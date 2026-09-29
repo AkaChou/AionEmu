@@ -422,7 +422,8 @@ public final class RetailDataDrivenDefinitionCompiler {
 				// already fallen back to the retail reward name): the hunt synthesizer re-reads the
 				// acquire name from the plan, so leaking the raw parameter would reject the sentinel.
 				var huntEntry = toHuntEntry(entry, acquireParam);
-				var plan = RetailSimpleHuntPlan.bind(huntEntry, npcIndex)
+				var basePlan = RetailSimpleHuntPlan.bind(huntEntry, npcIndex);
+				var plan = basePlan
 					.withPvpProgress(entry.allPvp())
 					.withPvpMinRank(entry.pvpMinRank())
 					.withPvpLevelGap(entry.pvpLevelGap())
@@ -432,10 +433,10 @@ public final class RetailDataDrivenDefinitionCompiler {
 					// Variant-axis adjudication: single-stage rows merge the client journal list;
 					// multi-stage rows merge the per-stage lists by counter slot (the retail table
 					// names only base templates, the client SECTION rows carry the T_ variants).
-					.withClientKillTargets(entry.allHunt()
-						? clientKillTargets.targets(entry.questId()) : java.util.Set.of())
-					.withClientStageKillTargets(entry.allHunt()
-						? clientKillTargets.stageTargets(entry.questId()) : java.util.Map.of())
+					.withClientKillTargets(resolveClientKillTargets(entry, clientKillTargets,
+						huntProgressRows, npcIndex, basePlan))
+					.withClientStageKillTargets(resolveClientStageKillTargets(entry, clientKillTargets,
+						huntProgressRows, npcIndex, basePlan))
 					// 计数轴裁定（单段）：客户端进度行与真端段同怪名时以客户端计数为准
 					// （服务端表修订的读数与客户端门控在少数行不一致，常设门登记该分歧集）。
 					// Count-axis adjudication (single stage): when the client progress row names the
@@ -817,5 +818,58 @@ public final class RetailDataDrivenDefinitionCompiler {
 					: RetailGrantKind.NPC);
 		return new RetailSimpleHuntTable.Entry(entry.questId(), List.copyOf(counters),
 			acquireName, entry.rewardNpc() == null ? "" : entry.rewardNpc(), null, grantKind);
+	}
+	private static java.util.Set<Integer> resolveClientKillTargets(RetailDataDrivenTable.Entry entry,
+			RetailClientKillTargets clientKillTargets, RetailClientHuntProgressRows huntProgressRows,
+			RetailNpcNameIndex npcIndex, RetailSimpleHuntPlan plan) {
+		if (!entry.allHunt()) {
+			return java.util.Set.of();
+		}
+		java.util.Set<Integer> targets = clientKillTargets.targets(entry.questId());
+		if (!targets.isEmpty()) {
+			return targets;
+		}
+		// 仅在真端名单完全无法解析到任何怪物时（Q 后缀改名模板等），才退回客户端任务书名单（15306 形同口径）
+		// Only when the retail list fails to resolve to any npc at all (e.g. Q-suffix renamed templates),
+		// fall back to the client journal progress rows.
+		if (!plan.counters().isEmpty() && plan.counters().get(0).npcIds().isEmpty()) {
+			java.util.List<RetailClientHuntProgressRows.Row> pRows = huntProgressRows.rows(entry.questId());
+			if (pRows != null && !pRows.isEmpty()) {
+				java.util.List<String> clientNames = pRows.stream()
+					.flatMap(r -> r.monsters().stream())
+					.toList();
+				return npcIndex.withDisplayNameVariants(npcIndex.resolveAll(clientNames).npcIds());
+			}
+		}
+		return java.util.Set.of();
+	}
+	private static java.util.Map<Integer, java.util.Set<Integer>> resolveClientStageKillTargets(
+			RetailDataDrivenTable.Entry entry, RetailClientKillTargets clientKillTargets,
+			RetailClientHuntProgressRows huntProgressRows, RetailNpcNameIndex npcIndex,
+			RetailSimpleHuntPlan plan) {
+		if (!entry.allHunt()) {
+			return java.util.Map.of();
+		}
+		java.util.Map<Integer, java.util.Set<Integer>> stages = clientKillTargets.stageTargets(entry.questId());
+		if (!stages.isEmpty()) {
+			return stages;
+		}
+		boolean anyUnresolved = plan.counters().stream().anyMatch(c -> c.npcIds().isEmpty());
+		if (!anyUnresolved) {
+			return java.util.Map.of();
+		}
+		java.util.List<RetailClientHuntProgressRows.Row> pRows = huntProgressRows.rows(entry.questId());
+		if (pRows == null || pRows.isEmpty()) {
+			return java.util.Map.of();
+		}
+		java.util.Map<Integer, java.util.Set<Integer>> resolved = new java.util.HashMap<>();
+		for (RetailClientHuntProgressRows.Row row : pRows) {
+			java.util.Set<Integer> ids = npcIndex.withDisplayNameVariants(
+				npcIndex.resolveAll(row.monsters()).npcIds());
+			if (!ids.isEmpty()) {
+				resolved.computeIfAbsent(row.section(), k -> new java.util.LinkedHashSet<>()).addAll(ids);
+			}
+		}
+		return java.util.Map.copyOf(resolved);
 	}
 }

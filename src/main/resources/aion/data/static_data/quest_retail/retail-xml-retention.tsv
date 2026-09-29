@@ -1148,7 +1148,7 @@
 2845	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_COUNTER_EXCEEDS_6BIT	client count exceeds the 6-bit SECTION field (fixed 6-bit layout invariant)
 2849	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 2852	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_PVP_GRID
-2869	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_MONSTER_UNRESOLVED	b2 kill targets: retail monster name(s) absent from server npc index (per-row names in retail-simplehunt-compiler-rejects.tsv / retail-data-driven-drift.tsv); XML carries operational targets
+2869	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history basis=DD_HUNT_PROGRESS_CLIENT_NAMES
 2870	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_HANDIN_CANONICAL
 2872	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_PVP_GRID
 2873	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_PVP_GRID
@@ -2651,28 +2651,28 @@
 13832	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_ITEMPLAY_CHAIN
 13833	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_ITEMPLAY_CHAIN
 13834	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_ITEMPLAY_CHAIN
-13840	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_MONSTER_UNRESOLVED	b2 kill targets: retail monster name(s) absent from server npc index (per-row names in retail-simplehunt-compiler-rejects.tsv / retail-data-driven-drift.tsv); XML carries operational targets
+13840	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history basis=DD_HUNT_PROGRESS_CLIENT_NAMES
 13841	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
 13842	RETAIL_TABLE	DataDriven	OK	retail-data-driven-drift.tsv
 13843	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_PVP_GRID
-13844	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_MONSTER_UNRESOLVED	b2 kill targets: retail monster name(s) absent from server npc index (per-row names in retail-simplehunt-compiler-rejects.tsv / retail-data-driven-drift.tsv); XML carries operational targets
-13845	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_MONSTER_UNRESOLVED	b2 kill targets: retail monster name(s) absent from server npc index (per-row names in retail-simplehunt-compiler-rejects.tsv / retail-data-driven-drift.tsv); XML carries operational targets
+13844	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history basis=DD_HUNT_PROGRESS_CLIENT_NAMES
+13845	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history basis=DD_HUNT_PROGRESS_CLIENT_NAMES
 13846	RETAIL_TABLE	DataDriven	OK	retail-data-driven-drift.tsv
 13847	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_PVP_GRID
-13848	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_MONSTER_UNRESOLVED	b2 kill targets: retail monster name(s) absent from server npc index (per-row names in retail-simplehunt-compiler-rejects.tsv / retail-data-driven-drift.tsv); XML carries operational targets
-13849	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_MONSTER_UNRESOLVED	b2 kill targets: retail monster name(s) absent from server npc index (per-row names in retail-simplehunt-compiler-rejects.tsv / retail-data-driven-drift.tsv); XML carries operational targets
+13848	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history basis=DD_HUNT_PROGRESS_CLIENT_NAMES
+13849	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history basis=DD_HUNT_PROGRESS_CLIENT_NAMES
 13850	RETAIL_TABLE	DataDriven	OK	retail-data-driven-drift.tsv
 13851	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_PVP_GRID
-13860	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_MONSTER_UNRESOLVED	b2 kill targets: retail monster name(s) absent from server npc index (per-row names in retail-simplehunt-compiler-rejects.tsv / retail-data-driven-drift.tsv); XML carries operational targets
+13860	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history basis=DD_HUNT_PROGRESS_CLIENT_NAMES
 13862	RETAIL_TABLE	DataDriven	OK	retail-data-driven-drift.tsv
 13863	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_PVP_GRID
-13864	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_MONSTER_UNRESOLVED	b2 kill targets: retail monster name(s) absent from server npc index (per-row names in retail-simplehunt-compiler-rejects.tsv / retail-data-driven-drift.tsv); XML carries operational targets
+13864	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history basis=DD_HUNT_PROGRESS_CLIENT_NAMES
 13866	RETAIL_TABLE	DataDriven	OK	retail-data-driven-drift.tsv
 13867	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_PVP_GRID
-13868	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_MONSTER_UNRESOLVED	b2 kill targets: retail monster name(s) absent from server npc index (per-row names in retail-simplehunt-compiler-rejects.tsv / retail-data-driven-drift.tsv); XML carries operational targets
+13868	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history basis=DD_HUNT_PROGRESS_CLIENT_NAMES
 13870	RETAIL_TABLE	DataDriven	OK	retail-data-driven-drift.tsv
 13871	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_PVP_GRID
-13880	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_MONSTER_UNRESOLVED	b2 kill targets: retail monster name(s) absent from server npc index (per-row names in retail-simplehunt-compiler-rejects.tsv / retail-data-driven-drift.tsv); XML carries operational targets
+13880	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history basis=DD_HUNT_PROGRESS_CLIENT_NAMES
 13882	RETAIL_TABLE	DataDriven	OK	retail-data-driven-drift.tsv
 13883	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_PVP_GRID
 13900	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c10f-talk-chain-decisions.tsv basis=CHAIN_REPLAY
@@ -2712,17 +2712,17 @@
 13940	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
 13941	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
 13942	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
-13943	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_MONSTER_UNRESOLVED	b2 kill targets: retail monster name(s) absent from server npc index (per-row names in retail-simplehunt-compiler-rejects.tsv / retail-data-driven-drift.tsv); XML carries operational targets
-13944	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_MONSTER_UNRESOLVED	b2 kill targets: retail monster name(s) absent from server npc index (per-row names in retail-simplehunt-compiler-rejects.tsv / retail-data-driven-drift.tsv); XML carries operational targets
+13943	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history basis=DD_HUNT_PROGRESS_CLIENT_NAMES
+13944	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history basis=DD_HUNT_PROGRESS_CLIENT_NAMES
 13945	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_CHAIN
-13946	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_MONSTER_UNRESOLVED	b2 kill targets: retail monster name(s) absent from server npc index (per-row names in retail-simplehunt-compiler-rejects.tsv / retail-data-driven-drift.tsv); XML carries operational targets
+13946	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history basis=DD_HUNT_PROGRESS_CLIENT_NAMES
 13947	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_AREA_HUNT_GRID
 13950	RETAIL_TABLE	DataDriven	OK	retail-data-driven-drift.tsv
 13951	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_ITEMPLAY_CHAIN
 13952	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p0c56-item-acquire-decisions.tsv basis=DD_ITEMPLAY_ACQUIRE
 13953	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_SIMPLE
 13954	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_TALK_HUNT_CHAIN_DEFERRED	retail-simple-talk-drift.tsv / retail-data-driven-drift.tsv: talk+hunt mixed-chain axis unimplemented for this shape (ladder/stage deficit)
-13955	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_MONSTER_UNRESOLVED	b2 kill targets: retail monster name(s) absent from server npc index (per-row names in retail-simplehunt-compiler-rejects.tsv / retail-data-driven-drift.tsv); XML carries operational targets
+13955	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history basis=DD_HUNT_PROGRESS_CLIENT_NAMES
 13956	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_CHAIN_CLIENT_ROWS
 13960	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_TALK_HUNT_CHAIN_DEFERRED	step vocabulary unsupported by retail synthesis [retention-lag fix: code realigned to frozen drift]
 13961	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_CHAIN
@@ -2780,8 +2780,8 @@
 14200	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history retail-simple-hunt-adjudicated-decisions.tsv basis=BRIEFING_STEP
 14201	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c11-collect-gate-adopt-decisions.tsv basis=COLLECT_ITEM_GATE_CHANNEL
 14202	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
-14203	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_MONSTER_UNRESOLVED	b2 kill targets: retail monster name(s) absent from server npc index (per-row names in retail-simplehunt-compiler-rejects.tsv / retail-data-driven-drift.tsv); XML carries operational targets
-14204	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_MONSTER_UNRESOLVED	b2 kill targets: retail monster name(s) absent from server npc index (per-row names in retail-simplehunt-compiler-rejects.tsv / retail-data-driven-drift.tsv); XML carries operational targets
+14203	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history basis=DD_HUNT_PROGRESS_CLIENT_NAMES
+14204	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history basis=DD_HUNT_PROGRESS_CLIENT_NAMES
 14211	XML_RETENTION	SimpleTalk	ADJUDICATED:RETAIL_ACQUIRE_NPC_UNRESOLVED	b1-acquire-sentinel/b1_forensics.tsv acquire npc unresolved: name absent from this server's npc_name_index
 14220	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf3c0,FUN_180caf640,FUN_180caf6c0,FUN_180caf740
 14240	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history retail-simple-hunt-adjudicated-decisions.tsv basis=ACCEPT_FLOW_LEGACY
@@ -2830,7 +2830,7 @@
 15104	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
 15200	RETAIL_TABLE	SimpleUseItem	OK	retired-xml-in-git-history p3b-use-item-decisions.tsv basis=USE_ITEM_CANONICAL
 15201	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
-15202	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_MONSTER_UNRESOLVED	b2 kill targets: retail monster name(s) absent from server npc index (per-row names in retail-simplehunt-compiler-rejects.tsv / retail-data-driven-drift.tsv); XML carries operational targets
+15202	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history basis=DD_HUNT_PROGRESS_CLIENT_NAMES
 15203	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
 15204	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_PVP_GRID
 15205	XML_RETENTION	-	NO_TABLE	retail-none
@@ -2879,9 +2879,9 @@
 15408	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
 15409	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
 15410	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
-15411	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_MONSTER_UNRESOLVED	b2 kill targets: retail monster name(s) absent from server npc index (per-row names in retail-simplehunt-compiler-rejects.tsv / retail-data-driven-drift.tsv); XML carries operational targets
-15412	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_MONSTER_UNRESOLVED	b2 kill targets: retail monster name(s) absent from server npc index (per-row names in retail-simplehunt-compiler-rejects.tsv / retail-data-driven-drift.tsv); XML carries operational targets
-15413	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_MONSTER_UNRESOLVED	b2 kill targets: retail monster name(s) absent from server npc index (per-row names in retail-simplehunt-compiler-rejects.tsv / retail-data-driven-drift.tsv); XML carries operational targets
+15411	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history basis=DD_HUNT_PROGRESS_CLIENT_NAMES
+15412	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history basis=DD_HUNT_PROGRESS_CLIENT_NAMES
+15413	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history basis=DD_HUNT_PROGRESS_CLIENT_NAMES
 15414	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
 15415	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
 15416	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
@@ -2935,7 +2935,7 @@
 15477	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p0c53-group-table-decisions.tsv basis=DD_AINAME_GROUP_TABLE
 15478	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p0c53-group-table-decisions.tsv basis=DD_AINAME_GROUP_TABLE
 15479	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p0c53-group-table-decisions.tsv basis=DD_AINAME_GROUP_TABLE
-15480	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_MONSTER_UNRESOLVED	b2 kill targets: retail monster name(s) absent from server npc index (per-row names in retail-simplehunt-compiler-rejects.tsv / retail-data-driven-drift.tsv); XML carries operational targets
+15480	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history basis=DD_HUNT_PROGRESS_CLIENT_NAMES
 15500	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
 15501	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
 15502	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CANONICAL
@@ -2986,8 +2986,8 @@
 15552	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_CHAIN_CLIENT_ROWS
 15553	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_CHAIN_CLIENT_ROWS
 15554	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_CHAIN_CLIENT_ROWS
-15560	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_MONSTER_UNRESOLVED	b2 kill targets: retail monster name(s) absent from server npc index (per-row names in retail-simplehunt-compiler-rejects.tsv / retail-data-driven-drift.tsv); XML carries operational targets
-15561	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_MONSTER_UNRESOLVED	b2 kill targets: retail monster name(s) absent from server npc index (per-row names in retail-simplehunt-compiler-rejects.tsv / retail-data-driven-drift.tsv); XML carries operational targets
+15560	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history basis=DD_HUNT_PROGRESS_CLIENT_NAMES
+15561	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history basis=DD_HUNT_PROGRESS_CLIENT_NAMES
 15562	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
 15563	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p0c56-item-acquire-decisions.tsv basis=DD_ITEMPLAY_ACQUIRE
 15564	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
@@ -3026,8 +3026,8 @@
 15666	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CANONICAL
 15667	XML_RETENTION	-	NO_TABLE	retail-none
 15670	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CHAIN
-15671	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_MONSTER_UNRESOLVED	b2 kill targets: retail monster name(s) absent from server npc index (per-row names in retail-simplehunt-compiler-rejects.tsv / retail-data-driven-drift.tsv); XML carries operational targets
-15672	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_MONSTER_UNRESOLVED	b2 kill targets: retail monster name(s) absent from server npc index (per-row names in retail-simplehunt-compiler-rejects.tsv / retail-data-driven-drift.tsv); XML carries operational targets
+15671	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history basis=DD_HUNT_PROGRESS_CLIENT_NAMES
+15672	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history basis=DD_HUNT_PROGRESS_CLIENT_NAMES
 15673	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history wave12-in-chain-pvp-decisions.tsv basis=DD_IN_CHAIN_PVP
 15674	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_GRANT_UNSUPPORTED	b1-acquire-sentinel/b1_forensics.tsv enter-area acquire: no quest_area binding (or collect-progress shape unsupported by the area grant edge)
 15680	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history wave7-narrow-itemplay-decisions.tsv basis=DD_NARROW_ITEMPLAY_RIDER
@@ -3116,7 +3116,7 @@
 16960	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history retail-simple-hunt-adjudicated-decisions.tsv basis=BRIEFING_STEP
 16961	XML_RETENTION	SimpleHunt	ADJUDICATED:XML_EXTRA_REWARD	legacy XML carries extra client-journal-named reward the retail table lacks (RETAIL_TABLE_GAPS class)
 16962	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
-16974	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_MONSTER_UNRESOLVED	b2 kill targets: retail monster name(s) absent from server npc index (per-row names in retail-simplehunt-compiler-rejects.tsv / retail-data-driven-drift.tsv); XML carries operational targets
+16974	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history basis=DD_HUNT_PROGRESS_CLIENT_NAMES
 16975	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p0c56-item-acquire-decisions.tsv basis=DD_ITEMPLAY_ACQUIRE
 16976	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CHAIN
 16977	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CANONICAL
@@ -3393,8 +3393,8 @@
 18940	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c10h-talk-chain-b4-decisions.tsv basis=P0C10H_EQUIVALENT
 18941	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
 18950	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_SIMPLE
-18951	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_MONSTER_UNRESOLVED	b2 kill targets: retail monster name(s) absent from server npc index (per-row names in retail-simplehunt-compiler-rejects.tsv / retail-data-driven-drift.tsv); XML carries operational targets
-18952	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_MONSTER_UNRESOLVED	b2 kill targets: retail monster name(s) absent from server npc index (per-row names in retail-simplehunt-compiler-rejects.tsv / retail-data-driven-drift.tsv); XML carries operational targets
+18951	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history basis=DD_HUNT_PROGRESS_CLIENT_NAMES
+18952	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history basis=DD_HUNT_PROGRESS_CLIENT_NAMES
 18953	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CANONICAL
 18954	RETAIL_TABLE	SimpleUseItem	OK	retired-xml-in-git-history p3b-use-item-decisions.tsv basis=USE_ITEM_CANONICAL
 18970	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_CHAIN
@@ -3493,7 +3493,7 @@
 19688	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CANONICAL
 19689	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CANONICAL
 19690	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_PVP_GRID
-19691	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_MONSTER_UNRESOLVED	b2 kill targets: retail monster name(s) absent from server npc index (per-row names in retail-simplehunt-compiler-rejects.tsv / retail-data-driven-drift.tsv); XML carries operational targets
+19691	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history basis=DD_HUNT_PROGRESS_CLIENT_NAMES
 19694	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CANONICAL
 19900	XML_RETENTION	DataDriven	ADJUDICATED:CURATED_LEGACY_CONTRACT_LOCK	curated deferral: reshape decision pending (DD gate CURATED_DEFERRED guard)
 20010	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_HUNT_CHAIN
@@ -3722,28 +3722,28 @@
 23832	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_ITEMPLAY_CHAIN
 23833	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_ITEMPLAY_CHAIN
 23834	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_ITEMPLAY_CHAIN
-23840	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_MONSTER_UNRESOLVED	b2 kill targets: retail monster name(s) absent from server npc index (per-row names in retail-simplehunt-compiler-rejects.tsv / retail-data-driven-drift.tsv); XML carries operational targets
+23840	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history basis=DD_HUNT_PROGRESS_CLIENT_NAMES
 23841	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
 23842	RETAIL_TABLE	DataDriven	OK	retail-data-driven-drift.tsv
 23843	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_PVP_GRID
-23844	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_MONSTER_UNRESOLVED	b2 kill targets: retail monster name(s) absent from server npc index (per-row names in retail-simplehunt-compiler-rejects.tsv / retail-data-driven-drift.tsv); XML carries operational targets
-23845	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_MONSTER_UNRESOLVED	b2 kill targets: retail monster name(s) absent from server npc index (per-row names in retail-simplehunt-compiler-rejects.tsv / retail-data-driven-drift.tsv); XML carries operational targets
+23844	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history basis=DD_HUNT_PROGRESS_CLIENT_NAMES
+23845	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history basis=DD_HUNT_PROGRESS_CLIENT_NAMES
 23846	RETAIL_TABLE	DataDriven	OK	retail-data-driven-drift.tsv
 23847	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_PVP_GRID
-23848	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_MONSTER_UNRESOLVED	b2 kill targets: retail monster name(s) absent from server npc index (per-row names in retail-simplehunt-compiler-rejects.tsv / retail-data-driven-drift.tsv); XML carries operational targets
-23849	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_MONSTER_UNRESOLVED	b2 kill targets: retail monster name(s) absent from server npc index (per-row names in retail-simplehunt-compiler-rejects.tsv / retail-data-driven-drift.tsv); XML carries operational targets
+23848	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history basis=DD_HUNT_PROGRESS_CLIENT_NAMES
+23849	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history basis=DD_HUNT_PROGRESS_CLIENT_NAMES
 23850	RETAIL_TABLE	DataDriven	OK	retail-data-driven-drift.tsv
 23851	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_PVP_GRID
-23860	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_MONSTER_UNRESOLVED	b2 kill targets: retail monster name(s) absent from server npc index (per-row names in retail-simplehunt-compiler-rejects.tsv / retail-data-driven-drift.tsv); XML carries operational targets
+23860	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history basis=DD_HUNT_PROGRESS_CLIENT_NAMES
 23862	RETAIL_TABLE	DataDriven	OK	retail-data-driven-drift.tsv
 23863	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_PVP_GRID
-23864	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_MONSTER_UNRESOLVED	b2 kill targets: retail monster name(s) absent from server npc index (per-row names in retail-simplehunt-compiler-rejects.tsv / retail-data-driven-drift.tsv); XML carries operational targets
+23864	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history basis=DD_HUNT_PROGRESS_CLIENT_NAMES
 23866	RETAIL_TABLE	DataDriven	OK	retail-data-driven-drift.tsv
 23867	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_PVP_GRID
-23868	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_MONSTER_UNRESOLVED	b2 kill targets: retail monster name(s) absent from server npc index (per-row names in retail-simplehunt-compiler-rejects.tsv / retail-data-driven-drift.tsv); XML carries operational targets
+23868	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history basis=DD_HUNT_PROGRESS_CLIENT_NAMES
 23870	RETAIL_TABLE	DataDriven	OK	retail-data-driven-drift.tsv
 23871	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_PVP_GRID
-23880	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_MONSTER_UNRESOLVED	b2 kill targets: retail monster name(s) absent from server npc index (per-row names in retail-simplehunt-compiler-rejects.tsv / retail-data-driven-drift.tsv); XML carries operational targets
+23880	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history basis=DD_HUNT_PROGRESS_CLIENT_NAMES
 23882	RETAIL_TABLE	DataDriven	OK	retail-data-driven-drift.tsv
 23883	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_PVP_GRID
 23900	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c10f-talk-chain-decisions.tsv basis=CHAIN_REPLAY
@@ -3783,17 +3783,17 @@
 23940	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
 23941	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
 23942	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
-23943	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_MONSTER_UNRESOLVED	b2 kill targets: retail monster name(s) absent from server npc index (per-row names in retail-simplehunt-compiler-rejects.tsv / retail-data-driven-drift.tsv); XML carries operational targets
-23944	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_MONSTER_UNRESOLVED	b2 kill targets: retail monster name(s) absent from server npc index (per-row names in retail-simplehunt-compiler-rejects.tsv / retail-data-driven-drift.tsv); XML carries operational targets
+23943	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history basis=DD_HUNT_PROGRESS_CLIENT_NAMES
+23944	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history basis=DD_HUNT_PROGRESS_CLIENT_NAMES
 23945	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_CHAIN
-23946	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_MONSTER_UNRESOLVED	b2 kill targets: retail monster name(s) absent from server npc index (per-row names in retail-simplehunt-compiler-rejects.tsv / retail-data-driven-drift.tsv); XML carries operational targets
+23946	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history basis=DD_HUNT_PROGRESS_CLIENT_NAMES
 23947	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_AREA_HUNT_GRID
 23950	RETAIL_TABLE	DataDriven	OK	retail-data-driven-drift.tsv
 23951	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_ITEMPLAY_CHAIN
 23952	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p0c56-item-acquire-decisions.tsv basis=DD_ITEMPLAY_ACQUIRE
 23953	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_SIMPLE
 23954	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_TALK_HUNT_CHAIN_DEFERRED	retail-simple-talk-drift.tsv / retail-data-driven-drift.tsv: talk+hunt mixed-chain axis unimplemented for this shape (ladder/stage deficit)
-23955	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_MONSTER_UNRESOLVED	b2 kill targets: retail monster name(s) absent from server npc index (per-row names in retail-simplehunt-compiler-rejects.tsv / retail-data-driven-drift.tsv); XML carries operational targets
+23955	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history basis=DD_HUNT_PROGRESS_CLIENT_NAMES
 23956	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_CHAIN_CLIENT_ROWS
 23960	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_TALK_HUNT_CHAIN_DEFERRED	step vocabulary unsupported by retail synthesis [retention-lag fix: code realigned to frozen drift]
 23961	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_CHAIN
@@ -3898,8 +3898,8 @@
 25093	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
 25094	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_HANDIN_CANONICAL
 25200	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history retail-data-driven-drift.tsv basis=DD_TALK_JOURNAL_ROW
-25201	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_MONSTER_UNRESOLVED	b2 kill targets: retail monster name(s) absent from server npc index (per-row names in retail-simplehunt-compiler-rejects.tsv / retail-data-driven-drift.tsv); XML carries operational targets
-25202	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_MONSTER_UNRESOLVED	b2 kill targets: retail monster name(s) absent from server npc index (per-row names in retail-simplehunt-compiler-rejects.tsv / retail-data-driven-drift.tsv); XML carries operational targets
+25201	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history basis=DD_HUNT_PROGRESS_CLIENT_NAMES
+25202	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history basis=DD_HUNT_PROGRESS_CLIENT_NAMES
 25203	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
 25204	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_PVP_GRID
 25205	XML_RETENTION	-	NO_TABLE	retail-none
@@ -3948,9 +3948,9 @@
 25408	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
 25409	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
 25410	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
-25411	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_MONSTER_UNRESOLVED	b2 kill targets: retail monster name(s) absent from server npc index (per-row names in retail-simplehunt-compiler-rejects.tsv / retail-data-driven-drift.tsv); XML carries operational targets
-25412	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_MONSTER_UNRESOLVED	b2 kill targets: retail monster name(s) absent from server npc index (per-row names in retail-simplehunt-compiler-rejects.tsv / retail-data-driven-drift.tsv); XML carries operational targets
-25413	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_MONSTER_UNRESOLVED	b2 kill targets: retail monster name(s) absent from server npc index (per-row names in retail-simplehunt-compiler-rejects.tsv / retail-data-driven-drift.tsv); XML carries operational targets
+25411	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history basis=DD_HUNT_PROGRESS_CLIENT_NAMES
+25412	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history basis=DD_HUNT_PROGRESS_CLIENT_NAMES
+25413	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history basis=DD_HUNT_PROGRESS_CLIENT_NAMES
 25414	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
 25415	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
 25416	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
@@ -4004,7 +4004,7 @@
 25477	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p0c53-group-table-decisions.tsv basis=DD_AINAME_GROUP_TABLE
 25478	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p0c53-group-table-decisions.tsv basis=DD_AINAME_GROUP_TABLE
 25479	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p0c53-group-table-decisions.tsv basis=DD_AINAME_GROUP_TABLE
-25480	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_MONSTER_UNRESOLVED	b2 kill targets: retail monster name(s) absent from server npc index (per-row names in retail-simplehunt-compiler-rejects.tsv / retail-data-driven-drift.tsv); XML carries operational targets
+25480	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history basis=DD_HUNT_PROGRESS_CLIENT_NAMES
 25500	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
 25501	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
 25502	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CANONICAL
@@ -4055,8 +4055,8 @@
 25552	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_CHAIN_CLIENT_ROWS
 25553	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_CHAIN_CLIENT_ROWS
 25554	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_CHAIN_CLIENT_ROWS
-25560	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_MONSTER_UNRESOLVED	b2 kill targets: retail monster name(s) absent from server npc index (per-row names in retail-simplehunt-compiler-rejects.tsv / retail-data-driven-drift.tsv); XML carries operational targets
-25561	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_MONSTER_UNRESOLVED	b2 kill targets: retail monster name(s) absent from server npc index (per-row names in retail-simplehunt-compiler-rejects.tsv / retail-data-driven-drift.tsv); XML carries operational targets
+25560	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history basis=DD_HUNT_PROGRESS_CLIENT_NAMES
+25561	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history basis=DD_HUNT_PROGRESS_CLIENT_NAMES
 25562	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
 25563	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p0c56-item-acquire-decisions.tsv basis=DD_ITEMPLAY_ACQUIRE
 25564	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
@@ -4094,8 +4094,8 @@
 25666	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CANONICAL
 25667	XML_RETENTION	-	NO_TABLE	retail-none
 25670	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CHAIN
-25671	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_MONSTER_UNRESOLVED	b2 kill targets: retail monster name(s) absent from server npc index (per-row names in retail-simplehunt-compiler-rejects.tsv / retail-data-driven-drift.tsv); XML carries operational targets
-25672	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_MONSTER_UNRESOLVED	b2 kill targets: retail monster name(s) absent from server npc index (per-row names in retail-simplehunt-compiler-rejects.tsv / retail-data-driven-drift.tsv); XML carries operational targets
+25671	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history basis=DD_HUNT_PROGRESS_CLIENT_NAMES
+25672	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history basis=DD_HUNT_PROGRESS_CLIENT_NAMES
 25673	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history wave12-in-chain-pvp-decisions.tsv basis=DD_IN_CHAIN_PVP
 25674	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_GRANT_UNSUPPORTED	b1-acquire-sentinel/b1_forensics.tsv enter-area acquire: no quest_area binding (or collect-progress shape unsupported by the area grant edge)
 25680	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_TALK_HUNT_CHAIN_DEFERRED	retail-simple-talk-drift.tsv / retail-data-driven-drift.tsv: talk+hunt mixed-chain axis unimplemented for this shape (ladder/stage deficit)
@@ -4184,7 +4184,7 @@
 26960	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history retail-simple-hunt-adjudicated-decisions.tsv basis=BRIEFING_STEP
 26961	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
 26962	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
-26974	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_MONSTER_UNRESOLVED	b2 kill targets: retail monster name(s) absent from server npc index (per-row names in retail-simplehunt-compiler-rejects.tsv / retail-data-driven-drift.tsv); XML carries operational targets
+26974	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history basis=DD_HUNT_PROGRESS_CLIENT_NAMES
 26975	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p0c56-item-acquire-decisions.tsv basis=DD_ITEMPLAY_ACQUIRE
 26976	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CHAIN
 26977	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CANONICAL
@@ -4460,8 +4460,8 @@
 28940	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c10h-talk-chain-b4-decisions.tsv basis=P0C10H_EQUIVALENT
 28941	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
 28950	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_SIMPLE
-28951	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_MONSTER_UNRESOLVED	b2 kill targets: retail monster name(s) absent from server npc index (per-row names in retail-simplehunt-compiler-rejects.tsv / retail-data-driven-drift.tsv); XML carries operational targets
-28952	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_MONSTER_UNRESOLVED	b2 kill targets: retail monster name(s) absent from server npc index (per-row names in retail-simplehunt-compiler-rejects.tsv / retail-data-driven-drift.tsv); XML carries operational targets
+28951	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history basis=DD_HUNT_PROGRESS_CLIENT_NAMES
+28952	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history basis=DD_HUNT_PROGRESS_CLIENT_NAMES
 28953	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CANONICAL
 28954	RETAIL_TABLE	SimpleUseItem	OK	retired-xml-in-git-history p3b-use-item-decisions.tsv basis=USE_ITEM_CANONICAL
 28970	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_CHAIN
@@ -4560,7 +4560,7 @@
 29688	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CANONICAL
 29689	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CANONICAL
 29690	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_PVP_GRID
-29691	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_MONSTER_UNRESOLVED	b2 kill targets: retail monster name(s) absent from server npc index (per-row names in retail-simplehunt-compiler-rejects.tsv / retail-data-driven-drift.tsv); XML carries operational targets
+29691	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history basis=DD_HUNT_PROGRESS_CLIENT_NAMES
 29694	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CANONICAL
 29900	XML_RETENTION	DataDriven	ADJUDICATED:CURATED_LEGACY_CONTRACT_LOCK	curated deferral: reshape decision pending (DD gate CURATED_DEFERRED guard)
 30001	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
@@ -4983,7 +4983,7 @@
 39712	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history retail-simple-hunt-adjudicated-decisions.tsv basis=FACTION_GRANT_DISABLED
 39713	XML_RETENTION	SimpleItemPlay	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL	b1-acquire-sentinel/b1_forensics.tsv faction sentinel with reward npc unresolved (no deliverable owner on this server)
 39715	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history retail-simple-hunt-adjudicated-decisions.tsv basis=FACTION_GRANT_DISABLED
-42000	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_MONSTER_UNRESOLVED	b2 kill targets: retail monster name(s) absent from server npc index (per-row names in retail-simplehunt-compiler-rejects.tsv / retail-data-driven-drift.tsv); XML carries operational targets
+42000	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history basis=DD_HUNT_PROGRESS_CLIENT_NAMES
 42001	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
 42002	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
 42003	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
@@ -4994,7 +4994,7 @@
 42011	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
 42012	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
 42013	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
-42100	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_MONSTER_UNRESOLVED	b2 kill targets: retail monster name(s) absent from server npc index (per-row names in retail-simplehunt-compiler-rejects.tsv / retail-data-driven-drift.tsv); XML carries operational targets
+42100	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history basis=DD_HUNT_PROGRESS_CLIENT_NAMES
 42101	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
 42102	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
 42103	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
