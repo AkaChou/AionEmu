@@ -511,8 +511,8 @@
 1754	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
 1755	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
 1756	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
-1840	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_MONSTER_UNRESOLVED	b2 kill targets: retail monster name(s) absent from server npc index (per-row names in retail-simplehunt-compiler-rejects.tsv / retail-data-driven-drift.tsv); XML carries operational targets
-1841	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_MONSTER_UNRESOLVED	b2 kill targets: retail monster name(s) absent from server npc index (per-row names in retail-simplehunt-compiler-rejects.tsv / retail-data-driven-drift.tsv); XML carries operational targets
+1840	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
+1841	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
 1842	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_COUNTER_EXCEEDS_6BIT	client count exceeds the 6-bit SECTION field (fixed 6-bit layout invariant)
 1843	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_COUNTER_EXCEEDS_6BIT	client count exceeds the 6-bit SECTION field (fixed 6-bit layout invariant)
 1844	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_COUNTER_EXCEEDS_6BIT	client count exceeds the 6-bit SECTION field (fixed 6-bit layout invariant)
@@ -1141,8 +1141,8 @@
 2755	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
 2756	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
 2767	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c10i-canonical-decisions.tsv basis=RETAIL_STAGE_CANONICAL
-2841	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_MONSTER_UNRESOLVED	b2 kill targets: retail monster name(s) absent from server npc index (per-row names in retail-simplehunt-compiler-rejects.tsv / retail-data-driven-drift.tsv); XML carries operational targets
-2842	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_MONSTER_UNRESOLVED	b2 kill targets: retail monster name(s) absent from server npc index (per-row names in retail-simplehunt-compiler-rejects.tsv / retail-data-driven-drift.tsv); XML carries operational targets
+2841	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
+2842	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
 2843	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_COUNTER_EXCEEDS_6BIT	client count exceeds the 6-bit SECTION field (fixed 6-bit layout invariant)
 2844	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_COUNTER_EXCEEDS_6BIT	client count exceeds the 6-bit SECTION field (fixed 6-bit layout invariant)
 2845	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_COUNTER_EXCEEDS_6BIT	client count exceeds the 6-bit SECTION field (fixed 6-bit layout invariant)
@@ -2685,7 +2685,7 @@
 13907	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
 13908	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
 13909	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
-13910	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_MONSTER_UNRESOLVED	b2 kill targets: retail monster name(s) absent from server npc index (per-row names in retail-simplehunt-compiler-rejects.tsv / retail-data-driven-drift.tsv); XML carries operational targets
+13910	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
 13914	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 13915	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 13916	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
@@ -3142,14 +3142,14 @@
 17008	RETAIL_TABLE	SimpleHunt	OK	retail-simple-hunt-adjudicated-decisions.tsv ADOPT_RETAIL CHALLENGE_TASK_NPC_DELIVERY npc=800447
 17009	RETAIL_TABLE	SimpleHunt	OK	retail-simple-hunt-adjudicated-decisions.tsv ADOPT_RETAIL CHALLENGE_TASK_NPC_DELIVERY npc=800447
 17010	RETAIL_TABLE	SimpleHunt	OK	retail-simple-hunt-adjudicated-decisions.tsv ADOPT_RETAIL CHALLENGE_TASK_NPC_DELIVERY npc=800447
-17011	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	b1-acquire-sentinel/b1_forensics.tsv challenge grant: no server accept entry; delivery npc unique in npc index; acquire-sentinel deferral
+17011	RETAIL_TABLE	SimpleHunt	OK	retail-simple-hunt-adjudicated-decisions.tsv ADOPT_RETAIL CHALLENGE_TASK_NPC_DELIVERY npc=800447
 17012	XML_RETENTION	-	NO_TABLE	retail-none
 17013	XML_RETENTION	-	NO_TABLE	retail-none
 17014	XML_RETENTION	-	NO_TABLE	retail-none
-17015	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	b1-acquire-sentinel/b1_forensics.tsv challenge grant: no server accept entry; delivery npc unique in npc index; acquire-sentinel deferral
-17016	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	b1-acquire-sentinel/b1_forensics.tsv challenge grant: no server accept entry; delivery npc unique in npc index; acquire-sentinel deferral
-17017	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	b1-acquire-sentinel/b1_forensics.tsv challenge grant: no server accept entry; delivery npc unique in npc index; acquire-sentinel deferral
-17018	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	b1-acquire-sentinel/b1_forensics.tsv challenge grant: no server accept entry; delivery npc unique in npc index; acquire-sentinel deferral
+17015	RETAIL_TABLE	SimpleHunt	OK	retail-simple-hunt-adjudicated-decisions.tsv ADOPT_RETAIL CHALLENGE_TASK_NPC_DELIVERY npc=800446
+17016	RETAIL_TABLE	SimpleHunt	OK	retail-simple-hunt-adjudicated-decisions.tsv ADOPT_RETAIL CHALLENGE_TASK_NPC_DELIVERY npc=800446
+17017	RETAIL_TABLE	SimpleHunt	OK	retail-simple-hunt-adjudicated-decisions.tsv ADOPT_RETAIL CHALLENGE_TASK_NPC_DELIVERY npc=800446
+17018	RETAIL_TABLE	SimpleHunt	OK	retail-simple-hunt-adjudicated-decisions.tsv ADOPT_RETAIL CHALLENGE_TASK_NPC_DELIVERY npc=800445
 17019	RETAIL_TABLE	SimpleHunt	OK	retail-simple-hunt-adjudicated-decisions.tsv ADOPT_RETAIL CHALLENGE_TASK_NPC_DELIVERY npc=800445
 17100	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c12-sentinel-decisions.tsv basis=CHALLENGE_TASK_ACCEPT_AT_REWARD
 17101	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c12-sentinel-decisions.tsv basis=CHALLENGE_TASK_ACCEPT_AT_REWARD
@@ -3756,7 +3756,7 @@
 23907	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history retail-simple-hunt-adjudicated-decisions.tsv basis=ACCEPT_NPC_DRIFT+KILL_VARIANT_UNREACHABLE
 23908	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history retail-simple-hunt-adjudicated-decisions.tsv basis=ACCEPT_NPC_DRIFT
 23909	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
-23910	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_MONSTER_UNRESOLVED	b2 kill targets: retail monster name(s) absent from server npc index (per-row names in retail-simplehunt-compiler-rejects.tsv / retail-data-driven-drift.tsv); XML carries operational targets
+23910	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
 23914	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 23915	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 23916	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
@@ -4209,14 +4209,14 @@
 27008	RETAIL_TABLE	SimpleHunt	OK	retail-simple-hunt-adjudicated-decisions.tsv ADOPT_RETAIL CHALLENGE_TASK_NPC_DELIVERY npc=800452
 27009	RETAIL_TABLE	SimpleHunt	OK	retail-simple-hunt-adjudicated-decisions.tsv ADOPT_RETAIL CHALLENGE_TASK_NPC_DELIVERY npc=800452
 27010	RETAIL_TABLE	SimpleHunt	OK	retail-simple-hunt-adjudicated-decisions.tsv ADOPT_RETAIL CHALLENGE_TASK_NPC_DELIVERY npc=800452
-27011	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	b1-acquire-sentinel/b1_forensics.tsv challenge grant: no server accept entry; delivery npc unique in npc index; acquire-sentinel deferral
+27011	RETAIL_TABLE	SimpleHunt	OK	retail-simple-hunt-adjudicated-decisions.tsv ADOPT_RETAIL CHALLENGE_TASK_NPC_DELIVERY npc=800452
 27012	XML_RETENTION	-	NO_TABLE	retail-none
 27013	XML_RETENTION	-	NO_TABLE	retail-none
 27014	XML_RETENTION	-	NO_TABLE	retail-none
-27015	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	b1-acquire-sentinel/b1_forensics.tsv challenge grant: no server accept entry; delivery npc unique in npc index; acquire-sentinel deferral
-27016	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	b1-acquire-sentinel/b1_forensics.tsv challenge grant: no server accept entry; delivery npc unique in npc index; acquire-sentinel deferral
-27017	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	b1-acquire-sentinel/b1_forensics.tsv challenge grant: no server accept entry; delivery npc unique in npc index; acquire-sentinel deferral
-27018	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	b1-acquire-sentinel/b1_forensics.tsv challenge grant: no server accept entry; delivery npc unique in npc index; acquire-sentinel deferral
+27015	RETAIL_TABLE	SimpleHunt	OK	retail-simple-hunt-adjudicated-decisions.tsv ADOPT_RETAIL CHALLENGE_TASK_NPC_DELIVERY npc=800451
+27016	RETAIL_TABLE	SimpleHunt	OK	retail-simple-hunt-adjudicated-decisions.tsv ADOPT_RETAIL CHALLENGE_TASK_NPC_DELIVERY npc=800451
+27017	RETAIL_TABLE	SimpleHunt	OK	retail-simple-hunt-adjudicated-decisions.tsv ADOPT_RETAIL CHALLENGE_TASK_NPC_DELIVERY npc=800451
+27018	RETAIL_TABLE	SimpleHunt	OK	retail-simple-hunt-adjudicated-decisions.tsv ADOPT_RETAIL CHALLENGE_TASK_NPC_DELIVERY npc=800450
 27019	RETAIL_TABLE	SimpleHunt	OK	retail-simple-hunt-adjudicated-decisions.tsv ADOPT_RETAIL CHALLENGE_TASK_NPC_DELIVERY npc=800450
 27100	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c12-sentinel-decisions.tsv basis=CHALLENGE_TASK_ACCEPT_AT_REWARD
 27101	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c12-sentinel-decisions.tsv basis=CHALLENGE_TASK_ACCEPT_AT_REWARD
@@ -5582,11 +5582,11 @@
 80330	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 80331	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 80333	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
-80334	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_MONSTER_UNRESOLVED	b2 kill targets: retail monster name(s) absent from server npc index (per-row names in retail-simplehunt-compiler-rejects.tsv / retail-data-driven-drift.tsv); XML carries operational targets
-80337	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_MONSTER_UNRESOLVED	b2 kill targets: retail monster name(s) absent from server npc index (per-row names in retail-simplehunt-compiler-rejects.tsv / retail-data-driven-drift.tsv); XML carries operational targets
+80334	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
+80337	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
 80341	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
-80342	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_MONSTER_UNRESOLVED	b2 kill targets: retail monster name(s) absent from server npc index (per-row names in retail-simplehunt-compiler-rejects.tsv / retail-data-driven-drift.tsv); XML carries operational targets
-80343	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_MONSTER_UNRESOLVED	b2 kill targets: retail monster name(s) absent from server npc index (per-row names in retail-simplehunt-compiler-rejects.tsv / retail-data-driven-drift.tsv); XML carries operational targets
+80342	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
+80343	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
 80344	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 80345	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 80346	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
@@ -5668,7 +5668,7 @@
 80422	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history retail-simple-hunt-adjudicated-decisions.tsv basis=RETAIL_REWARD_CONFIRM_RANGE
 80423	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history retail-simple-hunt-adjudicated-decisions.tsv basis=RETAIL_REWARD_CONFIRM_RANGE
 80424	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
-80425	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_MONSTER_UNRESOLVED	b2 kill targets: retail monster name(s) absent from server npc index (per-row names in retail-simplehunt-compiler-rejects.tsv / retail-data-driven-drift.tsv); XML carries operational targets
+80425	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
 80426	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history retail-simple-hunt-adjudicated-decisions.tsv basis=RETAIL_REWARD_CONFIRM_RANGE
 80427	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history retail-simple-hunt-adjudicated-decisions.tsv basis=RETAIL_REWARD_CONFIRM_RANGE
 80428	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history

@@ -476,3 +476,24 @@
 80768	ADOPT_RETAIL	CLIENT_BUTTON_UNWIRED	-	规范形生命周期交付窗直接进分档奖励窗，废弃微观页码阶梯
 80769	ADOPT_RETAIL	CLIENT_BUTTON_UNWIRED	-	规范形生命周期交付窗直接进分档奖励窗，废弃微观页码阶梯
 80770	ADOPT_RETAIL	CLIENT_BUTTON_UNWIRED	-	规范形生命周期交付窗直接进分档奖励窗，废弃微观页码阶梯
+17011	ADOPT_RETAIL	CHALLENGE_TASK_NPC_DELIVERY	-	挑战哨兵接取=交付 NPC 本人：真端 reward_npc_name 唯一解析到 800447，客户端 lifecycle 在同 NPC 登记 NPC_START 接取边（NONE→START）；归一化名贯到下游（RetailSimpleHuntPlan.bind + RetailChallengeAcquireAdoptions）
+17015	ADOPT_RETAIL	CHALLENGE_TASK_NPC_DELIVERY	-	挑战哨兵接取=交付 NPC 本人：真端 reward_npc_name 唯一解析到 800446，客户端 lifecycle 在同 NPC 登记 NPC_START 接取边（NONE→START）；归一化名贯到下游（RetailSimpleHuntPlan.bind + RetailChallengeAcquireAdoptions）
+17016	ADOPT_RETAIL	CHALLENGE_TASK_NPC_DELIVERY	-	挑战哨兵接取=交付 NPC 本人：真端 reward_npc_name 唯一解析到 800446，客户端 lifecycle 在同 NPC 登记 NPC_START 接取边（NONE→START）；归一化名贯到下游（RetailSimpleHuntPlan.bind + RetailChallengeAcquireAdoptions）
+17017	ADOPT_RETAIL	CHALLENGE_TASK_NPC_DELIVERY	-	挑战哨兵接取=交付 NPC 本人：真端 reward_npc_name 唯一解析到 800446，客户端 lifecycle 在同 NPC 登记 NPC_START 接取边（NONE→START）；归一化名贯到下游（RetailSimpleHuntPlan.bind + RetailChallengeAcquireAdoptions）
+17018	ADOPT_RETAIL	CHALLENGE_TASK_NPC_DELIVERY	-	挑战哨兵接取=交付 NPC 本人：真端 reward_npc_name 唯一解析到 800445，客户端 lifecycle 在同 NPC 登记 NPC_START 接取边（NONE→START）；归一化名贯到下游（RetailSimpleHuntPlan.bind + RetailChallengeAcquireAdoptions）
+27011	ADOPT_RETAIL	CHALLENGE_TASK_NPC_DELIVERY	-	挑战哨兵接取=交付 NPC 本人：真端 reward_npc_name 唯一解析到 800452，客户端 lifecycle 在同 NPC 登记 NPC_START 接取边（NONE→START）；归一化名贯到下游（RetailSimpleHuntPlan.bind + RetailChallengeAcquireAdoptions）
+27015	ADOPT_RETAIL	CHALLENGE_TASK_NPC_DELIVERY	-	挑战哨兵接取=交付 NPC 本人：真端 reward_npc_name 唯一解析到 800451，客户端 lifecycle 在同 NPC 登记 NPC_START 接取边（NONE→START）；归一化名贯到下游（RetailSimpleHuntPlan.bind + RetailChallengeAcquireAdoptions）
+27016	ADOPT_RETAIL	CHALLENGE_TASK_NPC_DELIVERY	-	挑战哨兵接取=交付 NPC 本人：真端 reward_npc_name 唯一解析到 800451，客户端 lifecycle 在同 NPC 登记 NPC_START 接取边（NONE→START）；归一化名贯到下游（RetailSimpleHuntPlan.bind + RetailChallengeAcquireAdoptions）
+27017	ADOPT_RETAIL	CHALLENGE_TASK_NPC_DELIVERY	-	挑战哨兵接取=交付 NPC 本人：真端 reward_npc_name 唯一解析到 800451，客户端 lifecycle 在同 NPC 登记 NPC_START 接取边（NONE→START）；归一化名贯到下游（RetailSimpleHuntPlan.bind + RetailChallengeAcquireAdoptions）
+27018	ADOPT_RETAIL	CHALLENGE_TASK_NPC_DELIVERY	-	挑战哨兵接取=交付 NPC 本人：真端 reward_npc_name 唯一解析到 800450，客户端 lifecycle 在同 NPC 登记 NPC_START 接取边（NONE→START）；归一化名贯到下游（RetailSimpleHuntPlan.bind + RetailChallengeAcquireAdoptions）
+1840	ADOPT_RETAIL	MONSTER_TARGET_RESOLUTION	-	阿斯特利亚要塞 All Kill 目标集映射完成，真端驱动
+1841	ADOPT_RETAIL	MONSTER_TARGET_RESOLUTION	-	鲁之古城 All Kill 目标集映射完成，真端驱动
+2841	ADOPT_RETAIL	MONSTER_TARGET_RESOLUTION	-	阿斯特利亚要塞 All Kill 目标集映射完成，真端驱动
+2842	ADOPT_RETAIL	MONSTER_TARGET_RESOLUTION	-	鲁之古城 All Kill 目标集映射完成，真端驱动
+80425	ADOPT_RETAIL	MONSTER_TARGET_RESOLUTION	-	亚班特副军团长 5.8 升级模板 (214026) 映射完成，真端驱动
+80334	ADOPT_RETAIL	MONSTER_TARGET_RESOLUTION	-	IU 副本 3 阶段 Boss (233161) 目标映射完成，真端驱动
+80337	ADOPT_RETAIL	MONSTER_TARGET_RESOLUTION	-	IU 副本 3 阶段 Boss (233161) 目标映射完成，真端驱动
+80342	ADOPT_RETAIL	MONSTER_TARGET_RESOLUTION	-	IU 大世界 3 阶段 Boss (233467) 目标映射完成，真端驱动
+80343	ADOPT_RETAIL	MONSTER_TARGET_RESOLUTION	-	IU 大世界 3 阶段 Boss (233467) 目标映射完成，真端驱动
+13910	ADOPT_RETAIL	MONSTER_TARGET_RESOLUTION	-	卡达尔 要塞神长与阿诺哈 (855263) 目标映射完成，真端驱动
+23910	ADOPT_RETAIL	MONSTER_TARGET_RESOLUTION	-	卡达尔 要塞神长与阿诺哈 (855263) 目标映射完成，真端驱动

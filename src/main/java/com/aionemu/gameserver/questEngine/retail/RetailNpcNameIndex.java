@@ -262,6 +262,7 @@ public final class RetailNpcNameIndex {
 			}
 		});
 		addStrippedPrefixAliases(byName);
+		addMonsterTargetAliases(byName);
 		Map<String, Set<String>> groupMembers = new LinkedHashMap<>();
 		Map<String, Set<Integer>> groups = new LinkedHashMap<>();
 		for (InputStream input : questAiNameGroupTables) {
@@ -296,6 +297,79 @@ public final class RetailNpcNameIndex {
 			}
 		}
 		return new RetailNpcNameIndex(byName, families, groupMembers, groups, questUseItemNpcIds);
+	}
+
+	/**
+	 * 为真端击杀目标名称增加别名解析与补全（挑战大怪、副本全清、活动代号与要塞神长）。
+	 * Adds monster target aliases for challenge bosses, instance all-kill clusters, event bosses, and fortress generals.
+	 */
+	private static void addMonsterTargetAliases(Map<String, Set<Integer>> byName) {
+		String[] bossPrefixes = {
+			"ab1_1131_boss_dr", "ab1_1132_boss_dr", "ab1_1141_boss_dr",
+			"ab1_1221_boss_dr", "ab1_1231_boss_dr", "ab1_1241_boss_dr",
+			"ldf5_fortress_7011_boss_da", "ldf5_fortress_7011_boss_li", "ldf5_fortress_7011_boss_dr",
+			"ldf5_fortress_7012_boss_da", "ldf5_fortress_7012_boss_li", "ldf5_fortress_7012_boss_dr",
+			"ldf5_fortress_7013_boss_da", "ldf5_fortress_7013_boss_li", "ldf5_fortress_7013_boss_dr",
+			"ldf5_fortress_7014_boss_da", "ldf5_fortress_7014_boss_li", "ldf5_fortress_7014_boss_dr",
+			"idseal_boss_vritra"
+		};
+		for (String prefix : bossPrefixes) {
+			Set<Integer> hits = new LinkedHashSet<>();
+			byName.forEach((cand, ids) -> {
+				if (cand.startsWith(prefix + "_")) {
+					hits.addAll(ids);
+				}
+			});
+			if (!hits.isEmpty() && !byName.containsKey(prefix)) {
+				byName.put(prefix, Set.copyOf(hits));
+			}
+		}
+
+		// 17015 / 27015: 欧比斯下层要塞神长 (Dr 龙族神长 + Da/Li 阵营神长)
+		byName.put("ab1_1131_boss_dr_q1737", Set.of(263006, 263011, 263012, 263013, 263014, 263015));
+		byName.put("ab1_1132_boss_dr_q1737", Set.of(263306, 263311, 263312, 263313, 263314, 263315));
+		byName.put("ab1_1141_boss_dr_q1737", Set.of(264506, 264511, 264512, 264513, 264514, 264515));
+
+		// 17016 / 27016: 欧比斯上层要塞神长
+		byName.put("ab1_1221_boss_dr_q1739", Set.of(266306, 266311));
+		byName.put("ab1_1231_boss_dr_q1739", Set.of(279447, 279741, 279643, 279935));
+		byName.put("ab1_1241_boss_dr_q1739", Set.of(279545, 279838, 270806, 270811));
+
+		// 17011 / 27011: Beritra (IDSeal_Boss_Vritra_Q18952)
+		byName.put("idseal_boss_vritra_q18952", Set.of(236244, 236245, 236246, 236247));
+
+		// 17017 / 27017: 深层要塞神长 Pashid
+		byName.put("ldf5_fortress_7011_boss_dr", Set.of(
+			251825, 251826, 251827, 251828, 251829, 251830, 251831, 251832, 251833, 251834,
+			251835, 251836, 251837, 251838, 251839));
+
+		// 17018 / 27018: 世界 Raid 大怪
+		byName.put("worldraid_df5", Set.of(219998, 219999));
+		byName.put("worldraid_lf5", Set.of(220000, 220001, 220002, 220003));
+		byName.put("worldraid_ldf4_advance", Set.of(234609, 234610));
+		byName.put("worldraid_ldf5_fortress", Set.of(234613));
+		byName.put("worldraid_ab1", Set.of(234591, 234592));
+
+		// 80425: 5.8 中升级为 48 级怪 IDDF3_DrakanClericNamedDQ_48_Ah
+		byName.put("iddf3_drakanclericnameddq_45_ae", Set.of(214026));
+
+		// 1840 / 2841: 阿斯特利亚要塞 All Kill
+		byName.put("idabre_up_asteria", Set.of(
+			214752, 214753, 214754, 214755, 214756, 214757, 214758, 214759, 214760,
+			214761, 214762, 214763, 214764, 214765, 214766, 214767, 214768, 214769, 214770,
+			215439, 215440, 215441, 215442, 215443, 215444));
+
+		// 1841 / 2842: 鲁之古城 All Kill
+		byName.put("idabre_up_rhoo", Set.of(
+			214771, 214772, 214773, 214774, 214775, 214776, 214777, 214778, 214779, 214780,
+			214781, 214782, 214783, 214784, 214785, 214786, 214787, 214788, 214789,
+			215445, 215446, 215447, 215448, 215449, 215450));
+
+		// 80334, 80337: IDAsteria_IU_3Stage_Boss
+		byName.put("idasteria_iu_3stage_boss", Set.of(233161));
+
+		// 80342, 80343: IDAsteria_IU_WORLD_3Stage_Boss
+		byName.put("idasteria_iu_world_3stage_boss", Set.of(233467));
 	}
 
 	/**
