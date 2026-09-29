@@ -40,6 +40,10 @@ public final class QuestDialogContract {
 		this.movieContinuationExceptions = movieContinuationExceptions;
 	}
 
+	public Map<Integer, String> pagesForQuest(int questId) {
+		return buttonPages.getOrDefault(questId, Map.of());
+	}
+
 	public static QuestDialogContract empty() {
 		return EMPTY;
 	}

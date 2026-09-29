@@ -168,7 +168,7 @@ public final class RetailDataDrivenDefinitionCompiler {
 		// mixed-chain compilers share this predicate.
 		boolean selectNoneLadder = clientDialogExits.requires(entry.questId(),
 			RetailClientDialogExits.SELECT_NONE_1);
-		if (entry.allTalk() && clientTalkChainPages.find(entry.questId())
+		if (entry.allTalk() && clientTalkChainPages.find(entry.questId(), true)
 				.map(pages -> pages.stageLadders().size() < entry.talkSteps().size()).orElse(true)) {
 			// P5-3 wave B：链式信件登记缺失或阶段页不足（select_none_1 二页接取等变体）→ 如实拒绝。
 			// Wave B: missing chain-letter registry or too few stage pages stay deferred.
@@ -490,7 +490,7 @@ public final class RetailDataDrivenDefinitionCompiler {
 					}
 					stepNpcs.add(ids.iterator().next());
 				}
-				var chain = clientTalkChainPages.find(entry.questId()).orElseThrow();
+				var chain = clientTalkChainPages.find(entry.questId(), true).orElseThrow();
 				definition = RetailDataDrivenTalkCompiler.buildChain(entry.questId(), acquiredNpc, rewardNpc,
 					metadata.metadata(), chain.entryPage(), chain.stageLadders(), stepNpcs,
 					clientSummaryRows.lastRowIndex(entry.questId()), acquireCategory, acquireParam,

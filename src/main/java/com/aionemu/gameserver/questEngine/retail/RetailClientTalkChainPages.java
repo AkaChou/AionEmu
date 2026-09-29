@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import com.aionemu.gameserver.questEngine.definition.QuestDialogContract;
 
 /**
  * 客户端「链式信件」登记（只读内存视图）。
@@ -32,6 +33,9 @@ public final class RetailClientTalkChainPages {
 	record Stage(int advanceActionId, List<Integer> ladder) {
 	}
 
+	private static final List<Integer> STEP_PAGE_HEADS = List.of(
+		1011, 1352, 1693, 2034, 2375, 2716, 3057, 3398, 3739, 4080, 6500, 6841, 7182, 7523);
+
 	/**
 	 * 一个任务的链式信件页。 / The chain letter pages of one quest.
 	 *
@@ -40,13 +44,15 @@ public final class RetailClientTalkChainPages {
 	record Pages(int entryPage, List<Stage> stageLadders) {
 	}
 
-	private static final RetailClientTalkChainPages DEFAULT = new RetailClientTalkChainPages(buildDefaultEntries());
-	private static final RetailClientTalkChainPages EMPTY = new RetailClientTalkChainPages(Map.of());
+	private static final RetailClientTalkChainPages DEFAULT = new RetailClientTalkChainPages(buildDefaultEntries(), true);
+	private static final RetailClientTalkChainPages EMPTY = new RetailClientTalkChainPages(Map.of(), false);
 
 	private final Map<Integer, Pages> entries;
+	private final boolean allowContractFallback;
 
-	private RetailClientTalkChainPages(Map<Integer, Pages> entries) {
+	private RetailClientTalkChainPages(Map<Integer, Pages> entries, boolean allowContractFallback) {
 		this.entries = Map.copyOf(entries);
+		this.allowContractFallback = allowContractFallback;
 	}
 
 	/** 缺省规范链式信件页梯登记（退役后生产通道）。 / Default canonical talk chain pages registry. */
@@ -89,12 +95,58 @@ public final class RetailClientTalkChainPages {
 		} catch (RuntimeException e) {
 			throw new IOException("failed to parse client talk chain page registry", e);
 		}
-		return new RetailClientTalkChainPages(entries);
+		return new RetailClientTalkChainPages(entries, false);
 	}
 
 	/** 该任务的链式信件页梯（未登记为空）。 / The chain letter page ladders, empty when unregistered. */
 	public Optional<Pages> find(int questId) {
-		return Optional.ofNullable(entries.get(questId));
+		return find(questId, false);
+	}
+
+	public Optional<Pages> find(int questId, boolean allowDerive) {
+		Pages existing = entries.get(questId);
+		if (existing != null) {
+			return Optional.of(existing);
+		}
+		if (!allowContractFallback || !allowDerive) {
+			return Optional.empty();
+		}
+		return deriveFromContract(questId);
+	}
+
+	private static Optional<Pages> deriveFromContract(int questId) {
+		QuestDialogContract contract = QuestDialogContract.loadDefault();
+		Map<Integer, String> pages = contract.pagesForQuest(questId);
+		if (pages.isEmpty()) {
+			return Optional.empty();
+		}
+		List<Stage> stages = new ArrayList<>();
+		for (int step = 0; step < STEP_PAGE_HEADS.size(); step++) {
+			int head = STEP_PAGE_HEADS.get(step);
+			String headName = pages.get(head);
+			if (headName == null) {
+				break;
+			}
+			List<Integer> ladder = new ArrayList<>();
+			ladder.add(head);
+			String prefix = headName + "_";
+			List<Integer> subpages = new ArrayList<>();
+			for (Map.Entry<Integer, String> entry : pages.entrySet()) {
+				if (entry.getValue().startsWith(prefix)) {
+					subpages.add(entry.getKey());
+				}
+			}
+			subpages.sort(Integer::compareTo);
+			ladder.addAll(subpages);
+			int advanceActionId = 10000 + step;
+			stages.add(new Stage(advanceActionId, List.copyOf(ladder)));
+		}
+		if (stages.isEmpty()) {
+			return Optional.empty();
+		}
+		Stage last = stages.get(stages.size() - 1);
+		stages.set(stages.size() - 1, new Stage(10255, last.ladder()));
+		return Optional.of(new Pages(4762, List.copyOf(stages)));
 	}
 
 	public int size() {

@@ -196,7 +196,7 @@ class RetailDataDrivenGateTest {
 			// accept/refuse, and the report/completion flows share the talkScope assembly.
 			boolean itemAcquireNoProgressScope = "itemplay".equalsIgnoreCase(entry.acquireCategory())
 				&& entry.noProgress();
-			boolean chainScope = talkAcquire && entry.allTalk();
+			boolean chainScope = (talkAcquire || systemAcquire) && entry.allTalk();
 			// 混合长尾切片 1：talk/hunt 交错行（块序混合链合成器）。
 			// Mixed-tail slice 1: talk/hunt interleave rows (the block-order mixed-chain compiler).
 			boolean talkHuntMixScope = talkAcquire && entry.stepCategories().stream().allMatch(
