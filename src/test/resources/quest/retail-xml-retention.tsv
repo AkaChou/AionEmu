@@ -523,7 +523,7 @@
 1873	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_PVP_GRID
 1874	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_PVP_GRID
 1875	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_PVP_GRID
-1876	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_TALK_CHAIN_DEFERRED	retail-simple-talk-drift.tsv / retail-data-driven-drift.tsv: talk-chain axis unimplemented for this shape
+1876	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_CHAIN
 1877	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_PVP_GRID
 1878	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_PVP_GRID
 1879	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_PVP_GRID
@@ -1154,7 +1154,7 @@
 2873	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_PVP_GRID
 2874	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_PVP_GRID
 2875	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_PVP_GRID
-2876	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_TALK_CHAIN_DEFERRED	retail-simple-talk-drift.tsv / retail-data-driven-drift.tsv: talk-chain axis unimplemented for this shape
+2876	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_CHAIN
 2877	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_PVP_GRID
 2878	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_PVP_GRID
 2879	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_PVP_GRID
@@ -2870,7 +2870,7 @@
 15335	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CANONICAL
 15400	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_CHAIN_CLIENT_ROWS
 15401	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_CHAIN
-15402	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_TALK_CHAIN_DEFERRED	retail-simple-talk-drift.tsv / retail-data-driven-drift.tsv: talk-chain axis unimplemented for this shape
+15402	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_CHAIN
 15403	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CANONICAL
 15404	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CANONICAL
 15405	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CANONICAL
@@ -3867,7 +3867,7 @@
 24261	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 24270	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 24275	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history retail-simple-hunt-adjudicated-decisions.tsv basis=CONFIRM_RANGE+KILL_VARIANT_UNREACHABLE+ACCEPT_FLOW_LEGACY+CLOSE_DIALOG_LEGACY
-25000	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_TALK_CHAIN_DEFERRED	retail-simple-talk-drift.tsv / retail-data-driven-drift.tsv: talk-chain axis unimplemented for this shape
+25000	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_CHAIN
 25001	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CANONICAL
 25002	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
 25010	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
@@ -3939,7 +3939,7 @@
 25335	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CANONICAL
 25400	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_CHAIN_CLIENT_ROWS
 25401	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_CHAIN
-25402	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_TALK_CHAIN_DEFERRED	retail-simple-talk-drift.tsv / retail-data-driven-drift.tsv: talk-chain axis unimplemented for this shape
+25402	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_CHAIN
 25403	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CANONICAL
 25404	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CANONICAL
 25405	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CANONICAL

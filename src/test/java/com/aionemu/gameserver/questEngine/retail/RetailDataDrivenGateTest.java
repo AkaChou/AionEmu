@@ -44,9 +44,9 @@ class RetailDataDrivenGateTest {
 	/** 冻结的家族规模。 / Frozen family size. */
 	private static final int FROZEN_FAMILY_SIZE = 1508; // 家族=（catalog∪retired)∩表，翻转只换 owner 不减员；并行会话家族表并入行当前解析器不可见（其解析器改动未落地），钉解析实况
 	/** 可驱动数量下限（三族混合链切片 + 25050/25082 curated 退回）。 / Floor for retail-drivable quests. */
-	private static final int ACCEPTED_FLOOR = 1073;
+	private static final int ACCEPTED_FLOOR = 1078;
 	/** 已退役子集冻结规模（P5-1..P5-4 + 混合链切片采纳批）。 / Retired subset frozen size (batches). */
-	private static final int FROZEN_RETIRED_SIZE = 1073;
+	private static final int FROZEN_RETIRED_SIZE = 1078;
 
 	/**
 	 * 暂缓采纳（编译可过但遗留合同测试仍锁定旧行为；逐条给出裁定理由，落定前保留 XML）。
@@ -405,6 +405,7 @@ class RetailDataDrivenGateTest {
 					.append('\n');
 			}
 			Files.writeString(Path.of(freezeOut), text.toString());
+			fingerprints = fingerprints();
 		}
 		List<String> problems = new ArrayList<>();
 		for (Map.Entry<Integer, String> entry : fingerprints.entrySet()) {

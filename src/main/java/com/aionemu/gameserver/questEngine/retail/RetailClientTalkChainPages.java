@@ -245,6 +245,14 @@ public final class RetailClientTalkChainPages {
 		m.put(3044, p16);
 		Pages p17 = new Pages(4762, List.of(new Stage(10001, List.of(1011, 1012))));
 		m.put(3056, p17);
+		Pages p18 = new Pages(4762, List.of(new Stage(10000, List.of(1352)), new Stage(10255, List.of(1352))));
+		m.put(1876, p18);
+		m.put(2876, p18);
+		Pages p19 = new Pages(4762, List.of(new Stage(10000, List.of(1352)), new Stage(10001, List.of(1693)), new Stage(10255, List.of(1693))));
+		m.put(25000, p19);
+		Pages p20 = new Pages(4762, List.of(new Stage(10000, List.of(1352, 1353)), new Stage(10001, List.of(1693, 1694)), new Stage(10255, List.of(1779))));
+		m.put(15402, p20);
+		m.put(25402, p20);
 		return Map.copyOf(m);
 	}
 }
