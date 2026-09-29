@@ -9,11 +9,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * 客户端报告模式登记（只读内存视图）。
+ * 客户端报告模式登记（原 {@code quest_client_use_item_report.tsv} 退役后转为动态测试资源流与规范视图）。
  * <p>
  * SimpleUseItem 的交付方式：CHECK = 交付物 HasItem 门控（5 个活动任务，交付物 = 用物品本体）；
- * REWARD = 1009 直接交付进领奖。该视图在 2026-09-28 退役 {@code quest_client_use_item_report.tsv}
- * 后转为内存静态视图。
+ * REWARD = 1009 直接交付进领奖。
  * <p>
  * In-memory view of the client report-mode registry for SimpleUseItem (retired TSV, in-memory view).
  */
@@ -28,46 +27,51 @@ public final class RetailClientUseItemReport {
 		REWARD
 	}
 
-	/** 5 个 CHECK 模式任务及其交付物 id（与退役前 TSV 逐项恒等）。 */
-	private static final Map<Integer, Integer> CHECK_ITEMS = Map.of(
-		80482, 182215419,
-		80486, 182215421,
-		80554, 182215444,
-		80558, 182215445,
-		80612, 182215579
-	);
-
-	private static final RetailClientUseItemReport DEFAULT =
-		new RetailClientUseItemReport(
-			Map.of(
-				80482, Mode.CHECK,
-				80486, Mode.CHECK,
-				80554, Mode.CHECK,
-				80558, Mode.CHECK,
-				80612, Mode.CHECK
-			),
-			CHECK_ITEMS
-		);
-
 	private static final RetailClientUseItemReport EMPTY =
 		new RetailClientUseItemReport(Map.of(), Map.of());
+	private static volatile RetailClientUseItemReport defaultInstance;
 
 	private final Map<Integer, Mode> modes;
 	private final Map<Integer, Integer> items;
 
 	private RetailClientUseItemReport(Map<Integer, Mode> modes, Map<Integer, Integer> items) {
-		this.modes = modes;
-		this.items = items;
+		this.modes = modes != null ? Map.copyOf(modes) : Map.of();
+		this.items = items != null ? Map.copyOf(items) : Map.of();
 	}
 
 	/** 缺省规范报告模式（退役后生产通道）。 / Default canonical report-mode registry. */
 	public static RetailClientUseItemReport defaultReport() {
-		return DEFAULT;
+		RetailClientUseItemReport instance = defaultInstance;
+		if (instance == null) {
+			synchronized (RetailClientUseItemReport.class) {
+				instance = defaultInstance;
+				if (instance == null) {
+					instance = decodeDefaultInstance();
+					defaultInstance = instance;
+				}
+			}
+		}
+		return instance;
 	}
 
 	/** 空登记（全部按 REWARD 处理）。 / Empty registry: everything is treated as REWARD. */
 	public static RetailClientUseItemReport empty() {
 		return EMPTY;
+	}
+
+	private static RetailClientUseItemReport decodeDefaultInstance() {
+		InputStream in = RetailClientUseItemReport.class.getResourceAsStream("/quest/quest_client_use_item_report.tsv");
+		if (in == null) {
+			in = RetailClientUseItemReport.class.getResourceAsStream("/aion/data/static_data/quest_retail/quest_client_use_item_report.tsv");
+		}
+		if (in == null) {
+			return EMPTY;
+		}
+		try (InputStream input = in) {
+			return load(input);
+		} catch (IOException e) {
+			return EMPTY;
+		}
 	}
 
 	/** 解析登记表（兼容方法；UTF-8 TSV；{@code #} 开头为注释）。 / Parses the registry TSV. */
