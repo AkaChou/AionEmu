@@ -54,9 +54,9 @@ class RetailSimpleUseItemGateTest {
 	/** 冻结的家族规模。 / Frozen family size. */
 	private static final int FROZEN_FAMILY_SIZE = 104;
 	/** 可驱动数量下限。 / Floor for retail-drivable quests. */
-	private static final int ACCEPTED_FLOOR = 102;
+	private static final int ACCEPTED_FLOOR = 104;
 	/** 已退役子集冻结规模（P3b 采纳子集退役）。 / Retired subset frozen size. */
-	private static final int FROZEN_RETIRED_SIZE = 102;
+	private static final int FROZEN_RETIRED_SIZE = 104;
 	private static final List<String> NPC_TEMPLATES = List.of(
 		"npc_template_200000_216188.xml", "npc_template_216189_235748.xml", "npc_template_235749_247606.xml",
 		"npc_template_247607_270057.xml", "npc_template_270058_286320.xml", "npc_template_286321_800030.xml",
@@ -237,11 +237,13 @@ class RetailSimpleUseItemGateTest {
 			|| !hasTargetlessDialog(definition, QuestDialogAction.FINISH_DIALOG.id(), QuestStatus.NONE)) {
 			problems.add(questId + ": 缺无目标拒绝/关窗路由（1003/1008）");
 		}
-		if (!hasReport(definition, row.rewardNpc())) {
-			problems.add(questId + ": 缺报告路由 npc=" + row.rewardNpc());
-		}
-		if (!hasComplete(definition, row.rewardNpc())) {
-			problems.add(questId + ": 缺完成分支 npc=" + row.rewardNpc());
+		for (int rewardNpc : row.rewardNpcs()) {
+			if (!hasReport(definition, rewardNpc)) {
+				problems.add(questId + ": 缺报告路由 npc=" + rewardNpc);
+			}
+			if (!hasComplete(definition, rewardNpc)) {
+				problems.add(questId + ": 缺完成分支 npc=" + rewardNpc);
+			}
 		}
 	}
 
@@ -378,19 +380,17 @@ class RetailSimpleUseItemGateTest {
 
 	/** 单任务真端编译上下文。 / Retail compile context for one quest row. */
 	private record RetailRow(RetailSimpleUseItemTable.Entry entry, QuestMetadata metadata, int acquiredNpc,
-			int rewardNpc, RetailSimpleUseItemDefinitionCompiler.Outcome outcome) {
+			Set<Integer> rewardNpcs, RetailSimpleUseItemDefinitionCompiler.Outcome outcome) {
 	}
 
 	private static RetailRow retailRow(int questId) {
 		RetailSimpleUseItemTable.Entry entry = table.find(questId).orElseThrow();
 		var metadata = RetailQuestMetadataCompiler.compile(retailTable.find(questId).orElseThrow(), npcIndex,
 			itemIndex, randomRewards, nameIds);
-		Set<Integer> reward = npcIndex.resolveAll(
-			List.of(entry.rewardNpc() == null ? "" : entry.rewardNpc())).npcIds();
+		Set<Integer> reward = npcIndex.resolvePartyName(entry.rewardNpc() == null ? "" : entry.rewardNpc());
 		var outcome = RetailSimpleUseItemDefinitionCompiler.compile(entry, itemIndex, npcIndex, metadata,
 			clientSummaryRows, clientReportModes, clientDialogExits);
-		return new RetailRow(entry, metadata.metadata(), -1,
-			reward.size() == 1 ? reward.iterator().next() : -1, outcome);
+		return new RetailRow(entry, metadata.metadata(), -1, reward, outcome);
 	}
 
 	/** 真端表 ∩ 生产宇宙。 / Retail table intersected with the production universe. */

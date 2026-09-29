@@ -4808,10 +4808,10 @@
 30717	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 30718	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history retail-simple-hunt-adjudicated-decisions.tsv basis=RETAIL_REWARD_CONFIRM_RANGE
 30719	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
-30720	XML_RETENTION	SimpleUseItem	ADJUDICATED:RETAIL_REWARD_NPC_NPC_UNRESOLVED	reward npc unresolved server-side (use-item family)
+30720	RETAIL_TABLE	SimpleUseItem	OK	retired-xml-in-git-history p3b-use-item-decisions.tsv basis=USE_ITEM_CANONICAL
 30721	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_TALK_HUNT_CHAIN_DEFERRED	retail-simple-talk-drift.tsv / retail-data-driven-drift.tsv: talk+hunt mixed-chain axis unimplemented for this shape (ladder/stage deficit)
 30722	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_REWARD_NPC_UNRESOLVED	reward npc unresolved server-side
-30723	XML_RETENTION	SimpleUseItem	ADJUDICATED:RETAIL_REWARD_NPC_NPC_UNRESOLVED	reward npc unresolved server-side (use-item family)
+30723	RETAIL_TABLE	SimpleUseItem	OK	retired-xml-in-git-history p3b-use-item-decisions.tsv basis=USE_ITEM_CANONICAL
 30750	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf3c0,FUN_180caf640,FUN_180caf6c0,FUN_180caf740
 30751	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf3c0,FUN_180caf640,FUN_180caf6c0,FUN_180caf740
 30752	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history retail-simple-hunt-adjudicated-decisions.tsv basis=BRIEFING_STEP

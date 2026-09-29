@@ -25,6 +25,7 @@ import com.aionemu.gameserver.questEngine.definition.QuestTransition;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -111,14 +112,11 @@ public final class RetailSimpleUseItemDefinitionCompiler {
 		if (resolveItemId(entry, itemIndex) == null) {
 			return new Outcome(null, "RETAIL_USE_ITEM_UNRESOLVED", entry.useItemName());
 		}
-		Set<Integer> ids = npcIndex.resolveAll(List.of(entry.rewardNpc() == null ? "" : entry.rewardNpc())).npcIds();
-		if (ids.size() == 1) {
+		Set<Integer> ids = npcIndex.resolvePartyName(entry.rewardNpc() == null ? "" : entry.rewardNpc());
+		if (!ids.isEmpty()) {
 			return null;
 		}
 		String raw = entry.rewardNpc() == null ? "" : entry.rewardNpc().trim();
-		if (ids.size() > 1) {
-			return new Outcome(null, "RETAIL_REWARD_NPC_AMBIGUOUS", raw + " -> " + ids);
-		}
 		String kind = raw.length() > 2 && raw.startsWith("_") && raw.endsWith("_")
 			? "_NPC_SENTINEL" : "_NPC_UNRESOLVED";
 		return new Outcome(null, "RETAIL_REWARD_NPC" + kind, raw);
@@ -149,7 +147,7 @@ public final class RetailSimpleUseItemDefinitionCompiler {
 			RetailClientUseItemReport reportModes) {
 		int questId = entry.questId();
 		int useItemId = resolveItemId(entry, itemIndex);
-		int rewardNpc = npcIndex.resolveAll(List.of(entry.rewardNpc())).npcIds().iterator().next();
+		Set<Integer> rewardNpcs = npcIndex.resolvePartyName(entry.rewardNpc() == null ? "" : entry.rewardNpc());
 		boolean checkHandIn = reportModes.mode(questId) == RetailClientUseItemReport.Mode.CHECK
 			&& reportModes.checkItemId(questId) > 0;
 		int checkItemId = checkHandIn ? reportModes.checkItemId(questId) : useItemId;
@@ -200,28 +198,30 @@ public final class RetailSimpleUseItemDefinitionCompiler {
 		int rewardWindowPage = QuestDialogPage.rewardWindowForTier(metadata.rewardGroups().size() - 1)
 			.orElseThrow(() -> new IllegalArgumentException(
 				"reward tiers exceed the six client reward windows: " + questId)).id();
-		QuestEvent.TalkToNpc deliver = new QuestEvent.TalkToNpc(rewardNpc,
-			QuestDialogAction.QUEST_SELECT.id());
-		if (checkHandIn) {
-			transitions.add(new QuestTransition(deliver,
-				List.of(new QuestCondition.HasItem(checkItemId, 1)),
-				List.of(new QuestAction.RemoveItem(checkItemId, 1)), "reward",
-				List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
-					new AfterCommitAction.ShowQuestDialog(rewardWindowPage)), null, "started"));
-		} else if (cakeEvent) {
-			// 真端工作物品门控蛋糕交付；SetVariable 保持领奖投影 = 客户端任务书末行（QE-051）。 /
-			// The retail work item gates the cake delivery; SetVariable keeps the reward projection
-			// on the last client journal row (QE-051).
-			transitions.add(new QuestTransition(deliver,
-				List.of(new QuestCondition.HasItem(useItemId, 1)),
-				List.of(new QuestAction.RemoveItem(useItemId, 1), new QuestAction.SetVariable("var0", 1)),
-				"reward",
-				List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
-					new AfterCommitAction.ShowQuestDialog(rewardWindowPage)), null, "started"));
-		} else {
-			transitions.add(new QuestTransition(deliver, List.of(), List.of(), "reward",
-				List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
-					new AfterCommitAction.ShowQuestDialog(rewardWindowPage)), null, "started"));
+		for (int rewardNpc : rewardNpcs) {
+			QuestEvent.TalkToNpc deliver = new QuestEvent.TalkToNpc(rewardNpc,
+				QuestDialogAction.QUEST_SELECT.id());
+			if (checkHandIn) {
+				transitions.add(new QuestTransition(deliver,
+					List.of(new QuestCondition.HasItem(checkItemId, 1)),
+					List.of(new QuestAction.RemoveItem(checkItemId, 1)), "reward",
+					List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
+						new AfterCommitAction.ShowQuestDialog(rewardWindowPage)), null, "started"));
+			} else if (cakeEvent) {
+				// 真端工作物品门控蛋糕交付；SetVariable 保持领奖投影 = 客户端任务书末行（QE-051）。 /
+				// The retail work item gates the cake delivery; SetVariable keeps the reward projection
+				// on the last client journal row (QE-051).
+				transitions.add(new QuestTransition(deliver,
+					List.of(new QuestCondition.HasItem(useItemId, 1)),
+					List.of(new QuestAction.RemoveItem(useItemId, 1), new QuestAction.SetVariable("var0", 1)),
+					"reward",
+					List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
+						new AfterCommitAction.ShowQuestDialog(rewardWindowPage)), null, "started"));
+			} else {
+				transitions.add(new QuestTransition(deliver, List.of(), List.of(), "reward",
+					List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
+						new AfterCommitAction.ShowQuestDialog(rewardWindowPage)), null, "started"));
+			}
 		}
 		// 掉落箱对象：开启箱体掉落任务物品，需要 START 态的 ACTION_ITEM_USE 路由
 		// （QuestInteractionObjectValidator 合同）；同时登记 TALK 路由使对象成为任务目标。
@@ -235,8 +235,10 @@ public final class RetailSimpleUseItemDefinitionCompiler {
 			transitions.add(new QuestTransition(new QuestEvent.CanAct(dropNpc, "ACTION_ITEM_USE"), List.of(),
 				List.of(), "started", List.of(), null, "started"));
 		}
-		transitions.addAll(previewFlow(rewardNpc));
-		transitions.addAll(completeFlow(metadata, rewardNpc));
+		for (int rewardNpc : rewardNpcs) {
+			transitions.addAll(previewFlow(rewardNpc));
+		}
+		transitions.addAll(completeFlow(metadata, rewardNpcs));
 		transitions.addAll(journalRowRepair(rewardRow.get("var0")));
 		if (cakeEvent) {
 			// 活动关闭后升级即弃任，避免旧活动任务继续领奖。 /
@@ -265,7 +267,7 @@ public final class RetailSimpleUseItemDefinitionCompiler {
 	 * + NOREWARD 收尾，确认区间 8..23。
 	 * The canonical completion flow over the 8..23 confirm range.
 	 */
-	private static List<QuestTransition> completeFlow(QuestMetadata metadata, int rewardNpc) {
+	private static List<QuestTransition> completeFlow(QuestMetadata metadata, Collection<Integer> rewardNpcs) {
 		if (metadata.rewardGroups().size() > 1) {
 			throw new IllegalArgumentException("multi-tier rewards not supported: "
 				+ metadata.rewardGroups().size() + " groups");
@@ -286,24 +288,26 @@ public final class RetailSimpleUseItemDefinitionCompiler {
 		for (int id = FIRST_CONFIRM_ACTION; id <= LAST_CONFIRM_ACTION; id++) {
 			confirmActions.add(QuestDialogAction.fromId(id));
 		}
-		for (QuestDialogAction action : confirmActions) {
-			int selectableIndex = action.id() - FIRST_CONFIRM_ACTION;
-			List<QuestAction> actions = new ArrayList<>(fixedRewards);
-			if (action != QuestDialogAction.SELECTED_QUEST_NOREWARD && selectableIndex < selectables.size()) {
-				actions.add(grant(selectables.get(selectableIndex)));
+		for (int rewardNpc : rewardNpcs) {
+			for (QuestDialogAction action : confirmActions) {
+				int selectableIndex = action.id() - FIRST_CONFIRM_ACTION;
+				List<QuestAction> actions = new ArrayList<>(fixedRewards);
+				if (action != QuestDialogAction.SELECTED_QUEST_NOREWARD && selectableIndex < selectables.size()) {
+					actions.add(grant(selectables.get(selectableIndex)));
+				}
+				actions.add(new QuestAction.CompleteQuest(0));
+				flow.add(new QuestTransition(new QuestEvent.TalkToNpc(rewardNpc, action.id()), List.of(),
+					List.copyOf(actions), "complete",
+					List.of(new AfterCommitAction.RefreshPlayerStats(),
+						new AfterCommitAction.SyncQuestState(QuestStateSyncMode.COMPLETION),
+						new AfterCommitAction.ShowQuestSelectionDialog(10)),
+					null, "reward"));
 			}
-			actions.add(new QuestAction.CompleteQuest(0));
-			flow.add(new QuestTransition(new QuestEvent.TalkToNpc(rewardNpc, action.id()), List.of(),
-				List.copyOf(actions), "complete",
-				List.of(new AfterCommitAction.RefreshPlayerStats(),
-					new AfterCommitAction.SyncQuestState(QuestStateSyncMode.COMPLETION),
-					new AfterCommitAction.ShowQuestSelectionDialog(10)),
-				null, "reward"));
 		}
 		// 奖励窗口自动确认通道（108 / 110+i，双协议注册 + CloseDialog 收窗）与对话页确认通道并行。
 		// The reward-window auto-confirm channel (108 / 110+i, dual-protocol registration with
 		// CloseDialog) runs alongside the talk-page confirm channel.
-		flow.addAll(RetailSimpleHuntDefinitionCompiler.rewardWindowAutoFlow(rewardNpc, fixedRewards,
+		flow.addAll(RetailSimpleHuntDefinitionCompiler.rewardWindowAutoFlow(rewardNpcs, fixedRewards,
 			selectables, metadata.classRewards(), "reward", "complete"));
 		return List.copyOf(flow);
 	}
