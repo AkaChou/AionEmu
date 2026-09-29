@@ -301,6 +301,10 @@ class RetailSimpleTalkGateTest {
 			inspectChain(questId, row, problems);
 			return;
 		}
+		if (!row.entry().singleStep()) {
+			inspectCanonicalChain(questId, row, problems);
+			return;
+		}
 		QuestDefinition definition = row.outcome().definition().definition();
 		if (definition.progressLayout().fields().size() != 1
 			|| !"var0".equals(definition.progressLayout().fields().get(0).name())) {
@@ -369,6 +373,69 @@ class RetailSimpleTalkGateTest {
 		if (row.rewardNpcs().isEmpty()) {
 			problems.add(questId + ": 无交付 NPC 集");
 		}
+	}
+
+	private static void inspectCanonicalChain(int questId, RetailRow row, List<String> problems) {
+		QuestDefinition definition = row.outcome().definition().definition();
+		if (definition.progressLayout().fields().size() != 1
+			|| !"var0".equals(definition.progressLayout().fields().get(0).name())) {
+			problems.add(questId + ": 进度域应为单一 var0，实际 " + definition.progressLayout().fields());
+		}
+		int clientRows = clientSummaryRows.rows(questId);
+		if (clientRows <= 0) {
+			problems.add(questId + ": 客户端任务书行数未登记（REWARD 投影无来源）");
+		}
+		Set<QuestStatus> statuses = new LinkedHashSet<>();
+		int m = row.entry().talkNpcs().size();
+		int expectedRewardRow = clientSummaryRows.rows(questId) > 0
+			? clientSummaryRows.lastRowIndex(questId) : m;
+		for (QuestNode node : definition.nodes()) {
+			statuses.add(node.projection().status());
+			Integer var0 = node.projection().variables().get("var0");
+			int expected = switch (node.label()) {
+				case "unaccepted", "started", "complete" -> 0;
+				case "reward" -> expectedRewardRow;
+				default -> {
+					if (node.label().startsWith("step")) {
+						yield Integer.parseInt(node.label().substring("step".length()));
+					}
+					yield -1;
+				}
+			};
+			if (var0 == null || var0.intValue() != expected) {
+				problems.add(questId + ": 节点 " + node.label() + " 投影 var0=" + var0
+					+ "，期望 " + expected);
+			}
+		}
+		if (!statuses.equals(Set.of(QuestStatus.NONE, QuestStatus.START, QuestStatus.REWARD,
+			QuestStatus.COMPLETE))) {
+			problems.add(questId + ": 节点状态集合异常 " + statuses);
+		}
+		if (row.entry().grantKind().systemGrant()) {
+			if (!hasSystemGrant(definition)) {
+				problems.add(questId + ": 系统发放行缺 SystemGrant 边");
+			}
+		} else {
+			if (!hasAccept(definition, row.acquiredNpc())) {
+				problems.add(questId + ": 缺接取路由 npc=" + row.acquiredNpc());
+			}
+		}
+		for (int rewardNpc : row.rewardNpcs()) {
+			if (!hasCanonicalDeliveryFromStep(definition, rewardNpc, "step" + m)) {
+				problems.add(questId + ": 交付路由不合规范形 npc=" + rewardNpc);
+			}
+			if (!hasComplete(definition, rewardNpc)) {
+				problems.add(questId + ": 缺完成分支 npc=" + rewardNpc);
+			}
+		}
+	}
+
+	private static boolean hasCanonicalDeliveryFromStep(QuestDefinition definition, int npcId, String sourceNode) {
+		return definition.transitions().stream().anyMatch(transition ->
+			transition.event() instanceof QuestEvent.TalkToNpc talk
+				&& talk.npcId() == npcId && isAction(talk, QuestDialogAction.QUEST_SELECT)
+				&& sourceNode.equals(transition.sourceNode())
+				&& "reward".equals(transition.targetNode()));
 	}
 
 	/** 任一接取/续页路由（系统发放行都不允许有）。 / Any accept or continuation route. */

@@ -34,6 +34,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -109,8 +110,11 @@ public final class RetailSimpleTalkDefinitionCompiler {
 		}
 		try {
 			QuestDefinition definition = !entry.singleStep()
-				? buildChain(entry, index, chainSteps, metadata.metadata(), exits, interactionObjects,
-				clientRewardNpcs)
+				? (chainSteps.has(entry.questId())
+					? buildChain(entry, index, chainSteps, metadata.metadata(), exits, interactionObjects,
+						clientRewardNpcs)
+					: buildCanonicalChain(entry, index, metadata.metadata(), summaryRows,
+						clientRewardNpcs, interactionObjects))
 				: build(entry, index, metadata.metadata(), summaryRows, clientRewardNpcs,
 					interactionObjects);
 			return new Outcome(QuestDefinitionCompiler.compile(definition), null, null);
@@ -164,9 +168,13 @@ public final class RetailSimpleTalkDefinitionCompiler {
 				// wave B（P0c-10h）：物品轴复合行若已被登记表逐字转写（路由在案）则放行——
 				// 登记表是转写事实源；cutscene / con_quest 行不在册，维持拒绝留独立裁定波。
 				// Wave-B: item-axis rows covered by the registry proceed; cutscene/con_quest stay out.
+				if (chainSteps.has(entry.questId())) {
 				boolean registryCovered = chainSteps.has(entry.questId())
 					&& !chainSteps.routes(entry.questId()).isEmpty();
 				if (!registryCovered) {
+					return new Outcome(null, "RETAIL_TALK_CHAIN_COMPOUND", "talk=" + entry.talkNpcs());
+				}
+				} else {
 					return new Outcome(null, "RETAIL_TALK_CHAIN_COMPOUND", "talk=" + entry.talkNpcs());
 				}
 			}
@@ -185,11 +193,12 @@ public final class RetailSimpleTalkDefinitionCompiler {
 				// P0c-10h B-7：系统发放链行合法（npc-start 块不再合成接取流，unaccepted 源路由
 				// 在 buildChain 剔除——P0c-2 形状合同）。
 			} else if (!entry.grantKind().systemGrant() && !canonicalStart && !acceptEntrance) {
-				return new Outcome(null, "RETAIL_TALK_CHAIN_NO_START", "no NPC_START block recorded");
+				if (chainSteps.has(entry.questId())) {
+					return new Outcome(null, "RETAIL_TALK_CHAIN_NO_START", "no NPC_START block recorded");
+				}
 			}
 			if (!chainSteps.has(entry.questId()) && !canonicalStart) {
-				return new Outcome(null, "RETAIL_TALK_CHAIN_NO_ROUTES",
-					String.join(",", entry.talkNpcs()));
+				// 登记表未登记的多步任务放行走真端规范对话链合成 (buildCanonicalChain)
 			}
 			return null;
 		}
@@ -399,6 +408,140 @@ public final class RetailSimpleTalkDefinitionCompiler {
 				List.of(new QuestAction.SetVariable("var0", heal.rewardRow())), "reward",
 				List.of(new AfterCommitAction.SyncQuestState(
 					QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH)), null, null));
+		}
+		return new QuestDefinition(entry.questId(), 1, metadata, layout, List.copyOf(nodes),
+			List.copyOf(transitions));
+	}
+
+	/**
+	 * 真端多步对话链规范生命周期合成（Canonical Talk Chain）：
+	 * 彻底废弃微观页码阶梯与 TSV 逐字转写，按真端规范模型驱动：
+	 * unaccepted → started (接取窗直发) → step1..stepM (对话推进 var0) → reward (分档奖励窗) → complete。
+	 */
+	private static QuestDefinition buildCanonicalChain(RetailSimpleTalkTable.Entry entry, RetailNpcNameIndex index,
+			QuestMetadata metadata, RetailClientSummaryRows summaryRows,
+			RetailClientRewardNpcs clientRewardNpcs, RetailQuestUseItemNpcs interactionObjects) {
+		boolean systemGrant = entry.grantKind().systemGrant()
+			&& entry.grantKind() != RetailGrantKind.CHALLENGE_TASK;
+		int acquiredNpc = systemGrant ? -1
+			: index.resolveAll(List.of(entry.grantKind() == RetailGrantKind.CHALLENGE_TASK
+				? entry.rewardNpc() : entry.acquiredNpc())).npcIds().iterator().next();
+		Set<Integer> resolvedReward = index.resolveAll(List.of(entry.rewardNpc())).npcIds();
+		List<Integer> rewardNpcs = resolvedReward.size() == 1
+			? List.of(resolvedReward.iterator().next())
+			: clientRewardNpcs.rewardNpcs(entry.questId());
+		List<Integer> talkNpcIds = new ArrayList<>();
+		for (String talkNpc : entry.talkNpcs()) {
+			talkNpcIds.add(index.resolveAll(List.of(talkNpc)).npcIds().iterator().next());
+		}
+		int m = talkNpcIds.size();
+		ProgressLayout layout = new ProgressLayout.Builder()
+			.add(new BitField("var0", 0, RetailHuntCounterLayout.SECTION_BITS, 0,
+				RetailHuntCounterLayout.SECTION_MASK, PersistenceMode.PERSISTENT, ProgressScope.LOCAL))
+			.build();
+		int lastRowIndex = summaryRows.rows(entry.questId()) > 0
+			? summaryRows.lastRowIndex(entry.questId()) : m;
+		List<QuestNode> nodes = new ArrayList<>(m + 4);
+		nodes.add(new QuestNode("unaccepted", new NodeProjection(QuestStatus.NONE, Map.of("var0", 0))));
+		nodes.add(new QuestNode("started", new NodeProjection(QuestStatus.START, Map.of("var0", 0))));
+		for (int i = 1; i <= m; i++) {
+			nodes.add(new QuestNode("step" + i, new NodeProjection(QuestStatus.START, Map.of("var0", i))));
+		}
+		nodes.add(new QuestNode("reward", new NodeProjection(QuestStatus.REWARD, Map.of("var0", lastRowIndex))));
+		nodes.add(new QuestNode("complete", new NodeProjection(QuestStatus.COMPLETE, Map.of("var0", 0))));
+
+		List<QuestTransition> transitions = new ArrayList<>();
+		if (!systemGrant) {
+			transitions.addAll(attachMovieToRoute(RetailSimpleHuntDefinitionCompiler.canonicalAcceptFlow(
+				acquiredNpc, "started", acceptGiveItemActions(entry)), "unaccepted", acquiredNpc,
+				QuestDialogAction.QUEST_SELECT.id(),
+				entry.cutsceneTrigger() == QuestDialogAction.ASK_QUEST_ACCEPT.id()
+					? entry.cutsceneMovieId() : -1));
+		} else {
+			transitions.add(new QuestTransition(new QuestEvent.SystemGrant(),
+				List.of(new QuestCondition.StartEligible()), List.of(), "started",
+				List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.VISIBILITY_REFRESH)), null,
+				"unaccepted"));
+		}
+
+		for (int objectId : new TreeSet<>(metadata.drops().stream()
+				.map(QuestDrop::npcId)
+				.filter(interactionObjects::isInteractionObject)
+				.toList())) {
+			transitions.add(new QuestTransition(new QuestEvent.TalkToNpc(objectId), List.of(), List.of(),
+				"started", List.of(), null, "started"));
+			transitions.add(new QuestTransition(new QuestEvent.CanAct(objectId, "ACTION_ITEM_USE"), List.of(),
+				List.of(), "started", List.of(), null, "started"));
+		}
+
+		Optional<RetailClientTalkChainPages.Pages> chainPages =
+			RetailClientTalkChainPages.defaultTalkChainPages().find(entry.questId(), true);
+		for (int index_i = 0; index_i < m; index_i++) {
+			int npc = talkNpcIds.get(index_i);
+			String source = index_i == 0 ? "started" : "step" + index_i;
+			String target = "step" + (index_i + 1);
+
+			List<Integer> ladder;
+			if (chainPages.isPresent() && index_i < chainPages.get().stageLadders().size()) {
+				ladder = chainPages.get().stageLadders().get(index_i).ladder();
+			} else {
+				ladder = List.of(1011 + (index_i + 1) * 341);
+			}
+
+			transitions.add(talk(npc, QuestDialogAction.QUEST_SELECT, source, source, null,
+				List.of(new AfterCommitAction.ShowQuestDialog(ladder.get(0)))));
+			for (int depth = 1; depth < ladder.size(); depth++) {
+				transitions.add(new QuestTransition(
+					new QuestEvent.TalkToNpc(npc, QuestDialogAction.fromId(ladder.get(depth)).id()),
+					List.of(), List.of(), source,
+					List.of(new AfterCommitAction.ShowQuestDialog(ladder.get(depth))), null, source));
+			}
+
+			transitions.add(new QuestTransition(
+				new QuestEvent.TalkToNpc(npc, 10000 + index_i),
+				List.of(), List.of(new QuestAction.SetVariable("var0", index_i + 1)), target,
+				List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
+					new AfterCommitAction.CloseDialog()),
+				null, source));
+
+			transitions.add(new QuestTransition(
+				new QuestEvent.TalkToNpc(npc, QuestDialogAction.SET_SUCCEED.id()),
+				List.of(), List.of(new QuestAction.SetVariable("var0", index_i + 1)), target,
+				List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
+					new AfterCommitAction.CloseDialog()),
+				null, source));
+		}
+
+		for (int rewardNpc : rewardNpcs) {
+			List<QuestItemRequirement> handIn = List.of();
+			if (entry.itemCheck()) {
+				handIn = metadata.itemRequirements().isEmpty()
+					? List.of(workItemRequirement(entry)) : metadata.itemRequirements();
+			}
+			List<QuestCondition> hasItems = handIn.stream()
+				.<QuestCondition>map(item -> new QuestCondition.HasItem(item.itemId(), item.count())).toList();
+			List<QuestAction> removeItems = handIn.stream()
+				.<QuestAction>map(item -> new QuestAction.RemoveItem(item.itemId(), item.count())).toList();
+			int rewardWindowPage = RetailSimpleCollectItemDefinitionCompiler.deliveryWindowPage(metadata, entry.questId());
+			transitions.addAll(attachMovieToRoute(List.of(RetailSimpleCollectItemDefinitionCompiler
+				.canonicalDelivery(rewardNpc, hasItems, removeItems, rewardWindowPage, "step" + m)),
+				"step" + m, rewardNpc, QuestDialogAction.QUEST_SELECT.id(),
+				entry.cutsceneTrigger() == QuestDialogAction.SELECT_QUEST_REWARD.id()
+					? entry.cutsceneMovieId() : -1));
+			transitions.add(new QuestTransition(
+				new QuestEvent.TalkToNpc(rewardNpc, QuestDialogAction.QUEST_SELECT.id()),
+				List.of(), List.of(), "reward",
+				List.of(new AfterCommitAction.ShowQuestDialog(rewardWindowPage)), null, "reward"));
+			transitions.addAll(reportNpcExit(systemGrant, acquiredNpc, rewardNpc));
+		}
+		transitions.addAll(completeFlow(metadata, rewardNpcs));
+		if (lastRowIndex > 0) {
+			transitions.add(new QuestTransition(new QuestEvent.EnterWorld(),
+				List.of(new QuestCondition.StatusIs(QuestStatus.REWARD),
+					new QuestCondition.QuestVariableIs("var0", 0)),
+				List.of(new QuestAction.SetVariable("var0", lastRowIndex)), "reward",
+				List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH)),
+				null, null));
 		}
 		return new QuestDefinition(entry.questId(), 1, metadata, layout, List.copyOf(nodes),
 			List.copyOf(transitions));
