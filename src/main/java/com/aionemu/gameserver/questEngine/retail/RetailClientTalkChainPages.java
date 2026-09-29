@@ -13,12 +13,11 @@ import java.util.Optional;
 import com.aionemu.gameserver.questEngine.definition.QuestDialogContract;
 
 /**
- * 客户端「链式信件」登记（只读内存视图）。
+ * 客户端「链式信件」登记（原 {@code quest_client_talk_chain_pages.tsv} 退役后转为动态测试资源流与规范视图）。
  * <p>
  * 签名 = select_none（单页接取窗）+ select1..selectK 阶梯页（第 i 步对话页 = select{i}，
  * 按钮 = 中间步 SETPRO{i} / 末步 SET_SUCCEED）。DataDriven Talk 链行按本表接入口页与逐阶段页合成；
- * 登记缺失或阶段页不足 = 客户端词汇不在标准链形状内 → 按稳定码拒绝、保留 XML。
- * 2026-09-28 退役 {@code quest_client_talk_chain_pages.tsv} 后转为内存静态规范视图。
+ * 登记缺失或阶段页不足时，支持从客户端对话契约动态派生规范页梯。
  * <p>
  * In-memory view of the client chain-letter registry for DataDriven talk-chain rows.
  */
@@ -44,8 +43,8 @@ public final class RetailClientTalkChainPages {
 	record Pages(int entryPage, List<Stage> stageLadders) {
 	}
 
-	private static final RetailClientTalkChainPages DEFAULT = new RetailClientTalkChainPages(buildDefaultEntries(), true);
 	private static final RetailClientTalkChainPages EMPTY = new RetailClientTalkChainPages(Map.of(), false);
+	private static volatile RetailClientTalkChainPages defaultInstance;
 
 	private final Map<Integer, Pages> entries;
 	private final boolean allowContractFallback;
@@ -57,12 +56,38 @@ public final class RetailClientTalkChainPages {
 
 	/** 缺省规范链式信件页梯登记（退役后生产通道）。 / Default canonical talk chain pages registry. */
 	public static RetailClientTalkChainPages defaultTalkChainPages() {
-		return DEFAULT;
+		RetailClientTalkChainPages instance = defaultInstance;
+		if (instance == null) {
+			synchronized (RetailClientTalkChainPages.class) {
+				instance = defaultInstance;
+				if (instance == null) {
+					instance = decodeDefaultInstance();
+					defaultInstance = instance;
+				}
+			}
+		}
+		return instance;
 	}
 
 	/** 空登记（测试合成器用）。 / Empty registry for tests. */
 	public static RetailClientTalkChainPages empty() {
 		return EMPTY;
+	}
+
+	private static RetailClientTalkChainPages decodeDefaultInstance() {
+		InputStream in = RetailClientTalkChainPages.class.getResourceAsStream("/quest/quest_client_talk_chain_pages.tsv");
+		if (in == null) {
+			in = RetailClientTalkChainPages.class.getResourceAsStream("/aion/data/static_data/quest_retail/quest_client_talk_chain_pages.tsv");
+		}
+		Map<Integer, Pages> entries = Map.of();
+		if (in != null) {
+			try (InputStream input = in) {
+				entries = load(input).entries;
+			} catch (IOException e) {
+				entries = Map.of();
+			}
+		}
+		return new RetailClientTalkChainPages(entries, true);
 	}
 
 	/** 解析登记表（UTF-8 TSV；{@code #} 注释行跳过）。 / Parses the registry TSV. */
@@ -151,31 +176,5 @@ public final class RetailClientTalkChainPages {
 
 	public int size() {
 		return entries.size();
-	}
-
-	private static Map<Integer, Pages> buildDefaultEntries() {
-		// 存量 Talk+Hunt 混合链过渡页梯（待战役 2 全面切入契约派生后退役）
-		Map<Integer, Pages> m = new HashMap<>();
-		Pages p0 = new Pages(4762, List.of(new Stage(10000, List.of(1011))));
-		m.put(13945, p0);
-		m.put(15101, p0);
-		m.put(16820, p0);
-		m.put(16835, p0);
-		m.put(18990, p0);
-		m.put(18992, p0);
-		m.put(18994, p0);
-		m.put(23945, p0);
-		m.put(26820, p0);
-		m.put(26835, p0);
-		m.put(28990, p0);
-		m.put(28992, p0);
-		m.put(28994, p0);
-		Pages p4 = new Pages(4762, List.of(new Stage(10000, List.of(1011)), new Stage(10001, List.of(1352))));
-		m.put(18996, p4);
-		m.put(28996, p4);
-		Pages p5 = new Pages(4762, List.of(new Stage(10000, List.of(1011, 1012, 1013)), new Stage(10001, List.of(1352, 1353, 1354))));
-		m.put(13950, p5);
-		m.put(23950, p5);
-		return Map.copyOf(m);
 	}
 }
