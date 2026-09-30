@@ -513,9 +513,9 @@
 1756	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
 1840	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
 1841	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
-1842	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_COUNTER_EXCEEDS_6BIT	client count exceeds the 6-bit SECTION field (fixed 6-bit layout invariant)
-1843	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_COUNTER_EXCEEDS_6BIT	client count exceeds the 6-bit SECTION field (fixed 6-bit layout invariant)
-1844	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_COUNTER_EXCEEDS_6BIT	client count exceeds the 6-bit SECTION field (fixed 6-bit layout invariant)
+1842	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
+1843	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
+1844	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
 1848	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 1851	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c10f-talk-chain-decisions.tsv basis=CHAIN_REPLAY
 1870	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_HANDIN_CANONICAL
@@ -693,7 +693,7 @@
 2227	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 2228	RETAIL_TABLE	SimpleUseItem	OK	retired-xml-in-git-history p3b-use-item-decisions.tsv basis=USE_ITEM_CANONICAL
 2230	XML_RETENTION	-	NO_TABLE	retail-none
-2231	XML_RETENTION	SimpleTalk	ADJUDICATED:RETAIL_TALK_CHAIN	retail-simple-talk-drift.tsv / retail-data-driven-drift.tsv: deep chain shape divergence (drift-authoritative code)
+2231	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 2232	XML_RETENTION	-	NO_TABLE	retail-none
 2233	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history retail-simple-hunt-adjudicated-decisions.tsv basis=XML_ACCEPT_FLOW_DEVIATION
 2234	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history retail-simple-hunt-adjudicated-decisions.tsv basis=XML_ACCEPT_FLOW_DEVIATION
@@ -1124,7 +1124,7 @@
 2718	RETAIL_TABLE	SimpleUseItem	OK	retired-xml-in-git-history p3b-use-item-decisions.tsv basis=USE_ITEM_CANONICAL
 2721	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c10f-talk-chain-decisions.tsv basis=CHAIN_REPLAY
 2722	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf3c0,FUN_180caf640,FUN_180caf6c0,FUN_180caf740
-2724	XML_RETENTION	SimpleTalk	ADJUDICATED:RETAIL_TALK_CHAIN	retail-simple-talk-drift.tsv / retail-data-driven-drift.tsv: deep chain shape divergence (drift-authoritative code)
+2724	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 2725	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c10f-talk-chain-decisions.tsv basis=CHAIN_REPLAY
 2728	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 2729	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c10m-item-decisions.tsv basis=PROJECTION_QE051
@@ -1143,9 +1143,9 @@
 2767	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c10i-canonical-decisions.tsv basis=RETAIL_STAGE_CANONICAL
 2841	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
 2842	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
-2843	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_COUNTER_EXCEEDS_6BIT	client count exceeds the 6-bit SECTION field (fixed 6-bit layout invariant)
-2844	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_COUNTER_EXCEEDS_6BIT	client count exceeds the 6-bit SECTION field (fixed 6-bit layout invariant)
-2845	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_COUNTER_EXCEEDS_6BIT	client count exceeds the 6-bit SECTION field (fixed 6-bit layout invariant)
+2843	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
+2844	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
+2845	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
 2849	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 2852	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_PVP_GRID
 2869	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history basis=DD_HUNT_PROGRESS_CLIENT_NAMES
@@ -2503,8 +2503,8 @@
 11071	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
 11072	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c10i-canonical-decisions.tsv basis=RETAIL_STAGE_CANONICAL
 11073	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
-11074	XML_RETENTION	SimpleTalk	ADJUDICATED:RETAIL_TALK_CUTSCENE	retail-simple-talk-drift.tsv / retail-data-driven-drift.tsv: cutscene-axis row (P0c-10k/10n metadata-isolated form)
-11075	XML_RETENTION	SimpleTalk	ADJUDICATED:RETAIL_TALK_CUTSCENE	retail-simple-talk-drift.tsv / retail-data-driven-drift.tsv: cutscene-axis row (P0c-10k/10n metadata-isolated form)
+11074	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
+11075	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 11076	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf3c0,FUN_180caf640,FUN_180caf6c0,FUN_180caf740
 11077	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c10i-canonical-decisions.tsv basis=RETAIL_STAGE_CANONICAL
 11100	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history retail-simple-hunt-adjudicated-decisions.tsv basis=RETAIL_REWARD_CONFIRM_RANGE
@@ -3114,13 +3114,13 @@
 16941	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
 16942	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CHAIN
 16960	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history retail-simple-hunt-adjudicated-decisions.tsv basis=BRIEFING_STEP
-16961	XML_RETENTION	SimpleHunt	ADJUDICATED:XML_EXTRA_REWARD	legacy XML carries extra client-journal-named reward the retail table lacks (RETAIL_TABLE_GAPS class)
+16961	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
 16962	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
 16974	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history basis=DD_HUNT_PROGRESS_CLIENT_NAMES
 16975	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p0c56-item-acquire-decisions.tsv basis=DD_ITEMPLAY_ACQUIRE
 16976	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CHAIN
 16977	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CANONICAL
-16979	XML_RETENTION	SimpleTalk	ADJUDICATED:RETAIL_TALK_CUTSCENE	retail-simple-talk-drift.tsv / retail-data-driven-drift.tsv: cutscene-axis row (P0c-10k/10n metadata-isolated form)
+16979	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 16984	XML_RETENTION	-	NO_TABLE	retail-none
 16985	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CHAIN
 16986	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
@@ -3338,7 +3338,7 @@
 18800	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 18801	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 18802	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c21-prereq-bucket-decisions.tsv basis=M3D_DOWNGRADE_REVERSED
-18805	XML_RETENTION	SimpleTalk	ADJUDICATED:RETAIL_TALK_CHAIN	retail-simple-talk-drift.tsv / retail-data-driven-drift.tsv: deep chain shape divergence (drift-authoritative code)
+18805	XML_RETENTION	SimpleTalk	ADJUDICATED:RETAIL_TALK_CHAIN	entry.talkNpcs() > 1 (chained talk ladder)
 18806	XML_RETENTION	SimpleTalk	ADJUDICATED:RETAIL_ACQUIRE_NPC_UNRESOLVED	b1-acquire-sentinel/b1_forensics.tsv acquire npc unresolved: name absent from this server's npc_name_index
 18807	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c39-canonical-adoption-decisions.tsv basis=CANONICAL_ITEM_CHANNEL
 18808	XML_RETENTION	SimpleTalk	ADJUDICATED:RETAIL_REWARD_NPC_UNRESOLVED	reward npc unresolved server-side
@@ -3364,7 +3364,7 @@
 18829	XML_RETENTION	SimpleTalk	ADJUDICATED:RETAIL_ACQUIRE_NPC_UNRESOLVED	b1-acquire-sentinel/b1_forensics.tsv acquire npc unresolved: name absent from this server's npc_name_index
 18830	XML_RETENTION	SimpleTalk	ADJUDICATED:RETAIL_TALK_NPC_UNRESOLVED	retail-simple-talk-drift.tsv / retail-data-driven-drift.tsv: talk npc unresolved server-side
 18831	XML_RETENTION	SimpleTalk	ADJUDICATED:RETAIL_REWARD_NPC_UNRESOLVED	reward npc unresolved server-side
-18832	XML_RETENTION	SimpleTalk	ADJUDICATED:RETAIL_TALK_CUTSCENE	retail-simple-talk-drift.tsv / retail-data-driven-drift.tsv: cutscene-axis row (P0c-10k/10n metadata-isolated form)
+18832	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 18833	RETAIL_TABLE	SimpleUseItem	OK	retired-xml-in-git-history p3b-use-item-decisions.tsv basis=USE_ITEM_CANONICAL
 18834	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 18835	RETAIL_TABLE	SimpleUseItem	OK	retired-xml-in-git-history p3b-use-item-decisions.tsv basis=USE_ITEM_CANONICAL
@@ -4188,7 +4188,7 @@
 26975	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p0c56-item-acquire-decisions.tsv basis=DD_ITEMPLAY_ACQUIRE
 26976	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CHAIN
 26977	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CANONICAL
-26979	XML_RETENTION	SimpleTalk	ADJUDICATED:RETAIL_TALK_CUTSCENE	retail-simple-talk-drift.tsv / retail-data-driven-drift.tsv: cutscene-axis row (P0c-10k/10n metadata-isolated form)
+26979	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 26984	XML_RETENTION	-	NO_TABLE	retail-none
 26985	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CHAIN
 26986	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
@@ -4405,7 +4405,7 @@
 28800	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c20-28800-adjudication.tsv basis=M3D_DOWNGRADE_REVERSED
 28801	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 28802	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c21-prereq-bucket-decisions.tsv basis=M3D_DOWNGRADE_REVERSED
-28805	XML_RETENTION	SimpleTalk	ADJUDICATED:RETAIL_TALK_CHAIN	retail-simple-talk-drift.tsv / retail-data-driven-drift.tsv: deep chain shape divergence (drift-authoritative code)
+28805	XML_RETENTION	SimpleTalk	ADJUDICATED:RETAIL_TALK_CHAIN	entry.talkNpcs() > 1 (chained talk ladder)
 28806	XML_RETENTION	SimpleTalk	ADJUDICATED:RETAIL_ACQUIRE_NPC_UNRESOLVED	b1-acquire-sentinel/b1_forensics.tsv acquire npc unresolved: name absent from this server's npc_name_index
 28807	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c39-canonical-adoption-decisions.tsv basis=CANONICAL_ITEM_CHANNEL
 28808	XML_RETENTION	SimpleTalk	ADJUDICATED:RETAIL_REWARD_NPC_UNRESOLVED	reward npc unresolved server-side
@@ -4431,7 +4431,7 @@
 28829	XML_RETENTION	SimpleTalk	ADJUDICATED:RETAIL_ACQUIRE_NPC_UNRESOLVED	b1-acquire-sentinel/b1_forensics.tsv acquire npc unresolved: name absent from this server's npc_name_index
 28830	XML_RETENTION	SimpleTalk	ADJUDICATED:RETAIL_TALK_NPC_UNRESOLVED	retail-simple-talk-drift.tsv / retail-data-driven-drift.tsv: talk npc unresolved server-side
 28831	XML_RETENTION	SimpleTalk	ADJUDICATED:RETAIL_REWARD_NPC_UNRESOLVED	reward npc unresolved server-side
-28832	XML_RETENTION	SimpleTalk	ADJUDICATED:RETAIL_TALK_CUTSCENE	retail-simple-talk-drift.tsv / retail-data-driven-drift.tsv: cutscene-axis row (P0c-10k/10n metadata-isolated form)
+28832	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 28833	RETAIL_TABLE	SimpleUseItem	OK	retired-xml-in-git-history p3b-use-item-decisions.tsv basis=USE_ITEM_CANONICAL
 28834	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 28835	RETAIL_TABLE	SimpleUseItem	OK	retired-xml-in-git-history p3b-use-item-decisions.tsv basis=USE_ITEM_CANONICAL

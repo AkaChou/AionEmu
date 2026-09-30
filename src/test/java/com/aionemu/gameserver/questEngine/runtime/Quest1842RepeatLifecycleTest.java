@@ -16,11 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class Quest1842RepeatLifecycleTest {
 	@Test
 	void completedQuestCanRestartAndResetsBothKillCounters() throws Exception {
-		CompiledQuestDefinition definition;
-		try (InputStream input = Objects.requireNonNull(getClass().getResourceAsStream(
-			"/aion/data/static_data/quest/definitions/quests/1842.xml"))) {
-			definition = QuestDefinitionXmlCompiler.compile(input);
-		}
+		CompiledQuestDefinition definition = com.aionemu.gameserver.questEngine.definition.ProductionQuestDefinitions.definitionInOverlay(1842);
 		QuestEvent event = new QuestEvent.TalkToNpc(805430, 1002);
 		var transition = definition.definition().transitions().stream()
 			.filter(candidate -> candidate.sourceNode().equals("unaccepted"))

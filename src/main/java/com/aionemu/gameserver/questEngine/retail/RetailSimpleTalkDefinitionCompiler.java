@@ -137,7 +137,7 @@ public final class RetailSimpleTalkDefinitionCompiler {
 			if (entry.questId() == 19070 || entry.questId() == 19071) {
 				return new Outcome(null, "RETAIL_TALK_CHAIN_NO_START", "no NPC_START block recorded");
 			}
-			if (Set.of(2231, 2724, 18805, 28805).contains(entry.questId())) {
+			if (entry.questId() == 18805 || entry.questId() == 28805) {
 				return new Outcome(null, "COMPILATION_FAILED", "legacy XML drift");
 			}
 			return null;
@@ -150,11 +150,10 @@ public final class RetailSimpleTalkDefinitionCompiler {
 			}
 		}
 		if (entry.cutscene()) {
-			boolean grantable = entry.singleStep() && !entry.removesItem() && entry.giveItemSymbol() != null;
 			int trigger = entry.cutsceneTrigger();
-			boolean supported = grantable && (trigger == QuestDialogAction.SELECT_QUEST_REWARD.id()
+			boolean supported = entry.singleStep() && !entry.removesItem() && (trigger == QuestDialogAction.SELECT_QUEST_REWARD.id()
 				? !entry.itemCheck()
-				: trigger == QuestDialogAction.ASK_QUEST_ACCEPT.id());
+				: (trigger == QuestDialogAction.ASK_QUEST_ACCEPT.id() || trigger == QuestDialogAction.QUEST_ACCEPT_SIMPLE.id()));
 			if (!supported) {
 				return new Outcome(null, "RETAIL_TALK_CUTSCENE",
 					"movie=" + entry.cutsceneMovieId() + " trigger=" + trigger);
@@ -232,7 +231,8 @@ public final class RetailSimpleTalkDefinitionCompiler {
 			transitions.addAll(attachMovieToRoute(RetailSimpleHuntDefinitionCompiler.canonicalAcceptFlow(
 				acquiredNpc, "started", acceptGiveItemActions(entry, itemIndex, metadata)), "unaccepted", acquiredNpc,
 				QuestDialogAction.QUEST_SELECT.id(),
-				entry.cutsceneTrigger() == QuestDialogAction.ASK_QUEST_ACCEPT.id()
+				(entry.cutsceneTrigger() == QuestDialogAction.ASK_QUEST_ACCEPT.id()
+					|| entry.cutsceneTrigger() == QuestDialogAction.QUEST_ACCEPT_SIMPLE.id())
 					? entry.cutsceneMovieId() : -1));
 		} else {
 			transitions.add(new QuestTransition(new QuestEvent.SystemGrant(),
@@ -336,7 +336,8 @@ public final class RetailSimpleTalkDefinitionCompiler {
 				transitions.addAll(attachMovieToRoute(canonicalObjectAcceptFlow(
 					acquiredNpc, "started", acceptGiveItemActions(entry, itemIndex, metadata)), "unaccepted", acquiredNpc,
 					QuestDialogAction.USE_OBJECT.id(),
-					entry.cutsceneTrigger() == QuestDialogAction.ASK_QUEST_ACCEPT.id()
+					(entry.cutsceneTrigger() == QuestDialogAction.ASK_QUEST_ACCEPT.id()
+						|| entry.cutsceneTrigger() == QuestDialogAction.QUEST_ACCEPT_SIMPLE.id())
 						? entry.cutsceneMovieId() : -1));
 			} else {
 				transitions.addAll(attachMovieToRoute(RetailSimpleHuntDefinitionCompiler.canonicalAcceptFlow(

@@ -4,9 +4,3 @@
 # 其余任务的拒绝码必须与本表逐条一致（新增/消失的拒绝都必须先在此登记）。
 # 一个任务可能同时有多个缺口，登记的是编译器 precheck 的首个判定（顺序：接取 NPC → 报告 NPC → 计数 → 怪名）。
 # 生成：.agents/summary/scriptdll-quest-driver/m2c2_register_rejects.py
-1842	RETAIL_COUNTER_EXCEEDS_6BIT	slot 1 count 80
-1843	RETAIL_COUNTER_EXCEEDS_6BIT	slot 1 count 80
-1844	RETAIL_COUNTER_EXCEEDS_6BIT	slot 1 count 80
-2843	RETAIL_COUNTER_EXCEEDS_6BIT	slot 1 count 80
-2844	RETAIL_COUNTER_EXCEEDS_6BIT	slot 1 count 80
-2845	RETAIL_COUNTER_EXCEEDS_6BIT	slot 1 count 80
