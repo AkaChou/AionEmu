@@ -5240,7 +5240,7 @@
 50111	XML_RETENTION	-	NO_TABLE	retail-none
 50123	XML_RETENTION	-	NO_TABLE	retail-none
 50124	XML_RETENTION	-	NO_TABLE	retail-none
-50125	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	b1-acquire-sentinel/b1_forensics.tsv area grant: no quest_area binding in ai-areas.xml (retail world files do not wire it)
+50125	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	QE-110 HOLD: 真端 tiamat_down/world.xml 的 questscript_area 计数=0，区域名只出现在 DD 行与 NpcAIPatterns_Event_KJS.xml 的 enable_area（同族悬空引用 43/385）；客户端 world.pak 条目 client_world_tiamat_down.xml 同样无此区域；证据 .agents/summary/quest-acquire-area-q50125/forensics_acquire_area_unbound.tsv 与 2026-09-30-qe110-acquire-area-unbound.zh-CN.md
 50126	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
 50127	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
 50128	RETAIL_TABLE	DataDriven	OK	retail-data-driven-drift.tsv
@@ -5296,7 +5296,7 @@
 51100	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CANONICAL
 51110	XML_RETENTION	-	NO_TABLE	retail-none
 51111	XML_RETENTION	-	NO_TABLE	retail-none
-51125	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	b1-acquire-sentinel/b1_forensics.tsv area grant: no quest_area binding in ai-areas.xml (retail world files do not wire it)
+51125	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	QE-110 HOLD: 真端 tiamat_down/world.xml 的 questscript_area 计数=0，区域名只出现在 DD 行与 NpcAIPatterns_Event_KJS.xml 的 enable_area（同族悬空引用 43/385）；客户端 world.pak 条目 client_world_tiamat_down.xml 同样无此区域；证据 .agents/summary/quest-acquire-area-q50125/forensics_acquire_area_unbound.tsv 与 2026-09-30-qe110-acquire-area-unbound.zh-CN.md
 51126	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
 51127	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
 51128	RETAIL_TABLE	DataDriven	OK	retail-data-driven-drift.tsv

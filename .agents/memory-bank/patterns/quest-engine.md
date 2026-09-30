@@ -2491,3 +2491,25 @@ keywords: 多胞感官区、sensory_area、MULTI_CELL_SENSORY_ZONE、一条 zone
 
 - **判定规则**：真端感官区别名先数胞——几个 `<sensory_area>` 就登记几个 `<points>`（写进**同一条** `<zone>`），绝不只取第一个胞、也不改写成球体近似。
 - **安全网**：多胞判定必须逐胞（XY 与 Z 同胞）；解析表双副本同片改；翻转按四件套 + A/B 对拍；既存红（80817、封顶登记行、HEAD 既存 4 例）不得顺手回写。
+
+## [QE-110] 一一〇、`EnterArea` 具名区域的悬空引用：只有引用没有几何 ⇒ 维持 HOLD，不得按名匹配也不得发明坐标 (DANGLING_ENTER_AREA_REFERENCE)
+
+<!-- pattern-metadata
+status: CONFIRMED
+scope: 真端 DataDriven 行 `category_acquire_=EnterArea` 的**具名区域**（如 `Tiamat_Down_QuestArea_Q50125`）在世界文件里没有 `<questscript_area>` 几何时的裁定口径，与「按 quest id 绑定 vs 按区域名匹配」的判据选择
+first_seen: 2026-09-30
+last_verified: 2026-09-30
+symptom: 行停在 `RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING`（50125/51125 这一类），DD 里明明写了区域名、活动 AI 模式也 `enable_area` 了同名区域，看起来像「只差补一条区域绑定」
+root_cause: ①真端区域对象**只由世界数据创建**（`QuestArea` 由 `CreateQuestArea` 解析 `<name>/<points_info>/<quest>`），AI 模式的 `enable_area` 只启用已存在的区域、没有几何创建路径 ⇒ 区域名不存在时是**悬空引用**；②2017「데바의 날」活动退役后世界文件里的 `<questscript_area>` 已被回滚，`tiamat_down/world.xml` 计数 = 0，区域名在真端全树 + 客户端 world.pak 条目里**只有 2 处引用、零处定义**；③同类悬空在真端是已知形态（385 个 `enable_area` 引用里 43 个无定义），不是本仓数据缺失
+fix_or_guardrail: 1. **判据仍是按 quest id 的区域绑定**：`ai-areas.xml` 的 `<quest_area quests="...">` 即真端世界文件 `<questscript_area><quest>`；**不要**改成「DD 区域名 == 世界文件区名」——7 行已采纳行两列本就不等（25674 DD=`DF6_QuestArea_Q25674` vs 世界 `LF6_QuestArea_Q25674`；13965/23965/13966/13967/23966/23967 同形），按名匹配会误杀；2. **缺几何 ⇒ HOLD**：不发明坐标、不按「像区域任务」猜、不合成 `SystemGrant`（会变成凭空发任务）；3. **封板证据三件套**：真端全树**字节级**双编码扫描 + 客户端 `world.pak` 世界条目 + 装载器解析标签，落成 `.agents/summary/<topic>/forensics_*.tsv` 并把结论写进保留台账第 5 列（owner/reason 不变）；4. **不需要新门禁**：`RetailDataDrivenGateTest.driftVersusShellsIsRegistered`（拒绝码恒等）+ `retentionManifestMatchesDriverOwnership`（可驱动却留 XML = 违规）已经把「绑定出现 ⇒ 必须翻片」两个方向锁死；5. **真端对齐待裁定**：真端数据里这两行实际不可接取，本服 XML 仍保留「靠近 Marmara/205958 接取」的历史路径，属已知差异，按「不删语义边」口径不改
+evidence: .agents/summary/quest-acquire-area-q50125/2026-09-30-qe110-acquire-area-unbound.zh-CN.md; .agents/summary/quest-acquire-area-q50125/forensics_acquire_area_unbound.tsv; .agents/summary/quest-acquire-area-q50125/scan_acquire_area_unbound.py; src/main/resources/aion/data/static_data/quest/retail/retail-xml-retention.tsv; src/test/java/com/aionemu/gameserver/questEngine/retail/RetailDataDrivenGateTest.java
+validation: 2026-09-30 零翻转：50125/51125 owner/reason 不变（`XML_RETENTION` + `ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING`），只升级双副本台账第 5 列证据；DD 分类桶不变（ADOPTED 1463 / AREA_PENDING 2）；新增可复算取证脚本 + 12 条判据 TSV（真端全树 18877 文件双编码命中 2 文件 0 几何；tiamat_down questscript_area=0；客户端世界文件 0 命中；43/385 悬空同类）；T1 81 例红 2 例 = 既存红；T3 1856 例红身份集 198 = `target/agent-logs/qe107b/t3.ids` **ADDED 0 / REMOVED 0**；verify_retirement catalog=746/directory=746/retired=5478=6224
+boundaries: 未解 `sql.rar`（无 rar 工具），但 `<questscript_area>` 属世界文件装载路径已由 `QuestArea.cpp` 解析标签证实；50130/51130 的同族悬空区域不在生产 catalog（6224）内，不在本轴范围；真机验收未做（本片不是行为变更片）；真端对齐（改为不可接取）需单独授权
+superseded_by: none
+see_also: [QE-108], [QE-107], [QE-104]
+first_check: 行停在 `*_AREA_PENDING` 时先答：①这个区域名在**任何**世界文件的 `<questscript_area>` 里有定义吗（全树字节级扫描，别只 grep 一个目录）？②只有 AI 模式的 `enable_area` 引用吗（那是启用动作、不是几何来源）？③客户端 world.pak 的同世界条目里有对应容器吗？④DD 区域名与世界文件区名不等吗（不等是已知真端形态，判据按 quest id 绑定，别改成按名匹配）？⑤要不要发明坐标——那是禁止项，只能 HOLD 并把证据写进台账。
+keywords: 悬空区域引用、AREA_PENDING、EnterArea 具名区域、questscript_area 计数 0、enable_area 启用非创建、QuestArea CreateQuestArea、按 id 绑定 vs 按名匹配、43/385 悬空同类、Tiamat_Down_QuestArea_Q50125、HOLD 封板、QE-110
+-->
+
+- **判定规则**：`EnterArea` 行被拒先扫真端世界文件——区域名**零定义**时按悬空引用处理（HOLD），不补绑定、不改按名匹配、不发明坐标。
+- **安全网**：封板证据落 TSV + 台账第 5 列；「绑定出现 ⇒ 翻片」由 `RetailDataDrivenGateTest` 的漂移登记与 owner 一致性双向守着；既存红（80817、封顶登记行、旧壳 39/入口页合同）不得顺手回写。
