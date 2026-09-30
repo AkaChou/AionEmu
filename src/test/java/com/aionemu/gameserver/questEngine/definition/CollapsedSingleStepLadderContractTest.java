@@ -126,21 +126,20 @@ class CollapsedSingleStepLadderContractTest {
 			.anyMatch(action -> action instanceof QuestAction.GiveItem give && give.itemId() == REPAIR_TOOL),
 			() -> "15000 acceptance edges must grant the repair tool " + REPAIR_TOOL);
 
-		/* 客户端页按钮链：check_user_item_ok 的 SELECT2(1352) -> select2 页，select2 的 SELECT2_1(1353) -> select2_1 页。
-		   没有这两条路由时 QuestClientContractGateTest 会报 BUTTON_WITHOUT_ROUTE。 */
-		/* Client button chain on row 1: SELECT2(1352) -> select2 page, SELECT2_1(1353) -> select2_1 page. */
+		/* 段首屏：段首页自身的同名动作（SELECT2=1352）回显段首屏；段内翻页（SELECT2_1=1353）由客户端本地
+		   完成——引擎的本地翻页 no-op 受理它，服务端不再建逐页路由（页梯退场片）。
+		   Stage head: the head page's own action (SELECT2 = 1352) re-shows the head; in-stage page turns
+		   (SELECT2_1 = 1353) stay client-local and are absorbed by the engine's local-page no-op, so no
+		   per-page route exists any more (the ladder-retirement slice). */
 		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(QuestDialogPage.SELECT2.id())),
 			routes(definition, "s1", "s1").stream()
 				.filter(route -> route.event().equals(new QuestEvent.TalkToNpc(
 					MILLIARD, QuestDialogAction.SELECT2.id(), 0)))
 				.findFirst().orElseThrow().afterCommit(),
 			() -> "15000 page 1352 opens the client select2 page");
-		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(QuestDialogPage.SELECT2_1.id())),
-			routes(definition, "s1", "s1").stream()
-				.filter(route -> route.event().equals(new QuestEvent.TalkToNpc(
-					MILLIARD, QuestDialogAction.SELECT2_1.id(), 0)))
-				.findFirst().orElseThrow().afterCommit(),
-			() -> "15000 page 1353 opens the client select2_1 page");
+		assertTrue(definition.transitions().stream().noneMatch(route ->
+				route.event().equals(new QuestEvent.TalkToNpc(MILLIARD, QuestDialogAction.SELECT2_1.id(), 0))),
+			() -> "15000 in-stage page turn SELECT2_1 must stay client-local (no server route)");
 
 		assertEquals(1, routes(definition, "s2", "reward").size(),
 			() -> "15000 row 2 advances into the reward row exactly once");
@@ -172,9 +171,21 @@ class CollapsedSingleStepLadderContractTest {
 			.toList();
 		assertEquals(EVIDENCE, removed, () -> "15670 row 1 consumes the four evidence items");
 
-		assertEquals(new QuestEvent.TalkToNpc(FIFTH_TRACE, QuestDialogAction.SET_SUCCEED.id(), 0),
-			routes(definition, "s2", "reward").getFirst().event(),
-			() -> "15670 row 2 is the client SET_SUCCEED step on the fifth trace object");
+		// 末 talk 段的推进按钮：客户端末段页尾可声明 SETPRO{K}/SET_SUCCEED/SELECT_QUEST_REWARD 三种收尾
+		// 按钮（`RetailQuestDialogPages#advanceActions`），服务端全部收下并收口到领奖态。
+		// The last talk stage's advance buttons: the client tail page may declare SETPRO{K}, SET_SUCCEED or
+		// SELECT_QUEST_REWARD (RetailQuestDialogPages#advanceActions); the server accepts all three into
+		// the reward state.
+		assertTrue(routes(definition, "s2", "reward").stream()
+				.anyMatch(route -> route.event().equals(new QuestEvent.TalkToNpc(
+					FIFTH_TRACE, QuestDialogAction.SET_SUCCEED.id(), 0))),
+			() -> "15670 row 2 keeps the client SET_SUCCEED step on the fifth trace object");
+		assertEquals(Set.of(QuestDialogAction.SETPRO3.id(), QuestDialogAction.SET_SUCCEED.id(),
+				QuestDialogAction.SELECT_QUEST_REWARD.id()),
+			routes(definition, "s2", "reward").stream()
+				.map(route -> ((QuestEvent.TalkToNpc) route.event()).dialogId())
+				.collect(java.util.stream.Collectors.toSet()),
+			() -> "15670 row 2 carries the three client terminal tail buttons into reward");
 
 		Set<Integer> completionNpcs = new LinkedHashSet<>();
 		definition.transitions().stream()

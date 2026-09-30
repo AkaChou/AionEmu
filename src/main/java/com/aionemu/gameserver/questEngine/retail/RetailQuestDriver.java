@@ -113,8 +113,6 @@ public final class RetailQuestDriver {
 	private final RetailClientHandinPages clientHandinPages;
 	/** 交互物 NPC 集（掉落箱的 ACTION_ITEM_USE 路由判据）。 / Interaction-object npc set. */
 	private final RetailQuestUseItemNpcs interactionObjects;
-	private final RetailClientTalkChainPages clientTalkChainPages;
-	private final RetailClientTalkCollectChainPages clientTalkCollectChainPages;
 	private final RetailClientKillTargets clientKillTargets;
 	private final RetailClientHuntProgressRows clientHuntProgressRows;
 	private final RetailEnterAreaZoneResolution enterAreaZoneResolution;
@@ -142,8 +140,6 @@ public final class RetailQuestDriver {
 			RetailDataDrivenTable dataDrivenTable,
 			RetailClientHandinPages clientHandinPages,
 			RetailQuestUseItemNpcs interactionObjects,
-			RetailClientTalkChainPages clientTalkChainPages,
-			RetailClientTalkCollectChainPages clientTalkCollectChainPages,
 			RetailClientKillTargets clientKillTargets, RetailClientHuntProgressRows clientHuntProgressRows,
 			RetailEnterAreaZoneResolution enterAreaZoneResolution) {
 		this.retailOwnedSimpleHunt = retailOwnedSimpleHunt;
@@ -185,8 +181,6 @@ public final class RetailQuestDriver {
 		this.dataDrivenTable = dataDrivenTable;
 		this.clientHandinPages = clientHandinPages;
 		this.interactionObjects = interactionObjects;
-		this.clientTalkChainPages = clientTalkChainPages;
-		this.clientTalkCollectChainPages = clientTalkCollectChainPages;
 		this.clientKillTargets = clientKillTargets;
 		this.clientHuntProgressRows = clientHuntProgressRows;
 		this.enterAreaZoneResolution = enterAreaZoneResolution;
@@ -423,9 +417,6 @@ public final class RetailQuestDriver {
 		RetailClientRewardNpcs clientRewardNpcs = RetailClientRewardNpcs.defaultRewardNpcs();
 		RetailClientHuntStages clientHuntStages = RetailClientHuntStages.defaultHuntStages();
 		RetailClientHandinPages clientHandinPages = RetailClientHandinPages.defaultHandinPages();
-		RetailClientTalkChainPages clientTalkChainPages = RetailClientTalkChainPages.defaultTalkChainPages();
-		RetailClientTalkCollectChainPages clientTalkCollectChainPages =
-			RetailClientTalkCollectChainPages.defaultTalkCollectChainPages();
 		RetailClientKillTargets clientKillTargets = RetailClientKillTargets.defaultKillTargets();
 		RetailClientHuntProgressRows clientHuntProgressRows = RetailClientHuntProgressRows.defaultHuntProgressRows();
 		RetailEnterAreaZoneResolution enterAreaZoneResolution = RetailEnterAreaZoneResolution.defaultZoneResolution();
@@ -449,8 +440,7 @@ public final class RetailQuestDriver {
 			retailTable, npcIndex, itemIndex, randomRewardIds(), nameIds(), serialHuntTable, clientHuntStages,
 			useItemTable, useItemReport, itemPlayTable, questAreas,
 			dataDrivenTable, clientHandinPages, interactionObjects,
-			clientTalkChainPages, clientTalkCollectChainPages, clientKillTargets,
-			clientHuntProgressRows, enterAreaZoneResolution);
+			clientKillTargets, clientHuntProgressRows, enterAreaZoneResolution);
 	}
 
 	private QuestCatalog apply(QuestCatalog xmlCatalog) {
@@ -714,8 +704,7 @@ public final class RetailQuestDriver {
 			var outcome = RetailDataDrivenDefinitionCompiler.compile(row.orElseThrow(), itemIndex, npcIndex,
 				metadata, clientRewardNpcs, questAreas, clientDialogExits,
 				clientSummaryRows, clientHandinPages,
-				interactionObjects, clientTalkChainPages, clientKillTargets,
-				clientTalkCollectChainPages, clientHuntProgressRows, enterAreaZoneResolution);
+				interactionObjects, clientKillTargets, clientHuntProgressRows, enterAreaZoneResolution);
 			if (outcome.accepted()) {
 				return Optional.of(outcome.definition());
 			}

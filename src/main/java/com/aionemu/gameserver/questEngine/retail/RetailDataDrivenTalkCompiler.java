@@ -42,12 +42,13 @@ import java.util.Objects;
 public final class RetailDataDrivenTalkCompiler {
 
 	/**
-	 * 本链族首个对话阶段的 select 页码：DataDriven 链行的接取走 select_none 询问窗（未接态首屏），
-	 * 因此对话链阶段从 select1 起。
-	 * Select page number of this chain family's first talk stage: DataDriven chain rows accept through
-	 * the select_none ask window (the unaccepted-state head), so their talk stages start at select1.
+	 * 本链族接取段占用的页族数：DataDriven 链行的接取走 select_none 询问窗（未接态首屏），
+	 * 客户端声明的第 1 个 select 页族即第一个对话阶段。
+	 * Leading page families owned by this chain family's acquire segment: DataDriven chain rows accept
+	 * through the select_none ask window (the unaccepted-state head), so the first declared select
+	 * family already belongs to the first talk stage.
 	 */
-	static final int TALK_STAGE_FIRST_SELECT = 1;
+	static final int ACQUIRE_PAGE_FAMILIES = 0;
 
 	private RetailDataDrivenTalkCompiler() {
 	}
@@ -189,17 +190,17 @@ public final class RetailDataDrivenTalkCompiler {
 	}
 
 	/**
-	 * 组装 Talk 链行定义（P5-3 wave B）：第 i 步 NPC 的 QUEST_SELECT 下发客户端契约推导的阶段首屏
-	 * {@code select{i+1}}（阶段内翻页 SELECTn_m 由客户端本地完成，服务端不再建逐页路由），推进按钮
-	 * {@code SETPRO{i+1}} 推进中间步（PACKET_ONLY + 全局任务簿页）；末步的 {@code SET_SUCCEED} 与
-	 * {@code SETPRO{N}} 同义（进度置满 → 领奖态）。
+	 * 组装 Talk 链行定义（P5-3 wave B）：第 i 步 NPC 的 QUEST_SELECT 下发客户端契约声明的第 i 个
+	 * select 页族首屏（阶段内翻页 SELECTn_m 由客户端本地完成，服务端不再建逐页路由），推进按钮
+	 * {@code SETPRO{K}}（K = 该声明族号）推进中间步（PACKET_ONLY + 全局任务簿页）；末步的
+	 * {@code SET_SUCCEED} 与 {@code SETPRO{K}} 同义（进度置满 → 领奖态）。
 	 * var0 = 阶梯计数（0 → 1 → … → 领奖行），领奖投影 = 客户端任务书末行（QE-051）。
 	 * 前置步 NPC 的 SET_SUCCEED 直达领奖（1876 捷径同构）；REWARD 态陈旧阶梯值进入世界时纠正。
 	 * 系统接取（chain / enterarea / enterworld / leveluplogin）无接取 NPC：发放边与 hunt 链同判据
 	 * （TalkCollectChain 同片先例），逐任务客户端 cutscene 声明挂到对应步推进边。
-	 * Builds the talk-chain definition; step i opens the client contract's stage head {@code select{i+1}}
-	 * (in-stage SELECTn_m page turns stay client-local, so no per-page server routes are built) and the
-	 * advance button {@code SETPRO{i+1}} moves intermediate steps. On the final step {@code SET_SUCCEED}
+	 * Builds the talk-chain definition; step i opens the i-th select family the client contract declares
+	 * (in-stage SELECTn_m page turns stay client-local, so no per-page server routes are built) and that
+	 * family's tail advance button {@code SETPRO{K}} moves intermediate steps. On the final step {@code SET_SUCCEED}
 	 * and {@code SETPRO{N}} are synonyms (progress full → reward). System acquires (chain / enterarea /
 	 * enterworld / leveluplogin) carry no acquire npc: grant edges share the hunt chain's predicate (the
 	 * TalkCollectChain precedent), and per-step client cutscenes ride the matching advance edge.
@@ -268,19 +269,22 @@ public final class RetailDataDrivenTalkCompiler {
 			boolean finalStep = index == steps - 1;
 			String target = finalStep ? "reward" : "s" + (index + 1);
 			Integer movieId = stepCutscenes == null ? null : stepCutscenes.get(index);
-			// 阶段首屏由客户端契约页面名推导（select{i+1}）；阶段内翻页动作不再生成服务端路由。
-			// The stage head comes from the client contract's page name (select{i+1}); in-stage page
-			// turns no longer produce server routes.
-			int stageSelect = TALK_STAGE_FIRST_SELECT + index;
-			int headPage = RetailQuestDialogPages.stageHead(questId, TALK_STAGE_FIRST_SELECT, index)
-				.orElseThrow(() -> new IllegalStateException("missing client stage head select" + stageSelect
-					+ " for DataDriven talk chain quest " + questId));
+			// 阶段首屏按**客户端声明的 select 页族序**取第 index 个声明族（阶段内翻页动作不再生成
+			// 服务端路由）；推进按钮 = 该族页尾的 SETPRO{K}。
+			// The stage head is the index-th declared select family of the client contract (in-stage
+			// page turns no longer produce server routes); the advance button is that family's tail
+			// SETPRO{K}.
+			int declaredOrdinal = ACQUIRE_PAGE_FAMILIES + index + 1;
+			RetailQuestDialogPages.StagePage stagePage = RetailQuestDialogPages
+				.stage(questId, ACQUIRE_PAGE_FAMILIES, index)
+				.orElseThrow(() -> new IllegalStateException("missing client stage page select"
+					+ declaredOrdinal + " for DataDriven talk chain quest " + questId));
 			transitions.add(talk(npc, QuestDialogAction.QUEST_SELECT, source, source,
-				List.of(new AfterCommitAction.ShowQuestDialog(headPage))));
-			// 推进按钮 = SETPRO{i+1}（客户端页尾「继续」按钮；SETPRO 全集 10000+N 同域，N=阶段号）。
-			// The advance button is SETPRO{i+1} (the client tail page's continue button; SETPRO
-			// occupies 10000+N with N as the stage number).
-			int advanceAction = QuestDialogAction.SETPRO1.id() + index;
+				List.of(new AfterCommitAction.ShowQuestDialog(stagePage.headPageId()))));
+			// 推进按钮 = SETPRO{K}（客户端页尾「继续」按钮；SETPRO 全集 10000+N 同域，N=声明的页族号）。
+			// The advance button is SETPRO{K} (the client tail page's continue button; SETPRO occupies
+			// 10000+N with N as the declared family number).
+			int advanceAction = stagePage.advanceActionId();
 			if (finalStep) {
 				// 末步推进：SET_SUCCEED（「结束对话」按钮）与 SETPRO{N}（页尾继续按钮把进度置满）同义，
 				// 二者都由客户端页面图发出，服务端按同一语义收口到领奖态。

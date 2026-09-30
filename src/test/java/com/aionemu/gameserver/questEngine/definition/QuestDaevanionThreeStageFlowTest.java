@@ -72,12 +72,18 @@ class QuestDaevanionThreeStageFlowTest {
 		assertNode(compiled, "reward", QuestStatus.REWARD, 3);
 		assertNode(compiled, "complete", QuestStatus.COMPLETE, 0);
 		assertEquals(6, compiled.definition().nodes().size());
+		// 段首屏：QUEST_SELECT 下发客户端契约声明的第 1 个 select 页族首屏（SELECT1=1011）；段内翻页
+		// （SELECT1_1 / SELECT1_1_1 / SELECT1_1_1_1）由客户端本地完成——引擎的本地翻页 no-op 受理，
+		// 服务端不再建逐页路由（页梯退场片）。
+		// Stage head: QUEST_SELECT shows the first select family head the client declares (SELECT1 = 1011);
+		// in-stage page turns (SELECT1_1 / SELECT1_1_1 / SELECT1_1_1_1) stay client-local and are absorbed
+		// by the engine's local-page no-op, so no per-page route exists any more.
 		assertPage(compiled, "started", contract.worker(), QuestDialogAction.QUEST_SELECT, QuestDialogPage.SELECT1);
-		assertPage(compiled, "started", contract.worker(), QuestDialogAction.SELECT1_1, QuestDialogPage.SELECT1_1);
-		if (contract.introDepth() == 3) {
-			assertPage(compiled, "started", contract.worker(), QuestDialogAction.SELECT1_1_1, QuestDialogPage.SELECT1_1_1);
-			assertPage(compiled, "started", contract.worker(), QuestDialogAction.SELECT1_1_1_1,
-				QuestDialogPage.SELECT1_1_1_1);
+		for (QuestDialogAction inStageTurn : List.of(QuestDialogAction.SELECT1_1,
+			QuestDialogAction.SELECT1_1_1, QuestDialogAction.SELECT1_1_1_1)) {
+			assertTrue(plan(compiled, snapshot(compiled, QuestStatus.START, 0, Map.of()),
+				contract.worker(), inStageTurn).isEmpty(),
+				() -> "in-stage page turn " + inStageTurn + " must stay client-local (no server route)");
 		}
 		QuestTransition introduction = route(compiled, "started", contract.worker(), QuestDialogAction.SETPRO1, null);
 		assertEquals("s1", introduction.targetNode());
@@ -90,13 +96,17 @@ class QuestDaevanionThreeStageFlowTest {
 		assertState(compiled, handled(compiled, snapshot(compiled, QuestStatus.START, 0, Map.of()),
 			contract.worker(), QuestDialogAction.SETPRO1), QuestStatus.START, 1);
 
+		// 采集段的段首页（SELECT2=1352）由服务端下发；段首页上的信息导航（SELECT2_1..3）是客户端本地
+		// 翻页，服务端不再建逐页路由（页梯退场片）。
+		// The collect stage's head page (SELECT2 = 1352) is still served; the information navigations on
+		// that head (SELECT2_1..3) stay client-local, so no per-page route exists any more.
 		assertPage(compiled, "s1", contract.worker(), QuestDialogAction.QUEST_SELECT, QuestDialogPage.SELECT2);
-		List<QuestDialogAction> information = List.of(QuestDialogAction.SELECT2_1, QuestDialogAction.SELECT2_2,
-			QuestDialogAction.SELECT2_3);
-		List<QuestDialogPage> informationPages = List.of(QuestDialogPage.SELECT2_1, QuestDialogPage.SELECT2_2,
-			QuestDialogPage.SELECT2_3);
-		for (int index = 0; index < contract.informationPages(); index++) {
-			assertPage(compiled, "s1", contract.worker(), information.get(index), informationPages.get(index));
+		for (QuestDialogAction informationNav : List.of(QuestDialogAction.SELECT2_1,
+			QuestDialogAction.SELECT2_2, QuestDialogAction.SELECT2_3)) {
+			assertTrue(plan(compiled, snapshot(compiled, QuestStatus.START, 1, Map.of()),
+				contract.worker(), informationNav).isEmpty(),
+				() -> "collect-stage information nav " + informationNav
+					+ " must stay client-local (no server route)");
 		}
 		QuestTransition close = route(compiled, "s1", contract.worker(), QuestDialogAction.FINISH_DIALOG, null);
 		assertEquals("s1", close.targetNode());
@@ -105,8 +115,12 @@ class QuestDaevanionThreeStageFlowTest {
 		assertEquals(List.of(new AfterCommitAction.CloseDialog()), close.afterCommit());
 		assertPage(compiled, "s2", contract.worker(), QuestDialogAction.QUEST_SELECT, QuestDialogPage.SELECT3);
 		assertPage(compiled, "s2", contract.worker(), QuestDialogAction.SELECT3, QuestDialogPage.SELECT3);
-		assertPage(compiled, "s2", contract.worker(), QuestDialogAction.SELECT3_1, QuestDialogPage.SELECT3_1);
-		assertPage(compiled, "s2", contract.worker(), QuestDialogAction.SELECT3_1_1, QuestDialogPage.SELECT3_1_1);
+		for (QuestDialogAction tailTurn : List.of(QuestDialogAction.SELECT3_1,
+			QuestDialogAction.SELECT3_1_1)) {
+			assertTrue(plan(compiled, snapshot(compiled, QuestStatus.START, 2, Map.of()),
+				contract.worker(), tailTurn).isEmpty(),
+				() -> "final-stage page turn " + tailTurn + " must stay client-local (no server route)");
+		}
 	}
 
 	@ParameterizedTest
@@ -172,7 +186,17 @@ class QuestDaevanionThreeStageFlowTest {
 				assertTrue(plan(compiled, snapshot, contract.issuer(), action).isEmpty(),
 					() -> "issuer must not bypass the worker via " + action);
 			}
-			assertTrue(plan(compiled, snapshot, contract.worker(), QuestDialogAction.SELECT_QUEST_REWARD).isEmpty());
+			// 末 talk 段的收尾按钮全集（SETPRO3 / SET_SUCCEED / SELECT_QUEST_REWARD）只在最后一段成立
+			// （客户端末段页尾可声明这三种收尾按钮，见 RetailQuestDialogPages#advanceActions）；
+			// 材料交付段（var0=1）及其之前都不得用 1009 跳过交付。
+			// The last talk stage's terminal button set (SETPRO3 / SET_SUCCEED / SELECT_QUEST_REWARD) exists
+			// only on the final talk stage (the client tail page may declare any of the three — see
+			// RetailQuestDialogPages#advanceActions); no stage at or before the material handover (var0=1)
+			// may claim through 1009.
+			int rowStage = stage;
+			assertEquals(rowStage == 2, !plan(compiled, snapshot, contract.worker(),
+				QuestDialogAction.SELECT_QUEST_REWARD).isEmpty(),
+				() -> "worker SELECT_QUEST_REWARD presence must follow the last talk stage at var0=" + rowStage);
 			if (stage != 0) {
 				assertTrue(plan(compiled, snapshot, contract.worker(), QuestDialogAction.SETPRO1).isEmpty());
 			}

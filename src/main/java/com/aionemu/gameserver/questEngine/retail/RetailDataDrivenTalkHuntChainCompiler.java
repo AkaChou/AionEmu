@@ -56,6 +56,13 @@ import com.aionemu.gameserver.questEngine.model.QuestStatus;
  */
 public final class RetailDataDrivenTalkHuntChainCompiler {
 
+	/**
+	 * 本家族接取段占用的页族数：接取走 select_none 询问窗（未接态首屏），声明的首个 select 页族即第 1 段。
+	 * Leading page families owned by this family's acquire segment: the accept runs through the
+	 * select_none ask window (the unaccepted-state head), so the first declared select family is stage 1.
+	 */
+	static final int ACQUIRE_PAGE_FAMILIES = 0;
+
 	private RetailDataDrivenTalkHuntChainCompiler() {
 	}
 
@@ -245,8 +252,6 @@ public final class RetailDataDrivenTalkHuntChainCompiler {
 	 */
 	public static Outcome compile(RetailDataDrivenTable.Entry entry, RetailNpcNameIndex npcIndex,
 			RetailQuestMetadataCompiler.Outcome metadata, java.util.Set<Integer> acquiredNpcs, int rewardNpc,
-			RetailClientTalkChainPages clientTalkChainPages,
-			RetailClientTalkCollectChainPages collectPages,
 			RetailQuestUseItemNpcs interactionObjects, RetailClientHuntProgressRows huntProgressRows,
 			RetailClientSummaryRows summaryRows, RetailEnterAreaZoneResolution enterAreaZones,
 			RetailItemNameIndex itemIndex, boolean levelUpAcquire, boolean selectNoneLadder) {
@@ -376,29 +381,18 @@ public final class RetailDataDrivenTalkHuntChainCompiler {
 				}
 			}
 		}
-		// 信件页梯必须覆盖全部 talk 步（外层下标 = 第几个 talk 步）。
-		// The letter-page ladders must cover every talk step (index = talk ordinal).
-		List<RetailClientTalkChainPages.Stage> ladders = clientTalkChainPages.find(entry.questId(), true)
-			.map(RetailClientTalkChainPages.Pages::stageLadders).orElse(List.of());
-		// 采集/信息段来自混合采集链登记表：段序 = 非 hunt 步序。
-		// The collect/info stages come from the mixed collect registry: stage order = non-hunt
-		// step order.
-		List<RetailClientTalkCollectChainPages.Stage> collectStages = collectPages.find(entry.questId())
-			.map(RetailClientTalkCollectChainPages.Pages::stageLadders).orElse(List.of());
+		// 客户端契约声明的 select 页族必须覆盖全部**可见步**（talk + collectitem；hunt/EA/EW/
+		// itemplay/talkfobj/pvp 占行不占段）：声明族不足即如实拒绝，不按逐任务页梯发明页；段内翻页
+		// （selectN_m）由客户端本地完成，服务端不再消费逐页路由。
+		// The select families the client contract declares must cover every visible step (talk plus
+		// collectitem; hunt/EA/EW/itemplay/talkfobj/pvp own a row but no stage): too few declared
+		// families reject honestly instead of inventing pages from a per-quest ladder, and in-stage
+		// page turns stay client-local.
 		int visibleSteps = talks.size() + collects.size();
-		List<RetailClientTalkCollectChainPages.Stage> normalized = new ArrayList<>();
-		if (collectStages.size() >= visibleSteps && !collectStages.isEmpty()) {
-			normalized.addAll(collectStages.subList(0, visibleSteps));
-		} else if (collects.isEmpty() && ladders.size() >= talks.size()) {
-			for (RetailClientTalkChainPages.Stage stage : ladders.subList(0, talks.size())) {
-				normalized.add(new RetailClientTalkCollectChainPages.Stage(
-					RetailClientTalkCollectChainPages.Kind.TALK, stage.ladder(),
-					stage.advanceActionId(), null, null));
-			}
-		} else {
+		int declaredFamilies = RetailQuestDialogPages.familyCount(entry.questId());
+		if (declaredFamilies < visibleSteps) {
 			return new Outcome(null, "RETAIL_TALK_HUNT_CHAIN_DEFERRED",
-				"ladders=" + ladders.size() + " talks=" + talks.size()
-					+ " stages=" + collectStages.size() + " visible=" + visibleSteps);
+				"declaredFamilies=" + declaredFamilies + " visible=" + visibleSteps);
 		}
 		// 采集检查步必须有真端交付物整组（采集族同判据）。
 		// A collect check step requires the retail item-requirement set (collect-family rule).
@@ -423,7 +417,7 @@ public final class RetailDataDrivenTalkHuntChainCompiler {
 			}
 				QuestDefinition definition = build(entry.questId(), steps, entry.stepCutscenes(), npcIndex,
 					metadata.metadata(),
-				acquiredNpcs, rewardNpc, normalized,
+				acquiredNpcs, rewardNpc,
 				interactionObjects, huntGroupsByRow,
 				worldAcquireId, "enterarea".equalsIgnoreCase(entry.acquireCategory())
 					|| "none".equalsIgnoreCase(entry.acquireCategory()), levelUpAcquire,
@@ -567,7 +561,6 @@ public final class RetailDataDrivenTalkHuntChainCompiler {
 	private static QuestDefinition build(int questId, List<Step> steps, Map<Integer, Integer> stepCutscenes,
 			RetailNpcNameIndex npcIndex,
 			QuestMetadata metadata, java.util.Set<Integer> acquiredNpcs, int rewardNpc,
-			List<RetailClientTalkCollectChainPages.Stage> stages,
 			RetailQuestUseItemNpcs interactionObjects,
 			Map<Integer, List<RetailClientHuntProgressRows.Row>> huntGroupsByRow, int worldAcquireId,
 			boolean areaAcquire, boolean levelUpAcquire, int lastRow, boolean selectNoneLadder,
@@ -811,6 +804,17 @@ public final class RetailDataDrivenTalkHuntChainCompiler {
 			}
 			visibleCursor++;
 		}
+		// 末段 talk 的段下标（末段收下客户端页尾的三种收尾按钮；行末若为 collect 段，本值属于它之前
+		// 的最后一个 talk 段，与 collect 段互不影响）。
+		// The stage index of the last talk stage (it accepts the client tail page's three terminal
+		// buttons; when the row ends with a collect stage the value belongs to the last talk stage
+		// before it, so the two never overlap).
+		int lastTalkVisibleIndex = -1;
+		for (int index = 0; index < stepCount; index++) {
+			if (steps.get(index).isTalk()) {
+				lastTalkVisibleIndex = stageIndexOf[index];
+			}
+		}
 		for (int index = 0; index < stepCount; index++) {
 			Step step = steps.get(index);
 			boolean finalStep = index == stepCount - 1;
@@ -819,26 +823,28 @@ public final class RetailDataDrivenTalkHuntChainCompiler {
 			String target = finalStep ? "reward" : "s" + (index + 1);
 			int npc = step.isTalk() ? talkNpcIds.get(talkOrdinalCursor)
 				: step.isCollect() ? collectNpcIds.get(collectOrdinalCursor) : 0;
-			// hunt 步不占对话段：页梯/检查段只挂在 talk/collect 步上。
-			// Hunts own no dialog stage: page ladders and check pairs hang on talk/collect steps.
-			RetailClientTalkCollectChainPages.Stage stage = step.isCollect() || step.isTalk()
-				? stages.get(stageIndexOf[index]) : null;
-			if (stage != null) {
-				List<Integer> ladder = stage.ladder();
+			// hunt/骑行者步不占对话段：对话段只挂在 talk/collect 步上。
+			// Hunts and riders own no dialog stage: only talk/collect steps carry one.
+			int stageIndex = stageIndexOf[index];
+			RetailQuestDialogPages.StagePage stagePage = step.isCollect() || step.isTalk()
+				? RetailQuestDialogPages.stage(questId, ACQUIRE_PAGE_FAMILIES, stageIndex)
+					.orElseThrow(() -> new IllegalStateException("missing client stage page for retail "
+						+ "talk/hunt chain quest " + questId + " stage " + stageIndex))
+				: null;
+			if (stagePage != null) {
+				// 段首屏按客户端契约声明的第 stageIndex 个 select 页族取页（页族号可跳号）。
+				// 段首页回声用页 id 原值（客户端翻页/回跳以页 id 作为 dialog 动作回传；页 id 不必是
+				// 枚举动作）；段内翻页由客户端本地完成，服务端不再建逐页路由。
+				// The stage head is the stageIndex-th select family the client contract declares (family
+				// numbers may skip). The head echo uses the raw page id (the client sends page ids back as
+				// dialog actions, and a page id need not be an enum action); in-stage page turns stay
+				// client-local, so no per-page route is built.
+				int headPage = stagePage.headPageId();
 				transitions.add(RetailSimpleHuntDefinitionCompiler.talk(npc, QuestDialogAction.QUEST_SELECT,
-					source, source, null, List.of(new AfterCommitAction.ShowQuestDialog(ladder.get(0)))));
-				// 页梯自环用页 id 原值（客户端翻页以页 id 作为 dialog 动作回传；页 id 不必是枚举动作）。
-				// Page-ladder self loops use the raw page id (the client sends the page id back as
-				// the dialog action; page ids need not be enum actions).
-				transitions.add(new QuestTransition(new QuestEvent.TalkToNpc(npc, ladder.get(0)),
+					source, source, null, List.of(new AfterCommitAction.ShowQuestDialog(headPage))));
+				transitions.add(new QuestTransition(new QuestEvent.TalkToNpc(npc, headPage),
 					List.of(), List.of(), source,
-					List.of(new AfterCommitAction.ShowQuestDialog(ladder.get(0))), null, source));
-				for (int depth = 1; depth < ladder.size(); depth++) {
-					transitions.add(new QuestTransition(
-						new QuestEvent.TalkToNpc(npc, ladder.get(depth)),
-						List.of(), List.of(), source,
-						List.of(new AfterCommitAction.ShowQuestDialog(ladder.get(depth))), null, source));
-				}
+					List.of(new AfterCommitAction.ShowQuestDialog(headPage)), null, source));
 				if (index > 0) {
 					transitions.add(finishTalk(npc, source));
 				}
@@ -987,17 +993,23 @@ public final class RetailDataDrivenTalkHuntChainCompiler {
 						landedNpc = collectNpcIds.get(collectOrdinalCursor + 1);
 					}
 				}
-				transitions.addAll(collectCheck(metadata, npc, stage, source, target, landingRow, finalStep,
+				transitions.addAll(collectCheck(metadata, npc, source, target, landingRow, finalStep,
 					landedNpc));
 				collectOrdinalCursor++;
 			} else if (step.isTalk()) {
-				// talk 推进：行 +1；末步 SET_SUCCEED 授予任务凭证（15314 形）。
-				// The talk advance bumps the row; the final step's advance grants the work items.
+				// talk 推进：行 +1；末步授予任务凭证（15314 形）。推进按钮 = 该页族尾的按钮（中间段
+				// SETPRO{K}；末 talk 段收下客户端末段页尾三种收尾按钮）；段尾过场来自客户端 HTML 的
+				// CutScene 常量账（不再消费逐任务页梯的 movie 列）。
+				// The talk advance bumps the row; the final step grants the work items. The advance
+				// buttons are the family tail's buttons (SETPRO{K} mid-chain; the client's three terminal
+				// tail buttons on the last talk stage); the tail cutscene comes from the client HTML
+				// CutScene ledger (the ladder registry's movie column is retired).
 				List<AfterCommitAction> advance = new ArrayList<>(4);
 				advance.add(new AfterCommitAction.SyncQuestState(finalStep
 					? QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH : QuestStateSyncMode.PACKET_ONLY));
-				if (stage.movieId() != null) {
-					advance.add(new AfterCommitAction.PlayMovie(stage.movieId(), QuestMovieType.CUTSCENE));
+				Integer stageMovie = RetailChainCutscenes.movieId(questId, stageIndex);
+				if (stageMovie != null) {
+					advance.add(new AfterCommitAction.PlayMovie(stageMovie, QuestMovieType.CUTSCENE));
 				}
 				advance.add(finalStep
 					? new AfterCommitAction.CloseDialog()
@@ -1009,9 +1021,12 @@ public final class RetailDataDrivenTalkHuntChainCompiler {
 						actions.add(new QuestAction.GiveItem(workItem.itemId(), workItem.count()));
 					}
 				}
-				transitions.add(new QuestTransition(
-					new QuestEvent.TalkToNpc(npc, stage.advanceActionId()), List.of(), List.copyOf(actions),
-					target, List.copyOf(advance), null, source));
+				for (int advanceAction : RetailQuestDialogPages.advanceActions(stagePage,
+						stageIndex == lastTalkVisibleIndex)) {
+					transitions.add(new QuestTransition(
+						new QuestEvent.TalkToNpc(npc, advanceAction), List.of(), List.copyOf(actions),
+						target, List.copyOf(advance), null, source));
+				}
 				talkOrdinalCursor++;
 			} else if (step.isHunt()) {
 				// hunt 步条件边形：单行块 = 旧 XML 同形（count-1 语义）；多行块（并行目标）每行
@@ -1254,7 +1269,7 @@ public final class RetailDataDrivenTalkHuntChainCompiler {
 	 * final stage also grants the work items and carries the 1009 pair); fail shows the fail page.
 	 */
 	private static List<QuestTransition> collectCheck(QuestMetadata metadata, int npc,
-			RetailClientTalkCollectChainPages.Stage stage, String source, String target, int landingRow,
+			String source, String target, int landingRow,
 			boolean finalStep, int landedNpc) {
 		List<QuestCondition> hasItems = metadata.itemRequirements().stream()
 			.map(item -> (QuestCondition) new QuestCondition.HasItem(item.itemId(), item.count()))
@@ -1267,8 +1282,8 @@ public final class RetailDataDrivenTalkHuntChainCompiler {
 		List<QuestAction> removeItems = metadata.itemRequirements().stream()
 			.map(item -> (QuestAction) new QuestAction.RemoveItem(item.itemId(), item.count()))
 			.toList();
-		int okPage = stage.resultPages()[0];
-		int failPage = stage.resultPages()[1];
+		int okPage = RetailQuestDialogPages.COLLECT_OK_PAGE_ID;
+		int failPage = RetailQuestDialogPages.COLLECT_FAIL_PAGE_ID;
 		List<AfterCommitAction> success = finalStep
 			? List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
 				new AfterCommitAction.ShowQuestDialog(QuestDialogPage.SHOW_SELECT_QUEST_REWARD_WINDOW1.id()))
@@ -1282,7 +1297,7 @@ public final class RetailDataDrivenTalkHuntChainCompiler {
 			}
 		}
 		List<QuestTransition> transitions = new ArrayList<>(4);
-		int checkAction = stage.advanceActionId();
+		int checkAction = RetailQuestDialogPages.COLLECT_CHECK_ACTION_ID;
 		transitions.add(new QuestTransition(new QuestEvent.TalkToNpc(npc, checkAction),
 			List.copyOf(hasItems), List.copyOf(successActions), target, success, 0, source));
 		transitions.add(new QuestTransition(new QuestEvent.TalkToNpc(npc, checkAction),

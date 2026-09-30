@@ -49,13 +49,13 @@ import java.util.TreeSet;
 public final class RetailSimpleTalkDefinitionCompiler {
 
 	/**
-	 * 本家族首个对话阶段的 select 页码：SimpleTalk 的 select1 承载接取入口页（ASK_QUEST_ACCEPT），
-	 * 因此在接取规范形（直接下发询问窗）之后，对话链阶段从 select2 起。
-	 * Select page number of this family's first talk stage: SimpleTalk carries the accept entry page in
-	 * select1 (ASK_QUEST_ACCEPT), so after the canonical accept (which pops the ask window directly) the
-	 * talk stages start at select2.
+	 * 本家族的接取段页族数：SimpleTalk 的 select1 承载接取入口页（ASK_QUEST_ACCEPT），因此在接取规范形
+	 * （直接下发询问窗）之后，对话链阶段对应客户端声明的第 2 个 select 页族。
+	 * Leading page families owned by this family's acquire segment: SimpleTalk carries the accept entry page
+	 * in select1 (ASK_QUEST_ACCEPT), so after the canonical accept (which pops the ask window directly) the
+	 * talk stages map to the second declared select family.
 	 */
-	static final int TALK_STAGE_FIRST_SELECT = 2;
+	static final int ACQUIRE_PAGE_FAMILIES = 1;
 
 	private RetailSimpleTalkDefinitionCompiler() {
 	}
@@ -325,7 +325,8 @@ public final class RetailSimpleTalkDefinitionCompiler {
 		}
 		int m = talkNpcIds.size();
 		int cutsceneStage = entry.cutscene()
-			? Math.max(0, RetailQuestDialogPages.stageIndexForAction(entry.questId(), entry.cutsceneTrigger()))
+			? Math.max(0, RetailQuestDialogPages.stageIndexForAction(entry.questId(),
+				entry.cutsceneTrigger(), ACQUIRE_PAGE_FAMILIES))
 			: -1;
 		ProgressLayout layout = new ProgressLayout.Builder()
 			.add(new BitField("var0", 0, RetailHuntCounterLayout.SECTION_BITS, 0,
@@ -380,10 +381,12 @@ public final class RetailSimpleTalkDefinitionCompiler {
 			String source = index_i == 0 ? "started" : "step" + index_i;
 			String target = "step" + (index_i + 1);
 			int stageIndex = index_i;
-			int headPage = RetailQuestDialogPages.stageHead(entry.questId(), TALK_STAGE_FIRST_SELECT, stageIndex)
-				.orElseThrow(() -> new IllegalStateException("missing client stage head select"
-					+ (TALK_STAGE_FIRST_SELECT + stageIndex)
+			RetailQuestDialogPages.StagePage stagePage = RetailQuestDialogPages
+				.stage(entry.questId(), ACQUIRE_PAGE_FAMILIES, stageIndex)
+				.orElseThrow(() -> new IllegalStateException("missing client stage page "
+					+ (ACQUIRE_PAGE_FAMILIES + stageIndex + 1)
 					+ " for retail SimpleTalk quest " + entry.questId()));
+			int headPage = stagePage.headPageId();
 
 			List<AfterCommitAction> headAfter = new ArrayList<>();
 			boolean cutsceneOnThisStage = index_i == cutsceneStage;

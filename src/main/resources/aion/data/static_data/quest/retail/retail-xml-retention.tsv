@@ -2436,7 +2436,7 @@
 10101	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf3c0,FUN_180caf5f0,FUN_180caf6c0,FUN_180caf740
 10110	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf3c0,FUN_180caf5f0,FUN_180caf6c0,FUN_180caf740
 10111	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history
-10112	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_TALK_HUNT_CHAIN_DEFERRED	retail-simple-talk-drift.tsv / retail-data-driven-drift.tsv: talk+hunt mixed-chain axis unimplemented for this shape (ladder/stage deficit)
+10112	XML_RETENTION	DataDriven	ADJUDICATED:CURATED_LEGACY_CONTRACT_LOCK	mixed-chain ladder-registry deficit gone: the client contract declares the stage select families; ownership flip needs its own evidence batch (curated deferral)
 10113	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history
 10500	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_CHAIN
 10501	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history wave10-chain-acquire-registry-decisions.tsv basis=DD_CHAIN_ACQUIRE_REGISTRY
@@ -2451,7 +2451,7 @@
 10522	XML_RETENTION	-	NO_TABLE	retail-none
 10525	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf3c0,FUN_180caf5f0,FUN_180caf6c0,FUN_180caf740
 10526	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history
-10527	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_TALK_HUNT_CHAIN_DEFERRED	retail-simple-talk-drift.tsv / retail-data-driven-drift.tsv: talk+hunt mixed-chain axis unimplemented for this shape (ladder/stage deficit)
+10527	XML_RETENTION	DataDriven	ADJUDICATED:CURATED_LEGACY_CONTRACT_LOCK	mixed-chain ladder-registry deficit gone: the client contract declares the stage select families; ownership flip needs its own evidence batch (curated deferral)
 10528	XML_RETENTION	-	SCRIPTED	registry=FUN_180caa850,FUN_180caf350,FUN_180caf3c0,FUN_180caf5f0,FUN_180caf6c0,FUN_180caf740
 10529	XML_RETENTION	-	SCRIPTED	registry=FUN_180caa850,FUN_180caf350,FUN_180caf3c0,FUN_180caf5f0,FUN_180caf6c0,FUN_180caf740
 10530	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_TALK_COLLECT_CHAIN_DEFERRED	retail-simple-talk-drift.tsv / retail-data-driven-drift.tsv: talk+collect mixed-chain axis unimplemented
@@ -3217,7 +3217,7 @@
 17511	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf6c0
 17525	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history wave8-sensory-area-decisions.tsv basis=DD_ENTERAREA_ZONE_RESOLUTION
 17526	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
-17540	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_TALK_HUNT_CHAIN_DEFERRED	step vocabulary unsupported by retail synthesis [retention-lag fix: code realigned to frozen drift]
+17540	XML_RETENTION	DataDriven	ADJUDICATED:CURATED_LEGACY_CONTRACT_LOCK	mixed-chain ladder-registry deficit gone: the client contract declares the stage select families; ownership flip needs its own evidence batch (curated deferral)
 17541	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
 17550	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_SIMPLE
 17551	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history
@@ -3498,7 +3498,7 @@
 19900	XML_RETENTION	DataDriven	ADJUDICATED:CURATED_LEGACY_CONTRACT_LOCK	curated deferral: reshape decision pending (DD gate CURATED_DEFERRED guard)
 20010	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_HUNT_CHAIN
 20011	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history wave10-chain-acquire-registry-decisions.tsv basis=DD_CHAIN_ACQUIRE_REGISTRY
-20031	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_TALK_HUNT_CHAIN_DEFERRED	step vocabulary unsupported by retail synthesis [retention-lag fix: code realigned to frozen drift]
+20031	XML_RETENTION	DataDriven	ADJUDICATED:CURATED_LEGACY_CONTRACT_LOCK	mixed-chain ladder-registry deficit gone: the client contract declares the stage select families; ownership flip needs its own evidence batch (curated deferral)
 20032	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history
 20033	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history
 20034	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history
@@ -3507,7 +3507,7 @@
 20101	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf3c0,FUN_180caf5f0,FUN_180caf6c0,FUN_180caf740
 20110	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf3c0,FUN_180caf5f0,FUN_180caf6c0,FUN_180caf740
 20111	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history
-20112	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_TALK_HUNT_CHAIN_DEFERRED	retail-simple-talk-drift.tsv / retail-data-driven-drift.tsv: talk+hunt mixed-chain axis unimplemented for this shape (ladder/stage deficit)
+20112	XML_RETENTION	DataDriven	ADJUDICATED:CURATED_LEGACY_CONTRACT_LOCK	mixed-chain ladder-registry deficit gone: the client contract declares the stage select families; ownership flip needs its own evidence batch (curated deferral)
 20113	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history
 20500	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_CHAIN
 20501	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history
@@ -3522,7 +3522,7 @@
 20522	XML_RETENTION	-	NO_TABLE	retail-none
 20525	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf3c0,FUN_180caf5f0,FUN_180caf6c0,FUN_180caf740
 20526	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history
-20527	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_TALK_HUNT_CHAIN_DEFERRED	retail-simple-talk-drift.tsv / retail-data-driven-drift.tsv: talk+hunt mixed-chain axis unimplemented for this shape (ladder/stage deficit)
+20527	XML_RETENTION	DataDriven	ADJUDICATED:CURATED_LEGACY_CONTRACT_LOCK	mixed-chain ladder-registry deficit gone: the client contract declares the stage select families; ownership flip needs its own evidence batch (curated deferral)
 20528	XML_RETENTION	-	SCRIPTED	registry=FUN_180caa850,FUN_180caf350,FUN_180caf3c0,FUN_180caf5f0,FUN_180caf6c0,FUN_180caf740
 20529	XML_RETENTION	-	SCRIPTED	registry=FUN_180caa850,FUN_180caf350,FUN_180caf3c0,FUN_180caf5f0,FUN_180caf6c0,FUN_180caf740
 20530	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_TALK_COLLECT_CHAIN_DEFERRED	retail-simple-talk-drift.tsv / retail-data-driven-drift.tsv: talk+collect mixed-chain axis unimplemented
@@ -4284,7 +4284,7 @@
 27511	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf6c0
 27525	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history wave8-sensory-area-decisions.tsv basis=DD_ENTERAREA_ZONE_RESOLUTION
 27526	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
-27540	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_TALK_HUNT_CHAIN_DEFERRED	step vocabulary unsupported by retail synthesis [retention-lag fix: code realigned to frozen drift]
+27540	XML_RETENTION	DataDriven	ADJUDICATED:CURATED_LEGACY_CONTRACT_LOCK	mixed-chain ladder-registry deficit gone: the client contract declares the stage select families; ownership flip needs its own evidence batch (curated deferral)
 27541	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
 27550	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_SIMPLE
 27551	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history

@@ -104,10 +104,13 @@ class QuestCradleReunionProductionFlowTest {
 		QuestMutationPlan selectPlan = dispatch(compiled, snapshot, select);
 		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(QuestDialogPage.SELECT3.id())),
 			selectPlan.afterCommit());
-		QuestMutationPlan continuation = dispatch(compiled, snapshot,
+		// 段内翻页（SELECT3_1=1694）由客户端本地完成：引擎的本地翻页 no-op 受理它，服务端不再建逐页
+		// 路由（页梯退场片）；段首屏与推进按钮仍是服务端语义边。
+		// In-stage page turns (SELECT3_1 = 1694) stay client-local and are absorbed by the engine's
+		// local-page no-op, so no per-page route exists any more (the ladder-retirement slice); the stage
+		// head and the advance button remain server-side semantic edges.
+		assertNoMatch(compiled, snapshot,
 			new QuestEvent.TalkToNpc(contract.handoffNpcId(), QuestDialogPage.SELECT3_1.id()));
-		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(QuestDialogPage.SELECT3_1.id())),
-			continuation.afterCommit());
 		assertNoMatch(compiled, snapshot, new QuestEvent.TalkToNpc(
 			contract.handoffNpcId(), QuestDialogAction.SETPRO1.id()));
 

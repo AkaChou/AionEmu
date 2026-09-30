@@ -65,15 +65,21 @@ class RetailDataDrivenGateTest {
 	 * ritual spawn/despawn and altar offering advances exceed the mixed collect-chain vocabulary
 	 * (m3d downgrade). To defer a row, register (quest_id → reason) here.
 	 */
-	private static final Map<Integer, String> CURATED_DEFERRED = Map.of(
-		25050, "collect-chain vocabulary lacks the ritual spawn/despawn + altar offering advances "
-			+ "(the legacy contract test pins them; m3d downgrade)",
-		25082, "collect-chain vocabulary lacks the ritual spawn/despawn advances "
-			+ "(the legacy contract pins them; m3d downgrade)",
-		19900, "minion tutorial prerequisite axis (1007) is unexpressed in the retail metadata and "
-			+ "the legacy contract pins the LevelUp+EnterWorld dual accept at 1500ms",
-		29900, "minion tutorial prerequisite axis (2009) is unexpressed in the retail metadata and "
-			+ "the legacy contract pins the LevelUp+EnterWorld dual accept at 1500ms",
+	/** 页梯退役带出的可编译暂缓行（见上表注释）。 / Compilable rows deferred by the ladder retirement. */
+	private static final String DEFERRED_BY_LADDER_RETIREMENT =
+		"mixed-chain stage order now derives from the client contract's declared select families, so the "
+			+ "old ladder-registry deficit no longer blocks this row; the ownership flip needs its own "
+			+ "contract and real-client evidence batch (curated deferral, XML stays authoritative)";
+
+	private static final Map<Integer, String> CURATED_DEFERRED = Map.ofEntries(
+		Map.entry(25050, "collect-chain vocabulary lacks the ritual spawn/despawn + altar offering advances "
+			+ "(the legacy contract test pins them; m3d downgrade)"),
+		Map.entry(25082, "collect-chain vocabulary lacks the ritual spawn/despawn advances "
+			+ "(the legacy contract pins them; m3d downgrade)"),
+		Map.entry(19900, "minion tutorial prerequisite axis (1007) is unexpressed in the retail metadata and "
+			+ "the legacy contract pins the LevelUp+EnterWorld dual accept at 1500ms"),
+		Map.entry(29900, "minion tutorial prerequisite axis (2009) is unexpressed in the retail metadata and "
+			+ "the legacy contract pins the LevelUp+EnterWorld dual accept at 1500ms"),
 		// P0c-53：活动商人采集行经组表（event_npc_idsolo_s4，组员 LC1_/DC1_）解析后编译可过，但客户端
 		// 任务书未声明采集模板会下发的接取页（1002→1003 / 1003→1004）⇒ 客户端契约门判
 		// PAGE_NOT_IN_TASK_HTML（12 条）⇒ 如实保留 XML；同一组名的 hunt 行（50091/50092）页形不同、已采纳。
@@ -82,14 +88,30 @@ class RetailDataDrivenGateTest {
 		// template emits, so the client contract gate reports PAGE_NOT_IN_TASK_HTML (12 rows) and the
 		// rows stay on XML; the same group name's hunt rows (50091/50092) have a different page shape
 		// and were adopted.
-		50089, "event-vendor collect row: the client task HTML does not declare the accept pages "
+		Map.entry(50089, "event-vendor collect row: the client task HTML does not declare the accept pages "
 			+ "(1002->1003 / 1003->1004) emitted for the declared group members "
-			+ "(QuestClientContractGateTest PAGE_NOT_IN_TASK_HTML)",
-		50090, "event-vendor collect row: the client task HTML does not declare the accept pages "
+			+ "(QuestClientContractGateTest PAGE_NOT_IN_TASK_HTML)"),
+		Map.entry(50090, "event-vendor collect row: the client task HTML does not declare the accept pages "
 			+ "(1002->1003 / 1003->1004) emitted for the declared group members "
-			+ "(QuestClientContractGateTest PAGE_NOT_IN_TASK_HTML)",
-		25051, "TalkFOBJ relative monster spawn axis exceeds the standard talk+hunt vocabulary "
-			+ "(the legacy contract pins it; curated deferral)");
+			+ "(QuestClientContractGateTest PAGE_NOT_IN_TASK_HTML)"),
+		Map.entry(25051, "TalkFOBJ relative monster spawn axis exceeds the standard talk+hunt vocabulary "
+			+ "(the legacy contract pins it; curated deferral)"),
+		// 混合链页梯登记退役片（2026-09-30）：段序改由客户端契约声明的 select 页族推导后，这 7 行不再
+		// 因「页梯登记缺行」被拒（旧漂移码 RETAIL_TALK_HUNT_CHAIN_DEFERRED 的成因已消失），但翻转为真端
+		// owner 属于生产行为变更，须走各自的合同/真机证据批 ⇒ 本批按 curated 暂缓保留 XML。
+		// Mixed-chain ladder-retirement slice (2026-09-30): with the stage order derived from the
+		// client contract's declared select families, these seven rows are no longer blocked by a
+		// missing ladder registry row (the old RETAIL_TALK_HUNT_CHAIN_DEFERRED cause is gone), but
+		// flipping them to the retail owner changes production behavior and needs its own contract
+		// and real-client evidence batch ⇒ held on XML as curated deferrals in this batch.
+		Map.entry(10112, DEFERRED_BY_LADDER_RETIREMENT),
+		Map.entry(10527, DEFERRED_BY_LADDER_RETIREMENT),
+		Map.entry(17540, DEFERRED_BY_LADDER_RETIREMENT),
+		Map.entry(20031, DEFERRED_BY_LADDER_RETIREMENT),
+		Map.entry(20112, DEFERRED_BY_LADDER_RETIREMENT),
+		Map.entry(20527, DEFERRED_BY_LADDER_RETIREMENT),
+		Map.entry(27540, DEFERRED_BY_LADDER_RETIREMENT));
+
 	private static final String CURATED_CODE = "CURATED_LEGACY_CONTRACT_LOCK";
 
 	private static RetailDataDrivenTable table;
@@ -101,8 +123,6 @@ class RetailDataDrivenGateTest {
 	/** 客户端交付型对话页（决定合成形状，必须与生产一致）。 / Client hand-in pages; must match production. */
 	private static RetailClientHandinPages clientHandinPages;
 	private static RetailQuestUseItemNpcs interactionObjects;
-	private static RetailClientTalkChainPages clientTalkChainPages;
-	private static RetailClientTalkCollectChainPages clientTalkCollectChainPages;
 	private static RetailClientKillTargets clientKillTargets;
 	private static RetailClientHuntProgressRows clientHuntProgressRows;
 	private static RetailEnterAreaZoneResolution enterAreaZoneResolution;
@@ -124,8 +144,6 @@ class RetailDataDrivenGateTest {
 		}
 		clientSummaryRows = RetailClientSummaryRows.defaultSummaryRows();
 		clientHandinPages = RetailClientHandinPages.defaultHandinPages();
-		clientTalkChainPages = RetailClientTalkChainPages.defaultTalkChainPages();
-		clientTalkCollectChainPages = RetailClientTalkCollectChainPages.defaultTalkCollectChainPages();
 		clientKillTargets = RetailClientKillTargets.defaultKillTargets();
 		clientHuntProgressRows = RetailClientHuntProgressRows.defaultHuntProgressRows();
 		enterAreaZoneResolution = RetailEnterAreaZoneResolution.defaultZoneResolution();
@@ -511,8 +529,7 @@ class RetailDataDrivenGateTest {
 						itemIndex, randomRewards, nameIds),
 					clientRewardNpcs, clientQuestAreas,
 					clientDialogExits, clientSummaryRows, clientHandinPages,
-					interactionObjects, clientTalkChainPages, clientKillTargets,
-					clientTalkCollectChainPages, clientHuntProgressRows, enterAreaZoneResolution);
+					interactionObjects, clientKillTargets, clientHuntProgressRows, enterAreaZoneResolution);
 			COMPILED.put(questId, outcome);
 			return outcome;
 	}

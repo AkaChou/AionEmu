@@ -42,13 +42,12 @@ public final class RetailDataDrivenDefinitionCompiler {
 			RetailClientSummaryRows clientSummaryRows,
 			RetailClientHandinPages clientHandinPages,
 			RetailQuestUseItemNpcs interactionObjects,
-			RetailClientTalkChainPages clientTalkChainPages, RetailClientKillTargets clientKillTargets,
-			RetailClientTalkCollectChainPages clientTalkCollectChainPages,
+			RetailClientKillTargets clientKillTargets,
 			RetailClientHuntProgressRows huntProgressRows) {
 		return compile(entry, itemIndex, npcIndex, metadata, clientRewardNpcs, questAreas,
 			clientDialogExits, clientSummaryRows, clientHandinPages,
-			interactionObjects, clientTalkChainPages, clientKillTargets,
-			clientTalkCollectChainPages, huntProgressRows, RetailEnterAreaZoneResolution.empty());
+			interactionObjects, clientKillTargets,
+			huntProgressRows, RetailEnterAreaZoneResolution.empty());
 	}
 
 	/**
@@ -63,8 +62,7 @@ public final class RetailDataDrivenDefinitionCompiler {
 			RetailClientSummaryRows clientSummaryRows,
 			RetailClientHandinPages clientHandinPages,
 			RetailQuestUseItemNpcs interactionObjects,
-			RetailClientTalkChainPages clientTalkChainPages, RetailClientKillTargets clientKillTargets,
-			RetailClientTalkCollectChainPages clientTalkCollectChainPages,
+			RetailClientKillTargets clientKillTargets,
 			RetailClientHuntProgressRows huntProgressRows,
 			RetailEnterAreaZoneResolution enterAreaZones) {
 		Objects.requireNonNull(entry, "entry");
@@ -222,8 +220,7 @@ public final class RetailDataDrivenDefinitionCompiler {
 			}
 			var talkCollectOutcome = RetailDataDrivenTalkCollectChainCompiler.compile(entry, npcIndex,
 				metadata, chainAcquireHere ? -1 : acquired.iterator().next(), reward.iterator().next(),
-				clientTalkCollectChainPages, clientSummaryRows, enterAreaZones,
-				itemIndex, selectNoneLadder);
+				clientSummaryRows, enterAreaZones, itemIndex, selectNoneLadder);
 			return new Outcome(talkCollectOutcome.definition(), talkCollectOutcome.rejectionCode(),
 				talkCollectOutcome.detail());
 		} else if (isTalkHuntMix(entry) || isTalkCollectHuntMix(entry) || isHuntEaMix(entry)
@@ -304,7 +301,6 @@ public final class RetailDataDrivenDefinitionCompiler {
 			var talkHuntOutcome = RetailDataDrivenTalkHuntChainCompiler.compile(entry, npcIndex, metadata,
 				acquired,
 				reward.iterator().next(),
-				clientTalkChainPages, clientTalkCollectChainPages,
 				interactionObjects, huntProgressRows, clientSummaryRows, enterAreaZones, itemIndex,
 				levelUpAcquire, selectNoneLadder);
 			return new Outcome(talkHuntOutcome.definition(), talkHuntOutcome.rejectionCode(),
@@ -535,22 +531,18 @@ public final class RetailDataDrivenDefinitionCompiler {
 	}
 
 	/**
-	 * 判定客户端契约是否为 Talk 链的每个阶段都声明了首屏页（DataDriven 链行的接取走 select_none 询问窗，
-	 * 因此首个对话阶段是 select1）。
-	 * Whether the client contract declares a head page for every talk-chain stage (DataDriven chain rows
-	 * accept through the select_none ask window, so their first talk stage is select1).
+	 * 判定客户端契约声明的 select 页族是否覆盖 Talk 链的每个阶段（DataDriven 链行的接取走 select_none
+	 * 询问窗，声明的首个 select 页族即第一个对话阶段；页族号可以跳号，覆盖只按声明序计数）。
+	 * Whether the select families the client contract declares cover every talk-chain stage (DataDriven
+	 * chain rows accept through the select_none ask window, so the first declared family is the first
+	 * talk stage; family numbers may skip, coverage counts declaration order only).
 	 * @param questId 任务 ID / quest id
 	 * @param steps Talk 阶段数 / number of talk stages
-	 * @return 全部阶段都有首屏时 true / true when every stage has a head page
+	 * @return 声明族覆盖全部阶段时 true / true when the declared families cover every stage
 	 */
 	static boolean hasEveryTalkStageHead(int questId, int steps) {
-		for (int index = 0; index < steps; index++) {
-			if (RetailQuestDialogPages.stageHead(questId,
-					RetailDataDrivenTalkCompiler.TALK_STAGE_FIRST_SELECT, index).isEmpty()) {
-				return false;
-			}
-		}
-		return steps > 0;
+		return steps > 0 && RetailQuestDialogPages.familyCount(questId)
+			>= RetailDataDrivenTalkCompiler.ACQUIRE_PAGE_FAMILIES + steps;
 	}
 
 	/** talk/collectitem 交错行：步骤类别仅含 talk 与 collectitem 且两者皆有。 / A talk/collectitem interleave row. */
