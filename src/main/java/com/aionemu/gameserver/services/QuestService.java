@@ -739,14 +739,15 @@ public final class QuestService {
 	 */
 	public static boolean startEventQuest(QuestEnv env, QuestStatus questStatus) {
 		QuestTemplate template = questsData.getQuestById(env.getQuestId());
-		if (template.getCategory() != QuestCategory.EVENT) {
+		if (template == null || template.getCategory() != QuestCategory.EVENT) {
 			return false;
 		}
 		int id = env.getQuestId();
 		Player player = env.getPlayer();
 		QuestStatus effectiveStatus = normalizeEventQuestStatus(questStatus);
 		PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(id, effectiveStatus, 0));
-		if ((player.getLevel() < template.getMinlevelPermitted()) && (template.getMinlevelPermitted() != 999)) {
+		int minLevel = template.getMinlevelPermitted();
+		if ((player.getLevel() < minLevel) && (minLevel != 999)) {
 			return false;
 		}
 		if (template.getMaxlevelPermitted() != 0 && player.getLevel() > template.getMaxlevelPermitted()) {

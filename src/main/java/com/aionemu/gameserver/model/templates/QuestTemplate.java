@@ -358,6 +358,15 @@ public class QuestTemplate {
 		return rank;
 	}
 
+	/**
+	 * 获取 minlevelPermitted 属性值。若未配置或为 null，返回 0（无等级限制）。
+	 * Gets the value of the minlevelPermitted property. Returns 0 if unconfigured or null.
+	 * @return 最低允许等级 / min level permitted
+	 */
+	public int getMinlevelPermitted() {
+		return minlevelPermitted == null ? 0 : minlevelPermitted;
+	}
+
 	 /**
 	  * 获取 maxRepeatCount 属性值。
 	  * Gets the value of the maxRepeatCount property
@@ -581,7 +590,7 @@ public class QuestTemplate {
 		t.id = id;
 		t.name = m.name();
 		t.nameId = m.displayNameId() == 0 ? null : m.displayNameId();
-		t.minlevelPermitted = m.minLevel() == 0 ? null : m.minLevel();
+		t.minlevelPermitted = m.minLevel();
 		t.maxlevelPermitted = m.maxLevel() == Integer.MAX_VALUE ? 0 : m.maxLevel();
 		t.cannotShare = m.cannotShare() ? Boolean.TRUE : null;
 		t.cannotGiveup = m.cannotGiveup() ? Boolean.TRUE : null;

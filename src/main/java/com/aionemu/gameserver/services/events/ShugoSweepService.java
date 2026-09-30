@@ -27,7 +27,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 术古扫荡棋盘服务，管理骰子、棋盘进度与奖励。
  * Shugo Sweep board service managing dice, board progress, and rewards.
- * @author Rinzler (Encom)
  */
 @Slf4j
 public class ShugoSweepService {
@@ -87,8 +86,15 @@ public class ShugoSweepService {
 	 * @param player 玩家 / player
 	 */
 	public void onLogout(Player player) {
+		if (player == null) {
+			return;
+		}
+		PlayerSweep sweep = player.getPlayerShugoSweep();
+		if (sweep == null) {
+			return;
+		}
 		DAOManager.getDAO(PlayerShugoSweepDAO.class).store(player);
-		player.getPlayerShugoSweep().setShugoSweepByObjId(player.getObjectId());
+		sweep.setShugoSweepByObjId(player.getObjectId());
 	}
 
 	/**
