@@ -22,7 +22,7 @@ import lombok.AccessLevel;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class QuestDefinitionDirectoryLoader {
 	private static final String QUEST_DIRECTORY =
-		"aion/data/static_data/quest_definition/quests";
+		"aion/data/static_data/quest/definitions/quests";
 
 	/**
 	 * 扫描并校验每个 {@code quests/<numericQuestId>.xml} 资源。没有节点和转换的定义

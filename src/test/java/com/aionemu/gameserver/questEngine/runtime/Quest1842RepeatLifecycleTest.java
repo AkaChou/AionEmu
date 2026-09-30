@@ -18,7 +18,7 @@ class Quest1842RepeatLifecycleTest {
 	void completedQuestCanRestartAndResetsBothKillCounters() throws Exception {
 		CompiledQuestDefinition definition;
 		try (InputStream input = Objects.requireNonNull(getClass().getResourceAsStream(
-			"/aion/data/static_data/quest_definition/quests/1842.xml"))) {
+			"/aion/data/static_data/quest/definitions/quests/1842.xml"))) {
 			definition = QuestDefinitionXmlCompiler.compile(input);
 		}
 		QuestEvent event = new QuestEvent.TalkToNpc(805430, 1002);

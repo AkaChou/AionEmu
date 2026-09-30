@@ -21,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 class Quest2008RetailAlignmentTest {
 	private static final Path XML = Path.of(
-		"src/main/resources/aion/data/static_data/quest_definition/quests/2008.xml");
+		"src/main/resources/aion/data/static_data/quest/definitions/quests/2008.xml");
 
 	@Test
 	void preservesAsmodianMetadataAndThreeTokenGuards() throws Exception {

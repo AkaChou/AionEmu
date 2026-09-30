@@ -21,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class QuestTitleRewardCoverageTest {
 	private static final Path QUEST_DATA = Path.of(
-		"src/main/resources/aion/data/static_data/quest_data/quest_data.xml");
+		"src/main/resources/aion/data/static_data/quest/legacy/quest_data.xml");
 	private static final Path PLAYER_TITLES = Path.of(
 		"src/main/resources/aion/data/static_data/player_titles.xml");
 	private static final Set<Integer> DISABLED_QUESTS = Set.of(19056, 29056);

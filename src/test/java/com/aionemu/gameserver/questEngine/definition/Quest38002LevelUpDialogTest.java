@@ -63,7 +63,7 @@ class Quest38002LevelUpDialogTest {
 
 	private CompiledQuestDefinition definition() throws Exception {
 		try (InputStream input = getClass().getResourceAsStream(
-			"/aion/data/static_data/quest_definition/quests/38002.xml")) {
+			"/aion/data/static_data/quest/definitions/quests/38002.xml")) {
 			if (input == null) {
 				throw new IllegalStateException("missing quest definition 38002.xml");
 			}

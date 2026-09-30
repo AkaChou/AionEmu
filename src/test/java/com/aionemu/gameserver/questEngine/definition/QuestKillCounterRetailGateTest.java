@@ -41,7 +41,7 @@ class QuestKillCounterRetailGateTest {
 	/** 合同快照规模：低于该值说明基线被误删或生成脚本漏了任务。 / Guard against silent baseline shrink. */
 	private static final int EXPECTED_CONTRACT_ROWS = 414;
 	private static final String QUEST_XML_DIR =
-		"src/main/resources/aion/data/static_data/quest_definition/quests";
+		"src/main/resources/aion/data/static_data/quest/definitions/quests";
 	private static final String PREVIOUS_SWITCH = System.getProperty("aion.quest.retailDriver");
 
 	@BeforeAll

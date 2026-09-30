@@ -48,7 +48,7 @@ class Quest2284ClientDialogAlignmentTest {
 	}
 
 	private static CompiledQuestDefinition load() {
-		String resource = "/aion/data/static_data/quest_definition/quests/2284.xml";
+		String resource = "/aion/data/static_data/quest/definitions/quests/2284.xml";
 		try (InputStream input = Objects.requireNonNull(
 			Quest2284ClientDialogAlignmentTest.class.getResourceAsStream(resource), resource)) {
 			return QuestDefinitionXmlCompiler.compile(input);

@@ -24,7 +24,7 @@ public final class RetailQuestAiNameGroups {
 	private static InputStream openStream() {
 		InputStream in = RetailQuestAiNameGroups.class.getResourceAsStream("/quest/retail-quest-ai-name-groups.tsv");
 		if (in == null) {
-			in = RetailQuestAiNameGroups.class.getResourceAsStream("/aion/data/static_data/quest_retail/retail-quest-ai-name-groups.tsv");
+			in = RetailQuestAiNameGroups.class.getResourceAsStream("/aion/data/static_data/quest/retail/retail-quest-ai-name-groups.tsv");
 		}
 		if (in == null) {
 			return new ByteArrayInputStream(new byte[0]);

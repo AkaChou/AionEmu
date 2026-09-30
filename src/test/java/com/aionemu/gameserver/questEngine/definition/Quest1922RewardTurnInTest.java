@@ -122,7 +122,7 @@ class Quest1922RewardTurnInTest {
 
 	private static CompiledQuestDefinition load() throws Exception {
 		try (InputStream input = Quest1922RewardTurnInTest.class.getResourceAsStream(
-				"/aion/data/static_data/quest_definition/quests/1922.xml")) {
+				"/aion/data/static_data/quest/definitions/quests/1922.xml")) {
 			assertNotNull(input, "missing quest definition 1922.xml");
 			return QuestDefinitionXmlCompiler.compile(input);
 		}

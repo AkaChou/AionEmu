@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class QuestRandomRewardsDataTest {
 	private static final Path DATA = Path.of(
-		"src/main/resources/aion/data/static_data/quest_random_rewards.xml");
+		"src/main/resources/aion/data/static_data/quest/legacy/quest_random_rewards.xml");
 
 	@Test
 	void retailPoolUsesWeightedBoundariesAndReturnsTheConfiguredCounts() throws Exception {
@@ -43,7 +43,7 @@ class QuestRandomRewardsDataTest {
 	@Test
 	void retailPoolFileValidatesAgainstItsSchema() throws Exception {
 		var schema = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI)
-			.newSchema(Path.of("src/main/resources/aion/data/static_data/quest_random_rewards.xsd").toFile());
+			.newSchema(Path.of("src/main/resources/aion/data/static_data/quest/legacy/quest_random_rewards.xsd").toFile());
 
 		schema.newValidator().validate(new StreamSource(DATA.toFile()));
 	}

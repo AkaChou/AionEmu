@@ -185,7 +185,7 @@ class Batch44FoamWispFiveRowContractTest {
 
 	private static CompiledQuestDefinition definition() throws IOException {
 		try (InputStream input = Batch44FoamWispFiveRowContractTest.class.getResourceAsStream(
-			"/aion/data/static_data/quest_definition/quests/" + QUEST_ID + ".xml")) {
+			"/aion/data/static_data/quest/definitions/quests/" + QUEST_ID + ".xml")) {
 			assertNotNull(input, () -> "missing quest definition " + QUEST_ID + ".xml");
 			return QuestDefinitionXmlCompiler.compile(input);
 		}

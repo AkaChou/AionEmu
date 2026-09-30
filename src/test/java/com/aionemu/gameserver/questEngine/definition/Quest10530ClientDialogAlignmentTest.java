@@ -103,7 +103,7 @@ class Quest10530ClientDialogAlignmentTest {
 
 	private static QuestDefinition definition() throws Exception {
 		try (InputStream input = Quest10530ClientDialogAlignmentTest.class.getResourceAsStream(
-				"/aion/data/static_data/quest_definition/quests/10530.xml")) {
+				"/aion/data/static_data/quest/definitions/quests/10530.xml")) {
 			if (input == null) {
 				throw new IllegalStateException("missing quest definition 10530.xml");
 			}

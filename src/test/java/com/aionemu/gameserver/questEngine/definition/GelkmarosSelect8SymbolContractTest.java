@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 class GelkmarosSelect8SymbolContractTest {
 	private static final Path QUEST_DIRECTORY = Path.of(
-		"src/main/resources/aion/data/static_data/quest_definition/quests");
+		"src/main/resources/aion/data/static_data/quest/definitions/quests");
 
 	@Test
 	void select8_1ConfirmCompletesTheMissionThroughTheClientSymbol() throws Exception {

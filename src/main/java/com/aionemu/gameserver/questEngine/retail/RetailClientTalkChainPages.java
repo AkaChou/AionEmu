@@ -77,7 +77,7 @@ public final class RetailClientTalkChainPages {
 	private static RetailClientTalkChainPages decodeDefaultInstance() {
 		InputStream in = RetailClientTalkChainPages.class.getResourceAsStream("/quest/quest_client_talk_chain_pages.tsv");
 		if (in == null) {
-			in = RetailClientTalkChainPages.class.getResourceAsStream("/aion/data/static_data/quest_retail/quest_client_talk_chain_pages.tsv");
+			in = RetailClientTalkChainPages.class.getResourceAsStream("/aion/data/static_data/quest/retail/quest_client_talk_chain_pages.tsv");
 		}
 		Map<Integer, Pages> entries = Map.of();
 		if (in != null) {

@@ -55,7 +55,7 @@ class Quest2009MovieDialogTest {
 	}
 
 	private static QuestDefinition load() throws Exception {
-		String resource = "/aion/data/static_data/quest_definition/quests/2009.xml";
+		String resource = "/aion/data/static_data/quest/definitions/quests/2009.xml";
 		try (InputStream input = Quest2009MovieDialogTest.class.getResourceAsStream(resource)) {
 			return QuestDefinitionXmlCompiler.compile(Objects.requireNonNull(input, resource)).definition();
 		}

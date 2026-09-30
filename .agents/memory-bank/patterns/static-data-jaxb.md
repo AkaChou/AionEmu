@@ -81,7 +81,7 @@ last_verified: 2026-09-14
 symptom: 英吉斯温地图驻地、门户、副本出口或任务错误进入 210130000，或运行数据再次把 210130000 当作玩家目标
 root_cause: Retail master-server data retained 210130000 for Inggison while the live world is 210050000; hotspot and portal templates consumed the master ID directly
 fix_or_guardrail: Player-facing Inggison targets must use 210050000; keep 210130000 only as a legacy map definition and compatibility sentinel, migrate paired zones/assets, and normalize TeleportService2 plus HotspotTeleportService
-evidence: commit a7da0ad67; src/main/java/com/aionemu/gameserver/services/teleport/TeleportService2.java; src/main/java/com/aionemu/gameserver/services/teleport/HotspotTeleportService.java; src/main/resources/aion/data/static_data/portals/portal_loc.xml; src/main/resources/aion/data/static_data/quest_definition/quests/10034.xml; src/main/resources/aion/data/static_data/zones/zones_quest.xml
+evidence: commit a7da0ad67; src/main/java/com/aionemu/gameserver/services/teleport/TeleportService2.java; src/main/java/com/aionemu/gameserver/services/teleport/HotspotTeleportService.java; src/main/resources/aion/data/static_data/portals/portal_loc.xml; retail-xml-retention.tsv 的 quest 10034 行（XML已退役并删除，见git历史）; src/main/resources/aion/data/static_data/zones/zones_quest.xml
 validation: static; client
 boundaries: 210130000 map/zone/spawn assets remain inert legacy definitions; Gelkmaros mirror 220140000 is not folded into 210050000
 superseded_by: none

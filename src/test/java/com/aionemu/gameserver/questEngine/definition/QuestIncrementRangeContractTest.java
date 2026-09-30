@@ -29,7 +29,7 @@ class QuestIncrementRangeContractTest {
 	@Test
 	void exactlyMatchedCountersStayInsideTheirDeclaredRange() {
 		QuestCatalog catalog = QuestDefinitionCatalogManifest.compile(
-			Path.of("src/main/resources/aion/data/static_data/quest_definition"));
+			Path.of("src/main/resources/aion/data/static_data/quest/definitions"));
 		List<String> violations = new ArrayList<>();
 		int checked = 0;
 		for (CompiledQuestDefinition compiled : catalog.executables()) {

@@ -132,7 +132,7 @@ class Quest10529BossKillCounterContractTest {
 	}
 
 	private static CompiledQuestDefinition load(int questId) {
-		String resource = "/aion/data/static_data/quest_definition/quests/" + questId + ".xml";
+		String resource = "/aion/data/static_data/quest/definitions/quests/" + questId + ".xml";
 		try (InputStream input = Objects.requireNonNull(
 				Quest10529BossKillCounterContractTest.class.getResourceAsStream(resource), resource)) {
 			return QuestDefinitionXmlCompiler.compile(input);

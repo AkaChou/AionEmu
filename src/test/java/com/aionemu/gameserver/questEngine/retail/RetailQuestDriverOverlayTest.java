@@ -30,7 +30,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 class RetailQuestDriverOverlayTest {
 
-	private static final String RETENTION = "/aion/data/static_data/quest_retail/retail-xml-retention.tsv";
+	private static final String RETENTION = "/aion/data/static_data/quest/retail/retail-xml-retention.tsv";
 	private static final String PREVIOUS_VALUE = System.getProperty("aion.quest.retailDriver");
 
 	@AfterAll
@@ -184,13 +184,13 @@ class RetailQuestDriverOverlayTest {
 	}
 
 	private RetailSimpleHuntTable simpleHuntTable() throws Exception {
-		try (InputStream input = open("/aion/data/static_data/quest_retail/Quest_SimpleHunt.xml")) {
+		try (InputStream input = open("/aion/data/static_data/quest/retail/Quest_SimpleHunt.xml")) {
 			return RetailSimpleHuntTable.load(input);
 		}
 	}
 
 	private RetailQuestXmlTable retailTable() throws Exception {
-		try (InputStream input = open("/aion/data/static_data/quest_retail/quest.xml")) {
+		try (InputStream input = open("/aion/data/static_data/quest/retail/quest.xml")) {
 			return RetailQuestXmlTable.load(input);
 		}
 	}
@@ -212,7 +212,7 @@ class RetailQuestDriverOverlayTest {
 
 	private java.util.Map<String, Integer> randomRewards() throws Exception {
 		java.util.Map<String, Integer> ids = new java.util.HashMap<>();
-		var document = parse(open("/aion/data/static_data/quest_random_rewards.xml"));
+		var document = parse(open("/aion/data/static_data/quest/legacy/quest_random_rewards.xml"));
 		var nodes = document.getDocumentElement().getElementsByTagName("quest_random_reward");
 		for (int index = 0; index < nodes.getLength(); index++) {
 			var element = (org.w3c.dom.Element) nodes.item(index);
@@ -224,7 +224,7 @@ class RetailQuestDriverOverlayTest {
 
 	private java.util.Map<Integer, Integer> nameIds() throws Exception {
 		java.util.Map<Integer, Integer> ids = new java.util.HashMap<>();
-		for (String line : lines(open("/aion/data/static_data/quest_retail/quest_name_string_ids.tsv"))) {
+		for (String line : lines(open("/aion/data/static_data/quest/retail/quest_name_string_ids.tsv"))) {
 			if (line.startsWith("#") || line.isBlank()) {
 				continue;
 			}

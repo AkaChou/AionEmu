@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class Quest30311RetailAlignmentTest {
 	@Test
 	void everyTurnInRequiresAndConsumesTheCollectedItem() throws Exception {
-		Path path = Path.of("src/main/resources/aion/data/static_data/quest_definition/quests/30311.xml");
+		Path path = Path.of("src/main/resources/aion/data/static_data/quest/definitions/quests/30311.xml");
 		try (InputStream input = Files.newInputStream(path)) {
 			QuestDefinition definition = QuestDefinitionXmlCompiler.compile(input).definition();
 			List<QuestTransition> turnIns = definition.transitions().stream()

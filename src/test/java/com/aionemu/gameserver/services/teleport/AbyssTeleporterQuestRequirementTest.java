@@ -32,7 +32,7 @@ class AbyssTeleporterQuestRequirementTest {
 	private static final Path PORTAL_TEMPLATES = Path.of(
 			"src/main/resources/aion/data/static_data/portals/portal_template2.xml");
 	private static final Path QUEST_DATA = Path.of(
-			"src/main/resources/aion/data/static_data/quest_data/quest_data.xml");
+			"src/main/resources/aion/data/static_data/quest/legacy/quest_data.xml");
 
 	@Test
 	void capitalGatesRequireTheRacialAbyssEntryQuest() throws Exception {

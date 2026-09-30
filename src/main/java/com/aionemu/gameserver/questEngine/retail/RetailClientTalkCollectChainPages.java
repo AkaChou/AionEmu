@@ -87,7 +87,7 @@ public final class RetailClientTalkCollectChainPages {
 	private static RetailClientTalkCollectChainPages decodeDefaultInstance() {
 		InputStream in = RetailClientTalkCollectChainPages.class.getResourceAsStream("/quest/quest_client_talk_collect_chain_pages.tsv");
 		if (in == null) {
-			in = RetailClientTalkCollectChainPages.class.getResourceAsStream("/aion/data/static_data/quest_retail/quest_client_talk_collect_chain_pages.tsv");
+			in = RetailClientTalkCollectChainPages.class.getResourceAsStream("/aion/data/static_data/quest/retail/quest_client_talk_collect_chain_pages.tsv");
 		}
 		if (in == null) {
 			return EMPTY;

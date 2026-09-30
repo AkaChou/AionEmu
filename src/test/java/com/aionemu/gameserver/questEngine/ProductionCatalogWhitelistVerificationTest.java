@@ -26,7 +26,7 @@ public class ProductionCatalogWhitelistVerificationTest {
 	@Test
 	public void verifyProductionCatalogWhitelist() throws Exception {
 		ClassLoader loader = getClass().getClassLoader();
-		try (InputStream input = loader.getResourceAsStream("aion/data/static_data/quest_definition/quest_definition_catalog.xml")) {
+		try (InputStream input = loader.getResourceAsStream("aion/data/static_data/quest/definitions/quest_definition_catalog.xml")) {
 			if (input == null) {
 				throw new IllegalStateException("missing production catalog");
 			}
@@ -42,7 +42,7 @@ public class ProductionCatalogWhitelistVerificationTest {
 					continue;
 				}
 				expectedExecutables++;
-				String expectedResource = "aion/data/static_data/quest_definition/quests/"
+				String expectedResource = "aion/data/static_data/quest/definitions/quests/"
 					+ entry.id() + ".xml";
 				if (!expectedResource.equals(entry.resource())) {
 					violations.add(entry.id() + ":RESOURCE_NOT_CANONICAL:" + entry.resource());

@@ -53,7 +53,7 @@ public final class StaticDataLoadRepro {
 		java.util.concurrent.atomic.AtomicReference<Throwable> questFailure = new java.util.concurrent.atomic.AtomicReference<>();
 		java.util.concurrent.CompletableFuture<Void> questPreload = java.util.concurrent.CompletableFuture.runAsync(
 			() -> com.aionemu.gameserver.questEngine.definition.QuestDefinitionCatalogManifest.compile(
-				com.aionemu.gameserver.configs.Config.dataFile("./data/static_data/quest_definition").toPath()))
+				com.aionemu.gameserver.configs.Config.dataFile("./data/static_data/quest/definitions").toPath()))
 			.whenComplete((v, t) -> questFailure.set(t));
 		long start = System.currentTimeMillis();
 		new DataManager();

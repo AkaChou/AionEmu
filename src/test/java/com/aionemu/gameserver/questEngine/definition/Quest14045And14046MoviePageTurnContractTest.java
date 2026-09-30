@@ -68,7 +68,7 @@ class Quest14045And14046MoviePageTurnContractTest {
 	}
 
 	private CompiledQuestDefinition definition(int questId) throws Exception {
-		String resource = "/aion/data/static_data/quest_definition/quests/" + questId + ".xml";
+		String resource = "/aion/data/static_data/quest/definitions/quests/" + questId + ".xml";
 		try (InputStream input = getClass().getResourceAsStream(resource)) {
 			if (input == null) {
 				throw new IllegalStateException("missing quest definition " + questId + ".xml");

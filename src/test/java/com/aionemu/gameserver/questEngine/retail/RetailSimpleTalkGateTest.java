@@ -65,7 +65,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class RetailSimpleTalkGateTest {
 
 	private static final String NPC_DIR = "/aion/data/static_data/npcs/";
-	private static final String CATALOG = "/aion/data/static_data/quest_definition/quest_definition_catalog.xml";
+	private static final String CATALOG = "/aion/data/static_data/quest/definitions/quest_definition_catalog.xml";
 	/** 与历史 XML 的漂移登记（quest_id, classification）。 / Drift registry versus the legacy XML. */
 	private static final String DRIFT_REGISTRY = "/quest/retail-simple-talk-drift.tsv";
 	/** 冻结的家族规模（真端表 ∩ 生产宇宙）。 / Frozen family size. */
@@ -98,10 +98,10 @@ class RetailSimpleTalkGateTest {
 
 	@BeforeAll
 	static void loadFixtures() throws Exception {
-		try (InputStream input = open("/aion/data/static_data/quest_retail/Quest_SimpleTalk.xml")) {
+		try (InputStream input = open("/aion/data/static_data/quest/retail/Quest_SimpleTalk.xml")) {
 			table = RetailSimpleTalkTable.load(input);
 		}
-		try (InputStream input = open("/aion/data/static_data/quest_retail/quest.xml")) {
+		try (InputStream input = open("/aion/data/static_data/quest/retail/quest.xml")) {
 			retailTable = RetailQuestXmlTable.load(input);
 		}
 		clientDialogExits = RetailClientDialogExits.defaultExits();
@@ -675,7 +675,7 @@ class RetailSimpleTalkGateTest {
 
 	private static Map<String, Integer> randomRewardIds() throws Exception {
 		Map<String, Integer> ids = new HashMap<>();
-		var document = parse(open("/aion/data/static_data/quest_random_rewards.xml"));
+		var document = parse(open("/aion/data/static_data/quest/legacy/quest_random_rewards.xml"));
 		var nodes = document.getDocumentElement().getElementsByTagName("quest_random_reward");
 		for (int index = 0; index < nodes.getLength(); index++) {
 			var element = (org.w3c.dom.Element) nodes.item(index);
@@ -687,7 +687,7 @@ class RetailSimpleTalkGateTest {
 
 	private static Map<Integer, Integer> nameIds() throws Exception {
 		Map<Integer, Integer> ids = new HashMap<>();
-		for (String line : lines(open("/aion/data/static_data/quest_retail/quest_name_string_ids.tsv"))) {
+		for (String line : lines(open("/aion/data/static_data/quest/retail/quest_name_string_ids.tsv"))) {
 			if (line.startsWith("#") || line.isBlank()) {
 				continue;
 			}

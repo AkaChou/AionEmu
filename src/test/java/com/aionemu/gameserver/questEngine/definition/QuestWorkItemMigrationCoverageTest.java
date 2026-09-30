@@ -41,7 +41,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 class QuestWorkItemMigrationCoverageTest {
 	private static final Path QUEST_DATA = Path.of(
-		"src/main/resources/aion/data/static_data/quest_data/quest_data.xml");
+		"src/main/resources/aion/data/static_data/quest/legacy/quest_data.xml");
 	private static final int QUEST_1192 = 1192;
 	private static final int WORK_ITEM_1192 = 182200556;
 

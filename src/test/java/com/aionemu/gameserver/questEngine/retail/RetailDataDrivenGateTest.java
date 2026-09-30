@@ -35,8 +35,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 class RetailDataDrivenGateTest {
 
-	private static final String CATALOG = "/aion/data/static_data/quest_definition/quest_definition_catalog.xml";
-	private static final String RETENTION = "/aion/data/static_data/quest_retail/retail-xml-retention.tsv";
+	private static final String CATALOG = "/aion/data/static_data/quest/definitions/quest_definition_catalog.xml";
+	private static final String RETENTION = "/aion/data/static_data/quest/retail/retail-xml-retention.tsv";
 	/** 漂移登记（P5-1 覆盖行 + 未覆盖行均登记）。 / Drift registry. */
 	private static final String DRIFT_REGISTRY = "/quest/retail-data-driven-drift.tsv";
 	/** 冻结 IR 指纹。 / Frozen IR fingerprints. */
@@ -114,10 +114,10 @@ class RetailDataDrivenGateTest {
 
 	@BeforeAll
 	static void loadFixtures() throws Exception {
-		try (InputStream input = open("/aion/data/static_data/quest_retail/data_driven_quest.xml")) {
+		try (InputStream input = open("/aion/data/static_data/quest/retail/data_driven_quest.xml")) {
 			table = RetailDataDrivenTable.load(input);
 		}
-		try (InputStream input = open("/aion/data/static_data/quest_retail/quest.xml")) {
+		try (InputStream input = open("/aion/data/static_data/quest/retail/quest.xml")) {
 			retailTable = RetailQuestXmlTable.load(input);
 		}
 		clientSummaryRows = RetailClientSummaryRows.defaultSummaryRows();
@@ -614,7 +614,7 @@ class RetailDataDrivenGateTest {
 
 	private static Map<Integer, Integer> nameIds() throws Exception {
 		Map<Integer, Integer> ids = new HashMap<>();
-		for (String line : lines(open("/aion/data/static_data/quest_retail/quest_name_string_ids.tsv"))) {
+		for (String line : lines(open("/aion/data/static_data/quest/retail/quest_name_string_ids.tsv"))) {
 			if (line.startsWith("#") || line.isBlank()) {
 				continue;
 			}
@@ -627,7 +627,7 @@ class RetailDataDrivenGateTest {
 	private static Map<String, Integer> randomRewardIds() throws Exception {
 		Map<String, Integer> ids = new HashMap<>();
 		var document = javax.xml.parsers.DocumentBuilderFactory.newInstance().newDocumentBuilder()
-			.parse(open("/aion/data/static_data/quest_random_rewards.xml"));
+			.parse(open("/aion/data/static_data/quest/legacy/quest_random_rewards.xml"));
 		var nodes = document.getDocumentElement().getElementsByTagName("quest_random_reward");
 		for (int index = 0; index < nodes.getLength(); index++) {
 			var element = (org.w3c.dom.Element) nodes.item(index);

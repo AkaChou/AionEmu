@@ -211,7 +211,7 @@ class Quest15400And25400KillCounterContractTest {
 	}
 
 	private static CompiledQuestDefinition load(int questId) {
-		String resource = "/aion/data/static_data/quest_definition/quests/" + questId + ".xml";
+		String resource = "/aion/data/static_data/quest/definitions/quests/" + questId + ".xml";
 		try (InputStream input = Objects.requireNonNull(
 				Quest15400And25400KillCounterContractTest.class.getResourceAsStream(resource), resource)) {
 			return QuestDefinitionXmlCompiler.compile(input);

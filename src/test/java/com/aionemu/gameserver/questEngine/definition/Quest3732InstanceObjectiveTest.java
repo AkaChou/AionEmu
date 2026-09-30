@@ -88,7 +88,7 @@ class Quest3732InstanceObjectiveTest {
 
 	private static CompiledQuestDefinition load() throws Exception {
 		try (InputStream input = Quest3732InstanceObjectiveTest.class.getResourceAsStream(
-			"/aion/data/static_data/quest_definition/quests/3732.xml")) {
+			"/aion/data/static_data/quest/definitions/quests/3732.xml")) {
 			if (input == null) {
 				throw new AssertionError("missing quest 3732 resource");
 			}

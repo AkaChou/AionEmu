@@ -47,7 +47,7 @@ public final class RetailClientKillTargets {
 	private static RetailClientKillTargets decodeDefaultInstance() {
 		InputStream in = RetailClientKillTargets.class.getResourceAsStream("/quest/quest_client_kill_targets.tsv");
 		if (in == null) {
-			in = RetailClientKillTargets.class.getResourceAsStream("/aion/data/static_data/quest_retail/quest_client_kill_targets.tsv");
+			in = RetailClientKillTargets.class.getResourceAsStream("/aion/data/static_data/quest/retail/quest_client_kill_targets.tsv");
 		}
 		RetailClientKillTargets targets = EMPTY;
 		if (in != null) {
@@ -59,7 +59,7 @@ public final class RetailClientKillTargets {
 		}
 		InputStream stageIn = RetailClientKillTargets.class.getResourceAsStream("/quest/quest_client_kill_targets_stages.tsv");
 		if (stageIn == null) {
-			stageIn = RetailClientKillTargets.class.getResourceAsStream("/aion/data/static_data/quest_retail/quest_client_kill_targets_stages.tsv");
+			stageIn = RetailClientKillTargets.class.getResourceAsStream("/aion/data/static_data/quest/retail/quest_client_kill_targets_stages.tsv");
 		}
 		if (stageIn != null) {
 			try (InputStream sIn = stageIn) {

@@ -127,7 +127,7 @@ class QuestInstanceExitRecoveryTest {
 
 	private static CompiledQuestDefinition load(int questId) throws Exception {
 		try (InputStream input = QuestInstanceExitRecoveryTest.class.getResourceAsStream(
-			"/aion/data/static_data/quest_definition/quests/" + questId + ".xml")) {
+			"/aion/data/static_data/quest/definitions/quests/" + questId + ".xml")) {
 			assertNotNull(input);
 			return QuestDefinitionXmlCompiler.compile(input);
 		}

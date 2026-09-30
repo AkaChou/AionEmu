@@ -55,7 +55,7 @@ public final class RetailClientHandinPages {
 	private static RetailClientHandinPages decodeDefaultInstance() {
 		InputStream in = RetailClientHandinPages.class.getResourceAsStream("/quest/quest_client_handin_pages.tsv");
 		if (in == null) {
-			in = RetailClientHandinPages.class.getResourceAsStream("/aion/data/static_data/quest_retail/quest_client_handin_pages.tsv");
+			in = RetailClientHandinPages.class.getResourceAsStream("/aion/data/static_data/quest/retail/quest_client_handin_pages.tsv");
 		}
 		RetailClientHandinPages pages = EMPTY;
 		if (in != null) {
@@ -67,7 +67,7 @@ public final class RetailClientHandinPages {
 		}
 		InputStream exIn = RetailClientHandinPages.class.getResourceAsStream("/quest/quest_client_handin_exceptions.tsv");
 		if (exIn == null) {
-			exIn = RetailClientHandinPages.class.getResourceAsStream("/aion/data/static_data/quest_retail/quest_client_handin_exceptions.tsv");
+			exIn = RetailClientHandinPages.class.getResourceAsStream("/aion/data/static_data/quest/retail/quest_client_handin_exceptions.tsv");
 		}
 		if (exIn != null) {
 			try (InputStream ex = exIn) {

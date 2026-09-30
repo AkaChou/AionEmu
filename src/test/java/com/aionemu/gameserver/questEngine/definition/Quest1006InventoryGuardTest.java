@@ -75,7 +75,7 @@ class Quest1006InventoryGuardTest {
 
 	private static CompiledQuestDefinition loadDefinition() throws Exception {
 		try (InputStream input = Quest1006InventoryGuardTest.class.getResourceAsStream(
-			"/aion/data/static_data/quest_definition/quests/1006.xml")) {
+			"/aion/data/static_data/quest/definitions/quests/1006.xml")) {
 			assertNotNull(input);
 			return QuestDefinitionXmlCompiler.compile(input);
 		}

@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class Quest30313RetailAlignmentTest {
 	@Test
 	void workAndCollectedItemsAreTransactionalAcrossEveryNpcPath() throws Exception {
-		Path path = Path.of("src/main/resources/aion/data/static_data/quest_definition/quests/30313.xml");
+		Path path = Path.of("src/main/resources/aion/data/static_data/quest/definitions/quests/30313.xml");
 		try (InputStream input = Files.newInputStream(path)) {
 			QuestDefinition definition = QuestDefinitionXmlCompiler.compile(input).definition();
 			assertEquals(List.of(new QuestItemRequirement(182209716, 1)),
@@ -41,7 +41,7 @@ class Quest30313RetailAlignmentTest {
 
 	@Test
 	void disabledPrismInteractionStaysUnroutedAndRewardClaimBelongsTo799225() throws Exception {
-		Path path = Path.of("src/main/resources/aion/data/static_data/quest_definition/quests/30313.xml");
+		Path path = Path.of("src/main/resources/aion/data/static_data/quest/definitions/quests/30313.xml");
 		try (InputStream input = Files.newInputStream(path)) {
 			QuestDefinition definition = QuestDefinitionXmlCompiler.compile(input).definition();
 			// 旧 handler 将 730275 的交互整体注释禁用：不得存在任何 730275 路由或接取入口。

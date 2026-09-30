@@ -42,7 +42,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class CutsceneHiddenQuestFamilyContractTest {
 
 	private static final Path DEFINITION_DIRECTORY = Path.of(
-		"src/main/resources/aion/data/static_data/quest_definition");
+		"src/main/resources/aion/data/static_data/quest/definitions");
 	private static final Path QUEST_DIRECTORY = DEFINITION_DIRECTORY.resolve("quests");
 	private static final int RAKSANG_RUINS = 300610000;
 	private static final int RAKSANG_INTRO_CUTSCENE = 912;
@@ -161,7 +161,7 @@ class CutsceneHiddenQuestFamilyContractTest {
 	/* Metadata-only entries carry no nodes, so they parse through the metadata-only entry point. */
 	private static QuestDefinition metadataOnlyDefinition(int questId) throws IOException {
 		try (InputStream input = CutsceneHiddenQuestFamilyContractTest.class.getResourceAsStream(
-				"/aion/data/static_data/quest_definition/quests/" + questId + ".xml")) {
+				"/aion/data/static_data/quest/definitions/quests/" + questId + ".xml")) {
 			assertNotNull(input, () -> "missing quest definition " + questId + ".xml");
 			return QuestDefinitionXmlCompiler.parse(input);
 		}
@@ -169,7 +169,7 @@ class CutsceneHiddenQuestFamilyContractTest {
 
 	private static CompiledQuestDefinition definition(int questId) throws IOException {
 		try (InputStream input = CutsceneHiddenQuestFamilyContractTest.class.getResourceAsStream(
-				"/aion/data/static_data/quest_definition/quests/" + questId + ".xml")) {
+				"/aion/data/static_data/quest/definitions/quests/" + questId + ".xml")) {
 			assertNotNull(input, () -> "missing quest definition " + questId + ".xml");
 			return QuestDefinitionXmlCompiler.compile(input);
 		}

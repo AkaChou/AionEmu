@@ -134,7 +134,7 @@ class QuestMissionRewardIndexRegressionTest {
 
 	private static QuestDefinition load(int questId) throws Exception {
 		try (InputStream input = QuestMissionRewardIndexRegressionTest.class.getResourceAsStream(
-				"/aion/data/static_data/quest_definition/quests/" + questId + ".xml")) {
+				"/aion/data/static_data/quest/definitions/quests/" + questId + ".xml")) {
 			assertNotNull(input, "missing production quest " + questId);
 			return QuestDefinitionXmlCompiler.compile(input).definition();
 		}

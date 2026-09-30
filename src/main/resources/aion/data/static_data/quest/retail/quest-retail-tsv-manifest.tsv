@@ -1,6 +1,6 @@
 # quest-retail TSV 清单（冻结；新增/删除必须先改本文件并在任务报告里登记理由）
 # Frozen inventory of quest-retail TSVs: adding or removing a *.tsv under
-#   src/main/resources/aion/data/static_data/quest_retail/
+#   src/main/resources/aion/data/static_data/quest/retail/
 #   src/main/resources/aion/definitions/quest_dialog/
 # 必须先在本文件登记（或删行）并同步 EXPECTED_TSV_COUNT，否则 RetailTsvManifestGateTest 变红。
 # 本清单自身不在登记范围内（门禁按文件名排除）。/ The manifest itself is excluded from the set.

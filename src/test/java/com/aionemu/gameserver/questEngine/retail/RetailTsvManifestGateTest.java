@@ -24,7 +24,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * 常设防漂移门：真端 TSV 清单冻结（quest-native-dispatch 工程口径）。
  * <p>
  * 背景：本工程停止为微观 HTML 页码扩建 TSV 补丁，因此
- * {@code src/main/resources/aion/data/static_data/quest_retail/} 与
+ * {@code src/main/resources/aion/data/static_data/quest/retail/} 与
  * {@code src/main/resources/aion/definitions/quest_dialog/} 下的 {@code *.tsv} 是**冻结面**：
  * 新增或删除都必须显式登记到 {@code quest-retail-tsv-manifest.tsv}，否则本门变红。
  * 三条断言：①磁盘 *.tsv 集合 == 清单登记集合（双向零差集）；②清单每行 4 列、file 唯一、
@@ -39,7 +39,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class RetailTsvManifestGateTest {
 
 	/** 冻结目录：真端残留表。 / Frozen directory: the retail leftovers. */
-	private static final Path RETAIL_DIR = Path.of("src/main/resources/aion/data/static_data/quest_retail");
+	private static final Path RETAIL_DIR = Path.of("src/main/resources/aion/data/static_data/quest/retail");
 	/** 冻结目录：对话契约与例外账。 / Frozen directory: dialog contract and exception ledger. */
 	private static final Path DIALOG_DIR = Path.of("src/main/resources/aion/definitions/quest_dialog");
 	/** 冻结范围 = 两目录的 *.tsv 并集。 / The frozen surface: the union of both directories. */

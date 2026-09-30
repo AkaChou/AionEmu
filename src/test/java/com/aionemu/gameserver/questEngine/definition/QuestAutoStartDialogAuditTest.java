@@ -17,7 +17,7 @@ class QuestAutoStartDialogAuditTest {
 	@Test
 	void automaticStartRoutesOnlyRefreshVisibilityWithoutQuestDialog() {
 		QuestCatalog catalog = QuestDefinitionCatalogManifest.compile(
-			Path.of("src/main/resources/aion/data/static_data/quest_definition"));
+			Path.of("src/main/resources/aion/data/static_data/quest/definitions"));
 		int checked = 0;
 		for (CompiledQuestDefinition compiled : catalog.executables()) {
 			Map<String, QuestStatus> statuses = compiled.definition().nodes().stream()

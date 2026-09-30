@@ -83,7 +83,7 @@ class Quest4914ClientDialogAlignmentTest {
 
 	private static CompiledQuestDefinition definition() throws Exception {
 		try (InputStream input = Quest4914ClientDialogAlignmentTest.class.getResourceAsStream(
-			"/aion/data/static_data/quest_definition/quests/4914.xml")) {
+			"/aion/data/static_data/quest/definitions/quests/4914.xml")) {
 			if (input == null) throw new IllegalStateException("missing quest definition 4914.xml");
 			return QuestDefinitionXmlCompiler.compile(input);
 		}

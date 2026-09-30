@@ -94,7 +94,7 @@ class Quest14013ProductionFlowTest {
 
 	private static CompiledQuestDefinition load() throws Exception {
 		try (InputStream input = Quest14013ProductionFlowTest.class.getResourceAsStream(
-			"/aion/data/static_data/quest_definition/quests/14013.xml")) {
+			"/aion/data/static_data/quest/definitions/quests/14013.xml")) {
 			return QuestDefinitionXmlCompiler.compile(Objects.requireNonNull(input));
 		}
 	}

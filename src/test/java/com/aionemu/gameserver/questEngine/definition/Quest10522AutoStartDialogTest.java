@@ -131,7 +131,7 @@ class Quest10522AutoStartDialogTest {
 
 	private CompiledQuestDefinition definition() throws Exception {
 		try (InputStream input = getClass().getResourceAsStream(
-				"/aion/data/static_data/quest_definition/quests/10522.xml")) {
+				"/aion/data/static_data/quest/definitions/quests/10522.xml")) {
 			if (input == null) {
 				throw new IllegalStateException("missing quest definition 10522.xml");
 			}

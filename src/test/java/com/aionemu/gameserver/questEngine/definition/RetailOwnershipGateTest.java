@@ -35,10 +35,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 class RetailOwnershipGateTest {
 
-	private static final String CATALOG = "/aion/data/static_data/quest_definition/quest_definition_catalog.xml";
+	private static final String CATALOG = "/aion/data/static_data/quest/definitions/quest_definition_catalog.xml";
 	private static final String RETENTION = "/quest/retail-xml-retention.tsv";
-	private static final String SIMPLE_HUNT_TABLE = "/aion/data/static_data/quest_retail/Quest_SimpleHunt.xml";
-	private static final String SIMPLE_TALK_TABLE = "/aion/data/static_data/quest_retail/Quest_SimpleTalk.xml";
+	private static final String SIMPLE_HUNT_TABLE = "/aion/data/static_data/quest/retail/Quest_SimpleHunt.xml";
+	private static final String SIMPLE_TALK_TABLE = "/aion/data/static_data/quest/retail/Quest_SimpleTalk.xml";
 
 	/** 清单允许的保留原因前缀。 / Allowed retention reason prefixes. */
 	/**

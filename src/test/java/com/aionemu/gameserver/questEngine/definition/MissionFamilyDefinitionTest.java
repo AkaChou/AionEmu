@@ -323,7 +323,7 @@ class MissionFamilyDefinitionTest {
 	}
 
 	private CompiledQuestDefinition definition(String file) throws Exception {
-		try (InputStream input = resource("/aion/data/static_data/quest_definition/quests/" + file)) {
+		try (InputStream input = resource("/aion/data/static_data/quest/definitions/quests/" + file)) {
 			return QuestDefinitionXmlCompiler.compile(input);
 		}
 	}

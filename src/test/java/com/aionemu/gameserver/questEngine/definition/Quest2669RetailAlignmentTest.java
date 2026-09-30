@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 /** Retail-anchored structural coverage for the Asmodian Atla escort. */
 class Quest2669RetailAlignmentTest {
 	private static final Path XML = Path.of(
-		"src/main/resources/aion/data/static_data/quest_definition/quests/2669.xml");
+		"src/main/resources/aion/data/static_data/quest/definitions/quests/2669.xml");
 
 	@Test
 	void preservesMetadataPrerequisiteAndRewards() throws Exception {

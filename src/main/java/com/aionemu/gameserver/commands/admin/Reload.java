@@ -50,7 +50,7 @@ public class Reload extends AdminCommand {
 		}
 		switch (params[0]) {
 			case "quest":
-				File xml = Config.dataFile("./data/static_data/quest_data/quest_data.xml");
+				File xml = Config.dataFile("./data/static_data/quest/legacy/quest_data.xml");
 				try {
 					JAXBContext jc = JAXBContext.newInstance(StaticData.class);
 					Unmarshaller un = jc.createUnmarshaller();

@@ -64,7 +64,7 @@ class Quest1940LevelUpDialogTest {
 
 	private CompiledQuestDefinition definition() throws Exception {
 		try (InputStream input = getClass().getResourceAsStream(
-				"/aion/data/static_data/quest_definition/quests/1940.xml")) {
+				"/aion/data/static_data/quest/definitions/quests/1940.xml")) {
 			if (input == null) {
 				throw new IllegalStateException("missing quest definition 1940.xml");
 			}

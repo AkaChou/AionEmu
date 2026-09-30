@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  */
 class Quest14123ZoneSpawnTest {
 	private static final Path XML = Path.of(
-		"src/main/resources/aion/data/static_data/quest_definition/quests/14123.xml");
+		"src/main/resources/aion/data/static_data/quest/definitions/quests/14123.xml");
 	private static final String SLOT = "peddler-hippola";
 	private static final int TEMPLATE_ID = 206360;
 	private static final AfterCommitAction SPAWN = new AfterCommitAction.SpawnNpc(SLOT, TEMPLATE_ID,

@@ -43,7 +43,7 @@ class QuestRetailStartMetadataGateTest {
 	private static final String CONTRACT_RESOURCE = "/quest/quest-start-metadata-retail-contract.tsv";
 	private static final String CAP_EXCEPTION_RESOURCE = "/quest/quest-start-metadata-retail-cap-exceptions.tsv";
 	private static final String CATALOG_RESOURCE =
-		"/aion/data/static_data/quest_definition/quest_definition_catalog.xml";
+		"/aion/data/static_data/quest/definitions/quest_definition_catalog.xml";
 
 	/** 真端占位任务（minlevel_permitted=999）：不可接取，min-level 不纳入比对。 */
 	private static final String RETAIL_PLACEHOLDER = "RETAIL_PLACEHOLDER";
@@ -213,7 +213,7 @@ class QuestRetailStartMetadataGateTest {
 
 	/** 生产任务 XML 资源路径（METADATA_ONLY 条目仍由 XML 拥有）。 / Production XML resource path. */
 	private static String questResource(int questId) {
-		return "/aion/data/static_data/quest_definition/quests/" + questId + ".xml";
+		return "/aion/data/static_data/quest/definitions/quests/" + questId + ".xml";
 	}
 
 	/**

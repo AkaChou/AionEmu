@@ -38,7 +38,7 @@ class QuestConquestOfferingSpawnDataTest {
 	/** 15321/25321 第 3 段要求击杀 10 只征服之祭物。/ Stage 3 of 15321/25321 requires 10 offerings killed. */
 	private static final int REQUIRED_KILLS = 10;
 
-	private static final Path QUESTS = Path.of("src/main/resources/aion/data/static_data/quest_definition/quests");
+	private static final Path QUESTS = Path.of("src/main/resources/aion/data/static_data/quest/definitions/quests");
 	private static final Path CONQUEST_SPAWNS = Path.of("src/main/resources/aion/data/static_data/spawns/Conquest");
 	private static final Path SCHEDULE = Path.of("src/main/resources/aion/config/schedule/conquest_schedule.xml");
 

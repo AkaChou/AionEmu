@@ -21,7 +21,7 @@ class Quest14026GeranaiaSpawnTest {
 	private static final Path GERANAIA_SPAWNS = Path.of(
 		"src/main/resources/aion/data/static_data/spawns/Instances/310040000_Geranaia.xml");
 	private static final Path QUEST_14026 = Path.of(
-		"src/main/resources/aion/data/static_data/quest_definition/quests/14026.xml");
+		"src/main/resources/aion/data/static_data/quest/definitions/quests/14026.xml");
 	private static final Path NPC_AI_PARTS =
 		Path.of("src/main/resources/aion/definitions/compact/ai/npc-ai-parts");
 	private static final String[][] DEFENSE_VARIANTS = {

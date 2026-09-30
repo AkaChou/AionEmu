@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /** Runtime parity for the former Java owners 80020 and 80021. */
 class QuestSoloriusEventDefinitionTest {
-	private static final Path DIR = Path.of("src/main/resources/aion/data/static_data/quest_definition/quests");
+	private static final Path DIR = Path.of("src/main/resources/aion/data/static_data/quest/definitions/quests");
 
 	@Test
 	void metadataMatchesLegacyAndRetailAuthority() throws Exception {

@@ -230,7 +230,7 @@ class RewardNpcOwnershipContractTest {
 
 	private static String resourceText(int questId) throws IOException {
 		try (InputStream input = RewardNpcOwnershipContractTest.class.getResourceAsStream(
-				"/aion/data/static_data/quest_definition/quests/" + questId + ".xml")) {
+				"/aion/data/static_data/quest/definitions/quests/" + questId + ".xml")) {
 			assertNotNull(input, () -> "missing quest definition " + questId + ".xml");
 			return new String(input.readAllBytes(), StandardCharsets.UTF_8);
 		}

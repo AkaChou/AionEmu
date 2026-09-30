@@ -251,9 +251,9 @@ class XmlDataLoaderTest {
 		SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
 
 		assertDoesNotThrow(() -> schemaFactory
-			.newSchema(Path.of("src/main/resources/aion/data/static_data/quest_data/quest_data.xsd").toFile())
+			.newSchema(Path.of("src/main/resources/aion/data/static_data/quest/legacy/quest_data.xsd").toFile())
 			.newValidator()
-			.validate(new StreamSource(Path.of("src/main/resources/aion/data/static_data/quest_data/quest_data.xml").toFile())));
+			.validate(new StreamSource(Path.of("src/main/resources/aion/data/static_data/quest/legacy/quest_data.xml").toFile())));
 	}
 
 	@Test

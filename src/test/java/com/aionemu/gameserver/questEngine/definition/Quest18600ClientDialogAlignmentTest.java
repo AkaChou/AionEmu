@@ -108,7 +108,7 @@ class Quest18600ClientDialogAlignmentTest {
 
 	private CompiledQuestDefinition load() throws Exception {
 		try (InputStream input = getClass().getResourceAsStream(
-			"/aion/data/static_data/quest_definition/quests/18600.xml")) {
+			"/aion/data/static_data/quest/definitions/quests/18600.xml")) {
 			if (input == null) {
 				throw new IllegalStateException("missing quest definition 18600.xml");
 			}

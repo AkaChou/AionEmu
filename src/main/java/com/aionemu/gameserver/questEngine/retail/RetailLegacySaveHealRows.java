@@ -30,7 +30,7 @@ public final class RetailLegacySaveHealRows {
 	public record HealEdge(int staleRow, int rewardRow) {
 	}
 
-	private static final String REGISTRY = "/aion/data/static_data/quest_retail/quest_legacy_heal_rows.tsv";
+	private static final String REGISTRY = "/aion/data/static_data/quest/retail/quest_legacy_heal_rows.tsv";
 	private static volatile Map<Integer, HealEdge> rows;
 
 	private RetailLegacySaveHealRows() {

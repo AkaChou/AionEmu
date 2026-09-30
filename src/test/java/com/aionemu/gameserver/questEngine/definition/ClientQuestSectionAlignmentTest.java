@@ -48,7 +48,7 @@ class ClientQuestSectionAlignmentTest {
 	@Test
 	void clientVisibleKillFieldsUseTheirFixedSixBitSections() {
 		QuestCatalog catalog = QuestDefinitionCatalogManifest.compile(
-			Path.of("src/main/resources/aion/data/static_data/quest_definition"));
+			Path.of("src/main/resources/aion/data/static_data/quest/definitions"));
 		int checked = 0;
 		for (CompiledQuestDefinition definition : catalog.executables()) {
 			int questId = definition.id();
@@ -182,7 +182,7 @@ class ClientQuestSectionAlignmentTest {
 	@Test
 	void sectionNamedCountersStayAtTheirFixedSixBitOffset() {
 		QuestCatalog catalog = QuestDefinitionCatalogManifest.compile(
-			Path.of("src/main/resources/aion/data/static_data/quest_definition"));
+			Path.of("src/main/resources/aion/data/static_data/quest/definitions"));
 		Set<Integer> offenders = new TreeSet<>();
 		for (CompiledQuestDefinition definition : catalog.executables()) {
 			for (BitField field : definition.definition().progressLayout().fields()) {

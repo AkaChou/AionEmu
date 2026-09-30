@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
  */
 class Quest2841RetailAlignmentTest {
 	private static final Path XML = Path.of(
-		"src/main/resources/aion/data/static_data/quest_definition/quests/2841.xml");
+		"src/main/resources/aion/data/static_data/quest/definitions/quests/2841.xml");
 	private static final Set<Integer> TARGET_NPCS = Set.of(
 		214752, 214753, 214754, 214755, 214756, 214757, 214758, 214759, 214760,
 		214761, 214762, 214763, 214764, 214765, 214766, 214767, 214768, 214769,

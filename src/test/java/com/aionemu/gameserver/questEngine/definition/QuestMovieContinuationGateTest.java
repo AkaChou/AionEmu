@@ -59,7 +59,7 @@ class QuestMovieContinuationGateTest {
 
 	@Test
 	void compilerRejectsMovieOnlyPageTurnWithoutLedger() throws Exception {
-		String resource = "/aion/data/static_data/quest_definition/quests/14045.xml";
+		String resource = "/aion/data/static_data/quest/definitions/quests/14045.xml";
 		String xml;
 		try (InputStream input = getClass().getResourceAsStream(resource)) {
 			xml = new String(input.readAllBytes(), StandardCharsets.UTF_8);

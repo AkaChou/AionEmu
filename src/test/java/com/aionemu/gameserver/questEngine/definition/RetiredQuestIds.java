@@ -18,7 +18,7 @@ import java.util.TreeSet;
  */
 public final class RetiredQuestIds {
 
-	private static final String RETENTION = "/aion/data/static_data/quest_retail/retail-xml-retention.tsv";
+	private static final String RETENTION = "/aion/data/static_data/quest/retail/retail-xml-retention.tsv";
 
 	private static volatile Set<Integer> ids;
 

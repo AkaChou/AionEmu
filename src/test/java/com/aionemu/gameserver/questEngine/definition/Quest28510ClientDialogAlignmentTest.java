@@ -140,7 +140,7 @@ class Quest28510ClientDialogAlignmentTest {
 	}
 
 	private static QuestDefinition load() throws Exception {
-		String resource = "/aion/data/static_data/quest_definition/quests/28510.xml";
+		String resource = "/aion/data/static_data/quest/definitions/quests/28510.xml";
 		try (InputStream input = Quest28510ClientDialogAlignmentTest.class.getResourceAsStream(resource)) {
 			if (input == null) throw new IllegalStateException("missing quest definition 28510.xml");
 			return QuestDefinitionXmlCompiler.compile(input).definition();

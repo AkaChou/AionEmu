@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 /** Retail-anchored structural coverage for the Asmodian Morheim campaign defense. */
 class Quest24026RetailAlignmentTest {
 	private static final Path XML = Path.of(
-		"src/main/resources/aion/data/static_data/quest_definition/quests/24026.xml");
+		"src/main/resources/aion/data/static_data/quest/definitions/quests/24026.xml");
 
 	@Test
 	void preservesMetadataPrerequisitesAndRewards() throws Exception {

@@ -42,7 +42,7 @@ public final class RetailEnterAreaZoneResolution {
 	private static RetailEnterAreaZoneResolution decodeDefaultInstance() {
 		InputStream in = RetailEnterAreaZoneResolution.class.getResourceAsStream("/quest/quest_enterarea_zone_resolution.tsv");
 		if (in == null) {
-			in = RetailEnterAreaZoneResolution.class.getResourceAsStream("/aion/data/static_data/quest_retail/quest_enterarea_zone_resolution.tsv");
+			in = RetailEnterAreaZoneResolution.class.getResourceAsStream("/aion/data/static_data/quest/retail/quest_enterarea_zone_resolution.tsv");
 		}
 		if (in == null) {
 			return EMPTY;

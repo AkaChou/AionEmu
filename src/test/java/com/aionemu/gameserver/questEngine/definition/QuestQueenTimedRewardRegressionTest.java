@@ -161,7 +161,7 @@ class QuestQueenTimedRewardRegressionTest {
 	}
 
 	private static QuestDefinition load(int questId) throws Exception {
-		Path path = Path.of("src/main/resources/aion/data/static_data/quest_definition/quests/" + questId + ".xml");
+		Path path = Path.of("src/main/resources/aion/data/static_data/quest/definitions/quests/" + questId + ".xml");
 		try (InputStream input = Files.newInputStream(path)) {
 			return QuestDefinitionXmlCompiler.compile(input).definition();
 		}

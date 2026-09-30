@@ -212,7 +212,7 @@ class Quest14047ClientDialogAlignmentTest {
 
 	private static QuestDefinition definition() throws Exception {
 		try (InputStream input = Quest14047ClientDialogAlignmentTest.class.getResourceAsStream(
-				"/aion/data/static_data/quest_definition/quests/14047.xml")) {
+				"/aion/data/static_data/quest/definitions/quests/14047.xml")) {
 			if (input == null) {
 				throw new IllegalStateException("missing quest definition 14047.xml");
 			}

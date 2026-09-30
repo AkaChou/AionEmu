@@ -54,7 +54,7 @@ class Quest80318RetailAlignmentTest {
 	@Test
 	void hasOneProductionOwnerAndNoLegacyOwner() throws Exception {
 		String catalog = Files.readString(Path.of(
-			"src/main/resources/aion/data/static_data/quest_definition/quest_definition_catalog.xml"));
+			"src/main/resources/aion/data/static_data/quest/definitions/quest_definition_catalog.xml"));
 		assertFalse(legacyScriptDataExists(), "quest_script_data directory must be fully removed");
 
 		assertEquals(1, occurrences(catalog, "id=\"80318\""));
@@ -73,7 +73,7 @@ class Quest80318RetailAlignmentTest {
 
 	private static QuestDefinition load() throws Exception {
 		try (InputStream input = Quest80318RetailAlignmentTest.class.getResourceAsStream(
-			"/aion/data/static_data/quest_definition/quests/80318.xml")) {
+			"/aion/data/static_data/quest/definitions/quests/80318.xml")) {
 			if (input == null) {
 				throw new AssertionError("missing quest 80318 resource");
 			}

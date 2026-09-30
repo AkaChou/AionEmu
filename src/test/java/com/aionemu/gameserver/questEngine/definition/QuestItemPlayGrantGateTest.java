@@ -28,7 +28,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class QuestItemPlayGrantGateTest {
 
 	/** 保留清单：RETAIL_TABLE 行 = 真端驱动的任务。 / The retention manifest: RETAIL_TABLE rows are retail-driven. */
-	private static final String RETENTION = "/aion/data/static_data/quest_retail/retail-xml-retention.tsv";
+	private static final String RETENTION = "/aion/data/static_data/quest/retail/retail-xml-retention.tsv";
 
 	/** 登记的外部来源（quest_id -> 说明）；当前为空。 / Registered outside sources (quest_id -> reason); empty today. */
 	private static final java.util.Map<Integer, String> REGISTERED_SOURCES = java.util.Map.of();

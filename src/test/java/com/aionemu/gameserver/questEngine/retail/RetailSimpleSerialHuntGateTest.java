@@ -43,8 +43,8 @@ class RetailSimpleSerialHuntGateTest {
 
 	private static final String NPC_DIR = "/aion/data/static_data/npcs/";
 	private static final String ITEM_DIR = "/aion/data/static_data/items/item/";
-	private static final String CATALOG = "/aion/data/static_data/quest_definition/quest_definition_catalog.xml";
-	private static final String RETENTION = "/aion/data/static_data/quest_retail/retail-xml-retention.tsv";
+	private static final String CATALOG = "/aion/data/static_data/quest/definitions/quest_definition_catalog.xml";
+	private static final String RETENTION = "/aion/data/static_data/quest/retail/retail-xml-retention.tsv";
 	/** 与历史 XML 的漂移登记。 / Drift registry versus the legacy XML. */
 	private static final String DRIFT_REGISTRY = "/quest/retail-simple-serial-hunt-drift.tsv";
 	/** 冻结 IR 指纹。 / Frozen IR fingerprints. */
@@ -73,10 +73,10 @@ class RetailSimpleSerialHuntGateTest {
 
 	@BeforeAll
 	static void loadFixtures() throws Exception {
-		try (InputStream input = open("/aion/data/static_data/quest_retail/Quest_SimpleSerialHunt.xml")) {
+		try (InputStream input = open("/aion/data/static_data/quest/retail/Quest_SimpleSerialHunt.xml")) {
 			table = RetailSimpleSerialHuntTable.load(input);
 		}
-		try (InputStream input = open("/aion/data/static_data/quest_retail/quest.xml")) {
+		try (InputStream input = open("/aion/data/static_data/quest/retail/quest.xml")) {
 			retailTable = RetailQuestXmlTable.load(input);
 		}
 		huntStages = RetailClientHuntStages.defaultHuntStages();
@@ -561,7 +561,7 @@ class RetailSimpleSerialHuntGateTest {
 
 	private static Map<Integer, Integer> nameIds() throws Exception {
 		Map<Integer, Integer> ids = new HashMap<>();
-		for (String line : lines(open("/aion/data/static_data/quest_retail/quest_name_string_ids.tsv"))) {
+		for (String line : lines(open("/aion/data/static_data/quest/retail/quest_name_string_ids.tsv"))) {
 			if (line.startsWith("#") || line.isBlank()) {
 				continue;
 			}
@@ -574,7 +574,7 @@ class RetailSimpleSerialHuntGateTest {
 	private static Map<String, Integer> randomRewardIds() throws Exception {
 		Map<String, Integer> ids = new HashMap<>();
 		var document = javax.xml.parsers.DocumentBuilderFactory.newInstance().newDocumentBuilder()
-			.parse(open("/aion/data/static_data/quest_random_rewards.xml"));
+			.parse(open("/aion/data/static_data/quest/legacy/quest_random_rewards.xml"));
 		var nodes = document.getDocumentElement().getElementsByTagName("quest_random_reward");
 		for (int index = 0; index < nodes.getLength(); index++) {
 			var element = (org.w3c.dom.Element) nodes.item(index);

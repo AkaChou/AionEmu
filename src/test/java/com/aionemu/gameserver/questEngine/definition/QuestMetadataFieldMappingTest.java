@@ -25,7 +25,7 @@ class QuestMetadataFieldMappingTest {
 		factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
 		Document document;
 		try (InputStream input = getClass().getResourceAsStream(
-				"/aion/data/static_data/quest_data/quest_data.xml")) {
+				"/aion/data/static_data/quest/legacy/quest_data.xml")) {
 			document = factory.newDocumentBuilder().parse(input);
 		}
 		assertEquals("quests", document.getDocumentElement().getTagName());

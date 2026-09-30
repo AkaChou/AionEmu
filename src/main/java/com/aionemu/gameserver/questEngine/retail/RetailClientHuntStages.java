@@ -57,7 +57,7 @@ public final class RetailClientHuntStages {
 	private static RetailClientHuntStages decodeDefaultInstance() {
 		InputStream in = RetailClientHuntStages.class.getResourceAsStream("/quest/quest_client_hunt_stages.tsv");
 		if (in == null) {
-			in = RetailClientHuntStages.class.getResourceAsStream("/aion/data/static_data/quest_retail/quest_client_hunt_stages.tsv");
+			in = RetailClientHuntStages.class.getResourceAsStream("/aion/data/static_data/quest/retail/quest_client_hunt_stages.tsv");
 		}
 		if (in == null) {
 			return EMPTY;

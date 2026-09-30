@@ -33,11 +33,11 @@ import java.util.concurrent.Future;
  */
 public final class QuestDefinitionCatalogManifest {
 	private static final String RESOURCE =
-		"aion/data/static_data/quest_definition/quest_definition_catalog.xml";
+		"aion/data/static_data/quest/definitions/quest_definition_catalog.xml";
 	private static final String SCHEMA =
-		"/aion/data/static_data/quest_definition/quest_definition_catalog.xsd";
+		"/aion/data/static_data/quest/definitions/quest_definition_catalog.xsd";
 	private static final String EXTERNAL_RESOURCE_PREFIX =
-		"aion/data/static_data/quest_definition/";
+		"aion/data/static_data/quest/definitions/";
 	private static final String CATALOG_FILE = "quest_definition_catalog.xml";
 	private static final String CATALOG_SCHEMA_FILE = "quest_definition_catalog.xsd";
 	private static final String DEFINITION_SCHEMA_FILE = "quest_definition.xsd";

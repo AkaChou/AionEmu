@@ -35,7 +35,7 @@ import org.junit.jupiter.api.Test;
  */
 class RetailHuntClientCountGateTest {
 
-	private static final String DD_TABLE = "/aion/data/static_data/quest_retail/data_driven_quest.xml";
+	private static final String DD_TABLE = "/aion/data/static_data/quest/retail/data_driven_quest.xml";
 	private static final String NPC_DIR = "/aion/data/static_data/npcs/";
 	private static final List<String> NPC_TEMPLATES = List.of(
 		"npc_template_200000_216188.xml", "npc_template_216189_235748.xml", "npc_template_235749_247606.xml",

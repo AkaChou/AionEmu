@@ -47,7 +47,7 @@ class QuestRetailClassGateTest {
 	/** 真端元数据层已登记的职业轴分歧（真端优先）。 / Registered retail-priority class-axis divergences. */
 	private static final String DIVERGENCE_RESOURCE = "/quest/retail-metadata-divergences.tsv";
 	/** 保留清单：owner=RETAIL_TABLE 的任务由真端定义驱动。 / Retention manifest: retail-driven quest owners. */
-	private static final String RETENTION_RESOURCE = "/aion/data/static_data/quest_retail/retail-xml-retention.tsv";
+	private static final String RETENTION_RESOURCE = "/aion/data/static_data/quest/retail/retail-xml-retention.tsv";
 
 	private static final String RETAIL_PLACEHOLDER = "RETAIL_PLACEHOLDER";
 

@@ -326,7 +326,7 @@ class Quest1989And2722And19008ClientDialogAlignmentTest {
 
 	private static QuestDefinition definition(int questId) throws Exception {
 		try (InputStream input = Quest1989And2722And19008ClientDialogAlignmentTest.class.getResourceAsStream(
-				"/aion/data/static_data/quest_definition/quests/" + questId + ".xml")) {
+				"/aion/data/static_data/quest/definitions/quests/" + questId + ".xml")) {
 			if (input == null) {
 				throw new IllegalStateException("missing quest definition " + questId + ".xml");
 			}

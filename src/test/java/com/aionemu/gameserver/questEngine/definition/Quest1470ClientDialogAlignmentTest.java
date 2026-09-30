@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  */
 class Quest1470ClientDialogAlignmentTest {
 	private static final Path QUEST_PATH = Path.of(
-		"src/main/resources/aion/data/static_data/quest_definition/quests/1470.xml");
+		"src/main/resources/aion/data/static_data/quest/definitions/quests/1470.xml");
 	private static final int HANNET_NPC_ID = 790004;
 	private static final List<Integer> KROMEDE_NPC_IDS = List.of(212846, 214621);
 

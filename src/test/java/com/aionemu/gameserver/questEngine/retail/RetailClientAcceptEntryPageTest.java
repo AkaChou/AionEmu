@@ -66,7 +66,7 @@ class RetailClientAcceptEntryPageTest {
 	/** 真端 owner 登记（owner=RETAIL_TABLE 的行由真端驱动，overlay 会替换 XML 与页）。 /
 	 * Retail ownership registry (RETAIL_TABLE rows are retail-driven, so the overlay owns their pages). */
 	private static final String RETENTION_REGISTRY =
-		"/aion/data/static_data/quest_retail/retail-xml-retention.tsv";
+		"/aion/data/static_data/quest/retail/retail-xml-retention.tsv";
 	/**
 	 * 冻结缺口表（重生成：{@code -Dretail.acceptEntryPage.gapOut=<path>}）。当前实测缺口 = 583 行：
 	 * 全部是客户端页索引**完全缺登记**的真端 owner 行（无据判定，保持合成器页）；有页索引的行必须

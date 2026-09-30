@@ -59,7 +59,7 @@ public final class RetailClientDialogExits {
 	private static RetailClientDialogExits decodeDefaultInstance() {
 		InputStream in = RetailClientDialogExits.class.getResourceAsStream("/quest/quest_client_dialog_exits.tsv");
 		if (in == null) {
-			in = RetailClientDialogExits.class.getResourceAsStream("/aion/data/static_data/quest_retail/quest_client_dialog_exits.tsv");
+			in = RetailClientDialogExits.class.getResourceAsStream("/aion/data/static_data/quest/retail/quest_client_dialog_exits.tsv");
 		}
 		if (in == null) {
 			return EMPTY;

@@ -64,8 +64,8 @@ class RetailSimpleCollectItemGateTest {
 
 	private static final String NPC_DIR = "/aion/data/static_data/npcs/";
 	private static final String ITEM_DIR = "/aion/data/static_data/items/item/";
-	private static final String CATALOG = "/aion/data/static_data/quest_definition/quest_definition_catalog.xml";
-	private static final String RETENTION = "/aion/data/static_data/quest_retail/retail-xml-retention.tsv";
+	private static final String CATALOG = "/aion/data/static_data/quest/definitions/quest_definition_catalog.xml";
+	private static final String RETENTION = "/aion/data/static_data/quest/retail/retail-xml-retention.tsv";
 	/** 与历史 XML 的漂移登记（quest_id, classification）。 / Drift registry versus the legacy XML. */
 	private static final String DRIFT_REGISTRY = "/quest/retail-simple-collect-item-drift.tsv";
 	/** 冻结 IR 指纹（退役后继续发现静默漂移）。 / Frozen IR fingerprints. */
@@ -96,10 +96,10 @@ class RetailSimpleCollectItemGateTest {
 
 	@BeforeAll
 	static void loadFixtures() throws Exception {
-		try (InputStream input = open("/aion/data/static_data/quest_retail/Quest_SimpleCollectItem.xml")) {
+		try (InputStream input = open("/aion/data/static_data/quest/retail/Quest_SimpleCollectItem.xml")) {
 			table = RetailSimpleCollectItemTable.load(input);
 		}
-		try (InputStream input = open("/aion/data/static_data/quest_retail/quest.xml")) {
+		try (InputStream input = open("/aion/data/static_data/quest/retail/quest.xml")) {
 			retailTable = RetailQuestXmlTable.load(input);
 		}
 		clientDialogExits = RetailClientDialogExits.defaultExits();
@@ -736,7 +736,7 @@ class RetailSimpleCollectItemGateTest {
 
 	private static Map<Integer, Integer> nameIds() throws Exception {
 		Map<Integer, Integer> ids = new HashMap<>();
-		for (String line : lines(open("/aion/data/static_data/quest_retail/quest_name_string_ids.tsv"))) {
+		for (String line : lines(open("/aion/data/static_data/quest/retail/quest_name_string_ids.tsv"))) {
 			if (line.startsWith("#") || line.isBlank()) {
 				continue;
 			}
@@ -749,7 +749,7 @@ class RetailSimpleCollectItemGateTest {
 	private static Map<String, Integer> randomRewardIds() throws Exception {
 		Map<String, Integer> ids = new HashMap<>();
 		var document = javax.xml.parsers.DocumentBuilderFactory.newInstance().newDocumentBuilder()
-			.parse(open("/aion/data/static_data/quest_random_rewards.xml"));
+			.parse(open("/aion/data/static_data/quest/legacy/quest_random_rewards.xml"));
 		var nodes = document.getDocumentElement().getElementsByTagName("quest_random_reward");
 		for (int index = 0; index < nodes.getLength(); index++) {
 			var element = (org.w3c.dom.Element) nodes.item(index);

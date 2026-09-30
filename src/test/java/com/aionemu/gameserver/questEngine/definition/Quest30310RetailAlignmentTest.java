@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class Quest30310RetailAlignmentTest {
 	@Test
 	void dropsMatchRetailQuestData() throws Exception {
-		Path path = Path.of("src/main/resources/aion/data/static_data/quest_definition/quests/30310.xml");
+		Path path = Path.of("src/main/resources/aion/data/static_data/quest/definitions/quests/30310.xml");
 		try (InputStream input = Files.newInputStream(path)) {
 			QuestMetadata metadata = QuestDefinitionXmlCompiler.compile(input).definition().metadata();
 			Set<QuestDrop> expected = Set.of(

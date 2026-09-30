@@ -17,7 +17,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[3]
 MB = ROOT / ".agents" / "memory-bank"
 VERIFY = Path("/tmp/mb-verify.txt")
-RETENTION = MB / ".." / ".." / "src/main/resources/aion/data/static_data/quest_retail/retail-xml-retention.tsv"
+RETENTION = MB / ".." / ".." / "src/main/resources/aion/data/static_data/quest/retail/retail-xml-retention.tsv"
 
 LINE = re.compile(r"^(?:- )?Pattern (?P<pid>QE-\d+) (?P<field>\w+) references missing path (?P<path>\S+)$")
 

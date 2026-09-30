@@ -26,7 +26,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 class QuestA03ShardRetailAlignmentTest {
 
-	private static final Path DIR = Path.of("src/main/resources/aion/data/static_data/quest_definition/quests");
+	private static final Path DIR = Path.of("src/main/resources/aion/data/static_data/quest/definitions/quests");
 
 	/** Metadata facts per quest: name, display-name-id, min-level, category, reward list (kind,id,amount). */
 	private static final Map<Integer, List<Object>> METADATA = Map.ofEntries(

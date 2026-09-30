@@ -13,7 +13,7 @@ class Quest1007MovieDialogTest {
 	void movieSelectionsRestoreTheContinueDialogAfterPlaybackStarts() throws Exception {
 		QuestDefinition definition;
 		try (InputStream input = getClass().getResourceAsStream(
-				"/aion/data/static_data/quest_definition/quests/1007.xml")) {
+				"/aion/data/static_data/quest/definitions/quests/1007.xml")) {
 			assertNotNull(input);
 			definition = QuestDefinitionXmlCompiler.compile(input).definition();
 		}

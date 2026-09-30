@@ -46,7 +46,7 @@ class QuestDialogMigrationGateTest {
 
 	@Test
 	void productionQuestXmlUsesTypedDialogActionsAndPages() throws Exception {
-		try (Stream<Path> paths = Files.walk(Path.of("src/main/resources/aion/data/static_data/quest_definition"))) {
+		try (Stream<Path> paths = Files.walk(Path.of("src/main/resources/aion/data/static_data/quest/definitions"))) {
 			paths.filter(path -> {
 				String name = path.toString();
 				return name.endsWith(".xml") || name.endsWith(".xsd");

@@ -63,7 +63,7 @@ class Quest38000LevelUpDialogTest {
 
 	private CompiledQuestDefinition definition() throws Exception {
 		try (InputStream input = getClass().getResourceAsStream(
-			"/aion/data/static_data/quest_definition/quests/38000.xml")) {
+			"/aion/data/static_data/quest/definitions/quests/38000.xml")) {
 			if (input == null) {
 				throw new IllegalStateException("missing quest definition 38000.xml");
 			}

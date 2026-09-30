@@ -261,7 +261,7 @@ class Batch34RentusBaseRowLadderContractTest {
 
 	private static CompiledQuestDefinition definition(int questId) throws IOException {
 		try (InputStream input = Batch34RentusBaseRowLadderContractTest.class.getResourceAsStream(
-				"/aion/data/static_data/quest_definition/quests/" + questId + ".xml")) {
+				"/aion/data/static_data/quest/definitions/quests/" + questId + ".xml")) {
 			assertNotNull(input, () -> "missing quest definition " + questId + ".xml");
 			return QuestDefinitionXmlCompiler.compile(input);
 		}

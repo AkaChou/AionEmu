@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ReportToManySetSucceedAlignmentTest {
 	private static final Path QUEST_DIRECTORY = Path.of(
-		"src/main/resources/aion/data/static_data/quest_definition/quests");
+		"src/main/resources/aion/data/static_data/quest/definitions/quests");
 
 	@Test
 	void clientSetSucceedRoutesPreserveExistingProgressionSemantics() throws Exception {

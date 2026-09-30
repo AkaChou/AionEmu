@@ -256,7 +256,7 @@ class Quest3502RetailFlowAlignmentTest {
 	}
 
 	private static CompiledQuestDefinition load() throws Exception {
-		Path path = Path.of("src/main/resources/aion/data/static_data/quest_definition/quests/3502.xml");
+		Path path = Path.of("src/main/resources/aion/data/static_data/quest/definitions/quests/3502.xml");
 		try (InputStream input = Files.newInputStream(path)) {
 			return QuestDefinitionXmlCompiler.compile(input);
 		}

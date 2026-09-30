@@ -160,7 +160,7 @@ class Quest2947RewardTurnInTest {
 	}
 
 	private static CompiledQuestDefinition load() throws Exception {
-		Path path = Path.of("src/main/resources/aion/data/static_data/quest_definition/quests/2947.xml");
+		Path path = Path.of("src/main/resources/aion/data/static_data/quest/definitions/quests/2947.xml");
 		try (InputStream input = Files.newInputStream(path)) {
 			return QuestDefinitionXmlCompiler.compile(input);
 		}

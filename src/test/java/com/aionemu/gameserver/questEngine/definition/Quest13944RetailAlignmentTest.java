@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 /** Retail-anchored structural coverage for the Union fortress hunt owner 13944. */
 class Quest13944RetailAlignmentTest {
 	private static final Path XML = Path.of(
-		"src/main/resources/aion/data/static_data/quest_definition/quests/13944.xml");
+		"src/main/resources/aion/data/static_data/quest/definitions/quests/13944.xml");
 
 	@Test
 	void preservesUnionMetadataThreeKillsAndDianTurnIn() throws Exception {

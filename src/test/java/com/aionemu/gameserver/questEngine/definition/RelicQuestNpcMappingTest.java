@@ -30,7 +30,7 @@ class RelicQuestNpcMappingTest {
 	void completedRelicDefinitionsUseAuthoritativeExchangeNpcMappings() throws Exception {
 		ClassLoader loader = getClass().getClassLoader();
 		for (var entry : EXPECTED_NPCS.entrySet()) {
-			String resource = "aion/data/static_data/quest_definition/quests/" + entry.getKey() + ".xml";
+			String resource = "aion/data/static_data/quest/definitions/quests/" + entry.getKey() + ".xml";
 			try (InputStream input = loader.getResourceAsStream(resource)) {
 				assertNotNull(input, resource);
 				CompiledQuestDefinition definition = QuestDefinitionXmlCompiler.compile(input);

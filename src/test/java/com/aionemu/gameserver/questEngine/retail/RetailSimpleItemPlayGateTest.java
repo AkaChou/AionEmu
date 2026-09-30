@@ -63,7 +63,7 @@ class RetailSimpleItemPlayGateTest {
 	private static final String RETENTION = "/quest/retail-xml-retention.tsv";
 	/** 生产任务 XML 源树目录（退役/在盘判据，不信 target/classes 残留）。 */
 	private static final Path PRODUCTION_XML_DIR =
-		Path.of("src/main/resources/aion/data/static_data/quest_definition/quests");
+		Path.of("src/main/resources/aion/data/static_data/quest/definitions/quests");
 	private static final String NPC_DIR = "/aion/data/static_data/npcs/";
 	private static final List<String> NPC_TEMPLATES = List.of(
 		"npc_template_200000_216188.xml", "npc_template_216189_235748.xml", "npc_template_235749_247606.xml",
@@ -83,10 +83,10 @@ class RetailSimpleItemPlayGateTest {
 
 	@BeforeAll
 	static void loadFixtures() throws Exception {
-		try (InputStream input = open("/aion/data/static_data/quest_retail/Quest_SimpleItemPlay.xml")) {
+		try (InputStream input = open("/aion/data/static_data/quest/retail/Quest_SimpleItemPlay.xml")) {
 			table = RetailSimpleItemPlayTable.load(input);
 		}
-		try (InputStream input = open("/aion/data/static_data/quest_retail/quest.xml")) {
+		try (InputStream input = open("/aion/data/static_data/quest/retail/quest.xml")) {
 			retailTable = RetailQuestXmlTable.load(input);
 		}
 		npcIndex = RetailNpcNameIndex.build(openAll(NPC_DIR, NPC_TEMPLATES), RetailQuestAiNameGroupsFixture.streams());
@@ -217,7 +217,7 @@ class RetailSimpleItemPlayGateTest {
 
 	private static Map<String, Integer> randomRewardIds() throws Exception {
 		Map<String, Integer> ids = new HashMap<>();
-		var document = parse(open("/aion/data/static_data/quest_random_rewards.xml"));
+		var document = parse(open("/aion/data/static_data/quest/legacy/quest_random_rewards.xml"));
 		var nodes = document.getDocumentElement().getElementsByTagName("quest_random_reward");
 		for (int index = 0; index < nodes.getLength(); index++) {
 			var element = (org.w3c.dom.Element) nodes.item(index);
@@ -229,7 +229,7 @@ class RetailSimpleItemPlayGateTest {
 
 	private static Map<Integer, Integer> nameIds() throws Exception {
 		Map<Integer, Integer> ids = new HashMap<>();
-		for (String line : lines(open("/aion/data/static_data/quest_retail/quest_name_string_ids.tsv"))) {
+		for (String line : lines(open("/aion/data/static_data/quest/retail/quest_name_string_ids.tsv"))) {
 			if (line.startsWith("#") || line.isBlank()) {
 				continue;
 			}

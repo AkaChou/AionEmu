@@ -53,12 +53,12 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class RetailMetadataEquivalenceGateTest {
 
 	private static final String RESOURCE_PREFIX = "/aion/data/static_data/";
-	private static final String RETAIL_QUEST_XML = RESOURCE_PREFIX + "quest_retail/quest.xml";
-	private static final String NAME_IDS_TSV = RESOURCE_PREFIX + "quest_retail/quest_name_string_ids.tsv";
+	private static final String RETAIL_QUEST_XML = RESOURCE_PREFIX + "quest/retail/quest.xml";
+	private static final String NAME_IDS_TSV = RESOURCE_PREFIX + "quest/retail/quest_name_string_ids.tsv";
 	private static final String NPC_DIR = RESOURCE_PREFIX + "npcs/";
 	private static final String ITEM_DIR = RESOURCE_PREFIX + "items/item/";
-	private static final String RANDOM_REWARDS = RESOURCE_PREFIX + "quest_random_rewards.xml";
-	private static final String CATALOG = RESOURCE_PREFIX + "quest_definition/quest_definition_catalog.xml";
+	private static final String RANDOM_REWARDS = RESOURCE_PREFIX + "quest/legacy/quest_random_rewards.xml";
+	private static final String CATALOG = RESOURCE_PREFIX + "quest/definitions/quest_definition_catalog.xml";
 	private static final String CAP_EXCEPTIONS = "/quest/quest-start-metadata-retail-cap-exceptions.tsv";
 	private static final String DIVERGENCES = "/quest/retail-metadata-divergences.tsv";
 

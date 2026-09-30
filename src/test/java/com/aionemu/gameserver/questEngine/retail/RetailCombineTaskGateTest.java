@@ -54,8 +54,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 class RetailCombineTaskGateTest {
 
-	private static final String CATALOG = "/aion/data/static_data/quest_definition/quest_definition_catalog.xml";
-	private static final String COMBINE_TABLE = "/aion/data/static_data/quest_retail/Quest_CombineTask.xml";
+	private static final String CATALOG = "/aion/data/static_data/quest/definitions/quest_definition_catalog.xml";
+	private static final String COMBINE_TABLE = "/aion/data/static_data/quest/retail/Quest_CombineTask.xml";
 	private static final String RECIPE_TEMPLATES = "/aion/data/static_data/recipe/recipe_templates.xml";
 	private static final String FINGERPRINTS = "/quest/retail-combine-task-ir-fingerprints.tsv";
 	private static final String NPC_DIR = "/aion/data/static_data/npcs/";
@@ -83,7 +83,7 @@ class RetailCombineTaskGateTest {
 		try (InputStream input = open(COMBINE_TABLE)) {
 			table = RetailCombineTaskTable.load(input);
 		}
-		try (InputStream input = open("/aion/data/static_data/quest_retail/quest.xml")) {
+		try (InputStream input = open("/aion/data/static_data/quest/retail/quest.xml")) {
 			retailTable = RetailQuestXmlTable.load(input);
 		}
 		recipeIndex = RetailRecipeIndex.build(List.of(open(RECIPE_TEMPLATES)));
@@ -346,7 +346,7 @@ class RetailCombineTaskGateTest {
 
 	private static Map<String, Integer> randomRewardIds() throws Exception {
 		Map<String, Integer> ids = new HashMap<>();
-		var document = parse(open("/aion/data/static_data/quest_random_rewards.xml"));
+		var document = parse(open("/aion/data/static_data/quest/legacy/quest_random_rewards.xml"));
 		var nodes = document.getDocumentElement().getElementsByTagName("quest_random_reward");
 		for (int index = 0; index < nodes.getLength(); index++) {
 			var element = (org.w3c.dom.Element) nodes.item(index);
@@ -358,7 +358,7 @@ class RetailCombineTaskGateTest {
 
 	private static Map<Integer, Integer> nameIds() throws Exception {
 		Map<Integer, Integer> ids = new HashMap<>();
-		for (String line : lines(open("/aion/data/static_data/quest_retail/quest_name_string_ids.tsv"))) {
+		for (String line : lines(open("/aion/data/static_data/quest/retail/quest_name_string_ids.tsv"))) {
 			if (line.startsWith("#") || line.isBlank()) {
 				continue;
 			}

@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  */
 class Quest1354ClientDialogAlignmentTest {
 	private static final Path QUEST_PATH = Path.of(
-		"src/main/resources/aion/data/static_data/quest_definition/quests/1354.xml");
+		"src/main/resources/aion/data/static_data/quest/definitions/quests/1354.xml");
 	private static final int NPC_ID = 203983;
 
 	@Test

@@ -41,7 +41,7 @@ class Quest14010EnterZoneProtocolTest {
 
 	private CompiledQuestDefinition definition() throws Exception {
 		try (InputStream input = getClass().getResourceAsStream(
-			"/aion/data/static_data/quest_definition/quests/14010.xml")) {
+			"/aion/data/static_data/quest/definitions/quests/14010.xml")) {
 			if (input == null) {
 				throw new IllegalStateException("missing quest 14010 definition");
 			}

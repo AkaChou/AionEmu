@@ -118,7 +118,7 @@ class Quest1661TheKrallScoutingMissionRegressionTest {
 	private static CompiledQuestDefinition definition() throws Exception {
 		try (InputStream input = Objects.requireNonNull(
 			Quest1661TheKrallScoutingMissionRegressionTest.class.getResourceAsStream(
-				"/aion/data/static_data/quest_definition/quests/1661.xml"))) {
+				"/aion/data/static_data/quest/definitions/quests/1661.xml"))) {
 			return QuestDefinitionXmlCompiler.compile(input);
 		}
 	}

@@ -59,7 +59,7 @@ class Quest1157EscortRegressionTest {
 	}
 
 	private static CompiledQuestDefinition load() {
-		String resource = "/aion/data/static_data/quest_definition/quests/1157.xml";
+		String resource = "/aion/data/static_data/quest/definitions/quests/1157.xml";
 		try (InputStream input = Objects.requireNonNull(
 				Quest1157EscortRegressionTest.class.getResourceAsStream(resource), resource)) {
 			return QuestDefinitionXmlCompiler.compile(input);

@@ -350,7 +350,7 @@ class GelkmarosKanteleRowLadderContractTest {
 
 	private static CompiledQuestDefinition definition() throws IOException {
 		try (InputStream input = GelkmarosKanteleRowLadderContractTest.class.getResourceAsStream(
-				"/aion/data/static_data/quest_definition/quests/" + QUEST + ".xml")) {
+				"/aion/data/static_data/quest/definitions/quests/" + QUEST + ".xml")) {
 			assertNotNull(input, () -> "missing quest definition " + QUEST + ".xml");
 			return QuestDefinitionXmlCompiler.compile(input);
 		}

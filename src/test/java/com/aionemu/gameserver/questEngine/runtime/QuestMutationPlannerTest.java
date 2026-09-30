@@ -107,7 +107,7 @@ class QuestMutationPlannerTest {
 	void locked14051StateIsRecoveredByBothAutomaticStartEventsAfterPrerequisitesPass() throws Exception {
 		CompiledQuestDefinition definition;
 		try (InputStream input = Objects.requireNonNull(getClass().getResourceAsStream(
-			"/aion/data/static_data/quest_definition/quests/14051.xml"))) {
+			"/aion/data/static_data/quest/definitions/quests/14051.xml"))) {
 			definition = QuestDefinitionXmlCompiler.compile(input);
 		}
 		QuestSnapshot locked = new QuestSnapshot(7, 14051, QuestStatus.LOCKED, 0, Map.of())
@@ -184,7 +184,7 @@ class QuestMutationPlannerTest {
 	void beautifulFeatherCleansEveryWorkItemOnRewardRoutes() throws Exception {
 		CompiledQuestDefinition definition;
 		try (InputStream input = Objects.requireNonNull(getClass().getResourceAsStream(
-			"/aion/data/static_data/quest_definition/quests/2392.xml"))) {
+			"/aion/data/static_data/quest/definitions/quests/2392.xml"))) {
 			definition = QuestDefinitionXmlCompiler.compile(input);
 		}
 		// 真实 quest.xml: 选定分支羽毛在 started->rN 已交并扣除；reward 路由上 3 类羽毛均使用 ALL 可选清理，防止阻断完成。
@@ -422,7 +422,7 @@ class QuestMutationPlannerTest {
 	void npcFactionLifecycleIsScheduledAroundTypedQuestStateTransitions() throws Exception {
 		CompiledQuestDefinition definition;
 		try (InputStream input = Objects.requireNonNull(getClass().getResourceAsStream(
-			"/aion/data/static_data/quest_definition/quests/36539.xml"))) {
+			"/aion/data/static_data/quest/definitions/quests/36539.xml"))) {
 			definition = QuestDefinitionXmlCompiler.compile(input);
 		}
 

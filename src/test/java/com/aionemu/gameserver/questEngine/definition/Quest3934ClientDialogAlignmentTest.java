@@ -185,7 +185,7 @@ class Quest3934ClientDialogAlignmentTest {
 	}
 
 	private static CompiledQuestDefinition load() throws Exception {
-		Path path = Path.of("src/main/resources/aion/data/static_data/quest_definition/quests/3934.xml");
+		Path path = Path.of("src/main/resources/aion/data/static_data/quest/definitions/quests/3934.xml");
 		try (InputStream input = Files.newInputStream(path)) {
 			return QuestDefinitionXmlCompiler.compile(input);
 		}

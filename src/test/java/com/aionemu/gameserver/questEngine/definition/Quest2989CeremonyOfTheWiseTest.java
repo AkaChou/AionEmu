@@ -216,7 +216,7 @@ class Quest2989CeremonyOfTheWiseTest {
 
 	private static QuestDefinition definition() throws Exception {
 		try (InputStream input = Quest2989CeremonyOfTheWiseTest.class.getResourceAsStream(
-				"/aion/data/static_data/quest_definition/quests/2989.xml")) {
+				"/aion/data/static_data/quest/definitions/quests/2989.xml")) {
 			if (input == null) {
 				throw new IllegalStateException("missing quest definition 2989.xml");
 			}

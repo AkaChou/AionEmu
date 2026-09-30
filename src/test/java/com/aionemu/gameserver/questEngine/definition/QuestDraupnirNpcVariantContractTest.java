@@ -29,7 +29,7 @@ class QuestDraupnirNpcVariantContractTest {
 	private static final Path INSTANCE_HANDLER = Path.of(
 		"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/DraupnirCaveInstance.java");
 	private static final Path QUEST_DATA = Path.of(
-		"src/main/resources/aion/data/static_data/quest_definition/quests");
+		"src/main/resources/aion/data/static_data/quest/definitions/quests");
 	private static final Map<Integer, Integer> RETIRED_NPC_VARIANTS = Map.of(
 		213775, 236924,
 		213778, 237265,

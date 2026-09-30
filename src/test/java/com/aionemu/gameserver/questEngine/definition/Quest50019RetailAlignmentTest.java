@@ -60,7 +60,7 @@ class Quest50019RetailAlignmentTest {
 	@Test
 	void hasOneProductionOwnerAndNoLegacyOwner() throws Exception {
 		String catalog = Files.readString(Path.of(
-			"src/main/resources/aion/data/static_data/quest_definition/quest_definition_catalog.xml"));
+			"src/main/resources/aion/data/static_data/quest/definitions/quest_definition_catalog.xml"));
 		assertFalse(legacyScriptDataExists(), "quest_script_data directory must be fully removed");
 
 		assertEquals(1, occurrences(catalog, "id=\"50019\""));

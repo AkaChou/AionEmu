@@ -92,7 +92,7 @@ class Quest2223ClientDialogAlignmentTest {
 
 	private static QuestDefinition definition() throws Exception {
 		try (InputStream input = Quest2223ClientDialogAlignmentTest.class.getResourceAsStream(
-			"/aion/data/static_data/quest_definition/quests/2223.xml")) {
+			"/aion/data/static_data/quest/definitions/quests/2223.xml")) {
 			if (input == null) throw new IllegalStateException("missing quest definition 2223.xml");
 			return QuestDefinitionXmlCompiler.compile(input).definition();
 		}

@@ -22,7 +22,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public final class RetailQuestWorkItems {
 
-	private static final String QUEST_DATA = "/aion/data/static_data/quest_data/quest_data.xml";
+	private static final String QUEST_DATA = "/aion/data/static_data/quest/legacy/quest_data.xml";
 	private static final Map<Integer, int[]> CACHE = new ConcurrentHashMap<>();
 
 	private RetailQuestWorkItems() {

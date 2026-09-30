@@ -402,7 +402,7 @@ class QuestMovieAndDialogLoopRegressionTest {
 		java.util.List<String> violations = new java.util.ArrayList<>();
 		int previewedBlocks = 0;
 		try (var files = Files.newDirectoryStream(
-				Path.of("src/main/resources/aion/data/static_data/quest_definition/quests"), "*.xml")) {
+				Path.of("src/main/resources/aion/data/static_data/quest/definitions/quests"), "*.xml")) {
 			for (Path file : files) {
 				var document = builder.parse(file.toFile());
 				org.w3c.dom.NodeList blocks = document.getElementsByTagName("npc-complete");

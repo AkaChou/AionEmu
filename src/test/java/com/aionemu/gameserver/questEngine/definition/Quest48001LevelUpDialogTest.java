@@ -63,7 +63,7 @@ class Quest48001LevelUpDialogTest {
 
 	private CompiledQuestDefinition definition() throws Exception {
 		try (InputStream input = getClass().getResourceAsStream(
-			"/aion/data/static_data/quest_definition/quests/48001.xml")) {
+			"/aion/data/static_data/quest/definitions/quests/48001.xml")) {
 			if (input == null) {
 				throw new IllegalStateException("missing quest definition 48001.xml");
 			}

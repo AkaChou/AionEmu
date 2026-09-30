@@ -35,7 +35,7 @@ public final class QuestDefinitionXmlCompiler {
 
 	private static Schema buildClasspathSchema() {
 		try (InputStream schemaStream = QuestDefinitionXmlCompiler.class.getResourceAsStream(
-				"/aion/data/static_data/quest_definition/quest_definition.xsd")) {
+				"/aion/data/static_data/quest/definitions/quest_definition.xsd")) {
 			if (schemaStream == null) {
 				throw new QuestCompilationException("SCHEMA_MISSING", "quest definition schema is not packaged");
 			}

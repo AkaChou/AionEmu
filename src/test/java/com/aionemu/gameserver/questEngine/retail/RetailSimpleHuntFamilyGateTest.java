@@ -86,10 +86,10 @@ class RetailSimpleHuntFamilyGateTest {
 	@BeforeAll
 	static void loadFixtures() throws Exception {
 		RetailSimpleHuntTable table;
-		try (InputStream input = open("/aion/data/static_data/quest_retail/Quest_SimpleHunt.xml")) {
+		try (InputStream input = open("/aion/data/static_data/quest/retail/Quest_SimpleHunt.xml")) {
 			table = RetailSimpleHuntTable.load(input);
 		}
-		try (InputStream input = open("/aion/data/static_data/quest_retail/quest.xml")) {
+		try (InputStream input = open("/aion/data/static_data/quest/retail/quest.xml")) {
 			retailTable = RetailQuestXmlTable.load(input);
 		}
 		clientRewardNpcs = RetailClientRewardNpcs.defaultRewardNpcs();
@@ -291,7 +291,7 @@ class RetailSimpleHuntFamilyGateTest {
 		}
 		assertEquals(registry, adopted, () -> "采纳集与裁定登记表失同步：registry=" + registry + " adopted=" + adopted);
 		RetailSimpleHuntTable table;
-		try (InputStream input = open("/aion/data/static_data/quest_retail/Quest_SimpleHunt.xml")) {
+		try (InputStream input = open("/aion/data/static_data/quest/retail/Quest_SimpleHunt.xml")) {
 			table = RetailSimpleHuntTable.load(input);
 		}
 		for (int questId : adopted) {
@@ -323,7 +323,7 @@ class RetailSimpleHuntFamilyGateTest {
 
 	private static Map<String, Integer> randomRewardIds() throws Exception {
 		Map<String, Integer> ids = new HashMap<>();
-		var document = parse(open("/aion/data/static_data/quest_random_rewards.xml"));
+		var document = parse(open("/aion/data/static_data/quest/legacy/quest_random_rewards.xml"));
 		var nodes = document.getDocumentElement().getElementsByTagName("quest_random_reward");
 		for (int index = 0; index < nodes.getLength(); index++) {
 			var element = (org.w3c.dom.Element) nodes.item(index);
@@ -335,7 +335,7 @@ class RetailSimpleHuntFamilyGateTest {
 
 	private static Map<Integer, Integer> nameIds() throws Exception {
 		Map<Integer, Integer> ids = new HashMap<>();
-		for (String line : lines(open("/aion/data/static_data/quest_retail/quest_name_string_ids.tsv"))) {
+		for (String line : lines(open("/aion/data/static_data/quest/retail/quest_name_string_ids.tsv"))) {
 			if (line.startsWith("#") || line.isBlank()) {
 				continue;
 			}

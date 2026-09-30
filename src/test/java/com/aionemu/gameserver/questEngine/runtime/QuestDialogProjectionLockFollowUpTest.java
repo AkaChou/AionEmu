@@ -114,7 +114,7 @@ class QuestDialogProjectionLockFollowUpTest {
 	}
 
 	private static CompiledQuestDefinition load(int questId) throws Exception {
-		String resource = "/aion/data/static_data/quest_definition/quests/" + questId + ".xml";
+		String resource = "/aion/data/static_data/quest/definitions/quests/" + questId + ".xml";
 		try (InputStream input = Objects.requireNonNull(
 				QuestDialogProjectionLockFollowUpTest.class.getResourceAsStream(resource), resource)) {
 			return QuestDefinitionXmlCompiler.compile(input);

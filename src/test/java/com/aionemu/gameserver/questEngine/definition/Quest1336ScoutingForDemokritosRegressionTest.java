@@ -114,7 +114,7 @@ class Quest1336ScoutingForDemokritosRegressionTest {
 	private static CompiledQuestDefinition definition() throws Exception {
 		try (InputStream input = Objects.requireNonNull(
 			Quest1336ScoutingForDemokritosRegressionTest.class.getResourceAsStream(
-				"/aion/data/static_data/quest_definition/quests/1336.xml"))) {
+				"/aion/data/static_data/quest/definitions/quests/1336.xml"))) {
 			return QuestDefinitionXmlCompiler.compile(input);
 		}
 	}

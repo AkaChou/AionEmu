@@ -89,7 +89,7 @@ class Quest24043RetailFlowAlignmentTest {
 	}
 
 	private static CompiledQuestDefinition load() {
-		String resource = "/aion/data/static_data/quest_definition/quests/24043.xml";
+		String resource = "/aion/data/static_data/quest/definitions/quests/24043.xml";
 		try (InputStream input = Objects.requireNonNull(
 			Quest24043RetailFlowAlignmentTest.class.getResourceAsStream(resource), resource)) {
 			return QuestDefinitionXmlCompiler.compile(input);

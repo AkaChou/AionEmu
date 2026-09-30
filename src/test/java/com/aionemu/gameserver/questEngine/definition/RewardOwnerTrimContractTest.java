@@ -239,7 +239,7 @@ class RewardOwnerTrimContractTest {
 
 	private static String resourceText(int questId) throws IOException {
 		try (InputStream input = RewardOwnerTrimContractTest.class.getResourceAsStream(
-				"/aion/data/static_data/quest_definition/quests/" + questId + ".xml")) {
+				"/aion/data/static_data/quest/definitions/quests/" + questId + ".xml")) {
 			assertNotNull(input, () -> "missing quest definition " + questId + ".xml");
 			return new String(input.readAllBytes(), java.nio.charset.StandardCharsets.UTF_8);
 		}
@@ -248,7 +248,7 @@ class RewardOwnerTrimContractTest {
 	/** 退役任务没有 XML（返回 null，由调用方按退役登记断言）。 / Retired quests have no XML resource. */
 	private static String resourceTextOrNull(int questId) throws IOException {
 		try (InputStream input = RewardOwnerTrimContractTest.class.getResourceAsStream(
-				"/aion/data/static_data/quest_definition/quests/" + questId + ".xml")) {
+				"/aion/data/static_data/quest/definitions/quests/" + questId + ".xml")) {
 			return input == null ? null
 				: new String(input.readAllBytes(), java.nio.charset.StandardCharsets.UTF_8);
 		}

@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 class QuestPageTurnResponseGateTest {
 	@Test
 	void pageTurnWithAnEmptyAfterCommitIsRejected() throws Exception {
-		String xml = read("/aion/data/static_data/quest_definition/quests/24053.xml");
+		String xml = read("/aion/data/static_data/quest/definitions/quests/24053.xml");
 		String mutated = xml.replace("<play-movie movie-id=\"252\"/>", "");
 		assertFalse(mutated.contains("<play-movie movie-id=\"252\"/>"),
 			"24053 must author its movie page turns with play-movie elements");
@@ -32,7 +32,7 @@ class QuestPageTurnResponseGateTest {
 
 	@Test
 	void movieOnlyPageTurnKeepsItsLedgerException() throws Exception {
-		String xml = read("/aion/data/static_data/quest_definition/quests/24053.xml");
+		String xml = read("/aion/data/static_data/quest/definitions/quests/24053.xml");
 
 		// 24053 step1-4 是显式 ledger 例外：影片静默形态仍按影片规则豁免，新门禁不得因此误报。
 		// 24053 step1-4 stay in the explicit ledger: the silent movie form is still exempted by the movie

@@ -62,7 +62,7 @@ public final class RetailClientUseItemReport {
 	private static RetailClientUseItemReport decodeDefaultInstance() {
 		InputStream in = RetailClientUseItemReport.class.getResourceAsStream("/quest/quest_client_use_item_report.tsv");
 		if (in == null) {
-			in = RetailClientUseItemReport.class.getResourceAsStream("/aion/data/static_data/quest_retail/quest_client_use_item_report.tsv");
+			in = RetailClientUseItemReport.class.getResourceAsStream("/aion/data/static_data/quest/retail/quest_client_use_item_report.tsv");
 		}
 		if (in == null) {
 			return EMPTY;

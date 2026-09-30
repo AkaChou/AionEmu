@@ -78,7 +78,7 @@ class Quest1006ClientDialogAlignmentTest {
 
 	private static CompiledQuestDefinition load() throws Exception {
 		try (InputStream input = Quest1006ClientDialogAlignmentTest.class.getResourceAsStream(
-			"/aion/data/static_data/quest_definition/quests/1006.xml")) {
+			"/aion/data/static_data/quest/definitions/quests/1006.xml")) {
 			if (input == null) {
 				throw new IllegalStateException("missing quest definition 1006.xml");
 			}

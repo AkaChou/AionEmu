@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.*;
 /** Retail-anchored structural coverage for the Draupnir Rescue escort. */
 class Quest2634RetailAlignmentTest {
 	private static final Path XML = Path.of(
-		"src/main/resources/aion/data/static_data/quest_definition/quests/2634.xml");
+		"src/main/resources/aion/data/static_data/quest/definitions/quests/2634.xml");
 
 	@Test
 	void preservesRetailMetadataAndRewards() throws Exception {

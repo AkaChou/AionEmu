@@ -36,33 +36,33 @@ public final class RetailQuestDriver {
 
 	/** 保留清单资源（quest_id, owner, family, reason, evidence）。 / The retention manifest resource. */
 	private static final String RETENTION_RESOURCE =
-		"/aion/data/static_data/quest_retail/retail-xml-retention.tsv";
-	private static final String SIMPLE_HUNT_TABLE = "/aion/data/static_data/quest_retail/Quest_SimpleHunt.xml";
+		"/aion/data/static_data/quest/retail/retail-xml-retention.tsv";
+	private static final String SIMPLE_HUNT_TABLE = "/aion/data/static_data/quest/retail/Quest_SimpleHunt.xml";
 	/** 真端 SimpleSerialHunt 模板表（行直接转换为 hunt 形 Entry，复用计划与合成器）。 /
 	 * The retail SimpleSerialHunt template table (rows convert to hunt-shaped entries). */
 	private static final String SIMPLE_SERIAL_HUNT_TABLE =
-		"/aion/data/static_data/quest_retail/Quest_SimpleSerialHunt.xml";
+		"/aion/data/static_data/quest/retail/Quest_SimpleSerialHunt.xml";
 	/** 真端 SimpleUseItem 模板表（用物品接取 + 报告 NPC）。 / The retail SimpleUseItem template table. */
 	private static final String SIMPLE_USE_ITEM_TABLE =
-		"/aion/data/static_data/quest_retail/Quest_SimpleUseItem.xml";
+		"/aion/data/static_data/quest/retail/Quest_SimpleUseItem.xml";
 	/** 真端 SimpleItemPlay 模板表（接取发物 → 用物品演出 → 交付）。 /
 	 * The retail SimpleItemPlay template table (accept grants the item, using it advances, hand-in). */
 	private static final String SIMPLE_ITEM_PLAY_TABLE =
-		"/aion/data/static_data/quest_retail/Quest_SimpleItemPlay.xml";
+		"/aion/data/static_data/quest/retail/Quest_SimpleItemPlay.xml";
 	/** 真端 DataDriven 模板表（接取方式 × 进度步骤链）。 / The retail DataDriven template table. */
 	private static final String DATA_DRIVEN_TABLE =
-		"/aion/data/static_data/quest_retail/data_driven_quest.xml";
-	private static final String SIMPLE_TALK_TABLE = "/aion/data/static_data/quest_retail/Quest_SimpleTalk.xml";
+		"/aion/data/static_data/quest/retail/data_driven_quest.xml";
+	private static final String SIMPLE_TALK_TABLE = "/aion/data/static_data/quest/retail/Quest_SimpleTalk.xml";
 	/** 真端 CombineTask 模板表。 / The retail CombineTask template table. */
-	private static final String COMBINE_TASK_TABLE = "/aion/data/static_data/quest_retail/Quest_CombineTask.xml";
+	private static final String COMBINE_TASK_TABLE = "/aion/data/static_data/quest/retail/Quest_CombineTask.xml";
 	/** 真端 SimpleCollectItem 模板表。 / The retail SimpleCollectItem template table. */
 	private static final String SIMPLE_COLLECT_ITEM_TABLE =
-		"/aion/data/static_data/quest_retail/Quest_SimpleCollectItem.xml";
+		"/aion/data/static_data/quest/retail/Quest_SimpleCollectItem.xml";
 	/** 本服配方模板（{@code (skillid, productid)} → recipe id）。 / Local recipe templates. */
 	private static final String RECIPE_TEMPLATES = "/aion/data/static_data/recipe/recipe_templates.xml";
-	private static final String RETAIL_QUEST_XML = "/aion/data/static_data/quest_retail/quest.xml";
-	private static final String NAME_IDS_TSV = "/aion/data/static_data/quest_retail/quest_name_string_ids.tsv";
-	private static final String RANDOM_REWARDS = "/aion/data/static_data/quest_random_rewards.xml";
+	private static final String RETAIL_QUEST_XML = "/aion/data/static_data/quest/retail/quest.xml";
+	private static final String NAME_IDS_TSV = "/aion/data/static_data/quest/retail/quest_name_string_ids.tsv";
+	private static final String RANDOM_REWARDS = "/aion/data/static_data/quest/legacy/quest_random_rewards.xml";
 	private static final String NPC_DIR = "/aion/data/static_data/npcs/";
 	private static final String ITEM_DIR = "/aion/data/static_data/items/item/";
 	/** 生产区域发放表（{@code <quest_area>} 绑定；真端世界文件 questscript_area 的落点）。 /

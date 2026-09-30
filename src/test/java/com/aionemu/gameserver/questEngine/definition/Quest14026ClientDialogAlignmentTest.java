@@ -57,7 +57,7 @@ class Quest14026ClientDialogAlignmentTest {
 
 	private CompiledQuestDefinition definition() throws Exception {
 		try (InputStream input = getClass().getResourceAsStream(
-			"/aion/data/static_data/quest_definition/quests/14026.xml")) {
+			"/aion/data/static_data/quest/definitions/quests/14026.xml")) {
 			if (input == null) {
 				throw new IllegalStateException("missing quest definition 14026.xml");
 			}

@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 class RetailSimpleHuntTableTest {
 
-	private static final String TABLE = "/aion/data/static_data/quest_retail/Quest_SimpleHunt.xml";
+	private static final String TABLE = "/aion/data/static_data/quest/retail/Quest_SimpleHunt.xml";
 
 	@Test
 	void loadsTheRetailTemplateTable() throws Exception {

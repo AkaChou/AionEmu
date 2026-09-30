@@ -70,7 +70,7 @@ class Quest14053LevelUpDialogTest {
 
 	private CompiledQuestDefinition definition() throws Exception {
 		try (InputStream input = getClass().getResourceAsStream(
-			"/aion/data/static_data/quest_definition/quests/14053.xml")) {
+			"/aion/data/static_data/quest/definitions/quests/14053.xml")) {
 			if (input == null) {
 				throw new IllegalStateException("missing quest definition 14053.xml");
 			}

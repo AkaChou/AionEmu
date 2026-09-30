@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 class DisabledClientQuestPlaceholderCatalogTest {
 	private static final Path DEFINITION_DIRECTORY = Path.of(
-		"src/main/resources/aion/data/static_data/quest_definition");
+		"src/main/resources/aion/data/static_data/quest/definitions");
 	private static final Path QUEST_DIRECTORY = DEFINITION_DIRECTORY.resolve("quests");
 	private static final List<Integer> DISABLED_PLACEHOLDERS = List.of(
 		2285, 3959, 4963, 10036, 18316, 18395, 19055, 19056, 20036, 20038,

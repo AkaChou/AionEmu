@@ -16,9 +16,9 @@ import java.util.Objects;
  */
 public final class QuestXmlFixtures {
 
-	private static final String PRODUCTION_RESOURCE = "/aion/data/static_data/quest_definition/quests/%d.xml";
+	private static final String PRODUCTION_RESOURCE = "/aion/data/static_data/quest/definitions/quests/%d.xml";
 	private static final Path PRODUCTION_DIR =
-		Path.of("src/main/resources/aion/data/static_data/quest_definition/quests");
+		Path.of("src/main/resources/aion/data/static_data/quest/definitions/quests");
 
 	private QuestXmlFixtures() {
 	}

@@ -64,7 +64,7 @@ class Quest2948LevelUpDialogTest {
 
 	private CompiledQuestDefinition definition() throws Exception {
 		try (InputStream input = getClass().getResourceAsStream(
-				"/aion/data/static_data/quest_definition/quests/2948.xml")) {
+				"/aion/data/static_data/quest/definitions/quests/2948.xml")) {
 			if (input == null) {
 				throw new IllegalStateException("missing quest definition 2948.xml");
 			}

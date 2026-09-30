@@ -32,13 +32,13 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 class RetailSystemGrantDispatchTest {
 	/** 真端 SimpleCollectItem 表（类别哨兵来源）。 / Retail SimpleCollectItem table path. */
-	private static final String COLLECT_ITEM_TABLE = "/aion/data/static_data/quest_retail/Quest_SimpleCollectItem.xml";
+	private static final String COLLECT_ITEM_TABLE = "/aion/data/static_data/quest/retail/Quest_SimpleCollectItem.xml";
 	/** 真端 SimpleTalk 表（类别哨兵来源）。 / Retail SimpleTalk table path. */
-	private static final String SIMPLE_TALK_TABLE = "/aion/data/static_data/quest_retail/Quest_SimpleTalk.xml";
+	private static final String SIMPLE_TALK_TABLE = "/aion/data/static_data/quest/retail/Quest_SimpleTalk.xml";
 	/** 生产区域发放表（quest_area 绑定）。 / Production quest-area grant table. */
 	private static final String QUEST_AREAS = "/aion/definitions/compact/ai/ai-areas.xml";
 	/** 真端 SimpleHunt 表（类别哨兵来源）。 / Retail SimpleHunt table path. */
-	private static final String SIMPLE_HUNT_TABLE = "/aion/data/static_data/quest_retail/Quest_SimpleHunt.xml";
+	private static final String SIMPLE_HUNT_TABLE = "/aion/data/static_data/quest/retail/Quest_SimpleHunt.xml";
 	/** 真端 {@code _faction_} 行的历史下限：CollectItem 实测 43 / SimpleTalk 实测 98。 */
 	private static final int COLLECT_ITEM_FACTION_FLOOR = 40;
 	/** SimpleTalk 已退役 {@code _faction_} 行的下限（P0c-2 批）。 / Retirement batch floor. */

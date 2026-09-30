@@ -265,7 +265,7 @@ class AturamSkyFortressCrystalLadderContractTest {
 
 	private static CompiledQuestDefinition definition(QuestSpec spec) throws IOException {
 		try (InputStream input = AturamSkyFortressCrystalLadderContractTest.class.getResourceAsStream(
-				"/aion/data/static_data/quest_definition/quests/" + spec.questId() + ".xml")) {
+				"/aion/data/static_data/quest/definitions/quests/" + spec.questId() + ".xml")) {
 			assertNotNull(input, () -> "missing quest definition " + spec.questId() + ".xml");
 			return QuestDefinitionXmlCompiler.compile(input);
 		}

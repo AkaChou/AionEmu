@@ -1861,7 +1861,7 @@ public class QuestEngine implements GameEngine {
 	private QuestCatalog loadProductionCatalog() throws Exception {
 		QuestDialogContract.invalidateDefault();
 		QuestCatalog xmlCatalog = QuestDefinitionCatalogManifest.compile(
-			Config.dataFile("./data/static_data/quest_definition").toPath());
+			Config.dataFile("./data/static_data/quest/definitions").toPath());
 		return RetailQuestDriver.overlayProduction(xmlCatalog);
 	}
 

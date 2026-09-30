@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class Quest30317RetailAlignmentTest {
 	@Test
 	void preservesTheDynamicNpcFlowAndCertificationTurnIn() throws Exception {
-		Path path = Path.of("src/main/resources/aion/data/static_data/quest_definition/quests/30317.xml");
+		Path path = Path.of("src/main/resources/aion/data/static_data/quest/definitions/quests/30317.xml");
 		try (InputStream input = Files.newInputStream(path)) {
 			QuestDefinition definition = QuestDefinitionXmlCompiler.compile(input).definition();
 

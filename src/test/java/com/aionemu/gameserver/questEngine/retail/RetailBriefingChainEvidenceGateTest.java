@@ -38,7 +38,7 @@ class RetailBriefingChainEvidenceGateTest {
 	private static final Path FROZEN_REGISTRY =
 		Path.of("src/test/resources/quest/retail-client-briefing-chains.tsv");
 	/** 真端模板表目录。 / The retail template-table directory. */
-	private static final Path RETAIL_DIR = Path.of("src/main/resources/aion/data/static_data/quest_retail");
+	private static final Path RETAIL_DIR = Path.of("src/main/resources/aion/data/static_data/quest/retail");
 	/** 冻结基数：登记行数 / SimpleHunt 简报行数 / SimpleCollectItem 简报行数。 / Frozen cardinalities. */
 	private static final int FROZEN_REGISTRY_SIZE = 3225;
 	private static final int HUNT_BRIEFING_ROWS = 47;

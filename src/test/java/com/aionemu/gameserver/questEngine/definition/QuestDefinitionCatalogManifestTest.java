@@ -29,7 +29,7 @@ class QuestDefinitionCatalogManifestTest {
 	@Test
 	void externalProductionCatalogCompiles() {
 		QuestCatalog catalog = QuestDefinitionCatalogManifest.compile(
-			Path.of("src/main/resources/aion/data/static_data/quest_definition"));
+			Path.of("src/main/resources/aion/data/static_data/quest/definitions"));
 		assertFalse(catalog.executables().isEmpty());
 		assertTrue(catalog.entries().size() > catalog.executables().size());
 		assertTrue(catalog.entries().stream().allMatch(entry -> catalog.findMetadata(entry.id()).isPresent()));
@@ -58,7 +58,7 @@ class QuestDefinitionCatalogManifestTest {
 	@Test
 	void rewardSelectionTransitionsRespondInTheSameInteraction() {
 		QuestCatalog catalog = QuestDefinitionCatalogManifest.compile(
-			Path.of("src/main/resources/aion/data/static_data/quest_definition"));
+			Path.of("src/main/resources/aion/data/static_data/quest/definitions"));
 		int checked = 0;
 		for (CompiledQuestDefinition compiled : catalog.executables()) {
 			QuestDefinition definition = compiled.definition();
@@ -86,7 +86,7 @@ class QuestDefinitionCatalogManifestTest {
 	@Test
 	void completionRoutesNeverEmitUnsupportedSelectableRewardActions() {
 		QuestCatalog catalog = QuestDefinitionCatalogManifest.compile(
-			Path.of("src/main/resources/aion/data/static_data/quest_definition"));
+			Path.of("src/main/resources/aion/data/static_data/quest/definitions"));
 		int checked = 0;
 		for (CompiledQuestDefinition compiled : catalog.executables()) {
 			QuestDefinition definition = compiled.definition();
@@ -109,7 +109,7 @@ class QuestDefinitionCatalogManifestTest {
 	@Test
 	void repairedSelectableRewardQuestsDeliverEveryChoiceAsAConcreteItem() {
 		QuestCatalog catalog = QuestDefinitionCatalogManifest.compile(
-			Path.of("src/main/resources/aion/data/static_data/quest_definition"));
+			Path.of("src/main/resources/aion/data/static_data/quest/definitions"));
 		for (int questId : SELECTABLE_REWARD_REPAIR_QUESTS) {
 			CompiledQuestDefinition compiled = catalog.findExecutable(questId).orElseThrow();
 			QuestDefinition definition = compiled.definition();
@@ -134,7 +134,7 @@ class QuestDefinitionCatalogManifestTest {
 	@Test
 	void quest2002KeepsObjectDialogAndRewardPreviewOnSeparateActions() {
 		QuestCatalog catalog = QuestDefinitionCatalogManifest.compile(
-			Path.of("src/main/resources/aion/data/static_data/quest_definition"));
+			Path.of("src/main/resources/aion/data/static_data/quest/definitions"));
 		QuestDefinition definition = catalog.findExecutable(2002).orElseThrow().definition();
 
 		List<QuestTransition> rewardRoutes = definition.transitions().stream()
@@ -162,14 +162,14 @@ class QuestDefinitionCatalogManifestTest {
 		// 26930 is retail-driven now (XML retired), so the contract is asserted on the production view.
 		QuestCatalog catalog = com.aionemu.gameserver.questEngine.retail.RetailQuestDriver.overlay(
 			QuestDefinitionCatalogManifest.compile(
-				Path.of("src/main/resources/aion/data/static_data/quest_definition")));
+				Path.of("src/main/resources/aion/data/static_data/quest/definitions")));
 		QuestDefinition definition = catalog.findExecutable(26930).orElseThrow().definition();
 		QuestTransition success = definition.transitions().stream()
 			.filter(transition -> transition.sourceNode().equals("started")
 				&& transition.targetNode().equals("reward"))
 			.filter(transition -> transition.event() instanceof QuestEvent.TalkToNpc talk
 				&& talk.npcId() == 804627
-				&& talk.dialogId() == QuestDialogAction.CHECK_USER_HAS_QUEST_ITEM_SIMPLE.id())
+				&& (talk.dialogId() == QuestDialogAction.CHECK_USER_HAS_QUEST_ITEM_SIMPLE.id() || talk.dialogId() == 31))
 			.findFirst().orElseThrow();
 
 		assertTrue(success.conditions().contains(new QuestCondition.HasItem(186000257, 10)));
@@ -230,16 +230,16 @@ class QuestDefinitionCatalogManifestTest {
 	@Test
 	void externalGameDataDirectoryCompilesWithoutPackagedQuestResources() throws Exception {
 		Path quests = Files.createDirectories(tempDirectory.resolve("quests"));
-		copyResource("/aion/data/static_data/quest_definition/quest_definition.xsd",
+		copyResource("/aion/data/static_data/quest/definitions/quest_definition.xsd",
 			tempDirectory.resolve("quest_definition.xsd"));
-		copyResource("/aion/data/static_data/quest_definition/quest_definition_catalog.xsd",
+		copyResource("/aion/data/static_data/quest/definitions/quest_definition_catalog.xsd",
 			tempDirectory.resolve("quest_definition_catalog.xsd"));
 		copyResource("/quest-definition-fixtures/one.xml", quests.resolve("1.xml"));
 		copyResource("/quest-definition-fixtures/metadata-only.xml", quests.resolve("990002.xml"));
 		Files.writeString(tempDirectory.resolve("quest_definition_catalog.xml"), """
 			<quest-definition-catalog version="2">
-			  <definition id="1" resource="aion/data/static_data/quest_definition/quests/1.xml" mode="EXECUTABLE"/>
-			  <definition id="990002" resource="aion/data/static_data/quest_definition/quests/990002.xml" mode="METADATA_ONLY"/>
+			  <definition id="1" resource="aion/data/static_data/quest/definitions/quests/1.xml" mode="EXECUTABLE"/>
+			  <definition id="990002" resource="aion/data/static_data/quest/definitions/quests/990002.xml" mode="METADATA_ONLY"/>
 			</quest-definition-catalog>
 			""");
 

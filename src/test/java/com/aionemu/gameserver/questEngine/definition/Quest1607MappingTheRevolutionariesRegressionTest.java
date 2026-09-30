@@ -133,7 +133,7 @@ class Quest1607MappingTheRevolutionariesRegressionTest {
 	private static CompiledQuestDefinition definition() throws Exception {
 		try (InputStream input = Objects.requireNonNull(
 			Quest1607MappingTheRevolutionariesRegressionTest.class.getResourceAsStream(
-				"/aion/data/static_data/quest_definition/quests/1607.xml"))) {
+				"/aion/data/static_data/quest/definitions/quests/1607.xml"))) {
 			return QuestDefinitionXmlCompiler.compile(input);
 		}
 	}

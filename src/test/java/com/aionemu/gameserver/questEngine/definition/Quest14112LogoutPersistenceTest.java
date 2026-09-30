@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 class Quest14112LogoutPersistenceTest {
 	private static final Path XML = Path.of(
-		"src/main/resources/aion/data/static_data/quest_definition/quests/14112.xml");
+		"src/main/resources/aion/data/static_data/quest/definitions/quests/14112.xml");
 
 	@Test
 	void keepsPoisonousBubblegutKillProgressAcrossLogout() throws Exception {

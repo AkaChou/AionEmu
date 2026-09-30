@@ -448,7 +448,7 @@ class QuestBClassRouteContractTest {
 
 	private static CompiledQuestDefinition compiled(int questId) throws Exception {
 		try (InputStream input = QuestBClassRouteContractTest.class.getResourceAsStream(
-				"/aion/data/static_data/quest_definition/quests/" + questId + ".xml")) {
+				"/aion/data/static_data/quest/definitions/quests/" + questId + ".xml")) {
 			assertNotNull(input, "missing quest definition " + questId + ".xml");
 			return QuestDefinitionXmlCompiler.compile(input);
 		}

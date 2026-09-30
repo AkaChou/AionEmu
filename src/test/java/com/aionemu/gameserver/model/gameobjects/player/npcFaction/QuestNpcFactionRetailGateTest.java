@@ -37,7 +37,7 @@ class QuestNpcFactionRetailGateTest {
 
 	private static QuestCatalog catalog() {
 		return QuestDefinitionCatalogManifest.compile(
-			Path.of("src/main/resources/aion/data/static_data/quest_definition"));
+			Path.of("src/main/resources/aion/data/static_data/quest/definitions"));
 	}
 
 	@Test

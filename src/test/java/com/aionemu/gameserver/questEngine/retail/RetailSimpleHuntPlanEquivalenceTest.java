@@ -28,7 +28,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class RetailSimpleHuntPlanEquivalenceTest {
 
 	private static final String CONTRACT = "/quest/quest-simple-hunt-retail-contract.tsv";
-	private static final String TABLE = "/aion/data/static_data/quest_retail/Quest_SimpleHunt.xml";
+	private static final String TABLE = "/aion/data/static_data/quest/retail/Quest_SimpleHunt.xml";
 	private static final String NPC_DIR = "/aion/data/static_data/npcs/";
 	private static final List<String> NPC_TEMPLATES = List.of(
 		"npc_template_200000_216188.xml", "npc_template_216189_235748.xml", "npc_template_235749_247606.xml",

@@ -181,7 +181,7 @@ class Quest25050RetailFlowAlignmentTest {
 	}
 
 	private static QuestDefinition load() throws Exception {
-		String resource = "/aion/data/static_data/quest_definition/quests/25050.xml";
+		String resource = "/aion/data/static_data/quest/definitions/quests/25050.xml";
 		try (InputStream input = Quest25050RetailFlowAlignmentTest.class.getResourceAsStream(resource)) {
 			return QuestDefinitionXmlCompiler.compile(Objects.requireNonNull(input, resource)).definition();
 		}

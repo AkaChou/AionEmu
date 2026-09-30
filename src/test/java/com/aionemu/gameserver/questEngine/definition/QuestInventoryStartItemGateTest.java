@@ -120,7 +120,7 @@ class QuestInventoryStartItemGateTest {
 
 	private static QuestDefinition load(int questId) throws Exception {
 		try (InputStream input = QuestInventoryStartItemGateTest.class.getResourceAsStream(
-				"/aion/data/static_data/quest_definition/quests/" + questId + ".xml")) {
+				"/aion/data/static_data/quest/definitions/quests/" + questId + ".xml")) {
 			assertNotNull(input, "quest " + questId + " definition must exist");
 			return QuestDefinitionXmlCompiler.compile(input).definition();
 		}

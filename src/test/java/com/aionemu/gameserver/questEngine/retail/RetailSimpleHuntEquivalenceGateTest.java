@@ -44,10 +44,10 @@ class RetailSimpleHuntEquivalenceGateTest {
 
 	private static final String NPC_DIR = "/aion/data/static_data/npcs/";
 	private static final String RETENTION = "/quest/retail-xml-retention.tsv";
-	private static final String XML_RESOURCE = "/aion/data/static_data/quest_definition/quests/%d.xml";
+	private static final String XML_RESOURCE = "/aion/data/static_data/quest/definitions/quests/%d.xml";
 	/** 生产任务 XML 源树目录（退役判据）。 / Source-tree directory of production quest XML. */
 	private static final Path PRODUCTION_XML_DIR =
-		Path.of("src/main/resources/aion/data/static_data/quest_definition/quests");
+		Path.of("src/main/resources/aion/data/static_data/quest/definitions/quests");
 	private static final String FINGERPRINTS = "/quest/retail-simple-hunt-ir-fingerprints.tsv";
 	/** P0c-3 哨兵行裁定（真端优先）：ADOPT_RETAIL 行不参与 XML 等价判据，另用真端侧冻结指纹护栏。 */
 	/** P0c-3 sentinel adjudication: ADOPT_RETAIL rows bypass the XML-equivalence criterion. */
@@ -81,10 +81,10 @@ class RetailSimpleHuntEquivalenceGateTest {
 	@BeforeAll
 	static void loadFixtures() throws Exception {
 		RetailSimpleHuntTable table;
-		try (InputStream input = open("/aion/data/static_data/quest_retail/Quest_SimpleHunt.xml")) {
+		try (InputStream input = open("/aion/data/static_data/quest/retail/Quest_SimpleHunt.xml")) {
 			table = RetailSimpleHuntTable.load(input);
 		}
-		try (InputStream input = open("/aion/data/static_data/quest_retail/quest.xml")) {
+		try (InputStream input = open("/aion/data/static_data/quest/retail/quest.xml")) {
 			retailTable = RetailQuestXmlTable.load(input);
 		}
 		clientRewardNpcs = RetailClientRewardNpcs.defaultRewardNpcs();
@@ -519,7 +519,7 @@ class RetailSimpleHuntEquivalenceGateTest {
 
 	private static Map<String, Integer> randomRewardIds() throws Exception {
 		Map<String, Integer> ids = new HashMap<>();
-		var document = parse(open("/aion/data/static_data/quest_random_rewards.xml"));
+		var document = parse(open("/aion/data/static_data/quest/legacy/quest_random_rewards.xml"));
 		var nodes = document.getDocumentElement().getElementsByTagName("quest_random_reward");
 		for (int index = 0; index < nodes.getLength(); index++) {
 			var element = (org.w3c.dom.Element) nodes.item(index);
@@ -531,7 +531,7 @@ class RetailSimpleHuntEquivalenceGateTest {
 
 	private static Map<Integer, Integer> nameIds() throws Exception {
 		Map<Integer, Integer> ids = new HashMap<>();
-		for (String line : lines(open("/aion/data/static_data/quest_retail/quest_name_string_ids.tsv"))) {
+		for (String line : lines(open("/aion/data/static_data/quest/retail/quest_name_string_ids.tsv"))) {
 			if (line.startsWith("#") || line.isBlank()) {
 				continue;
 			}

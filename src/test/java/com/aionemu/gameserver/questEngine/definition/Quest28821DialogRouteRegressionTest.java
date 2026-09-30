@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
  */
 class Quest28821DialogRouteRegressionTest {
 	private static final Path XML = Path.of(
-		"src/main/resources/aion/data/static_data/quest_definition/quests/28821.xml");
+		"src/main/resources/aion/data/static_data/quest/definitions/quests/28821.xml");
 	private static final Path CLIENT_MAPPING = Path.of("docs/quest/client-dialog-mapping");
 	private static final Set<Integer> BUTLERS = Set.of(810022, 810023, 810024, 810025, 810026);
 

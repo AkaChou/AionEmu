@@ -22,7 +22,7 @@ class Quest1922WorldCleanupTest {
 
 	private static CompiledQuestDefinition load() throws Exception {
 		try (InputStream input = Quest1922WorldCleanupTest.class.getResourceAsStream(
-			"/aion/data/static_data/quest_definition/quests/1922.xml")) {
+			"/aion/data/static_data/quest/definitions/quests/1922.xml")) {
 			return QuestDefinitionXmlCompiler.compile(Objects.requireNonNull(input));
 		}
 	}

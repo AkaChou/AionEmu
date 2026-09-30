@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 /** Retail-anchored structural and typed-runtime coverage for quest 1929. */
 class Quest1929RetailAlignmentTest {
 	private static final Path XML = Path.of(
-		"src/main/resources/aion/data/static_data/quest_definition/quests/1929.xml");
+		"src/main/resources/aion/data/static_data/quest/definitions/quests/1929.xml");
 
 	@Test
 	void preservesMetadataAndAllElevenClassRewards() throws Exception {

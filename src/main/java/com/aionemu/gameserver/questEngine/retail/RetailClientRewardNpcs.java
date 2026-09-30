@@ -55,7 +55,7 @@ public final class RetailClientRewardNpcs {
 	private static RetailClientRewardNpcs decodeDefaultInstance() {
 		InputStream in = RetailClientRewardNpcs.class.getResourceAsStream("/quest/quest_client_reward_npcs.tsv");
 		if (in == null) {
-			in = RetailClientRewardNpcs.class.getResourceAsStream("/aion/data/static_data/quest_retail/quest_client_reward_npcs.tsv");
+			in = RetailClientRewardNpcs.class.getResourceAsStream("/aion/data/static_data/quest/retail/quest_client_reward_npcs.tsv");
 		}
 		if (in == null) {
 			return EMPTY;

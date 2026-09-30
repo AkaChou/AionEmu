@@ -35,7 +35,7 @@ class FissureOfOblivionInstanceTest {
 	private static final Path PORTAL_TEMPLATES = Path.of(
 			"src/main/resources/aion/data/static_data/portals/portal_template2.xml");
 	private static final Path QUEST_DEFINITION = Path.of(
-			"src/main/resources/aion/data/static_data/quest_definition/quests/17510.xml");
+			"src/main/resources/aion/data/static_data/quest/definitions/quests/17510.xml");
 
 	@Test
 	void fourthMinionKillDeletesEveryFirstRoomAirWallController() throws Exception {

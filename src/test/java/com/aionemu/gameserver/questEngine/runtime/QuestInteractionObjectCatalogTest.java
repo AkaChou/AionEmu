@@ -47,7 +47,7 @@ class QuestInteractionObjectCatalogTest {
 	void productionQuestUseItemTalkRoutesDeclareActionEligibility() throws Exception {
 		QuestCatalog catalog;
 		try (InputStream input = resource(
-				"aion/data/static_data/quest_definition/quest_definition_catalog.xml")) {
+				"aion/data/static_data/quest/definitions/quest_definition_catalog.xml")) {
 			catalog = QuestDefinitionCatalogManifest.compile(input, getClass().getClassLoader());
 		}
 		Set<Integer> questUseItemNpcs = QuestInteractionObjectTestData.questUseItemNpcIds(
@@ -84,7 +84,7 @@ class QuestInteractionObjectCatalogTest {
 	void productionQuestUseItemDropsDeclareActionEligibility() throws Exception {
 		QuestCatalog catalog;
 		try (InputStream input = resource(
-				"aion/data/static_data/quest_definition/quest_definition_catalog.xml")) {
+				"aion/data/static_data/quest/definitions/quest_definition_catalog.xml")) {
 			catalog = QuestDefinitionCatalogManifest.compile(input, getClass().getClassLoader());
 		}
 		Set<Integer> questUseItemNpcs = QuestInteractionObjectTestData.questUseItemNpcIds(
@@ -121,7 +121,7 @@ class QuestInteractionObjectCatalogTest {
 	void wineBarrel1109UsesCatalogDropTalkAndActionObjectRoutes() throws Exception {
 		CompiledQuestDefinition definition;
 		try (InputStream input = resource(
-				"aion/data/static_data/quest_definition/quests/1109.xml")) {
+				"aion/data/static_data/quest/definitions/quests/1109.xml")) {
 			definition = QuestDefinitionXmlCompiler.compile(input);
 		}
 		QuestProductionDispatcher dispatcher = dispatcher(definition);

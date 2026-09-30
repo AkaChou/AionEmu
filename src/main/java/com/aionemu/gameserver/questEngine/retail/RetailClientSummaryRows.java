@@ -92,7 +92,7 @@ public final class RetailClientSummaryRows {
 	private static RetailClientSummaryRows decodeDefaultInstance() {
 		InputStream in = RetailClientSummaryRows.class.getResourceAsStream("/quest/quest_client_summary_rows.tsv");
 		if (in == null) {
-			in = RetailClientSummaryRows.class.getResourceAsStream("/aion/data/static_data/quest_retail/quest_client_summary_rows.tsv");
+			in = RetailClientSummaryRows.class.getResourceAsStream("/aion/data/static_data/quest/retail/quest_client_summary_rows.tsv");
 		}
 		if (in == null) {
 			return empty();

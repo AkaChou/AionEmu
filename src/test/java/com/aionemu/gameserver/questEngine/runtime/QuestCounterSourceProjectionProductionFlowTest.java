@@ -192,7 +192,7 @@ class QuestCounterSourceProjectionProductionFlowTest {
 	/** 30603/30613 仍由 XML 拥有；26802/16802 走生产驱动（XML 已退役）。 /
 	 * 30603/30613 remain XML-owned; 26802/16802 load through the production driver. */
 	private static CompiledQuestDefinition load(int questId) throws Exception {
-		String resource = "/aion/data/static_data/quest_definition/quests/" + questId + ".xml";
+		String resource = "/aion/data/static_data/quest/definitions/quests/" + questId + ".xml";
 		InputStream input = QuestCounterSourceProjectionProductionFlowTest.class.getResourceAsStream(resource);
 		if (input == null) {
 			return ProductionQuestDefinitions.definition(questId);
