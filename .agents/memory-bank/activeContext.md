@@ -384,7 +384,7 @@
     两个 zone 触发点 + 931 movie），随后继续把剩余 70 个 MISSING_LAST_ROW（61 其它形态 + 9 无 legacy）按同口径分类，
     并把 LEGACY_STEP_EXCEPTION 集补进审计脚本登记表。
   - **批次 26 边界（下一批前必读）**：select2 页（1352）只有 SETPRO1(10000) 一个可见动作，推进逻辑必须挂在它上面；
-    同类任务改 owner 前必须先读 docs/quest/client-dialog-mapping/quest-dialog-action-details.csv 的任务页按钮集合。
+    同类任务改 owner 前必须先读 .agents/summary/headless-client-extraction/MIGRATION.zh-CN.md（客户端映射已迁出到本地 aion-headless 项目，下同） 的任务页按钮集合。
     owner 收敛依据是客户端任务书行 NPC + 静态 spawn；legacy 里才有、且静态 spawn/实例 AI 都无出场点的 owner 不得保留。
     `COUNTER_CHAIN_GAP` 已归零，后续不要再按“SECTION_n == 6n”给已登记例外（1842-1844/2843-2845 的 7-bit 大值域、
     18033/28033/28313 三槽、24112/30600/30610 标志位族）做重复改动。剩余全库挂账：NO_NODES = 16984/26984，

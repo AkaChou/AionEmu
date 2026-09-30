@@ -1,12 +1,12 @@
 package com.aionemu.gameserver.questEngine.runtime;
 
 import com.aionemu.gameserver.questEngine.definition.ProductionQuestDefinitions;
+import com.aionemu.gameserver.questEngine.e2e.client.ClientActionOutcome;
 import com.aionemu.gameserver.questEngine.definition.CompiledQuestDefinition;
 import com.aionemu.gameserver.questEngine.definition.QuestDialogAction;
 import com.aionemu.gameserver.questEngine.definition.QuestDialogPage;
 import com.aionemu.gameserver.questEngine.definition.QuestEvent;
 import com.aionemu.gameserver.questEngine.definition.QuestTransition;
-import com.aionemu.gameserver.questEngine.e2e.client.QuestHeadlessClient;
 import com.aionemu.gameserver.questEngine.e2e.client.ServerPacketObservation;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import org.junit.jupiter.api.Test;
@@ -69,7 +69,7 @@ class QuestStepNpcSkipGuardTest {
 					&& "s1".equals(candidate.targetNode()))
 				.findFirst().orElseThrow();
 			runtime.prepare(pageEntry);
-			QuestHeadlessClient.DispatchOutcome page = runtime.dispatchPrepared();
+			ClientActionOutcome page = runtime.dispatchPrepared();
 			assertTrue(page.handled());
 			assertTrue(page.packets().stream().anyMatch(packet ->
 					packet.type() == ServerPacketObservation.Type.DIALOG_WINDOW
@@ -78,7 +78,7 @@ class QuestStepNpcSkipGuardTest {
 
 			// 中间态直接索要奖励必须无响应且不改变状态。
 			// A premature reward request mid-chain must be ignored.
-			QuestHeadlessClient.DispatchOutcome skip = runtime.dispatchWorld(
+			ClientActionOutcome skip = runtime.dispatchWorld(
 				new QuestEvent.TalkToNpc(actionStepNpc, QuestDialogAction.SELECT_QUEST_REWARD.id()));
 			assertFalse(skip.handled(), "premature reward report was handled");
 			assertEquals(QuestStatus.START, runtime.state().status());

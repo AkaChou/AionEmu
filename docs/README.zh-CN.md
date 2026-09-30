@@ -187,7 +187,7 @@ AION_HOME=/path/to/runtime ./aion/start-silent.sh
 - [静态数据 XML → JSONL 迁移方案](STATIC_DATA_JSONL_MIGRATION.zh-CN.md)
 - [任务编写指南](quest/WRITING_GUIDE.zh-CN.md) / [English](quest/WRITING_GUIDE.md)
 - [任务排查与修复 Playbook](quest/QUEST_REPAIR_PLAYBOOK.zh-CN.md)
-- [任务客户端对话框映射](quest/client-dialog-mapping/README.zh-CN.md)
+- [客户端映射与无头客户端迁出记录](.agents/summary/headless-client-extraction/MIGRATION.zh-CN.md)
 - [游戏术语中英对照](aion-game-terms-en-zh.md)
 - [客户端补丁说明](../patch/patch_documentation.md)
 

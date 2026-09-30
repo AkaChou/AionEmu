@@ -85,7 +85,7 @@ public final class QuestProtocolLoop implements AutoCloseable {
 	 * @param request 无头客户端请求 / headless-client request
 	 * @return 状态、失败和有序出站包观察 / state, failure, and ordered outbound-packet observations
 	 */
-	public QuestHeadlessClient.DispatchOutcome dispatch(ClientActionRequest request) {
+	public ClientActionOutcome dispatch(ClientActionRequest request) {
 		ensureOpen();
 		Objects.requireNonNull(request, "request");
 		if (request.questId() != runtime.state().questId()) {
@@ -129,7 +129,7 @@ public final class QuestProtocolLoop implements AutoCloseable {
 		if (request.kind() == ClientActionRequest.Kind.USE_ITEM && !handled) {
 			handled = changed || !packets.isEmpty();
 		}
-		return new QuestHeadlessClient.DispatchOutcome(handled, failure != null, changed, failure, packets);
+		return new ClientActionOutcome(handled, failure != null, changed, failure, packets);
 	}
 
 	@Override

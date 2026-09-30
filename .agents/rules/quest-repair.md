@@ -14,7 +14,7 @@ Before working on a quest issue, read:
 - `../../docs/quest/repair-playbook/PATTERNS.zh-CN.md`
 - `../../docs/quest/repair-playbook/CASES.zh-CN.md`
 - `../../docs/quest/WRITING_GUIDE.zh-CN.md`
-- `../../docs/quest/client-dialog-mapping/README.zh-CN.md`
+- `../../.agents/summary/headless-client-extraction/MIGRATION.zh-CN.md`
 
 When `CASES.zh-CN.md` links a matched case to `docs/quest/repair-playbook/cases/*.md`, read that case shard before designing the repair.
 

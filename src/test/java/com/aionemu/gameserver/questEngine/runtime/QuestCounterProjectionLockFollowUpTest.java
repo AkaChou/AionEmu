@@ -1,6 +1,7 @@
 package com.aionemu.gameserver.questEngine.runtime;
 
 import com.aionemu.gameserver.questEngine.definition.ProductionQuestDefinitions;
+import com.aionemu.gameserver.questEngine.e2e.client.ClientActionOutcome;
 import com.aionemu.gameserver.questEngine.definition.AfterCommitAction;
 import com.aionemu.gameserver.questEngine.definition.CompiledQuestDefinition;
 import com.aionemu.gameserver.questEngine.definition.NodeProjection;
@@ -12,7 +13,6 @@ import com.aionemu.gameserver.questEngine.definition.QuestEvent;
 import com.aionemu.gameserver.questEngine.definition.QuestNode;
 import com.aionemu.gameserver.questEngine.definition.QuestStateSyncMode;
 import com.aionemu.gameserver.questEngine.definition.QuestTransition;
-import com.aionemu.gameserver.questEngine.e2e.client.QuestHeadlessClient;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import org.junit.jupiter.api.Test;
 
@@ -64,7 +64,7 @@ class QuestCounterProjectionLockFollowUpTest {
 
 		try (QuestE2eRuntime runtime = new QuestE2eRuntime(definition)) {
 			runtime.prepare(useObject);
-			QuestHeadlessClient.DispatchOutcome outcome = runtime.dispatchPrepared();
+			ClientActionOutcome outcome = runtime.dispatchPrepared();
 			assertTrue(outcome.handled());
 			assertEquals(QuestStatus.REWARD, runtime.state().status());
 			assertEquals(Map.of("var0", 1), variables(definition, runtime));

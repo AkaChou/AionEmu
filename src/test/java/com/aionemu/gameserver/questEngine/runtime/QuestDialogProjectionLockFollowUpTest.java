@@ -1,6 +1,7 @@
 package com.aionemu.gameserver.questEngine.runtime;
 
 import com.aionemu.gameserver.questEngine.definition.AfterCommitAction;
+import com.aionemu.gameserver.questEngine.e2e.client.ClientActionOutcome;
 import com.aionemu.gameserver.questEngine.definition.CompiledQuestDefinition;
 import com.aionemu.gameserver.questEngine.definition.QuestDefinitionXmlCompiler;
 import com.aionemu.gameserver.questEngine.definition.QuestDialogAction;
@@ -8,7 +9,6 @@ import com.aionemu.gameserver.questEngine.definition.QuestDialogPage;
 import com.aionemu.gameserver.questEngine.definition.QuestEvent;
 import com.aionemu.gameserver.questEngine.definition.QuestNode;
 import com.aionemu.gameserver.questEngine.definition.QuestTransition;
-import com.aionemu.gameserver.questEngine.e2e.client.QuestHeadlessClient;
 import com.aionemu.gameserver.questEngine.e2e.client.ServerPacketObservation;
 import org.junit.jupiter.api.Test;
 
@@ -53,7 +53,7 @@ class QuestDialogProjectionLockFollowUpTest {
 			assertTrue(runtime.dispatchPrepared().handled());
 			assertEquals(Map.of("var0", 1), variables(definition, runtime));
 			runtime.prepare(escortPage);
-			QuestHeadlessClient.DispatchOutcome outcome = runtime.dispatchPrepared();
+			ClientActionOutcome outcome = runtime.dispatchPrepared();
 			assertTrue(outcome.handled());
 			assertTrue(outcome.packets().stream().anyMatch(QuestDialogProjectionLockFollowUpTest::isSelect2Page),
 				"SELECT2 page packet was not sent");
@@ -83,7 +83,7 @@ class QuestDialogProjectionLockFollowUpTest {
 			assertTrue(runtime.dispatchPrepared().handled());
 			assertEquals(Map.of("var0", 1), variables(definition, runtime));
 			runtime.prepare(reportPage);
-			QuestHeadlessClient.DispatchOutcome outcome = runtime.dispatchPrepared();
+			ClientActionOutcome outcome = runtime.dispatchPrepared();
 			assertTrue(outcome.handled());
 			assertTrue(outcome.packets().stream().anyMatch(QuestDialogProjectionLockFollowUpTest::isSelect2Page),
 				"SELECT2 page packet was not sent");

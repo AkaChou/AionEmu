@@ -7,7 +7,7 @@
 相关文档：
 
 - [任务 XML 编写指南](WRITING_GUIDE.zh-CN.md)：XML 状态图、领域积木和字段顺序。
-- [客户端任务对话映射说明](client-dialog-mapping/README.zh-CN.md)：客户端 HTML、页面、动作和旧模板合同。
+- [客户端映射迁出记录](.agents/summary/headless-client-extraction/MIGRATION.zh-CN.md)：客户端页面/动作映射与无头客户端已迁出本仓库，记录迁出清单、SHA-256 与影响边界。
 - [无任务上下文 NPC 对话专项记录](NPC_DIALOG_CONTEXT.zh-CN.md)：关闭普通任务标记后 `questId==0` 的协议证据、分流边界和回归矩阵。
 - [Pattern 指纹与提交索引](repair-playbook/PATTERNS.zh-CN.md)：可检索故障指纹、第一检查点和具体代表测试方法。
 - [已验收代表案例](repair-playbook/CASES.zh-CN.md)：完整症状、根因、修复层、验证结果和复用边界。
@@ -206,10 +206,8 @@ git log --all --oneline -- <path/to/legacy-handler.java>
 
 Aion 5.8 客户端是客户端页面、动作、字典和数据包的权威来源。当前任务缺少所需客户端文件、解包产物或抓包时，明确列出缺失项并向用户请求提供，在取得证据前不要猜测。优先使用：
 
-- `docs/quest/client-dialog-mapping/quest-dialog-action-details.csv`：页面上的实际按钮动作；
-- `quest-dialog-pages.csv`：页面存在性和页面名；
-- `legacy-quest-dialog-contracts.csv`：旧正式模板的 NPC、页面和状态合同；
-- `client-lifecycle-alignment.csv`：当前 IR 与客户端路径的对齐审计结果；逐路径顺序审计需运行 `QuestDialogOrderAudit`（产物不入库）。
+客户端映射数据（`quest-dialog-action-details.csv` 按钮动作、`quest-dialog-pages.csv` 页面存在性、`legacy-quest-dialog-contracts.csv` 旧模板合同）已迁出到本地 `aion-headless` 项目的 `data/client-dialog-mapping/`；本仓库内的入口是 [.agents/summary/headless-client-extraction/MIGRATION.zh-CN.md](.agents/summary/headless-client-extraction/MIGRATION.zh-CN.md)。
+- 客户端生命周期对齐与逐路径顺序审计都按需运行（`align_client_quest_dialog_lifecycle.py`、`QuestDialogOrderAudit`），**产物不入库**：两者都以任务 XML 的路径/哈希为键，退役或改写后立即失效。
 
 客户端页面只证明客户端可见合同，不能单独证明服务端状态和奖励副作用；服务端 IR 也不能单独证明页面按钮真的可达。
 
@@ -426,7 +424,7 @@ python3 .agents/summary/quest/align_client_quest_dialog_lifecycle.py --check
 python3 .agents/summary/quest/generate_quest_dialog_enums.py --check
 ```
 
-顺序审计应在测试编译完成后执行，命令和字段说明见 `client-dialog-mapping/README.zh-CN.md`。`EVIDENCE_REQUIRED` 不是“已修复”，不能为了清零报告而猜测 page/action。
+顺序审计应在测试编译完成后执行，命令和字段说明见迁出项目的 `README.zh-CN.md`（在库入口 [.agents/summary/headless-client-extraction/MIGRATION.zh-CN.md](.agents/summary/headless-client-extraction/MIGRATION.zh-CN.md)）。`EVIDENCE_REQUIRED` 不是“已修复”，不能为了清零报告而猜测 page/action。
 
 ### 7.5 Playbook 结构和引用自检
 
@@ -442,7 +440,7 @@ python3 .agents/summary/quest/check_quest_repair_playbook.py
 
 对全目录 `QuestDialogOrderAudit` 未解决行的批次治理遵循以下流程，可作为后续同类治理的固定流程引用：
 
-1. **先分类后修改**：把审计未解决行与客户端页面图、任务 XML 对话声明、`legacy-quest-dialog-contracts.csv` 契约做逐行关联，产出 `unresolved-inventory.csv`（含 decision/blocker/evidence_gaps）。分类只允许 `INTENTIONAL_CLIENT_ONLY`、`EVIDENCE_BLOCKED`、`FIX_XML`、`FIX_GENERATOR`、`GLOBAL_PROTOCOL`；无法在仓库内取证（唯一契约缺失、start item 未证实、per-var 页面映射缺失）的行一律升级为 `EVIDENCE_BLOCKED`/`INTENTIONAL_CLIENT_ONLY` 并逐行写明缺失证据，不留"待修复"占位。
+1. **先分类后修改**：把审计未解决行与客户端页面图（迁出项目数据）、任务 XML 对话声明、`legacy-quest-dialog-contracts.csv`（同上）契约做逐行关联，产出 `unresolved-inventory.csv`（含 decision/blocker/evidence_gaps）。分类只允许 `INTENTIONAL_CLIENT_ONLY`、`EVIDENCE_BLOCKED`、`FIX_XML`、`FIX_GENERATOR`、`GLOBAL_PROTOCOL`；无法在仓库内取证（唯一契约缺失、start item 未证实、per-var 页面映射缺失）的行一律升级为 `EVIDENCE_BLOCKED`/`INTENTIONAL_CLIENT_ONLY` 并逐行写明缺失证据，不留"待修复"占位。
 2. **按契约族批量修复**：每批一个页面族或契约族（报告协议路由、select_none 接取链、NPC_START 生成链、accept/refuse close 回退、NPC_REPORT 页指回），先 dry-run 生成 manifest 审阅，再写入；写入用模板化文本插入、`ET.fromstring` 校验、SHA-256 并发检查，脚本必须幂等（重跑不重复插入）。
 3. **每批后审计并回读**：全量审计既当编译器（AMBIGUOUS_TRANSITION 立即暴露批次冲突）也当验收器；冲突典型来源是 `expandNpcReport` 不做显式路由过滤（与 `expandNpcStart` 不同），新增显式 `QUEST_SELECT` 路由前必须检查同 (source, npc) 是否已有 `NPC_REPORT` 生成。
 4. **审计后必须刷新基线与台账**：`refresh_contract_baseline_with_aliases.py`（目标 0 指纹）、`extract_legacy_handler_action_contracts.py`（READY 队列 0）、重建 `unresolved-inventory.csv`。
@@ -453,8 +451,8 @@ python3 .agents/summary/quest/check_quest_repair_playbook.py
 ```bash
 CP="src/main/resources:src/test/resources:target/test-classes:target/classes"
 java -cp "$CP" com.aionemu.gameserver.questEngine.definition.QuestDialogOrderAudit \
-  docs/quest/client-dialog-mapping/quest-dialog-pages.csv \
-  docs/quest/client-dialog-mapping/quest-dialog-action-details.csv \
+  <aion-headless>/data/client-dialog-mapping/quest-dialog-pages.csv \
+  <aion-headless>/data/client-dialog-mapping/quest-dialog-action-details.csv \
   /tmp/quest-order-audit-current.csv   # 临时产物，不入库
 python3 .agents/summary/quest/test_extract_legacy_quest_dialog_contracts.py
 python3 .agents/summary/quest/test_align_client_quest_dialog_lifecycle.py
@@ -555,7 +553,7 @@ commit：
 你在当前 checkout 的 quest 分支工作。
 请先阅读 docs/quest/QUEST_REPAIR_PLAYBOOK.zh-CN.md、docs/quest/repair-playbook/PATTERNS.zh-CN.md、
 docs/quest/repair-playbook/CASES.zh-CN.md、docs/quest/WRITING_GUIDE.zh-CN.md、
-docs/quest/client-dialog-mapping/README.zh-CN.md、当前 checkout 的 AGENTS.md 和 `.agents/rules/` 规则。
+.agents/summary/headless-client-extraction/MIGRATION.zh-CN.md、当前 checkout 的 AGENTS.md 和 `.agents/rules/` 规则。
 使用当前环境可用的搜索、读取和编辑能力。
 
 任务：<quest-id>，症状：<玩家可复现步骤>。

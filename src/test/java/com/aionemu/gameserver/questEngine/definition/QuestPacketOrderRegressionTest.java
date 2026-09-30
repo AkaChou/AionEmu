@@ -1,8 +1,8 @@
 package com.aionemu.gameserver.questEngine.definition;
 
 import com.aionemu.gameserver.questEngine.e2e.QuestE2ePacketValidator;
+import com.aionemu.gameserver.questEngine.e2e.client.ClientActionOutcome;
 import com.aionemu.gameserver.questEngine.e2e.client.ClientActionRequest;
-import com.aionemu.gameserver.questEngine.e2e.client.QuestHeadlessClient;
 import com.aionemu.gameserver.questEngine.e2e.client.QuestProtocolLoop;
 import com.aionemu.gameserver.questEngine.e2e.client.ServerPacketObservation;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
@@ -114,7 +114,7 @@ class QuestPacketOrderRegressionTest {
 			runtime.prepare(transition);
 			int objectId = runtime.expectedDialogTargetObjectId();
 			try (QuestProtocolLoop protocol = new QuestProtocolLoop(runtime)) {
-				QuestHeadlessClient.DispatchOutcome outcome = protocol.dispatch(
+				ClientActionOutcome outcome = protocol.dispatch(
 					ClientActionRequest.dialog(questId, talk.npcId(), objectId, dialogId));
 				assertTrue(outcome.handled(), outcome::toString);
 				assertFalse(outcome.failed(), outcome::toString);

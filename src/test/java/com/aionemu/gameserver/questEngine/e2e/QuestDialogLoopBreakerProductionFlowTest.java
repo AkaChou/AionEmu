@@ -1,11 +1,11 @@
 package com.aionemu.gameserver.questEngine.e2e;
 
 import com.aionemu.gameserver.questEngine.definition.CompiledQuestDefinition;
+import com.aionemu.gameserver.questEngine.e2e.client.ClientActionOutcome;
 import com.aionemu.gameserver.questEngine.definition.QuestDefinitionXmlCompiler;
 import com.aionemu.gameserver.questEngine.definition.QuestDialogAction;
 import com.aionemu.gameserver.questEngine.definition.QuestTransition;
 import com.aionemu.gameserver.questEngine.e2e.client.ClientActionRequest;
-import com.aionemu.gameserver.questEngine.e2e.client.QuestHeadlessClient;
 import com.aionemu.gameserver.questEngine.e2e.client.QuestProtocolLoop;
 import com.aionemu.gameserver.questEngine.e2e.client.ServerPacketObservation;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
@@ -55,7 +55,7 @@ class QuestDialogLoopBreakerProductionFlowTest {
 					dispatchUnansweredSelect(protocol, objectId, attempt);
 				}
 
-				QuestHeadlessClient.DispatchOutcome breaker = selectUnroutedAction(protocol, objectId);
+				ClientActionOutcome breaker = selectUnroutedAction(protocol, objectId);
 
 				assertFalse(breaker.handled(), breaker::toString);
 				assertEquals(QuestStatus.START, runtime.state().status());
@@ -88,7 +88,7 @@ class QuestDialogLoopBreakerProductionFlowTest {
 					dispatchUnansweredSelect(protocol, objectId, attempt);
 				}
 
-				QuestHeadlessClient.DispatchOutcome breaker = selectUnroutedAction(protocol, objectId);
+				ClientActionOutcome breaker = selectUnroutedAction(protocol, objectId);
 
 				assertFalse(breaker.handled(), breaker::toString);
 				assertTrue(breaker.packets().stream().anyMatch(packet ->
@@ -101,14 +101,14 @@ class QuestDialogLoopBreakerProductionFlowTest {
 	private static void dispatchUnansweredSelect(QuestProtocolLoop protocol, int objectId, int attempt)
 			throws InterruptedException {
 		int unansweredAttempt = attempt;
-		QuestHeadlessClient.DispatchOutcome unanswered = selectUnroutedAction(protocol, objectId);
+		ClientActionOutcome unanswered = selectUnroutedAction(protocol, objectId);
 		assertFalse(unanswered.handled(), unanswered::toString);
 		assertTrue(unanswered.packets().isEmpty(),
 			() -> "attempt " + unansweredAttempt + " answered: " + unanswered.packets());
 		Thread.sleep(LOOP_RESEND_GAP_MILLIS);
 	}
 
-	private static QuestHeadlessClient.DispatchOutcome selectUnroutedAction(QuestProtocolLoop protocol, int objectId) {
+	private static ClientActionOutcome selectUnroutedAction(QuestProtocolLoop protocol, int objectId) {
 		return protocol.dispatch(ClientActionRequest.dialog(QUEST_ID, NPC_ID, objectId,
 			QuestDialogAction.SELECT_QUEST_REWARD.id()));
 	}

@@ -1,11 +1,12 @@
 package com.aionemu.gameserver.questEngine.runtime;
 
 import com.aionemu.gameserver.model.Gender;
+import com.aionemu.gameserver.questEngine.e2e.client.ClientActionBridge;
+import com.aionemu.gameserver.questEngine.e2e.client.ClientActionOutcome;
 import com.aionemu.gameserver.model.PlayerClass;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.gameobjects.player.npcFaction.ENpcFactionQuestState;
 import com.aionemu.gameserver.questEngine.e2e.client.ClientActionRequest;
-import com.aionemu.gameserver.questEngine.e2e.client.QuestHeadlessClient;
 import com.aionemu.gameserver.questEngine.e2e.client.QuestTrace;
 import com.aionemu.gameserver.questEngine.e2e.client.ServerPacketObservation;
 import com.aionemu.gameserver.questEngine.e2e.client.VirtualClientState;
@@ -47,7 +48,7 @@ import java.util.Set;
  * Executes one isolated quest scenario through the formal QuestProductionDispatcher/QuestExecutionCoordinator and
  * connects the real typed after-commit composition to in-memory state, protocol, spawn, AI, teleport, and movie ports.
  */
-public final class QuestE2eRuntime implements QuestHeadlessClient.ActionBridge, AutoCloseable {
+public final class QuestE2eRuntime implements ClientActionBridge, AutoCloseable {
 	private static final int PLAYER_ID = QuestE2eWorldFixture.PLAYER_ID;
 	private final CompiledQuestDefinition definition;
 	private final VirtualClientState state;
@@ -483,7 +484,7 @@ public final class QuestE2eRuntime implements QuestHeadlessClient.ActionBridge, 
 	}
 
 	@Override
-	public QuestHeadlessClient.DispatchOutcome dispatch(ClientActionRequest request) {
+	public ClientActionOutcome dispatch(ClientActionRequest request) {
 		beginRequest(request);
 		trace.add("ROUTER", request.event().type());
 		QuestStatus beforeStatus = state.status();
@@ -507,7 +508,7 @@ public final class QuestE2eRuntime implements QuestHeadlessClient.ActionBridge, 
 		boolean changed = beforeStatus != state.status() || beforeVars != state.packedVariables();
 		boolean handled = result != null && result.claimed();
 		boolean failed = result != null && result.failed() || failure != null;
-		return new QuestHeadlessClient.DispatchOutcome(handled, failed, changed, failure, packets);
+		return new ClientActionOutcome(handled, failed, changed, failure, packets);
 	}
 
 	private void recordMatchedTransition(List<QuestEventIndex.Route> routes, QuestEventRouter.DispatchResult result) {
@@ -598,12 +599,12 @@ public final class QuestE2eRuntime implements QuestHeadlessClient.ActionBridge, 
 	}
 
 	/** 直接执行一个内存世界事件，供审计器不经过页面点击地走正式 dispatcher。 / Dispatches one world event through the formal dispatcher for audit scenarios. */
-	public QuestHeadlessClient.DispatchOutcome dispatchWorld(QuestEvent event) {
+	public ClientActionOutcome dispatchWorld(QuestEvent event) {
 		return dispatch(ClientActionRequest.world(definition.id(), event));
 	}
 
 	/** 将定义事件具体化为生产入口实际接收的权威运行时事件并分发。 / Materializes a definition event into the authoritative runtime event received by production ingress and dispatches it. */
-	public QuestHeadlessClient.DispatchOutcome dispatchPrepared() {
+	public ClientActionOutcome dispatchPrepared() {
 		if (preparedTransition == null) {
 			throw new IllegalStateException("no transition has been prepared");
 		}

@@ -770,3 +770,57 @@
   已清理的 weather 补丁目录、已删除的 kill-target 契约快照、quest-load-fail 历史路径）。
 - 保留边界不变：`.py`/`.sh`/`.java` 工具与门禁、`*-decisions*`/`*-registry*` 登记表、`.md` 报告与验收记录继续保留；
   memory-bank `evidence:` 引用到的产物一律保留，避免破坏 `verify_memory_bank.py` 门禁。
+
+---
+
+## 6. 第四轮（2026-09-30）：client-dialog-mapping 过期审计报告
+
+| 文件 | 体积 | 判定依据 |
+|---|---:|---|
+| `docs/quest/client-dialog-mapping/client-lifecycle-alignment.csv` | 2.4 MB | **过期**：报告以 `quest_xml_sha256` 为键，3,134 个被审计 XML 中 2,843 个已不存在、164 个内容已变（仅 127 个哈希仍一致）；无测试消费，仅一次性脚本读取，可由 `align_client_quest_dialog_lifecycle.py` 按需重生成 |
+
+同目录其余文件经实测确认**仍在使用，不清理**：
+
+| 文件 | 体积 | 保留原因 |
+|---|---:|---|
+| `quest-dialog-pages.csv` / `quest-dialog-action-details.csv` | 14.2 / 11.7 MB | `ClientResourceOracle`（33 个测试）与 4 个门禁测试的输入；`QuestMovieContinuationGateTest` 以 SHA-256 钉住它们作为 `client_dialog_contract.tsv` 的来源 |
+| `legacy-quest-dialog-contracts.csv` | 2.1 MB | `LegacyQuestEvidenceOracle`、`ReportToManyLegacyFlowRegressionTest` 输入 |
+| `legacy-quest-dialog-template-index.csv` | 2.2 MB | 生产 TSV 生成器 `build_quest_client_talk_chain_steps.py` 的输入 |
+| `client-monster-progress-contracts.csv` | 494 KB | 2 个门禁测试输入 |
+| `client-hyperlinks.csv` / `client-html-pages.csv` | 277 / 178 KB | `ClientResourceOracle` 输入 |
+| `page-action-map.csv`、`same-id-map.csv`、`same-symbol-map.csv`、`quest-action-summary.csv`、`parse-errors.csv`、`parse-recoveries.csv` | 1.2 MB | 仍新鲜的查阅表（源为客户端 HTML，不随仓库演进失效）；README 数据字典维护，`page-action-map.csv` 另被 5 份专题记录引用 |
+
+---
+
+## 8. 第六轮（2026-09-30）：客户端映射与无头客户端对拍层迁出
+
+用户裁定"去掉 e2e、门禁、测试等"。执行方式是**先整体搬到仓库外的本地项目，再从本仓库移除**：
+
+- 新项目：`AionEmu-headless`（仓库外，未纳入本仓库 git；31 MB，48 个 Java 文件，含 `README.zh-CN.md` 与 `pom.xml.template`）。
+- 从本仓库移除：`docs/quest/client-dialog-mapping/`（15 文件 / 31 MB）+ 48 个 Java 文件
+  （22 个 `definition/` 客户端对拍测试、10 个 `e2e/` 无头审计测试、3 个 `definition/` 对拍工具
+  `QuestDialogOrderAudit`/`QuestDialogSequenceAudit`/`QuestPrematureRewardRouteAudit`、
+  12 个支持类/CLI）。合并上一轮的 `client-lifecycle-alignment.csv`，本目录两轮共移出 64 个文件。
+- 本仓库保留：`client_dialog_contract.tsv`、`src/main/resources/quest/quest_client_*.tsv`（运行时冻结表）、
+  进程内运行时夹具（`QuestE2eRuntime`、`QuestE2eWorldFixture`、`QuestProtocolLoop`、`QuestE2ePacketValidator`、
+  `QuestE2eTransitionMatch`、`QuestE2eStatus`、`VirtualClientState`、`QuestTrace`、`ServerPacketObservation`、
+  `ClientActionRequest`、`VirtualClock`）及其不依赖客户端数据的 8 个 runtime/definition 测试。
+- 为解耦新增两个中性类型：`ClientActionOutcome`、`ClientActionBridge`（从 `QuestHeadlessClient` 下沉，
+  否则 `QuestProtocolLoop`/`QuestPacketOrderRegressionTest` 会依赖已迁出的类）。
+- 文档同步：新增 `.agents/summary/headless-client-extraction/MIGRATION.zh-CN.md`（在库证据入口，含全部迁出文件
+  SHA-256）；改写 `memory-bank/patterns/quest-engine.md`（12 处证据 + 散文）、`activeContext.md`、
+  `docs/QUEST_REPAIR_PLAYBOOK`、`repair-playbook/PATTERNS`、`repair-playbook/CASES`、`docs/README`、
+  `docs/quest/NPC_DIALOG_CONTEXT`、`.agents/rules/quest-repair.md`。
+- 顺带修复 Playbook 自检的 5 处失效引用：`ORDERED_MULTI_NPC_REPORT_FLOW`、`EQUIPPED_START_CONDITION_RUNTIME`
+  重指现存代表测试（`ReportToManySetSucceedAlignmentTest`、`QuestMutationPlannerTest`）；
+  `COUNTER_SOURCE_PROJECTION_NO_LOCK`、`SATURATED_COUNTER_EXTRA_KILL_SILENT`、`AUTO_START_KEEPS_NONE_DIALOG_FREE`
+  修正到现存方法名（`killEdgesAdvanceOnlyTheFirstUnfinishedStage`、`extraKillsOfASaturatedStage...`、`areaAutoStart...`）。
+- 验证（已执行）：`verify_memory_bank.py` 绿（EVIDENCE_REFS=750）、`check_quest_repair_playbook.py` 绿
+  （PLAYBOOK_PATTERNS=72）、`git diff --check` 干净；被删类在 `src/` 内零引用。
+- 验证（已执行，2026-09-30 用户授权）：`mvn -q test` 编译通过；全量 3965 个测试为 187 failures / 90 errors，
+  失败集中在并发车道的真端迁移（退役/缺失 XML、catalog 校验、retail 编译器改形）。本提交触及的测试类中只有 3 个
+  既有红（`QuestCounterProjectionLockFollowUpTest#quest27510…`、`QuestCounterSourceProjectionProductionFlowTest
+  #quests30603And30613…`、`QuestResidualCounterLocksTest#quest28504…`），根因是并发车道改形/删 XML 后未重钉；
+  保留夹具的 8 个运行时测试类共 24 个用例，21 绿。残余说明性引用两处
+  （`RetailDataDrivenGateTest` 断言消息 2 行、`Batch44FoamWispFiveRowContractTest` 注释 1 行，非编译依赖），
+  其中前者所在文件正被并发车道修改，未改动。
