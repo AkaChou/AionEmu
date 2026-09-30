@@ -44,6 +44,7 @@ public final class RetailQuestTitleIds {
 		ids.put("dark_title25", 75);
 		ids.put("dark_title250", 250);
 		ids.put("dark_title26", 76);
+		ids.put("dark_title27", 77);
 		ids.put("dark_title28", 78);
 		ids.put("dark_title29", 79);
 		ids.put("dark_title294", 294);
@@ -61,6 +62,7 @@ public final class RetailQuestTitleIds {
 		ids.put("dark_title41", 91);
 		ids.put("dark_title42", 92);
 		ids.put("dark_title44", 94);
+		ids.put("dark_title45", 95);
 		ids.put("dark_title46", 96);
 		ids.put("dark_title47", 97);
 		ids.put("dark_title48", 98);
@@ -127,6 +129,7 @@ public final class RetailQuestTitleIds {
 		ids.put("light_title41", 41);
 		ids.put("light_title42", 42);
 		ids.put("light_title44", 44);
+		ids.put("light_title45", 45);
 		ids.put("light_title46", 46);
 		ids.put("light_title47", 47);
 		ids.put("light_title48", 48);

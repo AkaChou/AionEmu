@@ -50,13 +50,10 @@ public class Reload extends AdminCommand {
 		}
 		switch (params[0]) {
 			case "quest":
-				File xml = Config.dataFile("./data/static_data/quest/legacy/quest_data.xml");
 				try {
-					JAXBContext jc = JAXBContext.newInstance(StaticData.class);
-					Unmarshaller un = jc.createUnmarshaller();
-					QuestsData newQuestData = (QuestsData) un.unmarshal(xml);
 					QuestEngine questEngine = GameEngineServices.questEngine();
 					QuestEngine.PreparedProductionDefinitions prepared = questEngine.prepareProductionDefinitions();
+					QuestsData newQuestData = QuestsData.fromCatalog(com.aionemu.gameserver.questEngine.definition.ProductionQuestDefinitions.catalog());
 					reloadQuests(newQuestData.getQuestsData(), prepared);
 					PacketSendUtility.sendMessage(admin, "Quest reload Success!");
 				} catch (Exception | GameServerError e) {

@@ -31,8 +31,6 @@ class AbyssTeleporterQuestRequirementTest {
 
 	private static final Path PORTAL_TEMPLATES = Path.of(
 			"src/main/resources/aion/data/static_data/portals/portal_template2.xml");
-	private static final Path QUEST_DATA = Path.of(
-			"src/main/resources/aion/data/static_data/quest/legacy/quest_data.xml");
 
 	@Test
 	void capitalGatesRequireTheRacialAbyssEntryQuest() throws Exception {
@@ -48,15 +46,13 @@ class AbyssTeleporterQuestRequirementTest {
 	}
 
 	@Test
-	void entryQuestIsTheTerminalQuestOfEachRacialChain() throws Exception {
-		Document document = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(QUEST_DATA.toFile());
-
-		assertChainLink(document, 1921, 1920);
-		assertChainLink(document, 1922, 1921);
-		assertChainLink(document, 1044, 1922);
-		assertChainLink(document, 2946, 2945);
-		assertChainLink(document, 2947, 2946);
-		assertChainLink(document, 2042, 2947);
+	void entryQuestIsTheTerminalQuestOfEachRacialChain() {
+		assertChainLink(1921, 1920);
+		assertChainLink(1922, 1921);
+		assertChainLink(1044, 1922);
+		assertChainLink(2946, 2945);
+		assertChainLink(2947, 2946);
+		assertChainLink(2042, 2947);
 	}
 
 	@Test
@@ -83,10 +79,13 @@ class AbyssTeleporterQuestRequirementTest {
 		assertEquals(List.of(0), portalReq.getQuestReq().stream().map(QuestReq::getQuestStep).toList());
 	}
 
-	private static void assertChainLink(Document document, int questId, int prerequisiteQuestId) throws Exception {
-		String expression = "boolean(/quests/quest[@id='%d']/start_conditions/finished[@quest_id='%d'])"
-				.formatted(questId, prerequisiteQuestId);
-		assertEquals("true", XPathFactory.newInstance().newXPath().evaluate(expression, document),
-				"quest " + questId + " should require quest " + prerequisiteQuestId);
+	private static void assertChainLink(int questId, int prerequisiteQuestId) {
+		com.aionemu.gameserver.questEngine.definition.QuestMetadata metadata =
+				com.aionemu.gameserver.questEngine.definition.ProductionQuestDefinitions.catalog().findMetadata(questId)
+						.orElseThrow(() -> new AssertionError("missing quest metadata for " + questId));
+		boolean hasPrereq = metadata.prerequisites().contains(prerequisiteQuestId)
+				|| metadata.startConditions().stream()
+						.anyMatch(sc -> "FINISHED".equalsIgnoreCase(sc.type()) && sc.questId() == prerequisiteQuestId);
+		assertTrue(hasPrereq, "quest " + questId + " should require quest " + prerequisiteQuestId);
 	}
 }

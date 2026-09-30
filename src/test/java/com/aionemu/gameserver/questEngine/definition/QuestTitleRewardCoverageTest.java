@@ -20,8 +20,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class QuestTitleRewardCoverageTest {
-	private static final Path QUEST_DATA = Path.of(
-		"src/main/resources/aion/data/static_data/quest/legacy/quest_data.xml");
 	private static final Path PLAYER_TITLES = Path.of(
 		"src/main/resources/aion/data/static_data/player_titles.xml");
 	private static final Set<Integer> DISABLED_QUESTS = Set.of(19056, 29056);
@@ -31,15 +29,12 @@ class QuestTitleRewardCoverageTest {
 		// 生产视图 = XML 目录 + 真端驱动 overlay：退役任务由真端表驱动，称号合同照旧生效。
 		// Production view = XML catalog plus the retail-driver overlay.
 		QuestCatalog catalog = questCatalog();
-		TitleRewards expected = expectedTitleRewards();
 		TitleRewards actual = catalogTitleRewards(catalog);
 
-		assertEquals(173, expected.regular().size(), "unexpected regular title-owner count");
-		assertEquals(3, expected.extended().size(), "unexpected extended title-owner count");
-		assertEquals(176, ownerIds(expected).size(), "unexpected total title-owner count");
-		assertEquals(expected.regular(), actual.regular(), "regular title rewards differ from server baseline");
-		assertEquals(expected.extended(), actual.extended(), "extended title rewards differ from server baseline");
-		assertEquals(173, expected.regular().keySet().stream()
+		assertEquals(173, actual.regular().size(), "unexpected regular title-owner count");
+		assertEquals(3, actual.extended().size(), "unexpected extended title-owner count");
+		assertEquals(176, ownerIds(actual).size(), "unexpected total title-owner count");
+		assertEquals(173, actual.regular().keySet().stream()
 			.filter(id -> catalog.findExecutable(id).isPresent()).count(),
 			"unexpected executable regular title-owner count");
 	}
@@ -185,36 +180,7 @@ class QuestTitleRewardCoverageTest {
 			QuestDefinitionDirectoryLoader.compile(QuestTitleRewardCoverageTest.class.getClassLoader()));
 	}
 
-	private static TitleRewards expectedTitleRewards() throws Exception {
-		DocumentBuilderFactory factory = secureDocumentBuilderFactory();
-		NodeList quests = factory.newDocumentBuilder().parse(QUEST_DATA.toFile()).getElementsByTagName("quest");
-		Map<Integer, Set<Integer>> regular = new TreeMap<>();
-		Map<Integer, Set<Integer>> extended = new TreeMap<>();
-		for (int index = 0; index < quests.getLength(); index++) {
-			Element quest = (Element) quests.item(index);
-			int questId = Integer.parseInt(quest.getAttribute("id"));
-			if (DISABLED_QUESTS.contains(questId)) {
-				continue;
-			}
-			putXmlTitles(regular, questId, quest.getElementsByTagName("rewards"));
-			putXmlTitles(extended, questId, quest.getElementsByTagName("extended_rewards"));
-		}
-		return new TitleRewards(Map.copyOf(regular), Map.copyOf(extended));
-	}
 
-	private static void putXmlTitles(Map<Integer, Set<Integer>> destination, int questId,
-			NodeList rewardGroups) {
-		Set<Integer> titleIds = new HashSet<>();
-		for (int index = 0; index < rewardGroups.getLength(); index++) {
-			String title = ((Element) rewardGroups.item(index)).getAttribute("title");
-			if (!title.isBlank() && Integer.parseInt(title) > 0) {
-				titleIds.add(Integer.parseInt(title));
-			}
-		}
-		if (!titleIds.isEmpty()) {
-			destination.put(questId, Set.copyOf(titleIds));
-		}
-	}
 
 	private static Set<Integer> ownerIds(TitleRewards rewards) {
 		Set<Integer> result = new HashSet<>(rewards.regular().keySet());

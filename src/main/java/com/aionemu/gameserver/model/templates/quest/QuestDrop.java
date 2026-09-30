@@ -57,4 +57,14 @@ public class QuestDrop {
 	public int getCollectingStep() {
 		return collecting_step;
 	}
+
+	public QuestDrop() {}
+	public QuestDrop(int npcId, int itemId, int chance, int dropEachMember, int collectingStep) {
+		this.npcId = npcId;
+		this.itemId = itemId;
+		this.chance = chance;
+		this.dropEachMember = dropEachMember;
+		this.collecting_step = collectingStep;
+	}
+
 }

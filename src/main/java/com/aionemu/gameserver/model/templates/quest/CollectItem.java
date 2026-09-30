@@ -30,4 +30,10 @@ public class CollectItem {
 	 */
 	@XmlAttribute
 	protected Integer count;
+
+	public CollectItem() {}
+	public CollectItem(int itemId, int count) {
+		this.itemId = itemId;
+		this.count = count;
+	}
 }

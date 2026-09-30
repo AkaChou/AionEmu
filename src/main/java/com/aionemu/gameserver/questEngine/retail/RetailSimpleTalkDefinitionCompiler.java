@@ -163,7 +163,7 @@ public final class RetailSimpleTalkDefinitionCompiler {
 		if (entry.itemCheck() && metadata.itemRequirements().isEmpty()) {
 			boolean workItemResolvable = entry.singleStep() && !entry.removesItem()
 				&& entry.giveItemSymbol() != null
-				&& RetailQuestWorkItems.first(entry.giveItemSymbol(), entry.questId()) != null;
+				&& !metadata.questWorkItems().isEmpty();
 			if (!workItemResolvable) {
 				return new Outcome(null, "RETAIL_ITEM_CHECK_UNRESOLVED",
 					"item_check=1 但真端 quest.xml 未声明 collect_item 且工作物品通道不可解");
@@ -230,7 +230,7 @@ public final class RetailSimpleTalkDefinitionCompiler {
 		List<QuestTransition> transitions = new ArrayList<>();
 		if (!systemGrant) {
 			transitions.addAll(attachMovieToRoute(RetailSimpleHuntDefinitionCompiler.canonicalAcceptFlow(
-				acquiredNpc, "started", acceptGiveItemActions(entry, itemIndex)), "unaccepted", acquiredNpc,
+				acquiredNpc, "started", acceptGiveItemActions(entry, itemIndex, metadata)), "unaccepted", acquiredNpc,
 				QuestDialogAction.QUEST_SELECT.id(),
 				entry.cutsceneTrigger() == QuestDialogAction.ASK_QUEST_ACCEPT.id()
 					? entry.cutsceneMovieId() : -1));
@@ -256,7 +256,7 @@ public final class RetailSimpleTalkDefinitionCompiler {
 				QuestItemRequirement workItem;
 				if (!metadata.itemRequirements().isEmpty()) {
 					handIn = metadata.itemRequirements();
-				} else if ((workItem = workItemRequirement(entry, itemIndex)) != null) {
+				} else if ((workItem = workItemRequirement(entry, itemIndex, metadata)) != null) {
 					handIn = List.of(workItem);
 				} else {
 					handIn = List.of();
@@ -334,13 +334,13 @@ public final class RetailSimpleTalkDefinitionCompiler {
 		if (!systemGrant) {
 			if (interactionObjects.isInteractionObject(acquiredNpc)) {
 				transitions.addAll(attachMovieToRoute(canonicalObjectAcceptFlow(
-					acquiredNpc, "started", acceptGiveItemActions(entry, itemIndex)), "unaccepted", acquiredNpc,
+					acquiredNpc, "started", acceptGiveItemActions(entry, itemIndex, metadata)), "unaccepted", acquiredNpc,
 					QuestDialogAction.USE_OBJECT.id(),
 					entry.cutsceneTrigger() == QuestDialogAction.ASK_QUEST_ACCEPT.id()
 						? entry.cutsceneMovieId() : -1));
 			} else {
 				transitions.addAll(attachMovieToRoute(RetailSimpleHuntDefinitionCompiler.canonicalAcceptFlow(
-					acquiredNpc, "started", acceptGiveItemActions(entry, itemIndex)), "unaccepted", acquiredNpc,
+					acquiredNpc, "started", acceptGiveItemActions(entry, itemIndex, metadata)), "unaccepted", acquiredNpc,
 					QuestDialogAction.QUEST_SELECT.id(),
 					entry.cutsceneTrigger() == QuestDialogAction.ASK_QUEST_ACCEPT.id()
 						? entry.cutsceneMovieId() : -1));
@@ -402,11 +402,11 @@ public final class RetailSimpleTalkDefinitionCompiler {
 			stepActions.add(new QuestAction.SetVariable("var0", index_i + 1));
 			String stepGive = entry.stepGiveItem(index_i + 1);
 			if (stepGive != null) {
-				stepActions.add(giveItem(stepGive, entry.questId(), itemIndex));
+				stepActions.add(giveItem(stepGive, entry.questId(), itemIndex, metadata));
 			}
 			String stepRemove = entry.stepRemoveItem(index_i + 1);
 			if (stepRemove != null) {
-				stepActions.add(removeItem(stepRemove, entry.questId(), itemIndex));
+				stepActions.add(removeItem(stepRemove, entry.questId(), itemIndex, metadata));
 			}
 
 			transitions.add(new QuestTransition(
@@ -430,7 +430,7 @@ public final class RetailSimpleTalkDefinitionCompiler {
 				QuestItemRequirement workItem;
 				if (!metadata.itemRequirements().isEmpty()) {
 					handIn = metadata.itemRequirements();
-				} else if ((workItem = workItemRequirement(entry, itemIndex)) != null) {
+				} else if ((workItem = workItemRequirement(entry, itemIndex, metadata)) != null) {
 					handIn = List.of(workItem);
 				} else {
 					handIn = List.of();
@@ -465,13 +465,14 @@ public final class RetailSimpleTalkDefinitionCompiler {
 			List.copyOf(transitions));
 	}
 
-	private static QuestAction.GiveItem giveItem(String symbol, int questId, RetailItemNameIndex itemIndex) {
-		String[] parts = symbol.trim().split("\s+");
+	private static QuestAction.GiveItem giveItem(String symbol, int questId, RetailItemNameIndex itemIndex,
+			QuestMetadata metadata) {
+		String[] parts = symbol.trim().split("\\s+");
 		String stem = parts[0];
 		int count = parts.length > 1 ? Integer.parseInt(parts[1]) : 1;
 		Integer itemId = resolveItemId(stem, itemIndex);
-		if (itemId == null) {
-			itemId = RetailQuestWorkItems.first(symbol, questId);
+		if (itemId == null && metadata != null && !metadata.questWorkItems().isEmpty()) {
+			itemId = metadata.questWorkItems().getFirst().itemId();
 		}
 		if (itemId == null) {
 			throw new IllegalStateException("unresolved item symbol " + symbol + " in quest " + questId);
@@ -479,13 +480,14 @@ public final class RetailSimpleTalkDefinitionCompiler {
 		return new QuestAction.GiveItem(itemId, count);
 	}
 
-	private static QuestAction.RemoveItem removeItem(String symbol, int questId, RetailItemNameIndex itemIndex) {
-		String[] parts = symbol.trim().split("\s+");
+	private static QuestAction.RemoveItem removeItem(String symbol, int questId, RetailItemNameIndex itemIndex,
+			QuestMetadata metadata) {
+		String[] parts = symbol.trim().split("\\s+");
 		String stem = parts[0];
 		int count = parts.length > 1 ? Integer.parseInt(parts[1]) : 1;
 		Integer itemId = resolveItemId(stem, itemIndex);
-		if (itemId == null) {
-			itemId = RetailQuestWorkItems.first(symbol, questId);
+		if (itemId == null && metadata != null && !metadata.questWorkItems().isEmpty()) {
+			itemId = metadata.questWorkItems().getFirst().itemId();
 		}
 		if (itemId == null) {
 			throw new IllegalStateException("unresolved item symbol " + symbol + " in quest " + questId);
@@ -504,7 +506,8 @@ public final class RetailSimpleTalkDefinitionCompiler {
 		return itemIndex.resolve(normalized);
 	}
 
-	private static QuestItemRequirement workItemRequirement(RetailSimpleTalkTable.Entry entry, RetailItemNameIndex itemIndex) {
+	private static QuestItemRequirement workItemRequirement(RetailSimpleTalkTable.Entry entry, RetailItemNameIndex itemIndex,
+			QuestMetadata metadata) {
 		String symbol = entry.giveItemSymbol();
 		if (symbol == null) {
 			for (int step = entry.talkNpcs().size(); step >= 1; step--) {
@@ -517,23 +520,24 @@ public final class RetailSimpleTalkDefinitionCompiler {
 		if (symbol == null) {
 			return null;
 		}
-		String[] parts = symbol.trim().split("\s+");
+		String[] parts = symbol.trim().split("\\s+");
 		String stem = parts[0];
 		int count = parts.length > 1 ? Integer.parseInt(parts[1]) : 1;
 		Integer itemId = resolveItemId(stem, itemIndex);
-		if (itemId == null) {
-			itemId = RetailQuestWorkItems.first(symbol, entry.questId());
+		if (itemId == null && metadata != null && !metadata.questWorkItems().isEmpty()) {
+			itemId = metadata.questWorkItems().getFirst().itemId();
 		}
 		return itemId != null ? new QuestItemRequirement(itemId, count) : null;
 	}
 
-	private static List<QuestAction> acceptGiveItemActions(RetailSimpleTalkTable.Entry entry, RetailItemNameIndex itemIndex) {
+	private static List<QuestAction> acceptGiveItemActions(RetailSimpleTalkTable.Entry entry, RetailItemNameIndex itemIndex,
+			QuestMetadata metadata) {
 		String symbol = entry.giveItemSymbol();
 		if (symbol == null || symbol.isBlank()) {
 			return List.of();
 		}
 		try {
-			return List.of(giveItem(symbol, entry.questId(), itemIndex));
+			return List.of(giveItem(symbol, entry.questId(), itemIndex, metadata));
 		} catch (Exception e) {
 			return List.of();
 		}

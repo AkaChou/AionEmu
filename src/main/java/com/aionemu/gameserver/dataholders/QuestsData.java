@@ -118,4 +118,22 @@ public class QuestsData {
 		this.questsData = questsData;
 		afterUnmarshal(null, null);
 	}
+
+	/**
+	 * 从真端生产目录统一构造任务模板数据容器。
+	 * Synthesizes the quest template data container directly from the production quest catalog.
+	 */
+	public static QuestsData fromCatalog(com.aionemu.gameserver.questEngine.definition.QuestCatalog catalog) {
+		QuestsData data = new QuestsData();
+		List<QuestTemplate> templates = new ArrayList<>(catalog.entries().size());
+		for (var entry : catalog.entries()) {
+			QuestTemplate template = QuestTemplate.fromMetadata(entry.id(), entry.metadata());
+			if (template != null) {
+				templates.add(template);
+			}
+		}
+		data.setQuestsData(templates);
+		return data;
+	}
+
 }

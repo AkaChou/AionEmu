@@ -9,6 +9,7 @@ import com.aionemu.gameserver.questEngine.definition.QuestAction;
 import com.aionemu.gameserver.questEngine.definition.QuestCondition;
 import com.aionemu.gameserver.questEngine.definition.QuestDefinition;
 import com.aionemu.gameserver.questEngine.definition.QuestDialogPage;
+import com.aionemu.gameserver.questEngine.definition.QuestEvent;
 import com.aionemu.gameserver.questEngine.definition.QuestMetadata;
 import com.aionemu.gameserver.questEngine.definition.QuestNode;
 import com.aionemu.gameserver.questEngine.definition.QuestTransition;
@@ -63,13 +64,13 @@ public final class RetailDataDrivenCollectCompiler {
 				pages.get(), summaryRows, summaryRows.lastRowIndex(questId), interactionObjects,
 				exits.requires(questId, RetailClientDialogExits.SELECT_NONE_1));
 		}
-		return buildCanonical(questId, acquiredNpcs, rewardNpcs, metadata, summaryRows, exits);
+		return buildCanonical(questId, acquiredNpcs, rewardNpcs, metadata, summaryRows, exits, interactionObjects);
 	}
 
 	/** 家族规范形（select1/ask_quest_accept/select2 词汇表）。 / The family canonical shape. */
 	private static QuestDefinition buildCanonical(int questId, java.util.Set<Integer> acquiredNpcs,
 			java.util.Set<Integer> rewardNpcs, QuestMetadata metadata, RetailClientSummaryRows summaryRows,
-			RetailClientDialogExits exits) {
+			RetailClientDialogExits exits, RetailQuestUseItemNpcs interactionObjects) {
 		ProgressLayout layout = new ProgressLayout.Builder()
 			.add(new BitField("var0", 0, RetailHuntCounterLayout.SECTION_BITS, 0,
 				RetailHuntCounterLayout.SECTION_MASK, PersistenceMode.PERSISTENT, ProgressScope.LOCAL))
@@ -121,7 +122,27 @@ public final class RetailDataDrivenCollectCompiler {
 			transitions.addAll(RetailSimpleCollectItemDefinitionCompiler.reportNpcExit(
 				acquiredNpcs.contains(rewardVariant), rewardVariant, "started"));
 		}
+		transitions.addAll(dropBoxes(metadata, interactionObjects));
 		transitions.addAll(RetailSimpleCollectItemDefinitionCompiler.journalRowRepair(rewardRow.get("var0")));
 		return new QuestDefinition(questId, 1, metadata, layout, nodes, List.copyOf(transitions));
+	}
+
+	private static List<QuestTransition> dropBoxes(QuestMetadata metadata,
+			RetailQuestUseItemNpcs interactionObjects) {
+		if (interactionObjects == null) {
+			return List.of();
+		}
+		java.util.TreeSet<Integer> boxNpcs = new java.util.TreeSet<>();
+		for (var drop : metadata.drops()) {
+			if (interactionObjects.isInteractionObject(drop.npcId())) {
+				boxNpcs.add(drop.npcId());
+			}
+		}
+		List<QuestTransition> transitions = new ArrayList<>();
+		for (int box : boxNpcs) {
+			transitions.add(new QuestTransition(new QuestEvent.CanAct(box, "ACTION_ITEM_USE"), List.of(),
+				List.of(), "started", List.of(), null, "started"));
+		}
+		return transitions;
 	}
 }

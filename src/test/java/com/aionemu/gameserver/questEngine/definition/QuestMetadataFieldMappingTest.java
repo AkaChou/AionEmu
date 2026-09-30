@@ -1,68 +1,55 @@
 package com.aionemu.gameserver.questEngine.definition;
 
+import com.aionemu.gameserver.dataholders.QuestsData;
+import com.aionemu.gameserver.model.templates.QuestTemplate;
 import org.junit.jupiter.api.Test;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-
-import javax.xml.XMLConstants;
-import javax.xml.parsers.DocumentBuilderFactory;
-import java.io.InputStream;
-import java.util.HashSet;
-import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class QuestMetadataFieldMappingTest {
+
 	@Test
-	void currentQuestDataFieldsHaveAnExplicitCanonicalDestination() throws Exception {
-		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-		factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
-		factory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
-		factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
-		factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
-		Document document;
-		try (InputStream input = getClass().getResourceAsStream(
-				"/aion/data/static_data/quest/legacy/quest_data.xml")) {
-			document = factory.newDocumentBuilder().parse(input);
-		}
-		assertEquals("quests", document.getDocumentElement().getTagName());
-		NodeList quests = document.getDocumentElement().getElementsByTagName("quest");
-		assertTrue(quests.getLength() > 0);
+	void questTemplatesSynthesizedFromProductionCatalogCoverEveryField() {
+		QuestCatalog catalog = ProductionQuestDefinitions.catalog();
+		QuestsData questsData = QuestsData.fromCatalog(catalog);
 
-		Set<String> attributes = new HashSet<>();
-		Set<String> elements = new HashSet<>();
-		Set<Integer> ids = new HashSet<>();
-		for (int i = 0; i < quests.getLength(); i++) {
-			Element quest = (Element) quests.item(i);
-			assertTrue(ids.add(Integer.parseInt(quest.getAttribute("id"))),
-				() -> "duplicate quest template id: " + quest.getAttribute("id"));
-			for (int a = 0; a < quest.getAttributes().getLength(); a++) {
-				attributes.add(quest.getAttributes().item(a).getNodeName());
+		assertEquals(6224, questsData.size(), "unexpected synthesized quest count");
+
+		int withRewards = 0;
+		int withDrops = 0;
+		int withKills = 0;
+		int withCollects = 0;
+		int withWorkItems = 0;
+		int withStartConditions = 0;
+
+		for (QuestTemplate template : questsData.getQuestsData()) {
+			assertNotNull(template.getName(), "missing name for quest " + template.getId());
+			if (template.getRewards() != null && !template.getRewards().isEmpty()) {
+				withRewards++;
 			}
-			NodeList children = quest.getChildNodes();
-			for (int c = 0; c < children.getLength(); c++) {
-				Node child = children.item(c);
-				if (child instanceof Element element) {
-					elements.add(element.getTagName());
-				}
+			if (template.getQuestDrop() != null && !template.getQuestDrop().isEmpty()) {
+				withDrops++;
 			}
-		}
-		assertEquals(quests.getLength(), ids.size());
-
-		MapAssertions.assertMapped(attributes, "quest attribute");
-		MapAssertions.assertMapped(elements, "quest element");
-		assertTrue(QuestMetadataFieldMapping.mapping().size() >= attributes.size() + elements.size());
-	}
-
-	private static final class MapAssertions {
-		private static void assertMapped(Set<String> names, String kind) {
-			for (String name : names) {
-				assertTrue(QuestMetadataFieldMapping.mapping().containsKey(name),
-					() -> kind + " is unmapped: " + name);
+			if (template.getQuestKill() != null && !template.getQuestKill().isEmpty()) {
+				withKills++;
+			}
+			if (template.getCollectItems() != null && !template.getCollectItems().getCollectItem().isEmpty()) {
+				withCollects++;
+			}
+			if (template.getQuestWorkItems() != null && !template.getQuestWorkItems().getQuestWorkItem().isEmpty()) {
+				withWorkItems++;
+			}
+			if (template.getXMLStartConditions() != null && !template.getXMLStartConditions().isEmpty()) {
+				withStartConditions++;
 			}
 		}
+
+		assertTrue(withRewards > 5000, "expected > 5000 quests with rewards, got " + withRewards);
+		assertTrue(withDrops > 500, "expected > 500 quests with drops, got " + withDrops);
+		assertTrue(withCollects > 500, "expected > 500 quests with collects, got " + withCollects);
+		assertTrue(withWorkItems > 200, "expected > 200 quests with work items, got " + withWorkItems);
+		assertTrue(withStartConditions >= 500, "expected >= 500 quests with start conditions, got " + withStartConditions);
 	}
 }

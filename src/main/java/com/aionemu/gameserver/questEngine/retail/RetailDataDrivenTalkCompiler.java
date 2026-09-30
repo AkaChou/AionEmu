@@ -50,7 +50,12 @@ public final class RetailDataDrivenTalkCompiler {
 	 */
 	public static QuestDefinition build(int questId, int acquiredNpc, int rewardNpc, QuestMetadata metadata,
 			int lastRowIndex) {
-		return build(questId, acquiredNpc, List.of(rewardNpc), metadata, lastRowIndex);
+		return build(questId, acquiredNpc, List.of(rewardNpc), metadata, lastRowIndex, null);
+	}
+
+	public static QuestDefinition build(int questId, int acquiredNpc, int rewardNpc, QuestMetadata metadata,
+			int lastRowIndex, RetailQuestUseItemNpcs interactionObjects) {
+		return build(questId, acquiredNpc, List.of(rewardNpc), metadata, lastRowIndex, interactionObjects);
 	}
 
 	/**
@@ -64,6 +69,11 @@ public final class RetailDataDrivenTalkCompiler {
 	 */
 	public static QuestDefinition build(int questId, int acquiredNpc, java.util.Collection<Integer> rewardNpcs,
 			QuestMetadata metadata, int lastRowIndex) {
+		return build(questId, acquiredNpc, rewardNpcs, metadata, lastRowIndex, null);
+	}
+
+	public static QuestDefinition build(int questId, int acquiredNpc, java.util.Collection<Integer> rewardNpcs,
+			QuestMetadata metadata, int lastRowIndex, RetailQuestUseItemNpcs interactionObjects) {
 		List<QuestTransition> acquire;
 		if (acquiredNpc < 0) {
 			// 系统发放形（区域/等级/阵营哨兵）：无接取 NPC，发放由发放引擎完成；定义保留一条
@@ -81,7 +91,7 @@ public final class RetailDataDrivenTalkCompiler {
 			// the minimal-letter page chain is no longer server-driven.
 			acquire = RetailSimpleHuntDefinitionCompiler.canonicalAcceptFlow(acquiredNpc, "started");
 		}
-		return assemble(questId, acquire, rewardNpcs, metadata, lastRowIndex);
+		return assemble(questId, acquire, rewardNpcs, metadata, lastRowIndex, interactionObjects);
 	}
 
 	/**
@@ -96,11 +106,14 @@ public final class RetailDataDrivenTalkCompiler {
 	 */
 	public static QuestDefinition buildItemAcquire(int questId, int itemId, int rewardNpc,
 			QuestMetadata metadata, int lastRowIndex) {
-		// 接取规范形（P0-2 DD 尾片）：使用道具下发接取窗（页 4），无主 1002/1003/1008 提交/拒绝/关窗。
-		// Canonical item accept (the DD tail slice): UseItem pops page 4; 1002/1003/1008 commit/refuse/close.
+		return buildItemAcquire(questId, itemId, rewardNpc, metadata, lastRowIndex, null);
+	}
+
+	public static QuestDefinition buildItemAcquire(int questId, int itemId, int rewardNpc,
+			QuestMetadata metadata, int lastRowIndex, RetailQuestUseItemNpcs interactionObjects) {
 		return assemble(questId,
 			RetailSimpleHuntDefinitionCompiler.canonicalItemAcceptFlow(itemId, "started"),
-			List.of(rewardNpc), metadata, lastRowIndex);
+			List.of(rewardNpc), metadata, lastRowIndex, interactionObjects);
 	}
 
 	/**
@@ -110,7 +123,8 @@ public final class RetailDataDrivenTalkCompiler {
 	 * Assembly of everything but the accept segment, so the npc shape and the item shape cannot drift.
 	 */
 	private static QuestDefinition assemble(int questId, List<QuestTransition> acquire,
-			java.util.Collection<Integer> rewardNpcs, QuestMetadata metadata, int lastRowIndex) {
+			java.util.Collection<Integer> rewardNpcs, QuestMetadata metadata, int lastRowIndex,
+			RetailQuestUseItemNpcs interactionObjects) {
 		ProgressLayout layout = new ProgressLayout.Builder()
 			.add(new BitField("var0", 0, RetailHuntCounterLayout.SECTION_BITS, 0,
 				RetailHuntCounterLayout.SECTION_MASK, PersistenceMode.PERSISTENT, ProgressScope.LOCAL))
@@ -141,9 +155,29 @@ public final class RetailDataDrivenTalkCompiler {
 		}
 		// 完成流用采集族口径（领奖窗预览路由 + 确认段 8..23，容忍「零奖励组」）。
 		// The completion flow follows the collect family (reward-window previews + confirm range).
+		transitions.addAll(dropBoxes(metadata, interactionObjects));
 		transitions.addAll(RetailSimpleCollectItemDefinitionCompiler.completeFlow(questId, rewardNpcs, metadata));
 		transitions.addAll(RetailSimpleCollectItemDefinitionCompiler.journalRowRepair(lastRowIndex));
 		return new QuestDefinition(questId, 1, metadata, layout, nodes, List.copyOf(transitions));
+	}
+
+	private static List<QuestTransition> dropBoxes(QuestMetadata metadata,
+			RetailQuestUseItemNpcs interactionObjects) {
+		if (interactionObjects == null) {
+			return List.of();
+		}
+		java.util.TreeSet<Integer> boxNpcs = new java.util.TreeSet<>();
+		for (var drop : metadata.drops()) {
+			if (interactionObjects.isInteractionObject(drop.npcId())) {
+				boxNpcs.add(drop.npcId());
+			}
+		}
+		List<QuestTransition> transitions = new ArrayList<>();
+		for (int box : boxNpcs) {
+			transitions.add(new QuestTransition(new QuestEvent.CanAct(box, "ACTION_ITEM_USE"), List.of(),
+				List.of(), "started", List.of(), null, "started"));
+		}
+		return transitions;
 	}
 
 	/**

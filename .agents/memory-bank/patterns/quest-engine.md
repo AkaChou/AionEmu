@@ -18,7 +18,7 @@ last_verified: 2026-09-14
 symptom: 前置缺失、level-up 过早接取、NPC 注册或路由不一致
 root_cause: XML migration loses prerequisite or NPC registration semantics from legacy Handler
 fix_or_guardrail: Compare commit 911440146 first and restore missing prerequisites or NPC mappings
-evidence: commit 911440146; src/main/resources/aion/data/static_data/quest/legacy/quest_data.xml; docs/quest/QUEST_REPAIR_PLAYBOOK.zh-CN.md
+evidence: commit 911440146; commit 0997233c2（quest_data 已退役见 git 历史）; docs/quest/QUEST_REPAIR_PLAYBOOK.zh-CN.md
 validation: static; production-catalog; case-specific runtime/client validation required
 boundaries: If origin/history is unavailable record substitute evidence; static proof is not client acceptance
 superseded_by: none
@@ -29,7 +29,7 @@ first_check: old Handler, quest_data.xml, production catalog
 - **旧 Handler 提取与对照命令**：
   - 提取旧 Handler：`git show 911440146:src/main/java/quest/<file>`
   - 提取旧 NPC 注册列表：`git ls-tree -r 911440146` 提取后 grep `registerQuestNpc`，与新 XML 的 `npc-id` 比对。
-  - 元数据对照：`src/main/resources/aion/data/static_data/quest/legacy/quest_data.xml`
+  - 元数据对照：`commit 0997233c2（quest_data 已退役见 git 历史）`
 - **Level-up 与前置条件缺失案例 (如 14013)**：
   - 迁移时 level-up 自动获取转换若漏掉 `quests-finished` 前置条件（旧 handler `defaultOnLvlUpEvent(env, 14010, false)`），会导致过早接取。
   - 修复方案：给 level-up 转换补充 `<quests-finished quest-ids="..."/>`。
@@ -203,7 +203,7 @@ symptom: 等级满足但无任务标记、接受动作无响应、前置任务�
 keywords: 不可达接取前置; finished quest-id; 999 级前置; 接取动作无响应; QUEST_ACCEPT_1 无页面; quest 19055; quest 19054; NPC 798450
 root_cause: Production metadata referenced an unavailable, obsolete or unreachable prerequisite
 fix_or_guardrail: Prove the prerequisite against the production catalog before removing the invalid reference
-evidence: commit adc5cbc0b; .agents/summary/quest-19055/2026-09-09-unreachable-start-prerequisite-audit.md:7; quest_data.xml
+evidence: commit adc5cbc0b; .agents/summary/quest-19055/2026-09-09-unreachable-start-prerequisite-audit.md:7; commit 0997233c2（quest_data 已退役见 git 历史）
 validation: static; focused-test; client acceptance not implied
 boundaries: Do not remove a prerequisite merely because it is inconvenient; require catalog and version evidence
 superseded_by: none
@@ -872,7 +872,7 @@ last_verified: 2026-09-19
 symptom: 势力日常“怎么接都接不到”；GM `//quest start` 只给通用失败提示；或某任务永远不会出现在每日轮换里
 root_cause: NpcFactions.sendDailyQuest 的候选池按 metadata.npcFactionId() 过滤，缺声明等于永不入池（同时 PlayerQuestStartEligibilityPort 会跳过阵营校验，门禁反而更松）；轮换表星期位全 0 时 isActiveOn 恒假，任务同样永不轮换。旧路径 QuestService.startQuest 反而用 legacy npcfaction_id，导致新旧要求不一致形成死锁
 fix_or_guardrail: 1. 归属取值以 quest_data.xml 的 npcfaction_id 与 npc_factions_quest.xml 的 faction_id 两源一致为准，逐任务写入 metadata npc-faction-id；2. 轮换行要么缺省（isActiveOn 视为每天可发）要么至少一个星期位为 1，禁止全 0；Elyos/Asmodian 镜像与 legacy repeat_cycle=ALL 可作补掩码证据；3. 门禁 QuestNpcFactionRetailGateTest 同时校验归属基线、日常池组成与星期位；4. GM 调试用 `//quest set <id> START 0`（绕过 start 检查），`//quest start` 受 legacy maxlevel_permitted 限制且 dialogId=0 时不打印真实原因
-evidence: src/main/resources/aion/data/static_data/quest/legacy/quest_data.xml; src/main/resources/aion/data/static_data/npc_factions/npc_factions_quest.xml; retail-xml-retention.tsv 的 quest 35059 行（XML已退役并删除，见git历史）; src/main/java/com/aionemu/gameserver/model/gameobjects/player/npcFaction/NpcFactions.java; src/main/java/com/aionemu/gameserver/questEngine/runtime/PlayerQuestStartEligibilityPort.java; src/test/java/com/aionemu/gameserver/model/gameobjects/player/npcFaction/QuestNpcFactionRetailGateTest.java; src/test/resources/quest/quest-npc-faction-retail-contract.tsv; .agents/summary/quest-counter-audit/2026-09-18-counter-kill-and-repeat-gate-alignment.zh-CN.md
+evidence: commit 0997233c2（quest_data 已退役见 git 历史）; src/main/resources/aion/data/static_data/npc_factions/npc_factions_quest.xml; retail-xml-retention.tsv 的 quest 35059 行（XML已退役并删除，见git历史）; src/main/java/com/aionemu/gameserver/model/gameobjects/player/npcFaction/NpcFactions.java; src/main/java/com/aionemu/gameserver/questEngine/runtime/PlayerQuestStartEligibilityPort.java; src/test/java/com/aionemu/gameserver/model/gameobjects/player/npcFaction/QuestNpcFactionRetailGateTest.java; src/test/resources/quest/quest-npc-faction-retail-contract.tsv; .agents/summary/quest-counter-audit/2026-09-18-counter-kill-and-repeat-gate-alignment.zh-CN.md
 validation: focused-test：QuestNpcFactionRetailGateTest + NpcFactionsCanonicalCatalogTest 4/4；全量 mvn -o test 见提交信息
 boundaries: 只覆盖能被玩家接取的阵营日常；缺轮换行按“每天可发”处理（isActiveOn 语义），不得据此删行；等级/阵营成员等水平门禁属正常拒绝，不算缺陷
 superseded_by: none
@@ -969,7 +969,7 @@ last_verified: 2026-09-19
 symptom: 在 NPC 任务列表点任务行后对话框立刻关闭（SM_DIALOG_WINDOW page=0）或任务行点不动、永远接不到；客户端动作是 QUEST_ACCEPT_SIMPLE(20000)，服务端无异常堆栈，容易误判成接取路由缺失
 root_cause: metadata/inventory-items 在 typed engine 中被 PlayerQuestStartEligibilityPort 当作接取前置；私有 quest_data.xml 迁移把真端 check_item（任务中段交付/使用道具）写进 inventory_items（该字段的真端来源是 inventory_item_name），玩家接取时尚未持有该道具 → REQUIRED_INVENTORY_ITEM_MISSING，unaccepted→s0 转换不提交，DialogService 按“未处理的任务动作不得回显成对话页”关窗
 fix_or_guardrail: 1. metadata/inventory-items 只允许来自真端 quest.xml 的 inventory_item_name*；check_item/collect_item 分别属于交付校验与收集合同（QE-031/QE-032），不得充当接取门禁；2. 任务中段的 give-item/item-play/remove-item 合同不得跟着删；3. 改 XML 时必须同步删 quest_data.xml 的对应 inventory_items 行，保持迁移来源一致
-evidence: retail-xml-retention.tsv 的 quest 30721 行（XML已退役并删除，见git历史）; src/main/resources/aion/data/static_data/quest/legacy/quest_data.xml; src/test/java/com/aionemu/gameserver/questEngine/definition/QuestInventoryStartItemGateTest.java; src/test/resources/quest/quest-inventory-start-item-retail-contract.tsv; .agents/summary/quest-30721/2026-09-19-quest-30721-inventory-start-gate.zh-CN.md; .agents/summary/quest-inventory-start-item/audit_inventory_start_items.py; .agents/summary/quest-inventory-start-item/inventory-start-item-gaps.tsv
+evidence: retail-xml-retention.tsv 的 quest 30721 行（XML已退役并删除，见git历史）; commit 0997233c2（quest_data 已退役见 git 历史）; src/test/java/com/aionemu/gameserver/questEngine/definition/QuestInventoryStartItemGateTest.java; src/test/resources/quest/quest-inventory-start-item-retail-contract.tsv; .agents/summary/quest-30721/2026-09-19-quest-30721-inventory-start-gate.zh-CN.md; .agents/summary/quest-inventory-start-item/audit_inventory_start_items.py; .agents/summary/quest-inventory-start-item/inventory-start-item-gaps.tsv
 validation: focused-test（QuestInventoryStartItemGateTest 2/2；相邻回归 32/32：QuestItemSourceContractGateTest、QuestRetailStartMetadataGateTest、QuestStartEligibilityContractTest、PlayerQuestStartEligibilityPortTest、QuestEnterZoneStartOwnerRegressionTest）；production-gate（QuestDefinitionCatalogManifestTest、ProductionCatalogWhitelistVerificationTest、QuestClientContractGateTest、QuestDialogOrderAuditTest、QuestPageButtonAuditTest 31/31，PRODUCTION_COMPILE_OK=6189 / FAILURES=0）；runtime 与 client 未复验，需用户重建资源并重启服务端后实测
 boundaries: 全库审计反向违规（生产声明、真端无 inventory_item_name）为 0；仅剩“真端有、生产 XML 未声明”的 78 条缺口（inventory-start-item-gaps.tsv 标 XML_MISSING_GATE）与 223 条无生产 XML 的任务（NO_QUEST_XML），均未批量补——未证明这些任务要求接取前携带；30721 与 18300 不是同一根因（18300 属 QE-039 的 legacy 接取 owner 丢失），两者症状相似但判定路径不同
 superseded_by: none

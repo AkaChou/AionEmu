@@ -81,7 +81,6 @@
 	<pet_feed>
 		<import file="pets/pet_feed.xml" skipRoot="true"/>
 	</pet_feed>
-	<import file="quest/legacy/quest_data.xml"/>
 	<import file="quest/legacy/quest_random_rewards.xml"/>
 	<import file="recipe/recipe_templates.xml"/>
 	<import file="luna/luna_templates.xml"/>

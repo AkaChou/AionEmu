@@ -247,13 +247,13 @@ class XmlDataLoaderTest {
 	}
 
 	@Test
-	void questDataSourceValidatesAgainstSchema() {
-		SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-
-		assertDoesNotThrow(() -> schemaFactory
-			.newSchema(Path.of("src/main/resources/aion/data/static_data/quest/legacy/quest_data.xsd").toFile())
-			.newValidator()
-			.validate(new StreamSource(Path.of("src/main/resources/aion/data/static_data/quest/legacy/quest_data.xml").toFile())));
+	void questDataSynthesizesFromProductionCatalog() {
+		com.aionemu.gameserver.dataholders.QuestsData quests = com.aionemu.gameserver.dataholders.QuestsData.fromCatalog(
+			com.aionemu.gameserver.questEngine.definition.ProductionQuestDefinitions.catalog());
+		assertEquals(6224, quests.size());
+		assertNotNull(quests.getQuestById(1000));
+		assertNotNull(quests.getQuestById(1001));
+		assertNotNull(quests.getQuestById(1002));
 	}
 
 	@Test

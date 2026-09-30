@@ -88,4 +88,23 @@ public class Rewards {
 	public Integer getCP() {
 		return cp;
 	}
+
+	public Rewards() {}
+	public Rewards(Integer gold, Integer exp, Integer expBoost, Integer dp, Integer ap, Integer gp,
+			Integer abyssOp, Integer cp, Integer title, Integer extendInventory, Integer extendStigma,
+			List<QuestItems> rewardItem, List<QuestItems> selectableRewardItem) {
+		this.gold = gold;
+		this.exp = exp;
+		this.expBoost = expBoost;
+		this.dp = dp;
+		this.ap = ap;
+		this.gp = gp;
+		this.abyssOp = abyssOp;
+		this.cp = cp;
+		this.title = title;
+		this.extendInventory = extendInventory;
+		this.extendStigma = extendStigma;
+		this.rewardItem = rewardItem;
+		this.selectableRewardItem = selectableRewardItem;
+	}
 }

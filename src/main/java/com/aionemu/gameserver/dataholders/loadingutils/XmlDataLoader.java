@@ -311,6 +311,10 @@ public class XmlDataLoader {
 			data.petDopingData = petDefinitions.doping();
 			data.petMerchandData = petDefinitions.merchant();
 			data.windstreamsData = joinDefinition(windstreamDataFuture);
+			if (data.questData == null) {
+				data.questData = com.aionemu.gameserver.dataholders.QuestsData.fromCatalog(
+					com.aionemu.gameserver.questEngine.definition.ProductionQuestDefinitions.catalog());
+			}
 			data.logSummary();
 			long elapsed = System.currentTimeMillis() - unmarshalStart;
 			progressReporter.finish(totalSections, elapsed);

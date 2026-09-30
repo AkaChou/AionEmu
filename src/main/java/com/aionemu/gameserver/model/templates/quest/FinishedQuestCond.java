@@ -26,4 +26,10 @@ public class FinishedQuestCond {
 	public Integer getReward() {
 		return reward;
 	}
+
+	public FinishedQuestCond() {}
+	public FinishedQuestCond(int questId, int reward) {
+		this.questId = questId;
+		this.reward = reward;
+	}
 }

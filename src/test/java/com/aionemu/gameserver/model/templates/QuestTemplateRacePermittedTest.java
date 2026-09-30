@@ -27,11 +27,14 @@ class QuestTemplateRacePermittedTest {
 		""";
 
 	@Test
-	void questSchemaAcceptsMultiplePermittedRaces() throws Exception {
-		var schema = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI)
-			.newSchema(Path.of("src/main/resources/aion/data/static_data/quest/legacy/quest_data.xsd").toFile());
-
-		schema.newValidator().validate(new StreamSource(new StringReader(TWO_RACE_QUEST)));
+	void fromMetadataAcceptsMultiplePermittedRaces() {
+		var meta = new com.aionemu.gameserver.questEngine.definition.QuestMetadata(
+			"Q1315", 0, 10, 50, java.util.Set.of("ELYOS", "ASMODIANS"), "QUEST", com.aionemu.gameserver.questEngine.definition.RepeatPolicy.once(),
+			java.util.Set.of(), List.of(), List.of(), List.of());
+		QuestTemplate quest = QuestTemplate.fromMetadata(1315, meta);
+		assertTrue(quest.isRacePermitted(Race.ELYOS));
+		assertTrue(quest.isRacePermitted(Race.ASMODIANS));
+		assertFalse(quest.isRacePermitted(Race.NPC));
 	}
 
 	@Test

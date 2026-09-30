@@ -144,4 +144,14 @@ public class XMLStartCondition {
 	public List<FinishedQuestCond> getFinishedPreconditions() {
 		return finished;
 	}
+
+	public XMLStartCondition() {}
+	public XMLStartCondition(List<FinishedQuestCond> finished, List<Integer> unfinished,
+			List<Integer> noacquired, List<Integer> acquired, List<Integer> equipped) {
+		this.finished = finished;
+		this.unfinished = unfinished;
+		this.noacquired = noacquired;
+		this.acquired = acquired;
+		this.equipped = equipped;
+	}
 }

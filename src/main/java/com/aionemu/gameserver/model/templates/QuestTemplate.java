@@ -1,5 +1,12 @@
 package com.aionemu.gameserver.model.templates;
 
+import com.aionemu.gameserver.model.templates.quest.CollectItem;
+import com.aionemu.gameserver.model.templates.quest.FinishedQuestCond;
+import com.aionemu.gameserver.model.templates.quest.InventoryItem;
+import com.aionemu.gameserver.model.templates.rewards.BonusType;
+import com.aionemu.gameserver.questEngine.definition.QuestMetadata;
+import com.aionemu.gameserver.questEngine.definition.QuestReward;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -561,4 +568,223 @@ public class QuestTemplate {
 	public boolean isNoCount() {
 		return category.equals(QuestCategory.NON_COUNT) || category.equals(QuestCategory.EVENT);
 	}
+
+	/**
+	 * 从真端规范元数据映射生成 QuestTemplate 实例。
+	 * Synthesizes a QuestTemplate instance directly from canonical QuestMetadata.
+	 */
+	public static QuestTemplate fromMetadata(int id, QuestMetadata m) {
+		if (m == null) {
+			return null;
+		}
+		QuestTemplate t = new QuestTemplate();
+		t.id = id;
+		t.name = m.name();
+		t.nameId = m.displayNameId() == 0 ? null : m.displayNameId();
+		t.minlevelPermitted = m.minLevel() == 0 ? null : m.minLevel();
+		t.maxlevelPermitted = m.maxLevel() == Integer.MAX_VALUE ? 0 : m.maxLevel();
+		t.cannotShare = m.cannotShare() ? Boolean.TRUE : null;
+		t.cannotGiveup = m.cannotGiveup() ? Boolean.TRUE : null;
+		t.bountyReward = m.bountyReward() ? Boolean.TRUE : null;
+		t.useClassReward = m.useClassReward() == 0 ? null : m.useClassReward();
+		t.combineskill = m.combineSkill();
+		t.combineSkillpoint = m.combineSkillPoint();
+		t.timer = m.timer() ? Boolean.TRUE : null;
+		t.rank = m.rank();
+		t.maxCountLimitedQuest = m.maxCountLimitedQuest() == 1 ? null : m.maxCountLimitedQuest();
+		t.countRecoverLimitedQuest = m.countRecoverLimitedQuest() == 1 ? null : m.countRecoverLimitedQuest();
+		t.npcFactionId = m.npcFactionId();
+		t.titleId = m.titleId();
+
+		try {
+			t.category = QuestCategory.valueOf(m.category());
+		} catch (Exception e) {
+			t.category = QuestCategory.QUEST;
+		}
+
+		try {
+			t.mentorType = QuestMentorType.valueOf(m.mentorType());
+		} catch (Exception e) {
+			t.mentorType = QuestMentorType.NONE;
+		}
+
+		try {
+			t.targetType = QuestTargetType.valueOf(m.targetType());
+		} catch (Exception e) {
+			t.targetType = QuestTargetType.NONE;
+		}
+
+		if ("MALE".equalsIgnoreCase(m.permittedGender())) {
+			t.genderPermitted = Gender.MALE;
+		} else if ("FEMALE".equalsIgnoreCase(m.permittedGender())) {
+			t.genderPermitted = Gender.FEMALE;
+		} else {
+			t.genderPermitted = null;
+		}
+
+		t.racePermitted = new ArrayList<>();
+		for (String r : m.permittedRaces()) {
+			try {
+				t.racePermitted.add(Race.valueOf(r));
+			} catch (Exception ignored) {}
+		}
+		if (t.racePermitted.isEmpty() || m.permittedRaces().contains("PC_ALL")) {
+			t.racePermitted = List.of(Race.PC_ALL);
+		}
+
+		t.classPermitted = new ArrayList<>();
+		for (String c : m.permittedClasses()) {
+			try {
+				t.classPermitted.add(PlayerClass.valueOf(c));
+			} catch (Exception ignored) {}
+		}
+
+		if (m.repeatPolicy() != null) {
+			t.maxRepeatCount = m.repeatPolicy().maxRepeatCount() == 1 ? null : m.repeatPolicy().maxRepeatCount();
+			t.rewardRepeatCount = m.repeatPolicy().rewardRepeatCount() == 0 ? null : m.repeatPolicy().rewardRepeatCount();
+			t.questCooltime = (int) m.repeatPolicy().cooldownSeconds();
+		}
+
+		t.repeatCycle = new ArrayList<>();
+		for (String rc : m.repeatCycles()) {
+			try {
+				t.repeatCycle.add(QuestRepeatCycle.valueOf(rc));
+			} catch (Exception ignored) {}
+		}
+
+		if (!m.itemRequirements().isEmpty()) {
+			t.collectItems = new CollectItems();
+			for (var req : m.itemRequirements()) {
+				t.collectItems.getCollectItem().add(new CollectItem(req.itemId(), req.count()));
+			}
+		}
+
+		if (!m.inventoryItems().isEmpty()) {
+			t.inventoryItems = new InventoryItems();
+			for (var req : m.inventoryItems()) {
+				t.inventoryItems.getInventoryItem().add(new InventoryItem(req.itemId()));
+			}
+		}
+
+		if (!m.questWorkItems().isEmpty()) {
+			t.questWorkItems = new QuestWorkItems();
+			for (var req : m.questWorkItems()) {
+				t.questWorkItems.getQuestWorkItem().add(new QuestItems(req.itemId(), req.count()));
+			}
+		}
+
+		if (!m.drops().isEmpty()) {
+			t.questDrop = new ArrayList<>();
+			for (var drop : m.drops()) {
+				int dropMember = drop.scope() == com.aionemu.gameserver.questEngine.definition.QuestDropScope.ALLIANCE ? 2 : (drop.eachMember() ? 1 : 0);
+				t.questDrop.add(new QuestDrop(drop.npcId(), drop.itemId(), drop.chance(), dropMember, drop.collectingStep()));
+			}
+		}
+
+		if (!m.kills().isEmpty()) {
+			t.questKill = new ArrayList<>();
+			for (var kill : m.kills()) {
+				t.questKill.add(new QuestKill(kill.sequence(), kill.npcIds()));
+			}
+		}
+
+		if (!m.rewardGroups().isEmpty()) {
+			t.rewards = new ArrayList<>();
+			for (var group : m.rewardGroups()) {
+				t.rewards.add(toRewards(group.rewards()));
+			}
+		}
+
+		if (!m.extendedRewardGroups().isEmpty()) {
+			t.extendedRewards = new ArrayList<>();
+			for (var group : m.extendedRewardGroups()) {
+				t.extendedRewards.add(toRewards(group.rewards()));
+			}
+		}
+
+		if (!m.bonuses().isEmpty()) {
+			t.bonus = new ArrayList<>();
+			for (var b : m.bonuses()) {
+				try {
+					t.bonus.add(new QuestBonuses(BonusType.valueOf(b.type()), b.level(), b.skill()));
+				} catch (Exception ignored) {}
+			}
+		}
+
+		if (!m.classRewards().isEmpty()) {
+			for (var entry : m.classRewards().entrySet()) {
+				List<QuestItems> list = new ArrayList<>();
+				for (var rw : entry.getValue()) {
+					list.add(new QuestItems(rw.id(), (int) rw.amount()));
+				}
+				switch (entry.getKey()) {
+					case "FIGHTER" -> t.fighterSelectableReward = list;
+					case "KNIGHT" -> t.knightSelectableReward = list;
+					case "RANGER" -> t.rangerSelectableReward = list;
+					case "ASSASSIN" -> t.assassinSelectableReward = list;
+					case "WIZARD" -> t.wizardSelectableReward = list;
+					case "ELEMENTALIST" -> t.elementalistSelectableReward = list;
+					case "PRIEST" -> t.priestSelectableReward = list;
+					case "CHANTER" -> t.chanterSelectableReward = list;
+					case "GUNSLINGER" -> t.gunslingerSelectableReward = list;
+					case "SONGWEAVER" -> t.songweaverSelectableReward = list;
+					case "AETHERTECH" -> t.aethertechSelectableReward = list;
+				}
+			}
+		}
+
+		if (!m.startConditions().isEmpty()) {
+			List<FinishedQuestCond> finishedList = new ArrayList<>();
+			List<Integer> unfinishedList = new ArrayList<>();
+			List<Integer> noacquiredList = new ArrayList<>();
+			List<Integer> acquiredList = new ArrayList<>();
+			List<Integer> equippedList = new ArrayList<>();
+			for (var c : m.startConditions()) {
+				switch (c.type().toUpperCase(java.util.Locale.ROOT)) {
+					case "FINISHED" -> finishedList.add(new FinishedQuestCond(c.questId(), c.rewardMode()));
+					case "UNFINISHED" -> unfinishedList.add(c.questId());
+					case "NOACQUIRED" -> noacquiredList.add(c.questId());
+					case "ACQUIRED" -> acquiredList.add(c.questId());
+					case "EQUIPPED" -> equippedList.add(c.questId());
+				}
+			}
+			t.startConds = List.of(new XMLStartCondition(finishedList, unfinishedList, noacquiredList, acquiredList, equippedList));
+		}
+
+		return t;
+	}
+
+	private static Rewards toRewards(List<QuestReward> list) {
+		Integer gold = null;
+		Integer exp = null;
+		Integer expBoost = null;
+		Integer dp = null;
+		Integer ap = null;
+		Integer gp = null;
+		Integer abyssOp = null;
+		Integer cp = null;
+		Integer title = null;
+		List<QuestItems> rewardItem = new ArrayList<>();
+		List<QuestItems> selectableRewardItem = new ArrayList<>();
+
+		for (var rw : list) {
+			switch (rw.kind()) {
+				case "EXP" -> exp = (int) rw.amount();
+				case "GOLD", "KINAH" -> gold = (int) rw.amount();
+				case "AP" -> ap = (int) rw.amount();
+				case "GP" -> gp = (int) rw.amount();
+				case "DP" -> dp = (int) rw.amount();
+				case "CP" -> cp = (int) rw.amount();
+				case "EXP_BOOST" -> expBoost = (int) rw.amount();
+				case "ABYSS_OP" -> abyssOp = (int) rw.amount();
+				case "TITLE" -> title = rw.id();
+				case "ITEM" -> rewardItem.add(new QuestItems(rw.id(), (int) rw.amount()));
+				case "SELECTABLE_ITEM" -> selectableRewardItem.add(new QuestItems(rw.id(), (int) rw.amount()));
+			}
+		}
+		return new Rewards(gold, exp, expBoost, dp, ap, gp, abyssOp, cp, title, null, null,
+			rewardItem.isEmpty() ? null : rewardItem,
+			selectableRewardItem.isEmpty() ? null : selectableRewardItem);
+	}
+
 }

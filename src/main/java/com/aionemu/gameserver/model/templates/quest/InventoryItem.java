@@ -19,4 +19,9 @@ public class InventoryItem {
 	/** 返回物品 ID / Returns the item id */
 	@XmlAttribute(name = "item_id")
 	protected Integer itemId;
+
+	public InventoryItem() {}
+	public InventoryItem(int itemId) {
+		this.itemId = itemId;
+	}
 }

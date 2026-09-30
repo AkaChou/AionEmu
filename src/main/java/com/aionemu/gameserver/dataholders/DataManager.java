@@ -302,7 +302,7 @@ public final class DataManager {
         CUBEEXPANDER_DATA = data.cubeExpandData;
         WAREHOUSEEXPANDER_DATA = data.warehouseExpandData;
         BIND_POINT_DATA = data.bindPointData;
-        QUEST_DATA = data.questData;
+        QUEST_DATA = data.questData != null ? data.questData : QuestsData.fromCatalog(com.aionemu.gameserver.questEngine.definition.ProductionQuestDefinitions.catalog());
         QUEST_RANDOM_REWARDS = data.questRandomRewardsData;
         ZONE_DATA = data.zoneData;
         WALKER_DATA = data.walkerData;
@@ -507,6 +507,9 @@ public final class DataManager {
             StaticData staticData = loader.loadStaticData(skillDataFuture::join, phaseTimings);
             ItemData itemData = itemDataFuture.join();
             loader.logStaticDataPhaseTimings(phaseTimings);
+            if (staticData.questData == null) {
+                staticData.questData = QuestsData.fromCatalog(com.aionemu.gameserver.questEngine.definition.ProductionQuestDefinitions.catalog());
+            }
             return new LoadedStaticData(staticData, itemData);
         } catch (CompletionException e) {
             itemDataFuture.cancel(true);

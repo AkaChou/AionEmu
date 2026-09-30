@@ -478,9 +478,9 @@ public final class RetailDataDrivenDefinitionCompiler {
 				// completion flows are shared with the npc shape.
 				definition = itemAcquireId != null
 					? RetailDataDrivenTalkCompiler.buildItemAcquire(entry.questId(), itemAcquireId, rewardNpc,
-						metadata.metadata(), clientSummaryRows.lastRowIndex(entry.questId()))
+						metadata.metadata(), clientSummaryRows.lastRowIndex(entry.questId()), interactionObjects)
 					: RetailDataDrivenTalkCompiler.build(entry.questId(), acquiredNpc, rewardIds,
-						metadata.metadata(), clientSummaryRows.lastRowIndex(entry.questId()));
+						metadata.metadata(), clientSummaryRows.lastRowIndex(entry.questId()), interactionObjects);
 				return new Outcome(QuestDefinitionCompiler.compile(definition), null, null);
 			}
 			if (entry.allTalk()) {

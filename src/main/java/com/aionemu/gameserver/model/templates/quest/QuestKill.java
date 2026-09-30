@@ -53,4 +53,10 @@ public class QuestKill {
 		}
 		return npcIdSet;
 	}
+
+	public QuestKill() {}
+	public QuestKill(int seq, List<Integer> npcIds) {
+		this.seq = seq;
+		this.npcIds = npcIds;
+	}
 }

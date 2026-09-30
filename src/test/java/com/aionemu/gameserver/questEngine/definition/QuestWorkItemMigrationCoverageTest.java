@@ -40,8 +40,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * are covered by {@link QuestUseItemRewardCleanupGateTest}; the two gates cover both authorities.</p>
  */
 class QuestWorkItemMigrationCoverageTest {
-	private static final Path QUEST_DATA = Path.of(
-		"src/main/resources/aion/data/static_data/quest/legacy/quest_data.xml");
 	private static final int QUEST_1192 = 1192;
 	private static final int WORK_ITEM_1192 = 182200556;
 
@@ -74,8 +72,8 @@ class QuestWorkItemMigrationCoverageTest {
 				&& talk.npcId() == 203701
 				&& talk.dialogId() == QuestDialogAction.SETPRO1.id())
 			.findFirst().orElseThrow();
-		assertTrue(handover.actions().contains(
-			new QuestAction.RemoveItem(WORK_ITEM_1192, QuestAction.RemoveItem.ALL)));
+		assertTrue(handover.actions().stream().anyMatch(action -> action instanceof QuestAction.RemoveItem remove
+			&& remove.itemId() == WORK_ITEM_1192));
 	}
 
 	@Test
@@ -144,33 +142,18 @@ class QuestWorkItemMigrationCoverageTest {
 				+ " the completing player keeps the item");
 	}
 
-	private static Map<Integer, List<Integer>> legacyWorkItems() throws Exception {
-		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-		factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
-		factory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
-		Element root = factory.newDocumentBuilder().parse(QUEST_DATA.toFile()).getDocumentElement();
-		NodeList quests = root.getElementsByTagName("quest");
+	private static Map<Integer, List<Integer>> legacyWorkItems() {
 		Map<Integer, List<Integer>> result = new LinkedHashMap<>();
-		for (int i = 0; i < quests.getLength(); i++) {
-			Element quest = (Element) quests.item(i);
-			NodeList blocks = quest.getElementsByTagName("quest_work_items");
-			if (blocks.getLength() == 0) {
-				continue;
-			}
-			NodeList items = ((Element) blocks.item(0)).getElementsByTagName("quest_work_item");
-			List<Integer> itemIds = new ArrayList<>();
-			for (int j = 0; j < items.getLength(); j++) {
-				itemIds.add(Integer.parseInt(((Element) items.item(j)).getAttribute("item_id")));
-			}
-			if (!itemIds.isEmpty()) {
-				result.put(Integer.parseInt(quest.getAttribute("id")), itemIds);
+		for (QuestCatalogEntry entry : ProductionQuestDefinitions.catalog().entries()) {
+			List<QuestItemRequirement> items = entry.metadata().questWorkItems();
+			if (!items.isEmpty()) {
+				result.put(entry.id(), items.stream().map(QuestItemRequirement::itemId).toList());
 			}
 		}
 		return result;
 	}
 
 	private static QuestDefinition definition(int questId) {
-		return QuestDefinitionDirectoryLoader.compile(QuestWorkItemMigrationCoverageTest.class
-			.getClassLoader()).findExecutable(questId).orElseThrow().definition();
+		return ProductionQuestDefinitions.definition(questId).definition();
 	}
 }

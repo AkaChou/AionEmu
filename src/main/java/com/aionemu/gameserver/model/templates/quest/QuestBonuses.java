@@ -39,4 +39,11 @@ public class QuestBonuses {
 	 */
 	@XmlAttribute
 	protected Integer skill;
+
+	public QuestBonuses() {}
+	public QuestBonuses(BonusType type, Integer level, Integer skill) {
+		this.type = type;
+		this.level = level;
+		this.skill = skill;
+	}
 }
