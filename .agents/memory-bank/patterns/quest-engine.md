@@ -2381,3 +2381,25 @@ keywords: owner flip、RETAIL_TABLE、retail-vs-XML 对拍、编译器采纳不�
 
 - **判定规则**：解锁 ≠ 翻转。翻转的判据是「真端形与现行形等价」，不是「编译器不再拒绝」。
 - **安全网**：对拍必须在生产入口上做（overlay 同路径），B 侧三处（retention / XML / target 旧副本）同时改，跑完即还原并复跑门禁。
+
+## [QE-105] 一〇五、NPC/物件名索引必须门-生产同源：别名流漏接会让门看到 UNRESOLVED、生产已解析 (NPC_INDEX_GATE_PARITY)
+
+<!-- pattern-metadata
+status: CONFIRMED
+scope: 真端名解析索引（`RetailNpcNameIndex` / `RetailItemNameIndex`）在家族门与生产入口之间的构造一致性
+first_seen: 2026-09-30
+last_verified: 2026-09-30
+symptom: 给版本化别名表加行后，生产能解析而家族门仍报 `RETAIL_*_NPC_UNRESOLVED`（或反之），门与生产对同一行给出不同分类
+root_cause: 索引由多个来源拼装（npc_template 名、quest_ai_name 分组、版本化别名表），生产 `RetailQuestDriver` 三类全带，而 `RetailSimpleTalkGateTest` / `RetailSimpleItemPlayGateTest` / `RetailDataDrivenGateTest` 等门只带前两类；只有 `RetailSimpleHuntFamilyGateTest` 与生产一致
+fix_or_guardrail: 1. **新增任何名字来源（别名表 / 分组表 / 投影表）时，同片把受影响的门补上同一个流**，禁止「先加生产、门后补」；2. 分类口径以门为准做对拍时，必须先确认门的索引构造 == 生产的索引构造，否则门报的 UNRESOLVED 不是数据缺口；3. 别名表是版本化数据的直连映射（name → id 集合），不是编译例外，加行需三方对码（真端模板名 / 客户端声明 / 服务器 name_desc）；4. 集合形态的接取角色是引擎能力缺口（当前 `requireNpc` 要求恰一个 id），门补别名只会把 UNRESOLVED 变成 AMBIGUOUS，不代表可翻转
+evidence: .agents/summary/quest-acquire-npc-set/README.zh-CN.md; .agents/summary/quest-acquire-npc-set/acquire-npc-set-evidence.tsv; src/main/java/com/aionemu/gameserver/questEngine/retail/RetailQuestDriver.java; src/main/java/com/aionemu/gameserver/questEngine/retail/RetailNpcNameAliases.java
+validation: 2026-09-30 临时加 7 条别名后 `RetailSimpleTalkGateTest` / `RetailSimpleItemPlayGateTest` 实测：16/22 行由 UNRESOLVED 变 `RETAIL_ACQUIRE_NPC_AMBIGUOUS`、6 行（单 id）变 `DIFF:NODE_PROJECTION`；回滚别名与门改动后两门复跑 5/5 全绿
+boundaries: 本条只讲索引来源一致性；「集合可不可以翻转」属引擎能力问题（见 QE-104 与 `.agents/summary/quest-acquire-npc-set` 的方案）；别名行本身不改变 owner
+superseded_by: none
+see_also: [QE-104], [QE-103]
+first_check: 名解析类门红时先答：①门的索引构造与生产 `RetailQuestDriver` 是否同源（含别名流与分组流）？②这条名字是模板名、分组名还是版本化别名？③解析出的 id 是单个还是集合，编译器对该角色要求几个？④门/生产分类不一致时以谁为准？
+keywords: RetailNpcNameIndex、RetailNpcNameAliases、门生产同源、别名流、UNRESOLVED vs AMBIGUOUS、集合接取角色、三方对码、name_desc 变体
+-->
+
+- **判定规则**：门与生产对同一行给出不同分类时，先怀疑索引来源不同源，再怀疑数据。
+- **安全网**：任何新增名字来源都要在同片把门补齐；集合形态的名字解析结果不等于可翻转，它暴露的是引擎能力缺口。
