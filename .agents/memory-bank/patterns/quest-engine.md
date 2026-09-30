@@ -2447,3 +2447,25 @@ keywords: 领奖集合轴、DD_HANDIN_SET、客户端交付投影、版本化别
 
 - **判定规则**：真端角色名解析出多值先问「客户端声明了几个」；活动 NPC 用 `LC1_/DC1_` 变体族时走别名表，别在编译器里加特例。
 - **安全网**：编译入口只留一个签名；翻转前 A/B 对拍；EA 解析表改一行改两份；既存红（80817、封顶登记行）不得顺手回写。
+
+## [QE-108] 一〇八、真端区域发放轴：`quest_area` 绑定即发放，`SystemGrant` 单边取代整段接取段 (QUEST_AREA_GRANT_AXIS)
+
+<!-- pattern-metadata
+status: CONFIRMED
+scope: 真端 DataDriven 行 `category_acquire_=EnterArea` 且无接取 NPC 的采集交付形，与遗留 XML 区域边的口径
+first_seen: 2026-09-30
+last_verified: 2026-09-30
+symptom: 行停在 `RETAIL_ACQUIRE_GRANT_UNSUPPORTED`（15674/18739/18740/25674/28739/28740），真端表里既无 `value0_acquire_` 也无接取 NPC，看起来像缺数据
+root_cause: ①旧渲染把真端「区域发放」转写成 `unaccepted --EnterZone[zone]`（旧壳的世界 id 还与真端不符：18739 写 210070000，真端是 300610000 idraksha_solo）；②真端发放源是**世界文件的 `quest_area` 绑定**（`RetailAreaEngine` 命中即 `QuestService.startQuest`），既无接取 NPC 也无接取手势 ⇒ 接取段整段不该合成；③发放哨兵 `-1` 若被当 NPC id 会建出死路由
+fix_or_guardrail: 1. **绑定即放行**：接取轴白名单加 `areaCollectAcquire = isEnterArea && allCollect() && questAreas.isBound(questId)`，未绑定同形行继续 fail-closed（15548/25548 是等级里程碑误标）；2. **发放哨兵口径**：接取集恰为 `{-1}` ⇒ 接取集置空、不合成接取段，只前置一条 `SystemGrant` 边（`NONE → started`、`StartEligible`、`after = SyncQuestState(VISIBILITY_REFRESH)`、`priority=null`），两条合成路径（客户端词汇表/家族规范形）共用 `withSystemGrant(...)`；3. **发放可信度链**：`quest_area` 绑定 + 定义带 `SystemGrant` 边，缺一即玩家进区域接不到任务（`RetailSystemGrantDispatchTest` 即此链的门）；4. **翻转四件套 + QE-104 对拍**：retention 双副本 + 删 XML + 删目录登记行 + drift/指纹同片
+evidence: .agents/summary/quest-area-grant/2026-09-30-qe108-quest-area-grant.zh-CN.md; .agents/summary/quest-area-grant/qe-108-quest-area-decisions.tsv; .agents/summary/quest-area-grant/probe/divergence-summary.json; src/main/java/com/aionemu/gameserver/questEngine/retail/RetailDataDrivenDefinitionCompiler.java; src/main/java/com/aionemu/gameserver/questEngine/retail/RetailDataDrivenCollectCompiler.java; src/main/resources/aion/definitions/compact/ai/ai-areas.xml
+validation: 2026-09-30 6 行 `REJECTED:RETAIL_ACQUIRE_GRANT_UNSUPPORTED` → `ADOPTED` 并翻转（15674/18739/18740/25674/28739/28740，RETAIL_TABLE + XML/目录行删除）；DD 桶 ADOPTED 1453→1459、GRANT_UNSUPPORTED 8→2；A/B 对拍 6/6 行共享边非零；T3 1856 例红身份集 198 = 基线，ADDED 0 / REMOVED 0；verify_retirement catalog=750/directory=750/retired=5474=6224
+boundaries: 只覆盖「EnterArea 发放 + 采集交付」形；15548/25548（75 级达成硬币发放）无 `quest_area` 绑定、真端发放源未定位 ⇒ 继续留 XML；本轴 IR 换形（EnterZone→SystemGrant、39 检查对→QUEST_SELECT 门控、1009→108 领奖窗）属语义边换形，逐条在报告 §4 定性
+superseded_by: none
+see_also: [QE-107], [QE-104], [QE-102]
+first_check: 行被拒为 GRANT_UNSUPPORTED 时先答：①`category_acquire_` 是 `EnterArea` 吗？②`ai-areas.xml` 的 `<quest_area quests="...">` 里有这个 id 吗（绑定即真端发放源）？③有没有接取 NPC（有则属别的轴）？④采纳后定义里是否恰一条 `SystemGrant` 边且接取段为空？
+keywords: quest_area 区域发放、SystemGrant、发放哨兵 -1、EnterArea 接取轴、RetailAreaEngine、进区域即接取、绑定即放行、QE-108
+-->
+
+- **判定规则**：`category_acquire_=EnterArea` 先查 `ai-areas.xml` 的 `quest_area quests=`——绑定即真端进区域发放；未绑定（等级里程碑/活动误标）继续 fail-closed，不许按「像区域任务」猜。
+- **安全网**：发放哨兵只允许出现在接取集且必须落成单条 `SystemGrant` 边；翻转按四件套 + A/B 对拍；既存红（80817、封顶登记行、旧壳 39/入口页合同）不得顺手回写。

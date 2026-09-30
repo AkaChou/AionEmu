@@ -3029,7 +3029,7 @@
 15671	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history basis=DD_HUNT_PROGRESS_CLIENT_NAMES
 15672	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history basis=DD_HUNT_PROGRESS_CLIENT_NAMES
 15673	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history wave12-in-chain-pvp-decisions.tsv basis=DD_IN_CHAIN_PVP
-15674	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_GRANT_UNSUPPORTED	b1-acquire-sentinel/b1_forensics.tsv enter-area acquire: no quest_area binding (or collect-progress shape unsupported by the area grant edge)
+15674	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history qe-108-quest-area-decisions.tsv basis=QUEST_AREA_GRANT shared/onlyXml/onlyRetail=19/15/6
 15680	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history wave7-narrow-itemplay-decisions.tsv basis=DD_NARROW_ITEMPLAY_RIDER
 15681	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_PVP_GRID
 15682	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_PVP_GRID
@@ -3328,8 +3328,8 @@
 18649	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_CHAIN
 18737	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p0c54-noprogress-group-decisions.tsv basis=DD_NO_PROGRESS_GROUP_REWARD
 18738	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_ITEMPLAY_VARIANTS
-18739	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_GRANT_UNSUPPORTED	b1-acquire-sentinel/b1_forensics.tsv enter-area acquire: no quest_area binding (or collect-progress shape unsupported by the area grant edge)
-18740	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_GRANT_UNSUPPORTED	b1-acquire-sentinel/b1_forensics.tsv enter-area acquire: no quest_area binding (or collect-progress shape unsupported by the area grant edge)
+18739	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history qe-108-quest-area-decisions.tsv basis=QUEST_AREA_GRANT shared/onlyXml/onlyRetail=18/13/6
+18740	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history qe-108-quest-area-decisions.tsv basis=QUEST_AREA_GRANT shared/onlyXml/onlyRetail=18/13/6
 18741	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_AREA_HUNT_GRID
 18742	RETAIL_TABLE	DataDriven	OK	retail-data-driven-drift.tsv
 18743	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p0c53-group-table-decisions.tsv basis=DD_AINAME_GROUP_TABLE
@@ -4097,7 +4097,7 @@
 25671	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history basis=DD_HUNT_PROGRESS_CLIENT_NAMES
 25672	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history basis=DD_HUNT_PROGRESS_CLIENT_NAMES
 25673	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history wave12-in-chain-pvp-decisions.tsv basis=DD_IN_CHAIN_PVP
-25674	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_GRANT_UNSUPPORTED	b1-acquire-sentinel/b1_forensics.tsv enter-area acquire: no quest_area binding (or collect-progress shape unsupported by the area grant edge)
+25674	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history qe-108-quest-area-decisions.tsv basis=QUEST_AREA_GRANT shared/onlyXml/onlyRetail=19/15/6
 25680	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history
 25681	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_PVP_GRID
 25682	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_PVP_GRID
@@ -4395,8 +4395,8 @@
 28649	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_CHAIN
 28737	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p0c54-noprogress-group-decisions.tsv basis=DD_NO_PROGRESS_GROUP_REWARD
 28738	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_ITEMPLAY_VARIANTS
-28739	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_GRANT_UNSUPPORTED	b1-acquire-sentinel/b1_forensics.tsv enter-area acquire: no quest_area binding (or collect-progress shape unsupported by the area grant edge)
-28740	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_GRANT_UNSUPPORTED	b1-acquire-sentinel/b1_forensics.tsv enter-area acquire: no quest_area binding (or collect-progress shape unsupported by the area grant edge)
+28739	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history qe-108-quest-area-decisions.tsv basis=QUEST_AREA_GRANT shared/onlyXml/onlyRetail=18/14/6
+28740	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history qe-108-quest-area-decisions.tsv basis=QUEST_AREA_GRANT shared/onlyXml/onlyRetail=18/14/6
 28741	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_AREA_HUNT_GRID
 28742	RETAIL_TABLE	DataDriven	OK	retail-data-driven-drift.tsv
 28743	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p0c53-group-table-decisions.tsv basis=DD_AINAME_GROUP_TABLE

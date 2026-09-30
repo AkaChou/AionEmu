@@ -128,6 +128,15 @@ public final class RetailDataDrivenDefinitionCompiler {
 		// granted on area entry with no acquire npc; unbound look-alikes stay rejected.
 		boolean areaNoProgressAcquire = isEnterArea && entry.noProgress()
 			&& questAreas.isBound(entry.questId());
+		// 区域接取 + 采集交付行（15674/18739/28739 形：单 collectitem 步，交付物由真端元数据承载）：
+		// 真端世界文件的 quest_area 已绑定该任务 ⇒ 进区域由 RetailAreaEngine 直接发放，无接取 NPC；
+		// 未绑定的同形行（15548 形：等级里程碑误标 EnterArea）保持拒绝。
+		// Area acquire with a collect-destined row (the 15674/18739/28739 shapes: a single collectitem
+		// step whose hand-in items ride the retail metadata): bound in the retail world files ⇒ granted
+		// on area entry by RetailAreaEngine with no acquire npc; unbound look-alikes (the 15548 shape,
+		// a level milestone mis-labeled EnterArea) stay rejected.
+		boolean areaCollectAcquire = isEnterArea && entry.allCollect()
+			&& questAreas.isBound(entry.questId());
 		// 链式接取（none）混合行：前序任务完成 / 区域任务结束自动接取（10011/10501 形），
 		// 步词汇与混合链同域（talk/hunt/collectitem/enterarea + itemplay/talkfobj/enterworld 骑行者）。
 		// Chain-acquire (none) mixed rows: auto-granted on prior-quest completion / zone-mission end
@@ -151,6 +160,7 @@ public final class RetailDataDrivenDefinitionCompiler {
 		// the row out of the acquire-axis gate.
 		boolean talkChainAcquire = entry.allTalk() && entry.stepCategories().contains("talk");
 		if (!npcAcquire && !itemAcquire && !grantedMixAcquire && !areaNoProgressAcquire
+				&& !areaCollectAcquire
 				&& !chainMixAcquire && !talkChainAcquire && !entry.allHunt() && !entry.allPvp()) {
 			return new Outcome(null, "RETAIL_ACQUIRE_GRANT_UNSUPPORTED", acquireCategory);
 		}

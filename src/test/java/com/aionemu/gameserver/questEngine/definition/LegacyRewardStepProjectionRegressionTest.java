@@ -22,9 +22,14 @@ class LegacyRewardStepProjectionRegressionTest {
 	// 13965/23965 moved to DataDriven pure-EA chains (retail acquire authority; the reward row
 	// carries the QE-051 value and the heal edge is the EA final-chain shape), so the legacy
 	// packed-step contract no longer applies; the DD contract is locked by the gate/fingerprints.
+	// 15674/25674 自 QE-108 起由真端 quest_area 驱动（进区域 SystemGrant 发放、交付为带整组 HasItem
+	// 门控的 QUEST_SELECT 直翻领奖、自愈边取 REWARD 投影行值），遗留打包步合同对其退役失效。
+	// 15674/25674 are area-driven since QE-108 (area-entry SystemGrant, a gated QUEST_SELECT flipping
+	// to REWARD and the heal edge carrying the REWARD projection value), so the legacy packed-step
+	// contract no longer applies to them either.
 	private static final List<Integer> QUEST_IDS = List.of(
 		2393, 3722, 4722, 11149, 14010, 14015, 14020, 14040, 14050,
-		15674, 24010, 24020, 24040, 24050, 25674, 30057, 30158, 30208);
+		24010, 24020, 24040, 24050, 30057, 30158, 30208);
 
 	@Test
 	void keepsLegacyRewardEntryAtTheExistingPackedStep() throws Exception {

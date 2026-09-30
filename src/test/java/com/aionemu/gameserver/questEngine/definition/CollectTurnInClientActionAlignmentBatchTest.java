@@ -175,16 +175,42 @@ class CollectTurnInClientActionAlignmentBatchTest {
 		assertNoLegacyDeliveryPages(definition, 203983, "1351");
 	}
 
+	/**
+	 * RAKSANG 族（QE-108 起由真端 quest_area 驱动）：接取 = 进区域 {@code SystemGrant} 发放（无接取 NPC），
+	 * 交付 = {@code QUEST_SELECT}(started→reward) 带真端整组 HasItem 门控直翻 REWARD 并下发单档奖励窗；
+	 * 旧 SELECT1 入口页与 39 检查失败页随页链整体退场。
+	 * The RAKSANG family is area-driven since QE-108: the acquire is the {@code SystemGrant} edge fired on
+	 * area entry (no acquire npc), and the delivery is a gated {@code QUEST_SELECT}(started->reward) that
+	 * flips REWARD and shows the single-tier reward window; the legacy SELECT1 entry page and the 39
+	 * check-failure page are gone.
+	 */
 	@Test
-	void raksangQuestsShowTheClientOwnedEntryPageAndFailPage() throws Exception {
+	void raksangQuestsGrantOnAreaEntryAndDeliverOnQuestSelect() throws Exception {
 		for (int questId : RAKSANG_QUESTS) {
+			int itemId = questId == 18739 ? 182215692 : 182215693;
+			int count = questId == 18739 ? 5 : 8;
 			QuestDefinition definition = definition(questId).definition();
-			QuestTransition entry = talk(definition, "started", "started", 804707,
-				QuestDialogAction.QUEST_SELECT.id());
-			assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(QuestDialogPage.SELECT1.id())),
-				entry.afterCommit(), "quest " + questId + " entry page");
-			checkTurnInBranches(definition, 804707, questId == 18739 ? 182215692 : 182215693,
-				questId == 18739 ? 5 : 8, "CHECK_USER_ITEM_FAIL");
+
+			QuestTransition grant = transition(definition, "unaccepted", "started",
+				new QuestEvent.SystemGrant());
+			assertNull(grant.priority(), "quest " + questId + " grant priority");
+			assertEquals(List.of(new QuestCondition.StartEligible()), grant.conditions(),
+				"quest " + questId + " grant conditions");
+			assertEquals(List.of(), grant.actions(), "quest " + questId + " grant actions");
+			assertEquals(List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.VISIBILITY_REFRESH)),
+				grant.afterCommit(), "quest " + questId + " grant response");
+
+			QuestTransition deliver = delivery(definition, 804707, "quest " + questId + " delivery route");
+			assertNull(deliver.priority(), "quest " + questId + " delivery priority");
+			assertEquals(List.of(new QuestCondition.HasItem(itemId, count)), deliver.conditions(),
+				"quest " + questId + " delivery gate");
+			assertEquals(List.of(new QuestAction.RemoveItem(itemId, count)), deliver.actions(),
+				"quest " + questId + " delivery removals");
+			assertEquals(List.of(
+				new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
+				new AfterCommitAction.ShowQuestDialog(QuestDialogPage.SHOW_SELECT_QUEST_REWARD_WINDOW1.id())),
+				deliver.afterCommit(), "quest " + questId + " delivery response");
+			assertNoLegacyDeliveryPages(definition, 804707, "quest " + questId);
 		}
 	}
 

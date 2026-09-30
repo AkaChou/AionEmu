@@ -1,0 +1,17 @@
+# QE-108 真端 quest_area 区域接取轴（EnterArea 发放 + 采集交付行）：解锁行决策台账
+# 轴 = 该行原先被拒的原因（ACQUIRE = 接取段无可支持形，真题为 category_acquire_=EnterArea 且无接取 NPC）
+# 判据 basis=QUEST_AREA_GRANT：真端世界文件的 quest_area 绑定（ai-areas.xml 的 <quest_area ... quests="..."> 逐 id 包含）
+#       ＋ 采集交付行（progress_info 全为 collectitem，交付物由真端元数据承载）。翻转前按 QE-104 做生产 IR 对拍。
+#       绑定的对照量 = 该 <quest_area> 的 world_name（进区域发放的运行时世界）。
+# quest_id	family	axis	basis	world/area	shared/onlyXml/onlyRetail	decision
+15674	DataDriven	ACQUIRE	QUEST_AREA_GRANT	220110000 df6:DF6_QuestArea_Q15674	19/15/6	FLIP
+18739	DataDriven	ACQUIRE	QUEST_AREA_GRANT	300610000 idraksha_solo:QuestArea_Course_A	18/13/6	FLIP
+18740	DataDriven	ACQUIRE	QUEST_AREA_GRANT	300610000 idraksha_solo:QuestArea_Course_B	18/13/6	FLIP
+25674	DataDriven	ACQUIRE	QUEST_AREA_GRANT	210100000 lf6:LF6_QuestArea_Q25674	19/15/6	FLIP
+28739	DataDriven	ACQUIRE	QUEST_AREA_GRANT	300610000 idraksha_solo:QuestArea_Course_A	18/14/6	FLIP
+28740	DataDriven	ACQUIRE	QUEST_AREA_GRANT	300610000 idraksha_solo:QuestArea_Course_B	18/14/6	FLIP
+15548	DataDriven	ACQUIRE	NO_QUEST_AREA_BINDING	-	-	HOLD
+25548	DataDriven	ACQUIRE	NO_QUEST_AREA_BINDING	-	-	HOLD
+# HOLD 说明（15548/25548）：真端 dev_name = 「75레벨 달성 주화지급 퀘스트」（75 级达成硬币发放），无 progress_info，
+# category_acquire_=EnterArea 属误标；ai-areas.xml 里没有任何 quest_area 的 quests 含该 id（15548/25548 命中数 0），
+# 真端发放源（等级里程碑事件）未定位 ⇒ 继续 fail-closed 留 XML，禁止按形状猜发放。

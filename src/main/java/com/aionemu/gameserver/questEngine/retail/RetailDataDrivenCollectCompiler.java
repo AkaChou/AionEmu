@@ -1,5 +1,6 @@
 package com.aionemu.gameserver.questEngine.retail;
 
+import com.aionemu.gameserver.questEngine.definition.AfterCommitAction;
 import com.aionemu.gameserver.questEngine.definition.BitField;
 import com.aionemu.gameserver.questEngine.definition.NodeProjection;
 import com.aionemu.gameserver.questEngine.definition.PersistenceMode;
@@ -12,6 +13,7 @@ import com.aionemu.gameserver.questEngine.definition.QuestDialogPage;
 import com.aionemu.gameserver.questEngine.definition.QuestEvent;
 import com.aionemu.gameserver.questEngine.definition.QuestMetadata;
 import com.aionemu.gameserver.questEngine.definition.QuestNode;
+import com.aionemu.gameserver.questEngine.definition.QuestStateSyncMode;
 import com.aionemu.gameserver.questEngine.definition.QuestTransition;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 
@@ -51,20 +53,49 @@ public final class RetailDataDrivenCollectCompiler {
 			java.util.Set<Integer> rewardNpcs, QuestMetadata metadata, RetailClientSummaryRows summaryRows,
 			RetailClientDialogExits exits, RetailClientHandinPages handinPages,
 			RetailQuestUseItemNpcs interactionObjects) {
+		// 区域/链式发放哨兵（-1，15674/18739 形）：无接取 NPC —— 发放由 RetailAreaEngine 进区域完成
+		// （quest_area 绑定）或由前置任务完成触发；定义保留**一条 SystemGrant 边**（NONE → started），
+		// 与 talk 族 `acquiredNpc < 0` 及 hunt 系统发放口径一致；接取段（含报告 NPC 的 NONE 态呈现）
+		// 不再合成，避免把哨兵当 NPC id 建出死路由。
+		// The area/chain grant sentinel (-1, the 15674/18739 shapes): no acquire npc — the grant comes
+		// from RetailAreaEngine on area entry (the quest_area binding) or from the prior quest's
+		// completion. The definition keeps exactly one SystemGrant edge (NONE → started), the same
+		// caliber as the talk family's `acquiredNpc < 0` and the hunt family's system grants; no accept
+		// segment is synthesized, so the sentinel can never become an npc id route.
+		boolean systemGrant = acquiredNpcs.size() == 1 && acquiredNpcs.iterator().next() < 0;
+		java.util.Set<Integer> acquires = systemGrant ? java.util.Set.of() : acquiredNpcs;
 		// 交付型客户端词汇表（select_none/select1/check_ok/check_fail/select_success）：页面只能来自
 		// 客户端任务书，按钮必须逐个有路由，因此走专用合成器（P5-2 真实缺口：249/256 行是这种流程）。
 		// The client hand-in vocabulary needs its own shape: every button the client exposes must be
 		// routed and the pages come from the client letter, not from the family defaults.
 		var pages = handinPages.find(questId);
-		if (pages.isPresent()) {
+		QuestDefinition definition = pages.isPresent()
 			// 专用词汇合成器已变体化（18742/50052 形：接取与交付 NPC 均可为同名多刷点家族）。
 			// The dedicated-vocabulary compiler is variant-capable (the 18742/50052 shapes: acquires
 			// and rewards may each be a same-name multi-spawn family).
-			return RetailHandinDialogFlowCompiler.build(questId, acquiredNpcs, rewardNpcs, metadata,
+			? RetailHandinDialogFlowCompiler.build(questId, acquires, rewardNpcs, metadata,
 				pages.get(), summaryRows, summaryRows.lastRowIndex(questId), interactionObjects,
-				exits.requires(questId, RetailClientDialogExits.SELECT_NONE_1));
-		}
-		return buildCanonical(questId, acquiredNpcs, rewardNpcs, metadata, summaryRows, exits, interactionObjects);
+				exits.requires(questId, RetailClientDialogExits.SELECT_NONE_1))
+			: buildCanonical(questId, acquires, rewardNpcs, metadata, summaryRows, exits, interactionObjects);
+		return systemGrant ? withSystemGrant(definition) : definition;
+	}
+
+	/**
+	 * 给区域/链式发放行补上规范形 SystemGrant 边（NONE → started，条件 {@code StartEligible}）。
+	 * 单一真源：两条合成路径（客户端词汇表 / 家族规范形）共用同一段接取段语义。
+	 * <p>
+	 * Prepends the canonical SystemGrant edge (NONE → started, gated by {@code StartEligible}) for an
+	 * area/chain-granted row; one source of truth shared by both synthesis paths.
+	 */
+	private static QuestDefinition withSystemGrant(QuestDefinition definition) {
+		List<QuestTransition> transitions = new ArrayList<>(definition.transitions().size() + 1);
+		transitions.add(new QuestTransition(new QuestEvent.SystemGrant(),
+			List.of(new QuestCondition.StartEligible()), List.of(), "started",
+			List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.VISIBILITY_REFRESH)), null,
+			"unaccepted"));
+		transitions.addAll(definition.transitions());
+		return new QuestDefinition(definition.id(), definition.version(), definition.metadata(),
+			definition.progressLayout(), definition.nodes(), List.copyOf(transitions));
 	}
 
 	/** 家族规范形（select1/ask_quest_accept/select2 词汇表）。 / The family canonical shape. */
