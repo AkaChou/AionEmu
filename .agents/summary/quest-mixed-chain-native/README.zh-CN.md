@@ -59,5 +59,33 @@
    `ADJUDICATED:CURATED_LEGACY_CONTRACT_LOCK`。**没有任何任务在本批静默换 owner。**
 2. 末 talk 段的三按钮是**客户端末段页尾的收尾按钮全集**（逐行证据 100% 落在这三个 id 内）；服务端不再读页梯，
    因此无法逐行区分该行实际声明的是哪一个 ⇒ 三条同义边都登记（区间外按钮不会被发明）。
-3. 仍有 3 个**本来就红**的锁定测试（`Batch40ThreeNpcTalkLadderContractTest` ×3 方法、`Quest1152RetailAlignmentTest`、
-   `Quest1163ClientDialogAlignmentTest`），红因从「旧形不匹配」迁移为「新形无页梯路由 + 节点标签差异」，待单独重锚批次。
+3. ~~3 个本来就红的锁定测试~~ **已在本片 §5 重锚为绿**（红因从「旧形不匹配」迁移为「新形无页梯路由 + 节点标签差异」，
+   重锚后 5 个在册红身份整体退出红集）。
+
+## 5. Phase 3b：锁定测试重锚（2026-09-30 落地）
+
+本片把因迁移而红的 3 个锁定测试（5 个在册红身份）重锚到**新合同**，不改生产代码：
+
+| 测试类 | 重锚口径 |
+|---|---|
+| `Batch40ThreeNpcTalkLadderContractTest`（11072/21081/24150，5 例） | 行 0/1 = 阶段首屏（select2 页 1352 / select3 页 1693）+ 行内翻页**零路由** + 推进 `SETPRO{K}` ≡ `SET_SUCCEED`（同目标/同动作/同 after）+ 行 2 带门 `QUEST_SELECT` 直翻领奖态与档位奖励窗；`21081` 不再是 XML 例外（三行同形，物品在交付边收回）；无 NPC 键自动领奖入口按 `SELECTED_QUEST_AUTO_REWARD*` 家族登记（108 单档形独占 / 110.. 多档形） |
+| `Quest1152RetailAlignmentTest`（1 例） | 交付段 `select2_1` 无路由；`SETPRO1`≡`SET_SUCCEED` → `step1`（置 var0=1 + 收回 ODELLA）；交付 = 带门 `HasItem(PEPPER)` `QUEST_SELECT` → reward + 奖励窗 5；39 检查中转零路由；关窗出口 = `CloseDialog` |
+| `Quest1163ClientDialogAlignmentTest`（1 例） | `select2_1` 无路由；`SETPRO1`≡`SET_SUCCEED` → `step1`；交付 NPC 侧 `QUEST_SELECT` → reward + 奖励窗 5；奖励态重入页（`QUEST_SELECT` / 1009）重发同一奖励窗 |
+
+**形状冻结（探针实测，一次性）**：五条锁定任务的节点 = `unaccepted / started(var0=0) / step1(var0=1) / [step2(var0=2)] / reward(var0=2) / complete`；
+`SETPRO1=10000`、`SETPRO2=10001`、`SET_SUCCEED=10255`，中间段推进 = 结果页按钮 + `SET_SUCCEED` 两条同义边；
+旧存档治愈边 = `EnterWorld + REWARD + var0=0 ⇒ var0=N`。
+
+**验证（本轮实跑）**
+
+| 轮次 | 命令 | 结果 |
+|---|---|---|
+| 三组重锚聚焦 | `mvn -o -Dtest='Batch40ThreeNpcTalkLadderContractTest,Quest1152RetailAlignmentTest,Quest1163ClientDialogAlignmentTest' test` | 7 例全绿 |
+| questEngine 包内全量 | `mvn -o -Dtest='com.aionemu.gameserver.questEngine.**.*Test' -Dsurefire.failIfNoSpecifiedTests=false test` | 1855 例；红身份集对 HEAD 基线 **REMOVED 5 / ADDED 0**（203→198，`target/agent-logs/qe-reanchor.log`） |
+| 全量 | `mvn -o test` | 3970 例（183F+70E）；红身份集对 HEAD 基线 **REMOVED 5 / ADDED 0**（`target/agent-logs/full-reanchor.log`） |
+
+- 位移的 5 个身份全部是**在册红**：`Batch40ThreeNpcTalkLadderContractTest#{everyJournalRowOwnsAState,
+  rewardOwnerHoldsTheCompletionAndOtherNpcsDoNot,rowOwnersDriveTheClientPageChain}`、
+  `Quest1152RetailAlignmentTest#followsTheClientChefDialogAndLegacyTwoStepItemContract`、
+  `Quest1163ClientDialogAlignmentTest#followsTheRetailPotionHandoffAndRewardOwner`。
+- 未执行：真实客户端验收、服务器启动/重启（按纪律由用户管理生命周期）。

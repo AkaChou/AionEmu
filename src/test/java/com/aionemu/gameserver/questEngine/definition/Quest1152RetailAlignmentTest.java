@@ -16,12 +16,15 @@ class Quest1152RetailAlignmentTest {
 	private static final int PEPPER = 169400112;
 
 	/**
-	 * S3a（quest-native-dispatch）重锚：1152 为 SimpleTalk 链式行（retention owner = RETAIL_TABLE，登记块只有
-	 * NPC_START/NPC_COMPLETE、无 NPC_REPORT），接取段走 {@code canonicalAcceptFlow}、交付段仍是登记表逐字回放。
-	 * 本测试锁定 canonical 接取形（询问窗 / 两条提交边 / 关窗出口）与原两跳物品契约；旧页梯（1007 中转、
-	 * select1 续页）在接取 NPC 上已无路由。
-	 * S3a re-anchor: the accept segment is canonical while the delivery segment stays the verbatim registry replay;
-	 * this test locks both the canonical accept shape and the original two-hop item contract.
+	 * S3a（quest-native-dispatch）重锚 + 页梯退役重锚：1152 为 SimpleTalk 链式行（retention owner = RETAIL_TABLE），
+	 * 接取段走 {@code canonicalAcceptFlow}；交付段现在是**规范交付**——阶段首屏 = 客户端 select2 页，
+	 * 行内翻页（select2_1）是客户端本地行为（服务端零路由），推进由 `SETPRO1` ≡ `SET_SUCCEED` 两条同义边承担，
+	 * 领奖由带门 `QUEST_SELECT` 直翻领奖态 + 档位奖励窗完成；39 检查中转与 select5 报告页已退场。
+	 * <p>
+	 * S3a + ladder-retirement re-anchor: the accept segment stays canonical; the delivery segment now derives its
+	 * stage head from the client contract, keeps the in-stage flip client-local, advances through SETPRO1 ==
+	 * SET_SUCCEED, and opens the reward window through the gated QUEST_SELECT delivery. The 39 relay and the
+	 * select5 report page are retired.
 	 */
 	@Test
 	void followsTheClientChefDialogAndLegacyTwoStepItemContract() throws Exception {
@@ -55,47 +58,62 @@ class Quest1152RetailAlignmentTest {
 		}
 		assertTrue(routes(definition, "unaccepted", DELIVERY_NPC).isEmpty());
 
+		// 交付段：阶段首屏 = 客户端声明的 select2 页；行内翻页 select2_1 是客户端本地行为（服务端零路由）。
+		// Delivery segment: the derived select2 head page; the select2_1 flip stays client-local (no route).
 		assertPage(definition, "started", DELIVERY_NPC, QuestDialogAction.QUEST_SELECT, QuestDialogPage.SELECT2);
-		assertPage(definition, "started", DELIVERY_NPC, QuestDialogAction.SELECT2_1, QuestDialogPage.SELECT2_1);
+		assertTrue(routes(definition, "started", DELIVERY_NPC, QuestDialogAction.SELECT2_1).isEmpty(),
+			"the retired in-stage flip must carry no route on the delivery npc");
 		QuestTransition recipe = route(definition, "started", DELIVERY_NPC, QuestDialogAction.SETPRO1);
-		assertEquals("pepper", recipe.targetNode());
-		assertEquals(List.of(new QuestAction.RemoveItem(ODELLA, 1)), recipe.actions());
-		assertEquals(List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.PACKET_ONLY),
-			new AfterCommitAction.CloseDialog()), recipe.afterCommit());
+		QuestTransition succeeded = route(definition, "started", DELIVERY_NPC, QuestDialogAction.SET_SUCCEED);
+		assertEquals("step1", recipe.targetNode());
+		assertEquals(recipe.actions(), succeeded.actions(), "SETPRO1 and SET_SUCCEED must share the actions");
+		assertEquals(recipe.afterCommit(), succeeded.afterCommit(),
+			"SETPRO1 and SET_SUCCEED must share the after-commit");
+		assertEquals(List.of(new QuestAction.SetVariable("var0", 1), new QuestAction.RemoveItem(ODELLA, 1)),
+			recipe.actions());
+		assertEquals(List.of(new AfterCommitAction.SyncQuestState(
+			QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH), new AfterCommitAction.CloseDialog()),
+			recipe.afterCommit());
 
-		assertPage(definition, "pepper", DELIVERY_NPC, QuestDialogAction.QUEST_SELECT, QuestDialogPage.SELECT5);
-		List<QuestTransition> checks = routes(definition, "pepper", DELIVERY_NPC,
-			QuestDialogAction.CHECK_USER_HAS_QUEST_ITEM);
-		assertEquals(2, checks.size());
-		QuestTransition success = priority(checks, 0);
-		QuestTransition failure = priority(checks, 1);
-		assertEquals("reward", success.targetNode());
-		assertEquals(List.of(new QuestCondition.HasItem(PEPPER, 1)), success.conditions());
-		assertEquals(List.of(new QuestAction.RemoveItem(PEPPER, 1)), success.actions());
+		// 规范交付：带门 QUEST_SELECT 直翻领奖态 + 档位奖励窗；39 检查中转（CHECK_USER_HAS_QUEST_ITEM）与
+		// select5 报告页退场——该阶段在交付 NPC 上只剩这一条交付边与关窗出口。
+		// Canonical delivery: the gated QUEST_SELECT into the reward window; the 39 relay and the select5
+		// report page are retired (no route at all on this stage).
+		List<QuestTransition> delivery = routes(definition, "step1", DELIVERY_NPC, QuestDialogAction.QUEST_SELECT);
+		assertEquals(1, delivery.size(), "the reward-stage delivery must be unique");
+		assertEquals("reward", delivery.getFirst().targetNode());
+		assertEquals(List.of(new QuestCondition.HasItem(PEPPER, 1)), delivery.getFirst().conditions());
+		assertEquals(List.of(new QuestAction.RemoveItem(PEPPER, 1)), delivery.getFirst().actions());
 		assertEquals(List.of(new AfterCommitAction.SyncQuestState(
 			QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH), new AfterCommitAction.ShowQuestDialog(
-			QuestDialogPage.SHOW_SELECT_QUEST_REWARD_WINDOW1.id())), success.afterCommit());
-		assertEquals("pepper", failure.targetNode());
-		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(QuestDialogPage.SELECT6.id())),
-			failure.afterCommit());
-		assertEquals(List.of(new AfterCommitAction.ShowQuestSelectionDialog(QuestDialogPage.SELECT_QUEST.id())),
-			route(definition, "pepper", DELIVERY_NPC, QuestDialogAction.FINISH_DIALOG).afterCommit());
+			QuestDialogPage.SHOW_SELECT_QUEST_REWARD_WINDOW1.id())), delivery.getFirst().afterCommit());
+		assertTrue(routes(definition, "step1", DELIVERY_NPC, QuestDialogAction.CHECK_USER_HAS_QUEST_ITEM).isEmpty(),
+			"the retired 39 check relay must carry no route");
+		// 交付阶段的关窗出口：8.8 起该阶段页尾是关窗（不再回任务列表），沿用客户端页面按钮。
+		// The close-dialog exit stays on the delivery stage (no quest-list re-open).
+		assertEquals(List.of(new AfterCommitAction.CloseDialog()),
+			route(definition, "step1", DELIVERY_NPC, QuestDialogAction.FINISH_DIALOG).afterCommit());
 
+		// 领奖态：奖励窗载体（QUEST_SELECT 与 1009 都重发窗 1）与完成边留在交付 NPC。
+		// Reward state: the window carrier (QUEST_SELECT and 1009 both reopen window 1) lives on the delivery npc.
+		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(
+			QuestDialogPage.SHOW_SELECT_QUEST_REWARD_WINDOW1.id())),
+			route(definition, "reward", DELIVERY_NPC, QuestDialogAction.QUEST_SELECT).afterCommit());
 		QuestTransition completion = route(definition, "reward", DELIVERY_NPC,
 			QuestDialogAction.SELECTED_QUEST_REWARD1);
 		assertEquals("complete", completion.targetNode());
 		assertTrue(completion.actions().contains(new QuestAction.CompleteQuest(0)));
 		assertTrue(routes(definition, "reward", START_NPC).isEmpty());
-		for (QuestDialogAction action : List.of(QuestDialogAction.QUEST_SELECT, QuestDialogAction.SELECT2_1,
-				QuestDialogAction.SETPRO1, QuestDialogAction.CHECK_USER_HAS_QUEST_ITEM)) {
+		for (QuestDialogAction action : List.of(QuestDialogAction.QUEST_SELECT, QuestDialogAction.SETPRO1,
+				QuestDialogAction.SET_SUCCEED, QuestDialogAction.CHECK_USER_HAS_QUEST_ITEM)) {
 			assertTrue(routes(definition, "started", START_NPC, action).isEmpty());
-			assertTrue(routes(definition, "pepper", START_NPC, action).isEmpty());
+			assertTrue(routes(definition, "step1", START_NPC, action).isEmpty());
 		}
 	}
 
 	/**
 	 * 1152 于 P0c-34 退役（item_check 门通道落地后入台）：定义改由真端文件驱动合成，断言口径不变；
-	 * 生产视图 = XML 目录 + 真端 overlay，门路由（39/20002 对）由链登记 I 记录展开。
+	 * 生产视图 = XML 目录 + 真端 overlay，门路由由链登记展开，推进按钮改为客户端结果页同义集。
 	 * Quest 1152 was retired in P0c-34; the same assertions now run against the retail-driven
 	 * production overlay view.
 	 */
@@ -110,11 +128,6 @@ class Quest1152RetailAlignmentTest {
 			QuestDialogAction action, QuestDialogPage page) {
 		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(page.id())),
 			route(definition, source, npcId, action).afterCommit());
-	}
-
-	private static QuestTransition priority(List<QuestTransition> transitions, int priority) {
-		return transitions.stream().filter(transition -> Integer.valueOf(priority).equals(transition.priority()))
-			.findFirst().orElseThrow();
 	}
 
 	private static QuestTransition route(QuestDefinition definition, String source, int npcId,

@@ -66,15 +66,17 @@
   `Batch40ThreeNpcTalkLadderContractTest#rowOwnersDriveTheClientPageChain`、
   `Quest1152RetailAlignmentTest#followsTheClientChefDialogAndLegacyTwoStepItemContract`、
   `Quest1163ClientDialogAlignmentTest#followsTheRetailPotionHandoffAndRewardOwner`
-  （身份集不变，仍需单独一轮"锁定测试重锚"把它们改成新合同）。
+  （身份集不变）。**已由 Phase 3b 重锚为绿**（5 个在册红 REMOVED 5 / ADDED 0），
+  重锚口径见 `.agents/summary/quest-mixed-chain-native/README.zh-CN.md` §5。
 - 4 条 SimpleTalk 表行（`9570/9572/13816/23816`）不在 6224 owner 清单内，未被生产编译；其客户端契约
   缺少 `select2` 阶段首屏，新判据会 fail-closed（旧行为是硬编码下发 1352）。
 
-## 6. 下一批（未做）
+## 6. 后续批次（状态）
 
-1. 混合链 `RetailDataDrivenTalkHuntChainCompiler` / `RetailDataDrivenTalkCollectChainCompiler` 仍消费
-   `quest_client_talk_chain_pages.tsv` / `quest_client_talk_collect_chain_pages.tsv` 的 talk 段页梯；
-   按本轮同法摘除（collect 段的 39/20002 检查与好/坏结果页是语义边，必须保留）。
-2. 页梯 TSV 消费点清零后，`RetailClientTalkChainPages.STEP_PAGE_HEADS` 与两个 `quest_client_*_chain_pages.tsv`
-   才能整体退役（含测试资源副本）。
-3. 锁定测试重锚批次（页梯断言 → 本地翻页 no-op + 阶段首屏断言）。
+1. ~~混合链 `RetailDataDrivenTalkHuntChainCompiler` / `RetailDataDrivenTalkCollectChainCompiler` 的 talk 段页梯~~
+   **已完成（Phase 3 / 715ddf301）**：段首屏改由客户端声明的 select 页族序派生，collect 段的 39/10000/10001
+   是保留的语义边；台账 `.agents/summary/quest-mixed-chain-native/README.zh-CN.md`。
+2. ~~页梯 TSV 消费点清零后的读取器 / 双副本 TSV 整体退役~~ **已完成（Phase 3 / 715ddf301）**。
+3. ~~锁定测试重锚（页梯断言 → 本地翻页 no-op + 阶段首屏断言）~~ **已完成（Phase 3b）**。
+4. **仍待办**：页梯退役后解锁的 7 行（`10112/10527/17540/20031/20112/20527/27540`）owner 翻转需各自证据批
+   （现登记为 curated 暂缓）；真实客户端验收未做。
