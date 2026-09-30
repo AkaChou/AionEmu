@@ -26,7 +26,7 @@ class QuestHaramelItemCollectingRegressionTest {
 		new QuestCase(18509, 799523, 799524,
 			List.of(new ObjectDrop(700853, 182212008, false)), true),
 		new QuestCase(28503, 799523, 804605,
-			List.of(ObjectDrop.questGate(700834, 182212016)), false),
+			List.of(ObjectDrop.questGate(700834, 182212016)), true),
 		new QuestCase(28509, 799523, 799524,
 			List.of(new ObjectDrop(700853, 182212020, false)), true));
 

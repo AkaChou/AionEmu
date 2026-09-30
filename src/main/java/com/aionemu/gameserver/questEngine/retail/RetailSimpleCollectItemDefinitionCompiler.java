@@ -292,11 +292,14 @@ public final class RetailSimpleCollectItemDefinitionCompiler {
 
 		List<QuestTransition> transitions = new ArrayList<>();
 		if (!systemGrant) {
+			List<QuestAction> giveWorkItems = metadata.questWorkItems().stream()
+				.map(item -> (QuestAction) new QuestAction.GiveItem(item.itemId(), item.count()))
+				.toList();
 			// 规范形接取（quest-native-dispatch P0-2）：页 4 直发，SELECT1 入口页/1007 中转/续页梯删除。
 			// Canonical accept (quest-native-dispatch P0-2): page 4 directly; the SELECT1 entry page,
 			// the 1007 hop and the SELECT1_1 ladder are gone.
-			transitions.addAll(canonicalAcceptFlow(acquiredNpc));
-			transitions.add(setproRoute(acquiredNpc));
+			transitions.addAll(canonicalAcceptFlow(acquiredNpc, giveWorkItems));
+			transitions.add(setproRoute(acquiredNpc, giveWorkItems));
 		} else {
 			// 系统发放边：定义图在无接取路由时仍从 NONE 连通到 START；发放服务（阵营日常轮换等）
 			// 后续显式分发 {@link QuestEvent.SystemGrant}，或按 RetailAreaEngine 先例直启。
@@ -345,8 +348,12 @@ public final class RetailSimpleCollectItemDefinitionCompiler {
 
 	/** 真端表自带的备选接取路由 {@code SETPRO1}（133/138 行有）。 / The retail {@code SETPRO1} accept variant. */
 	static QuestTransition setproRoute(int acquiredNpc) {
+		return setproRoute(acquiredNpc, List.of());
+	}
+
+	static QuestTransition setproRoute(int acquiredNpc, List<QuestAction> acceptActions) {
 		return new QuestTransition(new QuestEvent.TalkToNpc(acquiredNpc, QuestDialogAction.SETPRO1.id()),
-			List.of(new QuestCondition.StartEligible()), List.of(), "started",
+			List.of(new QuestCondition.StartEligible()), acceptActions, "started",
 			List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.VISIBILITY_REFRESH),
 				new AfterCommitAction.CloseDialog()), null, "unaccepted");
 	}
@@ -380,7 +387,11 @@ public final class RetailSimpleCollectItemDefinitionCompiler {
 	 * their lifecycle semantics; the SELECT1(1011) entry page and the 1007 hop are gone.
 	 */
 	static List<QuestTransition> canonicalAcceptFlow(int acquiredNpc) {
-		return RetailSimpleHuntDefinitionCompiler.canonicalAcceptFlow(acquiredNpc, "started");
+		return canonicalAcceptFlow(acquiredNpc, List.of());
+	}
+
+	static List<QuestTransition> canonicalAcceptFlow(int acquiredNpc, List<QuestAction> acceptActions) {
+		return RetailSimpleHuntDefinitionCompiler.canonicalAcceptFlow(acquiredNpc, "started", acceptActions);
 	}
 
 	/**

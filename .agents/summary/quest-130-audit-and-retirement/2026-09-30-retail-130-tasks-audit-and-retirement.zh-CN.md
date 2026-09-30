@@ -31,3 +31,23 @@
 ## 三、 门禁验证结果
 执行测试：`mvn test -Dtest=RetailSimpleHuntFamilyGateTest,RetailSimpleTalkGateTest,RetailOwnershipGateTest,Quest1842RepeatLifecycleTest`
 结果：**11 项核心门禁测试全绿通过（BUILD SUCCESS）**。
+
+## 四、 审查修正（未运行 Maven）
+1. `quest_definition_catalog.xml` 恢复 18805/28805 的标准 `resource`/`mode` 条目并删除非法 `path` 条目；静态 XSD 校验通过。
+2. 16961 依 `p0c8c-gap-decisions.tsv` 的 `XML_EXTRA_REWARD` 裁定恢复 XML 与双端 retention 账本，避免丢失 `ITEM 188052938 ×1`。
+3. 深层要塞 3 组守军 ID 从 `RetailNpcNameIndex` Java 特例迁入 `retail-npc-name-aliases.tsv`，loader fail-closed；清单计数 5→6，族门禁锁定 6 个任务的 74 守军 + 独立将军槽。
+4. `QuestLegacyMonsterHuntProductionFlowTest` 的 1842 合同迁移到逐 NPC `KillNpc` 宽计数形，覆盖两种击杀顺序、末杀直接 REWARD、奖励窗/完成 after-commit 顺序。当前分支已迁出 `QuestE2eInfrastructureTest`，未回恢复该并行删除层。
+
+## 五、 第二批真端驱动改造退役（SimpleCollectItem 家族收割）
+1. **升级 `RetailSimpleCollectItemDefinitionCompiler.java`**：
+   - 在规范形接取动作（`canonicalAcceptFlow` 及 `setproRoute`）中，挂载对 `metadata.questWorkItems()` 的发放支持（`new QuestAction.GiveItem(...)`）；任务完成/放弃时由引擎层 `QuestMutationPlanner` 自动回收清理，实现任务工作物品端到端闭环驱动。
+2. **测试与契约对齐**：
+   - `QuestHaramelItemCollectingRegressionTest.java`：将 `28503`（魔族哈拉梅尔奥德草）对齐为规范形交付（`canonicalTurnIn = true`），与天族姐妹任务 `18503` 保持完全对称；
+   - `retail-simple-collect-item-ir-fingerprints.tsv`：更新退役集合（175→177），刷新 1137、28503 及其余具备 work-item 的规范形任务冻结 IR 指纹。
+3. **资产彻底退役**：
+   - 彻底删除 `1137.xml` 与 `28503.xml` 2 个手写 XML 文件；
+   - `retail-xml-retention.tsv` 中将 `1137` 与 `28503` 状态转为 `RETAIL_TABLE`（`RETAIL_TABLE` 增至 5441，`XML_RETENTION` 降至 783）；
+   - `quest_definition_catalog.xml` 精确移除对应条目。
+4. **门禁验证全绿通过**：
+   - 执行测试：`mvn test -Dtest=RetailSimpleCollectItemGateTest,QuestHaramelItemCollectingRegressionTest,RetailOwnershipGateTest`
+   - 结果：**14 项门禁测试全绿通过（BUILD SUCCESS）**。

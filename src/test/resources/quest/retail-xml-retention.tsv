@@ -44,7 +44,7 @@
 1134	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
 1135	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
 1136	RETAIL_TABLE	SimpleCollectItem	OK	retired-xml-in-git-history m5b3-collect-route-decisions.tsv basis=OBJECT_TALK_AFTER_COMMIT
-1137	XML_RETENTION	SimpleCollectItem	ADJUDICATED:WORK_ITEM_GRANT_AND_COLLECT_ROUTE	work-item grant + collect combined route unsupported
+1137	RETAIL_TABLE	SimpleCollectItem	OK	retired-xml-in-git-history
 1138	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 1139	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
 1140	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
@@ -3114,7 +3114,7 @@
 16941	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
 16942	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CHAIN
 16960	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history retail-simple-hunt-adjudicated-decisions.tsv basis=BRIEFING_STEP
-16961	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
+16961	XML_RETENTION	SimpleHunt	ADJUDICATED:XML_EXTRA_REWARD	legacy XML carries extra client-journal-named reward the retail table lacks (RETAIL_TABLE_GAPS class)
 16962	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
 16974	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history basis=DD_HUNT_PROGRESS_CLIENT_NAMES
 16975	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p0c56-item-acquire-decisions.tsv basis=DD_ITEMPLAY_ACQUIRE
@@ -4336,7 +4336,7 @@
 28314	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
 28500	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf3c0,FUN_180caf640,FUN_180caf6c0,FUN_180caf740
 28501	RETAIL_TABLE	SimpleCollectItem	OK	retired-xml-in-git-history m5b3-collect-route-decisions.tsv basis=MULTI_ITEM_HANDIN
-28503	XML_RETENTION	SimpleCollectItem	ADJUDICATED:COLLECT_PROGRESS_ROUTE	collect progress row projection route unsupported
+28503	RETAIL_TABLE	SimpleCollectItem	OK	retired-xml-in-git-history
 28504	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
 28505	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 28506	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
