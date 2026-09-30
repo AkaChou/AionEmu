@@ -21,7 +21,7 @@ RETAIL_QUEST_XML = f"{REPO.parent / 'PycharmProjects' / 'unpak'}/Quest_unpacked/
 RETAIL_ITEMS_DIR = f"{REPO.parent / 'PycharmProjects' / 'unpak'}/Items_unpacked"
 ITEM_DIR = os.path.join(REPO, "src/main/resources/aion/data/static_data/items/item")
 PROD_DIR = os.path.join(
-    REPO, "src/main/resources/aion/data/static_data/quest_definition/quests")
+    REPO, "src/main/resources/aion/data/static_data/quest/definitions/quests")
 # 生产宇宙 = XML 目录 ∪ 保留清单（已退役任务的 XML 只在 git 历史里，但仍按真端驱动生产）。
 # Production universe = XML directory plus the retention ledger (retired quests stay relevant).
 LEDGER = os.path.join(

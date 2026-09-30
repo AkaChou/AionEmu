@@ -52,13 +52,13 @@
    - 增加 702666 `USE_OBJECT` 传送进回廊（容错重返）；
    - 增加 702666 / 702667 的 `ACTION_ITEM_USE` `can-act` 交互资格。
 4. **双端文件同步**：
-   - 同步修改 `src/main/resources/aion/data/static_data/quest_definition/quests/10506.xml` 与 `aion/data/static_data/quest_definition/quests/10506.xml`。
+   - 同步修改 `src/main/resources/aion/data/static_data/quest/definitions/quests/10506.xml` 与 `aion/data/static_data/quest/definitions/quests/10506.xml`。
 5. **单元测试回归锁定**：
    - 在 `Quest10506ClientDialogAlignmentTest` 中增加 `corridorPortalsOnlyAvailableInStep5AndStep6` 测试，断言 `s2` 无回廊交互/传送，`s4` 与 `s5` 具备完整的交互与传送路由。
 
 ## 5. 本次修改清单 (Changeset Summary)
-1. `src/main/resources/aion/data/static_data/quest_definition/quests/10506.xml`
-2. `aion/data/static_data/quest_definition/quests/10506.xml`
+1. `src/main/resources/aion/data/static_data/quest/definitions/quests/10506.xml`
+2. `aion/data/static_data/quest/definitions/quests/10506.xml`
 3. `src/test/java/com/aionemu/gameserver/questEngine/definition/Quest10506ClientDialogAlignmentTest.java`
 4. `.agents/summary/quest-10506-beritra-corridor/README.md`
 5. `.agents/summary/quest-10506-beritra-corridor/verify_10506_contract.py`

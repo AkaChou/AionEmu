@@ -19,7 +19,7 @@ from pathlib import Path
 
 BASE = Path(__file__).resolve().parent
 REPO = BASE.parents[2]
-QUESTS = REPO / "src/main/resources/aion/data/static_data/quest_definition/quests"
+QUESTS = REPO / "src/main/resources/aion/data/static_data/quest/definitions/quests"
 DIALOG = Path(f"{REPO.parent / 'PycharmProjects' / 'unpak'}/data_unpacked/Dialogs")
 
 CROSS_STATES = {"ROW_WITHOUT_STATE", "BOTH_MISALIGNED"}

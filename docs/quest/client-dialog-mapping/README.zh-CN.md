@@ -35,7 +35,6 @@
 | `legacy-quest-dialog-contracts.csv` | 从全部 `origin/history` compact quest script XML 提取的每任务一份有效 NPC、页面和报告状态合同；专用区域模板覆盖聚合的 `zz_retail_simple_quests.xml` |
 | `legacy-quest-dialog-template-index.csv` | 上述 XML 的完整模板索引，保留同一任务可能存在的聚合与专用模板行，用于冲突和来源审计 |
 | `client-lifecycle-alignment.csv` | 客户端接取/报告页面图与当前 XML、旧正式模板合同的逐路由交叉审计 |
-| `quest-order-audit.csv` | active 客户端页面动作图与编译后任务 IR 的逐路径顺序审计 |
 
 CSV 使用带 BOM 的 UTF-8 编码，可直接用 Excel 打开。
 
@@ -52,7 +51,7 @@ HtmlPages  ID 31 = HTML_PAGE_PACKAGE_LIMITATION
 
 `quest-dialog-action-details.csv` 和 `page-action-map.csv` 表达的是客户端 HTML 中可以直接验证的关系：某个页面包含一个按钮，该按钮的 `href` 引用了某个 `HACTION_*`。动作执行后的服务器状态变化或下一个页面仍由服务端任务处理逻辑决定，不能只凭这两份客户端定义推断。
 
-`quest-order-audit.csv` 只使用 `source_variant=active` 且精确映射的任务 HTML 页面。审计从外部入口开始遍历，而不是把 HTML 文件中的页面声明顺序当作任务执行顺序。外部入口包括 `QUEST_SELECT`、`USE_OBJECT`、不依赖 NPC 的 `QUEST_ACTION`，以及没有出现在当前任务页面按钮中、但会直接打开 active 页面的一类 NPC 动作（例如 `EXCHANGE_COIN`）。
+逐路径顺序审计（`QuestDialogOrderAudit`）只使用 `source_variant=active` 且精确映射的任务 HTML 页面；它按需运行，产物为临时文件、不入库。审计从外部入口开始遍历，而不是把 HTML 文件中的页面声明顺序当作任务执行顺序。外部入口包括 `QUEST_SELECT`、`USE_OBJECT`、不依赖 NPC 的 `QUEST_ACTION`，以及没有出现在当前任务页面按钮中、但会直接打开 active 页面的一类 NPC 动作（例如 `EXCHANGE_COIN`）。
 
 `npc-item-report` 的物品不足回落不能假定所有任务都有 `SELECT6(2716)`。积木的 `failure-page` 省略时保留该兼容页；页面符号必须来自当前任务 active HTML，缺少失败页时使用 `failure-page="CLOSE"`。这是失败响应的 owner 合同，不是把失败页替换成奖励成功页的批处理规则。
 
@@ -69,7 +68,6 @@ HtmlPages  ID 31 = HTML_PAGE_PACKAGE_LIMITATION
 
 截至 2026-08-13，相对迁移基线已按强证据门槛修复 738 条 XML 页面属性：483 条 `NPC_START` 接取页和 255 条 `NPC_REPORT` 报告页，其中报告页包含 19 条 `item_order` 路由。本轮新增的 `report_to_many` 合同建模只在状态时序已由旧 handler 或专用历史测试确认的任务上应用；1913 系列等专用传送任务保留 `START + var0` 中间状态，不套用通用模板的 `REWARD` 时序。当前 `client-lifecycle-alignment.csv` 中 3,570 条路由为 `NOT_NEEDED`，2,367 条为 `EVIDENCE_REQUIRED`；后者主要是缺少唯一旧模板合同、当前 NPC 不属于旧模板，或报告动作/状态时机需要专用 handler 或真实证据。`EVIDENCE_REQUIRED` 是待补证据，不应被描述为已与客户端完全一致，也不应只改页面掩盖状态问题。
 
-当前 `quest-order-audit.csv` 包含 100,591 条 `PAGE_ACTION_MATCHED`、16,941 条 `TERMINAL_PAGE_REACHED`、1,862 条 `CLIENT_PAGE_UNREACHED` 和 0 条 `EVIDENCE_REQUIRED`（2026-09-12 治理后快照）。相对 2026-08-13 基线，本轮治理以客户端 HTML 页面图、`origin/history` 旧 handler 与权威模板契约为证据，清零了 `PAGE_NOT_IN_TASK_HTML`（原 1,034 行）与 `BUTTON_WITHOUT_ROUTE`（原 9 行）两类失败，并把 `CLIENT_PAGE_UNREACHED` 从 8,122 行降至 1,862 行（涉及 694 个任务；其中 2026-09-12 晚间批次用客户端解包 `data_driven_quest.xml` + NPC 名字表解析出 1,520 个 data-driven 任务的接取/领奖 NPC，清零了整个 select_none 接取链簇 118 个任务）。另已接入原始端服务端证据 `Quest_Simple{Talk,Hunt,CollectItem,UseItem,ItemPlay,SerialHunt}.xml`（5,496 个任务的逐 var talk NPC/物品/检查/动画页模板，提取为 `retail-simple-templates.csv`，619 行例外已引用），为故事链族的下一轮逐 var 页面建模提供证据：报告协议路由（`reward`/`started` 态 `QUEST_SELECT` 与 `SELECT_QUEST_REWARD` 上交）、单 NPC 任务的 `select_none` 接取链、NPC_START/显式 accept 路由的 close 回退，以及 select8_1 等旧客户端按钮符号的过期修正。剩余的 `CLIENT_PAGE_UNREACHED` 集中记录在 `../../../.agents/summary/quest-load-fail/unresolved-inventory.csv`，按 `FIX_XML`/`FIX_GENERATOR`/`INTENTIONAL_CLIENT_ONLY`/`EVIDENCE_BLOCKED` 分类；其中 `INTENTIONAL_CLIENT_ONLY`（道具起始任务的接取窗页 4，经 `use-item` 路由显示）是审计只沿对话触发器遍历导致的已建模例外。前两类（MATCHED/TERMINAL）只证明当前可达页面和动作合同，不能单独证明所有状态副作用都与真实一致；后两类必须继续补充客户端路径、旧 handler 或真实抓包证据。
 
 客户端的一个可见动作可能对应多个互斥的服务端条件分支。审计表会为每个候选分支输出一行，并用 `candidate_count` 和 `candidate_index` 关联；没有匹配路由时 `candidate_count=0`。候选合同字段包括：
 
@@ -128,7 +126,7 @@ python3 .agents/summary/quest/generate_quest_dialog_contract.py --check
 ```bash
 mvn -q -Dexec.classpathScope=test \
   -Dexec.mainClass=com.aionemu.gameserver.questEngine.definition.QuestDialogOrderAudit \
-  -Dexec.args="docs/quest/client-dialog-mapping/quest-dialog-pages.csv docs/quest/client-dialog-mapping/quest-dialog-action-details.csv docs/quest/client-dialog-mapping/quest-order-audit.csv" \
+  -Dexec.args="docs/quest/client-dialog-mapping/quest-dialog-pages.csv docs/quest/client-dialog-mapping/quest-dialog-action-details.csv" \
   exec:java
 ```
 

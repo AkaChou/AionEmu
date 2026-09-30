@@ -13,7 +13,7 @@ import re
 
 REPO = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", ".."))
 PROD_DIR = os.path.join(
-    REPO, "src/main/resources/aion/data/static_data/quest_definition/quests")
+    REPO, "src/main/resources/aion/data/static_data/quest/definitions/quests")
 
 TARGETS = ["2303", "2367", "2411", "2448", "3088"]
 

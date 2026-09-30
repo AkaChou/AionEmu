@@ -16,8 +16,8 @@ import re
 import subprocess
 
 REPO = next(p for p in pathlib.Path(__file__).resolve().parents if (p / "pom.xml").is_file())
-XML_DIR = REPO / 'src/main/resources/aion/data/static_data/quest_definition/quests'
-CATALOG = REPO / 'src/main/resources/aion/data/static_data/quest_definition/quest_definition_catalog.xml'
+XML_DIR = REPO / 'src/main/resources/aion/data/static_data/quest/definitions/quests'
+CATALOG = REPO / 'src/main/resources/aion/data/static_data/quest/definitions/quest_definition_catalog.xml'
 LEDGERS = [
 	REPO / '.agents/summary/scriptdll-quest-driver/retail-xml-retention.tsv',
 	REPO / 'src/test/resources/quest/retail-xml-retention.tsv',
@@ -39,7 +39,7 @@ def git_show(rel):
 
 
 def catalog_line(quest_id):
-	text = git_show('src/main/resources/aion/data/static_data/quest_definition/quest_definition_catalog.xml')
+	text = git_show('src/main/resources/aion/data/static_data/quest/definitions/quest_definition_catalog.xml')
 	m = re.search(rb'.*<definition id="%d" .*/>' % quest_id, text)
 	if not m:
 		raise SystemExit(f'no catalog line for {quest_id}')
@@ -116,7 +116,7 @@ def main():
 	args = parser.parse_args()
 	restored = 0
 	for quest_id in args.quest_ids:
-		rel = f'src/main/resources/aion/data/static_data/quest_definition/quests/{quest_id}.xml'
+		rel = f'src/main/resources/aion/data/static_data/quest/definitions/quests/{quest_id}.xml'
 		target = XML_DIR / f'{quest_id}.xml'
 		line = catalog_line(quest_id)
 		if target.is_file():

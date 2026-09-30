@@ -17,7 +17,7 @@ from collections import Counter
 
 SCRIPT_CSV = f"{REPO.parent / 'PycharmProjects' / 'unpak'}/Quest_unpacked/quest_script_monster.csv"
 DIALOGS = f"{REPO.parent / 'PycharmProjects' / 'unpak'}/data_unpacked/Dialogs"
-QUEST_XML_DIR = "src/main/resources/aion/data/static_data/quest_definition/quests"
+QUEST_XML_DIR = "src/main/resources/aion/data/static_data/quest/definitions/quests"
 
 
 def numeric_kill_quests():

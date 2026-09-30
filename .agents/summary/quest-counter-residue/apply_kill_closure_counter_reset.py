@@ -11,7 +11,7 @@ import re
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[3]
-QUEST_DIR = ROOT / "src/main/resources/aion/data/static_data/quest_definition/quests"
+QUEST_DIR = ROOT / "src/main/resources/aion/data/static_data/quest/definitions/quests"
 
 CLOSURE_OPEN = '    <transition source="s2" target="s3" priority="0">\n'
 HEAL_ANCHOR = '    <transition source="s3" target="s4">\n'

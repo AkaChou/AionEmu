@@ -31,7 +31,7 @@ import sys
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[3]
-QUESTS = REPO / "src/main/resources/aion/data/static_data/quest_definition/quests"
+QUESTS = REPO / "src/main/resources/aion/data/static_data/quest/definitions/quests"
 QUEST_IDS = (11072, 21081, 24150)
 
 FAMILY: dict[int, dict[str, object]] = {

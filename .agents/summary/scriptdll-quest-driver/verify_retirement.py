@@ -15,8 +15,8 @@ import sys
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[3]
-QUESTS = REPO / "src/main/resources/aion/data/static_data/quest_definition/quests"
-CATALOG = REPO / "src/main/resources/aion/data/static_data/quest_definition/quest_definition_catalog.xml"
+QUESTS = REPO / "src/main/resources/aion/data/static_data/quest/definitions/quests"
+CATALOG = REPO / "src/main/resources/aion/data/static_data/quest/definitions/quest_definition_catalog.xml"
 RETENTION = REPO / "src/test/resources/quest/retail-xml-retention.tsv"
 FIXTURE_DIR = REPO / "src/test/resources/quest/retired"
 UNIVERSE = 6224
@@ -61,7 +61,7 @@ def main() -> int:
         if QUESTS in path.parents or path == CATALOG:
             continue
         body = path.read_text(encoding="utf-8", errors="ignore")
-        for m in re.finditer(r"quest_definition/quests/(\d+)\.xml", body):
+        for m in re.finditer(r"quest/definitions/quests/(\d+)\.xml", body):
             if m.group(1) in retired:
                 refs.append(f"{path.relative_to(REPO)} -> {m.group(1)}.xml")
     if refs:

@@ -24,7 +24,7 @@ import xml.etree.ElementTree as ET
 
 BASE = os.path.dirname(os.path.abspath(__file__))
 REPO = os.path.abspath(os.path.join(BASE, "../../.."))
-QUEST_DIR = os.path.join(REPO, "src/main/resources/aion/data/static_data/quest_definition/quests")
+QUEST_DIR = os.path.join(REPO, "src/main/resources/aion/data/static_data/quest/definitions/quests")
 
 spec = importlib.util.spec_from_file_location("recon", os.path.join(BASE, "reconcile_simple_hunt.py"))
 R = importlib.util.module_from_spec(spec)

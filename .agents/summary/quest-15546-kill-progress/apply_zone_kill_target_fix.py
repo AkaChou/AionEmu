@@ -9,7 +9,7 @@ import os
 import pathlib
 
 ROOT = REPO
-Q = ROOT / "src/main/resources/aion/data/static_data/quest_definition/quests"
+Q = ROOT / "src/main/resources/aion/data/static_data/quest/definitions/quests"
 
 LF6_A = ("240475 240476 241656 241657 240477 240478 241658 241659 240479 240480 241660 241661 "
          "240481 240482 241662 241663 240483 240484 241664 241665")

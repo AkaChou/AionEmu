@@ -9,7 +9,7 @@
 ## 1. 根因分析 (Root Cause)
 
 ### 故障 1：任务 1722 同事件重叠且无唯一优先级 (AMBIGUOUS_TRANSITION: TALK_TO_NPC)
-- **触发点**: `src/main/resources/aion/data/static_data/quest_definition/quests/1722.xml`
+- **触发点**: `src/main/resources/aion/data/static_data/quest/definitions/quests/1722.xml`
 - **直接原因**:
   - NPC 278544 在 `s2` 阶段存在两条无条件、无优先级的同动作（`SETPRO3`）转换：
     - 行 102：`<transition source="s2" target="s3">`，推进到 `s3` 阶段并关闭对话。
@@ -19,7 +19,7 @@
   - 删除行 288 的冗余 `<transition source="s2" target="s2">`（NPC 278544 `SETPRO3`）。
 
 ### 故障 2：任务 3940 节点投影重复 (DUPLICATE_NODE_PROJECTION: START:0)
-- **触发点**: `src/main/resources/aion/data/static_data/quest_definition/quests/3940.xml`
+- **触发点**: `src/main/resources/aion/data/static_data/quest/definitions/quests/3940.xml`
 - **连锁排查发现**:
   - 修复 1722 后，全量 Catalog 编译立即触发 3940 编译失败。
   - 提交 `0823653a7` 尝试重构 3940 米拉詹特武器任务流程，引入 `<node label="hunt" status="START"/>` 与 `<counter source="hunt" target="hunt-done" field="var0" required="306">`。

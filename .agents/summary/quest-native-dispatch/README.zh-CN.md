@@ -537,7 +537,7 @@ S1 = 纯形状迁移 + **一个语义新增点**；链面 S2 需先裁 R 记录�
 
 **选择器盲区（本片实锤，新增纪律条目）**：`QuestNpcFactionRetailGateTest`
 （`model/gameobjects/player/npcFaction/`）3 例在 T2 中报"新红"，根因 = 它自建 catalog 读的是**已退役的
-XML 目录**（`src/main/resources/aion/data/static_data/quest_definition`，35007/39601.xml 早已删除）而非
+XML 目录**（`src/main/resources/aion/data/static_data/quest/definitions`，35007/39601.xml 早已删除）而非
 生产视图 ⇒ 与 S1 无关的陈债；它至今才暴露，是因为 T3 选择器 `-Dtest=com.aionemu.gameserver.questEngine.**`
 **不覆盖 `model/**`**。⇒ 凡断言"任务定义"的测试类都必须在 T2/T3 口径内（该类修法：改用
 `ProductionQuestDefinitions.catalog()`；归属 npcFaction 车道，本片只登记不代修）。
@@ -801,7 +801,7 @@ XML 目录**（`src/main/resources/aion/data/static_data/quest_definition`，350
   fail-open 点 = `lastRowIndex` 的 `Math.max(0, rows-1)` **缺行静默返 0**。
 - **净效果**：**25200 受理**（客户端 HTML = DD 模板 + 页 4 authored + 任务书 1 行）+ **5 行换码仍拒**
   （客户端无 HTML、无任务书）；死值清除（`build×2`/`buildItemAcquire`/`assemble` 页参移除 + javadoc 重写）。
-- **三件套**：受理 flip = retention owner + **遗留 XML 退役**（`quest_definition/quests/25200.xml`，git blob
+- **三件套**：受理 flip = retention owner + **遗留 XML 退役**（`quest/definitions/quests/25200.xml`，git blob
   `7b1aebbe…`）+ catalog 条目（1265 → 1264）——缺 XML 一步会让 `verifyProductionCoverage` 级联 15 错。
 - **判定**：清单门 3/3、黑盒契约门 1/1、DD 门唯一红 = foreign 在册红；**T1 ADDED 0 / REMOVED 0**
   （86 测试；红集 sha256 `3b92439da8…` 恒等）；T2/T3 合并收口跑。

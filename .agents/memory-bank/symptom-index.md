@@ -51,7 +51,7 @@
 | var0 不增长、自环计数卡 0、variable-at-least 不触发 | `QE-002` | QuestMutationPlanner.build, action variable writes, target projection |
 | CompleteQuest 后任务道具残留，Abandon 与完成路径行为不对称 | `QE-003` | CompleteQuest mutation plan and work-items declarations |
 | dialog 31 无路由、中间 NPC 丢失、NPC ID 错配、choice/fallback 冲突；中间报告步点击任务行后服务端只回 questId=0 第 10 页 | `QE-004` | quest XML nodes, NPC_REPORT edges, catalog mode and client dialog mapping；动作 31 落在中间报告步骤时逐档对比 legacy START_DIALOG 的 sendQuestDialog 页面，交付成功页还需检查 SELECT6 等后续按钮路由 |
-| 多 NPC 连续汇报时 var0 卡 0、任务追踪 UI 不推进、CLIENT_PAGE_UNREACHED | `QE-005` | client dialog action details, quest-order-audit and var node sequence |
+| 多 NPC 连续汇报时 var0 卡 0、任务追踪 UI 不推进、CLIENT_PAGE_UNREACHED | `QE-005` | client dialog action details and var node sequence |
 | REWARD 状态无 Page 5、奖励窗口关闭或 NPC 对话无响应 | `QE-006` | QuestEvent.matches and QuestProductionDispatcher priority |
 | 多选一交付后领奖或奖励预览卡死，removalFeasible 为 BLOCKED | `QE-007` | removalFeasible, branch transitions and reward-stage remove-item actions |
 | 等级满足但无任务标记、接受动作无响应、前置任务为 999 级或不存在 | `QE-008` | production catalog, quest_data.xml and start-condition definitions |

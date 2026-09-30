@@ -15,8 +15,8 @@ ADOPT_CLASS = f"{ROOT}/src/main/java/com/aionemu/gameserver/questEngine/retail/R
 DECISIONS = f"{ROOT}/src/test/resources/quest/retail-simple-hunt-adjudicated-decisions.tsv"
 RET_MAIN = f"{ROOT}/src/main/resources/aion/data/static_data/quest_retail/retail-xml-retention.tsv"
 RET_TEST = f"{ROOT}/src/test/resources/quest/retail-xml-retention.tsv"
-CATALOG = f"{ROOT}/src/main/resources/aion/data/static_data/quest_definition/quest_definition_catalog.xml"
-XML_DIR = f"{ROOT}/src/main/resources/aion/data/static_data/quest_definition/quests"
+CATALOG = f"{ROOT}/src/main/resources/aion/data/static_data/quest/definitions/quest_definition_catalog.xml"
+XML_DIR = f"{ROOT}/src/main/resources/aion/data/static_data/quest/definitions/quests"
 
 REVERT = [17011, 17015, 17016, 17017, 17018, 27011, 27015, 27016, 27017, 27018]
 
@@ -61,15 +61,15 @@ print("retention: 10 reverted (both copies)")
 # 恢复 XML + catalog（从 HEAD 恢复）
 for q in REVERT:
     subprocess.run(["git", "checkout", "HEAD", "--", f"src/main/resources/aion/data/static_data/"
-                   f"quest_definition/quests/{q}.xml"], cwd=ROOT, check=True)
-    t = f"{ROOT}/target/classes/aion/data/static_data/quest_definition/quests/{q}.xml"
+                   f"quest/definitions/quests/{q}.xml"], cwd=ROOT, check=True)
+    t = f"{ROOT}/target/classes/aion/data/static_data/quest/definitions/quests/{q}.xml"
     import shutil, os
     if os.path.exists(f"{XML_DIR}/{q}.xml") and not os.path.exists(t):
         shutil.copy(f"{XML_DIR}/{q}.xml", t)
 cat = open(CATALOG, encoding="utf-8").read()
 added = 0
 for q in REVERT:
-    entry = (f'\n  <definition id="{q}" resource="aion/data/static_data/quest_definition/'
+    entry = (f'\n  <definition id="{q}" resource="aion/data/static_data/quest/definitions/'
              f'quests/{q}.xml" mode="EXECUTABLE" />')
     if f'id="{q}"' not in cat:
         # 锚定插回：按 id 排序插到其后继 definition 前（无后继则插到收尾标签前）

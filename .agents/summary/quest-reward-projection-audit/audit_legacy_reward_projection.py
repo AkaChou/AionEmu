@@ -22,7 +22,7 @@ from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[3]
 HANDLER_DIR = "src/main/java/com/aionemu/gameserver/quest/handlers"
-QUESTS_DIR = REPO / "src/main/resources/aion/data/static_data/quest_definition/quests"
+QUESTS_DIR = REPO / "src/main/resources/aion/data/static_data/quest/definitions/quests"
 
 REWARD_STEP_RE = re.compile(
     r"changeQuestStep\s*\(\s*env\s*,\s*(\d+)\s*,\s*(\d+)\s*,\s*true\s*\)"

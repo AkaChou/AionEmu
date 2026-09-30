@@ -5,7 +5,7 @@ packed 变量做**全等**匹配：只要自环计数器把某个被投影的字
 同源事件就再也匹配不到该 source，任务停在第一只怪（NO_MATCH）。
 
 本脚本做两件事：
-1. 扫描生产 quest_definition/quests/*.xml，报告"自环 + increment 一个被 source
+1. 扫描生产 quest/definitions/quests/*.xml，报告"自环 + increment 一个被 source
    投影钉住的字段"这一结构性缺陷（修复前 15321/25608/27510，修复后应为 0）。
 2. 用与 planner 相同的匹配规则模拟连续击杀，给出修复前（把计数字段强行钉回
    0）与修复后的完成所需击杀数，证明症状与修复方向一致。
@@ -18,7 +18,7 @@ import re
 import xml.etree.ElementTree as ET
 from dataclasses import dataclass
 
-QUEST_DIR = "src/main/resources/aion/data/static_data/quest_definition/quests"
+QUEST_DIR = "src/main/resources/aion/data/static_data/quest/definitions/quests"
 
 
 @dataclass(frozen=True)

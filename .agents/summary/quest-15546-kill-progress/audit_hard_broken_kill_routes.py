@@ -5,7 +5,7 @@ import re, pathlib, collections
 
 ROOT = pathlib.Path(__file__).resolve().parents[3]
 SD = ROOT / "src/main/resources/aion/data/static_data"
-QUESTS = SD / "quest_definition/quests"
+QUESTS = SD / "quest/definitions/quests"
 
 names: dict[int, str] = {}
 for f in (SD / "npcs").glob("*.xml"):

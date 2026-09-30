@@ -11,7 +11,7 @@
 
 ## 证据链
 
-- `src/main/resources/aion/data/static_data/quest_definition/quests/10520.xml`: `s3 -> s4` 的 `SETPRO4` 执行 `set-variable var0=4`、移除信物，并在 after-commit 中 `teleport-player-current-or-default world-id="210100000"`；20520 对称使用 `world-id="220110000"`（Norsvold）。
+- `src/main/resources/aion/data/static_data/quest/definitions/quests/10520.xml`: `s3 -> s4` 的 `SETPRO4` 执行 `set-variable var0=4`、移除信物，并在 after-commit 中 `teleport-player-current-or-default world-id="210100000"`；20520 对称使用 `world-id="220110000"`（Norsvold）。
 - `src/main/resources/aion/data/static_data/player_experience_table.xml`: 66 级起始经验为 `2066885620`（注释 `Level 65` 的上一条是 65 级起始经验 `1926765410`）。
 - `PlayerCommonData.setExp` 旧逻辑把 65 级未完成任务的 `maxExp` 设为 `2066885620`，恰好等于 66 级起始经验；随后的 while 用 `exp >= startExp(level+1)` 升级，导致上限本身就能把玩家升到 66。
 - `npc_teleporter.xml` 已有部分数据门禁：203726 的 loc 444（伊鲁玛）为 `requiredQuest=10520 requiredQuestStep=4`，204191 的 loc 438（诺斯珀德）为 `requiredQuest=20520 requiredQuestStep=4`；804561/802452 等更严格路线仍为完成后才开放。

@@ -23,7 +23,7 @@ WANTED = (
     ('lf2a', 'InvadePortalDest_42_questArea_02'),
     ('lf2a', 'InvadePortalDest_42_questArea_03'),
 )
-HUNT = Path(f"{REPO}/src/main/resources/aion/data/static_data/quest_definition/quests")
+HUNT = Path(f"{REPO}/src/main/resources/aion/data/static_data/quest/definitions/quests")
 
 
 def world_id_map():

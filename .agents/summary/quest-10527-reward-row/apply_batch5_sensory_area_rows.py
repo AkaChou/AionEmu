@@ -29,7 +29,7 @@ from __future__ import annotations
 from pathlib import Path
 
 REPO = next(p for p in Path(__file__).resolve().parents if (p / "pom.xml").is_file())
-QUESTS = REPO / "src/main/resources/aion/data/static_data/quest_definition/quests"
+QUESTS = REPO / "src/main/resources/aion/data/static_data/quest/definitions/quests"
 
 
 class GroupA:

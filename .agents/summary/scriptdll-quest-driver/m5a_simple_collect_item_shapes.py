@@ -16,7 +16,7 @@ from collections import Counter
 REPO = pathlib.Path(__file__).resolve().parents[3]
 RETAIL = REPO / "src/main/resources/aion/data/static_data/quest_retail/Quest_SimpleCollectItem.xml"
 RETENTION = REPO / "src/main/resources/aion/data/static_data/quest_retail/retail-xml-retention.tsv"
-QUESTS = REPO / "src/main/resources/aion/data/static_data/quest_definition/quests"
+QUESTS = REPO / "src/main/resources/aion/data/static_data/quest/definitions/quests"
 OUT = pathlib.Path(__file__).resolve().parent / "retail-simple-collect-item-shapes.tsv"
 
 ROW = re.compile(r"<id id=\"(\d+)\">(.*?)</id>", re.DOTALL)

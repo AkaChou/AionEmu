@@ -9,7 +9,7 @@
 
 登记口径先复算到位：从 `p0c46-role-axis-census.tsv` 的 `INFO_ACCEPT_SPREAD` 重推 = **34 项 / 25 任务，RECOMPUTED == REGISTERED**（QE-072 校准：先证明判据认得登记时刻的坏面）。
 
-再下钻到**块级**找到了根因：遗留 XML 把真端**步骤行**（`talk_npc<k>`）误读成**起始行**，给每个链上 NPC 各写一个 `<dialog type="NPC_START">` 块；编译器 `RetailSimpleTalkDefinitionCompiler.acceptFlowChain` 对每个 `NPC_START` 块各合成一条接取流 ⇒ **链上每个 NPC 都成了接取人**。HEAD `quest_definition/quests/1484.xml` 即铁证——4 个 `NPC_START` 块，其中 3 个紧贴着遗留编译器自己的注释自认误读：
+再下钻到**块级**找到了根因：遗留 XML 把真端**步骤行**（`talk_npc<k>`）误读成**起始行**，给每个链上 NPC 各写一个 `<dialog type="NPC_START">` 块；编译器 `RetailSimpleTalkDefinitionCompiler.acceptFlowChain` 对每个 `NPC_START` 块各合成一条接取流 ⇒ **链上每个 NPC 都成了接取人**。HEAD `quest/definitions/quests/1484.xml` 即铁证——4 个 `NPC_START` 块，其中 3 个紧贴着遗留编译器自己的注释自认误读：
 
 ```
 74: <dialog type="NPC_START" npc-id="204045" source="unaccepted" ... start-page="SELECT1"/>

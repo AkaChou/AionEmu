@@ -15,9 +15,9 @@ RET_MAIN = f"{ROOT}/src/main/resources/aion/data/static_data/quest_retail/retail
 RET_TEST = f"{ROOT}/src/test/resources/quest/retail-xml-retention.tsv"
 DECISIONS = f"{ROOT}/src/test/resources/quest/retail-simple-hunt-adjudicated-decisions.tsv"
 REJECTS = f"{ROOT}/src/test/resources/quest/retail-simplehunt-compiler-rejects.tsv"
-CATALOG = f"{ROOT}/src/main/resources/aion/data/static_data/quest_definition/quest_definition_catalog.xml"
-XML_DIR = f"{ROOT}/src/main/resources/aion/data/static_data/quest_definition/quests"
-TARGET_XML_DIR = f"{ROOT}/target/classes/aion/data/static_data/quest_definition/quests"
+CATALOG = f"{ROOT}/src/main/resources/aion/data/static_data/quest/definitions/quest_definition_catalog.xml"
+XML_DIR = f"{ROOT}/src/main/resources/aion/data/static_data/quest/definitions/quests"
+TARGET_XML_DIR = f"{ROOT}/target/classes/aion/data/static_data/quest/definitions/quests"
 
 adopt = {}
 for line in open("/tmp/b1-adopt34.tsv"):

@@ -2,7 +2,7 @@
 """真端服务端模板表（58Server/Map/XML）对本仓库任务的覆盖统计。
 
 输入：<真端根>/Map/XML/{Quest_*.xml,data_driven_quest.xml,quest.xml}
-     src/main/resources/aion/data/static_data/quest_definition/quests/*.xml
+     src/main/resources/aion/data/static_data/quest/definitions/quests/*.xml
 输出：每张表的行数 / 与本仓库交集 / 并集覆盖
 """
 import glob
@@ -38,7 +38,7 @@ def plain_ids(path):
 
 def repo_quests():
     out = set()
-    for p in glob.glob(os.path.join(REPO, "src/main/resources/aion/data/static_data/quest_definition/quests/*.xml")):
+    for p in glob.glob(os.path.join(REPO, "src/main/resources/aion/data/static_data/quest/definitions/quests/*.xml")):
         m = re.search(r"/(\d+)\.xml$", p)
         if m:
             out.add(int(m.group(1)))

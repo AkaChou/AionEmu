@@ -19,7 +19,7 @@
 
 | 项 | 结果 |
 |---|---|
-| `git mv` 退役 | 286 个：`quest_definition/quests/<id>.xml` →（测试作用域）`src/test/resources/quest/retired/<id>.xml` |
+| `git mv` 退役 | 286 个：`quest/definitions/quests/<id>.xml` →（测试作用域）`src/test/resources/quest/retired/<id>.xml` |
 | `quest_definition_catalog.xml` | 6224 → **5938** 条（删除同 286 条） |
 | 生产 quests 目录 | **5938** 个文件（与 catalog 逐一对应） |
 | 生产任务全集 | 5938（XML 驱动）+ 286（真端驱动）= **6224** |

@@ -23,7 +23,7 @@ from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 REPO = next(p for p in Path(__file__).resolve().parents if (p / "pom.xml").is_file())
-QUESTS = REPO / 'src/main/resources/aion/data/static_data/quest_definition/quests/%d.xml'
+QUESTS = REPO / 'src/main/resources/aion/data/static_data/quest/definitions/quests/%d.xml'
 GAPS = HERE / 'simplehunt-dialog-route-gaps.txt'
 OUT = HERE / 'p0c8c-gap-decisions.tsv'
 PROD_DECISIONS = REPO / 'src/test/resources/quest/retail-simple-hunt-adjudicated-decisions.tsv'

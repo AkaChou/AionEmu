@@ -16,9 +16,9 @@
 > 旧 xml 已经在 git 历史中，所以没必要迁移到 test。
 
 落地：
-- 退役动作 = **删除** `src/main/resources/.../quest_definition/quests/<id>.xml`（不再 `git mv` 到 `src/test/resources/quest/retired/`）；
+- 退役动作 = **删除** `src/main/resources/.../quest/definitions/quests/<id>.xml`（不再 `git mv` 到 `src/test/resources/quest/retired/`）；
 - 退役事实的唯一仓库内记录 = `retail-xml-retention.tsv` 的 `owner=RETAIL_TABLE` 行（6224 行全量台账）；
-- 历史内容回溯方式 = git（`git log --follow -- src/main/resources/aion/data/static_data/quest_definition/quests/<id>.xml`）；
+- 历史内容回溯方式 = git（`git log --follow -- src/main/resources/aion/data/static_data/quest/definitions/quests/<id>.xml`）；
 - `src/test/resources/quest/retired/`（1867 个冻结副本）**已删除**，且 `verify_retirement.py` 新增"该目录不得存在"检查。
 
 ## 2. 交付

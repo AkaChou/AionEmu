@@ -11,7 +11,7 @@ from __future__ import annotations
 import re, sys
 from pathlib import Path
 
-QUESTS = Path("src/main/resources/aion/data/static_data/quest_definition/quests")
+QUESTS = Path("src/main/resources/aion/data/static_data/quest/definitions/quests")
 
 # quest -> (prerequisite, 证据)
 ADD = {

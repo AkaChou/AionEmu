@@ -7,8 +7,8 @@
 
 ## 改动范围
 
-- `src/main/resources/aion/data/static_data/quest_definition/quests/14026.xml`
-- `src/main/resources/aion/data/static_data/quest_definition/quests/24026.xml`
+- `src/main/resources/aion/data/static_data/quest/definitions/quests/14026.xml`
+- `src/main/resources/aion/data/static_data/quest/definitions/quests/24026.xml`
 - `src/test/java/com/aionemu/gameserver/questEngine/definition/QuestMissionRewardIndexRegressionTest.java`
 - 本证据文档。本线程未执行 git add/commit 或撤销其他人的改动。最终 status 显示新测试为 `A `（已暂存），两 XML 为工作区修改，本文档未跟踪；保留共享索引状态，不自行反向调整。
 

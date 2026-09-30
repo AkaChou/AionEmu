@@ -35,7 +35,7 @@ import sys
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[3]
-QUESTS = REPO / "src/main/resources/aion/data/static_data/quest_definition/quests"
+QUESTS = REPO / "src/main/resources/aion/data/static_data/quest/definitions/quests"
 QUEST_IDS = (14220, 24220)
 
 # 行 1 的“潘盖亚情报员”按要塞战入口位置分 4 个中立变体（BROWNIE）。

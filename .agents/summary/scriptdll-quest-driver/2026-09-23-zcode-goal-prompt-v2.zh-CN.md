@@ -270,7 +270,7 @@ SimpleHunt 21 行 `_area_`/`_Area_`，生产 `definitions/compact/ai/ai-areas.xm
 - [ ] 5554 个任务各有机器可读 owner 记录，且全部由真端文件驱动（不读 XML）
 - [ ] 670 个任务在保留清单中，逐条有原因与证据；无未归类任务（5554 + 670 = 6224）
 - [ ] 生产接线可用：开关关闭 = 改造前行为，开启 = 按 owner 表加载
-- [ ] 被迁移 XML 已从 `quest_definition/quests/` 删除，`quest_definition_catalog.xml` 已收敛
+- [ ] 被迁移 XML 已从 `quest/definitions/quests/` 删除，`quest_definition_catalog.xml` 已收敛
 - [ ] 五类门禁（归属/家族等价/调度逐帧/客户端契约/降级清单）实现且长期绿
 - [ ] 客户端抽检：每族 ≥3 个任务，`quest_summary` 行与 `SECTION_n` 计数一致
 - [ ] 终局报告（覆盖率、保留清单、口径分歧、未验证项）落盘

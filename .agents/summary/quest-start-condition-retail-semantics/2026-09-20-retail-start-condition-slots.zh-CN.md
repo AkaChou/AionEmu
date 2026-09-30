@@ -1,7 +1,7 @@
 # 起始条件“槽位”语义修复（15321/15323 无法接取）
 
 日期：2026-09-20
-范围：`src/main/resources/aion/data/static_data/quest_definition/quests/` 起始条件块
+范围：`src/main/resources/aion/data/static_data/quest/definitions/quests/` 起始条件块
 
 ## 玩家现象
 

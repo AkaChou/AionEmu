@@ -32,7 +32,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * 所以包类型必须是 {@code CUTSCENE}(0)；迁移前 handler 写的 `SM_PLAY_MOVIE(1, 912)` 落在影片表之外，
  * 不能照抄。其余 8 个（16984/26984 无过场 id 与触发世界证据、20015 无行为证据、18706/28706 是客户端
  * 999 级占位、3959/4963 是真端前置被取消的禁用占位、29706 在客户端 quest.xml 与真端 quest.xml 中都不存在）
- * 保持隔离，仅登记证据（审计脚本 CUTSCENE_HIDDEN_QUEST_REGISTRY 与 docs/QUEST_CATALOG 系列文档）。
+ * 保持隔离，仅登记证据（审计脚本 CUTSCENE_HIDDEN_QUEST_REGISTRY 与社区任务目录（生成物不入库））。
  * <p>
  * Batch 30 contract for the retail "cutscene playback hidden quest" family: the journal has blank <step> slots, so
  * the definition is enter-world + play cutscene + complete on movie end, with no reward row. 18744/28744 are the

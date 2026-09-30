@@ -18,7 +18,7 @@ REPO = next(p for p in Path(__file__).resolve().parents if (p / "pom.xml").is_fi
 DRIFT = REPO / 'src/test/resources/quest/retail-data-driven-drift.tsv'
 HANDIN = REPO / 'src/main/resources/aion/data/static_data/quest_retail/quest_client_handin_pages.tsv'
 ACTIONS = REPO / 'docs/quest/client-dialog-mapping/quest-dialog-action-details.csv'
-XML_REL = 'src/main/resources/aion/data/static_data/quest_definition/quests'
+XML_REL = 'src/main/resources/aion/data/static_data/quest/definitions/quests'
 
 
 def adopted_ids():

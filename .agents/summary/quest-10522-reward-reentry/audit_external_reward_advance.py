@@ -20,7 +20,7 @@ from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[3]
 JAVA_ROOT = REPO / "src/main/java"
-QUEST_DIR = REPO / "src/main/resources/aion/data/static_data/quest_definition/quests"
+QUEST_DIR = REPO / "src/main/resources/aion/data/static_data/quest/definitions/quests"
 
 # 引擎内写入方（questEngine 包）与管理员/GM 指令不属于“引擎外推进”，不参与本审计。
 EXCLUDED_PATH_PARTS = (
@@ -157,7 +157,7 @@ def main() -> int:
     rows = []
     for writer in scan_writers(args.revision):
         for quest_id in writer["questIds"]:
-            rel = f"src/main/resources/aion/data/static_data/quest_definition/quests/{quest_id}.xml"
+            rel = f"src/main/resources/aion/data/static_data/quest/definitions/quests/{quest_id}.xml"
             if not (REPO / rel).exists():
                 continue
             try:

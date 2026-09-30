@@ -8,7 +8,7 @@ server launch mode: not captured（服务端由用户管理）
 
 repository commit: `bd782024d`（`fix(quest): consume 14023 temple fragments on turn in and align castor dialogs`）
 
-working tree: dirty；本次修复提交仅包含 `../../../src/main/resources/aion/data/static_data/quest_definition/quests/14023.xml` 和 `../../../src/test/java/com/aionemu/gameserver/questEngine/definition/Quest14023ClientDialogAlignmentTest.java`；其他已修改和未跟踪文件属于工作区其他任务，均保留未提交。
+working tree: dirty；本次修复提交仅包含 `../../../src/main/resources/aion/data/static_data/quest/definitions/quests/14023.xml` 和 `../../../src/test/java/com/aionemu/gameserver/questEngine/definition/Quest14023ClientDialogAlignmentTest.java`；其他已修改和未跟踪文件属于工作区其他任务，均保留未提交。
 
 Aion 5.8 client/data provenance: Aion 5.8 客户端；仓库证据为 `../../../docs/quest/client-dialog-mapping/quest-dialog-pages.csv`、`quest-dialog-action-details.csv` 和 `quest-order-audit.csv`，对应 `quest_q14023.html`，source SHA-256 `083e5222441019c450aa1f96f6577251ea3e7513bdbfb6070a812578d139e8fa`；本次未重新采集客户端包哈希。
 

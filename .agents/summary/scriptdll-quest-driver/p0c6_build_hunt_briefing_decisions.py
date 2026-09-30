@@ -36,7 +36,7 @@ CHAINS = REPO / 'src/main/resources/aion/data/static_data/quest_retail/quest_cli
 REPORT_PAGES = REPO / 'src/main/resources/aion/data/static_data/quest_retail/quest_client_report_pages.tsv'
 NPC_INDEX = HERE / 'npc_name_index.tsv'
 MONSTER = Path(f"{REPO.parent / 'PycharmProjects' / 'unpak'}/Quest_unpacked/quest_monster.csv")
-QUESTS = REPO / 'src/main/resources/aion/data/static_data/quest_definition/quests'
+QUESTS = REPO / 'src/main/resources/aion/data/static_data/quest/definitions/quests'
 PROD_DECISIONS = REPO / 'src/test/resources/quest/retail-simple-hunt-adjudicated-decisions.tsv'
 WORK_DECISIONS = HERE / 'p0c6-simple-hunt-briefing-decisions.tsv'
 HEADER = [
@@ -137,7 +137,7 @@ def xml_dialog_axes(quest_id):
 
 def head_xml(quest_id):
 	"""git HEAD 里的（退役前）生产 XML；不存在返回空串。 / The pre-retirement XML from git HEAD."""
-	rel = 'src/main/resources/aion/data/static_data/quest_definition/quests/%d.xml' % quest_id
+	rel = 'src/main/resources/aion/data/static_data/quest/definitions/quests/%d.xml' % quest_id
 	proc = subprocess.run(['git', 'show', 'HEAD:' + rel], cwd=REPO, capture_output=True, text=True)
 	return proc.stdout if proc.returncode == 0 else ''
 

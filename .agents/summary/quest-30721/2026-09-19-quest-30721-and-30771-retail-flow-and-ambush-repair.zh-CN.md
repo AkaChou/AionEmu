@@ -43,13 +43,13 @@
 1. **`src/main/resources/aion/data/static_data/zones/zones_quest.xml`**：
    - 补齐 Cygnea (210070000) 的 `LF5_ITEMUSEAREA_Q30721`（球心 152.65, 1430.13, 488.10，半径 41.04）。
    - 补齐 Enshar (220080000) 的 `DF5_ITEMUSEAREA_Q30771`（球心 2924.01, 1672.71, 322.26，半径 58.71）。
-2. **`src/main/resources/aion/data/static_data/quest_definition/quests/30721.xml`**：
+2. **`src/main/resources/aion/data/static_data/quest/definitions/quests/30721.xml`**：
    - `s2 -> s3`（`item-play 182215698`）：增加 `spawn-npc-at-player`（德拉坎 236654 x2）。
    - `s3` 对话与 `s3 -> reward`：增加 `despawn-npc` 清理偷袭怪。
    - 移除 804704 的所有 `reward` / `npc-complete` 路由。
    - 804870 的 `npc-complete` 移除 `USE_OBJECT` 预览动作，保留 `SELECT_QUEST_REWARD`。
    - 增加 `enter-world` 下 `status=REWARD` 自愈为 `var0=4`。
-3. **`src/main/resources/aion/data/static_data/quest_definition/quests/30771.xml`**：
+3. **`src/main/resources/aion/data/static_data/quest/definitions/quests/30771.xml`**：
    - 镜像应用上述所有修正（804728 仅接取，804871 唯一领奖，偷袭怪生成与清理，自愈与预览动作收敛）。
 4. **`src/test/java/com/aionemu/gameserver/questEngine/definition/Quest30721And30771RetailFlowTest.java`**：
    - 新增端到端单元测试，全覆盖 30721 与 30771 从接取、中途对话、道具使用、袭击怪生成/销毁、到单 NPC 报告领奖的全流程与区域覆盖判定。

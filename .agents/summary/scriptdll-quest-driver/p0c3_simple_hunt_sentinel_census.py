@@ -80,7 +80,7 @@ def resolve(index, name):
 
 
 def universe():
-    catalog = read(REPO / 'src/main/resources/aion/data/static_data/quest_definition/quest_definition_catalog.xml')
+    catalog = read(REPO / 'src/main/resources/aion/data/static_data/quest/definitions/quest_definition_catalog.xml')
     ids = {int(x) for x in re.findall(r'<definition id="(\d+)"', catalog)}
     for line in read(RETAIL / 'retail-xml-retention.tsv').splitlines():
         if line.startswith('#') or not line.strip():

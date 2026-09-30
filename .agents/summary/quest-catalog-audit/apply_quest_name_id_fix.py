@@ -7,7 +7,7 @@ import re
 import xml.etree.ElementTree as ET
 
 REPO_ROOT = f"{REPO}"
-PROD_DIR = os.path.join(REPO_ROOT, "src/main/resources/aion/data/static_data/quest_definition/quests")
+PROD_DIR = os.path.join(REPO_ROOT, "src/main/resources/aion/data/static_data/quest/definitions/quests")
 QUEST_DATA_PATH = os.path.join(REPO_ROOT, "src/main/resources/aion/data/static_data/quest_data/quest_data.xml")
 CLIENT_STRINGS_PATH = f"{REPO.parent / 'PycharmProjects' / 'unpak'}/data_unpacked/Strings/client_strings_quest.xml"
 CLIENT_QUEST_PATH = f"{REPO.parent / 'PycharmProjects' / 'unpak'}/Quest_unpacked/quest.xml"

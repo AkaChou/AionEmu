@@ -19,7 +19,7 @@ import sys
 import xml.etree.ElementTree as ET
 
 DIALOG_ROOTS = glob.glob(f"{REPO.parent / 'PycharmProjects' / 'unpak'}/data_unpacked/Dialogs/*")
-QUEST_DIR = "src/main/resources/aion/data/static_data/quest_definition/quests"
+QUEST_DIR = "src/main/resources/aion/data/static_data/quest/definitions/quests"
 # quest id -> (kill phase walk already verified; 24011 is excluded: 6 kill transitions vs client /5)
 QUESTS = [14011, 14014, 14021, 14022, 24013, 24014, 24015]
 TRANSITION_RE = re.compile(r"<transition\b.*?</transition>", re.S)

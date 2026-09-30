@@ -5,7 +5,7 @@ from __future__ import annotations
 from pathlib import Path
 from xml.etree import ElementTree as ET
 
-QUEST_DIR = Path("src/main/resources/aion/data/static_data/quest_definition/quests")
+QUEST_DIR = Path("src/main/resources/aion/data/static_data/quest/definitions/quests")
 PAGE_ID = {"SHOW_SELECT_QUEST_REWARD_WINDOW%d" % n: (5, 6, 7, 8, 45, 46)[n - 1] for n in range(1, 7)}
 TIER_PAGE = (5, 6, 7, 8, 45, 46)
 ID_TO_TIER = {pid: tier for tier, pid in enumerate(TIER_PAGE)}

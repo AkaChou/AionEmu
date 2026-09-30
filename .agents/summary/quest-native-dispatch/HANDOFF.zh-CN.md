@@ -151,7 +151,7 @@ R1–R4 只是开场收尾（批 0）。
    源码与台账分提交（本仓既有惯例 `feat/fix(quest)` + `docs(quest)`）；提交信息以
    `Co-Authored-By: Claude Code <noreply@anthropic.com>` 结尾；**AI 中间产物（未跟踪的 dumps）不入库**。
 4. **受理 flip = 三件套同片**：`retail-xml-retention.tsv` owner 翻转 + **遗留 XML 退役**
-   （`quest_definition/quests/<id>.xml`）+ `quest_definition_catalog.xml` 条目删除；
+   （`quest/definitions/quests/<id>.xml`）+ `quest_definition_catalog.xml` 条目删除；
    并**清理 `target/` 孤副本**（否则生产视图继续按"XML 存在"判 owner，级联十几条"生产视图不可读"错误）。
 5. **drift/指纹重冻只写本片变化面**：与在册登记不一致的 foreign 行（并行车道「在册红」，代表：
    DD drift 的 `20035`）**必须按原值回置**——把它改绿 = REMOVED 1，违反判据③。

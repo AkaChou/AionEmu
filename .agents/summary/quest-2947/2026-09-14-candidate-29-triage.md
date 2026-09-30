@@ -16,7 +16,7 @@
 
 ## 扫描口径
 
-全量扫描 `quest_definition/quests/*.xml`：与 `complete-quest` 同事务、带有正数 `remove-item`、且该物品在 `metadata/items` 中声明、且没有 `has-item` 守卫的完成路由，共 46 条路由 / 36 个物品 / 31 个任务。
+全量扫描 `quest/definitions/quests/*.xml`：与 `complete-quest` 同事务、带有正数 `remove-item`、且该物品在 `metadata/items` 中声明、且没有 `has-item` 守卫的完成路由，共 46 条路由 / 36 个物品 / 31 个任务。
 
 - 其中 7 个物品的任务在 `origin/history` 里有旧 handler（11031、11032、2392 的 3 个物品、30003、30103），单列为“额外发现”。
 - 剩余 29 个物品对应 29 个任务，即上一轮标记的 `EVIDENCE_REQUIRED` 集合，也是本轮的排查对象。

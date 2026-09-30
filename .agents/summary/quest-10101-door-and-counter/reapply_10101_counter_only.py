@@ -10,8 +10,8 @@ import re
 import subprocess
 import sys
 
-PATH = "src/main/resources/aion/data/static_data/quest_definition/quests/10101.xml"
-HEAD = "HEAD:src/main/resources/aion/data/static_data/quest_definition/quests/10101.xml"
+PATH = "src/main/resources/aion/data/static_data/quest/definitions/quests/10101.xml"
+HEAD = "HEAD:src/main/resources/aion/data/static_data/quest/definitions/quests/10101.xml"
 
 COMMENT = (
     "    <!-- var2：卫兵击杀计数，客户端 quest_summary 第三行读取 SECTION_2（[%8]/2）；\n"

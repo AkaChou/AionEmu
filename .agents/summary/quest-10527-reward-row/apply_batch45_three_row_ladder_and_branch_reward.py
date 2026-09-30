@@ -40,7 +40,7 @@ import sys
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[3]
-QUESTS = REPO / "src/main/resources/aion/data/static_data/quest_definition/quests"
+QUESTS = REPO / "src/main/resources/aion/data/static_data/quest/definitions/quests"
 QUEST_IDS = (1938, 2922)
 
 # 1938 owner：接取/报告 = 203703 Likasas；行 0 = 798069 Shugo_LF3_1；行 1 = 805836 LF3_Nakaching_E

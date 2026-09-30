@@ -18,7 +18,7 @@ from collections import Counter
 REPO = pathlib.Path(__file__).resolve().parents[3]
 RETAIL = REPO / "src/main/resources/aion/data/static_data/quest_retail/Quest_CombineTask.xml"
 RETENTION = REPO / "src/main/resources/aion/data/static_data/quest_retail/retail-xml-retention.tsv"
-QUESTS = REPO / "src/main/resources/aion/data/static_data/quest_definition/quests"
+QUESTS = REPO / "src/main/resources/aion/data/static_data/quest/definitions/quests"
 ITEM_DIR = REPO / "src/main/resources/aion/data/static_data/items/item"
 NPC_DIR = REPO / "src/main/resources/aion/data/static_data/npcs"
 RECIPES = REPO / "src/main/resources/aion/data/static_data/recipe/recipe_templates.xml"

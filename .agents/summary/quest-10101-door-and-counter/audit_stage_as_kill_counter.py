@@ -18,7 +18,7 @@ import glob
 import re
 import xml.etree.ElementTree as ET
 
-QUEST_GLOB = "src/main/resources/aion/data/static_data/quest_definition/quests/*.xml"
+QUEST_GLOB = "src/main/resources/aion/data/static_data/quest/definitions/quests/*.xml"
 DIALOG_ROOTS = glob.glob(f"{REPO.parent / 'PycharmProjects' / 'unpak'}/data_unpacked/Dialogs/*")
 CLIENT_CSV = (f"{REPO.parent / 'PycharmProjects' / 'unpak'}/Quest_unpacked/quest_monster.csv",
               f"{REPO.parent / 'PycharmProjects' / 'unpak'}/Quest_unpacked/quest_script_monster.csv")

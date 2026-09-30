@@ -5,7 +5,7 @@ quest: 1311「A Germ Of Hope / 希望的苗木」
 user acceptance confirmation: 用户原话“验收完成”；2026-08-28；确认范围为整个任务
 server launch mode: not captured
 repository commit: 3721d0801
-working tree: dirty；本次相关路径为 quest_definition/quests/1311.xml 和 Quest1311ClientDialogAlignmentTest.java，工作区另有与本修复无关的改动
+working tree: dirty；本次相关路径为 quest/definitions/quests/1311.xml 和 Quest1311ClientDialogAlignmentTest.java，工作区另有与本修复无关的改动
 Aion 5.8 client/data provenance: Aion 5.8 客户端；仓库证据见 docs/quest/client-dialog-mapping/quest-dialog-pages.csv、quest-dialog-action-details.csv；newly collected SHA-256: not captured
 npc template/object: NPC template 203997；interaction object template 700164；runtime object ID: not captured
 map/instance: world 210020000（Eltnen）；instance: not captured；entry/reentry context: not captured

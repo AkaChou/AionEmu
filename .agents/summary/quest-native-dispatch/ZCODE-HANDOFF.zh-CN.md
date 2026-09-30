@@ -89,7 +89,7 @@ R4 W7 收口：README 全片台账、记忆库 QE 覆盖、迁移总量复算（
    ② 链门/家族门绿；③ **T1/T2/T3 `ADDED 0 / REMOVED 0`**，更强口径 = 红身份集 **sha256 逐字节相同**。
 2. **不 push**；**提交仅在用户当轮显式授权后进行**（源码 / 台账分提交，`git add <显式路径>`，禁 `git add -A`）；
    **不启停、不重启任何服务器进程**；不新增页码类 TSV。
-3. **受理 flip = 三件套同片**：`retail-xml-retention.tsv` owner 翻转 + **遗留 XML 退役**（`quest_definition/quests/<id>.xml`）
+3. **受理 flip = 三件套同片**：`retail-xml-retention.tsv` owner 翻转 + **遗留 XML 退役**（`quest/definitions/quests/<id>.xml`）
    + `quest_definition_catalog.xml` 条目删除；并**清理 `target/` 孤副本**（否则生产视图继续按"XML 存在"判 owner，
    级联十几条"生产视图不可读"错误）。
 4. **drift/指纹重冻只写本片变化面**：与在册登记不一致的 foreign 行（并行车道的「在册红」，代表：DD drift 的

@@ -95,7 +95,7 @@ def legacy_handler(quest_id: int) -> tuple[str, list[str]]:
 
 
 def xml_nodes(quest_id: int) -> tuple[str, str]:
-    path = REPO / 'src/main/resources/aion/data/static_data/quest_definition/quests' / f'{quest_id}.xml'
+    path = REPO / 'src/main/resources/aion/data/static_data/quest/definitions/quests' / f'{quest_id}.xml'
     if not path.is_file():
         return 'NO_DEFINITION', ''
     text = path.read_text(encoding='utf-8')

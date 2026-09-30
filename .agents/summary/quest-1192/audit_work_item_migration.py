@@ -12,8 +12,8 @@ from pathlib import Path
 
 ROOT = Path(".").resolve()
 QUEST_DATA = ROOT / "src/main/resources/aion/data/static_data/quest_data/quest_data.xml"
-DEF_DIR = ROOT / "src/main/resources/aion/data/static_data/quest_definition/quests"
-CATALOG = ROOT / "src/main/resources/aion/data/static_data/quest_definition/quest_definition_catalog.xml"
+DEF_DIR = ROOT / "src/main/resources/aion/data/static_data/quest/definitions/quests"
+CATALOG = ROOT / "src/main/resources/aion/data/static_data/quest/definitions/quest_definition_catalog.xml"
 
 legacy = {}
 for quest in ET.parse(QUEST_DATA).getroot().iter("quest"):

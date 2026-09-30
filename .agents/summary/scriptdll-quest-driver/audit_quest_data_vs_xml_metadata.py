@@ -21,7 +21,7 @@ from collections import Counter, defaultdict
 
 REPO = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", ".."))
 QUEST_DATA = os.path.join(REPO, "src/main/resources/aion/data/static_data/quest_data/quest_data.xml")
-PROD_DIR = os.path.join(REPO, "src/main/resources/aion/data/static_data/quest_definition/quests")
+PROD_DIR = os.path.join(REPO, "src/main/resources/aion/data/static_data/quest/definitions/quests")
 OUT_TSV = os.path.join(os.path.dirname(os.path.abspath(__file__)), "quest-data-vs-xml-metadata-audit.tsv")
 
 UNLIMITED = "UNLIMITED"

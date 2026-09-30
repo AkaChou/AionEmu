@@ -11,7 +11,7 @@ import re
 import sys
 from pathlib import Path
 
-DEF_DIR = Path("src/main/resources/aion/data/static_data/quest_definition/quests")
+DEF_DIR = Path("src/main/resources/aion/data/static_data/quest/definitions/quests")
 PRECEDING = ["races", "classes", "gender", "repeat", "prerequisites", "items", "inventory-items"]
 BLOCK = re.compile(r"^[ \t]*<work-items>.*?^[ \t]*</work-items>[ \t]*\n?", re.M | re.S)
 

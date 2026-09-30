@@ -47,7 +47,7 @@
 
 ## 验证
 
-- `xmllint --noout --schema src/main/resources/aion/data/static_data/quest_definition/quest_definition.xsd`：10100、20100 均通过。
+- `xmllint --noout --schema src/main/resources/aion/data/static_data/quest/definitions/quest_definition.xsd`：10100、20100 均通过。
 - Python XML 解析：通过。
 - `git diff --check`：通过。
 - IntelliJ 文件检查：两个 XML 和新测试均无错误。
@@ -66,8 +66,8 @@ rtk mvn -q -Dtest=Quest10100And20100ItemUseRemovalTest,QuestUseItemRewardCleanup
 
 ## 修改文件
 
-- `src/main/resources/aion/data/static_data/quest_definition/quests/10100.xml`
-- `src/main/resources/aion/data/static_data/quest_definition/quests/20100.xml`
+- `src/main/resources/aion/data/static_data/quest/definitions/quests/10100.xml`
+- `src/main/resources/aion/data/static_data/quest/definitions/quests/20100.xml`
 - `src/test/java/com/aionemu/gameserver/questEngine/definition/Quest10100And20100ItemUseRemovalTest.java`
 - `src/test/java/com/aionemu/gameserver/questEngine/definition/QuestUseItemRewardCleanupGateTest.java`
 - `.agents/summary/quest-10100/audit_use_item_reward_cleanup.py`

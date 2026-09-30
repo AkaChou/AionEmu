@@ -27,7 +27,7 @@ import sys
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
-QUEST_DIR = REPO_ROOT / "src/main/resources/aion/data/static_data/quest_definition/quests"
+QUEST_DIR = REPO_ROOT / "src/main/resources/aion/data/static_data/quest/definitions/quests"
 MIGRATION_MARKER = "<!-- SECTION_0 migration repair: legacy REWARD saves -->"
 NODE_RE = re.compile(r'<node label="(\w+)"[^>]*>.*?</node>', re.S)
 TRANSITION_RE = re.compile(r"<transition\b.*?</transition>", re.S)

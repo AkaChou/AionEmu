@@ -185,7 +185,6 @@ Ports and advertised addresses are configured in [`network.properties`](src/main
 
 - [A* PATH pathfinding plan](docs/PATH_ASTAR_REFACTOR_PLAN.md)
 - [Static data XML → JSONL migration plan](docs/STATIC_DATA_JSONL_MIGRATION.zh-CN.md)
-- [Quest catalog](docs/QUEST_CATALOG.zh-CN.md)
 - [Quest writing guide](docs/quest/WRITING_GUIDE.md) / [中文](docs/quest/WRITING_GUIDE.zh-CN.md)
 - [Quest repair playbook](docs/quest/QUEST_REPAIR_PLAYBOOK.zh-CN.md)
 - [Quest client-dialog mapping](docs/quest/client-dialog-mapping/README.zh-CN.md)

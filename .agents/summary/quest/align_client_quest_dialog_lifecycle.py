@@ -361,7 +361,7 @@ def scan(
     client_pages_by_id: dict[tuple[int, int], ClientPage] | None = None,
 ) -> list[Alignment]:
     client_pages_by_id = client_pages_by_id or {}
-    quest_dir = root / "src/main/resources/aion/data/static_data/quest_definition/quests"
+    quest_dir = root / "src/main/resources/aion/data/static_data/quest/definitions/quests"
     rows: list[Alignment] = []
     for path in sorted(quest_dir.glob("*.xml"), key=lambda candidate: int(candidate.stem)):
         quest_id = int(path.stem)

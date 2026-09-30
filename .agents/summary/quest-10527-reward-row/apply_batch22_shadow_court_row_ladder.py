@@ -37,7 +37,7 @@ from pathlib import Path
 
 QUEST_ID = "24046"
 QUEST_FILE = (Path(__file__).resolve().parents[3]
-              / "src/main/resources/aion/data/static_data/quest_definition/quests"
+              / "src/main/resources/aion/data/static_data/quest/definitions/quests"
               / f"{QUEST_ID}.xml")
 
 # ------------------------------------------------------------------ 精确锚点 / exact anchors

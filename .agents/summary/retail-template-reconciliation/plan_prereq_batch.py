@@ -18,7 +18,7 @@ from pathlib import Path
 REPO = next(p for p in Path(__file__).resolve().parents if (p / "pom.xml").is_file())
 
 RETAIL_QUEST_XML = Path(f"{REPO.parent / '58Server'}/Map/XML/quest.xml")
-QUESTS = Path(f"{REPO}/src/main/resources/aion/data/static_data/quest_definition/quests")
+QUESTS = Path(f"{REPO}/src/main/resources/aion/data/static_data/quest/definitions/quests")
 HERE = Path(__file__).resolve().parent
 
 

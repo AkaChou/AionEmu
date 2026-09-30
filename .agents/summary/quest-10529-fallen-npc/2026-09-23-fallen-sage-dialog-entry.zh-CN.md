@@ -20,7 +20,7 @@
 ## 已执行 / 待执行
 
 - 修复前静态探针：10529 的 `s9/806294/USE_OBJECT → SELECT10` 路由数为 0，复现首次点击回退到通用 page 10 的入口缺口；20529 同形。修复后两侧各 1 条；客户端动作图和 XML 目标阶段/后置顺序静态核对通过。
-- `xmllint --noout --schema src/main/resources/aion/data/static_data/quest_definition/quest_definition.xsd` 对两份 XML 均通过；`git diff --check` 通过；IDEA 的 Java 测试文件错误检查为 0。这些检查不代替编译或游戏实机验证。
+- `xmllint --noout --schema src/main/resources/aion/data/static_data/quest/definitions/quest_definition.xsd` 对两份 XML 均通过；`git diff --check` 通过；IDEA 的 Java 测试文件错误检查为 0。这些检查不代替编译或游戏实机验证。
 - 2026-09-24 用户授权后执行 `mvn -B test -Dtest='JournalReportRowSplitContractTest,ProductionCatalogWhitelistVerificationTest,QuestDefinitionCatalogManifestTest'`：20 例通过、失败 0、错误 0、跳过 0、BUILD SUCCESS；分别为 9/1/10 例。当前工作区生产门禁输出 `PRODUCTION_COMPILE_OK=2441`、`PRODUCTION_COMPILE_FAILURES=0`、`PRODUCTION_INTERACTION_OBJECT_FAILURES=0`、`PRODUCTION_WHITELIST_VIOLATIONS=0`。该计数是本次工作区运行结果，不与旧目录规模混用。
 - 验收前预期：首次点击倒下的德扎波波应下发 `questId=10529/page=4080`，依次 4081、4082；点击页内结束对话应上行 `10009`，下发 `START/var0=10`、发物品并传送，随后到代理人报告。20529 为独立客户端验收；若以后仍只见 questId=0/page10，需确认服务器实际载入的定义版本和该 NPC 的模板 ID。
 

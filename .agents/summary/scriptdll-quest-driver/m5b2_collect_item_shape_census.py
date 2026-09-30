@@ -13,7 +13,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from m5a2_simple_collect_item_name_resolution import family_ids, retail_rows  # noqa: E402
 
 REPO = next(p for p in Path(__file__).resolve().parents if (p / "pom.xml").is_file())
-QUESTS = REPO / "src/main/resources/aion/data/static_data/quest_definition/quests"
+QUESTS = REPO / "src/main/resources/aion/data/static_data/quest/definitions/quests"
 
 
 def collect(qid):

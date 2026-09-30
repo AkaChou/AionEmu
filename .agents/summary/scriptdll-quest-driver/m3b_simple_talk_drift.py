@@ -12,7 +12,7 @@
 
 三方数据源：
 - 真端合成器：Java 侧 RetailSimpleTalkDefinitionCompiler（每轮由 Maven 门禁导出分类，见 pending TSV）
-- 生产 XML：quest_definition/quests/<id>.xml（reward 投影、var0 值域、可见行集合）
+- 生产 XML：quest/definitions/quests/<id>.xml（reward 投影、var0 值域、可见行集合）
 - 客户端：data_unpacked/Dialogs/QUEST_Q<id>.html 的 quest_summary 行清单 +
   Quest_unpacked/quest_monster.csv 的 Progress(SECTION_n<X; SECTION_5==0) 客户端进度声明
 

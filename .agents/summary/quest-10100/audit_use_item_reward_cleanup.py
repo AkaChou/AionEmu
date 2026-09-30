@@ -31,7 +31,7 @@ def int_attr(element: ET.Element, attribute: str) -> int:
 
 
 def audit(root: Path) -> list[dict[str, object]]:
-    quest_dir = root / "src/main/resources/aion/data/static_data/quest_definition/quests"
+    quest_dir = root / "src/main/resources/aion/data/static_data/quest/definitions/quests"
     rows: list[dict[str, object]] = []
     for path in sorted(quest_dir.glob("*.xml")):
         definition = ET.parse(path).getroot()

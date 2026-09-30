@@ -10,7 +10,7 @@ import re, csv, pathlib, collections
 
 ROOT = REPO
 SD = ROOT / "src/main/resources/aion/data/static_data"
-Q = SD / "quest_definition/quests"
+Q = SD / "quest/definitions/quests"
 CSV = pathlib.Path(f"{REPO.parent / 'PycharmProjects' / 'unpak'}/Quest_unpacked/quest_monster.csv")
 
 names = collections.defaultdict(list)

@@ -15,7 +15,7 @@
 
 - `quest_client_hunt_progress_rows.tsv`、`quest_client_hunt_stages.tsv`、
   `quest_client_kill_targets_stages.tsv` 的源 = 入仓 `quest_monster.csv` + `npc_template` ⇒ **可构建期重放**；
-- `quest_client_kill_targets.tsv` 的源 = **45 个 ZONE 任务 XML**（`quest_definition/quests/*.xml`），
+- `quest_client_kill_targets.tsv` 的源 = **45 个 ZONE 任务 XML**（`quest/definitions/quests/*.xml`），
   而这 45 个 XML **45/45 已随真端迁移退役**（实测缺失）⇒ 生成链早已断裂，不能构建期重放。
   该表由 P4c 单源冻结保留为唯一权威（G3 pin 已转 `SINGLE_SOURCE`）。
 

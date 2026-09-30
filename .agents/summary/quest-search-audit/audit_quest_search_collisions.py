@@ -91,7 +91,7 @@ ambiguous_bodies = {body: ids for body, ids in body_to_npc_ids.items() if len(id
 print(f"Found {len(ambiguous_bodies)} display names that map to multiple NPC IDs across all NPCs")
 
 # 3. Now let's check which active quests actually use these ambiguous NPCs or dic links
-quest_files = glob.glob("src/main/resources/aion/data/static_data/quest_definition/quests/*.xml")
+quest_files = glob.glob("src/main/resources/aion/data/static_data/quest/definitions/quests/*.xml")
 print(f"Scanning {len(quest_files)} server quest XML files...")
 
 quest_npc_regex = re.compile(r'npc-id="(\d+)"')

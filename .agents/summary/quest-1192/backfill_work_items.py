@@ -13,8 +13,8 @@ from pathlib import Path
 
 ROOT = Path(".").resolve()
 QUEST_DATA = ROOT / "src/main/resources/aion/data/static_data/quest_data/quest_data.xml"
-DEF_DIR = ROOT / "src/main/resources/aion/data/static_data/quest_definition/quests"
-CATALOG = ROOT / "src/main/resources/aion/data/static_data/quest_definition/quest_definition_catalog.xml"
+DEF_DIR = ROOT / "src/main/resources/aion/data/static_data/quest/definitions/quests"
+CATALOG = ROOT / "src/main/resources/aion/data/static_data/quest/definitions/quest_definition_catalog.xml"
 
 # 上一轮审计确认的「无声明且无兜底」任务。1192 单独手工修复。
 MISSING = """1218 1319 1322 1324 1345 1371 1422 1452 1464 1469 1483 1484 1527 1528 1634 1636 1643 1721 1724 1725

@@ -67,7 +67,7 @@ def main():
     names = {q.findtext("name").lower(): qid for qid, q in retail.items()}
     names.update({f"q{qid}": qid for qid in retail})
     prod = {int(p.stem): ET.parse(p).getroot().find("metadata")
-            for p in (ROOT / "src/main/resources/aion/data/static_data/quest_definition/quests").glob("*.xml")}
+            for p in (ROOT / "src/main/resources/aion/data/static_data/quest/definitions/quests").glob("*.xml")}
     counts = {}
     with args.output.open("w", encoding="utf-8", newline="") as out:
         writer = csv.writer(out, delimiter="\t", lineterminator="\n")

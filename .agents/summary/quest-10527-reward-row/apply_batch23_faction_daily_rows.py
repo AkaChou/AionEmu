@@ -48,7 +48,7 @@ from pathlib import Path
 
 QUEST_ID = "39713"
 QUEST_FILE = (Path(__file__).resolve().parents[3]
-              / "src/main/resources/aion/data/static_data/quest_definition/quests"
+              / "src/main/resources/aion/data/static_data/quest/definitions/quests"
               / f"{QUEST_ID}.xml")
 
 NPCS = ("800936", "800937", "800938")

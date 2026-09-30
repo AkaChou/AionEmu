@@ -3,7 +3,7 @@
 - 时间：2026-09-20（用户提供 14:30–14:31 实机 QUEST-TRACE 与任务追踪截图）
 - 玩家：Ww（截图显示第 3 行「消灭巴鲁纳次元研究所中的次元研究所卫兵 (/2)」带 [完成] 徽标）
 - 客户端权威：`Quest.pak` / `data/Dialogs/10000_19999/quest_q10101.html`；解包根 `<客户端解包根>`
-- 相关文件：`src/main/resources/aion/data/static_data/quest_definition/quests/10101.xml`、`20101.xml`
+- 相关文件：`src/main/resources/aion/data/static_data/quest/definitions/quests/10101.xml`、`20101.xml`
 - 本轮改动状态：已改 9 个任务 XML（10101/20101 + 7 个同族，未提交）；门禁已跑（见第十三节），未实机复验
 - ⚠️ 第十二节的「行号探针假设 A/B」在第十三节被证伪/收敛：**不要**把 SECTION_0 直接当 HTML 行号改写阶段
 

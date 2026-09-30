@@ -22,10 +22,10 @@ MANIFEST_MAIN = REPO / "src/main/resources/aion/data/static_data/quest_retail/re
 MANIFEST_TEST = REPO / "src/test/resources/quest/retail-xml-retention.tsv"
 MANIFEST_TARGET_MAIN = REPO / "target/classes/aion/data/static_data/quest_retail/retail-xml-retention.tsv"
 MANIFEST_TARGET_TEST = REPO / "target/test-classes/quest/retail-xml-retention.tsv"
-CATALOG_MAIN = REPO / "src/main/resources/aion/data/static_data/quest_definition/quest_definition_catalog.xml"
-CATALOG_TARGET = REPO / "target/classes/aion/data/static_data/quest_definition/quest_definition_catalog.xml"
-QUESTS_MAIN = REPO / "src/main/resources/aion/data/static_data/quest_definition/quests"
-QUESTS_TARGET = REPO / "target/classes/aion/data/static_data/quest_definition/quests"
+CATALOG_MAIN = REPO / "src/main/resources/aion/data/static_data/quest/definitions/quest_definition_catalog.xml"
+CATALOG_TARGET = REPO / "target/classes/aion/data/static_data/quest/definitions/quest_definition_catalog.xml"
+QUESTS_MAIN = REPO / "src/main/resources/aion/data/static_data/quest/definitions/quests"
+QUESTS_TARGET = REPO / "target/classes/aion/data/static_data/quest/definitions/quests"
 
 FLIP_IDS = ("80290",)
 NEW_ROW = "{qid}\tRETAIL_TABLE\tSimpleTalk\tOK\tretired-xml-in-git-history p0c28-80290-heal-channel-flip.tsv basis=M3D_DOWNGRADE_REVERSED"
@@ -71,7 +71,7 @@ def main() -> int:
 				print(f"ABORT: expected quest XML missing: {xml}")
 				return 1
 			xml.unlink()
-		row = f'  <definition id="{qid}" resource="aion/data/static_data/quest_definition/quests/{qid}.xml" mode="EXECUTABLE" />\n'
+		row = f'  <definition id="{qid}" resource="aion/data/static_data/quest/definitions/quests/{qid}.xml" mode="EXECUTABLE" />\n'
 		for catalog in (CATALOG_MAIN, CATALOG_TARGET):
 			text = catalog.read_text(encoding="utf-8")
 			if text.count(row) != 1:

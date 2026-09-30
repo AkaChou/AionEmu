@@ -8,7 +8,7 @@
   被客户端丢弃，任务书停留在行 0；本任务客户端脚本是
   `Quest_unpacked/quest_script_monster.csv` 的 `1123,ProgressAll,,sensoryArea,,1,LF1_SensoryArea_Q88`
   —— 与同族 `1336`（12 个感应区影片，全部 `ProgressAll sensoryArea`）同型。
-- 同族权威范式（1336，`quest_definition/quests/1336.xml`）：进入感应区的 transition 只做
+- 同族权威范式（1336，`quest/definitions/quests/1336.xml`）：进入感应区的 transition 只做
   `<play-movie>` 自环，行推进由客户端影片结束回调
   （`CM_PLAY_MOVIE_END` -> `QuestEvent.MovieEnd`）在同一 tick 之后的 `<movie-end>` transition 里
   以 `sync-quest-state` 落盘；QE-024 也正是这条“影片推进必须实现明确状态迁移、不得留纯电影自环”的边界。
@@ -30,7 +30,7 @@ import sys
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[3]
-QUESTS = REPO / "src/main/resources/aion/data/static_data/quest_definition/quests"
+QUESTS = REPO / "src/main/resources/aion/data/static_data/quest/definitions/quests"
 QUEST_ID = 1123
 ZONE = "LF1_SENSORY_AREA_Q1123_210010000"
 MOVIE_ID = 11

@@ -35,7 +35,7 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 REPO = HERE.parent.parent.parent
 CENSUS = HERE / 'p0c10e-talk-chain-census.tsv'
-QDIR = REPO / 'src/main/resources/aion/data/static_data/quest_definition/quests'
+QDIR = REPO / 'src/main/resources/aion/data/static_data/quest/definitions/quests'
 CLIENT_CSV = REPO / 'docs/quest/client-dialog-mapping/quest-dialog-pages.csv'
 CLIENT_ACTIONS = REPO / 'docs/quest/client-dialog-mapping/quest-dialog-action-details.csv'
 OUT = REPO / 'src/main/resources/aion/data/static_data/quest_retail/quest_client_talk_chain_steps.tsv'

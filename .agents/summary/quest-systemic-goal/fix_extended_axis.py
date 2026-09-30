@@ -25,7 +25,7 @@ import xml.etree.ElementTree as ET
 REPO = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", ".."))
 AUDIT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "tier-axis-audit.tsv")
 PROD_DIR = os.path.join(
-    REPO, "src/main/resources/aion/data/static_data/quest_definition/quests")
+    REPO, "src/main/resources/aion/data/static_data/quest/definitions/quests")
 
 # XSD 顺序：rewards/reward-groups 在 extended-rewards 之前，锚点按此优先
 ANCHORS = ["</rewards>", "</group>", "</work-items>", "</inventory-items>",

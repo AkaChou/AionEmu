@@ -10,7 +10,7 @@
 
 ## 相似前置扫描
 
-扫描范围为 `src/main/resources/aion/data/static_data/quest_definition/quests/*.xml` 的 metadata：
+扫描范围为 `src/main/resources/aion/data/static_data/quest/definitions/quests/*.xml` 的 metadata：
 
 - 6238 个任务定义全部解析成功，XML 解析错误 0。
 - metadata 中共 1925 条 `prerequisites/quest` 或 `type="finished"` 前置引用。
@@ -44,7 +44,7 @@
 
 ## 验证证据
 
-- `xmllint --noout --schema src/main/resources/aion/data/static_data/quest_definition/quest_definition.xsd src/main/resources/aion/data/static_data/quest_definition/quests/19055.xml`：通过。
+- `xmllint --noout --schema src/main/resources/aion/data/static_data/quest/definitions/quest_definition.xsd src/main/resources/aion/data/static_data/quest/definitions/quests/19055.xml`：通过。
 - 专项 Maven：
   `Quest19055ClientDialogAlignmentTest,QuestDialogOrderAuditTest,QuestDialogSequenceAuditTest,QuestDefinitionCatalogManifestTest,ProductionCatalogWhitelistVerificationTest`：通过。
 - 生产目录输出：`PRODUCTION_COMPILE_OK=6200`、`PRODUCTION_COMPILE_FAILURES=0`、`PRODUCTION_WHITELIST_VIOLATIONS=0`。

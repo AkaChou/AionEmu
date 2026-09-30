@@ -8,7 +8,7 @@
   验收记录见 `../quest-acceptance/10501-2026-09-19-client-accepted.md`。
 - 交付批次: 修复提交 `75312dcdc`（42 个 quest XML + 5 个测试类）；Playbook 案例 8.39、本文档与验收记录随
   第二个文档提交落地（按规则 14/16 两次本地提交，不 push）。
-- 范围: `src/main/resources/aion/data/static_data/quest_definition/quests/10501.xml`、
+- 范围: `src/main/resources/aion/data/static_data/quest/definitions/quests/10501.xml`、
   `src/test/java/com/aionemu/gameserver/questEngine/definition/Quest10501HandoverContinuationTest.java`；
   同形批处理另含 41 个任务 XML 与 3 个测试类（见第十节 10.2）。
 

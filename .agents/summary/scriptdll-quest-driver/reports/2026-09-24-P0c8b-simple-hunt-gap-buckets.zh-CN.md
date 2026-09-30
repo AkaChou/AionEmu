@@ -37,7 +37,7 @@
    T1 **42 例 / 1F**（唯一失败为并发会话 DataDriven 批的 `QuestClientContractGateTest` count=786）；
    T2 **260 例 / 3F / 0E**（3 个失败全部非本切片，见 §5.2）；T3 clean 见 §5.1（**本切片自因新增失败已归零**）。
 6. **过程教训（写进 §3 的警示框）**：非 clean 的 `mvn test` 看不见退役断链——被删 XML 残留在
-   `target/classes/...quest_definition/quests/`，直读 classpath XML 的测试会继续假绿；
+   `target/classes/...quest/definitions/quests/`，直读 classpath XML 的测试会继续假绿；
    本切片 T2 全绿而 clean 副本 T3 立刻抓到 `RewardOwnerTrimContractTest`。
    **退役类切片只能以 clean 副本 T3 为准。**
 
@@ -66,7 +66,7 @@
 | 生产 XML | 删除 154 个（`quests/1113.xml` … `quests/80455.xml` 等，见裁定表） |
 
 > **方法论发现（本切片最重要的过程教训）**：**非 clean 的 `mvn test`（主工作树）看不见退役断链**——
-> 被删的 XML 仍残留在 `target/classes/aion/data/static_data/quest_definition/quests/`，
+> 被删的 XML 仍残留在 `target/classes/aion/data/static_data/quest/definitions/quests/`，
 > 于是直读 classpath XML 的测试继续"绿"。本切片 T2（`gates/T2-182352.log`，260 例 / 3F）
 > 全绿，而 clean 隔离副本的 T3 立刻暴露 `RewardOwnerTrimContractTest`（读 4714.xml）。
 > 结论：**退役类切片必须以 clean 副本的 T3 为准**，T2 只能当"选择器是否命中"的粗筛。

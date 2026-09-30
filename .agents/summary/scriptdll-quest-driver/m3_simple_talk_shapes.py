@@ -15,7 +15,7 @@ import re
 
 REPO = pathlib.Path(__file__).resolve().parents[3]
 PROD = REPO / 'src/main/resources/aion/data/static_data'
-QUESTS = PROD / 'quest_definition/quests'
+QUESTS = PROD / 'quest/definitions/quests'
 TABLE = PROD / 'quest_retail/Quest_SimpleTalk.xml'
 CATALOG = PROD / 'quest_definition/quest_definition_catalog.xml'
 OUT = REPO / '.agents/summary/scriptdll-quest-driver/retail-simple-talk-shapes.tsv'

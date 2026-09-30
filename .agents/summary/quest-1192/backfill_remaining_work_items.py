@@ -10,8 +10,8 @@ import xml.etree.ElementTree as ET
 from pathlib import Path
 
 ROOT = Path(".").resolve()
-DEF_DIR = ROOT / "src/main/resources/aion/data/static_data/quest_definition/quests"
-CATALOG = ROOT / "src/main/resources/aion/data/static_data/quest_definition/quest_definition_catalog.xml"
+DEF_DIR = ROOT / "src/main/resources/aion/data/static_data/quest/definitions/quests"
+CATALOG = ROOT / "src/main/resources/aion/data/static_data/quest/definitions/quest_definition_catalog.xml"
 
 # 内容与 legacy 不一致, 不自动改: 4942 物品集完全不同; 19026/19032/29026/29032 含重复条目且顺序不同。
 EXCLUDE = {4942, 19026, 19032, 29026, 29032}

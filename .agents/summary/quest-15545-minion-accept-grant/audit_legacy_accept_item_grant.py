@@ -14,7 +14,7 @@ from pathlib import Path
 REPO = Path(__file__).resolve().parents[3]
 OUT = Path(__file__).resolve().parent
 REV = "7e9f0316c^"
-DEF_DIR = REPO / "src/main/resources/aion/data/static_data/quest_definition/quests"
+DEF_DIR = REPO / "src/main/resources/aion/data/static_data/quest/definitions/quests"
 
 GIVE_CALL = re.compile(r"giveQuestItem\s*\(\s*env\s*,\s*(\d+)\s*(?:,\s*([0-9]+))?")
 QUEST_ID_DECL = re.compile(r"questId\s*=\s*(\d+)")

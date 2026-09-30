@@ -11,7 +11,7 @@ from pathlib import Path
 
 REPO = next(p for p in Path(__file__).resolve().parents if (p / "pom.xml").is_file())
 TABLE = REPO / 'src/main/resources/aion/data/static_data/quest_retail/data_driven_quest.xml'
-CATALOG = REPO / 'src/main/resources/aion/data/static_data/quest_definition/quest_definition_catalog.xml'
+CATALOG = REPO / 'src/main/resources/aion/data/static_data/quest/definitions/quest_definition_catalog.xml'
 RETENTION = REPO / 'src/main/resources/aion/data/static_data/quest_retail/retail-xml-retention.tsv'
 OUT = REPO / '.agents/summary/scriptdll-quest-driver/p5-datadriven-shape-census.tsv'
 FAMILY = REPO / '.agents/summary/scriptdll-quest-driver/p5-datadriven-family.txt'

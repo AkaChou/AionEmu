@@ -20,7 +20,7 @@ import subprocess
 import xml.etree.ElementTree as ET
 from pathlib import Path
 
-QUEST_DIR = Path("src/main/resources/aion/data/static_data/quest_definition/quests")
+QUEST_DIR = Path("src/main/resources/aion/data/static_data/quest/definitions/quests")
 HANDLER_PREFIX = "src/main/java/com/aionemu/gameserver/quest/handlers/"
 SELECT_ACTIONS = {"QUEST_SELECT", "FINISH_DIALOG", "ASK_QUEST_ACCEPT"}
 ACCEPT_ACTIONS = {"QUEST_ACCEPT_1", "QUEST_ACCEPT_SIMPLE", "QUEST_ACCEPT_SIMPLE_1"}

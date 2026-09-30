@@ -15,7 +15,7 @@ from pathlib import Path
 REPO = next(p for p in Path(__file__).resolve().parents if (p / "pom.xml").is_file())
 
 RETAIL = Path(f"{REPO.parent / '58Server'}/Map/XML/quest.xml")
-QUESTS = Path("src/main/resources/aion/data/static_data/quest_definition/quests")
+QUESTS = Path("src/main/resources/aion/data/static_data/quest/definitions/quests")
 HERE = Path(__file__).resolve().parent
 ported = {int(p.stem) for p in QUESTS.glob("*.xml") if p.stem.isdigit()}
 

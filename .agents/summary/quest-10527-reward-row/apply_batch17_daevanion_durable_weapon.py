@@ -31,7 +31,7 @@ import sys
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[3]
-QUESTS = REPO / "src/main/resources/aion/data/static_data/quest_definition/quests"
+QUESTS = REPO / "src/main/resources/aion/data/static_data/quest/definitions/quests"
 
 COMMENT = """    <!-- QE-051 领奖行（批次 17，圣灵守护者武器事件族）：客户端 quest_q{quest}.html 的 quest_summary
          共 {rows} 行，行 {row} = “{last_row}”。

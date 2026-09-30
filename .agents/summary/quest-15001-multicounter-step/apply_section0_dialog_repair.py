@@ -11,7 +11,7 @@ import argparse, re
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[3]
-QUEST_DIR = REPO / "src/main/resources/aion/data/static_data/quest_definition/quests"
+QUEST_DIR = REPO / "src/main/resources/aion/data/static_data/quest/definitions/quests"
 TSV = REPO / "src/test/resources/quest/quest-section0-report-row-contract.tsv"
 MARKER = "<!-- SECTION_0 dialog repair: stale REWARD saves on first NPC interaction -->"
 TRANSITION = re.compile(r"<transition\b.*?</transition>", re.S)

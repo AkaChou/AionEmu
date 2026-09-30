@@ -83,7 +83,7 @@
 
 ### D. 目录与文件收敛（6224 → 670）
 
-**完成判据**：被迁移任务的 `quest_definition/quests/<id>.xml` 已删除、`quest_definition_catalog.xml` 中对应 `<definition>` 条目已移除；全仓 `grep` 确认没有测试/脚本/资源再引用被删文件；`question_definition` 的 XSD/装载器不再要求这些条目。
+**完成判据**：被迁移任务的 `quest/definitions/quests/<id>.xml` 已删除、`quest_definition_catalog.xml` 中对应 `<definition>` 条目已移除；全仓 `grep` 确认没有测试/脚本/资源再引用被删文件；`question_definition` 的 XSD/装载器不再要求这些条目。
 
 ### E. 门禁（必须长期有效，不是一次性脚本）
 
@@ -199,7 +199,7 @@ mvn -q -Dtest='ProductionCatalogWhitelistVerificationTest,QuestDefinitionCatalog
 - [ ] 5554 个任务各有机器可读 owner 记录，且全部由真端文件驱动（不读 XML）
 - [ ] 670 个任务在保留清单中，逐条有原因与证据；无"未归类"任务（5554+670=6224）
 - [ ] 生产接线可用，开关关闭时行为与改造前一致，开启时按 owner 表加载
-- [ ] 被迁移的 XML 已从 `quest_definition/quests/` 删除，`quest_definition_catalog.xml` 已同步收敛
+- [ ] 被迁移的 XML 已从 `quest/definitions/quests/` 删除，`quest_definition_catalog.xml` 已同步收敛
 - [ ] 五类门禁（归属/家族等价/调度逐帧/客户端契约/降级清单）全部实现且绿
 - [ ] 客户端抽检：至少每族抽 3 个任务，`quest_summary` 行与 `SECTION_n` 计数与真端定义一致
 - [ ] 终局报告（覆盖率、保留清单、口径分歧、未验证项）落盘

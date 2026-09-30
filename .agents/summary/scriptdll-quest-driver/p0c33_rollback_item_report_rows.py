@@ -28,10 +28,10 @@ MANIFEST_MAIN = REPO / "src/main/resources/aion/data/static_data/quest_retail/re
 MANIFEST_TEST = REPO / "src/test/resources/quest/retail-xml-retention.tsv"
 MANIFEST_TARGET_MAIN = REPO / "target/classes/aion/data/static_data/quest_retail/retail-xml-retention.tsv"
 MANIFEST_TARGET_TEST = REPO / "target/test-classes/quest/retail-xml-retention.tsv"
-CATALOG_MAIN = REPO / "src/main/resources/aion/data/static_data/quest_definition/quest_definition_catalog.xml"
-CATALOG_TARGET = REPO / "target/classes/aion/data/static_data/quest_definition/quest_definition_catalog.xml"
-QUESTS_MAIN = REPO / "src/main/resources/aion/data/static_data/quest_definition/quests"
-QUESTS_TARGET = REPO / "target/classes/aion/data/static_data/quest_definition/quests"
+CATALOG_MAIN = REPO / "src/main/resources/aion/data/static_data/quest/definitions/quest_definition_catalog.xml"
+CATALOG_TARGET = REPO / "target/classes/aion/data/static_data/quest/definitions/quest_definition_catalog.xml"
+QUESTS_MAIN = REPO / "src/main/resources/aion/data/static_data/quest/definitions/quests"
+QUESTS_TARGET = REPO / "target/classes/aion/data/static_data/quest/definitions/quests"
 FINGERPRINTS = REPO / "src/test/resources/quest/retail-simple-talk-chain-ir-fingerprints.tsv"
 FINGERPRINTS_TARGET = REPO / "target/test-classes/quest/retail-simple-talk-chain-ir-fingerprints.tsv"
 
@@ -40,7 +40,7 @@ RETIRED_ROW_MARKER = "\tRETAIL_TABLE\tSimpleTalk\tOK\tretired-xml-in-git-history
 XML_ROW = ("{qid}\tXML_RETENTION\tSimpleTalk\tSEMANTIC_GAP:RETAIL_TALK_CHAIN\t"
 	"p0c33-item-report-rollback-decisions.tsv basis=ITEM_CHECK_GATE_NOT_TRANSCRIBED")
 CATALOG_ROW = ('  <definition id="{qid}" '
-	'resource="aion/data/static_data/quest_definition/quests/{qid}.xml" mode="EXECUTABLE" />\n')
+	'resource="aion/data/static_data/quest/definitions/quests/{qid}.xml" mode="EXECUTABLE" />\n')
 
 
 def abort(message: str) -> int:
@@ -75,7 +75,7 @@ def main() -> int:
 	# Restore the XMLs from HEAD into both copies; a rollback must refill target too.
 	restored = {}
 	for qid in ROLLBACK_IDS:
-		path = f"src/main/resources/aion/data/static_data/quest_definition/quests/{qid}.xml"
+		path = f"src/main/resources/aion/data/static_data/quest/definitions/quests/{qid}.xml"
 		text = subprocess.run(["git", "show", f"HEAD:{path}"], cwd=REPO, check=True,
 			capture_output=True).stdout.decode("utf-8")
 		if "<quest-definition" not in text:

@@ -41,7 +41,7 @@ XML。挂 `EXECUTABLE` 既违反 retention 分类，也没有节点定义支撑�
 
 1. `quest_definition_catalog.xml` 553/917 两行 `mode="EXECUTABLE"` → `mode="METADATA_ONLY"`
    （回退到 HEAD 一致态；该态经实机验证可启动）。
-2. 同步单文件到 `target/classes/aion/data/static_data/quest_definition/`，
+2. 同步单文件到 `target/classes/aion/data/static_data/quest/definitions/`，
    防止陈旧 classpath 在下次构建前继续崩。
 
 ## 复现 / 门禁循环

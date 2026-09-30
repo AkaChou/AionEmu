@@ -31,12 +31,12 @@ MANIFESTS = [
 ]
 MANIFEST_SNAPSHOT = REPO / ".agents/summary/scriptdll-quest-driver/retail-xml-retention.tsv"
 CATALOGS = [
-	REPO / "src/main/resources/aion/data/static_data/quest_definition/quest_definition_catalog.xml",
-	REPO / "target/classes/aion/data/static_data/quest_definition/quest_definition_catalog.xml",
+	REPO / "src/main/resources/aion/data/static_data/quest/definitions/quest_definition_catalog.xml",
+	REPO / "target/classes/aion/data/static_data/quest/definitions/quest_definition_catalog.xml",
 ]
 QUEST_DIRS = [
-	REPO / "src/main/resources/aion/data/static_data/quest_definition/quests",
-	REPO / "target/classes/aion/data/static_data/quest_definition/quests",
+	REPO / "src/main/resources/aion/data/static_data/quest/definitions/quests",
+	REPO / "target/classes/aion/data/static_data/quest/definitions/quests",
 ]
 RETAIL_ROW = ("{qid}\tRETAIL_TABLE\tDataDriven\tOK\tretired-xml-in-git-history "
 	"p0c53-group-table-decisions.tsv basis=DD_AINAME_GROUP_TABLE\n")
@@ -52,7 +52,7 @@ def restore_xmls() -> int:
 				continue
 			restored = subprocess.run(
 				["git", "show",
-					f"HEAD:src/main/resources/aion/data/static_data/quest_definition/quests/{quest_id}.xml"],
+					f"HEAD:src/main/resources/aion/data/static_data/quest/definitions/quests/{quest_id}.xml"],
 				cwd=REPO, capture_output=True, check=True).stdout
 			xml.write_bytes(restored)
 	print(f"xml restored: {len(FLIP_IDS)} × {len(QUEST_DIRS)} dirs")
@@ -69,7 +69,7 @@ def restore_catalog() -> int:
 			if quest_id in present:
 				continue
 			row = (f'  <definition id="{quest_id}" '
-				f'resource="aion/data/static_data/quest_definition/quests/{quest_id}.xml" '
+				f'resource="aion/data/static_data/quest/definitions/quests/{quest_id}.xml" '
 				f'mode="EXECUTABLE" />\n')
 			position = next((index for index, line in enumerate(lines)
 				if (m := pattern.match(line)) and int(m.group(1)) > quest_id), len(lines) - 1)

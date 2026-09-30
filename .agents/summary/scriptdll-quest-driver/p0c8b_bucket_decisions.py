@@ -40,7 +40,7 @@ GAPS = HERE / 'simplehunt-dialog-route-gaps.txt'
 OUT = HERE / 'p0c8b-bucket-decisions.tsv'
 PROD_DECISIONS = REPO / 'src/test/resources/quest/retail-simple-hunt-adjudicated-decisions.tsv'
 DETAILS = REPO / 'docs/quest/client-dialog-mapping/quest-dialog-action-details.csv'
-QUESTS_REL = 'src/main/resources/aion/data/static_data/quest_definition/quests/%d.xml'
+QUESTS_REL = 'src/main/resources/aion/data/static_data/quest/definitions/quests/%d.xml'
 # 真端确认段：SELECTED_QUEST_REWARD1(8) .. SELECTED_QUEST_NOREWARD(23)。
 CONFIRM_FIRST, CONFIRM_LAST = 8, 23
 CONFIRM_RANGE = CONFIRM_LAST - CONFIRM_FIRST + 1

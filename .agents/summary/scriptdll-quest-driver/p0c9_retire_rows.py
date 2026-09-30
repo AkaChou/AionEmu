@@ -24,7 +24,7 @@ from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 REPO = next(p for p in Path(__file__).resolve().parents if (p / "pom.xml").is_file())
-QUESTS = REPO / 'src/main/resources/aion/data/static_data/quest_definition/quests/%d.xml'
+QUESTS = REPO / 'src/main/resources/aion/data/static_data/quest/definitions/quests/%d.xml'
 GAPS = HERE / 'simplehunt-dialog-route-gaps.txt'
 PHASE53 = HERE / 'phase5-3-rejections.txt'
 OUT = HERE / 'p0c9-decisions.tsv'
@@ -115,7 +115,7 @@ def main():
             path.unlink()
             deleted += 1
     print('删除 XML %d 个' % deleted)
-    catalog_path = REPO / 'src/main/resources/aion/data/static_data/quest_definition/quest_definition_catalog.xml'
+    catalog_path = REPO / 'src/main/resources/aion/data/static_data/quest/definitions/quest_definition_catalog.xml'
     catalog_lines = catalog_path.read_text(encoding='utf-8').splitlines()
     kept = [line for line in catalog_lines
         if not (line.strip().startswith('<definition ') and

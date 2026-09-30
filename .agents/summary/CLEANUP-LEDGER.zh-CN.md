@@ -746,3 +746,27 @@
 | `startup-perf/xml-parser-probe/results-20260919-215023.txt` | 5191 |
 | `startup-perf/xml-parser-probe/results-20260919-215104.txt` | 5084 |
 | `startup-perf/xml-parser-probe/results-20260920-0004.txt` | 1508 |
+
+---
+
+## 5. 第三轮（2026-09-30）：docs 生成物与失效内容清理
+
+| 组 | 文件数 | 体积 | 说明 |
+|---|---:|---:|---|
+| `docs/data/*.txt` | 3 | 20.4 MB | 客户端/服务端 ID→名称一次性转储，全库无消费方 |
+| `docs/quest/client-dialog-mapping/quest-order-audit.csv` | 1 | 52.8 MB | 逐路径顺序审计快照，无测试/脚本消费；改为按需运行 `QuestDialogOrderAudit`（产物临时、不入库） |
+| `docs/QUEST_CATALOG.zh-CN.md` | 1 | 5.2 MB | 生成式任务目录，1,284 条链接指向已重命名目录且生成链已失效 |
+| catalog 生成/刷写脚本 | 4 | 13 KB | 目标文档删除 + 目录重命名双重失效（audit/refresh ×3、doc-links ×1） |
+| `.DS_Store` | 5 | 60 KB | OS 垃圾文件（未被 git 跟踪） |
+| **合计** | **14** | **~78.4 MB** | |
+
+补充说明：
+
+- 同一轮补齐 `0997233c2`（任务静态资源收拢）的路径对齐尾巴：`static_data/quest_definition/` →
+  `static_data/quest/definitions/`，覆盖 `docs/**`、`.agents/rules/**`、`.agents/summary/**` 共 287 个文件、5,740 处引用。
+  生产代码本就使用新路径，因此这是文档/脚本侧的收尾。
+- memory-bank：`activeContext.md` 中已关闭的焦点（已沉淀 / 已验收 / 已收口 / 已完成改造项）移入
+  `archive/2026-09-30-active-context-closed-focus.md`；同步清除失效引用（quest-order-audit 快照、
+  已清理的 weather 补丁目录、已删除的 kill-target 契约快照、quest-load-fail 历史路径）。
+- 保留边界不变：`.py`/`.sh`/`.java` 工具与门禁、`*-decisions*`/`*-registry*` 登记表、`.md` 报告与验收记录继续保留；
+  memory-bank `evidence:` 引用到的产物一律保留，避免破坏 `verify_memory_bank.py` 门禁。

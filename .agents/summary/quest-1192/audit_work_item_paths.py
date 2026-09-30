@@ -4,7 +4,7 @@ import xml.etree.ElementTree as ET
 from pathlib import Path
 
 ROOT = Path(".").resolve()
-DEF_DIR = ROOT / "src/main/resources/aion/data/static_data/quest_definition/quests"
+DEF_DIR = ROOT / "src/main/resources/aion/data/static_data/quest/definitions/quests"
 
 TARGETS = """1182 1183 1192 1218 1319 1322 1324 1345 1363 1371 1391 1422 1452 1464 1469 1483 1484 1527 1528 1540
 1574 1634 1636 1643 1721 1724 1725 1909 1918 1937 1963 1964 2239 2667 2918 3036 3037 3041 3049 3085 3086 3087

@@ -10,7 +10,7 @@ import re, pathlib, collections
 
 ROOT = REPO
 SD = ROOT / "src/main/resources/aion/data/static_data"
-Q = SD / "quest_definition/quests"
+Q = SD / "quest/definitions/quests"
 
 active_maps = {int(x) for x in re.findall(r'<map id="(\d+)"',
                 re.sub(r'<!--.*?-->', '', (SD / "world_maps.xml").read_text(encoding="utf-8"), flags=re.S))}

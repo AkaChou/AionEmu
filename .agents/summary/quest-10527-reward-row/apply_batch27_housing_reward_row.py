@@ -30,7 +30,7 @@ import sys
 from pathlib import Path
 
 QUEST_DIR = (Path(__file__).resolve().parents[3]
-             / "src/main/resources/aion/data/static_data/quest_definition/quests")
+             / "src/main/resources/aion/data/static_data/quest/definitions/quests")
 
 CONTRACTS = {
     18805: {

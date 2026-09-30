@@ -17,7 +17,7 @@ EDITS = {
     14021: [("s6", "s7")],
     24014: [("s4", "s5")],
 }
-PATH = "src/main/resources/aion/data/static_data/quest_definition/quests/{}.xml"
+PATH = "src/main/resources/aion/data/static_data/quest/definitions/quests/{}.xml"
 TRANSITION_RE = re.compile(r"<transition\b.*?</transition>", re.S)
 
 

@@ -4,7 +4,7 @@
 输入：
   quest_registry.tsv                     —— ScriptDLL64 注册点（Phase 1）
   <客户端解包根>/Quest_unpacked/*.xml|csv  —— 客户端任务表
-  src/main/resources/aion/data/static_data/quest_definition/quests/*.xml —— 本仓库任务清单
+  src/main/resources/aion/data/static_data/quest/definitions/quests/*.xml —— 本仓库任务清单
 输出：各表覆盖的 quest id 集合与本仓库任务集合的交集统计。
 """
 import csv
@@ -33,7 +33,7 @@ def registry_quests():
 
 def repo_quests():
     out = set()
-    pat = os.path.join(REPO, "src/main/resources/aion/data/static_data/quest_definition/quests/*.xml")
+    pat = os.path.join(REPO, "src/main/resources/aion/data/static_data/quest/definitions/quests/*.xml")
     for path in glob.glob(pat):
         m = re.search(r"/(\d+)\.xml$", path)
         if m:

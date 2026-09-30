@@ -9,9 +9,9 @@ import pathlib
 BASE = pathlib.Path("src/test/java/com/aionemu/gameserver/questEngine/definition")
 
 DIR_CONST = '''\tprivate static final Path {name} = Path.of(
-\t\t"src/main/resources/aion/data/static_data/quest_definition/quests");
+\t\t"src/main/resources/aion/data/static_data/quest/definitions/quests");
 '''
-DIR_CONST_ONE = '''\tprivate static final Path {name} = Path.of("src/main/resources/aion/data/static_data/quest_definition/quests");
+DIR_CONST_ONE = '''\tprivate static final Path {name} = Path.of("src/main/resources/aion/data/static_data/quest/definitions/quests");
 '''
 
 EDITS = {
@@ -47,14 +47,14 @@ EDITS = {
         ('Files.newInputStream(DIR.resolve(questId + ".xml"))', 'QuestXmlFixtures.open(questId)'),
     ],
     "QuestBatchReportNpcAlignmentTest.java": [
-        ('\t\tPath path = Path.of("src/main/resources/aion/data/static_data/quest_definition/quests/" + qid + ".xml");\n', ""),
+        ('\t\tPath path = Path.of("src/main/resources/aion/data/static_data/quest/definitions/quests/" + qid + ".xml");\n', ""),
         ('Files.newInputStream(path)', 'QuestXmlFixtures.open(Integer.parseInt(qid))'),
     ],
 }
 
 for quest_id in (30312, 30314, 30315):
     EDITS[f"Quest{quest_id}RetailAlignmentTest.java"] = [
-        (f'\t\tPath path = Path.of("src/main/resources/aion/data/static_data/quest_definition/quests/{quest_id}.xml");\n', ""),
+        (f'\t\tPath path = Path.of("src/main/resources/aion/data/static_data/quest/definitions/quests/{quest_id}.xml");\n', ""),
         ('Files.newInputStream(path)', f'QuestXmlFixtures.open({quest_id})'),
     ]
 

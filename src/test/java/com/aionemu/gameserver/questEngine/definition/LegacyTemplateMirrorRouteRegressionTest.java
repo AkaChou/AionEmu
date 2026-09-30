@@ -21,7 +21,7 @@ class LegacyTemplateMirrorRouteRegressionTest {
 		// （RetailQuestDriver.java:413-440：只有 RETAIL_TABLE 行进 retailOwned*，XML_RETENTION 只记
 		// reasons），因此定义由 XML 驱动、不在 S1 面内——报告页 SELECT5(2375) 与 20002
 		// (CHECK_USER_HAS_QUEST_ITEM_SIMPLE) 双 prio 检查对逐字保留
-		// （quest_definition/quests/2237.xml:143-165：prio0 成功→reward + 窗 1，prio1 失败→CloseDialog）。
+		// （quest/definitions/quests/2237.xml:143-165：prio0 成功→reward + 窗 1，prio1 失败→CloseDialog）。
 		// 该行的真端校验动作是 20002（SIMPLE 变体）：真端 collect 行与 quest.xml 均无 39 检查轴。
 		// 2237 stays XML-retained and outside the S1 face (only RETAIL_TABLE rows enter the retail
 		// driver), so its SELECT5(2375) report page and the 20002 (CHECK_USER_HAS_QUEST_ITEM_SIMPLE)

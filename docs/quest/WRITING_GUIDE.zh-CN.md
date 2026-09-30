@@ -6,7 +6,7 @@
 
 | | 正式 XML | Java DSL（QuestDsl） |
 |---|---|---|
-| 位置 | `src/main/resources/aion/data/static_data/quest_definition/quests/<id>.xml` | Java 代码（测试 fixture / 工具） |
+| 位置 | `src/main/resources/aion/data/static_data/quest/definitions/quests/<id>.xml` | Java 代码（测试 fixture / 工具） |
 | 生产使用 | ✅ 唯一生产 owner 来源 | ❌ 仅测试与工具 |
 | 校验 | XSD + `QuestDefinitionCompiler` 语义校验 | 与 XML 走同一 compiler |
 | 加载 | 经 schema v2 `quest_definition_catalog.xml` 按 mode 注册后由 QuestEngine 加载 | 编译期直接 `compile()` |
@@ -28,7 +28,7 @@
 ### 3.1 步骤
 
 1. 写 `quests/<id>.xml`；仅在完全符合下述标准模式时使用领域积木，其他流程继续写普通 transition。
-2. 在 schema v2 `quest_definition_catalog.xml` 注册一行 `<definition id="<id>" resource="aion/data/static_data/quest_definition/quests/<id>.xml" mode="EXECUTABLE"/>`（每个 ID 只注册一次）。
+2. 在 schema v2 `quest_definition_catalog.xml` 注册一行 `<definition id="<id>" resource="aion/data/static_data/quest/definitions/quests/<id>.xml" mode="EXECUTABLE"/>`（每个 ID 只注册一次）。
 3. 旧模板仍存在时，以 `quest_data.xml` 作为静态元数据迁移来源；旧模板缺失时必须从真实/客户端取得逐字段权威证据，禁止从现有候选 XML 或任务行为反推猜值。
 4. 删除旧执行入口（`quest_script_data/*.xml` 中对应节点 / 旧 Java handler），同一改动完成 owner 交接。
 
@@ -515,7 +515,7 @@ private static QuestDsl.QuestBuilder simpleCollect1103() {
 |---|---|---|
 | report_to（无 work item） | 见 §3.4 | `quests/1138.xml` |
 | report_to（有 work item） | give/has/remove-item + priority=1 拒绝分支 | `quests/1106.xml` |
-| monster_hunt（击杀计数） | var0 逐级推进，每 NPC 一条 kill transition，`source=k{i} target=k{i+1}`，after-commit `sync PACKET_ONLY`；终态报告 dialog 1009 → reward | `quests/1120.xml`（单组）、`1112`（双组，var0/var1 交叉，offset 0/6；生产 XML 已退役，可用 `git log --follow -- src/main/resources/aion/data/static_data/quest_definition/quests/1112.xml` 回溯） |
+| monster_hunt（击杀计数） | var0 逐级推进，每 NPC 一条 kill transition，`source=k{i} target=k{i+1}`，after-commit `sync PACKET_ONLY`；终态报告 dialog 1009 → reward | `quests/1120.xml`（单组）、`1112`（双组，var0/var1 交叉，offset 0/6；生产 XML 已退役，可用 `git log --follow -- src/main/resources/aion/data/static_data/quest/definitions/quests/1112.xml` 回溯） |
 | item_collecting | end NPC 动作 `CHECK_USER_HAS_QUEST_ITEM(39)` 上交检查：has-item（每个 collect_item）+ remove-item；无物品时 priority=1 fallback `SHOW_QUEST_PAGE page="SELECT6"`；metadata 必须有 drops | `quests/1129.xml` |
 | item_order | start_item_id 接取时 give-item，talk_npc 对话推进 var，end_npc 报告 | `quests/2146.xml`、`quests/2210.xml` |
 | xml_quest（复杂） | 每 var 值一个 node，每 dialog 分支一条 transition | `quests/1115.xml`、`quests/1127.xml` |
@@ -558,10 +558,10 @@ private static QuestDsl.QuestBuilder simpleCollect1103() {
 
 ```bash
 # schema 校验（任一合法 XML 解析器，例）
-python3 -c "import xml.dom.minidom,sys; xml.dom.minidom.parse('src/main/resources/aion/data/static_data/quest_definition/quests/<id>.xml')"
+python3 -c "import xml.dom.minidom,sys; xml.dom.minidom.parse('src/main/resources/aion/data/static_data/quest/definitions/quests/<id>.xml')"
 
 # catalog 重复 ID 检查
-grep -c 'id="<id>"' src/main/resources/aion/data/static_data/quest_definition/quest_definition_catalog.xml  # 应为 1
+grep -c 'id="<id>"' src/main/resources/aion/data/static_data/quest/definitions/quest_definition_catalog.xml  # 应为 1
 
 # 旧入口残留检查
 grep -rn '<report_to id="<id>"\|<monster_hunt id="<id>"' src/main/resources/aion/data/static_data/quest_script_data/  # 应为空

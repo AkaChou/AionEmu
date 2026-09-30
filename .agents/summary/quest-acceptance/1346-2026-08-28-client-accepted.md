@@ -4,7 +4,7 @@ quest: 1346「Killing for Castor / 进入地下神殿的资格」
 user acceptance confirmation: 用户于 2026-08-28 回复“验收完成”，未限定分支；按规则视为整任务客户端主路径验收完成（CLIENT_ACCEPTED）。
 server launch mode: not captured（服务端由用户管理）
 repository commit: ba2c985e4b09308c806dd34bec2025ca60fe1408
-working tree: dirty；本次修复提交仅包含 `../../../src/main/resources/aion/data/static_data/quest_definition/quests/1346.xml` 和 `../../../src/test/java/com/aionemu/gameserver/questEngine/definition/Quest1346ClientDialogAlignmentTest.java`；其他修改和未跟踪文件保留。
+working tree: dirty；本次修复提交仅包含 `../../../src/main/resources/aion/data/static_data/quest/definitions/quests/1346.xml` 和 `../../../src/test/java/com/aionemu/gameserver/questEngine/definition/Quest1346ClientDialogAlignmentTest.java`；其他修改和未跟踪文件保留。
 Aion 5.8 client/data provenance: Aion 5.8 客户端；仓库证据为 `../../../docs/quest/client-dialog-mapping/legacy-quest-dialog-contracts.csv`、`../../../docs/quest/client-dialog-mapping/quest-dialog-action-details.csv`、`../../../docs/quest/client-dialog-mapping/quest-dialog-pages.csv` 及 `src/main/resources/aion/definitions/compact/quests/scripts/zz_retail_simple_quests.xml`；本次未新增独立客户端包 SHA-256。
 npc template/object: start NPC template 203966；report/reward NPC template 203965；runtime object ID not captured；交互对象归属由客户端/旧任务合同确认 203966 接取、203965 报告和领奖。
 map/instance: world ID / instance ID not captured；entry/reentry context not captured。

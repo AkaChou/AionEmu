@@ -18,7 +18,7 @@ import re
 
 REPO = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", ".."))
 PROD_DIR = os.path.join(
-    REPO, "src/main/resources/aion/data/static_data/quest_definition/quests")
+    REPO, "src/main/resources/aion/data/static_data/quest/definitions/quests")
 
 MIN_FIXES = {
     "1648": "42", "2231": "12", "2641": "41",

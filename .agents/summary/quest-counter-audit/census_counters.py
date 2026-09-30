@@ -8,7 +8,7 @@ from pathlib import Path
 REPO = next(p for p in Path(__file__).resolve().parents if (p / "pom.xml").is_file())
 
 CLIENT = Path(f"{REPO.parent / 'PycharmProjects' / 'unpak'}/Quest_unpacked/quest_monster.csv")
-QUESTS = Path("src/main/resources/aion/data/static_data/quest_definition/quests")
+QUESTS = Path("src/main/resources/aion/data/static_data/quest/definitions/quests")
 
 gates = {}
 for row in csv.reader(CLIENT.open(encoding="utf-8", errors="ignore")):

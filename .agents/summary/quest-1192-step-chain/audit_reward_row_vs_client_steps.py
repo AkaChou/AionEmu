@@ -30,7 +30,7 @@ import xml.etree.ElementTree as ET
 from pathlib import Path
 
 REPO = next(p for p in Path(__file__).resolve().parents if (p / "pom.xml").is_file())
-QUESTS_DIR = REPO / "src/main/resources/aion/data/static_data/quest_definition/quests"
+QUESTS_DIR = REPO / "src/main/resources/aion/data/static_data/quest/definitions/quests"
 UNPACK_ROOT = Path(str(REPO.parent / "PycharmProjects" / "unpak"))
 DIALOG_DIR = UNPACK_ROOT / "data_unpacked/Dialogs"
 SCRIPT_CSV = UNPACK_ROOT / "Quest_unpacked/quest_script_monster.csv"

@@ -23,7 +23,7 @@ from pathlib import Path
 from xml.etree import ElementTree as ET
 
 REPO = Path(__file__).resolve().parents[3]
-QUESTS = REPO / "src/main/resources/aion/data/static_data/quest_definition/quests"
+QUESTS = REPO / "src/main/resources/aion/data/static_data/quest/definitions/quests"
 
 # (quest_id, 客户端文件, 末行文本, 领奖 NPC id, 写入方文件, 定位锚点)
 CONTRACTS = [

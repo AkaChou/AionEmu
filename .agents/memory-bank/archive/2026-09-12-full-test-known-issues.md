@@ -5,7 +5,7 @@
 
 > status: HISTORICAL
 > scope: AionEmu-test `quest` checkout; full-test triage from 2026-09-12 to 2026-09-13
-> source: historical `.agents/summary/quest-load-fail/full-test-known-issues.md` and the full-test record in this file
+> source: 历史上 quest-load-fail 主题的 AI 中间记录（目录已清理，见 git 历史）与本文件正文
 > last_verified: 2026-09-13
 > replacement: none; reusable rules must be distilled into `patterns/`
 > read_by_default: no

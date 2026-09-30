@@ -17,7 +17,7 @@ REPO = next(p for p in pathlib.Path(__file__).resolve().parents if (p / "pom.xml
 HERE = REPO / '.agents/summary/scriptdll-quest-driver'
 DETAIL = HERE / 'retail-simple-collect-item-drift-detail.tsv'
 DIFF = HERE / 'retail-simple-collect-item-diff-lines.tsv'
-QUEST_DIR = REPO / 'src/main/resources/aion/data/static_data/quest_definition/quests'
+QUEST_DIR = REPO / 'src/main/resources/aion/data/static_data/quest/definitions/quests'
 OUT = HERE / 'm5b3-collect-route-decisions.tsv'
 
 KEEP = {

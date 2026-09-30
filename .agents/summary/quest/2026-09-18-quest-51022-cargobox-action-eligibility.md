@@ -36,7 +36,7 @@ has no matching START ACTION_ITEM_USE eligibility route
 文件：
 
 ```text
-src/main/resources/aion/data/static_data/quest_definition/quests/51022.xml
+src/main/resources/aion/data/static_data/quest/definitions/quests/51022.xml
 ```
 
 在 `started` 状态补充无副作用的资格自环：
@@ -56,7 +56,7 @@ src/main/resources/aion/data/static_data/quest_definition/quests/51022.xml
 已执行：
 
 ```bash
-xmllint --noout src/main/resources/aion/data/static_data/quest_definition/quests/51022.xml
+xmllint --noout src/main/resources/aion/data/static_data/quest/definitions/quests/51022.xml
 mvn test -Dtest=QuestInteractionObjectCatalogTest
 ```
 

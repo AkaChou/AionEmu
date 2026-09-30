@@ -7,7 +7,7 @@
 进世界**（`spawns/**` 无静态 spot，真端家族表无刷怪列），退役会让任务不可完成 → 改判 KEEP_XML。
 本脚本负责恢复生产资源（内容取自 git HEAD，不做任何 git 状态变更）：
 
-1. 写回 `src/main/resources/aion/data/static_data/quest_definition/quests/<id>.xml`；
+1. 写回 `src/main/resources/aion/data/static_data/quest/definitions/quests/<id>.xml`；
 2. 把对应的 `<definition .../>` 行按 id 顺序插回 `quest_definition_catalog.xml`（行文本取自 HEAD）。
 
 用法：python3 -B p0c6_restore_spawn_gap_rows.py [--dry-run]
@@ -19,8 +19,8 @@ import subprocess
 from pathlib import Path
 
 REPO = next(p for p in Path(__file__).resolve().parents if (p / "pom.xml").is_file())
-QUESTS_REL = 'src/main/resources/aion/data/static_data/quest_definition/quests'
-CATALOG_REL = 'src/main/resources/aion/data/static_data/quest_definition/quest_definition_catalog.xml'
+QUESTS_REL = 'src/main/resources/aion/data/static_data/quest/definitions/quests'
+CATALOG_REL = 'src/main/resources/aion/data/static_data/quest/definitions/quest_definition_catalog.xml'
 CATALOG = REPO / CATALOG_REL
 IDS = (14112, 14123)
 

@@ -21,7 +21,7 @@ import xml.etree.ElementTree as ET
 REPO = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", ".."))
 RETAIL_QUEST_XML = f"{REPO.parent / 'PycharmProjects' / 'unpak'}/Quest_unpacked/quest.xml"
 PROD_DIR = os.path.join(
-    REPO, "src/main/resources/aion/data/static_data/quest_definition/quests")
+    REPO, "src/main/resources/aion/data/static_data/quest/definitions/quests")
 OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "class-axis-audit.tsv")
 
 TOKEN_MAP = {

@@ -81,7 +81,7 @@
 
 | 文件 | 变化 |
 |---|---|
-| `src/main/resources/.../quest_definition/quests/*.xml` | **删除 79 个**（`Path.unlink()`；不迁移内容，存证在 `p0c8c-retired-xml-evidence.tsv`） |
+| `src/main/resources/.../quest/definitions/quests/*.xml` | **删除 79 个**（`Path.unlink()`；不迁移内容，存证在 `p0c8c-retired-xml-evidence.tsv`） |
 | `src/main/resources/.../quest_definition/quest_definition_catalog.xml` | 同步移除 79 条 `<definition id="N" …/>`；目录＝磁盘（2400 = 2400），无悬空引用 |
 | `src/test/resources/quest/retail-simple-hunt-adjudicated-decisions.tsv` | +79 行 ADOPT_RETAIL（按 id 排序去重，既有 249 行零搅动） |
 | `src/test/resources/quest/retail-simple-hunt-adjudicated-ir-fingerprints.tsv` | 冻结模式重算 → 326 行 |
@@ -100,7 +100,7 @@
 | `.agents/summary/scriptdll-quest-driver/p0c6-legacy-save-normalization.tsv` | 追加 80601/80606 两行：被移除的 `REWARD/var0=0 → var0:=1` 自愈边 → **可选**一次性 DB 归一化 |
 
 **警示（沿用 P0c-8b）**：非 clean 的 `mvn test` 看不见退役断链——被删 XML 会残留在
-`target/classes/...quest_definition/quests/`，直读 classpath XML 的测试会继续假绿。**退役类切片只能以 clean 副本 T3 为准。**
+`target/classes/...quest/definitions/quests/`，直读 classpath XML 的测试会继续假绿。**退役类切片只能以 clean 副本 T3 为准。**
 
 ## 4. 对拍结果（P0c-8b → P0c-8c）
 

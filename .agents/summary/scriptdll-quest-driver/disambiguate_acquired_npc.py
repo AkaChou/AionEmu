@@ -24,7 +24,7 @@ from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[3]
 PROD = REPO / "src/main/resources/aion/data/static_data"
-QUESTS = PROD / "quest_definition/quests"
+QUESTS = PROD / "quest/definitions/quests"
 RETAIL_TABLE = PROD / "quest_retail/Quest_SimpleHunt.xml"
 NPCS = PROD / "npcs"
 

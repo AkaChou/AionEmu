@@ -5,7 +5,7 @@
 （口径：真端语义通过即可退役；本族另有一次性证据——574/574 与退役前 XML 编译结果逐行 IR 等价）。
 
 做两件事（都可用 git 回退，不做任何提交）：
-1) 删除生产资源 `quest_definition/quests/<id>.xml`（**不保留测试作用域副本**：历史内容由
+1) 删除生产资源 `quest/definitions/quests/<id>.xml`（**不保留测试作用域副本**：历史内容由
    git 历史承担，仓库内的退役事实只记在保留清单 owner=RETAIL_TABLE 行）；
 2) 从生产白名单 `quest_definition_catalog.xml` 移除对应 `<definition>` 行。
 
@@ -20,8 +20,8 @@ from pathlib import Path
 
 REPO = next(p for p in Path(__file__).resolve().parents if (p / "pom.xml").is_file())
 RETENTION = REPO / 'src/main/resources/aion/data/static_data/quest_retail/retail-xml-retention.tsv'
-PROD_DIR = REPO / 'src/main/resources/aion/data/static_data/quest_definition/quests'
-CATALOG = REPO / 'src/main/resources/aion/data/static_data/quest_definition/quest_definition_catalog.xml'
+PROD_DIR = REPO / 'src/main/resources/aion/data/static_data/quest/definitions/quests'
+CATALOG = REPO / 'src/main/resources/aion/data/static_data/quest/definitions/quest_definition_catalog.xml'
 EVIDENCE = REPO / '.agents/summary/scriptdll-quest-driver/m5b2-retired-collect-item-evidence.tsv'
 
 

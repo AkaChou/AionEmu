@@ -28,7 +28,7 @@ RETAIL_TABLE = REPO / 'src/main/resources/aion/data/static_data/quest_retail/Que
 RETENTION = REPO / 'src/test/resources/quest/retail-xml-retention.tsv'
 NPCS = REPO / 'src/main/resources/aion/data/static_data/npcs'
 SPAWNS = REPO / 'src/main/resources/aion/data/static_data/spawns'
-QUESTS_REL = 'src/main/resources/aion/data/static_data/quest_definition/quests'
+QUESTS_REL = 'src/main/resources/aion/data/static_data/quest/definitions/quests'
 OUT = HERE / 'p0c6-spawn-reachability-census.tsv'
 
 

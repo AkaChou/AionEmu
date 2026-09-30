@@ -39,7 +39,7 @@ RETENTION = REPO / "src/main/resources/aion/data/static_data/quest_retail/retail
 OUT_TSV = REPO / "src/main/resources/aion/data/static_data/quest_retail/retail-quest-ai-name-groups.tsv"
 OUT_REJECTED_TSV = (REPO / "src/main/resources/aion/data/static_data/quest_retail"
 	/ "retail-quest-ai-name-groups-rejected.tsv")
-LEGACY_QUESTS = REPO / "src/main/resources/aion/data/static_data/quest_definition/quests"
+LEGACY_QUESTS = REPO / "src/main/resources/aion/data/static_data/quest/definitions/quests"
 DD_TABLE = REPO / "src/main/resources/aion/data/static_data/quest_retail/data_driven_quest.xml"
 CLIENT_NPC = Path(f"{REPO.parent / 'PycharmProjects' / 'unpak'}/npcs_unpacked/client_npcs_npc.xml")
 CLIENT_DIC = Path(f"{REPO.parent / 'PycharmProjects' / 'unpak'}/strings_unpacked/client_strings_dic_etc.xml")

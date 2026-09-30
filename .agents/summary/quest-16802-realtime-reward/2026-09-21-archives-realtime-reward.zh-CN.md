@@ -99,7 +99,7 @@
     ```bash
     python3 - <<'PY'
     from pathlib import Path
-    qdir = Path('src/main/resources/aion/data/static_data/quest_definition/quests')
+    qdir = Path('src/main/resources/aion/data/static_data/quest/definitions/quests')
     for p in sorted(qdir.glob('*.xml')):
         s = p.read_text(encoding='utf-8')
         if '220331' in s:

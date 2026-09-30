@@ -16,7 +16,7 @@ from pathlib import Path
 REPO = next(p for p in Path(__file__).resolve().parents if (p / "pom.xml").is_file())
 RETENTION = REPO / 'src/main/resources/aion/data/static_data/quest_retail/retail-xml-retention.tsv'
 TESTS = REPO / 'src/test/java'
-XML_DIR = REPO / 'src/main/resources/aion/data/static_data/quest_definition/quests'
+XML_DIR = REPO / 'src/main/resources/aion/data/static_data/quest/definitions/quests'
 OUT = Path(__file__).resolve().parent / 'p0c3-stale-xml-test-refs.tsv'
 LITERAL = re.compile(r'quests/(\d+)\.xml')
 

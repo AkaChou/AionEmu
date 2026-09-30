@@ -16,7 +16,7 @@ import xml.etree.ElementTree as ET
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[3]
-PROD = REPO / "src/main/resources/aion/data/static_data/quest_definition/quests"
+PROD = REPO / "src/main/resources/aion/data/static_data/quest/definitions/quests"
 SPAWNS = REPO / "src/main/resources/aion/data/static_data/spawns"
 NPCS = REPO / "src/main/resources/aion/data/static_data/npcs"
 

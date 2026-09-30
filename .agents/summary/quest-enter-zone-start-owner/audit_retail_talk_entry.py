@@ -15,7 +15,7 @@ import csv
 import xml.etree.ElementTree as ET
 from pathlib import Path
 
-BASE = Path("src/main/resources/aion/data/static_data/quest_definition/quests")
+BASE = Path("src/main/resources/aion/data/static_data/quest/definitions/quests")
 CONTRACTS = Path("docs/quest/client-dialog-mapping/legacy-quest-dialog-contracts.csv")
 ENTRY = {"QUEST_SELECT", "FINISH_DIALOG", "ASK_QUEST_ACCEPT", "QUEST_ACCEPT_1",
          "QUEST_ACCEPT_SIMPLE", "QUEST_ACCEPT_SIMPLE_1", "SELECT_NONE_1"}

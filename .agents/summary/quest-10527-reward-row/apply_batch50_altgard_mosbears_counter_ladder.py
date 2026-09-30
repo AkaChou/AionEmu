@@ -27,7 +27,7 @@ import re
 import sys
 from pathlib import Path
 
-QUEST = Path('src/main/resources/aion/data/static_data/quest_definition/quests/2289.xml')
+QUEST = Path('src/main/resources/aion/data/static_data/quest/definitions/quests/2289.xml')
 
 HEADER = """<?xml version="1.0" encoding="UTF-8"?>
 <!--

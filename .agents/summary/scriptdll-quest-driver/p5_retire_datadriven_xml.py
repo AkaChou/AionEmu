@@ -15,8 +15,8 @@ from pathlib import Path
 
 REPO = next(p for p in Path(__file__).resolve().parents if (p / "pom.xml").is_file())
 RETENTION = REPO / 'src/main/resources/aion/data/static_data/quest_retail/retail-xml-retention.tsv'
-PROD_DIR = REPO / 'src/main/resources/aion/data/static_data/quest_definition/quests'
-CATALOG = REPO / 'src/main/resources/aion/data/static_data/quest_definition/quest_definition_catalog.xml'
+PROD_DIR = REPO / 'src/main/resources/aion/data/static_data/quest/definitions/quests'
+CATALOG = REPO / 'src/main/resources/aion/data/static_data/quest/definitions/quest_definition_catalog.xml'
 EVIDENCE = REPO / '.agents/summary/scriptdll-quest-driver/p5-retired-datadriven-evidence.tsv'
 
 
@@ -70,9 +70,9 @@ def main():
 	# 生产类目视图仍看到它们 → verifyProductionCoverage 误报 wrongOwner。按源目录差集清理。
 	# target/classes reconciliation (P5-4 lesson): Maven resources copies but never deletes, so stale
 	# copies of deleted XMLs keep the production view seeing them → spurious wrongOwner. Clean by diff.
-	target_quests = REPO / 'target/classes/aion/data/static_data/quest_definition/quests'
+	target_quests = REPO / 'target/classes/aion/data/static_data/quest/definitions/quests'
 	if target_quests.is_dir() and not args.dry_run:
-		src_dir = REPO / 'src/main/resources/aion/data/static_data/quest_definition/quests'
+		src_dir = REPO / 'src/main/resources/aion/data/static_data/quest/definitions/quests'
 		src_names = {p.name for p in src_dir.glob('*.xml')}
 		stale = [p for p in target_quests.glob('*.xml') if p.name not in src_names]
 		for p in stale:

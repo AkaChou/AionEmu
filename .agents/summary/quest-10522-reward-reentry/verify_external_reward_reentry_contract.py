@@ -18,7 +18,7 @@ import sys
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[3]
-QUEST_DIR = REPO / "src/main/resources/aion/data/static_data/quest_definition/quests"
+QUEST_DIR = REPO / "src/main/resources/aion/data/static_data/quest/definitions/quests"
 BASELINE = REPO / "src/test/resources/quest/external-reward-advance-baseline.tsv"
 
 TRANSITION_RE = re.compile(r"<transition\b(?P<head>[^>]*)>(?P<body>.*?)</transition>", re.S)

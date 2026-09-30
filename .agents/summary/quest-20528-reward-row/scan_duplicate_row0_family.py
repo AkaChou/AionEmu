@@ -2,7 +2,7 @@
 """只读扫描：客户端 quest_summary 末行与首行同文（末行=第 0 行重复行）的任务族，并对照本仓库 reward 投影。
 
 客户端证据：Aion 5.8 客户端解包 data_unpacked/Dialogs/**/quest_q<id>.html 的 quest_summary。
-仓库证据：src/main/resources/aion/data/static_data/quest_definition/quests/<id>.xml 的节点投影。
+仓库证据：src/main/resources/aion/data/static_data/quest/definitions/quests/<id>.xml 的节点投影。
 """
 from __future__ import annotations
 
@@ -13,7 +13,7 @@ import xml.etree.ElementTree as ET
 from pathlib import Path
 
 REPO = next(p for p in Path(__file__).resolve().parents if (p / "pom.xml").is_file())
-QUESTS = REPO / "src/main/resources/aion/data/static_data/quest_definition/quests"
+QUESTS = REPO / "src/main/resources/aion/data/static_data/quest/definitions/quests"
 UNPACK = Path(str(REPO.parent / "PycharmProjects" / "unpak"))
 DIALOGS = UNPACK / "data_unpacked/Dialogs"
 

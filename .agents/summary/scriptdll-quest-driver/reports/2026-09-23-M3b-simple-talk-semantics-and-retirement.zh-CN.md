@@ -95,7 +95,7 @@ SimpleTalk 侧 642 个未迁移任务全部有稳定原因码（`RETAIL_TALK_CHA
 
 | 类型 | 数量 | 做法 |
 |---|---:|---|
-| 按生产路径直读 `quest_definition/quests/<id>.xml` | 13 | 改 `QuestXmlFixtures.open(id)`（生产优先 → 冻结副本回落） |
+| 按生产路径直读 `quest/definitions/quests/<id>.xml` | 13 | 改 `QuestXmlFixtures.open(id)`（生产优先 → 冻结副本回落） |
 | 按 classpath 直读 `/aion/data/.../quests/<id>.xml` | 37 | 改 `QuestXmlFixtures.openResource(path)`（新增 helper，按路径末段取任务号） |
 | 审计"生产目录/生产 catalog" | 4 | 改生产视图 `RetailQuestDriver.overlay(QuestDefinitionDirectoryLoader.compile(...))` |
 | `QuestRetailClassGateTest` 职业轴 | 1 | 口径按 owner 分流：真端驱动任务按真端展开口径，XML 保留任务仍按客户端窄口径；登记分歧从 `retail-metadata-divergences.tsv` 读取 |

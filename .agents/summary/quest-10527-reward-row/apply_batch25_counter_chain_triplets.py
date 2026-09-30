@@ -41,7 +41,7 @@ import sys
 from pathlib import Path
 
 QUEST_DIR = (Path(__file__).resolve().parents[3]
-             / "src/main/resources/aion/data/static_data/quest_definition/quests")
+             / "src/main/resources/aion/data/static_data/quest/definitions/quests")
 
 CHAIN_PROGRESS = '''  <progress>
     <!-- 客户端 quest_monster.csv 的行是链式 0/1 计数槽：行 0 = SECTION_0<1 且 SECTION_5==0，

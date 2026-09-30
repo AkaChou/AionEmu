@@ -26,7 +26,7 @@ HERE = Path(__file__).resolve().parent
 DECISIONS = REPO / 'src/test/resources/quest/retail-simple-hunt-adjudicated-decisions.tsv'
 RETAIL_TABLE = REPO / 'src/main/resources/aion/data/static_data/quest_retail/Quest_SimpleHunt.xml'
 OUT = HERE / 'p0c6-legacy-save-normalization.tsv'
-QUESTS_REL = 'src/main/resources/aion/data/static_data/quest_definition/quests'
+QUESTS_REL = 'src/main/resources/aion/data/static_data/quest/definitions/quests'
 
 
 def head_xml(quest_id):

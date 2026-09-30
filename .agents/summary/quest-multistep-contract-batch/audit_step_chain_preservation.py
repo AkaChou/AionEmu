@@ -18,14 +18,14 @@ from pathlib import Path
 
 BASE = Path(__file__).resolve().parent
 REPO = BASE.parents[2]
-QUESTS = REPO / "src/main/resources/aion/data/static_data/quest_definition/quests"
+QUESTS = REPO / "src/main/resources/aion/data/static_data/quest/definitions/quests"
 ENUM_DIR = REPO / "src/main/java/com/aionemu/gameserver/questEngine/definition"
 sys.path.insert(0, str(BASE))
 import dump_chain_evidence as D  # noqa: E402
 from apply_multistep_chains_v2 import ENUM_ACTIONS, ENUM_PAGES, build_plan  # noqa: E402
 
 
-OLD_PATH = "src/main/resources/aion/data/static_data/quest_definition/quests/{quest_id}.xml"
+OLD_PATH = "src/main/resources/aion/data/static_data/quest/definitions/quests/{quest_id}.xml"
 
 
 def head_text(quest_id: int) -> str:

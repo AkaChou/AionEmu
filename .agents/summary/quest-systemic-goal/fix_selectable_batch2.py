@@ -15,7 +15,7 @@ import re
 
 REPO = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", ".."))
 PROD_DIR = os.path.join(
-    REPO, "src/main/resources/aion/data/static_data/quest_definition/quests")
+    REPO, "src/main/resources/aion/data/static_data/quest/definitions/quests")
 
 # 任务 -> (需删除的可选项 id 集合)（用于识别显式分支）
 BRANCH_DROPS = {

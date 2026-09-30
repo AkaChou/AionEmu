@@ -17,7 +17,7 @@ class AlignClientQuestDialogLifecycleTest(unittest.TestCase):
     def test_replaces_only_hash_verified_legacy_npc_routes(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
-            quest_dir = root / "src/main/resources/aion/data/static_data/quest_definition/quests"
+            quest_dir = root / "src/main/resources/aion/data/static_data/quest/definitions/quests"
             quest_dir.mkdir(parents=True)
             path = quest_dir / "25512.xml"
             path.write_text("""<?xml version="1.0" encoding="UTF-8"?>

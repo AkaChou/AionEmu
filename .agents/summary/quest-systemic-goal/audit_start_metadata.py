@@ -5,7 +5,7 @@
 
 用途：把真端 quest.xml 的 start 元数据（minlevel_permitted / maxlevel_permitted /
 race_permitted / class_permitted / gender_permitted / max_repeat_count）与生产
-quest_definition/quests/*.xml 的 metadata 逐任务比对，输出 TSV 差异清单。
+quest/definitions/quests/*.xml 的 metadata 逐任务比对，输出 TSV 差异清单。
 
 语义约定：
 - 真端 maxlevel_permitted 的 0 / 999 为「无上限」sentinel；998 语义待证（视为 sentinel 候选记录）。
@@ -16,7 +16,7 @@ quest_definition/quests/*.xml 的 metadata 逐任务比对，输出 TSV 差异�
 
 输入（只读）：
   <客户端解包根>/Quest_unpacked/quest.xml
-  src/main/resources/aion/data/static_data/quest_definition/quests/*.xml
+  src/main/resources/aion/data/static_data/quest/definitions/quests/*.xml
 输出：
   .agents/summary/quest-systemic-goal/start-metadata-diff.tsv
   （列：quest_id, field, production, retail, note）
@@ -28,7 +28,7 @@ import xml.etree.ElementTree as ET
 REPO = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", ".."))
 RETAIL_QUEST_XML = f"{REPO.parent / 'PycharmProjects' / 'unpak'}/Quest_unpacked/quest.xml"
 PROD_DIR = os.path.join(
-    REPO, "src/main/resources/aion/data/static_data/quest_definition/quests")
+    REPO, "src/main/resources/aion/data/static_data/quest/definitions/quests")
 OUT_TSV = os.path.join(
     os.path.dirname(os.path.abspath(__file__)), "start-metadata-diff.tsv")
 

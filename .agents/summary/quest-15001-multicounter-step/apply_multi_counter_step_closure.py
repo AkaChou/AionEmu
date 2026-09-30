@@ -28,7 +28,7 @@ REWARD_EXTRAS = {
 }
 
 ROOT = Path(__file__).resolve().parents[3]
-QUEST_DIR = ROOT / "src" / "main" / "resources" / "aion" / "data" / "static_data" / "quest_definition" / "quests"
+QUEST_DIR = ROOT / "src" / "main" / "resources" / "aion" / "data" / "static_data" / "quest/definitions" / "quests"
 REWARD_NODE = re.compile(r'<node label="reward"[^>]*>.*?</node>', re.S)
 TRANSITION = re.compile(r"<transition\b.*?</transition>", re.S)
 

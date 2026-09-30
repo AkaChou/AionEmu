@@ -25,8 +25,8 @@
 
 ## 修复
 
-- `src/main/resources/aion/data/static_data/quest_definition/quests/14045.xml`: `play-movie(272)` 后补 `SHOW_QUEST_PAGE SELECT1_1_1`
-- `src/main/resources/aion/data/static_data/quest_definition/quests/14046.xml`: `play-movie(102)` 后补 `SHOW_QUEST_PAGE SELECT2_1`
+- `src/main/resources/aion/data/static_data/quest/definitions/quests/14045.xml`: `play-movie(272)` 后补 `SHOW_QUEST_PAGE SELECT1_1_1`
+- `src/main/resources/aion/data/static_data/quest/definitions/quests/14046.xml`: `play-movie(102)` 后补 `SHOW_QUEST_PAGE SELECT2_1`
 - 两任务目标页的下一跳 `SETPRO1(10000)` / `SETPRO2(10001)` 路由原本已存在，页面显示后即可继续。
 - 回归覆盖: `Quest14045And14046MoviePageTurnContractTest`
 

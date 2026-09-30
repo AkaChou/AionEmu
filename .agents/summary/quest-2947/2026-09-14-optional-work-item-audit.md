@@ -21,7 +21,7 @@
 
 ## 同类扫描统计
 
-扫描范围为 `src/main/resources/aion/data/static_data/quest_definition/quests/*.xml` 当前工作区内容：
+扫描范围为 `src/main/resources/aion/data/static_data/quest/definitions/quests/*.xml` 当前工作区内容：
 
 - 与 `complete-quest` 同事务的正数 `<remove-item>` 共 109 条路由，涉及 51 个物品 ID。
 - 24 条路由（6 个物品）已经带 `has-item` 守卫，不属于同类。
@@ -34,7 +34,7 @@
 
 ## 验证证据
 
-- `xmllint --noout --schema src/main/resources/aion/data/static_data/quest_definition/quest_definition.xsd src/main/resources/aion/data/static_data/quest_definition/quests/2947.xml`：validates。
+- `xmllint --noout --schema src/main/resources/aion/data/static_data/quest/definitions/quest_definition.xsd src/main/resources/aion/data/static_data/quest/definitions/quests/2947.xml`：validates。
 - `git diff --check`：通过。
 - 专项测试：`Quest2947RewardTurnInTest` 4/4 通过。本会话未运行 Maven，使用既有 `../../../target/classes` 加 JUnit Platform launcher 执行。
 - 变异校验：同一测试指向 HEAD 中修复前的 2947.xml 时 3/4 失败（actions 仍为 `RemoveItem[count=1]`），证明测试确实锁定该缺陷；预览页测试不涉及该合同，保持通过。

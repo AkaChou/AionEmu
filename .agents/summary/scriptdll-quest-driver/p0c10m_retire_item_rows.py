@@ -21,8 +21,8 @@ from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 REPO = HERE.parent.parent.parent
-QUESTS = REPO / 'src/main/resources/aion/data/static_data/quest_definition/quests/%d.xml'
-CATALOG = REPO / 'src/main/resources/aion/data/static_data/quest_definition/quest_definition_catalog.xml'
+QUESTS = REPO / 'src/main/resources/aion/data/static_data/quest/definitions/quests/%d.xml'
+CATALOG = REPO / 'src/main/resources/aion/data/static_data/quest/definitions/quest_definition_catalog.xml'
 RETENTION_COPIES = (
     REPO / 'src/test/resources/quest/retail-xml-retention.tsv',
     REPO / 'src/main/resources/aion/data/static_data/quest_retail/retail-xml-retention.tsv',

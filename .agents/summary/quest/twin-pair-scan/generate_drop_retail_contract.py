@@ -17,7 +17,7 @@ REPO = next(p for p in Path(__file__).resolve().parents if (p / "pom.xml").is_fi
 from xml.etree import ElementTree as ET
 
 DEFAULT_RETAIL = Path(f"{REPO.parent / 'PycharmProjects' / 'unpak'}/Quest_unpacked/quest.xml")
-QUEST_DIR = Path("src/main/resources/aion/data/static_data/quest_definition/quests")
+QUEST_DIR = Path("src/main/resources/aion/data/static_data/quest/definitions/quests")
 OUTPUT = Path("src/test/resources/quest/quest-drop-retail-contract.tsv")
 FIELD = re.compile(r"^drop_(monster|item|prob)_(\d+)$")
 

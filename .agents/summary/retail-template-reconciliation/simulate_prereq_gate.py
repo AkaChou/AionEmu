@@ -4,7 +4,7 @@ from __future__ import annotations
 import xml.etree.ElementTree as ET
 from pathlib import Path
 
-QUESTS = Path("src/main/resources/aion/data/static_data/quest_definition/quests")
+QUESTS = Path("src/main/resources/aion/data/static_data/quest/definitions/quests")
 TSV = Path("src/test/resources/quest/quest-prerequisite-retail-contract.tsv")
 
 def effective(path: Path) -> set[int]:

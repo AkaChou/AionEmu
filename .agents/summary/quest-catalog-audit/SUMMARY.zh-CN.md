@@ -6,7 +6,7 @@
 2. 任务 `10035`（Soar to the Corridor）中文名称被错误标记为《地下神殿的秘密空间》（与 10034 相同）。
 
 ## 根因分析
-在任务静态数据 `quest_definition/quests/10035.xml` 和 `quest_data/quest_data.xml` 中，`display-name-id` / `nameId` 被误填为前一个任务的 `1141845`，而官方 5.8 客户端正确 ID 为 `1141846`（`STR_QUEST_NAME_Q10035`，中文名《锡兰泰拉回廊进军准备》）。
+在任务静态数据 `quest/definitions/quests/10035.xml` 和 `quest_data/quest_data.xml` 中，`display-name-id` / `nameId` 被误填为前一个任务的 `1141845`，而官方 5.8 客户端正确 ID 为 `1141846`（`STR_QUEST_NAME_Q10035`，中文名《锡兰泰拉回廊进军准备》）。
 
 通过对比官方 5.8 客户端（`<客户端解包根>/`），对服务端全量 6,222 个任务进行了全要素扫描，发现类似错误多达 219 处，主要分类为：
 - **错位映射至其他任务名称（116 处）**：如 10035 错映射至 10034、10100 错映射至 10101、80721~80736 等活动任务整体偏移。
@@ -20,7 +20,7 @@
 
 ## 修复范围
 1. **任务定义修正**：
-   - 修复 `src/main/resources/aion/data/static_data/quest_definition/quests/*.xml` 共 213 个文件中的 `display-name-id`。
+   - 修复 `src/main/resources/aion/data/static_data/quest/definitions/quests/*.xml` 共 213 个文件中的 `display-name-id`。
    - 同步更新 `src/main/resources/aion/data/static_data/quest_data/quest_data.xml` 中对应的 210 处 `nameId`。
 2. **任务目录文档更新（`docs/QUEST_CATALOG.zh-CN.md`）**：
    - 刷新生成日期为 `2026-09-18`。

@@ -25,8 +25,8 @@ from collections import defaultdict
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
-QUEST_DIR = REPO_ROOT / "src/main/resources/aion/data/static_data/quest_definition/quests"
-CATALOG = REPO_ROOT / "src/main/resources/aion/data/static_data/quest_definition/quest_definition_catalog.xml"
+QUEST_DIR = REPO_ROOT / "src/main/resources/aion/data/static_data/quest/definitions/quests"
+CATALOG = REPO_ROOT / "src/main/resources/aion/data/static_data/quest/definitions/quest_definition_catalog.xml"
 
 SECTION_LT_RE = re.compile(r"SECTION_(\d+)\s*<\s*(\d+)")
 SECTION_EQ_RE = re.compile(r"SECTION_(\d+)\s*==\s*(\d+)")

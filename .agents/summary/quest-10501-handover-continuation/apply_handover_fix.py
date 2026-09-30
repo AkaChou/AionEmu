@@ -20,7 +20,7 @@ import sys
 
 REPO = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", ".."))
 XML_DIR = os.path.join(REPO, "src", "main", "resources", "aion", "data", "static_data",
-                       "quest_definition", "quests")
+                       "quest/definitions", "quests")
 OK_PAGE = "CHECK_USER_ITEM_OK"
 TRANSITION_RE = re.compile(r"<transition\b[^>]*>.*?</transition>", re.S)
 

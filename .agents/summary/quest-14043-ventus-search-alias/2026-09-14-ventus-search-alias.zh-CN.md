@@ -10,7 +10,7 @@
 
 ## 权威证据链
 
-1. 服务端任务合同 `src/main/resources/aion/data/static_data/quest_definition/quests/14043.xml`：
+1. 服务端任务合同 `src/main/resources/aion/data/static_data/quest/definitions/quests/14043.xml`：
    - `:87/:98` 起始阶段（`started`，var0=0）与 NPC 278532 对话；
    - `:355`/`:366` `reward6`/`reward8` 的 `npc-complete` 也是 278532。
    即任务只在这三个阶段寻找 278532，与 241198/241418 无关。

@@ -42,7 +42,7 @@
 
 ## 验证证据
 
-1. `xmllint --noout --schema src/main/resources/aion/data/static_data/quest_definition/quest_definition.xsd src/main/resources/aion/data/static_data/quest_definition/quests/2392.xml`：通过。
+1. `xmllint --noout --schema src/main/resources/aion/data/static_data/quest/definitions/quest_definition.xsd src/main/resources/aion/data/static_data/quest/definitions/quests/2392.xml`：通过。
 2. `git diff --check`：通过。
 3. Maven 门禁：
    - `mvn test -Dtest=Quest2392BeautifulFeatherTest,QuestMutationPlannerTest,Quest1922RewardTurnInTest,Quest2947RewardTurnInTest,QuestDefinitionCatalogManifestTest,ProductionCatalogWhitelistVerificationTest`

@@ -29,7 +29,7 @@ sys.path.insert(0, str(BASE))
 import dump_chain_evidence as D  # noqa: E402
 
 REPO = BASE.parents[2]
-QUESTS = REPO / "src/main/resources/aion/data/static_data/quest_definition/quests"
+QUESTS = REPO / "src/main/resources/aion/data/static_data/quest/definitions/quests"
 ENUM_DIR = REPO / "src/main/java/com/aionemu/gameserver/questEngine/definition"
 REWARD_WINDOW = "SHOW_SELECT_QUEST_REWARD_WINDOW1"
 CHAIN_COMMENT = ("    <!-- 客户端逐行对话链合同：每行一个 START/REWARD 状态，每步使用该行客户端的页面与按钮动作。 "

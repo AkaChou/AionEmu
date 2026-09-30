@@ -30,7 +30,7 @@
 
 3. **第一批退役 8 个多步 SimpleTalk 任务**：
    - 任务列表：`1314, 1471, 2428, 3201, 4201, 21244, 80479, 80483`；
-   - 物理删除 `src/main/resources/aion/data/static_data/quest_definition/quests/<id>.xml`；
+   - 物理删除 `src/main/resources/aion/data/static_data/quest/definitions/quests/<id>.xml`；
    - 从 `quest_definition_catalog.xml` 移除上述 8 个可执行 XML 定义声明；
    - 更新 `retail-xml-retention.tsv`（主目录及测试目录），标记为 `RETAIL_TABLE SimpleTalk OK retired-xml-in-git-history`；
    - 同步更新 `retail-simple-talk-drift.tsv` 实际分类（`DIFF:TRANSITION_SET` / `DIFF:NODE_PROJECTION`）。

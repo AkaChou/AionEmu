@@ -9,7 +9,7 @@ reward claim, 1008 client-local close (dead-end shape), other client quest actio
 that need a chain root).
 
 输入 / Inputs:
-  src/main/resources/aion/data/static_data/quest_definition/quests/*.xml
+  src/main/resources/aion/data/static_data/quest/definitions/quests/*.xml
   docs/quest/client-dialog-mapping/quest-dialog-action-details.csv
   src/main/java/com/aionemu/gameserver/questEngine/definition/QuestDialogAction.java
 
@@ -28,7 +28,7 @@ from collections import Counter
 
 REPO = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", ".."))
 QUEST_XML_DIR = os.path.join(REPO, "src", "main", "resources", "aion", "data", "static_data",
-                            "quest_definition", "quests")
+                            "quest/definitions", "quests")
 DETAILS = os.path.join(REPO, "docs", "quest", "client-dialog-mapping",
                        "quest-dialog-action-details.csv")
 ACTIONS = os.path.join(REPO, "src", "main", "java", "com", "aionemu", "gameserver", "questEngine",

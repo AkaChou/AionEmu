@@ -17,7 +17,7 @@ from pathlib import Path
 REPO = next(p for p in Path(__file__).resolve().parents if (p / "pom.xml").is_file())
 
 RETAIL = Path(f"{REPO.parent / '58Server'}/Map/XML")
-REPO_QUESTS = Path(f"{REPO}/src/main/resources/aion/data/static_data/quest_definition/quests")
+REPO_QUESTS = Path(f"{REPO}/src/main/resources/aion/data/static_data/quest/definitions/quests")
 TEMPLATES = {
     "SimpleHunt": "Quest_SimpleHunt.xml",
     "SimpleTalk": "Quest_SimpleTalk.xml",

@@ -15,11 +15,11 @@ CALL = re.compile(
 	r'\.getClassLoader\(\)\.getResourceAsStream'
 	r'|(?:getClass\(\)|[A-Za-z_][A-Za-z0-9_]*\.class)\.getResourceAsStream)\('
 	r'\s*(?P<arg>'
-	r'"/aion/data/static_data/quest_definition/quests/[^"]*"'
-	r'|"aion/data/static_data/quest_definition/quests/[^"]*"'
-	r'|"/aion/data/static_data/quest_definition/quests/"\s*\+\s*[A-Za-z_][A-Za-z0-9_]*\s*\+\s*"\.xml"'
-	r'|"aion/data/static_data/quest_definition/quests/"\s*\+\s*[A-Za-z_][A-Za-z0-9_]*\s*\+\s*"\.xml"'
-	r'|"/aion/data/static_data/quest_definition/quests/"\s*\+\s*[A-Za-z_][A-Za-z0-9_]*'
+	r'"/aion/data/static_data/quest/definitions/quests/[^"]*"'
+	r'|"aion/data/static_data/quest/definitions/quests/[^"]*"'
+	r'|"/aion/data/static_data/quest/definitions/quests/"\s*\+\s*[A-Za-z_][A-Za-z0-9_]*\s*\+\s*"\.xml"'
+	r'|"aion/data/static_data/quest/definitions/quests/"\s*\+\s*[A-Za-z_][A-Za-z0-9_]*\s*\+\s*"\.xml"'
+	r'|"/aion/data/static_data/quest/definitions/quests/"\s*\+\s*[A-Za-z_][A-Za-z0-9_]*'
 	r'|[A-Za-z_][A-Za-z0-9_]*)\s*\)', re.DOTALL)
 
 

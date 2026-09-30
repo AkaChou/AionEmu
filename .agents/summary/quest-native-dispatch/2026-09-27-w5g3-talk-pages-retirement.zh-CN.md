@@ -56,7 +56,7 @@ dump 全树 `find -iname "*q80814.html"` 等零命中、`quest_client_summary_ro
 | 8 | drift 重冻 | `retail-data-driven-drift.tsv`：本片 **9 行**（25200→ADOPTED；5 行→新码；3 行 detail 修正）；**foreign 44 行按纪律回置**（见 §4.2） |
 | 9 | 冻结指纹 | `retail-data-driven-ir-fingerprints.tsv` 增 25200（`a828acdb…` / nodes 4 / transitions 25），1217 → 1218 |
 | 10 | retention | 三份副本同改 9 行：25200 → `RETAIL_TABLE/OK`（`basis=DD_TALK_JOURNAL_ROW`）；5 行 → `SEMANTIC_GAP:RETAIL_TALK_JOURNAL_MISSING`；3 行 reason 修正为 `RETAIL_ITEMPLAY_ACQUIRE_EVENT_DEFERRED` |
-| 11 | **遗留 XML 退役** | `quest_definition/quests/25200.xml`（91 行，git blob `7b1aebbe2ff1c3a6d8e5431c381dc0d8c6880682`）+ `quest_definition_catalog.xml` 条目（1265 → 1264，与 XML 文件数一致） |
+| 11 | **遗留 XML 退役** | `quest/definitions/quests/25200.xml`（91 行，git blob `7b1aebbe2ff1c3a6d8e5431c381dc0d8c6880682`）+ `quest_definition_catalog.xml` 条目（1265 → 1264，与 XML 文件数一致） |
 
 ## 4. 级联与两起操作事故（诚实留痕）
 

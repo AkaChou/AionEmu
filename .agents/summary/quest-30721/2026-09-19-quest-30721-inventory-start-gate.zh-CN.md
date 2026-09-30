@@ -38,7 +38,7 @@ s2 -> s3: item-play 182215698, remove-item 182215698 x1
 
 ## 修复
 
-- `src/main/resources/aion/data/static_data/quest_definition/quests/30721.xml`：
+- `src/main/resources/aion/data/static_data/quest/definitions/quests/30721.xml`：
   删除 `metadata/inventory-items` 中的 `182215698`。
 - `src/main/resources/aion/data/static_data/quest_data/quest_data.xml`：
   同步删除 quest `30721` 的对应 `inventory_items` 行，保持迁移来源一致。

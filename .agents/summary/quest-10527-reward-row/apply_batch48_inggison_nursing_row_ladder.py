@@ -21,7 +21,7 @@ import re
 import sys
 from pathlib import Path
 
-QUEST = Path('src/main/resources/aion/data/static_data/quest_definition/quests/11012.xml')
+QUEST = Path('src/main/resources/aion/data/static_data/quest/definitions/quests/11012.xml')
 
 OLD_NODES = """  <nodes>
     <node label="unaccepted" status="NONE">

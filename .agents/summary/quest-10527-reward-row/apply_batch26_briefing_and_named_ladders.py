@@ -39,7 +39,7 @@ import sys
 from pathlib import Path
 
 QUEST_DIR = (Path(__file__).resolve().parents[3]
-             / "src/main/resources/aion/data/static_data/quest_definition/quests")
+             / "src/main/resources/aion/data/static_data/quest/definitions/quests")
 
 VAR0_FIELD = ('    <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" '
               'scope="LOCAL"/>\n')

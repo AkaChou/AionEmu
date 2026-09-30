@@ -89,7 +89,7 @@ if (exits.requires(entry.questId(), RetailClientDialogExits.SELECT1_1)) {
 | 清单×4 | `src/main/resources/.../quest_retail/retail-xml-retention.tsv`、`src/test/resources/quest/retail-xml-retention.tsv`、`target/{classes,test-classes}/...` | 3 行 `XML_RETENTION → RETAIL_TABLE`，理由 `retired-xml-in-git-history p0c40-accept-chain-decisions.tsv basis=CHAIN_ACCEPT_CONTINUATION`；四副本 md5 `ea6170e93004ae51f5dc99a53d51e1c7` |
 | 清单快照 | `.agents/summary/scriptdll-quest-driver/retail-xml-retention.tsv` | 同 3 行按行手术（snapshot 落后于生产副本，单独核对） |
 | 目录×2 | `src/main/resources/.../quest_definition_catalog.xml`、`target/classes/...` | 删 3 条 `<definition>`，条目 **1344 → 1341**；md5 `5248f3a6eefec84961e4813457a76a29` |
-| 生产 XML×2 | `.../quest_definition/quests/{21460,29070,29071}.xml` | 删除（tracked，`git show HEAD:<path>` 可复现） |
+| 生产 XML×2 | `.../quest/definitions/quests/{21460,29070,29071}.xml` | 删除（tracked，`git show HEAD:<path>` 可复现） |
 | 链式指纹×2 | `src/test/resources/quest/retail-simple-talk-chain-ir-fingerprints.tsv`、`target/test-classes/...` | 42 行改值 + 3 行新增，**282 → 285**；md5 `c458370f932e5c8c43e1dd2bae11693f`；尾部历史块（`80752, 1323, 2611, 3001, 3023, 21136, 24123`）逐字节保留 |
 | 探针归档 | `.agents/summary/scriptdll-quest-driver/P0c40AcceptChainProbeTest.java.txt`（355 行） | 归档并从测试树删除（含 `target` 下 `.class`） |
 | 机械脚本 | `.agents/summary/scriptdll-quest-driver/p0c40_flip_hold_rows.py`、`p0c40_refreeze_fingerprints.py` | dry-run/`--apply` 双档；whipsaw 守卫 + 行数/升序/尾部块三重断言 |

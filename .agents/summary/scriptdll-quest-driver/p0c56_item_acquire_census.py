@@ -18,7 +18,7 @@ from pathlib import Path
 REPO = Path(__file__).resolve().parents[3]
 SUMMARY = REPO / ".agents/summary/scriptdll-quest-driver"
 RETAIL = REPO / "src/main/resources/aion/data/static_data/quest_retail"
-QUESTS = REPO / "src/main/resources/aion/data/static_data/quest_definition/quests"
+QUESTS = REPO / "src/main/resources/aion/data/static_data/quest/definitions/quests"
 
 OUT = SUMMARY / "p0c56-item-acquire-census.tsv"
 CLASSIFICATION = SUMMARY / "p0c56-classification-now.tsv"

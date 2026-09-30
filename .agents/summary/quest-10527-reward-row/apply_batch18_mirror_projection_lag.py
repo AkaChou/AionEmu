@@ -30,7 +30,7 @@ import sys
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[3]
-QUESTS = REPO / "src/main/resources/aion/data/static_data/quest_definition/quests"
+QUESTS = REPO / "src/main/resources/aion/data/static_data/quest/definitions/quests"
 
 # quest_id -> (镜像任务, 镜像的领奖行, 末行 NPC 说明)
 TARGETS = {

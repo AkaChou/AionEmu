@@ -27,7 +27,7 @@ for q in tree_quest.getroot().findall("quest"):
         desc = q.find("desc")
         client_quests[qid.text.strip()] = desc.text.strip() if desc is not None and desc.text else ""
 
-prod_dir = "src/main/resources/aion/data/static_data/quest_definition/quests"
+prod_dir = "src/main/resources/aion/data/static_data/quest/definitions/quests"
 quest_data_path = "src/main/resources/aion/data/static_data/quest_data/quest_data.xml"
 
 tree_qd = ET.parse(quest_data_path)

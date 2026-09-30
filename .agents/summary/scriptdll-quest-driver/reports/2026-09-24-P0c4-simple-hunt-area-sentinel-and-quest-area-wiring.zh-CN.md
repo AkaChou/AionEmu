@@ -116,7 +116,7 @@ python3 -B .agents/summary/scriptdll-quest-driver/verify_retirement.py          
 结果：**1952 例 / 22F / 13E / 1 skipped / BUILD FAILURE**。
 
 **必须 clean 的原因（方法论勘误）**：`mvn test` 只做增量拷贝，已从 `src/main/resources` 删除的
-`quest_definition/quests/*.xml` 会**残留在 `target/classes`**，使"直读退役 XML"的旧测试**假通过**。
+`quest/definitions/quests/*.xml` 会**残留在 `target/classes`**，使"直读退役 XML"的旧测试**假通过**。
 M2-e / M3 / M4 / M5 / P3 各批次引用的 T3「0F」证据都是增量构建取的，对"退役 XML 悬空引用"这一面
 **不成立**；自本行起全树门禁以 `clean` 为准。
 

@@ -96,7 +96,7 @@ def resolve(index, name):
 
 
 def universe():
-    s = read(os.path.join(ROOT, "src/main/resources/aion/data/static_data/quest_definition/quest_definition_catalog.xml"))
+    s = read(os.path.join(ROOT, "src/main/resources/aion/data/static_data/quest/definitions/quest_definition_catalog.xml"))
     ids = {int(x) for x in re.findall(r'<definition id="(\d+)"', s)}
     retention = os.path.join(RETAIL, "retail-xml-retention.tsv")
     for line in io.open(retention, encoding="utf-8", errors="replace"):

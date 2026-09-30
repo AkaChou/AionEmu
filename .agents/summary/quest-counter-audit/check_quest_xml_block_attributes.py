@@ -20,7 +20,7 @@ import sys
 import xml.etree.ElementTree as ET
 from pathlib import Path
 
-QUEST_XML_GLOB = "src/main/resources/aion/data/static_data/quest_definition/**/*.xml"
+QUEST_XML_GLOB = "src/main/resources/aion/data/static_data/quest/definitions/**/*.xml"
 CONTAINER_TAGS = {
     "metadata", "progress", "nodes", "transitions", "kills", "items", "drops",
     "reward-groups", "class-rewards", "start-conditions", "prerequisites", "learn-skills",

@@ -185,7 +185,6 @@ AION_HOME=/path/to/runtime ./aion/start-silent.sh
 
 - [A* PATH 寻路方案](PATH_ASTAR_REFACTOR_PLAN.md)
 - [静态数据 XML → JSONL 迁移方案](STATIC_DATA_JSONL_MIGRATION.zh-CN.md)
-- [任务目录](QUEST_CATALOG.zh-CN.md)
 - [任务编写指南](quest/WRITING_GUIDE.zh-CN.md) / [English](quest/WRITING_GUIDE.md)
 - [任务排查与修复 Playbook](quest/QUEST_REPAIR_PLAYBOOK.zh-CN.md)
 - [任务客户端对话框映射](quest/client-dialog-mapping/README.zh-CN.md)

@@ -53,7 +53,7 @@ import sys
 from pathlib import Path
 
 QUEST_DIR = (Path(__file__).resolve().parents[3]
-             / "src/main/resources/aion/data/static_data/quest_definition/quests")
+             / "src/main/resources/aion/data/static_data/quest/definitions/quests")
 
 # --- 1876 / 2876：reward 投影 1 -> 2，补 ENTER_WORLD 自愈边 ------------------------------------
 OLD_1876_REWARD = '''    <node label="reward" status="REWARD">

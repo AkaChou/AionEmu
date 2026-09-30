@@ -10,7 +10,7 @@ from pathlib import Path
 
 REPO = next(p for p in Path(__file__).resolve().parents if (p / "pom.xml").is_file())
 RETAIL = Path(f"{REPO.parent / '58Server'}/Map/XML")
-CATALOG = REPO / 'src/main/resources/aion/data/static_data/quest_definition/quest_definition_catalog.xml'
+CATALOG = REPO / 'src/main/resources/aion/data/static_data/quest/definitions/quest_definition_catalog.xml'
 TABLES = ['Quest_SimpleHunt.xml', 'Quest_SimpleTalk.xml', 'Quest_SimpleCollectItem.xml', 'Quest_SimpleUseItem.xml',
           'Quest_SimpleItemPlay.xml', 'Quest_SimpleSerialHunt.xml', 'Quest_SimpleGather.xml', 'Quest_CombineTask.xml',
           'data_driven_quest.xml']

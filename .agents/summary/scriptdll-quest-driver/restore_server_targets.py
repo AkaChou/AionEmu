@@ -15,7 +15,7 @@ import re
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[3]
-PROD = REPO / "src/main/resources/aion/data/static_data/quest_definition/quests"
+PROD = REPO / "src/main/resources/aion/data/static_data/quest/definitions/quests"
 OUT = REPO / "src/test/resources/quest/quest-simple-hunt-server-target-exceptions.tsv"
 
 RESTORE = [

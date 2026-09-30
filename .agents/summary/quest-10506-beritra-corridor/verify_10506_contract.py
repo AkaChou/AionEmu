@@ -9,9 +9,9 @@ import lxml.etree as etree
 
 def main():
     root_dir = Path(__file__).resolve().parents[3]
-    schema_path = root_dir / "src/main/resources/aion/data/static_data/quest_definition/quest_definition.xsd"
-    xml_path = root_dir / "src/main/resources/aion/data/static_data/quest_definition/quests/10506.xml"
-    aion_xml_path = root_dir / "aion/data/static_data/quest_definition/quests/10506.xml"
+    schema_path = root_dir / "src/main/resources/aion/data/static_data/quest/definitions/quest_definition.xsd"
+    xml_path = root_dir / "src/main/resources/aion/data/static_data/quest/definitions/quests/10506.xml"
+    aion_xml_path = root_dir / "aion/data/static_data/quest/definitions/quests/10506.xml"
 
     # 1. Verify schema
     with open(schema_path, "rb") as sf:

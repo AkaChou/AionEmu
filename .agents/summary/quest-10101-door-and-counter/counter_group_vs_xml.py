@@ -27,7 +27,7 @@ def html_counters(q):
 
 
 def xml_fields(q):
-    p = f"src/main/resources/aion/data/static_data/quest_definition/quests/{q}.xml"
+    p = f"src/main/resources/aion/data/static_data/quest/definitions/quests/{q}.xml"
     try:
         s = open(p, encoding="utf-8").read()
     except FileNotFoundError:

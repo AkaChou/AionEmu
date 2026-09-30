@@ -2,7 +2,7 @@
 """M2-e / P0c-3：把已迁移（IR 等价 286 + 裁定真端优先 62）的 SimpleHunt 任务从生产 XML 定义中退役。
 
 做两件事（都可用 git 回退，不做任何提交）：
-1) 删除生产资源 `src/main/resources/.../quest_definition/quests/<id>.xml`
+1) 删除生产资源 `src/main/resources/.../quest/definitions/quests/<id>.xml`
    （**不保留测试作用域副本**：历史内容由 git 历史承担，退役事实只记在保留清单行）；
 2) 从生产白名单 `quest_definition_catalog.xml` 移除对应 `<definition>` 行。
 
@@ -21,8 +21,8 @@ REPO = next(p for p in Path(__file__).resolve().parents if (p / "pom.xml").is_fi
 FINGERPRINTS = REPO / 'src/test/resources/quest/retail-simple-hunt-ir-fingerprints.tsv'
 ADJUDICATED_FINGERPRINTS = (REPO / 'src/test/resources/quest'
 	/ 'retail-simple-hunt-adjudicated-ir-fingerprints.tsv')
-PROD_DIR = REPO / 'src/main/resources/aion/data/static_data/quest_definition/quests'
-CATALOG = REPO / 'src/main/resources/aion/data/static_data/quest_definition/quest_definition_catalog.xml'
+PROD_DIR = REPO / 'src/main/resources/aion/data/static_data/quest/definitions/quests'
+CATALOG = REPO / 'src/main/resources/aion/data/static_data/quest/definitions/quest_definition_catalog.xml'
 EVIDENCE = REPO / '.agents/summary/scriptdll-quest-driver/m2e-retired-xml-evidence.tsv'
 
 

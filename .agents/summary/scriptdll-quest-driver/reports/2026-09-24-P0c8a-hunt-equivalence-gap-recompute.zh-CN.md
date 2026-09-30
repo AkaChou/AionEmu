@@ -102,7 +102,7 @@
 首跑（`gates/T3-p0c8-clobbered.log` 同批）暴露的 2 个自因失败已定位并修掉：
 `QuestPrematureRewardRouteExclusionTest` 的 `incompleteProgressCannotRewardAndCompletedProgressCanReport` /
 `gateRejects1347ReportWithOnlyOneCounterComplete` —— 该类的 `load(int)` 用 classpath 读
-`quest_definition/quests/<id>.xml`，1347 退役后 NPE；改为 `ProductionQuestDefinitions.definition(id)`
+`quest/definitions/quests/<id>.xml`，1347 退役后 NPE；改为 `ProductionQuestDefinitions.definition(id)`
 （生产视图对未退役任务返回同一 XML 定义，语义不变）后 1347 相关用例全绿。
 
 ### 5.2 非本切片的既有失败（T2）

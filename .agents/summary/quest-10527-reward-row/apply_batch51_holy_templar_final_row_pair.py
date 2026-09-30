@@ -39,7 +39,7 @@ QUESTS = {
     4942: {"ritual_npc": 204075, "ritual_item": 186000085, "handover_npc": 204053, "old_reward": 0},
 }
 FINAL_STEP = 10
-QUEST_DIR = Path('src/main/resources/aion/data/static_data/quest_definition/quests')
+QUEST_DIR = Path('src/main/resources/aion/data/static_data/quest/definitions/quests')
 
 
 def node(label: str, status: str, value: int) -> str:

@@ -33,4 +33,4 @@
 
 ## 生效前提
 
-`target/classes/aion/data/static_data/quest_definition/quests/3934.xml` 仍是旧资源（含 `<preview>`）。重新 `mvn -q process-resources`（或完整测试/打包）拷贝资源后，`//reload quest`/重启才会读到修复。
+`target/classes/aion/data/static_data/quest/definitions/quests/3934.xml` 仍是旧资源（含 `<preview>`）。重新 `mvn -q process-resources`（或完整测试/打包）拷贝资源后，`//reload quest`/重启才会读到修复。

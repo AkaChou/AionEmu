@@ -17,7 +17,7 @@
 2. **为什么测试没抓到（同一教训的第二例）**：白名单在 `ProductionCatalogWhitelistVerificationTest` 里还有**第三份拷贝**，
    而该测试只跑 **XML-owned** 目录（catalog），从不跑 overlay 目录；两份清单都漏了 `SYSTEM_GRANT`，于是双双全绿。
 3. **更深的缺口**：**没有任何测试跑过完整的 `prepareProductionDefinitions`**。它此前只能靠
-   `Config.dataFile("./data/static_data/quest_definition")` + `DataManager.NPC_DATA` 启动，测试无法注入。
+   `Config.dataFile("./data/static_data/quest/definitions")` + `DataManager.NPC_DATA` 启动，测试无法注入。
    P0c-5b（14120 缺 `talk_npc1`）与本例（`SYSTEM_GRANT` 未接线）都是这个缺口的产物。
 4. **修复**：① 把事件接线清单抽成唯一来源 `QuestProductionEventWiring`（启动路径与测试共用）；
    ② `QuestEngine` 增加**可注入 NPC AI 索引**的重载，使门禁能跑完整启动路径；
@@ -72,7 +72,7 @@
    启动日志不再出现 `Can't initialize typed quest engine`。
 2. **AI 索引口径**：门禁注入 `QuestInteractionObjectTestData.npcAiResolver`（与生产 `DataManager.NPC_DATA` 同口径：
    只区分 `quest_use_item`）。若 `DataManager.NPC_DATA` 本身加载失败（静态数据问题），门禁不覆盖。
-3. **目录来源差异**：生产 `prepareProductionDefinitions()` 无参版本读 `Config.dataFile("./data/static_data/quest_definition")`，
+3. **目录来源差异**：生产 `prepareProductionDefinitions()` 无参版本读 `Config.dataFile("./data/static_data/quest/definitions")`，
    门禁读 classpath 视图（`ProductionQuestDefinitions`）。两者内容一致性沿用既有口径（部署时 resource 与运行目录同源）。
 4. **P0c-5b 与本切片是同一模式的两例**：启动期合同（交互对象 / 事件接线）此前都无门禁。现已**两道都进 T1**；
    后续再往 `prepareProductionDefinitions` 加校验时，必须同批给门禁，否则同类问题会以第三种形态再现。

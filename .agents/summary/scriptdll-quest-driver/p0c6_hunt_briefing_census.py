@@ -23,7 +23,7 @@ import sys
 REPO = pathlib.Path(__file__).resolve().parents[3]
 TABLE = REPO / "src/main/resources/aion/data/static_data/quest_retail/Quest_SimpleHunt.xml"
 RETENTION = REPO / "src/test/resources/quest/retail-xml-retention.tsv"
-QUESTS = REPO / "src/main/resources/aion/data/static_data/quest_definition/quests"
+QUESTS = REPO / "src/main/resources/aion/data/static_data/quest/definitions/quests"
 UNPAK = pathlib.Path(f"{REPO.parent / 'PycharmProjects' / 'unpak'}")
 DIALOGS = UNPAK / "data_unpacked/Dialogs"
 MONSTER = UNPAK / "Quest_unpacked/quest_monster.csv"

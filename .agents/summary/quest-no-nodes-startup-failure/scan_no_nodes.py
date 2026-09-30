@@ -9,7 +9,7 @@ startup with "NO_NODES: executable definition has no nodes".
     python3 scan_no_nodes.py [quest_definition_dir]
 
 默认扫描源码树目录 / Defaults to the source-tree directory:
-    src/main/resources/aion/data/static_data/quest_definition
+    src/main/resources/aion/data/static_data/quest/definitions
 
 退出码 / Exit codes: 0 = 无违例 (green), 1 = 存在 NO_NODES 违例 (red)。
 """
@@ -17,7 +17,7 @@ import sys
 import xml.etree.ElementTree as ET
 from pathlib import Path
 
-DEFAULT_DIR = Path("src/main/resources/aion/data/static_data/quest_definition")
+DEFAULT_DIR = Path("src/main/resources/aion/data/static_data/quest/definitions")
 
 
 def scan(directory: Path) -> list[tuple[int, str, str]]:
@@ -30,12 +30,12 @@ def scan(directory: Path) -> list[tuple[int, str, str]]:
             continue
         quest_id = int(definition.get("id"))
         resource = definition.get("resource")
-        # resource 可能带 aion/data/static_data/quest_definition/ 前缀，也可能相对目录。
+        # resource 可能带 aion/data/static_data/quest/definitions/ 前缀，也可能相对目录。
         # The resource may carry the aion/data/... prefix or be relative to the directory.
         quest_file = directory / resource
         if not quest_file.is_file():
             stripped = resource
-            for prefix in ("aion/data/static_data/quest_definition/", "./"):
+            for prefix in ("aion/data/static_data/quest/definitions/", "./"):
                 if stripped.startswith(prefix):
                     stripped = stripped[len(prefix):]
                     break

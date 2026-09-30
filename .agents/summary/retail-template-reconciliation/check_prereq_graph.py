@@ -5,7 +5,7 @@ import sys
 import xml.etree.ElementTree as ET
 from pathlib import Path
 
-QUESTS = Path("src/main/resources/aion/data/static_data/quest_definition/quests")
+QUESTS = Path("src/main/resources/aion/data/static_data/quest/definitions/quests")
 
 def graph():
     have = {int(p.stem) for p in QUESTS.glob("*.xml") if p.stem.isdigit()}

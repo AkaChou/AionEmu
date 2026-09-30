@@ -5,7 +5,7 @@
   真端：<真端根>/Map/XML/
         Quest_SimpleHunt/SerialHunt/Talk/CollectItem/UseItem/ItemPlay/CombineTask.xml,
         data_driven_quest.xml, quest.xml, npcs.xml, Items.xml
-  本仓库：src/main/resources/aion/data/static_data/quest_definition/quests/*.xml
+  本仓库：src/main/resources/aion/data/static_data/quest/definitions/quests/*.xml
 
 输出（本目录）:
   reconciliation.tsv      逐任务对账结果
@@ -29,7 +29,7 @@ from pathlib import Path
 
 RETAIL = Path(f"{REPO.parent / '58Server'}/Map/XML")
 REPO = next(p for p in Path(__file__).resolve().parents if (p / "pom.xml").is_file())
-OURS = REPO / "src/main/resources/aion/data/static_data/quest_definition/quests"
+OURS = REPO / "src/main/resources/aion/data/static_data/quest/definitions/quests"
 OUT = Path(__file__).resolve().parent
 
 TEMPLATES = [

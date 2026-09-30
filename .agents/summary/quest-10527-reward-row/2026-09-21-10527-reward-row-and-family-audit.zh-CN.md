@@ -243,13 +243,13 @@
 已执行（本轮）：
 
 ```bash
-xmllint --noout --schema src/main/resources/aion/data/static_data/quest_definition/quest_definition.xsd \
-  src/main/resources/aion/data/static_data/quest_definition/quests/10525.xml \
-  src/main/resources/aion/data/static_data/quest_definition/quests/20525.xml \
-  src/main/resources/aion/data/static_data/quest_definition/quests/10527.xml \
-  src/main/resources/aion/data/static_data/quest_definition/quests/20527.xml \
-  src/main/resources/aion/data/static_data/quest_definition/quests/10528.xml \
-  src/main/resources/aion/data/static_data/quest_definition/quests/20528.xml
+xmllint --noout --schema src/main/resources/aion/data/static_data/quest/definitions/quest_definition.xsd \
+  src/main/resources/aion/data/static_data/quest/definitions/quests/10525.xml \
+  src/main/resources/aion/data/static_data/quest/definitions/quests/20525.xml \
+  src/main/resources/aion/data/static_data/quest/definitions/quests/10527.xml \
+  src/main/resources/aion/data/static_data/quest/definitions/quests/20527.xml \
+  src/main/resources/aion/data/static_data/quest/definitions/quests/10528.xml \
+  src/main/resources/aion/data/static_data/quest/definitions/quests/20528.xml
 python3 .agents/summary/quest-10527-reward-row/audit_reward_row_vs_client_steps.py
 git diff --check
 ```
@@ -632,7 +632,7 @@ mvn -B test -Dtest='ReportRowRewardProjectionContractTest,ArenaPhaseRowContractT
 | `OK` | 34 | SECTION_0 取值可达，其中 3210 本批次随 reward 投影一起收口（保持 OK） |
 | `UNREACHABLE` | 3 | 1922 / 2947 / 14054 —— legacy 从未实现客户端声明的中间阶段，需单独立项（见第十节） |
 | `NO_SECTION0_FIELD` | 5 | 3031 / 3725 / 4725 / 11468 / 21468 —— var0 不落在 SECTION_0（恒 0），与 `SECTION_0==0` 声明一致，非缺陷 |
-| `NO_DEFINITION` | 43 | 客户端有 SECTION_0 声明但 `quest_definition/quests` 下没有定义文件（1039、2015、2057、9685、10020-10022、10073、11250-11300、18402、18502、20021-20024、20073、21250-21301、24071、28402、28502、41556）——属未实现/未迁移任务，不是行投影错位，需要按任务链立项 |
+| `NO_DEFINITION` | 43 | 客户端有 SECTION_0 声明但 `quest/definitions/quests` 下没有定义文件（1039、2015、2057、9685、10020-10022、10073、11250-11300、18402、18502、20021-20024、20073、21250-21301、24071、28402、28502、41556）——属未实现/未迁移任务，不是行投影错位，需要按任务链立项 |
 
 `OK` 判定只说明“客户端声明的 SECTION_0 值在服务端可达”，不等于“每一行都有状态”。仍被判错位（`ROW_BEHIND` /
 `ROW_WITHOUT_STATE`）的 SECTION_0 任务及处置：11149（QE-045 回归锁，按客户端验收值固定）；10522 / 20522 /
@@ -705,7 +705,7 @@ mvn -B test -Dtest='ExternalRewardAdvanceReentryContractTest,Quest10522AutoStart
 - 结果：`Tests run: 84, Failures: 0, Errors: 0, Skipped: 0`（17 个测试类）；`PRODUCTION_COMPILE_OK=6189`、
   `PRODUCTION_COMPILE_FAILURES=0`、`PRODUCTION_INTERACTION_OBJECT_FAILURES=0`、`PRODUCTION_WHITELIST_VIOLATIONS=0`。
   首轮（更新测试前）暴露且已修的两处断言：`reward` 投影 `0 → 1` 与自愈边 `var0==1 → ==0`。
-- 静态：`xmllint --noout --schema src/main/resources/aion/data/static_data/quest_definition/quest_definition.xsd`
+- 静态：`xmllint --noout --schema src/main/resources/aion/data/static_data/quest/definitions/quest_definition.xsd`
   8 个文件全部 `validates`；IDE lint 0 警告（Java 侧仅有既存的风格类 warning，与本次 hunk 无关）；
   `git diff --check` 干净；`apply_batch8_external_writer_reward_row.py --check` 幂等通过。
 - 全库审计同工作树前后对照（先回放批 8 前的 8 个 XML 取基线，跑完审计再回放修复版本）：

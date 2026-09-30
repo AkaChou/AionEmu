@@ -35,7 +35,7 @@ import sys
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[3]
-QUESTS = REPO / "src/main/resources/aion/data/static_data/quest_definition/quests"
+QUESTS = REPO / "src/main/resources/aion/data/static_data/quest/definitions/quests"
 QUEST_ID = 1123
 ZONE = "LF1_SENSORY_AREA_Q1123_210010000"
 MOVIE_ID = 11

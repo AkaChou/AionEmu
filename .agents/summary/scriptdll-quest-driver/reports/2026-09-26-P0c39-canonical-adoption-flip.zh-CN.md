@@ -43,7 +43,7 @@
 | flip 脚本 | `.agents/summary/scriptdll-quest-driver/p0c39_adopt_flip_rows.py` | dry-run/`--apply`；四副本 whipsaw 守卫；XML/目录前置存在性校验；幂等可重跑 |
 | 清单 | `retail-xml-retention.tsv`（4 副本一致，含 `.agents` 快照按行手术） | 7 行 `XML_RETENTION → RETAIL_TABLE`，evidence = `p0c39-canonical-adoption-decisions.tsv basis=CANONICAL_ITEM_CHANNEL` |
 | 目录 | `quest_definition_catalog.xml`（main + target） | 删 7 条 `<definition …>` 行：**1351 → 1344** |
-| 生产 XML | `quest_definition/quests/{7 行}.xml`（main + target） | 删除（源文件 tracked，内容留在 git 历史，`git show HEAD:<path>` 可复现） |
+| 生产 XML | `quest/definitions/quests/{7 行}.xml`（main + target） | 删除（源文件 tracked，内容留在 git 历史，`git show HEAD:<path>` 可复现） |
 | 指纹 | `retail-simple-talk-chain-ir-fingerprints.tsv`（+target，md5 `5b410179…`） | 275 → **282** 数据行；set 对拍 **added=7 / changed=0 / removed=0**；插入保留文件既有布局（尾部历史块未动） |
 | 回归测试期望 | `ReportToManyDialogRouteRegressionTest.java` | 24120 的 1 条陈期望 → 2 条客户端一致期望（见 §1/§3③） |
 | 探针（临时） | `P0c39PreflipProbeTest.java` + `p0c39-probe-before.txt` / `p0c39-probe-after.txt` | flip 前后两轮；**树内已删**（归档 `.java.txt` + 输出 txt） |

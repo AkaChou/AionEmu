@@ -117,12 +117,12 @@ last_verified: 2026-09-14
 symptom: 多 NPC 连续汇报时 var0 卡 0、任务追踪 UI 不推进、CLIENT_PAGE_UNREACHED
 root_cause: Intermediate var node was deleted during Handler to XML migration
 fix_or_guardrail: Restore the intermediate var node and route through NPC_REPORT instead of USE_OBJECT
-evidence: docs/quest/client-dialog-mapping/quest-dialog-action-details.csv; docs/quest/client-dialog-mapping/quest-order-audit.csv; seven listed cases
+evidence: docs/quest/client-dialog-mapping/quest-dialog-action-details.csv; seven listed cases
 validation: static; client-contract; real-client validation required for acceptance
 boundaries: The intermediate NPC and terminal NPC must be distinguished by client action mapping
 superseded_by: none
 see_also: docs/quest/repair-playbook/PATTERNS.zh-CN.md (ORDERED_MULTI_NPC_REPORT_FLOW)
-first_check: client dialog action details, quest-order-audit and var node sequence
+first_check: client dialog action details and var node sequence
 -->
    - **现象**：`6d8019d8f` 误删中间 var 节点，导致 `var0` 永远卡在 0、客户端任务追踪 UI 不推进。
    - **受影响任务**：
@@ -137,7 +137,7 @@ first_check: client dialog action details, quest-order-audit and var node sequen
      - 使用 `SETPRO1(started→reward) + reward var0=0 + 无 set-variable action + SETPRO1 NPC≠终端 NPC` 过滤。
    - **判定依据**：
      - 客户端 `quest-dialog-action-details.csv`：若 select2→SETPRO1 与 select5→SELECT_QUEST_REWARD 分属两个不同 NPC，中间必须有 var 节点。
-     - 客户端 `quest-order-audit.csv`：检查 NPC 是否存在路由孤岛或 `CLIENT_PAGE_UNREACHED`。
+     - 逐路径顺序审计（`QuestDialogOrderAudit`，产物为临时文件不入库）：检查 NPC 是否存在路由孤岛或 `CLIENT_PAGE_UNREACHED`。
    - **修复模式**：恢复中间节点（`status=START, var0=1`）+ `NPC_REPORT`（中间→reward）+ reward 节点 `var0=1`。报告页必须走 `NPC_REPORT`，严禁误用 `USE_OBJECT`。
 
 ---
@@ -1277,7 +1277,7 @@ symptom: 客户端任务书对应不上服务端的“缺口定义”——审�
 root_cause: 真端把这类任务当作“过场/影片播放用隐藏任务”（dev_name 直接写明），任务书没有可见目标行，行为只有“进入指定世界 → 播放过场/影片 → 结束即完成”；迁移时若只看服务端缺口清单，容易误判成“定义缺失需要按行号补齐”，也容易把过场 id 的包类型写错（CutScenes.xml 与 CutSceneMovies.xml 是两张不同的资源表）
 fix_or_guardrail: 1. 先读真端 quest.xml 的 dev_name 与客户端 quest_summary 的 <step> 槽：槽内可见文本全空 → 这一族没有可点亮的行，禁止按 QE-051 行号口径补节点；2. 行为按迁移前 handler 的 enter-world/replay/movie-end 三段落成 typed 定义：unaccepted -> started 用 enter-world + world-is + start-eligible（等级/阵营/已完成由引擎元数据门控），started -> started 重播，started -> complete 用 movie-end + complete-quest；3. 过场/影片 id 必须在客户端资源表里查证，包类型由表决定：CutScenes.xml -> CUTSCENE(0)，CutSceneMovies.xml -> CUTSCENE_MOVIE(1)，迁移前 handler 的 SM_PLAY_MOVIE(1, id) 不是类型依据；4. 没有过场 id 或触发世界证据的成员保持隔离（METADATA_ONLY 或不注册），不得凭空补行为
 evidence: retail-xml-retention.tsv 的 quest 18744 行（XML已退役并删除，见git历史） 与 retail-xml-retention.tsv 的 quest 28744 行（XML已退役并删除，见git历史）（批次 30：进入 300610000 自动接取 + 过场 912 -> 完成，三节点无行节点）；retail-xml-retention.tsv 的 quest 16984 行（XML已退役并删除，见git历史） 与 retail-xml-retention.tsv 的 quest 26984 行（XML已退役并删除，见git历史）（同族仍为 METADATA_ONLY，过场 id/触发世界未取证）；src/test/java/com/aionemu/gameserver/questEngine/definition/CutsceneHiddenQuestFamilyContractTest.java（4 例：自动接取/重播/过场结束完成、不造行不挂对话、METADATA_ONLY 保持、隔离成员未注册未打包）；src/test/java/com/aionemu/gameserver/questEngine/definition/BlankJournalSlotBoundaryContractTest.java（空槽位族边界，批次 24）；src/test/java/com/aionemu/gameserver/questEngine/definition/DisabledClientQuestPlaceholderCatalogTest.java（3959/4963 禁用占位锁定）；.agents/summary/quest-10527-reward-row/audit_reward_row_vs_client_steps.py（BLANK_JOURNAL_SLOT_EXCEPTIONS / CLIENT_ONLY_ISOLATED_QUESTS 登记与 [10] 节输出）；.agents/summary/quest-10527-reward-row/2026-09-21-10527-reward-row-and-family-audit.zh-CN.md（§三十四）；迁移前 handler `AbstractRaksangIntro` 与 _18744Avisos_Intelligence/_28744Procuras_Intelligence 仅存在于 origin/history commit 77d99efd6；真端 quest 模板 dev_name（18744/28744 = 타메스 컷신 재생용(천)、16984/26984 = 룬의 안식처 컷신 재생용 히든 퀘스트 (천)、20015 = 5.5 인트로 영상 재생용 히든 퀘스트）；Aion 5.8 客户端 CutScene 资源表的过场 912 = CS_ID_132（其过场文本为拉科兰遗迹开场）
-validation: static（xmllint + quest_definition.xsd 2/2 validates，catalog XSD validates，docs/QUEST_CATALOG.zh-CN.md 行刷新幂等）+ audit（全库行号审计 NO_REWARD_ROW 178 -> 180、客户端任务书覆盖 5572 -> 5574，MISSING_LAST_ROW 77 / ROW_ALIGNED 2669 / ROW_BEHIND 179 不变）+ focused-test（批次 30：CutsceneHiddenQuestFamilyContractTest 4 例、引擎组合与目录门禁 90 例全绿；PRODUCTION_COMPILE_OK=6191 / FAILURES=0 / INTERACTION_OBJECT_FAILURES=0 / WHITELIST_VIOLATIONS=0）；客户端实机 PENDING_CLIENT
+validation: static（xmllint + quest_definition.xsd 2/2 validates，catalog XSD validates；生成式任务目录不再入库）+ audit（全库行号审计 NO_REWARD_ROW 178 -> 180、客户端任务书覆盖 5572 -> 5574，MISSING_LAST_ROW 77 / ROW_ALIGNED 2669 / ROW_BEHIND 179 不变）+ focused-test（批次 30：CutsceneHiddenQuestFamilyContractTest 4 例、引擎组合与目录门禁 90 例全绿；PRODUCTION_COMPILE_OK=6191 / FAILURES=0 / INTERACTION_OBJECT_FAILURES=0 / WHITELIST_VIOLATIONS=0）；客户端实机 PENDING_CLIENT
 boundaries: 只覆盖“任务书无可见行、任务本身只是播放过场/影片”的隐藏任务；正常有行目标的任务仍按 QE-051/QE-054 判；16984/26984 在拿到过场 id 与触发世界之前不得转成 EXECUTABLE；video 型（CutSceneMovies.xml）与 cutscene 型（CutScenes.xml）不得混用包类型；20015 还带客户端 check_user_item 检查页，属于另一个未取证形态，不得按本卡批量实现
 superseded_by: none
 first_check: 审计报 NO_NODES / MISSING_DEFINITION 且客户端 quest_summary 的 <step> 槽全空时，先查真端 quest.xml 的 dev_name 是否为“컷신/영상 재생용”，再查迁移前 handler 是否有 enter-world + movie 三段行为；有证据才落 typed 定义，并到 CutScenes.xml / CutSceneMovies.xml 里确认过场 id 属于哪张表
@@ -1287,7 +1287,7 @@ keywords: 隐藏任务、过场播放、CutScenes.xml、CutSceneMovies.xml、CS_
 - **判定规则**：真端 `quest.xml` 的 `dev_name` 直接标成“컷신 재생용 / 영상 재생용 히든 퀘스트”的任务，客户端任务书只有空 `<step>` 槽（可见文本全空，最多挂 `[%collectitem]` 占位），服务端行为就是“进入指定世界 → 播放过场/影片 → 结束即完成”。这类任务**没有可点亮的行**，QE-051 的行号口径与 QE-054 的落盘 step 口径都不适用；它们出现在 `NO_NODES` / `MISSING_DEFINITION` 桶里是“清单口径问题”，不是“按行号补定义”的工单。
 - **为什么容易漏**：`quest_summary` 的行既可能写成 `<p>` 也可能写成 `<step>`，只看 `<p>` 会把这一族误判成“1 行”；包类型也常被迁移前 handler 的 `SM_PLAY_MOVIE(1, id)` 带偏——`CutScenes.xml`（990 条，`.seq`）与 `CutSceneMovies.xml`（38 条，`.bik`）是两张互斥资源表，id 落在哪张表决定包类型是 `CUTSCENE`(0) 还是 `CUTSCENE_MOVIE`(1)。
 - **代表案例（批次 30，2026-09-22）**：`18744/28744`（真端 dev_name「타메스 컷신 재생용(천)」）——客户端 4 个空槽、等级 60、`reward_exp1/gold1=0`；迁移前 `AbstractRaksangIntro` 在 world `300610000` 按等级+阵营自动接取并播放过场、已接取存档重播、过场结束置 REWARD 并完成；过场 `912` = `CutScenes.xml` 的 `CS_ID_132`（`cs_id_132.xml` 文本为拉科兰遗迹开场），故 typed 定义用 `CUTSCENE`(0) 而不是 handler 里的类型 1。同族隔离成员：`16984/26984`（METADATA_ONLY，过场 id/触发世界未取证）、`20015`（5.5 开场影片 + `check_user_item` 检查页）、`18706/28706`（客户端 999 级占位）、`3959/4963`（`DisabledClientQuestPlaceholderCatalogTest` 锁定的禁用占位）、`29706`（客户端与真端 `quest.xml` 都不存在）。
-- **全库交叉验证方法**：把 `quest_definition/quests/*.xml` 的 `play-movie movie-id` 与两张客户端资源表求交——当前 232 个 `CUTSCENE` 动作 100% 命中 `CutScenes.xml`，8 个 `CUTSCENE_MOVIE` 100% 命中 `CutSceneMovies.xml`（1..37）；任何新过场动作都应先过这道交叉检查再写。
+- **全库交叉验证方法**：把 `quest/definitions/quests/*.xml` 的 `play-movie movie-id` 与两张客户端资源表求交——当前 232 个 `CUTSCENE` 动作 100% 命中 `CutScenes.xml`，8 个 `CUTSCENE_MOVIE` 100% 命中 `CutSceneMovies.xml`（1..37）；任何新过场动作都应先过这道交叉检查再写。
 - **编号说明**：`QE-054`（legacy 落盘 step 权威值）与 `QE-051`（领奖行投影）覆盖有行任务，本卡片覆盖无行隐藏任务，三者按“任务书是否有可见目标行”分流。
 
 ---
@@ -1442,7 +1442,7 @@ first_seen: 2026-09-26
 last_verified: 2026-09-26
 symptom: `python3 -B .agents/memory-bank/verify_memory_bank.py` 报 `MEMORY_BANK_VERIFY_FAILED STEPS=structure`，逐行 `- Pattern QE-0NN evidence references missing path .../quests/NNNNN.xml`（derived-index 与 freshness 都 OK）；卡片内容本身是对的，只是证据指到了已删除的 XML
 root_cause: `check_memory_bank.py` 用 `EVIDENCE_REFERENCE` 正则从证据字段抓"路径形状"的 token（`目录/文件.ext` 或 `文件.ext`，扩展名域 = java/xml/csv/md/json/properties/xsd/yml/yaml），再用 `EvidenceResolver` 在 `src/ docs/ .agents/ scripts/` 下做精确+后缀匹配；"退役 = 删除"把 quest XML 删掉后，历史卡片里的那些路径就永久悬空。`target/`、`aion/`、`log/` 前缀被显式豁免；`.tsv` 不在扩展名域内，所以写 `retail-xml-retention.tsv` 不会被抓
-fix_or_guardrail: 1. 批量退役收口后跑一次 `verify_memory_bank.py`，把悬空清单当退役尾巴处理（P0c-35 实测 52 处 / 18 卡）。2. 把每处已删 XML 路径替换为**持久指针**：`retail-xml-retention.tsv 的 quest <id> 行（XML 已退役并删除，内容见 git 历史；owner 记录见该清单）`。3. 替换必须**整串精确匹配**：若先替换短形式 `quests/NNNN.xml`，会把同一文件里长路径 `.../quest_definition/quests/NNNN.xml` 的尾段一起吃掉，留下 `.../quest_definition/retail-xml-retention.tsv` 这种半截假路径（本片踩中 2 处，需二次修）。4. 修复脚本按 card 维度 read-modify-write 并带竞态重试（记忆库是并发 lane 共享文件）。5. 收口跑 `sync_memory_bank.py` → `verify_memory_bank.py`，必须 `MEMORY_BANK_VERIFY_OK STEPS=3`
+fix_or_guardrail: 1. 批量退役收口后跑一次 `verify_memory_bank.py`，把悬空清单当退役尾巴处理（P0c-35 实测 52 处 / 18 卡）。2. 把每处已删 XML 路径替换为**持久指针**：`retail-xml-retention.tsv 的 quest <id> 行（XML 已退役并删除，内容见 git 历史；owner 记录见该清单）`。3. 替换必须**整串精确匹配**：若先替换短形式 `quests/NNNN.xml`，会把同一文件里长路径 `.../quest/definitions/quests/NNNN.xml` 的尾段一起吃掉，留下 `.../quest_definition/retail-xml-retention.tsv` 这种半截假路径（本片踩中 2 处，需二次修）。4. 修复脚本按 card 维度 read-modify-write 并带竞态重试（记忆库是并发 lane 共享文件）。5. 收口跑 `sync_memory_bank.py` → `verify_memory_bank.py`，必须 `MEMORY_BANK_VERIFY_OK STEPS=3`
 evidence: .agents/summary/scriptdll-quest-driver/mb_dangling_evidence_fix.py（可重放，--dry-run/--apply；含 retention owner 校验：非 RETAIL_TABLE 的悬空引用列 UNEXPECTED 而不改）；.agents/memory-bank/check_memory_bank.py（EVIDENCE_REFERENCE / EVIDENCE_ENV_ALLOWLIST / EvidenceResolver.SEARCH_ROOTS）；.agents/summary/scriptdll-quest-driver/reports/2026-09-26-P0c35-progress-row-projection.zh-CN.md
 validation: P0c-35 实测：52 处悬空（18 卡，全部命中 RETAIL_TABLE 退役行，UNEXPECTED 0）修复后结构门禁由 FAILED 变 `MEMORY_BANK_VERIFY_OK STEPS=3`；PATTERNS=107 不变（无卡片丢失，证明修复未覆盖并发 lane 的追加写）
 boundaries: 只处理"引用了已删除产物"的悬空；若引用对象仍在树内却解析不到、或该 quest 并未退役，那是真缺口而非本模式（脚本按 retention owner 分流上报，不静默改）
@@ -2303,7 +2303,7 @@ first_seen: 2026-09-29
 last_verified: 2026-09-29
 symptom: 指纹门证明 1236 个 retired DataDriven 行全部可驱动，但 drift 头仍写 ADOPTED=1215；21 条 retired 行残留旧 REJECTED 码，当前宇宙真实剩余被夸大为 293 而非 272
 root_cause: drift 门把 `RetiredQuestIds.contains(questId)` 当成“整行豁免”，把壳 XML 缺失豁免误扩大到账本同步；独立的指纹门会强制实际可驱动，但不会回写旧 drift 行，两门口径分叉后假账被冻结
-fix_or_guardrail: 1. 分类账本必须覆盖全部 family 行；retired 行只豁免 `quest_definition/quests/<id>.xml` 存在性，不豁免 `driftRegistry == classification`；2. 重算只能走官方 `equivOut` 通道，头部分计数由同一 dump 派生，禁止手补头；3. retired 行的可驱动性继续由 frozen IR fingerprint 独立守卫；4. 修正 stale retired 行必须保持 owner/IR 不变，不得借同一片扩大采纳面；5. 收口 = strict drift 门、fingerprint 门、ownership/manifest 聚焦门全绿
+fix_or_guardrail: 1. 分类账本必须覆盖全部 family 行；retired 行只豁免 `quest/definitions/quests/<id>.xml` 存在性，不豁免 `driftRegistry == classification`；2. 重算只能走官方 `equivOut` 通道，头部分计数由同一 dump 派生，禁止手补头；3. retired 行的可驱动性继续由 frozen IR fingerprint 独立守卫；4. 修正 stale retired 行必须保持 owner/IR 不变，不得借同一片扩大采纳面；5. 收口 = strict drift 门、fingerprint 门、ownership/manifest 聚焦门全绿
 evidence: .agents/summary/quest-native-dispatch/2026-09-29-p5-data-driven-talk-chain-13.zh-CN.md; src/test/java/com/aionemu/gameserver/questEngine/retail/RetailDataDrivenGateTest.java; src/test/resources/quest/retail-data-driven-drift.tsv; src/test/resources/quest/retail-data-driven-ir-fingerprints.tsv
 validation: 2026-09-29 strict 首跑按预期红并暴露 21 条 stale retired 行；`equivOut` 重算后 `rows=1508 / ADOPTED=1236 / 当前宇宙剩余=272`；`RetailDataDrivenGateTest` 6/6，`RetailOwnershipGateTest,RetailTsvManifestGateTest,RetailDataDrivenGateTest` 13/13
 boundaries: 本条不授权继续退役或采纳新行；owner flip 仍走 retention/catalog/客户端契约三件套；curated 暂缓行仍必须保持对应 REJECTED 码；`data_driven_quest.xml` 中当前生产宇宙外的 1002 个唯一 ID 不在本门覆盖面内

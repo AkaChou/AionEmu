@@ -11,10 +11,10 @@ import sys
 from pathlib import Path
 
 REPO = next(p for p in Path(__file__).resolve().parents if (p / "pom.xml").is_file())
-PROD_DIR = REPO / 'src/main/resources/aion/data/static_data/quest_definition/quests'
-CATALOG = REPO / 'src/main/resources/aion/data/static_data/quest_definition/quest_definition_catalog.xml'
+PROD_DIR = REPO / 'src/main/resources/aion/data/static_data/quest/definitions/quests'
+CATALOG = REPO / 'src/main/resources/aion/data/static_data/quest/definitions/quest_definition_catalog.xml'
 DEFERRED = Path(__file__).resolve().parent / 'p52-handin-deferred-quests.tsv'
-XML_REL = 'src/main/resources/aion/data/static_data/quest_definition/quests'
+XML_REL = 'src/main/resources/aion/data/static_data/quest/definitions/quests'
 
 
 def deferred_ids():
@@ -64,13 +64,13 @@ def main(args):
             if match:
                 while cursor < len(insertions) and insertions[cursor] < int(match.group(1)):
                     result.append(f'  <definition id="{insertions[cursor]}" '
-                        f'resource="aion/data/static_data/quest_definition/quests/'
+                        f'resource="aion/data/static_data/quest/definitions/quests/'
                         f'{insertions[cursor]}.xml" mode="EXECUTABLE" />\n')
                     cursor += 1
             result.append(line)
         while cursor < len(insertions):
             result.append(f'  <definition id="{insertions[cursor]}" '
-                f'resource="aion/data/static_data/quest_definition/quests/'
+                f'resource="aion/data/static_data/quest/definitions/quests/'
                 f'{insertions[cursor]}.xml" mode="EXECUTABLE" />\n')
             cursor += 1
         CATALOG.write_text(''.join(result), encoding='utf-8')

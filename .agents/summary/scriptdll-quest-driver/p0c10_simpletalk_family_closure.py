@@ -28,8 +28,8 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 REPO = next(p for p in Path(__file__).resolve().parents if (p / "pom.xml").is_file())
 RETENTION = REPO / 'src/main/resources/aion/data/static_data/quest_retail/retail-xml-retention.tsv'
-CATALOG = REPO / 'src/main/resources/aion/data/static_data/quest_definition/quest_definition_catalog.xml'
-QUESTS = REPO / 'src/main/resources/aion/data/static_data/quest_definition/quests'
+CATALOG = REPO / 'src/main/resources/aion/data/static_data/quest/definitions/quest_definition_catalog.xml'
+QUESTS = REPO / 'src/main/resources/aion/data/static_data/quest/definitions/quests'
 DRIFT = REPO / 'src/test/resources/quest/retail-simple-talk-drift.tsv'
 M3D = HERE / 'm3d-downgraded-quests.tsv'
 FAMILY_TARGET = 2223

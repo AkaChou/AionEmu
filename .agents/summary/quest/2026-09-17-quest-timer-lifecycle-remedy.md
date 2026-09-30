@@ -39,7 +39,7 @@ case CHECK_COLLECTED_ITEMS:
 
 ## 4. 修复内容
 
-`src/main/resources/aion/data/static_data/quest_definition/quests/2230.xml`：在“交付 10 颗棕熊尖牙 → REWARD”的转换 after-commit 首位加入
+`src/main/resources/aion/data/static_data/quest/definitions/quests/2230.xml`：在“交付 10 颗棕熊尖牙 → REWARD”的转换 after-commit 首位加入
 
 ```xml
 <cancel-quest-timer timer-id="visible" scope="PLAYER_QUEST"/>

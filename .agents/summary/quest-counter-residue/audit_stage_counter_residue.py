@@ -29,7 +29,7 @@ from pathlib import Path
 REPO = next(p for p in Path(__file__).resolve().parents if (p / "pom.xml").is_file())
 
 ROOT = Path(__file__).resolve().parents[3]
-QUEST_DIR = ROOT / "src/main/resources/aion/data/static_data/quest_definition/quests"
+QUEST_DIR = ROOT / "src/main/resources/aion/data/static_data/quest/definitions/quests"
 CLIENT_MONSTER_CSV = Path(f"{REPO.parent / 'PycharmProjects' / 'unpak'}/Quest_unpacked/quest_monster.csv")
 
 PROGRESS_RE = re.compile(r"Progress\(SECTION_(\d+)==(\d+);\s*SECTION_(\d+)<(\d+)\)")

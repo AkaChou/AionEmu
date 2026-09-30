@@ -17,7 +17,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[3]
 SPAWNS = ROOT / "src/main/resources/aion/data/static_data/spawns"
-QUESTS = ROOT / "src/main/resources/aion/data/static_data/quest_definition/quests"
+QUESTS = ROOT / "src/main/resources/aion/data/static_data/quest/definitions/quests"
 SCHEDULE = ROOT / "src/main/resources/aion/config/schedule/conquest_schedule.xml"
 
 # 玩家可玩世界 ↔ 大师服镜像世界 / playable worlds against their master-server mirrors

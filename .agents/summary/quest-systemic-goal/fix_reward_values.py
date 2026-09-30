@@ -18,7 +18,7 @@ import re
 REPO = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", ".."))
 AUDIT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "reward-axis-audit.tsv")
 PROD_DIR = os.path.join(
-    REPO, "src/main/resources/aion/data/static_data/quest_definition/quests")
+    REPO, "src/main/resources/aion/data/static_data/quest/definitions/quests")
 
 KIND_FIELD = {"GOLD_DIFF": ("reward_gold1", "GOLD"),
               "AP_DIFF": ("reward_abyss_point1", "AP"),

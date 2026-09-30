@@ -25,7 +25,7 @@ import xml.etree.ElementTree as ET
 from collections import defaultdict
 from pathlib import Path
 
-DEFAULT_QUESTS = Path("src/main/resources/aion/data/static_data/quest_definition/quests")
+DEFAULT_QUESTS = Path("src/main/resources/aion/data/static_data/quest/definitions/quests")
 
 
 def scan(quest_file: Path) -> list[dict]:

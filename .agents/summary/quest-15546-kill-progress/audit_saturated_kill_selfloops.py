@@ -9,7 +9,7 @@ from __future__ import annotations
 import re
 import pathlib
 
-QUESTS = pathlib.Path(__file__).resolve().parents[3] / "src/main/resources/aion/data/static_data/quest_definition/quests"
+QUESTS = pathlib.Path(__file__).resolve().parents[3] / "src/main/resources/aion/data/static_data/quest/definitions/quests"
 
 
 def main() -> int:

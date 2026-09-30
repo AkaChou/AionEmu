@@ -39,7 +39,7 @@ def collect(
 ) -> tuple[set[str], set[str]]:
     actions = set(STANDARD_ACTIONS)
     pages = set(STANDARD_PAGES)
-    quest_dir = root / "src/main/resources/aion/data/static_data/quest_definition/quests"
+    quest_dir = root / "src/main/resources/aion/data/static_data/quest/definitions/quests"
     for path in sorted(quest_dir.glob("*.xml")):
         source = path.read_text(encoding="utf-8")
         for match in TAG_PATTERN.finditer(source):

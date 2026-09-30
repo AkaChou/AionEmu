@@ -25,7 +25,7 @@ import xml.etree.ElementTree as ET
 REPO = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", ".."))
 RETAIL_QUEST_XML = f"{REPO.parent / 'PycharmProjects' / 'unpak'}/Quest_unpacked/quest.xml"
 PROD_DIR = os.path.join(
-    REPO, "src/main/resources/aion/data/static_data/quest_definition/quests")
+    REPO, "src/main/resources/aion/data/static_data/quest/definitions/quests")
 OUT_CONTRACT = os.path.join(
     REPO, "src/test/resources/quest/quest-start-metadata-retail-contract.tsv")
 OUT_CAP = os.path.join(
@@ -56,7 +56,7 @@ def parse_retail():
     return quests
 
 
-PROD_REL_DIR = "src/main/resources/aion/data/static_data/quest_definition/quests"
+PROD_REL_DIR = "src/main/resources/aion/data/static_data/quest/definitions/quests"
 LEDGER = os.path.join(
     REPO, "src/test/resources/quest/retail-xml-retention.tsv")
 
@@ -160,7 +160,7 @@ def main():
     # Cap exceptions only cover quests still backed by production XML; retired quests take the retail
     # metadata (unlimited) so the server-side cap no longer exists for them.
     catalog_path = os.path.join(
-        REPO, "src/main/resources/aion/data/static_data/quest_definition/quest_definition_catalog.xml")
+        REPO, "src/main/resources/aion/data/static_data/quest/definitions/quest_definition_catalog.xml")
     with open(catalog_path, encoding="utf-8") as fh:
         live_catalog = set(re.findall(r'<definition id="(\d+)"', fh.read()))
     for qid in sorted(pids, key=int):

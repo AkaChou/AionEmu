@@ -159,8 +159,8 @@ if (qs.getQuestVarById(varNum) == step) {
 
 ## 九、本批文件清单
 
-- `src/main/resources/aion/data/static_data/quest_definition/quests/20528.xml`
-- `src/main/resources/aion/data/static_data/quest_definition/quests/10528.xml`
+- `src/main/resources/aion/data/static_data/quest/definitions/quests/20528.xml`
+- `src/main/resources/aion/data/static_data/quest/definitions/quests/10528.xml`
 - `src/test/java/com/aionemu/gameserver/questEngine/definition/ArchdaevaRewardRowContractTest.java`
 - `.agents/summary/quest-10527-reward-row/audit_reward_row_vs_client_steps.py`（批次 53 例外登记）
 - `.agents/summary/quest-10527-reward-row/2026-09-21-10527-reward-row-and-family-audit.zh-CN.md`（§五十八 勘误）

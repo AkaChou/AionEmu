@@ -20,7 +20,7 @@ import sys
 import xml.etree.ElementTree as ET
 from pathlib import Path
 
-DEFAULT_QUESTS_DIR = Path("src/main/resources/aion/data/static_data/quest_definition/quests")
+DEFAULT_QUESTS_DIR = Path("src/main/resources/aion/data/static_data/quest/definitions/quests")
 FAMILY = (16801, 26801, 16802, 26802, 16803, 26803, 16804, 26804)
 
 

@@ -1,11 +1,10 @@
 # Active Context (当前攻坚上下文)
 
 
-> **生成物清理提示（2026-09-30）**：本文件正文提到的 `*.tsv` / `*.log` / `*.txt` / `*.xml` 等中间转储已随 `chore(agents)` 清理删除；原文与留痕仍可从 git 历史取回，被删清单与再生成入口见 `.agents/summary/CLEANUP-LEDGER.zh-CN.md`。
 
 记录当前正在推进的任务与未解决的问题焦点。跨 Agent 接力时，先读此文件了解当前状态。
 
-> last_updated: 2026-09-23
+> last_updated: 2026-09-30
 > status: ACTIVE
 > scope: current checkout only
 > owner: shared agents
@@ -18,10 +17,6 @@
 - **主分支 / 工作分支**：`quest`
 - **当前核心关注域**：
   - Quest 任务流转、状态机与 NPC 交互（Taloc's Hollow 副本实例脚本、Condition Spawns、Retail AI 判定）。
-  - **已沉淀**：跟随 NPC 寻路轨迹（Breadcrumb trail）与护送 AI 选型优化已修复并提炼为 `AIM-001`–`AIM-003`（见 [patterns/ai-movement.md](patterns/ai-movement.md)），证据留在 `docs/movement/escort-follow-movement-repair.md`。不再作为未完成焦点。
-  - **已沉淀**：Taloc's Hollow 卵的脱战抖动与孵化物过早消失已修复并提炼为 `AIM-004`（不可移动 NPC 不因够不着放弃目标）与 `IR-009`（pattern 子对象 `live_time` 与生成者状态重置解耦）；聚焦测试 95 例 + 客户端实机验证均通过，证据留在 `.agents/summary/talocs-hollow-mosqua-egg/2026-09-16-egg-disengage-and-summon-live-time.zh-CN.md`。不再作为未完成焦点。
-  - **已验收**：任务 10032 击杀 Celestius 后卡斯帕的幻影 799503 不出现 → `RetailPatternAI2` 增加“死亡/消失事件链子对象不随生成者状态重置删除”护栏（`IR-011`）+ 实例层按真端动作幂等补刷（`RetailPatternAI2#spawnRetailActionNpc`，IR-010 的同类适配器）；2026-09-16 客户端实机复验通过（幻影现身、10032 正常完成），证据在 `.agents/summary/quest-10032/2026-09-16-celestius-death-spawn-caspa-ghost.zh-CN.md`。
-  - **已验收**：任务 15300/25300 步骤 7「消灭盘龙巢穴的奥里萨」在爆发/一击致死时跳过阈值变身（237230 不生成 237231），已给 `immortalOrissanAI2` 加死亡兜底并批量补齐同族 8 个阈值变身 AI（死亡路径与阈值路径共用同一个 `*Once()` 闸门），Q 实例奥里萨死亡场景改为对实际生成的爆破手（209711/209776）喊话；聚焦测试 11 例全绿，不变量沉淀为 `AIM-007`。**2026-09-19/20 用户客户端确认 15300 全程顺利完成（含领奖）**，证据在 `.agents/summary/quest-15300-orissan/2026-09-19-immortal-orissan-death-fallback.zh-CN.md`。
   - **新焦点（待客户端观测/分批处置）**：领奖 packed step 投影全库审计（`QE-045`）发现 490 个旧 handler 领奖入口里 106 个 `MISMATCH_PROJECTION`、32 个 `MISSING_RECOVERY_EDGE` 尚未处置；本轮只修已验收的 15300/25300。下一步先用一次客户端观测确定「reward 投影 = 旧 handler pre-step」与「= 客户端 quest_summary 报告行」两条读数的取舍，再按批（优先 154xx redemption_landing 家族与 15301/25301 姊妹链）推进；脚本与清单在 `.agents/summary/quest-reward-projection-audit/2026-09-20-legacy-reward-projection-audit.zh-CN.md`。
   - **待一次客户端观测（QE-045 × QE-051 正面冲突，批次 13 已挂账）**：13965/23965（enter-zone 置 REWARD）与 15674/25674（CHECK_COLLECTED_ITEMS 置 REWARD）的客户端 quest_summary 都是 2 行、行 1 = 与领奖 NPC (835217/835220/806114/806116) 对话，按 QE-051 应有行 1 状态，但按 QE-045 必须保持 `reward var0=0` + `REWARD/var0=1` 恢复边（f6aff952a 基线，LegacyRewardStepProjectionRegressionTest 20 例硬锁）。取舍只需一次实机观测：**在 REWARD 态（可开奖励窗口时）任务书高亮的是行 0 还是行 1**；显示行 1 → 按客户端证据重定这 4 个的 QE-045 基线（XML + 锁测试 + 审计 QE045_LOCKED 同改）；显示行 0 → 保留现状并把“末行不可达”记为零售原样。观测前禁止批量翻动 20 个锁任务。
   - **待客户端验收（引擎外 REWARD，`QE-046`）**：任务 10522 领奖态「对话只有结束对话」的直接根因是迁移漏掉 `reward + QUEST_SELECT(31) -> DEFAULT_SUCCESS(10002)` 领奖态入口页，叠加引擎外写入方（`CM_CREATIVITY_POINTS`/`CoalescenceService`/`MinionService`/`RiftOrbAI2`）留下的 packed step 与 `reward` 投影错位。已按全库审计口径修复 10 个同型任务（10522/20522、15542/25542、15545/25545、30211/30213/30311/30313），并用 `ExternalRewardAdvanceReentryContractTest` + `src/test/resources/quest/external-reward-advance-baseline.tsv` 锁定；2026-09-21 授权 Maven 已完成：回归批 40 例、生产目录门禁 13 例（PRODUCTION_COMPILE_OK=6189/FAILURES=0）、客户端契约门禁 19 例（含 failOnStaleBaseline=true）全绿，宽口径 definition 包 980 例的 7 个失败均落在未改动任务上（10520/20520、15101、10526/20526、25512、15301/25301）。**客户端实机复测待用户执行**（需重建资源并重启），命令、审计脚本与复测路径见 `.agents/summary/quest-10522-reward-reentry/2026-09-20-external-reward-advance-reentry.zh-CN.md`。
@@ -30,14 +25,8 @@
 
   - **待客户端验收（10525 s4/s5 报告链，`QE-004`，已修复）**：13:37 实机 `CM_DIALOG_SELECT npcId=806134 questId=10525 动作=31` 被回退成 `questId=0/下发页=10`；10525 缺 `s4 QUEST_SELECT -> SELECT5(2375)` 与 `s5 SELECT6(2716) -> SELECT6(2716)`，魔族镜像 20525 两条都已有。已补齐 10525 并给 `QuestDialog31RegressionTest` 增加双阵营 turn-in 路由断言；XML/XSD/IDE/diff 静态检查通过，2026-09-21 授权 Maven 六类测试全绿（退出码 0），客户端复测未做。证据在 `.agents/summary/quest-10525-report-dialog31/2026-09-21-10525-s4-s5-report-dialog31.zh-CN.md`。
 
-  - **待客户端验收（击杀目标变体族，`QE-048`，已修复）**：15546《[每日]雷欧娜的委托》击杀不计数（客户端四个 `[%n]/4` 不动）的根因是任务只登记了世界中**零刷新**的 base 模板（240475/240483/240495/240497），而 Iluma 实际刷的是同族 `T_` 变体（241656/241657/241664/241665/241676/241677/241678/241679），`QuestEngine.onKill` 的 owner 索引因此永远拿不到该任务；已把 15546/25546 的每个计数器族改为「base + `T_` 变体」集合并同步 `<metadata><kills>`，再按同一客户端契约扫描修复 43 个同族任务（HEAD 42 个硬缺陷 → 当前工作区 0 命中）。新增门禁 `QuestIlumaNorsvoldKillTargetCoverageTest` + `src/test/resources/quest/iluma-norsvold-kill-target-contract.tsv`（45 任务评审快照），`QuestA03ShardRetailAlignmentTest` 相应改为「零售 progress_info 名单 ⊆ 目标 = 客户端契约快照」。**2026-09-21 授权 Maven：定向 40/40 全绿（PRODUCTION_COMPILE_OK=6189，FAILURES=0，WHITELIST_VIOLATIONS=0）；全量 questEngine 1555 run / 5 failures / 6 errors，11 项已逐条归因且均非本改动引入**；客户端实机复测未做，证据在 `.agents/summary/quest-15546-kill-progress/2026-09-21-iluma-norsvold-kill-target-variants.zh-CN.md`。 2026-09-21 追加（`QE-050`）：用户实测"某族打满 4/4 后继续击杀，进度不涨但客户端仍提示任务更新"。根因是收口自环只有下界（`variable-at-least 3 -> set 4`）在饱和后仍命中，planner 产出与当前 packed 完全相同的计划，`requiresStatePersistence` 不写库但 after-commit 的 `sync-quest-state PACKET_ONLY` 照发，客户端渲染成一次任务更新。已加引擎护栏（`QuestExecutionCoordinator.withoutRedundantStateSync`：状态未变化且无必需动作时丢弃多余状态同步）并把 15546/25546 计数改为精确边界（累加 `variable-below 4`、越界自愈 `variable-at-least 5 -> set 4`）；聚焦 88/88 全绿，全量 questEngine 1561 run / 5F / 6E 与修复前同一批既有失败，饱和自环全库审计 26 -> 18（余 18 条仅提交空事务、不再发通知，待逐任务收紧）。**客户端复测点：打满后多杀不应再出现"任务更新"，四族仍应逐次 1/2/3/4 推进**。
+  - **待客户端验收（击杀目标变体族，`QE-048`，已修复）**：15546《[每日]雷欧娜的委托》击杀不计数（客户端四个 `[%n]/4` 不动）的根因是任务只登记了世界中**零刷新**的 base 模板（240475/240483/240495/240497），而 Iluma 实际刷的是同族 `T_` 变体（241656/241657/241664/241665/241676/241677/241678/241679），`QuestEngine.onKill` 的 owner 索引因此永远拿不到该任务；已把 15546/25546 的每个计数器族改为「base + `T_` 变体」集合并同步 `<metadata><kills>`，再按同一客户端契约扫描修复 43 个同族任务（HEAD 42 个硬缺陷 → 当前工作区 0 命中）。新增门禁 `QuestIlumaNorsvoldKillTargetCoverageTest`（契约来源已单源化为生产登记表 `quest_client_kill_targets.tsv`，原 45 任务评审快照已删除），`QuestA03ShardRetailAlignmentTest` 相应改为「零售 progress_info 名单 ⊆ 目标 = 客户端契约快照」。**2026-09-21 授权 Maven：定向 40/40 全绿（PRODUCTION_COMPILE_OK=6189，FAILURES=0，WHITELIST_VIOLATIONS=0）；全量 questEngine 1555 run / 5 failures / 6 errors，11 项已逐条归因且均非本改动引入**；客户端实机复测未做，证据在 `.agents/summary/quest-15546-kill-progress/2026-09-21-iluma-norsvold-kill-target-variants.zh-CN.md`。 2026-09-21 追加（`QE-050`）：用户实测"某族打满 4/4 后继续击杀，进度不涨但客户端仍提示任务更新"。根因是收口自环只有下界（`variable-at-least 3 -> set 4`）在饱和后仍命中，planner 产出与当前 packed 完全相同的计划，`requiresStatePersistence` 不写库但 after-commit 的 `sync-quest-state PACKET_ONLY` 照发，客户端渲染成一次任务更新。已加引擎护栏（`QuestExecutionCoordinator.withoutRedundantStateSync`：状态未变化且无必需动作时丢弃多余状态同步）并把 15546/25546 计数改为精确边界（累加 `variable-below 4`、越界自愈 `variable-at-least 5 -> set 4`）；聚焦 88/88 全绿，全量 questEngine 1561 run / 5F / 6E 与修复前同一批既有失败，饱和自环全库审计 26 -> 18（余 18 条仅提交空事务、不再发通知，待逐任务收紧）。**客户端复测点：打满后多杀不应再出现"任务更新"，四族仍应逐次 1/2/3/4 推进**。
 
-  - **已收口（性能线）**：D 项"每实体预制容器"懒物化共 8 个切片（12.15–12.23）已全部提交并复测验收（12.25）：
-    存活堆 **−133 MB / −387 万对象**（且复测轮生物多 2.2%）、单位 CPU 样本分配 **−34%**、
-    `Buffer.checkIndex` 7.5%→0%、`Arrays.fill` 4.5%→0%、容器/锁相关 CPU 帧→0，窗口内 0 异常；不变量沉淀为 `AR-010`。
-    **寻路不再改动**（硬约束：不降路径质量）：A\* 的 87.5 MB/300s 属预热性常驻增长（`SearchWorkspace` CPU 帧仅 0.4%，
-    `PathData$MapData$Node` 池高水位 64.9 万→105.8 万），缩池只会把常驻换成下次重新分配；唯一零质量候选是
-    "手写开放集比较器（同全序）"，评估仅 2–5% 总 CPU，本轮判定不做。
   - **性能线复开条件**（满足任一才再开工，且必须用同一套 JFR 口径采样，不要继续扫直方图）：① 目标在线人数下出现卡顿/
     TPS 低于基线；② 单次 GC 停顿 > 200 ms 或 GC 频率上升；③ 进程 RSS > 目标机器物理内存 70%；④ 直方图出现新的
     "每实体预制容器"回归。复开首批候选：手写开放集比较器 → `collideWith` 调用点 → `WaterVolumeStore.find`（仍 5.9→8.6 MB/300s）
@@ -59,13 +48,7 @@
    - 已提交：`3fc71b693` 移除 137 个非真端残留 spot（33 个文件），并沉淀 `IR-007`；判定清单与脚本在 `.agents/summary/spawn-duplicate-spots/`。
 2. **任务排查标准流程**：
    - 检查任务 XML 节点时，对照 `docs/quest/` 维护文档及旧 Handler 行为。
-3. **P0–P2 架构改造：已全量验证并本地提交（本轮收尾）**：
-   - 记录见 `.agents/summary/architecture-performance-refactor/2026-09-15-p0-p2-implementation.md`；跨域不变量已沉淀为 `AR-004`（Netty 读缓冲 limit、直连 initialized/onDisconnect、writeData 后禁止 flip + 小端载荷、交付切接收方 ServiceContext）。
-   - 端到端验收通过（18:47 实例，真实客户端）：客户端登录 → 账号认证（内嵌直连）→ 进入世界，窗口内 0 ERROR/WARN；聊天服与登录服握手、登录服心跳线程均正常。
-   - 全量 `mvn test`：`3247` 例，`13` 失败（全部经 HEAD `2f0752248` 干净副本基线复现，属既有 quest/AI 数据与审计闸门欠账），本次改造引入的 7 例已修复并沉淀 `AR-005`。
-   - 收尾清理已完成：`MapRegion.getObjectsSnapshot()` 删除、`PacketProcessor` 去掉 `LinkedList` 强转。
-   - **既有 13 例失败仍未处理**（quest 1722/1367/3935/80805/10032、SETPRO 领奖审计、Retail AI 定义计数 134/133、WorldScoped waypoint 3206/3207、windstream 兼容映射、Theobomos 编队），如需修复应另开任务。
-4. **泰奥博莫斯（210060000）红/黄天空：根因已收敛，待实机验收**：
+3. **泰奥博莫斯（210060000）红/黄天空：根因已收敛，待实机验收**：
    - 结论：客户端 `lf2a` 的 `WeatherSystem` 只有 `SandRain` / `SandRain_Before`，二者 Sky 都指向
      `LF2A.Weather.LF2A_Rain`，且没有 remain/after 档；服务端下发 code 0 只能停止沙尘粒子，
      客户端不会把天空从乌云退回 `TimeEnv/Daylight`。Poeta/Inggison 有 after 档，所以能恢复。
@@ -77,9 +60,8 @@
    - 待验收：重启服务端 + 完全重启客户端进图。若仍红黄，再改客户端
      `Levels/lf2a/Level.pak`（优先散文件 `Levels/lf2a/mission_mission0.xml`），不要先回封标准 zip。
    - 2026-09-20 12:47 追加：服务端已确认无 210060000 天气表、无 `SM_WEATHER`，实机仍不晴，
-     触发点已定位到客户端。已生成待验证补丁
-     `.agents/summary/weather-theobomos/client-patch-20260920-1249/`（含标准 zip 回封 `Level.pak`
-     与散文件 `unpacked/mission_mission0.xml`）；实测时优先散文件，回封 pak 需客户端接受度验证。
+     触发点已定位到客户端。已生成待验证补丁目录（该目录已随生成物清理删除，重建脚本见
+     `.agents/summary/weather-theobomos/apply_weather_fix.py`）；实测时优先散文件，回封 pak 需客户端接受度验证。
    - 2026-09-20 13:58 追加：用户替换第一版 pak 后天空已正常，但地面/雾仍像黄昏。原因是
      `invade_direct_portal` / `WorldRaid` 两个 cutscene TimeEnv 选项仍以
      `time_name="Daylight"/"Night"`、`zonename=""` 与正常时段竞争；已把两者改名为 `*_disabled`、
@@ -88,32 +70,6 @@
      `53839e5962aea7df4e9f6357267dfcd5`，待实机确认地面/雾恢复晴天。
    - 证据：`.agents/summary/weather-theobomos/diagnosis-sandrain.md`、
      探针 `.agents/summary/weather-theobomos/probe/TheobomosWeatherProbe.jsh`。
-5. **客户端血条「数字」显示（Game.dll v3）：已实机验收并收口**：
-   - **已交付并确认有效**：`patch/Game.dll`（29,795,000 字节，MD5 `71a146481980f284e1144967037e3ab1`
-     ＝ 原版 + VIP + 3 处数字改动，与原版逐字节差 502 处）；2026-09-23 用户实测
-     **窗口内血条（目标窗口/组队/基础状态栏）出现数字**，客户端稳定。部署 = 覆盖 `bin64/Game.dll`，
-     回滚 = `bin64/Game.dll.bak`。
-   - **2026-09-23 补丁目录精简（用户要求「只留最终的」）**：`patch/` 现仅剩
-     `Game.dll`（唯一二进制补丁）、`Levels/lf2a/Level.pak`（天空修复）、`L10N/CHS/Data/data.pak`（⛔ 暂不可部署）；
-     已删除 `Game.hpnum.dll`、`Game.vip-hpnum.dll`（内容并入 `patch/Game.dll`）、`data.numbers.pak`、
-     `data/Npcs/npcs.pak`、`data/ui/game/game.pak`，重建方法保留在 `patch/patch_documentation.md`。
-   - **用户已接受该形态为交付**（「显示数字就行了」）；**头顶世界血条的数字不在本轮范围**——它由
-     NPC 显示系统手动绘制（`0x108c37df`→`0x108c3ed0`→`0x108c2250`），从不调用数字文本函数
-     `0x1097d290`，需**代码注入**才能实现；若日后要做，两条路：①索取 5.8 64 位现成补丁做字节对比；
-     ②x64dbg 跟 `Game.dll+8C2250` 取子控件虚表与构造点。
-   - **机理**（模式卡 `CPK-003`）：`num_type`(→`+0x8d4`，default/small/micro) + `value_type`(→`+0x364`)
-     由 UI 数据属性写入；控件更新函数 `0x108e125d` 读 `num_type` 后调 `0x1097d290` 画数字。
-   - **已撤的两个备选包**（2026-09-23 精简时删除，配方留在 `patch/patch_documentation.md`）：
-     `data.numbers.pak`（目标窗口数字，基准 = 客户端现用 data.pak、差异条目 = 1，只在「不想动 DLL」时才需要）
-     与 `data/Npcs/npcs.pak`（非必需——世界血条默认就有）。
-   - **纪律（本轮血的教训，`CPK-001`）**：pak 交付物必须以**客户端现用文件**为基准做单条目替换，
-     出货前核对差异条目数 == 1。上一轮误用仓库版（差 60 条目：任务对话 HTML + Strings/npcs/UI）
-     整包发出 → 客户端崩溃。仓库版 `patch/L10N/CHS/Data/data.pak` 曾只撤掉「数字」一处而非真正回滚，
-     经用户指出后已 **`git checkout` 回滚为提交版本**（95,915,168 / `9e624783…`，23,271 条目）；
-     回滚后仍与客户端原版差 **58 个条目**（55 `Dialogs/*` + 2 `Strings/*` + 1 `npcs/npc_mesh_replace.txt`）
-     → 标记 ⛔ **仍不可部署**，启用只能逐条目二分定位。客户端现用文件（94,240,820 / `b47db70c…`）
-     = 原版 + 勾选框，与客户端原版仅差 1 条目。
-   - 证据：`.agents/summary/client-hp-display/2026-09-23-client-hp-display-switch.zh-CN.md`（§12–§16）。
 
 ## 交接规则 (Handoff Rules)
 

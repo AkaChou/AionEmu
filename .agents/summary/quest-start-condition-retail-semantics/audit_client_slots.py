@@ -15,7 +15,7 @@ from pathlib import Path
 REPO = next(p for p in Path(__file__).resolve().parents if (p / "pom.xml").is_file())
 
 QUEST_XML = Path(f"{REPO.parent / '58Server'}/Map/XML/quest.xml")
-QUEST_DIR = Path("src/main/resources/aion/data/static_data/quest_definition/quests")
+QUEST_DIR = Path("src/main/resources/aion/data/static_data/quest/definitions/quests")
 FIELD_RE = re.compile(r"<(finished|acquired|noacquired|unfinished|equipped)_quest_cond(\d+)>([^<]+)</\1_quest_cond\2>")
 XML_COND_RE = re.compile(r'<condition\s+type="(\w+)"\s+quest-id="(\d+)"[^>]*/>')
 LIMITING = {"noacquired", "unfinished"}

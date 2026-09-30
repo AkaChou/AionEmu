@@ -6,7 +6,7 @@ This guide is for quest authors. It explains how to write quest definitions in p
 
 | | Production XML | Java DSL (QuestDsl) |
 |---|---|---|
-| Location | `src/main/resources/aion/data/static_data/quest_definition/quests/<id>.xml` | Java code (test fixtures / tooling) |
+| Location | `src/main/resources/aion/data/static_data/quest/definitions/quests/<id>.xml` | Java code (test fixtures / tooling) |
 | Production use | ✅ sole source of production owners | ❌ tests and tooling only |
 | Validation | XSD + semantic checks in `QuestDefinitionCompiler` | same compiler as XML |
 | Loading | registered with a mode in schema-v2 `quest_definition_catalog.xml`, loaded by QuestEngine | compiled directly via `compile()` |
@@ -28,7 +28,7 @@ Events are facts, conditions are tests, actions are state changes, after-commit 
 ### 3.1 Steps
 
 1. Write `quests/<id>.xml`; use the domain blocks below only for their exact standard patterns, and write ordinary transitions for everything else.
-2. Register it in the schema-v2 catalog: `<definition id="<id>" resource="aion/data/static_data/quest_definition/quests/<id>.xml" mode="EXECUTABLE"/>` (each ID exactly once).
+2. Register it in the schema-v2 catalog: `<definition id="<id>" resource="aion/data/static_data/quest/definitions/quests/<id>.xml" mode="EXECUTABLE"/>` (each ID exactly once).
 3. While a legacy template exists, use `quest_data.xml` as the metadata migration source. If it is absent, obtain field-level authority from the retail server/client; never infer missing values from a candidate XML or behavior alone.
 4. Delete the old execution entry (`quest_script_data/*.xml` node / old Java handler) in the same change — one owner per quest.
 
@@ -487,7 +487,7 @@ Key points:
 |---|---|---|
 | report_to (no work item) | see §3.4 | `quests/1138.xml` |
 | report_to (with work item) | give/has/remove-item + priority=1 rejection branch | `quests/1106.xml` |
-| monster_hunt (kill counter) | var0 advances step by step, one kill transition per NPC, `source=k{i} target=k{i+1}`, after-commit `sync PACKET_ONLY`; final report dialog 1009 → reward | `quests/1120.xml` (single group), `1112` (two groups, var0/var1 interleaved, offsets 0/6; production XML retired, recover it via `git log --follow -- src/main/resources/aion/data/static_data/quest_definition/quests/1112.xml`) |
+| monster_hunt (kill counter) | var0 advances step by step, one kill transition per NPC, `source=k{i} target=k{i+1}`, after-commit `sync PACKET_ONLY`; final report dialog 1009 → reward | `quests/1120.xml` (single group), `1112` (two groups, var0/var1 interleaved, offsets 0/6; production XML retired, recover it via `git log --follow -- src/main/resources/aion/data/static_data/quest/definitions/quests/1112.xml`) |
 | item_collecting | end NPC action `CHECK_USER_HAS_QUEST_ITEM(39)` turn-in check: has-item (per collect_item) + remove-item; priority=1 fallback `SHOW_QUEST_PAGE page="SELECT6"` when items are missing; metadata must carry `drops` | `quests/1129.xml` |
 | item_order | start_item_id given on accept, talk_npc dialog advances var, end_npc report | `quests/2146.xml`, `quests/2210.xml` |
 | xml_quest (complex) | one node per var value, one transition per dialog branch | `quests/1115.xml`, `quests/1127.xml` |
@@ -530,10 +530,10 @@ When the delay expires, the runtime resolves the live player again and sends the
 
 ```bash
 # schema check (any XML parser works, e.g.)
-python3 -c "import xml.dom.minidom,sys; xml.dom.minidom.parse('src/main/resources/aion/data/static_data/quest_definition/quests/<id>.xml')"
+python3 -c "import xml.dom.minidom,sys; xml.dom.minidom.parse('src/main/resources/aion/data/static_data/quest/definitions/quests/<id>.xml')"
 
 # catalog duplicate-ID check
-grep -c 'id="<id>"' src/main/resources/aion/data/static_data/quest_definition/quest_definition_catalog.xml  # must be 1
+grep -c 'id="<id>"' src/main/resources/aion/data/static_data/quest/definitions/quest_definition_catalog.xml  # must be 1
 
 # stale legacy-entry check
 grep -rn '<report_to id="<id>"\|<monster_hunt id="<id>"' src/main/resources/aion/data/static_data/quest_script_data/  # must be empty

@@ -17,7 +17,7 @@ import re
 
 REPO = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", ".."))
 PROD_DIR = os.path.join(
-    REPO, "src/main/resources/aion/data/static_data/quest_definition/quests")
+    REPO, "src/main/resources/aion/data/static_data/quest/definitions/quests")
 
 DROPS = {
     "1687": [112100747, 112300744, 112500732, 112600743, 112301411,

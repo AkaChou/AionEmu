@@ -83,7 +83,7 @@ if (qs.getQuestVarById(1) < 10) {
 ## 4. 影响范围与验证边界
 
 - **改动文件**:
-  - `src/main/resources/aion/data/static_data/quest_definition/quests/19637.xml`
+  - `src/main/resources/aion/data/static_data/quest/definitions/quests/19637.xml`
   - `src/test/java/com/aionemu/gameserver/questEngine/definition/Quest19637ClientDialogAlignmentTest.java`
 - **静态验证**:
   - `xmllint --noout --schema ... 19637.xml` 校验通过。

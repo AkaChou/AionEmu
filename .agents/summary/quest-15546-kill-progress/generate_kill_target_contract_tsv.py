@@ -10,7 +10,7 @@ import re, csv, pathlib, collections
 
 ROOT = REPO
 SD = ROOT / "src/main/resources/aion/data/static_data"
-Q = SD / "quest_definition/quests"
+Q = SD / "quest/definitions/quests"
 OUT = ROOT / "src/test/resources/quest/iluma-norsvold-kill-target-contract.tsv"
 
 ZONE = [int(x) for x in """15546 25546 25500 25501 25503 25504 42001 42002 80891 80892 80897 80898 80927 80928 80929

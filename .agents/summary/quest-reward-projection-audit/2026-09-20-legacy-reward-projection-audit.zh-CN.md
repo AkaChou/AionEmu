@@ -16,7 +16,7 @@ python3 .agents/summary/quest-reward-projection-audit/audit_legacy_reward_projec
 
 - 语料：`git log --all --diff-filter=D` 找出历史上被迁移删除的全部 `quest/handlers/**` Java 文件（2358 个），用 `git cat-file --batch` 批量读取每个文件删除前最后一次内容。
 - 提取：文件名/`questId` 常量定位任务号；正则 `changeQuestStep(env, from, to, true)` 取旧 handler 进入 `REWARD` 前后的 packed step。
-- 比对：解析当前 `src/main/resources/aion/data/static_data/quest_definition/quests/<id>.xml` 的 `reward` 节点投影 `var0`、`START -> REWARD` 交接是否 `set-variable var0`、以及是否存在无 `source` 的 `enter-world` 恢复边（`status-is REWARD` + `variable-is var0`）。
+- 比对：解析当前 `src/main/resources/aion/data/static_data/quest/definitions/quests/<id>.xml` 的 `reward` 节点投影 `var0`、`START -> REWARD` 交接是否 `set-variable var0`、以及是否存在无 `source` 的 `enter-world` 恢复边（`status-is REWARD` + `variable-is var0`）。
 - 输出：`report.tsv`（490 行逐任务判定）+ stdout 汇总。
 
 ## 2. 审计结果

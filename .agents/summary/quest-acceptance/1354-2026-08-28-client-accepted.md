@@ -4,7 +4,7 @@ quest: 1354「Practical Aerobatics / 上级飞行术考试」
 user acceptance confirmation: 用户于 2026-08-28 回复“验收并提交”，未限定分支；按规则视为整任务客户端主路径验收完成。
 server launch mode: not captured（服务端由用户管理）
 repository commit: ad0d1385a
-working tree: dirty；本次修复提交仅包含 `../../../src/main/resources/aion/data/static_data/quest_definition/quests/1354.xml` 和 `../../../src/test/java/com/aionemu/gameserver/questEngine/definition/Quest1354ClientDialogAlignmentTest.java`；其他修改和未跟踪文件保留。
+working tree: dirty；本次修复提交仅包含 `../../../src/main/resources/aion/data/static_data/quest/definitions/quests/1354.xml` 和 `../../../src/test/java/com/aionemu/gameserver/questEngine/definition/Quest1354ClientDialogAlignmentTest.java`；其他修改和未跟踪文件保留。
 Aion 5.8 client/data provenance: Aion 5.8 客户端；对话证据取自 `Data/Dialogs/Dialogs.pak` 中的 `QUEST_Q1354.html`，客户端任务元数据来自 `Data/China/Quest/quest.pak` 中的 `quest.xml`；本次未新增独立客户端包 SHA-256。
 npc template/object: start/reward NPC template 203983（Marana / 马拉纳）；flying ring templates `ERACUS_TEMPLE_AIR_BOOSTER_1`..`7`；runtime object ID not captured。
 map/instance: world ID 210020000（Eltnen / 埃特南）；instance ID not captured；entry/reentry context not captured。

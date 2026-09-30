@@ -34,7 +34,7 @@
 | select5 (2375) | 转告拉比临托斯的话。 | 1009 | SELECT_QUEST_REWARD | ⚠️ 错挂在 203701 上并直进 reward |
 | select_quest_reward1 (5) | （无按钮） | — | 领奖窗口 | ✅ |
 
-## 3. 修复内容（`src/main/resources/aion/data/static_data/quest_definition/quests/1192.xml`）
+## 3. 修复内容（`src/main/resources/aion/data/static_data/quest/definitions/quests/1192.xml`）
 
 节点（QE-051：客户端任务书每一行都要有 `var0==行号` 的状态，领奖行 = 第 3 行；命名沿用 10527 的 `started`/`sN` 惯例，既有 `Quest1192ClientDialogAlignmentTest` 的 `started` 断言保持不变）：
 
@@ -129,7 +129,7 @@
 
 ## 7. 变更文件
 
-- `src/main/resources/aion/data/static_data/quest_definition/quests/1192.xml`
+- `src/main/resources/aion/data/static_data/quest/definitions/quests/1192.xml`
 - `src/test/java/com/aionemu/gameserver/questEngine/definition/Quest1192StepChainContractTest.java`
 - `.agents/summary/quest-1192-step-chain/`：本文件、`audit_reward_row_vs_client_steps.py`（副本）、`audit_unrouted_progress_actions.py`、
   `audit-output.tsv`、`audit-run.log`、`unrouted-progress-actions.tsv`、`audit-cross.tsv`

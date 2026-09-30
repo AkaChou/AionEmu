@@ -16,7 +16,7 @@ from collections import defaultdict
 BASE = os.path.dirname(os.path.abspath(__file__))
 REPO = os.path.abspath(os.path.join(BASE, "../../.."))
 RETAIL = f"{REPO.parent / '58Server'}/Map/XML"
-QUEST_DIR = os.path.join(REPO, "src/main/resources/aion/data/static_data/quest_definition/quests")
+QUEST_DIR = os.path.join(REPO, "src/main/resources/aion/data/static_data/quest/definitions/quests")
 INDEX_TSV = os.path.join(BASE, "npc_name_index.tsv")
 
 

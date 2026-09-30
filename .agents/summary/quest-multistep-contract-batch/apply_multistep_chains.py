@@ -26,7 +26,7 @@ sys.path.insert(0, str(BASE))
 import dump_chain_evidence as D  # noqa: E402
 
 REPO = BASE.parents[2]
-QUESTS = REPO / "src/main/resources/aion/data/static_data/quest_definition/quests"
+QUESTS = REPO / "src/main/resources/aion/data/static_data/quest/definitions/quests"
 REWARD_WINDOW = "SHOW_SELECT_QUEST_REWARD_WINDOW1"
 
 

@@ -12,13 +12,12 @@
 - [Pattern 指纹与提交索引](repair-playbook/PATTERNS.zh-CN.md)：可检索故障指纹、第一检查点和具体代表测试方法。
 - [已验收代表案例](repair-playbook/CASES.zh-CN.md)：完整症状、根因、修复层、验证结果和复用边界。
 - [客户端与运行时验收记录模板](../../.agents/summary/quest-acceptance/README.zh-CN.md)：人工验收证据字段和附件哈希要求。
-- [任务 XML 紧凑语法迁移规范](../QUEST_XML_COMPACT_MIGRATION_PLAN.zh-CN.md)：迁移时的 IR 等价、脏工作树和全量门禁。
 
 ## 1. Agent 合同
 
 开始前必须遵守以下边界：
 
-1. 生产任务的唯一执行 owner 是 `src/main/resources/aion/data/static_data/quest_definition/quests/<id>.xml` 加上 `quest_definition_catalog.xml` 中的 `EXECUTABLE` 注册。Java DSL 只用于测试和工具。
+1. 生产任务的唯一执行 owner 是 `src/main/resources/aion/data/static_data/quest/definitions/quests/<id>.xml` 加上 `quest_definition_catalog.xml` 中的 `EXECUTABLE` 注册。Java DSL 只用于测试和工具。
 2. 旧 handler、`quest_data.xml`、客户端 5.8 数据和真实运行日志是行为证据，不是可以随手复制的生产 owner。缺少权威字段时，先标记为 `EVIDENCE_REQUIRED`，不要从候选 XML 或一次行为反推。
 3. 事件、条件、事务动作和 `after-commit` 副作用职责分离。状态推进正确但页面、关闭、生成 NPC 或跟随动作缺失，仍然是未完成的修复。
 4. 保留用户已有的脏工作区改动。禁止 `git reset --hard`、`git checkout --`、`git restore`、覆盖整文件或无范围的批量替换。
@@ -149,9 +148,9 @@ evidence:   <代表 commit 和 test，或新模式所需证据>
 
 ```bash
 rg -n 'id="14112"|npc-id="203195"|SELECT_QUEST_REWARD' \
-  src/main/resources/aion/data/static_data/quest_definition \
+  src/main/resources/aion/data/static_data/quest/definitions \
   src/test/java src/main/java
-sed -n '1,230p' src/main/resources/aion/data/static_data/quest_definition/quests/14112.xml
+sed -n '1,230p' src/main/resources/aion/data/static_data/quest/definitions/quests/14112.xml
 rg -n '14112|203195|Poisonous_Bubblegut' src/main/java src/test/java
 ```
 
@@ -210,7 +209,7 @@ Aion 5.8 客户端是客户端页面、动作、字典和数据包的权威来�
 - `docs/quest/client-dialog-mapping/quest-dialog-action-details.csv`：页面上的实际按钮动作；
 - `quest-dialog-pages.csv`：页面存在性和页面名；
 - `legacy-quest-dialog-contracts.csv`：旧正式模板的 NPC、页面和状态合同；
-- `client-lifecycle-alignment.csv`、`quest-order-audit.csv`：当前 IR 与客户端路径的审计结果。
+- `client-lifecycle-alignment.csv`：当前 IR 与客户端路径的对齐审计结果；逐路径顺序审计需运行 `QuestDialogOrderAudit`（产物不入库）。
 
 客户端页面只证明客户端可见合同，不能单独证明服务端状态和奖励副作用；服务端 IR 也不能单独证明页面按钮真的可达。
 
@@ -452,14 +451,11 @@ python3 .agents/summary/quest/check_quest_repair_playbook.py
 本批次验证命令组合（无需 Maven）：
 
 ```bash
-CP="src/main/resources:src/test/resources:target/test-classes:target/classes:$(cat .agents/summary/quest-load-fail/maven-test-classpath.txt)"
+CP="src/main/resources:src/test/resources:target/test-classes:target/classes"
 java -cp "$CP" com.aionemu.gameserver.questEngine.definition.QuestDialogOrderAudit \
   docs/quest/client-dialog-mapping/quest-dialog-pages.csv \
   docs/quest/client-dialog-mapping/quest-dialog-action-details.csv \
-  .agents/summary/quest-load-fail/quest-order-audit-current.csv
-python3 .agents/summary/quest-load-fail/refresh_contract_baseline_with_aliases.py
-python3 .agents/summary/quest-load-fail/extract_legacy_handler_action_contracts.py
-python3 .agents/summary/quest-load-fail/test_extract_legacy_handler_action_contracts.py
+  /tmp/quest-order-audit-current.csv   # 临时产物，不入库
 python3 .agents/summary/quest/test_extract_legacy_quest_dialog_contracts.py
 python3 .agents/summary/quest/test_align_client_quest_dialog_lifecycle.py
 ```

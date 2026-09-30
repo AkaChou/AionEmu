@@ -17,8 +17,8 @@ import subprocess
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[3]
-PROD = REPO / "src/main/resources/aion/data/static_data/quest_definition/quests"
-PROD_REL = "src/main/resources/aion/data/static_data/quest_definition/quests"
+PROD = REPO / "src/main/resources/aion/data/static_data/quest/definitions/quests"
+PROD_REL = "src/main/resources/aion/data/static_data/quest/definitions/quests"
 NPCS = REPO / "src/main/resources/aion/data/static_data/npcs"
 AUDIT = REPO / ".agents/summary/scriptdll-quest-driver/removed-spawned-audit.tsv"
 FAMILY_LIMIT = 16
