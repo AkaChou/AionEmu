@@ -17,11 +17,11 @@ import re
 import sys
 from pathlib import Path
 
-REPO = Path(f"{os.environ.get('AION_REPO_ROOT', os.path.expanduser('~/IdeaProjects/AionEmu-test'))}")
+REPO = next(p for p in Path(__file__).resolve().parents if (p / "pom.xml").is_file())
 RETAIL = REPO / 'src/main/resources/aion/data/static_data/quest_retail'
 NPC_DIR = REPO / 'src/main/resources/aion/data/static_data/npcs'
 CLIENT_REWARD_NPCS = RETAIL / 'quest_client_reward_npcs.tsv'
-RETAIL_SERVER = Path(f"{os.environ.get('AION_RETAIL_ROOT', os.path.expanduser('~/IdeaProjects/58Server'))}/Map/XML")
+RETAIL_SERVER = Path(f"{REPO.parent / '58Server'}/Map/XML")
 OUT = Path(__file__).resolve().parent / 'p0c3-simple-hunt-sentinel-census.tsv'
 MAX_COUNTERS = 5
 

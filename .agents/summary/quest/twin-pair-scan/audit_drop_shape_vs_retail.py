@@ -14,9 +14,11 @@ import os
 import re
 from collections import Counter
 from pathlib import Path
+
+REPO = next(p for p in Path(__file__).resolve().parents if (p / "pom.xml").is_file())
 from xml.etree import ElementTree as ET
 
-RETAIL = Path(f"{os.environ.get('AION_UNPACK_ROOT', os.path.expanduser('~/PycharmProjects/unpak'))}/Quest_unpacked/quest.xml")
+RETAIL = Path(f"{REPO.parent / 'PycharmProjects' / 'unpak'}/Quest_unpacked/quest.xml")
 QUEST_DIR = Path("src/main/resources/aion/data/static_data/quest_definition/quests")
 DROP_FIELD = re.compile(r"^drop_(monster|item|prob)_(\d+)$")
 

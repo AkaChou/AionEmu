@@ -54,7 +54,7 @@
 下一步必须先闭环"哪个数据源决定它"，不能靠猜。
 
 **待验证假设**：该位 = 该任务客户端 `quest_summary` 是否含 SECTION_0 行（报告行固定 SECTION_5，见附录 §6 第 10 条）。
-验证路径：用 `${AION_UNPACK_ROOT}/` 的 `QUEST_Q<id>.html` 与 `retail-simple-talk-pending.tsv` 的
+验证路径：用 `<客户端解包根>/` 的 `QUEST_Q<id>.html` 与 `retail-simple-talk-pending.tsv` 的
 `NODE_PROJECTION` 子集做交叉表；若一一对应，则该位是客户端契约，可由 HTML 驱动（或直接成为合成器参数）。
 
 ## 4. 门禁

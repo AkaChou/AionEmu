@@ -2,11 +2,15 @@
 # 批 1 修正：10 行采纳后仍被编译器拒绝（击杀目标别名 token 本服不可解析，属批 2 击杀轴）
 # ⇒ 回退出采纳集：采纳类删条目、decisions 删行、retention 回 XML_RETENTION/ADJUDICATED、
 #   恢复 XML + catalog 条目（fail-closed：门先红，回退后转绿并留痕）。
+from pathlib import Path
+
+REPO = next(p for p in Path(__file__).resolve().parents if (p / "pom.xml").is_file())
+
 import os
 import re
 import subprocess
 
-ROOT = f"{os.environ.get('AION_REPO_ROOT', os.path.expanduser('~/IdeaProjects/AionEmu-test'))}"
+ROOT = f"{REPO}"
 ADOPT_CLASS = f"{ROOT}/src/main/java/com/aionemu/gameserver/questEngine/retail/RetailChallengeAcquireAdoptions.java"
 DECISIONS = f"{ROOT}/src/test/resources/quest/retail-simple-hunt-adjudicated-decisions.tsv"
 RET_MAIN = f"{ROOT}/src/main/resources/aion/data/static_data/quest_retail/retail-xml-retention.tsv"

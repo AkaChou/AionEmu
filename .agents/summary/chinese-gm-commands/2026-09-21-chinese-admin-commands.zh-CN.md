@@ -13,7 +13,7 @@
 
 ## 2. 中文地点名的数据来源（客户端 → 服务端）
 
-1. 国服客户端：`${AION_CLIENT_ROOT}/L10N/CHS/Data/data.pak`（ZIP）→ `Strings/client_strings_*.xml`（UTF-16）。
+1. 国服客户端：`<客户端目录>/L10N/CHS/Data/data.pak`（ZIP）→ `Strings/client_strings_*.xml`（UTF-16）。
 2. 服务端静态数据：`src/main/resources/aion/data/static_data/teleport_location.xml`，每个 `teleloc_template` 带
    `loc_id / mapid / name / name_id / posX / posY / posZ / heading`。
 3. 用 `name_id` 把两侧连接：中文名来自客户端字符串表（地图级入口在 `client_strings_level.xml`，形如

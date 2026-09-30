@@ -17,8 +17,8 @@ import csv
 import re
 from pathlib import Path
 
-REPO = Path(f"{os.environ.get('AION_REPO_ROOT', os.path.expanduser('~/IdeaProjects/AionEmu-test'))}")
-UNPAK = Path(f"{os.environ.get('AION_UNPACK_ROOT', os.path.expanduser('~/PycharmProjects/unpak'))}/Quest_unpacked/quest_monster.csv")
+REPO = next(p for p in Path(__file__).resolve().parents if (p / "pom.xml").is_file())
+UNPAK = Path(f"{REPO.parent / 'PycharmProjects' / 'unpak'}/Quest_unpacked/quest_monster.csv")
 TOPIC = REPO / '.agents/summary/scriptdll-quest-driver'
 TABLE = REPO / 'src/main/resources/aion/data/static_data/quest_retail/Quest_SimpleSerialHunt.xml'
 OUT = REPO / 'src/main/resources/aion/data/static_data/quest_retail/quest_client_hunt_stages.tsv'

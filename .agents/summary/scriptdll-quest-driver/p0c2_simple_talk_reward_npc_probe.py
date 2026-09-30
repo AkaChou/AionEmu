@@ -8,8 +8,8 @@ import os
 import re
 from pathlib import Path
 
-REPO = Path(f"{os.environ.get('AION_REPO_ROOT', os.path.expanduser('~/IdeaProjects/AionEmu-test'))}")
-UNPAK = Path(f"{os.environ.get('AION_UNPACK_ROOT', os.path.expanduser('~/PycharmProjects/unpak'))}/data_unpacked")
+REPO = next(p for p in Path(__file__).resolve().parents if (p / "pom.xml").is_file())
+UNPAK = Path(f"{REPO.parent / 'PycharmProjects' / 'unpak'}/data_unpacked")
 CENSUS = REPO / '.agents/summary/scriptdll-quest-driver/p0c2-simple-talk-sentinel-census.tsv'
 OUT = REPO / '.agents/summary/scriptdll-quest-driver/p0c2-simple-talk-reward-npc-probe.tsv'
 

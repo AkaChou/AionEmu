@@ -113,7 +113,7 @@ T3（questEngine 全树，forkCount=2）：
 ## 6. 复现命令
 
 ```bash
-cd ${AION_REPO_ROOT}
+cd <仓库根>
 grep -rn "SystemGrant" src/main/java                     # 接线前后引用点变化
 grep -n "sendDailyQuest" -A 45 src/main/java/com/aionemu/gameserver/model/gameobjects/player/npcFaction/NpcFactions.java
 .agents/summary/scriptdll-quest-driver/run_quest_gates.sh T1

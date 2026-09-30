@@ -16,7 +16,7 @@ import os
 import sys
 from pathlib import Path
 
-REPO = Path(f"{os.environ.get('AION_REPO_ROOT', os.path.expanduser('~/IdeaProjects/AionEmu-test'))}")
+REPO = next(p for p in Path(__file__).resolve().parents if (p / "pom.xml").is_file())
 TOPIC = Path(__file__).resolve().parent
 PROD_DECISIONS = REPO / 'src/test/resources/quest/retail-simple-hunt-adjudicated-decisions.tsv'
 WORK_DECISIONS = TOPIC / 'p0c3-simple-hunt-sentinel-decisions.tsv'

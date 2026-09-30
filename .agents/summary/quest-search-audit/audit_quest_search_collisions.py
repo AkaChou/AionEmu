@@ -3,11 +3,13 @@ import re
 import csv
 import glob
 from pathlib import Path
+
+REPO = next(p for p in Path(__file__).resolve().parents if (p / "pom.xml").is_file())
 from collections import defaultdict
 
 # 1. Load NPC templates: ID -> name, desc, etc.
 # Check sources for client NPCs
-npc_sources = glob.glob(f"{os.environ.get('AION_UNPACK_ROOT', os.path.expanduser('~/PycharmProjects/unpak'))}/npcs_unpacked/client_npcs_*.xml")
+npc_sources = glob.glob(f"{REPO.parent / 'PycharmProjects' / 'unpak'}/npcs_unpacked/client_npcs_*.xml")
 print(f"Found {len(npc_sources)} NPC source files")
 
 npc_id_to_desc = {} # npc_id -> desc (e.g. STR_NPC_Ventus)
@@ -47,10 +49,10 @@ print(f"Found {len(ambiguous_descs)} ambiguous desc tags with multiple NPC IDs")
 # 2. Also check Chinese body names in string files
 # Strings where body is same
 string_sources = [
-    f"{os.environ.get('AION_UNPACK_ROOT', os.path.expanduser('~/PycharmProjects/unpak'))}/data_unpacked/Strings/client_strings_monster.xml",
-    f"{os.environ.get('AION_UNPACK_ROOT', os.path.expanduser('~/PycharmProjects/unpak'))}/data_unpacked/Strings/client_strings_npc.xml",
-    f"{os.environ.get('AION_UNPACK_ROOT', os.path.expanduser('~/PycharmProjects/unpak'))}/data_unpacked/Strings/client_strings_dic_people.xml",
-    f"{os.environ.get('AION_UNPACK_ROOT', os.path.expanduser('~/PycharmProjects/unpak'))}/data_unpacked/Strings/client_strings_dic_monster.xml"
+    f"{REPO.parent / 'PycharmProjects' / 'unpak'}/data_unpacked/Strings/client_strings_monster.xml",
+    f"{REPO.parent / 'PycharmProjects' / 'unpak'}/data_unpacked/Strings/client_strings_npc.xml",
+    f"{REPO.parent / 'PycharmProjects' / 'unpak'}/data_unpacked/Strings/client_strings_dic_people.xml",
+    f"{REPO.parent / 'PycharmProjects' / 'unpak'}/data_unpacked/Strings/client_strings_dic_monster.xml"
 ]
 
 desc_to_body = {}

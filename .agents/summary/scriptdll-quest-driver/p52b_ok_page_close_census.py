@@ -14,7 +14,7 @@ import subprocess
 from collections import Counter
 from pathlib import Path
 
-REPO = Path(f"{os.environ.get('AION_REPO_ROOT', os.path.expanduser('~/IdeaProjects/AionEmu-test'))}")
+REPO = next(p for p in Path(__file__).resolve().parents if (p / "pom.xml").is_file())
 DRIFT = REPO / 'src/test/resources/quest/retail-data-driven-drift.tsv'
 HANDIN = REPO / 'src/main/resources/aion/data/static_data/quest_retail/quest_client_handin_pages.tsv'
 ACTIONS = REPO / 'docs/quest/client-dialog-mapping/quest-dialog-action-details.csv'

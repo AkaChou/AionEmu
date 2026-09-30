@@ -30,7 +30,7 @@ Persistent architecture patterns and debugging insights are maintained in [.agen
 - Runtime configuration: `src/main/resources/aion/config/`, split into login, network, main, chat, administration, schedule, and other domains.
 - Default network ports are defined in `src/main/resources/aion/config/network/network.properties`: login client 2106, game client 7777, chat client 10241, game-to-login internal connection 9014, and game-to-chat internal connection 9021.
 - Login and game database settings are stored in `src/main/resources/aion/config/login/database.properties` and `src/main/resources/aion/config/network/database.properties` respectively.
-- External data roots (真端服务端表 / 客户端安装目录 / 客户端解包产物) are injected through environment variables; never hardcode developer-machine absolute paths. See [ENVIRONMENT.md](ENVIRONMENT.md) for `AION_REPO_ROOT`, `AION_RETAIL_ROOT`, `AION_CLIENT_ROOT`, `AION_UNPACK_ROOT`, and `JAVA_HOME` conventions.
+- External data roots (真端服务端表 / 客户端安装目录 / 客户端解包产物) are referenced by **name** only (`<真端根>`, `<客户端目录>`, `<客户端解包根>`, `<仓库根>`); never hardcode developer-machine absolute paths or require project-specific environment variables. See [ENVIRONMENT.md](ENVIRONMENT.md).
 
 ## Project Overview
 

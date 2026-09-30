@@ -28,7 +28,9 @@ import sys
 import zlib
 from pathlib import Path
 
-sys.path.insert(0, f"{os.environ.get('AION_UNPACK_ROOT', os.path.expanduser('~/PycharmProjects/unpak'))}")
+REPO = next(p for p in Path(__file__).resolve().parents if (p / "pom.xml").is_file())
+
+sys.path.insert(0, f"{REPO.parent / 'PycharmProjects' / 'unpak'}")
 from aionpak.core import _aion_xor_offset  # noqa: E402
 from aionpak.aion_tables import AION_XOR_TABLES  # noqa: E402
 

@@ -19,7 +19,7 @@ import sys
 import xml.etree.ElementTree as ET
 from pathlib import Path
 
-REPO = Path(f"{os.environ.get('AION_REPO_ROOT', os.path.expanduser('~/IdeaProjects/AionEmu-test'))}")
+REPO = next(p for p in Path(__file__).resolve().parents if (p / "pom.xml").is_file())
 MAPPING = REPO / 'docs/quest/client-dialog-mapping'
 PAGES = MAPPING / 'quest-dialog-pages.csv'
 ACTIONS = MAPPING / 'quest-dialog-action-details.csv'
@@ -106,7 +106,7 @@ def main():
     # 客户端 HTML 的过场声明（页名 → movie id）；源文件在 unpacked Dialogs 目录下。
     # CutScene declarations in the client HTML (page name -> movie id); the sources live in the
     # unpacked Dialogs directory.
-    html_root = Path(f"{os.environ.get('AION_UNPACK_ROOT', os.path.expanduser('~/PycharmProjects/unpak'))}/data_unpacked/Dialogs")
+    html_root = Path(f"{REPO.parent / 'PycharmProjects' / 'unpak'}/data_unpacked/Dialogs")
     cutscenes = {}
     page_names = {}
     for quest_id, file_rel in source_files.items():

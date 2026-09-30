@@ -5,11 +5,15 @@
 Only exact normalized matches are applied. Format becomes:  // 中文 / English原文
 Run: python3 apply_tail.py   (writes changes in place; prints stats)
 """
+from pathlib import Path
+
+REPO = next(p for p in Path(__file__).resolve().parents if (p / "pom.xml").is_file())
+
 import os
 import re, glob, collections, sys
 
-TERMS = f"{os.environ.get('AION_REPO_ROOT', os.path.expanduser('~/IdeaProjects/AionEmu-test'))}/docs/aion-game-terms-en-zh.md"
-ROOT = f"{os.environ.get('AION_REPO_ROOT', os.path.expanduser('~/IdeaProjects/AionEmu-test'))}/src/main/java"
+TERMS = f"{REPO}/docs/aion-game-terms-en-zh.md"
+ROOT = f"{REPO}/src/main/java"
 
 def norm(s):
     return re.sub(r'[^a-z0-9 ]', '', s.lower()).strip()

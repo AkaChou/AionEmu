@@ -3,7 +3,7 @@
 """P0c-41：EA 区名桶「感官区 NPC」证据扫描（IDInfinity 判例的批量化）。
 
 对 `RETAIL_ENTERAREA_ZONE_UNRESOLVED` 桶里每个未解析别名，在真端世界文件
-（`${AION_RETAIL_ROOT:-$HOME/IdeaProjects/58Server}/Map/Worlds/<dir>/world.xml`，UTF-16）中找同名**感官区 NPC**
+（`<真端根>/Map/Worlds/<dir>/world.xml`，UTF-16）中找同名**感官区 NPC**
 （`<name><别名></name>` + `<sensory_area>` 多边形 + top/bottom），再经
 `aion/definitions/compact/id-mappings.xml` 把世界目录名换算成 mapid，产出可直接注册进
 `zones_quest.xml` 的 POLYGON/SUB 区条目草稿。
@@ -26,8 +26,8 @@ import sys
 import xml.etree.ElementTree as ET
 from pathlib import Path
 
-REPO = Path(f"{os.environ.get('AION_REPO_ROOT', os.path.expanduser('~/IdeaProjects/AionEmu-test'))}")
-WORLDS = Path(f"{os.environ.get('AION_RETAIL_ROOT', os.path.expanduser('~/IdeaProjects/58Server'))}/Map/Worlds")
+REPO = next(p for p in Path(__file__).resolve().parents if (p / "pom.xml").is_file())
+WORLDS = Path(f"{REPO.parent / '58Server'}/Map/Worlds")
 ID_MAPPINGS = REPO / 'src/main/resources/aion/definitions/compact/id-mappings.xml'
 OUT = REPO / '.agents/summary/scriptdll-quest-driver/p0c41-sensory-area-scan.tsv'
 

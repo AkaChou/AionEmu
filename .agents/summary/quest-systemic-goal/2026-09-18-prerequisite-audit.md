@@ -5,7 +5,7 @@
 
 ## 范围与证据
 
-- 来源：`${AION_UNPACK_ROOT}/Quest_unpacked/quest.xml`，SHA-256 `0edade9f28411d73ffa8e9e84694e908d436852e11d77fb68a85ea2a5352025f`。
+- 来源：`<客户端解包根>/Quest_unpacked/quest.xml`，SHA-256 `0edade9f28411d73ffa8e9e84694e908d436852e11d77fb68a85ea2a5352025f`。
 - 生产 XML 6,222 个。保留 finished 的 OR 分支、字段内 AND、全局 prerequisites、奖励结局以及公共互斥条件。
 - 既有参考：QE-021；`043426b47` 的 2303 分组转换与 1510 取消前置处理。首批互斥族不含多分支 finished，不受其推断边界影响。
 - 审计工具：`audit_prerequisite_axis.py`；解析测试：`test_audit_prerequisite_axis.py`；剩余清单：`prerequisite-axis-audit.tsv`。均保留在本主题目录供后续 P6 使用。

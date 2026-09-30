@@ -20,7 +20,7 @@ import os
 import re
 from pathlib import Path
 
-REPO = Path(f"{os.environ.get('AION_REPO_ROOT', os.path.expanduser('~/IdeaProjects/AionEmu-test'))}")
+REPO = next(p for p in Path(__file__).resolve().parents if (p / "pom.xml").is_file())
 TOPIC = REPO / '.agents/summary/scriptdll-quest-driver'
 DRIFT = REPO / 'src/test/resources/quest/retail-simple-collect-item-drift.tsv'
 TABLE = REPO / 'src/main/resources/aion/data/static_data/quest_retail/quest.xml'

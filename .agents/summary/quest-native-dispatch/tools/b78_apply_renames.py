@@ -6,7 +6,9 @@ import os
 import sys
 from pathlib import Path
 
-ROOT = Path(f"{os.environ.get('AION_REPO_ROOT', os.path.expanduser('~/IdeaProjects/AionEmu-test'))}")
+REPO = next(p for p in Path(__file__).resolve().parents if (p / "pom.xml").is_file())
+
+ROOT = REPO
 COPIES = [
     ROOT / "src/main/resources/aion/data/static_data/quest_retail/retail-xml-retention.tsv",
     ROOT / "src/test/resources/quest/retail-xml-retention.tsv",

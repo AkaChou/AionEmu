@@ -4,7 +4,7 @@
 > **生成物清理提示（2026-09-30）**：本文件正文提到的 `*.tsv` / `*.log` / `*.txt` / `*.xml` 等中间转储已随 `chore(agents)` 清理删除；原文与留痕仍可从 git 历史取回，被删清单与再生成入口见 `.agents/summary/CLEANUP-LEDGER.zh-CN.md`。
 
 - 日期：2026-09-22；性质：对账为只读；PREREQ 批次已改 25 个生产 XML（未跑构建）。
-- 真端源：`${AION_RETAIL_ROOT}/Map/XML/`（UTF-16LE，5.8 服务端数据）
+- 真端源：`<真端根>/Map/XML/`（UTF-16LE，5.8 服务端数据）
 - 本仓库：`src/main/resources/aion/data/static_data/quest_definition/quests/*.xml`（6224 个定义）
 - 对账脚本：`reconcile_retail_templates.py`；逐任务结果：`reconciliation.tsv`
 

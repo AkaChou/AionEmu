@@ -6,7 +6,7 @@ string tables are joined onto teleport_location.xml through its name_id attribut
 
 用法 / Usage:
     python3 generate_teleport_names_zh.py \
-        [--client-data-pak "${AION_CLIENT_ROOT:-$HOME/IdeaProjects/5.8客户端}/L10N/CHS/Data/data.pak"] \
+        [--client-data-pak "<客户端目录>/L10N/CHS/Data/data.pak"] \
         [--teleloc src/main/resources/aion/data/static_data/teleport_location.xml] \
         [--out src/main/resources/aion/config/administration/teleport_names_zh.txt] \
         [--tsv .agents/summary/chinese-gm-commands/teleloc_zh.tsv]
@@ -21,7 +21,9 @@ import zipfile
 import xml.etree.ElementTree as ET
 from pathlib import Path
 
-DEFAULT_PAK = f"{os.environ.get('AION_CLIENT_ROOT', os.path.expanduser('~/IdeaProjects/5.8客户端'))}/L10N/CHS/Data/data.pak"
+REPO = next(p for p in Path(__file__).resolve().parents if (p / "pom.xml").is_file())
+
+DEFAULT_PAK = f"{REPO.parent / '5.8客户端'}/L10N/CHS/Data/data.pak"
 DEFAULT_TELELOC = "src/main/resources/aion/data/static_data/teleport_location.xml"
 DEFAULT_OUT = "src/main/resources/aion/config/administration/teleport_names_zh.txt"
 

@@ -22,7 +22,7 @@ from collections import Counter
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
-REPO = Path(f"{os.environ.get('AION_REPO_ROOT', os.path.expanduser('~/IdeaProjects/AionEmu-test'))}")
+REPO = next(p for p in Path(__file__).resolve().parents if (p / "pom.xml").is_file())
 QUESTS = REPO / 'src/main/resources/aion/data/static_data/quest_definition/quests/%d.xml'
 GAPS = HERE / 'simplehunt-dialog-route-gaps.txt'
 OUT = HERE / 'p0c8c-gap-decisions.tsv'

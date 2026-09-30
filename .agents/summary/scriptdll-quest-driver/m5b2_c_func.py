@@ -10,7 +10,9 @@ import re
 import sys
 from pathlib import Path
 
-C_SRC = Path(f"{os.environ.get('AION_RETAIL_ROOT', os.path.expanduser('~/IdeaProjects/58Server'))}/server58/MainServer_ScriptDLL64/ScriptDLL64.c")
+REPO = next(p for p in Path(__file__).resolve().parents if (p / "pom.xml").is_file())
+
+C_SRC = Path(f"{REPO.parent / '58Server'}/server58/MainServer_ScriptDLL64/ScriptDLL64.c")
 _CACHE = {}
 
 

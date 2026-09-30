@@ -4,7 +4,7 @@
 > **生成物清理提示（2026-09-30）**：本文件正文提到的 `*.tsv` / `*.log` / `*.txt` / `*.xml` 等中间转储已随 `chore(agents)` 清理删除；原文与留痕仍可从 git 历史取回，被删清单与再生成入口见 `.agents/summary/CLEANUP-LEDGER.zh-CN.md`。
 
 - 日期：2026-09-21
-- 仓库：`${AION_REPO_ROOT}`（生产任务定义 + 聚焦测试）
+- 仓库：`<仓库根>`（生产任务定义 + 聚焦测试）
 - 关联：QE-051（领奖行投影）、QE-032（交付路由）、wiki 仓库 `AionEmu-QuestWiki` 的 GM 命令生成
 - 验收状态：**TESTS_PASSED**（聚焦测试 + 生产目录/白名单/客户端契约门禁通过）；**PENDING_CLIENT**（未实机验收）
 

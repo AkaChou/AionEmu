@@ -22,14 +22,14 @@ import re
 import xml.etree.ElementTree as ET
 
 REPO = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", ".."))
-RETAIL_QUEST_XML = f"{os.environ.get('AION_UNPACK_ROOT', os.path.expanduser('~/PycharmProjects/unpak'))}/Quest_unpacked/quest.xml"
+RETAIL_QUEST_XML = f"{REPO.parent / 'PycharmProjects' / 'unpak'}/Quest_unpacked/quest.xml"
 ITEM_DIR = os.path.join(REPO, "src/main/resources/aion/data/static_data/items/item")
 PROD_DIR = os.path.join(
     REPO, "src/main/resources/aion/data/static_data/quest_definition/quests")
 OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "reward-axis-audit.tsv")
 
 
-RETAIL_ITEMS_DIR = f"{os.environ.get('AION_UNPACK_ROOT', os.path.expanduser('~/PycharmProjects/unpak'))}/Items_unpacked"
+RETAIL_ITEMS_DIR = f"{REPO.parent / 'PycharmProjects' / 'unpak'}/Items_unpacked"
 
 
 def build_item_map():

@@ -2,7 +2,7 @@
 """真端模板表 <-> 本仓库 typed quest XML 只读对账。
 
 输入（都不修改）:
-  真端：${AION_RETAIL_ROOT:-$HOME/IdeaProjects/58Server}/Map/XML/
+  真端：<真端根>/Map/XML/
         Quest_SimpleHunt/SerialHunt/Talk/CollectItem/UseItem/ItemPlay/CombineTask.xml,
         data_driven_quest.xml, quest.xml, npcs.xml, Items.xml
   本仓库：src/main/resources/aion/data/static_data/quest_definition/quests/*.xml
@@ -27,8 +27,8 @@ import xml.etree.ElementTree as ET
 from collections import Counter
 from pathlib import Path
 
-RETAIL = Path(f"{os.environ.get('AION_RETAIL_ROOT', os.path.expanduser('~/IdeaProjects/58Server'))}/Map/XML")
-REPO = Path(f"{os.environ.get('AION_REPO_ROOT', os.path.expanduser('~/IdeaProjects/AionEmu-test'))}")
+RETAIL = Path(f"{REPO.parent / '58Server'}/Map/XML")
+REPO = next(p for p in Path(__file__).resolve().parents if (p / "pom.xml").is_file())
 OURS = REPO / "src/main/resources/aion/data/static_data/quest_definition/quests"
 OUT = Path(__file__).resolve().parent
 

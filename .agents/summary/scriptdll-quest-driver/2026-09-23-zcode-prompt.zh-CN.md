@@ -5,7 +5,7 @@
 
 > 可整段粘贴给 zcode 作为首条消息。配套细节（数据地图、字段样例、DLL 函数、坑位）见同目录
 > `2026-09-23-zcode-appendix.zh-CN.md`；其中 §10 是一个**可选**的工作切分参考，不是验收要求。
-> 仓库：`${AION_REPO_ROOT}`（Aion 5.8 社区服务端，Java 25 + Maven + Spring Boot，单模块）。
+> 仓库：`<仓库根>`（Aion 5.8 社区服务端，Java 25 + Maven + Spring Boot，单模块）。
 
 ---
 

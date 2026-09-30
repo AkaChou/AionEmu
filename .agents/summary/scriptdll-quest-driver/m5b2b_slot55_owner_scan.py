@@ -16,12 +16,14 @@ import argparse
 import sys
 from pathlib import Path
 
+REPO = next(p for p in Path(__file__).resolve().parents if (p / "pom.xml").is_file())
+
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import re_vtable_scan  # noqa: E402
 from m5b2_pe_probe import Pe  # noqa: E402
 
 # 真端反编译导出根目录 / Retail decompilation export root
-EXPORT_ROOT = Path(f"{os.environ.get('AION_RETAIL_ROOT', os.path.expanduser('~/IdeaProjects/58Server'))}/server58-source")
+EXPORT_ROOT = Path(f"{REPO.parent / '58Server'}/server58-source")
 # 二进制名 → 符号表目录 / Binary name to symbol table directory
 SYMBOL_DIRS = {
 	"Server64.exe": "MainServer_Server64",

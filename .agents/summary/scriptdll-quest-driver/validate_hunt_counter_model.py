@@ -8,8 +8,12 @@
 
 数据源：
   .agents/summary/scriptdll-quest-driver/quest_registry.tsv
-  ${AION_UNPACK_ROOT:-$HOME/PycharmProjects/unpak}/Quest_unpacked/quest_monster.csv
+  <客户端解包根>/Quest_unpacked/quest_monster.csv
 """
+from pathlib import Path
+
+REPO = next(p for p in Path(__file__).resolve().parents if (p / "pom.xml").is_file())
+
 import csv
 import os
 import re
@@ -17,7 +21,7 @@ import sys
 
 BASE = os.path.dirname(os.path.abspath(__file__))
 REG = os.path.join(BASE, "quest_registry.tsv")
-MON = f"{os.environ.get('AION_UNPACK_ROOT', os.path.expanduser('~/PycharmProjects/unpak'))}/Quest_unpacked/quest_monster.csv"
+MON = f"{REPO.parent / 'PycharmProjects' / 'unpak'}/Quest_unpacked/quest_monster.csv"
 
 GUARD = re.compile(r"SECTION_(\d+)<(\d+)")
 

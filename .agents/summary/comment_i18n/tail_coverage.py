@@ -1,10 +1,14 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """Coverage analysis: match tail english comments against glossary dictionary."""
+from pathlib import Path
+
+REPO = next(p for p in Path(__file__).resolve().parents if (p / "pom.xml").is_file())
+
 import os
 import re, glob, json, collections
 
-TERMS = f"{os.environ.get('AION_REPO_ROOT', os.path.expanduser('~/IdeaProjects/AionEmu-test'))}/docs/aion-game-terms-en-zh.md"
+TERMS = f"{REPO}/docs/aion-game-terms-en-zh.md"
 
 def norm(s):
     return re.sub(r'[^a-z0-9 ]', '', s.lower()).strip()
@@ -68,7 +72,7 @@ def tail_comments(fp):
 
 matched = []
 unmatched = []
-for fp in glob.glob(f"{os.environ.get('AION_REPO_ROOT', os.path.expanduser('~/IdeaProjects/AionEmu-test'))}/src/main/java/**/*.java", recursive=True):
+for fp in glob.glob(f"{REPO}/src/main/java/**/*.java", recursive=True):
     for ln, code, body in tail_comments(fp):
         c = norm(body)
         if len(c) < 3:

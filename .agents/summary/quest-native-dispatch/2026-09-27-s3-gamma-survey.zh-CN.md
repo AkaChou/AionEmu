@@ -315,7 +315,7 @@
 - **复算（只读，`python3 -B`，无中间产物）**：
 
 ```bash
-cd ${AION_REPO_ROOT}
+cd <仓库根>
 # ① 82 行复算（S2 285 − G1 203）
 python3 -B - <<'PY'
 import re,collections as C

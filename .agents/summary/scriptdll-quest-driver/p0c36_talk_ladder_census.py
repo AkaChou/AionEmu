@@ -12,8 +12,8 @@ import os
 import csv, re, sys
 from pathlib import Path
 
-REPO = Path(__file__).resolve().parents[3]
-DIALOGS = Path(f"{os.environ.get('AION_UNPACK_ROOT', os.path.expanduser('~/PycharmProjects/unpak'))}/data_unpacked/Dialogs")
+REPO = next(p for p in Path(__file__).resolve().parents if (p / "pom.xml").is_file())
+DIALOGS = Path(f"{REPO.parent / 'PycharmProjects' / 'unpak'}/data_unpacked/Dialogs")
 RET = REPO / 'src/main/resources/aion/data/static_data/quest_retail'
 
 

@@ -9,7 +9,7 @@ import re
 from collections import Counter
 from pathlib import Path
 
-REPO = Path(f"{os.environ.get('AION_REPO_ROOT', os.path.expanduser('~/IdeaProjects/AionEmu-test'))}")
+REPO = next(p for p in Path(__file__).resolve().parents if (p / "pom.xml").is_file())
 TABLE = REPO / 'src/main/resources/aion/data/static_data/quest_retail/data_driven_quest.xml'
 DRIFT = REPO / 'src/test/resources/quest/retail-data-driven-drift.tsv'
 OUT = Path(__file__).resolve().parent / 'p53-step-unsupported-census.tsv'

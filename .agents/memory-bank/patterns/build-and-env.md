@@ -56,7 +56,7 @@ first_check: pom.xml, java version, Maven processor paths and baseline diff
 -->
 
 1. **Maven 路径**：
-   - 本机 Maven 路径位于 `/opt/homebrew/bin/mvn`（用户终端的全局 `PATH` 可能未包含 `mvn`）。
+   - `mvn` 可能不在终端全局 `PATH` 上；需用本机 Maven 安装路径直接调用，不要把该路径写入仓库。
 2. **JDK 目标版本与兼容性**：
    - 项目构建目标为 Java 25，开发环境使用 Java 26 可以稳定完成 `mvn compile` 与 `mvn test-compile`。
 3. **全量测试已知环境性失败 (JDK 25 反射 / Objenesis Mock 限制)**：

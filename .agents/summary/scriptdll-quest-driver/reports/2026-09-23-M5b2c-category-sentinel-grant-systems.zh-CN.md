@@ -47,7 +47,7 @@ SimpleCollectItem 的 40 行 `REJECTED:RETAIL_ACQUIRE_NPC_SENTINEL` 在 §4.8/§
 
 ## 2. 决定性证据：真端有 `npcfactions_quest.xml`（阵营 × 星期）
 
-`${AION_RETAIL_ROOT}/Map/XML/npcfactions_quest.xml`（UTF-16）**436 条**：
+`<真端根>/Map/XML/npcfactions_quest.xml`（UTF-16）**436 条**：
 
 ```xml
 <quest_id quest_id="35007">

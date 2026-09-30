@@ -1,10 +1,14 @@
 #!/usr/bin/env python3
 """生成 Iluma/Norsvold 击杀目标契约快照，并对快照做客户端契约 + 刷怪可达性自检。"""
 from __future__ import annotations
+from pathlib import Path
+
+REPO = next(p for p in Path(__file__).resolve().parents if (p / "pom.xml").is_file())
+
 import os
 import re, csv, pathlib, collections
 
-ROOT = pathlib.Path(f"{os.environ.get('AION_REPO_ROOT', os.path.expanduser('~/IdeaProjects/AionEmu-test'))}")
+ROOT = REPO
 SD = ROOT / "src/main/resources/aion/data/static_data"
 Q = SD / "quest_definition/quests"
 OUT = ROOT / "src/test/resources/quest/iluma-norsvold-kill-target-contract.tsv"

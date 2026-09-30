@@ -5,7 +5,7 @@
 
 > **用法**：整份粘贴给 zcode 作为 goal 模式的唯一目标说明；若环境支持 `create_goal`，把 §1 的 objective
 > 原文用于创建**一个** goal，其余章节作为执行手册。
-> 仓库：`${AION_REPO_ROOT}`（Aion 5.8 社区服务端，Java 25 + Maven + Spring Boot，单模块）。
+> 仓库：`<仓库根>`（Aion 5.8 社区服务端，Java 25 + Maven + Spring Boot，单模块）。
 > 深度资料：同目录 `2026-09-23-zcode-appendix.zh-CN.md`（**其 §1 工作区状态已过期，以本文件 §3 为准**）。
 > 台账（唯一进度源）：`.agents/summary/scriptdll-quest-driver/GOAL-retail-driver-progress.zh-CN.md`。
 > 报告索引：`.agents/summary/scriptdll-quest-driver/reports/INDEX.zh-CN.md`。
@@ -85,7 +85,7 @@ CollectItem 178 / UseItem 104 / ItemPlay 15 / SerialHunt 10 / DataDriven 1508）
 **回归三档（实测；T3 有特殊纪律，见下）**：
 
 ```bash
-cd ${AION_REPO_ROOT}
+cd <仓库根>
 # T1：改完立刻跑，秒级（12 个固定全局门禁类，清单唯一来源 affected_quest_tests.py#T1_GATE_CLASSES）
 .agents/summary/scriptdll-quest-driver/run_quest_gates.sh T1
 # T2：T1 + 按任务 ID 反查命中的测试类
@@ -99,10 +99,10 @@ python3 -B .agents/summary/scriptdll-quest-driver/affected_quest_tests.py --json
 
 ```bash
 rsync -a --delete --exclude '/target' --exclude '/.git' --exclude '/aion' --exclude '/patch' \
-      --exclude '/log' --exclude '/.codegraph' ${AION_REPO_ROOT}/ /private/tmp/aion-<切片>/
+      --exclude '/log' --exclude '/.codegraph' <仓库根>/ /private/tmp/aion-<切片>/
 cd /private/tmp/aion-<切片>
 mvn -o -B test -Dtest='com.aionemu.gameserver.questEngine.**,!com.aionemu.gameserver.questEngine.retail.RetailDataDrivenGateTest' \
-    -DfailIfNoTests=false -DforkCount=2 > ${AION_REPO_ROOT}/.agents/summary/scriptdll-quest-driver/gates/T3-<切片>-clean.log 2>&1
+    -DfailIfNoTests=false -DforkCount=2 > <仓库根>/.agents/summary/scriptdll-quest-driver/gates/T3-<切片>-clean.log 2>&1
 # 对账：失败方法集与最新基线逐行 comm（归一化到 `com.aionemu...` 开头的方法行）
 comm -23 <(grep -oE 'com\.aionemu[^ ]+$' gates/T3-<切片>-clean.log | sort -u) \
          <(grep -oE 'com\.aionemu[^ ]+$' gates/T3-p0c8c-clean2.log | sort -u)
@@ -121,10 +121,10 @@ rm -rf /private/tmp/aion-<切片>
 
 | 用途 | 路径 |
 |---|---|
-| 真端数据（UTF-16 + 内部 DTD） | `${AION_RETAIL_ROOT}/Map/XML/`（`quest.xml`、`Quest_*.xml`、`data_driven_quest.xml`、`npcfactions_quest.xml`、`challenge_task.xml`、`npcs.xml`） |
-| 真端二进制 | `${AION_RETAIL_ROOT}/MainServer/{ScriptDLL64.dll,Server64.exe}` |
-| 反编译源码 | `${AION_RETAIL_ROOT}/server58-source/{MainServer_ScriptDLL64,MainServer_Server64}/`（巨文件 `ScriptDLL64.c` 271 万行 / latin-1，grep 加 `-m`） |
-| 客户端解包（UTF-8） | `${AION_UNPACK_ROOT}/data_unpacked/Dialogs/**/quest_q<id>.html`；`Quest_unpacked/{quest.xml,quest_monster.csv,quest_script_monster.csv}` |
+| 真端数据（UTF-16 + 内部 DTD） | `<真端根>/Map/XML/`（`quest.xml`、`Quest_*.xml`、`data_driven_quest.xml`、`npcfactions_quest.xml`、`challenge_task.xml`、`npcs.xml`） |
+| 真端二进制 | `<真端根>/MainServer/{ScriptDLL64.dll,Server64.exe}` |
+| 反编译源码 | `<真端根>/server58-source/{MainServer_ScriptDLL64,MainServer_Server64}/`（巨文件 `ScriptDLL64.c` 271 万行 / latin-1，grep 加 `-m`） |
+| 客户端解包（UTF-8） | `<客户端解包根>/data_unpacked/Dialogs/**/quest_q<id>.html`；`Quest_unpacked/{quest.xml,quest_monster.csv,quest_script_monster.csv}` |
 | 本仓真端数据 | `src/main/resources/aion/data/static_data/quest_retail/`（各族表 + `quest.xml` + `retail-xml-retention.tsv` + `quest_client_*.tsv`） |
 | 证据与工具 | `.agents/summary/scriptdll-quest-driver/`（**中间产物只能放这里**，禁止 `scripts/`、禁止 `.agent/`） |
 

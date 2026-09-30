@@ -2,11 +2,15 @@
 # 批 1 数据面编辑（确定性、带断言计数）：
 #   34 行 flip（retention → RETAIL_TABLE/OK）+ 149 行裁定（ADJUDICATED:<码>）+ 9 行码对齐（drift 权威码）
 #   + decisions 登记 34 行 + rejects fixture 删 34 行 + catalog 删 34 条 + 删 34 个 XML。
+from pathlib import Path
+
+REPO = next(p for p in Path(__file__).resolve().parents if (p / "pom.xml").is_file())
+
 import re
 import os
 import subprocess
 
-ROOT = f"{os.environ.get('AION_REPO_ROOT', os.path.expanduser('~/IdeaProjects/AionEmu-test'))}"
+ROOT = f"{REPO}"
 RET_MAIN = f"{ROOT}/src/main/resources/aion/data/static_data/quest_retail/retail-xml-retention.tsv"
 RET_TEST = f"{ROOT}/src/test/resources/quest/retail-xml-retention.tsv"
 DECISIONS = f"{ROOT}/src/test/resources/quest/retail-simple-hunt-adjudicated-decisions.tsv"

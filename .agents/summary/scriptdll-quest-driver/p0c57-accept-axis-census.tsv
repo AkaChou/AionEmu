@@ -1,4 +1,4 @@
-# P0c-57（续片 33）接取轴普查：复算登记 34 项 + 分形（可裁面 / 暂缓面）: registry=${AION_REPO_ROOT}/src/main/resources/aion/data/static_data/quest_retail/quest_client_talk_chain_steps.tsv
+# P0c-57（续片 33）接取轴普查：复算登记 34 项 + 分形（可裁面 / 暂缓面）: registry=<仓库根>/src/main/resources/aion/data/static_data/quest_retail/quest_client_talk_chain_steps.tsv
 quest_id	npc_id	shape	role	owner_client	owner_retail	owner	served	rows	guards	note
 2538	204805	SPREAD_PRUNE_CANDIDATE	CHAIN	204827	NPC_Debrie_Hild	204827	page:SELECT1_1	11:SELECT1_1:unaccepted>unaccepted:DIALOG:SHOW_QUEST_PAGE:SELECT1_1	G2=CHAIN;G3=OK;G4=OK;G5=OK;G6=OK	retail=OK client=OK
 2538	790002	SPREAD_PRUNE_CANDIDATE	CHAIN	204827	NPC_Debrie_Hild	204827	page:SELECT1_1	13:SELECT1_1:unaccepted>unaccepted:DIALOG:SHOW_QUEST_PAGE:SELECT1_1	G2=CHAIN;G3=OK;G4=OK;G5=OK;G6=OK	retail=OK client=OK

@@ -1,8 +1,12 @@
+from pathlib import Path
+
+REPO = next(p for p in Path(__file__).resolve().parents if (p / "pom.xml").is_file())
+
 import os
 import re
 import xml.etree.ElementTree as ET
 
-client_strings_path = f"{os.environ.get('AION_UNPACK_ROOT', os.path.expanduser('~/PycharmProjects/unpak'))}/data_unpacked/Strings/client_strings_quest.xml"
+client_strings_path = f"{REPO.parent / 'PycharmProjects' / 'unpak'}/data_unpacked/Strings/client_strings_quest.xml"
 tree_strings = ET.parse(client_strings_path)
 id_to_string = {}
 name_to_string = {}
@@ -17,7 +21,7 @@ for s in tree_strings.getroot().findall("string"):
         name_to_string[sname_txt] = (sid_txt, sbody_txt)
         id_to_string[sid_txt] = (sname_txt, sbody_txt)
 
-client_quest_path = f"{os.environ.get('AION_UNPACK_ROOT', os.path.expanduser('~/PycharmProjects/unpak'))}/Quest_unpacked/quest.xml"
+client_quest_path = f"{REPO.parent / 'PycharmProjects' / 'unpak'}/Quest_unpacked/quest.xml"
 tree_quest = ET.parse(client_quest_path)
 client_quests = {}
 for q in tree_quest.getroot().findall("quest"):

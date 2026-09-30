@@ -447,7 +447,7 @@ T1 清单的唯一来源是 Python 工具里的 `T1_GATE_CLASSES`；`run_quest_g
 ### 6.5 复现命令
 
 ```bash
-cd ${AION_REPO_ROOT}
+cd <仓库根>
 # T1：改完立刻跑（~25 s）/ run right after an edit
 .agents/summary/scriptdll-quest-driver/run_quest_gates.sh T1
 # T2：T1 + 命中类 / T1 plus affected classes

@@ -11,7 +11,7 @@ import subprocess
 from collections import Counter
 from pathlib import Path
 
-REPO = Path(f"{os.environ.get('AION_REPO_ROOT', os.path.expanduser('~/IdeaProjects/AionEmu-test'))}")
+REPO = next(p for p in Path(__file__).resolve().parents if (p / "pom.xml").is_file())
 TABLE = REPO / 'src/main/resources/aion/data/static_data/quest_retail/data_driven_quest.xml'
 PAGES_CSV = REPO / 'docs/quest/client-dialog-mapping/quest-dialog-pages.csv'
 NPCS = sorted(REPO.glob('src/main/resources/aion/data/static_data/npcs/npc_template_*.xml'))

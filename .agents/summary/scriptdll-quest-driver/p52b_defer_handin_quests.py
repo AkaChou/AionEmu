@@ -10,7 +10,7 @@ import subprocess
 import sys
 from pathlib import Path
 
-REPO = Path(f"{os.environ.get('AION_REPO_ROOT', os.path.expanduser('~/IdeaProjects/AionEmu-test'))}")
+REPO = next(p for p in Path(__file__).resolve().parents if (p / "pom.xml").is_file())
 PROD_DIR = REPO / 'src/main/resources/aion/data/static_data/quest_definition/quests'
 CATALOG = REPO / 'src/main/resources/aion/data/static_data/quest_definition/quest_definition_catalog.xml'
 DEFERRED = Path(__file__).resolve().parent / 'p52-handin-deferred-quests.tsv'

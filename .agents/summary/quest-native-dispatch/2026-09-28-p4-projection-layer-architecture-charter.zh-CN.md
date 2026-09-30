@@ -50,8 +50,8 @@
 
 | 源 | 位置 | 规模/哈希 | 仓内状态 | 结论 |
 |---|---|---|---|---|
-| `quest_monster.csv` | `${AION_UNPACK_ROOT}/Quest_unpacked/quest_monster.csv` | 8499 行 / 2.1MB / sha256 `aaa8da03acfb…` | **不在仓** | 4 张 monster 系表的完整源；不冻结前不能做“离线可重放”的构建期生成 |
-| `data_unpacked/Dialogs` | `${AION_UNPACK_ROOT}/data_unpacked/Dialogs` | 21982 文件 / 116MB | **不在仓** | `talk_collect_chain_pages` 生成器的过场交叉核验源；需确认仓内 `quest-order-audit.csv` 是否已足够替代 |
+| `quest_monster.csv` | `<客户端解包根>/Quest_unpacked/quest_monster.csv` | 8499 行 / 2.1MB / sha256 `aaa8da03acfb…` | **不在仓** | 4 张 monster 系表的完整源；不冻结前不能做“离线可重放”的构建期生成 |
+| `data_unpacked/Dialogs` | `<客户端解包根>/data_unpacked/Dialogs` | 21982 文件 / 116MB | **不在仓** | `talk_collect_chain_pages` 生成器的过场交叉核验源；需确认仓内 `quest-order-audit.csv` 是否已足够替代 |
 | `client-monster-progress-contracts.csv` | `docs/quest/client-dialog-mapping/` | 853 行 / sha256 `9cab3c82…` | **在仓** | 只覆盖 853 个简单契约，小于当前 `hunt_progress_rows` 的 965 quest；不能单独作为全量源 |
 
 ## 4. 迁移模式

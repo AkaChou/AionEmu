@@ -7,15 +7,19 @@ base 66/67 + T_ 实刷 66/67）。名字经 npc_template `name_desc`（小写）
 与 DD 表分号段顺序（BoundCounter.slot 1..N）一一对应。
 当前覆盖 = 15546/25546（仅有的多段 + 客户端名单超集行）；后续多段行按需追加。
 """
+from pathlib import Path
+
+REPO = next(p for p in Path(__file__).resolve().parents if (p / "pom.xml").is_file())
+
 import os
 import csv
 import pathlib
 import re
 import collections
 
-ROOT = pathlib.Path(f"{os.environ.get('AION_REPO_ROOT', os.path.expanduser('~/IdeaProjects/AionEmu-test'))}")
+ROOT = REPO
 SD = ROOT / "src/main/resources/aion/data/static_data"
-CLIENT_CSV = pathlib.Path(f"{os.environ.get('AION_UNPACK_ROOT', os.path.expanduser('~/PycharmProjects/unpak'))}/Quest_unpacked/quest_monster.csv")
+CLIENT_CSV = pathlib.Path(f"{REPO.parent / 'PycharmProjects' / 'unpak'}/Quest_unpacked/quest_monster.csv")
 OUT = SD / "quest_retail/quest_client_kill_targets_stages.tsv"
 QUESTS = [15546, 25546]
 

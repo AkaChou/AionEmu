@@ -13,12 +13,12 @@
 
 ## 二、真端数据与原文 / Retail data
 
-- 真端 NPC 数据 `${AION_RETAIL_ROOT}/Map/XML/npcs_std_monsters.xml`：
+- 真端 NPC 数据 `<真端根>/Map/XML/npcs_std_monsters.xml`：
   - 282006：`move_speed_normal_* = 0`、`attack_range=3.0`、`min/max_damage=291/437`、`attack_delay=2081`、
     `sensory_range=20`、`max_chase_time=0`、`react_to_pathfind_fail=return_to_sp`。
   - 282082：`move_speed_normal_run=4.5`、`attack_range=2.0`、`min/max_damage=738/1107`、`attack_delay=1938`、
     `max_hp=5611`、4 个技能、`max_chase_time=40`、`sensory_range=10` —— 完整的可移动战斗召唤物。
-- 真端 pattern `${AION_RETAIL_ROOT}/Map/XML/NpcAIPatterns_IDElim_OSY.xml`（UTF-16）：
+- 真端 pattern `<真端根>/Map/XML/NpcAIPatterns_IDElim_OSY.xml`（UTF-16）：
   - `Elim_NeutflyEgg`：`on_see_user` = `use_skill(SKILLI_INDEX_0)` → `spawn_on_target(SPAWN_ID_1,
     BIDElim_NeutWorkmanflySummon_51_n, live_time=18, despawn_at_attack_state=TRUE)` → `despawn_self`；
     `on_enter_attack_state` / `on_enter_idle_state` 都是 `do_nothing`。**没有**任何回位/放弃目标/清仇恨动作，

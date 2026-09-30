@@ -12,11 +12,11 @@ import re
 import sys
 from pathlib import Path
 
-REPO = Path(__file__).resolve().parents[3]
+REPO = next(p for p in Path(__file__).resolve().parents if (p / "pom.xml").is_file())
 DD_TABLE = REPO / "src/main/resources/aion/data/static_data/quest_retail/data_driven_quest.xml"
 NPC_TEMPLATE_DIR = REPO / "src/main/resources/aion/data/static_data/npcs"
-CLIENT_NPC = Path(f"{os.environ.get('AION_UNPACK_ROOT', os.path.expanduser('~/PycharmProjects/unpak'))}/npcs_unpacked/client_npcs_npc.xml")
-CLIENT_STRINGS = Path(f"{os.environ.get('AION_UNPACK_ROOT', os.path.expanduser('~/PycharmProjects/unpak'))}/strings_unpacked/client_strings_dic_etc.xml")
+CLIENT_NPC = Path(f"{REPO.parent / 'PycharmProjects' / 'unpak'}/npcs_unpacked/client_npcs_npc.xml")
+CLIENT_STRINGS = Path(f"{REPO.parent / 'PycharmProjects' / 'unpak'}/strings_unpacked/client_strings_dic_etc.xml")
 
 TOKEN = "Village_Guard"
 

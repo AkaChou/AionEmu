@@ -9,13 +9,15 @@ import os
 import sys
 from pathlib import Path
 
+REPO = next(p for p in Path(__file__).resolve().parents if (p / "pom.xml").is_file())
+
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from m5b2_pe_probe import Pe  # noqa: E402
 
 
 def main():
     lo, hi = int(sys.argv[1], 16), int(sys.argv[2], 16)
-    pe = Pe(f"{os.environ.get('AION_RETAIL_ROOT', os.path.expanduser('~/IdeaProjects/58Server'))}/MainServer/ScriptDLL64.dll")
+    pe = Pe(f"{REPO.parent / '58Server'}/MainServer/ScriptDLL64.dll")
     secs = {s[0]: s for s in pe.sections}
     _, tva, _, _, trs = secs[".text"]
     tlo = pe.image_base + tva

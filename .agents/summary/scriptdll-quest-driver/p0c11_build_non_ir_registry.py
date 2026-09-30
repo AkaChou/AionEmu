@@ -24,7 +24,7 @@ from collections import defaultdict
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
-REPO = Path(f"{os.environ.get('AION_REPO_ROOT', os.path.expanduser('~/IdeaProjects/AionEmu-test'))}")
+REPO = next(p for p in Path(__file__).resolve().parents if (p / "pom.xml").is_file())
 CAP = REPO / 'src/test/resources/quest/quest-start-metadata-retail-cap-exceptions.tsv'
 HEAL = REPO / 'src/test/resources/quest/retail-legacy-save-normalization.tsv'
 DIV = REPO / 'src/test/resources/quest/retail-metadata-divergences.tsv'

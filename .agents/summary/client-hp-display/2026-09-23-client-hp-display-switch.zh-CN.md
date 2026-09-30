@@ -163,7 +163,7 @@ start bin64\aion.bin -ip:... -port:2106 -cc:5 -lang:chs -vip -f2p ... -disable-x
 
 ## 4. 涉及文件
 
-- 客户端（不在仓库内）：`${AION_CLIENT_ROOT}/bin32/game.dll`、`bin64/Game.dll`、
+- 客户端（不在仓库内）：`<客户端目录>/bin32/game.dll`、`bin64/Game.dll`、
   `单机启动.bat`、`SystemOptionGraphics.cfg`
 - 仓库内既有客户端补丁：`patch/Game.dll`（64 位）、`patch/patch_documentation.md`、
   `.agents/summary/patch-game-dll-vip/patch_game_dll_vip.py`

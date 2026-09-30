@@ -12,9 +12,11 @@ import re
 import sys
 from pathlib import Path
 
+REPO = next(p for p in Path(__file__).resolve().parents if (p / "pom.xml").is_file())
+
 ROOT = Path(__file__).resolve().parents[4]
 ITEMS = ROOT / "src/main/resources/aion/data/static_data/items"
-RETAIL = Path(f"{os.environ.get('AION_UNPACK_ROOT', os.path.expanduser('~/PycharmProjects/unpak'))}/Quest_unpacked/quest.xml")
+RETAIL = Path(f"{REPO.parent / 'PycharmProjects' / 'unpak'}/Quest_unpacked/quest.xml")
 OUT = ROOT / "src/test/resources/quest/quest-item-role-baseline.tsv"
 
 

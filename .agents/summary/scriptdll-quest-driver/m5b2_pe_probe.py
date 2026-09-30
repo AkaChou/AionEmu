@@ -12,8 +12,10 @@ import struct
 import sys
 from pathlib import Path
 
-DLL = Path(f"{os.environ.get('AION_RETAIL_ROOT', os.path.expanduser('~/IdeaProjects/58Server'))}/MainServer/ScriptDLL64.dll")
-SYMS = Path(f"{os.environ.get('AION_RETAIL_ROOT', os.path.expanduser('~/IdeaProjects/58Server'))}/server58-source/MainServer_ScriptDLL64/symbols.tsv")
+REPO = next(p for p in Path(__file__).resolve().parents if (p / "pom.xml").is_file())
+
+DLL = Path(f"{REPO.parent / '58Server'}/MainServer/ScriptDLL64.dll")
+SYMS = Path(f"{REPO.parent / '58Server'}/server58-source/MainServer_ScriptDLL64/symbols.tsv")
 
 
 class Pe:

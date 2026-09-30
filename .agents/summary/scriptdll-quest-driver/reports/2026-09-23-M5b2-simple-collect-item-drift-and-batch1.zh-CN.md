@@ -25,7 +25,7 @@
 
 ## 2. ScriptDLL64 反编译证据（本切片新增）
 
-真端二进制：`${AION_RETAIL_ROOT}/MainServer/ScriptDLL64.dll`（77 MB，ImageBase `0x180000000`）；反编译源码：`58Server/server58/MainServer_ScriptDLL64/ScriptDLL64.c`。
+真端二进制：`<真端根>/MainServer/ScriptDLL64.dll`（77 MB，ImageBase `0x180000000`）；反编译源码：`58Server/server58/MainServer_ScriptDLL64/ScriptDLL64.c`。
 
 1. **每任务一个 trampoline → 家族共享处理点**：真端为每个 SimpleCollectItem 任务注册一个跳板，例如 1103（`0x44f`）→ `FUN_180d46660`，函数体为
    `(**(code **)(lVar1 + 0x1b8))(param_1, uVar2, 0x44f, *puVar5, *puVar4, *puVar3);`

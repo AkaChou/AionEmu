@@ -5,7 +5,9 @@ import csv, re
 from collections import Counter
 from pathlib import Path
 
-CLIENT = Path(f"{os.environ.get('AION_UNPACK_ROOT', os.path.expanduser('~/PycharmProjects/unpak'))}/Quest_unpacked/quest_monster.csv")
+REPO = next(p for p in Path(__file__).resolve().parents if (p / "pom.xml").is_file())
+
+CLIENT = Path(f"{REPO.parent / 'PycharmProjects' / 'unpak'}/Quest_unpacked/quest_monster.csv")
 QUESTS = Path("src/main/resources/aion/data/static_data/quest_definition/quests")
 
 gates = {}

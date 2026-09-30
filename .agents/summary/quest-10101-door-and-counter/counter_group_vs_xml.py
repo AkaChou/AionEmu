@@ -1,6 +1,10 @@
 #!/usr/bin/env python3
 """对同一批任务输出：客户端 quest_summary 计数占位符组索引、生产 XML 未完成击杀路线的写入字段、
 客户端 quest_monster/quest_script_monster 合同行。只读证据脚本。"""
+from pathlib import Path
+
+REPO = next(p for p in Path(__file__).resolve().parents if (p / "pom.xml").is_file())
+
 import os
 import glob
 import re
@@ -11,7 +15,7 @@ QUESTIONS = [10101, 10112, 10011, 13945, 15324, 50091, 15546, 17510, 18994, 1370
 
 
 def html_counters(q):
-    hits = glob.glob(f"{os.environ.get('AION_UNPACK_ROOT', os.path.expanduser('~/PycharmProjects/unpak'))}/data_unpacked/Dialogs/*/quest_q{q}.html")
+    hits = glob.glob(f"{REPO.parent / 'PycharmProjects' / 'unpak'}/data_unpacked/Dialogs/*/quest_q{q}.html")
     if not hits:
         return None
     s = open(hits[0], encoding="utf-8", errors="replace").read()
@@ -64,9 +68,9 @@ def main():
         if kills:
             for k in kills[:12]:
                 print("    kill ->", k)
-        for row in csv_rows(f"{os.environ.get('AION_UNPACK_ROOT', os.path.expanduser('~/PycharmProjects/unpak'))}/Quest_unpacked/quest_monster.csv", q):
+        for row in csv_rows(f"{REPO.parent / 'PycharmProjects' / 'unpak'}/Quest_unpacked/quest_monster.csv", q):
             print("  [monster]", row[:160])
-        for row in csv_rows(f"{os.environ.get('AION_UNPACK_ROOT', os.path.expanduser('~/PycharmProjects/unpak'))}/Quest_unpacked/quest_script_monster.csv", q):
+        for row in csv_rows(f"{REPO.parent / 'PycharmProjects' / 'unpak'}/Quest_unpacked/quest_script_monster.csv", q):
             print("  [script ]", row[:160])
 
 

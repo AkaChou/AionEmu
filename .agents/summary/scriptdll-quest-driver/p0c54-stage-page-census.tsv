@@ -1,4 +1,4 @@
-# P0c-54 阶段页轴普查（入口页缺失 + 跨 NPC 扩散）: registry=${AION_REPO_ROOT}/src/main/resources/aion/data/static_data/quest_retail/quest_client_talk_chain_steps.tsv
+# P0c-54 阶段页轴普查（入口页缺失 + 跨 NPC 扩散）: registry=<仓库根>/src/main/resources/aion/data/static_data/quest_retail/quest_client_talk_chain_steps.tsv
 # quest_id	stage	page	expected_npc	emitted_by	status	detail
 1323	1	SELECT2	203939	730019:7:started>started|203939:12:reward>reward	SPREAD_DUPLICATE	
 1323	1	SELECT2_1	203939	730019:8:started>started|203939:13:reward>reward	SPREAD_DUPLICATE	

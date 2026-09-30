@@ -17,9 +17,11 @@ import sys
 from collections import Counter
 from pathlib import Path
 
+REPO = next(p for p in Path(__file__).resolve().parents if (p / "pom.xml").is_file())
+
 REPO_ROOT = Path(__file__).resolve().parents[3]
 BASE = REPO_ROOT / ".agents/summary/scriptdll-quest-driver"
-DEFAULT_RETAIL_XML = Path(f"{os.environ.get('AION_RETAIL_ROOT', os.path.expanduser('~/IdeaProjects/58Server'))}/Map/XML")
+DEFAULT_RETAIL_XML = Path(f"{REPO.parent / '58Server'}/Map/XML")
 DEFAULT_OUT = BASE / "m5b2b-faction-grant-coverage.tsv"
 FAMILY_TABLES = (
 	"Quest_SimpleCollectItem.xml",

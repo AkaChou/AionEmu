@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """生成 PREREQ 真端合同基线：src/test/resources/quest/quest-prerequisite-retail-contract.tsv
 
-数据源：${AION_RETAIL_ROOT:-$HOME/IdeaProjects/58Server}/Map/XML/quest.xml（真端 5.8 服务端任务表，UTF-16LE）。
+数据源：<真端根>/Map/XML/quest.xml（真端 5.8 服务端任务表，UTF-16LE）。
 列：quest_id <TAB> 分支列表（分支内逗号=AND，分号=OR）。
 运行：python3 -B .agents/summary/retail-template-reconciliation/build_prereq_contract_tsv.py
 """
@@ -10,7 +10,9 @@ import os
 import re
 from pathlib import Path
 
-RETAIL = Path(f"{os.environ.get('AION_RETAIL_ROOT', os.path.expanduser('~/IdeaProjects/58Server'))}/Map/XML/quest.xml")
+REPO = next(p for p in Path(__file__).resolve().parents if (p / "pom.xml").is_file())
+
+RETAIL = Path(f"{REPO.parent / '58Server'}/Map/XML/quest.xml")
 OUT = Path("src/test/resources/quest/quest-prerequisite-retail-contract.tsv")
 
 

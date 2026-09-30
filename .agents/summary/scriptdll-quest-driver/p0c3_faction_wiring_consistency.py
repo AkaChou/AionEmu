@@ -14,7 +14,7 @@ import re
 import sys
 from pathlib import Path
 
-REPO = Path(f"{os.environ.get('AION_REPO_ROOT', os.path.expanduser('~/IdeaProjects/AionEmu-test'))}")
+REPO = next(p for p in Path(__file__).resolve().parents if (p / "pom.xml").is_file())
 RETAIL = REPO / 'src/main/resources/aion/data/static_data/quest_retail'
 RETENTION = RETAIL / 'retail-xml-retention.tsv'
 TABLES = {'SimpleTalk': RETAIL / 'Quest_SimpleTalk.xml', 'SimpleHunt': RETAIL / 'Quest_SimpleHunt.xml'}
@@ -22,7 +22,7 @@ METADATA_COMPILER = (REPO / 'src/main/java/com/aionemu/gameserver/questEngine/re
                      / 'RetailQuestMetadataCompiler.java')
 WEEKDAY = REPO / 'src/main/resources/aion/data/static_data/npc_factions/npc_factions_quest.xml'
 FACTIONS = REPO / 'src/main/resources/aion/data/static_data/npc_factions/npc_factions.xml'
-RETAIL_SERVER = Path(f"{os.environ.get('AION_RETAIL_ROOT', os.path.expanduser('~/IdeaProjects/58Server'))}/Map/XML/npcfactions_quest.xml")
+RETAIL_SERVER = Path(f"{REPO.parent / '58Server'}/Map/XML/npcfactions_quest.xml")
 DAYS = ('mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun')
 
 

@@ -11,7 +11,7 @@
 - 中文任务 HTML：从 Aion 5.8 客户端中文本地化包解包获得。
 - 生成脚本：`.agents/summary/quest/generate_client_dialog_mapping.py`。
 
-需要重新生成而当前任务缺少上述客户端文件或解包产物时，先向用户请求提供。取得文件后，可通过命令行参数或 `AION_CLIENT_ROOT`、`AION_UNPACK_ROOT` 传入位置；不要把个人机器路径写入文档或生成结果。
+需要重新生成而当前任务缺少上述客户端文件或解包产物时，先向用户请求提供。取得文件后，通过命令行参数传入位置（缺省按 `ENVIRONMENT.md` 的同宿主目录约定解析）；不要把个人机器路径写入文档或生成结果。
 
 `mapping-summary.json` 记录权威原始包、解包输入的路径与 SHA-256，以及 active
 任务 HTML 的排序清单哈希和本次生成的记录数。2026-08-13 已从上述权威原始包重新解包核对：
@@ -136,7 +136,7 @@ mvn -q -Dexec.classpathScope=test \
 
 ```bash
 python3 .agents/summary/quest/generate_client_dialog_mapping.py \
-  --definitions-dir "${AION_UNPACK_ROOT}/dialog_unpacked" \
-  --zh-dialogs-dir "${AION_UNPACK_ROOT}/data_unpacked/Dialogs" \
+  --definitions-dir "<客户端解包根>/dialog_unpacked" \
+  --zh-dialogs-dir "<客户端解包根>/data_unpacked/Dialogs" \
   --output-dir docs/quest/client-dialog-mapping
 ```

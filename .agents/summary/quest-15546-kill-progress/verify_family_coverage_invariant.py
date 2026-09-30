@@ -1,10 +1,14 @@
 #!/usr/bin/env python3
 """核对修复后的 15 个任务满足"族内已刷新变体必须全部登记"的不变量（供 Java 门禁对齐）。"""
 from __future__ import annotations
+from pathlib import Path
+
+REPO = next(p for p in Path(__file__).resolve().parents if (p / "pom.xml").is_file())
+
 import os
 import re, pathlib, collections
 
-ROOT = pathlib.Path(f"{os.environ.get('AION_REPO_ROOT', os.path.expanduser('~/IdeaProjects/AionEmu-test'))}")
+ROOT = REPO
 SD = ROOT / "src/main/resources/aion/data/static_data"
 Q = SD / "quest_definition/quests"
 

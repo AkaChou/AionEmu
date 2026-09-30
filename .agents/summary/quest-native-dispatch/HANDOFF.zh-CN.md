@@ -13,7 +13,7 @@
 ## §1 完整提示词（可整段粘贴给任意执行体）
 
 ```
-你是 AionEmu 仓库（${AION_REPO_ROOT}，分支 quest）的 quest「真端驱动」迁移执行体。
+你是 AionEmu 仓库（<仓库根>，分支 quest）的 quest「真端驱动」迁移执行体。
 
 【目标 · 完成改造标准（Definition of Done）】本阶段的终点不是"再推进若干片"，而是让 Goal §0 三条同时成立：
 ① 全部"可迁移"任务由真端表在加载期合成生命周期分发（RETAIL_TABLE）；
@@ -207,7 +207,7 @@ QUEST_LOG_DIR=.agents/summary/quest-native-dispatch/gates \
   .agents/summary/scriptdll-quest-driver/run_quest_gates.sh T2 ${=IDS}
 
 # T3（暖副本/仓库外副本；**只能排除 .git 与 target**，.agents 必须带上）——**分 3 片，每片 ≤600s**
-rsync -a --delete --exclude .git --exclude target ${AION_REPO_ROOT}/ /private/tmp/aion-t3-warm/
+rsync -a --delete --exclude .git --exclude target <仓库根>/ /private/tmp/aion-t3-warm/
 cd /private/tmp/aion-t3-warm
 # 片 1/3（definition 包）
 mvn -o -B test '-Dtest=com.aionemu.gameserver.questEngine.definition.**' -DfailIfNoTests=false -DforkCount=4
@@ -282,7 +282,7 @@ python3 -B .agents/memory-bank/verify_memory_bank.py   # 期望 MEMORY_BANK_VERI
 
 | 项 | 值 |
 |---|---|
-| 仓库 | `${AION_REPO_ROOT}`（分支 `quest`） |
+| 仓库 | `<仓库根>`（分支 `quest`） |
 | **基线提交** | 启动时的 `HEAD`（写作时 `837e4c58e`）← 2ab91c0f8（输入表）← d1806b476（交接包/工具）← b5d2a7dea（产物清理）← 5318a8686（台账/工具链/证据）← 4ede058c0（源码迁移） |
 | 远端状态 | 领先 `origin/quest` **25 个提交，未推送**（不要 push） |
 | 工作树 | 应**干净**；4 个工具链输入表已入库、不得删（§2-13） |

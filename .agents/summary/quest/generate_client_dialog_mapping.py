@@ -7,7 +7,6 @@ import csv
 import hashlib
 import html
 import json
-import os
 import re
 import tempfile
 import xml.etree.ElementTree as ET
@@ -15,6 +14,8 @@ from collections import Counter, defaultdict
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Iterable, Sequence
+
+REPO = next(p for p in Path(__file__).resolve().parents if (p / "pom.xml").is_file())
 
 try:
     import lxml.etree as LET
@@ -24,8 +25,8 @@ except ImportError:
 
 ACTION_PATTERN = re.compile(r"\bHACTION_[A-Z0-9_]+\b", re.IGNORECASE)
 QUEST_FILE_PATTERN = re.compile(r"^quest_q(\d+)\.html$", re.IGNORECASE)
-CLIENT_ROOT_ENV = "AION_CLIENT_ROOT"
-UNPACK_ROOT_ENV = "AION_UNPACK_ROOT"
+CLIENT_ROOT = REPO.parent / "5.8客户端"
+UNPACK_ROOT = REPO.parent / "PycharmProjects" / "unpak"
 OUTPUT_FILES = (
     "client-hyperlinks.csv",
     "client-html-pages.csv",
@@ -102,13 +103,13 @@ def parse_args() -> argparse.Namespace:
         "--definitions-dir",
         type=Path,
         default=None,
-        help=f"Directory containing decoded HyperLinks.xml and HtmlPages.xml (default: ${{{UNPACK_ROOT_ENV}}}/dialog_unpacked).",
+        help="Directory containing decoded HyperLinks.xml and HtmlPages.xml (default: <客户端解包根>/dialog_unpacked).",
     )
     parser.add_argument(
         "--zh-dialogs-dir",
         type=Path,
         default=None,
-        help=f"Directory containing decoded Chinese quest HTML files (default: ${{{UNPACK_ROOT_ENV}}}/data_unpacked/Dialogs).",
+        help="Directory containing decoded Chinese quest HTML files (default: <客户端解包根>/data_unpacked/Dialogs).",
     )
     parser.add_argument(
         "--output-dir",
@@ -120,19 +121,19 @@ def parse_args() -> argparse.Namespace:
         "--dialogs-pak",
         type=Path,
         default=None,
-        help=f"Authoritative client package (default: ${{{CLIENT_ROOT_ENV}}}/data/Dialogs/Dialogs.pak).",
+        help="Authoritative client package (default: <客户端目录>/data/Dialogs/Dialogs.pak).",
     )
     parser.add_argument(
         "--chs-data-pak",
         type=Path,
         default=None,
-        help=f"Authoritative Chinese localization package (default: ${{{CLIENT_ROOT_ENV}}}/L10N/CHS/Data/data.pak).",
+        help="Authoritative Chinese localization package (default: <客户端目录>/L10N/CHS/Data/data.pak).",
     )
     parser.add_argument(
         "--quest-pak",
         type=Path,
         default=None,
-        help=f"Authoritative client quest-data package (default: ${{{CLIENT_ROOT_ENV}}}/data/Quest/Quest.pak).",
+        help="Authoritative client quest-data package (default: <客户端目录>/data/Quest/Quest.pak).",
     )
     parser.add_argument(
         "--check",
@@ -142,32 +143,26 @@ def parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
-def configured_input(explicit: Path | None, env_name: str, suffix: str) -> Path:
-    if explicit is not None:
-        return explicit
-    root = os.environ.get(env_name)
-    if not root:
-        raise SystemExit(
-            f"set {env_name} or pass the corresponding input path explicitly"
-        )
-    return Path(root) / suffix
+def configured_input(explicit: Path | None, root: Path, suffix: str) -> Path:
+    """命令行参数优先；缺省按同宿主目录约定解析外部根（见 ENVIRONMENT.md）。"""
+    return explicit if explicit is not None else root / suffix
 
 
 def resolve_input_paths(args: argparse.Namespace) -> tuple[Path, Path, Path, Path, Path]:
     return tuple(
         path.resolve()
         for path in (
-            configured_input(args.definitions_dir, UNPACK_ROOT_ENV, "dialog_unpacked"),
+            configured_input(args.definitions_dir, UNPACK_ROOT, "dialog_unpacked"),
             configured_input(
-                args.zh_dialogs_dir, UNPACK_ROOT_ENV, "data_unpacked/Dialogs"
+                args.zh_dialogs_dir, UNPACK_ROOT, "data_unpacked/Dialogs"
             ),
             configured_input(
-                args.dialogs_pak, CLIENT_ROOT_ENV, "data/Dialogs/Dialogs.pak"
+                args.dialogs_pak, CLIENT_ROOT, "data/Dialogs/Dialogs.pak"
             ),
             configured_input(
-                args.chs_data_pak, CLIENT_ROOT_ENV, "L10N/CHS/Data/data.pak"
+                args.chs_data_pak, CLIENT_ROOT, "L10N/CHS/Data/data.pak"
             ),
-            configured_input(args.quest_pak, CLIENT_ROOT_ENV, "data/Quest/Quest.pak"),
+            configured_input(args.quest_pak, CLIENT_ROOT, "data/Quest/Quest.pak"),
         )
     )
 
@@ -414,16 +409,13 @@ def limited_join(values: Iterable[str], limit: int = 5) -> str:
     return " | ".join(unique_values)
 
 
-def portable_source_path(path: Path, env_name: str) -> str:
+def portable_source_path(path: Path, root: Path, label: str) -> str:
     """Keep generated provenance portable without leaking a host filesystem path."""
-    root = os.environ.get(env_name)
-    if not root:
-        return f"${{{env_name}}}/<configured-path>"
     try:
-        relative = path.resolve().relative_to(Path(root).expanduser().resolve())
+        relative = path.resolve().relative_to(root.expanduser().resolve())
     except ValueError:
-        return f"${{{env_name}}}/<outside-configured-root>"
-    return f"${{{env_name}}}/{relative.as_posix()}"
+        return f"<{label}>/<outside-configured-root>"
+    return f"<{label}>/{relative.as_posix()}"
 
 
 def generate(args: argparse.Namespace, output_dir: Path) -> dict[str, object]:
@@ -754,17 +746,17 @@ def generate(args: argparse.Namespace, output_dir: Path) -> dict[str, object]:
 
     summary = {
         "sources": {
-            "dialogs_pak": portable_source_path(dialogs_pak, CLIENT_ROOT_ENV),
+            "dialogs_pak": portable_source_path(dialogs_pak, CLIENT_ROOT, "客户端目录"),
             "dialogs_pak_sha256": sha256(dialogs_pak),
-            "chs_data_pak": portable_source_path(chs_data_pak, CLIENT_ROOT_ENV),
+            "chs_data_pak": portable_source_path(chs_data_pak, CLIENT_ROOT, "客户端目录"),
             "chs_data_pak_sha256": sha256(chs_data_pak),
-            "quest_pak": portable_source_path(quest_pak, CLIENT_ROOT_ENV),
+            "quest_pak": portable_source_path(quest_pak, CLIENT_ROOT, "客户端目录"),
             "quest_pak_sha256": sha256(quest_pak),
-            "hyperlinks_xml": portable_source_path(hyperlinks_path, UNPACK_ROOT_ENV),
+            "hyperlinks_xml": portable_source_path(hyperlinks_path, UNPACK_ROOT, "客户端解包根"),
             "hyperlinks_sha256": sha256(hyperlinks_path),
-            "html_pages_xml": portable_source_path(html_pages_path, UNPACK_ROOT_ENV),
+            "html_pages_xml": portable_source_path(html_pages_path, UNPACK_ROOT, "客户端解包根"),
             "html_pages_sha256": sha256(html_pages_path),
-            "zh_dialogs_dir": portable_source_path(zh_dialogs_dir, UNPACK_ROOT_ENV),
+            "zh_dialogs_dir": portable_source_path(zh_dialogs_dir, UNPACK_ROOT, "客户端解包根"),
             "active_quest_html_files": active_html_files,
             "active_quest_html_manifest_sha256": active_html_manifest_sha256,
         },

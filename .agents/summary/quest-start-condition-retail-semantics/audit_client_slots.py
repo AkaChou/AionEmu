@@ -12,7 +12,9 @@ import itertools
 import re
 from pathlib import Path
 
-QUEST_XML = Path(f"{os.environ.get('AION_RETAIL_ROOT', os.path.expanduser('~/IdeaProjects/58Server'))}/Map/XML/quest.xml")
+REPO = next(p for p in Path(__file__).resolve().parents if (p / "pom.xml").is_file())
+
+QUEST_XML = Path(f"{REPO.parent / '58Server'}/Map/XML/quest.xml")
 QUEST_DIR = Path("src/main/resources/aion/data/static_data/quest_definition/quests")
 FIELD_RE = re.compile(r"<(finished|acquired|noacquired|unfinished|equipped)_quest_cond(\d+)>([^<]+)</\1_quest_cond\2>")
 XML_COND_RE = re.compile(r'<condition\s+type="(\w+)"\s+quest-id="(\d+)"[^>]*/>')

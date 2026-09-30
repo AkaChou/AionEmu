@@ -33,7 +33,7 @@ import re
 import sys
 from pathlib import Path
 
-REPO = Path(__file__).resolve().parents[3]
+REPO = next(p for p in Path(__file__).resolve().parents if (p / "pom.xml").is_file())
 NPC_TEMPLATE_DIR = REPO / "src/main/resources/aion/data/static_data/npcs"
 RETENTION = REPO / "src/main/resources/aion/data/static_data/quest_retail/retail-xml-retention.tsv"
 OUT_TSV = REPO / "src/main/resources/aion/data/static_data/quest_retail/retail-quest-ai-name-groups.tsv"
@@ -41,8 +41,8 @@ OUT_REJECTED_TSV = (REPO / "src/main/resources/aion/data/static_data/quest_retai
 	/ "retail-quest-ai-name-groups-rejected.tsv")
 LEGACY_QUESTS = REPO / "src/main/resources/aion/data/static_data/quest_definition/quests"
 DD_TABLE = REPO / "src/main/resources/aion/data/static_data/quest_retail/data_driven_quest.xml"
-CLIENT_NPC = Path(f"{os.environ.get('AION_UNPACK_ROOT', os.path.expanduser('~/PycharmProjects/unpak'))}/npcs_unpacked/client_npcs_npc.xml")
-CLIENT_DIC = Path(f"{os.environ.get('AION_UNPACK_ROOT', os.path.expanduser('~/PycharmProjects/unpak'))}/strings_unpacked/client_strings_dic_etc.xml")
+CLIENT_NPC = Path(f"{REPO.parent / 'PycharmProjects' / 'unpak'}/npcs_unpacked/client_npcs_npc.xml")
+CLIENT_DIC = Path(f"{REPO.parent / 'PycharmProjects' / 'unpak'}/strings_unpacked/client_strings_dic_etc.xml")
 
 # 遗留 XML 的接取流动作（NPC_START 之外的"对话即接取"形）。 / The legacy accept-flow actions.
 ACCEPT_ACTIONS = ("QUEST_ACCEPT_1", "QUEST_ACCEPT_SIMPLE", "ASK_QUEST_ACCEPT")

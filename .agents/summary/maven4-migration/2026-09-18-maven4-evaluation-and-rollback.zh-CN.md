@@ -1,7 +1,7 @@
 # Maven 4.0.0-rc-6 评估与回退记录
 
 - 日期：2026-09-18
-- **结论：已回退。本仓库继续使用 Maven 3.9.16（`/opt/homebrew/bin/mvn`），不再使用 Maven 4 RC。**
+- **结论：已回退。本仓库继续使用 Maven 3.9.16，不再使用 Maven 4 RC。**
 - 回退决定由用户作出；回退后工作区与迁移前一致（`.mvn/`、`mvnw`、`mvnw.cmd` 均已移除，`.gitignore` 与 memory-bank ENV-002 已还原）。
 
 ## 评估期实测数据（供将来复议）

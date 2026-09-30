@@ -20,11 +20,11 @@ from collections import defaultdict
 
 BASE = os.path.dirname(os.path.abspath(__file__))
 REPO = os.path.abspath(os.path.join(BASE, "../../.."))
-RETAIL_TABLE = f"{os.environ.get('AION_RETAIL_ROOT', os.path.expanduser('~/IdeaProjects/58Server'))}/Map/XML/Quest_SimpleHunt.xml"
+RETAIL_TABLE = f"{REPO.parent / '58Server'}/Map/XML/Quest_SimpleHunt.xml"
 NPC_DIR = os.path.join(REPO, "src/main/resources/aion/data/static_data/npcs")
 QUEST_DIR = os.path.join(REPO, "src/main/resources/aion/data/static_data/quest_definition/quests")
-CLIENT_DIALOGS = f"{os.environ.get('AION_UNPACK_ROOT', os.path.expanduser('~/PycharmProjects/unpak'))}/data_unpacked/Dialogs"
-CLIENT_TABLES = f"{os.environ.get('AION_UNPACK_ROOT', os.path.expanduser('~/PycharmProjects/unpak'))}/Quest_unpacked"
+CLIENT_DIALOGS = f"{REPO.parent / 'PycharmProjects' / 'unpak'}/data_unpacked/Dialogs"
+CLIENT_TABLES = f"{REPO.parent / 'PycharmProjects' / 'unpak'}/Quest_unpacked"
 CSV_GUARD = re.compile(r"SECTION_(\d+)<(\d+)")
 INDEX_TSV = os.path.join(BASE, "npc_name_index.tsv")
 OUT_TSV = os.path.join(BASE, "simple-hunt-reconciliation.tsv")

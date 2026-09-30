@@ -15,8 +15,10 @@ import re
 import sys
 from pathlib import Path
 
-CLIENT_CSV = Path(f"{os.environ.get('AION_UNPACK_ROOT', os.path.expanduser('~/PycharmProjects/unpak'))}/Quest_unpacked/quest_monster.csv")
-OUT = Path(f"{os.environ.get('AION_REPO_ROOT', os.path.expanduser('~/IdeaProjects/AionEmu-test'))}/src/main/resources/aion/data/static_data/quest_retail/quest_client_hunt_counter_sections.tsv")
+REPO = next(p for p in Path(__file__).resolve().parents if (p / "pom.xml").is_file())
+
+CLIENT_CSV = Path(f"{REPO.parent / 'PycharmProjects' / 'unpak'}/Quest_unpacked/quest_monster.csv")
+OUT = Path(f"{REPO}/src/main/resources/aion/data/static_data/quest_retail/quest_client_hunt_counter_sections.tsv")
 
 GATE = re.compile(r'SECTION_(\d+)<(\d+)')
 

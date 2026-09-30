@@ -12,10 +12,12 @@ import struct
 import sys
 from pathlib import Path
 
+REPO = next(p for p in Path(__file__).resolve().parents if (p / "pom.xml").is_file())
+
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from m5b2_pe_probe import Pe, load_symbols  # noqa: E402
 
-DLL = f"{os.environ.get('AION_RETAIL_ROOT', os.path.expanduser('~/IdeaProjects/58Server'))}/MainServer/ScriptDLL64.dll"
+DLL = f"{REPO.parent / '58Server'}/MainServer/ScriptDLL64.dll"
 
 
 def build(pe):

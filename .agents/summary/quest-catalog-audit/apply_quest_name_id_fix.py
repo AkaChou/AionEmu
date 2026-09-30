@@ -1,12 +1,16 @@
+from pathlib import Path
+
+REPO = next(p for p in Path(__file__).resolve().parents if (p / "pom.xml").is_file())
+
 import os
 import re
 import xml.etree.ElementTree as ET
 
-REPO_ROOT = f"{os.environ.get('AION_REPO_ROOT', os.path.expanduser('~/IdeaProjects/AionEmu-test'))}"
+REPO_ROOT = f"{REPO}"
 PROD_DIR = os.path.join(REPO_ROOT, "src/main/resources/aion/data/static_data/quest_definition/quests")
 QUEST_DATA_PATH = os.path.join(REPO_ROOT, "src/main/resources/aion/data/static_data/quest_data/quest_data.xml")
-CLIENT_STRINGS_PATH = f"{os.environ.get('AION_UNPACK_ROOT', os.path.expanduser('~/PycharmProjects/unpak'))}/data_unpacked/Strings/client_strings_quest.xml"
-CLIENT_QUEST_PATH = f"{os.environ.get('AION_UNPACK_ROOT', os.path.expanduser('~/PycharmProjects/unpak'))}/Quest_unpacked/quest.xml"
+CLIENT_STRINGS_PATH = f"{REPO.parent / 'PycharmProjects' / 'unpak'}/data_unpacked/Strings/client_strings_quest.xml"
+CLIENT_QUEST_PATH = f"{REPO.parent / 'PycharmProjects' / 'unpak'}/Quest_unpacked/quest.xml"
 
 # 1. Load client strings mapping
 tree_strings = ET.parse(CLIENT_STRINGS_PATH)

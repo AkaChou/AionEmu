@@ -24,7 +24,7 @@
 用法
 ----
     python3 -B extract_quest_registry.py \
-        --dump ${AION_RETAIL_ROOT:-$HOME/IdeaProjects/58Server}/server58/MainServer_ScriptDLL64/ScriptDLL64.c \
+        --dump <真端根>/server58/MainServer_ScriptDLL64/ScriptDLL64.c \
         --out quest_registry.tsv --helpers registry_helpers.tsv
 """
 from __future__ import annotations

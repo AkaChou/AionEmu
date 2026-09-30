@@ -18,7 +18,7 @@ import re
 import subprocess
 from pathlib import Path
 
-REPO = Path(f"{os.environ.get('AION_REPO_ROOT', os.path.expanduser('~/IdeaProjects/AionEmu-test'))}")
+REPO = next(p for p in Path(__file__).resolve().parents if (p / "pom.xml").is_file())
 QUESTS_REL = 'src/main/resources/aion/data/static_data/quest_definition/quests'
 CATALOG_REL = 'src/main/resources/aion/data/static_data/quest_definition/quest_definition_catalog.xml'
 CATALOG = REPO / CATALOG_REL

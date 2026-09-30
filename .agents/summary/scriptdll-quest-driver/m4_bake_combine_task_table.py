@@ -1,15 +1,19 @@
 #!/usr/bin/env python3
 """M4-a：真端 `Quest_CombineTask.xml`（UTF-16 + DTD）转 UTF-8 入仓。
 
-源：${AION_RETAIL_ROOT:-$HOME/IdeaProjects/58Server}/Map/XML/Quest_CombineTask.xml
+源：<真端根>/Map/XML/Quest_CombineTask.xml
 目标：src/main/resources/aion/data/static_data/quest_retail/Quest_CombineTask.xml
 与 M3 的 SimpleTalk/SimpleHunt 表处理方式一致：只做编码转换，不改内容。
 """
+from pathlib import Path
+
+REPO = next(p for p in Path(__file__).resolve().parents if (p / "pom.xml").is_file())
+
 import os
 import pathlib
 import sys
 
-SRC = pathlib.Path(f"{os.environ.get('AION_RETAIL_ROOT', os.path.expanduser('~/IdeaProjects/58Server'))}/Map/XML/Quest_CombineTask.xml")
+SRC = pathlib.Path(f"{REPO.parent / '58Server'}/Map/XML/Quest_CombineTask.xml")
 DST = pathlib.Path(
     "src/main/resources/aion/data/static_data/quest_retail/Quest_CombineTask.xml")
 

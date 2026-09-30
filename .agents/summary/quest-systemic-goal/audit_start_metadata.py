@@ -15,7 +15,7 @@ quest_definition/quests/*.xml 的 metadata 逐任务比对，输出 TSV 差异�
   class-token-mapping.tsv 中单独维护（P3 阶段使用，本脚本仅输出原始 token 集合）。
 
 输入（只读）：
-  ${AION_UNPACK_ROOT:-$HOME/PycharmProjects/unpak}/Quest_unpacked/quest.xml
+  <客户端解包根>/Quest_unpacked/quest.xml
   src/main/resources/aion/data/static_data/quest_definition/quests/*.xml
 输出：
   .agents/summary/quest-systemic-goal/start-metadata-diff.tsv
@@ -26,7 +26,7 @@ import sys
 import xml.etree.ElementTree as ET
 
 REPO = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", ".."))
-RETAIL_QUEST_XML = f"{os.environ.get('AION_UNPACK_ROOT', os.path.expanduser('~/PycharmProjects/unpak'))}/Quest_unpacked/quest.xml"
+RETAIL_QUEST_XML = f"{REPO.parent / 'PycharmProjects' / 'unpak'}/Quest_unpacked/quest.xml"
 PROD_DIR = os.path.join(
     REPO, "src/main/resources/aion/data/static_data/quest_definition/quests")
 OUT_TSV = os.path.join(

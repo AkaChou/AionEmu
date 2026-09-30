@@ -7,6 +7,10 @@ reads the numerator from SECTION_k, so the server must write it in the same tran
 
 Dry run by default; pass --apply to write.
 """
+from pathlib import Path
+
+REPO = next(p for p in Path(__file__).resolve().parents if (p / "pom.xml").is_file())
+
 import argparse
 import glob
 import os
@@ -14,7 +18,7 @@ import re
 import sys
 import xml.etree.ElementTree as ET
 
-DIALOG_ROOTS = glob.glob(f"{os.environ.get('AION_UNPACK_ROOT', os.path.expanduser('~/PycharmProjects/unpak'))}/data_unpacked/Dialogs/*")
+DIALOG_ROOTS = glob.glob(f"{REPO.parent / 'PycharmProjects' / 'unpak'}/data_unpacked/Dialogs/*")
 QUEST_DIR = "src/main/resources/aion/data/static_data/quest_definition/quests"
 # quest id -> (kill phase walk already verified; 24011 is excluded: 6 kill transitions vs client /5)
 QUESTS = [14011, 14014, 14021, 14022, 24013, 24014, 24015]

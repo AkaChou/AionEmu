@@ -4,13 +4,17 @@
 幂等：已补齐的文件第二次运行不会产生变化。
 """
 from __future__ import annotations
+from pathlib import Path
+
+REPO = next(p for p in Path(__file__).resolve().parents if (p / "pom.xml").is_file())
+
 import os
 import re, csv, pathlib, collections
 
-ROOT = pathlib.Path(f"{os.environ.get('AION_REPO_ROOT', os.path.expanduser('~/IdeaProjects/AionEmu-test'))}")
+ROOT = REPO
 SD = ROOT / "src/main/resources/aion/data/static_data"
 Q = SD / "quest_definition/quests"
-CLIENT_CSV = pathlib.Path(f"{os.environ.get('AION_UNPACK_ROOT', os.path.expanduser('~/PycharmProjects/unpak'))}/Quest_unpacked/quest_monster.csv")
+CLIENT_CSV = pathlib.Path(f"{REPO.parent / 'PycharmProjects' / 'unpak'}/Quest_unpacked/quest_monster.csv")
 
 name_to_ids: dict[str, list[int]] = collections.defaultdict(list)
 for f in (SD / "npcs").glob("*.xml"):

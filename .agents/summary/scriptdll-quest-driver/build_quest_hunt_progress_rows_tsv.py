@@ -10,14 +10,18 @@
 非 simpleQuest 行（questItemDropMonster 等物件行）不是计数行，跳过；无计数段的门
 （Progress(1) 等）也跳过。生成器只做扫描/聚合，不做改名。
 """
+from pathlib import Path
+
+REPO = next(p for p in Path(__file__).resolve().parents if (p / "pom.xml").is_file())
+
 import os
 import collections
 import csv
 import pathlib
 import re
 
-CLIENT_CSV = pathlib.Path(f"{os.environ.get('AION_UNPACK_ROOT', os.path.expanduser('~/PycharmProjects/unpak'))}/Quest_unpacked/quest_monster.csv")
-ROOT = pathlib.Path(f"{os.environ.get('AION_REPO_ROOT', os.path.expanduser('~/IdeaProjects/AionEmu-test'))}")
+CLIENT_CSV = pathlib.Path(f"{REPO.parent / 'PycharmProjects' / 'unpak'}/Quest_unpacked/quest_monster.csv")
+ROOT = REPO
 OUT = ROOT / "src/main/resources/aion/data/static_data/quest_retail/quest_client_hunt_progress_rows.tsv"
 
 GATE = re.compile(r'^Progress\(SECTION_0==(\d+)(?:; SECTION_([1-9]\d*)<(\d+))?\)$')

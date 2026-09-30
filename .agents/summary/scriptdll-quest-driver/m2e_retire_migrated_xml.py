@@ -17,7 +17,7 @@ import re
 import subprocess
 from pathlib import Path
 
-REPO = Path(f"{os.environ.get('AION_REPO_ROOT', os.path.expanduser('~/IdeaProjects/AionEmu-test'))}")
+REPO = next(p for p in Path(__file__).resolve().parents if (p / "pom.xml").is_file())
 FINGERPRINTS = REPO / 'src/test/resources/quest/retail-simple-hunt-ir-fingerprints.tsv'
 ADJUDICATED_FINGERPRINTS = (REPO / 'src/test/resources/quest'
 	/ 'retail-simple-hunt-adjudicated-ir-fingerprints.tsv')

@@ -4,7 +4,7 @@
 #
 # 证据链 / evidence chain:
 #   1. 扫描器 `p0c41_sensory_area_scan.py`（只读，478 个真端世界文件）在
-#      `${AION_RETAIL_ROOT}/Map/Worlds/<dir>/world.xml`（UTF-16）里逐别名找同名**感官区 NPC**
+#      `<真端根>/Map/Worlds/<dir>/world.xml`（UTF-16）里逐别名找同名**感官区 NPC**
 #      （`<name><别名></name>` + `<sensory_area>` 多边形 + top/bottom），并经
 #      `aion/definitions/compact/id-mappings.xml` 把世界目录名换算成 mapid（世界条目带属性，正则需要容属性）。
 #   2. 区名 = 别名大写 + `_<mapid>`（与既有 `DF5_SENSORYAREA_Q25084_220080000`、`IDINFINITY_SENSORYAREA_Q18252A_302400000` 同惯例），

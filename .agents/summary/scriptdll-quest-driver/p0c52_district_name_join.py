@@ -13,9 +13,9 @@ import re
 import sys
 from pathlib import Path
 
-REPO = Path(__file__).resolve().parents[3]
+REPO = next(p for p in Path(__file__).resolve().parents if (p / "pom.xml").is_file())
 NPC_DIR = REPO / "src/main/resources/aion/data/static_data/npcs"
-CLIENT_NPC = Path(f"{os.environ.get('AION_UNPACK_ROOT', os.path.expanduser('~/PycharmProjects/unpak'))}/npcs_unpacked/client_npcs_npc.xml")
+CLIENT_NPC = Path(f"{REPO.parent / 'PycharmProjects' / 'unpak'}/npcs_unpacked/client_npcs_npc.xml")
 DISTRICT = re.compile(r"^LDF4_Advance_Village_Guard_[LD]_(North|South|East|West)$")
 
 

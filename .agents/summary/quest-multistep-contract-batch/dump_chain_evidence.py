@@ -9,9 +9,9 @@ import sys
 import xml.etree.ElementTree as ET
 from pathlib import Path
 
-REPO = Path(__file__).resolve().parents[3]
+REPO = next(p for p in Path(__file__).resolve().parents if (p / "pom.xml").is_file())
 QUESTS = REPO / "src/main/resources/aion/data/static_data/quest_definition/quests"
-DIALOG = Path(f"{os.environ.get('AION_UNPACK_ROOT', os.path.expanduser('~/PycharmProjects/unpak'))}/data_unpacked/Dialogs")
+DIALOG = Path(f"{REPO.parent / 'PycharmProjects' / 'unpak'}/data_unpacked/Dialogs")
 RETAIL = Path("/tmp/zz_retail.xml")
 
 PAGE_RE = re.compile(r'<HtmlPage name="([^"]+)">(.*?)</HtmlPage>', re.S)

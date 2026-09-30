@@ -16,7 +16,7 @@
      - `zone_id=1 code=2 name=Sand_Rain_Before att_ranking=2 before=true`
    - `WeatherTable.getWeatherAfter()`（`model/templates/world/WeatherTable.java`）对 `Sand_Rain`
      返回 null → `WeatherService.setNextWeather()` 只能重新随机。
-2. 客户端地图数据同源（`${AION_RETAIL_ROOT}/Map/Worlds/lf2a/world.xml`，UTF-16LE，
+2. 客户端地图数据同源（`<真端根>/Map/Worlds/lf2a/world.xml`，UTF-16LE，
    `<weather>` 段 528745-529003 行）：
    - `SandRain`：`weather_zone_name=wz_Weatherzone_SandDersert`、`occur_prob=20`、
      `duration=110`、`weather_state=wind`、`sign_weather_name=SandRain_Before`(prob 100, 10)。
@@ -68,15 +68,15 @@
   `//weather THEOBOMOS 1` → 再 `//weather` 复读来判定探针是否可信。
 - 仍待判定：客户端是否认 "0 = 放晴"（强制 1 变红、强制 0 是否转晴）；关闭客户端
   **天气效果**（`SystemOptionGraphics.cfg: WEATHER_FX`）是否让红色消失；换第二个客户端对照。
-- 官方参考已找到：`${AION_RETAIL_ROOT}/Map/XML/weather.xml`（全局天气目录：
+- 官方参考已找到：`<真端根>/Map/XML/weather.xml`（全局天气目录：
   rain/wind/fog/darkcloud，含 occur_check_interval/occur_prob/occur_delay/duration/
   sign_weather_name/remain_weather_name/sub_weather_name），以及
-  `${AION_RETAIL_ROOT}/server58-source/**/World/WorldWeatherManager.cpp`、
+  `<真端根>/server58-source/**/World/WorldWeatherManager.cpp`、
   `WeatherZone.cpp`、`WeatherZoneArea.cpp`（恢复出的官方服务端天气实现）。
 
 ## 追加证据 2（用户实机 2）
 
-- 客户端资源侧：`${AION_CLIENT_ROOT}/Data/skybox/lf2a/` 有 5 套天空盒：
+- 客户端资源侧：`<客户端目录>/Data/skybox/lf2a/` 有 5 套天空盒：
   `lf2a_dawn / lf2a_daylight / lf2a_dusk / lf2a_night / lf2a_rain`。
   ⇒ "黄云滚滚"= 客户端切到了**天气版天空盒**（rain 变体），即客户端处于"有天气"状态。
 - 用户实测：站在 Theobomos 天气区内（`//goto Anangke`，z=138 在 0.1–500.1 内）
@@ -245,7 +245,7 @@
 ## 追加证据 6（2026-09-20 12:00）：客户端关卡数据里的"天气天空"与"入侵天空"是两套独立覆盖
 
 解包 `5.8客户端/Levels/lf2a/Level.pak → mission_mission0.xml`（用户侧 unpak 工具，
-`${AION_UNPACK_ROOT}/aion_pak.py`）后确认泰奥博莫斯的天空由三层决定：
+`<客户端解包根>/aion_pak.py`）后确认泰奥博莫斯的天空由三层决定：
 
 1. **时段天空（正常）**：`<TimeEnvOption ... sky_box_name="LF2A.TimeEnv.LF2A_Dawn/Daylight/Dusk/Night">`
    → `data/skybox/lf2a/lf2a_daylight` 等；`lf2adaylight_5.dds` 中心像素 (29,106,247) 是蓝天，
@@ -296,7 +296,7 @@ WorldRaid/invade_direct_portal 的 skydome_name 指回 `LF2A.TimeEnv.LF2A_Daylig
 
 - 位置：**客户端根目录下 `Levels/lf2a/Level.pak`**（同目录还有 `lf2a.pak`、`levellm.pak`、`terrainlm.pak`、
   `PathFind.pak`、`leveletc.pak`）。macOS 侧副本
-  `${AION_CLIENT_ROOT}/Levels/lf2a/Level.pak` = 9,766,479 字节，
+  `<客户端目录>/Levels/lf2a/Level.pak` = 9,766,479 字节，
   MD5 `fb49f0c3f1fce43d798b453e1def6dcf`；用户运行端按 `bin64/AIONClnt.err` 记录的根目录推断为
   `F:\永恒之塔5.8\Levels\lf2a\Level.pak`（两侧需先比 MD5 确认为同一份数据）。
 - `Level.pak` 内含 17 个条目，其中 `mission_mission0.xml`（3,755,553 字节）就是
@@ -312,7 +312,7 @@ WorldRaid/invade_direct_portal 的 skydome_name 指回 `LF2A.TimeEnv.LF2A_Daylig
 ## 追加证据 9（2026-09-20 12:23）：客户端 WeatherSystem 的 after 档缺失与服务端空天气表
 
 用户反馈：替换客户端 `Levels/lf2a/Level.pak` 后天空仍不是晴朗。复核 macOS 侧副本：
-`${AION_CLIENT_ROOT}/Levels/lf2a/Level.pak` 仍是 2020-02-21 原文件，
+`<客户端目录>/Levels/lf2a/Level.pak` 仍是 2020-02-21 原文件，
 MD5 `fb49f0c3f1fce43d798b453e1def6dcf`，即这次替换没有落到该副本；用户实机应按
 `F:\永恒之塔5.8\Levels\lf2a\Level.pak` 核 MD5，确认替换是否生效。
 

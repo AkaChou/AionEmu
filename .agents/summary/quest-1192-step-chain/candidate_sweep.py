@@ -20,7 +20,7 @@ from pathlib import Path
 BASE = Path(__file__).resolve().parent
 REPO = BASE.parents[2]
 QUESTS = REPO / "src/main/resources/aion/data/static_data/quest_definition/quests"
-DIALOG = Path(f"{os.environ.get('AION_UNPACK_ROOT', os.path.expanduser('~/PycharmProjects/unpak'))}/data_unpacked/Dialogs")
+DIALOG = Path(f"{REPO.parent / 'PycharmProjects' / 'unpak'}/data_unpacked/Dialogs")
 
 CROSS_STATES = {"ROW_WITHOUT_STATE", "BOTH_MISALIGNED"}
 CROSS_SHAPES = {"MISSING_TAIL_ROWS", "INTERIOR_GAP"}

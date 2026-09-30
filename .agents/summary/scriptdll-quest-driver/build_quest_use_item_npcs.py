@@ -11,7 +11,7 @@ import os
 from pathlib import Path
 import re
 
-REPO = Path(f"{os.environ.get('AION_REPO_ROOT', os.path.expanduser('~/IdeaProjects/AionEmu-test'))}")
+REPO = next(p for p in Path(__file__).resolve().parents if (p / "pom.xml").is_file())
 NPC_DIR = REPO / 'src/main/resources/aion/data/static_data/npcs'
 OUT = REPO / 'src/main/resources/aion/data/static_data/quest_retail/quest_use_item_npcs.tsv'
 

@@ -34,9 +34,9 @@ import sys
 from pathlib import Path
 from xml.etree import ElementTree as ET
 
-REPO = Path(__file__).resolve().parents[3]
+REPO = next(p for p in Path(__file__).resolve().parents if (p / "pom.xml").is_file())
 QUESTS = REPO / "src/main/resources/aion/data/static_data/quest_definition/quests"
-UNPACK = Path(f"{os.environ.get('AION_UNPACK_ROOT', os.path.expanduser('~/PycharmProjects/unpak'))}/data_unpacked/Dialogs")
+UNPACK = Path(f"{REPO.parent / 'PycharmProjects' / 'unpak'}/data_unpacked/Dialogs")
 EVIDENCE = Path(__file__).resolve().parent / "batch7-evidence.tsv"
 
 # (quest_id, client_rows, last_row, reward_npc_id, reward_npc_name, last_row_text)

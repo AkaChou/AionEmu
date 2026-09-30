@@ -11,7 +11,9 @@ import collections
 import xml.etree.ElementTree as ET
 from pathlib import Path
 
-QUESTS = Path(f"{os.environ.get('AION_REPO_ROOT', os.path.expanduser('~/IdeaProjects/AionEmu-test'))}/src/main/resources/aion/data/static_data/quest_definition/quests")
+REPO = next(p for p in Path(__file__).resolve().parents if (p / "pom.xml").is_file())
+
+QUESTS = Path(f"{REPO}/src/main/resources/aion/data/static_data/quest_definition/quests")
 SAMPLES = [1102, 1517, 15551, 15552, 15563, 16824, 2641, 5000, 21296, 10501, 1365, 80343]
 TAGS = ("node", "transition", "dialog", "actions", "counter", "counter-grid", "kill-chain",
         "kill-routes", "npc-item-report", "npc-complete", "after-commit")

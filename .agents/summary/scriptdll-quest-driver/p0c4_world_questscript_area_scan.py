@@ -13,8 +13,8 @@ import re
 import sys
 from pathlib import Path
 
-REPO = Path(f"{os.environ.get('AION_REPO_ROOT', os.path.expanduser('~/IdeaProjects/AionEmu-test'))}")
-WORLDS = Path(f"{os.environ.get('AION_RETAIL_ROOT', os.path.expanduser('~/IdeaProjects/58Server'))}/Map/Worlds")
+REPO = next(p for p in Path(__file__).resolve().parents if (p / "pom.xml").is_file())
+WORLDS = Path(f"{REPO.parent / '58Server'}/Map/Worlds")
 OUT = Path(__file__).resolve().parent / 'p0c4-world-questscript-area.tsv'
 TARGET_FILES = ('world.xml', 'world_M.xml', 'world_N.xml')
 AREA_RE = re.compile(r'<questscript_area\b[^>]*>(.*?)</questscript_area>', re.S)

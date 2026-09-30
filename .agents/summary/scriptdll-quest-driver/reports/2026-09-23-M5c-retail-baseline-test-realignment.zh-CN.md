@@ -20,8 +20,8 @@
 
 ## 2. 判定口径（三类证据的优先级）
 
-1. **真端表**（`${AION_RETAIL_ROOT}/Map/XML/Quest_*.xml`）：任务是否可驱动、进度类别、收集/击杀物、奖励档位。
-2. **客户端契约**（`${AION_UNPACK_ROOT}/data_unpacked/Dialogs/**/quest_q<id>.html` → `quest_client_summary_rows.tsv`）：任务书行数 = 进度行号上限（QE-051 领奖行投影）。
+1. **真端表**（`<真端根>/Map/XML/Quest_*.xml`）：任务是否可驱动、进度类别、收集/击杀物、奖励档位。
+2. **客户端契约**（`<客户端解包根>/data_unpacked/Dialogs/**/quest_q<id>.html` → `quest_client_summary_rows.tsv`）：任务书行数 = 进度行号上限（QE-051 领奖行投影）。
 3. **现有 XML**：**只作对照物**，不是金标准；历史错误直接按 1+2 放行。
 
 ## 3. 处置分类（35/35 全部分类）

@@ -22,7 +22,7 @@
 
 ## 2. 全库系统性排查与结果 (Systemic Audit Results)
 
-对 `${AION_UNPACK_ROOT}/Quest_unpacked/quest.xml`（3,705 个含 `collect_progress` 任务）及 `data_driven_quest.xml`（443 个含 `CollectItem` 任务）与服务端 `quest_definition/quests/*.xml`（全服 6,222 个任务定义）进行了全量交叉审计：
+对 `<客户端解包根>/Quest_unpacked/quest.xml`（3,705 个含 `collect_progress` 任务）及 `data_driven_quest.xml`（443 个含 `CollectItem` 任务）与服务端 `quest_definition/quests/*.xml`（全服 6,222 个任务定义）进行了全量交叉审计：
 
 | 缺陷分类 | 任务编号 | 任务名称 | 影响阵营/类型 | 审计诊断 | 修复措施 |
 |---|---|---|---|---|---|

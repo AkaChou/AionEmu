@@ -13,7 +13,7 @@ import os
 import pathlib
 import re
 
-REPO = pathlib.Path(f"{os.environ.get('AION_REPO_ROOT', os.path.expanduser('~/IdeaProjects/AionEmu-test'))}")
+REPO = next(p for p in pathlib.Path(__file__).resolve().parents if (p / "pom.xml").is_file())
 HERE = REPO / '.agents/summary/scriptdll-quest-driver'
 DETAIL = HERE / 'retail-simple-collect-item-drift-detail.tsv'
 DIFF = HERE / 'retail-simple-collect-item-diff-lines.tsv'

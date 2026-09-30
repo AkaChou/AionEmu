@@ -85,7 +85,7 @@ src/test/resources/quest/quest-simple-hunt-retail-contract.tsv  1366 行快照
   <class_permitted>warrior scout … rider</class_permitted><race_permitted>pc_light</race_permitted></quest>
 ```
 对照仓库 `quests/1102.xml`：`display-name-id="1102202"`、`IMPORTANT`、min 1 / max 2147483647、前序 1101、`cannot-share="true"`、`GOLD 400 + EXP 180`、`ELYOS`。
-客户端 UTF-8 副本（11MB）：`${AION_UNPACK_ROOT}/Quest_unpacked/quest.xml`。
+客户端 UTF-8 副本（11MB）：`<客户端解包根>/Quest_unpacked/quest.xml`。
 收集类字段（1001）：`collect_progress`、`collect_item1 "quest_1001a 3"`、`drop_monster_1`、`drop_item_1`、`drop_prob_1`、`drop_each_member_1`、`selectable_reward_item1_N`、`check_item1_N`。
 
 ### 4.3 其余各族表结构（首行实测）
@@ -199,7 +199,7 @@ python3 -B .agents/summary/scriptdll-quest-driver/retail_family_coverage.py
 python3 .agents/summary/scriptdll-quest-driver/extract_helper_body.py FUN_180cabb10
 
 # 真端表速查（UTF-16）
-python3 -c "import re;print(re.search(r'<id id=\"1102\">(.*?)</id>', open('${AION_RETAIL_ROOT}/Map/XML/Quest_SimpleHunt.xml', encoding='utf-16').read(), re.S).group(1))"
+python3 -c "import re;print(re.search(r'<id id=\"1102\">(.*?)</id>', open('<真端根>/Map/XML/Quest_SimpleHunt.xml', encoding='utf-16').read(), re.S).group(1))"
 ```
 
 产物落位：`.agents/summary/scriptdll-quest-driver/`（脚本加执行位、报告 `.txt`/`.tsv`、结论 `.zh-CN.md`）。

@@ -15,7 +15,7 @@ from collections import defaultdict
 
 BASE = os.path.dirname(os.path.abspath(__file__))
 REPO = os.path.abspath(os.path.join(BASE, "../../.."))
-RETAIL = f"{os.environ.get('AION_RETAIL_ROOT', os.path.expanduser('~/IdeaProjects/58Server'))}/Map/XML"
+RETAIL = f"{REPO.parent / '58Server'}/Map/XML"
 QUEST_DIR = os.path.join(REPO, "src/main/resources/aion/data/static_data/quest_definition/quests")
 INDEX_TSV = os.path.join(BASE, "npc_name_index.tsv")
 

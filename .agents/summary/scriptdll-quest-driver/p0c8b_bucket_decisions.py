@@ -34,7 +34,7 @@ import subprocess
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
-REPO = Path(f"{os.environ.get('AION_REPO_ROOT', os.path.expanduser('~/IdeaProjects/AionEmu-test'))}")
+REPO = next(p for p in Path(__file__).resolve().parents if (p / "pom.xml").is_file())
 CENSUS = HERE / 'p0c8-retention-diff-census.tsv'
 GAPS = HERE / 'simplehunt-dialog-route-gaps.txt'
 OUT = HERE / 'p0c8b-bucket-decisions.tsv'

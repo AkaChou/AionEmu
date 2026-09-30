@@ -8,7 +8,7 @@
 
 ## 1. 重大发现：真端服务端模板表就在本地
 
-`${AION_RETAIL_ROOT}/Map/XML/`（UTF-16，2024-02-04 版）就是 `QuestDB_Load` 读取的原始表：
+`<真端根>/Map/XML/`（UTF-16，2024-02-04 版）就是 `QuestDB_Load` 读取的原始表：
 
 ```
 Quest_SimpleHunt.xml  Quest_SimpleTalk.xml  Quest_SimpleCollectItem.xml  Quest_SimpleUseItem.xml

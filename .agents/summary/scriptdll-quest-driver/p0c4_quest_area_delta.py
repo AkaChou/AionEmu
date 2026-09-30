@@ -15,7 +15,7 @@ import sys
 from collections import defaultdict
 from pathlib import Path
 
-REPO = Path(f"{os.environ.get('AION_REPO_ROOT', os.path.expanduser('~/IdeaProjects/AionEmu-test'))}")
+REPO = next(p for p in Path(__file__).resolve().parents if (p / "pom.xml").is_file())
 SCAN = Path(__file__).resolve().parent / 'p0c4-world-questscript-area.tsv'
 PROD = REPO / 'src/main/resources/aion/definitions/compact/ai/ai-areas.xml'
 DELTA_OUT = Path(__file__).resolve().parent / 'p0c4-quest-area-delta.tsv'

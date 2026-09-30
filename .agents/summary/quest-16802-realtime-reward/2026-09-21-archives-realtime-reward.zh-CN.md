@@ -12,7 +12,7 @@
    - `16802,Progress(SECTION_0==0; SECTION_2<2)` + 6 个 `bideternity_01_leibo_*_68/69_ah`
    - 两条计数行都要求 `SECTION_0==0`，即**计数期间 var0 必须保持 0**；`SECTION_1/2` 分别是 var1/var2 计数。
    - 仓库内派生快照：`docs/quest/client-dialog-mapping/client-monster-progress-contracts.csv:282`（派生表只保留第一段）；客户端原始契约
-     `${AION_UNPACK_ROOT}/Quest_unpacked/quest_monster.csv:4378-4379` 明确给出 `SECTION_0==0; SECTION_1<30` 与
+     `<客户端解包根>/Quest_unpacked/quest_monster.csv:4378-4379` 明确给出 `SECTION_0==0; SECTION_1<30` 与
      `SECTION_0==0; SECTION_2<2` 两段；客户端数据 `data_driven_quest.xml` 16802 的两段 `value0_progress_`（`... 30; ... 2;`）与之一致。
 2. **客户端领奖资质**：客户端 `quest.xml` Q16802 `can_report=1`、`use_class_reward=1`（16801/16803/16804 同形）；任务 HTML 页面集为 `select_none(4762) / select_success(10002) / select_quest_reward1(5) / quest_summary(9) / quest_complete(1008)`，`select_success` 上的唯一按钮是 `HACTION_SELECT_QUEST_REWARD(1009)`（`quest-dialog-action-details.csv:7057-7059`）。
 3. **旧正式 handler**：`origin/history` 的 `_16802It_Belongs_In_A_Museum.java`

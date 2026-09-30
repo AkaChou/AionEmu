@@ -4,11 +4,15 @@
 输入：玩家 GPS (来自 log/adminaudit.log 的 //gps)。
 输出：95m 已知列表内所有 NPC + 3D 距离 + 有效感知范围 + 进入仇恨所需的垂直下降量。
 """
+from pathlib import Path
+
+REPO = next(p for p in Path(__file__).resolve().parents if (p / "pom.xml").is_file())
+
 import os
 import glob, math, os, re, sys
 import xml.etree.ElementTree as ET
 
-ROOT = f"{os.environ.get('AION_REPO_ROOT', os.path.expanduser('~/IdeaProjects/AionEmu-test'))}"
+ROOT = f"{REPO}"
 PX, PY, PZ = 1548.9895, 1004.6653, 3021.8057   # //gps 14:23:02
 KNOWN_DIST = 95.0                              # VisibleObject.VisibilityDistance / maxZvisibleDistance
 

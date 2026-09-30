@@ -19,7 +19,7 @@
 ## §1 完整提示词（可整段粘贴）
 
 ```
-你是 AionEmu 仓库（${AION_REPO_ROOT}，分支 quest）的 quest「真端驱动」迁移执行体。
+你是 AionEmu 仓库（<仓库根>，分支 quest）的 quest「真端驱动」迁移执行体。
 
 【目标】让"可迁移"任务由真端表在加载期合成生命周期分发（RETAIL_TABLE），停止扩建任何页码类 TSV 补丁，
 把已死的页码类 TSV 退役掉；保留 XML 的行必须逐行有登记理由。
@@ -135,10 +135,10 @@ QUEST_LOG_DIR=.agents/summary/quest-native-dispatch/gates \
 
 # T3（仓库外副本，跑完即删）
 # 注意：**只能排除 .git 与 target**；`.agents` 必须带上（有测试直接读 .agents/summary/quest/*.py）
-rsync -a --exclude .git --exclude target ${AION_REPO_ROOT}/ /private/tmp/aion-t3-<slice>/
+rsync -a --exclude .git --exclude target <仓库根>/ /private/tmp/aion-t3-<slice>/
 cd /private/tmp/aion-t3-<slice>
 mvn -o -B test '-Dtest=com.aionemu.gameserver.questEngine.**' -DfailIfNoTests=false -DforkCount=2 \
-  > ${AION_REPO_ROOT}/.agents/summary/quest-native-dispatch/gates/T3-<slice>.log 2>&1
+  > <仓库根>/.agents/summary/quest-native-dispatch/gates/T3-<slice>.log 2>&1
 rm -rf /private/tmp/aion-t3-<slice>
 
 # 红身份集提取 + 对拍（必用 LC_ALL=C sort；locale 排序会造假 ADDED/REMOVED 假象）
@@ -172,7 +172,7 @@ python3 -B .agents/memory-bank/verify_memory_bank.py   # 期望 MEMORY_BANK_VERI
 
 | 项 | 值 |
 |---|---|
-| 仓库 | `${AION_REPO_ROOT}`（分支 `quest`；基线提交 `b5d2a7dea`，领先 origin/quest 22 个未推送提交） |
+| 仓库 | `<仓库根>`（分支 `quest`；基线提交 `b5d2a7dea`，领先 origin/quest 22 个未推送提交） |
 | 车道台账 | `.agents/summary/quest-native-dispatch/`（GOAL §0.5 / README / 各片台账 / gates/ 日志与红集） |
 | 冻结面门 | `RetailTsvManifestGateTest`（磁盘集合 == 清单集合 == `EXPECTED_TSV_COUNT`，**现值 22**） |
 | 新常设门 | `RetailBriefingChainEvidenceGateTest`（简报链不变量，登记 3225 + 基数 47/5 冻结） |

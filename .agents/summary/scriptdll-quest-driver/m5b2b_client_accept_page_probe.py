@@ -19,6 +19,8 @@ import sys
 from collections import Counter
 from pathlib import Path
 
+REPO = next(p for p in Path(__file__).resolve().parents if (p / "pom.xml").is_file())
+
 REPO_ROOT = Path(__file__).resolve().parents[3]
 BASE = REPO_ROOT / ".agents/summary/scriptdll-quest-driver"
 CENSUS = BASE / "m5b2b-quest-event-census.tsv"
@@ -26,7 +28,7 @@ CONTRACT_INDEX = REPO_ROOT / "docs/quest/client-dialog-mapping/legacy-quest-dial
 DEFAULT_FAMILY = REPO_ROOT / "src/test/resources/quest/retail-simple-collect-item-drift.tsv"
 DEFAULT_OUT = BASE / "m5b2b-client-accept-page-vs-sentinel.tsv"
 # 解包后的客户端对话页目录 / Unpacked client dialog page root
-CLIENT_DIALOG_ROOT = Path(f"{os.environ.get('AION_UNPACK_ROOT', os.path.expanduser('~/PycharmProjects/unpak'))}/data_unpacked/Dialogs")
+CLIENT_DIALOG_ROOT = Path(f"{REPO.parent / 'PycharmProjects' / 'unpak'}/data_unpacked/Dialogs")
 # `<HtmlPage name="...">` 提取 / HtmlPage name extraction
 HTML_PAGE = re.compile(r'<HtmlPage\s+name="([^"]+)"')
 TRIPLET = ("0x1c", "0x1d", "0x26")

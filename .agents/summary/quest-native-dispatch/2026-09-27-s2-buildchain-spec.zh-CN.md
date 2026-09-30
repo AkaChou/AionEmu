@@ -811,7 +811,7 @@ B1b = { R 记录 | eventType == "TALK"
 ## 附录 B：复算命令（只读，`python3 -B`）
 
 ```bash
-cd ${AION_REPO_ROOT}
+cd <仓库根>
 # ① 285 行分类：有/无 NPC_START、NPC_REPORT 块
 python3 -B - <<'PY'
 import collections

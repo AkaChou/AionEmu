@@ -14,8 +14,10 @@ import re
 from collections import defaultdict
 from pathlib import Path
 
-RETAIL = Path(f"{os.environ.get('AION_RETAIL_ROOT', os.path.expanduser('~/IdeaProjects/58Server'))}/Map/XML")
-REPO_QUESTS = Path(f"{os.environ.get('AION_REPO_ROOT', os.path.expanduser('~/IdeaProjects/AionEmu-test'))}/src/main/resources/aion/data/static_data/quest_definition/quests")
+REPO = next(p for p in Path(__file__).resolve().parents if (p / "pom.xml").is_file())
+
+RETAIL = Path(f"{REPO.parent / '58Server'}/Map/XML")
+REPO_QUESTS = Path(f"{REPO}/src/main/resources/aion/data/static_data/quest_definition/quests")
 TEMPLATES = {
     "SimpleHunt": "Quest_SimpleHunt.xml",
     "SimpleTalk": "Quest_SimpleTalk.xml",

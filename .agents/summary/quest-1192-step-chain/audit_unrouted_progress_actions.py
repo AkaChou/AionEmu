@@ -25,9 +25,9 @@ import re
 import sys
 from pathlib import Path
 
-REPO = Path(__file__).resolve().parents[3]
+REPO = next(p for p in Path(__file__).resolve().parents if (p / "pom.xml").is_file())
 QUESTS_DIR = REPO / "src/main/resources/aion/data/static_data/quest_definition/quests"
-UNPACK = Path(f"{os.environ.get('AION_UNPACK_ROOT', os.path.expanduser('~/PycharmProjects/unpak'))}")
+UNPACK = Path(f"{REPO.parent / 'PycharmProjects' / 'unpak'}")
 DIALOG_DIR = UNPACK / "data_unpacked/Dialogs"
 OUTPUT = Path(__file__).resolve().parent / "unrouted-progress-actions.tsv"
 

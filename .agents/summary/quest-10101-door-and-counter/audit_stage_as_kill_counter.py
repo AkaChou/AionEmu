@@ -8,6 +8,10 @@ quest_summary displays a counter in slot [%3k+2]; the counter value must live in
 输出：同型候选（同一 NPC 连杀、未写独立计数字段、客户端存在计数槽）与其显示槽位。
 只读脚本，仅用于证据收集。
 """
+from pathlib import Path
+
+REPO = next(p for p in Path(__file__).resolve().parents if (p / "pom.xml").is_file())
+
 import os
 import csv
 import glob
@@ -15,9 +19,9 @@ import re
 import xml.etree.ElementTree as ET
 
 QUEST_GLOB = "src/main/resources/aion/data/static_data/quest_definition/quests/*.xml"
-DIALOG_ROOTS = glob.glob(f"{os.environ.get('AION_UNPACK_ROOT', os.path.expanduser('~/PycharmProjects/unpak'))}/data_unpacked/Dialogs/*")
-CLIENT_CSV = (f"{os.environ.get('AION_UNPACK_ROOT', os.path.expanduser('~/PycharmProjects/unpak'))}/Quest_unpacked/quest_monster.csv",
-              f"{os.environ.get('AION_UNPACK_ROOT', os.path.expanduser('~/PycharmProjects/unpak'))}/Quest_unpacked/quest_script_monster.csv")
+DIALOG_ROOTS = glob.glob(f"{REPO.parent / 'PycharmProjects' / 'unpak'}/data_unpacked/Dialogs/*")
+CLIENT_CSV = (f"{REPO.parent / 'PycharmProjects' / 'unpak'}/Quest_unpacked/quest_monster.csv",
+              f"{REPO.parent / 'PycharmProjects' / 'unpak'}/Quest_unpacked/quest_script_monster.csv")
 
 
 def summary_counters(quest_id):
