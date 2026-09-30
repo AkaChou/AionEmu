@@ -897,7 +897,7 @@ last_verified: 2026-09-19
 symptom: 在 NPC 任务列表点第 10 页任务行后服务端反复下发同一页（SM_DIALOG_WINDOW page=10 -> CM_DIALOG_SELECT action=31 -> page=10 循环），表现为“任务怎么点都接不到”；查 XML 却发现存在 unaccepted->started 路由
 root_cause: 51b4cb971 迁移把 registerOnEnterZone 一律概括成“进区域自动接取”，于是同时注册了 addOnQuestStart(npc) 的任务丢掉了 NPC 接取 owner：客户端在第 10 页点任务行发 QUEST_SELECT(31)，服务端没有 unaccepted+NPC+31 路由，DialogService 回退再次下发第 10 页形成循环。共有 18300/28300/1393/14123/15322/16800/17500/21080/25322/27500 十个任务命中；15322/25322 的正确语义是 legacy onAtDistanceEvent（at-distance 接取），14123/16800/17500/27500/21080 的接取 owner 一直是对话 NPC，enter-zone 只是 START 阶段的推进或生成
 fix_or_guardrail: 1. legacy handler 的 addOnQuestStart(npc) 是权威接取 owner，迁移必须落成 NPC_START（或在 NONE 状态显式路由该 NPC 的 QUEST_SELECT/QUEST_ACCEPT_*），enter-zone 只能表达 START 阶段的推进，二者不得互相替代；2. 只有当 legacy 该 NPC 在 NONE 状态没有对话分支（或只有 onEnterZone/onEnterWorld/onAtDistanceEvent 建档）时，才允许 unaccepted 自动接取，与 AUTO_START_KEEPS_NONE_DIALOG_FREE 一致；3. 被下发的客户端任务页上每个可见按钮都必须在该状态有路由：1393 补完 1003->1013->1002 链后才满足 QuestClientContractGateTest
-evidence: commit 51b4cb971（错误迁移，同时退休 18300/28300/1393/21080 等 handler）；origin/history 下对应 quest/handlers 旧 handler（`git show 51b4cb971^:<path>`）；retail-xml-retention.tsv 的 quest 18300 行（XML已退役并删除，见git历史）、28300.xml、1393.xml、14123.xml、15322.xml、25322.xml、21080.xml；src/main/java/com/aionemu/gameserver/questEngine/definition/QuestXmlBlockExpander.java；src/test/java/com/aionemu/gameserver/questEngine/definition/QuestEnterZoneStartOwnerRegressionTest.java；.agents/summary/quest-enter-zone-start-owner/README.md
+evidence: commit 51b4cb971（错误迁移，同时退休 18300/28300/1393/21080 等 handler）；origin/history 下对应 quest/handlers 旧 handler（`git show 51b4cb971^:<path>`）；retail-xml-retention.tsv 的 quest 18300 行（XML已退役并删除，见git历史）、28300.xml、1393.xml、14123.xml、21080.xml（15322/25322 的壳 XML 自 QE-109 起退役，只在 git 历史里）；.agents/summary/quest-enterarea-multicell/2026-09-30-qe109-multi-cell-sensory-areas.zh-CN.md；src/main/java/com/aionemu/gameserver/questEngine/definition/QuestXmlBlockExpander.java；src/test/java/com/aionemu/gameserver/questEngine/definition/QuestEnterZoneStartOwnerRegressionTest.java；.agents/summary/quest-enter-zone-start-owner/README.md
 validation: focused-test 6 类/38 用例 0 失败（QuestEnterZoneStartOwnerRegressionTest、Quest14123ZoneSpawnTest、MigratedQuestRepairDefinitionTest、QuestResidualCounterLocksTest、Quest26800ClientDialogAlignmentTest、LegacyTemplateMirrorRouteRegressionTest）；production-gate 5 类/31 用例 0 失败（QuestClientContractGateTest 于 -Dquest.client.contract.failOnStaleBaseline=true 下 PAGE_NOT_IN_TASK_HTML=0 / BUTTON_WITHOUT_ROUTE=0，PRODUCTION_COMPILE_OK=6189、WHITELIST_VIOLATIONS=0）；Aion 5.8 客户端实测未执行
 boundaries: 静态与 headless 门禁通过不等于客户端验收；audit_enter_zone_start_owner.py 只覆盖 51b4cb971^ 的 handler 集合，audit_unreachable_start.py 命中的 33 个任务由 RetailAreaEngine/NpcFactions/EVENT/物品等 XML 外机制接取，属观察清单
 superseded_by: none
@@ -2469,3 +2469,25 @@ keywords: quest_area 区域发放、SystemGrant、发放哨兵 -1、EnterArea �
 
 - **判定规则**：`category_acquire_=EnterArea` 先查 `ai-areas.xml` 的 `quest_area quests=`——绑定即真端进区域发放；未绑定（等级里程碑/活动误标）继续 fail-closed，不许按「像区域任务」猜。
 - **安全网**：发放哨兵只允许出现在接取集且必须落成单条 `SystemGrant` 边；翻转按四件套 + A/B 对拍；既存红（80817、封顶登记行、旧壳 39/入口页合同）不得顺手回写。
+
+## [QE-109] 一〇九、真端多胞感官区：一条 `<zone>` 多环 `<points>` = 进入任一胞即算进入，每胞独立 Z (MULTI_CELL_SENSORY_ZONE)
+
+<!-- pattern-metadata
+status: CONFIRMED
+scope: 真端 DD `EnterArea` 别名指向同名感官区 NPC 的**多胞**形（一个别名在世界文件里有多个 `<sensory_area>` 多边形）与 zones XML 的登记口径
+first_seen: 2026-09-30
+last_verified: 2026-09-30
+symptom: 行停在 `RETAIL_ENTERAREA_ZONE_UNRESOLVED`（13962/23962/15322/25322）；wave8 曾判「多胞别名不注册」——只登记一个胞会让其余胞成为静默死边
+root_cause: ①zones XML 的 `<points>` 过去只允许一个环（XSD maxOccurs=1，`ZoneTemplate.points` 是单值），多胞区只能用球体近似（a2306c8e2 的 r=10 球体）；②`ZoneService.getZoneInstancesByWorldId` 按区名 `zones.put(name, instance)`，同名多行会**后者覆盖前者**，所以「同名多行 = 并集」是错觉；③把多胞压成一个全局 Z 区间会放行错胞高度（Q15322b 三胞 Z 窗口互异）
+fix_or_guardrail: 1. **登记形**：一条 `<zone name=别名大写_mapid area_type="POLYGON">` 内含该别名的**全部** `<points>` 环（XSD `maxOccurs="unbounded"`），`ZoneData` 按环数分流：单环 `PolyArea`（行为不变）、多环 `MultiPolyArea`、无环 fail-closed；2. **几何语义**：`MultiPolyArea.isInside3D` 必须**逐胞**判（XY 与 Z 同胞），不能借用 `AbstractArea#isInsideZ` + `isInside2D` 的组合（那会把 A 胞 XY 与 B 胞 Z 拼起来）；3. **证据源**：真端 `<真端根>/Map/Worlds/<dir>/world.xml` 的 `<name><别名></name> + <sensory_area>` 全部胞（多边形 + 各自 top/bottom），区名按 `id-mappings.xml` 换算 mapid；4. **解析表双副本**同步，目标区名必须已登记（`RetailEnterAreaZoneRegistrationGateTest`）；5. **翻转四件套 + QE-104 对拍**（本片 4/4 行共享边非零）；6. **早期球体近似归一**：`*SENSORYAREA*` 的 r=10 球体按真端多边形改写（区名与解析表不变，只改几何）
+evidence: .agents/summary/quest-enterarea-multicell/2026-09-30-qe109-multi-cell-sensory-areas.zh-CN.md; .agents/summary/quest-enterarea-multicell/qe-109-quest-multi-cell-sensory-decisions.tsv; .agents/summary/quest-enterarea-multicell/probe/divergence-summary.json; src/main/java/com/aionemu/gameserver/model/geometry/MultiPolyArea.java; src/main/java/com/aionemu/gameserver/dataholders/ZoneData.java; src/main/resources/aion/data/static_data/zones/zones_quest.xml; src/test/java/com/aionemu/gameserver/world/zone/MultiCellSensoryZoneRegistrationTest.java
+validation: 2026-09-30 4 行 `REJECTED:RETAIL_ENTERAREA_ZONE_UNRESOLVED` → `ADOPTED` 并翻转（13962/23962/15322/25322，RETAIL_TABLE + XML/目录行删除）；DD 桶 ADOPTED 1459→1463、该桶 4→0；登记 11 条多胞区（1×6 胞 + 10×3 胞）+ 归一 4 条球体近似；新建常设门 5 例（schema / 任一胞算在区 / 错胞 Z 不得借用 / 5×2 别名齐备 / 多边形归一）；T3 1856 例红身份集 198 = 基线 ADDED 0 / REMOVED 0；zone+静态数据 49 例绿；verify_retirement catalog=746/directory=746/retired=5478=6224
+boundaries: 多胞只支持**多边形**胞（球体/圆柱多胞在真端数据里未见，不发明）；本片只归一了 QE 轴已翻转/已采纳的 4 条球体近似（16987/26987/30722/30772），其余 `*SENSORYAREA*` 球体行待单独普查；真机验收（进任一胞推进、顶沿高度、5 段链）待用户执行
+superseded_by: none
+see_also: [QE-108], [QE-107], [QE-104]
+first_check: 别名解析不出区名时先答：①真端世界文件里这个别名有几个 `<sensory_area>` 胞？②zones XML 是不是只登记了一个（其余胞会成静默死边）？③多胞是不是写成**一条** `<zone>` 的多个 `<points>`（同名多行会被 `zones.put` 后者覆盖）？④每胞的 top/bottom 是否各自保留（全局 Z 会放行错胞高度）？⑤解析表**双副本**都改了吗？
+keywords: 多胞感官区、sensory_area、MULTI_CELL_SENSORY_ZONE、一条 zone 多环、错胞 Z、r=10 球体近似、zones.xsd maxOccurs、MultiPolyArea、QE-109
+-->
+
+- **判定规则**：真端感官区别名先数胞——几个 `<sensory_area>` 就登记几个 `<points>`（写进**同一条** `<zone>`），绝不只取第一个胞、也不改写成球体近似。
+- **安全网**：多胞判定必须逐胞（XY 与 Z 同胞）；解析表双副本同片改；翻转按四件套 + A/B 对拍；既存红（80817、封顶登记行、HEAD 既存 4 例）不得顺手回写。

@@ -9,19 +9,26 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * 锁定 enter-zone 迁移任务必须保留 legacy 接取 owner 的合同。
- * Locks migrated enter-zone quests to their legacy start-owner contract.
+ * 锁定 enter-zone 迁移任务必须保留 legacy 接取 owner 的合同；QE-109 起 15322/25322 的 owner 换成
+ * 真端受理形（同一 NPC 的客户端受理手势）。
+ * Locks migrated enter-zone quests to their start-owner contract; since QE-109 the 15322/25322 owner is
+ * the retail accept shape (the client's accept gesture at the same npc).
  */
 class QuestEnterZoneStartOwnerRegressionTest {
 	private static final Map<Integer, QuestEvent> START_ROUTES = Map.ofEntries(
 		Map.entry(1393, new QuestEvent.TalkToNpc(204041, QuestDialogAction.QUEST_ACCEPT_1.id())),
 		Map.entry(14123, new QuestEvent.TalkToNpc(203933, QuestDialogAction.QUEST_ACCEPT_1.id())),
-		Map.entry(15322, new QuestEvent.AtDistance(805330)),
+		// 15322/25322 自 QE-109 起由真端多胞感官区 owner 驱动：接取仍是同一 NPC，但走客户端受理手势
+		// （QUEST_ACCEPT_SIMPLE=20000），遗留的「走到附近即接取」（AtDistance）随壳退役。
+		// Since QE-109 quests 15322/25322 are retail-owned (multi-cell sensory areas): the accept keeps the
+		// same npc but uses the client's accept gesture (QUEST_ACCEPT_SIMPLE=20000); the legacy
+		// walk-nearby accept (AtDistance) is retired with the shell.
+		Map.entry(15322, new QuestEvent.TalkToNpc(805330, QuestDialogAction.QUEST_ACCEPT_SIMPLE.id())),
 		Map.entry(16800, new QuestEvent.TalkToNpc(806075, QuestDialogAction.QUEST_ACCEPT_SIMPLE.id())),
 		Map.entry(17500, new QuestEvent.TalkToNpc(806262, QuestDialogAction.QUEST_ACCEPT_SIMPLE.id())),
 		Map.entry(18300, new QuestEvent.TalkToNpc(804699, QuestDialogAction.QUEST_ACCEPT_1.id())),
 		Map.entry(21080, new QuestEvent.TalkToNpc(799231, QuestDialogAction.QUEST_ACCEPT_1.id())),
-		Map.entry(25322, new QuestEvent.AtDistance(805342)),
+		Map.entry(25322, new QuestEvent.TalkToNpc(805342, QuestDialogAction.QUEST_ACCEPT_SIMPLE.id())),
 		Map.entry(27500, new QuestEvent.TalkToNpc(806264, QuestDialogAction.QUEST_ACCEPT_1.id())),
 		Map.entry(28300, new QuestEvent.TalkToNpc(801904, QuestDialogAction.QUEST_ACCEPT_1.id())));
 

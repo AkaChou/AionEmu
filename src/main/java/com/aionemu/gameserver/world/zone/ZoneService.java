@@ -31,6 +31,7 @@ import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.geometry.Area;
 import com.aionemu.gameserver.model.geometry.CylinderArea;
 import com.aionemu.gameserver.model.geometry.PolyArea;
+import com.aionemu.gameserver.model.templates.zone.Points;
 import com.aionemu.gameserver.model.geometry.SemisphereArea;
 import com.aionemu.gameserver.model.geometry.SphereArea;
 import com.aionemu.gameserver.model.siege.SiegeLocation;
@@ -210,8 +211,9 @@ public final class ZoneService implements GameEngine {
 		Map<ZoneName, ZoneInstance> zones = new HashMap<>();
 		int worldSize = DataManager.WORLD_MAPS_DATA.getTemplate(mapId).getWorldSize();
 		WorldZoneTemplate zone = new WorldZoneTemplate(worldSize, mapId);
-		PolyArea fullArea = new PolyArea(zone.getName(), mapId, zone.getPoints().getPoint(),
-				zone.getPoints().getBottom(), zone.getPoints().getTop());
+		Points worldRing = zone.getPoints().getFirst();
+		PolyArea fullArea = new PolyArea(zone.getName(), mapId, worldRing.getPoint(),
+				worldRing.getBottom(), worldRing.getTop());
 		ZoneInstance fullMap = new ZoneInstance(mapId, new ZoneInfo(fullArea, zone));
 		fullMap.addHandler(getNewZoneHandler(zone.getName()));
 		zones.put(zone.getName(), fullMap);

@@ -27,10 +27,12 @@ import org.xml.sax.SAXException;
 import com.aionemu.gameserver.configs.Config;
 import com.aionemu.gameserver.model.geometry.Area;
 import com.aionemu.gameserver.model.geometry.CylinderArea;
+import com.aionemu.gameserver.model.geometry.MultiPolyArea;
 import com.aionemu.gameserver.model.geometry.PolyArea;
 import com.aionemu.gameserver.model.geometry.SemisphereArea;
 import com.aionemu.gameserver.model.geometry.SphereArea;
 import com.aionemu.gameserver.model.templates.zone.ZoneClassName;
+import com.aionemu.gameserver.model.templates.zone.Points;
 import com.aionemu.gameserver.model.templates.zone.ZoneInfo;
 import com.aionemu.gameserver.model.templates.zone.ZoneTemplate;
 
@@ -69,8 +71,7 @@ public class ZoneData {
 		int weatherZoneId = 1;
 		for (ZoneTemplate zone : zoneList) {
 			Area area = switch (zone.getAreaType()) {
-                case POLYGON -> new PolyArea(zone.getName(), zone.getMapid(), zone.getPoints().getPoint(),
-                        zone.getPoints().getBottom(), zone.getPoints().getTop());
+                case POLYGON -> buildPolygonArea(zone);
                 case CYLINDER -> new CylinderArea(zone.getName(), zone.getMapid(), zone.getCylinder().getX(),
                         zone.getCylinder().getY(), zone.getCylinder().getR(), zone.getCylinder().getBottom(),
                         zone.getCylinder().getTop());
@@ -99,6 +100,25 @@ public class ZoneData {
 		}
 		zoneList.clear();
 		zoneList = null;
+	}
+
+	/**
+	 * 按环数构造多边形区域：单环沿用 {@link PolyArea}；多环（真端多胞感官区）构造
+	 * {@link MultiPolyArea}——每胞保留自己的 top/bottom，进入任一胞即算进入该区。
+	 * Builds the polygon area by ring count: a single ring keeps {@link PolyArea}; several rings (the
+	 * retail multi-cell sensory areas) become a {@link MultiPolyArea}, where every cell keeps its own
+	 * top/bottom and being inside any cell counts as being inside the zone.
+	 */
+	private static Area buildPolygonArea(ZoneTemplate zone) {
+		List<Points> rings = zone.getPoints();
+		if (rings.isEmpty()) {
+			throw new IllegalStateException("POLYGON zone without points: " + zone.getName().name());
+		}
+		if (rings.size() == 1) {
+			Points ring = rings.getFirst();
+			return new PolyArea(zone.getName(), zone.getMapid(), ring.getPoint(), ring.getBottom(), ring.getTop());
+		}
+		return new MultiPolyArea(zone.getName(), zone.getMapid(), rings);
 	}
 
 	/**

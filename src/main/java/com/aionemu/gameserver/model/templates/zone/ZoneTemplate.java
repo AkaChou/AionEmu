@@ -1,5 +1,6 @@
 package com.aionemu.gameserver.model.templates.zone;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -23,11 +24,20 @@ import lombok.Getter;
 public class ZoneTemplate {
 
 	/**
-	 * 获取 points 属性值。
-	 * Gets the value of the points property.
+	 * 多边形环列表：单环 = 普通多边形区；多环 = 多胞区（真端感官区常见形，进入任一胞即算进入）。
+	 * Polygon ring list: one ring is a plain polygon zone; several rings make a multi-cell zone
+	 * (the usual retail sensory-area shape: being inside any cell counts as being inside the zone).
 	 */
-	@XmlElement
-	protected Points points;
+	@XmlElement(name = "points")
+	protected List<Points> points;
+
+	/** 获取多边形环列表（惰性初始化为空表）。 / Returns the polygon ring list (lazily initialised). */
+	public List<Points> getPoints() {
+		if (points == null) {
+			points = new ArrayList<>();
+		}
+		return points;
+	}
 
 	/** 获取圆柱。 / Returns the cylinder. */
 	@XmlElement

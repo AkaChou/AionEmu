@@ -161,13 +161,23 @@ class QuestResidualCounterLocksTest {
 	@Test
 	void quests15322And25322StageEdgesResetCountersWithoutOverIncrement() throws Exception {
 		for (int questId : new int[] {15322, 25322}) {
-			CompiledQuestDefinition definition = load(questId);
+			// QE-109 起 15322/25322 由真端多胞感官区链驱动（XML 已退役 ⇒ 走生产视图）；真端把每段猎杀集合
+			// 逐 NPC 展开成 KillNpc 边（遗留壳是一条 KillNpcSet 边），因此按**源节点**聚合断言段数。
+			// Since QE-109 quests 15322/25322 follow the retail multi-cell sensory-area chain (their XML is
+			// retired, so the production view is used); retail expands each stage's hunt set into per-npc
+			// KillNpc edges (the shell used one KillNpcSet edge), so stages are asserted per source node.
+			CompiledQuestDefinition definition = productionLoad(questId);
 			List<QuestTransition> stageEdges = definition.definition().transitions().stream()
 				.filter(candidate -> candidate.actions().stream()
 					.anyMatch(action -> action instanceof QuestAction.SetVariable(String field, int value)
 						&& "var1".equals(field) && value == 0))
 				.toList();
-			assertEquals(4, stageEdges.size(), "quest " + questId + " stage edge count");
+			// 末段（s9→reward）不进本集合：领奖投影携带末段计数，所以完成边只推进 var0。
+			// The final stage (s9->reward) is excluded: the reward projection carries the final count, so its
+			// completion edge only advances var0.
+			assertEquals(java.util.Set.of("s1", "s3", "s5", "s7"),
+				stageEdges.stream().map(QuestTransition::sourceNode).collect(java.util.stream.Collectors.toSet()),
+				"quest " + questId + " resetting stage source nodes");
 			for (QuestTransition edge : stageEdges) {
 				assertTrue(edge.actions().stream()
 						.noneMatch(action -> action instanceof QuestAction.IncrementVariable increment

@@ -2726,7 +2726,7 @@
 13956	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_CHAIN_CLIENT_ROWS
 13960	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history
 13961	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_CHAIN
-13962	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ENTERAREA_ZONE_UNRESOLVED	enter-area zone not resolvable server-side
+13962	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history qe-109-quest-multi-cell-sensory-decisions.tsv basis=DD_MULTI_CELL_SENSORY_AREA shared/onlyXml/onlyRetail=27/4/4
 13963	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
 13964	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
 13965	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_CHAIN_CLIENT_ROWS
@@ -2861,7 +2861,7 @@
 15315	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CHAIN
 15316	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_HUNT_CHAIN
 15321	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history
-15322	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ENTERAREA_ZONE_UNRESOLVED	enter-area zone not resolvable server-side
+15322	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history qe-109-quest-multi-cell-sensory-decisions.tsv basis=DD_MULTI_CELL_SENSORY_AREA shared/onlyXml/onlyRetail=22/13/124
 15323	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CANONICAL
 15324	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
 15325	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
@@ -3797,7 +3797,7 @@
 23956	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_CHAIN_CLIENT_ROWS
 23960	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history
 23961	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_CHAIN
-23962	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ENTERAREA_ZONE_UNRESOLVED	enter-area zone not resolvable server-side
+23962	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history qe-109-quest-multi-cell-sensory-decisions.tsv basis=DD_MULTI_CELL_SENSORY_AREA shared/onlyXml/onlyRetail=25/2/6
 23963	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
 23964	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
 23965	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_CHAIN_CLIENT_ROWS
@@ -3930,7 +3930,7 @@
 25315	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CHAIN
 25316	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_HUNT_CHAIN
 25321	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history
-25322	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ENTERAREA_ZONE_UNRESOLVED	enter-area zone not resolvable server-side
+25322	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history qe-109-quest-multi-cell-sensory-decisions.tsv basis=DD_MULTI_CELL_SENSORY_AREA shared/onlyXml/onlyRetail=22/13/120
 25323	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CANONICAL
 25324	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
 25325	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID

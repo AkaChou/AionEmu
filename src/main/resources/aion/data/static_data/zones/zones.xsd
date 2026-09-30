@@ -12,7 +12,7 @@
 	<xs:complexType name="Zone">
 		<xs:choice>
 			<xs:element name="cylinder" type="Cylinder" minOccurs="0" maxOccurs="1"/>
-			<xs:element name="points" type="Points" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="points" type="Points" minOccurs="0" maxOccurs="unbounded"/>
 			<xs:element name="sphere" type="Sphere" minOccurs="0" maxOccurs="1"/>
 			<xs:element name="semisphere" type="Semisphere" minOccurs="0" maxOccurs="1"/>
 		</xs:choice>

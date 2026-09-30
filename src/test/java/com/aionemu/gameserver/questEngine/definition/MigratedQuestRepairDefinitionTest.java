@@ -45,21 +45,42 @@ class MigratedQuestRepairDefinitionTest {
 	void infiltrationOwnersResetTheCounterAfterEachTenKillStage() {
 		for (int questId : List.of(15322, 25322)) {
 			CompiledQuestDefinition definition = load(questId);
-			List<QuestTransition> stageCompletions = definition.definition().transitions().stream()
-				.filter(transition -> transition.event() instanceof QuestEvent.KillNpcSet
-					&& transition.targetNode().matches("s[246]|reward"))
-				.toList();
-			assertEquals(4, stageCompletions.size());
-			assertTrue(stageCompletions.stream().allMatch(transition ->
-				transition.conditions().contains(new QuestCondition.VariableAtLeast("var1", 9))
-					&& transition.actions().contains(new QuestAction.SetVariable("var1", 0))));
-			for (QuestTransition transition : stageCompletions) {
-				int sourceStep = Integer.parseInt(transition.sourceNode().substring(1));
-				int packed = definition.definition().progressLayout().pack(Map.of("var0", sourceStep, "var1", 9));
-				var plan = QuestMutationPlanner.plan(definition,
-					new com.aionemu.gameserver.questEngine.runtime.QuestSnapshot(7, questId, QuestStatus.START,
-						packed, Map.of()), transition).orElseThrow();
-				assertEquals(0, definition.definition().progressLayout().unpack(plan.nextPackedVariables()).get("var1"));
+			// QE-109 起 15322/25322 由真端多胞感官区链驱动：真端把每段猎杀集合**逐 NPC 展开**成 KillNpc 边
+			// （遗留壳是一条 KillNpcSet 边），因此按**源节点**聚合断言段合同——真端 5 段。
+			// Since QE-109 quests 15322/25322 follow the retail multi-cell sensory-area chain; retail expands
+			// each stage's hunt set into per-npc KillNpc edges (the shell used one KillNpcSet edge), so the
+			// stage contract is asserted per source node: the retail chain has five stages.
+			Map<String, List<QuestTransition>> stageCompletions = definition.definition().transitions().stream()
+				.filter(transition -> transition.event() instanceof QuestEvent.KillNpc
+					|| transition.event() instanceof QuestEvent.KillNpcSet)
+				.filter(transition -> transition.conditions().contains(new QuestCondition.VariableAtLeast("var1", 9)))
+				.collect(java.util.stream.Collectors.groupingBy(QuestTransition::sourceNode));
+			assertEquals(Set.of("s1", "s3", "s5", "s7", "s9"), stageCompletions.keySet(),
+				() -> "quest " + questId + " stage source nodes");
+			for (Map.Entry<String, List<QuestTransition>> stage : stageCompletions.entrySet()) {
+				boolean lastStage = "s9".equals(stage.getKey());
+				for (QuestTransition transition : stage.getValue()) {
+					assertTrue(transition.actions().stream().noneMatch(action ->
+							action instanceof QuestAction.IncrementVariable increment && "var1".equals(increment.field())),
+						() -> "quest " + questId + " " + stage.getKey() + " completion must not increment var1");
+					if (lastStage) {
+						// 末段直接进领奖：领奖节点投影携带末段计数（var1=10），因此完成边只推进 var0。
+						// The last stage goes straight to REWARD: the reward projection carries the final count
+						// (var1=10), so the completion edge only advances var0.
+						assertEquals("reward", transition.targetNode(), () -> "quest " + questId + " last stage target");
+						assertTrue(transition.actions().contains(new QuestAction.SetVariable("var0", 10)),
+							() -> "quest " + questId + " last stage reward advance");
+						continue;
+					}
+					assertTrue(transition.actions().contains(new QuestAction.SetVariable("var1", 0)),
+						() -> "quest " + questId + " " + stage.getKey() + " completion must clear var1");
+					int sourceStep = Integer.parseInt(stage.getKey().substring(1));
+					int packed = definition.definition().progressLayout().pack(Map.of("var0", sourceStep, "var1", 9));
+					var plan = QuestMutationPlanner.plan(definition,
+						new com.aionemu.gameserver.questEngine.runtime.QuestSnapshot(7, questId, QuestStatus.START,
+							packed, Map.of()), transition).orElseThrow();
+					assertEquals(0, definition.definition().progressLayout().unpack(plan.nextPackedVariables()).get("var1"));
+				}
 			}
 		}
 	}
