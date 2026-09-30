@@ -2359,3 +2359,25 @@ keywords: 混合链、TalkCollectChain、TalkHuntChain、页梯退役、stage �
 
 - **判定规则**：段首屏由客户端声明的 select 页族序派生、段内翻页交给客户端；页梯退役后别再用「登记表缺行」解释拒绝——缺的是客户端页族。
 - **收口原则**：末段收尾按钮按客户端末段页尾的**全集**登记（三按钮同义），页梯退役后不允许再逐行区分。
+
+## [QE-104] 一〇四、**owner 翻转先做 retail-vs-XML IR 对拍**：编译器采纳 ≠ 可直接翻转，差异面 = 真机验收清单 (OWNER_FLIP_IR_DIFF_EVIDENCE)
+
+<!-- pattern-metadata
+status: CONFIRMED
+scope: 保留清单行从 XML_RETENTION 翻转为 RETAIL_TABLE 的证据纪律（尤指「阻塞码消失后解锁」的行）
+first_seen: 2026-09-30
+last_verified: 2026-09-30
+symptom: 阻塞码消失（编译器已采纳该行）后，容易被当成「可以直接翻转」；但翻转改的是**生产供形**（XML 形 → 真端合成形），不是解锁一个开关
+root_cause: 编译器采纳只证明真端模板能被合成，不证明合成形与现行 XML 形等价；两形出自不同来源（遗留 XML vs 真端模板 + 客户端契约），接取模型 / 阶段页 / 击杀目标 / 报告页 / 自动领奖 / 旧存档治愈边任一轴都可能有实质差异
+fix_or_guardrail: 1. **翻转前先做生产路径对拍**：同一入口 `ProductionQuestDefinitions.definitionInOverlay(id)` 各 dump 一次——A = 现行 owner（XML）+ XML 在场；B = 临时把 retention 翻成 RETAIL_TABLE **且**移走 `definitions/quests/<id>.xml`（overlay fail-fast 要求两者同时改，否则抛 `retired quest still has XML owner`；`target/classes` 旧副本也要清），判据 = 节点标签集 + `event/conditions/actions/afterCommit` 四元组计数（共享 / 仅 XML / 仅真端）；2. **差异面 = 真机验收清单**：按轴（接取模型 / 阶段页 / 击杀目标 / 报告页 / 自动领奖 / 治愈边）逐条写成可观测项交用户实测；3. **零共享是强红线**：逐行零共享说明是两套生命周期，禁止按「编译器采纳」翻转；4. **不翻转也要登记升级**：把登记理由从「阻塞码成因」改成实测比值与差异摘要（retention 双副本 + drift 备注 + 门文案同片改，code 不变）；5. **探针用完即删**：临时翻转与 XML 移走必须还原并用既有门禁复跑验干净
+evidence: .agents/summary/quest-owner-flip-7/README.zh-CN.md; .agents/summary/quest-owner-flip-7/probe/ir-xml-owner.txt; .agents/summary/quest-owner-flip-7/probe/ir-retail-owner.txt; src/main/resources/aion/data/static_data/quest/retail/retail-xml-retention.tsv; src/test/java/com/aionemu/gameserver/questEngine/retail/RetailDataDrivenGateTest.java
+validation: 2026-09-30 七行（10112/20112/10527/20527/17540/27540/20031）对拍：节点集 7/7 相同，四元组共享/仅XML/仅真端 = 25/18/24、19/23/30、26/31/37、18/37/45、23/13/32、29/9/26、0/54/77；翻转侧编译全部采纳、无拒绝码；还原后焦点门 5 类 25 例唯一红 = 80817 既存漂移
+boundaries: 适用面 = 任何「阻塞消失后解锁」的翻转决策；不适用纯机械退役（QE-094）与零 IR 变化的手术；真端形「看起来更对」不构成翻转证据——必须由真机观测判定；本批未改生产行为、未重冻指纹
+superseded_by: none
+see_also: [QE-103], [QE-095], [QE-098]
+first_check: 翻转一行前先答：①A/B 两侧 IR 都 dump 了吗（B 侧 retention + XML + target 旧副本三处同时改）？②共享/仅 XML/仅真端各多少、差异落在哪些轴？③差异是否已写成可观测的真机验收项？④不翻转时登记理由升级了吗（双副本 + drift + 门文案同片）？⑤临时改动还原后门禁复跑了吗？
+keywords: owner flip、RETAIL_TABLE、retail-vs-XML 对拍、编译器采纳不等于可翻转、IR 四元组、零共享红线、真机验收清单、retired quest still has XML owner、登记理由升级
+-->
+
+- **判定规则**：解锁 ≠ 翻转。翻转的判据是「真端形与现行形等价」，不是「编译器不再拒绝」。
+- **安全网**：对拍必须在生产入口上做（overlay 同路径），B 侧三处（retention / XML / target 旧副本）同时改，跑完即还原并复跑门禁。

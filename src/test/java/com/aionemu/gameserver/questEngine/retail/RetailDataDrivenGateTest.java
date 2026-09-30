@@ -68,8 +68,9 @@ class RetailDataDrivenGateTest {
 	/** 页梯退役带出的可编译暂缓行（见上表注释）。 / Compilable rows deferred by the ladder retirement. */
 	private static final String DEFERRED_BY_LADDER_RETIREMENT =
 		"mixed-chain stage order now derives from the client contract's declared select families, so the "
-			+ "old ladder-registry deficit no longer blocks this row; the ownership flip needs its own "
-			+ "contract and real-client evidence batch (curated deferral, XML stays authoritative)";
+			+ "old ladder-registry deficit no longer blocks this row; the 2026-09-30 flip-evidence batch "
+			+ "measured a material retail-vs-XML IR divergence for these rows, so the ownership flip changes "
+			+ "production behavior and needs real-client acceptance (curated deferral, XML stays authoritative)";
 
 	private static final Map<Integer, String> CURATED_DEFERRED = Map.ofEntries(
 		Map.entry(25050, "collect-chain vocabulary lacks the ritual spawn/despawn + altar offering advances "

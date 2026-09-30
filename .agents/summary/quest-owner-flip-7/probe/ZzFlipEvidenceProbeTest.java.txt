@@ -1,0 +1,35 @@
+package com.aionemu.gameserver.questEngine.definition;
+
+import org.junit.jupiter.api.Test;
+
+import java.nio.file.Files;
+import java.nio.file.Path;
+
+/** 临时探针：转储 curated 暂缓 7 行的生产 IR（用完即删）。 / Temporary IR dump probe. */
+class ZzFlipEvidenceProbeTest {
+
+	@Test
+	void dump() throws Exception {
+		String out = System.getProperty("flip.probe.out");
+		StringBuilder sb = new StringBuilder();
+		for (int questId : new int[] {10112, 20112, 10527, 20527, 17540, 27540, 20031}) {
+			QuestDefinition definition = ProductionQuestDefinitions.definitionInOverlay(questId).definition();
+			sb.append("==================== QUEST ").append(questId).append('\n');
+			sb.append("-- nodes\n");
+			for (QuestNode node : definition.nodes()) {
+				sb.append("   [").append(node.label()).append("] ")
+					.append(node.projection().status()).append(' ')
+					.append(node.projection().variables()).append('\n');
+			}
+			sb.append("-- transitions\n");
+			for (QuestTransition transition : definition.transitions()) {
+				sb.append("   ").append(transition.sourceNode()).append(" --")
+					.append(transition.event()).append(" conds=").append(transition.conditions())
+					.append(" actions=").append(transition.actions())
+					.append(" after=").append(transition.afterCommit())
+					.append(" --> ").append(transition.targetNode()).append('\n');
+			}
+		}
+		Files.writeString(Path.of(out), sb.toString());
+	}
+}

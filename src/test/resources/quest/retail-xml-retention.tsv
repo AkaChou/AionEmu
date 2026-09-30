@@ -2436,7 +2436,7 @@
 10101	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf3c0,FUN_180caf5f0,FUN_180caf6c0,FUN_180caf740
 10110	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf3c0,FUN_180caf5f0,FUN_180caf6c0,FUN_180caf740
 10111	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history
-10112	XML_RETENTION	DataDriven	ADJUDICATED:CURATED_LEGACY_CONTRACT_LOCK	mixed-chain ladder-registry deficit gone: the client contract declares the stage select families; ownership flip needs its own evidence batch (curated deferral)
+10112	XML_RETENTION	DataDriven	ADJUDICATED:CURATED_LEGACY_CONTRACT_LOCK	flip-evidence(2026-09-30) retail-vs-XML IR shared/onlyXml/onlyRetail=25/18/24: select 阶梯 1012/1353/1354 → 1352 首屏 + 1008 关窗；UseItem 接取 → 前置 10111 门 + ItemPlay(3000ms)；2376 报告页 → 1009 重入；新增 QuestDialog(108) 自动领奖与 EnterWorld 治愈; 翻转属生产行为变更，待真机验收 .agents/summary/quest-owner-flip-7/README.zh-CN.md
 10113	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history
 10500	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_CHAIN
 10501	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history wave10-chain-acquire-registry-decisions.tsv basis=DD_CHAIN_ACQUIRE_REGISTRY
@@ -2451,7 +2451,7 @@
 10522	XML_RETENTION	-	NO_TABLE	retail-none
 10525	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf3c0,FUN_180caf5f0,FUN_180caf6c0,FUN_180caf740
 10526	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history
-10527	XML_RETENTION	DataDriven	ADJUDICATED:CURATED_LEGACY_CONTRACT_LOCK	mixed-chain ladder-registry deficit gone: the client contract declares the stage select families; ownership flip needs its own evidence batch (curated deferral)
+10527	XML_RETENTION	DataDriven	ADJUDICATED:CURATED_LEGACY_CONTRACT_LOCK	flip-evidence(2026-09-30) retail-vs-XML IR shared/onlyXml/onlyRetail=26/31/37: 14 段 talk/collect 阶梯的页梯中转与 39 检查对 → 阶段首屏 1011/1352/1693 + 1008 关窗；物品接取模型不同; 翻转属生产行为变更，待真机验收 .agents/summary/quest-owner-flip-7/README.zh-CN.md
 10528	XML_RETENTION	-	SCRIPTED	registry=FUN_180caa850,FUN_180caf350,FUN_180caf3c0,FUN_180caf5f0,FUN_180caf6c0,FUN_180caf740
 10529	XML_RETENTION	-	SCRIPTED	registry=FUN_180caa850,FUN_180caf350,FUN_180caf3c0,FUN_180caf5f0,FUN_180caf6c0,FUN_180caf740
 10530	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_TALK_COLLECT_CHAIN_DEFERRED	retail-simple-talk-drift.tsv / retail-data-driven-drift.tsv: talk+collect mixed-chain axis unimplemented
@@ -3217,7 +3217,7 @@
 17511	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf6c0
 17525	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history wave8-sensory-area-decisions.tsv basis=DD_ENTERAREA_ZONE_RESOLUTION
 17526	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
-17540	XML_RETENTION	DataDriven	ADJUDICATED:CURATED_LEGACY_CONTRACT_LOCK	mixed-chain ladder-registry deficit gone: the client contract declares the stage select families; ownership flip needs its own evidence batch (curated deferral)
+17540	XML_RETENTION	DataDriven	ADJUDICATED:CURATED_LEGACY_CONTRACT_LOCK	flip-evidence(2026-09-30) retail-vs-XML IR shared/onlyXml/onlyRetail=23/13/32: hunt 段数/目标不同（XML 折叠阶梯 + var0 4→5 治愈 + PlayMovie 473；真端 = 多段多目标 + QuestDialog(108)）; 翻转属生产行为变更，待真机验收 .agents/summary/quest-owner-flip-7/README.zh-CN.md
 17541	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
 17550	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_SIMPLE
 17551	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history
@@ -3498,7 +3498,7 @@
 19900	XML_RETENTION	DataDriven	ADJUDICATED:CURATED_LEGACY_CONTRACT_LOCK	curated deferral: reshape decision pending (DD gate CURATED_DEFERRED guard)
 20010	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_HUNT_CHAIN
 20011	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history wave10-chain-acquire-registry-decisions.tsv basis=DD_CHAIN_ACQUIRE_REGISTRY
-20031	XML_RETENTION	DataDriven	ADJUDICATED:CURATED_LEGACY_CONTRACT_LOCK	mixed-chain ladder-registry deficit gone: the client contract declares the stage select families; ownership flip needs its own evidence batch (curated deferral)
+20031	XML_RETENTION	DataDriven	ADJUDICATED:CURATED_LEGACY_CONTRACT_LOCK	flip-evidence(2026-09-30) retail-vs-XML IR shared/onlyXml/onlyRetail=0/54/77: 逐行零共享：54 条 XML 边与 77 条真端边完全不同（含接取门、阶段页、推进按钮、报告与领奖面）; 翻转属生产行为变更，待真机验收 .agents/summary/quest-owner-flip-7/README.zh-CN.md
 20032	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history
 20033	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history
 20034	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history
@@ -3507,7 +3507,7 @@
 20101	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf3c0,FUN_180caf5f0,FUN_180caf6c0,FUN_180caf740
 20110	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf3c0,FUN_180caf5f0,FUN_180caf6c0,FUN_180caf740
 20111	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history
-20112	XML_RETENTION	DataDriven	ADJUDICATED:CURATED_LEGACY_CONTRACT_LOCK	mixed-chain ladder-registry deficit gone: the client contract declares the stage select families; ownership flip needs its own evidence batch (curated deferral)
+20112	XML_RETENTION	DataDriven	ADJUDICATED:CURATED_LEGACY_CONTRACT_LOCK	flip-evidence(2026-09-30) retail-vs-XML IR shared/onlyXml/onlyRetail=19/23/30: 同 10112 形（镜像）；页梯/接取模型/报告页三轴均不同; 翻转属生产行为变更，待真机验收 .agents/summary/quest-owner-flip-7/README.zh-CN.md
 20113	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history
 20500	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_CHAIN
 20501	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history
@@ -3522,7 +3522,7 @@
 20522	XML_RETENTION	-	NO_TABLE	retail-none
 20525	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf3c0,FUN_180caf5f0,FUN_180caf6c0,FUN_180caf740
 20526	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history
-20527	XML_RETENTION	DataDriven	ADJUDICATED:CURATED_LEGACY_CONTRACT_LOCK	mixed-chain ladder-registry deficit gone: the client contract declares the stage select families; ownership flip needs its own evidence batch (curated deferral)
+20527	XML_RETENTION	DataDriven	ADJUDICATED:CURATED_LEGACY_CONTRACT_LOCK	flip-evidence(2026-09-30) retail-vs-XML IR shared/onlyXml/onlyRetail=18/37/45: 同 10527 形（镜像）；阶段页、推进按钮、物品轴均不同; 翻转属生产行为变更，待真机验收 .agents/summary/quest-owner-flip-7/README.zh-CN.md
 20528	XML_RETENTION	-	SCRIPTED	registry=FUN_180caa850,FUN_180caf350,FUN_180caf3c0,FUN_180caf5f0,FUN_180caf6c0,FUN_180caf740
 20529	XML_RETENTION	-	SCRIPTED	registry=FUN_180caa850,FUN_180caf350,FUN_180caf3c0,FUN_180caf5f0,FUN_180caf6c0,FUN_180caf740
 20530	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_TALK_COLLECT_CHAIN_DEFERRED	retail-simple-talk-drift.tsv / retail-data-driven-drift.tsv: talk+collect mixed-chain axis unimplemented
@@ -4284,7 +4284,7 @@
 27511	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf6c0
 27525	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history wave8-sensory-area-decisions.tsv basis=DD_ENTERAREA_ZONE_RESOLUTION
 27526	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
-27540	XML_RETENTION	DataDriven	ADJUDICATED:CURATED_LEGACY_CONTRACT_LOCK	mixed-chain ladder-registry deficit gone: the client contract declares the stage select families; ownership flip needs its own evidence batch (curated deferral)
+27540	XML_RETENTION	DataDriven	ADJUDICATED:CURATED_LEGACY_CONTRACT_LOCK	flip-evidence(2026-09-30) retail-vs-XML IR shared/onlyXml/onlyRetail=29/9/26: 同 17540 形（镜像）；击杀目标集合与阶段切分不同; 翻转属生产行为变更，待真机验收 .agents/summary/quest-owner-flip-7/README.zh-CN.md
 27541	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
 27550	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_SIMPLE
 27551	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history
