@@ -34,6 +34,10 @@ When `CASES.zh-CN.md` links a matched case to `docs/quest/repair-playbook/cases/
 3. A shared runtime or AI change must prove its impact scope and add shared regression coverage or a production-directory audit.
 4. Tests must lock down the source, target, status, variables, event, conditions, transactional actions, and complete `after-commit` order. Asserting only the final state is insufficient.
 5. A repair is incomplete when state is correct but page display, close behavior, spawning, following, teleportation, or another side effect remains wrong.
+6. No Hardcoded Exceptions in Quest Engine or Retail Compilers (严禁在任务引擎与编译器中引入硬编码特例):
+   Retail quest compilers (`Retail*Compiler`), production dispatchers (`QuestProductionDispatcher`), and the quest engine must strictly adhere to 1:1 data-driven transformations from true-server and client templates. Do NOT hardcode quest-specific or ID-specific mappings (e.g. synthetic `questId -> npcId` routes, synthetic `USE_OBJECT` transitions, or hardcoded item/NPC pairs) in quest compilers or the quest engine to bypass missing AI or runtime behaviors.
+   Behaviors that natively belong to NPC AI (such as world object interaction granting items, object despawning/respawning, custom dialogs, or scripted actions) must be implemented within the NPC AI layer or dedicated world-object interaction handlers, preserving clean domain boundaries and keeping the quest engine decoupled and free of hardcoded exceptions.
+   （严禁在任务编译器、调度器或任务引擎中引入特定任务 ID、特定物品/NPC ID 映射的硬编码特例代码。零售任务编译器必须保持对真端表与客户端数据的 1:1 数据驱动纯粹映射。属于 NPC AI 职责的行为（如场景物体交互发道具、物体消失进入刷新冷却、独立巡逻触发等）必须在 NPC AI 层实现，坚决不得为了掩盖 AI 缺失而在任务引擎中强塞非标路由或特例映射。）
 
 ## Acceptance and Playbook Updates
 
