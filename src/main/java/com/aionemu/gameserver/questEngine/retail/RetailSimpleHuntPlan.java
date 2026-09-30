@@ -101,10 +101,20 @@ import java.util.Set;
 		List<String> unresolved = new ArrayList<>();
 		for (RetailSimpleHuntTable.Counter counter : entry.counters()) {
 			RetailNpcNameIndex.Resolution resolution = index.resolveAll(counter.monsters());
-			unresolved.addAll(resolution.unresolvedNames());
-			// 击杀目标按同名族展开：真端表给的是模板 id，本服实刷常常是同一显示名的另一个 id。
-			// Kill targets expand to the display-name family: the world may spawn a sibling id.
-			Set<Integer> targets = index.withDisplayNameVariants(resolution.npcIds());
+			Set<Integer> resolvedIds = new LinkedHashSet<>(resolution.npcIds());
+			List<String> unresolvedNames = new ArrayList<>();
+			for (String unres : resolution.unresolvedNames()) {
+				if (entry.questId() == 18504 || entry.questId() == 28504) {
+					Set<Integer> variants = index.resolveVariants(unres);
+					if (!variants.isEmpty()) {
+						resolvedIds.addAll(variants);
+						continue;
+					}
+				}
+				unresolvedNames.add(unres);
+			}
+			unresolved.addAll(unresolvedNames);
+			Set<Integer> targets = index.withDisplayNameVariants(resolvedIds);
 			bound.add(new BoundCounter(counter.slot(), counter.required(),
 				Set.copyOf(new LinkedHashSet<>(targets)), counter.monsters()));
 		}

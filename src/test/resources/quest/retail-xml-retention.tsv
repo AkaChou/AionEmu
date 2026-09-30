@@ -2601,7 +2601,7 @@
 11453	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 11454	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 11455	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c10i-canonical-decisions.tsv basis=RETAIL_STAGE_CANONICAL
-11456	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_COUNTER_EXCEEDS_6BIT	client count exceeds the 6-bit SECTION field (fixed 6-bit layout invariant)
+11456	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
 11457	RETAIL_TABLE	SimpleCollectItem	OK	retired-xml-in-git-history m5b3-collect-route-decisions.tsv basis=OBJECT_TALK_ROUTE_MISSING
 11458	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c10i-canonical-decisions.tsv basis=RETAIL_STAGE_CANONICAL
 11459	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history retail-simple-hunt-adjudicated-decisions.tsv basis=RETAIL_REWARD_CONFIRM_RANGE
@@ -3270,7 +3270,7 @@
 18500	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf3c0,FUN_180caf640,FUN_180caf6c0,FUN_180caf740
 18501	RETAIL_TABLE	SimpleCollectItem	OK	retired-xml-in-git-history m5b3-collect-route-decisions.tsv basis=MULTI_ITEM_HANDIN
 18503	RETAIL_TABLE	SimpleCollectItem	OK	retired-xml-in-git-history m5b3-collect-route-decisions.tsv basis=SELECTABLE_CHOICE_EXPANSION
-18504	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_COUNTER_EXCEEDS_6BIT	client count exceeds the 6-bit SECTION field (fixed 6-bit layout invariant)
+18504	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
 18505	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c22-haramel-decisions.tsv basis=M3D_DOWNGRADE_REVERSED
 18506	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 18507	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
@@ -3673,7 +3673,7 @@
 21453	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 21454	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 21455	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c10h-talk-chain-b5-decisions.tsv basis=P0C10H_EQUIVALENT
-21456	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_COUNTER_EXCEEDS_6BIT	client count exceeds the 6-bit SECTION field (fixed 6-bit layout invariant)
+21456	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
 21457	RETAIL_TABLE	SimpleCollectItem	OK	retired-xml-in-git-history m5b3-collect-route-decisions.tsv basis=OBJECT_TALK_ROUTE_MISSING
 21458	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c10i-canonical-decisions.tsv basis=RETAIL_STAGE_CANONICAL
 21459	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history retail-simple-hunt-adjudicated-decisions.tsv basis=RETAIL_REWARD_CONFIRM_RANGE
@@ -4337,7 +4337,7 @@
 28500	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf3c0,FUN_180caf640,FUN_180caf6c0,FUN_180caf740
 28501	RETAIL_TABLE	SimpleCollectItem	OK	retired-xml-in-git-history m5b3-collect-route-decisions.tsv basis=MULTI_ITEM_HANDIN
 28503	XML_RETENTION	SimpleCollectItem	ADJUDICATED:COLLECT_PROGRESS_ROUTE	collect progress row projection route unsupported
-28504	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_COUNTER_EXCEEDS_6BIT	client count exceeds the 6-bit SECTION field (fixed 6-bit layout invariant)
+28504	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
 28505	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 28506	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 28507	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history retail-simple-hunt-adjudicated-decisions.tsv basis=RETAIL_REWARD_CONFIRM_RANGE
@@ -5475,7 +5475,7 @@
 80211	RETAIL_TABLE	SimpleUseItem	OK	retired-xml-in-git-history p3b-use-item-decisions.tsv basis=USE_ITEM_CANONICAL
 80212	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history retail-simple-hunt-adjudicated-decisions.tsv basis=RETAIL_REWARD_CONFIRM_RANGE
 80213	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
-80214	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_COUNTER_EXCEEDS_6BIT	client count exceeds the 6-bit SECTION field (fixed 6-bit layout invariant)
+80214	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
 80215	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
 80216	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history retail-simple-hunt-adjudicated-decisions.tsv basis=CONFIRM_RANGE+PACK_REBASE_LEGACY+KILL_VARIANT_CLIENT_LIST_ABSENT+GRID+LEGACY_NODE
 80217	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history retail-simple-hunt-adjudicated-decisions.tsv basis=RETAIL_REWARD_CONFIRM_RANGE
@@ -5484,7 +5484,7 @@
 80220	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history retail-simple-hunt-adjudicated-decisions.tsv basis=RETAIL_REWARD_CONFIRM_RANGE
 80221	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history retail-simple-hunt-adjudicated-decisions.tsv basis=RETAIL_REWARD_CONFIRM_RANGE
 80222	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
-80223	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_COUNTER_EXCEEDS_6BIT	client count exceeds the 6-bit SECTION field (fixed 6-bit layout invariant)
+80223	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
 80224	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
 80225	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history retail-simple-hunt-adjudicated-decisions.tsv basis=CONFIRM_RANGE+PACK_REBASE_LEGACY+KILL_VARIANT_CLIENT_LIST_ABSENT+GRID+LEGACY_NODE
 80226	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history retail-simple-hunt-adjudicated-decisions.tsv basis=RETAIL_REWARD_CONFIRM_RANGE
@@ -5928,7 +5928,7 @@
 80688	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 80689	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 80690	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
-80691	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_COUNTER_EXCEEDS_6BIT	client count exceeds the 6-bit SECTION field (fixed 6-bit layout invariant)
+80691	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
 80692	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
 80693	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
 80694	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
@@ -6050,7 +6050,7 @@
 80814	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_TALK_JOURNAL_MISSING	retail-simple-talk-drift.tsv / retail-data-driven-drift.tsv: client journal absent - reward projection underivable (QE-051/W5-g3 fail-closed)
 80815	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
 80816	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CANONICAL
-80817	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_COUNTER_EXCEEDS_6BIT	client count exceeds the 6-bit SECTION field (fixed 6-bit layout invariant)
+80817	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history
 80818	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CANONICAL
 80819	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CANONICAL
 80820	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CANONICAL

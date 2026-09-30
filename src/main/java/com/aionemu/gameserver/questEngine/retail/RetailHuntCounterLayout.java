@@ -19,6 +19,12 @@ public final class RetailHuntCounterLayout {
 	/** 计数器取值掩码（真端上限 63）。 / Counter mask (retail caps a counter at 63). */
 	public static final int SECTION_MASK = (1 << SECTION_BITS) - 1;
 
+	/** 真端大计数 SimpleHunt 击杀计数器位宽（ScriptDLL64 {@code FUN_180cb14e0} 反编译语义）。 / Wide counter bit width. */
+	public static final int WIDE_SECTION_BITS = 10;
+
+	/** 大计数取值掩码（真端上限 1023）。 / Wide counter mask (retail caps at 1023). */
+	public static final int WIDE_SECTION_MASK = (1 << WIDE_SECTION_BITS) - 1;
+
 	private RetailHuntCounterLayout() {
 	}
 

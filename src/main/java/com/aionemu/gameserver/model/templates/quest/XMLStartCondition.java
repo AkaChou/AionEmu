@@ -47,7 +47,7 @@ public class XMLStartCondition {
 		if (finished != null && finished.size() > 0) {
 			for (FinishedQuestCond fqc : finished) {
 				int questId = fqc.getQuestId();
-				int reward = fqc.getReward();
+				Integer reward = fqc.getReward();
 				QuestState qs = qsl.getQuestState(questId);
 				if (qs == null || qs.getStatus() != QuestStatus.COMPLETE
 						|| !checkReward(questId, reward, qs.getReward())) {
@@ -135,9 +135,12 @@ public class XMLStartCondition {
 				&& checkNoAcquiredQuests(qsl) && checkEquippedItems(player, warn);
 	}
 
-	private boolean checkReward(int questId, int neededReward, int currentReward) {
+	private boolean checkReward(int questId, Integer neededReward, int currentReward) {
+		if (neededReward == null) {
+			return true;
+		}
 		// 在欧比斯入场任务奖励正确前的临时例外任务。 / Temporary exceptions-quests till abyss entry quests work with correct reward
-		return neededReward == currentReward || questId == 2947 || questId == 1922;
+		return neededReward.intValue() == currentReward || questId == 2947 || questId == 1922;
 	}
 
 	/** 返回已完成任务前置条件 / Returns the finished preconditions */

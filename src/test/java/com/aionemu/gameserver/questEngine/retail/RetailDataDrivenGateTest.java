@@ -2,6 +2,7 @@ package com.aionemu.gameserver.questEngine.retail;
 
 import com.aionemu.gameserver.questEngine.definition.CompiledQuestDefinition;
 import com.aionemu.gameserver.questEngine.definition.QuestDefinition;
+import com.aionemu.gameserver.questEngine.definition.QuestEvent;
 import com.aionemu.gameserver.questEngine.definition.RetiredQuestIds;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -22,6 +23,7 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -140,6 +142,28 @@ class RetailDataDrivenGateTest {
 		familyIds = familyIds();
 		driftRegistry = driftRegistry();
 		fingerprints = fingerprints();
+	}
+
+	/**
+	 * LevelUpLogIn 任务（10500/20500）接取参数为等级（55 级），不得被误解析为 NPC 55 发放。
+	 * LevelUpLogIn quests (10500/20500) carry level acquire parameters and must not synthesize fake NPC 55 routes.
+	 */
+	@Test
+	void levelUpLogInQuestsDoNotSynthesizeFakeNpcRoutes() {
+		for (int questId : List.of(10500, 20500)) {
+			var outcome = compile(questId);
+			assertTrue(outcome.accepted(), () -> questId + " must be accepted");
+			QuestDefinition def = outcome.definition().definition();
+			boolean hasNpc55 = def.transitions().stream()
+				.anyMatch(t -> t.event() instanceof QuestEvent.TalkToNpc talk && talk.npcId() == 55);
+			assertFalse(hasNpc55, () -> questId + " must not have transitions on fake NPC 55");
+			boolean hasLevelUp = def.transitions().stream()
+				.anyMatch(t -> t.event() instanceof QuestEvent.LevelUp);
+			boolean hasEnterWorld = def.transitions().stream()
+				.anyMatch(t -> t.event() instanceof QuestEvent.EnterWorld && "unaccepted".equals(t.sourceNode()));
+			assertTrue(hasLevelUp, () -> questId + " must have LevelUp grant transition");
+			assertTrue(hasEnterWorld, () -> questId + " must have EnterWorld grant transition");
+		}
 	}
 
 	private static String NPC_DIR() {

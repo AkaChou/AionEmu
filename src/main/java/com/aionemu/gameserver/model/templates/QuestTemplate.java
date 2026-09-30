@@ -742,12 +742,15 @@ public class QuestTemplate {
 			}
 		}
 
-		if (!m.startConditions().isEmpty()) {
+		if (!m.startConditions().isEmpty() || !m.prerequisites().isEmpty()) {
 			List<FinishedQuestCond> finishedList = new ArrayList<>();
 			List<Integer> unfinishedList = new ArrayList<>();
 			List<Integer> noacquiredList = new ArrayList<>();
 			List<Integer> acquiredList = new ArrayList<>();
 			List<Integer> equippedList = new ArrayList<>();
+			for (int prereqId : m.prerequisites()) {
+				finishedList.add(new FinishedQuestCond(prereqId, null));
+			}
 			for (var c : m.startConditions()) {
 				switch (c.type().toUpperCase(java.util.Locale.ROOT)) {
 					case "FINISHED" -> finishedList.add(new FinishedQuestCond(c.questId(), c.rewardMode()));

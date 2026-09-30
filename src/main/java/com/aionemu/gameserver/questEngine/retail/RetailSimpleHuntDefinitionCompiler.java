@@ -500,7 +500,10 @@ public final class RetailSimpleHuntDefinitionCompiler {
 			}
 		}
 		for (RetailSimpleHuntPlan.BoundCounter counter : plan.counters()) {
-			if (counter.required() > RetailHuntCounterLayout.SECTION_MASK) {
+			int maxCount = (plan.counters().size() == 1)
+				? RetailHuntCounterLayout.WIDE_SECTION_MASK
+				: RetailHuntCounterLayout.SECTION_MASK;
+			if (counter.required() > maxCount) {
 				return new Outcome(null, "RETAIL_COUNTER_EXCEEDS_6BIT",
 					"slot " + counter.slot() + " count " + counter.required());
 			}
@@ -582,6 +585,10 @@ public final class RetailSimpleHuntDefinitionCompiler {
 		int questId = plan.questId();
 		boolean briefing = briefingNpcIds != null && !briefingNpcIds.isEmpty();
 		List<Slot> slots = slots(plan);
+		boolean wide = slots.stream().anyMatch(s -> s.required() > RetailHuntCounterLayout.SECTION_MASK);
+		if (wide && slots.size() == 1) {
+			return buildCanonicalCounterQuest(plan, slots.get(0), metadata, clientRewardNpcs, briefingNpcIds);
+		}
 		ProgressLayout.Builder layoutBuilder = new ProgressLayout.Builder();
 		for (Slot slot : slots) {
 			layoutBuilder.add(new BitField("var" + (slot.slot() - 1), RetailHuntCounterLayout.shiftFor(slot.slot()),
@@ -727,11 +734,100 @@ public final class RetailSimpleHuntDefinitionCompiler {
 	private record Slot(int slot, int required, List<Integer> npcIds) {
 	}
 
+	private static QuestDefinition buildCanonicalCounterQuest(RetailSimpleHuntPlan plan, Slot slot,
+			QuestMetadata metadata, RetailClientRewardNpcs clientRewardNpcs, Set<Integer> briefingNpcIds) {
+		int questId = plan.questId();
+		boolean briefing = briefingNpcIds != null && !briefingNpcIds.isEmpty();
+		int required = slot.required();
+
+		ProgressLayout.Builder layoutBuilder = new ProgressLayout.Builder();
+		layoutBuilder.add(new BitField("var0", 0, RetailHuntCounterLayout.WIDE_SECTION_BITS, 0,
+			RetailHuntCounterLayout.WIDE_SECTION_MASK,
+			com.aionemu.gameserver.questEngine.definition.PersistenceMode.PERSISTENT,
+			com.aionemu.gameserver.questEngine.definition.ProgressScope.LOCAL));
+		if (briefing) {
+			layoutBuilder.add(new BitField("var5", RetailHuntCounterLayout.shiftFor(6), 1, 0, 1,
+				com.aionemu.gameserver.questEngine.definition.PersistenceMode.PERSISTENT,
+				com.aionemu.gameserver.questEngine.definition.ProgressScope.LOCAL));
+		}
+		ProgressLayout layout = layoutBuilder.build();
+
+		List<QuestNode> nodes = new ArrayList<>();
+		nodes.add(new QuestNode("unaccepted", new NodeProjection(QuestStatus.NONE,
+			briefing ? Map.of("var0", 0, "var5", 0) : Map.of("var0", 0))));
+		if (briefing) {
+			nodes.add(new QuestNode("started", new NodeProjection(QuestStatus.START, Map.of("var0", 0, "var5", 1))));
+			nodes.add(new QuestNode("briefed", new NodeProjection(QuestStatus.START, Map.of("var0", 0, "var5", 0))));
+		} else {
+			nodes.add(new QuestNode("started", new NodeProjection(QuestStatus.START, Map.of())));
+		}
+		nodes.add(new QuestNode("reward", new NodeProjection(QuestStatus.REWARD,
+			briefing ? Map.of("var0", required, "var5", 0) : Map.of("var0", required))));
+		nodes.add(new QuestNode("complete", new NodeProjection(QuestStatus.COMPLETE,
+			briefing ? Map.of("var0", required, "var5", 0) : Map.of("var0", required))));
+
+		boolean enterWorld = plan.grantKind() == RetailGrantKind.WORLD || plan.worldAcquireId() > 0;
+		List<Integer> acquiredNpcs = enterWorld ? List.of()
+			: plan.acquiredNpcIds().stream().sorted().toList();
+		List<Integer> rewardNpcs = rewardNpcs(plan, clientRewardNpcs);
+
+		List<QuestTransition> transitions = new ArrayList<>();
+		String acceptTarget = "started";
+		if (enterWorld) {
+			transitions.add(new QuestTransition(new QuestEvent.EnterWorld(),
+				List.of(new QuestCondition.StartEligible(), new QuestCondition.WorldIs(plan.worldAcquireId(), true)),
+				List.of(), acceptTarget,
+				List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.VISIBILITY_REFRESH)), null,
+				"unaccepted"));
+		} else {
+			for (int acquiredNpc : acquiredNpcs) {
+				transitions.addAll(canonicalAcceptFlow(acquiredNpc, acceptTarget));
+			}
+		}
+
+		String huntSource = "started";
+		if (briefing) {
+			int briefingNpc = briefingNpcIds.iterator().next();
+			transitions.add(new QuestTransition(
+				new QuestEvent.TalkToNpc(briefingNpc, QuestDialogAction.QUEST_SELECT.id()),
+				List.of(), List.of(), "briefed",
+				List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
+					new AfterCommitAction.CloseDialog()),
+				null, "started"));
+			huntSource = "briefed";
+		}
+
+		for (int npcId : slot.npcIds()) {
+			transitions.add(new QuestTransition(new QuestEvent.KillNpc(npcId),
+				List.of(new QuestCondition.VariableBelow("var0", required - 1)),
+				List.of(new QuestAction.IncrementVariable("var0", 1)),
+				huntSource, PACKET_ONLY_SYNC, 1, huntSource));
+			transitions.add(new QuestTransition(new QuestEvent.KillNpc(npcId),
+				List.of(new QuestCondition.QuestVariableIs("var0", required - 1)),
+				List.of(new QuestAction.IncrementVariable("var0", 1)),
+				"reward", List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH)),
+				0, huntSource));
+		}
+
+		int rewardWindowPage = rewardWindowPage(metadata);
+		for (int rewardNpc : rewardNpcs) {
+			transitions.add(new QuestTransition(
+				new QuestEvent.TalkToNpc(rewardNpc, QuestDialogAction.QUEST_SELECT.id()),
+				List.of(), List.of(), "reward",
+				List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
+					new AfterCommitAction.ShowQuestDialog(rewardWindowPage)),
+				null, "reward"));
+		}
+		transitions.addAll(completeFlow(metadata, rewardNpcs, "reward", "complete"));
+
+		return new QuestDefinition(questId, 1, metadata, layout, nodes, List.copyOf(transitions));
+	}
+
 	private static List<Slot> slots(RetailSimpleHuntPlan plan) {
 		List<Slot> slots = new ArrayList<>();
 		Set<Integer> seen = new LinkedHashSet<>();
 		for (RetailSimpleHuntPlan.BoundCounter counter : plan.counters()) {
-			if (counter.required() < 1 || counter.required() > RetailHuntCounterLayout.SECTION_MASK) {
+			if (counter.required() < 1 || counter.required() > RetailHuntCounterLayout.WIDE_SECTION_MASK) {
 				throw new IllegalArgumentException("slot " + counter.slot() + " count out of 6-bit range");
 			}
 			List<Integer> npcIds = new ArrayList<>(counter.npcIds());

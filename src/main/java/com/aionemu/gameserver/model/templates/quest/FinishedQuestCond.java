@@ -20,7 +20,7 @@ public class FinishedQuestCond {
 	@XmlAttribute(name = "quest_id", required = true)
 	protected int questId;
 	@XmlAttribute(name = "reward")
-	protected int reward;
+	protected Integer reward;
 
 	/** 获取奖励。 / Returns the reward. */
 	public Integer getReward() {
@@ -28,7 +28,7 @@ public class FinishedQuestCond {
 	}
 
 	public FinishedQuestCond() {}
-	public FinishedQuestCond(int questId, int reward) {
+	public FinishedQuestCond(int questId, Integer reward) {
 		this.questId = questId;
 		this.reward = reward;
 	}

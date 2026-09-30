@@ -530,6 +530,15 @@ public final class QuestService {
 		if (((template.isMaster()) && (!CraftSkillUpdateService.canLearnMoreMasterCraftingSkill(player))) || ((template.isExpert()) && (!CraftSkillUpdateService.canLearnMoreExpertCraftingSkill(player)))) {
 			return false;
 		}
+		var metadata = GameEngineServices.questEngine().questCatalog().findMetadata(env.getQuestId()).orElse(null);
+		if (metadata != null && !metadata.prerequisites().isEmpty()) {
+			for (int prereqId : metadata.prerequisites()) {
+				QuestState state = player.getQuestStateList().getQuestState(prereqId);
+				if (state == null || state.getStatus() != QuestStatus.COMPLETE) {
+					return false;
+				}
+			}
+		}
 		int fulfilledStartConditions = 0;
 		if (!template.getXMLStartConditions().isEmpty()) {
 			for (XMLStartCondition startCondition : template.getXMLStartConditions()) {

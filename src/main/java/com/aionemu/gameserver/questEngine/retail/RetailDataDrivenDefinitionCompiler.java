@@ -81,6 +81,7 @@ public final class RetailDataDrivenDefinitionCompiler {
 		boolean isEnterWorld = "enterworld".equalsIgnoreCase(acquireCategory);
 		boolean isEnterArea = "enterarea".equalsIgnoreCase(acquireCategory);
 		boolean isNone = "none".equalsIgnoreCase(acquireCategory);
+		boolean isLevelUpLogIn = "leveluplogin".equalsIgnoreCase(acquireCategory);
 		boolean noneNpcAcquire = isNone && !questAreas.isBound(entry.questId())
 			&& (entry.allHunt() || entry.allPvp()) && !rewardName.isBlank();
 		// 物品接取轴（P0c-56）：真端 `category_acquire_ = ItemPlay` 的接取参数是**任务起始道具**符号
@@ -110,9 +111,9 @@ public final class RetailDataDrivenDefinitionCompiler {
 			return new Outcome(null, "RETAIL_ITEMPLAY_ACQUIRE_ITEM_UNRESOLVED",
 				entry.acquireParam() == null ? "" : entry.acquireParam().trim());
 		}
-		// 物品接取行的接取位点由道具承担（不查 NPC 名表），其余族照旧。
-		// Item-acquired rows have no acquire npc; the deliverable name channel stays untouched for the rest.
-		boolean npcAcquire = (!isEnterArea && !isNone && !isEnterWorld && !itemAcquire) || noneNpcAcquire;
+		// 物品接取行与升级登录行无接取 NPC（道具或系统事件发放），不查 NPC 名表；其余族照旧。
+		// Item-acquired and level-up-login rows carry no acquire npc; the deliverable name channel stays untouched for the rest.
+		boolean npcAcquire = (!isEnterArea && !isNone && !isEnterWorld && !itemAcquire && !isLevelUpLogIn) || noneNpcAcquire;
 		int worldAcquireId = 0;
 		if (isEnterWorld) {
 			String param = entry.acquireParam() == null ? "" : entry.acquireParam().trim();
@@ -121,16 +122,18 @@ public final class RetailDataDrivenDefinitionCompiler {
 			}
 			worldAcquireId = Integer.parseInt(param);
 		}
-		// enterworld/enterarea 接取的混合链行有发放路由（10010 进世界 / 16823 升级+区域任务结束），
+		// enterworld/enterarea/leveluplogin 接取的混合链行有发放路由（10010 进世界 / 16823 升级+区域任务结束 / 10031 等级登录），
 		// 不落本门；其余非 NPC 接取形状仍如实拒绝。
-		// enterworld/enterarea mixed-chain rows carry grant routes (10010 world-entry / 16823
-		// level-up + zone-mission-end) and bypass this gate; other non-npc shapes stay rejected.
-		boolean grantedMixAcquire = (isEnterWorld || isEnterArea)
+		// enterworld/enterarea/leveluplogin mixed-chain rows carry grant routes (10010 world-entry / 16823
+		// level-up + zone-mission-end / 10031 level-up-login) and bypass this gate; other non-npc shapes stay rejected.
+		boolean grantedMixAcquire = (isEnterWorld || isEnterArea || isLevelUpLogIn)
 			&& entry.stepCategories().stream().allMatch(
 				category -> category.equals("talk") || category.equals("hunt")
 					|| category.equals("collectitem") || category.equals("enterarea")
-					|| category.equals("enterworld"))
+					|| category.equals("enterworld") || category.equals("itemplay")
+					|| category.equals("talkfobj"))
 			&& (entry.stepCategories().contains("hunt") || entry.stepCategories().contains("talk")
+				|| entry.stepCategories().contains("itemplay")
 				|| isAreaWorldOnly(entry));
 		// 区域接取 + 交付即完成（13842 形）：真端世界文件绑定了区域 → 进区域发放、无接取 NPC；
 		// 未绑定的同形行（15548 形：等级里程碑误标 EnterArea）保持拒绝。
@@ -200,7 +203,7 @@ public final class RetailDataDrivenDefinitionCompiler {
 			// -1 哨兵（合成器发 level-up + zone-mission-end 发放边）。
 			// Chain/area acquire (none / enterarea): auto-granted with no acquire npc — the -1
 			// sentinel (the synthesizer emits the level-up + zone-mission-end grant edges).
-			boolean chainAcquireHere = "none".equalsIgnoreCase(acquireCategory) || isEnterArea;
+			boolean chainAcquireHere = "none".equalsIgnoreCase(acquireCategory) || isEnterArea || isLevelUpLogIn;
 			var acquired = chainAcquireHere
 				? java.util.Set.<Integer>of()
 				: npcIndex.resolveAll(
