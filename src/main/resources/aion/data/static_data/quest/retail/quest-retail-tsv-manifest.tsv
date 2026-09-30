@@ -26,6 +26,6 @@
 quest_legacy_heal_rows.tsv	heal	ACTIVE	旧存档自愈边（真端编译消费的单步 build 通道，P0c-28）；消费者 RetailLegacySaveHealRows
 quest_name_string_ids.tsv	name-index	ACTIVE	displayNameId 索引（STR_QUEST_NAME_Q* 优先 / quest_data.xml nameId 回退）；消费者 RetailQuestMetadataCompiler
 retail-xml-retention.tsv	retention	ACTIVE	6224 全量 owner/保留清单（quest_id, owner, family, reason, evidence）；消费者 RetailQuestDriver + RetailOwnershipGateTest
-retail-npc-name-aliases.tsv	name-index	ACTIVE	深层要塞 3 组 74 守军直连 id 别名（1842/2843、1843/2844、1844/2845 共用；将军独立 slot）；消费者 RetailNpcNameAliases + RetailNpcNameIndex + RetailSimpleHuntFamilyGateTest
+retail-npc-name-aliases.tsv	name-index	ACTIVE	直连 id 别名两类：①深层要塞 3 组 74 守军（1842/2843、1843/2844、1844/2845 共用；将军独立 slot）；②QE-106 客户端集合轴的真实逻辑名（GAb1_Sub_Fuen_E / HousingManager_Li|Da / NPC_event_* 共 7 条，展开到 houses.xml 管家与事件 NPC 变体）；消费者 RetailNpcNameAliases + RetailNpcNameIndex + SimpleHunt/SimpleTalk/SimpleItemPlay 家族门
 client_dialog_contract.tsv	contract	ACTIVE	客户端对话页契约（client-dialog-mapping CSV 派生，源哈希由 QuestMovieContinuationGateTest 校验）；消费者 QuestDialogContract
 movie_continuation_exceptions.tsv	contract	ACTIVE	同状态 movie-only page-turn 例外账（新增条目须过任务证据评审）；消费者 QuestDialogContract

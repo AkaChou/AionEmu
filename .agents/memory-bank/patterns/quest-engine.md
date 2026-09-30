@@ -2403,3 +2403,25 @@ keywords: RetailNpcNameIndex、RetailNpcNameAliases、门生产同源、别名�
 
 - **判定规则**：门与生产对同一行给出不同分类时，先怀疑索引来源不同源，再怀疑数据。
 - **安全网**：任何新增名字来源都要在同片把门补齐；集合形态的名字解析结果不等于可翻转，它暴露的是引擎能力缺口。
+
+## [QE-106] 一〇六、真端 NPC 名是逻辑名：接取/交付角色按客户端集合展开，多解=集合轴或 fail-closed (CLIENT_CONFIRMED_NPC_SET_AXIS)
+
+<!-- pattern-metadata
+status: CONFIRMED
+scope: 真端模板 `acquired_npc_name` / `reward_npc_name` 解析出多个 npc_id 时的合成语义（SimpleTalk / SimpleItemPlay 两族已落地）
+first_seen: 2026-09-30
+last_verified: 2026-09-30
+symptom: 行被 `RETAIL_ACQUIRE_NPC_UNRESOLVED`（或 `REWARD_NPC_UNRESOLVED`）长期保留，报「name absent from npc_name_index」；补别名后又变 `_AMBIGUOUS`，看起来像数据缺口或永远做不了
+root_cause: 真端模板名是**逻辑 NPC 名**（`HousingManager_Li` = 任意一名住宅管家、`NPC_event_svs_jabsuroong` = 光/暗两侧活动 NPC），服务器按变体逐 id 建模板（810017-810021 / 832850-832851 / 804749-804752…）；旧合成器对该角色硬要求「恰一个 id」，把合法的集合形态判成 AMBIGUOUS
+fix_or_guardrail: 1. **客户端是唯一仲裁**：解析集 == 客户端为该任务声明的集合（接取 `start_npc_ids`、交付 `end_npc_ids`）逐元素相等才放行，不等/未声明一律 fail-closed，禁止按名字猜或按登记补页；2. **投影是客户端数据**：`quest_client_accept_npc_sets.tsv` / `quest_client_handin_npc_sets.tsv` 由脚本从客户端对话映射生成（带 source_sha256），只收 ≥2 id 行，单 id 行在解析期抛错；3. **合成按集合展开**：接取段与交付预览/回收/完成段对集合内每个 id 各一份（事件键 `TalkToNpc(npcId, action)` 天然分键，无 AMBIGUOUS_TRANSITION）；奖励窗自动确认只留**一条全局 `QuestDialog(108)`** + 每个交付 NPC 一条；4. **多角色同源**：接取与交付两侧规则必须对称，否则解锁一行会立刻被另一角色挡住（实测 12/22 行如此）；5. **过场重挂排重**：`cs1_haction=1009` 已挂在交付段 `QUEST_SELECT`，阶段同号动作边不得再挂（否则每行播两次片，被过场不变量抓住）；6. **谈话角色（`talk_npc1/2`）多解不是本轴**，只把代码升级到 `TALK_NPC_AMBIGUOUS`，需另行设计「客户端谈话角色集合」轴
+evidence: .agents/summary/quest-acquire-npc-set/2026-09-30-qe106-client-confirmed-npc-sets.zh-CN.md; .agents/summary/quest-acquire-npc-set/qe-106-npc-set-decisions.tsv; .agents/summary/quest-acquire-npc-set/probe/divergence-summary.json; src/main/java/com/aionemu/gameserver/questEngine/retail/RetailClientAcceptNpcSets.java; src/main/java/com/aionemu/gameserver/questEngine/retail/RetailClientHandinNpcSets.java
+validation: 2026-09-30 25 行分类变化=23 行采纳并翻转（SimpleTalk，RETAIL_TABLE/OK，XML+目录行删除）+2 行升级为 `REJECTED:RETAIL_TALK_NPC_AMBIGUOUS`；ItemPlay 3 行换轴为 `RETAIL_CON_QUEST`/`RETAIL_TALK_CHAIN`；翻转前生产路径对拍 23/23 行共享边非零（节点集 21/23 相同，18806/28806 因真端链段多一个 step1 态）；门禁 `RetailSimpleTalkGateTest` 6/6（含负例 `clientNpcSetMismatchStaysFailClosed`）、`RetailSimpleItemPlayGateTest` 1/1、`RetailOwnershipGateTest` 3/3、T3 零新增失败、verify_retirement 6224 守恒
+boundaries: 只覆盖 SimpleTalk/SimpleItemPlay 两族的接取与交付角色；谈话角色、Hunt/DataDriven 其他族未改；翻转行的差异面（集合展开/页梯退场/108 入口）需按报告清单真机验收
+superseded_by: none
+see_also: [QE-104], [QE-105], [QE-103]
+first_check: 遇 `RETAIL_*_NPC_UNRESOLVED/_AMBIGUOUS` 先答：①这个名字是模板名、分组名还是逻辑名？②服务器上同族变体有几个 id（`name_desc` 变体/区块后缀）？③客户端 `start_npc_ids`/`end_npc_ids` 为这个 quest 声明了什么集合？④是真端名解析缺口（加别名），还是集合轴（客户端确认后按集合展开）？⑤该名字在别的角色位（talk/reward）有没有同样多解？
+keywords: 客户端集合轴、start_npc_ids、end_npc_ids、逻辑 NPC 名、多解接取/交付、fail-closed、集合展开、全局 108 路由、过场重挂排重、alembic 别名表、QE-106
+-->
+
+- **判定规则**：解析出多 id 不等于数据坏——先看客户端声明了什么集合；客户端说几个，就按几个展开，说不清就拒。
+- **安全网**：接取/交付两侧对称落地；集合展开后逐个跑家族门 + 负例门 + T3，再按 QE-104 对拍决定翻转。

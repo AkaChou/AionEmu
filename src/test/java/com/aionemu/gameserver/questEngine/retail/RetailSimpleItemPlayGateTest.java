@@ -45,18 +45,18 @@ class RetailSimpleItemPlayGateTest {
 	private static final Set<Integer> WAVE_ONE = Set.of(13704, 13708, 19048, 23704, 23708, 29048);
 	/** 稳定拒绝码白名单（码 → 预期任务；新增/消失必须先改本测试与裁定表）。 */
 	private static final Map<String, Set<Integer>> REGISTERED_REJECTS = Map.of(
-		"RETAIL_ACQUIRE_NPC_UNRESOLVED", Set.of(18828, 28828, 50048),
+		"RETAIL_CON_QUEST", Set.of(18828, 28828),
 		"RETAIL_ACQUIRE_NPC_SENTINEL", Set.of(39713, 49713),
-		"RETAIL_TALK_CHAIN", Set.of(18213, 28213),
+		"RETAIL_TALK_CHAIN", Set.of(18213, 28213, 50048),
 		"RETAIL_ADVANCE_UNEXPRESSED", Set.of(80255, 80256));
 	/**
-	 * 缺口批裁定的码：接取/交付 NPC 在本服数据缺失的 5 行、itemplay+talk 链轴的 2 行
-	 * （18213/28213，批 3）与推进轴未表达的 2 行（80255/80256，批 7）转
-	 * {@code ADJUDICATED:<码>} 保留（裁定=轴未实现/NPC 本服缺失，
+	 * 缺口批裁定的码：前置任务轴（18828/28828，QE-106 集合轴解锁后暴露）、哨兵接取的 2 行、
+	 * itemplay+talk 链轴的 3 行（18213/28213 批 3，50048 由 QE-106 集合轴解锁后暴露）与推进轴
+	 * 未表达的 2 行（80255/80256，批 7）转 {@code ADJUDICATED:<码>} 保留（裁定=轴未实现，
 	 * 家族门 fail-closed 复核仍以同码被拒）。
 	 * Codes adjudicated in the gap batches: their rows keep XML with the {@code ADJUDICATED:} prefix.
 	 */
-	private static final Set<String> ADJUDICATED_CODES = Set.of("RETAIL_ACQUIRE_NPC_UNRESOLVED",
+	private static final Set<String> ADJUDICATED_CODES = Set.of("RETAIL_CON_QUEST",
 		"RETAIL_ACQUIRE_NPC_SENTINEL", "RETAIL_TALK_CHAIN", "RETAIL_ADVANCE_UNEXPRESSED");
 	/** wave-1 六行的真端侧冻结 IR 指纹（退役证明，任何重算须显式入仓）。 */
 	private static final String FINGERPRINTS = "/quest/retail-simple-item-play-ir-fingerprints.tsv";
@@ -89,7 +89,10 @@ class RetailSimpleItemPlayGateTest {
 		try (InputStream input = open("/aion/data/static_data/quest/retail/quest.xml")) {
 			retailTable = RetailQuestXmlTable.load(input);
 		}
-		npcIndex = RetailNpcNameIndex.build(openAll(NPC_DIR, NPC_TEMPLATES), RetailQuestAiNameGroupsFixture.streams());
+		// 与生产同源：真端名解析含名字分组表与版本化别名表（QE-105 门-生产同源）。
+		// Production-identical NPC index: name groups plus the versioned alias table.
+		npcIndex = RetailNpcNameIndex.build(openAll(NPC_DIR, NPC_TEMPLATES), RetailQuestAiNameGroupsFixture.streams(),
+			RetailNpcNameAliases.streams());
 		itemIndex = RetailItemNameIndex.build(openAll("/aion/data/static_data/items/item/",
 			listXmlNames("/aion/data/static_data/items/item/")));
 		randomRewards = randomRewardIds();
@@ -130,7 +133,8 @@ class RetailSimpleItemPlayGateTest {
 				continue;
 			}
 			var outcome = RetailSimpleItemPlayDefinitionCompiler.compile(plan.get(), itemIndex, npcIndex,
-				RetailQuestMetadataCompiler.compile(meta.get(), npcIndex, itemIndex, randomRewards, nameIds));
+				RetailQuestMetadataCompiler.compile(meta.get(), npcIndex, itemIndex, randomRewards, nameIds),
+				RetailClientAcceptNpcSets.defaultSets(), RetailClientHandinNpcSets.defaultSets());
 			if (!outcome.accepted()) {
 				rejectCodes.put(questId, outcome.rejectionCode());
 				continue;

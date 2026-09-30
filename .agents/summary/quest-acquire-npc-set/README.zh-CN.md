@@ -5,6 +5,9 @@
 > **结论：名字已可解析，但解析结果是「多个 NPC id 的集合」——现行合成器要求每角色恰一个 id，故仍 fail-closed；
 > 解锁需要引擎层支持「接取角色 = 客户端声明的 NPC 集合」，本片只固化证据与方案，不改生产行为。**
 
+> **后续批次（2026-09-30）：引擎层已支持本轴，见 `2026-09-30-qe106-client-confirmed-npc-sets.zh-CN.md`**
+> （接取 + 交付两侧；23 行翻转、2 行升级为 TALK_NPC_AMBIGUOUS、3 行 ItemPlay 换轴）。
+
 ## 1. 缺口与三方证据（真端 × 客户端 × 服务器）
 
 暂缓理由原文：「name absent from this server's npc_name_index」。本轮把三源对齐后，**名字并非不存在**，

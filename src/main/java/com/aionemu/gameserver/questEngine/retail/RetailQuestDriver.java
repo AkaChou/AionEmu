@@ -98,6 +98,12 @@ public final class RetailQuestDriver {
 	private final RetailClientDialogExits clientDialogExits;
 	private final RetailClientSummaryRows clientSummaryRows;
 	private final RetailClientRewardNpcs clientRewardNpcs;
+	/** 客户端声明的接取 NPC 集合投影（多 id 真端名唯一放行通道，QE-105 家族）。 /
+	 * Client-declared accept-NPC set projection: the only pass-through for multi-id retail acquire names. */
+	private final RetailClientAcceptNpcSets clientAcceptNpcSets;
+	/** 客户端声明的交付 NPC 集合投影（多 id 真端领奖名唯一放行通道，QE-106 家族）。 /
+	 * Client-declared hand-in NPC set projection: the only pass-through for multi-id reward names. */
+	private final RetailClientHandinNpcSets clientHandinNpcSets;
 	private final RetailQuestAreaIndex questAreas;
 	private final RetailQuestXmlTable retailTable;
 	private final RetailNpcNameIndex npcIndex;
@@ -130,7 +136,8 @@ public final class RetailQuestDriver {
 			RetailCombineTaskTable combineTaskTable, RetailSimpleCollectItemTable simpleCollectItemTable,
 			RetailRecipeIndex recipeIndex,
 			RetailClientDialogExits clientDialogExits, RetailClientSummaryRows clientSummaryRows,
-			RetailClientRewardNpcs clientRewardNpcs,
+			RetailClientRewardNpcs clientRewardNpcs, RetailClientAcceptNpcSets clientAcceptNpcSets,
+			RetailClientHandinNpcSets clientHandinNpcSets,
 			RetailQuestXmlTable retailTable, RetailNpcNameIndex npcIndex, RetailItemNameIndex itemIndex,
 			Map<String, Integer> randomRewards, Map<Integer, Integer> nameIds,
 			RetailSimpleSerialHuntTable serialHuntTable, RetailClientHuntStages clientHuntStages,
@@ -167,6 +174,8 @@ public final class RetailQuestDriver {
 		this.clientDialogExits = clientDialogExits;
 		this.clientSummaryRows = clientSummaryRows;
 		this.clientRewardNpcs = clientRewardNpcs;
+		this.clientAcceptNpcSets = clientAcceptNpcSets;
+		this.clientHandinNpcSets = clientHandinNpcSets;
 		this.questAreas = questAreas;
 		this.retailTable = retailTable;
 		this.npcIndex = npcIndex;
@@ -415,6 +424,8 @@ public final class RetailQuestDriver {
 		RetailClientDialogExits clientDialogExits = RetailClientDialogExits.defaultExits();
 		RetailClientSummaryRows clientSummaryRows = RetailClientSummaryRows.defaultSummaryRows();
 		RetailClientRewardNpcs clientRewardNpcs = RetailClientRewardNpcs.defaultRewardNpcs();
+		RetailClientAcceptNpcSets clientAcceptNpcSets = RetailClientAcceptNpcSets.defaultSets();
+		RetailClientHandinNpcSets clientHandinNpcSets = RetailClientHandinNpcSets.defaultSets();
 		RetailClientHuntStages clientHuntStages = RetailClientHuntStages.defaultHuntStages();
 		RetailClientHandinPages clientHandinPages = RetailClientHandinPages.defaultHandinPages();
 		RetailClientKillTargets clientKillTargets = RetailClientKillTargets.defaultKillTargets();
@@ -437,7 +448,8 @@ public final class RetailQuestDriver {
 			retailOwnedItemPlay, retailOwnedDataDriven, retailOwnedTalk, retailOwnedCombine, retailOwnedCollectItem,
 			new RetailQuestCatalog(table, combineTaskTable, npcIndex), simpleTalkTable, combineTaskTable,
 			simpleCollectItemTable, recipeIndex, clientDialogExits, clientSummaryRows, clientRewardNpcs,
-			retailTable, npcIndex, itemIndex, randomRewardIds(), nameIds(), serialHuntTable, clientHuntStages,
+			clientAcceptNpcSets, clientHandinNpcSets, retailTable, npcIndex, itemIndex, randomRewardIds(),
+			nameIds(), serialHuntTable, clientHuntStages,
 			useItemTable, useItemReport, itemPlayTable, questAreas,
 			dataDrivenTable, clientHandinPages, interactionObjects,
 			clientKillTargets, clientHuntProgressRows, enterAreaZoneResolution);
@@ -677,7 +689,7 @@ public final class RetailQuestDriver {
 				return Optional.empty();
 			}
 			var outcome = RetailSimpleItemPlayDefinitionCompiler.compile(row.orElseThrow(), itemIndex, npcIndex,
-				metadata);
+				metadata, clientAcceptNpcSets, clientHandinNpcSets);
 			if (outcome.accepted()) {
 				return Optional.of(outcome.definition());
 			}
@@ -729,7 +741,8 @@ public final class RetailQuestDriver {
 				return Optional.empty();
 			}
 			var outcome = RetailSimpleTalkDefinitionCompiler.compile(row.orElseThrow(), npcIndex, itemIndex, metadata,
-				clientDialogExits, clientSummaryRows, clientRewardNpcs, interactionObjects);
+				clientDialogExits, clientSummaryRows, clientRewardNpcs, interactionObjects, clientAcceptNpcSets,
+				clientHandinNpcSets);
 			if (outcome.accepted()) {
 				return Optional.of(outcome.definition());
 			}

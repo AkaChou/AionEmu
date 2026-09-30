@@ -21,6 +21,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
@@ -36,7 +37,9 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -94,6 +97,8 @@ class RetailSimpleTalkGateTest {
 	private static RetailClientDialogExits clientDialogExits;
 	private static RetailClientSummaryRows clientSummaryRows;
 	private static RetailClientRewardNpcs clientRewardNpcs;
+	private static RetailClientAcceptNpcSets clientAcceptNpcSets;
+	private static RetailClientHandinNpcSets clientHandinNpcSets;
 	private static RetailQuestUseItemNpcs interactionObjects;
 
 	@BeforeAll
@@ -107,7 +112,12 @@ class RetailSimpleTalkGateTest {
 		clientDialogExits = RetailClientDialogExits.defaultExits();
 		clientSummaryRows = RetailClientSummaryRows.defaultSummaryRows();
 		clientRewardNpcs = RetailClientRewardNpcs.defaultRewardNpcs();
-		npcIndex = RetailNpcNameIndex.build(openAll(NPC_DIR, NPC_TEMPLATES), RetailQuestAiNameGroupsFixture.streams());
+		clientAcceptNpcSets = RetailClientAcceptNpcSets.defaultSets();
+		clientHandinNpcSets = RetailClientHandinNpcSets.defaultSets();
+		// 与生产同源：真端名解析含名字分组表与版本化别名表（QE-105 门-生产同源）。
+		// Production-identical NPC index: name groups plus the versioned alias table.
+		npcIndex = RetailNpcNameIndex.build(openAll(NPC_DIR, NPC_TEMPLATES), RetailQuestAiNameGroupsFixture.streams(),
+			RetailNpcNameAliases.streams());
 		itemIndex = RetailItemNameIndex.build(openAll("/aion/data/static_data/items/item/",
 			listXmlNames("/aion/data/static_data/items/item/")));
 		interactionObjects = RetailQuestUseItemNpcs.fromIds(npcIndex.questUseItemNpcIds());
@@ -124,6 +134,50 @@ class RetailSimpleTalkGateTest {
 	}
 
 	/** 可驱动集合必须满足真端语义（与 XML 是否等价无关）。 / Retail semantics of every drivable row. */
+	/**
+	 * 集合轴负例：真端名解析出多 id 时，只有与客户端声明集合**逐元素相等**才放行；
+	 * 少 id / 未声明 / 声明侧缺登记一律维持 fail-closed（客户端是唯一仲裁，不得按名字猜）。
+	 * Negative gate for the client-confirmed NPC set axis: element-wise equality or fail-closed.
+	 */
+	@Test
+	void clientNpcSetMismatchStaysFailClosed() throws Exception {
+		int questId = 18821;
+		RetailSimpleTalkTable.Entry entry = table.find(questId).orElseThrow();
+		var metadata = RetailQuestMetadataCompiler.compile(retailTable.find(questId).orElseThrow(), npcIndex,
+			itemIndex, randomRewards, nameIds);
+		// 对照组：真端名解析集 == 客户端 5 元集合 ⇒ 采纳。
+		assertTrue(compileWith(entry, metadata, clientAcceptNpcSets, clientHandinNpcSets).accepted(),
+			() -> "对照行 18821 应被采纳");
+		// 负例 1：客户端集合少一个 id（不是逐元素相等）⇒ 接取维持 fail-closed。
+		assertEquals("RETAIL_ACQUIRE_NPC_AMBIGUOUS",
+			compileWith(entry, metadata, acceptSets("18821\t810017,810018,810019,810020"),
+				clientHandinNpcSets).rejectionCode(),
+			() -> "客户端集合少一个 id 必须仍被拒");
+		// 负例 2：客户端未声明该任务 ⇒ 同上。
+		assertEquals("RETAIL_ACQUIRE_NPC_AMBIGUOUS",
+			compileWith(entry, metadata, RetailClientAcceptNpcSets.empty(), clientHandinNpcSets).rejectionCode(),
+			() -> "客户端未声明接取集合必须被拒");
+		// 负例 3：接取已确认，但交付集合缺登记（真端领奖名同样多解）⇒ 交付角色 fail-closed。
+		assertEquals("RETAIL_REWARD_NPC_AMBIGUOUS",
+			compileWith(entry, metadata, clientAcceptNpcSets, RetailClientHandinNpcSets.empty()).rejectionCode(),
+			() -> "客户端未声明交付集合必须被拒");
+		// 负例 4：投影表自身 fail-fast——单 id 行不是集合轴输入。
+		assertThrows(java.io.IOException.class, () -> acceptSets("18821\t810017"),
+			() -> "单 id 投影行必须在解析期抛错");
+	}
+
+	private static RetailSimpleTalkDefinitionCompiler.Outcome compileWith(RetailSimpleTalkTable.Entry entry,
+			RetailQuestMetadataCompiler.Outcome metadata, RetailClientAcceptNpcSets acceptSets,
+			RetailClientHandinNpcSets handinSets) {
+		return RetailSimpleTalkDefinitionCompiler.compile(entry, npcIndex, itemIndex, metadata,
+			clientDialogExits, clientSummaryRows, clientRewardNpcs, interactionObjects, acceptSets, handinSets);
+	}
+
+	private static RetailClientAcceptNpcSets acceptSets(String... rows) throws java.io.IOException {
+		return RetailClientAcceptNpcSets.load(new ByteArrayInputStream(
+			("# 测试投影\n" + String.join("\n", rows) + "\n").getBytes(StandardCharsets.UTF_8)));
+	}
+
 	@Test
 	void acceptedDefinitionsCarryRetailSemantics() {
 		List<String> problems = new ArrayList<>();
@@ -289,8 +343,10 @@ class RetailSimpleTalkGateTest {
 		if (row.entry().grantKind() == RetailGrantKind.CHALLENGE_TASK) {
 			// P0c-12：挑战任务哨兵走对话接取（受理 = 交付 shugo 本人，判例 17100），非系统发放形状。
 			// P0c-12: challenge-task sentinels take the dialog-accept shape at the hand-in shugo.
-			if (!hasAccept(definition, row.acquiredNpc())) {
-				problems.add(questId + ": 缺接取路由 npc=" + row.acquiredNpc());
+			for (int acquiredNpc : row.acquiredNpcs()) {
+				if (!hasAccept(definition, acquiredNpc)) {
+					problems.add(questId + ": 缺接取路由 npc=" + acquiredNpc);
+				}
 			}
 		} else if (row.entry().grantKind().systemGrant()) {
 			// 系统发放形状（P0c-2）：真端没有 NPC 接取（客户端只有委托书页），定义不得出现接取/续页路由，
@@ -303,8 +359,15 @@ class RetailSimpleTalkGateTest {
 				problems.add(questId + ": 系统发放行缺 SystemGrant 边");
 			}
 		} else {
-			if (!hasAccept(definition, row.acquiredNpc())) {
-				problems.add(questId + ": 缺接取路由 npc=" + row.acquiredNpc());
+			// 接取角色 = 客户端确认的整个集合：集合内每个 NPC 都必须有接取段（QE-105 集合轴）。
+			// The accept target is the client-confirmed set: every member needs its own accept segment.
+			for (int acquiredNpc : row.acquiredNpcs()) {
+				if (!hasAccept(definition, acquiredNpc)) {
+					problems.add(questId + ": 缺接取路由 npc=" + acquiredNpc);
+				}
+			}
+			if (row.acquiredNpcs().isEmpty()) {
+				problems.add(questId + ": 接取 NPC 集为空（接取路由无宿主）");
 			}
 			// S1：SELECT1_1/SELECT1_1_1 续页路由随页链退场——canonical 接取窗（页 4）直发，
 			// 客户端出口登记表的续页轴不再由服务端驱动（与采集族同口径）。
@@ -371,8 +434,13 @@ class RetailSimpleTalkGateTest {
 				problems.add(questId + ": 系统发放行缺 SystemGrant 边");
 			}
 		} else {
-			if (!hasAccept(definition, row.acquiredNpc())) {
-				problems.add(questId + ": 缺接取路由 npc=" + row.acquiredNpc());
+			for (int acquiredNpc : row.acquiredNpcs()) {
+				if (!hasAccept(definition, acquiredNpc)) {
+					problems.add(questId + ": 缺接取路由 npc=" + acquiredNpc);
+				}
+			}
+			if (row.acquiredNpcs().isEmpty()) {
+				problems.add(questId + ": 接取 NPC 集为空（接取路由无宿主）");
 			}
 		}
 		for (int rewardNpc : row.rewardNpcs()) {
@@ -611,8 +679,9 @@ class RetailSimpleTalkGateTest {
 	}
 
 	/** 单任务真端编译上下文（表行 + 元数据 + 结果）。 / Retail compile context for one quest row. */
-	private record RetailRow(RetailSimpleTalkTable.Entry entry, QuestMetadata metadata, int acquiredNpc,
-			List<Integer> rewardNpcs, RetailSimpleTalkDefinitionCompiler.Outcome outcome) {
+	private record RetailRow(RetailSimpleTalkTable.Entry entry, QuestMetadata metadata,
+			List<Integer> acquiredNpcs, List<Integer> rewardNpcs,
+			RetailSimpleTalkDefinitionCompiler.Outcome outcome) {
 	}
 
 	private static RetailRow retailRow(int questId) {
@@ -620,24 +689,33 @@ class RetailSimpleTalkGateTest {
 		var metadata = RetailQuestMetadataCompiler.compile(retailTable.find(questId).orElseThrow(), npcIndex,
 			itemIndex, randomRewards, nameIds);
 		var outcome = RetailSimpleTalkDefinitionCompiler.compile(entry, npcIndex, itemIndex, metadata,
-			clientDialogExits, clientSummaryRows, clientRewardNpcs, interactionObjects);
+			clientDialogExits, clientSummaryRows, clientRewardNpcs, interactionObjects, clientAcceptNpcSets,
+			clientHandinNpcSets);
 		// 交付 NPC 集：唯一名解析优先，复合势力引用取客户端任务书 dic 链登记（与合成器同口径）。
 		// Hand-in NPC set: unique name first, composite faction references via the client registry.
 		Set<Integer> resolvedReward = npcIndex.resolveAll(List.of(
 			entry.rewardNpc() == null ? "" : entry.rewardNpc())).npcIds();
+		Set<Integer> declaredHandin = clientHandinNpcSets.npcIds(entry.questId());
 		List<Integer> rewardNpcs = resolvedReward.size() == 1
-			? List.of(resolvedReward.iterator().next()) : clientRewardNpcs.rewardNpcs(entry.questId());
+			? List.of(resolvedReward.iterator().next())
+			: !declaredHandin.isEmpty() && declaredHandin.equals(resolvedReward)
+				? resolvedReward.stream().sorted().toList()
+				: clientRewardNpcs.rewardNpcs(entry.questId());
 		// P0c-12：挑战任务哨兵受理 NPC = 交付 shugo（与编译器同口径）。
 		String acquireName = entry.grantKind() == RetailGrantKind.CHALLENGE_TASK
 			? entry.rewardNpc() : entry.acquiredNpc();
-		return new RetailRow(entry, metadata.metadata(), resolveOrMinusOne(acquireName),
+		return new RetailRow(entry, metadata.metadata(), resolveAcquireNpcs(acquireName),
 			rewardNpcs, outcome);
 	}
 
-	/** 唯一 NPC id；空集/多解返回 -1（拒绝码已覆盖这些行）。 / Unique npc id, -1 when unresolved. */
-	private static int resolveOrMinusOne(String name) {
+	/**
+	 * 接取 NPC 集（与合成器同口径）：系统发放单元素 {@code [-1]} 占位；解析集为空时留空
+	 * （拒绝码已覆盖这些行）。
+	 * The accept-NPC set, matching the synthesizer: {@code [-1]} for system grants, empty when unresolved.
+	 */
+	private static List<Integer> resolveAcquireNpcs(String name) {
 		Set<Integer> ids = npcIndex.resolveAll(List.of(name == null ? "" : name)).npcIds();
-		return ids.size() == 1 ? ids.iterator().next() : -1;
+		return ids.stream().sorted().toList();
 	}
 
 	/** 真端表 ∩ 生产宇宙（catalog ∪ 退役 fixture）。 / Retail table intersected with the production universe. */

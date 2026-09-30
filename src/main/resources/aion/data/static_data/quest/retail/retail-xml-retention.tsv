@@ -2782,7 +2782,7 @@
 14202	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 14203	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history basis=DD_HUNT_PROGRESS_CLIENT_NAMES
 14204	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history basis=DD_HUNT_PROGRESS_CLIENT_NAMES
-14211	XML_RETENTION	SimpleTalk	ADJUDICATED:RETAIL_ACQUIRE_NPC_UNRESOLVED	b1-acquire-sentinel/b1_forensics.tsv acquire npc unresolved: name absent from this server's npc_name_index
+14211	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history qe-106-npc-set-decisions.tsv basis=CLIENT_CONFIRMED_NPC_SET shared/onlyXml/onlyRetail=31/5/102
 14220	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf3c0,FUN_180caf640,FUN_180caf6c0,FUN_180caf740
 14240	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history retail-simple-hunt-adjudicated-decisions.tsv basis=ACCEPT_FLOW_LEGACY
 14241	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
@@ -3339,7 +3339,7 @@
 18801	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 18802	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c21-prereq-bucket-decisions.tsv basis=M3D_DOWNGRADE_REVERSED
 18805	XML_RETENTION	SimpleTalk	ADJUDICATED:RETAIL_TALK_CHAIN	entry.talkNpcs() > 1 (chained talk ladder)
-18806	XML_RETENTION	SimpleTalk	ADJUDICATED:RETAIL_ACQUIRE_NPC_UNRESOLVED	b1-acquire-sentinel/b1_forensics.tsv acquire npc unresolved: name absent from this server's npc_name_index
+18806	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history qe-106-npc-set-decisions.tsv basis=CLIENT_CONFIRMED_NPC_SET shared/onlyXml/onlyRetail=20/39/47
 18807	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c39-canonical-adoption-decisions.tsv basis=CANONICAL_ITEM_CHANNEL
 18808	XML_RETENTION	SimpleTalk	ADJUDICATED:RETAIL_REWARD_NPC_UNRESOLVED	reward npc unresolved server-side
 18809	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c39-canonical-adoption-decisions.tsv basis=CANONICAL_ITEM_CHANNEL
@@ -3353,17 +3353,17 @@
 18818	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 18819	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 18820	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
-18821	XML_RETENTION	SimpleTalk	ADJUDICATED:RETAIL_ACQUIRE_NPC_UNRESOLVED	b1-acquire-sentinel/b1_forensics.tsv acquire npc unresolved: name absent from this server's npc_name_index
+18821	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history qe-106-npc-set-decisions.tsv basis=CLIENT_CONFIRMED_NPC_SET shared/onlyXml/onlyRetail=105/25/61
 18822	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 18823	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 18824	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 18825	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 18826	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
-18827	XML_RETENTION	SimpleTalk	ADJUDICATED:RETAIL_REWARD_NPC_UNRESOLVED	reward npc unresolved server-side
-18828	XML_RETENTION	SimpleItemPlay	ADJUDICATED:RETAIL_ACQUIRE_NPC_UNRESOLVED	b1-acquire-sentinel/b1_forensics.tsv acquire npc unresolved: name absent from this server's npc_name_index
-18829	XML_RETENTION	SimpleTalk	ADJUDICATED:RETAIL_ACQUIRE_NPC_UNRESOLVED	b1-acquire-sentinel/b1_forensics.tsv acquire npc unresolved: name absent from this server's npc_name_index
-18830	XML_RETENTION	SimpleTalk	ADJUDICATED:RETAIL_TALK_NPC_UNRESOLVED	retail-simple-talk-drift.tsv / retail-data-driven-drift.tsv: talk npc unresolved server-side
-18831	XML_RETENTION	SimpleTalk	ADJUDICATED:RETAIL_REWARD_NPC_UNRESOLVED	reward npc unresolved server-side
+18827	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history qe-106-npc-set-decisions.tsv basis=CLIENT_CONFIRMED_NPC_SET shared/onlyXml/onlyRetail=98/11/16
+18828	XML_RETENTION	SimpleItemPlay	ADJUDICATED:RETAIL_CON_QUEST	b1-acquire-sentinel qe-106 集合轴已解（接取/交付名→客户端集合逐元素相等）；现阻于 con_quest 前置轴
+18829	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history qe-106-npc-set-decisions.tsv basis=CLIENT_CONFIRMED_NPC_SET shared/onlyXml/onlyRetail=58/7/4
+18830	XML_RETENTION	SimpleTalk	ADJUDICATED:RETAIL_TALK_NPC_AMBIGUOUS	b1-acquire-sentinel qe-106 接取/交付集合轴已解；谈话角色（talk_npc）多解且客户端无该角色集合声明
+18831	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history qe-106-npc-set-decisions.tsv basis=CLIENT_CONFIRMED_NPC_SET shared/onlyXml/onlyRetail=98/11/16
 18832	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 18833	RETAIL_TABLE	SimpleUseItem	OK	retired-xml-in-git-history p3b-use-item-decisions.tsv basis=USE_ITEM_CANONICAL
 18834	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
@@ -3852,7 +3852,7 @@
 24201	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history retail-simple-hunt-adjudicated-decisions.tsv basis=BRIEFING_STEP
 24202	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c35-progress-row-projection-decisions.tsv basis=PROGRESS_ROW_PROJECTION
 24203	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf3c0,FUN_180caf5f0,FUN_180caf640,FUN_180caf6c0,FUN_180caf740
-24211	XML_RETENTION	SimpleTalk	ADJUDICATED:RETAIL_ACQUIRE_NPC_UNRESOLVED	b1-acquire-sentinel/b1_forensics.tsv acquire npc unresolved: name absent from this server's npc_name_index
+24211	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history qe-106-npc-set-decisions.tsv basis=CLIENT_CONFIRMED_NPC_SET shared/onlyXml/onlyRetail=31/5/102
 24220	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf3c0,FUN_180caf640,FUN_180caf6c0,FUN_180caf740
 24230	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history retail-simple-hunt-adjudicated-decisions.tsv basis=STAGE_FLIP_PAIRED+REPORT_PAGE_DIALOG_LEGACY+ACCEPT_FLOW_LEGACY+CLOSE_DIALOG_LEGACY
 24231	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
@@ -4406,7 +4406,7 @@
 28801	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 28802	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c21-prereq-bucket-decisions.tsv basis=M3D_DOWNGRADE_REVERSED
 28805	XML_RETENTION	SimpleTalk	ADJUDICATED:RETAIL_TALK_CHAIN	entry.talkNpcs() > 1 (chained talk ladder)
-28806	XML_RETENTION	SimpleTalk	ADJUDICATED:RETAIL_ACQUIRE_NPC_UNRESOLVED	b1-acquire-sentinel/b1_forensics.tsv acquire npc unresolved: name absent from this server's npc_name_index
+28806	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history qe-106-npc-set-decisions.tsv basis=CLIENT_CONFIRMED_NPC_SET shared/onlyXml/onlyRetail=20/39/47
 28807	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c39-canonical-adoption-decisions.tsv basis=CANONICAL_ITEM_CHANNEL
 28808	XML_RETENTION	SimpleTalk	ADJUDICATED:RETAIL_REWARD_NPC_UNRESOLVED	reward npc unresolved server-side
 28809	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c10h-talk-chain-b1-decisions.tsv basis=P0C10H_EQUIVALENT
@@ -4420,17 +4420,17 @@
 28818	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 28819	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 28820	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
-28821	XML_RETENTION	SimpleTalk	ADJUDICATED:RETAIL_ACQUIRE_NPC_UNRESOLVED	b1-acquire-sentinel/b1_forensics.tsv acquire npc unresolved: name absent from this server's npc_name_index
+28821	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history qe-106-npc-set-decisions.tsv basis=CLIENT_CONFIRMED_NPC_SET shared/onlyXml/onlyRetail=54/18/112
 28822	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 28823	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 28824	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 28825	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 28826	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
-28827	XML_RETENTION	SimpleTalk	ADJUDICATED:RETAIL_REWARD_NPC_UNRESOLVED	reward npc unresolved server-side
-28828	XML_RETENTION	SimpleItemPlay	ADJUDICATED:RETAIL_ACQUIRE_NPC_UNRESOLVED	b1-acquire-sentinel/b1_forensics.tsv acquire npc unresolved: name absent from this server's npc_name_index
-28829	XML_RETENTION	SimpleTalk	ADJUDICATED:RETAIL_ACQUIRE_NPC_UNRESOLVED	b1-acquire-sentinel/b1_forensics.tsv acquire npc unresolved: name absent from this server's npc_name_index
-28830	XML_RETENTION	SimpleTalk	ADJUDICATED:RETAIL_TALK_NPC_UNRESOLVED	retail-simple-talk-drift.tsv / retail-data-driven-drift.tsv: talk npc unresolved server-side
-28831	XML_RETENTION	SimpleTalk	ADJUDICATED:RETAIL_REWARD_NPC_UNRESOLVED	reward npc unresolved server-side
+28827	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history qe-106-npc-set-decisions.tsv basis=CLIENT_CONFIRMED_NPC_SET shared/onlyXml/onlyRetail=98/11/16
+28828	XML_RETENTION	SimpleItemPlay	ADJUDICATED:RETAIL_CON_QUEST	b1-acquire-sentinel qe-106 集合轴已解（接取/交付名→客户端集合逐元素相等）；现阻于 con_quest 前置轴
+28829	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history qe-106-npc-set-decisions.tsv basis=CLIENT_CONFIRMED_NPC_SET shared/onlyXml/onlyRetail=58/7/4
+28830	XML_RETENTION	SimpleTalk	ADJUDICATED:RETAIL_TALK_NPC_AMBIGUOUS	b1-acquire-sentinel qe-106 接取/交付集合轴已解；谈话角色（talk_npc）多解且客户端无该角色集合声明
+28831	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history qe-106-npc-set-decisions.tsv basis=CLIENT_CONFIRMED_NPC_SET shared/onlyXml/onlyRetail=98/31/16
 28832	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 28833	RETAIL_TABLE	SimpleUseItem	OK	retired-xml-in-git-history p3b-use-item-decisions.tsv basis=USE_ITEM_CANONICAL
 28834	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
@@ -5185,16 +5185,16 @@
 50039	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 50040	XML_RETENTION	-	NO_TABLE	retail-none
 50041	XML_RETENTION	-	NO_TABLE	retail-none
-50042	XML_RETENTION	SimpleTalk	ADJUDICATED:RETAIL_ACQUIRE_NPC_UNRESOLVED	b1-acquire-sentinel/b1_forensics.tsv acquire npc unresolved: name absent from this server's npc_name_index
-50043	XML_RETENTION	SimpleTalk	ADJUDICATED:RETAIL_ACQUIRE_NPC_UNRESOLVED	b1-acquire-sentinel/b1_forensics.tsv acquire npc unresolved: name absent from this server's npc_name_index
+50042	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history qe-106-npc-set-decisions.tsv basis=CLIENT_CONFIRMED_NPC_SET shared/onlyXml/onlyRetail=12/27/55
+50043	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history qe-106-npc-set-decisions.tsv basis=CLIENT_CONFIRMED_NPC_SET shared/onlyXml/onlyRetail=12/27/55
 50044	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 50045	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 50046	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
-50047	XML_RETENTION	SimpleTalk	ADJUDICATED:RETAIL_ACQUIRE_NPC_UNRESOLVED	b1-acquire-sentinel/b1_forensics.tsv acquire npc unresolved: name absent from this server's npc_name_index
-50048	XML_RETENTION	SimpleItemPlay	ADJUDICATED:RETAIL_ACQUIRE_NPC_UNRESOLVED	b1-acquire-sentinel/b1_forensics.tsv acquire npc unresolved: name absent from this server's npc_name_index
-50049	XML_RETENTION	SimpleTalk	ADJUDICATED:RETAIL_ACQUIRE_NPC_UNRESOLVED	b1-acquire-sentinel/b1_forensics.tsv acquire npc unresolved: name absent from this server's npc_name_index
-50050	XML_RETENTION	SimpleTalk	ADJUDICATED:RETAIL_ACQUIRE_NPC_UNRESOLVED	b1-acquire-sentinel/b1_forensics.tsv acquire npc unresolved: name absent from this server's npc_name_index
-50051	XML_RETENTION	SimpleTalk	ADJUDICATED:RETAIL_ACQUIRE_NPC_UNRESOLVED	b1-acquire-sentinel/b1_forensics.tsv acquire npc unresolved: name absent from this server's npc_name_index
+50047	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history qe-106-npc-set-decisions.tsv basis=CLIENT_CONFIRMED_NPC_SET shared/onlyXml/onlyRetail=62/10/5
+50048	XML_RETENTION	SimpleItemPlay	ADJUDICATED:RETAIL_TALK_CHAIN	b1-acquire-sentinel qe-106 集合轴已解；现阻于 talk_npc 链轴
+50049	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history qe-106-npc-set-decisions.tsv basis=CLIENT_CONFIRMED_NPC_SET shared/onlyXml/onlyRetail=31/8/3
+50050	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history qe-106-npc-set-decisions.tsv basis=CLIENT_CONFIRMED_NPC_SET shared/onlyXml/onlyRetail=31/8/3
+50051	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history qe-106-npc-set-decisions.tsv basis=CLIENT_CONFIRMED_NPC_SET shared/onlyXml/onlyRetail=31/8/3
 50052	RETAIL_TABLE	DataDriven	OK	retail-data-driven-drift.tsv
 50053	RETAIL_TABLE	DataDriven	OK	retail-data-driven-drift.tsv
 50054	RETAIL_TABLE	DataDriven	OK	retail-data-driven-drift.tsv
@@ -5270,14 +5270,14 @@
 51039	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 51040	XML_RETENTION	-	NO_TABLE	retail-none
 51041	XML_RETENTION	-	NO_TABLE	retail-none
-51042	XML_RETENTION	SimpleTalk	ADJUDICATED:RETAIL_ACQUIRE_NPC_UNRESOLVED	b1-acquire-sentinel/b1_forensics.tsv acquire npc unresolved: name absent from this server's npc_name_index
-51043	XML_RETENTION	SimpleTalk	ADJUDICATED:RETAIL_ACQUIRE_NPC_UNRESOLVED	b1-acquire-sentinel/b1_forensics.tsv acquire npc unresolved: name absent from this server's npc_name_index
+51042	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history qe-106-npc-set-decisions.tsv basis=CLIENT_CONFIRMED_NPC_SET shared/onlyXml/onlyRetail=12/27/55
+51043	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history qe-106-npc-set-decisions.tsv basis=CLIENT_CONFIRMED_NPC_SET shared/onlyXml/onlyRetail=12/27/55
 51044	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 51045	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 51046	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
-51049	XML_RETENTION	SimpleTalk	ADJUDICATED:RETAIL_ACQUIRE_NPC_UNRESOLVED	b1-acquire-sentinel/b1_forensics.tsv acquire npc unresolved: name absent from this server's npc_name_index
-51050	XML_RETENTION	SimpleTalk	ADJUDICATED:RETAIL_ACQUIRE_NPC_UNRESOLVED	b1-acquire-sentinel/b1_forensics.tsv acquire npc unresolved: name absent from this server's npc_name_index
-51051	XML_RETENTION	SimpleTalk	ADJUDICATED:RETAIL_ACQUIRE_NPC_UNRESOLVED	b1-acquire-sentinel/b1_forensics.tsv acquire npc unresolved: name absent from this server's npc_name_index
+51049	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history qe-106-npc-set-decisions.tsv basis=CLIENT_CONFIRMED_NPC_SET shared/onlyXml/onlyRetail=31/8/3
+51050	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history qe-106-npc-set-decisions.tsv basis=CLIENT_CONFIRMED_NPC_SET shared/onlyXml/onlyRetail=31/8/3
+51051	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history qe-106-npc-set-decisions.tsv basis=CLIENT_CONFIRMED_NPC_SET shared/onlyXml/onlyRetail=31/8/3
 51059	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CANONICAL
 51060	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CANONICAL
 51061	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CANONICAL

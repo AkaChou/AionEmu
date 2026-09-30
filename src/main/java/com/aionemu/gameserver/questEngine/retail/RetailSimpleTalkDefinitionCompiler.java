@@ -74,7 +74,8 @@ public final class RetailSimpleTalkDefinitionCompiler {
 	public static Outcome compile(RetailSimpleTalkTable.Entry entry, RetailNpcNameIndex index,
 			RetailItemNameIndex itemIndex, RetailQuestMetadataCompiler.Outcome metadata,
 			RetailClientDialogExits exits, RetailClientSummaryRows summaryRows,
-			RetailClientRewardNpcs clientRewardNpcs, RetailQuestUseItemNpcs interactionObjects) {
+			RetailClientRewardNpcs clientRewardNpcs, RetailQuestUseItemNpcs interactionObjects,
+			RetailClientAcceptNpcSets clientAcceptNpcSets, RetailClientHandinNpcSets clientHandinNpcSets) {
 		Objects.requireNonNull(entry, "entry");
 		Objects.requireNonNull(index, "index");
 		Objects.requireNonNull(itemIndex, "itemIndex");
@@ -83,58 +84,41 @@ public final class RetailSimpleTalkDefinitionCompiler {
 		Objects.requireNonNull(summaryRows, "summaryRows");
 		Objects.requireNonNull(clientRewardNpcs, "clientRewardNpcs");
 		Objects.requireNonNull(interactionObjects, "interactionObjects");
+		Objects.requireNonNull(clientAcceptNpcSets, "clientAcceptNpcSets");
+		Objects.requireNonNull(clientHandinNpcSets, "clientHandinNpcSets");
 		if (!metadata.clean()) {
 			return new Outcome(null, "RETAIL_METADATA_UNRESOLVED", metadata.unresolved().toString());
 		}
-		Outcome blocked = precheck(entry, index, metadata.metadata(), clientRewardNpcs);
+		Outcome blocked = precheck(entry, index, metadata.metadata(), clientRewardNpcs,
+			clientAcceptNpcSets, clientHandinNpcSets);
 		if (blocked != null) {
 			return blocked;
 		}
 		try {
 			QuestDefinition definition = !entry.singleStep()
 				? buildCanonicalChain(entry, index, itemIndex, metadata.metadata(), summaryRows,
-					clientRewardNpcs, interactionObjects)
+					clientRewardNpcs, clientHandinNpcSets, interactionObjects)
 				: build(entry, index, itemIndex, metadata.metadata(), summaryRows, clientRewardNpcs,
-					interactionObjects);
+					clientHandinNpcSets, interactionObjects);
 			return new Outcome(QuestDefinitionCompiler.compile(definition), null, null);
 		} catch (RuntimeException e) {
 			return new Outcome(null, "COMPILATION_FAILED", e.getMessage());
 		}
 	}
 
-	public static Outcome compile(RetailSimpleTalkTable.Entry entry, RetailNpcNameIndex index,
-			RetailItemNameIndex itemIndex, RetailQuestMetadataCompiler.Outcome metadata,
-			RetailClientDialogExits exits, RetailClientSummaryRows summaryRows,
-			RetailClientRewardNpcs clientRewardNpcs) {
-		return compile(entry, index, itemIndex, metadata, exits, summaryRows, clientRewardNpcs,
-			RetailQuestUseItemNpcs.empty());
-	}
-
-	public static Outcome compile(RetailSimpleTalkTable.Entry entry, RetailNpcNameIndex index,
-			RetailQuestMetadataCompiler.Outcome metadata, RetailClientDialogExits exits,
-			RetailClientSummaryRows summaryRows, RetailClientRewardNpcs clientRewardNpcs) {
-		return compile(entry, index, RetailItemNameIndex.empty(), metadata, exits, summaryRows, clientRewardNpcs,
-			RetailQuestUseItemNpcs.empty());
-	}
-
 	/**
 	 * 迁移判据。
 	 */
 	private static Outcome precheck(RetailSimpleTalkTable.Entry entry, RetailNpcNameIndex index,
-			QuestMetadata metadata, RetailClientRewardNpcs clientRewardNpcs) {
-		Outcome acquired = requireAcquire(index, entry);
+			QuestMetadata metadata, RetailClientRewardNpcs clientRewardNpcs,
+			RetailClientAcceptNpcSets clientAcceptNpcSets, RetailClientHandinNpcSets clientHandinNpcSets) {
+		Outcome acquired = requireAcquire(index, entry, clientAcceptNpcSets);
 		if (acquired != null) {
 			return acquired;
 		}
-		Outcome reward = requireNpc(index, entry.rewardNpc(), "REWARD");
+		Outcome reward = requireReward(index, entry, clientRewardNpcs, clientHandinNpcSets);
 		if (reward != null) {
-			if (RetailQuestMetadataCompiler.isFactionComposite(entry.rewardNpc())) {
-				if (clientRewardNpcs.rewardNpcs(entry.questId()).isEmpty()) {
-					return new Outcome(null, "RETAIL_REWARD_NPC_FACTION_COMPOSITE", entry.rewardNpc());
-				}
-			} else {
-				return reward;
-			}
+			return reward;
 		}
 		if (!entry.singleStep()) {
 			for (String talkNpc : entry.talkNpcs()) {
@@ -180,7 +164,8 @@ public final class RetailSimpleTalkDefinitionCompiler {
 		return null;
 	}
 
-	private static Outcome requireAcquire(RetailNpcNameIndex index, RetailSimpleTalkTable.Entry entry) {
+	private static Outcome requireAcquire(RetailNpcNameIndex index, RetailSimpleTalkTable.Entry entry,
+			RetailClientAcceptNpcSets clientAcceptNpcSets) {
 		String name = entry.acquiredNpc();
 		if (name == null || name.isBlank()) {
 			return new Outcome(null, "RETAIL_ACQUIRE_NPC_MISSING", "quest " + entry.questId());
@@ -191,7 +176,82 @@ public final class RetailSimpleTalkDefinitionCompiler {
 		if (entry.grantKind() == RetailGrantKind.CHALLENGE_TASK) {
 			return requireNpc(index, entry.rewardNpc(), "ACQUIRE");
 		}
-		return requireNpc(index, name, "ACQUIRE");
+		RetailNpcNameIndex.Resolution resolved = index.resolveAll(List.of(name));
+		if (!resolved.unresolvedNames().isEmpty() || resolved.npcIds().isEmpty()) {
+			return new Outcome(null, "RETAIL_ACQUIRE_NPC_UNRESOLVED", name);
+		}
+		if (resolved.npcIds().size() == 1) {
+			return null;
+		}
+		// 多 id：只有与客户端为该任务声明的接取 NPC 集**逐元素相等**才放行（客户端仲裁）；否则 fail-closed。
+		// Multi-id acquire: accepted only when it equals the client-declared set for this quest.
+		Set<Integer> declared = clientAcceptNpcSets.npcIds(entry.questId());
+		if (!declared.isEmpty() && declared.equals(resolved.npcIds())) {
+			return null;
+		}
+		return new Outcome(null, "RETAIL_ACQUIRE_NPC_AMBIGUOUS", name + " -> " + resolved.npcIds());
+	}
+
+	/**
+	 * 接取 NPC 列表：系统发放为 {@code [-1]} 占位；其余按真端名解析（单 id 或经客户端确认的集合），顺序稳定。
+	 * The accept-NPC list: {@code [-1]} for system grants, otherwise the resolved (client-confirmed) set.
+	 */
+	private static List<Integer> acquireNpcIds(RetailNpcNameIndex index, RetailSimpleTalkTable.Entry entry) {
+		if (entry.grantKind().systemGrant() && entry.grantKind() != RetailGrantKind.CHALLENGE_TASK) {
+			return List.of(-1);
+		}
+		String name = entry.grantKind() == RetailGrantKind.CHALLENGE_TASK
+			? entry.rewardNpc() : entry.acquiredNpc();
+		return index.resolveAll(List.of(name)).npcIds().stream().sorted().toList();
+	}
+
+	/**
+	 * 交付 NPC 判据：唯一解析；或解析集与客户端为该任务声明的交付集合**逐元素相等**（集合轴）；
+	 * 复合势力名（客户端 dic 链有登记）走既有的 {@link RetailClientRewardNpcs} 通道。
+	 * Reward-target criterion: a unique id, or the set the client declares for this quest (element-wise
+	 * equal); composite faction names keep using the client dic-chain registry.
+	 */
+	private static Outcome requireReward(RetailNpcNameIndex index, RetailSimpleTalkTable.Entry entry,
+			RetailClientRewardNpcs clientRewardNpcs, RetailClientHandinNpcSets clientHandinNpcSets) {
+		String name = entry.rewardNpc();
+		if (name == null || name.isBlank()) {
+			return new Outcome(null, "RETAIL_REWARD_NPC_MISSING", "REWARD");
+		}
+		RetailNpcNameIndex.Resolution resolved = index.resolveAll(List.of(name));
+		if (!resolved.unresolvedNames().isEmpty()) {
+			if (!RetailQuestMetadataCompiler.isFactionComposite(name)) {
+				return new Outcome(null, "RETAIL_REWARD_NPC_UNRESOLVED", name);
+			}
+			if (clientRewardNpcs.rewardNpcs(entry.questId()).isEmpty()) {
+				return new Outcome(null, "RETAIL_REWARD_NPC_FACTION_COMPOSITE", name);
+			}
+			return null;
+		}
+		if (resolved.npcIds().size() == 1) {
+			return null;
+		}
+		Set<Integer> declared = clientHandinNpcSets.npcIds(entry.questId());
+		if (!declared.isEmpty() && declared.equals(resolved.npcIds())) {
+			return null;
+		}
+		return new Outcome(null, "RETAIL_REWARD_NPC_AMBIGUOUS", name + " -> " + resolved.npcIds());
+	}
+
+	/**
+	 * 交付 NPC 集：唯一解析 → 单元素；经客户端集合确认的多 id 集 → 全量；复合势力名 → 客户端登记。
+	 * The hand-in NPC set: unique id, the client-confirmed multi-id set, or the composite registry.
+	 */
+	private static List<Integer> rewardNpcIds(RetailSimpleTalkTable.Entry entry, RetailNpcNameIndex index,
+			RetailClientRewardNpcs clientRewardNpcs, RetailClientHandinNpcSets clientHandinNpcSets) {
+		Set<Integer> resolved = index.resolveAll(List.of(entry.rewardNpc())).npcIds();
+		if (resolved.size() == 1) {
+			return List.of(resolved.iterator().next());
+		}
+		Set<Integer> declared = clientHandinNpcSets.npcIds(entry.questId());
+		if (!declared.isEmpty() && declared.equals(resolved)) {
+			return resolved.stream().sorted().toList();
+		}
+		return clientRewardNpcs.rewardNpcs(entry.questId());
 	}
 
 	private static Outcome requireNpc(RetailNpcNameIndex index, String name, String role) {
@@ -213,16 +273,12 @@ public final class RetailSimpleTalkDefinitionCompiler {
 	 */
 	private static QuestDefinition build(RetailSimpleTalkTable.Entry entry, RetailNpcNameIndex index,
 			RetailItemNameIndex itemIndex, QuestMetadata metadata, RetailClientSummaryRows summaryRows,
-			RetailClientRewardNpcs clientRewardNpcs, RetailQuestUseItemNpcs interactionObjects) {
+			RetailClientRewardNpcs clientRewardNpcs, RetailClientHandinNpcSets clientHandinNpcSets,
+			RetailQuestUseItemNpcs interactionObjects) {
 		boolean systemGrant = entry.grantKind().systemGrant()
 			&& entry.grantKind() != RetailGrantKind.CHALLENGE_TASK;
-		int acquiredNpc = systemGrant ? -1
-			: index.resolveAll(List.of(entry.grantKind() == RetailGrantKind.CHALLENGE_TASK
-				? entry.rewardNpc() : entry.acquiredNpc())).npcIds().iterator().next();
-		Set<Integer> resolvedReward = index.resolveAll(List.of(entry.rewardNpc())).npcIds();
-		List<Integer> rewardNpcs = resolvedReward.size() == 1
-			? List.of(resolvedReward.iterator().next())
-			: clientRewardNpcs.rewardNpcs(entry.questId());
+		List<Integer> acquiredNpcs = acquireNpcIds(index, entry);
+		List<Integer> rewardNpcs = rewardNpcIds(entry, index, clientRewardNpcs, clientHandinNpcSets);
 		ProgressLayout layout = new ProgressLayout.Builder()
 			.add(new BitField("var0", 0, RetailHuntCounterLayout.SECTION_BITS, 0,
 				RetailHuntCounterLayout.SECTION_MASK, PersistenceMode.PERSISTENT, ProgressScope.LOCAL))
@@ -237,12 +293,14 @@ public final class RetailSimpleTalkDefinitionCompiler {
 
 		List<QuestTransition> transitions = new ArrayList<>();
 		if (!systemGrant) {
-			transitions.addAll(attachMovieToRoute(RetailSimpleHuntDefinitionCompiler.canonicalAcceptFlow(
-				acquiredNpc, "started", acceptGiveItemActions(entry, itemIndex, metadata)), "unaccepted", acquiredNpc,
-				QuestDialogAction.QUEST_SELECT.id(),
-				(entry.cutsceneTrigger() == QuestDialogAction.ASK_QUEST_ACCEPT.id()
-					|| entry.cutsceneTrigger() == QuestDialogAction.QUEST_ACCEPT_SIMPLE.id())
-					? entry.cutsceneMovieId() : -1));
+			for (int acquiredNpc : acquiredNpcs) {
+				transitions.addAll(attachMovieToRoute(RetailSimpleHuntDefinitionCompiler.canonicalAcceptFlow(
+					acquiredNpc, "started", acceptGiveItemActions(entry, itemIndex, metadata)), "unaccepted",
+					acquiredNpc, QuestDialogAction.QUEST_SELECT.id(),
+					(entry.cutsceneTrigger() == QuestDialogAction.ASK_QUEST_ACCEPT.id()
+						|| entry.cutsceneTrigger() == QuestDialogAction.QUEST_ACCEPT_SIMPLE.id())
+						? entry.cutsceneMovieId() : -1));
+			}
 		} else {
 			transitions.add(new QuestTransition(new QuestEvent.SystemGrant(),
 				List.of(new QuestCondition.StartEligible()), List.of(), "started",
@@ -281,7 +339,7 @@ public final class RetailSimpleTalkDefinitionCompiler {
 					"started")), "started", rewardNpc, QuestDialogAction.QUEST_SELECT.id(),
 				entry.cutsceneTrigger() == QuestDialogAction.SELECT_QUEST_REWARD.id()
 					? entry.cutsceneMovieId() : -1));
-			transitions.addAll(reportNpcExit(systemGrant, acquiredNpc, rewardNpc, "started"));
+			transitions.addAll(reportNpcExit(systemGrant, acquiredNpcs, rewardNpc, "started"));
 		}
 		transitions.addAll(completeFlow(metadata, rewardNpcs));
 
@@ -309,16 +367,12 @@ public final class RetailSimpleTalkDefinitionCompiler {
 	 */
 	private static QuestDefinition buildCanonicalChain(RetailSimpleTalkTable.Entry entry, RetailNpcNameIndex index,
 			RetailItemNameIndex itemIndex, QuestMetadata metadata, RetailClientSummaryRows summaryRows,
-			RetailClientRewardNpcs clientRewardNpcs, RetailQuestUseItemNpcs interactionObjects) {
+			RetailClientRewardNpcs clientRewardNpcs, RetailClientHandinNpcSets clientHandinNpcSets,
+			RetailQuestUseItemNpcs interactionObjects) {
 		boolean systemGrant = entry.grantKind().systemGrant()
 			&& entry.grantKind() != RetailGrantKind.CHALLENGE_TASK;
-		int acquiredNpc = systemGrant ? -1
-			: index.resolveAll(List.of(entry.grantKind() == RetailGrantKind.CHALLENGE_TASK
-				? entry.rewardNpc() : entry.acquiredNpc())).npcIds().iterator().next();
-		Set<Integer> resolvedReward = index.resolveAll(List.of(entry.rewardNpc())).npcIds();
-		List<Integer> rewardNpcs = resolvedReward.size() == 1
-			? List.of(resolvedReward.iterator().next())
-			: clientRewardNpcs.rewardNpcs(entry.questId());
+		List<Integer> acquiredNpcs = acquireNpcIds(index, entry);
+		List<Integer> rewardNpcs = rewardNpcIds(entry, index, clientRewardNpcs, clientHandinNpcSets);
 		List<Integer> talkNpcIds = new ArrayList<>();
 		for (String talkNpc : entry.talkNpcs()) {
 			talkNpcIds.add(index.resolveAll(List.of(talkNpc)).npcIds().iterator().next());
@@ -345,19 +399,21 @@ public final class RetailSimpleTalkDefinitionCompiler {
 
 		List<QuestTransition> transitions = new ArrayList<>();
 		if (!systemGrant) {
-			if (interactionObjects.isInteractionObject(acquiredNpc)) {
-				transitions.addAll(attachMovieToRoute(canonicalObjectAcceptFlow(
-					acquiredNpc, "started", acceptGiveItemActions(entry, itemIndex, metadata)), "unaccepted", acquiredNpc,
-					QuestDialogAction.USE_OBJECT.id(),
-					(entry.cutsceneTrigger() == QuestDialogAction.ASK_QUEST_ACCEPT.id()
-						|| entry.cutsceneTrigger() == QuestDialogAction.QUEST_ACCEPT_SIMPLE.id())
-						? entry.cutsceneMovieId() : -1));
-			} else {
-				transitions.addAll(attachMovieToRoute(RetailSimpleHuntDefinitionCompiler.canonicalAcceptFlow(
-					acquiredNpc, "started", acceptGiveItemActions(entry, itemIndex, metadata)), "unaccepted", acquiredNpc,
-					QuestDialogAction.QUEST_SELECT.id(),
-					entry.cutsceneTrigger() == QuestDialogAction.ASK_QUEST_ACCEPT.id()
-						? entry.cutsceneMovieId() : -1));
+			for (int acquiredNpc : acquiredNpcs) {
+				if (interactionObjects.isInteractionObject(acquiredNpc)) {
+					transitions.addAll(attachMovieToRoute(canonicalObjectAcceptFlow(
+						acquiredNpc, "started", acceptGiveItemActions(entry, itemIndex, metadata)), "unaccepted",
+						acquiredNpc, QuestDialogAction.USE_OBJECT.id(),
+						(entry.cutsceneTrigger() == QuestDialogAction.ASK_QUEST_ACCEPT.id()
+							|| entry.cutsceneTrigger() == QuestDialogAction.QUEST_ACCEPT_SIMPLE.id())
+							? entry.cutsceneMovieId() : -1));
+				} else {
+					transitions.addAll(attachMovieToRoute(RetailSimpleHuntDefinitionCompiler.canonicalAcceptFlow(
+						acquiredNpc, "started", acceptGiveItemActions(entry, itemIndex, metadata)), "unaccepted",
+						acquiredNpc, QuestDialogAction.QUEST_SELECT.id(),
+						entry.cutsceneTrigger() == QuestDialogAction.ASK_QUEST_ACCEPT.id()
+							? entry.cutsceneMovieId() : -1));
+				}
 			}
 		} else {
 			transitions.add(new QuestTransition(new QuestEvent.SystemGrant(),
@@ -426,7 +482,8 @@ public final class RetailSimpleTalkDefinitionCompiler {
 					&& entry.cutsceneTrigger() != advance
 					&& entry.cutsceneTrigger() != QuestDialogAction.SET_SUCCEED.id()
 					&& entry.cutsceneTrigger() != QuestDialogAction.ASK_QUEST_ACCEPT.id()
-					&& entry.cutsceneTrigger() != QuestDialogAction.QUEST_ACCEPT_SIMPLE.id()) {
+					&& entry.cutsceneTrigger() != QuestDialogAction.QUEST_ACCEPT_SIMPLE.id()
+					&& entry.cutsceneTrigger() != QuestDialogAction.SELECT_QUEST_REWARD.id()) {
 				// 真端表声明的过场触发页是服务端副作用，不是状态迁移；只挂播片，不推进节点。
 				// A cutscene trigger declared by the retail table is a server side effect, not a state
 				// transition; it plays the movie without advancing the node.
@@ -461,7 +518,7 @@ public final class RetailSimpleTalkDefinitionCompiler {
 				new QuestEvent.TalkToNpc(rewardNpc, QuestDialogAction.QUEST_SELECT.id()),
 				List.of(), List.of(), "reward",
 				List.of(new AfterCommitAction.ShowQuestDialog(rewardWindowPage)), null, "reward"));
-			transitions.addAll(reportNpcExit(systemGrant, acquiredNpc, rewardNpc, "step" + m));
+			transitions.addAll(reportNpcExit(systemGrant, acquiredNpcs, rewardNpc, "step" + m));
 		}
 		transitions.addAll(completeFlow(metadata, rewardNpcs));
 		if (lastRowIndex > 0) {
@@ -608,8 +665,9 @@ public final class RetailSimpleTalkDefinitionCompiler {
 		return List.copyOf(flow);
 	}
 
-	private static List<QuestTransition> reportNpcExit(boolean systemGrant, int acquiredNpc, int rewardNpc, String sourceNode) {
-		if (!systemGrant && acquiredNpc == rewardNpc) {
+	private static List<QuestTransition> reportNpcExit(boolean systemGrant, List<Integer> acquiredNpcs,
+			int rewardNpc, String sourceNode) {
+		if (!systemGrant && acquiredNpcs.contains(rewardNpc)) {
 			return List.of();
 		}
 		return List.of(

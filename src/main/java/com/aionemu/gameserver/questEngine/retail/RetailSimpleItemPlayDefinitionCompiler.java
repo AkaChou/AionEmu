@@ -69,15 +69,18 @@ public final class RetailSimpleItemPlayDefinitionCompiler {
 	 * 编译一行。 / Compiles one row.
 	 */
 	public static Outcome compile(RetailSimpleItemPlayTable.Entry entry, RetailItemNameIndex itemIndex,
-			RetailNpcNameIndex npcIndex, RetailQuestMetadataCompiler.Outcome metadata) {
+			RetailNpcNameIndex npcIndex, RetailQuestMetadataCompiler.Outcome metadata,
+			RetailClientAcceptNpcSets clientAcceptNpcSets, RetailClientHandinNpcSets clientHandinNpcSets) {
 		Objects.requireNonNull(entry, "entry");
 		Objects.requireNonNull(itemIndex, "itemIndex");
 		Objects.requireNonNull(npcIndex, "npcIndex");
 		Objects.requireNonNull(metadata, "metadata");
+		Objects.requireNonNull(clientAcceptNpcSets, "clientAcceptNpcSets");
+		Objects.requireNonNull(clientHandinNpcSets, "clientHandinNpcSets");
 		if (!metadata.clean()) {
 			return new Outcome(null, "RETAIL_METADATA_UNRESOLVED", metadata.unresolved().toString());
 		}
-		Outcome blocked = precheck(entry, itemIndex, npcIndex);
+		Outcome blocked = precheck(entry, itemIndex, npcIndex, clientAcceptNpcSets, clientHandinNpcSets);
 		if (blocked != null) {
 			return blocked;
 		}
@@ -93,12 +96,13 @@ public final class RetailSimpleItemPlayDefinitionCompiler {
 	 * 迁移判据（稳定拒绝码，按序首中即拒）。 / Migration pre-check; the first hit wins.
 	 */
 	private static Outcome precheck(RetailSimpleItemPlayTable.Entry entry, RetailItemNameIndex itemIndex,
-			RetailNpcNameIndex npcIndex) {
+			RetailNpcNameIndex npcIndex, RetailClientAcceptNpcSets clientAcceptNpcSets,
+			RetailClientHandinNpcSets clientHandinNpcSets) {
 		int questId = entry.questId();
-		if (entry.acquiredNpcName() == null || resolveNpc(entry.acquiredNpcName(), npcIndex).size() != 1) {
+		if (!acquireAccepted(entry, npcIndex, clientAcceptNpcSets)) {
 			return npcReject("RETAIL_ACQUIRE_NPC", questId, entry.acquiredNpcName(), npcIndex);
 		}
-		if (entry.rewardNpcName() == null || resolveNpc(entry.rewardNpcName(), npcIndex).size() != 1) {
+		if (!rewardAccepted(entry, npcIndex, clientHandinNpcSets)) {
 			return npcReject("RETAIL_REWARD_NPC", questId, entry.rewardNpcName(), npcIndex);
 		}
 		if (entry.useItemName() == null) {
@@ -141,6 +145,53 @@ public final class RetailSimpleItemPlayDefinitionCompiler {
 		return npcIndex.resolveAll(List.of(name == null ? "" : name)).npcIds();
 	}
 
+	/**
+	 * 接取 NPC 是否可受理：唯一 id，或与客户端为该任务声明的接取集合**逐元素相等**的多 id 集合
+	 * （客户端是唯一仲裁；否则维持 fail-closed 的 {@code RETAIL_ACQUIRE_NPC_AMBIGUOUS}）。
+	 * An accepted acquire target: a unique id, or the multi-id set the client declares for this quest
+	 * (the client is the sole arbiter; anything else stays fail-closed).
+	 */
+	private static boolean acquireAccepted(RetailSimpleItemPlayTable.Entry entry, RetailNpcNameIndex npcIndex,
+			RetailClientAcceptNpcSets clientAcceptNpcSets) {
+		Set<Integer> resolved = resolveNpc(entry.acquiredNpcName(), npcIndex);
+		if (resolved.isEmpty()) {
+			return false;
+		}
+		if (resolved.size() == 1) {
+			return true;
+		}
+		Set<Integer> declared = clientAcceptNpcSets.npcIds(entry.questId());
+		return !declared.isEmpty() && declared.equals(resolved);
+	}
+
+	/**
+	 * 交付 NPC 是否可受理：唯一 id，或与客户端为该任务声明的交付集合**逐元素相等**的多 id 集合。
+	 * An accepted hand-in target: a unique id, or the multi-id set the client declares for this quest.
+	 */
+	private static boolean rewardAccepted(RetailSimpleItemPlayTable.Entry entry, RetailNpcNameIndex npcIndex,
+			RetailClientHandinNpcSets clientHandinNpcSets) {
+		Set<Integer> resolved = resolveNpc(entry.rewardNpcName(), npcIndex);
+		if (resolved.isEmpty()) {
+			return false;
+		}
+		if (resolved.size() == 1) {
+			return true;
+		}
+		Set<Integer> declared = clientHandinNpcSets.npcIds(entry.questId());
+		return !declared.isEmpty() && declared.equals(resolved);
+	}
+
+	/**
+	 * 接取/交付 NPC 列表（顺序稳定）。 / The accept / hand-in NPC lists in a stable order.
+	 */
+	private static List<Integer> acquireNpcIds(RetailSimpleItemPlayTable.Entry entry, RetailNpcNameIndex npcIndex) {
+		return resolveNpc(entry.acquiredNpcName(), npcIndex).stream().sorted().toList();
+	}
+
+	private static List<Integer> rewardNpcIds(RetailSimpleItemPlayTable.Entry entry, RetailNpcNameIndex npcIndex) {
+		return resolveNpc(entry.rewardNpcName(), npcIndex).stream().sorted().toList();
+	}
+
 	private static Integer resolveItemId(String symbol, RetailItemNameIndex itemIndex) {
 		if (symbol == null || symbol.isBlank()) {
 			return null;
@@ -170,8 +221,8 @@ public final class RetailSimpleItemPlayDefinitionCompiler {
 	private static QuestDefinition build(RetailSimpleItemPlayTable.Entry entry, RetailItemNameIndex itemIndex,
 			RetailNpcNameIndex npcIndex, QuestMetadata metadata) {
 		int questId = entry.questId();
-		int acquiredNpc = resolveNpc(entry.acquiredNpcName(), npcIndex).iterator().next();
-		int rewardNpc = resolveNpc(entry.rewardNpcName(), npcIndex).iterator().next();
+		List<Integer> acquiredNpcs = acquireNpcIds(entry, npcIndex);
+		List<Integer> rewardNpcs = rewardNpcIds(entry, npcIndex);
 		int itemId = resolveItemId(entry.useItemName(), itemIndex);
 		Integer giveItemId = entry.giveItem() != null ? resolveItemId(entry.giveItem(), itemIndex) : null;
 		int giveCount = itemCount(entry.giveItem());
@@ -195,8 +246,10 @@ public final class RetailSimpleItemPlayDefinitionCompiler {
 		// the play item.
 		List<QuestAction> acceptActions = giveItemId == null ? List.of()
 			: List.of(new QuestAction.GiveItem(giveItemId, giveCount));
-		transitions.addAll(RetailSimpleHuntDefinitionCompiler.canonicalAcceptFlow(
-			acquiredNpc, "started", acceptActions));
+		for (int acquiredNpc : acquiredNpcs) {
+			transitions.addAll(RetailSimpleHuntDefinitionCompiler.canonicalAcceptFlow(
+				acquiredNpc, "started", acceptActions));
+		}
 		// 用物品演出：started→reward（var0 置 1）。 / Using the item advances started→reward (var0 = 1).
 		transitions.add(new QuestTransition(new QuestEvent.UseItem(itemId, 0),
 			List.of(new QuestCondition.QuestVariableIs("var0", 0)),
@@ -211,15 +264,19 @@ public final class RetailSimpleItemPlayDefinitionCompiler {
 		int rewardWindowPage = QuestDialogPage.rewardWindowForTier(metadata.rewardGroups().size() - 1)
 			.orElseThrow(() -> new IllegalArgumentException(
 				"reward tiers exceed the six client reward windows: " + questId)).id();
-		transitions.add(talk(rewardNpc, QuestDialogAction.QUEST_SELECT, "reward", "reward", null,
-			List.of(new AfterCommitAction.ShowQuestDialog(rewardWindowPage))));
-		transitions.add(talk(rewardNpc, QuestDialogAction.USE_OBJECT, "reward", "reward", null,
-			List.of(new AfterCommitAction.ShowQuestDialog(rewardWindowPage))));
-		transitions.add(new QuestTransition(
-			new QuestEvent.TalkToNpc(rewardNpc, QuestDialogAction.SELECT_QUEST_REWARD.id()), List.of(),
-			List.of(new QuestAction.RemoveItem(itemId, removeCount)), "reward",
-			List.of(new AfterCommitAction.ShowQuestDialog(rewardWindowPage)), null, "reward"));
-		transitions.addAll(completeFlow(metadata, rewardNpc));
+		// 交付角色 = 客户端确认的集合：集合内每个 NPC 各一份预览/回收路由（事件键按 NPC 分开）。
+		// The hand-in role is the client-confirmed set: every member gets its own preview/removal route.
+		for (int rewardNpc : rewardNpcs) {
+			transitions.add(talk(rewardNpc, QuestDialogAction.QUEST_SELECT, "reward", "reward", null,
+				List.of(new AfterCommitAction.ShowQuestDialog(rewardWindowPage))));
+			transitions.add(talk(rewardNpc, QuestDialogAction.USE_OBJECT, "reward", "reward", null,
+				List.of(new AfterCommitAction.ShowQuestDialog(rewardWindowPage))));
+			transitions.add(new QuestTransition(
+				new QuestEvent.TalkToNpc(rewardNpc, QuestDialogAction.SELECT_QUEST_REWARD.id()), List.of(),
+				List.of(new QuestAction.RemoveItem(itemId, removeCount)), "reward",
+				List.of(new AfterCommitAction.ShowQuestDialog(rewardWindowPage)), null, "reward"));
+		}
+		transitions.addAll(completeFlow(metadata, rewardNpcs));
 		return new QuestDefinition(questId, 1, metadata, layout, nodes, List.copyOf(transitions));
 	}
 
@@ -227,7 +284,7 @@ public final class RetailSimpleItemPlayDefinitionCompiler {
 	 * 完成流：与 npc-complete 展开同构——固定奖励，确认段 8..23。
 	 * Completion flow isomorphic to the npc-complete expansion over the 8..23 confirm range.
 	 */
-	private static List<QuestTransition> completeFlow(QuestMetadata metadata, int rewardNpc) {
+	private static List<QuestTransition> completeFlow(QuestMetadata metadata, List<Integer> rewardNpcs) {
 		List<QuestReward> group = metadata.rewardGroups().isEmpty()
 			? List.of() : metadata.rewardGroups().get(0).rewards();
 		List<QuestAction> fixedRewards = new ArrayList<>();
@@ -237,20 +294,22 @@ public final class RetailSimpleItemPlayDefinitionCompiler {
 			}
 		}
 		List<QuestTransition> flow = new ArrayList<>();
-		for (int id = FIRST_CONFIRM_ACTION; id <= LAST_CONFIRM_ACTION; id++) {
-			List<QuestAction> actions = new ArrayList<>(fixedRewards);
-			actions.add(new QuestAction.CompleteQuest(0));
-			flow.add(new QuestTransition(new QuestEvent.TalkToNpc(rewardNpc, id), List.of(),
-				List.copyOf(actions), "complete",
-				List.of(new AfterCommitAction.RefreshPlayerStats(),
-					new AfterCommitAction.SyncQuestState(QuestStateSyncMode.COMPLETION),
-					new AfterCommitAction.ShowQuestSelectionDialog(10)),
-				null, "reward"));
+		for (int rewardNpc : rewardNpcs) {
+			for (int id = FIRST_CONFIRM_ACTION; id <= LAST_CONFIRM_ACTION; id++) {
+				List<QuestAction> actions = new ArrayList<>(fixedRewards);
+				actions.add(new QuestAction.CompleteQuest(0));
+				flow.add(new QuestTransition(new QuestEvent.TalkToNpc(rewardNpc, id), List.of(),
+					List.copyOf(actions), "complete",
+					List.of(new AfterCommitAction.RefreshPlayerStats(),
+						new AfterCommitAction.SyncQuestState(QuestStateSyncMode.COMPLETION),
+						new AfterCommitAction.ShowQuestSelectionDialog(10)),
+					null, "reward"));
+			}
 		}
-		// 奖励窗口自动确认通道：与对话页确认段同形（固定奖励挂 108，双协议注册 + CloseDialog 收窗）。
-		// The reward-window auto-confirm channel mirrors the talk-page confirm range (fixed rewards
-		// bind 108, dual-protocol registration with CloseDialog).
-		flow.addAll(RetailSimpleHuntDefinitionCompiler.rewardWindowAutoFlow(rewardNpc, fixedRewards,
+		// 奖励窗口自动确认通道：与对话页确认段同形（固定奖励挂 108，双协议注册 + CloseDialog 收窗）；
+		// 集合内共用一条全局 108 路由 + 各交付 NPC 一条，避免重复注册。
+		// The reward-window auto-confirm channel: one global 108 route plus one per hand-in NPC.
+		flow.addAll(RetailSimpleHuntDefinitionCompiler.rewardWindowAutoFlow(rewardNpcs, fixedRewards,
 			List.of(), Map.of(), "reward", "complete"));
 		return flow;
 	}
