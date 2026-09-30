@@ -2425,3 +2425,25 @@ keywords: 客户端集合轴、start_npc_ids、end_npc_ids、逻辑 NPC 名、�
 
 - **判定规则**：解析出多 id 不等于数据坏——先看客户端声明了什么集合；客户端说几个，就按几个展开，说不清就拒。
 - **安全网**：接取/交付两侧对称落地；集合展开后逐个跑家族门 + 负例门 + T3，再按 QE-104 对拍决定翻转。
+
+## [QE-107] 一〇七、真端逻辑名别名 + DataDriven 领奖集合轴：门与生产同源的单入口，多 owner 领奖只发一次全局奖励窗 (DD_HANDIN_SET_AND_VERSIONED_ALIAS)
+
+<!-- pattern-metadata
+status: CONFIRMED
+scope: 真端 DataDriven 行的 `reward_npc_name` 多解/未登记（混合链族已落地）与真端逻辑名别名表的维护口径
+first_seen: 2026-09-30
+last_verified: 2026-09-30
+symptom: 行停在 `RETAIL_REWARD_NPC_UNRESOLVED`，详情给出两个 id（`magician_apprentice -> [804897, 804898]`）或裸名（`Event_NPC_guardrung_l`、`event_npc_idsweep_eyeloong`）；补别名后又卡在 `RETAIL_ENTERAREA_ZONE_UNRESOLVED`，看起来像数据缺口
+root_cause: ①真端 `reward_npc_name` 是**逻辑名/声明组名**（`magician_apprentice` 在 `retail-quest-ai-name-groups.tsv` 里声明为 `LF5_Ajinos_E,DF5_Werinne_E`，遗留 XML 的交付/完成块正是这两个 id），旧混合链合成器对领奖角色硬要求「恰一个 id」；②真端活动表用逻辑名，服务器按 `LC1_/DC1_`（光/暗）× 名后缀逐 id 建模板（`LC1_event_npc_shugo_guardrung`=835132 等），名形不可机械推导，只能走版本化别名；③EA 进度别名（`DF5_SensoryArea_Q30722`）在解析表里缺行——**双副本**（`src/main/resources/quest/` 与 `src/test/resources/quest/`）只改一份时，门仍读旧副本
+fix_or_guardrail: 1. **单入口同源**：把接取/交付集合轴与 EA 别名表都做成编译入口的显式参数，**删掉会静默关掉该轴的便捷重载**（门与生产必须调同一签名，否则门会替生产背书）；2. **仲裁口径与 QE-106 一致**：唯一 id 直接放行，多 id 集只在与客户端交付投影逐元素相等时放行，空集/不等按原码如实拒绝且详情仍给完整解析集；3. **多 owner 展开**：领奖 `QUEST_SELECT` 入口、`fobjCollectHandIn`、`journalRowRepair` 逐 NPC 各一份，完成流与奖励窗自动确认只发**一次全局路由**（`completeFlow(metadata, rewardNpcs, …)`），避免 `AMBIGUOUS_TRANSITION`；4. **别名是数据**：真端逻辑名 → 变体 id 写进 `retail-npc-name-aliases.tsv`（不写死在编译器），每条要有服务器模板族命名 + 客户端集合或遗留 XML 见证；5. **EA 别名双副本同步**：解析表在生产与门测试资源各一份，落一行就要两处都落，否则只红门不红生产（或反之）；6. **翻转四件套**：retention 双副本 + 删 XML + 删目录登记行 + drift/指纹同片，先按 QE-104 做生产入口 A/B 对拍
+evidence: .agents/summary/quest-dd-handin-set/2026-09-30-qe107-dd-handin-set.zh-CN.md; .agents/summary/quest-dd-handin-set/qe-107-dd-handin-set-decisions.tsv; .agents/summary/quest-dd-handin-set/probe/divergence-summary.json; src/main/java/com/aionemu/gameserver/questEngine/retail/RetailDataDrivenDefinitionCompiler.java; src/main/java/com/aionemu/gameserver/questEngine/retail/RetailDataDrivenTalkHuntChainCompiler.java
+validation: 2026-09-30 5 行 `ADJUDICATED:RETAIL_REWARD_NPC_UNRESOLVED` → `ADOPTED` 并翻转（30722/30772/50064/50108/51064，RETAIL_TABLE + XML/目录行删除）；DD 桶 ADOPTED 1448→1453、REWARD_NPC_UNRESOLVED 7→2；A/B 对拍 5/5 行共享边非零（节点集 2/5 相同，采集族 `reward` 投影随客户端任务书行）；`RetailDataDrivenGateTest`/`RetailOwnershipGateTest`/`RetailTsvManifestGateTest`/`RetailEnterAreaZoneRegistrationGateTest`/`ProductionCatalogWhitelistVerificationTest` 绿（仅 80817 既存指纹红刻意保留）；T3 1856 例红身份集 198，对 QE-106 日志 ADDED 0 / REMOVED 0；verify_retirement catalog=756/directory=756/retired=5468=6224
+boundaries: 只覆盖 DataDriven 混合链的**领奖**角色；DD 接取侧仍按各分支既有判据（采集/谈话分支仍要唯一）；15690/25690 的真端名 `ld_rw_npc_gd5001` 服务器与客户端双零命中属真数据缺口；`RetailNonIrAxisGateTest.cappedQuestsAreNeverRetailDriven` 的 26 条封顶登记行是 HEAD 既存红（会把封顶改真端 UNLIMITED，需单独成片裁定）
+superseded_by: none
+see_also: [QE-106], [QE-105], [QE-104]
+first_check: 遇 DD 领奖名被拒先答：①这个名字能在 `retail-quest-ai-name-groups.tsv` 里查到声明组吗？②客户端 `quest_client_handin_npc_sets.tsv` 为该 quest 声明了什么集合（逐元素相等才算数）？③服务器模板族是 `LC1_/DC1_` 这类光暗变体吗（该加版本化别名而不是写死编译器）？④拒的是领奖角色还是 EA 别名——EA 解析表**双副本**都改了吗？⑤多 owner 展开后奖励窗是否只发一条全局 108 路由？
+keywords: 领奖集合轴、DD_HANDIN_SET、客户端交付投影、版本化别名、LC1/DC1 变体族、EA 别名双副本、门生产同源单入口、奖励窗唯一全局路由、retention 四件套、QE-107
+-->
+
+- **判定规则**：真端角色名解析出多值先问「客户端声明了几个」；活动 NPC 用 `LC1_/DC1_` 变体族时走别名表，别在编译器里加特例。
+- **安全网**：编译入口只留一个签名；翻转前 A/B 对拍；EA 解析表改一行改两份；既存红（80817、封顶登记行）不得顺手回写。

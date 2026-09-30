@@ -34,30 +34,19 @@ public final class RetailDataDrivenDefinitionCompiler {
 		}
 	}
 
-	/** 编译一行。 / Compiles one row. */
-	public static Outcome compile(RetailDataDrivenTable.Entry entry, RetailItemNameIndex itemIndex,
-			RetailNpcNameIndex npcIndex, RetailQuestMetadataCompiler.Outcome metadata,
-			RetailClientRewardNpcs clientRewardNpcs, RetailQuestAreaIndex questAreas,
-			RetailClientDialogExits clientDialogExits,
-			RetailClientSummaryRows clientSummaryRows,
-			RetailClientHandinPages clientHandinPages,
-			RetailQuestUseItemNpcs interactionObjects,
-			RetailClientKillTargets clientKillTargets,
-			RetailClientHuntProgressRows huntProgressRows) {
-		return compile(entry, itemIndex, npcIndex, metadata, clientRewardNpcs, questAreas,
-			clientDialogExits, clientSummaryRows, clientHandinPages,
-			interactionObjects, clientKillTargets,
-			huntProgressRows, RetailEnterAreaZoneResolution.empty());
-	}
-
 	/**
-	 * 完整编译入口（含 enterarea 别名解析表；EA 别名未登记 → RETAIL_ENTERAREA_ZONE_UNRESOLVED）。
-	 * The full compile entry (with the enterarea alias resolution table; unregistered EA aliases
-	 * reject with RETAIL_ENTERAREA_ZONE_UNRESOLVED).
+	 * 编译一行（唯一入口：接取/交付 NPC 集合轴与 enterarea 别名解析表都在签名里，门与生产同源）。
+	 * 领奖侧多 id 集只在**与客户端交付投影逐元素相等**时放行，否则按其名字通道如实拒绝。
+	 * <p>
+	 * Compiles one row (the single entry: both the accept/hand-in NPC-set axis and the enterarea
+	 * alias table are explicit parameters, so the gates and production share one source). A multi-id
+	 * hand-in set is admitted only when it equals the client hand-in projection element-wise;
+	 * otherwise the row rejects honestly on its name channel.
 	 */
 	public static Outcome compile(RetailDataDrivenTable.Entry entry, RetailItemNameIndex itemIndex,
 			RetailNpcNameIndex npcIndex, RetailQuestMetadataCompiler.Outcome metadata,
-			RetailClientRewardNpcs clientRewardNpcs, RetailQuestAreaIndex questAreas,
+			RetailClientRewardNpcs clientRewardNpcs, RetailClientHandinNpcSets clientHandinNpcSets,
+			RetailQuestAreaIndex questAreas,
 			RetailClientDialogExits clientDialogExits,
 			RetailClientSummaryRows clientSummaryRows,
 			RetailClientHandinPages clientHandinPages,
@@ -259,7 +248,20 @@ public final class RetailDataDrivenDefinitionCompiler {
 			var acquired = worldAcquireId > 0 || areaAcquire || levelUpAcquire || chainAcquire
 				? java.util.Set.<Integer>of()
 				: npcIndex.resolvePartyName(entry.acquireParam() == null ? "" : entry.acquireParam());
-			var reward = npcIndex.resolvePartyName(entry.rewardNpc() == null ? "" : entry.rewardNpc());
+			// 领奖 NPC 集合轴（QE-107）：真端 reward 名走统一名字通道（精确 → 声明组 → 名前变体），
+			// 唯一 id 照旧放行；**多 id 集**只在与该任务的客户端交付投影
+			// （{@code quest_client_handin_npc_sets.tsv}，即客户端 npc 块声明的 end_npc_ids）
+			// 逐元素相等时放行——客户端是唯一仲裁，未声明或不等一律 fail-closed（禁止按名字形状猜集合）。
+			// 30722/30772 形：真端名 magician_apprentice 在组表里声明为 LF5_Ajinos_E/DF5_Werinne_E，
+			// 遗留 XML 的交付/完成块正是这两个 id。
+			// The hand-in npc set axis (QE-107): the retail reward name rides the unified name channel
+			// (exact, declared group, name variants) and a unique id passes as before; a multi-id set
+			// passes only when it equals the client hand-in projection element-wise (the client npc
+			// block's declared end_npc_ids). The client is the sole arbiter — an undeclared or unequal
+			// set stays fail-closed rather than being guessed from name morphology. The 30722/30772
+			// shape: the retail name magician_apprentice is declared as LF5_Ajinos_E/DF5_Werinne_E, and
+			// the legacy XML's report/complete blocks carry exactly those two ids.
+			var reward = rewardNpcSet(entry, npcIndex, clientHandinNpcSets);
 			// 接取 NPC 允许变体家族 / 声明组（18738 形：真端表基名展开成阶段变体家族，各建接取路由）
 			// ——只要求非空，不再要求唯一。
 			// The acquire npc may be a variant family or a declared dialog-name group (the 18738 shape:
@@ -270,9 +272,15 @@ public final class RetailDataDrivenDefinitionCompiler {
 				return new Outcome(null, "RETAIL_ACQUIRE_NPC_UNRESOLVED",
 					entry.acquireParam() + " -> " + acquired);
 			}
-			if (reward.size() != 1) {
+			// 集合已由 rewardNpcSet 按客户端交付投影仲裁；此处只拦空集（真端名在服务器注册表与
+			// 客户端投影里都无声明）。多成员集交给混合链合成器逐 NPC 展开。
+			// The set has already been arbitrated against the client hand-in projection; only an empty
+			// set is rejected here (neither the server registry nor the client projection declares the
+			// retail name). A multi-member set is expanded per npc by the mixed-chain synthesizer.
+			if (reward.isEmpty()) {
 				return new Outcome(null, "RETAIL_REWARD_NPC_UNRESOLVED",
-					entry.rewardNpc() + " -> " + reward);
+					entry.rewardNpc() + " -> " + npcIndex.resolvePartyName(
+						entry.rewardNpc() == null ? "" : entry.rewardNpc()));
 			}
 			// 纯 TalkFOBJ 单步行（25070 形）只在**没有采集要求与掉落源**时才归链内 FOBJ 步：链内 FOBJ
 			// 步不带物品门，若真端元数据声明 collect_item（itemRequirements）或 drop_monster（drops），
@@ -299,8 +307,7 @@ public final class RetailDataDrivenDefinitionCompiler {
 						+ " drops=" + metadata.metadata().drops());
 			}
 			var talkHuntOutcome = RetailDataDrivenTalkHuntChainCompiler.compile(entry, npcIndex, metadata,
-				acquired,
-				reward.iterator().next(),
+				acquired, reward,
 				interactionObjects, huntProgressRows, clientSummaryRows, enterAreaZones, itemIndex,
 				levelUpAcquire, selectNoneLadder);
 			return new Outcome(talkHuntOutcome.definition(), talkHuntOutcome.rejectionCode(),
@@ -861,6 +868,28 @@ public final class RetailDataDrivenDefinitionCompiler {
 		}
 		return java.util.Set.of();
 	}
+
+	/**
+	 * 领奖 NPC 集合（QE-107 轴）：统一名字通道解析；唯一 id 直接放行，多 id 集仅在客户端交付投影
+	 * 逐元素相等时放行，其余返回空集（调用方按 {@code RETAIL_REWARD_NPC_UNRESOLVED} 如实拒绝并给出
+	 * 完整解析集）。客户端是唯一仲裁，禁止按名字形状猜集合。
+	 * <p>
+	 * The hand-in npc set (the QE-107 axis): resolved through the unified name channel; a unique id
+	 * passes directly and a multi-id set passes only when it equals the client hand-in projection;
+	 * anything else returns an empty set (the caller rejects honestly with the full resolved set).
+	 * The client is the sole arbiter, never name morphology.
+	 */
+	private static java.util.Set<Integer> rewardNpcSet(RetailDataDrivenTable.Entry entry,
+			RetailNpcNameIndex npcIndex, RetailClientHandinNpcSets clientHandinNpcSets) {
+		java.util.Set<Integer> resolved = npcIndex.resolvePartyName(
+			entry.rewardNpc() == null ? "" : entry.rewardNpc());
+		if (resolved.size() == 1) {
+			return resolved;
+		}
+		java.util.Set<Integer> declared = clientHandinNpcSets.npcIds(entry.questId());
+		return !declared.isEmpty() && declared.equals(resolved) ? resolved : java.util.Set.of();
+	}
+
 	private static java.util.Map<Integer, java.util.Set<Integer>> resolveClientStageKillTargets(
 			RetailDataDrivenTable.Entry entry, RetailClientKillTargets clientKillTargets,
 			RetailClientHuntProgressRows huntProgressRows, RetailNpcNameIndex npcIndex,

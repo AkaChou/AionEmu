@@ -714,7 +714,7 @@ public final class RetailQuestDriver {
 				return Optional.empty();
 			}
 			var outcome = RetailDataDrivenDefinitionCompiler.compile(row.orElseThrow(), itemIndex, npcIndex,
-				metadata, clientRewardNpcs, questAreas, clientDialogExits,
+				metadata, clientRewardNpcs, clientHandinNpcSets, questAreas, clientDialogExits,
 				clientSummaryRows, clientHandinPages,
 				interactionObjects, clientKillTargets, clientHuntProgressRows, enterAreaZoneResolution);
 			if (outcome.accepted()) {

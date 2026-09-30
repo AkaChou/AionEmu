@@ -123,6 +123,9 @@ class RetailDataDrivenGateTest {
 	private static RetailClientRewardNpcs clientRewardNpcs;
 	/** 客户端交付型对话页（决定合成形状，必须与生产一致）。 / Client hand-in pages; must match production. */
 	private static RetailClientHandinPages clientHandinPages;
+	/** 客户端交付 NPC 集合投影（多 owner 交付的仲裁源，必须与生产一致）。 /
+	 * Client hand-in npc-set projection (the multi-owner arbitration source, matching production). */
+	private static RetailClientHandinNpcSets clientHandinNpcSets;
 	private static RetailQuestUseItemNpcs interactionObjects;
 	private static RetailClientKillTargets clientKillTargets;
 	private static RetailClientHuntProgressRows clientHuntProgressRows;
@@ -150,6 +153,7 @@ class RetailDataDrivenGateTest {
 		enterAreaZoneResolution = RetailEnterAreaZoneResolution.defaultZoneResolution();
 		clientDialogExits = RetailClientDialogExits.defaultExits();
 		clientRewardNpcs = RetailClientRewardNpcs.defaultRewardNpcs();
+		clientHandinNpcSets = RetailClientHandinNpcSets.defaultSets();
 		try (InputStream input = open("/aion/definitions/compact/ai/ai-areas.xml")) {
 			clientQuestAreas = RetailQuestAreaIndex.load(input);
 		}
@@ -528,7 +532,7 @@ class RetailDataDrivenGateTest {
 				: RetailDataDrivenDefinitionCompiler.compile(entry, itemIndex, npcIndex,
 					RetailQuestMetadataCompiler.compile(retailTable.find(questId).orElseThrow(), npcIndex,
 						itemIndex, randomRewards, nameIds),
-					clientRewardNpcs, clientQuestAreas,
+					clientRewardNpcs, clientHandinNpcSets, clientQuestAreas,
 					clientDialogExits, clientSummaryRows, clientHandinPages,
 					interactionObjects, clientKillTargets, clientHuntProgressRows, enterAreaZoneResolution);
 			COMPILED.put(questId, outcome);

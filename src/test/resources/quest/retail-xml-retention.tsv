@@ -4810,7 +4810,7 @@
 30719	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 30720	RETAIL_TABLE	SimpleUseItem	OK	retired-xml-in-git-history p3b-use-item-decisions.tsv basis=USE_ITEM_CANONICAL
 30721	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history
-30722	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_REWARD_NPC_UNRESOLVED	reward npc unresolved server-side
+30722	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history qe-107-dd-handin-set-decisions.tsv basis=CLIENT_CONFIRMED_NPC_SET shared/onlyXml/onlyRetail=46/3/5
 30723	RETAIL_TABLE	SimpleUseItem	OK	retired-xml-in-git-history p3b-use-item-decisions.tsv basis=USE_ITEM_CANONICAL
 30750	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf3c0,FUN_180caf640,FUN_180caf6c0,FUN_180caf740
 30751	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf3c0,FUN_180caf640,FUN_180caf6c0,FUN_180caf740
@@ -4827,7 +4827,7 @@
 30768	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history retail-simple-hunt-adjudicated-decisions.tsv basis=RETAIL_REWARD_CONFIRM_RANGE
 30769	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 30771	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history
-30772	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_REWARD_NPC_UNRESOLVED	reward npc unresolved server-side
+30772	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history qe-107-dd-handin-set-decisions.tsv basis=CLIENT_CONFIRMED_NPC_SET shared/onlyXml/onlyRetail=46/3/5
 30800	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_TALK_HUNT_CHAIN_DEFERRED	retail-simple-talk-drift.tsv / retail-data-driven-drift.tsv: talk+hunt mixed-chain axis unimplemented for this shape (ladder/stage deficit)
 35007	RETAIL_TABLE	SimpleCollectItem	OK	retired-xml-in-git-history m5b3-collect-route-decisions.tsv basis=FACTION_GRANT_DAILY
 35008	RETAIL_TABLE	SimpleCollectItem	OK	retired-xml-in-git-history m5b3-collect-route-decisions.tsv basis=FACTION_GRANT_DAILY
@@ -5207,7 +5207,7 @@
 50061	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CANONICAL
 50062	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CANONICAL
 50063	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CANONICAL
-50064	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_REWARD_NPC_UNRESOLVED	reward npc unresolved server-side
+50064	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history qe-107-dd-handin-set-decisions.tsv basis=VERSIONED_NPC_ALIAS shared/onlyXml/onlyRetail=37/3/5
 50065	RETAIL_TABLE	DataDriven	OK	retail-data-driven-drift.tsv
 50068	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p0c53-group-table-decisions.tsv basis=DD_AINAME_GROUP_TABLE
 50069	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p0c53-group-table-decisions.tsv basis=DD_AINAME_GROUP_TABLE
@@ -5235,7 +5235,7 @@
 50104	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p0c53-group-table-decisions.tsv basis=DD_AINAME_GROUP_TABLE
 50105	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p0c53-group-table-decisions.tsv basis=DD_AINAME_GROUP_TABLE
 50107	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p0c53-group-table-decisions.tsv basis=DD_AINAME_GROUP_TABLE
-50108	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_REWARD_NPC_UNRESOLVED	reward npc unresolved server-side
+50108	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history qe-107-dd-handin-set-decisions.tsv basis=CLIENT_CONFIRMED_NPC_SET shared/onlyXml/onlyRetail=72/6/11
 50110	XML_RETENTION	-	NO_TABLE	retail-none
 50111	XML_RETENTION	-	NO_TABLE	retail-none
 50123	XML_RETENTION	-	NO_TABLE	retail-none
@@ -5283,7 +5283,7 @@
 51061	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CANONICAL
 51062	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CANONICAL
 51063	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CANONICAL
-51064	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_REWARD_NPC_UNRESOLVED	reward npc unresolved server-side
+51064	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history qe-107-dd-handin-set-decisions.tsv basis=VERSIONED_NPC_ALIAS shared/onlyXml/onlyRetail=37/3/5
 51071	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CANONICAL
 51076	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
 51077	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID

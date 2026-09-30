@@ -1,0 +1,9 @@
+# QE-107 真端逻辑名 / 客户端交付集合轴：解锁行决策台账
+# 轴 = 该行原先被拒的原因（REWARD = 领奖名多解；NAME = 真端逻辑名未登记；ACQUIRE = 接取名同轴；ZONE = EA 别名未登记）
+# 判据：真端名解析集 == 客户端声明交付集合（逐元素相等）或版本化别名（服务器模板族命名 + 遗留 XML 见证）；翻转前按 QE-104 做生产 IR 对拍
+# quest_id	family	axis	basis	shared/onlyXml/onlyRetail	decision
+30722	DataDriven	REWARD+ZONE	CLIENT_CONFIRMED_NPC_SET	46/3/5	FLIP
+30772	DataDriven	REWARD+ZONE	CLIENT_CONFIRMED_NPC_SET	46/3/5	FLIP
+50064	DataDriven	NAME+ACQUIRE	VERSIONED_NPC_ALIAS	37/3/5	FLIP
+50108	DataDriven	NAME+ACQUIRE	CLIENT_CONFIRMED_NPC_SET	72/6/11	FLIP
+51064	DataDriven	NAME+ACQUIRE	VERSIONED_NPC_ALIAS	37/3/5	FLIP

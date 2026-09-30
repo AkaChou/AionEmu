@@ -251,7 +251,8 @@ public final class RetailDataDrivenTalkHuntChainCompiler {
 	 * row-ladder plus stage-counter shape).
 	 */
 	public static Outcome compile(RetailDataDrivenTable.Entry entry, RetailNpcNameIndex npcIndex,
-			RetailQuestMetadataCompiler.Outcome metadata, java.util.Set<Integer> acquiredNpcs, int rewardNpc,
+			RetailQuestMetadataCompiler.Outcome metadata, java.util.Set<Integer> acquiredNpcs,
+			java.util.Set<Integer> rewardNpcs,
 			RetailQuestUseItemNpcs interactionObjects, RetailClientHuntProgressRows huntProgressRows,
 			RetailClientSummaryRows summaryRows, RetailEnterAreaZoneResolution enterAreaZones,
 			RetailItemNameIndex itemIndex, boolean levelUpAcquire, boolean selectNoneLadder) {
@@ -415,9 +416,9 @@ public final class RetailDataDrivenTalkHuntChainCompiler {
 					&& entry.acquireParam().trim().chars().allMatch(Character::isDigit)) {
 				worldAcquireId = Integer.parseInt(entry.acquireParam().trim());
 			}
-				QuestDefinition definition = build(entry.questId(), steps, entry.stepCutscenes(), npcIndex,
+			QuestDefinition definition = build(entry.questId(), steps, entry.stepCutscenes(), npcIndex,
 					metadata.metadata(),
-				acquiredNpcs, rewardNpc,
+				acquiredNpcs, rewardNpcs,
 				interactionObjects, huntGroupsByRow,
 				worldAcquireId, "enterarea".equalsIgnoreCase(entry.acquireCategory())
 					|| "none".equalsIgnoreCase(entry.acquireCategory()), levelUpAcquire,
@@ -560,7 +561,7 @@ public final class RetailDataDrivenTalkHuntChainCompiler {
 
 	private static QuestDefinition build(int questId, List<Step> steps, Map<Integer, Integer> stepCutscenes,
 			RetailNpcNameIndex npcIndex,
-			QuestMetadata metadata, java.util.Set<Integer> acquiredNpcs, int rewardNpc,
+			QuestMetadata metadata, java.util.Set<Integer> acquiredNpcs, java.util.Set<Integer> rewardNpcs,
 			RetailQuestUseItemNpcs interactionObjects,
 			Map<Integer, List<RetailClientHuntProgressRows.Row>> huntGroupsByRow, int worldAcquireId,
 			boolean areaAcquire, boolean levelUpAcquire, int lastRow, boolean selectNoneLadder,
@@ -1160,10 +1161,19 @@ public final class RetailDataDrivenTalkHuntChainCompiler {
 			}
 		}
 
-		transitions.add(talk(rewardNpc, QuestDialogAction.QUEST_SELECT, "reward", "reward",
-			List.of(new AfterCommitAction.ShowQuestDialog(QuestDialogPage.DEFAULT_SUCCESS.id()))));
-		if (dropDrivenFobj) {
-			transitions.addAll(fobjCollectHandIn(metadata, rewardNpc));
+		// 领奖 NPC 集（QE-107）：集合内每个成员各挂一条 QUEST_SELECT 交付入口（同一对话态「交付人
+		// 本人」形），完成流与奖励窗自动确认只发一次全局路由（多 owner 共用一个领奖窗，避免
+		// AMBIGUOUS_TRANSITION）。集合已由调用方按客户端交付投影仲裁（唯一 id 或逐元素相等）。
+		// The reward npc set (QE-107): every member carries its own QUEST_SELECT hand-in entry, while
+		// the completion flow and the auto-confirm reward window are emitted once as global routes
+		// (multi-owner quests share one reward window, avoiding AMBIGUOUS_TRANSITION). The caller has
+		// already arbitrated the set against the client hand-in projection.
+		for (int rewardNpc : rewardNpcs) {
+			transitions.add(talk(rewardNpc, QuestDialogAction.QUEST_SELECT, "reward", "reward",
+				List.of(new AfterCommitAction.ShowQuestDialog(QuestDialogPage.DEFAULT_SUCCESS.id()))));
+			if (dropDrivenFobj) {
+				transitions.addAll(fobjCollectHandIn(metadata, rewardNpc));
+			}
 		}
 		// 完成流统一走 hunt 家族 canonical 形：普通可选 = 选择梯；use_class_reward 的职业可选 =
 		// AdvancedClassIs 职业梯（collect 家族 completeFlow 只有选择梯，会把职业奖励错成任选）。
@@ -1171,11 +1181,11 @@ public final class RetailDataDrivenTalkHuntChainCompiler {
 		// choice ladder; use_class_reward class selectables expand per AdvancedClassIs (the collect
 		// family's completeFlow only has the choice ladder, which would flatten class rewards into
 		// pick-any).
-		transitions.addAll(RetailSimpleHuntDefinitionCompiler.completeFlow(metadata, rewardNpc, "reward",
+		transitions.addAll(RetailSimpleHuntDefinitionCompiler.completeFlow(metadata, rewardNpcs, "reward",
 			"complete"));
 		transitions.addAll(finalIsHunt
 			? RetailSimpleCollectItemDefinitionCompiler.journalRowRepair(lastRow)
-			: journalRowRepair(lastRow, rewardNpc));
+			: journalRowRepair(lastRow, rewardNpcs));
 		return new QuestDefinition(questId, 1, metadata, layout, nodes, List.copyOf(transitions));
 	}
 
@@ -1243,23 +1253,28 @@ public final class RetailDataDrivenTalkHuntChainCompiler {
 	 */
 	private static final int DEFAULT_PVP_LEVEL_GAP = 10;
 
-	/** 已进入领奖态的早期行存档按客户端末行恢复，并允许立即重开领奖对话。 /
-	 * Recover an earlier reward row to the client's final row on login or on reward NPC selection. */
-	private static List<QuestTransition> journalRowRepair(int lastRow, int rewardNpc) {
+	/** 已进入领奖态的早期行存档按客户端末行恢复，并允许在每个交付 NPC 上立即重开领奖对话。 /
+	 * Recover an earlier reward row to the client's final row on login or on any reward npc's
+	 * selection. */
+	private static List<QuestTransition> journalRowRepair(int lastRow, java.util.Collection<Integer> rewardNpcs) {
 		if (lastRow <= 0) {
 			return List.of();
 		}
 		List<QuestCondition> conditions = List.of(new QuestCondition.StatusIs(QuestStatus.REWARD),
 			new QuestCondition.VariableBelow("var0", lastRow));
 		List<QuestAction> actions = List.of(new QuestAction.SetVariable("var0", lastRow));
-		return List.of(
-			new QuestTransition(new QuestEvent.EnterWorld(), conditions, actions, "reward",
-				List.of(new AfterCommitAction.SyncQuestState(
-					QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH)), null, null),
-			new QuestTransition(new QuestEvent.TalkToNpc(rewardNpc, QuestDialogAction.QUEST_SELECT.id()),
+		List<QuestTransition> transitions = new java.util.ArrayList<>(rewardNpcs.size() + 1);
+		transitions.add(new QuestTransition(new QuestEvent.EnterWorld(), conditions, actions, "reward",
+			List.of(new AfterCommitAction.SyncQuestState(
+				QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH)), null, null));
+		for (int rewardNpc : rewardNpcs) {
+			transitions.add(new QuestTransition(
+				new QuestEvent.TalkToNpc(rewardNpc, QuestDialogAction.QUEST_SELECT.id()),
 				conditions, actions, "reward",
 				List.of(new AfterCommitAction.ShowQuestDialog(QuestDialogPage.DEFAULT_SUCCESS.id())),
 				null, null));
+		}
+		return List.copyOf(transitions);
 	}
 
 	/**

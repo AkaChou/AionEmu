@@ -87,7 +87,7 @@
 10034	ADOPTED
 10035	ADOPTED
 10111	ADOPTED
-10112	REJECTED:CURATED_LEGACY_CONTRACT_LOCK	mixed-chain stage order now derives from the client contract; flip-evidence(2026-09-30) retail-vs-XML IR shared/onlyXml/onlyRetail=25/18/24 ⇒ the ownership flip changes production behavior and needs real-client acceptance (curated deferral, XML stays authoritative)
+10112	REJECTED:CURATED_LEGACY_CONTRACT_LOCK	mixed-chain stage order now derives from the client contract's declared select families, so the old ladder-registry deficit no longer blocks this row; the 2026-09-30 flip-evidence batch measured a material retail-vs-XML IR divergence for these rows, so the ownership flip changes production behavior and needs real-client acceptance (curated deferral, XML stays authoritative)
 10113	ADOPTED
 10500	ADOPTED
 10501	ADOPTED
@@ -98,7 +98,7 @@
 10506	ADOPTED
 10507	ADOPTED
 10526	ADOPTED
-10527	REJECTED:CURATED_LEGACY_CONTRACT_LOCK	mixed-chain stage order now derives from the client contract; flip-evidence(2026-09-30) retail-vs-XML IR shared/onlyXml/onlyRetail=26/31/37 ⇒ the ownership flip changes production behavior and needs real-client acceptance (curated deferral, XML stays authoritative)
+10527	REJECTED:CURATED_LEGACY_CONTRACT_LOCK	mixed-chain stage order now derives from the client contract's declared select families, so the old ladder-registry deficit no longer blocks this row; the 2026-09-30 flip-evidence batch measured a material retail-vs-XML IR divergence for these rows, so the ownership flip changes production behavior and needs real-client acceptance (curated deferral, XML stays authoritative)
 10530	REJECTED:RETAIL_TALK_COLLECT_CHAIN_DEFERRED	rider unsupported: talkfobj
 11319	ADOPTED
 11323	ADOPTED
@@ -509,7 +509,7 @@
 17510	ADOPTED
 17525	ADOPTED
 17526	ADOPTED
-17540	REJECTED:CURATED_LEGACY_CONTRACT_LOCK	mixed-chain stage order now derives from the client contract; flip-evidence(2026-09-30) retail-vs-XML IR shared/onlyXml/onlyRetail=23/13/32 ⇒ the ownership flip changes production behavior and needs real-client acceptance (curated deferral, XML stays authoritative)
+17540	REJECTED:CURATED_LEGACY_CONTRACT_LOCK	mixed-chain stage order now derives from the client contract's declared select families, so the old ladder-registry deficit no longer blocks this row; the 2026-09-30 flip-evidence batch measured a material retail-vs-XML IR divergence for these rows, so the ownership flip changes production behavior and needs real-client acceptance (curated deferral, XML stays authoritative)
 17541	ADOPTED
 17550	ADOPTED
 17551	ADOPTED
@@ -593,13 +593,13 @@
 19900	REJECTED:CURATED_LEGACY_CONTRACT_LOCK	minion tutorial prerequisite axis (1007) is unexpressed in the retail metadata and the legacy contract pins the LevelUp+EnterWorld dual accept at 1500ms
 20010	ADOPTED
 20011	ADOPTED
-20031	REJECTED:CURATED_LEGACY_CONTRACT_LOCK	mixed-chain stage order now derives from the client contract; flip-evidence(2026-09-30) retail-vs-XML IR shared/onlyXml/onlyRetail=0/54/77 ⇒ the ownership flip changes production behavior and needs real-client acceptance (curated deferral, XML stays authoritative)
+20031	REJECTED:CURATED_LEGACY_CONTRACT_LOCK	mixed-chain stage order now derives from the client contract's declared select families, so the old ladder-registry deficit no longer blocks this row; the 2026-09-30 flip-evidence batch measured a material retail-vs-XML IR divergence for these rows, so the ownership flip changes production behavior and needs real-client acceptance (curated deferral, XML stays authoritative)
 20032	ADOPTED
 20033	ADOPTED
 20034	ADOPTED
 20035	REJECTED:RETAIL_ITEMPLAY_OUTPUT_UNRESOLVED	QUEST_20035D 1
 20111	ADOPTED
-20112	REJECTED:CURATED_LEGACY_CONTRACT_LOCK	mixed-chain stage order now derives from the client contract; flip-evidence(2026-09-30) retail-vs-XML IR shared/onlyXml/onlyRetail=19/23/30 ⇒ the ownership flip changes production behavior and needs real-client acceptance (curated deferral, XML stays authoritative)
+20112	REJECTED:CURATED_LEGACY_CONTRACT_LOCK	mixed-chain stage order now derives from the client contract's declared select families, so the old ladder-registry deficit no longer blocks this row; the 2026-09-30 flip-evidence batch measured a material retail-vs-XML IR divergence for these rows, so the ownership flip changes production behavior and needs real-client acceptance (curated deferral, XML stays authoritative)
 20113	ADOPTED
 20500	ADOPTED
 20501	ADOPTED
@@ -610,7 +610,7 @@
 20506	ADOPTED
 20507	ADOPTED
 20526	ADOPTED
-20527	REJECTED:CURATED_LEGACY_CONTRACT_LOCK	mixed-chain stage order now derives from the client contract; flip-evidence(2026-09-30) retail-vs-XML IR shared/onlyXml/onlyRetail=18/37/45 ⇒ the ownership flip changes production behavior and needs real-client acceptance (curated deferral, XML stays authoritative)
+20527	REJECTED:CURATED_LEGACY_CONTRACT_LOCK	mixed-chain stage order now derives from the client contract's declared select families, so the old ladder-registry deficit no longer blocks this row; the 2026-09-30 flip-evidence batch measured a material retail-vs-XML IR divergence for these rows, so the ownership flip changes production behavior and needs real-client acceptance (curated deferral, XML stays authoritative)
 20530	REJECTED:RETAIL_TALK_COLLECT_CHAIN_DEFERRED	rider unsupported: talkfobj
 21320	ADOPTED
 21323	ADOPTED
@@ -1018,7 +1018,7 @@
 27510	ADOPTED
 27525	ADOPTED
 27526	ADOPTED
-27540	REJECTED:CURATED_LEGACY_CONTRACT_LOCK	mixed-chain stage order now derives from the client contract; flip-evidence(2026-09-30) retail-vs-XML IR shared/onlyXml/onlyRetail=29/9/26 ⇒ the ownership flip changes production behavior and needs real-client acceptance (curated deferral, XML stays authoritative)
+27540	REJECTED:CURATED_LEGACY_CONTRACT_LOCK	mixed-chain stage order now derives from the client contract's declared select families, so the old ladder-registry deficit no longer blocks this row; the 2026-09-30 flip-evidence batch measured a material retail-vs-XML IR divergence for these rows, so the ownership flip changes production behavior and needs real-client acceptance (curated deferral, XML stays authoritative)
 27541	ADOPTED
 27550	ADOPTED
 27551	ADOPTED
