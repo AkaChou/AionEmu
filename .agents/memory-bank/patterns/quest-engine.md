@@ -2315,3 +2315,25 @@ keywords: retired drift、stale registry、ADOPTED 1236、equivOut、壳 XML 豁
 
 - **判定规则**：retirement 只表示“不再要求磁盘壳 XML”，不表示“账本可以停在旧码”；drift、fingerprint、owner 三方必须同一批收敛。
 - **一致性原则**：头部分计数不是手工账，是分类 dump 的派生视图；发现 fingerprint 与 drift 数量不一致时，先修豁免语义，再重算全表。
+
+## [QE-102] 一〇二、**owner 双运行时隔离 + 客户端本地翻页 no-op**：判据必须落在“无匹配路由”上，阶段首屏按客户端页名派生、末阶段推进动作是证据化同义集 (RUNTIME_OWNER_SPLIT_LOCAL_PAGE_NOOP)
+
+<!-- pattern-metadata
+status: CONFIRMED
+scope: XML owner 与真端 owner 的运行时隔离（目录拆分 / 路由 / 派发合同）、真端对话页内导航的客户端本地化（页梯路由退场）、阶段首屏派生与末阶段推进动作的通用化
+first_seen: 2026-09-30
+last_verified: 2026-09-30
+symptom: 真端 owner 的对话页内翻页（`select{i}_1` 等）被服务端建成逐页路由并靠逐任务页梯 TSV 喂数据；引擎只有单一 typed dispatcher，XML owner 与真端 owner 同池，无法按 owner 分别演进
+root_cause: 真端引擎里页内翻页是客户端本地行为（客户端页 HTML 自己换页，只把页尾按钮的 haction 发给服务端），服务端只负责阶段首屏与推进语义；早期把客户端页面合同转写为逐任务页梯 TSV 后，运行时被迫按页建路由，形状随 TSV 漂移
+fix_or_guardrail: 1. **运行时隔离**：按 `retail-xml-retention.tsv` 的 owner 把生产目录拆成两个互斥子目录，各自一个 `QuestProductionDispatcher`，用一个 `QuestRuntimeRouter` 派发；同一 quest id 被两个子运行时拥有 = 启动错误（fail-fast）；`questId=0` 的广播按 `QuestDispatchContract` 组合两侧结果；两子运行时**共享同一个 `QuestExecutionCoordinator`**，保持按玩家串行；2. **本地翻页判据**：真端 owner + 「该 owner 对该动作**无匹配路由**」+ 动作是客户端契约登记的该任务页面（或 `FINISH_DIALOG(1008)`）⇒ 返回已处理 no-op、不改状态；生命周期动作（QUEST_SELECT/SETPRO*/SET_SUCCEED/CHECK_USER_HAS_QUEST_ITEM*/接受拒绝/奖励确认/SELECT_QUEST_REWARD）永远不判本地；**判据必须用 `hasMatchingRoutes`**——事件索引按宽键（NPC）登记，`hasRoutes` 会把同 NPC 的其它对话误判成已登记；XML owner 绝不进入该分支；3. **阶段首屏派生**：按客户端契约页名 `select{firstStageNumber+stageIndex}` 取名，同名页缺失退回标准页 id（`1011+341*(N-1)`），两者都无 ⇒ 空（不发明页，调用方 fail-closed 拒绝该行）；家族差异只在首个阶段号（SimpleTalk `select1` 是接取入口页 ⇒ 对话阶段从 2 起；DataDriven 链行用 `select_none` 询问窗 ⇒ 从 1 起）；4. **末阶段推进动作**：`SET_SUCCEED(10255)` 与 `SETPRO{N}` 同义（进度置满 → 领奖），两条都登记，删掉逐任务 advance 查表与旧「单步 s1 别名边」；5. **验收**：IR 指纹 id 集不变、只重冻本轮受影响行，**既存无关漂移（80817）刻意不回写**，保持与基线红同身份
+evidence: .agents/summary/quest-native-runtime-split/README.zh-CN.md; src/main/java/com/aionemu/gameserver/questEngine/runtime/QuestRuntimeRouter.java; src/main/java/com/aionemu/gameserver/questEngine/runtime/QuestRuntimeDispatcher.java; src/main/java/com/aionemu/gameserver/questEngine/retail/RetailDialogIntentClassifier.java; src/main/java/com/aionemu/gameserver/questEngine/retail/RetailQuestDialogPages.java; src/main/java/com/aionemu/gameserver/questEngine/retail/RetailSimpleTalkDefinitionCompiler.java; src/main/java/com/aionemu/gameserver/questEngine/retail/RetailDataDrivenTalkCompiler.java
+validation: 2026-09-30 聚焦 9 类 50 例唯一红 = 80817 既存漂移；questEngine 包内全量（1855 例）红身份集对 HEAD 基线 ADDED 0/REMOVED 0（204→204）；全量 `mvn test`（3970 例）红身份集 ADDED 0/REMOVED 0（217→217，258 条红）；DataDriven 冻结指纹 1448 行 id 集不变、重冻 36 行（全部 DD allTalk）；证据面 = 81 条 allTalk 行页名与 `select{i+1}` 100% 一致、中间推进 100% == `SETPRO{i+1}`、末阶段 ∈ {SET_SUCCEED ×38, SETPRO{N} ×6}
+boundaries: 本轮只摘 SimpleTalk 与 DataDriven **纯 Talk 链**的页梯；混合链（TalkCollectChain / TalkHuntChain）仍消费 `quest_client_talk_chain_pages.tsv` / `quest_client_talk_collect_chain_pages.tsv` 的 talk 段页梯，collect 段的 39/20002 检查与结果页是语义边不得按本片删除；本地翻页 no-op 只对真端 owner 成立，XML owner 的形状仍由 XML 目录决定；真实客户端验收未做
+superseded_by: none
+see_also: [QE-093], [QE-094], [QE-095], [QE-100]
+first_check: 摘页梯前先答：①这条边是**页内导航**还是**语义推进**（推进/检查/奖励/接取一律保留）？②该动作在这个任务上到底有没有匹配路由（用 `hasMatchingRoutes` 判，别用宽键 `hasRoutes`）？③阶段首屏能不能由客户端契约页名派生（否则 fail-closed 拒绝，不许发明页）？④末阶段客户端页尾按钮是 `SET_SUCCEED` 还是 `SETPRO{N}`（两者同义，都留）？⑤指纹重冻后 id 集变了吗、既存无关红有没有被顺手抹掉？
+keywords: QuestRuntimeRouter、QuestRuntimeDispatcher、owner 隔离、runtime split、本地翻页 no-op、RetailDialogIntentClassifier、hasMatchingRoutes、阶段首屏、select{N}、SETPRO{N}、SET_SUCCEED 同义、单一 owner fail-fast、共享执行协调器、指纹只增不改 id 集
+-->
+
+- **判定规则**：页内翻页是客户端职责，服务端只认「阶段首屏 + 推进/检查/奖励」三类语义动作；把页梯写进服务端一定漂移。
+- **安全网**：形状手术的验收线是「红身份集对基线 ADDED 0 / REMOVED 0」，不是「全绿」；既存无关红必须在册。

@@ -174,10 +174,12 @@ public final class RetailDataDrivenDefinitionCompiler {
 		// mixed-chain compilers share this predicate.
 		boolean selectNoneLadder = clientDialogExits.requires(entry.questId(),
 			RetailClientDialogExits.SELECT_NONE_1);
-		if (entry.allTalk() && clientTalkChainPages.find(entry.questId(), true)
-				.map(pages -> pages.stageLadders().size() < entry.talkSteps().size()).orElse(true)) {
-			// P5-3 wave B：链式信件登记缺失或阶段页不足（select_none_1 二页接取等变体）→ 如实拒绝。
-			// Wave B: missing chain-letter registry or too few stage pages stay deferred.
+		if (entry.allTalk() && !hasEveryTalkStageHead(entry.questId(), entry.talkSteps().size())) {
+			// P5-3 wave B：客户端契约缺阶段首屏（select{i} 无同名页、也无标准 selectN 页）→ 如实拒绝，
+			// 不按页梯登记表发明页。阶段内翻页由客户端本地完成，服务端不再消费逐页路由。
+			// Wave B: the client contract lacks a stage head (no same-named select{i} page and no standard
+			// selectN page) → stay deferred instead of inventing pages from the ladder registry. In-stage
+			// page turns stay client-local, so no per-page routes are consumed anymore.
 			return new Outcome(null, "RETAIL_TALK_CHAIN_DEFERRED", "steps=" + entry.talkSteps().size());
 		}
 		if (entry.noProgress()) {
@@ -498,11 +500,9 @@ public final class RetailDataDrivenDefinitionCompiler {
 					}
 					stepNpcs.add(ids.iterator().next());
 				}
-				var chain = clientTalkChainPages.find(entry.questId(), true).orElseThrow();
 				definition = RetailDataDrivenTalkCompiler.buildChain(entry.questId(), acquiredNpc, rewardNpc,
-					metadata.metadata(), chain.entryPage(), chain.stageLadders(), stepNpcs,
-					clientSummaryRows.lastRowIndex(entry.questId()), acquireCategory, acquireParam,
-					worldAcquireId, entry.stepCutscenes());
+					metadata.metadata(), stepNpcs, clientSummaryRows.lastRowIndex(entry.questId()),
+					acquireCategory, acquireParam, worldAcquireId, entry.stepCutscenes());
 				return new Outcome(QuestDefinitionCompiler.compile(definition), null, null);
 			}
 			if (metadata.metadata().itemRequirements().isEmpty()) {
@@ -532,6 +532,25 @@ public final class RetailDataDrivenDefinitionCompiler {
 		} catch (RuntimeException e) {
 			return new Outcome(null, "COMPILATION_FAILED", e.getMessage());
 		}
+	}
+
+	/**
+	 * 判定客户端契约是否为 Talk 链的每个阶段都声明了首屏页（DataDriven 链行的接取走 select_none 询问窗，
+	 * 因此首个对话阶段是 select1）。
+	 * Whether the client contract declares a head page for every talk-chain stage (DataDriven chain rows
+	 * accept through the select_none ask window, so their first talk stage is select1).
+	 * @param questId 任务 ID / quest id
+	 * @param steps Talk 阶段数 / number of talk stages
+	 * @return 全部阶段都有首屏时 true / true when every stage has a head page
+	 */
+	static boolean hasEveryTalkStageHead(int questId, int steps) {
+		for (int index = 0; index < steps; index++) {
+			if (RetailQuestDialogPages.stageHead(questId,
+					RetailDataDrivenTalkCompiler.TALK_STAGE_FIRST_SELECT, index).isEmpty()) {
+				return false;
+			}
+		}
+		return steps > 0;
 	}
 
 	/** talk/collectitem 交错行：步骤类别仅含 talk 与 collectitem 且两者皆有。 / A talk/collectitem interleave row. */

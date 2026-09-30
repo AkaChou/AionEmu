@@ -11,7 +11,7 @@ import com.aionemu.gameserver.questEngine.definition.QuestMetadata;
 import com.aionemu.gameserver.questEngine.runtime.QuestRuntimeComposition;
 import com.aionemu.gameserver.questEngine.runtime.QuestSnapshot;
 import com.aionemu.gameserver.questEngine.runtime.QuestSpawnRegistry;
-import com.aionemu.gameserver.questEngine.runtime.QuestProductionDispatcher;
+import com.aionemu.gameserver.questEngine.runtime.QuestRuntimeDispatcher;
 import com.aionemu.gameserver.questEngine.runtime.PlayerQuestProximityEventPort;
 import com.aionemu.gameserver.questEngine.runtime.PlayerQuestEventPort;
 import com.aionemu.gameserver.questEngine.runtime.TypedQuestAfterCommitPort;
@@ -254,7 +254,7 @@ class QuestEngineRuntimeCompositionTest {
 
 		var dispatcherField = QuestEngine.class.getDeclaredField("productionDispatcher");
 		dispatcherField.setAccessible(true);
-		QuestProductionDispatcher dispatcher = (QuestProductionDispatcher) dispatcherField.get(engine);
+		QuestRuntimeDispatcher dispatcher = (QuestRuntimeDispatcher) dispatcherField.get(engine);
 		assertTrue(dispatcher.hasRoutes(new QuestEvent.Abandon()));
 		assertTrue(dispatcher.hasRoutes(new QuestEvent.DredgionReward()));
 		assertTrue(dispatcher.hasRoutes(new QuestEvent.HouseItemUse(3420021)));

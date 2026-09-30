@@ -41,6 +41,14 @@ import java.util.Objects;
  */
 public final class RetailDataDrivenTalkCompiler {
 
+	/**
+	 * 本链族首个对话阶段的 select 页码：DataDriven 链行的接取走 select_none 询问窗（未接态首屏），
+	 * 因此对话链阶段从 select1 起。
+	 * Select page number of this chain family's first talk stage: DataDriven chain rows accept through
+	 * the select_none ask window (the unaccepted-state head), so their talk stages start at select1.
+	 */
+	static final int TALK_STAGE_FIRST_SELECT = 1;
+
 	private RetailDataDrivenTalkCompiler() {
 	}
 
@@ -181,23 +189,25 @@ public final class RetailDataDrivenTalkCompiler {
 	}
 
 	/**
-	 * 组装 Talk 链行定义（P5-3 wave B，1876 链合同同构）：第 i 步 NPC 的 QUEST_SELECT 显示 select{i}
-	 * 页，按钮 SETPRO{i} 推进中间步（PACKET_ONLY + 全局任务簿页）、末步 SET_SUCCEED 进领奖态；
+	 * 组装 Talk 链行定义（P5-3 wave B）：第 i 步 NPC 的 QUEST_SELECT 下发客户端契约推导的阶段首屏
+	 * {@code select{i+1}}（阶段内翻页 SELECTn_m 由客户端本地完成，服务端不再建逐页路由），推进按钮
+	 * {@code SETPRO{i+1}} 推进中间步（PACKET_ONLY + 全局任务簿页）；末步的 {@code SET_SUCCEED} 与
+	 * {@code SETPRO{N}} 同义（进度置满 → 领奖态）。
 	 * var0 = 阶梯计数（0 → 1 → … → 领奖行），领奖投影 = 客户端任务书末行（QE-051）。
 	 * 前置步 NPC 的 SET_SUCCEED 直达领奖（1876 捷径同构）；REWARD 态陈旧阶梯值进入世界时纠正。
 	 * 系统接取（chain / enterarea / enterworld / leveluplogin）无接取 NPC：发放边与 hunt 链同判据
 	 * （TalkCollectChain 同片先例），逐任务客户端 cutscene 声明挂到对应步推进边。
-	 * Builds the talk-chain definition; step i pairs with the client's select{i} page. System acquires
-	 * (chain / enterarea / enterworld / leveluplogin) carry no acquire npc: grant edges share the hunt
-	 * chain's predicate (the TalkCollectChain precedent), and per-step client cutscenes ride the
-	 * matching advance edge.
+	 * Builds the talk-chain definition; step i opens the client contract's stage head {@code select{i+1}}
+	 * (in-stage SELECTn_m page turns stay client-local, so no per-page server routes are built) and the
+	 * advance button {@code SETPRO{i+1}} moves intermediate steps. On the final step {@code SET_SUCCEED}
+	 * and {@code SETPRO{N}} are synonyms (progress full → reward). System acquires (chain / enterarea /
+	 * enterworld / leveluplogin) carry no acquire npc: grant edges share the hunt chain's predicate (the
+	 * TalkCollectChain precedent), and per-step client cutscenes ride the matching advance edge.
 	 */
 	public static QuestDefinition buildChain(int questId, int acquiredNpc, int rewardNpc, QuestMetadata metadata,
-			int entryPage, List<RetailClientTalkChainPages.Stage> stageLadders, List<Integer> stepNpcs,
-			int lastRowIndex, String acquireCategory, String acquireParam, int worldAcquireId,
-			Map<Integer, Integer> stepCutscenes) {
+			List<Integer> stepNpcs, int lastRowIndex, String acquireCategory, String acquireParam,
+			int worldAcquireId, Map<Integer, Integer> stepCutscenes) {
 		Objects.requireNonNull(metadata, "metadata");
-		Objects.requireNonNull(stageLadders, "stageLadders");
 		Objects.requireNonNull(stepNpcs, "stepNpcs");
 		String category = acquireCategory == null ? "" : acquireCategory.trim();
 		boolean chainOrAreaAcquire = acquiredNpc < 0
@@ -258,22 +268,25 @@ public final class RetailDataDrivenTalkCompiler {
 			boolean finalStep = index == steps - 1;
 			String target = finalStep ? "reward" : "s" + (index + 1);
 			Integer movieId = stepCutscenes == null ? null : stepCutscenes.get(index);
-			// 阶段页面梯：QUEST_SELECT 显示梯首页，导航按钮沿梯下行（动作 id = 下一页 id）。
-			// The stage page ladder: QUEST_SELECT shows the head page; nav buttons walk down the
-			// ladder (a nav action's dialog id is the next page's id).
-			RetailClientTalkChainPages.Stage stage = stageLadders.get(index);
-			List<Integer> ladder = stage.ladder();
+			// 阶段首屏由客户端契约页面名推导（select{i+1}）；阶段内翻页动作不再生成服务端路由。
+			// The stage head comes from the client contract's page name (select{i+1}); in-stage page
+			// turns no longer produce server routes.
+			int stageSelect = TALK_STAGE_FIRST_SELECT + index;
+			int headPage = RetailQuestDialogPages.stageHead(questId, TALK_STAGE_FIRST_SELECT, index)
+				.orElseThrow(() -> new IllegalStateException("missing client stage head select" + stageSelect
+					+ " for DataDriven talk chain quest " + questId));
 			transitions.add(talk(npc, QuestDialogAction.QUEST_SELECT, source, source,
-				List.of(new AfterCommitAction.ShowQuestDialog(ladder.get(0)))));
-			for (int depth = 1; depth < ladder.size(); depth++) {
-				transitions.add(new QuestTransition(
-					new QuestEvent.TalkToNpc(npc, QuestDialogAction.fromId(ladder.get(depth)).id()),
-					List.of(), List.of(), source,
-					List.of(new AfterCommitAction.ShowQuestDialog(ladder.get(depth))), null, source));
-			}
+				List.of(new AfterCommitAction.ShowQuestDialog(headPage))));
+			// 推进按钮 = SETPRO{i+1}（客户端页尾「继续」按钮；SETPRO 全集 10000+N 同域，N=阶段号）。
+			// The advance button is SETPRO{i+1} (the client tail page's continue button; SETPRO
+			// occupies 10000+N with N as the stage number).
+			int advanceAction = QuestDialogAction.SETPRO1.id() + index;
 			if (finalStep) {
-				// 末步推进动作（SET_SUCCEED 或 1009 变体）进领奖态。
-				// The final advance action (SET_SUCCEED or the 1009 variant) moves to reward.
+				// 末步推进：SET_SUCCEED（「结束对话」按钮）与 SETPRO{N}（页尾继续按钮把进度置满）同义，
+				// 二者都由客户端页面图发出，服务端按同一语义收口到领奖态。
+				// The final advance: SET_SUCCEED (the client's "finish" button) and SETPRO{N} (the tail
+				// page's continue button filling the progress) are synonyms — both are sent by the client
+				// page graph and collapse into the reward state server-side.
 				List<AfterCommitAction> afterCommit = new ArrayList<>(3);
 				afterCommit.add(new AfterCommitAction.SyncQuestState(
 					QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH));
@@ -282,29 +295,21 @@ public final class RetailDataDrivenTalkCompiler {
 				}
 				afterCommit.add(new AfterCommitAction.ShowQuestSelectionDialog(QuestDialogPage.SELECT_QUEST.id()));
 				transitions.add(new QuestTransition(
-					new QuestEvent.TalkToNpc(npc, stage.advanceActionId()),
+					new QuestEvent.TalkToNpc(npc, QuestDialogAction.SET_SUCCEED.id()),
 					List.of(), List.of(), "reward",
 					List.copyOf(afterCommit),
 					null, source));
-				if (steps == 1 && stage.advanceActionId() != QuestDialogAction.SET_SUCCEED.id()) {
-					// 35055 单步捷径：步骤 NPC 的 SET_SUCCEED 落 s1（保留遗留别名边），与 SETPRO1
-					// 主边（进领奖）并存；推进动作本身已是 SET_SUCCEED 时不发重复边，也不声明不可达别名节点。
-					// The one-step shortcut: the step npc's SET_SUCCEED lands on s1 (the legacy
-					// alias edge), coexisting with the SETPRO1 primary edge into reward; when the
-					// advance action is already SET_SUCCEED, neither a duplicate edge nor an
-					// unreachable alias node is emitted.
-					nodes.add(new QuestNode("s1", new NodeProjection(QuestStatus.START, Map.of("var0", 1))));
-					transitions.add(new QuestTransition(
-						new QuestEvent.TalkToNpc(npc, QuestDialogAction.SET_SUCCEED.id()),
-						List.of(), List.of(new QuestAction.SetVariable("var0", 1)), "s1",
-						List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.PACKET_ONLY)),
-						null, source));
-				}
+				transitions.add(new QuestTransition(
+					new QuestEvent.TalkToNpc(npc, advanceAction),
+					List.of(), List.of(), "reward",
+					List.copyOf(afterCommit),
+					null, source));
 			} else {
-				// 中间步推进动作（登记表从按钮图导出）推进阶梯（只下发状态包 + 全局任务簿页）；
+				// 中间步推进按钮（客户端页尾 SETPRO{i+1}）推进阶梯（只下发状态包 + 全局任务簿页）；
 				// 同时保留 SET_SUCCEED 直达领奖的捷径（1876 修复期形状：前置步 NPC 也能收尾）。
-				// An intermediate advance (from the button graph) moves the ladder; the SET_SUCCEED
-				// shortcut to the reward state stays available from earlier stage npcs (1876 shape).
+				// An intermediate advance (the client tail page's SETPRO{i+1}) moves the ladder; the
+				// SET_SUCCEED shortcut to the reward state stays available from earlier stage npcs
+				// (1876 shape).
 				List<AfterCommitAction> afterCommit = new ArrayList<>(3);
 				afterCommit.add(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.PACKET_ONLY));
 				if (movieId != null) {
@@ -312,7 +317,7 @@ public final class RetailDataDrivenTalkCompiler {
 				}
 				afterCommit.add(new AfterCommitAction.ShowQuestSelectionDialog(QuestDialogPage.SELECT_QUEST.id()));
 				transitions.add(new QuestTransition(
-					new QuestEvent.TalkToNpc(npc, stage.advanceActionId()),
+					new QuestEvent.TalkToNpc(npc, advanceAction),
 					List.of(), List.of(new QuestAction.SetVariable("var0", index + 1)), target,
 					List.copyOf(afterCommit),
 					null, source));

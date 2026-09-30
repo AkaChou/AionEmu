@@ -313,6 +313,11 @@ public final class RetailQuestDriver {
 		return Optional.ofNullable(instance);
 	}
 
+	/** 真端模板表拥有的全部任务 ID（只读快照）。 / All quest ids owned by retail tables as a read-only snapshot. */
+	public Set<Integer> retailOwnedIds() {
+		return Set.copyOf(retailOwned);
+	}
+
 	/** 装载是否降级（真端资源不可用）。 / Whether the driver degraded on load. */
 	public static boolean isDegraded() {
 		return loadFailed;

@@ -39,8 +39,10 @@ import com.aionemu.gameserver.model.templates.rewards.BonusType;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_ITEM_USAGE_ANIMATION;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.questEngine.definition.CompiledQuestDefinition;
+import com.aionemu.gameserver.questEngine.definition.ImmutableQuestCatalog;
 import com.aionemu.gameserver.questEngine.definition.QuestCatalog;
 import com.aionemu.gameserver.questEngine.definition.QuestCatalogDrop;
+import com.aionemu.gameserver.questEngine.definition.QuestCatalogEntry;
 import com.aionemu.gameserver.questEngine.definition.QuestDefinitionCatalogManifest;
 import com.aionemu.gameserver.questEngine.retail.RetailQuestDriver;
 import com.aionemu.gameserver.questEngine.definition.QuestDialogContract;
@@ -58,10 +60,14 @@ import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.questEngine.runtime.PlayerQuestBroadcastPort;
+import com.aionemu.gameserver.questEngine.runtime.PlayerSerialExecutor;
 import com.aionemu.gameserver.questEngine.runtime.QuestDispatchContract;
+import com.aionemu.gameserver.questEngine.runtime.QuestExecutionCoordinator;
 import com.aionemu.gameserver.questEngine.runtime.QuestInteractionObjectValidator;
 import com.aionemu.gameserver.questEngine.runtime.QuestProductionEventWiring;
 import com.aionemu.gameserver.questEngine.runtime.QuestProductionDispatcher;
+import com.aionemu.gameserver.questEngine.runtime.QuestRuntimeDispatcher;
+import com.aionemu.gameserver.questEngine.runtime.QuestRuntimeRouter;
 import com.aionemu.gameserver.questEngine.runtime.QuestRouteResult;
 import com.aionemu.gameserver.questEngine.runtime.QuestRuntimeComposition;
 import com.aionemu.gameserver.services.QuestService;
@@ -130,14 +136,14 @@ public class QuestEngine implements GameEngine {
 	private ScheduledFuture<?> messageSendingTask;
 	/** Fully composed production ports used by typed quest execution. */
 	private final QuestRuntimeComposition runtimeComposition = QuestRuntimeComposition.production();
-	/** Live typed owner catalog and central Router/Coordinator execution chain. */
-	private volatile QuestProductionDispatcher productionDispatcher = QuestProductionDispatcher.disabled();
+	/** Live XML/retail runtime router; each child owns a disjoint catalog. */
+	private volatile QuestRuntimeDispatcher productionDispatcher = QuestProductionDispatcher.disabled();
 	/** Raw catalog compiled in parallel with other startup work; cleared once consumed. */
 	private volatile Future<QuestCatalog> productionCatalogPreload;
 
 	/** Fully validated immutable typed runtime waiting to be published. */
 	public record PreparedProductionDefinitions(QuestCatalogRegistry catalog,
-			QuestProductionDispatcher dispatcher) {
+			QuestRuntimeDispatcher dispatcher) {
 		public PreparedProductionDefinitions {
 			java.util.Objects.requireNonNull(catalog, "catalog");
 			java.util.Objects.requireNonNull(dispatcher, "dispatcher");
@@ -232,7 +238,7 @@ public class QuestEngine implements GameEngine {
 			Npc npc = env.getVisibleObject() instanceof Npc target ? target : null;
 			int requestedOwner = env.getQuestId();
 			int npcId = npc == null ? 0 : npc.getNpcId();
-			QuestProductionDispatcher typed = productionDispatcher;
+			QuestRuntimeDispatcher typed = productionDispatcher;
 			if (requestedOwner != 0 && typed.owns(requestedOwner)) {
 				QuestEvent event = npcId == 0
 					? new QuestEvent.QuestDialog(env.getDialogId())
@@ -334,7 +340,7 @@ public class QuestEngine implements GameEngine {
 	 * @return 派发顺序 / dispatch order
 	 */
 	List<Integer> npcDialogDispatchOwners(Player player, Npc npc, QuestEvent event) {
-		QuestProductionDispatcher typed = productionDispatcher;
+		QuestRuntimeDispatcher typed = productionDispatcher;
 		List<Integer> preferred = new ArrayList<>();
 		List<Integer> remaining = new ArrayList<>();
 		// 候选来自正式 catalog 并通过事件键过滤，因此不依赖 questNpcs 索引是否已装载。
@@ -366,7 +372,7 @@ public class QuestEngine implements GameEngine {
 	 * @return 是否可见/可进入 / whether the owner stays visible or enterable
 	 */
 	private boolean isClientVisibleNpcDialogOwner(Player player, Npc npc, int questId) {
-		QuestProductionDispatcher typed = productionDispatcher;
+		QuestRuntimeDispatcher typed = productionDispatcher;
 		if (!typed.owns(questId)) {
 			return false;
 		}
@@ -387,7 +393,7 @@ public class QuestEngine implements GameEngine {
 		if (env == null || env.getPlayer() == null || env.getQuestId() <= 0) {
 			return false;
 		}
-		QuestProductionDispatcher typed = productionDispatcher;
+		QuestRuntimeDispatcher typed = productionDispatcher;
 		if (!typed.owns(env.getQuestId())) {
 			return false;
 		}
@@ -406,7 +412,7 @@ public class QuestEngine implements GameEngine {
 		}
 		try {
 			QuestEvent event = new QuestEvent.KillNpc(npc.getNpcId());
-			QuestProductionDispatcher typed = productionDispatcher;
+			QuestRuntimeDispatcher typed = productionDispatcher;
 			List<Integer> questIds = getQuestNpc(npc.getNpcId()).getOnKillEvent();
 			if (questIds.stream().anyMatch(typed::owns)) {
 				try {
@@ -433,7 +439,7 @@ public class QuestEngine implements GameEngine {
 			return false;
 		}
 		try {
-			QuestProductionDispatcher typed = productionDispatcher;
+			QuestRuntimeDispatcher typed = productionDispatcher;
 			Player player = env.getPlayer();
 			List<Integer> questIds = getQuestNpc(npc.getNpcId()).getOnAttackEvent();
 			if (player != null && questIds.stream().anyMatch(typed::owns)) {
@@ -475,7 +481,7 @@ public class QuestEngine implements GameEngine {
 		}
 		try {
 			Player player = env.getPlayer();
-			QuestProductionDispatcher typed = productionDispatcher;
+			QuestRuntimeDispatcher typed = productionDispatcher;
 			if (player != null) {
 				try {
 					typed.dispatch(new QuestEvent.LevelUp(), player.getObjectId(), 0,
@@ -541,7 +547,7 @@ public class QuestEngine implements GameEngine {
 			return;
 		}
 		try {
-			QuestProductionDispatcher typed = productionDispatcher;
+			QuestRuntimeDispatcher typed = productionDispatcher;
 			Player player = env == null ? null : env.getPlayer();
 			if (player != null && questOnDie.stream().anyMatch(typed::owns)) {
 				// 死亡事实由正式 owner 广播消费；同一玩家可同时拥有多个死亡回退任务。
@@ -569,7 +575,7 @@ public class QuestEngine implements GameEngine {
 		}
 		try {
 			Player player = env.getPlayer();
-			QuestProductionDispatcher typed = productionDispatcher;
+			QuestRuntimeDispatcher typed = productionDispatcher;
 			if (player != null) {
 				// 分发到 typed owner：玩家登出（广播全部 log-out 路由）。
 				// Dispatch to typed owners: player logged out (broadcast all log-out routes).
@@ -598,7 +604,7 @@ public class QuestEngine implements GameEngine {
 		}
 		try {
 			Player player = env.getPlayer();
-			QuestProductionDispatcher typed = productionDispatcher;
+			QuestRuntimeDispatcher typed = productionDispatcher;
 			if (player != null) {
 				// 分发到 typed owner：护送 NPC 到达目标（有 owner 则独占，否则广播）。
 				// Dispatch to typed owners: escort NPC reached target (exclusive if owner is set, else broadcast).
@@ -628,7 +634,7 @@ public class QuestEngine implements GameEngine {
 		}
 		try {
 			Player player = env.getPlayer();
-			QuestProductionDispatcher typed = productionDispatcher;
+			QuestRuntimeDispatcher typed = productionDispatcher;
 			if (player != null) {
 				// 分发到 typed owner：护送 NPC 丢失目标（有 owner 则独占，否则广播）。
 				// Dispatch to typed owners: escort NPC lost target (exclusive if owner is set, else broadcast).
@@ -659,7 +665,7 @@ public class QuestEngine implements GameEngine {
 		}
 		try {
 			IntArrayList lists = getOnPassFlyingRingsQuests(FlyRing);
-			QuestProductionDispatcher typed = productionDispatcher;
+			QuestRuntimeDispatcher typed = productionDispatcher;
 			Player player = env == null ? null : env.getPlayer();
 			if (player != null) {
 				boolean hasTypedOwner = false;
@@ -698,7 +704,7 @@ public class QuestEngine implements GameEngine {
 		}
 		try {
 			Player player = env.getPlayer();
-			QuestProductionDispatcher typed = productionDispatcher;
+			QuestRuntimeDispatcher typed = productionDispatcher;
 			if (player != null) {
 				try {
 					typed.dispatch(new QuestEvent.EnterWorld(), player.getObjectId(), 0,
@@ -755,7 +761,7 @@ public class QuestEngine implements GameEngine {
 			return HandlerResult.FAILED;
 		}
 		try {
-			QuestProductionDispatcher typed = productionDispatcher;
+			QuestRuntimeDispatcher typed = productionDispatcher;
 			Player player = env.getPlayer();
 			if (player != null) {
 				int itemId = item.getItemTemplate().getTemplateId();
@@ -859,7 +865,7 @@ public class QuestEngine implements GameEngine {
 		if (env == null || env.getPlayer() == null || itemId <= 0 || itemObjectId < 0) {
 			return false;
 		}
-		QuestProductionDispatcher typed = productionDispatcher;
+		QuestRuntimeDispatcher typed = productionDispatcher;
 		Player player = env == null ? null : env.getPlayer();
 		if (player != null && itemId > 0 && typed.hasRoutes(new QuestEvent.HouseItemUse(itemId))) {
 			try {
@@ -883,7 +889,7 @@ public class QuestEngine implements GameEngine {
 		if (env == null || env.getPlayer() == null || itemId <= 0) {
 			return;
 		}
-		QuestProductionDispatcher typed = productionDispatcher;
+		QuestRuntimeDispatcher typed = productionDispatcher;
 		Player player = env == null ? null : env.getPlayer();
 		List<Integer> questIds = questItems.get(itemId);
 		if (player != null && itemId > 0 && questIds != null && questIds.stream().anyMatch(typed::owns)) {
@@ -923,7 +929,7 @@ public class QuestEngine implements GameEngine {
 			return false;
 		}
 		try {
-			QuestProductionDispatcher typed = productionDispatcher;
+			QuestRuntimeDispatcher typed = productionDispatcher;
 			Player recipient = env == null ? null : env.getPlayer();
 			if (recipient != null && playerRank != null
 				&& typed.hasRoutes(new QuestEvent.KillRanked(playerRank.getId()))) {
@@ -962,7 +968,7 @@ public class QuestEngine implements GameEngine {
 			return false;
 		}
 		try {
-			QuestProductionDispatcher typed = productionDispatcher;
+			QuestRuntimeDispatcher typed = productionDispatcher;
 			Player recipient = env == null ? null : env.getPlayer();
 			Player victim = env != null && env.getVisibleObject() instanceof Player player ? player : null;
 			if (recipient != null && victim != null && victim.getAbyssRank() != null
@@ -996,7 +1002,7 @@ public class QuestEngine implements GameEngine {
 			return false;
 		}
 		try {
-			QuestProductionDispatcher typed = productionDispatcher;
+			QuestRuntimeDispatcher typed = productionDispatcher;
 			Player player = env.getPlayer();
 			if (player != null) {
 				try {
@@ -1025,7 +1031,7 @@ public class QuestEngine implements GameEngine {
 			return false;
 		}
 		try {
-			QuestProductionDispatcher typed = productionDispatcher;
+			QuestRuntimeDispatcher typed = productionDispatcher;
 			Player player = env.getPlayer();
 			if (player != null) {
 				try {
@@ -1054,7 +1060,7 @@ public class QuestEngine implements GameEngine {
 			return false;
 		}
 		try {
-			QuestProductionDispatcher typed = productionDispatcher;
+			QuestRuntimeDispatcher typed = productionDispatcher;
 			Player player = env.getPlayer();
 			Set<Integer> typedClaimedOwners = Set.of();
 			if (player != null) {
@@ -1082,7 +1088,7 @@ public class QuestEngine implements GameEngine {
 			return;
 		}
 		Player player = env.getPlayer();
-		QuestProductionDispatcher typed = productionDispatcher;
+		QuestRuntimeDispatcher typed = productionDispatcher;
 		if (player != null && env.getQuestId() > 0) {
 			// 分发到 typed owner：任务计时器结束（独占指定 owner）。
 			// Dispatch to typed owners: quest timer ended (exclusive to the named owner).
@@ -1125,7 +1131,7 @@ public class QuestEngine implements GameEngine {
 			return false;
 		}
 		try {
-			QuestProductionDispatcher typed = productionDispatcher;
+			QuestRuntimeDispatcher typed = productionDispatcher;
 			Player player = env == null ? null : env.getPlayer();
 			if (player != null && skillId > 0 && typed.hasRoutes(new QuestEvent.UseSkill(skillId))) {
 				try {
@@ -1153,7 +1159,7 @@ public class QuestEngine implements GameEngine {
 			return;
 		}
 		Player player = env == null ? null : env.getPlayer();
-		QuestProductionDispatcher typed = productionDispatcher;
+		QuestRuntimeDispatcher typed = productionDispatcher;
 		if (player != null && player.getInventory() != null
 				&& player.getInventory().getItemCountByItemId(itemId) == 0) {
 			try {
@@ -1176,7 +1182,7 @@ public class QuestEngine implements GameEngine {
 			return;
 		}
 		Player player = env == null ? null : env.getPlayer();
-		QuestProductionDispatcher typed = productionDispatcher;
+		QuestRuntimeDispatcher typed = productionDispatcher;
 		if (player != null) {
 			try {
 				typed.dispatch(new QuestEvent.EquipItem(itemId),
@@ -1201,7 +1207,7 @@ public class QuestEngine implements GameEngine {
 		if (env == null || env.getPlayer() == null || questActionType == null) {
 			return false;
 		}
-		QuestProductionDispatcher typed = productionDispatcher;
+		QuestRuntimeDispatcher typed = productionDispatcher;
 		QuestEvent event = new QuestEvent.CanAct(templateId, questActionType.name());
 		try {
 			var result = typed.dispatch(event, env.getPlayer().getObjectId(), 0,
@@ -1225,7 +1231,7 @@ public class QuestEngine implements GameEngine {
 		if (env == null || env.getPlayer() == null) {
 			return;
 		}
-		QuestProductionDispatcher typed = productionDispatcher;
+		QuestRuntimeDispatcher typed = productionDispatcher;
 		Player player = env == null ? null : env.getPlayer();
 		if (player != null && typed.hasRoutes(new QuestEvent.DredgionReward())) {
 			try {
@@ -1275,7 +1281,7 @@ public class QuestEngine implements GameEngine {
 		}
 		try {
 			Player player = env.getPlayer();
-			QuestProductionDispatcher typed = productionDispatcher;
+			QuestRuntimeDispatcher typed = productionDispatcher;
 			if (player != null) {
 				// 分发到 typed owner：按 bonus-type 广播，声明了该类型的 owner 自行以条件决定是否匹配。
 				// Dispatch to typed owners: broadcast by bonus type; owners decide with their own conditions.
@@ -1328,7 +1334,7 @@ public class QuestEngine implements GameEngine {
 			return false;
 		}
 		try {
-			QuestProductionDispatcher typed = productionDispatcher;
+			QuestRuntimeDispatcher typed = productionDispatcher;
 			if (questNpc.getOnDistanceEvent().stream().anyMatch(typed::owns)) {
 				try {
 					typed.dispatch(runtimeComposition.proximityEventPort()
@@ -1356,7 +1362,7 @@ public class QuestEngine implements GameEngine {
 			return;
 		}
 		try {
-			QuestProductionDispatcher typed = productionDispatcher;
+			QuestRuntimeDispatcher typed = productionDispatcher;
 			Player player = env == null ? null : env.getPlayer();
 			if (player != null && typed.hasRoutes(new QuestEvent.EnterWindStream(teleportId))) {
 				try {
@@ -1963,18 +1969,24 @@ public class QuestEngine implements GameEngine {
 	PreparedProductionDefinitions prepareProductionDefinitions(QuestCatalog catalog,
 			IntFunction<String> aiNameByTemplate) {
 		java.util.Objects.requireNonNull(aiNameByTemplate, "aiNameByTemplate");
-		QuestCatalogRegistry registry = catalog instanceof QuestCatalogRegistry existing
-			? existing : new QuestCatalogRegistry(catalog);
-		QuestRuntimeComposition snapshotComposition = QuestRuntimeComposition.production(registry);
-		QuestProductionDispatcher dispatcher = QuestProductionDispatcher.production(registry, snapshotComposition);
-		QuestInteractionObjectValidator.validate(dispatcher, aiNameByTemplate);
+		RuntimeCatalogs catalogs = splitRuntimeCatalogs(catalog);
+		QuestRuntimeComposition snapshotComposition = QuestRuntimeComposition.production(catalogs.combined());
+		QuestExecutionCoordinator coordinator = new QuestExecutionCoordinator(new PlayerSerialExecutor());
+		QuestProductionDispatcher xmlDispatcher = QuestProductionDispatcher.production(catalogs.xml(),
+			snapshotComposition, coordinator);
+		QuestProductionDispatcher retailDispatcher = catalogs.retail().entries().isEmpty()
+			? QuestProductionDispatcher.disabled()
+			: QuestProductionDispatcher.production(catalogs.retail(), snapshotComposition, coordinator);
+		QuestRuntimeRouter dispatcher = new QuestRuntimeRouter(catalogs.combined(), xmlDispatcher, retailDispatcher);
+		QuestInteractionObjectValidator.validate(xmlDispatcher, aiNameByTemplate);
+		QuestInteractionObjectValidator.validate(retailDispatcher, aiNameByTemplate);
 		snapshotComposition.installBroadcastPort(new PlayerQuestBroadcastPort(
 			playerId -> com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(playerId),
 			(player, questIds) -> dispatcher.dispatchOwners(new QuestEvent.ZoneMissionEnd(), player.getObjectId(),
 				questIds, QuestDispatchContract.EXCLUSIVE),
 			(player, questIds) -> dispatcher.dispatchOwners(new QuestEvent.EventQuestRefresh(), player.getObjectId(),
 				questIds, QuestDispatchContract.EXCLUSIVE)));
-		for (CompiledQuestDefinition definition : registry.executables()) {
+		for (CompiledQuestDefinition definition : catalogs.combined().executables()) {
 			QuestProductionEventWiring.validateDefinition(definition);
 			if (definition.definition().transitions().stream()
 					.map(com.aionemu.gameserver.questEngine.definition.QuestTransition::event)
@@ -1986,7 +1998,44 @@ public class QuestEngine implements GameEngine {
 				throw new IllegalStateException("typed item-play event has no indexed route");
 			}
 		}
-		return new PreparedProductionDefinitions(registry, dispatcher);
+		return new PreparedProductionDefinitions(catalogs.combined(), dispatcher);
+	}
+
+	/**
+	 * 将生产目录按真端保留清单拆成 XML 与真端两个互斥子目录。
+	 * Splits the production catalog into disjoint XML and retail child catalogs according to the retail owner manifest.
+	 * <p>
+	 * 未加载真端驱动时保持单目录兼容（供既有单元测试和独立 XML 工具使用）；生产启动已由
+	 * {@link RetailQuestDriver#overlayProduction(QuestCatalog)} 完成保留清单校验，因此拆分会 fail fast。
+	 * When the retail driver is not loaded, the catalog remains a single compatibility catalog for unit tests and
+	 * standalone XML tools. Production loading has already validated the retention manifest before splitting, so
+	 * split-time failures are deterministic startup errors.</p>
+	 */
+	private static RuntimeCatalogs splitRuntimeCatalogs(QuestCatalog catalog) {
+		QuestCatalogRegistry combined = catalog instanceof QuestCatalogRegistry existing
+			? existing : new QuestCatalogRegistry(catalog);
+		Set<Integer> retailOwned = RetailQuestDriver.current().map(RetailQuestDriver::retailOwnedIds).orElse(Set.of());
+		if (retailOwned.isEmpty()) {
+			return new RuntimeCatalogs(combined, combined, new QuestCatalogRegistry(new ImmutableQuestCatalog(List.of())));
+		}
+		List<QuestCatalogEntry> xmlEntries = new ArrayList<>();
+		List<QuestCatalogEntry> retailEntries = new ArrayList<>();
+		for (QuestCatalogEntry entry : combined.entries()) {
+			(retailOwned.contains(entry.id()) ? retailEntries : xmlEntries).add(entry);
+		}
+		if (retailEntries.isEmpty()) {
+			// 合成目录/局部测试可能只装配 XML owner；生产目录已由 overlayProduction 完成完整归属校验。
+			// Synthetic and focused-test catalogs may contain XML owners only; production ownership was already
+			// validated by overlayProduction before this split point.
+			return new RuntimeCatalogs(combined, combined,
+				new QuestCatalogRegistry(new ImmutableQuestCatalog(List.of())));
+		}
+		return new RuntimeCatalogs(combined, new QuestCatalogRegistry(ImmutableQuestCatalog.fromEntries(xmlEntries)),
+			new QuestCatalogRegistry(ImmutableQuestCatalog.fromEntries(retailEntries)));
+	}
+
+	/** 已校验的组合目录与两个互斥子目录。 / Validated combined catalog and its two disjoint child catalogs. */
+	private record RuntimeCatalogs(QuestCatalogRegistry combined, QuestCatalogRegistry xml, QuestCatalogRegistry retail) {
 	}
 
 	void installProductionDefinitions(QuestCatalog catalog) {
@@ -1995,7 +2044,7 @@ public class QuestEngine implements GameEngine {
 
 	private void installProductionDefinitions(PreparedProductionDefinitions prepared) {
 		QuestCatalogRegistry catalog = prepared.catalog();
-		QuestProductionDispatcher dispatcher = prepared.dispatcher();
+		QuestRuntimeDispatcher dispatcher = prepared.dispatcher();
 		for (CompiledQuestDefinition definition : catalog.executables()) {
 			for (var transition : definition.definition().transitions()) {
 				if (transition.event() instanceof QuestEvent.TalkToNpc talk) {
@@ -2067,7 +2116,7 @@ public class QuestEngine implements GameEngine {
 
 	/** Returns the exact catalog/dispatcher pair currently published. */
 	public PreparedProductionDefinitions currentProductionDefinitions() {
-		QuestProductionDispatcher dispatcher = productionDispatcher;
+		QuestRuntimeDispatcher dispatcher = productionDispatcher;
 		return new PreparedProductionDefinitions(dispatcher.catalogRegistry(), dispatcher);
 	}
 

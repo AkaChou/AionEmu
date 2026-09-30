@@ -48,6 +48,15 @@ import java.util.TreeSet;
  */
 public final class RetailSimpleTalkDefinitionCompiler {
 
+	/**
+	 * 本家族首个对话阶段的 select 页码：SimpleTalk 的 select1 承载接取入口页（ASK_QUEST_ACCEPT），
+	 * 因此在接取规范形（直接下发询问窗）之后，对话链阶段从 select2 起。
+	 * Select page number of this family's first talk stage: SimpleTalk carries the accept entry page in
+	 * select1 (ASK_QUEST_ACCEPT), so after the canonical accept (which pops the ask window directly) the
+	 * talk stages start at select2.
+	 */
+	static final int TALK_STAGE_FIRST_SELECT = 2;
+
 	private RetailSimpleTalkDefinitionCompiler() {
 	}
 
@@ -315,6 +324,9 @@ public final class RetailSimpleTalkDefinitionCompiler {
 			talkNpcIds.add(index.resolveAll(List.of(talkNpc)).npcIds().iterator().next());
 		}
 		int m = talkNpcIds.size();
+		int cutsceneStage = entry.cutscene()
+			? Math.max(0, RetailQuestDialogPages.stageIndexForAction(entry.questId(), entry.cutsceneTrigger()))
+			: -1;
 		ProgressLayout layout = new ProgressLayout.Builder()
 			.add(new BitField("var0", 0, RetailHuntCounterLayout.SECTION_BITS, 0,
 				RetailHuntCounterLayout.SECTION_MASK, PersistenceMode.PERSISTENT, ProgressScope.LOCAL))
@@ -363,41 +375,27 @@ public final class RetailSimpleTalkDefinitionCompiler {
 				List.of(), "started", List.of(), null, "started"));
 		}
 
-		Optional<RetailClientTalkChainPages.Pages> chainPages =
-			RetailClientTalkChainPages.defaultTalkChainPages().find(entry.questId(), true);
 		for (int index_i = 0; index_i < m; index_i++) {
 			int npc = talkNpcIds.get(index_i);
 			String source = index_i == 0 ? "started" : "step" + index_i;
 			String target = "step" + (index_i + 1);
-
-			int expectedHead = 1011 + (index_i + 1) * 341;
-			List<Integer> ladder = chainPages
-				.flatMap(pages -> pages.stageLadders().stream()
-					.filter(s -> !s.ladder().isEmpty() && s.ladder().get(0) == expectedHead)
-					.findFirst()
-					.map(RetailClientTalkChainPages.Stage::ladder))
-				.orElse(List.of(expectedHead));
+			int stageIndex = index_i;
+			int headPage = RetailQuestDialogPages.stageHead(entry.questId(), TALK_STAGE_FIRST_SELECT, stageIndex)
+				.orElseThrow(() -> new IllegalStateException("missing client stage head select"
+					+ (TALK_STAGE_FIRST_SELECT + stageIndex)
+					+ " for retail SimpleTalk quest " + entry.questId()));
 
 			List<AfterCommitAction> headAfter = new ArrayList<>();
-			if (entry.cutscene() && entry.cutsceneTrigger() == ladder.get(0)) {
+			boolean cutsceneOnThisStage = index_i == cutsceneStage;
+			if (cutsceneOnThisStage && entry.cutscene() && entry.cutsceneTrigger() == headPage) {
 				headAfter.add(new AfterCommitAction.PlayMovie(entry.cutsceneMovieId(), QuestMovieType.CUTSCENE));
 			}
-			headAfter.add(new AfterCommitAction.ShowQuestDialog(ladder.get(0)));
+			headAfter.add(new AfterCommitAction.ShowQuestDialog(headPage));
 
+			// 首屏由服务端下发；同一阶段内的 1011→1012 等本地翻页不再生成逐页路由。
+			// The stage head is opened by the server; local 1011→1012 page turns no longer create per-page routes.
 			transitions.add(talk(npc, QuestDialogAction.QUEST_SELECT, source, source, null,
 				List.copyOf(headAfter)));
-			for (int depth = 1; depth < ladder.size(); depth++) {
-				int pageId = ladder.get(depth);
-				List<AfterCommitAction> after = new ArrayList<>();
-				if (entry.cutscene() && entry.cutsceneTrigger() == pageId) {
-					after.add(new AfterCommitAction.PlayMovie(entry.cutsceneMovieId(), QuestMovieType.CUTSCENE));
-				}
-				after.add(new AfterCommitAction.ShowQuestDialog(pageId));
-				transitions.add(new QuestTransition(
-					new QuestEvent.TalkToNpc(npc, QuestDialogAction.fromId(pageId).id()),
-					List.of(), List.of(), source,
-					List.copyOf(after), null, source));
-			}
 
 			List<QuestAction> stepActions = new ArrayList<>();
 			stepActions.add(new QuestAction.SetVariable("var0", index_i + 1));
@@ -410,19 +408,28 @@ public final class RetailSimpleTalkDefinitionCompiler {
 				stepActions.add(removeItem(stepRemove, entry.questId(), itemIndex, metadata));
 			}
 
+			int advance = 10000 + index_i;
 			transitions.add(new QuestTransition(
-				new QuestEvent.TalkToNpc(npc, 10000 + index_i),
+				new QuestEvent.TalkToNpc(npc, advance),
 				List.of(), List.copyOf(stepActions), target,
-				List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
-					new AfterCommitAction.CloseDialog()),
-				null, source));
+				stepAfterCommit(entry, advance, cutsceneOnThisStage), null, source));
 
 			transitions.add(new QuestTransition(
 				new QuestEvent.TalkToNpc(npc, QuestDialogAction.SET_SUCCEED.id()),
 				List.of(), List.copyOf(stepActions), target,
-				List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
-					new AfterCommitAction.CloseDialog()),
-				null, source));
+				stepAfterCommit(entry, QuestDialogAction.SET_SUCCEED.id(), cutsceneOnThisStage), null, source));
+
+			if (cutsceneOnThisStage && entry.cutscene() && entry.cutsceneTrigger() != headPage
+					&& entry.cutsceneTrigger() != advance
+					&& entry.cutsceneTrigger() != QuestDialogAction.SET_SUCCEED.id()
+					&& entry.cutsceneTrigger() != QuestDialogAction.ASK_QUEST_ACCEPT.id()
+					&& entry.cutsceneTrigger() != QuestDialogAction.QUEST_ACCEPT_SIMPLE.id()) {
+				// 真端表声明的过场触发页是服务端副作用，不是状态迁移；只挂播片，不推进节点。
+				// A cutscene trigger declared by the retail table is a server side effect, not a state
+				// transition; it plays the movie without advancing the node.
+				transitions.add(talk(npc, QuestDialogAction.fromId(entry.cutsceneTrigger()), source, source, null,
+					List.of(new AfterCommitAction.PlayMovie(entry.cutsceneMovieId(), QuestMovieType.CUTSCENE))));
+			}
 		}
 
 		for (int rewardNpc : rewardNpcs) {
@@ -564,6 +571,17 @@ public final class RetailSimpleTalkDefinitionCompiler {
 			}
 		}
 		return List.copyOf(reattached);
+	}
+
+	private static List<AfterCommitAction> stepAfterCommit(RetailSimpleTalkTable.Entry entry, int triggerAction,
+			boolean cutsceneOnThisStage) {
+		List<AfterCommitAction> after = new ArrayList<>();
+		if (cutsceneOnThisStage && entry.cutscene() && entry.cutsceneTrigger() == triggerAction) {
+			after.add(new AfterCommitAction.PlayMovie(entry.cutsceneMovieId(), QuestMovieType.CUTSCENE));
+		}
+		after.add(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH));
+		after.add(new AfterCommitAction.CloseDialog());
+		return List.copyOf(after);
 	}
 
 	private static List<QuestTransition> canonicalObjectAcceptFlow(int objectNpc, String acceptTarget,

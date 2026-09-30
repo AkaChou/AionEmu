@@ -32,7 +32,7 @@ import java.util.Set;
  * Executes live typed owners through the central router and transaction coordinator.
  */
 @Slf4j(topic = "QUEST_RUNTIME")
-public final class QuestProductionDispatcher {
+public final class QuestProductionDispatcher implements QuestRuntimeDispatcher {
 	@FunctionalInterface
 	interface ConnectionProvider {
 		Connection open() throws SQLException;
@@ -99,6 +99,24 @@ public final class QuestProductionDispatcher {
 		return new QuestProductionDispatcher(catalog, new QuestExecutionCoordinator(new PlayerSerialExecutor()),
 			composition.eventPort(), composition.actionPort(), composition.statePort(),
 			composition.afterCommitPort(), DatabaseFactory::getConnection,
+			new LocalizedQuestAuditSink(), new QuestRuntimeMetricsCollector());
+	}
+
+	/**
+	 * 使用共享执行协调器构建生产 dispatcher，使 XML 与真端 owner 仍按玩家串行执行。
+	 * Builds a production dispatcher with a shared execution coordinator so XML and retail owners
+	 * remain serialized per player.
+	 * @param catalog 该子运行时独占的目录 / catalog owned exclusively by this child runtime
+	 * @param composition 已固定的生产对象图 / pinned production object graph
+	 * @param coordinator 跨子运行时共享的执行协调器 / execution coordinator shared across child runtimes
+	 * @return 生产 dispatcher / production dispatcher
+	 */
+	public static QuestProductionDispatcher production(QuestCatalog catalog, QuestRuntimeComposition composition,
+			QuestExecutionCoordinator coordinator) {
+		Objects.requireNonNull(composition, "composition");
+		Objects.requireNonNull(coordinator, "coordinator");
+		return new QuestProductionDispatcher(catalog, coordinator, composition.eventPort(), composition.actionPort(),
+			composition.statePort(), composition.afterCommitPort(), DatabaseFactory::getConnection,
 			new LocalizedQuestAuditSink(), new QuestRuntimeMetricsCollector());
 	}
 
