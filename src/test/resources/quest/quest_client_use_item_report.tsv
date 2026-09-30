@@ -1,7 +1,0 @@
-# 客户端报告模式登记（quest_id, mode, item_id）
-# SimpleUseItem 交付方式：CHECK = 交付物 HasItem 门控；REWARD = 1009 直接交付（缺省默认）
-80482	CHECK	182215419
-80486	CHECK	182215421
-80554	CHECK	182215444
-80558	CHECK	182215445
-80612	CHECK	182215579

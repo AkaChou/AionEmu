@@ -47,8 +47,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * XML 自身带历史错误（用户口径 2026-09-23），只有在真端表达不了时才保留。
  * <p>
  * 数据来源三层：真端模板表 {@code Quest_SimpleCollectItem.xml}（接取/对象/报告 NPC）、真端 {@code quest.xml}
- * 元数据（交付物、奖励）、客户端契约登记（{@code quest_client_dialog_exits.tsv} 的 SELECT1_1/SELECT6、
- * {@code quest_client_summary_rows.tsv} 的任务书末行——真端表本身没有这两列）。
+ * 元数据（交付物、奖励）、规范形客户端契约视图（{@code RetailClientDialogExits} 与任务书末行投影）。
  * <p>
  * 断言四件事：
  * <ol>
