@@ -32,7 +32,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * "Talk 接取 + 单块 Hunt 进度"（复用 hunt 计数网格），其余步骤类型按批补齐并保持
  * {@code FAMILY_PENDING}。
  * <p>
- * 断言四件事：家族规模冻结 / 采纳数量下限 / 漂移登记同步 / 冻结 IR 指纹 + 保留清单一致。
+ * 断言五件事：家族规模冻结 / 采纳数量下限 / 漂移登记同步 / 冻结 IR 指纹 / 保留清单一致，
+ * 以及台账裁定码与漂移登记同源（QE-111）。
  * Retail-semantics gate for the DataDriven family (batch-wise rollout).
  */
 class RetailDataDrivenGateTest {
@@ -43,6 +44,8 @@ class RetailDataDrivenGateTest {
 	private static final String DRIFT_REGISTRY = "/quest/retail-data-driven-drift.tsv";
 	/** 冻结 IR 指纹。 / Frozen IR fingerprints. */
 	private static final String FINGERPRINTS = "/quest/retail-data-driven-ir-fingerprints.tsv";
+	/** 保留清单的测试侧副本（必须与 {@link #RETENTION} 逐字节一致）。 / Test-side retention copy. */
+	private static final String RETENTION_TEST_COPY = "/quest/retail-xml-retention.tsv";
 	/** 冻结的家族规模。 / Frozen family size. */
 	private static final int FROZEN_FAMILY_SIZE = 1508; // 家族=（catalog∪retired)∩表，翻转只换 owner 不减员；并行会话家族表并入行当前解析器不可见（其解析器改动未落地），钉解析实况
 	/** 可驱动数量下限（三族混合链切片 + 25050/25082 curated 退回）。 / Floor for retail-drivable quests. */
@@ -496,6 +499,55 @@ class RetailDataDrivenGateTest {
 			+ problems.stream().limit(20).toList());
 	}
 
+	/**
+	 * 台账裁定码 ⟺ 漂移登记（QE-111，码权威在冻结巡检表）：DD 族每一行的保留原因必须是
+	 * {@code ADJUDICATED:<码>}，且 {@code <码>} 逐字等于 {@code retail-data-driven-drift.tsv} 里该行的
+	 * {@code REJECTED:<码>}；采纳行则必须是 {@code RETAIL_TABLE/OK}。retention 是**派生视图**——
+	 * 出现"台账登记码 ≠ 现行拒绝码"时以漂移登记为准修正台账，禁止反过来按台账改判。
+	 * 同片锁住生产副本与测试副本逐字节一致（双副本漂移是本仓反复踩过的坑）。
+	 * Adjudicated codes must equal the frozen drift registry (the code authority) in both directions,
+	 * and the two retention copies must stay byte-identical.
+	 */
+	@Test
+	void adjudicatedRetentionCodesMatchTheDriftRegistry() throws Exception {
+		Map<Integer, String[]> retention = retentionRows();
+		List<String> problems = new ArrayList<>();
+		for (Map.Entry<Integer, String> entry : new TreeMap<>(driftRegistry).entrySet()) {
+			int questId = entry.getKey();
+			String drift = entry.getValue();
+			String[] row = retention.get(questId);
+			if (row == null) {
+				problems.add(questId + ": 漂移登记行在保留台账里缺失");
+				continue;
+			}
+			String owner = row[0];
+			String reason = row[1];
+			if ("ADOPTED".equals(drift)) {
+				if (!"RETAIL_TABLE".equals(owner) || !"OK".equals(reason)) {
+					problems.add(questId + ": 漂移登记 ADOPTED，台账却是 " + owner + "/" + reason);
+				}
+				continue;
+			}
+			if (!drift.startsWith("REJECTED:")) {
+				problems.add(questId + ": 未登记的漂移分类 " + drift);
+				continue;
+			}
+			if (!"XML_RETENTION".equals(owner)) {
+				problems.add(questId + ": 漂移登记 " + drift + "，台账 owner 却是 " + owner);
+				continue;
+			}
+			String expected = "ADJUDICATED:" + drift.substring("REJECTED:".length());
+			if (!expected.equals(reason)) {
+				problems.add(questId + ": 台账码与漂移登记不同源，台账=" + reason + " 漂移=" + drift);
+			}
+		}
+		assertTrue(problems.isEmpty(), () -> "DD 台账裁定码与冻结漂移登记失同步："
+			+ problems.stream().limit(20).toList());
+		String production = new String(open(RETENTION).readAllBytes(), StandardCharsets.UTF_8);
+		String testCopy = new String(open(RETENTION_TEST_COPY).readAllBytes(), StandardCharsets.UTF_8);
+		assertEquals(production, testCopy, "retention 双副本必须逐字节一致（生产 / 测试各一份）");
+	}
+
 	/** 暂缓采纳警卫：curated 行必须仍留 XML，且登记为 curated 拒绝码（裁定落定前不得悄悄采纳）。
 	 * Curated-deferral guard: deferred rows stay on XML with the curated rejection code. */
 	@Test
@@ -595,6 +647,19 @@ class RetailDataDrivenGateTest {
 			owners.put(Integer.parseInt(parts[0]), parts[1]);
 		}
 		return owners;
+	}
+
+	/** 保留台账的 owner/reason 两列（裁定码同源门用）。 / Owner and reason columns of the retention ledger. */
+	private static Map<Integer, String[]> retentionRows() throws Exception {
+		Map<Integer, String[]> rows = new TreeMap<>();
+		for (String line : lines(open(RETENTION))) {
+			if (line.startsWith("#") || line.isBlank()) {
+				continue;
+			}
+			String[] parts = line.split("\t", -1);
+			rows.put(Integer.parseInt(parts[0]), new String[] { parts[1], parts[3] });
+		}
+		return rows;
 	}
 
 	private static Map<Integer, String> driftRegistry() throws Exception {

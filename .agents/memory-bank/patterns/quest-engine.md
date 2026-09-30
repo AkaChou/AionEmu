@@ -2513,3 +2513,25 @@ keywords: 悬空区域引用、AREA_PENDING、EnterArea 具名区域、questscri
 
 - **判定规则**：`EnterArea` 行被拒先扫真端世界文件——区域名**零定义**时按悬空引用处理（HOLD），不补绑定、不改按名匹配、不发明坐标。
 - **安全网**：封板证据落 TSV + 台账第 5 列；「绑定出现 ⇒ 翻片」由 `RetailDataDrivenGateTest` 的漂移登记与 owner 一致性双向守着；既存红（80817、封顶登记行、旧壳 39/入口页合同）不得顺手回写。
+
+## [QE-111] 一一一、台账裁定码必须与冻结漂移登记同源：retention 是派生视图，禁止反过来按台账改判 (ADJUDICATION_CODE_SYNC)
+
+<!-- pattern-metadata
+status: CONFIRMED
+scope: DataDriven 族保留台账 `ADJUDICATED:<码>` 与冻结漂移登记 `src/test/resources/quest/retail-data-driven-drift.tsv` 的一致性口径，与双副本 retention 的同步纪律
+first_seen: 2026-09-30
+last_verified: 2026-09-30
+symptom: 台账写着 `ADJUDICATED:RETAIL_ACQUIRE_NPC_UNRESOLVED`（或 `RETAIL_TALK_HUNT_CHAIN_DEFERRED`），真端漂移登记却是 `REJECTED:RETAIL_ITEMPLAY_ACQUIRE_EVENT_DEFERRED`（或 `CURATED_LEGACY_CONTRACT_LOCK`）；排障时按台账码找成因会找到已消失的旧路径
+root_cause: ①台账的 reason 列是**历史裁定时刻**写下的码，编译器后续换了更精确的拒绝路径（ItemPlay 事件轴先于道具/接取解析；页梯退役后 talk 链成因消失、行转 curated）时无人归位；②`RetailDataDrivenGateTest` 只锁了漂移登记 ⟺ 现行编译、以及「可驱动却留 XML」，没有锁台账码与漂移码的同源；③retention 双副本（生产 / 门测试）也没有任何门锁逐字节一致
+fix_or_guardrail: 1. **码权威 = 冻结漂移登记**（可被 `driftVersusShellsIsRegistered` 复核的现行编译拒绝码），台账 reason 必须写成 `ADJUDICATED:<同码>`，禁止从 retention 反推码（QE-098 规则）；2. **双向一致**：DD 族每行 `RETAIL_TABLE/OK` ⟺ `ADOPTED`，`XML_RETENTION/ADJUDICATED:<码>` ⟺ `REJECTED:<码>`，无第三态；3. **同源门**：`RetailDataDrivenGateTest#adjudicatedRetentionCodesMatchTheDriftRegistry` 逐行断言 + 同片锁住 retention 双副本逐字节一致；4. **修正顺序**：先看漂移登记（码）→ 再改台账两副本 reason/evidence → 用 sabotage（把某行改回旧码）证明门有牙；5. **只改 reason/evidence 不动 owner**：本类修正零行为变更，不需要 A/B 对拍与真机验收
+evidence: .agents/summary/quest-adjudication-code-sync/2026-09-30-qe111-adjudication-code-sync.zh-CN.md; .agents/summary/quest-adjudication-code-sync/qe-111-adjudication-code-realign.tsv; src/test/java/com/aionemu/gameserver/questEngine/retail/RetailDataDrivenGateTest.java; src/test/resources/quest/retail-data-driven-drift.tsv; src/main/resources/aion/data/static_data/quest/retail/retail-xml-retention.tsv
+validation: 2026-09-30 4 行台账码归一（25051→CURATED_LEGACY_CONTRACT_LOCK；80885/80940/80961→RETAIL_ITEMPLAY_ACQUIRE_EVENT_DEFERRED），双副本同片改；新增常设门 1 例（漂移登记 1508 行双向 + 双副本逐字节），sabotage 实测可红；T1 82 例红 2 例 = 既存红；T3 1857 例红身份集 198 = `target/agent-logs/qe107b/t3.ids` ADDED 0 / REMOVED 0；verify_retirement catalog=746/directory=746/retired=5478=6224
+boundaries: 本门只管 DataDriven 族 1508 行；其它族 `ADJUDICATED:` 码由各自家族门负责（SimpleItemPlay 的 ADJUDICATED_CODES、SimpleHunt 的拒绝登记表）；未重跑 build_retention_list.py（该脚本会重写 evidence 列，属另一条流水线）；无行为变更故无真机验收项
+superseded_by: none
+see_also: [QE-110], [QE-108], [QE-098]
+first_check: 台账码与漂移登记不一致时先答：①这一行的漂移登记（码权威）是什么？②现行编译器的哪条分支产出它（grep 那个码的 return）？③台账码是不是历史裁定时刻的旧路径（成因是否已消失，例如页梯退役 / 事件轴先于道具解析）？④改的是 reason/evidence 而不是 owner 吗？⑤双副本都改了吗、门锁住了吗？
+keywords: 裁定码同源、ADJUDICATED 与 REJECTED 失同步、retention 派生视图、码权威在冻结漂移登记、ItemPlay 事件轴优先、curated 覆盖码、双副本逐字节门、sabotage 证明门有牙、QE-111
+-->
+
+- **判定规则**：台账与漂移登记打架时以**漂移登记**为准改台账；先确认现行编译器产出该码的分支，再改 reason/evidence（owner 不动）。
+- **安全网**：新增常设门逐行双向断言 + retention 双副本逐字节；修正后用 sabotage 反证门有效；既存红（80817、封顶登记行、旧壳 39/入口页合同）不得顺手回写。

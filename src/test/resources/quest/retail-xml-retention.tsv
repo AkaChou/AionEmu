@@ -3881,7 +3881,7 @@
 25032	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history
 25033	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CANONICAL
 25050	XML_RETENTION	DataDriven	ADJUDICATED:CURATED_LEGACY_CONTRACT_LOCK	curated deferral: reshape decision pending (DD gate CURATED_DEFERRED guard)
-25051	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_TALK_HUNT_CHAIN_DEFERRED	step vocabulary unsupported by retail synthesis [retention-lag fix: code realigned to frozen drift]
+25051	XML_RETENTION	DataDriven	ADJUDICATED:CURATED_LEGACY_CONTRACT_LOCK	QE-111 code realign to the frozen drift fixture (authority): RetailDataDrivenGateTest.CURATED_DEFERRED registers this row (TalkFOBJ relative monster spawn axis exceeds the talk+hunt vocabulary); the old RETAIL_TALK_HUNT_CHAIN_DEFERRED cause disappeared with the ladder retirement
 25052	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p0c51-fobj-collect-decisions.tsv basis=DD_FOBJ_COLLECT
 25060	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
 25062	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_HANDIN_CANONICAL
@@ -6112,7 +6112,7 @@
 80882	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_SIMPLE
 80883	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CANONICAL
 80884	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
-80885	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_UNRESOLVED	b1-acquire-sentinel/b1_forensics.tsv acquire npc unresolved: name absent from this server's npc_name_index
+80885	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ITEMPLAY_ACQUIRE_EVENT_DEFERRED	QE-111 code realign to the frozen drift fixture (authority): category_acquire_=ItemPlay + category1=event, so RetailDataDrivenDefinitionCompiler defers on the event axis before item resolution; the old RETAIL_ACQUIRE_NPC_UNRESOLVED label was stale (compiler comment: 'a more accurate code than acquire npc unresolved')
 80886	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_HANDIN_CANONICAL
 80887	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CANONICAL
 80888	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CANONICAL
@@ -6166,7 +6166,7 @@
 80937	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_PVP_GRID
 80938	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_PVP_GRID
 80939	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_SIMPLE
-80940	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_UNRESOLVED	b1-acquire-sentinel/b1_forensics.tsv acquire npc unresolved: name absent from this server's npc_name_index
+80940	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ITEMPLAY_ACQUIRE_EVENT_DEFERRED	QE-111 code realign to the frozen drift fixture (authority): category_acquire_=ItemPlay + category1=event, so RetailDataDrivenDefinitionCompiler defers on the event axis before item resolution; the old RETAIL_ACQUIRE_NPC_UNRESOLVED label was stale
 80941	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
 80942	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CANONICAL
 80943	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CANONICAL
@@ -6187,7 +6187,7 @@
 80958	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history wave11-hunt-collect-mix-decisions.tsv basis=DD_HUNT_COLLECT_MIX
 80959	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CANONICAL
 80960	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_SIMPLE
-80961	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_UNRESOLVED	b1-acquire-sentinel/b1_forensics.tsv acquire npc unresolved: name absent from this server's npc_name_index
+80961	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ITEMPLAY_ACQUIRE_EVENT_DEFERRED	QE-111 code realign to the frozen drift fixture (authority): category_acquire_=ItemPlay + category1=event, so RetailDataDrivenDefinitionCompiler defers on the event axis before item resolution; the old RETAIL_ACQUIRE_NPC_UNRESOLVED label was stale
 80962	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CANONICAL
 80963	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
 80964	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
