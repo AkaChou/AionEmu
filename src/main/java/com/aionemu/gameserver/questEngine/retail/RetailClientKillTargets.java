@@ -118,26 +118,12 @@ public final class RetailClientKillTargets {
 		return new RetailClientKillTargets(Map.copyOf(entries), Map.of());
 	}
 
-	/** 目标集包含该怪物的任务集（反查索引；用于判断 NPC 是否属变体目标）。 */
-	public Set<Integer> questsTargeting(int npcId) {
-		Set<Integer> hits = new LinkedHashSet<>();
-		entries.forEach((questId, targets) -> {
-			if (targets.contains(npcId)) {
-				hits.add(questId);
-			}
-		});
-		return Set.copyOf(hits);
-	}
 
 	/** 该任务的客户端目标集；未登记为空集。 / The quest's client targets; empty when unregistered. */
 	public Set<Integer> targets(int questId) {
 		return entries.getOrDefault(questId, Set.of());
 	}
 
-	/** 该任务是否登记了客户端目标名单。 / Whether the quest has an entry. */
-	public boolean contains(int questId) {
-		return entries.containsKey(questId);
-	}
 
 	public int size() {
 		return entries.size();
@@ -175,10 +161,6 @@ public final class RetailClientKillTargets {
 		return new RetailClientKillTargets(entries, Map.copyOf(frozen));
 	}
 
-	/** 该任务指定段（计数槽 1..N）的客户端目标集；未登记为空集。 / The stage's client targets; empty when unregistered. */
-	public Set<Integer> stageTargets(int questId, int stage) {
-		return stageEntries.getOrDefault(questId, Map.of()).getOrDefault(stage, Set.of());
-	}
 
 	/** 该任务的全逐段登记（段号 → 目标集）；未登记为空映射。 / The quest's full per-stage registry; empty when unregistered. */
 	public Map<Integer, Set<Integer>> stageTargets(int questId) {

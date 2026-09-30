@@ -453,21 +453,6 @@ public final class RetailSimpleCollectItemDefinitionCompiler {
 			List.of(new AfterCommitAction.CloseDialog())));
 	}
 
-	/**
-	 * 接取续页流：真端模板表没有"页链"列，{@code SELECT1_1} 来自客户端对话出口登记表
-	 * （客户端 5.8 的 select1 页按钮 {@code HACTION_SELECT1_1}）。
-	 * Accept continuation derived from the client dialog exit registry.
-	 */
-	static List<QuestTransition> acceptContinuation(int acquiredNpc, boolean continues) {
-		List<QuestTransition> flow = new ArrayList<>(2);
-		flow.add(talk(acquiredNpc, QuestDialogAction.SELECT1_1, "unaccepted", "unaccepted", null,
-			List.of(new AfterCommitAction.ShowQuestDialog(QuestDialogPage.SELECT1_1.id()))));
-		if (continues) {
-			flow.add(talk(acquiredNpc, QuestDialogAction.SELECT1_1_1, "unaccepted", "unaccepted", null,
-				List.of(new AfterCommitAction.ShowQuestDialog(QuestDialogPage.SELECT1_1_1.id()))));
-		}
-		return List.copyOf(flow);
-	}
 
 	/**
 	 * 完成流：与 {@code npc-complete} 展开同构。无可选奖励 = 预览窗 + 确认区间 8..23 每条发固定奖励；

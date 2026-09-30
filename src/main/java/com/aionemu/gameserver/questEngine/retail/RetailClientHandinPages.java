@@ -6,10 +6,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 
 /**
  * 客户端「交付型」对话页登记（原 {@code quest_client_handin_pages.tsv} 退役后转为动态测试资源流与规范视图）。
@@ -25,16 +23,13 @@ import java.util.Set;
  */
 public final class RetailClientHandinPages {
 
-	private static final RetailClientHandinPages EMPTY = new RetailClientHandinPages(Map.of(), Set.of());
+	private static final RetailClientHandinPages EMPTY = new RetailClientHandinPages(Map.of());
 	private static volatile RetailClientHandinPages defaultInstance;
 
 	private final Map<Integer, Pages> entries;
-	/** 交付型「像但不标准」的任务（页面集合超出模板）→ 合成器按稳定码拒绝。 / Hand-in-like exceptions. */
-	private final Set<Integer> excluded;
 
-	private RetailClientHandinPages(Map<Integer, Pages> entries, Set<Integer> excluded) {
+	private RetailClientHandinPages(Map<Integer, Pages> entries) {
 		this.entries = entries != null ? Map.copyOf(entries) : Map.of();
-		this.excluded = excluded != null ? Set.copyOf(excluded) : Set.of();
 	}
 
 	/** 缺省规范交付型对话页登记（退役后生产通道）。 / Default canonical hand-in pages registry. */
@@ -63,17 +58,6 @@ public final class RetailClientHandinPages {
 				pages = load(input);
 			} catch (IOException e) {
 				pages = EMPTY;
-			}
-		}
-		InputStream exIn = RetailClientHandinPages.class.getResourceAsStream("/quest/quest_client_handin_exceptions.tsv");
-		if (exIn == null) {
-			exIn = RetailClientHandinPages.class.getResourceAsStream("/aion/data/static_data/quest/retail/quest_client_handin_exceptions.tsv");
-		}
-		if (exIn != null) {
-			try (InputStream ex = exIn) {
-				pages = pages.withExceptions(ex);
-			} catch (IOException e) {
-				// ignore
 			}
 		}
 		return pages;
@@ -124,28 +108,7 @@ public final class RetailClientHandinPages {
 		} catch (RuntimeException e) {
 			throw new IOException("failed to parse client hand-in page registry", e);
 		}
-		return new RetailClientHandinPages(Map.copyOf(entries), Set.of());
-	}
-
-	/** 附加例外登记：页面集合超出交付型模板的任务（合成器拒绝、保留 XML）。 / Attaches the exception set. */
-	public RetailClientHandinPages withExceptions(InputStream exceptions) throws IOException {
-		Set<Integer> ids = new HashSet<>(this.excluded);
-		try (BufferedReader reader = new BufferedReader(new InputStreamReader(exceptions,
-				StandardCharsets.UTF_8))) {
-			String line;
-			while ((line = reader.readLine()) != null) {
-				if (line.startsWith("#") || line.isBlank()) {
-					continue;
-				}
-				ids.add(Integer.parseInt(line.split("\t", -1)[0]));
-			}
-		}
-		return new RetailClientHandinPages(entries, Set.copyOf(ids));
-	}
-
-	/** 该任务的客户端页面集合是否超出交付型模板。 / Whether the client pages exceed the hand-in template. */
-	public boolean excluded(int questId) {
-		return excluded.contains(questId);
+		return new RetailClientHandinPages(Map.copyOf(entries));
 	}
 
 	/** 该任务的交付型页面组（非交付型流程为空）。 / The hand-in pages of one quest, empty for other flows. */

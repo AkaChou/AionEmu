@@ -11,21 +11,14 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * 客户端对话出口登记表（原 {@code quest_client_dialog_exits.tsv} 退役后转为动态测试资源流与规范视图）。
+ * 客户端对话出口登记表（原 {@code quest_client_dialog_exits.tsv} 严格缩表后内存规范视图）。
  * <p>
- * 历史背景：客户端 5.8 的部分任务页里，{@code select1}、{@code select2}、{@code select5}、{@code select6}
- * 带微观翻页动作（如 {@code SELECT2_CONTINUE} 动作 1353、{@code SELECT5_CHECK} 等）。
- * Read-only in-memory view of the client dialog exit registry (retired TSV, in-memory canonical view).
+ * 仅保留具有 select_none 续页（4763，接取/拒绝按钮所在页）的规范形任务。
+ * 历史的微观页码阶梯（SELECT1_1、SELECT2_CONTINUE、SELECT5_CHECK、SELECT6 等）已随通用家族规范形生命周期彻底退役。
  */
 public final class RetailClientDialogExits {
 
 	public static final String SELECT_NONE_1 = "SELECT_NONE_1";
-	public static final String SELECT1_1 = "SELECT1_1";
-	public static final String SELECT1_1_1 = "SELECT1_1_1";
-	public static final String SELECT2_CONTINUE = "SELECT2_CONTINUE";
-	public static final String SELECT6 = "SELECT6";
-	public static final String SELECT5_CHECK = "SELECT5_CHECK";
-	public static final String SELECT5_CHECK_SIMPLE = "SELECT5_CHECK_SIMPLE";
 
 	private static final RetailClientDialogExits EMPTY = new RetailClientDialogExits(Map.of());
 	private static volatile RetailClientDialogExits defaultInstance;
