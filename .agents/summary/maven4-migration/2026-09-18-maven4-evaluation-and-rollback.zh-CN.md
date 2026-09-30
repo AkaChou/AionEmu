@@ -25,5 +25,5 @@
 ## 若将来要重新启用
 
 1. 下载 `https://repo.maven.apache.org/maven2/org/apache/maven/apache-maven/4.0.0-rc-6/apache-maven-4.0.0-rc-6-bin.tar.gz`（sha512 见同目录的 `.sha512` 文件）
-2. 解压到 `/Users/mc/Workspace/maven/4.0.0-rc-6`
+2. 解压到 `<解压后的 Maven 4 目录>`
 3. 或直接从上述 Trash 目录恢复；上表评估结论可直接复用

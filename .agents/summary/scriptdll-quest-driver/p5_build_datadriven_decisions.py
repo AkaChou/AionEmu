@@ -13,9 +13,10 @@ REJECTED → 不进裁定（未覆盖形状留 FAMILY_PENDING 待后续批）。
 
 输出：p5-datadriven-decisions.tsv。
 """
+import os
 from pathlib import Path
 
-REPO = Path('/Users/mc/IdeaProjects/AionEmu-test')
+REPO = Path(f"{os.environ.get('AION_REPO_ROOT', os.path.expanduser('~/IdeaProjects/AionEmu-test'))}")
 DRIFT = REPO / 'src/test/resources/quest/retail-data-driven-drift.tsv'
 CENSUS = REPO / '.agents/summary/scriptdll-quest-driver/p5-datadriven-shape-census.tsv'
 OUT = REPO / '.agents/summary/scriptdll-quest-driver/p5-datadriven-decisions.tsv'

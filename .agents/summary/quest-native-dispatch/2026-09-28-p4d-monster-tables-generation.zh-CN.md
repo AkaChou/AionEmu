@@ -26,7 +26,7 @@
 | 项 | 值 |
 |---|---|
 | 入仓路径 | `src/main/resources/aion/definitions/quest_monster/quest_monster.csv` |
-| 来源 | `/Users/mc/PycharmProjects/unpak/Quest_unpacked/quest_monster.csv` |
+| 来源 | `${AION_UNPACK_ROOT}/Quest_unpacked/quest_monster.csv` |
 | 规模 / sha256 | 8499 行 / 2227716 字节 / `aaa8da03…`（**记录但不钉**：用户明确该文件会持续修订） |
 | 形态 | UTF-8（首行 BOM）、CRLF、无引号字段、列数 7–569 可变 |
 

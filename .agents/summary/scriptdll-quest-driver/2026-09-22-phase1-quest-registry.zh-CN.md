@@ -4,8 +4,8 @@
 > **生成物清理提示（2026-09-30）**：本文件正文提到的 `*.tsv` / `*.log` / `*.txt` / `*.xml` 等中间转储已随 `chore(agents)` 清理删除；原文与留痕仍可从 git 历史取回，被删清单与再生成入口见 `.agents/summary/CLEANUP-LEDGER.zh-CN.md`。
 
 - 日期：2026-09-22；性质：只读分析（未改任何生产代码），产物在本目录。
-- 二进制：`/Users/mc/IdeaProjects/58Server/MainServer/ScriptDLL64.dll`（73.4 MB，与 NPCServer 副本同尺寸）
-- 反编译产物：`/Users/mc/IdeaProjects/58Server/server58/MainServer_ScriptDLL64/ScriptDLL64.c`
+- 二进制：`${AION_RETAIL_ROOT}/MainServer/ScriptDLL64.dll`（73.4 MB，与 NPCServer 副本同尺寸）
+- 反编译产物：`${AION_RETAIL_ROOT}/server58/MainServer_ScriptDLL64/ScriptDLL64.c`
   - 行数 2,719,399；函数 158,519（`status.txt: Exported 158519, failed 0`）
   - dump SHA256（脚本自动写入 TSV 头）：`dbcd96cc6a204912bf53be64021846c4ce18835afb2d44a8cc42750e2615441c`
 - 工具：`extract_quest_registry.py`、`report_quest_registry_coverage.py`、`sample_topology_vs_xml.py`

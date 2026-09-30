@@ -12,12 +12,13 @@
 
 用法：python3 -B p0c6_restore_spawn_gap_rows.py [--dry-run]
 """
+import os
 import argparse
 import re
 import subprocess
 from pathlib import Path
 
-REPO = Path('/Users/mc/IdeaProjects/AionEmu-test')
+REPO = Path(f"{os.environ.get('AION_REPO_ROOT', os.path.expanduser('~/IdeaProjects/AionEmu-test'))}")
 QUESTS_REL = 'src/main/resources/aion/data/static_data/quest_definition/quests'
 CATALOG_REL = 'src/main/resources/aion/data/static_data/quest_definition/quest_definition_catalog.xml'
 CATALOG = REPO / CATALOG_REL

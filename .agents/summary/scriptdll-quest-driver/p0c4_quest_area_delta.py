@@ -9,12 +9,13 @@
   p0c4-quest-area-delta.tsv         逐条对账（键 = world_name + area_name）
   p0c4-quest-area-missing-quests.tsv 生产缺失的 quest id（按 id 聚合，含真端世界/区域名）
 """
+import os
 import re
 import sys
 from collections import defaultdict
 from pathlib import Path
 
-REPO = Path('/Users/mc/IdeaProjects/AionEmu-test')
+REPO = Path(f"{os.environ.get('AION_REPO_ROOT', os.path.expanduser('~/IdeaProjects/AionEmu-test'))}")
 SCAN = Path(__file__).resolve().parent / 'p0c4-world-questscript-area.tsv'
 PROD = REPO / 'src/main/resources/aion/definitions/compact/ai/ai-areas.xml'
 DELTA_OUT = Path(__file__).resolve().parent / 'p0c4-quest-area-delta.tsv'

@@ -5,12 +5,13 @@ Compares the counter placeholder group index in the client quest_summary HTML wi
 counter_section recorded in docs/quest/client-dialog-mapping/client-monster-progress-contracts.csv.
 只读脚本，仅用于本任务证据收集。
 """
+import os
 import csv
 import glob
 import re
 import sys
 
-DIALOG_ROOTS = glob.glob("/Users/mc/PycharmProjects/unpak/data_unpacked/Dialogs/*")
+DIALOG_ROOTS = glob.glob(f"{os.environ.get('AION_UNPACK_ROOT', os.path.expanduser('~/PycharmProjects/unpak'))}/data_unpacked/Dialogs/*")
 CSV_PATH = "docs/quest/client-dialog-mapping/client-monster-progress-contracts.csv"
 
 

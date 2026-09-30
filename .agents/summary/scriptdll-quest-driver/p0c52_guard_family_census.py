@@ -6,6 +6,7 @@ P0c-52: three-source cross-tab for the Village_Guard family (DD table / server n
 templates / client npc blocks). Read-only census: no file is written outside stdout.
 """
 from __future__ import annotations
+import os
 
 import re
 import sys
@@ -14,8 +15,8 @@ from pathlib import Path
 REPO = Path(__file__).resolve().parents[3]
 DD_TABLE = REPO / "src/main/resources/aion/data/static_data/quest_retail/data_driven_quest.xml"
 NPC_TEMPLATE_DIR = REPO / "src/main/resources/aion/data/static_data/npcs"
-CLIENT_NPC = Path("/Users/mc/PycharmProjects/unpak/npcs_unpacked/client_npcs_npc.xml")
-CLIENT_STRINGS = Path("/Users/mc/PycharmProjects/unpak/strings_unpacked/client_strings_dic_etc.xml")
+CLIENT_NPC = Path(f"{os.environ.get('AION_UNPACK_ROOT', os.path.expanduser('~/PycharmProjects/unpak'))}/npcs_unpacked/client_npcs_npc.xml")
+CLIENT_STRINGS = Path(f"{os.environ.get('AION_UNPACK_ROOT', os.path.expanduser('~/PycharmProjects/unpak'))}/strings_unpacked/client_strings_dic_etc.xml")
 
 TOKEN = "Village_Guard"
 

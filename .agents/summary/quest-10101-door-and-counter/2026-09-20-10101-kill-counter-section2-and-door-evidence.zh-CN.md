@@ -2,7 +2,7 @@
 
 - 时间：2026-09-20（用户提供 14:30–14:31 实机 QUEST-TRACE 与任务追踪截图）
 - 玩家：Ww（截图显示第 3 行「消灭巴鲁纳次元研究所中的次元研究所卫兵 (/2)」带 [完成] 徽标）
-- 客户端权威：`Quest.pak` / `data/Dialogs/10000_19999/quest_q10101.html`；解包根 `/Users/mc/PycharmProjects/unpak`
+- 客户端权威：`Quest.pak` / `data/Dialogs/10000_19999/quest_q10101.html`；解包根 `${AION_UNPACK_ROOT}`
 - 相关文件：`src/main/resources/aion/data/static_data/quest_definition/quests/10101.xml`、`20101.xml`
 - 本轮改动状态：已改 9 个任务 XML（10101/20101 + 7 个同族，未提交）；门禁已跑（见第十三节），未实机复验
 - ⚠️ 第十二节的「行号探针假设 A/B」在第十三节被证伪/收敛：**不要**把 SECTION_0 直接当 HTML 行号改写阶段
@@ -133,7 +133,7 @@ return sendQuestDialog(env, 10000);   // 10000 = HTML_PAGE_CHECK_USER_ITEM_OK
 
 反馈 2「任务击杀完成后 html 为空、没有任务内容」：
 
-- 本轮无法读取用户两张截图（`/Users/mc/Library/Caches/WeType/dsclp/*.png` 不存在），需重新附上；同时需要区分「任务追踪窗口为空」与「点击门弹出的对话页为空」两种情况。
+- 本轮无法读取用户两张截图（`<用户截图缓存目录>*.png` 不存在），需重新附上；同时需要区分「任务追踪窗口为空」与「点击门弹出的对话页为空」两种情况。
 - 静态复核（本轮新增）：点击 234193 时 **不应下发任何 HTML**：
   - `RetailPatternAI2.isDirectTalkInteraction`（`ai/RetailPatternAI2.java:1047`）对 `on_talked_by_user → use_skill` 且无 `on_hyperlink_clicked` 的模式返回 true ⇒ `handleTalkedByUser` 跳过 `super.handleDialogStart`（不发默认页 10）；
   - 该模式只有 `use_skill`，门自体施放 21494（自杀），不会产生对话窗口；

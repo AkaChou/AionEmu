@@ -16,6 +16,7 @@
     python3 -B m5b2b_handler_slot_scan.py --tsv 1103 > out.tsv
 """
 from __future__ import annotations
+import os
 
 import argparse
 import re
@@ -23,10 +24,10 @@ import sys
 from pathlib import Path
 
 # 反编译导出 / Decompiled export
-DLL_SOURCE = Path("/Users/mc/IdeaProjects/58Server/server58/MainServer_ScriptDLL64/ScriptDLL64.c")
+DLL_SOURCE = Path(f"{os.environ.get('AION_RETAIL_ROOT', os.path.expanduser('~/IdeaProjects/58Server'))}/server58/MainServer_ScriptDLL64/ScriptDLL64.c")
 # 宿主符号表（用于把虚槽地址写成名字）/ Host symbols
 SERVER_SYMBOLS = Path(
-	"/Users/mc/IdeaProjects/58Server/server58-source/MainServer_Server64/symbols.tsv"
+	f"{os.environ.get('AION_RETAIL_ROOT', os.path.expanduser('~/IdeaProjects/58Server'))}/server58-source/MainServer_Server64/symbols.tsv"
 )
 # IUserImp 虚表基址（Server64 / MainServer_Server64）/ IUserImp vtable base
 IUSERIMP_VTABLE = 0x1411768d8
@@ -119,7 +120,7 @@ def user_slot_names() -> dict[int, str]:
 	if symbols:
 		from m5b2_pe_probe import Pe  # noqa: PLC0415
 
-		pe = Pe("/Users/mc/IdeaProjects/58Server/MainServer/Server64.exe")
+		pe = Pe(f"{os.environ.get('AION_RETAIL_ROOT', os.path.expanduser('~/IdeaProjects/58Server'))}/MainServer/Server64.exe")
 		for offset, label in IUSERIMP_SLOTS.items():
 			target = pe.u64(IUSERIMP_VTABLE + offset)
 			names[offset] = symbols.get(target) or label

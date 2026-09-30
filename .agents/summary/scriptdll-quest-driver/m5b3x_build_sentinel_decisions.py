@@ -16,10 +16,11 @@
 输出：m5b3x-collect-sentinel-decisions.tsv（quest_id/verdict/basis/axes/evidence）。
 用法：python3 -B m5b3x_build_sentinel_decisions.py
 """
+import os
 import re
 from pathlib import Path
 
-REPO = Path('/Users/mc/IdeaProjects/AionEmu-test')
+REPO = Path(f"{os.environ.get('AION_REPO_ROOT', os.path.expanduser('~/IdeaProjects/AionEmu-test'))}")
 TOPIC = REPO / '.agents/summary/scriptdll-quest-driver'
 GRANTS = TOPIC / 'm5b3x-collect-sentinel-grants.tsv'
 DRIFT = REPO / 'src/test/resources/quest/retail-simple-collect-item-drift.tsv'

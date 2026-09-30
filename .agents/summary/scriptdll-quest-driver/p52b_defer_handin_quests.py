@@ -4,12 +4,13 @@
 用法：python3 -B p52b_defer_handin_quests.py 19010:ACCEPT_GRANT_UNEXPRESSED 80745:LEGACY_WINDOW_SHORTCUT ...
 幂等：已在暂缓清单/已恢复的任务跳过。
 """
+import os
 import re
 import subprocess
 import sys
 from pathlib import Path
 
-REPO = Path('/Users/mc/IdeaProjects/AionEmu-test')
+REPO = Path(f"{os.environ.get('AION_REPO_ROOT', os.path.expanduser('~/IdeaProjects/AionEmu-test'))}")
 PROD_DIR = REPO / 'src/main/resources/aion/data/static_data/quest_definition/quests'
 CATALOG = REPO / 'src/main/resources/aion/data/static_data/quest_definition/quest_definition_catalog.xml'
 DEFERRED = Path(__file__).resolve().parent / 'p52-handin-deferred-quests.tsv'

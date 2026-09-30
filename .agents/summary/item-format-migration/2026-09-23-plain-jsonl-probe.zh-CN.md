@@ -154,7 +154,7 @@
 ## 7. 复现命令
 
 ```bash
-JAVA=/Users/mc/Library/Java/JavaVirtualMachines/azul-26.0.2.1/Contents/Home/bin/java
+JAVA=$JAVA_HOME/bin/java
 CP="target/classes:$(cat /tmp/aion-runtime-cp.txt):/tmp/probe-classes"
 XMLDIR=src/main/resources/aion/data/static_data/items/item
 

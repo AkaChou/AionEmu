@@ -2,10 +2,11 @@
 """批 7+8：retention 双副本 reason 前缀翻转 SEMANTIC_GAP:<code> → ADJUDICATED:<code>。
 零 owner 变化、零 evidence 结构变化（evidence 列整体替换为裁定说明）。
 失败即抛 AssertionError，双副本不一致也抛。"""
+import os
 import sys
 from pathlib import Path
 
-ROOT = Path("/Users/mc/IdeaProjects/AionEmu-test")
+ROOT = Path(f"{os.environ.get('AION_REPO_ROOT', os.path.expanduser('~/IdeaProjects/AionEmu-test'))}")
 COPIES = [
     ROOT / "src/main/resources/aion/data/static_data/quest_retail/retail-xml-retention.tsv",
     ROOT / "src/test/resources/quest/retail-xml-retention.tsv",

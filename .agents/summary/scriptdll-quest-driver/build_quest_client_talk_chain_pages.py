@@ -8,10 +8,11 @@
 
 用法：python3 -B build_quest_client_talk_chain_pages.py
 """
+import os
 import csv
 from pathlib import Path
 
-REPO = Path('/Users/mc/IdeaProjects/AionEmu-test')
+REPO = Path(f"{os.environ.get('AION_REPO_ROOT', os.path.expanduser('~/IdeaProjects/AionEmu-test'))}")
 MAPPING = REPO / 'docs/quest/client-dialog-mapping'
 PAGES = MAPPING / 'quest-dialog-pages.csv'
 ACTIONS = MAPPING / 'quest-dialog-action-details.csv'

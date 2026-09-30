@@ -25,10 +25,10 @@ WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
 WARNING: sun.misc.Unsafe::objectFieldOffset has been called by lombok.permit.Permit
 WARNING: Please consider reporting this to the maintainers of class lombok.permit.Permit
 WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
-[INFO] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/dataholders/StaticDataLoadRepro.java: /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/dataholders/StaticDataLoadRepro.java使用或覆盖了已过时的 API。
-[INFO] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/dataholders/StaticDataLoadRepro.java: 有关详细信息, 请使用 -Xlint:deprecation 重新编译。
-[INFO] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/chatserver/ChatServerTest.java: 某些输入文件使用了未经检查或不安全的操作。
-[INFO] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/chatserver/ChatServerTest.java: 有关详细信息, 请使用 -Xlint:unchecked 重新编译。
+[INFO] ${AION_REPO_ROOT}/src/test/java/com/aionemu/gameserver/dataholders/StaticDataLoadRepro.java: ${AION_REPO_ROOT}/src/test/java/com/aionemu/gameserver/dataholders/StaticDataLoadRepro.java使用或覆盖了已过时的 API。
+[INFO] ${AION_REPO_ROOT}/src/test/java/com/aionemu/gameserver/dataholders/StaticDataLoadRepro.java: 有关详细信息, 请使用 -Xlint:deprecation 重新编译。
+[INFO] ${AION_REPO_ROOT}/src/test/java/com/aionemu/chatserver/ChatServerTest.java: 某些输入文件使用了未经检查或不安全的操作。
+[INFO] ${AION_REPO_ROOT}/src/test/java/com/aionemu/chatserver/ChatServerTest.java: 有关详细信息, 请使用 -Xlint:unchecked 重新编译。
 [INFO] 
 [INFO] --- surefire:3.5.6:test (default-test) @ aionemu ---
 [INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider

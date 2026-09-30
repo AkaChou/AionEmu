@@ -7,11 +7,12 @@
 输出：期望集合未被仓库覆盖的任务（真缺陷）、仓库多出的引用（漂移）。
 """
 from __future__ import annotations
+import os
 import re, csv
 import xml.etree.ElementTree as ET
 from pathlib import Path
 
-RETAIL = Path("/Users/mc/IdeaProjects/58Server/Map/XML/quest.xml")
+RETAIL = Path(f"{os.environ.get('AION_RETAIL_ROOT', os.path.expanduser('~/IdeaProjects/58Server'))}/Map/XML/quest.xml")
 QUESTS = Path("src/main/resources/aion/data/static_data/quest_definition/quests")
 HERE = Path(__file__).resolve().parent
 ported = {int(p.stem) for p in QUESTS.glob("*.xml") if p.stem.isdigit()}

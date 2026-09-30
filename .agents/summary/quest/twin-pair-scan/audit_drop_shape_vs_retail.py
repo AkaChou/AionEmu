@@ -9,13 +9,14 @@ therefore treated as equivalent, while a missing/extra monster or a different ch
 is reported.
 """
 from __future__ import annotations
+import os
 
 import re
 from collections import Counter
 from pathlib import Path
 from xml.etree import ElementTree as ET
 
-RETAIL = Path("/Users/mc/PycharmProjects/unpak/Quest_unpacked/quest.xml")
+RETAIL = Path(f"{os.environ.get('AION_UNPACK_ROOT', os.path.expanduser('~/PycharmProjects/unpak'))}/Quest_unpacked/quest.xml")
 QUEST_DIR = Path("src/main/resources/aion/data/static_data/quest_definition/quests")
 DROP_FIELD = re.compile(r"^drop_(monster|item|prob)_(\d+)$")
 

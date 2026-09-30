@@ -9,10 +9,11 @@
       生产 quest XML（判断对象 TALK 路由是否存在）。
 输出：m5b3-collect-route-decisions.tsv
 """
+import os
 import pathlib
 import re
 
-REPO = pathlib.Path('/Users/mc/IdeaProjects/AionEmu-test')
+REPO = pathlib.Path(f"{os.environ.get('AION_REPO_ROOT', os.path.expanduser('~/IdeaProjects/AionEmu-test'))}")
 HERE = REPO / '.agents/summary/scriptdll-quest-driver'
 DETAIL = HERE / 'retail-simple-collect-item-drift-detail.tsv'
 DIFF = HERE / 'retail-simple-collect-item-diff-lines.tsv'

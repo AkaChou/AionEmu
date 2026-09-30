@@ -16,7 +16,7 @@ import os
 import re
 import sys
 
-ROOT = "/Users/mc/IdeaProjects/AionEmu-test"
+ROOT = f"{os.environ.get('AION_REPO_ROOT', os.path.expanduser('~/IdeaProjects/AionEmu-test'))}"
 RETAIL = os.path.join(ROOT, "src/main/resources/aion/data/static_data/quest_retail")
 NPC_DIR = os.path.join(ROOT, "src/main/resources/aion/data/static_data/npcs")
 OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "p0c2-simple-talk-sentinel-census.tsv")

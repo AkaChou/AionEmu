@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """P0c-3 探测：SimpleHunt 复合势力报告名能否走客户端 dic 链解出交付 NPC 集。"""
+import os
 import re
 from pathlib import Path
 
-REPO = Path('/Users/mc/IdeaProjects/AionEmu-test')
-UNPAK = Path('/Users/mc/PycharmProjects/unpak/data_unpacked')
+REPO = Path(f"{os.environ.get('AION_REPO_ROOT', os.path.expanduser('~/IdeaProjects/AionEmu-test'))}")
+UNPAK = Path(f"{os.environ.get('AION_UNPACK_ROOT', os.path.expanduser('~/PycharmProjects/unpak'))}/data_unpacked")
 CENSUS = REPO / '.agents/summary/scriptdll-quest-driver/p0c3-simple-hunt-sentinel-census.tsv'
 OUT = REPO / '.agents/summary/scriptdll-quest-driver/p0c3-simple-hunt-reward-npc-probe.tsv'
 

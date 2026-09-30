@@ -6,12 +6,13 @@ quest_monster.csv section gates (SECTION_1 / SECTION_2).
 
 仅报告，不修改任何文件。 / Report only; nothing is written.
 """
+import os
 import csv
 import re
 import sys
 from pathlib import Path
 
-CLIENT_CSV = Path("/Users/mc/PycharmProjects/unpak/Quest_unpacked/quest_monster.csv")
+CLIENT_CSV = Path(f"{os.environ.get('AION_UNPACK_ROOT', os.path.expanduser('~/PycharmProjects/unpak'))}/Quest_unpacked/quest_monster.csv")
 QUEST_DIR = Path("src/main/resources/aion/data/static_data/quest_definition/quests")
 
 

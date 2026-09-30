@@ -38,7 +38,7 @@ JDK 拒绝 dump）；**只对 jar 形态起效**（`target/AionEmu.jar` 或部�
 jar 形态的三步（待用户执行，需重启服务端）：
 
 ```bash
-JAVA=/Users/mc/Library/Java/JavaVirtualMachines/azul-26.0.2.1/Contents/Home/bin/java
+JAVA=$JAVA_HOME/bin/java
 # 1) 训练运行（记录类加载/链接）
 $JAVA -XX:AOTMode=record -XX:AOTConfiguration=/tmp/aion.aotconf -jar target/AionEmu.jar
 # 2) 生成缓存
@@ -329,7 +329,7 @@ RetailOpenWorldSpawnDataTest,NpcDropDataTest test
   pom 排除 `aion/**`，从仓库根运行时数据仍取 `src/main/resources/aion/**` 源码树）：
 
 ```bash
-JAVA=/Users/mc/Library/Java/JavaVirtualMachines/azul-26.0.2.1/Contents/Home/bin/java
+JAVA=$JAVA_HOME/bin/java
 JFR="-XX:StartFlightRecording=name=AOTMeasure,settings=profile,filename=/tmp/aot-use.jfr,duration=90s,dumponexit=true"
 $JAVA $JFR -jar target/AionEmu.jar                                    # 0 基线
 $JAVA -XX:AOTMode=record -XX:AOTConfiguration=/tmp/aion.aotconf -jar target/AionEmu.jar   # 1 记录

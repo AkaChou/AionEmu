@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
 """对剩余"只登记未刷新基础变体"的任务，列出客户端契约声明的、世界中确实刷新的缺口 ID。"""
 from __future__ import annotations
+import os
 import re, csv, pathlib, collections
 
-ROOT = pathlib.Path('/Users/mc/IdeaProjects/AionEmu-test')
+ROOT = pathlib.Path(f"{os.environ.get('AION_REPO_ROOT', os.path.expanduser('~/IdeaProjects/AionEmu-test'))}")
 SD = ROOT / "src/main/resources/aion/data/static_data"
 Q = SD / "quest_definition/quests"
-CSV = pathlib.Path("/Users/mc/PycharmProjects/unpak/Quest_unpacked/quest_monster.csv")
+CSV = pathlib.Path(f"{os.environ.get('AION_UNPACK_ROOT', os.path.expanduser('~/PycharmProjects/unpak'))}/Quest_unpacked/quest_monster.csv")
 
 names = collections.defaultdict(list)
 for f in (SD / "npcs").glob("*.xml"):

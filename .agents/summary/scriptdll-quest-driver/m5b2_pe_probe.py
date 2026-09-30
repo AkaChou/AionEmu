@@ -7,12 +7,13 @@
     python3 m5b2_pe_probe.py vtable <va_hex> [n]
     python3 m5b2_pe_probe.py func <va_hex>      # 打印函数首部反汇编
 """
+import os
 import struct
 import sys
 from pathlib import Path
 
-DLL = Path("/Users/mc/IdeaProjects/58Server/MainServer/ScriptDLL64.dll")
-SYMS = Path("/Users/mc/IdeaProjects/58Server/server58-source/MainServer_ScriptDLL64/symbols.tsv")
+DLL = Path(f"{os.environ.get('AION_RETAIL_ROOT', os.path.expanduser('~/IdeaProjects/58Server'))}/MainServer/ScriptDLL64.dll")
+SYMS = Path(f"{os.environ.get('AION_RETAIL_ROOT', os.path.expanduser('~/IdeaProjects/58Server'))}/server58-source/MainServer_ScriptDLL64/symbols.tsv")
 
 
 class Pe:

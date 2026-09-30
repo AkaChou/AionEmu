@@ -4,7 +4,7 @@
 set -euo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)"
 PROBE_DIR="$ROOT/.agents/summary/item-format-migration"
-JAVA="${JAVA:-/Users/mc/Library/Java/JavaVirtualMachines/azul-26.0.2.1/Contents/Home/bin/java}"
+JAVA="${JAVA:-$JAVA_HOME/bin/java}"
 CP_FILE="${CP_FILE:-/tmp/aion-runtime-cp.txt}"
 WARMUP="${WARMUP:-2}"
 ITERATIONS="${ITERATIONS:-5}"

@@ -8,12 +8,13 @@
 
 用法：python3 -B p0c2_faction_wiring_consistency.py
 """
+import os
 import io
 import re
 import sys
 from pathlib import Path
 
-REPO = Path('/Users/mc/IdeaProjects/AionEmu-test')
+REPO = Path(f"{os.environ.get('AION_REPO_ROOT', os.path.expanduser('~/IdeaProjects/AionEmu-test'))}")
 RETAIL = REPO / 'src/main/resources/aion/data/static_data/quest_retail'
 RETENTION = RETAIL / 'retail-xml-retention.tsv'
 TALK_TABLE = RETAIL / 'Quest_SimpleTalk.xml'

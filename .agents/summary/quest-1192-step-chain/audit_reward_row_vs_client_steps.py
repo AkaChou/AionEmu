@@ -9,7 +9,7 @@
 - QE-045 例外：15300/25300 等任务的客户端验收值是“进入 REWARD 前的 packed step”，
   reward 投影固定为 0/旧 step，不能用“最后一行”机械套用（见 QE045_LOCKED）。
 
-客户端解包目录默认 /Users/mc/PycharmProjects/unpak（可用 AION_UNPACK_ROOT 覆盖）：
+客户端解包目录默认 $HOME/PycharmProjects/unpak（可用 AION_UNPACK_ROOT 覆盖）：
 - data_unpacked/Dialogs/quest_q<id>.html 的 quest_summary 行清单（行索引权威）
 - Quest_unpacked/quest_script_monster.csv 的 Progress(SECTION_0==N ...) 客户端脚本声明（var0 是否行索引的旁证）
 
@@ -31,7 +31,7 @@ from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[3]
 QUESTS_DIR = REPO / "src/main/resources/aion/data/static_data/quest_definition/quests"
-UNPACK_ROOT = Path(os.environ.get("AION_UNPACK_ROOT", "/Users/mc/PycharmProjects/unpak"))
+UNPACK_ROOT = Path(os.environ.get("AION_UNPACK_ROOT", f"{os.environ.get('AION_UNPACK_ROOT', os.path.expanduser('~/PycharmProjects/unpak'))}"))
 DIALOG_DIR = UNPACK_ROOT / "data_unpacked/Dialogs"
 SCRIPT_CSV = UNPACK_ROOT / "Quest_unpacked/quest_script_monster.csv"
 NPC_NAME_FILE = UNPACK_ROOT / "npcs_unpacked/client_npcs_npc.xml"

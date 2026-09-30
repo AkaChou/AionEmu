@@ -20,7 +20,7 @@
 
 任务 `2230` 的题面明确为“在 30 分钟以内搜集 10 颗棕熊尖牙交给沙尼亚”，XML 在 `SETPRO1` 时启动 `start-quest-timer seconds="1800" timer-id="visible"`，但**任何路径都没有取消该计时器**。
 
-历史 handler 证据（`/Users/mc/IdeaProjects/AionEmu`，QuestHandler `_2230AFriendlyWager`）：
+历史 handler 证据（`<用户主目录>/IdeaProjects/AionEmu`，QuestHandler `_2230AFriendlyWager`）：
 
 ```java
 case CHECK_COLLECTED_ITEMS:

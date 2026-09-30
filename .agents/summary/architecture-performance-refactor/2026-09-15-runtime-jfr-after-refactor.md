@@ -33,7 +33,7 @@
 ## 复现命令 / Reproduce
 
 ```bash
-JFR=/Users/mc/Library/Java/JavaVirtualMachines/azul-26.0.2.1/Contents/Home/bin/jfr
+JFR=$JAVA_HOME/bin/jfr
 JFR_FILE=/tmp/startup.jfr   # 本地临时采样文件：按运行配置的 filename 指定，每次启动覆盖，不入库
 $JFR summary "$JFR_FILE"
 $JFR view --width 130 hot-methods "$JFR_FILE"

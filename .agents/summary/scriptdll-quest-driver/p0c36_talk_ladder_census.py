@@ -8,11 +8,12 @@
 只有三条同时成立才判「阶梯缺失需合成」。
 """
 from __future__ import annotations
+import os
 import csv, re, sys
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[3]
-DIALOGS = Path('/Users/mc/PycharmProjects/unpak/data_unpacked/Dialogs')
+DIALOGS = Path(f"{os.environ.get('AION_UNPACK_ROOT', os.path.expanduser('~/PycharmProjects/unpak'))}/data_unpacked/Dialogs")
 RET = REPO / 'src/main/resources/aion/data/static_data/quest_retail'
 
 

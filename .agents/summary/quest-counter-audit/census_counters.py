@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 """只读普查：任务 XML 击杀计数器目标值 vs 客户端 quest_monster.csv SECTION_1 门控。"""
+import os
 import csv, re
 from collections import Counter
 from pathlib import Path
 
-CLIENT = Path("/Users/mc/PycharmProjects/unpak/Quest_unpacked/quest_monster.csv")
+CLIENT = Path(f"{os.environ.get('AION_UNPACK_ROOT', os.path.expanduser('~/PycharmProjects/unpak'))}/Quest_unpacked/quest_monster.csv")
 QUESTS = Path("src/main/resources/aion/data/static_data/quest_definition/quests")
 
 gates = {}

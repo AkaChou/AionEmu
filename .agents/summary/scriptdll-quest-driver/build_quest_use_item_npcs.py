@@ -7,10 +7,11 @@ ACTION_ITEM_USE 路由"，而合成器不该为普通怪物掉落也发这种路
 
 生成物：src/main/resources/aion/data/static_data/quest_retail/quest_use_item_npcs.tsv
 """
+import os
 from pathlib import Path
 import re
 
-REPO = Path('/Users/mc/IdeaProjects/AionEmu-test')
+REPO = Path(f"{os.environ.get('AION_REPO_ROOT', os.path.expanduser('~/IdeaProjects/AionEmu-test'))}")
 NPC_DIR = REPO / 'src/main/resources/aion/data/static_data/npcs'
 OUT = REPO / 'src/main/resources/aion/data/static_data/quest_retail/quest_use_item_npcs.tsv'
 

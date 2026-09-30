@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """扫描 .text 中对指定地址区间（字符串表等）的 RIP 相对引用，输出 xref 明细。"""
+import os
 import bisect
 import sys
 from pathlib import Path
@@ -8,7 +9,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from m5b2_pe_probe import Pe, load_symbols  # noqa: E402
 
-DLL = "/Users/mc/IdeaProjects/58Server/MainServer/ScriptDLL64.dll"
+DLL = f"{os.environ.get('AION_RETAIL_ROOT', os.path.expanduser('~/IdeaProjects/58Server'))}/MainServer/ScriptDLL64.dll"
 
 
 def main():

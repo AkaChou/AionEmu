@@ -14,11 +14,12 @@
 族来源 = SimpleCollectItem 漂移登记全体 ∪ SimpleTalk 的 `_faction_` 哨兵行（P0c-2 起）。
 用法：python3 -B m5b3x_client_reward_npcs.py
 """
+import os
 import re
 from pathlib import Path
 
-REPO = Path('/Users/mc/IdeaProjects/AionEmu-test')
-UNPAK = Path('/Users/mc/PycharmProjects/unpak/data_unpacked')
+REPO = Path(f"{os.environ.get('AION_REPO_ROOT', os.path.expanduser('~/IdeaProjects/AionEmu-test'))}")
+UNPAK = Path(f"{os.environ.get('AION_UNPACK_ROOT', os.path.expanduser('~/PycharmProjects/unpak'))}/data_unpacked")
 TOPIC = REPO / '.agents/summary/scriptdll-quest-driver'
 DRIFT = REPO / 'src/test/resources/quest/retail-simple-collect-item-drift.tsv'
 SIMPLE_TALK = REPO / 'src/main/resources/aion/data/static_data/quest_retail/Quest_SimpleTalk.xml'

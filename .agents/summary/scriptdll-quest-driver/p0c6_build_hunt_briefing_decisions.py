@@ -23,18 +23,19 @@
 输出：src/test/resources/quest/retail-simple-hunt-adjudicated-decisions.tsv（与工作副本同步）
 用法：python3 -B p0c6_build_hunt_briefing_decisions.py
 """
+import os
 import re
 import subprocess
 from pathlib import Path
 
-REPO = Path('/Users/mc/IdeaProjects/AionEmu-test')
+REPO = Path(f"{os.environ.get('AION_REPO_ROOT', os.path.expanduser('~/IdeaProjects/AionEmu-test'))}")
 HERE = Path(__file__).resolve().parent
 TABLE = REPO / 'src/main/resources/aion/data/static_data/quest_retail/Quest_SimpleHunt.xml'
 RETENTION = REPO / 'src/test/resources/quest/retail-xml-retention.tsv'
 CHAINS = REPO / 'src/main/resources/aion/data/static_data/quest_retail/quest_client_briefing_chains.tsv'
 REPORT_PAGES = REPO / 'src/main/resources/aion/data/static_data/quest_retail/quest_client_report_pages.tsv'
 NPC_INDEX = HERE / 'npc_name_index.tsv'
-MONSTER = Path('/Users/mc/PycharmProjects/unpak/Quest_unpacked/quest_monster.csv')
+MONSTER = Path(f"{os.environ.get('AION_UNPACK_ROOT', os.path.expanduser('~/PycharmProjects/unpak'))}/Quest_unpacked/quest_monster.csv")
 QUESTS = REPO / 'src/main/resources/aion/data/static_data/quest_definition/quests'
 PROD_DECISIONS = REPO / 'src/test/resources/quest/retail-simple-hunt-adjudicated-decisions.tsv'
 WORK_DECISIONS = HERE / 'p0c6-simple-hunt-briefing-decisions.tsv'

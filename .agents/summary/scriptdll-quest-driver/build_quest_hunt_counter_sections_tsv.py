@@ -9,13 +9,14 @@ Progress 门给出每一 hunt 行的 SECTION_0（行阶梯目标值）与计数 
 
 用法：python3 -B build_quest_hunt_counter_sections.tsv.py <quest_ids...>
 """
+import os
 import csv
 import re
 import sys
 from pathlib import Path
 
-CLIENT_CSV = Path('/Users/mc/PycharmProjects/unpak/Quest_unpacked/quest_monster.csv')
-OUT = Path('/Users/mc/IdeaProjects/AionEmu-test/src/main/resources/aion/data/static_data/quest_retail/quest_client_hunt_counter_sections.tsv')
+CLIENT_CSV = Path(f"{os.environ.get('AION_UNPACK_ROOT', os.path.expanduser('~/PycharmProjects/unpak'))}/Quest_unpacked/quest_monster.csv")
+OUT = Path(f"{os.environ.get('AION_REPO_ROOT', os.path.expanduser('~/IdeaProjects/AionEmu-test'))}/src/main/resources/aion/data/static_data/quest_retail/quest_client_hunt_counter_sections.tsv")
 
 GATE = re.compile(r'SECTION_(\d+)<(\d+)')
 

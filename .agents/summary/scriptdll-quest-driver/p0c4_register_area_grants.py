@@ -12,10 +12,11 @@
 - src/test/resources/quest/retail-simple-hunt-adjudicated-decisions.tsv（既有 62 行 `_faction_` 裁定）
 输出：同文件（按 quest_id 排序，表头覆盖 `_faction_` 与 `_area_` 两类哨兵）+ 工作副本。
 """
+import os
 import sys
 from pathlib import Path
 
-REPO = Path('/Users/mc/IdeaProjects/AionEmu-test')
+REPO = Path(f"{os.environ.get('AION_REPO_ROOT', os.path.expanduser('~/IdeaProjects/AionEmu-test'))}")
 TOPIC = Path(__file__).resolve().parent
 PROD_DECISIONS = REPO / 'src/test/resources/quest/retail-simple-hunt-adjudicated-decisions.tsv'
 WORK_DECISIONS = TOPIC / 'p0c3-simple-hunt-sentinel-decisions.tsv'

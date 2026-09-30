@@ -7,15 +7,16 @@
 覆盖范围 = SimpleHunt 哨兵行（普查口径）+ 已退役 SimpleTalk 哨兵行（保留清单口径）。
 用法：python3 -B p0c3_fix_faction_masks.py [--dry-run]
 """
+import os
 import argparse
 import re
 from pathlib import Path
 
-REPO = Path('/Users/mc/IdeaProjects/AionEmu-test')
+REPO = Path(f"{os.environ.get('AION_REPO_ROOT', os.path.expanduser('~/IdeaProjects/AionEmu-test'))}")
 RETAIL_DIR = REPO / 'src/main/resources/aion/data/static_data/quest_retail'
 TALK_TABLE = RETAIL_DIR / 'Quest_SimpleTalk.xml'
 RETENTION = RETAIL_DIR / 'retail-xml-retention.tsv'
-RETAIL_SERVER = Path('/Users/mc/IdeaProjects/58Server/Map/XML/npcfactions_quest.xml')
+RETAIL_SERVER = Path(f"{os.environ.get('AION_RETAIL_ROOT', os.path.expanduser('~/IdeaProjects/58Server'))}/Map/XML/npcfactions_quest.xml")
 PROD = REPO / 'src/main/resources/aion/data/static_data/npc_factions/npc_factions_quest.xml'
 CENSUS = Path(__file__).resolve().parent / 'p0c3-simple-hunt-sentinel-census.tsv'
 DAYS = ('mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun')

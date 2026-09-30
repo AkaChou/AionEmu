@@ -31,7 +31,7 @@
 
 ## 2. 证据（全部可复现）
 
-1. **真端辅助表不含 npc id**（`/Users/mc/IdeaProjects/58Server/Map/XML/`）：
+1. **真端辅助表不含 npc id**（`${AION_RETAIL_ROOT}/Map/XML/`）：
    - `challenge_task.xml`（123 条）：字段 = id/name/desc/type/race/level_min/level_max/quest_list(quest_id,quest_repeat,score)/town_id/贡献者奖励 —— **无 npc 字段**；
    - `npcfactions.xml`（18 条）：id/name/desc/category/minlevel/race —— **无 npc 字段**；
    - `npcfactions_quest.xml`：quest_id → `npcfaction_name` + 星期位 —— **无 npc 字段**。

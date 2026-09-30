@@ -2,7 +2,7 @@ import os
 import re
 import xml.etree.ElementTree as ET
 
-client_strings_path = "/Users/mc/PycharmProjects/unpak/data_unpacked/Strings/client_strings_quest.xml"
+client_strings_path = f"{os.environ.get('AION_UNPACK_ROOT', os.path.expanduser('~/PycharmProjects/unpak'))}/data_unpacked/Strings/client_strings_quest.xml"
 tree_strings = ET.parse(client_strings_path)
 id_to_string = {}
 name_to_string = {}
@@ -14,7 +14,7 @@ for s in tree_strings.getroot().findall("string"):
         name_to_string[sname.text.strip()] = (sid.text.strip(), sbody.text if sbody is not None and sbody.text else "")
         id_to_string[sid.text.strip()] = (sname.text.strip(), sbody.text if sbody is not None and sbody.text else "")
 
-client_quest_path = "/Users/mc/PycharmProjects/unpak/Quest_unpacked/quest.xml"
+client_quest_path = f"{os.environ.get('AION_UNPACK_ROOT', os.path.expanduser('~/PycharmProjects/unpak'))}/Quest_unpacked/quest.xml"
 tree_quest = ET.parse(client_quest_path)
 client_quests = {}
 for q in tree_quest.getroot().findall("quest"):

@@ -50,8 +50,8 @@
 
 | 源 | 位置 | 规模/哈希 | 仓内状态 | 结论 |
 |---|---|---|---|---|
-| `quest_monster.csv` | `/Users/mc/PycharmProjects/unpak/Quest_unpacked/quest_monster.csv` | 8499 行 / 2.1MB / sha256 `aaa8da03acfb…` | **不在仓** | 4 张 monster 系表的完整源；不冻结前不能做“离线可重放”的构建期生成 |
-| `data_unpacked/Dialogs` | `/Users/mc/PycharmProjects/unpak/data_unpacked/Dialogs` | 21982 文件 / 116MB | **不在仓** | `talk_collect_chain_pages` 生成器的过场交叉核验源；需确认仓内 `quest-order-audit.csv` 是否已足够替代 |
+| `quest_monster.csv` | `${AION_UNPACK_ROOT}/Quest_unpacked/quest_monster.csv` | 8499 行 / 2.1MB / sha256 `aaa8da03acfb…` | **不在仓** | 4 张 monster 系表的完整源；不冻结前不能做“离线可重放”的构建期生成 |
+| `data_unpacked/Dialogs` | `${AION_UNPACK_ROOT}/data_unpacked/Dialogs` | 21982 文件 / 116MB | **不在仓** | `talk_collect_chain_pages` 生成器的过场交叉核验源；需确认仓内 `quest-order-audit.csv` 是否已足够替代 |
 | `client-monster-progress-contracts.csv` | `docs/quest/client-dialog-mapping/` | 853 行 / sha256 `9cab3c82…` | **在仓** | 只覆盖 853 个简单契约，小于当前 `hunt_progress_rows` 的 965 quest；不能单独作为全量源 |
 
 ## 4. 迁移模式
@@ -103,7 +103,7 @@
 - 该表退出冻结 manifest（M1–M3）或重复快照消除（M4），计数与清单同片更新；
 - DD（1218 数据行）/链（285 数据行）指纹逐字节相同；
 - T1 红集 `3b92439da8…`、T3 基线口径红集 `5e3acdb9…` 与基线恒等；聚焦门绿；
-- 离线 Maven 构建不依赖 `/Users/mc/...` 绝对路径；源缺失/漂移必须 fail-closed；
+- 离线 Maven 构建不依赖 `<用户主目录>/...` 绝对路径；源缺失/漂移必须 fail-closed；
 - 客户端合同表不动；不新增 TSV；不启停服务；不创建 worktree。
 
 ## 8. 需要用户决定的三件事

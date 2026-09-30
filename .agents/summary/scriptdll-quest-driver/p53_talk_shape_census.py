@@ -4,13 +4,14 @@
 
 用法：python3 -B p53_talk_shape_census.py
 """
+import os
 import csv
 import re
 import subprocess
 from collections import Counter
 from pathlib import Path
 
-REPO = Path('/Users/mc/IdeaProjects/AionEmu-test')
+REPO = Path(f"{os.environ.get('AION_REPO_ROOT', os.path.expanduser('~/IdeaProjects/AionEmu-test'))}")
 TABLE = REPO / 'src/main/resources/aion/data/static_data/quest_retail/data_driven_quest.xml'
 PAGES_CSV = REPO / 'docs/quest/client-dialog-mapping/quest-dialog-pages.csv'
 NPCS = sorted(REPO.glob('src/main/resources/aion/data/static_data/npcs/npc_template_*.xml'))

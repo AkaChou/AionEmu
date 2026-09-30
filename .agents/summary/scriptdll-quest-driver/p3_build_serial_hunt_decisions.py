@@ -11,9 +11,10 @@
 输出：p3-serial-hunt-decisions.tsv（quest_id/verdict/basis/axes/evidence）。
 用法：python3 -B p3_build_serial_hunt_decisions.py
 """
+import os
 from pathlib import Path
 
-REPO = Path('/Users/mc/IdeaProjects/AionEmu-test')
+REPO = Path(f"{os.environ.get('AION_REPO_ROOT', os.path.expanduser('~/IdeaProjects/AionEmu-test'))}")
 TOPIC = REPO / '.agents/summary/scriptdll-quest-driver'
 DRIFT = REPO / 'src/test/resources/quest/retail-simple-serial-hunt-drift.tsv'
 OUT = TOPIC / 'p3-serial-hunt-decisions.tsv'

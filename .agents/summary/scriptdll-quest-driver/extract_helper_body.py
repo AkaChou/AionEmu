@@ -5,11 +5,12 @@
 默认从 58Server 的 ScriptDLL64.c 读取；可用 --src 覆盖。
 The dump is latin-1 encoded; bodies end at the first column-0 '}'.
 """
+import os
 import argparse
 import re
 
 
-DEFAULT_SRC = "/Users/mc/IdeaProjects/58Server/server58/MainServer_ScriptDLL64/ScriptDLL64.c"
+DEFAULT_SRC = f"{os.environ.get('AION_RETAIL_ROOT', os.path.expanduser('~/IdeaProjects/58Server'))}/server58/MainServer_ScriptDLL64/ScriptDLL64.c"
 
 
 def extract(lines, name):

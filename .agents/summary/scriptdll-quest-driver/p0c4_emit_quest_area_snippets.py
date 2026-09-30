@@ -7,12 +7,13 @@ world_id 取自生产同文件的既有映射（world_name → world_id），不
 
 输出：p0c4-quest-area-snippets.xml（可直接粘贴进 ai-areas.xml）
 """
+import os
 import re
 import sys
 from pathlib import Path
 
-REPO = Path('/Users/mc/IdeaProjects/AionEmu-test')
-WORLDS = Path('/Users/mc/IdeaProjects/58Server/Map/Worlds')
+REPO = Path(f"{os.environ.get('AION_REPO_ROOT', os.path.expanduser('~/IdeaProjects/AionEmu-test'))}")
+WORLDS = Path(f"{os.environ.get('AION_RETAIL_ROOT', os.path.expanduser('~/IdeaProjects/58Server'))}/Map/Worlds")
 PROD = REPO / 'src/main/resources/aion/definitions/compact/ai/ai-areas.xml'
 OUT = Path(__file__).resolve().parent / 'p0c4-quest-area-snippets.xml'
 # 需要补的生产条目：真端所在世界目录 + 区域名
@@ -22,7 +23,7 @@ WANTED = (
     ('lf2a', 'InvadePortalDest_42_questArea_02'),
     ('lf2a', 'InvadePortalDest_42_questArea_03'),
 )
-HUNT = Path('/Users/mc/IdeaProjects/AionEmu-test/src/main/resources/aion/data/static_data/quest_definition/quests')
+HUNT = Path(f"{os.environ.get('AION_REPO_ROOT', os.path.expanduser('~/IdeaProjects/AionEmu-test'))}/src/main/resources/aion/data/static_data/quest_definition/quests")
 
 
 def world_id_map():

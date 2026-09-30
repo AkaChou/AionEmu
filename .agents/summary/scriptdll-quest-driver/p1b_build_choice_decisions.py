@@ -16,10 +16,11 @@ RetailSimpleCollectItemGateTest 的 acceptedDefinitionsCarryRetailSemantics 全�
 输出：p1b-collect-choice-decisions.tsv（quest_id/verdict/basis/axes/evidence）。
 用法：python3 -B p1b_build_choice_decisions.py
 """
+import os
 import re
 from pathlib import Path
 
-REPO = Path('/Users/mc/IdeaProjects/AionEmu-test')
+REPO = Path(f"{os.environ.get('AION_REPO_ROOT', os.path.expanduser('~/IdeaProjects/AionEmu-test'))}")
 TOPIC = REPO / '.agents/summary/scriptdll-quest-driver'
 DRIFT = REPO / 'src/test/resources/quest/retail-simple-collect-item-drift.tsv'
 TABLE = REPO / 'src/main/resources/aion/data/static_data/quest_retail/quest.xml'

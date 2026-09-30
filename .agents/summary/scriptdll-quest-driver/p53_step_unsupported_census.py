@@ -4,11 +4,12 @@
 输出：每行 quest_id / acquire / 组合标签 / 步骤明细摘要；组合直方图放 stdout。
 用法：python3 -B p53_step_unsupported_census.py
 """
+import os
 import re
 from collections import Counter
 from pathlib import Path
 
-REPO = Path('/Users/mc/IdeaProjects/AionEmu-test')
+REPO = Path(f"{os.environ.get('AION_REPO_ROOT', os.path.expanduser('~/IdeaProjects/AionEmu-test'))}")
 TABLE = REPO / 'src/main/resources/aion/data/static_data/quest_retail/data_driven_quest.xml'
 DRIFT = REPO / 'src/test/resources/quest/retail-data-driven-drift.tsv'
 OUT = Path(__file__).resolve().parent / 'p53-step-unsupported-census.tsv'

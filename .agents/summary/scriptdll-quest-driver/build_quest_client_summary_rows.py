@@ -5,19 +5,20 @@
 （memory-bank QE-051：领奖投影必须等于客户端任务书领奖行；客户端把行号 n 映射到 visible 槽位 3n）。
 真端模板表没有行数信息，因此行数从客户端 HTML 烘焙成只读资源，供 SimpleTalk 合成器与门禁使用。
 
-源：`/Users/mc/PycharmProjects/unpak/data_unpacked/Dialogs/**/quest_q<id>.html` 的
+源：`${AION_UNPACK_ROOT:-$HOME/PycharmProjects/unpak}/data_unpacked/Dialogs/**/quest_q<id>.html` 的
 `<HtmlPage name="quest_summary">` 内 `<step>` 数量（大小写不敏感，文件名有 `QUEST_Q`/`quest_q` 两种写法）。
 
 输出：src/main/resources/aion/data/static_data/quest_retail/quest_client_summary_rows.tsv
 格式：quest_id \t rows（rows >= 1；无 quest_summary 页的任务不入表）
 """
 from __future__ import annotations
+import os
 
 import pathlib
 import re
 import sys
 
-DIALOGS = pathlib.Path("/Users/mc/PycharmProjects/unpak/data_unpacked/Dialogs")
+DIALOGS = pathlib.Path(f"{os.environ.get('AION_UNPACK_ROOT', os.path.expanduser('~/PycharmProjects/unpak'))}/data_unpacked/Dialogs")
 OUT = pathlib.Path(
     "src/main/resources/aion/data/static_data/quest_retail/quest_client_summary_rows.tsv")
 NAME = re.compile(r"quest_q(\d+)\.html", re.IGNORECASE)

@@ -4,12 +4,13 @@
 
 用法: python3 m5b2_c_func.py <va_hex> [行数]
 """
+import os
 import bisect
 import re
 import sys
 from pathlib import Path
 
-C_SRC = Path("/Users/mc/IdeaProjects/58Server/server58/MainServer_ScriptDLL64/ScriptDLL64.c")
+C_SRC = Path(f"{os.environ.get('AION_RETAIL_ROOT', os.path.expanduser('~/IdeaProjects/58Server'))}/server58/MainServer_ScriptDLL64/ScriptDLL64.c")
 _CACHE = {}
 
 

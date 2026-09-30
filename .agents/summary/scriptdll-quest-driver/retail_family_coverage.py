@@ -4,11 +4,12 @@
 用法: python3 -B retail_family_coverage.py
 真端表为 UTF-16，行形如 <id id="1102">…</id>；DataDriven 用 <id id=…> 同构。
 """
+import os
 import re
 from pathlib import Path
 
-REPO = Path('/Users/mc/IdeaProjects/AionEmu-test')
-RETAIL = Path('/Users/mc/IdeaProjects/58Server/Map/XML')
+REPO = Path(f"{os.environ.get('AION_REPO_ROOT', os.path.expanduser('~/IdeaProjects/AionEmu-test'))}")
+RETAIL = Path(f"{os.environ.get('AION_RETAIL_ROOT', os.path.expanduser('~/IdeaProjects/58Server'))}/Map/XML")
 CATALOG = REPO / 'src/main/resources/aion/data/static_data/quest_definition/quest_definition_catalog.xml'
 TABLES = ['Quest_SimpleHunt.xml', 'Quest_SimpleTalk.xml', 'Quest_SimpleCollectItem.xml', 'Quest_SimpleUseItem.xml',
           'Quest_SimpleItemPlay.xml', 'Quest_SimpleSerialHunt.xml', 'Quest_SimpleGather.xml', 'Quest_CombineTask.xml',

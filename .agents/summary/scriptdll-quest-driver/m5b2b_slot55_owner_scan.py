@@ -10,6 +10,7 @@
     python3 -B m5b2b_slot55_owner_scan.py <binary> [--min-slots N] [--name-substr Quest]
 """
 from __future__ import annotations
+import os
 
 import argparse
 import sys
@@ -20,7 +21,7 @@ import re_vtable_scan  # noqa: E402
 from m5b2_pe_probe import Pe  # noqa: E402
 
 # 真端反编译导出根目录 / Retail decompilation export root
-EXPORT_ROOT = Path("/Users/mc/IdeaProjects/58Server/server58-source")
+EXPORT_ROOT = Path(f"{os.environ.get('AION_RETAIL_ROOT', os.path.expanduser('~/IdeaProjects/58Server'))}/server58-source")
 # 二进制名 → 符号表目录 / Binary name to symbol table directory
 SYMBOL_DIRS = {
 	"Server64.exe": "MainServer_Server64",

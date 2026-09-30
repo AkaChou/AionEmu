@@ -6,6 +6,7 @@ every retail collect/check name of that quest resolves to an item id through `na
 unresolved name can never create a false violation.
 """
 from __future__ import annotations
+import os
 
 import re
 import sys
@@ -13,7 +14,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[4]
 ITEMS = ROOT / "src/main/resources/aion/data/static_data/items"
-RETAIL = Path("/Users/mc/PycharmProjects/unpak/Quest_unpacked/quest.xml")
+RETAIL = Path(f"{os.environ.get('AION_UNPACK_ROOT', os.path.expanduser('~/PycharmProjects/unpak'))}/Quest_unpacked/quest.xml")
 OUT = ROOT / "src/test/resources/quest/quest-item-role-baseline.tsv"
 
 

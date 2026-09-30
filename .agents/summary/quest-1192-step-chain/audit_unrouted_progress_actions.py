@@ -18,6 +18,7 @@ SELECT_QUEST_REWARD、FINISH_DIALOG 等通用动作，已计入白名单）。�
 """
 
 from __future__ import annotations
+import os
 
 import csv
 import re
@@ -26,7 +27,7 @@ from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[3]
 QUESTS_DIR = REPO / "src/main/resources/aion/data/static_data/quest_definition/quests"
-UNPACK = Path("/Users/mc/PycharmProjects/unpak")
+UNPACK = Path(f"{os.environ.get('AION_UNPACK_ROOT', os.path.expanduser('~/PycharmProjects/unpak'))}")
 DIALOG_DIR = UNPACK / "data_unpacked/Dialogs"
 OUTPUT = Path(__file__).resolve().parent / "unrouted-progress-actions.tsv"
 

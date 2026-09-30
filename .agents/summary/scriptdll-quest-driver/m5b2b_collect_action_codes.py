@@ -7,12 +7,13 @@
 交叉：生产保留清单 retail-xml-retention.tsv（owner=RETAIL_TABLE 即真端驱动/已退役）
 输出：m5b2b-collect-client-action-codes.tsv
 """
+import os
 import collections
 import csv
 import pathlib
 import sys
 
-REPO = pathlib.Path('/Users/mc/IdeaProjects/AionEmu-test')
+REPO = pathlib.Path(f"{os.environ.get('AION_REPO_ROOT', os.path.expanduser('~/IdeaProjects/AionEmu-test'))}")
 IDX = REPO / 'docs/quest/client-dialog-mapping/legacy-quest-dialog-template-index.csv'
 RET = REPO / 'src/main/resources/aion/data/static_data/quest_retail/retail-xml-retention.tsv'
 OUT = pathlib.Path(__file__).with_name('m5b2b-collect-client-action-codes.tsv')

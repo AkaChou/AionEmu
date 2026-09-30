@@ -15,13 +15,14 @@
 输出：p0c6-spawn-reachability-census.tsv
 用法：python3 -B p0c6_spawn_reachability_census.py
 """
+import os
 import collections
 import glob
 import re
 import subprocess
 from pathlib import Path
 
-REPO = Path('/Users/mc/IdeaProjects/AionEmu-test')
+REPO = Path(f"{os.environ.get('AION_REPO_ROOT', os.path.expanduser('~/IdeaProjects/AionEmu-test'))}")
 HERE = Path(__file__).resolve().parent
 RETAIL_TABLE = REPO / 'src/main/resources/aion/data/static_data/quest_retail/Quest_SimpleHunt.xml'
 RETENTION = REPO / 'src/test/resources/quest/retail-xml-retention.tsv'

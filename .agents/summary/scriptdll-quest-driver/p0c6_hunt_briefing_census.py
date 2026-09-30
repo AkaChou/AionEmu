@@ -14,6 +14,7 @@
 Census of the four evidence sources for the retail `talk_npc1` SimpleHunt rows.
 """
 from __future__ import annotations
+import os
 
 import pathlib
 import re
@@ -23,7 +24,7 @@ REPO = pathlib.Path(__file__).resolve().parents[3]
 TABLE = REPO / "src/main/resources/aion/data/static_data/quest_retail/Quest_SimpleHunt.xml"
 RETENTION = REPO / "src/test/resources/quest/retail-xml-retention.tsv"
 QUESTS = REPO / "src/main/resources/aion/data/static_data/quest_definition/quests"
-UNPAK = pathlib.Path("/Users/mc/PycharmProjects/unpak")
+UNPAK = pathlib.Path(f"{os.environ.get('AION_UNPACK_ROOT', os.path.expanduser('~/PycharmProjects/unpak'))}")
 DIALOGS = UNPAK / "data_unpacked/Dialogs"
 MONSTER = UNPAK / "Quest_unpacked/quest_monster.csv"
 

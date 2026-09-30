@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """逐个任务导出「客户端步骤链 ↔ retail 步骤 ↔ 当前 XML」三方证据，供批量修复前核对。"""
 from __future__ import annotations
+import os
 
 import re
 import subprocess
@@ -10,7 +11,7 @@ from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[3]
 QUESTS = REPO / "src/main/resources/aion/data/static_data/quest_definition/quests"
-DIALOG = Path("/Users/mc/PycharmProjects/unpak/data_unpacked/Dialogs")
+DIALOG = Path(f"{os.environ.get('AION_UNPACK_ROOT', os.path.expanduser('~/PycharmProjects/unpak'))}/data_unpacked/Dialogs")
 RETAIL = Path("/tmp/zz_retail.xml")
 
 PAGE_RE = re.compile(r'<HtmlPage name="([^"]+)">(.*?)</HtmlPage>', re.S)

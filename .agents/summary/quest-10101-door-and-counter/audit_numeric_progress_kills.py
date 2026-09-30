@@ -5,13 +5,14 @@ For every quest whose client script monster contract uses the numeric Progress f
 killedByUser, report: HTML counter placeholder groups, and how the production XML models the
 kill route (row-advance on var0 vs. dedicated counter var). 只读证据脚本。
 """
+import os
 import glob
 import re
 import sys
 from collections import Counter
 
-SCRIPT_CSV = "/Users/mc/PycharmProjects/unpak/Quest_unpacked/quest_script_monster.csv"
-DIALOGS = "/Users/mc/PycharmProjects/unpak/data_unpacked/Dialogs"
+SCRIPT_CSV = f"{os.environ.get('AION_UNPACK_ROOT', os.path.expanduser('~/PycharmProjects/unpak'))}/Quest_unpacked/quest_script_monster.csv"
+DIALOGS = f"{os.environ.get('AION_UNPACK_ROOT', os.path.expanduser('~/PycharmProjects/unpak'))}/data_unpacked/Dialogs"
 QUEST_XML_DIR = "src/main/resources/aion/data/static_data/quest_definition/quests"
 
 

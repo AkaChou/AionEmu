@@ -7,11 +7,12 @@ O = 仓库: (AND prerequisites) AND (OR over groups(AND conditions))
 真值表枚举判定 R=>O（仓库是否更严/漏前置）与 O=>R（仓库是否更松/缺前置）。
 """
 from __future__ import annotations
+import os
 import re, sys, itertools
 import xml.etree.ElementTree as ET
 from pathlib import Path
 
-RETAIL = Path("/Users/mc/IdeaProjects/58Server/Map/XML/quest.xml")
+RETAIL = Path(f"{os.environ.get('AION_RETAIL_ROOT', os.path.expanduser('~/IdeaProjects/58Server'))}/Map/XML/quest.xml")
 QUESTS = Path("src/main/resources/aion/data/static_data/quest_definition/quests")
 HERE = Path(__file__).resolve().parent
 ported = {int(p.stem) for p in QUESTS.glob("*.xml") if p.stem.isdigit()}

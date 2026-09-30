@@ -8,12 +8,13 @@
 
 输出：p0c4-world-questscript-area.tsv（world_dir, area_name, quests_raw, quest_ids, points, bottom, top）
 """
+import os
 import re
 import sys
 from pathlib import Path
 
-REPO = Path('/Users/mc/IdeaProjects/AionEmu-test')
-WORLDS = Path('/Users/mc/IdeaProjects/58Server/Map/Worlds')
+REPO = Path(f"{os.environ.get('AION_REPO_ROOT', os.path.expanduser('~/IdeaProjects/AionEmu-test'))}")
+WORLDS = Path(f"{os.environ.get('AION_RETAIL_ROOT', os.path.expanduser('~/IdeaProjects/58Server'))}/Map/Worlds")
 OUT = Path(__file__).resolve().parent / 'p0c4-world-questscript-area.tsv'
 TARGET_FILES = ('world.xml', 'world_M.xml', 'world_N.xml')
 AREA_RE = re.compile(r'<questscript_area\b[^>]*>(.*?)</questscript_area>', re.S)

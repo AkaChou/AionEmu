@@ -9,6 +9,7 @@
     python3 -B m5b2b_faction_grant_coverage.py [--retail-xml <dir>] [--out <tsv>]
 """
 from __future__ import annotations
+import os
 
 import argparse
 import re
@@ -18,7 +19,7 @@ from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 BASE = REPO_ROOT / ".agents/summary/scriptdll-quest-driver"
-DEFAULT_RETAIL_XML = Path("/Users/mc/IdeaProjects/58Server/Map/XML")
+DEFAULT_RETAIL_XML = Path(f"{os.environ.get('AION_RETAIL_ROOT', os.path.expanduser('~/IdeaProjects/58Server'))}/Map/XML")
 DEFAULT_OUT = BASE / "m5b2b-faction-grant-coverage.tsv"
 FAMILY_TABLES = (
 	"Quest_SimpleCollectItem.xml",

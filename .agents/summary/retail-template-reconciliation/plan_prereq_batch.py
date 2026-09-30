@@ -8,14 +8,15 @@
   - 多 cond -> <metadata><start-condition-groups><group><condition type="finished" quest-id=.../>...</group>...
 """
 from __future__ import annotations
+import os
 
 import csv
 import re
 import xml.etree.ElementTree as ET
 from pathlib import Path
 
-RETAIL_QUEST_XML = Path("/Users/mc/IdeaProjects/58Server/Map/XML/quest.xml")
-QUESTS = Path("/Users/mc/IdeaProjects/AionEmu-test/src/main/resources/aion/data/static_data/quest_definition/quests")
+RETAIL_QUEST_XML = Path(f"{os.environ.get('AION_RETAIL_ROOT', os.path.expanduser('~/IdeaProjects/58Server'))}/Map/XML/quest.xml")
+QUESTS = Path(f"{os.environ.get('AION_REPO_ROOT', os.path.expanduser('~/IdeaProjects/AionEmu-test'))}/src/main/resources/aion/data/static_data/quest_definition/quests")
 HERE = Path(__file__).resolve().parent
 
 

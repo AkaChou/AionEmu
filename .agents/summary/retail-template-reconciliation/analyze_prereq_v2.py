@@ -2,12 +2,13 @@
 """PREREQ 批次复核（只读）：合并 prerequisites + start-conditions 的 AND 集合 A，
 与真端 DNF 分支 B 比对，输出精确语义差异与建议动作。"""
 from __future__ import annotations
+import os
 import re, csv, sys
 import xml.etree.ElementTree as ET
 from pathlib import Path
 
-RETAIL = Path("/Users/mc/IdeaProjects/58Server/Map/XML/quest.xml")
-QUESTS = Path("/Users/mc/IdeaProjects/AionEmu-test/src/main/resources/aion/data/static_data/quest_definition/quests")
+RETAIL = Path(f"{os.environ.get('AION_RETAIL_ROOT', os.path.expanduser('~/IdeaProjects/58Server'))}/Map/XML/quest.xml")
+QUESTS = Path(f"{os.environ.get('AION_REPO_ROOT', os.path.expanduser('~/IdeaProjects/AionEmu-test'))}/src/main/resources/aion/data/static_data/quest_definition/quests")
 HERE = Path(__file__).resolve().parent
 
 def retail_blocks() -> dict[int, dict]:

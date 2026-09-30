@@ -83,7 +83,7 @@
 ## 6. 复现命令
 
 ```bash
-JFR=/Users/mc/Library/Java/JavaVirtualMachines/azul-26.0.2.1/Contents/Home/bin/jfr
+JFR=$JAVA_HOME/bin/jfr
 $JFR print --json --events jdk.ExecutionSample --stack-depth 32 startup-20260824.jfr > /tmp/aion-exec-2143-d32.json
 $JFR print --json --events jdk.GCPhaseParallel,jdk.ClassLoad,jdk.Compilation,jdk.ObjectAllocationSample \
 	startup-20260824.jfr > /tmp/aion-other-2143.json

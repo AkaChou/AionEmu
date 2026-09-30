@@ -20,11 +20,12 @@
 
 用法：python3 -B p0c9_simplehunt_family_closure.py
 """
+import os
 from collections import Counter
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
-REPO = Path('/Users/mc/IdeaProjects/AionEmu-test')
+REPO = Path(f"{os.environ.get('AION_REPO_ROOT', os.path.expanduser('~/IdeaProjects/AionEmu-test'))}")
 RETENTION = REPO / 'src/main/resources/aion/data/static_data/quest_retail/retail-xml-retention.tsv'
 CATALOG = REPO / 'src/main/resources/aion/data/static_data/quest_definition/quest_definition_catalog.xml'
 QUESTS = REPO / 'src/main/resources/aion/data/static_data/quest_definition/quests'

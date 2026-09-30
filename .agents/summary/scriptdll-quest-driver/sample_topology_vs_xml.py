@@ -4,13 +4,14 @@
 用法: python3 -B sample_topology_vs_xml.py --out sample_topology_vs_xml.txt
 """
 from __future__ import annotations
+import os
 
 import argparse
 import collections
 import xml.etree.ElementTree as ET
 from pathlib import Path
 
-QUESTS = Path("/Users/mc/IdeaProjects/AionEmu-test/src/main/resources/aion/data/static_data/quest_definition/quests")
+QUESTS = Path(f"{os.environ.get('AION_REPO_ROOT', os.path.expanduser('~/IdeaProjects/AionEmu-test'))}/src/main/resources/aion/data/static_data/quest_definition/quests")
 SAMPLES = [1102, 1517, 15551, 15552, 15563, 16824, 2641, 5000, 21296, 10501, 1365, 80343]
 TAGS = ("node", "transition", "dialog", "actions", "counter", "counter-grid", "kill-chain",
         "kill-routes", "npc-item-report", "npc-complete", "after-commit")

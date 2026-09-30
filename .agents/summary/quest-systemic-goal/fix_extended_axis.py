@@ -30,8 +30,8 @@ PROD_DIR = os.path.join(
 # XSD 顺序：rewards/reward-groups 在 extended-rewards 之前，锚点按此优先
 ANCHORS = ["</rewards>", "</group>", "</work-items>", "</inventory-items>",
            "</items>", "</repeat>", "</races>"]
-RETAIL_QUEST_XML = "/Users/mc/PycharmProjects/unpak/Quest_unpacked/quest.xml"
-RETAIL_ITEMS_DIR = "/Users/mc/PycharmProjects/unpak/Items_unpacked"
+RETAIL_QUEST_XML = f"{os.environ.get('AION_UNPACK_ROOT', os.path.expanduser('~/PycharmProjects/unpak'))}/Quest_unpacked/quest.xml"
+RETAIL_ITEMS_DIR = f"{os.environ.get('AION_UNPACK_ROOT', os.path.expanduser('~/PycharmProjects/unpak'))}/Items_unpacked"
 ITEM_DIR = os.path.join(
     REPO, "src/main/resources/aion/data/static_data/items/item")
 

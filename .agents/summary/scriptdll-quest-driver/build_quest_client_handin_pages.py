@@ -11,10 +11,11 @@
 3) quest_client_handin_exceptions.tsv —— 交付型「像但不标准」的任务（页面集合多出 select_none_1 /
    select2 / SET_SUCCEED 等）→ 合成器按稳定码拒绝、保留 XML。
 """
+import os
 import csv
 from pathlib import Path
 
-REPO = Path('/Users/mc/IdeaProjects/AionEmu-test')
+REPO = Path(f"{os.environ.get('AION_REPO_ROOT', os.path.expanduser('~/IdeaProjects/AionEmu-test'))}")
 MAPPING = REPO / 'docs/quest/client-dialog-mapping'
 PAGES = MAPPING / 'quest-dialog-pages.csv'
 ACTIONS = MAPPING / 'quest-dialog-action-details.csv'

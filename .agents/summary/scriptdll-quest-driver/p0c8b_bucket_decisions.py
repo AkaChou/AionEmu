@@ -27,13 +27,14 @@
   * 缺口表移除这 154 行
 用法：python3 -B p0c8b_bucket_decisions.py [--dry-run]
 """
+import os
 import argparse
 import re
 import subprocess
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
-REPO = Path('/Users/mc/IdeaProjects/AionEmu-test')
+REPO = Path(f"{os.environ.get('AION_REPO_ROOT', os.path.expanduser('~/IdeaProjects/AionEmu-test'))}")
 CENSUS = HERE / 'p0c8-retention-diff-census.tsv'
 GAPS = HERE / 'simplehunt-dialog-route-gaps.txt'
 OUT = HERE / 'p0c8b-bucket-decisions.tsv'

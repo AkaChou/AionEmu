@@ -21,13 +21,14 @@ Usage / 用法:
 """
 
 from __future__ import annotations
+import os
 
 import struct
 import sys
 import zlib
 from pathlib import Path
 
-sys.path.insert(0, "/Users/mc/PycharmProjects/unpak")
+sys.path.insert(0, f"{os.environ.get('AION_UNPACK_ROOT', os.path.expanduser('~/PycharmProjects/unpak'))}")
 from aionpak.core import _aion_xor_offset  # noqa: E402
 from aionpak.aion_tables import AION_XOR_TABLES  # noqa: E402
 

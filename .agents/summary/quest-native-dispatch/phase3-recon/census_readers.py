@@ -4,11 +4,12 @@
 消费者类在 src/main 的调用点、测试侧引用。只读，不改任何文件。
 Read-only Phase 3 census: for each registered TSV, find direct path references,
 the manifest-named consumer classes, their src/main call sites, and test-side references."""
+import os
 import re
 import subprocess
 from pathlib import Path
 
-ROOT = Path("/Users/mc/IdeaProjects/AionEmu-test")
+ROOT = Path(f"{os.environ.get('AION_REPO_ROOT', os.path.expanduser('~/IdeaProjects/AionEmu-test'))}")
 OUT = ROOT / ".agents/summary/quest-native-dispatch/phase3-recon/census-readers.tsv"
 
 MANIFEST = ROOT / "src/main/resources/aion/data/static_data/quest_retail/quest-retail-tsv-manifest.tsv"

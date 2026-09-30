@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 """把 5.8 Iluma/Norsvold 任务族的击杀目标对齐到客户端契约的完整变体集合。"""
 from __future__ import annotations
+import os
 import pathlib
 
-ROOT = pathlib.Path("/Users/mc/IdeaProjects/AionEmu-test")
+ROOT = pathlib.Path(f"{os.environ.get('AION_REPO_ROOT', os.path.expanduser('~/IdeaProjects/AionEmu-test'))}")
 Q = ROOT / "src/main/resources/aion/data/static_data/quest_definition/quests"
 
 LF6_A = ("240475 240476 241656 241657 240477 240478 241658 241659 240479 240480 241660 241661 "

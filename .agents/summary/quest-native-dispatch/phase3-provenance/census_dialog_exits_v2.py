@@ -13,13 +13,14 @@
 输出：census-dialog-exits-v2.tsv（逐行）+ 控制台汇总。
 """
 from __future__ import annotations
+import os
 
 import csv
 import re
 from collections import Counter, defaultdict
 from pathlib import Path
 
-ROOT = Path("/Users/mc/IdeaProjects/AionEmu-test")
+ROOT = Path(f"{os.environ.get('AION_REPO_ROOT', os.path.expanduser('~/IdeaProjects/AionEmu-test'))}")
 RETAIL = ROOT / "src/main/resources/aion/data/static_data/quest_retail"
 RETENTION = RETAIL / "retail-xml-retention.tsv"
 SIMPLETALK = RETAIL / "Quest_SimpleTalk.xml"

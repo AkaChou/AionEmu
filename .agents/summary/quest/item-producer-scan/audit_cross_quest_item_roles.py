@@ -9,6 +9,7 @@ Audit of quest item roles. Reproduces the 2026-09-17 repairs, the full-catalog
   3 gaps       : 真端 collect/check 名称在我方未见到的任务（待逐条评审的后续轴）
 """
 from __future__ import annotations
+import os
 
 import re
 import sys
@@ -18,7 +19,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[4]
 QUESTS = ROOT / "src/main/resources/aion/data/static_data/quest_definition/quests"
 ITEMS = ROOT / "src/main/resources/aion/data/static_data/items"
-RETAIL = Path("/Users/mc/PycharmProjects/unpak/Quest_unpacked/quest.xml")
+RETAIL = Path(f"{os.environ.get('AION_UNPACK_ROOT', os.path.expanduser('~/PycharmProjects/unpak'))}/Quest_unpacked/quest.xml")
 BASELINE = ROOT / "src/test/resources/quest/quest-item-role-baseline.tsv"
 GAPS = ROOT / ".agents/summary/quest/item-producer-scan/item-role-gaps.tsv"
 REPAIRED = {15010, 15012, 15043, 15070, 51021, 28836, 28838,

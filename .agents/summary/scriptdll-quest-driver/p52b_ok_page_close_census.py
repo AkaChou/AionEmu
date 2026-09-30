@@ -8,12 +8,13 @@
 
 用法：python3 -B p52b_ok_page_close_census.py
 """
+import os
 import csv
 import subprocess
 from collections import Counter
 from pathlib import Path
 
-REPO = Path('/Users/mc/IdeaProjects/AionEmu-test')
+REPO = Path(f"{os.environ.get('AION_REPO_ROOT', os.path.expanduser('~/IdeaProjects/AionEmu-test'))}")
 DRIFT = REPO / 'src/test/resources/quest/retail-data-driven-drift.tsv'
 HANDIN = REPO / 'src/main/resources/aion/data/static_data/quest_retail/quest_client_handin_pages.tsv'
 ACTIONS = REPO / 'docs/quest/client-dialog-mapping/quest-dialog-action-details.csv'

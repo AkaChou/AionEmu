@@ -8,7 +8,7 @@
 
 数据源：
   .agents/summary/scriptdll-quest-driver/quest_registry.tsv
-  /Users/mc/PycharmProjects/unpak/Quest_unpacked/quest_monster.csv
+  ${AION_UNPACK_ROOT:-$HOME/PycharmProjects/unpak}/Quest_unpacked/quest_monster.csv
 """
 import csv
 import os
@@ -17,7 +17,7 @@ import sys
 
 BASE = os.path.dirname(os.path.abspath(__file__))
 REG = os.path.join(BASE, "quest_registry.tsv")
-MON = "/Users/mc/PycharmProjects/unpak/Quest_unpacked/quest_monster.csv"
+MON = f"{os.environ.get('AION_UNPACK_ROOT', os.path.expanduser('~/PycharmProjects/unpak'))}/Quest_unpacked/quest_monster.csv"
 
 GUARD = re.compile(r"SECTION_(\d+)<(\d+)")
 

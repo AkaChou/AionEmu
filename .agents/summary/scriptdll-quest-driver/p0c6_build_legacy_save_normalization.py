@@ -16,11 +16,12 @@
 输出：p0c6-legacy-save-normalization.tsv（quest_id, legacy_state, removed_action, retail_expectation, evidence）
 用法：python3 -B p0c6_build_legacy_save_normalization.py
 """
+import os
 import re
 import subprocess
 from pathlib import Path
 
-REPO = Path('/Users/mc/IdeaProjects/AionEmu-test')
+REPO = Path(f"{os.environ.get('AION_REPO_ROOT', os.path.expanduser('~/IdeaProjects/AionEmu-test'))}")
 HERE = Path(__file__).resolve().parent
 DECISIONS = REPO / 'src/test/resources/quest/retail-simple-hunt-adjudicated-decisions.tsv'
 RETAIL_TABLE = REPO / 'src/main/resources/aion/data/static_data/quest_retail/Quest_SimpleHunt.xml'

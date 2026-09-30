@@ -6,7 +6,7 @@ import re
 import os
 import subprocess
 
-ROOT = "/Users/mc/IdeaProjects/AionEmu-test"
+ROOT = f"{os.environ.get('AION_REPO_ROOT', os.path.expanduser('~/IdeaProjects/AionEmu-test'))}"
 RET_MAIN = f"{ROOT}/src/main/resources/aion/data/static_data/quest_retail/retail-xml-retention.tsv"
 RET_TEST = f"{ROOT}/src/test/resources/quest/retail-xml-retention.tsv"
 DECISIONS = f"{ROOT}/src/test/resources/quest/retail-simple-hunt-adjudicated-decisions.tsv"

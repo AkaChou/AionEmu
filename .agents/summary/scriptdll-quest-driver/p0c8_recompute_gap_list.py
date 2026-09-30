@@ -19,6 +19,7 @@
   * 追加窄投影行到 retail-simple-hunt-adjudicated-decisions.tsv（ADOPT_RETAIL 裁定）。
 用法：python3 -B p0c8_recompute_gap_list.py [--dry-run]
 """
+import os
 import argparse
 import re
 from pathlib import Path
@@ -28,8 +29,8 @@ CENSUS = HERE / 'p0c8-retention-diff-census.tsv'
 GAPS = HERE / 'simplehunt-dialog-route-gaps.txt'
 REJECTIONS = HERE / 'phase5-3-rejections.txt'
 RETIRE_DECISIONS = HERE / 'p0c8-equivalence-retire-decisions.tsv'
-MONSTER = Path('/Users/mc/PycharmProjects/unpak/Quest_unpacked/quest_monster.csv')
-PROD_DECISIONS = Path('/Users/mc/IdeaProjects/AionEmu-test/src/test/resources/quest'
+MONSTER = Path(f"{os.environ.get('AION_UNPACK_ROOT', os.path.expanduser('~/PycharmProjects/unpak'))}/Quest_unpacked/quest_monster.csv")
+PROD_DECISIONS = Path(f"{os.environ.get('AION_REPO_ROOT', os.path.expanduser('~/IdeaProjects/AionEmu-test'))}/src/test/resources/quest"
 	'/retail-simple-hunt-adjudicated-decisions.tsv')
 # 窄投影裁定：quest_id → (轴, 客户端门控证据)。 / Legacy-projection adjudication rows.
 NARROW_PROJECTION = {

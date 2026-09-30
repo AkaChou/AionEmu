@@ -14,11 +14,12 @@
 # 保守原则：判不了的行一律保留（少删安全，快照判据兜底）。
 # Census for the row-level shrink of quest_client_dialog_exits.tsv (batch 0 R1).
 # Row census per (quest x token) reachability; conservative: undecided rows keep tokens.
+import os
 import re
 import sys
 from collections import Counter
 
-ROOT = "/Users/mc/IdeaProjects/AionEmu-test"
+ROOT = f"{os.environ.get('AION_REPO_ROOT', os.path.expanduser('~/IdeaProjects/AionEmu-test'))}"
 RETENTION = f"{ROOT}/src/main/resources/aion/data/static_data/quest_retail/retail-xml-retention.tsv"
 SIMPLETALK = f"{ROOT}/src/main/resources/aion/data/static_data/quest_retail/Quest_SimpleTalk.xml"
 CHAIN = f"{ROOT}/src/main/resources/aion/data/static_data/quest_retail/quest_client_talk_chain_steps.tsv"

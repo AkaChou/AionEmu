@@ -40,7 +40,7 @@
 |P2|80798.xml:81、84|客户端收5个182215809即可交付，新增边沿用错误8个并扣8个|257ca01f9扩散旧数量错误；客户端quest.xml:253280合同确证|
 |P2|26930.xml:90、98|START持有20个186000257交付要求10个，但count=ALL清空20个|257ca01f9扩散旧扣量错误；旧handler、客户端quest.xml:179274、镜像16930精确扣10印证|
 
-客户端证据由只读审计读取 /Users/mc/PycharmProjects/unpak/Quest_unpacked/，不将历史handler直接当生产owner。14016/24016第二档无入口已确定，但旧handler也只用第一档，不能无依据创造领取第二档的剧情条件。
+客户端证据由只读审计读取 ${AION_UNPACK_ROOT}/Quest_unpacked/，不将历史handler直接当生产owner。14016/24016第二档无入口已确定，但旧handler也只用第一档，不能无依据创造领取第二档的剧情条件。
 
 ## 错误门禁、漏检与执行纪律
 

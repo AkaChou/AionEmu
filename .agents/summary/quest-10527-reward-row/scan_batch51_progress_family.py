@@ -6,6 +6,7 @@ collect_progress、当前 XML 的 reward 投影、legacy handler 名与关键阶
 `Progress(a~b)` 单变量 step 走行族 vs SECTION 链式族 vs 行号族。
 """
 from __future__ import annotations
+import os
 
 import csv
 import importlib.util
@@ -16,8 +17,8 @@ from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[3]
 TOPIC = Path(__file__).resolve().parent
-CLIENT_QUEST_XML = Path('/Users/mc/PycharmProjects/unpak/Quest_unpacked/quest.xml')
-SCRIPT_CSV = Path('/Users/mc/PycharmProjects/unpak/Quest_unpacked/quest_script_monster.csv')
+CLIENT_QUEST_XML = Path(f"{os.environ.get('AION_UNPACK_ROOT', os.path.expanduser('~/PycharmProjects/unpak'))}/Quest_unpacked/quest.xml")
+SCRIPT_CSV = Path(f"{os.environ.get('AION_UNPACK_ROOT', os.path.expanduser('~/PycharmProjects/unpak'))}/Quest_unpacked/quest_script_monster.csv")
 LEGACY_ROOT = 'origin/history'
 
 

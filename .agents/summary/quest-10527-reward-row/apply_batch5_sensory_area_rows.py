@@ -2,7 +2,7 @@
 """批次 5：修正 15550/25550 与 15551-15554/25551-25554（伊卢玛/诺斯沃尔德“导览”与“感应区坐骑”任务）。
 
 背景与证据：
-- 客户端 quest_summary 行清单（`/Users/mc/PycharmProjects/unpak/data_unpacked/Dialogs`）：
+- 客户端 quest_summary 行清单（`${AION_UNPACK_ROOT:-$HOME/PycharmProjects/unpak}/data_unpacked/Dialogs`）：
   * 15550/25550 共 3 行：和 Volter/Svanhild 对话、和 Ador/Conrto 对话、和 Aquaris/Vadorei 对话（领奖行）。
   * 15551-15554 与魔镜像共 3 行：使用 A->X 吸引物、使用 X->A 吸引物、和 Aquaris/Vadorei 对话（领奖行）。
 - 旧 handler（origin/history；删除它们的迁移提交是 79bc5d3a6）：

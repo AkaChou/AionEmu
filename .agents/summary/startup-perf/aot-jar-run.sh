@@ -20,7 +20,7 @@ set -uo pipefail
 TAG="$1"
 shift
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)"
-JAVA="${JAVA:-/Users/mc/Library/Java/JavaVirtualMachines/azul-26.0.2.1/Contents/Home/bin/java}"
+JAVA="${JAVA:-$JAVA_HOME/bin/java}"
 LOG="/tmp/aot-${TAG}.log"
 JFR="/tmp/aot-${TAG}.jfr"
 RECORDER_OPTS=()

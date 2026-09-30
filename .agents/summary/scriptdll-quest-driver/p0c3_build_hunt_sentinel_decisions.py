@@ -12,10 +12,11 @@
 - src/test/resources/quest/retail-simple-hunt-adjudicated-decisions.tsv（quest_id, verdict, basis, axes, evidence）
 - .agents/summary/scriptdll-quest-driver/p0c3-simple-hunt-sentinel-decisions.tsv（同内容的工作副本）
 """
+import os
 import io
 from pathlib import Path
 
-REPO = Path('/Users/mc/IdeaProjects/AionEmu-test')
+REPO = Path(f"{os.environ.get('AION_REPO_ROOT', os.path.expanduser('~/IdeaProjects/AionEmu-test'))}")
 TOPIC = REPO / '.agents/summary/scriptdll-quest-driver'
 CENSUS = TOPIC / 'p0c3-simple-hunt-sentinel-census.tsv'
 REGISTRY = REPO / 'src/main/resources/aion/data/static_data/quest_retail/quest_client_reward_npcs.tsv'

@@ -2,10 +2,10 @@ import os
 import re
 import xml.etree.ElementTree as ET
 
-REPO_ROOT = "/Users/mc/IdeaProjects/AionEmu-test"
+REPO_ROOT = f"{os.environ.get('AION_REPO_ROOT', os.path.expanduser('~/IdeaProjects/AionEmu-test'))}"
 PROD_DIR = os.path.join(REPO_ROOT, "src/main/resources/aion/data/static_data/quest_definition/quests")
 CATALOG_PATH = os.path.join(REPO_ROOT, "docs/QUEST_CATALOG.zh-CN.md")
-CLIENT_STRINGS_PATH = "/Users/mc/PycharmProjects/unpak/data_unpacked/Strings/client_strings_quest.xml"
+CLIENT_STRINGS_PATH = f"{os.environ.get('AION_UNPACK_ROOT', os.path.expanduser('~/PycharmProjects/unpak'))}/data_unpacked/Strings/client_strings_quest.xml"
 
 # 1. Load client strings
 tree_strings = ET.parse(CLIENT_STRINGS_PATH)

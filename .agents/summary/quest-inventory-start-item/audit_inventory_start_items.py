@@ -15,6 +15,7 @@ The script regenerates the retail-backed test baseline and writes the remaining
 opposite-axis gaps (retail inventory_item_name absent from production).
 """
 from __future__ import annotations
+import os
 
 import re
 import xml.etree.ElementTree as ET
@@ -23,7 +24,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[3]
 ITEMS = ROOT / "src/main/resources/aion/data/static_data/items"
 QUESTS = ROOT / "src/main/resources/aion/data/static_data/quest_definition/quests"
-RETAIL = Path("/Users/mc/PycharmProjects/unpak/Quest_unpacked/quest.xml")
+RETAIL = Path(f"{os.environ.get('AION_UNPACK_ROOT', os.path.expanduser('~/PycharmProjects/unpak'))}/Quest_unpacked/quest.xml")
 BASELINE = ROOT / "src/test/resources/quest/quest-inventory-start-item-retail-contract.tsv"
 GAPS = ROOT / ".agents/summary/quest-inventory-start-item/inventory-start-item-gaps.tsv"
 

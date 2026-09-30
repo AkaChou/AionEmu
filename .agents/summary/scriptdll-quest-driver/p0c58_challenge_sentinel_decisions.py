@@ -14,6 +14,7 @@
 用法 / Usage: `python3 -B p0c58_challenge_sentinel_decisions.py [--out <tsv>]`
 """
 from __future__ import annotations
+import os
 
 import argparse
 import csv
@@ -27,7 +28,7 @@ HERE = Path(__file__).resolve().parent
 REPO = HERE.parent.parent.parent
 NPC_DIR = REPO / "src/main/resources/aion/data/static_data/npcs"
 RETAIL = REPO / "src/main/resources/aion/data/static_data/quest_retail"
-CLIENT_NPC = Path("/Users/mc/PycharmProjects/unpak/npcs_unpacked/client_npcs_npc.xml")
+CLIENT_NPC = Path(f"{os.environ.get('AION_UNPACK_ROOT', os.path.expanduser('~/PycharmProjects/unpak'))}/npcs_unpacked/client_npcs_npc.xml")
 CLIENT_ACTIONS = REPO / "docs/quest/client-dialog-mapping/quest-dialog-action-details.csv"
 CENSUS = HERE / "p0c56-item-acquire-census.tsv"
 DEFAULT_OUT = HERE / "p0c58-challenge-sentinel-decisions.tsv"

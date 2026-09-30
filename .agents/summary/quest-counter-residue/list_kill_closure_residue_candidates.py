@@ -15,6 +15,7 @@ QE-045 允许的领奖投影与合法标记，必须逐任务取证后才能判�
 Usage: python3 list_kill_closure_residue_candidates.py [--include-sets] [--verbose]
 """
 from __future__ import annotations
+import os
 
 import re
 import sys
@@ -23,7 +24,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[3]
 QUEST_DIR = ROOT / "src/main/resources/aion/data/static_data/quest_definition/quests"
-CLIENT_MONSTER_CSV = Path("/Users/mc/PycharmProjects/unpak/Quest_unpacked/quest_monster.csv")
+CLIENT_MONSTER_CSV = Path(f"{os.environ.get('AION_UNPACK_ROOT', os.path.expanduser('~/PycharmProjects/unpak'))}/Quest_unpacked/quest_monster.csv")
 PROGRESS_RE = re.compile(r"Progress\(SECTION_(\d+)==(\d+);\s*SECTION_(\d+)<(\d+)\)")
 
 

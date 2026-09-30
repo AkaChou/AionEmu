@@ -4,7 +4,7 @@
 > **生成物清理提示（2026-09-30）**：本文件正文提到的 `*.tsv` / `*.log` / `*.txt` / `*.xml` 等中间转储已随 `chore(agents)` 清理删除；原文与留痕仍可从 git 历史取回，被删清单与再生成入口见 `.agents/summary/CLEANUP-LEDGER.zh-CN.md`。
 
 > 目标：以 Aion 5.8 真端解包数据为权威，对 AionEmu 任务系统做长期系统性根因治理。
-> 权威外部数据：`/Users/mc/PycharmProjects/unpak/Quest_unpacked/quest.xml`（只读）。
+> 权威外部数据：`${AION_UNPACK_ROOT}/Quest_unpacked/quest.xml`（只读）。
 > 本台账记录每个审计轴的：audit count / real defects / false positives / evidence blocked / fixed / commit / tests / next action。
 
 ## 快照基线（2026-09-18 全库只读扫描）

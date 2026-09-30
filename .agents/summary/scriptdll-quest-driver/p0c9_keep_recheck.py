@@ -13,6 +13,7 @@ v3 提示词 P0c-9.1 的复核项：
 客户端按钮 / 真端路由动作集 / 结论。
 用法：python3 -B p0c9_keep_recheck.py
 """
+import os
 import csv
 import importlib.util
 import re
@@ -20,10 +21,10 @@ from collections import defaultdict
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
-REPO = Path('/Users/mc/IdeaProjects/AionEmu-test')
+REPO = Path(f"{os.environ.get('AION_REPO_ROOT', os.path.expanduser('~/IdeaProjects/AionEmu-test'))}")
 GAPS = HERE / 'simplehunt-dialog-route-gaps.txt'
 OUT = HERE / 'p0c9-keep-recheck.tsv'
-SCRIPT_MONSTER = Path('/Users/mc/PycharmProjects/unpak/Quest_unpacked/quest_script_monster.csv')
+SCRIPT_MONSTER = Path(f"{os.environ.get('AION_UNPACK_ROOT', os.path.expanduser('~/PycharmProjects/unpak'))}/Quest_unpacked/quest_script_monster.csv")
 RETAIL_TABLE = REPO / 'src/main/resources/aion/data/static_data/quest_retail/Quest_SimpleHunt.xml'
 
 

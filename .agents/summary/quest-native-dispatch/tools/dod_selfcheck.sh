@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # 完成判据自检（DoD §7.1 + 缺口计数 §7.3）。
 set -u
-cd /Users/mc/IdeaProjects/AionEmu-test
+cd "${AION_REPO_ROOT:-$HOME/IdeaProjects/AionEmu-test}"
 R=src/main/resources/aion/data/static_data/quest_retail/retail-xml-retention.tsv
 echo "== 判据① SEMANTIC_GAP 行数（目标 0）"
 total=$(awk -F'\t' '!/^#/ && $4 ~ /^SEMANTIC_GAP/ {n++} END {print n+0}' "$R")

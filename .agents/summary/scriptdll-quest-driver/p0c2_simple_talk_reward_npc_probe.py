@@ -4,11 +4,12 @@
 
 与 m5b3x_client_reward_npcs.py 同证据链，只是族换成 SimpleTalk 的 _faction_ 行。
 """
+import os
 import re
 from pathlib import Path
 
-REPO = Path('/Users/mc/IdeaProjects/AionEmu-test')
-UNPAK = Path('/Users/mc/PycharmProjects/unpak/data_unpacked')
+REPO = Path(f"{os.environ.get('AION_REPO_ROOT', os.path.expanduser('~/IdeaProjects/AionEmu-test'))}")
+UNPAK = Path(f"{os.environ.get('AION_UNPACK_ROOT', os.path.expanduser('~/PycharmProjects/unpak'))}/data_unpacked")
 CENSUS = REPO / '.agents/summary/scriptdll-quest-driver/p0c2-simple-talk-sentinel-census.tsv'
 OUT = REPO / '.agents/summary/scriptdll-quest-driver/p0c2-simple-talk-reward-npc-probe.tsv'
 

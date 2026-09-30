@@ -6,6 +6,7 @@ The retail file names items and monsters, so the baseline stores a name-independ
 structure: per-monster drop-chance histogram plus the number of distinct drop items.
 """
 from __future__ import annotations
+import os
 
 import re
 import sys
@@ -13,7 +14,7 @@ from collections import Counter
 from pathlib import Path
 from xml.etree import ElementTree as ET
 
-DEFAULT_RETAIL = Path("/Users/mc/PycharmProjects/unpak/Quest_unpacked/quest.xml")
+DEFAULT_RETAIL = Path(f"{os.environ.get('AION_UNPACK_ROOT', os.path.expanduser('~/PycharmProjects/unpak'))}/Quest_unpacked/quest.xml")
 QUEST_DIR = Path("src/main/resources/aion/data/static_data/quest_definition/quests")
 OUTPUT = Path("src/test/resources/quest/quest-drop-retail-contract.tsv")
 FIELD = re.compile(r"^drop_(monster|item|prob)_(\d+)$")

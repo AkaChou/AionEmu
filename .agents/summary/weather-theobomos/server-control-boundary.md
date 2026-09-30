@@ -31,7 +31,7 @@ WeatherOption / TimeEnvOption / TimeofDayGroup(cutscene=...) 数据**。
 
 - `Cry3DEngine.dll` 字符串 `\level.pak` → `FUN_101214b0`，把目录名（如 `Levels/lf2a`）拼成
   `<dir>\level.pak` 后交给 CryPak 打开。客户端所有关卡资源都在本地 pak 内。
-- Ghidra 工程：`/Users/mc/IdeaProjects/58Server/server58/ghidra-projects/CryEngineDll`（本轮新建，
+- Ghidra 工程：`${AION_RETAIL_ROOT}/server58/ghidra-projects/CryEngineDll`（本轮新建，
   导入 `bin64/Cry3DEngine.dll`）；分析脚本见本目录 `FindStringRefs.java` / `DecompileFunc.java` / `ReadMemory.java`（运行日志为一次性产物）。
 
 ## 证据 3：客户端天气/时间环境 CVar（Cry3DEngine.dll 注册函数 FUN_101ab430）

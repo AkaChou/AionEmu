@@ -1,13 +1,14 @@
 #!/usr/bin/env python3
 """P0c-36：族内「中间对话行阶梯」缺口清单（修正 START 过滤 + 三轴证据）。"""
 from __future__ import annotations
+import os
 import csv, re
 from pathlib import Path
 from collections import Counter
 
 REPO = Path(__file__).resolve().parents[3]
 HERE = Path(__file__).resolve().parent
-DIALOGS = Path('/Users/mc/PycharmProjects/unpak/data_unpacked/Dialogs')
+DIALOGS = Path(f"{os.environ.get('AION_UNPACK_ROOT', os.path.expanduser('~/PycharmProjects/unpak'))}/data_unpacked/Dialogs")
 RET = REPO / 'src/main/resources/aion/data/static_data/quest_retail'
 
 

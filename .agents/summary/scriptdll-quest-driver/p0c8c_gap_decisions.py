@@ -45,6 +45,7 @@
   python3 -B p0c8c_gap_decisions.py --analyze
   python3 -B p0c8c_gap_decisions.py --write
 """
+import os
 import argparse
 import csv
 import itertools
@@ -53,13 +54,13 @@ from collections import Counter, defaultdict
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
-REPO = Path('/Users/mc/IdeaProjects/AionEmu-test')
+REPO = Path(f"{os.environ.get('AION_REPO_ROOT', os.path.expanduser('~/IdeaProjects/AionEmu-test'))}")
 CENSUS = HERE / 'p0c8c-gap-shape-census-full.tsv'
 OUT = HERE / 'p0c8c-gap-decisions.tsv'
 RETAIL_TABLE = REPO / 'src/main/resources/aion/data/static_data/quest_retail/Quest_SimpleHunt.xml'
-MONSTER_CSV = Path('/Users/mc/PycharmProjects/unpak/Quest_unpacked/quest_monster.csv')
-CLIENT_HTML_DIRS = (Path('/Users/mc/PycharmProjects/unpak/dialog_unpacked'),
-    Path('/Users/mc/PycharmProjects/unpak/data_unpacked/Dialogs'))
+MONSTER_CSV = Path(f"{os.environ.get('AION_UNPACK_ROOT', os.path.expanduser('~/PycharmProjects/unpak'))}/Quest_unpacked/quest_monster.csv")
+CLIENT_HTML_DIRS = (Path(f"{os.environ.get('AION_UNPACK_ROOT', os.path.expanduser('~/PycharmProjects/unpak'))}/dialog_unpacked"),
+    Path(f"{os.environ.get('AION_UNPACK_ROOT', os.path.expanduser('~/PycharmProjects/unpak'))}/data_unpacked/Dialogs"))
 NPC_DIR = REPO / 'src/main/resources/aion/data/static_data/npcs'
 SPAWN_DIR = REPO / 'src/main/resources/aion/data/static_data/spawns'
 WORLD_MAPS = REPO / 'src/main/resources/aion/data/static_data/world_maps.xml'

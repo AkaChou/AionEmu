@@ -19,11 +19,12 @@
 - `p0c6-briefing-gap-closure.tsv`（quest_id / 来源文件 / 原编码 / 新裁定路径）。
 用法：python3 -B p0c6_close_hunt_briefing_gaps.py [--dry-run]
 """
+import os
 import argparse
 import re
 from pathlib import Path
 
-REPO = Path('/Users/mc/IdeaProjects/AionEmu-test')
+REPO = Path(f"{os.environ.get('AION_REPO_ROOT', os.path.expanduser('~/IdeaProjects/AionEmu-test'))}")
 HERE = Path(__file__).resolve().parent
 TABLE = REPO / 'src/main/resources/aion/data/static_data/quest_retail/Quest_SimpleHunt.xml'
 RETENTION = REPO / 'src/test/resources/quest/retail-xml-retention.tsv'

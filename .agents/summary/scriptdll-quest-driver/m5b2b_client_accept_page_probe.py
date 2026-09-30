@@ -11,6 +11,7 @@
     python3 -B m5b2b_client_accept_page_probe.py [--ids 35007 1103 ...] [--out <tsv>]
 """
 from __future__ import annotations
+import os
 
 import argparse
 import re
@@ -25,7 +26,7 @@ CONTRACT_INDEX = REPO_ROOT / "docs/quest/client-dialog-mapping/legacy-quest-dial
 DEFAULT_FAMILY = REPO_ROOT / "src/test/resources/quest/retail-simple-collect-item-drift.tsv"
 DEFAULT_OUT = BASE / "m5b2b-client-accept-page-vs-sentinel.tsv"
 # 解包后的客户端对话页目录 / Unpacked client dialog page root
-CLIENT_DIALOG_ROOT = Path("/Users/mc/PycharmProjects/unpak/data_unpacked/Dialogs")
+CLIENT_DIALOG_ROOT = Path(f"{os.environ.get('AION_UNPACK_ROOT', os.path.expanduser('~/PycharmProjects/unpak'))}/data_unpacked/Dialogs")
 # `<HtmlPage name="...">` 提取 / HtmlPage name extraction
 HTML_PAGE = re.compile(r'<HtmlPage\s+name="([^"]+)"')
 TRIPLET = ("0x1c", "0x1d", "0x26")

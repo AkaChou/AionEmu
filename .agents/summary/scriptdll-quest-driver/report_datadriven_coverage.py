@@ -3,7 +3,7 @@
 
 输入：
   quest_registry.tsv                     —— ScriptDLL64 注册点（Phase 1）
-  /Users/mc/PycharmProjects/unpak/Quest_unpacked/*.xml|csv  —— 客户端任务表
+  ${AION_UNPACK_ROOT:-$HOME/PycharmProjects/unpak}/Quest_unpacked/*.xml|csv  —— 客户端任务表
   src/main/resources/aion/data/static_data/quest_definition/quests/*.xml —— 本仓库任务清单
 输出：各表覆盖的 quest id 集合与本仓库任务集合的交集统计。
 """
@@ -15,7 +15,7 @@ import xml.etree.ElementTree as ET
 
 BASE = os.path.dirname(os.path.abspath(__file__))
 REPO = os.path.abspath(os.path.join(BASE, "../../.."))
-CLIENT = "/Users/mc/PycharmProjects/unpak/Quest_unpacked"
+CLIENT = f"{os.environ.get('AION_UNPACK_ROOT', os.path.expanduser('~/PycharmProjects/unpak'))}/Quest_unpacked"
 
 
 def registry_quests():

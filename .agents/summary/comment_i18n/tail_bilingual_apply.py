@@ -5,10 +5,11 @@
 Only exact normalized matches are applied. Format becomes:  // 中文 / English原文
 Run: python3 apply_tail.py   (writes changes in place; prints stats)
 """
+import os
 import re, glob, collections, sys
 
-TERMS = '/Users/mc/IdeaProjects/AionEmu-test/docs/aion-game-terms-en-zh.md'
-ROOT = '/Users/mc/IdeaProjects/AionEmu-test/src/main/java'
+TERMS = f"{os.environ.get('AION_REPO_ROOT', os.path.expanduser('~/IdeaProjects/AionEmu-test'))}/docs/aion-game-terms-en-zh.md"
+ROOT = f"{os.environ.get('AION_REPO_ROOT', os.path.expanduser('~/IdeaProjects/AionEmu-test'))}/src/main/java"
 
 def norm(s):
     return re.sub(r'[^a-z0-9 ]', '', s.lower()).strip()

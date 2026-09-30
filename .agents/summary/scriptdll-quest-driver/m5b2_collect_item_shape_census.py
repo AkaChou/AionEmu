@@ -4,6 +4,7 @@
 
 输出 TSV: quest_id, verdict, reports, completes, transitions, var0, pages, actions, npcs
 """
+import os
 import sys
 import xml.etree.ElementTree as ET
 from pathlib import Path
@@ -11,7 +12,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from m5a2_simple_collect_item_name_resolution import family_ids, retail_rows  # noqa: E402
 
-REPO = Path("/Users/mc/IdeaProjects/AionEmu-test")
+REPO = Path(f"{os.environ.get('AION_REPO_ROOT', os.path.expanduser('~/IdeaProjects/AionEmu-test'))}")
 QUESTS = REPO / "src/main/resources/aion/data/static_data/quest_definition/quests"
 
 

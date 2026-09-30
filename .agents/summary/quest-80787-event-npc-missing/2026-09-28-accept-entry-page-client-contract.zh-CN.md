@@ -50,7 +50,7 @@
 - `accept-page-vs-client.txt`、`audit_accept_page_vs_client.py`：ADOPTED 面缺页审计。
 - `crosscheck_accept_entry.py` / `crosscheck-accept-entry.txt`：规则 × 迁移前 XML 对拍（153/0）。
 - `audit_active_events.py`、`report_expired_events.py`、`expired_events_zh.py`、`expired-events-zh.txt`、`events-chs-candidates.txt`、`map_events_to_chs.py`、`search_chs_event_strings.py`：活动名单审计与中文名映射（71 个过期活动 / 当前窗口内 10 个长期活动）。
-- 客户端页权威证据：`/Users/mc/PycharmProjects/unpak/data_unpacked/Dialogs/80000-84999/quest_q80787.html`（`select_none` 页含 20000/20001 按钮）。
+- 客户端页权威证据：`${AION_UNPACK_ROOT}/data_unpacked/Dialogs/80000-84999/quest_q80787.html`（`select_none` 页含 20000/20001 按钮）。
 
 ## 6. 验证结果与未验证项
 

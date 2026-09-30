@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """真端服务端模板表（58Server/Map/XML）对本仓库任务的覆盖统计。
 
-输入：/Users/mc/IdeaProjects/58Server/Map/XML/{Quest_*.xml,data_driven_quest.xml,quest.xml}
+输入：${AION_RETAIL_ROOT:-$HOME/IdeaProjects/58Server}/Map/XML/{Quest_*.xml,data_driven_quest.xml,quest.xml}
      src/main/resources/aion/data/static_data/quest_definition/quests/*.xml
 输出：每张表的行数 / 与本仓库交集 / 并集覆盖
 """
@@ -10,7 +10,7 @@ import os
 import re
 import xml.etree.ElementTree as ET
 
-RETAIL = "/Users/mc/IdeaProjects/58Server/Map/XML"
+RETAIL = f"{os.environ.get('AION_RETAIL_ROOT', os.path.expanduser('~/IdeaProjects/58Server'))}/Map/XML"
 REPO = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "../../.."))
 
 

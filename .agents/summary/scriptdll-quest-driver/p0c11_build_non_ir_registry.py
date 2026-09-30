@@ -18,12 +18,13 @@
 
 用法：python3 -B p0c11_build_non_ir_registry.py
 """
+import os
 import re
 from collections import defaultdict
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
-REPO = Path('/Users/mc/IdeaProjects/AionEmu-test')
+REPO = Path(f"{os.environ.get('AION_REPO_ROOT', os.path.expanduser('~/IdeaProjects/AionEmu-test'))}")
 CAP = REPO / 'src/test/resources/quest/quest-start-metadata-retail-cap-exceptions.tsv'
 HEAL = REPO / 'src/test/resources/quest/retail-legacy-save-normalization.tsv'
 DIV = REPO / 'src/test/resources/quest/retail-metadata-divergences.tsv'

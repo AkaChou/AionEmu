@@ -12,9 +12,10 @@
 输出：p3b-use-item-decisions.tsv（quest_id/verdict/basis/axes/evidence）。
 用法：python3 -B p3b_build_use_item_decisions.py
 """
+import os
 from pathlib import Path
 
-REPO = Path('/Users/mc/IdeaProjects/AionEmu-test')
+REPO = Path(f"{os.environ.get('AION_REPO_ROOT', os.path.expanduser('~/IdeaProjects/AionEmu-test'))}")
 TOPIC = REPO / '.agents/summary/scriptdll-quest-driver'
 DRIFT = REPO / 'src/test/resources/quest/retail-simple-use-item-drift.tsv'
 OUT = TOPIC / 'p3b-use-item-decisions.tsv'

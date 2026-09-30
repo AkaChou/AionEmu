@@ -8,11 +8,12 @@
 
 输出：p0c3-stale-xml-test-refs.tsv（test_file, quest_id, snippet）
 """
+import os
 import re
 import sys
 from pathlib import Path
 
-REPO = Path('/Users/mc/IdeaProjects/AionEmu-test')
+REPO = Path(f"{os.environ.get('AION_REPO_ROOT', os.path.expanduser('~/IdeaProjects/AionEmu-test'))}")
 RETENTION = REPO / 'src/main/resources/aion/data/static_data/quest_retail/retail-xml-retention.tsv'
 TESTS = REPO / 'src/test/java'
 XML_DIR = REPO / 'src/main/resources/aion/data/static_data/quest_definition/quests'

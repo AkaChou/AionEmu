@@ -7,6 +7,7 @@
 targets_file 每行形如 `0x0123c218\tDataDrivenQuest - Collect Item`。
 输出: 每个目标地址 -> 引用它的函数（symbols.tsv 中的最近符号）与指令地址。
 """
+import os
 import bisect
 import re
 import sys
@@ -15,7 +16,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from m5b2_pe_probe import Pe, load_symbols  # noqa: E402
 
-DLL = "/Users/mc/IdeaProjects/58Server/MainServer/ScriptDLL64.dll"
+DLL = f"{os.environ.get('AION_RETAIL_ROOT', os.path.expanduser('~/IdeaProjects/58Server'))}/MainServer/ScriptDLL64.dll"
 
 
 def main():

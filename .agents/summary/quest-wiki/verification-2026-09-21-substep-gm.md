@@ -1,6 +1,6 @@
 # QuestWiki 小步骤 GM 命令验证记录（2026-09-21）
 
-仓库：/Users/mc/IdeaProjects/AionEmu-QuestWiki（未提交）
+仓库：<用户主目录>/IdeaProjects/AionEmu-QuestWiki（未提交）
 需求：采集进度等小步骤也要有各自的 GM 命令。
 
 ## 实现

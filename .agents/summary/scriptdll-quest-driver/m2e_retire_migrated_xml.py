@@ -10,13 +10,14 @@
 ∪ `retail-simple-hunt-adjudicated-ir-fingerprints.tsv`（P0c-3 哨兵裁定行，真端优先）。
 用法：python3 -B m2e_retire_migrated_xml.py [--dry-run]
 """
+import os
 import argparse
 import hashlib
 import re
 import subprocess
 from pathlib import Path
 
-REPO = Path('/Users/mc/IdeaProjects/AionEmu-test')
+REPO = Path(f"{os.environ.get('AION_REPO_ROOT', os.path.expanduser('~/IdeaProjects/AionEmu-test'))}")
 FINGERPRINTS = REPO / 'src/test/resources/quest/retail-simple-hunt-ir-fingerprints.tsv'
 ADJUDICATED_FINGERPRINTS = (REPO / 'src/test/resources/quest'
 	/ 'retail-simple-hunt-adjudicated-ir-fingerprints.tsv')

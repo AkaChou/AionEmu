@@ -13,14 +13,15 @@
 
 用法：python3 -B m5b3x_faction_sentinel_grants.py [--fix-production]
 """
+import os
 import argparse
 import re
 from pathlib import Path
 
-REPO = Path('/Users/mc/IdeaProjects/AionEmu-test')
+REPO = Path(f"{os.environ.get('AION_REPO_ROOT', os.path.expanduser('~/IdeaProjects/AionEmu-test'))}")
 TOPIC = REPO / '.agents/summary/scriptdll-quest-driver'
 RETAIL_TABLE = REPO / 'src/main/resources/aion/data/static_data/quest_retail/Quest_SimpleCollectItem.xml'
-RETAIL_FACTION_QUESTS = Path('/Users/mc/IdeaProjects/58Server/Map/XML/npcfactions_quest.xml')
+RETAIL_FACTION_QUESTS = Path(f"{os.environ.get('AION_RETAIL_ROOT', os.path.expanduser('~/IdeaProjects/58Server'))}/Map/XML/npcfactions_quest.xml")
 PROD_FACTION_QUESTS = REPO / 'src/main/resources/aion/data/static_data/npc_factions/npc_factions_quest.xml'
 DRIFT = REPO / 'src/test/resources/quest/retail-simple-collect-item-drift.tsv'
 CLIENT_PAGE = TOPIC / 'm5b2b-client-accept-page-SimpleCollectItem.tsv'

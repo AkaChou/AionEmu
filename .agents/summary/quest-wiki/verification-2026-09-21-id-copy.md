@@ -1,6 +1,6 @@
 # QuestWiki ID/GM 复制按钮验证记录（2026-09-21）
 
-仓库：/Users/mc/IdeaProjects/AionEmu-QuestWiki（未提交）
+仓库：<用户主目录>/IdeaProjects/AionEmu-QuestWiki（未提交）
 页面：http://localhost:5190/quest/10525（preview，dist 构建 15:08:40 与源码 15:08:23 对齐）
 
 ## 验证项与证据

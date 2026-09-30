@@ -8,12 +8,13 @@
      （数据行 86/86 逐字节相同）；
   ③ 冻结事实文件的三类行数与实测一致（exclude 7 / cutscene 11 / withheld 2）。
 
-依赖（分析面，只读）：外部客户端解包目录 /Users/mc/PycharmProjects/unpak/data_unpacked/Dialogs
+依赖（分析面，只读）：外部客户端解包目录 ${AION_UNPACK_ROOT:-$HOME/PycharmProjects/unpak}/data_unpacked/Dialogs
 与退役快照 retired-tsv/quest_client_talk_pages.tsv.retired-20260927。
 
 用法：python3 -B .agents/summary/quest-native-dispatch/tools/p4e_talk_collect_repro_probe.py
 """
 from __future__ import annotations
+import os
 
 import pathlib
 import re
@@ -28,7 +29,7 @@ FACTS = REPO / 'src/main/resources/aion/definitions/quest_dialog/talk_collect_fr
 MANUAL_TABLE_REL = 'src/main/resources/aion/data/static_data/quest_retail/quest_client_talk_collect_chain_pages.tsv'
 GENERATED_TABLE = (REPO / 'target/generated-resources/aion/data/static_data/quest_retail'
                    / pathlib.Path(MANUAL_TABLE_REL).name)
-DIALOGS = pathlib.Path('/Users/mc/PycharmProjects/unpak/data_unpacked/Dialogs')
+DIALOGS = pathlib.Path(f"{os.environ.get('AION_UNPACK_ROOT', os.path.expanduser('~/PycharmProjects/unpak'))}/data_unpacked/Dialogs")
 WITHHELD = {'20035', '20501'}
 EXPECTED_KINDS = {'exclude': 7, 'cutscene': 11, 'withheld': 2}
 

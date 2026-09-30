@@ -14,7 +14,7 @@ import os
 import xml.etree.ElementTree as ET
 
 REPO = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", ".."))
-RETAIL_QUEST_XML = "/Users/mc/PycharmProjects/unpak/Quest_unpacked/quest.xml"
+RETAIL_QUEST_XML = f"{os.environ.get('AION_UNPACK_ROOT', os.path.expanduser('~/PycharmProjects/unpak'))}/Quest_unpacked/quest.xml"
 PROD_DIR = os.path.join(
     REPO, "src/main/resources/aion/data/static_data/quest_definition/quests")
 OUT = os.path.join(

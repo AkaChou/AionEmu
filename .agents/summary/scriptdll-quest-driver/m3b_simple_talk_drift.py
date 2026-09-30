@@ -24,6 +24,7 @@
 """
 
 from __future__ import annotations
+import os
 
 import argparse
 import csv
@@ -46,8 +47,8 @@ COVERED_REPORT_ACTIONS = {
 ITEM_CHECK_ACTIONS = {"HACTION_CHECK_USER_HAS_QUEST_ITEM", "HACTION_CHECK_USER_HAS_QUEST_ITEM_SIMPLE"}
 RETAIL_TALK_TABLE = REPO / "src/main/resources/aion/data/static_data/quest_retail/Quest_SimpleTalk.xml"
 AUDIT = REPO / ".agents/summary/quest-10527-reward-row/audit_reward_row_vs_client_steps.py"
-UNPACK = Path("/Users/mc/PycharmProjects/unpak/Quest_unpacked")
-DIALOGS = Path("/Users/mc/PycharmProjects/unpak/data_unpacked/Dialogs")
+UNPACK = Path(f"{os.environ.get('AION_UNPACK_ROOT', os.path.expanduser('~/PycharmProjects/unpak'))}/Quest_unpacked")
+DIALOGS = Path(f"{os.environ.get('AION_UNPACK_ROOT', os.path.expanduser('~/PycharmProjects/unpak'))}/data_unpacked/Dialogs")
 OUTPUT = HERE / "retail-simple-talk-drift.tsv"
 
 

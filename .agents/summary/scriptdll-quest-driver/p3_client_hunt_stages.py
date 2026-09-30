@@ -12,12 +12,13 @@
 
 用法：python3 -B p3_client_hunt_stages.py
 """
+import os
 import csv
 import re
 from pathlib import Path
 
-REPO = Path('/Users/mc/IdeaProjects/AionEmu-test')
-UNPAK = Path('/Users/mc/PycharmProjects/unpak/Quest_unpacked/quest_monster.csv')
+REPO = Path(f"{os.environ.get('AION_REPO_ROOT', os.path.expanduser('~/IdeaProjects/AionEmu-test'))}")
+UNPAK = Path(f"{os.environ.get('AION_UNPACK_ROOT', os.path.expanduser('~/PycharmProjects/unpak'))}/Quest_unpacked/quest_monster.csv")
 TOPIC = REPO / '.agents/summary/scriptdll-quest-driver'
 TABLE = REPO / 'src/main/resources/aion/data/static_data/quest_retail/Quest_SimpleSerialHunt.xml'
 OUT = REPO / 'src/main/resources/aion/data/static_data/quest_retail/quest_client_hunt_stages.tsv'

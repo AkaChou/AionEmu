@@ -9,12 +9,13 @@
 
 用法：python3 -B m3d_downgrade_to_xml.py <code> <quest_id> [<quest_id> ...] [--dry-run]
 """
+import os
 import argparse
 import pathlib
 import re
 import subprocess
 
-REPO = pathlib.Path('/Users/mc/IdeaProjects/AionEmu-test')
+REPO = pathlib.Path(f"{os.environ.get('AION_REPO_ROOT', os.path.expanduser('~/IdeaProjects/AionEmu-test'))}")
 XML_DIR = REPO / 'src/main/resources/aion/data/static_data/quest_definition/quests'
 CATALOG = REPO / 'src/main/resources/aion/data/static_data/quest_definition/quest_definition_catalog.xml'
 LEDGERS = [

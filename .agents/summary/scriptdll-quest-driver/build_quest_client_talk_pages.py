@@ -11,10 +11,11 @@
 已登记 handin 的任务跳过（交付流优先）。
 用法：python3 -B build_quest_client_talk_pages.py
 """
+import os
 import csv
 from pathlib import Path
 
-REPO = Path('/Users/mc/IdeaProjects/AionEmu-test')
+REPO = Path(f"{os.environ.get('AION_REPO_ROOT', os.path.expanduser('~/IdeaProjects/AionEmu-test'))}")
 MAPPING = REPO / 'docs/quest/client-dialog-mapping'
 PAGES = MAPPING / 'quest-dialog-pages.csv'
 HANDIN = REPO / 'src/main/resources/aion/data/static_data/quest_retail/quest_client_handin_pages.tsv'

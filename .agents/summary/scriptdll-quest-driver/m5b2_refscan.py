@@ -5,6 +5,7 @@
 用法: python3 m5b2_refscan.py <lo_hex> <hi_hex> [--fn]
   --fn 额外用 ScriptDLL64.c 的函数边界归组
 """
+import os
 import sys
 from pathlib import Path
 
@@ -14,7 +15,7 @@ from m5b2_pe_probe import Pe  # noqa: E402
 
 def main():
     lo, hi = int(sys.argv[1], 16), int(sys.argv[2], 16)
-    pe = Pe("/Users/mc/IdeaProjects/58Server/MainServer/ScriptDLL64.dll")
+    pe = Pe(f"{os.environ.get('AION_RETAIL_ROOT', os.path.expanduser('~/IdeaProjects/58Server'))}/MainServer/ScriptDLL64.dll")
     secs = {s[0]: s for s in pe.sections}
     _, tva, _, _, trs = secs[".text"]
     tlo = pe.image_base + tva

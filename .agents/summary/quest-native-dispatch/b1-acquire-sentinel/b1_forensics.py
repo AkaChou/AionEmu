@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 # 批 1（哨兵接取族 192 行）逐行取证：模板表字段 × NPC 名解析 × 区域绑定 × 客户端入口证据。
 # Batch-1 per-row forensics for the acquire-sentinel family.
+import os
 import re
 from collections import Counter
 
-ROOT = "/Users/mc/IdeaProjects/AionEmu-test"
+ROOT = f"{os.environ.get('AION_REPO_ROOT', os.path.expanduser('~/IdeaProjects/AionEmu-test'))}"
 QR = f"{ROOT}/src/main/resources/aion/data/static_data/quest_retail"
 NPC_INDEX = f"{ROOT}/.agents/summary/scriptdll-quest-driver/npc_name_index.tsv"
 AREAS = f"{ROOT}/src/main/resources/aion/definitions/compact/ai/ai-areas.xml"
