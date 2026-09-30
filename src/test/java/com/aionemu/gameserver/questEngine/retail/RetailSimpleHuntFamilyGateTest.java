@@ -127,6 +127,22 @@ class RetailSimpleHuntFamilyGateTest {
 	}
 
 	@Test
+	void fortressGarrisonAliasesAreVersionedAndBoundToAllSixQuests() {
+		Set<Integer> crotan = fortressGarrisonIds(215094, 215285);
+		Set<Integer> dkisas = fortressGarrisonIds(215137, 215317);
+		Set<Integer> lamiren = fortressGarrisonIds(215180, 215349);
+		assertEquals(crotan, npcIndexFull.resolve("idabre_up3_crotan"));
+		assertEquals(dkisas, npcIndexFull.resolve("idabre_up3_dkisas"));
+		assertEquals(lamiren, npcIndexFull.resolve("idabre_up3_lamiren"));
+		assertFortressPlan(1842, crotan, 215134);
+		assertFortressPlan(2843, crotan, 215134);
+		assertFortressPlan(1843, dkisas, 215177);
+		assertFortressPlan(2844, dkisas, 215177);
+		assertFortressPlan(1844, lamiren, 215220);
+		assertFortressPlan(2845, lamiren, 215220);
+	}
+
+	@Test
 	void familyCompilesWithoutShell() throws Exception {
 		Map<String, Integer> histogram = new TreeMap<>();
 		Map<Integer, String> rejects = new TreeMap<>();
@@ -312,8 +328,33 @@ class RetailSimpleHuntFamilyGateTest {
 			nameIdCache);
 	}
 
+	/** 深层要塞普通守军集：40 个主段 + 2 个补段 + 32 个增援；将军 ID 独占第二槽。 */
+	private static Set<Integer> fortressGarrisonIds(int first, int reinforcementFirst) {
+		Set<Integer> ids = new TreeSet<>();
+		for (int id = first; id < first + 43; id++) {
+			if (id != first + 40) {
+				ids.add(id);
+			}
+		}
+		for (int id = reinforcementFirst; id < reinforcementFirst + 32; id++) {
+			ids.add(id);
+		}
+		return Set.copyOf(ids);
+	}
+
+	private static void assertFortressPlan(int questId, Set<Integer> garrison, int generalNpcId) {
+		RetailSimpleHuntPlan plan = catalog.simpleHuntPlan(questId).orElseThrow();
+		RetailSimpleHuntPlan.BoundCounter garrisonCounter = plan.counter(1).orElseThrow();
+		RetailSimpleHuntPlan.BoundCounter generalCounter = plan.counter(2).orElseThrow();
+		assertEquals(80, garrisonCounter.required());
+		assertEquals(garrison, garrisonCounter.npcIds());
+		assertEquals(1, generalCounter.required());
+		assertEquals(Set.of(generalNpcId), generalCounter.npcIds());
+	}
+
 	private static RetailNpcNameIndex npcIndex() throws Exception {
-		return RetailNpcNameIndex.build(openAll(NPC_DIR, NPC_TEMPLATES), RetailQuestAiNameGroupsFixture.streams());
+		return RetailNpcNameIndex.build(openAll(NPC_DIR, NPC_TEMPLATES), RetailQuestAiNameGroupsFixture.streams(),
+			RetailNpcNameAliases.streams());
 	}
 
 	private static RetailItemNameIndex itemIndex() throws Exception {

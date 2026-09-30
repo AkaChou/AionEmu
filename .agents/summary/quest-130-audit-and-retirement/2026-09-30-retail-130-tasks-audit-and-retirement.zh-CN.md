@@ -32,11 +32,13 @@
 执行测试：`mvn test -Dtest=RetailSimpleHuntFamilyGateTest,RetailSimpleTalkGateTest,RetailOwnershipGateTest,Quest1842RepeatLifecycleTest`
 结果：**11 项核心门禁测试全绿通过（BUILD SUCCESS）**。
 
-## 四、 审查修正（未运行 Maven）
+## 四、 审查修正与聚焦验证
 1. `quest_definition_catalog.xml` 恢复 18805/28805 的标准 `resource`/`mode` 条目并删除非法 `path` 条目；静态 XSD 校验通过。
 2. 16961 依 `p0c8c-gap-decisions.tsv` 的 `XML_EXTRA_REWARD` 裁定恢复 XML 与双端 retention 账本，避免丢失 `ITEM 188052938 ×1`。
 3. 深层要塞 3 组守军 ID 从 `RetailNpcNameIndex` Java 特例迁入 `retail-npc-name-aliases.tsv`，loader fail-closed；清单计数 5→6，族门禁锁定 6 个任务的 74 守军 + 独立将军槽。
-4. `QuestLegacyMonsterHuntProductionFlowTest` 的 1842 合同迁移到逐 NPC `KillNpc` 宽计数形，覆盖两种击杀顺序、末杀直接 REWARD、奖励窗/完成 after-commit 顺序。当前分支已迁出 `QuestE2eInfrastructureTest`，未回恢复该并行删除层。
+4. `QuestLegacyMonsterHuntProductionFlowTest` 的 1842 合同迁移到逐 NPC `KillNpc` 宽计数形，覆盖两种击杀顺序、末杀直接 REWARD、状态/变量/事件/优先级、奖励窗重开与完成 after-commit 顺序；当前分支已迁出 `QuestE2eInfrastructureTest`，未恢复该并行删除层。
+5. `ClientQuestSectionAlignmentTest` 同步六任务深层要塞宽计数布局（`width=10`、`var1 offset=10`），并锁定 18952 顺序链满杀后停留 full START、由交付 NPC `804711` 的 `QUEST_SELECT` 进入 REWARD。
+6. 聚焦 Maven 验证：`mvn test -Dtest=QuestDefinitionCatalogManifestTest,ProductionCatalogWhitelistVerificationTest,RetailOwnershipGateTest,RetailTsvManifestGateTest,RetailSimpleHuntFamilyGateTest,QuestLegacyMonsterHuntProductionFlowTest,Quest1842RepeatLifecycleTest,ClientQuestSectionAlignmentTest`，结果 **72 tests / 0 failures / 0 errors / 0 skipped（BUILD SUCCESS）**。并行脏区不纳入本结论。
 
 ## 五、 第二批真端驱动改造退役（SimpleCollectItem 家族收割）
 1. **升级 `RetailSimpleCollectItemDefinitionCompiler.java`**：

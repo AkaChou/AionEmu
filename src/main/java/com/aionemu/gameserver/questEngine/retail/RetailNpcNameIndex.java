@@ -226,6 +226,16 @@ public final class RetailNpcNameIndex {
 	 */
 	public static RetailNpcNameIndex build(Collection<InputStream> templates,
 			Collection<InputStream> questAiNameGroupTables) throws IOException {
+		return build(templates, questAiNameGroupTables, RetailNpcNameAliases.streams());
+	}
+
+	/**
+	 * 同 {@link #build(Collection, Collection)}，并加载版本化 NPC id 别名表（TSV：{@code 别名 \t id1,id2,...}）。
+	 * Same as {@link #build(Collection, Collection)} plus the versioned NPC id alias table.
+	 */
+	public static RetailNpcNameIndex build(Collection<InputStream> templates,
+			Collection<InputStream> questAiNameGroupTables, Collection<InputStream> npcIdAliasTables)
+			throws IOException {
 		Map<String, Set<Integer>> byName = new LinkedHashMap<>();
 		Map<String, Set<Integer>> byNameId = new LinkedHashMap<>();
 		Map<Integer, String> nameIdByNpc = new LinkedHashMap<>();
@@ -263,6 +273,7 @@ public final class RetailNpcNameIndex {
 		});
 		addStrippedPrefixAliases(byName);
 		addMonsterTargetAliases(byName);
+		addVersionedNpcIdAliases(byName, npcIdAliasTables);
 		Map<String, Set<String>> groupMembers = new LinkedHashMap<>();
 		Map<String, Set<Integer>> groups = new LinkedHashMap<>();
 		for (InputStream input : questAiNameGroupTables) {
@@ -297,6 +308,37 @@ public final class RetailNpcNameIndex {
 			}
 		}
 		return new RetailNpcNameIndex(byName, families, groupMembers, groups, questUseItemNpcIds);
+	}
+
+	/**
+	 * 读取版本化直连 id 别名；别名不能遮蔽模板名，表内重复 id 视为数据错误。
+	 * Reads versioned direct-id aliases; an alias must not shadow a template name and duplicate ids fail closed.
+	 */
+	private static void addVersionedNpcIdAliases(Map<String, Set<Integer>> byName,
+			Collection<InputStream> npcIdAliasTables) throws IOException {
+		for (InputStream input : npcIdAliasTables) {
+			for (String line : new String(input.readAllBytes(), StandardCharsets.UTF_8).split("\n")) {
+				String row = line.strip();
+				if (row.isEmpty() || row.startsWith("#")) {
+					continue;
+				}
+				String[] parts = row.split("\t", -1);
+				if (parts.length != 2 || parts[1].isBlank()) {
+					throw new IOException("malformed npc-id alias row: " + row);
+				}
+				String alias = parts[0].strip().toLowerCase(Locale.ROOT);
+				Set<Integer> ids = new LinkedHashSet<>();
+				for (String value : parts[1].split(",")) {
+					String id = value.strip();
+					if (id.isEmpty() || !id.chars().allMatch(Character::isDigit) || !ids.add(Integer.parseInt(id))) {
+						throw new IOException("malformed or duplicate npc id in alias row: " + row);
+					}
+				}
+				if (byName.putIfAbsent(alias, Collections.unmodifiableSet(ids)) != null) {
+					throw new IOException("duplicate npc name alias: " + alias);
+				}
+			}
+		}
 	}
 
 	/**
@@ -364,45 +406,6 @@ public final class RetailNpcNameIndex {
 			214771, 214772, 214773, 214774, 214775, 214776, 214777, 214778, 214779, 214780,
 			214781, 214782, 214783, 214784, 214785, 214786, 214787, 214788, 214789,
 			215445, 215446, 215447, 215448, 215449, 215450));
-
-		// 1842 / 2843: 克罗坦要塞 All Kill (74 只普通守军，将军 215134 独占 slot 2)
-		byName.put("idabre_up3_crotan", Set.of(
-			215094, 215095, 215096, 215097, 215098, 215099, 215100, 215101, 215102, 215103,
-			215104, 215105, 215106, 215107, 215108, 215109, 215110, 215111, 215112, 215113,
-			215114, 215115, 215116, 215117, 215118, 215119, 215120, 215121, 215122, 215123,
-			215124, 215125, 215126, 215127, 215128, 215129, 215130, 215131, 215132, 215133,
-			215135, 215136,
-			215285, 215286, 215287, 215288, 215289, 215290, 215291, 215292, 215293, 215294,
-			215295, 215296, 215297, 215298, 215299, 215300, 215301, 215302, 215303, 215304,
-			215305, 215306, 215307, 215308, 215309, 215310, 215311, 215312, 215313, 215314,
-			215315, 215316
-		));
-
-		// 1843 / 2844: 德基萨斯要塞 All Kill (74 只普通守军，将军 215177 独占 slot 2)
-		byName.put("idabre_up3_dkisas", Set.of(
-			215137, 215138, 215139, 215140, 215141, 215142, 215143, 215144, 215145, 215146,
-			215147, 215148, 215149, 215150, 215151, 215152, 215153, 215154, 215155, 215156,
-			215157, 215158, 215159, 215160, 215161, 215162, 215163, 215164, 215165, 215166,
-			215167, 215168, 215169, 215170, 215171, 215172, 215173, 215174, 215175, 215176,
-			215178, 215179,
-			215317, 215318, 215319, 215320, 215321, 215322, 215323, 215324, 215325, 215326,
-			215327, 215328, 215329, 215330, 215331, 215332, 215333, 215334, 215335, 215336,
-			215337, 215338, 215339, 215340, 215341, 215342, 215343, 215344, 215345, 215346,
-			215347, 215348
-		));
-
-		// 1844 / 2845: 拉米伦要塞 All Kill (74 只普通守军，将军 215220 独占 slot 2)
-		byName.put("idabre_up3_lamiren", Set.of(
-			215180, 215181, 215182, 215183, 215184, 215185, 215186, 215187, 215188, 215189,
-			215190, 215191, 215192, 215193, 215194, 215195, 215196, 215197, 215198, 215199,
-			215200, 215201, 215202, 215203, 215204, 215205, 215206, 215207, 215208, 215209,
-			215210, 215211, 215212, 215213, 215214, 215215, 215216, 215217, 215218, 215219,
-			215221, 215222,
-			215349, 215350, 215351, 215352, 215353, 215354, 215355, 215356, 215357, 215358,
-			215359, 215360, 215361, 215362, 215363, 215364, 215365, 215366, 215367, 215368,
-			215369, 215370, 215371, 215372, 215373, 215374, 215375, 215376, 215377, 215378,
-			215379, 215380
-		));
 
 		// 80334, 80337: IDAsteria_IU_3Stage_Boss
 		byName.put("idasteria_iu_3stage_boss", Set.of(233161));

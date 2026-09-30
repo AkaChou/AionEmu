@@ -38,8 +38,7 @@ class ClientQuestSectionAlignmentTest {
 	 * here in the P0c-49 incidental repayment).
 	 */
 	private static final Set<Integer> SECTION_LAYOUT_DEBT = Set.of(
-		1842, 1843, 1844, 2843, 2844, 2845,
-		4928, 19078, 20034, 29074, 29078);
+		4928, 19078, 29074, 29078);
 	private static final List<Integer> VILLAGE_HUNT_QUESTS = List.of(
 		17106, 17108, 17110, 17112, 17114, 17116, 17118, 17120, 17122, 17124, 17126, 17128,
 		17130, 17132, 17134, 17136, 17138, 17140, 17142, 17144, 17146, 17148, 17150, 17152,
@@ -107,9 +106,12 @@ class ClientQuestSectionAlignmentTest {
 		state = apply(fourSections, state, new QuestEvent.KillNpc(236243));
 		state = apply(fourSections, state, new QuestEvent.KillNpc(236244));
 		vars = new QuestVars(state.packedVariables());
+		assertEquals(QuestStatus.START, state.status());
+		assertEquals(List.of(1, 1, 1, 1), List.of(vars.getVarById(0), vars.getVarById(1),
+			vars.getVarById(2), vars.getVarById(3)));
+		state = apply(fourSections, state, new QuestEvent.TalkToNpc(804711,
+			QuestDialogAction.QUEST_SELECT.id()));
 		assertEquals(QuestStatus.REWARD, state.status());
-		assertEquals(List.of(1, 1, 1, 1), List.of(vars.getVarById(1), vars.getVarById(2),
-			vars.getVarById(3), vars.getVarById(4)));
 
 		CompiledQuestDefinition mission = load(2002);
 		state = snapshot(2002, QuestStatus.START, 3);
@@ -171,11 +173,11 @@ class ClientQuestSectionAlignmentTest {
 	}
 
 	@Test
-	void extendedEightyKillCountersRemainExplicitLegacyExceptions() {
+	void extendedEightyKillCountersUseTheWideRetailLayout() {
 		for (int questId : EXTENDED_COUNTER_QUESTS) {
 			ProgressLayout layout = load(questId).definition().progressLayout();
-			assertEquals(7, layout.field("var0").width());
-			assertEquals(7, layout.field("var1").offset());
+			assertEquals(10, layout.field("var0").width());
+			assertEquals(10, layout.field("var1").offset());
 		}
 	}
 
