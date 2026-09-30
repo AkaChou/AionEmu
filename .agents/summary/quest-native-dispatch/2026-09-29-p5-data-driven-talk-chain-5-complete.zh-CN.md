@@ -1,5 +1,8 @@
 # 2026-09-29 DataDriven Talk 链最终收口（5 个，RETAIL_TALK_CHAIN_DEFERRED 清零）
 
+
+> **生成物清理提示（2026-09-30）**：本文件正文提到的 `*.tsv` / `*.log` / `*.txt` / `*.xml` 等中间转储已随 `chore(agents)` 清理删除；原文与留痕仍可从 git 历史取回，被删清单与再生成入口见 `.agents/summary/CLEANUP-LEDGER.zh-CN.md`。
+
 ## 范围
 
 - 解决因静态页梯表未硬编码导致的最后 5 个 Talk 链任务挂起：`1888, 2888, 10033, 15550, 25550`。

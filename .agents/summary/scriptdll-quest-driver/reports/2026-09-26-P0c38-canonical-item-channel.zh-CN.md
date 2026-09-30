@@ -1,5 +1,8 @@
 # P0c-38：canonical 行的 item 符号通道 —— 真端名索引优先 + 3 行物品置换修正
 
+
+> **生成物清理提示（2026-09-30）**：本文件正文提到的 `*.tsv` / `*.log` / `*.txt` / `*.xml` 等中间转储已随 `chore(agents)` 清理删除；原文与留痕仍可从 git 历史取回，被删清单与再生成入口见 `.agents/summary/CLEANUP-LEDGER.zh-CN.md`。
+
 > 切片窗口：2026-09-26（承接 P0c-37 登记的"17 行 `ADOPTION_BLOCKED` 的采纳通道"）。
 > **主产出**：canonical 合成器（`build_quest_client_talk_chain_steps.py`）新增**真端 item 名索引通道**
 > （`item_name_index.tsv`：符号去 `ITEM_` 前缀 + 小写 → id），命中即用，序数通道仅作兜底，两通道分歧时真端赢。

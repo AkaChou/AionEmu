@@ -1,2 +1,0 @@
-com.aionemu.gameserver.questEngine.retail.RetailDataDrivenGateTest.driftVersusShellsIsRegistered
-com.aionemu.gameserver.questEngine.retail.RetailSimpleItemPlayGateTest.familyMatchesFrozenFingerprintsAndRegisteredRejections

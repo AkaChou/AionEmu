@@ -1,5 +1,8 @@
 # SimpleTalk S2 · 链式规范段（G1 双块行）落地记录
 
+
+> **生成物清理提示（2026-09-30）**：本文件正文提到的 `*.tsv` / `*.log` / `*.txt` / `*.xml` 等中间转储已随 `chore(agents)` 清理删除；原文与留痕仍可从 git 历史取回，被删清单与再生成入口见 `.agents/summary/CLEANUP-LEDGER.zh-CN.md`。
+
 > 车道：`quest-native-dispatch`；面：**SimpleTalk S2（链式面）**；角色：生产改造 + 门禁同步 + 证据。
 > 上游：`2026-09-27-simpletalk-canonical-survey.zh-CN.md`（§2 落点、§3 策略三选一、§3.5 过场）；
 > 侦察产物：`2026-09-27-s2-r-record-conflicts.zh-CN.md`、`2026-09-27-s2-t2-triage.zh-CN.md`、

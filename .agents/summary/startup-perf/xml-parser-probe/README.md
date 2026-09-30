@@ -1,5 +1,8 @@
 # 静态数据 XML 解析器探针 / Static-data XML parser probe
 
+
+> **生成物清理提示（2026-09-30）**：本文件正文提到的 `*.tsv` / `*.log` / `*.txt` / `*.xml` 等中间转储已随 `chore(agents)` 清理删除；原文与留痕仍可从 git 历史取回，被删清单与再生成入口见 `.agents/summary/CLEANUP-LEDGER.zh-CN.md`。
+
 > status: **已运行**（2026-09-19 21:50，用户授权）。
 > 结果与结论：`../2026-09-19-xml-parser-probe-results.zh-CN.md` —— **候选 2（解析器替换）否决**。
 > 无 `pom.xml` 改动、无依赖引入、不启动服务端、不写生产代码。

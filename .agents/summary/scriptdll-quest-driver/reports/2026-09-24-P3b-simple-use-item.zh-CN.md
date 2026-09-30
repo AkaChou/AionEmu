@@ -1,5 +1,8 @@
 # P3b：SimpleUseItem 104 行 = 用物品接取规范形落驱动（102 退役 + 2 真端缺口）
 
+
+> **生成物清理提示（2026-09-30）**：本文件正文提到的 `*.tsv` / `*.log` / `*.txt` / `*.xml` 等中间转储已随 `chore(agents)` 清理删除；原文与留痕仍可从 git 历史取回，被删清单与再生成入口见 `.agents/summary/CLEANUP-LEDGER.zh-CN.md`。
+
 > 口径：真端优先。用物品接取族的规范形状 = `UseItem` → 接取确认窗 → 无目标对话接受/拒绝/关窗
 > → 报告 NPC SELECT5 → npc-complete 确认 8..23。
 

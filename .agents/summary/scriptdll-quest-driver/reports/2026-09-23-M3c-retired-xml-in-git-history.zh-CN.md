@@ -1,5 +1,8 @@
 # M3-c：退役 XML 只留 git 历史（取消测试作用域冻结副本）
 
+
+> **生成物清理提示（2026-09-30）**：本文件正文提到的 `*.tsv` / `*.log` / `*.txt` / `*.xml` 等中间转储已随 `chore(agents)` 清理删除；原文与留痕仍可从 git 历史取回，被删清单与再生成入口见 `.agents/summary/CLEANUP-LEDGER.zh-CN.md`。
+
 - 日期：2026-09-23
 - 切片：M3 收口（去 fixture 口径落地 + 退役任务测试适配补齐）
 - 承上：`2026-09-23-M3b-simple-talk-semantics-and-retirement.zh-CN.md`（SimpleTalk 语义收口与首次退役）

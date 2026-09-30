@@ -1,5 +1,8 @@
 # M5-b2：SimpleCollectItem 真端驱动漂移判定 + 首批 XML 退役
 
+
+> **生成物清理提示（2026-09-30）**：本文件正文提到的 `*.tsv` / `*.log` / `*.txt` / `*.xml` 等中间转储已随 `chore(agents)` 清理删除；原文与留痕仍可从 git 历史取回，被删清单与再生成入口见 `.agents/summary/CLEANUP-LEDGER.zh-CN.md`。
+
 - 日期：2026-09-23
 - 切片：M5-b2（SimpleCollectItem 家族，真端 `Quest_SimpleCollectItem.xml` 263 行 / 生产宇宙 178 行）
 - 结论一句话：**口径已确定（判据是真端语义 + 客户端契约，不是"合成 IR 必须等于 XML IR"）；本族可驱动从 12 行提升到 89 行（全表 150 行），首批退役 29 个 XML，其余 60 行带差异轴登记留 XML 等下一轮。**

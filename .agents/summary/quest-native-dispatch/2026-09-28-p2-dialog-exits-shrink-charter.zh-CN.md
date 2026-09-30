@@ -1,5 +1,8 @@
 # 阶段立项：批 P2 · `dialog_exits` 行级可达性普查 v2 + 缩表（2026-09-28）
 
+
+> **生成物清理提示（2026-09-30）**：本文件正文提到的 `*.tsv` / `*.log` / `*.txt` / `*.xml` 等中间转储已随 `chore(agents)` 清理删除；原文与留痕仍可从 git 历史取回，被删清单与再生成入口见 `.agents/summary/CLEANUP-LEDGER.zh-CN.md`。
+
 > 上游：`phase3-recon/2026-09-28-phase3-feasibility.zh-CN.md`（22 张三分类：可退役 1 / 需缩表 1 / 仍活 20）
 > + `phase3-provenance/2026-09-28-authority-provenance-audit.zh-CN.md`（21 张权威血缘；G1–G4 已冻结/补通道）。
 > 用户决定「1、2、3、4」= 执行 G1–G3 冻结/补通道 + 立项 P2 + G4 说明 + 审计提交与 push。

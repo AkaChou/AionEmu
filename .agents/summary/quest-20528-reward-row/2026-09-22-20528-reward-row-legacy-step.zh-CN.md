@@ -1,5 +1,8 @@
 # 任务 20528/10528「构筑保护之实体 1」领奖投影回归 legacy 落盘 step（reward=11，不是任务书末行 12）
 
+
+> **生成物清理提示（2026-09-30）**：本文件正文提到的 `*.tsv` / `*.log` / `*.txt` / `*.xml` 等中间转储已随 `chore(agents)` 清理删除；原文与留痕仍可从 git 历史取回，被删清单与再生成入口见 `.agents/summary/CLEANUP-LEDGER.zh-CN.md`。
+
 - 日期：2026-09-22
 - 范围：`quests/20528.xml`（用户报障，魔族）、`quests/10528.xml`（天族镜像，必须同步以免两侧再分叉）、
   聚焦门禁 `src/test/java/com/aionemu/gameserver/questEngine/definition/ArchdaevaRewardRowContractTest.java`、

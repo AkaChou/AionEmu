@@ -1,5 +1,8 @@
 # 静态数据 XML 解析器探针结果（2026-09-19）
 
+
+> **生成物清理提示（2026-09-30）**：本文件正文提到的 `*.tsv` / `*.log` / `*.txt` / `*.xml` 等中间转储已随 `chore(agents)` 清理删除；原文与留痕仍可从 git 历史取回，被删清单与再生成入口见 `.agents/summary/CLEANUP-LEDGER.zh-CN.md`。
+
 > status: 已按授权运行，结论 = **不采用解析器替换**（候选 2 否决）
 > evidence: `xml-parser-probe/results-20260919-215023.txt`（warmup=2 / 5 轮，热态）
 >          `xml-parser-probe/results-20260919-215104.txt`（warmup=0 / 3 轮，冷启动曲线）

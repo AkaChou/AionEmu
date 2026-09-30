@@ -1,5 +1,0 @@
-=== 冷启动曲线（warmup=0, 连续 3 轮，独立 JVM）/ cold-start curve ===
-### jaxb-item
-RESULT label=jaxb-item iterations=3 median_wall_ms=122.9 min_wall_ms=99.5 median_cpu_ms=113.3 median_alloc_mb=46.3 wall_ms=[515.7,122.9,99.5]
-### jsonl-item
-RESULT label=jsonl-item iterations=3 median_wall_ms=67.0 min_wall_ms=54.5 median_cpu_ms=58.8 median_alloc_mb=70.2 wall_ms=[355.8,67.0,54.5]

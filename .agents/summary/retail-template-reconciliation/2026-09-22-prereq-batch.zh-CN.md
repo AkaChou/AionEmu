@@ -1,5 +1,8 @@
 # PREREQ 批次交付记录（真端 finished_quest_cond 对账）
 
+
+> **生成物清理提示（2026-09-30）**：本文件正文提到的 `*.tsv` / `*.log` / `*.txt` / `*.xml` 等中间转储已随 `chore(agents)` 清理删除；原文与留痕仍可从 git 历史取回，被删清单与再生成入口见 `.agents/summary/CLEANUP-LEDGER.zh-CN.md`。
+
 - 日期：2026-09-22；状态：**实现完成、验收 PENDING**（未授权跑 Maven，未做客户机/运行期验证）
 - 变更：25 个生产任务 XML（24 补前置 + 1 修正迁移漂移），1 个新增门禁测试 + 1 个合同基线
 - 权威证据：真端服务端 `58Server/Map/XML/quest.xml`、Aion 5.8 客户端 `Quest_unpacked/quest.xml`、仓库旧库 `quest_data.xml`（QE-001）

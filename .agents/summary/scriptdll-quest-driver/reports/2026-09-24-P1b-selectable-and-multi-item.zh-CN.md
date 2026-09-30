@@ -1,5 +1,8 @@
 # P1b：可选奖励 25 行 + 多交付物 24 行落驱动（SimpleCollectItem 全族收口）
 
+
+> **生成物清理提示（2026-09-30）**：本文件正文提到的 `*.tsv` / `*.log` / `*.txt` / `*.xml` 等中间转储已随 `chore(agents)` 清理删除；原文与留痕仍可从 git 历史取回，被删清单与再生成入口见 `.agents/summary/CLEANUP-LEDGER.zh-CN.md`。
+
 > 口径：真端优先。接续 P1a，本切片把最后两批稳定码拒绝（`RETAIL_COLLECT_SELECTABLE_REWARD` /
 > `RETAIL_COLLECT_ITEM_SHAPE`）落进编译器并退役。**SimpleCollectItem 178 行自此 100% 由真端驱动。**
 

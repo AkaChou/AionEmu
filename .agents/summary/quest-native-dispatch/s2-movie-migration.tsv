@@ -1,5 +1,0 @@
-quest_id	movie_id	trigger_action	accept_npc_id	reward_npc_id	dual_role_row	expected_source	expected_npc	expected_action	carrier_source	carrier_npc	carrier_action	carrier_page	carrier_record_line	match_landing_verbatim	match_landing_filtered	match_carrier_verbatim	match_carrier_filtered	unscoped_npc_action_matches	verdict
-1422	100	1353	203912	203912	yes	started	203731	31	started	203731	1353	SELECT2_1(1353)	3025	1	1	1	0	(203731,31)=1;(203912,31)=4	LANDING_FIXED_PRECONDITION_PENDING
-2421	132	1353	204309	204309	yes	started	204187	31	started	204187	1353	SELECT2_1(1353)	3501	1	1	1	0	(204187,31)=1;(204309,31)=4	LANDING_FIXED_PRECONDITION_PENDING
-3006	361	1694	798132	798132	yes	s1	700339	31	s1	700339	1694	SELECT3_1(1694)	3855	1	1	1	0	(700339,31)=1;(798146,31)=1;(798132,31)=4	LANDING_FIXED_PRECONDITION_PENDING
-3020	363	1007	798143	798143	yes	unaccepted	798143	31	started	798143	1007	SHOW_ASK_QUEST_ACCEPT_WINDOW(4)	3869	1	1	1	0	(798143,31)=4;(798149,31)=1	LANDING_FIXED_PRECONDITION_PENDING

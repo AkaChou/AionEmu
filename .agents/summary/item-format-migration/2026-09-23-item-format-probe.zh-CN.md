@@ -1,5 +1,8 @@
 # 物品模板存储格式探针：JSONL 实测 (2026-09-23)
 
+
+> **生成物清理提示（2026-09-30）**：本文件正文提到的 `*.tsv` / `*.log` / `*.txt` / `*.xml` 等中间转储已随 `chore(agents)` 清理删除；原文与留痕仍可从 git 历史取回，被删清单与再生成入口见 `.agents/summary/CLEANUP-LEDGER.zh-CN.md`。
+
 > status: **已按授权运行**（用户 2026-09-23 明确授权实测）。未改生产代码、未引入依赖、未提交。
 > 探针: `JsonlItemProbe.java` + `run-jsonl-probe.sh` + `gen_compact_jsonl.py`
 > 产物: `results-batch.txt`、`results-coldstart.txt`、`results-verify.txt`、本文件

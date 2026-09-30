@@ -1,5 +1,8 @@
 # 启动优化第二轮：1–5 号候选执行记录（2026-09-19）
 
+
+> **生成物清理提示（2026-09-30）**：本文件正文提到的 `*.tsv` / `*.log` / `*.txt` / `*.xml` 等中间转储已随 `chore(agents)` 清理删除；原文与留痕仍可从 git 历史取回，被删清单与再生成入口见 `.agents/summary/CLEANUP-LEDGER.zh-CN.md`。
+
 > status: 代码改动已落地，聚焦测试通过（52 tests / 0 failures / 0 errors，2026-09-19 22:21）
 > 约束：XML 仍是运行时唯一来源，**不引入二进制/紧凑缓存**，reload 语义不变
 > 关联：`2026-09-19-static-data-critical-path-attribution.zh-CN.md`（第 5 节即 1–5 号候选）

@@ -1,5 +1,8 @@
 # M4-b：CombineTask 真端驱动落地 + 574 个 XML 退役（catalog 4440 → 3866）
 
+
+> **生成物清理提示（2026-09-30）**：本文件正文提到的 `*.tsv` / `*.log` / `*.txt` / `*.xml` 等中间转储已随 `chore(agents)` 清理删除；原文与留痕仍可从 git 历史取回，被删清单与再生成入口见 `.agents/summary/CLEANUP-LEDGER.zh-CN.md`。
+
 - 日期：2026-09-23
 - 切片：M4 第二批（CombineTask 从"真端表可复现"到"真端驱动生产 + XML 退役"）
 - 前置：`2026-09-23-M4a-combine-task-table-and-shapes.zh-CN.md`、`2026-09-23-M3c-retired-xml-in-git-history.zh-CN.md`

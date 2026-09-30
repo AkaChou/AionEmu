@@ -1,5 +1,8 @@
 # 批 P1 · 零消费者审计账退役：`retail-quest-ai-name-groups-rejected.tsv`（2026-09-28）
 
+
+> **生成物清理提示（2026-09-30）**：本文件正文提到的 `*.tsv` / `*.log` / `*.txt` / `*.xml` 等中间转储已随 `chore(agents)` 清理删除；原文与留痕仍可从 git 历史取回，被删清单与再生成入口见 `.agents/summary/CLEANUP-LEDGER.zh-CN.md`。
+
 > 车道：`quest-native-dispatch`；面：Phase 3 执行批 **P1**（整表退役）。
 > 上游：`phase3-recon/2026-09-28-phase3-feasibility.zh-CN.md` §判读-2（批 P1）。
 > 用户决定「1」= 立项并执行 P1（2026-09-28），含对删除审计账的认可。

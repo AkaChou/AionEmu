@@ -1,5 +1,8 @@
 # SimpleTalk S2（链式面 `buildChain`）canonical 化：逐块实现规格
 
+
+> **生成物清理提示（2026-09-30）**：本文件正文提到的 `*.tsv` / `*.log` / `*.txt` / `*.xml` 等中间转储已随 `chore(agents)` 清理删除；原文与留痕仍可从 git 历史取回，被删清单与再生成入口见 `.agents/summary/CLEANUP-LEDGER.zh-CN.md`。
+
 > 车道：`quest-native-dispatch`；面：**SimpleTalk 链式行 285 个 RETAIL_TABLE id**（`quest_client_talk_chain_steps.tsv` 登记）；
 > 唯一落点：`src/main/java/com/aionemu/gameserver/questEngine/retail/RetailSimpleTalkDefinitionCompiler.java` 的
 > **`buildChain`（当前 `:412-633`）与其被调用 helper**。

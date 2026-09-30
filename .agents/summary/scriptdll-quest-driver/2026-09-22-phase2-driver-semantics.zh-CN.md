@@ -1,5 +1,8 @@
 # Phase 2：ScriptDLL64 任务驱动语义解码（真端驱动恢复第二步）
 
+
+> **生成物清理提示（2026-09-30）**：本文件正文提到的 `*.tsv` / `*.log` / `*.txt` / `*.xml` 等中间转储已随 `chore(agents)` 清理删除；原文与留痕仍可从 git 历史取回，被删清单与再生成入口见 `.agents/summary/CLEANUP-LEDGER.zh-CN.md`。
+
 - 日期：2026-09-22；性质：只读分析（未改生产代码）；上游：Phase 1 报告 `2026-09-22-phase1-quest-registry.zh-CN.md`
 - 新增脚本：`extract_helper_body.py`（从 Ghidra dump 抽函数体）、`validate_hunt_counter_model.py`、`report_datadriven_coverage.py`
 - 结论文件：`hunt-counter-model-validation.txt`、`datadriven-coverage-report.txt`

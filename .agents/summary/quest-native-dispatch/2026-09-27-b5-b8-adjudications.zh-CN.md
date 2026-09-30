@@ -1,5 +1,8 @@
 # 缺口批 5–8 收口台账（客户端契约 40 + 领奖/计数 33 + 余量 16 + 裁定族 6 = 95 行 · quest-native-dispatch）
 
+
+> **生成物清理提示（2026-09-30）**：本文件正文提到的 `*.tsv` / `*.log` / `*.txt` / `*.xml` 等中间转储已随 `chore(agents)` 清理删除；原文与留痕仍可从 git 历史取回，被删清单与再生成入口见 `.agents/summary/CLEANUP-LEDGER.zh-CN.md`。
+
 > SEMANTIC_GAP：95 → **0**（DoD 判据 ① 达成）；全部零行为裁定改名 + drift 对码；里程碑 M2（批3+4）、
 > M3（批5+6）、M4（批7+8）逐轮 T1∥T3 验收。
 

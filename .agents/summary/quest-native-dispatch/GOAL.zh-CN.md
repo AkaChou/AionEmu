@@ -1,5 +1,8 @@
 # 终局目标书（Goal / Definition of Done）· 车道 quest-native-dispatch
 
+
+> **生成物清理提示（2026-09-30）**：本文件正文提到的 `*.tsv` / `*.log` / `*.txt` / `*.xml` 等中间转储已随 `chore(agents)` 清理删除；原文与留痕仍可从 git 历史取回，被删清单与再生成入口见 `.agents/summary/CLEANUP-LEDGER.zh-CN.md`。
+
 > 用途：作为 Claude Code workflow / 自主执行的**目标书**（可整体作为 goal prompt 或工作流的 meta.description）。
 > 状态：2026-09-27 冻结（数字为当次实测）；执行期以「变化面 == 缺陷面」逐片推进，每片独立验收、独立回滚。
 > 起点导航见 §6；验收命令见 §7；硬约束见 §5。

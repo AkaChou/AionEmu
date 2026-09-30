@@ -1,5 +1,8 @@
 # 批 N1 收口台账：EarlyElyos 3 在册红修复 + T2/T3 基线重冻（2026-09-28）
 
+
+> **生成物清理提示（2026-09-30）**：本文件正文提到的 `*.tsv` / `*.log` / `*.txt` / `*.xml` 等中间转储已随 `chore(agents)` 清理删除；原文与留痕仍可从 git 历史取回，被删清单与再生成入口见 `.agents/summary/CLEANUP-LEDGER.zh-CN.md`。
+
 > 阶段宪章：`2026-09-28-w6tail-w7-stage-charter.zh-CN.md`。三红 = 锁迁移前旧 XML 形的
 > `EarlyElyosQuestRegressionTest` 断言（任务均已 RETAIL_TABLE/OK 真端驱动），缺口批阶段因
 > DoD④ 字节恒等延期，本批按宪章重锚。

@@ -1,5 +1,8 @@
 # P0c-10：SimpleTalk 族收口对账（2223 行三分区 + 三桶零差集 + M3-d 降级复核 + 族级分歧表）
 
+
+> **生成物清理提示（2026-09-30）**：本文件正文提到的 `*.tsv` / `*.log` / `*.txt` / `*.xml` 等中间转储已随 `chore(agents)` 清理删除；原文与留痕仍可从 git 历史取回，被删清单与再生成入口见 `.agents/summary/CLEANUP-LEDGER.zh-CN.md`。
+
 - 日期：2026-09-25
 - 归属：真端任务驱动替换目标（P0c 线，v3 提示词 §4 P0c-10）
 - 触发：P0c-9 把 SimpleHunt 推到族口径闭环后，SimpleTalk 需要同格式的族级对账——

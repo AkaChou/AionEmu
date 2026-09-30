@@ -1,5 +1,8 @@
 # M2-e + M2-c(批次 1)：退役 286 个 SimpleHunt XML + 同名族等价集
 
+
+> **生成物清理提示（2026-09-30）**：本文件正文提到的 `*.tsv` / `*.log` / `*.txt` / `*.xml` 等中间转储已随 `chore(agents)` 清理删除；原文与留痕仍可从 git 历史取回，被删清单与再生成入口见 `.agents/summary/CLEANUP-LEDGER.zh-CN.md`。
+
 > **口径修正（M3-c，2026-09-23 后续切片）**：本报告的退役动作其后改为**删除**——旧 XML 不再迁移到
 > `src/test/resources/quest/retired/`（该目录与 1867 个冻结副本已删除），退役事实只留保留清单
 > `owner=RETAIL_TABLE`，历史内容由 git 承担；相关门禁/测试统一改走生产视图与冻结指纹。

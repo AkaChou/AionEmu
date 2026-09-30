@@ -1,5 +1,8 @@
 # 非 quest 全量失败修复
 
+
+> **生成物清理提示（2026-09-30）**：本文件正文提到的 `*.tsv` / `*.log` / `*.txt` / `*.xml` 等中间转储已随 `chore(agents)` 清理删除；原文与留痕仍可从 git 历史取回，被删清单与再生成入口见 `.agents/summary/CLEANUP-LEDGER.zh-CN.md`。
+
 ## 范围与根因
 
 - `SMPlayerSpawnTest`：夹具仍向 `World.worldMaps` 注入 `IntObjectHashMap`，而生产代码已使用 `WorldMap[]` 与并行 ID 数组。改为测试内的 `World.getWorldMap(int)` 查询替身，继续断言 44 字节出生包的地图、位置及尾字段；不修改生产 World 或协议。

@@ -1,5 +1,8 @@
 # M5-b3x：SimpleCollectItem 类别哨兵行 = 系统发放形状落驱动（批次 3）
 
+
+> **生成物清理提示（2026-09-30）**：本文件正文提到的 `*.tsv` / `*.log` / `*.txt` / `*.xml` 等中间转储已随 `chore(agents)` 清理删除；原文与留痕仍可从 git 历史取回，被删清单与再生成入口见 `.agents/summary/CLEANUP-LEDGER.zh-CN.md`。
+
 > 口径：真端优先。接续 M5-b2c 的裁定（`_faction_` 40 行不是解析缺口，而是"系统发放 + 无接取路由"），
 > 本切片把该形状落进 SimpleCollectItem 驱动并完成对应退役。
 

@@ -1,5 +1,8 @@
 # 2026-09-26 续片 27 / P0c-53：`ACQUIRE_NPC_UNRESOLVED` 38 行形状裁定（组表判据静态化 + 23 行采纳）
 
+
+> **生成物清理提示（2026-09-30）**：本文件正文提到的 `*.tsv` / `*.log` / `*.txt` / `*.xml` 等中间转储已随 `chore(agents)` 清理删除；原文与留痕仍可从 git 历史取回，被删清单与再生成入口见 `.agents/summary/CLEANUP-LEDGER.zh-CN.md`。
+
 ## 0. 一句话
 
 把 `RETAIL_ACQUIRE_NPC_UNRESOLVED` 38 行按**形状**拆成三类（真端字段是工作物符号的 11 行 / 既有变体通道

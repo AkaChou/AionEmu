@@ -1,3 +1,0 @@
-quest	client_rows	client_last_row	before_shape	before_reward_var0	after_shape	after_visible_state_var0	after_last_start_node	after_reward_var0	rowsource	evidence
-3938	11	10	MISSING_TAIL_ROWS	8	ALIGNED	0 1 2 3 4 5 6 7 8 9 10	s10(None)	None	QUEST_Q3938.html	legacy _3938Well_Rounded: 0->1..6->7->8(SET_REWARD 186000081)->REWARD; client collect 186000077 at artisan row 7
-4942	11	10	MISSING_TAIL_ROWS	0	ALIGNED	0 1 2 3 4 5 6 7 8 9 10	s10(None)	None	QUEST_Q4942.html	legacy _4942Proving_Proficiency mirror: 0->1..6->7->8(SET_REWARD 186000085)->REWARD

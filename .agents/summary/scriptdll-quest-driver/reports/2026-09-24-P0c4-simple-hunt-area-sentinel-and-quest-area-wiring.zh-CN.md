@@ -1,5 +1,8 @@
 # P0c-4：SimpleHunt `_area_` 类别哨兵 → 区域发放接线（8 行落地 + 8 个 XML 退役）
 
+
+> **生成物清理提示（2026-09-30）**：本文件正文提到的 `*.tsv` / `*.log` / `*.txt` / `*.xml` 等中间转储已随 `chore(agents)` 清理删除；原文与留痕仍可从 git 历史取回，被删清单与再生成入口见 `.agents/summary/CLEANUP-LEDGER.zh-CN.md`。
+
 - 日期：2026-09-24
 - 前置：P0c-3（`_faction_` 62 行）已完成；本切片处理它留下的 `RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING`
 - 判据：**真端世界文件是区域发放的金标准**。真端 `Map/Worlds/<world>/world*.xml` 的

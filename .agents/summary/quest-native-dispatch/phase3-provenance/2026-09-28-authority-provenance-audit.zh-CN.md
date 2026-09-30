@@ -1,5 +1,8 @@
 # Phase 3 权威血缘审计：21 张在册 TSV 的"真端驱动"成色（只读 · 2026-09-28）
 
+
+> **生成物清理提示（2026-09-30）**：本文件正文提到的 `*.tsv` / `*.log` / `*.txt` / `*.xml` 等中间转储已随 `chore(agents)` 清理删除；原文与留痕仍可从 git 历史取回，被删清单与再生成入口见 `.agents/summary/CLEANUP-LEDGER.zh-CN.md`。
+
 > 授权：用户「当前的多余 tsv 导致任务不是和真端一样驱动的」→「开始」。
 > 范围：只读取证（零形状、零 Maven、红集不解冻）；对象 = manifest 在册 21 张
 > （P1 已退役的 `retail-quest-ai-name-groups-rejected.tsv` 不在册，仅作背景）。

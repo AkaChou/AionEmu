@@ -1,5 +1,8 @@
 # P5-2：DataDriven Talk+CollectItem 客户端交付词汇落驱动（collect 批收口）
 
+
+> **生成物清理提示（2026-09-30）**：本文件正文提到的 `*.tsv` / `*.log` / `*.txt` / `*.xml` 等中间转储已随 `chore(agents)` 清理删除；原文与留痕仍可从 git 历史取回，被删清单与再生成入口见 `.agents/summary/CLEANUP-LEDGER.zh-CN.md`。
+
 - 日期：2026-09-24
 - 切片：P5-2（DataDriven 1508 行宇宙的 collectitem 批；接续 P5-1 Talk+hunt 428 行）
 - 状态：**完成（636 采纳全链绿；collect 自身零回归；剩余 T2 失败全部归属 P5-1 hunt 轨道与并发会话车道，见 §6）**

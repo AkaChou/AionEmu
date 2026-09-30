@@ -1,5 +1,8 @@
 # 零售任务迁移审查修复
 
+
+> **生成物清理提示（2026-09-30）**：本文件正文提到的 `*.tsv` / `*.log` / `*.txt` / `*.xml` 等中间转储已随 `chore(agents)` 清理删除；原文与留痕仍可从 git 历史取回，被删清单与再生成入口见 `.agents/summary/CLEANUP-LEDGER.zh-CN.md`。
+
 ## 判据
 
 - 13956/23956、13965/23965、16830/26830、16831/26831 等 8 个 DataDriven 任务：真端定义为 EnterWorld/EnterArea 接取，生产 XML 壳已退役删除，漂移登记已为 ADOPTED 且已具备 IR 指纹。此前在 retention 清单中残留为 XML_RETENTION，导致 RetailQuestDriver.verifyProductionCoverage 报错 missing=[...] (8) 阻断启动。现已通过 p5_build_datadriven_decisions.py 补齐纯 EnterArea 链形状支持，将全量裁定扩展至 1036 行，并同步三份 retention 清单至 RETAIL_TABLE DataDriven，消除启动阻断。

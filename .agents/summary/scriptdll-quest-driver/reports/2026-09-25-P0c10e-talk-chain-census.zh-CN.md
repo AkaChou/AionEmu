@@ -1,5 +1,8 @@
 # P0c-10e：SimpleTalk RETAIL_TALK_CHAIN 322 行链式合成普查（census 切片，无落地）
 
+
+> **生成物清理提示（2026-09-30）**：本文件正文提到的 `*.tsv` / `*.log` / `*.txt` / `*.xml` 等中间转储已随 `chore(agents)` 清理删除；原文与留痕仍可从 git 历史取回，被删清单与再生成入口见 `.agents/summary/CLEANUP-LEDGER.zh-CN.md`。
+
 - 日期：2026-09-25
 - 切片：P0c-10e（普查 + 波次切分 + 机制原料；**无生产代码改动、无退役**）
 - 产出：`p0c10e_build_talk_chain_census.py` → `p0c10e-talk-chain-census.tsv`（322 行 × 9 列）

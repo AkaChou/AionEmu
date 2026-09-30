@@ -1,5 +1,8 @@
 # SimpleTalk S3b/S3c 裁定简报（决策就绪）
 
+
+> **生成物清理提示（2026-09-30）**：本文件正文提到的 `*.tsv` / `*.log` / `*.txt` / `*.xml` 等中间转储已随 `chore(agents)` 清理删除；原文与留痕仍可从 git 历史取回，被删清单与再生成入口见 `.agents/summary/CLEANUP-LEDGER.zh-CN.md`。
+
 > 车道：`quest-native-dispatch`；面：SimpleTalk γ（82 行）的 S3b/S3c。角色：**只读研究 + 本文件**。
 > 上游证据：`2026-09-27-s3-special-rows.zh-CN.md`（逐行取证）、`2026-09-27-s3-gamma-survey.zh-CN.md`（§5/§6）、
 > `s3-gamma-rows.tsv`（82×11）、`2026-09-27-s3-t2-triage.zh-CN.md`。

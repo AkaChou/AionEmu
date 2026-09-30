@@ -1,5 +1,8 @@
 # W5-g3 · 页码类 TSV 退役第三张：`quest_client_talk_pages.tsv`（活门 → 可派生判据 + 1 行解锁）
 
+
+> **生成物清理提示（2026-09-30）**：本文件正文提到的 `*.tsv` / `*.log` / `*.txt` / `*.xml` 等中间转储已随 `chore(agents)` 清理删除；原文与留痕仍可从 git 历史取回，被删清单与再生成入口见 `.agents/summary/CLEANUP-LEDGER.zh-CN.md`。
+
 > 车道：`quest-native-dispatch`；面：**W5 页码类 TSV 退役（g3，形状片）**。
 > 上游：`GOAL.zh-CN.md` §3 W5；`2026-09-27-w5g3-w5g4-prep-and-rulings.zh-CN.md`（本次裁定取证）；
 > `2026-09-27-tsv-retirement-candidates.zh-CN.md` §2.1-③。

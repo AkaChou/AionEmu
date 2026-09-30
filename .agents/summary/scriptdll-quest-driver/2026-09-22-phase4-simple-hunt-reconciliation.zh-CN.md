@@ -1,5 +1,8 @@
 # Phase 4-1：SimpleHunt 真端表 ↔ 本仓库定义 全量对账
 
+
+> **生成物清理提示（2026-09-30）**：本文件正文提到的 `*.tsv` / `*.log` / `*.txt` / `*.xml` 等中间转储已随 `chore(agents)` 清理删除；原文与留痕仍可从 git 历史取回，被删清单与再生成入口见 `.agents/summary/CLEANUP-LEDGER.zh-CN.md`。
+
 - 日期：2026-09-22；性质：只读对账（未改生产源码、未提交）；工具：`reconcile_simple_hunt.py`
 - 输出：`simple-hunt-reconciliation.tsv`（942 行逐任务明细）、`simple-hunt-reconciliation.txt`（汇总）、`npc_name_index.tsv`
 

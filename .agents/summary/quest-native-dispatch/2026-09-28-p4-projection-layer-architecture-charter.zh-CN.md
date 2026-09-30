@@ -1,5 +1,8 @@
 # P4 立项（只读评估）：投影层退场——8 张 retail-table/server-registry TSV 的构建期化
 
+
+> **生成物清理提示（2026-09-30）**：本文件正文提到的 `*.tsv` / `*.log` / `*.txt` / `*.xml` 等中间转储已随 `chore(agents)` 清理删除；原文与留痕仍可从 git 历史取回，被删清单与再生成入口见 `.agents/summary/CLEANUP-LEDGER.zh-CN.md`。
+
 > 授权：用户「继续」（承接「辅助表是必要的吗」的结论）。
 > 性质：**只读评估**；不改生产数据/代码、不跑 Maven、不 commit/push。
 > 上游：Phase 3 权威血缘审计（`phase3-provenance/2026-09-28-authority-provenance-audit.zh-CN.md`）

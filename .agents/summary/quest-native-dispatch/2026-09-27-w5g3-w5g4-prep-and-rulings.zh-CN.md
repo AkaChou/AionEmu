@@ -1,5 +1,8 @@
 # W5-g3 / W5-g4 取证与裁定请求（talk_pages 与 briefing_chains）
 
+
+> **生成物清理提示（2026-09-30）**：本文件正文提到的 `*.tsv` / `*.log` / `*.txt` / `*.xml` 等中间转储已随 `chore(agents)` 清理删除；原文与留痕仍可从 git 历史取回，被删清单与再生成入口见 `.agents/summary/CLEANUP-LEDGER.zh-CN.md`。
+
 > 车道：`quest-native-dispatch`；面：**W5 页码类 TSV 退役 · 第三/第四张**。
 > 上游：`GOAL.zh-CN.md` §3 W5；`2026-09-27-tsv-retirement-candidates.zh-CN.md` §2.1-③/④、§3 第 2 层；
 > `2026-09-27-w5c-w6-recon-pack.zh-CN.md` §1-2；四路只读取证代理报告。

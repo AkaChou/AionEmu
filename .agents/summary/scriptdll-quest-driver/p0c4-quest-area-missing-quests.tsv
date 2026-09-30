@@ -1,9 +1,0 @@
-# P0c-4 生产 ai-areas.xml 缺失的真端 quest_area 绑定
-quest_id	retail_areas
-26960	idf5_td_war/IDF5_TD_War_QuestArea_Q26960
-26961	idf5_td_war/IDF5_TD_War_QuestArea_Q26960
-26962	idf5_td_war/IDF5_TD_War_QuestArea_Q26960
-39006	df2a/InvadePortalDest_41_questArea_01
-39008	lf2a/InvadePortalDest_42_questArea_01
-49006	lf2a/InvadePortalDest_42_questArea_01
-49008	df2a/InvadePortalDest_41_questArea_01

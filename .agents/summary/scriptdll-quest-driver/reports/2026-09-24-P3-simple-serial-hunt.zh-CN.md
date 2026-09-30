@@ -1,5 +1,8 @@
 # P3：SimpleSerialHunt 10 行 = 客户端链式阶梯落驱动（族全退役）
 
+
+> **生成物清理提示（2026-09-30）**：本文件正文提到的 `*.tsv` / `*.log` / `*.txt` / `*.xml` 等中间转储已随 `chore(agents)` 清理删除；原文与留痕仍可从 git 历史取回，被删清单与再生成入口见 `.agents/summary/CLEANUP-LEDGER.zh-CN.md`。
+
 > 口径：真端优先。客户端 `quest_monster.csv` 的链式 `Progress(SECTION_n<count; SECTION_(n-1)==count')`
 > 门控是本族的形状权威——乱序击杀不计数，合成定义必须是**串行阶梯**而非并行计数网格。
 

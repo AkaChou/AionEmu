@@ -1,5 +1,8 @@
 # P0c-8a：SimpleHunt 等价缺口按当前编译器重算（155 行可证等价 + 2 行窄投影 → 退役 157）
 
+
+> **生成物清理提示（2026-09-30）**：本文件正文提到的 `*.tsv` / `*.log` / `*.txt` / `*.xml` 等中间转储已随 `chore(agents)` 清理删除；原文与留痕仍可从 git 历史取回，被删清单与再生成入口见 `.agents/summary/CLEANUP-LEDGER.zh-CN.md`。
+
 - 日期：2026-09-24
 - 归属：真端任务驱动替换目标（P0c 线）
 - 触发：P0c-6 收口时登记——`simplehunt-dialog-route-gaps.txt` / `phase5-3-rejections.txt` 是 M2-c

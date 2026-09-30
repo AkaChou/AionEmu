@@ -1,5 +1,8 @@
 # System Patterns & Router (系统模式与知识路由器)
 
+
+> **生成物清理提示（2026-09-30）**：本文件正文提到的 `*.tsv` / `*.log` / `*.txt` / `*.xml` 等中间转储已随 `chore(agents)` 清理删除；原文与留痕仍可从 git 历史取回，被删清单与再生成入口见 `.agents/summary/CLEANUP-LEDGER.zh-CN.md`。
+
 本文档是 AionEmu 的**全局排查与模式顶级索引**。所有 Agent 在排查问题或修改核心代码前，先通过本索引快速定位对应业务领域的避坑指南。
 
 > role: router-only

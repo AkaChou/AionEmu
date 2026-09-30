@@ -1,5 +1,8 @@
 # SimpleTalk 规范形勘察（下一面执行底稿）
 
+
+> **生成物清理提示（2026-09-30）**：本文件正文提到的 `*.tsv` / `*.log` / `*.txt` / `*.xml` 等中间转储已随 `chore(agents)` 清理删除；原文与留痕仍可从 git 历史取回，被删清单与再生成入口见 `.agents/summary/CLEANUP-LEDGER.zh-CN.md`。
+
 > 车道：`quest-native-dispatch`；面：**SimpleTalk 规范形（S1 单步面 + S2 链面）**。
 > 本文只勘察、不落码；所有数字与 file:line 均为 2026-09-27 在本工作区实测（工作区处于
 > 兄弟车道在飞状态，动工前必须按 §5 复验窗口）。

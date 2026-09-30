@@ -1,5 +1,8 @@
 # W5 续片 + W6 取证包（四路只读取证，2026-09-27）
 
+
+> **生成物清理提示（2026-09-30）**：本文件正文提到的 `*.tsv` / `*.log` / `*.txt` / `*.xml` 等中间转储已随 `chore(agents)` 清理删除；原文与留痕仍可从 git 历史取回，被删清单与再生成入口见 `.agents/summary/CLEANUP-LEDGER.zh-CN.md`。
+
 > 车道：`quest-native-dispatch`；用途：**W5 续片**（`talk_pages` / `briefing_chains` / `dialog_exits` 退役与缩表）
 > 与 **W6 清理**的**可执行前置**。取证方式：四个只读子代理（禁 Maven、禁改文件），结论经主执行体复核。
 > 纪律：本文只记录事实与前置，**不含任何已执行的改动**（除 W5-g1/g2 已收口的两张表）。

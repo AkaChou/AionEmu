@@ -1,5 +1,8 @@
 # 2026-09-26 续片 27 / P0c-44：阶段/报告 NPC 身份漂移 —— 2482 改道 canonical（`XML_NPC_AXIS` 残留候选清零）
 
+
+> **生成物清理提示（2026-09-30）**：本文件正文提到的 `*.tsv` / `*.log` / `*.txt` / `*.xml` 等中间转储已随 `chore(agents)` 清理删除；原文与留痕仍可从 git 历史取回，被删清单与再生成入口见 `.agents/summary/CLEANUP-LEDGER.zh-CN.md`。
+
 ## 1. 结论
 
 P0c-43 的残留普查把 `XML_NPC_AXIS` 的**唯一同签名候选**登记为 **2482 Moreinen**：真端声明

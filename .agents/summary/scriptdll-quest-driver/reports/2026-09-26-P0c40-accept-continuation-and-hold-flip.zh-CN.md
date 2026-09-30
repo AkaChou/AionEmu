@@ -1,5 +1,8 @@
 # P0c-40 接取对话页链：链式路径补 acceptContinuation + 3 行 HOLD 采纳
 
+
+> **生成物清理提示（2026-09-30）**：本文件正文提到的 `*.tsv` / `*.log` / `*.txt` / `*.xml` 等中间转储已随 `chore(agents)` 清理删除；原文与留痕仍可从 git 历史取回，被删清单与再生成入口见 `.agents/summary/CLEANUP-LEDGER.zh-CN.md`。
+
 - 日期：2026-09-26
 - 切片：P0c-40（承 P0c-39 的 3 行 `ACCEPT_DIALOG_ENTRANCE` HOLD）
 - 台账：`../GOAL-retail-driver-progress.zh-CN.md`

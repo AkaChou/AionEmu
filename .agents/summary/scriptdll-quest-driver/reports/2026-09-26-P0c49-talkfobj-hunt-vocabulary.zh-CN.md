@@ -1,5 +1,8 @@
 # 2026-09-26 续片 23 / P0c-49：TalkFOBJ/hunt 链词汇 —— 18931/28931 采纳退役
 
+
+> **生成物清理提示（2026-09-30）**：本文件正文提到的 `*.tsv` / `*.log` / `*.txt` / `*.xml` 等中间转储已随 `chore(agents)` 清理删除；原文与留痕仍可从 git 历史取回，被删清单与再生成入口见 `.agents/summary/CLEANUP-LEDGER.zh-CN.md`。
+
 ## 1. 缺口形状
 
 `RETAIL_STEP_UNSUPPORTED` 桶（8 → 4 行后）里「TalkFOBJ 步 + 首领击杀块」两行（光暗镜像）：

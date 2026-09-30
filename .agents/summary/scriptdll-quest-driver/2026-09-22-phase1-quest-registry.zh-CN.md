@@ -1,5 +1,8 @@
 # Phase 1：ScriptDLL64 任务注册表提取（真端驱动恢复第一步）
 
+
+> **生成物清理提示（2026-09-30）**：本文件正文提到的 `*.tsv` / `*.log` / `*.txt` / `*.xml` 等中间转储已随 `chore(agents)` 清理删除；原文与留痕仍可从 git 历史取回，被删清单与再生成入口见 `.agents/summary/CLEANUP-LEDGER.zh-CN.md`。
+
 - 日期：2026-09-22；性质：只读分析（未改任何生产代码），产物在本目录。
 - 二进制：`/Users/mc/IdeaProjects/58Server/MainServer/ScriptDLL64.dll`（73.4 MB，与 NPCServer 副本同尺寸）
 - 反编译产物：`/Users/mc/IdeaProjects/58Server/server58/MainServer_ScriptDLL64/ScriptDLL64.c`

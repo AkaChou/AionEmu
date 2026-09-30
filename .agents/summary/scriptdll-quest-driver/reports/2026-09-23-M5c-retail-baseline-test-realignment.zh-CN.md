@@ -1,5 +1,8 @@
 # M5-c 以真端为基准复核基线失败（旧 XML 期望 → 真端/客户端期望）
 
+
+> **生成物清理提示（2026-09-30）**：本文件正文提到的 `*.tsv` / `*.log` / `*.txt` / `*.xml` 等中间转储已随 `chore(agents)` 清理删除；原文与留痕仍可从 git 历史取回，被删清单与再生成入口见 `.agents/summary/CLEANUP-LEDGER.zh-CN.md`。
+
 - 日期：2026-09-23
 - 前置：M5-b2（SimpleCollectItem 批次 1）后，`questEngine` 全树仍有 **28F + 7E = 35 个失败方法**（`gates/head-baseline-failures.txt`，2026-09-23 16:00 基线）。
 - 本轮用户口径（最高优先）：**"部分测试是以旧的 xml 为主，可能是错误的，请以真端为基准"**

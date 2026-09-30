@@ -1,5 +1,8 @@
 # 2026-09-17 METADATA_ONLY 任务可执行工作流补齐与事件兑换漏洞根治总结
 
+
+> **生成物清理提示（2026-09-30）**：本文件正文提到的 `*.tsv` / `*.log` / `*.txt` / `*.xml` 等中间转储已随 `chore(agents)` 清理删除；原文与留痕仍可从 git 历史取回，被删清单与再生成入口见 `.agents/summary/CLEANUP-LEDGER.zh-CN.md`。
+
 ## 1. 背景与目标
 在解决大德巴全系与制作名人交付契约后，针对 `item-role-gaps.tsv` 剩余的深水区任务展开进一步根治：
 1. **METADATA_ONLY 任务生成完整可执行链并提升为 EXECUTABLE**：

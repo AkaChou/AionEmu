@@ -1,5 +1,8 @@
 # 1192 同型候选复核（全库） / Candidate sweep for the 1192-style defects
 
+
+> **生成物清理提示（2026-09-30）**：本文件正文提到的 `*.tsv` / `*.log` / `*.txt` / `*.xml` 等中间转储已随 `chore(agents)` 清理删除；原文与留痕仍可从 git 历史取回，被删清单与再生成入口见 `.agents/summary/CLEANUP-LEDGER.zh-CN.md`。
+
 - 日期：2026-09-21 23:5x
 - 仓库：`/Users/mc/IdeaProjects/AionEmu-test`（HEAD `8623f4406`，复核时工作树含其它并行任务的未提交改动）
 - 关联：本目录 `2026-09-21-1192-step-chain-repair.zh-CN.md` 第 5 节；memory-bank `QE-004` / `QE-005` / `QE-051`

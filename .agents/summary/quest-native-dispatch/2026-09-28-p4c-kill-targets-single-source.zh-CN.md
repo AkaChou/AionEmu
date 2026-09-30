@@ -1,5 +1,8 @@
 # 批 P4c 执行台账：`quest_client_kill_targets.tsv` 单源化（M4）
 
+
+> **生成物清理提示（2026-09-30）**：本文件正文提到的 `*.tsv` / `*.log` / `*.txt` / `*.xml` 等中间转储已随 `chore(agents)` 清理删除；原文与留痕仍可从 git 历史取回，被删清单与再生成入口见 `.agents/summary/CLEANUP-LEDGER.zh-CN.md`。
+
 > 授权：用户「2、3 选 1」——在 P4c（快赢）与 P4d（monster 系，待三问）之间选择 P4c。
 > 上游：`2026-09-28-p4-projection-layer-architecture-charter.zh-CN.md` §6.3（P4c 快赢）。
 > 性质：**M4 单源化**——生产表保留且冻结面不变；只消除逐字节相同的测试夹具副本。

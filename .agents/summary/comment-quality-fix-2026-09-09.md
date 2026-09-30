@@ -1,5 +1,8 @@
 # 注释质量修复总结（2026-09-09）
 
+
+> **生成物清理提示（2026-09-30）**：本文件正文提到的 `*.tsv` / `*.log` / `*.txt` / `*.xml` 等中间转储已随 `chore(agents)` 清理删除；原文与留痕仍可从 git 历史取回，被删清单与再生成入口见 `.agents/summary/CLEANUP-LEDGER.zh-CN.md`。
+
 范围：`../../src/main/java` 全部 Java 源文件，**仅修改注释，未触碰任何代码**。
 基准：`../rules/i18n.md`（注释须中英双语同义）、`../../docs/aion-game-terms-en-zh.md`（术语对照）。
 

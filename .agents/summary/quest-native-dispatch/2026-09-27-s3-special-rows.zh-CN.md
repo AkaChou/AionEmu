@@ -1,5 +1,8 @@
 # SimpleTalk S3（γ 面：82 行纯 R 驱动链行）特例行逐行取证与处置提案
 
+
+> **生成物清理提示（2026-09-30）**：本文件正文提到的 `*.tsv` / `*.log` / `*.txt` / `*.xml` 等中间转储已随 `chore(agents)` 清理删除；原文与留痕仍可从 git 历史取回，被删清单与再生成入口见 `.agents/summary/CLEANUP-LEDGER.zh-CN.md`。
+
 > 车道：`quest-native-dispatch`；面：**SimpleTalk S3（γ 面）**；角色：**只读取证**（不落码、不改任何生产/测试/TSV）。
 > 上游：S2 收口 `2026-09-27-s2-canonical-segments.zh-CN.md`（§1 切片边界、§6 未决 4 条）、
 > 规格 `2026-09-27-s2-buildchain-spec.zh-CN.md`（§4 `I` 记录、§3.4 层 B1）、

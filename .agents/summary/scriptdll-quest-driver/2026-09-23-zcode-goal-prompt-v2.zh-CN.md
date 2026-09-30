@@ -1,5 +1,8 @@
 # ZCODE GOAL 提示词 v2：AionEmu 任务系统改为「真端文件驱动」（终局，自包含）
 
+
+> **生成物清理提示（2026-09-30）**：本文件正文提到的 `*.tsv` / `*.log` / `*.txt` / `*.xml` 等中间转储已随 `chore(agents)` 清理删除；原文与留痕仍可从 git 历史取回，被删清单与再生成入口见 `.agents/summary/CLEANUP-LEDGER.zh-CN.md`。
+
 > **用法**：整份粘贴给 zcode 作为 goal 模式的唯一目标说明；若环境支持 `create_goal`，把 §1 的
 > objective 原文用于创建**一个** goal，其余章节作为执行手册。
 > 仓库：`/Users/mc/IdeaProjects/AionEmu-test`（Aion 5.8 社区服务端，Java 25 + Maven + Spring Boot，单模块）。

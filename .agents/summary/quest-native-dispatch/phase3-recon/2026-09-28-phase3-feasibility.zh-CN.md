@@ -1,5 +1,8 @@
 # Phase 3 勘测报告：页码/登记类 TSV 全量退役可行性（只读取证 · 2026-09-28）
 
+
+> **生成物清理提示（2026-09-30）**：本文件正文提到的 `*.tsv` / `*.log` / `*.txt` / `*.xml` 等中间转储已随 `chore(agents)` 清理删除；原文与留痕仍可从 git 历史取回，被删清单与再生成入口见 `.agents/summary/CLEANUP-LEDGER.zh-CN.md`。
+
 > 授权：用户「phase 3」。范围 = 只读取证，不碰形状、不解冻红集；执行立项另行决定。
 > 背景口径：manifest 政策「页码类 TSV 只允许退役（删文件+删清单行+改常量），不允许静默新增」；
 > W5-g1..g4 已退役 4 张（report_pages / entry_pages / talk_pages / briefing_chains），

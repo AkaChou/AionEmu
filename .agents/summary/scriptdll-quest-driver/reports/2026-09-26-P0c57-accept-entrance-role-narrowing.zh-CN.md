@@ -1,5 +1,8 @@
 # P0c-57 接取入口角色收窄：18 个任务的每链 NPC `NPC_START` 块按真端/客户端 owner 收窄（SimpleTalk 链车道 / 续片 33）
 
+
+> **生成物清理提示（2026-09-30）**：本文件正文提到的 `*.tsv` / `*.log` / `*.txt` / `*.xml` 等中间转储已随 `chore(agents)` 清理删除；原文与留痕仍可从 git 历史取回，被删清单与再生成入口见 `.agents/summary/CLEANUP-LEDGER.zh-CN.md`。
+
 > 上游：P0c-55 在 P0c-46 角色普查的 `INFO_ACCEPT_SPREAD` 基础上登记了 `XML_ONLY_ACCEPT_ROLE_SPREAD_PENDING`（34 项 / 25 任务，`p0c42-blocked-rows.tsv` 行 32）。本片完成复算 → 定根因 → 受守卫通道 → 落地 → 全门禁。**真端与客户端为准，遗留 XML 只作对照**（不可推翻裁定 ⑥）。
 
 ## 1. 缺口形状（块级根因）

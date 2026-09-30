@@ -1,5 +1,8 @@
 # 任务 10527 领奖行投影错位（使用 182216075 后任务书仍停在“调查影子潜入部队秘密文书”）与同族行/状态对齐审计
 
+
+> **生成物清理提示（2026-09-30）**：本文件正文提到的 `*.tsv` / `*.log` / `*.txt` / `*.xml` 等中间转储已随 `chore(agents)` 清理删除；原文与留痕仍可从 git 历史取回，被删清单与再生成入口见 `.agents/summary/CLEANUP-LEDGER.zh-CN.md`。
+
 - 日期：2026-09-21
 - 范围：`quests/10527.xml`（用户报障）、`quests/10528.xml` 与 `quests/10525.xml`/`quests/20525.xml`（镜像同型）、
   新增聚焦门禁 `src/test/java/com/aionemu/gameserver/questEngine/definition/ArchdaevaRewardRowContractTest.java`

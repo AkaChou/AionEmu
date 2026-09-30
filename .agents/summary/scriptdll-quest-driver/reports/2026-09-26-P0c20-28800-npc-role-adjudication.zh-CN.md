@@ -1,5 +1,8 @@
 # P0c-20：28800 NPC 分工裁定——双生子先例 + 客户端登记无背书，ADOPT_RETAIL
 
+
+> **生成物清理提示（2026-09-30）**：本文件正文提到的 `*.tsv` / `*.log` / `*.txt` / `*.xml` 等中间转储已随 `chore(agents)` 清理删除；原文与留痕仍可从 git 历史取回，被删清单与再生成入口见 `.agents/summary/CLEANUP-LEDGER.zh-CN.md`。
+
 > 日期：2026-09-26 ｜ 切片：P0c-20 ｜ lane：SimpleTalk ｜ 前序：P0c-19（第六类证伪，镜像裁定词汇）
 
 ## 交付

@@ -1,5 +1,8 @@
 # P0c-10d：SimpleTalk M3-d 复核 10 行 EQUIVALENT 归零（retired 3909 → 3918 实测）
 
+
+> **生成物清理提示（2026-09-30）**：本文件正文提到的 `*.tsv` / `*.log` / `*.txt` / `*.xml` 等中间转储已随 `chore(agents)` 清理删除；原文与留痕仍可从 git 历史取回，被删清单与再生成入口见 `.agents/summary/CLEANUP-LEDGER.zh-CN.md`。
+
 - 日期：2026-09-25
 - 切片：P0c-10d（对账/收敛切片：**无生产代码改动**，只做登记翻转 + 退役落地）
 - 判据来源：P0c-10 M3-d 逐行复核（`p0c10-m3d-recheck.tsv`）中漂移分类 = **EQUIVALENT** 的 10 行——

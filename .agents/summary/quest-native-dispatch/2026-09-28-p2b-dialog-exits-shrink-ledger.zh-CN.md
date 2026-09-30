@@ -1,5 +1,8 @@
 # 批 P2b 执行台账：`dialog_exits` 阶梯 token 行级缩表（2026-09-28）
 
+
+> **生成物清理提示（2026-09-30）**：本文件正文提到的 `*.tsv` / `*.log` / `*.txt` / `*.xml` 等中间转储已随 `chore(agents)` 清理删除；原文与留痕仍可从 git 历史取回，被删清单与再生成入口见 `.agents/summary/CLEANUP-LEDGER.zh-CN.md`。
+
 > 授权：用户「授权，继续」；范围 = 按 P2a 普查结果执行 P2b 缩表并跑门禁。
 > 上游：`2026-09-28-p2-dialog-exits-shrink-charter.zh-CN.md`、
 > `phase3-provenance/2026-09-28-p2a-census-report.zh-CN.md`。

@@ -1,5 +1,8 @@
 # P0c-46 角色轴：交付角色收窄（`XML_ONLY_ROLE_AXIS_PENDING` 收口）
 
+
+> **生成物清理提示（2026-09-30）**：本文件正文提到的 `*.tsv` / `*.log` / `*.txt` / `*.xml` 等中间转储已随 `chore(agents)` 清理删除；原文与留痕仍可从 git 历史取回，被删清单与再生成入口见 `.agents/summary/CLEANUP-LEDGER.zh-CN.md`。
+
 - 日期：2026-09-26
 - 车道：SimpleTalk 链（`quest_client_talk_chain_steps.tsv` 生成器）
 - 判例：QE-076（守卫类型对齐 / 恒真守卫）、QE-077（角色轴与角色域收窄剪除）

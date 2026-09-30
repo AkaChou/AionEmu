@@ -1,5 +1,8 @@
 # 批 P4b 执行台账：`quest_use_item_npcs.tsv` 直接源消除（2026-09-28）
 
+
+> **生成物清理提示（2026-09-30）**：本文件正文提到的 `*.tsv` / `*.log` / `*.txt` / `*.xml` 等中间转储已随 `chore(agents)` 清理删除；原文与留痕仍可从 git 历史取回，被删清单与再生成入口见 `.agents/summary/CLEANUP-LEDGER.zh-CN.md`。
+
 > 授权：用户「授权」（承接「辅助表是必要的吗」→ P4a 只读立项 → P4b 试点执行）。
 > 上游：`2026-09-28-p4-projection-layer-architecture-charter.zh-CN.md`（P4a）、
 > `phase3-provenance/2026-09-28-authority-provenance-audit.zh-CN.md`（Phase 3 血缘）。

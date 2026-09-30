@@ -1,5 +1,8 @@
 # SimpleTalk S3（γ 面：82 行纯 R 驱动链行）逐行形状普查
 
+
+> **生成物清理提示（2026-09-30）**：本文件正文提到的 `*.tsv` / `*.log` / `*.txt` / `*.xml` 等中间转储已随 `chore(agents)` 清理删除；原文与留痕仍可从 git 历史取回，被删清单与再生成入口见 `.agents/summary/CLEANUP-LEDGER.zh-CN.md`。
+
 > 车道：`quest-native-dispatch`；面：**SimpleTalk S3 = γ 面**（G2 80 行 + G3 2 行）。
 > 角色：**只读普查**（不落码、不改登记表、不改任何生产/测试文件）；本目录两个产物（本文 +
 > `s3-gamma-rows.tsv`）即本片全部输出。

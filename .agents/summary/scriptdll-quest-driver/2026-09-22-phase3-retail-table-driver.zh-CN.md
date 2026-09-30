@@ -1,5 +1,8 @@
 # Phase 3：真端「表 + 类」驱动规格（本地已具备全部数据）
 
+
+> **生成物清理提示（2026-09-30）**：本文件正文提到的 `*.tsv` / `*.log` / `*.txt` / `*.xml` 等中间转储已随 `chore(agents)` 清理删除；原文与留痕仍可从 git 历史取回，被删清单与再生成入口见 `.agents/summary/CLEANUP-LEDGER.zh-CN.md`。
+
 - 日期：2026-09-22；性质：只读分析（未改生产代码）；上游：Phase 1（注册表）、Phase 2（驱动语义）
 - 新增脚本：`report_retail_table_coverage.py`；结论文件：`retail-table-coverage.txt`、`datadriven-progress-schema.tsv`、`datadriven-loader-messages.txt`
 

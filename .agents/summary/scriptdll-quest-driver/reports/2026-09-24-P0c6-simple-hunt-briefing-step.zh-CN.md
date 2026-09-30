@@ -1,5 +1,8 @@
 # P0c-6：SimpleHunt 网格族 `talk_npc1` 简报步骤接线（23 行裁定：21 退役 / 2 保留 XML）
 
+
+> **生成物清理提示（2026-09-30）**：本文件正文提到的 `*.tsv` / `*.log` / `*.txt` / `*.xml` 等中间转储已随 `chore(agents)` 清理删除；原文与留痕仍可从 git 历史取回，被删清单与再生成入口见 `.agents/summary/CLEANUP-LEDGER.zh-CN.md`。
+
 - 日期：2026-09-24
 - 归属：真端任务驱动替换目标（P0c 线）
 - 触发：P0c-5 收尾时登记的队列项——SimpleHunt 网格族 23 行 `talk_npc1` 的保留原因仍是

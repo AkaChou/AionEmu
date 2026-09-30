@@ -1,5 +1,8 @@
 # P5-3 DataDriven 纯对话落驱动（talk 简单 70 + talk 链 13；DataDriven 1508 = 719 已驱动）
 
+
+> **生成物清理提示（2026-09-30）**：本文件正文提到的 `*.tsv` / `*.log` / `*.txt` / `*.xml` 等中间转储已随 `chore(agents)` 清理删除；原文与留痕仍可从 git 历史取回，被删清单与再生成入口见 `.agents/summary/CLEANUP-LEDGER.zh-CN.md`。
+
 日期：2026-09-25　|　切片：P5-3 wave A/B（goal 台账见 `GOAL-retail-driver-progress.zh-CN.md`）
 
 ## 交付

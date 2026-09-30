@@ -1,6 +1,0 @@
-=== 最终基准：全量 11 分片串行 / final benchmark: all 11 shards, serial ===
-### batch-jaxb (XML -> JAXB)  warmup=2 iterations=5
-RESULT label=batch-jaxb iterations=5 median_wall_ms=1005.9 min_wall_ms=1001.6 median_cpu_ms=997.0 median_alloc_mb=575.6 wall_ms=[1015.0,1009.2,1002.5,1005.9,1001.6]
-### batch-jsonl (JSONL -> reflective bind)  warmup=2 iterations=5
-INFO java=26.0.2.1 scenario=batch-jsonl file=/tmp/item-shards-jsonl bytes=416 warmup=2 iterations=5
-RESULT label=batch-jsonl iterations=5 median_wall_ms=560.0 min_wall_ms=545.2 median_cpu_ms=546.4 median_alloc_mb=993.4 wall_ms=[560.0,651.6,582.2,548.4,545.2]

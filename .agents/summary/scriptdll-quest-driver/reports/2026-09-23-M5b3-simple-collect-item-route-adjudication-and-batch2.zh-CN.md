@@ -1,5 +1,8 @@
 # M5-b3 SimpleCollectItem ROUTE/OTHER 轴逐任务定性 + 批次 2 退役（57 个 XML）
 
+
+> **生成物清理提示（2026-09-30）**：本文件正文提到的 `*.tsv` / `*.log` / `*.txt` / `*.xml` 等中间转储已随 `chore(agents)` 清理删除；原文与留痕仍可从 git 历史取回，被删清单与再生成入口见 `.agents/summary/CLEANUP-LEDGER.zh-CN.md`。
+
 - 日期：2026-09-23
 - 前置：M5-b2（批次 1，29 个 XML 退役）留下 **60 个"可驱动但带 `ROUTE/OTHER` 轴"的任务**，
   当时的登记口径是"未定性 → 保留 XML"（`unreviewed-axes=ROUTE`）。

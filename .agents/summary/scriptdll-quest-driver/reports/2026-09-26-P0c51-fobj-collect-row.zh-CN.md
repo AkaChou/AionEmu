@@ -1,5 +1,8 @@
 # 2026-09-26 续片 25 / P0c-51：FOBJ 采集行 —— 25052 采纳退役（掉落驱动 FOBJ 形）
 
+
+> **生成物清理提示（2026-09-30）**：本文件正文提到的 `*.tsv` / `*.log` / `*.txt` / `*.xml` 等中间转储已随 `chore(agents)` 清理删除；原文与留痕仍可从 git 历史取回，被删清单与再生成入口见 `.agents/summary/CLEANUP-LEDGER.zh-CN.md`。
+
 ## 1. 缺口与判据
 
 `RETAIL_FOBJ_COLLECT_UNSUPPORTED` 桶（P0c-50 设立）最后一行 **25052**（"An Offering of Peace"）：

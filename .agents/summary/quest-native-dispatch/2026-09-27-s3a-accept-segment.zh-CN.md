@@ -1,5 +1,8 @@
 # SimpleTalk S3a · 仅接取段接管（60 行）落地记录
 
+
+> **生成物清理提示（2026-09-30）**：本文件正文提到的 `*.tsv` / `*.log` / `*.txt` / `*.xml` 等中间转储已随 `chore(agents)` 清理删除；原文与留痕仍可从 git 历史取回，被删清单与再生成入口见 `.agents/summary/CLEANUP-LEDGER.zh-CN.md`。
+
 > 车道：`quest-native-dispatch`；面：**SimpleTalk S3a（γ 面第一片）**；角色：生产改造 + 门禁同步 + 证据。
 > 上游：`2026-09-27-s3-gamma-survey.zh-CN.md`（γ 面普查：接取可翻 68/82 = 61 块驱动 + 7 纯 R 驱动）、
 > `2026-09-27-s3-special-rows.zh-CN.md`（逐行裁定证据）、`2026-09-27-s3-t2-triage.zh-CN.md`（分拣预判）。

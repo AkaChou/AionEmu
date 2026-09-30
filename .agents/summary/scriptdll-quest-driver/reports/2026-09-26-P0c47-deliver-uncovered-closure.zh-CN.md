@@ -1,5 +1,8 @@
 # P0c-47 `DELIVER_UNCOVERED` 收口：交付流改道（2964）+ 阶段推进行领奖窗外溢收窄（四任务）
 
+
+> **生成物清理提示（2026-09-30）**：本文件正文提到的 `*.tsv` / `*.log` / `*.txt` / `*.xml` 等中间转储已随 `chore(agents)` 清理删除；原文与留痕仍可从 git 历史取回，被删清单与再生成入口见 `.agents/summary/CLEANUP-LEDGER.zh-CN.md`。
+
 - 日期：2026-09-26 20:19–20:45（本片 lane，续片 30；安装 20:21:39、指纹重冻 20:24:14）
 - 上游：P0c-46 报告 §9.1 登记的 `DELIVER_UNCOVERED` 5 项（P0c-46 判"结构不同 ⇒ 不得剪"，逐项取证裁定）
 - 产物：`quest_client_talk_chain_steps.tsv` `ef2cc1a5…`（5071 行）→ **`395f4016…`（5076 行）**；裁定表 `p0c43-canonical-resynthesis.tsv`（新增 code）+ `p0c47-stage-window-spread.tsv`（新建，4 行）

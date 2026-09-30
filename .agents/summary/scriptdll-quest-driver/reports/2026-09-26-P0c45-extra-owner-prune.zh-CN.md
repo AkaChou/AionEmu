@@ -1,5 +1,8 @@
 # P0c-45 多余交付 owner 剪除：35010/35011 删去无背书的 Priamos（799806）+ `npc_check` 标记口径修复
 
+
+> **生成物清理提示（2026-09-30）**：本文件正文提到的 `*.tsv` / `*.log` / `*.txt` / `*.xml` 等中间转储已随 `chore(agents)` 清理删除；原文与留痕仍可从 git 历史取回，被删清单与再生成入口见 `.agents/summary/CLEANUP-LEDGER.zh-CN.md`。
+
 - 车道 / 续片：**SimpleTalk 链车道 / 续片 28**（编号消歧：并发 lane 同轮亦自标 **P0c-45 / 续片 19**（链式接取 none 12 行退役，产物 `p0c45_retire_chain_acquire_rows.py`）；两个 lane 共享 `.agents/summary/scriptdll-quest-driver/` 目录 ⇒ 唯一键 = **lane + 续片号**，本片产物一律含 `xml-only`/`extra-owner`/`35010`/`blast-radius`，与 lane 的 `retire_chain_acquire` 零文件名冲突）（编号消歧：本片唯一键 = lane + 续片号；产物文件名一律含 `p0c45`/`35010`/`xml-only`）
 - 轴（台账登记）：`XML_ONLY_NPC_CENSUS_PENDING` —— QE-073 指出的"审计对 owner **身份**是盲区"，用
   `npc_check=XML_ONLY:*` 做全登记表普查（接取侧 / 物件侧 / 检查侧此前未查）

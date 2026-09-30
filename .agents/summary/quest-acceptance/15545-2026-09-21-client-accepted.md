@@ -1,5 +1,8 @@
 # 任务 15545「[Learn Minion] Precious Ally Minion」客户端验收记录（ACCEPTED）
 
+
+> **生成物清理提示（2026-09-30）**：本文件正文提到的 `*.tsv` / `*.log` / `*.txt` / `*.xml` 等中间转储已随 `chore(agents)` 清理删除；原文与留痕仍可从 git 历史取回，被删清单与再生成入口见 `.agents/summary/CLEANUP-LEDGER.zh-CN.md`。
+
 ```text
 quest: 15545（ELYOS 66+ SIGNIFICANT，接取/完成 NPC 835514）；同批修复的镜像 25545（ASMODIANS，835515）与同因任务 2266/3085/28808 未单独实机复验
 user acceptance confirmation: 用户 2026-09-21 回复「客户端验证成功」（未限定分支或步骤）；按 ../../rules/quest-repair.md 规则 4 视为 15545 整条任务游玩链路通过

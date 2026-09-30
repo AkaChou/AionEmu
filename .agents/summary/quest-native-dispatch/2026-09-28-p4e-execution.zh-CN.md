@@ -1,5 +1,8 @@
 # 批 P4e 执行台账：talk+collect 混合链构建期生成（P4e-1）+ enterarea 区名登记门（P4e-2）
 
+
+> **生成物清理提示（2026-09-30）**：本文件正文提到的 `*.tsv` / `*.log` / `*.txt` / `*.xml` 等中间转储已随 `chore(agents)` 清理删除；原文与留痕仍可从 git 历史取回，被删清单与再生成入口见 `.agents/summary/CLEANUP-LEDGER.zh-CN.md`。
+
 > 授权：用户对 P4e 三点的「同意」——① P4e-1 按 20 行冻结源 + Java/Maven 构建期生成 + 计数 17→16；
 > ② P4e-2 保留解析表 + 新增登记门；③ 冻结源路径 `aion/definitions/quest_dialog/`。
 > 上游立项：`2026-09-28-p4e-mixed-registry-recon.zh-CN.md`（含复现度实测）；

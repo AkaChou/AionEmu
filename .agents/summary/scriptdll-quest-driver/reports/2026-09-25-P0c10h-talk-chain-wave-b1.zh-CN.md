@@ -1,5 +1,8 @@
 # P0c-10h SimpleTalk wave B B-1：复合行首轮落地（16 ADOPT 退役 + 169 KEEP 逐机制归零在案）
 
+
+> **生成物清理提示（2026-09-30）**：本文件正文提到的 `*.tsv` / `*.log` / `*.txt` / `*.xml` 等中间转储已随 `chore(agents)` 清理删除；原文与留痕仍可从 git 历史取回，被删清单与再生成入口见 `.agents/summary/CLEANUP-LEDGER.zh-CN.md`。
+
 - 日期：2026-09-25
 - 切片：P0c-10h（wave B 复合行：E 记录 + 系统性缺口修复 + B-1 等价采纳退役）
 - 前置：`2026-09-25-P0c10g-talk-chain-gate-permanent.zh-CN.md`

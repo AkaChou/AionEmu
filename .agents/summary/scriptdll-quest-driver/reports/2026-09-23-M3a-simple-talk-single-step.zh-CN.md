@@ -1,5 +1,8 @@
 # M3-a：SimpleTalk 单步形态合成器与现状冻结
 
+
+> **生成物清理提示（2026-09-30）**：本文件正文提到的 `*.tsv` / `*.log` / `*.txt` / `*.xml` 等中间转储已随 `chore(agents)` 清理删除；原文与留痕仍可从 git 历史取回，被删清单与再生成入口见 `.agents/summary/CLEANUP-LEDGER.zh-CN.md`。
+
 - 日期：2026-09-23
 - 切片：M3 第一批（SimpleTalk 2223 行的单步形态）
 - 前置：`2026-09-23-M2c2-npc-resolution-and-reject-classification.zh-CN.md`

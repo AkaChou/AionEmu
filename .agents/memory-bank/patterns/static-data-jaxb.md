@@ -1,5 +1,8 @@
 # Static Data & JAXB Patterns (静态数据与 JAXB 模式)
 
+
+> **生成物清理提示（2026-09-30）**：本文件正文提到的 `*.tsv` / `*.log` / `*.txt` / `*.xml` 等中间转储已随 `chore(agents)` 清理删除；原文与留痕仍可从 git 历史取回，被删清单与再生成入口见 `.agents/summary/CLEANUP-LEDGER.zh-CN.md`。
+
 本文档记录 AionEmu 静态模板数据、XML 映射及动态反射加载的底层事实。
 
 > Pattern IDs: `SDJ-001`–`SDJ-005`

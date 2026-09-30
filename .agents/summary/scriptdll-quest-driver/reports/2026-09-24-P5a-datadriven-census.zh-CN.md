@@ -1,5 +1,8 @@
 # P5a：DataDriven 1508 形状普查基线（表入仓 + 77 种组合 + 分批路线）
 
+
+> **生成物清理提示（2026-09-30）**：本文件正文提到的 `*.tsv` / `*.log` / `*.txt` / `*.xml` 等中间转储已随 `chore(agents)` 清理删除；原文与留痕仍可从 git 历史取回，被删清单与再生成入口见 `.agents/summary/CLEANUP-LEDGER.zh-CN.md`。
+
 > 口径：真端优先。DataDriven 是最后的大族：真端 `data_driven_quest.xml`（2526 行，∩本服 1508）
 > 本质是一台"任务小引擎"——接取方式 × 进度步骤链（每步 = 名单 + 计数）自由组合。
 

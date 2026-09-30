@@ -1,5 +1,8 @@
 # GOAL 台账：真端文件驱动的任务系统
 
+
+> **生成物清理提示（2026-09-30）**：本文件正文提到的 `*.tsv` / `*.log` / `*.txt` / `*.xml` 等中间转储已随 `chore(agents)` 清理删除；原文与留痕仍可从 git 历史取回，被删清单与再生成入口见 `.agents/summary/CLEANUP-LEDGER.zh-CN.md`。
+
 > 本文件是 goal 模式的**唯一进度台账**。每轮先读它，做完一个切片就更新它，然后继续下一个切片。
 > 提示词与判据：`2026-09-23-zcode-prompt.zh-CN.md`；数据地图/语义/坑位：`2026-09-23-zcode-appendix.zh-CN.md`。
 

@@ -1,5 +1,8 @@
 # P2a 报告：`dialog_exits` 行级可达性普查 v2（只读 · 2026-09-28）
 
+
+> **生成物清理提示（2026-09-30）**：本文件正文提到的 `*.tsv` / `*.log` / `*.txt` / `*.xml` 等中间转储已随 `chore(agents)` 清理删除；原文与留痕仍可从 git 历史取回，被删清单与再生成入口见 `.agents/summary/CLEANUP-LEDGER.zh-CN.md`。
+
 > 授权：用户「开始」；范围 = 只读普查（零形状、零 Maven、红集不解冻）。
 > 产物：本报告 + `census-dialog-exits-v2.tsv`（3938 行逐行矩阵）+ `census_dialog_exits_v2.py`（可重放）。
 > 上游：P2 立项书 `../2026-09-28-p2-dialog-exits-shrink-charter.zh-CN.md`。

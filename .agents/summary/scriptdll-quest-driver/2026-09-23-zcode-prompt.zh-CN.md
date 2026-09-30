@@ -1,5 +1,8 @@
 # ZCODE 交接提示词：AionEmu 任务系统改为「真端文件驱动」（终局交付）
 
+
+> **生成物清理提示（2026-09-30）**：本文件正文提到的 `*.tsv` / `*.log` / `*.txt` / `*.xml` 等中间转储已随 `chore(agents)` 清理删除；原文与留痕仍可从 git 历史取回，被删清单与再生成入口见 `.agents/summary/CLEANUP-LEDGER.zh-CN.md`。
+
 > 可整段粘贴给 zcode 作为首条消息。配套细节（数据地图、字段样例、DLL 函数、坑位）见同目录
 > `2026-09-23-zcode-appendix.zh-CN.md`；其中 §10 是一个**可选**的工作切分参考，不是验收要求。
 > 仓库：`/Users/mc/IdeaProjects/AionEmu-test`（Aion 5.8 社区服务端，Java 25 + Maven + Spring Boot，单模块）。

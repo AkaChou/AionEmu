@@ -1,5 +1,8 @@
 # W5-g4 · 页码类 TSV 退役第四张：`quest_client_briefing_chains.tsv`（零受理变化；不变量迁构建期）
 
+
+> **生成物清理提示（2026-09-30）**：本文件正文提到的 `*.tsv` / `*.log` / `*.txt` / `*.xml` 等中间转储已随 `chore(agents)` 清理删除；原文与留痕仍可从 git 历史取回，被删清单与再生成入口见 `.agents/summary/CLEANUP-LEDGER.zh-CN.md`。
+
 > 车道：`quest-native-dispatch`；面：**W5 页码类 TSV 退役（g4，零形状片）**。
 > 上游：`GOAL.zh-CN.md` §3 W5；`2026-09-27-w5g3-w5g4-prep-and-rulings.zh-CN.md` §4-5。
 > 裁定（用户，2026-09-27）：**a 退役 + 构建期校验**（否决 b 直接删门不留校验 / c 保持表与门）。

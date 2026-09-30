@@ -1,5 +1,8 @@
 # P0c-26：journal 轴备料（风暴期静态切片）——1526 登记表数据修正 + 自愈边通道发现
 
+
+> **生成物清理提示（2026-09-30）**：本文件正文提到的 `*.tsv` / `*.log` / `*.txt` / `*.xml` 等中间转储已随 `chore(agents)` 清理删除；原文与留痕仍可从 git 历史取回，被删清单与再生成入口见 `.agents/summary/CLEANUP-LEDGER.zh-CN.md`。
+
 > 日期：2026-09-26 ｜ 切片：P0c-26 ｜ lane：SimpleTalk（DataDriven 风暴持续，无窗口）｜ 前序：P0c-25
 
 > **性质**：lane 全量风暴窗口不可用（missing=664 持稳），本片为纯静态备料 + 数据修正 +

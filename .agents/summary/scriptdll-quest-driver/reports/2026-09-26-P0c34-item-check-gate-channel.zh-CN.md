@@ -1,5 +1,8 @@
 # P0c-34：item_check 门通道落地（npc-item-report 转写 + 链编译展开）+ 1152 入台
 
+
+> **生成物清理提示（2026-09-30）**：本文件正文提到的 `*.tsv` / `*.log` / `*.txt` / `*.xml` 等中间转储已随 `chore(agents)` 清理删除；原文与留痕仍可从 git 历史取回，被删清单与再生成入口见 `.agents/summary/CLEANUP-LEDGER.zh-CN.md`。
+
 - 日期：2026-09-26
 - 切片：P0c-34（承 P0c-33 回退后的第一片；通道落地 + 首行入台）
 - 触发：P0c-33 §7 工作项「item_check 门通道（npc-item-report 转写 + 链编译展开）——落地后 24202/80320 可重新入台」

@@ -1,5 +1,8 @@
 # P0c-30：P0c-24 三件套收口——barrel 方法 lenient 补回放绿 + 风暴复测
 
+
+> **生成物清理提示（2026-09-30）**：本文件正文提到的 `*.tsv` / `*.log` / `*.txt` / `*.xml` 等中间转储已随 `chore(agents)` 清理删除；原文与留痕仍可从 git 历史取回，被删清单与再生成入口见 `.agents/summary/CLEANUP-LEDGER.zh-CN.md`。
+
 > 日期：2026-09-26 ｜ 切片：P0c-30 ｜ lane：静默 2h18m（在飞态冻结，missing=664 持稳）｜ 前序：P0c-29
 
 ## 落地与验证

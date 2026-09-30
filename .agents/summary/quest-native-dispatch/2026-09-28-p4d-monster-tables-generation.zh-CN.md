@@ -1,5 +1,8 @@
 # 批 P4d：monster 系投影表构建期生成（源入仓 + Java/Maven）
 
+
+> **生成物清理提示（2026-09-30）**：本文件正文提到的 `*.tsv` / `*.log` / `*.txt` / `*.xml` 等中间转储已随 `chore(agents)` 清理删除；原文与留痕仍可从 git 历史取回，被删清单与再生成入口见 `.agents/summary/CLEANUP-LEDGER.zh-CN.md`。
+
 > 授权：用户对 P4d 三问的答复——① 外部源**入仓库、不钉 sha**（因为会修改）；
 > ② 构建期生成**必须 Java 或 Maven**；③（第三点 `events.properties:82` 经核为并行的开关改动，
 > 非本问答案，用户未否决下述推断）。

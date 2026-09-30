@@ -1,5 +1,8 @@
 # P0c-10g SimpleTalk wave A 链式行门禁转正（探针 → 永久三不变量门禁）
 
+
+> **生成物清理提示（2026-09-30）**：本文件正文提到的 `*.tsv` / `*.log` / `*.txt` / `*.xml` 等中间转储已随 `chore(agents)` 清理删除；原文与留痕仍可从 git 历史取回，被删清单与再生成入口见 `.agents/summary/CLEANUP-LEDGER.zh-CN.md`。
+
 - 日期：2026-09-25
 - 切片：P0c-10g（P0c-10f wave A 收尾：临时对拍探针转正为永久门禁）
 - 前置：`2026-09-25-P0c10f-talk-chain-wave-a.zh-CN.md`（83 ADOPT 退役 + 40 KEEP + 冻结指纹入仓）

@@ -1,5 +1,8 @@
 # 非真端残留 spot 去重 / Non-retail leftover spawn de-duplication
 
+
+> **生成物清理提示（2026-09-30）**：本文件正文提到的 `*.tsv` / `*.log` / `*.txt` / `*.xml` 等中间转储已随 `chore(agents)` 清理删除；原文与留痕仍可从 git 历史取回，被删清单与再生成入口见 `.agents/summary/CLEANUP-LEDGER.zh-CN.md`。
+
 ## 症状 / Symptom
 
 - 真端反馈：`278628` (Sileni)、`278630` (Lachesis)、`278633` (Larentia) 在同一位置出现 2 个。

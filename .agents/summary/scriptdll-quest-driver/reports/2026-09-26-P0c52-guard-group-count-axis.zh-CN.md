@@ -1,5 +1,8 @@
 # 2026-09-26 续片 26 / P0c-52：守备队区名组退役（24 行）+ 计数轴第二次裁定 + 击杀门禁真端化
 
+
+> **生成物清理提示（2026-09-30）**：本文件正文提到的 `*.tsv` / `*.log` / `*.txt` / `*.xml` 等中间转储已随 `chore(agents)` 清理删除；原文与留痕仍可从 git 历史取回，被删清单与再生成入口见 `.agents/summary/CLEANUP-LEDGER.zh-CN.md`。
+
 ## 0. 一句话
 
 把 `RETAIL_ACQUIRE_NPC_UNRESOLVED` 桶里的 **LDF4_Advance_Village_Guard 区名组**（8 组 / 24 行）

@@ -1,5 +1,8 @@
 # 接取发放（accept-actions）在 typed XML 迁移中丢失：15545/25545 报障 + 全库同类批量修复
 
+
+> **生成物清理提示（2026-09-30）**：本文件正文提到的 `*.tsv` / `*.log` / `*.txt` / `*.xml` 等中间转储已随 `chore(agents)` 清理删除；原文与留痕仍可从 git 历史取回，被删清单与再生成入口见 `.agents/summary/CLEANUP-LEDGER.zh-CN.md`。
+
 ```text
 report quest: 15545（ELYOS 66+ SIGNIFICANT，NPC 835514）“[Learn Minion] Precious Ally Minion”
 symptom: 使用「下级宠物精灵契约书」召唤宠物精灵后，任务没有往下（停留在接取步）

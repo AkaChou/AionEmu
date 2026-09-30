@@ -1,5 +1,8 @@
 # W5-g1 · 页码类 TSV 退役第一张：`quest_client_report_pages.tsv`（含读取者与死代码整体退场）
 
+
+> **生成物清理提示（2026-09-30）**：本文件正文提到的 `*.tsv` / `*.log` / `*.txt` / `*.xml` 等中间转储已随 `chore(agents)` 清理删除；原文与留痕仍可从 git 历史取回，被删清单与再生成入口见 `.agents/summary/CLEANUP-LEDGER.zh-CN.md`。
+
 > 车道：`quest-native-dispatch`；面：**W5 页码类 TSV 退役（g1）**。
 > 上游：`GOAL.zh-CN.md` §3 的 **W5** + §1 的 **F3**；`2026-09-27-tsv-retirement-candidates.zh-CN.md` §2.1-①、
 > §3 第 0 层、§4-0（退役机制）。

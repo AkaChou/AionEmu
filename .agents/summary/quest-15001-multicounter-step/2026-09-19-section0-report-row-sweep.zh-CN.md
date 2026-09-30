@@ -1,5 +1,8 @@
 # SECTION_0 报告行同族 sweep（244 + 2 任务批量修复）
 
+
+> **生成物清理提示（2026-09-30）**：本文件正文提到的 `*.tsv` / `*.log` / `*.txt` / `*.xml` 等中间转储已随 `chore(agents)` 清理删除；原文与留痕仍可从 git 历史取回，被删清单与再生成入口见 `.agents/summary/CLEANUP-LEDGER.zh-CN.md`。
+
 - 日期：2026-09-19
 - 触发：用户回报「15041 也是这样的问题」（与 15001 同型：击杀计数打满后任务说明停在击杀行）。
 - 前置审计：`.agents/summary/quest-15001-multicounter-step/2026-09-19-section0-report-row-closure-audit.zh-CN.md`（脚本 + 逐行 CSV）。

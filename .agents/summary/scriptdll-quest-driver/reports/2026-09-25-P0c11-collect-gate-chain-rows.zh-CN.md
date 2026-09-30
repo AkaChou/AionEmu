@@ -1,5 +1,8 @@
 # P0c-11：SimpleTalk 阶段门链行 10 行采纳退役 + collect_item 通道（TALK_CHAIN 残组续波）
 
+
+> **生成物清理提示（2026-09-30）**：本文件正文提到的 `*.tsv` / `*.log` / `*.txt` / `*.xml` 等中间转储已随 `chore(agents)` 清理删除；原文与留痕仍可从 git 历史取回，被删清单与再生成入口见 `.agents/summary/CLEANUP-LEDGER.zh-CN.md`。
+
 > 日期：2026-09-25 ｜ 切片：P0c-11 ｜ lane：SimpleTalk ｜ 前序：P0c-10o（4601/5554 快照）
 
 ## 交付

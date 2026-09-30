@@ -1,5 +1,8 @@
 # 全量测试已知问题清单（2026-09-12 全量跑：3086 tests）
 
+
+> **生成物清理提示（2026-09-30）**：本文件正文提到的 `*.tsv` / `*.log` / `*.txt` / `*.xml` 等中间转储已随 `chore(agents)` 清理删除；原文与留痕仍可从 git 历史取回，被删清单与再生成入口见 `.agents/summary/CLEANUP-LEDGER.zh-CN.md`。
+
 > status: HISTORICAL
 > scope: AionEmu-test `quest` checkout; full-test triage from 2026-09-12 to 2026-09-13
 > source: historical `.agents/summary/quest-load-fail/full-test-known-issues.md` and the full-test record in this file

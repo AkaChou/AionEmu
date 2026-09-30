@@ -1,5 +1,8 @@
 # P1 wave-1：SimpleItemPlay 族合成器 + 全族门禁（6 行 IR 等价，9 行稳定码登记）
 
+
+> **生成物清理提示（2026-09-30）**：本文件正文提到的 `*.tsv` / `*.log` / `*.txt` / `*.xml` 等中间转储已随 `chore(agents)` 清理删除；原文与留痕仍可从 git 历史取回，被删清单与再生成入口见 `.agents/summary/CLEANUP-LEDGER.zh-CN.md`。
+
 - 日期：2026-09-25
 - 切片：P1 SimpleItemPlay wave-1（族合成器 + 门禁；**无退役、无生产接线**）
 - 权威口径：真端模板表 `Quest_SimpleItemPlay.xml` 为形状权威（不可推翻教条 ①）；等价对拍以退役前

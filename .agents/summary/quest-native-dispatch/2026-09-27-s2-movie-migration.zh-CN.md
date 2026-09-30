@@ -1,5 +1,8 @@
 # S2 链式 4 行过场迁移：逐行落点表（canonical 重挂取证）
 
+
+> **生成物清理提示（2026-09-30）**：本文件正文提到的 `*.tsv` / `*.log` / `*.txt` / `*.xml` 等中间转储已随 `chore(agents)` 清理删除；原文与留痕仍可从 git 历史取回，被删清单与再生成入口见 `.agents/summary/CLEANUP-LEDGER.zh-CN.md`。
+
 > 车道 `quest-native-dispatch`；面：SimpleTalk **S2 链式面的过场轴**（真端 `cutsceneid1` + `cs1_haction`）。
 > 本文**只读取证 + 台账产出**：不改 `src/**`、不改任何 TSV/测试、不跑 Maven、不 commit。
 > 取证时间 **2026-09-27 13:5x**；工作区在飞（`RetailSimpleTalkDefinitionCompiler.java` 为 untracked 新文件，

@@ -1,5 +1,8 @@
 # P0c-13：CLIENT_ROUTE 73 行复験·第一批——Kaliga 系 20 行采纳退役（M3-d 降级反转）
 
+
+> **生成物清理提示（2026-09-30）**：本文件正文提到的 `*.tsv` / `*.log` / `*.txt` / `*.xml` 等中间转储已随 `chore(agents)` 清理删除；原文与留痕仍可从 git 历史取回，被删清单与再生成入口见 `.agents/summary/CLEANUP-LEDGER.zh-CN.md`。
+
 > 日期：2026-09-25/26 ｜ 切片：P0c-13 ｜ lane：SimpleTalk ｜ 前序：P0c-12（哨兵桶归零）
 
 ## 交付

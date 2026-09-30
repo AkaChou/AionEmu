@@ -1,5 +1,8 @@
 # 2026-09-26 续片 29 / P0c-56：物品接取轴（ItemPlay 非 event 12 行采纳）+ event/challenge 延后码收敛
 
+
+> **生成物清理提示（2026-09-30）**：本文件正文提到的 `*.tsv` / `*.log` / `*.txt` / `*.xml` 等中间转储已随 `chore(agents)` 清理删除；原文与留痕仍可从 git 历史取回，被删清单与再生成入口见 `.agents/summary/CLEANUP-LEDGER.zh-CN.md`。
+
 ## 0. 一句话
 
 `RETAIL_ACQUIRE_NPC_UNRESOLVED` 桶 21 行的接取字段写的是**任务起始道具符号**（`doc_quest_13952a` 形），
