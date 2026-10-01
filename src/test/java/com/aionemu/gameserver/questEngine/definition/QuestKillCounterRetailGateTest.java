@@ -97,17 +97,18 @@ class QuestKillCounterRetailGateTest {
 	}
 
 	/**
-	 * 反向对照：生产定义里 13765 的真端 IR 是一条五级击杀台阶（a0→…→a5），多插一级台阶就必须多杀一只。
-	 * 这条证明门禁不是空转：对拍真的跟着 IR 的计数步长走，而不是把合同值抄一遍。
-	 * Negative control: the production (retail) definition of 13765 is a five-rung kill ladder, so one
-	 * extra rung must raise the simulated count by exactly one — the sweep is not vacuous.
+	 * 反向对照：生产定义里 13765 的真端 IR 是一行五杀的行阶梯（SECTION_0==0 行、SECTION_1&lt;5 计数），
+	 * 多插一级台阶就必须多杀一只。这条证明门禁不是空转：对拍真的跟着 IR 的计数步长走，而不是把合同值抄一遍。
+	 * Negative control: the production (retail) definition of 13765 is a row ladder of five kills in one
+	 * row (row SECTION_0==0, count SECTION_1&lt;5), so one extra rung must raise the simulated count by
+	 * exactly one — the sweep is not vacuous.
 	 */
 	@Test
 	void simulatorReproducesTheFixedOverkillDrift() {
 		CompiledQuestDefinition original = catalog().findExecutable(13765).orElseThrow();
 		assertEquals(5, QuestKillCounterSimulator.requiredKills(original), "13765 requires five kills");
-		assertEquals(Set.of("var0"), QuestKillCounterSimulator.killCounterFields(original),
-			"13765's retail ladder counts on one field");
+		assertEquals(Set.of("var1"), QuestKillCounterSimulator.killCounterFields(original),
+			"13765's retail row ladder counts on the SECTION_1 slot with var0 as the row index");
 		CompiledQuestDefinition drifted = insertExtraKillRung(original);
 		assertEquals(6, QuestKillCounterSimulator.requiredKills(drifted),
 			"simulator must report one extra kill when the ladder grows by one rung");
@@ -126,22 +127,23 @@ class QuestKillCounterRetailGateTest {
 		QuestDefinition definition = compiled.definition();
 		String counter = QuestKillCounterSimulator.killCounterFields(compiled).stream().findFirst()
 			.orElseThrow(() -> new AssertionError("13765 owns no kill counter"));
-		QuestTransition last = definition.transitions().stream()
-			.filter(transition -> transition.event() instanceof QuestEvent.KillNpc
-				|| transition.event() instanceof QuestEvent.KillNpcSet)
-			.reduce((first, second) -> second)
-			.orElseThrow(() -> new AssertionError("13765 has no kill rung"));
-		QuestNode end = node(definition, last.targetNode());
-		Map<String, Integer> variables = new LinkedHashMap<>(end.projection().variables());
-		variables.put(counter, variables.getOrDefault(counter, 0) + 1);
-		String extraLabel = end.label() + "_extra";
-		List<QuestNode> nodes = new ArrayList<>(definition.nodes());
-		nodes.add(new QuestNode(extraLabel, new NodeProjection(end.projection().status(), variables)));
-		List<QuestTransition> transitions = new ArrayList<>(definition.transitions());
-		transitions.add(new QuestTransition(last.event(), List.of(), List.of(), extraLabel, List.of(),
-			last.priority(), end.label()));
+		List<QuestTransition> transitions = new ArrayList<>();
+		for (QuestTransition t : definition.transitions()) {
+			List<QuestCondition> newConds = new ArrayList<>();
+			for (QuestCondition c : t.conditions()) {
+				if (c instanceof QuestCondition.VariableBelow vb && vb.field().equals(counter)) {
+					newConds.add(new QuestCondition.VariableBelow(vb.field(), vb.value() + 1));
+				} else if (c instanceof QuestCondition.VariableAtLeast va && va.field().equals(counter)) {
+					newConds.add(new QuestCondition.VariableAtLeast(va.field(), va.value() + 1));
+				} else {
+					newConds.add(c);
+				}
+			}
+			transitions.add(new QuestTransition(t.event(), List.copyOf(newConds), t.actions(), t.targetNode(),
+				t.afterCommit(), t.priority(), t.sourceNode()));
+		}
 		return QuestDefinitionCompiler.compile(new QuestDefinition(definition.id(), definition.version(),
-			definition.metadata(), definition.progressLayout(), nodes, transitions));
+			definition.metadata(), definition.progressLayout(), definition.nodes(), transitions));
 	}
 
 	private static QuestNode node(QuestDefinition definition, String label) {

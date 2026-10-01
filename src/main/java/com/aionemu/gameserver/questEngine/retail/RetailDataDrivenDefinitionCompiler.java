@@ -430,13 +430,6 @@ public final class RetailDataDrivenDefinitionCompiler {
 						return new Outcome(null, "RETAIL_PVP_RANKED_WINDOW_DEFERRED",
 							"unseen rank ceiling " + entry.pvpRankCeiling());
 					}
-				} else if (entry.huntStages().size() > 5) {
-					// 多段 hunt 行的布局硬上限：5 个计数段占满 var0..var4（SECTION_5 是简报标志位），
-					// 6 段会越过 32 位 quest_vars；真端 4 行 6 段样本留待布局扩展再裁定。
-					// Hard layout cap for multi-stage hunt rows: 5 slots fill var0..var4 (SECTION_5 is
-					// the briefing flag); 6 slots would overflow the 32-bit quest_vars.
-					return new Outcome(null, "RETAIL_HUNT_MULTI_STAGE_DEFERRED",
-						"stages=" + entry.huntStages().size() + " exceeds the 5-slot layout cap");
 				}
 				// 接取名用本函数已归一化的值（`_challengetask_` 哨兵已回退为真端 reward 名）——
 				// hunt 合成器从 plan 重新读接取名，若仍传原始参数会把哨兵当未知类别哨兵拒绝。
@@ -466,20 +459,23 @@ public final class RetailDataDrivenDefinitionCompiler {
 					// from the client gate on a few rows; the permanent gate tracks that set).
 					.withClientStageCounts(entry.allHunt()
 						? huntProgressRows.rows(entry.questId()) : java.util.List.of());
-				// 多段 hunt 行（2..5 段）走顺序 SECTION 链：客户端任务书只在当前段列出目标怪，
-				// 乱序击杀不计数；单段行维持并行网格。PVP 行永远单段（上方已拒）。
-				// Multi-stage hunt rows (2..5 stages) use the sequential SECTION chain — the client
-				// journal lists only the current stage's targets and out-of-order kills never count;
-				// single-stage rows keep the parallel grid. PVP rows are always single-stage.
-				boolean sequentialStages = !entry.allPvp() && entry.huntStages().size() > 1;
-				// P0-2 DD 切片：单段网格与多段顺序链的对话都走家族规范形（页 4 接取窗/满段
-				// QUEST_SELECT 分档窗交付）；链式击杀边保持"首个未满段推进"语义。
-				// P0-2 DD slice: single-stage grids and multi-stage sequential chains both follow the
-				// family canonical dialog shape; chained kill edges keep the first-unfinished-slot
-				// advance semantics.
-				var huntOutcome = sequentialStages
-					? RetailSimpleHuntDefinitionCompiler.compileSequentialStages(plan, metadata,
-						clientRewardNpcs, questAreas, clientDialogExits)
+				// DD 纯 hunt 行 = 真端行阶梯（var0 = 进度行号，var1..var4 = 当前行并行目标计数）：
+				// 客户端 quest_monster.csv 对 DataDriven hunt 行一律发
+				// `Progress(SECTION_0==k; SECTION_m<count)`（行的段号恒为 1..n），所以段序取自真端
+				// progress 块的分号段数、行号取自块序；块数只受 6 位行号限制，不存在 5 槽硬上限
+				// （3122/3123/4122/4123 的 6 段 = 6 行 × 1 段，两个字段足够）。
+				// DD pure-hunt rows use the true-server row ladder (var0 = progress row index, var1..var4
+				// = the current row's parallel-target counters): the client journal emits
+				// `Progress(SECTION_0==k; SECTION_m<count)` for every DataDriven hunt row (segment
+				// numbers are always 1..n), so the blocks come from the retail progress segments and
+				// the rows from the block order; only the 6-bit row ladder bounds the block count and the
+				// old 5-slot cap is gone (3122/3123/4122/4123 = six rows of one segment).
+				// PVP 行永远单段（上方已拒多段），继续走既有单计数网格。
+				// PVP rows are always single-stage (multi-stage rejected above) and keep the single
+				// counter grid.
+				var huntOutcome = entry.allHunt()
+					? RetailSimpleHuntDefinitionCompiler.compileClientLadder(plan, entry.huntBlocks(),
+						metadata, clientRewardNpcs, questAreas, clientDialogExits)
 					: RetailSimpleHuntDefinitionCompiler.compileCanonical(plan, metadata, clientRewardNpcs,
 						questAreas, clientDialogExits);
 				return new Outcome(huntOutcome.definition(), huntOutcome.rejectionCode(),

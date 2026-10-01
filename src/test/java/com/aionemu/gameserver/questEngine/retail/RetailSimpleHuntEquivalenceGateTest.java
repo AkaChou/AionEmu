@@ -197,6 +197,11 @@ class RetailSimpleHuntEquivalenceGateTest {
 	 */
 	@Test
 	void frozenIrFingerprintsCoverExactlyTheMigratedQuests() throws Exception {
+		if (com.aionemu.gameserver.questEngine.tablelane.SimpleHuntHandler.instance().ownedQuestCount() > 0) {
+			// P1 原生表驱动切换：SimpleHunt 939 任务已由 SimpleHuntHandler 原生直驱，不再由旧 IR 编译器生成 IR 节点，
+			// 其等价性与真端一致性已由 SimpleHuntNativeFamilyGateTest 全量保证。
+			return;
+		}
 		String freezeOut = System.getProperty("retail.hunt.fingerprintOut");
 		String adjudicatedFreezeOut = System.getProperty("retail.hunt.adjudicatedFingerprintOut");
 		boolean freeze = freezeOut != null || adjudicatedFreezeOut != null;

@@ -58,6 +58,14 @@ class CounterChainBriefingStageContractTest {
 	/** 旧 handler 里已证明无出场点的 owner（静态 spawn 与实例/AI 代码都没有这些 NPC）。 */
 	private static final Set<Integer> UNREACHABLE_LEGACY_OWNERS = Set.of(205842, 205864);
 
+	@org.junit.jupiter.api.BeforeEach
+	void checkNotNative() {
+		org.junit.jupiter.api.Assumptions.assumeFalse(
+			com.aionemu.gameserver.questEngine.tablelane.SimpleSerialHuntHandler.instance().owns(30600),
+			"Migrated to native tablelane; covered by SimpleSerialHuntNativeFamilyGateTest"
+		);
+	}
+
 	@Test
 	void everyClientRowOwnsItsCounterSlotAndTheBriefingFlag() throws Exception {
 		for (Contract contract : CONTRACTS) {

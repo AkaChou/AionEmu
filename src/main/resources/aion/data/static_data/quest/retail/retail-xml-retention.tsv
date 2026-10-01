@@ -1350,8 +1350,8 @@
 3119	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 3120	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history retail-simple-hunt-adjudicated-decisions.tsv basis=STAGE_FLIP_PAIRED+EXTRA_KILL_COUNTER_LEGACY+GRID
 3121	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
-3122	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_HUNT_MULTI_STAGE_DEFERRED	b2 multi-stage hunt axis unimplemented (deferred); XML operational
-3123	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_HUNT_MULTI_STAGE_DEFERRED	b2 multi-stage hunt axis unimplemented (deferred); XML operational
+3122	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history qe-112-quest-ddhunt-ladder-decisions.tsv basis=DD_HUNT_CLIENT_LADDER
+3123	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history qe-112-quest-ddhunt-ladder-decisions.tsv basis=DD_HUNT_CLIENT_LADDER
 3200	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf3c0,FUN_180caf640,FUN_180caf6c0,FUN_180caf740
 3201	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 3202	RETAIL_TABLE	SimpleCollectItem	OK	retired-xml-in-git-history m5b3-collect-route-decisions.tsv basis=MULTI_ITEM_HANDIN
@@ -1642,8 +1642,8 @@
 4118	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 4119	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history retail-simple-hunt-adjudicated-decisions.tsv basis=STAGE_FLIP_PAIRED+EXTRA_KILL_COUNTER_LEGACY+GRID
 4120	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history retail-simple-hunt-adjudicated-decisions.tsv basis=RETAIL_REWARD_CONFIRM_RANGE
-4122	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_HUNT_MULTI_STAGE_DEFERRED	b2 multi-stage hunt axis unimplemented (deferred); XML operational
-4123	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_HUNT_MULTI_STAGE_DEFERRED	b2 multi-stage hunt axis unimplemented (deferred); XML operational
+4122	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history qe-112-quest-ddhunt-ladder-decisions.tsv basis=DD_HUNT_CLIENT_LADDER
+4123	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history qe-112-quest-ddhunt-ladder-decisions.tsv basis=DD_HUNT_CLIENT_LADDER
 4200	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf3c0,FUN_180caf640,FUN_180caf6c0,FUN_180caf740
 4201	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 4202	RETAIL_TABLE	SimpleCollectItem	OK	retired-xml-in-git-history m5b3-collect-route-decisions.tsv basis=MULTI_ITEM_HANDIN

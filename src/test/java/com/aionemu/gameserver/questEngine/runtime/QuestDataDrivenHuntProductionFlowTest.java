@@ -14,6 +14,8 @@ import com.aionemu.gameserver.questEngine.definition.QuestStateSyncMode;
 import com.aionemu.gameserver.questEngine.definition.QuestTransition;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.questEngine.retail.RetailQuestDriver;
+import com.aionemu.gameserver.questEngine.retail.RetailClientHuntProgressRows;
+import com.aionemu.gameserver.questEngine.definition.RetailHuntLadderShape;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.DynamicTest;
@@ -65,104 +67,100 @@ class QuestDataDrivenHuntProductionFlowTest {
 		QuestDefinition definition = compiled.definition();
 		// 网格规模 N 由领奖投影推导（真端 hunt 计数 = a0..aN）。
 		// Grid size N derives from the reward projection (the retail hunt counter is a0..aN).
-		int required = definition.nodes().stream()
-			.filter(node -> node.label().equals("reward"))
-			.findFirst().orElseThrow().projection().variables().get("var0");
-		assertTrue(required > 0, () -> contract.questId() + " 领奖投影必须携带计数 " + required);
-
-		assertNode(definition, "unaccepted", QuestStatus.NONE, 0);
-		for (int kills = 0; kills <= required; kills++) {
-			assertNode(definition, "a" + kills, QuestStatus.START, kills);
-		}
-		assertNode(definition, "reward", QuestStatus.REWARD, required);
-		assertNode(definition, "complete", QuestStatus.COMPLETE, 0);
+		// 形状 = 真端行阶梯：客户端任务书登记 `Progress(SECTION_0==0; SECTION_1<count)`，因此击杀
+		// 计数落在 var1、var0 是行号（收口时推进到 1），领奖行钉住满计数（QE-051）。
+		// Shape = the retail row ladder: the client journal declares
+		// `Progress(SECTION_0==0; SECTION_1<count)`, so kills count on var1 with var0 as the row
+		// index (advanced to 1 when the row closes) and the reward row pins the saturated count.
+		List<RetailClientHuntProgressRows.Row> clientRows =
+			RetailClientHuntProgressRows.defaultHuntProgressRows().rows(contract.questId());
+		assertEquals(1, clientRows.size(), () -> contract.questId() + " 客户端任务书必须只登记一行");
+		List<List<Integer>> ladder = List.of(List.of(clientRows.getFirst().count()));
+		RetailHuntLadderShape.assertLadder(compiled, ladder);
+		int required = ladder.getFirst().getFirst();
 
 		// 进区域系统发放接取，无 NPC 接取路由。
 		// Area-entry system grant, no NPC accept route.
-		QuestTransition grant = transition(definition, "unaccepted", "a0", new QuestEvent.SystemGrant());
+		QuestTransition grant = transition(definition, "unaccepted", "started", new QuestEvent.SystemGrant());
 		assertEquals(List.of(new QuestCondition.StartEligible()), grant.conditions());
 		assertEquals(List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.VISIBILITY_REFRESH)),
 			grant.afterCommit());
 
-		// 击杀网格：每个未满格状态覆盖全部客户端变体，逐态推进 + PACKET_ONLY。
-		// Kill grid: every unfinished state covers the full client variant set, advancing per state.
+		// 击杀边：行 0 的每个客户端变体一条未满自环 + 一条收口边；覆盖为超集（M2-c 同名族展开）。
+		// Kill edges: one unsatisfied self loop and one closing edge per client variant on row 0;
+		// coverage is a superset (M2-c display-name family expansion).
 		Set<Integer> killNpcs = new TreeSet<>();
-		for (int kills = 0; kills < required; kills++) {
-			final int state = kills;
-			List<QuestTransition> edges = definition.transitions().stream()
-				.filter(candidate -> candidate.sourceNode().equals("a" + state))
-				.filter(candidate -> candidate.event() instanceof QuestEvent.KillNpc)
-				.toList();
-			assertTrue(edges.size() >= contract.targetNpcIds().size(),
-				() -> "a" + state + " 击杀边必须覆盖全部变体");
-			for (QuestTransition edge : edges) {
-				assertEquals("a" + (state + 1), edge.targetNode());
-				if (edge.event() instanceof QuestEvent.KillNpc killNpc) {
-					killNpcs.add(killNpc.npcId());
-				}
+		List<QuestTransition> edges = definition.transitions().stream()
+			.filter(candidate -> "started".equals(candidate.sourceNode()))
+			.filter(candidate -> candidate.event() instanceof QuestEvent.KillNpc)
+			.toList();
+		assertTrue(edges.size() >= contract.targetNpcIds().size(),
+			() -> "started 击杀边必须覆盖全部变体");
+		for (QuestTransition edge : edges) {
+			assertTrue("started".equals(edge.targetNode()) || "reward".equals(edge.targetNode()),
+				() -> "行 0 的击杀边只能是自环或收口：" + edge);
+			if (edge.event() instanceof QuestEvent.KillNpc killNpc) {
+				killNpcs.add(killNpc.npcId());
 			}
 		}
-		// 同名显示名族展开（M2-c 裁定）：真端名解析后并入本服实刷的同名兄弟 id，
-		// 因此合同断言为"覆盖客户端变体"的超集，而非精确相等。
-		// Display-name family expansion (M2-c adjudication): the retail names resolve to include
-		// server-spawned sibling ids sharing the display name, so the contract asserts a superset
-		// covering the client variants rather than exact equality.
 		assertTrue(killNpcs.containsAll(contract.targetNpcIds()),
 			() -> contract.questId() + " 击杀集必须覆盖客户端变体，实际 " + killNpcs);
 
 		// 排除目标不产生任何击杀计划（客户端名单之外不计数）。
 		// Excluded targets produce no kill plan (anything outside the client list never counts).
-		QuestSnapshot start = snapshot(definition, QuestStatus.START, 0);
+		QuestSnapshot start = snapshot(definition, QuestStatus.START, 0, 0);
 		assertTrue(dispatchAll(compiled, start, new QuestEvent.KillNpc(contract.excludedTargetNpcId())).isEmpty(),
 			() -> contract.excludedTargetNpcId() + " 不得计数");
 
-		// 模拟：N 次有效击杀逐态推进，第 N 杀后仍在 START（真端把领奖入口放在 1009 之后）。
-		// Simulation: N valid kills advance state by state; after the Nth the quest is still START
-		// (the retail shape keeps reward entry behind the 1009 route).
+		// 模拟：前 N-1 杀留在行 0（var1 累加），第 N 杀直接收口进领奖态并钉住满计数
+		// （真端行阶梯的收口边就是领奖入口，不再有 aN 节点或 1009 中转）。
+		// Simulation: kills 1..N-1 stay on row 0 (var1 accumulates) and the Nth kill closes the row
+		// straight into the reward state with the saturated count pinned (the retail closing edge is
+		// the reward entry; there is no aN node and no 1009 hop).
 		QuestSnapshot snapshot = start;
-		for (int kills = 1; kills <= required; kills++) {
-			final int state = kills;
+		for (int kills = 1; kills < required; kills++) {
+			final int counted = kills;
 			QuestMutationPlan plan = dispatch(compiled, snapshot,
 				new QuestEvent.KillNpc(contract.sampleTargetNpcId()));
 			snapshot = nextSnapshot(snapshot, plan);
-			assertEquals(QuestStatus.START, snapshot.status(), () -> "第 " + state + " 杀后应为 START");
-			assertEquals(Map.of("var0", state), unpack(definition, snapshot));
+			assertEquals(QuestStatus.START, snapshot.status(), () -> "第 " + counted + " 杀后应仍在行 0");
+			assertEquals(Map.of("var0", 0, "var1", counted), unpack(definition, snapshot));
 		}
+		QuestMutationPlan closing = dispatch(compiled, snapshot,
+			new QuestEvent.KillNpc(contract.sampleTargetNpcId()));
+		snapshot = nextSnapshot(snapshot, closing);
+		assertEquals(QuestStatus.REWARD, snapshot.status(),
+			() -> "第 " + required + " 杀必须收口进领奖态");
+		assertEquals(Map.of("var0", 1, "var1", required), unpack(definition, snapshot));
 
-		// 满格 QUEST_SELECT 交付无门禁进入领奖态（P0-2 规范形，1009 中转删除）；
-		// 未满格节点无 QUEST_SELECT/1009 报告通道。
-		// The full-node QUEST_SELECT delivery enters reward ungated (canonical since P0-2, no 1009
-		// hop); unfinished nodes keep no QUEST_SELECT/1009 report channel.
-		QuestTransition finish = talk(definition, "a" + required, "reward", contract.reportNpcId(),
-			QuestDialogAction.QUEST_SELECT.id());
-		assertEquals(List.of(), finish.conditions());
-		QuestMutationPlan rewardEntry = dispatch(compiled, snapshot, finish.event());
-		assertEquals(QuestStatus.REWARD, rewardEntry.nextStatus());
-		assertEquals(Map.of("var0", required), unpack(definition, nextSnapshot(snapshot, rewardEntry)));
-		for (int kills = 0; kills < required; kills++) {
-			final int state = kills;
-			assertTrue(definition.transitions().stream().noneMatch(candidate ->
-				("a" + state).equals(candidate.sourceNode())
-					&& candidate.event() instanceof QuestEvent.TalkToNpc talkRoute
-					&& talkRoute.dialogId() != null
-					&& (talkRoute.dialogId() == QuestDialogAction.QUEST_SELECT.id()
-						|| talkRoute.dialogId() == QuestDialogAction.SELECT_QUEST_REWARD.id())),
-				() -> "a" + state + " 不得保留报告通道路由");
-		}
+		// 未收口的行不得保留报告通道路由（满段收口即进领奖态，无 1009 / QUEST_SELECT 中转）。
+		// The unfinished row keeps no report channel (the closing edge enters the reward state; no
+		// 1009 / QUEST_SELECT hop).
+		assertTrue(definition.transitions().stream().noneMatch(candidate ->
+			"started".equals(candidate.sourceNode())
+				&& candidate.event() instanceof QuestEvent.TalkToNpc talkRoute
+				&& talkRoute.dialogId() != null
+				&& (talkRoute.dialogId() == QuestDialogAction.QUEST_SELECT.id()
+					|| talkRoute.dialogId() == QuestDialogAction.SELECT_QUEST_REWARD.id())),
+			() -> "started 不得保留报告通道路由");
 
 		assertRewardAndCompletion(compiled, definition, contract, required);
 	}
 
 	private static void assertRewardAndCompletion(CompiledQuestDefinition compiled,
 			QuestDefinition definition, QuestContract contract, int required) {
-		// 领奖态预览：NPC 默认对话与 1009 都只弹选择窗口。
-		// Reward-state previews: the NPC default dialog and 1009 only show the selection window.
-		for (QuestDialogAction action : List.of(QuestDialogAction.USE_OBJECT,
-				QuestDialogAction.SELECT_QUEST_REWARD)) {
+		// 领奖态预览：真端行阶梯的领奖态入口是交付 NPC 的 QUEST_SELECT(31) 与默认对话(-1)，
+		// 两者都只弹分档选择窗（页 5）而不推进状态（旧网格的 USE_OBJECT / SELECT_QUEST_REWARD
+		// 预览形随族切换退场）。
+		// Reward-state previews: the retail ladder's reward-state entries are the delivery npc's
+		// QUEST_SELECT(31) and the default dialog (-1); both only show the tier window (page 5)
+		// without advancing (the old grid's USE_OBJECT / SELECT_QUEST_REWARD previews retired).
+		for (int dialogId : List.of(QuestDialogAction.QUEST_SELECT.id(), -1)) {
 			QuestTransition preview = transition(definition, "reward", "reward",
-				new QuestEvent.TalkToNpc(contract.reportNpcId(), action.id()));
-			assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(
-				QuestDialogPage.SHOW_SELECT_QUEST_REWARD_WINDOW1.id())), preview.afterCommit());
+				new QuestEvent.TalkToNpc(contract.reportNpcId(), dialogId));
+			assertEquals(new AfterCommitAction.ShowQuestDialog(
+				QuestDialogPage.SHOW_SELECT_QUEST_REWARD_WINDOW1.id()), preview.afterCommit().getLast(),
+				() -> "领奖态预览必须以分档选择窗收尾：" + preview);
 		}
 
 		// 完成流：确认段按真端奖励发放（EXP QUEST_BASE 数额与真端表一致）并收尾 CompleteQuest。
@@ -193,11 +191,15 @@ class QuestDataDrivenHuntProductionFlowTest {
 
 		// 完成模拟：REWARD 态走确认路由后 COMPLETE 且计数清零。
 		// Completion simulation: the confirm route moves REWARD to COMPLETE with the counter reset.
-		QuestSnapshot reward = snapshot(definition, QuestStatus.REWARD, required);
+		// 领奖态快照 = 行阶梯的领奖投影（var0 = 1 行后、var1 = 末行满计数）。
+		// The reward snapshot matches the ladder's reward projection (var0 = the row after the
+		// block, var1 = the final row's saturated count).
+		QuestSnapshot reward = snapshot(definition, QuestStatus.REWARD, 1, required);
 		QuestMutationPlan plan = QuestMutationPlanner.plan(compiled, reward, completion.event(), completion)
 			.orElseThrow();
 		assertEquals(QuestStatus.COMPLETE, plan.nextStatus());
-		assertEquals(Map.of("var0", 0), definition.progressLayout().unpack(plan.nextPackedVariables()));
+		assertEquals(Map.of("var0", 0, "var1", 0),
+			definition.progressLayout().unpack(plan.nextPackedVariables()));
 	}
 
 	private static List<QuestMutationPlan> dispatchAll(CompiledQuestDefinition compiled,
@@ -224,6 +226,11 @@ class QuestDataDrivenHuntProductionFlowTest {
 	private static QuestSnapshot snapshot(QuestDefinition definition, QuestStatus status, int var0) {
 		return new QuestSnapshot(7, definition.id(), status, definition.progressLayout().pack(
 			Map.of("var0", var0)), Map.of());
+	}
+
+	private static QuestSnapshot snapshot(QuestDefinition definition, QuestStatus status, int var0, int var1) {
+		return new QuestSnapshot(7, definition.id(), status, definition.progressLayout().pack(
+			Map.of("var0", var0, "var1", var1)), Map.of());
 	}
 
 	private static Map<String, Integer> unpack(QuestDefinition definition, QuestSnapshot snapshot) {

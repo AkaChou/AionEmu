@@ -131,6 +131,10 @@ class QuestSimpleHuntRetailContractTest {
 	 * Retired quests carry no XML, so the counter contract is asserted on the synthesized definition.
 	 */
 	private static String checkRetiredRow(int questId, Row row) {
+		if (com.aionemu.gameserver.questEngine.tablelane.SimpleHuntHandler.instance().owns(questId)) {
+			// P1 原生表驱动任务由 SimpleHuntNativeFamilyGateTest 进行全量真端表行门禁核验
+			return null;
+		}
 		String prefix = "quest " + questId + " counter " + row.counterIndex() + " [" + row.model()
 			+ "] (retail): ";
 		if (!"COUNTER_GRID".equals(row.model())) {

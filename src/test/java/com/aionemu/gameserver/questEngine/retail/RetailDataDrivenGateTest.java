@@ -4,6 +4,7 @@ import com.aionemu.gameserver.questEngine.definition.CompiledQuestDefinition;
 import com.aionemu.gameserver.questEngine.definition.QuestDefinition;
 import com.aionemu.gameserver.questEngine.definition.QuestEvent;
 import com.aionemu.gameserver.questEngine.definition.RetiredQuestIds;
+import com.aionemu.gameserver.questEngine.definition.RetailHuntLadderShape;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -50,6 +51,10 @@ class RetailDataDrivenGateTest {
 	private static final int FROZEN_FAMILY_SIZE = 1508; // 家族=（catalog∪retired)∩表，翻转只换 owner 不减员；并行会话家族表并入行当前解析器不可见（其解析器改动未落地），钉解析实况
 	/** 可驱动数量下限（三族混合链切片 + 25050/25082 curated 退回）。 / Floor for retail-drivable quests. */
 	private static final int ACCEPTED_FLOOR = 1153;
+	/** 客户端行阶梯覆盖下限（DD 纯 hunt 行 ∩ 已退役 ∧ 客户端有进度行；2026-10-01 冻结）。
+	 * Floor for the client row-ladder coverage of retired DD pure-hunt rows. */
+	private static final int FROZEN_CLIENT_LADDER_ROWS = 595;
+
 	/** 已退役子集冻结规模（P5-1..P5-4 + 混合链切片采纳批）。 / Retired subset frozen size (batches). */
 	private static final int FROZEN_RETIRED_SIZE = 1153;
 
@@ -473,6 +478,67 @@ class RetailDataDrivenGateTest {
 			() -> "冻结集合与退役集合不一致：frozen=" + fingerprints.size() + " retired=" + retiredInFamily.size());
 		assertTrue(problems.isEmpty(), () -> "DataDriven 冻结指纹失同步："
 			+ problems.stream().limit(20).toList());
+	}
+
+	/**
+	 * DD 纯 hunt 行按客户端行阶梯编译（客户端任务书为权威，不锚定指纹）：客户端
+	 * {@code quest_monster.csv} 对 DataDriven hunt 行一律登记
+	 * {@code Progress(SECTION_0==行号; SECTION_m<计数)} ⇒ 编译结果必须是行阶梯
+	 * （{@code var0} = 行号、{@code var1..varN} = 当前行段计数），由 {@link RetailHuntLadderShape}
+	 * 逐行复算并走一遍完整击杀流程。覆盖全部「已退役 ∧ 客户端声明进度行」的纯 hunt 行；
+	 * 3122/3123/4122/4123 的六行阶梯（{@code SECTION_0==0..5}）即由本门守。
+	 * Shape contract for DD pure-hunt rows driven by the client journal rows (not by the frozen
+	 * fingerprints); the six-row ladders of 3122/3123/4122/4123 are guarded here.
+	 */
+	@Test
+	void pureHuntRowsFollowTheClientRowLadder() {
+		int checked = 0;
+		List<String> problems = new ArrayList<>();
+		for (int questId : new TreeSet<>(familyIds)) {
+			if (!RetiredQuestIds.contains(questId)) {
+				continue;
+			}
+			var clientRows = clientHuntProgressRows.rows(questId);
+			if (clientRows.isEmpty()) {
+				continue;
+			}
+			var entry = table.find(questId).orElse(null);
+			if (entry == null || !entry.allHunt() || entry.allPvp()) {
+				continue;
+			}
+			var outcome = compile(questId);
+			if (!outcome.accepted()) {
+				problems.add(questId + ": 客户端声明了进度行却未采纳（" + outcome.rejectionCode() + "）");
+				continue;
+			}
+			checked++;
+			try {
+				RetailHuntLadderShape.assertLadder(outcome.definition(), ladderFrom(clientRows));
+			} catch (AssertionError error) {
+				problems.add(questId + ": " + error.getMessage());
+			}
+		}
+		int coverage = checked;
+		assertTrue(coverage >= FROZEN_CLIENT_LADDER_ROWS, () -> "客户端行阶梯覆盖回退：" + coverage);
+		assertTrue(problems.isEmpty(), () -> "DD 纯 hunt 行未按客户端行阶梯编译："
+			+ problems.stream().limit(20).toList());
+	}
+
+	/** 客户端进度行 → 行阶梯（行号 → 段计数按 SECTION_m 序号就位）。 / Client rows to ladder rows. */
+	private static List<List<Integer>> ladderFrom(List<RetailClientHuntProgressRows.Row> clientRows) {
+		TreeMap<Integer, TreeMap<Integer, Integer>> ladder = new TreeMap<>();
+		for (var row : clientRows) {
+			if (row.section() <= 0) {
+				ladder.computeIfAbsent(row.ladderRow(), key -> new TreeMap<>());
+				continue;
+			}
+			ladder.computeIfAbsent(row.ladderRow(), key -> new TreeMap<>()).put(row.section(), row.count());
+		}
+		List<List<Integer>> rows = new ArrayList<>();
+		for (var entry : ladder.entrySet()) {
+			rows.add(List.copyOf(entry.getValue().values()));
+		}
+		return rows;
 	}
 
 	/** 保留清单：采纳行必须 RETAIL_TABLE。 / Manifest agreement with the driver. */

@@ -58,12 +58,15 @@ class Quest13765RetailAlignmentTest {
 		assertEquals(List.of(new QuestReward("EXP", 0, 3618881), new QuestReward("ITEM", 186000236, 5)),
 			metadata.rewards());
 		// 客户端 quest_monster.csv SECTION_1<5、data_driven value0_progress_ 与 13841 族同侧的
-		// "客户端计数为权威"裁定一致：真端 IR 的击杀台阶共 5 级，只打 235357。
+		// "客户端计数为权威"裁定一致：真端 IR 是"行阶梯 + 段计数"，单行 5 杀只打 235357，计数落在
+		// SECTION_1 位（var1），var0 是进度行号（行满才置 1）。
 		// The client SECTION_1<5 gate and the client-count adjudication (the same canon as the 13841
-		// family) land on a five-rung retail ladder that only hunts 235357.
+		// family) land on a row ladder: one row of five kills on 235357, the count on the SECTION_1 slot
+		// (var1) with var0 as the progress row index (flipped to 1 only when the row closes).
 		assertEquals(5, QuestKillCounterSimulator.requiredKills(compiled), "13765 requires five kills");
-		assertEquals(Set.of("var0"), QuestKillCounterSimulator.killCounterFields(compiled),
-			"13765's retail ladder counts on one field");
+		assertEquals(Set.of("var1"), QuestKillCounterSimulator.killCounterFields(compiled),
+			"13765's retail row ladder counts on the SECTION_1 slot");
+		RetailHuntLadderShape.assertLadder(compiled, List.of(List.of(5)));
 		Set<Integer> hunted = QuestKillCounterSimulator.killEvents(compiled).stream()
 			.filter(event -> event instanceof QuestEvent.KillNpc)
 			.map(event -> ((QuestEvent.KillNpc) event).npcId())

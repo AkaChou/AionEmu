@@ -20,57 +20,89 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 class QuestDataDrivenRetailFlowAlignmentTest {
 	@Test
-	void quest25321KeepsTalkStepsSeparateFromSixHuntCounters() throws Exception {
-		QuestDefinition definition = load(25321);
+	void quest25321KeepsTalkStepsSeparateFromSixHuntCounters() {
+		// 25321 已由真端驱动（旧 XML 壳退役，台账 RETAIL_TABLE）⇒ 定义取自生产驱动，不再读仓内 XML。
+		// 合同 = 客户端任务书行阶梯：12 行里 6 个 talk 行（0/2/4/6/8/10）由对话推进，6 个 hunt 行
+		// （1/3/5/7/9/11）按客户端 quest_monster.csv 的 `Progress(SECTION_0==k; SECTION_1<count)` 计数
+		// （30/30/10/30/30/30 ⇒ 自环上界 29/29/9/29/29/29），领奖行 var0 = 12 并把末行满计数 30
+		// 钉进投影（QE-051）。旧 XML 的逐页对话梯断言随壳退役退场（页/动作由客户端登记决定）。
+		// 25321 is retail-driven now (its XML shell retired, ledger RETAIL_TABLE), so the definition
+		// comes from the production driver. The contract is the client journal's row ladder: six talk
+		// rows advanced by dialogue, six hunt rows counted by the client rows' declared
+		// SECTION_1<count, and a reward row pinning var0 = 12 plus the final count.
+		QuestDefinition definition = ProductionQuestDefinitions.definition(25321).definition();
 		assertOnlyNpcStart(definition, 805342);
-		assertOnlyNpcComplete(definition, 805342);
-		for (int index = 0; index <= 11; index++) {
-			assertEquals(new NodeProjection(QuestStatus.START, Map.of("var0", index)),
-				node(definition, "s" + index).projection());
+		assertEquals(Set.of(805342), completionNpcIds(definition),
+			() -> "完成面只允许接取 NPC + 真端交付节点 108（不绑 NPC）");
+		assertEquals(new NodeProjection(QuestStatus.START, Map.of("var0", 0)),
+			node(definition, "started").projection());
+		for (int index = 1; index <= 11; index++) {
+			int row = index;
+			assertEquals(new NodeProjection(QuestStatus.START, Map.of("var0", row)),
+				node(definition, "s" + row).projection());
 		}
-		assertEquals(new NodeProjection(QuestStatus.REWARD, Map.of("var0", 12, "var1", 0)),
+		assertEquals(new NodeProjection(QuestStatus.REWARD, Map.of("var0", 12, "var1", 30)),
 			node(definition, "reward").projection());
+		assertEquals(new NodeProjection(QuestStatus.COMPLETE, Map.of("var0", 0, "var1", 0)),
+			node(definition, "complete").projection());
 
-		assertDialogPage(definition, "s0", 805344, QuestDialogAction.QUEST_SELECT.id(), QuestDialogPage.SELECT1.id());
-		assertDialogPage(definition, "s0", 805344, QuestDialogAction.SELECT1_1.id(), QuestDialogPage.SELECT1_1.id());
-		assertTalk(definition, "s0", "s1", 805344, QuestDialogAction.SETPRO1.id());
-		assertDialogPage(definition, "s2", 805345, QuestDialogAction.QUEST_SELECT.id(), QuestDialogPage.SELECT3.id());
-		assertDialogPage(definition, "s2", 805345, QuestDialogAction.SELECT3_1.id(), QuestDialogPage.SELECT3_1.id());
-		assertTalk(definition, "s2", "s3", 805345, QuestDialogAction.SETPRO3.id());
-		assertDialogPage(definition, "s4", 805346, QuestDialogAction.QUEST_SELECT.id(), QuestDialogPage.SELECT5.id());
-		assertDialogPage(definition, "s4", 805346, QuestDialogAction.SELECT5_1.id(), QuestDialogPage.SELECT5_1.id());
-		assertTalk(definition, "s4", "s5", 805346, QuestDialogAction.SETPRO5.id());
-		assertDialogPage(definition, "s6", 805347, QuestDialogAction.QUEST_SELECT.id(), QuestDialogPage.SELECT7.id());
-		assertDialogPage(definition, "s6", 805347, QuestDialogAction.SELECT7_1.id(), QuestDialogPage.SELECT7_1.id());
-		assertTalk(definition, "s6", "s7", 805347, QuestDialogAction.SETPRO7.id());
-		assertDialogPage(definition, "s8", 805348, QuestDialogAction.QUEST_SELECT.id(), QuestDialogPage.SELECT9.id());
-		assertDialogPage(definition, "s8", 805348, QuestDialogAction.SELECT9_1.id(), QuestDialogPage.SELECT9_1.id());
-		assertTalk(definition, "s8", "s9", 805348, QuestDialogAction.SETPRO9.id());
-		assertDialogPage(definition, "s10", 805349, QuestDialogAction.QUEST_SELECT.id(), 6500);
-		assertDialogPage(definition, "s10", 805349, 6501, 6501);
-		assertTalk(definition, "s10", "s11", 805349, QuestDialogAction.SETPRO11.id());
+		int[][] huntRows = {{1, 30}, {3, 30}, {5, 10}, {7, 30}, {9, 30}, {11, 30}};
+		for (int[] hunt : huntRows) {
+			int row = hunt[0];
+			int count = hunt[1];
+			String source = "s" + row;
+			String target = row == 11 ? "reward" : "s" + (row + 1);
+			List<QuestTransition> kills = definition.transitions().stream()
+				.filter(transition -> source.equals(transition.sourceNode()))
+				.filter(transition -> transition.event() instanceof QuestEvent.KillNpc)
+				.toList();
+			assertFalse(kills.isEmpty(), () -> "hunt 行 " + source + " 必须有击杀边");
+			assertTrue(kills.stream().allMatch(transition -> source.equals(transition.targetNode())
+				|| target.equals(transition.targetNode())),
+				() -> "hunt 行 " + source + " 的击杀边只能自环或收口");
+			for (QuestTransition transition : kills) {
+				if (source.equals(transition.targetNode())) {
+					assertEquals(1, transition.priority(), () -> "未满自环必须低优先级：" + transition);
+					assertEquals(List.of(new QuestCondition.VariableBelow("var1", count - 1)),
+						transition.conditions());
+					assertEquals(List.of(new QuestAction.IncrementVariable("var1", 1)), transition.actions());
+				} else {
+					assertEquals(0, transition.priority(), () -> "收口边必须高优先级：" + transition);
+					assertEquals(List.of(new QuestCondition.VariableAtLeast("var1", count - 1)),
+						transition.conditions());
+					// 末行不清零：满计数留在领奖投影里（QE-051）；其余行收口即清空本行计数。
+					// The final row keeps its saturated count in the reward projection (QE-051); every
+					// other row clears its counters when it closes.
+					assertEquals(row == 11
+						? List.of(new QuestAction.SetVariable("var0", row + 1))
+						: List.of(new QuestAction.SetVariable("var0", row + 1),
+							new QuestAction.SetVariable("var1", 0)), transition.actions());
+				}
+			}
+		}
+		for (int row : new int[] {0, 2, 4, 6, 8, 10}) {
+			String source = row == 0 ? "started" : "s" + row;
+			String target = "s" + (row + 1);
+			assertTrue(definition.transitions().stream()
+					.filter(transition -> source.equals(transition.sourceNode()))
+					.filter(transition -> target.equals(transition.targetNode()))
+					.anyMatch(transition -> transition.event() instanceof QuestEvent.TalkToNpc),
+				() -> "talk 行 " + source + " 必须由对话推进到 " + target);
+		}
+	}
 
-		assertCounter(definition, "s1", "s2", 29,
-			ids(219693, 219694, 219695, 219696, 219697, 219698));
-		assertCounter(definition, "s3", "s4", 29,
-			ids(219778, 219779, 219780, 219781, 219782, 219783, 219784, 219786));
-		assertCounter(definition, "s5", "s6", 9,
-			ids(236363, 236364, 236365, 236366, 236367, 236368, 236369, 236370, 236371, 236372,
-				236373, 236374, 236375, 236376, 236377, 236378, 236379, 236380, 236381, 236382,
-				236383, 236384, 236385, 236386, 236387, 236388, 236389, 236390, 236586, 236587,
-				236588, 236589, 236590, 236591, 236592, 236593, 236594, 236595, 236596, 236597,
-				236598, 236599, 236600, 236601, 236602, 236603, 236604, 236605, 236606, 236607,
-				236608, 236609, 236610, 236611, 236612, 236613));
-		assertCounter(definition, "s7", "s8", 29,
-			ids(234694, 234696, 234697, 234699, 234701, 234702, 234703));
-		assertCounter(definition, "s9", "s10", 29,
-			ids(234244, 234246, 234247, 234503, 234505, 234517));
-		assertCounter(definition, "s11", "reward", 29, ids(234269, 234271, 234272));
-
-		QuestTransition report = route(definition, "reward", "reward", 805342,
-			QuestDialogAction.SELECT_QUEST_REWARD.id(), null);
-		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(QuestDialogPage.SHOW_SELECT_QUEST_REWARD_WINDOW1.id())),
-			report.afterCommit());
+	/** 完成面绑定的 NPC 集（真端交付节点 QuestDialog(108) 不绑 NPC，单独排除）。 / Completion npc ids. */
+	private static Set<Integer> completionNpcIds(QuestDefinition definition) {
+		Set<Integer> npcIds = new java.util.TreeSet<>();
+		for (QuestTransition transition : definition.transitions()) {
+			if (!"complete".equals(transition.targetNode())) {
+				continue;
+			}
+			if (transition.event() instanceof QuestEvent.TalkToNpc talk) {
+				npcIds.add(talk.npcId());
+			}
+		}
+		return npcIds;
 	}
 
 	@Test

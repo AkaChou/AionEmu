@@ -45,10 +45,6 @@ public final class RetailQuestDriver {
 	private static final String RETENTION_RESOURCE =
 		"/aion/data/static_data/quest/retail/retail-xml-retention.tsv";
 	private static final String SIMPLE_HUNT_TABLE = "/aion/data/static_data/quest/retail/Quest_SimpleHunt.xml";
-	/** 真端 SimpleSerialHunt 模板表（行直接转换为 hunt 形 Entry，复用计划与合成器）。 /
-	 * The retail SimpleSerialHunt template table (rows convert to hunt-shaped entries). */
-	private static final String SIMPLE_SERIAL_HUNT_TABLE =
-		"/aion/data/static_data/quest/retail/Quest_SimpleSerialHunt.xml";
 	/** 真端 DataDriven 模板表（接取方式 × 进度步骤链）。 / The retail DataDriven template table. */
 	private static final String DATA_DRIVEN_TABLE =
 		"/aion/data/static_data/quest/retail/data_driven_quest.xml";
@@ -73,8 +69,6 @@ public final class RetailQuestDriver {
 
 	/** 保留清单里标记为 RETAIL_TABLE 的全部任务（按家族分派到各自编译器）。 / All retail-owned quests. */
 	private final Set<Integer> retailOwned;
-	private final Set<Integer> retailOwnedSimpleHunt;
-	private final Set<Integer> retailOwnedSimpleSerialHunt;
 	private final Set<Integer> retailOwnedDataDriven;
 	private final Set<Integer> retailOwnedSimpleCollectItem;
 	private final RetailQuestCatalog catalog;
@@ -90,7 +84,6 @@ public final class RetailQuestDriver {
 	private final RetailItemNameIndex itemIndex;
 	private final Map<String, Integer> randomRewards;
 	private final Map<Integer, Integer> nameIds;
-	private final RetailSimpleSerialHuntTable serialHuntTable;
 	private final RetailClientHuntStages clientHuntStages;
 	private final RetailDataDrivenTable dataDrivenTable;
 	private final RetailClientHandinPages clientHandinPages;
@@ -108,27 +101,22 @@ public final class RetailQuestDriver {
 	private final Map<Integer, Optional<RetailQuestMetadataCompiler.Outcome>> metadataCache =
 		new ConcurrentHashMap<>();
 
-	private RetailQuestDriver(Set<Integer> retailOwnedSimpleHunt, Set<Integer> retailOwnedSimpleSerialHunt,
-			Set<Integer> retailOwnedDataDriven, Set<Integer> retailOwnedSimpleCollectItem,
+	private RetailQuestDriver(Set<Integer> retailOwnedDataDriven, Set<Integer> retailOwnedSimpleCollectItem,
 			RetailQuestCatalog catalog,
 			RetailClientDialogExits clientDialogExits, RetailClientSummaryRows clientSummaryRows,
 			RetailClientRewardNpcs clientRewardNpcs, RetailClientHandinNpcSets clientHandinNpcSets,
 			RetailQuestXmlTable retailTable, RetailNpcNameIndex npcIndex, RetailItemNameIndex itemIndex,
 			Map<String, Integer> randomRewards, Map<Integer, Integer> nameIds,
-			RetailSimpleSerialHuntTable serialHuntTable, RetailClientHuntStages clientHuntStages,
+			RetailClientHuntStages clientHuntStages,
 			RetailQuestAreaIndex questAreas,
 			RetailDataDrivenTable dataDrivenTable,
 			RetailClientHandinPages clientHandinPages,
 			RetailQuestUseItemNpcs interactionObjects,
 			RetailClientKillTargets clientKillTargets, RetailClientHuntProgressRows clientHuntProgressRows,
 			RetailEnterAreaZoneResolution enterAreaZoneResolution) {
-		this.retailOwnedSimpleHunt = retailOwnedSimpleHunt;
-		this.retailOwnedSimpleSerialHunt = retailOwnedSimpleSerialHunt;
 		this.retailOwnedDataDriven = retailOwnedDataDriven;
 		this.retailOwnedSimpleCollectItem = retailOwnedSimpleCollectItem;
 		this.retailOwned = new TreeSet<>();
-		this.retailOwned.addAll(retailOwnedSimpleHunt);
-		this.retailOwned.addAll(retailOwnedSimpleSerialHunt);
 		this.retailOwned.addAll(retailOwnedDataDriven);
 		this.retailOwned.addAll(retailOwnedSimpleCollectItem);
 		this.catalog = catalog;
@@ -142,7 +130,6 @@ public final class RetailQuestDriver {
 		this.itemIndex = itemIndex;
 		this.randomRewards = randomRewards;
 		this.nameIds = nameIds;
-		this.serialHuntTable = serialHuntTable;
 		this.clientHuntStages = clientHuntStages;
 		this.dataDrivenTable = dataDrivenTable;
 		this.clientHandinPages = clientHandinPages;
@@ -343,8 +330,6 @@ public final class RetailQuestDriver {
 	}
 
 	private static RetailQuestDriver load() throws IOException {
-		Set<Integer> retailOwnedHunt = new TreeSet<>();
-		Set<Integer> retailOwnedSerialHunt = new TreeSet<>();
 		Set<Integer> retailOwnedDataDriven = new TreeSet<>();
 		Set<Integer> retailOwnedCollectItem = new TreeSet<>();
 		Map<Integer, String> reasons = new HashMap<>();
@@ -356,11 +341,15 @@ public final class RetailQuestDriver {
 			if ("RETAIL_TABLE".equals(parts[1])) {
 				int questId = Integer.parseInt(parts[0]);
 				if ("SimpleHunt".equals(parts[2])) {
-					// P1 原生表驱动切换：SimpleHunt 939 任务由 SimpleHuntHandler 原生直驱，不再生成旧 IR 节点
-					// retailOwnedHunt.add(questId);
+					// P1 原生表驱动切换：SimpleHunt 939 任务由 SimpleHuntHandler 原生直驱；旧 IR 车道与
+					// 族金标已随 QE-112 切片原子删除（compileSimpleHunt 退场）。
+					// P1 native switch: the 939 SimpleHunt rows are driven natively; the old IR lane and its
+					// family golden were deleted atomically with the QE-112 slice (compileSimpleHunt retired).
 				} else if ("SimpleSerialHunt".equals(parts[2])) {
-					// P2 原生表驱动切换：SimpleSerialHunt 16 任务由 SimpleSerialHuntHandler 原生直驱，不再生成旧 IR 节点
-					// retailOwnedSerialHunt.add(questId);
+					// P2 原生表驱动切换：SimpleSerialHunt 16 任务由 SimpleSerialHuntHandler 原生直驱；旧 IR
+					// 车道、串行表读取器与族金标已随 QE-112 切片原子删除。
+					// P2 native switch: the 16 SimpleSerialHunt rows are driven natively; the old IR lane,
+					// its table reader and its family golden were deleted with the QE-112 slice.
 				} else if ("SimpleUseItem".equals(parts[2])) {
 					// P5 原生表驱动切换：SimpleUseItem 160 行由 SimpleUseItemHandler 原生直驱，不再生成
 					// 旧 IR 节点（同批删旧：本族 compiler/表/金标全部退场）。
@@ -392,10 +381,6 @@ public final class RetailQuestDriver {
 		try (InputStream input = open(SIMPLE_HUNT_TABLE)) {
 			table = RetailSimpleHuntTable.load(input);
 		}
-		RetailSimpleSerialHuntTable serialHuntTable;
-		try (InputStream input = open(SIMPLE_SERIAL_HUNT_TABLE)) {
-			serialHuntTable = RetailSimpleSerialHuntTable.load(input);
-		}
 		RetailQuestAreaIndex questAreas;
 		try (InputStream input = open(AI_AREAS)) {
 			questAreas = RetailQuestAreaIndex.load(input);
@@ -425,12 +410,11 @@ public final class RetailQuestDriver {
 		RetailQuestUseItemNpcs interactionObjects =
 			RetailQuestUseItemNpcs.fromIds(npcIndex.questUseItemNpcIds());
 		RetailItemNameIndex itemIndex = RetailItemNameIndex.loadItemTemplates();
-		return new RetailQuestDriver(retailOwnedHunt, retailOwnedSerialHunt,
-			retailOwnedDataDriven, retailOwnedCollectItem,
+		return new RetailQuestDriver(retailOwnedDataDriven, retailOwnedCollectItem,
 			new RetailQuestCatalog(table, npcIndex),
 			clientDialogExits, clientSummaryRows, clientRewardNpcs,
 			clientHandinNpcSets, retailTable, npcIndex, itemIndex, randomRewardIds(),
-			nameIds(), serialHuntTable, clientHuntStages,
+			nameIds(), clientHuntStages,
 			questAreas,
 			dataDrivenTable, clientHandinPages, interactionObjects,
 			clientKillTargets, clientHuntProgressRows, enterAreaZoneResolution);
@@ -523,48 +507,14 @@ public final class RetailQuestDriver {
 	}
 
 	private Optional<CompiledQuestDefinition> compileByFamily(int questId) {
-		if (retailOwnedSimpleSerialHunt.contains(questId)) {
-			return compileSimpleSerialHunt(questId);
-		}
+		// 家族分派只剩 DataDriven：SimpleHunt / SimpleSerialHunt（P1/P2）已 100% 原生直驱，
+		// 旧 IR 入口已随 QE-112 切片删除。
+		// Only DataDriven is left in the family dispatch: SimpleHunt / SimpleSerialHunt (P1/P2) are
+		// fully native and their old IR entry points were deleted with the QE-112 slice.
 		if (retailOwnedDataDriven.contains(questId)) {
 			return compileDataDriven(questId);
 		}
 		return Optional.empty();
-	}
-
-	/** SimpleSerialHunt 行 → 定义（客户端链式阶段契约的串行阶梯；乱序击杀不计数）。 */
-	private Optional<CompiledQuestDefinition> compileSimpleSerialHunt(int questId) {
-		try {
-			var row = serialHuntTable.find(questId);
-			if (row.isEmpty()) {
-				rejections.put(questId, "RETAIL_ROW_MISSING");
-				return Optional.empty();
-			}
-			var metadata = retailMetadata(questId);
-			if (metadata == null) {
-				return Optional.empty();
-			}
-			var entry = row.orElseThrow();
-			Set<Integer> acquired = npcIndex.resolveAll(
-				List.of(entry.acquiredNpc() == null ? "" : entry.acquiredNpc())).npcIds();
-			Set<Integer> reward = npcIndex.resolveAll(
-				List.of(entry.rewardNpc() == null ? "" : entry.rewardNpc())).npcIds();
-			String talkNpcName = entry.talkNpc() == null ? "" : entry.talkNpc();
-			Set<Integer> briefing = npcIndex.resolveAll(List.of(talkNpcName)).npcIds();
-			var plan = new RetailSimpleHuntPlan(questId, List.of(), acquired, reward, 0, List.of(),
-				entry.acquiredNpc() == null ? "" : entry.acquiredNpc(),
-				entry.rewardNpc() == null ? "" : entry.rewardNpc());
-			var outcome = RetailSimpleHuntDefinitionCompiler.compileSerialChain(plan, clientHuntStages, metadata,
-				briefing, talkNpcName);
-			if (outcome.accepted()) {
-				return Optional.of(outcome.definition());
-			}
-			rejections.put(questId, outcome.rejectionCode());
-			return Optional.empty();
-		} catch (RuntimeException e) {
-			rejections.put(questId, "RUNTIME_FAILURE");
-			return Optional.empty();
-		}
 	}
 
 	/** DataDriven 行 → 定义（P5-1：Talk 接取 + 单块 Hunt 进度复用 hunt 网格；异形按稳定码拒绝）。 */
@@ -605,29 +555,7 @@ public final class RetailQuestDriver {
 			RetailSpawnedNpcIds.load());
 	}
 
-	private Optional<CompiledQuestDefinition> compileSimpleHunt(int questId) {
-		try {
-			return catalog.simpleHuntPlan(questId).flatMap(plan -> {
-				var row = retailTable.find(questId);
-				if (row.isEmpty()) {
-					rejections.put(questId, "RETAIL_ROW_MISSING");
-					return Optional.empty();
-				}
-				var metadata = RetailQuestMetadataCompiler.compile(row.orElseThrow(), npcIndex, itemIndex,
-					randomRewards, nameIds, RetailSpawnedNpcIds.load());
-				var outcome = RetailSimpleHuntDefinitionCompiler.compile(plan, metadata, clientRewardNpcs,
-					questAreas, clientDialogExits);
-				if (outcome.accepted()) {
-					return Optional.of(outcome.definition());
-				}
-				rejections.put(questId, outcome.rejectionCode());
-				return Optional.empty();
-			});
-		} catch (RuntimeException e) {
-			rejections.put(questId, "RUNTIME_FAILURE");
-			return Optional.empty();
-		}
-	}
+
 
 	// ---------------------------------------------------------------- 资源装载
 

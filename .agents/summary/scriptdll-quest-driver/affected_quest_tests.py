@@ -49,12 +49,10 @@ T1_GATE_CLASSES = (
 	"RetailQuestCatalogTest",
 	"RetailQuestDriverOverlayTest",
 	"RetailSystemGrantDispatchTest",
-	"QuestClientContractGateTest",
 	"ProductionCatalogWhitelistVerificationTest",
 	"QuestDefinitionCatalogManifestTest",
 	"RetailSimpleHuntFamilyGateTest",
 	"RetailSimpleTalkGateTest",
-	"RetailSimpleTalkChainGateTest",
 	"RetailNonIrAxisGateTest",
 	"RetailSimpleItemPlayGateTest",
 	"QuestItemPlayGrantGateTest",
@@ -66,11 +64,14 @@ T1_GATE_CLASSES = (
 	"RetailQuestAiNameGroupGateTest",
 	# 真端驱动原生生命周期黑盒契约门（quest-native-dispatch P0-1）：接取→进度→交付→结算。
 	# Native retail lifecycle black-box contract gate (quest-native-dispatch P0-1).
-	"RetailQuestContractTest",
 	# P0-2 DD 尾片：防漂移门禁（TSV 清单冻结）。
 	# Anti-drift gate: the retail TSV manifest is frozen.
 	"RetailTsvManifestGateTest",
 	"RetailBriefingChainEvidenceGateTest",
+	# 已退役门禁（随客户端映射表/无头对拍层迁出、talk-chain TSV 退役而删除）不再登记；
+	# 删掉的三个类见 a68ce3225 与 21ba566fa，悬空登记会让本工具以 exit=3 中止 T2。
+	# Retired gates removed with their layers (a68ce3225, 21ba566fa); dangling names made the
+	# tool exit 3 and silently abort T2 under `set -e`, so they are no longer registered.
 )
 # Class-name tokens used only inside the quest engine test package by --wide-gates.
 # 仅供 --wide-gates 在任务引擎测试包内使用的类名关键词。

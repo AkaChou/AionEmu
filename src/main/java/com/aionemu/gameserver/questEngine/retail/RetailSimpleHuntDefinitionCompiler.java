@@ -639,10 +639,51 @@ public final class RetailSimpleHuntDefinitionCompiler {
 			briefing ? withFlagCleared(projection(slots, full)) : projection(slots, full))));
 		nodes.add(new QuestNode(completeLabel, new NodeProjection(QuestStatus.COMPLETE, Map.copyOf(zero))));
 
-		// 路由：接取流（npc-start 规范形）→ 计数网格 → 报告（npc-report 规范形）→ 完成（npc-complete 规范形）。
+		// 路由：接取流（npc-start 规范形）→ 计数 → 报告（npc-report 规范形）→ 完成（npc-complete 规范形）。
+		// Routes: accept flow, the counter model's edges, the report flow and the completion flow.
+		String firstGridLabel = gridLabels.get(pack(slots, combos.get(0)));
+		// 有简报时接取落在 started（标志位 1）；SETPRO 按钮清位后才进入计数网格零段节点。
+		// With a briefing the accept lands on started (flag raised); the SETPRO button clears it.
+		String acceptTarget = briefing ? "started" : firstGridLabel;
+		// 顺序链复用链式击杀边（首个未满段推进、KillNpc 逐怪登记）。
+		// Sequential chains reuse the chained kill edges (first-unfinished-slot advance, per-npc KillNpc).
+		List<QuestTransition> progressEdges = sequentialStages
+			? chainedEdges(slots, combos, gridLabels)
+			: gridEdges(plan, slots, combos);
+		String fullLabel = gridLabels.get(pack(slots, full));
+		// 简报边（仅声明简报 NPC 时）：简报 NPC 的 QUEST_SELECT 一步清 SECTION_5 标志并关窗（"见中间人
+		// 才开计数"语义保留，select2 页链删除；目标投影是标志位的权威）。
+		// Briefing edge (declared briefing npc only): the briefing npc's QUEST_SELECT clears the
+		// SECTION_5 flag and closes in one step (the "meet the middleman before counting" semantics
+		// stay; the select2 chain goes; the target projection is authoritative for the flag).
+		List<QuestTransition> briefingEdges = briefing
+			? List.of(new QuestTransition(
+				new QuestEvent.TalkToNpc(briefingNpcIds.iterator().next(), QuestDialogAction.QUEST_SELECT.id()),
+				List.of(), List.of(), firstGridLabel,
+				List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
+					new AfterCommitAction.CloseDialog()),
+				null, "started"))
+			: List.of();
+		return assembleRoutes(plan, metadata, clientRewardNpcs, layout, nodes, briefingEdges, progressEdges,
+			acceptTarget, fullLabel);
+	}
+
+	/**
+	 * 计数模型之后的路由装配（接取/报告/完成；网格、串行链与行阶梯共用）：接取流 → 简报边 → 计数边 →
+	 * 满段 `QUEST_SELECT` 翻 REWARD + 分档奖励窗 → 完成流。计数边与满段节点由调用方给出，
+	 * 本函数只按既有顺序拼装（既有网格族的 IR 因此逐字节不变）。
+	 * Route assembly after the counter model (accept/report/completion, shared by the grid, the serial
+	 * chain and the row ladder): the accept flow, the briefing edge, the counter edges, the full node's
+	 * QUEST_SELECT flipping REWARD with the tiered reward window, then the completion flow. The counter
+	 * edges and the full node come from the caller, so the existing grid family's IR stays byte-identical.
+	 */
+	private static QuestDefinition assembleRoutes(RetailSimpleHuntPlan plan, QuestMetadata metadata,
+			RetailClientRewardNpcs clientRewardNpcs, ProgressLayout layout, List<QuestNode> nodes,
+			List<QuestTransition> briefingEdges, List<QuestTransition> progressEdges, String acceptTarget,
+			String fullLabel) {
 		// 系统发放形状（P0c-3）：接取名是类别哨兵（_faction_）时真端没有 NPC 接取——客户端任务书只有
 		// 委托书页（HACTION_FINISH_DIALOG），发放由阵营日常轮换在服务端完成，因此定义不生成接取路由，
-		// 只留一条 SystemGrant 边（NONE → 零段网格节点），其余击杀网格/报告/完成与普通行同构。
+		// 只留一条 SystemGrant 边（NONE → 计数零态节点），其余计数/报告/完成与普通行同构。
 		// System-grant shape: sentinel acquire names carry no NPC accept route in retail; the faction
 		// rotation grants the quest and the definition keeps a single SystemGrant edge.
 		boolean enterWorld = plan.grantKind() == RetailGrantKind.WORLD || plan.worldAcquireId() > 0;
@@ -656,10 +697,6 @@ public final class RetailSimpleHuntDefinitionCompiler {
 			: plan.acquiredNpcIds().stream().sorted().toList();
 		List<Integer> rewardNpcs = rewardNpcs(plan, clientRewardNpcs);
 		List<QuestTransition> transitions = new ArrayList<>();
-		String firstGridLabel = gridLabels.get(pack(slots, combos.get(0)));
-		// 有简报时接取落在 started（标志位 1）；SETPRO 按钮清位后才进入计数网格零段节点。
-		// With a briefing the accept lands on started (flag raised); the SETPRO button clears it.
-		String acceptTarget = briefing ? "started" : firstGridLabel;
 		if (enterWorld) {
 			transitions.add(new QuestTransition(new QuestEvent.EnterWorld(),
 				List.of(new QuestCondition.StartEligible(), new QuestCondition.WorldIs(plan.worldAcquireId(), true)),
@@ -681,43 +718,221 @@ public final class RetailSimpleHuntDefinitionCompiler {
 				transitions.addAll(canonicalAcceptFlow(acquiredNpc, acceptTarget));
 			}
 		}
-		if (briefing) {
-			// 规范形简报：简报 NPC 的 QUEST_SELECT 一步清 SECTION_5 标志并关窗（"见中间人才开计数"
-			// 语义保留，select2 页链删除）；目标投影是标志位的权威（与原链末 SETPRO 收尾同机制）。
-			// Canonical briefing: the briefing NPC's QUEST_SELECT clears the SECTION_5 flag and closes
-			// in one step (the must-visit-middleman semantics stay; the select2 chain goes).
-			transitions.add(new QuestTransition(
-				new QuestEvent.TalkToNpc(briefingNpcIds.iterator().next(), QuestDialogAction.QUEST_SELECT.id()),
-				List.of(), List.of(), firstGridLabel,
-				List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
-					new AfterCommitAction.CloseDialog()),
-				null, "started"));
-		}
-		// 顺序链复用链式击杀边（首个未满段推进、KillNpc 逐怪登记）；PVP 多段在 DD 路由处已被拒。
-		// Sequential chains reuse the chained kill edges (first-unfinished-slot advance, per-npc
-		// KillNpc); PVP multi-stage is rejected at the DD router.
-		transitions.addAll(sequentialStages
-			? chainedEdges(slots, combos, gridLabels)
-			: gridEdges(plan, slots, combos));
-		int fullPack = pack(slots, full);
-		String fullLabel = gridLabels.get(fullPack);
+		transitions.addAll(briefingEdges);
+		transitions.addAll(progressEdges);
 		// 规范形交付：满段节点 QUEST_SELECT 直接翻 REWARD 并按档位查表下发奖励窗
 		// （报告页 1352/2375 与 1009 中转删除；REWARD 态的重开预览仍由完成流提供）。
-		// Canonical delivery: the full node's QUEST_SELECT flips REWARD and shows the tiered
-		// reward window directly (no report page, no 1009 hop); the completion flow keeps the
-		// reward-state re-open previews.
+		// Canonical delivery: the full node's QUEST_SELECT flips REWARD and shows the tiered reward
+		// window directly (no report page, no 1009 hop); the completion flow keeps the reward-state
+		// re-open previews.
 		int rewardWindowPage = rewardWindowPage(metadata);
 		for (int rewardNpc : rewardNpcs) {
 			transitions.add(new QuestTransition(
 				new QuestEvent.TalkToNpc(rewardNpc, QuestDialogAction.QUEST_SELECT.id()),
-				List.of(), List.of(), rewardLabel,
+				List.of(), List.of(), "reward",
 				List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
 					new AfterCommitAction.ShowQuestDialog(rewardWindowPage)),
 				null, fullLabel));
 		}
-		transitions.addAll(completeFlow(metadata, rewardNpcs, rewardLabel, completeLabel));
-		return new QuestDefinition(questId, 1, metadata, layout, nodes, List.copyOf(transitions));
+		transitions.addAll(completeFlow(metadata, rewardNpcs, "reward", "complete"));
+		return new QuestDefinition(plan.questId(), 1, metadata, layout, nodes, List.copyOf(transitions));
 	}
+
+	/**
+	 * DD 纯 Hunt 行的行阶梯合成（真端 DataDriven 引擎形）。
+	 * <p>
+	 * 客户端任务书 {@code quest_monster.csv} 的 DataDriven hunt 行一律是"行阶梯 + 段计数"：
+	 * {@code Progress(SECTION_0==k; SECTION_m<count)}——{@code SECTION_0} 是当前进度行号（真端
+	 * {@code progress_info} 里该 hunt 块的位置），{@code SECTION_m}（m ≥ 1）是当前行内并行目标的计数
+	 * （行内第 g 个目标占 {@code SECTION_(g+1)}；客户端登记 1142 行的段号实测恒为 1..n）。因此布局 =
+	 * {@code var0}（行号，6 位）+ {@code var1..var4}（段计数，6 位）——与 18990/20504/15321 等混合链
+	 * 行的既有实机验收形同构；6 段行（3122/3123/4122/4123）只需 var0+var1，SECTION_5 简报位的
+	 * "5 槽硬上限"在该模型下不存在。
+	 * <p>
+	 * 击杀边 = 混合链的条件边形：自身段未满 → 自环 +1（优先级 1）；本行各段全满的那一杀 → 行号 +1
+	 * 并把本行计数清零（优先级 0）；末行不清零，满计数留在领奖投影里（QE-051）。
+	 * Row-ladder synthesis for DD pure-hunt rows (the true-server DataDriven engine shape).
+	 */
+	public static Outcome compileClientLadder(RetailSimpleHuntPlan plan, List<Integer> stepGroupCounts,
+			RetailQuestMetadataCompiler.Outcome metadata, RetailClientRewardNpcs clientRewardNpcs,
+			RetailQuestAreaIndex questAreas, RetailClientDialogExits clientDialogExits) {
+		Objects.requireNonNull(plan, "plan");
+		Objects.requireNonNull(stepGroupCounts, "stepGroupCounts");
+		Objects.requireNonNull(metadata, "metadata");
+		Objects.requireNonNull(clientRewardNpcs, "clientRewardNpcs");
+		Objects.requireNonNull(questAreas, "questAreas");
+		Objects.requireNonNull(clientDialogExits, "clientDialogExits");
+		if (!metadata.clean()) {
+			return new Outcome(null, "RETAIL_METADATA_UNRESOLVED", metadata.unresolved().toString());
+		}
+		Outcome briefing = requireBriefing(plan);
+		if (briefing != null) {
+			return briefing;
+		}
+		Outcome blocked = precheck(plan, clientRewardNpcs, true, questAreas);
+		if (blocked != null) {
+			return blocked;
+		}
+		// 行阶梯没有 SECTION_5 位：声明简报 NPC 的 hunt 行（真端 talk_npc1）在本模型里没有承载位，
+		// 如实拒绝而不是静默丢步（真端 DataDriven 表的 allHunt 行恒无 talk_npc1）。
+		// The row ladder carries no SECTION_5 slot: a hunt row declaring a briefing npc (retail
+		// talk_npc1) has no home in this model, so reject honestly instead of dropping the step
+		// (retail DataDriven allHunt rows never declare talk_npc1).
+		if (!plan.briefingNpcIds().isEmpty()) {
+			return new Outcome(null, "RETAIL_HUNT_LADDER_BRIEFING_DEFERRED", plan.briefingNpcName());
+		}
+		// 形状门（fail-closed）：块的段数必须逐块覆盖全部计数槽、每块 1..4 段（客户端段号域 SECTION_1..4）、
+		// 块数落 6 位行号、每段计数落 6 位。
+		// Shape gate (fail-closed): the block segment counts must cover every counter slot, each block
+		// carries 1..4 segments (the client's SECTION_1..4 vocabulary), the block count fits the 6-bit
+		// row ladder and every segment count fits a 6-bit counter.
+		int counted = 0;
+		for (int groups : stepGroupCounts) {
+			if (groups < 1 || groups > CLIENT_LADDER_MAX_SEGMENTS) {
+				return new Outcome(null, "RETAIL_HUNT_LADDER_SHAPE", "step segments=" + groups);
+			}
+			counted += groups;
+		}
+		if (counted != plan.counters().size()) {
+			return new Outcome(null, "RETAIL_HUNT_LADDER_SHAPE",
+				"segments=" + counted + " counters=" + plan.counters().size());
+		}
+		if (stepGroupCounts.size() > RetailHuntCounterLayout.SECTION_MASK) {
+			return new Outcome(null, "RETAIL_HUNT_LADDER_SHAPE", "steps=" + stepGroupCounts.size());
+		}
+		try {
+			// 宽计数组（真端 10 位槽位相机 FUN_180cb14e0，如 80817 的 100 杀）：客户端行阶梯恒为
+			// 6 位段号，且该形通常无任务书行，因此不猜 10 位阶梯——沿用既有宽计数组合成器（形与指纹不变）。
+			// Wide counters (the true-server 10-bit slot camera FUN_180cb14e0, e.g. 80817's 100 kills):
+			// the client row ladder is always 6-bit and such rows usually carry no journal row, so no
+			// 10-bit ladder is invented — the existing wide-counter synthesizer keeps its shape.
+			boolean wide = plan.counters().stream()
+				.anyMatch(counter -> counter.required() > RetailHuntCounterLayout.SECTION_MASK);
+			QuestDefinition definition = wide
+				? buildCanonicalCounterQuest(plan, slots(plan), metadata.metadata(), clientRewardNpcs,
+					plan.briefingNpcIds())
+				: buildClientLadder(plan, metadata.metadata(), clientRewardNpcs, stepGroupCounts);
+			return new Outcome(QuestDefinitionCompiler.compile(definition), null, null);
+		} catch (RuntimeException e) {
+			return new Outcome(null, "COMPILATION_FAILED", e.getMessage());
+		}
+	}
+
+	private static QuestDefinition buildClientLadder(RetailSimpleHuntPlan plan, QuestMetadata metadata,
+			RetailClientRewardNpcs clientRewardNpcs, List<Integer> stepGroupCounts) {
+		List<Slot> flat = slots(plan);
+		List<List<Slot>> steps = new ArrayList<>(stepGroupCounts.size());
+		int cursor = 0;
+		for (int groups : stepGroupCounts) {
+			List<Slot> step = new ArrayList<>(groups);
+			for (int segment = 0; segment < groups; segment++) {
+				step.add(flat.get(cursor++));
+			}
+			steps.add(List.copyOf(step));
+		}
+		int maxSegments = steps.stream().mapToInt(List::size).max().orElseThrow();
+		ProgressLayout.Builder layoutBuilder = new ProgressLayout.Builder()
+			.add(new BitField("var0", 0, RetailHuntCounterLayout.SECTION_BITS, 0,
+				RetailHuntCounterLayout.SECTION_MASK,
+				com.aionemu.gameserver.questEngine.definition.PersistenceMode.PERSISTENT,
+				com.aionemu.gameserver.questEngine.definition.ProgressScope.LOCAL));
+		for (int section = 1; section <= maxSegments; section++) {
+			layoutBuilder.add(new BitField("var" + section, RetailHuntCounterLayout.shiftFor(section + 1),
+				RetailHuntCounterLayout.SECTION_BITS, 0, RetailHuntCounterLayout.SECTION_MASK,
+				com.aionemu.gameserver.questEngine.definition.PersistenceMode.PERSISTENT,
+				com.aionemu.gameserver.questEngine.definition.ProgressScope.LOCAL));
+		}
+		ProgressLayout layout = layoutBuilder.build();
+
+		// 行态投影只钉行号：段计数是自由字段（自环推进不得落在被投影钉住的字段上，QE-012 家族约束），
+		// 只有领奖行把末块满计数钉进投影（QE-051）。
+		// Row projections pin the row index only: the segment counters stay free (a self-loop may not
+		// increment a projected field — the QE-012 family constraint) and only the reward row pins the
+		// final block's full counts (QE-051).
+		Map<String, Integer> zero = Map.of("var0", 0);
+		int stepCount = steps.size();
+		List<QuestNode> nodes = new ArrayList<>(stepCount + 3);
+		nodes.add(new QuestNode("unaccepted", new NodeProjection(QuestStatus.NONE, zero)));
+		// started = 行 0（首块目标）；s{k} = 行 k（第 k 块落点）；reward = 全部块之后的行。
+		// started = row 0 (the first block's targets); s{k} = row k (block k's landing); the final
+		// block lands on the reward row.
+		nodes.add(new QuestNode("started", new NodeProjection(QuestStatus.START, zero)));
+		for (int row = 1; row < stepCount; row++) {
+			nodes.add(new QuestNode("s" + row, new NodeProjection(QuestStatus.START, Map.of("var0", row))));
+		}
+		// 领奖行 = 全部 hunt 块之后的下一行；末块满计数留在投影里（QE-051，与混合链同判据）。
+		// Reward row = the row after every hunt block; the final block's full counts stay in the
+		// projection (QE-051, the same rule as the mixed chain).
+		Map<String, Integer> rewardRow = new java.util.LinkedHashMap<>();
+		rewardRow.put("var0", stepCount);
+		List<Slot> finalBlock = steps.get(stepCount - 1);
+		for (int segment = 0; segment < finalBlock.size(); segment++) {
+			rewardRow.put("var" + (segment + 1), finalBlock.get(segment).required());
+		}
+		nodes.add(new QuestNode("reward", new NodeProjection(QuestStatus.REWARD, Map.copyOf(rewardRow))));
+		// complete 归零：段计数与行号一起复位（与混合链的 completeZero 同形）。
+		// The complete node zeroes the row index and every segment counter (the mixed chain's
+		// completeZero shape).
+		Map<String, Integer> completeZero = new java.util.LinkedHashMap<>();
+		completeZero.put("var0", 0);
+		for (int section = 1; section <= maxSegments; section++) {
+			completeZero.put("var" + section, 0);
+		}
+		nodes.add(new QuestNode("complete", new NodeProjection(QuestStatus.COMPLETE, Map.copyOf(completeZero))));
+
+		List<QuestTransition> progressEdges = new ArrayList<>();
+		for (int stepIndex = 0; stepIndex < stepCount; stepIndex++) {
+			List<Slot> step = steps.get(stepIndex);
+			boolean finalStep = stepIndex == stepCount - 1;
+			boolean parallel = step.size() > 1;
+			String source = stepIndex == 0 ? "started" : "s" + stepIndex;
+			String target = finalStep ? "reward" : "s" + (stepIndex + 1);
+			for (int segment = 0; segment < step.size(); segment++) {
+				Slot slot = step.get(segment);
+				String section = "var" + (segment + 1);
+				List<QuestCondition> completingGate = new ArrayList<>(Math.max(1, step.size()));
+				// 收口边 = "本段这一杀把它打满（>= required-1）+ 本行其余段已满"。并行行同样需要本段下界，
+				// 否则先打满其它段的玩家能用本段的第 1 杀直接收口（旧真端 XML 的三边防法同侧）。
+				// The closing edge needs the own segment at required-1 plus every other segment of the row
+				// saturated; without the own bound a player who filled the other segments first could close
+				// the row with the very first kill of this segment (the same three-edge canon as the XML).
+				completingGate.add(new QuestCondition.VariableAtLeast(section, slot.required() - 1));
+				if (parallel) {
+					for (int other = 0; other < step.size(); other++) {
+						if (other != segment) {
+							completingGate.add(new QuestCondition.VariableAtLeast("var" + (other + 1),
+									step.get(other).required()));
+						}
+					}
+				}
+				List<QuestAction> completing = new ArrayList<>(1 + step.size());
+				completing.add(new QuestAction.SetVariable("var0", stepIndex + 1));
+				if (!finalStep) {
+					for (int other = 0; other < step.size(); other++) {
+						completing.add(new QuestAction.SetVariable("var" + (other + 1), 0));
+					}
+				}
+				for (int npcId : slot.npcIds()) {
+					progressEdges.add(new QuestTransition(new QuestEvent.KillNpc(npcId),
+						List.copyOf(completingGate), List.copyOf(completing), target, PACKET_ONLY_SYNC,
+						0, source));
+					progressEdges.add(new QuestTransition(new QuestEvent.KillNpc(npcId),
+						List.of(new QuestCondition.VariableBelow(section, slot.required() - (parallel ? 0 : 1))),
+						List.of(new QuestAction.IncrementVariable(section, 1)), source, PACKET_ONLY_SYNC,
+						1, source));
+				}
+			}
+		}
+		return assembleRoutes(plan, metadata, clientRewardNpcs, layout, nodes, List.of(), progressEdges,
+			"started", "reward");
+	}
+
+	/**
+	 * 客户端行阶梯的段号域（SECTION_1..SECTION_4；SECTION_5 在旧网格族是简报位，本模型不占用）。
+	 * The client ladder's segment vocabulary (SECTION_1..SECTION_4; SECTION_5 is the legacy grid
+	 * family's briefing slot and stays unused here).
+	 */
+	private static final int CLIENT_LADDER_MAX_SEGMENTS = 4;
 
 	/** 简报标志位为 0 的投影（网格节点/领奖节点在简报完成后都在此态）。 / Projection with the flag cleared. */
 	private static Map<String, Integer> withFlagCleared(Map<String, Integer> values) {

@@ -2817,3 +2817,28 @@ keywords: DataDriven、data_driven_quest.xml、客户端三表存在性、CLIENT
 - **判定规则**：DD 行集 = 真端活行 **∩** 客户端可渲染（客户端三表至少一表有该 id **且** 真端 `quest.xml` 有元数据）；其余是表内孤行，保持不生产。
 - **安全网**：XML 注释块不是行；切换集必须与孤行集零交集；玩家可见行的真端算术（含溢出/不可完成）原样复刻——「修好」与「显式禁用」都是漂移。
 - **反漂移**：以逐行 TSV + 客户端三表 sha256 冻结身份证据；任何指纹重冻必须逐条归因，且不得与在飞切片共文件混改。
+
+---
+
+## [QE-125] 一百二十五、真端 DD 纯 hunt 行是「行阶梯」：`var0` 行号 + `var1..` 段计数，门禁必须由客户端行驱动 (DATA_DRIVEN_HUNT_ROW_LADDER)
+
+<!-- pattern-metadata
+status: CONFIRMED
+scope: 真端 DataDriven（`data_driven_quest.xml`）**纯 hunt 行**的进度模型形状（行 / 段 / SECTION 槽的区分）与门禁口径
+first_seen: 2026-10-01
+last_verified: 2026-10-01
+symptom: ① 把真端 progress 块里 `;` 分隔的「段」当成 `SECTION` 槽位 ⇒ 编出「5 槽硬上限」，>5 段的 4 行（3122/3123/4122/4123）被长期拒（停在 `XML_RETENTION/ADJUDICATED:RETAIL_HUNT_MULTI_STAGE_DEFERRED`）；② 单段行的计数落在 `var0`（旧网格形）⇒ 客户端任务书 `Progress(SECTION_0==0; SECTION_1<count)` 永远读不到进度；③ 形状变了先看冻结指纹红，而不是回到客户端行复算（把回归证据当正确性判据）
+root_cause: 真端 DD hunt 的进度编号是**两层**的：外层 = 进度行号（客户端 `SECTION_0`，真端「步号」），内层 = 该行的并行目标段号（客户端 `SECTION_1..4`）。旧模型只有一层，于是行与段互相冒充：段数被当成槽位数（上限 5）、行号被当成计数。真实数据里这两层各自合法：行数受 6 位行号限制（≤63）、每行 1..4 段、每段计数 1..63；3122/3123/4122/4123 是 6 行 × 每行 1 杀，两个字段足够。客户端 `quest_monster.csv` 对 DD hunt 行一律登记 `Progress(SECTION_0==k; SECTION_m<count)`，与真端 `FUN_180c46020` 的「步号 + 4×6 位组槽」逐指令一致 ⇒ 客户端行是权威，真端块的段数与之不一致时按客户端行编译（本族 842 行里 55 行属此类，逐行登记形差）
+fix_or_guardrail: 1. DD 纯 hunt 行按行阶梯编译：布局 = `var0`（行号，6 位）+ `var1..var4`（当前行段计数，各 6 位）；2. **客户端行驱动**：从 `quest_monster.csv` 的 `Progress(SECTION_0==k; SECTION_m<count)` 反推行阶梯（不是从真端块或指纹反推），真端块段数与客户端行不一致时以客户端为准并逐行登记形差；3. 每段两条击杀边——未满自环（优先级 1：`VariableBelow(var_m, count-1)` + `Increment(var_m)`）与本行收口（优先级 0：`VariableAtLeast(var_m, count-1)`；非末行清零本行全部计数并推进行号，末行满计数留在领奖投影，QE-051）；4. 行节点投影只钉行号（计数必须保持自由，否则自环撞投影，QE-012 家族约束）；5. 门禁用 `RetailHuntLadderShape` 逐行复算形状并**饱和行走**整个阶梯（落点必须是领奖行、行号 == 行数），指纹只作回归证据；6. 宽计数（>63，如 80817 的 100 杀）不得猜 10 位阶梯——按 QE-124 / 计划 §10.3-#5 在原生车道复刻真端 6 位溢出算术
+evidence: src/main/java/com/aionemu/gameserver/questEngine/retail/RetailSimpleHuntDefinitionCompiler.java（compileClientLadder + assembleRoutes）; src/main/java/com/aionemu/gameserver/questEngine/retail/RetailDataDrivenDefinitionCompiler.java（allHunt 行阶梯路由与硬上限删除）; src/test/java/com/aionemu/gameserver/questEngine/definition/RetailHuntLadderShape.java（形状 + 饱和行走夹具）; src/test/java/com/aionemu/gameserver/questEngine/retail/RetailDataDrivenGateTest.java（pureHuntRowsFollowTheClientRowLadder）; .agents/summary/quest-dd-hunt6-ladder/tools/dd-hunt-ladder-probe.py; .agents/summary/quest-dd-hunt6-ladder/qe-112-quest-ddhunt-ladder-decisions.tsv; .agents/summary/quest-dd-hunt6-ladder/QE112-DD-HUNT-LADDER-REPORT.zh-CN.md
+validation: 2026-10-01 QE-112 落地批：3122/3123/4122/4123 由 XML 保留转 `RETAIL_TABLE/OK`（漂移登记 ADOPTED 1463 → **1467**，删 4 个 XML + 目录条目）；客户端行阶梯门覆盖 **595** 行（已退役 ∧ 客户端声明进度行 ∧ 纯 hunt ∧ 非 PVP）全绿；DD 门 **9/9**、族门 + tablelane **138/138**、聚焦套件 **1699 / 161F+137E / 105 红类**（对 P7 前置裁定批基线 **ADDED 0 / REMOVED 3**）；同批删旧：compileSimpleHunt / compileSimpleSerialHunt / RetailSimpleSerialHuntTable / 串行族旧金标退场
+superseded_by: none
+boundaries: ① 客户端 `quest_monster.csv` 与真端 `data_driven_quest.xml` 在仓库外/客户端包内，仓内只落复算工具 + 台账 + 门；② 「客户端计数为权威」是本族既有裁定（13841/13765 同侧），真端块段数与客户端行不一致时**不改客户端行**；③ 80817 的 100 杀仍是宽计数例外，其真端 6 位溢出语义在 P7 原生车道落地（本护照只到「不猜 10 位阶梯」为止）；④ 混合链（talk+hunt 同行）不走本模型：它们按客户端 select 页族推导行序（QE-121/QE-123）；⑤ 行阶梯门的 595 行覆盖只对「已退役且客户端有行」的行成立，新增退役行必须同步抬高覆盖下限
+see_also: [QE-124], [QE-123], [QE-012]
+first_check: 改 DD hunt 形状前先答：① 客户端 `quest_monster.csv` 对该 id 登记了哪些 `Progress(SECTION_0==k; SECTION_m<count)` 行？② 真端块的段数与客户端行一致吗（不一致就以客户端为准并登记）？③ 每段的计数是否 ≤63、行数是否 ≤63？④ 每段是否都有「未满自环 + 本行收口」两条边，且行节点只钉行号？⑤ 门禁是否真的走了饱和行走（而不是只比指纹）？
+keywords: DataDriven、纯hunt、行阶梯、SECTION_0、SECTION_1、五槽上限误判、RETAIL_HUNT_MULTI_STAGE_DEFERRED、3122、3123、4122、4123、quest_monster.csv、客户端计数为权威、compileClientLadder、RetailHuntLadderShape、饱和行走、QE-112、QE-125
+-->
+
+- **判定规则**：DD 纯 hunt 的进度 = 「行号（SECTION_0）+ 当前行段计数（SECTION_1..4）」；行与段是两层编号，段数不是槽位数。
+- **安全网**：形状由客户端任务书行驱动复算（`Progress(SECTION_0==k; SECTION_m<count)`），真端块与客户端行不一致时以客户端为准并逐行登记；门必须饱和行走整个阶梯。
+- **反漂移**：指纹只作回归证据；宽计数（>63）不许发明 10 位阶梯，按真端溢出算术在原生车道复刻。

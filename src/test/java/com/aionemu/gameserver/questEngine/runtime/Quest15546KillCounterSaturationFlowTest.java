@@ -1,6 +1,7 @@
 package com.aionemu.gameserver.questEngine.runtime;
 
 import com.aionemu.gameserver.questEngine.definition.AfterCommitAction;
+import com.aionemu.gameserver.questEngine.definition.RetailHuntLadderShape;
 import com.aionemu.gameserver.questEngine.definition.CompiledQuestDefinition;
 import com.aionemu.gameserver.questEngine.definition.ImmutableQuestCatalog;
 import com.aionemu.gameserver.questEngine.definition.ProductionQuestDefinitions;
@@ -25,51 +26,58 @@ import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * 15546《[每日]雷欧娜的委托》顺序链的段饱和合同（定义来自生产驱动，真端四段顺序链）。
- * Saturation contract for the sequential-chain daily 15546 (production-driver definition, the
- * retail four-stage chain): while later stages are closed, a kill of an already saturated stage
- * must not change quest state and must not announce a quest update to the client.
- * <p>回归背景：客户端每段计数上限 4（{@code Progress(SECTION_n<4)}）。顺序链的击杀边只从
- * "首个未满段"推进——段满后同段再击杀不再命中任何路线，不会提交空事务、不会因
- * {@code sync-quest-state PACKET_ONLY} 下发 {@code SM_QUEST_ACTION}（旧并行网格的"收口路线"
- * 假更新问题在链形下结构性消失）。</p>
- * <p>Regression background: each stage caps at 4. Chain kill edges only advance the first
- * unfinished stage, so post-saturation kills match no route — no empty transaction, no spurious
- * quest-update packet (the legacy parallel grid's closing-route double-announce disappears
- * structurally in the chain shape).</p>
+ * 15546《[每日]雷欧娜的委托》行阶梯的段饱和合同（定义来自生产驱动，真端单行四段并行形）。
+ * Saturation contract for the row-ladder daily 15546 (production-driver definition, the retail
+ * single row with four parallel segments).
+ * <p>真端证据：{@code data_driven_quest.xml} 的 hunt 只有 {@code <data>} 一块，块内
+ * {@code value0_progress_} 并列四组目标；客户端 {@code quest_monster.csv} 同侧登记
+ * {@code Progress(SECTION_0==0; SECTION_1..4<4)}——四个计数并行推进（段满即封顶），行号 var0 全程保持 0，
+ * 四段齐满的那一杀才把行号置 1 并进领奖。段满后同段再击杀不再命中任何路线：既不提交空事务，也不因
+ * {@code sync-quest-state PACKET_ONLY} 下发 {@code SM_QUEST_ACTION}。</p>
+ * <p>Retail evidence: the DD hunt row owns a single {@code <data>} block whose
+ * {@code value0_progress_} lists four target groups side by side, and the client journal registers
+ * {@code Progress(SECTION_0==0; SECTION_1..4<4)}. The four counters advance in parallel (each caps at
+ * four) while the row index var0 stays 0; only the kill that saturates the whole row flips it to 1 and
+ * enters reward. A kill of an already saturated segment matches no route — no empty transaction and no
+ * spurious quest-update packet.</p>
  */
 class Quest15546KillCounterSaturationFlowTest {
 	private static final int PLAYER_ID = 7;
 	private static final int QUEST_ID = 15546;
-	/** 星光精灵 T_ 变体：Iluma 生产刷怪数据里真实刷新的第 1 段目标（逐段登记表并入）。 */
+	/** 第 1 段（星光精灵 T_ 变体，SECTION_1）目标。 / Segment 1 (SECTION_1) target. */
 	private static final int ELEMENTAL_LIGHT_NPC_ID = 241656;
-	/** 第 2 段（达鲁）目标，用于验证第 1 段满后下一段继续计数。 */
+	/** 第 2 段（达鲁，SECTION_2）目标。 / Segment 2 (SECTION_2) target. */
 	private static final int DARU_NPC_ID = 241664;
-	/** 第 3 段（波波库）目标，用于验证前段进行中后段永不提前计数。 */
+	/** 第 3 段（波波库，SECTION_3）目标。 / Segment 3 (SECTION_3) target. */
 	private static final int POPOKU_NPC_ID = 241676;
 	private static final int STAGE_CEILING = 4;
 
 	@Test
-	void fourKillsSaturateTheFirstStageAndAnnounceProgress() throws Exception {
+	void fourKillsSaturateTheFirstSegmentAndAnnounceProgress() throws Exception {
+		RetailHuntLadderShape.assertLadder(ProductionQuestDefinitions.definition(QUEST_ID),
+			List.of(List.of(STAGE_CEILING, STAGE_CEILING, STAGE_CEILING, STAGE_CEILING)));
 		Fixture fixture = new Fixture();
 		for (int kill = 1; kill <= STAGE_CEILING; kill++) {
 			final int progress = kill;
 			fixture.afterCommit.clear();
 			assertHandled(fixture.dispatchKill(ELEMENTAL_LIGHT_NPC_ID));
-			assertEquals(progress, fixture.counter("var0"), "SECTION_1 progress after kill " + kill);
+			assertEquals(progress, fixture.counter("var1"), "SECTION_1 progress after kill " + kill);
+			assertEquals(0, fixture.counter("var0"), "the row index stays 0 while the row runs");
 			assertEquals(List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.PACKET_ONLY)),
 				fixture.afterCommit, "kill " + kill + " must announce the counter progress");
 		}
 	}
 
 	@Test
-	void extraKillsOfASaturatedStageDoNotAnnounceAQuestUpdate() throws Exception {
+	void extraKillsOfASaturatedSegmentDoNotAnnounceAQuestUpdate() throws Exception {
 		Fixture fixture = new Fixture();
 		for (int kill = 1; kill <= STAGE_CEILING; kill++) {
 			assertHandled(fixture.dispatchKill(ELEMENTAL_LIGHT_NPC_ID));
 		}
-		// 第 2 段仍未计数：任务既不能完成，也不该因为第 1 段的超额击杀下发任何状态更新。
-		assertEquals(0, fixture.counter("var1"));
+		// 其余段仍未计数：任务既不能完成，也不该因为第 1 段的超额击杀下发任何状态更新。
+		// The other segments are still empty: the row cannot close, and the surplus kill must not
+		// announce any state update.
+		assertEquals(0, fixture.counter("var2"));
 		int packedAfterCeiling = fixture.packedVariables.get();
 
 		fixture.afterCommit.clear();
@@ -83,19 +91,24 @@ class Quest15546KillCounterSaturationFlowTest {
 	}
 
 	@Test
-	void theNextStageStillCountsWhileLaterStagesNeverCountEarly() throws Exception {
+	void parallelSegmentsCountIndependentlyUntilTheRowCloses() throws Exception {
 		Fixture fixture = new Fixture();
-		// 第 1 段进行中：第 3 段目标不得提前计数（链式 SECTION 门控）。
-		// While stage 1 runs, a stage-3 target must never count early (the chained SECTION gate).
-		assertFalse(fixture.dispatchKill(POPOKU_NPC_ID).handled(),
-			"a later-stage kill must not match any route before its stage opens");
+		// 同行的四段互不阻塞：第 3 段目标在第 1 段刚起步时照样计数（真端 block 内并列，客户端同侧）。
+		// The four segments of one row never block each other: a segment-3 target counts right away
+		// (the retail block lists them side by side and the client mirrors that).
+		assertHandled(fixture.dispatchKill(POPOKU_NPC_ID));
+		assertEquals(1, fixture.counter("var3"), "SECTION_3 counts while segment 1 is open");
+		assertEquals(0, fixture.counter("var1"), "a segment-3 kill must not touch segment 1");
+
 		for (int kill = 1; kill <= STAGE_CEILING; kill++) {
 			assertHandled(fixture.dispatchKill(ELEMENTAL_LIGHT_NPC_ID));
 		}
 		fixture.afterCommit.clear();
 		assertHandled(fixture.dispatchKill(DARU_NPC_ID));
 
-		assertEquals(1, fixture.counter("var1"), "SECTION_2 must keep counting");
+		assertEquals(1, fixture.counter("var2"), "SECTION_2 must keep counting");
+		assertEquals(QuestStatus.START, fixture.status.get(),
+			"the row stays open until every segment saturates");
 		assertEquals(List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.PACKET_ONLY)),
 			fixture.afterCommit, "real progress must still be announced");
 	}
@@ -143,7 +156,11 @@ class Quest15546KillCounterSaturationFlowTest {
 		}
 	}
 
-	/** 击杀路线只允许携带计数增量；其余动作由状态端口应用，这里不应出现物品/货币类动作。 */
+	/**
+	 * 击杀路线只允许携带计数增量与行号推进；其余动作由状态端口应用，这里不应出现物品/货币类动作。
+	 * Kill routes carry only counter increments and the row-index advance; item or currency actions
+	 * stay out of the kill lane.
+	 */
 	private static QuestActionPort counterIncrementPort() {
 		return new QuestActionPort() {
 			@Override
@@ -153,8 +170,9 @@ class Quest15546KillCounterSaturationFlowTest {
 			@Override
 			public QuestTransactionParticipant apply(Connection connection, QuestSnapshot snapshot,
 					List<QuestAction> actions) {
-				actions.forEach(action -> assertInstanceOf(QuestAction.IncrementVariable.class, action,
-					() -> "kill routes must only carry counter increments: " + action));
+				actions.forEach(action -> assertTrue(
+					action instanceof QuestAction.IncrementVariable || action instanceof QuestAction.SetVariable,
+					() -> "kill routes must only carry counter increments and the row advance: " + action));
 				return QuestTransactionParticipant.none();
 			}
 		};
