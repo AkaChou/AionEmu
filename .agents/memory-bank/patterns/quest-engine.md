@@ -2842,3 +2842,28 @@ keywords: DataDriven、纯hunt、行阶梯、SECTION_0、SECTION_1、五槽上�
 - **判定规则**：DD 纯 hunt 的进度 = 「行号（SECTION_0）+ 当前行段计数（SECTION_1..4）」；行与段是两层编号，段数不是槽位数。
 - **安全网**：形状由客户端任务书行驱动复算（`Progress(SECTION_0==k; SECTION_m<count)`），真端块与客户端行不一致时以客户端为准并逐行登记；门必须饱和行走整个阶梯。
 - **反漂移**：指纹只作回归证据；宽计数（>63）不许发明 10 位阶梯，按真端溢出算术在原生车道复刻。
+
+---
+
+## [QE-126] 一百二十六、DD 行切原生前必须先把「逐行 handler 契约」冻成不变量：8 类 progress + 6 类接取 + 步列词汇表 (DATA_DRIVEN_NATIVE_CONTRACT)
+
+<!-- pattern-metadata
+status: CONFIRMED
+scope: 真端 DataDriven（`data_driven_quest.xml`）切换集（1467 行）的**原生实现前置契约**：接取轴、progress 轴、步列（动作/效果）轴、6 位布局不变量
+first_seen: 2026-10-01
+last_verified: 2026-10-01
+symptom: ① 直接照 DD 表「写一个 handler」，未知 `category_progress_` / 未知 `valueN_progress_` 列被静默吞掉 ⇒ 行看着「接上了」但与原版行为不同；② 把整族切换当成「实现 8 个 handler 方法」而不是「逐行契约复算」⇒ 没有可对拍的验收基线（真端要求「工厂逐类别逐行对拍」）；③ 用指纹 TSV 当正确性判据，而不是回到真端表行 + 客户端存在性复算
+root_cause: 真端 DD 行不是单一状态机，而是「按 `category_progress_` 造 handler 对象」的**逐步链**：每步一条 `{kind, data}` 记录（真端 `def+0xF0` 向量元素 0x10 字节），事件到达时按当前步号（`prog&0x3F == expectedStep`）匹配类别 handler（Hunt `FUN_180c46020` / Pvp `FUN_180c46980` / CollectItem `FUN_180c46e90` / Talk `FUN_180c466a0` / EnterArea `FUN_180c47bf0` / ItemPlay `FUN_180c474b0` / EnterWorld `FUN_180c467b0` / TalkFOBJ `FUN_180c478e0`），步内子计数按 6 位组槽 +1、满则步进/成功；接取侧另有 5 类 kind（`QuestProgressExtraInfo_Talk.cpp`：ItemPlay=3 / Talk=4 / EnterWorld=7 / LevelUp=8 / LevelUpLogIn=10）+ DD 的 `EnterArea`/`none`；每步的 `valueN_progress_` 列就是动作表解释器（`FUN_180c4cd50`）的数据来源。这三条面在旧 IR 里被合成语义掩盖，所以切换前必须逐行复算成契约，否则「整族切换」没有任何可对拍的基线
+fix_or_guardrail: 切换前冻结六条不变量（零行为变更批）：① 接取轴直方图（切换集只出现 talk/enterarea/none/leveluplogin/itemplay/enterworld，`_faction_`/`levelup` 全在孤行桶 ⇒ 不入切换集）；② progress 词汇闭合 = 真端 8 类，未知类别 fail-closed；③ 每类步数与每行步数分布；④ **步列词汇表**（每类实际使用的 `valueN_progress_` 列号 + 出现次数）= step 2 的动作/效果实现清单，新增列号即失败；⑤ 6 位布局不变量（每步子计数 ≤4 组、计数 ≤63；唯一例外 80817 按 QE-124 原样复刻回绕）；⑥ 逐行矩阵（id × 接取 × 步序列 × 列词汇 × 领奖名）规范形 SHA-256 + 生产装载器 `RetailDataDrivenTable` 逐行一致（装载器视图 = 契约视图）
+evidence: src/test/java/com/aionemu/gameserver/questEngine/tablelane/DataDrivenNativeContractGateTest.java; .agents/summary/quest-engine-native/p7/tools/dd-native-contract-probe.py; .agents/summary/quest-engine-native/p7/dd-native-shape-matrix.tsv; .agents/summary/quest-engine-native/p7/dd-native-contract-summary.json; .agents/summary/quest-engine-native/p7/P7-STEP1-REPORT.zh-CN.md; .agents/summary/quest-engine-native/p7-prereqs/dd-dispatcher-and-handlers.md（8 类 handler 逐函数证据）
+validation: 2026-10-01 P7 步 1（零行为变更）：切换集 **1467 行**（活行 2492 ∧ owner RETAIL_TABLE）；接取直方图 talk 1142 / enterarea 165 / none 120 / leveluplogin 15 / itemplay 13 / enterworld 12；每类步数 hunt 827 / talk 403 / collectitem 348 / pvp 207 / enterarea 153 / itemplay 42 / enterworld 34 / talkfobj 19；每行步数 0..14（1188 行单步、99 行零步）、**94 个有序步序列形**；6 位布局 0 例外（每步 ≤4 组子计数、计数 ≤63，唯一例外 80817）；逐行矩阵摘要 `3d7b762e…f77d`；门 `DataDrivenNativeContractGateTest` **6/6**；同一批裁定 §10.3-#22（typed 车道入口页余面不修旧 IR、随 P7 步 2 车道删除）
+superseded_by: none
+boundaries: ① 本护照只冻「哪些类别/列被使用 + 用了多少次」，**不把未坐实的语义写死**：`6`/`9`/`10` 列与 `5` 的 hunt/talk 生成形仍是 step 2 前置（须逐列坐实 `valueN → 真端 def 偏移`）；② 契约矩阵是**切换批的验收基线**，不是运行时台账，P8 随车道删除；③ 门内独立重解析真端表（不复用装载器判断）才是有效复算，装载器一致性是同一测试的第二条断言；④ 未知类别/未知列/新形一律 fail-closed，禁止「先接上再补」
+see_also: [QE-124], [QE-125], [QE-121], [QE-012]
+first_check: 动 DD 原生车道前先答：① 这一行在切换集里吗（owner `RETAIL_TABLE` ∧ 不在 337 孤行 / 18 注释桶）？② 它的步序列与步列出现新类别/新列号了吗（有 ⇒ 先裁定再实现）？③ 每步子计数是否 ≤4 组、计数是否 ≤63（80817 是唯一例外）？④ 契约矩阵摘要是否仍等于冻结值（不等就说明真端表/台账/孤行快照被改动）？⑤ 生产装载器的步序列/接取类别/领奖名是否与表逐行一致？
+keywords: DataDriven、原生契约、1467、category_progress_、category_acquire_、8类handler、valueN_progress_、步列词汇表、6位组槽、80817、94形、逐行矩阵、DataDrivenNativeContractGateTest、DATA_DRIVEN_NATIVE_CONTRACT、P7、QE-126
+-->
+
+- **判定规则**：DD 行的进度 = 「步号（6 位）+ 每步 4 组 6 位子计数」，每一步由该步 `category_progress_` 对应的真端 handler 服务；接取由 `category_acquire_` 的 kind 决定，二者都是**行级契约**，不是族级实现细节。
+- **安全网**：切换前先用零行为变更批把契约冻成六条不变量（含逐行矩阵摘要）；运行时遇到未裁定的类别/列/形一律 fail-closed。
+- **反漂移**：契约矩阵必须从真端表行 + owner 台账 + 客户端孤行快照重算（不读外部根、不复用装载器判断）；未坐实的列语义宁可 fail-closed，也不许猜。
