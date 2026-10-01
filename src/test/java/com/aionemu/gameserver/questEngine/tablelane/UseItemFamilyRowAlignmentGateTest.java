@@ -71,6 +71,23 @@ class UseItemFamilyRowAlignmentGateTest {
 	private static final int USE_ITEM_ROUTED = 102;
 	private static final int ITEM_PLAY_ROUTED = 6;
 	/** quest.xml {@code check_item} 声明行（退役面 11 行，其中 2 行为 fail-closed 残余）。 / check_item rows. */
+	/** 其他 retail 族表（跨族 {@code con_quest} 目标的接取 NPC 来源）。 / Sibling retail family tables. */
+	private static final List<String> SIBLING_RESOURCES = List.of(
+		"aion/data/static_data/quest/retail/Quest_SimpleHunt.xml",
+		"aion/data/static_data/quest/retail/Quest_SimpleTalk.xml",
+		"aion/data/static_data/quest/retail/Quest_SimpleCollectItem.xml",
+		"aion/data/static_data/quest/retail/Quest_CombineTask.xml",
+		"aion/data/static_data/quest/retail/Quest_SimpleSerialHunt.xml",
+		"aion/data/static_data/quest/retail/Quest_SimpleUseItem.xml",
+		"aion/data/static_data/quest/retail/Quest_SimpleItemPlay.xml");
+	/** 链式接取窗目标分布（真端全表冻结）：UseItem 0/30/2、ItemPlay 2/7/0。 / Chain-target distribution. */
+	private static final int USE_ITEM_CHAIN_IN_TABLE = 0;
+	private static final int USE_ITEM_CHAIN_SIBLING = 30;
+	private static final int USE_ITEM_CHAIN_NO_ROW = 2;
+	private static final int ITEM_PLAY_CHAIN_IN_TABLE = 2;
+	private static final int ITEM_PLAY_CHAIN_SIBLING = 7;
+	private static final int ITEM_PLAY_CHAIN_NO_ROW = 0;
+
 	private static final Set<Integer> CHECK_ITEM_ROWS = Set.of(13812, 23812, 30720, 30723, 80482, 80486, 80554,
 		80558, 80612, 80615, 80616);
 
@@ -116,6 +133,67 @@ class UseItemFamilyRowAlignmentGateTest {
 			assertEquals(List.of(1, 2, 3).subList(0, row.talkNpcNames().size()),
 				declaredSteps(raw, "talk_npc"), "talk 链不得有空位: " + questId);
 		}
+	}
+
+	/**
+	 * 链式接取窗（真端交付节点 0x1e 槽）：两族的 {@code con_quest} 行逐行对拍，且下一环必须在本行的
+	 * 交付 NPC 上可接取（UseItem 无接取面 ⇒ 目标一律在兄弟族；ItemPlay 有 2 行本表内目标）。
+	 * <p>
+	 * The chain window (retail slot 0x1e): both families map every {@code con_quest} row and every target
+	 * with a resolved acquire face acquires at this row's hand-in NPC.
+	 */
+	@Test
+	void chainAcquireWindowsCloseAtTheRewardNpcForBothFamilies() throws Exception {
+		Map<Integer, Map<String, String>> siblings = new LinkedHashMap<>();
+		for (String resource : SIBLING_RESOURCES) {
+			parseTable(readResource(resource)).forEach(siblings::putIfAbsent);
+		}
+		assertChainFace(useItemRaw, siblings, SimpleUseItemHandler.instance()::conQuest,
+			USE_ITEM_CHAIN_IN_TABLE, USE_ITEM_CHAIN_SIBLING, USE_ITEM_CHAIN_NO_ROW, "UseItem");
+		assertChainFace(itemPlayRaw, siblings, SimpleItemPlayHandler.instance()::conQuest,
+			ITEM_PLAY_CHAIN_IN_TABLE, ITEM_PLAY_CHAIN_SIBLING, ITEM_PLAY_CHAIN_NO_ROW, "ItemPlay");
+		assertTrue(SimpleItemPlayHandler.instance().unresolvedChainQuestIds().isEmpty(),
+			() -> "ItemPlay 链式接取窗未闭环: "
+				+ SimpleItemPlayHandler.instance().unresolvedChainQuestIds());
+	}
+
+	private void assertChainFace(Map<Integer, Map<String, String>> source,
+			Map<Integer, Map<String, String>> siblings, java.util.function.IntFunction<Integer> conQuest,
+			int expectedInTable, int expectedSibling, int expectedNoRow, String family) {
+		int inTable = 0;
+		int inSibling = 0;
+		int noRow = 0;
+		List<String> mismatches = new ArrayList<>();
+		for (Map.Entry<Integer, Map<String, String>> entry : source.entrySet()) {
+			Integer next = integer(entry.getValue(), "con_quest");
+			if (next == null) {
+				continue;
+			}
+			assertEquals(next, conQuest.apply(entry.getKey()), family + " con_quest 装载漂移: " + entry.getKey());
+			String rewardName = value(entry.getValue(), "reward_npc_name");
+			Map<String, String> target = source.get(next);
+			if (target != null) {
+				inTable++;
+			} else if (siblings.containsKey(next)) {
+				inSibling++;
+				target = siblings.get(next);
+			} else {
+				noRow++;
+				continue;
+			}
+			String targetAcquire = value(target, "acquired_npc_name");
+			if (targetAcquire == null) {
+				targetAcquire = value(target, "task_npc");
+			}
+			if (targetAcquire != null && !targetAcquire.equals(rewardName)) {
+				mismatches.add(family + " " + entry.getKey() + "->" + next + " reward=" + rewardName
+					+ " targetAcquire=" + targetAcquire);
+			}
+		}
+		assertTrue(mismatches.isEmpty(), () -> "链式接取窗未在本行交付 NPC 上闭环: " + mismatches);
+		assertEquals(expectedInTable, inTable, family + " 本表内目标数漂移");
+		assertEquals(expectedSibling, inSibling, family + " 跨族目标数漂移");
+		assertEquals(expectedNoRow, noRow, family + " 无表行目标数漂移");
 	}
 
 	@Test

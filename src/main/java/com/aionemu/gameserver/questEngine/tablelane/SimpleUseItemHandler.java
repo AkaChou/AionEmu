@@ -115,6 +115,9 @@ public final class SimpleUseItemHandler {
 	/** 未解析的物品符号（证据面）。 / Unresolved item symbols. */
 	private final Set<String> unresolvedItemSymbols;
 
+	/** 任务 ID → 链式接取窗的下一环（真端交付节点 0x1e 槽的 {@code con_quest}）。 / Quest id → the next quest of the chain window. */
+	private final Map<Integer, Integer> conQuestByQuestId;
+
 	/** 生产实例构造（真端表 + 生产背包/结算口）。 / The production wiring. */
 	private SimpleUseItemHandler(NativeQuestTableLoader tableLoader, NativeNpcNameResolver nameResolver,
 			RetailItemNameIndex itemIndex, NativeQuestXmlTable questXml, NativeInventoryPort inventory) {
@@ -150,6 +153,8 @@ public final class SimpleUseItemHandler {
 		Set<Integer> unroutable = new TreeSet<>();
 		Set<String> unresolved = new TreeSet<>();
 		Set<String> unresolvedItems = new TreeSet<>();
+
+		Map<Integer, Integer> conQuests = new LinkedHashMap<>();
 
 		for (NativeQuestTableLoader.SimpleUseItemRow row : tableLoader.useItemRows()) {
 			int questId = row.questId();
@@ -236,7 +241,23 @@ public final class SimpleUseItemHandler {
 					acceptByItem.computeIfAbsent(useItem.itemId(), key -> new ArrayList<>()).add(questId);
 				}
 			}
+
+			// 链式接取窗（真端 0x1e 槽）按原文装载：本族的接取面是「用物品」，没有自己的接取 NPC，
+			// 故闭环判据（下一环的接取 NPC = 本行的交付 NPC）由逐行对拍门跨族复算，handler 只暴露证据面。
+			// The chain window (retail slot 0x1e) loads verbatim. This family accepts by using an item and
+			// has no acquire NPC of its own, so the closure invariant (the next quest acquires at this row's
+			// hand-in NPC) is recomputed cross-family by the per-row gate; the handler only exposes the face.
+			if (row.conQuest() != null) {
+				conQuests.put(questId, row.conQuest());
+			}
 		}
+
+		// 闭环判据的归属：本族没有接取 NPC 面（接取 = 使用道具），因此 handler 内**无法**判定
+		// 「下一环的接取 NPC = 本行交付 NPC」；该不变量由逐行对拍门跨族独立复算（当前 32 行目标
+		// 30 兄弟族 + 2 无行，0 例外），本处只留证据面，不静默放行也不新增路由。
+		// Closure ownership: this family has no acquire-NPC face (accept = using an item), so the handler
+		// cannot decide the invariant itself; the per-row gate recomputes it cross-family (32 targets =
+		// 30 sibling + 2 no-row, 0 exceptions). No routing is added here.
 
 		this.useItemByQuestId = Collections.unmodifiableMap(useItems);
 		this.acceptQuestIdsByItemId = Collections.unmodifiableMap(acceptByItem);
@@ -251,6 +272,19 @@ public final class SimpleUseItemHandler {
 		this.unroutableQuestIds = Collections.unmodifiableSet(unroutable);
 		this.unresolvedNames = Collections.unmodifiableSet(unresolved);
 		this.unresolvedItemSymbols = Collections.unmodifiableSet(unresolvedItems);
+		this.conQuestByQuestId = Collections.unmodifiableMap(conQuests);
+	}
+
+	/**
+	 * 真端 {@code con_quest}（链式接取窗的下一环，交付节点 0x1e 槽）；未声明返回 null。
+	 * <p>
+	 * 真端该列由交付节点 0x1e 槽消费（{@code mgr+0x1a8(player, con_quest)} = 下一环接取窗）。本族接取 =
+	 * 使用道具、没有接取 NPC 面，故「下一环在本行交付 NPC 上可接取」这条等价不变量由逐行对拍门跨族复算。
+	 * The retail {@code con_quest} column (hand-in slot 0x1e). This family accepts by using an item and has
+	 * no acquire NPC, so the equivalence is recomputed cross-family by the per-row alignment gate.
+	 */
+	public Integer conQuest(int questId) {
+		return conQuestByQuestId.get(questId);
 	}
 
 	public static SimpleUseItemHandler instance() {

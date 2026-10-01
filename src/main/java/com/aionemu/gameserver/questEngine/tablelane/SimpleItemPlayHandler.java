@@ -93,6 +93,11 @@ public final class SimpleItemPlayHandler {
 	/** 未解析的物品符号（证据面）。 / Unresolved item symbols. */
 	private final Set<String> unresolvedItemSymbols;
 
+	/** 任务 ID → 链式接取窗的下一环（真端交付节点 0x1e 槽的 {@code con_quest}）。 / Quest id → the next quest of the chain window. */
+	private final Map<Integer, Integer> conQuestByQuestId;
+	/** 链式接取窗未闭环的行（本族当前恒空：声明行未路由，闭环由逐行门复算）。 / Rows whose chain window is not realized. */
+	private final Set<Integer> unresolvedChainQuestIds;
+
 	/** 生产实例构造（真端表 + 生产背包/结算口）。 / The production wiring. */
 	private SimpleItemPlayHandler(NativeQuestTableLoader tableLoader, NativeNpcNameResolver nameResolver,
 			RetailItemNameIndex itemIndex, NativeInventoryPort inventory) {
@@ -124,6 +129,9 @@ public final class SimpleItemPlayHandler {
 		Set<Integer> unroutable = new TreeSet<>();
 		Set<String> unresolved = new TreeSet<>();
 		Set<String> unresolvedItems = new TreeSet<>();
+
+		Map<Integer, Integer> conQuests = new LinkedHashMap<>();
+		Set<Integer> unresolvedChain = new TreeSet<>();
 
 		for (NativeQuestTableLoader.SimpleItemPlayRow row : tableLoader.itemPlayRows()) {
 			int questId = row.questId();
@@ -183,6 +191,40 @@ public final class SimpleItemPlayHandler {
 					advanceByItem.computeIfAbsent(playItemId, key -> new ArrayList<>()).add(questId);
 				}
 			}
+
+			// 链式接取窗（真端 0x1e 槽）按原文装载：本族 9 行声明 con_quest，其中 2 行（13400/23400）
+			// 的目标落在本表内（13401/23401），其余 7 行在兄弟族。
+			// 过场（真端 0x35 槽）本族 2 行声明 cutsceneid1（859/860），但真端表**没有 cs1_haction 列**
+			// （全表 0 命中；对比 CollectItem 2 行带动作列）⇒ 0x35 槽的触发动作在真端数据里不存在，
+			// 本车道按「未被服务的动作不播」冻结为休眠面，只留证据、不合成页动作；声明行本身也因
+			// 中继/步物品/过场/交付门落在不路由长尾上（见上 resolvable 判定），运行期不上线。
+			// The chain window (slot 0x1e) loads verbatim: nine rows declare con_quest and two of them
+			// (13400/23400) target in-table quests (13401/23401). Two rows declare cutsceneid1 (859/860) for
+			// slot 0x35, yet this retail table carries no cs1_haction column at all (0 hits vs. 2 in
+			// CollectItem), so the slot's trigger action does not exist in the retail data: the face stays
+			// dormant with evidence recorded and no synthesised page. Declaring rows also sit in the
+			// unrouted long tail (see the resolvable check above).
+			if (row.conQuest() != null) {
+				conQuests.put(questId, row.conQuest());
+			}
+		}
+
+		// 闭环判据（与 P1B/P4B 同一不变量）：本表内目标逐行验证「下一环的接取 NPC = 本行交付 NPC」，
+		// 不闭环即登记 fail-closed 证据；跨族目标（7 行）由逐行对拍门按同一条不变量复算。
+		// Closure check (same invariant as P1B/P4B): in-table targets are verified here and non-closing rows
+		// are recorded; cross-family targets are recomputed by the per-row gate.
+		for (Map.Entry<Integer, Integer> entry : conQuests.entrySet()) {
+			int questId = entry.getKey();
+			int next = entry.getValue();
+			Integer targetAcquire = acquires.get(next);
+			if (targetAcquire == null) {
+				continue;
+			}
+			List<Integer> sourceRewards = rewards.get(questId);
+			if (routed.contains(next)
+					&& (sourceRewards == null || !sourceRewards.contains(targetAcquire))) {
+				unresolvedChain.add(questId);
+			}
 		}
 
 		this.acquireNpcByQuestId = Collections.unmodifiableMap(acquires);
@@ -195,6 +237,22 @@ public final class SimpleItemPlayHandler {
 		this.unroutableQuestIds = Collections.unmodifiableSet(unroutable);
 		this.unresolvedNames = Collections.unmodifiableSet(unresolved);
 		this.unresolvedItemSymbols = Collections.unmodifiableSet(unresolvedItems);
+		this.conQuestByQuestId = Collections.unmodifiableMap(conQuests);
+		this.unresolvedChainQuestIds = Collections.unmodifiableSet(unresolvedChain);
+	}
+
+	/**
+	 * 真端 {@code con_quest}（链式接取窗的下一环，交付节点 0x1e 槽）；未声明返回 null。
+	 * The retail {@code con_quest} column (hand-in slot 0x1e); the window is realized by the next quest's
+	 * own accept route whenever that row acquires at this row's hand-in NPC.
+	 */
+	public Integer conQuest(int questId) {
+		return conQuestByQuestId.get(questId);
+	}
+
+	/** 链式接取窗未闭环的行（fail-closed 证据面）。 / Rows whose chain window is not realized. */
+	public Set<Integer> unresolvedChainQuestIds() {
+		return unresolvedChainQuestIds;
 	}
 
 	public static SimpleItemPlayHandler instance() {
