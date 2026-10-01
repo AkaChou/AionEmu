@@ -1,44 +1,44 @@
-# questId	owner	family	reason	xml_in_repo	nodes	slot0	slot3	step-shape	invariant
-9623	(absent)	-	-	no	DAT_1856dea90:Rebecca_2|DAT_1856df0d0:Rebecca_3|DAT_1856de450:Rebecca_5	Rebecca_5	0->Rebecca_2|1->Rebecca_3|3->Rebecca_5	0->Rebecca_2|1->Rebecca_3|3->Rebecca_5	OK
-19048	RETAIL_TABLE	SimpleItemPlay	OK	no	DAT_1856df710:Andreas	Andreas	1->Andreas	1->Andreas	OK
-29048	RETAIL_TABLE	SimpleItemPlay	OK	no	DAT_1856dfd60:Seriphim	Seriphim	1->Seriphim	1->Seriphim	OK
-18213	XML_RETENTION	SimpleItemPlay	ADJUDICATED:RETAIL_TALK_CHAIN	yes	DAT_1856e09f0:Inggril|DAT_1856e03b0:Junos|DAT_1856e1030:Romedon	Junos	0->Inggril|1->Romedon|3->Romedon	0->Inggril|1->Romedon|3->Romedon	OK
-28213	XML_RETENTION	SimpleItemPlay	ADJUDICATED:RETAIL_TALK_CHAIN	yes	DAT_1856e1cc0:Inggness|DAT_1856e2300:Kijan|DAT_1856e1680:Shinin	Shinin	0->Inggness|1->Kijan|3->Kijan	0->Inggness|1->Kijan|3->Kijan	OK
-41267	(absent)	-	-	no	DAT_1856e2950:Joubis	Joubis	1->Joubis	1->Joubis	OK
-41514	(absent)	-	-	no	DAT_1856e2f90:Grido	Grido	1->Grido	1->Grido	OK
-41540	(absent)	-	-	no	DAT_1856e35e0:Materia	Materia	1->Materia	1->Materia	OK
-41300	(absent)	-	-	no	DAT_1856e3c30:Fudion|DAT_1856e4270:Vesetia	Fudion	1->Vesetia	1->Vesetia	OK
-41577	(absent)	-	-	no	DAT_1856e4f00:Jinikin|DAT_1856e48c0:Kiriyu	Kiriyu	1->Jinikin	1->Jinikin	OK
-41593	(absent)	-	-	no	DAT_1856e5540:Solpress	Solpress	1->Solpress	1->Solpress	OK
-18828	XML_RETENTION	SimpleItemPlay	ADJUDICATED:RETAIL_CON_QUEST	yes	DAT_1856e5b90:HousingManager_Li	HousingManager_Li	1->HousingManager_Li	1->HousingManager_Li	OK
-28828	XML_RETENTION	SimpleItemPlay	ADJUDICATED:RETAIL_CON_QUEST	yes	DAT_1856e61e0:HousingManager_Da	HousingManager_Da	1->HousingManager_Da	1->HousingManager_Da	OK
-12066	(absent)	-	-	no	DAT_1856e6830:Ancanus	Ancanus	1->Ancanus	1->Ancanus	OK
-22066	(absent)	-	-	no	DAT_1856e6e70:Udvi	Udvi	1->Udvi	1->Udvi	OK
-50013	(absent)	-	-	no	DAT_1856e74c0:Event_L_Shugo_Kannaring	Event_L_Shugo_Kannaring	1->Event_L_Shugo_Kannaring	1->Event_L_Shugo_Kannaring	OK
-50014	(absent)	-	-	no	DAT_1856e7b10:Event_L_Shugo_Soloring	Event_L_Shugo_Soloring	1->Event_L_Shugo_Soloring	1->Event_L_Shugo_Soloring	OK
-51013	(absent)	-	-	no	DAT_1856e8160:Event_D_Shugo_Kannaring	Event_D_Shugo_Kannaring	1->Event_D_Shugo_Kannaring	1->Event_D_Shugo_Kannaring	OK
-51014	(absent)	-	-	no	DAT_1856e87a0:Event_D_Shugo_Soloring	Event_D_Shugo_Soloring	1->Event_D_Shugo_Soloring	1->Event_D_Shugo_Soloring	OK
-80255	XML_RETENTION	SimpleItemPlay	ADJUDICATED:RETAIL_ADVANCE_UNEXPRESSED	yes	DAT_1856e8df0:event_Parutoo	event_Parutoo	0->event_Parutoo	1->event_Parutoo	MISMATCH
-80256	XML_RETENTION	SimpleItemPlay	ADJUDICATED:RETAIL_ADVANCE_UNEXPRESSED	yes	DAT_1856e9440:event_Boobanah	event_Boobanah	0->event_Boobanah	1->event_Boobanah	MISMATCH
-18014	(absent)	-	-	no	DAT_1856e9a80:LDF5b_Gadoron_G	LDF5b_Gadoron_G	1->LDF5b_Gadoron_G	1->LDF5b_Gadoron_G	OK
-28014	(absent)	-	-	no	DAT_1856ea0d0:LDF5b_Sertes_G	LDF5b_Sertes_G	1->LDF5b_Sertes_G	1->LDF5b_Sertes_G	OK
-39713	XML_RETENTION	SimpleItemPlay	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL	yes	DAT_1856ea720:LDF5b_Greenhat_LD	-	0->LDF5b_Greenhat_LD|2->LDF5b_Greenhat_LD	0->LDF5b_Greenhat_LD|2->LDF5b_Greenhat_LD	MISMATCH
-49713	XML_RETENTION	SimpleItemPlay	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL	yes	DAT_1856ead60:LDF5b_Greenhat_LD	-	0->LDF5b_Greenhat_LD|2->LDF5b_Greenhat_LD	0->LDF5b_Greenhat_LD|2->LDF5b_Greenhat_LD	MISMATCH
-12525	(absent)	-	-	no	DAT_1856eb3b0:LDF5a_Iroas_E	LDF5a_Iroas_E	1->LDF5a_Iroas_E	1->LDF5a_Iroas_E	OK
-12562	(absent)	-	-	no	DAT_1856eb9f0:LDF5a_Thrasir_E	LDF5a_Thrasir_E	1->LDF5a_Thrasir_E	1->LDF5a_Thrasir_E	OK
-22525	(absent)	-	-	no	DAT_1856ec040:LDF5a_Balbrin_E	LDF5a_Balbrin_E	1->LDF5a_Balbrin_E	1->LDF5a_Balbrin_E	OK
-22562	(absent)	-	-	no	DAT_1856ec690:LDF5a_Otr_E	LDF5a_Otr_E	1->LDF5a_Otr_E	1->LDF5a_Otr_E	OK
-13054	(absent)	-	-	no	DAT_1856ed960:LDF5b_Demios_E|DAT_1856eccd0:LDF5b_Heres_E|DAT_1856ed320:LDF5b_Tetis_E	LDF5b_Heres_E	0->LDF5b_Tetis_E|1->LDF5b_Heres_E|3->LDF5b_Demios_E	0->LDF5b_Tetis_E|1->LDF5b_Heres_E|3->LDF5b_Demios_E	OK
-13064	(absent)	-	-	no	DAT_1856edfa0:LDF5b_Pandaroong_E	LDF5b_Pandaroong_E	1->LDF5b_Pandaroong_E	1->LDF5b_Pandaroong_E	OK
-23054	(absent)	-	-	no	DAT_1856ef270:LDF5b_Beltane_E|DAT_1856ee5f0:LDF5b_Ivolk_E|DAT_1856eec30:LDF5b_Quage_E	LDF5b_Ivolk_E	0->LDF5b_Quage_E|1->LDF5b_Ivolk_E|3->LDF5b_Beltane_E	0->LDF5b_Quage_E|1->LDF5b_Ivolk_E|3->LDF5b_Beltane_E	OK
-23064	(absent)	-	-	no	DAT_1856ef8c0:LDF5b_Pandaroong_E	LDF5b_Pandaroong_E	1->LDF5b_Pandaroong_E	1->LDF5b_Pandaroong_E	OK
-23562	(absent)	-	-	no	DAT_1856f11d0:LDF5b_Devring_E|DAT_1856eff10:LDF5b_Offiring_E|DAT_1856f0b90:LDF5b_Railring_E|DAT_1856f0550:LDF5b_Storing_E	LDF5b_Offiring_E	0->LDF5b_Storing_E|1->LDF5b_Railring_E|3->LDF5b_Devring_E	0->LDF5b_Storing_E|1->LDF5b_Railring_E|3->LDF5b_Devring_E	OK
-13400	(absent)	-	-	no	DAT_1856f1e60:LDF5b_Pepe_E|DAT_1856f1810:LDF5b_Portis_E|DAT_1856f24a0:LDF5b_Watering_E	LDF5b_Portis_E	0->LDF5b_Pepe_E|2->LDF5b_Watering_E	0->LDF5b_Pepe_E|2->LDF5b_Watering_E	OK
-13401	(absent)	-	-	no	DAT_1856f3130:LDF5b_Shinisto_E|DAT_1856f2ae0:LDF5b_Watering_E	LDF5b_Watering_E	1->LDF5b_Shinisto_E	1->LDF5b_Shinisto_E	OK
-23400	(absent)	-	-	no	DAT_1856f3db0:LDF5b_Phone_E|DAT_1856f3770:LDF5b_Stelman_E|DAT_1856f43f0:LDF5b_Watering_E	LDF5b_Stelman_E	0->LDF5b_Phone_E|2->LDF5b_Watering_E	0->LDF5b_Phone_E|2->LDF5b_Watering_E	OK
-23401	(absent)	-	-	no	DAT_1856f5080:LDF5b_Denitz_E|DAT_1856f4a40:LDF5b_Watering_E	LDF5b_Watering_E	1->LDF5b_Denitz_E	1->LDF5b_Denitz_E	OK
-13704	RETAIL_TABLE	SimpleItemPlay	OK	no	DAT_1856f56d0:LDF4_Advance_Village_Guard01_L	LDF4_Advance_Village_Guard01_L	1->LDF4_Advance_Village_Guard01_L	1->LDF4_Advance_Village_Guard01_L	OK
-13708	RETAIL_TABLE	SimpleItemPlay	OK	no	DAT_1856f5d10:LDF4_Advance_Village_Guard02_L	LDF4_Advance_Village_Guard02_L	1->LDF4_Advance_Village_Guard02_L	1->LDF4_Advance_Village_Guard02_L	OK
-23704	RETAIL_TABLE	SimpleItemPlay	OK	no	DAT_1856f6360:LDF4_Advance_Village_Guard05_D	LDF4_Advance_Village_Guard05_D	1->LDF4_Advance_Village_Guard05_D	1->LDF4_Advance_Village_Guard05_D	OK
-23708	RETAIL_TABLE	SimpleItemPlay	OK	no	DAT_1856f69b0:LDF4_Advance_Village_Guard06_D	LDF4_Advance_Village_Guard06_D	1->LDF4_Advance_Village_Guard06_D	1->LDF4_Advance_Village_Guard06_D	OK
-50048	XML_RETENTION	SimpleItemPlay	ADJUDICATED:RETAIL_TALK_CHAIN	yes	DAT_1856f7000:NPC_event_devasday_shugo|DAT_1856f7640:NPC_event_devasday_shugoseller	NPC_event_devasday_shugo	0->NPC_event_devasday_shugoseller|2->NPC_event_devasday_shugo	0->NPC_event_devasday_shugoseller|2->NPC_event_devasday_shugo	OK
+# questId	owner	family	reason	xml_in_repo	nodes	slot0	slot3	step-shape	camera-guard	camera-target	invariant
+9623	(absent)	-	-	no	DAT_1856dea90:Rebecca_2|DAT_1856df0d0:Rebecca_3|DAT_1856de450:Rebecca_5	Rebecca_5	0->Rebecca_2|1->Rebecca_3|3->Rebecca_5	0->Rebecca_2|1->Rebecca_3|3->Rebecca_5	2	3	OK
+19048	RETAIL_TABLE	SimpleItemPlay	OK	no	DAT_1856df710:Andreas	Andreas	1->Andreas	1->Andreas	0	1	OK
+29048	RETAIL_TABLE	SimpleItemPlay	OK	no	DAT_1856dfd60:Seriphim	Seriphim	1->Seriphim	1->Seriphim	0	1	OK
+18213	XML_RETENTION	SimpleItemPlay	ADJUDICATED:RETAIL_TALK_CHAIN	yes	DAT_1856e09f0:Inggril|DAT_1856e03b0:Junos|DAT_1856e1030:Romedon	Junos	0->Inggril|1->Romedon|3->Romedon	0->Inggril|1->Romedon|3->Romedon	2	3	OK
+28213	XML_RETENTION	SimpleItemPlay	ADJUDICATED:RETAIL_TALK_CHAIN	yes	DAT_1856e1cc0:Inggness|DAT_1856e2300:Kijan|DAT_1856e1680:Shinin	Shinin	0->Inggness|1->Kijan|3->Kijan	0->Inggness|1->Kijan|3->Kijan	2	3	OK
+41267	(absent)	-	-	no	DAT_1856e2950:Joubis	Joubis	1->Joubis	1->Joubis	0	1	OK
+41514	(absent)	-	-	no	DAT_1856e2f90:Grido	Grido	1->Grido	1->Grido	0	1	OK
+41540	(absent)	-	-	no	DAT_1856e35e0:Materia	Materia	1->Materia	1->Materia	0	1	OK
+41300	(absent)	-	-	no	DAT_1856e3c30:Fudion|DAT_1856e4270:Vesetia	Fudion	1->Vesetia	1->Vesetia	0	1	OK
+41577	(absent)	-	-	no	DAT_1856e4f00:Jinikin|DAT_1856e48c0:Kiriyu	Kiriyu	1->Jinikin	1->Jinikin	0	1	OK
+41593	(absent)	-	-	no	DAT_1856e5540:Solpress	Solpress	1->Solpress	1->Solpress	0	1	OK
+18828	XML_RETENTION	SimpleItemPlay	ADJUDICATED:RETAIL_CON_QUEST	yes	DAT_1856e5b90:HousingManager_Li	HousingManager_Li	1->HousingManager_Li	1->HousingManager_Li	0	1	OK
+28828	XML_RETENTION	SimpleItemPlay	ADJUDICATED:RETAIL_CON_QUEST	yes	DAT_1856e61e0:HousingManager_Da	HousingManager_Da	1->HousingManager_Da	1->HousingManager_Da	0	1	OK
+12066	(absent)	-	-	no	DAT_1856e6830:Ancanus	Ancanus	1->Ancanus	1->Ancanus	0	1	OK
+22066	(absent)	-	-	no	DAT_1856e6e70:Udvi	Udvi	1->Udvi	1->Udvi	0	1	OK
+50013	(absent)	-	-	no	DAT_1856e74c0:Event_L_Shugo_Kannaring	Event_L_Shugo_Kannaring	1->Event_L_Shugo_Kannaring	1->Event_L_Shugo_Kannaring	0	1	OK
+50014	(absent)	-	-	no	DAT_1856e7b10:Event_L_Shugo_Soloring	Event_L_Shugo_Soloring	1->Event_L_Shugo_Soloring	1->Event_L_Shugo_Soloring	0	1	OK
+51013	(absent)	-	-	no	DAT_1856e8160:Event_D_Shugo_Kannaring	Event_D_Shugo_Kannaring	1->Event_D_Shugo_Kannaring	1->Event_D_Shugo_Kannaring	0	1	OK
+51014	(absent)	-	-	no	DAT_1856e87a0:Event_D_Shugo_Soloring	Event_D_Shugo_Soloring	1->Event_D_Shugo_Soloring	1->Event_D_Shugo_Soloring	0	1	OK
+80255	XML_RETENTION	SimpleItemPlay	ADJUDICATED:RETAIL_ADVANCE_UNEXPRESSED	yes	DAT_1856e8df0:event_Parutoo	event_Parutoo	0->event_Parutoo	1->event_Parutoo	-	-	MISMATCH
+80256	XML_RETENTION	SimpleItemPlay	ADJUDICATED:RETAIL_ADVANCE_UNEXPRESSED	yes	DAT_1856e9440:event_Boobanah	event_Boobanah	0->event_Boobanah	1->event_Boobanah	-	-	MISMATCH
+18014	(absent)	-	-	no	DAT_1856e9a80:LDF5b_Gadoron_G	LDF5b_Gadoron_G	1->LDF5b_Gadoron_G	1->LDF5b_Gadoron_G	0	1	OK
+28014	(absent)	-	-	no	DAT_1856ea0d0:LDF5b_Sertes_G	LDF5b_Sertes_G	1->LDF5b_Sertes_G	1->LDF5b_Sertes_G	0	1	OK
+39713	XML_RETENTION	SimpleItemPlay	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL	yes	DAT_1856ea720:LDF5b_Greenhat_LD	-	0->LDF5b_Greenhat_LD|2->LDF5b_Greenhat_LD	0->LDF5b_Greenhat_LD|2->LDF5b_Greenhat_LD	1	2	MISMATCH
+49713	XML_RETENTION	SimpleItemPlay	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL	yes	DAT_1856ead60:LDF5b_Greenhat_LD	-	0->LDF5b_Greenhat_LD|2->LDF5b_Greenhat_LD	0->LDF5b_Greenhat_LD|2->LDF5b_Greenhat_LD	1	2	MISMATCH
+12525	(absent)	-	-	no	DAT_1856eb3b0:LDF5a_Iroas_E	LDF5a_Iroas_E	1->LDF5a_Iroas_E	1->LDF5a_Iroas_E	0	1	OK
+12562	(absent)	-	-	no	DAT_1856eb9f0:LDF5a_Thrasir_E	LDF5a_Thrasir_E	1->LDF5a_Thrasir_E	1->LDF5a_Thrasir_E	0	1	OK
+22525	(absent)	-	-	no	DAT_1856ec040:LDF5a_Balbrin_E	LDF5a_Balbrin_E	1->LDF5a_Balbrin_E	1->LDF5a_Balbrin_E	0	1	OK
+22562	(absent)	-	-	no	DAT_1856ec690:LDF5a_Otr_E	LDF5a_Otr_E	1->LDF5a_Otr_E	1->LDF5a_Otr_E	0	1	OK
+13054	(absent)	-	-	no	DAT_1856ed960:LDF5b_Demios_E|DAT_1856eccd0:LDF5b_Heres_E|DAT_1856ed320:LDF5b_Tetis_E	LDF5b_Heres_E	0->LDF5b_Tetis_E|1->LDF5b_Heres_E|3->LDF5b_Demios_E	0->LDF5b_Tetis_E|1->LDF5b_Heres_E|3->LDF5b_Demios_E	2	3	OK
+13064	(absent)	-	-	no	DAT_1856edfa0:LDF5b_Pandaroong_E	LDF5b_Pandaroong_E	1->LDF5b_Pandaroong_E	1->LDF5b_Pandaroong_E	0	1	OK
+23054	(absent)	-	-	no	DAT_1856ef270:LDF5b_Beltane_E|DAT_1856ee5f0:LDF5b_Ivolk_E|DAT_1856eec30:LDF5b_Quage_E	LDF5b_Ivolk_E	0->LDF5b_Quage_E|1->LDF5b_Ivolk_E|3->LDF5b_Beltane_E	0->LDF5b_Quage_E|1->LDF5b_Ivolk_E|3->LDF5b_Beltane_E	2	3	OK
+23064	(absent)	-	-	no	DAT_1856ef8c0:LDF5b_Pandaroong_E	LDF5b_Pandaroong_E	1->LDF5b_Pandaroong_E	1->LDF5b_Pandaroong_E	0	1	OK
+23562	(absent)	-	-	no	DAT_1856f11d0:LDF5b_Devring_E|DAT_1856eff10:LDF5b_Offiring_E|DAT_1856f0b90:LDF5b_Railring_E|DAT_1856f0550:LDF5b_Storing_E	LDF5b_Offiring_E	0->LDF5b_Storing_E|1->LDF5b_Railring_E|3->LDF5b_Devring_E	0->LDF5b_Storing_E|1->LDF5b_Railring_E|3->LDF5b_Devring_E	2	3	OK
+13400	(absent)	-	-	no	DAT_1856f1e60:LDF5b_Pepe_E|DAT_1856f1810:LDF5b_Portis_E|DAT_1856f24a0:LDF5b_Watering_E	LDF5b_Portis_E	0->LDF5b_Pepe_E|2->LDF5b_Watering_E	0->LDF5b_Pepe_E|2->LDF5b_Watering_E	1	2	OK
+13401	(absent)	-	-	no	DAT_1856f3130:LDF5b_Shinisto_E|DAT_1856f2ae0:LDF5b_Watering_E	LDF5b_Watering_E	1->LDF5b_Shinisto_E	1->LDF5b_Shinisto_E	0	1	OK
+23400	(absent)	-	-	no	DAT_1856f3db0:LDF5b_Phone_E|DAT_1856f3770:LDF5b_Stelman_E|DAT_1856f43f0:LDF5b_Watering_E	LDF5b_Stelman_E	0->LDF5b_Phone_E|2->LDF5b_Watering_E	0->LDF5b_Phone_E|2->LDF5b_Watering_E	1	2	OK
+23401	(absent)	-	-	no	DAT_1856f5080:LDF5b_Denitz_E|DAT_1856f4a40:LDF5b_Watering_E	LDF5b_Watering_E	1->LDF5b_Denitz_E	1->LDF5b_Denitz_E	0	1	OK
+13704	RETAIL_TABLE	SimpleItemPlay	OK	no	DAT_1856f56d0:LDF4_Advance_Village_Guard01_L	LDF4_Advance_Village_Guard01_L	1->LDF4_Advance_Village_Guard01_L	1->LDF4_Advance_Village_Guard01_L	0	1	OK
+13708	RETAIL_TABLE	SimpleItemPlay	OK	no	DAT_1856f5d10:LDF4_Advance_Village_Guard02_L	LDF4_Advance_Village_Guard02_L	1->LDF4_Advance_Village_Guard02_L	1->LDF4_Advance_Village_Guard02_L	0	1	OK
+23704	RETAIL_TABLE	SimpleItemPlay	OK	no	DAT_1856f6360:LDF4_Advance_Village_Guard05_D	LDF4_Advance_Village_Guard05_D	1->LDF4_Advance_Village_Guard05_D	1->LDF4_Advance_Village_Guard05_D	0	1	OK
+23708	RETAIL_TABLE	SimpleItemPlay	OK	no	DAT_1856f69b0:LDF4_Advance_Village_Guard06_D	LDF4_Advance_Village_Guard06_D	1->LDF4_Advance_Village_Guard06_D	1->LDF4_Advance_Village_Guard06_D	0	1	OK
+50048	XML_RETENTION	SimpleItemPlay	ADJUDICATED:RETAIL_TALK_CHAIN	yes	DAT_1856f7000:NPC_event_devasday_shugo|DAT_1856f7640:NPC_event_devasday_shugoseller	NPC_event_devasday_shugo	0->NPC_event_devasday_shugoseller|2->NPC_event_devasday_shugo	0->NPC_event_devasday_shugoseller|2->NPC_event_devasday_shugo	1	2	OK

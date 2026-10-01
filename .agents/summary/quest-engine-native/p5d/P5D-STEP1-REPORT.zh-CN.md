@@ -39,6 +39,33 @@
 约定（talk 族的中继/步物品/交付门实现见 `SimpleTalkHandler`：`relaysByNpcId` / `relayCount` /
 `stepGive|stepRemoveItem` / `RELAY_STEP_PAGES = {1352, 1693, 2034}`）。
 
+### 1.4 相机（步进边）= 用道具推进的闸门（**步 2 的前置证据，本步闭合**）
+
+每行的**主注册 thunk**（`FUN_180cb2eb0(..., <questId>, 5, <hash>, <thunk>)` 指向的函数体）就是该行的相机：
+
+```c
+void FUN_180dbb1d0(longlong *param_1)          /* quest 0x4725 = 18213 */
+{
+  (**(code **)(*param_1 + 0xd0))(param_1,&local_res8,0x4725);      /* 取 (状态, 步) */
+  if ((local_res8 == '\x03') && (local_res9 == 2)) {               /* 闸门：状态 3 且 step == 2 */
+    (**(code **)(*param_1 + 0xf0))(param_1,0x4725,3,0);            /* 推进：step = 3 */
+  }
+  (**(code **)(*param_1 + 0x110))(param_1,0x4725,2,3,0,1,0,0,0,0); /* 注册步进边 2→3 */
+  return;
+}
+```
+
+43 行全量复算（工具 `itemplay-shape-audit.py` 的 `camera-guard`/`camera-target` 列）：**41 行满足
+`闸门步 = relayCount`、`目标步 = relayCount + 1`**，唯一无相机的两行正是 80255/80256
+（⇒ 其「advance 轴在真端不存在」的裁定再次被独立坐实）。例：13704（0 中继）= 0→1、13400（1 中继）= 1→2、
+18213/9623/13054（2 中继）= 2→3。
+
+**⇒ 结论：本族「用道具推进」不是无条件推进，而是闸门 `状态 == 3 ∧ step == relayCount` 的一步推进。**
+中继谈话负责把 step 从 0 推到 `relayCount`（逐节点、严格表序），道具推进负责最后一步
+（`relayCount → relayCount + 1`），交付节点在 step == `relayCount + 1` 时激活（= `slot 3 #K` 的 K）。
+这同时解释了为什么 9623 等行**没有接取发放**（`give_item` 空）：道具来源可以在族外，但**步数前置**仍
+卡死「绕过中继直接用道具跳 REWARD」。
+
 ---
 
 ## 2. 行集真实分解（§10.3-#16① 判据修正）
@@ -95,11 +122,15 @@
 
 ## 5. 残余与下一步（P5D 步 2）
 
-1. **接线面（目标集 5 行 + 在表中的中继行）**：`SimpleItemPlayHandler` 增中继链（`talk_npcK` 严格表序，
-   `slot 3 #K` 证据已备）、第 K 步发/扣、`item_check` 交付门与旧存档自愈——形态与 talk 族同轴。
-2. **仍缺的一条证据**（未坐实前不动手）：本族推进 = 使用 `use_item_name`，但 9623 等行**没有接取发放**
-   （`give_item` 空），道具可能独立可得 ⇒ 需坐实「用道具推进是否以步数 vars 为前置」，否则会出现
-   「绕过中继直接用道具跳 REWARD」的漂移。
-3. **保持冻结**：80255/80256（advance 未表达）、39713/49713（接取哨兵）、28 行不在生产——三者都不得靠
-   合成页/补名上线。
-4. 客户端验收 `PENDING_CLIENT`（随步 2 一并跑）。
+1. **步 2 可直接动工（前置证据已在本步闭合）**：按 §1.4 的闸门证据接线——
+   * 接取（`acquired_npc_name`，26/31 → 1002/20000）⇒ step = 0，发放 `give_item`（若有）；
+   * 中继 `talk_npcK`（严格表序，节点 `slot 3 #K-1`）⇒ step K-1 → K，并执行第 K 步的 `give_itemK`/`remove_itemK`；
+   * 用道具（真端相机）⇒ **闸门 step == relayCount** 时才推进到 `relayCount + 1`（新实现必须带这个门，
+     不得沿用现有 `SimpleItemPlayHandler.onItemUse` 的无条件推进）；
+   * 交付节点（`slot 3 #min(relayCount+1,3)` / `slot 4`）⇒ step == relayCount+1 时开奖励窗；
+     `item_check = true` 的行另需交付门；旧存档自愈随批。
+   * 目标集 = 形态与闸门都已成立的行（XML 保留 5 行 + 表中其余同形行，共 39 行族内形状一致行；
+     路由上线仍按 owner 裁定逐行决定）。
+2. **保持冻结**：80255/80256（真端无相机 ⇒ advance 轴不存在）、39713/49713（接取哨兵 `_faction_` 无
+   `slot 0` 节点）、28 行不在生产——三者都不得靠合成页/补名/无条件推进上线。
+3. 客户端验收 `PENDING_CLIENT`（随步 2 一并跑）。
