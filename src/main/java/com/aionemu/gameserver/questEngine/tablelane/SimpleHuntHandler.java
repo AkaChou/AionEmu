@@ -19,7 +19,6 @@ import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.questEngine.definition.QuestDialogContract;
 import com.aionemu.gameserver.questEngine.definition.QuestDialogPage;
-import com.aionemu.gameserver.services.QuestService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
@@ -63,12 +62,23 @@ public final class SimpleHuntHandler {
 	/** 路由集 = 注册集 − XML-only 行（单一 owner 不变量）。 / Routing set = registration set minus XML-owned rows. */
 	private final Set<Integer> routedQuestIds;
 
+	/** 完成/领奖口（计划 §6.2 NativeReportRewardFlow 完成半边）。 / The native completion/reward port. */
+	private final NativeReportRewardFlow rewardFlow;
+
 	private SimpleHuntHandler(NativeQuestTableLoader tableLoader, CameraRegistry cameraRegistry,
 			NativeNpcNameResolver nameResolver, HtmlPagesRegistry pagesRegistry, Set<Integer> xmlOnlyIds) {
+		this(tableLoader, cameraRegistry, nameResolver, pagesRegistry, xmlOnlyIds,
+				NativeReportRewardFlow.instance());
+	}
+
+	SimpleHuntHandler(NativeQuestTableLoader tableLoader, CameraRegistry cameraRegistry,
+			NativeNpcNameResolver nameResolver, HtmlPagesRegistry pagesRegistry, Set<Integer> xmlOnlyIds,
+			NativeReportRewardFlow rewardFlow) {
 		this.tableLoader = tableLoader;
 		this.cameraRegistry = cameraRegistry;
 		this.nameResolver = nameResolver;
 		this.pagesRegistry = pagesRegistry;
+		this.rewardFlow = rewardFlow;
 
 		Map<Integer, List<HuntTargetRef>> targets = new LinkedHashMap<>();
 		Map<Integer, Integer> acquires = new LinkedHashMap<>();
@@ -365,7 +375,7 @@ public final class SimpleHuntHandler {
 				} else if ((dialogId >= 8 && dialogId <= 23) || dialogId == 108 || (dialogId >= 110 && dialogId <= 124)) {
 					// 结算奖励并完成任务
 					int rewardIndex = (dialogId >= 8 && dialogId <= 23) ? (dialogId - 8) : 0;
-					if (QuestService.finishQuest(env, rewardIndex)) {
+					if (rewardFlow.claim(env, rewardIndex).completed()) {
 						PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 1008, questId));
 						return true;
 					}

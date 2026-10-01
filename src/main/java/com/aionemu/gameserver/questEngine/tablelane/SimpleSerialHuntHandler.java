@@ -19,7 +19,6 @@ import com.aionemu.gameserver.questEngine.definition.QuestDialogPage;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
-import com.aionemu.gameserver.services.QuestService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
@@ -64,11 +63,20 @@ public final class SimpleSerialHuntHandler {
 	/** 路由集 = 管理集 − XML-only 行（单一 owner 不变量）。 / Routing set = managed set minus XML-owned rows. */
 	private final Set<Integer> routedQuestIds;
 
-	private SimpleSerialHuntHandler(NativeQuestTableLoader tableLoader, CameraRegistry cameraRegistry,
+	/** 完成/领奖口（计划 §6.2 NativeReportRewardFlow 完成半边）。 / The native completion/reward port. */
+	private final NativeReportRewardFlow rewardFlow;
+
+	SimpleSerialHuntHandler(NativeQuestTableLoader tableLoader, CameraRegistry cameraRegistry,
 			NativeNpcNameResolver nameResolver, Set<Integer> xmlOnlyIds) {
+		this(tableLoader, cameraRegistry, nameResolver, xmlOnlyIds, NativeReportRewardFlow.instance());
+	}
+
+	SimpleSerialHuntHandler(NativeQuestTableLoader tableLoader, CameraRegistry cameraRegistry,
+			NativeNpcNameResolver nameResolver, Set<Integer> xmlOnlyIds, NativeReportRewardFlow rewardFlow) {
 		this.tableLoader = tableLoader;
 		this.cameraRegistry = cameraRegistry;
 		this.nameResolver = nameResolver;
+		this.rewardFlow = rewardFlow;
 
 		Map<Integer, List<HuntTargetRef>> targets = new LinkedHashMap<>();
 		Map<Integer, Integer> acquireNpcs = new LinkedHashMap<>();
@@ -419,7 +427,7 @@ public final class SimpleSerialHuntHandler {
 				} else if ((dialogId >= 8 && dialogId <= 23) || dialogId == 108 || (dialogId >= 110 && dialogId <= 124)) {
 					// 结算奖励并完成任务
 					int rewardIndex = (dialogId >= 8 && dialogId <= 23) ? (dialogId - 8) : 0;
-					if (QuestService.finishQuest(env, rewardIndex)) {
+					if (rewardFlow.claim(env, rewardIndex).completed()) {
 						PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 1008, questId));
 						return true;
 					}

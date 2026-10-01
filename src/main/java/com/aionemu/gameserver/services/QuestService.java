@@ -117,15 +117,35 @@ public final class QuestService {
 	 * whether successful
 	 */
 	public static boolean finishQuest(QuestEnv env, int reward) {
+		QuestTemplate template = questsData == null ? null : questsData.getQuestById(env.getQuestId());
+		if (template == null) {
+			// 已切换到 native 车道的行没有 typed 模板：旧完成口 fail-closed，由 native 完成口
+			// （NativeReportRewardFlow）用真端 quest.xml 元数据构造模板后走同一条发放路径。
+			// Rows owned by the native lane carry no typed template here: this legacy entry point
+			// fails closed, and the native completion port supplies the retail-derived template.
+			return false;
+		}
+		return finishQuest(env, reward, template);
+	}
+
+	/**
+	 * 用给定模板完成任务并发放指定奖励（native 完成口的共用结算体）。
+	 * Finishes the quest with the given template and grants the specified reward; this is the shared
+	 * settlement body used by the native completion port as well as the legacy XML lane.
+	 * @param env 任务环境 / quest environment
+	 * @param reward 奖励档位（奖励组下标，已在调用方校验范围）/ reward tier (validated group index)
+	 * @param template 奖励面模板（真端元数据映射或 XML 模板）/ reward template
+	 * @return 是否成功 / whether the settlement succeeded
+	 */
+	public static boolean finishQuest(QuestEnv env, int reward, QuestTemplate template) {
 		Player player = env.getPlayer();
 		int id = env.getQuestId();
 		QuestState qs = player.getQuestStateList().getQuestState(id);
 		Rewards rewards = new Rewards();
 		Rewards extendedRewards = new Rewards();
-		if (qs == null || qs.getStatus() != QuestStatus.REWARD) {
+		if (qs == null || qs.getStatus() != QuestStatus.REWARD || template == null) {
 			return false;
 		}
-		QuestTemplate template = questsData.getQuestById(id);
 		if (template.getCategory() == QuestCategory.MISSION && qs.getCompleteCount() != 0) {
 			return false;
 		}
@@ -376,7 +396,7 @@ public final class QuestService {
 		Player player = env.getPlayer();
 		int id = env.getQuestId();
 		QuestState qs = player.getQuestStateList().getQuestState(id);
-		QuestWorkItems qwi = questsData.getQuestById(id).getQuestWorkItems();
+		QuestWorkItems qwi = template.getQuestWorkItems();
 		if (qwi != null) {
 			long count = 0;
 			for (QuestItems qi : qwi.getQuestWorkItem()) {
@@ -400,8 +420,10 @@ public final class QuestService {
 			PacketSendUtility.sendMessage(player, "You're GM! So system won't apply countNextRepeatTime()");
 		}
 		PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(id, qs.getStatus(), qs.getQuestVars().getQuestVars()));
-		player.getController().updateZone();
-		player.getController().updateNearbyQuests();
+		if (player.getController() != null) {
+			player.getController().updateZone();
+			player.getController().updateNearbyQuests();
+		}
 		GameEngineServices.questEngine().onLvlUp(env);
 		if (template.getNpcFactionId() != 0) {
 			player.getNpcFactions().completeQuest(template);

@@ -31,7 +31,7 @@ class NativeQuestStartPortTest {
 	/** min 11 / 前置 {@code finished_quest_cond1=Q1131}。 */
 	private static final int GATED = 1132;
 	private static final int GATE_QUEST = 1131;
-	/** {@code bm_restrict_category=1}（语义未坐实 ⇒ fail-closed）。 */
+	/** {@code bm_restrict_category=1}（账号限制位 20 = {@code quest_acquire1}）。 */
 	private static final int BM_RESTRICTED = 1329;
 	/** {@code minlevel_permitted=999}：真端不可接取行。 */
 	private static final int UNREACHABLE = 2732;
@@ -58,13 +58,26 @@ class NativeQuestStartPortTest {
 	}
 
 	@Test
-	void bmRestrictedRowsFailClosedUntilTheAxisIsProven() {
+	void bmRestrictedRowsFollowTheAccountRestrictionBit() {
 		Player player = player(40);
-		NativeQuestStartPort.StartResult result = port().start(player, BM_RESTRICTED);
+		// 真端判定 = 玩家限制位图第 (类别 + 19) 位：类别 1 ⇒ quest_acquire1(20)。
+		// The retail check is bit (category + 19) of the player's restriction bitmap: 1 ⇒ quest_acquire1.
+		int[] requestedBit = {-1};
+		NativeQuestStartPort restricted = new NativeQuestStartPort(NativeQuestXmlTable.instance(),
+			(ignored, bitIndex) -> {
+				requestedBit[0] = bitIndex;
+				return true;
+			});
+		assertEquals(NativeQuestStartPort.Outcome.BM_RESTRICT_BLOCKED,
+			restricted.start(player, BM_RESTRICTED).outcome(), "限制位命中 ⇒ 拒接");
+		assertEquals(NativeQuestStartPort.QUEST_ACQUIRE_FIRST_BIT, requestedBit[0],
+			"类别 1 必须查 quest_acquire1 位");
+		assertNull(player.getQuestStateList().getQuestState(BM_RESTRICTED), "拒接不得建档");
 
-		assertEquals(NativeQuestStartPort.Outcome.BM_RESTRICT_UNRESOLVED, result.outcome(),
-				"bm_restrict_category 位集语义未坐实：必须 fail-closed，禁止放行兜底");
-		assertNull(player.getQuestStateList().getQuestState(BM_RESTRICTED));
+		// 本服无计费来源 ⇒ 生产位集为空（真端全订阅账号同形）⇒ 该行按真端可接取。
+		// No billing source here ⇒ the production bitmap is empty ⇒ the row is acquirable.
+		assertTrue(port().start(player, BM_RESTRICTED).started(), "限制位未命中 ⇒ 可接取");
+		assertEquals(QuestStatus.START, player.getQuestStateList().getQuestState(BM_RESTRICTED).getStatus());
 	}
 
 	@Test

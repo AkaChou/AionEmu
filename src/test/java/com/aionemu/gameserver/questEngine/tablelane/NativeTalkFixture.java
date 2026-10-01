@@ -62,6 +62,18 @@ public final class NativeTalkFixture {
 		}
 	}
 
+	/** 注入假背包端口与完成口的处理器（领奖段门禁用）。 /
+	 * A handler with the given inventory and completion ports (used by the claim-segment gates). */
+	public static SimpleTalkHandler handler(NativeInventoryPort inventory, NativeReportRewardFlow rewardFlow) {
+		try {
+			return new SimpleTalkHandler(NativeQuestTableLoader.instance(), NativeNpcNameResolver.instance(),
+				RetailItemNameIndex.loadItemTemplates(), NativeQuestXmlTable.instance(), inventory,
+				NativeQuestOwnerResolver.instance().xmlOnlyIds(), NativeMoviePort.live(), rewardFlow);
+		} catch (java.io.IOException e) {
+			throw new AssertionError("retail item index unreadable", e);
+		}
+	}
+
 	/** 真端行（缺行 fail-closed）。 / The retail row (missing rows fail closed). */
 	public static SimpleTalkRow row(int questId) {
 		return handler().requireRow(questId);

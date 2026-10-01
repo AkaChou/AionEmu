@@ -19,8 +19,8 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
  * 开始条件读真端 {@code quest.xml} 轴：等级（{@code minlevel_permitted}/{@code maxlevel_permitted}，
  * 真端 {@code Quest::CanAcquireQuest} 对 {@code level < minlevel} 一律拒绝，故 {@code 999} 是不可达值而非
  * "无限制"）、种族、职业、性别、重复上限（{@code max_repeat_count}）、已完成前置（{@code finished_quest_condN}，
- * 值形如 {@code Q50010}）。{@code bm_restrict_category} 的 128 位地图位集语义尚未坐实 ⇒ **fail-closed**
- * （{@code BM_RESTRICT_UNRESOLVED}），不得用放行兜底。
+ * 值形如 {@code Q50010}）。{@code bm_restrict_category} 按真端「类别 + 19」位查玩家账号限制位图
+ * （{@code quest_acquire1..4}，见 {@link RestrictionBitmap}），本服无计费来源 ⇒ 位集为空。
  * <p>
  * Native start/state port: retail quest.xml axes only, no typed template; unproven axes fail closed.
  */
@@ -40,11 +40,36 @@ public final class NativeQuestStartPort {
 		REPEAT_LIMIT,
 		/** 前置任务未完成。 / Prerequisite quests incomplete. */
 		PREREQUISITE_MISSING,
-		/** {@code bm_restrict_category} 未坐实 ⇒ fail-closed。 / Unproven BM restriction axis. */
-		BM_RESTRICT_UNRESOLVED,
+		/** 账号限制位图命中该行的 {@code quest_acquireN} 位。 / Account restriction bitmap hit. */
+		BM_RESTRICT_BLOCKED,
 		/** 缺真端行。 / No retail row. */
 		MISSING_ROW
 	}
+
+	/**
+	 * 账号限制位图端口（真端 {@code quest_acquireN} 等 68 个限制位的玩家侧位集）。
+	 * <p>
+	 * 真端语义（已坐实，见 {@code p3/p3-prereqs/bm-restrict-category-semantics.md}）：
+	 * {@code bm_restrict_category} 是**类别下标**（服务端存 1 字节，&lt;0 → 0、&gt;8 → 8），
+	 * 判定为「玩家限制位图 = {(类别 + 19)} 时拒绝接取」；下标 20..23 即
+	 * {@code quest_acquire1..4}。本服无计费/账号类型子系统 ⇒ 生产端口为空位集
+	 * （真端全订阅账号的 restrict 列表同样为空），因此类别 1 的行按真端**可接取**。
+	 * <p>
+	 * The account restriction bitmap: the retail check denies acquisition when bit
+	 * {@code category + 19} is set on the player (indices 20..23 are {@code quest_acquire1..4}).
+	 * This server has no billing/account-type source, so the production port is the empty set —
+	 * the same shape a full-subscription retail account has.
+	 */
+	@FunctionalInterface
+	public interface RestrictionBitmap {
+		boolean has(Player player, int bitIndex);
+
+		/** 无计费来源的生产位集（空）。 / The production bitmap: empty (no billing source). */
+		RestrictionBitmap EMPTY = (player, bitIndex) -> false;
+	}
+
+	/** 真端限制位图里 {@code quest_acquire1} 的下标（类别 1 + 19）。 / Retail bit index of quest_acquire1. */
+	static final int QUEST_ACQUIRE_FIRST_BIT = 20;
 
 	/** 结论 + 证据串。 / Verdict with an evidence detail. */
 	public record StartResult(Outcome outcome, String detail) {
@@ -56,6 +81,7 @@ public final class NativeQuestStartPort {
 	private static volatile NativeQuestStartPort instance;
 
 	private final NativeQuestXmlTable questXml;
+	private final RestrictionBitmap restrictions;
 
 	public static NativeQuestStartPort instance() {
 		NativeQuestStartPort local = instance;
@@ -63,7 +89,7 @@ public final class NativeQuestStartPort {
 			synchronized (NativeQuestStartPort.class) {
 				local = instance;
 				if (local == null) {
-					local = new NativeQuestStartPort(NativeQuestXmlTable.instance());
+					local = new NativeQuestStartPort(NativeQuestXmlTable.instance(), RestrictionBitmap.EMPTY);
 					instance = local;
 				}
 			}
@@ -72,7 +98,12 @@ public final class NativeQuestStartPort {
 	}
 
 	public NativeQuestStartPort(NativeQuestXmlTable questXml) {
+		this(questXml, RestrictionBitmap.EMPTY);
+	}
+
+	public NativeQuestStartPort(NativeQuestXmlTable questXml, RestrictionBitmap restrictions) {
 		this.questXml = questXml;
+		this.restrictions = restrictions;
 	}
 
 	/**
@@ -146,11 +177,14 @@ public final class NativeQuestStartPort {
 		if (!tokenPermitted(row.text("gender_permitted"), gender)) {
 			return new StartResult(Outcome.GENDER_BLOCKED, "gender " + gender);
 		}
-		if (!row.text("bm_restrict_category").isBlank()) {
-			// 未决项：真端按 128 位地图位集判定（NPCServer fun_052.cpp:3726 写入 / CanAcquireQuest 消费），
-			// 本服尚无该位集来源 ⇒ fail-closed，禁止放行兜底。
-			return new StartResult(Outcome.BM_RESTRICT_UNRESOLVED,
-					"bm_restrict_category=" + row.text("bm_restrict_category"));
+		// bm_restrict_category：真端按「类别 + 19」位查玩家限制位图（NPCServer Quest::CanAcquireQuest，
+		// 见 p3-prereqs/bm-restrict-category-semantics.md）；类别仅 1..4 落在 quest_acquire1..4。
+		// bm_restrict_category is the account-restriction category: the retail check denies when the
+		// player's bitmap has bit (category + 19); only 1..4 land on quest_acquire1..4.
+		int restrictCategory = restrictCategory(row);
+		if (restrictCategory != 0 && restrictions.has(player, restrictCategory + 19)) {
+			return new StartResult(Outcome.BM_RESTRICT_BLOCKED,
+					"quest_acquire" + restrictCategory + " set");
 		}
 		List<Integer> missing = missingPrerequisites(player, row);
 		if (!missing.isEmpty()) {
@@ -255,6 +289,18 @@ public final class NativeQuestStartPort {
 	private static int intOr(NativeQuestXmlTable.QuestRow row, String tag, int fallback) {
 		Integer value = row.integer(tag);
 		return value == null ? fallback : value;
+	}
+
+	/**
+	 * {@code bm_restrict_category} → 类别下标（与真端同形：缺列/负值 → 0、&gt;8 → 8）。
+	 * The retail restriction category, clamped exactly like the retail loaders.
+	 */
+	public static int restrictCategory(NativeQuestXmlTable.QuestRow row) {
+		Integer raw = row.integer("bm_restrict_category");
+		if (raw == null || raw < 0) {
+			return 0;
+		}
+		return Math.min(raw, 8);
 	}
 
 	/** {@code class_permitted}/{@code gender_permitted} 空格分隔词表；缺声明或 {@code all} 不限制。 */

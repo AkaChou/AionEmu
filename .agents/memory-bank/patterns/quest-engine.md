@@ -2547,14 +2547,14 @@ first_seen: 2026-10-01
 last_verified: 2026-10-01
 symptom: 玩家在奖励窗点「领取」无反应/服务端异常，任务停在 REWARD 永不 COMPLETE；日志为 NullPointerException: Cannot invoke "com.aionemu.gameserver.model.templates.QuestTemplate.getCategory()" because "template" is null
 root_cause: ①旧族编译器与 typed XML 随同批删旧退场后，已切换行从生产目录退场（ProductionQuestDefinitions.definition(1141/2354) = missing production quest definition），而生产 QuestsData 由该目录构建（DataManager.java:305 → QuestsData.fromCatalog），故 questsData.getQuestById(id) == null；②三个 native handler 的领奖段仍调旧 lane 完成入口 QuestService.finishQuest（SimpleTalkHandler.java:894-896、SimpleHuntHandler.java:367-369、SimpleSerialHuntHandler.java:421-423），该入口首段即要求 typed 模板（QuestService.java:128-131）；③族门与夹具（SimpleHunt/SimpleSerialHunt/SimpleTalk 族门 + NativeTalkFixture）全部止步于奖励窗页 5，**领奖段零覆盖**，故 P1/P2/P3 三次切换批都未暴露
-fix_or_guardrail: 二选一且都不得引入 IR 双事实来源：①落 native 完成/领奖口（计划 §6.2 NativeReportRewardFlow 完成半边：直读 quest.xml 的 reward_exp*/reward_gold*/reward_item*/selectable_reward_item*/reward_title*/reward_item_ext_* + 状态端口写 COMPLETE/completeCount/reward/completeTime + 客户端同步；档位/可选/职业/随机奖励逐列坐实后再开）；②让已切换行保留「无节点无转换」的 metadata-only 模板（目录加载器已支持该语义），令旧完成口的奖励面继续可用。无论选哪条，族门必须补一条**领奖段**用例（REWARD → 8..23 → COMPLETE + completeCount+1），否则同类缺口仍会以「门绿」形态复现
-evidence: .agents/summary/quest-engine-native/p3/step5-anchor-evidence.tsv; .agents/summary/quest-engine-native/gates/2026-10-01-focused-run-p3step5-red-classes.tsv; src/main/java/com/aionemu/gameserver/services/QuestService.java:128; src/main/java/com/aionemu/gameserver/dataholders/QuestsData.java:126; src/main/java/com/aionemu/gameserver/questEngine/tablelane/SimpleTalkHandler.java:894; src/main/java/com/aionemu/gameserver/questEngine/tablelane/SimpleHuntHandler.java:367; src/main/java/com/aionemu/gameserver/questEngine/tablelane/SimpleSerialHuntHandler.java:421
-validation: 2026-10-01 探针实测（注入 QuestsData.fromCatalog(ProductionQuestDefinitions.catalog()) 后对 1141/2354 的 REWARD 行调用 finishQuest）：模板 null + NPE 复现；聚焦套件 110 红类里无任何该类领奖段用例（零覆盖取证）
-boundaries: 本条目只登记缺陷与候选处置，不含实现；奖励档位/可选奖励/职业奖励/随机奖励的逐列语义属计划 P6「奖励档位/窗口」范围，未坐实前不得以估算发放；修复落地前 P3 的「报告/领奖语义闭环」退出条件不成立
+fix_or_guardrail: 已按候选①落地（不得引入 IR 双事实来源）：`tablelane/NativeReportRewardFlow` 直读真端 quest.xml 奖励列（经**与生产目录同一条** RetailQuestMetadataCompiler → QuestTemplate.fromMetadata）后调共用结算体 `QuestService.finishQuest(env, tier, template)`；三族 handler 领奖段改走该口（完成口构造注入）；旧入口 `finishQuest(env, reward)` 缺模板改为 fail-closed（不再 NPE）；奖励窗按钮按行声明选项面校验、多档行（P6 未坐实）fail-closed。任何族切换批必须带一条**领奖段**用例（REWARD → 8..23 → COMPLETE + completeCount+1），否则同类缺口仍会以「门绿」形态复现
+evidence: .agents/summary/quest-engine-native/p3/P3-STEP5-REPORT.zh-CN.md §5.1; .agents/summary/quest-engine-native/p3/P3-STEP6-REPORT.zh-CN.md §1/§3; src/main/java/com/aionemu/gameserver/questEngine/tablelane/NativeReportRewardFlow.java; src/main/java/com/aionemu/gameserver/services/QuestService.java; src/test/java/com/aionemu/gameserver/questEngine/tablelane/NativeQuestRewardClaimGateTest.java
+validation: 2026-10-01 步骤 5 探针复现 NPE（注入 QuestsData.fromCatalog 后对 1141/2354 的 REWARD 行调用 finishQuest）；2026-10-01 步骤 6 落地后 NativeQuestRewardClaimGateTest 12/12（奖励面逐列对拍 + 三族 REWARD→COMPLETE 页 + 越界按钮/未解析奖励/缺元数据/缺 REWARD 态/结算拒绝 fail-closed），NativeQuestStartPortTest 9/9，A 组 79 例 2F+1E（三红全部范围外：80817/19673/1137），聚焦套件对步骤 5 基线逐类清单 ADDED 0 / REMOVED 0
+boundaries: 随机奖励组（{%}name → RANDOM kind）与多档行档位语义仍属计划 P6「奖励档位/窗口」范围，未坐实前不得以估算发放（已切换行里只有 18706/28706 多档且等级轴 999 不可达）；发放细节（背包/经验/金币/称号/AP/GP/DP）由共用结算体承担，未跑启服与真机客户端验收 ⇒ 三族维持 PENDING_CLIENT
 superseded_by: none
 see_also: [QE-104], [QE-108]
 first_check: 奖励窗后无反应时先答：①该行还有 typed QuestTemplate 吗（QuestsData.getQuestById(id)）？②领奖分支调的是哪个完成入口（native handler → QuestService.finishQuest?）？③族门有没有一条用例走到 COMPLETE 而不是只到奖励窗页 5？④要补的是 native 完成口还是 metadata-only 模板（不允许回退 IR）？
-keywords: 领奖段NPE、finishQuest 要求模板、typed XML 退役、QuestsData.fromCatalog、族门只到奖励窗、领奖段零覆盖、REWARD 不转 COMPLETE、QE-113
+keywords: 领奖段NPE、finishQuest 要求模板、typed XML 退役、QuestsData.fromCatalog、族门只到奖励窗、领奖段零覆盖、REWARD 不转 COMPLETE、NativeReportRewardFlow、奖励窗按钮声明面、QE-113
 -->
 
 - **判定规则**：已切换族的完成/领奖面属于退出条件的一部分；「奖励窗页出现」不等于「能领奖」。
@@ -2562,7 +2562,7 @@ keywords: 领奖段NPE、finishQuest 要求模板、typed XML 退役、QuestsDat
 
 ---
 
-## [QE-114] 一一四、`bm_restrict_category` 未坐实 ⇒ 44% 的 talk 行 fail-closed 不可接取：接取轴缺口会被门态掩盖 (BM_RESTRICT_BITMAP_UNRESOLVED)
+## [QE-114] 一一四、`bm_restrict_category` = 账号限制类别下标（误判为地图位集 ⇒ 44% talk 行曾被 fail-closed 卡住）(BM_RESTRICT_BITMAP_UNRESOLVED)
 
 <!-- pattern-metadata
 status: CONFIRMED
@@ -2571,15 +2571,15 @@ first_seen: 2026-10-01
 last_verified: 2026-10-01
 symptom: 任务在客户端可见、NPC 对话正常，但确认接取（1002/20000）后不建档、不发页；NativeQuestStartPort 返回 BM_RESTRICT_UNRESOLVED。SimpleTalk 表 1383/3152 行（43.9%）受影响；quest.xml 全表 3477/10035 行声明该轴
 root_cause: 真端该列是 128 位地图/类别位集（写入侧 NPCServer fun_052.cpp:3726，消费侧 Quest::CanAcquireQuest），本服尚无该位集来源；NativeQuestStartPort 在等级/种族/职业/性别轴之后、前置轴之前对非空值 fail-closed（:149-154）。重锚测试若只断言表行/阶梯而不覆盖接取，缺口会被「夹具直建 START 行」的门态掩盖
-fix_or_guardrail: ①立项解 fun_052.cpp 的位集语义（写出侧写入位 + 消费侧判定双向对拍），落地后把 fail-closed 断言换成真端位集判定；②在此之前保持 fail-closed 并**按行冻结**（不得放行兜底、不得按 name 近似匹配）；③重锚类必须显式断言该轴状态（如 EarlyElyosQuestRegressionTest 对 1414/1691 断言 bm 轴 + 直建 START 验证机械面），缺该断言即视为门态不完整
-evidence: .agents/summary/quest-engine-native/p3/step5-anchor-evidence.tsv; src/main/java/com/aionemu/gameserver/questEngine/tablelane/NativeQuestStartPort.java:149; src/main/resources/aion/data/static_data/quest/retail/quest.xml; src/test/java/com/aionemu/gameserver/questEngine/definition/EarlyElyosQuestRegressionTest.java
-validation: 2026-10-01 按行复算：quest.xml 3477/10035 行、SimpleTalk 1383/3152 行声明 bm_restrict_category；1414/1691 实测 evaluateNpcAcquire = BM_RESTRICT_UNRESOLVED 且 1002 不建档
-boundaries: 位集语义来源只在真端 NPCServer（fun_052.cpp）与本服缺失的位图数据；未坐实前不得以「放行 + 事后校验」替代 fail-closed；本条目不含实现
+fix_or_guardrail: 语义已坐实并落地（不是地图位集）：该列是**账号限制类别下标**（真端服务端只存 1 字节并 clamp 0..8），判定 = 「玩家限制位图第 `类别 + 19` 位为 1 ⇒ 拒绝接取」，位 20..23 = quest_acquire1..4；本服落地 `NativeQuestStartPort.restrictCategory` + `RestrictionBitmap` 端口（无计费来源 ⇒ 空位集 ⇒ 类别 1 行按真端可接取），位命中 ⇒ `BM_RESTRICT_BLOCKED` 拒绝建档。重锚类必须显式断言该轴（位下标 + 空位集放行/注入位拒绝），缺该断言即视为门态不完整
+evidence: .agents/summary/quest-engine-native/p3/p3-prereqs/bm-restrict-category-semantics.md（写出/消费双向 + Server64.exe 位名表实读）; .agents/summary/quest-engine-native/p3/P3-STEP6-REPORT.zh-CN.md §2; src/main/java/com/aionemu/gameserver/questEngine/tablelane/NativeQuestStartPort.java; src/test/java/com/aionemu/gameserver/questEngine/tablelane/NativeQuestStartPortTest.java
+validation: 2026-10-01 步骤 5 按行复算（quest.xml 3477 行、SimpleTalk 982 / SimpleHunt 507 / SerialHunt 2 行声明，取值全为 1）；2026-10-01 步骤 6 双向对拍 + 二进制位名表实读；NativeQuestStartPortTest 9/9（注入位 ⇒ 拒绝且查位 = 20；空位集 ⇒ START），EarlyElyosQuestRegressionTest 1414/1691 经真实 1002 动作建档并保留前置轴拒接
+boundaries: 限制位集唯一来源是账号计费/类型（bm_restrict.xml 的 restrict 名单），本服无该子系统 ⇒ 位集恒空；若将来引入，只替换 RestrictionBitmap 生产实现、判定公式不变；类别 5..8 落在非任务位名（channel_chat_write/instance_cooltime），现网数据不出现，出现即按同一机械规则判定
 superseded_by: none
 see_also: [QE-113], [QE-108]
 first_check: 接取后不建档时先答：①NativeQuestStartPort 返回哪个 Outcome？②该行 quest.xml 的 bm_restrict_category 是否非空？③是等级/种族/职业/性别/前置哪条轴先短路？④测试是不是直接建 START 绕过了接取轴？
-keywords: bm_restrict_category、128位地图位集、fun_052.cpp、BM_RESTRICT_UNRESOLVED、接取 fail-closed、44% talk 行、夹具直建 START 掩盖接取轴、QE-114
+keywords: bm_restrict_category、账号限制类别下标、类别+19位、quest_acquire1..4、RestrictionBitmap、bm_restrict.xml、BM_RESTRICT_BLOCKED、44% talk 行、QE-114
 -->
 
-- **判定规则**：`bm_restrict_category` 非空 = 真端按地图/类别位集判定；未坐实即 fail-closed，宁可不可接取也不发明判定。
-- **安全网**：重锚类同时断言「该轴 fail-closed」与「机械面（中继/发扣/报告）正确」，避免用直建 START 的夹具把接取缺口盖掉。
+- **判定规则**：`bm_restrict_category = N`（真端 clamp 0..8）= 查玩家限制位图第 `N + 19` 位（1..4 ⇒ `quest_acquire1..4`）；位置位 ⇒ 拒绝接取，位为空 ⇒ 放行。
+- **安全网**：重锚类同时断言「该轴位下标与放行/拒绝面」与「机械面（中继/发扣/报告）正确」，避免用直建 START 的夹具把接取缺口盖掉。

@@ -313,22 +313,29 @@ class EarlyElyosQuestRegressionTest {
 		assertEquals("Q1413", NativeQuestXmlTable.instance().require(1414).text("finished_quest_cond1"),
 			"真端前置轴");
 
-		// 真端 quest.xml 声明 bm_restrict_category=1：128 位地图位集语义未坐实 ⇒ native fail-closed，
-		// 该行当前不可接取（阻塞项登记于计划 §10.3；接线前不得放行兜底）。
-		// The retail row declares bm_restrict_category=1; the 128-bit map bitset is not decoded yet, so the
-		// native lane fails closed and this row cannot be acquired (registered blocker in plan §10.3).
-		assertEquals("1", NativeQuestXmlTable.instance().require(1414).text("bm_restrict_category"),
+		// 真端 quest.xml 声明 bm_restrict_category=1 ⇒ 账号限制位 20（quest_acquire1）；本服无计费来源
+		// ⇒ 限制位集为空（真端全订阅账号同形）⇒ 该行按真端可接取（被限制账号的拒绝面见
+		// NativeQuestStartPortTest 的位集注入用例）。
+		// bm_restrict_category=1 maps to account-restriction bit 20 (quest_acquire1); this server has no
+		// billing source, so the bitmap is empty and the row is acquirable (the deny path is covered by
+		// the injected-bitmap case in NativeQuestStartPortTest).
+		assertEquals(1, NativeQuestStartPort.restrictCategory(NativeQuestXmlTable.instance().require(1414)),
 			"真端 bm 轴");
+		// 前置 Q1413 未完成时拒接（bm 轴坐实后由前置轴接管 fail-closed）。
+		// Without prerequisite Q1413 the acquire is refused (the prerequisite axis takes over).
 		NativeTalkFixture.clearPackets(player);
-		assertEquals(NativeQuestStartPort.Outcome.BM_RESTRICT_UNRESOLVED,
-			NativeQuestStartPort.instance().evaluateNpcAcquire(player, 1414).outcome(), "bm 轴 fail-closed");
-		assertFalse(handler.onDialog(NativeTalkFixture.dialog(player, 203989, 1414, 1002)), "bm 未坐实不得建档");
+		assertFalse(handler.onDialog(NativeTalkFixture.dialog(player, 203989, 1414, 1002)), "前置未完成拒接");
 		assertNull(player.getQuestStateList().getQuestState(1414), "拒接不得落库");
 		assertEquals(List.of(), NativeTalkFixture.dialogPages(player), "拒接不发页");
+		NativeTalkFixture.completePrerequisites(player, 1413);
+		NativeTalkFixture.clearPackets(player);
+		assertTrue(handler.onDialog(NativeTalkFixture.dialog(player, 203989, 1414, 1002)), "接取确认");
+		assertEquals(QuestStatus.START, player.getQuestStateList().getQuestState(1414).getStatus(),
+			"限制位集为空 ⇒ 建档 START");
+		NativeTalkFixture.assertOnlyDialogPage(player, SimpleTalkHandler.PAGE_ACCEPTED);
 
-		// 接取轴外的形状（中继发物 → 报告领奖）用直建 START 行验证：机械面必须与真端行一致。
-		// The relay/report machinery is verified on a seeded START row (the acquire axis above is blocked).
-		NativeTalkFixture.start(player, 1414);
+		// 接取后的形状（中继发物 → 报告领奖）沿真端行继续验证。
+		// The relay/report machinery continues on the row created through the real acquire axis.
 		NativeTalkFixture.clearPackets(player);
 		assertTrue(itemHandler.onDialog(NativeTalkFixture.dialog(player, 700175, 1414, 10000)), "中继步 1");
 		NativeTalkFixture.assertOnlyDialogPage(player, 1352);
@@ -455,17 +462,21 @@ class EarlyElyosQuestRegressionTest {
 		assertEquals("Q1932", NativeQuestXmlTable.instance().require(1691).text("finished_quest_cond1"),
 			"真端前置轴");
 
-		// 真端 quest.xml 声明 bm_restrict_category=1：128 位地图位集未坐实 ⇒ native fail-closed（计划 §10.3）。
-		// The row declares bm_restrict_category=1; the 128-bit map bitset is not decoded yet ⇒ fail closed.
-		assertEquals("1", NativeQuestXmlTable.instance().require(1691).text("bm_restrict_category"),
+		// 真端 bm 轴同 1414：类别 1 ⇒ 限制位 20，本服位集为空 ⇒ 可接取（拒绝面见 NativeQuestStartPortTest）。
+		// Same bm axis as 1414: category 1 ⇒ restriction bit 20, empty bitmap here ⇒ acquirable.
+		assertEquals(1, NativeQuestStartPort.restrictCategory(NativeQuestXmlTable.instance().require(1691)),
 			"真端 bm 轴");
-		assertEquals(NativeQuestStartPort.Outcome.BM_RESTRICT_UNRESOLVED,
-			NativeQuestStartPort.instance().evaluateNpcAcquire(player, 1691).outcome(), "bm 轴 fail-closed");
-		assertFalse(handler.onDialog(NativeTalkFixture.dialog(player, 798386, 1691, 1002)), "bm 未坐实不得建档");
+		// 前置 Q1932 未完成时拒接，完成后可接取。/ Refused without prerequisite Q1932, then acquirable.
+		NativeTalkFixture.clearPackets(player);
+		assertFalse(handler.onDialog(NativeTalkFixture.dialog(player, 798386, 1691, 1002)), "前置未完成拒接");
 		assertNull(player.getQuestStateList().getQuestState(1691), "拒接不得落库");
+		NativeTalkFixture.completePrerequisites(player, 1932);
+		NativeTalkFixture.clearPackets(player);
+		assertTrue(handler.onDialog(NativeTalkFixture.dialog(player, 798386, 1691, 1002)), "接取确认");
+		assertEquals(QuestStatus.START, player.getQuestStateList().getQuestState(1691).getStatus(),
+			"限制位集为空 ⇒ 建档 START");
 
-		// 直建 START 行验证三段阶梯与报告领奖的机械面。 / Seed START and walk the three-step ladder.
-		NativeTalkFixture.start(player, 1691);
+		// 接取后走三段阶梯与报告领奖的机械面。 / Walk the three-step ladder on the created row.
 		for (int index = 0; index < ladder.length; index++) {
 			NativeTalkFixture.clearPackets(player);
 			assertTrue(itemHandler.onDialog(NativeTalkFixture.dialog(player, ladder[index][1], 1691,

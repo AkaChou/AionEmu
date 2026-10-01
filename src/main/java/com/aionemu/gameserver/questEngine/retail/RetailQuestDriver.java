@@ -125,6 +125,10 @@ public final class RetailQuestDriver {
 	/** 入口页契约快照（见 {@link #refreshAcceptEntryContract()}）。 / Accept entry page contract snapshot. */
 	private volatile QuestDialogContract acceptEntryContract;
 	private final Map<Integer, String> rejections = new ConcurrentHashMap<>();
+	/** 真端 quest.xml 元数据缓存（native 完成口与目录构建共用同一条编译器）。 /
+	 * Retail quest.xml metadata cache shared by the native completion port and the catalog build. */
+	private final Map<Integer, Optional<RetailQuestMetadataCompiler.Outcome>> metadataCache =
+		new ConcurrentHashMap<>();
 
 	private RetailQuestDriver(Set<Integer> retailOwnedSimpleHunt, Set<Integer> retailOwnedSimpleSerialHunt,
 			Set<Integer> retailOwnedSimpleUseItem, Set<Integer> retailOwnedSimpleItemPlay,
@@ -322,6 +326,25 @@ public final class RetailQuestDriver {
 	/** 真端模板表拥有的全部任务 ID（只读快照）。 / All quest ids owned by retail tables as a read-only snapshot. */
 	public Set<Integer> retailOwnedIds() {
 		return Set.copyOf(retailOwned);
+	}
+
+	/**
+	 * 真端 {@code quest.xml} 行的规范元数据（native 完成/领奖口的数据底座）。
+	 * <p>
+	 * 与生产目录走同一条 {@link RetailQuestMetadataCompiler}（同 npc/物品/随机奖励/name id 索引），
+	 * 按任务缓存；缺行返回 empty。奖励面因此只有一个事实来源 = 真端表列本身，不引入 IR。
+	 * <p>
+	 * Canonical retail {@code quest.xml} metadata for the native completion port: the very compiler
+	 * (and indexes) that build the production catalog, cached per quest id; empty when the row is
+	 * absent. The reward face therefore has a single fact source — the retail columns — and no IR.
+	 */
+	public Optional<RetailQuestMetadataCompiler.Outcome> retailMetadataOf(int questId) {
+		if (retailTable.find(questId).isEmpty()) {
+			return Optional.empty();
+		}
+		return metadataCache.computeIfAbsent(questId, id -> Optional.of(RetailQuestMetadataCompiler.compile(
+			retailTable.find(id).orElseThrow(), npcIndex, itemIndex, randomRewards, nameIds,
+			RetailSpawnedNpcIds.load())));
 	}
 
 	/** 装载是否降级（真端资源不可用）。 / Whether the driver degraded on load. */

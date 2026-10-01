@@ -22,7 +22,6 @@ import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.questEngine.retail.RetailGrantKind;
 import com.aionemu.gameserver.questEngine.retail.RetailQuestMetadataCompiler;
 import com.aionemu.gameserver.questEngine.retail.RetailItemNameIndex;
-import com.aionemu.gameserver.services.QuestService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
@@ -106,6 +105,8 @@ public final class SimpleTalkHandler {
 	private final NativeQuestTableLoader tableLoader;
 	private final NativeNpcNameResolver nameResolver;
 	private final NativeInventoryPort inventory;
+	/** 完成/领奖口（计划 §6.2 NativeReportRewardFlow 完成半边）。 / The native completion/reward port. */
+	private final NativeReportRewardFlow rewardFlow;
 
 	/** 任务 ID → 真端 {@code con_quest}（链式接取窗的下一环；无声明则缺席）。 / Quest id → retail {@code con_quest}. */
 	private final Map<Integer, Integer> conQuestByQuestId;
@@ -151,22 +152,32 @@ public final class SimpleTalkHandler {
 
 	private SimpleTalkHandler(NativeQuestTableLoader tableLoader, NativeNpcNameResolver nameResolver) {
 		this(tableLoader, nameResolver, retailItemIndex(), NativeQuestXmlTable.instance(), NativeInventoryPort.live(),
-				NativeQuestOwnerResolver.instance().xmlOnlyIds(), NativeMoviePort.live());
+				NativeQuestOwnerResolver.instance().xmlOnlyIds(), NativeMoviePort.live(),
+				NativeReportRewardFlow.instance());
 	}
 
 	SimpleTalkHandler(NativeQuestTableLoader tableLoader, NativeNpcNameResolver nameResolver,
 			RetailItemNameIndex itemIndex, NativeQuestXmlTable questXml, NativeInventoryPort inventory) {
 		this(tableLoader, nameResolver, itemIndex, questXml, inventory,
-				NativeQuestOwnerResolver.instance().xmlOnlyIds(), NativeMoviePort.live());
+				NativeQuestOwnerResolver.instance().xmlOnlyIds(), NativeMoviePort.live(),
+				NativeReportRewardFlow.instance());
 	}
 
 	SimpleTalkHandler(NativeQuestTableLoader tableLoader, NativeNpcNameResolver nameResolver,
 			RetailItemNameIndex itemIndex, NativeQuestXmlTable questXml, NativeInventoryPort inventory,
 			Set<Integer> xmlOwnedIds, NativeMoviePort moviePort) {
+		this(tableLoader, nameResolver, itemIndex, questXml, inventory, xmlOwnedIds, moviePort,
+				NativeReportRewardFlow.instance());
+	}
+
+	SimpleTalkHandler(NativeQuestTableLoader tableLoader, NativeNpcNameResolver nameResolver,
+			RetailItemNameIndex itemIndex, NativeQuestXmlTable questXml, NativeInventoryPort inventory,
+			Set<Integer> xmlOwnedIds, NativeMoviePort moviePort, NativeReportRewardFlow rewardFlow) {
 		this.tableLoader = tableLoader;
 		this.nameResolver = nameResolver;
 		this.inventory = inventory;
 		this.moviePort = moviePort;
+		this.rewardFlow = rewardFlow;
 		this.dialogContract = QuestDialogContract.loadDefault();
 
 		Map<Integer, Integer> acquires = new LinkedHashMap<>();
@@ -892,7 +903,9 @@ public final class SimpleTalkHandler {
 				if ((dialogId >= 8 && dialogId <= 23) || dialogId == 108
 						|| (dialogId >= 110 && dialogId <= 124)) {
 					int rewardIndex = (dialogId >= 8 && dialogId <= 23) ? (dialogId - 8) : 0;
-					if (QuestService.finishQuest(env, rewardIndex)) {
+					// 结算走 native 完成口（真端 quest.xml 奖励列 + 共用结算体），不再依赖 typed 模板。
+					// Settlement goes through the native completion port; no typed template required.
+					if (rewardFlow.claim(env, rewardIndex).completed()) {
 						PacketSendUtility.sendPacket(player,
 								new SM_DIALOG_WINDOW(targetObjectId, PAGE_COMPLETE, questId));
 						return true;
