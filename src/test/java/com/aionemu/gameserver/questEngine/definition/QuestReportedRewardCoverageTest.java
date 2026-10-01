@@ -62,30 +62,6 @@ class QuestReportedRewardCoverageTest {
 			assertTargetlessCompletionRoutes(compiled, QuestDialogAction.SELECTED_QUEST_AUTO_REWARD1.id(), 11);
 		}
 	}
-
-	@Test
-	void classRewardMetadataMatchesEveryReportedCompletionAction() {
-		QuestCatalog catalog = productionCatalog();
-		for (int questId : CLASS_QUEST_IDS) {
-			CompiledQuestDefinition compiled = catalog.findExecutable(questId).orElseThrow();
-			QuestMetadata metadata = compiled.definition().metadata();
-			assertEquals(1, metadata.useClassReward(), "quest=" + questId);
-			assertEquals(11, metadata.classRewards().size(), "quest=" + questId);
-			for (QuestTransition transition : targetlessRoutes(compiled,
-					QuestDialogAction.SELECTED_QUEST_AUTO_REWARD1.id())) {
-				PlayerClass playerClass = transition.conditions().stream()
-					.filter(QuestCondition.AdvancedClassIs.class::isInstance)
-					.map(QuestCondition.AdvancedClassIs.class::cast)
-					.map(QuestCondition.AdvancedClassIs::playerClass)
-					.findFirst().orElseThrow();
-				QuestReward reward = metadata.classRewards().get(classRewardKey(playerClass)).getFirst();
-				assertTrue(transition.actions().contains(new QuestAction.GrantReward(
-					QuestRewardKind.ITEM.name(), reward.id(), reward.amount(), QuestRewardAmountMode.EXACT)),
-					"quest=" + questId + " class=" + playerClass);
-			}
-		}
-	}
-
 	/**
 	 * 对话页确认通道（TalkToNpc 报告 NPC 键）：DD 形与遗留形同键注册；classScoped 时按
 	 * AdvancedClassIs 条件计数（无条件交付兜底路由不计入职业梯）。

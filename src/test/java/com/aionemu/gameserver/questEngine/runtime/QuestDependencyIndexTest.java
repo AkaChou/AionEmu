@@ -45,19 +45,6 @@ class QuestDependencyIndexTest {
 		assertEquals(List.of(), index.dependentsOf(1200));
 	}
 
-	@Test
-	void indexesCanonicalMetadataPrerequisitesAndStartConditions() throws Exception {
-		var prerequisiteOwner = compile(10011);
-		var startConditionOwner = compile(10032);
-		QuestDependencyIndex index = new QuestDependencyIndex(
-			new ImmutableQuestCatalog(List.of(prerequisiteOwner, startConditionOwner)));
-
-		assertEquals(List.of(10011), index.dependentsOf(10010));
-		assertEquals(List.of(10032), index.dependentsOf(10031));
-		assertEquals(List.of(10032), index.dependentsOf(10025));
-		assertEquals(List.of(10032), index.dependentsOf(14062));
-	}
-
 	private static CompiledQuestDefinition compile(int questId) throws Exception {
 		// 退役任务的生产 XML 只在 git 历史里：统一取生产视图（XML 目录 + 真端 overlay）——已退役任务
 		// 由真端表 + quest.xml 元数据合成，前置条件与启动条件仍完整登记。

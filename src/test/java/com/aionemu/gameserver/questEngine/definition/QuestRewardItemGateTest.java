@@ -1,6 +1,7 @@
 package com.aionemu.gameserver.questEngine.definition;
 
 import com.aionemu.gameserver.questEngine.retail.RetailItemNameIndex;
+import com.aionemu.gameserver.questEngine.tablelane.DataDrivenNativeRuntime;
 import com.aionemu.gameserver.questEngine.tablelane.NativeQuestXmlTable;
 import com.aionemu.gameserver.questEngine.tablelane.SimpleCollectItemHandler;
 import com.aionemu.gameserver.questEngine.tablelane.SimpleCombineTaskHandler;
@@ -134,13 +135,14 @@ class QuestRewardItemGateTest {
 		production = new HashMap<>();
 		Set<Integer> withoutAnyDefinition = new TreeSet<>();
 		for (Integer qid : contract.keySet()) {
-			// P3/P4/P5 重锚（计划 §8.9）：已切到原生车道的行（SimpleTalk / SimpleHunt / SimpleSerialHunt /
-			// SimpleCollectItem / SimpleUseItem / SimpleItemPlay）没有 typed 定义，道具轴直接取自真端
-			// quest.xml 行；其余行仍按生产视图反推。fail-closed 残余（退役但不可路由，如 SimpleUseItem
-			// 的复合交付名行 30720/30723）在两处都没有定义，按不可路由登记而不是断言其道具轴。
-			// P3/P4/P5 re-anchor: rows on the native lane carry no typed definition, so their item axis
-			// comes from the retail quest.xml row; the fail-closed residue (retired yet unroutable) has no
-			// definition at all and is recorded instead of asserted.
+			// P3/P4/P5/P7 重锚（计划 §8.9）：已切到原生车道的行（七家族 handler + P7 步 f 起 DataDriven
+			// 1467 行）没有 typed 定义，道具轴直接取自真端 quest.xml 行；其余行仍按生产视图反推。
+			// fail-closed 残余（退役但不可路由，如 SimpleUseItem 的复合交付名行 30720/30723）在两处都
+			// 没有定义，按不可路由登记而不是断言其道具轴。
+			// P3/P4/P5/P7 re-anchor: rows on the native lane (seven family handlers plus, since P7 step f,
+			// the 1467 DataDriven rows) carry no typed definition, so their item axis comes from the retail
+			// quest.xml row; the fail-closed residue (retired yet unroutable) has no definition at all and
+			// is recorded instead of asserted.
 			if (nativeOwned(qid)) {
 				production.put(qid, parseNativeRowItems(qid));
 			} else if (RetiredQuestIds.contains(qid)
@@ -315,8 +317,9 @@ class QuestRewardItemGateTest {
 			extGold, extItems);
 	}
 
-	/** 已切到原生车道的行（SimpleTalk / SimpleHunt / SimpleSerialHunt）。 /
-	 * Rows already switched to the native lane. */
+	/** 已切到原生车道的行（七家族 handler + P7 步 f 起 DataDriven 运行时路由行）。 /
+	 * Rows already switched to the native lane (seven family handlers plus, since P7 step f, the
+	 * routed DataDriven rows). */
 	private static boolean nativeOwned(int questId) {
 		return SimpleTalkHandler.instance().routes(questId)
 			|| SimpleHuntHandler.instance().routes(questId)
@@ -324,7 +327,8 @@ class QuestRewardItemGateTest {
 			|| SimpleCollectItemHandler.instance().routes(questId)
 			|| SimpleUseItemHandler.instance().routes(questId)
 			|| SimpleItemPlayHandler.instance().routes(questId)
-			|| SimpleCombineTaskHandler.instance().routes(questId);
+			|| SimpleCombineTaskHandler.instance().routes(questId)
+			|| DataDrivenNativeRuntime.instance().owns(questId);
 	}
 
 	/**

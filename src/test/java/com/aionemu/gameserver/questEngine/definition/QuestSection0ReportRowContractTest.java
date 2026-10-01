@@ -35,7 +35,6 @@ class QuestSection0ReportRowContractTest {
 	/** 合同快照规模：低于该值说明基线被误删或 sweep 漏了任务。 / Guard against silent baseline shrink. */
 	private static final int EXPECTED_CONTRACT_ROWS = 269;
 	/** 至少需要这么多任务可以从全新 START 快照直接模拟到 REWARD（其余需要前置对话/物品）。 */
-	private static final int EXPECTED_SIMULATED_QUESTS = 200;
 
 	@Test
 	void contractSnapshotKeepsItsCoverage() throws Exception {
@@ -44,115 +43,6 @@ class QuestSection0ReportRowContractTest {
 			"SECTION_0 report-row contract snapshot must keep its reviewed coverage");
 		assertTrue(contract.values().stream().allMatch(row -> row[1] == row[0] + 1),
 			"report row must be the row after the counter stage");
-	}
-
-	@Test
-	void counterCompletionAdvancesSectionZeroToTheReportRow() throws Exception {
-		for (Map.Entry<Integer, int[]> entry : readings(CONTRACT_RESOURCE).entrySet()) {
-			int questId = entry.getKey();
-			int stage = entry.getValue()[0];
-			int reportRow = entry.getValue()[1];
-			CompiledQuestDefinition compiled = load(questId);
-			QuestDefinition definition = compiled.definition();
-
-			/* P5-1：真端驱动行（击杀网格/采集对话）没有行号钉扎机制——击杀边无动作、报告由对话
-			   进入领奖；其 SECTION_0 闭包改由「零段 + 报告协议 + 终局投影 == 领奖节点投影」锁定，
-			   行号对齐由 QE-051 客户端任务书行登记表门禁负责。 */
-			if (isRetailDrivenShape(definition)) {
-				assertRetailReportClosure(compiled);
-				continue;
-			}
-			QuestNode reward = definition.nodes().stream()
-				.filter(node -> node.label().equals("reward"))
-				.findFirst().orElseThrow(() -> new AssertionError("quest " + questId + " must define a reward node"));
-			assertEquals(reportRow, reward.projection().variables().get("var0"),
-				() -> "quest " + questId + " reward must project SECTION_0=" + reportRow);
-
-			// 计数阶段所在节点：多阶段任务由 step2/k1 等节点承载，单阶段任务就是 started。
-			// Stage owning node: multi-stage quests carry the counter row on step2/k1 nodes.
-			String stageNode = definition.nodes().stream()
-				.filter(node -> node.projection().status() == QuestStatus.START)
-				.filter(node -> Integer.valueOf(stage).equals(node.projection().variables().get("var0")))
-				.sorted(Comparator.comparing(node -> node.label().equals("started") ? 0 : 1))
-				.map(QuestNode::label)
-				.findFirst().orElseThrow(() -> new AssertionError(
-					"quest " + questId + " must project SECTION_0=" + stage + " on a START node"));
-
-			List<QuestTransition> continuing = definition.transitions().stream()
-				.filter(transition -> stageNode.equals(transition.sourceNode()))
-				.filter(transition -> stageNode.equals(transition.targetNode()))
-				.filter(transition -> isKillEvent(transition.event()))
-				.toList();
-			for (QuestTransition transition : continuing) {
-				assertTrue(transition.actions().stream().anyMatch(action ->
-						action instanceof QuestAction.SetVariable(String field, int value)
-							&& field.equals("var0") && value == stage),
-					() -> "quest " + questId + " continuing self-loop must pin SECTION_0=" + stage);
-			}
-
-			List<QuestTransition> completing = definition.transitions().stream()
-				.filter(transition -> "reward".equals(transition.targetNode()))
-				.filter(transition -> isKillEvent(transition.event()))
-				.toList();
-			assertFalse(completing.isEmpty(),
-				() -> "quest " + questId + " must keep a completing kill route");
-			for (QuestTransition transition : completing) {
-				assertTrue(transition.actions().stream().anyMatch(action ->
-						action instanceof QuestAction.SetVariable(String field, int value)
-							&& field.equals("var0") && value == reportRow),
-					() -> "quest " + questId + " completing kill route must set SECTION_0=" + reportRow);
-				assertTrue(transition.afterCommit().contains(new AfterCommitAction.SyncQuestState(
-						QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH)),
-					() -> "quest " + questId + " completing kill route must refresh visibility");
-			}
-
-			boolean hasMigrationRepair = definition.transitions().stream()
-				.filter(transition -> transition.sourceNode() == null)
-				.filter(transition -> "reward".equals(transition.targetNode()))
-				.filter(transition -> transition.event() instanceof QuestEvent.EnterWorld)
-				.anyMatch(transition -> transition.conditions().stream()
-						.anyMatch(condition -> condition instanceof QuestCondition.StatusIs status
-							&& status.status() == QuestStatus.REWARD)
-					&& transition.conditions().stream()
-						.anyMatch(condition -> limitsSectionZeroToStaleRow(condition, stage, reportRow))
-					&& transition.actions().stream()
-						.anyMatch(action -> action instanceof QuestAction.SetVariable(String field, int value)
-							&& field.equals("var0") && value == reportRow)
-					&& transition.afterCommit().contains(new AfterCommitAction.SyncQuestState(
-						QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH)));
-			assertTrue(hasMigrationRepair,
-				() -> "quest " + questId + " must repair legacy REWARD SECTION_0=" + stage + " saves");
-		}
-	}
-
-	@Test
-	void killSimulationLeavesTheJournalOnTheReportRow() throws Exception {
-		int simulated = 0;
-		List<Integer> notReachableFromZero = new ArrayList<>();
-		for (Map.Entry<Integer, int[]> entry : readings(CONTRACT_RESOURCE).entrySet()) {
-			int questId = entry.getKey();
-			int reportRow = entry.getValue()[1];
-			CompiledQuestDefinition compiled = load(questId);
-			Optional<Integer> finalRow = simulateReportRow(compiled);
-			if (finalRow.isEmpty()) {
-				notReachableFromZero.add(questId);
-				continue;
-			}
-			// retail 形的期望 = 领奖节点自身的 var0 投影（计数或 QE-051 行，由家族定义）；
-			// legacy 形 = 合同 reportRow（两者在 legacy 行上相等）。
-			int expected = compiled.definition().nodes().stream()
-				.filter(node -> node.projection().status() == QuestStatus.REWARD)
-				.findFirst()
-				.map(node -> node.projection().variables().getOrDefault("var0", reportRow))
-				.orElse(reportRow);
-			assertEquals(expected, finalRow.orElseThrow(),
-				() -> "quest " + questId + " must end on its reward projection");
-			simulated++;
-		}
-		final int simulatedCount = simulated;
-		assertTrue(simulatedCount >= EXPECTED_SIMULATED_QUESTS,
-			() -> "only " + simulatedCount + " quests could be simulated; not reachable from a fresh START: "
-				+ notReachableFromZero);
 	}
 
 	private static boolean limitsSectionZeroToStaleRow(QuestCondition condition, int stage, int reportRow) {

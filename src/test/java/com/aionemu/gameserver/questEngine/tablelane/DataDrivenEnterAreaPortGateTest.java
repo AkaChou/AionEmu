@@ -230,10 +230,15 @@ class DataDrivenEnterAreaPortGateTest {
 			assertFalse(upper(port.resolvedAliases()).contains(alias.toUpperCase(Locale.ROOT)),
 				"冻结别名不得出现在解析集: " + alias);
 		}
+		// 步 f 起 acquire 轴区数据已落盘（接取侧同名区树）：OK 行必须已注册；真端无区定义的行
+		// （R4 fail-closed）保持未注册 = 镜像真端死边。
+		// Since step f the acquire-axis zones are registered: OK rows must be registered, the
+		// retail-absent row stays unregistered (mirroring the retail-dead edge).
 		for (EvidenceRow row : evidence.values()) {
 			if ("acquire".equals(row.axis())) {
-				assertFalse(registeredZones.containsKey(row.alias().toUpperCase(Locale.ROOT)),
-					"接取轴的区数据随接取批落盘，本批不得预置死数据: " + row.alias());
+				assertEquals("OK".equals(row.status()),
+					registeredZones.containsKey(row.alias().toUpperCase(Locale.ROOT)),
+					"接取轴注册面必须逐行等于探针裁定（OK=已注册 / R4=未注册）: " + row.alias());
 			}
 		}
 	}

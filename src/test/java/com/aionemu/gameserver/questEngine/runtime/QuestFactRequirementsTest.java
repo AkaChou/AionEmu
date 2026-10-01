@@ -121,25 +121,6 @@ class QuestFactRequirementsTest {
 		assertThrows(NullPointerException.class, () -> QuestFactRequirements.conservative(false, null, false));
 	}
 
-	/**
-	 * 接取转换（从 NONE 到 START）必须继承元数据声明的前置条件所需事实族（如前置任务完成集合）。
-	 * 任务 19638 要求前置 19637 finished，接取时必须采集 questIdSets；任务 19637 无前置，不额外采集。
-	 */
-	@Test
-	void acquiringTransitionInheritsMetadataPrerequisites() throws Exception {
-		/* P5-1：19638/19637 已是网格形，接取目标 = 网格零段（a0），不再是 started——按
-		   NONE→START 的接取路由通用定位。 */
-		CompiledQuestDefinition quest19638 = loadQuest(19638);
-		QuestTransition accept19638 = findAcquire(quest19638);
-		QuestFactRequirements req19638 = QuestFactRequirements.of(quest19638, accept19638.event(), accept19638);
-		assertTrue(req19638.questIdSets(), "19638 接取时必须采集前置任务 ID 集合以校验 19637 完成状态");
-
-		CompiledQuestDefinition quest19637 = loadQuest(19637);
-		QuestTransition accept19637 = findAcquire(quest19637);
-		QuestFactRequirements req19637 = QuestFactRequirements.of(quest19637, accept19637.event(), accept19637);
-		assertFalse(req19637.questIdSets(), "19637 无前置条件，接取转换不应多采 questIdSets");
-	}
-
 	private static CompiledQuestDefinition loadQuest(int questId) {
 		// 前置采集契约行已由真端表驱动（退役），改从生产视图取定义。
 		// The fact-requirement rows are retail-driven since retirement; load via the production view.

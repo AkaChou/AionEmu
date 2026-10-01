@@ -268,6 +268,12 @@ def acquire_axis(acquire, param, reward_npc, by_desc, by_name, aliases, groups, 
         except ValueError: level = -1
         if level <= 0: return None
         return 10 if acquire == 'leveluplogin' else 8
+    if acquire == 'enterarea':
+        # 步 f kind-6 接取面：非空别名 = 接取侧名字哈希树登记（区未注册时永不命中 = 真端死边镜像）；
+        # 空别名 = 真端注册空名哈希 ⇒ 永不接取（同 none）。
+        # Step f kind-6 face: a non-empty alias registers in the acquire-side name-hash tree (an
+        # unregistered zone never fires, mirroring the retail-dead edge); an empty alias never hits.
+        return 6 if (param or '').strip() else 0
     return 0
 
 def main():

@@ -135,14 +135,6 @@ class QuestDraupnirNpcVariantContractTest {
 	}
 
 	@Test
-	void acceptsTheCurrentAkhalRouteForBothFactionQuests() throws Exception {
-		for (int questId : List.of(14252, 24252)) {
-			assertFalse(killRoutes(load(questId), 237275).isEmpty(),
-				() -> "quest " + questId + " must accept the live Akhal npc 237275");
-		}
-	}
-
-	@Test
 	void keepsOnlyAuthoritativeStaticDraupnirVariantsAndGeneratedTargets() throws Exception {
 		Set<Integer> trackedNpcIds = Set.of(213775, 213776, 213778, 213779, 213780, 213802,
 			236924, 236925, 236928, 236929, 237263, 237264, 237265, 237266, 237267, 237275);

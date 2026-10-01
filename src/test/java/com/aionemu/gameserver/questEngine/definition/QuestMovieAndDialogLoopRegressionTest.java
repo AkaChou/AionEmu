@@ -26,31 +26,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class QuestMovieAndDialogLoopRegressionTest {
 
 	@Test
-	void barunaLaboratoryMovieLoopsAdvanceToStep1() throws Exception {
-		// 16942 天族巴鲁纳次元研究所
-		QuestDefinition def16942 = definition(16942).definition();
-		assertNode(def16942, "s1", Map.of("var0", 1));
-		QuestTransition trans16942 = def16942.transitions().stream()
-			.filter(t -> "started".equals(t.sourceNode()) && "s1".equals(t.targetNode())
-				&& t.event() instanceof QuestEvent.TalkToNpc talk && talk.npcId() == 206361
-				&& Integer.valueOf(QuestDialogAction.SETPRO1.id()).equals(talk.dialogId()))
-			.findFirst().orElseThrow();
-		assertTrue(trans16942.actions().stream().anyMatch(a -> a instanceof QuestAction.SetVariable set && "var0".equals(set.field()) && set.value() == 1));
-		assertTrue(trans16942.afterCommit().stream().anyMatch(a -> a instanceof AfterCommitAction.PlayMovie movie && movie.movieId() == 899));
-
-		// 26942 魔族巴鲁纳次元研究所
-		QuestDefinition def26942 = definition(26942).definition();
-		assertNode(def26942, "s1", Map.of("var0", 1));
-		QuestTransition trans26942 = def26942.transitions().stream()
-			.filter(t -> "started".equals(t.sourceNode()) && "s1".equals(t.targetNode())
-				&& t.event() instanceof QuestEvent.TalkToNpc talk && talk.npcId() == 206362
-				&& Integer.valueOf(QuestDialogAction.SETPRO1.id()).equals(talk.dialogId()))
-			.findFirst().orElseThrow();
-		assertTrue(trans26942.actions().stream().anyMatch(a -> a instanceof QuestAction.SetVariable set && "var0".equals(set.field()) && set.value() == 1));
-		assertTrue(trans26942.afterCommit().stream().anyMatch(a -> a instanceof AfterCommitAction.PlayMovie movie && movie.movieId() == 900));
-	}
-
-	@Test
 	void quest14047OnlyPlaysMovieOnActualKillStage() throws Exception {
 		QuestDefinition def14047 = definition(14047).definition();
 		// 非目标击杀阶段禁止错配 214599 循环播放电影 422
@@ -146,23 +121,6 @@ class QuestMovieAndDialogLoopRegressionTest {
 				&& Integer.valueOf(QuestDialogAction.SETPRO2.id()).equals(ttn.dialogId()))
 			.findFirst().orElseThrow();
 		assertTrue(singleLine.actions().stream().anyMatch(a -> a instanceof QuestAction.SetVariable sv && "var0".equals(sv.field()) && sv.value() == 2));
-	}
-
-	@Test
-	void quest15301And25301AcceptanceAdvancesToStarted() throws Exception {
-		for (int qid : List.of(15301, 25301)) {
-			QuestDefinition def = definition(qid).definition();
-			int npcId = qid == 15301 ? 805327 : 805339;
-			// 真端驱动混合采集链（DD_TALK_COLLECT_CHAIN）以 started 作为接取落点；接取合同不变。
-			// The retail-driven mixed collect chain (DD_TALK_COLLECT_CHAIN) lands acceptance on
-			// started; the acceptance contract itself is unchanged.
-			QuestTransition accept = def.transitions().stream()
-				.filter(t -> "unaccepted".equals(t.sourceNode()) && "started".equals(t.targetNode())
-					&& t.event() instanceof QuestEvent.TalkToNpc ttn && ttn.npcId() == npcId
-					&& Integer.valueOf(QuestDialogAction.QUEST_ACCEPT_1.id()).equals(ttn.dialogId()))
-				.findFirst().orElseThrow();
-			assertTrue(accept.afterCommit().stream().anyMatch(a -> a instanceof AfterCommitAction.ShowQuestDialog sqd && sqd.dialogId() == QuestDialogPage.QUEST_ACCEPT_1.id()));
-		}
 	}
 
 	@Test

@@ -29,12 +29,6 @@ public final class QuestDialogContract {
 	private static final String CONTRACT_RELATIVE_PATH = "quest_dialog/client_dialog_contract.tsv";
 	private static final String EXCEPTIONS_RELATIVE_PATH = "quest_dialog/movie_continuation_exceptions.tsv";
 
-	/** 接取入口页偏好序：真端接取窗 → 极简信页 → 对话入口页。 / Accept entry page preference order. */
-	private static final List<Integer> ACCEPT_ENTRY_PAGE_PREFERENCE = List.of(
-		QuestDialogPage.SHOW_ASK_QUEST_ACCEPT_WINDOW.id(),
-		QuestDialogPage.SELECT_NONE.id(),
-		QuestDialogPage.SELECT1.id());
-
 	/**
 	 * 真端接取入口页偏好序：极简信页 → 对话入口页 → 接取窗页（兜底）。
 	 * <p>
@@ -145,33 +139,15 @@ public final class QuestDialogContract {
 	}
 
 	/**
-	 * 接取入口页：客户端任务页实际声明的第一张可渲染页
-	 * （{@code ask_quest_accept}(4) → {@code select_none}(4762) → {@code select1}(1011)）；
-	 * 客户端页登记缺失时回落到真端接取窗页 4（无据判定的行保持既有页，不发明新页）。
-	 * <p>
-	 * The accept entry page: the first page the client task HTML actually declares
-	 * ({@code ask_quest_accept} → {@code select_none} → {@code select1}); a quest with no client page
-	 * registry row keeps the retail ask window page 4, so undecidable rows stay where they were.
-	 */
-	public int acceptEntryPage(int questId) {
-		for (int pageId : ACCEPT_ENTRY_PAGE_PREFERENCE) {
-			if (hasButtonPage(questId, pageId)) {
-				return pageId;
-			}
-		}
-		return QuestDialogPage.SHOW_ASK_QUEST_ACCEPT_WINDOW.id();
-	}
-
-	/**
 	 * 真端表车道的接取入口页（信页优先）：{@code select_none}(4762) → {@code select1}(1011) → 页 4 兜底。
 	 * <p>
-	 * 与 {@link #acceptEntryPage(int)} 的区别是页 4 不再是首选：真端页 4 只能由页动作 {@code 1007} 打开，
-	 * 作为入口直接下发会使信页（以及挂在 {@code 1007} 上的过场）永不可达。旧形偏好（页 4 优先）保留给
-	 * 尚未迁移的 typed 车道编译产物（P8 随该车道退场）。
+	 * 页 4 不是首选：真端页 4 只能由页动作 {@code 1007} 打开，作为入口直接下发会使信页（以及挂在
+	 * {@code 1007} 上的过场）永不可达。旧「页 4 优先」typed 形（{@code acceptEntryPage}）随 P7 步 f
+	 * 的 DD 编译车道退场删除（§10.3-#22）。
 	 * <p>
-	 * The native-lane accept entry page (letter page first): page 4 is no longer preferred because retail
-	 * reaches it only through the {@code 1007} page action; the ask-window-first shape stays with the
-	 * compiled typed lane until P8 removes it.
+	 * The native-lane accept entry page (letter page first): retail reaches page 4 only through the
+	 * {@code 1007} page action, so emitting it first would make the letter page unreachable. The old
+	 * ask-window-first typed form retired with the DD compile lane in P7 step f (§10.3-#22).
 	 */
 	public int retailEntryPage(int questId) {
 		for (int pageId : RETAIL_ENTRY_PAGE_PREFERENCE) {

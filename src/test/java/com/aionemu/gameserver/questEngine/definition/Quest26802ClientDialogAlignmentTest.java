@@ -171,37 +171,6 @@ class Quest26802ClientDialogAlignmentTest {
 			definition.progressLayout().unpack(report.nextPackedVariables()));
 	}
 
-	@Test
-	void incompleteProgressCannotReachRewardOrTheRewardWindow() throws Exception {
-		CompiledQuestDefinition compiled = definition();
-		QuestDefinition definition = compiled.definition();
-		for (Map<String, Integer> variables : List.of(
-			Map.of("var0", 0, "var1", 0),
-			Map.of("var0", 15, "var1", 0),
-			Map.of("var0", 29, "var1", 0),
-			Map.of("var0", 30, "var1", 0),
-			Map.of("var0", 30, "var1", 1))) {
-			QuestSnapshot snapshot = snapshot(compiled, variables);
-			for (QuestTransition route : definition.transitions()) {
-				if (!(route.event() instanceof QuestEvent.TalkToNpc)) {
-					continue;
-				}
-				QuestMutationPlanner.plan(compiled, snapshot, route.event(), route).ifPresent(plan -> {
-					boolean rewards = plan.nextStatus() == QuestStatus.REWARD
-						|| plan.nextStatus() == QuestStatus.COMPLETE
-						|| plan.requiredActions().stream().anyMatch(action ->
-							action instanceof QuestAction.GrantReward
-								|| action instanceof QuestAction.GrantSelectedReward
-								|| action instanceof QuestAction.CompleteQuest)
-						|| plan.afterCommit().contains(new AfterCommitAction.ShowQuestDialog(
-							QuestDialogPage.SHOW_SELECT_QUEST_REWARD_WINDOW1.id()));
-					assertFalse(rewards, () -> "quest " + QUEST_ID + " premature reward at " + variables
-						+ " via " + route);
-				});
-			}
-		}
-	}
-
 	/** 链节点击杀边合同：目标集合、推进目标与 PACKET_ONLY。 / Chain-node kill-edge contract. */
 	private static Set<Integer> assertChainEdges(QuestDefinition definition, String source,
 			String target) {

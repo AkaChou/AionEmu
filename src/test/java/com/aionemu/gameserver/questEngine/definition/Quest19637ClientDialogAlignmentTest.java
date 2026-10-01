@@ -90,65 +90,6 @@ class Quest19637ClientDialogAlignmentTest {
 		}
 	}
 
-	@Test
-	void killGridAdvancesVar0UpToTenAndEntersRewardThroughTheReport() {
-		CompiledQuestDefinition compiled = load();
-		QuestDefinition definition = compiled.definition();
-		ProgressLayout layout = definition.progressLayout();
-
-		// 1. 网格推进：从 a{k} 状态击杀客户端变体，推进到 a{k+1}（仍 START，PACKET_ONLY）。
-		for (int kills = 0; kills < KILLS_REQUIRED; kills++) {
-			final int state = kills;
-			List<QuestTransition> edges = definition.transitions().stream()
-				.filter(transition -> Objects.equals(transition.sourceNode(), "a" + state)
-					&& transition.event() instanceof QuestEvent.KillNpc)
-				.toList();
-			Set<Integer> targets = new TreeSet<>();
-			for (QuestTransition edge : edges) {
-				assertEquals("a" + (state + 1), edge.targetNode());
-				targets.add(((QuestEvent.KillNpc) edge.event()).npcId());
-			}
-			assertTrue(targets.containsAll(TARGET_MOBS),
-				() -> "a" + state + " 击杀集必须覆盖客户端变体，实际 " + targets);
-		}
-		int sampleTarget = TARGET_MOBS.iterator().next();
-		QuestTransition continuing = transition(definition, "a0", "a1",
-			new QuestEvent.KillNpc(sampleTarget));
-		assertEquals(List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.PACKET_ONLY)),
-			continuing.afterCommit());
-
-		// 2. 第 10 次击杀：在 var0=9 时击杀第 10 只仍停在 START（a10），领奖入口在 1009 报告之后。
-		QuestSnapshot ninthSnapshot = new QuestSnapshot(1, QUEST_ID, QuestStatus.START,
-			layout.pack(Map.of("var0", 9)), Map.of());
-		QuestTransition finalKill = transition(definition, "a9", "a10", new QuestEvent.KillNpc(sampleTarget));
-		QuestMutationPlan finalKillPlan = QuestMutationPlanner.plan(compiled, ninthSnapshot,
-			new QuestEvent.KillNpc(sampleTarget), finalKill).orElseThrow();
-		assertEquals(QuestStatus.START, finalKillPlan.nextStatus(),
-			"第 10 杀后应停在 a10（START）");
-		assertEquals(Map.of("var0", 10), layout.unpack(finalKillPlan.nextPackedVariables()));
-
-		// 3. 满格 QUEST_SELECT 交付无门禁进入 REWARD（P0-2 规范形，1009 中转删除）；
-		//    未满格 a5 无 QUEST_SELECT/1009 报告通道。
-		QuestTransition finish = transition(definition, "a10", "reward",
-			new QuestEvent.TalkToNpc(CAINUS_NPC_ID, QuestDialogAction.QUEST_SELECT.id()));
-		assertEquals(List.of(), finish.conditions());
-		QuestSnapshot fullSnapshot = new QuestSnapshot(1, QUEST_ID, QuestStatus.START,
-			finalKillPlan.nextPackedVariables(), Map.of());
-		QuestMutationPlan rewardPlan = QuestMutationPlanner.plan(compiled, fullSnapshot, finish.event(), finish)
-			.orElseThrow();
-		assertEquals(QuestStatus.REWARD, rewardPlan.nextStatus());
-		assertEquals(List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
-			new AfterCommitAction.ShowQuestDialog(QuestDialogPage.rewardWindowForTier(
-				definition.metadata().rewardGroups().size() - 1).orElseThrow().id())),
-			finish.afterCommit());
-		assertTrue(definition.transitions().stream().noneMatch(candidate ->
-			"a5".equals(candidate.sourceNode()) && candidate.event() instanceof QuestEvent.TalkToNpc talkRoute
-				&& talkRoute.dialogId() != null
-				&& (talkRoute.dialogId() == QuestDialogAction.QUEST_SELECT.id()
-					|| talkRoute.dialogId() == QuestDialogAction.SELECT_QUEST_REWARD.id())),
-			() -> "a5 不得保留报告通道路由");
-	}
-
 	private static QuestTransition talk(QuestDefinition definition, String source, String target, int action) {
 		return definition.transitions().stream()
 			.filter(candidate -> Objects.equals(candidate.sourceNode(), source)

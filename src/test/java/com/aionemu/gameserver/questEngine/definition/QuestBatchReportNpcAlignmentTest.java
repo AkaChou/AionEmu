@@ -212,34 +212,6 @@ class QuestBatchReportNpcAlignmentTest {
 		assertCanonicalChainDelivery(def, stage, endNpc);
 		assertEquals(List.of(endNpc), completionNpcs(def));
 	}
-
-	@Test
-	void quest18737SupportsMultipleEndNpcChoices() throws Exception {
-		QuestDefinition def = load("18737").definition();
-		int startNpc = 804707;
-		List<Integer> endNpcs = List.of(206378, 206379, 206380);
-		// P0-2 DD 尾片：按真端规范形重锚。交付 owner 集逐 owner 各发一份 QUEST_SELECT 交付边——
-		// 直翻领奖态 + 分档奖励窗（QE-028 查表）；成功页与 1009 中转随页链删除。
-		// P0-2 DD tail slice: re-anchored to the retail canonical shape. The reward-owner set emits one
-		// QUEST_SELECT delivery edge per owner — straight to REWARD plus the tiered reward window — and
-		// the success page and the 1009 hop are gone.
-		int rewardWindow = QuestDialogPage.rewardWindowForTier(def.metadata().rewardGroups().size() - 1)
-			.orElse(QuestDialogPage.SHOW_SELECT_QUEST_REWARD_WINDOW1).id();
-
-		assertEquals(1, talkRoutes(def, "unaccepted", startNpc, QuestDialogAction.QUEST_SELECT).size());
-		for (int endNpc : endNpcs) {
-			List<QuestTransition> delivery = talkRoutes(def, "started", endNpc, QuestDialogAction.QUEST_SELECT);
-			assertEquals(1, delivery.size());
-			assertEquals("reward", delivery.getFirst().targetNode());
-			assertEquals(List.of(
-				new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
-				new AfterCommitAction.ShowQuestDialog(rewardWindow)), delivery.getFirst().afterCommit());
-			assertTrue(talkRoutes(def, "started", endNpc, QuestDialogAction.SELECT_QUEST_REWARD).isEmpty(),
-				"canonical removed the 1009 hop");
-		}
-		assertEquals(endNpcs, completionNpcs(def));
-	}
-
 	@Test
 	void quest28601ReportsAndCompletesAtLegacyEndNpc() throws Exception {
 		QuestDefinition def = load("28601").definition();

@@ -374,7 +374,10 @@ def main() -> int:
 	print(json.dumps(summary, ensure_ascii=False, indent=2))
 
 	if args.emit_zones:
-		emit_zone_file(progress_ok)
+		# 步 f 起两轴都发区：acquire 轴（接取 kind 6 的同名区树）与 progress 轴互斥，几何同源。
+		# Since step f both axes emit zones: the acquire axis (kind-6 same-name tree) is
+		# alias-disjoint from the progress axis and shares the same retail geometry source.
+		emit_zone_file(ok)
 	return 0
 
 

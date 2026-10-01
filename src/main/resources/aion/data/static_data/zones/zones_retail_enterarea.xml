@@ -6,6 +6,34 @@
 	questscript_area、item_use_area 段；mapid 取自 id-mappings.xml（客户端派生）。禁止手改。
 -->
 <zones>
+	<zone mapid="400010000" name="AB1_QuestArea_Q13947" area_type="POLYGON" zone_type="SUB">
+		<points bottom="2102.719482" top="2602.719482">
+			<point x="1029.124023" y="1562.524902"/>
+			<point x="1195.963379" y="1199.301514"/>
+			<point x="1533.118286" y="1072.433960"/>
+			<point x="1941.289795" y="1324.090088"/>
+			<point x="1997.204224" y="1544.698608"/>
+			<point x="1922.474121" y="1765.413208"/>
+			<point x="1759.110474" y="1954.845703"/>
+			<point x="1454.976074" y="2019.148315"/>
+			<point x="1157.793335" y="1843.619263"/>
+			<point x="1050.042725" y="1570.767212"/>
+		</points>
+	</zone>
+	<zone mapid="400010000" name="AB1_QuestArea_Q23947" area_type="POLYGON" zone_type="SUB">
+		<points bottom="2102.719482" top="2602.719482">
+			<point x="1029.205322" y="1562.458130"/>
+			<point x="1196.044678" y="1199.234741"/>
+			<point x="1533.199585" y="1072.367188"/>
+			<point x="1941.371094" y="1324.023315"/>
+			<point x="1997.285522" y="1544.631836"/>
+			<point x="1922.555420" y="1765.346436"/>
+			<point x="1759.191772" y="1954.778931"/>
+			<point x="1455.057373" y="2019.081543"/>
+			<point x="1157.874634" y="1843.552490"/>
+			<point x="1050.124023" y="1570.700439"/>
+		</points>
+	</zone>
 	<zone mapid="400010000" name="AB1_SensoryArea_Q15400a" area_type="POLYGON" zone_type="SUB">
 		<points bottom="2954.838867" top="3004.838867">
 			<point x="1503.556152" y="972.867920"/>
@@ -223,6 +251,63 @@
 			<point x="2847.220703" y="1675.659302"/>
 			<point x="2850.983887" y="1683.794189"/>
 			<point x="2860.948242" y="1685.695923"/>
+		</points>
+	</zone>
+	<zone mapid="220110000" name="DF6_QuestArea_Q15674" area_type="POLYGON" zone_type="SUB">
+		<points bottom="134.677673" top="534.677673">
+			<point x="2054.427246" y="1655.499512"/>
+			<point x="2057.229492" y="1487.807617"/>
+			<point x="2215.341064" y="1478.227661"/>
+			<point x="2164.340576" y="1127.912231"/>
+			<point x="2244.211182" y="1091.480103"/>
+			<point x="2660.250244" y="1143.331055"/>
+			<point x="2974.257568" y="1366.123291"/>
+			<point x="2970.053955" y="1978.465454"/>
+			<point x="2604.329834" y="2216.676270"/>
+			<point x="2461.403564" y="2220.879883"/>
+			<point x="2347.544922" y="2329.953613"/>
+			<point x="2147.167725" y="2239.588379"/>
+			<point x="1977.846069" y="2102.038574"/>
+			<point x="2037.383667" y="1859.623535"/>
+			<point x="2117.482910" y="1712.721924"/>
+		</points>
+	</zone>
+	<zone mapid="220110000" name="DF6_QuestArea_Q25671" area_type="POLYGON" zone_type="SUB">
+		<points bottom="128.832703" top="528.832703">
+			<point x="2054.427246" y="1655.499512"/>
+			<point x="2057.229492" y="1487.807617"/>
+			<point x="2215.341064" y="1478.227661"/>
+			<point x="2164.340576" y="1127.912231"/>
+			<point x="2244.211182" y="1091.480103"/>
+			<point x="2660.250244" y="1143.331055"/>
+			<point x="2974.257568" y="1366.123291"/>
+			<point x="2970.053955" y="1978.465454"/>
+			<point x="2604.329834" y="2216.676270"/>
+			<point x="2461.403564" y="2220.879883"/>
+			<point x="2347.544922" y="2329.953613"/>
+			<point x="2147.167725" y="2239.588379"/>
+			<point x="1977.846069" y="2102.038574"/>
+			<point x="2037.383667" y="1859.623535"/>
+			<point x="2117.482910" y="1712.721924"/>
+		</points>
+	</zone>
+	<zone mapid="220110000" name="DF6_QuestArea_Q25672" area_type="POLYGON" zone_type="SUB">
+		<points bottom="128.832703" top="528.832703">
+			<point x="2066.026855" y="1648.042603"/>
+			<point x="2068.829102" y="1480.350708"/>
+			<point x="2226.940674" y="1470.770752"/>
+			<point x="2175.940186" y="1120.455322"/>
+			<point x="2255.810791" y="1084.023193"/>
+			<point x="2671.849854" y="1135.874146"/>
+			<point x="2985.857178" y="1358.666382"/>
+			<point x="2981.653564" y="1971.008545"/>
+			<point x="2615.929443" y="2209.219238"/>
+			<point x="2473.003174" y="2213.423096"/>
+			<point x="2359.144531" y="2322.496582"/>
+			<point x="2158.767334" y="2232.131348"/>
+			<point x="1989.445679" y="2094.581787"/>
+			<point x="2048.983398" y="1852.166626"/>
+			<point x="2129.082520" y="1705.265015"/>
 		</points>
 	</zone>
 	<zone mapid="220110000" name="DF6_SensoryArea_Q15613a" area_type="POLYGON" zone_type="SUB">
@@ -554,12 +639,28 @@
 			<point x="384.000000" y="614.500000"/>
 		</points>
 	</zone>
+	<zone mapid="320130000" name="IDDF2A_Adma_QuestArea_Q3122" area_type="POLYGON" zone_type="SUB">
+		<points bottom="166.944061" top="196.944061">
+			<point x="434.379486" y="228.049103"/>
+			<point x="434.349487" y="194.580750"/>
+			<point x="467.355133" y="193.129181"/>
+			<point x="467.550171" y="225.724106"/>
+		</points>
+	</zone>
 	<zone mapid="301540000" name="IDEternity_01_SensoryArea_Q16800" area_type="POLYGON" zone_type="SUB">
 		<points bottom="464.100006" top="514.099976">
 			<point x="709.500000" y="484.750000"/>
 			<point x="764.000000" y="484.875000"/>
 			<point x="764.125000" y="541.750000"/>
 			<point x="709.625000" y="541.625000"/>
+		</points>
+	</zone>
+	<zone mapid="301550000" name="IDEternity_02_QuestArea_Q16830" area_type="POLYGON" zone_type="SUB">
+		<points bottom="1030.348267" top="1060.348267">
+			<point x="776.068848" y="732.151550"/>
+			<point x="850.966980" y="735.729370"/>
+			<point x="846.498352" y="811.717957"/>
+			<point x="773.007263" y="809.584045"/>
 		</points>
 	</zone>
 	<zone mapid="301550000" name="IDEternity_02_SensoryArea_Q16820a" area_type="POLYGON" zone_type="SUB">
@@ -801,6 +902,38 @@
 			<point x="176.482559" y="1038.336548"/>
 		</points>
 	</zone>
+	<zone mapid="302350000" name="IDEternity_War_QuestArea_Q13965" area_type="POLYGON" zone_type="SUB">
+		<points bottom="59.649597" top="409.649597">
+			<point x="462.869995" y="717.809998"/>
+			<point x="463.184692" y="785.531067"/>
+			<point x="497.474945" y="780.236023"/>
+			<point x="498.441437" y="723.223816"/>
+		</points>
+	</zone>
+	<zone mapid="302350000" name="IDEternity_War_QuestArea_Q13966" area_type="POLYGON" zone_type="SUB">
+		<points bottom="50.000000" top="445.000000">
+			<point x="29.760000" y="4.984253"/>
+			<point x="1514.499512" y="8.923382"/>
+			<point x="1498.227295" y="1371.119507"/>
+			<point x="45.608803" y="1389.947021"/>
+		</points>
+	</zone>
+	<zone mapid="302350000" name="IDEternity_War_QuestArea_Q13967" area_type="POLYGON" zone_type="SUB">
+		<points bottom="319.296783" top="714.296753">
+			<point x="29.760000" y="4.894307"/>
+			<point x="1514.499512" y="8.833435"/>
+			<point x="1498.227295" y="1371.029541"/>
+			<point x="45.608803" y="1389.857056"/>
+		</points>
+	</zone>
+	<zone mapid="302350000" name="IDEternity_War_QuestArea_Q23965" area_type="POLYGON" zone_type="SUB">
+		<points bottom="59.649597" top="409.649597">
+			<point x="462.869995" y="717.809998"/>
+			<point x="463.184692" y="785.531067"/>
+			<point x="497.474945" y="780.236023"/>
+			<point x="498.441437" y="723.223816"/>
+		</points>
+	</zone>
 	<zone mapid="302350000" name="IDEternity_War_SensoryArea_Q13960" area_type="POLYGON" zone_type="SUB">
 		<points bottom="50.000000" top="400.000000">
 			<point x="463.010010" y="717.840027"/>
@@ -946,6 +1079,14 @@
 			<point x="249.121063" y="263.158844"/>
 			<point x="248.701111" y="253.071945"/>
 			<point x="257.420471" y="244.779037"/>
+		</points>
+	</zone>
+	<zone mapid="310110000" name="IDLF2A_Lab_QuestArea_Q3123" area_type="POLYGON" zone_type="SUB">
+		<points bottom="161.844498" top="191.844498">
+			<point x="500.998566" y="195.266769"/>
+			<point x="499.302277" y="239.547623"/>
+			<point x="448.834137" y="239.546158"/>
+			<point x="449.845764" y="192.328293"/>
 		</points>
 	</zone>
 	<zone mapid="210130000" name="LF4_SensoryArea_Q10035A" area_type="POLYGON" zone_type="SUB">
@@ -1128,6 +1269,38 @@
 			<point x="120.279938" y="1468.412476"/>
 			<point x="104.425354" y="1478.348999"/>
 			<point x="92.325333" y="1471.312500"/>
+		</points>
+	</zone>
+	<zone mapid="210100000" name="LF6_QuestArea_Q15671" area_type="POLYGON" zone_type="SUB">
+		<points bottom="134.473511" top="534.473511">
+			<point x="2014.754272" y="1028.940674"/>
+			<point x="2093.795166" y="1259.521606"/>
+			<point x="2058.981689" y="1533.769897"/>
+			<point x="2107.340088" y="1666.536499"/>
+			<point x="2256.907715" y="1777.284546"/>
+			<point x="2379.208008" y="1784.833984"/>
+			<point x="2533.215820" y="1861.838013"/>
+			<point x="2860.859863" y="1810.501953"/>
+			<point x="3043.542236" y="1694.836060"/>
+			<point x="3045.052246" y="900.707458"/>
+			<point x="2396.272949" y="1049.514648"/>
+			<point x="2119.129395" y="901.826904"/>
+		</points>
+	</zone>
+	<zone mapid="210100000" name="LF6_QuestArea_Q15672" area_type="POLYGON" zone_type="SUB">
+		<points bottom="134.473511" top="534.473511">
+			<point x="2008.978394" y="1027.804810"/>
+			<point x="2088.019287" y="1258.385742"/>
+			<point x="2053.205811" y="1532.634033"/>
+			<point x="2101.564209" y="1665.400635"/>
+			<point x="2251.131836" y="1776.148682"/>
+			<point x="2373.432129" y="1783.698120"/>
+			<point x="2527.439941" y="1860.702148"/>
+			<point x="2855.083984" y="1809.366089"/>
+			<point x="3037.766357" y="1693.700195"/>
+			<point x="3039.276367" y="899.571594"/>
+			<point x="2390.497070" y="1048.378784"/>
+			<point x="2113.353516" y="900.691040"/>
 		</points>
 	</zone>
 	<zone mapid="210100000" name="LF6_SensoryArea_Q25673" area_type="POLYGON" zone_type="SUB">

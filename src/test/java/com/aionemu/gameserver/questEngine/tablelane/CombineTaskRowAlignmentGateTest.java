@@ -160,7 +160,7 @@ class CombineTaskRowAlignmentGateTest {
 			if (contract.hasButtonPage(questId, askWindow)) {
 				registered++;
 			}
-			assertEquals(contract.acceptEntryPage(questId), askWindow,
+			assertEquals(contract.retailEntryPage(questId), askWindow,
 				"本族行的入口页 = 真端接取窗页 4（客户端页登记缺失即回落）: " + questId);
 		}
 		assertEquals(0, registered, "本族 574 行客户端页索引完全无登记（P6 步骤 1 冻结事实）");

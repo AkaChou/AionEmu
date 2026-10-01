@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -81,6 +82,21 @@ class QuestProductionStartupGateTest {
 		final int total = typedExecutables + nativeOwned;
 		assertTrue(total > 5000, () -> "生产可执行定义数量异常：" + total + "（typed=" + typedExecutables
 			+ " native=" + nativeOwned + "）");
-		assertTrue(!carriers.isEmpty(), "生产目录里必须存在 SystemGrant 边（服务侧发放行的回归锚）");
+		// P7 步 f 重锚：SYSTEM_GRANT 边随 DataDriven 1467 行退出 typed 目录（XML 保留行本就不携带发放边），
+		// 服务侧发放面改由两条原生通道承担——NativeSystemGrantLanes 聚合面（Talk+Collect）与 DD 运行时的
+		// 接取型发放兴趣面（leveluplogin 等级键 + enterworld 世界键）。两者任一为空即拦「发放面塌空壳」。
+		// P7 step-f re-anchor: SYSTEM_GRANT edges left the typed catalog with the 1467 DataDriven rows
+		// (XML-retained rows never carried grant edges). The service-side grant face is now held by two
+		// native channels — the NativeSystemGrantLanes aggregate (Talk+Collect) and the DD runtime's
+		// grant-style acquire interests (leveluplogin level keys + enterworld world keys). An empty
+		// either channel means the grant face collapsed.
+		assertFalse(com.aionemu.gameserver.questEngine.tablelane.NativeSystemGrantLanes.lanes().isEmpty(),
+			"原生系统发放聚合面不得为空（NativeSystemGrantLanes）");
+		assertTrue(!com.aionemu.gameserver.questEngine.tablelane.DataDrivenNativeRuntime.instance()
+				.acquireLevelInterests().isEmpty(),
+			"DD 运行时接取型发放（leveluplogin 等级键）不得为空");
+		assertTrue(!com.aionemu.gameserver.questEngine.tablelane.DataDrivenNativeRuntime.instance()
+				.acquireWorldInterests().isEmpty(),
+			"DD 运行时接取型发放（enterworld 世界键）不得为空");
 	}
 }

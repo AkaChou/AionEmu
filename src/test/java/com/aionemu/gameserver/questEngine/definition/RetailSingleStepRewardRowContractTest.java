@@ -19,7 +19,6 @@ import java.lang.reflect.Field;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -72,13 +71,12 @@ class RetailSingleStepRewardRowContractTest {
 	private static final int REWARD_ROW = 1;
 	private static final int STALE_ROW = 0;
 
-	/** 仍由 XML 车道拥有的原合同行（不在真端 SimpleTalk 表内）。 / Contract rows still owned by XML. */
-	private static final List<Contract> XML_CONTRACTS = Stream.of(
-		List.of(new Contract(26838, "A"), new Contract(80735, "A"), new Contract(80736, "A")),
-		List.of(new Contract(16838, "B"), new Contract(16977, "B")),
-		List.of(new Contract(29002, "C")))
-		.flatMap(List::stream)
-		.toList();
+	/** 仍由 XML 车道拥有的原合同行。P7 步 f 起 A/B 组（26838/80735/80736/16838/16977）已随 DD 1467 行
+	 * 切到原生车道，其单步奖励行语义由 DataDrivenNativeRuntimeGateTest 承担；C 组 29002 仍是 XML 保留行。
+	 * Contract rows still owned by XML. Since P7 step f the A/B groups moved to the native lane with the
+	 * 1467 DD rows (their single-step reward-row semantics live in DataDrivenNativeRuntimeGateTest);
+	 * group C (29002) remains an XML-retained row. */
+	private static final List<Contract> XML_CONTRACTS = List.of(new Contract(29002, "C"));
 
 	@Test
 	void nativeRowsCarryTheirRetailItemChannels() {

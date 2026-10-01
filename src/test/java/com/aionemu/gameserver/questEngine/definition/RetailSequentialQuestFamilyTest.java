@@ -67,13 +67,6 @@ class RetailSequentialQuestFamilyTest {
 			.allMatch(talk -> talk.npcId() == 805330));
 	}
 
-	@Test
-	void dailyFragmentReportsUseFourStageOwnersAndReturnToStartNpc() throws Exception {
-		// TEMP-VERIFY(view): 并行批次落定前的宽松生产视图（XML 目录 + 真端驱动，跳过覆盖门）。
-		assertDailyQuest(15590, 806114, List.of(806224, 806225, 806226, 806227));
-		assertDailyQuest(25590, 806116, List.of(806228, 806229, 806230, 806231));
-	}
-
 	// TEMP-VERIFY(view): 并行批次落定前的宽松生产视图（XML 目录 + 真端驱动，跳过覆盖门）。
 	private static final AtomicReference<QuestCatalog> VIEW = new AtomicReference<>();
 

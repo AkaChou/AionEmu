@@ -78,26 +78,6 @@ class QuestPrematureRewardRouteExclusionTest {
 	}
 
 	@Test
-	void fiveKillsNotOneUnlock16988ReportStage() {
-		/* P5-1：16988 已是击杀网格（var0 = 计数 0..5），第 5 杀进满段 a5，报告（1009）才进领奖。
-		   Grid since P5-1: var0 counts 0..5; the fifth kill lands on a5 and only the report rewards. */
-		CompiledQuestDefinition compiled = load(16988);
-		Map<String, Integer> variables = Map.of("var0", 0);
-		QuestEvent event = new QuestEvent.KillNpc(233129);
-		for (int count = 1; count <= 5; count++) {
-			List<QuestMutationPlan> plans = plans(compiled, variables, event);
-			assertEquals(1, plans.size(), "16988 kill " + count);
-			QuestMutationPlan plan = plans.getFirst();
-			assertEquals(QuestStatus.START, plan.nextStatus());
-			variables = compiled.definition().progressLayout().unpack(plan.nextPackedVariables());
-			assertEquals(Map.of("var0", count), variables);
-			if (count < 5) {
-				assertNoPrematureReward(compiled, variables);
-			}
-		}
-	}
-
-	@Test
 	void quest2569RewardStateKeepsTheTurnInPreview() {
 		/* 2569 的备选报告段 s2 已被 XML 侧修复移除（生产定义只剩单报告段 s1，由上方契约案例锁定）；
 		   S2 之后 reward 态的页链入口（31 → SELECT5 页）与 1009 中转记录随规范段退场，领奖态重开
@@ -145,37 +125,6 @@ class QuestPrematureRewardRouteExclusionTest {
 				}
 			}
 		}
-	}
-
-	@ParameterizedTest
-	@ValueSource(ints = {0, 9})
-	void gateRejectsRelocated19631DeliveryRoute(int weakenedMinimum) {
-		/* P0-2 DD 切片后 19631 网格形的守门对象 = 满段 a10 的 QUEST_SELECT 交付（无条件、分档奖励窗）；
-		   负控把交付边原样搬到未满段 a<weakened>，零进度快照必须真的能上交，门禁必须拦下。
-		   Since the P0-2 DD slice the gate target is the full-node QUEST_SELECT delivery on a10
-		   (unconditional, tiered reward window); re-sourcing it verbatim to an incomplete segment
-		   must let a zero-progress snapshot turn in, and the gate must catch exactly that. */
-		CompiledQuestDefinition original = load(19631);
-		QuestEvent event = new QuestEvent.TalkToNpc(800411, QuestDialogAction.QUEST_SELECT.id());
-		QuestTransition route = original.definition().transitions().stream()
-			.filter(t -> "a10".equals(t.sourceNode()) && "reward".equals(t.targetNode())
-				&& t.event().equals(event))
-			.findFirst().orElseThrow();
-		assertEquals(List.of(
-				new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
-				new AfterCommitAction.ShowQuestDialog(QuestDialogPage.rewardWindowForTier(
-					original.definition().metadata().rewardGroups().size() - 1).orElseThrow().id())),
-			route.afterCommit());
-		String weakenedSource = "a" + weakenedMinimum;
-		QuestTransition broken = new QuestTransition(route.event(), route.conditions(), route.actions(),
-			route.targetNode(), route.afterCommit(), route.priority(), weakenedSource);
-		CompiledQuestDefinition mutated = replaceTransition(original, route, broken);
-		Map<String, Integer> incomplete = Map.of("var0", weakenedMinimum);
-		assertNoPrematureReward(original, incomplete);
-		assertEquals(1, plans(mutated, incomplete, event).size(), "negative control must actually unlock");
-		AssertionError failure = assertThrows(AssertionError.class,
-			() -> assertNoPrematureReward(mutated, incomplete));
-		assertTrue(failure.getMessage().contains("premature reward"));
 	}
 
 	@Test

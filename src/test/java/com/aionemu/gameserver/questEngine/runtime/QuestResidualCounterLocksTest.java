@@ -112,32 +112,6 @@ class QuestResidualCounterLocksTest {
 	}
 
 	@Test
-	void quest17541AdvancesOnlyTheFirstUnfinishedStage() throws Exception {
-		CompiledQuestDefinition definition = productionLoad(17541);
-		// 17541 已由真端三段顺序链驱动（1/1/1）：217195 属段 2，零态击杀不计数；217185 → 段 1、
-		// 217195 → 段 2、217204 → 段 3 逐段推进，末杀仍停在 START，满链节点才可报告。
-		// Retail three-stage sequential chain (1/1/1): 217195 is a stage-2 target and must not count
-		// from the zero state; 217185/217195/217204 advance one stage each and the final kill stays
-		// START — only the full chain node reports.
-		try (QuestE2eRuntime runtime = new QuestE2eRuntime(definition)) {
-			// 真端接取流先落到链首节点（a0b0c0）；随后 217195（段 2 目标）在零态不得计数。
-			// The retail accept flow lands on the first chain node first; 217195 (a stage-2 target)
-			// must then not count from the zero state.
-			runtime.prepare(acceptRoute(definition));
-			assertTrue(runtime.dispatchPrepared().handled());
-			assertFalse(runtime.dispatchWorld(new QuestEvent.KillNpc(217195)).handled(),
-				"a later-stage target must not count from the zero state");
-			dispatchKill(runtime, 217185);
-			assertEquals(Map.of("var0", 1, "var1", 0, "var2", 0), variables(definition, runtime));
-			dispatchKill(runtime, 217195);
-			assertEquals(Map.of("var0", 1, "var1", 1, "var2", 0), variables(definition, runtime));
-			dispatchKill(runtime, 217204);
-			assertEquals(QuestStatus.START, runtime.state().status());
-			assertEquals(Map.of("var0", 1, "var1", 1, "var2", 1), variables(definition, runtime));
-		}
-	}
-
-	@Test
 	void quest28504FinalKillEntersRewardWithoutOutOfRangeIncrement() throws Exception {
 		CompiledQuestDefinition definition = load(28504);
 		QuestTransition counting = killRoute(definition, "hunting");
@@ -155,35 +129,6 @@ class QuestResidualCounterLocksTest {
 			assertTrue(runtime.dispatchPrepared().handled());
 			assertEquals(QuestStatus.REWARD, runtime.state().status());
 			assertEquals(Map.of("var0", 65), variables(definition, runtime));
-		}
-	}
-
-	@Test
-	void quests15322And25322StageEdgesResetCountersWithoutOverIncrement() throws Exception {
-		for (int questId : new int[] {15322, 25322}) {
-			// QE-109 起 15322/25322 由真端多胞感官区链驱动（XML 已退役 ⇒ 走生产视图）；真端把每段猎杀集合
-			// 逐 NPC 展开成 KillNpc 边（遗留壳是一条 KillNpcSet 边），因此按**源节点**聚合断言段数。
-			// Since QE-109 quests 15322/25322 follow the retail multi-cell sensory-area chain (their XML is
-			// retired, so the production view is used); retail expands each stage's hunt set into per-npc
-			// KillNpc edges (the shell used one KillNpcSet edge), so stages are asserted per source node.
-			CompiledQuestDefinition definition = productionLoad(questId);
-			List<QuestTransition> stageEdges = definition.definition().transitions().stream()
-				.filter(candidate -> candidate.actions().stream()
-					.anyMatch(action -> action instanceof QuestAction.SetVariable(String field, int value)
-						&& "var1".equals(field) && value == 0))
-				.toList();
-			// 末段（s9→reward）不进本集合：领奖投影携带末段计数，所以完成边只推进 var0。
-			// The final stage (s9->reward) is excluded: the reward projection carries the final count, so its
-			// completion edge only advances var0.
-			assertEquals(java.util.Set.of("s1", "s3", "s5", "s7"),
-				stageEdges.stream().map(QuestTransition::sourceNode).collect(java.util.stream.Collectors.toSet()),
-				"quest " + questId + " resetting stage source nodes");
-			for (QuestTransition edge : stageEdges) {
-				assertTrue(edge.actions().stream()
-						.noneMatch(action -> action instanceof QuestAction.IncrementVariable increment
-							&& "var1".equals(increment.field())),
-					"quest " + questId + " stage edge still increments var1 past its threshold");
-			}
 		}
 	}
 

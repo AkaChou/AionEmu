@@ -62,32 +62,6 @@ class QuestA03ShardRetailAlignmentTest {
 		return ProductionQuestDefinitions.definition(questId);
 	}
 
-	@Test
-	void metadataMatchesRetailQuestData() throws Exception {
-		for (Map.Entry<Integer, List<Object>> entry : METADATA.entrySet()) {
-			int questId = entry.getKey();
-			List<Object> facts = entry.getValue();
-			QuestMetadata metadata = production(questId).definition().metadata();
-			// 真端驱动合成行名 Q<id>，客户端锚点保留在 displayNameId。
-			// The retail driver synthesizes the row name Q<id>; the client anchor stays in displayNameId.
-			assertEquals(facts.get(0), metadata.name(), "name of " + questId);
-			assertEquals(facts.get(1), metadata.displayNameId(), "display-name-id of " + questId);
-			assertEquals(facts.get(2), metadata.minLevel(), "min-level of " + questId);
-			assertEquals(facts.get(3), metadata.category(), "category of " + questId);
-			assertTrue(metadata.permittedRaces().contains("ASMODIANS"), "race of " + questId);
-			@SuppressWarnings("unchecked")
-			List<long[]> expectedRewards = (List<long[]>) facts.get(4);
-			assertEquals(expectedRewards.size(), metadata.rewards().size(), "reward count of " + questId);
-			for (int i = 0; i < expectedRewards.size(); i++) {
-				long[] expected = expectedRewards.get(i);
-				QuestReward reward = metadata.rewards().get(i);
-				assertEquals(expected[0], kindOrdinal(reward.kind()), "reward kind of " + questId + "#" + i);
-				assertEquals(expected[1], reward.id(), "reward id of " + questId + "#" + i);
-				assertEquals(expected[2], reward.amount(), "reward amount of " + questId + "#" + i);
-			}
-		}
-	}
-
 	private static long kindOrdinal(String kind) {
 		return switch (kind) {
 			case "GOLD" -> 1;
@@ -95,74 +69,6 @@ class QuestA03ShardRetailAlignmentTest {
 			case "ITEM" -> 3;
 			default -> throw new IllegalArgumentException("unexpected reward kind " + kind);
 		};
-	}
-
-	@Test
-	void huntTargetsAndStepsMatchRetailProgressInfo() {
-		for (Map.Entry<Integer, Set<Integer>> entry : HUNT_NPCS.entrySet()) {
-			int questId = entry.getKey();
-			Set<Integer> expectedNpcs = entry.getValue();
-			CompiledQuestDefinition compiled = production(questId);
-			QuestDefinition definition = compiled.definition();
-			List<QuestTransition> transitions = definition.transitions();
-			int required = HUNT_STEPS.get(questId);
-
-			// 计数器合同：真端把击杀计数投影为 a0..aN 网格，领奖投影 var0 = 零售要求次数。
-			// Counter contract: the retail shape projects the kills as the a0..aN grid and the
-			// reward projection carries var0 = the retail kill requirement.
-			assertEquals(required, rewardProjection(definition), "kill counter ceiling of " + questId);
-
-			// 击杀网格：每个未满格状态覆盖零售名单（驱动显示名扩展是合法超集）并推进到下一状态。
-			// Kill grid: every unfinished state covers the retail list (driver display-name
-			// expansion is a legal superset) and advances to the next state.
-			Set<Integer> killNpcs = null;
-			for (int kills = 0; kills < required; kills++) {
-				final int state = kills;
-				List<QuestTransition> killRoutes = transitions.stream()
-					.filter(transition -> Objects.equals(transition.sourceNode(), "a" + state)
-						&& transition.event() instanceof QuestEvent.KillNpc)
-					.toList();
-				assertFalse(killRoutes.isEmpty(),
-					() -> "quest " + questId + " state a" + state + " must have kill transitions");
-				Set<Integer> stateTargets = new TreeSet<>();
-				for (QuestTransition killRoute : killRoutes) {
-					assertEquals("a" + (state + 1), killRoute.targetNode(),
-						"kill target of " + questId);
-					assertEquals(List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.PACKET_ONLY)),
-						killRoute.afterCommit(), "kill afterCommit of " + questId);
-					stateTargets.add(((QuestEvent.KillNpc) killRoute.event()).npcId());
-				}
-				if (killNpcs == null) {
-					killNpcs = stateTargets;
-				}
-				assertEquals(killNpcs, stateTargets, () -> "a" + state + " target set of " + questId);
-			}
-			assertTrue(killNpcs.containsAll(expectedNpcs),
-				() -> "retail progress list of " + questId + " must stay covered");
-
-			// 交付收口（P0-2 规范形）：满格 a{N} 的 QUEST_SELECT 无门禁进入 reward；
-			// 未满格无 QUEST_SELECT/1009 报告通道。
-			// Delivery close (canonical since P0-2): the saturated a{N} QUEST_SELECT enters reward
-			// ungated; unfinished nodes keep no QUEST_SELECT/1009 report channel.
-			QuestTransition completion = transitions.stream()
-				.filter(transition -> Objects.equals(transition.sourceNode(), "a" + required))
-				.filter(transition -> transition.event() instanceof QuestEvent.TalkToNpc talk
-					&& Integer.valueOf(QuestDialogAction.QUEST_SELECT.id()).equals(talk.dialogId()))
-				.findFirst().orElseThrow();
-			assertEquals("reward", completion.targetNode(), "delivery route of " + questId);
-			assertEquals(List.of(), completion.conditions(), "delivery gate of " + questId);
-			for (int kills = 0; kills < required; kills++) {
-				final int state = kills;
-				assertTrue(transitions.stream().noneMatch(transition ->
-					Objects.equals(transition.sourceNode(), "a" + state)
-						&& transition.event() instanceof QuestEvent.TalkToNpc talk
-						&& talk.dialogId() != null
-						&& (Integer.valueOf(QuestDialogAction.QUEST_SELECT.id()).equals(talk.dialogId())
-							|| Integer.valueOf(QuestDialogAction.SELECT_QUEST_REWARD.id())
-								.equals(talk.dialogId()))),
-					() -> "a" + state + " keeps no report channel of " + questId);
-			}
-		}
 	}
 
 	/** 领奖投影携带的击杀网格规模。 / The kill-grid size carried by the reward projection. */

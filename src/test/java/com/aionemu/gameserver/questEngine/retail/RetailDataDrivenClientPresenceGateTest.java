@@ -20,8 +20,9 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import com.aionemu.gameserver.questEngine.definition.RetiredQuestIds;
-import com.aionemu.gameserver.questEngine.retail.RetailDataDrivenTable.Entry;
-import com.aionemu.gameserver.questEngine.retail.RetailDataDrivenTable.HuntStage;
+import com.aionemu.gameserver.questEngine.tablelane.DataDrivenQuestTable;
+import com.aionemu.gameserver.questEngine.tablelane.DataDrivenQuestTable.Kind;
+import com.aionemu.gameserver.questEngine.tablelane.DataDrivenQuestTable.Row;
 import com.aionemu.gameserver.questEngine.tablelane.NativeQuestOwnerResolver;
 
 /**
@@ -62,7 +63,7 @@ class RetailDataDrivenClientPresenceGateTest {
 	private static final String EVENT_HUNT_MONSTER = "world_event_camel";
 	private static final int EVENT_HUNT_COUNT = 100;
 
-	private static RetailDataDrivenTable dd;
+	private static DataDrivenQuestTable dd;
 	private static Set<Integer> frozenAbsent;
 	private static Set<Integer> commentedOut;
 	private static Set<Integer> questXmlIds;
@@ -70,7 +71,7 @@ class RetailDataDrivenClientPresenceGateTest {
 
 	@BeforeAll
 	static void loadFixtures() throws Exception {
-		dd = RetailDataDrivenTable.load(resource(DD_TABLE));
+		dd = DataDrivenQuestTable.load(resource(DD_TABLE));
 		questXmlIds = questXmlIds();
 		owners = retentionOwners();
 		Map<String, Set<Integer>> fixture = fixtureRows();
@@ -85,10 +86,10 @@ class RetailDataDrivenClientPresenceGateTest {
 		assertEquals(COMMENTED_OUT_ROWS, commentedOut.size(), "真端表注释禁用行数冻结");
 		Set<Integer> xmlOnly = NativeQuestOwnerResolver.instance().xmlOnlyIds();
 		for (int questId : frozenAbsent) {
-			Entry entry = dd.find(questId).orElse(null);
-			assertNotNull(entry, "孤行必须仍在真端 DD 表里: " + questId);
+			Row row = dd.find(questId).orElse(null);
+			assertNotNull(row, "孤行必须仍在真端 DD 表里: " + questId);
 			assertTrue(questId >= 99000 && questId <= 99999, "孤行必须落在 99xxx 段: " + questId);
-			assertEquals("Talk", entry.acquireCategory(), "孤行的接取类别冻结: " + questId);
+			assertEquals("talk", row.acquireKind(), "孤行的接取类别冻结: " + questId);
 			assertFalse(questXmlIds.contains(questId), "孤行在真端 quest.xml 里不得有元数据行: " + questId);
 			assertEquals("ABSENT", owners.getOrDefault(questId, "ABSENT"),
 				"孤行不得出现在保留台账（owner 必须 ABSENT）: " + questId);
@@ -138,13 +139,20 @@ class RetailDataDrivenClientPresenceGateTest {
 	@Test
 	void eventQuest80817KeepsTheRetailHuntArithmetic() {
 		assertFalse(frozenAbsent.contains(80817), "80817 客户端两表都有行，不属于孤行集");
-		Entry entry = dd.find(80817).orElseThrow();
-		assertEquals("Talk", entry.acquireCategory(), "80817 接取类别 = Talk（真端表）");
-		HuntStage hunt = entry.huntStages().stream()
-			.filter(stage -> stage.monsters().contains(EVENT_HUNT_MONSTER))
+		Row row = dd.find(80817).orElseThrow();
+		assertEquals("talk", row.acquireKind(), "80817 接取类别 = Talk（真端表）");
+		String huntPayload = row.steps().stream()
+			.filter(step -> step.kind() == Kind.HUNT)
+			.filter(step -> step.payload().contains(EVENT_HUNT_MONSTER))
 			.findFirst()
-			.orElseThrow(() -> new AssertionError("80817 必须声明 " + EVENT_HUNT_MONSTER + " 击杀"));
-		assertEquals(EVENT_HUNT_COUNT, hunt.count(),
+			.orElseThrow(() -> new AssertionError("80817 必须声明 " + EVENT_HUNT_MONSTER + " 击杀"))
+			.payload();
+		// 真端载荷尾整数可带 `;` 段尾（`world_event_camel 100;`）——只取前导整数。
+		// The retail payload's trailing count may end with a `;` segment separator — take the
+		// leading integer only.
+		String tail = huntPayload.substring(huntPayload.lastIndexOf(' ') + 1).trim();
+		int count = Integer.parseInt(tail.substring(0, (int) tail.chars().takeWhile(Character::isDigit).count()));
+		assertEquals(EVENT_HUNT_COUNT, count,
 			"80817 真端计数 = 100（6 位组槽上限 63 ⇒ 真端自身永不达标，禁止改成 10 位相机）");
 		assertTrue(questXmlIds.contains(80817), "80817 必须有真端 quest.xml 元数据行");
 		assertEquals("RETAIL_TABLE", owners.get(80817), "80817 属于 P7 切换集");
@@ -189,7 +197,7 @@ class RetailDataDrivenClientPresenceGateTest {
 		return ids;
 	}
 
-	/** 保留台账 owner（测试副本与生产副本逐字节一致，由 RetailDataDrivenGateTest 断言）。 */
+	/** 保留台账 owner（测试副本与生产副本逐字节一致）。 */
 	private static Map<Integer, String> retentionOwners() throws Exception {
 		Map<Integer, String> owners = new LinkedHashMap<>();
 		try (BufferedReader reader = new BufferedReader(

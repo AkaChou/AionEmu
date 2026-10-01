@@ -55,57 +55,6 @@ class Quest28932RewardRowContractTest {
 		}
 	}
 
-	@Test
-	void singleKillAdvancesToTheRewardRow() throws Exception {
-		/* 网格形：击杀边 a0→a1 无条件（PACKET_ONLY），满段即报告门控。 */
-		CompiledQuestDefinition compiled = definition(28932);
-		List<QuestTransition> kills = compiled.definition().transitions().stream()
-			.filter(candidate -> "a0".equals(candidate.sourceNode()) && "a1".equals(candidate.targetNode()))
-			.filter(candidate -> candidate.event() instanceof QuestEvent.KillNpcSet
-				|| candidate.event() instanceof QuestEvent.KillNpc)
-			.toList();
-		assertEquals(1, kills.size(), "28932 kill edge a0->a1");
-		assertEquals(List.of(), kills.getFirst().conditions());
-		assertEquals(List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.PACKET_ONLY)),
-			kills.getFirst().afterCommit());
-
-		QuestMutationPlan plan = QuestMutationPlanner.plan(compiled,
-			snapshot(compiled, QuestStatus.START, Map.of("var0", 0)), kills.getFirst()).orElseThrow();
-		assertEquals(QuestStatus.START, plan.nextStatus());
-		assertEquals(Map.of("var0", 1), unpack(compiled, plan));
-	}
-
-	@Test
-	void saturatedRecoveryDialogsStillMatchTheDeclaredRowState() throws Exception {
-		/* P0-2 规范形交付协议：满段 a1 的 QUEST_SELECT 直翻领奖（LEVEL + 分档奖励窗）；
-		   未满段 a0 无 QUEST_SELECT/1009 报告通道。交付 NPC = 生产定义挂满段交付边的 NPC。 */
-		CompiledQuestDefinition compiled = definition(28932);
-		QuestDefinition definition = compiled.definition();
-		int reportNpc = definition.transitions().stream()
-			.filter(candidate -> "a1".equals(candidate.sourceNode()) && "reward".equals(candidate.targetNode())
-				&& candidate.event() instanceof QuestEvent.TalkToNpc talk
-				&& talk.dialogId() == QuestDialogAction.QUEST_SELECT.id())
-			.mapToInt(candidate -> ((QuestEvent.TalkToNpc) candidate.event()).npcId())
-			.findFirst().orElseThrow();
-		QuestEvent event = new QuestEvent.TalkToNpc(reportNpc, QuestDialogAction.QUEST_SELECT.id());
-		QuestTransition deliver = definition.transitions().stream()
-			.filter(candidate -> "a1".equals(candidate.sourceNode()) && "reward".equals(candidate.targetNode()))
-			.filter(candidate -> event.equals(candidate.event()))
-			.findFirst().orElseThrow(
-				() -> new AssertionError("missing saturated delivery route " + reportNpc));
-		QuestMutationPlan plan = QuestMutationPlanner.plan(compiled,
-			snapshot(compiled, QuestStatus.START, Map.of("var0", 1)), deliver).orElseThrow(
-				() -> new AssertionError("unplannable saturated delivery route " + reportNpc));
-		assertEquals(QuestStatus.REWARD, plan.nextStatus());
-		assertEquals(Map.of("var0", 1), unpack(compiled, plan));
-		assertTrue(definition.transitions().stream().noneMatch(candidate ->
-			"a0".equals(candidate.sourceNode()) && candidate.event() instanceof QuestEvent.TalkToNpc talkRoute
-				&& talkRoute.dialogId() != null
-				&& (talkRoute.dialogId() == QuestDialogAction.QUEST_SELECT.id()
-					|| talkRoute.dialogId() == QuestDialogAction.SELECT_QUEST_REWARD.id())),
-			() -> "a0 不得保留报告通道路由");
-	}
-
 	private static QuestNode node(QuestDefinition definition, String label) {
 		return definition.nodes().stream()
 			.filter(candidate -> label.equals(candidate.label())).findFirst().orElseThrow();

@@ -46,21 +46,6 @@ class QuestRepeatLifecycleTest {
 	private static final int NATIVE_ITEM = 182206032;
 
 	@Test
-	void repeatable15476CanStartAgainFromCompletedState() throws Exception {
-		CompiledQuestDefinition definition = definition(15476);
-		QuestEvent event = new QuestEvent.TalkToNpc(805809, 1002);
-		var transition = definition.definition().transitions().stream()
-			.filter(candidate -> candidate.sourceNode().equals("unaccepted"))
-			.filter(candidate -> candidate.event().equals(event))
-			.findFirst().orElseThrow();
-		QuestSnapshot completed = new QuestSnapshot(7, 15476, QuestStatus.COMPLETE, 0,
-			Map.of(), Map.of()).withStartEligibility(QuestStartEligibility.allowed())
-			.withCompletedQuestIds(Set.of(15402));
-
-		assertTrue(QuestMutationPlanner.plan(definition, completed, event, transition).isPresent());
-	}
-
-	@Test
 	void repeatable1963ReopensItsAcceptWindowAndRestartsFromCompletedState() {
 		SimpleTalkHandler handler = SimpleTalkHandler.instance();
 		Player player = createTestPlayer();

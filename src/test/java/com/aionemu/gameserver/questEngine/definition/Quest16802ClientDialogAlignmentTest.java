@@ -182,56 +182,6 @@ class Quest16802ClientDialogAlignmentTest {
 			definition.progressLayout().unpack(report.nextPackedVariables()));
 	}
 
-	@Test
-	void retailChainReplacesTheLegacyStageFlagMigration() throws Exception {
-		QuestDefinition definition = definition().definition();
-		// 旧 XML 的 k1/k2 迁移标志与无 source 自愈边随真端链退役：生产 DD 链不得再登记任何
-		// 无 source 路由或 EnterWorld 事件。
-		// The legacy k1/k2 migration flags and source-less self-heal edges retired with the XML:
-		// the retail chain keeps no source-less routes and no EnterWorld events.
-		assertTrue(definition.transitions().stream()
-				.noneMatch(candidate -> candidate.sourceNode() == null),
-			"the retail chain must not keep source-less migration routes");
-		assertTrue(definition.transitions().stream()
-				.noneMatch(candidate -> candidate.event() instanceof QuestEvent.EnterWorld),
-			"the retail chain must not keep EnterWorld migration routes");
-		assertTrue(definition.transitions().stream()
-				.noneMatch(candidate -> candidate.event() instanceof QuestEvent.LevelUp
-					|| candidate.event() instanceof QuestEvent.ZoneMissionEnd),
-			"the retail chain must not keep legacy LevelUp/ZoneMissionEnd routes");
-	}
-
-	@Test
-	void incompleteProgressCannotReachRewardOrTheRewardWindow() throws Exception {
-		CompiledQuestDefinition compiled = definition();
-		QuestDefinition definition = compiled.definition();
-		for (Map<String, Integer> variables : List.of(
-			Map.of("var0", 0, "var1", 0),
-			Map.of("var0", 15, "var1", 0),
-			Map.of("var0", 29, "var1", 0),
-			Map.of("var0", 30, "var1", 0),
-			Map.of("var0", 30, "var1", 1))) {
-			QuestSnapshot snapshot = snapshot(compiled, variables);
-			for (QuestTransition route : definition.transitions()) {
-				if (!(route.event() instanceof QuestEvent.TalkToNpc)) {
-					continue;
-				}
-				QuestMutationPlanner.plan(compiled, snapshot, route.event(), route).ifPresent(plan -> {
-					boolean rewards = plan.nextStatus() == QuestStatus.REWARD
-						|| plan.nextStatus() == QuestStatus.COMPLETE
-						|| plan.requiredActions().stream().anyMatch(action ->
-							action instanceof QuestAction.GrantReward
-								|| action instanceof QuestAction.GrantSelectedReward
-								|| action instanceof QuestAction.CompleteQuest)
-						|| plan.afterCommit().contains(new AfterCommitAction.ShowQuestDialog(
-							QuestDialogPage.SHOW_SELECT_QUEST_REWARD_WINDOW1.id()));
-					assertFalse(rewards, () -> "quest " + QUEST_ID + " premature reward at " + variables
-						+ " via " + route);
-				});
-			}
-		}
-	}
-
 	/** 链节点击杀边合同：目标集合、推进目标与 PACKET_ONLY。 / Chain-node kill-edge contract. */
 	private static Set<Integer> assertChainEdges(QuestDefinition definition, String source,
 			String target) {

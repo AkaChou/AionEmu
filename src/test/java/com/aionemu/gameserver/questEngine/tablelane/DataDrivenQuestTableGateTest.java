@@ -20,23 +20,23 @@ import java.util.Set;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import com.aionemu.gameserver.questEngine.retail.RetailDataDrivenTable;
 import com.aionemu.gameserver.questEngine.tablelane.DataDrivenQuestTable.ExtraAction;
 import com.aionemu.gameserver.questEngine.tablelane.DataDrivenQuestTable.Kind;
 import com.aionemu.gameserver.questEngine.tablelane.DataDrivenQuestTable.Row;
 import com.aionemu.gameserver.questEngine.tablelane.DataDrivenQuestTable.Step;
 
 /**
- * P7 步 2 门：DD **原生行模型**（{@link DataDrivenQuestTable}）与真端表 / 旧视图 / 真端列 guard 的一致性。
+ * P7 步 2 门：DD **原生行模型**（{@link DataDrivenQuestTable}）与真端表 / 切换集契约 / 真端列 guard 的一致性。
  * <p>
- * ① 行集与步序必须与旧视图（`RetailDataDrivenTable`，仍然服务 IR 车道）逐行一致——同一张真端表，
- * 两个解析器不得漂移；② 切换集（owner `RETAIL_TABLE` ∧ 不在客户端孤行桶）的类别步数与 P7 步 1
+ * ① 行集与步序冻结（`RetailDataDrivenTable` 旧视图已随 P7 步 f 的旧 IR 车道删除，逐行对拍由
+ * 步 b 批次完成并入史）；② 切换集（owner `RETAIL_TABLE` ∧ 不在客户端孤行桶）的类别步数与 P7 步 1
  * 契约冻结一致；③ 附加动作分类必须等于真端 `LoadExtraAction` 按列号的裁定（列 1 发 / 2 扣 / 3 传送 /
  * 4 过场 / 5 生成 / 6 延迟 / 7 与 8 消息 / 9 进副本 / 10 定时器），且 CollectItem/PvP 无附加动作面；
  * ④ 非法类别 / 缺载荷 / 非法列组合必须 fail-closed（稳定码）。
  * <p>
- * P7 step 2 gate for the native DataDriven row model: agreement with the legacy view and the retail table,
- * the frozen switch-set histograms, the retail extra-action guard, and fail-closed validation.
+ * P7 step 2 gate for the native DataDriven row model: the frozen row set and switch-set histograms,
+ * the retail extra-action guard, and fail-closed validation (the legacy-view row-by-row comparison
+ * retired with the old IR lane in P7 step f).
  */
 class DataDrivenQuestTableGateTest {
 
@@ -54,13 +54,11 @@ class DataDrivenQuestTableGateTest {
 		"enterarea", 153, "itemplay", 42, "enterworld", 34, "talkfobj", 19);
 
 	private static DataDrivenQuestTable nativeTable;
-	private static RetailDataDrivenTable legacyTable;
 	private static Set<Integer> switchSet;
 
 	@BeforeAll
 	static void loadFixtures() throws Exception {
 		nativeTable = DataDrivenQuestTable.load(resource(DD_TABLE));
-		legacyTable = RetailDataDrivenTable.load(resource(DD_TABLE));
 		Map<Integer, String> owners = retentionOwners();
 		Set<Integer> excluded = fixtureBucket("CLIENT_ABSENT_LIVE");
 		excluded.addAll(fixtureBucket("COMMENTED_OUT"));
@@ -72,19 +70,12 @@ class DataDrivenQuestTableGateTest {
 		}
 	}
 
-	/** ① 原生模型与旧视图逐行一致（同一真端表，两个解析器不得漂移）。 */
+	/** ① 真端 DD 活行数冻结（旧视图删除后由本门直接冻结）。 */
 	@Test
-	void nativeModelAgreesWithTheLegacyViewRowByRow() {
+	void liveRowCountStaysFrozen() {
 		assertEquals(LIVE_ROWS, nativeTable.size(), "真端 DD 活行数冻结");
-		assertEquals(legacyTable.questIds(), nativeTable.questIds(), "行集必须一致");
 		for (int questId : nativeTable.questIds()) {
 			Row row = nativeTable.find(questId).orElseThrow();
-			RetailDataDrivenTable.Entry legacy = legacyTable.find(questId).orElseThrow();
-			assertEquals(legacy.stepCategories(), row.steps().stream().map(Step::kind).map(Kind::tableName).toList(),
-				"步序（类别序列）必须一致: " + questId);
-			assertEquals(legacy.acquireCategory().toLowerCase(java.util.Locale.ROOT), row.acquireKind(),
-				"接取类别必须一致: " + questId);
-			assertEquals(legacy.rewardNpc(), row.rewardNpc(), "领奖 NPC 必须一致: " + questId);
 			for (int index = 0; index < row.steps().size(); index++) {
 				assertEquals(index, row.steps().get(index).index(), "步号 = 表序位置: " + questId);
 			}

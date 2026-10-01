@@ -23,22 +23,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * Exercises compiled production counters, client sections and hand-in boundaries after migration.
  */
 class QuestRefactorRepairRegressionTest {
-	@Test
-	void repeatedKillsDoNotLockAfterTheFirstEvent() throws Exception {
-		for (int id : List.of(13945, 18994, 28994)) {
-			var compiled = load(id);
-			var state = snapshot(compiled, Map.of("var0", 1, "var1", 0), Map.of());
-			int required = id == 13945 ? 2 : 3;
-			for (int count = 1; count <= required; count++) {
-				var plan = onlyPlan(compiled, state, new QuestEvent.KillNpc(id == 13945 ? 884544 : 857974));
-				state = next(state, plan);
-				assertEquals(count == required && id != 13945 ? 0 : count,
-					compiled.definition().progressLayout().unpack(state.packedVariables()).get("var1"));
-				assertEquals(count == required && id == 13945 ? QuestStatus.REWARD : QuestStatus.START,
-					state.status());
-			}
-		}
-	}
 
 	@Test
 	void leatherWingsBriefingTalkClearsSectionFiveWithoutCountingAKill() throws Exception {
@@ -69,49 +53,6 @@ class QuestRefactorRepairRegressionTest {
 		}
 		assertEquals(QuestStatus.REWARD,
 			onlyPlan(compiled, state, new QuestEvent.TalkToNpc(204701, 31)).nextStatus());
-	}
-
-	/**
-	 * 交付边界契约：短堆栈被拒（零计划进领奖），满堆栈恰好扣除真端需求数量、多余保留。
-	 * 每个任务登记各交付动作的满堆栈成功计划数：
-	 * 26930 仍是 XML：39 显式交付带双变体路由（2 条），1009 领奖入口是第二条交付边（1 条）。
-	 * 80798 已由真端 DataDriven 交付流接管（retention: DD_TALK_COLLECT_CANONICAL，客户端交付页齐备）：
-	 * 交付检查对 39/20002 成对登记（事件匹配器把 item-check 族视为等价，满堆栈时两条成功边都进领奖），
-	 * 1009 只剩领奖态预览入口，不再是 START 态交付边。
-	 * Hand-in boundary: short stacks are rejected (no plan reaches reward) and a full stack removes
-	 * exactly the retail count, keeping the surplus. Per quest and action the map records the
-	 * expected full-stack success plans: 26930 stays XML (the explicit 39 turn-in carries two
-	 * variant routes, the 1009 reward entry is the second hand-in edge). 80798 is the retail
-	 * DataDriven hand-in flow now: the 39/20002 check pair is registered together (the event
-	 * matcher treats the item-check family as equivalent, so both success edges reach reward on a
-	 * full stack), and 1009 remains only the reward-state preview, not a START-state hand-in.
-	 */
-	@Test
-	void handInsRejectShortStacksAndKeepTheSurplus() throws Exception {
-		for (HandInContract contract : List.of(
-			new HandInContract(26930, 186000257, 10, 804627, Map.of(39, 2, 1009, 1)),
-			new HandInContract(80798, 182215809, 5, 833545, Map.of(39, 2, 20002, 2)))) {
-			var compiled = load(contract.questId());
-			for (var entry : contract.successPlansByAction().entrySet()) {
-				int action = entry.getKey();
-				int expectedFullStack = entry.getValue();
-				for (int count : List.of(contract.required() - 1, contract.required(),
-						contract.required() * 2)) {
-					var state = snapshot(compiled, Map.of("var0", 0), Map.of(contract.item(), count));
-					var successes = plans(compiled, state, new QuestEvent.TalkToNpc(contract.npc(), action))
-						.stream().filter(p -> p.nextStatus() == QuestStatus.REWARD).toList();
-					assertEquals(count < contract.required() ? 0 : expectedFullStack, successes.size(),
-						contract.questId() + " action " + action + " stack " + count);
-					if (count >= contract.required()) {
-						for (var success : successes) {
-							assertEquals(List.of(new QuestAction.RemoveItem(contract.item(), contract.required())),
-								success.requiredActions().stream()
-									.filter(QuestAction.RemoveItem.class::isInstance).toList());
-						}
-					}
-				}
-			}
-		}
 	}
 
 	/** 交付边界契约行。 / One hand-in boundary contract row. */

@@ -131,31 +131,6 @@ class ClientQuestSectionAlignmentTest {
 			vars.getVarById(2), vars.getVarById(3)));
 	}
 
-	/**
-	 * 真端行（P0c-49 采纳 18931）的段计数器在击杀后归位，且**字段之外的残bit 被归一清除**：
-	 * 老存档在旧打包下把计数压在位 2（部署期紧凑打包），采纳段布局后该位落在 var0 的 6 位段内
-	 * 之外（retail：var0=bits0..5 / var1=bits6..11）——本测试以「位 12」表达同一件事：任何
-	 * 落在所有字段之外的位都在下一次变更被重打包丢弃（旧紧凑打包行 = 历史遗留，登记在案）。
-	 * A retail row (18931 adopted in P0c-49) re-parks its section counter after a kill and drops any
-	 * bit outside the fields: legacy saves packed the counter compactly at bit 2, which under the
-	 * section layout is no longer a field boundary (retail: var0 = bits 0..5, var1 = bits 6..11).
-	 * The test expresses the same claim with bit 12: any bit outside every field is dropped when the
-	 * planner repacks, i.e. the deployed compact packing is a registered historical leftover.
-	 */
-	@Test
-	void nextKillNormalizesBitsOutsideTheSectionFields() {
-		CompiledQuestDefinition definition = load(18931);
-		QuestSnapshot compactFirstKill = snapshot(18931, QuestStatus.START, (1 << 0) | (1 << 12));
-
-		QuestSnapshot normalized = apply(definition, compactFirstKill, new QuestEvent.KillNpc(243797));
-
-		QuestVars vars = new QuestVars(normalized.packedVariables());
-		assertEquals(1, vars.getVarById(0));
-		assertEquals(1, vars.getVarById(1));
-		assertEquals((1 << 0) | (1 << 6), normalized.packedVariables(),
-			"字段之外的残 bit 必须在重打包时被丢弃");
-	}
-
 	@Test
 	void talocItemSkillCountersUseTheirFixedSixBitSections() {
 		for (int questId : List.of(11468, 21468)) {

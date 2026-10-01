@@ -32,8 +32,8 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
  * <ul>
  *   <li>接取侧（真端 {@code cab520} 语义）：接取 NPC 的 QUEST_SELECT → 接取入口页
  *       （真端表只有 NPC/物品列、没有页列，故取客户端任务页声明的可渲染页：
- *       {@code ask_quest_accept}(4) → {@code select_none}(4762) → {@code select1}(1011)，见
- *       {@link QuestDialogContract#acceptEntryPage(int)}；{@code select1} 首屏的 1012/1013
+ *       {@code select_none}(4762) → {@code select1}(1011) → 页 4 兜底，见
+ *       {@link QuestDialogContract#retailEntryPage(int)}；{@code select1} 首屏的 1012/1013
  *       翻页动作按真端 cab520「原样回发」）；
  *       1002/20000 → {@code SetQuestAcquired} + 页 1003（20000 同时发放 {@code give_item}）；
  *       1003/1004/20001 → 页 1004；</li>

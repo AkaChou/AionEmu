@@ -22,8 +22,6 @@ import java.util.regex.Pattern;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import com.aionemu.gameserver.questEngine.retail.RetailDataDrivenTable;
-import com.aionemu.gameserver.questEngine.retail.RetailDataDrivenTable.Entry;
 
 /**
  * P7 步 1 门（计划 §10.2「P7 DataDriven」）：DD 行的**原生 handler 契约**逐行冻结。
@@ -132,7 +130,6 @@ class DataDrivenNativeContractGateTest {
 	private static final Pattern CATEGORY = Pattern.compile("<category_progress_>\\s*([^<]*?)\\s*</category_progress_>");
 	private static final Pattern COLUMN = Pattern.compile("<(value\\d+_progress_)>\\s*([^<]*?)\\s*</\\1>");
 
-	private static RetailDataDrivenTable loader;
 	private static Map<Integer, Row> rows;
 	private static Set<Integer> switchSet;
 	private static Set<Integer> clientAbsent;
@@ -147,7 +144,6 @@ class DataDrivenNativeContractGateTest {
 
 	@BeforeAll
 	static void loadFixtures() throws Exception {
-		loader = RetailDataDrivenTable.load(resource(DD_TABLE));
 		rows = parseRawTable();
 		clientAbsent = fixtureBucket("CLIENT_ABSENT_LIVE");
 		commentedOut = fixtureBucket("COMMENTED_OUT");
@@ -301,7 +297,7 @@ class DataDrivenNativeContractGateTest {
 		assertEquals(100, targets(rows.get(80817).steps().get(0)).get(0), "80817 真端计数 = 100（原样保留）");
 	}
 
-	/** ⑥ 逐行矩阵摘要 + 生产装载器视图一致性（装载器 = 契约视图）。 */
+	/** ⑥ 逐行矩阵摘要冻结（装载器视图对拍已随 P7 步 f 旧视图删除入史）。 */
 	@Test
 	void theRowMatrixMatchesTheFrozenDigest() throws Exception {
 		StringBuilder canonical = new StringBuilder();
@@ -323,14 +319,6 @@ class DataDrivenNativeContractGateTest {
 		}
 		assertEquals(CANONICAL_SHA256, sha256(canonical.toString()),
 			"逐行矩阵规范形摘要冻结（真端表 / owner 台账 / 孤行快照任一漂移即失败）");
-		for (int questId : switchSet) {
-			Entry entry = loader.find(questId).orElseThrow(() -> new AssertionError("装载器缺行: " + questId));
-			assertEquals(rows.get(questId).acquire().toLowerCase(java.util.Locale.ROOT),
-				entry.acquireCategory().toLowerCase(java.util.Locale.ROOT), "装载器接取类别必须与表一致: " + questId);
-			assertEquals(rows.get(questId).steps().stream().map(Step::category).toList(),
-				entry.stepCategories(), "装载器步序列必须与表一致: " + questId);
-			assertEquals(rows.get(questId).rewardNpc(), entry.rewardNpc(), "装载器领奖名必须与表一致: " + questId);
-		}
 	}
 
 	// ---------------------------------------------------------------- 复算辅助

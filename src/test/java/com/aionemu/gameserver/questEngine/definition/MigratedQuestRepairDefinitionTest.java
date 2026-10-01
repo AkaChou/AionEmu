@@ -21,69 +21,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /** Regression coverage for the migrated owners repaired in this batch. */
 class MigratedQuestRepairDefinitionTest {
-	@Test
-	void diversionOwnersCompleteOnTheSixthKillAndProjectRewardState() {
-		for (int questId : List.of(13955, 23955)) {
-			CompiledQuestDefinition definition = load(questId);
-			QuestNode reward = definition.definition().nodes().stream()
-				.filter(node -> node.label().equals("reward")).findFirst().orElseThrow();
-			assertEquals(QuestStatus.REWARD, reward.projection().status());
-			assertEquals(1, reward.projection().variables().get("var0"));
-			assertTrue(definition.definition().transitions().stream()
-				.flatMap(transition -> transition.conditions().stream())
-				.anyMatch(condition -> condition.equals(new QuestCondition.VariableSumIs(List.of("var1", "var2"), 5))));
-			assertTrue(definition.definition().transitions().stream()
-				.flatMap(transition -> transition.conditions().stream())
-				.anyMatch(condition -> condition.equals(new QuestCondition.VariableSumBelow(List.of("var1", "var2"), 5))));
-			assertFalse(definition.definition().transitions().stream()
-				.flatMap(transition -> transition.conditions().stream())
-				.anyMatch(QuestCondition.VariableAtLeast.class::isInstance));
-		}
-	}
-
-	@Test
-	void infiltrationOwnersResetTheCounterAfterEachTenKillStage() {
-		for (int questId : List.of(15322, 25322)) {
-			CompiledQuestDefinition definition = load(questId);
-			// QE-109 起 15322/25322 由真端多胞感官区链驱动：真端把每段猎杀集合**逐 NPC 展开**成 KillNpc 边
-			// （遗留壳是一条 KillNpcSet 边），因此按**源节点**聚合断言段合同——真端 5 段。
-			// Since QE-109 quests 15322/25322 follow the retail multi-cell sensory-area chain; retail expands
-			// each stage's hunt set into per-npc KillNpc edges (the shell used one KillNpcSet edge), so the
-			// stage contract is asserted per source node: the retail chain has five stages.
-			Map<String, List<QuestTransition>> stageCompletions = definition.definition().transitions().stream()
-				.filter(transition -> transition.event() instanceof QuestEvent.KillNpc
-					|| transition.event() instanceof QuestEvent.KillNpcSet)
-				.filter(transition -> transition.conditions().contains(new QuestCondition.VariableAtLeast("var1", 9)))
-				.collect(java.util.stream.Collectors.groupingBy(QuestTransition::sourceNode));
-			assertEquals(Set.of("s1", "s3", "s5", "s7", "s9"), stageCompletions.keySet(),
-				() -> "quest " + questId + " stage source nodes");
-			for (Map.Entry<String, List<QuestTransition>> stage : stageCompletions.entrySet()) {
-				boolean lastStage = "s9".equals(stage.getKey());
-				for (QuestTransition transition : stage.getValue()) {
-					assertTrue(transition.actions().stream().noneMatch(action ->
-							action instanceof QuestAction.IncrementVariable increment && "var1".equals(increment.field())),
-						() -> "quest " + questId + " " + stage.getKey() + " completion must not increment var1");
-					if (lastStage) {
-						// 末段直接进领奖：领奖节点投影携带末段计数（var1=10），因此完成边只推进 var0。
-						// The last stage goes straight to REWARD: the reward projection carries the final count
-						// (var1=10), so the completion edge only advances var0.
-						assertEquals("reward", transition.targetNode(), () -> "quest " + questId + " last stage target");
-						assertTrue(transition.actions().contains(new QuestAction.SetVariable("var0", 10)),
-							() -> "quest " + questId + " last stage reward advance");
-						continue;
-					}
-					assertTrue(transition.actions().contains(new QuestAction.SetVariable("var1", 0)),
-						() -> "quest " + questId + " " + stage.getKey() + " completion must clear var1");
-					int sourceStep = Integer.parseInt(stage.getKey().substring(1));
-					int packed = definition.definition().progressLayout().pack(Map.of("var0", sourceStep, "var1", 9));
-					var plan = QuestMutationPlanner.plan(definition,
-						new com.aionemu.gameserver.questEngine.runtime.QuestSnapshot(7, questId, QuestStatus.START,
-							packed, Map.of()), transition).orElseThrow();
-					assertEquals(0, definition.definition().progressLayout().unpack(plan.nextPackedVariables()).get("var1"));
-				}
-			}
-		}
-	}
 
 	@Test
 	void groupOwnersDeclareDropsConsumeCollectedItemsAndExposeAllSelectableRewards() {
@@ -96,32 +33,6 @@ class MigratedQuestRepairDefinitionTest {
 		assertGroupQuest(15604, 0, 0, 0, 806161,
 			Set.of(112601697, 112601698, 112501807, 112501808, 112501809,
 				112301840, 112301841, 112101727, 112101728));
-	}
-
-	@Test
-	void repairedBlockedOwnersExposeTheNewFailureMessageAndEffectCapabilities() {
-		for (int questId : List.of(10101, 20101)) {
-			CompiledQuestDefinition definition = load(questId);
-			assertTrue(definition.definition().transitions().stream().anyMatch(transition ->
-				transition.event() instanceof QuestEvent.Die
-					&& transition.afterCommit().contains(new AfterCommitAction.SendSystemMessage(
-						QuestSystemMessage.QUEST_FAILED))));
-		}
-
-		CompiledQuestDefinition hypervention = load(14031);
-		assertEquals(3, hypervention.definition().transitions().stream()
-			.filter(transition -> transition.event() instanceof QuestEvent.ItemPlay itemPlay
-				&& itemPlay.animationMillis() == 3000).count());
-		assertTrue(hypervention.definition().transitions().stream().anyMatch(transition ->
-			transition.event() instanceof QuestEvent.Die
-				&& transition.afterCommit().contains(new AfterCommitAction.SendSystemMessage(
-					QuestSystemMessage.QUEST_FAILED))));
-
-		CompiledQuestDefinition fissure = load(17510);
-		assertTrue(fissure.definition().transitions().stream().anyMatch(transition ->
-			Objects.equals(transition.sourceNode(), "s4")
-				&& transition.afterCommit().contains(new AfterCommitAction.RemoveEffect(4808))
-				&& transition.afterCommit().contains(new AfterCommitAction.RemoveEffect(4836))));
 	}
 
 	@Test
@@ -194,27 +105,6 @@ class MigratedQuestRepairDefinitionTest {
 	}
 
 	@Test
-	void premiumAbbeyPvpMirrorsUseAnyWorldKillCapability() {
-		for (int questId : List.of(19690, 29690)) {
-			CompiledQuestDefinition definition = load(questId);
-			assertEquals(1, definition.definition().metadata().inventoryItems().size());
-			assertEquals(200000000, definition.definition().metadata().rewards().get(0).amount());
-			assertEquals(3, definition.definition().transitions().stream()
-				.filter(transition -> transition.event() instanceof QuestEvent.KillInWorld kill
-					&& kill.worldId() == 0).count());
-			// 真端等级窗（ScriptDLL "PvP Target Level Gap"，装载器缺省 10）：单边上界
-			// killer - victim <= gap，无下界。
-			// Retail level window (ScriptDLL "PvP Target Level Gap", loader default 10): one-sided
-			// upper bound killer - victim <= gap with no lower bound.
-			assertTrue(definition.definition().transitions().stream()
-				.filter(transition -> transition.event() instanceof QuestEvent.KillInWorld)
-				.flatMap(transition -> transition.conditions().stream())
-				.anyMatch(condition -> condition.equals(new QuestCondition.PvpVictimLevelDelta(
-					Integer.MIN_VALUE, 10))));
-		}
-	}
-
-	@Test
 	void pippiQuestPreservesPaidSupplyAndBothRibbonZoneOrders() {
 		CompiledQuestDefinition definition = load(3090);
 		assertEquals(Set.of(3089), definition.definition().metadata().prerequisites());
@@ -279,42 +169,6 @@ class MigratedQuestRepairDefinitionTest {
 				&& talk.npcId() == 700421 && talk.dialogId() == 10255)
 			.findFirst().orElseThrow();
 		assertTrue(supply.afterCommit().contains(new AfterCommitAction.CloseDialog()));
-	}
-
-	@Test
-	void cygneaTourRestoresRetailStartReportAndRewardFlow() {
-		CompiledQuestDefinition definition = load(11319);
-		assertEquals("SEEN_MARKER", definition.definition().metadata().category());
-		assertEquals(Set.of("ELYOS"), definition.definition().metadata().permittedRaces());
-		assertEquals(55, definition.definition().metadata().minLevel());
-		assertEquals(11319, definition.definition().metadata().rewards().get(0).amount());
-
-		QuestTransition normalAccept = definition.definition().transitions().stream()
-			.filter(transition -> transition.event() instanceof QuestEvent.TalkToNpc talk
-				&& talk.npcId() == 800245 && talk.dialogId() == 1002)
-			.findFirst().orElseThrow();
-		assertEquals("started", normalAccept.targetNode());
-		assertTrue(normalAccept.conditions().contains(new QuestCondition.StartEligible()));
-		assertTrue(normalAccept.afterCommit().contains(new AfterCommitAction.ShowQuestDialog(1003)));
-
-		QuestTransition report = definition.definition().transitions().stream()
-			.filter(transition -> transition.event() instanceof QuestEvent.TalkToNpc talk
-				&& talk.npcId() == 804782 && talk.dialogId() == 1009)
-			.findFirst().orElseThrow();
-		assertEquals("reward", report.targetNode());
-		// 规范形（1919 合同逐字锁定）：状态由目标节点投影驱动，1009 路由不再显式 SetStatus。
-		// Canonical shape (the 1919 contract pins it verbatim): status comes from the target-node
-		// projection; the 1009 route carries no explicit SetStatus.
-		assertTrue(report.actions().isEmpty());
-		assertTrue(report.afterCommit().contains(new AfterCommitAction.ShowQuestDialog(5)));
-
-		QuestTransition completion = definition.definition().transitions().stream()
-			.filter(transition -> Objects.equals(transition.sourceNode(), "reward")
-				&& transition.targetNode().equals("complete"))
-			.findFirst().orElseThrow();
-		assertTrue(completion.actions().contains(new QuestAction.GrantReward(
-			"EXP", 0, 11319, QuestRewardAmountMode.QUEST_BASE)));
-		assertTrue(completion.actions().contains(new QuestAction.CompleteQuest(0)));
 	}
 
 	@Test

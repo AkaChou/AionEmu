@@ -52,13 +52,16 @@ class QuestInteractionObjectContractGateTest {
 		int total = checked;
 		// 下限随 owner 迁移下移：SimpleHunt(939)/SimpleSerialHunt(16)/SimpleTalk(3152)/SimpleCollectItem(177)
 		// 四族切到 native 后退出 typed 目录，可执行定义数从 P2 的 5000+ 降到 P3 的 3044、P4 的 2867，
-		// P5 再切 SimpleUseItem/SimpleItemPlay 两族后为 2757；P6 切 CombineTask(574) 后为 2183，
-		// 下限 2100 仍能拦住「目录塌成空壳」。
+		// P5 再切 SimpleUseItem/SimpleItemPlay 两族后为 2757；P6 切 CombineTask(574) 后为 2183；
+		// P7 步 f 切 DataDriven(1467) 后 typed 目录只剩 XML 保留行，实测 714——下限 700 仍能拦住
+		// 「目录塌成空壳」，native 行的启动合同由各家族门与 DataDrivenNativeRuntimeGateTest 承担。
 		// The floor follows the owner migration: the four families switched to the native lane left the
 		// typed directory, taking the executable count from 5000+ (P2) to 3044 (P3) and 2867 (P4); the
 		// P5 switch of SimpleUseItem/SimpleItemPlay brings it to 2757, and the P6 CombineTask switch (574)
-		// brings it to 2183 — 2100 still catches a collapse into an empty shell.
-		assertTrue(total > 2100, () -> "生产可执行定义数量异常：" + total);
+		// to 2183; the P7 step-f DataDriven switch (1467) leaves only the XML-retained rows (observed 714)
+		// — 700 still catches a collapse into an empty shell, and native startup contracts are held by
+		// the family gates and DataDrivenNativeRuntimeGateTest.
+		assertTrue(total > 700, () -> "生产可执行定义数量异常：" + total);
 		assertEquals(Map.of(), failures, () -> "启动期交互对象合同失败 "
 			+ failures.size() + " 例：" + failures);
 	}

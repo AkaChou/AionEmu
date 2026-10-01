@@ -169,7 +169,7 @@ public final class DataDrivenNativeRuntime {
 					}
 				}
 				yield ok && !npcIds.isEmpty()
-					? new AcquirePlan(4, 0, 0, 0, List.copyOf(npcIds)) : null;
+					? new AcquirePlan(4, 0, 0, 0, List.copyOf(npcIds), "") : null;
 			}
 			case "itemplay" -> {
 				String text = (row.acquireParam() == null ? "" : row.acquireParam()).trim();
@@ -178,16 +178,23 @@ public final class DataDrivenNativeRuntime {
 					unresolved.add(text.toLowerCase(java.util.Locale.ROOT));
 					yield null;
 				}
-				yield new AcquirePlan(3, 0, 0, itemId, List.of());
+				yield new AcquirePlan(3, 0, 0, itemId, List.of(), "");
 			}
 			case "enterworld" -> {
 				int worldId = parseWorldId(row.acquireParam() == null ? "" : row.acquireParam());
-				yield worldId > 0 ? new AcquirePlan(7, 0, worldId, 0, List.of()) : null;
+				yield worldId > 0 ? new AcquirePlan(7, 0, worldId, 0, List.of(), "") : null;
 			}
 			case "levelup", "leveluplogin" -> {
 				int level = parseCount(row.acquireParam() == null ? "" : row.acquireParam());
 				yield level > 0
-					? new AcquirePlan("leveluplogin".equals(kind) ? 10 : 8, level, 0, 0, List.of()) : null;
+					? new AcquirePlan("leveluplogin".equals(kind) ? 10 : 8, level, 0, 0, List.of(), "") : null;
+			}
+			case "enterarea" -> {
+				// 真端接取侧独立名字哈希树：别名登记原文，区未注册时永不命中（真端自身死边）。
+				// The retail acquire-side name-hash tree keys on the alias; an unregistered zone
+				// name is never dispatched, mirroring the retail-dead edge.
+				String alias = (row.acquireParam() == null ? "" : row.acquireParam()).trim();
+				yield alias.isEmpty() ? AcquirePlan.NONE : new AcquirePlan(6, 0, 0, 0, List.of(), alias);
 			}
 			default -> AcquirePlan.NONE;
 		};
@@ -225,9 +232,21 @@ public final class DataDrivenNativeRuntime {
 	 * The per-row acquire plan (retail LoadBasicInfo registration face). EnterArea is unfaced in e1
 	 * (zone geometry not imported); none/other kinds have no acquire registration.
 	 */
-	private record AcquirePlan(int kind, int level, int worldId, int itemId, List<Integer> npcIds) {
+	/**
+	 * 接取计划（真端 6 类接取 kind 的解析产物）。
+	 * <p>
+	 * kind 6（EnterArea）只带区别名：真端接取侧是**独立的名字哈希注册树**（`FUN_180c47bf0` 尾段，
+	 * 0x1003F 逐值比较），区不存在时注册项永不命中（真端自身即死边）⇒ 镜像 = 兴趣键登记别名原文，
+	 * 进区事件按注册区名派发，未注册区名永不派发。
+	 * The acquire plan parsed from one retail acquire kind. Kind 6 (EnterArea) carries only the zone
+	 * alias: retail registers it in a separate name-hash tree (tail of FUN_180c47bf0) that can only be
+	 * hit by an entered zone of the same name, so an unregistered alias is a dead edge at retail itself
+	 * — mirrored by keying the interest on the alias text.
+	 */
+	private record AcquirePlan(int kind, int level, int worldId, int itemId, List<Integer> npcIds,
+			String zoneAlias) {
 
-		static final AcquirePlan NONE = new AcquirePlan(0, 0, 0, 0, List.of());
+		static final AcquirePlan NONE = new AcquirePlan(0, 0, 0, 0, List.of(), "");
 	}
 
 	private static volatile DataDrivenNativeRuntime instance;
@@ -248,6 +267,8 @@ public final class DataDrivenNativeRuntime {
 	private final Map<Integer, List<Integer>> acquireWorldsByWorldId;
 	/** 接取兴趣面：等级等值（kind 8/10）→ 任务。 / Acquire interest: exact level → quests. */
 	private final Map<Integer, List<Integer>> acquireLevelsByLevel;
+	/** 接取兴趣面：进区别名（kind 6，真端接取侧名字哈希树）→ 任务。 / Acquire interest: zone alias (kind 6). */
+	private final Map<String, List<Integer>> acquireZonesByName;
 	/** 已落面附加动作（quest → 逐步 ActionPlan，与步序对齐）。 / Faced extra actions per quest and step. */
 	private final Map<Integer, List<List<ActionPlan>>> actionsByQuestId;
 	/** 接取计划（quest → plan，kind 过滤与接取面用）。 / Acquire plans by quest. */
@@ -268,7 +289,8 @@ public final class DataDrivenNativeRuntime {
 			Map<String, List<StepHit>> zonesByName, Map<Integer, List<StepHit>> worldsByWorldId,
 			Map<Integer, List<Integer>> pvpStepsByQuestId, Map<Integer, List<Integer>> acquireTalksByNpcId,
 			Map<Integer, List<Integer>> acquireItemsByItemId, Map<Integer, List<Integer>> acquireWorldsByWorldId,
-			Map<Integer, List<Integer>> acquireLevelsByLevel, Map<Integer, List<List<ActionPlan>>> actionsByQuestId,
+			Map<Integer, List<Integer>> acquireLevelsByLevel, Map<String, List<Integer>> acquireZonesByName,
+			Map<Integer, List<List<ActionPlan>>> actionsByQuestId,
 			Map<Integer, AcquirePlan> acquireByQuestId, Set<Integer> ownedQuestIds,
 			Set<Integer> routedQuestIds, Map<Integer, FreezeReason> frozenQuestIds, Set<String> unresolvedNames,
 			NativeInventoryPort inventoryPort, NativeMoviePort moviePort, NativeTeleportPort teleportPort,
@@ -285,6 +307,7 @@ public final class DataDrivenNativeRuntime {
 		this.acquireItemsByItemId = acquireItemsByItemId;
 		this.acquireWorldsByWorldId = acquireWorldsByWorldId;
 		this.acquireLevelsByLevel = acquireLevelsByLevel;
+		this.acquireZonesByName = acquireZonesByName;
 		this.actionsByQuestId = actionsByQuestId;
 		this.acquireByQuestId = acquireByQuestId;
 		this.ownedQuestIds = ownedQuestIds;
@@ -299,8 +322,13 @@ public final class DataDrivenNativeRuntime {
 	}
 
 	/**
-	 * 生产单例：装载真端 DD 表，路由集为空（DD 切换集仍由旧 IR 车道 owns ⇒ 零行为变更）。
-	 * Production singleton: loads the retail DD table with an empty routing set (zero behavior change).
+	 * 生产单例：装载真端 DD 表并按切换集（retention 台账 owner=RETAIL_TABLE ∧ family=DataDriven = 1467
+	 * 候选行）建立路由视图；行级冻结在 {@link #create} 内逐行裁定（可路由 1444 / 冻结 23）。
+	 * 启动次序依赖：静态数据（含 zones 注册表）先于引擎装载（GameStartupSequenceLifecycle 相位序）。
+	 * Production singleton: loads the retail DD table and builds the routing view for the switch set
+	 * (retention ledger owner RETAIL_TABLE ∧ family DataDriven = 1467 candidates); per-row freezing is
+	 * adjudicated inside create (1444 routed / 23 frozen). Startup ordering: static data (incl. the
+	 * zone registry) loads before engines (GameStartupSequenceLifecycle phase order).
 	 */
 	public static DataDrivenNativeRuntime instance() {
 		DataDrivenNativeRuntime local = instance;
@@ -316,16 +344,100 @@ public final class DataDrivenNativeRuntime {
 		return local;
 	}
 
+	/** retention 台账资源（owner/family 列 = 切换集权威来源）。 / The retention ledger (switch-set source). */
+	private static final String RETENTION_RESOURCE = "/aion/data/static_data/quest/retail/retail-xml-retention.tsv";
+
 	private static DataDrivenNativeRuntime loadProduction() {
+		Set<Integer> switchSet = retentionSwitchSet();
+		DataDrivenQuestTable table;
 		try (InputStream input = DataDrivenNativeRuntime.class.getResourceAsStream(TABLE_RESOURCE)) {
 			if (input == null) {
 				throw new IllegalStateException("DATA_DRIVEN_TABLE_MISSING: " + TABLE_RESOURCE);
 			}
-			DataDrivenQuestTable table = DataDrivenQuestTable.load(input);
-			return create(table, Set.of(), null, null, null, null, null, null, null, null);
+			table = DataDrivenQuestTable.load(input);
 		} catch (IOException e) {
 			throw new IllegalStateException("DATA_DRIVEN_TABLE_UNREADABLE: " + TABLE_RESOURCE, e);
 		}
+		NativeEnterAreaPort enterAreaPort = NativeEnterAreaPort.create(table, switchSet, registeredZoneNames());
+		try {
+			return create(table, switchSet, NativeNpcNameResolver.instance(), enterAreaPort,
+				RetailItemNameIndex.loadItemTemplates(), NativeInventoryPort.live(), NativeMoviePort.live(),
+				NativeTeleportPort.live(), NativeSpawnPort.live(), NativeSayPort.live());
+		} catch (IOException e) {
+			throw new IllegalStateException("DATA_DRIVEN_PRODUCTION_WIRING_FAILED", e);
+		}
+	}
+
+	/**
+	 * 切换集 = retention 台账 owner RETAIL_TABLE ∧ family DataDriven（与 RetailQuestDriver 同源解析，
+	 * 1467 行；行级可路由性由 create 逐行裁定）。
+	 * The switch set: retention rows with owner RETAIL_TABLE ∧ family DataDriven (same ledger the
+	 * driver parsed; per-row routability is adjudicated row by row in create).
+	 */
+	private static Set<Integer> retentionSwitchSet() {
+		try (InputStream input = DataDrivenNativeRuntime.class.getResourceAsStream(RETENTION_RESOURCE)) {
+			if (input == null) {
+				throw new IllegalStateException("DATA_DRIVEN_RETENTION_MISSING: " + RETENTION_RESOURCE);
+			}
+			Set<Integer> ids = new java.util.TreeSet<>();
+			for (String line : new java.io.BufferedReader(new java.io.InputStreamReader(input,
+					java.nio.charset.StandardCharsets.UTF_8)).lines().toList()) {
+				if (line.isBlank() || line.startsWith("#")) {
+					continue;
+				}
+				String[] parts = line.split("\t", -1);
+				if ("RETAIL_TABLE".equals(parts[1]) && "DataDriven".equals(parts[2])) {
+					ids.add(Integer.parseInt(parts[0]));
+				}
+			}
+			if (ids.isEmpty()) {
+				throw new IllegalStateException("DATA_DRIVEN_SWITCH_SET_EMPTY: " + RETENTION_RESOURCE);
+			}
+			return ids;
+		} catch (IOException e) {
+			throw new IllegalStateException("DATA_DRIVEN_RETENTION_UNREADABLE: " + RETENTION_RESOURCE, e);
+		}
+	}
+
+	/**
+	 * 已注册区名（ZoneData 全量 zones_*.xml；进区事件只按注册区派发，别名必须落在注册面内）。
+	 * 单测环境静态数据未装载 ⇒ 回退扫描工作树同一 zones 目录（与 ZoneData 同一文件集，口径一致）。
+	 * Registered zone names from ZoneData (all zones_*.xml); enter-zone events dispatch by registered
+	 * name only. Unit tests without static data fall back to scanning the same zones directory in the
+	 * working tree (the identical file set, one semantic).
+	 */
+	private static Set<String> registeredZoneNames() {
+		Set<String> names = new java.util.TreeSet<>(String.CASE_INSENSITIVE_ORDER);
+		if (com.aionemu.gameserver.dataholders.DataManager.ZONE_DATA != null) {
+			for (java.util.List<com.aionemu.gameserver.model.templates.zone.ZoneInfo> infos : com.aionemu.gameserver.dataholders.DataManager.ZONE_DATA
+					.getZones().values()) {
+				for (com.aionemu.gameserver.model.templates.zone.ZoneInfo info : infos) {
+					names.add(info.getZoneTemplate().getName().name());
+				}
+			}
+		} else {
+			java.util.regex.Pattern zoneName = java.util.regex.Pattern.compile("<zone\\b[^>]*\\bname=\"([^\"]+)\"");
+			java.nio.file.Path dir = java.nio.file.Path.of("src/main/resources/aion/data/static_data/zones");
+			try (java.util.stream.Stream<java.nio.file.Path> files = java.nio.file.Files.list(dir)) {
+				for (java.nio.file.Path path : files.sorted().toList()) {
+					String file = path.getFileName().toString();
+					if (!file.startsWith("zones_") || !file.endsWith(".xml")) {
+						continue;
+					}
+					java.util.regex.Matcher matcher = zoneName.matcher(java.nio.file.Files.readString(path,
+						java.nio.charset.StandardCharsets.UTF_8));
+					while (matcher.find()) {
+						names.add(matcher.group(1));
+					}
+				}
+			} catch (IOException e) {
+				throw new IllegalStateException("DATA_DRIVEN_ZONE_REGISTRY_UNREADABLE: " + dir, e);
+			}
+		}
+		if (names.isEmpty()) {
+			throw new IllegalStateException("DATA_DRIVEN_ZONE_REGISTRY_EMPTY");
+		}
+		return names;
 	}
 
 	/**
@@ -352,8 +464,8 @@ public final class DataDrivenNativeRuntime {
 		}
 		if (routedQuestIds == null || routedQuestIds.isEmpty()) {
 			return new DataDrivenNativeRuntime(Map.of(), Map.of(), Map.of(), Map.of(), Map.of(), Map.of(), Map.of(),
-				Map.of(), Map.of(), Map.of(), Map.of(), Map.of(), Map.of(), Map.of(), Set.of(), Set.of(), Map.of(),
-				Set.of(), null, null, null, null, null);
+				Map.of(), Map.of(), Map.of(), Map.of(), Map.of(), Map.of(), Map.of(), Map.of(), Set.of(), Set.of(),
+				Map.of(), Set.of(), null, null, null, null, null);
 		}
 		Objects.requireNonNull(nameResolver, "DATA_DRIVEN_NAME_RESOLVER_MISSING");
 		Objects.requireNonNull(enterAreaPort, "DATA_DRIVEN_ENTER_AREA_PORT_MISSING");
@@ -376,6 +488,7 @@ public final class DataDrivenNativeRuntime {
 		Map<Integer, List<Integer>> acquireItems = new LinkedHashMap<>();
 		Map<Integer, List<Integer>> acquireWorlds = new LinkedHashMap<>();
 		Map<Integer, List<Integer>> acquireLevels = new LinkedHashMap<>();
+		Map<String, List<Integer>> acquireZones = new LinkedHashMap<>();
 		Map<Integer, List<List<ActionPlan>>> actionPlans = new LinkedHashMap<>();
 		Map<Integer, AcquirePlan> acquirePlans = new LinkedHashMap<>();
 		Set<Integer> owned = new TreeSet<>();
@@ -425,6 +538,8 @@ public final class DataDrivenNativeRuntime {
 				case 3 -> acquireItems.computeIfAbsent(acquire.itemId(), key -> new ArrayList<>()).add(questId);
 				case 7 -> acquireWorlds.computeIfAbsent(acquire.worldId(), key -> new ArrayList<>()).add(questId);
 				case 8, 10 -> acquireLevels.computeIfAbsent(acquire.level(), key -> new ArrayList<>()).add(questId);
+				case 6 -> acquireZones.computeIfAbsent(acquire.zoneAlias().toUpperCase(Locale.ROOT),
+					key -> new ArrayList<>()).add(questId);
 				default -> {
 				}
 			}
@@ -432,8 +547,9 @@ public final class DataDrivenNativeRuntime {
 		return new DataDrivenNativeRuntime(Map.copyOf(plans), Map.copyOf(kills), Map.copyOf(talks), Map.copyOf(fobjs),
 			Map.copyOf(itemPlays), Map.copyOf(zones), Map.copyOf(worlds), Map.copyOf(pvpSteps),
 			Map.copyOf(acquireTalks), Map.copyOf(acquireItems), Map.copyOf(acquireWorlds), Map.copyOf(acquireLevels),
-			Map.copyOf(actionPlans), Map.copyOf(acquirePlans), Set.copyOf(owned), Set.copyOf(routed),
-			Map.copyOf(frozen), Set.copyOf(unresolved), inventoryPort, moviePort, teleportPort, spawnPort, sayPort);
+			Map.copyOf(acquireZones), Map.copyOf(actionPlans), Map.copyOf(acquirePlans), Set.copyOf(owned),
+			Set.copyOf(routed), Map.copyOf(frozen), Set.copyOf(unresolved), inventoryPort, moviePort, teleportPort,
+			spawnPort, sayPort);
 	}
 
 	/** 一行计划的中转结构（构建期）。 / Mutable per-row plan during construction. */
@@ -992,6 +1108,11 @@ public final class DataDrivenNativeRuntime {
 					if (!NativeQuestStartPort.instance().start(player, questId).started()) {
 						return false;
 					}
+					// 真端 1002 接取收尾 = FUN_180c4d5b0(user,-1,…,-1)，其 -1 路径跑步 0 动作
+					// （门 = 接取 kind==4，本面只服务 talk 接取行 ⇒ 结构性满足）。
+					// Retail 1002 accept tail = FUN_180c4d5b0(user,-1,…,-1) whose -1 path runs
+					// step-0 actions (gated on acquire kind 4, structurally true on this face).
+					runActions(player, questId, 0);
 					PacketSendUtility.sendPacket(player,
 						new SM_DIALOG_WINDOW(objectId, PAGE_ACCEPTED, questId));
 					return true;
@@ -1012,6 +1133,12 @@ public final class DataDrivenNativeRuntime {
 					if (dialogId == ACTION_BOOK
 						&& !NativeQuestStartPort.instance().start(player, questId).started()) {
 						return false;
+					}
+					if (dialogId == ACTION_BOOK) {
+						// 真端 20000 接取收尾同样走 FUN_180c4d5b0(-1,-1) ⇒ 步 0 动作（同 1002 面）。
+						// The retail 20000 accept tail funnels into FUN_180c4d5b0(-1,-1) too: step-0
+						// actions, same as the 1002 face.
+						runActions(player, questId, 0);
 					}
 					// 真端 `mgr+0x5d8` 完成通道（20001 的 +0x2a8 演出面未坐实，e1 只回完成页）。
 					// The retail mgr+0x5d8 completion channel (20001's +0x2a8 play face is
@@ -1101,13 +1228,21 @@ public final class DataDrivenNativeRuntime {
 	}
 
 	/**
-	 * 进区事件（EnterArea 直接步进）。 / Enter-zone event (EnterArea advance).
+	 * 进区事件：接取双角色（真端区 handler `FUN_180c47bf0` 尾段的独立接取侧名字哈希树：接取 kind==6 且
+	 * 区名哈希命中 → `(+0xd8)` 接取 + 步 0 动作）+ EnterArea 直接步进。未注册的别名（如真端无区定义的
+	 * `DF6_QuestArea_Q25674`）在本服永不派发进区事件 ⇒ 兴趣键登记原文 = 镜像真端死边。
+	 * Enter-zone event: the dual-role acquire of the retail zone handler's separate acquire-side
+	 * name-hash tree (kind 6 → SetQuestAcquired + step-0 actions), then the EnterArea advance.
 	 */
 	public boolean onEnterZone(Player player, String zoneName) {
 		if (zoneName == null) {
 			return false;
 		}
-		return dispatch(player, zonesByName.get(zoneName.toUpperCase(Locale.ROOT)));
+		String key = zoneName.toUpperCase(Locale.ROOT);
+		if (acquire(player, acquireZonesByName.get(key), 6)) {
+			return true;
+		}
+		return dispatch(player, zonesByName.get(key));
 	}
 
 	/**
@@ -1362,14 +1497,17 @@ public final class DataDrivenNativeRuntime {
 		state.setPersistentState(PersistentState.UPDATE_REQUIRED);
 		PacketSendUtility.sendPacket(player,
 			new SM_QUEST_ACTION(state.getQuestId(), state.getStatus(), state.getQuestVars().getQuestVars()));
-		// 真端动作执行矩阵：推进/收口分支只对 Hunt/EnterArea/TalkFOBJ 调执行器（对话平面与
-		// ItemPlay/EnterWorld 的推进边只发 0xf0/0x100，见 e2 取证 §1）；接取分支不受此限。
-		// Retail runs the executor only on the Hunt/EnterArea/TalkFOBJ advance branches; the dialog
-		// plane and ItemPlay/EnterWorld advances never call it (e2 evidence §1).
+		// 真端动作执行矩阵（步 f 逐 handler 修正）：推进/收口分支对 Hunt/EnterArea/TalkFOBJ **和 Talk**
+		// 调执行器——对话平面推进/完成统一汇入 `FUN_180c4d5b0(…,-1)`，其 -1 路径在 C:2075066 直调
+		// `FUN_180c4c8d0(完成步动作)`，门 = 完成步 kind==4（Talk）；CollectItem 拾取分支无执行器、
+		// 门也只放行 kind 4 ⇒ 排除；ItemPlay/EnterWorld 推进边零执行器调用（e2 取证 §1）。
+		// Retail executor matrix (step-f per-handler fix): the advance edge runs the executor for
+		// Hunt/EnterArea/TalkFOBJ **and Talk** — the dialog plane funnels into FUN_180c4d5b0(…,-1)
+		// whose -1 path calls FUN_180c4c8d0 on the completed step's actions, gated on step kind == 4.
 		if (result.outcome() == DataDrivenProgress.Outcome.STEP_ADVANCE
 			|| result.outcome() == DataDrivenProgress.Outcome.STEP_COMPLETE) {
 			switch (plansByQuestId.get(state.getQuestId()).get(actionStepIndex).kind()) {
-				case HUNT, ENTER_AREA, TALK_FOBJ -> runActions(player, state.getQuestId(), actionStepIndex);
+				case HUNT, ENTER_AREA, TALK_FOBJ, TALK -> runActions(player, state.getQuestId(), actionStepIndex);
 				default -> {
 				}
 			}
@@ -1482,5 +1620,10 @@ public final class DataDrivenNativeRuntime {
 	/** 接取等级兴趣面（level → 任务）。 / Acquire level interests (level → quests). */
 	public Map<Integer, List<Integer>> acquireLevelInterests() {
 		return acquireLevelsByLevel;
+	}
+
+	/** 接取进区兴趣面（区别名大写 → 任务）。 / Acquire zone interests (alias upper → quests). */
+	public Map<String, List<Integer>> acquireZoneInterests() {
+		return acquireZonesByName;
 	}
 }

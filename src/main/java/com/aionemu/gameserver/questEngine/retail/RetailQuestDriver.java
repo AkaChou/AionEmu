@@ -1,10 +1,7 @@
 package com.aionemu.gameserver.questEngine.retail;
 
-import com.aionemu.gameserver.questEngine.definition.CompiledQuestDefinition;
-import com.aionemu.gameserver.questEngine.definition.ImmutableQuestCatalog;
 import com.aionemu.gameserver.questEngine.definition.QuestCatalog;
 import com.aionemu.gameserver.questEngine.definition.QuestCatalogEntry;
-import com.aionemu.gameserver.questEngine.definition.QuestDialogContract;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -16,9 +13,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.Set;
-import java.util.TreeSet;
 import java.util.concurrent.ConcurrentHashMap;
+import com.aionemu.gameserver.questEngine.tablelane.DataDrivenNativeRuntime;
 import com.aionemu.gameserver.questEngine.tablelane.SimpleCollectItemHandler;
 import com.aionemu.gameserver.questEngine.tablelane.SimpleCombineTaskHandler;
 import com.aionemu.gameserver.questEngine.tablelane.SimpleHuntHandler;
@@ -30,31 +26,31 @@ import com.aionemu.gameserver.questEngine.tablelane.SimpleUseItemHandler;
 /**
  * 生产装载链的"真端优先"驱动（提示词 §4.C 的 overlay 落点）。
  * <p>
- * 职责单一：对保留清单（{@code quest_retail/retail-xml-retention.tsv}）判定为
- * {@code RETAIL_TABLE} 的任务，用真端模板表 + 真端 quest.xml 元数据 + DLL 语义
- * 合成完整定义，替换/补入 XML 目录；保留清单内的任务一律维持 XML。
- * {@link #overlay} 为局部目录测试保留宽松入口；生产必须调用
- * {@link #overlayProduction}，逐任务核对完整归属。已删除的 XML 无法由开关恢复。
- * <p>
- * The retail-first overlay; production verifies every owner rather than silently
- * dropping retired quests when the driver is disabled or unavailable.
+ * P7 步 f 起七族（SimpleHunt/SimpleSerialHunt/SimpleTalk/SimpleCollectItem/SimpleUseItem/
+ * SimpleItemPlay/CombineTask）与 DataDriven 1467 行全部由 tablelane 原生 handler/运行时直驱，
+ * 旧 IR 编译车道已随切换原子退场；本类只剩三个职责：
+ * <ol>
+ *   <li><b>真端 quest.xml 元数据底座</b>（{@link #retailMetadataOf}，native 完成/领奖口的唯一事实来源）；</li>
+ *   <li><b>生产覆盖校验</b>（{@link #overlayProduction}：保留清单 6224 行逐 id 核对 = 目录条目 ∨
+ *       原生 owner ∨ DD 运行时 owned〔routed 或显式冻结〕，缺一即拒启）；</li>
+ *   <li><b>直通 overlay</b>（目录原样返回；保留清单内任务一律维持 XML）。</li>
+ * </ol>
+ * The retail-first driver. Since P7 step f every family (SimpleHunt/SimpleSerialHunt/SimpleTalk/
+ * SimpleCollectItem/SimpleUseItem/SimpleItemPlay/CombineTask) and the 1467 DataDriven rows are driven
+ * natively by the tablelane handlers/runtime, and the old IR compile lane retired atomically with the
+ * switch. Three duties remain: the retail quest.xml metadata base for the native completion port, the
+ * fail-closed production coverage check (catalog entry ∨ native owner ∨ DD-runtime owned), and the
+ * pass-through overlay.
  */
 public final class RetailQuestDriver {
 
 	/** 保留清单资源（quest_id, owner, family, reason, evidence）。 / The retention manifest resource. */
 	private static final String RETENTION_RESOURCE =
 		"/aion/data/static_data/quest/retail/retail-xml-retention.tsv";
-	private static final String SIMPLE_HUNT_TABLE = "/aion/data/static_data/quest/retail/Quest_SimpleHunt.xml";
-	/** 真端 DataDriven 模板表（接取方式 × 进度步骤链）。 / The retail DataDriven template table. */
-	private static final String DATA_DRIVEN_TABLE =
-		"/aion/data/static_data/quest/retail/data_driven_quest.xml";
 	private static final String RETAIL_QUEST_XML = "/aion/data/static_data/quest/retail/quest.xml";
 	private static final String NAME_IDS_TSV = "/aion/data/static_data/quest/retail/quest_name_string_ids.tsv";
 	private static final String RANDOM_REWARDS = "/aion/data/static_data/quest/legacy/quest_random_rewards.xml";
 	private static final String NPC_DIR = "/aion/data/static_data/npcs/";
-	/** 生产区域发放表（{@code <quest_area>} 绑定；真端世界文件 questscript_area 的落点）。 /
-	 * Production quest-area grant table ({@code <quest_area>} bindings from the retail world files). */
-	private static final String AI_AREAS = "/aion/definitions/compact/ai/ai-areas.xml";
 	private static final String SWITCH_PROPERTY = "aion.quest.retailDriver";
 	private static final int PRODUCTION_QUEST_COUNT = 6224;
 
@@ -67,76 +63,24 @@ public final class RetailQuestDriver {
 	private static volatile RetailQuestDriver instance;
 	private static volatile boolean loadFailed;
 
-	/** 保留清单里标记为 RETAIL_TABLE 的全部任务（按家族分派到各自编译器）。 / All retail-owned quests. */
-	private final Set<Integer> retailOwned;
-	private final Set<Integer> retailOwnedDataDriven;
-	private final Set<Integer> retailOwnedSimpleCollectItem;
-	private final RetailQuestCatalog catalog;
-	private final RetailClientDialogExits clientDialogExits;
-	private final RetailClientSummaryRows clientSummaryRows;
-	private final RetailClientRewardNpcs clientRewardNpcs;
-	/** 客户端声明的交付 NPC 集合投影（多 id 真端领奖名唯一放行通道，QE-106 家族）。 /
-	 * Client-declared hand-in NPC set projection: the only pass-through for multi-id reward names. */
-	private final RetailClientHandinNpcSets clientHandinNpcSets;
-	private final RetailQuestAreaIndex questAreas;
 	private final RetailQuestXmlTable retailTable;
 	private final RetailNpcNameIndex npcIndex;
 	private final RetailItemNameIndex itemIndex;
 	private final Map<String, Integer> randomRewards;
 	private final Map<Integer, Integer> nameIds;
-	private final RetailClientHuntStages clientHuntStages;
-	private final RetailDataDrivenTable dataDrivenTable;
-	private final RetailClientHandinPages clientHandinPages;
-	/** 交互物 NPC 集（掉落箱的 ACTION_ITEM_USE 路由判据）。 / Interaction-object npc set. */
-	private final RetailQuestUseItemNpcs interactionObjects;
-	private final RetailClientKillTargets clientKillTargets;
-	private final RetailClientHuntProgressRows clientHuntProgressRows;
-	private final RetailEnterAreaZoneResolution enterAreaZoneResolution;
-	private final Map<Integer, Optional<CompiledQuestDefinition>> cache = new ConcurrentHashMap<>();
-	/** 入口页契约快照（见 {@link #refreshAcceptEntryContract()}）。 / Accept entry page contract snapshot. */
-	private volatile QuestDialogContract acceptEntryContract;
-	private final Map<Integer, String> rejections = new ConcurrentHashMap<>();
 	/** 真端 quest.xml 元数据缓存（native 完成口与目录构建共用同一条编译器）。 /
 	 * Retail quest.xml metadata cache shared by the native completion port and the catalog build. */
 	private final Map<Integer, Optional<RetailQuestMetadataCompiler.Outcome>> metadataCache =
 		new ConcurrentHashMap<>();
 
-	private RetailQuestDriver(Set<Integer> retailOwnedDataDriven, Set<Integer> retailOwnedSimpleCollectItem,
-			RetailQuestCatalog catalog,
-			RetailClientDialogExits clientDialogExits, RetailClientSummaryRows clientSummaryRows,
-			RetailClientRewardNpcs clientRewardNpcs, RetailClientHandinNpcSets clientHandinNpcSets,
-			RetailQuestXmlTable retailTable, RetailNpcNameIndex npcIndex, RetailItemNameIndex itemIndex,
-			Map<String, Integer> randomRewards, Map<Integer, Integer> nameIds,
-			RetailClientHuntStages clientHuntStages,
-			RetailQuestAreaIndex questAreas,
-			RetailDataDrivenTable dataDrivenTable,
-			RetailClientHandinPages clientHandinPages,
-			RetailQuestUseItemNpcs interactionObjects,
-			RetailClientKillTargets clientKillTargets, RetailClientHuntProgressRows clientHuntProgressRows,
-			RetailEnterAreaZoneResolution enterAreaZoneResolution) {
-		this.retailOwnedDataDriven = retailOwnedDataDriven;
-		this.retailOwnedSimpleCollectItem = retailOwnedSimpleCollectItem;
-		this.retailOwned = new TreeSet<>();
-		this.retailOwned.addAll(retailOwnedDataDriven);
-		this.retailOwned.addAll(retailOwnedSimpleCollectItem);
-		this.catalog = catalog;
-		this.clientDialogExits = clientDialogExits;
-		this.clientSummaryRows = clientSummaryRows;
-		this.clientRewardNpcs = clientRewardNpcs;
-		this.clientHandinNpcSets = clientHandinNpcSets;
-		this.questAreas = questAreas;
+	private RetailQuestDriver(RetailQuestXmlTable retailTable,
+			RetailNpcNameIndex npcIndex, RetailItemNameIndex itemIndex, Map<String, Integer> randomRewards,
+			Map<Integer, Integer> nameIds) {
 		this.retailTable = retailTable;
 		this.npcIndex = npcIndex;
 		this.itemIndex = itemIndex;
 		this.randomRewards = randomRewards;
 		this.nameIds = nameIds;
-		this.clientHuntStages = clientHuntStages;
-		this.dataDrivenTable = dataDrivenTable;
-		this.clientHandinPages = clientHandinPages;
-		this.interactionObjects = interactionObjects;
-		this.clientKillTargets = clientKillTargets;
-		this.clientHuntProgressRows = clientHuntProgressRows;
-		this.enterAreaZoneResolution = enterAreaZoneResolution;
 	}
 
 	/** 开关是否开启（默认 true；{@code -Daion.quest.retailDriver=false} 回退改造前）。 */
@@ -145,23 +89,23 @@ public final class RetailQuestDriver {
 	}
 
 	/**
-	 * 局部目录兼容入口：retail-owned 任务用真端定义替换/补入，装载失败返回原 XML 目录。
+	 * 局部目录兼容入口：目录原样返回（P7 步 f 起无 retail 编译产物，保留任务一律维持 XML）。
 	 * 不能用于生产启动：退役 XML 已删除，失败回退将丢失任务；生产必须调用 {@link #overlayProduction}。
-	 * Compatibility overlay for partial catalogs; production must use the fail-closed entry point.
+	 * Compatibility overlay for partial catalogs; the catalog passes through untouched (no retail
+	 * compile products remain). Production must use the fail-closed entry point.
 	 */
 	public static QuestCatalog overlay(QuestCatalog xmlCatalog) {
 		Objects.requireNonNull(xmlCatalog, "xmlCatalog");
 		if (!isEnabled()) {
 			return xmlCatalog;
 		}
-		RetailQuestDriver driver;
 		try {
-			driver = currentOrLoad();
+			currentOrLoad();
 		} catch (RuntimeException | IOException e) {
 			loadFailed = true;
 			return xmlCatalog;
 		}
-		return driver.apply(xmlCatalog);
+		return xmlCatalog;
 	}
 
 	/**
@@ -176,21 +120,25 @@ public final class RetailQuestDriver {
 			verifyProductionCoverage(xmlCatalog, xmlCatalog, false);
 			return xmlCatalog;
 		}
-		RetailQuestDriver driver;
 		try {
-			driver = currentOrLoad();
+			currentOrLoad();
 		} catch (RuntimeException | IOException e) {
 			loadFailed = true;
 			throw new IllegalStateException("retail quest driver unavailable; retired XML cannot be restored", e);
 		}
-		QuestCatalog result = driver.apply(xmlCatalog);
-		verifyProductionCoverage(xmlCatalog, result, true);
-		return result;
+		verifyProductionCoverage(xmlCatalog, xmlCatalog, true);
+		return xmlCatalog;
 	}
 
 	/**
 	 * 对完整生产目录逐 ID 核对来源与执行定义；局部测试桩不走此入口。
+	 * <p>
+	 * 覆盖三分册（P7 步 f 起）：目录条目 ∨ 原生 handler owns ∨ DD 运行时 owned（可路由或**显式冻结**
+	 * ——冻结行带 {@code FreezeReason} 登记 §10.3，非静默丢弃）。DataDriven 旧编译车道已退场，
+	 * 其 1467 行全部由 {@link DataDrivenNativeRuntime} 接管。
 	 * Verifies exact production ownership; partial test catalogs use the lenient overlay instead.
+	 * Coverage since step f: catalog entry ∨ native handler owner ∨ DD-runtime owned (routed or
+	 * explicitly frozen with a registered FreezeReason — never silently dropped).
 	 */
 	static void verifyProductionCoverage(QuestCatalog xmlCatalog, QuestCatalog actual, boolean enabled) {
 		Map<Integer, String> owners = new HashMap<>();
@@ -211,7 +159,7 @@ public final class RetailQuestDriver {
 					throw new IllegalStateException("invalid retail quest id in owner row: " + line, e);
 				}
 				if (questId <= 0) {
-					throw new IllegalStateException("nonpositive retail quest id in owner row: " + line);
+					throw new IllegalStateException("nonpositive retail quest id in owner row: " + questId);
 				}
 				if (owners.putIfAbsent(questId, parts[1]) != null) {
 					throw new IllegalStateException("duplicate retail quest owner: " + questId);
@@ -237,14 +185,15 @@ public final class RetailQuestDriver {
 						|| SimpleCollectItemHandler.instance().owns(questId)
 						|| SimpleUseItemHandler.instance().owns(questId)
 						|| SimpleItemPlayHandler.instance().owns(questId)
-						|| SimpleCombineTaskHandler.instance().owns(questId))
+						|| SimpleCombineTaskHandler.instance().owns(questId)
+						|| DataDrivenNativeRuntime.instance().owns(questId))
 						&& "RETAIL_TABLE".equals(row.getValue())) {
 					nativeCoveredCount++;
 					continue;
 				}
 				missing.add(questId);
 			} else if (enabled && "RETAIL_TABLE".equals(row.getValue())) {
-				if (xml.isPresent() || entry.orElseThrow().executable().isEmpty()) {
+				if (xml.isPresent()) {
 					wrongOwner.add(questId);
 				}
 			} else if (xml.isEmpty() || xml.orElseThrow() != entry.orElseThrow()) {
@@ -272,11 +221,6 @@ public final class RetailQuestDriver {
 		return Optional.ofNullable(instance);
 	}
 
-	/** 真端模板表拥有的全部任务 ID（只读快照）。 / All quest ids owned by retail tables as a read-only snapshot. */
-	public Set<Integer> retailOwnedIds() {
-		return Set.copyOf(retailOwned);
-	}
-
 	/**
 	 * 真端 {@code quest.xml} 行的规范元数据（native 完成/领奖口的数据底座）。
 	 * <p>
@@ -302,10 +246,6 @@ public final class RetailQuestDriver {
 	}
 
 	/**
-	 * 同一进程只装载一次真端表与索引，避免预加载线程和测试入口重复构建整个目录。
-	 * Loads the retail tables and indexes once across concurrent production/preload callers.
-	 */
-	/**
 	 * 确保真端驱动已按类路径资源装载并返回（供 native 车道只读消费元数据，不触发目录覆盖校验）。
 	 * Ensures the retail driver is loaded from classpath resources and returns it; the native lane
 	 * consumes metadata read-only through this entry without running catalog overlay verification.
@@ -329,75 +269,16 @@ public final class RetailQuestDriver {
 		return driver;
 	}
 
+	/**
+	 * 装载真端表与索引（P7 步 f 后 = 元数据底座；家族切换史：SimpleHunt 939 / SimpleSerialHunt 16 /
+	 * SimpleTalk 3152 / SimpleCollectItem 262 / SimpleUseItem 160 / SimpleItemPlay 43 / CombineTask 574
+	 * 已随 P1-P6 原生直驱，DataDriven 1467 随 P7 步 f 由 {@link DataDrivenNativeRuntime} 接管，
+	 * 旧 IR 编译车道原子退场）。归属核验见 {@link #verifyProductionCoverage}。
+	 * Loads the retail tables and indexes (post step f: the metadata base). Family switch history:
+	 * P1-P6 went native batch by batch; DataDriven's 1467 rows moved to the DD runtime in step f and
+	 * the old IR compile lane retired atomically. Ownership is verified by verifyProductionCoverage.
+	 */
 	private static RetailQuestDriver load() throws IOException {
-		Set<Integer> retailOwnedDataDriven = new TreeSet<>();
-		Set<Integer> retailOwnedCollectItem = new TreeSet<>();
-		Map<Integer, String> reasons = new HashMap<>();
-		for (String line : lines(open(RETENTION_RESOURCE))) {
-			if (line.startsWith("#") || line.isBlank()) {
-				continue;
-			}
-			String[] parts = line.split("\t", -1);
-			if ("RETAIL_TABLE".equals(parts[1])) {
-				int questId = Integer.parseInt(parts[0]);
-				if ("SimpleHunt".equals(parts[2])) {
-					// P1 原生表驱动切换：SimpleHunt 939 任务由 SimpleHuntHandler 原生直驱；旧 IR 车道与
-					// 族金标已随 QE-112 切片原子删除（compileSimpleHunt 退场）。
-					// P1 native switch: the 939 SimpleHunt rows are driven natively; the old IR lane and its
-					// family golden were deleted atomically with the QE-112 slice (compileSimpleHunt retired).
-				} else if ("SimpleSerialHunt".equals(parts[2])) {
-					// P2 原生表驱动切换：SimpleSerialHunt 16 任务由 SimpleSerialHuntHandler 原生直驱；旧 IR
-					// 车道、串行表读取器与族金标已随 QE-112 切片原子删除。
-					// P2 native switch: the 16 SimpleSerialHunt rows are driven natively; the old IR lane,
-					// its table reader and its family golden were deleted with the QE-112 slice.
-				} else if ("SimpleUseItem".equals(parts[2])) {
-					// P5 原生表驱动切换：SimpleUseItem 160 行由 SimpleUseItemHandler 原生直驱，不再生成
-					// 旧 IR 节点（同批删旧：本族 compiler/表/金标全部退场）。
-					// P5 native switch: the 160 SimpleUseItem rows are driven natively; the compiler entry is cut.
-					// retailOwnedUseItem.add(questId);
-				} else if ("SimpleItemPlay".equals(parts[2])) {
-					// P5 原生表驱动切换：SimpleItemPlay 43 行由 SimpleItemPlayHandler 原生直驱（同上）。
-					// P5 native switch: the 43 SimpleItemPlay rows are driven natively; the compiler entry is cut.
-					// retailOwnedItemPlay.add(questId);
-				} else if ("DataDriven".equals(parts[2])) {
-					retailOwnedDataDriven.add(questId);
-				} else if ("CombineTask".equals(parts[2])) {
-					// P6 原生表驱动切换：CombineTask 574 行由 SimpleCombineTaskHandler 原生直驱，不再生成
-					// 旧 IR 节点（同批删旧：本族 compiler/表/金标全部退场）。
-					// P6 native switch: the 574 CombineTask rows are driven natively; the compiler entry is cut.
-					// retailOwnedCombine.add(questId);
-				} else if ("SimpleCollectItem".equals(parts[2])) {
-					// P4 原生表驱动切换：SimpleCollectItem 262 行由 SimpleCollectItemHandler 原生直驱，
-					// 不再生成旧 IR 节点（同批删旧：本族 compiler 入口切断）。
-					// P4 native switch: the 262 SimpleCollectItem rows are driven natively by
-					// SimpleCollectItemHandler and no longer synthesize IR nodes; the compiler entry is cut.
-					// retailOwnedCollectItem.add(questId);
-				}
-			} else {
-				reasons.put(Integer.parseInt(parts[0]), parts[1] + ":" + parts[3]);
-			}
-		}
-		RetailSimpleHuntTable table;
-		try (InputStream input = open(SIMPLE_HUNT_TABLE)) {
-			table = RetailSimpleHuntTable.load(input);
-		}
-		RetailQuestAreaIndex questAreas;
-		try (InputStream input = open(AI_AREAS)) {
-			questAreas = RetailQuestAreaIndex.load(input);
-		}
-		RetailDataDrivenTable dataDrivenTable;
-		try (InputStream input = open(DATA_DRIVEN_TABLE)) {
-			dataDrivenTable = RetailDataDrivenTable.load(input);
-		}
-		RetailClientDialogExits clientDialogExits = RetailClientDialogExits.defaultExits();
-		RetailClientSummaryRows clientSummaryRows = RetailClientSummaryRows.defaultSummaryRows();
-		RetailClientRewardNpcs clientRewardNpcs = RetailClientRewardNpcs.defaultRewardNpcs();
-		RetailClientHandinNpcSets clientHandinNpcSets = RetailClientHandinNpcSets.defaultSets();
-		RetailClientHuntStages clientHuntStages = RetailClientHuntStages.defaultHuntStages();
-		RetailClientHandinPages clientHandinPages = RetailClientHandinPages.defaultHandinPages();
-		RetailClientKillTargets clientKillTargets = RetailClientKillTargets.defaultKillTargets();
-		RetailClientHuntProgressRows clientHuntProgressRows = RetailClientHuntProgressRows.defaultHuntProgressRows();
-		RetailEnterAreaZoneResolution enterAreaZoneResolution = RetailEnterAreaZoneResolution.defaultZoneResolution();
 		RetailQuestXmlTable retailTable;
 		try (InputStream input = open(RETAIL_QUEST_XML)) {
 			retailTable = RetailQuestXmlTable.load(input);
@@ -407,155 +288,9 @@ public final class RetailQuestDriver {
 		// the acquire/hand-in fields (one guard squad shares a ScriptDLL dialog name).
 		RetailNpcNameIndex npcIndex = RetailNpcNameIndex.build(openAll(NPC_DIR, NPC_FILES),
 			RetailQuestAiNameGroups.streams(), RetailNpcNameAliases.streams());
-		RetailQuestUseItemNpcs interactionObjects =
-			RetailQuestUseItemNpcs.fromIds(npcIndex.questUseItemNpcIds());
 		RetailItemNameIndex itemIndex = RetailItemNameIndex.loadItemTemplates();
-		return new RetailQuestDriver(retailOwnedDataDriven, retailOwnedCollectItem,
-			new RetailQuestCatalog(table, npcIndex),
-			clientDialogExits, clientSummaryRows, clientRewardNpcs,
-			clientHandinNpcSets, retailTable, npcIndex, itemIndex, randomRewardIds(),
-			nameIds(), clientHuntStages,
-			questAreas,
-			dataDrivenTable, clientHandinPages, interactionObjects,
-			clientKillTargets, clientHuntProgressRows, enterAreaZoneResolution);
+		return new RetailQuestDriver(retailTable, npcIndex, itemIndex, randomRewardIds(), nameIds());
 	}
-
-	private QuestCatalog apply(QuestCatalog xmlCatalog) {
-		List<QuestCatalogEntry> entries = new java.util.ArrayList<>();
-		int replaced = 0;
-		int added = 0;
-		for (QuestCatalogEntry entry : xmlCatalog.entries()) {
-			Optional<CompiledQuestDefinition> retail = definition(entry.id());
-			if (retail.isPresent()) {
-				entries.add(QuestCatalogEntry.executable(retail.orElseThrow()));
-				replaced++;
-			} else {
-				entries.add(entry);
-			}
-		}
-		for (int questId : retailOwned) {
-			if (xmlCatalog.findEntry(questId).isEmpty()) {
-				Optional<CompiledQuestDefinition> retail = definition(questId);
-				retail.ifPresent(definition -> {
-					entries.add(QuestCatalogEntry.executable(definition));
-				});
-				if (retail.isPresent()) {
-					added++;
-				}
-			}
-		}
-		appliedReplaced = replaced;
-		appliedAdded = added;
-		return ImmutableQuestCatalog.fromEntries(entries);
-	}
-
-	private volatile int appliedReplaced;
-	private volatile int appliedAdded;
-
-	/** 最近一次 overlay 的替换/补入统计（诊断用）。 / Overlay stats for diagnostics. */
-	public String overlayStats() {
-		return "replaced=" + appliedReplaced + " added=" + appliedAdded;
-	}
-
-	/** 真端定义缓存（拒绝结果同样缓存，含拒绝码）。 / Cached outcome per quest, rejections included. */
-	public Optional<CompiledQuestDefinition> definition(int questId) {
-		if (!retailOwned.contains(questId)) {
-			return Optional.empty();
-		}
-		refreshAcceptEntryContract();
-		return cache.computeIfAbsent(questId, this::compile);
-	}
-
-	/**
-	 * 接取入口页的客户端契约快照。任务热重载会 {@code QuestDialogContract.invalidateDefault()} 换掉契约
-	 * 实例，此时丢弃逐任务定义缓存，让入口页按新契约重算；契约未变时只是一次 volatile 比较。
-	 * Contract snapshot for the accept entry page. A quest hot reload swaps the contract instance
-	 * ({@code QuestDialogContract.invalidateDefault()}), so the per-quest cache is dropped and the entry
-	 * pages follow the new contract; an unchanged contract costs one volatile comparison.
-	 */
-	private void refreshAcceptEntryContract() {
-		QuestDialogContract contract = QuestDialogContract.loadDefault();
-		if (acceptEntryContract == contract) {
-			return;
-		}
-		synchronized (this) {
-			if (acceptEntryContract != contract) {
-				cache.clear();
-				acceptEntryContract = contract;
-			}
-		}
-	}
-
-	/** 拒绝码（未拒绝任务无映射）。 / The rejection code for a retail-owned quest, if any. */
-	public Optional<String> rejectionCode(int questId) {
-		return Optional.ofNullable(rejections.get(questId));
-	}
-
-	public int retailOwnedCount() {
-		return retailOwned.size();
-	}
-
-	/**
-	 * 合成一行并做接取入口页的客户端契约修复（真端表无对话页列，见
-	 * {@link RetailClientAcceptEntryPage}）。
-	 * Compiles one row and applies the client accept-entry-page contract repair (the retail tables
-	 * carry no dialog-page column; see {@link RetailClientAcceptEntryPage}).
-	 */
-	private Optional<CompiledQuestDefinition> compile(int questId) {
-		return compileByFamily(questId).map(definition ->
-			RetailClientAcceptEntryPage.repair(definition, QuestDialogContract.loadDefault()));
-	}
-
-	private Optional<CompiledQuestDefinition> compileByFamily(int questId) {
-		// 家族分派只剩 DataDriven：SimpleHunt / SimpleSerialHunt（P1/P2）已 100% 原生直驱，
-		// 旧 IR 入口已随 QE-112 切片删除。
-		// Only DataDriven is left in the family dispatch: SimpleHunt / SimpleSerialHunt (P1/P2) are
-		// fully native and their old IR entry points were deleted with the QE-112 slice.
-		if (retailOwnedDataDriven.contains(questId)) {
-			return compileDataDriven(questId);
-		}
-		return Optional.empty();
-	}
-
-	/** DataDriven 行 → 定义（P5-1：Talk 接取 + 单块 Hunt 进度复用 hunt 网格；异形按稳定码拒绝）。 */
-	private Optional<CompiledQuestDefinition> compileDataDriven(int questId) {
-		try {
-			var row = dataDrivenTable.find(questId);
-			if (row.isEmpty()) {
-				rejections.put(questId, "RETAIL_ROW_MISSING");
-				return Optional.empty();
-			}
-			var metadata = retailMetadata(questId);
-			if (metadata == null) {
-				return Optional.empty();
-			}
-			var outcome = RetailDataDrivenDefinitionCompiler.compile(row.orElseThrow(), itemIndex, npcIndex,
-				metadata, clientRewardNpcs, clientHandinNpcSets, questAreas, clientDialogExits,
-				clientSummaryRows, clientHandinPages,
-				interactionObjects, clientKillTargets, clientHuntProgressRows, enterAreaZoneResolution);
-			if (outcome.accepted()) {
-				return Optional.of(outcome.definition());
-			}
-			rejections.put(questId, outcome.rejectionCode());
-			return Optional.empty();
-		} catch (RuntimeException e) {
-			rejections.put(questId, "RUNTIME_FAILURE");
-			return Optional.empty();
-		}
-	}
-
-	/** 真端 quest.xml 元数据（缺行记 RETAIL_ROW_MISSING）。 / Retail metadata for a quest row. */
-	private RetailQuestMetadataCompiler.Outcome retailMetadata(int questId) {
-		var row = retailTable.find(questId);
-		if (row.isEmpty()) {
-			rejections.put(questId, "RETAIL_ROW_MISSING");
-			return null;
-		}
-		return RetailQuestMetadataCompiler.compile(row.orElseThrow(), npcIndex, itemIndex, randomRewards, nameIds,
-			RetailSpawnedNpcIds.load());
-	}
-
-
 
 	// ---------------------------------------------------------------- 资源装载
 

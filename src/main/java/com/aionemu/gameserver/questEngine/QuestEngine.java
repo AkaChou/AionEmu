@@ -2040,7 +2040,8 @@ public class QuestEngine implements GameEngine {
 			|| SimpleCollectItemHandler.instance().routes(questId)
 			|| SimpleUseItemHandler.instance().routes(questId)
 			|| SimpleItemPlayHandler.instance().routes(questId)
-			|| SimpleCombineTaskHandler.instance().routes(questId));
+			|| SimpleCombineTaskHandler.instance().routes(questId)
+			|| com.aionemu.gameserver.questEngine.tablelane.DataDrivenNativeRuntime.instance().routes(questId));
 	}
 
 	/**
@@ -2262,33 +2263,17 @@ public class QuestEngine implements GameEngine {
 	 * 将生产目录按真端保留清单拆成 XML 与真端两个互斥子目录。
 	 * Splits the production catalog into disjoint XML and retail child catalogs according to the retail owner manifest.
 	 * <p>
-	 * 未加载真端驱动时保持单目录兼容（供既有单元测试和独立 XML 工具使用）；生产启动已由
-	 * {@link RetailQuestDriver#overlayProduction(QuestCatalog)} 完成保留清单校验，因此拆分会 fail fast。
-	 * When the retail driver is not loaded, the catalog remains a single compatibility catalog for unit tests and
-	 * standalone XML tools. Production loading has already validated the retention manifest before splitting, so
-	 * split-time failures are deterministic startup errors.</p>
+	 * P7 步 f 起 retail 编译产物为零（七族 + DataDriven 1467 行全部原生直驱），retail 子目录恒空，
+	 * 生产与测试目录都走 combined 单目录兼容形；归属核验仍由
+	 * {@link RetailQuestDriver#overlayProduction(QuestCatalog)} 在装载前完成。
+	 * Since P7 step f the retail compile products are zero (all families and the 1467 DataDriven rows
+	 * are native-driven), so the retail child catalog is always empty and both production and test
+	 * catalogs use the combined form; ownership is still validated by overlayProduction before load.
 	 */
 	private static RuntimeCatalogs splitRuntimeCatalogs(QuestCatalog catalog) {
 		QuestCatalogRegistry combined = catalog instanceof QuestCatalogRegistry existing
 			? existing : new QuestCatalogRegistry(catalog);
-		Set<Integer> retailOwned = RetailQuestDriver.current().map(RetailQuestDriver::retailOwnedIds).orElse(Set.of());
-		if (retailOwned.isEmpty()) {
-			return new RuntimeCatalogs(combined, combined, new QuestCatalogRegistry(new ImmutableQuestCatalog(List.of())));
-		}
-		List<QuestCatalogEntry> xmlEntries = new ArrayList<>();
-		List<QuestCatalogEntry> retailEntries = new ArrayList<>();
-		for (QuestCatalogEntry entry : combined.entries()) {
-			(retailOwned.contains(entry.id()) ? retailEntries : xmlEntries).add(entry);
-		}
-		if (retailEntries.isEmpty()) {
-			// 合成目录/局部测试可能只装配 XML owner；生产目录已由 overlayProduction 完成完整归属校验。
-			// Synthetic and focused-test catalogs may contain XML owners only; production ownership was already
-			// validated by overlayProduction before this split point.
-			return new RuntimeCatalogs(combined, combined,
-				new QuestCatalogRegistry(new ImmutableQuestCatalog(List.of())));
-		}
-		return new RuntimeCatalogs(combined, new QuestCatalogRegistry(ImmutableQuestCatalog.fromEntries(xmlEntries)),
-			new QuestCatalogRegistry(ImmutableQuestCatalog.fromEntries(retailEntries)));
+		return new RuntimeCatalogs(combined, combined, new QuestCatalogRegistry(new ImmutableQuestCatalog(List.of())));
 	}
 
 	/** 已校验的组合目录与两个互斥子目录。 / Validated combined catalog and its two disjoint child catalogs. */

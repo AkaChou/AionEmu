@@ -338,8 +338,7 @@ class SimpleCollectItemNativeFamilyGateTest {
 			RELAY_QUEST)), "三个代表行必须在 native 注册集内");
 		assertTrue(Set.of(SINGLE_OBJECT_QUEST, MULTI_COUNT_QUEST, RELAY_QUEST)
 			.stream().allMatch(handler::routes), "P4 切换后代表行必须由 native 路由");
-		assertFalse(RetailQuestDriver.current().orElseThrow().retailOwnedIds()
-			.contains(SINGLE_OBJECT_QUEST), "同批删旧：采集行不得再列为旧编译 owner");
+		// 同批删旧（P7 步 f 闭环）：旧编译 owner 面已随 RetailQuestDriver 编译车道整体退场（结构性）。
 	}
 
 	/**

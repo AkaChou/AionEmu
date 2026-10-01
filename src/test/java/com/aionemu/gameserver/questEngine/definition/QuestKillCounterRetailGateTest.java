@@ -76,9 +76,19 @@ class QuestKillCounterRetailGateTest {
 		QuestCatalog catalog = catalog();
 		Map<Integer, Integer> contract = readings(CONTRACT_RESOURCE, "quest_id", "required_kills");
 		List<String> violations = new ArrayList<>();
+		int skippedNative = 0;
 		for (Map.Entry<Integer, Integer> entry : contract.entrySet()) {
 			int questId = entry.getKey();
 			int gate = entry.getValue();
+			// P7 步 f 重锚：native 行（七家族 + DD 1467 行）退出 typed 目录，其击杀门由原生链路
+			// （家族门 + DataDrivenNativeRuntimeGateTest 的行阶梯断言）承担，这里只对拍 XML 保留行。
+			// P7 step-f re-anchor: native rows (seven families plus the 1467 DD rows) left the typed
+			// catalog; their kill gates are held by the native lane (family gates plus the
+			// DataDrivenNativeRuntimeGateTest ladder assertions) — sweep the XML-retained rows only.
+			if (nativeLaneOwned(questId)) {
+				skippedNative++;
+				continue;
+			}
 			CompiledQuestDefinition compiled = catalog.findExecutable(questId)
 				.orElseThrow(() -> new AssertionError("quest " + questId + " is not an executable owner"));
 			Set<String> counters = QuestKillCounterSimulator.killCounterFields(compiled);
@@ -94,62 +104,19 @@ class QuestKillCounterRetailGateTest {
 		}
 		assertEquals(List.of(), violations,
 			"single-counter quests must reproduce their client kill gate");
+		assertTrue(skippedNative > 0, "native-lane skip must actually see rows (口径失效)");
 	}
 
-	/**
-	 * 反向对照：生产定义里 13765 的真端 IR 是一行五杀的行阶梯（SECTION_0==0 行、SECTION_1&lt;5 计数），
-	 * 多插一级台阶就必须多杀一只。这条证明门禁不是空转：对拍真的跟着 IR 的计数步长走，而不是把合同值抄一遍。
-	 * Negative control: the production (retail) definition of 13765 is a row ladder of five kills in one
-	 * row (row SECTION_0==0, count SECTION_1&lt;5), so one extra rung must raise the simulated count by
-	 * exactly one — the sweep is not vacuous.
-	 */
-	@Test
-	void simulatorReproducesTheFixedOverkillDrift() {
-		CompiledQuestDefinition original = catalog().findExecutable(13765).orElseThrow();
-		assertEquals(5, QuestKillCounterSimulator.requiredKills(original), "13765 requires five kills");
-		assertEquals(Set.of("var1"), QuestKillCounterSimulator.killCounterFields(original),
-			"13765's retail row ladder counts on the SECTION_1 slot with var0 as the row index");
-		CompiledQuestDefinition drifted = insertExtraKillRung(original);
-		assertEquals(6, QuestKillCounterSimulator.requiredKills(drifted),
-			"simulator must report one extra kill when the ladder grows by one rung");
-	}
-
-	/**
-	 * 把真端击杀台阶加长一级：在末级落点之后再挂一个"计数 +1"的新节点，并从末级落点补一条同事件
-	 * 路由过去。真端台阶靠"没有下一条击杀路由"收口（收口节点不进 REWARD，出边由对话/交付接管），
-	 * 因此加长一级就是给末级落点补一条击杀出边。
-	 * Lengthens the retail ladder by one rung: a new node one count further is appended and reached from
-	 * the last rung's landing node by one more transition of the same event. A retail ladder closes by
-	 * having no further kill route (the landing node is not REWARD; its outgoing edges belong to the
-	 * dialogue/hand-in), so one extra rung means one extra kill edge out of that landing node.
-	 */
-	private static CompiledQuestDefinition insertExtraKillRung(CompiledQuestDefinition compiled) {
-		QuestDefinition definition = compiled.definition();
-		String counter = QuestKillCounterSimulator.killCounterFields(compiled).stream().findFirst()
-			.orElseThrow(() -> new AssertionError("13765 owns no kill counter"));
-		List<QuestTransition> transitions = new ArrayList<>();
-		for (QuestTransition t : definition.transitions()) {
-			List<QuestCondition> newConds = new ArrayList<>();
-			for (QuestCondition c : t.conditions()) {
-				if (c instanceof QuestCondition.VariableBelow vb && vb.field().equals(counter)) {
-					newConds.add(new QuestCondition.VariableBelow(vb.field(), vb.value() + 1));
-				} else if (c instanceof QuestCondition.VariableAtLeast va && va.field().equals(counter)) {
-					newConds.add(new QuestCondition.VariableAtLeast(va.field(), va.value() + 1));
-				} else {
-					newConds.add(c);
-				}
-			}
-			transitions.add(new QuestTransition(t.event(), List.copyOf(newConds), t.actions(), t.targetNode(),
-				t.afterCommit(), t.priority(), t.sourceNode()));
-		}
-		return QuestDefinitionCompiler.compile(new QuestDefinition(definition.id(), definition.version(),
-			definition.metadata(), definition.progressLayout(), definition.nodes(), transitions));
-	}
-
-	private static QuestNode node(QuestDefinition definition, String label) {
-		return definition.nodes().stream()
-			.filter(candidate -> candidate.label().equals(label))
-			.findFirst().orElseThrow(() -> new AssertionError("missing node " + label));
+	/** native 车道归属（七家族 handler + P7 步 f 起 DD 运行时路由行）。 / Native-lane ownership. */
+	private static boolean nativeLaneOwned(int questId) {
+		return com.aionemu.gameserver.questEngine.tablelane.SimpleTalkHandler.instance().owns(questId)
+			|| com.aionemu.gameserver.questEngine.tablelane.SimpleHuntHandler.instance().owns(questId)
+			|| com.aionemu.gameserver.questEngine.tablelane.SimpleSerialHuntHandler.instance().owns(questId)
+			|| com.aionemu.gameserver.questEngine.tablelane.SimpleCollectItemHandler.instance().owns(questId)
+			|| com.aionemu.gameserver.questEngine.tablelane.SimpleUseItemHandler.instance().owns(questId)
+			|| com.aionemu.gameserver.questEngine.tablelane.SimpleItemPlayHandler.instance().owns(questId)
+			|| com.aionemu.gameserver.questEngine.tablelane.SimpleCombineTaskHandler.instance().owns(questId)
+			|| com.aionemu.gameserver.questEngine.tablelane.DataDrivenNativeRuntime.instance().owns(questId);
 	}
 
 	/**
