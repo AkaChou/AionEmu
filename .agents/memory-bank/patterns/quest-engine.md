@@ -2892,3 +2892,28 @@ keywords: DataDriven、step column、valueN_progress_、LoadProgressInfo、LoadE
 - **判定规则**：`value0_progress_`（以及 CollectItem 的 1..4/5、PvP 的 1..3）= 类别载荷；其余 = 通用附加动作，且只在真端 guard 放行的类别里成立。
 - **安全网**：类别 × 列号的闭合断言写进门；非法/未知组合 fail-closed，禁止「先吞列再补」。
 - **反漂移**：附加动作在**步完成/推进后**执行（动作表解释器），不要挪到事件到达路径上。
+
+---
+
+## [QE-128] 一百二十八、DD 原生算术是「无掩码组槽自增 + 全组槽达标收口」，饱和进位必须原样复刻（80817 不可完成） (DATA_DRIVEN_PROGRESS_ARITHMETIC)
+
+<!-- pattern-metadata
+status: CONFIRMED
+scope: 真端 DataDriven 行的原生进度算术（6 位步号 + 每 6 位一个组槽；零相机）
+first_seen: 2026-10-01
+last_verified: 2026-10-01
+symptom: ① 用家族相机（`ProgressCamera` + `CameraRegistry`）服务 DD 行 ⇒ 引入真端不存在的 `fullValue`/推进通道语义，且与 DD「零相机调用」冲突；② 自增时按 `& 0x3F` 掩码或做饱和保护 ⇒ 抹掉真端的进位污染（80817 的 100 杀会「看起来能完成」，改变真端行为）；③ 把「本步某一组达标」当成收口条件 ⇒ 多子目标步（hunt 多段）提前推进
+root_cause: 真端 DD handler 内联算术（与家族相机 `fun_731.cpp:5306` 无关）：`prog = GetQuestProgress`；`if ((prog & 0x3F) != expectedStep) return`（只服务当前步）；命中时字面 `prog += (1 << shift)`——**无 6 位掩码**，故组槽计满 63 再 +1 会进位污染下一组槽；收口判据是「该步声明的全部组槽都达标」，写回 `prog = (prog & 0x3F) + 1`（组槽全清、守卫位丢弃），末步改调 `SetQuestSuccess`。目标 > 63 的行（80817 = 100 杀）因此永远不满足 ⇒ 真端自身不可完成（§10.3-#5 裁定原样复刻）
+fix_or_guardrail: 1. DD 行零相机：不注册 `CameraRegistry` 行、不调 `ProgressCamera`；2. 读布局 = `vars & 0x3F`（步号）+ `(vars >>> 6*group) & 0x3F`（组槽，group 1..4）；3. 自增 = `vars + (1 << (6*group))`（**不掩码**，保留进位污染）；4. 收口 = 全部声明组槽达标 ⇒ `(vars & 0x3F) + 1`；末步返回 `STEP_COMPLETE`（真端 `SetQuestSuccess`）、中间步 `STEP_ADVANCE`（`SetQuestProgress`）；5. 守卫 = 非当前步 / 未声明组 / 无组槽 / 位形异常（bit30/31 或负值）一律零动作；6. 目标 > 63 不许「修好」：门内必须有「饱和进位 + 永不收口」的正例
+evidence: src/main/java/com/aionemu/gameserver/questEngine/tablelane/DataDrivenProgress.java; src/test/java/com/aionemu/gameserver/questEngine/tablelane/DataDrivenProgressTest.java; .agents/summary/quest-engine-native/p7/P7-STEP1-REPORT.zh-CN.md; .agents/summary/quest-engine-native/p7/P7-STEP2-PREREQ-COLUMN-SEMANTICS.zh-CN.md; .agents/summary/quest-engine-native/p7-prereqs/dd-dispatcher-and-handlers.md
+validation: 2026-10-01：门 `DataDrivenProgressTest` **8/8**（布局读法 / 单组达标 / 多组等待全满 / 行阶梯全步行走 / 非当前步与未声明组零动作 / 80817 饱和进位污染且永不收口 / 守卫位零动作 / 步进写清零组槽）；P7 步 1 契约冻结证实 1467 行里每步 ≤4 组子计数、计数 ≤63 仅 80817 例外
+superseded_by: none
+boundaries: ① 本护照只覆盖**有组槽**的类别（Hunt/TalkFOBJ 多组；CollectItem/PvP 单组）；Talk/EnterArea/EnterWorld/ItemPlay 无组槽（直接步进），其收口语义另案（真端 Talk 走 `def+0x40/0x44/0x48`）；② 持久化与客户端同步不属本类（state port 职责）；③ 守卫位检查是本服 fail-closed 策略（真端 DD handler 不查，但真端 DD 行也不产生该位形）；④ CollectItem 的「需求数」来源（真端 `data+0xC`）在 DD 表里尚未逐列坐实，属步 2 剩余取证面
+see_also: [QE-127], [QE-126], [QE-124], [QE-010]
+first_check: 实现/排查 DD 进度前先答：① 这一步用组槽吗（Hunt/TalkFOBJ 多组、CollectItem/PvP 单组、其余无）？② 自增是不是无掩码字面加法（饱和进位有没有被自己「修掉」）？③ 收口是否要求全部声明组槽达标？④ 末步是否走 `STEP_COMPLETE`（`SetQuestSuccess`）而不是 STEP_ADVANCE？⑤ 目标 > 63 的行是否仍不可完成（80817 正例绿）？
+keywords: DataDriven、原生算术、零相机、6位步号、组槽、无掩码自增、饱和进位、进位置污染、全组槽达标、SetQuestSuccess、80817不可完成、DataDrivenProgress、DATA_DRIVEN_PROGRESS_ARITHMETIC、QE-128
+-->
+
+- **判定规则**：DD 进度 = 「步号（bit0-5）+ 组槽（bit6..）」；命中自增无掩码（保留进位），收口要全部声明组槽达标，步进写清零组槽。
+- **安全网**：非当前步 / 未声明组 / 位形异常一律零动作；目标 > 63 的行必须仍然不可完成（门内正例）。
+- **反漂移**：别把家族相机的 `fullValue`/推进通道语义套到 DD 上——DD 零相机是真端事实。
