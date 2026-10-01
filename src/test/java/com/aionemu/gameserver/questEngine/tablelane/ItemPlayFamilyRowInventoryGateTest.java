@@ -12,7 +12,10 @@ import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.TreeSet;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.junit.jupiter.api.Test;
 
@@ -43,6 +46,12 @@ class ItemPlayFamilyRowInventoryGateTest {
 
 	/** 真端表全量行数（真端 {@code quest_simpleitemplays}）。 / Retail table row count. */
 	private static final int TABLE_ROWS = 43;
+	/** 真端表的 43 个 id。 / The 43 retail table ids. */
+	private static final Set<Integer> TABLE_IDS = Set.of(
+		9623, 19048, 29048, 41267, 41514, 41540, 41300, 41577, 41593, 18828, 28828, 12066, 22066, 50013,
+		50014, 51013, 51014, 80255, 80256, 18014, 28014, 39713, 49713, 12525, 12562, 22525, 22562, 13054,
+		13064, 23054, 23064, 23562, 13400, 13401, 23400, 23401, 13704, 13708, 23704, 23708, 50048, 18213,
+		28213);
 	/** 无 owner 条目、无 XML ⇒ 不在本服生产的行数。 / Rows absent from production. */
 	private static final int ABSENT_ROWS = 28;
 
@@ -67,6 +76,20 @@ class ItemPlayFamilyRowInventoryGateTest {
 
 	/** 真端槽形态已成立、仅差接线面的 5 行 = 下一增量目标集。 / Shape-ready next-increment targets. */
 	private static final Set<Integer> SHAPE_READY_ADJUDICATED = Set.of(18213, 28213, 18828, 28828, 50048);
+
+	/**
+	 * 真端 {@code quest.xml} 的等级门：{@code minlevel_permitted = 999} = **停用形**（真端
+	 * {@code Quest::CanAcquireQuest} 对 {@code level < minlevel} 一律拒绝 ⇒ 不可接取；本车道
+	 * {@code NativeQuestStartPort} 同一口径）。
+	 */
+	private static final Set<Integer> STOPPED_ROWS = Set.of(
+		41267, 41514, 41540, 41300, 41577, 41593, 12066, 22066, 50013, 50014, 51013, 51014, 18014, 28014,
+		12525, 12562, 22525, 22562, 13054, 13064, 23054, 23064, 23562, 13400, 13401, 23400, 23401);
+
+	/** 可接取形的 16 行（{@code minlevel_permitted != 999}）。 / The sixteen acquirable rows. */
+	private static final Set<Integer> LIVE_ROWS = Set.of(
+		9623, 19048, 29048, 18213, 28213, 18828, 28828, 80255, 80256, 39713, 49713, 13704, 13708, 23704,
+		23708, 50048);
 
 	/**
 	 * 行集真实分解：真端表 43 行 = 6 路由 + 9 XML 保留裁定 + 28 不在生产；三者互斥且覆盖全表，
@@ -139,6 +162,80 @@ class ItemPlayFamilyRowInventoryGateTest {
 			"真端槽形态已成立、仅差接线面的行集 = 5 行冻结");
 		assertTrue(java.util.Collections.disjoint(deviating, shapeReady), "两集合互斥");
 		assertEquals(ADJUDICATED_ROWS.size(), deviating.size() + shapeReady.size(), "9 行归属完整");
+	}
+
+	/**
+	 * 可接取轴冻结：43 行按真端 {@code quest.xml} 的 {@code minlevel_permitted} 分桶（停用 27 / 可接取 16），
+	 * 且**停用形上的长尾缺口没有运行期影响**——声明过场的两行（13400/23400）落在停用形里，
+	 * 故 §10.3-#21 的「触发列缺失」不需要接线（真端与客户端 {@code quest.xml} 双向 999 一致）。
+	 */
+	@Test
+	void acquirableAxisSplitsTheFamilyAndClosesTheCutsceneGap() throws Exception {
+		Map<Integer, Integer> minLevel = minLevels();
+		Set<Integer> stopped = new TreeSet<>();
+		Set<Integer> live = new TreeSet<>();
+		for (Map.Entry<Integer, Integer> entry : minLevel.entrySet()) {
+			if (entry.getValue() == 999) {
+				stopped.add(entry.getKey());
+			} else {
+				live.add(entry.getKey());
+			}
+		}
+		assertEquals(STOPPED_ROWS, stopped, "停用形（minlevel_permitted = 999）行集冻结");
+		assertEquals(LIVE_ROWS, live, "可接取形行集冻结");
+		assertEquals(TABLE_ROWS, stopped.size() + live.size(), "两桶互斥且覆盖全表");
+
+		// 过场行（真端表 cutsceneid1 859/860）在停用形里 ⇒ 触发列缺失无运行期影响（§10.3-#21 闭环）。
+		assertTrue(stopped.containsAll(Set.of(13400, 23400)), "声明过场的两行必须是停用形");
+		SimpleItemPlayHandler handler = SimpleItemPlayHandler.instance();
+		for (int questId : Set.of(13400, 23400)) {
+			assertTrue(handler.relayCount(questId) >= 1, "过场行同时是中继行: " + questId);
+			assertFalse(handler.routes(questId), "停用形不得由 native 车道路由: " + questId);
+		}
+
+		// 可接取的中继行 = 5 行（其余中继行是停用形或不在生产）。
+		Set<Integer> liveRelays = new TreeSet<>();
+		for (int questId : LIVE_ROWS) {
+			if (handler.relayCount(questId) > 0) {
+				liveRelays.add(questId);
+			}
+		}
+		// 可接取 + 有中继的 6 行：18213/28213（XML 保留 + 名字道具全解 ⇒ 步 3 激活候选）、
+		// 39713/49713/50048（XML 保留但名字轴无解 ⇒ 留 XML 车道）、9623（保留清单无条目 ⇒ 不在本服生产）。
+		assertEquals(Set.of(9623, 18213, 28213, 39713, 49713, 50048), liveRelays,
+			"可接取的中继行集冻结（步 3 激活候选只在其中，且仅 18213/28213 名字轴干净）");
+	}
+
+	/** 真端 {@code quest.xml} 本族 43 行的 {@code minlevel_permitted}（独立重解析）。 */
+	private static Map<Integer, Integer> minLevels() throws Exception {
+		String text = readResource("/aion/data/static_data/quest/retail/quest.xml");
+		Map<Integer, Integer> result = new TreeMap<>();
+		Matcher block = Pattern.compile("<quest>.*?</quest>", Pattern.DOTALL).matcher(text);
+		while (block.find()) {
+			String body = block.group();
+			Matcher id = Pattern.compile("<id>\\s*(\\d+)\\s*</id>").matcher(body);
+			if (!id.find()) {
+				continue;
+			}
+			int questId = Integer.parseInt(id.group(1));
+			if (!TABLE_IDS.contains(questId)) {
+				continue;
+			}
+			Matcher minLevel = Pattern.compile("<minlevel_permitted>\\s*(\\d+)").matcher(body);
+			result.put(questId, minLevel.find() ? Integer.parseInt(minLevel.group(1)) : 0);
+		}
+		assertEquals(TABLE_ROWS, result.size(), "本族 43 行必须在真端 quest.xml 内有等级门");
+		return result;
+	}
+
+	/** 读类路径资源为文本。 / Reads one classpath resource as text. */
+	private static String readResource(String path) throws Exception {
+		try (InputStream input = ItemPlayFamilyRowInventoryGateTest.class.getResourceAsStream(path)) {
+			if (input == null) {
+				throw new IllegalStateException("missing resource " + path);
+			}
+			return new String(input.readAllBytes(), StandardCharsets.UTF_8);
+		}
 	}
 
 	/** 真端清单：quest id → [owner, family, reason]（非本族行不载入）。 / The retention manifest. */

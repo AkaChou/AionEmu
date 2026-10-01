@@ -20,6 +20,7 @@
 | 客户端页契约同轴 | `client_dialog_contract.tsv`：9623 = `1011/1352/1693`（2 中继）、13400 = `1011/1352/1353/1354`（1 中继）、50048 = `1011/1352`（1 中继）、13704 = `1011`（直交形） |
 | 旧编译器（真端+客户端派生契约）同形 | 已删的 `RetailSimpleItemPlayDefinitionCompiler`（`git show db1492b80^:...`）：`var0` = 1 位；`var0 == 0 → var0 = 1` 才 `started → reward` |
 | 步号写在 `var0` 且**只有一个位段** | XML 保留 5 行（18213/28213/39713/49713/50048）逐行：`bit-field name="var0" offset="0" width=2..6` 各 1 段 ⇒ 整值写步号不覆盖其它字段 |
+| 可接取轴：`minlevel_permitted = 999` = **停用形** | 真端 `quest.xml`（本车道 `NativeQuestStartPort` 同口径：`Quest::CanAcquireQuest` 对 `level < minlevel` 恒拒）与客户端 `quest.xml` 对 13400/23400 **双向 999** ⇒ 43 行 = **停用 27 行 / 可接取 16 行** |
 | 50048 派生定义（仍在生产）同形 | `quests/50048.xml`：接取 → `s0`(var0=0) → 中继 `833460` `SETPRO1` 置 `var0=1` → 扣物品 + `var0=2` → `NPC_REPORT` ⇒ 交付步 = `relayCount + 1` |
 
 ---
@@ -49,6 +50,7 @@
 | 18213/28213 | ✅（中继 2 步 + 发扣 + 页 + 闸门全就绪） | ❌ | owner `XML_RETENTION`；激活 = retention 重裁 + 删 XML（**与 QE-112 在飞切片共文件 ⇒ 另批**） |
 | 18828/28828 | 直交形（无中继） | ❌ | **双保险 fail-closed**：接取/交付名 `HousingManager_Li/Da` 静态数据无解，且 `con_quest` 目标 18829/28829 **不在本表**（跨表目标 ⇒ 本车道不发明路由） |
 | 50048 | 数据面就绪但中继名无解 | ❌ | `NPC_event_devasday_shugoseller` 仅存在于真端表、静态数据零命中（与 `NPC_event_devasday_shugo` 同类）⇒ 名字轴 fail-closed |
+| 9623/13054/23054/23562/13400/23400 | — | ❌ | **停用形（`minlevel_permitted = 999`）**：不可接取 ⇒ 长尾缺口无运行期影响（13400/23400 的过场 859/860 由此不需要接线，§10.3-#21 闭环） |
 | 80255/80256、39713/49713、28 行不在生产 | ❌（真端形态本身不成立/不在生产） | ❌ | 见 §10.3-#16① 冻结 |
 
 **证据面双向冻结**：行集门把未解析名集合改成**逐元素相等**断言（新增或消失都必须显式改表）；
@@ -61,7 +63,7 @@
 | 门 | 命令 | 结果 |
 |---|---|---|
 | 族门（ItemPlay） | `mvn -o test -Dtest='SimpleItemPlayNativeFamilyGateTest'` | **12/12**（步 1 基线 9 → +3：中继接线面 / 相机闸门 / 自愈） |
-| 行集门 | `mvn -o test -Dtest='ItemPlayFamilyRowInventoryGateTest'` | **3/3** |
+| 行集门 | `mvn -o test -Dtest='ItemPlayFamilyRowInventoryGateTest'` | **4/4**（新增可接取轴用例：逐行从 `quest.xml` 独立复算两桶 + 过场行必须落停用形 + 可接取中继行集冻结） |
 | 族门 + tablelane | `mvn -o test '-Dtest=*FamilyGateTest,*RowAlignmentGateTest,*InventoryGateTest,NativeQuestTableLoaderTest,*RewardClaimGateTest,*NativeTalk*Test,NativeNearbyQuestAxisGateTest,SMNearbyQuestsPacketTest,NativeAcceptEntryAskFlowGateTest'` | **135/135**（步 1 基线 132 → +3 例） |
 | 聚焦套件 | `mvn -o test '-Dtest=*Quest*Test,*Retail*Test'` | **1699 / 162F+142E / 108 类**，对步 1 基线 **ADDED 0 / REMOVED 0 / changed triplets 0** |
 
