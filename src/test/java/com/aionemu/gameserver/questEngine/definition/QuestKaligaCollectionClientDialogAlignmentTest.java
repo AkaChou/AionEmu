@@ -1,132 +1,211 @@
 package com.aionemu.gameserver.questEngine.definition;
 
-import com.aionemu.gameserver.model.Race;
-import com.aionemu.gameserver.questEngine.model.QuestStatus;
-import org.junit.jupiter.api.Test;
-
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.util.List;
+
+import org.junit.jupiter.api.Test;
+
+import com.aionemu.gameserver.questEngine.tablelane.SimpleTalkHandler;
 
 /**
  * 验证卡里加 20 个收藏品任务的阵营陈列柜和客户端对话合同。
- * Verifies the faction-scoped cabinet and client dialog contract for all 20 Kaliga collection quests.
+ * <p>
+ * P3 重锚（计划 §8.9）：旧 IR 形状断言（节点名/条件/动作/页链）随 SimpleTalk 切换批退场，
+ * 本类改为真端表行锚——接取/交付 NPC、中继步、发扣物品、交付门均取自
+ * {@code Quest_SimpleTalk.xml} + {@code quest.xml} 与静态数据（{@code npc_template} /
+ * 物品 {@code name_desc}），native 处理器必须逐项一致。
+ * <p>
+ * P3 re-anchor (plan §8.9): the IR-shape assertions retire with the SimpleTalk switch batch;
+ * this class now pins the retail table row through the native handler.
  */
 class QuestKaligaCollectionClientDialogAlignmentTest {
-	private static final int KALIGA_KEY_ID = 185000102;
-	private static final int KALIGA_BOSS_ID = 217006;
-	private static final List<QuestCase> CASES = List.of(
-		new QuestCase(18618, 730326, Race.ELYOS),
-		new QuestCase(18619, 730327, Race.ELYOS),
-		new QuestCase(18620, 730328, Race.ELYOS),
-		new QuestCase(18621, 730329, Race.ELYOS),
-		new QuestCase(18622, 730330, Race.ELYOS),
-		new QuestCase(18623, 730331, Race.ELYOS),
-		new QuestCase(18624, 730332, Race.ELYOS),
-		new QuestCase(18625, 730333, Race.ELYOS),
-		new QuestCase(18626, 730334, Race.ELYOS),
-		new QuestCase(18627, 730335, Race.ELYOS),
-		new QuestCase(28618, 730326, Race.ASMODIANS),
-		new QuestCase(28619, 730327, Race.ASMODIANS),
-		new QuestCase(28620, 730328, Race.ASMODIANS),
-		new QuestCase(28621, 730329, Race.ASMODIANS),
-		new QuestCase(28622, 730330, Race.ASMODIANS),
-		new QuestCase(28623, 730331, Race.ASMODIANS),
-		new QuestCase(28624, 730332, Race.ASMODIANS),
-		new QuestCase(28625, 730333, Race.ASMODIANS),
-		new QuestCase(28626, 730334, Race.ASMODIANS),
-		new QuestCase(28627, 730335, Race.ASMODIANS));
 
 	@Test
-	void allFactionsUseTheirCabinetAndClientPages() throws Exception {
-		for (QuestCase questCase : CASES) {
-			QuestDefinition definition = load(questCase.questId()).definition();
-			assertNode(definition, "started", QuestStatus.START, Map.of("var0", 0));
-			assertNode(definition, "reward", QuestStatus.REWARD, Map.of("var0", 0));
-			assertEquals(Set.of(questCase.race().name()), definition.metadata().permittedRaces());
+	void allFactionsUseTheirCabinetAndClientPages() {
+		SimpleTalkHandler handler = SimpleTalkHandler.instance();
 
-			// P0-3 S1：SimpleTalk 接取/交付切真端规范形（页 4 / 分档窗）——接取走 canonicalAcceptFlow
-			// （QUEST_SELECT 直发接取窗页 4，无 1007 中转与页梯），交付走 canonicalDelivery
-			// （QUEST_SELECT(started→reward) 带钥匙整组门直翻领奖并下发单档奖励窗 1）；START 自环的
-			// SELECT5 报告入口页、39/20002 检查对与 SELECT6 失败页整体退场，未集齐零路由。
-			// P0-3 S1: the SimpleTalk accept/delivery segments take the retail canonical shape (page 4 /
-			// tiered window) — the accept is canonicalAcceptFlow (QUEST_SELECT opens the ask window, page 4)
-			// and the delivery is canonicalDelivery (a gated QUEST_SELECT(started->reward) carrying the
-			// whole key group, showing the single-tier reward window 1); the START self-loop SELECT5 report
-			// entry, the 39/20002 check pair and the SELECT6 failure page are gone.
-			QuestTransition accept = route(definition, "unaccepted", "unaccepted",
-				new QuestEvent.TalkToNpc(questCase.cabinetId(), QuestDialogAction.QUEST_SELECT.id()), null);
-			// 真端形状无路由级种族条件（P0c-13 复験裁定：真端对、XML 错）：阵营隔离由独立任务 ID +
-			// race_permitted 元数据在接取时强制（QuestService 全部接取入口校验 isRacePermitted），
-			// 状态机入口路由不再重复设防。
-			// Retail shape declares no route-level race condition (P0c-13 re-adjudication: retail is
-			// right, XML was redundant): faction isolation comes from separate quest ids plus
-			// race_permitted metadata enforced at start time (every QuestService start entry checks
-			// isRacePermitted), so the entry route stays unguarded.
-			assertEquals(List.of(), accept.conditions());
-			assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(
-				QuestDialogPage.SHOW_ASK_QUEST_ACCEPT_WINDOW.id())), accept.afterCommit());
+		// 真端行 18618：IDCromede_sword → IDCromede_sword
+		assertTrue(handler.routes(18618), "18618 必须由 native 车道路由");
+		assertEquals(730326, handler.acquireNpc(18618), "接取 NPC");
+		assertEquals(730326, handler.rewardNpc(18618), "交付 NPC");
+		assertEquals(0, handler.relayCount(18618), "中继步数");
+		assertNull(handler.acceptGiveItem(18618), "接取侧无发放");
+		assertEquals(List.of(new SimpleTalkHandler.ItemStack(185000102, 1)), handler.workItems(18618), "交付门");
+		assertNull(handler.cutscene(18618), "该行无过场");
 
-			QuestTransition deliver = route(definition, "started", "reward",
-				new QuestEvent.TalkToNpc(questCase.cabinetId(), QuestDialogAction.QUEST_SELECT.id()), null);
-			assertNull(deliver.priority(), "quest " + questCase.questId() + " delivery route priority");
-			assertEquals(List.of(new QuestCondition.HasItem(KALIGA_KEY_ID, 1)), deliver.conditions());
-			assertEquals(List.of(new QuestAction.RemoveItem(KALIGA_KEY_ID, 1)), deliver.actions());
-			assertEquals(List.of(
-				new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
-				new AfterCommitAction.ShowQuestDialog(QuestDialogPage.SHOW_SELECT_QUEST_REWARD_WINDOW1.id())),
-				deliver.afterCommit());
+		// 真端行 18619：IDCromede_2hsword → IDCromede_2hsword
+		assertTrue(handler.routes(18619), "18619 必须由 native 车道路由");
+		assertEquals(730327, handler.acquireNpc(18619), "接取 NPC");
+		assertEquals(730327, handler.rewardNpc(18619), "交付 NPC");
+		assertEquals(0, handler.relayCount(18619), "中继步数");
+		assertNull(handler.acceptGiveItem(18619), "接取侧无发放");
+		assertEquals(List.of(new SimpleTalkHandler.ItemStack(185000102, 1)), handler.workItems(18619), "交付门");
+		assertNull(handler.cutscene(18619), "该行无过场");
 
-			assertFalse(definition.transitions().stream().anyMatch(transition ->
-				transition.event() instanceof QuestEvent.TalkToNpc talk && talk.dialogId() != null
-					&& (talk.dialogId() == QuestDialogAction.CHECK_USER_HAS_QUEST_ITEM.id()
-						|| talk.dialogId() == QuestDialogAction.CHECK_USER_HAS_QUEST_ITEM_SIMPLE.id())),
-				"quest " + questCase.questId() + " retired the 39/20002 check pair");
-			assertFalse(definition.transitions().stream().anyMatch(transition ->
-				transition.afterCommit().stream().anyMatch(action ->
-					action instanceof AfterCommitAction.ShowQuestDialog page
-						&& (page.dialogId() == QuestDialogPage.SELECT5.id()
-							|| page.dialogId() == QuestDialogPage.SELECT6.id()))),
-				"quest " + questCase.questId() + " retired the SELECT5/SELECT6 report pages");
-			assertFalse(definition.transitions().stream().anyMatch(transition ->
-				"started".equals(transition.sourceNode())
-					&& transition.event().equals(new QuestEvent.TalkToNpc(KALIGA_BOSS_ID,
-						QuestDialogAction.CHECK_USER_HAS_QUEST_ITEM.id()))),
-				"quest " + questCase.questId() + " must not check the key at Kaliga");
-		}
-	}
+		// 真端行 18620：IDCromede_dagger → IDCromede_dagger
+		assertTrue(handler.routes(18620), "18620 必须由 native 车道路由");
+		assertEquals(730328, handler.acquireNpc(18620), "接取 NPC");
+		assertEquals(730328, handler.rewardNpc(18620), "交付 NPC");
+		assertEquals(0, handler.relayCount(18620), "中继步数");
+		assertNull(handler.acceptGiveItem(18620), "接取侧无发放");
+		assertEquals(List.of(new SimpleTalkHandler.ItemStack(185000102, 1)), handler.workItems(18620), "交付门");
+		assertNull(handler.cutscene(18620), "该行无过场");
 
+		// 真端行 18621：IDCromede_polearm → IDCromede_polearm
+		assertTrue(handler.routes(18621), "18621 必须由 native 车道路由");
+		assertEquals(730329, handler.acquireNpc(18621), "接取 NPC");
+		assertEquals(730329, handler.rewardNpc(18621), "交付 NPC");
+		assertEquals(0, handler.relayCount(18621), "中继步数");
+		assertNull(handler.acceptGiveItem(18621), "接取侧无发放");
+		assertEquals(List.of(new SimpleTalkHandler.ItemStack(185000102, 1)), handler.workItems(18621), "交付门");
+		assertNull(handler.cutscene(18621), "该行无过场");
 
-	private static QuestTransition route(QuestDefinition definition, String source, String target,
-		QuestEvent event, Integer priority) {
-		List<QuestTransition> routes = definition.transitions().stream()
-			.filter(candidate -> source.equals(candidate.sourceNode()))
-			.filter(candidate -> target.equals(candidate.targetNode()))
-			.filter(candidate -> event.equals(candidate.event()))
-			.filter(candidate -> priority == null || priority.equals(candidate.priority()))
-			.toList();
-		assertEquals(1, routes.size(), source + " -> " + target + " " + event);
-		return routes.getFirst();
-	}
+		// 真端行 18622：IDCromede_bow → IDCromede_bow
+		assertTrue(handler.routes(18622), "18622 必须由 native 车道路由");
+		assertEquals(730330, handler.acquireNpc(18622), "接取 NPC");
+		assertEquals(730330, handler.rewardNpc(18622), "交付 NPC");
+		assertEquals(0, handler.relayCount(18622), "中继步数");
+		assertNull(handler.acceptGiveItem(18622), "接取侧无发放");
+		assertEquals(List.of(new SimpleTalkHandler.ItemStack(185000102, 1)), handler.workItems(18622), "交付门");
+		assertNull(handler.cutscene(18622), "该行无过场");
 
-	private static void assertNode(QuestDefinition definition, String label, QuestStatus status,
-		Map<String, Integer> variables) {
-		QuestNode node = definition.nodes().stream()
-			.filter(candidate -> label.equals(candidate.label()))
-			.findFirst().orElseThrow();
-		assertEquals(status, node.projection().status());
-		assertEquals(variables, node.projection().variables());
-	}
+		// 真端行 18623：IDCromede_mace → IDCromede_mace
+		assertTrue(handler.routes(18623), "18623 必须由 native 车道路由");
+		assertEquals(730331, handler.acquireNpc(18623), "接取 NPC");
+		assertEquals(730331, handler.rewardNpc(18623), "交付 NPC");
+		assertEquals(0, handler.relayCount(18623), "中继步数");
+		assertNull(handler.acceptGiveItem(18623), "接取侧无发放");
+		assertEquals(List.of(new SimpleTalkHandler.ItemStack(185000102, 1)), handler.workItems(18623), "交付门");
+		assertNull(handler.cutscene(18623), "该行无过场");
 
-	private static CompiledQuestDefinition load(int questId) throws Exception {
-		// 退役任务的生产 XML 只在 git 历史里：统一取生产视图（XML 目录 + 真端 overlay）。
-		return ProductionQuestDefinitions.definition(questId);
-	}
+		// 真端行 18624：IDCromede_staff → IDCromede_staff
+		assertTrue(handler.routes(18624), "18624 必须由 native 车道路由");
+		assertEquals(730332, handler.acquireNpc(18624), "接取 NPC");
+		assertEquals(730332, handler.rewardNpc(18624), "交付 NPC");
+		assertEquals(0, handler.relayCount(18624), "中继步数");
+		assertNull(handler.acceptGiveItem(18624), "接取侧无发放");
+		assertEquals(List.of(new SimpleTalkHandler.ItemStack(185000102, 1)), handler.workItems(18624), "交付门");
+		assertNull(handler.cutscene(18624), "该行无过场");
 
-	private record QuestCase(int questId, int cabinetId, Race race) {
+		// 真端行 18625：IDCromede_book → IDCromede_book
+		assertTrue(handler.routes(18625), "18625 必须由 native 车道路由");
+		assertEquals(730333, handler.acquireNpc(18625), "接取 NPC");
+		assertEquals(730333, handler.rewardNpc(18625), "交付 NPC");
+		assertEquals(0, handler.relayCount(18625), "中继步数");
+		assertNull(handler.acceptGiveItem(18625), "接取侧无发放");
+		assertEquals(List.of(new SimpleTalkHandler.ItemStack(185000102, 1)), handler.workItems(18625), "交付门");
+		assertNull(handler.cutscene(18625), "该行无过场");
+
+		// 真端行 18626：IDCromede_orb → IDCromede_orb
+		assertTrue(handler.routes(18626), "18626 必须由 native 车道路由");
+		assertEquals(730334, handler.acquireNpc(18626), "接取 NPC");
+		assertEquals(730334, handler.rewardNpc(18626), "交付 NPC");
+		assertEquals(0, handler.relayCount(18626), "中继步数");
+		assertNull(handler.acceptGiveItem(18626), "接取侧无发放");
+		assertEquals(List.of(new SimpleTalkHandler.ItemStack(185000102, 1)), handler.workItems(18626), "交付门");
+		assertNull(handler.cutscene(18626), "该行无过场");
+
+		// 真端行 18627：IDCromede_shield → IDCromede_shield
+		assertTrue(handler.routes(18627), "18627 必须由 native 车道路由");
+		assertEquals(730335, handler.acquireNpc(18627), "接取 NPC");
+		assertEquals(730335, handler.rewardNpc(18627), "交付 NPC");
+		assertEquals(0, handler.relayCount(18627), "中继步数");
+		assertNull(handler.acceptGiveItem(18627), "接取侧无发放");
+		assertEquals(List.of(new SimpleTalkHandler.ItemStack(185000102, 1)), handler.workItems(18627), "交付门");
+		assertNull(handler.cutscene(18627), "该行无过场");
+
+		// 真端行 28618：IDCromede_sword → IDCromede_sword
+		assertTrue(handler.routes(28618), "28618 必须由 native 车道路由");
+		assertEquals(730326, handler.acquireNpc(28618), "接取 NPC");
+		assertEquals(730326, handler.rewardNpc(28618), "交付 NPC");
+		assertEquals(0, handler.relayCount(28618), "中继步数");
+		assertNull(handler.acceptGiveItem(28618), "接取侧无发放");
+		assertEquals(List.of(new SimpleTalkHandler.ItemStack(185000102, 1)), handler.workItems(28618), "交付门");
+		assertNull(handler.cutscene(28618), "该行无过场");
+
+		// 真端行 28619：IDCromede_2hsword → IDCromede_2hsword
+		assertTrue(handler.routes(28619), "28619 必须由 native 车道路由");
+		assertEquals(730327, handler.acquireNpc(28619), "接取 NPC");
+		assertEquals(730327, handler.rewardNpc(28619), "交付 NPC");
+		assertEquals(0, handler.relayCount(28619), "中继步数");
+		assertNull(handler.acceptGiveItem(28619), "接取侧无发放");
+		assertEquals(List.of(new SimpleTalkHandler.ItemStack(185000102, 1)), handler.workItems(28619), "交付门");
+		assertNull(handler.cutscene(28619), "该行无过场");
+
+		// 真端行 28620：IDCromede_dagger → IDCromede_dagger
+		assertTrue(handler.routes(28620), "28620 必须由 native 车道路由");
+		assertEquals(730328, handler.acquireNpc(28620), "接取 NPC");
+		assertEquals(730328, handler.rewardNpc(28620), "交付 NPC");
+		assertEquals(0, handler.relayCount(28620), "中继步数");
+		assertNull(handler.acceptGiveItem(28620), "接取侧无发放");
+		assertEquals(List.of(new SimpleTalkHandler.ItemStack(185000102, 1)), handler.workItems(28620), "交付门");
+		assertNull(handler.cutscene(28620), "该行无过场");
+
+		// 真端行 28621：IDCromede_polearm → IDCromede_polearm
+		assertTrue(handler.routes(28621), "28621 必须由 native 车道路由");
+		assertEquals(730329, handler.acquireNpc(28621), "接取 NPC");
+		assertEquals(730329, handler.rewardNpc(28621), "交付 NPC");
+		assertEquals(0, handler.relayCount(28621), "中继步数");
+		assertNull(handler.acceptGiveItem(28621), "接取侧无发放");
+		assertEquals(List.of(new SimpleTalkHandler.ItemStack(185000102, 1)), handler.workItems(28621), "交付门");
+		assertNull(handler.cutscene(28621), "该行无过场");
+
+		// 真端行 28622：IDCromede_bow → IDCromede_bow
+		assertTrue(handler.routes(28622), "28622 必须由 native 车道路由");
+		assertEquals(730330, handler.acquireNpc(28622), "接取 NPC");
+		assertEquals(730330, handler.rewardNpc(28622), "交付 NPC");
+		assertEquals(0, handler.relayCount(28622), "中继步数");
+		assertNull(handler.acceptGiveItem(28622), "接取侧无发放");
+		assertEquals(List.of(new SimpleTalkHandler.ItemStack(185000102, 1)), handler.workItems(28622), "交付门");
+		assertNull(handler.cutscene(28622), "该行无过场");
+
+		// 真端行 28623：IDCromede_mace → IDCromede_mace
+		assertTrue(handler.routes(28623), "28623 必须由 native 车道路由");
+		assertEquals(730331, handler.acquireNpc(28623), "接取 NPC");
+		assertEquals(730331, handler.rewardNpc(28623), "交付 NPC");
+		assertEquals(0, handler.relayCount(28623), "中继步数");
+		assertNull(handler.acceptGiveItem(28623), "接取侧无发放");
+		assertEquals(List.of(new SimpleTalkHandler.ItemStack(185000102, 1)), handler.workItems(28623), "交付门");
+		assertNull(handler.cutscene(28623), "该行无过场");
+
+		// 真端行 28624：IDCromede_staff → IDCromede_staff
+		assertTrue(handler.routes(28624), "28624 必须由 native 车道路由");
+		assertEquals(730332, handler.acquireNpc(28624), "接取 NPC");
+		assertEquals(730332, handler.rewardNpc(28624), "交付 NPC");
+		assertEquals(0, handler.relayCount(28624), "中继步数");
+		assertNull(handler.acceptGiveItem(28624), "接取侧无发放");
+		assertEquals(List.of(new SimpleTalkHandler.ItemStack(185000102, 1)), handler.workItems(28624), "交付门");
+		assertNull(handler.cutscene(28624), "该行无过场");
+
+		// 真端行 28625：IDCromede_book → IDCromede_book
+		assertTrue(handler.routes(28625), "28625 必须由 native 车道路由");
+		assertEquals(730333, handler.acquireNpc(28625), "接取 NPC");
+		assertEquals(730333, handler.rewardNpc(28625), "交付 NPC");
+		assertEquals(0, handler.relayCount(28625), "中继步数");
+		assertNull(handler.acceptGiveItem(28625), "接取侧无发放");
+		assertEquals(List.of(new SimpleTalkHandler.ItemStack(185000102, 1)), handler.workItems(28625), "交付门");
+		assertNull(handler.cutscene(28625), "该行无过场");
+
+		// 真端行 28626：IDCromede_orb → IDCromede_orb
+		assertTrue(handler.routes(28626), "28626 必须由 native 车道路由");
+		assertEquals(730334, handler.acquireNpc(28626), "接取 NPC");
+		assertEquals(730334, handler.rewardNpc(28626), "交付 NPC");
+		assertEquals(0, handler.relayCount(28626), "中继步数");
+		assertNull(handler.acceptGiveItem(28626), "接取侧无发放");
+		assertEquals(List.of(new SimpleTalkHandler.ItemStack(185000102, 1)), handler.workItems(28626), "交付门");
+		assertNull(handler.cutscene(28626), "该行无过场");
+
+		// 真端行 28627：IDCromede_shield → IDCromede_shield
+		assertTrue(handler.routes(28627), "28627 必须由 native 车道路由");
+		assertEquals(730335, handler.acquireNpc(28627), "接取 NPC");
+		assertEquals(730335, handler.rewardNpc(28627), "交付 NPC");
+		assertEquals(0, handler.relayCount(28627), "中继步数");
+		assertNull(handler.acceptGiveItem(28627), "接取侧无发放");
+		assertEquals(List.of(new SimpleTalkHandler.ItemStack(185000102, 1)), handler.workItems(28627), "交付门");
+		assertNull(handler.cutscene(28627), "该行无过场");
 	}
 }

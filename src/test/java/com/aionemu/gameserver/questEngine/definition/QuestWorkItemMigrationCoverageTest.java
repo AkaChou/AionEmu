@@ -1,6 +1,7 @@
 package com.aionemu.gameserver.questEngine.definition;
 
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
+import com.aionemu.gameserver.questEngine.tablelane.SimpleTalkHandler;
 import org.junit.jupiter.api.Test;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -16,6 +17,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -53,27 +55,24 @@ class QuestWorkItemMigrationCoverageTest {
 
 	@Test
 	void verteronReinforcementsDeclaresItsWorkItemAndTurnsItInAtLavirintos() {
-		QuestDefinition definition = definition(QUEST_1192);
-		assertEquals(List.of(new QuestItemRequirement(WORK_ITEM_1192, 1)),
-			definition.metadata().questWorkItems());
-
-		// 接取发放工作物品:与 quest_data.xml 的 work item 声明一致。
-		QuestTransition accept = definition.transitions().stream()
-			.filter(transition -> transition.event() instanceof QuestEvent.TalkToNpc talk
-				&& talk.npcId() == 203098
-				&& talk.dialogId() == QuestDialogAction.QUEST_ACCEPT_1.id())
-			.findFirst().orElseThrow();
-		assertTrue(accept.actions().contains(new QuestAction.GiveItem(WORK_ITEM_1192, 1)));
-
-		// retai zz_retail_simple_quests.xml:8533 要求 203701 处交出物品;
-		// 用 ALL 表达「有则交出、旧存档缺失也不阻断」。
-		QuestTransition handover = definition.transitions().stream()
-			.filter(transition -> transition.event() instanceof QuestEvent.TalkToNpc talk
-				&& talk.npcId() == 203701
-				&& talk.dialogId() == QuestDialogAction.SETPRO1.id())
-			.findFirst().orElseThrow();
-		assertTrue(handover.actions().stream().anyMatch(action -> action instanceof QuestAction.RemoveItem remove
-			&& remove.itemId() == WORK_ITEM_1192));
+		// P3 重锚（计划 §8.9）：1192 自 SimpleTalk 切换批起由 native 车道直驱，旧断言（typed metadata 的
+		// {@code <work-items>} 声明 + QUEST_ACCEPT_1/SETPRO1 边）属 IR 形状，改锚真端表行的两条物品通道。
+		// 真端事实不变：接取发工作物品、首步 Lavirintos(203701) 回收同一物品、第 2 步 Xenophon(203833)。
+		// P3 re-anchor (plan §8.9): quest 1192 is native-lane driven since the SimpleTalk switch batch, so
+		// the IR-shape assertions are replaced by the retail row's two item channels.
+		SimpleTalkHandler handler = SimpleTalkHandler.instance();
+		assertEquals(203098, handler.acquireNpc(QUEST_1192), "真端 acquired_npc_name = Spatalos");
+		assertEquals(203098, handler.rewardNpc(QUEST_1192), "真端 reward_npc_name = Spatalos");
+		assertEquals(2, handler.relayCount(QUEST_1192), "真端行有 talk_npc1(Lavirintos)/talk_npc2(Xenophon)");
+		// 接取发放工作物品：与 quest.xml 的 work item 声明同物（182200556）。
+		// Accept grants the work item, the same item quest.xml declares (182200556).
+		assertEquals(new SimpleTalkHandler.ItemStack(WORK_ITEM_1192, 1), handler.acceptGiveItem(QUEST_1192));
+		// 首步交出：真端 remove_item1 = ITEM_DOC_QUEST_1192A 1，落在 Lavirintos 步上。
+		// First-step hand-over: remove_item1 lands on the Lavirintos step.
+		assertTrue(handler.relaysForNpc(203701).contains(new SimpleTalkHandler.RelayStep(QUEST_1192, 1, 203701)),
+			"1192 的首步必须挂在 Lavirintos(203701)");
+		assertEquals(new SimpleTalkHandler.ItemStack(WORK_ITEM_1192, 1), handler.stepRemoveItem(QUEST_1192, 1));
+		assertNull(handler.stepRemoveItem(QUEST_1192, 2), "第 2 步不得重复回收工作物品");
 	}
 
 	@Test

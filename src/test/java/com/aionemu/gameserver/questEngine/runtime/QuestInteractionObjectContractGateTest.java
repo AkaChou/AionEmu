@@ -52,7 +52,12 @@ class QuestInteractionObjectContractGateTest {
 			}
 		}
 		int total = checked;
-		assertTrue(total > 5000, () -> "生产可执行定义数量异常：" + total);
+		// 下限随 owner 迁移下移：SimpleHunt(939)/SimpleSerialHunt(16)/SimpleTalk(3152) 三族切到 native 后
+		// 退出 typed 目录，可执行定义数从 P2 的 5000+ 降到本批的 3044；下限 3000 仍能拦住「目录塌成空壳」。
+		// The floor follows the owner migration: the three families switched to the native lane left the
+		// typed directory, taking the executable count from 5000+ (P2) down to 3044; 3000 still catches a
+		// collapse into an empty shell.
+		assertTrue(total > 3000, () -> "生产可执行定义数量异常：" + total);
 		assertEquals(Map.of(), failures, () -> "启动期交互对象合同失败 "
 			+ failures.size() + " 例：" + failures);
 	}

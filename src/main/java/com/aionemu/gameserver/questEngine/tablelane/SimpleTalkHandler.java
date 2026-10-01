@@ -100,6 +100,14 @@ public final class SimpleTalkHandler {
 	private final NativeNpcNameResolver nameResolver;
 	private final NativeInventoryPort inventory;
 
+	/** 任务 ID → 真端 {@code con_quest}（链式接取窗的下一环；无声明则缺席）。 / Quest id → retail {@code con_quest}. */
+	private final Map<Integer, Integer> conQuestByQuestId;
+	/**
+	 * 链式接取窗未在本行交付 NPC 上闭环的行（fail-closed 证据面）。
+	 * Rows whose chain accept window is not realized at this row's reward NPC (fail-closed surface).
+	 */
+	private final Set<Integer> unresolvedChainQuestIds;
+
 	private final Map<Integer, Integer> acquireNpcByQuestId;
 	private final Map<Integer, Integer> rewardNpcByQuestId;
 	/** 中继 NPC ID → 该 NPC 上的全部中继步。 / Relay NPC id → every relay step bound to it. */
@@ -163,6 +171,8 @@ public final class SimpleTalkHandler {
 		Map<Integer, Integer> factions = new LinkedHashMap<>();
 		Map<Integer, Cutscene> cutscenes = new LinkedHashMap<>();
 		Set<Integer> unresolvedGates = new TreeSet<>();
+		Map<Integer, Integer> conQuests = new LinkedHashMap<>();
+		Set<Integer> unresolvedChain = new TreeSet<>();
 		Set<Integer> owned = new TreeSet<>();
 		Set<Integer> routed = new TreeSet<>();
 		Set<String> unresolved = new TreeSet<>();
@@ -235,6 +245,26 @@ public final class SimpleTalkHandler {
 			}
 		}
 
+		// 真端 0x1e 槽（交付 NPC 节点）：接续下一任务 {@code con_quest} 的接取窗。本车道的接取路由按
+		// NPC 建表，故该窗的等价物 = 「下一环的接取 NPC 恰是本行的交付 NPC」。逐行验证并把不闭环的
+		// 行登记为 fail-closed 证据（不新增第二套路由：下一环的接取路由永远由它自己那一行提供）。
+		// Retail slot 0x1e (on the reward-NPC node) opens the next quest's accept window. This lane keys
+		// accept routes by NPC, so the equivalent is "the next quest acquires at this row's reward NPC";
+		// every row is verified and non-closing rows are recorded as fail-closed evidence.
+		for (NativeQuestTableLoader.SimpleTalkRow row : tableLoader.talkRows()) {
+			Integer next = row.conQuest();
+			if (next == null) {
+				continue;
+			}
+			int questId = row.questId();
+			conQuests.put(questId, next);
+			Integer targetAcquire = acquires.get(next);
+			if (routed.contains(next) && targetAcquire != null
+					&& !targetAcquire.equals(rewards.get(questId))) {
+				unresolvedChain.add(questId);
+			}
+		}
+
 		this.acquireNpcByQuestId = Collections.unmodifiableMap(acquires);
 		this.rewardNpcByQuestId = Collections.unmodifiableMap(rewards);
 		this.relaysByNpcId = Collections.unmodifiableMap(relays);
@@ -244,6 +274,8 @@ public final class SimpleTalkHandler {
 		this.stepRemoveByQuestId = Collections.unmodifiableMap(stepRemoves);
 		this.workItemsByQuestId = Collections.unmodifiableMap(workItems);
 		this.unresolvedGateQuestIds = Collections.unmodifiableSet(unresolvedGates);
+		this.conQuestByQuestId = Collections.unmodifiableMap(conQuests);
+		this.unresolvedChainQuestIds = Collections.unmodifiableSet(unresolvedChain);
 		this.grantKindByQuestId = Collections.unmodifiableMap(grantKinds);
 		this.factionByQuestId = Collections.unmodifiableMap(factions);
 		this.cutsceneByQuestId = Collections.unmodifiableMap(cutscenes);
@@ -430,9 +462,18 @@ public final class SimpleTalkHandler {
 		return grantKindByQuestId.getOrDefault(questId, RetailGrantKind.NPC);
 	}
 
-	/** 是否系统发放（无 NPC 接取路由）。 / Whether the quest is system-granted (no NPC accept route). */
+	/**
+	 * 是否系统发放（无 NPC 接取路由，且该类别在本服确有发放入口）。
+	 * <p>
+	 * 判据用 {@link RetailGrantKind#grantable()} 而非 {@code knownGrant()}：{@code _challengetask_}
+	 * 在本服只有完成回调、没有受理入口，若按「已知哨兵」放行，{@code grantSystemStart} 会替它建档，
+	 * 与「挑战任务行不得被系统发放」的既定合同相反（P3 步骤 4 由 native 侧契约门抓出）。
+	 * System-grant verdict, keyed on {@link RetailGrantKind#grantable()} so that {@code _challengetask_}
+	 * rows (no intake in this server) can never be admitted by {@code grantSystemStart}.
+	 */
 	public boolean isSystemGranted(int questId) {
-		return routes(questId) && grantKind(questId).knownGrant();
+		RetailGrantKind kind = grantKind(questId);
+		return routes(questId) && kind != RetailGrantKind.NPC && kind.grantable();
 	}
 
 	/** 真端势力 id（quest.xml {@code npcfaction_name}；无则 0）。 / The retail faction id, or 0. */
@@ -467,6 +508,28 @@ public final class SimpleTalkHandler {
 	}
 
 	/**
+	 * 真端 {@code con_quest}（链式接取窗的下一环）；未声明返回 null。
+	 * <p>
+	 * 真端该列由交付 NPC 节点上的 0x1e 槽消费（{@code mgr+0x1a8(player, con_quest)} = 下一环的接取窗）。
+	 * 本车道按 NPC 建接取路由，故只要下一环的接取 NPC 等于本行的交付 NPC，该窗即已由下一环自身那一行
+	 * 实现；{@link #unresolvedChainQuestIds()} 为空即全表闭环。
+	 * <p>
+	 * The retail {@code con_quest} column, consumed by slot 0x1e on the reward-NPC node ({@code
+	 * mgr+0x1a8(player, con_quest)} opens the next quest's accept window). This lane registers accept
+	 * routes per NPC, so the window is already realized by the next quest's own row whenever that row
+	 * acquires at this row's reward NPC; an empty {@link #unresolvedChainQuestIds()} means the whole
+	 * table closes.
+	 */
+	public Integer conQuest(int questId) {
+		return conQuestByQuestId.get(questId);
+	}
+
+	/** 链式接取窗未闭环的行（fail-closed 证据面）。 / Rows whose chain window is not realized. */
+	public Set<Integer> unresolvedChainQuestIds() {
+		return unresolvedChainQuestIds;
+	}
+
+	/**
 	 * 系统发放入口（{@code _faction_} 等哨兵行）：无进度时直接进 START，等价于旧
 	 * {@code RetailSystemGrantDispatcher} 对 SystemGrant 边的处理。
 	 * System-grant entry: starts the quest directly when it has no progress.
@@ -481,7 +544,8 @@ public final class SimpleTalkHandler {
 		if (existing != null && existing.getStatus() != QuestStatus.NONE) {
 			return false;
 		}
-		return QuestService.startQuest(new QuestEnv(null, player, questId, 0));
+		// 系统发放：资格已由 factionRotationEligible 按同一 quest.xml 轴判定，此处只做状态面建档。
+		return NativeQuestStartPort.instance().grant(player, questId).started();
 	}
 
 	/**
@@ -513,27 +577,30 @@ public final class SimpleTalkHandler {
 				&& existing.getStatus() != QuestStatus.LOCKED && !repeatable) {
 			return false;
 		}
-		int minLevel = intOrDefault(row, "minlevel_permitted", 1);
+		// 轴判定与 NPC 接取共用同一实现（NativeQuestStartPort），避免第二套事实来源。
+		int minLevel = intOrZero(row, "minlevel_permitted");
 		int maxLevel = intOrDefault(row, "maxlevel_permitted", Integer.MAX_VALUE);
 		int level = player.getLevel();
 		if (minLevel != 999 && level < minLevel) {
+			// 系统发放的阵营日常不走 NPC 接取（真端 CanAcquireQuest 不参与），故 999 在此不阻断。
 			return false;
 		}
 		if (level > maxLevel) {
 			return false;
 		}
-		if (!racePermitted(row, player.getRace() == null ? null : player.getRace().name())) {
+		if (!NativeQuestStartPort.racePermitted(row.text("race_permitted"),
+				player.getRace() == null ? null : player.getRace().name())) {
 			return false;
 		}
 		String classToken = player.getCommonData() == null || player.getCommonData().getPlayerClass() == null
 				? null
 				: player.getCommonData().getPlayerClass().name().toLowerCase(java.util.Locale.ROOT);
-		if (!tokenPermitted(row.text("class_permitted"), classToken)) {
+		if (!NativeQuestStartPort.tokenPermitted(row.text("class_permitted"), classToken)) {
 			return false;
 		}
 		String genderToken = player.getGender() == null ? null
 				: player.getGender().name().toLowerCase(java.util.Locale.ROOT);
-		return tokenPermitted(row.text("gender_permitted"), genderToken);
+		return NativeQuestStartPort.tokenPermitted(row.text("gender_permitted"), genderToken);
 	}
 
 	private static int intOrZero(NativeQuestXmlTable.QuestRow row, String tag) {
@@ -544,46 +611,6 @@ public final class SimpleTalkHandler {
 	private static int intOrDefault(NativeQuestXmlTable.QuestRow row, String tag, int fallback) {
 		Integer value = row.integer(tag);
 		return value == null ? fallback : value;
-	}
-
-	/** {@code class_permitted}/{@code gender_permitted} 空格分隔词表；缺声明或 {@code all} 表示不限制。 */
-	private static boolean tokenPermitted(String field, String token) {
-		if (field == null || field.isBlank() || "all".equalsIgnoreCase(field.trim())) {
-			return true;
-		}
-		if (token == null) {
-			return false;
-		}
-		for (String candidate : field.trim().toLowerCase(java.util.Locale.ROOT).split("[\\s,]+")) {
-			if (candidate.equals(token)) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	/** {@code race_permitted} → 种族判定（pc_light→ELYOS、pc_dark→ASMODIANS、pc_all/双族→任意）。 */
-	private static boolean racePermitted(NativeQuestXmlTable.QuestRow row, String raceName) {
-		String field = row.text("race_permitted");
-		if (field == null || field.isBlank()) {
-			return true;
-		}
-		boolean light = false;
-		boolean dark = false;
-		for (String token : field.trim().toLowerCase(java.util.Locale.ROOT).split("[\\s,]+")) {
-			if ("pc_all".equals(token)) {
-				return true;
-			}
-			light |= "pc_light".equals(token);
-			dark |= "pc_dark".equals(token);
-		}
-		if (light && dark) {
-			return true;
-		}
-		if (raceName == null) {
-			return false;
-		}
-		return light ? "ELYOS".equals(raceName) : dark && "ASMODIANS".equals(raceName);
 	}
 
 	/**
@@ -748,7 +775,9 @@ public final class SimpleTalkHandler {
 		QuestStatus status = qs != null ? qs.getStatus() : QuestStatus.NONE;
 
 		// 1. 接取（真端 cab520）：接取 NPC 的问询 → 确认（20000 同时发放 give_item）/ 拒绝。
-		if (qs == null || status == QuestStatus.NONE) {
+		// 可重复行在 COMPLETE 态同样开放接取窗（真端 finishedcount < max_repeat_count 时再次可接）。
+		boolean fresh = qs == null || status == QuestStatus.NONE;
+		if (fresh || (status == QuestStatus.COMPLETE && repeatable(questId))) {
 			Integer acquireNpc = acquireNpcByQuestId.get(questId);
 			if (acquireNpc == null || acquireNpc != npcId) {
 				return false;
@@ -758,7 +787,8 @@ public final class SimpleTalkHandler {
 				return true;
 			}
 			if (dialogId == 1002 || dialogId == 20000) {
-				if (QuestService.startQuest(env)) {
+				// 真端接取：条件判定 + 建档/复位走 native 状态端口（不依赖 typed QuestTemplate）。
+				if (NativeQuestStartPort.instance().start(player, questId).started()) {
 					if (dialogId == 20000) {
 						give(player, acceptGiveByQuestId.get(questId));
 					}
@@ -873,6 +903,13 @@ public final class SimpleTalkHandler {
 		for (ItemStack item : workItems(questId)) {
 			inventory.remove(player, item.itemId(), item.count());
 		}
+	}
+
+	/** 真端 {@code max_repeat_count} > 1 ⇒ 可重复（COMPLETE 态可再次开窗）。 / Repeatable per retail max_repeat_count. */
+	private boolean repeatable(int questId) {
+		NativeQuestXmlTable.QuestRow row = NativeQuestXmlTable.instance().find(questId).orElse(null);
+		Integer maxRepeat = row == null ? null : row.integer("max_repeat_count");
+		return maxRepeat != null && maxRepeat > 1;
 	}
 
 	private void give(Player player, ItemStack item) {

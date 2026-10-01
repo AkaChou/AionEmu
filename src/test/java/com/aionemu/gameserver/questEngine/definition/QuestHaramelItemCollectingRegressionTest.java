@@ -1,6 +1,7 @@
 package com.aionemu.gameserver.questEngine.definition;
 
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
+import com.aionemu.gameserver.questEngine.tablelane.SimpleTalkHandler;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -23,12 +24,8 @@ class QuestHaramelItemCollectingRegressionTest {
 			List.of(ObjectDrop.questGate(700833, 182212013), ObjectDrop.questGate(700951, 182212014)), true),
 		new QuestCase(18503, 799523, 203166,
 			List.of(ObjectDrop.questGate(700834, 182212004)), true),
-		new QuestCase(18509, 799523, 799524,
-			List.of(new ObjectDrop(700853, 182212008, false)), true),
 		new QuestCase(28503, 799523, 804605,
-			List.of(ObjectDrop.questGate(700834, 182212016)), true),
-		new QuestCase(28509, 799523, 799524,
-			List.of(new ObjectDrop(700853, 182212020, false)), true));
+			List.of(ObjectDrop.questGate(700834, 182212016)), true));
 
 	@Test
 	void haramelItemCollectingQuestsExposeObjectGatesAndUseTheirTurnInNpc() {
@@ -156,185 +153,44 @@ class QuestHaramelItemCollectingRegressionTest {
 		}
 	}
 
+	/**
+	 * 哈拉梅尔 native 行的真端表事实（P3 重锚，计划 §8.9）：18505/18509/28509 自 SimpleTalk 切换批起由
+	 * native 车道直驱，typed 定义退出生产视图，交付面改锚「真端表行 + quest.xml collect_item 整组门」；
+	 * 接取/进行中/奖励窗的对话页阶梯（4/10/5/1008）由族级门禁 {@code SimpleTalkNativeFamilyGateTest} 逐行守。
+	 * <p>
+	 * Native-lane retail facts for the Haramel rows (P3 re-anchor, plan §8.9): 18505/18509/28509 moved to the
+	 * native lane, so their hand-in contract is anchored on the retail row plus the whole quest.xml
+	 * collect_item group; the accept/in-progress/reward dialog ladder is guarded per row by the family gate.
+	 */
 	@Test
-	void quest18509AcceptAndEmptyReportDialogsHaveClientOwnedResponses() {
-		CompiledQuestDefinition definition = load(18509);
-
-		QuestTransition accept = dialog(definition, "unaccepted", "started", 799523,
-			QuestDialogAction.QUEST_ACCEPT_1.id());
-		assertEquals(List.of(new QuestCondition.StartEligible()), accept.conditions());
-		assertEquals(List.of(
-			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.VISIBILITY_REFRESH),
-			new AfterCommitAction.ShowQuestDialog(QuestDialogPage.QUEST_ACCEPT_1.id())), accept.afterCommit());
-
-		QuestTransition acceptFinish = dialog(definition, "started", "started", 799523,
-			QuestDialogAction.FINISH_DIALOG.id());
-		assertEquals(List.of(new AfterCommitAction.ShowQuestSelectionDialog(QuestDialogPage.SELECT_QUEST.id())),
-			acceptFinish.afterCommit());
-
-		// P0-3 S1：SimpleTalk 接取/交付切真端规范形（页 4 / 分档窗）——39/20002 检查对与 SELECT6
-		// 空报告页整体退场（未集齐零路由，关窗兜底交 DialogService）；门落在交付边 conditions() 上，
-		// 且是真端 collect_item1 整组（quest_18509a×1）。
-		// P0-3 S1: the SimpleTalk accept/delivery segments take the retail canonical shape (page 4 /
-		// tiered window) — the 39/20002 check pair and the SELECT6 empty-report page are retired (an
-		// incomplete hand-in has no route; DialogService closes the window), and the gate sits on the
-		// delivery edge's conditions() as the whole retail collect_item1 group (quest_18509a x1).
-		QuestTransition deliver = dialog(definition, "started", "reward", 799524,
-			QuestDialogAction.QUEST_SELECT.id());
-		assertEquals(List.of(new QuestCondition.HasItem(182212008, 1)), deliver.conditions());
-		assertEquals(List.of(new QuestAction.RemoveItem(182212008, 1)), deliver.actions());
-		assertEquals(List.of(
-			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
-			new AfterCommitAction.ShowQuestDialog(QuestDialogPage.SHOW_SELECT_QUEST_REWARD_WINDOW1.id())),
-			deliver.afterCommit());
-		assertFalse(definition.definition().transitions().stream().anyMatch(transition ->
-			transition.event() instanceof QuestEvent.TalkToNpc talk && talk.npcId() == 799524
-				&& talk.dialogId() != null
-				&& (talk.dialogId() == QuestDialogAction.CHECK_USER_HAS_QUEST_ITEM.id()
-					|| talk.dialogId() == QuestDialogAction.CHECK_USER_HAS_QUEST_ITEM_SIMPLE.id())),
-			"canonical removed the 39/20002 check pair at the report npc");
-		assertFalse(definition.definition().transitions().stream().anyMatch(transition ->
-			transition.afterCommit().stream().anyMatch(action ->
-				action instanceof AfterCommitAction.ShowQuestDialog page
-					&& (page.dialogId() == QuestDialogPage.SELECT5.id()
-						|| page.dialogId() == QuestDialogPage.SELECT6.id()))),
-			"canonical removed the SELECT5/SELECT6 report pages");
-
-		// P0c-22 裁定（真端/客户端对、XML 错）：客户端 1008 按钮字面 = "结束对话"（page-action-map
-		// 全页一致），报告 NPC 关窗按族形 reportNpcExit 发 CloseDialog；遗留 XML 的
-		// ShowQuestSelectionDialog(SELECT_QUEST) 是手工推断。真端掉落 IDNovice_WoodenBox(700853)
-		// 的 ai=chest 不在 quest_use_item 交互对象合同内（validator 只查 quest_use_item），
-		// 开箱走 chest AI 流，无需任务路由门。
-		// P0c-22 adjudication (client-literal, XML-wrong): the client 1008 button reads "end
-		// conversation" across all pages, so the report NPC close emits CloseDialog per the
-		// family reportNpcExit shape; the legacy XML's ShowQuestSelectionDialog was hand-made.
-		// The box drop IDNovice_WoodenBox (700853) has ai=chest — outside the quest_use_item
-		// interaction contract (the validator scopes quest_use_item only), so opening runs on
-		// the chest AI flow and needs no quest-engine gate.
-		QuestTransition emptyReportFinish = dialog(definition, "started", "started", 799524,
-			QuestDialogAction.FINISH_DIALOG.id());
-		assertEquals(List.of(new AfterCommitAction.CloseDialog()), emptyReportFinish.afterCommit());
-		assertFalse(definition.definition().transitions().stream().anyMatch(transition ->
-			transition.event() instanceof QuestEvent.CanAct canAct && canAct.templateId() == 700853),
-			"chest-ai box must not carry a quest ACTION_ITEM_USE gate");
+	void nativeHaramelRowsExposeTheirTurnInNpcAndCollectGate() {
+		SimpleTalkHandler handler = SimpleTalkHandler.instance();
+		// 18505：接取 Zephyros(203166) / 交付 Alaus(203106)，交付门 = collect_item1..3 整组。
+		// 18505: acquired Zephyros(203166) / reward Alaus(203106), gate = the whole collect_item1..3 group.
+		assertTrue(handler.routes(18505), "18505 必须由 native 车道路由");
+		assertEquals(203166, handler.acquireNpc(18505), "18505 接取 NPC（Zephyros）");
+		assertEquals(203106, handler.rewardNpc(18505), "18505 交付 NPC（Alaus）");
+		assertEquals(0, handler.relayCount(18505), "18505 是单步行");
+		assertEquals(List.of(new SimpleTalkHandler.ItemStack(182212005, 1),
+			new SimpleTalkHandler.ItemStack(182212006, 1), new SimpleTalkHandler.ItemStack(182212007, 1)),
+			handler.workItems(18505), "18505 交付门 = quest.xml collect_item 整组（同序同数量）");
+		assertFalse(handler.unresolvedGate(18505), "18505 门必须可解");
+		// 18509 / 28509：接取 Shugo_IDNovice_2(799523) / 交付 Shugo_IDNovice_3(799524)，单物门。
+		// 18509 / 28509: acquired Shugo_IDNovice_2(799523) / reward Shugo_IDNovice_3(799524), one-item gate.
+		for (int[] row : new int[][] {{18509, 182212008}, {28509, 182212020}}) {
+			int questId = row[0];
+			int gateItem = row[1];
+			assertTrue(handler.routes(questId), "quest " + questId + " 必须由 native 车道路由");
+			assertEquals(799523, handler.acquireNpc(questId), "quest " + questId + " 接取 NPC");
+			assertEquals(799524, handler.rewardNpc(questId), "quest " + questId + " 交付 NPC");
+			assertEquals(0, handler.relayCount(questId), "quest " + questId + " 是单步行");
+			assertTrue(handler.requireRow(questId).itemCheck(), "quest " + questId + " 必须声明 item_check");
+			assertEquals(List.of(new SimpleTalkHandler.ItemStack(gateItem, 1)), handler.workItems(questId),
+				"quest " + questId + " 交付门物品（quest.xml collect_item1）");
+			assertFalse(handler.unresolvedGate(questId), "quest " + questId + " 门必须可解");
+		}
 	}
 
-	@Test
-	void quest28509AcceptAndEmptyReportDialogsHaveClientOwnedResponses() {
-		CompiledQuestDefinition definition = load(28509);
-
-		QuestTransition accept = dialog(definition, "unaccepted", "started", 799523,
-			QuestDialogAction.QUEST_ACCEPT_1.id());
-		assertEquals(List.of(new QuestCondition.StartEligible()), accept.conditions());
-		assertEquals(List.of(
-			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.VISIBILITY_REFRESH),
-			new AfterCommitAction.ShowQuestDialog(QuestDialogPage.QUEST_ACCEPT_1.id())), accept.afterCommit());
-
-		QuestTransition acceptFinish = dialog(definition, "started", "started", 799523,
-			QuestDialogAction.FINISH_DIALOG.id());
-		assertEquals(List.of(new AfterCommitAction.ShowQuestSelectionDialog(QuestDialogPage.SELECT_QUEST.id())),
-			acceptFinish.afterCommit());
-
-		// P0-3 S1：SimpleTalk 接取/交付切真端规范形（页 4 / 分档窗）——39/20002 检查对与 SELECT6
-		// 空报告页整体退场（未集齐零路由，关窗兜底交 DialogService）；门落在交付边 conditions() 上，
-		// 且是真端 collect_item1 整组（quest_28509a×1）。
-		// P0-3 S1: the SimpleTalk accept/delivery segments take the retail canonical shape (page 4 /
-		// tiered window) — the 39/20002 check pair and the SELECT6 empty-report page are retired (an
-		// incomplete hand-in has no route; DialogService closes the window), and the gate sits on the
-		// delivery edge's conditions() as the whole retail collect_item1 group (quest_28509a x1).
-		QuestTransition deliver = dialog(definition, "started", "reward", 799524,
-			QuestDialogAction.QUEST_SELECT.id());
-		assertEquals(List.of(new QuestCondition.HasItem(182212020, 1)), deliver.conditions());
-		assertEquals(List.of(new QuestAction.RemoveItem(182212020, 1)), deliver.actions());
-		assertEquals(List.of(
-			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
-			new AfterCommitAction.ShowQuestDialog(QuestDialogPage.SHOW_SELECT_QUEST_REWARD_WINDOW1.id())),
-			deliver.afterCommit());
-		assertFalse(definition.definition().transitions().stream().anyMatch(transition ->
-			transition.event() instanceof QuestEvent.TalkToNpc talk && talk.npcId() == 799524
-				&& talk.dialogId() != null
-				&& (talk.dialogId() == QuestDialogAction.CHECK_USER_HAS_QUEST_ITEM.id()
-					|| talk.dialogId() == QuestDialogAction.CHECK_USER_HAS_QUEST_ITEM_SIMPLE.id())),
-			"canonical removed the 39/20002 check pair at the report npc");
-		assertFalse(definition.definition().transitions().stream().anyMatch(transition ->
-			transition.afterCommit().stream().anyMatch(action ->
-				action instanceof AfterCommitAction.ShowQuestDialog page
-					&& (page.dialogId() == QuestDialogPage.SELECT5.id()
-						|| page.dialogId() == QuestDialogPage.SELECT6.id()))),
-			"canonical removed the SELECT5/SELECT6 report pages");
-
-		// P0c-22 裁定同 18509：客户端 1008 = "结束对话" → CloseDialog（族形 reportNpcExit）；
-		// 遗留 XML 的 ShowQuestSelectionDialog 是手工推断。IDNovice_WoodenBox(700853) 的
-		// ai=chest 不在 quest_use_item 合同内，无需门。
-		// P0c-22 adjudication same as 18509: the client 1008 button reads "end conversation" ->
-		// CloseDialog (family reportNpcExit); the legacy ShowQuestSelectionDialog was hand-made.
-		// IDNovice_WoodenBox (700853) has ai=chest — outside the quest_use_item contract, no gate.
-		QuestTransition emptyReportFinish = dialog(definition, "started", "started", 799524,
-			QuestDialogAction.FINISH_DIALOG.id());
-		assertEquals(List.of(new AfterCommitAction.CloseDialog()), emptyReportFinish.afterCommit());
-		assertFalse(definition.definition().transitions().stream().anyMatch(transition ->
-			transition.event() instanceof QuestEvent.CanAct canAct && canAct.templateId() == 700853),
-			"chest-ai box must not carry a quest ACTION_ITEM_USE gate");
-	}
-
-	@Test
-	void quest18505ExposesTurnInNpcGaphyrkWithoutDuplicateStartNpcCompletion() {
-		CompiledQuestDefinition definition = load(18505);
-
-		assertTrue(hasDialog(definition, "unaccepted", 203166, QuestDialogAction.QUEST_SELECT.id()));
-		assertFalse(hasDialog(definition, "unaccepted", 203106, QuestDialogAction.QUEST_SELECT.id()));
-
-		assertTrue(hasDialog(definition, "started", 203106, QuestDialogAction.QUEST_SELECT.id()));
-		assertFalse(hasDialog(definition, "started", 203166, QuestDialogAction.QUEST_SELECT.id()));
-
-		assertTrue(hasDialog(definition, "started", 203166, QuestDialogAction.FINISH_DIALOG.id()));
-		assertTrue(hasDialog(definition, "started", 203106, QuestDialogAction.FINISH_DIALOG.id()));
-
-		// P0-3 S1：SimpleTalk 接取/交付切真端规范形（页 4 / 分档窗）——交付 NPC 203106 上的 39/20002
-		// 检查对随页链退场，交付 = canonicalDelivery：QUEST_SELECT(started→reward) 带真端
-		// collect_item1..3 整组门（quest_18505a/b/c×1）直翻领奖并下发单档奖励窗 1。
-		// P0-3 S1: the SimpleTalk accept/delivery segments take the retail canonical shape (page 4 /
-		// tiered window) — the 39/20002 check pair at the turn-in npc 203106 is retired and the delivery
-		// is canonicalDelivery: a gated QUEST_SELECT(started->reward) carrying the whole retail
-		// collect_item1..3 group (quest_18505a/b/c x1) that flips REWARD and shows the reward window 1.
-		assertFalse(hasDialog(definition, "started", 203106, QuestDialogAction.CHECK_USER_HAS_QUEST_ITEM.id()));
-		assertFalse(hasDialog(definition, "started", 203166, QuestDialogAction.CHECK_USER_HAS_QUEST_ITEM.id()));
-
-		assertFalse(hasDialog(definition, "started", 203106, QuestDialogAction.CHECK_USER_HAS_QUEST_ITEM_SIMPLE.id()));
-		assertFalse(hasDialog(definition, "started", 203166, QuestDialogAction.CHECK_USER_HAS_QUEST_ITEM_SIMPLE.id()));
-
-		QuestTransition deliver = dialog(definition, "started", "reward", 203106,
-			QuestDialogAction.QUEST_SELECT.id());
-		assertEquals(List.of(
-			new QuestCondition.HasItem(182212005, 1),
-			new QuestCondition.HasItem(182212006, 1),
-			new QuestCondition.HasItem(182212007, 1)), deliver.conditions());
-		assertEquals(List.of(
-			new QuestAction.RemoveItem(182212005, 1),
-			new QuestAction.RemoveItem(182212006, 1),
-			new QuestAction.RemoveItem(182212007, 1)), deliver.actions());
-		assertEquals(List.of(
-			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
-			new AfterCommitAction.ShowQuestDialog(QuestDialogPage.SHOW_SELECT_QUEST_REWARD_WINDOW1.id())),
-			deliver.afterCommit());
-		assertFalse(definition.definition().transitions().stream().anyMatch(transition ->
-			transition.afterCommit().stream().anyMatch(action ->
-				action instanceof AfterCommitAction.ShowQuestDialog page
-					&& (page.dialogId() == QuestDialogPage.SELECT5.id()
-						|| page.dialogId() == QuestDialogPage.SELECT6.id()))),
-			"canonical removed the SELECT5/SELECT6 report pages");
-
-		long completeCount203106 = definition.definition().transitions().stream()
-			.filter(t -> "reward".equals(t.sourceNode()) && "complete".equals(t.targetNode())
-				&& t.event() instanceof QuestEvent.TalkToNpc talk && talk.npcId() == 203106)
-			.count();
-		long completeCount203166 = definition.definition().transitions().stream()
-			.filter(t -> "reward".equals(t.sourceNode()) && "complete".equals(t.targetNode())
-				&& t.event() instanceof QuestEvent.TalkToNpc talk && talk.npcId() == 203166)
-			.count();
-		assertTrue(completeCount203106 > 0, "turn-in NPC 203106 completion routes");
-		assertEquals(0, completeCount203166, "no completion routes on start NPC 203166");
-	}
 
 	private static boolean hasDialog(CompiledQuestDefinition definition, String sourceNode, int npcId, int dialogId) {
 		return definition.definition().transitions().stream().anyMatch(transition ->

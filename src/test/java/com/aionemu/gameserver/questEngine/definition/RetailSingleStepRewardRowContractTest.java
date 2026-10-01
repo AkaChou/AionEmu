@@ -1,11 +1,21 @@
 package com.aionemu.gameserver.questEngine.definition;
 
+import com.aionemu.gameserver.model.Gender;
+import com.aionemu.gameserver.model.PlayerClass;
+import com.aionemu.gameserver.model.Race;
+import com.aionemu.gameserver.model.gameobjects.player.Player;
+import com.aionemu.gameserver.model.gameobjects.player.PlayerCommonData;
+import com.aionemu.gameserver.model.gameobjects.player.QuestStateList;
+import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.questEngine.runtime.QuestMutationPlan;
 import com.aionemu.gameserver.questEngine.runtime.QuestMutationPlanner;
 import com.aionemu.gameserver.questEngine.runtime.QuestSnapshot;
+import com.aionemu.gameserver.questEngine.tablelane.SimpleTalkHandler;
 import org.junit.jupiter.api.Test;
+import org.objenesis.ObjenesisStd;
 
+import java.lang.reflect.Field;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,25 +24,47 @@ import java.util.stream.Stream;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * 锁定批次 10：retail“单步任务”（start + 1 step）族的领奖行合同。
- * retail 源 `definitions/compact/quests/scripts/zz_retail_simple_quests.xml` 里这批任务是
- * “拿任务 → 完成一个交付/收集动作 → 领奖”的两段式，客户端 quest_summary 正好 2 行，
- * 末行是领奖/交付行（交给/送给/报告/再次对话）。同族 249 个 retail 单步任务中 184 个早已是
- * `reward var0=1`，本批 17 个的投影停在 0：其中 12 个末行完全没有 START/REWARD 状态
- * （审计 MISSING_LAST_ROW），5 个末行有中间行状态但领奖态仍显示上一行（审计 ROW_BEHIND）。
- * 两组都补一条无 source 的 enter-world 自愈边（REWARD/var0=0 → 1），否则旧存档会因
- * `QuestMutationPlanner#matchesSourceNode` 的“投影变量必须全等”语义匹配不到任何领奖路由。
- * Locks the tenth repair batch: the retail "single-step" family (start + one step) has a two-row
- * quest_summary whose last row is the reward row, and 184 of the 249 sibling retail single-step quests
- * already projected `reward var0=1`. The 17 quests here still projected 0 — 12 of them left the last
- * journal row without any START/REWARD state, 5 kept showing the previous row in the reward state. Both
- * groups gained a source-less enter-world recovery edge (REWARD/var0=0 -&gt; 1) because the planner only
- * matches source nodes whose declared variables are equal, so persisted reward saves would otherwise
- * match no reward route at all.
+ * 锁定批次 10 的单步零售族「领奖行」合同，并按 owner 分轴（P3 重锚，计划 §8.9）。
+ * <p>
+ * 原断言全部落在 IR 形状上（reward 节点的 journal 投影行 = 1、无 source 的 enter-world 自愈边、
+ * 领奖路由写行值）。SimpleTalk 切换批把这批里的 15 行移入 native 车道后 typed 定义退出生产视图，
+ * 因此本测试改为双轴：
+ * <ul>
+ * <li><b>native 行</b>：断言真端表行（接取/交付 NPC、中继数、接取发放、步内发扣、交付门），并把
+ * 「旧存档领奖行自愈」锚到 native 的进世界自愈（链形 vars=0 → 中继数；单步 vars=1 → 0）；</li>
+ * <li><b>XML 保留行</b>：仍由 IR 车道拥有，逐条保留原来的 journal 行与自愈边断言。</li>
+ * </ul>
+ * Locks batch 10's "reward row" contract, split by owner (P3 re-anchor, plan §8.9). The 15 rows that
+ * moved to the native lane are asserted on their retail rows plus the native enter-world heal; the rows
+ * still owned by XML keep the original journal-row and recovery-edge assertions.
  */
 class RetailSingleStepRewardRowContractTest {
+
+	/** native 行的真端表事实（发放/回收为空即真端该列未声明）。 / Retail row facts of the native contracts. */
+	private record NativeRow(int questId, int acquireNpc, int rewardNpc, int relayCount,
+			Integer acceptGive, Integer stepGive, Integer stepRemove, List<SimpleTalkHandler.ItemStack> gate) {
+	}
+
+	private static final List<NativeRow> NATIVE_ROWS = List.of(
+		new NativeRow(1526, 204555, 204555, 0, null, null, null,
+			List.of(new SimpleTalkHandler.ItemStack(182201713, 10))),
+		new NativeRow(1527, 204555, 205229, 1, 182201781, null, null, List.of()),
+		new NativeRow(1528, 204553, 204583, 1, 182201778, null, null, List.of()),
+		new NativeRow(1725, 278520, 278590, 1, 182202153, null, null, List.of()),
+		new NativeRow(2135, 203532, 203532, 1, 182203131, null, 182203131, List.of()),
+		new NativeRow(2247, 203645, 203645, 1, null, 182203231, null, List.of()),
+		new NativeRow(2266, 203558, 203654, 1, 182203244, null, null, List.of()),
+		new NativeRow(3087, 798201, 798144, 1, null, 182208063, null, List.of()),
+		new NativeRow(4020, 205120, 205120, 1, 182209080, 182209081, 182209080, List.of()),
+		new NativeRow(21455, 799404, 799244, 1, 182209514, 182209515, 182209514, List.of()),
+		new NativeRow(1963, 203726, 203726, 1, 182206032, null, 182206032, List.of()),
+		new NativeRow(1964, 203726, 203726, 1, 182206033, null, 182206033, List.of()),
+		new NativeRow(18035, 730732, 804709, 1, 182213483, null, null, List.of()),
+		new NativeRow(21458, 799249, 799249, 1, 182209518, null, 182209518, List.of()),
+		new NativeRow(11455, 799070, 798946, 1, 182209503, 182209504, 182209503, List.of()));
 
 	private record Contract(int questId, String group) {
 	}
@@ -40,74 +72,67 @@ class RetailSingleStepRewardRowContractTest {
 	private static final int REWARD_ROW = 1;
 	private static final int STALE_ROW = 0;
 
-	/* A 组：末行完全没有 START/REWARD 状态（审计 MISSING_LAST_ROW）。 */
-	/* Group A: the last journal row had no START/REWARD state at all (audit: MISSING_LAST_ROW). */
-	private static final List<Contract> GROUP_A = List.of(
-		new Contract(1527, "A"),
-		new Contract(1528, "A"),
-		new Contract(1725, "A"),
-		new Contract(2135, "A"),
-		new Contract(2247, "A"),
-		new Contract(2266, "A"),
-		new Contract(3087, "A"),
-		new Contract(4020, "A"),
-		new Contract(21455, "A"),
-		new Contract(26838, "A"),
-		new Contract(80735, "A"),
-		new Contract(80736, "A")
-	);
-
-	/* B 组：末行已有中间行状态（var0=1），但 reward 投影仍停在行 0。 */
-	/* Group B: the last row already had an intermediate state (var0=1) while reward still projected row 0. */
-	private static final List<Contract> GROUP_B = List.of(
-		new Contract(1963, "B"),
-		new Contract(1964, "B"),
-		new Contract(16838, "B"),
-		new Contract(16977, "B"),
-		new Contract(18035, "B")
-	);
-
-	/* C 组：镜像 19002 已对齐的单侧缺陷，旧 handler 直接给出“领奖时 var0=1”的语义证据。 */
-	/* Group C: single-sided defect whose mirror 19002 is aligned, evidenced by the legacy handler. */
-	private static final List<Contract> GROUP_C = List.of(
-		new Contract(29002, "C")
-	);
-
-	private static final List<Contract> CONTRACTS = Stream.of(GROUP_A, GROUP_B, GROUP_C)
+	/** 仍由 XML 车道拥有的原合同行（不在真端 SimpleTalk 表内）。 / Contract rows still owned by XML. */
+	private static final List<Contract> XML_CONTRACTS = Stream.of(
+		List.of(new Contract(26838, "A"), new Contract(80735, "A"), new Contract(80736, "A")),
+		List.of(new Contract(16838, "B"), new Contract(16977, "B")),
+		List.of(new Contract(29002, "C")))
 		.flatMap(List::stream)
 		.toList();
 
-	/* 已对齐的同族参照（retail 单步任务，修复前就已是 reward var0=1）。 */
-	/* Aligned siblings of the same retail single-step family (already var0=1 before this batch). */
-	private static final List<Integer> ALIGNED_SIBLINGS = List.of(1526, 21458, 11455);
+	@Test
+	void nativeRowsCarryTheirRetailItemChannels() {
+		SimpleTalkHandler handler = SimpleTalkHandler.instance();
+		assertTrue(handler.unresolvedItemSymbols().isEmpty(),
+			() -> "原生物品符号面必须全解: " + handler.unresolvedItemSymbols());
+		for (NativeRow row : NATIVE_ROWS) {
+			int questId = row.questId();
+			assertTrue(handler.routes(questId), "quest " + questId + " 必须由 native 车道路由");
+			assertEquals(row.acquireNpc(), handler.acquireNpc(questId), "acquire npc: " + questId);
+			assertEquals(row.rewardNpc(), handler.rewardNpc(questId), "reward npc: " + questId);
+			assertEquals(row.relayCount(), handler.relayCount(questId), "relay count: " + questId);
+			assertEquals(stack(row.acceptGive()), handler.acceptGiveItem(questId), "accept grant: " + questId);
+			assertEquals(stack(row.stepGive()), handler.stepGiveItem(questId, 1), "step grant: " + questId);
+			assertEquals(stack(row.stepRemove()), handler.stepRemoveItem(questId, 1), "step removal: " + questId);
+			assertEquals(row.gate(), handler.workItems(questId), "hand-in gate: " + questId);
+			assertFalse(handler.unresolvedGate(questId), "门不得 fail-closed: " + questId);
+		}
+	}
+
+	/**
+	 * 旧存档领奖行自愈：REWARD 态的异常行值在进世界时被修回真端投影行，且第二次进入零写入。
+	 * Enter-world heal of stale reward rows: the native lane repairs the row value and stays idempotent.
+	 */
+	@Test
+	void nativeRewardRowsSelfHealOnEnterWorld() {
+		SimpleTalkHandler handler = SimpleTalkHandler.instance();
+		for (NativeRow row : NATIVE_ROWS) {
+			int questId = row.questId();
+			int relays = handler.relayCount(questId);
+			int staleVars = relays > 0 ? STALE_ROW : REWARD_ROW;
+			Player player = createTestPlayer();
+			player.getQuestStateList().addQuest(questId,
+				new QuestState(questId, QuestStatus.REWARD, staleVars, 0, null, 0, null));
+
+			assertTrue(handler.onEnterWorld(player), "quest " + questId + " 旧存档领奖行必须自愈");
+			QuestState healed = player.getQuestStateList().getQuestState(questId);
+			assertEquals(relays, healed.getQuestVars().getQuestVars(),
+				"quest " + questId + " 必须自愈到真端投影行");
+			assertFalse(handler.onEnterWorld(player), "quest " + questId + " 自愈必须幂等");
+		}
+	}
 
 	@Test
-	void rewardRowEqualsTheClientJournalLastRow() throws Exception {
-		for (Contract contract : CONTRACTS) {
-			QuestDefinition definition = definition(contract.questId()).definition();
+	void xmlRetainedRowsKeepTheirJournalRowAndRecoveryContract() throws Exception {
+		for (Contract contract : XML_CONTRACTS) {
+			CompiledQuestDefinition compiled = definition(contract.questId());
+			QuestDefinition definition = compiled.definition();
 			assertEquals(REWARD_ROW, rewardRow(definition),
 				() -> "quest " + contract.questId() + " reward journal row");
 			assertEquals(Map.of("var0", STALE_ROW), node(definition, "started").projection().variables(),
 				() -> "quest " + contract.questId() + " start state keeps journal row 0");
-		}
-	}
 
-	@Test
-	void alignedSiblingsOfTheSameFamilyShareTheRewardRow() throws Exception {
-		for (int questId : ALIGNED_SIBLINGS) {
-			assertEquals(REWARD_ROW, rewardRow(definition(questId).definition()),
-				() -> "aligned sibling " + questId + " reward journal row");
-		}
-		/* C 组的镜像必须与本侧同值。 / The mirror of the group C quest must share its reward row. */
-		assertEquals(REWARD_ROW, rewardRow(definition(19002).definition()),
-			"mirror 19002 reward journal row");
-	}
-
-	@Test
-	void persistedRewardRowsAreRepairedOnEnterWorld() throws Exception {
-		for (Contract contract : CONTRACTS) {
-			CompiledQuestDefinition compiled = definition(contract.questId());
-			QuestTransition recovery = recoveryRoute(compiled.definition());
+			QuestTransition recovery = recoveryRoute(definition);
 			assertEquals(List.of(
 				new QuestCondition.StatusIs(QuestStatus.REWARD),
 				new QuestCondition.QuestVariableIs("var0", STALE_ROW)), recovery.conditions(),
@@ -128,8 +153,8 @@ class RetailSingleStepRewardRowContractTest {
 	}
 
 	@Test
-	void noRewardRouteWritesAStaleJournalRow() throws Exception {
-		for (Contract contract : CONTRACTS) {
+	void xmlRetainedRewardRoutesNeverWriteAStaleJournalRow() throws Exception {
+		for (Contract contract : XML_CONTRACTS) {
 			QuestDefinition definition = definition(contract.questId()).definition();
 			List<QuestTransition> rewardRoutes = definition.transitions().stream()
 				.filter(candidate -> "reward".equals(candidate.targetNode()))
@@ -144,6 +169,33 @@ class RetailSingleStepRewardRowContractTest {
 					}
 				}
 			}
+		}
+	}
+
+	private static SimpleTalkHandler.ItemStack stack(Integer itemId) {
+		return itemId == null ? null : new SimpleTalkHandler.ItemStack(itemId, 1);
+	}
+
+	/** 极简测试玩家（无 DB、无网络栈），与本族 native 门禁同法。 / Minimal test player, same style as the native gates. */
+	private static Player createTestPlayer() {
+		Player player = new ObjenesisStd().newInstance(Player.class);
+		PlayerCommonData pcd = new PlayerCommonData(10001);
+		pcd.setRace(Race.ELYOS);
+		pcd.setGender(Gender.MALE);
+		setField(pcd, PlayerCommonData.class, "playerClass", PlayerClass.WARRIOR);
+		setField(pcd, PlayerCommonData.class, "level", 20);
+		setField(player, Player.class, "playerCommonData", pcd);
+		player.setQuestStateList(new QuestStateList());
+		return player;
+	}
+
+	private static void setField(Object target, Class<?> declaring, String name, Object value) {
+		try {
+			Field field = declaring.getDeclaredField(name);
+			field.setAccessible(true);
+			field.set(target, value);
+		} catch (ReflectiveOperationException e) {
+			throw new IllegalStateException("test fixture failed: " + declaring.getSimpleName() + "." + name, e);
 		}
 	}
 

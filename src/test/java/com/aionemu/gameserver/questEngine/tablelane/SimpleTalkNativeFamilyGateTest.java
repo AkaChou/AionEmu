@@ -169,8 +169,28 @@ class SimpleTalkNativeFamilyGateTest {
 		assertTrue(handler.onDialog(new QuestEnv(acquire, player, questId, 31)));
 		// 非接取 NPC 不响应（真端按节点槽分派，不跨 NPC）。
 		assertFalse(handler.onDialog(new QuestEnv(createMockNpc(1), player, questId, 31)));
-		// 1002/20000 的接取落库依赖生产数据持有者（QuestService.questsData），由启动门覆盖。
+		// 问询页只开窗、不落库；落库走 native 建档口（见 acceptCommitCreatesTheRetailRow）。
 		assertNull(player.getQuestStateList().getQuestState(questId));
+	}
+
+	/** 接取落库：真端条件轴（等级/种族/职业/性别/重复）通过后由 native 状态端口建档到 START。 */
+	@Test
+	void acceptCommitCreatesTheRetailRow() {
+		Player player = createTestPlayer();
+		Npc acquire = createMockNpc(handler.acquireNpc(ITEM_QUEST));
+
+		assertTrue(handler.onDialog(new QuestEnv(acquire, player, ITEM_QUEST, 31)), "问询页");
+		assertTrue(handler.onDialog(new QuestEnv(acquire, player, ITEM_QUEST, 1002)), "接取必须落库（native 建档口）");
+		QuestState state = player.getQuestStateList().getQuestState(ITEM_QUEST);
+		assertEquals(QuestStatus.START, state.getStatus());
+		assertEquals(0, state.getQuestVars().getQuestVars(), "接取复位 raw vars");
+
+		// 真端 max_repeat_count=1：完成后不得再次接取。
+		state.setStatus(QuestStatus.COMPLETE);
+		state.setCompleteCount(1);
+		assertFalse(handler.onDialog(new QuestEnv(acquire, player, ITEM_QUEST, 1002)),
+				"不可重复行完成后必须拒绝接取");
+		assertEquals(QuestStatus.COMPLETE, state.getStatus(), "被拒时不得改写状态");
 	}
 
 	@Test
@@ -337,15 +357,23 @@ class SimpleTalkNativeFamilyGateTest {
 		PlayerCommonData pcd = new PlayerCommonData(10001);
 		pcd.setRace(Race.ELYOS);
 		pcd.setGender(Gender.MALE);
-		try {
-			java.lang.reflect.Field field = Player.class.getDeclaredField("playerCommonData");
-			field.setAccessible(true);
-			field.set(player, pcd);
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
+		// setPlayerClass/setLevel 需要经验表就绪（单测无服务栈）⇒ 直接写字段；等级取真端 1131 的 minlevel 之上。
+		setField(pcd, PlayerCommonData.class, "playerClass",
+				com.aionemu.gameserver.model.PlayerClass.WARRIOR);
+		setField(pcd, PlayerCommonData.class, "level", 20);
+		setField(player, Player.class, "playerCommonData", pcd);
 		player.setQuestStateList(new QuestStateList());
 		return player;
+	}
+
+	private static void setField(Object target, Class<?> type, String name, Object value) {
+		try {
+			java.lang.reflect.Field field = type.getDeclaredField(name);
+			field.setAccessible(true);
+			field.set(target, value);
+		} catch (ReflectiveOperationException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	private static Npc createMockNpc(int npcId) {

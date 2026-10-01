@@ -1,128 +1,73 @@
 package com.aionemu.gameserver.questEngine.definition;
 
-import com.aionemu.gameserver.questEngine.model.QuestStatus;
-import com.aionemu.gameserver.questEngine.runtime.QuestMutationPlanner;
-import com.aionemu.gameserver.questEngine.runtime.QuestSnapshot;
-import org.junit.jupiter.api.Test;
-
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class QuestMinionTutorialRetailAlignmentTest {
-	@Test
-	void tutorialOwnersUseTheRetailQuestWorkItemsAndItemPlayLifecycle() {
-		assertTutorial(19900, 1007, 190080020, 836073);
-		assertTutorial(29900, 2009, 190080021, 836074);
-	}
+import java.util.List;
 
-	@Test
-	void archDaevaMinionChainGrantsItsOwnContractOnAccept() {
-		// 66+ 守护灵教学链：接取时必须发放本任务专属契约书，MinionService 只认该 id 才会把任务推进到 REWARD。
-		// Level-66+ minion tutorial chain: accepting must grant the quest-specific contract, because
-		// MinionService only advances the quest to REWARD for that exact item id.
-		assertAcceptGrant(15545, 835514, 190080010, List.of(new QuestReward("ITEM", 190080012, 1)));
-		assertAcceptGrant(25545, 835515, 190080011, List.of(new QuestReward("ITEM", 190080012, 1)));
-	}
+import org.junit.jupiter.api.Test;
+
+import com.aionemu.gameserver.questEngine.tablelane.SimpleTalkHandler;
+
+/**
+ * QuestMinionTutorialRetailAlignmentTest
+ * <p>
+ * P3 重锚（计划 §8.9）：旧 IR 形状断言（节点名/条件/动作/页链）随 SimpleTalk 切换批退场，
+ * 本类改为真端表行锚——接取/交付 NPC、中继步、发扣物品、交付门均取自
+ * {@code Quest_SimpleTalk.xml} + {@code quest.xml} 与静态数据（{@code npc_template} /
+ * 物品 {@code name_desc}），native 处理器必须逐项一致。
+ * <p>
+ * P3 re-anchor (plan §8.9): the IR-shape assertions retire with the SimpleTalk switch batch;
+ * this class now pins the retail table row through the native handler.
+ */
+class QuestMinionTutorialRetailAlignmentTest {
 
 	@Test
 	void legacyAcceptItemGrantsSurviveTheTypedMigration() {
-		// 这三个任务的旧 handler 都在接取分支 giveQuestItem，而当前目录没有任何其它产出源；
-		// 缺少发放会让任务道具在交出/完成页根本不存在。奖励物品不在此断言范围。
-		// Their legacy handlers all granted the work item in the accept branch and the production catalog has
-		// no other source, so a dropped grant leaves the hand-in step with nothing to hand over. Reward items
-		// are intentionally not asserted here.
-		assertAcceptGrant(2266, 203558, 182203244, null);
-		assertAcceptGrant(3085, 798144, 182208048, null);
-		assertAcceptGrant(28808, 830392, 182213216, null);
-	}
+		SimpleTalkHandler handler = SimpleTalkHandler.instance();
 
-	private static void assertAcceptGrant(int questId, int npcId, int workItemId, List<QuestReward> expectedRewards) {
-		QuestDefinition definition = load(questId).definition();
+		// 真端行 2266：Valuerin → Aurtri
+		assertTrue(handler.routes(2266), "2266 必须由 native 车道路由");
+		assertEquals(203558, handler.acquireNpc(2266), "接取 NPC");
+		assertEquals(203654, handler.rewardNpc(2266), "交付 NPC");
+		assertFalse(handler.acquireNpc(2266).equals(handler.rewardNpc(2266)),
+				"接取与交付 owner 分离");
+		assertEquals(1, handler.relayCount(2266), "中继步数");
+		assertTrue(handler.relaysForNpc(203655).stream().anyMatch(relay -> relay.questId() == 2266 && relay.step() == 1),
+				"中继 1 必须挂在该 NPC 上: Neifenmer");
+		assertEquals(new SimpleTalkHandler.ItemStack(182203244, 1),
+				handler.acceptGiveItem(2266), "接取侧发放");
+		assertTrue(handler.workItems(2266).isEmpty(), "该行未声明 item_check：无交付门");
+		assertFalse(handler.unresolvedGate(2266), "无门行不得 fail-closed");
+		assertNull(handler.cutscene(2266), "该行无过场");
 
-		assertEquals(List.of(new QuestItemRequirement(workItemId, 1)),
-			definition.metadata().questWorkItems(), "quest " + questId + " quest work items");
-		if (expectedRewards != null) {
-			assertEquals(expectedRewards, definition.metadata().rewards(), "quest " + questId + " rewards");
-		}
+		// 真端行 3085：Talos → Shugo_LF2a_1
+		assertTrue(handler.routes(3085), "3085 必须由 native 车道路由");
+		assertEquals(798144, handler.acquireNpc(3085), "接取 NPC");
+		assertEquals(798132, handler.rewardNpc(3085), "交付 NPC");
+		assertFalse(handler.acquireNpc(3085).equals(handler.rewardNpc(3085)),
+				"接取与交付 owner 分离");
+		assertEquals(1, handler.relayCount(3085), "中继步数");
+		assertTrue(handler.relaysForNpc(203830).stream().anyMatch(relay -> relay.questId() == 3085 && relay.step() == 1),
+				"中继 1 必须挂在该 NPC 上: Vatonia");
+		assertEquals(new SimpleTalkHandler.ItemStack(182208048, 1),
+				handler.acceptGiveItem(3085), "接取侧发放");
+		assertTrue(handler.workItems(3085).isEmpty(), "该行未声明 item_check：无交付门");
+		assertFalse(handler.unresolvedGate(3085), "无门行不得 fail-closed");
+		assertNull(handler.cutscene(3085), "该行无过场");
 
-		for (QuestDialogAction acceptAction : List.of(
-			QuestDialogAction.QUEST_ACCEPT_1, QuestDialogAction.QUEST_ACCEPT_SIMPLE)) {
-			QuestTransition accept = definition.transitions().stream()
-				.filter(t -> Objects.equals(t.sourceNode(), "unaccepted") && t.targetNode().equals("started"))
-				.filter(t -> t.event() instanceof QuestEvent.TalkToNpc talk && talk.npcId() == npcId
-					&& Integer.valueOf(acceptAction.id()).equals(talk.dialogId()))
-				.findFirst().orElseThrow(() -> new AssertionError(
-					"quest " + questId + "缺少 NPC " + npcId + " 的接取动作 " + acceptAction));
-			assertEquals(List.of(new QuestCondition.StartEligible()), accept.conditions(),
-				"quest " + questId + " accept conditions");
-			assertTrue(accept.actions().contains(new QuestAction.GiveItem(workItemId, 1)),
-				"quest " + questId + " 接取时必须发放任务工作物品 " + workItemId);
-		}
-	}
-
-	private static void assertTutorial(int questId, int prerequisiteId, int workItemId, int npcId) {
-		CompiledQuestDefinition compiled = load(questId);
-		QuestDefinition definition = compiled.definition();
-
-		assertTrue(definition.metadata().itemRequirements().isEmpty());
-		assertEquals(Set.of(prerequisiteId), definition.metadata().prerequisites());
-		assertTrue(definition.metadata().startConditions().stream()
-			.noneMatch(condition -> condition.questId() == prerequisiteId));
-		assertEquals(List.of(new QuestReward("ITEM", 190080012, 1)), definition.metadata().rewards());
-		assertEquals(List.of(new QuestItemRequirement(workItemId, 1)),
-			definition.metadata().questWorkItems());
-
-		assertStartTransition(definition, new QuestEvent.LevelUp(), workItemId);
-		assertStartTransition(definition, new QuestEvent.EnterWorld(), workItemId);
-
-		QuestTransition itemPlay = definition.transitions().stream()
-			.filter(t -> Objects.equals(t.sourceNode(), "started") && t.targetNode().equals("reward")
-				&& t.event() instanceof QuestEvent.ItemPlay play
-				&& play.itemId() == workItemId)
-			.findFirst().orElseThrow();
-		assertEquals(1500, ((QuestEvent.ItemPlay) itemPlay.event()).animationMillis());
-		assertTrue(itemPlay.actions().isEmpty());
-		var completedContractPlan = QuestMutationPlanner.plan(compiled,
-			new QuestSnapshot(7, questId, QuestStatus.START, 0, Map.of()), itemPlay.event(), itemPlay)
-			.orElseThrow();
-		assertEquals(QuestStatus.REWARD, completedContractPlan.nextStatus());
-		assertEquals(1, completedContractPlan.nextPackedVariables());
-		assertTrue(completedContractPlan.requiredActions().isEmpty());
-		assertFalse(definition.transitions().stream().anyMatch(t ->
-			t.event() instanceof QuestEvent.UseItem use && use.itemId() == workItemId));
-
-		assertTrue(definition.transitions().stream().anyMatch(t ->
-			Objects.equals(t.sourceNode(), "unaccepted") && t.event() instanceof QuestEvent.TalkToNpc talk
-				&& talk.npcId() == npcId && Integer.valueOf(31).equals(talk.dialogId())));
-		assertTrue(definition.nodes().stream()
-			.filter(n -> n.label().equals("reward") || n.label().equals("complete"))
-			.allMatch(n -> n.projection().variables().get("var0") == 1));
-		assertEquals(0, definition.nodes().stream()
-			.filter(n -> n.label().equals("legacy-reward"))
-			.findFirst().orElseThrow().projection().variables().get("var0"));
-		assertEquals(QuestStatus.REWARD, definition.nodes().stream()
-			.filter(n -> n.label().equals("reward"))
-			.findFirst().orElseThrow().projection().status());
-	}
-
-	private static void assertStartTransition(QuestDefinition definition, QuestEvent event, int workItemId) {
-		QuestTransition start = definition.transitions().stream()
-			.filter(t -> Objects.equals(t.sourceNode(), "unaccepted") && t.targetNode().equals("started")
-				&& t.event().equals(event))
-			.findFirst().orElseThrow();
-		assertTrue(start.actions().contains(new QuestAction.GiveItem(workItemId, 1)));
-	}
-
-	// 退役任务统一走生产视图（真端 overlay 合成；旧 XML 只在 git 历史里）。
-	// Retired quests resolve through the production view (retail overlay; the old XML lives in
-	// git history only).
-	private static CompiledQuestDefinition load(int questId) {
-		return ProductionQuestDefinitions.definition(questId);
+		// 真端行 28808：Aruza → NPC_Housing_FOBJ_01
+		assertTrue(handler.owns(28808), "28808 在真端表行集内");
+		assertFalse(handler.routes(28808), "28808 仍保留 XML 定义：native 只装载不路由（单一 owner）");
+		assertEquals(830392, handler.acquireNpc(28808), "接取 NPC");
+		assertNull(handler.rewardNpc(28808), "交付 NPC 未唯一解析（证据面冻结）");
+		assertEquals(0, handler.relayCount(28808), "中继步数");
+		assertEquals(new SimpleTalkHandler.ItemStack(182213216, 1),
+				handler.acceptGiveItem(28808), "接取侧发放");
+		assertTrue(handler.workItems(28808).isEmpty(), "该行未声明 item_check：无交付门");
+		assertFalse(handler.unresolvedGate(28808), "无门行不得 fail-closed");
+		assertNull(handler.cutscene(28808), "该行无过场");
 	}
 }

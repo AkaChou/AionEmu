@@ -1,6 +1,7 @@
 package com.aionemu.gameserver.questEngine.definition;
 
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
+import com.aionemu.gameserver.questEngine.tablelane.SimpleTalkHandler;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
@@ -158,29 +159,22 @@ class QuestDefinitionCatalogManifestTest {
 
 	@Test
 	void quest26930UsesTheSimpleItemCheckForCollectionTurnIn() {
-		// 26930 已由真端 SimpleTalk 驱动（XML 退役）：断言必须落在生产视图（XML 目录 + 真端 overlay）。
-		// 26930 is retail-driven now (XML retired), so the contract is asserted on the production view.
-		QuestCatalog catalog = com.aionemu.gameserver.questEngine.retail.RetailQuestDriver.overlay(
-			QuestDefinitionCatalogManifest.compile(
-				Path.of("src/main/resources/aion/data/static_data/quest/definitions")));
-		QuestDefinition definition = catalog.findExecutable(26930).orElseThrow().definition();
-		QuestTransition success = definition.transitions().stream()
-			.filter(transition -> transition.sourceNode().equals("started")
-				&& transition.targetNode().equals("reward"))
-			.filter(transition -> transition.event() instanceof QuestEvent.TalkToNpc talk
-				&& talk.npcId() == 804627
-				&& (talk.dialogId() == QuestDialogAction.CHECK_USER_HAS_QUEST_ITEM_SIMPLE.id() || talk.dialogId() == 31))
-			.findFirst().orElseThrow();
-
-		assertTrue(success.conditions().contains(new QuestCondition.HasItem(186000257, 10)));
-		// 扣除量 = 客户端 collect_item1 声明的 10；旧 handler 的 checkQuestItems(...,true,...) 经
-		// QuestService.collectItemCheck 精确扣除该数量，并不清空背包内的全部同名道具。
-		// Deduction is the client-declared 10; the legacy checkQuestItems path removes exactly that count.
-		assertTrue(success.actions().contains(new QuestAction.RemoveItem(186000257, 10)));
-		assertFalse(success.actions().contains(new QuestAction.RemoveItem(186000257, QuestAction.RemoveItem.ALL)));
-		assertEquals(List.of(
-			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
-			new AfterCommitAction.ShowQuestDialog(5)), success.afterCommit());
+		// P3 重锚（计划 §8.9）：26930 自 SimpleTalk 切换批起由 native 车道直驱，typed 定义退出生产视图；
+		// 旧断言（overlay 里的 started→reward 边 + HasItem/RemoveItem 动作）属 IR 形状，改锚真端表行 +
+		// quest.xml 收集通道 + 族级奖励窗页。
+		// P3 re-anchor (plan §8.9): quest 26930 is native-lane driven since the SimpleTalk switch batch, so
+		// the IR-shape assertions are replaced by the retail row, the quest.xml collect channel and the
+		// family reward-window page.
+		SimpleTalkHandler handler = SimpleTalkHandler.instance();
+		assertEquals(804627, handler.acquireNpc(26930), "真端 acquired_npc_name = LDF4_Advance_Ekthe_E");
+		assertEquals(804627, handler.rewardNpc(26930), "真端 reward_npc_name = LDF4_Advance_Ekthe_E");
+		assertEquals(0, handler.relayCount(26930), "26930 是单步行");
+		assertTrue(handler.requireRow(26930).itemCheck(), "26930 真端行必须声明 item_check");
+		// 交付门 = quest.xml collect_item1 声明的 186000257×10（整组门，不做子集放行）。
+		// The hand-in gate is the whole quest.xml collect_item1 group, 186000257 x10.
+		assertEquals(List.of(new SimpleTalkHandler.ItemStack(186000257, 10)), handler.workItems(26930));
+		assertFalse(handler.unresolvedGate(26930), "可解门不得 fail-closed");
+		assertEquals(5, SimpleTalkHandler.PAGE_REWARD_WINDOW, "领取走族级奖励窗页 5");
 	}
 
 	@Test

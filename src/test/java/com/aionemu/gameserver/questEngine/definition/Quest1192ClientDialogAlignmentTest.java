@@ -1,69 +1,48 @@
 package com.aionemu.gameserver.questEngine.definition;
 
-import com.aionemu.gameserver.questEngine.model.QuestStatus;
-import org.junit.jupiter.api.Test;
-
-import java.io.InputStream;
-import java.util.List;
-import java.util.Map;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.util.List;
+
+import org.junit.jupiter.api.Test;
+
+import com.aionemu.gameserver.questEngine.tablelane.SimpleTalkHandler;
 
 /**
  * 验证任务 1192 的接取页链不会把不存在的 1012 页面回显给客户端。
- * Verifies that quest 1192 uses its client acceptance action instead of echoing the missing page 1012.
+ * <p>
+ * P3 重锚（计划 §8.9）：旧 IR 形状断言（节点名/条件/动作/页链）随 SimpleTalk 切换批退场，
+ * 本类改为真端表行锚——接取/交付 NPC、中继步、发扣物品、交付门均取自
+ * {@code Quest_SimpleTalk.xml} + {@code quest.xml} 与静态数据（{@code npc_template} /
+ * 物品 {@code name_desc}），native 处理器必须逐项一致。
+ * <p>
+ * P3 re-anchor (plan §8.9): the IR-shape assertions retire with the SimpleTalk switch batch;
+ * this class now pins the retail table row through the native handler.
  */
 class Quest1192ClientDialogAlignmentTest {
-	private static final int START_NPC_ID = 203098;
-	private static final int START_ITEM_ID = 182200556;
 
 	@Test
-	void acceptDialogChainUsesTheClientAcceptanceAction() throws Exception {
-		QuestDefinition definition = definition().definition();
-		assertNode(definition, "unaccepted", QuestStatus.NONE, Map.of("var0", 0));
-		assertNode(definition, "started", QuestStatus.START, Map.of("var0", 0));
+	void acceptDialogChainUsesTheClientAcceptanceAction() {
+		SimpleTalkHandler handler = SimpleTalkHandler.instance();
 
-		// S2：接取窗由 QUEST_SELECT 直发（页 4）；select1 页梯与 1007 中转随规范接取段退场。
-		// S2 canonical accept: QUEST_SELECT opens page 4 directly; the select1 ladder and the 1007 relay retire.
-		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(
-			QuestDialogPage.SHOW_ASK_QUEST_ACCEPT_WINDOW.id())),
-			route(definition, "unaccepted", "unaccepted", QuestDialogAction.QUEST_SELECT.id()).afterCommit());
-
-		assertFalse(definition.transitions().stream()
-			.anyMatch(transition -> transition.event().equals(new QuestEvent.TalkToNpc(START_NPC_ID,
-				QuestDialogAction.SELECT1_1.id()))));
-		assertFalse(definition.transitions().stream()
-			.anyMatch(transition -> transition.event().equals(new QuestEvent.TalkToNpc(START_NPC_ID,
-				QuestDialogAction.ASK_QUEST_ACCEPT.id()))),
-			"quest 1192 的 1007 中转必须随规范接取段退场");
-
-		QuestTransition accept = route(definition, "unaccepted", "started", QuestDialogAction.QUEST_ACCEPT_1.id());
-		assertEquals(List.of(new QuestCondition.StartEligible()), accept.conditions());
-		assertEquals(List.of(new QuestAction.GiveItem(START_ITEM_ID, 1)), accept.actions());
-		assertEquals(List.of(
-			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.VISIBILITY_REFRESH),
-			new AfterCommitAction.ShowQuestDialog(QuestDialogPage.QUEST_ACCEPT_1.id())), accept.afterCommit());
-	}
-
-	private static QuestTransition route(QuestDefinition definition, String source, String target, int action) {
-		return definition.transitions().stream()
-			.filter(transition -> source.equals(transition.sourceNode())
-				&& target.equals(transition.targetNode())
-				&& transition.event().equals(new QuestEvent.TalkToNpc(START_NPC_ID, action)))
-			.findFirst().orElseThrow();
-	}
-
-	private static void assertNode(QuestDefinition definition, String label, QuestStatus status,
-			Map<String, Integer> variables) {
-		QuestNode node = definition.nodes().stream()
-			.filter(candidate -> label.equals(candidate.label()))
-			.findFirst().orElseThrow();
-		assertEquals(status, node.projection().status());
-		assertEquals(variables, node.projection().variables());
-	}
-
-	private CompiledQuestDefinition definition() throws Exception {
-		return ProductionQuestDefinitions.definitionInOverlay(1192);
+		// 真端行 1192：Spatalos → Spatalos
+		assertTrue(handler.routes(1192), "1192 必须由 native 车道路由");
+		assertEquals(203098, handler.acquireNpc(1192), "接取 NPC");
+		assertEquals(203098, handler.rewardNpc(1192), "交付 NPC");
+		assertEquals(2, handler.relayCount(1192), "中继步数");
+		assertTrue(handler.relaysForNpc(203701).stream().anyMatch(relay -> relay.questId() == 1192 && relay.step() == 1),
+				"中继 1 必须挂在该 NPC 上: Lavirintos");
+		assertTrue(handler.relaysForNpc(203833).stream().anyMatch(relay -> relay.questId() == 1192 && relay.step() == 2),
+				"中继 2 必须挂在该 NPC 上: Xenophon");
+		assertEquals(new SimpleTalkHandler.ItemStack(182200556, 1),
+				handler.acceptGiveItem(1192), "接取侧发放");
+		assertEquals(new SimpleTalkHandler.ItemStack(182200556, 1),
+				handler.stepRemoveItem(1192, 1), "第 1 步扣除");
+		assertTrue(handler.workItems(1192).isEmpty(), "该行未声明 item_check：无交付门");
+		assertFalse(handler.unresolvedGate(1192), "无门行不得 fail-closed");
+		assertNull(handler.cutscene(1192), "该行无过场");
 	}
 }

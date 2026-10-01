@@ -55,7 +55,6 @@ public final class RetailQuestDriver {
 	/** 真端 DataDriven 模板表（接取方式 × 进度步骤链）。 / The retail DataDriven template table. */
 	private static final String DATA_DRIVEN_TABLE =
 		"/aion/data/static_data/quest/retail/data_driven_quest.xml";
-	private static final String SIMPLE_TALK_TABLE = "/aion/data/static_data/quest/retail/Quest_SimpleTalk.xml";
 	/** 真端 CombineTask 模板表。 / The retail CombineTask template table. */
 	private static final String COMBINE_TASK_TABLE = "/aion/data/static_data/quest/retail/Quest_CombineTask.xml";
 	/** 真端 SimpleCollectItem 模板表。 / The retail SimpleCollectItem template table. */
@@ -89,11 +88,9 @@ public final class RetailQuestDriver {
 	private final Set<Integer> retailOwnedSimpleUseItem;
 	private final Set<Integer> retailOwnedSimpleItemPlay;
 	private final Set<Integer> retailOwnedDataDriven;
-	private final Set<Integer> retailOwnedSimpleTalk;
 	private final Set<Integer> retailOwnedCombineTask;
 	private final Set<Integer> retailOwnedSimpleCollectItem;
 	private final RetailQuestCatalog catalog;
-	private final RetailSimpleTalkTable simpleTalkTable;
 	private final RetailCombineTaskTable combineTaskTable;
 	private final RetailSimpleCollectItemTable simpleCollectItemTable;
 	private final RetailRecipeIndex recipeIndex;
@@ -132,9 +129,8 @@ public final class RetailQuestDriver {
 	private RetailQuestDriver(Set<Integer> retailOwnedSimpleHunt, Set<Integer> retailOwnedSimpleSerialHunt,
 			Set<Integer> retailOwnedSimpleUseItem, Set<Integer> retailOwnedSimpleItemPlay,
 			Set<Integer> retailOwnedDataDriven,
-			Set<Integer> retailOwnedSimpleTalk,
 			Set<Integer> retailOwnedCombineTask, Set<Integer> retailOwnedSimpleCollectItem,
-			RetailQuestCatalog catalog, RetailSimpleTalkTable simpleTalkTable,
+			RetailQuestCatalog catalog,
 			RetailCombineTaskTable combineTaskTable, RetailSimpleCollectItemTable simpleCollectItemTable,
 			RetailRecipeIndex recipeIndex,
 			RetailClientDialogExits clientDialogExits, RetailClientSummaryRows clientSummaryRows,
@@ -156,7 +152,6 @@ public final class RetailQuestDriver {
 		this.retailOwnedSimpleUseItem = retailOwnedSimpleUseItem;
 		this.retailOwnedSimpleItemPlay = retailOwnedSimpleItemPlay;
 		this.retailOwnedDataDriven = retailOwnedDataDriven;
-		this.retailOwnedSimpleTalk = retailOwnedSimpleTalk;
 		this.retailOwnedCombineTask = retailOwnedCombineTask;
 		this.retailOwnedSimpleCollectItem = retailOwnedSimpleCollectItem;
 		this.retailOwned = new TreeSet<>();
@@ -165,11 +160,9 @@ public final class RetailQuestDriver {
 		this.retailOwned.addAll(retailOwnedSimpleUseItem);
 		this.retailOwned.addAll(retailOwnedSimpleItemPlay);
 		this.retailOwned.addAll(retailOwnedDataDriven);
-		this.retailOwned.addAll(retailOwnedSimpleTalk);
 		this.retailOwned.addAll(retailOwnedCombineTask);
 		this.retailOwned.addAll(retailOwnedSimpleCollectItem);
 		this.catalog = catalog;
-		this.simpleTalkTable = simpleTalkTable;
 		this.combineTaskTable = combineTaskTable;
 		this.simpleCollectItemTable = simpleCollectItemTable;
 		this.recipeIndex = recipeIndex;
@@ -361,7 +354,6 @@ public final class RetailQuestDriver {
 		Set<Integer> retailOwnedUseItem = new TreeSet<>();
 		Set<Integer> retailOwnedItemPlay = new TreeSet<>();
 		Set<Integer> retailOwnedDataDriven = new TreeSet<>();
-		Set<Integer> retailOwnedTalk = new TreeSet<>();
 		Set<Integer> retailOwnedCombine = new TreeSet<>();
 		Set<Integer> retailOwnedCollectItem = new TreeSet<>();
 		Map<Integer, String> reasons = new HashMap<>();
@@ -384,9 +376,6 @@ public final class RetailQuestDriver {
 					retailOwnedItemPlay.add(questId);
 				} else if ("DataDriven".equals(parts[2])) {
 					retailOwnedDataDriven.add(questId);
-				} else if ("SimpleTalk".equals(parts[2])) {
-					// P3 原生表驱动切换：SimpleTalk 3152 任务由 SimpleTalkHandler 原生直驱，不再生成旧 IR 节点
-					// retailOwnedTalk.add(questId);
 				} else if ("CombineTask".equals(parts[2])) {
 					retailOwnedCombine.add(questId);
 				} else if ("SimpleCollectItem".equals(parts[2])) {
@@ -421,10 +410,6 @@ public final class RetailQuestDriver {
 		try (InputStream input = open(DATA_DRIVEN_TABLE)) {
 			dataDrivenTable = RetailDataDrivenTable.load(input);
 		}
-		RetailSimpleTalkTable simpleTalkTable;
-		try (InputStream input = open(SIMPLE_TALK_TABLE)) {
-			simpleTalkTable = RetailSimpleTalkTable.load(input);
-		}
 		RetailCombineTaskTable combineTaskTable;
 		try (InputStream input = open(COMBINE_TASK_TABLE)) {
 			combineTaskTable = RetailCombineTaskTable.load(input);
@@ -457,8 +442,8 @@ public final class RetailQuestDriver {
 			RetailQuestUseItemNpcs.fromIds(npcIndex.questUseItemNpcIds());
 		RetailItemNameIndex itemIndex = RetailItemNameIndex.loadItemTemplates();
 		return new RetailQuestDriver(retailOwnedHunt, retailOwnedSerialHunt, retailOwnedUseItem,
-			retailOwnedItemPlay, retailOwnedDataDriven, retailOwnedTalk, retailOwnedCombine, retailOwnedCollectItem,
-			new RetailQuestCatalog(table, combineTaskTable, npcIndex), simpleTalkTable, combineTaskTable,
+			retailOwnedItemPlay, retailOwnedDataDriven, retailOwnedCombine, retailOwnedCollectItem,
+			new RetailQuestCatalog(table, combineTaskTable, npcIndex), combineTaskTable,
 			simpleCollectItemTable, recipeIndex, clientDialogExits, clientSummaryRows, clientRewardNpcs,
 			clientAcceptNpcSets, clientHandinNpcSets, retailTable, npcIndex, itemIndex, randomRewardIds(),
 			nameIds(), serialHuntTable, clientHuntStages,
@@ -554,9 +539,6 @@ public final class RetailQuestDriver {
 	}
 
 	private Optional<CompiledQuestDefinition> compileByFamily(int questId) {
-		if (retailOwnedSimpleTalk.contains(questId)) {
-			return compileSimpleTalk(questId);
-		}
 		if (retailOwnedCombineTask.contains(questId)) {
 			return compileCombineTask(questId);
 		}
@@ -729,32 +711,6 @@ public final class RetailQuestDriver {
 				metadata, clientRewardNpcs, clientHandinNpcSets, questAreas, clientDialogExits,
 				clientSummaryRows, clientHandinPages,
 				interactionObjects, clientKillTargets, clientHuntProgressRows, enterAreaZoneResolution);
-			if (outcome.accepted()) {
-				return Optional.of(outcome.definition());
-			}
-			rejections.put(questId, outcome.rejectionCode());
-			return Optional.empty();
-		} catch (RuntimeException e) {
-			rejections.put(questId, "RUNTIME_FAILURE");
-			return Optional.empty();
-		}
-	}
-
-	/** SimpleTalk 行 → 定义（单步 / 交付检查形态；其余形态由编译器按稳定码拒绝）。 */
-	private Optional<CompiledQuestDefinition> compileSimpleTalk(int questId) {
-		try {
-			var row = simpleTalkTable.find(questId);
-			if (row.isEmpty()) {
-				rejections.put(questId, "RETAIL_ROW_MISSING");
-				return Optional.empty();
-			}
-			var metadata = retailMetadata(questId);
-			if (metadata == null) {
-				return Optional.empty();
-			}
-			var outcome = RetailSimpleTalkDefinitionCompiler.compile(row.orElseThrow(), npcIndex, itemIndex, metadata,
-				clientDialogExits, clientSummaryRows, clientRewardNpcs, interactionObjects, clientAcceptNpcSets,
-				clientHandinNpcSets);
 			if (outcome.accepted()) {
 				return Optional.of(outcome.definition());
 			}

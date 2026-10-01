@@ -342,7 +342,8 @@ public final class SimpleSerialHuntHandler {
 					return true;
 				} else if (dialogId == 1002 || dialogId == 20000) {
 					// 确认接取任务
-					if (QuestService.startQuest(env)) {
+					// 真端接取：条件判定 + 建档走 native 状态端口（不依赖 typed QuestTemplate）。
+					if (NativeQuestStartPort.instance().start(player, questId).started()) {
 						Set<Integer> briefingNpcs = briefingNpcsByQuestId.get(questId);
 						if (briefingNpcs != null && !briefingNpcs.isEmpty()) {
 							QuestState qs = player.getQuestStateList().getQuestState(questId);

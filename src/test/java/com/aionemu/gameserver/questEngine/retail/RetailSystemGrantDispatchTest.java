@@ -3,6 +3,7 @@ package com.aionemu.gameserver.questEngine.retail;
 import com.aionemu.gameserver.questEngine.definition.ProductionQuestDefinitions;
 import com.aionemu.gameserver.questEngine.definition.QuestCatalog;
 import com.aionemu.gameserver.questEngine.definition.RetiredQuestIds;
+import com.aionemu.gameserver.questEngine.tablelane.SimpleTalkHandler;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -33,8 +34,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class RetailSystemGrantDispatchTest {
 	/** 真端 SimpleCollectItem 表（类别哨兵来源）。 / Retail SimpleCollectItem table path. */
 	private static final String COLLECT_ITEM_TABLE = "/aion/data/static_data/quest/retail/Quest_SimpleCollectItem.xml";
-	/** 真端 SimpleTalk 表（类别哨兵来源）。 / Retail SimpleTalk table path. */
-	private static final String SIMPLE_TALK_TABLE = "/aion/data/static_data/quest/retail/Quest_SimpleTalk.xml";
 	/** 生产区域发放表（quest_area 绑定）。 / Production quest-area grant table. */
 	private static final String QUEST_AREAS = "/aion/definitions/compact/ai/ai-areas.xml";
 	/** 真端 SimpleHunt 表（类别哨兵来源）。 / Retail SimpleHunt table path. */
@@ -63,21 +62,15 @@ class RetailSystemGrantDispatchTest {
 		}
 	}
 
-	/** SimpleTalk 指定类别的哨兵行。 / SimpleTalk sentinel rows of the requested kind. */
-	private static List<Integer> simpleTalkIds(RetailGrantKind kind) throws IOException {
-		try (InputStream input = RetailSystemGrantDispatchTest.class.getResourceAsStream(SIMPLE_TALK_TABLE)) {
-			if (input == null) {
-				throw new IllegalStateException("missing resource " + SIMPLE_TALK_TABLE);
-			}
-			RetailSimpleTalkTable table = RetailSimpleTalkTable.load(input);
-			return table.questIds().stream()
-				.map(table::find)
-				.flatMap(Optional::stream)
-				.filter(entry -> entry.grantKind() == kind)
-				.map(RetailSimpleTalkTable.Entry::questId)
-				.sorted()
-				.toList();
-		}
+	/**
+	 * SimpleTalk 指定类别的哨兵行（P3 后取自原生车道：表行的接取名类别由 {@link SimpleTalkHandler}
+	 * 装载，旧 {@code RetailSimpleTalkTable} 已随其编译器同批删除）。
+	 * SimpleTalk sentinel rows of the requested kind, read from the native lane after P3 (the retired
+	 * {@code RetailSimpleTalkTable} was deleted together with its compiler).
+	 */
+	private static List<Integer> simpleTalkIds(RetailGrantKind kind) {
+		SimpleTalkHandler handler = SimpleTalkHandler.instance();
+		return handler.ownedQuestIds().stream().filter(questId -> handler.grantKind(questId) == kind).toList();
 	}
 
 
@@ -124,20 +117,50 @@ class RetailSystemGrantDispatchTest {
 		assertTrue(missing.isEmpty(), () -> "哨兵行缺 SystemGrant 边（分配后无法发放）: " + missing);
 	}
 
-	/** SimpleTalk 已退役（真端驱动）的 {@code _faction_} 行同样必须可发放。 / SimpleTalk wiring contract. */
+	/**
+	 * SimpleTalk 已切原生车道的 {@code _faction_} 行必须可发放：轮换池（{@code factionRotationCandidates}）
+	 * 收得进、发放入口（{@code isSystemGranted}）放得过，两轴缺一即「分配后永远接不了」。旧断言落在 typed
+	 * 目录的 {@code SystemGrant} 边上，该边随 P3 切换批退出生产视图，故改锚在原生车道的同两轴。
+	 * The faction-sentinel rows that moved to the native lane must stay both rotation-eligible and
+	 * grantable; the typed {@code SystemGrant} edge they used to assert on retired with the P3 switch.
+	 */
 	@Test
-	void retiredSimpleTalkFactionRowsCarrySystemGrantEdge() throws IOException {
-		QuestCatalog catalog = ProductionQuestDefinitions.catalog();
-		List<Integer> retired = simpleTalkIds(RetailGrantKind.FACTION).stream()
-			.filter(RetiredQuestIds::contains)
+	void nativeSimpleTalkFactionRowsAreRotationEligibleAndGrantable() {
+		SimpleTalkHandler handler = SimpleTalkHandler.instance();
+		List<Integer> routed = simpleTalkIds(RetailGrantKind.FACTION).stream()
+			.filter(handler::routes)
 			.toList();
-		assertTrue(retired.size() >= SIMPLE_TALK_FACTION_FLOOR,
-			() -> "已退役的 SimpleTalk _faction_ 行数异常（应 ≥" + SIMPLE_TALK_FACTION_FLOOR + "）: " + retired.size());
-		List<String> missing = retired.stream()
-			.filter(questId -> !RetailSystemGrantDispatcher.isSystemGranted(catalog, questId))
-			.map(questId -> questId + "=" + eventTypes(catalog, questId))
-			.toList();
-		assertTrue(missing.isEmpty(), () -> "已退役的哨兵行缺 SystemGrant 边（分配后无法发放）: " + missing);
+		// 真端表 98 行 `_faction_`，其中 4 行仍由 XML 定义拥有（owner 归 XML 车道）；路由 94 行里
+		// 71 行的 quest.xml npcfaction_name 落在本服 10 个守备队势力内（= 轮换宇宙），另 23 行是
+		// Mentee_Li/Mentee_Da（师徒系统），不在轮换宇宙，故不参与「轮换池收得进」这条断言。
+		// Of the retail table's 98 `_faction_` rows, 4 are still XML-owned; of the 94 routed rows 71
+		// bind to one of the ten guard factions (the rotation universe) while 23 carry the mentor-system
+		// names Mentee_Li/Mentee_Da and stay outside it.
+		List<Integer> rotationBound = routed.stream().filter(questId -> handler.factionId(questId) != 0).toList();
+		List<Integer> outsideRotation = routed.stream().filter(questId -> handler.factionId(questId) == 0).toList();
+		assertTrue(rotationBound.size() >= SIMPLE_TALK_FACTION_FLOOR,
+			() -> "轮换宇宙内的原生 SimpleTalk _faction_ 行数异常（应 ≥" + SIMPLE_TALK_FACTION_FLOOR
+				+ "）: " + rotationBound.size());
+		List<String> problems = new java.util.ArrayList<>();
+		for (int questId : rotationBound) {
+			int factionId = handler.factionId(questId);
+			if (!handler.factionRotationCandidates(factionId).contains(questId)) {
+				problems.add(questId + "=不在势力 " + factionId + " 的轮换池");
+			}
+			if (!handler.isSystemGranted(questId)) {
+				problems.add(questId + "=发放入口 isSystemGranted=false（分配后接不了）");
+			}
+		}
+		assertTrue(problems.isEmpty(), () -> "原生哨兵行的发放接线缺口: " + problems);
+		// 轮换宇宙外的行必须冻结为「任何势力池都收不进」——否则会被误当作可发放。
+		// Rows outside the rotation universe must stay out of every faction pool.
+		for (int questId : outsideRotation) {
+			for (int factionId = 1; factionId <= 20; factionId++) {
+				int poolId = factionId;
+				assertFalse(handler.factionRotationCandidates(factionId).contains(questId),
+					() -> "轮换宇宙外的行 " + questId + " 混进了势力 " + poolId + " 的池");
+			}
+		}
 	}
 
 	/** SimpleHunt 已退役（真端驱动）的 {@code _faction_} 行同样必须可发放。 / SimpleHunt wiring contract. */
@@ -156,7 +179,11 @@ class RetailSystemGrantDispatchTest {
 		assertTrue(missing.isEmpty(), () -> "已退役的哨兵行缺 SystemGrant 边（分配后无法发放）: " + missing);
 	}
 
-	/** {@code _challengetask_} 没有受理入口（本服只有完成回调），不得被误当系统发放。 / No grant path. */
+	/**
+	 * {@code _challengetask_} 没有受理入口（本服只有完成回调），不得被误当系统发放：typed 侧无
+	 * {@code SystemGrant} 边，原生侧 {@code isSystemGranted} 也必须为 false（发放入口不得接单）。
+	 * Challenge-task sentinels have no grant path on either lane.
+	 */
 	@Test
 	void challengeTaskSentinelRowsAreNotSystemGranted() throws IOException {
 		QuestCatalog catalog = ProductionQuestDefinitions.catalog();
@@ -166,6 +193,10 @@ class RetailSystemGrantDispatchTest {
 			.toList());
 		wronglyGranted.addAll(simpleHuntIds(RetailGrantKind.CHALLENGE_TASK).stream()
 			.filter(questId -> RetailSystemGrantDispatcher.isSystemGranted(catalog, questId))
+			.toList());
+		SimpleTalkHandler handler = SimpleTalkHandler.instance();
+		wronglyGranted.addAll(simpleTalkIds(RetailGrantKind.CHALLENGE_TASK).stream()
+			.filter(handler::isSystemGranted)
 			.toList());
 		assertTrue(wronglyGranted.isEmpty(),
 			() -> "挑战任务哨兵行不应带 SystemGrant 边（无受理入口）: " + wronglyGranted);

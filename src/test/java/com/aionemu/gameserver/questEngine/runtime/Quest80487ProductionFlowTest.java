@@ -20,6 +20,8 @@ import com.aionemu.gameserver.questEngine.definition.QuestEvent;
 import com.aionemu.gameserver.questEngine.definition.QuestMetadata;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
+import com.aionemu.gameserver.questEngine.retail.RetailGrantKind;
+import com.aionemu.gameserver.questEngine.tablelane.SimpleTalkHandler;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -50,20 +52,20 @@ class Quest80487ProductionFlowTest {
 	}
 
 	@Test
-	void levelUpDoesNotStartNpcOnlyQuestOrOpenMissingClientPage() throws Exception {
-		CompiledQuestDefinition definition = definition();
-		List<QuestAuditEvent> auditEvents = new ArrayList<>();
-		Player player = player();
-		QuestProductionDispatcher dispatcher = dispatcher(definition, player, auditEvents);
-
-		QuestEventRouter.DispatchResult result = dispatcher.dispatch(new QuestEvent.LevelUp(),
-			PLAYER_ID, QUEST_ID, QuestDispatchContract.BROADCAST);
-
-		assertNoFailure(result);
-		assertFalse(result.handled(), result::toString);
-		assertNull(player.getQuestStateList().getQuestState(QUEST_ID));
-		assertTrue(packetQueue(player.getClientConnection()).isEmpty());
-		assertTrue(auditEvents.isEmpty(), auditEvents::toString);
+	void npcOnlyGrowthRowHasNoNonDialogStartAxis() {
+		// P3 重锚（计划 §8.9）：80487 自 SimpleTalk 切换批起由 native 车道直驱，typed 定义退出生产视图。
+		// 旧断言（typed dispatcher 派发 LevelUp 必须 unhandled）的等价 native 事实：
+		// ① 该行已无 typed 定义，升级轴（唯一的自动接取通道）够不到它；
+		// ② native 车道只有「对话接取」与「系统发放」两条入口，而本行 grantKind=NPC ⇒ 无发放入口。
+		// P3 re-anchor (plan §8.9): 80487 moved to the native lane, so the level-up axis (the only
+		// auto-start path, carried by typed definitions) can no longer reach it, and the NPC-only row has
+		// no system-grant entry either.
+		SimpleTalkHandler handler = SimpleTalkHandler.instance();
+		assertTrue(handler.routes(QUEST_ID), "80487 必须由 native 车道路由");
+		assertEquals(RetailGrantKind.NPC, handler.grantKind(QUEST_ID), "真端 acquired_npc_name = event_Nebrith");
+		assertFalse(handler.isSystemGranted(QUEST_ID), "NPC 接取行不得有系统发放入口");
+		assertFalse(ProductionQuestDefinitions.catalog().findExecutable(QUEST_ID).isPresent(),
+			"切换后 typed 目录不得再持有 80487（双 owner 即双事实来源）");
 	}
 
 	@Test
@@ -91,18 +93,17 @@ class Quest80487ProductionFlowTest {
 
 	@Test
 	void growthQuestFamilyRestoresLegacyNpcStartRoutes() throws Exception {
+		SimpleTalkHandler handler = SimpleTalkHandler.instance();
 		for (int questId = 80487; questId <= 80538; questId++) {
-			var transitions = definition(questId).definition().transitions();
 			int npcId = questId <= 80512 ? 831031 : 831029;
-
-			assertFalse(transitions.stream().anyMatch(
-				transition -> transition.event() instanceof QuestEvent.LevelUp), "quest " + questId);
-			assertTrue(transitions.stream().anyMatch(transition ->
-				transition.event() instanceof QuestEvent.TalkToNpc talk
-					&& talk.npcId() == npcId
-					&& Integer.valueOf(1002).equals(talk.dialogId())
-					&& "unaccepted".equals(transition.sourceNode())
-					&& "started".equals(transition.targetNode())), "quest " + questId);
+			// 真端表行事实：52 行成长任务全部为 NPC 接取单步行（无发放/回收列、无交付门、无升级轴）。
+			// Retail row facts: all 52 growth rows are single-step NPC-accept rows with no item columns,
+			// no hand-in gate and no level-up axis.
+			assertTrue(handler.routes(questId), "quest " + questId + " 必须由 native 车道路由");
+			assertEquals(npcId, handler.acquireNpc(questId), "quest " + questId + " 接取 NPC");
+			assertEquals(npcId, handler.rewardNpc(questId), "quest " + questId + " 交付 NPC");
+			assertEquals(0, handler.relayCount(questId), "quest " + questId + " 是单步行");
+			assertEquals(RetailGrantKind.NPC, handler.grantKind(questId), "quest " + questId + " 是 NPC 接取行");
 		}
 	}
 
