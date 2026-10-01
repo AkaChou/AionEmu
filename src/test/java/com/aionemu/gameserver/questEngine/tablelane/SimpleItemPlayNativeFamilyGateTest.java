@@ -140,6 +140,83 @@ class SimpleItemPlayNativeFamilyGateTest {
 			"接取提交即发真端 give_item");
 	}
 
+	/**
+	 * P5D 步 2：中继链/步物品/页 **已接线**，但 owner 仍为 XML 保留的行**不上线**（接线 ≠ 激活，
+	 * 激活随 retention 重裁）。真端证据：交付节点 {@code slot 3 #K}（每 NPC 一节点）+ 行主 thunk 相机。
+	 */
+	@Test
+	void relayFaceIsWiredWhileXmlRetainedRowsStayUnrouted() {
+		assertEquals(0, handler.relayCount(PLAY_QUEST), "直交形行无中继（6 路由行全为直交形）");
+		assertEquals(2, handler.relayCount(18213), "18213 真端 slot 3 #0/#1 ⇒ 两步中继");
+		assertEquals(2, handler.relayCount(9623), "9623 两步中继");
+		assertEquals(1, handler.relayCount(50048), "50048 一步中继");
+		assertEquals(1352, SimpleItemPlayHandler.pageForStep(1), "真端步页 select2");
+		assertEquals(1693, SimpleItemPlayHandler.pageForStep(2), "真端步页 select3");
+		assertEquals(2034, SimpleItemPlayHandler.pageForStep(3), "真端步页 select4");
+
+		// 中继步序 = 表序（talk_npc1/2），绑定到各自 NPC 节点。
+		List<SimpleItemPlayHandler.RelayStep> relays = handler.relaysForQuest(18213);
+		assertEquals(2, relays.size(), "18213 两个中继步");
+		assertEquals(1, relays.get(0).step(), "第 1 步");
+		assertEquals(2, relays.get(1).step(), "第 2 步");
+		assertTrue(handler.relaysForNpc(relays.get(0).npcId()).stream()
+				.anyMatch(relay -> relay.questId() == 18213 && relay.step() == 1), "第 1 步绑定该 NPC");
+		assertTrue(handler.relaysForNpc(relays.get(1).npcId()).stream()
+				.anyMatch(relay -> relay.questId() == 18213 && relay.step() == 2), "第 2 步绑定该 NPC");
+
+		// 第 K 步发/扣（18213 真端 give_item2/remove_item2；第 1 步无声明）。
+		ItemStack stepTwoGive = handler.stepGiveItem(18213, 2);
+		ItemStack stepTwoRemove = handler.stepRemoveItem(18213, 2);
+		assertNotNull(stepTwoGive, "18213 第 2 步发放已解");
+		assertNotNull(stepTwoRemove, "18213 第 2 步扣除已解");
+		assertTrue(handler.stepGiveItem(18213, 1) == null, "18213 第 1 步无发放声明");
+
+		// 接线 ≠ 激活：XML 保留行（含中继名无解的 50048）不得路由。
+		assertFalse(handler.routes(18213), "XML 保留行不得路由（owner 未退役）");
+		assertFalse(handler.routes(50048), "中继名无解 + XML 保留 ⇒ 双保险 fail-closed");
+		assertFalse(handler.routes(9623), "不在生产的行不得路由");
+	}
+
+	/**
+	 * P5D 步 2：用道具推进必须过真端相机闸门（{@code step == relayCount}），并写回 {@code relayCount + 1}
+	 * （与旧编译器 {@code var0 == 0 → var0 = 1} 同形）。
+	 */
+	@Test
+	void itemUseIsGatedOnTheRetailCameraStep() {
+		SimpleItemPlayHandler local = handlerWith(NativeTalkFixture.RecordingInventory.EMPTY,
+			NativeReportRewardFlow.instance());
+		int playItem = local.playItemId(PLAY_QUEST);
+
+		// 步号 != relayCount(0)（异构/旧存档形态）⇒ 闸门拒绝，状态与步号零变更。
+		Player gatedPlayer = NativeTalkFixture.player();
+		NativeTalkFixture.add(gatedPlayer, PLAY_QUEST, QuestStatus.START, 1);
+		assertFalse(local.onItemUse(gatedPlayer, playItem), "步号不等于 relayCount ⇒ 用物不得推进");
+		QuestState gated = gatedPlayer.getQuestStateList().getQuestState(PLAY_QUEST);
+		assertEquals(QuestStatus.START, gated.getStatus(), "被闸门拒绝的任务状态不得变化");
+		assertEquals(1, gated.getQuestVars().getQuestVars(), "被闸门拒绝的任务步号不得变化");
+
+		Player player = NativeTalkFixture.player();
+		NativeTalkFixture.add(player, PLAY_QUEST, QuestStatus.START, 0);
+		assertTrue(local.onItemUse(player, playItem), "步号等于 relayCount ⇒ 用物推进");
+		QuestState advanced = player.getQuestStateList().getQuestState(PLAY_QUEST);
+		assertEquals(QuestStatus.REWARD, advanced.getStatus());
+		assertEquals(1, advanced.getQuestVars().getQuestVars(), "推进后步号 = relayCount + 1");
+	}
+
+	/** P5D 步 2：REWARD 态而步号仍为 0 的旧存档（P5 车道未写步号）在进入世界时自愈到 relayCount + 1。 */
+	@Test
+	void rewardSavesWithStepZeroAreHealedOnEnterWorld() {
+		SimpleItemPlayHandler local = handlerWith(NativeTalkFixture.RecordingInventory.EMPTY,
+			NativeReportRewardFlow.instance());
+		Player player = NativeTalkFixture.player();
+		NativeTalkFixture.add(player, PLAY_QUEST, QuestStatus.REWARD, 0);
+
+		assertTrue(local.onEnterWorld(player), "REWARD + 步号 0 的旧存档必须自愈");
+		assertEquals(1, player.getQuestStateList().getQuestState(PLAY_QUEST).getQuestVars().getQuestVars(),
+			"自愈步号 = relayCount + 1");
+		assertFalse(local.onEnterWorld(player), "已自愈后再次进入世界零副作用");
+	}
+
 	@Test
 	void usingThePlayItemAdvancesToRewardInOneStep() {
 		SimpleItemPlayHandler local = handlerWith(NativeTalkFixture.RecordingInventory.EMPTY,

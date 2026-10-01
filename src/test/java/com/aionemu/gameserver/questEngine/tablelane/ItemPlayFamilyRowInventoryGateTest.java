@@ -167,19 +167,18 @@ class ItemPlayFamilyRowInventoryGateTest {
 		return result;
 	}
 
-	/** 证据面：未解析名/符号集合不得随本批扩大（本批零行为变更）。 */
+	/**
+	 * 证据面**双向冻结**：未解析名集合必须逐元素等于下表（既不得新增——新面孔说明有名字解析回归或
+	 * 新接线面未解；也不得消失——已解必须显式改表）。P5D 步 2 起中继名也进入解析面，
+	 * {@code NPC_event_devasday_shugoseller}（50048 的 {@code talk_npc1}，静态数据里只有真端表命中）随之登记。
+	 */
 	@Test
-	void evidenceFacesStayFrozenForThisZeroSwitchBatch() {
+	void evidenceFacesStayFrozen() {
 		SimpleItemPlayHandler handler = SimpleItemPlayHandler.instance();
-		Set<String> expectedNames = new LinkedHashSet<>(Set.of(
+		Set<String> expectedNames = new TreeSet<>(Set.of(
 			"HousingManager_Da", "HousingManager_Li", "LDF5b_Greenhat_LD",
-			"NPC_event_devasday_shugo", "_faction_"));
-		Set<String> actual = new TreeSet<>(handler.unresolvedNames());
-		// 未退役/未接线行里的名字可能已可解：只冻结「已解不得回退」的一面。
-		for (String name : actual) {
-			assertTrue(expectedNames.contains(name) || expectedNames.contains(name),
-				"未解析名证据面不得出现新面孔: " + name);
-		}
+			"NPC_event_devasday_shugo", "NPC_event_devasday_shugoseller", "_faction_"));
+		assertEquals(expectedNames, new TreeSet<>(handler.unresolvedNames()), "未解析名证据面冻结");
 		assertTrue(handler.unresolvedChainQuestIds().isEmpty(), "本表内 con_quest 闭环不得回退");
 	}
 }

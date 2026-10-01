@@ -37,13 +37,19 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
  *       1002 提交（页 1003）/20000 提交（关窗）→ {@link NativeQuestStartPort} 建档，接取即发
  *       {@code give_item}（演出道具；6 行实测 {@code give_item == use_item_name}）；</li>
  *   <li><b>推进</b>：使用 {@code use_item_name} 道具一步推进 START → REWARD（真端 {@code UseItem} 演出，
- *       不代扣道具——回收在交付动作 1009，与退役编译器同刻）；</li>
+ *       不代扣道具——回收在交付动作 1009，与退役编译器同刻）；推进**带步数前置**（真端行主 thunk 即本行相机：
+ *       {@code if (status == 3 && step == relayCount) set(questId, relayCount + 1, 0)}）⇒ 步号不等于
+ *       {@code relayCount} 时零副作用；推进后步号 = {@code relayCount + 1}；</li>
+ *   <li><b>中继链</b>（真端交付节点 {@code slot 3 #K}，与 talk 族 cabb10 同轴）：声明 {@code talk_npcK} 的行
+ *       按表序在中继 NPC 上接 {@code 10000 + K - 1} 动作，只有 {@code 步号 == K - 1} 才推进到 K，并发/扣
+ *       第 K 步的 {@code give_itemK}/{@code remove_itemK}；步 K 的页 = {@code select(K+1)}(1352/1693/2034)；</li>
  *   <li><b>交付/预览</b>：REWARD 态交付 NPC 的 31/26/USE_OBJECT(-1) 重开奖励窗页 5；1009 回收演出道具
  *       并重开奖励窗；</li>
  *   <li><b>领奖</b>：{@link NativeReportRewardFlow}（真端 reward 列 → 共用结算体），完成页 1008。</li>
  * </ul>
- * 缺行/名字多义/道具未解/未退役的行一律不路由（fail-closed）；中继链（{@code talk_npc1/2}）、
- * 第 K 步发/扣与 {@code cutsceneid1} 只在未退役行上出现，本批不路由。
+ * 缺行/名字多义/道具未解/未退役的行一律不路由（fail-closed）。中继链与第 K 步发/扣自 P5D 步 2 起已接线
+ * （数据面 + 动作面 + 页 + 闸门），声明行仍因 **owner 未退役**（XML 保留裁定）而不上线；声明
+ * {@code cutsceneid1} 的行为触发列缺失型休眠（§10.3-#21），仍不路由。
  * <p>
  * Retail SimpleItemPlay native handler (plan §6.2 / §7 P5). The routed six rows accept at the retail
  * acquire npc (page-4 ask window, 1002/20000 commits granting the play item), advance by using the
@@ -63,6 +69,9 @@ public final class SimpleItemPlayHandler {
 	public static final int PAGE_REFUSED = QuestDialogPage.QUEST_REFUSE_1.id();
 	/** 完成页。 / The completion page. */
 	public static final int PAGE_COMPLETE = QuestDialogPage.QUEST_COMPLETE.id();
+
+	/** 中继步页（真端 SELECT2..4；客户端契约逐行已声明）。 / Relay step pages (retail SELECT2..4). */
+	private static final int[] RELAY_STEP_PAGES = {1352, 1693, 2034};
 
 	private static volatile SimpleItemPlayHandler instance;
 
@@ -93,6 +102,19 @@ public final class SimpleItemPlayHandler {
 	private final Set<String> unresolvedNames;
 	/** 未解析的物品符号（证据面）。 / Unresolved item symbols. */
 	private final Set<String> unresolvedItemSymbols;
+
+	/** 中继引用：任务 ID + 步号 (1..3) + 中继 NPC ID。 / Relay reference: quest id + step (1..3) + relay npc id. */
+	public record RelayStep(int questId, int step, int npcId) {
+	}
+
+	/** 中继 NPC ID → 该 NPC 上的全部中继步。 / Relay npc id → every relay step bound to it. */
+	private final Map<Integer, List<RelayStep>> relaysByNpcId;
+	/** 任务 ID → 中继步数（0 = 直交形）。 / Quest id → relay step count (0 = direct hand-in). */
+	private final Map<Integer, Integer> relayCountByQuestId;
+	/** 任务 ID → 第 K 步的发放（位置保留）。 / Quest id → step grants (positions kept). */
+	private final Map<Integer, List<ItemStack>> stepGiveByQuestId;
+	/** 任务 ID → 第 K 步的扣除（位置保留）。 / Quest id → step removals (positions kept). */
+	private final Map<Integer, List<ItemStack>> stepRemoveByQuestId;
 
 	/** 任务 ID → 链式接取窗的下一环（真端交付节点 0x1e 槽的 {@code con_quest}）。 / Quest id → the next quest of the chain window. */
 	private final Map<Integer, Integer> conQuestByQuestId;
@@ -131,6 +153,10 @@ public final class SimpleItemPlayHandler {
 		Set<String> unresolved = new TreeSet<>();
 		Set<String> unresolvedItems = new TreeSet<>();
 
+		Map<Integer, List<RelayStep>> relays = new LinkedHashMap<>();
+		Map<Integer, Integer> relayCounts = new LinkedHashMap<>();
+		Map<Integer, List<ItemStack>> stepGives = new LinkedHashMap<>();
+		Map<Integer, List<ItemStack>> stepRemoves = new LinkedHashMap<>();
 		Map<Integer, Integer> conQuests = new LinkedHashMap<>();
 		Set<Integer> unresolvedChain = new TreeSet<>();
 
@@ -173,13 +199,47 @@ public final class SimpleItemPlayHandler {
 				playItems.put(questId, playItem.itemId());
 			}
 
-			// 中继链与第 K 步发/扣：本批 6 行均未声明；声明了却不能全解的行不可路由（不半接线）。
-			// The relay chain and step give/remove columns: none of the routed rows declares them; a row
-			// that declares them without a full resolution stays unroutable instead of half-wired.
-			boolean declaresStepItems = row.stepGiveItems().stream().anyMatch(SimpleItemPlayHandler::declared)
+			// 中继链（真端交付节点 slot 3 #K）：按表序解析中继 NPC；步页/动作/发扣与 look 族同轴。
+			// The relay chain (retail slot 3 #K): relay npcs resolve in table order, same axis as the talk lane.
+			List<String> talkNpcs = row.talkNpcNames();
+			relayCounts.put(questId, talkNpcs.size());
+			for (int index = 0; index < talkNpcs.size(); index++) {
+				NativeNpcNameResolver.Match relayMatch = nameResolver.resolve(talkNpcs.get(index));
+				if (relayMatch.resolution() != NativeNpcNameResolver.Resolution.UNIQUE) {
+					unresolved.add(talkNpcs.get(index));
+					resolvable = false;
+					continue;
+				}
+				int relayNpcId = relayMatch.npcIds().getFirst();
+				relays.computeIfAbsent(relayNpcId, key -> new ArrayList<>())
+					.add(new RelayStep(questId, index + 1, relayNpcId));
+			}
+
+			// 第 K 步发/扣（位置保留）：声明了却解析不出的行不可路由（不半接线）。
+			// Step-K give/remove keep positions; a declared symbol that does not resolve keeps the row unroutable.
+			List<ItemStack> stepGive = parseStepSymbols(row.stepGiveItems(), questId, unresolvedItems);
+			List<ItemStack> stepRemove = parseStepSymbols(row.stepRemoveItems(), questId, unresolvedItems);
+			if (stepGive.stream().anyMatch(java.util.Objects::nonNull)) {
+				stepGives.put(questId, stepGive);
+			}
+			if (stepRemove.stream().anyMatch(java.util.Objects::nonNull)) {
+				stepRemoves.put(questId, stepRemove);
+			}
+			boolean stepItemsDeclared = row.stepGiveItems().stream().anyMatch(SimpleItemPlayHandler::declared)
 				|| row.stepRemoveItems().stream().anyMatch(SimpleItemPlayHandler::declared);
-			if (!row.talkNpcNames().isEmpty() || declaresStepItems
-					|| row.cutsceneId() != null || row.itemCheck()) {
+			boolean stepItemsResolved = (row.stepGiveItems().size() == stepGive.size()
+					&& java.util.stream.IntStream.range(0, stepGive.size())
+						.allMatch(i -> !declared(row.stepGiveItems().get(i)) || stepGive.get(i) != null))
+				&& (row.stepRemoveItems().size() == stepRemove.size()
+					&& java.util.stream.IntStream.range(0, stepRemove.size())
+						.allMatch(i -> !declared(row.stepRemoveItems().get(i)) || stepRemove.get(i) != null));
+			if (stepItemsDeclared && !stepItemsResolved) {
+				resolvable = false;
+			}
+
+			// 过场（真端 0x35 槽）与交付门：触发列在本表里不存在（§10.3-#21）⇒ 声明行保持 fail-closed。
+			// The cutscene slot 0x35 has no trigger column in this table (§10.3-#21): declaring rows fail closed.
+			if (row.cutsceneId() != null || row.itemCheck()) {
 				resolvable = false;
 			}
 
@@ -228,6 +288,10 @@ public final class SimpleItemPlayHandler {
 			}
 		}
 
+		this.relaysByNpcId = Collections.unmodifiableMap(relays);
+		this.relayCountByQuestId = Collections.unmodifiableMap(relayCounts);
+		this.stepGiveByQuestId = Collections.unmodifiableMap(stepGives);
+		this.stepRemoveByQuestId = Collections.unmodifiableMap(stepRemoves);
 		this.acquireNpcByQuestId = Collections.unmodifiableMap(acquires);
 		this.rewardNpcsByQuestId = Collections.unmodifiableMap(rewards);
 		this.acceptGiveByQuestId = Collections.unmodifiableMap(acceptGives);
@@ -337,6 +401,55 @@ public final class SimpleItemPlayHandler {
 		return advanceQuestIdsByItemId.getOrDefault(itemId, List.of());
 	}
 
+	/** 任务的中继步数（0 = 直交形）。 / Relay step count (0 = direct hand-in). */
+	public int relayCount(int questId) {
+		return relayCountByQuestId.getOrDefault(questId, 0);
+	}
+
+	/** 指定 NPC 上的中继步（无则空表）。 / Relay steps bound to the npc. */
+	public List<RelayStep> relaysForNpc(int npcId) {
+		return relaysByNpcId.getOrDefault(npcId, List.of());
+	}
+
+	/** 指定任务的按序中继步（证据/门禁用；无则空表）。 / The quest's relay steps in table order. */
+	public List<RelayStep> relaysForQuest(int questId) {
+		List<RelayStep> steps = new ArrayList<>();
+		for (List<RelayStep> relayed : relaysByNpcId.values()) {
+			for (RelayStep relay : relayed) {
+				if (relay.questId() == questId) {
+					steps.add(relay);
+				}
+			}
+		}
+		steps.sort(java.util.Comparator.comparingInt(RelayStep::step));
+		return Collections.unmodifiableList(steps);
+	}
+
+	/** 第 K 中继步（K=1..3）的发放；无则 null。 / The step-K grant, or null. */
+	public ItemStack stepGiveItem(int questId, int step) {
+		return stepAt(stepGiveByQuestId.get(questId), step);
+	}
+
+	/** 第 K 中继步（K=1..3）的扣除；无则 null。 / The step-K removal, or null. */
+	public ItemStack stepRemoveItem(int questId, int step) {
+		return stepAt(stepRemoveByQuestId.get(questId), step);
+	}
+
+	/** 中继步对应的页 id（真端 SELECT2..4）。 / The page id of a relay step (retail SELECT2..4). */
+	public static int pageForStep(int step) {
+		if (step < 1 || step > RELAY_STEP_PAGES.length) {
+			throw new IllegalArgumentException("relay step out of range: " + step);
+		}
+		return RELAY_STEP_PAGES[step - 1];
+	}
+
+	private static ItemStack stepAt(List<ItemStack> stacks, int step) {
+		if (stacks == null || step < 1 || step > stacks.size()) {
+			return null;
+		}
+		return stacks.get(step - 1);
+	}
+
 	public NativeQuestTableLoader.SimpleItemPlayRow requireRow(int questId) {
 		return tableLoader.requireItemPlay(questId);
 	}
@@ -364,14 +477,26 @@ public final class SimpleItemPlayHandler {
 				engine.registerQuestNpc(npcId).addOnTalkEvent(entry.getKey());
 			}
 		}
+		for (Map.Entry<Integer, List<RelayStep>> entry : relaysByNpcId.entrySet()) {
+			for (RelayStep relay : entry.getValue()) {
+				if (routedQuestIds.contains(relay.questId())) {
+					engine.registerQuestNpc(entry.getKey()).addOnTalkEvent(relay.questId());
+				}
+			}
+		}
 	}
 
 	/**
-	 * 用物演出推进（真端 {@code UseItem}）：START 态使用该行声明的道具一步进 REWARD。
-	 * 未接取/待领奖时零副作用（本族接取走 NPC 对话，不由用物开窗）。
+	 * 用物演出推进（真端 {@code UseItem}）：START 态且**步号等于 {@code relayCount}** 时使用该行声明的道具，
+	 * 一步进 REWARD 并把步号置为 {@code relayCount + 1}。
 	 * <p>
-	 * The retail item-play advance: using the declared item in START flips the row to REWARD in one
-	 * step; other states are untouched (this family accepts at an npc, never through the item).
+	 * 闸门来自真端行主 thunk（本行相机）：{@code if (status == 3 && step == relayCount) set(questId,
+	 * relayCount + 1, 0)}——43 行里 41 行满足该式（唯一无相机的 80255/80256 已在计划 §10.3-#16① 冻结）；
+	 * 旧编译器（真端+客户端派生契约）同形：{@code var0 == 0 → var0 = 1} 才 started→reward。步号不足
+	 * （中继没走完）与步号越界都**零副作用**。
+	 * <p>
+	 * The retail advance requires {@code step == relayCount} (the row's own camera gate), then flips to
+	 * REWARD with {@code step = relayCount + 1}; other states and out-of-step rows are untouched.
 	 */
 	public boolean onItemUse(Player player, int itemId) {
 		if (player == null || player.getQuestStateList() == null || itemId <= 0) {
@@ -387,6 +512,11 @@ public final class SimpleItemPlayHandler {
 			if (state == null || state.getStatus() != QuestStatus.START) {
 				continue;
 			}
+			int relayCount = relayCount(questId);
+			if (state.getQuestVars().getQuestVars() != relayCount) {
+				continue;
+			}
+			state.getQuestVars().setVar(relayCount + 1);
 			state.setStatus(QuestStatus.REWARD);
 			state.setPersistentState(PersistentState.UPDATE_REQUIRED);
 			PacketSendUtility.sendPacket(player,
@@ -394,6 +524,33 @@ public final class SimpleItemPlayHandler {
 			handled = true;
 		}
 		return handled;
+	}
+
+	/**
+	 * 旧存档自愈（真端相机步号的 native 等价物）：REWARD 态而步号仍为 0 的行补到 {@code relayCount + 1}
+	 * ——P5 起的 native 车道推进时未写步号，旧存档会停在 0（老 IR 车道写的是 1）。
+	 * <p>
+	 * Enter-world heal: a REWARD row whose step is still 0 (saves written by the P5 lane, which did not
+	 * record the step) is repaired to {@code relayCount + 1}; other values are left untouched.
+	 */
+	public boolean onEnterWorld(Player player) {
+		if (player == null || player.getQuestStateList() == null) {
+			return false;
+		}
+		boolean healed = false;
+		for (int questId : routedQuestIds) {
+			QuestState state = player.getQuestStateList().getQuestState(questId);
+			if (state == null || state.getStatus() != QuestStatus.REWARD
+					|| state.getQuestVars().getQuestVars() != 0) {
+				continue;
+			}
+			int healedVars = relayCount(questId) + 1;
+			state.getQuestVars().setVar(healedVars);
+			state.setPersistentState(PersistentState.UPDATE_REQUIRED);
+			PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(questId, QuestStatus.REWARD, healedVars));
+			healed = true;
+		}
+		return healed;
 	}
 
 	/**
@@ -453,9 +610,45 @@ public final class SimpleItemPlayHandler {
 			return false;
 		}
 
-		// START：推进事件是用物（真端演出），对话不推进；未满条件时给进行中页。
-		// START: the advance event is the item use; a dialog never advances the row.
+		// START：① 中继步（真端交付节点 slot 3 #K 与 cabb10 同轴）只推进「当前步」，乱序/重复零副作用，
+		//        步进即发/扣该步物品，步页 = select(K+1)；② 最终推进事件是用物（真端相机，带步号闸门）；
+		//        ③ 交付 NPC 处未满足时给进行中页。
+		// START: (1) the relay step (retail slot 3 #K, same axis as cabb10) advances only the current step,
+		// issuing/removing that step's items and serving select(K+1); (2) the final advance is the gated
+		// item use; (3) the hand-in npc serves the in-progress page until the gate passes.
 		if (status == QuestStatus.START) {
+			int vars = state.getQuestVars().getQuestVars();
+			for (RelayStep relay : relaysForNpc(npcId)) {
+				if (relay.questId() != questId) {
+					continue;
+				}
+				int step = relay.step();
+				int action = 10000 + step - 1;
+				if (dialogId == action) {
+					if (vars == step - 1) {
+						state.getQuestVars().setVar(step);
+						state.setPersistentState(PersistentState.UPDATE_REQUIRED);
+						PacketSendUtility.sendPacket(player,
+							new SM_QUEST_ACTION(questId, QuestStatus.START, step));
+						ItemStack stepGive = stepGiveItem(questId, step);
+						if (stepGive != null) {
+							inventory.give(player, stepGive.itemId(), stepGive.count());
+						}
+						ItemStack stepRemove = stepRemoveItem(questId, step);
+						if (stepRemove != null) {
+							inventory.remove(player, stepRemove.itemId(), stepRemove.count());
+						}
+					}
+					int page = vars == step - 1 ? pageForStep(step) : pageForStep(Math.max(1, vars));
+					PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(objectId, page, questId));
+					return true;
+				}
+				if (dialogId == 31 || dialogId == 26 || dialogId == -1) {
+					int page = vars >= step ? pageForStep(step) : PAGE_IN_PROGRESS;
+					PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(objectId, page, questId));
+					return true;
+				}
+			}
 			if (rewardNpcsByQuestId.getOrDefault(questId, List.of()).contains(npcId)
 					&& (dialogId == 31 || dialogId == 26 || dialogId == -1)) {
 				PacketSendUtility.sendPacket(player,
@@ -551,6 +744,15 @@ public final class SimpleItemPlayHandler {
 
 	private ItemStack parseSymbol(String symbol, int questId, Set<String> unresolved) {
 		return NativeItemSymbols.parse(symbol, questId, itemIndex, unresolved);
+	}
+
+	/** 第 K 步发/扣的位置表（缺位保留为 null）。 / The positional step give/remove table (gaps kept as null). */
+	private List<ItemStack> parseStepSymbols(List<String> symbols, int questId, Set<String> unresolved) {
+		List<ItemStack> parsed = new ArrayList<>(symbols.size());
+		for (String symbol : symbols) {
+			parsed.add(parseSymbol(symbol, questId, unresolved));
+		}
+		return Collections.unmodifiableList(parsed);
 	}
 
 	/** 真端 {@code max_repeat_count} > 1 ⇒ 可重复（COMPLETE 态可再次开窗）。 / Repeatable per retail max_repeat_count. */

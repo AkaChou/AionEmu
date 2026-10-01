@@ -793,6 +793,11 @@ public class QuestEngine implements GameEngine {
 			} catch (RuntimeException ignored) {
 				// Native enter-world heal is best-effort.
 			}
+			try {
+				SimpleItemPlayHandler.instance().onEnterWorld(player);
+			} catch (RuntimeException ignored) {
+				// Native enter-world heal is best-effort.
+			}
 			if (player != null) {
 				try {
 					typed.dispatch(new QuestEvent.EnterWorld(), player.getObjectId(), 0,
