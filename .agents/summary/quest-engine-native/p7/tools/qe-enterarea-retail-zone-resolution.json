@@ -1,0 +1,121 @@
+{
+  "switch_set_aliases": 120,
+  "progress_axis": {
+    "total": 105,
+    "resolved": 91,
+    "no_retail_area": 14
+  },
+  "acquire_axis": {
+    "total": 15,
+    "resolved": 14,
+    "no_retail_area": 1
+  },
+  "resolved": 105,
+  "no_retail_area": 15,
+  "kinds": {
+    "questscript_area": 14,
+    "sensory_area": 91
+  },
+  "rules": {
+    "R1_SAME_NAME": 101,
+    "R3_QUESTSCRIPT_QUEST_BINDING": 4
+  },
+  "world_dirs": {
+    "ab1": 4,
+    "df5": 12,
+    "df6": 24,
+    "DF_Tower": 1,
+    "IDAb1_Ere": 5,
+    "IDAbRe_Core_03": 2,
+    "iddf2a_adma": 1,
+    "IDEternity_01": 1,
+    "IDEternity_02": 15,
+    "IDEternity_03": 11,
+    "IDEternity_War": 9,
+    "IDF6_LF1": 1,
+    "IDInfinity": 2,
+    "IDLDF5_Fortress_War": 1,
+    "idlf2a_lab": 1,
+    "LF4_M": 1,
+    "LF5": 10,
+    "LF6": 3,
+    "LF_Tower": 1
+  },
+  "cells_total": 134,
+  "progress_cells_total": 120,
+  "already_registered_same_name": 0,
+  "binding_mismatch": [],
+  "legacy_cross_check_mismatch": [
+    "DF5_SensoryArea_Q25084",
+    "DF6_SensoryArea_Q15613a",
+    "DF6_SensoryArea_Q25551_AtoB",
+    "DF6_SensoryArea_Q25551_BtoA",
+    "DF6_SensoryArea_Q25552_AtoD",
+    "DF6_SensoryArea_Q25552_DtoA",
+    "DF6_SensoryArea_Q25553_AtoF",
+    "DF6_SensoryArea_Q25553_FtoA",
+    "DF6_SensoryArea_Q25554_AtoH",
+    "DF6_SensoryArea_Q25554_HtoA",
+    "DF6_SensoryArea_Q25601a_Dynamic_Env",
+    "DF6_SensoryArea_Q25602a_Dynamic_Env",
+    "DF6_SensoryArea_Q25604a_Dynamic_Env",
+    "DF6_SensoryArea_Q25605a_Dynamic_Env",
+    "DF6_SensoryArea_Q25606b_Dynamic_Env",
+    "DF6_SensoryArea_Q25608a_Dynamic_Env",
+    "DF_Tower_SensoryArea_Q26800",
+    "LF5_SensoryArea_Q10503",
+    "LF5_SensoryArea_Q10506",
+    "LF5_SensoryArea_Q10507",
+    "LF_Tower_SensoryArea_Q16800"
+  ],
+  "twin_evidence_present": [
+    "LF6_SensoryArea_Q15551_AtoB",
+    "LF6_SensoryArea_Q15551_BtoA",
+    "LF6_SensoryArea_Q15552_AtoD",
+    "LF6_SensoryArea_Q15552_DtoA",
+    "LF6_SensoryArea_Q15553_AtoF",
+    "LF6_SensoryArea_Q15553_FtoA",
+    "LF6_SensoryArea_Q15554_AtoH",
+    "LF6_SensoryArea_Q15554_HtoA",
+    "LF6_SensoryArea_Q15601a_Dynamic_Env",
+    "LF6_SensoryArea_Q15602a_Dynamic_Env",
+    "LF6_SensoryArea_Q15604a_Dynamic_Env",
+    "LF6_SensoryArea_Q15608a_Dynamic_Env"
+  ],
+  "progress_missing_aliases": [
+    "LF6_SensoryArea_Q15551_AtoB",
+    "LF6_SensoryArea_Q15551_BtoA",
+    "LF6_SensoryArea_Q15552_AtoD",
+    "LF6_SensoryArea_Q15552_DtoA",
+    "LF6_SensoryArea_Q15553_AtoF",
+    "LF6_SensoryArea_Q15553_FtoA",
+    "LF6_SensoryArea_Q15554_AtoH",
+    "LF6_SensoryArea_Q15554_HtoA",
+    "LF6_SensoryArea_Q15601a_Dynamic_Env",
+    "LF6_SensoryArea_Q15601b",
+    "LF6_SensoryArea_Q15602a_Dynamic_Env",
+    "LF6_SensoryArea_Q15604a_Dynamic_Env",
+    "LF6_SensoryArea_Q15605a_Named",
+    "LF6_SensoryArea_Q15608a_Dynamic_Env"
+  ],
+  "acquire_missing_aliases": [
+    "DF6_QuestArea_Q25674"
+  ],
+  "missing_aliases": [
+    "DF6_QuestArea_Q25674",
+    "LF6_SensoryArea_Q15551_AtoB",
+    "LF6_SensoryArea_Q15551_BtoA",
+    "LF6_SensoryArea_Q15552_AtoD",
+    "LF6_SensoryArea_Q15552_DtoA",
+    "LF6_SensoryArea_Q15553_AtoF",
+    "LF6_SensoryArea_Q15553_FtoA",
+    "LF6_SensoryArea_Q15554_AtoH",
+    "LF6_SensoryArea_Q15554_HtoA",
+    "LF6_SensoryArea_Q15601a_Dynamic_Env",
+    "LF6_SensoryArea_Q15601b",
+    "LF6_SensoryArea_Q15602a_Dynamic_Env",
+    "LF6_SensoryArea_Q15604a_Dynamic_Env",
+    "LF6_SensoryArea_Q15605a_Named",
+    "LF6_SensoryArea_Q15608a_Dynamic_Env"
+  ]
+}

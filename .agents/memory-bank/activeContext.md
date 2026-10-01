@@ -4,7 +4,7 @@
 
 记录当前正在推进的任务与未解决的问题焦点。跨 Agent 接力时，先读此文件了解当前状态。
 
-> last_updated: 2026-10-01
+> last_updated: 2026-10-02
 > status: ACTIVE
 > scope: current checkout only
 > owner: shared agents
@@ -20,6 +20,7 @@
   - **P7 步 1 已落地（DD 原生 handler 契约冻结，2026-10-01，零行为变更）**：1467 行切换集按「真端 8 类 progress handler + 6 类接取 kind」逐行复算成契约矩阵并冻成六条不变量（接取直方图 / 8 类词汇闭合 / 每类步数 / 步列词汇表 `valueN_progress_` 列号+次数 / 6 位布局：每步 ≤4 组子计数且计数 ≤63（唯一例外 80817）/ 逐行矩阵 SHA-256 `3d7b762e…f77d` + 生产装载器逐行一致）；门 `DataDrivenNativeContractGateTest` 6/6；**§10.3-#22 裁定**：typed 车道入口页余面不修旧 IR、随 P7 步 2 车道删除；模式卡 `QE-126`。**下一批 = P7 步 2**：原生 DD 运行时（含 `6/9/10` 列与 `5` 的 hunt/talk 生成形逐列坐实）+ 1467 行原子切换 + 同批删 `RetailDataDriven*Compiler` / `RetailEnterAreaZoneResolution` / `RetailQuestAiNameGroups` 读取。见 `p7/P7-STEP1-REPORT.zh-CN.md`。**步 2 前置已坐实（2026-10-01）**：DD 步列 = 「类别载荷（`FUN_180c4b980`）+ 通用附加动作（`FUN_180c49610` = `LoadExtraAction`：发扣/传送/过场/生成/延迟/消息/进副本/定时器）」，真端 guard 只放行 kind 2/3/4/6/7/8/9/10 且 Hunt 只 4/5 ⇒ CollectItem/PvP 无附加动作面；实测 1467 行列面与真端逐列相符（0 例外）；门内补语义闭合断言（7/7）；模式卡 `QE-127`。
 **步 2 步 a 已落地（2026-10-01，零行为变更）**：DD 原生算术核心 `tablelane/DataDrivenProgress`（6 位步号 + 组槽、无掩码自增保留饱和进位、全组槽达标才收口、末步 = `SetQuestSuccess` 语义、守卫异常零动作；80817 的 100 杀仍不可完成 = 原样复刻），门 `DataDrivenProgressTest` 8/8；模式卡 `QE-128`。
 **步 2 步 b 已落地（2026-10-01，零行为变更）**：原生行模型 `tablelane/DataDrivenQuestTable`（每步 = 步号 + 类别 kind + 全部非空列 + 附加动作分类；装载即 fail-closed：未知类别/缺载荷/非法列组合抛稳定码），门 `DataDrivenQuestTableGateTest` 4/4（与旧视图 2492 行逐行一致 + 切换集 1467 行类别步数冻结 + 附加动作分类 = 真端列裁定 + 非法形负例）；模式卡 `QE-129`。
+**步 2 步 c 已落地（2026-10-01，零行为变更）**：DD `EnterArea` 轴按真端进区 handler `FUN_180c47bf0` 的名哈希逐值比对坐实绑定 = **同名区**（零换算），切换集 120 别名逐行裁定 = `progress` 105（91 解析 + 14 真端无定义）/ `acquire` 15（14 + 1）；几何逐字入仓 `zones_retail_enterarea.xml`（91 区 / 120 胞），端口 `tablelane/NativeEnterAreaPort` 恒等解析 + fail-closed；门 `DataDrivenEnterAreaPortGateTest` 6/6、族门 + tablelane 170/170、聚焦套件 1703 / 161F+137E / 105 类（ADDED 0 / REMOVED 0）；**新登记 §10.3-#23**（LF6 侧 14 条 progress 别名真端无区定义，DF6 镜像有几何、客户端只有 SP 位点 ⇒ 冻结不猜）；见 `p7/P7-STEP2C-REPORT.zh-CN.md`、模式卡 QE-130。
   - Quest 任务流转、状态机与 NPC 交互（Taloc's Hollow 副本实例脚本、Condition Spawns、Retail AI 判定）。
   - **新焦点（待客户端观测/分批处置）**：领奖 packed step 投影全库审计（`QE-045`）发现 490 个旧 handler 领奖入口里 106 个 `MISMATCH_PROJECTION`、32 个 `MISSING_RECOVERY_EDGE` 尚未处置；本轮只修已验收的 15300/25300。下一步先用一次客户端观测确定「reward 投影 = 旧 handler pre-step」与「= 客户端 quest_summary 报告行」两条读数的取舍，再按批（优先 154xx redemption_landing 家族与 15301/25301 姊妹链）推进；脚本与清单在 `.agents/summary/quest-reward-projection-audit/2026-09-20-legacy-reward-projection-audit.zh-CN.md`。
   - **待一次客户端观测（QE-045 × QE-051 正面冲突，批次 13 已挂账）**：13965/23965（enter-zone 置 REWARD）与 15674/25674（CHECK_COLLECTED_ITEMS 置 REWARD）的客户端 quest_summary 都是 2 行、行 1 = 与领奖 NPC (835217/835220/806114/806116) 对话，按 QE-051 应有行 1 状态，但按 QE-045 必须保持 `reward var0=0` + `REWARD/var0=1` 恢复边（f6aff952a 基线，LegacyRewardStepProjectionRegressionTest 20 例硬锁）。取舍只需一次实机观测：**在 REWARD 态（可开奖励窗口时）任务书高亮的是行 0 还是行 1**；显示行 1 → 按客户端证据重定这 4 个的 QE-045 基线（XML + 锁测试 + 审计 QE045_LOCKED 同改）；显示行 0 → 保留现状并把“末行不可达”记为零售原样。观测前禁止批量翻动 20 个锁任务。
