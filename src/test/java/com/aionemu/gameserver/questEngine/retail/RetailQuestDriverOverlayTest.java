@@ -70,7 +70,8 @@ class RetailQuestDriverOverlayTest {
 			|| com.aionemu.gameserver.questEngine.tablelane.SimpleTalkHandler.instance().owns(id)
 			|| com.aionemu.gameserver.questEngine.tablelane.SimpleCollectItemHandler.instance().owns(id)
 			|| com.aionemu.gameserver.questEngine.tablelane.SimpleUseItemHandler.instance().owns(id)
-			|| com.aionemu.gameserver.questEngine.tablelane.SimpleItemPlayHandler.instance().owns(id)).count();
+			|| com.aionemu.gameserver.questEngine.tablelane.SimpleItemPlayHandler.instance().owns(id)
+			|| com.aionemu.gameserver.questEngine.tablelane.SimpleCombineTaskHandler.instance().owns(id)).count();
 		assertEquals(6224, production.entries().size() + migratedNativeCount);
 	}
 
@@ -87,6 +88,7 @@ class RetailQuestDriverOverlayTest {
 			.filter(id -> !com.aionemu.gameserver.questEngine.tablelane.SimpleCollectItemHandler.instance().owns(id))
 			.filter(id -> !com.aionemu.gameserver.questEngine.tablelane.SimpleUseItemHandler.instance().owns(id))
 			.filter(id -> !com.aionemu.gameserver.questEngine.tablelane.SimpleItemPlayHandler.instance().owns(id))
+			.filter(id -> !com.aionemu.gameserver.questEngine.tablelane.SimpleCombineTaskHandler.instance().owns(id))
 			.findFirst().orElseThrow();
 		QuestCatalog xmlCatalog = com.aionemu.gameserver.questEngine.definition.ImmutableQuestCatalog.fromEntries(
 			production.entries().stream().filter(entry -> !retailIds.contains(entry.id())).toList());
@@ -110,7 +112,8 @@ class RetailQuestDriverOverlayTest {
 			|| com.aionemu.gameserver.questEngine.tablelane.SimpleTalkHandler.instance().owns(id)
 			|| com.aionemu.gameserver.questEngine.tablelane.SimpleCollectItemHandler.instance().owns(id)
 			|| com.aionemu.gameserver.questEngine.tablelane.SimpleUseItemHandler.instance().owns(id)
-			|| com.aionemu.gameserver.questEngine.tablelane.SimpleItemPlayHandler.instance().owns(id)).count();
+			|| com.aionemu.gameserver.questEngine.tablelane.SimpleItemPlayHandler.instance().owns(id)
+			|| com.aionemu.gameserver.questEngine.tablelane.SimpleCombineTaskHandler.instance().owns(id)).count();
 		assertEquals(retailOwnedIds().size(), driver.retailOwnedCount() + migratedNativeCount,
 			"driver must include every retail-owned manifest row");
 		assertEquals(xmlCatalog.entries().size(), overlay.entries().size(),

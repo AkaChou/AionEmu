@@ -3,6 +3,7 @@ package com.aionemu.gameserver.questEngine.definition;
 import com.aionemu.gameserver.questEngine.retail.RetailItemNameIndex;
 import com.aionemu.gameserver.questEngine.tablelane.NativeQuestXmlTable;
 import com.aionemu.gameserver.questEngine.tablelane.SimpleCollectItemHandler;
+import com.aionemu.gameserver.questEngine.tablelane.SimpleCombineTaskHandler;
 import com.aionemu.gameserver.questEngine.tablelane.SimpleItemPlayHandler;
 import com.aionemu.gameserver.questEngine.tablelane.SimpleHuntHandler;
 import com.aionemu.gameserver.questEngine.tablelane.SimpleSerialHuntHandler;
@@ -322,7 +323,8 @@ class QuestRewardItemGateTest {
 			|| SimpleSerialHuntHandler.instance().routes(questId)
 			|| SimpleCollectItemHandler.instance().routes(questId)
 			|| SimpleUseItemHandler.instance().routes(questId)
-			|| SimpleItemPlayHandler.instance().routes(questId);
+			|| SimpleItemPlayHandler.instance().routes(questId)
+			|| SimpleCombineTaskHandler.instance().routes(questId);
 	}
 
 	/**

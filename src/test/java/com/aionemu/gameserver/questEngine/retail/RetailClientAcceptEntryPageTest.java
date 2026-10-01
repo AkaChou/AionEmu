@@ -16,6 +16,7 @@ import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.questEngine.tablelane.NativeTalkFixture;
 import com.aionemu.gameserver.questEngine.tablelane.SimpleCollectItemHandler;
+import com.aionemu.gameserver.questEngine.tablelane.SimpleCombineTaskHandler;
 import com.aionemu.gameserver.questEngine.tablelane.SimpleHuntHandler;
 import com.aionemu.gameserver.questEngine.tablelane.SimpleItemPlayHandler;
 import com.aionemu.gameserver.questEngine.tablelane.SimpleSerialHuntHandler;
@@ -100,6 +101,7 @@ class RetailClientAcceptEntryPageTest {
 	private static final SimpleCollectItemHandler COLLECT = SimpleCollectItemHandler.instance();
 	private static final SimpleUseItemHandler USE = SimpleUseItemHandler.instance();
 	private static final SimpleItemPlayHandler PLAY = SimpleItemPlayHandler.instance();
+	private static final SimpleCombineTaskHandler COMBINE = SimpleCombineTaskHandler.instance();
 
 	@Test
 	void entryPageFollowsTheClientTaskPage() {
@@ -241,6 +243,9 @@ class RetailClientAcceptEntryPageTest {
 		if (PLAY.owns(questId)) {
 			return "SimpleItemPlay";
 		}
+		if (COMBINE.owns(questId)) {
+			return "CombineTask";
+		}
 		return null;
 	}
 
@@ -248,7 +253,8 @@ class RetailClientAcceptEntryPageTest {
 	 * Whether any native family routes the row (owned but unrouted rows are the fail-closed freeze). */
 	private static boolean nativeRoutes(int questId) {
 		return TALK.routes(questId) || HUNT.routes(questId) || SERIAL.routes(questId)
-			|| COLLECT.routes(questId) || USE.routes(questId) || PLAY.routes(questId);
+			|| COLLECT.routes(questId) || USE.routes(questId) || PLAY.routes(questId)
+			|| COMBINE.routes(questId);
 	}
 
 	/** 原生家族声明的接取 NPC（用物接取族无 NPC 入口，返回 null）。 /
@@ -265,6 +271,11 @@ class RetailClientAcceptEntryPageTest {
 		}
 		if (COLLECT.routes(questId)) {
 			return COLLECT.acquireNpc(questId);
+		}
+		if (COMBINE.routes(questId)) {
+			// CombineTask 的 task_npc 双名 = 天/魔接取（兼交付）NPC，取首个即可判入口页。 /
+			// The CombineTask task_npc pair is the per-faction accept npc; the first one judges the page.
+			return COMBINE.taskNpcs(questId).getFirst();
 		}
 		return PLAY.routes(questId) ? PLAY.acquireNpc(questId) : null;
 	}
@@ -286,6 +297,7 @@ class RetailClientAcceptEntryPageTest {
 		QuestDialogContract contract = QuestDialogContract.loadDefault();
 		List<String> gaps = new ArrayList<>();
 		Set<Integer> skipped = new TreeSet<>();
+		Set<Integer> globalAskWindow = new TreeSet<>();
 		int checked = 0;
 		for (int questId : retailOwnedQuestIds()) {
 			if (nativeLane(questId) != null) {
@@ -313,6 +325,17 @@ class RetailClientAcceptEntryPageTest {
 				checked++;
 				int page = contract.acceptEntryPage(questId);
 				if (!contract.hasButtonPage(questId, page)) {
+					if (COMBINE.routes(questId)
+							&& page == QuestDialogPage.SHOW_ASK_QUEST_ACCEPT_WINDOW.id()) {
+						// CombineTask 574 行在客户端任务页索引里完全无登记：接取入口是**全局接取窗页 4**
+						// （native 控件，不属于任务页），故不构成"任务页失同步"gap；该面由
+						// CombineTaskRowAlignmentGateTest#acceptEntryPagesComeFromTheClientTaskPageContract 双向冻结。
+						// The CombineTask rows carry no client task-page registration at all: their entry is
+						// the global ask window page 4 (a native control, not a quest page), so it is not a
+						// task-page desync gap; that face is frozen by the CombineTask row-alignment gate.
+						globalAskWindow.add(questId);
+						continue;
+					}
 					gaps.add(questId + "\t" + page);
 				}
 				continue;
@@ -337,6 +360,8 @@ class RetailClientAcceptEntryPageTest {
 				+ "新增=" + difference(observed, frozen) + " 需删登记=" + difference(frozen, observed));
 		assertEquals(FAIL_CLOSED_NATIVE_ROWS, skipped,
 			"fail-closed 原生行集合漂移 / fail-closed native rows drifted");
+		assertEquals(COMBINE.routedQuestIds(), globalAskWindow,
+			"全局接取窗页 4 的 CombineTask 行集必须逐元素等于本族路由集（新增/消失都要显式改本类）");
 		int edgeCount = checked;
 		assertTrue(edgeCount > 1500,
 			() -> "接取入口边覆盖过少，门禁失效 / accept-entry-edge coverage too small: " + edgeCount);

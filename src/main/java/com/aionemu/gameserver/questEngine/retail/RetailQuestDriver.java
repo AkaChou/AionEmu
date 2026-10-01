@@ -20,6 +20,7 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.concurrent.ConcurrentHashMap;
 import com.aionemu.gameserver.questEngine.tablelane.SimpleCollectItemHandler;
+import com.aionemu.gameserver.questEngine.tablelane.SimpleCombineTaskHandler;
 import com.aionemu.gameserver.questEngine.tablelane.SimpleHuntHandler;
 import com.aionemu.gameserver.questEngine.tablelane.SimpleItemPlayHandler;
 import com.aionemu.gameserver.questEngine.tablelane.SimpleSerialHuntHandler;
@@ -51,10 +52,6 @@ public final class RetailQuestDriver {
 	/** 真端 DataDriven 模板表（接取方式 × 进度步骤链）。 / The retail DataDriven template table. */
 	private static final String DATA_DRIVEN_TABLE =
 		"/aion/data/static_data/quest/retail/data_driven_quest.xml";
-	/** 真端 CombineTask 模板表。 / The retail CombineTask template table. */
-	private static final String COMBINE_TASK_TABLE = "/aion/data/static_data/quest/retail/Quest_CombineTask.xml";
-	/** 本服配方模板（{@code (skillid, productid)} → recipe id）。 / Local recipe templates. */
-	private static final String RECIPE_TEMPLATES = "/aion/data/static_data/recipe/recipe_templates.xml";
 	private static final String RETAIL_QUEST_XML = "/aion/data/static_data/quest/retail/quest.xml";
 	private static final String NAME_IDS_TSV = "/aion/data/static_data/quest/retail/quest_name_string_ids.tsv";
 	private static final String RANDOM_REWARDS = "/aion/data/static_data/quest/legacy/quest_random_rewards.xml";
@@ -79,11 +76,8 @@ public final class RetailQuestDriver {
 	private final Set<Integer> retailOwnedSimpleHunt;
 	private final Set<Integer> retailOwnedSimpleSerialHunt;
 	private final Set<Integer> retailOwnedDataDriven;
-	private final Set<Integer> retailOwnedCombineTask;
 	private final Set<Integer> retailOwnedSimpleCollectItem;
 	private final RetailQuestCatalog catalog;
-	private final RetailCombineTaskTable combineTaskTable;
-	private final RetailRecipeIndex recipeIndex;
 	private final RetailClientDialogExits clientDialogExits;
 	private final RetailClientSummaryRows clientSummaryRows;
 	private final RetailClientRewardNpcs clientRewardNpcs;
@@ -115,11 +109,8 @@ public final class RetailQuestDriver {
 		new ConcurrentHashMap<>();
 
 	private RetailQuestDriver(Set<Integer> retailOwnedSimpleHunt, Set<Integer> retailOwnedSimpleSerialHunt,
-			Set<Integer> retailOwnedDataDriven,
-			Set<Integer> retailOwnedCombineTask, Set<Integer> retailOwnedSimpleCollectItem,
+			Set<Integer> retailOwnedDataDriven, Set<Integer> retailOwnedSimpleCollectItem,
 			RetailQuestCatalog catalog,
-			RetailCombineTaskTable combineTaskTable,
-			RetailRecipeIndex recipeIndex,
 			RetailClientDialogExits clientDialogExits, RetailClientSummaryRows clientSummaryRows,
 			RetailClientRewardNpcs clientRewardNpcs, RetailClientHandinNpcSets clientHandinNpcSets,
 			RetailQuestXmlTable retailTable, RetailNpcNameIndex npcIndex, RetailItemNameIndex itemIndex,
@@ -134,17 +125,13 @@ public final class RetailQuestDriver {
 		this.retailOwnedSimpleHunt = retailOwnedSimpleHunt;
 		this.retailOwnedSimpleSerialHunt = retailOwnedSimpleSerialHunt;
 		this.retailOwnedDataDriven = retailOwnedDataDriven;
-		this.retailOwnedCombineTask = retailOwnedCombineTask;
 		this.retailOwnedSimpleCollectItem = retailOwnedSimpleCollectItem;
 		this.retailOwned = new TreeSet<>();
 		this.retailOwned.addAll(retailOwnedSimpleHunt);
 		this.retailOwned.addAll(retailOwnedSimpleSerialHunt);
 		this.retailOwned.addAll(retailOwnedDataDriven);
-		this.retailOwned.addAll(retailOwnedCombineTask);
 		this.retailOwned.addAll(retailOwnedSimpleCollectItem);
 		this.catalog = catalog;
-		this.combineTaskTable = combineTaskTable;
-		this.recipeIndex = recipeIndex;
 		this.clientDialogExits = clientDialogExits;
 		this.clientSummaryRows = clientSummaryRows;
 		this.clientRewardNpcs = clientRewardNpcs;
@@ -262,7 +249,8 @@ public final class RetailQuestDriver {
 						|| SimpleTalkHandler.instance().owns(questId)
 						|| SimpleCollectItemHandler.instance().owns(questId)
 						|| SimpleUseItemHandler.instance().owns(questId)
-						|| SimpleItemPlayHandler.instance().owns(questId))
+						|| SimpleItemPlayHandler.instance().owns(questId)
+						|| SimpleCombineTaskHandler.instance().owns(questId))
 						&& "RETAIL_TABLE".equals(row.getValue())) {
 					nativeCoveredCount++;
 					continue;
@@ -358,7 +346,6 @@ public final class RetailQuestDriver {
 		Set<Integer> retailOwnedHunt = new TreeSet<>();
 		Set<Integer> retailOwnedSerialHunt = new TreeSet<>();
 		Set<Integer> retailOwnedDataDriven = new TreeSet<>();
-		Set<Integer> retailOwnedCombine = new TreeSet<>();
 		Set<Integer> retailOwnedCollectItem = new TreeSet<>();
 		Map<Integer, String> reasons = new HashMap<>();
 		for (String line : lines(open(RETENTION_RESOURCE))) {
@@ -386,7 +373,10 @@ public final class RetailQuestDriver {
 				} else if ("DataDriven".equals(parts[2])) {
 					retailOwnedDataDriven.add(questId);
 				} else if ("CombineTask".equals(parts[2])) {
-					retailOwnedCombine.add(questId);
+					// P6 原生表驱动切换：CombineTask 574 行由 SimpleCombineTaskHandler 原生直驱，不再生成
+					// 旧 IR 节点（同批删旧：本族 compiler/表/金标全部退场）。
+					// P6 native switch: the 574 CombineTask rows are driven natively; the compiler entry is cut.
+					// retailOwnedCombine.add(questId);
 				} else if ("SimpleCollectItem".equals(parts[2])) {
 					// P4 原生表驱动切换：SimpleCollectItem 262 行由 SimpleCollectItemHandler 原生直驱，
 					// 不再生成旧 IR 节点（同批删旧：本族 compiler 入口切断）。
@@ -414,11 +404,6 @@ public final class RetailQuestDriver {
 		try (InputStream input = open(DATA_DRIVEN_TABLE)) {
 			dataDrivenTable = RetailDataDrivenTable.load(input);
 		}
-		RetailCombineTaskTable combineTaskTable;
-		try (InputStream input = open(COMBINE_TASK_TABLE)) {
-			combineTaskTable = RetailCombineTaskTable.load(input);
-		}
-		RetailRecipeIndex recipeIndex = RetailRecipeIndex.build(List.of(open(RECIPE_TEMPLATES)));
 		RetailClientDialogExits clientDialogExits = RetailClientDialogExits.defaultExits();
 		RetailClientSummaryRows clientSummaryRows = RetailClientSummaryRows.defaultSummaryRows();
 		RetailClientRewardNpcs clientRewardNpcs = RetailClientRewardNpcs.defaultRewardNpcs();
@@ -441,9 +426,9 @@ public final class RetailQuestDriver {
 			RetailQuestUseItemNpcs.fromIds(npcIndex.questUseItemNpcIds());
 		RetailItemNameIndex itemIndex = RetailItemNameIndex.loadItemTemplates();
 		return new RetailQuestDriver(retailOwnedHunt, retailOwnedSerialHunt,
-			retailOwnedDataDriven, retailOwnedCombine, retailOwnedCollectItem,
-			new RetailQuestCatalog(table, combineTaskTable, npcIndex), combineTaskTable,
-			recipeIndex, clientDialogExits, clientSummaryRows, clientRewardNpcs,
+			retailOwnedDataDriven, retailOwnedCollectItem,
+			new RetailQuestCatalog(table, npcIndex),
+			clientDialogExits, clientSummaryRows, clientRewardNpcs,
 			clientHandinNpcSets, retailTable, npcIndex, itemIndex, randomRewardIds(),
 			nameIds(), serialHuntTable, clientHuntStages,
 			questAreas,
@@ -538,9 +523,6 @@ public final class RetailQuestDriver {
 	}
 
 	private Optional<CompiledQuestDefinition> compileByFamily(int questId) {
-		if (retailOwnedCombineTask.contains(questId)) {
-			return compileCombineTask(questId);
-		}
 		if (retailOwnedSimpleSerialHunt.contains(questId)) {
 			return compileSimpleSerialHunt(questId);
 		}
@@ -548,31 +530,6 @@ public final class RetailQuestDriver {
 			return compileDataDriven(questId);
 		}
 		return Optional.empty();
-	}
-
-	/** CombineTask 行 → 定义（真端表 + 配方索引 + 元数据交叉校验；其余形态按稳定码拒绝）。 */
-	private Optional<CompiledQuestDefinition> compileCombineTask(int questId) {
-		try {
-			var row = combineTaskTable.find(questId);
-			if (row.isEmpty()) {
-				rejections.put(questId, "RETAIL_ROW_MISSING");
-				return Optional.empty();
-			}
-			var metadata = retailMetadata(questId);
-			if (metadata == null) {
-				return Optional.empty();
-			}
-			var outcome = RetailCombineTaskDefinitionCompiler.compile(row.orElseThrow(), npcIndex, itemIndex,
-				recipeIndex, metadata);
-			if (outcome.accepted()) {
-				return Optional.of(outcome.definition());
-			}
-			rejections.put(questId, outcome.rejectionCode());
-			return Optional.empty();
-		} catch (RuntimeException e) {
-			rejections.put(questId, "RUNTIME_FAILURE");
-			return Optional.empty();
-		}
 	}
 
 	/** SimpleSerialHunt 行 → 定义（客户端链式阶段契约的串行阶梯；乱序击杀不计数）。 */

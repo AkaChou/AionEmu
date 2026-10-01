@@ -2675,3 +2675,25 @@ keywords: UseItem, ItemPlay, 用物接取, 演出道具, onItemUseEvent, 单一o
 
 - **判定规则**：用物入口按族试探、单一 owner；接取窗页来自客户端任务页契约。
 - **安全网**：新增用物族时先写「用物 → 页/状态」行锚用例，再切族。
+
+## [QE-119] 一一九、已切 native 车道的行不在 typed 目录里 ⇒ 放弃/元数据这类目录面入口必须按 owner 分流 (NATIVE_ABANDON_OWNER_SPLIT)
+
+<!-- pattern-metadata
+status: CONFIRMED
+scope: 真端表驱动车道（SimpleHunt / SimpleSerialHunt / SimpleTalk / SimpleCollectItem / SimpleUseItem / SimpleItemPlay / CombineTask）与 QuestService 放弃路径、QuestEngine owner 判定
+first_seen: 2026-10-01
+last_verified: 2026-10-01
+symptom: 已切 native 车道的任务在客户端点「放弃任务」无反应（服务端直接 return false，状态与背包零变更）；handler 里写好的 abandon 段（如 CombineTask 忘配方）永远不可达；排查时先看到的是 canAbandon 失败，而元数据本身并不缺
+root_cause: `QuestService.abandonQuest` 的第一步是 `questEngine.questCatalog().findMetadata(questId)`，而 questCatalog 是 **typed IR 目录**；切族时已切换行被移出 typed 目录（retention 分支注释 + 旧编译器同批删除），native 行在目录里没有元数据 ⇒ metadata == null ⇒ `canAbandon` 恒 false ⇒ 写在 handler 里的族级放弃动作与放弃清理永不执行
+fix_or_guardrail: 1. QuestEngine 增 `isNativeOwner` / `hasNativeAbandonRoute` / `nativeMetadata` / `onNativeAbandon`：owner = 七个 native handler 的 routes 并集；元数据取真端 quest.xml 行（与 native 完成口同一条 RetailQuestMetadataCompiler 装载链，缺行或不干净即 empty ⇒ fail-closed）；族级动作由 handler 自己声明（CombineTask 忘配方；无族级动作的族返回 true）；2. `QuestService.abandonQuest` 按 owner 分三支：native（族级动作 + 共用清理段 = 状态复位 + 真端 quest_work_item* 回收）、typed production（IR abandon 边）、legacy；3. 断言面 = 引擎级 owner/元数据双面 + handler 族级动作逐元素（注入假 NativeRecipePort）+ QuestService 源码接线锁
+evidence: src/main/java/com/aionemu/gameserver/services/QuestService.java（abandonQuest 的 native 分支）; src/main/java/com/aionemu/gameserver/questEngine/QuestEngine.java（isNativeOwner/nativeMetadata/onNativeAbandon）; src/main/java/com/aionemu/gameserver/questEngine/tablelane/SimpleCombineTaskHandler.java（onAbandon）; src/main/java/com/aionemu/gameserver/questEngine/tablelane/NativeRecipePort.java; src/test/java/com/aionemu/gameserver/questEngine/tablelane/SimpleCombineTaskNativeFamilyGateTest.java（nativeAbandonFaceIsWiredToTheRetailMetadataAxis、abandonForgetsTheRecipeThroughTheFamilyAction）; .agents/summary/quest-engine-native/p6/P6-REPORT.zh-CN.md
+validation: 2026-10-01 P6：引擎级实测 native owner 命中 + 真端元数据 cannot_giveup=0 + quest_work_item* 与表列同形；handler 族级动作实测忘配方（假端口逐元素）+ 非本族行拒绝；族门 11/11、逐行对拍 4/4、族门 + tablelane 108/108 绿
+boundaries: 放弃段**全路径**（在线玩家控制器 + 背包 + DB 配方表）未在单测栈执行（Objenesis 夹具玩家无 controller/recipeList，RecipeList 删除走 DAO）⇒ 该面记 PENDING_CLIENT；cannot_giveup=1 的拒绝面由真端元数据轴判定，本批未造行单独验证
+superseded_by: none
+see_also: [QE-113], [QE-116], [QE-117]
+first_check: 已切族的任务「放弃没反应」时先答：① 该行现在还是 typed owner 吗（typed catalog findMetadata 命中吗）？② 放弃分支是按 owner 分流还是只看 typed 目录？③ 族级动作（忘配方/清道具）挂在哪一层、共用清理段在哪？
+keywords: 放弃任务、abandonQuest、findMetadata为空、native owner分流、typed目录、cannot_giveup、quest_work_item、忘配方、NativeRecipePort、onNativeAbandon、QE-119
+-->
+
+- **判定规则**：凡是以 typed catalog 取数当入口的公共面（放弃、元数据、模板），切族后都必须先按 owner 分流。
+- **安全网**：新增切族批时把「放弃」列入批门（owner + 元数据 + 族级动作 + 共用清理），不要只测接取/交付/领奖三段。

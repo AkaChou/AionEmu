@@ -1337,11 +1337,26 @@ public final class QuestService {
 	public static boolean abandonQuest(Player player, int questId) {
 		QuestEngine questEngine = GameEngineServices.questEngine();
 		QuestMetadata metadata = questEngine.questCatalog().findMetadata(questId).orElse(null);
+		if (metadata == null && questEngine.isNativeOwner(questId)) {
+			// 已切原生车道的行不在 typed 目录里：放弃的元数据轴（cannot_giveup / quest_work_item*）
+			// 取自真端 quest.xml 行——与 native 完成口同一条装载链，缺行/不干净即 fail-closed。
+			// Rows on the native lane are absent from the typed catalog: their abandon metadata
+			// (cannot_giveup / quest_work_item*) comes from the same retail quest.xml chain the native
+			// completion port uses; missing or unclean rows fail closed.
+			metadata = questEngine.nativeMetadata(questId).orElse(null);
+		}
 		QuestState qs = player.getQuestStateList().getQuestState(questId);
 		if (!canAbandon(metadata, qs)) {
 			return false;
 		}
-		if (questEngine.isProductionOwner(questId) && questEngine.hasProductionAbandonRoute(questId)) {
+		if (questEngine.hasNativeAbandonRoute(questId)) {
+			// 原生车道：族级动作（CombineTask 忘配方）+ 共用清理段（状态复位 + 工作物品回收）。
+			// Native lane: family-level actions (CombineTask forgets its recipe) followed by the shared
+			// cleanup (state reset plus work-item recycling).
+			if (!questEngine.onNativeAbandon(player, questId)) {
+				return false;
+			}
+		} else if (questEngine.isProductionOwner(questId) && questEngine.hasProductionAbandonRoute(questId)) {
 			if (!questEngine.onAbandon(player, questId)) {
 				return false;
 			}

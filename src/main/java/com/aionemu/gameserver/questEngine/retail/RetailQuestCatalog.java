@@ -29,27 +29,11 @@ public final class RetailQuestCatalog {
 	}
 
 	private final RetailSimpleHuntTable simpleHunt;
-	private final RetailCombineTaskTable combineTask;
 	private final RetailNpcNameIndex npcNames;
 
 	public RetailQuestCatalog(RetailSimpleHuntTable simpleHunt, RetailNpcNameIndex npcNames) {
-		this(simpleHunt, null, npcNames);
-	}
-
-	/**
-	 * 带 CombineTask 表的构造（判源与诊断用；{@code combineTask} 可为 null 表示未装载）。
-	 * CombineTask-aware constructor; a null table means the family is not loaded.
-	 */
-	public RetailQuestCatalog(RetailSimpleHuntTable simpleHunt, RetailCombineTaskTable combineTask,
-			RetailNpcNameIndex npcNames) {
 		this.simpleHunt = simpleHunt;
-		this.combineTask = combineTask;
 		this.npcNames = npcNames;
-	}
-
-	/** 是否有真端 CombineTask 行。 / Whether a retail CombineTask row exists. */
-	public boolean hasCombineTask(int questId) {
-		return combineTask != null && combineTask.find(questId).isPresent();
 	}
 
 	/** 是否有真端 SimpleHunt 行。 / Whether a retail SimpleHunt row exists. */
@@ -68,7 +52,7 @@ public final class RetailQuestCatalog {
 	 * Classifies the definition source; {@code xmlPorted} comes from the current XML catalog.
 	 */
 	public Source sourceOf(int questId, boolean xmlPorted) {
-		if (hasSimpleHunt(questId) || hasCombineTask(questId)) {
+		if (hasSimpleHunt(questId)) {
 			return Source.RETAIL_TABLE;
 		}
 		return xmlPorted ? Source.XML_FALLBACK : Source.UNKNOWN;
@@ -76,7 +60,7 @@ public final class RetailQuestCatalog {
 
 	/** 该任务是否应当走表驱动（降级链第一判定）。 / Whether the quest should be table driven. */
 	public boolean isTableDriven(int questId) {
-		return hasSimpleHunt(questId) || hasCombineTask(questId);
+		return hasSimpleHunt(questId);
 	}
 
 	/**
@@ -93,10 +77,5 @@ public final class RetailQuestCatalog {
 
 	public int retailSimpleHuntRows() {
 		return simpleHunt.size();
-	}
-
-	/** 真端 CombineTask 行数（诊断用；未装载时为 0）。 / Retail CombineTask row count, 0 when unloaded. */
-	public int retailCombineTaskRows() {
-		return combineTask == null ? 0 : combineTask.size();
 	}
 }

@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.OptionalInt;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
@@ -58,6 +59,7 @@ import com.aionemu.gameserver.questEngine.handlers.HandlerResult;
 import com.aionemu.gameserver.questEngine.tablelane.HtmlPagesRegistry;
 import com.aionemu.gameserver.questEngine.tablelane.CameraRegistry;
 import com.aionemu.gameserver.questEngine.tablelane.SimpleCollectItemHandler;
+import com.aionemu.gameserver.questEngine.tablelane.SimpleCombineTaskHandler;
 import com.aionemu.gameserver.questEngine.tablelane.SimpleHuntHandler;
 import com.aionemu.gameserver.questEngine.tablelane.SimpleItemPlayHandler;
 import com.aionemu.gameserver.questEngine.tablelane.SimpleSerialHuntHandler;
@@ -189,11 +191,7 @@ public class QuestEngine implements GameEngine {
 
 	/** 返回指定 owner 是否拥有实际匹配事件的路由。 / Return whether the owner has a route matching the event. */
 	public boolean hasMatchingRoutes(QuestEvent event, int questId) {
-		if (SimpleHuntHandler.instance().routes(questId) || SimpleSerialHuntHandler.instance().routes(questId)
-				|| SimpleTalkHandler.instance().routes(questId)
-				|| SimpleCollectItemHandler.instance().routes(questId)
-				|| SimpleUseItemHandler.instance().routes(questId)
-				|| SimpleItemPlayHandler.instance().routes(questId)) {
+		if (isNativeOwner(questId)) {
 			return true;
 		}
 		return productionDispatcher.hasMatchingRoutes(event, questId);
@@ -286,6 +284,15 @@ public class QuestEngine implements GameEngine {
 			// 真端表驱动车道：SimpleItemPlay 接取/交付预览/领奖由原生处理器直驱（P5 切换批）
 			if (requestedOwner != 0 && SimpleItemPlayHandler.instance().routes(requestedOwner)) {
 				if (SimpleItemPlayHandler.instance().onDialog(env)) {
+					return true;
+				}
+			}
+			// 真端表驱动车道：CombineTask 接取（发分量 + 学配方）/ 交付（产物门 + 回收分量）/ 领奖由
+			// 原生处理器直驱（P6 切换批）。
+			// The CombineTask lane (accept with component grants and recipe learn, product-gated
+			// hand-in with component recycling, reward-window settlement) is driven natively.
+			if (requestedOwner != 0 && SimpleCombineTaskHandler.instance().routes(requestedOwner)) {
+				if (SimpleCombineTaskHandler.instance().onDialog(env)) {
 					return true;
 				}
 			}
@@ -1953,6 +1960,69 @@ public class QuestEngine implements GameEngine {
 	}
 
 	/**
+	 * 原生表车道是否为该行的 owner（已被原生处理器路由的行）。
+	 * <p>
+	 * 与 {@link #isProductionOwner(int)}（typed IR 目录）互斥：已切换的行不在 typed 目录里，因此
+	 * 放弃/元数据这类"目录面"入口必须按 owner 分流，不能只看 typed catalog。
+	 * Whether the retail-table lane owns the row (a row routed by a native handler). Mutually exclusive
+	 * with the typed IR catalog, so catalog-facing entries (abandon, metadata) must branch by owner.
+	 */
+	public boolean isNativeOwner(int questId) {
+		return questId > 0 && (SimpleHuntHandler.instance().routes(questId)
+			|| SimpleSerialHuntHandler.instance().routes(questId)
+			|| SimpleTalkHandler.instance().routes(questId)
+			|| SimpleCollectItemHandler.instance().routes(questId)
+			|| SimpleUseItemHandler.instance().routes(questId)
+			|| SimpleItemPlayHandler.instance().routes(questId)
+			|| SimpleCombineTaskHandler.instance().routes(questId));
+	}
+
+	/**
+	 * 原生行的真端 {@code quest.xml} 元数据（与生产目录同一条 {@code RetailQuestMetadataCompiler} 装载链）。
+	 * 缺行或元数据不干净一律 empty（fail-closed）。
+	 * The retail {@code quest.xml} metadata of a native row, from the same compiler chain as the
+	 * production catalog; missing rows and unclean metadata return empty (fail-closed).
+	 */
+	public Optional<QuestMetadata> nativeMetadata(int questId) {
+		if (!isNativeOwner(questId)) {
+			return Optional.empty();
+		}
+		try {
+			return RetailQuestDriver.ensureLoaded().retailMetadataOf(questId)
+				.filter(compiled -> compiled.clean())
+				.map(compiled -> compiled.metadata());
+		} catch (RuntimeException | java.io.IOException e) {
+			return Optional.empty();
+		}
+	}
+
+	/**
+	 * 原生行是否可放弃：owner 命中即由 {@link #onNativeAbandon(Player, int)} + 共用清理段收尾；
+	 * 「能否放弃」由真端 {@code cannot_giveup} 元数据轴在 {@code QuestService} 侧判定。
+	 * Whether the native lane declares the abandon path for the row; the retail {@code cannot_giveup}
+	 * axis stays with {@code QuestService}.
+	 */
+	public boolean hasNativeAbandonRoute(int questId) {
+		return isNativeOwner(questId);
+	}
+
+	/**
+	 * 原生行的族级放弃动作（如 CombineTask 忘配方）；无族级动作的族返回 {@code true}。
+	 * 共用的状态复位与工作物品回收不在本方法内。
+	 * The family-level abandon actions of a native row (CombineTask forgets its recipe); families
+	 * without family-level actions answer {@code true}. Shared state/inventory cleanup is not here.
+	 */
+	public boolean onNativeAbandon(Player player, int questId) {
+		if (player == null || questId <= 0 || !isNativeOwner(questId)) {
+			return false;
+		}
+		if (SimpleCombineTaskHandler.instance().routes(questId)) {
+			return SimpleCombineTaskHandler.instance().onAbandon(player, questId);
+		}
+		return true;
+	}
+
+	/**
 	 * 从显式 production catalog 加载已通过 owner 审核的 typed 定义。
 	 * 真端驱动开关（{@code aion.quest.retailDriver}，默认开启）开启时，保留清单判定为
 	 * RETAIL_TABLE 的任务用真端定义替换/补入（retail-package overlay）；关闭开关时
@@ -2276,6 +2346,7 @@ public class QuestEngine implements GameEngine {
 			SimpleCollectItemHandler.instance().installInterest(this);
 			SimpleUseItemHandler.instance().installInterest(this);
 			SimpleItemPlayHandler.instance().installInterest(this);
+			SimpleCombineTaskHandler.instance().installInterest(this);
 			installProductionDefinitions(prepared == null
 					? prepareProductionDefinitions(awaitProductionCatalogPreload()) : prepared);
 			log.info(I18n.get("log.quest_engine.typed_owners_loaded", productionDispatcher.owners().size()));

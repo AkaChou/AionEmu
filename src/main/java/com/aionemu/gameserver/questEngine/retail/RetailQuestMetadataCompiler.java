@@ -431,10 +431,12 @@ public final class RetailQuestMetadataCompiler {
 	}
 
 	/**
-	 * 真端 CombineTask 表的技能符号名 → 技能 id；{@code any} 与未知名返回 null。
+	 * 真端 CombineTask 表的技能符号名 → 技能 id；{@code any} 与未知名返回 null。native CombineTask
+	 * 车道（{@code SimpleCombineTaskHandler}）复用同一张表，故本方法对包外可见。
 	 * Maps a CombineTask table craft-skill symbol to its id; {@code any} and unknown names yield null.
+	 * The native CombineTask lane reuses this very table, so the accessor is public.
 	 */
-	static Integer combineSkillId(String raw) {
+	public static Integer combineSkillId(String raw) {
 		if (raw == null) {
 			return null;
 		}
