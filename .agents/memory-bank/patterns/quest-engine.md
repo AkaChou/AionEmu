@@ -2917,3 +2917,28 @@ keywords: DataDriven、原生算术、零相机、6位步号、组槽、无掩�
 - **判定规则**：DD 进度 = 「步号（bit0-5）+ 组槽（bit6..）」；命中自增无掩码（保留进位），收口要全部声明组槽达标，步进写清零组槽。
 - **安全网**：非当前步 / 未声明组 / 位形异常一律零动作；目标 > 63 的行必须仍然不可完成（门内正例）。
 - **反漂移**：别把家族相机的 `fullValue`/推进通道语义套到 DD 上——DD 零相机是真端事实。
+
+---
+
+## [QE-129] 一百二十九、迁移期「同表双解析器」必须逐行对拍：原生行模型与旧视图不许漂移 (DATA_DRIVEN_DUAL_PARSER_AGREEMENT)
+
+<!-- pattern-metadata
+status: CONFIRMED
+scope: 真端 DataDriven 表在「原生行模型已建、旧 IR 视图未删」过渡期的解析一致性（同表两解析器）
+first_seen: 2026-10-01
+last_verified: 2026-10-01
+symptom: ① 新原生 loader 与旧 IR 视图各自解析同一张真端表，某天其中一边改了规范化口径（大小写/空白/注释块/列名）⇒ 同一 quest 在两车道下步序不同，切换批前后行为悄悄变化；② 只用「新 loader 自测绿」当验收，没人证明它与旧视图在**全部行**上一致；③ 旧视图的既有规范化（如 Hunt 段计数解析、PvP 军衔列）被新 loader 忽略后未被发现
+root_cause: 过渡期不可避免会有两个解析器（旧 IR 视图 + 新原生模型）同时存在，而两者都判「自己解析正确」；真端表的规范化细节（内部 DTD 实体、注释块不是行、`valueN_progress_` 列号语义、类别名大小写混写 `Collectitem/Pvp/PvP/Enterworld`）在两处各写一遍 ⇒ 漂移面完全在「没有被对拍的字段」上
+fix_or_guardrail: 迁移期门必须**逐行三元对拍**：① 行集一致（含注释块不是行的口径）；② 逐行步序（类别序列，lowercase 规范形）一致；③ 逐行接取类别与领奖 NPC 一致；④ 步号 = 表序位置；⑤ 新模型的类别×列号放行面必须能解释旧视图观察到的全部列（否则说明真端 guard 表还没坐实）；⑥ 非法形（未知类别 / 缺载荷 / 非法列组合）必须有稳定码负例，而不是抛通用异常
+evidence: src/main/java/com/aionemu/gameserver/questEngine/tablelane/DataDrivenQuestTable.java; src/test/java/com/aionemu/gameserver/questEngine/tablelane/DataDrivenQuestTableGateTest.java; src/main/java/com/aionemu/gameserver/questEngine/retail/RetailDataDrivenTable.java; .agents/summary/quest-engine-native/p7/P7-STEP2-PREREQ-COLUMN-SEMANTICS.zh-CN.md
+validation: 2026-10-01：门 `DataDrivenQuestTableGateTest` **4/4**——2492 活行逐行一致（步序/接取/领奖 NPC）、切换集 1467 行类别步数与 P7 步 1 契约冻结一致、附加动作分类 = 真端 `LoadExtraAction` 列裁定、四类非法形负例（KIND_UNKNOWN / PAYLOAD_MISSING / COLUMN_ILLEGAL×2）；族门 + tablelane 157/157；聚焦套件 1703 / 161F+137E / 105 红类（对 QE-112 基线 ADDED 0 / REMOVED 0，唯一 delta = 新门 4 例全绿）
+superseded_by: none
+boundaries: ① 本护照只覆盖**解析一致性**，不覆盖行为等价（行为等价要等切换批的逐行对拍门）；② 对拍门是过渡期产物：旧视图删除后（P7 步 2 末批）改为「原生模型 vs 真端表原始文本」对拍（QE-126 的矩阵摘要即该形态）；③ 双解析器允许存在，但**任何一边改变规范化都必须让对拍门失败**，不许放行
+see_also: [QE-127], [QE-126], [QE-128]
+first_check: 迁移期改任一边解析器前先答：① 逐行对拍门还在跑吗（行集/步序/接取/领奖名四项）？② 这次改动会不会改规范化口径（大小写、空白、注释、列名）？③ 真端 guard 表（类别×列号）是否需要同步更新？④ 非法形负例是否覆盖新增分支？⑤ 旧视图删除后是否已把对拍基线换成真端表原始文本摘要？
+keywords: 迁移期、双解析器、逐行对拍、DataDriven、原生行模型、RetailDataDrivenTable、DataDrivenQuestTable、规范化漂移、稳定码、fail-closed、DATA_DRIVEN_DUAL_PARSER_AGREEMENT、QE-129
+-->
+
+- **判定规则**：同表存在两个解析器时，"各自自测绿"不算证据；必须有逐行（行集 + 步序 + 接取 + 领奖名 + 步号=位置）对拍门。
+- **安全网**：新模型的类别×列号放行面必须能解释旧视图观察到的全部列，否则说明真端 guard 还没坐实。
+- **反漂移**：非法形一律稳定码 + 负例；旧视图删除后基线换成真端表原始文本摘要。
