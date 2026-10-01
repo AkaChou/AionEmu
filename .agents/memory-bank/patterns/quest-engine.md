@@ -2765,3 +2765,28 @@ keywords: 接取入口页、信页、select_none、4762、select1、1011、ask_q
 - **判定规则**：入口页来自信页/阶段页表；接取窗页 4 是**页动作 1007 的结果**，不是入口。把两者混为一谈会让信页与挂在 1007 上的过场一起消失。
 - **安全网**：所有下发的页都必须在客户端任务页声明集合内；未声明即 fail-closed（无包），禁止发明页号或原样回发 1007 冒充。
 - **反漂移**：跨族同轴改动（入口页口径 + 1007 分支）必须一次覆盖全部已切换族并用跨族门冻结（9105 行契约复算 + 五行可达性 + 一条 fail-closed 样例行）。
+
+---
+
+## [QE-123] 一百二十三、族表「残余行」要按 owner 分桶并回真端节点槽形态复算，不能把「不路由」当「长尾未接线」 (NATIVE_FAMILY_ROW_BUCKETS_AND_NODE_SLOT_SHAPE)
+
+<!-- pattern-metadata
+status: CONFIRMED
+scope: 真端表车道的**行集账目**与逐行可行性裁定（样本 = SimpleItemPlay；方法是跨族通用的）
+first_seen: 2026-10-01
+last_verified: 2026-10-01
+symptom: ① 排期时把某族「不路由」的行数当成「声明了中继/步物品/交付门的长尾行数」⇒ 目标集虚高（itemplay 实际只有 11 行声明长尾列，不路由却是 37 行）；② 把「本服从未上线」的行（真端表有、本服无 XML、保留清单无条目）误当待接线长尾，或反过来把已裁定的 XML 保留行当成实现债
+root_cause: 真端表行数、本服保留清单（owner = `RETAIL_TABLE` / `XML_RETENTION` / 无条目）与 handler 的注册/路由集是三份不同的账；`routes` 还叠加「已退役 ∧ 非 XML-only ∧ 名字/道具可解」的判定，所以「不路由」是这些条件的并集，与「声明了哪些长尾列」没有一一对应。逐行可行性必须回到真端节点/槽形态：`FUN_180cb5920(&DAT_node, L"<NPC 名>", questId)` 每 NPC 一节点、`FUN_180cb3070(&DAT_slot, &DAT_node, questId, slot, index, 0)` 注册槽；ItemPlay 族（行主注册 `FUN_180cb2eb0(..., questId, 5, ...)`，kind = 5）的不变量是 `slot 0` = 接取节点、`slot 3 #K` = 第 K 步（`talk_npcK` 从 0 起；交付步 = `min(relays+1, 3)`）、`slot 4` = 交付节点。
+fix_or_guardrail: 1. 任何族的「残余行」先按 owner 分桶（RETAIL_TABLE 路由 / XML_RETENTION 裁定 / 无条目不在生产），逐桶给可复算判据，再谈接线排期；2. 逐行可行性以真端节点/槽形态为第一判据并用工具复算（`p5d/tools/itemplay-node-shape-probe.py`、`p5d/tools/itemplay-shape-audit.py`），不从表列名反推；3. 形态偏离行必须与既有裁定理由互证——偏离集要**恰好等于**裁定为「避免不成立型」的行（advance 未表达 / 接取哨兵），否则说明裁定或形态有一边错了；4. 形态已成立、只差接线面的行集要显式冻结成「下一增量目标集」；5. 零行为变更批必须用聚焦套件**逐类差集**证明（ADDED / REMOVED / changed 全 0），不得只看总数相同。
+evidence: src/test/java/com/aionemu/gameserver/questEngine/tablelane/ItemPlayFamilyRowInventoryGateTest.java（行集分解 + 裁定↔真端形态互证 + 证据面不回退）; src/main/java/com/aionemu/gameserver/questEngine/tablelane/SimpleItemPlayHandler.java（ownedQuestIds/routedQuestIds/unroutableQuestIds 与 routes 判定）; src/main/resources/aion/data/static_data/quest/retail/Quest_SimpleItemPlay.xml（43 行）; src/main/resources/aion/data/static_data/quest/retail/retail-xml-retention.tsv（6 RETAIL_TABLE + 9 XML_RETENTION 裁定）; 真端原码（`<真端根>`，见 P5D 步 1 报告 §1 的行号对拍）：ScriptDLL64 反编译 1397261/1397297/1397813（18213 三节点）、1401657/1402130/1402295/1402427/1403153（slot 0/3#K/4）、1399108（行主注册 kind=5）、1397777-1397801（9623 节点）; .agents/summary/quest-engine-native/p5d/P5D-STEP1-REPORT.zh-CN.md、p5d/itemplay-shape.tsv、p5d/tools/itemplay-node-shape-probe.py、p5d/tools/itemplay-shape-audit.py
+validation: 2026-10-01 P5D 步 1（零行为变更）：43 行全量复算，39 行与族不变量完全一致 0 例外；偏离 4 行 = 80255/80256（交付步注册在 #0 ⇒ 原地推进、无步链）+ 39713/49713（`slot 0` 缺失、接取名 `_faction_` 哨兵），**恰好等于**既有裁定 `ADVANCE_UNEXPRESSED` / `ACQUIRE_NPC_SENTINEL`；与 talk 族同形（1468/1471 对拍）；新门 3/3、族门 + tablelane 132/132；聚焦套件 1699 / 162F+142E / 108 类，对 P5C 基线 ADDED 0 / REMOVED 0 / changed triplets 0
+superseded_by: none
+boundaries: ① 本模式的不变量（`slot 3 #K` 步号、交付步钳到 3）只在 ItemPlay 族逐行复算过；talk/hunt/collect 虽抽样同形，用前须按同法复算；② 「无 owner 条目」= 本服无 XML 且清单无行 ⇒ 判为不在生产；将来要上线这些真端行须立「上线」案而非接线案；③ 4 个形态偏离行的裁定保持冻结，禁止靠合成页/补名绕过；④ 真端节点/槽证据在仓库外（`<真端根>`），仓内只能冻结行集分解与裁定理由
+see_also: [QE-121], [QE-122], [QE-117]
+first_check: 某族「残余行」排期前先答：① 表行数与 owner 分桶（RETAIL_TABLE / XML_RETENTION / 无条目）各多少？② 真正声明长尾列（中继 / 步物品 / 交付门 / 过场）的几行？③ 真端节点槽形态复算过没有（`slot 0`/`slot 3 #K`/`slot 4` 与步号）？④ 形态偏离行是否恰好等于既有裁定为「避免不成立型」的行？⑤ 形态就绪行是否已冻结成下一增量目标集？
+keywords: 行集分解、owner分桶、RETAIL_TABLE、XML_RETENTION、ADJUDICATED、不在生产、节点槽形态、FUN_180cb5920、FUN_180cb3070、slot3步号、talk_npcK、交付步钳制、ItemPlay、kind5、零行为变更、逐类差集、QE-123
+-->
+
+- **判定规则**：一族的「残余」要先分三桶（已路由 / XML 保留裁定 / 不在生产），再按真端节点槽形态判「能不能接线」；「不路由」不等于「长尾未接线」。
+- **安全网**：形态偏离行必须与裁定理由一一对应；对不上就先查证据，不得直接排期接线。
+- **反漂移**：零行为变更批用聚焦套件逐类差集（ADDED/REMOVED/changed）证明，而不是只比总数。
