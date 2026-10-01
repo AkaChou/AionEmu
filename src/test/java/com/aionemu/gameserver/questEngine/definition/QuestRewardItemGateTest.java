@@ -1,5 +1,10 @@
 package com.aionemu.gameserver.questEngine.definition;
 
+import com.aionemu.gameserver.questEngine.retail.RetailItemNameIndex;
+import com.aionemu.gameserver.questEngine.tablelane.NativeQuestXmlTable;
+import com.aionemu.gameserver.questEngine.tablelane.SimpleHuntHandler;
+import com.aionemu.gameserver.questEngine.tablelane.SimpleSerialHuntHandler;
+import com.aionemu.gameserver.questEngine.tablelane.SimpleTalkHandler;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.w3c.dom.Element;
@@ -124,9 +129,15 @@ class QuestRewardItemGateTest {
 
 		production = new HashMap<>();
 		for (Integer qid : contract.keySet()) {
-			// 已退役任务的 XML 只在 git 历史里：道具轴改从生产视图（真端合成定义）反推。
-			// Retired quests carry no XML any more; their item axes come from the synthesized definition.
-			production.put(qid, RetiredQuestIds.contains(qid) ? parseRetailProduction(qid) : parseProduction(qid));
+			// P3 重锚（计划 §8.9）：已切到原生车道的行（SimpleTalk / SimpleHunt / SimpleSerialHunt）
+			// 没有 typed 定义，道具轴直接取自真端表行；其余行仍按生产视图（真端合成定义）反推。
+			// P3 re-anchor (plan §8.9): rows on the native lane carry no typed definition, so their item
+			// axis comes from the retail row itself; the remaining rows keep the synthesized view.
+			if (nativeOwned(qid)) {
+				production.put(qid, parseNativeRowItems(qid));
+			} else {
+				production.put(qid, RetiredQuestIds.contains(qid) ? parseRetailProduction(qid) : parseProduction(qid));
+			}
 		}
 		assertFalse(production.isEmpty(), "production items must not be empty");
 	}
@@ -289,6 +300,106 @@ class QuestRewardItemGateTest {
 		extItems.sort(null);
 		return new ProductionItems(fixed, allSelectable, new TreeSet<>(),
 			extGold, extItems);
+	}
+
+	/** 已切到原生车道的行（SimpleTalk / SimpleHunt / SimpleSerialHunt）。 /
+	 * Rows already switched to the native lane. */
+	private static boolean nativeOwned(int questId) {
+		return SimpleTalkHandler.instance().routes(questId)
+			|| SimpleHuntHandler.instance().routes(questId)
+			|| SimpleSerialHuntHandler.instance().routes(questId);
+	}
+
+	/**
+	 * 原生车道的奖赏轴：真端 {@code quest.xml} 行就是唯一事实来源——固定道具取
+	 * {@code reward_item1_N}（缺列即 RETAIL_UNSET 语义），可选取 {@code selectable_reward_item1_N}，
+	 * extended 取 {@code reward_gold_ext / reward_item_ext_N / selectable_reward_item_ext_N}；
+	 * 道具符号 → id 走生产物品名索引（与合同快照同一条 name_desc 通道）。合同表是客户端
+	 * {@code Quest_unpacked/quest.xml} 的冻结快照，故本方法对 native 行构成「服务端表 → 客户端表」对拍。
+	 * <p>
+	 * Native reward axis: the retail {@code quest.xml} row is the single source of truth — fixed items
+	 * from {@code reward_item1_N} (a missing column means RETAIL_UNSET), selectable items from
+	 * {@code selectable_reward_item1_N}, extended from the {@code *_ext*} columns, with symbols mapped
+	 * through the production item-name index. The contract TSV is a frozen client-side snapshot, so this
+	 * compares the server table against the client table for native rows.
+	 */
+	private static ProductionItems parseNativeRowItems(int questId) throws Exception {
+		NativeQuestXmlTable.QuestRow row = NativeQuestXmlTable.instance().find(questId)
+			.orElseThrow(() -> new IllegalStateException("missing retail quest.xml row " + questId));
+		RetailItemNameIndex itemIndex = itemIndex();
+		List<String> fixed = new ArrayList<>();
+		Set<Integer> selectable = new TreeSet<>();
+		for (Map.Entry<String, List<String>> field : row.fields().entrySet()) {
+			String tag = field.getKey();
+			if (field.getValue().isEmpty()) {
+				continue;
+			}
+			if (tag.startsWith("reward_item_ext_") || tag.startsWith("selectable_reward_item_ext_")
+				|| tag.equals("reward_gold_ext") || tag.equals("reward_title_ext")) {
+				continue;
+			}
+			boolean fixedSlot = tag.startsWith("reward_item1_");
+			if (!fixedSlot && !tag.startsWith("selectable_reward_item1_")) {
+				continue;
+			}
+			for (String value : field.getValue()) {
+				Integer itemId = itemIndex.resolve(symbol(value));
+				assertNotNull(itemId, "retail item symbol must resolve: quest " + questId + " " + tag + "=" + value);
+				if (fixedSlot) {
+					fixed.add(itemId + ":" + symbolCount(value));
+				} else {
+					selectable.add(itemId);
+				}
+			}
+		}
+		List<String> extItems = new ArrayList<>();
+		for (Map.Entry<String, List<String>> field : row.fields().entrySet()) {
+			String tag = field.getKey();
+			if (!tag.startsWith("reward_item_ext_") && !tag.startsWith("selectable_reward_item_ext_")) {
+				continue;
+			}
+			for (String value : field.getValue()) {
+				Integer itemId = itemIndex.resolve(symbol(value));
+				assertNotNull(itemId, "retail ext item symbol must resolve: quest " + questId + " " + tag + "=" + value);
+				extItems.add(itemId + ":" + symbolCount(value));
+			}
+		}
+		extItems.sort(null);
+		Long extGold = row.text("reward_gold_ext").isBlank() ? null : Long.parseLong(row.text("reward_gold_ext").trim());
+		return new ProductionItems(fixed, selectable, new TreeSet<>(), extGold, extItems);
+	}
+
+	/** 生产物品名索引（惰性缓存：合同 3992 行共享一份）。 / The production item-name index, cached. */
+	private static synchronized RetailItemNameIndex itemIndex() throws Exception {
+		if (ITEM_INDEX == null) {
+			ITEM_INDEX = RetailItemNameIndex.loadItemTemplates();
+		}
+		return ITEM_INDEX;
+	}
+
+	private static RetailItemNameIndex ITEM_INDEX;
+
+	/** 真端物品单元格的物品名（空格前段，允许名称本身含空格时取最后一段为数量）。 /
+	 * The item name of a retail cell (the trailing numeric token is the count). */
+	private static String symbol(String cell) {
+		String trimmed = cell.trim();
+		int lastSpace = trimmed.lastIndexOf(' ');
+		if (lastSpace < 0) {
+			return trimmed;
+		}
+		String tail = trimmed.substring(lastSpace + 1);
+		return tail.chars().allMatch(Character::isDigit) ? trimmed.substring(0, lastSpace) : trimmed;
+	}
+
+	/** 真端物品单元格的数量（缺省 1）。 / The cell count (1 when absent). */
+	private static int symbolCount(String cell) {
+		String trimmed = cell.trim();
+		int lastSpace = trimmed.lastIndexOf(' ');
+		if (lastSpace < 0) {
+			return 1;
+		}
+		String tail = trimmed.substring(lastSpace + 1);
+		return tail.chars().allMatch(Character::isDigit) ? Integer.parseInt(tail) : 1;
 	}
 
 	/**

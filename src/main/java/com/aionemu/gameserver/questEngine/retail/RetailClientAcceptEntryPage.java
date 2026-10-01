@@ -64,18 +64,8 @@ public final class RetailClientAcceptEntryPage {
 	 * The unaccepted first page for this quest: whichever page the client declares.
 	 */
 	public static int entryPage(int questId, QuestDialogContract contract) {
-		if (contract.hasButtonPage(questId, ASK_WINDOW_PAGE)) {
-			return ASK_WINDOW_PAGE;
-		}
-		if (contract.hasButtonPage(questId, SELECT_NONE_PAGE)) {
-			return SELECT_NONE_PAGE;
-		}
-		if (contract.hasButtonPage(questId, SELECT1_PAGE)) {
-			return SELECT1_PAGE;
-		}
-		// 客户端页契约无登记时保持合成器既有页（不改动无法判定的行）。
-		// Without a client page registry row the synthesizer's page is kept (undecidable rows stay put).
-		return ASK_WINDOW_PAGE;
+		// 规则唯一事实来源在客户端契约本身（native 车道同源取页）。 / The rule lives on the contract itself.
+		return Objects.requireNonNull(contract, "contract").acceptEntryPage(questId);
 	}
 
 	/**

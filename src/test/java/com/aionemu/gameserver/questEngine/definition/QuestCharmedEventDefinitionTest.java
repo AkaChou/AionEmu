@@ -1,116 +1,145 @@
 package com.aionemu.gameserver.questEngine.definition;
 
-import com.aionemu.gameserver.model.Race;
-import com.aionemu.gameserver.questEngine.model.QuestStatus;
-import com.aionemu.gameserver.questEngine.runtime.QuestMutationPlanner;
-import com.aionemu.gameserver.questEngine.runtime.QuestSnapshot;
-import com.aionemu.gameserver.questEngine.runtime.QuestStartEligibility;
-import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
-/** Runtime parity for the former Java owners 80030 and 80033. */
+import com.aionemu.gameserver.model.PlayerClass;
+import com.aionemu.gameserver.model.Race;
+import com.aionemu.gameserver.model.gameobjects.player.Player;
+import com.aionemu.gameserver.questEngine.model.QuestStatus;
+import com.aionemu.gameserver.questEngine.retail.RetailGrantKind;
+import com.aionemu.gameserver.questEngine.tablelane.NativeQuestXmlTable;
+import com.aionemu.gameserver.questEngine.tablelane.NativeTalkFixture;
+import com.aionemu.gameserver.questEngine.tablelane.SimpleTalkHandler;
+
+/**
+ * 80030/80033 春节事件任务（瑞雪爷爷 3 段）：真端表行 = 单步行 NPC 接取 + {@code item_check}
+ * 交付门（神符 1 件）+ 称号道具奖励。
+ * <p>
+ * P3 重锚（计划 §8.9）：断言面只保留真端表行、真端 {@code quest.xml} 与客户端页契约。
+ * 旧 IR 断言的 {@code EventQuestRefresh} 排程（10s 复活/子任务重启）与「活动失效时 UseItem 阻断」
+ * 只存在于本地 XML 与旧 handler；真端 codegen 为这两行注册的是普通 SimpleTalk 槽位
+ * （{@code L"event_Lotus"/L"event_Metrano"} → {@code 0x1389e/0x138a1} 注册块 + cab520/cabb10 thunk），
+ * 活动子系表 {@code quest/event_quest.xml} 全域缺失（计划 §10.3-#3）⇒ 登记为不可实证假设，不再断言。
+ * <p>
+ * Event quests 80030/80033: the retail row is a single-step NPC talk row with a one-item hand-in gate
+ * and a title-item reward. The old IR-only {@code EventQuestRefresh} scheduling and inactive-event item
+ * blocking were local inventions; they are now registered as unverifiable assumptions.
+ */
 class QuestCharmedEventDefinitionTest {
-	@Test
-	void metadataMatchesLegacyAndRetailAuthority() throws Exception {
-		assertMetadata(80030, "[Event] An Unwelcome Gaze", "ELYOS");
-		assertMetadata(80033, "[Event] Averting The Gaze", "ASMODIANS");
-	}
+
+	private static final int ELYOS_QUEST = 80030;
+	private static final int ASMODIAN_QUEST = 80033;
+	/** event_Lotus / event_Metrano（真端 acquired/reward 列 → 静态 npc_template）。 */
+	private static final int ELYOS_NPC = 799766;
+	private static final int ASMODIAN_NPC = 799781;
+	/** world_event_lunar_scroll_shield_all_20a / world_event_add_title_153_14。 */
+	private static final int GATE_ITEM = 164002015;
+	private static final int REWARD_ITEM = 169610037;
 
 	@Test
-	void charmCardSchedulesRaceScopedExternalEventRefresh() throws Exception {
-		assertSchedule(80030, 80029, Race.ELYOS, 80030, 80034, 80035, 80036);
-		assertSchedule(80033, 80032, Race.ASMODIANS, 80033, 80037, 80038, 80039);
-	}
-
-	@Test
-	void delayedRefreshStartsSelfAndRestartsCompletedChildFromLiveInventory() throws Exception {
-		CompiledQuestDefinition self = load(80030);
-		QuestTransition selfRefresh = transition(self.definition(), "unaccepted", "started",
-			QuestEvent.EventQuestRefresh.class);
-		QuestSnapshot selfSnapshot = new QuestSnapshot(7, 80030, QuestStatus.NONE, 0,
-			Map.of(164002015, 1)).withStartEligibility(QuestStartEligibility.allowed());
-		assertEquals(QuestStatus.START, QuestMutationPlanner.plan(self, selfSnapshot,
-			new QuestEvent.EventQuestRefresh(), selfRefresh).orElseThrow().nextStatus());
-
-		CompiledQuestDefinition child = load(80034);
-		QuestTransition restart = transition(child.definition(), "complete", "started",
-			QuestEvent.EventQuestRefresh.class);
-		QuestSnapshot childSnapshot = new QuestSnapshot(7, 80034, QuestStatus.COMPLETE, 0,
-			Map.of(164002016, 10)).withStartEligibility(QuestStartEligibility.allowed());
-		assertEquals(QuestStatus.START, QuestMutationPlanner.plan(child, childSnapshot,
-			new QuestEvent.EventQuestRefresh(), restart).orElseThrow().nextStatus());
+	void retailRowsCarryTheSingleStepNpcHandIn() {
+		SimpleTalkHandler handler = NativeTalkFixture.handler();
+		for (int questId : quests()) {
+			assertTrue(handler.routes(questId), "quest " + questId + " 必须由 native 车道路由");
+			assertEquals(RetailGrantKind.NPC, handler.grantKind(questId), "NPC 接取行");
+			assertEquals(npcOf(questId), handler.acquireNpc(questId), "接取 NPC");
+			assertEquals(npcOf(questId), handler.rewardNpc(questId), "交付 NPC（真端同主）");
+			assertEquals(0, handler.relayCount(questId), "无中继步");
+			assertEquals(List.of(new SimpleTalkHandler.ItemStack(GATE_ITEM, 1)), handler.workItems(questId),
+				"交付门 = quest.xml collect_item1 ×1");
+			assertFalse(handler.unresolvedGate(questId), "交付门必须可解");
+			assertNull(handler.acceptGiveItem(questId), "无接取发放");
+			assertNull(handler.stepGiveItem(questId, 1), "无步进发放");
+			assertNull(handler.stepRemoveItem(questId, 1), "无步进扣除");
+			assertNull(handler.cutscene(questId), "无过场");
+		}
 	}
 
 	@Test
-	void dialogAndInactiveAsmodianFailureRemainExplicit() throws Exception {
-		CompiledQuestDefinition definition = load(80033);
-		QuestTransition reward = talk(definition.definition(), "started", "reward", 799781, 1009, true);
-		assertEquals(List.of(new QuestAction.RemoveItem(164002015, 1)), reward.actions());
-		assertTrue(talk(definition.definition(), "reward", "complete", 799781, 8, false).actions().stream()
-			.anyMatch(QuestAction.CompleteQuest.class::isInstance));
-
-		QuestTransition inactive = definition.definition().transitions().stream()
-			.filter(t -> "unaccepted".equals(t.sourceNode()) && t.event() instanceof QuestEvent.UseItem
-				&& t.conditions().contains(new QuestCondition.EventActive(80032, false)))
-			.findFirst().orElseThrow();
-		QuestSnapshot snapshot = new QuestSnapshot(7, 80033, QuestStatus.NONE, 0, Map.of())
-			.withEventActivities(Map.of(80032, false));
-		assertTrue(QuestMutationPlanner.plan(definition, snapshot, new QuestEvent.UseItem(188051133), inactive)
-			.orElseThrow().requiredActions().contains(new QuestAction.BlockDefaultItemUse()));
+	void questXmlDeclaresTheEventMetadata() {
+		assertEventRow(ELYOS_QUEST, "pc_light", "STR_QUEST_ZONE19");
+		assertEventRow(ASMODIAN_QUEST, "pc_dark", "STR_QUEST_ZONE20");
 	}
 
-	private static void assertMetadata(int questId, String name, String race) throws Exception {
-		QuestMetadata metadata = load(questId).definition().metadata();
-		assertEquals(name, metadata.name());
-		assertEquals(10, metadata.minLevel());
-		assertEquals(Set.of(race), metadata.permittedRaces());
-		assertEquals(List.of(new QuestItemRequirement(164002015, 1)), metadata.itemRequirements());
-		assertEquals(List.of(new QuestItemRequirement(164002015, 1)), metadata.inventoryItems());
-		assertEquals(List.of(new QuestReward("ITEM", 169610037, 1)), metadata.rewards());
+	@Test
+	void acceptAndHandInFollowTheRetailTalkLane() {
+		for (int questId : quests()) {
+			int npcId = npcOf(questId);
+			Player player = NativeTalkFixture.player(raceOf(questId), PlayerClass.WARRIOR, 10);
+			SimpleTalkHandler handler = NativeTalkFixture.handler();
+			NativeTalkFixture.RecordingInventory inventory = new NativeTalkFixture.RecordingInventory();
+			SimpleTalkHandler itemHandler = NativeTalkFixture.handler(inventory);
+
+			NativeTalkFixture.clearPackets(player);
+			assertTrue(handler.onDialog(NativeTalkFixture.dialog(player, npcId, questId, 31)), "接取问询");
+			assertNull(player.getQuestStateList().getQuestState(questId), "问询页不得落库");
+			NativeTalkFixture.assertOnlyDialogPage(player, NativeTalkFixture.clientEntryPage(questId));
+
+			NativeTalkFixture.clearPackets(player);
+			assertTrue(handler.onDialog(NativeTalkFixture.dialog(player, npcId, questId, 1002)), "接取确认");
+			assertEquals(QuestStatus.START, player.getQuestStateList().getQuestState(questId).getStatus());
+			NativeTalkFixture.assertOnlyDialogPage(player, SimpleTalkHandler.PAGE_ACCEPTED);
+
+			NativeTalkFixture.clearPackets(player);
+			assertTrue(itemHandler.onDialog(NativeTalkFixture.dialog(player, npcId, questId, 1009)), "报告被受理");
+			assertEquals(QuestStatus.START, player.getQuestStateList().getQuestState(questId).getStatus(),
+				"未持有神符必须保持 START");
+			NativeTalkFixture.assertOnlyDialogPage(player, SimpleTalkHandler.PAGE_IN_PROGRESS);
+
+			inventory.hold(GATE_ITEM, 1);
+			NativeTalkFixture.clearPackets(player);
+			assertTrue(itemHandler.onDialog(NativeTalkFixture.dialog(player, npcId, questId, 1009)), "交付报告");
+			assertEquals(QuestStatus.REWARD, player.getQuestStateList().getQuestState(questId).getStatus());
+			NativeTalkFixture.assertOnlyDialogPage(player, SimpleTalkHandler.PAGE_REWARD_WINDOW);
+			assertEquals(List.of("remove:" + GATE_ITEM + ":1"), inventory.calls(), "交付门按真端扣除");
+		}
 	}
 
-	private static void assertSchedule(int questId, int activeQuestId, Race race, int... targets)
-			throws Exception {
-		CompiledQuestDefinition definition = load(questId);
-		QuestTransition use = definition.definition().transitions().stream()
-			.filter(t -> "unaccepted".equals(t.sourceNode()) && t.event() instanceof QuestEvent.UseItem
-				&& t.conditions().contains(new QuestCondition.EventActive(activeQuestId)))
-			.findFirst().orElseThrow();
-		assertTrue(use.conditions().contains(new QuestCondition.PlayerRaceIs(race)));
-		AfterCommitAction.ScheduleEventQuestRefresh schedule = use.afterCommit().stream()
-			.filter(AfterCommitAction.ScheduleEventQuestRefresh.class::isInstance)
-			.map(AfterCommitAction.ScheduleEventQuestRefresh.class::cast).findFirst().orElseThrow();
-		assertEquals(10, schedule.seconds());
-		assertArrayEquals(targets, schedule.questIds());
-
-		QuestSnapshot snapshot = new QuestSnapshot(7, questId, QuestStatus.NONE, 0, Map.of())
-			.withRace(race).withEventActivities(Map.of(activeQuestId, true));
-		assertTrue(QuestMutationPlanner.plan(definition, snapshot, new QuestEvent.UseItem(188051133), use)
-			.isPresent());
+	@Test
+	void theRetailRowHasNoSystemGrantOrRefreshAxis() {
+		SimpleTalkHandler handler = NativeTalkFixture.handler();
+		for (int questId : quests()) {
+			assertFalse(handler.isSystemGranted(questId), "quest " + questId + " 只能由 NPC 接取");
+			assertEquals(0, handler.factionId(questId), "quest " + questId + " 不是阵营日常行");
+			assertNull(handler.conQuest(questId), "quest " + questId + " 无链式接取窗");
+			NativeQuestXmlTable.QuestRow row = NativeQuestXmlTable.instance().find(questId).orElseThrow();
+			assertTrue(row.fields().keySet().stream().noneMatch(tag -> tag.contains("refresh")),
+				"真端行不得声明刷新排程（活动子系表缺失，计划 §10.3-#3）: " + row.fields().keySet());
+		}
 	}
 
-	private static QuestTransition transition(QuestDefinition definition, String source, String target,
-			Class<? extends QuestEvent> eventType) {
-		return definition.transitions().stream().filter(t -> source.equals(t.sourceNode())
-			&& target.equals(t.targetNode()) && eventType.isInstance(t.event())).findFirst().orElseThrow();
+	private static void assertEventRow(int questId, String race, String zone) {
+		NativeQuestXmlTable.QuestRow row = NativeQuestXmlTable.instance().find(questId).orElseThrow();
+		assertEquals("event", row.text("category1"), "真端类别");
+		assertEquals(zone, row.text("category2"), "真端区域");
+		assertEquals(10, row.integer("minlevel_permitted"), "真端等级下限");
+		assertEquals(race, row.text("race_permitted"), "真端种族轴");
+		assertEquals("1", row.text("max_repeat_count"), "一次性任务");
+		assertEquals("world_event_lunar_scroll_shield_all_20a 1", row.text("collect_item1"), "真端收集物通道");
+		assertEquals("world_event_lunar_scroll_shield_all_20a", row.text("inventory_item_name1"),
+			"真端背包物通道");
+		assertEquals("world_event_lunar_scroll_shield_all_20a 1", row.text("check_item1_1"), "真端交付门通道");
+		assertEquals("world_event_add_title_153_14 1", row.text("reward_item1_1"), "真端称号道具奖励");
+		assertEquals("0", row.text("reward_exp1"), "真端经验奖励为 0");
+		assertEquals("0", row.text("reward_gold1"), "真端金币奖励为 0");
 	}
 
-	private static QuestTransition talk(QuestDefinition definition, String source, String target,
-			int npcId, int dialogId, boolean requiresItem) {
-		return definition.transitions().stream().filter(t -> source.equals(t.sourceNode())
-			&& target.equals(t.targetNode()) && t.event() instanceof QuestEvent.TalkToNpc talk
-			&& talk.npcId() == npcId && Integer.valueOf(dialogId).equals(talk.dialogId())
-			&& (!requiresItem || t.conditions().contains(new QuestCondition.HasItem(164002015, 1))))
-			.findFirst().orElseThrow();
+	private static int[] quests() {
+		return new int[] {ELYOS_QUEST, ASMODIAN_QUEST};
 	}
 
-	private static CompiledQuestDefinition load(int questId) throws Exception {
-		// 退役任务的生产 XML 只在 git 历史里：统一取生产视图（XML 目录 + 真端 overlay）。
-		return ProductionQuestDefinitions.definition(questId);
+	private static int npcOf(int questId) {
+		return questId == ELYOS_QUEST ? ELYOS_NPC : ASMODIAN_NPC;
+	}
+
+	private static Race raceOf(int questId) {
+		return questId == ELYOS_QUEST ? Race.ELYOS : Race.ASMODIANS;
 	}
 }

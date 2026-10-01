@@ -10,6 +10,7 @@ import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
@@ -27,6 +28,12 @@ public final class QuestDialogContract {
 		"aion/definitions/quest_dialog/movie_continuation_exceptions.tsv";
 	private static final String CONTRACT_RELATIVE_PATH = "quest_dialog/client_dialog_contract.tsv";
 	private static final String EXCEPTIONS_RELATIVE_PATH = "quest_dialog/movie_continuation_exceptions.tsv";
+
+	/** 接取入口页偏好序：真端接取窗 → 极简信页 → 对话入口页。 / Accept entry page preference order. */
+	private static final List<Integer> ACCEPT_ENTRY_PAGE_PREFERENCE = List.of(
+		QuestDialogPage.SHOW_ASK_QUEST_ACCEPT_WINDOW.id(),
+		QuestDialogPage.SELECT_NONE.id(),
+		QuestDialogPage.SELECT1.id());
 
 	private static final QuestDialogContract EMPTY = new QuestDialogContract(Map.of(), Set.of());
 	private static volatile QuestDialogContract defaultContract;
@@ -116,6 +123,24 @@ public final class QuestDialogContract {
 
 	public boolean isEmpty() {
 		return buttonPages.isEmpty();
+	}
+
+	/**
+	 * 接取入口页：客户端任务页实际声明的第一张可渲染页
+	 * （{@code ask_quest_accept}(4) → {@code select_none}(4762) → {@code select1}(1011)）；
+	 * 客户端页登记缺失时回落到真端接取窗页 4（无据判定的行保持既有页，不发明新页）。
+	 * <p>
+	 * The accept entry page: the first page the client task HTML actually declares
+	 * ({@code ask_quest_accept} → {@code select_none} → {@code select1}); a quest with no client page
+	 * registry row keeps the retail ask window page 4, so undecidable rows stay where they were.
+	 */
+	public int acceptEntryPage(int questId) {
+		for (int pageId : ACCEPT_ENTRY_PAGE_PREFERENCE) {
+			if (hasButtonPage(questId, pageId)) {
+				return pageId;
+			}
+		}
+		return QuestDialogPage.SHOW_ASK_QUEST_ACCEPT_WINDOW.id();
 	}
 
 	public boolean hasButtonPage(int questId, int pageId) {

@@ -115,6 +115,38 @@ class NativeQuestStartPortTest {
 		assertEquals(NativeQuestStartPort.Outcome.ALREADY_RUNNING, port().start(player, PLAIN).outcome());
 	}
 
+	/** 真端 class_permitted 词表限职业：{@code fighter knight}（1913，min 10 ⇒ 展开 GLADIATOR/TEMPLAR）。 */
+	private static final int CLASS_RESTRICTED = 1913;
+
+	@Test
+	void classRestrictedRowsFollowTheRetailTokenMapping() {
+		// 真端 token（fighter/knight/wizard…）不是 PlayerClass 枚举名；逐字比较会让限职业行永远拒接。
+		// Retail tokens (fighter/knight/wizard…) are not PlayerClass names; a literal comparison would
+		// reject every class-restricted row forever.
+		Player gladiator = player(20, PlayerClass.GLADIATOR);
+		// 真端前置 {@code Q1007:1} = 奖励档 1（0 基 0），必须先完成前置任务。
+		gladiator.getQuestStateList().addQuest(1007,
+			new QuestState(1007, QuestStatus.COMPLETE, 0, 1, null, 0, null));
+		assertTrue(port().start(gladiator, CLASS_RESTRICTED).started(), "fighter ⇒ GLADIATOR 必须放行");
+
+		Player templar = player(20, PlayerClass.TEMPLAR);
+		templar.getQuestStateList().addQuest(1007,
+			new QuestState(1007, QuestStatus.COMPLETE, 0, 1, null, 0, null));
+		assertTrue(port().start(templar, CLASS_RESTRICTED).started(), "knight ⇒ TEMPLAR 必须放行");
+
+		Player wrongSlot = player(20, PlayerClass.GLADIATOR);
+		wrongSlot.getQuestStateList().addQuest(1007,
+			new QuestState(1007, QuestStatus.COMPLETE, 0, 1, null, 2, null));
+		assertEquals(NativeQuestStartPort.Outcome.PREREQUISITE_MISSING,
+			port().start(wrongSlot, CLASS_RESTRICTED).outcome(),
+			"Q1007:1 必须比对奖励档（0 基 0），档位不符即拒绝");
+
+		Player warrior = player(20, PlayerClass.WARRIOR);
+		assertEquals(NativeQuestStartPort.Outcome.CLASS_BLOCKED,
+				port().start(warrior, CLASS_RESTRICTED).outcome(), "未入词表的职业必须 fail-closed");
+		assertNull(warrior.getQuestStateList().getQuestState(CLASS_RESTRICTED), "被拒时不得建档");
+	}
+
 	@Test
 	void systemGrantWritesTheStateWithoutNpcAxes() {
 		Player player = player(20);
@@ -129,12 +161,16 @@ class NativeQuestStartPortTest {
 	}
 
 	private static Player player(int level) {
+		return player(level, PlayerClass.WARRIOR);
+	}
+
+	private static Player player(int level, PlayerClass playerClass) {
 		Player player = new ObjenesisStd().newInstance(Player.class);
 		PlayerCommonData pcd = new PlayerCommonData(10001);
 		pcd.setRace(Race.ELYOS);
 		pcd.setGender(Gender.MALE);
 		// setPlayerClass / setLevel 需要经验表就绪（单测无服务栈）⇒ 直接写字段。
-		setField(pcd, PlayerCommonData.class, "playerClass", PlayerClass.WARRIOR);
+		setField(pcd, PlayerCommonData.class, "playerClass", playerClass);
 		setField(pcd, PlayerCommonData.class, "level", level);
 		try {
 			java.lang.reflect.Field field = Player.class.getDeclaredField("playerCommonData");

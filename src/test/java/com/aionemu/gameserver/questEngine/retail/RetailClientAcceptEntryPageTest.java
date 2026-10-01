@@ -1,5 +1,6 @@
 package com.aionemu.gameserver.questEngine.retail;
 
+import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.questEngine.definition.AfterCommitAction;
 import com.aionemu.gameserver.questEngine.definition.CompiledQuestDefinition;
 import com.aionemu.gameserver.questEngine.definition.ProductionQuestDefinitions;
@@ -12,6 +13,11 @@ import com.aionemu.gameserver.questEngine.definition.QuestEvent;
 import com.aionemu.gameserver.questEngine.definition.QuestNode;
 import com.aionemu.gameserver.questEngine.definition.QuestTransition;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
+import com.aionemu.gameserver.questEngine.model.QuestEnv;
+import com.aionemu.gameserver.questEngine.tablelane.NativeTalkFixture;
+import com.aionemu.gameserver.questEngine.tablelane.SimpleHuntHandler;
+import com.aionemu.gameserver.questEngine.tablelane.SimpleSerialHuntHandler;
+import com.aionemu.gameserver.questEngine.tablelane.SimpleTalkHandler;
 import org.junit.jupiter.api.Test;
 
 import java.io.BufferedReader;
@@ -76,6 +82,10 @@ class RetailClientAcceptEntryPageTest {
 	 * page the client declares.
 	 */
 	private static final String GAP_BASELINE = "/quest/retail-accept-entry-page-gaps.tsv";
+	/** 已切换到原生车道的三个家族处理器。 / The three families already switched to the native lane. */
+	private static final SimpleTalkHandler TALK = NativeTalkFixture.handler();
+	private static final SimpleHuntHandler HUNT = SimpleHuntHandler.instance();
+	private static final SimpleSerialHuntHandler SERIAL = SimpleSerialHuntHandler.instance();
 
 	@Test
 	void entryPageFollowsTheClientTaskPage() {
@@ -118,6 +128,24 @@ class RetailClientAcceptEntryPageTest {
 		List<String> missing = new ArrayList<>();
 		int checked = 0;
 		for (int questId : retailOwnedQuestIds()) {
+			if (nativeLane(questId) != null) {
+				// 原生车道：入口页 = 客户端声明页；select1(1011) 首屏的翻页动作由 native 处理器原样回发。
+				// Native lane: the entry page is the client-declared page; select1 page turns are echoed.
+				Integer acquireNpc = nativeAcquireNpc(questId);
+				if (acquireNpc == null || contract.acceptEntryPage(questId) != RetailClientAcceptEntryPage.SELECT1_PAGE) {
+					continue;
+				}
+				for (int pageId : List.of(QuestDialogPage.SELECT1_1.id(), QuestDialogPage.SELECT1_1_1.id())) {
+					if (!contract.hasButtonPage(questId, pageId)) {
+						continue;
+					}
+					checked++;
+					if (!nativeServesPage(questId, acquireNpc, pageId)) {
+						missing.add(questId + "\t" + pageId);
+					}
+				}
+				continue;
+			}
 			QuestDefinition definition = ProductionQuestDefinitions.definition(questId).definition();
 			for (QuestTransition entry : acceptEntryEdges(definition)) {
 				if (shownPage(entry) != RetailClientAcceptEntryPage.SELECT1_PAGE
@@ -142,6 +170,46 @@ class RetailClientAcceptEntryPageTest {
 		assertTrue(missing.isEmpty(), () -> "select1 accept ladder missing routes: " + missing);
 	}
 
+	/**
+	 * 原生车道是否服务该 select1 翻页动作：假玩家 + 真端接取 NPC 驱动处理器，断言原样回发该页。
+	 * Whether the native lane serves the select1 page turn: drive the handler with a fake player on the
+	 * retail acquire NPC and assert the page is echoed.
+	 */
+	private static boolean nativeServesPage(int questId, int acquireNpc, int pageId) {
+		Player player = NativeTalkFixture.player();
+		NativeTalkFixture.clearPackets(player);
+		QuestEnv env = NativeTalkFixture.dialog(player, acquireNpc, questId, pageId);
+		boolean handled = TALK.routes(questId) ? TALK.onDialog(env)
+			: HUNT.routes(questId) ? HUNT.onDialog(env) : SERIAL.onDialog(env);
+		return handled && NativeTalkFixture.dialogPages(player).equals(List.of(pageId));
+	}
+
+	/** 已切到原生车道的家族名（SimpleTalk / SimpleHunt / SimpleSerialHunt）；未切换返回 null。 /
+	 * The native family owning the row, or null when the row still runs on the typed IR lane. */
+	private static String nativeLane(int questId) {
+		if (TALK.routes(questId)) {
+			return "SimpleTalk";
+		}
+		if (HUNT.routes(questId)) {
+			return "SimpleHunt";
+		}
+		if (SERIAL.routes(questId)) {
+			return "SimpleSerialHunt";
+		}
+		return null;
+	}
+
+	/** 原生家族声明的接取 NPC。 / The acquire NPC the native family declares. */
+	private static Integer nativeAcquireNpc(int questId) {
+		if (TALK.routes(questId)) {
+			return TALK.acquireNpc(questId);
+		}
+		if (HUNT.routes(questId)) {
+			return HUNT.acquireNpc(questId);
+		}
+		return SERIAL.routes(questId) ? SERIAL.acquireNpc(questId) : null;
+	}
+
 	/** 同 NPC/动作/来源且确实下发客户端声明页的续页路由。 / A same-owner page-turn route showing the page. */
 	private static Optional<QuestTransition> continuationRoute(QuestDefinition definition, int npcId,
 			int actionId, int pageId, String sourceNode) {
@@ -160,6 +228,21 @@ class RetailClientAcceptEntryPageTest {
 		List<String> gaps = new ArrayList<>();
 		int checked = 0;
 		for (int questId : retailOwnedQuestIds()) {
+			if (nativeLane(questId) != null) {
+				// 原生车道：接取入口 = 接取 NPC 的 QUEST_SELECT → 客户端契约页；无 NPC 接取入口的行
+				// （系统/事件发放、接取名未解）没有入口页可判。
+				// Native lane: the entry is the acquire NPC's QUEST_SELECT → the client contract page.
+				Integer acquireNpc = nativeAcquireNpc(questId);
+				if (acquireNpc == null) {
+					continue;
+				}
+				checked++;
+				int page = contract.acceptEntryPage(questId);
+				if (!contract.hasButtonPage(questId, page)) {
+					gaps.add(questId + "\t" + page);
+				}
+				continue;
+			}
 			CompiledQuestDefinition definition = ProductionQuestDefinitions.definition(questId);
 			for (QuestTransition transition : acceptEntryEdges(definition.definition())) {
 				checked++;

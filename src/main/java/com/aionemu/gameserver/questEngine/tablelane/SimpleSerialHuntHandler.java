@@ -14,6 +14,8 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_DIALOG_WINDOW;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_QUEST_ACTION;
 import com.aionemu.gameserver.questEngine.QuestEngine;
+import com.aionemu.gameserver.questEngine.definition.QuestDialogContract;
+import com.aionemu.gameserver.questEngine.definition.QuestDialogPage;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
@@ -337,8 +339,19 @@ public final class SimpleSerialHuntHandler {
 			Integer acqNpc = acquireNpcByQuestId.get(questId);
 			if (acqNpc != null && acqNpc == npcId) {
 				if (dialogId == 26 || dialogId == 31 || dialogId == 1007 || dialogId == -1) {
-					// 打开任务描述与接受窗口 (select1 / page 4)
-					PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 4, questId));
+					// 接取入口页 = 客户端任务页声明的可渲染页（真端表无页列，见 QuestDialogContract#acceptEntryPage）。
+					// The accept entry page is the page the client task HTML declares.
+					PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId,
+							QuestDialogContract.loadDefault().acceptEntryPage(questId), questId));
+					return true;
+				} else if (dialogId == QuestDialogPage.SELECT1_1.id()
+						|| dialogId == QuestDialogPage.SELECT1_1_1.id()) {
+					// select1 首屏翻页（真端 cab520 原样回发）；客户端未声明该页即 fail-closed。
+					// select1 page turns (cab520 echoes them); undeclared pages fail closed.
+					if (!QuestDialogContract.loadDefault().hasButtonPage(questId, dialogId)) {
+						return false;
+					}
+					PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, dialogId, questId));
 					return true;
 				} else if (dialogId == 1002 || dialogId == 20000) {
 					// 确认接取任务

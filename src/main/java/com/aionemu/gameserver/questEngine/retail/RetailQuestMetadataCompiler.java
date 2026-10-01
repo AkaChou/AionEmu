@@ -365,7 +365,20 @@ public final class RetailQuestMetadataCompiler {
 	}
 
 	private static Set<String> classes(RetailQuestXmlTable.Entry entry, int minLevel) {
-		String raw = entry.text("class_permitted");
+		return permittedClassNames(entry.text("class_permitted"), minLevel);
+	}
+
+	/**
+	 * 真端 {@code class_permitted} 词表 → 允许的 {@code PlayerClass} 名集合（空集 = 不限职业）。
+	 * 规则与生产元数据同源：≥16 token = 全集通配；基础职业在最低等级 ≥ 10 时展开为两条进阶线；
+	 * 未登记 token 忽略。原生接取端口复用本方法，避免第二套职业轴。
+	 * <p>
+	 * Retail {@code class_permitted} tokens → the permitted {@code PlayerClass} names (empty means
+	 * unrestricted). The rule matches the production metadata: a 16-token set is a wildcard, base
+	 * classes expand into their two advanced lines at minimum level 10, and unknown tokens are ignored.
+	 * The native acquisition port reuses this method instead of keeping a second class axis.
+	 */
+	public static Set<String> permittedClassNames(String raw, int minLevel) {
 		if (raw == null) {
 			return Set.of();
 		}
@@ -445,6 +458,21 @@ public final class RetailQuestMetadataCompiler {
 			}
 		}
 		return conditions;
+	}
+
+	/**
+	 * 开始条件的奖励分支模式（{@code Q1007:1} → 0；无后缀 → 0）：与生产元数据同源，
+	 * 原生接取端口复用同一解析，避免第二套实现。
+	 * <p>
+	 * The reward-mode index of a start condition ({@code Q1007:1} → 0; no suffix → 0), sharing the
+	 * production metadata parse so the native acquisition port keeps a single implementation.
+	 */
+	public static int prerequisiteRewardMode(int questId, String token) {
+		if (token == null) {
+			return 0;
+		}
+		int colon = token.indexOf(':');
+		return colon < 0 ? 0 : parseRewardMode(questId, token, colon);
 	}
 
 	/**

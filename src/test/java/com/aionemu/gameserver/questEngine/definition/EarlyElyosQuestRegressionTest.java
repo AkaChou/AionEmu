@@ -1,10 +1,18 @@
 package com.aionemu.gameserver.questEngine.definition;
 
+import com.aionemu.gameserver.model.PlayerClass;
+import com.aionemu.gameserver.model.Race;
+import com.aionemu.gameserver.model.gameobjects.player.Player;
+import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.questEngine.runtime.QuestMutationPlan;
 import com.aionemu.gameserver.questEngine.runtime.QuestMutationPlanner;
 import com.aionemu.gameserver.questEngine.runtime.QuestSnapshot;
 import com.aionemu.gameserver.questEngine.runtime.QuestStartEligibility;
+import com.aionemu.gameserver.questEngine.tablelane.NativeQuestStartPort;
+import com.aionemu.gameserver.questEngine.tablelane.NativeQuestXmlTable;
+import com.aionemu.gameserver.questEngine.tablelane.NativeTalkFixture;
+import com.aionemu.gameserver.questEngine.tablelane.SimpleTalkHandler;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -13,172 +21,215 @@ import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+/**
+ * 早期天族任务回归：已随真端表切换到 native 车道的行（1117/1118/1131/1141/1156/1158/1414/1691）
+ * 只按真端表行 + quest.xml + 客户端页契约断言；其余任务仍走 IR 车道（1311/1647/1371/1561/1612/1626/
+ * 1114/1464/1111/1162），断言面不变。
+ * <p>
+ * P3 re-anchor (plan §8.9): the rows that switched to the native lane assert retail-row, quest.xml and
+ * client-page facts only; the remaining quests keep their IR assertions.
+ */
 class EarlyElyosQuestRegressionTest {
+	/**
+	 * 1118（폴리니아의 연고）：真端 cab520 只在 20000 分支发放 {@code give_item}
+	 * （{@code ITEM_QUEST_1118A} ×1），1002 仅建档；交付门由表的 {@code item_check} 声明，
+	 * 该行未声明 ⇒ 中继交还不回收工作物品。
+	 * 1118: the retail accept branch grants the work item on 20000 only, and the row declares no
+	 * {@code item_check}, so the hand-in neither gates nor consumes it.
+	 */
 	@Test
-	void ointmentAcceptanceKeepsTheWorkItemOnBothClientAcceptRoutes() {
-		CompiledQuestDefinition definition = load(1118);
+	void ointmentAcceptanceGrantsTheWorkItemOnTheRetailAcceptAction() {
+		SimpleTalkHandler handler = NativeTalkFixture.handler();
+		NativeTalkFixture.RecordingInventory inventory = new NativeTalkFixture.RecordingInventory();
+		SimpleTalkHandler itemHandler = NativeTalkFixture.handler(inventory);
 
-		for (int dialogId : List.of(1002, 20000)) {
-			QuestTransition route = route(definition, "unaccepted", "v0",
-				new QuestEvent.TalkToNpc(203059, dialogId));
+		assertEquals(203059, handler.acquireNpc(1118), "接取 NPC（Polinia）");
+		assertEquals(new SimpleTalkHandler.ItemStack(182200224, 1), handler.acceptGiveItem(1118),
+			"真端 give_item = ITEM_QUEST_1118A ×1");
+		assertEquals(1, handler.relayCount(1118), "中继步数 = 1（Kustanon 203070）");
+		assertTrue(handler.workItems(1118).isEmpty(), "真端行未声明 item_check：交付门不生效");
 
-			assertTrue(route.conditions().contains(new QuestCondition.StartEligible()));
-			assertTrue(route.actions().contains(new QuestAction.GiveItem(182200224, 1)),
-			"missing ointment for dialog " + dialogId);
-			QuestMutationPlan plan = QuestMutationPlanner.plan(definition,
-				new QuestSnapshot(7, 1118, QuestStatus.NONE, 0, Map.of())
-					.withStartEligibility(QuestStartEligibility.allowed()),
-				new QuestEvent.TalkToNpc(203059, dialogId), route).orElseThrow();
-			assertEquals(QuestStatus.START, plan.nextStatus());
-		}
+		// 1002（QUEST_ACCEPT_1）：只建档，不发放。
+		Player plainAccept = NativeTalkFixture.player(Race.ELYOS, PlayerClass.WARRIOR, 20);
+		NativeTalkFixture.clearPackets(plainAccept);
+		assertTrue(itemHandler.onDialog(NativeTalkFixture.dialog(plainAccept, 203059, 1118, 1002)), "1002 接取");
+		assertEquals(QuestStatus.START, plainAccept.getQuestStateList().getQuestState(1118).getStatus());
+		NativeTalkFixture.assertOnlyDialogPage(plainAccept, SimpleTalkHandler.PAGE_ACCEPTED);
+		assertEquals(List.of(), inventory.calls(), "1002 不发放");
+
+		// 20000：建档 + 发放工作物品（真端 cab520 的 give_item 分支）。
+		inventory.clear();
+		Player itemAccept = NativeTalkFixture.player(Race.ELYOS, PlayerClass.WARRIOR, 20);
+		NativeTalkFixture.clearPackets(itemAccept);
+		assertTrue(itemHandler.onDialog(NativeTalkFixture.dialog(itemAccept, 203059, 1118, 20000)), "20000 接取");
+		assertEquals(QuestStatus.START, itemAccept.getQuestStateList().getQuestState(1118).getStatus());
+		NativeTalkFixture.assertOnlyDialogPage(itemAccept, SimpleTalkHandler.PAGE_ACCEPTED);
+		assertEquals(List.of("give:182200224:1"), inventory.calls(), "20000 发放工作物品");
 	}
 
+	/**
+	 * 1118 的交付段：中继步 1（Kustanon）推进到步 1，交付 NPC Melpone(203079) 的 1009 报告在
+	 * 中继全满后翻 REWARD 并下发奖励窗；真端行无 item_check ⇒ 报告不校验也不扣除工作物品。
+	 * 1118's hand-in: relay step 1 advances, then the report at Melpone(203079) flips REWARD with the
+	 * reward window; the row has no item_check, so the report neither checks nor consumes the item.
+	 */
 	@Test
-	void ointmentDeliveryRequiresAndConsumesTheWorkItem() {
-		CompiledQuestDefinition definition = load(1118);
-		// S3c（quest-native-dispatch）：交付段规范形——门与扣物挂在交付 NPC 的 `QUEST_SELECT(31)` 提交边
-		// （直翻 REWARD）上；旧 `1009` 报告边（`v1→reward`）随报告页退场。
-		// S3c: gate and consumption ride the canonical QUEST_SELECT(31) submission edge; the legacy
-		// 1009 report edge (v1->reward) retires with the report page.
-		QuestEvent event = new QuestEvent.TalkToNpc(203079, 31);
-		QuestTransition delivery = route(definition, "v1", "reward", event);
+	void ointmentDeliveryWalksTheRetailRelayChainIntoTheRewardWindow() {
+		SimpleTalkHandler handler = NativeTalkFixture.handler();
+		SimpleTalkHandler itemHandler = NativeTalkFixture.handler(new NativeTalkFixture.RecordingInventory());
+		Player player = NativeTalkFixture.player(Race.ELYOS, PlayerClass.WARRIOR, 20);
 
-		assertTrue(delivery.conditions().contains(new QuestCondition.HasItem(182200224, 1)));
-		assertTrue(delivery.actions().contains(new QuestAction.RemoveItem(182200224, 1)));
-		QuestSnapshot missingOintment = new QuestSnapshot(7, 1118, QuestStatus.START, 1, Map.of());
-		assertFalse(QuestMutationPlanner.plan(definition, missingOintment, event, delivery).isPresent());
+		assertEquals(203079, handler.rewardNpc(1118), "交付 NPC（Melpone）");
+		assertTrue(handler.relaysForNpc(203070).stream()
+				.anyMatch(relay -> relay.questId() == 1118 && relay.step() == 1),
+			"中继步 1 挂在 Kustanon 203070");
+		// 20000 分支会经物品端口发放，走假背包处理器（真端 cab520 give_item 分支）。
+		assertTrue(itemHandler.onDialog(NativeTalkFixture.dialog(player, 203059, 1118, 20000)), "接取");
 
-		QuestMutationPlan plan = QuestMutationPlanner.plan(definition,
-			new QuestSnapshot(7, 1118, QuestStatus.START, 1, Map.of(182200224, 1)),
-			event, delivery).orElseThrow();
-		assertEquals(QuestStatus.REWARD, plan.nextStatus());
-		assertEquals(List.of(new QuestAction.RemoveItem(182200224, 1)), plan.requiredActions());
+		NativeTalkFixture.clearPackets(player);
+		assertTrue(handler.onDialog(NativeTalkFixture.dialog(player, 203070, 1118, 10000)), "中继步 1");
+		assertEquals(1, player.getQuestStateList().getQuestState(1118).getQuestVars().getQuestVars(), "步号 = 1");
+		NativeTalkFixture.assertOnlyDialogPage(player, 1352);
+
+		NativeTalkFixture.clearPackets(player);
+		assertTrue(handler.onDialog(NativeTalkFixture.dialog(player, 203079, 1118, 1009)), "交付报告");
+		assertEquals(QuestStatus.REWARD, player.getQuestStateList().getQuestState(1118).getStatus());
+		NativeTalkFixture.assertOnlyDialogPage(player, SimpleTalkHandler.PAGE_REWARD_WINDOW);
 	}
 
+	/**
+	 * 1131（요새 내부 대화 퀘스트）：接取 Hyacinte(203097) 发 ITEM_QUEST_1131A(182200506)，
+	 * 中继 Shugo_LF1a_01(799093) 的 10000 换手（发 DOC_QUEST_1131B 182200507、扣回 1131A），
+	 * 交付 Nadaelo(203101) 报告翻 REWARD；con_quest 链式接取窗 = 1132。
+	 * 1131: Hyacinte grants 1131A on accept, the Shugo relay swaps it for 1131B, Nadaelo hands in.
+	 */
 	@Test
-	void undeliveredArmourOpensTheShugoConversationBeforeTheTransferPage() {
-		CompiledQuestDefinition definition = load(1131);
-		QuestTransition route = route(definition, "started", "started",
-			new QuestEvent.TalkToNpc(799093, 31));
+	void armourTransferFollowsTheRetailRelayStepChannels() {
+		SimpleTalkHandler handler = NativeTalkFixture.handler();
+		NativeTalkFixture.RecordingInventory inventory = new NativeTalkFixture.RecordingInventory();
+		SimpleTalkHandler itemHandler = NativeTalkFixture.handler(inventory);
+		Player player = NativeTalkFixture.player(Race.ELYOS, PlayerClass.WARRIOR, 20);
 
-		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(1352)), route.afterCommit());
-		// W6 尾（quest-native-dispatch）：SimpleTalk 阶段腿重建把阶段节点改为 s1/s2/… 命名（QE-080），
-		// 旧转写长名 shugo 随之退场；1352 交付前对话页与 10000 交接边（装甲 Give/Remove）语义不变。
-		// W6 tail: the staged-ladder rebuild renamed stage nodes to s1/s2/… (QE-080); the legacy
-		// transcribed name "shugo" retires, while the 1352 pre-transfer page and the 10000 hand-over
-		// edge (armour give/remove) keep their semantics.
-		QuestTransition transfer = route(definition, "started", "s1",
-			new QuestEvent.TalkToNpc(799093, 10000));
-		assertTrue(transfer.actions().contains(new QuestAction.GiveItem(182200507, 1)));
-		assertTrue(transfer.actions().contains(new QuestAction.RemoveItem(182200506, 1)));
+		assertEquals(203097, handler.acquireNpc(1131), "接取 NPC（Hyacinte）");
+		assertEquals(203101, handler.rewardNpc(1131), "交付 NPC（Nadaelo）");
+		assertEquals(new SimpleTalkHandler.ItemStack(182200506, 1), handler.acceptGiveItem(1131), "接取发放");
+		assertEquals(new SimpleTalkHandler.ItemStack(182200507, 1), handler.stepGiveItem(1131, 1), "步内发放");
+		assertEquals(new SimpleTalkHandler.ItemStack(182200506, 1), handler.stepRemoveItem(1131, 1), "步内扣除");
+		assertEquals(1132, handler.conQuest(1131), "链式接取窗下一环");
+
+		NativeTalkFixture.clearPackets(player);
+		assertTrue(itemHandler.onDialog(NativeTalkFixture.dialog(player, 203097, 1131, 20000)), "接取");
+		NativeTalkFixture.assertOnlyDialogPage(player, SimpleTalkHandler.PAGE_ACCEPTED);
+		assertEquals(List.of("give:182200506:1"), inventory.calls(), "接取发放 1131A");
+
+		inventory.clear();
+		NativeTalkFixture.clearPackets(player);
+		assertTrue(itemHandler.onDialog(NativeTalkFixture.dialog(player, 799093, 1131, 10000)), "中继换手");
+		assertEquals(QuestStatus.START, player.getQuestStateList().getQuestState(1131).getStatus(),
+			"换手步不翻领奖态");
+		NativeTalkFixture.assertOnlyDialogPage(player, 1352);
+		assertEquals(List.of("give:182200507:1", "remove:182200506:1"), inventory.calls(), "步内先发后扣");
+
+		NativeTalkFixture.clearPackets(player);
+		assertTrue(handler.onDialog(NativeTalkFixture.dialog(player, 203101, 1131, 1009)), "交付报告");
+		assertEquals(QuestStatus.REWARD, player.getQuestStateList().getQuestState(1131).getStatus());
+		NativeTalkFixture.assertOnlyDialogPage(player, SimpleTalkHandler.PAGE_REWARD_WINDOW);
 	}
 
+	/**
+	 * 1156（톨바스 마을 도난 사건 &lt;2&gt;）：接取 Santenius(203128)，中继 BrownieLump_Q43(700003) 步骤 1，
+	 * 交付 Gapir(798003)；真端行无 give/remove、无 item_check ⇒ 全程无物品通道；con_quest = 1157。
+	 * 1156: Santenius acquires, the Brownie relays, Gapir hands in; the row declares no item channels.
+	 */
 	@Test
-	void stolenVillageSealUsesTheItemStackOnlyAfterAcceptance() {
-		CompiledQuestDefinition definition = load(1156);
+	void stolenSealChainKeepsTheBrownieRelayAndGapirHandIn() {
+		SimpleTalkHandler handler = NativeTalkFixture.handler();
 
-		route(definition, "started", "started",
-			new QuestEvent.CanAct(700003, "ACTION_ITEM_USE"));
-		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(1352)),
-			route(definition, "started", "started", new QuestEvent.TalkToNpc(700003, -1)).afterCommit());
-		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(1353)),
-			route(definition, "started", "started", new QuestEvent.TalkToNpc(700003, 1353)).afterCommit());
-		assertEquals(List.of(
-			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
-			new AfterCommitAction.CloseDialog()),
-			route(definition, "started", "k1", new QuestEvent.TalkToNpc(700003, 10000)).afterCommit());
-		// S2：交付 = QUEST_SELECT(k1→reward) 空门（真端行无 item_check）直翻领奖态并下发奖励窗；SELECT5
-		// 报告页与 1009 检查中转随规范交付段退场（未集齐零路由，关窗兜底交 DialogService）。
-		// S2 canonical delivery: QUEST_SELECT(k1→reward) with the empty gate flips REWARD and shows the
-		// reward window; the report page and the 1009 check relay retire with the canonical segment.
-		QuestTransition delivery = route(definition, "k1", "reward", new QuestEvent.TalkToNpc(798003, 31));
-		assertEquals(List.of(), delivery.conditions());
-		assertEquals(List.of(), delivery.actions());
-		assertEquals(List.of(
-			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
-			new AfterCommitAction.ShowQuestDialog(deliveryWindowPage(definition.definition().metadata()))),
-			delivery.afterCommit());
-		assertFalse(definition.definition().transitions().stream().anyMatch(transition ->
-			Objects.equals(transition.sourceNode(), "k1") && "reward".equals(transition.targetNode())
-				&& transition.event().equals(new QuestEvent.TalkToNpc(798003, 1009))),
-			"quest 1156 的 1009 检查中转必须随规范交付段退场");
-		route(definition, "reward", "complete", new QuestEvent.TalkToNpc(798003, 8));
-
-		assertFalse(definition.definition().transitions().stream().anyMatch(transition ->
-			Objects.equals(transition.sourceNode(), "unaccepted")
-				&& transition.event() instanceof QuestEvent.TalkToNpc talk
-				&& (talk.npcId() == 700003 || talk.npcId() == 798003)));
+		assertTrue(handler.routes(1156), "1156 必须由 native 车道路由");
+		assertEquals(203128, handler.acquireNpc(1156), "接取 NPC（Santenius）");
+		assertEquals(798003, handler.rewardNpc(1156), "交付 NPC（Gapir）");
+		assertTrue(handler.relaysForNpc(700003).stream()
+				.anyMatch(relay -> relay.questId() == 1156 && relay.step() == 1),
+			"中继步 1 挂在 BrownieLump_Q43 700003");
+		assertNull(handler.acceptGiveItem(1156), "接取无发放");
+		assertNull(handler.stepGiveItem(1156, 1), "步内无发放");
+		assertNull(handler.stepRemoveItem(1156, 1), "步内无扣除");
+		assertTrue(handler.workItems(1156).isEmpty(), "无 item_check 门");
+		assertFalse(handler.unresolvedGate(1156), "非 item_check 行无门");
+		assertEquals(1157, handler.conQuest(1156), "链式接取窗下一环");
 	}
 
+	/**
+	 * 1158（톨바스 마을 도난 사건 &lt;4&gt;）：与 1156 互为反向主（接取 Gapir 798003 / 交付 Santenius 203128），
+	 * 中继 BrownieLump_Q43(700003) 步骤 1 发放 ITEM_QUEST_1158A(182200502)；quest.xml 前置 Q1157。
+	 * 1158 mirrors 1156 (Gapir acquires, Santenius hands in); the relay grants 1158A; prerequisite Q1157.
+	 */
 	@Test
-	void recoveredVillageSealUsesTheItemStackOnlyAfterAcceptance() {
-		CompiledQuestDefinition definition = load(1158);
+	void recoveredSealChainGrantsTheSealOnTheBrownieRelay() {
+		SimpleTalkHandler handler = NativeTalkFixture.handler();
+		NativeTalkFixture.RecordingInventory inventory = new NativeTalkFixture.RecordingInventory();
+		SimpleTalkHandler itemHandler = NativeTalkFixture.handler(inventory);
+		Player player = NativeTalkFixture.player(Race.ELYOS, PlayerClass.WARRIOR, 20);
 
-		assertObjectGate(definition, "started", 700003);
-		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(1352)),
-			route(definition, "started", "started", new QuestEvent.TalkToNpc(700003, -1)).afterCommit());
-		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(1353)),
-			route(definition, "started", "started", new QuestEvent.TalkToNpc(700003, 1353)).afterCommit());
-		QuestTransition seal = route(definition, "started", "k1",
-			new QuestEvent.TalkToNpc(700003, 10000));
-		assertTrue(seal.actions().contains(new QuestAction.GiveItem(182200502, 1)));
-		assertEquals(List.of(
-			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
-			new AfterCommitAction.CloseDialog()), seal.afterCommit());
-		assertFalse(definition.definition().transitions().stream().anyMatch(transition ->
-			Objects.equals(transition.sourceNode(), "started")
-				&& transition.event().equals(new QuestEvent.TalkToNpc(700003, QuestDialogAction.QUEST_SELECT.id()))));
-		assertNoUnacceptedObjectRoute(definition, 700003);
+		assertEquals(798003, handler.acquireNpc(1158), "接取 NPC（Gapir）");
+		assertEquals(203128, handler.rewardNpc(1158), "交付 NPC（Santenius）");
+		assertEquals(new SimpleTalkHandler.ItemStack(182200502, 1), handler.stepGiveItem(1158, 1), "步内发放印章");
+		assertNull(handler.stepRemoveItem(1158, 1), "步内无扣除");
+		assertTrue(handler.workItems(1158).isEmpty(), "真端行未声明 item_check：交付门不生效");
+		assertEquals("Q1157", NativeQuestXmlTable.instance().require(1158).text("finished_quest_cond1"),
+			"真端前置轴");
+
+		NativeTalkFixture.completePrerequisites(player, 1157);
+		NativeTalkFixture.clearPackets(player);
+		assertTrue(itemHandler.onDialog(NativeTalkFixture.dialog(player, 798003, 1158, 1002)), "接取");
+		NativeTalkFixture.assertOnlyDialogPage(player, SimpleTalkHandler.PAGE_ACCEPTED);
+
+		NativeTalkFixture.clearPackets(player);
+		assertTrue(itemHandler.onDialog(NativeTalkFixture.dialog(player, 700003, 1158, 10000)), "中继步 1");
+		NativeTalkFixture.assertOnlyDialogPage(player, 1352);
+		assertEquals(List.of("give:182200502:1"), inventory.calls(), "步内发放印章");
+
+		NativeTalkFixture.clearPackets(player);
+		assertTrue(handler.onDialog(NativeTalkFixture.dialog(player, 203128, 1158, 1009)), "交付报告");
+		assertEquals(QuestStatus.REWARD, player.getQuestStateList().getQuestState(1158).getStatus());
+		NativeTalkFixture.assertOnlyDialogPage(player, SimpleTalkHandler.PAGE_REWARD_WINDOW);
 	}
 
+	/**
+	 * 1141（고고하스 대화퀘）：接取 Scarecrow_Nola(730001) / 交付 LF1a_Barrel(700122)，零中继、无交付门；
+	 * 领奖窗由交付 NPC 自己承担（页与选择按钮同 owner）；quest.xml 前置 Q1143。
+	 * 1141: Scarecrow_Nola acquires, the barrel object hands in; no relay, no gate, prerequisite Q1143.
+	 */
 	@Test
-	void belbuasWineBarrelUsesTheObjectRouteOnlyAfterAcceptance() {
-		CompiledQuestDefinition definition = load(1141);
+	void wineBarrelHandInUsesTheClientDeclaredReportOwner() {
+		SimpleTalkHandler handler = NativeTalkFixture.handler();
+		Player player = NativeTalkFixture.player(Race.ELYOS, PlayerClass.WARRIOR, 20);
 
-		// P0c-24 裁定（真端对、XML 错）：客户端模板索引声明酒桶(700122)的报告开启动作 =
-		// QUEST_SELECT(31)（对象也走对话开启），与族编译一致；遗留 XML 的 USE_OBJECT 与手制
-		// CanAct 门是推断形。1141 真端行无掉落——validator 的 ACTION_ITEM_USE 门要求是掉落驱动
-		// （quest_use_item 掉落才需要），无掉落无门。
-		// P0c-24 adjudication (retail-right, XML-wrong): the client template index declares the
-		// barrel's (700122) report opener as QUEST_SELECT(31) — objects also open via the dialog
-		// action, matching the family compile. The legacy XML's USE_OBJECT route and hand-made
-		// CanAct gate were inferred. The retail row has no drops, and the validator's
-		// ACTION_ITEM_USE gate requirement is drop-driven, so no gate applies.
-		// P0-3 S1：SimpleTalk 接取/交付切真端规范形（页 4 / 分档窗）。真端行 1141 只有
-		// acquired=Scarecrow_Nola / reward=LF1a_Barrel 两列、零 item_check（Quest_SimpleTalk.xml:379-383），
-		// 交付 = QUEST_SELECT(31) 空门直翻领奖态并下发第 1 档奖励窗（quest.xml:3729-3731 的 exp +
-		// 单道具一档）；报告页 SELECT5(2375) 与 1009 中转随页链退场。
-		// P0-3 S1: 1141's canonical delivery is the empty-gate QUEST_SELECT(31) flipping REWARD with
-		// the first reward window; the SELECT5(2375) report page and the 1009 hop are gone.
-		QuestTransition delivery = route(definition, "started", "reward",
-			new QuestEvent.TalkToNpc(700122, QuestDialogAction.QUEST_SELECT.id()));
-		assertTrue(delivery.conditions().isEmpty(), "no item gate without item_check");
-		assertTrue(delivery.actions().isEmpty());
-		assertEquals(List.of(
-			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
-			new AfterCommitAction.ShowQuestDialog(5)), delivery.afterCommit());
-		// 负控限定交付段（started 源）：reward 源的完成预览另一条 1009 边属完成流，不在本轮面内。
-		// The negative control is scoped to the delivery segment (started source); the reward-state
-		// completion preview keeps its own 1009 edge.
-		assertTrue(definition.definition().transitions().stream()
-			.filter(transition -> "started".equals(transition.sourceNode()))
-			.noneMatch(transition -> transition.event() instanceof QuestEvent.TalkToNpc talk
-				&& talk.dialogId() != null && talk.dialogId() == QuestDialogAction.SELECT_QUEST_REWARD.id()),
-			"canonical removed the started 1009 hop");
-		assertTrue(definition.definition().transitions().stream()
-			.flatMap(transition -> transition.afterCommit().stream())
-			.noneMatch(action -> action instanceof AfterCommitAction.ShowQuestDialog dialog
-				&& dialog.dialogId() == QuestDialogPage.SELECT5.id()),
-			"canonical removed the select5 report page");
-		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(5)),
-			route(definition, "reward", "reward", new QuestEvent.TalkToNpc(700122, -1)).afterCommit());
-		QuestTransition completion = route(definition, "reward", "complete",
-			new QuestEvent.TalkToNpc(700122, 8));
-		assertEquals(new AfterCommitAction.ShowQuestSelectionDialog(10), completion.afterCommit().getLast());
+		assertTrue(handler.routes(1141), "1141 必须由 native 车道路由");
+		assertEquals(730001, handler.acquireNpc(1141), "接取 NPC（Scarecrow_Nola）");
+		assertEquals(700122, handler.rewardNpc(1141), "交付 NPC（LF1a_Barrel 物件）");
+		assertEquals(0, handler.relayCount(1141), "无中继步");
+		assertTrue(handler.workItems(1141).isEmpty(), "无 item_check 门");
+		assertNull(handler.acceptGiveItem(1141), "接取无发放");
+		assertEquals("Q1143", NativeQuestXmlTable.instance().require(1141).text("finished_quest_cond1"),
+			"真端前置轴");
 
-		assertNoUnacceptedObjectRoute(definition, 700122);
+		NativeTalkFixture.completePrerequisites(player, 1143);
+		NativeTalkFixture.clearPackets(player);
+		assertTrue(handler.onDialog(NativeTalkFixture.dialog(player, 730001, 1141, 31)), "接取问询");
+		NativeTalkFixture.assertOnlyDialogPage(player, NativeTalkFixture.clientEntryPage(1141));
+		NativeTalkFixture.clearPackets(player);
+		assertTrue(handler.onDialog(NativeTalkFixture.dialog(player, 730001, 1141, 1002)), "接取确认");
+		NativeTalkFixture.assertOnlyDialogPage(player, SimpleTalkHandler.PAGE_ACCEPTED);
+
+		// 报告：零中继 + 空门 ⇒ 直接翻 REWARD 并下发奖励窗（页 5 与选择按钮同 owner）。
+		NativeTalkFixture.clearPackets(player);
+		assertTrue(handler.onDialog(NativeTalkFixture.dialog(player, 700122, 1141, 1009)), "酒桶报告");
+		assertEquals(QuestStatus.REWARD, player.getQuestStateList().getQuestState(1141).getStatus());
+		NativeTalkFixture.assertOnlyDialogPage(player, SimpleTalkHandler.PAGE_REWARD_WINDOW);
 	}
 
 	@Test
@@ -212,30 +263,81 @@ class EarlyElyosQuestRegressionTest {
 		assertNoUnacceptedObjectRoute(definition, 700005);
 	}
 
+	/**
+	 * 1311（진균 재배지）仍在 IR 车道（{@code definitions/quests/1311.xml}）：物件门 + 工作物品回收。
+	 * 1414 已随 P3 移出 IR，见下方 native 用例。
+	 * 1311 stays on the IR lane; 1414 left it with P3 (native case below).
+	 */
 	@Test
-	void germAndWindmillObjectsRequireAndConsumeTheirWorkItems() {
-		for (int[] expected : new int[][]{
-			{1311, 203997, 700164, 182201305},
-			{1414, 203989, 700175, 182201349}}) {
-			int questId = expected[0];
-			int startNpc = expected[1];
-			int objectNpc = expected[2];
-			int workItem = expected[3];
-			CompiledQuestDefinition definition = load(questId);
+	void germObjectRequiresAndConsumesItsWorkItem() {
+		CompiledQuestDefinition definition = load(1311);
+		int startNpc = 203997;
+		int objectNpc = 700164;
+		int workItem = 182201305;
 
-			assertTrue(definition.definition().transitions().stream().anyMatch(transition ->
-				Objects.equals(transition.sourceNode(), "unaccepted") && transition.targetNode().equals("started")
-					&& transition.event() instanceof QuestEvent.TalkToNpc talk && talk.npcId() == startNpc
-					&& transition.actions().contains(new QuestAction.GiveItem(workItem, 1))));
-			assertObjectGate(definition, "started", objectNpc);
-			QuestTransition use = route(definition, "started", "reward",
-				new QuestEvent.TalkToNpc(objectNpc, -1));
-			assertTrue(use.conditions().contains(new QuestCondition.HasItem(workItem, 1)));
-			assertTrue(use.actions().contains(new QuestAction.RemoveItem(workItem, 1)));
-			assertTrue(use.afterCommit().contains(
-				new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH)));
-			assertNoUnacceptedObjectRoute(definition, objectNpc);
-		}
+		assertTrue(definition.definition().transitions().stream().anyMatch(transition ->
+			Objects.equals(transition.sourceNode(), "unaccepted") && transition.targetNode().equals("started")
+				&& transition.event() instanceof QuestEvent.TalkToNpc talk && talk.npcId() == startNpc
+				&& transition.actions().contains(new QuestAction.GiveItem(workItem, 1))));
+		assertObjectGate(definition, "started", objectNpc);
+		QuestTransition use = route(definition, "started", "reward",
+			new QuestEvent.TalkToNpc(objectNpc, -1));
+		assertTrue(use.conditions().contains(new QuestCondition.HasItem(workItem, 1)));
+		assertTrue(use.actions().contains(new QuestAction.RemoveItem(workItem, 1)));
+		assertTrue(use.afterCommit().contains(
+			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH)));
+		assertNoUnacceptedObjectRoute(definition, objectNpc);
+	}
+
+	/**
+	 * 1414（카이단 괴멸작전 시작）：接取/交付同主 Aeolus(203989)，中继 LF2_Gear_Q1414(700175) 步 1 发
+	 * ITEM_QUEST_1414A(182201349)；quest.xml 前置 Q1413 未完成时真端拒接（native fail-closed）。
+	 * 1414: same-NPC owners, one relay that grants 1414A; acquisition fails closed without Q1413.
+	 */
+	@Test
+	void gearRelayGrantsTheQuestItemAndFailsClosedWithoutThePrerequisite() {
+		SimpleTalkHandler handler = NativeTalkFixture.handler();
+		NativeTalkFixture.RecordingInventory inventory = new NativeTalkFixture.RecordingInventory();
+		SimpleTalkHandler itemHandler = NativeTalkFixture.handler(inventory);
+		Player player = NativeTalkFixture.player(Race.ELYOS, PlayerClass.WARRIOR, 40);
+
+		assertTrue(handler.routes(1414), "1414 必须由 native 车道路由");
+		assertEquals(203989, handler.acquireNpc(1414), "接取 NPC（Aeolus）");
+		assertEquals(203989, handler.rewardNpc(1414), "交付 NPC（真端同主）");
+		assertEquals(1, handler.relayCount(1414), "中继步数 = 1");
+		assertTrue(handler.relaysForNpc(700175).stream()
+				.anyMatch(relay -> relay.questId() == 1414 && relay.step() == 1),
+			"中继步 1 挂在 LF2_Gear_Q1414");
+		assertEquals(new SimpleTalkHandler.ItemStack(182201349, 1), handler.stepGiveItem(1414, 1), "步内发放");
+		assertTrue(handler.workItems(1414).isEmpty(), "真端行未声明 item_check：交付门不生效");
+		assertEquals("Q1413", NativeQuestXmlTable.instance().require(1414).text("finished_quest_cond1"),
+			"真端前置轴");
+
+		// 真端 quest.xml 声明 bm_restrict_category=1：128 位地图位集语义未坐实 ⇒ native fail-closed，
+		// 该行当前不可接取（阻塞项登记于计划 §10.3；接线前不得放行兜底）。
+		// The retail row declares bm_restrict_category=1; the 128-bit map bitset is not decoded yet, so the
+		// native lane fails closed and this row cannot be acquired (registered blocker in plan §10.3).
+		assertEquals("1", NativeQuestXmlTable.instance().require(1414).text("bm_restrict_category"),
+			"真端 bm 轴");
+		NativeTalkFixture.clearPackets(player);
+		assertEquals(NativeQuestStartPort.Outcome.BM_RESTRICT_UNRESOLVED,
+			NativeQuestStartPort.instance().evaluateNpcAcquire(player, 1414).outcome(), "bm 轴 fail-closed");
+		assertFalse(handler.onDialog(NativeTalkFixture.dialog(player, 203989, 1414, 1002)), "bm 未坐实不得建档");
+		assertNull(player.getQuestStateList().getQuestState(1414), "拒接不得落库");
+		assertEquals(List.of(), NativeTalkFixture.dialogPages(player), "拒接不发页");
+
+		// 接取轴外的形状（中继发物 → 报告领奖）用直建 START 行验证：机械面必须与真端行一致。
+		// The relay/report machinery is verified on a seeded START row (the acquire axis above is blocked).
+		NativeTalkFixture.start(player, 1414);
+		NativeTalkFixture.clearPackets(player);
+		assertTrue(itemHandler.onDialog(NativeTalkFixture.dialog(player, 700175, 1414, 10000)), "中继步 1");
+		NativeTalkFixture.assertOnlyDialogPage(player, 1352);
+		assertEquals(List.of("give:182201349:1"), inventory.calls(), "步内发放");
+
+		NativeTalkFixture.clearPackets(player);
+		assertTrue(handler.onDialog(NativeTalkFixture.dialog(player, 203989, 1414, 1009)), "交付报告");
+		assertEquals(QuestStatus.REWARD, player.getQuestStateList().getQuestState(1414).getStatus());
+		NativeTalkFixture.assertOnlyDialogPage(player, SimpleTalkHandler.PAGE_REWARD_WINDOW);
 	}
 
 	@Test
@@ -309,8 +411,10 @@ class EarlyElyosQuestRegressionTest {
 		}
 	}
 
+	/** 1647（볼빅 동상）仍在 IR 车道：物件门 + 装备门，交付不需工作物品。 /
+	 * 1647 stays on the IR lane: object gate plus equipped-item gates. */
 	@Test
-	void bollvigStatueAndLeatherSlipperRestoreTheirLegacyGates() {
+	void bollvigStatueRestoresItsLegacyGates() {
 		CompiledQuestDefinition bollvig = load(1647);
 		assertObjectGate(bollvig, "started", 700272);
 		QuestTransition statue = route(bollvig, "started", "reward",
@@ -319,29 +423,69 @@ class EarlyElyosQuestRegressionTest {
 		assertTrue(statue.conditions().contains(new QuestCondition.EquippedItem(110100150)));
 		assertTrue(statue.conditions().contains(new QuestCondition.EquippedItem(113100144)));
 		assertNoUnacceptedObjectRoute(bollvig, 700272);
-
-		CompiledQuestDefinition slipper = load(1691);
-		// W6 尾（quest-native-dispatch）：阶段腿重建（QE-080）把 spoken-to-diana / returned-to-sneaker
-		// 改为 s1 / s2+s3 阶梯；鞋匠 700563 的对话页 2034 现挂 QUEST_SELECT(31) 自环（旧 -1 门随
-		// 物件规范形退场），10002 交接边新增任务物品发放，领奖 = 798386 的 QUEST_SELECT(31) 直达奖励窗。
-		// W6 tail: the staged-ladder rebuild (QE-080) renamed spoken-to-diana / returned-to-sneaker to
-		// the s1 / s2+s3 ladder; the shoe NPC's page 2034 now rides the QUEST_SELECT(31) self-loop (the
-		// legacy -1 gate retires with the object canonical), the 10002 edge grants the quest item, and
-		// the reward window is reached on 798386/31.
-		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(1352)),
-			route(slipper, "started", "started", new QuestEvent.TalkToNpc(790005, 31)).afterCommit());
-		route(slipper, "started", "s1", new QuestEvent.TalkToNpc(790005, 10000));
-		route(slipper, "s1", "s2", new QuestEvent.TalkToNpc(798386, 10001));
-		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(2034)),
-			route(slipper, "s2", "s2", new QuestEvent.TalkToNpc(700563, 31)).afterCommit());
-		QuestTransition slipperHandin = route(slipper, "s2", "s3",
-			new QuestEvent.TalkToNpc(700563, 10002));
-		assertTrue(slipperHandin.actions().contains(new QuestAction.GiveItem(182201826, 1)));
-		assertEquals(new AfterCommitAction.CloseDialog(), slipperHandin.afterCommit().getLast());
-		route(slipper, "s3", "reward", new QuestEvent.TalkToNpc(798386, 31));
-		assertNoUnacceptedObjectRoute(slipper, 700563);
 	}
 
+	/**
+	 * 1691（내가 니 딸이다1）：接取/交付同主 Harmone(798386)，三段中继 Noiyus(790005) →
+	 * Harmone(798386) → LF3_FOBJ_Q1691(700563)，第 3 步发 ITEM_QUEST_1691A(182201826)；
+	 * quest.xml 前置 Q1932，con_quest 链式接取窗 = 1692。
+	 * 1691: three-step relay ladder with the 1691A grant on step 3; prerequisite Q1932.
+	 */
+	@Test
+	void leatherSlipperChainFollowsTheThreeStepRetailLadder() {
+		SimpleTalkHandler handler = NativeTalkFixture.handler();
+		NativeTalkFixture.RecordingInventory inventory = new NativeTalkFixture.RecordingInventory();
+		SimpleTalkHandler itemHandler = NativeTalkFixture.handler(inventory);
+		Player player = NativeTalkFixture.player(Race.ELYOS, PlayerClass.WARRIOR, 40);
+
+		assertTrue(handler.routes(1691), "1691 必须由 native 车道路由");
+		assertEquals(798386, handler.acquireNpc(1691), "接取 NPC（Harmone）");
+		assertEquals(798386, handler.rewardNpc(1691), "交付 NPC（真端同主）");
+		assertEquals(3, handler.relayCount(1691), "中继步数 = 3");
+		int[][] ladder = {{1, 790005}, {2, 798386}, {3, 700563}};
+		for (int[] step : ladder) {
+			assertTrue(handler.relaysForNpc(step[1]).stream()
+					.anyMatch(relay -> relay.questId() == 1691 && relay.step() == step[0]),
+				"第 " + step[0] + " 步必须挂在 " + step[1]);
+		}
+		assertNull(handler.stepGiveItem(1691, 1), "第 1 步无发放");
+		assertNull(handler.stepGiveItem(1691, 2), "第 2 步无发放");
+		assertEquals(new SimpleTalkHandler.ItemStack(182201826, 1), handler.stepGiveItem(1691, 3), "第 3 步发放");
+		assertEquals(1692, handler.conQuest(1691), "链式接取窗下一环");
+		assertEquals("Q1932", NativeQuestXmlTable.instance().require(1691).text("finished_quest_cond1"),
+			"真端前置轴");
+
+		// 真端 quest.xml 声明 bm_restrict_category=1：128 位地图位集未坐实 ⇒ native fail-closed（计划 §10.3）。
+		// The row declares bm_restrict_category=1; the 128-bit map bitset is not decoded yet ⇒ fail closed.
+		assertEquals("1", NativeQuestXmlTable.instance().require(1691).text("bm_restrict_category"),
+			"真端 bm 轴");
+		assertEquals(NativeQuestStartPort.Outcome.BM_RESTRICT_UNRESOLVED,
+			NativeQuestStartPort.instance().evaluateNpcAcquire(player, 1691).outcome(), "bm 轴 fail-closed");
+		assertFalse(handler.onDialog(NativeTalkFixture.dialog(player, 798386, 1691, 1002)), "bm 未坐实不得建档");
+		assertNull(player.getQuestStateList().getQuestState(1691), "拒接不得落库");
+
+		// 直建 START 行验证三段阶梯与报告领奖的机械面。 / Seed START and walk the three-step ladder.
+		NativeTalkFixture.start(player, 1691);
+		for (int index = 0; index < ladder.length; index++) {
+			NativeTalkFixture.clearPackets(player);
+			assertTrue(itemHandler.onDialog(NativeTalkFixture.dialog(player, ladder[index][1], 1691,
+				10000 + index)), "第 " + (index + 1) + " 步推进");
+			NativeTalkFixture.assertOnlyDialogPage(player, SimpleTalkHandler.pageForStep(index + 1));
+		}
+		assertEquals(List.of("give:182201826:1"), inventory.calls(), "只有第 3 步发放");
+
+		NativeTalkFixture.clearPackets(player);
+		assertTrue(handler.onDialog(NativeTalkFixture.dialog(player, 798386, 1691, 1009)), "交付报告");
+		assertEquals(QuestStatus.REWARD, player.getQuestStateList().getQuestState(1691).getStatus());
+		NativeTalkFixture.assertOnlyDialogPage(player, SimpleTalkHandler.PAGE_REWARD_WINDOW);
+	}
+
+	/**
+	 * 范围外红（登记不修）：1137 属 P4 SimpleCollectItem 族的真端行，其生产定义已由族编译器改为
+	 * 交付规范形，本用例仍按旧 IR 边的形状断言 ⇒ 随 P4 切换批重锚（不属 P3 步骤 5）。
+	 * Out-of-scope red (registered, not fixed): 1137 belongs to the P4 SimpleCollectItem family; its
+	 * production shape moved with the family compiler, so this IR-edge assertion re-anchors with P4.
+	 */
 	@Test
 	void fossilCollectionPublishesProgressAndFinalNpcConsumesOnlyTheCollectedItem() {
 		CompiledQuestDefinition definition = load(1137);
@@ -441,29 +585,47 @@ class EarlyElyosQuestRegressionTest {
 			new AfterCommitAction.ShowQuestDialog(1003)), accept.afterCommit());
 	}
 
+	/**
+	 * 1117（스파키의 발광체）：接取/交付同主 Pranoa(203074)，表行 {@code item_check=1} 且
+	 * quest.xml {@code collect_item1 = check_item1_1 = quest_1117a 3} ⇒ 交付门 = 工作物品 ×3；
+	 * 报告时未集齐保持 START（进行中页 10），集齐才翻 REWARD 并扣整组。
+	 * 1117: same-NPC acquisition and hand-in with the retail item_check gate (3 items).
+	 */
 	@Test
-	void singleItemCollection1117DeliveryTransitionsToRewardWindowDirectly() {
-		CompiledQuestDefinition definition = load(1117);
-		// P0-3 S1：SimpleTalk 接取/交付切真端规范形（页 4 / 分档窗）。真端行 1117 acquired=reward=
-		// Pranoa、item_check=1 且 quest.xml 已声明 collect_item（quest_1117a 3，Quest_SimpleTalk.xml:310-314），
-		// 交付 = QUEST_SELECT(31) 带整组 HasItem 门直翻领奖态并下发第 1 档奖励窗；39/20002 检查对与
-		// select6 失败页退场（未集齐 = 零路由，关窗兜底交 DialogService）。
-		// P0-3 S1: 1117's canonical delivery is QUEST_SELECT(31) gated by the whole hand-in set,
-		// flipping REWARD with the first reward window; the 39/20002 check pairs and the select6
-		// failure page are gone (an incomplete hand-in has no route at all).
-		QuestTransition itemCheck = route(definition, "started", "reward",
-			new QuestEvent.TalkToNpc(203074, QuestDialogAction.QUEST_SELECT.id()));
-		assertTrue(itemCheck.conditions().contains(new QuestCondition.HasItem(182200208, 3)));
-		assertTrue(itemCheck.actions().contains(new QuestAction.RemoveItem(182200208, 3)));
-		assertEquals(List.of(
-			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
-			new AfterCommitAction.ShowQuestDialog(5)), itemCheck.afterCommit());
-		assertTrue(definition.definition().transitions().stream()
-			.filter(transition -> "started".equals(transition.sourceNode()))
-			.noneMatch(transition -> transition.event() instanceof QuestEvent.TalkToNpc talk
-				&& talk.dialogId() != null && talk.dialogId() == QuestDialogAction
-					.CHECK_USER_HAS_QUEST_ITEM.id()),
-			"canonical removed the 39/20002 check pairs");
+	void singleItemCollection1117UsesTheRetailItemCheckGate() {
+		SimpleTalkHandler handler = NativeTalkFixture.handler();
+		NativeTalkFixture.RecordingInventory inventory = new NativeTalkFixture.RecordingInventory();
+		SimpleTalkHandler itemHandler = NativeTalkFixture.handler(inventory);
+		Player player = NativeTalkFixture.player(Race.ELYOS, PlayerClass.WARRIOR, 20);
+
+		assertEquals(203074, handler.acquireNpc(1117), "接取 NPC（Pranoa）");
+		assertEquals(203074, handler.rewardNpc(1117), "交付 NPC（真端同主）");
+		assertEquals(0, handler.relayCount(1117), "无中继步");
+		assertTrue(NativeTalkFixture.row(1117).itemCheck(), "表行声明 item_check");
+		assertEquals(List.of(new SimpleTalkHandler.ItemStack(182200208, 3)), handler.workItems(1117),
+			"交付门 = quest.xml collect_item1 ×3");
+		assertFalse(handler.unresolvedGate(1117), "交付门必须可解");
+		NativeQuestXmlTable.QuestRow row = NativeQuestXmlTable.instance().require(1117);
+		assertEquals("quest_1117a 3", row.text("collect_item1"), "真端收集列");
+		assertEquals("quest_1117a 3", row.text("check_item1_1"), "真端交付门列");
+
+		NativeTalkFixture.clearPackets(player);
+		assertTrue(itemHandler.onDialog(NativeTalkFixture.dialog(player, 203074, 1117, 1002)), "接取");
+		NativeTalkFixture.assertOnlyDialogPage(player, SimpleTalkHandler.PAGE_ACCEPTED);
+
+		// 未集齐：报告门保持 START。 / Without the items the report gate holds.
+		NativeTalkFixture.clearPackets(player);
+		assertTrue(itemHandler.onDialog(NativeTalkFixture.dialog(player, 203074, 1117, 1009)), "报告被受理");
+		assertEquals(QuestStatus.START, player.getQuestStateList().getQuestState(1117).getStatus(),
+			"未集齐必须保持 START");
+		NativeTalkFixture.assertOnlyDialogPage(player, SimpleTalkHandler.PAGE_IN_PROGRESS);
+
+		inventory.hold(182200208, 3);
+		NativeTalkFixture.clearPackets(player);
+		assertTrue(itemHandler.onDialog(NativeTalkFixture.dialog(player, 203074, 1117, 1009)), "交付报告");
+		assertEquals(QuestStatus.REWARD, player.getQuestStateList().getQuestState(1117).getStatus());
+		NativeTalkFixture.assertOnlyDialogPage(player, SimpleTalkHandler.PAGE_REWARD_WINDOW);
+		assertEquals(List.of("remove:182200208:3"), inventory.calls(), "交付门按真端扣除整组");
 	}
 
 	@Test

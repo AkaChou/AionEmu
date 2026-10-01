@@ -14,10 +14,13 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_DIALOG_WINDOW;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_QUEST_ACTION;
 import com.aionemu.gameserver.questEngine.QuestEngine;
+import com.aionemu.gameserver.questEngine.definition.QuestDialogContract;
+import com.aionemu.gameserver.questEngine.definition.QuestDialogPage;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.questEngine.retail.RetailGrantKind;
+import com.aionemu.gameserver.questEngine.retail.RetailQuestMetadataCompiler;
 import com.aionemu.gameserver.questEngine.retail.RetailItemNameIndex;
 import com.aionemu.gameserver.services.QuestService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
@@ -28,7 +31,11 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
  * 完全由真端表 {@code Quest_SimpleTalk.xml}（{@link NativeQuestTableLoader.SimpleTalkRow}）驱动，
  * 不生成 IR 节点图、不经旧编译器。对话状态机按真端 DLL 的两段分派器还原：
  * <ul>
- *   <li>接取侧（真端 {@code cab520} 语义）：接取 NPC 的 QUEST_SELECT → 问询页 4；
+ *   <li>接取侧（真端 {@code cab520} 语义）：接取 NPC 的 QUEST_SELECT → 接取入口页
+ *       （真端表只有 NPC/物品列、没有页列，故取客户端任务页声明的可渲染页：
+ *       {@code ask_quest_accept}(4) → {@code select_none}(4762) → {@code select1}(1011)，见
+ *       {@link QuestDialogContract#acceptEntryPage(int)}；{@code select1} 首屏的 1012/1013
+ *       翻页动作按真端 cab520「原样回发」）；
  *       1002/20000 → {@code SetQuestAcquired} + 页 1003（20000 同时发放 {@code give_item}）；
  *       1003/1004/20001 → 页 1004；</li>
  *   <li>对话侧（真端 {@code cabb10} 语义）：中继 NPC 按 {@code talk_npc1..3} 步进，
@@ -135,6 +142,8 @@ public final class SimpleTalkHandler {
 	/** 路由集 = 注册集 − XML-only 行。 / The routing set: registration set minus XML-owned rows. */
 	private final Set<Integer> routedQuestIds;
 	private final NativeMoviePort moviePort;
+	/** 客户端任务页契约：接取入口页与 select1 续页的唯一取数面。 / Client task-page contract for entry pages. */
+	private final QuestDialogContract dialogContract;
 	/** 唯一解析失败的 NPC 名（证据面）。 / NPC names that did not resolve uniquely (evidence surface). */
 	private final Set<String> unresolvedNames;
 	/** 未解析的物品符号（证据面；非空即报告门 fail-closed）。 / Unresolved item symbols (evidence surface). */
@@ -158,6 +167,7 @@ public final class SimpleTalkHandler {
 		this.nameResolver = nameResolver;
 		this.inventory = inventory;
 		this.moviePort = moviePort;
+		this.dialogContract = QuestDialogContract.loadDefault();
 
 		Map<Integer, Integer> acquires = new LinkedHashMap<>();
 		Map<Integer, Integer> rewards = new LinkedHashMap<>();
@@ -594,8 +604,12 @@ public final class SimpleTalkHandler {
 		}
 		String classToken = player.getCommonData() == null || player.getCommonData().getPlayerClass() == null
 				? null
-				: player.getCommonData().getPlayerClass().name().toLowerCase(java.util.Locale.ROOT);
-		if (!NativeQuestStartPort.tokenPermitted(row.text("class_permitted"), classToken)) {
+				: player.getCommonData().getPlayerClass().name().toUpperCase(java.util.Locale.ROOT);
+		// 职业轴与 NPC 接取/生产元数据同源（真端 token → PlayerClass）。
+		// The class axis shares the retail token mapping used by NPC acquisition and quest metadata.
+		java.util.Set<String> permittedClasses = RetailQuestMetadataCompiler.permittedClassNames(
+				row.text("class_permitted"), minLevel);
+		if (!permittedClasses.isEmpty() && (classToken == null || !permittedClasses.contains(classToken))) {
 			return false;
 		}
 		String genderToken = player.getGender() == null ? null
@@ -783,7 +797,19 @@ public final class SimpleTalkHandler {
 				return false;
 			}
 			if (dialogId == 31 || dialogId == 26) {
-				PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, PAGE_ASK_ACCEPT, questId));
+				// 接取入口页 = 客户端任务页声明的可渲染页（真端表无页列）。
+				// The accept entry page is the page the client task HTML declares.
+				PacketSendUtility.sendPacket(player,
+						new SM_DIALOG_WINDOW(targetObjectId, dialogContract.acceptEntryPage(questId), questId));
+				return true;
+			}
+			// select1 续页翻页（真端 cab520 对 1012/1013 原样回发）；客户端未声明该页即 fail-closed。
+			// select1 page turns (cab520 echoes 1012/1013); undeclared pages fail closed.
+			if (dialogId == QuestDialogPage.SELECT1_1.id() || dialogId == QuestDialogPage.SELECT1_1_1.id()) {
+				if (!dialogContract.hasButtonPage(questId, dialogId)) {
+					return false;
+				}
+				PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, dialogId, questId));
 				return true;
 			}
 			if (dialogId == 1002 || dialogId == 20000) {

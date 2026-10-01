@@ -10,8 +10,15 @@ import com.aionemu.gameserver.questEngine.definition.QuestDialogPage;
 import com.aionemu.gameserver.questEngine.definition.QuestEvent;
 import com.aionemu.gameserver.questEngine.definition.QuestStateSyncMode;
 import com.aionemu.gameserver.questEngine.definition.QuestTransition;
+import com.aionemu.gameserver.model.PlayerClass;
+import com.aionemu.gameserver.model.Race;
+import com.aionemu.gameserver.model.gameobjects.player.Player;
+import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.questEngine.retail.RetailQuestDriver;
+import com.aionemu.gameserver.questEngine.tablelane.NativeQuestXmlTable;
+import com.aionemu.gameserver.questEngine.tablelane.NativeTalkFixture;
+import com.aionemu.gameserver.questEngine.tablelane.SimpleTalkHandler;
 import org.junit.jupiter.api.Test;
 
 
@@ -24,6 +31,7 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -35,7 +43,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 class QuestProductionAcceptProtocolRegressionTest {
 
-	private record AcceptRoute(int questId, int npcId, int startPage) {
+	private record AcceptRoute(int questId, int npcId, int startPage, boolean nativeRow) {
 	}
 
 	/**
@@ -54,6 +62,10 @@ class QuestProductionAcceptProtocolRegressionTest {
 	@Test
 	void everyConfirmedQuestHasACompleteNpcAcceptProtocolAtIrcLevel() throws Exception {
 		for (AcceptRoute route : acceptRoutes()) {
+			if (route.nativeRow()) {
+				assertNativeAcceptProtocol(route);
+				continue;
+			}
 			CompiledQuestDefinition definition = definition(route.questId());
 			List<QuestTransition> talks = definition.transitionsFor("TALK_TO_NPC");
 
@@ -74,6 +86,10 @@ class QuestProductionAcceptProtocolRegressionTest {
 	@Test
 	void everyConfirmedQuestAcceptsThroughTheStandardDialogFlow() throws Exception {
 		for (AcceptRoute route : acceptRoutes()) {
+			if (route.nativeRow()) {
+				assertNativeAcceptProtocol(route);
+				continue;
+			}
 			CompiledQuestDefinition definition = definition(route.questId());
 			AtomicReference<QuestStatus> status = new AtomicReference<>(QuestStatus.NONE);
 			List<QuestMutationPlan> plans = new ArrayList<>();
@@ -124,9 +140,38 @@ class QuestProductionAcceptProtocolRegressionTest {
 		80031, QuestDialogPage.SELECT1.id(),
 		80032, QuestDialogPage.SELECT1.id());
 
+	/** 原生车道的接取职业（真端 {@code class_permitted} 词表 → PlayerClass）。 /
+	 * The native accept class per quest (retail {@code class_permitted} tokens → PlayerClass). */
+	private static final Map<Integer, PlayerClass> NATIVE_ACCEPT_CLASSES = Map.of(
+		1913, PlayerClass.GLADIATOR,
+		1914, PlayerClass.ASSASSIN,
+		1915, PlayerClass.SORCERER,
+		1916, PlayerClass.CHANTER,
+		80028, PlayerClass.WARRIOR,
+		80031, PlayerClass.WARRIOR,
+		80032, PlayerClass.WARRIOR);
+
+	/** 真端前置 {@code Q1007:n} 的奖励档（0 基；转职仪式 1..4 → 0..3）。 /
+	 * The reward slot of the retail {@code Q1007:n} prerequisite (zero-based). */
+	private static final Map<Integer, Integer> NATIVE_PREREQ_SLOTS = Map.of(
+		1913, 0, 1914, 1, 1915, 2, 1916, 3);
+
 	private static List<AcceptRoute> acceptRoutes() throws Exception {
 		List<AcceptRoute> routes = new ArrayList<>();
+		SimpleTalkHandler nativeTalk = NativeTalkFixture.handler();
 		for (int questId : CONFIRMED_QUESTS) {
+			if (nativeTalk.routes(questId)) {
+				// P3 重锚（计划 §8.9）：SimpleTalk 切换批后这些行由 native 车道驱动，接取首屏取客户端任务页
+				// 声明的可渲染页（80028/80031/80032 也声明真端接取窗页 4）；旧的 IR 首屏 1011 随之退场。
+				// P3 re-anchor (plan §8.9): these rows are native now; the first screen is the page the client
+				// task HTML declares (page 4), so the retired IR first screen 1011 no longer applies.
+				Integer npcId = nativeTalk.acquireNpc(questId);
+				if (npcId == null) {
+					throw new IllegalStateException("quest " + questId + " is a native row without an acquire npc");
+				}
+				routes.add(new AcceptRoute(questId, npcId, NativeTalkFixture.clientEntryPage(questId), true));
+				continue;
+			}
 			CompiledQuestDefinition definition = definition(questId);
 			Integer startPage = START_PAGES.get(questId);
 			if (startPage == null) {
@@ -139,9 +184,52 @@ class QuestProductionAcceptProtocolRegressionTest {
 				.map(t -> ((QuestEvent.TalkToNpc) t.event()).npcId())
 				.findFirst()
 				.orElseThrow(() -> new IllegalStateException("quest " + questId + " has no 1002 accept route"));
-			routes.add(new AcceptRoute(questId, npcId, startPage));
+			routes.add(new AcceptRoute(questId, npcId, startPage, false));
 		}
 		return routes;
+	}
+
+	/**
+	 * 原生车道的接取协议（真端 cab520）：{@code QUEST_SELECT}(31) 只开客户端契约页、不落库；
+	 * 1002 建档到 START 并回 1003。前置（{@code Q1007:n}）由 native 建档口按真端轴判定。
+	 * <p>
+	 * The native accept protocol (retail cab520): dialog 31 only opens the client-declared page and
+	 * persists nothing; 1002 creates the row at START and answers 1003.
+	 */
+	private static void assertNativeAcceptProtocol(AcceptRoute route) {
+		SimpleTalkHandler handler = NativeTalkFixture.handler();
+		Player player = nativePlayer(route.questId());
+
+		NativeTalkFixture.clearPackets(player);
+		assertTrue(handler.onDialog(NativeTalkFixture.dialog(player, route.npcId(), route.questId(), 31)),
+			"quest " + route.questId() + " dialog 31 must be handled");
+		assertNull(player.getQuestStateList().getQuestState(route.questId()),
+			"quest " + route.questId() + " dialog 31 must not persist state");
+		NativeTalkFixture.assertOnlyDialogPage(player, route.startPage());
+		assertTrue(NativeTalkFixture.clientDeclares(route.questId(), route.startPage()),
+			"quest " + route.questId() + " 接取首屏必须由客户端任务页声明: " + route.startPage());
+
+		NativeTalkFixture.clearPackets(player);
+		assertTrue(handler.onDialog(NativeTalkFixture.dialog(player, route.npcId(), route.questId(), 1002)),
+			"quest " + route.questId() + " dialog 1002 must accept");
+		assertEquals(QuestStatus.START,
+			player.getQuestStateList().getQuestState(route.questId()).getStatus(),
+			"quest " + route.questId() + " dialog 1002 must start the quest");
+		NativeTalkFixture.assertOnlyDialogPage(player, SimpleTalkHandler.PAGE_ACCEPTED);
+	}
+
+	/** 原生行的测试玩家：真端种族/最低等级 + 冻结职业 + 转职仪式前置档。 /
+	 * The test player for a native row: retail race/level, frozen class, ascension prerequisite slot. */
+	private static Player nativePlayer(int questId) {
+		NativeQuestXmlTable.QuestRow meta = NativeQuestXmlTable.instance().find(questId).orElseThrow();
+		Integer minLevel = meta.integer("minlevel_permitted");
+		Player player = NativeTalkFixture.player("pc_dark".equals(meta.text("race_permitted"))
+			? Race.ASMODIANS : Race.ELYOS,
+			NATIVE_ACCEPT_CLASSES.get(questId), minLevel == null || minLevel <= 0 ? 1 : minLevel);
+		QuestState prerequisite = new QuestState(1007, QuestStatus.COMPLETE, 0, 1, null,
+			NATIVE_PREREQ_SLOTS.getOrDefault(questId, 0), null);
+		player.getQuestStateList().addQuest(1007, prerequisite);
+		return player;
 	}
 
 	/** 前置完成事实取自 metadata 的 start-conditions（编译为 startConditionGroups）。 */

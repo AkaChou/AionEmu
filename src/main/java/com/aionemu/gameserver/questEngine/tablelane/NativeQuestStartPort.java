@@ -6,6 +6,7 @@ import java.util.Locale;
 
 import com.aionemu.gameserver.model.gameobjects.PersistentState;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
+import com.aionemu.gameserver.questEngine.retail.RetailQuestMetadataCompiler;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_QUEST_ACTION;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
@@ -131,7 +132,14 @@ public final class NativeQuestStartPort {
 		String playerClass = player.getCommonData() == null || player.getCommonData().getPlayerClass() == null
 				? null
 				: player.getCommonData().getPlayerClass().name().toLowerCase(Locale.ROOT);
-		if (!tokenPermitted(row.text("class_permitted"), playerClass)) {
+		// 职业词表与生产元数据同源（真端 token → PlayerClass，基础职业 ≥10 展开进阶线）；
+		// 逐字比较 token 会让 fighter/knight/wizard 这类真端名永远不匹配。
+		// Class tokens share the production metadata mapping; a literal token comparison would never
+		// match retail names such as fighter/knight/wizard.
+		java.util.Set<String> permittedClasses = RetailQuestMetadataCompiler.permittedClassNames(
+				row.text("class_permitted"), minLevel);
+		if (!permittedClasses.isEmpty()
+				&& (playerClass == null || !permittedClasses.contains(playerClass.toUpperCase(Locale.ROOT)))) {
 			return new StartResult(Outcome.CLASS_BLOCKED, "class " + playerClass);
 		}
 		String gender = player.getGender() == null ? null : player.getGender().name().toLowerCase(Locale.ROOT);
@@ -171,26 +179,42 @@ public final class NativeQuestStartPort {
 		for (String tag : List.of("finished_quest_cond1", "finished_quest_cond2", "finished_quest_cond3",
 				"finished_quest_cond4", "finished_quest_cond5", "finished_quest_cond6", "finished_quest_cond7")) {
 			for (String value : row.list(tag)) {
-				int questId = prerequisiteId(value);
-				if (questId <= 0) {
-					missing.add(questId);
-					continue;
-				}
-				QuestState prerequisite = player.getQuestStateList().getQuestState(questId);
-				if (prerequisite == null || prerequisite.getStatus() != QuestStatus.COMPLETE) {
-					missing.add(questId);
+				for (String token : value.trim().split("[\\s,]+")) {
+					if (token.isBlank()) {
+						continue;
+					}
+					int questId = prerequisiteId(token);
+					if (questId <= 0) {
+						missing.add(questId);
+						continue;
+					}
+					QuestState prerequisite = player.getQuestStateList().getQuestState(questId);
+					// 带 {@code :n} 后缀（真端奖励分支）的行还要比对该前置的奖励档；
+					// 档位解析与生产元数据同源。 / A {@code :n} suffix also pins the prerequisite's
+					// reward slot, parsed through the shared production rule.
+					boolean rewardMatches = token.indexOf(':') < 0
+							|| (prerequisite != null && prerequisite.getReward()
+								== RetailQuestMetadataCompiler.prerequisiteRewardMode(questId, token));
+					if (prerequisite == null || prerequisite.getStatus() != QuestStatus.COMPLETE || !rewardMatches) {
+						missing.add(questId);
+					}
 				}
 			}
 		}
 		return missing;
 	}
 
-	/** {@code Q50010} → 50010（真端在装载期按名解析；本表值恒为 {@code Q<digits>}）。 */
+	/** {@code Q50010} / {@code Q1007:1} → 50010 / 1007（冒号后缀是奖励分支，不属 id）。 /
+	 * {@code Q50010} / {@code Q1007:1} → quest id; the colon suffix is a reward-branch annotation. */
 	private static int prerequisiteId(String value) {
 		if (value == null || value.isBlank()) {
 			return 0;
 		}
 		String digits = value.trim().toUpperCase(Locale.ROOT);
+		int colon = digits.indexOf(':');
+		if (colon >= 0) {
+			digits = digits.substring(0, colon);
+		}
 		if (digits.startsWith("Q")) {
 			digits = digits.substring(1);
 		}

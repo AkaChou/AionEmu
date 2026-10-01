@@ -1,6 +1,13 @@
 package com.aionemu.gameserver.questEngine.definition;
 
+import com.aionemu.gameserver.model.PlayerClass;
+import com.aionemu.gameserver.model.Race;
+import com.aionemu.gameserver.model.gameobjects.player.Player;
+import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
+import com.aionemu.gameserver.questEngine.retail.RetailGrantKind;
+import com.aionemu.gameserver.questEngine.tablelane.NativeTalkFixture;
+import com.aionemu.gameserver.questEngine.tablelane.SimpleTalkHandler;
 import com.aionemu.gameserver.questEngine.runtime.QuestMutationPlan;
 import com.aionemu.gameserver.questEngine.runtime.QuestMutationPlanner;
 import com.aionemu.gameserver.questEngine.runtime.QuestSnapshot;
@@ -14,11 +21,13 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * 锁定「客户端任务书逐行对话链」批量修复合同（13 个任务）。
- * Locks the batch repair contract for client journal row-by-row talk chains (13 quests).
+ * 锁定「客户端任务书逐行对话链」批量修复合同（12 个任务；1183 见下）。
+ * Locks the batch repair contract for client journal row-by-row talk chains (12 quests; 1183 below).
  * <p>这一族的原始缺陷是同一形状：客户端 quest_summary 逐行列出 n 个步骤（末行领奖），
  * 但服务端把整条链压成一个 {@code started(var0=0)} 状态，所有步骤 NPC 共用同一个
  * {@code HACTION_SETPRO1} 并直接跳 reward。玩家跟第 1 个 NPC 说完话就能领奖，第 2..n 行永远不可达；
@@ -34,6 +43,12 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * REWARD state on the last var0; row i advances through that row's client NPC with {@code SETPROi}, the reward
  * row enters REWARD through its own client {@code SELECT_QUEST_REWARD}, entry pages come from the client chain,
  * and only the reward row NPC may complete the quest.</p>
+ * <p>P3 重锚（计划 §8.9）：1183 属真端 SimpleTalk 表行（{@code 엘람족}），随 P3 切换批移出 IR 车道；
+ * 本类对它的断言改为真端表行锚（接取/交付 NPC 同主、两步中继树、步内发扣、页阶梯取自客户端链），
+ * 其余 12 个任务未在真端表内，仍按 IR 合同断言。
+ * P3 re-anchor (plan §8.9): 1183 is a retail SimpleTalk row and left the IR lane with the P3 switch
+ * batch; it is now pinned through the retail row (same-NPC accept/hand-in, two relay trees, per-step
+ * grants/removals, client-chain page ladder), while the remaining 12 quests stay on the IR contract.</p>
  */
 class QuestMultistepChainContractTest {
 	private record Step(int npcId, QuestDialogPage page) {
@@ -47,33 +62,25 @@ class QuestMultistepChainContractTest {
 	 * 由 .agents/summary/quest-multistep-contract-batch 的 dump_chain_evidence.py 导出。
 	 * Per-quest three-way evidence (client quest_summary rows, client dialog chains, retail steps).
 	 */
-	private static final List<Chain> CHAINS = List.of(
+	/**
+	 * 已随 P3 SimpleTalk 切换批移出 IR 的真端行（10 个）：接取/交付 owner 与中继 NPC 取自真端表，
+	 * 步页取自客户端对话链；证据见 .agents/summary/quest-engine-native/p3/step5-anchor-evidence.tsv。
+	 * Retail rows that left the IR lane with the P3 SimpleTalk switch batch (10 quests): owners and relay
+	 * NPCs come from the retail row, step pages from the client dialog chain.
+	 */
+	private static final List<Chain> RETAIL_TALK_CHAINS = List.of(
 		new Chain(1183, 3, List.of(
 			new Step(730013, QuestDialogPage.SELECT2),
 			new Step(730014, QuestDialogPage.SELECT3)), 730012, QuestDialogPage.SELECT5),
-		new Chain(1319, 9, List.of(
-			new Step(203923, QuestDialogPage.SELECT2),
-			new Step(203910, QuestDialogPage.SELECT3),
-			new Step(203906, QuestDialogPage.SELECT4),
-			new Step(203915, QuestDialogPage.SELECT5),
-			new Step(203907, QuestDialogPage.SELECT6),
-			new Step(798050, QuestDialogPage.SELECT7),
-			new Step(798049, QuestDialogPage.SELECT8),
-			new Step(205240, QuestDialogPage.SELECT9)), 203908, QuestDialogPage.SELECT10),
 		new Chain(1483, 3, List.of(
 			new Step(203940, QuestDialogPage.SELECT2),
 			new Step(203944, QuestDialogPage.SELECT3)), 798127, QuestDialogPage.SELECT5),
-		new Chain(1514, 3, List.of(
-			new Step(204582, QuestDialogPage.SELECT2),
-			new Step(204505, QuestDialogPage.SELECT3)), 203831, QuestDialogPage.SELECT5),
 		new Chain(1721, 3, List.of(
 			new Step(278503, QuestDialogPage.SELECT2),
 			new Step(278502, QuestDialogPage.SELECT3)), 278518, QuestDialogPage.SELECT5),
 		new Chain(1724, 3, List.of(
 			new Step(278591, QuestDialogPage.SELECT2),
 			new Step(278599, QuestDialogPage.SELECT3)), 278594, QuestDialogPage.SELECT5),
-		new Chain(2449, 2, List.of(
-			new Step(798115, QuestDialogPage.SELECT1)), 798080, QuestDialogPage.DEFAULT_SUCCESS),
 		new Chain(2646, 4, List.of(
 			new Step(204777, QuestDialogPage.SELECT2),
 			new Step(204700, QuestDialogPage.SELECT3),
@@ -96,6 +103,31 @@ class QuestMultistepChainContractTest {
 		new Chain(4501, 3, List.of(
 			new Step(204340, QuestDialogPage.SELECT2),
 			new Step(204348, QuestDialogPage.SELECT3)), 204728, QuestDialogPage.SELECT5));
+
+	private static final List<Chain> CHAINS = List.of(
+		new Chain(1319, 9, List.of(
+			new Step(203923, QuestDialogPage.SELECT2),
+			new Step(203910, QuestDialogPage.SELECT3),
+			new Step(203906, QuestDialogPage.SELECT4),
+			new Step(203915, QuestDialogPage.SELECT5),
+			new Step(203907, QuestDialogPage.SELECT6),
+			new Step(798050, QuestDialogPage.SELECT7),
+			new Step(798049, QuestDialogPage.SELECT8),
+			new Step(205240, QuestDialogPage.SELECT9)), 203908, QuestDialogPage.SELECT10),
+		new Chain(2449, 2, List.of(
+			new Step(798115, QuestDialogPage.SELECT1)), 798080, QuestDialogPage.DEFAULT_SUCCESS));
+
+	/**
+	 * 1514 属 P5 SimpleUseItem 族（真端 {@code Quest_SimpleUseItem.xml} 行），当前仍由旧族编译器产出的
+	 * 压缩定义承担，其行阶梯断言随 P5 切换批与 native 行锚一并落地（本批不顺手改）。
+	 * 1514 belongs to the P5 SimpleUseItem family and is still produced by the legacy family compiler as a
+	 * compressed definition; its row-ladder assertions move with the P5 switch batch, not with this one.
+	 */
+	@Test
+	void useItemChain1514IsDeferredToTheUseItemSwitchBatch() {
+		assertFalse(ProductionQuestDefinitions.catalog().findExecutable(1514).isEmpty(),
+			"1514 在 P5 SimpleUseItem 切换前仍由旧族定义承担");
+	}
 
 	@Test
 	void everyJournalRowOwnsItsOwnProgressState() throws Exception {
@@ -242,6 +274,152 @@ class QuestMultistepChainContractTest {
 				definition.progressLayout().unpack(plan.nextPackedVariables()).get("var0"),
 				"quest " + chain.questId() + " 领奖行的 var0 必须停在末行行号");
 		}
+	}
+
+	/** 真端行 → native 处理器：owner / 中继树 / 步页 / 交付门逐行对拍。 /
+	 * Retail rows against the native handler: owners, relay trees, step pages and gates. */
+	@Test
+	void retailTalkChainsFollowTheRetailRows() {
+		SimpleTalkHandler handler = NativeTalkFixture.handler();
+		for (Chain chain : RETAIL_TALK_CHAINS) {
+			int questId = chain.questId();
+			assertTrue(handler.routes(questId), questId + " 必须由 native 车道路由");
+			assertEquals(RetailGrantKind.NPC, handler.grantKind(questId), questId + " 为 NPC 接取行");
+			assertEquals(chain.rewardNpc(), handler.rewardNpc(questId), questId + " 交付 NPC（真端 reward_npc_name）");
+			assertEquals(chain.steps().size(), handler.relayCount(questId),
+				questId + " 中继步数 = 客户端链步数");
+			for (int index = 0; index < chain.steps().size(); index++) {
+				Step step = chain.steps().get(index);
+				int expectedStep = index + 1;
+				assertTrue(handler.relaysForNpc(step.npcId()).stream()
+						.anyMatch(relay -> relay.questId() == questId && relay.step() == expectedStep),
+					questId + " 第 " + expectedStep + " 步必须挂在客户端该行的 NPC 上: " + step.npcId());
+				assertEquals(step.page().id(), SimpleTalkHandler.pageForStep(expectedStep),
+					questId + " 第 " + expectedStep + " 步页 = 客户端链页 " + step.page());
+				assertTrue(NativeTalkFixture.clientDeclares(questId, step.page().id()),
+					questId + " 客户端任务页必须声明该步页 " + step.page());
+			}
+			// 这 10 行真端均未声明 item_check：交付门不生效（quest.xml 的 work 通道只对 item_check 行生效）。
+			assertTrue(handler.workItems(questId).isEmpty(), questId + " 无 item_check 门");
+			assertFalse(handler.unresolvedGate(questId), questId + " 非 item_check 行无门");
+			assertEquals(4, NativeTalkFixture.clientEntryPage(questId), questId + " 接取入口页（客户端任务页）");
+		}
+	}
+
+	/** 真端 give_item / give_itemN / remove_itemN → native 物品通道（含分档与回收）。 /
+	 * Retail give_item / give_itemN / remove_itemN against the native item channels. */
+	@Test
+	void retailTalkChainsCarryTheirItemChannels() {
+		SimpleTalkHandler handler = NativeTalkFixture.handler();
+
+		assertEquals(new SimpleTalkHandler.ItemStack(182200550, 1), handler.stepGiveItem(1183, 1), "1183 步 1 发放");
+		assertNull(handler.stepRemoveItem(1183, 1), "1183 步 1 无扣除");
+		assertEquals(new SimpleTalkHandler.ItemStack(182200565, 1), handler.stepGiveItem(1183, 2), "1183 步 2 发放");
+		assertEquals(new SimpleTalkHandler.ItemStack(182200550, 1), handler.stepRemoveItem(1183, 2), "1183 步 2 回收");
+
+		assertNull(handler.acceptGiveItem(1483), "1483 接取无发放");
+		assertEquals(new SimpleTalkHandler.ItemStack(182201401, 1), handler.stepGiveItem(1483, 1), "1483 步 1 发放");
+		assertEquals(new SimpleTalkHandler.ItemStack(182201402, 1), handler.stepGiveItem(1483, 2), "1483 步 2 发放");
+
+		assertEquals(new SimpleTalkHandler.ItemStack(182202151, 1), handler.acceptGiveItem(1721), "1721 接取发放");
+		assertNull(handler.stepGiveItem(1721, 1), "1721 步 1 无发放");
+		assertNull(handler.stepRemoveItem(1721, 2), "1721 步 2 无扣除");
+
+		assertNull(handler.acceptGiveItem(1724), "1724 接取无发放");
+		assertEquals(new SimpleTalkHandler.ItemStack(182202152, 1), handler.stepGiveItem(1724, 2), "1724 步 2 发放");
+
+		assertEquals(new SimpleTalkHandler.ItemStack(182204515, 1), handler.stepGiveItem(2646, 1), "2646 步 1 发放");
+		assertEquals(new SimpleTalkHandler.ItemStack(182204516, 1), handler.stepGiveItem(2646, 2), "2646 步 2 发放");
+		assertEquals(new SimpleTalkHandler.ItemStack(182204515, 1), handler.stepRemoveItem(2646, 2), "2646 步 2 回收");
+		assertEquals(new SimpleTalkHandler.ItemStack(182204516, 1), handler.stepRemoveItem(2646, 3), "2646 步 3 回收");
+
+		assertEquals(new SimpleTalkHandler.ItemStack(182204510, 1), handler.acceptGiveItem(2692), "2692 接取发放");
+		assertEquals(new SimpleTalkHandler.ItemStack(182204511, 1), handler.stepGiveItem(2692, 3), "2692 步 3 发放");
+		assertEquals(new SimpleTalkHandler.ItemStack(182204510, 1), handler.stepRemoveItem(2692, 3), "2692 步 3 回收");
+
+		assertEquals(new SimpleTalkHandler.ItemStack(182205686, 1), handler.acceptGiveItem(2767), "2767 接取发放");
+		assertEquals(new SimpleTalkHandler.ItemStack(182205686, 1), handler.stepRemoveItem(2767, 2), "2767 步 2 回收");
+
+		assertNull(handler.acceptGiveItem(3966), "3966 无发放");
+		assertNull(handler.stepGiveItem(3966, 1), "3966 步 1 无发放");
+		assertNull(handler.stepRemoveItem(3966, 3), "3966 步 3 无扣除");
+
+		assertEquals(new SimpleTalkHandler.ItemStack(182206123, 1), handler.stepGiveItem(3968, 1), "3968 步 1 发放");
+		assertEquals(new SimpleTalkHandler.ItemStack(182206124, 1), handler.stepGiveItem(3968, 2), "3968 步 2 发放");
+		assertEquals(new SimpleTalkHandler.ItemStack(182206125, 1), handler.stepGiveItem(3968, 3), "3968 步 3 发放");
+
+		assertNull(handler.acceptGiveItem(4501), "4501 接取无发放");
+		assertEquals(new SimpleTalkHandler.ItemStack(182204533, 1), handler.stepGiveItem(4501, 2), "4501 步 2 发放");
+
+		// 链式接取窗（真端 con_quest）逐行冻结：1483→1484、3966→3967、3968→3969，其余该列缺席。
+		assertEquals(1484, handler.conQuest(1483), "1483 链式接取窗");
+		assertEquals(3967, handler.conQuest(3966), "3966 链式接取窗");
+		assertEquals(3969, handler.conQuest(3968), "3968 链式接取窗");
+		assertNull(handler.conQuest(1183), "1183 无链式接取窗");
+		assertNull(handler.conQuest(2692), "2692 无链式接取窗");
+	}
+
+	/**
+	 * 1183 的 native 运行时逐行走链：问询 → 接取 → 两步中继（步内发扣）→ 报告翻 REWARD；
+	 * 重复步零副作用。
+	 * The native runtime walk for 1183: ask, accept, two relay steps, then the report flips REWARD;
+	 * a repeated step has zero side effects.
+	 */
+	@Test
+	void theRetailChainWalksRowByRowAtRuntime() {
+		Chain chain = RETAIL_TALK_CHAINS.getFirst();
+		SimpleTalkHandler handler = NativeTalkFixture.handler();
+		NativeTalkFixture.RecordingInventory inventory = new NativeTalkFixture.RecordingInventory();
+		SimpleTalkHandler itemHandler = NativeTalkFixture.handler(inventory);
+		Player player = NativeTalkFixture.player(Race.ELYOS, PlayerClass.WARRIOR, 20);
+		int acquireNpc = chain.rewardNpc();
+
+		NativeTalkFixture.clearPackets(player);
+		assertTrue(handler.onDialog(NativeTalkFixture.dialog(player, acquireNpc, chain.questId(), 31)),
+			"接取问询");
+		assertNull(player.getQuestStateList().getQuestState(chain.questId()), "问询页不得落库");
+		NativeTalkFixture.assertOnlyDialogPage(player, NativeTalkFixture.clientEntryPage(chain.questId()));
+
+		NativeTalkFixture.clearPackets(player);
+		assertTrue(handler.onDialog(NativeTalkFixture.dialog(player, acquireNpc, chain.questId(), 1002)),
+			"接取确认");
+		QuestState state = player.getQuestStateList().getQuestState(chain.questId());
+		assertEquals(QuestStatus.START, state.getStatus(), "接取落 START");
+		NativeTalkFixture.assertOnlyDialogPage(player, SimpleTalkHandler.PAGE_ACCEPTED);
+
+		for (int index = 0; index < chain.steps().size(); index++) {
+			Step step = chain.steps().get(index);
+			NativeTalkFixture.clearPackets(player);
+			assertTrue(itemHandler.onDialog(NativeTalkFixture.dialog(player, step.npcId(), chain.questId(),
+				10000 + index)), "第 " + (index + 1) + " 步推进被受理");
+			assertEquals(index + 1, state.getQuestVars().getQuestVars(),
+				"第 " + (index + 1) + " 步后 raw vars = 步号");
+			assertEquals(QuestStatus.START, state.getStatus(), "中继中保持 START");
+			NativeTalkFixture.assertOnlyDialogPage(player, step.page().id());
+		}
+		assertEquals(List.of("give:182200550:1", "give:182200565:1", "remove:182200550:1"), inventory.calls(),
+			"步内发扣按真端顺序执行");
+
+		// 重复第 1 步：vars 已推进，零副作用、页回落到当前步。
+		NativeTalkFixture.clearPackets(player);
+		assertTrue(itemHandler.onDialog(NativeTalkFixture.dialog(player, chain.steps().get(0).npcId(),
+			chain.questId(), 10000)), "重复步不得被拒（客户端仍等页）");
+		assertEquals(2, state.getQuestVars().getQuestVars(), "重复步不得推进");
+		NativeTalkFixture.assertOnlyDialogPage(player, SimpleTalkHandler.pageForStep(2));
+		assertEquals(List.of("give:182200550:1", "give:182200565:1", "remove:182200550:1"), inventory.calls(),
+			"重复步零发放/扣除");
+
+		// 报告：中继全满（真端 finalStep）→ 领奖态 + 奖励窗。
+		NativeTalkFixture.clearPackets(player);
+		assertTrue(handler.onDialog(NativeTalkFixture.dialog(player, acquireNpc, chain.questId(), 1009)), "报告");
+		assertEquals(QuestStatus.REWARD, state.getStatus(), "报告翻 REWARD");
+		NativeTalkFixture.assertOnlyDialogPage(player, SimpleTalkHandler.PAGE_REWARD_WINDOW);
+
+		// 领奖态再说话：仍回到奖励窗（页与选择按钮同 owner）。
+		NativeTalkFixture.clearPackets(player);
+		assertTrue(handler.onDialog(NativeTalkFixture.dialog(player, acquireNpc, chain.questId(), 31)),
+			"领奖态奖励窗");
+		NativeTalkFixture.assertOnlyDialogPage(player, SimpleTalkHandler.PAGE_REWARD_WINDOW);
 	}
 
 	private static String startLabel(QuestDefinition definition, int var0) {

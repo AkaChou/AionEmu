@@ -1,11 +1,23 @@
 package com.aionemu.gameserver.questEngine.definition;
 
+import java.util.Map;
+
 import org.junit.jupiter.api.Test;
+
+import com.aionemu.gameserver.model.PlayerClass;
+import com.aionemu.gameserver.model.Race;
+import com.aionemu.gameserver.model.gameobjects.player.Player;
+import com.aionemu.gameserver.questEngine.model.QuestStatus;
+import com.aionemu.gameserver.questEngine.tablelane.NativeQuestXmlTable;
+import com.aionemu.gameserver.questEngine.tablelane.NativeTalkFixture;
+import com.aionemu.gameserver.questEngine.tablelane.SimpleTalkHandler;
 
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -38,19 +50,89 @@ class GrowthQuestDialogPageAlignmentTest {
 		new WelcomeQuest(29671, 806700, 806701));
 
 	@Test
-	void deliveryOnlyGrowthQuestsUseTheCanonicalDeliveryWindow() throws Exception {
-		// P0-3 S1：SimpleTalk 接取/交付切真端规范形（页 4 / 分档窗）。80369-80386 与 80487-80538 的
-		// 70 行真端行只有 acquired/reward 两列、零 item_check/give_item/remove_item/cutscene/talk_npc
-		// （Quest_SimpleTalk.xml 实测），交付 = QUEST_SELECT(31) 空门直翻领奖态 + 第 1 档奖励窗；
-		// 报告页 SELECT5(2375) 与 1009 中转随页链退场。
-		// P0-3 S1: the seventy delivery-only rows carry nothing but acquired/reward, so the canonical
-		// delivery is the empty-gate QUEST_SELECT(31) into REWARD with the first reward window.
+	void deliveryOnlyGrowthQuestsFollowTheRetailTalkRow() {
+		// P3 重锚（计划 §8.9）：80369-80386 / 80487-80538 共 70 行自 SimpleTalk 切换批起由 native 车道
+		// 直驱。真端行只有 acquired/reward 两列（零中继、零交付门、零发扣、零过场），所以页阶梯是
+		// 「接取入口页（客户端任务页声明页）→ 1003 确认 → 交付 NPC 1009 直开奖励窗（页 5）」。
+		// P3 re-anchor (plan §8.9): the seventy delivery-only rows run on the native lane; their retail
+		// rows carry nothing but acquired/reward, so the dialogs are entry page → 1003 → reward window 5.
+		SimpleTalkHandler handler = NativeTalkFixture.handler();
 		for (int questId = 80369; questId <= 80386; questId++) {
-			assertCanonicalDelivery(compile(questId));
+			assertDeliveryOnlyNativeRow(handler, questId);
 		}
 		for (int questId = 80487; questId <= 80538; questId++) {
-			assertCanonicalDelivery(compile(questId));
+			assertDeliveryOnlyNativeRow(handler, questId);
 		}
+	}
+
+	/** 74 行成长任务的接取 NPC（真端表列 → 静态 npc_template 解析，冻结）。 /
+	 * The acquire NPCs of the growth rows (retail column → static npc_template, frozen). */
+	private static final Map<String, Integer> ACQUIRE_NPCS = Map.of(
+		"event_Cherylin", 831833,
+		"event_Asif", 831834,
+		"event_Rylin", 831835,
+		"event_Jaysif", 831836,
+		"event_Nebrith", 831031,
+		"event_Edandos", 831029);
+
+	private static void assertDeliveryOnlyNativeRow(SimpleTalkHandler handler, int questId) {
+		assertTrue(handler.routes(questId), "quest " + questId + " 必须由 native 车道路由");
+		NativeQuestXmlTable.QuestRow meta = NativeQuestXmlTable.instance().find(questId).orElseThrow();
+		String acquireName = handler.requireRow(questId).acquiredNpcName();
+		Integer expectedAcquire = ACQUIRE_NPCS.get(acquireName);
+		assertNotNull(expectedAcquire, "接取名未冻结 / unfrozen acquire name: " + acquireName);
+		assertEquals(expectedAcquire, handler.acquireNpc(questId), "quest " + questId + " 接取 NPC");
+		// 交付 NPC：真端 reward 列必须唯一解析；同名列（80487 族）接取/交付同主，异名列交付 owner 分离。
+		// Reward NPC: the retail reward column must resolve; same-name rows share the owner, others split it.
+		assertNotNull(handler.rewardNpc(questId), "quest " + questId + " 交付 NPC 未解析: "
+			+ handler.requireRow(questId).rewardNpcName());
+		if (acquireName.equals(handler.requireRow(questId).rewardNpcName())) {
+			assertEquals(handler.acquireNpc(questId), handler.rewardNpc(questId),
+				"quest " + questId + " 同名单步行");
+		} else {
+			assertNotEquals(handler.acquireNpc(questId), handler.rewardNpc(questId),
+				"quest " + questId + " 接取与交付 owner 分离");
+		}
+		assertEquals(0, handler.relayCount(questId), "quest " + questId + " 是单步行（真端行无 talk_npc 列）");
+		assertTrue(handler.workItems(questId).isEmpty(),
+			"quest " + questId + " 无交付门（真端行无 item_check 列）");
+		assertFalse(handler.unresolvedGate(questId), "quest " + questId + " 无门不得 fail-closed");
+		assertNull(handler.acceptGiveItem(questId), "quest " + questId + " 接取侧无发放");
+		assertNull(handler.stepGiveItem(questId, 1), "quest " + questId + " 无步进发放");
+		assertNull(handler.stepRemoveItem(questId, 1), "quest " + questId + " 无步进扣除");
+		assertNull(handler.cutscene(questId), "quest " + questId + " 无过场");
+
+		Player player = NativeTalkFixture.player(acquireRace(meta), PlayerClass.WARRIOR, acceptLevel(meta));
+		int acquire = handler.acquireNpc(questId);
+
+		NativeTalkFixture.clearPackets(player);
+		assertTrue(handler.onDialog(NativeTalkFixture.dialog(player, acquire, questId, 31)), "接取问询");
+		NativeTalkFixture.assertOnlyDialogPage(player, NativeTalkFixture.clientEntryPage(questId));
+
+		NativeTalkFixture.clearPackets(player);
+		assertTrue(handler.onDialog(NativeTalkFixture.dialog(player, acquire, questId, 1002)), "接取确认");
+		assertEquals(QuestStatus.START,
+			player.getQuestStateList().getQuestState(questId).getStatus(), "接取必须建档到 START");
+		NativeTalkFixture.assertOnlyDialogPage(player, SimpleTalkHandler.PAGE_ACCEPTED);
+
+		NativeTalkFixture.clearPackets(player);
+		assertTrue(handler.onDialog(NativeTalkFixture.dialog(player, handler.rewardNpc(questId), questId, 1009)),
+			"交付报告");
+		assertEquals(QuestStatus.REWARD,
+			player.getQuestStateList().getQuestState(questId).getStatus(), "无门交付必须直开领奖态");
+		NativeTalkFixture.assertOnlyDialogPage(player, SimpleTalkHandler.PAGE_REWARD_WINDOW);
+	}
+
+	/** 真端行的种族轴（{@code race_permitted}）。 / The retail race axis. */
+	private static Race acquireRace(NativeQuestXmlTable.QuestRow meta) {
+		return "pc_dark".equals(meta.text("race_permitted")) ? Race.ASMODIANS : Race.ELYOS;
+	}
+
+	/** 真端行的等级下限（等级上限同样受 {@link com.aionemu.gameserver.questEngine.tablelane.NativeQuestStartPort} 约束）。 /
+	 * The retail minimum level (the ceiling is adjudicated by the native start port as well). */
+	private static int acceptLevel(NativeQuestXmlTable.QuestRow meta) {
+		Integer min = meta.integer("minlevel_permitted");
+		return min == null || min <= 0 ? 1 : min;
 	}
 
 	@Test
@@ -205,47 +287,6 @@ class GrowthQuestDialogPageAlignmentTest {
 	private static QuestDefinition compile(int questId) throws Exception {
 		// 退役任务的生产 XML 只在 git 历史里：统一取生产视图（XML 目录 + 真端 overlay）。
 		return ProductionQuestDefinitions.definition(questId).definition();
-	}
-
-	/**
-	 * 交付型成长行的规范形交付断言——P0-3 S1：SimpleTalk 接取/交付切真端规范形（页 4 / 分档窗）。
-	 * 真端单步行只有 acquired/reward 两列
-	 * （{@code Quest_SimpleTalk.xml} 80369/80487 族零 item_check、零 give_item），交付 = 单条
-	 * {@code QUEST_SELECT}(31) 空门边直翻领奖态并下发奖励窗；报告页 {@code SELECT5}(2375) 与
-	 * 1009 中转随页链退场（负控）。
-	 * Canonical delivery for the delivery-only growth rows: one empty-gate QUEST_SELECT(31) edge into
-	 * REWARD with the reward window; the SELECT5 report page and the 1009 hop are gone.
-	 */
-	private static void assertCanonicalDelivery(QuestDefinition definition) {
-		List<QuestTransition> delivery = definition.transitions().stream()
-			.filter(transition -> "started".equals(transition.sourceNode())
-				&& "reward".equals(transition.targetNode())
-				&& transition.event() instanceof QuestEvent.TalkToNpc talk
-				&& Integer.valueOf(QuestDialogAction.QUEST_SELECT.id()).equals(talk.dialogId()))
-			.toList();
-		assertEquals(1, delivery.size(), "quest " + definition.id() + " canonical delivery route count");
-		QuestTransition deliver = delivery.getFirst();
-		assertTrue(deliver.conditions().isEmpty(), "quest " + definition.id() + " delivery gate");
-		assertTrue(deliver.actions().isEmpty(), "quest " + definition.id() + " delivery actions");
-		assertNull(deliver.priority(), "quest " + definition.id() + " delivery priority");
-		// 单步面 completeFlow 拒绝多奖励档 ⇒ 档位式只落在第 1 档窗（零奖励组同样兜底该窗）。
-		// Single-step rows never carry ≥2 tiers, so the tier lookup lands on the first reward window.
-		int rewardWindow = QuestDialogPage.rewardWindowForTier(definition.metadata().rewardGroups().size() - 1)
-			.orElse(QuestDialogPage.SHOW_SELECT_QUEST_REWARD_WINDOW1).id();
-		assertEquals(List.of(
-			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
-			new AfterCommitAction.ShowQuestDialog(rewardWindow)), deliver.afterCommit(),
-			"quest " + definition.id() + " delivery window");
-		assertTrue(definition.transitions().stream().noneMatch(transition ->
-			"started".equals(transition.sourceNode())
-				&& transition.event() instanceof QuestEvent.TalkToNpc talk
-				&& Integer.valueOf(QuestDialogAction.SELECT_QUEST_REWARD.id()).equals(talk.dialogId())),
-			"quest " + definition.id() + " canonical removed the 1009 hop");
-		assertTrue(definition.transitions().stream()
-			.flatMap(transition -> transition.afterCommit().stream())
-			.noneMatch(action -> action instanceof AfterCommitAction.ShowQuestDialog dialog
-				&& dialog.dialogId() == QuestDialogPage.SELECT5.id()),
-			"quest " + definition.id() + " canonical removed the select5 report page");
 	}
 
 	private static void assertDialogPage(QuestDefinition definition, String source, int dialogId, int pageId) {
