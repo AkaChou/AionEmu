@@ -1,0 +1,10 @@
+# questStringId source: STR_QUEST_SAY_* / STR_CHAT_* client string id
+# source: <真端根>/Map/XML/strings.xml (retail server string table, verbatim)
+# consumers: DataDrivenNativeRuntime extra-action case 7 (Say) key resolution
+STR_QUEST_SAY_LF4_04	1122003
+STR_QUEST_SAY_LF4_05	1122004
+STR_QUEST_SAY_LF4_06	1122005
+STR_QUEST_SAY_LF4_21	1800621
+STR_QUEST_SAY_AB1_005	1111205
+STR_QUEST_SAY_LF5_001	1111568
+STR_CHAT_DF5_Quest_Gossip_41	1501285

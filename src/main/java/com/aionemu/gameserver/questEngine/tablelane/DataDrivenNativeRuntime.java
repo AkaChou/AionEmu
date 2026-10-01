@@ -25,6 +25,7 @@ import com.aionemu.gameserver.questEngine.definition.QuestDialogContract;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.questEngine.retail.RetailItemNameIndex;
+import com.aionemu.gameserver.questEngine.retail.RetailStringIds;
 import com.aionemu.gameserver.questEngine.tablelane.DataDrivenQuestTable.Kind;
 import com.aionemu.gameserver.questEngine.tablelane.DataDrivenQuestTable.Row;
 import com.aionemu.gameserver.questEngine.tablelane.DataDrivenQuestTable.Step;
@@ -107,7 +108,7 @@ public final class DataDrivenNativeRuntime {
 
 	/** 不可原生路由的冻结原因。 / Why a switch-set row is not natively routable yet. */
 	public enum FreezeReason {
-		/** 名字解析不到唯一 NPC / 怪物 / 物品。 / A payload name did not resolve. */
+		/** 名字解析不到唯一 NPC / 怪物 / 物品 / 字符串键。 / A payload name or string key did not resolve. */
 		NAME_UNRESOLVED,
 		/** 进区别名在真端世界文件里没有定义（{@code NativeEnterAreaPort.RETAIL_ABSENT_ALIASES}）。 / Retail-absent zone alias. */
 		ZONE_ABSENT,
@@ -115,10 +116,10 @@ public final class DataDrivenNativeRuntime {
 		ZONE_UNRESOLVED,
 		/** 载荷语法不合法（空组 / 非整数世界 id / 非整数计数）。 / Malformed payload. */
 		PAYLOAD_INVALID,
-		/** 步携带步 e1 未落面的附加动作（TELEPORT/SPAWN/DELAY/MESSAGE/ENTER_INSTANCE/TIMER）。 / A step carries an extra action not yet faced. */
-		ACTION_UNFACED,
-		/** 行带未坐实语义的接取条件列（`con_quest`/`con_quest_list`）。 / The row carries un-adjudicated acquire-condition columns. */
-		ACQUIRE_CONDITION_UNFACED
+		/** 步携带步 e2 未落面的附加动作（ENTER_INSTANCE/TIMER，及 c8d0 步上的 DELAY/MESSAGE-8——
+		 * def 侧槽未定名）。 / A step carries an extra action not yet faced (instance/timer, and the
+		 * unnamed def-side delay/message-8 on EnterArea/TalkFOBJ steps). */
+		ACTION_UNFACED
 	}
 
 	/** 真端 PvP 闸门（`PvP Target Min Rank` / `Max Rank` / `Level Gap`；0 = 该轴无闸门）。 / PvP gate. */
@@ -129,6 +130,9 @@ public final class DataDrivenNativeRuntime {
 	private record StepPlan(Kind kind, boolean counter, List<DataDrivenProgress.Slot> slots, PvpGate gate,
 			boolean lastStep) {
 	}
+
+	/** 挑战任务接取哨兵（真端 DD 表字面；P0c-58 四源裁定 = 接取 NPC 即交付 NPC 本人）。 */
+	private static final String CHALLENGE_TASK_SENTINEL = "_challengetask_";
 
 	/**
 	 * 接取计划（真端 LoadBasicInfo 注册面）。返回 {@code null} = 接取参数名解析失败（fail-closed 冻结）。
@@ -141,16 +145,27 @@ public final class DataDrivenNativeRuntime {
 			case "talk" -> {
 				Set<Integer> npcIds = new LinkedHashSet<>();
 				boolean ok = true;
-				for (PayloadGroup group : parseGroups(row.acquireParam() == null ? "" : row.acquireParam())) {
-					for (String name : group.names()) {
-						if (!resolveMonsters(name, nameResolver, npcIds, new ArrayList<>())) {
-							unresolved.add(name.trim().toLowerCase(java.util.Locale.ROOT));
-							ok = false;
+				// 挑战任务哨兵：接取参数不是 NPC 名，接取 NPC = 交付 NPC 本人（reward_npc_name）。
+				// Challenge sentinel: the acquire npc is the reward npc itself (P0c-58 four-source ruling).
+				if (CHALLENGE_TASK_SENTINEL.equals((row.acquireParam() == null ? "" : row.acquireParam()).trim())) {
+					ok = resolveMonsters(row.rewardNpc() == null ? "" : row.rewardNpc(), nameResolver, npcIds,
+						new ArrayList<>());
+					if (!ok) {
+						unresolved.add((row.rewardNpc() == null ? "" : row.rewardNpc()).trim()
+							.toLowerCase(java.util.Locale.ROOT));
+					}
+				} else {
+					for (PayloadGroup group : parseGroups(row.acquireParam() == null ? "" : row.acquireParam())) {
+						for (String name : group.names()) {
+							if (!resolveMonsters(name, nameResolver, npcIds, new ArrayList<>())) {
+								unresolved.add(name.trim().toLowerCase(java.util.Locale.ROOT));
+								ok = false;
+								break;
+							}
+						}
+						if (!ok) {
 							break;
 						}
-					}
-					if (!ok) {
-						break;
 					}
 				}
 				yield ok && !npcIds.isEmpty()
@@ -182,18 +197,25 @@ public final class DataDrivenNativeRuntime {
 	private record PayloadGroup(List<String> names, int trailing) {
 	}
 
-	/** 步 e1 已落面的附加动作类型（真端执行器 case 1/2/4）。 / The extra-action types faced in step e1. */
+	/** 步 e2 已落面的附加动作类型（真端执行器 case 1/2/3/4/5/7）。 / The extra-action types faced in step e2. */
 	private enum ActionType {
 		/** case 1：发物品（`Give/Remove Items` 发半边）。 / Give items (executor case 1). */
 		GIVE_ITEMS,
 		/** case 2：扣物品。 / Remove items (executor case 2). */
 		REMOVE_ITEMS,
 		/** case 4：过场/电影（`Cutscene|Cutscene2|Movie|Movie2 N`）。 / Cutscene or movie (executor case 4). */
-		CUTSCENE
+		CUTSCENE,
+		/** case 3：传送（`世界 x y z heading`，真端 z+1 落地）。 / Teleport (executor case 3). */
+		TELEPORT,
+		/** case 5：刷怪（`Absolute|Relative 名, 数量, 时间[, x y z heading]`）。 / Spawn npcs (executor case 5). */
+		SPAWN,
+		/** case 7：播报（`STR_*` 键 → 字符串表 id）。 / Say (executor case 7, string-table id). */
+		SAY
 	}
 
-	/** 一个已解析的附加动作（发扣物品对或过场 id）。 / One resolved extra action. */
-	private record ActionPlan(ActionType type, int itemId, int count, int movieId, boolean movieToken) {
+	/** 一个已解析的附加动作（未用字段 = -1/0）。 / One resolved extra action (unused fields = -1/0). */
+	private record ActionPlan(ActionType type, int itemId, int count, int movieId, boolean movieToken, int worldId,
+			float x, float y, float z, int heading, boolean relative, int stringId) {
 	}
 
 	/**
@@ -236,6 +258,9 @@ public final class DataDrivenNativeRuntime {
 	private final Set<String> unresolvedNames;
 	private final NativeInventoryPort inventoryPort;
 	private final NativeMoviePort moviePort;
+	private final NativeTeleportPort teleportPort;
+	private final NativeSpawnPort spawnPort;
+	private final NativeSayPort sayPort;
 
 	private DataDrivenNativeRuntime(Map<Integer, List<StepPlan>> plansByQuestId,
 			Map<Integer, List<StepHit>> killsByNpcId, Map<Integer, List<StepHit>> talksByNpcId,
@@ -246,7 +271,8 @@ public final class DataDrivenNativeRuntime {
 			Map<Integer, List<Integer>> acquireLevelsByLevel, Map<Integer, List<List<ActionPlan>>> actionsByQuestId,
 			Map<Integer, AcquirePlan> acquireByQuestId, Set<Integer> ownedQuestIds,
 			Set<Integer> routedQuestIds, Map<Integer, FreezeReason> frozenQuestIds, Set<String> unresolvedNames,
-			NativeInventoryPort inventoryPort, NativeMoviePort moviePort) {
+			NativeInventoryPort inventoryPort, NativeMoviePort moviePort, NativeTeleportPort teleportPort,
+			NativeSpawnPort spawnPort, NativeSayPort sayPort) {
 		this.plansByQuestId = plansByQuestId;
 		this.killsByNpcId = killsByNpcId;
 		this.talksByNpcId = talksByNpcId;
@@ -267,6 +293,9 @@ public final class DataDrivenNativeRuntime {
 		this.unresolvedNames = unresolvedNames;
 		this.inventoryPort = inventoryPort;
 		this.moviePort = moviePort;
+		this.teleportPort = teleportPort;
+		this.spawnPort = spawnPort;
+		this.sayPort = sayPort;
 	}
 
 	/**
@@ -293,7 +322,7 @@ public final class DataDrivenNativeRuntime {
 				throw new IllegalStateException("DATA_DRIVEN_TABLE_MISSING: " + TABLE_RESOURCE);
 			}
 			DataDrivenQuestTable table = DataDrivenQuestTable.load(input);
-			return create(table, Set.of(), null, null, null, null, null);
+			return create(table, Set.of(), null, null, null, null, null, null, null, null);
 		} catch (IOException e) {
 			throw new IllegalStateException("DATA_DRIVEN_TABLE_UNREADABLE: " + TABLE_RESOURCE, e);
 		}
@@ -316,20 +345,24 @@ public final class DataDrivenNativeRuntime {
 	 */
 	public static DataDrivenNativeRuntime create(DataDrivenQuestTable table, Set<Integer> routedQuestIds,
 			NativeNpcNameResolver nameResolver, NativeEnterAreaPort enterAreaPort, RetailItemNameIndex itemIndex,
-			NativeInventoryPort inventoryPort, NativeMoviePort moviePort) {
+			NativeInventoryPort inventoryPort, NativeMoviePort moviePort, NativeTeleportPort teleportPort,
+			NativeSpawnPort spawnPort, NativeSayPort sayPort) {
 		if (table == null) {
 			throw new IllegalArgumentException("DATA_DRIVEN_TABLE_MISSING");
 		}
 		if (routedQuestIds == null || routedQuestIds.isEmpty()) {
 			return new DataDrivenNativeRuntime(Map.of(), Map.of(), Map.of(), Map.of(), Map.of(), Map.of(), Map.of(),
 				Map.of(), Map.of(), Map.of(), Map.of(), Map.of(), Map.of(), Map.of(), Set.of(), Set.of(), Map.of(),
-				Set.of(), null, null);
+				Set.of(), null, null, null, null, null);
 		}
 		Objects.requireNonNull(nameResolver, "DATA_DRIVEN_NAME_RESOLVER_MISSING");
 		Objects.requireNonNull(enterAreaPort, "DATA_DRIVEN_ENTER_AREA_PORT_MISSING");
 		Objects.requireNonNull(itemIndex, "DATA_DRIVEN_ITEM_INDEX_MISSING");
 		Objects.requireNonNull(inventoryPort, "DATA_DRIVEN_INVENTORY_PORT_MISSING");
 		Objects.requireNonNull(moviePort, "DATA_DRIVEN_MOVIE_PORT_MISSING");
+		Objects.requireNonNull(teleportPort, "DATA_DRIVEN_TELEPORT_PORT_MISSING");
+		Objects.requireNonNull(spawnPort, "DATA_DRIVEN_SPAWN_PORT_MISSING");
+		Objects.requireNonNull(sayPort, "DATA_DRIVEN_SAY_PORT_MISSING");
 
 		Map<Integer, List<StepPlan>> plans = new LinkedHashMap<>();
 		Map<Integer, List<StepHit>> kills = new LinkedHashMap<>();
@@ -400,7 +433,7 @@ public final class DataDrivenNativeRuntime {
 			Map.copyOf(itemPlays), Map.copyOf(zones), Map.copyOf(worlds), Map.copyOf(pvpSteps),
 			Map.copyOf(acquireTalks), Map.copyOf(acquireItems), Map.copyOf(acquireWorlds), Map.copyOf(acquireLevels),
 			Map.copyOf(actionPlans), Map.copyOf(acquirePlans), Set.copyOf(owned), Set.copyOf(routed),
-			Map.copyOf(frozen), Set.copyOf(unresolved), inventoryPort, moviePort);
+			Map.copyOf(frozen), Set.copyOf(unresolved), inventoryPort, moviePort, teleportPort, spawnPort, sayPort);
 	}
 
 	/** 一行计划的中转结构（构建期）。 / Mutable per-row plan during construction. */
@@ -418,13 +451,6 @@ public final class DataDrivenNativeRuntime {
 
 	private static RowPlan planRow(int questId, Row row, NativeNpcNameResolver nameResolver,
 			NativeEnterAreaPort enterAreaPort, RetailItemNameIndex itemIndex) {
-		// 真端 LoadBasicInfo 先解析接取条件列（0x640 条目 type 表未坐实）⇒ 带条件列的行整行冻结。
-		// Retail LoadBasicInfo parses the acquire-condition columns first (the 0x640 entry type table
-		// is un-adjudicated) ⇒ rows carrying them freeze as a whole.
-		if (row.hasAcquireConditions()) {
-			return new RowPlan(List.of(), List.of(), List.of(), List.of(), List.of(), List.of(), List.of(),
-				List.of(), List.of(), FreezeReason.ACQUIRE_CONDITION_UNFACED, List.of());
-		}
 		List<StepPlan> steps = new ArrayList<>();
 		List<NpcHit> kills = new ArrayList<>();
 		List<NpcHit> talks = new ArrayList<>();
@@ -596,7 +622,7 @@ public final class DataDrivenNativeRuntime {
 				}
 			}
 			if (freeze == null) {
-				freeze = scanFacedActions(step, itemIndex, facedActions, unresolved);
+				freeze = scanFacedActions(step, nameResolver, itemIndex, facedActions, unresolved);
 			}
 			if (freeze != null) {
 				break;
@@ -608,18 +634,22 @@ public final class DataDrivenNativeRuntime {
 	}
 
 	/**
-	 * 步 e1 附加动作面：逐步扫描附加动作列。已落面（真端执行器 case 1/2/4）解析成
-	 * {@link ActionPlan}；未落面（case 3/5/6/7/9/10，步 e2 收全）返回 ACTION_UNFACED，
-	 * 物品符号解析失败返回 NAME_UNRESOLVED，成功返回 {@code null}。
-	 * e1 extra-action face: parse the faced executor cases (1/2/4); an unfaced column
-	 * (cases 3/5/6/7/9/10, completed in e2) yields ACTION_UNFACED, an unresolved item symbol
+	 * 步 e2 附加动作面：逐步扫描附加动作列。已落面（真端执行器 case 1/2/3/4/5/7）解析成
+	 * {@link ActionPlan}；case 6/8 只在 EnterArea/TalkFOBJ 步活（def 侧槽未定名 ⇒ 这两类步冻结，
+	 * 其余 kind 真端执行器无该 case = 装载即死列，镜像忽略）；case 9/10（EnterInstance/Timer）
+	 * 宿主渲染面未坐实 ⇒ ACTION_UNFACED；物品符号/字符串键解析失败返回 NAME_UNRESOLVED，
+	 * 成功返回 {@code null}。
+	 * e2 extra-action face: parse the faced executor cases (1/2/3/4/5/7); cases 6/8 are live only on
+	 * EnterArea/TalkFOBJ steps (unnamed def-side slots ⇒ those freeze, other kinds mirror-ignore the
+	 * retail-dead column); cases 9/10 stay ACTION_UNFACED; an unresolved item symbol or string key
 	 * yields NAME_UNRESOLVED, success yields {@code null}.
 	 */
-	private static FreezeReason scanFacedActions(Step step, RetailItemNameIndex itemIndex,
-			List<List<ActionPlan>> facedActions, List<String> unresolved) {
+	private static FreezeReason scanFacedActions(Step step, NativeNpcNameResolver nameResolver,
+			RetailItemNameIndex itemIndex, List<List<ActionPlan>> facedActions, List<String> unresolved) {
 		List<ActionPlan> plans = new ArrayList<>();
 		for (DataDrivenQuestTable.ExtraAction action : step.extraActions()) {
-			String text = step.column(action.column());
+			int columnIndex = actualColumnOf(step, action);
+			String text = step.column(columnIndex);
 			switch (action) {
 				case GIVE_ITEMS, REMOVE_ITEMS -> {
 					// 真端 `符号 数量`（可多对，`,`/空格分隔）；符号经物品名索引解析。
@@ -629,13 +659,8 @@ public final class DataDrivenNativeRuntime {
 						return FreezeReason.ACTION_UNFACED;
 					}
 					for (int index = 0; index < tokens.length; index += 2) {
-						int count;
-						try {
-							count = Integer.parseInt(tokens[index + 1]);
-						} catch (NumberFormatException e) {
-							return FreezeReason.ACTION_UNFACED;
-						}
-						if (count <= 0) {
+						int count = parseRetailInt(tokens[index + 1]);
+						if (tokens[index + 1].isEmpty() || count <= 0) {
 							return FreezeReason.ACTION_UNFACED;
 						}
 						Integer itemId = itemIndex.resolve(tokens[index]);
@@ -646,38 +671,168 @@ public final class DataDrivenNativeRuntime {
 						plans.add(new ActionPlan(
 							action == DataDrivenQuestTable.ExtraAction.GIVE_ITEMS
 								? ActionType.GIVE_ITEMS : ActionType.REMOVE_ITEMS,
-							itemId, count, 0, false));
+							itemId, count, 0, false, -1, 0, 0, 0, 0, false, -1));
 					}
 				}
 				case CUTSCENE -> {
-					// 真端 `Cutscene|Cutscene2|Movie|Movie2 N`（+可选 HACTION 链接，e1 忽略）；
-					// 未知词形 = 真端 Wrong Type!!（记日志跳过），e1 同镜像不冻结。
-					// Retail `Cutscene|Cutscene2|Movie|Movie2 N` (+ optional HACTION links, ignored in e1);
+					// 真端 `Cutscene|Cutscene2|Movie|Movie2 N`（+可选 HACTION 链接，忽略）；
+					// 未知词形 = 真端 Wrong Type!!（记日志跳过），不冻结。
+					// Retail `Cutscene|Cutscene2|Movie|Movie2 N` (+ optional HACTION links, ignored);
 					// an unknown token is the retail Wrong Type!! (log + skip), mirrored without freezing.
 					String[] tokens = text.trim().split("[,\\s]+");
 					if (tokens.length < 2) {
 						return FreezeReason.ACTION_UNFACED;
 					}
 					String token = tokens[0];
-					int movieId;
-					try {
-						movieId = Integer.parseInt(tokens[1]);
-					} catch (NumberFormatException e) {
+					int movieId = parseRetailInt(tokens[1]);
+					if (tokens[1].isEmpty()) {
 						return FreezeReason.ACTION_UNFACED;
 					}
 					if (token.equalsIgnoreCase("Cutscene") || token.equalsIgnoreCase("Cutscene2")) {
-						plans.add(new ActionPlan(ActionType.CUTSCENE, 0, 0, movieId, false));
+						plans.add(new ActionPlan(ActionType.CUTSCENE, 0, 0, movieId, false, -1, 0, 0, 0, 0, false,
+							-1));
 					} else if (token.equalsIgnoreCase("Movie") || token.equalsIgnoreCase("Movie2")) {
-						plans.add(new ActionPlan(ActionType.CUTSCENE, 0, 0, movieId, true));
+						plans.add(new ActionPlan(ActionType.CUTSCENE, 0, 0, movieId, true, -1, 0, 0, 0, 0, false,
+							-1));
+					}
+				}
+				case TELEPORT -> {
+					// 真端 case 3 → `IUserImp::Teleport(world, x, y, z+1, heading, 1)`；载荷 = 5 个整数。
+					// Retail case 3 → IUserImp::Teleport; the payload is five integers.
+					String[] tokens = text.trim().split("[,\\s]+");
+					if (tokens.length < 5) {
+						return FreezeReason.ACTION_UNFACED;
+					}
+					int worldId = parseRetailInt(tokens[0]);
+					float x = parseRetailInt(tokens[1]);
+					float y = parseRetailInt(tokens[2]);
+					float z = parseRetailInt(tokens[3]);
+					int heading = parseRetailInt(tokens[4]);
+					if (tokens[0].isEmpty() || worldId <= 0) {
+						return FreezeReason.ACTION_UNFACED;
+					}
+					plans.add(new ActionPlan(ActionType.TELEPORT, 0, 0, 0, false, worldId, x, y, z, heading, false,
+						-1));
+				}
+				case SPAWN -> {
+					// 真端 case 5 → `IUserImp::Spawn`：`Absolute|Relative 名, 数量, 时间[, x y z heading]`
+					// 可 `;` 连多组；名字经 NPC 名空间解析。
+					// Retail case 5 → IUserImp::Spawn: multi-group spawn declarations.
+					String[] tokens = text.trim().split("[,\\s;]+");
+					int index = 0;
+					while (index < tokens.length) {
+						boolean relative;
+						if (tokens[index].equalsIgnoreCase("Relative")) {
+							relative = true;
+						} else if (tokens[index].equalsIgnoreCase("Absolute")) {
+							relative = false;
+						} else {
+							return FreezeReason.ACTION_UNFACED;
+						}
+						index++;
+						if (index >= tokens.length) {
+							return FreezeReason.ACTION_UNFACED;
+						}
+						Set<Integer> npcIds = new LinkedHashSet<>();
+						if (!resolveMonsters(tokens[index], nameResolver, npcIds, unresolved)) {
+							return FreezeReason.NAME_UNRESOLVED;
+						}
+						index++;
+						int fields = relative ? 2 : 6;
+						if (index + fields > tokens.length) {
+							return FreezeReason.ACTION_UNFACED;
+						}
+						int count = parseRetailInt(tokens[index]);
+						if (count <= 0) {
+							return FreezeReason.ACTION_UNFACED;
+						}
+						int lifeSeconds = parseRetailInt(tokens[index + 1]);
+						float x = fields == 6 ? parseRetailInt(tokens[index + 2]) : 0;
+						float y = fields == 6 ? parseRetailInt(tokens[index + 3]) : 0;
+						float z = fields == 6 ? parseRetailInt(tokens[index + 4]) : 0;
+						int heading = fields == 6 ? parseRetailInt(tokens[index + 5]) : 0;
+						for (int npcId : npcIds) {
+							plans.add(new ActionPlan(ActionType.SPAWN, npcId, count, lifeSeconds, false, -1, x, y, z,
+								heading, relative, -1));
+						}
+						index += fields;
+					}
+				}
+				case MESSAGE -> {
+					// case 7（列 7）→ `IUserImp::Say`（字符串表 id，键经真端字符串表解析）；
+					// case 8（列 8）= def 侧槽，仅 EnterArea/TalkFOBJ 步活 ⇒ 同 col6 规则。
+					// Column 7 → IUserImp::Say with a string-table id; column 8 is the def-side twin.
+					if (columnIndex == 8) {
+						FreezeReason reason = defSideAction(step);
+						if (reason != null) {
+							return reason;
+						}
+						continue;
+					}
+					Integer stringId = RetailStringIds.instance().resolve(text);
+					if (stringId == null) {
+						unresolved.add(text.trim().toLowerCase(java.util.Locale.ROOT));
+						return FreezeReason.NAME_UNRESOLVED;
+					}
+					plans.add(new ActionPlan(ActionType.SAY, 0, 0, 0, false, -1, 0, 0, 0, 0, false, stringId));
+				}
+				case DELAY -> {
+					// case 6 → def+0x270（未定名）：仅 EnterArea/TalkFOBJ 步活；其余 kind = 真端死列。
+					// case 6 → the unnamed def-side slot: live only on EnterArea/TalkFOBJ steps.
+					FreezeReason reason = defSideAction(step);
+					if (reason != null) {
+						return reason;
 					}
 				}
 				default -> {
+					// case 9/10（EnterInstance/Timer）：宿主渲染面未坐实（creationId 客户端表 /
+					// 到期分发面）⇒ fail-closed 冻结。
+					// Cases 9/10 stay frozen: the instance creation table and the timer expiry
+					// dispatch are un-adjudicated.
 					return FreezeReason.ACTION_UNFACED;
 				}
 			}
 		}
 		facedActions.add(List.copyOf(plans));
 		return null;
+	}
+
+	/** case 6/8 的活面判定：EnterArea/TalkFOBJ 步 = 未定名 def 侧槽 ⇒ 冻结；其余 kind = 真端死列 ⇒ 忽略。 */
+	private static FreezeReason defSideAction(Step step) {
+		return switch (step.kind()) {
+			case ENTER_AREA, TALK_FOBJ -> FreezeReason.ACTION_UNFACED;
+			default -> null;
+		};
+	}
+
+	/** MESSAGE 动作的实际列号（列 7 优先；仅声明列 8 时取 8）。 / The actual column of a MESSAGE action. */
+	private static int actualColumnOf(Step step, DataDrivenQuestTable.ExtraAction action) {
+		if (action == DataDrivenQuestTable.ExtraAction.MESSAGE && step.column(action.column()) == null) {
+			return 8;
+		}
+		return action.column();
+	}
+
+	/**
+	 * 真端数字 token 解析镜像（`FUN_18107c0f0` = `wcstoul` base 10：前导整数截断，
+	 * `83.9`→83、无数字→0）。
+	 * The retail numeric-token parse mirror (wcstoul: leading integer truncated, no digits → 0).
+	 */
+	private static int parseRetailInt(String token) {
+		String text = token.trim();
+		int start = text.startsWith("+") || text.startsWith("-") ? 1 : 0;
+		int end = start;
+		while (end < text.length() && Character.isDigit(text.charAt(end))) {
+			end++;
+		}
+		if (end == start) {
+			return 0;
+		}
+		try {
+			return Integer.parseInt(text.substring(0, end));
+		} catch (NumberFormatException e) {
+			return 0;
+		}
 	}
 
 
@@ -907,8 +1062,8 @@ public final class DataDrivenNativeRuntime {
 	}
 
 	/**
-	 * 执行一步的已落面动作（真端执行器 case 1/2/4：发/扣物品对、Cutscene/Movie）。
-	 * Runs one step's faced actions (retail executor cases 1/2/4).
+	 * 执行一步的已落面动作（真端执行器 case 1/2/3/4/5/7：发/扣物品对、Cutscene/Movie、传送、刷怪、播报）。
+	 * Runs one step's faced actions (retail executor cases 1/2/3/4/5/7).
 	 */
 	private void runActions(Player player, int questId, int stepIndex) {
 		if (inventoryPort == null || moviePort == null) {
@@ -929,8 +1084,20 @@ public final class DataDrivenNativeRuntime {
 						moviePort.play(player, action.movieId());
 					}
 				}
+				case TELEPORT -> teleportPort.teleport(player, action.worldId(), action.x(), action.y(), action.z(),
+					action.heading());
+				case SPAWN -> spawnPort.spawn(player, action.itemId(), action.count(), action.relative(), action.x(),
+					action.y(), action.z(), action.heading(), lifeSeconds(action));
+				case SAY -> sayPort.say(player, action.stringId());
 			}
 		}
+	}
+
+	/** 刷怪存活秒（真端刷怪单 time 参数；0 = 不定时回收）。 / The spawn lifetime seconds (0 = no despawn). */
+	private static int lifeSeconds(ActionPlan action) {
+		// ActionPlan 未用字段回收：SPAWN 的 movieId 槽存 time（见 scanFacedActions）。
+		// SPAWN reuses the movieId slot for the time parameter (see scanFacedActions).
+		return action.movieId();
 	}
 
 	/**
@@ -1195,12 +1362,17 @@ public final class DataDrivenNativeRuntime {
 		state.setPersistentState(PersistentState.UPDATE_REQUIRED);
 		PacketSendUtility.sendPacket(player,
 			new SM_QUEST_ACTION(state.getQuestId(), state.getStatus(), state.getQuestVars().getQuestVars()));
-		// 真端动作只在步进/收口分支执行（部分自增分支直接 return，`FUN_180c46020`）。
-		// Retail runs the action list only on the step-advance/complete branches (the partial
-		// counter branch returns early, FUN_180c46020).
+		// 真端动作执行矩阵：推进/收口分支只对 Hunt/EnterArea/TalkFOBJ 调执行器（对话平面与
+		// ItemPlay/EnterWorld 的推进边只发 0xf0/0x100，见 e2 取证 §1）；接取分支不受此限。
+		// Retail runs the executor only on the Hunt/EnterArea/TalkFOBJ advance branches; the dialog
+		// plane and ItemPlay/EnterWorld advances never call it (e2 evidence §1).
 		if (result.outcome() == DataDrivenProgress.Outcome.STEP_ADVANCE
 			|| result.outcome() == DataDrivenProgress.Outcome.STEP_COMPLETE) {
-			runActions(player, state.getQuestId(), actionStepIndex);
+			switch (plansByQuestId.get(state.getQuestId()).get(actionStepIndex).kind()) {
+				case HUNT, ENTER_AREA, TALK_FOBJ -> runActions(player, state.getQuestId(), actionStepIndex);
+				default -> {
+				}
+			}
 		}
 		return true;
 	}
