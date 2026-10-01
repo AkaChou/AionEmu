@@ -2867,3 +2867,28 @@ keywords: DataDriven、原生契约、1467、category_progress_、category_acqui
 - **判定规则**：DD 行的进度 = 「步号（6 位）+ 每步 4 组 6 位子计数」，每一步由该步 `category_progress_` 对应的真端 handler 服务；接取由 `category_acquire_` 的 kind 决定，二者都是**行级契约**，不是族级实现细节。
 - **安全网**：切换前先用零行为变更批把契约冻成六条不变量（含逐行矩阵摘要）；运行时遇到未裁定的类别/列/形一律 fail-closed。
 - **反漂移**：契约矩阵必须从真端表行 + owner 台账 + 客户端孤行快照重算（不读外部根、不复用装载器判断）；未坐实的列语义宁可 fail-closed，也不许猜。
+
+---
+
+## [QE-127] 一百二十七、DD 步列 = 类别载荷 + 通用附加动作两段：`valueN_progress_` 的真实语义由真端 `LoadProgressInfo` / `LoadExtraAction` 两函数共同定义 (DATA_DRIVEN_STEP_COLUMN_SEMANTICS)
+
+<!-- pattern-metadata
+status: CONFIRMED
+scope: 真端 DataDriven（`data_driven_quest.xml`）每个 `<data>` 步骤里 `valueN_progress_` 列的语义（类别载荷 vs 通用附加动作）与其适用类别
+first_seen: 2026-10-01
+last_verified: 2026-10-01
+symptom: ① 看到 DD 表的 `value5_progress_`（`Absolute/Relative 名, 数量, 时间[, x y z h]`）当成「未知长尾列」而冻结/忽略 ⇒ 生成 NPC 的事件对象面永不接线；② 把 `value1_progress_` 一律当 FOBJ 追加名（collectitem 语义）而套到 talk/itemplay 上 ⇒ 实际是「发/扣物品」；③ 直接把每个非 0 列当动作执行，忽略真端的类别 guard ⇒ 给 CollectItem/PvP 造出真端根本不存在的动作面
+root_cause: 真端对 `<data>` 的属性有两段解析（`ScriptDLL64.c`：`/* 180c4b330 */` `DataDrivenQuestLoader::LoadProgressInfo`）：类别标签 `0xfe9` 决定步 kind（`QuestProgressExtraInfo_*` 对象），值标签 `0xfec..0xff6` = `value0..value10` 交给 `FUN_180c4b980`（类别载荷）解析；`FUN_180c4b980` 处理完再**尾调** `FUN_180c49610`（`LoadExtraAction`）解析通用附加动作。每个 kind 的分支以 `return 1` 结束者**没有**附加动作面（CollectItem=1、PvP=5），以 `break` 结束者才落到附加动作（Hunt 另有 `if (1 < (u32)(index-4)) return 1` ⇒ 只放行 4/5）；`LoadExtraAction` 自身也有 guard：`kind < 2 || (4 < kind && 4 < (u32)(kind-6))` ⇒ 只放行 kind 2/3/4/6/7/8/9/10
+fix_or_guardrail: 1. 读 DD 步列时先分两段：index 0（CollectItem 另含 1..4 追加 FOBJ、5 整数；PvP 另含 1..3 军衔阈值/上限/等级差）= **类别载荷**；其余 = **通用附加动作**（1/2 发扣物品、3 传送、4 过场/影像 `Cutscene|Cutscene2|Movie|Movie2 [+HACTION_*]`、5 生成 NPC `Absolute|Relative 名, 数量, 时间[, x y z h]`、6 延迟毫秒、7/8 消息串索引、9 进副本 `创建id, 世界id, 离开进度`、10 定时器 `时间, 目标进度, 动作id`）；2. 遵守类别 guard：CollectItem/PvP 的 1..10 非载荷列在真端非法 ⇒ 本服 fail-closed，不得静默吞列；3. 附加动作在步完成/推进后由动作表解释器执行（`FUN_180c4cd50`/`FUN_180c4d190`/`FUN_180c4c8d0`），不是「事件到达即执行」；4. 门禁把 (类别, 列号) 的闭合断言写死（非法/未知组合零命中）
+evidence: .agents/summary/quest-engine-native/p7/P7-STEP2-PREREQ-COLUMN-SEMANTICS.zh-CN.md; src/test/java/com/aionemu/gameserver/questEngine/tablelane/DataDrivenNativeContractGateTest.java（everyStepColumnCarriesAdjudicatedRetailSemantics）; .agents/summary/quest-engine-native/p7/dd-native-shape-matrix.tsv; .agents/summary/quest-engine-native/p7-prereqs/dd-dispatcher-and-handlers.md
+validation: 2026-10-01：真端反编译逐分支坐实（`FUN_180c4b980` @180c4b980 尾调 `FUN_180c49610` @180c49610；guard 与四类过场类型/生成形/定时器字段均有日志串证据）；本服 1467 行切换集实测列面与真端逐列相符（hunt 4/5；collectitem 1..5；pvp 1..3；talk 1..10 全套；enterarea 4/5/7/10；itemplay 1/2/4/5/7/10；enterworld 1/2/4；talkfobj 1/2/3/4/5/6/10）0 例外；门 `DataDrivenNativeContractGateTest` **7/7**
+superseded_by: none
+boundaries: ① 本护照只到「列 → 语义/解析形」；附加动作的**执行时机**与逐动作副作用细节（发扣批量语义、生成 NPC 生命周期、定时器目标进度写回）属 P7 步 2 实现面；② `value0_acquire_`/`value1_acquire_` 是接取侧载荷（`category_acquire_` 的 kind 3/4/7/8/10），与本护照的 progress 列不是同一面；③ 真端 kind 号（CollectItem=1/Hunt=2/ItemPlay=3/Talk=4/PvP=5/EnterArea=6/EnterWorld=7/LevelUp=8/TalkFOBJ=9/LevelUpLogIn=10）只在**同一 `<data>` 内**成立，跨表不可复用
+see_also: [QE-126], [QE-124], [QE-121]
+first_check: 动 DD 步列前先答：① 这个 index 在该类别里是「类别载荷」还是「附加动作」（查 QE-127 两表）？② 该类别在真端允许附加动作吗（CollectItem/PvP 不允许；Hunt 只 4/5）？③ 列值的解析形与真端日志串（Give/Remove Items、Teleport To、Play Cutscene、Spawn Npcs、Delay Time、Message、Enter Instance、Add Timer）对得上吗？④ 这个动作应该在步完成/推进后执行吗？⑤ 门禁的 (类别, 列号) 闭合断言是否仍绿？
+keywords: DataDriven、step column、valueN_progress_、LoadProgressInfo、LoadExtraAction、FUN_180c4b980、FUN_180c49610、类别载荷、附加动作、发扣物品、传送、过场、生成NPC、延迟、消息、进副本、定时器、guard、CollectItem无附加动作、PvP无附加动作、DATA_DRIVEN_STEP_COLUMN_SEMANTICS、QE-127
+-->
+
+- **判定规则**：`value0_progress_`（以及 CollectItem 的 1..4/5、PvP 的 1..3）= 类别载荷；其余 = 通用附加动作，且只在真端 guard 放行的类别里成立。
+- **安全网**：类别 × 列号的闭合断言写进门；非法/未知组合 fail-closed，禁止「先吞列再补」。
+- **反漂移**：附加动作在**步完成/推进后**执行（动作表解释器），不要挪到事件到达路径上。

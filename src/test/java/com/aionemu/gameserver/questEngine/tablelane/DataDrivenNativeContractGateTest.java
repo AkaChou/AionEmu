@@ -99,6 +99,32 @@ class DataDrivenNativeContractGateTest {
 		"enterworld", Map.of(0, 34, 1, 1, 2, 1, 4, 1),
 		"talkfobj", Map.of(0, 19, 1, 7, 2, 3, 3, 1, 4, 2, 5, 5, 6, 2, 10, 2));
 
+	/**
+	 * 类别载荷列（真端 `FUN_180c4b980`：按 kind 解析 index=0 的类别数据；CollectItem 另占 1..4 的追加 FOBJ 与 5 的整数，
+	 * PvP 另占 1..3 的军衔阈值/上限/等级差）。 / Category payload columns parsed by `FUN_180c4b980`.
+	 */
+	private static final Map<String, Set<Integer>> CATEGORY_PAYLOAD_COLUMNS = Map.of(
+		"hunt", Set.of(0),
+		"collectitem", Set.of(0, 1, 2, 3, 4, 5),
+		"pvp", Set.of(0, 1, 2, 3),
+		"talk", Set.of(0),
+		"enterarea", Set.of(0),
+		"itemplay", Set.of(0),
+		"enterworld", Set.of(0),
+		"talkfobj", Set.of(0));
+	/**
+	 * 通用附加动作列（真端 `FUN_180c49610` = `DataDrivenQuestLoader::LoadExtraAction`）：1/2=发扣物品、3=传送、
+	 * 4=过场影像、5=生成 NPC、6=延迟、7/8=消息、9=进副本、10=定时器；真端 guard 只放行 kind 2/3/4/6/7/8/9/10，
+	 * 且 Hunt 只放行 4/5 ⇒ CollectItem(1) 与 PvP(5) **没有**附加动作面。 / Generic extra-action columns.
+	 */
+	private static final Map<String, Set<Integer>> EXTRA_ACTION_COLUMNS = Map.of(
+		"hunt", Set.of(4, 5),
+		"itemplay", Set.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10),
+		"talk", Set.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10),
+		"enterarea", Set.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10),
+		"enterworld", Set.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10),
+		"talkfobj", Set.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10));
+
 	private static final Pattern BLOCK = Pattern.compile("<quest_data_driven>(.*?)</quest_data_driven>", Pattern.DOTALL);
 	private static final Pattern DATA = Pattern.compile("<data>(.*?)</data>", Pattern.DOTALL);
 	private static final Pattern COMMENT = Pattern.compile("<!--.*?-->", Pattern.DOTALL);
@@ -211,6 +237,43 @@ class DataDrivenNativeContractGateTest {
 		Map<String, Map<Integer, Integer>> frozen = new TreeMap<>();
 		COLUMN_HISTOGRAM.forEach((category, counts) -> frozen.put(category, new TreeMap<>(counts)));
 		assertEquals(frozen, histogram, "步列词汇表冻结：新增 valueN 列必须显式裁定（禁止静默吞列）");
+	}
+
+	/**
+	 * ⑦ 步列语义闭合（真端 `FUN_180c4b980` + `FUN_180c49610`，见 `p7/P7-STEP2-PREREQ-COLUMN-SEMANTICS.zh-CN.md`）：
+	 * 每个观测到的 (类别, 列号) 必须落在「类别载荷」或「该类别真端允许的附加动作」之一；真端非法组合必须零命中，
+	 * 未知组合必须零命中（新增列号/新组合一律 fail-closed，禁止静默吞列）。
+	 *
+	 * Every observed (category, column) pair must be either a category payload column or an extra-action column the
+	 * retail loader admits for that category; illegal or unknown combinations must stay at zero hits.
+	 */
+	@Test
+	void everyStepColumnCarriesAdjudicatedRetailSemantics() {
+		Map<String, Set<Integer>> observed = new TreeMap<>();
+		for (int questId : switchSet) {
+			for (Step step : rows.get(questId).steps()) {
+				for (int column : step.columns().keySet()) {
+					Set<Integer> payloads = CATEGORY_PAYLOAD_COLUMNS.get(step.category());
+					Set<Integer> extras = EXTRA_ACTION_COLUMNS.getOrDefault(step.category(), Set.of());
+					assertTrue(payloads.contains(column) || extras.contains(column),
+						"步列语义未裁定（fail-closed）: quest " + questId + " category " + step.category()
+							+ " column " + column);
+					observed.computeIfAbsent(step.category(), key -> new TreeSet<>()).add(column);
+				}
+			}
+		}
+		for (Map.Entry<String, Set<Integer>> entry : observed.entrySet()) {
+			Set<Integer> allowed = new TreeSet<>(CATEGORY_PAYLOAD_COLUMNS.get(entry.getKey()));
+			allowed.addAll(EXTRA_ACTION_COLUMNS.getOrDefault(entry.getKey(), Set.of()));
+			assertTrue(allowed.containsAll(entry.getValue()),
+				"类别 " + entry.getKey() + " 的观测列必须落在裁定面内: " + entry.getValue());
+			assertTrue(entry.getValue().contains(0), "每步必须有载荷列 0: " + entry.getKey());
+		}
+		// 真端 guard：CollectItem(1) 与 PvP(5) 无附加动作面；Hunt 只允许 4/5。
+		assertTrue(!EXTRA_ACTION_COLUMNS.containsKey("collectitem"), "CollectItem 无附加动作面（真端 return 1）");
+		assertTrue(!EXTRA_ACTION_COLUMNS.containsKey("pvp"), "PvP 无附加动作面（真端 return 1）");
+		assertEquals(Set.of(4, 5), EXTRA_ACTION_COLUMNS.get("hunt"), "Hunt 只允许 4/5 落到附加动作");
+		assertEquals(PROGRESS_CATEGORIES, observed.keySet(), "观测类别必须恰为真端 8 类");
 	}
 
 	/** ⑤ 6 位布局：每步子计数 ≤ 4 组、计数 ≤ 63（80817 = 裁定例外，原样复刻真端回绕）。 */
