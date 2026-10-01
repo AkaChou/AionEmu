@@ -19,9 +19,21 @@ import pathlib
 import re
 import xml.etree.ElementTree as ET
 
-XML = pathlib.Path('/Users/mc/IdeaProjects/58Server/Map/XML')
-CLIENT = pathlib.Path('/Users/mc/PycharmProjects/unpak/Quest_unpacked')
-REPO = pathlib.Path('/Users/mc/IdeaProjects/AionEmu-test')
+HERE = pathlib.Path(__file__).resolve()
+REPO = next(candidate for candidate in [HERE, *HERE.parents] if (candidate / 'pom.xml').is_file())
+
+
+def host_dir(relative: str) -> pathlib.Path:
+    """按 ENVIRONMENT.md 的同宿主目录约定解析外部根（支持 <workspace> 与 HOME 两种布局）。"""
+    for candidate in [REPO.parent / relative, REPO.parent.parent / relative,
+                      pathlib.Path.home() / relative]:
+        if candidate.exists():
+            return candidate
+    raise SystemExit("cannot locate external root '" + relative + "'")
+
+
+XML = host_dir('58Server') / 'Map/XML'
+CLIENT = host_dir('PycharmProjects/unpak/Quest_unpacked')
 NPC_DIR = REPO / 'src/main/resources/aion/data/static_data/npcs'
 RETENTION = REPO / 'src/main/resources/aion/data/static_data/quest/retail/retail-xml-retention.tsv'
 DEFS = REPO / 'src/main/resources/aion/data/static_data/quest/definitions/quests'

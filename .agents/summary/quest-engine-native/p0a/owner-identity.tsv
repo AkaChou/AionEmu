@@ -4287,7 +4287,7 @@ questId	retail_family	retail_acquire	retail_reward	retail_monsters	npc_acquire	n
 18209								True	False	XML_RETENTION	-	True	NO_TABLE_XML_ONLY	
 18210	SimpleTalk	eno	junos		UNIQUE	UNIQUE	EMPTY	True	False	RETAIL_TABLE	SimpleTalk	False	NATIVE_READY_RAW_VARS_PENDING	
 18212								True	False	XML_RETENTION	-	True	NO_TABLE_XML_ONLY	
-18213	SimpleItemPlay	junos	romedon		UNIQUE	UNIQUE	EMPTY	True	False	XML_RETENTION	SimpleItemPlay	True	NATIVE_READY_RAW_VARS_PENDING	
+18213	SimpleItemPlay	junos	romedon		UNIQUE	UNIQUE	EMPTY	True	False	RETAIL_TABLE	SimpleItemPlay	False	NATIVE_READY_RAW_VARS_PENDING	
 18215	SimpleTalk	eno	eno		UNIQUE	UNIQUE	EMPTY	True	False	ABSENT		False	NATIVE_READY_RAW_VARS_PENDING	
 18216	SimpleTalk	eno	eno		UNIQUE	UNIQUE	EMPTY	True	True	ABSENT		False	NATIVE_READY_RAW_VARS_PENDING	
 18217	SimpleTalk	eno	eno		UNIQUE	UNIQUE	EMPTY	True	False	ABSENT		False	NATIVE_READY_RAW_VARS_PENDING	
@@ -6112,7 +6112,7 @@ questId	retail_family	retail_acquire	retail_reward	retail_monsters	npc_acquire	n
 28209								True	False	XML_RETENTION	-	True	NO_TABLE_XML_ONLY	
 28210	SimpleTalk	reigar	shinin		AMBIGUOUS(1)	UNIQUE	EMPTY	True	False	RETAIL_TABLE	SimpleTalk	False	NATIVE_NAME_AMBIGUOUS	acquire:['reigar(2)']
 28212								True	False	XML_RETENTION	-	True	NO_TABLE_XML_ONLY	
-28213	SimpleItemPlay	shinin	kijan		UNIQUE	UNIQUE	EMPTY	True	False	XML_RETENTION	SimpleItemPlay	True	NATIVE_READY_RAW_VARS_PENDING	
+28213	SimpleItemPlay	shinin	kijan		UNIQUE	UNIQUE	EMPTY	True	False	RETAIL_TABLE	SimpleItemPlay	False	NATIVE_READY_RAW_VARS_PENDING	
 28215	SimpleTalk	reigar	reigar		AMBIGUOUS(1)	AMBIGUOUS(1)	EMPTY	True	False	ABSENT		False	NATIVE_NAME_AMBIGUOUS	acquire:['reigar(2)'] reward:['reigar(2)']
 28216	SimpleTalk	reigar	reigar		AMBIGUOUS(1)	AMBIGUOUS(1)	EMPTY	True	True	ABSENT		False	NATIVE_NAME_AMBIGUOUS	acquire:['reigar(2)'] reward:['reigar(2)']
 28217	SimpleTalk	reigar	reigar		AMBIGUOUS(1)	AMBIGUOUS(1)	EMPTY	True	False	ABSENT		False	NATIVE_NAME_AMBIGUOUS	acquire:['reigar(2)'] reward:['reigar(2)']

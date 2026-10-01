@@ -16,7 +16,8 @@ import sys
 
 import pymysql  # noqa: N817
 
-REPO = pathlib.Path('/Users/mc/IdeaProjects/AionEmu-test')
+HERE = pathlib.Path(__file__).resolve()
+REPO = next(candidate for candidate in [HERE, *HERE.parents] if (candidate / 'pom.xml').is_file())
 P0A = REPO / '.agents/summary/quest-engine-native/p0a'
 DB = dict(host='127.0.0.1', port=3306, user='root', password='123456',
           database='al_server_gs', charset='utf8mb4',
