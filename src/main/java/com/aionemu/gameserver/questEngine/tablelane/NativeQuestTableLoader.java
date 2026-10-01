@@ -60,9 +60,15 @@ public final class NativeQuestTableLoader {
 	public record KillSlot(int count, List<String> monsters) {
 	}
 
-	/** SimpleHunt 表行。 / One SimpleHunt table row. */
+	/**
+	 * SimpleHunt 表行。{@code con_quest}（交付节点 0x1e 槽的链式接取窗，132 行）与
+	 * {@code cutsceneid1}/{@code cs1_haction}（交付节点 0x35 槽的过场，3 行）按原文装载。
+	 * <p>
+	 * One SimpleHunt table row; the chain-window column (slot 0x1e, 132 rows) and the cutscene columns
+	 * (slot 0x35, 3 rows) load verbatim.
+	 */
 	public record SimpleHuntRow(int questId, String acquiredNpcName, String rewardNpcName,
-			Map<Integer, KillSlot> killSlots) {
+			Map<Integer, KillSlot> killSlots, Integer conQuest, Integer cutsceneId, Integer cutsceneAction) {
 	}
 
 	/** 串行阶段规约：阶段号 (1..5) + 所需击杀数 + 目标怪名列表。 / Serial stage: 1-based stage + required count + monster names. */
@@ -362,7 +368,10 @@ public final class NativeQuestTableLoader {
 			SimpleHuntRow row = new SimpleHuntRow(questId,
 					optionalText(element, "acquired_npc_name"),
 					optionalText(element, "reward_npc_name"),
-					parseKillSlots(questId, element));
+					parseKillSlots(questId, element),
+					optionalInt(element, "con_quest", questId),
+					optionalInt(element, "cutsceneid1", questId),
+					optionalInt(element, "cs1_haction", questId));
 			if (rows.putIfAbsent(questId, row) != null) {
 				throw new IllegalStateException("NATIVE_TABLE_PARSE_FAILED: duplicate quest id " + questId);
 			}

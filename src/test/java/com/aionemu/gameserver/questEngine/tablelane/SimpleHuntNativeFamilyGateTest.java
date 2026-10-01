@@ -3,8 +3,10 @@ package com.aionemu.gameserver.questEngine.tablelane;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -173,6 +175,93 @@ class SimpleHuntNativeFamilyGateTest {
 		qs.setStatus(QuestStatus.REWARD);
 		QuestEnv envRewardDialog = new QuestEnv(rewNpc, player, 2354, 31);
 		assertTrue(handler.onDialog(envRewardDialog));
+	}
+
+	/**
+	 * P1B 残余轴①：链式接取窗（真端交付节点 0x1e 槽 = {@code mgr+0x1a8(player, con_quest)}）。
+	 * <p>
+	 * 132 行逐行装载；本表内 65 行的下一环必须在本行的交付 NPC 上可接取（本车道接取路由按 NPC 建表
+	 * ⇒ 该窗已由下一环自身那一行实现）；跨族/无行目标由独立审计复算（`p4b/tools/conquest-axis-audit.py`）。
+	 * The chain window (retail hand-in slot 0x1e): 132 rows load and the 65 in-table targets acquire at this
+	 * row's hand-in NPC, so the window is already realized by the next quest's own accept route.
+	 */
+	@Test
+	void chainWindowsCloseAtTheHandInNpc() {
+		Map<Integer, NativeQuestTableLoader.SimpleHuntRow> rows = new java.util.TreeMap<>();
+		for (NativeQuestTableLoader.SimpleHuntRow row : loader.rows()) {
+			rows.put(row.questId(), row);
+		}
+		int declared = 0;
+		int inTable = 0;
+		for (NativeQuestTableLoader.SimpleHuntRow row : loader.rows()) {
+			Integer next = row.conQuest();
+			assertEquals(next, handler.conQuest(row.questId()), "con_quest 装载漂移: " + row.questId());
+			if (next == null) {
+				continue;
+			}
+			declared++;
+			NativeQuestTableLoader.SimpleHuntRow target = rows.get(next);
+			if (target == null) {
+				continue;
+			}
+			inTable++;
+			assertEquals(row.rewardNpcName(), target.acquiredNpcName(),
+				"本表内下一环的接取 NPC 必须等于本行交付 NPC: " + row.questId() + "->" + next);
+			Integer sourceReward = handler.rewardNpc(row.questId());
+			Integer targetAcquire = handler.acquireNpc(next);
+			if (sourceReward != null && targetAcquire != null) {
+				assertEquals(sourceReward, targetAcquire,
+					"链式接取窗未在本行交付 NPC 上闭环: " + row.questId() + "->" + next);
+			}
+		}
+		assertEquals(132, declared, "真端 SimpleHunt con_quest 覆盖 132 行");
+		assertEquals(65, inTable, "本表内链式目标 65 行（其余为跨族/无行，由审计复算）");
+		assertTrue(handler.unresolvedChainQuestIds().isEmpty(),
+			() -> "本族链式接取窗未闭环: " + handler.unresolvedChainQuestIds());
+	}
+
+	/**
+	 * P1B 残余轴②：过场（真端交付节点 0x35 槽 PlayMovie）。3 行声明（3016=362 / 4007=391 / 4014=393，
+	 * 动作均 1007 = 真端拒绝流页）；动作未被本行服务时不得下发（本车道尚未实现 1007 拒绝页 ⇒
+	 * 该动作当前不可达，如实冻结为「装载 + 消费面就绪、触发面待拒绝流」）。
+	 * The cutscene slot (0x35): three rows declare it (movie 362/391/393 on action 1007 = the retail refuse
+	 * page). The movie is only sent when the row serves the action; this lane does not implement page 1007
+	 * yet, so the face stays dormant and is frozen as such.
+	 */
+	@Test
+	void cutsceneFaceIsLoadedAndFiresOnlyOnAServedAction() {
+		RecordingMovies movies = new RecordingMovies();
+		SimpleHuntHandler local = new SimpleHuntHandler(loader, cameraRegistry,
+			NativeNpcNameResolver.instance(), HtmlPagesRegistry.instance(),
+			NativeQuestOwnerResolver.instance().xmlOnlyIds(), movies, NativeReportRewardFlow.instance());
+		assertEquals(362, local.cutscene(3016).movieId(), "3016 真端 cutsceneid1");
+		assertEquals(1007, local.cutscene(3016).triggerAction(), "3016 真端 cs1_haction");
+		assertEquals(391, local.cutscene(4007).movieId());
+		assertEquals(393, local.cutscene(4014).movieId());
+		assertNull(local.cutscene(2354), "未声明过场的行不得有过场面");
+
+		Player player = createTestPlayer();
+		Npc npc = createMockNpc(local.acquireNpc(3016));
+		assertFalse(local.onDialog(new QuestEnv(npc, player, 3016, 1007)),
+			"本车道未实现 1007 拒绝页 ⇒ 该动作不被服务");
+		assertTrue(movies.played().isEmpty(), "未被服务的动作不得下发过场");
+		assertTrue(local.onDialog(new QuestEnv(npc, player, 3016, 26)),
+			"接取问询页必须由本行服务");
+		assertTrue(movies.played().isEmpty(), "非触发动作不得下发过场");
+	}
+
+	/** 记录式假过场端口（真端 0x35 槽）。 / A recording fake cutscene port (retail slot 0x35). */
+	private static final class RecordingMovies implements NativeMoviePort {
+		private final List<Integer> played = new ArrayList<>();
+
+		@Override
+		public void play(Player player, int movieId) {
+			played.add(movieId);
+		}
+
+		private List<Integer> played() {
+			return List.copyOf(played);
+		}
 	}
 
 	private static Player createTestPlayer() {

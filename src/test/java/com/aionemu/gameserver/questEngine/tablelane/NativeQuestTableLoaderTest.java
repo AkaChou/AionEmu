@@ -69,6 +69,20 @@ class NativeQuestTableLoaderTest {
 				.collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue().count())));
 		assertTrue(!row2354.acquiredNpcName().isBlank());
 		assertTrue(!row2354.rewardNpcName().isBlank());
+		// P1B 残余轴：链式接取窗（0x1e 槽）与过场（0x35 槽）列按原文装载。
+		// P1B residual axes: the chain-window (slot 0x1e) and cutscene (slot 0x35) columns load verbatim.
+		assertNull(row2354.conQuest());
+		assertNull(row2354.cutsceneId());
+		NativeQuestTableLoader.SimpleHuntRow row1339 = loader.require(1339);
+		assertEquals(1340, row1339.conQuest());
+		assertNull(row1339.cutsceneAction());
+		NativeQuestTableLoader.SimpleHuntRow row3016 = loader.require(3016);
+		assertEquals(362, row3016.cutsceneId());
+		assertEquals(1007, row3016.cutsceneAction());
+		assertEquals(132, loader.rows().stream().filter(row -> row.conQuest() != null).count(),
+				"真端 SimpleHunt con_quest 覆盖 132 行");
+		assertEquals(3, loader.rows().stream().filter(row -> row.cutsceneId() != null).count(),
+				"真端 SimpleHunt cutsceneid1 覆盖 3 行（3016/4007/4014）");
 		// 13912 形：槽 1 有怪，槽 3 有计数无怪（真端自身无事件源，行为永不满足）。 / The 13912 shape:
 		// slot 1 has monsters; slot 3 has a count and no monsters (retail wires no event source either).
 		NativeQuestTableLoader.SimpleHuntRow row13912 = loader.require(13912);

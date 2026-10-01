@@ -276,7 +276,8 @@ class NativeQuestRewardClaimGateTest {
 		RecordingSink sink = new RecordingSink();
 		SimpleHuntHandler handler = new SimpleHuntHandler(NativeQuestTableLoader.instance(),
 			CameraRegistry.instance(), NativeNpcNameResolver.instance(), HtmlPagesRegistry.instance(),
-			NativeQuestOwnerResolver.instance().xmlOnlyIds(), NativeReportRewardFlow.withSink(sink));
+			NativeQuestOwnerResolver.instance().xmlOnlyIds(), NativeMoviePort.live(),
+			NativeReportRewardFlow.withSink(sink));
 		Player player = NativeTalkFixture.player();
 		NativeTalkFixture.add(player, HUNT_SCALAR_QUEST, QuestStatus.REWARD, 0);
 		int npcId = handler.rewardNpc(HUNT_SCALAR_QUEST);

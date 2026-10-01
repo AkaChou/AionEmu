@@ -39,6 +39,10 @@ public final class SimpleHuntHandler {
 	public record HuntTargetRef(int questId, int slot) {
 	}
 
+	/** 过场引用：movie id + 触发动作 id（{@code cs1_haction}；-1 = 表未声明触发）。 */
+	public record Cutscene(int movieId, int triggerAction) {
+	}
+
 	/** 获取拥有的任务数量。 / Returns managed quest count. */
 	public int ownedQuestCount() {
 		return ownedQuestIds.size();
@@ -50,6 +54,8 @@ public final class SimpleHuntHandler {
 	private final CameraRegistry cameraRegistry;
 	private final NativeNpcNameResolver nameResolver;
 	private final HtmlPagesRegistry pagesRegistry;
+	/** 过场出口（真端交付节点 0x35 槽 PlayMovie）。 / The cutscene exit (retail hand-in slot 0x35). */
+	private final NativeMoviePort moviePort;
 
 	/** NPC ID → 监听该怪物的任务槽位集合。 / NPC ID → listening quest slots. */
 	private final Map<Integer, List<HuntTargetRef>> targetsByNpcId;
@@ -62,27 +68,38 @@ public final class SimpleHuntHandler {
 	/** 路由集 = 注册集 − XML-only 行（单一 owner 不变量）。 / Routing set = registration set minus XML-owned rows. */
 	private final Set<Integer> routedQuestIds;
 
+	/** 任务 ID → 链式接取窗的下一环（真端交付节点 0x1e 槽的 {@code con_quest}）。 / Quest id → the next quest of the chain window. */
+	private final Map<Integer, Integer> conQuestByQuestId;
+	/** 链式接取窗未闭环的行（fail-closed 证据面）。 / Rows whose chain window is not realized. */
+	private final Set<Integer> unresolvedChainQuestIds;
+	/** 任务 ID → 过场引用（表 {@code cutsceneid1}/{@code cs1_haction}）。 / Quest id → cutscene reference. */
+	private final Map<Integer, Cutscene> cutsceneByQuestId;
+
 	/** 完成/领奖口（计划 §6.2 NativeReportRewardFlow 完成半边）。 / The native completion/reward port. */
 	private final NativeReportRewardFlow rewardFlow;
 
 	private SimpleHuntHandler(NativeQuestTableLoader tableLoader, CameraRegistry cameraRegistry,
 			NativeNpcNameResolver nameResolver, HtmlPagesRegistry pagesRegistry, Set<Integer> xmlOnlyIds) {
 		this(tableLoader, cameraRegistry, nameResolver, pagesRegistry, xmlOnlyIds,
-				NativeReportRewardFlow.instance());
+				NativeMoviePort.live(), NativeReportRewardFlow.instance());
 	}
 
 	SimpleHuntHandler(NativeQuestTableLoader tableLoader, CameraRegistry cameraRegistry,
 			NativeNpcNameResolver nameResolver, HtmlPagesRegistry pagesRegistry, Set<Integer> xmlOnlyIds,
-			NativeReportRewardFlow rewardFlow) {
+			NativeMoviePort moviePort, NativeReportRewardFlow rewardFlow) {
 		this.tableLoader = tableLoader;
 		this.cameraRegistry = cameraRegistry;
 		this.nameResolver = nameResolver;
 		this.pagesRegistry = pagesRegistry;
+		this.moviePort = moviePort;
 		this.rewardFlow = rewardFlow;
 
 		Map<Integer, List<HuntTargetRef>> targets = new LinkedHashMap<>();
 		Map<Integer, Integer> acquires = new LinkedHashMap<>();
 		Map<Integer, Integer> rewards = new LinkedHashMap<>();
+		Map<Integer, Integer> conQuests = new LinkedHashMap<>();
+		Map<Integer, Cutscene> cutscenes = new LinkedHashMap<>();
+		Set<Integer> unresolvedChain = new TreeSet<>();
 		Set<Integer> owned = new TreeSet<>();
 		Set<Integer> routed = new TreeSet<>();
 
@@ -120,6 +137,34 @@ public final class SimpleHuntHandler {
 					}
 				}
 			}
+
+			// 链式接取窗（真端 0x1e 槽）与过场（真端 0x35 槽）按原文装载，语义在构造尾与 onDialog 消费。
+			// The chain window (slot 0x1e) and the cutscene (slot 0x35) load verbatim; their semantics are
+			// consumed in the constructor tail and in onDialog.
+			if (row.conQuest() != null) {
+				conQuests.put(qid, row.conQuest());
+			}
+			if (row.cutsceneId() != null) {
+				cutscenes.put(qid, new Cutscene(row.cutsceneId(),
+						row.cutsceneAction() == null ? -1 : row.cutsceneAction()));
+			}
+		}
+
+		// 真端 0x1e 槽（交付节点）：接续下一任务 {@code con_quest} 的接取窗。本车道接取路由按 NPC 建表，
+		// 故该窗的等价物 = 「下一环的接取 NPC 恰是本行的交付 NPC」；本表内目标逐行验证，不闭环即登记
+		// fail-closed 证据（跨族目标由逐行门按同一条不变量复算，不新增第二套路由）。
+		// Retail slot 0x1e (on the hand-in node) opens the next quest's accept window. This lane keys accept
+		// routes by NPC, so the equivalent is "the next quest acquires at this row's hand-in NPC"; in-table
+		// targets are verified here and non-closing rows are recorded as fail-closed evidence.
+		for (Map.Entry<Integer, Integer> entry : conQuests.entrySet()) {
+			int questId = entry.getKey();
+			int next = entry.getValue();
+			Integer targetAcquire = acquires.get(next);
+			Integer sourceReward = rewards.get(questId);
+			if (routed.contains(next) && targetAcquire != null
+					&& !targetAcquire.equals(sourceReward)) {
+				unresolvedChain.add(questId);
+			}
 		}
 
 		this.targetsByNpcId = Collections.unmodifiableMap(targets);
@@ -127,6 +172,9 @@ public final class SimpleHuntHandler {
 		this.rewardNpcByQuestId = Collections.unmodifiableMap(rewards);
 		this.ownedQuestIds = Collections.unmodifiableSet(owned);
 		this.routedQuestIds = Collections.unmodifiableSet(routed);
+		this.conQuestByQuestId = Collections.unmodifiableMap(conQuests);
+		this.unresolvedChainQuestIds = Collections.unmodifiableSet(unresolvedChain);
+		this.cutsceneByQuestId = Collections.unmodifiableMap(cutscenes);
 	}
 
 	public static SimpleHuntHandler instance() {
@@ -180,6 +228,28 @@ public final class SimpleHuntHandler {
 	/** 获取任务交付 NPC ID。 / Returns the reward NPC ID for the quest. */
 	public Integer rewardNpc(int questId) {
 		return rewardNpcByQuestId.get(questId);
+	}
+
+	/**
+	 * 真端 {@code con_quest}（链式接取窗的下一环，交付节点 0x1e 槽）；未声明返回 null。
+	 * <p>
+	 * 本车道接取路由按 NPC 建表，故只要下一环的接取 NPC 等于本行的交付 NPC，该窗即已由下一环自身
+	 * 那一行实现；{@link #unresolvedChainQuestIds()} 为空即全表闭环。
+	 * The retail {@code con_quest} column (hand-in slot 0x1e); the window is realized by the next quest's
+	 * own accept route whenever that row acquires at this row's hand-in NPC.
+	 */
+	public Integer conQuest(int questId) {
+		return conQuestByQuestId.get(questId);
+	}
+
+	/** 链式接取窗未闭环的行（fail-closed 证据面）。 / Rows whose chain window is not realized. */
+	public Set<Integer> unresolvedChainQuestIds() {
+		return unresolvedChainQuestIds;
+	}
+
+	/** 过场引用（表未声明返回 null）。 / The cutscene reference (null when the row declares none). */
+	public Cutscene cutscene(int questId) {
+		return cutsceneByQuestId.get(questId);
 	}
 
 	/**
@@ -303,6 +373,30 @@ public final class SimpleHuntHandler {
 		if (env == null || env.getPlayer() == null) {
 			return false;
 		}
+		boolean handled = handleDialog(env);
+		if (handled) {
+			playCutsceneIfTriggered(env.getPlayer(), env.getQuestId(), env.getDialogId());
+		}
+		return handled;
+	}
+
+	/**
+	 * 真端过场（交付节点 0x35 槽 PlayMovie）：动作命中 {@code cs1_haction} 时经 {@link NativeMoviePort}
+	 * 下发，是状态机之外的副作用（不推进节点、不建任务档）。
+	 * Retail cutscene (hand-in slot 0x35): sent as a side effect when the client action matches
+	 * cs1_haction; it never advances the node or creates quest state.
+	 */
+	private void playCutsceneIfTriggered(Player player, int questId, int dialogId) {
+		Cutscene cutscene = cutsceneByQuestId.get(questId);
+		if (cutscene != null && cutscene.triggerAction() == dialogId) {
+			moviePort.play(player, cutscene.movieId());
+		}
+	}
+
+	private boolean handleDialog(QuestEnv env) {
+		if (env == null || env.getPlayer() == null) {
+			return false;
+		}
 		Player player = env.getPlayer();
 		int questId = env.getQuestId();
 		if (!routes(questId)) {
@@ -384,6 +478,14 @@ public final class SimpleHuntHandler {
 			return false;
 		}
 
+		// 表声明的过场触发动作（真端把 movie 挂在页动作上；本族 3 行 = 1007 拒绝流页）：
+		// 不推进状态，但被服务时 movie 由 onDialog 包装层下发。
+		// The declared cutscene trigger action (this family's three rows use the 1007 refuse page):
+		// it advances no state, and the wrapper sends the movie whenever it is served.
+		Cutscene cutscene = cutsceneByQuestId.get(questId);
+		if (cutscene != null && cutscene.triggerAction() == dialogId) {
+			return true;
+		}
 		return false;
 	}
 }
