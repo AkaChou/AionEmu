@@ -185,18 +185,12 @@ public class PlayerController extends CreatureController<Player> {
 		if (mapRegion == null) {
 			return;
 		}
-		var mapInstance = mapRegion.getParent();
-		HashMap<Integer, Integer> nearbyQuestList = new HashMap<>();
-		for (int questId : getOwner().getPosition().getMapRegion().getParent().getQuestIds()) {
-			int diff = 0;
-			if (questId <= 0xFFFF) {
-				diff = QuestService.getLevelRequirement(questId, getOwner().getCommonData().getLevel());
-			}
-			if (diff <= 2 && QuestService.checkStartConditions(new QuestEnv(null, getOwner(), questId, 0), false)) {
-				nearbyQuestList.put(questId, diff);
-			}
-		}
-		PacketSendUtility.sendPacket(getOwner(), new SM_NEARBY_QUESTS(nearbyQuestList));
+		// 清单来源 = 本图实例的 NPC 任务并集（真端 World::GetAcquirableQuestList 同源），
+		// 判定按 owner 分车道（见 QuestService.nearbyQuestFlags）。
+		// The list comes from the map instance's NPC quest union (the retail acquirable list) and the
+		// per-row verdict branches by owner inside QuestService.
+		PacketSendUtility.sendPacket(getOwner(), new SM_NEARBY_QUESTS(
+			QuestService.nearbyQuestFlags(getOwner(), mapRegion.getParent().getQuestIds())));
 	}
 
 	/**

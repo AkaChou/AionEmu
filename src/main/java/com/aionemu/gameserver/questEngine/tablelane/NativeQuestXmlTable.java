@@ -96,13 +96,16 @@ public final class NativeQuestXmlTable {
 	private static final String EXPECTED_ROOT = "quests";
 	private static final String ROW_TAG = "quest";
 	private static final String ID_TAG = "id";
+	private static final String NAME_TAG = "name";
 
 	private static volatile NativeQuestXmlTable instance;
 
 	private final Map<Integer, QuestRow> rowsByQuestId;
+	private final Map<String, Integer> questIdByName;
 
-	private NativeQuestXmlTable(Map<Integer, QuestRow> rowsByQuestId) {
+	private NativeQuestXmlTable(Map<Integer, QuestRow> rowsByQuestId, Map<String, Integer> questIdByName) {
 		this.rowsByQuestId = rowsByQuestId;
+		this.questIdByName = questIdByName;
 	}
 
 	/** 已装载的表（未装载则先装载）。 / The loaded table; loads it first when absent. */
@@ -166,7 +169,19 @@ public final class NativeQuestXmlTable {
 		if (rows.isEmpty()) {
 			throw new IllegalStateException("NATIVE_TABLE_PARSE_FAILED: " + RESOURCE + " has no rows");
 		}
-		return new NativeQuestXmlTable(Collections.unmodifiableMap(rows));
+		Map<String, Integer> byName = new LinkedHashMap<>();
+		for (QuestRow row : rows.values()) {
+			String name = row.text(NAME_TAG);
+			if (name.isBlank()) {
+				continue;
+			}
+			if (byName.putIfAbsent(name, row.questId()) != null) {
+				throw new IllegalStateException(
+						"NATIVE_TABLE_PARSE_FAILED: duplicate quest name " + name);
+			}
+		}
+		return new NativeQuestXmlTable(Collections.unmodifiableMap(rows),
+				Collections.unmodifiableMap(byName));
 	}
 
 	private static int rowId(Element row) {
@@ -245,5 +260,28 @@ public final class NativeQuestXmlTable {
 			throw new IllegalStateException("NATIVE_TABLE_ROW_MISSING: quest " + questId + " has no quest.xml row");
 		}
 		return row;
+	}
+
+	/**
+	 * 按真端 {@code <name>} 反查行（该列在真端表内唯一）。
+	 * <p>
+	 * 真端 {@code finished_quest_condN} 写的就是目标行的 {@code <name>}：绝大多数是
+	 * {@code Q<id>}，574 行（CombineTask 全族）是符号（如 {@code ws_q5015}）。
+	 * <p>
+	 * Looks a row up by its retail {@code <name>}, which is what {@code finished_quest_condN}
+	 * references: usually {@code Q<id>}, but the 574 CombineTask rows use symbols such as
+	 * {@code ws_q5015}.
+	 */
+	public Optional<QuestRow> findByName(String name) {
+		if (name == null || name.isBlank()) {
+			return Optional.empty();
+		}
+		Integer questId = questIdByName.get(name.trim());
+		return questId == null ? Optional.empty() : find(questId);
+	}
+
+	/** 已建立名称索引的行数。 / The number of rows carrying a name index entry. */
+	public int namedRowCount() {
+		return questIdByName.size();
 	}
 }

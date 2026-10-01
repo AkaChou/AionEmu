@@ -58,6 +58,7 @@ import com.aionemu.gameserver.questEngine.definition.QuestPvpCreditSource;
 import com.aionemu.gameserver.questEngine.handlers.HandlerResult;
 import com.aionemu.gameserver.questEngine.tablelane.HtmlPagesRegistry;
 import com.aionemu.gameserver.questEngine.tablelane.CameraRegistry;
+import com.aionemu.gameserver.questEngine.tablelane.NativeQuestStartPort;
 import com.aionemu.gameserver.questEngine.tablelane.SimpleCollectItemHandler;
 import com.aionemu.gameserver.questEngine.tablelane.SimpleCombineTaskHandler;
 import com.aionemu.gameserver.questEngine.tablelane.SimpleHuntHandler;
@@ -1994,6 +1995,31 @@ public class QuestEngine implements GameEngine {
 		} catch (RuntimeException | java.io.IOException e) {
 			return Optional.empty();
 		}
+	}
+
+	/**
+	 * 原生行的区域任务清单结论（真端 opcode 127 三值：平条目 / {@code 0x20000} 软标记 / 不入列表）。
+	 * 非 owner 行返回 {@code OMITTED}，调用方按 typed 车道自有规则处理。
+	 * <p>
+	 * The retail zone-quest verdict of a native-owned row (opcode 127). Non-owned rows answer
+	 * {@code OMITTED} so the caller can fall back to the typed lane's own rule.
+	 */
+	public NativeQuestStartPort.ZoneVerdict nativeZoneVerdict(Player player, int questId) {
+		if (player == null || questId <= 0 || !isNativeOwner(questId)) {
+			return NativeQuestStartPort.ZoneVerdict.OMITTED;
+		}
+		return NativeQuestStartPort.instance().zoneVerdict(player, questId);
+	}
+
+	/**
+	 * 原生行的接取资格硬判定（真端 {@code CanAcquireQuest} = 2）：NPC 对话、传送门与势力任务列表面。
+	 * 「只差 1 级」是清单面的软结论，在本判定下仍是拒绝。
+	 * <p>
+	 * The hard acquisition verdict of a native-owned row (retail {@code CanAcquireQuest} == 2), used by
+	 * the NPC/portal/faction faces; the one-level-short soft verdict stays a rejection here.
+	 */
+	public boolean nativeAcquireAllowed(Player player, int questId) {
+		return nativeZoneVerdict(player, questId) == NativeQuestStartPort.ZoneVerdict.ACQUIRABLE;
 	}
 
 	/**

@@ -16,7 +16,9 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -496,6 +498,15 @@ public final class QuestService {
 
 	private static boolean checkStartConditionsImpl(QuestEnv env, boolean warn) {
 		Player player = env.getPlayer();
+		QuestEngine engine = GameEngineServices.questEngine();
+		// 原生行没有 typed 模板：起始条件走真端 quest.xml 轴（owner 分流同 QE-113/QE-119）。
+		// warn 面只有 typed 的 startQuest 会用到，而该入口要求 typed 模板 ⇒ native 行不经过它。
+		// Native rows carry no typed template: their start conditions come from the retail quest.xml
+		// axes (the same owner split as QE-113/QE-119). The warn face exists only on the typed
+		// startQuest path, which requires a typed template and therefore never sees a native row.
+		if (env.getQuestId() > 0 && engine.isNativeOwner(env.getQuestId())) {
+			return engine.nativeAcquireAllowed(player, env.getQuestId());
+		}
 		QuestTemplate template = questsData.getQuestById(env.getQuestId());
         QuestState qs = player.getQuestStateList().getQuestState(env.getQuestId());
         if (qs != null && qs.getStatus() != QuestStatus.NONE && !qs.canRepeat()) {
@@ -1200,6 +1211,55 @@ public final class QuestService {
 			return 0;
 		}
 		return metadata.minLevel() - playerLevel;
+	}
+
+	/**
+	 * 附近任务提示清单（真端 opcode 127 / {@code S_UPDATE_ZONE_QUEST} = {@code SM_NEARBY_QUESTS}）。
+	 * <p>
+	 * 真端 {@code User::_UpdateQuestAcquireCondition} 对世界「可接取任务清单」（NPC 生成/消失维护的
+	 * 任务集合）逐行调用 {@code Quest::CanAcquireQuest}：返回 {@code 2} ⇒ 平条目；返回 {@code 1}
+	 * （仅等级差 1 级）⇒ {@code questId | 0x20000} 软标记条目；返回 {@code 0} ⇒ 不入列表。
+	 * 原生行的三值判定见 {@code QuestEngine.nativeZoneVerdict}；typed 车道（未迁移族）沿用原有
+	 * 「等级差 ≤ 2 且起始条件通过」判定，不产生软标记条目。
+	 * <p>
+	 * The retail zone-quest list. Native rows come from the retail verdict; typed rows keep the
+	 * pre-migration rule (level gap ≤ 2 and the typed start conditions pass).
+	 * @param player 玩家 / player
+	 * @param questIds 本图实例的任务清单（NPC 任务数据的并集） / the instance's NPC-driven quest ids
+	 * @return 任务 ID → 标记（{@code 0} = 平条目，{@code 1} = 软标记条目），按 ID 升序 /
+	 *         quest id → flag ({@code 0} plain, {@code 1} soft-marked), ascending by id
+	 */
+	public static Map<Integer, Integer> nearbyQuestFlags(Player player, Collection<Integer> questIds) {
+		Map<Integer, Integer> flags = new TreeMap<>();
+		if (player == null || questIds == null) {
+			return flags;
+		}
+		for (Integer rawId : questIds) {
+			if (rawId == null || rawId <= 0) {
+				continue;
+			}
+			Integer flag = nearbyQuestFlag(player, rawId);
+			if (flag != null) {
+				flags.put(rawId, flag);
+			}
+		}
+		return flags;
+	}
+
+	/** 单行提示标记：{@code null} = 不入列表。 / One row's hint flag; {@code null} means "not listed". */
+	private static Integer nearbyQuestFlag(Player player, int questId) {
+		if (GameEngineServices.questEngine().isNativeOwner(questId)) {
+			return switch (GameEngineServices.questEngine().nativeZoneVerdict(player, questId)) {
+				case ACQUIRABLE -> 0;
+				case LEVEL_SOON -> 1;
+				case OMITTED -> null;
+			};
+		}
+		int diff = getLevelRequirement(questId, player.getCommonData().getLevel());
+		if (diff <= 2 && checkStartConditions(new QuestEnv(null, player, questId, 0), false)) {
+			return diff;
+		}
+		return null;
 	}
 
 	/*

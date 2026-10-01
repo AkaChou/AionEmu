@@ -2697,3 +2697,25 @@ keywords: 放弃任务、abandonQuest、findMetadata为空、native owner分流�
 
 - **判定规则**：凡是以 typed catalog 取数当入口的公共面（放弃、元数据、模板），切族后都必须先按 owner 分流。
 - **安全网**：新增切族批时把「放弃」列入批门（owner + 元数据 + 族级动作 + 共用清理），不要只测接取/交付/领奖三段。
+
+## [QE-120] 一百二十、真端「附近任务提示」是共享客户端面：按 owner 分流且三值语义（平条目 / 0x20000 软标记 / 丢弃） (NATIVE_NEARBY_AXIS_TRIPLE_VERDICT)
+
+<!-- pattern-metadata
+status: CONFIRMED
+scope: 真端表驱动车道（七个已切换族）与 `PlayerController.updateNearbyQuests` / `QuestService` 起始条件与清单面 / `SM_NEARBY_QUESTS`(opcode 127) / `NativeQuestStartPort.zoneVerdict`
+first_seen: 2026-10-01
+last_verified: 2026-10-01
+symptom: 已切 native 车道的任务在客户端「附近可接任务」提示里完全消失（大地图/雷达无提示，走进 NPC 区域也不列表）；同一行在 NPC 对话面却能正常接取，容易被误判为 NPC 或区域问题
+root_cause: 该面原本走 typed 目录：`QuestService.getLevelRequirement` 取 `questCatalog().findMetadata`（native 行返回 999）、`checkStartConditions` 取 `questsData.getQuestById`（native 行模板为 null ⇒ 恒 false），而切族时这些行已移出 typed 目录 ⇒ native 行永远不进列表；且旧实现即使拿到行也不会产生「只差 1 级」的软标记条目
+fix_or_guardrail: 1. 真端语义（原码坐实）：清单形态 `Quest::CanAcquireQuest(..., param_5 = 0)` **不短路**，返回 2 = 全部轴通过、1 = 仅等级轴不达且 `minlevel_permitted <= level + 1`、0 = 其余一切失败；调用方 `User::_UpdateQuestAcquireCondition` 把 2/1/0 分别写成 `questId` / `questId | 0x20000` / 丢弃，opcode `0x0181` 经 `(op + 0xD5) ^ 0xD5` 反解 = 127 = `SM_NEARBY_QUESTS`；2. 落地：`NativeQuestStartPort.zoneVerdict` 三值（轴拆 `levelVerdict` + `eligibilityVerdict`，NPC 面 `evaluateNpcAcquire` 的结论与顺序逐字不变）+ `QuestEngine.nativeZoneVerdict`/`nativeAcquireAllowed` + `QuestService.nearbyQuestFlags`（按 owner 分车道；typed 车道逐字保留旧判定）+ `checkStartConditions` owner 分流 + 包编码 `writeD(flag > 0 ? questId | 0x20000 : questId)`；3. 清单来源 = `WorldMapInstance#getQuestIds`（NPC 入图按 `QuestNpc#getOnQuestStart()` 并入，等价真端 `World::CheckAcquirableQuestFromNewNpc`）
+evidence: src/main/java/com/aionemu/gameserver/questEngine/tablelane/NativeQuestStartPort.java（ZoneVerdict/zoneVerdict/levelVerdict/eligibilityVerdict）; src/main/java/com/aionemu/gameserver/questEngine/QuestEngine.java（nativeZoneVerdict/nativeAcquireAllowed）; src/main/java/com/aionemu/gameserver/services/QuestService.java（nearbyQuestFlags + checkStartConditions owner 分流）; src/main/java/com/aionemu/gameserver/controllers/PlayerController.java（updateNearbyQuests 委托化）; src/main/java/com/aionemu/gameserver/network/aion/serverpackets/SM_NEARBY_QUESTS.java; src/test/java/com/aionemu/gameserver/questEngine/tablelane/NativeNearbyQuestAxisGateTest.java; src/test/java/com/aionemu/gameserver/network/aion/serverpackets/SMNearbyQuestsPacketTest.java; .agents/summary/quest-engine-native/p7/P7-REPORT.zh-CN.md
+validation: 2026-10-01 P6.5：全族 5938 行扫描（软档 1568 / `minlevel_permitted=999` 硬 0 1822 / 非等级轴硬 0 2484），软结论 ⇔ 「除等级外全通过 + 恰好差 1 级」；代表行（5000/1963/1132/80001/80010/3713/3966/1101）逐轴正负例；族门 + tablelane 118/118；聚焦套件 1699 / 162F+142E / 108 类（对 P6 基线 ADDED 0 / REMOVED 0）
+boundaries: ① typed 车道（未迁移族）不产生软标记条目，随各族迁移收敛；② `CanAcquireQuest` 的物品/装备/制作/阵营轴与 P3 交接口径一致地未消费（清单与 NPC 接取用同一判定函数 ⇒ 不会出现「能接但不在清单」的不一致）；③ 代表行真实客户端表现记 PENDING_CLIENT
+superseded_by: none
+see_also: [QE-113], [QE-119], [QE-115]
+first_check: 已切族的任务在「附近任务提示」里消失时先答：① 该面取数走 typed 目录还是按 owner 分流？② 该行是否命中 `isNativeOwner`？③ 是「不入列表」还是「入列表但没有 0x20000 软标记」——前者查轴失败原因（等级差 > 1 / 超 maxlevel / 非等级轴 / 重复上限 / 进行中），后者查清单编码是否仍是 `questId | 0x20000`？
+keywords: 附近任务、SM_NEARBY_QUESTS、S_UPDATE_ZONE_QUEST、opcode127、updateNearbyQuests、CanAcquireQuest三值、0x20000软标记、zoneVerdict、nearbyQuestFlags、owner分流、finished_quest_cond符号、QE-120
+-->
+
+- **判定规则**：真端一次 `CanAcquireQuest` 给出 `2/1/0` 三值，等级轴不单独拆成「差值 + 布尔」；任何「入列表 + 标记」的面都必须能表达「只差 1 级」这一档，否则等于砍掉了客户端的预告提示。
+- **安全网**：清单来源（NPC 生成/消失维护的任务集合）与判定轴是两条独立证据链；接线新族时两者都要按真端复核，且 `id > 0xFFFF` 的条目必须按四字节写（`questId | 0x20000`），不要用两个 `writeH` 拼装。

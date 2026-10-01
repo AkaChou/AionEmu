@@ -47,6 +47,27 @@ public final class NativeQuestStartPort {
 	}
 
 	/**
+	 * 真端 opcode 127（{@code S_UPDATE_ZONE_QUEST} = AionEmu 的 {@code SM_NEARBY_QUESTS}）单行结论。
+	 * <p>
+	 * 真端 {@code Quest::CanAcquireQuest} 在区域任务清单形态（{@code param_5 = 0}：不短路、不提示）
+	 * 下返回三值：{@code 2} = 全部轴通过；{@code 1} = **仅**等级轴不达且
+	 * {@code minlevel_permitted <= level + 1}；{@code 0} = 其余一切失败（种族/职业/性别/头衔/军衔/
+	 * 重复上限/前置/等级差 &gt; 1/超出等级上限）。真端调用方 {@code User::_UpdateQuestAcquireCondition}
+	 * 把 {@code 2} 写成平条目、{@code 1} 写成 {@code questId | 0x20000} 软标记条目、{@code 0} 丢弃。
+	 * <p>
+	 * The retail zone-quest verdict (opcode 127): {@code 2} = every axis passes, {@code 1} = only the
+	 * level axis is short and {@code minlevel_permitted <= level + 1}, {@code 0} = anything else.
+	 */
+	public enum ZoneVerdict {
+		/** 真端 2：平条目。 / Retail 2: plain entry. */
+		ACQUIRABLE,
+		/** 真端 1：{@code questId | 0x20000} 软标记条目。 / Retail 1: the {@code questId | 0x20000} entry. */
+		LEVEL_SOON,
+		/** 真端 0：不入列表。 / Retail 0: not listed. */
+		OMITTED
+	}
+
+	/**
 	 * 账号限制位图端口（真端 {@code quest_acquireN} 等 68 个限制位的玩家侧位集）。
 	 * <p>
 	 * 真端语义（已坐实，见 {@code p3/p3-prereqs/bm-restrict-category-semantics.md}）：
@@ -148,6 +169,60 @@ public final class NativeQuestStartPort {
 		if (state != null && (state.getStatus() == QuestStatus.START || state.getStatus() == QuestStatus.REWARD)) {
 			return new StartResult(Outcome.ALREADY_RUNNING, state.getStatus().name());
 		}
+		StartResult levelVerdict = levelVerdict(player, row);
+		if (!levelVerdict.started()) {
+			return levelVerdict;
+		}
+		StartResult eligibility = eligibilityVerdict(player, row);
+		if (!eligibility.started()) {
+			return eligibility;
+		}
+		return repeatVerdict(state, row);
+	}
+
+	/**
+	 * 区域任务清单（真端 opcode 127 / {@code SM_NEARBY_QUESTS}）单行结论。
+	 * <p>
+	 * 轴与 {@link #evaluateNpcAcquire(Player, int)} 同源，差别只有真端在清单形态下**不短路**：等级轴
+	 * 失败时其余轴仍全部判定，因此软结论 {@code 1} 只在「其余轴全通过 + 恰好只差 1 级」出现；任一非
+	 * 等级轴失败（含超出等级上限、重复上限用尽、进行中）都是硬 {@code 0}。
+	 * <p>
+	 * The zone-quest verdict: the same retail axes as {@link #evaluateNpcAcquire(Player, int)}, but
+	 * the retail list form never short-circuits, so the soft verdict {@code 1} needs every other axis
+	 * to pass. Any non-level failure (over {@code maxlevel}, repeat budget spent, in progress) is a
+	 * hard {@code 0}.
+	 */
+	public ZoneVerdict zoneVerdict(Player player, int questId) {
+		if (player == null || player.getQuestStateList() == null) {
+			return ZoneVerdict.OMITTED;
+		}
+		NativeQuestXmlTable.QuestRow row = questXml.find(questId).orElse(null);
+		if (row == null) {
+			return ZoneVerdict.OMITTED;
+		}
+		QuestState state = player.getQuestStateList().getQuestState(questId);
+		if (state != null && (state.getStatus() == QuestStatus.START || state.getStatus() == QuestStatus.REWARD)) {
+			// 真端调用方要求 {@code UserQuestData_GetQuestState(id)[0] == 0}（无进行中记录）才入清单。
+			// The retail caller requires the player's quest-state byte to be zero (nothing in progress).
+			return ZoneVerdict.OMITTED;
+		}
+		if (!eligibilityVerdict(player, row).started() || !repeatVerdict(state, row).started()) {
+			return ZoneVerdict.OMITTED;
+		}
+		int minLevel = intOr(row, "minlevel_permitted", 0);
+		int maxLevel = intOr(row, "maxlevel_permitted", 0);
+		int level = player.getLevel();
+		if (maxLevel != 0 && level > maxLevel) {
+			return ZoneVerdict.OMITTED;
+		}
+		if (minLevel != 0 && level < minLevel) {
+			return minLevel - level == 1 ? ZoneVerdict.LEVEL_SOON : ZoneVerdict.OMITTED;
+		}
+		return ZoneVerdict.ACQUIRABLE;
+	}
+
+	/** 等级轴（真端 {@code minlevel_permitted}/{@code maxlevel_permitted}）。 / The level axis. */
+	private StartResult levelVerdict(Player player, NativeQuestXmlTable.QuestRow row) {
 		int minLevel = intOr(row, "minlevel_permitted", 0);
 		int maxLevel = intOr(row, "maxlevel_permitted", 0);
 		int level = player.getLevel();
@@ -157,6 +232,11 @@ public final class NativeQuestStartPort {
 		if (maxLevel != 0 && level > maxLevel) {
 			return new StartResult(Outcome.LEVEL_BLOCKED, "level " + level + " > maxlevel " + maxLevel);
 		}
+		return new StartResult(Outcome.STARTED, "level " + level);
+	}
+
+	/** 等级以外的接取资格轴：种族/职业/性别/账号限制位/已完成前置。 / Every non-level eligibility axis. */
+	private StartResult eligibilityVerdict(Player player, NativeQuestXmlTable.QuestRow row) {
 		if (!racePermitted(row.text("race_permitted"), player.getRace() == null ? null : player.getRace().name())) {
 			return new StartResult(Outcome.RACE_BLOCKED, "race " + player.getRace());
 		}
@@ -168,7 +248,7 @@ public final class NativeQuestStartPort {
 		// Class tokens share the production metadata mapping; a literal token comparison would never
 		// match retail names such as fighter/knight/wizard.
 		java.util.Set<String> permittedClasses = RetailQuestMetadataCompiler.permittedClassNames(
-				row.text("class_permitted"), minLevel);
+				row.text("class_permitted"), intOr(row, "minlevel_permitted", 0));
 		if (!permittedClasses.isEmpty()
 				&& (playerClass == null || !permittedClasses.contains(playerClass.toUpperCase(Locale.ROOT)))) {
 			return new StartResult(Outcome.CLASS_BLOCKED, "class " + playerClass);
@@ -190,7 +270,7 @@ public final class NativeQuestStartPort {
 		if (!missing.isEmpty()) {
 			return new StartResult(Outcome.PREREQUISITE_MISSING, "unfinished prerequisites " + missing);
 		}
-		return repeatVerdict(state, row);
+		return new StartResult(Outcome.STARTED, "eligibility");
 	}
 
 	/** 重复上限（真端 {@code finishedcount < max_repeat_count}）。 / Repeat budget. */
@@ -238,9 +318,19 @@ public final class NativeQuestStartPort {
 		return missing;
 	}
 
-	/** {@code Q50010} / {@code Q1007:1} → 50010 / 1007（冒号后缀是奖励分支，不属 id）。 /
-	 * {@code Q50010} / {@code Q1007:1} → quest id; the colon suffix is a reward-branch annotation. */
-	private static int prerequisiteId(String value) {
+	/**
+	 * {@code finished_quest_condN} 取值 → 前置任务 ID。
+	 * <p>
+	 * 真端该列写的是**目标行的 {@code <name>}**，并可选带 {@code :n} 奖励分支后缀：绝大多数为
+	 * {@code Q<id>}，574 行（CombineTask 全族）为符号（{@code ws_q5015} = 行 5015），因此除
+	 * {@code Q<digits>} 之外一律回落到 {@link NativeQuestXmlTable#findByName(String)}；两者都
+	 * 解不出才算表数据破损（fail-loud）。
+	 * <p>
+	 * The column holds the referenced row's retail {@code <name>} (plus an optional {@code :n} reward
+	 * branch): {@code Q<id>} for most rows and a symbol such as {@code ws_q5015} for the 574
+	 * CombineTask rows, so anything that is not {@code Q<digits>} falls back to the name index.
+	 */
+	private int prerequisiteId(String value) {
 		if (value == null || value.isBlank()) {
 			return 0;
 		}
@@ -255,7 +345,14 @@ public final class NativeQuestStartPort {
 		try {
 			return Integer.parseInt(digits);
 		} catch (NumberFormatException e) {
-			throw new IllegalStateException("NATIVE_TABLE_PARSE_FAILED: bad finished_quest_cond '" + value + "'");
+			String name = value.trim();
+			int nameColon = name.indexOf(':');
+			if (nameColon >= 0) {
+				name = name.substring(0, nameColon);
+			}
+			return questXml.findByName(name).map(NativeQuestXmlTable.QuestRow::questId)
+				.orElseThrow(() -> new IllegalStateException(
+					"NATIVE_TABLE_PARSE_FAILED: unresolvable finished_quest_cond '" + value + "'"));
 		}
 	}
 
