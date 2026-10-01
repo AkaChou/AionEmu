@@ -1,0 +1,967 @@
+package com.aionemu.gameserver.questEngine.tablelane;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
+
+import com.aionemu.gameserver.model.gameobjects.Npc;
+import com.aionemu.gameserver.model.gameobjects.PersistentState;
+import com.aionemu.gameserver.model.gameobjects.player.Player;
+import com.aionemu.gameserver.network.aion.serverpackets.SM_DIALOG_WINDOW;
+import com.aionemu.gameserver.network.aion.serverpackets.SM_QUEST_ACTION;
+import com.aionemu.gameserver.questEngine.QuestEngine;
+import com.aionemu.gameserver.questEngine.definition.QuestDialogContract;
+import com.aionemu.gameserver.questEngine.definition.QuestDialogPage;
+import com.aionemu.gameserver.questEngine.definition.QuestItemRequirement;
+import com.aionemu.gameserver.questEngine.model.QuestEnv;
+import com.aionemu.gameserver.questEngine.model.QuestState;
+import com.aionemu.gameserver.questEngine.model.QuestStatus;
+import com.aionemu.gameserver.questEngine.retail.RetailClientHandinNpcSets;
+import com.aionemu.gameserver.questEngine.retail.RetailGrantKind;
+import com.aionemu.gameserver.questEngine.retail.RetailItemNameIndex;
+import com.aionemu.gameserver.questEngine.retail.RetailQuestMetadataCompiler;
+import com.aionemu.gameserver.utils.PacketSendUtility;
+
+/**
+ * 真端 SimpleCollectItem 原生任务处理器（计划 §6.2 / §7 P4 切换批）。
+ * <p>
+ * 完全由真端表 {@link NativeQuestTableLoader#collectRows()}、相机 {@link CameraRegistry} 与
+ * {@code quest.xml} 元数据驱动，绝不生成 IR 节点、绝不回退旧编译器。逐项证据：
+ * <ul>
+ *   <li><b>接取</b>：{@code acquired_npc_name} → 问询页 4 / 确认 1002/20000 → {@link NativeQuestStartPort}
+ *       （真端 Quest::CanAcquireQuest 轴），随后按 {@code give_item} 原样发放；</li>
+ *   <li><b>中继链</b>：{@code talk_npc1..3} 严格按表序推进（真端 cabb10 语义，乱序零推进）；
+ *       {@code collect_progress} 与 talk 链长一致（实测 9620=3、14150/14120=1、其余 0），
+ *       因此"链未走完不得开始采集"就是真端该列的直接含义；</li>
+ *   <li><b>采集推进</b>：点击采集对象（{@code object1..4}）走真端相机
+ *       {@link ProgressCamera}（6 位槽，required = {@code quest.xml collect_itemN}，N = 掉落物在交付列的位置），
+ *       满值即推进通道 → REWARD；击杀 {@code drop_monster_N} 同样推进该槽（掉落由
+ *       {@code QuestService} 的掉落族按 {@code drop_*} 列发放）；</li>
+ *   <li><b>交付</b>：交付 NPC 处按 {@code check_item} 门（{@code NativeInventoryPort} 持有量）
+ *       扣工作物品 → REWARD + 奖励窗页 5；未持有 → 进行中页 10；</li>
+ *   <li><b>领奖</b>：{@link NativeReportRewardFlow}（真端 reward 列 → 共用结算体），完成页 1008。</li>
+ * </ul>
+ * 缺行/缺相机行/名字多义/物品未解的行走 fail-closed（不路由、不发放）。
+ * <p>
+ * Retail SimpleCollectItem native handler (plan §6.2 / §7 P4): driven purely by the family table,
+ * the progress camera and retail quest.xml metadata; it generates no IR nodes and never falls back
+ * to the retired compiler. Accept flows through {@link NativeQuestStartPort}; the {@code talk_npc1..3}
+ * relay chain gates collection exactly as the retail {@code collect_progress} column states; collect
+ * objects and drop monsters advance the single-slot camera whose requirement is the retail
+ * {@code collect_item} count; hand-in consumes the {@code check_item} work items and settles through
+ * {@link NativeReportRewardFlow}. Missing rows, missing camera rows, ambiguous names and unresolved
+ * items fail closed.
+ */
+public final class SimpleCollectItemHandler implements NativeSystemGrantLane {
+
+	/** 接取问询页。 / The accept ask page. */
+	public static final int PAGE_ASK_ACCEPT = 4;
+	/** 确认接取页。 / The accept confirmation page. */
+	public static final int PAGE_ACCEPTED = 1003;
+	/** 进行中页（未满足交付门）。 / In-progress page. */
+	public static final int PAGE_IN_PROGRESS = 10;
+	/** 奖励窗页。 / The reward window page. */
+	public static final int PAGE_REWARD_WINDOW = 5;
+	/** 完成页。 / The completion page. */
+	public static final int PAGE_COMPLETE = 1008;
+
+	/**
+	 * 采集对象引用：任务 id + 目标 NPC 模板 id + 真端列序槽位。
+	 * <p>
+	 * 槽位由真端掉落列决定（{@code drop_monster_K} → {@code drop_item_K} → 该物品在 {@code collect_itemN}
+	 * 交付列里的位置），对象点击只能推进它自己那一槽；对象列序**不是**槽序（真端 4046/2487/2346/1154/41510）。
+	 * Collect-object reference: quest id + object npc template id + the retail camera slot. The slot comes
+	 * from the retail drop column (drop_monster_K → drop_item_K → its position among collect_itemN), not
+	 * from the object column order (retail rows 4046/2487/2346/1154/41510 show the difference).
+	 */
+	public record CollectTargetRef(int questId, int objectNpcId, int slot) {
+	}
+
+	/** 采集怪引用：任务 id + 相机槽。 / Collect-monster reference: quest id + camera slot. */
+	public record CollectMonsterRef(int questId, int slot) {
+	}
+
+	/** 工作物品（已解析成 id + 数量）。 / A resolved work item (id + count). */
+	private record ItemStack(int itemId, int count) {
+	}
+
+	private static volatile SimpleCollectItemHandler instance;
+
+	private final NativeQuestTableLoader tableLoader;
+	private final CameraRegistry cameraRegistry;
+	private final NativeNpcNameResolver nameResolver;
+	private final HtmlPagesRegistry pagesRegistry;
+	private final NativeInventoryPort inventory;
+	private final NativeReportRewardFlow rewardFlow;
+
+	private final Map<Integer, Integer> acquireNpcByQuestId;
+	/** 任务 ID → 全部交付 NPC（真端逻辑名 + 客户端交付集合展开；首项为兼容易）。
+	 * Quest id → every hand-in NPC (retail logical name expanded through the client set). */
+	private final Map<Integer, List<Integer>> rewardNpcsByQuestId;
+	private final Map<Integer, List<Integer>> talkNpcsByQuestId;
+	private final Map<Integer, List<Integer>> objectsByQuestId;
+	private final Map<Integer, Map<Integer, Integer>> cameraRequiresByQuestId;
+	private final Map<Integer, List<ItemStack>> handInByQuestId;
+	private final Map<Integer, List<ItemStack>> acceptGiveByQuestId;
+	private final Map<Integer, List<CollectMonsterRef>> collectTargetsByNpcId;
+	private final Set<Integer> ownedQuestIds;
+	private final Set<Integer> routedQuestIds;
+	private final Set<Integer> unroutableQuestIds;
+
+	/** 任务 ID → 接取名类别（{@code _faction_} 等哨兵 = 系统发放）。 / Quest id → acquire-name category. */
+	private final Map<Integer, RetailGrantKind> grantKindByQuestId;
+	/** 任务 ID → 真端势力 id（{@code quest.xml npcfaction_name}；无则 0）。 / Quest id → retail faction id. */
+	private final Map<Integer, Integer> factionByQuestId;
+
+	private final Map<Integer, List<CollectTargetRef>> objectsByNpcId;
+
+	/** 包内可见：家族门禁用注入的背包/完成端口构造。 / Package-visible: family gates inject inventory and settlement ports. */
+	SimpleCollectItemHandler(NativeQuestTableLoader tableLoader, CameraRegistry cameraRegistry,
+			NativeNpcNameResolver nameResolver, HtmlPagesRegistry pagesRegistry, NativeInventoryPort inventory,
+			NativeReportRewardFlow rewardFlow, Set<Integer> xmlOnlyIds, Set<Integer> unresolvedMetadata) {
+		this.tableLoader = tableLoader;
+		this.cameraRegistry = cameraRegistry;
+		this.nameResolver = nameResolver;
+		this.pagesRegistry = pagesRegistry;
+		this.inventory = inventory;
+		this.rewardFlow = rewardFlow;
+
+		Map<Integer, Integer> acquires = new LinkedHashMap<>();
+		Map<Integer, List<Integer>> rewards = new LinkedHashMap<>();
+		Map<Integer, List<Integer>> talks = new LinkedHashMap<>();
+		Map<Integer, List<Integer>> objects = new LinkedHashMap<>();
+		Map<Integer, Map<Integer, Integer>> cameraRequires = new LinkedHashMap<>();
+		Map<Integer, List<ItemStack>> handIns = new LinkedHashMap<>();
+		Map<Integer, List<ItemStack>> acceptGives = new LinkedHashMap<>();
+		Map<Integer, List<CollectMonsterRef>> monsters = new LinkedHashMap<>();
+		Map<Integer, List<CollectTargetRef>> objectRefs = new LinkedHashMap<>();
+		Set<Integer> owned = new TreeSet<>();
+		Set<Integer> routed = new TreeSet<>();
+		Set<Integer> unroutable = new TreeSet<>();
+		Map<Integer, RetailGrantKind> grantKinds = new LinkedHashMap<>();
+		Map<Integer, Integer> factions = new LinkedHashMap<>();
+
+		for (NativeQuestTableLoader.SimpleCollectItemRow row : tableLoader.collectRows()) {
+			int questId = row.questId();
+			owned.add(questId);
+			// 接取哨兵（`_faction_` 等系统发放）与势力轴：与 SimpleTalk 同源，供阵营日常轮换共用。
+			// Acquire sentinels (system grants) and the faction axis, shared with the SimpleTalk lane.
+			grantKinds.put(questId, RetailGrantKind.of(row.acquiredNpcName()));
+			int rowFactionId = NativeFactionRotation.factionIdOf(questId);
+			if (rowFactionId != 0) {
+				factions.put(questId, rowFactionId);
+			}
+
+			NativeNpcNameResolver.Match acquire = nameResolver.resolve(row.acquiredNpcName());
+			if (acquire.resolution() == NativeNpcNameResolver.Resolution.UNIQUE) {
+				acquires.put(questId, acquire.npcIds().get(0));
+			}
+			List<Integer> rewardIds = rewardNpcIds(questId, row.rewardNpcName());
+			if (!rewardIds.isEmpty()) {
+				rewards.put(questId, rewardIds);
+			}
+			List<Integer> talkIds = new ArrayList<>(row.talkNpcNames().size());
+			for (String talkName : row.talkNpcNames()) {
+				NativeNpcNameResolver.Match talk = nameResolver.resolve(talkName);
+				if (talk.resolution() == NativeNpcNameResolver.Resolution.UNIQUE) {
+					talkIds.add(talk.npcIds().get(0));
+				}
+			}
+			if (!talkIds.isEmpty()) {
+				talks.put(questId, List.copyOf(talkIds));
+			}
+			RetailQuestMetadataCompiler.Outcome metadata = metadataOf(questId);
+			if (metadata == null) {
+				unresolvedMetadata.add(questId);
+			}
+			// 采集槽由真端掉落列决定：{@code drop_monster_K} 列出的来源（对象或怪）产出
+			// {@code drop_item_K}，该物品在交付列里的位置就是相机槽（真端数据里一行的对象列序**不等于**槽序，
+			// 见 4046/2487/2346/1154/41510；同一来源也不会同时落在两个槽上）。
+			// The camera slot comes from the retail drop column: drop_monster_K yields drop_item_K and
+			// the position of that item among the hand-in columns is the slot. The retail data shows the
+			// object column order is not the slot order (4046/2487/2346/1154/41510).
+			Map<Integer, Integer> slotByDropSource = dropSourceSlots(metadata);
+
+			List<Integer> objectIds = new ArrayList<>(row.objects().size());
+			for (String object : row.objects()) {
+				List<Integer> candidates = nameResolver.resolveMonsterIds(object);
+				if (candidates.size() != 1) {
+					if (candidates.size() > 1) {
+						unroutable.add(questId);
+					}
+					continue;
+				}
+				int objectId = candidates.get(0);
+				Integer slot = slotByDropSource.get(objectId);
+				if (slot == null) {
+					// 对象不在任何掉落列里 ⇒ 真端没有给它槽位（如 41216 的来源是另一个 FOBJ）；
+					// fail-closed，不按列序猜槽。
+					// The object appears in no drop column, so the retail data assigns it no slot: fail
+					// closed instead of guessing from the column order.
+					unroutable.add(questId);
+					continue;
+				}
+				objectIds.add(objectId);
+				objectRefs.computeIfAbsent(objectId, key -> new ArrayList<>())
+					.add(new CollectTargetRef(questId, objectId, slot));
+			}
+			if (!objectIds.isEmpty()) {
+				objects.put(questId, List.copyOf(objectIds));
+			}
+			Map<Integer, Integer> requires = NativeCollectSpecs.collectSlotRequirements(questId);
+			if (!requires.isEmpty()) {
+				cameraRequires.put(questId, requires);
+			}
+			List<ItemStack> handIn = resolveItems(metadata, true);
+			if (!handIn.isEmpty()) {
+				handIns.put(questId, handIn);
+			}
+			List<ItemStack> acceptGive = new ArrayList<>(resolveItems(metadata, false));
+			ItemStack rowGive = parseSymbol(row.acceptGiveItem());
+			if (rowGive != null && acceptGive.stream().noneMatch(item -> item.itemId() == rowGive.itemId())) {
+				acceptGive.add(rowGive);
+			}
+			if (!acceptGive.isEmpty()) {
+				acceptGives.put(questId, List.copyOf(acceptGive));
+			}
+			if (metadata != null && metadata.clean()) {
+				for (var drop : metadata.metadata().drops()) {
+					Integer slot = slotByDropSource.get(drop.npcId());
+					if (slot == null) {
+						// 掉落物不在交付列：无法定槽 ⇒ fail-closed（不猜槽位）。
+						// A drop without a matching hand-in column cannot be slotted: fail closed.
+						unroutable.add(questId);
+						continue;
+					}
+					monsters.computeIfAbsent(drop.npcId(), key -> new ArrayList<>())
+						.add(new CollectMonsterRef(questId, slot));
+				}
+			}
+
+			// 可路由 = 有采集对象 + 有相机行 + 元数据可解 + 名字唯一 + 非 XML-only。
+			// 交付门在该行 itemRequirements 非空但解析失败时同样 fail-closed（handIns 缺项即门永不放行）。
+			// Routable = objects + camera row + resolvable metadata + unique names + not XML-only.
+			// A declared-but-unresolved hand-in face stays fail-closed: the gate never opens.
+			boolean gateResolved = metadata != null
+				&& (metadata.metadata().itemRequirements().isEmpty() || handIns.containsKey(questId));
+			boolean routable = !unroutable.contains(questId)
+				&& !objects.isEmpty()
+				&& cameraRequires.containsKey(questId)
+				&& gateResolved
+				&& rewards.containsKey(questId)
+				&& (xmlOnlyIds == null || !xmlOnlyIds.contains(questId));
+			if (routable) {
+				routed.add(questId);
+			}
+		}
+
+		this.acquireNpcByQuestId = Collections.unmodifiableMap(acquires);
+		this.rewardNpcsByQuestId = Collections.unmodifiableMap(rewards);
+		this.talkNpcsByQuestId = Collections.unmodifiableMap(talks);
+		this.objectsByQuestId = Collections.unmodifiableMap(objects);
+		this.cameraRequiresByQuestId = Collections.unmodifiableMap(cameraRequires);
+		this.handInByQuestId = Collections.unmodifiableMap(handIns);
+		this.acceptGiveByQuestId = Collections.unmodifiableMap(acceptGives);
+		this.collectTargetsByNpcId = Collections.unmodifiableMap(monsters);
+		this.objectsByNpcId = Collections.unmodifiableMap(objectRefs);
+		this.ownedQuestIds = Collections.unmodifiableSet(owned);
+		this.routedQuestIds = Collections.unmodifiableSet(routed);
+		this.unroutableQuestIds = Collections.unmodifiableSet(unroutable);
+		this.grantKindByQuestId = Collections.unmodifiableMap(grantKinds);
+		this.factionByQuestId = Collections.unmodifiableMap(factions);
+	}
+
+	private static RetailQuestMetadataCompiler.Outcome metadataOf(int questId) {
+		try {
+			return com.aionemu.gameserver.questEngine.retail.RetailQuestDriver.ensureLoaded()
+				.retailMetadataOf(questId).orElse(null);
+		} catch (java.io.IOException | RuntimeException e) {
+			// 元数据不可编译（真端休眠行 36017/46017/47112 的 minlevel=999）：按未解处理，fail-closed。
+			// Uncompilable metadata (the retail dormant rows 36017/46017/47112 with minlevel=999)
+			// counts as unresolved and fails closed.
+			return null;
+		}
+	}
+
+	/**
+	 * 采集族的交付/发放物品：交付面 = {@code itemRequirements}（真端 {@code collect_item}），
+	 * 接取发放面 = {@code questWorkItems}（真端 {@code quest_work_item}）。
+	 * <p>
+	 * Retail hand-in items ({@code collect_item}) and accept-time grants ({@code quest_work_item}).
+	 */
+	private static List<ItemStack> resolveItems(RetailQuestMetadataCompiler.Outcome metadata, boolean handIn) {
+		if (metadata == null) {
+			return List.of();
+		}
+		if (metadata.unresolved().stream().anyMatch(entry -> entry.startsWith("collect_item")
+				|| entry.startsWith("quest_work_item"))) {
+			return List.of();
+		}
+		List<QuestItemRequirement> source = handIn
+			? metadata.metadata().itemRequirements()
+			: metadata.metadata().questWorkItems();
+		List<ItemStack> items = new ArrayList<>(source.size());
+		for (QuestItemRequirement requirement : source) {
+			items.add(new ItemStack(requirement.itemId(), requirement.count()));
+		}
+		return List.copyOf(items);
+	}
+
+	private static ItemStack parseSymbol(String symbol) {
+		if (symbol == null || symbol.isBlank()) {
+			return null;
+		}
+		String[] parts = symbol.trim().split("\\s+");
+		String stem = parts[0].toLowerCase(java.util.Locale.ROOT);
+		RetailItemNameIndex index;
+		try {
+			index = RetailItemNameIndex.loadItemTemplates();
+		} catch (java.io.IOException e) {
+			return null;
+		}
+		Integer itemId = index.resolve(stem);
+		if (itemId == null && stem.startsWith("item_")) {
+			itemId = index.resolve(stem.substring("item_".length()));
+		}
+		if (itemId == null) {
+			return null;
+		}
+		int count = 1;
+		if (parts.length > 1) {
+			try {
+				count = Integer.parseInt(parts[1]);
+			} catch (NumberFormatException e) {
+				return null;
+			}
+		}
+		return new ItemStack(itemId, count);
+	}
+
+	public static SimpleCollectItemHandler instance() {
+		SimpleCollectItemHandler local = instance;
+		if (local == null) {
+			synchronized (SimpleCollectItemHandler.class) {
+				local = instance;
+				if (local == null) {
+					local = new SimpleCollectItemHandler(NativeQuestTableLoader.instance(),
+						CameraRegistry.instance(), NativeNpcNameResolver.instance(),
+						HtmlPagesRegistry.instance(), NativeInventoryPort.live(),
+						NativeReportRewardFlow.instance(),
+						NativeQuestOwnerResolver.instance().xmlOnlyIds(), new TreeSet<>());
+					instance = local;
+				}
+			}
+		}
+		return local;
+	}
+
+	/** 判断是否拥有该任务（注册集）。 / Checks whether the handler manages the quest (registration set). */
+	public boolean owns(int questId) {
+		return ownedQuestIds.contains(questId);
+	}
+
+	/** 路由集 = 注册集 − XML-only 行 − 不可路由行。 / Routing set = registration set minus XML-only and unroutable rows. */
+	public boolean routes(int questId) {
+		return routedQuestIds.contains(questId);
+	}
+
+	public Set<Integer> ownedQuestIds() {
+		return ownedQuestIds;
+	}
+
+	public Set<Integer> routedQuestIds() {
+		return routedQuestIds;
+	}
+
+	/** 已装载但当前不可路由的采集行（缺对象/缺相机/名字多义/物品未解）。 / Loaded but currently unroutable collect rows. */
+	public Set<Integer> unroutableQuestIds() {
+		return unroutableQuestIds;
+	}
+
+	/** 接取名类别（真端哨兵 = 系统发放）。 / The acquire-name category (a sentinel means system-granted). */
+	@Override
+	public RetailGrantKind grantKind(int questId) {
+		return grantKindByQuestId.getOrDefault(questId, RetailGrantKind.NPC);
+	}
+
+	/** 真端 {@code quest.xml} 的势力 id（{@code npcfaction_name}；无则 0）。 / The retail faction id, or 0. */
+	@Override
+	public int factionId(int questId) {
+		return factionByQuestId.getOrDefault(questId, 0);
+	}
+
+	/**
+	 * 指定势力的当前可轮换任务 id（真端 {@code _faction_} 行 ∩ 本族路由集）。
+	 * Faction-rotation candidates of one faction: routed rows whose acquire name is {@code _faction_}.
+	 */
+	@Override
+	public Set<Integer> factionRotationCandidates(int factionId) {
+		Set<Integer> candidates = new TreeSet<>();
+		for (Map.Entry<Integer, Integer> entry : factionByQuestId.entrySet()) {
+			int questId = entry.getKey();
+			if (entry.getValue() == factionId && routes(questId)
+					&& grantKind(questId) == RetailGrantKind.FACTION) {
+				candidates.add(questId);
+			}
+		}
+		return Collections.unmodifiableSet(candidates);
+	}
+
+	/**
+	 * 是否系统发放（哨兵行且本服确有该发放入口）；判据与 SimpleTalk 车道同形：{@link RetailGrantKind#grantable()}
+	 * 让 {@code _challengetask_} 这类没有受理入口的哨兵保持拒绝。
+	 * System-grant verdict, keyed on {@link RetailGrantKind#grantable()} so sentinels without an intake
+	 * in this server can never be granted.
+	 */
+	@Override
+	public boolean isSystemGranted(int questId) {
+		RetailGrantKind kind = grantKind(questId);
+		return routes(questId) && kind != RetailGrantKind.NPC && kind.grantable();
+	}
+
+	/** 阵营日常轮换资格（与 SimpleTalk 共用 {@link NativeFactionRotation} 的真端轴判定）。 /
+	 * Rotation eligibility, sharing the retail axis adjudication with the SimpleTalk lane. */
+	@Override
+	public boolean factionRotationEligible(Player player, int questId, int factionId) {
+		return NativeFactionRotation.eligible(player, questId, factionId, isSystemGranted(questId),
+			NativeFactionRotation.factionKind(grantKind(questId)), factionId(questId));
+	}
+
+	/**
+	 * 系统发放入口（{@code _faction_} 等哨兵行）：无进度时直接进 START，随后按本族采集流程推进。
+	 * System-grant entry: starts the quest directly when it has no progress; the collect flow drives it.
+	 */
+	@Override
+	public boolean grantSystemStart(Player player, int questId) {
+		if (player == null || !isSystemGranted(questId)) {
+			return false;
+		}
+		QuestState existing = player.getQuestStateList().getQuestState(questId);
+		if (existing != null && existing.getStatus() != QuestStatus.NONE) {
+			return false;
+		}
+		return NativeQuestStartPort.instance().grant(player, questId).started();
+	}
+
+	/** 任务起始 NPC。 / The acquire NPC for the quest. */
+	public Integer acquireNpc(int questId) {
+		return acquireNpcByQuestId.get(questId);
+	}
+
+	/**
+	 * 任务交付 NPC（首项；多交付 NPC 行见 {@link #rewardNpcs(int)}）。
+	 * The quest's hand-in NPC (the first one; see {@link #rewardNpcs(int)} for multi-NPC rows).
+	 */
+	public Integer rewardNpc(int questId) {
+		List<Integer> npcs = rewardNpcsByQuestId.get(questId);
+		return npcs == null || npcs.isEmpty() ? null : npcs.getFirst();
+	}
+
+	/** 任务的全部交付 NPC（真端逻辑名 + 客户端交付集合展开）。 / Every hand-in NPC of the quest. */
+	public List<Integer> rewardNpcs(int questId) {
+		return rewardNpcsByQuestId.getOrDefault(questId, List.of());
+	}
+
+	/** 任务的采集对象 NPC 模板 id。 / The collect-object npc template ids of the quest. */
+	public List<Integer> collectObjects(int questId) {
+		return objectsByQuestId.getOrDefault(questId, List.of());
+	}
+
+	/** 任务的中继 NPC id（表序 1..3）。 / The relay npc ids of the quest (table order 1..3). */
+	public List<Integer> relayNpcs(int questId) {
+		return talkNpcsByQuestId.getOrDefault(questId, List.of());
+	}
+
+	/** 任务的采集怪 NPC 模板 id（去重、表序）。 / The collect-monster npc template ids of the quest (deduped, table order). */
+	public List<Integer> collectMonsterTargets(int questId) {
+		Set<Integer> monsters = new TreeSet<>();
+		for (Map.Entry<Integer, List<CollectMonsterRef>> entry : collectTargetsByNpcId.entrySet()) {
+			for (CollectMonsterRef ref : entry.getValue()) {
+				if (ref.questId() == questId) {
+					monsters.add(entry.getKey());
+				}
+			}
+		}
+		return List.copyOf(monsters);
+	}
+
+	/** 任务的接取发放物品 id（真端 {@code quest_work_item}）。 / The accept-time grant item ids of the quest (retail quest_work_item). */
+	public List<Integer> acceptGiveItems(int questId) {
+		List<ItemStack> items = acceptGiveByQuestId.get(questId);
+		if (items == null) {
+			return List.of();
+		}
+		List<Integer> ids = new ArrayList<>(items.size());
+		for (ItemStack item : items) {
+			ids.add(item.itemId());
+		}
+		return List.copyOf(ids);
+	}
+
+	/** 任务的交付物品 id（真端 {@code collect_item}，与相机计数同源）。 / The hand-in item ids of the quest (retail collect_item). */
+	public List<Integer> handInItems(int questId) {
+		List<ItemStack> items = handInByQuestId.get(questId);
+		if (items == null) {
+			return List.of();
+		}
+		List<Integer> ids = new ArrayList<>(items.size());
+		for (ItemStack item : items) {
+			ids.add(item.itemId());
+		}
+		return List.copyOf(ids);
+	}
+
+	/** 任务在指定 NPC 上的采集目标（注册索引对拍用）。 / Collect targets of the quest on the given npc. */
+	public List<CollectTargetRef> targetsForNpc(int npcId) {
+		return objectsByNpcId.getOrDefault(npcId, List.of());
+	}
+
+	/**
+	 * 任务的全部采集来源 → 真端相机槽（对象与怪同源；证据/对拍面）。
+	 * <p>
+	 * 槽 = 该来源产出的物品在交付列（{@code collect_itemN}）里的位置，与相机
+	 * {@link NativeCollectSpecs} 的槽序同源；不在交付列的来源不出现（该行走 fail-closed）。
+	 * Every collect source (object or monster) of the quest mapped to its retail camera slot; the slot is
+	 * the position of the produced item among the hand-in columns. Sources without a hand-in column are
+	 * absent (their row fails closed).
+	 */
+	public Map<Integer, Integer> collectSources(int questId) {
+		Map<Integer, Integer> slots = new LinkedHashMap<>();
+		for (Map.Entry<Integer, List<CollectTargetRef>> entry : objectsByNpcId.entrySet()) {
+			for (CollectTargetRef ref : entry.getValue()) {
+				if (ref.questId() == questId) {
+					slots.putIfAbsent(entry.getKey(), ref.slot());
+				}
+			}
+		}
+		for (Map.Entry<Integer, List<CollectMonsterRef>> entry : collectTargetsByNpcId.entrySet()) {
+			for (CollectMonsterRef ref : entry.getValue()) {
+				if (ref.questId() == questId) {
+					slots.putIfAbsent(entry.getKey(), ref.slot());
+				}
+			}
+		}
+		return Collections.unmodifiableMap(slots);
+	}
+
+	/** 启动期注册 native 兴趣到 {@link QuestEngine}。 / Registers native interests into the engine at startup. */
+	public void installInterest(QuestEngine engine) {
+		if (engine == null) {
+			return;
+		}
+		for (Map.Entry<Integer, Integer> entry : acquireNpcByQuestId.entrySet()) {
+			int questId = entry.getKey();
+			if (!routedQuestIds.contains(questId)) {
+				continue;
+			}
+			engine.registerQuestNpc(entry.getValue()).addOnQuestStart(questId);
+			engine.registerQuestNpc(entry.getValue()).addOnTalkEvent(questId);
+		}
+		for (Map.Entry<Integer, List<Integer>> entry : rewardNpcsByQuestId.entrySet()) {
+			int questId = entry.getKey();
+			if (!routedQuestIds.contains(questId)) {
+				continue;
+			}
+			for (int rewardNpc : entry.getValue()) {
+				engine.registerQuestNpc(rewardNpc).addOnTalkEvent(questId);
+			}
+		}
+		for (Map.Entry<Integer, List<Integer>> entry : talkNpcsByQuestId.entrySet()) {
+			int questId = entry.getKey();
+			if (!routedQuestIds.contains(questId)) {
+				continue;
+			}
+			for (int npcId : entry.getValue()) {
+				engine.registerQuestNpc(npcId).addOnTalkEvent(questId);
+			}
+		}
+		for (Map.Entry<Integer, List<CollectTargetRef>> entry : objectsByNpcId.entrySet()) {
+			for (CollectTargetRef ref : entry.getValue()) {
+				if (!routedQuestIds.contains(ref.questId())) {
+					continue;
+				}
+				engine.registerQuestNpc(entry.getKey()).addOnTalkEvent(ref.questId());
+			}
+		}
+		for (Map.Entry<Integer, List<CollectMonsterRef>> entry : collectTargetsByNpcId.entrySet()) {
+			for (CollectMonsterRef ref : entry.getValue()) {
+				if (!routedQuestIds.contains(ref.questId())) {
+					continue;
+				}
+				engine.registerQuestNpc(entry.getKey()).addOnKillEvent(ref.questId());
+			}
+		}
+	}
+
+	/**
+	 * 击杀采集怪推进相机（真端掉落族同源进度）。
+	 * Advances the camera when a collect monster is killed (the same progress the drop family feeds).
+	 */
+	public boolean onKill(Player player, int npcId) {
+		if (player == null || npcId <= 0) {
+			return false;
+		}
+		List<CollectMonsterRef> refs = collectTargetsByNpcId.get(npcId);
+		if (refs == null || refs.isEmpty()) {
+			return false;
+		}
+		boolean handled = false;
+		for (CollectMonsterRef ref : refs) {
+			if (advance(player, ref.questId(), ref.slot())) {
+				handled = true;
+			}
+		}
+		return handled;
+	}
+
+	/**
+	 * 采集对象（{@code objectN}）被点击时的推进口。
+	 * Advances the camera when a collect object ({@code objectN}) is used.
+	 */
+	public boolean onObjectUse(Player player, int questId, int objectNpcId) {
+		if (player == null || !routes(questId)) {
+			return false;
+		}
+		List<Integer> objects = objectsByQuestId.get(questId);
+		if (objects == null || !objects.contains(objectNpcId)) {
+			return false;
+		}
+		if (!talkChainComplete(player, questId)) {
+			return false;
+		}
+		// 只推进该对象所在列的真端槽位。 / Advance only the retail slot of this object's column.
+		for (CollectTargetRef ref : objectsByNpcId.getOrDefault(objectNpcId, List.of())) {
+			if (ref.questId() == questId) {
+				return advance(player, questId, ref.slot());
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * 真端掉落来源（对象或怪）→ 相机槽。槽 = {@code drop_item_K} 在交付列（{@code collect_itemN}）里的位置；
+	 * 掉落物不在交付列时该来源不定槽（调用方 fail-closed）。
+	 * <p>
+	 * Retail drop source (object or monster) to camera slot: the slot is the position of the drop's item
+	 * among the hand-in columns. A source whose item is not a hand-in item gets no slot.
+	 */
+	private static Map<Integer, Integer> dropSourceSlots(RetailQuestMetadataCompiler.Outcome metadata) {
+		if (metadata == null || !metadata.clean()) {
+			return Map.of();
+		}
+		List<QuestItemRequirement> collected = metadata.metadata().itemRequirements();
+		Map<Integer, Integer> slots = new LinkedHashMap<>();
+		for (var drop : metadata.metadata().drops()) {
+			int slot = slotOfItem(collected, drop.itemId());
+			if (slot != 0) {
+				slots.putIfAbsent(drop.npcId(), slot);
+			}
+		}
+		return slots;
+	}
+
+	/**
+	 * 交付 NPC 集合：真端 {@code reward_npc_name} 是**逻辑名**，静态数据唯一命中即单元素；未命中
+	 * （如 {@code <地图>_<势力名>} 复合名 LF4_GuardianOfDivine）时按客户端交付集合
+	 * （{@code quest_client_handin_npc_sets.tsv}）逐元素展开——与退役前的
+	 * {@code RetailSimpleCollectItemDefinitionCompiler} 同一仲裁面；客户端未声明即 fail-closed。
+	 * <p>
+	 * Hand-in NPC set: a retail logical name resolves to one id when unique; names missing from static
+	 * data (the {@code <map>_<faction>} composites) expand through the client-declared hand-in set, the
+	 * same arbitration face the retired compiler used; an undeclared row stays fail-closed.
+	 */
+	private static List<Integer> rewardNpcIds(int questId, String retailName) {
+		NativeNpcNameResolver.Match match = NativeNpcNameResolver.instance().resolve(retailName);
+		if (match.resolution() == NativeNpcNameResolver.Resolution.UNIQUE) {
+			return List.of(match.npcIds().getFirst());
+		}
+		Set<Integer> declared = RetailClientHandinNpcSets.defaultSets().npcIds(questId);
+		return declared.isEmpty() ? List.of() : List.copyOf(new TreeSet<>(declared));
+	}
+
+	/** 交付列里该物品的槽位（1..N）；不在交付列返回 0。 / The slot of an item in the hand-in columns, or 0. */
+	private static int slotOfItem(List<QuestItemRequirement> collected, int itemId) {
+		for (int index = 0; index < collected.size(); index++) {
+			if (collected.get(index).itemId() == itemId) {
+				return index + 1;
+			}
+		}
+		return 0;
+	}
+
+	/** 相机推进一步（状态/守卫/满值推进统一走真端 {@link ProgressCamera}）。 / One camera step via the retail camera. */
+	private boolean advance(Player player, int questId, int slot) {
+		QuestState state = player.getQuestStateList() == null ? null
+			: player.getQuestStateList().getQuestState(questId);
+		if (state == null || state.getStatus() != QuestStatus.START) {
+			return false;
+		}
+		Map<Integer, Integer> requires = cameraRequiresByQuestId.get(questId);
+		if (requires == null || requires.isEmpty()) {
+			return false;
+		}
+		CameraRegistry.CameraRow row = cameraRegistry.find(questId).orElse(null);
+		if (row == null) {
+			return false;
+		}
+		ProgressCamera.Result result = ProgressCamera.advance(ProgressCamera.Status.START,
+			state.getQuestVars().getQuestVars(), row, slot, true);
+		if (result.outcome() == ProgressCamera.Outcome.NO_ACTION) {
+			return false;
+		}
+		state.getQuestVars().setVar(result.newVars());
+		// 采集族语义（真端 collect 族）：满值只表示"采集完成"，仍在 START 态；交付 NPC 处扣物品时
+		// 才翻 REWARD（与狩猎族"满值即待领奖"不同——采集多一道交付门，见 check_item 列）。
+		// Collect-family semantics: a full camera only means "collection done" and stays in START;
+		// the hand-in npc performs the item removal and flips to REWARD (the family carries the extra
+		// check_item gate, unlike the hunt families).
+		state.setPersistentState(PersistentState.UPDATE_REQUIRED);
+		PacketSendUtility.sendPacket(player,
+			new SM_QUEST_ACTION(questId, state.getStatus(), state.getQuestVars().getQuestVars()));
+		return true;
+	}
+
+	/**
+	 * 中继链是否走完：talk_npc1..3 按表序推进（真端 {@code collect_progress} 的直接语义）。
+	 * Whether the relay chain is done: talk_npc1..3 are visited in table order, which is exactly what
+	 * the retail {@code collect_progress} column states for this family.
+	 */
+	private boolean talkChainComplete(Player player, int questId) {
+		List<Integer> talkNpcs = talkNpcsByQuestId.get(questId);
+		if (talkNpcs == null || talkNpcs.isEmpty()) {
+			return true;
+		}
+		QuestState state = player.getQuestStateList().getQuestState(questId);
+		return state != null && talkStep(state) >= talkNpcs.size();
+	}
+
+	/**
+	 * 处理对话与翻页（接取 / 中继链 / 采集对象 / 交付 / 领奖）。
+	 * Handles dialog and page progression (accept / relay chain / collect objects / hand-in / reward).
+	 */
+	public boolean onDialog(QuestEnv env) {
+		if (env == null || env.getPlayer() == null) {
+			return false;
+		}
+		Player player = env.getPlayer();
+		int questId = env.getQuestId();
+		if (!routes(questId)) {
+			return false;
+		}
+		Npc npc = env.getVisibleObject() instanceof Npc target ? target : null;
+		int npcId = npc != null ? npc.getNpcId() : 0;
+		int objectId = npc != null ? npc.getObjectId() : 0;
+		int dialogId = env.getDialogId();
+		QuestState state = player.getQuestStateList().getQuestState(questId);
+		QuestStatus status = state != null ? state.getStatus() : QuestStatus.NONE;
+
+		if (state == null || status == QuestStatus.NONE) {
+			return onAcceptDialog(player, questId, npcId, objectId, dialogId);
+		}
+
+		if (status == QuestStatus.START) {
+			if (objectsByQuestId.containsKey(questId) && objectsByQuestId.get(questId).contains(npcId)) {
+				if (onObjectUse(player, questId, npcId)) {
+					PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(objectId, PAGE_IN_PROGRESS, questId));
+					return true;
+				}
+			}
+			if (talkChainStep(player, questId, npcId)) {
+				return true;
+			}
+			if (rewardNpcsByQuestId.getOrDefault(questId, List.of()).contains(npcId)) {
+				if (handInComplete(player, questId)) {
+					state.setStatus(QuestStatus.REWARD);
+					state.setPersistentState(PersistentState.UPDATE_REQUIRED);
+					PacketSendUtility.sendPacket(player,
+						new SM_QUEST_ACTION(questId, state.getStatus(), state.getQuestVars().getQuestVars()));
+					PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(objectId, PAGE_REWARD_WINDOW, questId));
+					return true;
+				}
+				if (dialogId == 31 || dialogId == 26 || dialogId == 1009) {
+					PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(objectId, PAGE_IN_PROGRESS, questId));
+					return true;
+				}
+			}
+			return false;
+		}
+
+		if (status == QuestStatus.REWARD) {
+			if (rewardNpcsByQuestId.getOrDefault(questId, List.of()).contains(npcId)) {
+				if (dialogId == 31 || dialogId == 26 || dialogId == 1009 || dialogId == -1) {
+					PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(objectId, PAGE_REWARD_WINDOW, questId));
+					return true;
+				}
+				if ((dialogId >= 8 && dialogId <= 23) || dialogId == 108 || (dialogId >= 110 && dialogId <= 124)) {
+					int rewardIndex = dialogId >= 8 && dialogId <= 23 ? dialogId - 8 : 0;
+					if (rewardFlow.claim(env, rewardIndex).completed()) {
+						PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(objectId, PAGE_COMPLETE, questId));
+						return true;
+					}
+				}
+			}
+			return false;
+		}
+		return false;
+	}
+
+	private boolean onAcceptDialog(Player player, int questId, int npcId, int objectId, int dialogId) {
+		Integer acquireNpc = acquireNpcByQuestId.get(questId);
+		if (acquireNpc == null || acquireNpc != npcId) {
+			return false;
+		}
+		if (dialogId == 31 || dialogId == 26) {
+			PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(objectId,
+				QuestDialogContract.loadDefault().acceptEntryPage(questId), questId));
+			return true;
+		}
+		if (dialogId == QuestDialogPage.SELECT1_1.id() || dialogId == QuestDialogPage.SELECT1_1_1.id()) {
+			if (!QuestDialogContract.loadDefault().hasButtonPage(questId, dialogId)) {
+				return false;
+			}
+			PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(objectId, dialogId, questId));
+			return true;
+		}
+		if (dialogId == 1002 || dialogId == 20000) {
+			if (NativeQuestStartPort.instance().start(player, questId).started()) {
+				grantAcceptItems(player, questId);
+				PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(objectId, PAGE_ACCEPTED, questId));
+				return true;
+			}
+			return false;
+		}
+		if (dialogId == 1003 || dialogId == 1004 || dialogId == 20001) {
+			PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(objectId, 1004, questId));
+			return true;
+		}
+		return false;
+	}
+
+	private void grantAcceptItems(Player player, int questId) {
+		List<ItemStack> items = acceptGiveByQuestId.get(questId);
+		if (items == null) {
+			return;
+		}
+		for (ItemStack item : items) {
+			inventory.give(player, item.itemId(), item.count());
+		}
+	}
+
+	/**
+	 * 中继链步进：命中表序中的下一个 NPC 才推进（乱序/重复零推进）。
+	 * Relay-chain step: only the next NPC in table order advances (out-of-order repeats are no-ops).
+	 */
+	private boolean talkChainStep(Player player, int questId, int npcId) {
+		List<Integer> talkNpcs = talkNpcsByQuestId.get(questId);
+		if (talkNpcs == null || talkNpcs.isEmpty()) {
+			return false;
+		}
+		int index = talkNpcs.indexOf(npcId);
+		if (index < 0) {
+			return false;
+		}
+		QuestState state = player.getQuestStateList().getQuestState(questId);
+		if (state == null) {
+			return false;
+		}
+		if (index != talkStep(state)) {
+			return false;
+		}
+		int next = index + 1;
+		int vars = (state.getQuestVars().getQuestVars() & ~RELAY_STEP_MASK) | (next << RELAY_STEP_SHIFT);
+		state.getQuestVars().setVar(vars);
+		state.setPersistentState(PersistentState.UPDATE_REQUIRED);
+		PacketSendUtility.sendPacket(player,
+			new SM_QUEST_ACTION(questId, state.getStatus(), state.getQuestVars().getQuestVars()));
+		return true;
+	}
+
+	/** 中继步位段（相机槽 0..5，中继步放 16..17，恒低于真端守卫位 0x40000000）。 /
+	 * Relay-step field: the camera uses bits 0..5, the relay step lives at bits 16..17, always
+	 * below the retail guard bit 0x40000000. */
+	private static final int RELAY_STEP_SHIFT = 16;
+	private static final int RELAY_STEP_MASK = 0x3 << RELAY_STEP_SHIFT;
+
+	/** 当前中继步（= 已完成的 talk 数）。 / Current relay step (the number of finished talks). */
+	private static int talkStep(QuestState state) {
+		return (state.getQuestVars().getQuestVars() & RELAY_STEP_MASK) >>> RELAY_STEP_SHIFT;
+	}
+
+	/** 相机是否满值（真端推进通道的条件：各槽达到 required）。 / Whether the camera is full (every slot at its requirement). */
+	private boolean cameraFull(Player player, int questId) {
+		QuestState state = player.getQuestStateList() == null ? null
+			: player.getQuestStateList().getQuestState(questId);
+		Map<Integer, Integer> requires = cameraRequiresByQuestId.get(questId);
+		CameraRegistry.CameraRow camera = cameraRegistry.find(questId).orElse(null);
+		if (state == null || requires == null || camera == null) {
+			return false;
+		}
+		int vars = state.getQuestVars().getQuestVars();
+		for (Map.Entry<Integer, Integer> entry : requires.entrySet()) {
+			if (RawQuestVarsCodec.slotValue(camera.width(), vars, entry.getKey()) < entry.getValue()) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	private boolean handInComplete(Player player, int questId) {
+		if (!talkChainComplete(player, questId) || !cameraFull(player, questId)) {
+			return false;
+		}
+		List<ItemStack> items = handInByQuestId.get(questId);
+		if (items == null || items.isEmpty()) {
+			return false;
+		}
+		for (ItemStack item : items) {
+			if (inventory.count(player, item.itemId()) < item.count()) {
+				return false;
+			}
+		}
+		for (ItemStack item : items) {
+			if (!inventory.remove(player, item.itemId(), item.count())) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	/**
+	 * 采集对象的可交互性：玩家在该对象上有一条已接取（START）的采集任务，且中继链已走完。
+	 * 供 {@code QuestEngine.onCanAct(ACTION_ITEM_USE)} 判定（交互物 AI 的对话入口）。
+	 * <p>
+	 * Usability of a collect object: the player has a STARTED collect quest on that npc and the relay
+	 * chain is complete. Consulted by {@code QuestEngine.onCanAct(ACTION_ITEM_USE)}.
+	 */
+	public boolean allowsItemUse(Player player, int objectNpcId) {
+		if (player == null || player.getQuestStateList() == null) {
+			return false;
+		}
+		List<CollectTargetRef> refs = objectsByNpcId.get(objectNpcId);
+		if (refs == null || refs.isEmpty()) {
+			return false;
+		}
+		for (CollectTargetRef ref : refs) {
+			if (!routes(ref.questId())) {
+				continue;
+			}
+			QuestState state = player.getQuestStateList().getQuestState(ref.questId());
+			if (state != null && state.getStatus() == QuestStatus.START
+					&& talkChainComplete(player, ref.questId())) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/** 采集对象命中判定（供引擎的 USE_OBJECT 兜底路径使用）。 / Whether the npc is a collect object of the quest. */
+	public boolean isCollectObject(int questId, int npcId) {
+		List<Integer> objects = objectsByQuestId.get(questId);
+		return objects != null && objects.contains(npcId);
+	}
+
+}

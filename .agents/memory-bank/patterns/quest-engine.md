@@ -2583,3 +2583,51 @@ keywords: bm_restrict_category、账号限制类别下标、类别+19位、quest
 
 - **判定规则**：`bm_restrict_category = N`（真端 clamp 0..8）= 查玩家限制位图第 `N + 19` 位（1..4 ⇒ `quest_acquire1..4`）；位置位 ⇒ 拒绝接取，位为空 ⇒ 放行。
 - **安全网**：重锚类同时断言「该轴位下标与放行/拒绝面」与「机械面（中继/发扣/报告）正确」，避免用直建 START 的夹具把接取缺口盖掉。
+
+---
+
+## [QE-115] 一一五、采集族相机槽序由真端掉落列决定，不是对象列序 (COLLECT_SLOT_FROM_DROP_COLUMN)
+
+<!-- pattern-metadata
+status: CONFIRMED
+scope: 真端 SimpleCollectItem 族（Quest_SimpleCollectItem.xml ×  quest.xml）的「对象/怪 → 相机槽」映射与 native SimpleCollectItemHandler 的 ProgressCamera 槽位；同理适用于任何按族切换后需要把「点击/击杀来源」映射到进度槽的家族
+first_seen: 2026-10-01
+last_verified: 2026-10-01
+symptom: 单列采集正常，多列采集静默卡死——点击第二个及以后的对象只填第一槽，交付 NPC 处永远「进行中页」，任务不可完成（18501/28501/1487 等多列行）；或反向：一次点击把多槽一起填满
+root_cause: 直觉映射「object1..4 的列序 = 相机槽序」与真端数据不符。真端 quest.xml 的 `drop_monster_K` / `drop_item_K` 才是槽位来源：`drop_monster_K` 列出的来源（对象名或真怪名）产出 `drop_item_K`，该物品在交付列 `collect_itemN` 里的**位置**才是槽号。真端反例：4046（对象 1 个、drop_item_1 是 collect_item4）、2487（对象是 object1 但对应 drop 列 2，槽 1 由真怪 Pretor_38_An 产出）、2346/41216（槽 1 的来源是真怪/另一个 FOBJ）、1154/41510（一个 drop 列列出多个对象，全部灌同一槽）。全表按对象列序取槽会把 4046/2487/2346/1154/41510 这类行映射错；按来源查 drop 列则 295/300 个对象列可定槽，剩 5 个（4 个事件行 + 41216）真端本就无槽
+fix_or_guardrail: 1. **唯一映射入口**：handler 构造期由元数据 `drops()`（npcId,itemId）建「来源 → 槽」，槽 = `itemId` 在 `itemRequirements()`（collect_itemN）里的下标 + 1；对象列与击杀目标都查这张表，禁止用 `objectN` 的 N；2. **fail-closed**：来源不在任何 drop 列 ⇒ 不可路由（不猜槽）；drop 物品不在交付列 ⇒ 不可路由（本次真端 0 例，规则留作护栏）；3. **证据面**：`collectSources(questId)` 暴露来源→槽，逐行对齐门把真端 drop 列独立重解析后与它对拍，并冻结「objectK 与 drop_monster_K 同名 275 / 仅大小写差异 8 / 多来源 3 / 真怪 3」四类计数；4. **镜头/交付不分家**：相机 required 仍来自 collect_itemN 计数，交付门 = 相机满值 + 持有整组交付物
+evidence: .agents/summary/quest-engine-native/p4/P4-REPORT.zh-CN.md; .agents/summary/quest-engine-native/p4/tools/collect_feasibility.py; src/main/java/com/aionemu/gameserver/questEngine/tablelane/SimpleCollectItemHandler.java（dropSourceSlots/collectSources）; src/main/java/com/aionemu/gameserver/questEngine/tablelane/NativeCollectSpecs.java; src/test/java/com/aionemu/gameserver/questEngine/tablelane/SimpleCollectItemRowAlignmentGateTest.java; src/test/java/com/aionemu/gameserver/questEngine/tablelane/SimpleCollectItemNativeFamilyGateTest.java; src/test/java/com/aionemu/gameserver/questEngine/definition/Quest18501InteractionObjectTest.java
+validation: 2026-10-01 P4 收口：独立重解析真端表 + quest.xml 逐行对拍 5/5 绿（275/8/3/3 四类冻结 + 来源→槽逐列相等），族门 12/12（含 18501 两列 ×5 的正向交付：单列满不放行、两列满 + 持有整组才翻 REWARD 并两份扣除），18501 类 2/2、Haramel 四行 2/2、3734 2/2；聚焦套件 1695 例 / 162F+157E / 110 类红，对 P3 步骤 6 基线逐类 ADDED 0 / REMOVED 0（差集只在本次重锚类）
+boundaries: 本规则只描述「来源 → 槽」的取数；槽的宽度/推进/满值副作用仍由 ProgressCamera（6 位槽、守卫位）与家族 handler 决定；真端 drop_prob 概率与掉落发放归 QuestService 掉落族，不在本映射内；未跑真实客户端验收（PENDING_CLIENT）
+superseded_by: none
+see_also: [QE-089], [QE-113], [QE-116]
+first_check: 多列采集卡住时先答：①这行的对象列序与 drop 列序一致吗（打印 quest.xml 的 drop_monster_K/drop_item_K 与 collect_itemN）？②handler 的槽是从哪里取的（对象列号还是 drop 物品位置）？③该对象在真端任何 drop 列里出现过吗？④相机 required 与交付列计数同源吗？⑤有没有用例真的把两列都填满并走到 REWARD？
+keywords: 采集槽序、object列序不是槽序、drop_monster_K、drop_item_K、collect_itemN、多列采集卡死、进行中页永不翻REWARD、ProgressCamera槽、collectSources、fail-closed定槽、QE-115
+-->
+
+- **判定规则**：槽 = `drop_item_K` 在 `collect_itemN` 交付列里的位置；来源（对象/怪）由 `drop_monster_K` 列出，一律查表取槽，不看 `objectN` 的下标。
+- **安全网**：来源无槽位即 fail-closed；族门必须有「多列都填满才交付」的正向用例，逐行对齐门冻结四类列计数。
+
+---
+
+## [QE-116] 一一六、按族切换必须把系统发放面收进同一聚合入口，否则切族即孤立哨兵行 (NATIVE_SYSTEM_GRANT_LANE)
+
+<!-- pattern-metadata
+status: CONFIRMED
+scope: 已切换到 native 车道的任务家族（SimpleHunt/SimpleSerialHunt/SimpleTalk/SimpleCollectItem）与真端族表的接取哨兵（`_faction_`/`_area_`/`_challengetask_`）；主要是阵营日常轮换（NpcFactions）的候选池与发放入口
+first_seen: 2026-10-01
+last_verified: 2026-10-01
+symptom: 切换批之后某一族的阵营日常/区域任务「分配后永远接不了」——typed 目录的 `SystemGrant` 边随该族退场，而 native 侧只把前一个家族接进了轮换池，于是 43 行 `_faction_` 采集任务既进不了池子、也过不了 `isSystemGranted`（测试表现为 `everyFactionSentinelRowCarriesSystemGrantEdge` 由绿转红）
+root_cause: 真端引擎里系统发放面是**引擎级**单一入口（接取哨兵 → 子系统发放），与家族无关；本服把该面挂在具体家族 handler 上（NpcFactions 直接调 SimpleTalkHandler），于是每切一族就要在上层加一次分支，漏掉即静默孤立。诊断盲区：类级红清单只比类名，同一类里「新失败的用例」不会被发现，必须比对每类的 tests/failures/errors 三元组
+fix_or_guardrail: 1. **统一接口 + 聚合入口**：`NativeSystemGrantLane`（owns/routes/grantKind/factionId/factionRotationCandidates/isSystemGranted/factionRotationEligible/grantSystemStart）+ `NativeSystemGrantLanes` 聚合；上层（NpcFactions）只调聚合，切族时家族 handler 实现接口即接入；2. **共用轴判定**：`NativeFactionRotation`（等级/种族/职业/性别/重复上限，读真端 quest.xml）由各族共用，禁止第二套；3. **归属唯一**：`ownershipConflicts()` 断言注册集两两不交（owner resolver 保证）；4. **门**：每族补「轮换池收得进 + isSystemGranted 放得过」两轴断言，且 `_challengetask_` 这类无受理入口的哨兵必须保持拒绝（`grantable()` 判据）
+evidence: .agents/summary/quest-engine-native/p4/P4-REPORT.zh-CN.md; src/main/java/com/aionemu/gameserver/questEngine/tablelane/NativeSystemGrantLane.java; src/main/java/com/aionemu/gameserver/questEngine/tablelane/NativeSystemGrantLanes.java; src/main/java/com/aionemu/gameserver/questEngine/tablelane/NativeFactionRotation.java; src/main/java/com/aionemu/gameserver/model/gameobjects/player/npcFaction/NpcFactions.java; src/test/java/com/aionemu/gameserver/questEngine/retail/RetailSystemGrantDispatchTest.java
+validation: 2026-10-01 P4：SimpleCollectItem 43 行 `_faction_`（manifest 内 40 行）接入聚合入口，RetailSystemGrantDispatchTest 的采集侧由红转绿（该类仅余 P1/P2 既存 2 例红）；聚焦套件逐类三元组比对：162F+157E / 110 类，对 P3 步骤 6 基线 ADDED 0 / REMOVED 0，且失败/错误数净减 5F+7E 全部落在本次重锚类
+boundaries: 只覆盖「已切换族」；未切换家族仍走 typed `SystemGrant` 边与 RetailSystemGrantDispatcher，两条路径在下一次族切换时合成；`_area_`/`_challengetask_` 的实际发放入口仍由各自子系统决定（本服 `_challengetask_` 无受理入口 ⇒ 恒拒绝）；未跑真实客户端验收（PENDING_CLIENT）
+superseded_by: none
+see_also: [QE-108], [QE-114], [QE-115]
+first_check: 切族后哨兵行失效时先答：①这一族的接取哨兵在真端是什么类别（_faction_/_area_/_challengetask_/EnterWorld）？②上层是调家族 handler 还是聚合入口？③轮换池与 isSystemGranted 两轴分别是哪个实现判的？④registry 的归属交叠为空吗？⑤类级红清单是不是把「同类的用例数变化」掩盖了（比对三元组而非类名）？
+keywords: 系统发放面、接取哨兵、_faction_、阵营日常轮换、SystemGrant边退场、NpcFactions、factionRotationCandidates、isSystemGranted、NativeSystemGrantLane、聚合入口、切族孤立行、三元组比对、QE-116
+-->
+
+- **判定规则**：系统发放面属于引擎级入口，不挂在单一家族下；切族时把该族接进聚合车道，而不是在上层加 family 分支。
+- **安全网**：每族两轴断言（轮换池 + 发放入口），并逐类比对 tests/failures/errors 三元组，避免「类级 ADDED 0」掩盖同类的用例级回归。

@@ -15,6 +15,7 @@ import com.aionemu.gameserver.questEngine.definition.QuestTransition;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.questEngine.tablelane.NativeTalkFixture;
+import com.aionemu.gameserver.questEngine.tablelane.SimpleCollectItemHandler;
 import com.aionemu.gameserver.questEngine.tablelane.SimpleHuntHandler;
 import com.aionemu.gameserver.questEngine.tablelane.SimpleSerialHuntHandler;
 import com.aionemu.gameserver.questEngine.tablelane.SimpleTalkHandler;
@@ -82,10 +83,11 @@ class RetailClientAcceptEntryPageTest {
 	 * page the client declares.
 	 */
 	private static final String GAP_BASELINE = "/quest/retail-accept-entry-page-gaps.tsv";
-	/** 已切换到原生车道的三个家族处理器。 / The three families already switched to the native lane. */
+	/** 已切换到原生车道的四个家族处理器。 / The four families already switched to the native lane. */
 	private static final SimpleTalkHandler TALK = NativeTalkFixture.handler();
 	private static final SimpleHuntHandler HUNT = SimpleHuntHandler.instance();
 	private static final SimpleSerialHuntHandler SERIAL = SimpleSerialHuntHandler.instance();
+	private static final SimpleCollectItemHandler COLLECT = SimpleCollectItemHandler.instance();
 
 	@Test
 	void entryPageFollowsTheClientTaskPage() {
@@ -107,11 +109,24 @@ class RetailClientAcceptEntryPageTest {
 	@Test
 	void select1EntryRegistersTheClientAcceptLadder() {
 		QuestDialogContract contract = QuestDialogContract.loadDefault();
-		CompiledQuestDefinition compiled = ProductionQuestDefinitions.definition(1144);
 		assertTrue(contract.hasButtonPage(1144, RetailClientAcceptEntryPage.SELECT1_PAGE),
 			"1144 must declare select1");
 		assertTrue(contract.hasButtonPage(1144, QuestDialogPage.SELECT1_1.id()),
 			"1144 must declare the select1 continuation");
+		if (nativeLane(1144) != null) {
+			// 1144 已切到原生车道：1011 首屏的 1012/1013 翻页由处理器原样回发（cab520 语义），
+			// 客户端未声明的续页必须零路由（与 typed 分支同形断言）。
+			// 1144 runs on the native lane now: the handler echoes the client-declared 1012/1013 page
+			// turns on the 1011 entry screen, and undeclared continuations stay unanswered.
+			int acquireNpc = nativeAcquireNpc(1144);
+			assertTrue(nativeServesPage(1144, acquireNpc, QuestDialogPage.SELECT1_1.id()),
+				"1144's 1011->1012 page turn must be served by the native lane");
+			assertEquals(contract.hasButtonPage(1144, QuestDialogPage.SELECT1_1_1.id()),
+				nativeServesPage(1144, acquireNpc, QuestDialogPage.SELECT1_1_1.id()),
+				"1144 must not invent a page beyond the client contract");
+			return;
+		}
+		CompiledQuestDefinition compiled = ProductionQuestDefinitions.definition(1144);
 		assertTrue(continuationRoute(compiled.definition(), QUEST_1144_ACQUIRE_NPC, QuestDialogAction.SELECT1_1.id(),
 				QuestDialogPage.SELECT1_1.id(), "unaccepted").isPresent(),
 			"1144's 1011->1012 page turn must be server-routed");
@@ -180,11 +195,12 @@ class RetailClientAcceptEntryPageTest {
 		NativeTalkFixture.clearPackets(player);
 		QuestEnv env = NativeTalkFixture.dialog(player, acquireNpc, questId, pageId);
 		boolean handled = TALK.routes(questId) ? TALK.onDialog(env)
-			: HUNT.routes(questId) ? HUNT.onDialog(env) : SERIAL.onDialog(env);
+			: HUNT.routes(questId) ? HUNT.onDialog(env)
+			: SERIAL.routes(questId) ? SERIAL.onDialog(env) : COLLECT.routes(questId) && COLLECT.onDialog(env);
 		return handled && NativeTalkFixture.dialogPages(player).equals(List.of(pageId));
 	}
 
-	/** 已切到原生车道的家族名（SimpleTalk / SimpleHunt / SimpleSerialHunt）；未切换返回 null。 /
+	/** 已切到原生车道的家族名（Talk / Hunt / SerialHunt / CollectItem）；未切换返回 null。 /
 	 * The native family owning the row, or null when the row still runs on the typed IR lane. */
 	private static String nativeLane(int questId) {
 		if (TALK.routes(questId)) {
@@ -195,6 +211,9 @@ class RetailClientAcceptEntryPageTest {
 		}
 		if (SERIAL.routes(questId)) {
 			return "SimpleSerialHunt";
+		}
+		if (COLLECT.routes(questId)) {
+			return "SimpleCollectItem";
 		}
 		return null;
 	}
@@ -207,7 +226,10 @@ class RetailClientAcceptEntryPageTest {
 		if (HUNT.routes(questId)) {
 			return HUNT.acquireNpc(questId);
 		}
-		return SERIAL.routes(questId) ? SERIAL.acquireNpc(questId) : null;
+		if (SERIAL.routes(questId)) {
+			return SERIAL.acquireNpc(questId);
+		}
+		return COLLECT.routes(questId) ? COLLECT.acquireNpc(questId) : null;
 	}
 
 	/** 同 NPC/动作/来源且确实下发客户端声明页的续页路由。 / A same-owner page-turn route showing the page. */

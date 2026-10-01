@@ -2,6 +2,7 @@ package com.aionemu.gameserver.questEngine.definition;
 
 import com.aionemu.gameserver.questEngine.retail.RetailItemNameIndex;
 import com.aionemu.gameserver.questEngine.tablelane.NativeQuestXmlTable;
+import com.aionemu.gameserver.questEngine.tablelane.SimpleCollectItemHandler;
 import com.aionemu.gameserver.questEngine.tablelane.SimpleHuntHandler;
 import com.aionemu.gameserver.questEngine.tablelane.SimpleSerialHuntHandler;
 import com.aionemu.gameserver.questEngine.tablelane.SimpleTalkHandler;
@@ -129,10 +130,10 @@ class QuestRewardItemGateTest {
 
 		production = new HashMap<>();
 		for (Integer qid : contract.keySet()) {
-			// P3 重锚（计划 §8.9）：已切到原生车道的行（SimpleTalk / SimpleHunt / SimpleSerialHunt）
-			// 没有 typed 定义，道具轴直接取自真端表行；其余行仍按生产视图（真端合成定义）反推。
-			// P3 re-anchor (plan §8.9): rows on the native lane carry no typed definition, so their item
-			// axis comes from the retail row itself; the remaining rows keep the synthesized view.
+			// P3/P4 重锚（计划 §8.9）：已切到原生车道的行（SimpleTalk / SimpleHunt / SimpleSerialHunt /
+			// SimpleCollectItem）没有 typed 定义，道具轴直接取自真端表行；其余行仍按生产视图反推。
+			// P3/P4 re-anchor: rows on the native lane carry no typed definition, so their item axis comes
+			// from the retail row itself; the remaining rows keep the synthesized view.
 			if (nativeOwned(qid)) {
 				production.put(qid, parseNativeRowItems(qid));
 			} else {
@@ -307,7 +308,8 @@ class QuestRewardItemGateTest {
 	private static boolean nativeOwned(int questId) {
 		return SimpleTalkHandler.instance().routes(questId)
 			|| SimpleHuntHandler.instance().routes(questId)
-			|| SimpleSerialHuntHandler.instance().routes(questId);
+			|| SimpleSerialHuntHandler.instance().routes(questId)
+			|| SimpleCollectItemHandler.instance().routes(questId);
 	}
 
 	/**

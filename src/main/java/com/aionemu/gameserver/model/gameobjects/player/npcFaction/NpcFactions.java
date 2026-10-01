@@ -30,7 +30,7 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_TITLE_INFO;
 import com.aionemu.gameserver.questEngine.definition.QuestCatalog;
 import com.aionemu.gameserver.questEngine.retail.RetailSystemGrantDispatcher;
 import com.aionemu.gameserver.questEngine.runtime.PlayerQuestStartEligibilityPort;
-import com.aionemu.gameserver.questEngine.tablelane.SimpleTalkHandler;
+import com.aionemu.gameserver.questEngine.tablelane.NativeSystemGrantLanes;
 import com.aionemu.gameserver.services.QuestService;
 import com.aionemu.gameserver.services.craft.CraftSkillUpdateService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
@@ -303,7 +303,7 @@ public class NpcFactions {
 					// from the native lane, which reads the retail quest.xml axes directly.
 					id -> catalog.findMetadata(id).isPresent()
 						? isNpcFactionRotationEligible(eligibility, id, faction.getId())
-						: SimpleTalkHandler.instance().factionRotationEligible(owner, id, faction.getId()),
+						: NativeSystemGrantLanes.factionRotationEligible(owner, id, faction.getId()),
 					id -> DataManager.NPC_FACTIONS_QUEST_DATA.isActiveOn(id, today)));
 				quests.addAll(nativeFactionRotationCandidates(catalog, faction.getId(), today));
 				quests.sort(null);
@@ -319,7 +319,7 @@ public class NpcFactions {
 			// 原生车道（已切换家族）先行；其余（XML/未切换家族的 typed 定义）仍走 retail 判定。
 			// Category-sentinel (system-granted) quests have no accept route, so grant on assignment:
 			// the native lane first, then the retail dispatcher for rows still served by typed definitions.
-			if (!SimpleTalkHandler.instance().grantSystemStart(owner, questId)) {
+			if (!NativeSystemGrantLanes.grantSystemStart(owner, questId)) {
 				RetailSystemGrantDispatcher.grantIfSystemGranted(owner, questId);
 			}
 		}
@@ -344,14 +344,14 @@ public class NpcFactions {
 	 */
 	private List<Integer> nativeFactionRotationCandidates(QuestCatalog catalog, int factionId, int today) {
 		List<Integer> candidates = new ArrayList<>();
-		for (int questId : SimpleTalkHandler.instance().factionRotationCandidates(factionId)) {
+		for (int questId : NativeSystemGrantLanes.factionRotationCandidates(factionId)) {
 			if (catalog.findMetadata(questId).isPresent()) {
 				continue;
 			}
 			if (!DataManager.NPC_FACTIONS_QUEST_DATA.isActiveOn(questId, today)) {
 				continue;
 			}
-			if (!SimpleTalkHandler.instance().factionRotationEligible(owner, questId, factionId)) {
+			if (!NativeSystemGrantLanes.factionRotationEligible(owner, questId, factionId)) {
 				continue;
 			}
 			candidates.add(questId);

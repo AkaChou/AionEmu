@@ -1,50 +1,103 @@
 package com.aionemu.gameserver.questEngine.definition;
 
-import com.aionemu.gameserver.questEngine.model.QuestStatus;
-import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import org.junit.jupiter.api.Test;
 
+import com.aionemu.gameserver.model.gameobjects.player.Player;
+import com.aionemu.gameserver.questEngine.model.QuestStatus;
+import com.aionemu.gameserver.questEngine.retail.RetailItemNameIndex;
+import com.aionemu.gameserver.questEngine.tablelane.CameraRegistry;
+import com.aionemu.gameserver.questEngine.tablelane.NativeNpcNameResolver;
+import com.aionemu.gameserver.questEngine.tablelane.NativeTalkFixture;
+import com.aionemu.gameserver.questEngine.tablelane.RawQuestVarsCodec;
+import com.aionemu.gameserver.questEngine.tablelane.SimpleCollectItemHandler;
+
+/**
+ * 3734（노흐사나_FOBJ 수집）龙之臂宝箱的原生采集合同。
+ * <p>
+ * P4 重锚（计划 §8.9）：真端 {@code Quest_SimpleCollectItem.xml} 行
+ * （接取/交付同主 {@code LF2_Brando_E_LHM}，{@code object1=IDAB1_MiniCastle_DragonArms_Q3704}，
+ * {@code quest.xml} {@code collect_item1=quest_3704a 4}）就是该任务的唯一事实；宝箱只在任务进行中可交互
+ * （真端 ACTION_ITEM_USE 的 START 态判定），旧 IR 断言（{@code unaccepted} 无路由、{@code var0} 投影）退场。
+ * <p>
+ * Native collect contract of quest 3734's dragon-arms chest: the retail row is the single source of
+ * truth and the chest is usable only while the quest is in progress.
+ */
 class Quest3734DragonArmsChestTest {
-	private static final int DRAGON_ARMS_CHEST = 700415;
+
+	private static final int QUEST_ID = 3734;
+	/** 真端接取/交付同主。 / The retail accept and hand-in NPC. */
+	private static final String QUEST_NPC = "LF2_Brando_E_LHM";
+	/** 真端 object1 列（龙之臂宝箱）。 / The retail object column. */
+	private static final String DRAGON_ARMS_CHEST = "IDAB1_MiniCastle_DragonArms_Q3704";
+	/** 真端 collect_item1 列（4 件）。 / The retail hand-in column (four). */
+	private static final String CHEST_ITEM = "quest_3704a";
+	private static final int CHEST_COUNT = 4;
 
 	@Test
-	void dragonArmsChestUsesTheObjectRouteOnlyAfterAcceptance() {
-		CompiledQuestDefinition definition = load(3734);
-		QuestEvent event = new QuestEvent.CanAct(
-			DRAGON_ARMS_CHEST, "ACTION_ITEM_USE");
-		QuestTransition gate = route(definition, "started", "started", event);
-
-		QuestNode startedNode = definition.definition().nodes().stream()
-			.filter(node -> node.label().equals("started"))
-			.findFirst().orElseThrow();
-		assertEquals(QuestStatus.START, startedNode.projection().status());
-		assertEquals(Map.of("var0", 0), startedNode.projection().variables());
-		assertEquals(List.of(), gate.conditions());
-		assertEquals(List.of(), gate.actions());
-		assertEquals(List.of(), gate.afterCommit());
-		assertFalse(definition.definition().transitions().stream().anyMatch(transition ->
-			transition.sourceNode().equals("unaccepted") && transition.event().equals(event)));
+	void dragonArmsChestIsTheNativeCollectTargetOfTheRetailRow() throws IOException {
+		SimpleCollectItemHandler handler = SimpleCollectItemHandler.instance();
+		int questNpc = npc(QUEST_NPC);
+		assertTrue(handler.routes(QUEST_ID), "3734 必须由 native 车道路由");
+		assertEquals(questNpc, handler.acquireNpc(QUEST_ID), "真端接取 NPC");
+		assertEquals(questNpc, handler.rewardNpc(QUEST_ID), "真端交付 NPC（与接取同主）");
+		assertEquals(List.of(objectId()), handler.collectObjects(QUEST_ID), "宝箱必须解析为静态数据 id");
+		assertEquals(List.of(itemId()), handler.handInItems(QUEST_ID), "交付物必须来自真端 collect_item1");
+		assertEquals(Map.of(1, CHEST_COUNT), CameraRegistry.instance().require(QUEST_ID).slotRequires(),
+			"相机槽 1 的 required 必须等于真端 collect_item1 的计数");
 	}
 
-	private static QuestTransition route(CompiledQuestDefinition definition,
-		String source, String target, QuestEvent event) {
-		return definition.definition().transitions().stream()
-			.filter(transition -> transition.sourceNode().equals(source)
-				&& transition.targetNode().equals(target)
-				&& transition.event().equals(event))
-			.findFirst().orElseThrow();
+	@Test
+	void chestIsUsableOnlyAfterAcceptanceAndSaturatesAtTheRetailCount() throws IOException {
+		SimpleCollectItemHandler handler = SimpleCollectItemHandler.instance();
+		Player player = NativeTalkFixture.player();
+		int chest = objectId();
+
+		// 未接取：宝箱不可交互（真端无任务路由），点击零推进。
+		assertFalse(handler.allowsItemUse(player, chest), "未接取时宝箱不得可交互");
+		assertFalse(handler.onObjectUse(player, QUEST_ID, chest), "未接取不得推进相机");
+
+		NativeTalkFixture.start(player, QUEST_ID);
+		assertTrue(handler.allowsItemUse(player, chest), "进行中的宝箱必须可交互");
+		for (int index = 0; index < CHEST_COUNT; index++) {
+			assertTrue(handler.onObjectUse(player, QUEST_ID, chest), "第 " + (index + 1) + " 次开箱必须推进");
+		}
+		assertFalse(handler.onObjectUse(player, QUEST_ID, chest), "满值后不得超发");
+		CameraRegistry.CameraRow camera = CameraRegistry.instance().require(QUEST_ID);
+		assertEquals(CHEST_COUNT, RawQuestVarsCodec.slotValue(camera.width(), vars(player), 1));
+		assertEquals(QuestStatus.START,
+			player.getQuestStateList().getQuestState(QUEST_ID).getStatus(),
+			"采集满值仍留在 START，交付 NPC 处才翻 REWARD");
 	}
 
-	/**
-	 * 生产零售视图：3734 已退役 XML，定义由真端 SimpleCollectItem 表合成（M5-b3 裁定）。
-	 * Production retail view: 3734 has no XML anymore and resolves through the retail table.
-	 */
-	private static CompiledQuestDefinition load(int questId) {
-		return ProductionQuestDefinitions.definition(questId);
+	private static int vars(Player player) {
+		return player.getQuestStateList().getQuestState(QUEST_ID).getQuestVars().getQuestVars();
+	}
+
+	private static int objectId() {
+		List<Integer> ids = NativeNpcNameResolver.instance().resolveMonsterIds(DRAGON_ARMS_CHEST);
+		assertEquals(1, ids.size(), () -> "真端对象名必须唯一解析: " + DRAGON_ARMS_CHEST);
+		return ids.getFirst();
+	}
+
+	private static int npc(String retailName) {
+		var match = NativeNpcNameResolver.instance().resolve(retailName);
+		assertEquals(NativeNpcNameResolver.Resolution.UNIQUE, match.resolution(),
+			() -> "真端 NPC 名必须唯一解析: " + retailName);
+		return match.npcIds().getFirst();
+	}
+
+	private static int itemId() throws IOException {
+		Integer id = RetailItemNameIndex.loadItemTemplates().resolve(CHEST_ITEM);
+		assertNotNull(id, () -> "真端物品符号必须解析: " + CHEST_ITEM);
+		return id;
 	}
 }

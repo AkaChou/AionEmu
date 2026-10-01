@@ -20,6 +20,8 @@ import com.aionemu.gameserver.questEngine.definition.QuestMetadata;
 import com.aionemu.gameserver.questEngine.definition.QuestStartCondition;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
+import com.aionemu.gameserver.questEngine.retail.RetailQuestDriver;
+import com.aionemu.gameserver.questEngine.retail.RetailQuestMetadataCompiler;
 import org.junit.jupiter.api.Test;
 
 import org.junit.jupiter.api.AfterEach;
@@ -417,7 +419,18 @@ class PlayerQuestStartEligibilityPortTest {
 
 	private static QuestMetadata metadata(int questId) throws Exception {
 		// 退役任务的生产 XML 只在 git 历史里：统一取生产视图（XML 目录 + 真端 overlay）。
-		return ProductionQuestDefinitions.definition(questId).definition().metadata();
+		// 已切到 native 车道的行（P1/P2/P3/P4 各家族）不再有 typed 定义 ⇒ 元数据直取真端
+		// quest.xml 规范元数据（与 native 领奖口同一条编译器），不再依赖退场的 IR 产物。
+		// Retired rows have no typed XML any more: the production view still serves the rows that keep a
+		// typed definition, while native-lane rows read the retail quest.xml metadata through the same
+		// canonical compiler the native reward flow uses.
+		try {
+			return ProductionQuestDefinitions.definition(questId).definition().metadata();
+		} catch (IllegalStateException missingTypedDefinition) {
+			return RetailQuestDriver.ensureLoaded().retailMetadataOf(questId)
+				.map(RetailQuestMetadataCompiler.Outcome::metadata)
+				.orElseThrow(() -> missingTypedDefinition);
+		}
 	}
 
 	private static QuestMetadata metadataFromXml(String metadata) {

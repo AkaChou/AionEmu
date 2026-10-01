@@ -3,19 +3,17 @@ package com.aionemu.gameserver.questEngine.runtime;
 import com.aionemu.gameserver.questEngine.definition.CompiledQuestDefinition;
 import com.aionemu.gameserver.questEngine.definition.ProductionQuestDefinitions;
 import com.aionemu.gameserver.questEngine.definition.QuestCatalogEntry;
-import com.aionemu.gameserver.questEngine.definition.QuestDialogAction;
-import com.aionemu.gameserver.questEngine.definition.QuestEvent;
-import com.aionemu.gameserver.questEngine.definition.QuestNode;
-import com.aionemu.gameserver.questEngine.definition.QuestTransition;
+import com.aionemu.gameserver.questEngine.tablelane.NativeTalkFixture;
+import com.aionemu.gameserver.questEngine.tablelane.SimpleCollectItemHandler;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.TreeMap;
 import java.util.function.IntFunction;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -52,49 +50,46 @@ class QuestInteractionObjectContractGateTest {
 			}
 		}
 		int total = checked;
-		// 下限随 owner 迁移下移：SimpleHunt(939)/SimpleSerialHunt(16)/SimpleTalk(3152) 三族切到 native 后
-		// 退出 typed 目录，可执行定义数从 P2 的 5000+ 降到本批的 3044；下限 3000 仍能拦住「目录塌成空壳」。
-		// The floor follows the owner migration: the three families switched to the native lane left the
-		// typed directory, taking the executable count from 5000+ (P2) down to 3044; 3000 still catches a
-		// collapse into an empty shell.
-		assertTrue(total > 3000, () -> "生产可执行定义数量异常：" + total);
+		// 下限随 owner 迁移下移：SimpleHunt(939)/SimpleSerialHunt(16)/SimpleTalk(3152)/SimpleCollectItem(177)
+		// 四族切到 native 后退出 typed 目录，可执行定义数从 P2 的 5000+ 降到 P3 的 3044、本批的 2867；
+		// 下限 2800 仍能拦住「目录塌成空壳」。
+		// The floor follows the owner migration: the four families switched to the native lane left the
+		// typed directory, taking the executable count from 5000+ (P2) to 3044 (P3) and 2867 (P4); 2800
+		// still catches a collapse into an empty shell.
+		assertTrue(total > 2800, () -> "生产可执行定义数量异常：" + total);
 		assertEquals(Map.of(), failures, () -> "启动期交互对象合同失败 "
 			+ failures.size() + " 例：" + failures);
 	}
 
 	/**
-	 * 14120/14150：真端 {@code talk_npc1} 步骤必须存在——先与中间 NPC 对话推进到采集行，
-	 * 采集对象的 {@code ACTION_ITEM_USE} 才能落在掉落生效步（{@code collect_progress}=1）上。
-	 * P0-2 规范形：推进 = 中间 NPC 的 QUEST_SELECT 一步直达（select2 页链与末按钮 SETPRO1 删除）。
-	 * The retail talk step must exist so the object-use route lands on the drop's collecting step.
-	 * Canonical since P0-2: the advancement is the mid NPC's QUEST_SELECT in one step (the select2
-	 * page chain and its terminal SETPRO1 button are gone).
+	 * 14120/14150：真端 {@code talk_npc1} 中继步必须在 native 车道上成立——中继链未走完时采集对象零推进，
+	 * 与该中间 NPC 对话推进后对象才生效（真端 {@code collect_progress}=1 的直读语义）。
+	 * <p>
+	 * 该步曾因缺失让服务端起不来（typed 时代的 {@code ACTION_ITEM_USE} 掉落步合同）；P4 起两行由
+	 * {@link SimpleCollectItemHandler} 原生直驱，合同改由 native 链路本身承担。
+	 * The retail talk step must hold on the native lane: the collect object stays a no-op until the mid
+	 * NPC has been talked to. The two rows were the ones whose missing step blocked server startup.
 	 */
 	@Test
-	void collectItemTalkStepsLandOnTheirCollectingStep() {
+	void collectItemTalkStepsGateTheirCollectingStepOnTheNativeLane() {
 		Map<Integer, Integer> talkNpcs = Map.of(14120, 730020, 14150, 204582);
+		SimpleCollectItemHandler handler = SimpleCollectItemHandler.instance();
 		for (int questId : TALK_STEP_QUESTS) {
-			CompiledQuestDefinition compiled = ProductionQuestDefinitions.definition(questId);
-			int talkNpc = talkNpcs.get(questId);
-			boolean hasTalkStep = compiled.definition().transitions().stream().anyMatch(transition ->
-				transition.event() instanceof QuestEvent.TalkToNpc talk
-					&& talk.npcId() == talkNpc && talk.dialogId() != null
-					&& talk.dialogId() == QuestDialogAction.QUEST_SELECT.id()
-					&& "started".equals(transition.sourceNode()) && "v1".equals(transition.targetNode()));
-			assertTrue(hasTalkStep, () -> "quest " + questId + " 必须由 talk_npc1=" + talkNpc
-				+ " 的 QUEST_SELECT 一步推进到 v1");
-			for (QuestTransition transition : compiled.definition().transitions()) {
-				if (!(transition.event() instanceof QuestEvent.CanAct(int templateId, String actionType))
-						|| !"ACTION_ITEM_USE".equals(actionType)) {
-					continue;
-				}
-				QuestNode source = compiled.definition().nodes().stream()
-					.filter(node -> Objects.equals(node.label(), transition.sourceNode()))
-					.findFirst().orElseThrow();
-				assertEquals(1, source.projection().variables().get("var0"),
-					() -> "quest " + questId + " 的 ACTION_ITEM_USE 必须落在采集行 var0=1（模板 "
-						+ templateId + "）");
-			}
+			List<Integer> relays = handler.relayNpcs(questId);
+			assertFalse(relays.isEmpty(), () -> "quest " + questId + " 必须装载真端 talk_npc1 中继步");
+			assertEquals(talkNpcs.get(questId), relays.getFirst(),
+				() -> "quest " + questId + " 的 talk_npc1 必须解析为静态数据 id");
+			assertTrue(handler.routes(questId), () -> "quest " + questId + " 必须由 native 车道路由");
+
+			var player = NativeTalkFixture.player();
+			NativeTalkFixture.start(player, questId);
+			int objectNpc = handler.collectObjects(questId).getFirst();
+			assertFalse(handler.onObjectUse(player, questId, objectNpc),
+				() -> "quest " + questId + " 中继链未走完时采集对象不得推进");
+			assertTrue(handler.onDialog(NativeTalkFixture.dialog(player, relays.getFirst(), questId, 26)),
+				() -> "quest " + questId + " 与 talk_npc1 对话必须推进链条");
+			assertTrue(handler.onObjectUse(player, questId, objectNpc),
+				() -> "quest " + questId + " 中继链走完后采集对象必须推进（采集行生效）");
 		}
 	}
 }

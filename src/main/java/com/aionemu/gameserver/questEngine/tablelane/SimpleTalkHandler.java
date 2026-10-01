@@ -20,7 +20,6 @@ import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.questEngine.retail.RetailGrantKind;
-import com.aionemu.gameserver.questEngine.retail.RetailQuestMetadataCompiler;
 import com.aionemu.gameserver.questEngine.retail.RetailItemNameIndex;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
@@ -71,7 +70,7 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
  * item_check hand-in gate resolves its work items through the retail channels (quest.xml
  * collect_item → quest_work_item → the row's own grant symbol) and fails closed when unresolved.
  */
-public final class SimpleTalkHandler {
+public final class SimpleTalkHandler implements NativeSystemGrantLane {
 
 	/** 中继引用：任务 ID + 步号 (1..3) + 中继 NPC ID。 / Relay reference: quest id + step (1..3) + relay NPC id. */
 	public record RelayStep(int questId, int step, int npcId) {
@@ -579,63 +578,10 @@ public final class SimpleTalkHandler {
 	 * evaluated here without synthesizing IR metadata.
 	 */
 	public boolean factionRotationEligible(Player player, int questId, int factionId) {
-		if (player == null || !isSystemGranted(questId) || grantKind(questId) != RetailGrantKind.FACTION
-				|| factionId <= 0 || factionId(questId) != factionId) {
-			return false;
-		}
-		var factions = player.getNpcFactions();
-		var faction = factions == null ? null : factions.getNpcFactionById(factionId);
-		if (faction == null || !faction.isActive()) {
-			return false;
-		}
-		NativeQuestXmlTable.QuestRow row = NativeQuestXmlTable.instance().find(questId).orElse(null);
-		if (row == null || player.getQuestStateList() == null) {
-			return false;
-		}
-		QuestState existing = player.getQuestStateList().getQuestState(questId);
-		boolean repeatable = intOrZero(row, "max_repeat_count") > 0;
-		if (existing != null && existing.getStatus() != QuestStatus.NONE
-				&& existing.getStatus() != QuestStatus.LOCKED && !repeatable) {
-			return false;
-		}
-		// 轴判定与 NPC 接取共用同一实现（NativeQuestStartPort），避免第二套事实来源。
-		int minLevel = intOrZero(row, "minlevel_permitted");
-		int maxLevel = intOrDefault(row, "maxlevel_permitted", Integer.MAX_VALUE);
-		int level = player.getLevel();
-		if (minLevel != 999 && level < minLevel) {
-			// 系统发放的阵营日常不走 NPC 接取（真端 CanAcquireQuest 不参与），故 999 在此不阻断。
-			return false;
-		}
-		if (level > maxLevel) {
-			return false;
-		}
-		if (!NativeQuestStartPort.racePermitted(row.text("race_permitted"),
-				player.getRace() == null ? null : player.getRace().name())) {
-			return false;
-		}
-		String classToken = player.getCommonData() == null || player.getCommonData().getPlayerClass() == null
-				? null
-				: player.getCommonData().getPlayerClass().name().toUpperCase(java.util.Locale.ROOT);
-		// 职业轴与 NPC 接取/生产元数据同源（真端 token → PlayerClass）。
-		// The class axis shares the retail token mapping used by NPC acquisition and quest metadata.
-		java.util.Set<String> permittedClasses = RetailQuestMetadataCompiler.permittedClassNames(
-				row.text("class_permitted"), minLevel);
-		if (!permittedClasses.isEmpty() && (classToken == null || !permittedClasses.contains(classToken))) {
-			return false;
-		}
-		String genderToken = player.getGender() == null ? null
-				: player.getGender().name().toLowerCase(java.util.Locale.ROOT);
-		return NativeQuestStartPort.tokenPermitted(row.text("gender_permitted"), genderToken);
-	}
-
-	private static int intOrZero(NativeQuestXmlTable.QuestRow row, String tag) {
-		Integer value = row.integer(tag);
-		return value == null ? 0 : value;
-	}
-
-	private static int intOrDefault(NativeQuestXmlTable.QuestRow row, String tag, int fallback) {
-		Integer value = row.integer(tag);
-		return value == null ? fallback : value;
+		// 轴判定抽到 NativeFactionRotation（P4 起第二个家族共用同一条事实）。
+		// The axis adjudication lives in NativeFactionRotation, shared from the second family onwards.
+		return NativeFactionRotation.eligible(player, questId, factionId, isSystemGranted(questId),
+			NativeFactionRotation.factionKind(grantKind(questId)), factionId(questId));
 	}
 
 	/**

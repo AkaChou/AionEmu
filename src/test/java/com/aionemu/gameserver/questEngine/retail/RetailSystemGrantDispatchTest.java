@@ -3,6 +3,8 @@ package com.aionemu.gameserver.questEngine.retail;
 import com.aionemu.gameserver.questEngine.definition.ProductionQuestDefinitions;
 import com.aionemu.gameserver.questEngine.definition.QuestCatalog;
 import com.aionemu.gameserver.questEngine.definition.RetiredQuestIds;
+import com.aionemu.gameserver.questEngine.tablelane.NativeSystemGrantLanes;
+import com.aionemu.gameserver.questEngine.tablelane.SimpleCollectItemHandler;
 import com.aionemu.gameserver.questEngine.tablelane.SimpleTalkHandler;
 import org.junit.jupiter.api.Test;
 
@@ -18,9 +20,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * 系统发放接线门禁（P0c）。守的是接线契约本身：
  * <ol>
  * <li><b>哨兵行必须可发放</b>：真端 {@code Quest_SimpleCollectItem.xml} / {@code Quest_SimpleTalk.xml} 里
- * {@code _faction_} 的每一行（SimpleTalk 只算已退役、由真端驱动的行），在生产定义（真端 overlay）里都必须带
- * {@code QuestEvent.SystemGrant} 边 —— 否则 {@code NpcFactions.sendDailyQuest()} 分配后无法发放
- * （只发提示、永远接不了）；</li>
+ * {@code _faction_} 的每一行，在其所属车道（P3 起 SimpleTalk、P4 起 SimpleCollectItem 均走 native）必须
+ * 既进得了势力轮换池、又过得了发放入口 —— 否则 {@code NpcFactions.sendDailyQuest()} 分配后无法发放
+ * （只发提示、永远接不了）；未切换家族仍断言生产定义（真端 overlay）的
+ * {@code QuestEvent.SystemGrant} 边；</li>
  * <li><b>无发放入口的哨兵不得被发放</b>：{@code _challengetask_}（挑战任务；本服只有完成回调）
  * 的 SimpleTalk 行仍由 XML 驱动，不得带该边；</li>
  * <li><b>区域行必须双满足</b>：{@code _area_} 的已退役行既要在 {@code ai-areas.xml} 的 quest_area 里
@@ -32,8 +35,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * {@code SystemGrant} edge in the production definition, and plain NPC-accept rows must not.
  */
 class RetailSystemGrantDispatchTest {
-	/** 真端 SimpleCollectItem 表（类别哨兵来源）。 / Retail SimpleCollectItem table path. */
-	private static final String COLLECT_ITEM_TABLE = "/aion/data/static_data/quest/retail/Quest_SimpleCollectItem.xml";
 	/** 生产区域发放表（quest_area 绑定）。 / Production quest-area grant table. */
 	private static final String QUEST_AREAS = "/aion/definitions/compact/ai/ai-areas.xml";
 	/** 真端 SimpleHunt 表（类别哨兵来源）。 / Retail SimpleHunt table path. */
@@ -45,21 +46,18 @@ class RetailSystemGrantDispatchTest {
 	/** SimpleHunt 已退役 {@code _faction_} 行的下限（P0c-3 批）。 / SimpleHunt batch floor. */
 	private static final int SIMPLE_HUNT_FACTION_FLOOR = 62;
 
-	/** 真端 {@code _faction_} 行（阵营日常哨兵）。 / Retail {@code _faction_} sentinel rows. */
-	private static List<Integer> collectItemFactionIds() throws IOException {
-		try (InputStream input = RetailSystemGrantDispatchTest.class.getResourceAsStream(COLLECT_ITEM_TABLE)) {
-			if (input == null) {
-				throw new IllegalStateException("missing resource " + COLLECT_ITEM_TABLE);
-			}
-			RetailSimpleCollectItemTable table = RetailSimpleCollectItemTable.load(input);
-			return table.questIds().stream()
-				.map(table::find)
-				.flatMap(Optional::stream)
-				.filter(entry -> entry.grantKind() == RetailGrantKind.FACTION)
-				.map(RetailSimpleCollectItemTable.Entry::questId)
-				.sorted()
-				.toList();
-		}
+	/**
+	 * SimpleCollectItem 的 {@code _faction_} 行（P4 后取自原生车道：行集与接取名类别都由
+	 * {@link SimpleCollectItemHandler} 装载，旧 {@code RetailSimpleCollectItemTable} 已随其编译器同批删除）。
+	 * SimpleCollectItem sentinel rows, read from the native lane after P4 (the retired
+	 * {@code RetailSimpleCollectItemTable} went away together with the family compiler).
+	 */
+	private static List<Integer> collectItemFactionIds() {
+		SimpleCollectItemHandler handler = SimpleCollectItemHandler.instance();
+		return handler.ownedQuestIds().stream()
+			.filter(questId -> handler.grantKind(questId) == RetailGrantKind.FACTION)
+			.sorted()
+			.toList();
 	}
 
 	/**
@@ -98,23 +96,43 @@ class RetailSystemGrantDispatchTest {
 			.orElse("<no-definition>");
 	}
 
+	/**
+	 * SimpleCollectItem 已切原生车道的 {@code _faction_} 行（真端 43 行）必须可发放：阵营轮换池
+	 * （{@link NativeSystemGrantLanes#factionRotationCandidates(int)}）收得进、发放入口
+	 * （{@link NativeSystemGrantLanes#isSystemGranted(int)}）放得过，两轴缺一即「分配后永远接不了」。
+	 * P4 前该断言落在 typed 目录的 {@code SystemGrant} 边上，该边随本族切换批退出生产视图。
+	 * The faction-sentinel rows of the retired family must stay both rotation-eligible and grantable
+	 * after the P4 switch; the typed {@code SystemGrant} edge they used to assert on is gone.
+	 */
 	@Test
-	void everyFactionSentinelRowCarriesSystemGrantEdge() throws IOException {
-		QuestCatalog catalog = ProductionQuestDefinitions.catalog();
-		// 真端表含少量**本服宇宙之外**的行（如 39611/47112/49611，catalog 与 git 历史都没有），
-		// 它们没有定义，不参与接线契约；只在"生产宇宙内"的行上断言。
-		// The retail table carries a few rows outside this server's universe (e.g. 39611/47112/49611);
-		// only in-universe rows take part in the wiring contract.
-		List<Integer> inUniverse = collectItemFactionIds().stream()
-			.filter(questId -> catalog.findExecutable(questId).isPresent())
-			.toList();
-		assertTrue(inUniverse.size() >= COLLECT_ITEM_FACTION_FLOOR,
-			() -> "生产宇宙内的 _faction_ 行数异常（应 ≥" + COLLECT_ITEM_FACTION_FLOOR + "）: " + inUniverse.size());
-		List<String> missing = inUniverse.stream()
-			.filter(questId -> !RetailSystemGrantDispatcher.isSystemGranted(catalog, questId))
-			.map(questId -> questId + "=" + eventTypes(catalog, questId))
-			.toList();
-		assertTrue(missing.isEmpty(), () -> "哨兵行缺 SystemGrant 边（分配后无法发放）: " + missing);
+	void nativeSimpleCollectItemFactionRowsAreRotationEligibleAndGrantable() {
+		SimpleCollectItemHandler handler = SimpleCollectItemHandler.instance();
+		List<Integer> routed = collectItemFactionIds().stream().filter(handler::routes).toList();
+		List<Integer> rotationBound = routed.stream().filter(questId -> handler.factionId(questId) != 0).toList();
+		List<Integer> outsideRotation = routed.stream().filter(questId -> handler.factionId(questId) == 0).toList();
+		assertTrue(rotationBound.size() >= COLLECT_ITEM_FACTION_FLOOR,
+			() -> "轮换宇宙内的原生 SimpleCollectItem _faction_ 行数异常（应 ≥" + COLLECT_ITEM_FACTION_FLOOR
+				+ "）: " + rotationBound.size());
+		List<String> problems = new java.util.ArrayList<>();
+		for (int questId : rotationBound) {
+			int factionId = handler.factionId(questId);
+			if (!NativeSystemGrantLanes.factionRotationCandidates(factionId).contains(questId)) {
+				problems.add(questId + "=不在势力 " + factionId + " 的轮换池");
+			}
+			if (!NativeSystemGrantLanes.isSystemGranted(questId)) {
+				problems.add(questId + "=发放入口 isSystemGranted=false（分配后接不了）");
+			}
+		}
+		assertTrue(problems.isEmpty(), () -> "原生采集哨兵行的发放接线缺口: " + problems);
+		// 轮换宇宙外的行必须冻结为「任何势力池都收不进」——否则会被误当作可发放。
+		// Rows outside the rotation universe must stay out of every faction pool.
+		for (int questId : outsideRotation) {
+			for (int factionId = 1; factionId <= 20; factionId++) {
+				int poolId = factionId;
+				assertFalse(NativeSystemGrantLanes.factionRotationCandidates(factionId).contains(questId),
+					() -> "轮换宇宙外的行 " + questId + " 混进了势力 " + poolId + " 的池");
+			}
+		}
 	}
 
 	/**

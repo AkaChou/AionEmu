@@ -1,83 +1,120 @@
 package com.aionemu.gameserver.questEngine.definition;
 
-import com.aionemu.gameserver.questEngine.model.QuestStatus;
-import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.junit.jupiter.api.Test;
+
+import com.aionemu.gameserver.model.gameobjects.player.Player;
+import com.aionemu.gameserver.questEngine.model.QuestStatus;
+import com.aionemu.gameserver.questEngine.retail.RetailItemNameIndex;
+import com.aionemu.gameserver.questEngine.tablelane.CameraRegistry;
+import com.aionemu.gameserver.questEngine.tablelane.NativeNpcNameResolver;
+import com.aionemu.gameserver.questEngine.tablelane.NativeTalkFixture;
+import com.aionemu.gameserver.questEngine.tablelane.RawQuestVarsCodec;
+import com.aionemu.gameserver.questEngine.tablelane.SimpleCollectItemHandler;
 
 /**
- * 锁定 18501 两个哈拉梅尔交互物的类型化使用合同。
- * Locks the typed use contract for quest 18501's two Haramel interaction objects.
+ * 18501（상인 슈고의 요청_천）两个哈拉梅尔交互物的原生采集合同。
+ * <p>
+ * P4 重锚（计划 §8.9）：真端 {@code Quest_SimpleCollectItem.xml} 的两列
+ * （{@code object1}=IDNovice_FOBJ_ODBox / {@code object2}=IDNovice_Rough_Odum）与 {@code quest.xml} 的
+ * {@code collect_item1/2}（各 5 件）在同一下标上成线，故对象点击只推进自己那一槽；旧 IR 断言
+ * （typed 节点 / 掉落 {@code collectingStep} 形状 / SELECT 页链）随本族切换批退场。
+ * <p>
+ * Native collect contract of 18501's two Haramel interaction objects: the retail table's object columns
+ * and the {@code quest.xml} hand-in columns line up on the same index, so each object advances only its
+ * own camera slot. Positive end-to-end coverage (with an injected inventory port) lives in
+ * {@code SimpleCollectItemNativeFamilyGateTest}; this class asserts the production wiring.
  */
 class Quest18501InteractionObjectTest {
+
+	private static final int QUEST_ID = 18501;
+	/** Shugo_IDNovice_1 / Shugo_IDNovice_2（真端 acquired/reward 列 → 静态 npc_template）。 */
+	private static final int ACCEPT_NPC = 799522;
+	private static final int REWARD_NPC = 799523;
+	/** 真端 object1 / object2 列名。 / The retail object columns. */
+	private static final String OD_BOX = "IDNovice_FOBJ_ODBox";
+	private static final String ODUM = "IDNovice_Rough_Odum";
+	/** 真端 collect_item1 / collect_item2 列（各 5 件）。 / The retail hand-in columns (five each). */
+	private static final String OD_BOX_ITEM = "quest_18501a";
+	private static final String ODUM_ITEM = "quest_18501b";
+	private static final int OD_BOX_COUNT = 5;
+	private static final int ODUM_COUNT = 5;
+
 	@Test
-	void bothOdiumObjectsExposeTheActionItemGateAndDropBackedTalkRoute() {
-		CompiledQuestDefinition definition = load();
-		assertEquals(QuestStatus.START, node(definition, "started").projection().status());
-		assertEquals(Map.of("var0", 0), node(definition, "started").projection().variables());
+	void bothOdiumObjectsCarryTheirOwnSlotFromTheRetailColumns() throws IOException {
+		SimpleCollectItemHandler handler = SimpleCollectItemHandler.instance();
+		assertTrue(handler.routes(QUEST_ID), "18501 必须由 native 车道路由");
+		assertEquals(ACCEPT_NPC, handler.acquireNpc(QUEST_ID), "真端接取 NPC");
+		assertEquals(REWARD_NPC, handler.rewardNpc(QUEST_ID), "真端交付 NPC");
+		assertEquals(List.of(objectId(OD_BOX), objectId(ODUM)), handler.collectObjects(QUEST_ID),
+			"两列对象必须逐列解析为静态数据 id");
+		assertEquals(List.of(itemId(OD_BOX_ITEM), itemId(ODUM_ITEM)), handler.handInItems(QUEST_ID),
+			"两列交付物必须逐列来自真端 collect_item1/2");
+		assertEquals(Map.of(1, OD_BOX_COUNT, 2, ODUM_COUNT),
+			CameraRegistry.instance().require(QUEST_ID).slotRequires(),
+			"相机槽 1/2 的 required 必须等于真端 collect_item1/2 的计数");
+	}
 
-		for (int[] object : new int[][]{{700833, 182212001}, {700951, 182212002}}) {
-			int objectId = object[0];
-			int itemId = object[1];
-			QuestTransition gate = route(definition, new QuestEvent.CanAct(objectId, "ACTION_ITEM_USE"));
-			assertEquals("started", gate.sourceNode());
-			assertEquals("started", gate.targetNode());
-			assertEquals(List.of(), gate.actions());
-			assertEquals(List.of(), gate.afterCommit());
+	@Test
+	void eachObjectAdvancesOnlyItsOwnColumnAndSaturatesThere() throws IOException {
+		SimpleCollectItemHandler handler = SimpleCollectItemHandler.instance();
+		Player player = NativeTalkFixture.player();
+		int odBox = objectId(OD_BOX);
+		int odum = objectId(ODUM);
 
-			QuestTransition use = route(definition, new QuestEvent.TalkToNpc(objectId, -1));
-			assertEquals("started", use.sourceNode());
-			assertEquals("started", use.targetNode());
-			assertEquals(List.of(), use.actions());
-			assertEquals(List.of(), use.afterCommit());
+		// 未接取：零推进（真端该对象只在任务进行中响应）。
+		assertFalse(handler.onObjectUse(player, QUEST_ID, odBox), "未接取不得推进相机");
+		assertFalse(handler.onObjectUse(player, QUEST_ID, odum), "未接取不得推进相机");
 
-			assertTrue(definition.definition().metadata().drops().stream().anyMatch(drop ->
-				drop.npcId() == objectId && drop.itemId() == itemId
-					&& drop.chance() == 100 && drop.eachMember() && drop.collectingStep() == 0));
-			assertFalse(definition.definition().transitions().stream().anyMatch(transition ->
-				"unaccepted".equals(transition.sourceNode())
-					&& ((transition.event() instanceof QuestEvent.TalkToNpc talk && talk.npcId() == objectId)
-						|| (transition.event() instanceof QuestEvent.CanAct canAct
-							&& canAct.templateId() == objectId))));
+		NativeTalkFixture.start(player, QUEST_ID);
+		CameraRegistry.CameraRow camera = CameraRegistry.instance().require(QUEST_ID);
+		for (int index = 0; index < OD_BOX_COUNT; index++) {
+			assertTrue(handler.onObjectUse(player, QUEST_ID, odBox),
+				"槽 1 第 " + (index + 1) + " 次点击必须推进");
 		}
+		assertFalse(handler.onObjectUse(player, QUEST_ID, odBox), "槽 1 满值后不得超发");
+		int afterSlotOne = vars(player);
+		assertEquals(OD_BOX_COUNT, RawQuestVarsCodec.slotValue(camera.width(), afterSlotOne, 1),
+			"object1 只能推进槽 1");
+		assertEquals(0, RawQuestVarsCodec.slotValue(camera.width(), afterSlotOne, 2),
+			"object1 不得推进槽 2");
+
+		for (int index = 0; index < ODUM_COUNT; index++) {
+			assertTrue(handler.onObjectUse(player, QUEST_ID, odum),
+				"槽 2 第 " + (index + 1) + " 次点击必须推进");
+		}
+		assertFalse(handler.onObjectUse(player, QUEST_ID, odum), "槽 2 满值后不得超发");
+		int bothFull = vars(player);
+		assertEquals(OD_BOX_COUNT, RawQuestVarsCodec.slotValue(camera.width(), bothFull, 1));
+		assertEquals(ODUM_COUNT, RawQuestVarsCodec.slotValue(camera.width(), bothFull, 2),
+			"object2 只能推进槽 2");
+		assertEquals(QuestStatus.START,
+			player.getQuestStateList().getQuestState(QUEST_ID).getStatus(),
+			"采集族满值仍留在 START（交付 NPC 处才翻 REWARD）");
 	}
 
-	@Test
-	void finishDialogOnTheAcceptConfirmPageReturnsToTheSelectionList() {
-		CompiledQuestDefinition definition = load();
-		QuestTransition finish = definition.definition().transitions().stream()
-			.filter(transition -> "started".equals(transition.sourceNode())
-				&& QuestEvent.matches(transition.event(),
-					new QuestEvent.TalkToNpc(799522, QuestDialogAction.FINISH_DIALOG.id())))
-			.findFirst().orElseThrow();
-		assertEquals("started", finish.targetNode());
-		assertEquals(List.of(), finish.actions());
-		assertEquals(List.of(new AfterCommitAction.ShowQuestSelectionDialog(QuestDialogPage.SELECT_QUEST.id())),
-			finish.afterCommit());
+	private static int vars(Player player) {
+		return player.getQuestStateList().getQuestState(QUEST_ID).getQuestVars().getQuestVars();
 	}
 
-	private static QuestTransition route(CompiledQuestDefinition definition, QuestEvent event) {
-		return definition.definition().transitions().stream()
-			.filter(transition -> "started".equals(transition.sourceNode())
-				&& "started".equals(transition.targetNode())
-				&& QuestEvent.matches(transition.event(), event))
-			.findFirst().orElseThrow();
+	private static int objectId(String retailName) {
+		List<Integer> ids = NativeNpcNameResolver.instance().resolveMonsterIds(retailName);
+		assertEquals(1, ids.size(), () -> "真端对象名必须唯一解析: " + retailName);
+		assertNotNull(ids.getFirst());
+		return ids.getFirst();
 	}
 
-	private static QuestNode node(CompiledQuestDefinition definition, String label) {
-		return definition.definition().nodes().stream()
-			.filter(candidate -> candidate.label().equals(label))
-			.findFirst().orElseThrow();
-	}
-
-	private static CompiledQuestDefinition load() {
-		// 已退役任务不再有 XML：问生产视图（XML 目录 + 真端 overlay）。
-		// Retired quests have no XML left; ask the production view (XML directory + retail overlay).
-		return ProductionQuestDefinitions.definition(18501);
+	private static int itemId(String symbol) throws IOException {
+		Integer id = RetailItemNameIndex.loadItemTemplates().resolve(symbol);
+		assertNotNull(id, () -> "真端物品符号必须解析: " + symbol);
+		return id;
 	}
 }

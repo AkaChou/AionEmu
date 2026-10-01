@@ -57,6 +57,7 @@ import com.aionemu.gameserver.questEngine.definition.QuestPvpCreditSource;
 import com.aionemu.gameserver.questEngine.handlers.HandlerResult;
 import com.aionemu.gameserver.questEngine.tablelane.HtmlPagesRegistry;
 import com.aionemu.gameserver.questEngine.tablelane.CameraRegistry;
+import com.aionemu.gameserver.questEngine.tablelane.SimpleCollectItemHandler;
 import com.aionemu.gameserver.questEngine.tablelane.SimpleHuntHandler;
 import com.aionemu.gameserver.questEngine.tablelane.SimpleSerialHuntHandler;
 import com.aionemu.gameserver.questEngine.tablelane.SimpleTalkHandler;
@@ -187,7 +188,8 @@ public class QuestEngine implements GameEngine {
 	/** 返回指定 owner 是否拥有实际匹配事件的路由。 / Return whether the owner has a route matching the event. */
 	public boolean hasMatchingRoutes(QuestEvent event, int questId) {
 		if (SimpleHuntHandler.instance().routes(questId) || SimpleSerialHuntHandler.instance().routes(questId)
-				|| SimpleTalkHandler.instance().routes(questId)) {
+				|| SimpleTalkHandler.instance().routes(questId)
+				|| SimpleCollectItemHandler.instance().routes(questId)) {
 			return true;
 		}
 		return productionDispatcher.hasMatchingRoutes(event, questId);
@@ -265,6 +267,12 @@ public class QuestEngine implements GameEngine {
 					return true;
 				}
 			}
+			// 真端表驱动车道：SimpleCollectItem 采集对象/交付 NPC 由原生处理器直驱（P4 切换批）
+			if (requestedOwner != 0 && SimpleCollectItemHandler.instance().routes(requestedOwner)) {
+				if (SimpleCollectItemHandler.instance().onDialog(env)) {
+					return true;
+				}
+			}
 			if (requestedOwner != 0 && typed.owns(requestedOwner)) {
 				QuestEvent event = npcId == 0
 					? new QuestEvent.QuestDialog(env.getDialogId())
@@ -296,6 +304,18 @@ public class QuestEngine implements GameEngine {
 
 			if (requestedOwner == 0 && npcId != 0) {
 				QuestEvent event = new QuestEvent.TalkToNpc(npcId, env.getDialogId(), npc.getObjectId());
+				// 客户端直接交互采集对象（questId==0 入口）：native 采集族先手匹配（单一 owner 不变量：
+				// 该行已切 native，typed 目录里没有它的路由）。
+				// Direct client interaction with a collect object (questId==0 entry): the native collect
+				// family matches first (single-owner invariant: switched rows carry no typed route).
+				for (SimpleCollectItemHandler.CollectTargetRef ref
+						: SimpleCollectItemHandler.instance().targetsForNpc(npcId)) {
+					if (!SimpleCollectItemHandler.instance().routes(ref.questId())) {
+						continue;
+					}
+					env.setQuestId(ref.questId());
+					return true;
+				}
 				// 参考 legacy 引擎：当调用方确实提供了 questId==0 的任务对话入口（交互物 AI 等）时，
 				// 按 NPC 任务顺序逐个尝试，让第一个真正处理该动作的 owner 胜出。
 				// 客户端 NPC 对话选择没有任务上下文时已在 CM_DIALOG_SELECT 按普通对话处理，不会走到这里。
@@ -441,6 +461,10 @@ public class QuestEngine implements GameEngine {
 			return true;
 		}
 		if (SimpleSerialHuntHandler.instance().onKill(env.getPlayer(), npc.getNpcId())) {
+			return true;
+		}
+		// 真端表驱动车道：SimpleCollectItem 采集怪击杀推进同一相机（掉落仍由掉落族发放）。
+		if (SimpleCollectItemHandler.instance().onKill(env.getPlayer(), npc.getNpcId())) {
 			return true;
 		}
 		try {
@@ -1250,6 +1274,14 @@ public class QuestEngine implements GameEngine {
 		QuestRuntimeDispatcher typed = productionDispatcher;
 		QuestEvent event = new QuestEvent.CanAct(templateId, questActionType.name());
 		try {
+			// 真端表驱动车道：采集对象（QUEST_USE_ITEM 交互物）的可交互性由 native 侧按
+			// START 态 + 中继链完成度判定（族切换后没有 typed 路由可查）。
+			// Native lane: a collect object's usability is adjudicated natively (START state plus
+			// relay-chain completion); after the family switch there is no typed route to consult.
+			if (questActionType == QuestActionType.ACTION_ITEM_USE
+					&& SimpleCollectItemHandler.instance().allowsItemUse(env.getPlayer(), templateId)) {
+				return true;
+			}
 			var result = typed.dispatch(event, env.getPlayer().getObjectId(), 0,
 				QuestDispatchContract.EXCLUSIVE);
 			if (result.claimed() && !result.handled()) {
@@ -2217,6 +2249,7 @@ public class QuestEngine implements GameEngine {
 			SimpleHuntHandler.instance().installInterest(this);
 			SimpleSerialHuntHandler.instance().installInterest(this);
 			SimpleTalkHandler.instance().installInterest(this);
+			SimpleCollectItemHandler.instance().installInterest(this);
 			installProductionDefinitions(prepared == null
 					? prepareProductionDefinitions(awaitProductionCatalogPreload()) : prepared);
 			log.info(I18n.get("log.quest_engine.typed_owners_loaded", productionDispatcher.owners().size()));

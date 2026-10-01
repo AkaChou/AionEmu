@@ -19,6 +19,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.concurrent.ConcurrentHashMap;
+import com.aionemu.gameserver.questEngine.tablelane.SimpleCollectItemHandler;
 import com.aionemu.gameserver.questEngine.tablelane.SimpleHuntHandler;
 import com.aionemu.gameserver.questEngine.tablelane.SimpleSerialHuntHandler;
 import com.aionemu.gameserver.questEngine.tablelane.SimpleTalkHandler;
@@ -57,9 +58,6 @@ public final class RetailQuestDriver {
 		"/aion/data/static_data/quest/retail/data_driven_quest.xml";
 	/** 真端 CombineTask 模板表。 / The retail CombineTask template table. */
 	private static final String COMBINE_TASK_TABLE = "/aion/data/static_data/quest/retail/Quest_CombineTask.xml";
-	/** 真端 SimpleCollectItem 模板表。 / The retail SimpleCollectItem template table. */
-	private static final String SIMPLE_COLLECT_ITEM_TABLE =
-		"/aion/data/static_data/quest/retail/Quest_SimpleCollectItem.xml";
 	/** 本服配方模板（{@code (skillid, productid)} → recipe id）。 / Local recipe templates. */
 	private static final String RECIPE_TEMPLATES = "/aion/data/static_data/recipe/recipe_templates.xml";
 	private static final String RETAIL_QUEST_XML = "/aion/data/static_data/quest/retail/quest.xml";
@@ -92,7 +90,6 @@ public final class RetailQuestDriver {
 	private final Set<Integer> retailOwnedSimpleCollectItem;
 	private final RetailQuestCatalog catalog;
 	private final RetailCombineTaskTable combineTaskTable;
-	private final RetailSimpleCollectItemTable simpleCollectItemTable;
 	private final RetailRecipeIndex recipeIndex;
 	private final RetailClientDialogExits clientDialogExits;
 	private final RetailClientSummaryRows clientSummaryRows;
@@ -135,7 +132,7 @@ public final class RetailQuestDriver {
 			Set<Integer> retailOwnedDataDriven,
 			Set<Integer> retailOwnedCombineTask, Set<Integer> retailOwnedSimpleCollectItem,
 			RetailQuestCatalog catalog,
-			RetailCombineTaskTable combineTaskTable, RetailSimpleCollectItemTable simpleCollectItemTable,
+			RetailCombineTaskTable combineTaskTable,
 			RetailRecipeIndex recipeIndex,
 			RetailClientDialogExits clientDialogExits, RetailClientSummaryRows clientSummaryRows,
 			RetailClientRewardNpcs clientRewardNpcs, RetailClientAcceptNpcSets clientAcceptNpcSets,
@@ -168,7 +165,6 @@ public final class RetailQuestDriver {
 		this.retailOwned.addAll(retailOwnedSimpleCollectItem);
 		this.catalog = catalog;
 		this.combineTaskTable = combineTaskTable;
-		this.simpleCollectItemTable = simpleCollectItemTable;
 		this.recipeIndex = recipeIndex;
 		this.clientDialogExits = clientDialogExits;
 		this.clientSummaryRows = clientSummaryRows;
@@ -288,7 +284,8 @@ public final class RetailQuestDriver {
 			var entry = actual.findEntry(questId);
 			if (entry.isEmpty()) {
 				if ((SimpleHuntHandler.instance().owns(questId) || SimpleSerialHuntHandler.instance().owns(questId)
-						|| SimpleTalkHandler.instance().owns(questId))
+						|| SimpleTalkHandler.instance().owns(questId)
+						|| SimpleCollectItemHandler.instance().owns(questId))
 						&& "RETAIL_TABLE".equals(row.getValue())) {
 					nativeCoveredCount++;
 					continue;
@@ -356,6 +353,15 @@ public final class RetailQuestDriver {
 	 * 同一进程只装载一次真端表与索引，避免预加载线程和测试入口重复构建整个目录。
 	 * Loads the retail tables and indexes once across concurrent production/preload callers.
 	 */
+	/**
+	 * 确保真端驱动已按类路径资源装载并返回（供 native 车道只读消费元数据，不触发目录覆盖校验）。
+	 * Ensures the retail driver is loaded from classpath resources and returns it; the native lane
+	 * consumes metadata read-only through this entry without running catalog overlay verification.
+	 */
+	public static RetailQuestDriver ensureLoaded() throws IOException {
+		return currentOrLoad();
+	}
+
 	private static RetailQuestDriver currentOrLoad() throws IOException {
 		RetailQuestDriver driver = instance;
 		if (driver == null) {
@@ -402,7 +408,11 @@ public final class RetailQuestDriver {
 				} else if ("CombineTask".equals(parts[2])) {
 					retailOwnedCombine.add(questId);
 				} else if ("SimpleCollectItem".equals(parts[2])) {
-					retailOwnedCollectItem.add(questId);
+					// P4 原生表驱动切换：SimpleCollectItem 262 行由 SimpleCollectItemHandler 原生直驱，
+					// 不再生成旧 IR 节点（同批删旧：本族 compiler 入口切断）。
+					// P4 native switch: the 262 SimpleCollectItem rows are driven natively by
+					// SimpleCollectItemHandler and no longer synthesize IR nodes; the compiler entry is cut.
+					// retailOwnedCollectItem.add(questId);
 				}
 			} else {
 				reasons.put(Integer.parseInt(parts[0]), parts[1] + ":" + parts[3]);
@@ -437,10 +447,6 @@ public final class RetailQuestDriver {
 		try (InputStream input = open(COMBINE_TASK_TABLE)) {
 			combineTaskTable = RetailCombineTaskTable.load(input);
 		}
-		RetailSimpleCollectItemTable simpleCollectItemTable;
-		try (InputStream input = open(SIMPLE_COLLECT_ITEM_TABLE)) {
-			simpleCollectItemTable = RetailSimpleCollectItemTable.load(input);
-		}
 		RetailRecipeIndex recipeIndex = RetailRecipeIndex.build(List.of(open(RECIPE_TEMPLATES)));
 		RetailClientDialogExits clientDialogExits = RetailClientDialogExits.defaultExits();
 		RetailClientSummaryRows clientSummaryRows = RetailClientSummaryRows.defaultSummaryRows();
@@ -467,7 +473,7 @@ public final class RetailQuestDriver {
 		return new RetailQuestDriver(retailOwnedHunt, retailOwnedSerialHunt, retailOwnedUseItem,
 			retailOwnedItemPlay, retailOwnedDataDriven, retailOwnedCombine, retailOwnedCollectItem,
 			new RetailQuestCatalog(table, combineTaskTable, npcIndex), combineTaskTable,
-			simpleCollectItemTable, recipeIndex, clientDialogExits, clientSummaryRows, clientRewardNpcs,
+			recipeIndex, clientDialogExits, clientSummaryRows, clientRewardNpcs,
 			clientAcceptNpcSets, clientHandinNpcSets, retailTable, npcIndex, itemIndex, randomRewardIds(),
 			nameIds(), serialHuntTable, clientHuntStages,
 			useItemTable, useItemReport, itemPlayTable, questAreas,
@@ -565,9 +571,6 @@ public final class RetailQuestDriver {
 		if (retailOwnedCombineTask.contains(questId)) {
 			return compileCombineTask(questId);
 		}
-		if (retailOwnedSimpleCollectItem.contains(questId)) {
-			return compileSimpleCollectItem(questId);
-		}
 		if (retailOwnedSimpleSerialHunt.contains(questId)) {
 			return compileSimpleSerialHunt(questId);
 		}
@@ -597,31 +600,6 @@ public final class RetailQuestDriver {
 			}
 			var outcome = RetailCombineTaskDefinitionCompiler.compile(row.orElseThrow(), npcIndex, itemIndex,
 				recipeIndex, metadata);
-			if (outcome.accepted()) {
-				return Optional.of(outcome.definition());
-			}
-			rejections.put(questId, outcome.rejectionCode());
-			return Optional.empty();
-		} catch (RuntimeException e) {
-			rejections.put(questId, "RUNTIME_FAILURE");
-			return Optional.empty();
-		}
-	}
-
-	/** SimpleCollectItem 行 → 定义（交付检查 + 完成流；异形按稳定码拒绝留 XML）。 */
-	private Optional<CompiledQuestDefinition> compileSimpleCollectItem(int questId) {
-		try {
-			var row = simpleCollectItemTable.find(questId);
-			if (row.isEmpty()) {
-				rejections.put(questId, "RETAIL_ROW_MISSING");
-				return Optional.empty();
-			}
-			var metadata = retailMetadata(questId);
-			if (metadata == null) {
-				return Optional.empty();
-			}
-			var outcome = RetailSimpleCollectItemDefinitionCompiler.compile(row.orElseThrow(), npcIndex, metadata,
-				clientDialogExits, clientSummaryRows, clientRewardNpcs);
 			if (outcome.accepted()) {
 				return Optional.of(outcome.definition());
 			}

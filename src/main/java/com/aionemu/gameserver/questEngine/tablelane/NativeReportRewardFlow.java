@@ -100,6 +100,15 @@ public final class NativeReportRewardFlow {
 	}
 
 	/**
+	 * 元数据来源与结算体都可注入（只服务包内单测：typed 目录未装载时用真端驱动元数据）。
+	 * Both the metadata source and the settlement sink are injectable (package-private test seam:
+	 * use the retail driver metadata when the typed catalog is not booted).
+	 */
+	static NativeReportRewardFlow forTest(MetadataSource metadata, CompletionSink sink) {
+		return new NativeReportRewardFlow(metadata, sink);
+	}
+
+	/**
 	 * 结算并完成任务行。
 	 * Settles the row and completes the quest.
 	 * @param env 任务环境（对话动作 id 提供奖励窗选项下标）/ quest environment

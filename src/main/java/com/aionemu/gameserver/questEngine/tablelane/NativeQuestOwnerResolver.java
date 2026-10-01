@@ -92,6 +92,9 @@ public final class NativeQuestOwnerResolver {
 		for (NativeQuestTableLoader.SimpleHuntRow row : NativeQuestTableLoader.instance().rows()) {
 			retailTableIds.add(row.questId());
 		}
+		for (NativeQuestTableLoader.SimpleCollectItemRow row : NativeQuestTableLoader.instance().collectRows()) {
+			retailTableIds.add(row.questId());
+		}
 		return new NativeQuestOwnerResolver(Collections.unmodifiableSet(retailTableIds),
 				Collections.unmodifiableSet(scanXmlDefinitionIds(loader)));
 	}

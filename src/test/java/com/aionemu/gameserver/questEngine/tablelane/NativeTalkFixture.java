@@ -170,6 +170,9 @@ public final class NativeTalkFixture {
 
 	/** 记录式假背包端口。 / A recording fake inventory port. */
 	public static final class RecordingInventory implements NativeInventoryPort {
+		/** 只读空实现（不需要物品通道的用例）。 / A read-only empty port for cases without item traffic. */
+		public static final RecordingInventory EMPTY = new RecordingInventory();
+
 		private final Map<Integer, Long> held = new LinkedHashMap<>();
 		private final List<String> calls = new ArrayList<>();
 

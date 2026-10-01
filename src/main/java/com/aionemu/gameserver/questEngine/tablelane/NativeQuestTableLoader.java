@@ -94,9 +94,29 @@ public final class NativeQuestTableLoader {
 			List<String> stepGiveItems, List<String> stepRemoveItems, Integer cutsceneId, Integer cutsceneAction) {
 	}
 
+	/**
+	 * SimpleCollectItem 表行（真端 {@code quest_simplecollectitems}，262 行）。形状实测：
+	 * 双 NPC 100%、{@code object1..4} 257 行（9649/9650/9654/9655/9656 五个 TEST 行只声明
+	 * {@code reward_check} 无采集物）、{@code talk_npc1..3} 8 行、{@code party_drop} 80 行、
+	 * {@code give_item}/{@code give_item1}/{@code remove_item2}/cutscene 长尾列按原文装载。
+	 * <p>
+	 * One SimpleCollectItem table row. Measured shape: the two-NPC pair is total, {@code object1..4}
+	 * covers 257 rows (the five TEST rows 9649/9650/9654/9655/9656 declare only {@code reward_check}),
+	 * {@code talk_npc1..3} covers 8 rows, {@code party_drop} 80 rows, and the give/remove/cutscene
+	 * columns are loaded as the table's own text.
+	 */
+	public record SimpleCollectItemRow(int questId, String devName, String acquiredNpcName,
+			String rewardNpcName, List<String> objects, List<String> talkNpcNames, Integer conQuest,
+			String acceptGiveItem, String stepGiveItem, String removeItem2, Integer cutsceneId,
+			Integer cutsceneAction, boolean partyDrop) {
+	}
+
 	private static final String RESOURCE = "aion/data/static_data/quest/retail/Quest_SimpleHunt.xml";
 	private static final String SERIAL_RESOURCE = "aion/data/static_data/quest/retail/Quest_SimpleSerialHunt.xml";
 	private static final String EXPECTED_SERIAL_ROOT = "quest_simpleserialhunts";
+	private static final String COLLECT_RESOURCE =
+			"aion/data/static_data/quest/retail/Quest_SimpleCollectItem.xml";
+	private static final String EXPECTED_COLLECT_ROOT = "quest_simplecollectitems";
 	private static final String TALK_RESOURCE = "aion/data/static_data/quest/retail/Quest_SimpleTalk.xml";
 	private static final String EXPECTED_TALK_ROOT = "quest_simpletalks";
 	private static final String EXPECTED_ROOT = "quest_simplehunts";
@@ -110,13 +130,16 @@ public final class NativeQuestTableLoader {
 	private final Map<Integer, SimpleHuntRow> rowsByQuestId;
 	private final Map<Integer, SimpleSerialHuntRow> serialRowsByQuestId;
 	private final Map<Integer, SimpleTalkRow> talkRowsByQuestId;
+	private final Map<Integer, SimpleCollectItemRow> collectRowsByQuestId;
 
 	private NativeQuestTableLoader(Map<Integer, SimpleHuntRow> rowsByQuestId,
 			Map<Integer, SimpleSerialHuntRow> serialRowsByQuestId,
-			Map<Integer, SimpleTalkRow> talkRowsByQuestId) {
+			Map<Integer, SimpleTalkRow> talkRowsByQuestId,
+			Map<Integer, SimpleCollectItemRow> collectRowsByQuestId) {
 		this.rowsByQuestId = rowsByQuestId;
 		this.serialRowsByQuestId = serialRowsByQuestId;
 		this.talkRowsByQuestId = talkRowsByQuestId;
+		this.collectRowsByQuestId = collectRowsByQuestId;
 	}
 
 	/** 已装载的表（未装载则先装载）。 / The loaded table; loads it first when absent. */
@@ -143,7 +166,8 @@ public final class NativeQuestTableLoader {
 	static NativeQuestTableLoader load(ClassLoader loader) {
 		try (InputStream input = loader.getResourceAsStream(RESOURCE);
 				InputStream serialInput = loader.getResourceAsStream(SERIAL_RESOURCE);
-				InputStream talkInput = loader.getResourceAsStream(TALK_RESOURCE)) {
+				InputStream talkInput = loader.getResourceAsStream(TALK_RESOURCE);
+				InputStream collectInput = loader.getResourceAsStream(COLLECT_RESOURCE)) {
 			if (input == null) {
 				throw new IllegalStateException("NATIVE_TABLE_PARSE_FAILED: missing " + RESOURCE);
 			}
@@ -153,7 +177,10 @@ public final class NativeQuestTableLoader {
 			if (talkInput == null) {
 				throw new IllegalStateException("NATIVE_TABLE_PARSE_FAILED: missing " + TALK_RESOURCE);
 			}
-			return parse(input, serialInput, talkInput);
+			if (collectInput == null) {
+				throw new IllegalStateException("NATIVE_TABLE_PARSE_FAILED: missing " + COLLECT_RESOURCE);
+			}
+			return parse(input, serialInput, talkInput, collectInput);
 		} catch (IOException e) {
 			throw new IllegalStateException("NATIVE_TABLE_PARSE_FAILED: cannot read tables", e);
 		}
@@ -164,22 +191,33 @@ public final class NativeQuestTableLoader {
 		try (InputStream serialInput = NativeQuestTableLoader.class.getClassLoader()
 				.getResourceAsStream(SERIAL_RESOURCE);
 				InputStream talkInput = NativeQuestTableLoader.class.getClassLoader()
-						.getResourceAsStream(TALK_RESOURCE)) {
-			return parse(input, serialInput, talkInput);
+						.getResourceAsStream(TALK_RESOURCE);
+				InputStream collectInput = NativeQuestTableLoader.class.getClassLoader()
+						.getResourceAsStream(COLLECT_RESOURCE)) {
+			return parse(input, serialInput, talkInput, collectInput);
 		}
 	}
 
 	/** 解析狩猎 + 串行两表（包内可见供负例测试；Talk 表从 classpath 补足）。 / Parses the hunt and serial tables. */
 	static NativeQuestTableLoader parse(InputStream input, InputStream serialInput) throws IOException {
 		try (InputStream talkInput = NativeQuestTableLoader.class.getClassLoader()
-				.getResourceAsStream(TALK_RESOURCE)) {
-			return parse(input, serialInput, talkInput);
+				.getResourceAsStream(TALK_RESOURCE);
+				InputStream collectInput = NativeQuestTableLoader.class.getClassLoader()
+						.getResourceAsStream(COLLECT_RESOURCE)) {
+			return parse(input, serialInput, talkInput, collectInput);
 		}
 	}
 
 	/** 解析三张表的字节流（包内可见供负例测试）。 / Parses the three table streams. */
 	static NativeQuestTableLoader parse(InputStream input, InputStream serialInput, InputStream talkInput)
 			throws IOException {
+		return parse(input, serialInput, talkInput, NativeQuestTableLoader.class.getClassLoader()
+				.getResourceAsStream(COLLECT_RESOURCE));
+	}
+
+	/** 解析四张表的字节流（包内可见供负例测试）。 / Parses the four table streams. */
+	static NativeQuestTableLoader parse(InputStream input, InputStream serialInput, InputStream talkInput,
+			InputStream collectInput) throws IOException {
 		Document document;
 		DocumentBuilder builder = newDocumentBuilder();
 		try {
@@ -213,8 +251,11 @@ public final class NativeQuestTableLoader {
 		}
 		Map<Integer, SimpleSerialHuntRow> serialRows = serialInput != null ? loadSerial(serialInput, builder) : Map.of();
 		Map<Integer, SimpleTalkRow> talkRows = talkInput != null ? loadTalk(talkInput, builder) : Map.of();
+		Map<Integer, SimpleCollectItemRow> collectRows =
+				collectInput != null ? loadCollect(collectInput, builder) : Map.of();
 		return new NativeQuestTableLoader(Collections.unmodifiableMap(rows),
-				Collections.unmodifiableMap(serialRows), Collections.unmodifiableMap(talkRows));
+				Collections.unmodifiableMap(serialRows), Collections.unmodifiableMap(talkRows),
+				Collections.unmodifiableMap(collectRows));
 	}
 
 	private static Map<Integer, SimpleTalkRow> loadTalk(InputStream stream, DocumentBuilder builder) {
@@ -383,6 +424,87 @@ public final class NativeQuestTableLoader {
 				Collections.unmodifiableList(talkNpcs), Collections.unmodifiableList(stages));
 	}
 
+	/**
+	 * 装载 SimpleCollectItem 表：双 NPC 必填（真端 262/262），采集物 0..4 个按原文装载
+	 * （五个 TEST 行无采集物，由处理器 at-load 视为不可路由，不在装载层伪造对象）。
+	 * <p>
+	 * Loads the SimpleCollectItem table: the two-NPC pair is mandatory in retail (262/262); the
+	 * 0..4 collect objects are loaded as written (the five TEST rows carry none and are treated as
+	 * unroutable at load time by the handler; no object is invented here).
+	 */
+	private static Map<Integer, SimpleCollectItemRow> loadCollect(InputStream stream, DocumentBuilder builder) {
+		Document document;
+		try {
+			document = builder.parse(stream);
+		} catch (IOException | org.xml.sax.SAXException e) {
+			throw new IllegalStateException("NATIVE_TABLE_PARSE_FAILED: malformed " + COLLECT_RESOURCE, e);
+		}
+		Element root = document.getDocumentElement();
+		if (root == null || !EXPECTED_COLLECT_ROOT.equals(root.getTagName())) {
+			throw new IllegalStateException("NATIVE_TABLE_PARSE_FAILED: expected root <"
+					+ EXPECTED_COLLECT_ROOT + ">, got <" + (root == null ? "(none)" : root.getTagName()) + ">");
+		}
+		Map<Integer, SimpleCollectItemRow> rows = new LinkedHashMap<>();
+		NodeList children = root.getChildNodes();
+		for (int i = 0; i < children.getLength(); i++) {
+			Node child = children.item(i);
+			if (!(child instanceof Element element) || !ROW_TAG.equals(element.getTagName())) {
+				continue;
+			}
+			int questId = rowId(element);
+			SimpleCollectItemRow row = parseCollectRow(questId, element);
+			if (rows.putIfAbsent(questId, row) != null) {
+				throw new IllegalStateException(
+						"NATIVE_TABLE_PARSE_FAILED: duplicate collect quest id " + questId);
+			}
+		}
+		if (rows.isEmpty()) {
+			throw new IllegalStateException("NATIVE_TABLE_PARSE_FAILED: " + COLLECT_RESOURCE + " has no rows");
+		}
+		return rows;
+	}
+
+	private static SimpleCollectItemRow parseCollectRow(int questId, Element element) {
+		String acquired = optionalText(element, "acquired_npc_name");
+		String reward = optionalText(element, "reward_npc_name");
+		if (acquired == null || acquired.isBlank()) {
+			throw new IllegalStateException(
+					"NATIVE_TABLE_PARSE_FAILED: collect quest " + questId + " has no acquired_npc_name");
+		}
+		if (reward == null || reward.isBlank()) {
+			throw new IllegalStateException(
+					"NATIVE_TABLE_PARSE_FAILED: collect quest " + questId + " has no reward_npc_name");
+		}
+		List<String> objects = new ArrayList<>(4);
+		for (int i = 1; i <= 4; i++) {
+			String object = optionalText(element, "object" + i);
+			if (object != null && !object.isBlank()) {
+				objects.add(object.strip());
+			}
+		}
+		List<String> talkNpcs = new ArrayList<>(3);
+		for (int i = 1; i <= 3; i++) {
+			String talk = optionalText(element, "talk_npc" + i);
+			if (talk != null && !talk.isBlank()) {
+				talkNpcs.add(talk.strip());
+			}
+		}
+		boolean partyDrop = "1".equals(optionalText(element, "party_drop").strip());
+		return new SimpleCollectItemRow(questId, optionalText(element, "dev_name"), acquired, reward,
+				Collections.unmodifiableList(objects), Collections.unmodifiableList(talkNpcs),
+				optionalInt(element, "con_quest", questId),
+				blankToNull(optionalText(element, "give_item")),
+				blankToNull(optionalText(element, "give_item1")),
+				blankToNull(optionalText(element, "remove_item2")),
+				optionalInt(element, "cutsceneid1", questId),
+				optionalInt(element, "cs1_haction", questId),
+				partyDrop);
+	}
+
+	private static String blankToNull(String value) {
+		return value == null || value.isBlank() ? null : value.strip();
+	}
+
 	private static Map<Integer, KillSlot> parseKillSlots(int questId, Element row) {
 		Map<Integer, Integer> counts = new TreeMap<>();
 		Map<Integer, String> monsterTexts = new TreeMap<>();
@@ -527,6 +649,31 @@ public final class NativeQuestTableLoader {
 		return row;
 	}
 
+	/** SimpleCollectItem 全量行（只读集合）。 / All SimpleCollectItem rows. */
+	public Collection<SimpleCollectItemRow> collectRows() {
+		return collectRowsByQuestId.values();
+	}
+
+	/** SimpleCollectItem 行数。 / The number of SimpleCollectItem rows. */
+	public int collectSize() {
+		return collectRowsByQuestId.size();
+	}
+
+	/** 按任务查询采集行，无行返回 Optional.empty()。 / Looks a collect row up. */
+	public Optional<SimpleCollectItemRow> findCollect(int questId) {
+		return Optional.ofNullable(collectRowsByQuestId.get(questId));
+	}
+
+	/** 按任务查询采集行，缺行 fail-closed。 / Looks a collect row up; missing rows fail closed. */
+	public SimpleCollectItemRow requireCollect(int questId) {
+		SimpleCollectItemRow row = collectRowsByQuestId.get(questId);
+		if (row == null) {
+			throw new IllegalStateException("NATIVE_TABLE_ROW_MISSING: quest " + questId
+					+ " has no SimpleCollectItem row");
+		}
+		return row;
+	}
+
 	/** 表行数。 / The number of table rows. */
 	public int size() {
 		return rowsByQuestId.size();
@@ -613,6 +760,34 @@ public final class NativeQuestTableLoader {
 			fullValue |= count << width.shift(slot);
 		}
 		return new CameraRegistry.RowSpec(row.questId(), width, fullValue, slotRequires);
+	}
+
+	/**
+	 * 采集行 → 相机行规约：单槽（槽 1）+ {@code collect_item1} 的 required（真端 collect 表 262 行
+	 * 里 253 行有采集计数，最大 40；9 行为事件/测试形态不派生相机行）。宽度规则同狩猎族。
+	 * <p>
+	 * Collect row → camera row spec: one slot (slot 1) with the {@code collect_item1} requirement
+	 * (253 of the 262 retail collect rows carry a count, max 40; the 9 event/test shapes derive no
+	 * camera row). Width rule mirrors the hunt family.
+	 */
+	public CameraRegistry.RowSpec cameraSpec(int questId, Map<Integer, Integer> slotRequires) {
+		if (slotRequires == null || slotRequires.isEmpty()) {
+			throw new IllegalStateException(
+					"NATIVE_CAMERA_ROW_MISSING: collect quest " + questId + " has no collect counts");
+		}
+		RawQuestVarsCodec.Width width = RawQuestVarsCodec.Width.SIX;
+		for (int required : slotRequires.values()) {
+			if (required > width.slotMask()) {
+				width = RawQuestVarsCodec.Width.TEN;
+				break;
+			}
+		}
+		Map<Integer, Integer> ordered = new TreeMap<>(slotRequires);
+		int fullValue = 0;
+		for (Map.Entry<Integer, Integer> entry : ordered.entrySet()) {
+			fullValue |= entry.getValue() << width.shift(entry.getKey());
+		}
+		return new CameraRegistry.RowSpec(questId, width, fullValue, ordered);
 	}
 
 	/**
