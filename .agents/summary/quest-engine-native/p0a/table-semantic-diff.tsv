@@ -1,0 +1,9 @@
+table	verdict	rows_src	rows_repo	content_diff_ids	samples_src_vs_repo
+quest.xml	SEMANTIC_EQUAL	10035	10035	diff=0 only_src=0 only_repo=0	
+data_driven_quest.xml	SEMANTIC_EQUAL	2492	2492	diff=0 only_src=0 only_repo=0	
+Quest_SimpleHunt.xml	CONTENT_DRIFT	1863	1863	diff=17 only_src=0 only_repo=0	id2354:src=852763ec repo=cbe9220a id2405:src=ae701a52 repo=488ab61f id2406:src=d5ba8e88 repo=091ca73c
+Quest_CombineTask.xml	SEMANTIC_EQUAL	574	574	diff=0 only_src=0 only_repo=0	
+Quest_SimpleCollectItem.xml	SEMANTIC_EQUAL	262	262	diff=0 only_src=0 only_repo=0	
+Quest_SimpleItemPlay.xml	SEMANTIC_EQUAL	43	43	diff=0 only_src=0 only_repo=0	
+Quest_SimpleSerialHunt.xml	SEMANTIC_EQUAL	16	16	diff=0 only_src=0 only_repo=0	
+quest_random_rewards.xml	CONTENT_DRIFT	817	329	diff=329 only_src=488 only_repo=0	id10003:src=0eee9cf5 repo=32f3e782 id10004:src=3a795c53 repo=0a8af4f5 id10005:src=27249f51 repo=2c1d71fc

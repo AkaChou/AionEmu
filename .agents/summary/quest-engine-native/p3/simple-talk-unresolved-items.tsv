@@ -1,0 +1,22 @@
+# SimpleTalk 物品面未解析快照（真端表事实，2026-10-01）
+# 口径：SimpleTalkHandler 物品解析（RetailItemNameIndex，符号去 ITEM_ 前缀后按 name_desc 查 id）。
+# 由 SimpleTalkNativeFamilyGateTest 冻结断言（集合恒为 14，漂移即红灯）。
+# kind 语义：
+#   GATE_GAP     = item_check 交付门完全不可解 → 报告门 fail-closed（该行交付被挡住，与老链路拒绝该行同效）
+#   GATE_PARTIAL = 交付门部分可解 → 未解项静默跳过（与老链路 acceptGiveItemActions 同法）
+# 归因：均为本服静态物品数据缺口（items/item 模板缺该 name_desc），非分派/表语义缺陷。
+kind	entry	quests	note
+GATE_GAP	item_check:2732	2732	重复型深渊补给：collect_item/quest_work_item/give_item 三通道皆无
+GATE_GAP	item_check:30509	30509	동료의 유품：三通道皆无（con_quest=30510）
+GATE_GAP	item_check:41571	41571	키리유의 손녀：三通道皆无（con_quest=41572）
+GATE_GAP	item_check:50011	50011	설탕 수집（光）：三通道皆无（con_quest=50013）
+GATE_GAP	item_check:50012	50012	쓴 카카오 수집（光）：三通道皆无（con_quest=50014）
+GATE_GAP	item_check:51011	51011	설탕 수집（魔）：三通道皆无（con_quest=51013）
+GATE_GAP	item_check:51012	51012	쓴 카카오 수집（魔）：三通道皆无（con_quest=51014）
+GATE_GAP	item_check:16921	16921	collect_item1 = item_idunderrune_quest_01 20，物品模板缺该 name_desc
+GATE_GAP	item_check:26921	26921	同上（魔族镜像）
+GATE_GAP	item_check:16930	16930	collect_item1 = item_idruneweapon_quest_01 10，物品模板缺该 name_desc
+GATE_GAP	item_check:26930	26930	同上（魔族镜像）
+GATE_PARTIAL	item_exp_extraction_65a 1	80669 80670 80671 80672	collect_item3 缺物品模板；门按可解部分建立
+GATE_PARTIAL	item_idunderrune_quest_01 20	16921 26921	同 GATE_GAP 行（该行门整体不可解，故同时计入 GATE_GAP）
+GATE_PARTIAL	item_idruneweapon_quest_01 10	16930 26930	同 GATE_GAP 行（该行门整体不可解，故同时计入 GATE_GAP）

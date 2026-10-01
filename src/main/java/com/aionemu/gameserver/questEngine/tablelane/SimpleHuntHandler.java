@@ -1,0 +1,329 @@
+package com.aionemu.gameserver.questEngine.tablelane;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
+
+import com.aionemu.gameserver.model.gameobjects.Npc;
+import com.aionemu.gameserver.model.gameobjects.PersistentState;
+import com.aionemu.gameserver.model.gameobjects.player.Player;
+import com.aionemu.gameserver.network.aion.serverpackets.SM_DIALOG_WINDOW;
+import com.aionemu.gameserver.network.aion.serverpackets.SM_QUEST_ACTION;
+import com.aionemu.gameserver.questEngine.model.QuestEnv;
+import com.aionemu.gameserver.questEngine.model.QuestState;
+import com.aionemu.gameserver.questEngine.model.QuestStatus;
+import com.aionemu.gameserver.questEngine.QuestEngine;
+import com.aionemu.gameserver.services.QuestService;
+import com.aionemu.gameserver.utils.PacketSendUtility;
+
+/**
+ * 真端 SimpleHunt 原生任务处理器（计划 §6.2 / P1 切换批）。
+ * <p>
+ * 完全基于真端表数据 {@link NativeQuestTableLoader} 与相机注册表 {@link CameraRegistry} 驱动，
+ * 绝不生成 IR 节点图或通过旧编译器分派。
+ * 状态基于 32 位 raw vars 与 ProgressCamera 双通道（0xf0 普通写入 / 0x100 推进写入）原子演进。
+ * <p>
+ * Retail SimpleHunt native quest handler (plan §6.2 / P1 switch batch).
+ * Driven 100% by true-end table data and CameraRegistry; generates zero IR nodes
+ * and bypasses legacy compiler overlays. Progress advances via 32-bit raw vars and
+ * ProgressCamera dual-channel logic (0xf0 normal write / 0x100 advance write).
+ */
+public final class SimpleHuntHandler {
+
+	/** 狩猎目标槽位引用：任务 ID + 槽位 (1..5)。 / Hunt target reference: quest id + slot. */
+	public record HuntTargetRef(int questId, int slot) {
+	}
+
+	/** 获取拥有的任务数量。 / Returns managed quest count. */
+	public int ownedQuestCount() {
+		return ownedQuestIds.size();
+	}
+
+	private static volatile SimpleHuntHandler instance;
+
+	private final NativeQuestTableLoader tableLoader;
+	private final CameraRegistry cameraRegistry;
+	private final NativeNpcNameResolver nameResolver;
+	private final HtmlPagesRegistry pagesRegistry;
+
+	/** NPC ID → 监听该怪物的任务槽位集合。 / NPC ID → listening quest slots. */
+	private final Map<Integer, List<HuntTargetRef>> targetsByNpcId;
+	/** 任务 ID → 接取 NPC ID。 / Quest ID → acquire NPC ID. */
+	private final Map<Integer, Integer> acquireNpcByQuestId;
+	/** 任务 ID → 交付 NPC ID。 / Quest ID → reward NPC ID. */
+	private final Map<Integer, Integer> rewardNpcByQuestId;
+	/** 本处理器拥有的真端任务 ID 集合。 / Managed retail quest IDs. */
+	private final Set<Integer> ownedQuestIds;
+
+	private SimpleHuntHandler(NativeQuestTableLoader tableLoader, CameraRegistry cameraRegistry,
+			NativeNpcNameResolver nameResolver, HtmlPagesRegistry pagesRegistry) {
+		this.tableLoader = tableLoader;
+		this.cameraRegistry = cameraRegistry;
+		this.nameResolver = nameResolver;
+		this.pagesRegistry = pagesRegistry;
+
+		Map<Integer, List<HuntTargetRef>> targets = new LinkedHashMap<>();
+		Map<Integer, Integer> acquires = new LinkedHashMap<>();
+		Map<Integer, Integer> rewards = new LinkedHashMap<>();
+		Set<Integer> owned = new TreeSet<>();
+
+		for (NativeQuestTableLoader.SimpleHuntRow row : tableLoader.rows()) {
+			int qid = row.questId();
+			owned.add(qid);
+
+			// 接取 NPC 索引
+			if (row.acquiredNpcName() != null && !row.acquiredNpcName().isBlank()) {
+				NativeNpcNameResolver.Match m = nameResolver.resolve(row.acquiredNpcName());
+				if (m.resolution() == NativeNpcNameResolver.Resolution.UNIQUE) {
+					acquires.put(qid, m.npcIds().get(0));
+				}
+			}
+
+			// 交付 NPC 索引
+			if (row.rewardNpcName() != null && !row.rewardNpcName().isBlank()) {
+				NativeNpcNameResolver.Match m = nameResolver.resolve(row.rewardNpcName());
+				if (m.resolution() == NativeNpcNameResolver.Resolution.UNIQUE) {
+					rewards.put(qid, m.npcIds().get(0));
+				}
+			}
+
+			// 击杀目标索引
+			for (Map.Entry<Integer, NativeQuestTableLoader.KillSlot> entry : row.killSlots().entrySet()) {
+				int slot = entry.getKey();
+				for (String monsterName : entry.getValue().monsters()) {
+					List<Integer> candidateNpcIds = nameResolver.resolveMonsterIds(monsterName);
+					for (int npcId : candidateNpcIds) {
+						targets.computeIfAbsent(npcId, k -> new ArrayList<>())
+								.add(new HuntTargetRef(qid, slot));
+					}
+				}
+			}
+		}
+
+		this.targetsByNpcId = Collections.unmodifiableMap(targets);
+		this.acquireNpcByQuestId = Collections.unmodifiableMap(acquires);
+		this.rewardNpcByQuestId = Collections.unmodifiableMap(rewards);
+		this.ownedQuestIds = Collections.unmodifiableSet(owned);
+	}
+
+	public static SimpleHuntHandler instance() {
+		SimpleHuntHandler local = instance;
+		if (local == null) {
+			synchronized (SimpleHuntHandler.class) {
+				local = instance;
+				if (local == null) {
+					local = new SimpleHuntHandler(NativeQuestTableLoader.instance(),
+							CameraRegistry.instance(),
+							NativeNpcNameResolver.instance(),
+							HtmlPagesRegistry.instance());
+					instance = local;
+				}
+			}
+		}
+		return local;
+	}
+
+	/** 判断是否拥有该任务。 / Checks if this handler manages the quest. */
+	public boolean owns(int questId) {
+		return ownedQuestIds.contains(questId);
+	}
+
+	/** 获取拥有的任务 ID 集合。 / Returns managed quest IDs. */
+	public Set<Integer> ownedQuestIds() {
+		return ownedQuestIds;
+	}
+
+	/** 获取任务起始 NPC ID。 / Returns the acquire NPC ID for the quest. */
+	public Integer acquireNpc(int questId) {
+		return acquireNpcByQuestId.get(questId);
+	}
+
+	/** 获取任务交付 NPC ID。 / Returns the reward NPC ID for the quest. */
+	public Integer rewardNpc(int questId) {
+		return rewardNpcByQuestId.get(questId);
+	}
+
+	/**
+	 * 查询与指定 NPC 相关的 SimpleHunt 任务 ID 列表。
+	 * Returns SimpleHunt quest IDs associated with the NPC.
+	 */
+	public List<Integer> questsForNpc(int npcId) {
+		if (npcId <= 0) {
+			return Collections.emptyList();
+		}
+		List<Integer> result = new ArrayList<>();
+		for (Map.Entry<Integer, Integer> e : acquireNpcByQuestId.entrySet()) {
+			if (e.getValue() == npcId) {
+				result.add(e.getKey());
+			}
+		}
+		for (Map.Entry<Integer, Integer> e : rewardNpcByQuestId.entrySet()) {
+			if (e.getValue() == npcId && !result.contains(e.getKey())) {
+				result.add(e.getKey());
+			}
+		}
+		return result;
+	}
+
+	/**
+	 * 在启动期将 SimpleHunt 涉及的 NPC 注册进 {@link QuestEngine} 索引。
+	 * Registers NPC interests into {@link QuestEngine} at startup.
+	 */
+	public void installInterest(QuestEngine engine) {
+		if (engine == null) {
+			return;
+		}
+		for (Map.Entry<Integer, Integer> entry : acquireNpcByQuestId.entrySet()) {
+			int qid = entry.getKey();
+			int npcId = entry.getValue();
+			engine.registerQuestNpc(npcId).addOnQuestStart(qid);
+			engine.registerQuestNpc(npcId).addOnTalkEvent(qid);
+		}
+		for (Map.Entry<Integer, Integer> entry : rewardNpcByQuestId.entrySet()) {
+			int qid = entry.getKey();
+			int npcId = entry.getValue();
+			engine.registerQuestNpc(npcId).addOnTalkEvent(qid);
+		}
+		for (Map.Entry<Integer, List<HuntTargetRef>> entry : targetsByNpcId.entrySet()) {
+			int npcId = entry.getKey();
+			for (HuntTargetRef ref : entry.getValue()) {
+				engine.registerQuestNpc(npcId).addOnKillEvent(ref.questId());
+			}
+		}
+	}
+
+	/**
+	 * 处理怪物击杀事件（真端相机推进）。
+	 * Handles a monster kill event by advancing the retail progress camera.
+	 *
+	 * @param player 击杀玩家 / The killer player
+	 * @param npcId  被击杀怪物 NPC ID / The killed NPC ID
+	 * @return 是否有任务被处理推进 / true if any quest was advanced
+	 */
+	public boolean onKill(Player player, int npcId) {
+		if (player == null || npcId <= 0) {
+			return false;
+		}
+		List<HuntTargetRef> refs = targetsByNpcId.get(npcId);
+		if (refs == null || refs.isEmpty()) {
+			return false;
+		}
+
+		boolean handled = false;
+		for (HuntTargetRef ref : refs) {
+			QuestState qs = player.getQuestStateList().getQuestState(ref.questId());
+			if (qs == null || qs.getStatus() != QuestStatus.START) {
+				continue;
+			}
+
+			CameraRegistry.CameraRow row = cameraRegistry.require(ref.questId());
+			int currentVars = qs.getQuestVars().getQuestVars();
+
+			// 相机推进一步：三守卫检查 + 槽位加 1 + 满值推进检测
+			ProgressCamera.Result result = ProgressCamera.advance(
+					ProgressCamera.Status.START, currentVars, row, ref.slot(), true);
+
+			if (result.outcome() == ProgressCamera.Outcome.NO_ACTION) {
+				// 超杀或未达守卫条件：真端规范零动作
+				continue;
+			}
+
+			qs.getQuestVars().setVar(result.newVars());
+			if (result.outcome() == ProgressCamera.Outcome.ADVANCE_WRITE) {
+				// 推进通道（真端 +0x100）：进入 REWARD 待领奖状态
+				qs.setStatus(QuestStatus.REWARD);
+			}
+
+			qs.setPersistentState(PersistentState.UPDATE_REQUIRED);
+			PacketSendUtility.sendPacket(player,
+					new SM_QUEST_ACTION(ref.questId(), qs.getStatus(), qs.getQuestVars().getQuestVars()));
+			handled = true;
+		}
+
+		return handled;
+	}
+
+	/**
+	 * 处理 NPC 对话与翻页事件（接取 / 报告 / 交付）。
+	 * Handles dialog and page progression events (accept / report / finish).
+	 */
+	public boolean onDialog(QuestEnv env) {
+		if (env == null || env.getPlayer() == null) {
+			return false;
+		}
+		Player player = env.getPlayer();
+		int questId = env.getQuestId();
+		if (!owns(questId)) {
+			return false;
+		}
+
+		Npc npc = env.getVisibleObject() instanceof Npc n ? n : null;
+		int npcId = npc != null ? npc.getNpcId() : 0;
+		int targetObjectId = npc != null ? npc.getObjectId() : 0;
+		int dialogId = env.getDialogId();
+
+		QuestState qs = player.getQuestStateList().getQuestState(questId);
+		QuestStatus status = qs != null ? qs.getStatus() : QuestStatus.NONE;
+
+		// 1. 未接取状态：处理接取对话流
+		if (status == QuestStatus.NONE || qs == null) {
+			Integer acqNpc = acquireNpcByQuestId.get(questId);
+			if (acqNpc != null && acqNpc == npcId) {
+				if (dialogId == 31 || dialogId == 26) {
+					// 初始对话打开接取问询页 (ask_quest_accept / page 4)
+					PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 4, questId));
+					return true;
+				} else if (dialogId == 1002 || dialogId == 20000) {
+					// 确认接取任务
+					if (QuestService.startQuest(env)) {
+						PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 1003, questId));
+						return true;
+					}
+				} else if (dialogId == 1003 || dialogId == 1004 || dialogId == 20001) {
+					PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 1004, questId));
+					return true;
+				}
+			}
+			return false;
+		}
+
+		// 2. 进行中状态：检查中继对话或未完成提示
+		if (status == QuestStatus.START) {
+			Integer rewNpc = rewardNpcByQuestId.get(questId);
+			if (rewNpc != null && rewNpc == npcId) {
+				if (dialogId == 31 || dialogId == 26) {
+					// 尚未完成杀怪：常规未完成对话提示 (page 10)
+					PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 10, questId));
+					return true;
+				}
+			}
+			return false;
+		}
+
+		// 3. 待交付状态 (REWARD)：在交付 NPC 处领取奖励
+		if (status == QuestStatus.REWARD) {
+			Integer rewNpc = rewardNpcByQuestId.get(questId);
+			if (rewNpc != null && rewNpc == npcId) {
+				if (dialogId == 31 || dialogId == 26 || dialogId == 1009 || dialogId == -1) {
+					// 展示奖励选择窗口 (select_quest_reward1 / page 5)
+					PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 5, questId));
+					return true;
+				} else if ((dialogId >= 8 && dialogId <= 23) || dialogId == 108 || (dialogId >= 110 && dialogId <= 124)) {
+					// 结算奖励并完成任务
+					int rewardIndex = (dialogId >= 8 && dialogId <= 23) ? (dialogId - 8) : 0;
+					if (QuestService.finishQuest(env, rewardIndex)) {
+						PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 1008, questId));
+						return true;
+					}
+				}
+			}
+			return false;
+		}
+
+		return false;
+	}
+}

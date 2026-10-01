@@ -18,6 +18,8 @@ import com.aionemu.gameserver.questEngine.definition.QuestEvent;
 import com.aionemu.gameserver.questEngine.definition.QuestMetadata;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
+import com.aionemu.gameserver.questEngine.tablelane.SimpleHuntHandler;
+import com.aionemu.gameserver.questEngine.tablelane.SimpleTalkHandler;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -194,10 +196,34 @@ class QuestEngineNpcDialogDispatchTest {
 	}
 
 	/** 生产视图目录（XML 目录 + 真端 overlay）；退役任务的旧 XML 只在 git 历史里。 */
+	/** 真端 quest.xml 的 category1（大写；缺省 QUEST）。 / Retail quest.xml category1 (upper case; default QUEST). */
+	private static String categoryOf(int questId) {
+		return com.aionemu.gameserver.questEngine.tablelane.NativeQuestXmlTable.instance().find(questId)
+			.map(row -> row.text("category1"))
+			.filter(raw -> !raw.isBlank())
+			.map(raw -> raw.trim().toUpperCase(java.util.Locale.ROOT))
+			.orElse("QUEST");
+	}
+
 	private static QuestCatalog productionXml(int... questIds) {
 		List<CompiledQuestDefinition> definitions = new ArrayList<>();
 		for (int questId : questIds) {
-			definitions.add(ProductionQuestDefinitions.definition(questId));
+			if (SimpleHuntHandler.instance().owns(questId)) {
+				int npcId = (questId == 1320 || questId == 1321) ? REFERENCE_NPC_TEMPLATE_ID : NPC_TEMPLATE_ID;
+				String category = questId == 1320 ? "IMPORTANT" : "QUEST";
+				definitions.add(talkOwner(questId, npcId, category, QuestStatus.NONE,
+					QuestDialogAction.QUEST_SELECT.id()));
+			} else if (SimpleTalkHandler.instance().owns(questId)) {
+				// P3 原生表驱动切换：SimpleTalk 行进原生车道，typed 目录里没有该行；派发门禁只需
+				// 该 NPC 上的 QUEST_SELECT 谈话 owner 形状（类别取自真端 quest.xml category1，
+				// 页链由 SimpleTalkNativeFamilyGateTest 冻结）。
+				int npcId = questId == 1478 ? REFERENCE_NPC_TEMPLATE_ID : NPC_TEMPLATE_ID;
+				String category = categoryOf(questId);
+				definitions.add(talkOwner(questId, npcId, category, QuestStatus.NONE,
+					QuestDialogAction.QUEST_SELECT.id()));
+			} else {
+				definitions.add(ProductionQuestDefinitions.definition(questId));
+			}
 		}
 		return new ImmutableQuestCatalog(definitions);
 	}

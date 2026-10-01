@@ -72,8 +72,15 @@ class QuestProductionStartupGateTest {
 				carriers.add(entry.id());
 			}
 		}
-		int total = executables;
-		assertTrue(total > 5000, () -> "生产可执行定义数量异常：" + total);
+		// P1/P2/P3 按族切换后，被切走的家族不再出现在 typed 目录里，但仍由原生处理器直驱；
+		// 生产规模门按「typed 可执行 + 原生 owner」的合计锚定（总数不得回退）。
+		final int nativeOwned = com.aionemu.gameserver.questEngine.tablelane.SimpleHuntHandler.instance().ownedQuestCount()
+			+ com.aionemu.gameserver.questEngine.tablelane.SimpleSerialHuntHandler.instance().ownedQuestCount()
+			+ com.aionemu.gameserver.questEngine.tablelane.SimpleTalkHandler.instance().ownedQuestCount();
+		final int typedExecutables = executables;
+		final int total = typedExecutables + nativeOwned;
+		assertTrue(total > 5000, () -> "生产可执行定义数量异常：" + total + "（typed=" + typedExecutables
+			+ " native=" + nativeOwned + "）");
 		assertTrue(!carriers.isEmpty(), "生产目录里必须存在 SystemGrant 边（服务侧发放行的回归锚）");
 	}
 }

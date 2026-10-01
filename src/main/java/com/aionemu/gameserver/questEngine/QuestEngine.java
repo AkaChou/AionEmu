@@ -55,6 +55,11 @@ import com.aionemu.gameserver.questEngine.definition.QuestNpcAttackFacts;
 import com.aionemu.gameserver.questEngine.definition.QuestNode;
 import com.aionemu.gameserver.questEngine.definition.QuestPvpCreditSource;
 import com.aionemu.gameserver.questEngine.handlers.HandlerResult;
+import com.aionemu.gameserver.questEngine.tablelane.HtmlPagesRegistry;
+import com.aionemu.gameserver.questEngine.tablelane.CameraRegistry;
+import com.aionemu.gameserver.questEngine.tablelane.SimpleHuntHandler;
+import com.aionemu.gameserver.questEngine.tablelane.SimpleSerialHuntHandler;
+import com.aionemu.gameserver.questEngine.tablelane.SimpleTalkHandler;
 import com.aionemu.gameserver.questEngine.model.QuestActionType;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.questEngine.model.QuestState;
@@ -181,6 +186,10 @@ public class QuestEngine implements GameEngine {
 
 	/** 返回指定 owner 是否拥有实际匹配事件的路由。 / Return whether the owner has a route matching the event. */
 	public boolean hasMatchingRoutes(QuestEvent event, int questId) {
+		if (SimpleHuntHandler.instance().owns(questId) || SimpleSerialHuntHandler.instance().owns(questId)
+				|| SimpleTalkHandler.instance().owns(questId)) {
+			return true;
+		}
 		return productionDispatcher.hasMatchingRoutes(event, questId);
 	}
 
@@ -239,6 +248,23 @@ public class QuestEngine implements GameEngine {
 			int requestedOwner = env.getQuestId();
 			int npcId = npc == null ? 0 : npc.getNpcId();
 			QuestRuntimeDispatcher typed = productionDispatcher;
+			// 真端表驱动车道：SimpleHunt 任务直接由原生处理器驱动，不走 IR 节点状态机
+			if (requestedOwner != 0 && SimpleHuntHandler.instance().owns(requestedOwner)) {
+				if (SimpleHuntHandler.instance().onDialog(env)) {
+					return true;
+				}
+			}
+			if (requestedOwner != 0 && SimpleSerialHuntHandler.instance().owns(requestedOwner)) {
+				if (SimpleSerialHuntHandler.instance().onDialog(env)) {
+					return true;
+				}
+			}
+			// 真端表驱动车道：SimpleTalk 任务由原生处理器直驱（cab520 接取 / cabb10 中继与报告）
+			if (requestedOwner != 0 && SimpleTalkHandler.instance().owns(requestedOwner)) {
+				if (SimpleTalkHandler.instance().onDialog(env)) {
+					return true;
+				}
+			}
 			if (requestedOwner != 0 && typed.owns(requestedOwner)) {
 				QuestEvent event = npcId == 0
 					? new QuestEvent.QuestDialog(env.getDialogId())
@@ -409,6 +435,13 @@ public class QuestEngine implements GameEngine {
 	public boolean onKill(QuestEnv env) {
 		if (env == null || env.getPlayer() == null || !(env.getVisibleObject() instanceof Npc npc)) {
 			return false;
+		}
+		// 真端表驱动车道：SimpleHunt 怪物击杀由原生相机直接推进，不走 IR 边分派
+		if (SimpleHuntHandler.instance().onKill(env.getPlayer(), npc.getNpcId())) {
+			return true;
+		}
+		if (SimpleSerialHuntHandler.instance().onKill(env.getPlayer(), npc.getNpcId())) {
+			return true;
 		}
 		try {
 			QuestEvent event = new QuestEvent.KillNpc(npc.getNpcId());
@@ -2169,6 +2202,14 @@ public class QuestEngine implements GameEngine {
 	public void load(CountDownLatch progressLatch, PreparedProductionDefinitions prepared) {
 		log.info(I18n.get("log.5359e35f8f99"));
 		try {
+			// P0b 数据基础：启动期装载真端页注册表；缺失/损坏页表必须让启动失败（fail-fast）。
+			// P0b data foundation: eagerly load the retail page registry at startup; a missing or
+			// corrupt page table must fail the boot (fail-fast).
+			HtmlPagesRegistry.ensureLoaded();
+			CameraRegistry.ensureLoaded();
+			SimpleHuntHandler.instance().installInterest(this);
+			SimpleSerialHuntHandler.instance().installInterest(this);
+			SimpleTalkHandler.instance().installInterest(this);
 			installProductionDefinitions(prepared == null
 					? prepareProductionDefinitions(awaitProductionCatalogPreload()) : prepared);
 			log.info(I18n.get("log.quest_engine.typed_owners_loaded", productionDispatcher.owners().size()));

@@ -1,0 +1,632 @@
+package com.aionemu.gameserver.questEngine.tablelane;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.TreeMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import javax.xml.XMLConstants;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
+/**
+ * 真端任务表装载器（计划 §6.2：家族逐个接入；本横切只装 {@code Quest_SimpleHunt.xml}）。
+ * <p>
+ * 数据源 = P0b 入仓副本（UTF-8、byte 级一致）。行模型：{@code <id id="N">} + 接取/交付 NPC 名 +
+ * {@code countN/monsterN}（槽 1..5）。真端数据事实（P1 对拍实证）：元素文本可跨行（37116 的
+ * monster 名单含换行，必须归一内部空白）；存在零计数行（11013/11014/11208/11209，真端休眠行，
+ * 合法装载但不得派生相机行）；存在有计数无 monster 的行（13912/23912 的槽 3——真端脚本也未给
+ * 该槽事件源，行为 = 永不满足，本类如实装载不修复）；注释掉的行由 DOM 天然忽略。
+ * <p>
+ * 相机行推导（纯函数 {@link #cameraSpec}）：宽度规则 = 任一 count 超 6 位掩码 ⇒ 10 位，否则
+ * 6 位（对拍 1812 任务零失败）；fullValue = 各槽 count 按位移或（对拍与脚本字面 fullValue 全等，
+ * 含 13912/23912）。哪些行注册进 {@link CameraRegistry} 由切换批按脚本接线集决定（51 行真端
+ * 休眠：表有行、脚本无包装函数 ⇒ 原生侧同样不接 handler）。
+ * <p>
+ * The retail quest-table loader (plan §6.2: families plug in one by one; this tranche loads
+ * {@code Quest_SimpleHunt.xml} only). Source = the P0b ingested copy (UTF-8, byte-identical).
+ * Row model: {@code <id id="N">} + acquire/reward NPC names + {@code countN/monsterN}
+ * (slots 1..5). Retail data facts (P1 reconciliation evidence): element text can span lines
+ * (37116's monster list contains newlines — inner whitespace must be normalized); zero-count rows
+ * exist (11013/11014/11208/11209 — dormant retail rows that load legally but must never derive a
+ * camera row); count-without-monster rows exist (slot 3 of 13912/23912 — retail's own script never
+ * wires an event source for that slot either, so behavior is "never satisfied"; loaded as-is, never
+ * fixed); commented-out rows are ignored by the DOM naturally.
+ * <p>
+ * Camera-row derivation (pure function {@link #cameraSpec}): width rule = any count above the 6-bit
+ * mask implies 10-bit, otherwise 6-bit (reconciled with zero failures across 1812 quests);
+ * fullValue = bit-OR of per-slot counts (equal to the script's literal fullValue on every quest,
+ * including 13912/23912). Which rows register into {@link CameraRegistry} is the switch batch's
+ * decision per the script-wired set (51 retail-dormant rows: table row present, no script wrapper
+ * ⇒ the native lane wires no handler either).
+ */
+public final class NativeQuestTableLoader {
+
+	/** 单槽狩猎目标：required 计数 + 怪物名（真端 13912 形允许空名单）。 / One hunt slot: required count + monster names (the retail 13912 shape allows an empty list). */
+	public record KillSlot(int count, List<String> monsters) {
+	}
+
+	/** SimpleHunt 表行。 / One SimpleHunt table row. */
+	public record SimpleHuntRow(int questId, String acquiredNpcName, String rewardNpcName,
+			Map<Integer, KillSlot> killSlots) {
+	}
+
+	/** 串行阶段规约：阶段号 (1..5) + 所需击杀数 + 目标怪名列表。 / Serial stage: 1-based stage + required count + monster names. */
+	public record SerialStage(int stage, int count, List<String> monsters) {
+	}
+
+	/** SimpleSerialHunt 表行。 / One SimpleSerialHunt table row. */
+	public record SimpleSerialHuntRow(int questId, String devName, String acquiredNpcName,
+			String rewardNpcName, List<String> talkNpcNames, List<SerialStage> stages) {
+	}
+
+	/**
+	 * SimpleTalk 表行（真端 {@code quest_simpletalks}，3152 行）。形状实测：双 NPC 结构 100%、
+	 * {@code talk_npc1..3} 中继链 15%、{@code item_check} 63%（值恒为 1，语义 = 交付前须持有工作物品）、
+	 * {@code con_quest} 16%（链式接取窗的下一条）、give/remove 物品与 cutscene 为长尾列。
+	 * <p>
+	 * One SimpleTalk table row (retail {@code quest_simpletalks}, 3152 rows). Measured shape: the
+	 * two-NPC structure is total, {@code talk_npc1..3} relay chains cover ~15%, {@code item_check}
+	 * 63% (value is always 1 = the work item must be carried before the hand-in), {@code con_quest}
+	 * 16% (the next quest of the chain-acquire window); give/remove items and cutscenes are the
+	 * long tail. Values are kept as the table's own text so no semantics are invented here.
+	 *
+	 * @param acceptGiveItem  {@code give_item} 原文（形如 {@code NAME COUNT}；接取侧 20000 动作的发放）
+	 * @param stepGiveItems   {@code give_item1..3} 原文，**按下标对齐中继步**（null = 该步无发放）
+	 * @param stepRemoveItems {@code remove_item1..3} 原文，**按下标对齐中继步**（null = 该步无扣除）
+	 */
+	public record SimpleTalkRow(int questId, String devName, String acquiredNpcName, String rewardNpcName,
+			List<String> talkNpcNames, Integer conQuest, boolean itemCheck, String acceptGiveItem,
+			List<String> stepGiveItems, List<String> stepRemoveItems, Integer cutsceneId, Integer cutsceneAction) {
+	}
+
+	private static final String RESOURCE = "aion/data/static_data/quest/retail/Quest_SimpleHunt.xml";
+	private static final String SERIAL_RESOURCE = "aion/data/static_data/quest/retail/Quest_SimpleSerialHunt.xml";
+	private static final String EXPECTED_SERIAL_ROOT = "quest_simpleserialhunts";
+	private static final String TALK_RESOURCE = "aion/data/static_data/quest/retail/Quest_SimpleTalk.xml";
+	private static final String EXPECTED_TALK_ROOT = "quest_simpletalks";
+	private static final String EXPECTED_ROOT = "quest_simplehunts";
+	private static final String ROW_TAG = "id";
+	private static final Pattern COUNT_TAG = Pattern.compile("count([1-5])");
+	private static final Pattern MONSTER_TAG = Pattern.compile("monster([1-5])");
+	private static final Pattern COMMA = Pattern.compile("\\s*,\\s*");
+
+	private static volatile NativeQuestTableLoader instance;
+
+	private final Map<Integer, SimpleHuntRow> rowsByQuestId;
+	private final Map<Integer, SimpleSerialHuntRow> serialRowsByQuestId;
+	private final Map<Integer, SimpleTalkRow> talkRowsByQuestId;
+
+	private NativeQuestTableLoader(Map<Integer, SimpleHuntRow> rowsByQuestId,
+			Map<Integer, SimpleSerialHuntRow> serialRowsByQuestId,
+			Map<Integer, SimpleTalkRow> talkRowsByQuestId) {
+		this.rowsByQuestId = rowsByQuestId;
+		this.serialRowsByQuestId = serialRowsByQuestId;
+		this.talkRowsByQuestId = talkRowsByQuestId;
+	}
+
+	/** 已装载的表（未装载则先装载）。 / The loaded table; loads it first when absent. */
+	public static NativeQuestTableLoader instance() {
+		NativeQuestTableLoader local = instance;
+		if (local == null) {
+			synchronized (NativeQuestTableLoader.class) {
+				local = instance;
+				if (local == null) {
+					local = load(NativeQuestTableLoader.class.getClassLoader());
+					instance = local;
+				}
+			}
+		}
+		return local;
+	}
+
+	/** 启动期强制装载（失败即异常，由调用方决定是否终止启动）。 / Eagerly loads at startup; throws on failure. */
+	public static void ensureLoaded() {
+		instance();
+	}
+
+	/** 从 classpath 装载并解析表。 / Loads and parses the table from the classpath. */
+	static NativeQuestTableLoader load(ClassLoader loader) {
+		try (InputStream input = loader.getResourceAsStream(RESOURCE);
+				InputStream serialInput = loader.getResourceAsStream(SERIAL_RESOURCE);
+				InputStream talkInput = loader.getResourceAsStream(TALK_RESOURCE)) {
+			if (input == null) {
+				throw new IllegalStateException("NATIVE_TABLE_PARSE_FAILED: missing " + RESOURCE);
+			}
+			if (serialInput == null) {
+				throw new IllegalStateException("NATIVE_TABLE_PARSE_FAILED: missing " + SERIAL_RESOURCE);
+			}
+			if (talkInput == null) {
+				throw new IllegalStateException("NATIVE_TABLE_PARSE_FAILED: missing " + TALK_RESOURCE);
+			}
+			return parse(input, serialInput, talkInput);
+		} catch (IOException e) {
+			throw new IllegalStateException("NATIVE_TABLE_PARSE_FAILED: cannot read tables", e);
+		}
+	}
+
+	/** 解析表字节流（包内可见供负例测试）。 / Parses the table stream (package-visible for negative tests). */
+	static NativeQuestTableLoader parse(InputStream input) throws IOException {
+		try (InputStream serialInput = NativeQuestTableLoader.class.getClassLoader()
+				.getResourceAsStream(SERIAL_RESOURCE);
+				InputStream talkInput = NativeQuestTableLoader.class.getClassLoader()
+						.getResourceAsStream(TALK_RESOURCE)) {
+			return parse(input, serialInput, talkInput);
+		}
+	}
+
+	/** 解析狩猎 + 串行两表（包内可见供负例测试；Talk 表从 classpath 补足）。 / Parses the hunt and serial tables. */
+	static NativeQuestTableLoader parse(InputStream input, InputStream serialInput) throws IOException {
+		try (InputStream talkInput = NativeQuestTableLoader.class.getClassLoader()
+				.getResourceAsStream(TALK_RESOURCE)) {
+			return parse(input, serialInput, talkInput);
+		}
+	}
+
+	/** 解析三张表的字节流（包内可见供负例测试）。 / Parses the three table streams. */
+	static NativeQuestTableLoader parse(InputStream input, InputStream serialInput, InputStream talkInput)
+			throws IOException {
+		Document document;
+		DocumentBuilder builder = newDocumentBuilder();
+		try {
+			document = builder.parse(input);
+		} catch (org.xml.sax.SAXException e) {
+			throw new IllegalStateException("NATIVE_TABLE_PARSE_FAILED: malformed Quest_SimpleHunt.xml", e);
+		}
+		Element root = document.getDocumentElement();
+		if (root == null || !EXPECTED_ROOT.equals(root.getTagName())) {
+			throw new IllegalStateException("NATIVE_TABLE_PARSE_FAILED: expected root <" + EXPECTED_ROOT
+					+ ">, got <" + (root == null ? "(none)" : root.getTagName()) + ">");
+		}
+		Map<Integer, SimpleHuntRow> rows = new LinkedHashMap<>();
+		NodeList children = root.getChildNodes();
+		for (int i = 0; i < children.getLength(); i++) {
+			Node child = children.item(i);
+			if (!(child instanceof Element element) || !ROW_TAG.equals(element.getTagName())) {
+				continue;
+			}
+			int questId = rowId(element);
+			SimpleHuntRow row = new SimpleHuntRow(questId,
+					optionalText(element, "acquired_npc_name"),
+					optionalText(element, "reward_npc_name"),
+					parseKillSlots(questId, element));
+			if (rows.putIfAbsent(questId, row) != null) {
+				throw new IllegalStateException("NATIVE_TABLE_PARSE_FAILED: duplicate quest id " + questId);
+			}
+		}
+		if (rows.isEmpty()) {
+			throw new IllegalStateException("NATIVE_TABLE_PARSE_FAILED: " + RESOURCE + " has no rows");
+		}
+		Map<Integer, SimpleSerialHuntRow> serialRows = serialInput != null ? loadSerial(serialInput, builder) : Map.of();
+		Map<Integer, SimpleTalkRow> talkRows = talkInput != null ? loadTalk(talkInput, builder) : Map.of();
+		return new NativeQuestTableLoader(Collections.unmodifiableMap(rows),
+				Collections.unmodifiableMap(serialRows), Collections.unmodifiableMap(talkRows));
+	}
+
+	private static Map<Integer, SimpleTalkRow> loadTalk(InputStream stream, DocumentBuilder builder) {
+		Document document;
+		try {
+			document = builder.parse(stream);
+		} catch (IOException | org.xml.sax.SAXException e) {
+			throw new IllegalStateException("NATIVE_TABLE_PARSE_FAILED: malformed " + TALK_RESOURCE, e);
+		}
+		Element root = document.getDocumentElement();
+		if (root == null || !EXPECTED_TALK_ROOT.equals(root.getTagName())) {
+			throw new IllegalStateException("NATIVE_TABLE_PARSE_FAILED: expected root <" + EXPECTED_TALK_ROOT
+					+ ">, got <" + (root == null ? "(none)" : root.getTagName()) + ">");
+		}
+		Map<Integer, SimpleTalkRow> rows = new LinkedHashMap<>();
+		NodeList children = root.getChildNodes();
+		for (int i = 0; i < children.getLength(); i++) {
+			Node child = children.item(i);
+			if (!(child instanceof Element element) || !ROW_TAG.equals(element.getTagName())) {
+				continue;
+			}
+			int questId = rowId(element);
+			SimpleTalkRow row = parseTalkRow(questId, element);
+			if (rows.putIfAbsent(questId, row) != null) {
+				throw new IllegalStateException("NATIVE_TABLE_PARSE_FAILED: duplicate talk quest id " + questId);
+			}
+		}
+		if (rows.isEmpty()) {
+			throw new IllegalStateException("NATIVE_TABLE_PARSE_FAILED: " + TALK_RESOURCE + " has no rows");
+		}
+		return rows;
+	}
+
+	/**
+	 * SimpleTalk 行解析：双 NPC 为**必填**（真端 3152/3152），缺失即 fail-closed；
+	 * give/remove 物品与 cutscene 按原文装载（不在装载层发明 count/id 语义）。
+	 * <p>
+	 * SimpleTalk row parsing: the two-NPC pair is mandatory in retail (3152/3152) and missing
+	 * values fail closed; give/remove items and cutscenes are loaded as the table's own text so
+	 * the loader invents no count/id semantics.
+	 */
+	private static SimpleTalkRow parseTalkRow(int questId, Element element) {
+		String acquired = optionalText(element, "acquired_npc_name");
+		String reward = optionalText(element, "reward_npc_name");
+		if (acquired == null || acquired.isBlank()) {
+			throw new IllegalStateException(
+					"NATIVE_TABLE_PARSE_FAILED: talk quest " + questId + " has no acquired_npc_name");
+		}
+		if (reward == null || reward.isBlank()) {
+			throw new IllegalStateException(
+					"NATIVE_TABLE_PARSE_FAILED: talk quest " + questId + " has no reward_npc_name");
+		}
+		List<String> talkNpcs = new ArrayList<>(3);
+		for (int i = 1; i <= 3; i++) {
+			String talk = optionalText(element, "talk_npc" + i);
+			if (talk != null && !talk.isBlank()) {
+				talkNpcs.add(talk.strip());
+			}
+		}
+		// 物品列按真端语义分槽：give_item = 接取侧发放；give_itemK/remove_itemK = 第 K 中继步的发放/扣除
+		// （与 1131 的 cab520/cabb10 立即数逐字节对拍，见 p3-prereqs/simple-talk-codegen.md §5/§6）。
+		String acceptGiveItem = null;
+		String give = optionalText(element, "give_item");
+		if (give != null && !give.isBlank()) {
+			acceptGiveItem = normalizeValue(give);
+		}
+		List<String> stepGiveItems = new ArrayList<>(3);
+		List<String> stepRemoveItems = new ArrayList<>(3);
+		for (int i = 1; i <= 3; i++) {
+			String indexed = optionalText(element, "give_item" + i);
+			stepGiveItems.add(indexed != null && !indexed.isBlank() ? normalizeValue(indexed) : null);
+			String removed = optionalText(element, "remove_item" + i);
+			stepRemoveItems.add(removed != null && !removed.isBlank() ? normalizeValue(removed) : null);
+		}
+		Integer conQuest = optionalInt(element, "con_quest", questId);
+		Integer cutsceneId = optionalInt(element, "cutsceneid1", questId);
+		Integer cutsceneAction = optionalInt(element, "cs1_haction", questId);
+		boolean itemCheck = "1".equals(optionalText(element, "item_check"));
+		return new SimpleTalkRow(questId, optionalText(element, "dev_name"), acquired.strip(), reward.strip(),
+				Collections.unmodifiableList(talkNpcs), conQuest, itemCheck, acceptGiveItem,
+				Collections.unmodifiableList(stepGiveItems), Collections.unmodifiableList(stepRemoveItems),
+				cutsceneId, cutsceneAction);
+	}
+
+	/** 归一元素文本内部空白（源表可跨行）。 / Normalizes inner whitespace (source text may span lines). */
+	private static String normalizeValue(String raw) {
+		return String.join(" ", raw.trim().split("\\s+"));
+	}
+
+	/** 可选整数元素：缺省返回 null，非数字 fail-closed。 / Optional int element: null when absent, fail closed when malformed. */
+	private static Integer optionalInt(Element row, String tag, int questId) {
+		String raw = optionalText(row, tag);
+		if (raw == null || raw.isBlank()) {
+			return null;
+		}
+		try {
+			return Integer.valueOf(raw.trim());
+		} catch (NumberFormatException e) {
+			throw new IllegalStateException("NATIVE_TABLE_PARSE_FAILED: quest " + questId + " <" + tag
+					+ "> is not a number: " + raw);
+		}
+	}
+
+	private static Map<Integer, SimpleSerialHuntRow> loadSerial(InputStream stream, DocumentBuilder builder) {
+		Document document;
+		try {
+			document = builder.parse(stream);
+		} catch (IOException | org.xml.sax.SAXException e) {
+			throw new IllegalStateException("NATIVE_TABLE_PARSE_FAILED: malformed " + SERIAL_RESOURCE, e);
+		}
+		Element root = document.getDocumentElement();
+		if (root == null || !EXPECTED_SERIAL_ROOT.equals(root.getTagName())) {
+			throw new IllegalStateException("NATIVE_TABLE_PARSE_FAILED: expected root <" + EXPECTED_SERIAL_ROOT
+					+ ">, got <" + (root == null ? "(none)" : root.getTagName()) + ">");
+		}
+		Map<Integer, SimpleSerialHuntRow> rows = new LinkedHashMap<>();
+		NodeList children = root.getChildNodes();
+		for (int i = 0; i < children.getLength(); i++) {
+			Node child = children.item(i);
+			if (!(child instanceof Element element) || !ROW_TAG.equals(element.getTagName())) {
+				continue;
+			}
+			int questId = rowId(element);
+			SimpleSerialHuntRow row = parseSerialRow(questId, element);
+			if (rows.putIfAbsent(questId, row) != null) {
+				throw new IllegalStateException("NATIVE_TABLE_PARSE_FAILED: duplicate serial quest id " + questId);
+			}
+		}
+		return rows;
+	}
+
+	private static SimpleSerialHuntRow parseSerialRow(int questId, Element element) {
+		String devName = optionalText(element, "dev_name");
+		String acquired = optionalText(element, "acquired_npc_name");
+		String reward = optionalText(element, "reward_npc_name");
+		List<String> talkNpcs = new ArrayList<>(4);
+		for (int i = 1; i <= 4; i++) {
+			String talk = optionalText(element, "talk_npc" + i);
+			if (talk != null && !talk.isBlank()) {
+				talkNpcs.add(talk.strip());
+			}
+		}
+		String[] countTags = {"count_first", "count_second", "count_third", "count_fourth", "count_fifth"};
+		String[] monsterTags = {"monster_first", "monster_second", "monster_third", "monster_fourth", "monster_fifth"};
+		List<SerialStage> stages = new ArrayList<>(5);
+		for (int i = 0; i < 5; i++) {
+			String countStr = optionalText(element, countTags[i]);
+			if (countStr != null && !countStr.isBlank()) {
+				int count = Integer.parseInt(countStr.strip());
+				if (count > 0) {
+					String monsterStr = optionalText(element, monsterTags[i]);
+					List<String> monsterList = new ArrayList<>();
+					if (monsterStr != null && !monsterStr.isBlank()) {
+						for (String m : COMMA.split(monsterStr.trim())) {
+							String trimmed = m.strip();
+							if (!trimmed.isEmpty()) {
+								monsterList.add(trimmed);
+							}
+						}
+					}
+					stages.add(new SerialStage(i + 1, count, Collections.unmodifiableList(monsterList)));
+				}
+			}
+		}
+		return new SimpleSerialHuntRow(questId, devName, acquired, reward,
+				Collections.unmodifiableList(talkNpcs), Collections.unmodifiableList(stages));
+	}
+
+	private static Map<Integer, KillSlot> parseKillSlots(int questId, Element row) {
+		Map<Integer, Integer> counts = new TreeMap<>();
+		Map<Integer, String> monsterTexts = new TreeMap<>();
+		NodeList children = row.getChildNodes();
+		for (int i = 0; i < children.getLength(); i++) {
+			Node child = children.item(i);
+			if (!(child instanceof Element element)) {
+				continue;
+			}
+			Matcher count = COUNT_TAG.matcher(element.getTagName());
+			if (count.matches()) {
+				int slot = Integer.parseInt(count.group(1));
+				if (counts.put(slot, requireOwnInt(element)) != null) {
+					throw new IllegalStateException(
+							"NATIVE_TABLE_PARSE_FAILED: quest " + questId + " has duplicate count" + slot);
+				}
+				continue;
+			}
+			Matcher monster = MONSTER_TAG.matcher(element.getTagName());
+			if (monster.matches()) {
+				monsterTexts.put(Integer.parseInt(monster.group(1)), element.getTextContent());
+			}
+		}
+		Map<Integer, KillSlot> killSlots = new TreeMap<>();
+		for (Map.Entry<Integer, Integer> entry : counts.entrySet()) {
+			int slot = entry.getKey();
+			// 有计数无 monster 属真端 13912 形（空名单 = 事件源缺失，行为永不满足），如实装载。
+			// Count-without-monster is the retail 13912 shape (empty list = missing event source,
+			// never satisfied); loaded as-is.
+			String rawMonsters = monsterTexts.getOrDefault(slot, "");
+			// 源表元素文本可跨行（37116）：先归一内部空白再按逗号切名单。
+			// Source element text can span lines (37116): normalize inner whitespace, then split.
+			String normalized = String.join(" ", rawMonsters.trim().split("\\s+"));
+			List<String> monsters = new ArrayList<>();
+			for (String name : COMMA.split(normalized)) {
+				if (!name.isEmpty()) {
+					monsters.add(name);
+				}
+			}
+			killSlots.put(slot, new KillSlot(entry.getValue(), List.copyOf(monsters)));
+		}
+		for (int slot : monsterTexts.keySet()) {
+			if (!killSlots.containsKey(slot)) {
+				// 有 monster 无 count = 相机 required 缺失，真端不存在此形，fail-closed。
+				// Monster-without-count lacks the camera required; retail has no such shape — fail closed.
+				throw new IllegalStateException(
+						"NATIVE_TABLE_PARSE_FAILED: quest " + questId + " has monster" + slot + " without count"
+								+ slot);
+			}
+		}
+		return Collections.unmodifiableSortedMap(new TreeMap<>(killSlots));
+	}
+
+	/** 读元素自身文本为整数（计数元素叶节点）。 / Reads the element's own text as an int (leaf count element). */
+	private static int requireOwnInt(Element valueHolder) {
+		String raw = valueHolder.getTextContent();
+		if (raw == null || raw.isBlank()) {
+			throw new IllegalStateException("NATIVE_TABLE_PARSE_FAILED: <" + valueHolder.getTagName()
+					+ "> has no value");
+		}
+		try {
+			return Integer.parseInt(raw.trim());
+		} catch (NumberFormatException e) {
+			throw new IllegalStateException("NATIVE_TABLE_PARSE_FAILED: <" + valueHolder.getTagName()
+					+ "> is not a number: " + raw.trim());
+		}
+	}
+
+	private static DocumentBuilder newDocumentBuilder() {
+		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+		try {
+			factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+			// 允许内部 DTD 子集（真端表的字符实体声明），但拒绝一切外部 DTD/实体。
+			// Allow the internal DTD subset (the retail table's character entities), refuse all external DTDs.
+			factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
+			factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
+			factory.setExpandEntityReferences(true);
+			return factory.newDocumentBuilder();
+		} catch (ParserConfigurationException e) {
+			throw new IllegalStateException("NATIVE_TABLE_PARSE_FAILED: cannot configure XML parser", e);
+		}
+	}
+
+	private static int requireInt(Element row, String tag) {
+		String raw = textOf(row, tag);
+		if (raw == null || raw.isBlank()) {
+			throw new IllegalStateException(
+					"NATIVE_TABLE_PARSE_FAILED: <" + ROW_TAG + "> is missing <" + tag + ">");
+		}
+		try {
+			return Integer.parseInt(raw.trim());
+		} catch (NumberFormatException e) {
+			throw new IllegalStateException("NATIVE_TABLE_PARSE_FAILED: <" + tag + "> is not a number: " + raw);
+		}
+	}
+
+	private static String optionalText(Element row, String tag) {
+		String value = textOf(row, tag);
+		return value == null ? "" : value.trim();
+	}
+
+	private static String textOf(Element row, String tag) {
+		NodeList nodes = row.getElementsByTagName(tag);
+		return nodes.getLength() == 0 ? null : nodes.item(0).getTextContent();
+	}
+
+	/** 行 id 在真端表里是行元素自身的 {@code id} 属性（{@code <id id="N">}）。 / The row id is the row element's own {@code id} attribute ({@code <id id="N">}). */
+	private static int rowId(Element row) {
+		String raw = row.getAttribute("id");
+		if (raw.isBlank()) {
+			throw new IllegalStateException("NATIVE_TABLE_PARSE_FAILED: <" + ROW_TAG + "> without id attribute");
+		}
+		try {
+			return Integer.parseInt(raw.trim());
+		} catch (NumberFormatException e) {
+			throw new IllegalStateException("NATIVE_TABLE_PARSE_FAILED: id attribute is not a number: " + raw);
+		}
+	}
+
+	/** SimpleTalk 全量行（只读集合）。 / All SimpleTalk rows. */
+	public Collection<SimpleTalkRow> talkRows() {
+		return talkRowsByQuestId.values();
+	}
+
+	/** SimpleTalk 行数。 / The number of SimpleTalk rows. */
+	public int talkSize() {
+		return talkRowsByQuestId.size();
+	}
+
+	/** 按任务查询 SimpleTalk 行，无行返回 Optional.empty()。 / Looks a SimpleTalk row up. */
+	public Optional<SimpleTalkRow> findTalk(int questId) {
+		return Optional.ofNullable(talkRowsByQuestId.get(questId));
+	}
+
+	/** 按任务查询 SimpleTalk 行，缺行 fail-closed。 / Looks a SimpleTalk row up; missing rows fail closed. */
+	public SimpleTalkRow requireTalk(int questId) {
+		SimpleTalkRow row = talkRowsByQuestId.get(questId);
+		if (row == null) {
+			throw new IllegalStateException("NATIVE_TABLE_ROW_MISSING: quest " + questId
+					+ " has no SimpleTalk row");
+		}
+		return row;
+	}
+
+	/** 表行数。 / The number of table rows. */
+	public int size() {
+		return rowsByQuestId.size();
+	}
+
+	/** 全部表行（questId 升序由底层 LinkedHashMap 装载序决定）。 / All rows (in load order). */
+	public List<SimpleHuntRow> rows() {
+		return List.copyOf(rowsByQuestId.values());
+	}
+
+	/** 按任务查询。 / Looks a row up by quest id. */
+	public Optional<SimpleHuntRow> find(int questId) {
+		return Optional.ofNullable(rowsByQuestId.get(questId));
+	}
+
+	/** 按任务查询，缺行 fail-closed。 / Looks a row up; missing rows fail closed. */
+	public SimpleHuntRow require(int questId) {
+		SimpleHuntRow row = rowsByQuestId.get(questId);
+		if (row == null) {
+			throw new IllegalStateException("NATIVE_TABLE_ROW_MISSING: quest " + questId
+					+ " has no SimpleHunt row");
+		}
+		return row;
+	}
+
+	/** 串行任务全量行（只读集合）。 / All serial hunt rows. */
+	public Collection<SimpleSerialHuntRow> serialHuntRows() {
+		return serialRowsByQuestId.values();
+	}
+
+	/** 按任务查询串行行，无行返回 Optional.empty()。 / Looks a serial row up. */
+	public Optional<SimpleSerialHuntRow> findSerial(int questId) {
+		return Optional.ofNullable(serialRowsByQuestId.get(questId));
+	}
+
+	/** 按任务查询串行行，缺行 fail-closed。 / Looks a serial row up; missing rows fail closed. */
+	public SimpleSerialHuntRow requireSerial(int questId) {
+		SimpleSerialHuntRow row = serialRowsByQuestId.get(questId);
+		if (row == null) {
+			throw new IllegalStateException("NATIVE_TABLE_ROW_MISSING: serial quest " + questId
+					+ " has no SimpleSerialHunt row");
+		}
+		return row;
+	}
+
+	/**
+	 * 表行 → 相机行规约（纯函数；零计数行拒绝——真端休眠行不得派生相机）。
+	 * Table row → camera row spec (pure; zero-count rows are rejected — dormant retail rows must
+	 * never derive a camera row).
+	 */
+	public CameraRegistry.RowSpec cameraSpec(SimpleHuntRow row) {
+		if (row.killSlots().isEmpty()) {
+			throw new IllegalStateException(
+					"NATIVE_CAMERA_ROW_MISSING: quest " + row.questId() + " has no kill counts");
+		}
+		RawQuestVarsCodec.Width width = widthOf(row);
+		Map<Integer, Integer> slotRequires = new TreeMap<>();
+		int fullValue = 0;
+		for (Map.Entry<Integer, KillSlot> entry : row.killSlots().entrySet()) {
+			int slot = entry.getKey();
+			int count = entry.getValue().count();
+			slotRequires.put(slot, count);
+			fullValue |= count << width.shift(slot);
+		}
+		return new CameraRegistry.RowSpec(row.questId(), width, fullValue, slotRequires);
+	}
+
+	/**
+	 * 串行表行 → 相机行规约（纯函数；全 16 行均在 6 位掩码内）。
+	 * Serial table row → camera row spec (pure; all 16 rows fit in the 6-bit mask).
+	 */
+	public CameraRegistry.RowSpec cameraSpec(SimpleSerialHuntRow row) {
+		if (row.stages().isEmpty()) {
+			throw new IllegalStateException(
+					"NATIVE_CAMERA_ROW_MISSING: serial quest " + row.questId() + " has no stages");
+		}
+		RawQuestVarsCodec.Width width = RawQuestVarsCodec.Width.SIX;
+		Map<Integer, Integer> slotRequires = new TreeMap<>();
+		int fullValue = 0;
+		for (SerialStage stage : row.stages()) {
+			int slot = stage.stage();
+			int count = stage.count();
+			slotRequires.put(slot, count);
+			fullValue |= count << width.shift(slot);
+		}
+		return new CameraRegistry.RowSpec(row.questId(), width, fullValue, slotRequires);
+	}
+
+	/**
+	 * 宽度规则：任一 count 超 6 位掩码 ⇒ 10 位，否则 6 位（对拍 1812 任务零失败）。
+	 * Width rule: any count above the 6-bit mask implies 10-bit, else 6-bit (zero failures across
+	 * the 1812 reconciled quests).
+	 */
+	static RawQuestVarsCodec.Width widthOf(SimpleHuntRow row) {
+		int sixBitMask = RawQuestVarsCodec.Width.SIX.slotMask();
+		for (KillSlot slot : row.killSlots().values()) {
+			if (slot.count() > sixBitMask) {
+				return RawQuestVarsCodec.Width.TEN;
+			}
+		}
+		return RawQuestVarsCodec.Width.SIX;
+	}
+}

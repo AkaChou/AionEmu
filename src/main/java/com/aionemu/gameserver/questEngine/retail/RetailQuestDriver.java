@@ -19,6 +19,9 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.concurrent.ConcurrentHashMap;
+import com.aionemu.gameserver.questEngine.tablelane.SimpleHuntHandler;
+import com.aionemu.gameserver.questEngine.tablelane.SimpleSerialHuntHandler;
+import com.aionemu.gameserver.questEngine.tablelane.SimpleTalkHandler;
 
 /**
  * 生产装载链的"真端优先"驱动（提示词 §4.C 的 overlay 落点）。
@@ -64,7 +67,6 @@ public final class RetailQuestDriver {
 	private static final String NAME_IDS_TSV = "/aion/data/static_data/quest/retail/quest_name_string_ids.tsv";
 	private static final String RANDOM_REWARDS = "/aion/data/static_data/quest/legacy/quest_random_rewards.xml";
 	private static final String NPC_DIR = "/aion/data/static_data/npcs/";
-	private static final String ITEM_DIR = "/aion/data/static_data/items/item/";
 	/** 生产区域发放表（{@code <quest_area>} 绑定；真端世界文件 questscript_area 的落点）。 /
 	 * Production quest-area grant table ({@code <quest_area>} bindings from the retail world files). */
 	private static final String AI_AREAS = "/aion/definitions/compact/ai/ai-areas.xml";
@@ -282,11 +284,18 @@ public final class RetailQuestDriver {
 		}
 		List<Integer> missing = new java.util.ArrayList<>();
 		List<Integer> wrongOwner = new java.util.ArrayList<>();
+		int nativeCoveredCount = 0;
 		for (Map.Entry<Integer, String> row : owners.entrySet()) {
 			int questId = row.getKey();
 			var xml = xmlCatalog.findEntry(questId);
 			var entry = actual.findEntry(questId);
 			if (entry.isEmpty()) {
+				if ((SimpleHuntHandler.instance().owns(questId) || SimpleSerialHuntHandler.instance().owns(questId)
+						|| SimpleTalkHandler.instance().owns(questId))
+						&& "RETAIL_TABLE".equals(row.getValue())) {
+					nativeCoveredCount++;
+					continue;
+				}
 				missing.add(questId);
 			} else if (enabled && "RETAIL_TABLE".equals(row.getValue())) {
 				if (xml.isPresent() || entry.orElseThrow().executable().isEmpty()) {
@@ -301,11 +310,12 @@ public final class RetailQuestDriver {
 				wrongOwner.add(entry.id());
 			}
 		}
-		if (!missing.isEmpty() || !wrongOwner.isEmpty() || actual.entries().size() != owners.size()) {
+		int totalCovered = actual.entries().size() + nativeCoveredCount;
+		if (!missing.isEmpty() || !wrongOwner.isEmpty() || totalCovered != owners.size()) {
 			missing.sort(Integer::compareTo);
 			wrongOwner.sort(Integer::compareTo);
 			throw new IllegalStateException("retail production catalog incomplete: entries="
-				+ actual.entries().size() + "/" + owners.size() + ", missing="
+				+ totalCovered + "/" + owners.size() + ", missing="
 				+ missing.stream().limit(10).toList() + " (" + missing.size() + "), wrongOwner="
 				+ wrongOwner.stream().limit(10).toList() + " (" + wrongOwner.size() + ")");
 		}
@@ -363,9 +373,11 @@ public final class RetailQuestDriver {
 			if ("RETAIL_TABLE".equals(parts[1])) {
 				int questId = Integer.parseInt(parts[0]);
 				if ("SimpleHunt".equals(parts[2])) {
-					retailOwnedHunt.add(questId);
+					// P1 原生表驱动切换：SimpleHunt 939 任务由 SimpleHuntHandler 原生直驱，不再生成旧 IR 节点
+					// retailOwnedHunt.add(questId);
 				} else if ("SimpleSerialHunt".equals(parts[2])) {
-					retailOwnedSerialHunt.add(questId);
+					// P2 原生表驱动切换：SimpleSerialHunt 16 任务由 SimpleSerialHuntHandler 原生直驱，不再生成旧 IR 节点
+					// retailOwnedSerialHunt.add(questId);
 				} else if ("SimpleUseItem".equals(parts[2])) {
 					retailOwnedUseItem.add(questId);
 				} else if ("SimpleItemPlay".equals(parts[2])) {
@@ -373,7 +385,8 @@ public final class RetailQuestDriver {
 				} else if ("DataDriven".equals(parts[2])) {
 					retailOwnedDataDriven.add(questId);
 				} else if ("SimpleTalk".equals(parts[2])) {
-					retailOwnedTalk.add(questId);
+					// P3 原生表驱动切换：SimpleTalk 3152 任务由 SimpleTalkHandler 原生直驱，不再生成旧 IR 节点
+					// retailOwnedTalk.add(questId);
 				} else if ("CombineTask".equals(parts[2])) {
 					retailOwnedCombine.add(questId);
 				} else if ("SimpleCollectItem".equals(parts[2])) {
@@ -442,8 +455,7 @@ public final class RetailQuestDriver {
 			RetailQuestAiNameGroups.streams(), RetailNpcNameAliases.streams());
 		RetailQuestUseItemNpcs interactionObjects =
 			RetailQuestUseItemNpcs.fromIds(npcIndex.questUseItemNpcIds());
-		RetailItemNameIndex itemIndex = RetailItemNameIndex.build(
-			openAll(ITEM_DIR, listXmlNames(ITEM_DIR)));
+		RetailItemNameIndex itemIndex = RetailItemNameIndex.loadItemTemplates();
 		return new RetailQuestDriver(retailOwnedHunt, retailOwnedSerialHunt, retailOwnedUseItem,
 			retailOwnedItemPlay, retailOwnedDataDriven, retailOwnedTalk, retailOwnedCombine, retailOwnedCollectItem,
 			new RetailQuestCatalog(table, combineTaskTable, npcIndex), simpleTalkTable, combineTaskTable,
@@ -563,7 +575,7 @@ public final class RetailQuestDriver {
 		if (retailOwnedDataDriven.contains(questId)) {
 			return compileDataDriven(questId);
 		}
-		return compileSimpleHunt(questId);
+		return Optional.empty();
 	}
 
 	/** CombineTask 行 → 定义（真端表 + 配方索引 + 元数据交叉校验；其余形态按稳定码拒绝）。 */
@@ -815,51 +827,6 @@ public final class RetailQuestDriver {
 			ids.put(Integer.parseInt(parts[0].substring("STR_QUEST_NAME_Q".length())), Integer.parseInt(parts[1]));
 		}
 		return ids;
-	}
-
-	private static List<String> listXmlNames(String dir) throws IOException {
-		var url = RetailQuestDriver.class.getResource(dir);
-		if (url == null) {
-			return List.of();
-		}
-		if ("file".equals(url.getProtocol())) {
-			try {
-				java.io.File[] files = new java.io.File(url.toURI()).listFiles(
-					(directory, name) -> name.endsWith(".xml"));
-				if (files == null) {
-					return List.of();
-				}
-				return java.util.Arrays.stream(files).map(java.io.File::getName).sorted().toList();
-			} catch (java.net.URISyntaxException e) {
-				throw new IOException("bad resource dir " + dir, e);
-			}
-		}
-		// jar 协议：按目录前缀枚举（与 QuestDefinitionDirectoryLoader 同思路）。
-		if ("jar".equals(url.getProtocol())) {
-			try {
-				var connection = (java.net.JarURLConnection) url.openConnection();
-				connection.setUseCaches(false);
-				try (var jar = connection.getJarFile()) {
-					String prefix = dir.substring(1);
-					List<String> names = new java.util.ArrayList<>();
-					var entries = jar.entries();
-					while (entries.hasMoreElements()) {
-						String name = entries.nextElement().getName();
-						if (name.startsWith(prefix) && name.endsWith(".xml")
-							&& name.indexOf('/', prefix.length()) < 0) {
-							names.add(name.substring(prefix.length()));
-						}
-					}
-					java.util.Collections.sort(names);
-					return names;
-				}
-			} catch (IOException e) {
-				throw e;
-			} catch (Exception e) {
-				throw new IOException("jar listing failed for " + dir, e);
-			}
-		}
-		throw new IOException("unsupported resource protocol " + url.getProtocol());
 	}
 
 	private static org.w3c.dom.Document parse(InputStream input) throws IOException {

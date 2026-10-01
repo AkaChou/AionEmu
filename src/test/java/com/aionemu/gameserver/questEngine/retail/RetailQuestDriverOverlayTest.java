@@ -61,10 +61,14 @@ class RetailQuestDriverOverlayTest {
 	}
 
 	@Test
-	void productionOverlayContainsExactlyTheManifestQuestUniverse() {
+	void productionOverlayContainsExactlyTheManifestQuestUniverse() throws Exception {
 		System.setProperty("aion.quest.retailDriver", "true");
 		QuestCatalog production = com.aionemu.gameserver.questEngine.definition.ProductionQuestDefinitions.catalog();
-		assertEquals(6224, production.entries().size());
+		int migratedNativeCount = (int) retailOwnedIds().stream().filter(id ->
+			com.aionemu.gameserver.questEngine.tablelane.SimpleHuntHandler.instance().owns(id)
+			|| com.aionemu.gameserver.questEngine.tablelane.SimpleSerialHuntHandler.instance().owns(id)
+			|| com.aionemu.gameserver.questEngine.tablelane.SimpleTalkHandler.instance().owns(id)).count();
+		assertEquals(6224, production.entries().size() + migratedNativeCount);
 	}
 
 	@Test
@@ -72,7 +76,12 @@ class RetailQuestDriverOverlayTest {
 		System.setProperty("aion.quest.retailDriver", "true");
 		QuestCatalog production = com.aionemu.gameserver.questEngine.definition.ProductionQuestDefinitions.catalog();
 		Set<Integer> retailIds = retailOwnedIds();
-		int missingId = retailIds.iterator().next();
+		// 已切原生车道的行不再由 typed 目录覆盖；负例必须挑一行**仍走旧 IR** 的 retail 行。
+		int missingId = retailIds.stream()
+			.filter(id -> !com.aionemu.gameserver.questEngine.tablelane.SimpleHuntHandler.instance().owns(id))
+			.filter(id -> !com.aionemu.gameserver.questEngine.tablelane.SimpleSerialHuntHandler.instance().owns(id))
+			.filter(id -> !com.aionemu.gameserver.questEngine.tablelane.SimpleTalkHandler.instance().owns(id))
+			.findFirst().orElseThrow();
 		QuestCatalog xmlCatalog = com.aionemu.gameserver.questEngine.definition.ImmutableQuestCatalog.fromEntries(
 			production.entries().stream().filter(entry -> !retailIds.contains(entry.id())).toList());
 		QuestCatalog incomplete = com.aionemu.gameserver.questEngine.definition.ImmutableQuestCatalog.fromEntries(
@@ -89,7 +98,11 @@ class RetailQuestDriverOverlayTest {
 		QuestCatalog overlay = RetailQuestDriver.overlay(xmlCatalog);
 
 		RetailQuestDriver driver = RetailQuestDriver.current().orElseThrow();
-		assertEquals(retailOwnedIds().size(), driver.retailOwnedCount(),
+		int migratedNativeCount = (int) retailOwnedIds().stream().filter(id ->
+			com.aionemu.gameserver.questEngine.tablelane.SimpleHuntHandler.instance().owns(id)
+			|| com.aionemu.gameserver.questEngine.tablelane.SimpleSerialHuntHandler.instance().owns(id)
+			|| com.aionemu.gameserver.questEngine.tablelane.SimpleTalkHandler.instance().owns(id)).count();
+		assertEquals(retailOwnedIds().size(), driver.retailOwnedCount() + migratedNativeCount,
 			"driver must include every retail-owned manifest row");
 		assertEquals(xmlCatalog.entries().size(), overlay.entries().size(),
 			"overlay must not change the entry count while XML files still exist");
