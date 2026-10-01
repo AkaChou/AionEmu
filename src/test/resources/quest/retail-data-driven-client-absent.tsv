@@ -1,0 +1,357 @@
+# §10.3-#5 裁定冻结：客户端三表皆无的 DD 活行（CLIENT_ABSENT_LIVE ⇒ P7 不得路由/注册） + 真端表内注释禁用的行（COMMENTED_OUT ⇒ 装载器不含；逐行证据见 p7/dd-client-presence.tsv）
+quest_id	dev_name	acquire_category	hunt_first	retention_owner	xml_in_repo	verdict
+99003	[주간] 중심기지 수호	Talk	LDF5_Fortress_D2_ShadowStalker_65_An 15; LDF5_Fortress_C1_ElementalFire3_65_An 15; LDF5_Fortress_B1_Statue_M_Rune_65_An 15;	ABSENT	False	CLIENT_ABSENT_LIVE
+99004	[주간] 중심기지 수호	Talk	LDF5_Fortress_D2_ShadowStalker_65_An 15; LDF5_Fortress_C1_ElementalFire3_65_An 15; LDF5_Fortress_B1_Statue_M_Rune_65_An 15;	ABSENT	False	CLIENT_ABSENT_LIVE
+99005	5.8 마스터 서버 업적 PVP [긴급 지령] 잉기스온 수비 지령	Talk	45	ABSENT	False	CLIENT_ABSENT_LIVE
+99006	5.8 마스터 서버 업적 PVP [긴급 지령] 잉기스온 수비 지령	Talk	45	ABSENT	False	CLIENT_ABSENT_LIVE
+99007	[주간] 중심기지 수호	Talk	LDF5_Fortress_D2_ShadowStalker_65_An 10; LDF5_Fortress_C1_ElementalFire3_65_An 10; LDF5_Fortress_D1_Rottentree_BurnRe_65_An 10;	ABSENT	False	CLIENT_ABSENT_LIVE
+99008	[주간] 중심기지 수호	Talk	LDF5_Fortress_D1_Rottentree_BurnRe_65_An 10; LDF5_Fortress_D2_ShadowStalker_65_An 10; LDF5_Fortress_C1_ElementalFire3_65_An 10;	ABSENT	False	CLIENT_ABSENT_LIVE
+99009	5.8 마스터 서버 업적 PVP [긴급 지령] 잉기스온 수비 지령	Talk	20	ABSENT	False	CLIENT_ABSENT_LIVE
+99010	5.8 마스터 서버 업적 PVP [긴급 지령] 잉기스온 수비 지령	Talk	20	ABSENT	False	CLIENT_ABSENT_LIVE
+99011	[주간] 중심기지 수호	Talk	LDF5_Fortress_D2_ShadowStalker_65_An 10; LDF5_Fortress_C1_ElementalFire3_65_An 10; LDF5_Fortress_D1_Rottentree_BurnRe_65_An 10;	ABSENT	False	CLIENT_ABSENT_LIVE
+99012	[주간] 중심기지 수호	Talk	LDF5_Fortress_D1_Rottentree_BurnRe_65_An 10; LDF5_Fortress_D2_ShadowStalker_65_An 10; LDF5_Fortress_C1_ElementalFire3_65_An 10;	ABSENT	False	CLIENT_ABSENT_LIVE
+99013	5.8 마스터 서버 업적 PVP [긴급 지령] 잉기스온 수비 지령	Talk	10	ABSENT	False	CLIENT_ABSENT_LIVE
+99014	5.8 마스터 서버 업적 PVP [긴급 지령] 잉기스온 수비 지령	Talk	10	ABSENT	False	CLIENT_ABSENT_LIVE
+99015	[주간] 중심기지 수호	Talk	LDF5_Fortress_D2_ShadowStalker_65_An 10; LDF5_Fortress_C1_ElementalFire3_65_An 10; LDF5_Fortress_D1_Rottentree_BurnRe_65_An 10;	ABSENT	False	CLIENT_ABSENT_LIVE
+99016	[주간] 중심기지 수호	Talk	LDF5_Fortress_D1_Rottentree_BurnRe_65_An 10; LDF5_Fortress_D2_ShadowStalker_65_An 10; LDF5_Fortress_C1_ElementalFire3_65_An 10;	ABSENT	False	CLIENT_ABSENT_LIVE
+99017	5.8 마스터 서버 업적 PVP [긴급 지령] 잉기스온 수비 지령	Talk	5	ABSENT	False	CLIENT_ABSENT_LIVE
+99018	5.8 마스터 서버 업적 PVP [긴급 지령] 잉기스온 수비 지령	Talk	5	ABSENT	False	CLIENT_ABSENT_LIVE
+99101	[주간] 중심기지 수호	Talk	LF3E3_AeB_LizardAs_44_Ae_Tune, LF3E3_AeB_LizardAsSleep_44_Ae_Tune 5; LF3E3_FeA_LizardFi_44_Ae_Tune, LF3E3_FeA_LizardFiSleep_44_Ae_Tune, LF3E3_FeA_LizardFiTalk_44_Ae_Tune 5; LF3E3_FeC_LizardFi_44_Ae_Tune, LF3E3_FeC_LizardFiSleep_44_Ae_Tune 5;	ABSENT	False	CLIENT_ABSENT_LIVE
+99102	[주간] 중심기지 수호	Talk	G6_FeB_NagaFiD_45_Ae_tune 5; G6_PeA1_NagaPrDTalk_45_Ae_tune, G6_PeA1_NagaPrD_45_Ae_tune 5;	ABSENT	False	CLIENT_ABSENT_LIVE
+99103	[주간] 중심기지 수호	Talk	TrollkinReD_41_An 5; TrollRe2D_41_An 5;	ABSENT	False	CLIENT_ABSENT_LIVE
+99104	[주간] 중심기지 수호	Talk	ab1_1141_defender_da_a 2; ab1_1141_defender_da_b 8;	ABSENT	False	CLIENT_ABSENT_LIVE
+99105	[주간] 중심기지 수호	Talk	ab1_1132_defender_da_a 3; ab1_1132_defender_da_b 7;	ABSENT	False	CLIENT_ABSENT_LIVE
+99106	[주간] 중심기지 수호	Talk	ab1_1131_defender_da_a 5; ab1_1131_defender_da_b 5;	ABSENT	False	CLIENT_ABSENT_LIVE
+99107	-	Talk	15	ABSENT	False	CLIENT_ABSENT_LIVE
+99108	-	Talk	15	ABSENT	False	CLIENT_ABSENT_LIVE
+99109	-	Talk	15	ABSENT	False	CLIENT_ABSENT_LIVE
+99110	-	Talk	Zombie_39_An 7; Zombie_38_An 7;	ABSENT	False	CLIENT_ABSENT_LIVE
+99111	-	Talk	world_event_newyear_year_01 5;	ABSENT	False	CLIENT_ABSENT_LIVE
+99112	-	Talk	200	ABSENT	False	CLIENT_ABSENT_LIVE
+99113	-	Talk	100	ABSENT	False	CLIENT_ABSENT_LIVE
+99114	-	Talk	60	ABSENT	False	CLIENT_ABSENT_LIVE
+99115	[일일] 심해의 끝자락 토벌	Talk	WORLD_QUEST_Q_Q_01	ABSENT	False	CLIENT_ABSENT_LIVE
+99116	[일일] 심해의 끝자락 토벌	Talk	WORLD_QUEST_Q_Q_01	ABSENT	False	CLIENT_ABSENT_LIVE
+99117	[일일] 심해의 끝자락 토벌	Talk	WORLD_QUEST_Q_Q_01	ABSENT	False	CLIENT_ABSENT_LIVE
+99118	-	Talk	LF4_2021_defender_Da_wi LF4_2021_defender_Da_Fi LF4_2021_defender_Da_Pr LF4_2021_defender_Da_As LF4_2021_defender_Da_Ra LF4_2021_defenderS_Da_As LF4_2021_defenderS_Da_Fi LF4_2021_defenderS_Da_wi LF4_2021_defenderS_Da_Pr 5;	ABSENT	False	CLIENT_ABSENT_LIVE
+99119	-	Talk	LF4_2011_defender_Da_wi LF4_2011_defender_Da_Fi LF4_2011_defender_Da_Pr LF4_2011_defender_Da_As LF4_2011_defenderS_Da_As LF4_2011_defenderS_Da_Fi LF4_2011_defenderS_Da_wi LF4_2011_defenderS_Da_Pr LF4_2011_defender_Da_Ra 5;	ABSENT	False	CLIENT_ABSENT_LIVE
+99120	-	Talk	DF4_3021_defender_Da_wi DF4_3021_defender_Da_Fi DF4_3021_defender_Da_Pr DF4_3021_defender_Da_As DF4_3021_defender_Da_Ra DF4_3021_defenderS_Da_As DF4_3021_defenderS_Da_Fi DF4_3021_defenderS_Da_wi 5;	ABSENT	False	CLIENT_ABSENT_LIVE
+99121	-	Talk	DF4_3011_defender_Da_wi DF4_3011_defender_Da_Fi DF4_3011_defender_Da_Pr DF4_3011_defender_Da_As DF4_3011_defenderS_Da_As DF4_3011_defenderS_Da_Fi DF4_3011_defenderS_Da_wi DF4_3011_defenderS_Da_Pr DF4_3011_defender_Da_Ra 5;	ABSENT	False	CLIENT_ABSENT_LIVE
+99122	-	Talk	DF4_DragonFly_54_An DF4_DragonFly_55_An 4; DF4_Mudthorn_DR_54_An DF4_Mudthorn_DR_55_An 4;	ABSENT	False	CLIENT_ABSENT_LIVE
+99123	-	Talk	DF4_Varanus_DR_54_An DF4_Varanus_DR_55_An 4; DF4_Scorpion_Rough_54_An DF4_Scorpion_Rough_55_An 4;	ABSENT	False	CLIENT_ABSENT_LIVE
+99124	-	Talk	-	ABSENT	False	CLIENT_ABSENT_LIVE
+99125	-	Talk	50	ABSENT	False	CLIENT_ABSENT_LIVE
+99126	[일일] 심해의 끝자락 토벌	Talk	DF6_Ninetailfoxwoman_Soul_E	ABSENT	False	CLIENT_ABSENT_LIVE
+99127	-	Talk	15	ABSENT	False	CLIENT_ABSENT_LIVE
+99128	-	Talk	DF6_Ninetailfoxwoman_Soul_E_1	ABSENT	False	CLIENT_ABSENT_LIVE
+99129	-	Talk	18	ABSENT	False	CLIENT_ABSENT_LIVE
+99130	-	Talk	DF6_Ninetailfoxwoman_Soul_E	ABSENT	False	CLIENT_ABSENT_LIVE
+99131	-	Talk	10	ABSENT	False	CLIENT_ABSENT_LIVE
+99132	-	Talk	20	ABSENT	False	CLIENT_ABSENT_LIVE
+99133	-	Talk	LDF4b_T2_DrakanFi_Tiamat_59_Ae LDF4b_T2_DrakanSc_Tiamat_59_Ae LDF4b_T2_DrakanWi_Tiamat_59_Ae LDF4b_T2_DrakanCl_Tiamat_59_Ae 5; LDF4b_T3_DrakanFi_Tiamat_59_Ae LDF4b_T3_DrakanSc_Tiamat_59_Ae LDF4b_T3_DrakanWi_Tiamat_59_Ae LDF4b_T3_DrakanCl_Tiamat_59_Ae 5; LDF4b_T4_DrakanFi_Tiamat_60_An LDF4b_T4_DrakanSc_Tiamat_60_An LDF4b_T4_DrakanWi_Tiamat_60_An LDF4b_T4_DrakanCl_Tiamat_60_An 5;	ABSENT	False	CLIENT_ABSENT_LIVE
+99134	-	Talk	ldf4b_4011_defender_Da_Fi ldf4b_4011_defender_Da_Ra ldf4b_4011_defender_Da_Pr 3;	ABSENT	False	CLIENT_ABSENT_LIVE
+99135	-	Talk	ldf4b_4031_defender_Da_Fi ldf4b_4031_defender_Da_Ra ldf4b_4031_defender_Da_Pr 3;	ABSENT	False	CLIENT_ABSENT_LIVE
+99136	-	Talk	ldf4b_4041_defender_Da_Fi ldf4b_4041_defender_Da_Ra ldf4b_4041_defender_Da_Pr 3;	ABSENT	False	CLIENT_ABSENT_LIVE
+99137	-	Talk	ldf4b_4021_defender_Da_Fi ldf4b_4021_defender_Da_Ra ldf4b_4021_defender_Da_Pr 3;	ABSENT	False	CLIENT_ABSENT_LIVE
+99138	-	Talk	DF6_Ninetailfoxwoman_Soul_E_1	ABSENT	False	CLIENT_ABSENT_LIVE
+99139	-	Talk	DF6_Ninetailfoxwoman_Soul_E_1	ABSENT	False	CLIENT_ABSENT_LIVE
+99140	-	Talk	DF6_Ninetailfoxwoman_Soul_E_1	ABSENT	False	CLIENT_ABSENT_LIVE
+99141	-	Talk	30	ABSENT	False	CLIENT_ABSENT_LIVE
+99143	-	Talk	Ruonas	ABSENT	False	CLIENT_ABSENT_LIVE
+99144	-	Talk	LDF4b_T2_DrakanFi_Tiamat_59_Ae LDF4b_T2_DrakanSc_Tiamat_59_Ae LDF4b_T2_DrakanWi_Tiamat_59_Ae LDF4b_T2_DrakanCl_Tiamat_59_Ae 5; LDF4b_T3_DrakanFi_Tiamat_59_Ae LDF4b_T3_DrakanSc_Tiamat_59_Ae LDF4b_T3_DrakanWi_Tiamat_59_Ae LDF4b_T3_DrakanCl_Tiamat_59_Ae 5; LDF4b_T4_DrakanFi_Tiamat_60_An LDF4b_T4_DrakanSc_Tiamat_60_An LDF4b_T4_DrakanWi_Tiamat_60_An LDF4b_T4_DrakanCl_Tiamat_60_An 5;	ABSENT	False	CLIENT_ABSENT_LIVE
+99145	-	Talk	LDF4A_B2_Nepilim_M1_58_Ae LDF4A_B2_Nepilim_M1_58_Ae_idle_01 LDF4A_B2_Nepilim_M1_58_Ae_idle_02 3; LDF4A_B2_Nepilim_R_58_Ae LDF4A_B2_Nepilim_R_58_Ae_idle_01 LDF4A_B2_Nepilim_R_58_Ae_idle_02 3;	ABSENT	False	CLIENT_ABSENT_LIVE
+99147	-	Talk	LDF4b_C1_GururuFi_57_Ae LDF4b_C1_GururuFi_58_Ae LDF4b_C1_Gururuwi_57_Ae LDF4b_C1_Gururuwi_58_Ae LDF4b_C1_GururuAs_57_Ae LDF4b_C1_GururuAs_58_Ae LDF4b_C1_GururuCl_57_Ae LDF4b_C1_GururuCl_58_Ae 10;	ABSENT	False	CLIENT_ABSENT_LIVE
+99148	-	Talk	LDF4b_C3_DrakanFi_Tiamat_60_An LDF4b_C3_DrakanSc_Tiamat_60_An LDF4b_C3_DrakanWi_Tiamat_60_An LDF4b_C3_DrakanCl_Tiamat_60_An LDF4b_C3_DrakanFi_Tiamat_60_Ae LDF4b_C3_DrakanSc_Tiamat_60_Ae LDF4b_C3_DrakanWi_Tiamat_60_Ae LDF4b_C3_DrakanCl_Tiamat_60_Ae 11;	ABSENT	False	CLIENT_ABSENT_LIVE
+99149	-	Talk	LDF4b_C2_Mammoth_59_Ae LDF4b_C2_Mammoth_60_Ae LDF4b_C2_Waterworm_59_Ae LDF4b_C2_Waterworm_60_Ae LDF4b_C2_Flyingworm_59_Ae LDF4b_C2_Flyingworm_60_Ae 10;	ABSENT	False	CLIENT_ABSENT_LIVE
+99150	[일일] 심해의 끝자락 토벌	Talk	LDF4_Advance_kalnif_65_An 6;	ABSENT	False	CLIENT_ABSENT_LIVE
+99152	-	Talk	ld_rw_npc_gd5001_1	ABSENT	False	CLIENT_ABSENT_LIVE
+99153	-	Talk	Ruonas	ABSENT	False	CLIENT_ABSENT_LIVE
+99154	-	Talk	LDF4b_T2_DrakanFi_Tiamat_59_Ae LDF4b_T2_DrakanSc_Tiamat_59_Ae LDF4b_T2_DrakanWi_Tiamat_59_Ae LDF4b_T2_DrakanCl_Tiamat_59_Ae 5; LDF4b_T3_DrakanFi_Tiamat_59_Ae LDF4b_T3_DrakanSc_Tiamat_59_Ae LDF4b_T3_DrakanWi_Tiamat_59_Ae LDF4b_T3_DrakanCl_Tiamat_59_Ae 5; LDF4b_T4_DrakanFi_Tiamat_60_An LDF4b_T4_DrakanSc_Tiamat_60_An LDF4b_T4_DrakanWi_Tiamat_60_An LDF4b_T4_DrakanCl_Tiamat_60_An 5;	ABSENT	False	CLIENT_ABSENT_LIVE
+99155	-	Talk	LDF4A_B2_Nepilim_M1_58_Ae LDF4A_B2_Nepilim_M1_58_Ae_idle_01 LDF4A_B2_Nepilim_M1_58_Ae_idle_02 3; LDF4A_B2_Nepilim_R_58_Ae LDF4A_B2_Nepilim_R_58_Ae_idle_01 LDF4A_B2_Nepilim_R_58_Ae_idle_02 3;	ABSENT	False	CLIENT_ABSENT_LIVE
+99156	-	Talk	60	ABSENT	False	CLIENT_ABSENT_LIVE
+99157	-	Talk	LDF4b_C1_GururuFi_57_Ae LDF4b_C1_GururuFi_58_Ae LDF4b_C1_Gururuwi_57_Ae LDF4b_C1_Gururuwi_58_Ae LDF4b_C1_GururuAs_57_Ae LDF4b_C1_GururuAs_58_Ae LDF4b_C1_GururuCl_57_Ae LDF4b_C1_GururuCl_58_Ae 10;	ABSENT	False	CLIENT_ABSENT_LIVE
+99158	-	Talk	LDF4b_C3_DrakanFi_Tiamat_60_An LDF4b_C3_DrakanSc_Tiamat_60_An LDF4b_C3_DrakanWi_Tiamat_60_An LDF4b_C3_DrakanCl_Tiamat_60_An LDF4b_C3_DrakanFi_Tiamat_60_Ae LDF4b_C3_DrakanSc_Tiamat_60_Ae LDF4b_C3_DrakanWi_Tiamat_60_Ae LDF4b_C3_DrakanCl_Tiamat_60_Ae 11;	ABSENT	False	CLIENT_ABSENT_LIVE
+99159	-	Talk	LDF4b_C2_Mammoth_59_Ae LDF4b_C2_Mammoth_60_Ae LDF4b_C2_Waterworm_59_Ae LDF4b_C2_Waterworm_60_Ae LDF4b_C2_Flyingworm_59_Ae LDF4b_C2_Flyingworm_60_Ae 10;	ABSENT	False	CLIENT_ABSENT_LIVE
+99160	-	Talk	60	ABSENT	False	CLIENT_ABSENT_LIVE
+99161	-	Talk	LDF5_Recon_Fi_v10_D_65_An LDF5_Recon_Ra_v10_D_65_An LDF5_Recon_Wi_v10_D_65_An LDF5_v10_Guard01_Q_D 4; LDF5_Recon_Fi_v10_DR_65_An LDF5_Recon_Ra_v10_DR_65_An LDF5_Recon_Wi_v10_DR_65_An LDF5_v10_Guard01_Q_DR LDF5_Recon_Fi_v10_DR_low_65_An LDF5_Recon_Ra_v10_DR_low_65_An LDF5_Recon_Wi_v10_DR_low_65_An 4;	ABSENT	False	CLIENT_ABSENT_LIVE
+99162	-	Talk	LDF5_Recon_Fi_v11_D_65_An LDF5_Recon_Ra_v11_D_65_An LDF5_Recon_Wi_v11_D_65_An LDF5_v11_Guard01_Q_D 4; LDF5_Recon_Fi_v11_DR_65_An LDF5_Recon_Ra_v11_DR_65_An LDF5_Recon_Wi_v11_DR_65_An LDF5_v11_Guard01_Q_DR LDF5_Recon_Fi_v11_DR_low_65_An LDF5_Recon_Ra_v11_DR_low_65_An LDF5_Recon_Wi_v11_DR_low_65_An 4;	ABSENT	False	CLIENT_ABSENT_LIVE
+99163	-	Talk	LDF5_Recon_Fi_v12_D_65_An LDF5_Recon_Ra_v12_D_65_An LDF5_Recon_Wi_v12_D_65_An LDF5_v12_Guard01_Q_D 4; LDF5_Recon_Fi_v12_DR_65_An LDF5_Recon_Ra_v12_DR_65_An LDF5_Recon_Wi_v12_DR_65_An LDF5_v12_Guard01_Q_DR LDF5_Recon_Fi_v12_DR_low_65_An LDF5_Recon_Ra_v12_DR_low_65_An LDF5_Recon_Wi_v12_DR_low_65_An 4;	ABSENT	False	CLIENT_ABSENT_LIVE
+99164	-	Talk	LDF5_Recon_Fi_v13_D_65_Ae, LDF5_Recon_Ra_v13_D_65_Ae, LDF5_Recon_Wi_v13_D_65_Ae, LDF5_Recon_Gu_v13_D_65_Ae, LDF5_v13_Guard01_Q_D 4; LDF5_Recon_Fi_v13_DR_65_Ae, LDF5_Recon_Ra_v13_DR_65_Ae, LDF5_Recon_Wi_v13_DR_65_Ae, LDF5_Recon_Gu_v13_DR_65_Ae, LDF5_v13_Guard01_Q_DR, LDF5_Recon_Fi_v13_DR_low_65_Ae, LDF5_Recon_Ra_v13_DR_low_65_Ae, LDF5_Recon_Wi_v13_DR_low_65_Ae, LDF5_Recon_Gu_v13_DR_low_65_Ae 4;	ABSENT	False	CLIENT_ABSENT_LIVE
+99165	-	Talk	LDF5_Recon_Fi_v14_D_65_An, LDF5_Recon_Ra_v14_D_65_An, LDF5_Recon_Wi_v14_D_65_An, LDF5_v14_Guard01_Q_D 4; LDF5_Recon_Fi_v14_DR_65_An, LDF5_Recon_Ra_v14_DR_65_An, LDF5_Recon_Wi_v14_DR_65_An, LDF5_v14_Guard01_Q_DR, LDF5_Recon_Fi_v14_DR_low_65_An, LDF5_Recon_Ra_v14_DR_low_65_An, LDF5_Recon_Wi_v14_DR_low_65_An 4;	ABSENT	False	CLIENT_ABSENT_LIVE
+99166	-	Talk	LDF5_Recon_Fi_v17_D_65_Ae, LDF5_Recon_Ra_v17_D_65_Ae, LDF5_Recon_Wi_v17_D_65_Ae, LDF5_Recon_Gu_v17_D_65_Ae, LDF5_v17_Guard01_Q_D 4; LDF5_Recon_Fi_v17_DR_65_Ae, LDF5_Recon_Ra_v17_DR_65_Ae, LDF5_Recon_Wi_v17_DR_65_Ae, LDF5_Recon_Gu_v17_DR_65_Ae, LDF5_v17_Guard01_Q_DR, LDF5_Recon_Fi_v17_DR_low_65_Ae, LDF5_Recon_Ra_v17_DR_low_65_Ae, LDF5_Recon_Wi_v17_DR_low_65_Ae, LDF5_Recon_Gu_v17_DR_low_65_Ae 4;	ABSENT	False	CLIENT_ABSENT_LIVE
+99167	-	Talk	LDF5_Recon_Fi_v18_D_65_An, LDF5_Recon_Ra_v18_D_65_An, LDF5_Recon_Wi_v18_D_65_An, LDF5_v18_Guard01_Q_D 4; LDF5_Recon_Fi_v18_DR_65_An, LDF5_Recon_Ra_v18_DR_65_An, LDF5_Recon_Wi_v18_DR_65_An, LDF5_v18_Guard01_Q_DR, LDF5_Recon_Fi_v18_DR_low_65_An, LDF5_Recon_Ra_v18_DR_low_65_An, LDF5_Recon_Wi_v18_DR_low_65_An 4;	ABSENT	False	CLIENT_ABSENT_LIVE
+99168	-	Talk	LDF5_Recon_Fi_v19_D_65_An, LDF5_Recon_Ra_v19_D_65_An, LDF5_Recon_Wi_v19_D_65_An, LDF5_v19_Guard01_Q_D 4; LDF5_Recon_Fi_v19_DR_65_An, LDF5_Recon_Ra_v19_DR_65_An, LDF5_Recon_Wi_v19_DR_65_An, LDF5_v19_Guard01_Q_DR, LDF5_Recon_Fi_v19_DR_low_65_An, LDF5_Recon_Ra_v19_DR_low_65_An, LDF5_Recon_Wi_v19_DR_low_65_An 4;	ABSENT	False	CLIENT_ABSENT_LIVE
+99169	-	Talk	-	ABSENT	False	CLIENT_ABSENT_LIVE
+99170	-	Talk	-	ABSENT	False	CLIENT_ABSENT_LIVE
+99171	-	Talk	-	ABSENT	False	CLIENT_ABSENT_LIVE
+99174	-	Talk	DF6_Ninetailfoxwoman_Soul_E_1	ABSENT	False	CLIENT_ABSENT_LIVE
+99175	-	Talk	DF6_Ninetailfoxwoman_Soul_E_1	ABSENT	False	CLIENT_ABSENT_LIVE
+99176	-	Talk	DF6_Ninetailfoxwoman_Soul_E_1	ABSENT	False	CLIENT_ABSENT_LIVE
+99178	-	Talk	ldf5b_6011_guard_gu_mistoff_d_5 ldf5b_6011_guard_as_mistoff_d_5 LDF5b_6011_Guard_Kn_MistOff_D_5 ldf5b_6011_guard_pr_mistoff_d_5 ldf5b_6011_guard_el_mistoff_d_5 ldf5b_6011_guard_ra_mistoff_d_5 ldf5b_6011_guard_fi_mistoff_d_5 ldf5b_6011_guard_pr_mistoff_d_5 3;	ABSENT	False	CLIENT_ABSENT_LIVE
+99179	-	Talk	ldf5b_6021_guard_gu_mistoff_d_5 ldf5b_6021_guard_as_mistoff_d_5 LDF5b_6021_Guard_Kn_MistOff_D_5 ldf5b_6021_guard_pr_mistoff_d_5 ldf5b_6021_guard_el_mistoff_d_5 3;	ABSENT	False	CLIENT_ABSENT_LIVE
+99180	-	Talk	ldf5a_5011_guard_gu_mistoff_d_5 ldf5a_5011_guard_as_mistoff_d_5 LDF5a_5011_Guard_Kn_MistOff_D_5 ldf5a_5011_guard_pr_mistoff_d_5 ldf5a_5011_guard_el_mistoff_d_5 ldf5a_5011_guard_ra_mistoff_d_5 ldf5a_5011_guard_fi_mistoff_d_5 LDF5a_5011_Guard_Wi_MistOff_d_5 LDF5a_5011_Guard_Ra_MistOn_d_5 ldf5a_5011_guard_pr_miston_d_5 3;	ABSENT	False	CLIENT_ABSENT_LIVE
+99182	-	Talk	LDF5_Recon_Fi_v11_D_65_An LDF5_Recon_Ra_v11_D_65_An LDF5_Recon_Wi_v11_D_65_An LDF5_v11_Guard01_Q_D 3; LDF5_Recon_Fi_v11_DR_65_An LDF5_Recon_Ra_v11_DR_65_An LDF5_Recon_Wi_v11_DR_65_An LDF5_v11_Guard01_Q_DR LDF5_Recon_Fi_v11_DR_low_65_An LDF5_Recon_Ra_v11_DR_low_65_An LDF5_Recon_Wi_v11_DR_low_65_An 3;	ABSENT	False	CLIENT_ABSENT_LIVE
+99184	-	Talk	LDF5_Recon_Fi_v13_D_65_Ae, LDF5_Recon_Ra_v13_D_65_Ae, LDF5_Recon_Wi_v13_D_65_Ae, LDF5_Recon_Gu_v13_D_65_Ae, LDF5_v13_Guard01_Q_D 3; LDF5_Recon_Fi_v13_DR_65_Ae, LDF5_Recon_Ra_v13_DR_65_Ae, LDF5_Recon_Wi_v13_DR_65_Ae, LDF5_Recon_Gu_v13_DR_65_Ae, LDF5_v13_Guard01_Q_DR, LDF5_Recon_Fi_v13_DR_low_65_Ae, LDF5_Recon_Ra_v13_DR_low_65_Ae, LDF5_Recon_Wi_v13_DR_low_65_Ae, LDF5_Recon_Gu_v13_DR_low_65_Ae 3;	ABSENT	False	CLIENT_ABSENT_LIVE
+99185	-	Talk	LDF5_Recon_Fi_v14_D_65_An, LDF5_Recon_Ra_v14_D_65_An, LDF5_Recon_Wi_v14_D_65_An, LDF5_v14_Guard01_Q_D 3; LDF5_Recon_Fi_v14_DR_65_An, LDF5_Recon_Ra_v14_DR_65_An, LDF5_Recon_Wi_v14_DR_65_An, LDF5_v14_Guard01_Q_DR, LDF5_Recon_Fi_v14_DR_low_65_An, LDF5_Recon_Ra_v14_DR_low_65_An, LDF5_Recon_Wi_v14_DR_low_65_An 3;	ABSENT	False	CLIENT_ABSENT_LIVE
+99186	-	Talk	LDF5_Recon_Fi_v17_D_65_Ae, LDF5_Recon_Ra_v17_D_65_Ae, LDF5_Recon_Wi_v17_D_65_Ae, LDF5_Recon_Gu_v17_D_65_Ae, LDF5_v17_Guard01_Q_D 3; LDF5_Recon_Fi_v17_DR_65_Ae, LDF5_Recon_Ra_v17_DR_65_Ae, LDF5_Recon_Wi_v17_DR_65_Ae, LDF5_Recon_Gu_v17_DR_65_Ae, LDF5_v17_Guard01_Q_DR, LDF5_Recon_Fi_v17_DR_low_65_Ae, LDF5_Recon_Ra_v17_DR_low_65_Ae, LDF5_Recon_Wi_v17_DR_low_65_Ae, LDF5_Recon_Gu_v17_DR_low_65_Ae 3;	ABSENT	False	CLIENT_ABSENT_LIVE
+99187	-	Talk	LDF5_Recon_Fi_v18_D_65_An, LDF5_Recon_Ra_v18_D_65_An, LDF5_Recon_Wi_v18_D_65_An, LDF5_v18_Guard01_Q_D 3; LDF5_Recon_Fi_v18_DR_65_An, LDF5_Recon_Ra_v18_DR_65_An, LDF5_Recon_Wi_v18_DR_65_An, LDF5_v18_Guard01_Q_DR, LDF5_Recon_Fi_v18_DR_low_65_An, LDF5_Recon_Ra_v18_DR_low_65_An, LDF5_Recon_Wi_v18_DR_low_65_An 3;	ABSENT	False	CLIENT_ABSENT_LIVE
+99188	-	Talk	LDF5_Recon_Fi_v19_D_65_An, LDF5_Recon_Ra_v19_D_65_An, LDF5_Recon_Wi_v19_D_65_An, LDF5_v19_Guard01_Q_D 3; LDF5_Recon_Fi_v19_DR_65_An, LDF5_Recon_Ra_v19_DR_65_An, LDF5_Recon_Wi_v19_DR_65_An, LDF5_v19_Guard01_Q_DR, LDF5_Recon_Fi_v19_DR_low_65_An, LDF5_Recon_Ra_v19_DR_low_65_An, LDF5_Recon_Wi_v19_DR_low_65_An 3;	ABSENT	False	CLIENT_ABSENT_LIVE
+99190	-	Talk	ld_rw_npc_gd5001_1	ABSENT	False	CLIENT_ABSENT_LIVE
+99191	-	Talk	60	ABSENT	False	CLIENT_ABSENT_LIVE
+99192	-	Talk	WORLD_QUEST_Q_Q_01	ABSENT	False	CLIENT_ABSENT_LIVE
+99193	-	Talk	DF6_Ninetailfoxwoman_Soul_E_1	ABSENT	False	CLIENT_ABSENT_LIVE
+99194	-	Talk	DF6_Ninetailfoxwoman_Soul_E_1	ABSENT	False	CLIENT_ABSENT_LIVE
+99195	-	Talk	DF6_Ninetailfoxwoman_Soul_E_1	ABSENT	False	CLIENT_ABSENT_LIVE
+99196	-	Talk	DF6_Ninetailfoxwoman_Soul_E_1	ABSENT	False	CLIENT_ABSENT_LIVE
+99197	-	Talk	50	ABSENT	False	CLIENT_ABSENT_LIVE
+99198	-	Talk	5	ABSENT	False	CLIENT_ABSENT_LIVE
+99199	-	Talk	5	ABSENT	False	CLIENT_ABSENT_LIVE
+99201	[주간] 중심기지 수호	Talk	G6_Link_FeA_NagaFiD_44_Ae_tune, G6_Link_FeA_NagaFiD_45_Ae_tune 5; G6_FeB_NagaFiD_45_Ae_tune 5; G6_PeA1_NagaPrDTalk_45_Ae_tune, G6_PeA1_NagaPrD_45_Ae_tune 5;	ABSENT	False	CLIENT_ABSENT_LIVE
+99202	[주간] 중심기지 수호	Talk	LF3E3_AeB_LizardAs_44_Ae_Tune, LF3E3_AeB_LizardAsSleep_44_Ae_Tune 5; LF3E3_FeA_LizardFi_44_Ae_Tune, LF3E3_FeA_LizardFiSleep_44_Ae_Tune, LF3E3_FeA_LizardFiTalk_44_Ae_Tune 5;	ABSENT	False	CLIENT_ABSENT_LIVE
+99203	[주간] 중심기지 수호	Talk	Zombie_39_An 5; Zombie_38_An 5;	ABSENT	False	CLIENT_ABSENT_LIVE
+99204	[주간] 중심기지 수호	Talk	ab1_1141_defender_li_a 2; ab1_1141_defender_li_b 8;	ABSENT	False	CLIENT_ABSENT_LIVE
+99205	[주간] 중심기지 수호	Talk	ab1_1132_defender_li_a 3; ab1_1132_defender_li_b 7;	ABSENT	False	CLIENT_ABSENT_LIVE
+99206	[주간] 중심기지 수호	Talk	ab1_1131_defender_li_a 5; ab1_1131_defender_li_b 5;	ABSENT	False	CLIENT_ABSENT_LIVE
+99207	-	Talk	15	ABSENT	False	CLIENT_ABSENT_LIVE
+99208	-	Talk	15	ABSENT	False	CLIENT_ABSENT_LIVE
+99209	-	Talk	15	ABSENT	False	CLIENT_ABSENT_LIVE
+99210	-	Talk	TrollkinReD_41_An 7; TrollRe2D_41_An 7;	ABSENT	False	CLIENT_ABSENT_LIVE
+99211	-	Talk	world_event_newyear_year_03 5;	ABSENT	False	CLIENT_ABSENT_LIVE
+99212	-	Talk	200	ABSENT	False	CLIENT_ABSENT_LIVE
+99213	-	Talk	100	ABSENT	False	CLIENT_ABSENT_LIVE
+99214	-	Talk	60	ABSENT	False	CLIENT_ABSENT_LIVE
+99215	[일일] 심해의 끝자락 토벌	Talk	WORLD_QUEST_Q_Q_01	ABSENT	False	CLIENT_ABSENT_LIVE
+99216	[일일] 심해의 끝자락 토벌	Talk	WORLD_QUEST_Q_Q_01	ABSENT	False	CLIENT_ABSENT_LIVE
+99217	[일일] 심해의 끝자락 토벌	Talk	WORLD_QUEST_Q_Q_01	ABSENT	False	CLIENT_ABSENT_LIVE
+99218	-	Talk	LF4_2021_defender_Li_wi LF4_2021_defender_Li_Fi LF4_2021_defender_Li_Pr LF4_2021_defender_Li_As LF4_2021_defender_Li_Ra LF4_2021_defenderS_Li_As LF4_2021_defenderS_Li_Fi LF4_2021_defenderS_Li_wi LF4_2021_defenderS_Li_Pr 5;	ABSENT	False	CLIENT_ABSENT_LIVE
+99219	-	Talk	LF4_2011_defender_Li_wi LF4_2011_defender_Li_Fi LF4_2011_defender_Li_Pr LF4_2011_defender_Li_As LF4_2011_defenderS_Li_As LF4_2011_defenderS_Li_Fi LF4_2011_defenderS_Li_wi LF4_2011_defenderS_Li_Pr LF4_2011_defender_Li_Ra 5;	ABSENT	False	CLIENT_ABSENT_LIVE
+99220	-	Talk	DF4_3021_defender_Li_wi DF4_3021_defender_Li_Fi DF4_3021_defender_Li_Pr DF4_3021_defender_Li_As DF4_3021_defender_Li_Ra DF4_3021_defenderS_Li_As DF4_3021_defenderS_Li_Fi DF4_3021_defenderS_Li_wi DF4_3021_defenderS_Li_Pr 5;	ABSENT	False	CLIENT_ABSENT_LIVE
+99221	-	Talk	DF4_3011_defender_Li_wi DF4_3011_defender_Li_Fi DF4_3011_defender_Li_Pr DF4_3011_defender_Li_As DF4_3011_defenderS_Li_As DF4_3011_defenderS_Li_Fi DF4_3011_defenderS_Li_wi DF4_3011_defenderS_Li_Pr DF4_3011_defender_Li_Ra 5;	ABSENT	False	CLIENT_ABSENT_LIVE
+99222	-	Talk	LF4_C2_WaterWorm_55_An 4; LF4_C2_ShellizardDad_55_An LF4_C2_ShellizardMom_55_An LF4_C2_ShellizardBaby_55_n 4;	ABSENT	False	CLIENT_ABSENT_LIVE
+99223	-	Talk	LF4_C_DragonSnake_55_An LF4_C_DragonSnakeDie_55_An 4; LF4_C_Shadowstalker_Sand_55_An 4;	ABSENT	False	CLIENT_ABSENT_LIVE
+99224	-	Talk	-	ABSENT	False	CLIENT_ABSENT_LIVE
+99225	-	Talk	50	ABSENT	False	CLIENT_ABSENT_LIVE
+99226	[일일] 심해의 끝자락 토벌	Talk	DF6_Ninetailfoxwoman_Soul_E	ABSENT	False	CLIENT_ABSENT_LIVE
+99227	-	Talk	15	ABSENT	False	CLIENT_ABSENT_LIVE
+99228	-	Talk	DF6_Ninetailfoxwoman_Soul_E_1	ABSENT	False	CLIENT_ABSENT_LIVE
+99229	-	Talk	18	ABSENT	False	CLIENT_ABSENT_LIVE
+99230	-	Talk	DF6_Ninetailfoxwoman_Soul_E	ABSENT	False	CLIENT_ABSENT_LIVE
+99231	-	Talk	10	ABSENT	False	CLIENT_ABSENT_LIVE
+99232	-	Talk	20	ABSENT	False	CLIENT_ABSENT_LIVE
+99233	-	Talk	LDF4b_T2_DrakanFi_Tiamat_59_Ae LDF4b_T2_DrakanSc_Tiamat_59_Ae LDF4b_T2_DrakanWi_Tiamat_59_Ae LDF4b_T2_DrakanCl_Tiamat_59_Ae 5; LDF4b_T3_DrakanFi_Tiamat_59_Ae LDF4b_T3_DrakanSc_Tiamat_59_Ae LDF4b_T3_DrakanWi_Tiamat_59_Ae LDF4b_T3_DrakanCl_Tiamat_59_Ae 5; LDF4b_T4_DrakanFi_Tiamat_60_An LDF4b_T4_DrakanSc_Tiamat_60_An LDF4b_T4_DrakanWi_Tiamat_60_An LDF4b_T4_DrakanCl_Tiamat_60_An 5;	ABSENT	False	CLIENT_ABSENT_LIVE
+99234	-	Talk	ldf4b_4011_defender_Li_Fi ldf4b_4011_defender_Li_Ra ldf4b_4011_defender_Li_Pr 3;	ABSENT	False	CLIENT_ABSENT_LIVE
+99235	-	Talk	ldf4b_4031_defender_Li_Fi ldf4b_4031_defender_Li_Ra ldf4b_4031_defender_Li_Pr 3;	ABSENT	False	CLIENT_ABSENT_LIVE
+99236	-	Talk	ldf4b_4041_defender_Li_Fi ldf4b_4041_defender_Li_Ra ldf4b_4041_defender_Li_Pr 3;	ABSENT	False	CLIENT_ABSENT_LIVE
+99237	-	Talk	ldf4b_4021_defender_Li_Fi ldf4b_4021_defender_Li_Ra ldf4b_4021_defender_Li_Pr 3;	ABSENT	False	CLIENT_ABSENT_LIVE
+99238	-	Talk	DF6_Ninetailfoxwoman_Soul_E_1	ABSENT	False	CLIENT_ABSENT_LIVE
+99239	-	Talk	DF6_Ninetailfoxwoman_Soul_E_1	ABSENT	False	CLIENT_ABSENT_LIVE
+99240	-	Talk	DF6_Ninetailfoxwoman_Soul_E_1	ABSENT	False	CLIENT_ABSENT_LIVE
+99241	-	Talk	30	ABSENT	False	CLIENT_ABSENT_LIVE
+99243	-	Talk	Trois	ABSENT	False	CLIENT_ABSENT_LIVE
+99244	-	Talk	LDF4b_T2_DrakanFi_Tiamat_59_Ae LDF4b_T2_DrakanSc_Tiamat_59_Ae LDF4b_T2_DrakanWi_Tiamat_59_Ae LDF4b_T2_DrakanCl_Tiamat_59_Ae 5; LDF4b_T3_DrakanFi_Tiamat_59_Ae LDF4b_T3_DrakanSc_Tiamat_59_Ae LDF4b_T3_DrakanWi_Tiamat_59_Ae LDF4b_T3_DrakanCl_Tiamat_59_Ae 5; LDF4b_T4_DrakanFi_Tiamat_60_An LDF4b_T4_DrakanSc_Tiamat_60_An LDF4b_T4_DrakanWi_Tiamat_60_An LDF4b_T4_DrakanCl_Tiamat_60_An 5;	ABSENT	False	CLIENT_ABSENT_LIVE
+99245	-	Talk	LDF4A_B2_Nepilim_M1_58_Ae LDF4A_B2_Nepilim_M1_58_Ae_idle_01 LDF4A_B2_Nepilim_M1_58_Ae_idle_02 3; LDF4A_B2_Nepilim_R_58_Ae LDF4A_B2_Nepilim_R_58_Ae_idle_01 LDF4A_B2_Nepilim_R_58_Ae_idle_02 3;	ABSENT	False	CLIENT_ABSENT_LIVE
+99247	-	Talk	LDF4b_C1_GururuFi_57_Ae LDF4b_C1_GururuFi_58_Ae LDF4b_C1_Gururuwi_57_Ae LDF4b_C1_Gururuwi_58_Ae LDF4b_C1_GururuAs_57_Ae LDF4b_C1_GururuAs_58_Ae LDF4b_C1_GururuCl_57_Ae LDF4b_C1_GururuCl_58_Ae 10;	ABSENT	False	CLIENT_ABSENT_LIVE
+99248	-	Talk	LDF4b_C3_DrakanFi_Tiamat_60_An LDF4b_C3_DrakanSc_Tiamat_60_An LDF4b_C3_DrakanWi_Tiamat_60_An LDF4b_C3_DrakanCl_Tiamat_60_An LDF4b_C3_DrakanFi_Tiamat_60_Ae LDF4b_C3_DrakanSc_Tiamat_60_Ae LDF4b_C3_DrakanWi_Tiamat_60_Ae LDF4b_C3_DrakanCl_Tiamat_60_Ae 11;	ABSENT	False	CLIENT_ABSENT_LIVE
+99249	-	Talk	LDF4b_C2_Mammoth_59_Ae LDF4b_C2_Mammoth_60_Ae LDF4b_C2_Waterworm_59_Ae LDF4b_C2_Waterworm_60_Ae LDF4b_C2_Flyingworm_59_Ae LDF4b_C2_Flyingworm_60_Ae 10;	ABSENT	False	CLIENT_ABSENT_LIVE
+99250	[일일] 심해의 끝자락 토벌	Talk	LDF4_Advance_kalnif_65_An 6;	ABSENT	False	CLIENT_ABSENT_LIVE
+99252	-	Talk	ld_rw_npc_gd5001_1	ABSENT	False	CLIENT_ABSENT_LIVE
+99253	-	Talk	Trois	ABSENT	False	CLIENT_ABSENT_LIVE
+99254	-	Talk	LDF4b_T2_DrakanFi_Tiamat_59_Ae LDF4b_T2_DrakanSc_Tiamat_59_Ae LDF4b_T2_DrakanWi_Tiamat_59_Ae LDF4b_T2_DrakanCl_Tiamat_59_Ae 5; LDF4b_T3_DrakanFi_Tiamat_59_Ae LDF4b_T3_DrakanSc_Tiamat_59_Ae LDF4b_T3_DrakanWi_Tiamat_59_Ae LDF4b_T3_DrakanCl_Tiamat_59_Ae 5; LDF4b_T4_DrakanFi_Tiamat_60_An LDF4b_T4_DrakanSc_Tiamat_60_An LDF4b_T4_DrakanWi_Tiamat_60_An LDF4b_T4_DrakanCl_Tiamat_60_An 5;	ABSENT	False	CLIENT_ABSENT_LIVE
+99255	-	Talk	LDF4A_B2_Nepilim_M1_58_Ae LDF4A_B2_Nepilim_M1_58_Ae_idle_01 LDF4A_B2_Nepilim_M1_58_Ae_idle_02 3; LDF4A_B2_Nepilim_R_58_Ae LDF4A_B2_Nepilim_R_58_Ae_idle_01 LDF4A_B2_Nepilim_R_58_Ae_idle_02 3;	ABSENT	False	CLIENT_ABSENT_LIVE
+99256	-	Talk	60	ABSENT	False	CLIENT_ABSENT_LIVE
+99257	-	Talk	LDF4b_C1_GururuFi_57_Ae LDF4b_C1_GururuFi_58_Ae LDF4b_C1_Gururuwi_57_Ae LDF4b_C1_Gururuwi_58_Ae LDF4b_C1_GururuAs_57_Ae LDF4b_C1_GururuAs_58_Ae LDF4b_C1_GururuCl_57_Ae LDF4b_C1_GururuCl_58_Ae 10;	ABSENT	False	CLIENT_ABSENT_LIVE
+99258	-	Talk	LDF4b_C3_DrakanFi_Tiamat_60_An LDF4b_C3_DrakanSc_Tiamat_60_An LDF4b_C3_DrakanWi_Tiamat_60_An LDF4b_C3_DrakanCl_Tiamat_60_An LDF4b_C3_DrakanFi_Tiamat_60_Ae LDF4b_C3_DrakanSc_Tiamat_60_Ae LDF4b_C3_DrakanWi_Tiamat_60_Ae LDF4b_C3_DrakanCl_Tiamat_60_Ae 11;	ABSENT	False	CLIENT_ABSENT_LIVE
+99259	-	Talk	LDF4b_C2_Mammoth_59_Ae LDF4b_C2_Mammoth_60_Ae LDF4b_C2_Waterworm_59_Ae LDF4b_C2_Waterworm_60_Ae LDF4b_C2_Flyingworm_59_Ae LDF4b_C2_Flyingworm_60_Ae 10;	ABSENT	False	CLIENT_ABSENT_LIVE
+99260	-	Talk	60	ABSENT	False	CLIENT_ABSENT_LIVE
+99261	-	Talk	LDF5_Recon_Fi_v10_L_65_An LDF5_Recon_Ra_v10_L_65_An LDF5_Recon_Wi_v10_L_65_An LDF5_v10_Guard01_Q_L 4; LDF5_Recon_Fi_v10_DR_65_An LDF5_Recon_Ra_v10_DR_65_An LDF5_Recon_Wi_v10_DR_65_An LDF5_v10_Guard01_Q_DR LDF5_Recon_Fi_v10_DR_low_65_An LDF5_Recon_Ra_v10_DR_low_65_An LDF5_Recon_Wi_v10_DR_low_65_An 4;	ABSENT	False	CLIENT_ABSENT_LIVE
+99262	-	Talk	LDF5_Recon_Fi_v11_L_65_An LDF5_Recon_Ra_v11_L_65_An LDF5_Recon_Wi_v11_L_65_An LDF5_v11_Guard01_Q_L 4; LDF5_Recon_Fi_v11_DR_65_An LDF5_Recon_Ra_v11_DR_65_An LDF5_Recon_Wi_v11_DR_65_An LDF5_v11_Guard01_Q_DR LDF5_Recon_Fi_v11_DR_low_65_An LDF5_Recon_Ra_v11_DR_low_65_An LDF5_Recon_Wi_v11_DR_low_65_An 4;	ABSENT	False	CLIENT_ABSENT_LIVE
+99263	-	Talk	LDF5_Recon_Fi_v12_L_65_An, LDF5_Recon_Ra_v12_L_65_An, LDF5_Recon_Wi_v12_L_65_An, LDF5_v12_Guard01_Q_L 4; LDF5_Recon_Fi_v12_DR_65_An, LDF5_Recon_Ra_v12_DR_65_An, LDF5_Recon_Wi_v12_DR_65_An, LDF5_v12_Guard01_Q_DR, LDF5_Recon_Fi_v12_DR_low_65_An, LDF5_Recon_Ra_v12_DR_low_65_An, LDF5_Recon_Wi_v12_DR_low_65_An 4;	ABSENT	False	CLIENT_ABSENT_LIVE
+99264	-	Talk	LDF5_Recon_Fi_v13_L_65_Ae, LDF5_Recon_Ra_v13_L_65_Ae, LDF5_Recon_Wi_v13_L_65_Ae, LDF5_Recon_Gu_v13_L_65_Ae, LDF5_v13_Guard01_Q_L 4; LDF5_Recon_Fi_v13_DR_65_Ae, LDF5_Recon_Ra_v13_DR_65_Ae, LDF5_Recon_Wi_v13_DR_65_Ae, LDF5_Recon_Gu_v13_DR_65_Ae, LDF5_v13_Guard01_Q_DR, LDF5_Recon_Fi_v13_DR_low_65_Ae, LDF5_Recon_Ra_v13_DR_low_65_Ae, LDF5_Recon_Wi_v13_DR_low_65_Ae, LDF5_Recon_Gu_v13_DR_low_65_Ae 4;	ABSENT	False	CLIENT_ABSENT_LIVE
+99265	-	Talk	LDF5_Recon_Fi_v14_L_65_An, LDF5_Recon_Ra_v14_L_65_An, LDF5_Recon_Wi_v14_L_65_An, LDF5_v14_Guard01_Q_L 4; LDF5_Recon_Fi_v14_DR_65_An, LDF5_Recon_Ra_v14_DR_65_An, LDF5_Recon_Wi_v14_DR_65_An, LDF5_v14_Guard01_Q_DR, LDF5_Recon_Fi_v14_DR_low_65_An, LDF5_Recon_Ra_v14_DR_low_65_An, LDF5_Recon_Wi_v14_DR_low_65_An 4;	ABSENT	False	CLIENT_ABSENT_LIVE
+99266	-	Talk	LDF5_Recon_Fi_v17_L_65_Ae, LDF5_Recon_Ra_v17_L_65_Ae, LDF5_Recon_Wi_v17_L_65_Ae, LDF5_Recon_Gu_v17_L_65_Ae, LDF5_v17_Guard01_Q_L 4; LDF5_Recon_Fi_v17_DR_65_Ae, LDF5_Recon_Ra_v17_DR_65_Ae, LDF5_Recon_Wi_v17_DR_65_Ae, LDF5_Recon_Gu_v17_DR_65_Ae, LDF5_v17_Guard01_Q_DR, LDF5_Recon_Fi_v17_DR_low_65_Ae, LDF5_Recon_Ra_v17_DR_low_65_Ae, LDF5_Recon_Wi_v17_DR_low_65_Ae, LDF5_Recon_Gu_v17_DR_low_65_Ae 4;	ABSENT	False	CLIENT_ABSENT_LIVE
+99267	-	Talk	LDF5_Recon_Fi_v18_L_65_An, LDF5_Recon_Ra_v18_L_65_An, LDF5_Recon_Wi_v18_L_65_An, LDF5_v18_Guard01_Q_L 4; LDF5_Recon_Fi_v18_DR_65_An, LDF5_Recon_Ra_v18_DR_65_An, LDF5_Recon_Wi_v18_DR_65_An, LDF5_v18_Guard01_Q_DR, LDF5_Recon_Fi_v18_DR_low_65_An, LDF5_Recon_Ra_v18_DR_low_65_An, LDF5_Recon_Wi_v18_DR_low_65_An 4;	ABSENT	False	CLIENT_ABSENT_LIVE
+99268	-	Talk	LDF5_Recon_Fi_v19_L_65_An, LDF5_Recon_Ra_v19_L_65_An, LDF5_Recon_Wi_v19_L_65_An, LDF5_v19_Guard01_Q_L 4; LDF5_Recon_Fi_v19_DR_65_An, LDF5_Recon_Ra_v19_DR_65_An, LDF5_Recon_Wi_v19_DR_65_An, LDF5_v19_Guard01_Q_DR, LDF5_Recon_Fi_v19_DR_low_65_An, LDF5_Recon_Ra_v19_DR_low_65_An, LDF5_Recon_Wi_v19_DR_low_65_An 4;	ABSENT	False	CLIENT_ABSENT_LIVE
+99269	-	Talk	-	ABSENT	False	CLIENT_ABSENT_LIVE
+99270	-	Talk	-	ABSENT	False	CLIENT_ABSENT_LIVE
+99271	-	Talk	-	ABSENT	False	CLIENT_ABSENT_LIVE
+99274	-	Talk	DF6_Ninetailfoxwoman_Soul_E_1	ABSENT	False	CLIENT_ABSENT_LIVE
+99275	-	Talk	DF6_Ninetailfoxwoman_Soul_E_1	ABSENT	False	CLIENT_ABSENT_LIVE
+99276	-	Talk	DF6_Ninetailfoxwoman_Soul_E_1	ABSENT	False	CLIENT_ABSENT_LIVE
+99278	-	Talk	ldf5b_6011_guard_gu_mistoff_l_5 ldf5b_6011_guard_as_mistoff_l_5 ldf5b_6011_guard_kn_mistoff_l_5 ldf5b_6011_guard_pr_mistoff_l_5 ldf5b_6011_guard_el_mistoff_l_5 ldf5b_6011_guard_ra_mistoff_l_5 ldf5b_6011_guard_fi_mistoff_l_5 ldf5b_6011_guard_pr_mistoff_l_5 3;	ABSENT	False	CLIENT_ABSENT_LIVE
+99279	-	Talk	ldf5b_6021_guard_gu_mistoff_l_5 ldf5b_6021_guard_as_mistoff_l_5 ldf5b_6021_guard_kn_mistoff_l_5 ldf5b_6021_guard_pr_mistoff_l_5 ldf5b_6021_guard_el_mistoff_l_5 3;	ABSENT	False	CLIENT_ABSENT_LIVE
+99280	-	Talk	ldf5a_5011_guard_gu_mistoff_l_5 ldf5a_5011_guard_as_mistoff_l_5 ldf5a_5011_guard_kn_mistoff_l_5 ldf5a_5011_guard_pr_mistoff_l_5 ldf5a_5011_guard_el_mistoff_l_5 ldf5a_5011_guard_ra_mistoff_l_5 ldf5a_5011_guard_fi_mistoff_l_5 LDF5a_5011_Guard_Wi_MistOff_L_5 LDF5a_5011_Guard_Ra_MistOn_L_5 ldf5a_5011_guard_pr_miston_l_5 3;	ABSENT	False	CLIENT_ABSENT_LIVE
+99282	-	Talk	LDF5_Recon_Fi_v11_L_65_An LDF5_Recon_Ra_v11_L_65_An LDF5_Recon_Wi_v11_L_65_An LDF5_v11_Guard01_Q_L 3; LDF5_Recon_Fi_v11_DR_65_An LDF5_Recon_Ra_v11_DR_65_An LDF5_Recon_Wi_v11_DR_65_An LDF5_v11_Guard01_Q_DR LDF5_Recon_Fi_v11_DR_low_65_An LDF5_Recon_Ra_v11_DR_low_65_An LDF5_Recon_Wi_v11_DR_low_65_An 3;	ABSENT	False	CLIENT_ABSENT_LIVE
+99284	-	Talk	LDF5_Recon_Fi_v13_L_65_Ae, LDF5_Recon_Ra_v13_L_65_Ae, LDF5_Recon_Wi_v13_L_65_Ae, LDF5_Recon_Gu_v13_L_65_Ae, LDF5_v13_Guard01_Q_L 3; LDF5_Recon_Fi_v13_DR_65_Ae, LDF5_Recon_Ra_v13_DR_65_Ae, LDF5_Recon_Wi_v13_DR_65_Ae, LDF5_Recon_Gu_v13_DR_65_Ae, LDF5_v13_Guard01_Q_DR, LDF5_Recon_Fi_v13_DR_low_65_Ae, LDF5_Recon_Ra_v13_DR_low_65_Ae, LDF5_Recon_Wi_v13_DR_low_65_Ae, LDF5_Recon_Gu_v13_DR_low_65_Ae 3;	ABSENT	False	CLIENT_ABSENT_LIVE
+99285	-	Talk	LDF5_Recon_Fi_v14_L_65_An, LDF5_Recon_Ra_v14_L_65_An, LDF5_Recon_Wi_v14_L_65_An, LDF5_v14_Guard01_Q_L 3; LDF5_Recon_Fi_v14_DR_65_An, LDF5_Recon_Ra_v14_DR_65_An, LDF5_Recon_Wi_v14_DR_65_An, LDF5_v14_Guard01_Q_DR, LDF5_Recon_Fi_v14_DR_low_65_An, LDF5_Recon_Ra_v14_DR_low_65_An, LDF5_Recon_Wi_v14_DR_low_65_An 3;	ABSENT	False	CLIENT_ABSENT_LIVE
+99286	-	Talk	LDF5_Recon_Fi_v17_L_65_Ae, LDF5_Recon_Ra_v17_L_65_Ae, LDF5_Recon_Wi_v17_L_65_Ae, LDF5_Recon_Gu_v17_L_65_Ae, LDF5_v17_Guard01_Q_L 3; LDF5_Recon_Fi_v17_DR_65_Ae, LDF5_Recon_Ra_v17_DR_65_Ae, LDF5_Recon_Wi_v17_DR_65_Ae, LDF5_Recon_Gu_v17_DR_65_Ae, LDF5_v17_Guard01_Q_DR, LDF5_Recon_Fi_v17_DR_low_65_Ae, LDF5_Recon_Ra_v17_DR_low_65_Ae, LDF5_Recon_Wi_v17_DR_low_65_Ae, LDF5_Recon_Gu_v17_DR_low_65_Ae 3;	ABSENT	False	CLIENT_ABSENT_LIVE
+99287	-	Talk	LDF5_Recon_Fi_v18_L_65_An, LDF5_Recon_Ra_v18_L_65_An, LDF5_Recon_Wi_v18_L_65_An, LDF5_v18_Guard01_Q_L 3; LDF5_Recon_Fi_v18_DR_65_An, LDF5_Recon_Ra_v18_DR_65_An, LDF5_Recon_Wi_v18_DR_65_An, LDF5_v18_Guard01_Q_DR, LDF5_Recon_Fi_v18_DR_low_65_An, LDF5_Recon_Ra_v18_DR_low_65_An, LDF5_Recon_Wi_v18_DR_low_65_An 3;	ABSENT	False	CLIENT_ABSENT_LIVE
+99288	-	Talk	LDF5_Recon_Fi_v19_L_65_An, LDF5_Recon_Ra_v19_L_65_An, LDF5_Recon_Wi_v19_L_65_An, LDF5_v19_Guard01_Q_L 3; LDF5_Recon_Fi_v19_DR_65_An, LDF5_Recon_Ra_v19_DR_65_An, LDF5_Recon_Wi_v19_DR_65_An, LDF5_v19_Guard01_Q_DR, LDF5_Recon_Fi_v19_DR_low_65_An, LDF5_Recon_Ra_v19_DR_low_65_An, LDF5_Recon_Wi_v19_DR_low_65_An 3;	ABSENT	False	CLIENT_ABSENT_LIVE
+99290	-	Talk	ld_rw_npc_gd5001_1	ABSENT	False	CLIENT_ABSENT_LIVE
+99291	-	Talk	60	ABSENT	False	CLIENT_ABSENT_LIVE
+99292	-	Talk	WORLD_QUEST_Q_Q_01	ABSENT	False	CLIENT_ABSENT_LIVE
+99293	-	Talk	DF6_Ninetailfoxwoman_Soul_E_1	ABSENT	False	CLIENT_ABSENT_LIVE
+99294	-	Talk	DF6_Ninetailfoxwoman_Soul_E_1	ABSENT	False	CLIENT_ABSENT_LIVE
+99295	-	Talk	DF6_Ninetailfoxwoman_Soul_E_1	ABSENT	False	CLIENT_ABSENT_LIVE
+99296	-	Talk	DF6_Ninetailfoxwoman_Soul_E_1	ABSENT	False	CLIENT_ABSENT_LIVE
+99297	-	Talk	50	ABSENT	False	CLIENT_ABSENT_LIVE
+99298	-	Talk	5	ABSENT	False	CLIENT_ABSENT_LIVE
+99299	-	Talk	5	ABSENT	False	CLIENT_ABSENT_LIVE
+99301	[주간] 중심기지 수호	Talk	Cherubim4Wp1stNM_48_Al 1; DrakanLF3Boss_48_Al 1;	ABSENT	False	CLIENT_ABSENT_LIVE
+99302	[주간] 중심기지 수호	Talk	SeirenReBossD_46_Ah 1; ElementalWater4NamedD_43_Ah 1;	ABSENT	False	CLIENT_ABSENT_LIVE
+99303	-	Talk	5	ABSENT	False	CLIENT_ABSENT_LIVE
+99304	-	Talk	5	ABSENT	False	CLIENT_ABSENT_LIVE
+99305	-	Talk	5	ABSENT	False	CLIENT_ABSENT_LIVE
+99306	-	Talk	5	ABSENT	False	CLIENT_ABSENT_LIVE
+99307	-	Talk	15	ABSENT	False	CLIENT_ABSENT_LIVE
+99308	-	Talk	60	ABSENT	False	CLIENT_ABSENT_LIVE
+99309	-	Talk	LDF4_Advance_Rottentree_65_An 5; LDF4_Advance_J_Rottentree_65_An 5; LDF4_Advance_Chapire_Pr_65_n, LDF4_Advance_Chapire_Pr_65_n_Talk 5; LDF4_Advance_Popoku_Pr_65_An, LDF4_Advance_Popoku_Pr_65_An_Talk 5; LDF4_Advance_kalnif_65_An 3;	ABSENT	False	CLIENT_ABSENT_LIVE
+99310	-	Talk	WORLD_QUEST_Q_Q_03	ABSENT	False	CLIENT_ABSENT_LIVE
+99311	-	Talk	ancanus	ABSENT	False	CLIENT_ABSENT_LIVE
+99312	-	Talk	WORLD_QUEST_Q_Q_03	ABSENT	False	CLIENT_ABSENT_LIVE
+99313	-	Talk	10	ABSENT	False	CLIENT_ABSENT_LIVE
+99314	-	Talk	WORLD_QUEST_Q_Q_03	ABSENT	False	CLIENT_ABSENT_LIVE
+99315	-	Talk	WORLD_QUEST_Q_Q_03	ABSENT	False	CLIENT_ABSENT_LIVE
+99316	-	Talk	WORLD_QUEST_Q_Q_03	ABSENT	False	CLIENT_ABSENT_LIVE
+99317	-	Talk	ShellizardD_16_An_1 5;	ABSENT	False	CLIENT_ABSENT_LIVE
+99318	-	Talk	LF5_A_Shellizard_55_n_1 5;	ABSENT	False	CLIENT_ABSENT_LIVE
+99319	-	Talk	WORLD_QUEST_Q_Q_03	ABSENT	False	CLIENT_ABSENT_LIVE
+99321	-	Talk	TDown_DrakanFi_Noble_60_An 5; TDown_DrakanFi_Noble_60_Ae 5;	ABSENT	False	CLIENT_ABSENT_LIVE
+99322	-	Talk	TDown_DrakanFi_Noble_60_An 5; TDown_DrakanFi_Noble_60_Ae 5;	ABSENT	False	CLIENT_ABSENT_LIVE
+99323	-	Talk	TDown_DrakanFi_Noble_60_An 5; TDown_DrakanFi_Noble_60_Ae 5;	ABSENT	False	CLIENT_ABSENT_LIVE
+99324	-	Talk	WORLD_QUEST_Q_Q_03	ABSENT	False	CLIENT_ABSENT_LIVE
+99325	-	Talk	LDF5a_Tiryns_Commander	ABSENT	False	CLIENT_ABSENT_LIVE
+99326	-	Talk	WORLD_QUEST_Q_Q_03	ABSENT	False	CLIENT_ABSENT_LIVE
+99327	-	Talk	WORLD_QUEST_Q_Q_03	ABSENT	False	CLIENT_ABSENT_LIVE
+99328	-	Talk	WORLD_QUEST_Q_Q_03	ABSENT	False	CLIENT_ABSENT_LIVE
+99329	-	Talk	WORLD_QUEST_Q_Q_03	ABSENT	False	CLIENT_ABSENT_LIVE
+99330	-	Talk	WORLD_QUEST_Q_Q_03	ABSENT	False	CLIENT_ABSENT_LIVE
+99331	-	Talk	WORLD_QUEST_Q_Q_03	ABSENT	False	CLIENT_ABSENT_LIVE
+99332	-	Talk	WORLD_QUEST_Q_Q_03	ABSENT	False	CLIENT_ABSENT_LIVE
+99333	-	Talk	WORLD_QUEST_Q_Q_03	ABSENT	False	CLIENT_ABSENT_LIVE
+99334	-	Talk	WORLD_QUEST_Q_Q_03	ABSENT	False	CLIENT_ABSENT_LIVE
+99335	-	Talk	WORLD_QUEST_Q_Q_03	ABSENT	False	CLIENT_ABSENT_LIVE
+99336	-	Talk	LDF4_Advance_Village_Guard09_L2	ABSENT	False	CLIENT_ABSENT_LIVE
+99337	-	Talk	WORLD_QUEST_Q_Q_03	ABSENT	False	CLIENT_ABSENT_LIVE
+99338	-	Talk	WORLD_QUEST_Q_Q_03	ABSENT	False	CLIENT_ABSENT_LIVE
+99339	-	Talk	WORLD_QUEST_Q_Q_03	ABSENT	False	CLIENT_ABSENT_LIVE
+99340	-	Talk	WORLD_QUEST_Q_Q_03	ABSENT	False	CLIENT_ABSENT_LIVE
+99341	-	Talk	WORLD_QUEST_Q_Q_03	ABSENT	False	CLIENT_ABSENT_LIVE
+99401	[주간] 중심기지 수호	Talk	Ab1_1011_CyclopsOdNamed_51_Al 1;	ABSENT	False	CLIENT_ABSENT_LIVE
+99402	[주간] 중심기지 수호	Talk	DF6_G_6_Named_Sinsi_68_Ah_1 1;	ABSENT	False	CLIENT_ABSENT_LIVE
+99403	-	Talk	5	ABSENT	False	CLIENT_ABSENT_LIVE
+99404	-	Talk	5	ABSENT	False	CLIENT_ABSENT_LIVE
+99405	-	Talk	5	ABSENT	False	CLIENT_ABSENT_LIVE
+99406	-	Talk	5	ABSENT	False	CLIENT_ABSENT_LIVE
+99407	-	Talk	15	ABSENT	False	CLIENT_ABSENT_LIVE
+99408	-	Talk	60	ABSENT	False	CLIENT_ABSENT_LIVE
+99409	-	Talk	LDF4_Advance_Rottentree_65_An 5; LDF4_Advance_J_Rottentree_65_An 5; LDF4_Advance_Chapire_Pr_65_n, LDF4_Advance_Chapire_Pr_65_n_Talk 5; LDF4_Advance_Popoku_Pr_65_An, LDF4_Advance_Popoku_Pr_65_An_Talk 5; LDF4_Advance_kalnif_65_An 3;	ABSENT	False	CLIENT_ABSENT_LIVE
+99410	-	Talk	WORLD_QUEST_Q_Q_03	ABSENT	False	CLIENT_ABSENT_LIVE
+99411	-	Talk	udvi	ABSENT	False	CLIENT_ABSENT_LIVE
+99412	-	Talk	WORLD_QUEST_Q_Q_03	ABSENT	False	CLIENT_ABSENT_LIVE
+99413	-	Talk	10	ABSENT	False	CLIENT_ABSENT_LIVE
+99414	-	Talk	WORLD_QUEST_Q_Q_03	ABSENT	False	CLIENT_ABSENT_LIVE
+99415	-	Talk	WORLD_QUEST_Q_Q_03	ABSENT	False	CLIENT_ABSENT_LIVE
+99416	-	Talk	WORLD_QUEST_Q_Q_03	ABSENT	False	CLIENT_ABSENT_LIVE
+99417	-	Talk	ShellizardD_16_An_1 5;	ABSENT	False	CLIENT_ABSENT_LIVE
+99418	-	Talk	LF5_A_Shellizard_55_n_1 5;	ABSENT	False	CLIENT_ABSENT_LIVE
+99419	-	Talk	WORLD_QUEST_Q_Q_03	ABSENT	False	CLIENT_ABSENT_LIVE
+99421	-	Talk	TDown_DrakanFi_Noble_60_An 5; TDown_DrakanFi_Noble_60_Ae 5;	ABSENT	False	CLIENT_ABSENT_LIVE
+99422	-	Talk	TDown_DrakanFi_Noble_60_An 5; TDown_DrakanFi_Noble_60_Ae 5;	ABSENT	False	CLIENT_ABSENT_LIVE
+99423	-	Talk	TDown_DrakanFi_Noble_60_An 5; TDown_DrakanFi_Noble_60_Ae 5;	ABSENT	False	CLIENT_ABSENT_LIVE
+99424	-	Talk	WORLD_QUEST_Q_Q_03	ABSENT	False	CLIENT_ABSENT_LIVE
+99425	-	Talk	LDF5a_Bard_Commander	ABSENT	False	CLIENT_ABSENT_LIVE
+99426	-	Talk	WORLD_QUEST_Q_Q_03	ABSENT	False	CLIENT_ABSENT_LIVE
+99427	-	Talk	WORLD_QUEST_Q_Q_03	ABSENT	False	CLIENT_ABSENT_LIVE
+99428	-	Talk	WORLD_QUEST_Q_Q_03	ABSENT	False	CLIENT_ABSENT_LIVE
+99429	-	Talk	WORLD_QUEST_Q_Q_03	ABSENT	False	CLIENT_ABSENT_LIVE
+99430	-	Talk	WORLD_QUEST_Q_Q_03	ABSENT	False	CLIENT_ABSENT_LIVE
+99431	-	Talk	WORLD_QUEST_Q_Q_03	ABSENT	False	CLIENT_ABSENT_LIVE
+99432	-	Talk	WORLD_QUEST_Q_Q_03	ABSENT	False	CLIENT_ABSENT_LIVE
+99433	-	Talk	WORLD_QUEST_Q_Q_03	ABSENT	False	CLIENT_ABSENT_LIVE
+99434	-	Talk	WORLD_QUEST_Q_Q_03	ABSENT	False	CLIENT_ABSENT_LIVE
+99435	-	Talk	WORLD_QUEST_Q_Q_03	ABSENT	False	CLIENT_ABSENT_LIVE
+99436	-	Talk	LDF4_Advance_Village_Guard09_D2	ABSENT	False	CLIENT_ABSENT_LIVE
+99437	-	Talk	WORLD_QUEST_Q_Q_03	ABSENT	False	CLIENT_ABSENT_LIVE
+99438	-	Talk	WORLD_QUEST_Q_Q_03	ABSENT	False	CLIENT_ABSENT_LIVE
+99439	-	Talk	WORLD_QUEST_Q_Q_03	ABSENT	False	CLIENT_ABSENT_LIVE
+99440	-	Talk	WORLD_QUEST_Q_Q_03	ABSENT	False	CLIENT_ABSENT_LIVE
+99441	-	Talk	WORLD_QUEST_Q_Q_03	ABSENT	False	CLIENT_ABSENT_LIVE
+99501	[주간] 중심기지 수호	Talk	Underpass_DrakanFi_55_Ae, Underpass_DrakanWi_55_Ae, Underpass_DrakanSc_55_Ae, Underpass_DrakanCl_55_Ae, Underpass_DrakanKn_55_Ae 30;	ABSENT	False	CLIENT_ABSENT_LIVE
+99502	[주간] 중심기지 수호	Talk	Underpass_DrakanFi_55_Ae, Underpass_DrakanWi_55_Ae, Underpass_DrakanSc_55_Ae, Underpass_DrakanCl_55_Ae, Underpass_DrakanKn_55_Ae 30;	ABSENT	False	CLIENT_ABSENT_LIVE
+99601	[주간] 중심기지 수호	Talk	TDown_DrakanWi_Noble_Named_60_Ae 1; TDown_Drakan_Pagati_Named_60_Ae 1; TDown_DrakanCl_Noble_Named_60_Ae 1; TDown_Drakan_Sikara_Named_60_Ae 1;	ABSENT	False	CLIENT_ABSENT_LIVE
+99602	[주간] 중심기지 수호	Talk	TDown_DrakanWi_Noble_Named_60_Ae 1; TDown_Drakan_Pagati_Named_60_Ae 1; TDown_Drakan_Sikara_Named_60_Ae 1; TDown_DrakanCl_Noble_Named_60_Ae 1;	ABSENT	False	CLIENT_ABSENT_LIVE
+99603	명인의 전당으로	Talk	LDF4b_T1_Fungy_58_An, LDF4b_T2_Sam_58_An, LDF4b_T2_Sam_59_An, LDF4b_T3_Xipeto_Rage_58_An, LDF4b_T3_Xipeto_Rage_59_An, LDF4b_T4_Twister_Aurora_60_An 11;	ABSENT	False	CLIENT_ABSENT_LIVE
+99604	명인의 전당으로	Talk	LDF4b_T1_Fungy_58_An, LDF4b_T2_Sam_58_An, LDF4b_T2_Sam_59_An, LDF4b_T3_Xipeto_Rage_58_An, LDF4b_T3_Xipeto_Rage_59_An, LDF4b_T4_Twister_Aurora_60_An 11;	ABSENT	False	CLIENT_ABSENT_LIVE
+99605	명인의 전당으로	Talk	LDF4b_T1_Fungy_58_An, LDF4b_T2_Sam_58_An, LDF4b_T2_Sam_59_An, LDF4b_T3_Xipeto_Rage_58_An, LDF4b_T3_Xipeto_Rage_59_An, LDF4b_T4_Twister_Aurora_60_An 11;	ABSENT	False	CLIENT_ABSENT_LIVE
+99606	명인의 전당으로	Talk	LDF4b_T1_Fungy_58_An, LDF4b_T2_Sam_58_An, LDF4b_T2_Sam_59_An, LDF4b_T3_Xipeto_Rage_58_An, LDF4b_T3_Xipeto_Rage_59_An, LDF4b_T4_Twister_Aurora_60_An 11;	ABSENT	False	CLIENT_ABSENT_LIVE
+99607	명인의 전당으로	Talk	LDF4b_T1_Fungy_58_An, LDF4b_T2_Sam_58_An, LDF4b_T2_Sam_59_An, LDF4b_T3_Xipeto_Rage_58_An, LDF4b_T3_Xipeto_Rage_59_An, LDF4b_T4_Twister_Aurora_60_An 11;	ABSENT	False	CLIENT_ABSENT_LIVE
+99608	명인의 전당으로	Talk	LDF4b_T1_Fungy_58_An, LDF4b_T2_Sam_58_An, LDF4b_T2_Sam_59_An, LDF4b_T3_Xipeto_Rage_58_An, LDF4b_T3_Xipeto_Rage_59_An, LDF4b_T4_Twister_Aurora_60_An 11;	ABSENT	False	CLIENT_ABSENT_LIVE
+99609	명인의 전당으로	Talk	LDF4b_T1_Fungy_58_An, LDF4b_T2_Sam_58_An, LDF4b_T2_Sam_59_An, LDF4b_T3_Xipeto_Rage_58_An, LDF4b_T3_Xipeto_Rage_59_An, LDF4b_T4_Twister_Aurora_60_An 11;	ABSENT	False	CLIENT_ABSENT_LIVE
+99610	명인의 전당으로	Talk	LDF4b_T1_Fungy_58_An, LDF4b_T2_Sam_58_An, LDF4b_T2_Sam_59_An, LDF4b_T3_Xipeto_Rage_58_An, LDF4b_T3_Xipeto_Rage_59_An, LDF4b_T4_Twister_Aurora_60_An 11;	ABSENT	False	CLIENT_ABSENT_LIVE
+99701	5.8 마스터 서버 업적 PVP [긴급 지령] 잉기스온 수비 지령	Talk	15	ABSENT	False	CLIENT_ABSENT_LIVE
+99702	5.8 마스터 서버 업적 PVP [긴급 지령] 잉기스온 수비 지령	Talk	15	ABSENT	False	CLIENT_ABSENT_LIVE
+99703	5.8 마스터 서버 업적 PVP [긴급 지령] 잉기스온 수비 지령	Talk	30	ABSENT	False	CLIENT_ABSENT_LIVE
+99704	5.8 마스터 서버 업적 PVP [긴급 지령] 잉기스온 수비 지령	Talk	30	ABSENT	False	CLIENT_ABSENT_LIVE
+99705	명인의 전당으로	Talk	LDF5A_E1E2_Vri_ShieFwAreaDD_Kn_65_Ae, LDF5A_E1E2_Vri_StunHpDrain_Fi_65_Ae, LDF5A_E1E2_Vri_OpenAerial_Ri_SN_65_Ae, LDF5A_E1E2_Vri_Broad_As_65_Ae, LDF5A_E1E2_Vri_MezBroad_Wi_65_Ae, LDF5A_E1E2_Vri_HelpBuff_Mu_65_Ae, LDF5A_E1E2_Vri_HelpHeal_Pr_65_Ae 2;	ABSENT	False	CLIENT_ABSENT_LIVE
+99706	명인의 전당으로	Talk	LDF5A_E1E2_Vri_ShieFwAreaDD_Kn_65_Ae, LDF5A_E1E2_Vri_StunHpDrain_Fi_65_Ae, LDF5A_E1E2_Vri_OpenAerial_Ri_SN_65_Ae, LDF5A_E1E2_Vri_Broad_As_65_Ae, LDF5A_E1E2_Vri_MezBroad_Wi_65_Ae, LDF5A_E1E2_Vri_HelpBuff_Mu_65_Ae, LDF5A_E1E2_Vri_HelpHeal_Pr_65_Ae 2;	ABSENT	False	CLIENT_ABSENT_LIVE
+99707	명인의 전당으로	Talk	LDF5B_f4_Vri_Tanker_Fi_DD_65_An, LDF5B_f4_Vri_DDealer_Gu_DD_65_An, LDF5B_f4_Vri_HPDrainDD_Fi_65_An, LDF5B_f4_Vri_Alert_As_65_An, LDF5B_f4_Vri_Alert_Wi_65_An, LDF5B_f4_Vri_Heal_Pr_65_An 2;	ABSENT	False	CLIENT_ABSENT_LIVE
+99708	명인의 전당으로	Talk	LDF5B_f4_Vri_Tanker_Fi_DD_65_An, LDF5B_f4_Vri_DDealer_Gu_DD_65_An, LDF5B_f4_Vri_HPDrainDD_Fi_65_An, LDF5B_f4_Vri_Alert_As_65_An, LDF5B_f4_Vri_Alert_Wi_65_An, LDF5B_f4_Vri_Heal_Pr_65_An 2;	ABSENT	False	CLIENT_ABSENT_LIVE
+99709	명인의 전당으로	Talk	LDF5B_d1_Vri2_Tanker_Fi_DD_65_An, LDF5B_d1_Vri2_DDealer_Gu_DD_65_An, LDF5B_d1_Vri2_HPDrainDD_Fi_65_An, LDF5B_d1_Vri2_Alert_As_65_An, LDF5B_d1_Vri2_Alert_Wi_65_An, LDF5B_d1_Vri2_Heal_Pr_65_An 2;	ABSENT	False	CLIENT_ABSENT_LIVE
+99710	명인의 전당으로	Talk	LDF5B_d1_Vri2_Tanker_Fi_DD_65_An, LDF5B_d1_Vri2_DDealer_Gu_DD_65_An, LDF5B_d1_Vri2_HPDrainDD_Fi_65_An, LDF5B_d1_Vri2_Alert_As_65_An, LDF5B_d1_Vri2_Alert_Wi_65_An, LDF5B_d1_Vri2_Heal_Pr_65_An 2;	ABSENT	False	CLIENT_ABSENT_LIVE
+99711	[주간] 아문트 영지 환경 개선	Talk	DF5_C_Elementalearth2Re_57_An, DF5_C_Elementalearth2Re_58_An 6;	ABSENT	False	CLIENT_ABSENT_LIVE
+99712	[주간] 세타스 영지 환경 개선	Talk	DF5_E2_FlyingWorm_ED_60_n, DF5_E2_FlyingWorm_ED_61_n 6;	ABSENT	False	CLIENT_ABSENT_LIVE
+99713	[주간] 벨리아드 영지 환경 개선	Talk	DF5_G_Varanus_61_An, DF5_G_Varanus_62_An 6;	ABSENT	False	CLIENT_ABSENT_LIVE
+99714	[일일] 거인의 유적지 토벌	Talk	LF5_Brontte_E	ABSENT	False	CLIENT_ABSENT_LIVE
+99715	[일일] 심해의 끝자락 토벌	Talk	LF5_Brontte_E	ABSENT	False	CLIENT_ABSENT_LIVE
+99716	[일일] 하늘 비늘 골짜기 토벌	Talk	LF5_Brontte_E	ABSENT	False	CLIENT_ABSENT_LIVE
+99717	[주간] 호노르 영지의 방해꾼 처치	Talk	LF5_C_RottentreeS_57_An, LF5_C_RottentreeS_58_An 6;	ABSENT	False	CLIENT_ABSENT_LIVE
+99718	[주간] 안드레이아 영지의 방해꾼 처치	Talk	LF5_E_Gargoyle_59_An, LF5_E_Gargoyle_60_An 6;	ABSENT	False	CLIENT_ABSENT_LIVE
+99719	[주간] 에티카 영지의 방해꾼 처치	Talk	LF5_F_Slime_60_An 6;	ABSENT	False	CLIENT_ABSENT_LIVE
+99720	[일일] 칠흑의 안개가시 숲 토벌	Talk	DF5_Bastan_E	ABSENT	False	CLIENT_ABSENT_LIVE
+99721	[일일] 얼어붙은 수정동굴 토벌	Talk	DF5_Bastan_E	ABSENT	False	CLIENT_ABSENT_LIVE
+99722	[일일] 검은지느러미 협곡 토벌	Talk	DF5_Bastan_E	ABSENT	False	CLIENT_ABSENT_LIVE
+99723	[주간] 결계의 통로와 레기온 영지	Talk	DF5_C_Elementalearth2Re_57_An, DF5_C_Elementalearth2Re_58_An 4;DF5_E2_FlyingWorm_ED_60_n, DF5_E2_FlyingWorm_ED_61_n 4;DF5_G_Varanus_61_An, DF5_G_Varanus_61_An 4;	ABSENT	False	CLIENT_ABSENT_LIVE
+99724	[주간] 결계의 통로 관리에 도움을	Talk	LF5_C_RottentreeS_57_An, LF5_C_RottentreeS_58_An 4;LF5_E_Gargoyle_59_An, LF5_E_Gargoyle_60_An 4;LF5_F_Slime_60_An 4;	ABSENT	False	CLIENT_ABSENT_LIVE
+99725	[주간] 중심기지 수호	Talk	LDF4a_Public_Quest_Monster_05 1;LDF4a_Public_Quest_Monster_08 1;LDF4a_Public_Quest_Monster_11 1;	ABSENT	False	CLIENT_ABSENT_LIVE
+99726	[주간] 중심기지 수호	Talk	LDF4a_Public_Quest_Monster_05 1;LDF4a_Public_Quest_Monster_08 1;LDF4a_Public_Quest_Monster_11 1;	ABSENT	False	CLIENT_ABSENT_LIVE
+99727	환경 변화 (PVE) B1	Talk	LF6_F_neut_68_An 10;	ABSENT	False	CLIENT_ABSENT_LIVE
+99728	환경 변화 (PVE) B2	Talk	LF6_B2_Environment_Specter_66_An, LF6_B2_Environment_LichEquip_66_An 30;	ABSENT	False	CLIENT_ABSENT_LIVE
+99729	환경 변화 (PVE) C	Talk	LF6_C_Environment_Cellatu_66_An 10;	ABSENT	False	CLIENT_ABSENT_LIVE
+99730	[파티] 환경 변화 (PVE) D	Talk	LF6_Krall_Fi_H_N_68_An, LF6_Krall_Wi_H_N_68_An, LF6_Krall_As_H_N_68_An, LF6_Krall_Pr_H_N_68_An 30;	ABSENT	False	CLIENT_ABSENT_LIVE
+99731	환경 변화 (PVE) E	Talk	LF6_E_Environment_Octaside_66_An 10;	ABSENT	False	CLIENT_ABSENT_LIVE
+99732	환경 변화 (PVE) F1	Talk	LF6_Rottentree_B_68_An 10;	ABSENT	False	CLIENT_ABSENT_LIVE
+99733	환경 변화 (PVE) F2	Talk	LF6_F2_Environment_SoulStone_66_An 30;	ABSENT	False	CLIENT_ABSENT_LIVE
+99734	환경 변화 (PVE) G	Talk	LF6_Harpy_G_71_n 10;	ABSENT	False	CLIENT_ABSENT_LIVE
+99735	[파티] 환경 변화 (PVE) H	Talk	LF6_Owllau_Fi_D_N_68_An, LF6_Owllau_As_D_N_68_An, LF6_Owllau_Wi_D_N_68_An, LF6_Owllau_Pr_D_N_68_An 30;	ABSENT	False	CLIENT_ABSENT_LIVE
+99736	환경 변화 (PVE) I	Talk	LF6_I_Environment_clodworm_66_An 10;	ABSENT	False	CLIENT_ABSENT_LIVE
+99737	환경 변화 (PVE) B1	Talk	DF6_B_Environment_DragonTooth_68_An 10;	ABSENT	False	CLIENT_ABSENT_LIVE
+99738	환경 변화 (PVE) B2	Talk	DF6_B2_Environment_Griffo_69_An 30;	ABSENT	False	CLIENT_ABSENT_LIVE
+99739	환경 변화 (PVE) C	Talk	DF6_C_Environment_DemonTree_67_An 10;	ABSENT	False	CLIENT_ABSENT_LIVE
+99740	[파티] 환경 변화 (PVE) D	Talk	DF6_D_N_Lycan_Fi_68_An, DF6_D_N_Lycan_As_68_An, DF6_D_N_Lycan_Ra_68_An, DF6_D_N_Lycan_Wi_68_An 30;	ABSENT	False	CLIENT_ABSENT_LIVE
+99741	환경 변화 (PVE) E	Talk	DF6_E_Environment_Griffo_67_An 10;	ABSENT	False	CLIENT_ABSENT_LIVE
+99742	환경 변화 (PVE) F1	Talk	DF6_F_Environment_Starturtle_68_An 10;	ABSENT	False	CLIENT_ABSENT_LIVE
+99743	환경 변화 (PVE) F2	Talk	DF6_F2_Environment_Undead_Fi_69_An, DF6_F2_Environment_Undead_Wi_69_An 30;	ABSENT	False	CLIENT_ABSENT_LIVE
+99744	환경 변화 (PVE) G	Talk	DF6_G_Environment_Trico_67_An 10;	ABSENT	False	CLIENT_ABSENT_LIVE
+99745	[파티] 환경 변화 (PVE) H	Talk	DF6_H_N_Calydon_Fi_68_An, DF6_H_N_Calydon_As_68_An, DF6_H_N_Calydon_Wi_68_An, DF6_H_N_Calydon_Pr_68_An 30;	ABSENT	False	CLIENT_ABSENT_LIVE
+99746	환경 변화 (PVE) I	Talk	DF6_I_Environment_NoName_67_An 10;	ABSENT	False	CLIENT_ABSENT_LIVE
+99747	[파티] 환경 변화 (PVE) H	Talk	LDF5_Village_Guard10_D 1;LDF5_Village_Guard11_D 1;LDF5_Village_Guard13_D 1;LDF5_Village_Guard18_D 1;LDF5_Village_Guard19_D 1;	ABSENT	False	CLIENT_ABSENT_LIVE
+99748	환경 변화 (PVE) I	Talk	LDF5_Village_Guard10_L 1;LDF5_Village_Guard11_L 1;LDF5_Village_Guard13_L 1;LDF5_Village_Guard18_L 1;LDF5_Village_Guard19_L 1;	ABSENT	False	CLIENT_ABSENT_LIVE
+99749	[주간] 중심기지 수호	Talk	LDF5B_A4_Comad_64_An, LDF5B_A4_Comad_65_An, LDF5B_A4_FlyingWorm_65_An, LDF5B_A4_Element1_Water_65_An,  LDF5B_A4_Element1_Swamp_65_An, LDF5B_A4_Phaini_65_n, LDF5B_A4_Nebilim_65_An 7;	ABSENT	False	CLIENT_ABSENT_LIVE
+99142	[일일] 심해의 끝자락 토벌	Talk	ld_rw_npc_gd5001_1	ABSENT	False	COMMENTED_OUT
+99146	-	Talk	60	ABSENT	False	COMMENTED_OUT
+99151	-	Talk	60	ABSENT	False	COMMENTED_OUT
+99172	-	Talk	LDF5_under_FlyWorm_65_An 10; LDF5_Under_VrDrZombID_Fi_65_An 3; LDF5_Under_VrDrZombID_Wi_65_An 3;	ABSENT	False	COMMENTED_OUT
+99173	-	Talk	LDF5_Under_VriTR_Lizard_Fi_DD_1_65_Ae LDF5_Under_VriTR_Lizard_Ra_DoT_1_65_Ae LDF5_Under_VriTR_Drakan_As_2_Broad_65_Ae LDF5_Under_VriTR_Drakan_Fi_DD_65_Ae LDF5_Under_VriTR_Drakan_Wi_DoT_65_Ae LDF5_Under_VriTR_Drakan_Pr_Heal_65_Ae LDF5_Under_VriTR_Drakan_As_Hide_65_Ae LDF5_Under_VriTR_Drakan_El_Summon_65_Ae LDF5_Under_VriTR_Drakan_Fi_Stun_65_Ae LDF5_Under_VriTR_Drakan_Wi_Mes_65_Ae LDF5_Under_Vri_OpenAerial_Ri_SN_65_Ae 15;	ABSENT	False	COMMENTED_OUT
+99181	-	Talk	LDF5_Recon_Fi_v10_D_65_An LDF5_Recon_Ra_v10_D_65_An LDF5_Recon_Wi_v10_D_65_An LDF5_v10_Guard01_Q_D 3; LDF5_Recon_Fi_v10_DR_65_An LDF5_Recon_Ra_v10_DR_65_An LDF5_Recon_Wi_v10_DR_65_An LDF5_v10_Guard01_Q_DR LDF5_Recon_Fi_v10_DR_low_65_An LDF5_Recon_Ra_v10_DR_low_65_An LDF5_Recon_Wi_v10_DR_low_65_An 3;	ABSENT	False	COMMENTED_OUT
+99183	-	Talk	LDF5_Recon_Fi_v12_D_65_An LDF5_Recon_Ra_v12_D_65_An LDF5_Recon_Wi_v12_D_65_An LDF5_v12_Guard01_Q_D 3; LDF5_Recon_Fi_v12_DR_65_An LDF5_Recon_Ra_v12_DR_65_An LDF5_Recon_Wi_v12_DR_65_An LDF5_v12_Guard01_Q_DR LDF5_Recon_Fi_v12_DR_low_65_An LDF5_Recon_Ra_v12_DR_low_65_An LDF5_Recon_Wi_v12_DR_low_65_An 3;	ABSENT	False	COMMENTED_OUT
+99189	-	Talk	LDF5_Under_VriTR_Lizard_Fi_DD_1_65_Ae LDF5_Under_VriTR_Lizard_Ra_DoT_1_65_Ae LDF5_Under_VriTR_Drakan_As_2_Broad_65_Ae LDF5_Under_VriTR_Drakan_Fi_DD_65_Ae LDF5_Under_VriTR_Drakan_Wi_DoT_65_Ae LDF5_Under_VriTR_Drakan_Pr_Heal_65_Ae LDF5_Under_VriTR_Drakan_As_Hide_65_Ae LDF5_Under_VriTR_Drakan_El_Summon_65_Ae LDF5_Under_VriTR_Drakan_Fi_Stun_65_Ae LDF5_Under_VriTR_Drakan_Wi_Mes_65_Ae LDF5_Under_Vri_OpenAerial_Ri_SN_65_Ae 15;	ABSENT	False	COMMENTED_OUT
+99242	[일일] 심해의 끝자락 토벌	Talk	ld_rw_npc_gd5001_1	ABSENT	False	COMMENTED_OUT
+99246	-	Talk	60	ABSENT	False	COMMENTED_OUT
+99251	-	Talk	60	ABSENT	False	COMMENTED_OUT
+99272	-	Talk	LDF5_under_FlyWorm_65_An 10; LDF5_Under_VrDrZombID_Fi_65_An 3; LDF5_Under_VrDrZombID_Wi_65_An 3;	ABSENT	False	COMMENTED_OUT
+99273	-	Talk	LDF5_Under_VriTR_Lizard_Fi_DD_1_65_Ae LDF5_Under_VriTR_Lizard_Ra_DoT_1_65_Ae LDF5_Under_VriTR_Drakan_As_2_Broad_65_Ae LDF5_Under_VriTR_Drakan_Fi_DD_65_Ae LDF5_Under_VriTR_Drakan_Wi_DoT_65_Ae LDF5_Under_VriTR_Drakan_Pr_Heal_65_Ae LDF5_Under_VriTR_Drakan_As_Hide_65_Ae LDF5_Under_VriTR_Drakan_El_Summon_65_Ae LDF5_Under_VriTR_Drakan_Fi_Stun_65_Ae LDF5_Under_VriTR_Drakan_Wi_Mes_65_Ae LDF5_Under_Vri_OpenAerial_Ri_SN_65_Ae 15;	ABSENT	False	COMMENTED_OUT
+99281	-	Talk	LDF5_Recon_Fi_v10_L_65_An LDF5_Recon_Ra_v10_L_65_An LDF5_Recon_Wi_v10_L_65_An LDF5_v10_Guard01_Q_L 3; LDF5_Recon_Fi_v10_DR_65_An LDF5_Recon_Ra_v10_DR_65_An LDF5_Recon_Wi_v10_DR_65_An LDF5_v10_Guard01_Q_DR LDF5_Recon_Fi_v10_DR_low_65_An LDF5_Recon_Ra_v10_DR_low_65_An LDF5_Recon_Wi_v10_DR_low_65_An 3;	ABSENT	False	COMMENTED_OUT
+99283	-	Talk	LDF5_Recon_Fi_v12_L_65_An, LDF5_Recon_Ra_v12_L_65_An, LDF5_Recon_Wi_v12_L_65_An, LDF5_v12_Guard01_Q_L 3; LDF5_Recon_Fi_v12_DR_65_An, LDF5_Recon_Ra_v12_DR_65_An, LDF5_Recon_Wi_v12_DR_65_An, LDF5_v12_Guard01_Q_DR, LDF5_Recon_Fi_v12_DR_low_65_An, LDF5_Recon_Ra_v12_DR_low_65_An, LDF5_Recon_Wi_v12_DR_low_65_An 3;	ABSENT	False	COMMENTED_OUT
+99289	-	Talk	LDF5_Under_VriTR_Lizard_Fi_DD_1_65_Ae LDF5_Under_VriTR_Lizard_Ra_DoT_1_65_Ae LDF5_Under_VriTR_Drakan_As_2_Broad_65_Ae LDF5_Under_VriTR_Drakan_Fi_DD_65_Ae LDF5_Under_VriTR_Drakan_Wi_DoT_65_Ae LDF5_Under_VriTR_Drakan_Pr_Heal_65_Ae LDF5_Under_VriTR_Drakan_As_Hide_65_Ae LDF5_Under_VriTR_Drakan_El_Summon_65_Ae LDF5_Under_VriTR_Drakan_Fi_Stun_65_Ae LDF5_Under_VriTR_Drakan_Wi_Mes_65_Ae LDF5_Under_Vri_OpenAerial_Ri_SN_65_Ae 15;	ABSENT	False	COMMENTED_OUT
+99320	-	Talk	ancanus	ABSENT	False	COMMENTED_OUT
+99420	-	Talk	udvi	ABSENT	False	COMMENTED_OUT

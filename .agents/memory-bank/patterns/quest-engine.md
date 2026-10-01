@@ -2792,3 +2792,28 @@ keywords: 可接取轴、minlevel_permitted、999停用形、停用行不排期�
 - **判定规则**：一族的「残余」要先分三桶（已路由 / XML 保留裁定 / 不在生产），再按真端节点槽形态判「能不能接线」；「不路由」不等于「长尾未接线」。
 - **安全网**：形态偏离行必须与裁定理由一一对应；对不上就先查证据，不得直接排期接线。
 - **反漂移**：零行为变更批用聚焦套件逐类差集（ADDED/REMOVED/changed）证明，而不是只比总数。
+
+---
+
+## [QE-124] 一百二十四、DD 行按「客户端三表存在性」分桶：表内孤行保持不生产，真端溢出算术原样复刻 (DATA_DRIVEN_CLIENT_PRESENCE_BUCKETS)
+
+<!-- pattern-metadata
+status: CONFIRMED
+scope: 真端 DataDriven（`data_driven_quest.xml`）表的**行集裁定**——玩家可见性判据 = 客户端三表存在性 + 真端 `quest.xml` 元数据；以及 DD Hunt 溢出算术的复刻原则
+first_seen: 2026-10-01
+last_verified: 2026-10-01
+symptom: ① 把「真端表里有行」当成「必须上线」，于是表内孤行被拉进路由/注册；② DD 表行数口径混乱（块 2526 / 活行 2492 / 裸正则 2510），注释禁用行被当成待实现行；③ 遇到真端自身不可完成的行（80817，100 杀）时走两个手滑之一——把它「修好」成 10 位相机，或显式禁用
+root_cause: 真端 DD 表的行集与「玩家可见面」是三份不同的账——真端表活行（XML 注释块不是行）/ 客户端三表（`quest.xml`、`data_driven_quest.xml`、`challenge_task.xml`）/ 本服 owner 台账。可渲染有两条硬前提：客户端三表至少一表有该 id，且真端 `quest.xml` 有元数据行；337 行两条都不满足（98% 落 99xxx 段、全 `Talk`、要塞/BG 系接取名、`[주간]/[일일]/[파티]` 标签），即在真端同版客户端上同样不可渲染、不可领奖。80817 的 100 杀不是宽度问题而是算术溢出：DD Hunt 只有「6 位步号（bits 0-5）+ 4×6 位组槽（bits 6-29）」一种布局（`FUN_180c46020` 逐指令），单组上限 63 ⇒ 第 64 杀槽回绕并污染下一组 ⇒ `(slot < target)` 永不稳定；10 位相机是家族相机 `FUN_180cb14e0` 的形，DD 不走它
+fix_or_guardrail: 1. 任何 DD 行集裁定先按客户端三表存在性分桶（`CLIENT_PRESENT` / `CLIENT_ABSENT_LIVE` / `COMMENTED_OUT`），并声明口径（块数 or 活行数）；2. XML 注释块不是行——生产装载器（`RetailDataDrivenTable`）与审计/探针脚本必须同口径；3. `CLIENT_ABSENT_LIVE` ∧ 真端 `quest.xml` 无元数据 ∧ owner `ABSENT` ⇒ **类级冻结：保持不生产**（台账 owner 不变），P7 不得路由/注册；将来要上线须另立「上线」案并补客户端正文 + 元数据；4. 玩家可见行（`CLIENT_PRESENT`）的真端算术必须**原样复刻含溢出**——禁止把它「修好」成更宽的相机、禁止显式禁用；5. 切换集不变量 = `CLIENT_PRESENT ∧ owner RETAIL_TABLE`，用门冻结其与孤行集零交集
+evidence: src/test/java/com/aionemu/gameserver/questEngine/retail/RetailDataDrivenClientPresenceGateTest.java（逐元素冻结 + 零交集 + 80817 规格冻结）; src/test/resources/quest/retail-data-driven-client-absent.tsv（337 + 18 行冻结夹具）; .agents/summary/quest-engine-native/p7/tools/dd-client-presence-probe.py（四源复算）; .agents/summary/quest-engine-native/p7/dd-client-presence.tsv（2492 活行逐行证据）; .agents/summary/quest-engine-native/p7/DD-CLIENT-PRESENCE-ADJUDICATION.zh-CN.md（裁定书）; .agents/summary/quest-engine-native/p7/P7-DD-ADJUDICATION-REPORT.zh-CN.md（本批报告）; src/main/java/com/aionemu/gameserver/questEngine/retail/RetailDataDrivenTable.java; .agents/memory-bank/activeContext.md
+validation: 2026-10-01 裁定批（只读证据 + 冻结门，零运行时改动）：探针复算 2492 活行 = CLIENT_PRESENT 2155 + CLIENT_ABSENT_LIVE 337（0 行有真端 `quest.xml` 行、0 行 owner `RETAIL_TABLE`、0 行有仓内 XML）+ 注释禁用 18（全 99xxx）；P7 切换集 1467 行与孤行集零交集；本轮门 `RetailDataDrivenClientPresenceGateTest` **4/4** 绿、族门 + tablelane **138/138** 绿、聚焦套件 **1703 / 162F+142E / 108 类**（对 P5D 步 3 基线 ADDED 0 / REMOVED 0，唯一逐类差异 = 新增本门 4 例）
+superseded_by: none
+boundaries: ① 客户端三表存在性在仓库外（`<客户端解包根>`）复算，仓内只落逐行 TSV + 三表 sha256 前 16（`quest.xml 0edade9f28411d73` / `data_driven_quest.xml 8137f99d16403dd2` / `challenge_task.xml 321a60df313f1cb5`），门内只复算可复算的一半（真端表行存在、99xxx 段、`Talk` 接取、真端 `quest.xml` 无行、owner `ABSENT`、无 XML、非退役）；② 「保持不生产」是行集裁定，不等于这些 id 永久不上线——上线须另行补两表证据；③ 80817 的「真端不可完成」是算术事实（6 位单组上限 63），实现时必须原样复刻，不得为可玩性加特判；④ 本模式只覆盖 DD 表，其他族表的行集裁定走 QE-123 的分桶法；⑤ `RetailDataDrivenGateTest` 里 80817 的指纹红属于**旧自造宽计数形状**，P7 落地时按真端派生形状重冻——该指纹文件与在飞切片共文件，不得在本类裁定批里顺手改
+see_also: [QE-123], [QE-121], [QE-012]
+first_check: DD 行集裁定前先答：① 口径是块数还是活行数（注释块剔干净了吗）？② 客户端三表各有该 id 吗？③ 真端 `quest.xml` 有元数据行吗？④ 台账 owner 是什么（`RETAIL_TABLE` / `XML_RETENTION` / `ABSENT`）？⑤ 计数需求是否在 6 位组槽上限 63 之内（>63 即真端自身不可完成，只能复刻不能修好）？
+keywords: DataDriven、data_driven_quest.xml、客户端三表存在性、CLIENT_PRESENT、CLIENT_ABSENT_LIVE、COMMENTED_OUT、表内孤行、2492、337、1467、80817、100杀、6位组槽、63上限、10位相机禁令、复刻真端算术、QE-124
+-->
+
+- **判定规则**：DD 行集 = 真端活行 **∩** 客户端可渲染（客户端三表至少一表有该 id **且** 真端 `quest.xml` 有元数据）；其余是表内孤行，保持不生产。
+- **安全网**：XML 注释块不是行；切换集必须与孤行集零交集；玩家可见行的真端算术（含溢出/不可完成）原样复刻——「修好」与「显式禁用」都是漂移。
+- **反漂移**：以逐行 TSV + 客户端三表 sha256 冻结身份证据；任何指纹重冻必须逐条归因，且不得与在飞切片共文件混改。
