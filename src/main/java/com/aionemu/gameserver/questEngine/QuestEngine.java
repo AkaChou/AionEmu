@@ -59,6 +59,7 @@ import com.aionemu.gameserver.questEngine.handlers.HandlerResult;
 import com.aionemu.gameserver.questEngine.tablelane.HtmlPagesRegistry;
 import com.aionemu.gameserver.questEngine.tablelane.CameraRegistry;
 import com.aionemu.gameserver.questEngine.tablelane.NativeQuestStartPort;
+import com.aionemu.gameserver.questEngine.tablelane.DataDrivenNativeRuntime;
 import com.aionemu.gameserver.questEngine.tablelane.SimpleCollectItemHandler;
 import com.aionemu.gameserver.questEngine.tablelane.SimpleCombineTaskHandler;
 import com.aionemu.gameserver.questEngine.tablelane.SimpleHuntHandler;
@@ -297,6 +298,11 @@ public class QuestEngine implements GameEngine {
 					return true;
 				}
 			}
+			// 真端表驱动车道：DataDriven Talk / TalkFOBJ 步（本批路由集为空 ⇒ 恒 false）。
+			// DataDriven Talk / TalkFOBJ steps: no-op until the atomic switch batch.
+			if (npcId != 0 && DataDrivenNativeRuntime.instance().onDialog(player, npcId)) {
+				return true;
+			}
 			if (requestedOwner != 0 && typed.owns(requestedOwner)) {
 				QuestEvent event = npcId == 0
 					? new QuestEvent.QuestDialog(env.getDialogId())
@@ -489,6 +495,11 @@ public class QuestEngine implements GameEngine {
 		}
 		// 真端表驱动车道：SimpleCollectItem 采集怪击杀推进同一相机（掉落仍由掉落族发放）。
 		if (SimpleCollectItemHandler.instance().onKill(env.getPlayer(), npc.getNpcId())) {
+			return true;
+		}
+		// 真端表驱动车道：DataDriven Hunt 步组计数（本批路由集为空 ⇒ 恒 false，切换随 P7 步 2 步 f）。
+		// DataDriven hunt steps: no-op until the atomic switch batch flips the routing set.
+		if (DataDrivenNativeRuntime.instance().onKill(env.getPlayer(), npc.getNpcId())) {
 			return true;
 		}
 		try {
@@ -798,6 +809,13 @@ public class QuestEngine implements GameEngine {
 			} catch (RuntimeException ignored) {
 				// Native enter-world heal is best-effort.
 			}
+			try {
+				// 真端表驱动车道：DataDriven EnterWorld 步（本批路由集为空 ⇒ 恒 false）。
+				// DataDriven EnterWorld steps: no-op until the atomic switch batch.
+				DataDrivenNativeRuntime.instance().onEnterWorld(player, player.getWorldId());
+			} catch (RuntimeException ignored) {
+				// Native enter-world dispatch is best-effort.
+			}
 			if (player != null) {
 				try {
 					typed.dispatch(new QuestEvent.EnterWorld(), player.getObjectId(), 0,
@@ -1032,6 +1050,15 @@ public class QuestEngine implements GameEngine {
 		try {
 			QuestRuntimeDispatcher typed = productionDispatcher;
 			Player recipient = env == null ? null : env.getPlayer();
+			// 真端表驱动车道：DataDriven PvP 步（军衔区间 + 等级差闸门；本批路由集为空 ⇒ 恒 false）。
+			// DataDriven PvP steps: no-op until the atomic switch batch.
+			try {
+				if (recipient != null && env.getVisibleObject() instanceof Player victim) {
+					DataDrivenNativeRuntime.instance().onKillRanked(killer, victim, playerRank);
+				}
+			} catch (RuntimeException ignored) {
+				// Native PvP dispatch is best-effort.
+			}
 			if (recipient != null && playerRank != null
 				&& typed.hasRoutes(new QuestEvent.KillRanked(playerRank.getId()))) {
 				try {
@@ -1105,6 +1132,9 @@ public class QuestEngine implements GameEngine {
 		try {
 			QuestRuntimeDispatcher typed = productionDispatcher;
 			Player player = env.getPlayer();
+			// 真端表驱动车道：DataDriven EnterArea 步（本批路由集为空 ⇒ 恒 false）。
+			// DataDriven EnterArea steps: no-op until the atomic switch batch.
+			DataDrivenNativeRuntime.instance().onEnterZone(player, zoneName.name());
 			if (player != null) {
 				try {
 					typed.dispatch(new QuestEvent.EnterZone(zoneName.name()),
@@ -2378,6 +2408,9 @@ public class QuestEngine implements GameEngine {
 			SimpleUseItemHandler.instance().installInterest(this);
 			SimpleItemPlayHandler.instance().installInterest(this);
 			SimpleCombineTaskHandler.instance().installInterest(this);
+			// DataDriven 原生运行时：本批路由集为空 ⇒ 兴趣面零注册（切换随 P7 步 2 步 f）。
+			// DataDriven native runtime: empty routing set in this batch, so no interests are installed.
+			DataDrivenNativeRuntime.instance().installInterest(this);
 			installProductionDefinitions(prepared == null
 					? prepareProductionDefinitions(awaitProductionCatalogPreload()) : prepared);
 			log.info(I18n.get("log.quest_engine.typed_owners_loaded", productionDispatcher.owners().size()));

@@ -115,6 +115,22 @@ class DataDrivenProgressTest {
 	}
 
 	@Test
+	void saturatedGroupIsNotIncrementedAgain() {
+		// 真端 `FUN_180c46020`：自增只在 `counter < target` 时发生（`if (uVar11 < target) { vars += … }`）。
+		// 组 1 计满后超杀必须零写（不得进位污染组 2），组 2 未满 ⇒ NO_ACTION。
+		List<Slot> slots = List.of(new Slot(1, 2), new Slot(2, 3));
+		int vars = (2 << 6); // 组 1 已满（2/2），组 2 = 0/3
+		Result over = DataDrivenProgress.hit(vars, 0, slots, 1, true);
+		assertEquals(Outcome.NO_ACTION, over.outcome(), "满组槽超杀 ⇒ 零动作（真端 counter < target 守卫）");
+		assertEquals(vars, over.newVars(), "零动作不得写 vars（无进位污染）");
+		// 全部组槽已达标时仍按真端收口步进（`bVar3 == true` 分支）。
+		int satisfied = (2 << 6) | (3 << 12);
+		Result closed = DataDrivenProgress.hit(satisfied, 0, slots, 1, true);
+		assertEquals(Outcome.STEP_COMPLETE, closed.outcome(), "全组达标形按真端收口步进");
+		assertEquals(1, closed.newVars());
+	}
+
+	@Test
 	void guardShapesFailClosed() {
 		assertEquals(Outcome.NO_ACTION,
 			DataDrivenProgress.hit(0x40000000, 0, List.of(new Slot(1, 1)), 1, true).outcome(),

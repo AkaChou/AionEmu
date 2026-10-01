@@ -2901,10 +2901,10 @@ keywords: DataDriven、step column、valueN_progress_、LoadProgressInfo、LoadE
 status: CONFIRMED
 scope: 真端 DataDriven 行的原生进度算术（6 位步号 + 每 6 位一个组槽；零相机）
 first_seen: 2026-10-01
-last_verified: 2026-10-01
+last_verified: 2026-10-02
 symptom: ① 用家族相机（`ProgressCamera` + `CameraRegistry`）服务 DD 行 ⇒ 引入真端不存在的 `fullValue`/推进通道语义，且与 DD「零相机调用」冲突；② 自增时按 `& 0x3F` 掩码或做饱和保护 ⇒ 抹掉真端的进位污染（80817 的 100 杀会「看起来能完成」，改变真端行为）；③ 把「本步某一组达标」当成收口条件 ⇒ 多子目标步（hunt 多段）提前推进
 root_cause: 真端 DD handler 内联算术（与家族相机 `fun_731.cpp:5306` 无关）：`prog = GetQuestProgress`；`if ((prog & 0x3F) != expectedStep) return`（只服务当前步）；命中时字面 `prog += (1 << shift)`——**无 6 位掩码**，故组槽计满 63 再 +1 会进位污染下一组槽；收口判据是「该步声明的全部组槽都达标」，写回 `prog = (prog & 0x3F) + 1`（组槽全清、守卫位丢弃），末步改调 `SetQuestSuccess`。目标 > 63 的行（80817 = 100 杀）因此永远不满足 ⇒ 真端自身不可完成（§10.3-#5 裁定原样复刻）
-fix_or_guardrail: 1. DD 行零相机：不注册 `CameraRegistry` 行、不调 `ProgressCamera`；2. 读布局 = `vars & 0x3F`（步号）+ `(vars >>> 6*group) & 0x3F`（组槽，group 1..4）；3. 自增 = `vars + (1 << (6*group))`（**不掩码**，保留进位污染）；4. 收口 = 全部声明组槽达标 ⇒ `(vars & 0x3F) + 1`；末步返回 `STEP_COMPLETE`（真端 `SetQuestSuccess`）、中间步 `STEP_ADVANCE`（`SetQuestProgress`）；5. 守卫 = 非当前步 / 未声明组 / 无组槽 / 位形异常（bit30/31 或负值）一律零动作；6. 目标 > 63 不许「修好」：门内必须有「饱和进位 + 永不收口」的正例
+fix_or_guardrail: 1. DD 行零相机：不注册 `CameraRegistry` 行、不调 `ProgressCamera`；2. 读布局 = `vars & 0x3F`（步号）+ `(vars >>> 6*group) & 0x3F`（组槽，group 1..4）；3. 自增 = `vars + (1 << (6*group))`（**不掩码**，保留进位污染），且**只在 `counter < target` 时发生**（真端 `FUN_180c46020`/`FUN_180c46980` 的 `if (uVar11 < target)` 守卫 ⇒ 满组槽超杀零写、不进位污染邻组；2026-10-02 补正）；4. 收口 = 全部声明组槽达标 ⇒ `(vars & 0x3F) + 1`；末步返回 `STEP_COMPLETE`（真端 `SetQuestSuccess`）、中间步 `STEP_ADVANCE`（`SetQuestProgress`）；5. 守卫 = 非当前步 / 未声明组 / 无组槽 / 位形异常（bit30/31 或负值）一律零动作；6. 目标 > 63 不许「修好」：门内必须有「饱和进位 + 永不收口」的正例
 evidence: src/main/java/com/aionemu/gameserver/questEngine/tablelane/DataDrivenProgress.java; src/test/java/com/aionemu/gameserver/questEngine/tablelane/DataDrivenProgressTest.java; .agents/summary/quest-engine-native/p7/P7-STEP1-REPORT.zh-CN.md; .agents/summary/quest-engine-native/p7/P7-STEP2-PREREQ-COLUMN-SEMANTICS.zh-CN.md; .agents/summary/quest-engine-native/p7-prereqs/dd-dispatcher-and-handlers.md
 validation: 2026-10-01：门 `DataDrivenProgressTest` **8/8**（布局读法 / 单组达标 / 多组等待全满 / 行阶梯全步行走 / 非当前步与未声明组零动作 / 80817 饱和进位污染且永不收口 / 守卫位零动作 / 步进写清零组槽）；P7 步 1 契约冻结证实 1467 行里每步 ≤4 组子计数、计数 ≤63 仅 80817 例外
 superseded_by: none
@@ -2914,7 +2914,7 @@ first_check: 实现/排查 DD 进度前先答：① 这一步用组槽吗（Hunt
 keywords: DataDriven、原生算术、零相机、6位步号、组槽、无掩码自增、饱和进位、进位置污染、全组槽达标、SetQuestSuccess、80817不可完成、DataDrivenProgress、DATA_DRIVEN_PROGRESS_ARITHMETIC、QE-128
 -->
 
-- **判定规则**：DD 进度 = 「步号（bit0-5）+ 组槽（bit6..）」；命中自增无掩码（保留进位），收口要全部声明组槽达标，步进写清零组槽。
+- **判定规则**：DD 进度 = 「步号（bit0-5）+ 组槽（bit6..）」；命中自增无掩码（保留进位）**但只在 `counter < target` 时发生**（满组槽超杀零写），收口要全部声明组槽达标，步进写清零组槽。
 - **安全网**：非当前步 / 未声明组 / 位形异常一律零动作；目标 > 63 的行必须仍然不可完成（门内正例）。
 - **反漂移**：别把家族相机的 `fullValue`/推进通道语义套到 DD 上——DD 零相机是真端事实。
 
@@ -2968,3 +2968,28 @@ keywords: DataDriven、EnterArea、kind 6、进区、同名区、FUN_180c47bf0�
 - **判定规则**：DD 进区绑定 = 真端**同名区**（名哈希逐值比对，零换算）；几何只来自真端世界文件（同名多胞归并），脚本区按 `<quest>` 绑定优先于名字形。
 - **安全网**：门内三重冻结（胞数 + mapid + 原文摘要）；真端缺席的 14 条 progress 别名 + 1 条 acquire 别名冻结在端口常量里，未登记别名一律 `DATA_DRIVEN_ENTER_AREA_ZONE_UNRESOLVED`。
 - **反漂移**：别用「出生点 + 半径」球体近似复活旧壳区，也别跨世界搬镜像几何（DF6 ↔ LF6）——真端没有就是没有。
+
+---
+
+## [QE-131] 一百三十一、DD 原生进度运行时：路由集 → 兴趣面 → 真端 handler 语义（整行原子 + 生产零路由） (DATA_DRIVEN_NATIVE_RUNTIME)
+
+<!-- pattern-metadata
+status: CONFIRMED
+scope: 真端 DataDriven 表的原生**进度运行时**（兴趣面建立 + 事件执行 + 行级路由判定）；不含接取轴与附加动作执行面
+first_seen: 2026-10-02
+last_verified: 2026-10-02
+symptom: ① 把 DD 表装载进来却没有事件入口（「装载未消费」）——击杀/对话/进区/进世界/用物/PvP 都不推进，任务静默卡步；② 按**步**而不是按**行**判定可路由 ⇒ 半行原生半行旧 IR，出现死边或双 owner；③ 用兴趣面索引事件时漏建某一类（如 TalkFOBJ 只注册对话兴趣却按 FOBJ 事件到达）⇒ 该步永不命中；④ 在未坐实事件源/闸门来源时「先上线再说」⇒ 与真端语义漂移
+root_cause: DD 行是「每步一条 handler 记录」（真端 `def+0xF0` 向量），事件派发面按类别各不相同：Hunt 走击杀（`FUN_180c46020`，4 组 × 6 位、组内命中且 `counter < target` 才自增、全组达标才步进）、PvP 走击杀包（`FUN_180c46980`，军衔区间 + `killerLevel <= victimLevel + gap`）、Talk 走对话（`FUN_180c466a0`，直接写目标步）、EnterArea 走进区（`FUN_180c47bf0`，同名区名哈希比对后直接步进）、EnterWorld 走进世界（`FUN_180c467b0`）、TalkFOBJ 走对象交互（`FUN_180c478e0`，组计数二值 0→1 且尾整数是动作类型而非计数）；载荷语法也逐类不同（hunt：`;` 分组 + 尾整数计数 + 空格分隔名单回退；talkfobj：尾整数 = 动作类型）。任何一类缺失都会让该行成为死边
+fix_or_guardrail: 1. 运行时按**路由集**逐行建兴趣面（击杀/对话/FOBJ/进区/进世界/PvP 行集），每步必须落进对应兴趣面，否则**整行冻结**（整行原子可路由，禁止半行切换）；2. 事件入口只服务路由集内的行，且生产路由集在原子切换批之前恒为空（`instance()` 空集 = 零行为变更，门内断言；`QuestEngine` 五入口接线后恒 false）；3. 名字解析失败不许换算/近似（不去后缀、不去前缀、不猜别名）——副本全图击杀名（`IDAbRe_Low_*`/`IDSeal_*`）与 `quest_ai_name` 组名必须走各自真端同轴规则后单独登记；4. 真端 handler 的守卫必须逐条复刻（步号 `vars & 0x3F`、自增 `counter < target`、组槽上限 4、末步 = `SetQuestSuccess` → 本服 REWARD）；5. 距离/等级闸门的**取值来源**未坐实时只登记不实现（不得默认放行）
+evidence: src/main/java/com/aionemu/gameserver/questEngine/tablelane/DataDrivenNativeRuntime.java; src/test/java/com/aionemu/gameserver/questEngine/tablelane/DataDrivenNativeRuntimeGateTest.java; .agents/summary/quest-engine-native/p7/P7-STEP2D-REPORT.zh-CN.md; .agents/summary/quest-engine-native/p7-prereqs/dd-dispatcher-and-handlers.md
+validation: 2026-10-02：真端原码逐函数复读（`ScriptDLL64.c:2069982` Hunt / `:2070182` PvP / Talk / `:2071274` TalkFOBJ / `:2071405` EnterArea）；本服切换集 1467 行复算 = 可路由 **1017** / 冻结 **450**（`KIND_NOT_WIRED` 374 / `NAME_UNRESOLVED` 68 / `ZONE_ABSENT` 8），已路由行逐类步数 hunt 697 / pvp 205 / talk 212 / enterarea 117 / enterworld 32 / talkfobj 15，且切换集逐类步数与 P7 步 1 契约（827/348/207/403/153/42/34/19）逐值一致；门 `DataDrivenNativeRuntimeGateTest` **9/9**（生产零路由、两桶互斥闭合、兴趣面逐元素复算、六类事件语义、冻结面）、`DataDrivenProgressTest` **9/9**；族门 + tablelane **180/180**；聚焦套件 **1703 / 161F+137E / 105 红类**（ADDED 0 / REMOVED 0）
+superseded_by: none
+boundaries: ① 本批只接线六类（Hunt/PvP/Talk/EnterArea/EnterWorld/TalkFOBJ）；CollectItem（宿主采集/交付事件源）与 ItemPlay（动作码 >=10000 → SetQuestProgress(code-9999)）留步 d2，含这两类的行整行冻结（374 行）；② 附加动作执行面（列 1..10）与接取轴 6 类留步 e；③ 距离闸门取值来源（真端 `def+0x1c`）与 48 个未解析名登记 §10.3-#24；④ 生产路由集为空是本批口径：字面切换随步 f（1467 行 + 同批删旧）；⑤ PvP 闸门口径依 `FUN_180c46980` 三比较（min/max rank 的 0 = 无闸门、level gap 始终参与）
+see_also: [QE-128], [QE-130], [QE-127], [QE-126], [QE-129]
+first_check: 动 DD 原生运行时前先答：① 该步是否落进对应兴趣面（kill/talk/fobj/zone/world/pvp）？缺一类会不会让整行成为死边？② 路由判定是按行还是按步（必须按行）？③ 自增是否带 `counter < target` 守卫？④ 名字解析失败时有没有偷偷做换算/近似？⑤ 生产路由集是否仍为空（原子切换批之前不得上线）？⑥ 事件入口是否只服务路由集内的行（单一 owner）？
+keywords: DataDriven、原生运行时、进度运行时、兴趣面、路由集、整行原子、零行为变更、Hunt 组计数、PvP 闸门、Talk 直接步进、EnterArea 同名区、EnterWorld、TalkFOBJ 二值、counter小于target、名字未解析、副本全图击杀、quest_ai_name、DataDrivenNativeRuntime、DATA_DRIVEN_NATIVE_RUNTIME、QE-131
+-->
+
+- **判定规则**：DD 行按**行**判可路由（任一步不可服务即整行冻结）；每步必须落进对应兴趣面；生产路由集在原子切换批前恒为空。
+- **安全网**：自增带 `counter < target` 守卫（满组槽超杀零写）；名字解析失败不换算、不近似，冻结并登记；未坐实的闸门取值来源只登记不实现。
+- **反漂移**：别把「装载成功」当「运行时会派发」；别按步切换（半行 = 死边）；别在未切换时把生产路由集打开（单一 owner）。

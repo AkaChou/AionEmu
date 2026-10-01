@@ -3,7 +3,9 @@ package com.aionemu.gameserver.questEngine.tablelane;
 import java.util.List;
 
 /**
- * 真端 DataDriven 进度算术（计划 §10.2「P7 DataDriven」步 2；证据 `ScriptDLL64.c` 逐指令）。
+ * 真端 DataDriven 进度算术（计划 §10.2「P7 DataDriven」步 2；证据 `ScriptDLL64.c` 逐指令：
+ * `FUN_180c46020` Hunt / `FUN_180c46980` PvP / `FUN_180c478e0` TalkFOBJ / `FUN_180c466a0` Talk
+ * / `FUN_180c47bf0` EnterArea / `FUN_180c467b0` EnterWorld）。
  * <p>
  * DD 行**不走相机**（真端 DD handler 内联算术，无 `fun_731.cpp:5306` 那种相机 vtable 调用），
  * 其 raw vars 布局 = 「6 位步号（bit0-5）+ 每 6 位一个组槽（bit6..）」：
@@ -12,6 +14,8 @@ import java.util.List;
  *   <li>命中自增：字面 `prog += (1 << shift)`——**不做 6 位掩码**，因此计数 63 再 +1 会进位污染下一组槽
  *       （真端 80817 的 100 杀即此形：槽回绕后 `counter < target` 永不成立 ⇒ 真端自身不可完成，
  *       本类按 §10.3-#5 裁定**原样复刻**，禁止改成 10 位相机或显式禁用）；</li>
+ *   <li>自增**只在 `counter < target` 时发生**（真端 `FUN_180c46020`：`if (uVar11 &lt; target) { vars += …; }`
+ *       ——计满的组槽不再自增，因此不会溢出污染下一组；全部组槽已达标时仍按收口步进）；</li>
  *   <li>本步收口：仅当**该步声明的全部组槽**都在新字里达标时才步进，步进形 = `(prog & 0x3F) + 1`
  *       （真端 `prog = (prog & 0x3F) + 1` ⇒ 组槽清零、守卫位一并丢弃）；</li>
  *   <li>区分中间步（真端 `SetQuestProgress`，继续走下一步）与末步（真端 `SetQuestSuccess`，转待领奖）。</li>
@@ -140,13 +144,30 @@ public final class DataDrivenProgress {
 		if (!declared) {
 			return new Result(Outcome.NO_ACTION, vars);
 		}
-		int newVars = increment(vars, group);
-		if (!guardClear(newVars)) {
-			// 进位越过守卫位（仅饱和污染可达）⇒ 零动作，绝不写坏位形。
-			return new Result(Outcome.NO_ACTION, vars);
+		int target = -1;
+		for (Slot slot : slots) {
+			if (slot.group() == group) {
+				target = slot.target();
+				break;
+			}
+		}
+		// 真端只在本组未达标时自增（`FUN_180c46020`/`FUN_180c46980` 的 `counter < target` 守卫）：
+		// 已满组槽的超杀零写（不得进位污染下一组），但「全部组槽已达标」仍按收口步进。
+		// The retail increment is guarded by counter < target; an over-target hit writes nothing,
+		// while an all-satisfied shape still closes the step.
+		int newVars = vars;
+		boolean incremented = false;
+		if (counter(vars, group) < target) {
+			newVars = increment(vars, group);
+			if (!guardClear(newVars)) {
+				// 进位越过守卫位（仅饱和污染可达）⇒ 零动作，绝不写坏位形。
+				return new Result(Outcome.NO_ACTION, vars);
+			}
+			incremented = true;
 		}
 		if (!allSatisfied(newVars, slots)) {
-			return new Result(Outcome.COUNTER_INCREMENT, newVars);
+			return incremented ? new Result(Outcome.COUNTER_INCREMENT, newVars)
+				: new Result(Outcome.NO_ACTION, vars);
 		}
 		int advanced = advance(newVars);
 		return new Result(lastStep ? Outcome.STEP_COMPLETE : Outcome.STEP_ADVANCE, advanced);
