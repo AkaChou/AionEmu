@@ -20,7 +20,9 @@ import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.Test;
 
+import com.aionemu.gameserver.questEngine.tablelane.NativeQuestTableLoader.SimpleItemPlayRow;
 import com.aionemu.gameserver.questEngine.tablelane.NativeQuestTableLoader.SimpleTalkRow;
+import com.aionemu.gameserver.questEngine.tablelane.NativeQuestTableLoader.SimpleUseItemRow;
 
 /**
  * SimpleHunt 表装载器门测试（夹具事实来自 P1 对拍：1863 活跃行、13912 槽 3 空名单、37116 跨行
@@ -258,5 +260,34 @@ class NativeQuestTableLoaderTest {
 				</quest_simplehunts>
 				""".getBytes(StandardCharsets.UTF_8))));
 		assertTrue(garbage.getMessage().startsWith("NATIVE_TABLE_PARSE_FAILED"), garbage.getMessage());
+	}
+
+	/** P5：SimpleUseItem 160 行 + SimpleItemPlay 43 行装载，长尾列按原文（含第 K 步位置保留）。 /
+	 * P5: the use-item (160) and item-play (43) tables load with their long-tail columns verbatim. */
+	@Test
+	void loadsFullUseItemAndItemPlayTables() {
+		NativeQuestTableLoader loader = NativeQuestTableLoader.instance();
+		assertEquals(160, loader.useItemSize());
+		assertEquals(43, loader.itemPlaySize());
+		// 1559 = 三步中继 + 第 3 步换物（真端表原文）。 / 1559 = three relay steps with a step-3 exchange.
+		SimpleUseItemRow row1559 = loader.requireUseItem(1559);
+		assertEquals("ITEM_QUEST_1559A", row1559.useItemName());
+		assertEquals("Shugo_LF3_4", row1559.rewardNpcName());
+		assertEquals(List.of("Shugo_LF3_4", "Lomulias", "Shugo_c5"), row1559.talkNpcNames());
+		assertEquals(Arrays.asList(null, null, "ITEM_QUEST_1559B 1"), row1559.stepGiveItems());
+		assertEquals(Arrays.asList(null, null, "ITEM_QUEST_1559A 1"), row1559.stepRemoveItems());
+		assertNull(row1559.conQuest());
+		assertEquals(0, row1559.cutsceneId() == null ? 0 : 1);
+		// 80482 = item_check 交付门（无中继链）。 / 80482 carries the item_check hand-in gate.
+		assertTrue(loader.requireUseItem(80482).itemCheck());
+		assertFalse(loader.requireUseItem(1107).itemCheck());
+		// 19048 = 接取即发演出道具（give_item 原子与 use_item 同物）。 / 19048 grants the play item on accept.
+		SimpleItemPlayRow play = loader.requireItemPlay(19048);
+		assertEquals("Andreas", play.acquiredNpcName());
+		assertEquals("Andreas", play.rewardNpcName());
+		assertEquals("ITEM_DOC_QUEST_19048A 1", play.useItemName());
+		assertEquals("ITEM_DOC_QUEST_19048A 1", play.acceptGiveItem());
+		assertEquals(List.of(), play.talkNpcNames());
+		assertEquals(Arrays.asList(null, null), play.stepGiveItems());
 	}
 }

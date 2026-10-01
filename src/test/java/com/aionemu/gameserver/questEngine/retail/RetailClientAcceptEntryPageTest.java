@@ -17,8 +17,10 @@ import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.questEngine.tablelane.NativeTalkFixture;
 import com.aionemu.gameserver.questEngine.tablelane.SimpleCollectItemHandler;
 import com.aionemu.gameserver.questEngine.tablelane.SimpleHuntHandler;
+import com.aionemu.gameserver.questEngine.tablelane.SimpleItemPlayHandler;
 import com.aionemu.gameserver.questEngine.tablelane.SimpleSerialHuntHandler;
 import com.aionemu.gameserver.questEngine.tablelane.SimpleTalkHandler;
+import com.aionemu.gameserver.questEngine.tablelane.SimpleUseItemHandler;
 import org.junit.jupiter.api.Test;
 
 import java.io.BufferedReader;
@@ -83,11 +85,21 @@ class RetailClientAcceptEntryPageTest {
 	 * page the client declares.
 	 */
 	private static final String GAP_BASELINE = "/quest/retail-accept-entry-page-gaps.tsv";
-	/** 已切换到原生车道的四个家族处理器。 / The four families already switched to the native lane. */
+	/**
+	 * 自有但 fail-closed 的用物接取行（真端表行已退役，但声明的交付名 {@code magician_apprentice}
+	 * 在客户端/名称索引里无唯一解，没有驱动定义可判入口页）。新增或消失都必须显式改本表。
+	 * Owned-but-fail-closed item-use rows: retired retail rows whose declared hand-in name has no
+	 * unique resolution, so there is no driver definition and no entry page to judge. The list is
+	 * asserted in both directions so new or vanished rows must be an explicit edit.
+	 */
+	private static final Set<Integer> FAIL_CLOSED_NATIVE_ROWS = Set.of(30720, 30723);
+	/** 已切换到原生车道的家族处理器。 / The families already switched to the native lane. */
 	private static final SimpleTalkHandler TALK = NativeTalkFixture.handler();
 	private static final SimpleHuntHandler HUNT = SimpleHuntHandler.instance();
 	private static final SimpleSerialHuntHandler SERIAL = SimpleSerialHuntHandler.instance();
 	private static final SimpleCollectItemHandler COLLECT = SimpleCollectItemHandler.instance();
+	private static final SimpleUseItemHandler USE = SimpleUseItemHandler.instance();
+	private static final SimpleItemPlayHandler PLAY = SimpleItemPlayHandler.instance();
 
 	@Test
 	void entryPageFollowsTheClientTaskPage() {
@@ -141,11 +153,16 @@ class RetailClientAcceptEntryPageTest {
 	void everySelect1EntryFollowsTheClientAcceptLadder() throws Exception {
 		QuestDialogContract contract = QuestDialogContract.loadDefault();
 		List<String> missing = new ArrayList<>();
+		Set<Integer> skipped = new TreeSet<>();
 		int checked = 0;
 		for (int questId : retailOwnedQuestIds()) {
 			if (nativeLane(questId) != null) {
 				// 原生车道：入口页 = 客户端声明页；select1(1011) 首屏的翻页动作由 native 处理器原样回发。
 				// Native lane: the entry page is the client-declared page; select1 page turns are echoed.
+				if (!nativeRoutes(questId)) {
+					skipped.add(questId);
+					continue;
+				}
 				Integer acquireNpc = nativeAcquireNpc(questId);
 				if (acquireNpc == null || contract.acceptEntryPage(questId) != RetailClientAcceptEntryPage.SELECT1_PAGE) {
 					continue;
@@ -183,6 +200,8 @@ class RetailClientAcceptEntryPageTest {
 		assertTrue(coverage >= SELECT1_LADDER_COVERAGE_FLOOR,
 			() -> "select1 continuation coverage too small: " + coverage);
 		assertTrue(missing.isEmpty(), () -> "select1 accept ladder missing routes: " + missing);
+		assertEquals(FAIL_CLOSED_NATIVE_ROWS, skipped,
+			"fail-closed 原生行集合漂移 / fail-closed native rows drifted");
 	}
 
 	/**
@@ -196,29 +215,44 @@ class RetailClientAcceptEntryPageTest {
 		QuestEnv env = NativeTalkFixture.dialog(player, acquireNpc, questId, pageId);
 		boolean handled = TALK.routes(questId) ? TALK.onDialog(env)
 			: HUNT.routes(questId) ? HUNT.onDialog(env)
-			: SERIAL.routes(questId) ? SERIAL.onDialog(env) : COLLECT.routes(questId) && COLLECT.onDialog(env);
+			: SERIAL.routes(questId) ? SERIAL.onDialog(env)
+			: COLLECT.routes(questId) ? COLLECT.onDialog(env) : PLAY.routes(questId) && PLAY.onDialog(env);
 		return handled && NativeTalkFixture.dialogPages(player).equals(List.of(pageId));
 	}
 
-	/** 已切到原生车道的家族名（Talk / Hunt / SerialHunt / CollectItem）；未切换返回 null。 /
+	/** 已切到原生车道的家族名（Talk / Hunt / SerialHunt / CollectItem / UseItem / ItemPlay）；未切换返回 null。 /
 	 * The native family owning the row, or null when the row still runs on the typed IR lane. */
 	private static String nativeLane(int questId) {
-		if (TALK.routes(questId)) {
+		if (TALK.owns(questId)) {
 			return "SimpleTalk";
 		}
-		if (HUNT.routes(questId)) {
+		if (HUNT.owns(questId)) {
 			return "SimpleHunt";
 		}
-		if (SERIAL.routes(questId)) {
+		if (SERIAL.owns(questId)) {
 			return "SimpleSerialHunt";
 		}
-		if (COLLECT.routes(questId)) {
+		if (COLLECT.owns(questId)) {
 			return "SimpleCollectItem";
+		}
+		if (USE.owns(questId)) {
+			return "SimpleUseItem";
+		}
+		if (PLAY.owns(questId)) {
+			return "SimpleItemPlay";
 		}
 		return null;
 	}
 
-	/** 原生家族声明的接取 NPC。 / The acquire NPC the native family declares. */
+	/** 原生车道是否有该行的驱动定义（own 但未 route 的行是 fail-closed 冻结行）。 /
+	 * Whether any native family routes the row (owned but unrouted rows are the fail-closed freeze). */
+	private static boolean nativeRoutes(int questId) {
+		return TALK.routes(questId) || HUNT.routes(questId) || SERIAL.routes(questId)
+			|| COLLECT.routes(questId) || USE.routes(questId) || PLAY.routes(questId);
+	}
+
+	/** 原生家族声明的接取 NPC（用物接取族无 NPC 入口，返回 null）。 /
+	 * The acquire NPC the native family declares; the item-use family has no NPC entry. */
 	private static Integer nativeAcquireNpc(int questId) {
 		if (TALK.routes(questId)) {
 			return TALK.acquireNpc(questId);
@@ -229,7 +263,10 @@ class RetailClientAcceptEntryPageTest {
 		if (SERIAL.routes(questId)) {
 			return SERIAL.acquireNpc(questId);
 		}
-		return COLLECT.routes(questId) ? COLLECT.acquireNpc(questId) : null;
+		if (COLLECT.routes(questId)) {
+			return COLLECT.acquireNpc(questId);
+		}
+		return PLAY.routes(questId) ? PLAY.acquireNpc(questId) : null;
 	}
 
 	/** 同 NPC/动作/来源且确实下发客户端声明页的续页路由。 / A same-owner page-turn route showing the page. */
@@ -248,14 +285,29 @@ class RetailClientAcceptEntryPageTest {
 	void everyRetailOwnedAcceptEntryPageIsClientLoadable() throws Exception {
 		QuestDialogContract contract = QuestDialogContract.loadDefault();
 		List<String> gaps = new ArrayList<>();
+		Set<Integer> skipped = new TreeSet<>();
 		int checked = 0;
 		for (int questId : retailOwnedQuestIds()) {
 			if (nativeLane(questId) != null) {
 				// 原生车道：接取入口 = 接取 NPC 的 QUEST_SELECT → 客户端契约页；无 NPC 接取入口的行
 				// （系统/事件发放、接取名未解）没有入口页可判。
 				// Native lane: the entry is the acquire NPC's QUEST_SELECT → the client contract page.
+				if (!nativeRoutes(questId)) {
+					skipped.add(questId);
+					continue;
+				}
 				Integer acquireNpc = nativeAcquireNpc(questId);
 				if (acquireNpc == null) {
+					if (USE.routes(questId)) {
+						// 用物接取族：入口页由 UseItem 事件下发（真端无主接取形），同样必须客户端可渲染。
+						// Item-use family: the entry page is popped by the UseItem event, and must be
+						// client-renderable just the same.
+						checked++;
+						int usePage = SimpleUseItemHandler.PAGE_ASK_ACCEPT;
+						if (!contract.hasButtonPage(questId, usePage)) {
+							gaps.add(questId + "\t" + usePage);
+						}
+					}
 					continue;
 				}
 				checked++;
@@ -283,6 +335,8 @@ class RetailClientAcceptEntryPageTest {
 		assertEquals(frozen, observed,
 			() -> "接取入口页与客户端任务页失同步 / accept entry pages out of sync with the client task HTML: "
 				+ "新增=" + difference(observed, frozen) + " 需删登记=" + difference(frozen, observed));
+		assertEquals(FAIL_CLOSED_NATIVE_ROWS, skipped,
+			"fail-closed 原生行集合漂移 / fail-closed native rows drifted");
 		int edgeCount = checked;
 		assertTrue(edgeCount > 1500,
 			() -> "接取入口边覆盖过少，门禁失效 / accept-entry-edge coverage too small: " + edgeCount);

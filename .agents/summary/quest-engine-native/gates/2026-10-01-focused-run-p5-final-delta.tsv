@@ -1,0 +1,11 @@
+# P4 收口：聚焦套件逐类 tests/failures/errors 三元组差集（基线 = 上一批日志）
+# 命令：mvn -o test -Dtest=*Quest*Test,*Retail*Test -DfailIfNoTests=false
+# 日志：.agents/summary/quest-engine-native/gates/2026-10-01-focused-run-p4-final.log（基线） / .agents/summary/quest-engine-native/gates/2026-10-01-focused-run-p5-final.log（本批）
+# 总量：基线 (1695, 163, 145, 2) / 本批 (1691, 162, 142, 2)
+class	base_tests	base_failures	base_errors	new_tests	new_failures	new_errors	delta
+com.aionemu.gameserver.questEngine.definition.Quest1309ClientDialogAlignmentTest	1	0	0	2	0	0	T+1
+com.aionemu.gameserver.questEngine.definition.QuestEventQuestBatchDefinitionTest	5	0	3	5	0	0	E-3
+com.aionemu.gameserver.questEngine.retail.RetailSimpleItemPlayGateTest	1	0	0	<absent>	<absent>	<absent>	REMOVED
+com.aionemu.gameserver.questEngine.retail.RetailSimpleUseItemGateTest	5	0	0	<absent>	<absent>	<absent>	REMOVED
+com.aionemu.gameserver.questEngine.runtime.QuestMutationPlannerTest	23	1	2	23	0	2	F-1
+com.aionemu.gameserver.questEngine.tablelane.NativeQuestTableLoaderTest	10	0	0	11	0	0	T+1

@@ -13,6 +13,7 @@ import com.aionemu.gameserver.questEngine.tablelane.NativeQuestStartPort;
 import com.aionemu.gameserver.questEngine.tablelane.NativeQuestXmlTable;
 import com.aionemu.gameserver.questEngine.tablelane.NativeTalkFixture;
 import com.aionemu.gameserver.questEngine.tablelane.SimpleTalkHandler;
+import com.aionemu.gameserver.questEngine.tablelane.SimpleUseItemHandler;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -21,6 +22,7 @@ import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -361,26 +363,45 @@ class EarlyElyosQuestRegressionTest {
 		route(flowers, "flowers-delivered", "reward", new QuestEvent.TalkToNpc(730039, -1));
 		assertNoUnacceptedObjectRoute(flowers, 730039);
 
-		CompiledQuestDefinition map = load(1561);
-		// W6 尾（quest-native-dispatch）：1561 迁 SimpleUseItem 规范形——宝箱 700188 的
-		// QUEST_SELECT(31) 提交边从 started 直翻领奖态并下发奖励窗，旧 CanAct 物件门与
-		// -1→2375 页随物件规范形退场；"领奖态宝箱可重开"由 -1/1009 → 窗 5 的自环保留。
-		// W6 tail: 1561 moved to the SimpleUseItem canonical — the chest's QUEST_SELECT(31)
-		// submission edge flips REWARD from started with the reward window; the legacy CanAct
-		// object gates and the -1->2375 page retire, while "the chest reopens at reward" survives
-		// as the -1/1009 -> window-5 self-loops.
-		QuestTransition chestDelivery = route(map, "started", "reward",
-			new QuestEvent.TalkToNpc(700188, 31));
-		assertEquals(List.of(), chestDelivery.conditions());
-		assertEquals(List.of(
-			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
-			new AfterCommitAction.ShowQuestDialog(5)), chestDelivery.afterCommit());
+		// 1561 已随 P5 切到 SimpleUseItem 原生车道：断言面改读真端行 + 真端 quest.xml + 客户端页契约。
+		// 1561 switched to the SimpleUseItem native lane in P5: its assertions now read the retail row,
+		// the retail quest.xml and the client page contract only.
+		SimpleUseItemHandler chest = SimpleUseItemHandler.instance();
+		assertEquals(List.of(700188), chest.rewardNpcs(1561),
+			"真端 reward_npc_name = LF3_JewelBox_Q1561(700188)");
+		assertTrue(chest.relayNpcs(1561).isEmpty(), "真端该行无 talk_npc 列 ⇒ 无中继步");
+		assertTrue(chest.gateItems(1561).isEmpty(), "真端该行未声明 item_check ⇒ 交付不设工作物品门");
+		Integer chestItem = chest.useItemId(1561);
+		assertNotNull(chestItem, "真端 use_item_name 必须解析为生产物品 id");
+		assertTrue(chest.acceptQuestIdsForItem(chestItem).contains(1561), "接取道具必须指回 1561");
+
+		Player chestPlayer = NativeTalkFixture.player(Race.ELYOS, PlayerClass.WARRIOR, 40);
+		NativeTalkFixture.clearPackets(chestPlayer);
+		assertTrue(chest.onItemUse(chestPlayer, chestItem), "宝箱道具使用开接取窗（真端 UseItem 无主事件）");
+		NativeTalkFixture.assertOnlyDialogPage(chestPlayer, SimpleUseItemHandler.PAGE_ASK_ACCEPT);
+		assertTrue(chest.onDialog(NativeTalkFixture.dialog(chestPlayer, 0, 1561, 1002)), "无主 1002 接取");
+		assertEquals(QuestStatus.START, chestPlayer.getQuestStateList().getQuestState(1561).getStatus(),
+			"1002 只建档");
+
+		// 宝箱交付：31 直翻领奖态并下发奖励窗（真端报告领奖相位）；-1/1009 在领奖态自环重开窗。
+		// Chest hand-in: 31 flips REWARD with the reward window; -1/1009 re-open it at reward.
+		NativeTalkFixture.clearPackets(chestPlayer);
+		assertTrue(chest.onDialog(NativeTalkFixture.dialog(chestPlayer, 700188, 1561, 31)), "宝箱 31 交付");
+		assertEquals(QuestStatus.REWARD, chestPlayer.getQuestStateList().getQuestState(1561).getStatus());
+		NativeTalkFixture.assertOnlyDialogPage(chestPlayer, SimpleUseItemHandler.PAGE_REWARD_WINDOW);
 		for (int dialogId : List.of(-1, 1009)) {
-			assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(5)),
-				route(map, "reward", "reward", new QuestEvent.TalkToNpc(700188, dialogId)).afterCommit());
+			NativeTalkFixture.clearPackets(chestPlayer);
+			assertTrue(chest.onDialog(NativeTalkFixture.dialog(chestPlayer, 700188, 1561, dialogId)),
+				"领奖态自环必须被服务：" + dialogId);
+			NativeTalkFixture.assertOnlyDialogPage(chestPlayer, SimpleUseItemHandler.PAGE_REWARD_WINDOW);
 		}
-		assertEquals(new AfterCommitAction.CloseDialog(),
-			route(map, "reward", "complete", new QuestEvent.TalkToNpc(700188, 108)).afterCommit().getLast());
+		// 领奖按钮（8..23/108/110..124）与完成页 1008 由族门禁覆盖；此处只锁用物接取窗的客户端面
+		// （奖励窗页 5 是服务端报告相位，不在任务页 HTML 索引里，不需要客户端声明）。
+		// The claim buttons and the 1008 page are covered by the family gate; here we only lock the
+		// item-use ask window against the client task page (the page-5 reward window is the server
+		// report phase and is not part of the quest HTML page index).
+		assertTrue(QuestDialogContract.loadDefault().hasButtonPage(1561,
+			SimpleUseItemHandler.PAGE_ASK_ACCEPT), "1561 的接取窗页必须由客户端任务页声明（ask_quest_accept）");
 	}
 
 	@Test

@@ -3,9 +3,11 @@ package com.aionemu.gameserver.questEngine.definition;
 import com.aionemu.gameserver.questEngine.retail.RetailItemNameIndex;
 import com.aionemu.gameserver.questEngine.tablelane.NativeQuestXmlTable;
 import com.aionemu.gameserver.questEngine.tablelane.SimpleCollectItemHandler;
+import com.aionemu.gameserver.questEngine.tablelane.SimpleItemPlayHandler;
 import com.aionemu.gameserver.questEngine.tablelane.SimpleHuntHandler;
 import com.aionemu.gameserver.questEngine.tablelane.SimpleSerialHuntHandler;
 import com.aionemu.gameserver.questEngine.tablelane.SimpleTalkHandler;
+import com.aionemu.gameserver.questEngine.tablelane.SimpleUseItemHandler;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.w3c.dom.Element;
@@ -129,17 +131,26 @@ class QuestRewardItemGateTest {
 		assertFalse(contract.isEmpty(), "item contract must not be empty");
 
 		production = new HashMap<>();
+		Set<Integer> withoutAnyDefinition = new TreeSet<>();
 		for (Integer qid : contract.keySet()) {
-			// P3/P4 重锚（计划 §8.9）：已切到原生车道的行（SimpleTalk / SimpleHunt / SimpleSerialHunt /
-			// SimpleCollectItem）没有 typed 定义，道具轴直接取自真端表行；其余行仍按生产视图反推。
-			// P3/P4 re-anchor: rows on the native lane carry no typed definition, so their item axis comes
-			// from the retail row itself; the remaining rows keep the synthesized view.
+			// P3/P4/P5 重锚（计划 §8.9）：已切到原生车道的行（SimpleTalk / SimpleHunt / SimpleSerialHunt /
+			// SimpleCollectItem / SimpleUseItem / SimpleItemPlay）没有 typed 定义，道具轴直接取自真端
+			// quest.xml 行；其余行仍按生产视图反推。fail-closed 残余（退役但不可路由，如 SimpleUseItem
+			// 的复合交付名行 30720/30723）在两处都没有定义，按不可路由登记而不是断言其道具轴。
+			// P3/P4/P5 re-anchor: rows on the native lane carry no typed definition, so their item axis
+			// comes from the retail quest.xml row; the fail-closed residue (retired yet unroutable) has no
+			// definition at all and is recorded instead of asserted.
 			if (nativeOwned(qid)) {
 				production.put(qid, parseNativeRowItems(qid));
+			} else if (RetiredQuestIds.contains(qid)
+					&& ProductionQuestDefinitions.catalog().findExecutable(qid).isEmpty()) {
+				withoutAnyDefinition.add(qid);
 			} else {
 				production.put(qid, RetiredQuestIds.contains(qid) ? parseRetailProduction(qid) : parseProduction(qid));
 			}
 		}
+		assertEquals(Set.of(30720, 30723), withoutAnyDefinition,
+			"退役且无定义的行必须正好是 SimpleUseItem 的 fail-closed 残余");
 		assertFalse(production.isEmpty(), "production items must not be empty");
 	}
 
@@ -309,7 +320,9 @@ class QuestRewardItemGateTest {
 		return SimpleTalkHandler.instance().routes(questId)
 			|| SimpleHuntHandler.instance().routes(questId)
 			|| SimpleSerialHuntHandler.instance().routes(questId)
-			|| SimpleCollectItemHandler.instance().routes(questId);
+			|| SimpleCollectItemHandler.instance().routes(questId)
+			|| SimpleUseItemHandler.instance().routes(questId)
+			|| SimpleItemPlayHandler.instance().routes(questId);
 	}
 
 	/**
@@ -459,7 +472,9 @@ class QuestRewardItemGateTest {
 		List<String> problems = new ArrayList<>();
 		for (Map.Entry<Integer, RetailItems> entry : contract.entrySet()) {
 			RetailItems retail = entry.getValue();
-			if (retail.fixedUnset()) {
+			if (retail.fixedUnset() || !production.containsKey(entry.getKey())) {
+				// 无定义行 = 退役且不可路由的 fail-closed 残余（loadFixtures 已冻结其集合）。
+				// Rows without any definition are the retired-but-unroutable fail-closed residue.
 				continue;
 			}
 			if (DUAL_ROUTE_EVIDENCE_BLOCKED.contains(entry.getKey())
@@ -488,7 +503,7 @@ class QuestRewardItemGateTest {
 		for (Map.Entry<Integer, RetailItems> entry : contract.entrySet()) {
 			int qid = entry.getKey();
 			RetailItems retail = entry.getValue();
-			if (retail.selectable().isEmpty()) {
+			if (retail.selectable().isEmpty() || !production.containsKey(qid)) {
 				continue;
 			}
 			Set<Integer> actual = production.get(qid).selectable();
@@ -526,7 +541,8 @@ class QuestRewardItemGateTest {
 	void extendedRewardsMatchTheRetailContract() {
 		List<String> problems = new ArrayList<>();
 		for (Map.Entry<Integer, RetailItems> entry : contract.entrySet()) {
-			if (entry.getValue().extGold() == null && entry.getValue().extItems().isEmpty()) {
+			if (entry.getValue().extGold() == null && entry.getValue().extItems().isEmpty()
+					|| !production.containsKey(entry.getKey())) {
 				continue;
 			}
 			int qid = entry.getKey();

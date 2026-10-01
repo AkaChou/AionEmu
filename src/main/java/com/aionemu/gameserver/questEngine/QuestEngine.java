@@ -59,8 +59,10 @@ import com.aionemu.gameserver.questEngine.tablelane.HtmlPagesRegistry;
 import com.aionemu.gameserver.questEngine.tablelane.CameraRegistry;
 import com.aionemu.gameserver.questEngine.tablelane.SimpleCollectItemHandler;
 import com.aionemu.gameserver.questEngine.tablelane.SimpleHuntHandler;
+import com.aionemu.gameserver.questEngine.tablelane.SimpleItemPlayHandler;
 import com.aionemu.gameserver.questEngine.tablelane.SimpleSerialHuntHandler;
 import com.aionemu.gameserver.questEngine.tablelane.SimpleTalkHandler;
+import com.aionemu.gameserver.questEngine.tablelane.SimpleUseItemHandler;
 import com.aionemu.gameserver.questEngine.model.QuestActionType;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.questEngine.model.QuestState;
@@ -189,7 +191,9 @@ public class QuestEngine implements GameEngine {
 	public boolean hasMatchingRoutes(QuestEvent event, int questId) {
 		if (SimpleHuntHandler.instance().routes(questId) || SimpleSerialHuntHandler.instance().routes(questId)
 				|| SimpleTalkHandler.instance().routes(questId)
-				|| SimpleCollectItemHandler.instance().routes(questId)) {
+				|| SimpleCollectItemHandler.instance().routes(questId)
+				|| SimpleUseItemHandler.instance().routes(questId)
+				|| SimpleItemPlayHandler.instance().routes(questId)) {
 			return true;
 		}
 		return productionDispatcher.hasMatchingRoutes(event, questId);
@@ -270,6 +274,18 @@ public class QuestEngine implements GameEngine {
 			// 真端表驱动车道：SimpleCollectItem 采集对象/交付 NPC 由原生处理器直驱（P4 切换批）
 			if (requestedOwner != 0 && SimpleCollectItemHandler.instance().routes(requestedOwner)) {
 				if (SimpleCollectItemHandler.instance().onDialog(env)) {
+					return true;
+				}
+			}
+			// 真端表驱动车道：SimpleUseItem 用物接取后的无主对话/中继/交付由原生处理器直驱（P5 切换批）
+			if (requestedOwner != 0 && SimpleUseItemHandler.instance().routes(requestedOwner)) {
+				if (SimpleUseItemHandler.instance().onDialog(env)) {
+					return true;
+				}
+			}
+			// 真端表驱动车道：SimpleItemPlay 接取/交付预览/领奖由原生处理器直驱（P5 切换批）
+			if (requestedOwner != 0 && SimpleItemPlayHandler.instance().routes(requestedOwner)) {
+				if (SimpleItemPlayHandler.instance().onDialog(env)) {
 					return true;
 				}
 			}
@@ -829,6 +845,14 @@ public class QuestEngine implements GameEngine {
 			Player player = env.getPlayer();
 			if (player != null) {
 				int itemId = item.getItemTemplate().getTemplateId();
+				// P5 真端族用物事件：SimpleUseItem 用物开接取窗、SimpleItemPlay 用物推进入 REWARD。
+				// 两个原生车道先手认领各自道具（单一 owner：已切换行的 typed 目录里没有它的路由）。
+				// P5 native item-use events: SimpleUseItem opens the accept window, SimpleItemPlay
+				// advances to REWARD. The native lanes claim their own items first (single owner).
+				if (SimpleUseItemHandler.instance().onItemUse(player, itemId)
+						|| SimpleItemPlayHandler.instance().onItemUse(player, itemId)) {
+					return HandlerResult.SUCCESS;
+				}
 				OptionalInt itemPlayDuration = typed.itemPlayAnimationMillis(itemId);
 				if (itemPlayDuration.isPresent()) {
 					scheduleTypedItemPlay(player, item, itemPlayDuration.getAsInt());
@@ -2250,6 +2274,8 @@ public class QuestEngine implements GameEngine {
 			SimpleSerialHuntHandler.instance().installInterest(this);
 			SimpleTalkHandler.instance().installInterest(this);
 			SimpleCollectItemHandler.instance().installInterest(this);
+			SimpleUseItemHandler.instance().installInterest(this);
+			SimpleItemPlayHandler.instance().installInterest(this);
 			installProductionDefinitions(prepared == null
 					? prepareProductionDefinitions(awaitProductionCatalogPreload()) : prepared);
 			log.info(I18n.get("log.quest_engine.typed_owners_loaded", productionDispatcher.owners().size()));

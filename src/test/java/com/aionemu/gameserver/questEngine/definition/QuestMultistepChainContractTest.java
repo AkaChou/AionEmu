@@ -8,6 +8,7 @@ import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.questEngine.retail.RetailGrantKind;
 import com.aionemu.gameserver.questEngine.tablelane.NativeTalkFixture;
 import com.aionemu.gameserver.questEngine.tablelane.SimpleTalkHandler;
+import com.aionemu.gameserver.questEngine.tablelane.SimpleUseItemHandler;
 import com.aionemu.gameserver.questEngine.runtime.QuestMutationPlan;
 import com.aionemu.gameserver.questEngine.runtime.QuestMutationPlanner;
 import com.aionemu.gameserver.questEngine.runtime.QuestSnapshot;
@@ -22,6 +23,7 @@ import java.util.stream.IntStream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -118,15 +120,43 @@ class QuestMultistepChainContractTest {
 			new Step(798115, QuestDialogPage.SELECT1)), 798080, QuestDialogPage.DEFAULT_SUCCESS));
 
 	/**
-	 * 1514 属 P5 SimpleUseItem 族（真端 {@code Quest_SimpleUseItem.xml} 行），当前仍由旧族编译器产出的
-	 * 压缩定义承担，其行阶梯断言随 P5 切换批与 native 行锚一并落地（本批不顺手改）。
-	 * 1514 belongs to the P5 SimpleUseItem family and is still produced by the legacy family compiler as a
-	 * compressed definition; its row-ladder assertions move with the P5 switch batch, not with this one.
+	 * 1514 属 P5 SimpleUseItem 族（真端 {@code Quest_SimpleUseItem.xml} 行）：P5 切换批把它交给
+	 * {@link SimpleUseItemHandler} 原生直驱，typed 目录里不再有它的压缩定义。行阶梯锚改为真端行锚：
+	 * {@code talk_npc1/2} 两级中继（客户端声明 SELECT2/SELECT3 页）+ 交付 NPC 翻 REWARD。
+	 * <p>
+	 * 1514 belongs to the P5 SimpleUseItem family: the P5 switch batch hands it to the native lane, so the
+	 * typed directory no longer carries its compressed definition. The row-ladder anchor is now the retail
+	 * row itself — a two-step relay chain (client-declared SELECT2/SELECT3 pages) plus the hand-in npc.
 	 */
 	@Test
-	void useItemChain1514IsDeferredToTheUseItemSwitchBatch() {
-		assertFalse(ProductionQuestDefinitions.catalog().findExecutable(1514).isEmpty(),
-			"1514 在 P5 SimpleUseItem 切换前仍由旧族定义承担");
+	void useItemChain1514IsDrivenByTheNativeLane() {
+		SimpleUseItemHandler handler = SimpleUseItemHandler.instance();
+		assertTrue(handler.routes(1514), "1514 必须由 P5 SimpleUseItem native 车道直驱");
+		assertTrue(ProductionQuestDefinitions.catalog().findExecutable(1514).isEmpty(),
+			"已切换行不得再出现在 typed 目录（单一 owner）");
+		assertNotNull(handler.useItemId(1514), "真端 use_item_name 必须解析");
+
+		// 真端 talk_npc1/2 两级中继 = 该行阶梯；每级页必须是客户端声明的可渲染页。
+		List<Integer> relays = handler.relayNpcs(1514);
+		assertEquals(2, relays.size(), "真端 talk_npc1/2 两级中继");
+		assertTrue(NativeTalkFixture.clientDeclares(1514, QuestDialogPage.SELECT2.id()));
+		assertTrue(NativeTalkFixture.clientDeclares(1514, QuestDialogPage.SELECT3.id()));
+
+		Player player = NativeTalkFixture.player(Race.ELYOS, PlayerClass.WARRIOR, 35);
+		NativeTalkFixture.start(player, 1514);
+		NativeTalkFixture.clearPackets(player);
+		assertTrue(handler.onDialog(NativeTalkFixture.dialog(player, relays.getFirst(), 1514, 26)));
+		NativeTalkFixture.assertOnlyDialogPage(player, QuestDialogPage.SELECT2.id());
+		NativeTalkFixture.clearPackets(player);
+		assertTrue(handler.onDialog(NativeTalkFixture.dialog(player, relays.get(1), 1514, 26)));
+		NativeTalkFixture.assertOnlyDialogPage(player, QuestDialogPage.SELECT3.id());
+
+		int rewardNpc = handler.rewardNpcs(1514).getFirst();
+		NativeTalkFixture.clearPackets(player);
+		assertTrue(handler.onDialog(NativeTalkFixture.dialog(player, rewardNpc, 1514, 26)),
+			"中继走完后交付 NPC 翻 REWARD 并开奖励窗");
+		NativeTalkFixture.assertOnlyDialogPage(player, SimpleUseItemHandler.PAGE_REWARD_WINDOW);
+		assertEquals(QuestStatus.REWARD, player.getQuestStateList().getQuestState(1514).getStatus());
 	}
 
 	@Test

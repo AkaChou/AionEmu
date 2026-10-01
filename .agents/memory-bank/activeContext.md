@@ -4,7 +4,7 @@
 
 记录当前正在推进的任务与未解决的问题焦点。跨 Agent 接力时，先读此文件了解当前状态。
 
-> last_updated: 2026-09-30
+> last_updated: 2026-10-01
 > status: ACTIVE
 > scope: current checkout only
 > owner: shared agents
@@ -16,6 +16,7 @@
 
 - **主分支 / 工作分支**：`quest`
 - **当前核心关注域**：
+  - **真端引擎迁移 P5 已收口（实现面）**：SimpleUseItem 160 行 / SimpleItemPlay 43 行切原生直驱，同批删旧（两表/两编译器/两旧金标/三个 IR 指纹 TSV），族门 + tablelane 91/91 绿、聚焦套件 1691 例 / 162F+142E / 108 类红（对 P4 基线 ADDED 0 / REMOVED 1）。模式卡 `QE-117`（交付门 = 记录开关 `item_check`）与 `QE-118`（用物事件两副面孔）。**未闭环**：itemplay 长尾 37 行不路由、`con_quest` 32/9 行未接线、代表任务真实客户端验收 `PENDING_CLIENT`；下一批 = P6 CombineTask。证据：`.agents/summary/quest-engine-native/p5/P5-REPORT.zh-CN.md`、计划 §10.3-#16。
   - Quest 任务流转、状态机与 NPC 交互（Taloc's Hollow 副本实例脚本、Condition Spawns、Retail AI 判定）。
   - **新焦点（待客户端观测/分批处置）**：领奖 packed step 投影全库审计（`QE-045`）发现 490 个旧 handler 领奖入口里 106 个 `MISMATCH_PROJECTION`、32 个 `MISSING_RECOVERY_EDGE` 尚未处置；本轮只修已验收的 15300/25300。下一步先用一次客户端观测确定「reward 投影 = 旧 handler pre-step」与「= 客户端 quest_summary 报告行」两条读数的取舍，再按批（优先 154xx redemption_landing 家族与 15301/25301 姊妹链）推进；脚本与清单在 `.agents/summary/quest-reward-projection-audit/2026-09-20-legacy-reward-projection-audit.zh-CN.md`。
   - **待一次客户端观测（QE-045 × QE-051 正面冲突，批次 13 已挂账）**：13965/23965（enter-zone 置 REWARD）与 15674/25674（CHECK_COLLECTED_ITEMS 置 REWARD）的客户端 quest_summary 都是 2 行、行 1 = 与领奖 NPC (835217/835220/806114/806116) 对话，按 QE-051 应有行 1 状态，但按 QE-045 必须保持 `reward var0=0` + `REWARD/var0=1` 恢复边（f6aff952a 基线，LegacyRewardStepProjectionRegressionTest 20 例硬锁）。取舍只需一次实机观测：**在 REWARD 态（可开奖励窗口时）任务书高亮的是行 0 还是行 1**；显示行 1 → 按客户端证据重定这 4 个的 QE-045 基线（XML + 锁测试 + 审计 QE045_LOCKED 同改）；显示行 0 → 保留现状并把“末行不可达”记为零售原样。观测前禁止批量翻动 20 个锁任务。

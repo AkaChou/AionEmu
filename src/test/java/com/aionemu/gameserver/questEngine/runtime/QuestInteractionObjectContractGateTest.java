@@ -51,12 +51,12 @@ class QuestInteractionObjectContractGateTest {
 		}
 		int total = checked;
 		// 下限随 owner 迁移下移：SimpleHunt(939)/SimpleSerialHunt(16)/SimpleTalk(3152)/SimpleCollectItem(177)
-		// 四族切到 native 后退出 typed 目录，可执行定义数从 P2 的 5000+ 降到 P3 的 3044、本批的 2867；
-		// 下限 2800 仍能拦住「目录塌成空壳」。
+		// 四族切到 native 后退出 typed 目录，可执行定义数从 P2 的 5000+ 降到 P3 的 3044、P4 的 2867，
+		// P5 再切 SimpleUseItem/SimpleItemPlay 两族后为 2757；下限 2700 仍能拦住「目录塌成空壳」。
 		// The floor follows the owner migration: the four families switched to the native lane left the
-		// typed directory, taking the executable count from 5000+ (P2) to 3044 (P3) and 2867 (P4); 2800
-		// still catches a collapse into an empty shell.
-		assertTrue(total > 2800, () -> "生产可执行定义数量异常：" + total);
+		// typed directory, taking the executable count from 5000+ (P2) to 3044 (P3) and 2867 (P4); the
+		// P5 switch of SimpleUseItem/SimpleItemPlay brings it to 2757, and 2700 still catches a collapse.
+		assertTrue(total > 2700, () -> "生产可执行定义数量异常：" + total);
 		assertEquals(Map.of(), failures, () -> "启动期交互对象合同失败 "
 			+ failures.size() + " 例：" + failures);
 	}

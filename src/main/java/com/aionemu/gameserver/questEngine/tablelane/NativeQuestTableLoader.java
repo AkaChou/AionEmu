@@ -111,6 +111,38 @@ public final class NativeQuestTableLoader {
 			Integer cutsceneAction, boolean partyDrop) {
 	}
 
+	/**
+	 * SimpleUseItem 表行（真端 {@code quest_simpleuseitems}，160 行）。形状实测：本族**没有**
+	 * {@code acquired_npc_name}——接取 = 使用 {@code use_item_name} 声明的道具；{@code use_item_name}/
+	 * {@code reward_npc_name} 100%，{@code talk_npc1..3} 54/26/10 行（用物后中继链），{@code con_quest} 32 行，
+	 * {@code give_itemN}/{@code remove_itemN} 8/4/3 与 10/6/3 行（第 N 步发/扣，实测这些行**都**声明了第 N 个中继 NPC），
+	 * {@code item_check} 5 行（80482/80486/80612/80615/80616）。
+	 * <p>
+	 * One SimpleUseItem row. The family has no {@code acquired_npc_name}: the quest is accepted by
+	 * using the declared item. The suffixed give/remove columns are step-scoped (every such row also
+	 * declares the matching {@code talk_npcN}), so step lists keep their positions.
+	 */
+	public record SimpleUseItemRow(int questId, String devName, String useItemName, String rewardNpcName,
+			List<String> talkNpcNames, Integer conQuest, boolean itemCheck, List<String> stepGiveItems,
+			List<String> stepRemoveItems, Integer cutsceneId, Integer cutsceneAction) {
+	}
+
+	/**
+	 * SimpleItemPlay 表行（真端 {@code quest_simpleitemplays}，43 行）。形状实测：{@code acquired_npc_name}/
+	 * {@code reward_npc_name} 100%（NPC 接取），{@code use_item_name} 41 行（接取后使用道具推进），
+	 * {@code give_item} 34 行（接取即发），{@code talk_npc1/2} 11/6 行，{@code con_quest} 9 行，
+	 * {@code give_item1/2} 7/5 行、{@code remove_item1/2} 1/4 行（第 N 步发/扣，均带第 N 个中继 NPC），
+	 * {@code cutsceneid1} 2 行。
+	 * <p>
+	 * One SimpleItemPlay row: the npc accepts and grants the item, using it advances, the relay chain and
+	 * the hand-in follow. Step lists keep their positions (same convention as the talk family).
+	 */
+	public record SimpleItemPlayRow(int questId, String devName, String acquiredNpcName, String rewardNpcName,
+			String useItemName, List<String> talkNpcNames, Integer conQuest, boolean itemCheck,
+			String acceptGiveItem, List<String> stepGiveItems, List<String> stepRemoveItems,
+			Integer cutsceneId, Integer cutsceneAction) {
+	}
+
 	private static final String RESOURCE = "aion/data/static_data/quest/retail/Quest_SimpleHunt.xml";
 	private static final String SERIAL_RESOURCE = "aion/data/static_data/quest/retail/Quest_SimpleSerialHunt.xml";
 	private static final String EXPECTED_SERIAL_ROOT = "quest_simpleserialhunts";
@@ -119,6 +151,10 @@ public final class NativeQuestTableLoader {
 	private static final String EXPECTED_COLLECT_ROOT = "quest_simplecollectitems";
 	private static final String TALK_RESOURCE = "aion/data/static_data/quest/retail/Quest_SimpleTalk.xml";
 	private static final String EXPECTED_TALK_ROOT = "quest_simpletalks";
+	private static final String USE_ITEM_RESOURCE = "aion/data/static_data/quest/retail/Quest_SimpleUseItem.xml";
+	private static final String EXPECTED_USE_ITEM_ROOT = "quest_simpleuseitems";
+	private static final String ITEM_PLAY_RESOURCE = "aion/data/static_data/quest/retail/Quest_SimpleItemPlay.xml";
+	private static final String EXPECTED_ITEM_PLAY_ROOT = "quest_simpleitemplays";
 	private static final String EXPECTED_ROOT = "quest_simplehunts";
 	private static final String ROW_TAG = "id";
 	private static final Pattern COUNT_TAG = Pattern.compile("count([1-5])");
@@ -131,15 +167,21 @@ public final class NativeQuestTableLoader {
 	private final Map<Integer, SimpleSerialHuntRow> serialRowsByQuestId;
 	private final Map<Integer, SimpleTalkRow> talkRowsByQuestId;
 	private final Map<Integer, SimpleCollectItemRow> collectRowsByQuestId;
+	private final Map<Integer, SimpleUseItemRow> useItemRowsByQuestId;
+	private final Map<Integer, SimpleItemPlayRow> itemPlayRowsByQuestId;
 
 	private NativeQuestTableLoader(Map<Integer, SimpleHuntRow> rowsByQuestId,
 			Map<Integer, SimpleSerialHuntRow> serialRowsByQuestId,
 			Map<Integer, SimpleTalkRow> talkRowsByQuestId,
-			Map<Integer, SimpleCollectItemRow> collectRowsByQuestId) {
+			Map<Integer, SimpleCollectItemRow> collectRowsByQuestId,
+			Map<Integer, SimpleUseItemRow> useItemRowsByQuestId,
+			Map<Integer, SimpleItemPlayRow> itemPlayRowsByQuestId) {
 		this.rowsByQuestId = rowsByQuestId;
 		this.serialRowsByQuestId = serialRowsByQuestId;
 		this.talkRowsByQuestId = talkRowsByQuestId;
 		this.collectRowsByQuestId = collectRowsByQuestId;
+		this.useItemRowsByQuestId = useItemRowsByQuestId;
+		this.itemPlayRowsByQuestId = itemPlayRowsByQuestId;
 	}
 
 	/** 已装载的表（未装载则先装载）。 / The loaded table; loads it first when absent. */
@@ -167,7 +209,9 @@ public final class NativeQuestTableLoader {
 		try (InputStream input = loader.getResourceAsStream(RESOURCE);
 				InputStream serialInput = loader.getResourceAsStream(SERIAL_RESOURCE);
 				InputStream talkInput = loader.getResourceAsStream(TALK_RESOURCE);
-				InputStream collectInput = loader.getResourceAsStream(COLLECT_RESOURCE)) {
+				InputStream collectInput = loader.getResourceAsStream(COLLECT_RESOURCE);
+				InputStream useItemInput = loader.getResourceAsStream(USE_ITEM_RESOURCE);
+				InputStream itemPlayInput = loader.getResourceAsStream(ITEM_PLAY_RESOURCE)) {
 			if (input == null) {
 				throw new IllegalStateException("NATIVE_TABLE_PARSE_FAILED: missing " + RESOURCE);
 			}
@@ -180,7 +224,13 @@ public final class NativeQuestTableLoader {
 			if (collectInput == null) {
 				throw new IllegalStateException("NATIVE_TABLE_PARSE_FAILED: missing " + COLLECT_RESOURCE);
 			}
-			return parse(input, serialInput, talkInput, collectInput);
+			if (useItemInput == null) {
+				throw new IllegalStateException("NATIVE_TABLE_PARSE_FAILED: missing " + USE_ITEM_RESOURCE);
+			}
+			if (itemPlayInput == null) {
+				throw new IllegalStateException("NATIVE_TABLE_PARSE_FAILED: missing " + ITEM_PLAY_RESOURCE);
+			}
+			return parse(input, serialInput, talkInput, collectInput, useItemInput, itemPlayInput);
 		} catch (IOException e) {
 			throw new IllegalStateException("NATIVE_TABLE_PARSE_FAILED: cannot read tables", e);
 		}
@@ -193,8 +243,12 @@ public final class NativeQuestTableLoader {
 				InputStream talkInput = NativeQuestTableLoader.class.getClassLoader()
 						.getResourceAsStream(TALK_RESOURCE);
 				InputStream collectInput = NativeQuestTableLoader.class.getClassLoader()
-						.getResourceAsStream(COLLECT_RESOURCE)) {
-			return parse(input, serialInput, talkInput, collectInput);
+						.getResourceAsStream(COLLECT_RESOURCE);
+				InputStream useItemInput = NativeQuestTableLoader.class.getClassLoader()
+						.getResourceAsStream(USE_ITEM_RESOURCE);
+				InputStream itemPlayInput = NativeQuestTableLoader.class.getClassLoader()
+						.getResourceAsStream(ITEM_PLAY_RESOURCE)) {
+			return parse(input, serialInput, talkInput, collectInput, useItemInput, itemPlayInput);
 		}
 	}
 
@@ -203,8 +257,12 @@ public final class NativeQuestTableLoader {
 		try (InputStream talkInput = NativeQuestTableLoader.class.getClassLoader()
 				.getResourceAsStream(TALK_RESOURCE);
 				InputStream collectInput = NativeQuestTableLoader.class.getClassLoader()
-						.getResourceAsStream(COLLECT_RESOURCE)) {
-			return parse(input, serialInput, talkInput, collectInput);
+						.getResourceAsStream(COLLECT_RESOURCE);
+				InputStream useItemInput = NativeQuestTableLoader.class.getClassLoader()
+						.getResourceAsStream(USE_ITEM_RESOURCE);
+				InputStream itemPlayInput = NativeQuestTableLoader.class.getClassLoader()
+						.getResourceAsStream(ITEM_PLAY_RESOURCE)) {
+			return parse(input, serialInput, talkInput, collectInput, useItemInput, itemPlayInput);
 		}
 	}
 
@@ -215,9 +273,23 @@ public final class NativeQuestTableLoader {
 				.getResourceAsStream(COLLECT_RESOURCE));
 	}
 
-	/** 解析四张表的字节流（包内可见供负例测试）。 / Parses the four table streams. */
+	/** 解析四张表的字节流（包内可见供负例测试）；P5 两表从 classpath 补足。 /
+	 * Parses the four table streams (package-visible for negative tests); the two P5 tables come from the
+	 * classpath. */
 	static NativeQuestTableLoader parse(InputStream input, InputStream serialInput, InputStream talkInput,
 			InputStream collectInput) throws IOException {
+		try (InputStream useItemInput = NativeQuestTableLoader.class.getClassLoader()
+				.getResourceAsStream(USE_ITEM_RESOURCE);
+				InputStream itemPlayInput = NativeQuestTableLoader.class.getClassLoader()
+						.getResourceAsStream(ITEM_PLAY_RESOURCE)) {
+			return parse(input, serialInput, talkInput, collectInput, useItemInput, itemPlayInput);
+		}
+	}
+
+	/** 解析六张表的字节流（包内可见供负例测试）。 / Parses the six table streams. */
+	static NativeQuestTableLoader parse(InputStream input, InputStream serialInput, InputStream talkInput,
+			InputStream collectInput, InputStream useItemInput, InputStream itemPlayInput)
+			throws IOException {
 		Document document;
 		DocumentBuilder builder = newDocumentBuilder();
 		try {
@@ -253,9 +325,14 @@ public final class NativeQuestTableLoader {
 		Map<Integer, SimpleTalkRow> talkRows = talkInput != null ? loadTalk(talkInput, builder) : Map.of();
 		Map<Integer, SimpleCollectItemRow> collectRows =
 				collectInput != null ? loadCollect(collectInput, builder) : Map.of();
+		Map<Integer, SimpleUseItemRow> useItemRows =
+				useItemInput != null ? loadUseItem(useItemInput, builder) : Map.of();
+		Map<Integer, SimpleItemPlayRow> itemPlayRows =
+				itemPlayInput != null ? loadItemPlay(itemPlayInput, builder) : Map.of();
 		return new NativeQuestTableLoader(Collections.unmodifiableMap(rows),
 				Collections.unmodifiableMap(serialRows), Collections.unmodifiableMap(talkRows),
-				Collections.unmodifiableMap(collectRows));
+				Collections.unmodifiableMap(collectRows), Collections.unmodifiableMap(useItemRows),
+				Collections.unmodifiableMap(itemPlayRows));
 	}
 
 	private static Map<Integer, SimpleTalkRow> loadTalk(InputStream stream, DocumentBuilder builder) {
@@ -501,6 +578,152 @@ public final class NativeQuestTableLoader {
 				partyDrop);
 	}
 
+	private static Map<Integer, SimpleUseItemRow> loadUseItem(InputStream stream, DocumentBuilder builder) {
+		Document document;
+		try {
+			document = builder.parse(stream);
+		} catch (IOException | org.xml.sax.SAXException e) {
+			throw new IllegalStateException("NATIVE_TABLE_PARSE_FAILED: malformed " + USE_ITEM_RESOURCE, e);
+		}
+		Element root = document.getDocumentElement();
+		if (root == null || !EXPECTED_USE_ITEM_ROOT.equals(root.getTagName())) {
+			throw new IllegalStateException("NATIVE_TABLE_PARSE_FAILED: expected root <"
+					+ EXPECTED_USE_ITEM_ROOT + ">, got <" + (root == null ? "(none)" : root.getTagName()) + ">");
+		}
+		Map<Integer, SimpleUseItemRow> rows = new LinkedHashMap<>();
+		NodeList children = root.getChildNodes();
+		for (int i = 0; i < children.getLength(); i++) {
+			Node child = children.item(i);
+			if (!(child instanceof Element element) || !ROW_TAG.equals(element.getTagName())) {
+				continue;
+			}
+			int questId = rowId(element);
+			SimpleUseItemRow row = parseUseItemRow(questId, element);
+			if (rows.putIfAbsent(questId, row) != null) {
+				throw new IllegalStateException(
+						"NATIVE_TABLE_PARSE_FAILED: duplicate use-item quest id " + questId);
+			}
+		}
+		if (rows.isEmpty()) {
+			throw new IllegalStateException("NATIVE_TABLE_PARSE_FAILED: " + USE_ITEM_RESOURCE + " has no rows");
+		}
+		return rows;
+	}
+
+	/**
+	 * SimpleUseItem 行解析：{@code use_item_name} 与 {@code reward_npc_name} 为必填（真端 160/160），
+	 * 中继 NPC 与第 K 步发/扣物品按原文装载（位置保留，缺位为 {@code null}）。
+	 * <p>
+	 * SimpleUseItem row parsing: the use-item symbol and the reward npc are mandatory in retail
+	 * (160/160); relay npcs and the step-scoped give/remove items keep their positions.
+	 */
+	private static SimpleUseItemRow parseUseItemRow(int questId, Element element) {
+		String useItem = optionalText(element, "use_item_name");
+		String reward = optionalText(element, "reward_npc_name");
+		if (useItem == null || useItem.isBlank()) {
+			throw new IllegalStateException(
+					"NATIVE_TABLE_PARSE_FAILED: use-item quest " + questId + " has no use_item_name");
+		}
+		if (reward == null || reward.isBlank()) {
+			throw new IllegalStateException(
+					"NATIVE_TABLE_PARSE_FAILED: use-item quest " + questId + " has no reward_npc_name");
+		}
+		List<String> talkNpcs = new ArrayList<>(3);
+		List<String> stepGiveItems = new ArrayList<>(3);
+		List<String> stepRemoveItems = new ArrayList<>(3);
+		for (int i = 1; i <= 3; i++) {
+			String talk = optionalText(element, "talk_npc" + i);
+			if (talk != null && !talk.isBlank()) {
+				talkNpcs.add(talk.strip());
+			}
+			String give = optionalText(element, "give_item" + i);
+			stepGiveItems.add(give != null && !give.isBlank() ? normalizeValue(give) : null);
+			String removed = optionalText(element, "remove_item" + i);
+			stepRemoveItems.add(removed != null && !removed.isBlank() ? normalizeValue(removed) : null);
+		}
+		return new SimpleUseItemRow(questId, optionalText(element, "dev_name"), normalizeValue(useItem),
+				reward.strip(), Collections.unmodifiableList(talkNpcs),
+				optionalInt(element, "con_quest", questId), "1".equals(optionalText(element, "item_check")),
+				Collections.unmodifiableList(stepGiveItems), Collections.unmodifiableList(stepRemoveItems),
+				optionalInt(element, "cutsceneid1", questId),
+				optionalInt(element, "cs1_haction", questId));
+	}
+
+	private static Map<Integer, SimpleItemPlayRow> loadItemPlay(InputStream stream, DocumentBuilder builder) {
+		Document document;
+		try {
+			document = builder.parse(stream);
+		} catch (IOException | org.xml.sax.SAXException e) {
+			throw new IllegalStateException("NATIVE_TABLE_PARSE_FAILED: malformed " + ITEM_PLAY_RESOURCE, e);
+		}
+		Element root = document.getDocumentElement();
+		if (root == null || !EXPECTED_ITEM_PLAY_ROOT.equals(root.getTagName())) {
+			throw new IllegalStateException("NATIVE_TABLE_PARSE_FAILED: expected root <"
+					+ EXPECTED_ITEM_PLAY_ROOT + ">, got <" + (root == null ? "(none)" : root.getTagName()) + ">");
+		}
+		Map<Integer, SimpleItemPlayRow> rows = new LinkedHashMap<>();
+		NodeList children = root.getChildNodes();
+		for (int i = 0; i < children.getLength(); i++) {
+			Node child = children.item(i);
+			if (!(child instanceof Element element) || !ROW_TAG.equals(element.getTagName())) {
+				continue;
+			}
+			int questId = rowId(element);
+			SimpleItemPlayRow row = parseItemPlayRow(questId, element);
+			if (rows.putIfAbsent(questId, row) != null) {
+				throw new IllegalStateException(
+						"NATIVE_TABLE_PARSE_FAILED: duplicate item-play quest id " + questId);
+			}
+		}
+		if (rows.isEmpty()) {
+			throw new IllegalStateException("NATIVE_TABLE_PARSE_FAILED: " + ITEM_PLAY_RESOURCE + " has no rows");
+		}
+		return rows;
+	}
+
+	/**
+	 * SimpleItemPlay 行解析：接取/交付 NPC 为必填（真端 43/43），{@code give_item} = 接取发放，
+	 * {@code give_itemK}/{@code remove_itemK} = 第 K 中继步的发/扣（位置保留）。
+	 * <p>
+	 * SimpleItemPlay row parsing: the accept and hand-in npcs are mandatory in retail (43/43);
+	 * {@code give_item} is the accept grant and the indexed give/remove columns are step-scoped.
+	 */
+	private static SimpleItemPlayRow parseItemPlayRow(int questId, Element element) {
+		String acquired = optionalText(element, "acquired_npc_name");
+		String reward = optionalText(element, "reward_npc_name");
+		if (acquired == null || acquired.isBlank()) {
+			throw new IllegalStateException(
+					"NATIVE_TABLE_PARSE_FAILED: item-play quest " + questId + " has no acquired_npc_name");
+		}
+		if (reward == null || reward.isBlank()) {
+			throw new IllegalStateException(
+					"NATIVE_TABLE_PARSE_FAILED: item-play quest " + questId + " has no reward_npc_name");
+		}
+		String useItem = optionalText(element, "use_item_name");
+		String give = optionalText(element, "give_item");
+		String acceptGiveItem = give != null && !give.isBlank() ? normalizeValue(give) : null;
+		List<String> talkNpcs = new ArrayList<>(2);
+		List<String> stepGiveItems = new ArrayList<>(2);
+		List<String> stepRemoveItems = new ArrayList<>(2);
+		for (int i = 1; i <= 2; i++) {
+			String talk = optionalText(element, "talk_npc" + i);
+			if (talk != null && !talk.isBlank()) {
+				talkNpcs.add(talk.strip());
+			}
+			String indexed = optionalText(element, "give_item" + i);
+			stepGiveItems.add(indexed != null && !indexed.isBlank() ? normalizeValue(indexed) : null);
+			String removed = optionalText(element, "remove_item" + i);
+			stepRemoveItems.add(removed != null && !removed.isBlank() ? normalizeValue(removed) : null);
+		}
+		return new SimpleItemPlayRow(questId, optionalText(element, "dev_name"), acquired.strip(),
+				reward.strip(), useItem != null && !useItem.isBlank() ? normalizeValue(useItem) : null,
+				Collections.unmodifiableList(talkNpcs), optionalInt(element, "con_quest", questId),
+				"1".equals(optionalText(element, "item_check")), acceptGiveItem,
+				Collections.unmodifiableList(stepGiveItems), Collections.unmodifiableList(stepRemoveItems),
+				optionalInt(element, "cutsceneid1", questId),
+				optionalInt(element, "cs1_haction", questId));
+	}
+
 	private static String blankToNull(String value) {
 		return value == null || value.isBlank() ? null : value.strip();
 	}
@@ -670,6 +893,56 @@ public final class NativeQuestTableLoader {
 		if (row == null) {
 			throw new IllegalStateException("NATIVE_TABLE_ROW_MISSING: quest " + questId
 					+ " has no SimpleCollectItem row");
+		}
+		return row;
+	}
+
+	/** SimpleUseItem 全量行（只读集合）。 / All SimpleUseItem rows. */
+	public Collection<SimpleUseItemRow> useItemRows() {
+		return useItemRowsByQuestId.values();
+	}
+
+	/** SimpleUseItem 行数。 / The number of SimpleUseItem rows. */
+	public int useItemSize() {
+		return useItemRowsByQuestId.size();
+	}
+
+	/** 按任务查询 SimpleUseItem 行，无行返回 Optional.empty()。 / Looks a SimpleUseItem row up. */
+	public Optional<SimpleUseItemRow> findUseItem(int questId) {
+		return Optional.ofNullable(useItemRowsByQuestId.get(questId));
+	}
+
+	/** 按任务查询 SimpleUseItem 行，缺行 fail-closed。 / Looks a SimpleUseItem row up; missing rows fail closed. */
+	public SimpleUseItemRow requireUseItem(int questId) {
+		SimpleUseItemRow row = useItemRowsByQuestId.get(questId);
+		if (row == null) {
+			throw new IllegalStateException("NATIVE_TABLE_ROW_MISSING: quest " + questId
+					+ " has no SimpleUseItem row");
+		}
+		return row;
+	}
+
+	/** SimpleItemPlay 全量行（只读集合）。 / All SimpleItemPlay rows. */
+	public Collection<SimpleItemPlayRow> itemPlayRows() {
+		return itemPlayRowsByQuestId.values();
+	}
+
+	/** SimpleItemPlay 行数。 / The number of SimpleItemPlay rows. */
+	public int itemPlaySize() {
+		return itemPlayRowsByQuestId.size();
+	}
+
+	/** 按任务查询 SimpleItemPlay 行，无行返回 Optional.empty()。 / Looks a SimpleItemPlay row up. */
+	public Optional<SimpleItemPlayRow> findItemPlay(int questId) {
+		return Optional.ofNullable(itemPlayRowsByQuestId.get(questId));
+	}
+
+	/** 按任务查询 SimpleItemPlay 行，缺行 fail-closed。 / Looks a SimpleItemPlay row up; missing rows fail closed. */
+	public SimpleItemPlayRow requireItemPlay(int questId) {
+		SimpleItemPlayRow row = itemPlayRowsByQuestId.get(questId);
+		if (row == null) {
+			throw new IllegalStateException("NATIVE_TABLE_ROW_MISSING: quest " + questId
+					+ " has no SimpleItemPlay row");
 		}
 		return row;
 	}

@@ -21,8 +21,10 @@ import java.util.TreeSet;
 import java.util.concurrent.ConcurrentHashMap;
 import com.aionemu.gameserver.questEngine.tablelane.SimpleCollectItemHandler;
 import com.aionemu.gameserver.questEngine.tablelane.SimpleHuntHandler;
+import com.aionemu.gameserver.questEngine.tablelane.SimpleItemPlayHandler;
 import com.aionemu.gameserver.questEngine.tablelane.SimpleSerialHuntHandler;
 import com.aionemu.gameserver.questEngine.tablelane.SimpleTalkHandler;
+import com.aionemu.gameserver.questEngine.tablelane.SimpleUseItemHandler;
 
 /**
  * 生产装载链的"真端优先"驱动（提示词 §4.C 的 overlay 落点）。
@@ -46,13 +48,6 @@ public final class RetailQuestDriver {
 	 * The retail SimpleSerialHunt template table (rows convert to hunt-shaped entries). */
 	private static final String SIMPLE_SERIAL_HUNT_TABLE =
 		"/aion/data/static_data/quest/retail/Quest_SimpleSerialHunt.xml";
-	/** 真端 SimpleUseItem 模板表（用物品接取 + 报告 NPC）。 / The retail SimpleUseItem template table. */
-	private static final String SIMPLE_USE_ITEM_TABLE =
-		"/aion/data/static_data/quest/retail/Quest_SimpleUseItem.xml";
-	/** 真端 SimpleItemPlay 模板表（接取发物 → 用物品演出 → 交付）。 /
-	 * The retail SimpleItemPlay template table (accept grants the item, using it advances, hand-in). */
-	private static final String SIMPLE_ITEM_PLAY_TABLE =
-		"/aion/data/static_data/quest/retail/Quest_SimpleItemPlay.xml";
 	/** 真端 DataDriven 模板表（接取方式 × 进度步骤链）。 / The retail DataDriven template table. */
 	private static final String DATA_DRIVEN_TABLE =
 		"/aion/data/static_data/quest/retail/data_driven_quest.xml";
@@ -83,8 +78,6 @@ public final class RetailQuestDriver {
 	private final Set<Integer> retailOwned;
 	private final Set<Integer> retailOwnedSimpleHunt;
 	private final Set<Integer> retailOwnedSimpleSerialHunt;
-	private final Set<Integer> retailOwnedSimpleUseItem;
-	private final Set<Integer> retailOwnedSimpleItemPlay;
 	private final Set<Integer> retailOwnedDataDriven;
 	private final Set<Integer> retailOwnedCombineTask;
 	private final Set<Integer> retailOwnedSimpleCollectItem;
@@ -94,9 +87,6 @@ public final class RetailQuestDriver {
 	private final RetailClientDialogExits clientDialogExits;
 	private final RetailClientSummaryRows clientSummaryRows;
 	private final RetailClientRewardNpcs clientRewardNpcs;
-	/** 客户端声明的接取 NPC 集合投影（多 id 真端名唯一放行通道，QE-105 家族）。 /
-	 * Client-declared accept-NPC set projection: the only pass-through for multi-id retail acquire names. */
-	private final RetailClientAcceptNpcSets clientAcceptNpcSets;
 	/** 客户端声明的交付 NPC 集合投影（多 id 真端领奖名唯一放行通道，QE-106 家族）。 /
 	 * Client-declared hand-in NPC set projection: the only pass-through for multi-id reward names. */
 	private final RetailClientHandinNpcSets clientHandinNpcSets;
@@ -108,9 +98,6 @@ public final class RetailQuestDriver {
 	private final Map<Integer, Integer> nameIds;
 	private final RetailSimpleSerialHuntTable serialHuntTable;
 	private final RetailClientHuntStages clientHuntStages;
-	private final RetailSimpleUseItemTable useItemTable;
-	private final RetailClientUseItemReport useItemReport;
-	private final RetailSimpleItemPlayTable itemPlayTable;
 	private final RetailDataDrivenTable dataDrivenTable;
 	private final RetailClientHandinPages clientHandinPages;
 	/** 交互物 NPC 集（掉落箱的 ACTION_ITEM_USE 路由判据）。 / Interaction-object npc set. */
@@ -128,20 +115,16 @@ public final class RetailQuestDriver {
 		new ConcurrentHashMap<>();
 
 	private RetailQuestDriver(Set<Integer> retailOwnedSimpleHunt, Set<Integer> retailOwnedSimpleSerialHunt,
-			Set<Integer> retailOwnedSimpleUseItem, Set<Integer> retailOwnedSimpleItemPlay,
 			Set<Integer> retailOwnedDataDriven,
 			Set<Integer> retailOwnedCombineTask, Set<Integer> retailOwnedSimpleCollectItem,
 			RetailQuestCatalog catalog,
 			RetailCombineTaskTable combineTaskTable,
 			RetailRecipeIndex recipeIndex,
 			RetailClientDialogExits clientDialogExits, RetailClientSummaryRows clientSummaryRows,
-			RetailClientRewardNpcs clientRewardNpcs, RetailClientAcceptNpcSets clientAcceptNpcSets,
-			RetailClientHandinNpcSets clientHandinNpcSets,
+			RetailClientRewardNpcs clientRewardNpcs, RetailClientHandinNpcSets clientHandinNpcSets,
 			RetailQuestXmlTable retailTable, RetailNpcNameIndex npcIndex, RetailItemNameIndex itemIndex,
 			Map<String, Integer> randomRewards, Map<Integer, Integer> nameIds,
 			RetailSimpleSerialHuntTable serialHuntTable, RetailClientHuntStages clientHuntStages,
-			RetailSimpleUseItemTable useItemTable, RetailClientUseItemReport useItemReport,
-			RetailSimpleItemPlayTable itemPlayTable,
 			RetailQuestAreaIndex questAreas,
 			RetailDataDrivenTable dataDrivenTable,
 			RetailClientHandinPages clientHandinPages,
@@ -150,16 +133,12 @@ public final class RetailQuestDriver {
 			RetailEnterAreaZoneResolution enterAreaZoneResolution) {
 		this.retailOwnedSimpleHunt = retailOwnedSimpleHunt;
 		this.retailOwnedSimpleSerialHunt = retailOwnedSimpleSerialHunt;
-		this.retailOwnedSimpleUseItem = retailOwnedSimpleUseItem;
-		this.retailOwnedSimpleItemPlay = retailOwnedSimpleItemPlay;
 		this.retailOwnedDataDriven = retailOwnedDataDriven;
 		this.retailOwnedCombineTask = retailOwnedCombineTask;
 		this.retailOwnedSimpleCollectItem = retailOwnedSimpleCollectItem;
 		this.retailOwned = new TreeSet<>();
 		this.retailOwned.addAll(retailOwnedSimpleHunt);
 		this.retailOwned.addAll(retailOwnedSimpleSerialHunt);
-		this.retailOwned.addAll(retailOwnedSimpleUseItem);
-		this.retailOwned.addAll(retailOwnedSimpleItemPlay);
 		this.retailOwned.addAll(retailOwnedDataDriven);
 		this.retailOwned.addAll(retailOwnedCombineTask);
 		this.retailOwned.addAll(retailOwnedSimpleCollectItem);
@@ -169,7 +148,6 @@ public final class RetailQuestDriver {
 		this.clientDialogExits = clientDialogExits;
 		this.clientSummaryRows = clientSummaryRows;
 		this.clientRewardNpcs = clientRewardNpcs;
-		this.clientAcceptNpcSets = clientAcceptNpcSets;
 		this.clientHandinNpcSets = clientHandinNpcSets;
 		this.questAreas = questAreas;
 		this.retailTable = retailTable;
@@ -179,9 +157,6 @@ public final class RetailQuestDriver {
 		this.nameIds = nameIds;
 		this.serialHuntTable = serialHuntTable;
 		this.clientHuntStages = clientHuntStages;
-		this.useItemTable = useItemTable;
-		this.useItemReport = useItemReport;
-		this.itemPlayTable = itemPlayTable;
 		this.dataDrivenTable = dataDrivenTable;
 		this.clientHandinPages = clientHandinPages;
 		this.interactionObjects = interactionObjects;
@@ -285,7 +260,9 @@ public final class RetailQuestDriver {
 			if (entry.isEmpty()) {
 				if ((SimpleHuntHandler.instance().owns(questId) || SimpleSerialHuntHandler.instance().owns(questId)
 						|| SimpleTalkHandler.instance().owns(questId)
-						|| SimpleCollectItemHandler.instance().owns(questId))
+						|| SimpleCollectItemHandler.instance().owns(questId)
+						|| SimpleUseItemHandler.instance().owns(questId)
+						|| SimpleItemPlayHandler.instance().owns(questId))
 						&& "RETAIL_TABLE".equals(row.getValue())) {
 					nativeCoveredCount++;
 					continue;
@@ -380,8 +357,6 @@ public final class RetailQuestDriver {
 	private static RetailQuestDriver load() throws IOException {
 		Set<Integer> retailOwnedHunt = new TreeSet<>();
 		Set<Integer> retailOwnedSerialHunt = new TreeSet<>();
-		Set<Integer> retailOwnedUseItem = new TreeSet<>();
-		Set<Integer> retailOwnedItemPlay = new TreeSet<>();
 		Set<Integer> retailOwnedDataDriven = new TreeSet<>();
 		Set<Integer> retailOwnedCombine = new TreeSet<>();
 		Set<Integer> retailOwnedCollectItem = new TreeSet<>();
@@ -400,9 +375,14 @@ public final class RetailQuestDriver {
 					// P2 原生表驱动切换：SimpleSerialHunt 16 任务由 SimpleSerialHuntHandler 原生直驱，不再生成旧 IR 节点
 					// retailOwnedSerialHunt.add(questId);
 				} else if ("SimpleUseItem".equals(parts[2])) {
-					retailOwnedUseItem.add(questId);
+					// P5 原生表驱动切换：SimpleUseItem 160 行由 SimpleUseItemHandler 原生直驱，不再生成
+					// 旧 IR 节点（同批删旧：本族 compiler/表/金标全部退场）。
+					// P5 native switch: the 160 SimpleUseItem rows are driven natively; the compiler entry is cut.
+					// retailOwnedUseItem.add(questId);
 				} else if ("SimpleItemPlay".equals(parts[2])) {
-					retailOwnedItemPlay.add(questId);
+					// P5 原生表驱动切换：SimpleItemPlay 43 行由 SimpleItemPlayHandler 原生直驱（同上）。
+					// P5 native switch: the 43 SimpleItemPlay rows are driven natively; the compiler entry is cut.
+					// retailOwnedItemPlay.add(questId);
 				} else if ("DataDriven".equals(parts[2])) {
 					retailOwnedDataDriven.add(questId);
 				} else if ("CombineTask".equals(parts[2])) {
@@ -430,15 +410,6 @@ public final class RetailQuestDriver {
 		try (InputStream input = open(AI_AREAS)) {
 			questAreas = RetailQuestAreaIndex.load(input);
 		}
-		RetailSimpleUseItemTable useItemTable;
-		try (InputStream input = open(SIMPLE_USE_ITEM_TABLE)) {
-			useItemTable = RetailSimpleUseItemTable.load(input);
-		}
-		RetailClientUseItemReport useItemReport = RetailClientUseItemReport.defaultReport();
-		RetailSimpleItemPlayTable itemPlayTable;
-		try (InputStream input = open(SIMPLE_ITEM_PLAY_TABLE)) {
-			itemPlayTable = RetailSimpleItemPlayTable.load(input);
-		}
 		RetailDataDrivenTable dataDrivenTable;
 		try (InputStream input = open(DATA_DRIVEN_TABLE)) {
 			dataDrivenTable = RetailDataDrivenTable.load(input);
@@ -451,7 +422,6 @@ public final class RetailQuestDriver {
 		RetailClientDialogExits clientDialogExits = RetailClientDialogExits.defaultExits();
 		RetailClientSummaryRows clientSummaryRows = RetailClientSummaryRows.defaultSummaryRows();
 		RetailClientRewardNpcs clientRewardNpcs = RetailClientRewardNpcs.defaultRewardNpcs();
-		RetailClientAcceptNpcSets clientAcceptNpcSets = RetailClientAcceptNpcSets.defaultSets();
 		RetailClientHandinNpcSets clientHandinNpcSets = RetailClientHandinNpcSets.defaultSets();
 		RetailClientHuntStages clientHuntStages = RetailClientHuntStages.defaultHuntStages();
 		RetailClientHandinPages clientHandinPages = RetailClientHandinPages.defaultHandinPages();
@@ -470,13 +440,13 @@ public final class RetailQuestDriver {
 		RetailQuestUseItemNpcs interactionObjects =
 			RetailQuestUseItemNpcs.fromIds(npcIndex.questUseItemNpcIds());
 		RetailItemNameIndex itemIndex = RetailItemNameIndex.loadItemTemplates();
-		return new RetailQuestDriver(retailOwnedHunt, retailOwnedSerialHunt, retailOwnedUseItem,
-			retailOwnedItemPlay, retailOwnedDataDriven, retailOwnedCombine, retailOwnedCollectItem,
+		return new RetailQuestDriver(retailOwnedHunt, retailOwnedSerialHunt,
+			retailOwnedDataDriven, retailOwnedCombine, retailOwnedCollectItem,
 			new RetailQuestCatalog(table, combineTaskTable, npcIndex), combineTaskTable,
 			recipeIndex, clientDialogExits, clientSummaryRows, clientRewardNpcs,
-			clientAcceptNpcSets, clientHandinNpcSets, retailTable, npcIndex, itemIndex, randomRewardIds(),
+			clientHandinNpcSets, retailTable, npcIndex, itemIndex, randomRewardIds(),
 			nameIds(), serialHuntTable, clientHuntStages,
-			useItemTable, useItemReport, itemPlayTable, questAreas,
+			questAreas,
 			dataDrivenTable, clientHandinPages, interactionObjects,
 			clientKillTargets, clientHuntProgressRows, enterAreaZoneResolution);
 	}
@@ -574,12 +544,6 @@ public final class RetailQuestDriver {
 		if (retailOwnedSimpleSerialHunt.contains(questId)) {
 			return compileSimpleSerialHunt(questId);
 		}
-		if (retailOwnedSimpleUseItem.contains(questId)) {
-			return compileSimpleUseItem(questId);
-		}
-		if (retailOwnedSimpleItemPlay.contains(questId)) {
-			return compileSimpleItemPlay(questId);
-		}
 		if (retailOwnedDataDriven.contains(questId)) {
 			return compileDataDriven(questId);
 		}
@@ -635,56 +599,6 @@ public final class RetailQuestDriver {
 				entry.rewardNpc() == null ? "" : entry.rewardNpc());
 			var outcome = RetailSimpleHuntDefinitionCompiler.compileSerialChain(plan, clientHuntStages, metadata,
 				briefing, talkNpcName);
-			if (outcome.accepted()) {
-				return Optional.of(outcome.definition());
-			}
-			rejections.put(questId, outcome.rejectionCode());
-			return Optional.empty();
-		} catch (RuntimeException e) {
-			rejections.put(questId, "RUNTIME_FAILURE");
-			return Optional.empty();
-		}
-	}
-
-	/** SimpleUseItem 行 → 定义（用物品接取 + 无目标对话 + 报告/完成；异形按稳定码拒绝留 XML）。 */
-	private Optional<CompiledQuestDefinition> compileSimpleUseItem(int questId) {
-		try {
-			var row = useItemTable.find(questId);
-			if (row.isEmpty()) {
-				rejections.put(questId, "RETAIL_ROW_MISSING");
-				return Optional.empty();
-			}
-			var metadata = retailMetadata(questId);
-			if (metadata == null) {
-				return Optional.empty();
-			}
-			var outcome = RetailSimpleUseItemDefinitionCompiler.compile(row.orElseThrow(), itemIndex, npcIndex,
-				metadata, clientSummaryRows, useItemReport, clientDialogExits);
-			if (outcome.accepted()) {
-				return Optional.of(outcome.definition());
-			}
-			rejections.put(questId, outcome.rejectionCode());
-			return Optional.empty();
-		} catch (RuntimeException e) {
-			rejections.put(questId, "RUNTIME_FAILURE");
-			return Optional.empty();
-		}
-	}
-
-	/** SimpleItemPlay 行 → 定义（接取发物 → 用物品演出 → 交付；异形按稳定码拒绝留 XML）。 */
-	private Optional<CompiledQuestDefinition> compileSimpleItemPlay(int questId) {
-		try {
-			var row = itemPlayTable.find(questId);
-			if (row.isEmpty()) {
-				rejections.put(questId, "RETAIL_ROW_MISSING");
-				return Optional.empty();
-			}
-			var metadata = retailMetadata(questId);
-			if (metadata == null) {
-				return Optional.empty();
-			}
-			var outcome = RetailSimpleItemPlayDefinitionCompiler.compile(row.orElseThrow(), itemIndex, npcIndex,
-				metadata, clientAcceptNpcSets, clientHandinNpcSets);
 			if (outcome.accepted()) {
 				return Optional.of(outcome.definition());
 			}

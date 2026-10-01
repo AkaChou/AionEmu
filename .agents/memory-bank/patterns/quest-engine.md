@@ -2631,3 +2631,47 @@ keywords: 系统发放面、接取哨兵、_faction_、阵营日常轮换、Syst
 
 - **判定规则**：系统发放面属于引擎级入口，不挂在单一家族下；切族时把该族接进聚合车道，而不是在上层加 family 分支。
 - **安全网**：每族两轴断言（轮换池 + 发放入口），并逐类比对 tests/failures/errors 三元组，避免「类级 ADDED 0」掩盖同类的用例级回归。
+
+## [QE-117] 一一七、真端族表的交付门开关是记录 `item_check`，不是 `quest_work_item*` 反推 (WORK_ITEM_GATE_SWITCH_NOT_SYNTHESIS)
+
+<!-- pattern-metadata
+status: CONFIRMED
+scope: 真端族表（Quest_SimpleTalk / Quest_SimpleCollectItem / Quest_SimpleUseItem / Quest_SimpleItemPlay …）的交付门与工作物品通道，对照 quest.xml 的 `collect_itemN` / `quest_work_itemN` / `check_itemK_L`
+first_seen: 2026-10-01
+last_verified: 2026-10-01
+symptom: 切族之后工作物品类任务的交付门与旧 IR 不一致——有的行凭空要求工作物品（未持有即停在进行中页）、有的行完成时凭空扣物或反之不扣；门禁用例表现为「工作物品 = 用物品本体」这类新断言的取数面与旧断言不符
+root_cause: 旧 typed 编译器把 `quest.xml quest_work_item1` 单独当作门依据并派生完成期 `RemoveItem(ALL)` 清理（判例：蛋糕事件 80008/80009、2578），而真端把交付门做成**族表 record 级开关 `item_check`**；工作物品通道只在开关行生效（P3-STEP2 §3 口径：`collect_itemN` → `quest_work_itemN` → 表内发放符号），无开关的行不设门、不代扣
+fix_or_guardrail: 1. **门只在 `item_check=1` 行派生**；门物品按族表约定解析（SimpleUseItem = quest.xml `check_itemK_L`；SimpleTalk = `collect_itemN` → `quest_work_itemN` → 发放符号）；2. **无开关行既不加门也不代扣**（引擎不替道具动作扣物）；3. **逐行断言 + 集合冻结**：开关行集合与声明门物品行集合都要冻结（P5 实测 useitem 160 行里只有 5 行开关、11 行声明门物品，另有 4 行声明门物品但无开关 ⇒ 按开关口径不设门）；4. 出现「工作物品 ≠ 用物品」的行必须走真端声明，禁止按名字同一性推断
+evidence: .agents/summary/quest-engine-native/p5/P5-REPORT.zh-CN.md; src/main/java/com/aionemu/gameserver/questEngine/tablelane/SimpleUseItemHandler.java（gateItems/item_check 分支）; src/test/java/com/aionemu/gameserver/questEngine/tablelane/SimpleUseItemNativeFamilyGateTest.java; src/test/java/com/aionemu/gameserver/questEngine/definition/QuestEventQuestBatchDefinitionTest.java; src/test/java/com/aionemu/gameserver/questEngine/runtime/QuestMutationPlannerTest.java
+validation: 2026-10-01 P5：两族按开关口径落库（5 开关行 / 11 声明门物品行复算），族门 11/11 + 9/9、族门 + tablelane 91/91 绿；聚焦套件 1691 例 / 162F+142E / 108 类红，对 P4 基线 ADDED 0 / REMOVED 1
+boundaries: 开关列名以各族表原文为准（当前四族同名 `item_check`）；`quest_work_item*` 仍可作为接取发放/展示面使用，本条只裁定「门 / 代扣」；未跑真实客户端验收（PENDING_CLIENT）
+superseded_by: none
+see_also: [QE-105], [QE-113], [QE-115]
+first_check: 交付门行为不符时先答：① 该行族表 `item_check` 是 0 还是 1？② 门物品从哪一列、哪条通道解析？③ 旧 IR 的 HasItem/RemoveItem 是不是从 `quest_work_item*` 反推的？④ 开关行集合与声明门物品行集合是否都已冻结？
+keywords: item_check, quest_work_item, collect_item, check_item, 交付门, 工作物品, RemoveItem ALL, 完成代扣, HasItem, 开关口径, 旧 IR 合成语义, QE-117
+-->
+
+- **判定规则**：门与代扣只认族表记录开关；`quest_work_item*` 是物品声明通道，不是门。
+- **反向信号**：新车道「少扣了一件物品」时先查该行是不是 `item_check=false`——那通常是真端原样，而不是缺陷。
+
+## [QE-118] 一一八、用物事件轴有两副面孔：无主接取窗 vs 演出推进，切族必须按族表判 (USE_ITEM_EVENT_TWO_FACES)
+
+<!-- pattern-metadata
+status: CONFIRMED
+scope: 真端族表 Quest_SimpleUseItem（用物接取）与 Quest_SimpleItemPlay（接取发演出道具、用物推进）共用 QuestEngine 用物入口的场景
+first_seen: 2026-10-01
+last_verified: 2026-10-01
+symptom: 切族后用物没反应或反应错相——SimpleUseItem 行右键道具不出接取窗；SimpleItemPlay 行右键道具不翻领奖态；或同一道具被错误族的处理器抢先认领
+root_cause: 真端「用物」在各族表里语义不同：SimpleUseItem 是**无主接取事件**（UseItem → 接取窗页），SimpleItemPlay 是**演出推进**（START → REWARD，接取时发放演出道具），而旧 IR 把两者都编译成 typed UseItem/ItemPlay 边；切族时只接一条分支就会漏掉另一副面孔
+fix_or_guardrail: 1. 各族 handler 自己判 owns/routes，引擎用物入口按「先手认领、成功即 SUCCESS」顺序试探，单一 owner 保证不互相抢；2. 两族的接取入口页都取客户端任务页契约 `QuestDialogContract.acceptEntryPage`，禁止写死页 4；3. 行锚测试覆盖「用物 → 页/状态」两轴（useitem：页 4；itemplay：START → REWARD）
+evidence: .agents/summary/quest-engine-native/p5/P5-REPORT.zh-CN.md; src/main/java/com/aionemu/gameserver/questEngine/tablelane/SimpleUseItemHandler.java; src/main/java/com/aionemu/gameserver/questEngine/tablelane/SimpleItemPlayHandler.java; src/main/java/com/aionemu/gameserver/questEngine/QuestEngine.java（onItemUseEvent）; src/test/java/com/aionemu/gameserver/questEngine/tablelane/SimpleItemPlayNativeFamilyGateTest.java
+validation: 2026-10-01 P5：useitem 102 条 NATIVE_READY 行客户端入口页复算 102/102 = ask_quest_accept(4)，itemplay 4 行为 select1（处理器按契约取页）；族门 11/11 + 9/9、族门 + tablelane 91/91 绿
+boundaries: 只覆盖已切换的用物两族；typed 的 ItemPlay 动画时长路径与 XML-only 行仍在旧车道；BARD/HouseItemUse 等其它用物族未纳入；未跑真实客户端验收（PENDING_CLIENT）
+superseded_by: none
+see_also: [QE-113], [QE-117]
+first_check: 用物无反应时先答：① 该行属于哪一族（useitem 表还是 itemplay 表）？② 该道具是否被两族同时声明（单一 owner 是否成立）？③ 入口页是从客户端契约取还是写死的？
+keywords: UseItem, ItemPlay, 用物接取, 演出道具, onItemUseEvent, 单一owner, 接取窗页4, acceptEntryPage, QE-118
+-->
+
+- **判定规则**：用物入口按族试探、单一 owner；接取窗页来自客户端任务页契约。
+- **安全网**：新增用物族时先写「用物 → 页/状态」行锚用例，再切族。

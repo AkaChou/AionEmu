@@ -9,8 +9,12 @@ import com.aionemu.gameserver.questEngine.definition.QuestCondition;
 import com.aionemu.gameserver.questEngine.definition.QuestDefinitionXmlCompiler;
 import com.aionemu.gameserver.questEngine.definition.QuestDsl;
 import com.aionemu.gameserver.questEngine.definition.QuestEvent;
+import com.aionemu.gameserver.questEngine.definition.QuestItemRequirement;
 import com.aionemu.gameserver.questEngine.definition.QuestStateSyncMode;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
+import com.aionemu.gameserver.questEngine.retail.RetailQuestDriver;
+import com.aionemu.gameserver.questEngine.retail.RetailQuestMetadataCompiler;
+import com.aionemu.gameserver.questEngine.tablelane.SimpleUseItemHandler;
 import org.junit.jupiter.api.Test;
 
 import java.io.InputStream;
@@ -204,17 +208,28 @@ class QuestMutationPlannerTest {
 		assertTrue(routes.stream().allMatch(route -> route.actions().containsAll(cleanup)));
 	}
 
+	/**
+	 * 2578 已随 P5 切到 SimpleUseItem 原生车道：真端行是「用物接取 + talk_npc1..2 中继 + Midheim 交付」，
+	 * 记录开关 {@code item_check=false} ⇒ 交付不设门、完成不代扣（旧 typed 的 {@code RemoveItem(ALL)}
+	 * 完成清理是从 {@code quest_work_item1} 反推的合成语义，随切换批退场；不可重复行在 COMPLETE 态
+	 * 也不会再开接取窗，故工作物品残留不会造成重复领奖）。
+	 * <p>
+	 * 2578 runs on the SimpleUseItem native lane since P5: the retail row is item-use accept, a two-step
+	 * relay and a Midheim hand-in, with {@code item_check=false} — so neither a gate nor an engine-side
+	 * completion removal exists (the retired typed cleanup was synthesized from {@code quest_work_item1}).
+	 */
 	@Test
-	void ringForLuckRemovesItsQuestWorkItemWhenCompleting() throws Exception {
-		CompiledQuestDefinition definition = ProductionQuestDefinitions.definitionInOverlay(2578);
-
-		var completion = definition.definition().transitions().stream()
-			.filter(transition -> "reward".equals(transition.sourceNode())
-				&& "complete".equals(transition.targetNode()))
-			.findFirst().orElseThrow();
-
-		assertTrue(completion.actions().contains(
-			new QuestAction.RemoveItem(182204453, QuestAction.RemoveItem.ALL)));
+	void ringForLuckRowRunsOnTheItemUseLaneWithoutAWorkItemGate() throws Exception {
+		SimpleUseItemHandler handler = SimpleUseItemHandler.instance();
+		assertTrue(handler.routes(2578), "2578 必须由 native 用物车道服务");
+		assertEquals(2, handler.relayNpcs(2578).size(), "真端 talk_npc1..2 ⇒ 两步中继");
+		assertTrue(handler.gateItems(2578).isEmpty(), "真端 item_check=false ⇒ 交付不设门");
+		Integer workItem = handler.useItemId(2578);
+		assertNotNull(workItem, "真端 use_item_name 必须解析");
+		RetailQuestMetadataCompiler.Outcome compiled = RetailQuestDriver.ensureLoaded()
+			.retailMetadataOf(2578).orElseThrow();
+		assertEquals(List.of(new QuestItemRequirement(workItem, 1)), compiled.metadata().questWorkItems(),
+			"真端工作物品 = 用物品本体（记录开关关着 ⇒ 引擎不代扣）");
 	}
 
 	@Test
