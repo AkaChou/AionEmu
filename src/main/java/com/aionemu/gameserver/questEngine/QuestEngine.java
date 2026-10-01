@@ -578,6 +578,13 @@ public class QuestEngine implements GameEngine {
 			QuestRuntimeDispatcher typed = productionDispatcher;
 			if (player != null) {
 				try {
+					// 真端表驱动车道：DD LevelUp 接取面（kind 8 与 10，等级等值；路由集为空 ⇒ 恒 false）。
+					// DataDriven LevelUp acquire face (kinds 8 and 10, exact level equality).
+					DataDrivenNativeRuntime.instance().onLevelReached(player, player.getLevel(), false);
+				} catch (RuntimeException ignored) {
+					// Native level-up acquire is best-effort.
+				}
+				try {
 					typed.dispatch(new QuestEvent.LevelUp(), player.getObjectId(), 0,
 						QuestDispatchContract.BROADCAST);
 				} catch (RuntimeException ignored) {
@@ -586,6 +593,23 @@ public class QuestEngine implements GameEngine {
 			}
 		} catch (Exception ex) {
 			// log.error(I18n.get("log.b844c9346335", ex));
+		}
+	}
+
+	/**
+	 * 分发登录事件（真端 DD LevelUpLogIn 接取遍历：等级等值、只服务 kind 10）。
+	 * Dispatch the login event (the retail DD LevelUpLogIn acquire walk: exact level equality,
+	 * kind 10 only).
+	 * @param player 登录玩家 / the logged-in player
+	 */
+	public void onLoggedIn(Player player) {
+		if (player == null) {
+			return;
+		}
+		try {
+			DataDrivenNativeRuntime.instance().onLevelReached(player, player.getLevel(), true);
+		} catch (RuntimeException ignored) {
+			// Native login acquire is best-effort.
 		}
 	}
 

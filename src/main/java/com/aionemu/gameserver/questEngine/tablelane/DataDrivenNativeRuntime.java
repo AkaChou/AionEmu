@@ -21,6 +21,7 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_DIALOG_WINDOW;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_QUEST_ACTION;
 import com.aionemu.gameserver.questEngine.QuestEngine;
+import com.aionemu.gameserver.questEngine.definition.QuestDialogContract;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.questEngine.retail.RetailItemNameIndex;
@@ -77,12 +78,28 @@ public final class DataDrivenNativeRuntime {
 	private static final int PAGE_REWARD_WINDOW = 5;
 	/** 完成页（真端 `mgr+0x5d8` 完成通道；与家族车道同页）。 / The completion page. */
 	private static final int PAGE_COMPLETE = 1008;
+	/** 接取入口问询页（真端 `FUN_180c47220` 打开态字面量 `0x129a`）。 / The accept-entry ask page (retail 0x129a). */
+	private static final int PAGE_ACCEPT_ENTRY = 4762;
+	/** 接取确认页（真端 1002 成功后下发）。 / The accepted page (sent after retail 1002). */
+	private static final int PAGE_ACCEPTED = 1003;
+	/** 拒绝确认页（真端 1003 下发）。 / The confirm-refuse page (sent after retail 1003). */
+	private static final int PAGE_REFUSE = 1004;
 	/** 报告动作（真端 `0x3f1`）。 / The report action. */
 	private static final int ACTION_REPORT = 1009;
 	/** 完成动作（真端 `0x3f0`）。 / The complete action. */
 	private static final int ACTION_COMPLETE = 1008;
 	/** 步进 + 完成动作（真端 `0x280f`）。 / The advance-and-complete action. */
 	private static final int ACTION_ADVANCE_COMPLETE = 10255;
+	/** 接取动作（真端 0x3ea）。 / The accept action. */
+	private static final int ACTION_ACCEPT = 1002;
+	/** 接取确认动作（真端 0x3eb）。 / The accepted-ack action. */
+	private static final int ACTION_ACCEPTED = 1003;
+	/** 问询动作（真端 0x3ef → mgr+0x1a0 接取窗）。 / The ask action (retail mgr+0x1a0). */
+	private static final int ACTION_ASK = 1007;
+	/** 建档动作（真端 20000）。 / The book-entry accept action. */
+	private static final int ACTION_BOOK = 20000;
+	/** 拒绝动作（真端 20001）。 / The refuse action. */
+	private static final int ACTION_REFUSE = 20001;
 
 	/** 一次事件命中的步引用：任务 + 步号 + 组槽（直接步进类为 0）。 / One event hit: quest, step, group. */
 	public record StepHit(int questId, int stepIndex, int group) {
@@ -97,7 +114,11 @@ public final class DataDrivenNativeRuntime {
 		/** 进区别名未登记成区。 / Zone alias not registered. */
 		ZONE_UNRESOLVED,
 		/** 载荷语法不合法（空组 / 非整数世界 id / 非整数计数）。 / Malformed payload. */
-		PAYLOAD_INVALID
+		PAYLOAD_INVALID,
+		/** 步携带步 e1 未落面的附加动作（TELEPORT/SPAWN/DELAY/MESSAGE/ENTER_INSTANCE/TIMER）。 / A step carries an extra action not yet faced. */
+		ACTION_UNFACED,
+		/** 行带未坐实语义的接取条件列（`con_quest`/`con_quest_list`）。 / The row carries un-adjudicated acquire-condition columns. */
+		ACQUIRE_CONDITION_UNFACED
 	}
 
 	/** 真端 PvP 闸门（`PvP Target Min Rank` / `Max Rank` / `Level Gap`；0 = 该轴无闸门）。 / PvP gate. */
@@ -109,8 +130,82 @@ public final class DataDrivenNativeRuntime {
 			boolean lastStep) {
 	}
 
+	/**
+	 * 接取计划（真端 LoadBasicInfo 注册面）。返回 {@code null} = 接取参数名解析失败（fail-closed 冻结）。
+	 * The per-row acquire plan; {@code null} = the acquire parameter name did not resolve (fail closed).
+	 */
+	private static AcquirePlan acquirePlan(Row row, NativeNpcNameResolver nameResolver,
+			RetailItemNameIndex itemIndex, Set<String> unresolved) {
+		String kind = row.acquireKind() == null ? "" : row.acquireKind().trim();
+		return switch (kind) {
+			case "talk" -> {
+				Set<Integer> npcIds = new LinkedHashSet<>();
+				boolean ok = true;
+				for (PayloadGroup group : parseGroups(row.acquireParam() == null ? "" : row.acquireParam())) {
+					for (String name : group.names()) {
+						if (!resolveMonsters(name, nameResolver, npcIds, new ArrayList<>())) {
+							unresolved.add(name.trim().toLowerCase(java.util.Locale.ROOT));
+							ok = false;
+							break;
+						}
+					}
+					if (!ok) {
+						break;
+					}
+				}
+				yield ok && !npcIds.isEmpty()
+					? new AcquirePlan(4, 0, 0, 0, List.copyOf(npcIds)) : null;
+			}
+			case "itemplay" -> {
+				String text = (row.acquireParam() == null ? "" : row.acquireParam()).trim();
+				Integer itemId = itemIndex.resolve(text);
+				if (itemId == null) {
+					unresolved.add(text.toLowerCase(java.util.Locale.ROOT));
+					yield null;
+				}
+				yield new AcquirePlan(3, 0, 0, itemId, List.of());
+			}
+			case "enterworld" -> {
+				int worldId = parseWorldId(row.acquireParam() == null ? "" : row.acquireParam());
+				yield worldId > 0 ? new AcquirePlan(7, 0, worldId, 0, List.of()) : null;
+			}
+			case "levelup", "leveluplogin" -> {
+				int level = parseCount(row.acquireParam() == null ? "" : row.acquireParam());
+				yield level > 0
+					? new AcquirePlan("leveluplogin".equals(kind) ? 10 : 8, level, 0, 0, List.of()) : null;
+			}
+			default -> AcquirePlan.NONE;
+		};
+	}
+
 	/** 一个载荷组：名字列表 + 尾整数（Hunt = 计数，TalkFOBJ = 动作类型）。 / One payload group. */
 	private record PayloadGroup(List<String> names, int trailing) {
+	}
+
+	/** 步 e1 已落面的附加动作类型（真端执行器 case 1/2/4）。 / The extra-action types faced in step e1. */
+	private enum ActionType {
+		/** case 1：发物品（`Give/Remove Items` 发半边）。 / Give items (executor case 1). */
+		GIVE_ITEMS,
+		/** case 2：扣物品。 / Remove items (executor case 2). */
+		REMOVE_ITEMS,
+		/** case 4：过场/电影（`Cutscene|Cutscene2|Movie|Movie2 N`）。 / Cutscene or movie (executor case 4). */
+		CUTSCENE
+	}
+
+	/** 一个已解析的附加动作（发扣物品对或过场 id）。 / One resolved extra action. */
+	private record ActionPlan(ActionType type, int itemId, int count, int movieId, boolean movieToken) {
+	}
+
+	/**
+	 * 接取计划（真端 LoadBasicInfo 注册面：Talk=0x640 对话面 / ItemPlay=事件 5 / EnterWorld=事件 0x12 /
+	 * LevelUpLogIn=vec0+vec3 等级等值；EnterArea=e1 缺面（区几何未导入，接取缺席镜像真端注册树未填）；
+	 * none/其余 = 无接取注册）。
+	 * The per-row acquire plan (retail LoadBasicInfo registration face). EnterArea is unfaced in e1
+	 * (zone geometry not imported); none/other kinds have no acquire registration.
+	 */
+	private record AcquirePlan(int kind, int level, int worldId, int itemId, List<Integer> npcIds) {
+
+		static final AcquirePlan NONE = new AcquirePlan(0, 0, 0, 0, List.of());
 	}
 
 	private static volatile DataDrivenNativeRuntime instance;
@@ -123,17 +218,35 @@ public final class DataDrivenNativeRuntime {
 	private final Map<String, List<StepHit>> zonesByName;
 	private final Map<Integer, List<StepHit>> worldsByWorldId;
 	private final Map<Integer, List<Integer>> pvpStepsByQuestId;
+	/** 接取兴趣面：Talk 对话 NPC → 任务。 / Acquire interest: talk npc → quests. */
+	private final Map<Integer, List<Integer>> acquireTalksByNpcId;
+	/** 接取兴趣面：物品获得（kind 3，真端事件 5 双角色）→ 任务。 / Acquire interest: item acquire → quests. */
+	private final Map<Integer, List<Integer>> acquireItemsByItemId;
+	/** 接取兴趣面：进世界（kind 7，真端事件 0x12 双角色）→ 任务。 / Acquire interest: enter-world → quests. */
+	private final Map<Integer, List<Integer>> acquireWorldsByWorldId;
+	/** 接取兴趣面：等级等值（kind 8/10）→ 任务。 / Acquire interest: exact level → quests. */
+	private final Map<Integer, List<Integer>> acquireLevelsByLevel;
+	/** 已落面附加动作（quest → 逐步 ActionPlan，与步序对齐）。 / Faced extra actions per quest and step. */
+	private final Map<Integer, List<List<ActionPlan>>> actionsByQuestId;
+	/** 接取计划（quest → plan，kind 过滤与接取面用）。 / Acquire plans by quest. */
+	private final Map<Integer, AcquirePlan> acquireByQuestId;
 	private final Set<Integer> ownedQuestIds;
 	private final Set<Integer> routedQuestIds;
 	private final Map<Integer, FreezeReason> frozenQuestIds;
 	private final Set<String> unresolvedNames;
+	private final NativeInventoryPort inventoryPort;
+	private final NativeMoviePort moviePort;
 
 	private DataDrivenNativeRuntime(Map<Integer, List<StepPlan>> plansByQuestId,
 			Map<Integer, List<StepHit>> killsByNpcId, Map<Integer, List<StepHit>> talksByNpcId,
 			Map<Integer, List<StepHit>> fobjsByNpcId, Map<Integer, List<StepHit>> itemPlaysByItemId,
 			Map<String, List<StepHit>> zonesByName, Map<Integer, List<StepHit>> worldsByWorldId,
-			Map<Integer, List<Integer>> pvpStepsByQuestId, Set<Integer> ownedQuestIds,
-			Set<Integer> routedQuestIds, Map<Integer, FreezeReason> frozenQuestIds, Set<String> unresolvedNames) {
+			Map<Integer, List<Integer>> pvpStepsByQuestId, Map<Integer, List<Integer>> acquireTalksByNpcId,
+			Map<Integer, List<Integer>> acquireItemsByItemId, Map<Integer, List<Integer>> acquireWorldsByWorldId,
+			Map<Integer, List<Integer>> acquireLevelsByLevel, Map<Integer, List<List<ActionPlan>>> actionsByQuestId,
+			Map<Integer, AcquirePlan> acquireByQuestId, Set<Integer> ownedQuestIds,
+			Set<Integer> routedQuestIds, Map<Integer, FreezeReason> frozenQuestIds, Set<String> unresolvedNames,
+			NativeInventoryPort inventoryPort, NativeMoviePort moviePort) {
 		this.plansByQuestId = plansByQuestId;
 		this.killsByNpcId = killsByNpcId;
 		this.talksByNpcId = talksByNpcId;
@@ -142,10 +255,18 @@ public final class DataDrivenNativeRuntime {
 		this.zonesByName = zonesByName;
 		this.worldsByWorldId = worldsByWorldId;
 		this.pvpStepsByQuestId = pvpStepsByQuestId;
+		this.acquireTalksByNpcId = acquireTalksByNpcId;
+		this.acquireItemsByItemId = acquireItemsByItemId;
+		this.acquireWorldsByWorldId = acquireWorldsByWorldId;
+		this.acquireLevelsByLevel = acquireLevelsByLevel;
+		this.actionsByQuestId = actionsByQuestId;
+		this.acquireByQuestId = acquireByQuestId;
 		this.ownedQuestIds = ownedQuestIds;
 		this.routedQuestIds = routedQuestIds;
 		this.frozenQuestIds = frozenQuestIds;
 		this.unresolvedNames = unresolvedNames;
+		this.inventoryPort = inventoryPort;
+		this.moviePort = moviePort;
 	}
 
 	/**
@@ -172,7 +293,7 @@ public final class DataDrivenNativeRuntime {
 				throw new IllegalStateException("DATA_DRIVEN_TABLE_MISSING: " + TABLE_RESOURCE);
 			}
 			DataDrivenQuestTable table = DataDrivenQuestTable.load(input);
-			return create(table, Set.of(), null, null, null);
+			return create(table, Set.of(), null, null, null, null, null);
 		} catch (IOException e) {
 			throw new IllegalStateException("DATA_DRIVEN_TABLE_UNREADABLE: " + TABLE_RESOURCE, e);
 		}
@@ -188,19 +309,27 @@ public final class DataDrivenNativeRuntime {
 	 * @param enterAreaPort  真端同名区端口（路由集非空时必需）/ retail same-name zone port (required when routing)
 	 * @param itemIndex      真端物品名索引（路由集非空时必需；ItemPlay 载荷解析）/ retail item-name index
 	 *                       (required when routing; resolves ItemPlay payloads)
+	 * @param inventoryPort  发扣物品端口（路由集非空时必需；步 e1 动作面）/ inventory port (required when
+	 *                       routing; the e1 give/remove action face)
+	 * @param moviePort      过场端口（路由集非空时必需；步 e1 CUTSCENE 动作面）/ movie port (required when
+	 *                       routing; the e1 cutscene action face)
 	 */
 	public static DataDrivenNativeRuntime create(DataDrivenQuestTable table, Set<Integer> routedQuestIds,
-			NativeNpcNameResolver nameResolver, NativeEnterAreaPort enterAreaPort, RetailItemNameIndex itemIndex) {
+			NativeNpcNameResolver nameResolver, NativeEnterAreaPort enterAreaPort, RetailItemNameIndex itemIndex,
+			NativeInventoryPort inventoryPort, NativeMoviePort moviePort) {
 		if (table == null) {
 			throw new IllegalArgumentException("DATA_DRIVEN_TABLE_MISSING");
 		}
 		if (routedQuestIds == null || routedQuestIds.isEmpty()) {
 			return new DataDrivenNativeRuntime(Map.of(), Map.of(), Map.of(), Map.of(), Map.of(), Map.of(), Map.of(),
-				Map.of(), Set.of(), Set.of(), Map.of(), Set.of());
+				Map.of(), Map.of(), Map.of(), Map.of(), Map.of(), Map.of(), Map.of(), Set.of(), Set.of(), Map.of(),
+				Set.of(), null, null);
 		}
 		Objects.requireNonNull(nameResolver, "DATA_DRIVEN_NAME_RESOLVER_MISSING");
 		Objects.requireNonNull(enterAreaPort, "DATA_DRIVEN_ENTER_AREA_PORT_MISSING");
 		Objects.requireNonNull(itemIndex, "DATA_DRIVEN_ITEM_INDEX_MISSING");
+		Objects.requireNonNull(inventoryPort, "DATA_DRIVEN_INVENTORY_PORT_MISSING");
+		Objects.requireNonNull(moviePort, "DATA_DRIVEN_MOVIE_PORT_MISSING");
 
 		Map<Integer, List<StepPlan>> plans = new LinkedHashMap<>();
 		Map<Integer, List<StepHit>> kills = new LinkedHashMap<>();
@@ -210,6 +339,12 @@ public final class DataDrivenNativeRuntime {
 		Map<String, List<StepHit>> zones = new LinkedHashMap<>();
 		Map<Integer, List<StepHit>> worlds = new LinkedHashMap<>();
 		Map<Integer, List<Integer>> pvpSteps = new LinkedHashMap<>();
+		Map<Integer, List<Integer>> acquireTalks = new LinkedHashMap<>();
+		Map<Integer, List<Integer>> acquireItems = new LinkedHashMap<>();
+		Map<Integer, List<Integer>> acquireWorlds = new LinkedHashMap<>();
+		Map<Integer, List<Integer>> acquireLevels = new LinkedHashMap<>();
+		Map<Integer, List<List<ActionPlan>>> actionPlans = new LinkedHashMap<>();
+		Map<Integer, AcquirePlan> acquirePlans = new LinkedHashMap<>();
 		Set<Integer> owned = new TreeSet<>();
 		Set<Integer> routed = new TreeSet<>();
 		Map<Integer, FreezeReason> frozen = new TreeMap<>();
@@ -222,9 +357,17 @@ public final class DataDrivenNativeRuntime {
 			}
 			owned.add(questId);
 			RowPlan rowPlan = planRow(questId, row, nameResolver, enterAreaPort, itemIndex);
-			if (rowPlan.freezeReason() != null) {
-				frozen.put(questId, rowPlan.freezeReason());
-				rowPlan.unresolvedNames().forEach(name -> unresolved.add(name));
+			FreezeReason freeze = rowPlan.freezeReason();
+			// 接取轴在路由裁定前解析：接取参数名失败同样整行冻结（routed ∪ frozen 互斥闭合）。
+			// The acquire axis resolves before the routing decision: a failed acquire parameter
+			// freezes the whole row (routed/frozen stay disjoint).
+			AcquirePlan acquire = freeze == null ? acquirePlan(row, nameResolver, itemIndex, unresolved) : null;
+			if (freeze == null && acquire == null) {
+				freeze = FreezeReason.NAME_UNRESOLVED;
+			}
+			if (freeze != null) {
+				frozen.put(questId, freeze);
+				rowPlan.unresolvedNames().forEach(unresolved::add);
 				continue;
 			}
 			routed.add(questId);
@@ -239,16 +382,31 @@ public final class DataDrivenNativeRuntime {
 			if (!rowPlan.pvpSteps().isEmpty()) {
 				pvpSteps.put(questId, List.copyOf(rowPlan.pvpSteps()));
 			}
+			if (!rowPlan.facedActions().isEmpty()) {
+				actionPlans.put(questId, rowPlan.facedActions());
+			}
+			acquirePlans.put(questId, acquire);
+			switch (acquire.kind()) {
+				case 4 -> acquire.npcIds().forEach(
+					npcId -> acquireTalks.computeIfAbsent(npcId, key -> new ArrayList<>()).add(questId));
+				case 3 -> acquireItems.computeIfAbsent(acquire.itemId(), key -> new ArrayList<>()).add(questId);
+				case 7 -> acquireWorlds.computeIfAbsent(acquire.worldId(), key -> new ArrayList<>()).add(questId);
+				case 8, 10 -> acquireLevels.computeIfAbsent(acquire.level(), key -> new ArrayList<>()).add(questId);
+				default -> {
+				}
+			}
 		}
 		return new DataDrivenNativeRuntime(Map.copyOf(plans), Map.copyOf(kills), Map.copyOf(talks), Map.copyOf(fobjs),
-			Map.copyOf(itemPlays), Map.copyOf(zones), Map.copyOf(worlds), Map.copyOf(pvpSteps), Set.copyOf(owned),
-			Set.copyOf(routed), Map.copyOf(frozen), Set.copyOf(unresolved));
+			Map.copyOf(itemPlays), Map.copyOf(zones), Map.copyOf(worlds), Map.copyOf(pvpSteps),
+			Map.copyOf(acquireTalks), Map.copyOf(acquireItems), Map.copyOf(acquireWorlds), Map.copyOf(acquireLevels),
+			Map.copyOf(actionPlans), Map.copyOf(acquirePlans), Set.copyOf(owned), Set.copyOf(routed),
+			Map.copyOf(frozen), Set.copyOf(unresolved), inventoryPort, moviePort);
 	}
 
 	/** 一行计划的中转结构（构建期）。 / Mutable per-row plan during construction. */
 	private record RowPlan(List<StepPlan> steps, List<NpcHit> kills, List<NpcHit> talks, List<NpcHit> fobjs,
 			List<NpcHit> itemPlays, List<KeyHit> zones, List<NpcHit> worlds, List<Integer> pvpSteps,
-			FreezeReason freezeReason, List<String> unresolvedNames) {
+			List<List<ActionPlan>> facedActions, FreezeReason freezeReason, List<String> unresolvedNames) {
 	}
 
 	/** NPC 键命中（击杀/对话/FOBJ/世界按 int 键，进区按字符串键）。 / An interest hit bound to a key. */
@@ -260,6 +418,13 @@ public final class DataDrivenNativeRuntime {
 
 	private static RowPlan planRow(int questId, Row row, NativeNpcNameResolver nameResolver,
 			NativeEnterAreaPort enterAreaPort, RetailItemNameIndex itemIndex) {
+		// 真端 LoadBasicInfo 先解析接取条件列（0x640 条目 type 表未坐实）⇒ 带条件列的行整行冻结。
+		// Retail LoadBasicInfo parses the acquire-condition columns first (the 0x640 entry type table
+		// is un-adjudicated) ⇒ rows carrying them freeze as a whole.
+		if (row.hasAcquireConditions()) {
+			return new RowPlan(List.of(), List.of(), List.of(), List.of(), List.of(), List.of(), List.of(),
+				List.of(), List.of(), FreezeReason.ACQUIRE_CONDITION_UNFACED, List.of());
+		}
 		List<StepPlan> steps = new ArrayList<>();
 		List<NpcHit> kills = new ArrayList<>();
 		List<NpcHit> talks = new ArrayList<>();
@@ -268,6 +433,7 @@ public final class DataDrivenNativeRuntime {
 		List<KeyHit> zones = new ArrayList<>();
 		List<NpcHit> worlds = new ArrayList<>();
 		List<Integer> pvpSteps = new ArrayList<>();
+		List<List<ActionPlan>> facedActions = new ArrayList<>();
 		List<String> unresolved = new ArrayList<>();
 		FreezeReason freeze = null;
 		int stepCount = row.steps().size();
@@ -429,13 +595,89 @@ public final class DataDrivenNativeRuntime {
 					pvpSteps.add(step.index());
 				}
 			}
+			if (freeze == null) {
+				freeze = scanFacedActions(step, itemIndex, facedActions, unresolved);
+			}
 			if (freeze != null) {
 				break;
 			}
 		}
 		return new RowPlan(List.copyOf(steps), List.copyOf(kills), List.copyOf(talks), List.copyOf(fobjs),
-			List.copyOf(itemPlays), List.copyOf(zones), List.copyOf(worlds), List.copyOf(pvpSteps), freeze,
-			List.copyOf(unresolved));
+			List.copyOf(itemPlays), List.copyOf(zones), List.copyOf(worlds), List.copyOf(pvpSteps),
+			List.copyOf(facedActions), freeze, List.copyOf(unresolved));
+	}
+
+	/**
+	 * 步 e1 附加动作面：逐步扫描附加动作列。已落面（真端执行器 case 1/2/4）解析成
+	 * {@link ActionPlan}；未落面（case 3/5/6/7/9/10，步 e2 收全）返回 ACTION_UNFACED，
+	 * 物品符号解析失败返回 NAME_UNRESOLVED，成功返回 {@code null}。
+	 * e1 extra-action face: parse the faced executor cases (1/2/4); an unfaced column
+	 * (cases 3/5/6/7/9/10, completed in e2) yields ACTION_UNFACED, an unresolved item symbol
+	 * yields NAME_UNRESOLVED, success yields {@code null}.
+	 */
+	private static FreezeReason scanFacedActions(Step step, RetailItemNameIndex itemIndex,
+			List<List<ActionPlan>> facedActions, List<String> unresolved) {
+		List<ActionPlan> plans = new ArrayList<>();
+		for (DataDrivenQuestTable.ExtraAction action : step.extraActions()) {
+			String text = step.column(action.column());
+			switch (action) {
+				case GIVE_ITEMS, REMOVE_ITEMS -> {
+					// 真端 `符号 数量`（可多对，`,`/空格分隔）；符号经物品名索引解析。
+					// Retail `symbol count` pairs separated by commas/spaces; symbols resolve via the item index.
+					String[] tokens = text.trim().split("[,\\s]+");
+					if (tokens.length % 2 != 0) {
+						return FreezeReason.ACTION_UNFACED;
+					}
+					for (int index = 0; index < tokens.length; index += 2) {
+						int count;
+						try {
+							count = Integer.parseInt(tokens[index + 1]);
+						} catch (NumberFormatException e) {
+							return FreezeReason.ACTION_UNFACED;
+						}
+						if (count <= 0) {
+							return FreezeReason.ACTION_UNFACED;
+						}
+						Integer itemId = itemIndex.resolve(tokens[index]);
+						if (itemId == null) {
+							unresolved.add(tokens[index].toLowerCase(java.util.Locale.ROOT));
+							return FreezeReason.NAME_UNRESOLVED;
+						}
+						plans.add(new ActionPlan(
+							action == DataDrivenQuestTable.ExtraAction.GIVE_ITEMS
+								? ActionType.GIVE_ITEMS : ActionType.REMOVE_ITEMS,
+							itemId, count, 0, false));
+					}
+				}
+				case CUTSCENE -> {
+					// 真端 `Cutscene|Cutscene2|Movie|Movie2 N`（+可选 HACTION 链接，e1 忽略）；
+					// 未知词形 = 真端 Wrong Type!!（记日志跳过），e1 同镜像不冻结。
+					// Retail `Cutscene|Cutscene2|Movie|Movie2 N` (+ optional HACTION links, ignored in e1);
+					// an unknown token is the retail Wrong Type!! (log + skip), mirrored without freezing.
+					String[] tokens = text.trim().split("[,\\s]+");
+					if (tokens.length < 2) {
+						return FreezeReason.ACTION_UNFACED;
+					}
+					String token = tokens[0];
+					int movieId;
+					try {
+						movieId = Integer.parseInt(tokens[1]);
+					} catch (NumberFormatException e) {
+						return FreezeReason.ACTION_UNFACED;
+					}
+					if (token.equalsIgnoreCase("Cutscene") || token.equalsIgnoreCase("Cutscene2")) {
+						plans.add(new ActionPlan(ActionType.CUTSCENE, 0, 0, movieId, false));
+					} else if (token.equalsIgnoreCase("Movie") || token.equalsIgnoreCase("Movie2")) {
+						plans.add(new ActionPlan(ActionType.CUTSCENE, 0, 0, movieId, true));
+					}
+				}
+				default -> {
+					return FreezeReason.ACTION_UNFACED;
+				}
+			}
+		}
+		facedActions.add(List.copyOf(plans));
+		return null;
 	}
 
 
@@ -535,10 +777,14 @@ public final class DataDrivenNativeRuntime {
 
 	/**
 	 * 物品获得事件（ItemPlay 组计数；真端事件 5，`FUN_180c46e90`：当前步 kind==3 + 物品 id 匹配 +
-	 * 组 1 计数步进）。
-	 * Item-acquire event (ItemPlay group counters; retail event 5 keyed by the resolved item id).
+	 * 组 1 计数步进）+ 接取双角色（状态非 START 且接取 kind==3 → 接取 + 步 0 动作）。
+	 * Item-acquire event (ItemPlay group counters; retail event 5) plus the dual-role acquire
+	 * branch (no START state + acquire kind 3 → acquire + step-0 actions).
 	 */
 	public boolean onItemAcquired(Player player, int itemId) {
+		if (acquire(player, acquireItemsByItemId.get(itemId), 3)) {
+			return true;
+		}
 		return dispatch(player, itemPlaysByItemId.get(itemId));
 	}
 
@@ -555,9 +801,136 @@ public final class DataDrivenNativeRuntime {
 	 * @param requestedOwner 客户端携带的任务上下文（0 = 无；非 0 时只服务该任务）/ the client quest context
 	 */
 	public boolean onDialog(Player player, int npcId, int dialogId, int objectId, int requestedOwner) {
+		if (dispatchAcquireDialog(player, acquireTalksByNpcId.get(npcId), dialogId, objectId, requestedOwner)) {
+			return true;
+		}
 		boolean fobj = dispatch(player, fobjsByNpcId.get(npcId));
 		boolean plane = dispatchDialog(player, talksByNpcId.get(npcId), dialogId, objectId, requestedOwner);
 		return plane || fobj;
+	}
+
+	/**
+	 * Talk 接取对话面（真端 `FUN_180c47220`：打开 → 页 4762；1002 → 接取 + 页 1003；1003 → 页 1004；
+	 * 1007 → 接取窗（客户端契约 fail-closed）；20000 → 接取 + 完成通道；20001/1008 → 完成通道；
+	 * 其余 ≥1000 原样回发）。只服务「尚未开始该任务」的玩家（真端按 0x640 条件路由到接取对象）。
+	 * The Talk acquire dialog face of retail FUN_180c47220, served only to players without the quest.
+	 */
+	private boolean dispatchAcquireDialog(Player player, List<Integer> questIds, int dialogId, int objectId,
+			int requestedOwner) {
+		if (player == null || questIds == null || questIds.isEmpty()) {
+			return false;
+		}
+		for (int questId : questIds) {
+			if (requestedOwner != 0 && requestedOwner != questId) {
+				continue;
+			}
+			if (state(player, questId) != null) {
+				continue;
+			}
+			switch (dialogId) {
+				case 31, 26, -1 -> {
+					PacketSendUtility.sendPacket(player,
+						new SM_DIALOG_WINDOW(objectId, PAGE_ACCEPT_ENTRY, questId));
+					return true;
+				}
+				case ACTION_ACCEPT -> {
+					if (!NativeQuestStartPort.instance().start(player, questId).started()) {
+						return false;
+					}
+					PacketSendUtility.sendPacket(player,
+						new SM_DIALOG_WINDOW(objectId, PAGE_ACCEPTED, questId));
+					return true;
+				}
+				case ACTION_ACCEPTED -> {
+					PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(objectId, PAGE_REFUSE, questId));
+					return true;
+				}
+				case ACTION_ASK -> {
+					int askWindow = QuestDialogContract.loadDefault().askWindowPage(questId);
+					if (askWindow < 0) {
+						return false;
+					}
+					PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(objectId, askWindow, questId));
+					return true;
+				}
+				case ACTION_BOOK, ACTION_REFUSE, ACTION_COMPLETE -> {
+					if (dialogId == ACTION_BOOK
+						&& !NativeQuestStartPort.instance().start(player, questId).started()) {
+						return false;
+					}
+					// 真端 `mgr+0x5d8` 完成通道（20001 的 +0x2a8 演出面未坐实，e1 只回完成页）。
+					// The retail mgr+0x5d8 completion channel (20001's +0x2a8 play face is
+					// un-adjudicated; e1 sends the completion page only).
+					PacketSendUtility.sendPacket(player,
+						new SM_DIALOG_WINDOW(objectId, PAGE_COMPLETE, questId));
+					return true;
+				}
+				default -> {
+					if (dialogId >= 1000) {
+						PacketSendUtility.sendPacket(player,
+							new SM_DIALOG_WINDOW(objectId, dialogId, questId));
+						return true;
+					}
+					return false;
+				}
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * 双角色接取（真端 progress handler 的 state!=3 分支）：接取成功即执行步 0 的已落面动作
+	 * （真端 `FUN_180c4cd50(def+0x10)`）。
+	 * The dual-role acquire of the retail progress handlers; a successful acquire runs step 0's
+	 * faced actions (retail FUN_180c4cd50 on the first handler's action list).
+	 */
+	private boolean acquire(Player player, List<Integer> questIds, Integer requiredKind) {
+		if (player == null || questIds == null || questIds.isEmpty()) {
+			return false;
+		}
+		boolean handled = false;
+		for (int questId : questIds) {
+			AcquirePlan plan = acquireByQuestId.get(questId);
+			if (plan == null || (requiredKind != null && plan.kind() != requiredKind)) {
+				continue;
+			}
+			if (state(player, questId) != null) {
+				continue;
+			}
+			if (!NativeQuestStartPort.instance().start(player, questId).started()) {
+				continue;
+			}
+			runActions(player, questId, 0);
+			handled = true;
+		}
+		return handled;
+	}
+
+	/**
+	 * 执行一步的已落面动作（真端执行器 case 1/2/4：发/扣物品对、Cutscene/Movie）。
+	 * Runs one step's faced actions (retail executor cases 1/2/4).
+	 */
+	private void runActions(Player player, int questId, int stepIndex) {
+		if (inventoryPort == null || moviePort == null) {
+			return;
+		}
+		List<List<ActionPlan>> perStep = actionsByQuestId.get(questId);
+		if (perStep == null || stepIndex < 0 || stepIndex >= perStep.size()) {
+			return;
+		}
+		for (ActionPlan action : perStep.get(stepIndex)) {
+			switch (action.type()) {
+				case GIVE_ITEMS -> inventoryPort.give(player, action.itemId(), action.count());
+				case REMOVE_ITEMS -> inventoryPort.remove(player, action.itemId(), action.count());
+				case CUTSCENE -> {
+					if (action.movieToken()) {
+						moviePort.playMovie(player, action.movieId());
+					} else {
+						moviePort.play(player, action.movieId());
+					}
+				}
+			}
+		}
 	}
 
 	/**
@@ -571,10 +944,26 @@ public final class DataDrivenNativeRuntime {
 	}
 
 	/**
-	 * 进世界事件（EnterWorld 直接步进）。 / Enter-world event (EnterWorld advance).
+	 * 进世界事件（EnterWorld 直接步进）+ 接取双角色（状态非 START 且接取 kind==7 → 接取 + 步 0 动作）。
+	 * Enter-world event (EnterWorld advance) plus the dual-role acquire branch (kind 7).
 	 */
 	public boolean onEnterWorld(Player player, int worldId) {
+		if (acquire(player, acquireWorldsByWorldId.get(worldId), 7)) {
+			return true;
+		}
 		return dispatch(player, worldsByWorldId.get(worldId));
+	}
+
+	/**
+	 * 登录/升级接取（kind 8/10，真端 vec0/vec3 遍历：`ctx+8 == def+8` **等级等值**才接取；
+	 * 登录面只服务 kind 10，升级面 8 与 10 都服务）。真端登录面另有 +0x138 否决槽（拒绝/删除簿），
+	 * 本服无对应簿面 ⇒ 不镜像（接取仍受 `NativeQuestStartPort.start` 条件面约束）。
+	 * Login/level-up acquire (kinds 8/10; the retail walks acquire on **exact level equality**;
+	 * login serves kind 10 only, level-up serves both). The retail login veto slot +0x138 has no
+	 * counterpart on this server ⇒ not mirrored (the start-port conditions still gate).
+	 */
+	public boolean onLevelReached(Player player, int level, boolean loginWalk) {
+		return acquire(player, acquireLevelsByLevel.get(level), loginWalk ? Integer.valueOf(10) : null);
 	}
 
 	/**
@@ -654,6 +1043,14 @@ public final class DataDrivenNativeRuntime {
 		for (Map.Entry<Integer, List<StepHit>> entry : fobjsByNpcId.entrySet()) {
 			for (StepHit hit : entry.getValue()) {
 				engine.registerQuestNpc(entry.getKey()).addOnTalkEvent(hit.questId());
+			}
+		}
+		// 接取 NPC 也要进对话注册（玩家无任务状态时客户端才能打开对话）。
+		// Acquire NPCs join the dialog registry too (clients can only open the dialog of a
+		// registered npc while the player has no quest state).
+		for (Map.Entry<Integer, List<Integer>> entry : acquireTalksByNpcId.entrySet()) {
+			for (int questId : entry.getValue()) {
+				engine.registerQuestNpc(entry.getKey()).addOnTalkEvent(questId);
 			}
 		}
 	}
@@ -773,7 +1170,7 @@ public final class DataDrivenNativeRuntime {
 		int vars = state.getQuestVars().getQuestVars();
 		DataDrivenProgress.Result result = DataDrivenProgress.hit(vars, stepIndex, plan.slots(), group,
 			plan.lastStep());
-		return apply(player, state, result);
+		return apply(player, state, result, stepIndex);
 	}
 
 	private boolean advance(Player player, QuestState state, int stepIndex, boolean lastStep) {
@@ -784,10 +1181,10 @@ public final class DataDrivenNativeRuntime {
 		DataDrivenProgress.Result result = new DataDrivenProgress.Result(
 			lastStep ? DataDrivenProgress.Outcome.STEP_COMPLETE : DataDrivenProgress.Outcome.STEP_ADVANCE,
 			DataDrivenProgress.advance(vars));
-		return apply(player, state, result);
+		return apply(player, state, result, stepIndex);
 	}
 
-	private boolean apply(Player player, QuestState state, DataDrivenProgress.Result result) {
+	private boolean apply(Player player, QuestState state, DataDrivenProgress.Result result, int actionStepIndex) {
 		if (result.outcome() == DataDrivenProgress.Outcome.NO_ACTION) {
 			return false;
 		}
@@ -798,6 +1195,13 @@ public final class DataDrivenNativeRuntime {
 		state.setPersistentState(PersistentState.UPDATE_REQUIRED);
 		PacketSendUtility.sendPacket(player,
 			new SM_QUEST_ACTION(state.getQuestId(), state.getStatus(), state.getQuestVars().getQuestVars()));
+		// 真端动作只在步进/收口分支执行（部分自增分支直接 return，`FUN_180c46020`）。
+		// Retail runs the action list only on the step-advance/complete branches (the partial
+		// counter branch returns early, FUN_180c46020).
+		if (result.outcome() == DataDrivenProgress.Outcome.STEP_ADVANCE
+			|| result.outcome() == DataDrivenProgress.Outcome.STEP_COMPLETE) {
+			runActions(player, state.getQuestId(), actionStepIndex);
+		}
 		return true;
 	}
 
@@ -886,5 +1290,25 @@ public final class DataDrivenNativeRuntime {
 	/** PvP 行 → 步号。 / PvP rows by step index. */
 	public Map<Integer, List<Integer>> pvpSteps() {
 		return pvpStepsByQuestId;
+	}
+
+	/** 接取对话兴趣面（npcId → 任务）。 / Acquire talk interests (npc → quests). */
+	public Map<Integer, List<Integer>> acquireTalkInterests() {
+		return acquireTalksByNpcId;
+	}
+
+	/** 接取物品兴趣面（itemId → 任务）。 / Acquire item interests (item → quests). */
+	public Map<Integer, List<Integer>> acquireItemInterests() {
+		return acquireItemsByItemId;
+	}
+
+	/** 接取进世界兴趣面（worldId → 任务）。 / Acquire enter-world interests (world → quests). */
+	public Map<Integer, List<Integer>> acquireWorldInterests() {
+		return acquireWorldsByWorldId;
+	}
+
+	/** 接取等级兴趣面（level → 任务）。 / Acquire level interests (level → quests). */
+	public Map<Integer, List<Integer>> acquireLevelInterests() {
+		return acquireLevelsByLevel;
 	}
 }

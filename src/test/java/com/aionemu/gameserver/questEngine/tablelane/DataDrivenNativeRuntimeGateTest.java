@@ -28,10 +28,12 @@ import org.junit.jupiter.api.Test;
 import org.objenesis.ObjenesisStd;
 
 import com.aionemu.gameserver.model.Gender;
+import com.aionemu.gameserver.model.PlayerClass;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.gameobjects.player.PlayerCommonData;
 import com.aionemu.gameserver.model.gameobjects.player.QuestStateList;
+import com.aionemu.gameserver.questEngine.definition.QuestDialogContract;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.questEngine.retail.RetailItemNameIndex;
@@ -42,19 +44,23 @@ import com.aionemu.gameserver.questEngine.tablelane.DataDrivenQuestTable.Step;
 import com.aionemu.gameserver.utils.stats.AbyssRankEnum;
 
 /**
- * P7 步 2 步 d / 步 d2 门：DD 原生**进度运行时**（八类接线：Hunt / PvP / Talk / CollectItem / ItemPlay /
- * EnterArea / EnterWorld / TalkFOBJ）。
+ * P7 步 2 步 d / 步 d2 / 步 e1 门：DD 原生**进度运行时**（八类接线 + 四类接取面 + GIVE/REMOVE/CUTSCENE 动作面）。
  * <p>
  * 冻结点：① 生产口径路由集为空（零行为变更：DD 切换集行仍由旧 IR 车道 owns）；② 兴趣面按 payload 逐类建立
  * （Hunt 组名 → 怪物 id、Talk/CollectItem → NPC、TalkFOBJ → NPC、ItemPlay → 物品 id、EnterArea → 同名注册区、
- * EnterWorld → worldId、PvP → 行步）；③ 事件语义 = 真端 handler 逐指令（Hunt `FUN_180c46020` 组计数、
- * PvP `FUN_180c46980` 闸门 + 单组、ItemPlay `FUN_180c46e90` 物品获得组计数、
- * Talk/CollectItem = `FUN_180c474b0` 共享对话平面（开页 select(K+1) + 顺序动作/1009/10255 步进）、
- * EnterArea `FUN_180c47bf0`/EnterWorld `FUN_180c467b0` 直接步进、TalkFOBJ `FUN_180c478e0` 二值组）；
- * ④ 冻结面闭合（routed ∪ frozen = 切换集，互斥；步 d2 后冻结面 = 真端缺席进区别名 §10.3-#23）。
+ * EnterWorld → worldId、PvP → 行步）+ 接取兴趣面（Talk 对话 NPC / 物品获得 / 进世界 / 等级等值）；
+ * ③ 事件语义 = 真端 handler 逐指令（Hunt `FUN_180c46020` 组计数、PvP `FUN_180c46980` 闸门 + 单组、
+ * ItemPlay `FUN_180c46e90` 物品获得组计数、Talk/CollectItem = `FUN_180c474b0` 共享对话平面
+ * （开页 select(K+1) + 顺序动作/1009/10255 步进）、EnterArea `FUN_180c47bf0`/EnterWorld `FUN_180c467b0`
+ * 直接步进、TalkFOBJ `FUN_180c478e0` 二值组）+ 接取面（Talk `FUN_180c47220` 词汇、ItemPlay/EnterWorld
+ * 双角色、LevelUp/LevelUpLogIn 等级等值遍历）+ 附加动作面（执行器 case 1/2/4，只在步进/收口分支执行）；
+ * ④ 冻结面闭合（routed ∪ frozen = 切换集，互斥；步 e1 后冻结面 = ZONE_ABSENT 9 + ACTION_UNFACED 33 +
+ * ACQUIRE_CONDITION_UNFACED 35 + NAME_UNRESOLVED 6，证据 `.agents/summary/quest-engine-native/p7/
+ * tools/dd-planrow-e1-mirror.py`）。
  * <p>
- * P7 step 2d/2d2 gate for the native DD progress runtime: empty production routing (zero behavior change),
- * per-kind interest construction, retail event semantics for the eight wired kinds, and a closed
+ * P7 step 2d/2d2/e1 gate for the native DD progress runtime: empty production routing (zero behavior
+ * change), per-kind interest construction including the four acquire faces, retail event semantics for
+ * the eight wired kinds plus the acquire vocabulary and the faced extra actions, and a closed
  * routed/frozen split of the switch set.
  */
 class DataDrivenNativeRuntimeGateTest {
@@ -70,6 +76,9 @@ class DataDrivenNativeRuntimeGateTest {
 	private static DataDrivenQuestTable table;
 	private static Set<Integer> switchSet;
 	private static NativeEnterAreaPort enterAreaPort;
+	private static RetailItemNameIndex itemIndex;
+	private static NativeTalkFixture.RecordingInventory inventory;
+	private static RecordingMovies movies;
 	private static DataDrivenNativeRuntime runtime;
 
 	@BeforeAll
@@ -89,9 +98,12 @@ class DataDrivenNativeRuntimeGateTest {
 				zoneNames.add(matcher.group(1));
 			}
 		}
-	 enterAreaPort = NativeEnterAreaPort.create(table, switchSet, zoneNames);
+		enterAreaPort = NativeEnterAreaPort.create(table, switchSet, zoneNames);
+		itemIndex = RetailItemNameIndex.loadItemTemplates();
+		inventory = new NativeTalkFixture.RecordingInventory();
+		movies = new RecordingMovies();
 		runtime = DataDrivenNativeRuntime.create(table, switchSet, NativeNpcNameResolver.instance(),
-			enterAreaPort, RetailItemNameIndex.loadItemTemplates());
+			enterAreaPort, itemIndex, inventory, movies);
 	}
 
 	/** ① 生产单例 = 零行为变更：路由集为空，事件恒 false。 / Production singleton routes nothing. */
@@ -103,12 +115,18 @@ class DataDrivenNativeRuntimeGateTest {
 		assertTrue(production.killInterests().isEmpty(), "零兴趣注册");
 		assertTrue(production.zoneInterests().isEmpty(), "零进区兴趣");
 		assertTrue(production.itemPlayInterests().isEmpty(), "零物品获得兴趣");
+		assertTrue(production.acquireTalkInterests().isEmpty(), "零接取对话兴趣");
+		assertTrue(production.acquireItemInterests().isEmpty(), "零接取物品兴趣");
+		assertTrue(production.acquireWorldInterests().isEmpty(), "零接取进世界兴趣");
+		assertTrue(production.acquireLevelInterests().isEmpty(), "零接取等级兴趣");
 		Player player = player(1, Set.of());
 		assertFalse(production.onKill(player, 278516), "零路由 ⇒ 击杀恒 false");
 		assertFalse(production.onEnterZone(player, "AB1_SensoryArea_Q1868a"), "零路由 ⇒ 进区恒 false");
 		assertFalse(production.onEnterWorld(player, 210040000), "零路由 ⇒ 进世界恒 false");
 		assertFalse(production.onDialog(player, 804915, 31, 1, 0), "零路由 ⇒ 对话恒 false");
 		assertFalse(production.onItemAcquired(player, 100000001), "零路由 ⇒ 物品获得恒 false");
+		assertFalse(production.onLevelReached(player, 30, false), "零路由 ⇒ 升级接取恒 false");
+		assertFalse(production.onLevelReached(player, 30, true), "零路由 ⇒ 登录接取恒 false");
 	}
 
 	/** ② 逐行裁定闭合：切换集 = 可路由 ∪ 冻结（互斥，无第三桶）。 / Closed routed/frozen split. */
@@ -249,16 +267,16 @@ class DataDrivenNativeRuntimeGateTest {
 		int npcId = keyOf(runtime.talkInterests(), questId, stepIndex);
 		Player player = NativeTalkFixture.player();
 		QuestState state = NativeTalkFixture.add(player, questId, QuestStatus.START, stepIndex);
-		// 打开：阶段页（select1 = 1011），步号不变。
-		assertTrue(runtime.onDialog(player, npcId, 31, 1, 0), "对话打开必须被对话平面服务");
+		// 打开：阶段页（select1 = 1011），步号不变。页动作携带任务上下文（真端客户端在进度页发 questId）。
+		assertTrue(runtime.onDialog(player, npcId, 31, 1, questId), "对话打开必须被对话平面服务");
 		NativeTalkFixture.assertOnlyDialogPage(player, DataDrivenNativeRuntime.stagePageForGate(stepIndex));
 		assertEquals(stepIndex, DataDrivenProgress.step(state.getQuestVars().getQuestVars()), "打开不写步号");
 		// 乱序动作（真端 `code-9999 != 当前步 + 1`）：零写、零回发。
 		NativeTalkFixture.clearPackets(player);
-		assertFalse(runtime.onDialog(player, npcId, 10000 + stepIndex + 2, 1, 0), "乱序动作必须静默");
+		assertFalse(runtime.onDialog(player, npcId, 10000 + stepIndex + 2, 1, questId), "乱序动作必须静默");
 		assertTrue(NativeTalkFixture.dialogPages(player).isEmpty(), "乱序动作不发页");
 		// 顺序动作（真端守卫：code-9999 == 当前步 + 1 ⇔ code == 10000 + 当前步）：步号 + 1。
-		assertTrue(runtime.onDialog(player, npcId, 10000 + stepIndex, 1, 0), "顺序动作必须步进");
+		assertTrue(runtime.onDialog(player, npcId, 10000 + stepIndex, 1, questId), "顺序动作必须步进");
 		assertEquals(stepIndex + 1, DataDrivenProgress.step(state.getQuestVars().getQuestVars()),
 			"顺序动作写 = 步号 + 1");
 	}
@@ -275,7 +293,7 @@ class DataDrivenNativeRuntimeGateTest {
 		int npcId = keyOf(runtime.talkInterests(), questId, stepIndex);
 		Player player = NativeTalkFixture.player();
 		NativeTalkFixture.add(player, questId, QuestStatus.START, stepIndex);
-		assertTrue(runtime.onDialog(player, npcId, 1009, 1, 0), "1009 必须被报告通道服务");
+		assertTrue(runtime.onDialog(player, npcId, 1009, 1, questId), "1009 必须被报告通道服务");
 		assertEquals(QuestStatus.REWARD, player.getQuestStateList().getQuestState(questId).getStatus(),
 			"末步 1009 = 真端 SetQuestSuccess ⇒ 待领奖");
 		NativeTalkFixture.assertOnlyDialogPage(player, 5);
@@ -308,8 +326,8 @@ class DataDrivenNativeRuntimeGateTest {
 		Player player = player(12, Set.of(questId));
 		QuestState state = player.getQuestStateList().getQuestState(questId);
 		state.getQuestVars().setVar(stepIndex);
-		assertTrue(runtime.onDialog(player, npcId, 31, 1, 0), "FOBJ 首次交互 0→1");
-		boolean again = runtime.onDialog(player, npcId, 31, 1, 0);
+		assertTrue(runtime.onDialog(player, npcId, 31, 1, questId), "FOBJ 首次交互 0→1");
+		boolean again = runtime.onDialog(player, npcId, 31, 1, questId);
 		assertFalse(again, "二值组槽已置 1 ⇒ 超杀零动作（真端 uVar15 == 0 守卫）");
 	}
 
@@ -347,16 +365,22 @@ class DataDrivenNativeRuntimeGateTest {
 			"闸门失败不得写 vars");
 	}
 
-	/** ⑧ 冻结面：冻结行不得进兴趣面，且原因闭合。 / Frozen rows stay out of every interest. */
+	/** ⑧ 冻结面：冻结行不得进任何兴趣面，原因闭合。 / Frozen rows stay out of every interest. */
 	@Test
 	void frozenRowsAreNeverRouted() {
-		assertFalse(runtime.frozenQuestIds().isEmpty(), "步 d2 后仍须有冻结行（真端缺席进区别名 §10.3-#23）");
+		assertFalse(runtime.frozenQuestIds().isEmpty(), "步 e1 后仍须有冻结行");
 		for (Map.Entry<Integer, FreezeReason> entry : runtime.frozenQuestIds().entrySet()) {
 			int questId = entry.getKey();
 			assertFalse(runtime.routes(questId), "冻结行不得路由");
 			assertFalse(runtime.pvpSteps().containsKey(questId), "冻结行不得进 PvP 行集");
-			assertEquals(FreezeReason.ZONE_ABSENT, entry.getValue(),
-				"步 d2 后唯一冻结原因 = 真端缺席进区别名（§10.3-#23）");
+			assertFalse(runtime.acquireTalkInterests().values().stream().anyMatch(q -> q.contains(questId)),
+				"冻结行不得进接取对话兴趣：" + questId);
+			assertFalse(runtime.acquireItemInterests().values().stream().anyMatch(q -> q.contains(questId)),
+				"冻结行不得进接取物品兴趣：" + questId);
+			assertFalse(runtime.acquireWorldInterests().values().stream().anyMatch(q -> q.contains(questId)),
+				"冻结行不得进接取进世界兴趣：" + questId);
+			assertFalse(runtime.acquireLevelInterests().values().stream().anyMatch(q -> q.contains(questId)),
+				"冻结行不得进接取等级兴趣：" + questId);
 		}
 	}
 
@@ -382,25 +406,249 @@ class DataDrivenNativeRuntimeGateTest {
 		assertEquals(Map.of(Kind.HUNT, 827, Kind.COLLECT_ITEM, 348, Kind.PVP, 207, Kind.TALK, 403,
 			Kind.ENTER_AREA, 153, Kind.ITEM_PLAY, 42, Kind.ENTER_WORLD, 34, Kind.TALK_FOBJ, 19), switchSteps,
 			"切换集逐类步数 = P7 步 1 契约");
-		// 步 d2 八类接线后的已路由步数（planRow 离线镜像逐值一致，见
-		// `.agents/summary/quest-engine-native/p7/tools/dd-planrow-mirror.py`）。
-		assertEquals(Map.of(Kind.HUNT, 821, Kind.COLLECT_ITEM, 345, Kind.PVP, 207, Kind.TALK, 398,
-			Kind.ENTER_AREA, 137, Kind.ITEM_PLAY, 42, Kind.ENTER_WORLD, 34, Kind.TALK_FOBJ, 18), routedSteps,
-			"已路由行的逐类步数冻结");
-		assertEquals(1458, runtime.routedQuestIds().size(), "可路由行冻结（步 d2：CollectItem/ItemPlay/对话平面接线）");
-		assertEquals(9, runtime.frozenQuestIds().size(), "冻结行冻结（全部为真端缺席进区别名行）");
+		// 步 e1 四接取面 + 动作面接线后的已路由步数（离线镜像逐值一致，见
+		// `.agents/summary/quest-engine-native/p7/tools/dd-planrow-e1-mirror.py`）。
+		assertEquals(Map.of(Kind.HUNT, 759, Kind.COLLECT_ITEM, 335, Kind.PVP, 205, Kind.TALK, 272,
+			Kind.ENTER_AREA, 116, Kind.ITEM_PLAY, 29, Kind.ENTER_WORLD, 26, Kind.TALK_FOBJ, 10), routedSteps,
+			"已路由行的逐类步数冻结（步 e1：接取轴 + 附加动作轴入冻结面后）");
+		assertEquals(1384, runtime.routedQuestIds().size(), "可路由行冻结（步 e1：1384 = 1467 − 83）");
+		assertEquals(83, runtime.frozenQuestIds().size(), "冻结行冻结（四桶，见离线镜像）");
 		Map<FreezeReason, Integer> byReason = new TreeMap<>();
 		for (FreezeReason reason : runtime.frozenQuestIds().values()) {
 			byReason.merge(reason, 1, Integer::sum);
 		}
-		assertEquals(Map.of(FreezeReason.ZONE_ABSENT, 9), byReason, "冻结原因分桶冻结（§10.3-#23）");
-		// 步 d2 名字裁定后：载荷名面零未解析（165 个 hunt/talk/fobj/collectitem 失败名均为真端
-		// quest_ai_name 组，已按 SimpleHunt 同轴落别名台账；唯一未解析面 = 切换集行引用的 LF6 进区别名）。
+		assertEquals(Map.of(FreezeReason.ZONE_ABSENT, 9, FreezeReason.NAME_UNRESOLVED, 6,
+			FreezeReason.ACTION_UNFACED, 33, FreezeReason.ACQUIRE_CONDITION_UNFACED, 35), byReason,
+			"冻结原因分桶冻结（步 e1：ZONE_ABSENT 9 + 挑战哨兵 NAME_UNRESOLVED 6 + 未落面动作 33 + 接取条件列 35）");
+		// 步 e1 名字面：9 个真端缺席进区别名（§10.3-#23，保持原文大小写）+ 挑战任务哨兵
+		// `_challengetask_`（6 行接取参数不是 NPC 名；真端四源裁定 = 交付 NPC 自身接取，随步 e2 落面）。
 		assertEquals(Set.of("LF6_SensoryArea_Q15551_AtoB", "LF6_SensoryArea_Q15552_AtoD",
 			"LF6_SensoryArea_Q15553_AtoF", "LF6_SensoryArea_Q15554_AtoH", "LF6_SensoryArea_Q15601a_Dynamic_Env",
 			"LF6_SensoryArea_Q15602a_Dynamic_Env", "LF6_SensoryArea_Q15604a_Dynamic_Env",
-			"LF6_SensoryArea_Q15605a_Named", "LF6_SensoryArea_Q15608a_Dynamic_Env"), runtime.unresolvedNames(),
-			"未解析名字集 = 真端缺席进区别名（NativeEnterAreaPort.RETAIL_ABSENT_ALIASES 的切换集子集，§10.3-#23）");
+			"LF6_SensoryArea_Q15605a_Named", "LF6_SensoryArea_Q15608a_Dynamic_Env", "_challengetask_"),
+			runtime.unresolvedNames(), "未解析名字集 = 真端缺席进区别名 + 挑战任务接取哨兵");
+	}
+
+	/**
+	 * ⑩ Talk 接取对话面（真端 `FUN_180c47220` 词汇，只服务无状态玩家）：打开 → 4762；1002 → 接取 +
+	 * 1003；1003 → 1004；20001 → 完成通道 1008；1008/其余 ≥1000 原样回发；&lt;1000 零动作；
+	 * 1007 → 客户端契约问询窗（fail-closed）；已接取玩家不得再见接取入口页。
+	 * The Talk acquire dialog face (retail FUN_180c47220 vocabulary), served only to stateless players.
+	 */
+	@Test
+	void acquireTalkDialogFaceFollowsTheRetailVocabulary() {
+		int npcId = -1;
+		int questId = -1;
+		boolean found = false;
+		outer:
+		for (Map.Entry<Integer, List<Integer>> entry : runtime.acquireTalkInterests().entrySet()) {
+			for (int candidate : entry.getValue()) {
+				Player probe = NativeTalkFixture.player();
+				assertTrue(runtime.onDialog(probe, entry.getKey(), 31, 1, 0), "无状态玩家打开必发接取入口页");
+				NativeTalkFixture.assertOnlyDialogPage(probe, 4762);
+				if (runtime.onDialog(probe, entry.getKey(), 1002, 1, 0)
+					&& probe.getQuestStateList().getQuestState(candidate) != null) {
+					npcId = entry.getKey();
+					questId = candidate;
+					found = true;
+					break outer;
+				}
+			}
+		}
+		assertTrue(found, "须有可接取的 Talk 行（NativeQuestStartPort 条件面放行）");
+		// 1002 → 接取 + 1003。
+		Player player = NativeTalkFixture.player();
+		assertTrue(runtime.onDialog(player, npcId, 1002, 1, 0), "探针已证明该任务可接取");
+		NativeTalkFixture.assertOnlyDialogPage(player, 1003);
+		assertEquals(QuestStatus.START, player.getQuestStateList().getQuestState(questId).getStatus(),
+			"1002 = 真端 SetQuestAcquired");
+		// 已接取玩家：接取面不再服务该任务（带任务上下文时不得再见 4762；同 NPC 其他任务仍可接）。
+		NativeTalkFixture.clearPackets(player);
+		runtime.onDialog(player, npcId, 31, 1, questId);
+		assertFalse(NativeTalkFixture.dialogPages(player).contains(4762), "已接取玩家不得再见接取入口页");
+		// 1003 → 1004；20001 → 1008；1008 回发；1012 回发；999 零动作。
+		Player other = NativeTalkFixture.player();
+		assertTrue(runtime.onDialog(other, npcId, 1003, 1, 0), "1003 必须发拒绝确认页");
+		NativeTalkFixture.assertOnlyDialogPage(other, 1004);
+		NativeTalkFixture.clearPackets(other);
+		assertTrue(runtime.onDialog(other, npcId, 20001, 1, 0), "20001 = 完成通道");
+		NativeTalkFixture.assertOnlyDialogPage(other, 1008);
+		NativeTalkFixture.clearPackets(other);
+		assertTrue(runtime.onDialog(other, npcId, 1008, 1, 0), "1008 原样回发");
+		NativeTalkFixture.assertOnlyDialogPage(other, 1008);
+		NativeTalkFixture.clearPackets(other);
+		assertTrue(runtime.onDialog(other, npcId, 1012, 1, 0), "其余 ≥1000 动作原样回发");
+		NativeTalkFixture.assertOnlyDialogPage(other, 1012);
+		NativeTalkFixture.clearPackets(other);
+		assertFalse(runtime.onDialog(other, npcId, 999, 1, 0), "<1000 非接取词汇零动作");
+		assertTrue(NativeTalkFixture.dialogPages(other).isEmpty(), "<1000 不发页");
+		// 1007 → 客户端契约问询窗（无契约页 = fail-closed 拒绝）。
+		Player asker = NativeTalkFixture.player();
+		int askPage = QuestDialogContract.loadDefault().askWindowPage(questId);
+		assertEquals(askPage >= 0, runtime.onDialog(asker, npcId, 1007, 1, 0), "1007 按客户端契约裁定");
+		if (askPage >= 0) {
+			NativeTalkFixture.assertOnlyDialogPage(asker, askPage);
+		}
+	}
+
+	/**
+	 * ⑪ 双角色接取（真端 progress handler 的 state!=3 分支，接取即执行步 0 动作）：ItemPlay（事件 5）/
+	 * EnterWorld（事件 0x12）/ LevelUp·LevelUpLogIn（`ctx+8 == def+8` 等级等值，登录遍历只服务 kind 10）。
+	 * Dual-role acquires fire on their retail events (item acquire / enter world / exact level).
+	 */
+	@Test
+	void dualRoleAcquiresFireOnTheirRetailEvents() {
+		// ItemPlay 接取（kind 3，物品 id 键控；该批接取行 minlvl 65/66 ⇒ 探测玩家取两族 66 级）。
+		int[] itemFixture = firstAcquirable(runtime.acquireItemInterests(),
+			(player, key, candidate) -> {
+				for (Race race : List.of(Race.ELYOS, Race.ASMODIANS)) {
+					Player probe = NativeTalkFixture.player(race, PlayerClass.WARRIOR, 66);
+					if (runtime.onItemAcquired(probe, key)
+						&& probe.getQuestStateList().getQuestState(candidate) != null) {
+						return true;
+					}
+				}
+				return false;
+			});
+		assertTrue(itemFixture[0] > 0, "须有可接取的 ItemPlay 行");
+		// EnterWorld 接取（kind 7，worldId 键控；该批接取行同为 minlvl 66 ⇒ 双族 66 级探测）。
+		int[] worldFixture = firstAcquirable(runtime.acquireWorldInterests(),
+			(player, key, candidate) -> {
+				for (Race race : List.of(Race.ELYOS, Race.ASMODIANS)) {
+					Player probe = NativeTalkFixture.player(race, PlayerClass.WARRIOR, 66);
+					if (runtime.onEnterWorld(probe, key)
+						&& probe.getQuestStateList().getQuestState(candidate) != null) {
+						return true;
+					}
+				}
+				return false;
+			});
+		assertTrue(worldFixture[0] > 0, "须有可接取的 EnterWorld 行");
+		// 等级键集冻结（镜像：30/40/45/50/55，切换集内全部 kind 10 LevelUpLogIn）。
+		assertEquals(Set.of(30, 40, 45, 50, 55), runtime.acquireLevelInterests().keySet(),
+			"接取等级键集 = 离线镜像");
+		int[] levelFixture = firstAcquirable(runtime.acquireLevelInterests(),
+			(player, key, candidate) -> {
+				setLevel(player, key);
+				return runtime.onLevelReached(player, key, true)
+					&& player.getQuestStateList().getQuestState(candidate) != null;
+			});
+		assertTrue(levelFixture[0] > 0, "须有可接取的 LevelUpLogIn 行");
+		int level = levelFixture[0];
+		// 升级遍历服务 kind 8 与 10（切换集无 kind 8 行 ⇒ 登录/升级同集）。
+		Player onLevelUp = player(21, Set.of());
+		setLevel(onLevelUp, level);
+		assertTrue(runtime.onLevelReached(onLevelUp, level, false), "升级遍历按等级等值接取");
+		// 等级等值守卫（真端 `ctx+8 == def+8`，运行时以等级键索引承担）：差一级零接取。
+		Player off = player(22, Set.of());
+		setLevel(off, level + 1);
+		assertFalse(runtime.onLevelReached(off, off.getLevel(), true), "等级等值守卫（登录遍历）");
+		assertFalse(runtime.onLevelReached(off, off.getLevel(), false), "等级等值守卫（升级遍历）");
+	}
+
+	/** 接取面探测回调：key 触发 + candidate 任务成档才认。 / Probe: key fires and the quest commits. */
+	private interface AcquireProbe {
+		boolean fire(Player player, int key, int candidate);
+	}
+
+	/** 在接取兴趣面里找首个「key 触发 + 任务成档」的组合（fail-closed 探测）。 */
+	private static int[] firstAcquirable(Map<Integer, List<Integer>> interests, AcquireProbe probe) {
+		for (Map.Entry<Integer, List<Integer>> entry : interests.entrySet()) {
+			for (int candidate : entry.getValue()) {
+				Player player = NativeTalkFixture.player();
+				if (probe.fire(player, entry.getKey(), candidate)) {
+					return new int[] {entry.getKey(), candidate};
+				}
+			}
+		}
+		return new int[] {-1, -1};
+	}
+
+	/**
+	 * ⑫ 发/扣物品动作面（真端执行器 case 1/2）：只在步进/收口分支按列序执行（部分自增分支不执行，
+	 * `FUN_180c46020`）；打开页零动作。
+	 * The give/remove action face runs on the advance/complete branch only, in column order.
+	 */
+	@Test
+	void facedGiveAndRemoveActionsRunOnTheAdvanceBranch() {
+		int[] give = firstRoutedStepWithExtra(Kind.TALK, 1);
+		assertAdvanceItemCalls(give[0], give[1]);
+		int[] remove = firstRoutedStepWithExtra(Kind.TALK, 2);
+		assertAdvanceItemCalls(remove[0], remove[1]);
+	}
+
+	/** 从表列原文复算期望调用并断言一次顺序步进的物品通道轨迹。 */
+	private void assertAdvanceItemCalls(int questId, int stepIndex) {
+		Step step = table.find(questId).orElseThrow().steps().get(stepIndex);
+		List<String> expected = new ArrayList<>();
+		for (int column : new int[] {1, 2}) {
+			String text = step.column(column);
+			if (text == null || text.isBlank()) {
+				continue;
+			}
+			String[] tokens = text.trim().split("[,\\s]+");
+			for (int index = 0; index < tokens.length; index += 2) {
+				expected.add((column == 1 ? "give:" : "remove:") + itemIndex.resolve(tokens[index]) + ":"
+					+ Integer.parseInt(tokens[index + 1]));
+			}
+		}
+		assertFalse(expected.isEmpty(), "夹具步必须带发/扣物品列：" + questId + "#" + stepIndex);
+		int npcId = keyOf(runtime.talkInterests(), questId, stepIndex);
+		Player player = NativeTalkFixture.player();
+		NativeTalkFixture.add(player, questId, QuestStatus.START, stepIndex);
+		inventory.clear();
+		NativeTalkFixture.clearPackets(player);
+		assertTrue(runtime.onDialog(player, npcId, 10000 + stepIndex, 1, questId), "顺序动作步进");
+		assertEquals(expected, inventory.calls(), "步进分支按列序执行已落面发/扣动作");
+	}
+
+	/**
+	 * ⑬ 过场动作面（真端执行器 case 4）：`Cutscene|Cutscene2` 走 CUTSCENE 资源型、`Movie|Movie2`
+	 * 走电影型（+0x1b8 独立槽），只在步进/收口分支播放。
+	 * Cutscene actions play through the movie port; the token picks the resource type.
+	 */
+	@Test
+	void cutsceneActionsPlayThroughTheMoviePort() {
+		int[] fixture = firstRoutedStepWithExtra(Kind.ENTER_AREA, 4);
+		int questId = fixture[0];
+		int stepIndex = fixture[1];
+		Step step = table.find(questId).orElseThrow().steps().get(stepIndex);
+		String[] tokens = step.column(4).trim().split("[,\\s]+");
+		int movieId = Integer.parseInt(tokens[1]);
+		String expected = (tokens[0].equalsIgnoreCase("Movie") || tokens[0].equalsIgnoreCase("Movie2")
+			? "movie:" : "play:") + movieId;
+		Player player = NativeTalkFixture.player();
+		NativeTalkFixture.add(player, questId, QuestStatus.START, stepIndex);
+		String zone = enterAreaPort.zoneName(questId, stepIndex).orElseThrow();
+		movies.clear();
+		assertTrue(runtime.onEnterZone(player, zone), "进区直接步进");
+		assertTrue(movies.calls().contains(expected), "收口/步进分支播放已声明过场，实际：" + movies.calls());
+	}
+
+	/** 记录式假过场端口。 / A recording fake movie port. */
+	private static final class RecordingMovies implements NativeMoviePort {
+
+		private final List<String> calls = new ArrayList<>();
+
+		/** 清零调用记录。 / Clears the call log. */
+		void clear() {
+			calls.clear();
+		}
+
+		/** 调用记录（{@code play:id} / {@code movie:id}）。 / The call log. */
+		List<String> calls() {
+			return List.copyOf(calls);
+		}
+
+		@Override
+		public void play(Player player, int movieId) {
+			calls.add("play:" + movieId);
+		}
+
+		@Override
+		public void playMovie(Player player, int movieId) {
+			calls.add("movie:" + movieId);
+		}
 	}
 
 	// ------------------------------------------------------------------ 辅助
@@ -440,6 +688,22 @@ class DataDrivenNativeRuntimeGateTest {
 			}
 		}
 		throw new IllegalStateException("no routed pvp fixture");
+	}
+
+	/** 首个「已路由 + 指定 kind + 指定附加动作列非空」的步（{questId, stepIndex}）。 */
+	private static int[] firstRoutedStepWithExtra(Kind kind, int column) {
+		for (int questId : new TreeSet<>(runtime.routedQuestIds())) {
+			for (Step step : table.find(questId).orElseThrow().steps()) {
+				if (step.kind() != kind) {
+					continue;
+				}
+				String text = step.column(column);
+				if (text != null && !text.isBlank()) {
+					return new int[] {questId, step.index()};
+				}
+			}
+		}
+		throw new IllegalStateException("no routed " + kind + " step with extra column " + column);
 	}
 
 	private static int optionalInt(String column) {

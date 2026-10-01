@@ -421,6 +421,9 @@ public class PlayerController extends CreatureController<Player> {
 		TeleportService2.playerTransformation(getOwner());
 		TeleportService2.instanceTransformation(getOwner());
 		TeleportService2.archdaevaTransformation(getOwner());
+		// 真端表驱动车道：DD LevelUpLogIn 接取遍历（best-effort，路由集为空 ⇒ 恒 false）。
+		// DataDriven LevelUpLogIn acquire walk (best-effort; no-op until the switch batch).
+		GameEngineServices.questEngine().onLoggedIn(getOwner());
 		if (getOwner().getPosition().getWorldMapInstance().getParent().isExceptBuff()) {
 			getOwner().getEffectController().removeAllEffects();
 		}

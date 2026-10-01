@@ -169,9 +169,17 @@ public final class DataDrivenQuestTable {
 	 * @param acquireKind  真端接取类别原文（小写规范形）/ the acquire category
 	 * @param acquireParam 接取参数（`value0_acquire_`）/ the acquire parameter
 	 * @param rewardNpc    真端领奖 NPC 名（`reward_npc_name`）/ the reward npc name
+	 * @param conQuest     接取条件列原文（`con_quest`，语义未坐实只装载）/ raw acquire-condition column
+	 * @param conQuestList 接取条件列原文（`con_quest_list`，语义未坐实只装载）/ raw acquire-condition list column
 	 * @param steps        进度步序列（表序，index = 位置）/ the ordered progress steps
 	 */
-	public record Row(int questId, String acquireKind, String acquireParam, String rewardNpc, List<Step> steps) {
+	public record Row(int questId, String acquireKind, String acquireParam, String rewardNpc, String conQuest,
+			String conQuestList, List<Step> steps) {
+
+		/** 是否带未坐实的接取条件列。 / Whether the row carries un-adjudicated acquire conditions. */
+		public boolean hasAcquireConditions() {
+			return (conQuest != null && !conQuest.isBlank()) || (conQuestList != null && !conQuestList.isBlank());
+		}
 	}
 
 	/** 类别载荷列（真端 `FUN_180c4b980` 按 kind 解析的列号）。 / Category payload columns per kind. */
@@ -251,6 +259,11 @@ public final class DataDrivenQuestTable {
 		String acquire = text(element, "category_acquire_");
 		String acquireParam = text(element, "value0_acquire_");
 		String reward = text(element, "reward_npc_name");
+		// 真端 LoadBasicInfo 解析的接取条件列（0x640 条目 type 表未坐实 ⇒ 步 e1 只装载不解释）。
+		// The acquire-condition columns parsed by retail LoadBasicInfo (the 0x640 entry type table is
+		// not adjudicated yet ⇒ step e1 only loads them, never interprets them).
+		String conQuest = text(element, "con_quest");
+		String conQuestList = text(element, "con_quest_list");
 		List<Step> steps = new ArrayList<>();
 		NodeList infos = element.getElementsByTagName("data");
 		for (int index = 0; index < infos.getLength(); index++) {
@@ -291,7 +304,8 @@ public final class DataDrivenQuestTable {
 			steps.add(new Step(steps.size(), kind, Map.copyOf(columns)));
 		}
 		return new Row(questId, acquire == null ? "" : acquire.trim().toLowerCase(Locale.ROOT), acquireParam,
-			reward, List.copyOf(steps));
+			reward, conQuest == null ? "" : conQuest.trim(), conQuestList == null ? "" : conQuestList.trim(),
+			List.copyOf(steps));
 	}
 
 	/** 列面 fail-closed 校验：每步必须声明载荷列，且每个列号必须落在真端放行的载荷/附加动作列内。 */

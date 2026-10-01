@@ -18,17 +18,40 @@ public interface NativeMoviePort {
 	/** 播放过场（真端 PlayMovie）。 / Plays the cutscene (retail PlayMovie). */
 	void play(Player player, int movieId);
 
+	/**
+	 * 播放电影型资源（真端 `PlayMovie` 独立槽 +0x1b8，对应 DD 附加动作 `Movie|Movie2 N` 词形；
+	 * 与 {@link #play} 的差异只在客户端资源包型）。
+	 * Plays a movie-type resource (the retail PlayMovie slot +0x1b8, the DD extra-action
+	 * {@code Movie|Movie2 N} token); differs from {@link #play} only in the client resource
+	 * packet type.
+	 */
+	default void playMovie(Player player, int movieId) {
+		play(player, movieId);
+	}
+
 	/** 生产实现（客户端过场资源类型）。 / The live implementation (client cutscene resource type). */
 	static NativeMoviePort live() {
 		return Live.INSTANCE;
 	}
 
 	/** 生产实现持有者。 / Live implementation holder. */
-	final class Live {
-		private static final NativeMoviePort INSTANCE = (player, movieId) -> PacketSendUtility.sendPacket(player,
-			new SM_PLAY_MOVIE(QuestMovieType.CUTSCENE.wireValue(), movieId));
+	final class Live implements NativeMoviePort {
+
+		private static final NativeMoviePort INSTANCE = new Live();
 
 		private Live() {
+		}
+
+		@Override
+		public void play(Player player, int movieId) {
+			PacketSendUtility.sendPacket(player,
+				new SM_PLAY_MOVIE(QuestMovieType.CUTSCENE.wireValue(), movieId));
+		}
+
+		@Override
+		public void playMovie(Player player, int movieId) {
+			PacketSendUtility.sendPacket(player,
+				new SM_PLAY_MOVIE(QuestMovieType.CUTSCENE_MOVIE.wireValue(), movieId));
 		}
 	}
 }
