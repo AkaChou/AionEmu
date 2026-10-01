@@ -143,6 +143,20 @@ public final class NativeQuestTableLoader {
 			Integer cutsceneId, Integer cutsceneAction) {
 	}
 
+	/**
+	 * CombineTask 表行（真端 {@code quest_combinetasks}，574 行）。形状实测：{@code task_npc} 100%
+	 * （574/574 均为两名 = 天/魔各一）、{@code combineskill} / {@code combine_skillpoint} /
+	 * {@code recipe_name} / {@code product} / {@code give_component1} 各 100%、{@code give_component2} 152 行；
+	 * 真端 helper 允许 8 个分量槽位（{@code lVar4 = 8}），装载按位置保留（缺位 = {@code null}）。
+	 * <p>
+	 * One CombineTask row. Measured shape: all 574 rows carry two accept npcs, a combine skill, a skill
+	 * point, a recipe name, a single product slot and at least one component; 152 rows add a second
+	 * component. The retail helper allows eight component slots, so components keep their positions.
+	 */
+	public record CombineTaskRow(int questId, String devName, List<String> taskNpcNames, String combineSkill,
+			int skillPoint, String recipeName, String product, List<String> components) {
+	}
+
 	private static final String RESOURCE = "aion/data/static_data/quest/retail/Quest_SimpleHunt.xml";
 	private static final String SERIAL_RESOURCE = "aion/data/static_data/quest/retail/Quest_SimpleSerialHunt.xml";
 	private static final String EXPECTED_SERIAL_ROOT = "quest_simpleserialhunts";
@@ -155,6 +169,10 @@ public final class NativeQuestTableLoader {
 	private static final String EXPECTED_USE_ITEM_ROOT = "quest_simpleuseitems";
 	private static final String ITEM_PLAY_RESOURCE = "aion/data/static_data/quest/retail/Quest_SimpleItemPlay.xml";
 	private static final String EXPECTED_ITEM_PLAY_ROOT = "quest_simpleitemplays";
+	private static final String COMBINE_RESOURCE = "aion/data/static_data/quest/retail/Quest_CombineTask.xml";
+	private static final String EXPECTED_COMBINE_ROOT = "quest_combinetasks";
+	/** 真端 CombineTask helper 的分量槽位数（{@code lVar4 = 8}）。 / Retail component slot count. */
+	private static final int COMBINE_COMPONENT_SLOTS = 8;
 	private static final String EXPECTED_ROOT = "quest_simplehunts";
 	private static final String ROW_TAG = "id";
 	private static final Pattern COUNT_TAG = Pattern.compile("count([1-5])");
@@ -169,19 +187,22 @@ public final class NativeQuestTableLoader {
 	private final Map<Integer, SimpleCollectItemRow> collectRowsByQuestId;
 	private final Map<Integer, SimpleUseItemRow> useItemRowsByQuestId;
 	private final Map<Integer, SimpleItemPlayRow> itemPlayRowsByQuestId;
+	private final Map<Integer, CombineTaskRow> combineRowsByQuestId;
 
 	private NativeQuestTableLoader(Map<Integer, SimpleHuntRow> rowsByQuestId,
 			Map<Integer, SimpleSerialHuntRow> serialRowsByQuestId,
 			Map<Integer, SimpleTalkRow> talkRowsByQuestId,
 			Map<Integer, SimpleCollectItemRow> collectRowsByQuestId,
 			Map<Integer, SimpleUseItemRow> useItemRowsByQuestId,
-			Map<Integer, SimpleItemPlayRow> itemPlayRowsByQuestId) {
+			Map<Integer, SimpleItemPlayRow> itemPlayRowsByQuestId,
+			Map<Integer, CombineTaskRow> combineRowsByQuestId) {
 		this.rowsByQuestId = rowsByQuestId;
 		this.serialRowsByQuestId = serialRowsByQuestId;
 		this.talkRowsByQuestId = talkRowsByQuestId;
 		this.collectRowsByQuestId = collectRowsByQuestId;
 		this.useItemRowsByQuestId = useItemRowsByQuestId;
 		this.itemPlayRowsByQuestId = itemPlayRowsByQuestId;
+		this.combineRowsByQuestId = combineRowsByQuestId;
 	}
 
 	/** 已装载的表（未装载则先装载）。 / The loaded table; loads it first when absent. */
@@ -211,7 +232,8 @@ public final class NativeQuestTableLoader {
 				InputStream talkInput = loader.getResourceAsStream(TALK_RESOURCE);
 				InputStream collectInput = loader.getResourceAsStream(COLLECT_RESOURCE);
 				InputStream useItemInput = loader.getResourceAsStream(USE_ITEM_RESOURCE);
-				InputStream itemPlayInput = loader.getResourceAsStream(ITEM_PLAY_RESOURCE)) {
+				InputStream itemPlayInput = loader.getResourceAsStream(ITEM_PLAY_RESOURCE);
+				InputStream combineInput = loader.getResourceAsStream(COMBINE_RESOURCE)) {
 			if (input == null) {
 				throw new IllegalStateException("NATIVE_TABLE_PARSE_FAILED: missing " + RESOURCE);
 			}
@@ -230,7 +252,10 @@ public final class NativeQuestTableLoader {
 			if (itemPlayInput == null) {
 				throw new IllegalStateException("NATIVE_TABLE_PARSE_FAILED: missing " + ITEM_PLAY_RESOURCE);
 			}
-			return parse(input, serialInput, talkInput, collectInput, useItemInput, itemPlayInput);
+			if (combineInput == null) {
+				throw new IllegalStateException("NATIVE_TABLE_PARSE_FAILED: missing " + COMBINE_RESOURCE);
+			}
+			return parse(input, serialInput, talkInput, collectInput, useItemInput, itemPlayInput, combineInput);
 		} catch (IOException e) {
 			throw new IllegalStateException("NATIVE_TABLE_PARSE_FAILED: cannot read tables", e);
 		}
@@ -247,8 +272,10 @@ public final class NativeQuestTableLoader {
 				InputStream useItemInput = NativeQuestTableLoader.class.getClassLoader()
 						.getResourceAsStream(USE_ITEM_RESOURCE);
 				InputStream itemPlayInput = NativeQuestTableLoader.class.getClassLoader()
-						.getResourceAsStream(ITEM_PLAY_RESOURCE)) {
-			return parse(input, serialInput, talkInput, collectInput, useItemInput, itemPlayInput);
+						.getResourceAsStream(ITEM_PLAY_RESOURCE);
+				InputStream combineInput = NativeQuestTableLoader.class.getClassLoader()
+						.getResourceAsStream(COMBINE_RESOURCE)) {
+			return parse(input, serialInput, talkInput, collectInput, useItemInput, itemPlayInput, combineInput);
 		}
 	}
 
@@ -261,16 +288,24 @@ public final class NativeQuestTableLoader {
 				InputStream useItemInput = NativeQuestTableLoader.class.getClassLoader()
 						.getResourceAsStream(USE_ITEM_RESOURCE);
 				InputStream itemPlayInput = NativeQuestTableLoader.class.getClassLoader()
-						.getResourceAsStream(ITEM_PLAY_RESOURCE)) {
-			return parse(input, serialInput, talkInput, collectInput, useItemInput, itemPlayInput);
+						.getResourceAsStream(ITEM_PLAY_RESOURCE);
+				InputStream combineInput = NativeQuestTableLoader.class.getClassLoader()
+						.getResourceAsStream(COMBINE_RESOURCE)) {
+			return parse(input, serialInput, talkInput, collectInput, useItemInput, itemPlayInput, combineInput);
 		}
 	}
 
 	/** 解析三张表的字节流（包内可见供负例测试）。 / Parses the three table streams. */
 	static NativeQuestTableLoader parse(InputStream input, InputStream serialInput, InputStream talkInput)
 			throws IOException {
-		return parse(input, serialInput, talkInput, NativeQuestTableLoader.class.getClassLoader()
-				.getResourceAsStream(COLLECT_RESOURCE));
+		try (InputStream combineInput = NativeQuestTableLoader.class.getClassLoader()
+				.getResourceAsStream(COMBINE_RESOURCE)) {
+			return parse(input, serialInput, talkInput, NativeQuestTableLoader.class.getClassLoader()
+					.getResourceAsStream(COLLECT_RESOURCE), NativeQuestTableLoader.class.getClassLoader()
+							.getResourceAsStream(USE_ITEM_RESOURCE),
+					NativeQuestTableLoader.class.getClassLoader().getResourceAsStream(ITEM_PLAY_RESOURCE),
+					combineInput);
+		}
 	}
 
 	/** 解析四张表的字节流（包内可见供负例测试）；P5 两表从 classpath 补足。 /
@@ -281,15 +316,29 @@ public final class NativeQuestTableLoader {
 		try (InputStream useItemInput = NativeQuestTableLoader.class.getClassLoader()
 				.getResourceAsStream(USE_ITEM_RESOURCE);
 				InputStream itemPlayInput = NativeQuestTableLoader.class.getClassLoader()
-						.getResourceAsStream(ITEM_PLAY_RESOURCE)) {
-			return parse(input, serialInput, talkInput, collectInput, useItemInput, itemPlayInput);
+						.getResourceAsStream(ITEM_PLAY_RESOURCE);
+				InputStream combineInput = NativeQuestTableLoader.class.getClassLoader()
+						.getResourceAsStream(COMBINE_RESOURCE)) {
+			return parse(input, serialInput, talkInput, collectInput, useItemInput, itemPlayInput, combineInput);
 		}
 	}
 
-	/** 解析六张表的字节流（包内可见供负例测试）。 / Parses the six table streams. */
+	/** 解析六张表的字节流（包内可见供负例测试）；CombineTask 表从 classpath 补足。 /
+	 * Parses the six table streams (package-visible for negative tests); the CombineTask table comes from
+	 * the classpath. */
 	static NativeQuestTableLoader parse(InputStream input, InputStream serialInput, InputStream talkInput,
 			InputStream collectInput, InputStream useItemInput, InputStream itemPlayInput)
 			throws IOException {
+		try (InputStream combineInput = NativeQuestTableLoader.class.getClassLoader()
+				.getResourceAsStream(COMBINE_RESOURCE)) {
+			return parse(input, serialInput, talkInput, collectInput, useItemInput, itemPlayInput, combineInput);
+		}
+	}
+
+	/** 解析七张表的字节流（包内可见供负例测试）。 / Parses the seven table streams. */
+	static NativeQuestTableLoader parse(InputStream input, InputStream serialInput, InputStream talkInput,
+			InputStream collectInput, InputStream useItemInput, InputStream itemPlayInput,
+			InputStream combineInput) throws IOException {
 		Document document;
 		DocumentBuilder builder = newDocumentBuilder();
 		try {
@@ -329,10 +378,12 @@ public final class NativeQuestTableLoader {
 				useItemInput != null ? loadUseItem(useItemInput, builder) : Map.of();
 		Map<Integer, SimpleItemPlayRow> itemPlayRows =
 				itemPlayInput != null ? loadItemPlay(itemPlayInput, builder) : Map.of();
+		Map<Integer, CombineTaskRow> combineRows =
+				combineInput != null ? loadCombine(combineInput, builder) : Map.of();
 		return new NativeQuestTableLoader(Collections.unmodifiableMap(rows),
 				Collections.unmodifiableMap(serialRows), Collections.unmodifiableMap(talkRows),
 				Collections.unmodifiableMap(collectRows), Collections.unmodifiableMap(useItemRows),
-				Collections.unmodifiableMap(itemPlayRows));
+				Collections.unmodifiableMap(itemPlayRows), Collections.unmodifiableMap(combineRows));
 	}
 
 	private static Map<Integer, SimpleTalkRow> loadTalk(InputStream stream, DocumentBuilder builder) {
@@ -724,6 +775,93 @@ public final class NativeQuestTableLoader {
 				optionalInt(element, "cs1_haction", questId));
 	}
 
+	private static Map<Integer, CombineTaskRow> loadCombine(InputStream stream, DocumentBuilder builder) {
+		Document document;
+		try {
+			document = builder.parse(stream);
+		} catch (IOException | org.xml.sax.SAXException e) {
+			throw new IllegalStateException("NATIVE_TABLE_PARSE_FAILED: malformed " + COMBINE_RESOURCE, e);
+		}
+		Element root = document.getDocumentElement();
+		if (root == null || !EXPECTED_COMBINE_ROOT.equals(root.getTagName())) {
+			throw new IllegalStateException("NATIVE_TABLE_PARSE_FAILED: expected root <"
+					+ EXPECTED_COMBINE_ROOT + ">, got <" + (root == null ? "(none)" : root.getTagName()) + ">");
+		}
+		Map<Integer, CombineTaskRow> rows = new LinkedHashMap<>();
+		NodeList children = root.getChildNodes();
+		for (int i = 0; i < children.getLength(); i++) {
+			Node child = children.item(i);
+			if (!(child instanceof Element element) || !ROW_TAG.equals(element.getTagName())) {
+				continue;
+			}
+			int questId = rowId(element);
+			CombineTaskRow row = parseCombineRow(questId, element);
+			if (rows.putIfAbsent(questId, row) != null) {
+				throw new IllegalStateException(
+						"NATIVE_TABLE_PARSE_FAILED: duplicate combine-task quest id " + questId);
+			}
+		}
+		if (rows.isEmpty()) {
+			throw new IllegalStateException("NATIVE_TABLE_PARSE_FAILED: " + COMBINE_RESOURCE + " has no rows");
+		}
+		return rows;
+	}
+
+	/**
+	 * CombineTask 行解析：{@code task_npc}（逗号分隔，真端 574/574 两名）、{@code combineskill}、
+	 * {@code recipe_name}、{@code product} 为必填；{@code combine_skillpoint} 缺省 0（与元数据交叉校验同口径）；
+	 * 分量按 {@code give_component1..8} **位置保留**（缺位 = {@code null}）。
+	 * <p>
+	 * CombineTask row parsing: the accept npcs (comma separated), skill, recipe name and product slot are
+	 * mandatory; the skill point defaults to zero and components keep their eight retail positions.
+	 */
+	private static CombineTaskRow parseCombineRow(int questId, Element element) {
+		String taskNpc = optionalText(element, "task_npc");
+		if (taskNpc == null || taskNpc.isBlank()) {
+			throw new IllegalStateException(
+					"NATIVE_TABLE_PARSE_FAILED: combine-task quest " + questId + " has no task_npc");
+		}
+		List<String> npcs = new ArrayList<>(2);
+		for (String name : COMMA.split(taskNpc.strip())) {
+			String trimmed = name.strip();
+			if (!trimmed.isEmpty()) {
+				npcs.add(trimmed);
+			}
+		}
+		if (npcs.isEmpty()) {
+			throw new IllegalStateException(
+					"NATIVE_TABLE_PARSE_FAILED: combine-task quest " + questId + " has an empty task_npc list");
+		}
+		String skill = optionalText(element, "combineskill");
+		if (skill == null || skill.isBlank()) {
+			throw new IllegalStateException(
+					"NATIVE_TABLE_PARSE_FAILED: combine-task quest " + questId + " has no combineskill");
+		}
+		String recipe = optionalText(element, "recipe_name");
+		if (recipe == null || recipe.isBlank()) {
+			throw new IllegalStateException(
+					"NATIVE_TABLE_PARSE_FAILED: combine-task quest " + questId + " has no recipe_name");
+		}
+		String product = optionalText(element, "product");
+		if (product == null || product.isBlank()) {
+			throw new IllegalStateException(
+					"NATIVE_TABLE_PARSE_FAILED: combine-task quest " + questId + " has no product");
+		}
+		Integer skillPoint = optionalInt(element, "combine_skillpoint", questId);
+		if (skillPoint != null && skillPoint < 0) {
+			throw new IllegalStateException("NATIVE_TABLE_PARSE_FAILED: combine-task quest " + questId
+					+ " has a negative combine_skillpoint: " + skillPoint);
+		}
+		List<String> components = new ArrayList<>(COMBINE_COMPONENT_SLOTS);
+		for (int i = 1; i <= COMBINE_COMPONENT_SLOTS; i++) {
+			String component = optionalText(element, "give_component" + i);
+			components.add(component != null && !component.isBlank() ? normalizeValue(component) : null);
+		}
+		return new CombineTaskRow(questId, optionalText(element, "dev_name"),
+				Collections.unmodifiableList(npcs), skill.strip(), skillPoint == null ? 0 : skillPoint,
+				recipe.strip(), normalizeValue(product), Collections.unmodifiableList(components));
+	}
+
 	private static String blankToNull(String value) {
 		return value == null || value.isBlank() ? null : value.strip();
 	}
@@ -943,6 +1081,31 @@ public final class NativeQuestTableLoader {
 		if (row == null) {
 			throw new IllegalStateException("NATIVE_TABLE_ROW_MISSING: quest " + questId
 					+ " has no SimpleItemPlay row");
+		}
+		return row;
+	}
+
+	/** CombineTask 全量行（只读集合）。 / All CombineTask rows. */
+	public Collection<CombineTaskRow> combineRows() {
+		return combineRowsByQuestId.values();
+	}
+
+	/** CombineTask 行数。 / The number of CombineTask rows. */
+	public int combineSize() {
+		return combineRowsByQuestId.size();
+	}
+
+	/** 按任务查询 CombineTask 行，无行返回 Optional.empty()。 / Looks a CombineTask row up. */
+	public Optional<CombineTaskRow> findCombine(int questId) {
+		return Optional.ofNullable(combineRowsByQuestId.get(questId));
+	}
+
+	/** 按任务查询 CombineTask 行，缺行 fail-closed。 / Looks a CombineTask row up; missing rows fail closed. */
+	public CombineTaskRow requireCombine(int questId) {
+		CombineTaskRow row = combineRowsByQuestId.get(questId);
+		if (row == null) {
+			throw new IllegalStateException("NATIVE_TABLE_ROW_MISSING: quest " + questId
+					+ " has no CombineTask row");
 		}
 		return row;
 	}

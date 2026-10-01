@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.questEngine.tablelane;
 
+import com.aionemu.gameserver.questEngine.tablelane.NativeQuestTableLoader.CombineTaskRow;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -289,5 +291,36 @@ class NativeQuestTableLoaderTest {
 		assertEquals("ITEM_DOC_QUEST_19048A 1", play.acceptGiveItem());
 		assertEquals(List.of(), play.talkNpcNames());
 		assertEquals(Arrays.asList(null, null), play.stepGiveItems());
+	}
+
+	/** P6：CombineTask 574 行装载，接取 NPC 对/技能/技能点/配方/产物/分量按原文（分量位置保留）。 /
+	 * P6: the 574 CombineTask rows load verbatim (accept npc pair, skill, skill point, recipe, product,
+	 * components with their retail positions kept). */
+	@Test
+	void loadsFullCombineTaskTable() {
+		NativeQuestTableLoader loader = NativeQuestTableLoader.instance();
+		assertEquals(574, loader.combineSize());
+		// 5000 = 双 NPC（天/魔各一）+ 技能 1 点 + 单分量。 / 5000 = npc pair, one skill point, one component.
+		CombineTaskRow row = loader.requireCombine(5000);
+		assertEquals(List.of("Anteros", "Auminus"), row.taskNpcNames());
+		assertEquals("weaponsmith", row.combineSkill());
+		assertEquals(1, row.skillPoint());
+		assertEquals("r_ws_q5000", row.recipeName());
+		assertEquals("item_ws_q5000 3", row.product());
+		assertEquals("item_part_ws_q5000_a 4", row.components().getFirst());
+		assertEquals(Arrays.asList("item_part_ws_q5000_a 4", null, null, null, null, null, null, null),
+			row.components());
+		// 全表形状冻结：task_npc 574/574 两名、分量 1..8 位置保留、第 2 分量 152 行。
+		assertTrue(loader.combineRows().stream().allMatch(candidate -> candidate.taskNpcNames().size() == 2),
+			"真端 574/574 均为双 NPC");
+		assertTrue(loader.combineRows().stream()
+			.allMatch(candidate -> candidate.components().size() == 8), "分量槽位必须位置保留");
+		assertTrue(loader.combineRows().stream()
+			.allMatch(candidate -> candidate.components().getFirst() != null), "give_component1 100%");
+		assertEquals(152, loader.combineRows().stream()
+			.filter(candidate -> candidate.components().get(1) != null).count(), "give_component2 152 行");
+		assertTrue(loader.combineRows().stream()
+			.allMatch(candidate -> candidate.components().subList(2, 8).stream().allMatch(java.util.Objects::isNull)),
+			"真端数据只有 1/2 两个分量槽");
 	}
 }
