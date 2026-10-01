@@ -13,6 +13,7 @@ import com.aionemu.gameserver.model.gameobjects.PersistentState;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_DIALOG_WINDOW;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_QUEST_ACTION;
+import com.aionemu.gameserver.questEngine.definition.QuestDialogAction;
 import com.aionemu.gameserver.questEngine.definition.QuestDialogContract;
 import com.aionemu.gameserver.questEngine.definition.QuestDialogPage;
 import com.aionemu.gameserver.questEngine.definition.RetiredQuestIds;
@@ -478,7 +479,17 @@ public final class SimpleItemPlayHandler {
 		}
 		if (dialogId == 31 || dialogId == 26) {
 			PacketSendUtility.sendPacket(player,
-				new SM_DIALOG_WINDOW(objectId, dialogContract.acceptEntryPage(questId), questId));
+				new SM_DIALOG_WINDOW(objectId, dialogContract.retailEntryPage(questId), questId));
+			return true;
+		}
+		if (dialogId == QuestDialogAction.ASK_QUEST_ACCEPT.id()) {
+			// 真端页动作 1007（ASK_QUEST_ACCEPT → mgr+0x1a0）：打开接取窗页 4；客户端未声明即 fail-closed。
+			// Retail page action 1007 (mgr+0x1a0) opens ask window page 4; undeclared pages fail closed.
+			int askWindow = dialogContract.askWindowPage(questId);
+			if (askWindow < 0) {
+				return false;
+			}
+			PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(objectId, askWindow, questId));
 			return true;
 		}
 		if (dialogId == QuestDialogPage.SELECT1_1.id() || dialogId == QuestDialogPage.SELECT1_1_1.id()) {

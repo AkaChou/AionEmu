@@ -45,6 +45,9 @@ class QuestEventQuestBatchDefinitionTest {
 	private static final int[] FAYREFOLK_QUESTS = {80028, 80031, 80032};
 	/** 真端接取窗页（两族客户端任务页都声明 {@code ask_quest_accept}）。 / The retail ask window page. */
 	private static final int ASK_WINDOW_PAGE = QuestDialogPage.SHOW_ASK_QUEST_ACCEPT_WINDOW.id();
+	/** 客户端信页：极简信页 select_none(4762) / 对话入口页 select1(1011)。 / Client letter pages. */
+	private static final int SELECT_NONE_PAGE = QuestDialogPage.SELECT_NONE.id();
+	private static final int SELECT1_PAGE = QuestDialogPage.SELECT1.id();
 
 	private static final SimpleUseItemHandler USE = SimpleUseItemHandler.instance();
 	private static final SimpleTalkHandler TALK = NativeTalkFixture.handler();
@@ -94,6 +97,17 @@ class QuestEventQuestBatchDefinitionTest {
 
 			NativeTalkFixture.clearPackets(player);
 			assertTrue(TALK.onDialog(NativeTalkFixture.dialog(player, npcId, questId, 31)), "接取问询: " + questId);
+			// 真端入口页 = 信页（select1 1011）；页 4 只由页动作 1007 打开（独立复算偏好序）。
+			// Retail entry page = the letter page; page 4 is reachable only through action 1007.
+			int expectedEntry = QuestDialogContract.loadDefault().hasButtonPage(questId, SELECT_NONE_PAGE)
+				? SELECT_NONE_PAGE
+				: QuestDialogContract.loadDefault().hasButtonPage(questId, SELECT1_PAGE)
+					? SELECT1_PAGE : ASK_WINDOW_PAGE;
+			NativeTalkFixture.assertOnlyDialogPage(player, expectedEntry);
+
+			NativeTalkFixture.clearPackets(player);
+			assertTrue(TALK.onDialog(NativeTalkFixture.dialog(player, npcId, questId, 1007)),
+				"页动作 1007（ASK_QUEST_ACCEPT）必须打开接取窗: " + questId);
 			NativeTalkFixture.assertOnlyDialogPage(player, ASK_WINDOW_PAGE);
 
 			NativeTalkFixture.clearPackets(player);

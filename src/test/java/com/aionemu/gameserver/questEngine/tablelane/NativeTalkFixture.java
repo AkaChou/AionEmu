@@ -79,9 +79,17 @@ public final class NativeTalkFixture {
 		return handler().requireRow(questId);
 	}
 
-	/** 客户端任务页声明的接取入口页。 / The accept entry page declared by the client task HTML. */
+	/**
+	 * 真端表车道的接取入口页（信页优先；页 4 只由页动作 1007 打开）。
+	 * The native-lane accept entry page (letter page first; page 4 is 1007-only).
+	 */
 	public static int clientEntryPage(int questId) {
-		return QuestDialogContract.loadDefault().acceptEntryPage(questId);
+		return QuestDialogContract.loadDefault().retailEntryPage(questId);
+	}
+
+	/** 页动作 1007(ASK_QUEST_ACCEPT) 的目标页（客户端未声明即 -1）。 / The ask window page for action 1007. */
+	public static int askWindowPage(int questId) {
+		return QuestDialogContract.loadDefault().askWindowPage(questId);
 	}
 
 	/** 客户端任务页是否声明该页。 / Whether the client task HTML declares the page. */

@@ -14,6 +14,7 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_DIALOG_WINDOW;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_QUEST_ACTION;
 import com.aionemu.gameserver.questEngine.QuestEngine;
+import com.aionemu.gameserver.questEngine.definition.QuestDialogAction;
 import com.aionemu.gameserver.questEngine.definition.QuestDialogContract;
 import com.aionemu.gameserver.questEngine.definition.QuestDialogPage;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
@@ -754,10 +755,20 @@ public final class SimpleTalkHandler implements NativeSystemGrantLane {
 				return false;
 			}
 			if (dialogId == 31 || dialogId == 26) {
-				// 接取入口页 = 客户端任务页声明的可渲染页（真端表无页列）。
-				// The accept entry page is the page the client task HTML declares.
+				// 接取入口页 = 真端信页/阶段页（页 4 只能由 1007 打开，见 QuestDialogContract#retailEntryPage）。
+				// The accept entry page is the retail letter/stage page (page 4 is 1007-only).
 				PacketSendUtility.sendPacket(player,
-						new SM_DIALOG_WINDOW(targetObjectId, dialogContract.acceptEntryPage(questId), questId));
+						new SM_DIALOG_WINDOW(targetObjectId, dialogContract.retailEntryPage(questId), questId));
+				return true;
+			}
+			if (dialogId == QuestDialogAction.ASK_QUEST_ACCEPT.id()) {
+				// 真端页动作 1007（ASK_QUEST_ACCEPT → mgr+0x1a0）：打开接取窗页 4；客户端未声明即 fail-closed。
+				// Retail page action 1007 (mgr+0x1a0) opens ask window page 4; undeclared pages fail closed.
+				int askWindow = dialogContract.askWindowPage(questId);
+				if (askWindow < 0) {
+					return false;
+				}
+				PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, askWindow, questId));
 				return true;
 			}
 			// select1 续页翻页（真端 cab520 对 1012/1013 原样回发）；客户端未声明该页即 fail-closed。

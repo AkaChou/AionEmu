@@ -332,7 +332,14 @@ class QuestMultistepChainContractTest {
 			// 这 10 行真端均未声明 item_check：交付门不生效（quest.xml 的 work 通道只对 item_check 行生效）。
 			assertTrue(handler.workItems(questId).isEmpty(), questId + " 无 item_check 门");
 			assertFalse(handler.unresolvedGate(questId), questId + " 非 item_check 行无门");
-			assertEquals(4, NativeTalkFixture.clientEntryPage(questId), questId + " 接取入口页（客户端任务页）");
+			// 真端入口页表：信页优先（select_none 4762 → select1 1011），页 4 只由页动作 1007 打开。
+			// Retail entry page table: letter page first (4762 → 1011); page 4 is 1007-only.
+			int expectedEntry = NativeTalkFixture.clientDeclares(questId, QuestDialogPage.SELECT_NONE.id())
+				? QuestDialogPage.SELECT_NONE.id()
+				: NativeTalkFixture.clientDeclares(questId, QuestDialogPage.SELECT1.id())
+					? QuestDialogPage.SELECT1.id() : QuestDialogPage.SHOW_ASK_QUEST_ACCEPT_WINDOW.id();
+			assertEquals(expectedEntry, NativeTalkFixture.clientEntryPage(questId),
+				questId + " 接取入口页（真端信页偏好序）");
 		}
 	}
 

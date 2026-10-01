@@ -222,11 +222,11 @@ class SimpleHuntNativeFamilyGateTest {
 
 	/**
 	 * P1B 残余轴②：过场（真端交付节点 0x35 槽 PlayMovie）。3 行声明（3016=362 / 4007=391 / 4014=393，
-	 * 动作均 1007 = 真端拒绝流页）；动作未被本行服务时不得下发（本车道尚未实现 1007 拒绝页 ⇒
-	 * 该动作当前不可达，如实冻结为「装载 + 消费面就绪、触发面待拒绝流」）。
-	 * The cutscene slot (0x35): three rows declare it (movie 362/391/393 on action 1007 = the retail refuse
-	 * page). The movie is only sent when the row serves the action; this lane does not implement page 1007
-	 * yet, so the face stays dormant and is frozen as such.
+	 * 动作均 1007 = 真端 ask 流）；P5C 起 1007（ASK_QUEST_ACCEPT，真端 {@code mgr+0x1a0}）由本行服务，
+	 * 过场面随之可达，且只在命中表声明动作时下发。
+	 * The cutscene slot (0x35): three rows declare it (movie 362/391/393 on action 1007 = the retail ask
+	 * flow). Since P5C the row serves action 1007 (page 4), so the face is reachable and only fires on the
+	 * action the table declares.
 	 */
 	@Test
 	void cutsceneFaceIsLoadedAndFiresOnlyOnAServedAction() {
@@ -242,9 +242,10 @@ class SimpleHuntNativeFamilyGateTest {
 
 		Player player = createTestPlayer();
 		Npc npc = createMockNpc(local.acquireNpc(3016));
-		assertFalse(local.onDialog(new QuestEnv(npc, player, 3016, 1007)),
-			"本车道未实现 1007 拒绝页 ⇒ 该动作不被服务");
-		assertTrue(movies.played().isEmpty(), "未被服务的动作不得下发过场");
+		assertTrue(local.onDialog(new QuestEnv(npc, player, 3016, 1007)),
+			"1007（ASK_QUEST_ACCEPT）由本行服务 ⇒ 打开接取窗页 4");
+		assertEquals(List.of(362), movies.played(), "命中表声明动作 ⇒ 下发该行 movie");
+		movies.clear();
 		assertTrue(local.onDialog(new QuestEnv(npc, player, 3016, 26)),
 			"接取问询页必须由本行服务");
 		assertTrue(movies.played().isEmpty(), "非触发动作不得下发过场");
@@ -261,6 +262,10 @@ class SimpleHuntNativeFamilyGateTest {
 
 		private List<Integer> played() {
 			return List.copyOf(played);
+		}
+
+		private void clear() {
+			played.clear();
 		}
 	}
 

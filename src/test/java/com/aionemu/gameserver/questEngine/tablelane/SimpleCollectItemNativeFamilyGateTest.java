@@ -156,13 +156,20 @@ class SimpleCollectItemNativeFamilyGateTest {
 		NativeTalkFixture.clearPackets(player);
 		assertTrue(local.onDialog(NativeTalkFixture.dialog(player, acquireNpc, SINGLE_OBJECT_QUEST, 26)),
 			"点接取 NPC 必须下发客户端声明的接取入口页");
-		NativeTalkFixture.assertOnlyDialogPage(player, 4);
+		NativeTalkFixture.assertOnlyDialogPage(player, NativeTalkFixture.clientEntryPage(SINGLE_OBJECT_QUEST));
+		NativeTalkFixture.clearPackets(player);
+		assertTrue(local.onDialog(NativeTalkFixture.dialog(player, acquireNpc, SINGLE_OBJECT_QUEST, 1007)),
+			"页动作 1007（ASK_QUEST_ACCEPT）必须打开接取窗页 4");
+		NativeTalkFixture.assertOnlyDialogPage(player, NativeTalkFixture.askWindowPage(SINGLE_OBJECT_QUEST));
+		NativeTalkFixture.clearPackets(player);
 		assertTrue(local.onDialog(NativeTalkFixture.dialog(player, acquireNpc, SINGLE_OBJECT_QUEST, 1002)),
 			"确认接取必须由 native 接取口服务");
 		assertEquals(local.acceptGiveItems(SINGLE_OBJECT_QUEST).size(), inventory.calls().size(),
 			"接取侧发放面 = quest_work_item 列（1137 = 1 件）");
-		assertEquals(4, NativeTalkFixture.clientEntryPage(SINGLE_OBJECT_QUEST),
-			"该行的客户端入口页 = 4（问询页）");
+		assertEquals(1011, NativeTalkFixture.clientEntryPage(SINGLE_OBJECT_QUEST),
+			"该行的客户端入口页 = select1(1011) 信页（真端入口页表；页 4 只由 1007 打开）");
+		assertEquals(4, NativeTalkFixture.askWindowPage(SINGLE_OBJECT_QUEST),
+			"该行客户端声明 ask_quest_accept(4) ⇒ 1007 可打开接取窗");
 		QuestState state = player.getQuestStateList().getQuestState(SINGLE_OBJECT_QUEST);
 		assertNotNull(state, "接取后必须建档");
 		assertEquals(QuestStatus.START, state.getStatus());
