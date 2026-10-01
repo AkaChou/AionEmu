@@ -334,8 +334,14 @@ public final class RetailNpcNameIndex {
 						throw new IOException("malformed or duplicate npc id in alias row: " + row);
 					}
 				}
-				if (byName.putIfAbsent(alias, Collections.unmodifiableSet(ids)) != null) {
-					throw new IOException("duplicate npc name alias: " + alias);
+				// 等集重复 = 同一事实已由既有条目承载（模板名 / NPC_ 剥前缀别名 / 击杀目标别名），
+				// 台账作为过渡载体与之收敛：跳过，保留既有条目；id 集不一致才是真数据冲突。
+				// A duplicate row carrying the identical id set is the same fact already held by an
+				// existing entry (template name / NPC_-stripped alias / monster-target alias): skip it
+				// and keep the existing entry; a differing id set is a real data conflict.
+				Set<Integer> existing = byName.putIfAbsent(alias, Collections.unmodifiableSet(ids));
+				if (existing != null && !existing.equals(ids)) {
+					throw new IOException("conflicting npc name alias: " + alias);
 				}
 			}
 		}

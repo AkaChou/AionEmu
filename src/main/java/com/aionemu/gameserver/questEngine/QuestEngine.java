@@ -298,9 +298,11 @@ public class QuestEngine implements GameEngine {
 					return true;
 				}
 			}
-			// 真端表驱动车道：DataDriven Talk / TalkFOBJ 步（本批路由集为空 ⇒ 恒 false）。
-			// DataDriven Talk / TalkFOBJ steps: no-op until the atomic switch batch.
-			if (npcId != 0 && DataDrivenNativeRuntime.instance().onDialog(player, npcId)) {
+			// 真端表驱动车道：DataDriven Talk / CollectItem 步的共享对话平面（开页 + 页动作/1009/1008，
+			// `FUN_180c474b0`）与 TalkFOBJ 组计数（本批路由集为空 ⇒ 恒 false）。
+			// DataDriven dialog plane and TalkFOBJ groups: no-op until the atomic switch batch.
+			if (npcId != 0 && DataDrivenNativeRuntime.instance().onDialog(player, npcId, env.getDialogId(),
+				npc.getObjectId(), requestedOwner)) {
 				return true;
 			}
 			if (requestedOwner != 0 && typed.owns(requestedOwner)) {
@@ -1010,6 +1012,10 @@ public class QuestEngine implements GameEngine {
 		}
 		QuestRuntimeDispatcher typed = productionDispatcher;
 		Player player = env == null ? null : env.getPlayer();
+		// 真端表驱动车道：DataDriven ItemPlay 步由物品获得事件推进（真端事件 5，`FUN_180c46e90`；
+		// 本批路由集为空 ⇒ 恒 false）。
+		// Table lane: DataDriven ItemPlay steps advance on the item-acquire event (no-op until step 2f).
+		DataDrivenNativeRuntime.instance().onItemAcquired(player, itemId);
 		List<Integer> questIds = questItems.get(itemId);
 		if (player != null && itemId > 0 && questIds != null && questIds.stream().anyMatch(typed::owns)) {
 			// 物品进入玩家背包后先进入正式 typed owner；同一物品可被多个

@@ -2979,12 +2979,12 @@ scope: 真端 DataDriven 表的原生**进度运行时**（兴趣面建立 + 事
 first_seen: 2026-10-02
 last_verified: 2026-10-02
 symptom: ① 把 DD 表装载进来却没有事件入口（「装载未消费」）——击杀/对话/进区/进世界/用物/PvP 都不推进，任务静默卡步；② 按**步**而不是按**行**判定可路由 ⇒ 半行原生半行旧 IR，出现死边或双 owner；③ 用兴趣面索引事件时漏建某一类（如 TalkFOBJ 只注册对话兴趣却按 FOBJ 事件到达）⇒ 该步永不命中；④ 在未坐实事件源/闸门来源时「先上线再说」⇒ 与真端语义漂移
-root_cause: DD 行是「每步一条 handler 记录」（真端 `def+0xF0` 向量），事件派发面按类别各不相同：Hunt 走击杀（`FUN_180c46020`，4 组 × 6 位、组内命中且 `counter < target` 才自增、全组达标才步进）、PvP 走击杀包（`FUN_180c46980`，军衔区间 + `killerLevel <= victimLevel + gap`）、Talk 走对话（`FUN_180c466a0`，直接写目标步）、EnterArea 走进区（`FUN_180c47bf0`，同名区名哈希比对后直接步进）、EnterWorld 走进世界（`FUN_180c467b0`）、TalkFOBJ 走对象交互（`FUN_180c478e0`，组计数二值 0→1 且尾整数是动作类型而非计数）；载荷语法也逐类不同（hunt：`;` 分组 + 尾整数计数 + 空格分隔名单回退；talkfobj：尾整数 = 动作类型）。任何一类缺失都会让该行成为死边
+root_cause: DD 行是「每步一条 handler 记录」（真端 `def+0xF0` 向量），事件派发面按类别各不相同：Hunt 走击杀（`FUN_180c46020`，4 组 × 6 位、组内命中且 `counter < target` 才自增、全组达标才步进）、PvP 走击杀包（`FUN_180c46980`，军衔区间 + `killerLevel <= victimLevel + gap`）、EnterArea 走进区（`FUN_180c47bf0`，同名区名哈希比对后直接步进）、EnterWorld 走进世界（`FUN_180c467b0`）、TalkFOBJ 走对象交互（`FUN_180c478e0`，组计数二值 0→1 且尾整数是动作类型而非计数）；**步 d2 纠正（QE-132）**：kind 1 CollectItem 与 kind 4 Talk = 共享对话平面 `FUN_180c474b0`（原判 `FUN_180c466a0` 直接写目标步是错的——它是家族交付 handler，DD 行 +0x10 恒 -2 ⇒ 死代码）、kind 3 ItemPlay = 物品获得事件（`FUN_180c46e90`）；载荷语法也逐类不同（hunt：`;` 分组 + 尾整数计数 + 空格分隔名单回退；talkfobj：尾整数 = 动作类型）。任何一类缺失都会让该行成为死边
 fix_or_guardrail: 1. 运行时按**路由集**逐行建兴趣面（击杀/对话/FOBJ/进区/进世界/PvP 行集），每步必须落进对应兴趣面，否则**整行冻结**（整行原子可路由，禁止半行切换）；2. 事件入口只服务路由集内的行，且生产路由集在原子切换批之前恒为空（`instance()` 空集 = 零行为变更，门内断言；`QuestEngine` 五入口接线后恒 false）；3. 名字解析失败不许换算/近似（不去后缀、不去前缀、不猜别名）——副本全图击杀名（`IDAbRe_Low_*`/`IDSeal_*`）与 `quest_ai_name` 组名必须走各自真端同轴规则后单独登记；4. 真端 handler 的守卫必须逐条复刻（步号 `vars & 0x3F`、自增 `counter < target`、组槽上限 4、末步 = `SetQuestSuccess` → 本服 REWARD）；5. 距离/等级闸门的**取值来源**未坐实时只登记不实现（不得默认放行）
 evidence: src/main/java/com/aionemu/gameserver/questEngine/tablelane/DataDrivenNativeRuntime.java; src/test/java/com/aionemu/gameserver/questEngine/tablelane/DataDrivenNativeRuntimeGateTest.java; .agents/summary/quest-engine-native/p7/P7-STEP2D-REPORT.zh-CN.md; .agents/summary/quest-engine-native/p7-prereqs/dd-dispatcher-and-handlers.md
 validation: 2026-10-02：真端原码逐函数复读（`ScriptDLL64.c:2069982` Hunt / `:2070182` PvP / Talk / `:2071274` TalkFOBJ / `:2071405` EnterArea）；本服切换集 1467 行复算 = 可路由 **1017** / 冻结 **450**（`KIND_NOT_WIRED` 374 / `NAME_UNRESOLVED` 68 / `ZONE_ABSENT` 8），已路由行逐类步数 hunt 697 / pvp 205 / talk 212 / enterarea 117 / enterworld 32 / talkfobj 15，且切换集逐类步数与 P7 步 1 契约（827/348/207/403/153/42/34/19）逐值一致；门 `DataDrivenNativeRuntimeGateTest` **9/9**（生产零路由、两桶互斥闭合、兴趣面逐元素复算、六类事件语义、冻结面）、`DataDrivenProgressTest` **9/9**；族门 + tablelane **180/180**；聚焦套件 **1703 / 161F+137E / 105 红类**（ADDED 0 / REMOVED 0）
 superseded_by: none
-boundaries: ① 本批只接线六类（Hunt/PvP/Talk/EnterArea/EnterWorld/TalkFOBJ）；CollectItem（宿主采集/交付事件源）与 ItemPlay（动作码 >=10000 → SetQuestProgress(code-9999)）留步 d2，含这两类的行整行冻结（374 行）；② 附加动作执行面（列 1..10）与接取轴 6 类留步 e；③ 距离闸门取值来源（真端 `def+0x1c`）与 48 个未解析名登记 §10.3-#24；④ 生产路由集为空是本批口径：字面切换随步 f（1467 行 + 同批删旧）；⑤ PvP 闸门口径依 `FUN_180c46980` 三比较（min/max rank 的 0 = 无闸门、level gap 始终参与）
+boundaries: ① 本批只接线六类（Hunt/PvP/Talk/EnterArea/EnterWorld/TalkFOBJ）；**步 d2 已接线（QE-132 纠正归属）**：CollectItem = 共享对话平面（非宿主采集/交付事件源）、ItemPlay = 物品获得事件（非动作码步进）；② 附加动作执行面（列 1..10）与接取轴 6 类留步 e；③ 距离闸门取值来源（真端行字段 +112，DD 表无来源列 ⇒ 恒 0）登记 §10.3-#24②；④ 生产路由集为空是本批口径：字面切换随步 f（1467 行 + 同批删旧）；⑤ PvP 闸门口径依 `FUN_180c46980` 三比较（min/max rank 的 0 = 无闸门、level gap 始终参与）
 see_also: [QE-128], [QE-130], [QE-127], [QE-126], [QE-129]
 first_check: 动 DD 原生运行时前先答：① 该步是否落进对应兴趣面（kill/talk/fobj/zone/world/pvp）？缺一类会不会让整行成为死边？② 路由判定是按行还是按步（必须按行）？③ 自增是否带 `counter < target` 守卫？④ 名字解析失败时有没有偷偷做换算/近似？⑤ 生产路由集是否仍为空（原子切换批之前不得上线）？⑥ 事件入口是否只服务路由集内的行（单一 owner）？
 keywords: DataDriven、原生运行时、进度运行时、兴趣面、路由集、整行原子、零行为变更、Hunt 组计数、PvP 闸门、Talk 直接步进、EnterArea 同名区、EnterWorld、TalkFOBJ 二值、counter小于target、名字未解析、副本全图击杀、quest_ai_name、DataDrivenNativeRuntime、DATA_DRIVEN_NATIVE_RUNTIME、QE-131
@@ -2993,3 +2993,49 @@ keywords: DataDriven、原生运行时、进度运行时、兴趣面、路由集
 - **判定规则**：DD 行按**行**判可路由（任一步不可服务即整行冻结）；每步必须落进对应兴趣面；生产路由集在原子切换批前恒为空。
 - **安全网**：自增带 `counter < target` 守卫（满组槽超杀零写）；名字解析失败不换算、不近似，冻结并登记；未坐实的闸门取值来源只登记不实现。
 - **反漂移**：别把「装载成功」当「运行时会派发」；别按步切换（半行 = 死边）；别在未切换时把生产路由集打开（单一 owner）。
+
+## [QE-132] 一百三十二、DD handler 归属以装载器注册面为准：三类对话驱动步 = 共享对话平面 + 物品获得事件 (DATA_DRIVEN_DIALOG_PLANE)
+
+<!-- pattern-metadata
+status: CONFIRMED
+scope: 真端 DataDriven kind 1（CollectItem）/ kind 4（Talk）/ kind 3（ItemPlay）的事件源与推进面归属；不含接取轴与附加动作执行面
+first_seen: 2026-10-02
+last_verified: 2026-10-02
+symptom: ① 按邻近函数归属 handler——`FUN_180c466a0` 被当成 DD Talk 推进面（「对话即步进」），实际它是**家族交付 handler**（DD 行字段 +0x10 恒 -2、`LoadBasicInfo` 不写 ⇒ 对 DD 行是死代码）；② 把 CollectItem 当「宿主采集/交付事件源」找事件面找不到；③ 把 ItemPlay 当对话动作码步进 ⇒ 事件源错成对话；④ 动作码公式差一——写成 `code == 10000 + 当前步 + 1` 让全表顺序动作静默
+root_cause: DD handler 的权威归属在 `DataDrivenQuestLoader::LoadProgressInfo` 的**注册 switch**（事件类型 → handler 记录）：1=CollectItem、2=Hunt、3=ItemPlay、4=Talk、5=Pvp、6=EnterArea、7=EnterWorld、9=TalkFOBJ；kind 1 与 4 的主对象注册**同一共享对话平面** `FUN_180c474b0`（开页 select(K+1) 从 15 值页表、顺序页动作 10000..10013、1009 报告推进 + 完成页、1008 仅完成页、10255 推进 + 完成页、其余 ≥1000 回显页）；kind 3 = **物品获得事件**（注册事件 5，`FUN_180c46e90`：状态 3 + 当前步 kind==3 + 物品 id 匹配 → 组 1 `+1 < target` 自增、满组步进/收口；装载器缺省计数 1）；顺序页动作守卫 = `code-9999 == 当前步+1` ⇔ **动作码 = 10000 + 当前步**（写当前步+1）
+fix_or_guardrail: 1. 归属 handler 先读装载器注册面（事件类型 switch），再读 handler 本体；「死代码判据」= 行字段恒值 + 装载器不写；2. 页动作公式先写守卫恒等式再写代码（`code-9999 == cur+1`），测试用例的动作码从恒等式推导不从直觉推导；3. CollectItem/Talk 载荷 = NPC 名（quest_ai_name 组名展开全组成员），进共享对话平面；ItemPlay 载荷 = 物品名（+可选 `, 计数`），进物品获得事件；4. `QuestEngine.onDialog`/`onItemGet` 的分流 hook 放在 typed owner 之前（路由集为空时恒 false）
+evidence: ScriptDLL64.c `LoadProgressInfo`（注册 switch）/ `FUN_180c474b0`（共享对话平面）/ `FUN_180c46e90`（ItemPlay 事件）/ `FUN_180c492d0`（LoadBasicInfo，+0x10 不写）；src/main/java/com/aionemu/gameserver/questEngine/tablelane/DataDrivenNativeRuntime.java; src/main/java/com/aionemu/gameserver/questEngine/QuestEngine.java; .agents/summary/quest-engine-native/p7/P7-STEP2D2-REPORT.zh-CN.md
+validation: 2026-10-02：门 `DataDrivenNativeRuntimeGateTest` **12/12**（对话平面开页/乱序静默/顺序步进、1009 奖励窗、ItemPlay 计数、分桶 1458/9）、`DataDrivenProgressTest` 9/9；planRow 离线镜像（p7/tools/dd-planrow-mirror.py）与 Java 实测逐值一致（hunt 821 / collectitem 345 / pvp 207 / talk 398 / enterarea 137 / itemplay 42 / enterworld 34 / talkfobj 18）；真端 quest 1870/1817 客户端契约页对拍
+superseded_by: none
+boundaries: ① 距离闸门（共享 Hunt/PvP 前奏读行字段 +112）：DD 表**无来源列**（LoadBasicInfo 不解析 ⇒ 恒 0），但 mgr+0x98/+0xa0/+0xa8 语义与 param_6 单位未坐实 ⇒ 仍不实现（§10.3-#24② 收窄，步 f 前闭合）；② 阶段页表 15 值（1011..7864），步 ≥15 无页、空步集 → 10002；③ 附加动作执行面与接取轴留步 e
+see_also: [QE-131], [QE-133], [QE-130], [QE-128]
+first_check: 动 DD 对话/物品步之前先答：① 该 kind 在装载器注册面里挂的是哪个事件类型？② 推进面是共享对话平面还是独立 handler（别拿邻近函数充数）？③ 页动作码恒等式是什么（code-9999 == cur+1）？④ ItemPlay 的事件源是物品获得不是对话？⑤ 距离闸门的表来源列存在吗（DD 无 ⇒ 恒 0）？
+keywords: DataDriven、kind1、kind4、kind3、CollectItem、Talk、ItemPlay、共享对话平面、FUN_180c474b0、FUN_180c46e90、物品获得事件、页动作、1009、1008、10255、顺序守卫、动作码差一、距离闸门、LoadProgressInfo、注册面、DATA_DRIVEN_DIALOG_PLANE、QE-132
+-->
+
+- **判定规则**：DD handler 归属以 `LoadProgressInfo` 注册面为准；kind 1/4 = 共享对话平面 `FUN_180c474b0`，kind 3 = 物品获得事件（注册事件 5）；`FUN_180c466a0` 对 DD 行是死代码（+0x10 恒 -2）。
+- **安全网**：页动作码 = 10000 + 当前步（守卫 `code-9999 == cur+1`）；乱序动作零写零回发；DD 表无距离闸门来源列 ⇒ 恒 0、不实现。
+- **反漂移**：别按邻近函数归属 handler；别把 ItemPlay 当对话步进；测试动作码必须从守卫恒等式推导。
+
+## [QE-133] 一百三十三、复算镜像必须覆盖全部既有解析面；别名台账重复行按等集幂等、异集 fail-closed (MIRROR_COMPLETENESS_ALIAS_IDEMPOTENT)
+
+<!-- pattern-metadata
+status: CONFIRMED
+scope: 离线复算/探针工具对 Java 解析面的镜像纪律；版本化别名台账（retail-npc-name-aliases.tsv）与 RetailNpcNameIndex 的收敛语义
+first_seen: 2026-10-02
+last_verified: 2026-10-02
+symptom: ① 探针把「击杀目标等价集」硬编码键（`ab1_1131_boss_dr_q1737` 等 8 个 boss 名）判为未解析 → 错按 quest_ai_name 轴写进台账 → 旧车道 `addVersionedNpcIdAliases` 的 `putIfAbsent != null` 重复闸抛异常 → `RetailQuestDriver.load()` 恒失败；② 两个调用方（`metadataOf`/`collectSlotRequirements`）`catch IOException → 记未解返回`，而测试每构造一个 handler 都重试 ensureLoaded ⇒ **全量 load 无限重试**（每次数十秒，族门跑 20 分钟不出一个类）；③ 复算脚本物品索引用错主键属性（`item_id` vs `id`）得出 46 冻结 vs Java 9 冻结的假分歧；④ **第二形态（组通道）**：10 个已被旧车道组表（`quest/retail-quest-ai-name-groups.tsv`）声明的组键被写进台账 ⇒ 台账行走旧车道 byName（spawn 通道）⇒ `RetailQuestAiNameGroupGateTest` 通道互斥闸红 + `QuestEventShardRetailAlignmentTest` 50073 报告 NPC 解析被夺走；⑤ 台账新别名让**旧车道** DD 编译器多解析了名字 ⇒ 4 行 IR 指纹漂移（13841/23841 +14 边、15473/25473 +80 边）——这是**预期方向**的重冻，不是回归
+root_cause: 离线镜像只复刻了「模板名 + 台账」两轴，漏了 `addMonsterTargetAliases`（19 前缀聚合 + 18 硬编码键）、`addStrippedPrefixAliases`（NPC_ 剥前缀）与**对话名组表**三个既有解析面 ⇒ 名字「真端可解」的判据不完整；同名事实存在**多载体**（硬编码 / 模板名 / 组表 / 台账行）时，装载器把「重复」一律当错误，而其中等集重复其实是同一事实的两个载体收敛；击杀目标名（boss/要塞神长/AllKill）的正确展开轴是 P0a 家族裁定的**击杀目标等价集**，quest_ai_name 组员是「对话/AI 名」轴——两轴 id 集不同（如 ab1_1221_boss_dr_q1739：硬编码 {266306,266311} vs quest_ai_name 组 {267811..267815}）；组键的权威载体是组表（成员 = name_desc 通道），台账行会把组键塞进 spawn 通道破坏互斥
+fix_or_guardrail: 1. 写探针/镜像前先枚举目标装载器的**全部** byName 来源（模板名 / 剥前缀 / 硬编码块 / 组表 / 台账），逐一镜像，缺一轴裁定就会错轴；2. 版本化台账装载对重复行改**等集幂等**：`putIfAbsent` 命中且 id 集相等 → 跳过保留既有条目（同名事实多载体收敛）；id 集不同 → 仍抛（真数据冲突不吞）；3. **组键不进台账**：组键的权威载体 = 组表，原生车道（NativeNpcNameResolver）直读同一张组表、按成员 name_desc/name 展开作为解析兜底（byDesc → byName → 台账 → 组通道）；4. 装载失败必须**快速失败**于首个调用方或缓存失败标记（`loadFailed`），禁止「catch 后当未解 + 调用方重试」组合——那会把一次数据错误放大成全量 load 重试风暴；5. 镜像复算与 Java 实测分歧时，先修镜像的装载器（属性名/解析序逐一对齐），再考虑改 Java；6. 台账行引发旧车道 IR 指纹漂移时，先归因（展开集是否 = 真端事实），方向正确才重冻（`-Dretail.dataDriven.fpOut` 再生 + 逐行 diff 审查）
+evidence: src/main/java/com/aionemu/gameserver/questEngine/retail/RetailNpcNameIndex.java（addVersionedNpcIdAliases 等集幂等守卫）; src/main/java/com/aionemu/gameserver/questEngine/tablelane/NativeNpcNameResolver.java（组通道兜底）; src/main/resources/aion/data/static_data/quest/retail/retail-npc-name-aliases.tsv（+163 组行 + 8 击杀目标行；组键 10 行移除）; src/test/resources/quest/retail-data-driven-ir-fingerprints.tsv（4 行重冻）; .agents/summary/quest-engine-native/p7/tools/dd-unresolved-name-probe.py（load_monster_target_keys + load_declared_group_keys 镜像）; .agents/summary/quest-engine-native/p7/tools/dd-planrow-mirror.py; jstack/JFR/lsof 取证链（模板正则 → addStrippedPrefixAliases → 重试风暴）
+validation: 2026-10-02：修后 `SimpleCollectItemNativeFamilyGateTest` 单类 26.5s 14/14（修前同卡死 >20 分钟）；证据 TSV 重生成 = 153 QUEST_AI_NAME_GROUP_CANDIDATE + 10 GROUP_TABLE_DECLARED_CANDIDATE + 8 KILL_TARGET_HARDCODE_CANDIDATE（10 组键与组表成员展开**同集**验证）；终态探针 0 未解析；分桶镜像与 Java 逐值一致（1458/9）；`RetailDataDrivenGateTest` 重冻后 9/9
+superseded_by: none
+boundaries: ① 台账仍是过渡载体（P8 删），等集幂等不是永久豁免——P8 静态数据直读后硬编码块与台账一同退场；② 前缀聚合键（19 个裸前缀）仍由 Java 动态计算，不进台账；③ 击杀目标轴名字若 DD 步是 TALK（对话语义），必须重新裁定（本批 8 个全是 hunt 步）
+see_also: [QE-132], [QE-131], [QE-127]
+first_check: 动别名台账/复算工具前先答：① 目标装载器 byName 有几个来源轴，镜像了几个？② 新台账行键是否与模板名/剥前缀/硬编码键撞车（撞了是等集还是异集）？③ load 失败的传播路径是快速失败还是 catch-重试？④ 击杀目标名用的是哪个轴（等价集 vs quest_ai_name）？
+keywords: 复算镜像、探针、台账、别名、等集幂等、putIfAbsent、击杀目标等价集、quest_ai_name、addMonsterTargetAliases、addStrippedPrefixAliases、load重试风暴、ensureLoaded、快速失败、MIRROR_COMPLETENESS_ALIAS_IDEMPOTENT、QE-133
+-->
+
+- **判定规则**：镜像工具必须覆盖装载器全部 byName 来源轴；台账重复行等集幂等跳过、异集抛错。
+- **安全网**：装载失败快速失败或缓存失败标记；禁止 catch-当未解 + 调用方重试的组合。
+- **反漂移**：击杀目标名（boss/AllKill/要塞神长）用击杀目标等价集轴，不用 quest_ai_name 轴；镜像与实测分歧先修镜像装载器。

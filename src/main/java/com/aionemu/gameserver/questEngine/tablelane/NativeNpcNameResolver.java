@@ -56,6 +56,18 @@ public final class NativeNpcNameResolver {
 	private static final String RESOURCE_DIR = "aion/data/static_data/npcs";
 	private static final String ALIASES_RESOURCE =
 			"aion/data/static_data/quest/retail/retail-npc-name-aliases.tsv";
+	/**
+	 * 真端对话名组表（quest_ai_name → 成员 name_desc）：组键的**权威载体**在旧车道组表，
+	 * 原生车道直读同一张表（组键不进别名台账——台账行会撞旧车道 spawn 通道的互斥闸，
+	 * QE-133 同类事故的第二形态）。
+	 * The retail dialog-name group table: the authoritative carrier for group keys. The native
+	 * lane reads the same table (group keys must NOT go into the alias ledger — a ledger row
+	 * would enter the old lane's spawn channel and break its exclusivity gate, the second
+	 * QE-133-style incident shape).
+	 */
+	private static final String[] GROUPS_RESOURCES = {
+			"quest/retail-quest-ai-name-groups.tsv",
+			"aion/data/static_data/quest/retail/retail-quest-ai-name-groups.tsv"};
 	/** 与生产 XmlDataLoader 相同的分片命名约定。 / Same shard naming convention as XmlDataLoader. */
 	private static final Pattern SHARD_PATTERN = Pattern.compile("npc_template_(\\d+)_(\\d+)\\.xml");
 	private static final Pattern NPC_TAG = Pattern.compile("<npc_template\\b([^>]*)>");
@@ -71,16 +83,20 @@ public final class NativeNpcNameResolver {
 	private final Map<String, List<Integer>> idsByAll;
 	/** 目标名/别名 (quest_ai_name 等) 索引。 / Target/alias index. */
 	private final Map<String, List<Integer>> monsterAliases;
+	/** 对话名组展开（组键 → 成员 id 并集，表内声明序）。 / Dialog-name group expansions. */
+	private final Map<String, List<Integer>> questAiNameGroups;
 	/** 解析过的模板定义数。 / Number of template definitions parsed. */
 	private final int templateCount;
 
 	private NativeNpcNameResolver(Map<String, List<Integer>> idsByNameDesc,
 			Map<String, List<Integer>> idsByName, Map<String, List<Integer>> idsByAll,
-			Map<String, List<Integer>> monsterAliases, int templateCount) {
+			Map<String, List<Integer>> monsterAliases, Map<String, List<Integer>> questAiNameGroups,
+			int templateCount) {
 		this.idsByNameDesc = idsByNameDesc;
 		this.idsByName = idsByName;
 		this.idsByAll = idsByAll;
 		this.monsterAliases = monsterAliases;
+		this.questAiNameGroups = questAiNameGroups;
 		this.templateCount = templateCount;
 	}
 
@@ -198,9 +214,58 @@ public final class NativeNpcNameResolver {
 				throw new IllegalStateException("NATIVE_TABLE_PARSE_FAILED: failed to read npc aliases", e);
 			}
 		}
+		// 对话名组表：组键 = 权威载体在旧车道组表的名字，展开 = 成员 name_desc/name 的 id 并集
+		// （表内声明序；P0c-53：插入序必须保留，Set.copyOf 会改哈希序）。
+		// Dialog-name groups: expansion = union of member ids via name_desc then name, in table
+		// declaration order (P0c-53: insertion order must survive; Set.copyOf would hash-shuffle it).
+		Map<String, List<Integer>> groups = new LinkedHashMap<>();
+		for (String groupsResource : GROUPS_RESOURCES) {
+			URL groupsUrl = loader.getResource(groupsResource);
+			if (groupsUrl == null) {
+				continue;
+			}
+			try (var reader = new java.io.BufferedReader(new java.io.InputStreamReader(groupsUrl.openStream(), java.nio.charset.StandardCharsets.UTF_8))) {
+				String line;
+				while ((line = reader.readLine()) != null) {
+					line = line.strip();
+					if (line.isEmpty() || line.startsWith("#") || line.startsWith("quest_ai_name\t")) {
+						continue;
+					}
+					String[] parts = line.split("\t");
+					if (parts.length < 2 || parts[1].isBlank()) {
+						continue;
+					}
+					String key = parts[0].strip().toLowerCase(Locale.ROOT);
+					List<Integer> ids = new ArrayList<>();
+					for (String member : parts[1].split(",")) {
+						member = member.strip().toLowerCase(Locale.ROOT);
+						if (member.isEmpty()) {
+							continue;
+						}
+						List<Integer> memberIds = idsByNameDesc.get(member);
+						if (memberIds == null || memberIds.isEmpty()) {
+							memberIds = idsByName.get(member);
+						}
+						if (memberIds != null) {
+							for (int memberId : memberIds) {
+								if (!ids.contains(memberId)) {
+									ids.add(memberId);
+								}
+							}
+						}
+					}
+					if (!ids.isEmpty()) {
+						groups.put(key, Collections.unmodifiableList(ids));
+					}
+				}
+				break;
+			} catch (IOException e) {
+				throw new IllegalStateException("NATIVE_TABLE_PARSE_FAILED: failed to read npc name groups", e);
+			}
+		}
 		return new NativeNpcNameResolver(Collections.unmodifiableMap(idsByNameDesc),
 				Collections.unmodifiableMap(idsByName), Collections.unmodifiableMap(idsByAll),
-				Collections.unmodifiableMap(aliases), templateCount);
+				Collections.unmodifiableMap(aliases), Collections.unmodifiableMap(groups), templateCount);
 	}
 
 	private static void index(Map<String, List<Integer>> idsByName, String rawName, int npcId) {
@@ -269,7 +334,14 @@ public final class NativeNpcNameResolver {
 			return byName;
 		}
 		List<Integer> byAlias = monsterAliases.get(normalized);
-		return byAlias != null ? byAlias : List.of();
+		if (byAlias != null && !byAlias.isEmpty()) {
+			return byAlias;
+		}
+		// 组通道兜底：组键不是 spawn 名（与 spawn 通道互斥），最后按组展开解析。
+		// Group channel last: a group key is never a spawn name (channel exclusivity), so group
+		// expansion is the final fallback.
+		List<Integer> byGroup = questAiNameGroups.get(normalized);
+		return byGroup != null ? byGroup : List.of();
 	}
 
 	/**
