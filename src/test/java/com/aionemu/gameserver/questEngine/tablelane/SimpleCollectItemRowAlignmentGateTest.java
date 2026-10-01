@@ -2,14 +2,17 @@ package com.aionemu.gameserver.questEngine.tablelane;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
@@ -18,6 +21,8 @@ import java.util.regex.Pattern;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+
+import com.aionemu.gameserver.questEngine.definition.QuestDialogPage;
 
 /**
  * SimpleCollectItem 族级**逐行对齐门**（P4 收口，计划 §8.9）：以真端表 {@code Quest_SimpleCollectItem.xml}
@@ -81,6 +86,25 @@ class SimpleCollectItemRowAlignmentGateTest {
 	 * hand-in face does not exist and the row fails closed (the retired compiler rejected it the same way).
 	 */
 	private static final Set<Integer> COMPOSITE_REWARD_WITHOUT_CLIENT_SET_ROWS = Set.of(39611, 49611);
+
+	/** 其他 retail 族表（跨族 {@code con_quest} 目标的接取 NPC 来源）。 / Sibling retail family tables. */
+	private static final List<String> SIBLING_RESOURCES = List.of(
+		"aion/data/static_data/quest/retail/Quest_SimpleHunt.xml",
+		"aion/data/static_data/quest/retail/Quest_SimpleTalk.xml",
+		"aion/data/static_data/quest/retail/Quest_CombineTask.xml",
+		"aion/data/static_data/quest/retail/Quest_SimpleUseItem.xml",
+		"aion/data/static_data/quest/retail/Quest_SimpleItemPlay.xml",
+		"aion/data/static_data/quest/retail/Quest_SimpleSerialHunt.xml");
+	/** 链式接取窗目标的分布（真端全表冻结）。 / Distribution of the chain-window targets (frozen). */
+	private static final int CHAIN_TARGET_IN_TABLE = 6;
+	private static final int CHAIN_TARGET_SIBLING = 24;
+	private static final int CHAIN_TARGET_NO_ROW = 7;
+	private static final int CHAIN_TARGET_NO_ROW_XML_OWNED = 3;
+	/** 真端声明的过场（交付节点 0x35 槽）：两行同为 movie 456 / 动作 SELECT1_1(1012)。 /
+	 * The declared cutscenes (hand-in node slot 0x35): both rows are movie 456 / action SELECT1_1(1012). */
+	private static final int CUTSCENE_MOVIE = 456;
+	private static final int CUTSCENE_ACTION = QuestDialogPage.SELECT1_1.id();
+	private static final Set<Integer> CUTSCENE_QUEST_IDS = Set.of(18501, 28501);
 
 	private static final Pattern ROW = Pattern.compile("<id id=\"(\\d+)\">(.*?)</id>", Pattern.DOTALL);
 	private static final Pattern FIELD = Pattern.compile("<(\\w+)>(.*?)</\\1>", Pattern.DOTALL);
@@ -348,6 +372,96 @@ class SimpleCollectItemRowAlignmentGateTest {
 		assertEquals(COLLECT_ITEM3_ROWS, collect3, "quest.xml collect_item3 行数");
 	}
 
+	/**
+	 * ⑥ 链式接取窗（真端 0x1e 槽）：{@code con_quest} 的下一环必须在本行的交付 NPC 上可接取
+	 * （本车道接取路由按 NPC 建表，该等价物即窗口本身）；跨族目标按同一不变量独立复算。
+	 * <p>
+	 * The chain window (retail slot 0x1e): the next quest must acquire at this row's hand-in NPC;
+	 * cross-family targets are recomputed under the same invariant.
+	 */
+	@Test
+	void chainAcquireWindowsCloseAtTheRewardNpc() throws Exception {
+		Map<Integer, Map<String, String>> siblings = new HashMap<>();
+		for (String resource : SIBLING_RESOURCES) {
+			parseTable(readResource(resource)).forEach(siblings::putIfAbsent);
+		}
+		Set<Integer> xmlOwned = NativeQuestOwnerResolver.instance().xmlOnlyIds();
+		int inTable = 0;
+		int inSibling = 0;
+		int noRow = 0;
+		int noRowXmlOwned = 0;
+		List<String> mismatches = new ArrayList<>();
+		for (Map.Entry<Integer, Map<String, String>> entry : tableRaw.entrySet()) {
+			int questId = entry.getKey();
+			Integer next = integer(entry.getValue(), "con_quest");
+			if (next == null) {
+				continue;
+			}
+			assertEquals(next, handler.conQuest(questId), "con_quest 装载漂移 / mapping: " + questId);
+			String rewardName = value(entry.getValue(), "reward_npc_name");
+			Map<String, String> target = tableRaw.get(next);
+			if (target != null) {
+				inTable++;
+			} else if (siblings.containsKey(next)) {
+				inSibling++;
+				target = siblings.get(next);
+			} else {
+				noRow++;
+				if (xmlOwned.contains(next)) {
+					noRowXmlOwned++;
+				}
+				continue;
+			}
+			String targetAcquire = value(target, "acquired_npc_name");
+			if (!Objects.equals(rewardName, targetAcquire)) {
+				mismatches.add(questId + "->" + next + " reward=" + rewardName
+					+ " targetAcquire=" + targetAcquire);
+			}
+		}
+		assertTrue(mismatches.isEmpty(), () -> "链式接取窗未在本行交付 NPC 上闭环: " + mismatches);
+		assertEquals(CHAIN_TARGET_IN_TABLE, inTable, "本表内目标数漂移");
+		assertEquals(CHAIN_TARGET_SIBLING, inSibling, "跨族目标数漂移");
+		assertEquals(CHAIN_TARGET_NO_ROW, noRow, "无表行目标数漂移");
+		assertEquals(CHAIN_TARGET_NO_ROW_XML_OWNED, noRowXmlOwned, "无表行目标里的 XML-owner 数漂移");
+		assertTrue(handler.unresolvedChainQuestIds().isEmpty(),
+			() -> "本族链式接取窗未闭环: " + handler.unresolvedChainQuestIds());
+	}
+
+	/**
+	 * ⑦ 过场装载（真端交付节点 0x35 槽）：{@code cutsceneid1}/{@code cs1_haction} 逐行进 native 消费面；
+	 * 未声明的行不得有过场面（真端 thunk 不内联 movie，本车道以表列为唯一事实）。
+	 * <p>
+	 * The cutscene face (retail slot 0x35): declared rows map into the native consumption face and rows
+	 * without the column expose none.
+	 */
+	@Test
+	void cutsceneFaceFollowsTheRetailTable() {
+		int declared = 0;
+		Set<Integer> declaredQuestIds = new TreeSet<>();
+		for (Map.Entry<Integer, Map<String, String>> entry : tableRaw.entrySet()) {
+			int questId = entry.getKey();
+			Integer movie = integer(entry.getValue(), "cutsceneid1");
+			SimpleCollectItemHandler.Cutscene cutscene = handler.cutscene(questId);
+			if (movie == null) {
+				assertNull(cutscene, "未声明过场的行不得有过场面: " + questId);
+				continue;
+			}
+			declared++;
+			declaredQuestIds.add(questId);
+			Integer action = integer(entry.getValue(), "cs1_haction");
+			assertEquals(movie.intValue(), cutscene.movieId(), "cutsceneid1: " + questId);
+			assertEquals(action == null ? -1 : action.intValue(), cutscene.triggerAction(),
+				"cs1_haction: " + questId);
+		}
+		assertEquals(CUTSCENE_ROWS, declared, "过场行数漂移");
+		assertEquals(CUTSCENE_QUEST_IDS, declaredQuestIds, "过场行集漂移");
+		for (int questId : CUTSCENE_QUEST_IDS) {
+			assertEquals(CUTSCENE_MOVIE, handler.cutscene(questId).movieId(), "过场 movie 漂移: " + questId);
+			assertEquals(CUTSCENE_ACTION, handler.cutscene(questId).triggerAction(),
+				"过场触发动作漂移: " + questId);
+		}
+	}
+
 	/** quest.xml 单值列（缺列/空值返回 null）。 / A single-valued quest.xml column. */
 	private static String questText(int questId, String tag) {
 		List<String> values = questXmlRaw.getOrDefault(questId, Map.of()).get(tag);
@@ -476,6 +590,12 @@ class SimpleCollectItemRowAlignmentGateTest {
 	private static String value(Map<String, String> raw, String key) {
 		String text = raw.get(key);
 		return text == null || text.isBlank() ? null : text;
+	}
+
+	/** 数值单元格（缺列/空值返回 null）。 / A numeric cell (null when absent or blank). */
+	private static Integer integer(Map<String, String> raw, String key) {
+		String text = value(raw, key);
+		return text == null ? null : Integer.valueOf(text);
 	}
 
 	private static String readResource(String path) throws Exception {

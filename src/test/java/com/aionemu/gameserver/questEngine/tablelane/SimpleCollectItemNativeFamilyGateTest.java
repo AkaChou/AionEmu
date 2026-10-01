@@ -3,6 +3,7 @@ package com.aionemu.gameserver.questEngine.tablelane;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
@@ -13,6 +14,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
+import com.aionemu.gameserver.questEngine.definition.QuestDialogPage;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
@@ -333,7 +335,107 @@ class SimpleCollectItemNativeFamilyGateTest {
 			.contains(SINGLE_OBJECT_QUEST), "同批删旧：采集行不得再列为旧编译 owner");
 	}
 
+	/**
+	 * 链式接取窗（真端交付节点 0x1e 槽 = {@code mgr+0x1a8(player, con_quest)}）：37 行全部装载，且
+	 * 本表内的下一环必须在本行的交付 NPC 上可接取（本车道按 NPC 建接取路由 ⇒ 该窗已由下一环自身实现）。
+	 * <p>
+	 * The chain window (retail hand-in slot 0x1e): all 37 rows load and every in-table next quest acquires
+	 * at this row's hand-in NPC, so the window is already realized by the next quest's own accept route.
+	 */
+	@Test
+	void chainWindowsAreLoadedAndCloseAtTheHandInNpc() {
+		int declared = 0;
+		int inTable = 0;
+		for (SimpleCollectItemRow row : loader.collectRows()) {
+			Integer next = row.conQuest();
+			assertEquals(next, handler.conQuest(row.questId()), "con_quest 装载漂移: " + row.questId());
+			if (next == null) {
+				continue;
+			}
+			declared++;
+			if (loader.collectRows().stream().noneMatch(candidate -> candidate.questId() == next)) {
+				continue;
+			}
+			inTable++;
+			Integer targetAcquire = handler.acquireNpc(next);
+			assertNotNull(targetAcquire, "本表内下一环必须有接取 NPC: " + row.questId() + "->" + next);
+			assertTrue(handler.rewardNpcs(row.questId()).contains(targetAcquire),
+				"链式接取窗未在本行交付 NPC 上闭环: " + row.questId() + "->" + next);
+		}
+		assertEquals(37, declared, "真端 con_quest 覆盖 37 行");
+		assertEquals(6, inTable, "本表内链式目标 6 行（其余为跨族/无行，本族对拍门复算）");
+		assertTrue(handler.unresolvedChainQuestIds().isEmpty(),
+			() -> "本族链式接取窗未闭环: " + handler.unresolvedChainQuestIds());
+	}
+
+	/**
+	 * 过场（真端交付节点 0x35 槽 PlayMovie）：动作命中表声明的 {@code cs1_haction} 时下发
+	 * {@code cutsceneid1}，是状态机之外的副作用；未声明的行与触发动作之外的动作都不下发。
+	 * <p>
+	 * The cutscene (retail hand-in slot 0x35 PlayMovie): the declared action triggers the declared movie
+	 * as a side effect outside the state machine, and nothing else does.
+	 */
+	@Test
+	void cutscenePlaysOnTheDeclaredActionWithoutAdvancingTheNode() {
+		RecordingMovies movies = new RecordingMovies();
+		SimpleCollectItemHandler local = handlerWith(NativeTalkFixture.RecordingInventory.EMPTY, movies,
+			NativeReportRewardFlow.instance());
+		assertEquals(456, local.cutscene(MULTI_COLUMN_QUEST).movieId(), "18501 真端 cutsceneid1");
+		assertEquals(QuestDialogPage.SELECT1_1.id(), local.cutscene(MULTI_COLUMN_QUEST).triggerAction(),
+			"18501 真端 cs1_haction = select1_1(1012)");
+		assertNull(local.cutscene(SINGLE_OBJECT_QUEST), "未声明过场的行不得有过场面");
+
+		Player player = NativeTalkFixture.player();
+		NativeTalkFixture.add(player, MULTI_COLUMN_QUEST, QuestStatus.START, 0);
+		int rewardNpc = local.rewardNpc(MULTI_COLUMN_QUEST);
+		int varsBefore = player.getQuestStateList().getQuestState(MULTI_COLUMN_QUEST)
+			.getQuestVars().getQuestVars();
+
+		// 非触发动作（26 = 交付问询）：被服务但不播过场。
+		NativeTalkFixture.clearPackets(player);
+		assertTrue(local.onDialog(NativeTalkFixture.dialog(player, rewardNpc, MULTI_COLUMN_QUEST, 26)));
+		assertTrue(movies.played().isEmpty(), "非触发动作不得下发过场");
+
+		// 交付面的动作集（31/26/1009）不含该页动作 ⇒ 该状态不服务、不下发（真端该动作挂在接取页链上）。
+		NativeTalkFixture.clearPackets(player);
+		assertFalse(local.onDialog(NativeTalkFixture.dialog(player, rewardNpc, MULTI_COLUMN_QUEST,
+			QuestDialogPage.SELECT1_1.id())), "交付面不服务接取侧页动作（真端该 action 属 select1 页链）");
+		assertTrue(movies.played().isEmpty(), "未服务的动作不得下发过场");
+		assertEquals(varsBefore, player.getQuestStateList().getQuestState(MULTI_COLUMN_QUEST)
+			.getQuestVars().getQuestVars(), "任何对话都不得改写任务 vars");
+
+		// 接取页链（1012 = select1_1，客户端契约已声明该页）：动作被服务 ⇒ 下发真端 movie，
+		// 且只是状态机之外的副作用（不建任务档、不推进节点）。
+		Player accepting = NativeTalkFixture.player();
+		movies.clear();
+		NativeTalkFixture.clearPackets(accepting);
+		assertTrue(local.onDialog(NativeTalkFixture.dialog(accepting, local.acquireNpc(MULTI_COLUMN_QUEST),
+			MULTI_COLUMN_QUEST, QuestDialogPage.SELECT1_1.id())));
+		assertEquals(List.of(456), movies.played(), "命中 cs1_haction 必须下发 cutsceneid1");
+		NativeTalkFixture.assertOnlyDialogPage(accepting, QuestDialogPage.SELECT1_1.id());
+		assertNull(accepting.getQuestStateList().getQuestState(MULTI_COLUMN_QUEST),
+			"过场不建任务档（仍须走 20000/1002 接取）");
+	}
+
 	// ---------------------------------------------------------------- 夹具
+
+	/** 记录式假过场端口（真端 0x35 槽）。 / A recording fake cutscene port (retail slot 0x35). */
+	private static final class RecordingMovies implements NativeMoviePort {
+		private final List<Integer> played = new ArrayList<>();
+
+		@Override
+		public void play(Player player, int movieId) {
+			played.add(movieId);
+		}
+
+		private List<Integer> played() {
+			return List.copyOf(played);
+		}
+
+		private void clear() {
+			played.clear();
+		}
+	}
 
 	private record ClaimCall(int questId, int tier, com.aionemu.gameserver.model.templates.QuestTemplate template) {
 	}
@@ -348,8 +450,13 @@ class SimpleCollectItemNativeFamilyGateTest {
 
 	private static SimpleCollectItemHandler handlerWith(NativeInventoryPort inventory,
 			NativeReportRewardFlow rewardFlow) {
+		return handlerWith(inventory, NativeMoviePort.live(), rewardFlow);
+	}
+
+	private static SimpleCollectItemHandler handlerWith(NativeInventoryPort inventory, NativeMoviePort moviePort,
+			NativeReportRewardFlow rewardFlow) {
 		return new SimpleCollectItemHandler(NativeQuestTableLoader.instance(), CameraRegistry.instance(),
-			NativeNpcNameResolver.instance(), HtmlPagesRegistry.instance(), inventory, rewardFlow,
+			NativeNpcNameResolver.instance(), HtmlPagesRegistry.instance(), inventory, moviePort, rewardFlow,
 			NativeQuestOwnerResolver.instance().xmlOnlyIds(), new java.util.TreeSet<>());
 	}
 }

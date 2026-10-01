@@ -43,7 +43,12 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
  *       {@code QuestService} 的掉落族按 {@code drop_*} 列发放）；</li>
  *   <li><b>交付</b>：交付 NPC 处按 {@code check_item} 门（{@code NativeInventoryPort} 持有量）
  *       扣工作物品 → REWARD + 奖励窗页 5；未持有 → 进行中页 10；</li>
- *   <li><b>领奖</b>：{@link NativeReportRewardFlow}（真端 reward 列 → 共用结算体），完成页 1008。</li>
+ *   <li><b>领奖</b>：{@link NativeReportRewardFlow}（真端 reward 列 → 共用结算体），完成页 1008；</li>
+ *   <li><b>链式接取窗</b>：{@code con_quest}（真端交付节点 0x1e 槽 {@code mgr+0x1a8(player, con_quest)}）
+ *       —— 本车道按 NPC 建接取路由，该窗的等价物 = 「下一环的接取 NPC 就是本行的交付 NPC」，
+ *       逐行验证、不闭环的行登记 fail-closed（{@link #unresolvedChainQuestIds()}）；</li>
+ *   <li><b>过场</b>：{@code cutsceneid1}/{@code cs1_haction}（真端交付节点 0x35 槽 PlayMovie）经
+ *       {@link NativeMoviePort} 下发，是页动作上的副作用、不推进节点。</li>
  * </ul>
  * 缺行/缺相机行/名字多义/物品未解的行走 fail-closed（不路由、不发放）。
  * <p>
@@ -53,8 +58,10 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
  * relay chain gates collection exactly as the retail {@code collect_progress} column states; collect
  * objects and drop monsters advance the single-slot camera whose requirement is the retail
  * {@code collect_item} count; hand-in consumes the {@code check_item} work items and settles through
- * {@link NativeReportRewardFlow}. Missing rows, missing camera rows, ambiguous names and unresolved
- * items fail closed.
+ * {@link NativeReportRewardFlow}; the retail chain window ({@code con_quest} on slot 0x1e) is realized
+ * by the next quest's own accept route and the cutscene slot (0x35) is served through
+ * {@link NativeMoviePort}. Missing rows, missing camera rows, ambiguous names and unresolved items
+ * fail closed.
  */
 public final class SimpleCollectItemHandler implements NativeSystemGrantLane {
 
@@ -85,6 +92,10 @@ public final class SimpleCollectItemHandler implements NativeSystemGrantLane {
 	public record CollectMonsterRef(int questId, int slot) {
 	}
 
+	/** 过场引用：movie id + 触发动作 id（{@code cs1_haction}；-1 = 表未声明触发）。 */
+	public record Cutscene(int movieId, int triggerAction) {
+	}
+
 	/** 工作物品（已解析成 id + 数量）。 / A resolved work item (id + count). */
 	private record ItemStack(int itemId, int count) {
 	}
@@ -96,6 +107,7 @@ public final class SimpleCollectItemHandler implements NativeSystemGrantLane {
 	private final NativeNpcNameResolver nameResolver;
 	private final HtmlPagesRegistry pagesRegistry;
 	private final NativeInventoryPort inventory;
+	private final NativeMoviePort moviePort;
 	private final NativeReportRewardFlow rewardFlow;
 
 	private final Map<Integer, Integer> acquireNpcByQuestId;
@@ -119,15 +131,26 @@ public final class SimpleCollectItemHandler implements NativeSystemGrantLane {
 
 	private final Map<Integer, List<CollectTargetRef>> objectsByNpcId;
 
+	/** 任务 ID → 链式接取窗的下一环（真端交付节点 0x1e 槽的 {@code con_quest}）。 / Quest id → the next quest of the chain window. */
+	private final Map<Integer, Integer> conQuestByQuestId;
+
+	/** 链式接取窗未闭环的行（fail-closed 证据面）。 / Rows whose chain window is not realized. */
+	private final Set<Integer> unresolvedChainQuestIds;
+
+	/** 任务 ID → 过场引用（表 {@code cutsceneid1}/{@code cs1_haction}）。 / Quest id → cutscene reference. */
+	private final Map<Integer, Cutscene> cutsceneByQuestId;
+
 	/** 包内可见：家族门禁用注入的背包/完成端口构造。 / Package-visible: family gates inject inventory and settlement ports. */
 	SimpleCollectItemHandler(NativeQuestTableLoader tableLoader, CameraRegistry cameraRegistry,
 			NativeNpcNameResolver nameResolver, HtmlPagesRegistry pagesRegistry, NativeInventoryPort inventory,
-			NativeReportRewardFlow rewardFlow, Set<Integer> xmlOnlyIds, Set<Integer> unresolvedMetadata) {
+			NativeMoviePort moviePort, NativeReportRewardFlow rewardFlow, Set<Integer> xmlOnlyIds,
+			Set<Integer> unresolvedMetadata) {
 		this.tableLoader = tableLoader;
 		this.cameraRegistry = cameraRegistry;
 		this.nameResolver = nameResolver;
 		this.pagesRegistry = pagesRegistry;
 		this.inventory = inventory;
+		this.moviePort = moviePort;
 		this.rewardFlow = rewardFlow;
 
 		Map<Integer, Integer> acquires = new LinkedHashMap<>();
@@ -144,6 +167,9 @@ public final class SimpleCollectItemHandler implements NativeSystemGrantLane {
 		Set<Integer> unroutable = new TreeSet<>();
 		Map<Integer, RetailGrantKind> grantKinds = new LinkedHashMap<>();
 		Map<Integer, Integer> factions = new LinkedHashMap<>();
+		Map<Integer, Integer> conQuests = new LinkedHashMap<>();
+		Map<Integer, Cutscene> cutscenes = new LinkedHashMap<>();
+		Set<Integer> unresolvedChain = new TreeSet<>();
 
 		for (NativeQuestTableLoader.SimpleCollectItemRow row : tableLoader.collectRows()) {
 			int questId = row.questId();
@@ -257,6 +283,37 @@ public final class SimpleCollectItemHandler implements NativeSystemGrantLane {
 			if (routable) {
 				routed.add(questId);
 			}
+
+			// 链式接取窗（真端 0x1e 槽）与过场（真端 0x35 槽）按原文装载：两侧语义分别在构造函数尾部
+			// 与 onDialog 上消费，装载面不做任何推断。
+			// The chain window (retail slot 0x1e) and the cutscene (retail slot 0x35) load verbatim; their
+			// semantics are consumed in the constructor tail and in onDialog.
+			Integer next = row.conQuest();
+			if (next != null) {
+				conQuests.put(questId, next);
+			}
+			if (row.cutsceneId() != null) {
+				cutscenes.put(questId, new Cutscene(row.cutsceneId(),
+						row.cutsceneAction() == null ? -1 : row.cutsceneAction()));
+			}
+		}
+
+		// 真端 0x1e 槽（交付节点）：接续下一任务 {@code con_quest} 的接取窗。本车道的接取路由按 NPC 建表，
+		// 故该窗的等价物 = 「下一环的接取 NPC 恰是本行的交付 NPC」。本表内目标逐行验证，不闭环的行登记为
+		// fail-closed 证据（跨族目标由逐行对拍门按同一条不变量复算）；不新增第二套路由：下一环的接取路由
+		// 永远由它自己那一行提供。
+		// Retail slot 0x1e (on the hand-in node) opens the next quest's accept window. This lane keys
+		// accept routes by NPC, so the equivalent is "the next quest acquires at this row's hand-in NPC".
+		// In-table targets are verified here and non-closing rows are recorded as fail-closed evidence;
+		// cross-family targets are recomputed by the per-row alignment gate under the same invariant.
+		for (Map.Entry<Integer, Integer> entry : conQuests.entrySet()) {
+			int questId = entry.getKey();
+			int next = entry.getValue();
+			Integer targetAcquire = acquires.get(next);
+			if (routed.contains(next) && targetAcquire != null
+					&& !rewards.getOrDefault(questId, List.of()).contains(targetAcquire)) {
+				unresolvedChain.add(questId);
+			}
 		}
 
 		this.acquireNpcByQuestId = Collections.unmodifiableMap(acquires);
@@ -273,6 +330,9 @@ public final class SimpleCollectItemHandler implements NativeSystemGrantLane {
 		this.unroutableQuestIds = Collections.unmodifiableSet(unroutable);
 		this.grantKindByQuestId = Collections.unmodifiableMap(grantKinds);
 		this.factionByQuestId = Collections.unmodifiableMap(factions);
+		this.conQuestByQuestId = Collections.unmodifiableMap(conQuests);
+		this.unresolvedChainQuestIds = Collections.unmodifiableSet(unresolvedChain);
+		this.cutsceneByQuestId = Collections.unmodifiableMap(cutscenes);
 	}
 
 	private static RetailQuestMetadataCompiler.Outcome metadataOf(int questId) {
@@ -350,7 +410,7 @@ public final class SimpleCollectItemHandler implements NativeSystemGrantLane {
 					local = new SimpleCollectItemHandler(NativeQuestTableLoader.instance(),
 						CameraRegistry.instance(), NativeNpcNameResolver.instance(),
 						HtmlPagesRegistry.instance(), NativeInventoryPort.live(),
-						NativeReportRewardFlow.instance(),
+						NativeMoviePort.live(), NativeReportRewardFlow.instance(),
 						NativeQuestOwnerResolver.instance().xmlOnlyIds(), new TreeSet<>());
 					instance = local;
 				}
@@ -546,6 +606,33 @@ public final class SimpleCollectItemHandler implements NativeSystemGrantLane {
 			}
 		}
 		return Collections.unmodifiableMap(slots);
+	}
+
+	/**
+	 * 真端 {@code con_quest}（链式接取窗的下一环）；未声明返回 null。
+	 * <p>
+	 * 真端该列由交付节点上的 0x1e 槽消费（{@code mgr+0x1a8(player, con_quest)} = 下一环的接取窗：
+	 * ScriptDLL64 注册 {@code FUN_180cb2ac0(..., 0x1e, FUN_180d39370, 0)}，quest 1103 的 thunk 内是
+	 * {@code mgr+0x1a8(player, 1104)}）。本车道按 NPC 建接取路由，故只要下一环的接取 NPC 等于本行的
+	 * 交付 NPC，该窗即已由下一环自身那一行实现；{@link #unresolvedChainQuestIds()} 为空即全表闭环。
+	 * <p>
+	 * The retail {@code con_quest} column, consumed by slot 0x1e on the hand-in node (the
+	 * {@code mgr+0x1a8(player, con_quest)} next-quest accept window). This lane registers accept routes
+	 * per NPC, so the window is already realized by the next quest's own row whenever that row acquires
+	 * at this row's hand-in NPC; an empty {@link #unresolvedChainQuestIds()} means the whole table closes.
+	 */
+	public Integer conQuest(int questId) {
+		return conQuestByQuestId.get(questId);
+	}
+
+	/** 链式接取窗未闭环的行（fail-closed 证据面）。 / Rows whose chain window is not realized. */
+	public Set<Integer> unresolvedChainQuestIds() {
+		return unresolvedChainQuestIds;
+	}
+
+	/** 过场引用（表未声明返回 null）。 / The cutscene reference (null when the row declares none). */
+	public Cutscene cutscene(int questId) {
+		return cutsceneByQuestId.get(questId);
 	}
 
 	/** 启动期注册 native 兴趣到 {@link QuestEngine}。 / Registers native interests into the engine at startup. */
@@ -747,6 +834,29 @@ public final class SimpleCollectItemHandler implements NativeSystemGrantLane {
 		if (env == null || env.getPlayer() == null) {
 			return false;
 		}
+		boolean handled = handleDialog(env);
+		if (handled) {
+			playCutsceneIfTriggered(env.getPlayer(), env.getQuestId(), env.getDialogId());
+		}
+		return handled;
+	}
+
+	/**
+	 * 真端过场（槽 0x35 PlayMovie）：动作命中 {@code cs1_haction} 时按 CUTSCENE 类型下发，
+	 * 是状态机之外的副作用（不推进节点）。 / Retail cutscene: sent as a side effect when the
+	 * client action matches cs1_haction; it never advances the node.
+	 */
+	private void playCutsceneIfTriggered(Player player, int questId, int dialogId) {
+		Cutscene cutscene = cutsceneByQuestId.get(questId);
+		if (cutscene != null && cutscene.triggerAction() == dialogId) {
+			moviePort.play(player, cutscene.movieId());
+		}
+	}
+
+	private boolean handleDialog(QuestEnv env) {
+		if (env == null || env.getPlayer() == null) {
+			return false;
+		}
 		Player player = env.getPlayer();
 		int questId = env.getQuestId();
 		if (!routes(questId)) {
@@ -805,6 +915,16 @@ public final class SimpleCollectItemHandler implements NativeSystemGrantLane {
 				}
 			}
 			return false;
+		}
+
+		// 表声明的过场触发动作（真端把 movie 挂在页动作上；本族两行 = SELECT1_1(1012)）：
+		// 不推进状态，但必须被服务（否则客户端停在页上），movie 由 onDialog 包装层下发。
+		// The declared cutscene trigger action (the retail page action; SELECT1_1(1012) for this family's
+		// two rows) advances no state but must be served, otherwise the client stalls on the page; the
+		// movie itself is sent by the onDialog wrapper.
+		Cutscene cutscene = cutsceneByQuestId.get(questId);
+		if (cutscene != null && cutscene.triggerAction() == dialogId) {
+			return true;
 		}
 		return false;
 	}
