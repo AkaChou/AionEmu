@@ -67,6 +67,7 @@ python3 .agents/summary/quest-engine-native/p3/tools/simple_talk_item_face.py \
 |---|---|---|
 | tablelane 套件 | `mvn -o test -Dtest='com.aionemu.gameserver.questEngine.tablelane.*Test'` | **70/70 绿**（`SimpleTalkNativeFamilyGateTest` 8/8，新增门缺通道行集门） |
 | 启动与派发 | `mvn -o test -Dtest='QuestProductionStartupGateTest,QuestEngineRuntimeCompositionTest,QuestEngineNpcDialogDispatchTest,QuestEngineEscortAndProximityRegistrationTest,RetailQuestDriverOverlayTest'` | **全绿** |
+| 聚焦套件 | `mvn -o test '-Dtest=*Quest*Test,*Retail*Test'` | **1678 例 / 164F+226E**（与步骤 2 基线**逐类一致**：失败类集合 ADDED 0 / REMOVED 0）⇒ 本批零新增门禁债；日志 `gates/2026-10-01-focused-run-p3step3.log` |
 
 新增/改写的族门断言：
 1. `unresolvedItemSymbols()` **必须为空**（白名单归零，不再有冻结白名单）；
