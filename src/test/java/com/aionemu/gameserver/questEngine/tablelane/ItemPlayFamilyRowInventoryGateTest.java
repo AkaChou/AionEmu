@@ -2,6 +2,7 @@ package com.aionemu.gameserver.questEngine.tablelane;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.BufferedReader;
@@ -19,24 +20,30 @@ import java.util.regex.Pattern;
 
 import org.junit.jupiter.api.Test;
 
+import com.aionemu.gameserver.questEngine.definition.QuestDialogContract;
+import com.aionemu.gameserver.questEngine.definition.QuestDialogPage;
+import com.aionemu.gameserver.questEngine.tablelane.NativeItemSymbols.ItemStack;
+
 /**
- * P5D 步 1 门：SimpleItemPlay **行集真实分解**冻结 + 真端节点槽形态裁定交叉校验。
+ * P5D 步 1/3 门：SimpleItemPlay **行集真实分解**冻结 + 真端节点槽形态裁定交叉校验 + 激活批证据面。
  * <p>
  * 计划 §10.3-#16① 原判据写作「37 行声明中继 / {@code cutsceneid1} / {@code item_check}」，与真端表事实不符。
  * P5D 复算（工具 {@code p5d/tools/itemplay-shape-audit.py}，真端 {@code ScriptDLL64.c} 节点/槽逐行对拍）得到的
- * 真实分解是：43 行 = **6 路由**（owner {@code RETAIL_TABLE}）+ **9 XML 保留**（owner {@code XML_RETENTION}，
- * 各有 {@code ADJUDICATED:*} 理由）+ **28 无 owner 条目**（不在本服生产：无 XML、清单无行）。
+ * 真实分解是：43 行 = **8 路由**（owner {@code RETAIL_TABLE}）+ **7 XML 保留**（owner {@code XML_RETENTION}，
+ * 各有 {@code ADJUDICATED:*} 理由）+ **28 无 owner 条目**（不在本服生产：无 XML、清单无行）；
+ * 其中 18213/28213 由「接线 ≠ 激活」转为激活（P5D 步 3：retention 重裁 + 删 XML + 删目录条目）。
  * <p>
  * 同一复算还把 9 行的裁定理由与真端槽形态对齐：{@code slot 0} = 接取节点、{@code slot 3#K} = 第 K 步
  * （{@code talk_npcK} 从 0 起，交付节点 = {@code min(relays+1, 3)}）、{@code slot 4} = 交付节点。39/43 行
  * 与该不变量完全一致；偏离的 4 行恰好是裁定为 {@code ADVANCE_UNEXPRESSED}(80255/80256) 与
  * {@code ACQUIRE_NPC_SENTINEL}(39713/49713) 的行 ⇒ 理由与真端形态互证；其余 5 行
- * （{@code TALK_CHAIN}/{@code CON_QUEST}）形态已成立，只差接线面 ⇒ 下一增量的目标集。
+ * （{@code TALK_CHAIN}/{@code CON_QUEST}）形态已成立；P5D 步 3 激活其中名字轴干净、owner 可退役的两行
+ * （18213/28213），其余 3 行（{@code CON_QUEST} 跨表目标 18829/28829 不存在、50048 中继名零命中）保持 XML 保留。
  * <p>
  * Frozen row-set decomposition for the retail SimpleItemPlay family plus the cross-check between the
  * recorded XML-retention adjudications and the retail node/slot shape verdict: the four rows whose shape
  * deviates from the family invariant are exactly the rows adjudicated as advance-unexpressed or
- * acquire-sentinel, and the five shape-ready adjudicated rows are the next increment's target set.
+ * acquire-sentinel; step 3 activates the two shape-ready rows with clean name axes (18213/28213).
  */
 class ItemPlayFamilyRowInventoryGateTest {
 
@@ -55,14 +62,12 @@ class ItemPlayFamilyRowInventoryGateTest {
 	/** 无 owner 条目、无 XML ⇒ 不在本服生产的行数。 / Rows absent from production. */
 	private static final int ABSENT_ROWS = 28;
 
-	/** 已退役并路由的 6 行。 / The six retired, routed rows. */
+	/** 已退役并路由的 8 行（P5D 步 3 激活 18213/28213 后）。 / The eight retired, routed rows. */
 	private static final Set<Integer> ROUTED_ROWS =
-		Set.of(13704, 13708, 19048, 23704, 23708, 29048);
+		Set.of(13704, 13708, 19048, 23704, 23708, 29048, 18213, 28213);
 
-	/** XML 保留的 9 行及其裁定理由（真端清单逐字）。 / The nine XML-retention rows and their reasons. */
+	/** XML 保留的 7 行及其裁定理由（真端清单逐字）。 / The seven XML-retention rows and their reasons. */
 	private static final Map<Integer, String> ADJUDICATED_ROWS = Map.of(
-		18213, "ADJUDICATED:RETAIL_TALK_CHAIN",
-		28213, "ADJUDICATED:RETAIL_TALK_CHAIN",
 		50048, "ADJUDICATED:RETAIL_TALK_CHAIN",
 		18828, "ADJUDICATED:RETAIL_CON_QUEST",
 		28828, "ADJUDICATED:RETAIL_CON_QUEST",
@@ -74,8 +79,8 @@ class ItemPlayFamilyRowInventoryGateTest {
 	/** 真端槽形态偏离本族不变量的 4 行（P5D 逐行复算）。 / Rows deviating from the retail slot shape. */
 	private static final Set<Integer> SHAPE_DEVIATING_ROWS = Set.of(80255, 80256, 39713, 49713);
 
-	/** 真端槽形态已成立、仅差接线面的 5 行 = 下一增量目标集。 / Shape-ready next-increment targets. */
-	private static final Set<Integer> SHAPE_READY_ADJUDICATED = Set.of(18213, 28213, 18828, 28828, 50048);
+	/** 真端槽形态已成立、仍留 XML 的 3 行（名字轴无解 ⇒ fail-closed）。 / Remaining shape-ready XML rows. */
+	private static final Set<Integer> SHAPE_READY_ADJUDICATED = Set.of(18828, 28828, 50048);
 
 	/**
 	 * 真端 {@code quest.xml} 的等级门：{@code minlevel_permitted = 999} = **停用形**（真端
@@ -128,7 +133,7 @@ class ItemPlayFamilyRowInventoryGateTest {
 		assertEquals(new TreeSet<>(ADJUDICATED_ROWS.keySet()), adjudicated, "XML 保留行集冻结");
 		assertEquals(ABSENT_ROWS, absent.size(), "不在生产的行数冻结");
 		assertEquals(TABLE_ROWS, ROUTED_ROWS.size() + adjudicated.size() + absent.size(),
-			"6 路由 + 9 裁定 + 28 不在生产 = 43（互斥且覆盖）");
+			"8 路由 + 7 裁定 + 28 不在生产 = 43（互斥且覆盖）");
 
 		for (int questId : adjudicated) {
 			assertFalse(handler.routes(questId), "XML 保留行不走 native 车道: " + questId);
@@ -159,9 +164,9 @@ class ItemPlayFamilyRowInventoryGateTest {
 		assertEquals(SHAPE_DEVIATING_ROWS, deviating,
 			"真端槽形态偏离（advance 未表达 / 接取哨兵）的行集 = 4 行冻结");
 		assertEquals(SHAPE_READY_ADJUDICATED, shapeReady,
-			"真端槽形态已成立、仅差接线面的行集 = 5 行冻结");
+			"真端槽形态已成立、仍留 XML 的行集 = 3 行冻结");
 		assertTrue(java.util.Collections.disjoint(deviating, shapeReady), "两集合互斥");
-		assertEquals(ADJUDICATED_ROWS.size(), deviating.size() + shapeReady.size(), "9 行归属完整");
+		assertEquals(ADJUDICATED_ROWS.size(), deviating.size() + shapeReady.size(), "7 行归属完整");
 	}
 
 	/**
@@ -193,17 +198,69 @@ class ItemPlayFamilyRowInventoryGateTest {
 			assertFalse(handler.routes(questId), "停用形不得由 native 车道路由: " + questId);
 		}
 
-		// 可接取的中继行 = 5 行（其余中继行是停用形或不在生产）。
+		// 可接取的中继行 = 6 行（其余中继行是停用形或不在生产）。
 		Set<Integer> liveRelays = new TreeSet<>();
 		for (int questId : LIVE_ROWS) {
 			if (handler.relayCount(questId) > 0) {
 				liveRelays.add(questId);
 			}
 		}
-		// 可接取 + 有中继的 6 行：18213/28213（XML 保留 + 名字道具全解 ⇒ 步 3 激活候选）、
-		// 39713/49713/50048（XML 保留但名字轴无解 ⇒ 留 XML 车道）、9623（保留清单无条目 ⇒ 不在本服生产）。
+		// 可接取 + 有中继的 6 行：18213/28213（步 3 已激活为 RETAIL_TABLE）、
+		// 39713/49713/50048（名字轴无解 ⇒ 留 XML 车道）、9623（保留清单无条目 ⇒ 不在本服生产）。
 		assertEquals(Set.of(9623, 18213, 28213, 39713, 49713, 50048), liveRelays,
-			"可接取的中继行集冻结（步 3 激活候选只在其中，且仅 18213/28213 名字轴干净）");
+			"可接取的中继行集冻结（激活行 18213/28213 在其中）");
+	}
+
+	/**
+	 * P5D 步 3 激活证据面：激活的 18213/28213 必须同时满足真端三源——① 表行声明两步中继且交付节点
+	 * 落在 {@code slot 3}；② 真端 {@code quest.xml} 可接取（{@code minlevel_permitted = 51}，非停用形）
+	 * 且前置 {@code finished_quest_cond1} 为同族上一环；③ 客户端页阶梯声明入口 {@code select1}(1011)、
+	 * 问询窗 {@code ask_quest_accept}(4) 与两步页 {@code select2}(1352)/{@code select3}(1693)，
+	 * 与 native 处理器的页序逐页一致；④ 处理器对两行路由且保留清单为 {@code RETAIL_TABLE}。
+	 * <p>
+	 * Step-3 activation evidence: both activated rows must satisfy the retail row shape, the retail
+	 * {@code quest.xml} acquire axis and the client page ladder, and must actually be routed by the lane.
+	 */
+	@Test
+	void activatedRelayRowsCarryTheRetailShapeAcquireAxisAndClientPageLadder() throws Exception {
+		SimpleItemPlayHandler handler = SimpleItemPlayHandler.instance();
+		QuestDialogContract contract = QuestDialogContract.loadDefault();
+		Map<Integer, String[]> manifest = manifest();
+		Map<Integer, Integer> minLevel = minLevels();
+
+		for (int questId : Set.of(18213, 28213)) {
+			assertTrue(ROUTED_ROWS.contains(questId), "激活行必须在路由集里: " + questId);
+			assertEquals("RETAIL_TABLE", manifest.get(questId)[0], "激活行 owner 必须退役: " + questId);
+			assertEquals(51, minLevel.get(questId), "激活行真端等级门: " + questId);
+			assertEquals(2, handler.relayCount(questId), "真端 slot 3 #0/#1 ⇒ 两步中继: " + questId);
+
+			// 客户端页阶梯（真端客户端 quest.xml 派生的页动作契约）↔ native 页序逐页一致。
+			assertTrue(contract.hasButtonPage(questId, QuestDialogPage.SELECT1.id()),
+				"客户端必须声明入口页 select1: " + questId);
+			assertTrue(contract.hasButtonPage(questId, QuestDialogPage.SHOW_ASK_QUEST_ACCEPT_WINDOW.id()),
+				"客户端必须声明问询窗页 4: " + questId);
+			assertEquals(SimpleItemPlayHandler.pageForStep(1), QuestDialogPage.SELECT2.id(),
+				"第 1 步页 = 真端 select2");
+			assertEquals(SimpleItemPlayHandler.pageForStep(2), QuestDialogPage.SELECT3.id(),
+				"第 2 步页 = 真端 select3");
+			for (int step = 1; step <= handler.relayCount(questId); step++) {
+				assertTrue(contract.hasButtonPage(questId, SimpleItemPlayHandler.pageForStep(step)),
+					"客户端必须声明第 " + step + " 步页: " + questId);
+			}
+
+			// 步物品轴：接取发第 1 步道具、第 2 步换物（真端 give_item/give_item2/remove_item2 逐列）。
+			ItemStack acceptGive = handler.acceptGiveItem(questId);
+			ItemStack stepTwoGive = handler.stepGiveItem(questId, 2);
+			ItemStack stepTwoRemove = handler.stepRemoveItem(questId, 2);
+			assertNotNull(acceptGive, "接取必须发放第 1 步道具: " + questId);
+			assertNotNull(stepTwoGive, "第 2 步必须发放: " + questId);
+			assertNotNull(stepTwoRemove, "第 2 步必须扣除: " + questId);
+			assertEquals(handler.playItemId(questId), stepTwoGive.itemId(),
+				"演出道具 = 第 2 步发放的道具: " + questId);
+			assertEquals(acceptGive.itemId(), stepTwoRemove.itemId(),
+				"第 2 步扣除接取发放的道具: " + questId);
+			assertEquals(null, handler.stepGiveItem(questId, 1), "第 1 步无发放声明: " + questId);
+		}
 	}
 
 	/** 真端 {@code quest.xml} 本族 43 行的 {@code minlevel_permitted}（独立重解析）。 */
@@ -260,7 +317,7 @@ class ItemPlayFamilyRowInventoryGateTest {
 			}
 		}
 		assertTrue(result.size() == ADJUDICATED_ROWS.size() + ROUTED_ROWS.size(),
-			"清单里本族行数 = 6 路由 + 9 裁定");
+			"清单里本族行数 = 8 路由 + 7 裁定");
 		return result;
 	}
 

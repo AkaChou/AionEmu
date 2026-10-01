@@ -3242,7 +3242,7 @@
 18209	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf640,FUN_180caf6c0
 18210	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c10h-talk-chain-b1-decisions.tsv basis=P0C10H_EQUIVALENT
 18212	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf640,FUN_180caf6c0
-18213	XML_RETENTION	SimpleItemPlay	ADJUDICATED:RETAIL_TALK_CHAIN	retail-simple-talk-drift.tsv / retail-data-driven-drift.tsv: deep chain shape divergence (drift-authoritative code)
+18213	RETAIL_TABLE	SimpleItemPlay	OK	retired-xml-in-git-history p5d-step3-itemplay-activation.tsv basis=RETAIL_SLOT_SHAPE+CAMERA_GATE+CLIENT_PAGE_LADDER
 18218	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf640,FUN_180caf6c0
 18219	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 18220	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
@@ -4309,7 +4309,7 @@
 28209	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf640,FUN_180caf6c0
 28210	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c10h-talk-chain-b1-decisions.tsv basis=P0C10H_EQUIVALENT
 28212	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf640,FUN_180caf6c0
-28213	XML_RETENTION	SimpleItemPlay	ADJUDICATED:RETAIL_TALK_CHAIN	retail-simple-talk-drift.tsv / retail-data-driven-drift.tsv: deep chain shape divergence (drift-authoritative code)
+28213	RETAIL_TABLE	SimpleItemPlay	OK	retired-xml-in-git-history p5d-step3-itemplay-activation.tsv basis=RETAIL_SLOT_SHAPE+CAMERA_GATE+CLIENT_PAGE_LADDER
 28218	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf640,FUN_180caf6c0
 28219	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 28220	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history

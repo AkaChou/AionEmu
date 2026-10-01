@@ -69,7 +69,8 @@ class UseItemFamilyRowAlignmentGateTest {
 	private static final int ITEM_PLAY_CUTSCENE = 2;
 	/** 路由集冻结（与处理器一致；判据在本类内独立复算）。 / Frozen routing sets. */
 	private static final int USE_ITEM_ROUTED = 102;
-	private static final int ITEM_PLAY_ROUTED = 6;
+	/** P5D 步 3 激活 18213/28213 后的路由集规模（6 直交 + 2 中继）。 / Routed rows after step-3 activation. */
+	private static final int ITEM_PLAY_ROUTED = 8;
 	/** quest.xml {@code check_item} 声明行（退役面 11 行，其中 2 行为 fail-closed 残余）。 / check_item rows. */
 	/** 其他 retail 族表（跨族 {@code con_quest} 目标的接取 NPC 来源）。 / Sibling retail family tables. */
 	private static final List<String> SIBLING_RESOURCES = List.of(
@@ -300,14 +301,24 @@ class UseItemFamilyRowAlignmentGateTest {
 		for (Map.Entry<Integer, Map<String, String>> entry : itemPlayRaw.entrySet()) {
 			int questId = entry.getKey();
 			Map<String, String> raw = entry.getValue();
-			boolean longTail = !declaredSteps(raw, "talk_npc").isEmpty()
-				|| !declaredSteps(raw, "give_item").isEmpty() || !declaredSteps(raw, "remove_item").isEmpty()
-				|| value(raw, "cutsceneid1") != null || "1".equals(value(raw, "item_check"));
-			boolean resolvable = !longTail
-				&& unique(value(raw, "acquired_npc_name"), npcs)
+			// P5D 步 2/3 起长尾面（中继链 / 步发扣）已按真端接线 ⇒ 独立复算同样逐面判定，
+			// 不再按「有长尾即不路由」冻结；只有真端数据里无解的面才 fail-closed。
+			// Since P5D the long-tail faces are wired per retail, so the recomputation checks every declared
+			// face; only faces the retail data cannot resolve stay fail-closed.
+			boolean resolvable = unique(value(raw, "acquired_npc_name"), npcs)
 				&& faceResolves(value(raw, "reward_npc_name"), npcs, handin, questId)
-				&& itemResolves(value(raw, "use_item_name"), items)
-				&& (value(raw, "give_item") == null || itemResolves(value(raw, "give_item"), items));
+				&& (value(raw, "use_item_name") == null || itemResolves(value(raw, "use_item_name"), items))
+				&& (value(raw, "give_item") == null || itemResolves(value(raw, "give_item"), items))
+				&& declaredSteps(raw, "talk_npc").stream()
+					.allMatch(step -> unique(value(raw, "talk_npc" + step), npcs))
+				&& declaredSteps(raw, "give_item").stream()
+					.allMatch(step -> itemResolves(value(raw, "give_item" + step), items))
+				&& declaredSteps(raw, "remove_item").stream()
+					.allMatch(step -> itemResolves(value(raw, "remove_item" + step), items));
+			// 过场（{@code cs1_haction} 触发列本表不存在）与交付门（{@code item_check}）声明行 fail-closed。
+			if (value(raw, "cutsceneid1") != null || "1".equals(value(raw, "item_check"))) {
+				resolvable = false;
+			}
 			if (resolvable && RetiredQuestIds.contains(questId) && !xmlOnly.contains(questId)
 					&& metadataClean(driver, questId)) {
 				expectedItemPlay.add(questId);

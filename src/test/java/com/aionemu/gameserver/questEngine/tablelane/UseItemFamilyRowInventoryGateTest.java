@@ -141,12 +141,12 @@ class UseItemFamilyRowInventoryGateTest {
 			"SimpleItemPlay 表行数必须冻结");
 		org.junit.jupiter.api.Assertions.assertEquals(104, perFamily.get("SimpleUseItem")[1],
 			"SimpleUseItem 退役行数必须冻结（retention owner=RETAIL_TABLE）");
-		org.junit.jupiter.api.Assertions.assertEquals(6, perFamily.get("SimpleItemPlay")[1],
-			"SimpleItemPlay 退役行数必须冻结");
+		org.junit.jupiter.api.Assertions.assertEquals(8, perFamily.get("SimpleItemPlay")[1],
+			"SimpleItemPlay 退役行数必须冻结（P5D 步 3 激活 18213/28213 后）");
 		org.junit.jupiter.api.Assertions.assertEquals(102, perFamily.get("SimpleUseItem")[2],
 			"SimpleUseItem NATIVE_READY 行数必须冻结");
-		org.junit.jupiter.api.Assertions.assertEquals(6, perFamily.get("SimpleItemPlay")[2],
-			"SimpleItemPlay NATIVE_READY 行数必须冻结");
+		org.junit.jupiter.api.Assertions.assertEquals(8, perFamily.get("SimpleItemPlay")[2],
+			"SimpleItemPlay NATIVE_READY 行数必须冻结（中继面全解 ⇒ 8）");
 		java.util.Set<String> failClosed = new java.util.TreeSet<>();
 		for (String line : lines) {
 			String[] parts = line.split("\t");
