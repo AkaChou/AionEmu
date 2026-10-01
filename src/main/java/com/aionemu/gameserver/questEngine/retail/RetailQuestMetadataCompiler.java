@@ -1,5 +1,6 @@
 package com.aionemu.gameserver.questEngine.retail;
 
+import com.aionemu.gameserver.questEngine.tablelane.NativeNpcFactionNames;
 import com.aionemu.gameserver.questEngine.definition.QuestDrop;
 import com.aionemu.gameserver.questEngine.definition.QuestItemRequirement;
 import com.aionemu.gameserver.questEngine.definition.QuestMetadata;
@@ -95,11 +96,7 @@ public final class RetailQuestMetadataCompiler {
 	 * Retail NPC-faction name to faction id (library-wide unambiguous votes); shared with the
 	 * synthesizer to recognize {@code <map>_<faction>} reward references.
 	 */
-	static final Map<String, Integer> NPC_FACTIONS = Map.ofEntries(
-		Map.entry("Army_Da", 6), Map.entry("Army_Li", 3), Map.entry("BountyHunter_Da", 7),
-		Map.entry("BountyHunter_Li", 4), Map.entry("Greenhat_D", 18), Map.entry("Greenhat_L", 17),
-		Map.entry("GuardianOfDivine", 2), Map.entry("GuardianOfTower", 5), Map.entry("Silverlin_D", 16),
-		Map.entry("Silverlin_L", 15));
+	static final Map<String, Integer> NPC_FACTIONS = NativeNpcFactionNames.all();
 
 	/**
 	 * 奖励名是否为 {@code <地图>_<势力名>} 复合引用（去掉首个下划线前缀后是已知真端势力名；

@@ -1,22 +1,10 @@
-# SimpleTalk 物品面未解析快照（真端表事实，2026-10-01）
-# 口径：SimpleTalkHandler 物品解析（RetailItemNameIndex，符号去 ITEM_ 前缀后按 name_desc 查 id）。
-# 由 SimpleTalkNativeFamilyGateTest 冻结断言（集合恒为 14，漂移即红灯）。
-# kind 语义：
-#   GATE_GAP     = item_check 交付门完全不可解 → 报告门 fail-closed（该行交付被挡住，与老链路拒绝该行同效）
-#   GATE_PARTIAL = 交付门部分可解 → 未解项静默跳过（与老链路 acceptGiveItemActions 同法）
-# 归因：均为本服静态物品数据缺口（items/item 模板缺该 name_desc），非分派/表语义缺陷。
+# SimpleTalk 物品面快照（真端表事实，2026-10-01 步骤 3 复算）
+# 口径：SimpleTalkHandler 物品符号解析。真端两通道各有统一约定（全量复算）：
+#   表 give/remove 列    663 个单元全为 ITEM_X 形（去 ITEM_ 前缀后 = 物品模板 name_desc）
+#   quest.xml 交付列    3394 个单元全为原名形，其中含 item_* 真名（如 item_idunderrune_quest_01）
+# 规则：先按原名（小写）查 name_desc，未命中再按去 ITEM_ 前缀重查；
+# 3145 个去重符号 0 冲突 0 未解（真端运行期不做解析：thunk 内为离线解析好的数值 id）。
+# 结论：历史 14 项白名单**归零**（原先的 11 GAP + 3 PARTIAL 全部为解析规则缺陷，非静态数据缺口）。
 kind	entry	quests	note
-GATE_GAP	item_check:2732	2732	重复型深渊补给：collect_item/quest_work_item/give_item 三通道皆无
-GATE_GAP	item_check:30509	30509	동료의 유품：三通道皆无（con_quest=30510）
-GATE_GAP	item_check:41571	41571	키리유의 손녀：三通道皆无（con_quest=41572）
-GATE_GAP	item_check:50011	50011	설탕 수집（光）：三通道皆无（con_quest=50013）
-GATE_GAP	item_check:50012	50012	쓴 카카오 수집（光）：三通道皆无（con_quest=50014）
-GATE_GAP	item_check:51011	51011	설탕 수집（魔）：三通道皆无（con_quest=51013）
-GATE_GAP	item_check:51012	51012	쓴 카카오 수집（魔）：三通道皆无（con_quest=51014）
-GATE_GAP	item_check:16921	16921	collect_item1 = item_idunderrune_quest_01 20，物品模板缺该 name_desc
-GATE_GAP	item_check:26921	26921	同上（魔族镜像）
-GATE_GAP	item_check:16930	16930	collect_item1 = item_idruneweapon_quest_01 10，物品模板缺该 name_desc
-GATE_GAP	item_check:26930	26930	同上（魔族镜像）
-GATE_PARTIAL	item_exp_extraction_65a 1	80669 80670 80671 80672	collect_item3 缺物品模板；门按可解部分建立
-GATE_PARTIAL	item_idunderrune_quest_01 20	16921 26921	同 GATE_GAP 行（该行门整体不可解，故同时计入 GATE_GAP）
-GATE_PARTIAL	item_idruneweapon_quest_01 10	16930 26930	同 GATE_GAP 行（该行门整体不可解，故同时计入 GATE_GAP）
+NONE	<whitelist-empty>	-	0 个未解物品符号；1988 个 item_check 行中 1981 行交付门成立
+UNREACHABLE_GATE_ROWS	item_check-no-channel	2732 30509 41571 50011 50012 51011 51012	7 行 item_check=1 但 quest.xml 无 collect_item/quest_work_item 通道；行方 client_level/minlevel_permitted=999 ⇒ 真端 Quest::CanAcquireQuest 拒绝，报告门不可达（native fail-closed，逐行冻结于族门）

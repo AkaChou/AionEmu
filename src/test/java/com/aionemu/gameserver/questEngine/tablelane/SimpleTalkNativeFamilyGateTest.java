@@ -42,6 +42,8 @@ import com.aionemu.gameserver.questEngine.retail.RetailItemNameIndex;
 class SimpleTalkNativeFamilyGateTest {
 
 	private static final int EXPECTED_ROWS = 3152;
+	/** XML_RETENTION 行数（`retail-xml-retention.tsv` 中 SimpleTalk 家族的行数）。 / XML-retained SimpleTalk rows. */
+	private static final int XML_RETAINED_ROWS = 18;
 	/** 未唯一解析的 NPC 名数量（冻结证据：`p3/simple-talk-unresolved-npcs.tsv`）。 / Frozen unresolved count. */
 	private static final int FROZEN_UNRESOLVED = 39;
 	/** 接取列未解析行数（哨兵 181 + 数据缺口 26 行的接取面）。 / Rows whose acquire name stays unresolved. */
@@ -64,11 +66,16 @@ class SimpleTalkNativeFamilyGateTest {
 	 * 未解析物品面冻结（`p3/simple-talk-unresolved-items.tsv`）：11 个交付门缺口 + 3 个部分缺口符号。
 	 * Frozen unresolved item face (evidence snapshot in `p3/simple-talk-unresolved-items.tsv`).
 	 */
-	private static final Set<String> FROZEN_UNRESOLVED_ITEMS = Set.of(
-			"item_check:2732", "item_check:30509", "item_check:41571",
-			"item_check:50011", "item_check:50012", "item_check:51011", "item_check:51012",
-			"item_check:16921", "item_check:26921", "item_check:16930", "item_check:26930",
-			"item_exp_extraction_65a 1", "item_idunderrune_quest_01 20", "item_idruneweapon_quest_01 10");
+	/**
+	 * item_check 行里「门通道全缺」的行 = 真端不可接取行（quest.xml {@code client_level}/{@code minlevel_permitted}=999）。
+	 * 真端 {@code Quest::CanAcquireQuest} 对 {@code level < minlevel} 一律拒绝，故这些行的报告门在真端不可达；
+	 * native 侧按 fail-closed 处理（不可观测），并逐行冻结以察觉数据漂移。
+	 * The item_check rows with no gate channel at all: unreachable in the true server.
+	 */
+	private static final Set<Integer> UNREACHABLE_GATE_ROWS =
+			Set.of(2732, 30509, 41571, 50011, 50012, 51011, 51012);
+	/** item_check 且交付门成立的行数（真端表/quest.xml 全量复算）。 / Rows whose hand-in gate resolves. */
+	private static final int GATE_ROWS = 1981;
 
 	private static SimpleTalkHandler handler;
 	private static SimpleTalkHandler itemHandler;
@@ -85,6 +92,10 @@ class SimpleTalkNativeFamilyGateTest {
 	@Test
 	void everyRetailTalkRowIsOwned() {
 		assertEquals(EXPECTED_ROWS, handler.ownedQuestCount());
+		// 单一 owner：注册集 3152 = 路由集 3134 + XML_RETENTION 18（表行仍带 XML 定义者交给 XML 车道）。
+		// Single owner: registration set = routing set + the 18 XML_RETENTION rows.
+		assertEquals(EXPECTED_ROWS - XML_RETAINED_ROWS, handler.routedQuestIds().size(),
+				() -> "路由集必须 = 注册集 − XML 保留行，实际=" + handler.routedQuestIds().size());
 		assertEquals(FROZEN_UNRESOLVED, handler.unresolvedNames().size(),
 				() -> "未解析名集合漂移，实际=" + handler.unresolvedNames());
 		assertTrue(handler.unresolvedNames().containsAll(List.of("_area_", "_faction_", "_challengetask_")),
@@ -203,8 +214,10 @@ class SimpleTalkNativeFamilyGateTest {
 	/** 物品面：真端 cab520/cabb10 的物品通道与 item_check 交付门（含冻结缺口）。 */
 	@Test
 	void itemFaceFollowsTheRetailChannels() {
-		assertEquals(FROZEN_UNRESOLVED_ITEMS, handler.unresolvedItemSymbols(),
-				() -> "未解析物品面漂移，实际=" + handler.unresolvedItemSymbols());
+		// 真端符号面 100% 可解（2026-10-01 全量复算：SimpleTalk 表 give/remove 列 663 个符号全为
+		// ITEM_X 形；quest.xml collect/work 列 3394 个符号全为原名形，其中含 item_* 真名）→ 白名单归零。
+		assertTrue(handler.unresolvedItemSymbols().isEmpty(),
+				() -> "物品符号必须 100% 可解，实际未解=" + handler.unresolvedItemSymbols());
 
 		// 1131 ↔ cab520 立即数 182200506（接取发放）与 cabb10 立即数 182200507/182200506（步内发/扣）。
 		assertEquals(new SimpleTalkHandler.ItemStack(182200506, 1), handler.acceptGiveItem(ITEM_QUEST));
@@ -217,8 +230,34 @@ class SimpleTalkNativeFamilyGateTest {
 				new SimpleTalkHandler.ItemStack(182212535, 1), new SimpleTalkHandler.ItemStack(182212536, 1)),
 				handler.workItems(CHAINED_QUEST));
 
-		// 1988 个 item_check 行中 11 行门不可解（缺口冻结），其余 1977 行门成立。
-		assertEquals(1977, handler.ownedQuestIds().stream().filter(id -> !handler.workItems(id).isEmpty()).count());
+		// 1988 个 item_check 行：1981 行交付门成立，7 行门通道全缺（真端不可接取行，见下条门禁）。
+		assertEquals(GATE_ROWS,
+				handler.ownedQuestIds().stream().filter(id -> !handler.workItems(id).isEmpty()).count());
+		// 新解出的两个真端通道样本：16921 = collect_item1（item_idunderrune_quest_01 20）；
+		// 80669 = collect_item1..3（第三项 item_exp_extraction_65a 为带前缀的真名）。
+		assertEquals(List.of(new SimpleTalkHandler.ItemStack(186000256, 20)),
+				itemHandler.workItems(16921));
+		// 80669：collect_item1..3 = medal_07 1050 / junk_world_event_s4_quest_01a 1 / item_exp_extraction_65a 1。
+		assertEquals(List.of(new SimpleTalkHandler.ItemStack(186000469, 1050),
+				new SimpleTalkHandler.ItemStack(182007165, 1), new SimpleTalkHandler.ItemStack(169405376, 1)),
+				itemHandler.workItems(80669));
+	}
+
+	/** 门通道全缺的行 = 真端不可接取行；fail-closed 处理，且必须逐行冻结。 */
+	@Test
+	void gateLessRowsAreTheRetailUnreachableSet() {
+		Set<Integer> gateLess = new java.util.TreeSet<>();
+		for (int questId : handler.ownedQuestIds()) {
+			if (handler.workItems(questId).isEmpty() && handler.unresolvedGate(questId)) {
+				gateLess.add(questId);
+			}
+		}
+		assertEquals(UNREACHABLE_GATE_ROWS, gateLess, "门缺通道行集漂移 / gate-less row set drifted");
+		for (int questId : gateLess) {
+			var row = NativeQuestXmlTable.instance().find(questId).orElseThrow();
+			assertTrue("999".equals(row.text("client_level")) || "999".equals(row.text("minlevel_permitted")),
+					"门缺通道行必须真端不可接取（client_level/minlevel=999）: " + questId);
+		}
 	}
 
 	/** 中继步按真端顺序发放/扣除物品；交付门未持有则不放行。 */

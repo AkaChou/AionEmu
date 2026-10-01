@@ -17,6 +17,7 @@ import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
+import com.aionemu.gameserver.questEngine.retail.RetailGrantKind;
 import com.aionemu.gameserver.questEngine.retail.RetailItemNameIndex;
 import com.aionemu.gameserver.services.QuestService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
@@ -44,6 +45,20 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
  * （记入 {@link #unresolvedItemSymbols()}，报告门不放行）。物品id←符号名的解析复用
  * {@link RetailItemNameIndex}（两侧车道同一份物品名事实来源）。
  * <p>
+ * 另外三条表声明面同样按真端还原：
+ * <ul>
+ *   <li>{@code _faction_} 等接取哨兵（真端系统发放）：本类只提供发放判定与发放入口，
+ *       由发放子系统（NPC 阵营日常轮换）调用，见 {@link #isSystemGranted(int)} /
+ *       {@link #factionRotationCandidates(int)} / {@link #grantSystemStart(Player, int)}；</li>
+ *   <li>{@code cutsceneid1}/{@code cs1_haction} 过场（真端槽 0x35 PlayMovie）：动作命中触发行时
+ *       经 {@link NativeMoviePort} 播放，见 {@link #cutscene(int)}；</li>
+ *   <li>旧存档任务书行自愈（真端编译边登记 P0c-28）：{@code REWARD} 态进入世界时把异常行值修回
+ *       真端投影行，见 {@link #onEnterWorld(Player)}。</li>
+ * </ul>
+ * <p>
+ * 路由集 = 真端表行 **减去** XML-only 行（XML 定义仍在 = XML 车道 owns，native 不路由，
+ * 见 {@link #routes(int)}）：表行与 XML 定义的交集不再是双主，而是「XML 保留」的显式结论。
+ * <p>
  * Retail SimpleTalk native handler (plan §7 P3 step 2). Driven purely by the retail table; the
  * dialog state machine mirrors the DLL's two dispatchers (cab520 accept side / cabb10 dialog side),
  * and the inventory face of both dispatchers funnels through {@link NativeInventoryPort}. The
@@ -58,6 +73,10 @@ public final class SimpleTalkHandler {
 
 	/** 物品栈：item_id + 数量。 / One item stack: id + count. */
 	public record ItemStack(int itemId, int count) {
+	}
+
+	/** 过场引用：movie id + 触发动作 id（{@code cs1_haction}；-1 = 表未声明触发）。 */
+	public record Cutscene(int movieId, int triggerAction) {
 	}
 
 	/** 接取问询页（真端 select1 之前的一步）。 / The accept ask page. */
@@ -95,21 +114,42 @@ public final class SimpleTalkHandler {
 	private final Map<Integer, List<ItemStack>> stepRemoveByQuestId;
 	/** 任务 ID → item_check 交付门的工作物品（缺失 = 该行交付门未解析）。 / Quest id → work items of the item_check gate. */
 	private final Map<Integer, List<ItemStack>> workItemsByQuestId;
+	/** 交付门声明了物品但无法全部解析的行（fail-closed：报告门永不放行）。 / Rows whose declared gate cannot be resolved. */
+	private final Set<Integer> unresolvedGateQuestIds;
+	/** 任务 ID → 接取名类别（{@code _faction_} 等哨兵 = 系统发放）。 / Quest id → acquire-name category. */
+	private final Map<Integer, RetailGrantKind> grantKindByQuestId;
+	/** 任务 ID → 真端势力 id（{@code quest.xml npcfaction_name}；无则 0）。 / Quest id → retail faction id. */
+	private final Map<Integer, Integer> factionByQuestId;
+	/** 任务 ID → 过场引用（表 {@code cutsceneid1}/{@code cs1_haction}）。 / Quest id → cutscene reference. */
+	private final Map<Integer, Cutscene> cutsceneByQuestId;
+	/** 表行全量（注册集）。 / Every table row (the registration set). */
 	private final Set<Integer> ownedQuestIds;
+	/** 路由集 = 注册集 − XML-only 行。 / The routing set: registration set minus XML-owned rows. */
+	private final Set<Integer> routedQuestIds;
+	private final NativeMoviePort moviePort;
 	/** 唯一解析失败的 NPC 名（证据面）。 / NPC names that did not resolve uniquely (evidence surface). */
 	private final Set<String> unresolvedNames;
 	/** 未解析的物品符号（证据面；非空即报告门 fail-closed）。 / Unresolved item symbols (evidence surface). */
 	private final Set<String> unresolvedItemSymbols;
 
 	private SimpleTalkHandler(NativeQuestTableLoader tableLoader, NativeNpcNameResolver nameResolver) {
-		this(tableLoader, nameResolver, retailItemIndex(), NativeQuestXmlTable.instance(), NativeInventoryPort.live());
+		this(tableLoader, nameResolver, retailItemIndex(), NativeQuestXmlTable.instance(), NativeInventoryPort.live(),
+				NativeQuestOwnerResolver.instance().xmlOnlyIds(), NativeMoviePort.live());
 	}
 
 	SimpleTalkHandler(NativeQuestTableLoader tableLoader, NativeNpcNameResolver nameResolver,
 			RetailItemNameIndex itemIndex, NativeQuestXmlTable questXml, NativeInventoryPort inventory) {
+		this(tableLoader, nameResolver, itemIndex, questXml, inventory,
+				NativeQuestOwnerResolver.instance().xmlOnlyIds(), NativeMoviePort.live());
+	}
+
+	SimpleTalkHandler(NativeQuestTableLoader tableLoader, NativeNpcNameResolver nameResolver,
+			RetailItemNameIndex itemIndex, NativeQuestXmlTable questXml, NativeInventoryPort inventory,
+			Set<Integer> xmlOwnedIds, NativeMoviePort moviePort) {
 		this.tableLoader = tableLoader;
 		this.nameResolver = nameResolver;
 		this.inventory = inventory;
+		this.moviePort = moviePort;
 
 		Map<Integer, Integer> acquires = new LinkedHashMap<>();
 		Map<Integer, Integer> rewards = new LinkedHashMap<>();
@@ -119,13 +159,31 @@ public final class SimpleTalkHandler {
 		Map<Integer, List<ItemStack>> stepGives = new LinkedHashMap<>();
 		Map<Integer, List<ItemStack>> stepRemoves = new LinkedHashMap<>();
 		Map<Integer, List<ItemStack>> workItems = new LinkedHashMap<>();
+		Map<Integer, RetailGrantKind> grantKinds = new LinkedHashMap<>();
+		Map<Integer, Integer> factions = new LinkedHashMap<>();
+		Map<Integer, Cutscene> cutscenes = new LinkedHashMap<>();
+		Set<Integer> unresolvedGates = new TreeSet<>();
 		Set<Integer> owned = new TreeSet<>();
+		Set<Integer> routed = new TreeSet<>();
 		Set<String> unresolved = new TreeSet<>();
 		Set<String> unresolvedItems = new TreeSet<>();
 
 		for (NativeQuestTableLoader.SimpleTalkRow row : tableLoader.talkRows()) {
 			int qid = row.questId();
 			owned.add(qid);
+			if (!xmlOwnedIds.contains(qid)) {
+				routed.add(qid);
+			}
+			grantKinds.put(qid, RetailGrantKind.of(row.acquiredNpcName()));
+			int factionId = NativeNpcFactionNames.idOf(
+					questXml.find(qid).map(meta -> meta.text("npcfaction_name")).orElse(""));
+			if (factionId != 0) {
+				factions.put(qid, factionId);
+			}
+			if (row.cutsceneId() != null) {
+				cutscenes.put(qid, new Cutscene(row.cutsceneId(),
+						row.cutsceneAction() == null ? -1 : row.cutsceneAction()));
+			}
 			resolveInto(acquires, qid, row.acquiredNpcName(), unresolved);
 			resolveInto(rewards, qid, row.rewardNpcName(), unresolved);
 			List<String> talkNpcs = row.talkNpcNames();
@@ -155,7 +213,11 @@ public final class SimpleTalkHandler {
 			}
 
 			if (row.itemCheck()) {
-				List<ItemStack> gate = gateItems(qid, questXml, itemIndex, unresolvedItems);
+				// 逐行判定（不得用全局集合增量：同一未解符号在首行登记后，后续同形行会漏判为可解）。
+				Set<String> gateUnresolved = new TreeSet<>();
+				List<ItemStack> gate = gateItems(qid, questXml, itemIndex, gateUnresolved);
+				unresolvedItems.addAll(gateUnresolved);
+				boolean gateSymbolsFailed = !gateUnresolved.isEmpty();
 				if (gate.isEmpty()) {
 					// 回退：真端该行的发放符号（老链路的 workItemRequirement 同法）。
 					ItemStack fallback = acceptGive != null ? acceptGive : lastNonNull(stepGive);
@@ -163,8 +225,10 @@ public final class SimpleTalkHandler {
 						gate = List.of(fallback);
 					}
 				}
-				if (gate.isEmpty()) {
-					unresolvedItems.add("item_check:" + qid);
+				if (gate.isEmpty() || gateSymbolsFailed) {
+					// 门声明了物品但无法全部解析 ⇒ 报告门永不放行（fail-closed），不按可解子集放行；
+					// 门通道全缺⇒同样 fail-closed（行级事实由 unresolvedGate 承载，不混入符号证据面）。
+					unresolvedGates.add(qid);
 				} else {
 					workItems.put(qid, gate);
 				}
@@ -179,7 +243,12 @@ public final class SimpleTalkHandler {
 		this.stepGiveByQuestId = Collections.unmodifiableMap(stepGives);
 		this.stepRemoveByQuestId = Collections.unmodifiableMap(stepRemoves);
 		this.workItemsByQuestId = Collections.unmodifiableMap(workItems);
+		this.unresolvedGateQuestIds = Collections.unmodifiableSet(unresolvedGates);
+		this.grantKindByQuestId = Collections.unmodifiableMap(grantKinds);
+		this.factionByQuestId = Collections.unmodifiableMap(factions);
+		this.cutsceneByQuestId = Collections.unmodifiableMap(cutscenes);
 		this.ownedQuestIds = Collections.unmodifiableSet(owned);
+		this.routedQuestIds = Collections.unmodifiableSet(routed);
 		this.unresolvedNames = Collections.unmodifiableSet(unresolved);
 		this.unresolvedItemSymbols = Collections.unmodifiableSet(unresolvedItems);
 	}
@@ -252,13 +321,16 @@ public final class SimpleTalkHandler {
 			throw new IllegalStateException(
 					"NATIVE_TABLE_PARSE_FAILED: quest " + questId + " has a non-numeric item count in " + symbol);
 		}
-		// 真端 quest.xml/表用 {@code ITEM_} 前缀的符号名，物品模板的 name_desc 去掉该前缀
-		// （如 ITEM_QUEST_1131A ↔ quest_1131a = 182200506）；与老链路 resolveItemId 同法。
+		// 两个通道各有一套统一约定（真端表事实，2026-10-01 全量复算）：SimpleTalk 表 give/remove 列
+		// 663 个符号全为 {@code ITEM_X} 形式；quest.xml collect_item_/quest_work_item 列 3394 个符号
+		// 全为原名形式，其中含 {@code item_*} 真名（如 item_idunderrune_quest_01）。故先按原名查，
+		// 未命中再按 {@code ITEM_} 前缀别名重查；3145 个去重符号两步规则 0 冲突 0 未解。
+		// （真端运行期不做名字解析：thunk 内是离线 codegen 解析好的数值 id。）
 		String stem = parts[0].toLowerCase(java.util.Locale.ROOT);
-		if (stem.startsWith("item_")) {
-			stem = stem.substring("item_".length());
-		}
 		Integer itemId = itemIndex.resolve(stem);
+		if (itemId == null && stem.startsWith("item_")) {
+			itemId = itemIndex.resolve(stem.substring("item_".length()));
+		}
 		if (itemId == null) {
 			unresolved.add(symbol);
 			return null;
@@ -309,26 +381,243 @@ public final class SimpleTalkHandler {
 		}
 		for (Map.Entry<Integer, Integer> entry : acquireNpcByQuestId.entrySet()) {
 			int questId = entry.getKey();
+			if (!routedQuestIds.contains(questId)) {
+				continue;
+			}
 			int npcId = entry.getValue();
 			engine.registerQuestNpc(npcId).addOnQuestStart(questId);
 			engine.registerQuestNpc(npcId).addOnTalkEvent(questId);
 		}
 		for (Map.Entry<Integer, Integer> entry : rewardNpcByQuestId.entrySet()) {
 			int questId = entry.getKey();
+			if (!routedQuestIds.contains(questId)) {
+				continue;
+			}
 			int npcId = entry.getValue();
 			engine.registerQuestNpc(npcId).addOnTalkEvent(questId);
 		}
 		for (Map.Entry<Integer, List<RelayStep>> entry : relaysByNpcId.entrySet()) {
 			int npcId = entry.getKey();
 			for (RelayStep relay : entry.getValue()) {
-				engine.registerQuestNpc(npcId).addOnTalkEvent(relay.questId());
+				if (routedQuestIds.contains(relay.questId())) {
+					engine.registerQuestNpc(npcId).addOnTalkEvent(relay.questId());
+				}
 			}
 		}
 	}
 
-	/** 判断是否拥有该任务。 / Checks whether this handler owns the quest. */
+	/** 判断是否拥有该任务（注册集）。 / Checks whether this handler owns the quest (registration set). */
 	public boolean owns(int questId) {
 		return ownedQuestIds.contains(questId);
+	}
+
+	/**
+	 * 判断该任务是否由 native 车道**路由**（注册集 − XML-only 行）。
+	 * 与 {@link #owns(int)} 的区别：XML 定义仍在的任务由 XML 车道 owns，native 只注册不路由（单 owner）。
+	 * Whether the native lane routes this quest (registration set minus XML-owned rows).
+	 */
+	public boolean routes(int questId) {
+		return routedQuestIds.contains(questId);
+	}
+
+	/** 路由集（不变量：与 XML-only 集交集为空）。 / The routing set (disjoint from the XML-owned set). */
+	public Set<Integer> routedQuestIds() {
+		return routedQuestIds;
+	}
+
+	/** 接取名类别（真端哨兵 = 系统发放）。 / Acquire-name category (a retail sentinel means system-granted). */
+	public RetailGrantKind grantKind(int questId) {
+		return grantKindByQuestId.getOrDefault(questId, RetailGrantKind.NPC);
+	}
+
+	/** 是否系统发放（无 NPC 接取路由）。 / Whether the quest is system-granted (no NPC accept route). */
+	public boolean isSystemGranted(int questId) {
+		return routes(questId) && grantKind(questId).knownGrant();
+	}
+
+	/** 真端势力 id（quest.xml {@code npcfaction_name}；无则 0）。 / The retail faction id, or 0. */
+	public int factionId(int questId) {
+		return factionByQuestId.getOrDefault(questId, 0);
+	}
+
+	/**
+	 * 指定势力的当前可轮换任务 id（真端 {@code _faction_} 行 ∩ 路由集）。
+	 * Faction-rotation candidates of one faction: routed rows whose acquire name is {@code _faction_}.
+	 */
+	public Set<Integer> factionRotationCandidates(int factionId) {
+		Set<Integer> candidates = new TreeSet<>();
+		for (Map.Entry<Integer, Integer> entry : factionByQuestId.entrySet()) {
+			int questId = entry.getKey();
+			if (entry.getValue() == factionId && routes(questId)
+					&& grantKind(questId) == RetailGrantKind.FACTION) {
+				candidates.add(questId);
+			}
+		}
+		return Collections.unmodifiableSet(candidates);
+	}
+
+	/** 过场引用（表未声明返回 null）。 / The cutscene reference (null when the row declares none). */
+	public Cutscene cutscene(int questId) {
+		return cutsceneByQuestId.get(questId);
+	}
+
+	/** 交付门是否因物品数据缺口而 fail-closed。 / Whether the hand-in gate fails closed on an item data gap. */
+	public boolean unresolvedGate(int questId) {
+		return unresolvedGateQuestIds.contains(questId);
+	}
+
+	/**
+	 * 系统发放入口（{@code _faction_} 等哨兵行）：无进度时直接进 START，等价于旧
+	 * {@code RetailSystemGrantDispatcher} 对 SystemGrant 边的处理。
+	 * System-grant entry: starts the quest directly when it has no progress.
+	 *
+	 * @return 实际发放成功时为 true / true when the quest was granted
+	 */
+	public boolean grantSystemStart(Player player, int questId) {
+		if (player == null || !isSystemGranted(questId)) {
+			return false;
+		}
+		QuestState existing = player.getQuestStateList().getQuestState(questId);
+		if (existing != null && existing.getStatus() != QuestStatus.NONE) {
+			return false;
+		}
+		return QuestService.startQuest(new QuestEnv(null, player, questId, 0));
+	}
+
+	/**
+	 * 阵营日常轮换的 native 资格判定（真端 {@code quest.xml} 轴：势力/等级/种族/职业/性别/可重复）。
+	 * <p>
+	 * typed 元数据在本族切走后不复存在，因此上层的 {@code PlayerQuestStartEligibilityPort} 会以
+	 * {@code QUEST_METADATA_MISSING} 拒绝；本方法是同一判据在 native 车道的直读实现（不构造 IR 元数据）。
+	 * Native eligibility for the faction daily rotation, read straight from the retail quest.xml axes.
+	 * The typed eligibility port cannot serve switched families (no metadata), so the same predicates are
+	 * evaluated here without synthesizing IR metadata.
+	 */
+	public boolean factionRotationEligible(Player player, int questId, int factionId) {
+		if (player == null || !isSystemGranted(questId) || grantKind(questId) != RetailGrantKind.FACTION
+				|| factionId <= 0 || factionId(questId) != factionId) {
+			return false;
+		}
+		var factions = player.getNpcFactions();
+		var faction = factions == null ? null : factions.getNpcFactionById(factionId);
+		if (faction == null || !faction.isActive()) {
+			return false;
+		}
+		NativeQuestXmlTable.QuestRow row = NativeQuestXmlTable.instance().find(questId).orElse(null);
+		if (row == null || player.getQuestStateList() == null) {
+			return false;
+		}
+		QuestState existing = player.getQuestStateList().getQuestState(questId);
+		boolean repeatable = intOrZero(row, "max_repeat_count") > 0;
+		if (existing != null && existing.getStatus() != QuestStatus.NONE
+				&& existing.getStatus() != QuestStatus.LOCKED && !repeatable) {
+			return false;
+		}
+		int minLevel = intOrDefault(row, "minlevel_permitted", 1);
+		int maxLevel = intOrDefault(row, "maxlevel_permitted", Integer.MAX_VALUE);
+		int level = player.getLevel();
+		if (minLevel != 999 && level < minLevel) {
+			return false;
+		}
+		if (level > maxLevel) {
+			return false;
+		}
+		if (!racePermitted(row, player.getRace() == null ? null : player.getRace().name())) {
+			return false;
+		}
+		String classToken = player.getCommonData() == null || player.getCommonData().getPlayerClass() == null
+				? null
+				: player.getCommonData().getPlayerClass().name().toLowerCase(java.util.Locale.ROOT);
+		if (!tokenPermitted(row.text("class_permitted"), classToken)) {
+			return false;
+		}
+		String genderToken = player.getGender() == null ? null
+				: player.getGender().name().toLowerCase(java.util.Locale.ROOT);
+		return tokenPermitted(row.text("gender_permitted"), genderToken);
+	}
+
+	private static int intOrZero(NativeQuestXmlTable.QuestRow row, String tag) {
+		Integer value = row.integer(tag);
+		return value == null ? 0 : value;
+	}
+
+	private static int intOrDefault(NativeQuestXmlTable.QuestRow row, String tag, int fallback) {
+		Integer value = row.integer(tag);
+		return value == null ? fallback : value;
+	}
+
+	/** {@code class_permitted}/{@code gender_permitted} 空格分隔词表；缺声明或 {@code all} 表示不限制。 */
+	private static boolean tokenPermitted(String field, String token) {
+		if (field == null || field.isBlank() || "all".equalsIgnoreCase(field.trim())) {
+			return true;
+		}
+		if (token == null) {
+			return false;
+		}
+		for (String candidate : field.trim().toLowerCase(java.util.Locale.ROOT).split("[\\s,]+")) {
+			if (candidate.equals(token)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/** {@code race_permitted} → 种族判定（pc_light→ELYOS、pc_dark→ASMODIANS、pc_all/双族→任意）。 */
+	private static boolean racePermitted(NativeQuestXmlTable.QuestRow row, String raceName) {
+		String field = row.text("race_permitted");
+		if (field == null || field.isBlank()) {
+			return true;
+		}
+		boolean light = false;
+		boolean dark = false;
+		for (String token : field.trim().toLowerCase(java.util.Locale.ROOT).split("[\\s,]+")) {
+			if ("pc_all".equals(token)) {
+				return true;
+			}
+			light |= "pc_light".equals(token);
+			dark |= "pc_dark".equals(token);
+		}
+		if (light && dark) {
+			return true;
+		}
+		if (raceName == null) {
+			return false;
+		}
+		return light ? "ELYOS".equals(raceName) : dark && "ASMODIANS".equals(raceName);
+	}
+
+	/**
+	 * 进世界自愈（真端 P0c-28 旧存档修复边的 native 等价物）：
+	 * <ul>
+	 *   <li>链形行（中继 ≥1）在 {@code REWARD} 态且 vars=0（XML 时代存档）→ vars = 中继步数（真端投影行）；</li>
+	 *   <li>单步行在 {@code REWARD} 态且 vars=1（1 基行号残留）→ vars = 0（真端投影在行 0）。</li>
+	 * </ul>
+	 * Enter-world save heal for the native lane (the retail-table equivalent of the P0c-28 heal edges).
+	 *
+	 * @return 是否有行被修复 / whether any row was healed
+	 */
+	public boolean onEnterWorld(Player player) {
+		if (player == null || player.getQuestStateList() == null) {
+			return false;
+		}
+		boolean healed = false;
+		for (int questId : routedQuestIds) {
+			QuestState state = player.getQuestStateList().getQuestState(questId);
+			if (state == null || state.getStatus() != QuestStatus.REWARD) {
+				continue;
+			}
+			int vars = state.getQuestVars().getQuestVars();
+			int relayCount = relayCount(questId);
+			int healedVars = relayCount > 0 ? (vars == 0 ? relayCount : -1) : (vars == 1 ? 0 : -1);
+			if (healedVars < 0) {
+				continue;
+			}
+			state.getQuestVars().setVar(healedVars);
+			state.setPersistentState(PersistentState.UPDATE_REQUIRED);
+			PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(questId, QuestStatus.REWARD, healedVars));
+			healed = true;
+		}
+		return healed;
 	}
 
 	/** 拥有的任务 ID 集合。 / Managed quest ids. */
@@ -422,9 +711,32 @@ public final class SimpleTalkHandler {
 		if (env == null || env.getPlayer() == null) {
 			return false;
 		}
+		boolean handled = handleDialog(env);
+		if (handled) {
+			playCutsceneIfTriggered(env.getPlayer(), env.getQuestId(), env.getDialogId());
+		}
+		return handled;
+	}
+
+	/**
+	 * 真端过场（槽 0x35 PlayMovie）：动作命中 {@code cs1_haction} 时按 CUTSCENE 类型下发，
+	 * 是状态机之外的副作用（不推进节点）。 / Retail cutscene: sent as a side effect when the
+	 * client action matches cs1_haction; it never advances the node.
+	 */
+	private void playCutsceneIfTriggered(Player player, int questId, int dialogId) {
+		Cutscene cutscene = cutsceneByQuestId.get(questId);
+		if (cutscene != null && cutscene.triggerAction() == dialogId) {
+			moviePort.play(player, cutscene.movieId());
+		}
+	}
+
+	private boolean handleDialog(QuestEnv env) {
+		if (env == null || env.getPlayer() == null) {
+			return false;
+		}
 		Player player = env.getPlayer();
 		int questId = env.getQuestId();
-		if (!owns(questId)) {
+		if (!routes(questId)) {
 			return false;
 		}
 		Npc npc = env.getVisibleObject() instanceof Npc n ? n : null;
@@ -534,11 +846,21 @@ public final class SimpleTalkHandler {
 			return false;
 		}
 
+		// 表声明的过场触发动作（真端把 movie 挂在页动作上，如 SELECT2_1/SELECT3_1/QUEST_REFUSE_4）：
+		// 不推进状态，但必须被服务（否则客户端停在页上），movie 由 onDialog 包装层下发。
+		Cutscene cutscene = cutsceneByQuestId.get(questId);
+		if (cutscene != null && cutscene.triggerAction() == dialogId) {
+			return true;
+		}
 		return false;
 	}
 
 	/** 交付门（item_check）持有量检查：缺一即不放行。 / The item_check hold gate; a single shortfall holds it. */
 	private boolean holdsGateItems(int questId, Player player) {
+		if (unresolvedGateQuestIds.contains(questId)) {
+			// 门声明了无法解析的物品 ⇒ 永不放行（与旧 IR 的 HasItem(全部声明物) 等价）。
+			return false;
+		}
 		for (ItemStack item : workItems(questId)) {
 			if (inventory.count(player, item.itemId()) < item.count()) {
 				return false;

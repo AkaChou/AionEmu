@@ -58,9 +58,11 @@ public final class SimpleHuntHandler {
 	private final Map<Integer, Integer> rewardNpcByQuestId;
 	/** 本处理器拥有的真端任务 ID 集合。 / Managed retail quest IDs. */
 	private final Set<Integer> ownedQuestIds;
+	/** 路由集 = 注册集 − XML-only 行（单一 owner 不变量）。 / Routing set = registration set minus XML-owned rows. */
+	private final Set<Integer> routedQuestIds;
 
 	private SimpleHuntHandler(NativeQuestTableLoader tableLoader, CameraRegistry cameraRegistry,
-			NativeNpcNameResolver nameResolver, HtmlPagesRegistry pagesRegistry) {
+			NativeNpcNameResolver nameResolver, HtmlPagesRegistry pagesRegistry, Set<Integer> xmlOnlyIds) {
 		this.tableLoader = tableLoader;
 		this.cameraRegistry = cameraRegistry;
 		this.nameResolver = nameResolver;
@@ -70,10 +72,14 @@ public final class SimpleHuntHandler {
 		Map<Integer, Integer> acquires = new LinkedHashMap<>();
 		Map<Integer, Integer> rewards = new LinkedHashMap<>();
 		Set<Integer> owned = new TreeSet<>();
+		Set<Integer> routed = new TreeSet<>();
 
 		for (NativeQuestTableLoader.SimpleHuntRow row : tableLoader.rows()) {
 			int qid = row.questId();
 			owned.add(qid);
+			if (xmlOnlyIds == null || !xmlOnlyIds.contains(qid)) {
+				routed.add(qid);
+			}
 
 			// 接取 NPC 索引
 			if (row.acquiredNpcName() != null && !row.acquiredNpcName().isBlank()) {
@@ -108,6 +114,7 @@ public final class SimpleHuntHandler {
 		this.acquireNpcByQuestId = Collections.unmodifiableMap(acquires);
 		this.rewardNpcByQuestId = Collections.unmodifiableMap(rewards);
 		this.ownedQuestIds = Collections.unmodifiableSet(owned);
+		this.routedQuestIds = Collections.unmodifiableSet(routed);
 	}
 
 	public static SimpleHuntHandler instance() {
@@ -119,7 +126,8 @@ public final class SimpleHuntHandler {
 					local = new SimpleHuntHandler(NativeQuestTableLoader.instance(),
 							CameraRegistry.instance(),
 							NativeNpcNameResolver.instance(),
-							HtmlPagesRegistry.instance());
+							HtmlPagesRegistry.instance(),
+							NativeQuestOwnerResolver.instance().xmlOnlyIds());
 					instance = local;
 				}
 			}
@@ -130,6 +138,21 @@ public final class SimpleHuntHandler {
 	/** 判断是否拥有该任务。 / Checks if this handler manages the quest. */
 	public boolean owns(int questId) {
 		return ownedQuestIds.contains(questId);
+	}
+
+	/**
+	 * 判断该任务是否由 native 车道**路由**（注册集 − XML-only 行）。
+	 * XML 定义仍在的真端表行由 XML 车道 owns，native 只装载不路由（单一 owner 不变量）。
+	 * Whether the native lane routes this quest (registration set minus XML-owned rows).
+	 * Retail table rows that still carry an XML definition stay owned by the XML lane.
+	 */
+	public boolean routes(int questId) {
+		return routedQuestIds.contains(questId);
+	}
+
+	/** 路由集（不变量：与 XML-only 集交集为空）。 / The routing set (disjoint from the XML-owned set). */
+	public Set<Integer> routedQuestIds() {
+		return routedQuestIds;
 	}
 
 	/** 获取拥有的任务 ID 集合。 / Returns managed quest IDs. */
@@ -179,18 +202,27 @@ public final class SimpleHuntHandler {
 		}
 		for (Map.Entry<Integer, Integer> entry : acquireNpcByQuestId.entrySet()) {
 			int qid = entry.getKey();
+			if (!routedQuestIds.contains(qid)) {
+				continue;
+			}
 			int npcId = entry.getValue();
 			engine.registerQuestNpc(npcId).addOnQuestStart(qid);
 			engine.registerQuestNpc(npcId).addOnTalkEvent(qid);
 		}
 		for (Map.Entry<Integer, Integer> entry : rewardNpcByQuestId.entrySet()) {
 			int qid = entry.getKey();
+			if (!routedQuestIds.contains(qid)) {
+				continue;
+			}
 			int npcId = entry.getValue();
 			engine.registerQuestNpc(npcId).addOnTalkEvent(qid);
 		}
 		for (Map.Entry<Integer, List<HuntTargetRef>> entry : targetsByNpcId.entrySet()) {
 			int npcId = entry.getKey();
 			for (HuntTargetRef ref : entry.getValue()) {
+				if (!routedQuestIds.contains(ref.questId())) {
+					continue;
+				}
 				engine.registerQuestNpc(npcId).addOnKillEvent(ref.questId());
 			}
 		}
@@ -215,6 +247,10 @@ public final class SimpleHuntHandler {
 
 		boolean handled = false;
 		for (HuntTargetRef ref : refs) {
+			if (!routes(ref.questId())) {
+				// XML 定义仍在的行由 XML 车道 owns：native 只装载不推进（单一 owner 不变量）。
+				continue;
+			}
 			QuestState qs = player.getQuestStateList().getQuestState(ref.questId());
 			if (qs == null || qs.getStatus() != QuestStatus.START) {
 				continue;
@@ -257,7 +293,7 @@ public final class SimpleHuntHandler {
 		}
 		Player player = env.getPlayer();
 		int questId = env.getQuestId();
-		if (!owns(questId)) {
+		if (!routes(questId)) {
 			return false;
 		}
 

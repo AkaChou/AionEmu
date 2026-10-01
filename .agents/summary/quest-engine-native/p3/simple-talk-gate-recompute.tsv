@@ -1,0 +1,1989 @@
+kind	quest_id	gate	symbols
+RESOLVED	1105	collect_item	quest_1105a 3
+RESOLVED	1108	collect_item	quest_1108a 3
+RESOLVED	1116	collect_item	quest_1116a 3
+RESOLVED	1117	collect_item	quest_1117a 3
+RESOLVED	1121	collect_item	quest_1121a 3
+RESOLVED	1124	collect_item	quest_1124a 3
+RESOLVED	1126	collect_item	quest_1126a 3
+RESOLVED	1129	collect_item	quest_1129a 5
+RESOLVED	1132	collect_item	quest_1132a 5; quest_1132b 4
+RESOLVED	1145	collect_item	vegetable_n_c_10a 4
+RESOLVED	1148	collect_item	quest_1148a 6; quest_1148b 4
+RESOLVED	1151	collect_item	doc_quest_1151a 1
+RESOLVED	1152	collect_item	shopmaterial_co_17a 1
+RESOLVED	1159	collect_item	quest_1159a 1
+RESOLVED	1160	collect_item	quest_1160a 1; quest_1160b 1; quest_1160c 1
+RESOLVED	1166	collect_item	quest_1166a 10
+RESOLVED	1167	collect_item	quest_1167a 3; quest_1167b 5
+RESOLVED	1174	collect_item	quest_1174a 5
+RESOLVED	1176	collect_item	quest_1176a 8
+RESOLVED	1186	collect_item	quest_1186a 5
+RESOLVED	1189	collect_item	quest_1189a 7
+RESOLVED	1190	collect_item	doc_quest_1190a 1
+RESOLVED	1193	collect_item	quest_1193a 1
+RESOLVED	1203	collect_item	quest_1203a 5
+RESOLVED	1204	collect_item	quest_1204a 5
+RESOLVED	1206	collect_item	herb_n_c_10a 3
+RESOLVED	1207	collect_item	metal_n_c_10a 3
+RESOLVED	1208	collect_item	noblemetal_n_c_10a 5
+RESOLVED	1210	collect_item	plant_n_c_10a 10; berry_n_c_10b 5
+RESOLVED	1211	collect_item	herb_n_c_10b 10
+RESOLVED	1213	collect_item	herb_n_c_10b 12
+RESOLVED	1214	collect_item	vegetable_n_c_10b 12
+RESOLVED	1215	collect_item	shell_n_c_10b 15
+RESOLVED	1222	collect_item	matter_option_c_hp_20 10; matter_option_c_accuracy_20 10; matter_option_c_block_20 10
+RESOLVED	1223	collect_item	matter_option_c_mp_20 10; matter_option_c_dodge_20 10; matter_option_c_parry_20 10
+RESOLVED	1225	collect_item	junk_coin_quest_material 1
+RESOLVED	1301	collect_item	od_n_c_10a 10
+RESOLVED	1303	collect_item	quest_1303a 9
+RESOLVED	1307	collect_item	quest_1307a 1; quest_1307b 1
+RESOLVED	1317	collect_item	quest_1317a 10
+RESOLVED	1318	collect_item	quest_1318a 10
+RESOLVED	1325	collect_item	quest_1325a 10
+RESOLVED	1333	collect_item	quest_1333a 3
+RESOLVED	1334	collect_item	quest_1334a 3; sword_n_c_23b 1
+RESOLVED	1341	collect_item	quest_1341a 7; quest_1341b 3
+RESOLVED	1342	collect_item	quest_1342a 10
+RESOLVED	1351	collect_item	quest_1351a 10
+RESOLVED	1353	collect_item	quest_1353a 7
+RESOLVED	1358	collect_item	quest_1358a 5
+RESOLVED	1362	collect_item	quest_1362a 1; quest_1362b 1
+RESOLVED	1366	collect_item	quest_1366a 10
+RESOLVED	1368	collect_item	food_material_30c 2; vegetable_n_c_20b 1; Shopmaterial_co_20a 1; shopmaterial_co_21a 1
+RESOLVED	1372	collect_item	quest_1372a 5
+RESOLVED	1375	collect_item	quest_1375a 5
+RESOLVED	1381	collect_item	quest_1381a 7
+RESOLVED	1384	collect_item	quest_1384a 3; quest_1384b 3; quest_1384c 3
+RESOLVED	1386	collect_item	quest_1386a 5
+RESOLVED	1388	collect_item	quest_1388a 5
+RESOLVED	1389	collect_item	quest_1389a 10
+RESOLVED	1402	collect_item	quest_1402a 3
+RESOLVED	1403	collect_item	quest_1403a 1
+RESOLVED	1405	collect_item	quest_1405a 4; quest_1405b 6
+RESOLVED	1408	collect_item	quest_1408a 5; quest_1408b 5
+RESOLVED	1415	collect_item	quest_1415a 10
+RESOLVED	1416	collect_item	quest_1416a 1
+RESOLVED	1419	collect_item	quest_1419a 10
+RESOLVED	1420	collect_item	quest_1420a 5; quest_1420b 5
+RESOLVED	1424	collect_item	quest_1424a 10
+RESOLVED	1425	collect_item	quest_1425a 10
+RESOLVED	1426	collect_item	quest_1426a 10
+RESOLVED	1431	collect_item	fish_n_c_10c 6
+RESOLVED	1432	collect_item	fish_n_c_20a 9
+RESOLVED	1433	collect_item	herb_n_c_20a 10
+RESOLVED	1434	collect_item	vegetable_n_c_20a 10
+RESOLVED	1435	collect_item	metal_n_c_20a 10
+RESOLVED	1436	collect_item	plant_n_c_20a 10
+RESOLVED	1437	collect_item	noblemetal_n_c_20a 10
+RESOLVED	1439	collect_item	tree_n_c_20a 10
+RESOLVED	1440	collect_item	herb_n_c_20b 10
+RESOLVED	1441	collect_item	vegetable_n_c_20b 10
+RESOLVED	1443	collect_item	od_n_c_20a 10
+RESOLVED	1444	collect_item	noblemetal_n_c_30a 10
+RESOLVED	1446	collect_item	berry_n_c_20b 6; fish_n_c_20b 4
+RESOLVED	1447	collect_item	fish_n_c_30a 10
+RESOLVED	1448	collect_item	quest_1448a 4; quest_1448b 6
+RESOLVED	1450	collect_item	metal_n_c_30a 10
+RESOLVED	1453	collect_item	noblemetal_n_c_30a 5
+RESOLVED	1454	collect_item	tree_n_c_30a 10
+RESOLVED	1455	collect_item	jewelry_n_c_20a 4
+RESOLVED	1456	collect_item	jewelry_n_c_30a 5
+RESOLVED	1457	collect_item	herb_n_c_30a 15
+RESOLVED	1458	collect_item	jewelry_n_c_20b 5
+RESOLVED	1459	collect_item	jewelry_n_c_30b 5
+RESOLVED	1460	collect_item	quest_1460a 1
+RESOLVED	1461	collect_item	quest_1461a 1; quest_1461b 3
+RESOLVED	1462	collect_item	quest_1462a 3
+RESOLVED	1473	collect_item	quest_1473a 3
+RESOLVED	1475	collect_item	quest_1475a 5; quest_1475b 3
+RESOLVED	1478	collect_item	quest_1478a 4; quest_1478b 4
+RESOLVED	1480	collect_item	quest_1480a 1
+RESOLVED	1481	collect_item	quest_1481a 1
+RESOLVED	1491	collect_item	quest_1491a 1; junk_armor_parts_token_light 25
+RESOLVED	1492	collect_item	quest_1492a 1; junk_armor_parts_token_light 25
+RESOLVED	1493	collect_item	quest_1493a 1; junk_armor_parts_token_light 25
+RESOLVED	1494	collect_item	quest_1494a 1; junk_armor_parts_token_light 50
+RESOLVED	1495	collect_item	quest_1495a 1; junk_armor_parts_token_light 38
+RESOLVED	1496	collect_item	quest_1496a 5; quest_1496b 5
+RESOLVED	1498	collect_item	quest_1498a 4; quest_1498b 6
+RESOLVED	1502	collect_item	quest_1502a 5
+RESOLVED	1506	collect_item	quest_1506a 6; quest_1506b 4
+RESOLVED	1510	collect_item	quest_1510a 10
+RESOLVED	1511	collect_item	quest_1511a 5
+RESOLVED	1512	collect_item	quest_1512a 2; quest_1512b 1
+RESOLVED	1516	collect_item	food_accuracy_20a 1
+RESOLVED	1518	collect_item	quest_1518a 10
+RESOLVED	1523	collect_item	quest_1523a 10
+RESOLVED	1524	collect_item	quest_1524a 10
+RESOLVED	1526	collect_item	quest_1526a 10
+RESOLVED	1530	collect_item	quest_1530a 3
+RESOLVED	1532	collect_item	quest_1532a 1; quest_1532b 1
+RESOLVED	1534	collect_item	quest_1534a 10
+RESOLVED	1539	collect_item	quest_1539a 5; shopmaterial_co_21a 3
+RESOLVED	1541	collect_item	quest_1541a 7
+RESOLVED	1543	collect_item	quest_1543a 7
+RESOLVED	1544	collect_item	quest_1544a 3
+RESOLVED	1545	collect_item	quest_1545a 3
+RESOLVED	1547	collect_item	quest_1547a 2; quest_1547b 2; quest_1547c 2; quest_1547d 2
+RESOLVED	1549	collect_item	quest_1549a 1
+RESOLVED	1550	collect_item	quest_1550a 3; quest_1550b 2; quest_1550c 3; jr_part_mythril_02a 2
+RESOLVED	1552	collect_item	quest_1552a 10
+RESOLVED	1554	collect_item	quest_1554b 1
+RESOLVED	1556	collect_item	quest_1556a 1
+RESOLVED	1566	collect_item	quest_1566a 4; quest_1566b 6
+RESOLVED	1576	collect_item	quest_1576a 10
+RESOLVED	1580	collect_item	quest_1580a 5
+RESOLVED	1585	collect_item	quest_1585a 10
+RESOLVED	1589	collect_item	quest_1589a 10
+RESOLVED	1591	collect_item	quest_1591a 10
+RESOLVED	1592	collect_item	quest_1592a 15; quest_1592b 7
+RESOLVED	1594	collect_item	quest_1594a 2
+RESOLVED	1595	collect_item	quest_1595a 2
+RESOLVED	1596	collect_item	quest_1596a 10
+RESOLVED	1599	collect_item	quest_1599a 1
+RESOLVED	1602	collect_item	quest_1602a 10
+RESOLVED	1603	collect_item	doc_quest_1603a 1
+RESOLVED	1610	collect_item	quest_1610a 5
+RESOLVED	1611	collect_item	quest_1611a 4; quest_1611b 3; quest_1611c 3
+RESOLVED	1616	collect_item	quest_1616a 5
+RESOLVED	1617	collect_item	quest_1617a 1
+RESOLVED	1619	collect_item	quest_1619a 10
+RESOLVED	1622	collect_item	quest_1622a 5; quest_1622b 5
+RESOLVED	1625	collect_item	quest_1625a 7
+RESOLVED	1629	collect_item	quest_1629a 5
+RESOLVED	1632	collect_item	quest_1632a 5
+RESOLVED	1635	collect_item	quest_1635a 1
+RESOLVED	1642	collect_item	quest_1642a 10
+RESOLVED	1645	collect_item	quest_1645a 1
+RESOLVED	1646	collect_item	quest_1646a 3
+RESOLVED	1653	collect_item	quest_1653a 30
+RESOLVED	1663	collect_item	quest_1663a 1
+RESOLVED	1664	collect_item	quest_1664a 5
+RESOLVED	1669	collect_item	quest_1669a 10
+RESOLVED	1672	collect_item	quest_1672a 1
+RESOLVED	1673	collect_item	jewelry_n_c_30a 4
+RESOLVED	1674	collect_item	plant_n_c_30a 10
+RESOLVED	1675	collect_item	fish_n_c_30b 10
+RESOLVED	1676	collect_item	herb_n_c_30b 10
+RESOLVED	1677	collect_item	tree_n_c_40a 10
+RESOLVED	1678	collect_item	fish_n_c_40a 10
+RESOLVED	1679	collect_item	shell_n_c_40a 10
+RESOLVED	1680	collect_item	metal_n_c_40a 5
+RESOLVED	1681	collect_item	plant_n_c_40a 10
+RESOLVED	1682	collect_item	herb_n_c_40b 10
+RESOLVED	1683	collect_item	quest_1683a 3
+RESOLVED	1684	collect_item	quest_1684a 1; quest_1684b 1
+RESOLVED	1688	collect_item	junk_draupnir_quest_01 2; junk_draupnir_quest_02 2; junk_draupnir_quest_03 6
+RESOLVED	1689	collect_item	junk_draupnir_quest_01 2; junk_draupnir_quest_02 2; junk_draupnir_quest_03 6
+RESOLVED	1690	collect_item	junk_draupnir_quest_01 2; junk_draupnir_quest_02 2; junk_draupnir_quest_03 25
+RESOLVED	1692	collect_item	noblemetal_n_c_30a 10; gold 3146
+RESOLVED	1730	collect_item	quest_1730a 10
+RESOLVED	1731	collect_item	quest_1731a 5
+RESOLVED	1734	collect_item	od_n_c_30a 5
+RESOLVED	1735	collect_item	od_n_c_40a 10
+RESOLVED	1743	collect_item	quest_1743a 1
+RESOLVED	1744	collect_item	quest_1744a 5
+RESOLVED	1746	collect_item	quest_1746a 5
+RESOLVED	1748	collect_item	quest_1748a 5
+RESOLVED	1749	collect_item	quest_1749a 5
+RESOLVED	1751	collect_item	quest_1751a 5; quest_1751b 7
+RESOLVED	1758	collect_item	quest_1758a 3
+RESOLVED	1759	collect_item	quest_1759a 5
+RESOLVED	1762	collect_item	quest_1762a 7; quest_1762b 8
+RESOLVED	1763	collect_item	quest_1763a 5; quest_1763b 8
+RESOLVED	1764	collect_item	quest_1764a 5; quest_1764b 5; quest_1764c 5
+RESOLVED	1768	collect_item	quest_1768a 3
+RESOLVED	1771	collect_item	quest_1771a 1; quest_1771b 1; quest_1771c 1
+RESOLVED	1772	collect_item	quest_1772a 5
+RESOLVED	1778	collect_item	quest_1778a 3
+RESOLVED	1781	collect_item	quest_1781a 5; quest_1781b 5
+RESOLVED	1784	collect_item	quest_1784a 5
+RESOLVED	1786	collect_item	quest_1786a 5
+RESOLVED	1789	collect_item	quest_1789a 5
+RESOLVED	1794	collect_item	quest_1794a 5
+RESOLVED	1796	collect_item	quest_1796a 4; quest_1796b 2
+RESOLVED	1801	collect_item	quest_1801a 5
+RESOLVED	1802	collect_item	quest_1802a 5
+RESOLVED	1803	collect_item	quest_1803a 5
+RESOLVED	1804	collect_item	quest_1804a 5
+RESOLVED	1805	collect_item	quest_1805a 5
+RESOLVED	1806	collect_item	quest_1806a 5
+RESOLVED	1807	collect_item	quest_1807a 5
+RESOLVED	1808	collect_item	quest_1808a 5
+RESOLVED	1809	collect_item	quest_1809a 5
+RESOLVED	1810	collect_item	quest_1810a 5
+RESOLVED	1819	collect_item	quest_1819a 5
+RESOLVED	1820	collect_item	quest_1820a 4
+RESOLVED	1821	collect_item	quest_1821a 5
+RESOLVED	1822	collect_item	quest_1822a 5
+RESOLVED	1823	collect_item	quest_1823a 10
+RESOLVED	1824	collect_item	quest_1824a 10
+RESOLVED	1825	collect_item	quest_1825a 1; quest_1825b 1; quest_1825c 1; quest_1825d 1
+RESOLVED	1826	collect_item	quest_1826a 5; quest_1826b 5
+RESOLVED	1848	collect_item	quest_1848a 3; quest_1848b 3; quest_1848c 3
+RESOLVED	1858	collect_item	quest_1858a 5
+RESOLVED	1859	collect_item	quest_1859a 5
+RESOLVED	1860	collect_item	quest_1860a 5
+RESOLVED	1861	collect_item	quest_1861a 5
+RESOLVED	1862	collect_item	quest_1862a 5
+RESOLVED	1863	collect_item	quest_1863a 5
+RESOLVED	1902	collect_item	ws_part_steel_01a 3
+RESOLVED	1903	collect_item	ws_part_steel_01a 3
+RESOLVED	1904	collect_item	food_phyattack_20a 3
+RESOLVED	1905	collect_item	jr_part_birke_01a 3
+RESOLVED	1906	collect_item	al_part_stone1_02a 15
+RESOLVED	1907	collect_item	ta_part_lea1_01a 3
+RESOLVED	1909	quest_work_item	doc_quest_1909a
+RESOLVED	1910	collect_item	junk_v_s_11d 1
+RESOLVED	1911	collect_item	junk_k_s_13d 2
+RESOLVED	1912	collect_item	junk_l_s_16d 3
+RESOLVED	1930	collect_item	sword_n_r1_q_25a 1; quest_1930b 1; quest_1930c 3; quest_1930d 1
+RESOLVED	1932	collect_item	quest_1932a 1
+RESOLVED	1933	collect_item	quest_1933a 1; quest_1933b 1; quest_1933c 1
+RESOLVED	1934	collect_item	quest_1934a 1
+RESOLVED	1949	collect_item	quest_1949a 3
+RESOLVED	1971	quest_work_item	quest_1971c
+RESOLVED	1973	collect_item	quest_skill_weapon_399b 1
+RESOLVED	1975	collect_item	quest_skill_armor_399b 1
+RESOLVED	1977	collect_item	quest_skill_handi_399b 1
+RESOLVED	1979	collect_item	quest_skill_cook01_399b 1; quest_skill_cook02_399b 1; quest_skill_cook03_399b 1; quest_skill_cook04_399b 1
+RESOLVED	1981	collect_item	quest_skill_alche_399b 1
+RESOLVED	1983	collect_item	quest_skill_tailo_399b 1
+RESOLVED	2105	collect_item	quest_2105a 3
+RESOLVED	2108	collect_item	quest_2108a 3
+RESOLVED	2112	collect_item	quest_2112a 3
+RESOLVED	2113	collect_item	quest_2113a 1
+RESOLVED	2118	collect_item	doc_quest_2118a 1
+RESOLVED	2120	collect_item	quest_2120a 3
+RESOLVED	2124	collect_item	quest_2124a 3; quest_2124b 3
+RESOLVED	2127	collect_item	quest_2127a 3
+RESOLVED	2128	collect_item	quest_2128a 3
+RESOLVED	2133	collect_item	herb_d_n_c_10a 3
+RESOLVED	2134	collect_item	metal_n_c_10a 3
+RESOLVED	2144	collect_item	matter_option_c_hp_20 10; matter_option_c_accuracy_20 10; matter_option_c_block_20 10
+RESOLVED	2145	collect_item	matter_option_c_mp_20 10; matter_option_c_dodge_20 10; matter_option_c_parry_20 10
+RESOLVED	2147	collect_item	junk_coin_d_quest_material 1
+RESOLVED	2204	collect_item	quest_2204a 5
+RESOLVED	2205	collect_item	quest_2205a 5
+RESOLVED	2206	collect_item	quest_2206a 5
+RESOLVED	2212	collect_item	quest_2212a 6
+RESOLVED	2214	collect_item	quest_2214a 5
+RESOLVED	2218	collect_item	quest_2218a 5
+RESOLVED	2224	collect_item	quest_2224a 6
+RESOLVED	2227	collect_item	quest_2227a 3
+RESOLVED	2236	collect_item	quest_2236a 5
+RESOLVED	2238	collect_item	quest_2238a 5
+RESOLVED	2241	collect_item	quest_2241a 5
+RESOLVED	2249	collect_item	quest_2249a 5
+RESOLVED	2250	collect_item	herb_d_n_c_10b 15
+RESOLVED	2251	collect_item	quest_2251a 5
+RESOLVED	2254	collect_item	quest_2254a 5
+RESOLVED	2259	collect_item	quest_2259a 1
+RESOLVED	2265	collect_item	quest_2265a 1
+RESOLVED	2270	collect_item	quest_2270a 3
+RESOLVED	2272	collect_item	quest_2272a 1
+RESOLVED	2273	collect_item	quest_2273a 3
+RESOLVED	2275	collect_item	vegetable_d_n_c_10b 9
+RESOLVED	2276	collect_item	vegetable_d_n_c_10c 9
+RESOLVED	2277	collect_item	quest_2277a 10
+RESOLVED	2292	collect_item	Ring_d_n_c_16c 1; Ring_d_n_c_16d 1; Ring_d_n_c_16e 1
+RESOLVED	2297	collect_item	shell_d_n_c_10b 18
+RESOLVED	2301	collect_item	od_n_c_20a  10
+RESOLVED	2302	collect_item	quest_2302a 1; quest_2302b 1; quest_2302c 2
+RESOLVED	2305	collect_item	quest_2305a 1
+RESOLVED	2311	collect_item	quest_2311a 10
+RESOLVED	2312	collect_item	quest_2312a 10
+RESOLVED	2314	collect_item	quest_2314a 3; quest_2314b 2; quest_2314c 1
+RESOLVED	2320	collect_item	quest_2320a 4; quest_2320b 4; quest_2320c 2
+RESOLVED	2323	collect_item	quest_2323a 3; quest_2323b 4; quest_2323c 3
+RESOLVED	2325	collect_item	quest_2325a 1
+RESOLVED	2328	collect_item	quest_2328a 1
+RESOLVED	2334	collect_item	food_d_material_30c 2; fish_d_n_c_20b 2; Shopmaterial_co_22a 2; shopmaterial_co_19a 5
+RESOLVED	2340	collect_item	quest_2340a 10
+RESOLVED	2356	collect_item	quest_2356a 10
+RESOLVED	2359	collect_item	quest_2359a 10
+RESOLVED	2362	collect_item	quest_2362a 6; quest_2362b 4
+RESOLVED	2369	collect_item	quest_2369a 25
+RESOLVED	2371	collect_item	quest_2371a 3; quest_2371b 1
+RESOLVED	2378	collect_item	quest_2378a 10
+RESOLVED	2379	collect_item	quest_2379a 25
+RESOLVED	2380	collect_item	quest_2380a 30
+RESOLVED	2384	collect_item	quest_2384a 3; quest_2384b 3; quest_2384c 3
+RESOLVED	2386	collect_item	quest_2386a 10
+RESOLVED	2387	collect_item	quest_2387a 3
+RESOLVED	2389	collect_item	quest_2389a 7
+RESOLVED	2391	collect_item	quest_2391a 3
+RESOLVED	2400	collect_item	quest_2400a 7; quest_2400b 3
+RESOLVED	2401	collect_item	quest_2401a 5
+RESOLVED	2402	collect_item	quest_2402a 10
+RESOLVED	2407	collect_item	quest_2407a 1
+RESOLVED	2412	collect_item	quest_2412a 3; quest_2412b 2; quest_2412c 1
+RESOLVED	2413	collect_item	quest_2413a 3; quest_2413b 2; quest_2413c 1
+RESOLVED	2416	collect_item	quest_2416a 2; quest_2416b 5
+RESOLVED	2419	collect_item	quest_2419a 10
+RESOLVED	2425	collect_item	quest_2425a 5
+RESOLVED	2429	collect_item	quest_2429a 3; quest_2429b 1
+RESOLVED	2431	collect_item	quest_2431a 3
+RESOLVED	2440	collect_item	quest_2440a 7
+RESOLVED	2442	collect_item	quest_2442a 10
+RESOLVED	2446	collect_item	quest_2446a 10
+RESOLVED	2451	collect_item	metal_n_c_20a 10
+RESOLVED	2452	collect_item	quest_2452a 10
+RESOLVED	2453	collect_item	tree_d_n_c_20a 10
+RESOLVED	2454	collect_item	plant_d_n_c_20a 10
+RESOLVED	2455	collect_item	berry_d_n_c_20a 10
+RESOLVED	2456	collect_item	vegetable_d_n_c_20a 10
+RESOLVED	2457	collect_item	fish_d_n_c_20a 5
+RESOLVED	2459	collect_item	fish_d_n_c_20b 10
+RESOLVED	2460	collect_item	berry_d_n_c_20b 3; vegetable_d_n_c_20b 7
+RESOLVED	2461	collect_item	herb_d_n_c_20a 10
+RESOLVED	2462	collect_item	herb_d_n_c_20b 10
+RESOLVED	2463	collect_item	quest_2463a 1; junk_armor_parts_token_dark 25
+RESOLVED	2464	collect_item	quest_2464a 1; junk_armor_parts_token_dark 25
+RESOLVED	2465	collect_item	noblemetal_n_c_20a 10
+RESOLVED	2466	collect_item	jewelry_n_c_20a 4
+RESOLVED	2467	collect_item	jewelry_n_c_20b 5
+RESOLVED	2468	collect_item	noblemetal_n_c_30a 10
+RESOLVED	2469	collect_item	metal_n_c_30a 10
+RESOLVED	2470	collect_item	tree_d_n_c_30a 7
+RESOLVED	2471	collect_item	quest_2471a 1; junk_armor_parts_token_dark 25
+RESOLVED	2472	collect_item	plant_d_n_c_30a 10
+RESOLVED	2473	collect_item	herb_d_n_c_30b 5
+RESOLVED	2474	collect_item	herb_d_n_c_30a 10
+RESOLVED	2475	collect_item	berry_d_n_c_30b 10
+RESOLVED	2476	collect_item	quest_2476a 3
+RESOLVED	2478	collect_item	quest_2478a 3; quest_2478b 3; quest_2478c 3
+RESOLVED	2481	collect_item	quest_2481a 6
+RESOLVED	2483	collect_item	quest_2483a 1
+RESOLVED	2490	collect_item	quest_2490a 1; junk_armor_parts_token_dark 38
+RESOLVED	2491	collect_item	quest_2491a 1; junk_armor_parts_token_dark 50
+RESOLVED	2494	collect_item	quest_2494a 1; quest_2494b 1; quest_2494c 1
+RESOLVED	2502	collect_item	quest_2502a 10
+RESOLVED	2504	collect_item	quest_2504a 7; shopmaterial_co_14a 1; shopmaterial_co_09a 1
+RESOLVED	2511	collect_item	quest_2511a 1; quest_2511b 1; quest_2511c 1; quest_2511d 1
+RESOLVED	2525	collect_item	quest_2525a 1
+RESOLVED	2529	collect_item	quest_2529a 10
+RESOLVED	2531	collect_item	quest_2531a 4; quest_2531b 4; shopmaterial_al_01a 1
+RESOLVED	2540	collect_item	quest_2540a 7; quest_2540b 3
+RESOLVED	2541	collect_item	quest_2541a 9
+RESOLVED	2543	collect_item	quest_2543a 1
+RESOLVED	2545	collect_item	quest_2545a 10
+RESOLVED	2547	collect_item	quest_2547a 7; quest_2547b 3
+RESOLVED	2548	collect_item	quest_2548a 2
+RESOLVED	2557	collect_item	quest_2557a 6; quest_2557b 4
+RESOLVED	2558	collect_item	quest_2558a 10
+RESOLVED	2559	collect_item	quest_2559a 1
+RESOLVED	2562	collect_item	quest_2562a 6; quest_2562b 4
+RESOLVED	2563	collect_item	quest_2563a 1
+RESOLVED	2565	collect_item	quest_2565a 7; plant_d_n_c_30a 3
+RESOLVED	2570	collect_item	quest_2570a 7; quest_2570b 3
+RESOLVED	2572	collect_item	quest_2572a 6
+RESOLVED	2574	collect_item	quest_2574a 3; quest_2574b 3; quest_2574c 4
+RESOLVED	2579	collect_item	quest_2579a 4; quest_2579b 5; shopmaterial_co_19a 1
+RESOLVED	2581	collect_item	quest_2581a 4
+RESOLVED	2586	collect_item	quest_2586a 8; quest_2586b 2
+RESOLVED	2588	collect_item	quest_2588a 5; quest_2588b 5
+RESOLVED	2595	collect_item	quest_2595a 10
+RESOLVED	2596	collect_item	quest_2596a 40
+RESOLVED	2597	collect_item	quest_2597a 35
+RESOLVED	2599	collect_item	quest_2599a 1; quest_2599b 1
+RESOLVED	2612	collect_item	quest_2612a 4; quest_2612b 6
+RESOLVED	2614	collect_item	quest_2614a 9
+RESOLVED	2623	collect_item	quest_2623a 2; quest_2623b 3
+RESOLVED	2625	collect_item	quest_2625a 5; quest_2625b 5
+RESOLVED	2626	collect_item	quest_2626a 6; quest_2626b 4
+RESOLVED	2631	collect_item	quest_2631a 1
+RESOLVED	2640	collect_item	quest_2640a 6; quest_2640b 4
+RESOLVED	2642	collect_item	quest_2642a 5; quest_2642b 5
+RESOLVED	2643	collect_item	quest_2643a 4; quest_2643b 2; quest_2643c 2; quest_2643d 1
+RESOLVED	2649	collect_item	quest_2649a 3; quest_2649b 7
+RESOLVED	2652	collect_item	quest_2652a 2; quest_2652b 8
+RESOLVED	2657	collect_item	junk_draupnir_quest_01 3; junk_draupnir_quest_02 3; junk_draupnir_quest_03 30
+RESOLVED	2658	collect_item	quest_2658a 10
+RESOLVED	2660	collect_item	quest_2660a 10
+RESOLVED	2673	collect_item	quest_2673a 5; quest_2673b 5
+RESOLVED	2675	collect_item	quest_2675a 4; quest_2675b 4; quest_2675c 2
+RESOLVED	2678	collect_item	junk_draupnir_quest_01 2; junk_draupnir_quest_02 2; junk_draupnir_quest_03 6
+RESOLVED	2679	collect_item	junk_draupnir_quest_01 2; junk_draupnir_quest_02 2; junk_draupnir_quest_03 20
+RESOLVED	2680	collect_item	jewelry_n_c_30a 5
+RESOLVED	2681	collect_item	vegetable_d_n_c_30a 10
+RESOLVED	2682	collect_item	berry_d_n_c_30a 10
+RESOLVED	2683	collect_item	jewelry_n_c_30c 4
+RESOLVED	2684	collect_item	vegetable_d_n_c_30b 10
+RESOLVED	2685	collect_item	herb_d_n_c_40a 10
+RESOLVED	2686	collect_item	fish_d_n_c_40a 10
+RESOLVED	2687	collect_item	shell_d_n_c_40a 10
+RESOLVED	2688	collect_item	tree_d_n_c_40a 10
+RESOLVED	2689	collect_item	berry_d_n_c_40b 10
+RESOLVED	2694	collect_item	quest_2694a 10
+RESOLVED	2699	collect_item	quest_2699a 1
+RESOLVED	2728	collect_item	quest_2728a 1
+GATE_GAP	2732	quest_work_item	<empty>
+RESOLVED	2733	collect_item	od_n_c_30a 5
+RESOLVED	2734	collect_item	od_n_c_40a 10
+RESOLVED	2741	collect_item	quest_2741a 5
+RESOLVED	2744	collect_item	quest_2744a 5; quest_2744b 5
+RESOLVED	2746	collect_item	quest_2746a 10
+RESOLVED	2751	collect_item	quest_2751a 5
+RESOLVED	2752	collect_item	quest_2752a 7
+RESOLVED	2754	collect_item	quest_2754a 1
+RESOLVED	2760	collect_item	quest_2760a 7
+RESOLVED	2761	collect_item	quest_2761a 5
+RESOLVED	2762	collect_item	quest_2762a 7
+RESOLVED	2765	collect_item	quest_2765a 8
+RESOLVED	2766	collect_item	quest_2766a 3
+RESOLVED	2774	collect_item	quest_2774a 5
+RESOLVED	2775	collect_item	quest_2775a 7
+RESOLVED	2779	collect_item	quest_2779a 1
+RESOLVED	2781	collect_item	quest_2781a 7
+RESOLVED	2784	collect_item	quest_2784a 5
+RESOLVED	2788	collect_item	quest_2788a 3; quest_2788b 3
+RESOLVED	2789	collect_item	quest_2789a 5
+RESOLVED	2791	collect_item	quest_2791a 6; quest_2791b 3
+RESOLVED	2794	collect_item	quest_2794a 5
+RESOLVED	2801	collect_item	quest_2801a 5
+RESOLVED	2802	collect_item	quest_2802a 5
+RESOLVED	2803	collect_item	quest_2803a 5
+RESOLVED	2804	collect_item	quest_2804a 5
+RESOLVED	2805	collect_item	quest_2805a 5
+RESOLVED	2806	collect_item	quest_2806a 5
+RESOLVED	2807	collect_item	quest_2807a 5
+RESOLVED	2808	collect_item	quest_2808a 5
+RESOLVED	2809	collect_item	quest_2809a 5
+RESOLVED	2810	collect_item	quest_2810a 5
+RESOLVED	2819	collect_item	quest_2819a 5
+RESOLVED	2820	collect_item	quest_2820a 4
+RESOLVED	2821	collect_item	quest_2821a 7
+RESOLVED	2822	collect_item	quest_2822a 5
+RESOLVED	2823	collect_item	quest_2823a 10
+RESOLVED	2824	collect_item	quest_2824a 10
+RESOLVED	2825	collect_item	quest_2825a 1; quest_2825b 1; quest_2825c 1; quest_2825d 1
+RESOLVED	2826	collect_item	quest_2826a 5; quest_2826b 5
+RESOLVED	2833	collect_item	quest_2833a 7; quest_2833b 3
+RESOLVED	2849	collect_item	quest_2849a 3; quest_2849b 3; quest_2849c 3
+RESOLVED	2858	collect_item	quest_2858a 5
+RESOLVED	2859	collect_item	quest_2859a 5
+RESOLVED	2860	collect_item	quest_2860a 5
+RESOLVED	2861	collect_item	quest_2861a 5
+RESOLVED	2862	collect_item	quest_2862a 5
+RESOLVED	2863	collect_item	quest_2863a 5
+RESOLVED	2905	collect_item	ws_part_d_steel_01a 3
+RESOLVED	2906	collect_item	ws_part_d_steel_01a 3
+RESOLVED	2907	collect_item	food_d_phyattack_20a 3
+RESOLVED	2908	collect_item	jr_part_d_birke_01a 3
+RESOLVED	2909	collect_item	al_part_d_stone1_02a 15
+RESOLVED	2910	collect_item	ta_part_d_lea1_01a 3
+RESOLVED	2915	collect_item	food_d_phyattack_20a 2
+RESOLVED	2923	collect_item	quest_2923a 3; quest_2923b 2; quest_2923c 1
+RESOLVED	2924	collect_item	quest_2924a 5; quest_2924b 1
+RESOLVED	2926	collect_item	quest_2926a 1; quest_2926b 1; metal_n_c_30a 1
+RESOLVED	2927	collect_item	quest_2927b 1; quest_2927c 1; jewelry_n_c_40c 1
+RESOLVED	2949	collect_item	quest_2949a 10; quest_2949b 10; tree_d_n_c_10a 15
+RESOLVED	2950	collect_item	quest_2950a 10; quest_2950b 7
+RESOLVED	2952	collect_item	quest_2952a 3; jewelry_n_r_30c 5
+RESOLVED	2956	collect_item	quest_2956a 3; quest_2956b 3; shopmaterial_co_16a 1
+RESOLVED	2960	collect_item	shopmaterial_co_12a 1; first_aid_30a 1; od_n_c_20a 1
+RESOLVED	2973	collect_item	quest_d_skill_weapon_399b 1
+RESOLVED	2975	collect_item	quest_d_skill_armor_399b 1
+RESOLVED	2977	collect_item	quest_d_skill_handi_399b 1
+RESOLVED	2979	collect_item	quest_d_skill_cook01_399b 1; quest_d_skill_cook02_399b 1; quest_d_skill_cook03_399b 1; quest_d_skill_cook04_399b 1
+RESOLVED	2981	collect_item	quest_d_skill_alche_399b 1
+RESOLVED	2983	collect_item	quest_d_skill_tailo_399b 1
+RESOLVED	3003	collect_item	quest_3003a 7; quest_3003b 5
+RESOLVED	3007	collect_item	quest_3007a 8
+RESOLVED	3009	collect_item	quest_3009a 1
+RESOLVED	3010	collect_item	quest_3010a 10
+RESOLVED	3012	collect_item	quest_3012a 10
+RESOLVED	3017	collect_item	slate_n_q_20a 1; slate_n_q_20b 1; slate_n_q_20c 1
+RESOLVED	3022	collect_item	quest_3022a 7
+RESOLVED	3034	collect_item	quest_3034a 1
+RESOLVED	3038	collect_item	quest_3038a 7
+RESOLVED	3039	collect_item	quest_3039a 1
+RESOLVED	3047	collect_item	quest_3047a 1
+RESOLVED	3053	collect_item	quest_3053a 1
+RESOLVED	3059	collect_item	quest_3059a 1
+RESOLVED	3061	collect_item	quest_3061a 15
+RESOLVED	3062	collect_item	quest_3062a 15
+RESOLVED	3063	collect_item	quest_3063a 15
+RESOLVED	3077	collect_item	quest_3077a 7; quest_3077b 7
+RESOLVED	3078	collect_item	quest_3078a 6; quest_3078b 6
+RESOLVED	3084	collect_item	quest_3084a 8; shopmaterial_ha_08a 1
+RESOLVED	3089	collect_item	quest_3089b 10
+RESOLVED	3092	collect_item	quest_3092a 7
+RESOLVED	3101	collect_item	quest_3101a 7; shopmaterial_ha_17a 3; shopmaterial_ta_03a 1; shopmaterial_ta_11a 1
+RESOLVED	3104	collect_item	quest_3104a 1
+RESOLVED	3106	collect_item	quest_3106a 6; quest_3106b 9
+RESOLVED	3112	collect_item	quest_3112a 6; quest_3112b 9
+RESOLVED	3114	collect_item	matter_option_c_hp_50 10; matter_option_c_accuracy_50 10; matter_option_c_block_50 10
+RESOLVED	3115	collect_item	matter_option_c_mp_50 10; matter_option_c_dodge_50 10; matter_option_c_parry_50 10
+RESOLVED	3117	collect_item	quest_3117a 1
+RESOLVED	3119	collect_item	quest_3119a 10
+RESOLVED	3203	collect_item	quest_3203a 1
+RESOLVED	3204	quest_work_item	quest_3204a
+RESOLVED	3206	collect_item	quest_3206a 12
+RESOLVED	3208	quest_work_item	DOC_QUEST_3208A
+RESOLVED	3209	quest_work_item	quest_3209a
+RESOLVED	3214	collect_item	quest_3214a 10
+RESOLVED	3215	collect_item	quest_3215a 10
+RESOLVED	3216	collect_item	quest_3216a 4; quest_3216b 3
+RESOLVED	3303	collect_item	quest_3303a 30
+RESOLVED	3304	collect_item	junk_lehpar_quest_01a 40
+RESOLVED	3305	collect_item	junk_lehpar_quest_01a 60
+RESOLVED	3306	collect_item	junk_lehpar_quest_01a 80
+RESOLVED	3310	collect_item	quest_3310a 2; quest_3310b 1; quest_3310c 3; quest_3310d 2
+RESOLVED	3313	collect_item	quest_3313a 5; quest_3313b 3
+RESOLVED	3316	collect_item	quest_3316a 3
+RESOLVED	3317	collect_item	quest_3317a 7
+RESOLVED	3318	collect_item	quest_3318a 7
+RESOLVED	3320	collect_item	quest_3320a 5
+RESOLVED	3322	collect_item	quest_3322a 7
+RESOLVED	3331	collect_item	quest_3331a 10
+RESOLVED	3336	collect_item	quest_3336a 8
+RESOLVED	3337	quest_work_item	quest_3337a 1
+RESOLVED	3338	collect_item	matter_option_c_hp_30 10; matter_option_c_accuracy_30 10; matter_option_c_block_30 10
+RESOLVED	3339	collect_item	matter_option_c_mp_30 10; matter_option_c_dodge_30 10; matter_option_c_parry_30 10
+RESOLVED	3340	collect_item	quest_3340a 1
+RESOLVED	3505	collect_item	quest_3505a 10
+RESOLVED	3506	collect_item	quest_3506a 5
+RESOLVED	3507	collect_item	quest_3507a 5; quest_3507b 5
+RESOLVED	3509	collect_item	quest_3509a 10
+RESOLVED	3510	collect_item	quest_3510a 5
+RESOLVED	3513	collect_item	quest_3513a 10
+RESOLVED	3518	collect_item	quest_3518a 7
+RESOLVED	3520	collect_item	quest_3520a 5
+RESOLVED	3535	collect_item	quest_3535a 10
+RESOLVED	3536	collect_item	quest_3536a 10
+RESOLVED	3537	collect_item	quest_3537a 4; quest_3537b 6
+RESOLVED	3539	collect_item	quest_3539a 4
+RESOLVED	3540	collect_item	quest_3540a 10
+RESOLVED	3542	collect_item	quest_3542a 10
+RESOLVED	3544	collect_item	quest_3544a 8
+RESOLVED	3545	collect_item	matter_option_c_hp_40 10; matter_option_c_accuracy_40 10; matter_option_c_block_40 10
+RESOLVED	3546	collect_item	matter_option_c_mp_40 10; matter_option_c_dodge_40 10; matter_option_c_parry_40 10
+RESOLVED	3547	collect_item	quest_3547a 10
+RESOLVED	3548	collect_item	quest_3548a 1
+RESOLVED	3705	collect_item	junk_idlf1_drop_component_01a 20; junk_idlf1_sale_component_01a 1
+RESOLVED	3715	collect_item	quest_3715a 10
+RESOLVED	3717	collect_item	quest_3717a 6; quest_3717b 6; quest_3717c 1; quest_3717d 1
+RESOLVED	3724	collect_item	quest_3724a 6; quest_3724b 6; quest_3724c 1; quest_3724d 1
+RESOLVED	3905	collect_item	quest_ab1_01 1; quest_ab1_02 1; quest_ab1_03 1; gold 2400000
+RESOLVED	3906	collect_item	quest_ab1_04 1; quest_ab1_05 1; gold 3600000
+RESOLVED	3907	collect_item	quest_ab1_06 1; quest_ab1_07 1; quest_ab1_08 1; gold 4800000
+RESOLVED	3915	collect_item	quest_3915a 40
+RESOLVED	3916	collect_item	quest_3916a 40
+RESOLVED	3918	collect_item	quest_3918a 28
+RESOLVED	3919	collect_item	quest_3919a 4
+RESOLVED	3932	collect_item	quest_3932a 10; quest_3932b 1
+RESOLVED	3942	collect_item	quest_skill_weapon_399b 1
+RESOLVED	3945	collect_item	quest_skill_armor_399b 1
+RESOLVED	3948	collect_item	quest_skill_handi_399b 1
+RESOLVED	3951	collect_item	quest_skill_cook01_399b 1; quest_skill_cook02_399b 1; quest_skill_cook03_399b 1; quest_skill_cook04_399b 1
+RESOLVED	3954	collect_item	quest_skill_alche_399b 1
+RESOLVED	3957	collect_item	quest_skill_tailo_399b 1
+RESOLVED	3961	collect_item	gold 40000
+RESOLVED	3962	collect_item	material_charm_light_40 1; gold 50000
+RESOLVED	3963	collect_item	material_charm_light_45 1; gold 70000
+RESOLVED	3964	collect_item	material_charm_light_50 1; gold 90000
+RESOLVED	3975	collect_item	devanion_master_01a 5
+RESOLVED	4002	collect_item	quest_4002a 13; quest_4002b 13
+RESOLVED	4009	collect_item	bug_n_q_20a 10
+RESOLVED	4016	collect_item	quest_4016a 10
+RESOLVED	4019	collect_item	quest_4019a 13; quest_4019b 10
+RESOLVED	4034	collect_item	quest_4034a 6; quest_4034b 6
+RESOLVED	4037	collect_item	quest_4037a 11
+RESOLVED	4041	collect_item	quest_4041a 7; quest_4041b 5
+RESOLVED	4050	collect_item	quest_4050a 1
+RESOLVED	4054	collect_item	quest_4054a 8; quest_4054b 4
+RESOLVED	4056	collect_item	quest_4056a 1
+RESOLVED	4057	collect_item	quest_4057a 1
+RESOLVED	4059	collect_item	quest_4059a 10
+RESOLVED	4061	collect_item	quest_4061a 12
+RESOLVED	4062	collect_item	quest_4062a 12
+RESOLVED	4063	collect_item	quest_4063a 12
+RESOLVED	4076	collect_item	quest_4076a 12
+RESOLVED	4080	collect_item	quest_4080a 8; quest_4080b 4
+RESOLVED	4081	collect_item	quest_4081a 6; quest_4081b 6
+RESOLVED	4084	collect_item	quest_4084a 12
+RESOLVED	4085	collect_item	quest_4085a 12
+RESOLVED	4089	collect_item	quest_4089a 12
+RESOLVED	4090	collect_item	quest_4090a 7; quest_4090b 5
+RESOLVED	4091	collect_item	quest_4091a 1; quest_4091b 1
+RESOLVED	4092	collect_item	quest_4092a 1
+RESOLVED	4095	collect_item	quest_4095a 1
+RESOLVED	4098	collect_item	quest_4098a 3; quest_4098b 7
+RESOLVED	4100	collect_item	quest_4100a 5; quest_4100b 7
+RESOLVED	4105	collect_item	quest_4105a 12
+RESOLVED	4113	collect_item	matter_option_c_hp_50 10; matter_option_c_accuracy_50 10; matter_option_c_block_50 10
+RESOLVED	4114	collect_item	matter_option_c_mp_50 10; matter_option_c_dodge_50 10; matter_option_c_parry_50 10
+RESOLVED	4116	collect_item	quest_4116a 1
+RESOLVED	4118	collect_item	quest_4118a 10
+RESOLVED	4203	collect_item	quest_4203a 1
+RESOLVED	4204	quest_work_item	quest_4204a
+RESOLVED	4206	collect_item	quest_4206a 12
+RESOLVED	4208	quest_work_item	DOC_QUEST_4208A
+RESOLVED	4209	quest_work_item	quest_4209a
+RESOLVED	4214	collect_item	quest_4214a 10
+RESOLVED	4215	collect_item	quest_4215a 10
+RESOLVED	4216	collect_item	quest_4216a 4; quest_4216b 3
+RESOLVED	4301	collect_item	quest_4301a 4; quest_4301b 6
+RESOLVED	4303	collect_item	quest_4303a 30
+RESOLVED	4304	collect_item	junk_d_lehpar_quest_01a 40
+RESOLVED	4305	collect_item	junk_d_lehpar_quest_01a 60
+RESOLVED	4306	collect_item	junk_d_lehpar_quest_01a 80
+RESOLVED	4308	collect_item	quest_4308a 1
+RESOLVED	4309	collect_item	quest_4309a 1
+RESOLVED	4311	collect_item	quest_4311a 1; quest_4311b 1; quest_4311c 1; quest_4311d 1
+RESOLVED	4315	collect_item	quest_4315a 3; quest_4315b 1
+RESOLVED	4316	collect_item	quest_4316a 5; quest_4316b 3; quest_4316c 2
+RESOLVED	4322	collect_item	quest_4322a 5; quest_4322b 5
+RESOLVED	4327	collect_item	quest_4327a 7
+RESOLVED	4328	collect_item	quest_4328a 5
+RESOLVED	4331	collect_item	quest_4331a 6; quest_4331b 4
+RESOLVED	4332	collect_item	quest_4332a 10
+RESOLVED	4333	collect_item	quest_4333a 10
+RESOLVED	4334	collect_item	quest_4334a 7
+RESOLVED	4336	collect_item	matter_option_c_hp_30 10; matter_option_c_accuracy_30 10; matter_option_c_block_30 10
+RESOLVED	4337	collect_item	matter_option_c_mp_30 10; matter_option_c_dodge_30 10; matter_option_c_parry_30 10
+RESOLVED	4500	collect_item	quest_4500a 10
+RESOLVED	4507	collect_item	quest_4507a 5; quest_4507b 5
+RESOLVED	4508	collect_item	quest_4508a 6; quest_4508b 4
+RESOLVED	4509	collect_item	quest_4509a 5; quest_4509b 5
+RESOLVED	4511	collect_item	quest_4511a 9
+RESOLVED	4513	collect_item	quest_4513a 7; quest_4513b 3
+RESOLVED	4514	collect_item	quest_4514a 1; quest_4514b 1
+RESOLVED	4515	collect_item	quest_4515a 10
+RESOLVED	4518	collect_item	quest_4518a 1
+RESOLVED	4519	collect_item	quest_4519a 4; quest_4519b 6
+RESOLVED	4522	collect_item	quest_4522a 10
+RESOLVED	4530	collect_item	quest_4530a 10
+RESOLVED	4535	collect_item	quest_4535a 10
+RESOLVED	4540	collect_item	matter_option_c_hp_40 10; matter_option_c_accuracy_40 10; matter_option_c_block_40 10
+RESOLVED	4541	collect_item	matter_option_c_mp_40 10; matter_option_c_dodge_40 10; matter_option_c_parry_40 10
+RESOLVED	4705	collect_item	junk_idlf1_drop_component_01a 20; junk_idlf1_sale_component_01a 1
+RESOLVED	4715	collect_item	quest_4715a 10
+RESOLVED	4717	collect_item	quest_4717a 6; quest_4717b 6; quest_4717c 1; quest_4717d 1
+RESOLVED	4724	collect_item	quest_4724a 6; quest_4724b 6; quest_4724c 1; quest_4724d 1
+RESOLVED	4909	collect_item	quest_ab1_01 1; quest_ab1_02 1; quest_ab1_03 1; gold 2400000
+RESOLVED	4910	collect_item	quest_ab1_04 1; quest_ab1_05 1; gold 3600000
+RESOLVED	4911	collect_item	quest_ab1_06 1; quest_ab1_07 1; quest_ab1_08 1; gold 4800000
+RESOLVED	4915	collect_item	quest_4915a 40
+RESOLVED	4916	collect_item	quest_4916a 40
+RESOLVED	4918	collect_item	quest_4918a 28
+RESOLVED	4919	collect_item	quest_4919a 4
+RESOLVED	4936	collect_item	quest_4936a 10; quest_4936b 1
+RESOLVED	4946	collect_item	quest_d_skill_weapon_399b 1
+RESOLVED	4949	collect_item	quest_d_skill_armor_399b 1
+RESOLVED	4952	collect_item	quest_d_skill_handi_399b 1
+RESOLVED	4955	collect_item	quest_d_skill_cook01_399b 1; quest_d_skill_cook02_399b 1; quest_d_skill_cook03_399b 1; quest_d_skill_cook04_399b 1
+RESOLVED	4958	collect_item	quest_d_skill_alche_399b 1
+RESOLVED	4961	collect_item	quest_d_skill_tailo_399b 1
+RESOLVED	4966	collect_item	gold 40000
+RESOLVED	4967	collect_item	material_charm_dark_40 1; gold 50000
+RESOLVED	4968	collect_item	material_charm_dark_45 1; gold 70000
+RESOLVED	4969	collect_item	material_charm_dark_50 1; gold 90000
+RESOLVED	4975	collect_item	devanion_master_01a 5
+RESOLVED	9548	collect_item	quest_9548a 5
+RESOLVED	9549	collect_item	quest_9549a 5
+RESOLVED	9551	collect_item	quest_9551a 5
+RESOLVED	9552	collect_item	quest_9552a 5
+RESOLVED	9562	collect_item	quest_9562a 1
+RESOLVED	9563	collect_item	quest_9563a 1
+RESOLVED	9564	collect_item	quest_9564a 1
+RESOLVED	9565	collect_item	quest_9565a 1
+RESOLVED	9608	collect_item	quest_9608a 1
+RESOLVED	9609	collect_item	quest_9609a 1
+RESOLVED	9610	collect_item	quest_9610a 1
+RESOLVED	9611	collect_item	quest_9611a 1
+RESOLVED	11003	collect_item	quest_11003a 6; quest_11003b 4
+RESOLVED	11022	collect_item	quest_11022a 9; Junk_redeem_jewelry_02a 1
+RESOLVED	11024	collect_item	quest_11024a 9
+RESOLVED	11025	collect_item	quest_11025a 1
+RESOLVED	11028	collect_item	quest_11028a 4; quest_11028b 3; quest_11028c 3
+RESOLVED	11037	collect_item	quest_11037a 3; quest_11037b 2; shell_n_c_50a 2; shopmaterial_co_23a 3
+RESOLVED	11039	collect_item	quest_11039a 1
+RESOLVED	11042	collect_item	quest_11042a 22; Junk_redeem_jewelry_02a 1
+RESOLVED	11044	collect_item	quest_11044a 4; quest_11044b 6
+RESOLVED	11047	collect_item	quest_11047a 9; Junk_redeem_jewelry_02a 1
+RESOLVED	11049	collect_item	quest_11049a 3
+RESOLVED	11051	collect_item	quest_11051a 30; gold 50000
+RESOLVED	11052	collect_item	quest_11052a 30; gold 50000
+RESOLVED	11053	collect_item	quest_11053a 30; gold 50000
+RESOLVED	11054	collect_item	quest_11054a 30; gold 150000
+RESOLVED	11055	collect_item	quest_11055a 4; quest_11055b 20; gold 200000
+RESOLVED	11064	collect_item	quest_11064a 10
+RESOLVED	11065	collect_item	quest_11065a 10
+RESOLVED	11066	collect_item	quest_11066a 10
+RESOLVED	11067	collect_item	quest_11067a 10
+RESOLVED	11077	quest_work_item	doc_quest_11077a 1
+RESOLVED	11101	collect_item	quest_11101a 4; quest_11101b 6
+RESOLVED	11104	collect_item	quest_11104a 1; quest_11104b 1
+RESOLVED	11108	collect_item	quest_11108a 10
+RESOLVED	11111	collect_item	quest_11111a 1
+RESOLVED	11113	collect_item	quest_11113a 10
+RESOLVED	11114	collect_item	quest_11114a 1
+RESOLVED	11115	collect_item	quest_11115a 3; quest_11115b 3; shop_food_hpregen_20a 2; shop_food_mpregen_20a 2
+RESOLVED	11121	collect_item	quest_11121a 4; quest_11121b 6
+RESOLVED	11125	collect_item	quest_11125a 3; quest_11125b 3; quest_11125c 3
+RESOLVED	11127	collect_item	quest_11127a 10
+RESOLVED	11128	collect_item	quest_11128a 1
+RESOLVED	11130	collect_item	quest_11130a 9; Junk_redeem_jewelry_02a 1
+RESOLVED	11142	collect_item	quest_11142a 5; quest_11142b 5
+RESOLVED	11148	collect_item	quest_11148a 6; quest_11148b 4
+RESOLVED	11152	collect_item	quest_11152a 6
+RESOLVED	11203	collect_item	quest_11203a 10
+RESOLVED	11205	collect_item	quest_11205a 7; quest_11205b 3
+RESOLVED	11206	collect_item	quest_11206a 10
+RESOLVED	11218	collect_item	quest_11218a 6; quest_11218b 4
+RESOLVED	11219	collect_item	quest_11219a 1
+RESOLVED	11220	collect_item	quest_11220a 10
+RESOLVED	11221	collect_item	quest_11221a 10
+RESOLVED	11223	collect_item	quest_11223a 10
+RESOLVED	11230	collect_item	air_collection_treasure01 88
+RESOLVED	11231	collect_item	air_collection_treasure01 66
+RESOLVED	11232	collect_item	air_collection_treasure01 44
+RESOLVED	11251	collect_item	2hsword_n_u0_q_54a 1; quest_11251a 1; gold 8000000
+RESOLVED	11253	collect_item	book_n_u0_q_54a 1; quest_11253a 1; gold 8000000
+RESOLVED	11255	collect_item	bow_n_u0_q_54a 1; quest_11255a 1; gold 8000000
+RESOLVED	11257	collect_item	dagger_n_u0_q_54a 1; quest_11257a 1; gold 8000000
+RESOLVED	11259	collect_item	mace_n_u0_q_54a 1; quest_11259a 1; gold 8000000
+RESOLVED	11261	collect_item	orb_n_u0_q_54a 1; quest_11261a 1; gold 8000000
+RESOLVED	11263	collect_item	polearm_n_u0_q_54a 1; quest_11263a 1; gold 8000000
+RESOLVED	11265	collect_item	staff_n_u0_q_54a 1; quest_11265a 1; gold 8000000
+RESOLVED	11267	collect_item	sword_n_u0_q_54a 1; quest_11267a 1; gold 8000000
+RESOLVED	11268	collect_item	junk_kaisinel_reward_01a 6
+RESOLVED	11269	collect_item	junk_kaisinel_reward_01a 5
+RESOLVED	11270	collect_item	junk_kaisinel_reward_01a 3
+RESOLVED	11271	collect_item	junk_kaisinel_reward_01a 3
+RESOLVED	11272	collect_item	junk_kaisinel_reward_01a 5
+RESOLVED	11273	collect_item	junk_kaisinel_reward_01a 9
+RESOLVED	11274	collect_item	junk_kaisinel_reward_01a 6
+RESOLVED	11275	collect_item	quest_11275a 60; material_stigma_quest_01 1
+RESOLVED	11277	collect_item	matter_option_c_hp_60 10; matter_option_c_accuracy_60 10; matter_option_c_block_60 10
+RESOLVED	11278	collect_item	matter_option_c_mp_60 10; matter_option_c_dodge_60 10; matter_option_c_parry_60 10
+RESOLVED	11297	collect_item	gun_n_u0_q_54a 1; quest_11297a 1; gold 8000000
+RESOLVED	11299	collect_item	cannon_n_u0_q_54a 1; quest_11299a 1; gold 8000000
+RESOLVED	11301	collect_item	harp_n_u0_q_54a 1; quest_11301a 1; gold 8000000
+RESOLVED	11303	collect_item	keyblade_n_u0_q_54a 1; quest_11303a 1; gold 8000000
+RESOLVED	11304	collect_item	quest_11304a 1
+RESOLVED	11452	collect_item	quest_11452a 1
+RESOLVED	11454	collect_item	quest_11454a 5; soil_conditioner_01 1
+RESOLVED	11511	collect_item	quest_11511a 15
+RESOLVED	11516	collect_item	quest_11516a 5
+RESOLVED	11517	collect_item	quest_11517a 4
+RESOLVED	11520	collect_item	coin_headquarters_01 7
+RESOLVED	11521	collect_item	coin_headquarters_01 6
+RESOLVED	11550	collect_item	junk_extend_stigma_01 1
+RESOLVED	12001	collect_item	quest_12001a 8
+RESOLVED	12011	collect_item	quest_12011a 9
+RESOLVED	12014	collect_item	quest_12014a 9
+RESOLVED	12018	collect_item	quest_12018a 8
+RESOLVED	12022	collect_item	tiamat_banner_01 10
+RESOLVED	12024	collect_item	quest_12024a 8
+RESOLVED	12026	collect_item	quest_12026a 13
+RESOLVED	12030	collect_item	quest_12030a 1
+RESOLVED	12034	collect_item	quest_12034a 10
+RESOLVED	12040	collect_item	quest_12040a 11
+RESOLVED	12058	collect_item	quest_12058a 4; quest_12058b 6; quest_12058c 5
+RESOLVED	12060	collect_item	tiamat_banner_01 150
+RESOLVED	12400	collect_item	2hsword_n_u0_q_60a 1; ldf4b_weapon_upgrade_01 1; ldf4b_weapon_upgrade_02 1; ldf4b_weapon_upgrade_03 1
+RESOLVED	12401	collect_item	mace_n_u0_q_60a 1; ldf4b_weapon_upgrade_01 1; ldf4b_weapon_upgrade_02 1; ldf4b_weapon_upgrade_03 1
+RESOLVED	12402	collect_item	polearm_n_u0_q_60a 1; ldf4b_weapon_upgrade_01 1; ldf4b_weapon_upgrade_02 1; ldf4b_weapon_upgrade_03 1
+RESOLVED	12403	collect_item	orb_n_u0_q_60a 1; ldf4b_weapon_upgrade_01 1; ldf4b_weapon_upgrade_02 1; ldf4b_weapon_upgrade_03 1
+RESOLVED	12404	collect_item	staff_n_u0_q_60a 1; ldf4b_weapon_upgrade_01 1; ldf4b_weapon_upgrade_02 1; ldf4b_weapon_upgrade_03 1
+RESOLVED	12405	collect_item	book_n_u0_q_60a 1; ldf4b_weapon_upgrade_01 1; ldf4b_weapon_upgrade_02 1; ldf4b_weapon_upgrade_03 1
+RESOLVED	12406	collect_item	bow_n_u0_q_60a 1; ldf4b_weapon_upgrade_01 1; ldf4b_weapon_upgrade_02 1; ldf4b_weapon_upgrade_03 1
+RESOLVED	12407	collect_item	sword_n_u0_q_60a 1; ldf4b_weapon_upgrade_01 1; ldf4b_weapon_upgrade_02 1; ldf4b_weapon_upgrade_03 1
+RESOLVED	12408	collect_item	dagger_n_u0_q_60a 1; ldf4b_weapon_upgrade_01 1; ldf4b_weapon_upgrade_02 1; ldf4b_weapon_upgrade_03 1
+RESOLVED	12409	collect_item	gun_n_u0_q_60a 1; ldf4b_weapon_upgrade_01 1; ldf4b_weapon_upgrade_02 1; ldf4b_weapon_upgrade_03 1
+RESOLVED	12410	collect_item	cannon_n_u0_q_60a 1; ldf4b_weapon_upgrade_01 1; ldf4b_weapon_upgrade_02 1; ldf4b_weapon_upgrade_03 1
+RESOLVED	12411	collect_item	harp_n_u0_q_60a 1; ldf4b_weapon_upgrade_01 1; ldf4b_weapon_upgrade_02 1; ldf4b_weapon_upgrade_03 1
+RESOLVED	12412	collect_item	keyblade_n_u0_q_60a 1; ldf4b_weapon_upgrade_01 1; ldf4b_weapon_upgrade_02 1; ldf4b_weapon_upgrade_03 1
+RESOLVED	12506	collect_item	doc_quest_12506a 1
+RESOLVED	12513	collect_item	quest_12513a 6
+RESOLVED	12515	collect_item	quest_12515a 8
+RESOLVED	12521	collect_item	quest_12521a 1
+RESOLVED	12523	collect_item	quest_12523a 1
+RESOLVED	12532	collect_item	quest_12532a 7
+RESOLVED	12533	quest_work_item	quest_12533a
+RESOLVED	12537	collect_item	quest_12537a 1
+RESOLVED	12538	collect_item	quest_12538a 7; quest_12538b 8
+RESOLVED	12540	collect_item	quest_12540a 3
+RESOLVED	12542	quest_work_item	quest_12542a
+RESOLVED	12543	quest_work_item	quest_12543a
+RESOLVED	12552	collect_item	quest_12552a 8
+RESOLVED	12553	collect_item	quest_12553a 11
+RESOLVED	12559	collect_item	quest_12559a 1
+RESOLVED	12802	collect_item	quest_12802a 5
+RESOLVED	12805	collect_item	quest_12805a 8
+RESOLVED	12810	collect_item	quest_12810a 9
+RESOLVED	12815	collect_item	quest_12815a 11
+RESOLVED	12816	collect_item	quest_12816a 8
+RESOLVED	12821	collect_item	quest_12821a 1
+RESOLVED	12822	collect_item	quest_12822a 6
+RESOLVED	12828	collect_item	quest_12828a 1
+RESOLVED	12833	collect_item	quest_12833a 10
+RESOLVED	12840	collect_item	quest_12941a 1
+RESOLVED	12853	collect_item	medal_07 300
+RESOLVED	13003	collect_item	quest_13003a 9
+RESOLVED	13007	collect_item	quest_13007a 9
+RESOLVED	13011	collect_item	quest_13011a 1
+RESOLVED	13016	collect_item	quest_13016a 1
+RESOLVED	13026	collect_item	quest_13026a 9
+RESOLVED	13036	collect_item	quest_13036a 9
+RESOLVED	13037	collect_item	quest_13037a 1
+RESOLVED	13044	collect_item	quest_13044a 9
+RESOLVED	13049	quest_work_item	quest_13049a 1
+RESOLVED	13052	collect_item	quest_13052a 9
+RESOLVED	13053	collect_item	quest_13053a 1; quest_13053b 1; quest_13053c 1
+RESOLVED	13057	collect_item	quest_13057a 9
+RESOLVED	13300	collect_item	quest_13300a 9
+RESOLVED	13307	collect_item	quest_13307a 1
+RESOLVED	13311	collect_item	quest_13311a 1
+RESOLVED	13312	collect_item	quest_13312a 9
+RESOLVED	13317	collect_item	quest_13317a 1
+RESOLVED	13327	collect_item	quest_13327a 1
+RESOLVED	13336	collect_item	quest_13336a 9
+RESOLVED	13341	collect_item	quest_13341a 1
+RESOLVED	13345	collect_item	quest_13345a 1
+RESOLVED	13360	collect_item	medal_07 300
+RESOLVED	13361	collect_item	medal_07 63; coin_material_01 1
+RESOLVED	13362	collect_item	coin_pvp_01 2
+RESOLVED	13402	quest_work_item	quest_13402a 1
+RESOLVED	13509	collect_item	quest_13510a 1; quest_13510b 1
+RESOLVED	13510	collect_item	quest_13510a 1; quest_13510b 1
+RESOLVED	13515	collect_item	quest_13515a 1
+RESOLVED	13528	collect_item	quest_13528a 1; quest_13528b 1; quest_13528c 1
+RESOLVED	13529	collect_item	quest_13529a 1; quest_13529b 1; quest_13529c 1; quest_13529d 1
+RESOLVED	13550	collect_item	quest_13550a 3
+RESOLVED	13555	collect_item	quest_13555a 14
+RESOLVED	13564	collect_item	quest_13564a 6
+RESOLVED	13567	collect_item	quest_13567a 9
+RESOLVED	13607	collect_item	quest_13607a 10
+RESOLVED	13609	collect_item	quest_13609a 1
+RESOLVED	13614	collect_item	quest_13614a 6
+RESOLVED	13652	collect_item	quest_13652a 8
+RESOLVED	13655	collect_item	quest_13655a 6
+RESOLVED	13657	collect_item	medal_07 63
+RESOLVED	13712	collect_item	medal_07 63; coin_material_01 1
+RESOLVED	13714	collect_item	medal_07 63; coin_material_01 1
+RESOLVED	13741	collect_item	quest_13741a 3; quest_13741b 3; quest_13741c 3; quest_13741d 3
+RESOLVED	13742	collect_item	quest_13742a 3; quest_13742b 3; quest_13742c 3; quest_13742d 3
+RESOLVED	13743	collect_item	quest_13743a 3; quest_13743b 3; quest_13743c 3; quest_13743d 3
+RESOLVED	13807	collect_item	quest_13807a 7
+RESOLVED	13809	quest_work_item	quest_13809a 1
+RESOLVED	13810	collect_item	doc_quest_13810a 1
+RESOLVED	13813	collect_item	quest_13813a 20
+RESOLVED	13816	quest_work_item	quest_13816a 1
+RESOLVED	13819	collect_item	quest_13819a 20
+RESOLVED	13820	collect_item	quest_13820a 20
+RESOLVED	13821	collect_item	quest_13821a 20
+RESOLVED	13901	collect_item	quest_13901a 1; quest_13901b 1
+RESOLVED	13903	collect_item	quest_13903a 1; quest_13903b 1
+RESOLVED	13904	collect_item	quest_13903a 1; quest_13903b 1
+RESOLVED	13914	collect_item	quest_13914a 1
+RESOLVED	13915	collect_item	quest_13914a 1
+RESOLVED	13916	collect_item	quest_13916a 1
+RESOLVED	14110	collect_item	quest_14110a 5
+RESOLVED	14113	collect_item	quest_14113a 5
+RESOLVED	14121	collect_item	quest_14121a 5
+RESOLVED	14201	collect_item	doc_quest_14201a 1
+RESOLVED	15210	collect_item	medal_07 300
+RESOLVED	15211	collect_item	medal_07 63; coin_material_01 1
+RESOLVED	15212	collect_item	medal_07 63
+RESOLVED	15213	collect_item	medal_07 18; coin_medal_03 1
+RESOLVED	16921	collect_item	item_idunderrune_quest_01 20
+RESOLVED	16930	collect_item	item_idruneweapon_quest_01 10
+RESOLVED	16940	collect_item	quest_16940a 3
+RESOLVED	16950	collect_item	quest_16950a 1
+RESOLVED	16952	collect_item	quest_16952a 7
+RESOLVED	16954	collect_item	quest_16954a 1
+RESOLVED	16992	collect_item	quest_16992a 1
+RESOLVED	17100	collect_item	metal_n_c_30a 5
+RESOLVED	17101	collect_item	fs_material_n_c_18a 3; fs_material_n_c_21a 2
+RESOLVED	17102	collect_item	junk_town_upgrade_aventurine 5
+RESOLVED	17103	collect_item	junk_town_upgrade_rich_soil 1
+RESOLVED	17104	collect_item	junk_town_upgrade_seasonlight 1
+RESOLVED	17105	collect_item	junk_town_upgrade_flower_soul 1
+RESOLVED	17107	collect_item	junk_town_upgrade_flower_soul 1
+RESOLVED	17109	collect_item	junk_town_upgrade_flower_soul 1
+RESOLVED	17111	collect_item	junk_town_upgrade_flower_soul 1
+RESOLVED	17113	collect_item	junk_town_upgrade_flower_soul 1
+RESOLVED	17115	collect_item	junk_town_upgrade_flower_soul 1
+RESOLVED	17117	collect_item	junk_town_upgrade_flower_soul 1
+RESOLVED	17119	collect_item	junk_town_upgrade_flower_soul 1
+RESOLVED	17121	collect_item	junk_town_upgrade_flower_soul 1
+RESOLVED	17123	collect_item	junk_town_upgrade_flower_soul 1
+RESOLVED	17125	collect_item	junk_town_upgrade_flower_soul 1
+RESOLVED	17127	collect_item	junk_town_upgrade_flower_soul 1
+RESOLVED	17129	collect_item	junk_town_upgrade_flower_soul 1
+RESOLVED	17131	collect_item	junk_town_upgrade_flower_soul 1
+RESOLVED	17133	collect_item	junk_town_upgrade_flower_soul 1
+RESOLVED	17135	collect_item	junk_town_upgrade_flower_soul 1
+RESOLVED	17137	collect_item	junk_town_upgrade_flower_soul 1
+RESOLVED	17139	collect_item	junk_town_upgrade_flower_soul 1
+RESOLVED	17141	collect_item	junk_town_upgrade_flower_soul 1
+RESOLVED	17143	collect_item	junk_town_upgrade_flower_soul 1
+RESOLVED	17145	collect_item	junk_town_upgrade_flower_soul 1
+RESOLVED	17147	collect_item	junk_town_upgrade_flower_soul 1
+RESOLVED	17149	collect_item	junk_town_upgrade_flower_soul 1
+RESOLVED	17151	collect_item	junk_town_upgrade_flower_soul 1
+RESOLVED	17153	collect_item	junk_town_upgrade_flower_soul 1
+RESOLVED	18001	collect_item	quest_18001a 30
+RESOLVED	18013	collect_item	quest_18013a 4
+RESOLVED	18216	collect_item	coin_arena_pvp_01 400; coin_arena_01 9800
+RESOLVED	18219	collect_item	quest_vip_01a 10
+RESOLVED	18220	collect_item	quest_vip_01a 10
+RESOLVED	18221	collect_item	quest_vip_01a 10
+RESOLVED	18222	collect_item	quest_vip_01a 10
+RESOLVED	18223	collect_item	quest_vip_01a 10
+RESOLVED	18305	collect_item	quest_18305a 5
+RESOLVED	18306	collect_item	quest_18306a 5
+RESOLVED	18308	collect_item	quest_18308a 5
+RESOLVED	18311	quest_work_item	Doc_quest_18311a
+RESOLVED	18312	collect_item	quest_18312a 10
+RESOLVED	18403	collect_item	quest_18403a 20
+RESOLVED	18408	collect_item	quest_18408a 3
+RESOLVED	18411	collect_item	quest_18411a 1
+RESOLVED	18505	collect_item	quest_18505a 1; quest_18505b 1; quest_18505c 1
+RESOLVED	18509	collect_item	quest_18509a 1
+RESOLVED	18607	collect_item	quest_18607a 15
+RESOLVED	18608	collect_item	SWORD_D_N_L1_35A 1; Necklace_n_l1_q_38c 1
+RESOLVED	18609	collect_item	MACE_D_N_L1_35A 1; Necklace_n_l1_q_38c 1
+RESOLVED	18610	collect_item	DAGGER_D_N_L1_35A 1; Necklace_n_l1_q_38c 1
+RESOLVED	18611	collect_item	ORB_D_N_L1_35A 1; Necklace_n_l1_q_38c 1
+RESOLVED	18612	collect_item	BOOK_D_N_L1_35A 1; Necklace_n_l1_q_38c 1
+RESOLVED	18613	collect_item	2HSWORD_D_N_L1_35A 1; Necklace_n_l1_q_38c 1
+RESOLVED	18614	collect_item	POLEARM_D_N_L1_35A 1; Necklace_n_l1_q_38c 1
+RESOLVED	18615	collect_item	STAFF_D_N_L1_35A 1; Necklace_n_l1_q_38c 1
+RESOLVED	18616	collect_item	BOW_D_N_L1_35A 1; Necklace_n_l1_q_38c 1
+RESOLVED	18618	collect_item	key_idcromede_05 1
+RESOLVED	18619	collect_item	key_idcromede_05 1
+RESOLVED	18620	collect_item	key_idcromede_05 1
+RESOLVED	18621	collect_item	key_idcromede_05 1
+RESOLVED	18622	collect_item	key_idcromede_05 1
+RESOLVED	18623	collect_item	key_idcromede_05 1
+RESOLVED	18624	collect_item	key_idcromede_05 1
+RESOLVED	18625	collect_item	key_idcromede_05 1
+RESOLVED	18626	collect_item	key_idcromede_05 1
+RESOLVED	18627	collect_item	key_idcromede_05 1
+RESOLVED	18628	collect_item	SWORD_D_N_L1_35A 1; Necklace_n_l1_q_38d 1
+RESOLVED	18629	collect_item	MACE_D_N_L1_35A 1; Necklace_n_l1_q_38d 1
+RESOLVED	18630	collect_item	DAGGER_D_N_L1_35A 1; Necklace_n_l1_q_38d 1
+RESOLVED	18631	collect_item	ORB_D_N_L1_35A 1; Necklace_n_l1_q_38d 1
+RESOLVED	18632	collect_item	BOOK_D_N_L1_35A 1; Necklace_n_l1_q_38d 1
+RESOLVED	18633	collect_item	2HSWORD_D_N_L1_35A 1; Necklace_n_l1_q_38d 1
+RESOLVED	18634	collect_item	POLEARM_D_N_L1_35A 1; Necklace_n_l1_q_38d 1
+RESOLVED	18635	collect_item	STAFF_D_N_L1_35A 1; Necklace_n_l1_q_38d 1
+RESOLVED	18636	collect_item	BOW_D_N_L1_35A 1; Necklace_n_l1_q_38d 1
+RESOLVED	18637	collect_item	gun_d_n_l1_35d 1; Necklace_n_l1_q_38c 1
+RESOLVED	18638	collect_item	cannon_d_n_l1_35a 1; Necklace_n_l1_q_38c 1
+RESOLVED	18639	collect_item	harp_d_n_l1_35a 1; Necklace_n_l1_q_38c 1
+RESOLVED	18640	collect_item	gun_d_n_l1_35d 1; Necklace_n_l1_q_38d 1
+RESOLVED	18641	collect_item	cannon_d_n_l1_35a 1; Necklace_n_l1_q_38d 1
+RESOLVED	18642	collect_item	harp_d_n_l1_35a 1; Necklace_n_l1_q_38d 1
+RESOLVED	18643	collect_item	key_idcromede_05 1
+RESOLVED	18644	collect_item	key_idcromede_05 1
+RESOLVED	18645	collect_item	key_idcromede_05 1
+RESOLVED	18646	collect_item	keyblade_d_n_l1_35a 1; Necklace_n_l1_q_38c 1
+RESOLVED	18647	collect_item	keyblade_d_n_l1_35a 1; Necklace_n_l1_q_38d 1
+RESOLVED	18648	collect_item	key_idcromede_05 1
+RESOLVED	18707	collect_item	quest_18707a 2
+RESOLVED	18711	collect_item	sword_n_l1_q_56a 1; ldf4a_quest_junk_01 1
+RESOLVED	18713	collect_item	dagger_n_l1_q_56a 1; ldf4a_quest_junk_01 1
+RESOLVED	18715	collect_item	mace_n_l1_q_56a 1; ldf4a_quest_junk_01 1
+RESOLVED	18717	collect_item	orb_n_l1_q_56a 1; ldf4a_quest_junk_01 1
+RESOLVED	18719	collect_item	book_n_l1_q_56a 1; ldf4a_quest_junk_01 1
+RESOLVED	18721	collect_item	2hsword_n_l1_q_56a 1; ldf4a_quest_junk_01 1
+RESOLVED	18723	collect_item	polearm_n_l1_q_56a 1; ldf4a_quest_junk_01 1
+RESOLVED	18725	collect_item	staff_n_l1_q_56a 1; ldf4a_quest_junk_01 1
+RESOLVED	18727	collect_item	bow_n_l1_q_56a 1; ldf4a_quest_junk_01 1
+RESOLVED	18729	collect_item	keyblade_n_l1_q_56a 1; ldf4a_quest_junk_01 1
+RESOLVED	18731	collect_item	gun_n_l1_q_56a 1; ldf4a_quest_junk_01 1
+RESOLVED	18733	collect_item	cannon_n_l1_q_56a 1; ldf4a_quest_junk_01 1
+RESOLVED	18735	collect_item	harp_n_l1_q_56a 1; ldf4a_quest_junk_01 1
+RESOLVED	18812	collect_item	junk_od_fragment_sad_01 1; junk_od_fragment_scary_01 25; junk_od_fragment_amazing_01 25
+RESOLVED	18813	collect_item	junk_od_fragment_happy_01 1; junk_od_fragment_amazing_01 25; junk_od_fragment_lonely_01 25
+RESOLVED	18814	collect_item	junk_od_fragment_delight_01 1; junk_od_fragment_amazing_01 10; junk_od_fragment_lonely_01 15; junk_od_fragment_scary_01 25
+RESOLVED	18815	collect_item	junk_od_fragment_angry_01 1; junk_od_fragment_lonely_01 25; junk_od_fragment_scary_01 25
+RESOLVED	18816	collect_item	junk_leaf_spring_01 1; junk_leaf_summer_01 1; junk_leaf_fall_01 1; junk_leaf_winter_01 1
+RESOLVED	18817	collect_item	junk_crystal_spring_01 1; junk_crystal_summer_01 1; junk_crystal_fall_01 1; junk_crystal_winter_01 1
+RESOLVED	18818	collect_item	junk_dailygather_shell_01 10
+RESOLVED	18819	collect_item	junk_dailygather_stone_01 10
+RESOLVED	18820	collect_item	junk_dailygather_plant_01 10
+RESOLVED	18822	collect_item	junk_od_fragment_sad_01 1; junk_od_fragment_scary_01 25; junk_od_fragment_amazing_01 25
+RESOLVED	18823	collect_item	junk_od_fragment_happy_01 1; junk_od_fragment_amazing_01 25; junk_od_fragment_lonely_01 25
+RESOLVED	18824	collect_item	junk_od_fragment_delight_01 1; junk_od_fragment_amazing_01 10; junk_od_fragment_lonely_01 15; junk_od_fragment_scary_01 25
+RESOLVED	18825	collect_item	junk_od_fragment_angry_01 1; junk_od_fragment_lonely_01 25; junk_od_fragment_scary_01 25
+RESOLVED	18834	collect_item	quest_18834a 50
+RESOLVED	18836	collect_item	quest_18836a 50
+RESOLVED	18838	collect_item	quest_18838a 50
+RESOLVED	18840	collect_item	junk_leaf_spring_01 1; junk_leaf_summer_01 1; junk_leaf_fall_01 1; junk_leaf_winter_01 1
+RESOLVED	18841	collect_item	junk_leaf_spring_01 1; junk_leaf_summer_01 1; junk_leaf_fall_01 1; junk_leaf_winter_01 1
+RESOLVED	18842	collect_item	junk_leaf_spring_01 1; junk_leaf_summer_01 1; junk_leaf_fall_01 1; junk_leaf_winter_01 1
+RESOLVED	18844	collect_item	junk_od_fragment_amazing_01 1; junk_od_fragment_scary_01 1; junk_od_fragment_lonely_01 1
+RESOLVED	18848	collect_item	quest_18848a 6
+RESOLVED	18913	collect_item	doc_quest_18913a 1
+RESOLVED	18916	collect_item	quest_18916a 1
+RESOLVED	19042	collect_item	quest_19042a 1
+RESOLVED	19043	collect_item	quest_19043a 10
+RESOLVED	19049	collect_item	me_part_l_10_01a 3
+RESOLVED	19052	collect_item	quest_skill_menui_299b 1
+RESOLVED	19053	collect_item	quest_skill_menui_399b 1
+RESOLVED	19054	collect_item	quest_skill_menui_299b 1
+RESOLVED	19055	collect_item	quest_skill_menui_399b 1
+RESOLVED	19064	collect_item	quest_19064a 1; relic_02 1
+RESOLVED	21001	collect_item	quest_21001a 10
+RESOLVED	21022	collect_item	quest_21021a 2; quest_21021b 3; quest_21021c 5
+RESOLVED	21028	collect_item	quest_21028a 10
+RESOLVED	21032	collect_item	quest_21032a 10
+RESOLVED	21035	collect_item	quest_21035a 10
+RESOLVED	21039	collect_item	quest_21039a 25; junk_d_redeem_jewelry_02a 1
+RESOLVED	21041	collect_item	quest_21041a 9; junk_d_redeem_jewelry_02a 1
+RESOLVED	21042	collect_item	quest_21042a 4; quest_21042b 4; junk_d_redeem_jewelry_02a 1
+RESOLVED	21043	collect_item	quest_21043a 25; junk_d_redeem_jewelry_02a 1
+RESOLVED	21049	collect_item	quest_21049a 3
+RESOLVED	21051	collect_item	quest_21051a 30; gold 50000
+RESOLVED	21052	collect_item	quest_21052a 30; gold 50000
+RESOLVED	21053	collect_item	quest_21053a 30; gold 50000
+RESOLVED	21054	collect_item	quest_21054a 30; gold 150000
+RESOLVED	21055	collect_item	quest_21055a 4; quest_21055b 20; gold 200000
+RESOLVED	21078	collect_item	quest_21078a 10
+RESOLVED	21081	quest_work_item	doc_quest_21081a 1
+RESOLVED	21100	collect_item	quest_21100a 10
+RESOLVED	21101	collect_item	quest_21101a 1
+RESOLVED	21107	collect_item	quest_21107a 10
+RESOLVED	21116	collect_item	quest_21116a 10
+RESOLVED	21123	collect_item	quest_21123a 10
+RESOLVED	21126	collect_item	quest_21126a 10
+RESOLVED	21201	collect_item	quest_21201a 5; quest_21201b 5
+RESOLVED	21204	collect_item	quest_21204a 10
+RESOLVED	21207	collect_item	quest_21207a 10
+RESOLVED	21224	collect_item	quest_21224a 10
+RESOLVED	21225	collect_item	quest_21225a 10
+RESOLVED	21226	collect_item	quest_21226a 10
+RESOLVED	21229	collect_item	quest_21229a 10
+RESOLVED	21230	collect_item	quest_21230a 10
+RESOLVED	21233	collect_item	quest_21233a 20
+RESOLVED	21234	collect_item	quest_21234a 20
+RESOLVED	21235	collect_item	quest_21235a 20
+RESOLVED	21236	collect_item	quest_21236a 20
+RESOLVED	21242	collect_item	air_collection_treasure01 88
+RESOLVED	21245	collect_item	quest_21245a 1
+RESOLVED	21247	collect_item	quest_21247a 10
+RESOLVED	21251	collect_item	2hsword_d_n_u0_q_54a 1; quest_21251a 1; gold 8000000
+RESOLVED	21253	collect_item	book_d_n_u0_q_54a 1; quest_21253a 1; gold 8000000
+RESOLVED	21255	collect_item	bow_d_n_u0_q_54a 1; quest_21255a 1; gold 8000000
+RESOLVED	21257	collect_item	dagger_d_n_u0_q_54a 1; quest_21257a 1; gold 8000000
+RESOLVED	21259	collect_item	mace_d_n_u0_q_54a 1; quest_21259a 1; gold 8000000
+RESOLVED	21261	collect_item	orb_d_n_u0_q_54a 1; quest_21261a 1; gold 8000000
+RESOLVED	21263	collect_item	polearm_d_n_u0_q_54a 1; quest_21263a 1; gold 8000000
+RESOLVED	21265	collect_item	staff_d_n_u0_q_54a 1; quest_21265a 1; gold 8000000
+RESOLVED	21267	collect_item	sword_d_n_u0_q_54a 1; quest_21267a 1; gold 8000000
+RESOLVED	21268	collect_item	junk_marcutan_reward_01a 6
+RESOLVED	21269	collect_item	junk_marcutan_reward_01a 5
+RESOLVED	21270	collect_item	junk_marcutan_reward_01a 3
+RESOLVED	21271	collect_item	junk_marcutan_reward_01a 3
+RESOLVED	21272	collect_item	junk_marcutan_reward_01a 5
+RESOLVED	21273	collect_item	air_collection_treasure01 66
+RESOLVED	21274	collect_item	air_collection_treasure01 44
+RESOLVED	21275	collect_item	junk_marcutan_reward_01a 9
+RESOLVED	21276	collect_item	junk_marcutan_reward_01a 6
+RESOLVED	21277	collect_item	quest_21277a 60; material_d_stigma_quest_01 1
+RESOLVED	21279	collect_item	matter_option_c_hp_60 10; matter_option_c_accuracy_60 10; matter_option_c_block_60 10
+RESOLVED	21280	collect_item	matter_option_c_mp_60 10; matter_option_c_dodge_60 10; matter_option_c_parry_60 10
+RESOLVED	21298	collect_item	gun_d_n_u0_q_54a 1; quest_21298a 1; gold 8000000
+RESOLVED	21300	collect_item	cannon_d_n_u0_q_54a 1; quest_21300a 1; gold 8000000
+RESOLVED	21302	collect_item	harp_d_n_u0_q_54a 1; quest_21302a 1; gold 8000000
+RESOLVED	21304	collect_item	keyblade_d_n_u0_q_54a 1; quest_21304a 1; gold 8000000
+RESOLVED	21452	collect_item	quest_21452a 1
+RESOLVED	21454	collect_item	quest_21454a 5; soil_conditioner_01 1
+RESOLVED	21508	collect_item	quest_21508a 15
+RESOLVED	21510	collect_item	quest_21510a 15
+RESOLVED	21515	collect_item	quest_21515a 5
+RESOLVED	21516	collect_item	quest_21516a 4
+RESOLVED	21519	collect_item	coin_d_headquarters_01 7
+RESOLVED	21520	collect_item	coin_d_headquarters_01 6
+RESOLVED	21550	collect_item	junk_extend_stigma_01 1
+RESOLVED	22001	collect_item	quest_22001a 8
+RESOLVED	22010	collect_item	quest_22010a 9
+RESOLVED	22012	collect_item	quest_22012a 9
+RESOLVED	22014	collect_item	quest_22014a 7
+RESOLVED	22018	collect_item	quest_22018a 8
+RESOLVED	22022	collect_item	tiamat_banner_01 10
+RESOLVED	22023	collect_item	quest_22023a 8
+RESOLVED	22026	collect_item	quest_22026a 13
+RESOLVED	22030	collect_item	quest_22030a 1
+RESOLVED	22034	collect_item	quest_22034a 10
+RESOLVED	22040	collect_item	quest_22040a 11
+RESOLVED	22058	collect_item	quest_22058a 1
+RESOLVED	22059	collect_item	quest_22059a 7
+RESOLVED	22060	collect_item	tiamat_banner_01 150
+RESOLVED	22400	collect_item	2hsword_d_n_u0_q_60a 1; ldf4b_weapon_upgrade_01 1; ldf4b_weapon_upgrade_02 1; ldf4b_weapon_upgrade_03 1
+RESOLVED	22401	collect_item	mace_d_n_u0_q_60a 1; ldf4b_weapon_upgrade_01 1; ldf4b_weapon_upgrade_02 1; ldf4b_weapon_upgrade_03 1
+RESOLVED	22402	collect_item	polearm_d_n_u0_q_60a 1; ldf4b_weapon_upgrade_01 1; ldf4b_weapon_upgrade_02 1; ldf4b_weapon_upgrade_03 1
+RESOLVED	22403	collect_item	orb_d_n_u0_q_60a 1; ldf4b_weapon_upgrade_01 1; ldf4b_weapon_upgrade_02 1; ldf4b_weapon_upgrade_03 1
+RESOLVED	22404	collect_item	staff_d_n_u0_q_60a 1; ldf4b_weapon_upgrade_01 1; ldf4b_weapon_upgrade_02 1; ldf4b_weapon_upgrade_03 1
+RESOLVED	22405	collect_item	book_d_n_u0_q_60a 1; ldf4b_weapon_upgrade_01 1; ldf4b_weapon_upgrade_02 1; ldf4b_weapon_upgrade_03 1
+RESOLVED	22406	collect_item	bow_d_n_u0_q_60a 1; ldf4b_weapon_upgrade_01 1; ldf4b_weapon_upgrade_02 1; ldf4b_weapon_upgrade_03 1
+RESOLVED	22407	collect_item	sword_d_n_u0_q_60a 1; ldf4b_weapon_upgrade_01 1; ldf4b_weapon_upgrade_02 1; ldf4b_weapon_upgrade_03 1
+RESOLVED	22408	collect_item	dagger_d_n_u0_q_60a 1; ldf4b_weapon_upgrade_01 1; ldf4b_weapon_upgrade_02 1; ldf4b_weapon_upgrade_03 1
+RESOLVED	22409	collect_item	gun_d_n_u0_q_60a 1; ldf4b_weapon_upgrade_01 1; ldf4b_weapon_upgrade_02 1; ldf4b_weapon_upgrade_03 1
+RESOLVED	22410	collect_item	cannon_d_n_u0_q_60a 1; ldf4b_weapon_upgrade_01 1; ldf4b_weapon_upgrade_02 1; ldf4b_weapon_upgrade_03 1
+RESOLVED	22411	collect_item	harp_d_n_u0_q_60a 1; ldf4b_weapon_upgrade_01 1; ldf4b_weapon_upgrade_02 1; ldf4b_weapon_upgrade_03 1
+RESOLVED	22412	collect_item	keyblade_d_n_u0_q_60a 1; ldf4b_weapon_upgrade_01 1; ldf4b_weapon_upgrade_02 1; ldf4b_weapon_upgrade_03 1
+RESOLVED	22506	collect_item	doc_quest_22506a 1
+RESOLVED	22513	collect_item	quest_22513a 6
+RESOLVED	22515	collect_item	quest_22515a 8
+RESOLVED	22521	collect_item	quest_22521a 1
+RESOLVED	22523	collect_item	quest_22523a 1
+RESOLVED	22532	collect_item	quest_22532a 7
+RESOLVED	22533	quest_work_item	quest_22533a
+RESOLVED	22537	collect_item	quest_22537a 9
+RESOLVED	22538	collect_item	quest_22538a 11
+RESOLVED	22540	collect_item	quest_22540a 3
+RESOLVED	22542	quest_work_item	quest_22542a
+RESOLVED	22543	quest_work_item	quest_22543a
+RESOLVED	22552	collect_item	quest_22552a 1
+RESOLVED	22559	collect_item	quest_22559a 1
+RESOLVED	22801	collect_item	quest_22801a 8
+RESOLVED	22807	collect_item	quest_22807a 4
+RESOLVED	22810	collect_item	quest_22810a 9
+RESOLVED	22811	collect_item	quest_22811a 6
+RESOLVED	22816	collect_item	quest_22816a 11
+RESOLVED	22821	collect_item	quest_22821a 1
+RESOLVED	22822	collect_item	quest_22822a 6
+RESOLVED	22827	collect_item	quest_22827a 7
+RESOLVED	22833	collect_item	quest_22833a 8
+RESOLVED	22840	collect_item	quest_22840a 1
+RESOLVED	22853	collect_item	medal_07 300
+RESOLVED	23002	collect_item	quest_23002a 9
+RESOLVED	23009	collect_item	quest_23009a 9
+RESOLVED	23011	collect_item	quest_23011a 1
+RESOLVED	23017	collect_item	quest_23017a 9
+RESOLVED	23020	collect_item	quest_23020a 9
+RESOLVED	23021	collect_item	quest_23021a 1
+RESOLVED	23027	collect_item	quest_23027a 9
+RESOLVED	23036	collect_item	quest_23036a 9
+RESOLVED	23037	collect_item	quest_23037a 1
+RESOLVED	23044	collect_item	quest_23044a 9
+RESOLVED	23049	quest_work_item	quest_23049a 1
+RESOLVED	23052	collect_item	quest_23052a 9
+RESOLVED	23053	collect_item	quest_23053a 1; quest_23053b 1; quest_23053c 1
+RESOLVED	23057	collect_item	quest_23057a 9
+RESOLVED	23300	collect_item	quest_23300a 1
+RESOLVED	23307	collect_item	quest_23307a 1
+RESOLVED	23317	collect_item	quest_23317a 1
+RESOLVED	23327	collect_item	quest_23327a 1
+RESOLVED	23336	collect_item	quest_23336a 9
+RESOLVED	23341	collect_item	quest_23341a 1
+RESOLVED	23345	collect_item	quest_23345a 1
+RESOLVED	23360	collect_item	medal_07 300
+RESOLVED	23361	collect_item	medal_07 63; coin_material_01 1
+RESOLVED	23362	collect_item	coin_pvp_01 2
+RESOLVED	23402	quest_work_item	quest_23402a 1
+RESOLVED	23509	collect_item	quest_23510a 1; quest_23510b 1
+RESOLVED	23510	collect_item	quest_23510a 1; quest_23510b 1
+RESOLVED	23515	collect_item	quest_23515a 1
+RESOLVED	23528	collect_item	quest_23528a 1; quest_23528b 1; quest_23528c 1
+RESOLVED	23529	collect_item	quest_23529a 1; quest_23529b 1; quest_23529c 1; quest_23529d 1
+RESOLVED	23554	collect_item	quest_23554a 1
+RESOLVED	23560	collect_item	quest_23560a 9
+RESOLVED	23563	collect_item	quest_23563a 9
+RESOLVED	23565	collect_item	quest_23565a 9
+RESOLVED	23607	collect_item	quest_23607a 10
+RESOLVED	23609	collect_item	quest_23609a 1
+RESOLVED	23614	collect_item	quest_23614a 6
+RESOLVED	23712	collect_item	medal_07 63; coin_material_01 1
+RESOLVED	23714	collect_item	medal_07 63; coin_material_01 1
+RESOLVED	23741	collect_item	quest_23741a 3; quest_23741b 3; quest_23741c 3; quest_23741d 3
+RESOLVED	23742	collect_item	quest_23742a 3; quest_23742b 3; quest_23742c 3; quest_23742d 3
+RESOLVED	23743	collect_item	quest_23743a 3; quest_23743b 3; quest_23743c 3; quest_23743d 3
+RESOLVED	23807	collect_item	quest_23807a 7
+RESOLVED	23809	quest_work_item	quest_23809a 1
+RESOLVED	23810	collect_item	doc_quest_23810a 1
+RESOLVED	23813	collect_item	quest_23813a 20
+RESOLVED	23816	quest_work_item	quest_23816a 1
+RESOLVED	23819	collect_item	quest_23819a 20
+RESOLVED	23820	collect_item	quest_23820a 20
+RESOLVED	23821	collect_item	quest_23821a 20
+RESOLVED	23901	collect_item	quest_23901a 1; quest_23901b 1
+RESOLVED	23903	collect_item	quest_23903a 1; quest_23903b 1
+RESOLVED	23904	collect_item	quest_23903a 1; quest_23903b 1
+RESOLVED	23914	collect_item	quest_23914a 1
+RESOLVED	23915	collect_item	quest_23914a 1
+RESOLVED	23916	collect_item	quest_23916a 1
+RESOLVED	24113	collect_item	quest_24113a 1
+RESOLVED	24121	collect_item	quest_24121a 1
+RESOLVED	24152	collect_item	quest_24152a 1
+RESOLVED	24202	collect_item	quest_24202b 1
+RESOLVED	24231	collect_item	quest_24231a 8
+RESOLVED	24242	collect_item	quest_24242a 1
+RESOLVED	25210	collect_item	medal_07 300
+RESOLVED	25211	collect_item	medal_07 63; coin_material_01 1
+RESOLVED	25212	collect_item	medal_07 63
+RESOLVED	25213	collect_item	medal_07 18; coin_medal_03 1
+RESOLVED	25230	collect_item	Key_tiamatdown_r_01 1
+RESOLVED	25231	collect_item	Key_tiamatdown_l_01 1
+RESOLVED	25232	collect_item	Key_tiamatdown_u_01 1
+RESOLVED	26921	collect_item	item_idunderrune_quest_01 20
+RESOLVED	26930	collect_item	item_idruneweapon_quest_01 10
+RESOLVED	26940	collect_item	quest_26940a 3
+RESOLVED	26950	collect_item	quest_26950a 1
+RESOLVED	26952	collect_item	quest_26952a 7
+RESOLVED	26954	collect_item	quest_26954a 1
+RESOLVED	26992	collect_item	quest_26992a 1
+RESOLVED	27100	collect_item	metal_n_c_30a 5
+RESOLVED	27101	collect_item	fs_material_n_c_18a 3; fs_material_n_c_21a 2
+RESOLVED	27102	collect_item	junk_town_upgrade_aventurine 5
+RESOLVED	27103	collect_item	junk_town_upgrade_rich_soil 1
+RESOLVED	27104	collect_item	junk_town_upgrade_seasonlight 1
+RESOLVED	27105	collect_item	junk_town_upgrade_flower_soul 1
+RESOLVED	27107	collect_item	junk_town_upgrade_flower_soul 1
+RESOLVED	27109	collect_item	junk_town_upgrade_flower_soul 1
+RESOLVED	27111	collect_item	junk_town_upgrade_flower_soul 1
+RESOLVED	27113	collect_item	junk_town_upgrade_flower_soul 1
+RESOLVED	27115	collect_item	junk_town_upgrade_flower_soul 1
+RESOLVED	27117	collect_item	junk_town_upgrade_flower_soul 1
+RESOLVED	27119	collect_item	junk_town_upgrade_flower_soul 1
+RESOLVED	27121	collect_item	junk_town_upgrade_flower_soul 1
+RESOLVED	27123	collect_item	junk_town_upgrade_flower_soul 1
+RESOLVED	27125	collect_item	junk_town_upgrade_flower_soul 1
+RESOLVED	27127	collect_item	junk_town_upgrade_flower_soul 1
+RESOLVED	27129	collect_item	junk_town_upgrade_flower_soul 1
+RESOLVED	27131	collect_item	junk_town_upgrade_flower_soul 1
+RESOLVED	27133	collect_item	junk_town_upgrade_flower_soul 1
+RESOLVED	27135	collect_item	junk_town_upgrade_flower_soul 1
+RESOLVED	27137	collect_item	junk_town_upgrade_flower_soul 1
+RESOLVED	27139	collect_item	junk_town_upgrade_flower_soul 1
+RESOLVED	27141	collect_item	junk_town_upgrade_flower_soul 1
+RESOLVED	27143	collect_item	junk_town_upgrade_flower_soul 1
+RESOLVED	27145	collect_item	junk_town_upgrade_flower_soul 1
+RESOLVED	27147	collect_item	junk_town_upgrade_flower_soul 1
+RESOLVED	27149	collect_item	junk_town_upgrade_flower_soul 1
+RESOLVED	27151	collect_item	junk_town_upgrade_flower_soul 1
+RESOLVED	27153	collect_item	junk_town_upgrade_flower_soul 1
+RESOLVED	28001	collect_item	quest_28001a 30
+RESOLVED	28013	collect_item	quest_28013a 4
+RESOLVED	28216	collect_item	coin_arena_pvp_01 400; coin_arena_01 9800
+RESOLVED	28219	collect_item	quest_vip_01a 10
+RESOLVED	28220	collect_item	quest_vip_01a 10
+RESOLVED	28221	collect_item	quest_vip_01a 10
+RESOLVED	28222	collect_item	quest_vip_01a 10
+RESOLVED	28223	collect_item	quest_vip_01a 10
+RESOLVED	28305	collect_item	quest_28305a 5
+RESOLVED	28306	collect_item	quest_28306a 5
+RESOLVED	28308	collect_item	quest_28308a 5
+RESOLVED	28311	quest_work_item	Doc_quest_28311a
+RESOLVED	28312	collect_item	quest_28312a 10
+RESOLVED	28403	collect_item	quest_28403a 20
+RESOLVED	28408	collect_item	quest_28408a 3
+RESOLVED	28411	collect_item	quest_28411a 1
+RESOLVED	28505	collect_item	quest_28505a 1; quest_28505b 1; quest_28505c 1
+RESOLVED	28509	collect_item	quest_28509a 1
+RESOLVED	28607	collect_item	quest_28607a 15
+RESOLVED	28608	collect_item	SWORD_D_N_L1_35A 1; Necklace_n_l1_q_38c 1
+RESOLVED	28609	collect_item	MACE_D_N_L1_35A 1; Necklace_n_l1_q_38c 1
+RESOLVED	28610	collect_item	DAGGER_D_N_L1_35A 1; Necklace_n_l1_q_38c 1
+RESOLVED	28611	collect_item	ORB_D_N_L1_35A 1; Necklace_n_l1_q_38c 1
+RESOLVED	28612	collect_item	BOOK_D_N_L1_35A 1; Necklace_n_l1_q_38c 1
+RESOLVED	28613	collect_item	2HSWORD_D_N_L1_35A 1; Necklace_n_l1_q_38c 1
+RESOLVED	28614	collect_item	POLEARM_D_N_L1_35A 1; Necklace_n_l1_q_38c 1
+RESOLVED	28615	collect_item	STAFF_D_N_L1_35A 1; Necklace_n_l1_q_38c 1
+RESOLVED	28616	collect_item	BOW_D_N_L1_35A 1; Necklace_n_l1_q_38c 1
+RESOLVED	28618	collect_item	key_idcromede_05 1
+RESOLVED	28619	collect_item	key_idcromede_05 1
+RESOLVED	28620	collect_item	key_idcromede_05 1
+RESOLVED	28621	collect_item	key_idcromede_05 1
+RESOLVED	28622	collect_item	key_idcromede_05 1
+RESOLVED	28623	collect_item	key_idcromede_05 1
+RESOLVED	28624	collect_item	key_idcromede_05 1
+RESOLVED	28625	collect_item	key_idcromede_05 1
+RESOLVED	28626	collect_item	key_idcromede_05 1
+RESOLVED	28627	collect_item	key_idcromede_05 1
+RESOLVED	28628	collect_item	SWORD_D_N_L1_35A 1; Necklace_n_l1_q_38d 1
+RESOLVED	28629	collect_item	MACE_D_N_L1_35A 1; Necklace_n_l1_q_38d 1
+RESOLVED	28630	collect_item	DAGGER_D_N_L1_35A 1; Necklace_n_l1_q_38d 1
+RESOLVED	28631	collect_item	ORB_D_N_L1_35A 1; Necklace_n_l1_q_38d 1
+RESOLVED	28632	collect_item	BOOK_D_N_L1_35A 1; Necklace_n_l1_q_38d 1
+RESOLVED	28633	collect_item	2HSWORD_D_N_L1_35A 1; Necklace_n_l1_q_38d 1
+RESOLVED	28634	collect_item	POLEARM_D_N_L1_35A 1; Necklace_n_l1_q_38d 1
+RESOLVED	28635	collect_item	STAFF_D_N_L1_35A 1; Necklace_n_l1_q_38d 1
+RESOLVED	28636	collect_item	BOW_D_N_L1_35A 1; Necklace_n_l1_q_38d 1
+RESOLVED	28637	collect_item	gun_d_n_l1_35d 1; Necklace_n_l1_q_38c 1
+RESOLVED	28638	collect_item	cannon_d_n_l1_35a 1; Necklace_n_l1_q_38c 1
+RESOLVED	28639	collect_item	harp_d_n_l1_35a 1; Necklace_n_l1_q_38c 1
+RESOLVED	28640	collect_item	gun_d_n_l1_35d 1; Necklace_n_l1_q_38d 1
+RESOLVED	28641	collect_item	cannon_d_n_l1_35a 1; Necklace_n_l1_q_38d 1
+RESOLVED	28642	collect_item	harp_d_n_l1_35a 1; Necklace_n_l1_q_38d 1
+RESOLVED	28643	collect_item	key_idcromede_05 1
+RESOLVED	28644	collect_item	key_idcromede_05 1
+RESOLVED	28645	collect_item	key_idcromede_05 1
+RESOLVED	28646	collect_item	keyblade_d_n_l1_35a 1; Necklace_n_l1_q_38c 1
+RESOLVED	28647	collect_item	keyblade_d_n_l1_35a 1; Necklace_n_l1_q_38d 1
+RESOLVED	28648	collect_item	key_idcromede_05 1
+RESOLVED	28707	collect_item	quest_28707a 2
+RESOLVED	28711	collect_item	sword_d_n_l1_q_56a 1; ldf4a_quest_junk_01 1
+RESOLVED	28713	collect_item	dagger_d_n_l1_q_56a 1; ldf4a_quest_junk_01 1
+RESOLVED	28715	collect_item	mace_d_n_l1_q_56a 1; ldf4a_quest_junk_01 1
+RESOLVED	28717	collect_item	orb_d_n_l1_q_56a 1; ldf4a_quest_junk_01 1
+RESOLVED	28719	collect_item	book_d_n_l1_q_56a 1; ldf4a_quest_junk_01 1
+RESOLVED	28721	collect_item	2hsword_d_n_l1_q_56a 1; ldf4a_quest_junk_01 1
+RESOLVED	28723	collect_item	polearm_d_n_l1_q_56a 1; ldf4a_quest_junk_01 1
+RESOLVED	28725	collect_item	staff_d_n_l1_q_56a 1; ldf4a_quest_junk_01 1
+RESOLVED	28727	collect_item	bow_d_n_l1_q_56a 1; ldf4a_quest_junk_01 1
+RESOLVED	28729	collect_item	keyblade_d_n_l1_q_56a 1; ldf4a_quest_junk_01 1
+RESOLVED	28731	collect_item	gun_d_n_l1_q_56a 1; ldf4a_quest_junk_01 1
+RESOLVED	28733	collect_item	cannon_d_n_l1_q_56a 1; ldf4a_quest_junk_01 1
+RESOLVED	28735	collect_item	harp_d_n_l1_q_56a 1; ldf4a_quest_junk_01 1
+RESOLVED	28812	collect_item	junk_od_fragment_sad_01 1; junk_od_fragment_scary_01 25; junk_od_fragment_amazing_01 25
+RESOLVED	28813	collect_item	junk_od_fragment_happy_01 1; junk_od_fragment_amazing_01 25; junk_od_fragment_lonely_01 25
+RESOLVED	28814	collect_item	junk_od_fragment_delight_01 1; junk_od_fragment_amazing_01 10; junk_od_fragment_lonely_01 15; junk_od_fragment_scary_01 25
+RESOLVED	28815	collect_item	junk_od_fragment_angry_01 1; junk_od_fragment_lonely_01 25; junk_od_fragment_scary_01 25
+RESOLVED	28816	collect_item	junk_leaf_spring_01 1; junk_leaf_summer_01 1; junk_leaf_fall_01 1; junk_leaf_winter_01 1
+RESOLVED	28817	collect_item	junk_crystal_spring_01 1; junk_crystal_summer_01 1; junk_crystal_fall_01 1; junk_crystal_winter_01 1
+RESOLVED	28818	collect_item	junk_dailygather_shell_d_01 10
+RESOLVED	28819	collect_item	junk_dailygather_stone_d_01 10
+RESOLVED	28820	collect_item	junk_dailygather_plant_d_01 10
+RESOLVED	28822	collect_item	junk_od_fragment_sad_01 1; junk_od_fragment_scary_01 25; junk_od_fragment_amazing_01 25
+RESOLVED	28823	collect_item	junk_od_fragment_happy_01 1; junk_od_fragment_amazing_01 25; junk_od_fragment_lonely_01 25
+RESOLVED	28824	collect_item	junk_od_fragment_delight_01 1; junk_od_fragment_amazing_01 10; junk_od_fragment_lonely_01 15; junk_od_fragment_scary_01 25
+RESOLVED	28825	collect_item	junk_od_fragment_angry_01 1; junk_od_fragment_lonely_01 25; junk_od_fragment_scary_01 25
+RESOLVED	28834	collect_item	quest_28834a 50
+RESOLVED	28836	collect_item	quest_28836a 50
+RESOLVED	28838	collect_item	quest_28838a 50
+RESOLVED	28840	collect_item	junk_leaf_spring_01 1; junk_leaf_summer_01 1; junk_leaf_fall_01 1; junk_leaf_winter_01 1
+RESOLVED	28841	collect_item	junk_leaf_spring_01 1; junk_leaf_summer_01 1; junk_leaf_fall_01 1; junk_leaf_winter_01 1
+RESOLVED	28842	collect_item	junk_leaf_spring_01 1; junk_leaf_summer_01 1; junk_leaf_fall_01 1; junk_leaf_winter_01 1
+RESOLVED	28844	collect_item	junk_od_fragment_amazing_01 1; junk_od_fragment_scary_01 1; junk_od_fragment_lonely_01 1
+RESOLVED	28848	collect_item	quest_28848a 6
+RESOLVED	28913	collect_item	doc_quest_28913a 1
+RESOLVED	28916	collect_item	quest_28916a 1
+RESOLVED	29042	collect_item	quest_29042a 1
+RESOLVED	29043	collect_item	quest_29043a 10
+RESOLVED	29049	collect_item	me_part_D_10_01a 3
+RESOLVED	29052	collect_item	quest_d_skill_menui_299b 1
+RESOLVED	29053	collect_item	quest_d_skill_menui_399b 1
+RESOLVED	29054	collect_item	quest_d_skill_menui_299b 1
+RESOLVED	29055	collect_item	quest_d_skill_menui_399b 1
+RESOLVED	29064	collect_item	quest_29064a 1; relic_d_02 1
+RESOLVED	30002	collect_item	doc_quest_30002a 1
+RESOLVED	30009	collect_item	quest_30009a 4; quest_30009b 2; quest_30009c 1
+RESOLVED	30013	collect_item	quest_30013a 20
+RESOLVED	30014	collect_item	quest_30014a 15
+RESOLVED	30016	collect_item	sword_n_r2_51a 1; Insidium_01 1
+RESOLVED	30018	collect_item	2hsword_n_r2_51a 1; Insidium_01 1
+RESOLVED	30020	collect_item	polearm_n_r2_51a 1; Insidium_01 1
+RESOLVED	30022	collect_item	staff_n_r2_51a 1; Insidium_01 1
+RESOLVED	30024	collect_item	book_n_r2_51a 1; Insidium_01 1
+RESOLVED	30026	collect_item	orb_n_r2_51a 1; Insidium_01 1
+RESOLVED	30028	collect_item	bow_n_r2_51a 1; Insidium_01 1
+RESOLVED	30030	collect_item	dagger_n_r2_51a 1; Insidium_01 1
+RESOLVED	30032	collect_item	mace_n_r2_51a 1; Insidium_01 1
+RESOLVED	30035	collect_item	gun_n_r2_51a 1; Insidium_01 1
+RESOLVED	30037	collect_item	cannon_n_r2_51a 1; Insidium_01 1
+RESOLVED	30039	collect_item	harp_n_r2_51a 1; Insidium_01 1
+RESOLVED	30041	collect_item	keyblade_n_r2_51a 1; Insidium_01 1
+RESOLVED	30102	collect_item	doc_quest_30102a 1
+RESOLVED	30109	collect_item	quest_30109a 4; quest_30109b 2; quest_30109c 1
+RESOLVED	30116	collect_item	sword_n_r2_51a 1; Insidium_01 1
+RESOLVED	30118	collect_item	2hsword_n_r2_51a 1; Insidium_01 1
+RESOLVED	30120	collect_item	polearm_n_r2_51a 1; Insidium_01 1
+RESOLVED	30122	collect_item	staff_n_r2_51a 1; Insidium_01 1
+RESOLVED	30124	collect_item	book_n_r2_51a 1; Insidium_01 1
+RESOLVED	30126	collect_item	orb_n_r2_51a 1; Insidium_01 1
+RESOLVED	30128	collect_item	bow_n_r2_51a 1; Insidium_01 1
+RESOLVED	30130	collect_item	dagger_n_r2_51a 1; Insidium_01 1
+RESOLVED	30132	collect_item	mace_n_r2_51a 1; Insidium_01 1
+RESOLVED	30135	collect_item	gun_n_r2_51a 1; Insidium_01 1
+RESOLVED	30137	collect_item	cannon_n_r2_51a 1; Insidium_01 1
+RESOLVED	30139	collect_item	harp_n_r2_51a 1; Insidium_01 1
+RESOLVED	30141	collect_item	keyblade_n_r2_51a 1; Insidium_01 1
+RESOLVED	30201	collect_item	quest_30201a 1
+RESOLVED	30207	collect_item	quest_30207a 20
+RESOLVED	30212	collect_item	quest_30212a 5
+RESOLVED	30214	collect_item	IDCatacombs_Certification_01 100
+RESOLVED	30215	collect_item	IDCatacombs_Certification_01 200
+RESOLVED	30223	collect_item	quest_30223a 1
+RESOLVED	30225	collect_item	quest_30225a 6
+RESOLVED	30226	collect_item	quest_30226a 30
+RESOLVED	30228	collect_item	quest_30228a 20
+RESOLVED	30229	collect_item	quest_30229a 50
+RESOLVED	30230	collect_item	quest_30230a 30
+RESOLVED	30231	collect_item	quest_30231a 15
+RESOLVED	30233	collect_item	quest_30233a 20; quest_30233b 50; quest_30233c 30; quest_30233d 15
+RESOLVED	30301	collect_item	quest_30301a 1
+RESOLVED	30307	collect_item	quest_30307a 30
+RESOLVED	30312	collect_item	quest_30312a 20
+RESOLVED	30314	collect_item	IDCatacombs_Certification_01 100
+RESOLVED	30315	collect_item	IDCatacombs_Certification_01 200
+RESOLVED	30323	collect_item	quest_30323a 1
+RESOLVED	30325	collect_item	quest_30325a 6
+RESOLVED	30326	collect_item	quest_30326a 30
+RESOLVED	30328	collect_item	quest_30328a 30
+RESOLVED	30329	collect_item	quest_30329a 30
+RESOLVED	30330	collect_item	quest_30330a 30
+RESOLVED	30331	collect_item	quest_30331a 15
+RESOLVED	30333	collect_item	quest_30333a 30; quest_30333b 30; quest_30333c 30; quest_30333d 15
+RESOLVED	30401	collect_item	quest_30401a 1
+RESOLVED	30404	collect_item	quest_30404a 3
+RESOLVED	30406	quest_work_item	quest_30406a 1
+RESOLVED	30408	collect_item	quest_30408a 1
+RESOLVED	30415	collect_item	quest_30415a 1
+RESOLVED	30421	collect_item	quest_30421a 1
+RESOLVED	30451	collect_item	quest_30451a 1
+RESOLVED	30454	collect_item	quest_30454a 3
+RESOLVED	30456	quest_work_item	quest_30456a 1
+RESOLVED	30458	collect_item	quest_30458a 1
+RESOLVED	30459	collect_item	quest_30459b 1; quest_30459c 1; as_material_n_c_58b
+RESOLVED	30466	collect_item	quest_30466a 1
+RESOLVED	30472	collect_item	quest_30472a 1
+GATE_GAP	30509	quest_work_item	<empty>
+RESOLVED	30510	collect_item	quest_30510a 1
+RESOLVED	30511	collect_item	quest_30511a 30
+RESOLVED	30513	collect_item	quest_30513a 3
+RESOLVED	30559	collect_item	quest_30559a 1
+RESOLVED	30560	quest_work_item	quest_30560a 1
+RESOLVED	30561	collect_item	quest_30561a 30
+RESOLVED	30563	collect_item	quest_30563a 3
+RESOLVED	30706	collect_item	quest_30706a 3
+RESOLVED	30712	collect_item	quest_30712a 1
+RESOLVED	30713	collect_item	quest_30713b 1
+RESOLVED	30756	collect_item	quest_30756a 3
+RESOLVED	30762	collect_item	quest_30762a 1
+RESOLVED	30763	collect_item	quest_30763b 1
+RESOLVED	35031	collect_item	od_n_c_30a 3
+RESOLVED	35032	collect_item	vegetable_n_c_30a 1; berry_n_c_30a 1; fish_n_c_30a 1
+RESOLVED	35033	collect_item	tree_n_c_30a 2; metal_n_c_30a 1
+RESOLVED	35034	collect_item	herb_n_c_30a 3
+RESOLVED	35039	collect_item	od_n_c_40a 3
+RESOLVED	35040	collect_item	vegetable_n_c_40a 1; berry_n_c_40a 1; fish_n_c_40a 1
+RESOLVED	35041	collect_item	tree_n_c_40a 2; metal_n_c_40a 1
+RESOLVED	35042	collect_item	herb_n_c_40a 3
+RESOLVED	35045	collect_item	od_n_c_50a 3
+RESOLVED	35046	collect_item	vegetable_n_c_50a 1; berry_n_c_50a 1; fish_n_c_50a 1
+RESOLVED	35047	collect_item	tree_n_c_50a 2; metal_n_c_50a 1
+RESOLVED	35048	collect_item	herb_n_c_50a 3
+RESOLVED	36503	collect_item	quest_36503a 1
+RESOLVED	36509	collect_item	quest_36509a 1
+RESOLVED	36515	collect_item	quest_36515a 1
+RESOLVED	36519	collect_item	quest_36519a 1
+RESOLVED	36520	collect_item	quest_36520a 1
+RESOLVED	36522	collect_item	quest_36522a 1
+RESOLVED	36524	collect_item	quest_36524a 1
+RESOLVED	36525	collect_item	quest_36525a 1
+RESOLVED	36527	collect_item	quest_36527a 1
+RESOLVED	36528	collect_item	quest_36528a 1
+RESOLVED	37000	collect_item	quest_37000a 5
+RESOLVED	37001	collect_item	quest_37001a 5
+RESOLVED	37005	collect_item	quest_37005a 5
+RESOLVED	37008	collect_item	quest_37008a 5
+RESOLVED	37100	collect_item	quest_37100a 5
+RESOLVED	37107	collect_item	quest_37107a 5
+RESOLVED	37500	collect_item	quest_37500a 1
+RESOLVED	37501	collect_item	quest_37501a 1
+RESOLVED	37502	collect_item	quest_37502a 1
+RESOLVED	37503	collect_item	quest_37503a 1
+RESOLVED	38500	collect_item	coin_protection_01 8
+RESOLVED	38501	collect_item	coin_protection_01 7
+RESOLVED	38502	collect_item	coin_protection_01 8
+RESOLVED	38503	collect_item	coin_protection_01 7
+RESOLVED	38504	collect_item	coin_protection_01 6
+RESOLVED	38505	collect_item	coin_hunters_01 8
+RESOLVED	38506	collect_item	coin_hunters_01 7
+RESOLVED	38507	collect_item	coin_hunters_01 6
+RESOLVED	39603	collect_item	quest_39603a 6
+RESOLVED	39610	collect_item	quest_39610a 6
+RESOLVED	41111	collect_item	junk_kahrun_quest_material 1
+RESOLVED	41161	collect_item	quest_41161a 15
+RESOLVED	41168	collect_item	quest_41168a 1
+RESOLVED	41171	collect_item	quest_41171a 15
+RESOLVED	41175	collect_item	quest_41175a 15
+RESOLVED	41187	collect_item	medal_07 72
+RESOLVED	41201	collect_item	quest_41201a 15
+RESOLVED	41251	collect_item	quest_41251a 15
+RESOLVED	41268	collect_item	quest_41268a 15
+RESOLVED	41269	collect_item	quest_41269a 15
+RESOLVED	41302	collect_item	quest_41302a 15
+RESOLVED	41351	collect_item	quest_41351a 15
+RESOLVED	41451	collect_item	quest_41451a 100; quest_41451b 100; relic_yun_01 1
+RESOLVED	41452	collect_item	quest_41452a 1; relic_yun_01 1
+RESOLVED	41453	collect_item	quest_41453b 50; relic_yun_02 1
+RESOLVED	41454	collect_item	quest_41454a 10; quest_41454b 10; relic_yun_03 1
+RESOLVED	41463	collect_item	quest_41463a 7
+RESOLVED	41464	collect_item	quest_41464a 330; quest_41464b 330; quest_41464c 330
+RESOLVED	41465	collect_item	quest_41465a 330; quest_41465b 330; quest_41465c 330
+RESOLVED	41466	collect_item	quest_41466a 145
+RESOLVED	41467	collect_item	quest_41467a 350; quest_41467b 150
+RESOLVED	41468	collect_item	relic_yun_04 1
+RESOLVED	41512	collect_item	quest_41512a 7
+RESOLVED	41520	collect_item	quest_41520a 7
+RESOLVED	41528	collect_item	quest_41528a 8
+RESOLVED	41532	collect_item	quest_41532a 9
+RESOLVED	41536	collect_item	quest_41536a 1; quest_41536b 1; quest_41536c 1
+RESOLVED	41539	collect_item	quest_41539a 1
+RESOLVED	41543	collect_item	quest_41543a 7; quest_41543b 9
+RESOLVED	41544	quest_work_item	quest_41544a 1
+RESOLVED	41546	quest_work_item	quest_41546a 1
+RESOLVED	41554	collect_item	quest_41554a 5
+RESOLVED	41560	collect_item	ldf4b_questcomp_02 30
+RESOLVED	41561	collect_item	quest_41561a 1
+RESOLVED	41562	collect_item	quest_41562a 10; quest_41562b 10
+RESOLVED	41563	collect_item	ldf4b_questcomp_01 30
+RESOLVED	41564	collect_item	quest_41564a 1
+RESOLVED	41565	collect_item	quest_41565a 10; quest_41565b 10; quest_41565c 10
+GATE_GAP	41571	quest_work_item	<empty>
+RESOLVED	41572	collect_item	quest_41572a 1
+RESOLVED	41574	collect_item	quest_41574a 11
+RESOLVED	41584	collect_item	quest_41584a 9
+RESOLVED	41592	collect_item	quest_41592a 8
+RESOLVED	41594	collect_item	quest_41594a 8
+RESOLVED	41596	collect_item	quest_41596a 10
+RESOLVED	41598	collect_item	medal_07 100; coin_medal_03 1
+RESOLVED	45031	collect_item	od_n_c_30a 3
+RESOLVED	45032	collect_item	vegetable_d_n_c_30a 1; berry_d_n_c_30a 1; fish_d_n_c_30a 1
+RESOLVED	45033	collect_item	tree_d_n_c_30a 2; metal_n_c_30a 1
+RESOLVED	45034	collect_item	herb_d_n_c_30a 3
+RESOLVED	45039	collect_item	od_n_c_40a 3
+RESOLVED	45040	collect_item	vegetable_d_n_c_40a 1; berry_d_n_c_40a 1; fish_d_n_c_40a 1
+RESOLVED	45041	collect_item	tree_d_n_c_40a 2; metal_n_c_40a 1
+RESOLVED	45042	collect_item	herb_d_n_c_40a 3
+RESOLVED	45045	collect_item	od_n_c_50a 3
+RESOLVED	45046	collect_item	vegetable_d_n_c_50a 1; berry_d_n_c_50a 1; fish_d_n_c_50a 1
+RESOLVED	45047	collect_item	tree_d_n_c_50a 2; metal_n_c_50a 1
+RESOLVED	45048	collect_item	herb_d_n_c_50a 3
+RESOLVED	46503	collect_item	quest_46503a 1
+RESOLVED	46509	collect_item	quest_46509a 1
+RESOLVED	46515	collect_item	quest_46515a 1
+RESOLVED	46519	collect_item	quest_46519a 1
+RESOLVED	46521	collect_item	quest_46521a 1
+RESOLVED	46524	collect_item	quest_46524a 1
+RESOLVED	46525	collect_item	quest_46525a 1
+RESOLVED	46526	collect_item	quest_46526a 1
+RESOLVED	46528	collect_item	quest_46528a 1
+RESOLVED	47000	collect_item	quest_47000a 5
+RESOLVED	47002	collect_item	quest_47002a 5
+RESOLVED	47005	collect_item	quest_47005a 3
+RESOLVED	47100	collect_item	quest_47100a 5
+RESOLVED	47107	collect_item	quest_47107a 5
+RESOLVED	47500	collect_item	quest_47500a 1
+RESOLVED	47501	collect_item	quest_47501a 1
+RESOLVED	47502	collect_item	quest_47502a 1
+RESOLVED	47503	collect_item	quest_47503a 1
+RESOLVED	48500	collect_item	coin_d_protection_01 8
+RESOLVED	48501	collect_item	coin_d_protection_01 7
+RESOLVED	48502	collect_item	coin_d_protection_01 8
+RESOLVED	48503	collect_item	coin_d_protection_01 7
+RESOLVED	48504	collect_item	coin_d_protection_01 6
+RESOLVED	48505	collect_item	coin_d_hunters_01 8
+RESOLVED	48506	collect_item	coin_d_hunters_01 7
+RESOLVED	48507	collect_item	coin_d_hunters_01 6
+RESOLVED	49603	collect_item	quest_49603a 6
+RESOLVED	49610	collect_item	quest_49610a 6
+RESOLVED	50007	collect_item	quest_50007a 3
+GATE_GAP	50011	quest_work_item	<empty>
+GATE_GAP	50012	quest_work_item	<empty>
+RESOLVED	50024	collect_item	assambly_event_valen_white_half_01 1
+RESOLVED	50025	collect_item	assambly_event_valen_white_half_02 1
+RESOLVED	50026	collect_item	event_chaos_wingwar_coin_02 1
+RESOLVED	50027	collect_item	Event_food_2stat_60a 5
+RESOLVED	50028	collect_item	Event_food_2stat_60b 5
+RESOLVED	50029	collect_item	Event_food_2stat_60a 10; Event_food_2stat_60b 10
+RESOLVED	50030	collect_item	Event_food_2stat_60a 6; Event_food_2stat_60b 6
+RESOLVED	50035	collect_item	Event_goldcake_soup 1; Event_goldcake_cake 4
+RESOLVED	50036	collect_item	Event_goldcake_soup 1
+RESOLVED	50037	collect_item	Event_goldcake_cake 4
+RESOLVED	50039	collect_item	assembly_newyearcard_left 10
+RESOLVED	50042	collect_item	Event_svs_crystal 1; junk_soul_r01_65a 35; junk_humanoid_r01_65a 35; junk_animal_r01_65a 35
+RESOLVED	50043	collect_item	Event_svs_crystal 1; V13_N_po_shopmaterial_C_61a 15
+RESOLVED	50044	collect_item	Event_buchu_flour 1; Event_2014_8pc_coin 4
+RESOLVED	50045	collect_item	Event_2014_8pc_coin 1
+RESOLVED	50046	collect_item	Event_buchu_flour 1
+RESOLVED	50047	collect_item	event_2014devasday_coin 2
+RESOLVED	50049	collect_item	wrap_event_2014xmas_snow_4 1
+RESOLVED	50050	collect_item	wrap_event_2014xmas_snow_5 1
+RESOLVED	50051	collect_item	event_2014xmas_snow_10 1
+RESOLVED	51007	collect_item	quest_51007a 3
+GATE_GAP	51011	quest_work_item	<empty>
+GATE_GAP	51012	quest_work_item	<empty>
+RESOLVED	51024	collect_item	assambly_event_valen_white_half_01 1
+RESOLVED	51025	collect_item	assambly_event_valen_white_half_02 1
+RESOLVED	51026	collect_item	event_chaos_wingwar_coin_02 1
+RESOLVED	51027	collect_item	Event_food_2stat_60a 5
+RESOLVED	51028	collect_item	Event_food_2stat_60b 5
+RESOLVED	51029	collect_item	Event_food_2stat_60a 10; Event_food_2stat_60b 10
+RESOLVED	51030	collect_item	Event_food_2stat_60a 6; Event_food_2stat_60b 6
+RESOLVED	51035	collect_item	Event_goldcake_soup 1; Event_goldcake_cake 4
+RESOLVED	51036	collect_item	Event_goldcake_soup 1
+RESOLVED	51037	collect_item	Event_goldcake_cake 4
+RESOLVED	51039	collect_item	assembly_newyearcard_left 10
+RESOLVED	51042	collect_item	Event_svs_crystal 1; V15_N_ch_shopmaterial_C_61a 20
+RESOLVED	51043	collect_item	Event_svs_crystal 3
+RESOLVED	51044	collect_item	Event_buchu_flour 1; Event_2014_8pc_coin 4
+RESOLVED	51045	collect_item	Event_2014_8pc_coin 1
+RESOLVED	51046	collect_item	Event_buchu_flour 1
+RESOLVED	51049	collect_item	wrap_event_2014xmas_snow_4 1
+RESOLVED	51050	collect_item	wrap_event_2014xmas_snow_5 1
+RESOLVED	51051	collect_item	event_2014xmas_snow_10 1
+RESOLVED	80002	collect_item	quest_80002a 10
+RESOLVED	80003	collect_item	quest_80003a 10
+RESOLVED	80004	collect_item	quest_80004a 10
+RESOLVED	80005	collect_item	quest_80005a 10
+RESOLVED	80006	collect_item	quest_80006a 10
+RESOLVED	80007	collect_item	quest_80007a 10
+RESOLVED	80012	collect_item	world_event_potion_hp_mp_40a 10
+RESOLVED	80015	collect_item	world_event_potion_hp_mp_40a 10
+RESOLVED	80016	collect_item	quest_80016a 15
+RESOLVED	80017	collect_item	quest_80017a 10
+RESOLVED	80018	collect_item	quest_80018a 15
+RESOLVED	80019	collect_item	quest_80019a 10
+RESOLVED	80022	collect_item	world_event_food_NewYear_3stats 5; world_event_NewYear_potion_hp_mp_40a 5; world_event_NewYear_food_dpheal_30a 5
+RESOLVED	80023	collect_item	world_event_food_NewYear_3stats 10; world_event_NewYear_potion_hp_mp_40a 10; world_event_NewYear_food_dpheal_30a 10
+RESOLVED	80024	collect_item	world_event_food_NewYear_3stats 15; world_event_NewYear_potion_hp_mp_40a 15; world_event_NewYear_food_dpheal_30a 15
+RESOLVED	80025	collect_item	world_event_food_NewYear_3stats 5; world_event_NewYear_potion_hp_mp_40a 5; world_event_NewYear_food_dpheal_30a 5
+RESOLVED	80026	collect_item	world_event_food_NewYear_3stats 10; world_event_NewYear_potion_hp_mp_40a 10; world_event_NewYear_food_dpheal_30a 10
+RESOLVED	80027	collect_item	world_event_food_NewYear_3stats 15; world_event_NewYear_potion_hp_mp_40a 15; world_event_NewYear_food_dpheal_30a 15
+RESOLVED	80030	collect_item	world_event_lunar_scroll_shield_all_20a 1
+RESOLVED	80033	collect_item	world_event_lunar_scroll_shield_all_20a 1
+RESOLVED	80034	collect_item	world_event_lunar_scroll_shield_all_30a 10
+RESOLVED	80035	collect_item	world_event_lunar_scroll_shield_all_40a 5
+RESOLVED	80036	collect_item	world_event_lunar_scroll_shield_all_50a 1
+RESOLVED	80037	collect_item	world_event_lunar_scroll_shield_all_30a 10
+RESOLVED	80038	collect_item	world_event_lunar_scroll_shield_all_40a 5
+RESOLVED	80039	collect_item	world_event_lunar_scroll_shield_all_50a 1
+RESOLVED	80040	collect_item	world_event_children_scroll_shield_all_30a 20
+RESOLVED	80041	collect_item	world_event_children_scroll_shield_all_30a 20
+RESOLVED	80042	collect_item	quest_80042a 20
+RESOLVED	80043	collect_item	quest_80043a 20
+RESOLVED	80044	collect_item	quest_80044a 20
+RESOLVED	80045	collect_item	quest_80045a 20
+RESOLVED	80046	collect_item	quest_80046a 20
+RESOLVED	80047	collect_item	quest_80047a 20
+RESOLVED	80048	collect_item	quest_80048a 20
+RESOLVED	80049	collect_item	quest_80049a 20
+RESOLVED	80050	collect_item	quest_80050a 5
+RESOLVED	80051	collect_item	quest_80051a 20
+RESOLVED	80052	collect_item	quest_80052a 5
+RESOLVED	80053	collect_item	quest_80053a 20
+RESOLVED	80054	collect_item	quest_80054a 5
+RESOLVED	80055	collect_item	quest_80055a 20
+RESOLVED	80056	collect_item	quest_80056a 5
+RESOLVED	80057	collect_item	quest_80057a 20
+RESOLVED	80058	collect_item	quest_80058a 10
+RESOLVED	80059	collect_item	world_event_tanabata_03a 1
+RESOLVED	80060	collect_item	quest_80060a 20
+RESOLVED	80061	collect_item	quest_80061a 20
+RESOLVED	80062	collect_item	quest_80062a 20
+RESOLVED	80063	collect_item	quest_80063a 20
+RESOLVED	80064	collect_item	quest_80064a 10
+RESOLVED	80065	collect_item	world_event_tanabata_02a 1
+RESOLVED	80066	collect_item	quest_80066a 20
+RESOLVED	80067	collect_item	quest_80067a 20
+RESOLVED	80068	collect_item	quest_80068a 20
+RESOLVED	80069	collect_item	quest_80069a 20
+RESOLVED	80072	collect_item	world_event_summerday_swimsuit_exchange 1
+RESOLVED	80073	collect_item	world_event_summerday_kina_exchange 1
+RESOLVED	80074	collect_item	world_event_summerday_swimsuit_exchange 1
+RESOLVED	80075	collect_item	world_event_summerday_kina_exchange 1
+RESOLVED	80076	collect_item	quest_80076a 150
+RESOLVED	80077	collect_item	quest_80077a 150
+RESOLVED	80078	collect_item	world_event_midautumnday_potion_hp_mp_40a 10; world_event_midautumnday_food_dpheal_30a 10
+RESOLVED	80079	collect_item	world_event_midautumnday_potion_hp_mp_40a 20; world_event_midautumnday_food_dpheal_30a 20
+RESOLVED	80080	collect_item	world_event_midautumnday_potion_hp_mp_40a 30; world_event_midautumnday_food_dpheal_30a 30
+RESOLVED	80081	collect_item	world_event_midautumnday_potion_hp_mp_40a 40; world_event_midautumnday_food_dpheal_30a 40
+RESOLVED	80082	collect_item	world_event_midautumnday_potion_hp_mp_40a 10; world_event_midautumnday_food_dpheal_30a 10
+RESOLVED	80083	collect_item	world_event_midautumnday_potion_hp_mp_40a 20; world_event_midautumnday_food_dpheal_30a 20
+RESOLVED	80084	collect_item	world_event_midautumnday_potion_hp_mp_40a 30; world_event_midautumnday_food_dpheal_30a 30
+RESOLVED	80085	collect_item	world_event_midautumnday_potion_hp_mp_40a 40; world_event_midautumnday_food_dpheal_30a 40
+RESOLVED	80086	collect_item	quest_80086a 10
+RESOLVED	80087	collect_item	quest_80087a 10
+RESOLVED	80088	collect_item	quest_80088a 10
+RESOLVED	80089	collect_item	quest_80089a 10
+RESOLVED	80090	collect_item	quest_80090a 5
+RESOLVED	80091	collect_item	quest_80091a 5
+RESOLVED	80092	collect_item	quest_80092a 5
+RESOLVED	80093	collect_item	quest_80093a 5
+RESOLVED	80094	collect_item	quest_80094a 15
+RESOLVED	80095	collect_item	quest_80095a 15
+RESOLVED	80096	collect_item	quest_80096a 15
+RESOLVED	80097	collect_item	quest_80097a 15
+RESOLVED	80098	collect_item	quest_80098a 10
+RESOLVED	80099	collect_item	quest_80099a 10
+RESOLVED	80100	collect_item	quest_80100a 10
+RESOLVED	80101	collect_item	quest_80101a 10
+RESOLVED	80102	collect_item	quest_80102a 5
+RESOLVED	80103	collect_item	quest_80103a 5
+RESOLVED	80104	collect_item	quest_80104a 5
+RESOLVED	80105	collect_item	quest_80105a 5
+RESOLVED	80106	collect_item	quest_80106a 15
+RESOLVED	80107	collect_item	quest_80107a 15
+RESOLVED	80108	collect_item	quest_80108a 15
+RESOLVED	80109	collect_item	quest_80109a 15
+RESOLVED	80110	collect_item	world_event_halloween2011 10
+RESOLVED	80111	collect_item	world_event_halloween2011 10
+RESOLVED	80112	collect_item	world_event_winter2011_food_hpregen_30a 10
+RESOLVED	80113	collect_item	world_event_winter2011_food_hpregen_30a 15
+RESOLVED	80114	collect_item	world_event_winter2011_food_hpregen_30a 20
+RESOLVED	80115	collect_item	world_event_winter2011_food_hpregen_30a 30
+RESOLVED	80116	collect_item	world_event_winter2011_food_mpregen_30a 10
+RESOLVED	80117	collect_item	world_event_winter2011_food_mpregen_30a 15
+RESOLVED	80118	collect_item	world_event_winter2011_food_mpregen_30a 20
+RESOLVED	80119	collect_item	world_event_winter2011_food_mpregen_30a 30
+RESOLVED	80120	collect_item	world_event_winter2011_food_hpregen_30a 10
+RESOLVED	80121	collect_item	world_event_winter2011_food_hpregen_30a 15
+RESOLVED	80122	collect_item	world_event_winter2011_food_hpregen_30a 20
+RESOLVED	80123	collect_item	world_event_winter2011_food_hpregen_30a 30
+RESOLVED	80124	collect_item	world_event_winter2011_food_mpregen_30a 10
+RESOLVED	80125	collect_item	world_event_winter2011_food_mpregen_30a 15
+RESOLVED	80126	collect_item	world_event_winter2011_food_mpregen_30a 20
+RESOLVED	80127	collect_item	world_event_winter2011_food_mpregen_30a 30
+RESOLVED	80128	collect_item	quest_80128a 20
+RESOLVED	80129	collect_item	quest_80129a 20
+RESOLVED	80130	collect_item	quest_80130a 10
+RESOLVED	80131	collect_item	world_event_tanabata_03b 1
+RESOLVED	80132	collect_item	quest_80132a 10
+RESOLVED	80133	collect_item	world_event_tanabata_02b 1
+RESOLVED	80134	collect_item	quest_80134a 5; quest_80134b 6; quest_80134c 11
+RESOLVED	80136	collect_item	quest_80136a 7; quest_80136b 10; quest_80136c 14
+RESOLVED	80138	collect_item	quest_80138a 10; quest_80138b 13; quest_80138c 17
+RESOLVED	80140	collect_item	quest_80140a 10; quest_80140b 13; quest_80140c 17
+RESOLVED	80142	collect_item	quest_80142a 5; quest_80142b 6; quest_80142c 11
+RESOLVED	80144	collect_item	quest_80144a 7; quest_80144b 10; quest_80144c 14
+RESOLVED	80146	collect_item	quest_80146a 10; quest_80146b 13; quest_80146c 17
+RESOLVED	80148	collect_item	quest_80148a 10; quest_80148b 13; quest_80148c 17
+RESOLVED	80150	collect_item	world_event_arena_scroll_shield_all_40a 1
+RESOLVED	80151	collect_item	world_event_arena_scroll_shield_all_50a 1
+RESOLVED	80152	collect_item	world_event_arena_scroll_speed_run_50a 1
+RESOLVED	80153	collect_item	world_event_arena_scroll_speed_fly_50a 1
+RESOLVED	80154	collect_item	world_event_arena_scroll_shield_all_40a 1
+RESOLVED	80155	collect_item	world_event_arena_scroll_shield_all_50a 1
+RESOLVED	80156	collect_item	world_event_arena_scroll_speed_run_50a 1
+RESOLVED	80157	collect_item	world_event_arena_scroll_speed_fly_50a 1
+RESOLVED	80158	collect_item	junk_world_event_webshop_01a
+RESOLVED	80159	collect_item	junk_world_event_webshop_03a
+RESOLVED	80160	collect_item	junk_world_event_webshop_01a
+RESOLVED	80161	collect_item	junk_world_event_webshop_03a
+RESOLVED	80162	collect_item	world_event_coin_au_04 30
+RESOLVED	80163	collect_item	world_event_coin_au_05 30
+RESOLVED	80164	collect_item	world_event_coin_au_06 30
+RESOLVED	80165	collect_item	world_event_coin_au_07 30
+RESOLVED	80166	collect_item	world_event_coin_au_04 30
+RESOLVED	80167	collect_item	world_event_coin_au_05 30
+RESOLVED	80168	collect_item	world_event_coin_au_06 30
+RESOLVED	80169	collect_item	world_event_coin_au_07 30
+RESOLVED	80170	collect_item	world_event_coin_au_08 100
+RESOLVED	80171	collect_item	world_event_coin_au_08 100
+RESOLVED	80175	collect_item	quest_80175a 15; quest_80175b 12
+RESOLVED	80179	collect_item	quest_80179a 16; quest_80179b 11
+RESOLVED	80183	collect_item	quest_80183a 10
+RESOLVED	80187	collect_item	quest_80187a 10
+RESOLVED	80191	collect_item	quest_80190a 4; quest_80190b 4
+RESOLVED	80195	collect_item	quest_80194a 4; quest_80194b 4
+RESOLVED	80196	collect_item	quest_80196a 12
+RESOLVED	80200	collect_item	quest_80200a 12
+RESOLVED	80206	collect_item	quest_80206a 27
+RESOLVED	80210	collect_item	quest_80210a 27
+RESOLVED	80213	collect_item	quest_80213a 20
+RESOLVED	80222	collect_item	quest_80213a 20
+RESOLVED	80231	collect_item	junk_world_event_Lotto_01 1
+RESOLVED	80232	collect_item	junk_world_event_Lotto_11 1
+RESOLVED	80233	collect_item	junk_world_event_Lotto_21 1
+RESOLVED	80234	collect_item	junk_world_event_Lotto_02 1
+RESOLVED	80235	collect_item	junk_world_event_Lotto_12 1
+RESOLVED	80236	collect_item	junk_world_event_Lotto_22 1
+RESOLVED	80237	collect_item	junk_world_event_Lotto_03 1
+RESOLVED	80238	collect_item	junk_world_event_Lotto_13 1
+RESOLVED	80239	collect_item	junk_world_event_Lotto_23 1
+RESOLVED	80240	collect_item	junk_world_event_Lotto_04 1
+RESOLVED	80241	collect_item	junk_world_event_Lotto_14 1
+RESOLVED	80242	collect_item	junk_world_event_Lotto_24 1
+RESOLVED	80243	collect_item	junk_world_event_Lotto_05 1
+RESOLVED	80244	collect_item	junk_world_event_Lotto_15 1
+RESOLVED	80245	collect_item	junk_world_event_Lotto_25 1
+RESOLVED	80246	collect_item	junk_world_event_Lotto_06 1
+RESOLVED	80247	collect_item	junk_world_event_Lotto_16 1
+RESOLVED	80248	collect_item	junk_world_event_Lotto_26 1
+RESOLVED	80249	collect_item	junk_world_event_Lotto_07 1
+RESOLVED	80250	collect_item	junk_world_event_Lotto_17 1
+RESOLVED	80251	collect_item	junk_world_event_Lotto_27 1
+RESOLVED	80252	collect_item	junk_world_event_Lotto_08 1
+RESOLVED	80253	collect_item	junk_world_event_Lotto_18 1
+RESOLVED	80254	collect_item	junk_world_event_Lotto_28 1
+RESOLVED	80269	quest_work_item	quest_80269 1
+RESOLVED	80271	quest_work_item	quest_80271 1
+RESOLVED	80282	collect_item	world_wrap_event_inst_01_coin_01_s9 1
+RESOLVED	80284	collect_item	quest_80284a 20
+RESOLVED	80285	collect_item	quest_80285a 20
+RESOLVED	80286	collect_item	medal_07 630
+RESOLVED	80287	collect_item	medal_07 630
+RESOLVED	80288	collect_item	medal_07 630
+RESOLVED	80289	collect_item	medal_07 630
+RESOLVED	80290	collect_item	relic_armor_30 10
+RESOLVED	80294	collect_item	relic_armor_30 10
+RESOLVED	80314	collect_item	quest_80314a 12
+RESOLVED	80316	collect_item	ring_a_u2_30a 1
+RESOLVED	80317	collect_item	ring_a_u2_30b 1
+RESOLVED	80320	collect_item	quest_80320a 12
+RESOLVED	80322	collect_item	ring_d_a_u2_30a 1
+RESOLVED	80323	collect_item	ring_d_a_u2_30b 1
+RESOLVED	80345	collect_item	junk_world_event_Lotto_ver2_01
+RESOLVED	80346	collect_item	junk_world_event_Lotto_ver2_02
+RESOLVED	80347	collect_item	junk_world_event_Lotto_ver2_03
+RESOLVED	80348	collect_item	junk_world_event_Lotto_ver2_04
+RESOLVED	80349	collect_item	junk_world_event_Lotto_ver2_05
+RESOLVED	80352	collect_item	assembly_world_event_ice_piece 6
+RESOLVED	80356	collect_item	assembly_world_event_ice_piece 5
+RESOLVED	80357	collect_item	assembly_world_event_ice_piece 10
+RESOLVED	80358	collect_item	assembly_world_event_ice_piece 15
+RESOLVED	80359	collect_item	junk_world_event_l_bond 1
+RESOLVED	80361	collect_item	assembly_world_event_ice_piece 6
+RESOLVED	80365	collect_item	assembly_world_event_ice_piece 5
+RESOLVED	80366	collect_item	assembly_world_event_ice_piece 10
+RESOLVED	80367	collect_item	assembly_world_event_ice_piece 15
+RESOLVED	80368	collect_item	junk_world_event_d_bond 1
+RESOLVED	80405	collect_item	quest_80405a 6
+RESOLVED	80424	collect_item	quest_80424a 10
+RESOLVED	80438	collect_item	quest_80438a 10
+RESOLVED	80457	collect_item	junk_world_event_Lotto_ver2_06
+RESOLVED	80458	collect_item	junk_world_event_Lotto_ver2_07
+RESOLVED	80459	collect_item	junk_world_event_Lotto_ver2_08
+RESOLVED	80460	collect_item	junk_world_event_Lotto_ver2_09
+RESOLVED	80461	collect_item	junk_world_event_Lotto_ver2_10
+RESOLVED	80462	collect_item	junk_world_event_Lotto_ver2_11
+RESOLVED	80463	collect_item	junk_world_event_Lotto_ver2_12
+RESOLVED	80464	collect_item	junk_world_event_Lotto_ver2_13
+RESOLVED	80465	collect_item	junk_world_event_Lotto_ver2_14
+RESOLVED	80466	collect_item	junk_world_event_Lotto_ver2_15
+RESOLVED	80473	collect_item	world_xp_extraction_charm_01 1
+RESOLVED	80474	collect_item	world_xp_extraction_charm_01 1
+RESOLVED	80475	collect_item	world_event_item_ivankupala_bonfire_01 10
+RESOLVED	80476	collect_item	world_event_item_ivankupala_bonfire_01 10
+RESOLVED	80477	collect_item	world_event_item_ivankupala_bonfire_01 10
+RESOLVED	80478	collect_item	world_event_item_ivankupala_bonfire_01 10
+RESOLVED	80480	collect_item	quest_80480a 15
+RESOLVED	80484	collect_item	quest_80484a 15
+RESOLVED	80539	collect_item	quest_80539b 3; quest_80539a 1; world_promotion_vip_continue_coin 612
+RESOLVED	80540	collect_item	quest_80540b 3; quest_80540a 1; world_promotion_vip_continue_coin 612
+RESOLVED	80541	collect_item	quest_80541a
+RESOLVED	80542	collect_item	quest_80542a
+RESOLVED	80543	collect_item	quest_80543a
+RESOLVED	80544	collect_item	quest_80544a
+RESOLVED	80555	collect_item	quest_80555a 1
+RESOLVED	80559	collect_item	quest_80559a 1
+RESOLVED	80561	collect_item	world_item_trump_heart_A 1; world_item_trump_club_A 1; world_item_trump_diamond_A 1; world_item_trump_spade_A 1
+RESOLVED	80562	collect_item	world_item_trump_heart_A 1; world_item_trump_club_A 1
+RESOLVED	80563	collect_item	world_item_trump_diamond_A 1; world_item_trump_spade_A 1
+RESOLVED	80564	collect_item	world_item_trump_club_A 1; world_item_trump_spade_A 1
+RESOLVED	80565	collect_item	junk_world_event_ap2gp_01 1; junk_world_event_ap2gp_02 1
+RESOLVED	80566	collect_item	junk_world_event_ap2gp_01 1; junk_world_event_ap2gp_02 1
+RESOLVED	80567	collect_item	world_event_wordcard_A_01 1; world_event_wordcard_I_01 1; world_event_wordcard_O_01 1; world_event_wordcard_N_01 1
+RESOLVED	80568	collect_item	world_event_wordcard_A_01 1; world_event_wordcard_B_01 1; world_event_wordcard_Y_01 1; world_event_wordcard_S_01 2
+RESOLVED	80569	collect_item	world_event_wordcard_D_01 1; world_event_wordcard_A_01 2; world_event_wordcard_E_01 1; world_event_wordcard_V_01 1
+RESOLVED	80570	collect_item	world_event_wordcard_piece_01 100
+RESOLVED	80571	collect_item	world_event_wordcard_A_01 1; world_event_wordcard_I_01 1; world_event_wordcard_O_01 1; world_event_wordcard_N_01 1
+RESOLVED	80572	collect_item	world_event_wordcard_A_01 1; world_event_wordcard_B_01 1; world_event_wordcard_Y_01 1; world_event_wordcard_S_01 2
+RESOLVED	80573	collect_item	world_event_wordcard_D_01 1; world_event_wordcard_A_01 2; world_event_wordcard_E_01 1; world_event_wordcard_V_01 1
+RESOLVED	80574	collect_item	world_event_wordcard_piece_01 100
+RESOLVED	80576	collect_item	world_event_opportunity_snowball 10
+RESOLVED	80579	collect_item	world_event_opportunity_snowball 10
+RESOLVED	80581	collect_item	junk_world_event_ap2gp_01 10; junk_world_event_ap2gp_02 10
+RESOLVED	80582	collect_item	junk_world_event_ap2gp_01 10; junk_world_event_ap2gp_02 10
+RESOLVED	80583	collect_item	junk_world_event_ap2gp_01 100; junk_world_event_ap2gp_02 100
+RESOLVED	80584	collect_item	junk_world_event_ap2gp_01 100; junk_world_event_ap2gp_02 100
+RESOLVED	80585	collect_item	rec_L_cv_item_ldf5_idunder_rune_01 1
+RESOLVED	80587	collect_item	world_item_idunderrune_quest_01 10
+RESOLVED	80589	collect_item	world_item_idunderrune_quest_02 1
+RESOLVED	80590	collect_item	rec_D_cv_item_ldf5_idunder_rune_01 1
+RESOLVED	80592	collect_item	world_item_idunderrune_quest_01 10
+RESOLVED	80594	collect_item	world_item_idunderrune_quest_02 1
+RESOLVED	80595	collect_item	junk_world_event_ap2gp_01_ncw 1; junk_world_event_ap2gp_02_ncw 1
+RESOLVED	80596	collect_item	junk_world_event_ap2gp_01_ncw 1; junk_world_event_ap2gp_02_ncw 1
+RESOLVED	80597	collect_item	junk_world_event_ap2gp_01_ncw 10; junk_world_event_ap2gp_02_ncw 10
+RESOLVED	80598	collect_item	junk_world_event_ap2gp_01_ncw 10; junk_world_event_ap2gp_02_ncw 10
+RESOLVED	80599	collect_item	junk_world_event_ap2gp_01_ncw 100; junk_world_event_ap2gp_02_ncw 100
+RESOLVED	80600	collect_item	junk_world_event_ap2gp_01_ncw 100; junk_world_event_ap2gp_02_ncw 100
+RESOLVED	80614	collect_item	quest_80614a 30
+RESOLVED	80617	collect_item	junk_world_event_webshop_01a
+RESOLVED	80618	collect_item	junk_world_event_webshop_02a
+RESOLVED	80619	collect_item	junk_world_event_webshop_01a
+RESOLVED	80620	collect_item	junk_world_event_webshop_02a
+RESOLVED	80621	collect_item	junk_world_event_webshop_01a
+RESOLVED	80622	collect_item	junk_world_event_webshop_01a
+RESOLVED	80625	collect_item	world_event_redcard_heart_08 1; world_event_redcard_heart_09 1; world_event_blackcard_clover_08 1; world_event_blackcard_clover_09 1
+RESOLVED	80626	collect_item	world_event_blackcard_clover_02 1
+RESOLVED	80627	collect_item	world_event_trump_royalstraight_01 1; world_event_blackcard_Joker 1
+RESOLVED	80628	collect_item	world_event_trump_royalstraight_01 1; world_event_blackcard_Joker 1
+RESOLVED	80629	collect_item	world_event_redcard_heart_07 1; world_event_redcard_Joker 1
+RESOLVED	80630	collect_item	world_event_redcard_heart_07 1; world_event_redcard_Joker 1
+RESOLVED	80631	collect_item	world_event_blackcard_clover_07 1
+RESOLVED	80632	collect_item	world_event_blackcard_clover_07 1
+RESOLVED	80633	collect_item	world_event_redcard_heart_13 1
+RESOLVED	80634	collect_item	world_event_redcard_heart_13 1
+RESOLVED	80635	collect_item	world_event_fruitsalad_01 1
+RESOLVED	80636	collect_item	assembly_world_event_fruit_01 50
+RESOLVED	80637	collect_item	assembly_world_event_fruit_03 75
+RESOLVED	80638	collect_item	assembly_world_event_fruit_02 100
+RESOLVED	80639	collect_item	world_event_fruitsalad_01 1
+RESOLVED	80640	collect_item	assembly_world_event_fruit_01 50
+RESOLVED	80641	collect_item	assembly_world_event_fruit_03 75
+RESOLVED	80642	collect_item	assembly_world_event_fruit_02 100
+RESOLVED	80643	collect_item	junk_world_event_webshop_03a
+RESOLVED	80644	collect_item	junk_world_event_webshop_03a
+RESOLVED	80645	collect_item	world_event_holywater01 1
+RESOLVED	80646	collect_item	world_event_holywater02 1
+RESOLVED	80647	collect_item	world_event_holywater03 1
+RESOLVED	80648	collect_item	world_event_holywater04 1
+RESOLVED	80649	collect_item	world_event_holywater01 10
+RESOLVED	80650	collect_item	world_event_holywater02 10
+RESOLVED	80651	collect_item	world_event_holywater03 10
+RESOLVED	80652	collect_item	world_event_holywater04 10
+RESOLVED	80653	collect_item	world_event_holywater01 1
+RESOLVED	80654	collect_item	world_event_holywater02 1
+RESOLVED	80655	collect_item	world_event_holywater03 1
+RESOLVED	80656	collect_item	world_event_holywater04 1
+RESOLVED	80657	collect_item	world_event_holywater01 1
+RESOLVED	80658	collect_item	world_event_holywater02 1
+RESOLVED	80659	collect_item	world_event_holywater03 1
+RESOLVED	80660	collect_item	world_event_holywater04 1
+RESOLVED	80661	collect_item	world_event_holywater01 10
+RESOLVED	80662	collect_item	world_event_holywater02 10
+RESOLVED	80663	collect_item	world_event_holywater03 10
+RESOLVED	80664	collect_item	world_event_holywater04 10
+RESOLVED	80665	collect_item	world_event_holywater01 1
+RESOLVED	80666	collect_item	world_event_holywater02 1
+RESOLVED	80667	collect_item	world_event_holywater03 1
+RESOLVED	80668	collect_item	world_event_holywater04 1
+RESOLVED	80669	collect_item	medal_07 1050; junk_world_event_s4_quest_01a 1; item_exp_extraction_65a 1
+RESOLVED	80670	collect_item	medal_07 1050; junk_world_event_s4_quest_01a 1; item_exp_extraction_65a 1
+RESOLVED	80671	collect_item	medal_07 1050; junk_world_event_s4_quest_01a 1; item_exp_extraction_65a 1
+RESOLVED	80672	collect_item	medal_07 1050; junk_world_event_s4_quest_01a 1; item_exp_extraction_65a 1
+RESOLVED	80673	collect_item	assembly_world_event_movement_01 10
+RESOLVED	80674	collect_item	assembly_world_event_movement_02 10
+RESOLVED	80675	collect_item	assembly_world_event_movement_03 10
+RESOLVED	80676	collect_item	assembly_world_event_movement_04 10
+RESOLVED	80677	collect_item	assembly_world_event_movement_01 10
+RESOLVED	80678	collect_item	assembly_world_event_movement_01 10
+RESOLVED	80679	collect_item	assembly_world_event_movement_02 10
+RESOLVED	80680	collect_item	assembly_world_event_movement_03 10
+RESOLVED	80681	collect_item	assembly_world_event_movement_04 10
+RESOLVED	80682	collect_item	assembly_world_event_movement_01 10
+RESOLVED	80685	collect_item	world_event_snake_01 1
+RESOLVED	80688	collect_item	world_event_snake_01 1
+RESOLVED	80697	collect_item	assembly_world_event_movement_01 100
+RESOLVED	80698	collect_item	assembly_world_event_movement_02 100
+RESOLVED	80699	collect_item	assembly_world_event_movement_03 100
+RESOLVED	80700	collect_item	assembly_world_event_movement_04 100
+RESOLVED	80701	collect_item	assembly_world_event_movement_01 100
+RESOLVED	80702	collect_item	assembly_world_event_movement_02 100
+RESOLVED	80703	collect_item	assembly_world_event_movement_03 100
+RESOLVED	80704	collect_item	assembly_world_event_movement_04 100
+RESOLVED	80705	collect_item	world_event_movement_fake 10
+RESOLVED	80706	collect_item	world_event_movement_fake 10
+RESOLVED	80716	collect_item	quest_80716a 5
+RESOLVED	80717	collect_item	quest_80717a 3
+RESOLVED	80718	collect_item	quest_80718a 5
+RESOLVED	80720	collect_item	quest_80720a 50
+RESOLVED	80738	collect_item	quest_80738a 6
+RESOLVED	80762	collect_item	quest_80762a 5
+RESOLVED	80767	collect_item	quest_80767a 5
+RESOLVED	99002	collect_item	medal_07 300

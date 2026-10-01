@@ -59,9 +59,11 @@ public final class SimpleSerialHuntHandler {
 	private final Map<Integer, List<NativeQuestTableLoader.SerialStage>> stagesByQuestId;
 	/** 任务 ID 集合。 / Managed quest IDs. */
 	private final Set<Integer> managedQuestIds;
+	/** 路由集 = 管理集 − XML-only 行（单一 owner 不变量）。 / Routing set = managed set minus XML-owned rows. */
+	private final Set<Integer> routedQuestIds;
 
 	private SimpleSerialHuntHandler(NativeQuestTableLoader tableLoader, CameraRegistry cameraRegistry,
-			NativeNpcNameResolver nameResolver) {
+			NativeNpcNameResolver nameResolver, Set<Integer> xmlOnlyIds) {
 		this.tableLoader = tableLoader;
 		this.cameraRegistry = cameraRegistry;
 		this.nameResolver = nameResolver;
@@ -72,10 +74,14 @@ public final class SimpleSerialHuntHandler {
 		Map<Integer, Set<Integer>> briefingNpcs = new LinkedHashMap<>();
 		Map<Integer, List<NativeQuestTableLoader.SerialStage>> stagesMap = new LinkedHashMap<>();
 		Set<Integer> questIds = new TreeSet<>();
+		Set<Integer> routedIds = new TreeSet<>();
 
 		for (NativeQuestTableLoader.SimpleSerialHuntRow row : tableLoader.serialHuntRows()) {
 			int questId = row.questId();
 			questIds.add(questId);
+			if (xmlOnlyIds == null || !xmlOnlyIds.contains(questId)) {
+				routedIds.add(questId);
+			}
 			stagesMap.put(questId, row.stages());
 
 			if (row.acquiredNpcName() != null && !row.acquiredNpcName().isBlank()) {
@@ -114,6 +120,7 @@ public final class SimpleSerialHuntHandler {
 		this.briefingNpcsByQuestId = Collections.unmodifiableMap(briefingNpcs);
 		this.stagesByQuestId = Collections.unmodifiableMap(stagesMap);
 		this.managedQuestIds = Collections.unmodifiableSet(questIds);
+		this.routedQuestIds = Collections.unmodifiableSet(routedIds);
 	}
 
 	public static SimpleSerialHuntHandler instance() {
@@ -125,7 +132,8 @@ public final class SimpleSerialHuntHandler {
 					local = new SimpleSerialHuntHandler(
 							NativeQuestTableLoader.instance(),
 							CameraRegistry.instance(),
-							NativeNpcNameResolver.instance());
+							NativeNpcNameResolver.instance(),
+							NativeQuestOwnerResolver.instance().xmlOnlyIds());
 					instance = local;
 				}
 			}
@@ -139,6 +147,20 @@ public final class SimpleSerialHuntHandler {
 
 	public boolean owns(int questId) {
 		return managedQuestIds.contains(questId);
+	}
+
+	/**
+	 * 判断该任务是否由 native 车道**路由**（管理集 − XML-only 行）。
+	 * XML 定义仍在的真端表行由 XML 车道 owns，native 只装载不路由（单一 owner 不变量）。
+	 * Whether the native lane routes this quest (managed set minus XML-owned rows).
+	 */
+	public boolean routes(int questId) {
+		return routedQuestIds.contains(questId);
+	}
+
+	/** 路由集（不变量：与 XML-only 集交集为空）。 / The routing set (disjoint from the XML-owned set). */
+	public Set<Integer> routedQuestIds() {
+		return routedQuestIds;
 	}
 
 	public Set<Integer> ownedQuestIds() {
@@ -186,17 +208,26 @@ public final class SimpleSerialHuntHandler {
 		}
 		for (Map.Entry<Integer, Integer> entry : acquireNpcByQuestId.entrySet()) {
 			int qid = entry.getKey();
+			if (!routedQuestIds.contains(qid)) {
+				continue;
+			}
 			int npcId = entry.getValue();
 			engine.registerQuestNpc(npcId).addOnQuestStart(qid);
 			engine.registerQuestNpc(npcId).addOnTalkEvent(qid);
 		}
 		for (Map.Entry<Integer, Integer> entry : rewardNpcByQuestId.entrySet()) {
 			int qid = entry.getKey();
+			if (!routedQuestIds.contains(qid)) {
+				continue;
+			}
 			int npcId = entry.getValue();
 			engine.registerQuestNpc(npcId).addOnTalkEvent(qid);
 		}
 		for (Map.Entry<Integer, Set<Integer>> entry : briefingNpcsByQuestId.entrySet()) {
 			int qid = entry.getKey();
+			if (!routedQuestIds.contains(qid)) {
+				continue;
+			}
 			for (int talkId : entry.getValue()) {
 				engine.registerQuestNpc(talkId).addOnTalkEvent(qid);
 			}
@@ -204,6 +235,9 @@ public final class SimpleSerialHuntHandler {
 		for (Map.Entry<Integer, List<HuntTargetRef>> entry : targetsByNpcId.entrySet()) {
 			int npcId = entry.getKey();
 			for (HuntTargetRef ref : entry.getValue()) {
+				if (!routedQuestIds.contains(ref.questId())) {
+					continue;
+				}
 				engine.registerQuestNpc(npcId).addOnKillEvent(ref.questId());
 			}
 		}
@@ -227,6 +261,10 @@ public final class SimpleSerialHuntHandler {
 		boolean handled = false;
 		for (HuntTargetRef ref : targets) {
 			int questId = ref.questId();
+			if (!routes(questId)) {
+				// XML 定义仍在的行由 XML 车道 owns：native 只装载不推进（单一 owner 不变量）。
+				continue;
+			}
 			QuestState state = player.getQuestStateList().getQuestState(questId);
 			if (state == null || state.getStatus() != QuestStatus.START) {
 				continue;

@@ -30,6 +30,7 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_TITLE_INFO;
 import com.aionemu.gameserver.questEngine.definition.QuestCatalog;
 import com.aionemu.gameserver.questEngine.retail.RetailSystemGrantDispatcher;
 import com.aionemu.gameserver.questEngine.runtime.PlayerQuestStartEligibilityPort;
+import com.aionemu.gameserver.questEngine.tablelane.SimpleTalkHandler;
 import com.aionemu.gameserver.services.QuestService;
 import com.aionemu.gameserver.services.craft.CraftSkillUpdateService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
@@ -295,10 +296,17 @@ public class NpcFactions {
 				// 真实按星期位控制势力每日任务发放；当天不可发放的任务不进随机池，空池跳过不发。
 				// Faction daily quests are granted by the real weekday bitmask; quests unavailable today stay out of the random pool, and an empty pool is skipped.
 				int today = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
-				List<Integer> quests = canonicalDailyQuestCandidates(catalog, faction.getId(),
+				List<Integer> quests = new ArrayList<>(canonicalDailyQuestCandidates(catalog, faction.getId(),
 					questEngine::isHaveHandler,
-					id -> isNpcFactionRotationEligible(eligibility, id, faction.getId()),
-					id -> DataManager.NPC_FACTIONS_QUEST_DATA.isActiveOn(id, today));
+					// typed 元数据缺席 = 已切原生车道的行：资格判定改由 native 车道直读真端 quest.xml 轴。
+					// Missing typed metadata means the row moved to the native lane: eligibility comes
+					// from the native lane, which reads the retail quest.xml axes directly.
+					id -> catalog.findMetadata(id).isPresent()
+						? isNpcFactionRotationEligible(eligibility, id, faction.getId())
+						: SimpleTalkHandler.instance().factionRotationEligible(owner, id, faction.getId()),
+					id -> DataManager.NPC_FACTIONS_QUEST_DATA.isActiveOn(id, today)));
+				quests.addAll(nativeFactionRotationCandidates(catalog, faction.getId(), today));
+				quests.sort(null);
 				if (quests.isEmpty()) {
 					continue;
 				}
@@ -308,8 +316,12 @@ public class NpcFactions {
 			}
 			PacketSendUtility.sendPacket(owner, new SM_QUEST_ACTION(questId, true));
 			// 类别哨兵（系统发放）任务没有接取路由：分配即发放，避免"只发提示、永远接不了"。
-			// Category-sentinel (system-granted) quests have no accept route, so grant on assignment.
-			RetailSystemGrantDispatcher.grantIfSystemGranted(owner, questId);
+			// 原生车道（已切换家族）先行；其余（XML/未切换家族的 typed 定义）仍走 retail 判定。
+			// Category-sentinel (system-granted) quests have no accept route, so grant on assignment:
+			// the native lane first, then the retail dispatcher for rows still served by typed definitions.
+			if (!SimpleTalkHandler.instance().grantSystemStart(owner, questId)) {
+				RetailSystemGrantDispatcher.grantIfSystemGranted(owner, questId);
+			}
 		}
 	}
 
@@ -324,6 +336,27 @@ public class NpcFactions {
 			.sorted()
 			.boxed()
 			.toList());
+	}
+
+	/**
+	 * 原生车道的阵营日常候选（真端 {@code _faction_} 行 ∩ 路由集，且未由 typed 目录覆盖）。
+	 * Native faction-rotation candidates: routed {@code _faction_} rows the typed catalog does not cover.
+	 */
+	private List<Integer> nativeFactionRotationCandidates(QuestCatalog catalog, int factionId, int today) {
+		List<Integer> candidates = new ArrayList<>();
+		for (int questId : SimpleTalkHandler.instance().factionRotationCandidates(factionId)) {
+			if (catalog.findMetadata(questId).isPresent()) {
+				continue;
+			}
+			if (!DataManager.NPC_FACTIONS_QUEST_DATA.isActiveOn(questId, today)) {
+				continue;
+			}
+			if (!SimpleTalkHandler.instance().factionRotationEligible(owner, questId, factionId)) {
+				continue;
+			}
+			candidates.add(questId);
+		}
+		return candidates;
 	}
 
 	private boolean isNpcFactionRotationEligible(PlayerQuestStartEligibilityPort eligibility, int questId,

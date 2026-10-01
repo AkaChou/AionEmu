@@ -186,8 +186,8 @@ public class QuestEngine implements GameEngine {
 
 	/** 返回指定 owner 是否拥有实际匹配事件的路由。 / Return whether the owner has a route matching the event. */
 	public boolean hasMatchingRoutes(QuestEvent event, int questId) {
-		if (SimpleHuntHandler.instance().owns(questId) || SimpleSerialHuntHandler.instance().owns(questId)
-				|| SimpleTalkHandler.instance().owns(questId)) {
+		if (SimpleHuntHandler.instance().routes(questId) || SimpleSerialHuntHandler.instance().routes(questId)
+				|| SimpleTalkHandler.instance().routes(questId)) {
 			return true;
 		}
 		return productionDispatcher.hasMatchingRoutes(event, questId);
@@ -249,18 +249,18 @@ public class QuestEngine implements GameEngine {
 			int npcId = npc == null ? 0 : npc.getNpcId();
 			QuestRuntimeDispatcher typed = productionDispatcher;
 			// 真端表驱动车道：SimpleHunt 任务直接由原生处理器驱动，不走 IR 节点状态机
-			if (requestedOwner != 0 && SimpleHuntHandler.instance().owns(requestedOwner)) {
+			if (requestedOwner != 0 && SimpleHuntHandler.instance().routes(requestedOwner)) {
 				if (SimpleHuntHandler.instance().onDialog(env)) {
 					return true;
 				}
 			}
-			if (requestedOwner != 0 && SimpleSerialHuntHandler.instance().owns(requestedOwner)) {
+			if (requestedOwner != 0 && SimpleSerialHuntHandler.instance().routes(requestedOwner)) {
 				if (SimpleSerialHuntHandler.instance().onDialog(env)) {
 					return true;
 				}
 			}
 			// 真端表驱动车道：SimpleTalk 任务由原生处理器直驱（cab520 接取 / cabb10 中继与报告）
-			if (requestedOwner != 0 && SimpleTalkHandler.instance().owns(requestedOwner)) {
+			if (requestedOwner != 0 && SimpleTalkHandler.instance().routes(requestedOwner)) {
 				if (SimpleTalkHandler.instance().onDialog(env)) {
 					return true;
 				}
@@ -738,6 +738,13 @@ public class QuestEngine implements GameEngine {
 		try {
 			Player player = env.getPlayer();
 			QuestRuntimeDispatcher typed = productionDispatcher;
+			// 原生车道：链形行/单步行的旧存档任务书行自愈（真端编译边登记 P0c-28 的 native 等价物）。
+			// Native lane: enter-world save heal for chain/single-step rows (the P0c-28 heal-edge equivalent).
+			try {
+				SimpleTalkHandler.instance().onEnterWorld(player);
+			} catch (RuntimeException ignored) {
+				// Native enter-world heal is best-effort.
+			}
 			if (player != null) {
 				try {
 					typed.dispatch(new QuestEvent.EnterWorld(), player.getObjectId(), 0,

@@ -40,6 +40,9 @@ class SimpleHuntNativeFamilyGateTest {
 	private static NativeQuestTableLoader loader;
 	private static CameraRegistry cameraRegistry;
 
+	/** 真端表行仍带 XML 定义的行（`retail-xml-retention.tsv` = XML_RETENTION，SimpleHunt 3 行）。 */
+	private static final Set<Integer> XML_RETAINED_ROWS = Set.of(14112, 14123, 16961);
+
 	@BeforeAll
 	static void setUp() {
 		loader = NativeQuestTableLoader.instance();
@@ -53,6 +56,15 @@ class SimpleHuntNativeFamilyGateTest {
 		Set<Integer> owned = handler.ownedQuestIds();
 		// 验证真端 SimpleHunt 全量行纳入原生处理器管理
 		assertTrue(owned.size() >= 939, "Expected at least 939 managed quests, found: " + owned.size());
+
+		// 单一 owner 不变量：注册集 = 路由集 + XML_RETENTION 行（表行仍带 XML 定义者交给 XML 车道）。
+		// Single-owner invariant: registration set = routing set + XML_RETENTION rows.
+		assertEquals(owned.size(), handler.routedQuestIds().size() + XML_RETAINED_ROWS.size(),
+				"注册集与路由集差值必须恰为 XML 保留行 / routing set must be the registration set minus XML rows");
+		for (int questId : XML_RETAINED_ROWS) {
+			assertTrue(handler.owns(questId), "XML 保留行仍须在注册集内（装载面）: " + questId);
+			assertFalse(handler.routes(questId), "XML 保留行不得由 native 路由: " + questId);
+		}
 
 		// 逐行验证相机注册表与表行严格对齐
 		for (NativeQuestTableLoader.SimpleHuntRow row : loader.rows()) {
