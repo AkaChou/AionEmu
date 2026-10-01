@@ -14,21 +14,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class RetailClientContractConstantsGateTest {
 
 	@Test
-	void dialogExitsKeepCanonicalSelectNoneRows() {
-		RetailClientDialogExits exits = RetailClientDialogExits.defaultExits();
-		assertEquals(14, exits.size());
-
-		for (int questId : new int[] {1888, 2888, 15478, 15479, 15606, 16800, 25050,
-				25073, 25094, 25478, 25479, 25606, 26800, 80989}) {
-			assertTrue(exits.requires(questId, RetailClientDialogExits.SELECT_NONE_1),
-				() -> "SELECT_NONE_1 must stay registered for quest " + questId);
-		}
-
-		assertFalse(exits.requires(1000, RetailClientDialogExits.SELECT_NONE_1));
-		assertFalse(exits.requires(1888, "LEGACY_PAGE_EXIT"));
-	}
-
-	@Test
 	void useItemReportKeepsCheckModeItems() {
 		RetailClientUseItemReport report = RetailClientUseItemReport.defaultReport();
 

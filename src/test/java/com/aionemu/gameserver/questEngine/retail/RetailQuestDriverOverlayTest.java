@@ -211,20 +211,10 @@ class RetailQuestDriverOverlayTest {
 		return ids;
 	}
 
-	private RetailSimpleHuntTable simpleHuntTable() throws Exception {
-		try (InputStream input = open("/aion/data/static_data/quest/retail/Quest_SimpleHunt.xml")) {
-			return RetailSimpleHuntTable.load(input);
-		}
-	}
-
 	private RetailQuestXmlTable retailTable() throws Exception {
 		try (InputStream input = open("/aion/data/static_data/quest/retail/quest.xml")) {
 			return RetailQuestXmlTable.load(input);
 		}
-	}
-
-	private RetailQuestCatalog catalog() throws Exception {
-		return new RetailQuestCatalog(simpleHuntTable(), npcIndex());
 	}
 
 	private RetailNpcNameIndex npcIndex() throws Exception {

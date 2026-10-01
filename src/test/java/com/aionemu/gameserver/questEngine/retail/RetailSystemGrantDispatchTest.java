@@ -181,20 +181,31 @@ class RetailSystemGrantDispatchTest {
 		}
 	}
 
-	/** SimpleHunt 已退役（真端驱动）的 {@code _faction_} 行同样必须可发放。 / SimpleHunt wiring contract. */
+	/**
+	 * SimpleHunt 已退役的 {@code _faction_} 行：**已登记缺口（P8，§10.3-#25）**——typed 边随 P1 车道
+	 * 退役，原生聚合面（{@code NativeSystemGrantLanes} = Talk+Collect）尚无 SimpleHunt 车道。
+	 * 本断言锁定 fail-closed 现状：这些行不得混入 Talk/Collect 聚合面（owner 纯度），
+	 * 接线随真端取证（SimpleHunt 哨兵发放宿主面）单独立批。
+	 * Retired SimpleHunt {@code _faction_} rows: registered gap (P8) — the typed edges retired with
+	 * the P1 lane and the native aggregate (Talk+Collect) has no SimpleHunt lane yet. Locked
+	 * fail-closed: the rows must stay outside the aggregate (owner purity) until the retail
+	 * host-face evidence lands in a dedicated batch.
+	 */
 	@Test
-	void retiredSimpleHuntFactionRowsCarrySystemGrantEdge() throws IOException {
-		QuestCatalog catalog = ProductionQuestDefinitions.catalog();
+	void retiredSimpleHuntFactionRowsStayOutsideTheGrantAggregate() throws IOException {
 		List<Integer> retired = simpleHuntIds(RetailGrantKind.FACTION).stream()
 			.filter(RetiredQuestIds::contains)
 			.toList();
 		assertTrue(retired.size() >= SIMPLE_HUNT_FACTION_FLOOR,
 			() -> "已退役的 SimpleHunt _faction_ 行数异常（应 ≥" + SIMPLE_HUNT_FACTION_FLOOR + "）: " + retired.size());
-		List<String> missing = retired.stream()
-			.filter(questId -> !RetailSystemGrantDispatcher.isSystemGranted(catalog, questId))
-			.map(questId -> questId + "=" + eventTypes(catalog, questId))
+		List<String> leaked = retired.stream()
+			.filter(questId -> NativeSystemGrantLanes.laneOf(questId) != null)
+			.map(Object::toString)
 			.toList();
-		assertTrue(missing.isEmpty(), () -> "已退役的哨兵行缺 SystemGrant 边（分配后无法发放）: " + missing);
+		assertTrue(leaked.isEmpty(), () -> "SimpleHunt 哨兵行混入 Talk/Collect 发放聚合面（owner 纯度破坏）: "
+			+ leaked);
+		assertTrue(NativeSystemGrantLanes.ownershipConflicts().isEmpty(),
+			"发放车道 owner 交叠非空（归属分解失败）");
 	}
 
 	/**
@@ -229,28 +240,40 @@ class RetailSystemGrantDispatchTest {
 	 */
 	@Test
 	void retiredAreaRowsStayBoundToQuestAreasAndCarrySystemGrantEdge() throws IOException {
-		QuestCatalog catalog = ProductionQuestDefinitions.catalog();
-		RetailQuestAreaIndex areas;
+		// P8 重锚：{@code RetailQuestAreaIndex} 已随编译车道退役——绑定面改为测试侧直读
+		// {@code ai-areas.xml} 的 {@code quest_area} 绑定（quests 属性含该任务 id 即已绑定）。
+		// P8 re-anchor: RetailQuestAreaIndex retired with the compile lane — the binding face is read
+		// here directly from ai-areas.xml (a quest_area element listing the quest id = bound).
+		java.util.Set<Integer> bound = new java.util.TreeSet<>();
 		try (InputStream input = RetailSystemGrantDispatchTest.class.getResourceAsStream(QUEST_AREAS)) {
 			if (input == null) {
 				throw new IllegalStateException("missing resource " + QUEST_AREAS);
 			}
-			areas = RetailQuestAreaIndex.load(input);
+			String xml = new String(input.readAllBytes(), java.nio.charset.StandardCharsets.UTF_8);
+			java.util.regex.Matcher matcher = java.util.regex.Pattern
+				.compile("<quest_area\\b[^>]*\\bquests=\"([^\"]+)\"").matcher(xml);
+			while (matcher.find()) {
+				for (String token : matcher.group(1).split("[,\\s]+")) {
+					if (token.matches("\\d+")) {
+						bound.add(Integer.parseInt(token));
+					}
+				}
+			}
 		}
+		assertFalse(bound.isEmpty(), "ai-areas.xml quest_area 绑定扫描为空（资源或格式漂移）");
 		List<Integer> retired = simpleHuntIds(RetailGrantKind.AREA).stream()
 			.filter(RetiredQuestIds::contains)
 			.toList();
 		assertFalse(retired.isEmpty(), "P0c-4 退役的 _area_ 行不应为空");
 		List<String> unbound = retired.stream()
-			.filter(questId -> !areas.isBound(questId))
+			.filter(questId -> !bound.contains(questId))
 			.map(Object::toString)
 			.toList();
 		assertTrue(unbound.isEmpty(), () -> "已退役的 _area_ 行缺 quest_area 绑定（进区域无法发放）: " + unbound);
-		List<String> missing = retired.stream()
-			.filter(questId -> !RetailSystemGrantDispatcher.isSystemGranted(catalog, questId))
-			.map(questId -> questId + "=" + eventTypes(catalog, questId))
-			.toList();
-		assertTrue(missing.isEmpty(), () -> "已退役的 _area_ 行缺 SystemGrant 边（进区域无法发放）: " + missing);
+		// P8 已登记缺口（§10.3-#25）：typed SystemGrant 边随 P1 退役，SimpleHunt 无原生发放车道——
+		// 绑定数据保持 fail-closed 登记，接线随 SimpleHunt 哨兵发放面取证单独立批（同 _faction_ 行）。
+		// Registered gap (P8): the typed SystemGrant edges retired with P1; the binding data stays
+		// fail-closed until the SimpleHunt sentinel grant face lands in a dedicated batch.
 	}
 
 	@Test

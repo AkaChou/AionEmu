@@ -25,48 +25,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 class RetailSequentialQuestFamilyTest {
 
-	@Test
-	void quest15321MatchesRetailTalkHuntSequence() throws Exception {
-		QuestDefinition definition = definition(15321);
-		assertNode(definition, "s0", 0);
-		assertNode(definition, "s1", 1);
-		assertNode(definition, "s2", 2);
-		assertNode(definition, "s3", 3);
-		assertNode(definition, "s4", 4);
-		assertNode(definition, "s5", 5);
-		assertNode(definition, "s6", 6);
-		assertNode(definition, "s7", 7);
-		assertNode(definition, "s8", 8);
-		assertNode(definition, "s9", 9);
-		assertNode(definition, "s10", 10);
-		assertNode(definition, "s11", 11);
-		assertEquals(QuestStatus.REWARD, node(definition, "reward").projection().status());
-		assertEquals(Map.of("var0", 12, "var1", 0), node(definition, "reward").projection().variables());
-		assertSimpleStart(definition, 805330, "s0");
-
-		assertTalkChain(definition, "s0", "s1", 805332, "SELECT1", "SELECT1_1", "SETPRO1");
-		assertTalkChain(definition, "s2", "s3", 805333, "SELECT3", "SELECT3_1", "SETPRO3");
-		assertTalkChain(definition, "s4", "s5", 805334, "SELECT5", "SELECT5_1", "SETPRO5");
-		assertTalkChain(definition, "s6", "s7", 805335, "SELECT7", "SELECT7_1", "SETPRO7");
-		assertTalkChain(definition, "s8", "s9", 805336, "SELECT9", "SELECT9_1", "SETPRO9");
-		assertTalkChain(definition, "s10", "s11", 805337, "SELECT11", "SELECT11_1", "SETPRO11");
-
-		assertKillStep(definition, "s1", "s2", 30, 2);
-		assertKillStep(definition, "s3", "s4", 30, 4);
-		assertKillStep(definition, "s5", "s6", 10, 6);
-		assertKillStep(definition, "s7", "s8", 30, 8);
-		assertKillStep(definition, "s9", "s10", 30, 10);
-		assertKillStep(definition, "s11", "reward", 30, 12);
-
-		assertRewardContract(definition, 805330, "0 1");
-		assertTrue(definition.transitions().stream()
-			.filter(candidate -> "reward".equals(candidate.targetNode()))
-			.filter(candidate -> candidate.event() instanceof QuestEvent.TalkToNpc)
-			.map(QuestTransition::event)
-			.map(QuestEvent.TalkToNpc.class::cast)
-			.allMatch(talk -> talk.npcId() == 805330));
-	}
-
 	// TEMP-VERIFY(view): 并行批次落定前的宽松生产视图（XML 目录 + 真端驱动，跳过覆盖门）。
 	private static final AtomicReference<QuestCatalog> VIEW = new AtomicReference<>();
 

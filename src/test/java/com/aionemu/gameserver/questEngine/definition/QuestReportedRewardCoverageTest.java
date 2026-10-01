@@ -39,11 +39,29 @@ class QuestReportedRewardCoverageTest {
 		expected.addAll(EXPLICIT_CLASS_QUEST_IDS);
 		assertEquals(182, expected.size());
 
+		// P8 重锚：native 行（owner RETAIL_TABLE）无 typed 定义——跳过并要求其确属退役行
+		// （防名单陈旧静默缩水）；XML 保留行仍逐条断言。
+		// P8 re-anchor: native rows carry no typed definition — skip them but require the id to be a
+		// retired row (guards against silent list rot); XML-retained rows are still asserted one by one.
+		java.util.function.IntPredicate retiredOnly = questId -> {
+			if (catalog.findExecutable(questId).isPresent()) {
+				return false;
+			}
+			assertTrue(RetiredQuestIds.contains(questId),
+				() -> "quest " + questId + " missing from catalog and not retired");
+			return true;
+		};
 		for (int questId : FIXED_QUEST_IDS) {
+			if (retiredOnly.test(questId)) {
+				continue;
+			}
 			assertTargetlessCompletionRoutes(catalog.findExecutable(questId).orElseThrow(),
 				QuestDialogAction.SELECTED_QUEST_AUTO_REWARD.id(), 1);
 		}
 		for (int questId : CHOICE_QUEST_IDS) {
+			if (retiredOnly.test(questId)) {
+				continue;
+			}
 			CompiledQuestDefinition compiled = catalog.findExecutable(questId).orElseThrow();
 			List<QuestReward> choices = compiled.definition().metadata().rewards().stream()
 				.filter(reward -> QuestRewardKind.fromWire(reward.kind()) == QuestRewardKind.SELECTABLE_ITEM)
@@ -57,6 +75,9 @@ class QuestReportedRewardCoverageTest {
 			}
 		}
 		for (int questId : union(CLASS_QUEST_IDS, EXPLICIT_CLASS_QUEST_IDS)) {
+			if (retiredOnly.test(questId)) {
+				continue;
+			}
 			CompiledQuestDefinition compiled = catalog.findExecutable(questId).orElseThrow();
 			assertTalkConfirmRoutes(compiled, QuestDialogAction.SELECTED_QUEST_REWARD1.id(), 11, true);
 			assertTargetlessCompletionRoutes(compiled, QuestDialogAction.SELECTED_QUEST_AUTO_REWARD1.id(), 11);

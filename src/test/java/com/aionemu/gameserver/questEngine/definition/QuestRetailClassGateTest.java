@@ -195,7 +195,15 @@ class QuestRetailClassGateTest {
 			int qid = entry.getKey();
 			ClassMeta meta = production.get(qid);
 			if (meta == null) {
-				problems.add("contract quest " + qid + " missing from production catalog");
+				// P8 重锚：native 行（owner RETAIL_TABLE，七族 ∨ DD 1467 行）退出 typed 目录，
+				// 其职业轴 = 显示元数据（§10.3-#18 裁定），无目录载体不算缺失；
+				// 非 native 行缺目录载体仍是真回归。
+				// P8 re-anchor: native rows (owner RETAIL_TABLE) left the typed catalog — their class
+				// axis is display metadata (§10.3-#18), so a missing carrier is not a defect; for
+				// non-native rows it still is.
+				if (!retailOwnedIds.contains(qid)) {
+					problems.add("contract quest " + qid + " missing from production catalog");
+				}
 				continue;
 			}
 			Set<String> retailAlive = retailAliveClasses(entry.getValue());
@@ -223,6 +231,9 @@ class QuestRetailClassGateTest {
 		List<String> problems = new ArrayList<>();
 		for (Map.Entry<Integer, RetailClassRow> entry : contract.entrySet()) {
 			int qid = entry.getKey();
+			if (production.get(qid) == null && retailOwnedIds.contains(qid)) {
+				continue; // P8：native 行无 typed 目录载体（同上，职业轴 = 显示元数据）。
+			}
 			if (productionAliveClasses(production.get(qid)).equals(Set.of("WILDCARD"))
 				&& !EVIDENCE_BLOCKED.contains(qid) && !INTENTIONAL_WEAPON_ADAPTATION.contains(qid)) {
 				problems.add("quest " + qid + " is a wildcard but retail limits classes to "
@@ -267,6 +278,10 @@ class QuestRetailClassGateTest {
 			}
 			assertTrue(registeredClassDivergences.contains(questId),
 				"quest " + questId + " must be registered in the classes divergence ledger");
+			if (production.get(questId) == null) {
+				// P8：native 行无 typed 目录载体——展开口径由真端 quest.xml 元数据承担（显示面）。
+				continue;
+			}
 			assertEquals(expected, productionAliveClasses(production.get(questId)),
 				"quest " + questId + " must expose exactly its retail-expanded class set");
 		}

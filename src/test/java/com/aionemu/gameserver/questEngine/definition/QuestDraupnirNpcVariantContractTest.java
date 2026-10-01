@@ -68,52 +68,6 @@ class QuestDraupnirNpcVariantContractTest {
 		quest(2631, variant(213775, 236924)));
 
 	@Test
-	void liveNpcVariantsPreserveEachBaseKillContract() throws Exception {
-		for (QuestVariants questVariants : QUEST_VARIANTS) {
-			CompiledQuestDefinition definition = load(questVariants.questId());
-			for (NpcVariant variant : questVariants.variants()) {
-				List<QuestTransition> baseRoutes = killRoutes(definition, variant.baseNpcId());
-				List<QuestTransition> liveRoutes = killRoutes(definition, variant.liveNpcId());
-
-				assertFalse(baseRoutes.isEmpty(), () -> "missing base route " + questVariants.questId()
-					+ " npc " + variant.baseNpcId());
-				assertFalse(liveRoutes.isEmpty(), () -> "missing live route " + questVariants.questId()
-					+ " npc " + variant.liveNpcId());
-				for (QuestTransition baseRoute : baseRoutes) {
-					QuestTransition liveRoute = liveRoutes.stream()
-						.filter(candidate -> sameContractExceptEvent(baseRoute, candidate))
-						.findFirst()
-						.orElseThrow(() -> new AssertionError("variant route mismatch for quest "
-							+ questVariants.questId() + ": " + baseRoute + " -> " + variant.liveNpcId()));
-					assertEquivalentKillPlans(definition, baseRoute, liveRoute, variant);
-				}
-			}
-		}
-	}
-
-	@Test
-	void liveNpcVariantsPreserveQuestDropContracts() throws Exception {
-		for (QuestVariants questVariants : DROP_VARIANTS) {
-			QuestMetadata metadata = load(questVariants.questId()).definition().metadata();
-			for (NpcVariant variant : questVariants.variants()) {
-				// 掉落死 id 修复（生产驱动）：真端模板 id 213775 在本服世界无实刷，掉落契约整体
-				// 移到实刷变体 236924；退役 id 不再携带死数据（真端行 item 182204478 / 100%）。
-				// Dead-id drop repair (production driver): the retail template id 213775 has no live
-				// spawn in this world, so the drop contract moves wholesale to the live variant 236924
-				// and the retired id carries no dead data (retail row: item 182204478 at 100%).
-				assertTrue(metadata.drops().stream().noneMatch(drop -> drop.npcId() == variant.baseNpcId()),
-					() -> "retired npc " + variant.baseNpcId() + " must not carry a quest drop for quest "
-						+ questVariants.questId());
-				QuestDrop liveDrop = singleDrop(metadata, variant.liveNpcId());
-				assertEquals(182204478, liveDrop.itemId(), () -> "item mismatch for quest "
-					+ questVariants.questId() + " npc " + variant.liveNpcId());
-				assertEquals(100, liveDrop.chance(), () -> "chance mismatch for quest "
-					+ questVariants.questId() + " npc " + variant.liveNpcId());
-			}
-		}
-	}
-
-	@Test
 	void everyQuestReferenceToARetiredDraupnirNpcAlsoIncludesItsLiveVariant() throws Exception {
 		// 退役任务的 XML 不再进仓：本扫描只覆盖仍由 XML 拥有的生产任务；
 		// 真端驱动任务的 NPC id 由 RetailNpcNameIndex 的同名族闭包给出（见 RetailSimpleHunt* 门禁）。

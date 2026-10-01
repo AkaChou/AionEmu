@@ -1,20 +1,15 @@
 package com.aionemu.gameserver.questEngine.retail;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.io.BufferedReader;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.regex.Matcher;
@@ -23,21 +18,26 @@ import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
 
+import com.aionemu.gameserver.questEngine.tablelane.DataDrivenNativeRuntime;
+import com.aionemu.gameserver.questEngine.tablelane.DataDrivenQuestTable;
+import com.aionemu.gameserver.questEngine.tablelane.NativeEnterAreaPort;
+
 /**
- * 常设门：DD {@code enterarea} 别名解析表的**目标区名必须已在 zones XML 登记**（fail-closed）。
+ * 常设门：DD {@code enterarea} 别名的**目标区名必须已在 zones XML 登记**（fail-closed 死边守卫）。
  * <p>
- * 背景：运行时 enter-zone 事件只按 zones XML 的登记名派发（{@code PlayerController#onEnterZone} →
- * {@code QuestEngine#onEnterZone(ZoneName)}）。{@code quest_enterarea_zone_resolution.tsv} 把 DD value0
- * 的驼峰别名解析成登记名；解析表若指向一个**未登记**的区名，该 EA 步就是死边——任务静默卡行，
- * 且编译期看不出来（编译器只校验"别名已登记在解析表里"，不校验"目标区名在 zones XML 里"）。
+ * P8 重锚：旧解析表 {@code quest_enterarea_zone_resolution.tsv} 与其读者
+ * {@code RetailEnterAreaZoneResolution} 已随编译车道退役——别名解析现在只活在
+ * {@link NativeEnterAreaPort#create}（表别名 ∈ 登记名才落面，缺席真端区定义的别名落
+ * {@code RETAIL_ABSENT_ALIASES} 冻结集）。本门按生产同源输入重建端口，断言：
+ * ①解析面非空且每个已解析目标都在 zones XML 登记名内（防空扫描/防静默死边）；
+ * ②缺席冻结集恰等于 {@code RETAIL_ABSENT_ALIASES}（防真端区定义补齐后忘记解冻、
+ * 或新增缺席别名被静默吞掉）。进区事件的运行时接取面由
+ * {@code DataDrivenNativeRuntimeGateTest}（⑪-b）承担。
  * <p>
- * 本门把后半句补上：解析表每个目标区名必须出现在 {@code aion/data/static_data/zones/} 的
- * {@code zones_*.xml} 里（既含 {@code zones_quest.xml} 的 quest 子区，也含逐地图
- * {@code zones_<mapId>.xml} 的地图区——实测 101 个目标名里 15 个只登记在逐地图文件）。
- * <p>
- * Standing gate: every target zone name of the DD enterarea alias resolution table must be registered
- * by a zones XML template. A resolution entry pointing at an unregistered name makes the enter-area
- * step a dead edge that no compile-time check currently catches.
+ * Standing gate: every resolved DD enterarea target must be registered by a zones XML template and
+ * the retail-absent frozen set must stay exactly {@code RETAIL_ABSENT_ALIASES}. P8 re-anchor: the old
+ * resolution TSV and its reader retired with the compile lane — the port rebuilt here from the same
+ * production inputs is the only alias resolution left.
  */
 class RetailEnterAreaZoneRegistrationGateTest {
 
@@ -46,46 +46,61 @@ class RetailEnterAreaZoneRegistrationGateTest {
 	/** zones 登记名总量的下界（防空表通过：目录缺失或解析失效时立刻红）。 / Sanity floor. */
 	private static final int MIN_REGISTERED_ZONES = 4000;
 
-	/** ①解析表非空、每行三列完整（quest / alias / zone_name）。 / Table shape. */
+	/** ①解析面：每个已解析目标区名必须在 zones XML 登记名内，且解析结果非空。 / Resolved face. */
 	@Test
-	void resolutionTableIsWellFormed() throws Exception {
-		List<String[]> rows = resolutionRows();
-		assertFalse(rows.isEmpty(), "解析表不得为空");
-		List<String> malformed = new ArrayList<>();
-		for (String[] row : rows) {
-			for (String column : row) {
-				if (column.isBlank()) {
-					malformed.add(String.join("|", row));
-					break;
+	void everyResolvedZoneNameIsRegistered() throws Exception {
+		NativeEnterAreaPort port = productionPort(registeredZoneNames());
+		Set<String> resolved = port.resolvedAliases();
+		assertFalse(resolved.isEmpty(), "DD enterarea 别名解析面不得为空（表或登记名扫描失效）");
+		Set<String> registered = registeredZoneNames();
+		Set<String> unregistered = new TreeSet<>();
+		for (int questId = 1; questId <= 99999; questId++) {
+			for (String zoneName : port.zoneNames(questId)) {
+				if (!registered.contains(zoneName)) {
+					unregistered.add(zoneName);
 				}
 			}
 		}
-		assertTrue(malformed.isEmpty(), () -> "解析表存在空列（quest/alias/zone_name 必填）: " + malformed);
+		assertTrue(unregistered.isEmpty(), () -> "解析目标区名未在 zones XML 登记（EA 步会成静默死边）: "
+			+ unregistered);
 	}
 
-	/** ②解析目标（逐个不同区名）必须全部已登记。 / Every distinct target name must be registered. */
+	/** ②缺席冻结集恒等于 RETAIL_ABSENT_ALIASES（无静默增长、无遗漏）。 / Frozen absent set. */
 	@Test
-	void everyResolvedZoneNameIsRegistered() throws Exception {
-		Set<String> registered = registeredZoneNames();
-		Map<String, String> unresolved = new LinkedHashMap<>();
-		for (String[] row : resolutionRows()) {
-			String zoneName = row[2];
-			if (!registered.contains(zoneName)) {
-				unresolved.putIfAbsent(zoneName, row[1]);
+	void frozenAbsentAliasesStayExactlyTheRetailAbsentSet() throws Exception {
+		NativeEnterAreaPort port = productionPort(registeredZoneNames());
+		assertEquals(NativeEnterAreaPort.RETAIL_ABSENT_ALIASES, port.frozenAbsentAliases(),
+			"缺席别名冻结集漂移——真端补区或新增缺席别名都必须显式裁定");
+	}
+
+	/** 生产同源端口重建（表 + 切换集 + zones 登记名）。 / Port rebuilt from production inputs. */
+	private static NativeEnterAreaPort productionPort(Set<String> registeredNames) throws Exception {
+		DataDrivenQuestTable table;
+		try (InputStream input = RetailEnterAreaZoneRegistrationGateTest.class
+				.getResourceAsStream(DataDrivenNativeRuntime.TABLE_RESOURCE)) {
+			assertNotNull(input, "缺少 DD 表资源");
+			table = DataDrivenQuestTable.load(input);
+		}
+		return NativeEnterAreaPort.create(table, retentionSwitchSet(), registeredNames);
+	}
+
+	/** 切换集 = retention 台账 owner RETAIL_TABLE ∧ family DataDriven（与运行时同源解析）。 /
+	 * Switch set from the retention ledger (same source the runtime uses). */
+	private static Set<Integer> retentionSwitchSet() throws Exception {
+		Set<Integer> ids = new TreeSet<>();
+		for (String line : Files.readAllLines(
+				Path.of("src/main/resources/aion/data/static_data/quest/retail/retail-xml-retention.tsv"),
+				StandardCharsets.UTF_8)) {
+				if (line.isBlank() || line.startsWith("#")) {
+					continue;
+				}
+				String[] cells = line.split("\\t");
+			if (cells.length > 2 && "RETAIL_TABLE".equals(cells[1]) && "DataDriven".equals(cells[2])) {
+				ids.add(Integer.parseInt(cells[0]));
 			}
 		}
-		assertTrue(unresolved.isEmpty(), () -> "解析表目标区名未在 zones XML 登记（EA 步会成静默死边，"
-			+ "登记名或别名归属需要重新裁定）: " + unresolved);
-	}
-
-	private static List<String[]> resolutionRows() {
-		List<String[]> rows = new ArrayList<>();
-		RetailEnterAreaZoneResolution.defaultZoneResolution().zones().forEach((qid, aliases) -> {
-			aliases.forEach((alias, zone) -> {
-				rows.add(new String[]{String.valueOf(qid), alias, zone});
-			});
-		});
-		return rows;
+		assertFalse(ids.isEmpty(), "retention 切换集不得为空");
+		return ids;
 	}
 
 	private static Set<String> registeredZoneNames() throws Exception {

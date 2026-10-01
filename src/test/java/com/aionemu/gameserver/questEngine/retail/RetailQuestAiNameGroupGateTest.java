@@ -115,11 +115,12 @@ class RetailQuestAiNameGroupGateTest {
 				() -> group + " 同时命中 spawn 名（通道互斥性被破坏）");
 			assertEquals(ids, index.resolveAllOrQuestAiNameGroup(group),
 				() -> group + " 组通道解析结果与成员集不一致");
-			RetailSimpleHuntPlan plan = bindPlan(1, group);
-			assertEquals(ids, plan.acquiredNpcIds(), () -> group + " 接取集与成员集不一致");
-			assertEquals(ids, plan.rewardNpcIds(), () -> group + " 交付集与成员集不一致");
-			assertTrue(plan.acquiredNpcIsQuestAiNameGroup() && plan.rewardNpcIsQuestAiNameGroup(),
-				() -> group + " 接取/交付两侧的组标记缺失");
+			// P8 重锚：旧 IR 计划（RetailSimpleHuntPlan.bind）的组展开即此解析通道的直通调用，
+			// 绑定面由解析器通道断言本身覆盖；live 运行时的接取/交付登记由
+			// QuestEngineNpcDialogDispatchTest 与各家族门承担。
+			// P8 re-anchor: the old IR plan's group expansion was a pass-through of this very resolver
+			// channel, so the binding side is covered by the resolver assertions; live runtime
+			// registration is held by QuestEngineNpcDialogDispatchTest and the family gates.
 		}
 	}
 
@@ -151,28 +152,31 @@ class RetailQuestAiNameGroupGateTest {
 		assertTrue(pinnedGroups >= 2, () -> "本判据退化为空断言（族宽于声明的组应至少两个）：" + pinnedGroups);
 	}
 
-	/** ②绑定侧行为：组名 → 全组成员 + 打标；同族单名行仍是单值且不打标。 / Binding side. */
+	/** ②绑定侧行为：组名 → 全组成员（解析器通道）；同族单名行仍是单值且不打组标记。 / Binding side. */
 	@Test
 	void bindingExpandsGroupsOnlyWhenDeclared() {
 		for (String group : GROUPS) {
-			RetailSimpleHuntPlan groupPlan = bindPlan(questIdOf(group), group);
-			assertTrue(groupPlan.acquiredNpcIsQuestAiNameGroup(),
-				() -> group + " 接取侧未打组标记");
-			assertTrue(groupPlan.rewardNpcIsQuestAiNameGroup(),
-				() -> group + " 交付侧未打组标记");
-			assertEquals(index.resolveQuestAiNameGroup(group), groupPlan.acquiredNpcIds(),
-				() -> group + " 接取集与成员集不一致");
-			assertEquals(index.resolveQuestAiNameGroup(group), groupPlan.rewardNpcIds(),
-				() -> group + " 交付集与成员集不一致");
+			int questId = questIdOf(group);
+			Set<Integer> members = index.resolveQuestAiNameGroup(group);
+			// P8 重锚：绑定面走解析器通道（旧 IR 计划的展开即其直通调用）——
+			// 组解析 = 全成员、统一通道取声明集、组名不命中 spawn 名。
+			// P8 re-anchor: the binding side goes through the resolver channel (the old IR plan's
+			// expansion was its pass-through) — group resolution equals the member set, the unified
+			// channel takes the declared set, and the group name never matches a spawn name.
+			assertFalse(members.isEmpty(), () -> group + " 组解析为空");
+			assertEquals(members, index.resolveAllOrQuestAiNameGroup(group),
+				() -> group + " 统一通道未取声明成员集");
+			assertTrue(index.resolveAll(List.of(group)).npcIds().isEmpty(),
+				() -> group + " 组名同时命中 spawn 名");
+			assertTrue(index.isQuestAiNameGroup(group), () -> group + " 未打组标记");
 		}
-		// 同族单名行（09_L2 / 09_D2）：精确解析、不打标，组通道不得外溢。
-		// The single-name siblings (09_L2 / 09_D2): exact resolution, unflagged, no group spillover.
+		// 同族单名行（09_L2 / 09_D2）：精确解析为唯一 id、不打组标记，组通道不得外溢。
+		// The single-name siblings (09_L2 / 09_D2): exact single resolution, unflagged, no spillover.
 		for (String single : List.of("LDF4_Advance_Village_Guard09_L2", "LDF4_Advance_Village_Guard09_D2")) {
-			RetailSimpleHuntPlan plan = bindPlan(single.endsWith("_L2") ? 13770 : 23770, single);
-			assertFalse(plan.acquiredNpcIsQuestAiNameGroup(), () -> single + " 不应打组标记");
-			assertFalse(plan.rewardNpcIsQuestAiNameGroup(), () -> single + " 不应打组标记");
-			assertEquals(1, plan.acquiredNpcIds().size(), () -> single + " 接取集应为单值");
-			assertEquals(1, plan.rewardNpcIds().size(), () -> single + " 交付集应为单值");
+			assertFalse(index.isQuestAiNameGroup(single), () -> single + " 不应打组标记");
+			assertEquals(1, index.resolve(single).size(), () -> single + " 应解析为唯一 spawn 名");
+			assertEquals(1, index.resolveAll(List.of(single)).npcIds().size(),
+				() -> single + " 统一通道不得展开为多值");
 		}
 	}
 
@@ -198,12 +202,6 @@ class RetailQuestAiNameGroupGateTest {
 		// Group name to its first DD row (light 13758.., dark 23758..; district order matches the table).
 		int base = group.contains("_D_") ? 23758 : 13758;
 		return base + GROUPS.indexOf(group) % 4 * 3;
-	}
-
-	private static RetailSimpleHuntPlan bindPlan(int questId, String name) {
-		return RetailSimpleHuntPlan.bind(new RetailSimpleHuntTable.Entry(questId,
-			List.of(new RetailSimpleHuntTable.Counter(1, 1, List.of(""))), name, name, null,
-			RetailGrantKind.NPC), index);
 	}
 
 	private static List<InputStream> openAll(String dir, List<String> files) throws Exception {

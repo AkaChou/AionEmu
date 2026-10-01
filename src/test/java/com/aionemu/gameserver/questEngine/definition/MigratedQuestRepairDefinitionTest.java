@@ -23,19 +23,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class MigratedQuestRepairDefinitionTest {
 
 	@Test
-	void groupOwnersDeclareDropsConsumeCollectedItemsAndExposeAllSelectableRewards() {
-		assertGroupQuest(15602, 182215994, 1, 703136, 806159,
-			Set.of(113601699, 113601700, 113501890, 113501891, 113501892,
-				113301934, 113301935, 113101793, 113101794));
-		assertGroupQuest(25602, 182216002, 4, 241201, 806171,
-			Set.of(113601699, 113601700, 113501890, 113501891, 113501892,
-				113301934, 113301935, 113101793, 113101794));
-		assertGroupQuest(15604, 0, 0, 0, 806161,
-			Set.of(112601697, 112601698, 112501807, 112501808, 112501809,
-				112301840, 112301841, 112101727, 112101728));
-	}
-
-	@Test
 	void relicRewardFamiliesConsumeTheCorrectRelicAndSelectMetadataAp() {
 		Map<Integer, long[]> expected = Map.of(
 			11279, new long[] {300, 600, 900, 1200},

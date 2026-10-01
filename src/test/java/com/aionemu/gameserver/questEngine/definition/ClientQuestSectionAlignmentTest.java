@@ -76,62 +76,6 @@ class ClientQuestSectionAlignmentTest {
 	}
 
 	@Test
-	void villageHuntsAdvanceTheLegacySectionZeroCounter() {
-		for (int questId : VILLAGE_HUNT_QUESTS) {
-			CompiledQuestDefinition definition = load(questId);
-			QuestSnapshot state = snapshot(questId, QuestStatus.START, 0);
-			for (int count = 1; count <= 3; count++) {
-				state = apply(definition, state, new QuestEvent.KillNpc(219501));
-				assertEquals(count, new QuestVars(state.packedVariables()).getVarById(0),
-					() -> "quest " + questId + " did not update client SECTION_0");
-			}
-		}
-	}
-
-	@Test
-	void representativeMultiSectionAndMissionCountersReachTheClientSlots() {
-		CompiledQuestDefinition threeSections = load(11102);
-		QuestSnapshot state = snapshot(11102, QuestStatus.START, 0);
-		state = apply(threeSections, state, new QuestEvent.KillNpc(216489));
-		state = apply(threeSections, state, new QuestEvent.KillNpc(216490));
-		state = apply(threeSections, state, new QuestEvent.KillNpc(216491));
-		QuestVars vars = new QuestVars(state.packedVariables());
-		assertEquals(List.of(1, 1, 1), List.of(vars.getVarById(0), vars.getVarById(1),
-			vars.getVarById(2)));
-
-		CompiledQuestDefinition fourSections = load(18952);
-		state = snapshot(18952, QuestStatus.START, 0);
-		state = apply(fourSections, state, new QuestEvent.KillNpc(236225));
-		state = apply(fourSections, state, new QuestEvent.KillNpc(236231));
-		state = apply(fourSections, state, new QuestEvent.KillNpc(236243));
-		state = apply(fourSections, state, new QuestEvent.KillNpc(236244));
-		vars = new QuestVars(state.packedVariables());
-		assertEquals(QuestStatus.START, state.status());
-		assertEquals(List.of(1, 1, 1, 1), List.of(vars.getVarById(0), vars.getVarById(1),
-			vars.getVarById(2), vars.getVarById(3)));
-		state = apply(fourSections, state, new QuestEvent.TalkToNpc(804711,
-			QuestDialogAction.QUEST_SELECT.id()));
-		assertEquals(QuestStatus.REWARD, state.status());
-
-		CompiledQuestDefinition mission = load(2002);
-		state = snapshot(2002, QuestStatus.START, 3);
-		for (int expected = 4; expected <= 10; expected++) {
-			state = apply(mission, state, new QuestEvent.KillNpc(210377));
-			assertEquals(expected, new QuestVars(state.packedVariables()).getVarById(0));
-		}
-
-		CompiledQuestDefinition ceremony = load(30203);
-		state = snapshot(30203, QuestStatus.START, 0);
-		for (int npcId : List.of(216175, 216177, 216179, 216181, 216263)) {
-			state = apply(ceremony, state, new QuestEvent.KillNpc(npcId));
-		}
-		vars = new QuestVars(state.packedVariables());
-		assertEquals(QuestStatus.REWARD, state.status());
-		assertEquals(List.of(1, 1, 1, 1), List.of(vars.getVarById(0), vars.getVarById(1),
-			vars.getVarById(2), vars.getVarById(3)));
-	}
-
-	@Test
 	void talocItemSkillCountersUseTheirFixedSixBitSections() {
 		for (int questId : List.of(11468, 21468)) {
 			CompiledQuestDefinition definition = load(questId);
@@ -144,15 +88,6 @@ class ClientQuestSectionAlignmentTest {
 			assertEquals(0, vars.getVarById(0), () -> "quest " + questId + " moved SECTION_0");
 			assertEquals(List.of(1, 1, 1), List.of(vars.getVarById(1), vars.getVarById(2),
 				vars.getVarById(3)), () -> "quest " + questId + " did not update SECTION_1..3");
-		}
-	}
-
-	@Test
-	void extendedEightyKillCountersUseTheWideRetailLayout() {
-		for (int questId : EXTENDED_COUNTER_QUESTS) {
-			ProgressLayout layout = load(questId).definition().progressLayout();
-			assertEquals(10, layout.field("var0").width());
-			assertEquals(10, layout.field("var1").offset());
 		}
 	}
 

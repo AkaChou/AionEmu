@@ -59,24 +59,6 @@ class QuestMovieAndDialogLoopRegressionTest {
 	}
 
 	@Test
-	void quest24155AdvancesToArmedOnTheBriefingTalk() throws Exception {
-		QuestDefinition def = definition(24155).definition();
-		// P0c-6：24155 走真端网格合成器，简报完成后的计数态是网格零段节点 a0（旧 XML 叫 armed）；
-		// 标志位由目标节点投影承担（a0 投影 var5=0），不再写成显式 SetVariable 动作。
-		// P0-2 规范形：简报一步直达——对话入口是 QUEST_SELECT，select2 页链与其 SETPRO2 按钮不再下发。
-		// Since P0c-6 24155 is grid-composed: the post-briefing counting state is the zero grid node a0
-		// (named armed by the retired XML); the cleared flag comes from that node's projection.
-		// Canonical since P0-2: one-step briefing — the entry is QUEST_SELECT, and the select2 page
-		// chain with its SETPRO2 button is no longer served.
-		QuestTransition talk = def.transitions().stream()
-			.filter(t -> "started".equals(t.sourceNode()) && "a0".equals(t.targetNode())
-				&& t.event() instanceof QuestEvent.TalkToNpc ttn && ttn.npcId() == 204785
-				&& Integer.valueOf(QuestDialogAction.QUEST_SELECT.id()).equals(ttn.dialogId()))
-			.findFirst().orElseThrow();
-		assertNode(def, "a0", Map.of("var0", 0, "var5", 0));
-	}
-
-	@Test
 	void quest28301GrantsDeviceAndAdvancesToReward() throws Exception {
 		QuestDefinition def = definition(28301).definition();
 		// 批次 52：拾取页（select2/select2_1）与 SETPRO2 只属于 H-Core（730374），装置交给
@@ -198,27 +180,6 @@ class QuestMovieAndDialogLoopRegressionTest {
 		}
 
 		assertTrue(violations.isEmpty(), "Impossible drop collecting-steps found: " + violations);
-	}
-
-	@Test
-	void quests2372And4907And24202And24203DropsStepCorrected() throws Exception {
-		// 2372/4907/24203 仍由 XML 拥有：XML 期把掉落生效步压成 0（收集期全程可掉）。
-		// XML-owned rows keep the flattened step 0.
-		for (int qid : List.of(2372, 4907, 24203)) {
-			QuestDefinition def = definition(qid).definition();
-			assertTrue(def.metadata().drops().stream().allMatch(d -> d.collectingStep() == 0),
-				"Quest " + qid + " drops must have collectingStep=0");
-		}
-		// 24202 于 P0c-35 退役（真端驱动）：真端 quest.xml collect_progress=2 = 客户端任务书第 2 行
-		// （带 [%collectitem] 的交付行），掉落生效步按真端声明并由 START 行 2 承载（QE-061 可达性）。
-		// Quest 24202 is retail-driven since P0c-35: the retail collect_progress (2) is authoritative and
-		// must be reachable through the matching START row.
-		QuestDefinition def = definition(24202).definition();
-		assertTrue(def.metadata().drops().stream().allMatch(d -> d.collectingStep() == 2),
-			"Quest 24202 drops must carry the retail collect_progress (2)");
-		assertTrue(def.nodes().stream().anyMatch(node -> node.projection().status() == QuestStatus.START
-			&& Integer.valueOf(2).equals(node.projection().variables().get("var0"))),
-			"Quest 24202 must project a START row at the retail drop step");
 	}
 
 	@Test

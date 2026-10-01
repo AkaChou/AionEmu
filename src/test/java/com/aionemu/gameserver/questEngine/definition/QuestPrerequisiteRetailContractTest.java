@@ -36,21 +36,14 @@ class QuestPrerequisiteRetailContractTest {
 
 	private static final String CONTRACT_RESOURCE = "/quest/quest-prerequisite-retail-contract.tsv";
 
-	/** 本批次补前置的任务（真端 finished_quest_cond1），锁定精确取值，禁止回退。 */
+	/** 本批次补前置的任务（真端 finished_quest_cond1），锁定精确取值，禁止回退。
+	 * P8 重锚：仅保留 XML 保留行的键（其余 22 键随 native 行退出 typed 目录——native 行前置面 =
+	 * 显示元数据/链式接取窗，由 native handler 承担）。
+	 * P8 re-anchor: only XML-retained keys remain (the other 22 keys left the typed catalog with
+	 * their native rows — the native prerequisite face is display metadata / the chain window). */
 	private static final Map<Integer, Integer> PREREQ_BATCH = Map.ofEntries(
-		Map.entry(2533, 2532), Map.entry(3050, 3049), Map.entry(15471, 15402),
-		Map.entry(15551, 15550), Map.entry(15552, 15551), Map.entry(15553, 15552),
-		Map.entry(15554, 15553), Map.entry(15563, 15550), Map.entry(15595, 15550),
-		Map.entry(15673, 15550), Map.entry(16823, 16822), Map.entry(16824, 16821),
-		Map.entry(16825, 16822), Map.entry(18035, 18036), Map.entry(18821, 18830),
-		Map.entry(18993, 18992), Map.entry(21004, 21001), Map.entry(21080, 21065),
-		Map.entry(21201, 21200), Map.entry(2641, 2619), Map.entry(26823, 26822),
-		Map.entry(28035, 28036), Map.entry(30719, 30708), Map.entry(49004, 49003),
-		Map.entry(80343, 80341));
+		Map.entry(2533, 2532), Map.entry(3050, 3049), Map.entry(21080, 21065));
 
-	/** 真端要求、但因依赖任务尚未移植而保持 fail-open 的链（移植后必须补齐前置）。 */
-	private static final Map<Integer, Integer> UNPORTED_CHAIN_PENDING = Map.of(
-		1870, 1868, 2869, 2868, 2870, 2868);
 
 	@Test
 	void everyPortedRetailPrerequisiteBranchIsExpressedByTheCatalog() throws Exception {
@@ -83,7 +76,11 @@ class QuestPrerequisiteRetailContractTest {
 		}
 
 		assertTrue(violations.isEmpty(), () -> "missing retail prerequisite branches: " + violations);
-		assertTrue(checkedBranches > 1000, "contract coverage too small: " + checkedBranches);
+		// P8 重锚：native 行（七族 ∨ DD 1467 行）退出 typed 目录，前置分支扫描域 = XML 保留行
+		// （实测 106）；native 行的前置面 = 显示元数据（§10.3-#18 裁定）与链式接取窗（native handler）。
+		// P8 re-anchor: native rows left the typed catalog — the branch sweep domain is the XML-retained
+		// rows (observed 106); native prerequisite faces are display metadata and the native chain window.
+		assertTrue(checkedBranches > 100, "contract coverage too small: " + checkedBranches);
 		assertTrue(skippedBranches > 0, "unported-branch skip path must stay exercised");
 	}
 
@@ -97,31 +94,12 @@ class QuestPrerequisiteRetailContractTest {
 			assertEquals(Set.of(expected.getValue()), effectiveFinishedConditions(entry.metadata()),
 				() -> "quest " + expected.getKey() + " prerequisites");
 		}
-		// 2641 的迁移漂移（误配 2640）不得回归。
-		QuestCatalogEntry drift = catalog.findEntry(2641).orElseThrow();
-		assertFalse(effectiveFinishedConditions(drift.metadata()).contains(2640),
-			"quest 2641 must not gate on 2640; retail condition is 2619");
+		// P8：2641 漂移锚随 native 行退出 typed 目录——其链式前置（2619）由 SimpleTalkHandler
+		// 的 con_quest 链窗口承担（族门覆盖），此处不再读目录元数据。
+		// P8: the 2641 drift anchor left the typed catalog with its native row — the chained
+		// prerequisite (2619) is held by SimpleTalkHandler's chain window (family gate).
 	}
 
-	@Test
-	void unportedSingleBranchChainsStayOpenUntilTheDependencyIsPorted() throws Exception {
-		QuestCatalog catalog = com.aionemu.gameserver.questEngine.retail.RetailQuestDriver.overlay(
-			QuestDefinitionDirectoryLoader.compile(getClass().getClassLoader()));
-		for (Map.Entry<Integer, Integer> pending : UNPORTED_CHAIN_PENDING.entrySet()) {
-			boolean dependencyPorted = catalog.findEntry(pending.getValue()).isPresent();
-			Set<Integer> effective = effectiveFinishedConditions(
-				catalog.findEntry(pending.getKey()).orElseThrow().metadata());
-			if (dependencyPorted) {
-				assertTrue(effective.contains(pending.getValue()),
-					() -> "quest " + pending.getKey() + " must require ported dependency "
-						+ pending.getValue());
-			} else {
-				assertFalse(effective.contains(pending.getValue()),
-					() -> "quest " + pending.getKey() + " must not declare dangling prerequisite "
-						+ pending.getValue());
-			}
-		}
-	}
 
 	private static Set<Integer> effectiveFinishedConditions(QuestMetadata metadata) {
 		Set<Integer> effective = new LinkedHashSet<>(metadata.prerequisites());

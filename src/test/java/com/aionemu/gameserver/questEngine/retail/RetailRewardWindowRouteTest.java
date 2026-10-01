@@ -80,7 +80,8 @@ class RetailRewardWindowRouteTest {
 
 	/**
 	 * 已切到 native 车道的多交付 NPC 行：交付集由客户端任务书登记
-	 * （{@code quest_client_reward_npcs.tsv}），处理器按集合逐个 NPC 受理奖励动作；native 车道不产生
+	 * （{@code quest_client_handin_npc_sets.tsv}，P8 起 reward_npcs 台账退役后为唯一登记面），
+	 * 处理器按集合逐个 NPC 受理奖励动作；native 车道不产生
 	 * quest 域全局 AUTO_REWARD 路由，结构上即不存在 typed 车道那条 {@code AMBIGUOUS_TRANSITION} 风险。
 	 * <p>
 	 * Native multi-NPC rows: the client quest-letter registry declares the hand-in set, the handler accepts
@@ -96,7 +97,7 @@ class RetailRewardWindowRouteTest {
 			.stream().map(row -> DynamicTest.dynamicTest(row.family() + " " + row.questId(), () -> {
 				assertTrue(nativeLaneOwns(row.family(), row.questId()),
 					() -> row.family() + " " + row.questId() + " must be routed by the native lane");
-				List<Integer> declared = RetailClientRewardNpcs.defaultRewardNpcs().rewardNpcs(row.questId());
+				Set<Integer> declared = RetailClientHandinNpcSets.defaultSets().npcIds(row.questId());
 				assertEquals(row.npcCount(), declared.size(),
 					"client-declared hand-in NPCs for " + row.questId());
 				assertEquals(row.knownNpcs(), new java.util.TreeSet<>(declared),
@@ -118,19 +119,6 @@ class RetailRewardWindowRouteTest {
 			case "SimpleTalk" -> SimpleTalkHandler.instance().routes(questId);
 			default -> false;
 		};
-	}
-
-	@Test
-	void selectableWindowSlotsAlsoKeepOneGlobalRoutePerAction() {
-		List<QuestTransition> routes = RetailSimpleHuntDefinitionCompiler.rewardWindowAutoFlow(
-			List.of(799800, 799801), List.of(),
-			List.of(new QuestReward("SELECTABLE_ITEM", 1001, 1),
-				new QuestReward("SELECTABLE_ITEM", 1002, 1)),
-			Map.of(), "reward", "complete");
-		for (int dialogId = QuestDialogAction.SELECTED_QUEST_AUTO_REWARD1.id();
-				dialogId < QuestDialogAction.SELECTED_QUEST_AUTO_REWARD1.id() + 2; dialogId++) {
-			assertRoutes(routes, dialogId, 2, Set.of(799800, 799801));
-		}
 	}
 
 	private static void assertRoutes(List<QuestTransition> transitions, int dialogId, int npcCount,

@@ -78,18 +78,4 @@ class QuestA03ShardRetailAlignmentTest {
 			.findFirst().orElseThrow().projection().variables().get("var0");
 	}
 
-	@Test
-	void pureTalkQuest21065HasNoKillTransitions() throws Exception {
-		CompiledQuestDefinition compiled = load(21065);
-		boolean hasKill = compiled.definition().transitions().stream()
-			.anyMatch(t -> t.event() instanceof QuestEvent.KillNpc || t.event() instanceof QuestEvent.KillNpcSet);
-		assertFalse(hasKill, "21065 is a pure talk quest");
-		Set<Integer> talkNpcs = new HashSet<>();
-		for (QuestTransition transition : compiled.definition().transitions()) {
-			if (transition.event() instanceof QuestEvent.TalkToNpc talk) {
-				talkNpcs.add(talk.npcId());
-			}
-		}
-		assertEquals(Set.of(799231, 799322), talkNpcs, "21065 talk npcs (Niamela + Herka)");
-	}
 }
