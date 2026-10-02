@@ -1,4 +1,4 @@
-# DD 附加动作 case 9/10 取证与 Timer 落面（2026-10-02，偏差修复第三批；同日第四批补 case 9 立即面/注册表；10-03 第五批 col6 类定名/param_6 单位佐证；10-03 第七批 col6 空桩落面解冻 2 行；10-03 第八批 param_6 生产链闭合 + 50m 距离门落面；10-03 第九批 col9 EnterInstance 落点坐标复核闭合 → 解冻 2 行）
+# DD 附加动作 case 9/10 取证与 Timer 落面（2026-10-02，偏差修复第三批；同日第四批补 case 9 立即面/注册表；10-03 第五批 col6 类定名/param_6 单位佐证；10-03 第七批 col6 空桩落面解冻 2 行；10-03 第八批 param_6 生产链闭合 + 50m 距离门落面；10-03 第九批 col9 EnterInstance 落点坐标复核闭合 → 解冻 2 行；10-03 第十批 离场检查面终裁不可达 + param_7 写锚闭合，纯证据批）
 
 证据根：`<真端根>/server58/MainServer_ScriptDLL64/ScriptDLL64.c`（C:）、`MainServer_Server64/Server64.c`（S:）、
 `NPCServer_NPCSvr64/NPCSvr64.c`（N:）、DD 表 `data_driven_quest.xml` 原始载荷探针。
@@ -9,7 +9,7 @@
 |---|---|
 | 装载 | C:`FUN_180c49610` case 10：载荷 = `时间, 目标步, 旗标` 三整数（缺项日志 `"Add Timer - Timer Time / Dest Progress is Not Exists"`）；步号上下文入 def+0x68、目标步入 def+0x6c |
 | 武装 | S:799910 `"IUserImp::AddQuestTimer"`（profiler 壳）→ `FUN_1400e4af0` = `ServerToNPCServer.inl` opcode 0x6c/0xad/0xff93 **转发 NPCServer 计时**（9-int 载荷）；N:275070 同名对端 |
-| 到期分发 | C: 宿主按 quest id 回调注册表（`FUN_180c4dea0(&DAT_184720528, questId, FUN_180c46d80)`，注册条件 = def 轴存在 `!= -2`）→ **`FUN_180c46d80`** |
+| 到期分发 | C: 宿主按 quest id 回调注册表（`FUN_180c4dea0(&DAT_184720528, questId, FUN_180c46d80)`，注册条件 = def 轴存在 `!= -2`）→ **`FUN_180c46d80`**（**第十批订正**：该注册轴 = ×0x18 事件表行 id=3，其 EXE 侧派发器全数零调用者 = 死代码；活到期回报线 = `QuestTimerPacket` → 逐用户任务控制器 vtable+0x188，见 §8②③） |
 | 到期判定 | `FUN_180c46d80`：状态字 = 3（进行中）∧ `ctx < 当前步 < 目标步`（ctx 符号选支）⇒ `+0xf0`（SetQuestProgress 直写步号）或 `+0x160`（弃任） |
 | 单位 | 载荷数值域 110~14100（`300,7,0`/`1800,7,0`/`2700,2,0`/`14100,7,0`）= 秒级语义；N: `AddNpcQuestTimer` 以 1 tick 形态注册（`local_34 = 1`） |
 | 旗标 | 第三整数 ∈ {0,1}：0 = 到期推进（ctx=0 → `0 < cur < dest`）、1 = 到期弃任（`120,7,1` = 120 秒内未达步 7 则弃任）；与 `FUN_180c46d80` 的 ctx 符号选支互证 |
@@ -57,8 +57,9 @@ fail-closed 冻结）+ `ActionType.ENTER_INSTANCE` + 执行面 = 传送端口（
 
 **第九批残余偏差（登记不扩批）**：①**离场检查面不实现**——`FUN_180c46d80` 块 1 汇编级坐实
 （`def+0x40 锚 ≠ -2 ∧ 锚 < 步(6位) < def+0x44` ⇒ `+0xf0(qid, 锚值, 0)` 写回锚 / 锚 < 0 ⇒ `+0x160`
-弃任；capstone 反汇编 180c46e13..e37），但其宿主触发链未闭合（注册表 mgr+0x48 = `DAT_184720528`
-向量**全库无读者**，param_7 身份 = Ghidra 死角）⇒ 两解冻行的"离开副本回退锚步"行为未镜像；
+弃任；capstone 反汇编 180c46e13..e37），其宿主触发链第九批时未闭合（param_7 身份当时 = Ghidra
+死角）⇒ 两解冻行的"离开副本回退锚步"行为未镜像；**第十批已终裁 = 拓扑一致不可达面（§8：
+派发轴死代码字节级终证 + 写锚 edx 残值 ∈{0,1} 不可钉 + 活线对 case 9 行无武装事件）**；
 ②**成员名尾巴**（仅冻结行 20032 携带 `QUEST_20032A/B`）语义未证 ⇒ 解析忽略。
 
 ## 3. c8d0 步 col6（case 6 Delay）/ col8（case 8 Message8）——col6 = 宿主空桩零效果（第七批落面解冻 2 行）；col8 = `Npc::Die`（零 routed 人口，维持冻结）
@@ -118,6 +119,9 @@ itemplay 40/enterworld 32/talkfobj 18；接取 talk 1133 不变 / none 264）；
 尾巴登记残余不实现；DD 门 23/23（+落点表钉子）、TSV 清单门登记 10（EXPECTED_TSV_COUNT 9→10）、
 presence 4/4；聚焦对基线红类集同值（`gates/2026-10-03-focused-run-col9-enterinstance-face.log`）。
 
+第十批（2026-10-03）= **纯证据批（零 Java 变更，无门禁重跑）**：离场检查面触发链终裁不可达
++ param_7 写锚闭合（§8），分桶不变 **1457/10**。
+
 ## 6. param_6 距离闸门——单位佐证升级，生产函数仍未定位 ⇒ 维持不实现（**第八批已闭合推翻，见 §7**）
 
 - **case 表坐实（第五批通读 `FUN_180c46020` 全体；案值字段订正 = def+0x70，即 `piVar14[0x1c]`）**：
@@ -174,3 +178,54 @@ Ghidra 无须动用——NPCSvr64.c / Server64.c / ScriptDLL64.c 三份既有反
 6. **门禁**：DD 门 22/22（新增 `killProgressMirrorsTheRetailDistanceGate` 界内 49m 过 /
    界外 51m 拒且 vars 不写 / 2500 整等过 / z 轴入平方和；`pvpKillProgressMirrorsTheRetailDistanceGate`
    同构）；聚焦套件对基线 ADDED 0（`gates/2026-10-03-focused-run-param6-face.log`）。
+
+## 8. 离场检查面终裁：注册派发轴死代码 + 写锚不可钉 ⇒ 登记拓扑一致不可达面（第十批，2026-10-03，纯证据批零行为变更）
+
+verifier 判词：在导出事件方法簇 `FUN_180cb2b40..FUN_180cb2f20` 中逐个排查 mgr+0x48
+（`DAT_184720528`）向量的派发读者，钉死离场检查面的宿主触发事件；回溯 `FUN_180c4b980` 调
+`FUN_180c49610` 处 iVar5（即 loader param_7）的赋值路径坐实写锚语义；若触发链确证不可达则
+登记为与本服拓扑一致的不可达面并收口。
+
+**① 事件 3 身份钉死（注册轴）**：离场检查面 `FUN_180c46d80`（块 1 = def+0x40/+0x44 离场轴、
+块 2 = Timer def+0x68/+0x6c 轴，**同一 handler 双块**）注册在 **×0x18 事件表行 id=3**
+（mgr+0x48 = `DAT_184720528`）：注册器 `FUN_180c4dea0(行, questId, fn)`——行 = intrusive 链表
+{头, 尾哨兵@+8}，16 字节项 {questId, ?, fn, ?}；导出壳 `FUN_180cb2bf0`（id<0x19 泛化形
+`mgr + id*0x18`）。同轴注册：事件 2 = `FUN_180c466a0`（条件 def+0x80≠-2）。ctx 形制：
+ctx[0]=eventId（调用方置）、ctx[1]=questId（派发器逐项写）、`fn(user, ctx)`。
+
+**② 派发轴死亡四路闭环（字节级）**：
+1. 通用派发器 = Server64 `FUN_140092590`（读行头/尾哨兵逐项调 fn）——Ghidra headless 全库
+   xref **仅 1 条数据引用** from `0x15488396c`；字节级验证：该地址 = `.pdata` RUNTIME_FUNCTION
+   `{begin=0x92590, end=0x925fd, unwind=0x13b6bb0}` 的 BeginAddress 槽 = **函数自身异常展开项**
+   ⇒ 零真实调用、零指针引用。专用派发器 `FUN_140092620`（事件 0 行内联形）/`FUN_140092680`
+   与 thunk `FUN_1400927a0 → FUN_140a1b850` 亦全数零调用者。
+2. Server64.c 全文 `* 0x18` 扫描 = 皆普通数组分配/操作；mgr+0x30/+0x48 **常量偏移读 0 处**。
+3. ScriptDLL64.c 内部 id*0x18 仅注册器一处（无 DLL 侧派发点）；NPCSvr64.c 无 mgr+0x30/+0x48
+   派发点、`*0x18` 命中皆普通数组操作。
+4. **"神秘表"订正**（上一窗悬案）：`0x1548839xx` 邻域 4 字节 RVA 组 = 连续 `.pdata` 记录；
+   "二进制 .rdata 列"实为 **`.xdata` UNWIND_INFO**（`\x01\x04\x01` = version 1 / flags 0 /
+   prolog 4 / unwind code count 1），非字符串表。
+
+**③ 活的 Timer 到期回报线（本批新发现）**：真端活路径 = `QuestTimerPacket`
+（NpcSocket.cpp 0x12ab..0x12f1）→ 用户 +0x3748 **逐用户任务控制器**（宿主 `User.h` 类：
+状态 +0xe8∈{2,3}、任务 id +0xd8、进度族 vtable +0x238/+0x240/+0x248/+0x250；探针串
+`d:\_build\src\server\mainserver\User.h`）→ **vtable+0x188** 方法（user, {questId, +3 dwords},
+{3 bytes}, 毫秒/1000）。该线**不读 ×0x18 表**（EXE/DLL 全库仅注册器一处 id*0x18）⇒ ×0x18
+注册轴与活回报线**平行不交**。Timer 面（§1）镜像的语义规格（载荷三元 + 范围判定 + 直写/弃任）
+仍是唯一可重建规格；活方法体与 `FUN_180c46d80` 块 2 的同一律 = **开放佐证轴**（登记不阻塞：
+无矛盾证据，`GetQuestStateList` 状态模型两侧同构）。
+
+**④ param_7 写锚闭合（第十批）**：`FUN_180c4b980` → `FUN_180c49610` 唯一调用点 `0x180c4bbe0`，
+arg7 = `[rsp+0x30]` = **edx 快照**（存于 `0x180c4bbc6`）；edx = 解析旗标族寄存器残值
+（join `0x4c2bd`/`0x4c48c` `test r10d,r10d; jne 0x180c4bbc6` 绕过 ordinal∈{4,5} 守卫）⇒
+def+0x40 ∈ {0,1} 量级、**精确值静态不可钉**（须动态轨迹，如实机调试器）。
+
+**⑤ 终裁：登记不实现**（三重独立理由，任一即足）：
+- **注册派发轴死代码**（②）——×0x18 轴在此 build 无任何活派发器；
+- **写锚不可钉**（④）——不猜不实现；
+- **活线对 10034/20034 无武装事件**（③）——case 9 行载荷 = `creationId, worldId, leaveProgress`
+  无 Timer 列 ⇒ 无到期事件可携离场检查；10034/20034 的 col9 **立即落地面**（第九批）不受影响。
+
+分桶不变 **1457/10**；成员名尾巴解析忽略维持（§2 残余②）。残余偏差终态 = ACTION_UNFACED 1
+（20032，真端内在缺失）+ ZONE_ABSENT 9（真端内在缺失）+ 离场检查面（本节拓扑一致不可达面）
+——三者皆"镜像与真端一致"或"证据静态不可达"，无用户资产待办。
