@@ -48,6 +48,27 @@
 - 预期：放弃后配方/工作物品回收正常（`RecipeListRecipePort` DAO 面），再接取不残留旧状态。
 - 异常记录：放弃报错（记下服务端日志栈）/ 再接取异常 / 配方残留。
 
+## 管理员命令速查（降低走查成本）
+
+- `//quest start <id>`：对**选中玩家**强制建档（绕过接取面；①②③⑤ 的推进/交付/领奖/放弃
+  可用 `//quest delete <id>` 复位重测；`//quest show` 查看状态）。
+- `//quest log on`：打开任务追踪日志（复现异常时先开，服务端日志会带任务 traces）。
+- `//moveto worldId X Y Z`：坐标传送。**④ 进区接取**的六个区多边形中心（z 取 bottom/top 中值，
+  进入后如悬空轻微移动即可落地；各区几何 = ai-areas.xml 与真端 world 文件逐值一致的多边形）：
+
+```
+//moveto 600051000 614.9 2795.5 194.4    # LDF5a_QuestArea_Q12504（Talk）
+//moveto 600051000 296.8  759.1 232.8    # LDF5a_QuestArea_Q12505（Hunt）
+//moveto 600051000 1274.1 1978.2 93.2    # LDF5a_QuestArea_Q12524（Hunt）
+//moveto 600051000 651.9  284.4 242.9    # LDF5a_QuestArea_Q22504（Talk）
+//moveto 600051000 1454.1 1009.1 127.6   # LDF5a_QuestArea_Q22524（Hunt）
+//moveto 220050000 1334.4 2011.6 145.7   # InvadePortalDest_41_questArea_02（39005，Hunt，df2a）
+```
+
+注意：④ 验的是**自动接取面**，不要先用 `//quest start` 建档（会掩盖触发面结论）；每个区
+测完用 `//quest delete <id>` 复位再测下一个。LDF5a（600051000）为单人副本，需按正常入口
+进入后再传送；若 `//moveto` 跨图直达失败，先 `//goto` 到对应入口。
+
 ## 回退与安全
 
 - 任一项失败不影响其余项独立验收；失败现象优先记服务端日志（`aion/logs/`）+ 客户端截图。
