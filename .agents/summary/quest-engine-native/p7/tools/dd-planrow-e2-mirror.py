@@ -33,6 +33,16 @@ PAYLOAD_COLUMNS = {'hunt': {0}, 'collectitem': {0,1,2,3,4,5}, 'pvp': {0,1,2,3}, 
                    'enterarea': {0}, 'itemplay': {0}, 'enterworld': {0}, 'talkfobj': {0}}
 SENTINEL = '_challengetask_'
 
+# 真端副本入口表（第九批入仓）：creationId → (resolved, worldId)。
+# The retail instance-entry table (batch 9): creationId → (resolved, worldId).
+INSTANCE_ENTRIES = {}
+for _line in open(REPO + '/src/main/resources/aion/data/static_data/quest/retail/retail-instance-entry-points.tsv', encoding='utf-8'):
+    _line = _line.strip()
+    if not _line or _line.startswith('#'):
+        continue
+    _c = _line.split('\t')
+    INSTANCE_ENTRIES[int(_c[0])] = ( _c[7].strip().lower() == 'true', int(_c[1]) )
+
 def load_local_npcs():
     by_desc, by_name = {}, {}
     for path in sorted(glob.glob(NPC_DIR + '/npc_template_*.xml')):
@@ -235,11 +245,23 @@ def scan_faced_actions(cat, cols, items, strings, by_desc, by_name, aliases, gro
         elif action == 'DELAY':
             pass  # case 6 = 宿主 Npc 槽 +0x270 空桩（EXE FUN_140094480 = return;）⇒ 真端零效果，镜像忽略
         elif action == 'INSTANCE':
-            # 2026-10-02 偏差修复第三批取证：装载面（creationId, worldId, leaveProgress, 成员名）
-            # 与离场检查面已坐实；第四批补立即面 = FUN_180c4c8d0 case 9 = +0x220(creationId) 单参
-            # 调 User::EnterInstance，注册表 = instance_creation.xml 静态表；仍缺落点位置面
-            # （start_point_alias 别名→坐标数据不可达）⇒ 维持冻结。
-            return 'ACTION_UNFACED'
+            # 2026-10-03 偏差修复第九批落面：载荷 = `creationId, worldId, leaveProgress[, 成员名…]`；
+            # 立即面落点 = retail-instance-entry-points.tsv（真端 instance_creation.xml ×
+            # Map/Worlds/<world>/world.xml location_alias_list）；creation 2 的别名在真端
+            # idelim/world.xml 本就缺失（内在缺失）⇒ 该行维持冻结；离场检查面宿主触发链未定 ⇒
+            # 登记残余偏差不实现；成员名尾巴解析忽略（仅冻结行携带）。
+            toks = [t for t in re.split(r'[,\s]+', text.strip()) if t]
+            if len(toks) < 3:
+                return 'PAYLOAD_INVALID'
+            try:
+                cid, wid, lp = int(toks[0]), int(toks[1]), int(toks[2])
+            except ValueError:
+                return 'PAYLOAD_INVALID'
+            if cid <= 0 or wid <= 0 or lp < 0:
+                return 'PAYLOAD_INVALID'
+            ep = INSTANCE_ENTRIES.get(cid)
+            if ep is None or not ep[0] or ep[1] != wid:
+                return 'ACTION_UNFACED'
         elif action == 'TIMER':
             # 2026-10-02 落面（真端 FUN_180c49610 case 10 + 到期面 FUN_180c46d80）：
             # 载荷 = `秒, 目标步, 旗标`，旗标 0=推进 / 1=弃任。

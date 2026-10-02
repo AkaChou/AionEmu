@@ -135,9 +135,10 @@ public final class DataDrivenNativeRuntime {
 		ZONE_UNRESOLVED,
 		/** 载荷语法不合法（空组 / 非整数世界 id / 非整数计数）。 / Malformed payload. */
 		PAYLOAD_INVALID,
-		/** 步携带步 e2 未落面的附加动作（ENTER_INSTANCE/TIMER，及 c8d0 步上的 DELAY/MESSAGE-8——
-		 * def 侧槽未定名）。 / A step carries an extra action not yet faced (instance/timer, and the
-		 * unnamed def-side delay/message-8 on EnterArea/TalkFOBJ steps). */
+		/** 步携带仍未落面的附加动作（第九批后仅剩：真端世界文件本就缺落点别名的 ENTER_INSTANCE 行
+		 * 〔20032，creation 2〕；col8 Message8 = `Npc::Die` 零 routed 人口不计）。A step carries an
+		 * extra action still unfaced (after batch 9: only the Enter Instance row whose landing alias
+		 * is intrinsically absent from the retail world files). */
 		ACTION_UNFACED
 	}
 
@@ -239,7 +240,11 @@ public final class DataDrivenNativeRuntime {
 		SAY,
 		/** case 10：任务计时（`秒, 目标步, 旗标`，旗标 0=到期推进 / 1=到期弃任）。
 		 * Quest timer (executor case 10: `seconds, destStep, flag`; flag 0 = advance / 1 = abandon). */
-		TIMER
+		TIMER,
+		/** case 9：进副本（`creationId, worldId, leaveProgress[, 成员名…]`；落点 =
+		 * `NativeInstanceEntryPort` 真端别名坐标；movieId 槽 = creationId）。Enter instance
+		 * (executor case 9; landing point from the retail alias table; movieId slot = creationId). */
+		ENTER_INSTANCE
 	}
 
 	/** 一个已解析的附加动作（未用字段 = -1/0）。 / One resolved extra action (unused fields = -1/0). */
@@ -961,24 +966,44 @@ public final class DataDrivenNativeRuntime {
 						-1));
 				}
 				case ENTER_INSTANCE -> {
-					// 真端 case 9（`FUN_180c49610` case 9）：装载面 = `creationId, worldId,
-					// leaveProgress, [成员名…]`；离场检查面 = `FUN_180c46d80` 第一块；立即执行面 =
-					// 完成步应用器 `FUN_180c4c8d0` case 9 = `(*param_2+0x220)(param_2, creationId)`
-					// 单参调 `User::EnterInstance`（→ `CheckAndAskPrivateInstance`/`_EnterInstance`，
-					// insCreateId 注册表 = 真端 `Map/XML/instance_creation.xml` 静态表，377 行，
-					// 引用的 2/3/13 全在）。仍缺最后一面 = **落点位置**：注册表的
-					// `start_point_alias_01/02`（IDElim_Entrance_alias / IDTemple_SecretRoom_alias /
-					// IDTemple_Low_Ent01）的真端/客户端数据全根检索仅注册表自引 ⇒ 别名→坐标
-					// 解析数据不可达，EVIDENCE_MISSING，维持 fail-closed 冻结。
-					// Retail case 9: loader face (creationId, worldId, leaveProgress, members),
-					// leave-check face (FUN_180c46d80 block 1) and the immediate face (applier
-					// FUN_180c4c8d0 case 9 = vtable +0x220 called with creationId into
-					// User::EnterInstance) are all adjudicated; the insCreateId registry is the
-					// static Map/XML/instance_creation.xml (377 rows, ids 2/3/13 present). The last
-					// missing face is the landing position: the registry's start_point_alias_01/02
-					// values resolve nowhere in the accessible retail/client data ⇒ EVIDENCE_MISSING;
-					// fail-closed freeze remains.
-					return FreezeReason.ACTION_UNFACED;
+					// 真端 case 9（`FUN_180c49610` case 9，2026-10-03 第九批落面）：载荷 =
+					// `creationId, worldId, leaveProgress[, 成员名…]`；立即执行面 = 完成步应用器
+					// `FUN_180c4c8d0` case 9 = `(*param_2+0x220)(param_2, creationId)` 单参虚调
+					// `User::EnterInstance` → 落点 = `instance_creation.xml` 的 `start_point_alias`
+					// → 真端 `Map/Worlds/<world>/world.xml` `location_alias_list` 坐标（解析器
+					// `WorldDb::LoadInstanceCreation`）。别名在真端 world.xml 缺失时真端自身只记
+					// 错误日志、落点空置（creation 2 = IDElim 即此内在缺失）⇒ 镜像 fail-closed
+					// 冻结该行。离场检查面（`FUN_180c46d80` 块 1：`def+0x40 锚 < 步 < def+0x44`
+					// ⇒ `+0xf0` 写回锚值）的宿主触发链停在 DLL 数据段（mgr+0x48 表全库无读者）
+					// 且写锚 param_7 身份未定 ⇒ 不实现，本批登记为携带行上的残余偏差；成员名尾巴
+					// （仅冻结行 20032 携带）语义未证 ⇒ 解析忽略。
+					// Retail case 9 (batch 9, 2026-10-03): payload = `creationId, worldId,
+					// leaveProgress[, names]`; the immediate face enters the instance world at the
+					// start point resolved from the retail world files. An intrinsically absent
+					// alias (creation 2 = IDElim) keeps that row fail-closed frozen. The
+					// leave-check face stays unmirrored (the host-side trigger and the write
+					// anchor are unresolved); trailing member names (frozen row 20032 only) are
+					// parsed and ignored.
+					String[] tokens = text.trim().split("[,\\s]+");
+					if (tokens.length < 3) {
+						return FreezeReason.PAYLOAD_INVALID;
+					}
+					int creationId = parseRetailInt(tokens[0]);
+					int payloadWorldId = parseWorldId(tokens[1]);
+					int leaveProgress = parseRetailInt(tokens[2]);
+					if (creationId <= 0 || payloadWorldId <= 0 || leaveProgress < 0) {
+						return FreezeReason.PAYLOAD_INVALID;
+					}
+					NativeInstanceEntryPort.EntryPoint entry = NativeInstanceEntryPort.instance()
+						.entry(creationId).orElse(null);
+					if (entry == null || !entry.resolved() || entry.worldId() != payloadWorldId) {
+						// 真端注册表缺行 / 别名真端本就缺失 / 载荷与注册表 worldId 不符 ⇒ fail-closed。
+						// Missing registry row / intrinsically absent alias / payload-vs-registry
+						// world mismatch ⇒ fail closed.
+						return FreezeReason.ACTION_UNFACED;
+					}
+					plans.add(new ActionPlan(ActionType.ENTER_INSTANCE, 0, 0, creationId, false, payloadWorldId,
+						entry.x(), entry.y(), entry.z(), entry.heading(), false, -1));
 				}
 				default -> {
 					// 其余未落面动作一律 fail-closed 冻结。
@@ -1343,6 +1368,15 @@ public final class DataDrivenNativeRuntime {
 				case SAY -> sayPort.say(player, action.stringId());
 				case TIMER -> timerPort.schedule(player, questId, action.count(), action.movieId(),
 					action.itemId() == 1);
+				case ENTER_INSTANCE -> {
+					// 真端 case 9 立即面 = `+0x220(creationId)` → `User::EnterInstance` → 落点 =
+					// 别名坐标（NativeInstanceEntryPort）；传送端口 = Java 侧等价面（与 case 3 同
+					// 通道，heading 度）。
+					// Retail case 9 immediate face: enter the instance world at the alias-resolved
+					// start point (the teleport port is the Java-side equivalent, degree heading).
+					teleportPort.teleport(player, action.worldId(), action.x(), action.y(), action.z(),
+						action.heading());
+				}
 			}
 		}
 	}

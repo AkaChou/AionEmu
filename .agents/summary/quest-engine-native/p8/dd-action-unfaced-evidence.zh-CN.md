@@ -1,4 +1,4 @@
-# DD 附加动作 case 9/10 取证与 Timer 落面（2026-10-02，偏差修复第三批；同日第四批补 case 9 立即面/注册表；10-03 第五批 col6 类定名/param_6 单位佐证；10-03 第七批 col6 空桩落面解冻 2 行；10-03 第八批 param_6 生产链闭合 + 50m 距离门落面）
+# DD 附加动作 case 9/10 取证与 Timer 落面（2026-10-02，偏差修复第三批；同日第四批补 case 9 立即面/注册表；10-03 第五批 col6 类定名/param_6 单位佐证；10-03 第七批 col6 空桩落面解冻 2 行；10-03 第八批 param_6 生产链闭合 + 50m 距离门落面；10-03 第九批 col9 EnterInstance 落点坐标复核闭合 → 解冻 2 行）
 
 证据根：`<真端根>/server58/MainServer_ScriptDLL64/ScriptDLL64.c`（C:）、`MainServer_Server64/Server64.c`（S:）、
 `NPCServer_NPCSvr64/NPCSvr64.c`（N:）、DD 表 `data_driven_quest.xml` 原始载荷探针。
@@ -38,12 +38,28 @@
   引用的 creationId 全在——2 = `IDELIM_PRIVATE_D`/IDElim/INSTANCE_PRIVATE、3 = `IDTEMPLE_UP_INSTANT`/
   IDTemple_Up/INSTANCE_INSTANT、13 = `IDTEMPLE_LOW_INSTANT`/IDTemple_Low/INSTANCE_INSTANT；
   与载荷 worldId 列互证一致（3→300150000、13→300160000、2/12→IDElim ↔ 20032 的 EnterWorld 步 300190000）。
-- **仍缺 = 落点位置面（数据级）**：注册表行自带 `start_point_alias_01/02`（2→`IDElim_Entrance_alias`、
-  3→`IDTemple_SecretRoom_alias`、13→`IDTemple_Low_Ent01`）+ `resurrect_point_alias`；这些别名串在
-  **真端全根（含反编译源）/ 本仓 / 客户端解包根** 四路检索均仅注册表自引 ⇒ 别名→坐标解析数据不可达
-  （与 ZONE_ABSENT 的 LF6 world 资产同类）。fail-closed ⇒ **维持冻结 3 行（20032/10034/20034）**，
-  冻结事由由"触发面 EVIDENCE_MISSING"升级为"落点位置面 EVIDENCE_MISSING（start_point_alias 解析资产）"，
-  **禁止按"三面已坐实"半解冻**；用户侧资产到位后即可按本节全链落面。
+- **仍缺 = 落点位置面 → **第九批已闭合（2026-10-03 复核推翻"四路不可达"）**：旧检索漏扫了
+**`<真端根>/Map/Worlds/`（256 世界目录本体）**——落点坐标一直在真端 world.xml 里：
+`location_alias_list` 段（`IDTemple_Up/world.xml` → `IDTemple_SecretRoom_alias` =
+562.176941/223.046707/137.100006/dir 270；`IDTemple_Low/world.xml` → `IDTemple_Low_Ent01` =
+794.989990/918.979980/154.000000/dir 213）。真端解析器 = `WorldDb::LoadInstanceCreation`
+（server58-source `WorldDb.cpp:3411`）→ `WorldBase::GetLocationAliasPoint`（`WorldBase.cpp:1650`）；
+**别名缺失时真端自身只记错误日志 `"cannot find location start_point_alias_list(%s) in world(%d)"`
+并继续装载（落点空置）**——creation 2 的 `IDElim_Entrance_alias` 在真端 `idelim/world.xml` 本就
+不存在（该文件仅 `IDElim_Start_01`）⇒ **真端内在缺失**，非检索缺口。
+
+**第九批落面（行为变更批）**：入仓 `retail-instance-entry-points.tsv`（3 creation 行：2 =
+resolved=false 内在缺失 / 3、13 = 真端原坐标；TSV 清单门 9→10）+ `NativeInstanceEntryPort`
+（静态单例，缺表 = 装载失败）+ 运行时 `ENTER_INSTANCE` 分支（解析 `creationId, worldId,
+leaveProgress[, 成员名…]`；端口解析落点；`resolved=false` / 注册表缺行 / 载荷 worldId 不符 ⇒
+fail-closed 冻结）+ `ActionType.ENTER_INSTANCE` + 执行面 = 传送端口（与 case 3 同通道，heading 度）
+⇒ **10034/20034 解冻**（分桶 1455/12 → **1457/10**：ZONE_ABSENT 9 + ACTION_UNFACED 1）。
+
+**第九批残余偏差（登记不扩批）**：①**离场检查面不实现**——`FUN_180c46d80` 块 1 汇编级坐实
+（`def+0x40 锚 ≠ -2 ∧ 锚 < 步(6位) < def+0x44` ⇒ `+0xf0(qid, 锚值, 0)` 写回锚 / 锚 < 0 ⇒ `+0x160`
+弃任；capstone 反汇编 180c46e13..e37），但其宿主触发链未闭合（注册表 mgr+0x48 = `DAT_184720528`
+向量**全库无读者**，param_7 身份 = Ghidra 死角）⇒ 两解冻行的"离开副本回退锚步"行为未镜像；
+②**成员名尾巴**（仅冻结行 20032 携带 `QUEST_20032A/B`）语义未证 ⇒ 解析忽略。
 
 ## 3. c8d0 步 col6（case 6 Delay）/ col8（case 8 Message8）——col6 = 宿主空桩零效果（第七批落面解冻 2 行）；col8 = `Npc::Die`（零 routed 人口，维持冻结）
 
@@ -95,6 +111,12 @@ itemplay 39/enterworld 31/talkfobj 15；接取 talk 1133）；DD 门 20/20 + pre
 （`onKill(Player,Npc)` 生产重载 + `onKillRanked` 首查）；分桶不变 **1455/12**（门是运行期判定，
 不改路由/冻结集）；DD 门 22/22（+2 距离门钉子）；聚焦 1457 例 / 25F+164E / 72 红类对基线
 **ADDED 0**（`gates/2026-10-03-focused-run-param6-face.log`）。
+
+第九批（2026-10-03）= 行为变更批：col9 EnterInstance 落点复核闭合（§2），10034/20034 解冻，
+分桶 **1457/10**（逐类步数重冻：hunt 820/collectitem 345/pvp 207/talk 395/enterarea 137/
+itemplay 40/enterworld 32/talkfobj 18；接取 talk 1133 不变 / none 264）；离场检查面 + 成员名
+尾巴登记残余不实现；DD 门 23/23（+落点表钉子）、TSV 清单门登记 10（EXPECTED_TSV_COUNT 9→10）、
+presence 4/4；聚焦对基线红类集同值（`gates/2026-10-03-focused-run-col9-enterinstance-face.log`）。
 
 ## 6. param_6 距离闸门——单位佐证升级，生产函数仍未定位 ⇒ 维持不实现（**第八批已闭合推翻，见 §7**）
 

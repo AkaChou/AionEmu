@@ -118,9 +118,10 @@ class DataDrivenNativeRuntimeGateTest {
 	}
 
 	/**
-	 * ① 生产单例 = 切换批语义（步 f 起）：切换集 1467 全量接管（routed 1455 / frozen 12——
+	 * ① 生产单例 = 切换批语义（步 f 起）：切换集 1467 全量接管（routed 1457 / frozen 10——
 	 * 2026-10-02 第三批 col10 Timer 落面解冻 9 行；2026-10-03 第七批 col6 Delay 空桩落面
-	 * 解冻 2 行；残留 = ZONE_ABSENT 9 + ACTION_UNFACED 3〔col9 EnterInstance〕）；非路由行的
+	 * 解冻 2 行；2026-10-03 第九批 col9 EnterInstance 落面解冻 2 行〔10034/20034〕；残留 =
+	 * ZONE_ABSENT 9 + ACTION_UNFACED 1〔20032，creation 2 落点别名真端内在缺失〕）；非路由行的
 	 * 事件仍恒 false（冻结行不接事件面）。
 	 * The production singleton owns the switch set since step f; non-routed rows still answer false.
 	 */
@@ -128,9 +129,9 @@ class DataDrivenNativeRuntimeGateTest {
 	void productionRuntimeRoutesTheSwitchSet() {
 		DataDrivenNativeRuntime production = DataDrivenNativeRuntime.instance();
 		assertEquals(1467, production.ownedQuestIds().size(), "生产接管 = 切换集全量");
-		assertEquals(1455, production.routedQuestIds().size(), "可路由 1455（col6 Delay 空桩落面后）");
-		assertEquals(12, production.frozenQuestIds().size(),
-			"显式冻结 12（ZONE_ABSENT 9 + col9 3；镜像同值）");
+		assertEquals(1457, production.routedQuestIds().size(), "可路由 1457（col9 EnterInstance 落面后）");
+		assertEquals(10, production.frozenQuestIds().size(),
+			"显式冻结 10（ZONE_ABSENT 9 + 20032；镜像同值）");
 		assertFalse(production.killInterests().isEmpty(), "击杀兴趣面已注册");
 		assertFalse(production.zoneInterests().isEmpty(), "进区兴趣面已注册");
 		assertFalse(production.acquireTalkInterests().isEmpty(), "接取对话兴趣面已注册");
@@ -488,6 +489,38 @@ class DataDrivenNativeRuntimeGateTest {
 		assertTrue(runtime.onKillRanked(killer, victim, rank), "50m 内必须推进");
 	}
 
+	/**
+	 * ⑧b col9 EnterInstance 落点面（偏差修复第九批）：落点表 = 真端 world.xml location_alias_list
+	 * 原坐标；10034（creation 13）/20034（creation 3）解冻路由，20032（creation 2）因别名真端
+	 * 内在缺失维持 fail-closed 冻结。
+	 * The Enter Instance landing face (batch 9): 10034/20034 unfrozen and routed; 20032 stays
+	 * fail-closed frozen (its landing alias is intrinsically absent in the retail world file).
+	 */
+	@Test
+	void instanceEntryFaceFollowsTheRetailLandingTable() {
+		NativeInstanceEntryPort port = NativeInstanceEntryPort.instance();
+		assertEquals(3, port.all().size(), "表 = DD 引用的三个 creation（2/3/13）");
+		NativeInstanceEntryPort.EntryPoint up = port.entry(3).orElseThrow();
+		assertTrue(up.resolved(), "creation 3 别名在真端 IDTemple_Up world.xml 有坐标");
+		assertEquals(300150000, up.worldId(), "creation 3 worldId = IDTemple_Up（与 20034 载荷一致）");
+		assertEquals(562.176941f, up.x(), 1e-3f, "落点 x = 真端 location_alias 原值");
+		assertEquals(223.046707f, up.y(), 1e-3f, "落点 y = 真端 location_alias 原值");
+		assertEquals(137.100006f, up.z(), 1e-3f, "落点 z = 真端 location_alias 原值");
+		assertEquals(270, up.heading(), "dir 270 = 真端原值（度）");
+		NativeInstanceEntryPort.EntryPoint low = port.entry(13).orElseThrow();
+		assertTrue(low.resolved(), "creation 13 别名在真端 IDTemple_Low world.xml 有坐标");
+		assertEquals(300160000, low.worldId(), "creation 13 worldId = IDTemple_Low（与 10034 载荷一致）");
+		assertEquals(794.989990f, low.x(), 1e-3f, "落点 x = 真端 location_alias 原值");
+		assertEquals(213, low.heading(), "dir 213 = 真端原值（度）");
+		assertFalse(port.entry(2).orElseThrow().resolved(), "creation 2 = IDElim_Entrance_alias 真端内在缺失");
+		// 路由面：解冻两行 + 冻结一行且原因闭合。 / Routing: two unfrozen, one frozen with the closed reason.
+		assertTrue(runtime.routes(10034), "10034（creation 13）已随第九批落面解冻");
+		assertTrue(runtime.routes(20034), "20034（creation 3）已随第九批落面解冻");
+		assertFalse(runtime.routes(20032), "20032（creation 2）维持 fail-closed 冻结");
+		assertEquals(FreezeReason.ACTION_UNFACED, runtime.frozenQuestIds().get(20032),
+			"冻结原因 = 落点别名真端内在缺失");
+	}
+
 	/** ⑧ 冻结面：冻结行不得进任何兴趣面，原因闭合（e2 后 = ZONE_ABSENT + ACTION_UNFACED）。 */
 	@Test
 	void frozenRowsAreNeverRouted() {
@@ -529,28 +562,27 @@ class DataDrivenNativeRuntimeGateTest {
 		assertEquals(Map.of(Kind.HUNT, 827, Kind.COLLECT_ITEM, 348, Kind.PVP, 207, Kind.TALK, 403,
 			Kind.ENTER_AREA, 153, Kind.ITEM_PLAY, 42, Kind.ENTER_WORLD, 34, Kind.TALK_FOBJ, 19), switchSteps,
 			"切换集逐类步数 = P7 步 1 契约");
-		// 已路由步数；2026-10-03 偏差修复第七批 col6 Delay 空桩落面后随 10035/25606 解冻重冻
+		// 已路由步数；2026-10-03 偏差修复第九批 col9 EnterInstance 落面后随 10034/20034 解冻重冻
 		// （离线镜像逐值一致，见 `.agents/summary/quest-engine-native/p7/tools/dd-planrow-e2-mirror.py`）。
-		assertEquals(Map.of(Kind.HUNT, 818, Kind.COLLECT_ITEM, 345, Kind.PVP, 207, Kind.TALK, 387,
-			Kind.ENTER_AREA, 137, Kind.ITEM_PLAY, 39, Kind.ENTER_WORLD, 31, Kind.TALK_FOBJ, 15), routedSteps,
-			"已路由行的逐类步数冻结（col6 Delay 空桩落面后）");
-		assertEquals(1455, runtime.routedQuestIds().size(), "可路由行冻结（Delay 落面：1455 = 1467 − 12）");
-		assertEquals(12, runtime.frozenQuestIds().size(), "冻结行冻结（两桶，见离线镜像）");
+		assertEquals(Map.of(Kind.HUNT, 820, Kind.COLLECT_ITEM, 345, Kind.PVP, 207, Kind.TALK, 395,
+			Kind.ENTER_AREA, 137, Kind.ITEM_PLAY, 40, Kind.ENTER_WORLD, 32, Kind.TALK_FOBJ, 18), routedSteps,
+			"已路由行的逐类步数冻结（col9 EnterInstance 落面后）");
+		assertEquals(1457, runtime.routedQuestIds().size(), "可路由行冻结（EnterInstance 落面：1457 = 1467 − 10）");
+		assertEquals(10, runtime.frozenQuestIds().size(), "冻结行冻结（两桶，见离线镜像）");
 		Map<FreezeReason, Integer> byReason = new TreeMap<>();
 		for (FreezeReason reason : runtime.frozenQuestIds().values()) {
 			byReason.merge(reason, 1, Integer::sum);
 		}
-		assertEquals(Map.of(FreezeReason.ZONE_ABSENT, 9, FreezeReason.ACTION_UNFACED, 3), byReason,
-			"冻结原因分桶冻结（ZONE_ABSENT 9 §10.3-#23 + ACTION_UNFACED 3 = col9 EnterInstance 3"
-				+ "〔落点位置面 EVIDENCE_MISSING〕；col10 Timer 与 c8d0 col6 Delay 已落面解冻）");
+		assertEquals(Map.of(FreezeReason.ZONE_ABSENT, 9, FreezeReason.ACTION_UNFACED, 1), byReason,
+			"冻结原因分桶冻结（ZONE_ABSENT 9 §10.3-#23 + ACTION_UNFACED 1 = 20032〔creation 2 的落点"
+				+ "别名在真端 idelim/world.xml 本就缺失 = 内在缺失；10034/20034 已随第九批落面解冻〕）");
 		// 步 e2 后唯一未解析面 = 切换集行引用的 LF6 真端缺席进区别名（原文大小写，§10.3-#23）；
 		// 挑战哨兵 `_challengetask_` 已按 P0c-58 四源裁定落面（接取 NPC = reward_npc_name），
 		// MESSAGE 字符串键经 retail-quest-string-ids.tsv 全部解析。
-		// 接取直方图（去重任务数，离线镜像权威值）：talk 1133（含哨兵 6；2026-10-03 col6 Delay
-		// 落面后 +1）/ itemplay 13 / enterworld 12 / leveluplogin 15 / enterarea 20（步 f kind-6
-		// 落面）/ none 261。
+		// 接取直方图（去重任务数，离线镜像权威值）：talk 1133（含哨兵 6）/ itemplay 13 /
+		// enterworld 12 / leveluplogin 15 / enterarea 20（步 f kind-6 落面）/ none 264。
 		assertEquals(1133, runtime.acquireTalkInterests().values().stream().flatMap(List::stream).distinct().count(),
-			"接取 talk 去重任务数（Delay 落面后）");
+			"接取 talk 去重任务数（EnterInstance 落面后不变）");
 		assertEquals(13, runtime.acquireItemInterests().values().stream().flatMap(List::stream).distinct().count(),
 			"接取 itemplay 去重任务数");
 		assertEquals(12, runtime.acquireWorldInterests().values().stream().flatMap(List::stream).distinct().count(),

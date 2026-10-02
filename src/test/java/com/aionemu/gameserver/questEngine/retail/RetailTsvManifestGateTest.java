@@ -61,7 +61,7 @@ class RetailTsvManifestGateTest {
 	 * 2026-10-02 7→9：归位登记两个既有 TSV（quest_client_handin_npc_sets / retail-quest-ai-name-groups，
 	 * 自 src/main/resources/quest/ 迁入 quest/retail/，非新增面）；理由同步计划第三十八版。
 	 */
-	private static final int EXPECTED_TSV_COUNT = 9;
+	private static final int EXPECTED_TSV_COUNT = 10;
 
 	/**
 	 * ①清单覆盖：磁盘上的 *.tsv 集合与清单登记集合双向零差集。
