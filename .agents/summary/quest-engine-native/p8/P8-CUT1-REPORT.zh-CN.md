@@ -118,9 +118,12 @@ mvn -o test '-Dtest=*Quest*Test,*Retail*Test'
 - **触发器残留登记 §10.3-#26**：`_area_` 行发放面就绪但进区不分发（真端 MoveNew→tick→AddAreaQuest
   链无对应物；Talk 8 + Hunt 17 行），独立批取证接线。
 
-## 7. P8 剩余
+## 7. 第三批：DD ItemPlay 道具可得门重建（2026-10-02，已闭环）
 
-- **DD ItemPlay 道具可得门重建**（步 f 登记；DD 运行时步载荷 itemId → 物品模板/掉落/授予三源对拍）；
+详见 `p8/datadriven-itemplay-grant-gate.zh-CN.md`。`DataDrivenItemPlayGrantGateTest`：路由集 ∩ DD ItemPlay 步 = 42 步 / 37 任务全人口三源对拍（模板索引 / 行内 GIVE ∪ 任务掉落 / 工作物品采集面），18738/28738 = 真端宝箱 NPC 外部登记（登记必须仍被使用）；本门 1/1、DD 门全组 45/45。
+
+## 8. P8 剩余
+
 - **原生行职业轴执行位**（`QuestRetailClassGateTest` 豁免面：真端 class 限制是否为服务端闸门）；
 - memory-bank 同步；客户端验收 `PENDING_CLIENT`（Say 气泡 / Spawn 回收 / DD 接取页词汇 /
   进区接取 `*_QuestArea_*` 走查）。
