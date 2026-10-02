@@ -117,19 +117,19 @@ class DataDrivenNativeRuntimeGateTest {
 	}
 
 	/**
-	 * ① 生产单例 = 切换批语义（步 f 起）：切换集 1467 全量接管（routed 1453 / frozen 14——
-	 * 2026-10-02 偏差修复第三批把 col10 Timer 落面：9 行解冻，残留 = ZONE_ABSENT 9 +
-	 * ACTION_UNFACED 5〔col9 EnterInstance 3 + c8d0 col6 2〕）；非路由行的事件仍恒 false
-	 * （冻结行不接事件面）。
+	 * ① 生产单例 = 切换批语义（步 f 起）：切换集 1467 全量接管（routed 1455 / frozen 12——
+	 * 2026-10-02 第三批 col10 Timer 落面解冻 9 行；2026-10-03 第七批 col6 Delay 空桩落面
+	 * 解冻 2 行；残留 = ZONE_ABSENT 9 + ACTION_UNFACED 3〔col9 EnterInstance〕）；非路由行的
+	 * 事件仍恒 false（冻结行不接事件面）。
 	 * The production singleton owns the switch set since step f; non-routed rows still answer false.
 	 */
 	@Test
 	void productionRuntimeRoutesTheSwitchSet() {
 		DataDrivenNativeRuntime production = DataDrivenNativeRuntime.instance();
 		assertEquals(1467, production.ownedQuestIds().size(), "生产接管 = 切换集全量");
-		assertEquals(1453, production.routedQuestIds().size(), "可路由 1453（col10 Timer 落面后）");
-		assertEquals(14, production.frozenQuestIds().size(),
-			"显式冻结 14（ZONE_ABSENT 9 + col9 3 + col6 2；镜像同值）");
+		assertEquals(1455, production.routedQuestIds().size(), "可路由 1455（col6 Delay 空桩落面后）");
+		assertEquals(12, production.frozenQuestIds().size(),
+			"显式冻结 12（ZONE_ABSENT 9 + col9 3；镜像同值）");
 		assertFalse(production.killInterests().isEmpty(), "击杀兴趣面已注册");
 		assertFalse(production.zoneInterests().isEmpty(), "进区兴趣面已注册");
 		assertFalse(production.acquireTalkInterests().isEmpty(), "接取对话兴趣面已注册");
@@ -462,28 +462,28 @@ class DataDrivenNativeRuntimeGateTest {
 		assertEquals(Map.of(Kind.HUNT, 827, Kind.COLLECT_ITEM, 348, Kind.PVP, 207, Kind.TALK, 403,
 			Kind.ENTER_AREA, 153, Kind.ITEM_PLAY, 42, Kind.ENTER_WORLD, 34, Kind.TALK_FOBJ, 19), switchSteps,
 			"切换集逐类步数 = P7 步 1 契约");
-		// 步 e2 动作面收全后的已路由步数；2026-10-02 偏差修复第三批 col10 Timer 落面后随 9 行解冻
-		// 重冻（离线镜像逐值一致，见 `.agents/summary/quest-engine-native/p7/tools/dd-planrow-e2-mirror.py`）。
-		assertEquals(Map.of(Kind.HUNT, 816, Kind.COLLECT_ITEM, 345, Kind.PVP, 207, Kind.TALK, 379,
-			Kind.ENTER_AREA, 133, Kind.ITEM_PLAY, 39, Kind.ENTER_WORLD, 31, Kind.TALK_FOBJ, 13), routedSteps,
-			"已路由行的逐类步数冻结（col10 Timer 落面后）");
-		assertEquals(1453, runtime.routedQuestIds().size(), "可路由行冻结（Timer 落面：1453 = 1467 − 14）");
-		assertEquals(14, runtime.frozenQuestIds().size(), "冻结行冻结（两桶，见离线镜像）");
+		// 已路由步数；2026-10-03 偏差修复第七批 col6 Delay 空桩落面后随 10035/25606 解冻重冻
+		// （离线镜像逐值一致，见 `.agents/summary/quest-engine-native/p7/tools/dd-planrow-e2-mirror.py`）。
+		assertEquals(Map.of(Kind.HUNT, 818, Kind.COLLECT_ITEM, 345, Kind.PVP, 207, Kind.TALK, 387,
+			Kind.ENTER_AREA, 137, Kind.ITEM_PLAY, 39, Kind.ENTER_WORLD, 31, Kind.TALK_FOBJ, 15), routedSteps,
+			"已路由行的逐类步数冻结（col6 Delay 空桩落面后）");
+		assertEquals(1455, runtime.routedQuestIds().size(), "可路由行冻结（Delay 落面：1455 = 1467 − 12）");
+		assertEquals(12, runtime.frozenQuestIds().size(), "冻结行冻结（两桶，见离线镜像）");
 		Map<FreezeReason, Integer> byReason = new TreeMap<>();
 		for (FreezeReason reason : runtime.frozenQuestIds().values()) {
 			byReason.merge(reason, 1, Integer::sum);
 		}
-		assertEquals(Map.of(FreezeReason.ZONE_ABSENT, 9, FreezeReason.ACTION_UNFACED, 5), byReason,
-			"冻结原因分桶冻结（ZONE_ABSENT 9 §10.3-#23 + ACTION_UNFACED 5 = col9 EnterInstance 3"
-				+ "〔立即执行面 EVIDENCE_MISSING〕+ c8d0 步 col6 2；col10 Timer 已落面解冻 9 行）");
+		assertEquals(Map.of(FreezeReason.ZONE_ABSENT, 9, FreezeReason.ACTION_UNFACED, 3), byReason,
+			"冻结原因分桶冻结（ZONE_ABSENT 9 §10.3-#23 + ACTION_UNFACED 3 = col9 EnterInstance 3"
+				+ "〔落点位置面 EVIDENCE_MISSING〕；col10 Timer 与 c8d0 col6 Delay 已落面解冻）");
 		// 步 e2 后唯一未解析面 = 切换集行引用的 LF6 真端缺席进区别名（原文大小写，§10.3-#23）；
 		// 挑战哨兵 `_challengetask_` 已按 P0c-58 四源裁定落面（接取 NPC = reward_npc_name），
 		// MESSAGE 字符串键经 retail-quest-string-ids.tsv 全部解析。
-		// 接取直方图（去重任务数，离线镜像权威值）：talk 1132（含哨兵 6；2026-10-02 col10 Timer
-		// 落面后 +6）/ itemplay 13 / enterworld 12 / leveluplogin 15 / enterarea 20（步 f kind-6
-		// 落面）/ none 258。
-		assertEquals(1132, runtime.acquireTalkInterests().values().stream().flatMap(List::stream).distinct().count(),
-			"接取 talk 去重任务数（Timer 落面后）");
+		// 接取直方图（去重任务数，离线镜像权威值）：talk 1133（含哨兵 6；2026-10-03 col6 Delay
+		// 落面后 +1）/ itemplay 13 / enterworld 12 / leveluplogin 15 / enterarea 20（步 f kind-6
+		// 落面）/ none 261。
+		assertEquals(1133, runtime.acquireTalkInterests().values().stream().flatMap(List::stream).distinct().count(),
+			"接取 talk 去重任务数（Delay 落面后）");
 		assertEquals(13, runtime.acquireItemInterests().values().stream().flatMap(List::stream).distinct().count(),
 			"接取 itemplay 去重任务数");
 		assertEquals(12, runtime.acquireWorldInterests().values().stream().flatMap(List::stream).distinct().count(),

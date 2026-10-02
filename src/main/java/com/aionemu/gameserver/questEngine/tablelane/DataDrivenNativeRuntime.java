@@ -882,8 +882,11 @@ public final class DataDrivenNativeRuntime {
 				}
 				case MESSAGE -> {
 					// case 7（列 7）→ `IUserImp::Say`（字符串表 id，键经真端字符串表解析）；
-					// case 8（列 8）= def 侧槽，仅 EnterArea/TalkFOBJ 步活 ⇒ 同 col6 规则。
-					// Column 7 → IUserImp::Say with a string-table id; column 8 is the def-side twin.
+					// case 8（列 8）= 宿主 `Npc` 槽 +0x3a0 = `Npc::Die`（宿主 NPC 死亡，真端唯一载荷行
+					// 9696 = `_TEST_` 串且不路由）⇒ fail-closed 维持冻结（`defSideAction`）。
+					// Column 7 → IUserImp::Say with a string-table id; column 8 targets the host-Npc
+					// vtable +0x3a0 = Npc::Die (the sole retail payload row 9696 is a _TEST_ string on
+					// a non-routed quest) ⇒ fail-closed freeze stays (defSideAction).
 					if (columnIndex == 8) {
 						FreezeReason reason = defSideAction(step);
 						if (reason != null) {
@@ -899,12 +902,18 @@ public final class DataDrivenNativeRuntime {
 					plans.add(new ActionPlan(ActionType.SAY, 0, 0, 0, false, -1, 0, 0, 0, 0, false, stringId));
 				}
 				case DELAY -> {
-					// case 6 → def+0x270（未定名）：仅 EnterArea/TalkFOBJ 步活；其余 kind = 真端死列。
-					// case 6 → the unnamed def-side slot: live only on EnterArea/TalkFOBJ steps.
-					FreezeReason reason = defSideAction(step);
-					if (reason != null) {
-						return reason;
-					}
+					// case 6（列 6，2026-10-03 落面 = 零效果镜像）：真端装载器 `FUN_180c49610` case 6 读
+					// "DataDrivenQuest - Delay Time" 整数入动作向量；运行时应用器 `FUN_180c4c8d0` case 6 =
+					// `(*param_3 + 0x270)(param_3, 延迟值)`，param_3 = 宿主侧 `Npc`（EXE `Npc::vftable`
+					// 199 槽 @0x12b8470，槽 +0x3a0 = `Npc::Die` 交叉验证），槽 +0x270 = **空桩**
+					// （`FUN_140094480` = `return;`）⇒ 真端 Delay = 装载存储、调用空桩、零效果。
+					// 镜像 = 忽略该动作（真端一致，不冻结）；真端仅 10035/25606 携带（值 8/3/2）。
+					// Retail case 6 (2026-10-03, zero-effect mirror): the loader FUN_180c49610 stores the
+					// "Delay Time" int; the applier FUN_180c4c8d0 case 6 calls vtable +0x270 on the
+					// host-side Npc (EXE Npc::vftable, 199 slots, +0x3a0 = Npc::Die cross-check) whose
+					// +0x270 is an EMPTY STUB (FUN_140094480 = `return;`) ⇒ retail Delay = stored,
+					// invoked, no effect. Mirror = ignore the action (retail-faithful, no freeze);
+					// only 10035/25606 carry it (values 8/3/2).
 				}
 				case TIMER -> {
 					// 真端 case 10（`FUN_180c49610` case 10，2026-10-02 取证落面）：载荷 =
@@ -964,18 +973,14 @@ public final class DataDrivenNativeRuntime {
 	}
 
 	/**
-	 * case 6/8 的活面判定：EnterArea/TalkFOBJ 步 = `IOneQuestScriptNpc` 虚槽 +0x270/+0x3a0 ⇒ 冻结；
-	 * 其余 kind = 真端死列（执行器变体 `FUN_180c4cd50`/`FUN_180c4d190` 无 case 6/8）⇒ 忽略。
-	 * 槽体形态（2026-10-03 取证）：完成步应用器 `FUN_180c4c8d0` case 6 = `(*param_3+0x270)(param_3, 延迟值)`
-	 * 虚调用，类 = 工厂 `FUN_180c45830` 定名的固定类 `IOneQuestScriptNpc`（非每任务脚本子类）；
-	 * 槽方法体在 vtable 数据段，盘上两份 ScriptDLL64.dll 与反编译不同源（析构指纹不在地址空间）
-	 * ⇒ 需同源二进制，EVIDENCE_MISSING 维持冻结。
-	 * Kind-6/8 live-face test: EnterArea/TalkFOBJ steps hit IOneQuestScriptNpc vtable slots
-	 * +0x270/+0x3a0 (applier FUN_180c4c8d0 case 6 = virtual call with the delay int; the class is the
-	 * fixed IOneQuestScriptNpc named by factory FUN_180c45830, not per-quest script subclasses). The
-	 * slot bodies live in vtable data absent from the decompile, and neither on-disk ScriptDLL64.dll
-	 * build matches the decompile's address space ⇒ same-build binary needed; EVIDENCE_MISSING keeps
-	 * the freeze. Other kinds: dead columns (executor variants FUN_180c4cd50/4d190 have no case 6/8).
+	 * case 8（MESSAGE 列 8）的活面判定：EnterArea/TalkFOBJ 步 = 宿主 `Npc` 槽 +0x3a0 = `Npc::Die`
+	 * （真端语义 = 宿主 NPC 死亡；EXE `Npc::vftable` 199 槽交叉验证）⇒ 未落面维持冻结；
+	 * 其余 kind = 真端执行器变体（`FUN_180c4cd50`/`FUN_180c4d190`）无 case 8 = 装载即死列 ⇒ 忽略。
+	 * （case 6 DELAY 已另案落面 = 空桩零效果镜像忽略，不经此函数。）
+	 * Kind-8 (MESSAGE column 8) live-face test: EnterArea/TalkFOBJ steps target the host-Npc vtable
+	 * +0x3a0 = Npc::Die (retail semantics: the host NPC dies; EXE Npc::vftable cross-check) ⇒ the
+	 * face stays unfaced/frozen; other kinds: dead columns in the executor variants. (case 6 DELAY
+	 * is adjudicated separately as an empty-stub no-op and no longer routes here.)
 	 */
 	private static FreezeReason defSideAction(Step step) {
 		return switch (step.kind()) {

@@ -1,4 +1,4 @@
-# DD 附加动作 case 9/10 取证与 Timer 落面（2026-10-02，偏差修复第三批；同日第四批补 case 9 立即面/注册表，10-03 第五批补 col6 类定名/param_6 单位佐证）
+# DD 附加动作 case 9/10 取证与 Timer 落面（2026-10-02，偏差修复第三批；同日第四批补 case 9 立即面/注册表；10-03 第五批 col6 类定名/param_6 单位佐证；10-03 第七批 col6 空桩落面解冻 2 行）
 
 证据根：`<真端根>/server58/MainServer_ScriptDLL64/ScriptDLL64.c`（C:）、`MainServer_Server64/Server64.c`（S:）、
 `NPCServer_NPCSvr64/NPCSvr64.c`（N:）、DD 表 `data_driven_quest.xml` 原始载荷探针。
@@ -45,38 +45,51 @@
   冻结事由由"触发面 EVIDENCE_MISSING"升级为"落点位置面 EVIDENCE_MISSING（start_point_alias 解析资产）"，
   **禁止按"三面已坐实"半解冻**；用户侧资产到位后即可按本节全链落面。
 
-## 3. c8d0 步 col6（case 6 Delay）/ col8（case 8）——固定类 `IOneQuestScriptNpc` 虚槽，槽体需同源二进制 ⇒ 维持冻结 2 行（10035/25606）
+## 3. c8d0 步 col6（case 6 Delay）/ col8（case 8 Message8）——col6 = 宿主空桩零效果（第七批落面解冻 2 行）；col8 = `Npc::Die`（零 routed 人口，维持冻结）
 
-- **槽体形态（第四批升级取证）**：完成步应用器 `FUN_180c4c8d0` case 6 =
-  `(**(code **)(*param_3 + 0x270))(param_3, 延迟值)`、case 8 = `+0x3a0` 同形——都是 param_3
-  （任务脚本 NPC 对象）的**虚调用**；case 10 同函数 = `+0x250(first_int * 1000)` 互证 vtable 槽族。
-- **类已定名（推翻"脚本字节码解释层子类"假设）**：工厂 `FUN_180c45830` 首行
-  `*param_1 = IOneQuestScriptNpc::vftable`——对象是**固定 C++ 类** `IOneQuestScriptNpc`
-  （0x640 字节，实例字段 0x1e0/0x258/0x260/0x268 存每实例函数指针），**不是每任务脚本子类**；
-  执行器变体 `FUN_180c4cd50`/`FUN_180c4d190` 无 case 6/8（其余 kind = 装载即死列，印证）。
-- **为何仍 EVIDENCE_MISSING**：+0x270/+0x3a0 槽方法体在 vtable **数据段**（反编译 .c 不含数据），
-  盘上两份 `ScriptDLL64.dll`（MainServer/NPCServer，2020-05-19 同构）与反编译
-  `server58/MainServer_ScriptDLL64/ScriptDLL64.c` **不同源**——用类方法指纹
-  （析构 `0xc45920/0xc459a0/0xc45a20` 的 qword）在两份 DLL 地址空间检索全空 ⇒
-  解槽体需**与反编译同源的二进制或 Ghidra 工程**（用户侧资产）；
-  RTTI 链（类型描述符 `.?AVIOneQuestScriptNpc@@` 在 .data 0x471f250）在同源件上可直解 vtable。
-  fail-closed ⇒ 维持冻结 2 行，**冻结事由升级为"固定类命名虚槽 + 同源二进制资产缺口"**。
+- **装载面（第五批误判更正）**：装载器 `FUN_180c49610` case 6 **确实入列**——读
+  "DataDrivenQuest - Delay Time" 整数成功即 `FUN_180c51560` 存入动作向量（缺列才静默跳过）；
+  case 7/8 = 字符串索引 "Message"（错索引有日志）。
+- **接收者类（第七批钉死）**：应用器 `FUN_180c4c8d0` 的 param_3 = **宿主侧（EXE）任务脚本对象**
+  ——DLL 每类处理函数存于自身 0x640 记录的字段（+0x1e0/+0x230/+0x258/+0x260/+0x268），被宿主
+  以 **EXE 对象为第一参**回调（dlg 处理器 `FUN_180c478e0` 的 +0x50/+0x518/+0x4d8/+0x4c0/+0x500/
+  +0x5d8 大偏移虚调 ⇒ 槽位 ≥0x5e0 = ≥188，远超 DLL 自身 `IOneQuestScriptNpc::vftable`
+  （@0x123d3b8，RTTI 真空表：析构 + 每步类 {COL, 双函数} 分派结构，Ghidra 命名有误导性））。
+  宿主类 = **EXE `Npc`**（`Npc::vftable` @EXE 0x12b8470，199 槽，构造器 `FUN_140b16fe0` lea 提取）：
+  **槽 +0x3a0（116）= `FUN_1400b21350` = `Npc::Die`（剖析串交叉验证）** —— 映射可信。
+- **col6 Delay = 空桩零效果 ⇒ 落面为忽略**：`Npc::vftable` 槽 +0x270（78）= `FUN_140094480` =
+  **`return;` 空桩**（Npc 预留接口槽区）⇒ 真端 Delay = 装载存储、运行时调用空桩、**零效果**。
+  镜像 = 忽略该动作（真端一致）⇒ **10035/25606 解冻**（载荷 = Delay 8 / 3 / 2，仅此两行携带），
+  分桶 1453/14 → **1455/12**。
+- **col8 Message8 = `Npc::Die` ⇒ 维持冻结**：case 8 调宿主槽 +0x3a0 = 宿主 NPC 死亡（真端语义
+  存在但未落面）；全表唯一 value8-on-c8d0 载荷行 = 9696（`STR_MSG_LIMIT_SALE_TEST_DESC01`，
+  `_TEST_` 串且该行不路由）⇒ routed 人口零行，`defSideAction` 对 col8 维持 fail-closed。
+- **方法论更正**：第六批"盘上 DLL 与反编译不同源"系**指纹法错误**（假设槽 0 = 工厂邻区析构）——
+  DLL 与反编译**同源**（ghidra.log 实证 IMPORTING 同一文件）；col6 真正的解锁 = 接收者在
+  **EXE 侧**，而盘上 `Server64.exe`（2020-06-17）与 Server64.c 反编译**同源**（宽/窄剖析串全中），
+  其代码早已在可读的反编译里 ⇒ **无需任何用户资产**。
 
-## 4. 原始载荷全集（60 命中 → 冻结 14）
+## 4. 原始载荷全集（60 命中 → 冻结 12）
 
 探针：`data_driven_quest.xml` 的 `progress_info/data` 有序步，`value{6,8,9,10}_progress_` 非空列。
-路由集 ∩ 执行矩阵后冻结 = col9 3（20032/10034/20034）+ col6 2（10035/25606）+ ~~col10 9~~（本批解冻）。
-复算工具：`p7/tools/dd-planrow-e2-mirror.py`（本批同步 Timer 落面逻辑，离线输出 routed 1453 / frozen 14
-与 Java 门逐值一致）。
+路由集 ∩ 执行矩阵后冻结 = col9 3（20032/10034/20034）+ ~~col6 2~~（第七批解冻：10035/25606，
+载荷 Delay 8/3/2）+ ~~col10 9~~（本批解冻）。
+复算工具：`p7/tools/dd-planrow-e2-mirror.py`（第七批同步 Delay 空桩忽略逻辑，离线输出
+routed 1455 / frozen 12 与 Java 门逐值一致）。
 
 ## 5. 门态
 
 DD 门 20/20（新增 `questTimerExpiryMirrorsTheRetailRangeCheck`：范围内直写 / 过目标步与 0 步零操作 /
-REWARD 与未路由零操作）；族门 + tablelane 121/121；聚焦套件 1457 例 / 72 红类对基线 **ADDED 0 / REMOVED 0**
-（`gates/2026-10-02-focused-run-timer-face.log`）。
+REWARD 与未路由零操作）；族门 + tablelane 121/121；聚焦套件 1457 例 / 25F+164E / 72 红类对基线
+**ADDED 0 / REMOVED 0**（`gates/2026-10-02-focused-run-timer-face.log`；第七批重跑同值）。
 
 第四批 = 纯证据批（零行为变更）：case 9 立即面/注册表两处登记推翻（§2），Java 镜像的
 ENTER_INSTANCE 分支仅更新证据注释（仍 `ACTION_UNFACED`），分桶不变 1453/14，离线镜像逐值一致。
+
+第七批（2026-10-03）= 行为变更批：col6 Delay 空桩落面（镜像忽略），10035/25606 解冻，
+分桶 **1455/12**（逐类步数重冻：hunt 818/collectitem 345/pvp 207/talk 387/enterarea 137/
+itemplay 39/enterworld 31/talkfobj 15；接取 talk 1133）；DD 门 20/20 + presence 门 4/4 绿；
+聚焦套件重跑 1457 例 25F+164E 与基线同值。
 
 ## 6. param_6 距离闸门——单位佐证升级，生产函数仍未定位 ⇒ 维持不实现
 

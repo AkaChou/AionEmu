@@ -228,10 +228,12 @@ def scan_faced_actions(cat, cols, items, strings, by_desc, by_name, aliases, gro
         elif action == 'MESSAGE' and column == 7:
             if text not in strings:
                 unresolved.add(text.lower()); return 'NAME_UNRESOLVED'
-        elif action in ('MESSAGE8', 'DELAY'):
+        elif action == 'MESSAGE8':
             if cat in ('enterarea', 'talkfobj'):
-                return 'ACTION_UNFACED'  # IOneQuestScriptNpc 虚槽 +0x270/+0x3a0，槽体需同源二进制
-            # 其余 kind：真端执行器无 case 6/8 = 装载即死列 ⇒ 忽略
+                return 'ACTION_UNFACED'  # case 8 = 宿主 Npc 槽 +0x3a0 = Npc::Die（未落面；routed 人口零行）
+            # 其余 kind：真端执行器无 case 8 = 装载即死列 ⇒ 忽略
+        elif action == 'DELAY':
+            pass  # case 6 = 宿主 Npc 槽 +0x270 空桩（EXE FUN_140094480 = return;）⇒ 真端零效果，镜像忽略
         elif action == 'INSTANCE':
             # 2026-10-02 偏差修复第三批取证：装载面（creationId, worldId, leaveProgress, 成员名）
             # 与离场检查面已坐实；第四批补立即面 = FUN_180c4c8d0 case 9 = +0x220(creationId) 单参
