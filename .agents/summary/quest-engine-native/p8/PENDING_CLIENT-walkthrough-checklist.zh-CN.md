@@ -73,3 +73,21 @@
 
 - 任一项失败不影响其余项独立验收；失败现象优先记服务端日志（`aion/logs/`）+ 客户端截图。
 - 全部四/五项通过后回填结论，P8 客户端验收轴（§10.3-#6 / #17①②）即可闭环。
+
+## 验收结论（待用户回填）
+
+> 回填格式：每项一行 PASS/FAIL；FAIL 附客户端现象与服务端日志行（`aion/logs/` 最新
+> `game.log` / `error.log` 中带 quest id 的行即可），代理据此走 fail-closed 异常批。
+> Fill-back format: one PASS/FAIL line per item; for FAIL, attach the client symptom and
+> the quest-id-bearing server log lines, and the agent will triage as a new fail-closed batch.
+
+```
+日期/时间：
+客户端版本/登录账号等级（影响 ④ 副本入口与等级闸门）：
+
+① Say 气泡        10033  PASS / FAIL   现象：
+② Spawn 回收      10010  PASS / FAIL   现象：
+③ DD 接取页       1870   PASS / FAIL   现象：
+④ 进区接取  12504 12505 12524 22504 22524 39005   PASS / FAIL   各区结论：
+⑤ 放弃段全链路     5000   PASS / FAIL   现象：
+```
