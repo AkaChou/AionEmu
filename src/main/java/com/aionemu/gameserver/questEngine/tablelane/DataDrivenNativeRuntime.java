@@ -1350,9 +1350,20 @@ public final class DataDrivenNativeRuntime {
 		// 接取 NPC 也要进对话注册（玩家无任务状态时客户端才能打开对话）。
 		// Acquire NPCs join the dialog registry too (clients can only open the dialog of a
 		// registered npc while the player has no quest state).
+		// 同批把接取 NPC 注册进 onQuestStart：附近任务提示轴（SM_NEARBY_QUESTS）的候选集 =
+		// WorldMapInstance 从 NPC 的 onQuestStart 并集枚举，缺该注册则 DD talk 接取任务永远
+		// 进不了候选集（提示面只覆盖七族，§10.3-#18 的 DD 侧残余）。对话接取流不经该注册
+		// （onDialog 直派），故零双重接取风险。
+		// Acquire NPCs also join the onQuestStart registry: the nearby-quests hint axis
+		// (SM_NEARBY_QUESTS) enumerates candidates from each NPC's onQuestStart union in
+		// WorldMapInstance — without this registration DD talk-acquire quests can never enter
+		// the candidate set (the hint face would cover the six families only; the DD-side
+		// residual of §10.3-#18). The dialog acquire flow does not read this registry
+		// (onDialog dispatches directly), so no double-acquire risk.
 		for (Map.Entry<Integer, List<Integer>> entry : acquireTalksByNpcId.entrySet()) {
 			for (int questId : entry.getValue()) {
 				engine.registerQuestNpc(entry.getKey()).addOnTalkEvent(questId);
+				engine.registerQuestNpc(entry.getKey()).addOnQuestStart(questId);
 			}
 		}
 	}

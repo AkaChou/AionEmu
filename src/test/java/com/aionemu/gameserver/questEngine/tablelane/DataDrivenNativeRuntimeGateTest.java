@@ -33,6 +33,7 @@ import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.gameobjects.player.PlayerCommonData;
 import com.aionemu.gameserver.model.gameobjects.player.QuestStateList;
+import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.questEngine.definition.QuestDialogContract;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
@@ -136,6 +137,47 @@ class DataDrivenNativeRuntimeGateTest {
 		Player player = player(1, Set.of());
 		assertFalse(production.onKill(player, 1), "非切换集击杀恒 false");
 		assertFalse(production.onEnterWorld(player, 210040000), "无接取面/无进度行的进世界恒 false");
+	}
+
+	/**
+	 * ①b 接取 NPC 必须同时进 onQuestStart 注册面：附近任务提示轴（SM_NEARBY_QUESTS）的候选集 =
+	 * {@code WorldMapInstance} 从 NPC 的 onQuestStart 并集枚举，DD talk 接取任务缺该注册就永远
+	 * 进不了候选集（§10.3-#18 的 DD 侧残余）。对话接取流不经该注册，注册只喂提示面。
+	 * ①b Acquire NPCs must also land in the onQuestStart registry: the nearby-quests hint axis
+	 * (SM_NEARBY_QUESTS) enumerates candidates from the per-NPC onQuestStart union in
+	 * WorldMapInstance — without it DD talk-acquire quests never reach the candidate set (the
+	 * DD-side residual of §10.3-#18). The dialog acquire flow does not read this registry.
+	 */
+	@Test
+	void acquireTalkInterestsAlsoRegisterTheNearbyQuestCandidateFace() {
+		// installInterest 的击杀注册会查 NPC 模板（registerCanAct 告警面）；测试环境喂空 NpcData，
+		// 与 QuestEngineEscortAndProximityRegistrationTest 同模式。
+		// The kill-side registration consults NPC templates (registerCanAct warn face); feed an
+		// empty NpcData like QuestEngineEscortAndProximityRegistrationTest does.
+		com.aionemu.gameserver.dataholders.NpcData previous = com.aionemu.gameserver.dataholders.DataManager.NPC_DATA;
+		com.aionemu.gameserver.dataholders.DataManager.NPC_DATA = new com.aionemu.gameserver.dataholders.NpcData();
+		try {
+			QuestEngine engine = new QuestEngine();
+			runtime.installInterest(engine);
+			var acquireTalks = runtime.acquireTalkInterests();
+			assertFalse(acquireTalks.isEmpty(), "接取对话兴趣面非空（口径失效）");
+			for (Map.Entry<Integer, List<Integer>> entry : acquireTalks.entrySet()) {
+				List<Integer> onStart = engine.getQuestNpc(entry.getKey()).getOnQuestStart();
+				for (int questId : entry.getValue()) {
+					assertTrue(onStart.contains(questId), () -> "接取 NPC " + entry.getKey()
+						+ " 的任务 " + questId + " 未进 onQuestStart（附近任务提示候选面缺失）");
+				}
+			}
+			// 冻结行不得借道任何接取 NPC 的 onQuestStart 注册进入候选集。
+			for (int frozenId : runtime.frozenQuestIds().keySet()) {
+				for (int npcId : acquireTalks.keySet()) {
+					assertFalse(engine.getQuestNpc(npcId).getOnQuestStart().contains(frozenId),
+						() -> "冻结行 " + frozenId + " 不应出现在接取 NPC " + npcId + " 的 onQuestStart");
+				}
+			}
+		} finally {
+			com.aionemu.gameserver.dataholders.DataManager.NPC_DATA = previous;
+		}
 	}
 
 	/** ② 逐行裁定闭合：切换集 = 可路由 ∪ 冻结（互斥，无第三桶）。 / Closed routed/frozen split. */
