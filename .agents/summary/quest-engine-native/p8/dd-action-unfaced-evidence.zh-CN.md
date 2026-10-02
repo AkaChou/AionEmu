@@ -1,4 +1,4 @@
-# DD 附加动作 case 9/10 取证与 Timer 落面（2026-10-02，偏差修复第三批）
+# DD 附加动作 case 9/10 取证与 Timer 落面（2026-10-02，偏差修复第三批；同日第四批补 case 9 立即面/注册表）
 
 证据根：`<真端根>/server58/MainServer_ScriptDLL64/ScriptDLL64.c`（C:）、`MainServer_Server64/Server64.c`（S:）、
 `NPCServer_NPCSvr64/NPCSvr64.c`（N:）、DD 表 `data_driven_quest.xml` 原始载荷探针。
@@ -18,17 +18,32 @@
 镜像落面：`NativeTimerPort`（线程池延时）+ `DataDrivenNativeRuntime.onQuestTimerExpired`（到期判定，可单测）
 + `DataDrivenProgress.jumpTo`（直写步号，组槽保持）+ 弃任走 `QuestService.abandonQuest`（QE-119 同口）。
 
-## 2. case 9（EnterInstance）——装载/离场两坐实，立即面 EVIDENCE_MISSING ⇒ 维持冻结 3 行
+## 2. case 9（EnterInstance）——三面全坐实，唯落点位置面数据不可达 ⇒ 维持冻结 3 行
 
 - **装载面（推翻旧登记）**：C:`FUN_180c49610` case 9 载荷 = `creationId, worldId, leaveProgress, [成员名…]`
   （缺项日志三条："Ins Creation ID / Ins World ID / Leave Progress Not Exists"）。
   **worldId 是表内独立列**——计划原登记"creationId→世界映射在客户端表"不成立（当时只读了首 token）。
-  实测载荷：`12, 300190000, 7, QUEST_9693A…`（9693/10032/10037/20032/20037）、`13, 300160000, 7`（10034）、
-  `3, 300150000, 5`（20034/20038）。
+  实测载荷：`12, 300190000, 7, QUEST_9693A…`（9693/10032/10037/20037）、`2, 300190000, 7, QUEST_20032A, QUEST_20032B`（20032）、
+  `13, 300160000, 7`（10034）、`3, 300150000, 5`（20034/20038）。
 - **离场检查面**：`FUN_180c46d80` 第一块 = def+0x40（ctx）/ +0x44（leaveProgress）轴，同 Timer 形。
-- **立即执行面**：+0x40/+0x44 全文件**仅装载器与离场检查两个读者**——进实例的触发面（谁在何时把玩家
-  送进 worldId）在 ScriptDLL64 无读者 ⇒ EVIDENCE_MISSING，fail-closed 维持冻结（10032 非路由、
-  20032/10034/20034 冻结），**禁止按"离场轴已坐实"半解冻**。
+- **立即执行面（第四批推翻"无读者"登记）**：完成步应用器 S:`FUN_180c4c8d0` case 9 =
+  `(**(code **)(*param_2 + 0x220))(param_2, first_int)`——**单参 creationId 虚调 `User::EnterInstance`**；
+  同函数 case 10 = `+0x250(first_int * 1000)`（Timer 毫秒单位硬证据，§1"秒级语义推断"升级为坐实）；
+  case 6/8 = `param_3`（任务对象 IOneQuestScriptNpc）+0x270/+0x3a0 虚槽（§3 同口径）。
+- **注册表（第四批推翻"宿主内部不可达"假设）**：`User::EnterInstance`（S:926244，`FUN_1405a4880`）
+  → `FUN_1406093b0` = `User::CheckAndAskPrivateInstance`（S:988239）→ `FUN_1406dae50` 按 insCreateId
+  查实例记录 → `User::_EnterInstance`（S:926330，`FUN_1405a4aa0`：冷却/savetype ∈ {0x1e,0x3c,0x5b} 闸门
+  /组队/复入/luna 计价通用实例引擎；"cannot find insCreateId(%d)" 三处日志）。
+  **insCreateId 的静态注册表 = `<真端根>/Map/XML/instance_creation.xml`（377 行）**：
+  引用的 creationId 全在——2 = `IDELIM_PRIVATE_D`/IDElim/INSTANCE_PRIVATE、3 = `IDTEMPLE_UP_INSTANT`/
+  IDTemple_Up/INSTANCE_INSTANT、13 = `IDTEMPLE_LOW_INSTANT`/IDTemple_Low/INSTANCE_INSTANT；
+  与载荷 worldId 列互证一致（3→300150000、13→300160000、2/12→IDElim ↔ 20032 的 EnterWorld 步 300190000）。
+- **仍缺 = 落点位置面（数据级）**：注册表行自带 `start_point_alias_01/02`（2→`IDElim_Entrance_alias`、
+  3→`IDTemple_SecretRoom_alias`、13→`IDTemple_Low_Ent01`）+ `resurrect_point_alias`；这些别名串在
+  **真端全根（含反编译源）/ 本仓 / 客户端解包根** 四路检索均仅注册表自引 ⇒ 别名→坐标解析数据不可达
+  （与 ZONE_ABSENT 的 LF6 world 资产同类）。fail-closed ⇒ **维持冻结 3 行（20032/10034/20034）**，
+  冻结事由由"触发面 EVIDENCE_MISSING"升级为"落点位置面 EVIDENCE_MISSING（start_point_alias 解析资产）"，
+  **禁止按"三面已坐实"半解冻**；用户侧资产到位后即可按本节全链落面。
 
 ## 3. c8d0 步 col6（case 6 Delay）——维持冻结 2 行（10035/25606）
 
@@ -48,3 +63,6 @@ case 6 = `FUN_180c49610` 早退分支（`FUN_181079cf0(param_5,…,L"DataDrivenQ
 DD 门 20/20（新增 `questTimerExpiryMirrorsTheRetailRangeCheck`：范围内直写 / 过目标步与 0 步零操作 /
 REWARD 与未路由零操作）；族门 + tablelane 121/121；聚焦套件 1457 例 / 72 红类对基线 **ADDED 0 / REMOVED 0**
 （`gates/2026-10-02-focused-run-timer-face.log`）。
+
+第四批 = 纯证据批（零行为变更）：case 9 立即面/注册表两处登记推翻（§2），Java 镜像的
+ENTER_INSTANCE 分支仅更新证据注释（仍 `ACTION_UNFACED`），分桶不变 1453/14，离线镜像逐值一致。

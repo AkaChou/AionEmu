@@ -233,8 +233,10 @@ def scan_faced_actions(cat, cols, items, strings, by_desc, by_name, aliases, gro
                 return 'ACTION_UNFACED'  # def 侧槽未定名，活面步冻结
             # 其余 kind：真端执行器无 case 6/8 = 装载即死列 ⇒ 忽略
         elif action == 'INSTANCE':
-            # 2026-10-02 偏差修复第三批取证：装载面已坐实（creationId, worldId, leaveProgress,
-            # 成员名），但立即执行面在 ScriptDLL64 无读者（+0x40/+0x44 仅两读者）⇒ 维持冻结。
+            # 2026-10-02 偏差修复第三批取证：装载面（creationId, worldId, leaveProgress, 成员名）
+            # 与离场检查面已坐实；第四批补立即面 = FUN_180c4c8d0 case 9 = +0x220(creationId) 单参
+            # 调 User::EnterInstance，注册表 = instance_creation.xml 静态表；仍缺落点位置面
+            # （start_point_alias 别名→坐标数据不可达）⇒ 维持冻结。
             return 'ACTION_UNFACED'
         elif action == 'TIMER':
             # 2026-10-02 落面（真端 FUN_180c49610 case 10 + 到期面 FUN_180c46d80）：

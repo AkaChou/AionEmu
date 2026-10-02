@@ -934,15 +934,22 @@ public final class DataDrivenNativeRuntime {
 				}
 				case ENTER_INSTANCE -> {
 					// 真端 case 9（`FUN_180c49610` case 9）：装载面 = `creationId, worldId,
-					// leaveProgress, [成员名…]`（2026-10-02 取证推翻"creationId→世界映射在客户端表"
-					// 的旧登记——worldId 是表内独立列）；离场检查面 = `FUN_180c46d80` 第一块
-					// （`ctx < 当前步 < leaveProgress` ⇒ 推进/弃任）。**立即执行面在 ScriptDLL64
-					// 无读者**（+0x40/+0x44 全文件仅装载器与离场检查两读者）⇒ 进实例的触发面
-					// EVIDENCE_MISSING，维持 fail-closed 冻结，禁止按"离场轴已坐实"半解冻。
-					// Retail case 9: the loader face (creationId, worldId, leaveProgress, members) and
-					// the leave-check face (FUN_180c46d80 block 1) are adjudicated, but the immediate
-					// entry face has no reader in ScriptDLL64 (+0x40/+0x44 have exactly two readers)
-					// ⇒ the trigger face stays EVIDENCE_MISSING; fail-closed freeze remains.
+					// leaveProgress, [成员名…]`；离场检查面 = `FUN_180c46d80` 第一块；立即执行面 =
+					// 完成步应用器 `FUN_180c4c8d0` case 9 = `(*param_2+0x220)(param_2, creationId)`
+					// 单参调 `User::EnterInstance`（→ `CheckAndAskPrivateInstance`/`_EnterInstance`，
+					// insCreateId 注册表 = 真端 `Map/XML/instance_creation.xml` 静态表，377 行，
+					// 引用的 2/3/13 全在）。仍缺最后一面 = **落点位置**：注册表的
+					// `start_point_alias_01/02`（IDElim_Entrance_alias / IDTemple_SecretRoom_alias /
+					// IDTemple_Low_Ent01）的真端/客户端数据全根检索仅注册表自引 ⇒ 别名→坐标
+					// 解析数据不可达，EVIDENCE_MISSING，维持 fail-closed 冻结。
+					// Retail case 9: loader face (creationId, worldId, leaveProgress, members),
+					// leave-check face (FUN_180c46d80 block 1) and the immediate face (applier
+					// FUN_180c4c8d0 case 9 = vtable +0x220 called with creationId into
+					// User::EnterInstance) are all adjudicated; the insCreateId registry is the
+					// static Map/XML/instance_creation.xml (377 rows, ids 2/3/13 present). The last
+					// missing face is the landing position: the registry's start_point_alias_01/02
+					// values resolve nowhere in the accessible retail/client data ⇒ EVIDENCE_MISSING;
+					// fail-closed freeze remains.
 					return FreezeReason.ACTION_UNFACED;
 				}
 				default -> {
