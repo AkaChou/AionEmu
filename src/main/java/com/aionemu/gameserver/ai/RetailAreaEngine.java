@@ -10,6 +10,9 @@ import com.aionemu.gameserver.lifecycle.GameEngineServices;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_DYNAMIC_LIMIT_AREA_INFO;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
+import com.aionemu.gameserver.questEngine.retail.RetailGrantKind;
+import com.aionemu.gameserver.questEngine.tablelane.NativeQuestStartPort;
+import com.aionemu.gameserver.questEngine.tablelane.NativeSystemGrantLanes;
 import com.aionemu.gameserver.services.QuestService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldMapInstance;
@@ -110,8 +113,8 @@ public final class RetailAreaEngine {
 			if (presence == null || presence.instance() != instance) {
 				presence = new QuestPresence(instance, new HashSet<>());
 			}
-			entered = enteredQuestAreas(DataManager.RETAIL_AI_DATA.getQuestAreas(player.getWorldId()).stream()
-					.filter(RetailAreaEngine::hasQuestTemplates).toList(), QUEST_STATES.getOrDefault(instance, Map.of()),
+			entered = enteredQuestAreas(DataManager.RETAIL_AI_DATA.getQuestAreas(player.getWorldId()),
+				QUEST_STATES.getOrDefault(instance, Map.of()),
 				presence.areas(), player.getX(), player.getY(), player.getZ());
 			if (presence.areas().isEmpty()) {
 				QUEST_PRESENCE.remove(player);
@@ -121,7 +124,27 @@ public final class RetailAreaEngine {
 		}
 		for (QuestArea area : entered) {
 			for (int questId : area.questIds()) {
-				QuestService.startQuest(new QuestEnv(null, player, questId, 0));
+				// §10.3-#26：按行分流。native 行（七族/DD，typed 目录无载体）走 start port——真端
+				// `User_AddAreaQuest` → `AddQuest` 前置 `CheckQuestAcquireCondition` 的同形全条件面
+				// （等级/种族/职业/性别/前置）；typed 行维持 `startQuest` 原路；两者皆非的绑定 id
+				// 跳过不猜（ai-areas 与评审面之外的行禁止合成）。原整区 `hasQuestTemplates` 滤网
+				// 会把含 native 行的区整体静默丢掉（发放面接了、触发面没接的根因），随本批退役。
+				// native 判据 = `routes() ∧ grantKind == AREA`（冻结行不得建档——禁止半接线）。
+				// §10.3-#26: dispatch per row. Native rows (family/DD, no typed carrier) go through
+				// the start port — the exact equivalent of retail AddAreaQuest's
+				// CheckQuestAcquireCondition precondition (level/race/class/gender/prerequisites);
+				// typed rows keep startQuest; ids that are neither are skipped rather than guessed.
+				// The old area-level hasQuestTemplates filter silently dropped any area containing a
+				// native row — the root cause of "grant face wired, trigger face missing". The native
+				// predicate is routes() ∧ grantKind == AREA: frozen rows must never get a row created
+				// (no half-wiring).
+				var lane = NativeSystemGrantLanes.laneOf(questId);
+				if (lane != null && lane.routes(questId)
+					&& lane.grantKind(questId) == RetailGrantKind.AREA) {
+					NativeQuestStartPort.instance().start(player, questId);
+				} else if (GameEngineServices.questEngine().questCatalog().findMetadata(questId).isPresent()) {
+					QuestService.startQuest(new QuestEnv(null, player, questId, 0));
+				}
 			}
 		}
 	}

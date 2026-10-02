@@ -3066,7 +3066,7 @@
     <point x="3040" y="3040"/>
     <point x="3040" y="8"/>
   </quest_area>
-  <quest_area world_id="210060000" world_name="lf2a" name="InvadePortalDest_42_questArea_02" quests="49004,49005" bottom="-41.570000" top="358.429993">
+  <quest_area world_id="210060000" world_name="lf2a" name="InvadePortalDest_42_questArea_02" quests="49004" bottom="-41.570000" top="358.429993">
     <point x="285.269989" y="1194.849976"/>
     <point x="242.976974" y="1156.584839"/>
     <point x="257.074677" y="1096.166260"/>
@@ -3094,7 +3094,7 @@
     <point x="230.893265" y="1241.170898"/>
     <point x="277.214203" y="1225.059204"/>
   </quest_area>
-  <quest_area world_id="210060000" world_name="lf2a" name="InvadePortalDest_42_questArea_03" quests="39007,39009" bottom="-41.570000" top="358.429993">
+  <quest_area world_id="210060000" world_name="lf2a" name="InvadePortalDest_42_questArea_03" quests="" bottom="-41.570000" top="358.429993">
     <point x="707.580017" y="2583.340088"/>
     <point x="570.473877" y="2519.634277"/>
     <point x="476.299957" y="2454.543457"/>
@@ -4078,7 +4078,7 @@
     <point x="1254.832764" y="2118.605225"/>
     <point x="1233.204590" y="2137.122559"/>
   </quest_area>
-  <quest_area world_id="220050000" world_name="df2a" name="InvadePortalDest_41_questArea_03" quests="49009,49007" bottom="-54.270000" top="345.730011">
+  <quest_area world_id="220050000" world_name="df2a" name="InvadePortalDest_41_questArea_03" quests="" bottom="-54.270000" top="345.730011">
     <point x="2291.104004" y="3052.719971"/>
     <point x="1962.298096" y="3043.074463"/>
     <point x="1824.783447" y="3033.367432"/>
@@ -4864,13 +4864,13 @@
     <point x="1090.5" y="587.5"/>
     <point x="1090" y="596.5"/>
   </quest_area>
-  <quest_area world_id="300540000" world_name="idldf5b_td" name="IDLDF5b_TD_QuestArea_Q18033" quests="18033,28033" bottom="-157.815033" top="542.184967">
+  <quest_area world_id="300540000" world_name="idldf5b_td" name="IDLDF5b_TD_QuestArea_Q18033" quests="" bottom="-157.815033" top="542.184967">
     <point x="8.671781" y="6.595541"/>
     <point x="12.298521" y="1011.2113"/>
     <point x="1011.47418" y="1014.83813"/>
     <point x="1009.66083" y="12.035746"/>
   </quest_area>
-  <quest_area world_id="300590000" world_name="IDLDF5_Under_01" name="IDLDF5_Under_01_QuestArea01" quests="16972,26972" bottom="516.053345" top="716.053345">
+  <quest_area world_id="300590000" world_name="IDLDF5_Under_01" name="IDLDF5_Under_01_QuestArea01" quests="" bottom="516.053345" top="716.053345">
     <point x="220.396317" y="367.327118"/>
     <point x="835.329468" y="375.743256"/>
     <point x="832.391479" y="607.257568"/>
@@ -4926,7 +4926,7 @@
     <point x="261.4552" y="131.154388"/>
     <point x="167.552185" y="200.597351"/>
   </quest_area>
-  <quest_area world_id="301320000" world_name="IDLDF5_Under_01_PC" name="IDLDF5_Under_01_QuestArea01" quests="16972,26972" bottom="516.053345" top="716.053345">
+  <quest_area world_id="301320000" world_name="IDLDF5_Under_01_PC" name="IDLDF5_Under_01_QuestArea01" quests="" bottom="516.053345" top="716.053345">
     <point x="220.396317" y="367.327118"/>
     <point x="835.329468" y="375.743256"/>
     <point x="832.391479" y="607.257568"/>
@@ -6084,7 +6084,7 @@
     <point x="1157.87463" y="1843.55249"/>
     <point x="1050.12402" y="1570.70044"/>
   </quest_area>
-  <quest_area world_id="400020000" world_name="gab1_01" name="GAb1_01_QuestArea" quests="13912,23912" bottom="1184.48572" top="1884.48572">
+  <quest_area world_id="400020000" world_name="gab1_01" name="GAb1_01_QuestArea" quests="" bottom="1184.48572" top="1884.48572">
     <point x="449.439423" y="464.763947"/>
     <point x="1573.84998" y="455.116089"/>
     <point x="1562.76721" y="1579.39978"/>
@@ -6122,14 +6122,14 @@
     <point x="1049.93787" y="477.39624"/>
     <point x="1035.49512" y="1.595543"/>
   </quest_area>
-  <quest_area world_id="400030000" world_name="GAb1_Sub" name="GAb1_Sub_01_QuestArea" quests="13913,23913" bottom="222.023163" top="822.023163">
+  <quest_area world_id="400030000" world_name="GAb1_Sub" name="GAb1_Sub_01_QuestArea" quests="" bottom="222.023163" top="822.023163">
     <point x="44.749115" y="5.26947"/>
     <point x="981.850098" y="31.23349"/>
     <point x="961.329712" y="999.096802"/>
     <point x="25.555511" y="968.845825"/>
     <point x="22.919006" y="970.156128"/>
   </quest_area>
-  <quest_area world_id="400040000" world_name="gab1_02" name="GAb1_02_QuestArea" quests="13912,23912" bottom="1184.48572" top="1884.48572">
+  <quest_area world_id="400040000" world_name="gab1_02" name="GAb1_02_QuestArea" quests="" bottom="1184.48572" top="1884.48572">
     <point x="449.439423" y="464.763947"/>
     <point x="1573.84998" y="455.116089"/>
     <point x="1562.76721" y="1579.39978"/>
@@ -6167,7 +6167,7 @@
     <point x="1050.93787" y="478.39624"/>
     <point x="1035.495" y="4.595545"/>
   </quest_area>
-  <quest_area world_id="400050000" world_name="gab1_03" name="GAb1_03_QuestArea" quests="13912,23912" bottom="1184.48572" top="1884.48572">
+  <quest_area world_id="400050000" world_name="gab1_03" name="GAb1_03_QuestArea" quests="" bottom="1184.48572" top="1884.48572">
     <point x="449.439423" y="464.763947"/>
     <point x="1573.84998" y="455.116089"/>
     <point x="1562.76721" y="1579.39978"/>
@@ -6205,7 +6205,7 @@
     <point x="1049.93787" y="477.39621"/>
     <point x="1024.47729" y="3.436127"/>
   </quest_area>
-  <quest_area world_id="400060000" world_name="gab1_04" name="GAb1_04_QuestArea" quests="13912,23912" bottom="1184.48572" top="1884.48572">
+  <quest_area world_id="400060000" world_name="gab1_04" name="GAb1_04_QuestArea" quests="" bottom="1184.48572" top="1884.48572">
     <point x="449.439423" y="464.763947"/>
     <point x="1573.84998" y="455.116089"/>
     <point x="1562.76721" y="1579.39978"/>

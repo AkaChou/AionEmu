@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -233,11 +234,15 @@ class RetailSystemGrantDispatchTest {
 	}
 
 	/**
-	 * {@code _area_} 行的发放入口是区域引擎（P0c-4 已按真端世界文件的 {@code questscript_area}
-	 * 补齐 {@code ai-areas.xml} 的 quest_area 绑定）：已退役行必须同时满足
-	 * 「quest_area 有绑定」+「定义带 SystemGrant 边」，缺一都会让玩家进区域后接不到任务。
-	 * Area rows are granted on area entry (wired in P0c-4 from the retail world files), so every
-	 * retired row must stay bound in the quest-area table and keep its SystemGrant edge.
+	 * {@code _area_} 行的发放入口是区域引擎：绑定面以**真端世界文件**为权威
+	 * （`questscript_area` 的 {@code quest} 子元素；P0c-4「ai-areas = 真端镜像」的前提在
+	 * §10.3-#26 取证中被推翻——ai-areas 曾含真端没有的幻影绑定，2026-10-02 已校正为空绑定）。
+	 * SimpleHunt 的 {@code _area_} 行在 ai-areas 中的绑定必须恰好等于真端活集
+	 * （双向：活行必绑、死行必不绑），且发放面（laneOf ∧ isSystemGranted）保持。
+	 * Area rows are granted on area entry; the binding authority is the retail world files
+	 * (the questscript_area quest child). P0c-4's "ai-areas mirrors retail" premise was
+	 * overturned by the §10.3-#26 evidence — phantom bindings were emptied on 2026-10-02.
+	 * The SimpleHunt area rows bound in ai-areas must equal the retail-live set exactly.
 	 */
 	@Test
 	void retiredAreaRowsStayBoundToQuestAreasAndCarrySystemGrantEdge() throws IOException {
@@ -266,11 +271,21 @@ class RetailSystemGrantDispatchTest {
 			.filter(RetiredQuestIds::contains)
 			.toList();
 		assertFalse(retired.isEmpty(), "P0c-4 退役的 _area_ 行不应为空");
+		// 真端活集（§10.3-#26 全量对拍 258 世界目录三类区）：SimpleHunt 侧 4 行。
+		// The retail-live set (full three-area-type scan of 258 world dirs): four SimpleHunt rows.
+		Set<Integer> retailLive = Set.of(12505, 12524, 22524, 39005);
 		List<String> unbound = retired.stream()
+			.filter(retailLive::contains)
 			.filter(questId -> !bound.contains(questId))
 			.map(Object::toString)
 			.toList();
-		assertTrue(unbound.isEmpty(), () -> "已退役的 _area_ 行缺 quest_area 绑定（进区域无法发放）: " + unbound);
+		assertTrue(unbound.isEmpty(), () -> "真端活绑定行缺 quest_area 绑定（进区域无法发放）: " + unbound);
+		List<String> phantom = retired.stream()
+			.filter(questId -> !retailLive.contains(questId))
+			.filter(bound::contains)
+			.map(Object::toString)
+			.toList();
+		assertTrue(phantom.isEmpty(), () -> "真端死边行不得保留 quest_area 绑定（幻影发放）: " + phantom);
 		// §10.3-#25 闭环（发放面）：SimpleHunt 车道已注册，_area_ 行同享「laneOf 命中 ∧ isSystemGranted」；
 		// 进区触发器（真端 MoveNew 入队 + tick 排水 + AddAreaQuest(type 3)）= 引擎级独立轴 §10.3-#26，
 		// 对 Talk（8 行）与 SimpleHunt（17 行）同时待接线，不在本门断言范围。
