@@ -1,4 +1,4 @@
-# DD 附加动作 case 9/10 取证与 Timer 落面（2026-10-02，偏差修复第三批；同日第四批补 case 9 立即面/注册表）
+# DD 附加动作 case 9/10 取证与 Timer 落面（2026-10-02，偏差修复第三批；同日第四批补 case 9 立即面/注册表，10-03 第五批补 col6 类定名/param_6 单位佐证）
 
 证据根：`<真端根>/server58/MainServer_ScriptDLL64/ScriptDLL64.c`（C:）、`MainServer_Server64/Server64.c`（S:）、
 `NPCServer_NPCSvr64/NPCSvr64.c`（N:）、DD 表 `data_driven_quest.xml` 原始载荷探针。
@@ -45,11 +45,22 @@
   冻结事由由"触发面 EVIDENCE_MISSING"升级为"落点位置面 EVIDENCE_MISSING（start_point_alias 解析资产）"，
   **禁止按"三面已坐实"半解冻**；用户侧资产到位后即可按本节全链落面。
 
-## 3. c8d0 步 col6（case 6 Delay）——维持冻结 2 行（10035/25606）
+## 3. c8d0 步 col6（case 6 Delay）/ col8（case 8）——固定类 `IOneQuestScriptNpc` 虚槽，槽体需同源二进制 ⇒ 维持冻结 2 行（10035/25606）
 
-case 6 = `FUN_180c49610` 早退分支（`FUN_181079cf0(param_5,…,L"DataDrivenQuest - Delay Time")`，单整数）；
-对话平面 `FUN_180c474b0` 内 case 0..0xe 的分发表（步幅 0x155 的脚本字节码偏移 + `+0x188` 虚调）指向
-**任务脚本字节码解释层**，def+0x270 槽（延迟态存哪、到期谁唤醒）仍未定名 ⇒ 维持 ACTION_UNFACED。
+- **槽体形态（第四批升级取证）**：完成步应用器 `FUN_180c4c8d0` case 6 =
+  `(**(code **)(*param_3 + 0x270))(param_3, 延迟值)`、case 8 = `+0x3a0` 同形——都是 param_3
+  （任务脚本 NPC 对象）的**虚调用**；case 10 同函数 = `+0x250(first_int * 1000)` 互证 vtable 槽族。
+- **类已定名（推翻"脚本字节码解释层子类"假设）**：工厂 `FUN_180c45830` 首行
+  `*param_1 = IOneQuestScriptNpc::vftable`——对象是**固定 C++ 类** `IOneQuestScriptNpc`
+  （0x640 字节，实例字段 0x1e0/0x258/0x260/0x268 存每实例函数指针），**不是每任务脚本子类**；
+  执行器变体 `FUN_180c4cd50`/`FUN_180c4d190` 无 case 6/8（其余 kind = 装载即死列，印证）。
+- **为何仍 EVIDENCE_MISSING**：+0x270/+0x3a0 槽方法体在 vtable **数据段**（反编译 .c 不含数据），
+  盘上两份 `ScriptDLL64.dll`（MainServer/NPCServer，2020-05-19 同构）与反编译
+  `server58/MainServer_ScriptDLL64/ScriptDLL64.c` **不同源**——用类方法指纹
+  （析构 `0xc45920/0xc459a0/0xc45a20` 的 qword）在两份 DLL 地址空间检索全空 ⇒
+  解槽体需**与反编译同源的二进制或 Ghidra 工程**（用户侧资产）；
+  RTTI 链（类型描述符 `.?AVIOneQuestScriptNpc@@` 在 .data 0x471f250）在同源件上可直解 vtable。
+  fail-closed ⇒ 维持冻结 2 行，**冻结事由升级为"固定类命名虚槽 + 同源二进制资产缺口"**。
 
 ## 4. 原始载荷全集（60 命中 → 冻结 14）
 
@@ -66,3 +77,18 @@ REWARD 与未路由零操作）；族门 + tablelane 121/121；聚焦套件 1457
 
 第四批 = 纯证据批（零行为变更）：case 9 立即面/注册表两处登记推翻（§2），Java 镜像的
 ENTER_INSTANCE 分支仅更新证据注释（仍 `ACTION_UNFACED`），分桶不变 1453/14，离线镜像逐值一致。
+
+## 6. param_6 距离闸门——单位佐证升级，生产函数仍未定位 ⇒ 维持不实现
+
+- **case 表坐实（本批通读 `FUN_180c46020` 全体）**：def+0x38 值取 0/1 → `2500.0 < param_6` 拒；
+  2 → `10000.0`；5/6 → `40000.0`；其余值直落计数体。case 0/1 另带同图判定
+  （`+0x30(user)==param_3` 直过，否则 `+0x98/+0xa0/+0xa8` 旗标链）。
+- **单位佐证（升级"未坐实"）**：EXE 侧 `World::KillNpcInRange`（S:926xxx 前奏/1095865 派生）
+  与击杀归属代码全程**平方距离**口径（`dpps(x²+y²+z²)` 点积平方和、`<= r*r`、
+  `0x2711`=100²+1 门）；线性读法（2.5km/10km/40km 击杀记数界）荒谬 ⇒
+  **2500/10000/40000 = 50m/100m/200m 平方距离**为唯一自洽读法。
+- **仍缺 = param_6 生产函数**：hunt 处理指针 `DAT_184720a50` 全库只写不读（EXE 经
+  `GetInterface` 对象 vtable 调 DLL，事件回调链 `FUN_140092590`→EXE 注册 thunk→DLL 槽
+  还有两层未通）⇒ 距离参考点（击杀者↔死者）与精确算式无直接证据。
+  fail-closed ⇒ **维持不实现**；开放轴收窄为"param_6 生产函数定位"（单位已自洽，
+  生产函数定位后即可按 `distSq ≤ 案值` 落 50m/100m/200m 界）。

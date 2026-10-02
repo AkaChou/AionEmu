@@ -230,7 +230,7 @@ def scan_faced_actions(cat, cols, items, strings, by_desc, by_name, aliases, gro
                 unresolved.add(text.lower()); return 'NAME_UNRESOLVED'
         elif action in ('MESSAGE8', 'DELAY'):
             if cat in ('enterarea', 'talkfobj'):
-                return 'ACTION_UNFACED'  # def 侧槽未定名，活面步冻结
+                return 'ACTION_UNFACED'  # IOneQuestScriptNpc 虚槽 +0x270/+0x3a0，槽体需同源二进制
             # 其余 kind：真端执行器无 case 6/8 = 装载即死列 ⇒ 忽略
         elif action == 'INSTANCE':
             # 2026-10-02 偏差修复第三批取证：装载面（creationId, worldId, leaveProgress, 成员名）

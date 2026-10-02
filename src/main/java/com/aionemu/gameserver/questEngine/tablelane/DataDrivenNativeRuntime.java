@@ -963,7 +963,20 @@ public final class DataDrivenNativeRuntime {
 		return null;
 	}
 
-	/** case 6/8 的活面判定：EnterArea/TalkFOBJ 步 = 未定名 def 侧槽 ⇒ 冻结；其余 kind = 真端死列 ⇒ 忽略。 */
+	/**
+	 * case 6/8 的活面判定：EnterArea/TalkFOBJ 步 = `IOneQuestScriptNpc` 虚槽 +0x270/+0x3a0 ⇒ 冻结；
+	 * 其余 kind = 真端死列（执行器变体 `FUN_180c4cd50`/`FUN_180c4d190` 无 case 6/8）⇒ 忽略。
+	 * 槽体形态（2026-10-03 取证）：完成步应用器 `FUN_180c4c8d0` case 6 = `(*param_3+0x270)(param_3, 延迟值)`
+	 * 虚调用，类 = 工厂 `FUN_180c45830` 定名的固定类 `IOneQuestScriptNpc`（非每任务脚本子类）；
+	 * 槽方法体在 vtable 数据段，盘上两份 ScriptDLL64.dll 与反编译不同源（析构指纹不在地址空间）
+	 * ⇒ 需同源二进制，EVIDENCE_MISSING 维持冻结。
+	 * Kind-6/8 live-face test: EnterArea/TalkFOBJ steps hit IOneQuestScriptNpc vtable slots
+	 * +0x270/+0x3a0 (applier FUN_180c4c8d0 case 6 = virtual call with the delay int; the class is the
+	 * fixed IOneQuestScriptNpc named by factory FUN_180c45830, not per-quest script subclasses). The
+	 * slot bodies live in vtable data absent from the decompile, and neither on-disk ScriptDLL64.dll
+	 * build matches the decompile's address space ⇒ same-build binary needed; EVIDENCE_MISSING keeps
+	 * the freeze. Other kinds: dead columns (executor variants FUN_180c4cd50/4d190 have no case 6/8).
+	 */
 	private static FreezeReason defSideAction(Step step) {
 		return switch (step.kind()) {
 			case ENTER_AREA, TALK_FOBJ -> FreezeReason.ACTION_UNFACED;
