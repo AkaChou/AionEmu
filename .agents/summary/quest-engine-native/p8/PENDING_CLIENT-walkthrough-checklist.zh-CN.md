@@ -4,7 +4,9 @@
 执行者：**用户**（真实客户端 + 服务端 `aion/` 部署）。以下每项记录：任务 id、执行结果、
 异常现象（客户端表现 + 服务端日志行）。回填到本文件「验收结论」节或口头转述均可。
 
-前置：`scripts/package.sh` 部署最新 JAR（含 P8 六批），服务端启动，客户端 5.8 登录。
+前置：~~`scripts/package.sh` 部署最新 JAR~~ **已由代理完成（2026-10-02 10:36，`aion/AionEmu.jar`
+含 P8 全部十一批提交 + MoveTo 同世界传送修复）**，仅需 `./aion/start-silent.sh` 启动服务端
+（关闭 `./aion/shutdown.sh`），客户端 5.8 登录。
 
 ## ① Say 气泡（NativeSayPort = SM_SYSTEM_MESSAGE，登记偏差面）
 
@@ -72,12 +74,13 @@
 
 ## 回退与安全
 
-- 任一项失败不影响其余项独立验收；失败现象优先记服务端日志（`aion/logs/`）+ 客户端截图。
+- 任一项失败不影响其余项独立验收；失败现象优先记服务端日志（`aion/log/`，logback 默认
+  `log/` 相对启动目录）+ 客户端截图。
 - 全部四/五项通过后回填结论，P8 客户端验收轴（§10.3-#6 / #17①②）即可闭环。
 
 ## 验收结论（待用户回填）
 
-> 回填格式：每项一行 PASS/FAIL；FAIL 附客户端现象与服务端日志行（`aion/logs/` 最新
+> 回填格式：每项一行 PASS/FAIL；FAIL 附客户端现象与服务端日志行（`aion/log/` 最新
 > `game.log` / `error.log` 中带 quest id 的行即可），代理据此走 fail-closed 异常批。
 > Fill-back format: one PASS/FAIL line per item; for FAIL, attach the client symptom and
 > the quest-id-bearing server log lines, and the agent will triage as a new fail-closed batch.
