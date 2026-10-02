@@ -63,10 +63,10 @@ public final class NativeNpcNameResolver {
 	 * The retail dialog-name group table: the authoritative carrier for group keys. The native
 	 * lane reads the same table (group keys must NOT go into the alias ledger — a ledger row
 	 * would enter the old lane's spawn channel and break its exclusivity gate, the second
-	 * QE-133-style incident shape).
+	 * QE-133-style incident shape). Relocated 2026-10-02 to its single canonical home under
+	 * {@code quest/retail/} (the old dual chain under {@code src/main/resources/quest/} retired).
 	 */
 	private static final String[] GROUPS_RESOURCES = {
-			"quest/retail-quest-ai-name-groups.tsv",
 			"aion/data/static_data/quest/retail/retail-quest-ai-name-groups.tsv"};
 	/** 与生产 XmlDataLoader 相同的分片命名约定。 / Same shard naming convention as XmlDataLoader. */
 	private static final Pattern SHARD_PATTERN = Pattern.compile("npc_template_(\\d+)_(\\d+)\\.xml");

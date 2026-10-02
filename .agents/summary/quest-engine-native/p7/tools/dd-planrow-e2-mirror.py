@@ -19,7 +19,7 @@ ZONE_FILE = REPO + '/src/main/resources/aion/data/static_data/zones/zones_retail
 DD_TABLE = REPO + '/src/main/resources/aion/data/static_data/quest/retail/data_driven_quest.xml'
 RETENTION = REPO + '/src/main/resources/aion/data/static_data/quest/retail/retail-xml-retention.tsv'
 ALIASES = REPO + '/src/main/resources/aion/data/static_data/quest/retail/retail-npc-name-aliases.tsv'
-GROUPS_TSV = REPO + '/src/main/resources/quest/retail-quest-ai-name-groups.tsv'
+GROUPS_TSV = REPO + '/src/main/resources/aion/data/static_data/quest/retail/retail-quest-ai-name-groups.tsv'
 STRINGS_TSV = REPO + '/src/main/resources/aion/data/static_data/quest/retail/retail-quest-string-ids.tsv'
 
 ATTR = re.compile(r'\b(npc_id|name|name_desc|quest_ai_name)="([^"]*)"')

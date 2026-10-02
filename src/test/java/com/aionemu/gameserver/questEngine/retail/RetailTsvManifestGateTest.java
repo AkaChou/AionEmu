@@ -58,8 +58,10 @@ class RetailTsvManifestGateTest {
 	 * 改此常量必须在任务报告里登记理由（新增了什么、或退役了哪一个及其前置已满足）。
 	 * Frozen row count: the only legal way to add or retire a TSV row is to change this constant,
 	 * which keeps every change of the frozen surface visible in review.
+	 * 2026-10-02 7→9：归位登记两个既有 TSV（quest_client_handin_npc_sets / retail-quest-ai-name-groups，
+	 * 自 src/main/resources/quest/ 迁入 quest/retail/，非新增面）；理由同步计划第三十八版。
 	 */
-	private static final int EXPECTED_TSV_COUNT = 7;
+	private static final int EXPECTED_TSV_COUNT = 9;
 
 	/**
 	 * ①清单覆盖：磁盘上的 *.tsv 集合与清单登记集合双向零差集。

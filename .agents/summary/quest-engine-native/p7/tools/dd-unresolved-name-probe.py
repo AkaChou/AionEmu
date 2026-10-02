@@ -89,7 +89,7 @@ def load_declared_group_keys():
     破坏通道互斥闸——QE-133 同类事故的第二形态）。原生车道经 NativeNpcNameResolver
     的组通道直读同一张表。"""
     out = set()
-    path = REPO + '/src/main/resources/quest/retail-quest-ai-name-groups.tsv'
+    path = REPO + '/src/main/resources/aion/data/static_data/quest/retail/retail-quest-ai-name-groups.tsv'
     for line in open(path, encoding='utf-8'):
         s = line.strip()
         if not s or s.startswith('#') or s.startswith('quest_ai_name\t'): continue

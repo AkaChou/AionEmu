@@ -22,10 +22,11 @@ public final class RetailQuestAiNameGroups {
 	}
 
 	private static InputStream openStream() {
-		InputStream in = RetailQuestAiNameGroups.class.getResourceAsStream("/quest/retail-quest-ai-name-groups.tsv");
-		if (in == null) {
-			in = RetailQuestAiNameGroups.class.getResourceAsStream("/aion/data/static_data/quest/retail/retail-quest-ai-name-groups.tsv");
-		}
+		// 2026-10-02 归位：单一事实源 = quest/retail/，原 src/main/resources/quest/ 双链退役。
+		// Relocated 2026-10-02: single canonical home under quest/retail/; the old dual chain
+		// under src/main/resources/quest/ is retired.
+		InputStream in = RetailQuestAiNameGroups.class
+			.getResourceAsStream("/aion/data/static_data/quest/retail/retail-quest-ai-name-groups.tsv");
 		if (in == null) {
 			return new ByteArrayInputStream(new byte[0]);
 		}

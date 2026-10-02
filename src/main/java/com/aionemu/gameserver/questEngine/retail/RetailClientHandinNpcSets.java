@@ -53,12 +53,11 @@ public final class RetailClientHandinNpcSets {
 	}
 
 	private static RetailClientHandinNpcSets decodeDefaultInstance() {
+		// 2026-10-02 归位：单一事实源 = quest/retail/，原 src/main/resources/quest/ 双链退役。
+		// Relocated 2026-10-02: single canonical home under quest/retail/; the old dual chain
+		// under src/main/resources/quest/ is retired.
 		InputStream in = RetailClientHandinNpcSets.class.getResourceAsStream(
-			"/quest/quest_client_handin_npc_sets.tsv");
-		if (in == null) {
-			in = RetailClientHandinNpcSets.class.getResourceAsStream(
-				"/aion/data/static_data/quest/retail/quest_client_handin_npc_sets.tsv");
-		}
+			"/aion/data/static_data/quest/retail/quest_client_handin_npc_sets.tsv");
 		if (in == null) {
 			return EMPTY;
 		}

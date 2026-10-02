@@ -55,7 +55,7 @@ def load_aliases():
 def load_groups():
     """镜像 NativeNpcNameResolver 的对话名组通道（组键 → 成员 name_desc/name 展开，声明序）。"""
     m = {}
-    for line in open(REPO + '/src/main/resources/quest/retail-quest-ai-name-groups.tsv', encoding='utf-8'):
+    for line in open(REPO + '/src/main/resources/aion/data/static_data/quest/retail/retail-quest-ai-name-groups.tsv', encoding='utf-8'):
         line = line.strip()
         if not line or line.startswith('#') or line.startswith('quest_ai_name\t'): continue
         parts = line.split('\t')
