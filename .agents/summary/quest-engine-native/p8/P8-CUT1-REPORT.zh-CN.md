@@ -99,10 +99,27 @@ mvn -o test '-Dtest=*Quest*Test,*Retail*Test'
 3. **预言机随车道退役**：测试引用被删类作 oracle 时，替换物必须是 live 面
    （handler 访问器 / 生产同源端口重建 / 测试侧直读数据文件），禁止复刻旧车道逻辑。
 
-## 6. P8 剩余
+## 6. 第二刀：§10.3-#25 取证 + 接线 + 阵营门禁收口（2026-10-02，已闭环）
 
-- **§10.3-#25 取证批**：真端 SimpleHunt `_faction_`/`_area_` 哨兵发放宿主面（禁止按 Talk/Collect
-  形态类比）→ 接线后翻转 `RetailSystemGrantDispatchTest` 两断言；
+详见 `p8/simplehunt-grant-face-adjudication.zh-CN.md`（宿主面逐函数取证 + 轮换表镜像发现）。要点：
+
+- **Faction 轴**（家族无关）：`NpcFactionDB` 7 星期向量载池 → `CheckNewFactionQuest` →
+  `GetTodayFactionQuest`（tm_wday）→ 随机选 → `InitFactionQuest`（state=2 + 0xfe7b）→ cab520
+  state 分发 → `AddQuest` type 3；`Quest::CanAcquireQuest` 零家族分支、DLL 零哨兵字符串。
+- **Area 轴**（家族无关）：`world.xml <questscript_area>` → case 0x894 → `NpcScriptMgr_AddQuestArea`
+  → `MoveNew` 入队 → 60 tick 排水 → `User_AddAreaQuest(type 3)`。
+- **接线**：`SimpleHuntHandler implements NativeSystemGrantLane`（第三车道六法），
+  `NativeSystemGrantLanes` = Talk+Collect+Hunt；`RetailSystemGrantDispatchTest` 翻转 7/7 绿。
+- **连带收口（取证发现）**：生产轮换表镜像陈旧 → `npc_factions_quest.xml` 425→436 行对齐真端
+  （补 11 全 0 掩码行 + 39713/49713 本地全 1 回正）；契约快照 v2 三列 287 行（+34 已实发未评审行、
+  休眠行 until-ported）；`QuestNpcFactionRetailGateTest` 三法重锚绿 + `NpcFactionQuestDataTest`
+  425→436。行为影响 = 35027-35030/45027-45030/36514/36517 从「无轮换行即每日可发」回正为真端
+  本征「永不发放」。
+- **触发器残留登记 §10.3-#26**：`_area_` 行发放面就绪但进区不分发（真端 MoveNew→tick→AddAreaQuest
+  链无对应物；Talk 8 + Hunt 17 行），独立批取证接线。
+
+## 7. P8 剩余
+
 - **DD ItemPlay 道具可得门重建**（步 f 登记；DD 运行时步载荷 itemId → 物品模板/掉落/授予三源对拍）；
 - **原生行职业轴执行位**（`QuestRetailClassGateTest` 豁免面：真端 class 限制是否为服务端闸门）；
 - memory-bank 同步；客户端验收 `PENDING_CLIENT`（Say 气泡 / Spawn 回收 / DD 接取页词汇 /

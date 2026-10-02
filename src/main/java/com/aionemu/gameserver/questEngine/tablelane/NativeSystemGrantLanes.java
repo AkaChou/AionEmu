@@ -28,10 +28,13 @@ public final class NativeSystemGrantLanes {
 	/** 惰性持有：避免类初始化期与两个家族表的装载顺序耦合。 / Lazily held to avoid load-order coupling. */
 	private static final class Holder {
 		private static final List<NativeSystemGrantLane> LANES =
-			List.of(SimpleTalkHandler.instance(), SimpleCollectItemHandler.instance());
+			List.of(SimpleTalkHandler.instance(), SimpleCollectItemHandler.instance(),
+					SimpleHuntHandler.instance());
 	}
 
-	/** 全部已切换家族的发放车道（只读、顺序稳定）。 / Every switched lane (read-only, stable order). */
+	/** 全部已切换家族的发放车道（只读、顺序稳定；§10.3-#25 起 SimpleHunt 为第三车道——宿主面裁定 = 发放链与家族无关）。 /
+	 * Every switched lane (read-only, stable order); SimpleHunt is the third lane since §10.3-#25
+	 * (host-face verdict: the grant chain is family-agnostic). */
 	public static List<NativeSystemGrantLane> lanes() {
 		return Holder.LANES;
 	}

@@ -14,6 +14,7 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_DIALOG_WINDOW;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_QUEST_ACTION;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
+import com.aionemu.gameserver.questEngine.retail.RetailGrantKind;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.questEngine.QuestEngine;
@@ -34,7 +35,7 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
  * and bypasses legacy compiler overlays. Progress advances via 32-bit raw vars and
  * ProgressCamera dual-channel logic (0xf0 normal write / 0x100 advance write).
  */
-public final class SimpleHuntHandler {
+public final class SimpleHuntHandler implements NativeSystemGrantLane {
 
 	/** 狩猎目标槽位引用：任务 ID + 槽位 (1..5)。 / Hunt target reference: quest id + slot. */
 	public record HuntTargetRef(int questId, int slot) {
@@ -79,6 +80,11 @@ public final class SimpleHuntHandler {
 	/** 完成/领奖口（计划 §6.2 NativeReportRewardFlow 完成半边）。 / The native completion/reward port. */
 	private final NativeReportRewardFlow rewardFlow;
 
+	/** 任务 ID → 接取名类别（真端哨兵 = 系统发放）。 / Quest id → acquire-name category. */
+	private final Map<Integer, RetailGrantKind> grantKindByQuestId;
+	/** 任务 ID → 真端势力 id（quest.xml {@code npcfaction_name}）。 / Quest id → retail faction id. */
+	private final Map<Integer, Integer> factionIdByQuestId;
+
 	private SimpleHuntHandler(NativeQuestTableLoader tableLoader, CameraRegistry cameraRegistry,
 			NativeNpcNameResolver nameResolver, HtmlPagesRegistry pagesRegistry, Set<Integer> xmlOnlyIds) {
 		this(tableLoader, cameraRegistry, nameResolver, pagesRegistry, xmlOnlyIds,
@@ -103,6 +109,8 @@ public final class SimpleHuntHandler {
 		Set<Integer> unresolvedChain = new TreeSet<>();
 		Set<Integer> owned = new TreeSet<>();
 		Set<Integer> routed = new TreeSet<>();
+		Map<Integer, RetailGrantKind> grantKinds = new LinkedHashMap<>();
+		Map<Integer, Integer> factions = new LinkedHashMap<>();
 
 		for (NativeQuestTableLoader.SimpleHuntRow row : tableLoader.rows()) {
 			int qid = row.questId();
@@ -111,7 +119,16 @@ public final class SimpleHuntHandler {
 				routed.add(qid);
 			}
 
-			// 接取 NPC 索引
+			// 接取 NPC 索引（哨兵行解析必然失败 = 无 NPC 接取面，接取归系统发放——
+			// 真端宿主面裁定 §10.3-#25：faction/area 发放路径与家族无关）。
+			// Acquire-NPC index (sentinel names intentionally fail to resolve — their acquire face is
+			// the system grant; the retail host path is family-agnostic, §10.3-#25 adjudication).
+			grantKinds.put(qid, RetailGrantKind.of(row.acquiredNpcName()));
+			int factionId = NativeNpcFactionNames.idOf(
+					NativeQuestXmlTable.instance().find(qid).map(meta -> meta.text("npcfaction_name")).orElse(""));
+			if (factionId != 0) {
+				factions.put(qid, factionId);
+			}
 			if (row.acquiredNpcName() != null && !row.acquiredNpcName().isBlank()) {
 				NativeNpcNameResolver.Match m = nameResolver.resolve(row.acquiredNpcName());
 				if (m.resolution() == NativeNpcNameResolver.Resolution.UNIQUE) {
@@ -176,6 +193,8 @@ public final class SimpleHuntHandler {
 		this.conQuestByQuestId = Collections.unmodifiableMap(conQuests);
 		this.unresolvedChainQuestIds = Collections.unmodifiableSet(unresolvedChain);
 		this.cutsceneByQuestId = Collections.unmodifiableMap(cutscenes);
+		this.grantKindByQuestId = Collections.unmodifiableMap(grantKinds);
+		this.factionIdByQuestId = Collections.unmodifiableMap(factions);
 	}
 
 	public static SimpleHuntHandler instance() {
@@ -251,6 +270,71 @@ public final class SimpleHuntHandler {
 	/** 过场引用（表未声明返回 null）。 / The cutscene reference (null when the row declares none). */
 	public Cutscene cutscene(int questId) {
 		return cutsceneByQuestId.get(questId);
+	}
+
+	// ===== 系统发放面（NativeSystemGrantLane；§10.3-#25 宿主面裁定 = 与家族无关） =====
+	// ===== System-grant face (NativeSystemGrantLane; §10.3-#25 host-face verdict = family-agnostic). =====
+
+	@Override
+	public RetailGrantKind grantKind(int questId) {
+		return grantKindByQuestId.getOrDefault(questId, RetailGrantKind.NPC);
+	}
+
+	/**
+	 * 是否系统发放（哨兵行且本服确有该发放入口）。挑战任务哨兵（{@code _challengetask_}）在本服只有
+	 * 完成回调、没有受理入口，若按已知哨兵放行，{@code grantSystemStart} 会替它建档——与
+	 * {@link SimpleTalkHandler} 同一拒绝面。
+	 * Whether the row is system-granted here; challenge-task rows stay rejected (no intake).
+	 */
+	@Override
+	public boolean isSystemGranted(int questId) {
+		RetailGrantKind kind = grantKind(questId);
+		return routes(questId) && kind != RetailGrantKind.NPC && kind.grantable();
+	}
+
+	/** 真端势力 id（quest.xml {@code npcfaction_name}；无则 0）。 / The retail faction id, or 0. */
+	@Override
+	public int factionId(int questId) {
+		return factionIdByQuestId.getOrDefault(questId, 0);
+	}
+
+	/** 指定势力当前可轮换的已路由任务 id（哨兵 = FACTION 行）。 / Faction-rotation candidates. */
+	@Override
+	public Set<Integer> factionRotationCandidates(int factionId) {
+		Set<Integer> candidates = new TreeSet<>();
+		for (Map.Entry<Integer, Integer> entry : factionIdByQuestId.entrySet()) {
+			int questId = entry.getKey();
+			if (entry.getValue() == factionId && routes(questId)
+					&& grantKind(questId) == RetailGrantKind.FACTION) {
+				candidates.add(questId);
+			}
+		}
+		return candidates;
+	}
+
+	/**
+	 * 系统发放入口：无进度时直接建档到 START（与 Talk/Collect 车道同一条
+	 * {@code NativeQuestStartPort.grant} 面——真端宿主发放链对全部家族共用同一原语）。
+	 * The grant entry: create the row at START via the same port as the Talk/Collect lanes — the
+	 * retail host grant chain shares one primitive across families (§10.3-#25 verdict).
+	 */
+	@Override
+	public boolean grantSystemStart(Player player, int questId) {
+		if (player == null || !isSystemGranted(questId)) {
+			return false;
+		}
+		QuestState existing = player.getQuestStateList().getQuestState(questId);
+		if (existing != null && existing.getStatus() != QuestStatus.NONE) {
+			return false;
+		}
+		return NativeQuestStartPort.instance().grant(player, questId).started();
+	}
+
+	/** 阵营日常轮换资格（真端 quest.xml 轴直读，判据抽到 NativeFactionRotation 共用）。 / Rotation eligibility. */
+	@Override
+	public boolean factionRotationEligible(Player player, int questId, int factionId) {
+		return NativeFactionRotation.eligible(player, questId, factionId, isSystemGranted(questId),
+				NativeFactionRotation.factionKind(grantKind(questId)), factionId(questId));
 	}
 
 	/**

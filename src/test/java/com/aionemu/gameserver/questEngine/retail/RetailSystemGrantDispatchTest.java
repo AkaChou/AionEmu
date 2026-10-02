@@ -182,28 +182,29 @@ class RetailSystemGrantDispatchTest {
 	}
 
 	/**
-	 * SimpleHunt 已退役的 {@code _faction_} 行：**已登记缺口（P8，§10.3-#25）**——typed 边随 P1 车道
-	 * 退役，原生聚合面（{@code NativeSystemGrantLanes} = Talk+Collect）尚无 SimpleHunt 车道。
-	 * 本断言锁定 fail-closed 现状：这些行不得混入 Talk/Collect 聚合面（owner 纯度），
-	 * 接线随真端取证（SimpleHunt 哨兵发放宿主面）单独立批。
-	 * Retired SimpleHunt {@code _faction_} rows: registered gap (P8) — the typed edges retired with
-	 * the P1 lane and the native aggregate (Talk+Collect) has no SimpleHunt lane yet. Locked
-	 * fail-closed: the rows must stay outside the aggregate (owner purity) until the retail
-	 * host-face evidence lands in a dedicated batch.
+	 * SimpleHunt 已退役的 {@code _faction_} 行必须可发放（§10.3-#25 已闭环）：真端宿主面裁定 =
+	 * 阵营日常发放链与家族无关（{@code NpcFactionDB} 星期位 → {@code CheckNewFactionQuest} 随机挑选 →
+	 * {@code InitFactionQuest} → cab520 状态面受理 → AddQuest type 3；数据面 = 125/127 哨兵行在
+	 * npcfactions_quest.xml 池内）。SimpleHuntHandler 已注册为第三发放车道，这些行必须
+	 * 「laneOf 命中 ∧ isSystemGranted 放行」两轴俱在，且与 Talk/Collect 车道零交叠。
+	 * Retired SimpleHunt {@code _faction_} rows must stay grantable (§10.3-#25 closed): the retail
+	 * host path is family-agnostic and SimpleHuntHandler is the third grant lane — both
+	 * "laneOf hits" and "isSystemGranted passes" must hold, with zero overlap to Talk/Collect.
 	 */
 	@Test
-	void retiredSimpleHuntFactionRowsStayOutsideTheGrantAggregate() throws IOException {
+	void retiredSimpleHuntFactionRowsCarrySystemGrantEdge() throws IOException {
 		List<Integer> retired = simpleHuntIds(RetailGrantKind.FACTION).stream()
 			.filter(RetiredQuestIds::contains)
 			.toList();
 		assertTrue(retired.size() >= SIMPLE_HUNT_FACTION_FLOOR,
 			() -> "已退役的 SimpleHunt _faction_ 行数异常（应 ≥" + SIMPLE_HUNT_FACTION_FLOOR + "）: " + retired.size());
-		List<String> leaked = retired.stream()
-			.filter(questId -> NativeSystemGrantLanes.laneOf(questId) != null)
+		List<String> missing = retired.stream()
+			.filter(questId -> NativeSystemGrantLanes.laneOf(questId) == null
+				|| !NativeSystemGrantLanes.laneOf(questId).isSystemGranted(questId))
 			.map(Object::toString)
 			.toList();
-		assertTrue(leaked.isEmpty(), () -> "SimpleHunt 哨兵行混入 Talk/Collect 发放聚合面（owner 纯度破坏）: "
-			+ leaked);
+		assertTrue(missing.isEmpty(), () -> "已退役的 SimpleHunt 哨兵行发放面缺失（laneOf/isSystemGranted）: "
+			+ missing);
 		assertTrue(NativeSystemGrantLanes.ownershipConflicts().isEmpty(),
 			"发放车道 owner 交叠非空（归属分解失败）");
 	}
@@ -270,10 +271,18 @@ class RetailSystemGrantDispatchTest {
 			.map(Object::toString)
 			.toList();
 		assertTrue(unbound.isEmpty(), () -> "已退役的 _area_ 行缺 quest_area 绑定（进区域无法发放）: " + unbound);
-		// P8 已登记缺口（§10.3-#25）：typed SystemGrant 边随 P1 退役，SimpleHunt 无原生发放车道——
-		// 绑定数据保持 fail-closed 登记，接线随 SimpleHunt 哨兵发放面取证单独立批（同 _faction_ 行）。
-		// Registered gap (P8): the typed SystemGrant edges retired with P1; the binding data stays
-		// fail-closed until the SimpleHunt sentinel grant face lands in a dedicated batch.
+		// §10.3-#25 闭环（发放面）：SimpleHunt 车道已注册，_area_ 行同享「laneOf 命中 ∧ isSystemGranted」；
+		// 进区触发器（真端 MoveNew 入队 + tick 排水 + AddAreaQuest(type 3)）= 引擎级独立轴 §10.3-#26，
+		// 对 Talk（8 行）与 SimpleHunt（17 行）同时待接线，不在本门断言范围。
+		// §10.3-#25 closed (the grant face): SimpleHunt is a registered lane and _area_ rows share the
+		// same face; the area-entry trigger (retail MoveNew enqueue + tick drain + AddAreaQuest type 3)
+		// is the engine-level axis §10.3-#26 covering both Talk and SimpleHunt.
+		for (int questId : retired) {
+			com.aionemu.gameserver.questEngine.tablelane.NativeSystemGrantLane lane =
+				NativeSystemGrantLanes.laneOf(questId);
+			assertTrue(lane != null && lane.isSystemGranted(questId),
+				() -> "已退役的 _area_ 行 " + questId + " 发放面缺失（laneOf/isSystemGranted）");
+		}
 	}
 
 	@Test
