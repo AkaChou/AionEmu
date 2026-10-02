@@ -499,9 +499,10 @@ public class QuestEngine implements GameEngine {
 		if (SimpleCollectItemHandler.instance().onKill(env.getPlayer(), npc.getNpcId())) {
 			return true;
 		}
-		// 真端表驱动车道：DataDriven Hunt 步组计数（本批路由集为空 ⇒ 恒 false，切换随 P7 步 2 步 f）。
-		// DataDriven hunt steps: no-op until the atomic switch batch flips the routing set.
-		if (DataDrivenNativeRuntime.instance().onKill(env.getPlayer(), npc.getNpcId())) {
+		// 真端表驱动车道：DataDriven Hunt 步组计数（带真端 50m 距离门——处理函数前奏 case 0，
+		// def+0x70 恒 0，见 DataDrivenNativeRuntime.RETAIL_KILL_DISTANCE_SQ 取证链）。
+		// DataDriven hunt steps with the retail 50 m distance gate (handler-preamble case 0).
+		if (DataDrivenNativeRuntime.instance().onKill(env.getPlayer(), npc)) {
 			return true;
 		}
 		try {

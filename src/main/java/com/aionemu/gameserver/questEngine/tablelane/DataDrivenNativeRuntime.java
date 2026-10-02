@@ -16,6 +16,7 @@ import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.PersistentState;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_DIALOG_WINDOW;
@@ -65,6 +66,23 @@ public final class DataDrivenNativeRuntime {
 
 	/** 真端 DD 表资源路径。 / The retail DD table resource. */
 	public static final String TABLE_RESOURCE = "/aion/data/static_data/quest/retail/data_driven_quest.xml";
+
+	/**
+	 * 真端击杀/PvP 距离门（平方米）。8 批取证链：处理函数前奏（Hunt 槽 `FUN_180c46020` / Pvp 槽
+	 * `FUN_180c46980`，注册于 `DAT_184720a50` / `DAT_184720a08`）按 def+0x70 案值取界
+	 * {&lt;0:跳过, 0/1:2500, 2:10000, 5/6:40000, 其他:跳过}；DD 装载器对 def+0x70 **零写入**（解析记录
+	 * 初始化恒 0，全库无存储点）⇒ 运行时恒走 case 0 = 2500（50m）。实参 = 成员与死亡对象的平方欧氏
+	 * 距离（MainServer `AllianceBattleGroup::GetValidMember` 算 {@code dx²+dy²+dz²}，200m 外成员发包前
+	 * 已剔除；包 NS_VALID_MEMBER_LIST 0xff78 每成员 {id, distSq} → NPCSvr64 `PacketValidMemberList`
+	 * 原样作为第 6 参传入处理函数）。同图检查（{@code +0x30()==mapId}）与旗标链（+0x98/+0xa0/+0xa8，
+	 * 仅跨世界可达）在本服拓扑不可达 ⇒ 不镜像。
+	 * Retail kill/PvP distance gate (squared m): the shared handler preamble gates progress by the
+	 * def+0x70 case table, but no loader ever stores that field (init 0) ⇒ case 0 always, i.e. 2500
+	 * (50 m). The argument is the squared Euclidean distance between the credited member and the dead
+	 * object (GetValidMember → packet 0xff78 → PacketValidMemberList → handler arg 6). The same-world
+	 * and flag checks are cross-world-only in retail and unreachable on this topology ⇒ not mirrored.
+	 */
+	static final float RETAIL_KILL_DISTANCE_SQ = 2500.0f;
 
 	/** 组标题后的尾整数（空格或逗号分隔）；名字内部的 `_N` 不算计数。 / Trailing count after a space or comma. */
 	private static final Pattern TRAILING_INT = Pattern.compile("^(.*?)(?:\\s*,\\s*|\\s+)(\\d+)$");
@@ -329,12 +347,13 @@ public final class DataDrivenNativeRuntime {
 
 	/**
 	 * 生产单例：装载真端 DD 表并按切换集（retention 台账 owner=RETAIL_TABLE ∧ family=DataDriven = 1467
-	 * 候选行）建立路由视图；行级冻结在 {@link #create} 内逐行裁定（可路由 1444 / 冻结 23）。
-	 * 启动次序依赖：静态数据（含 zones 注册表）先于引擎装载（GameStartupSequenceLifecycle 相位序）。
+	 * 候选行）建立路由视图；行级冻结在 {@link #create} 内逐行裁定（2026-10-03 偏差修复第七批后 =
+	 * 可路由 1455 / 冻结 12）。
 	 * Production singleton: loads the retail DD table and builds the routing view for the switch set
 	 * (retention ledger owner RETAIL_TABLE ∧ family DataDriven = 1467 candidates); per-row freezing is
-	 * adjudicated inside create (1444 routed / 23 frozen). Startup ordering: static data (incl. the
-	 * zone registry) loads before engines (GameStartupSequenceLifecycle phase order).
+	 * adjudicated inside create (routed 1455 / frozen 12 after the deviation-fix batch 7, 2026-10-03).
+	 * Startup ordering: static data (incl. the zone registry) loads before engines
+	 * (GameStartupSequenceLifecycle phase order).
 	 */
 	public static DataDrivenNativeRuntime instance() {
 		DataDrivenNativeRuntime local = instance;
@@ -1108,10 +1127,48 @@ public final class DataDrivenNativeRuntime {
 	// ------------------------------------------------------------------ 事件面
 
 	/**
-	 * 击杀事件（Hunt 组计数）。 / Kill event (Hunt group counters).
+	 * 击杀事件（Hunt 组计数；生产入口，带真端距离门）。50m 外死亡对象不产生进度（真端处理函数前奏
+	 * case 0：{@code 2500.0 < param_6 → return}；param_6 = 成员↔死亡对象平方欧氏距离，见
+	 * {@link #RETAIL_KILL_DISTANCE_SQ}）。
+	 * Kill event (Hunt group counters; the production entry with the retail distance gate). Dead
+	 * objects beyond 50 m yield no progress (retail handler preamble case 0); see the constant for
+	 * the evidence chain.
 	 */
-	public boolean onKill(Player player, int npcId) {
+	public boolean onKill(Player player, Npc npc) {
+		if (npc == null) {
+			return false;
+		}
+		return onKillAt(player, npc.getNpcId(), npc.getX(), npc.getY(), npc.getZ());
+	}
+
+	/**
+	 * 带死亡位点坐标的击杀派发（{@link #onKill(Player, Npc)} 的坐标形；包内测试面）。
+	 * Kill dispatch with the dead-object coordinates (package-visible test seam of the Npc overload).
+	 */
+	boolean onKillAt(Player player, int npcId, float x, float y, float z) {
+		if (player == null || !withinRetailKillDistance(player.getX() - x, player.getY() - y,
+				player.getZ() - z)) {
+			return false;
+		}
 		return dispatch(player, killsByNpcId.get(npcId));
+	}
+
+	/**
+	 * 击杀事件（Hunt 组计数；已过距离门的裸派发——仅供既有门禁测试沿用，生产必须走
+	 * {@link #onKill(Player, Npc)}）。
+	 * Kill event (Hunt group counters; the bare post-gate dispatch, kept for the existing gate tests —
+	 * production must go through {@link #onKill(Player, Npc)}).
+	 */
+	boolean onKill(Player player, int npcId) {
+		return dispatch(player, killsByNpcId.get(npcId));
+	}
+
+	/**
+	 * 真端距离门判定（平方欧氏 ≤ {@link #RETAIL_KILL_DISTANCE_SQ}）。
+	 * The retail gate test (squared Euclidean distance within the bound).
+	 */
+	static boolean withinRetailKillDistance(float dx, float dy, float dz) {
+		return dx * dx + dy * dy + dz * dz <= RETAIL_KILL_DISTANCE_SQ;
 	}
 
 	/**
@@ -1379,6 +1436,15 @@ public final class DataDrivenNativeRuntime {
 	 */
 	public boolean onKillRanked(Player killer, Player victim, AbyssRankEnum victimRank) {
 		if (killer == null || victim == null || victimRank == null || pvpStepsByQuestId.isEmpty()) {
+			return false;
+		}
+		// 真端 Pvp 处理函数（`FUN_180c46980`，槽 +0x528）与 Hunt 共用同一距离前奏：成员↔死亡玩家
+		// 平方距离 > 2500（50m）⇒ 该次进度零动作（def+0x70 恒 0 ⇒ 恒 case 0，见
+		// RETAIL_KILL_DISTANCE_SQ；真端 GetValidMember 同样以死亡对象为距离基准）。
+		// The retail PvP handler shares the Hunt distance preamble: beyond 50 m squared the progress
+		// is a no-op (def+0x70 is uniformly 0 ⇒ case 0 always; retail measures against the dead object).
+		if (!withinRetailKillDistance(killer.getX() - victim.getX(), killer.getY() - victim.getY(),
+				killer.getZ() - victim.getZ())) {
 			return false;
 		}
 		boolean handled = false;

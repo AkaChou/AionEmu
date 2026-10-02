@@ -43,6 +43,7 @@ import com.aionemu.gameserver.questEngine.tablelane.DataDrivenQuestTable.Kind;
 import com.aionemu.gameserver.questEngine.tablelane.DataDrivenQuestTable.Row;
 import com.aionemu.gameserver.questEngine.tablelane.DataDrivenQuestTable.Step;
 import com.aionemu.gameserver.utils.stats.AbyssRankEnum;
+import com.aionemu.gameserver.world.WorldPosition;
 
 /**
  * P7 步 2 步 d→步 f 门：DD 原生**进度运行时**（八类接线 + 五类接取面〔含步 f kind-6 进区〕+
@@ -288,6 +289,39 @@ class DataDrivenNativeRuntimeGateTest {
 		assertTrue(state.getQuestVars().getQuestVars() >= stepIndex, "组槽自增不得回退步号");
 	}
 
+	/**
+	 * ④b Hunt 距离门（偏差修复第八批落面）：真端处理函数前奏 case 0 = {@code 2500.0 < distSq → return}
+	 * （def+0x70 恒 0 ⇒ 恒 2500 = 50m 平方；param_6 = 成员↔死亡对象平方欧氏距离，生产链 =
+	 * `AllianceBattleGroup::GetValidMember` → NS_VALID_MEMBER_LIST 0xff78 → NPCSvr64
+	 * `PacketValidMemberList` → `FUN_180c46020` 第 6 参）。
+	 * Hunt distance gate (deviation-fix batch 8): retail handler-preamble case 0 with the squared
+	 * 50 m bound; the argument is the squared member-to-dead-object distance.
+	 */
+	@Test
+	void killProgressMirrorsTheRetailDistanceGate() {
+		int questId = firstRouted(Kind.HUNT, 0);
+		int stepIndex = table.find(questId).orElseThrow().steps().getFirst().index();
+		int npcId = keyOf(runtime.killInterests(), questId, stepIndex);
+		// 界内（49m）：进度照常。 / Inside (49 m): progress as usual.
+		Player near = player(30, Set.of(questId));
+		place(near, 0f, 0f, 0f);
+		near.getQuestStateList().getQuestState(questId).getQuestVars().setVar(stepIndex);
+		assertTrue(runtime.onKillAt(near, npcId, 49f, 0f, 0f), "50m 内击杀必须推进");
+		// 界外（51m）：零动作零写。 / Outside (51 m): no progress, no write.
+		Player far = player(31, Set.of(questId));
+		place(far, 0f, 0f, 0f);
+		far.getQuestStateList().getQuestState(questId).getQuestVars().setVar(stepIndex);
+		assertFalse(runtime.onKillAt(far, npcId, 51f, 0f, 0f), "50m 外距离门必须拒绝进度");
+		assertEquals(stepIndex, DataDrivenProgress
+			.step(far.getQuestStateList().getQuestState(questId).getQuestVars().getQuestVars()),
+			"距离门外不得写 vars");
+		// 边界：恰好 2500（50m）= 通过（真端是严格大于才拒绝）；z 轴参与平方和。
+		// Boundary: exactly 2500 (50 m) passes (retail rejects only strictly greater); z enters the sum.
+		assertTrue(DataDrivenNativeRuntime.withinRetailKillDistance(50f, 0f, 0f), "50m 整等于界内");
+		assertFalse(DataDrivenNativeRuntime.withinRetailKillDistance(30f, 40f, 0.1f),
+			"三维平方和超界必须拒绝");
+	}
+
 	/** ⑤ EnterArea / EnterWorld：直接步进（真端写目标步）。 / Direct advance kinds. */
 	@Test
 	void directAdvanceKindsMoveTheStepNumber() {
@@ -395,6 +429,9 @@ class DataDrivenNativeRuntimeGateTest {
 		Step step = row.steps().getFirst();
 		Player killer = player(13, Set.of(questId));
 		Player victim = player(14, Set.of());
+		// 距离门夹具：同点 ⇒ 0 距离过门（本测试只裁军衔/等级差轴）。 / Same point ⇒ the distance gate passes.
+		place(killer, 0f, 0f, 0f);
+		place(victim, 0f, 0f, 0f);
 		QuestState state = killer.getQuestStateList().getQuestState(questId);
 		state.getQuestVars().setVar(step.index());
 		// 闸门内：受害者等级 + levelGap >= 击杀者等级，军衔落在区间内。
@@ -411,6 +448,8 @@ class DataDrivenNativeRuntimeGateTest {
 		// 闸门失败：等级差不足（`killerLevel <= victimLevel + gap` 不成立）。
 		Player killer2 = player(15, Set.of(questId));
 		Player weakVictim = player(16, Set.of());
+		place(killer2, 0f, 0f, 0f);
+		place(weakVictim, 0f, 0f, 0f);
 		killer2.getQuestStateList().getQuestState(questId).getQuestVars().setVar(step.index());
 		setLevel(killer2, 40 + gap + 5);
 		setLevel(weakVictim, 40);
@@ -419,6 +458,34 @@ class DataDrivenNativeRuntimeGateTest {
 		assertEquals(step.index(),
 			DataDrivenProgress.step(killer2.getQuestStateList().getQuestState(questId).getQuestVars().getQuestVars()),
 			"闸门失败不得写 vars");
+	}
+
+	/**
+	 * ⑦b PvP 距离门：真端 Pvp 处理函数（`FUN_180c46980`，槽 +0x528）与 Hunt 共用同一距离前奏——
+	 * 成员↔死亡玩家平方距离 > 2500（50m）⇒ 零动作；距离门先于军衔/等级差逐任务闸门。
+	 * PvP distance gate: the retail PvP handler shares the Hunt preamble — beyond the squared 50 m
+	 * bound the progress is a no-op, ahead of the per-quest rank/level gates.
+	 */
+	@Test
+	void pvpKillProgressMirrorsTheRetailDistanceGate() {
+		int questId = firstRoutedPvpWithGate();
+		Row row = table.find(questId).orElseThrow();
+		Step step = row.steps().getFirst();
+		Player killer = player(32, Set.of(questId));
+		Player victim = player(33, Set.of());
+		place(killer, 0f, 0f, 0f);
+		place(victim, 51f, 0f, 0f);
+		killer.getQuestStateList().getQuestState(questId).getQuestVars().setVar(step.index());
+		AbyssRankEnum rank = rankWithin(optionalInt(step.column(1)), optionalInt(step.column(2)));
+		setLevel(victim, 60);
+		setLevel(killer, 60);
+		assertFalse(runtime.onKillRanked(killer, victim, rank), "50m 外 PvP 进度必须零动作");
+		assertEquals(step.index(), DataDrivenProgress
+			.step(killer.getQuestStateList().getQuestState(questId).getQuestVars().getQuestVars()),
+			"距离门外不得写 vars");
+		// 界内回到既有闸门链（同图同闸门参数 ⇒ 推进）。 / Inside, the existing gate chain resumes.
+		place(victim, 49f, 0f, 0f);
+		assertTrue(runtime.onKillRanked(killer, victim, rank), "50m 内必须推进");
 	}
 
 	/** ⑧ 冻结面：冻结行不得进任何兴趣面，原因闭合（e2 后 = ZONE_ABSENT + ACTION_UNFACED）。 */
@@ -1105,6 +1172,13 @@ class DataDrivenNativeRuntimeGateTest {
 		} catch (ReflectiveOperationException e) {
 			throw new IllegalStateException(e);
 		}
+	}
+
+	/** 反射放置坐标（距离门测试面；生产经 WorldPosition 正常初始化）。 / Reflective placement for the gate tests. */
+	private static void place(Player player, float x, float y, float z) {
+		WorldPosition position = new WorldPosition(110010000);
+		position.setXYZH(x, y, z, (byte) 0);
+		player.setPosition(position);
 	}
 
 	private static Player player(int seed, Set<Integer> questIds) {

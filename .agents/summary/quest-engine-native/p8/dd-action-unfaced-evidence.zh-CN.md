@@ -1,4 +1,4 @@
-# DD 附加动作 case 9/10 取证与 Timer 落面（2026-10-02，偏差修复第三批；同日第四批补 case 9 立即面/注册表；10-03 第五批 col6 类定名/param_6 单位佐证；10-03 第七批 col6 空桩落面解冻 2 行）
+# DD 附加动作 case 9/10 取证与 Timer 落面（2026-10-02，偏差修复第三批；同日第四批补 case 9 立即面/注册表；10-03 第五批 col6 类定名/param_6 单位佐证；10-03 第七批 col6 空桩落面解冻 2 行；10-03 第八批 param_6 生产链闭合 + 50m 距离门落面）
 
 证据根：`<真端根>/server58/MainServer_ScriptDLL64/ScriptDLL64.c`（C:）、`MainServer_Server64/Server64.c`（S:）、
 `NPCServer_NPCSvr64/NPCSvr64.c`（N:）、DD 表 `data_driven_quest.xml` 原始载荷探针。
@@ -91,9 +91,15 @@ ENTER_INSTANCE 分支仅更新证据注释（仍 `ACTION_UNFACED`），分桶不
 itemplay 39/enterworld 31/talkfobj 15；接取 talk 1133）；DD 门 20/20 + presence 门 4/4 绿；
 聚焦套件重跑 1457 例 25F+164E 与基线同值。
 
-## 6. param_6 距离闸门——单位佐证升级，生产函数仍未定位 ⇒ 维持不实现
+第八批（2026-10-03）= 行为变更批：param_6 生产链全闭合（§7），Hunt/Pvp 50m 平方距离门落面
+（`onKill(Player,Npc)` 生产重载 + `onKillRanked` 首查）；分桶不变 **1455/12**（门是运行期判定，
+不改路由/冻结集）；DD 门 22/22（+2 距离门钉子）；聚焦 1457 例 / 25F+164E / 72 红类对基线
+**ADDED 0**（`gates/2026-10-03-focused-run-param6-face.log`）。
 
-- **case 表坐实（本批通读 `FUN_180c46020` 全体）**：def+0x38 值取 0/1 → `2500.0 < param_6` 拒；
+## 6. param_6 距离闸门——单位佐证升级，生产函数仍未定位 ⇒ 维持不实现（**第八批已闭合推翻，见 §7**）
+
+- **case 表坐实（第五批通读 `FUN_180c46020` 全体；案值字段订正 = def+0x70，即 `piVar14[0x1c]`）**：
+  值取 0/1 → `2500.0 < param_6` 拒；
   2 → `10000.0`；5/6 → `40000.0`；其余值直落计数体。case 0/1 另带同图判定
   （`+0x30(user)==param_3` 直过，否则 `+0x98/+0xa0/+0xa8` 旗标链）。
 - **单位佐证（升级"未坐实"）**：EXE 侧 `World::KillNpcInRange`（S:926xxx 前奏/1095865 派生）
@@ -108,3 +114,41 @@ itemplay 39/enterworld 31/talkfobj 15；接取 talk 1133）；DD 门 20/20 + pre
   派发串）。定位需**同源二进制（Ghidra 工程/带符号）或调试会话**——与 col6 槽体合并为
   同一件用户侧资产（同源 ScriptDLL64.dll + Server64.exe）。fail-closed ⇒ **维持不实现**；
   开放轴收窄为"同源二进制到位后从 XMM 传参调用点直读算式"。
+
+## 7. param_6 生产链全闭合（第八批，2026-10-03）——恒 2500（50m 平方）落面
+
+> **§6 两处订正**：① 案值字段 = def+0x70（`piVar14[0x1c]`，int* 下标 ×4），非 §6 所写 def+0x38；
+> ② "调用方在 EXE、XMM 文本不可达、需用户侧同源二进制"被本批推翻——**纯文本检索即可闭合**，
+> 关键在换靶：距离不是调用点算出的 XMM 实参，而是**随包携带的每成员字段**。
+
+**取证人**（按用户授权"对 Server64.exe 发起 Ghidra headless 深挖批"执行；实际全链文本侧闭合，
+Ghidra 无须动用——NPCSvr64.c / Server64.c / ScriptDLL64.c 三份既有反编译即可）：
+
+1. **生产函数 = MainServer `AllianceBattleGroup::GetValidMember`**（`FUN_140065970`，
+   AllianceBattleGroup.cpp:0xae7）：对每个联盟成员算 `dx²+dy²+dz²`（死亡对象位点 +0x120/0x124/0x128
+   vs 成员同偏移），**硬预滤 `> 40000.0` 剔除（200m）**，幸存者打包 `{playerId(u32), distSq(f32)}`
+   对，经 **NS_VALID_MEMBER_LIST（包 id 0xff78**，编码器 `FUN_140055170`、成对追加器
+   `FUN_1400550e0`）发往 NPCServer。
+2. **中继 = NPCSvr64 `PacketValidMemberList`**（`FUN_1401fe590`，ServerSocket.cpp 0xd4a）：包
+   dword0==0 → Hunt 路（`FUN_1402033a0`，哈希 @mgr+0x530/0x540，FNV-1a 逐成员查
+   GetCurQuestIds 数组）；dword0≠0 → Pvp 路（`FUN_140203960`，哈希 @mgr+0x4e8/0x4f8，附
+   0x22 步长小队行）；每命中行调 `(**(mgr+0x570))(user, arg2, mapId, questId, step, distSq)`
+   / `(**(mgr+0x528))` 同形——0x1847204e0+0x570 = **0x184720a50**（P2 登记的 a50 精确吻合）、
+   +0x528 = 0x184720a08（a08）。
+3. **处理函数注册钉死**：登记 switch（2076037/2076076）`DAT_184720a50 = FUN_180c46020`（Hunt）、
+   `DAT_184720a08 = FUN_180c46980`（Pvp）——**两函数共用同一距离前奏**（同 def+0x70 案表、同
+   2500/10000/40000、同同图 + 旗标链）。批次 6 "全库唯一 float 函数"结论维持，但其调用形态 =
+   包载数据落栈槽 [rsp+0x28]（Ghidra 形参 float param_6），非 XMM 寄存器——"文本不可达"成因纠正。
+4. **def+0x70 ≡ 0（本批新证据）**：解析记录初始化 `local_f0/ec/e8 = {-2, -2, 0}` 复制至
+   def+0x68/0x6c/0x70；全库 `+ 0x70) = ` 存储扫描仅两处 CRT 区函数（`FUN_181084094` 区 /
+   `FUN_18109273f`），**装载路径零写入** ⇒ 运行时恒 case 0 = **2500（50m 平方）**，1/2/5/6
+   分支为本 build 死分支。
+5. **落面**（行为变更批）：`DataDrivenNativeRuntime` 距离门三件——`onKill(Player, Npc)` 生产
+   重载（`onKillAt` 坐标形包内测试缝）、`withinRetailKillDistance` 判定（≤2500）、
+   `onKillRanked` 首查击杀者↔受害者距离（Pvp 同前奏）；QuestEngine 击杀点改传 `Npc`。同图检查
+   与 +0x98/+0xa0/+0xa8 旗标链仅跨世界可达，本服拓扑不可达 ⇒ 不镜像（注释登记）。
+   **多成员分发（真端 = 200m 内全体联盟成员各带自身 distSq 进包、逐成员过门）未镜像**——本服
+   击杀事件只派给击杀者，该分发面与 param_6 独立，登记为观察项不扩批。
+6. **门禁**：DD 门 22/22（新增 `killProgressMirrorsTheRetailDistanceGate` 界内 49m 过 /
+   界外 51m 拒且 vars 不写 / 2500 整等过 / z 轴入平方和；`pvpKillProgressMirrorsTheRetailDistanceGate`
+   同构）；聚焦套件对基线 ADDED 0（`gates/2026-10-03-focused-run-param6-face.log`）。
