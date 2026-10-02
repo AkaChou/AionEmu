@@ -24,6 +24,7 @@ import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.questEngine.definition.QuestDialogContract;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
+import com.aionemu.gameserver.services.QuestService;
 import com.aionemu.gameserver.questEngine.retail.RetailItemNameIndex;
 import com.aionemu.gameserver.questEngine.retail.RetailStringIds;
 import com.aionemu.gameserver.questEngine.tablelane.DataDrivenQuestTable.Kind;
@@ -217,7 +218,10 @@ public final class DataDrivenNativeRuntime {
 		/** case 5：刷怪（`Absolute|Relative 名, 数量, 时间[, x y z heading]`）。 / Spawn npcs (executor case 5). */
 		SPAWN,
 		/** case 7：播报（`STR_*` 键 → 字符串表 id）。 / Say (executor case 7, string-table id). */
-		SAY
+		SAY,
+		/** case 10：任务计时（`秒, 目标步, 旗标`，旗标 0=到期推进 / 1=到期弃任）。
+		 * Quest timer (executor case 10: `seconds, destStep, flag`; flag 0 = advance / 1 = abandon). */
+		TIMER
 	}
 
 	/** 一个已解析的附加动作（未用字段 = -1/0）。 / One resolved extra action (unused fields = -1/0). */
@@ -282,6 +286,7 @@ public final class DataDrivenNativeRuntime {
 	private final NativeTeleportPort teleportPort;
 	private final NativeSpawnPort spawnPort;
 	private final NativeSayPort sayPort;
+	private final NativeTimerPort timerPort;
 
 	private DataDrivenNativeRuntime(Map<Integer, List<StepPlan>> plansByQuestId,
 			Map<Integer, List<StepHit>> killsByNpcId, Map<Integer, List<StepHit>> talksByNpcId,
@@ -294,7 +299,7 @@ public final class DataDrivenNativeRuntime {
 			Map<Integer, AcquirePlan> acquireByQuestId, Set<Integer> ownedQuestIds,
 			Set<Integer> routedQuestIds, Map<Integer, FreezeReason> frozenQuestIds, Set<String> unresolvedNames,
 			NativeInventoryPort inventoryPort, NativeMoviePort moviePort, NativeTeleportPort teleportPort,
-			NativeSpawnPort spawnPort, NativeSayPort sayPort) {
+			NativeSpawnPort spawnPort, NativeSayPort sayPort, NativeTimerPort timerPort) {
 		this.plansByQuestId = plansByQuestId;
 		this.killsByNpcId = killsByNpcId;
 		this.talksByNpcId = talksByNpcId;
@@ -319,6 +324,7 @@ public final class DataDrivenNativeRuntime {
 		this.teleportPort = teleportPort;
 		this.spawnPort = spawnPort;
 		this.sayPort = sayPort;
+		this.timerPort = timerPort;
 	}
 
 	/**
@@ -362,7 +368,7 @@ public final class DataDrivenNativeRuntime {
 		try {
 			return create(table, switchSet, NativeNpcNameResolver.instance(), enterAreaPort,
 				RetailItemNameIndex.loadItemTemplates(), NativeInventoryPort.live(), NativeMoviePort.live(),
-				NativeTeleportPort.live(), NativeSpawnPort.live(), NativeSayPort.live());
+				NativeTeleportPort.live(), NativeSpawnPort.live(), NativeSayPort.live(), NativeTimerPort.live());
 		} catch (IOException e) {
 			throw new IllegalStateException("DATA_DRIVEN_PRODUCTION_WIRING_FAILED", e);
 		}
@@ -458,14 +464,14 @@ public final class DataDrivenNativeRuntime {
 	public static DataDrivenNativeRuntime create(DataDrivenQuestTable table, Set<Integer> routedQuestIds,
 			NativeNpcNameResolver nameResolver, NativeEnterAreaPort enterAreaPort, RetailItemNameIndex itemIndex,
 			NativeInventoryPort inventoryPort, NativeMoviePort moviePort, NativeTeleportPort teleportPort,
-			NativeSpawnPort spawnPort, NativeSayPort sayPort) {
+			NativeSpawnPort spawnPort, NativeSayPort sayPort, NativeTimerPort timerPort) {
 		if (table == null) {
 			throw new IllegalArgumentException("DATA_DRIVEN_TABLE_MISSING");
 		}
 		if (routedQuestIds == null || routedQuestIds.isEmpty()) {
 			return new DataDrivenNativeRuntime(Map.of(), Map.of(), Map.of(), Map.of(), Map.of(), Map.of(), Map.of(),
 				Map.of(), Map.of(), Map.of(), Map.of(), Map.of(), Map.of(), Map.of(), Map.of(), Set.of(), Set.of(),
-				Map.of(), Set.of(), null, null, null, null, null);
+				Map.of(), Set.of(), null, null, null, null, null, null);
 		}
 		Objects.requireNonNull(nameResolver, "DATA_DRIVEN_NAME_RESOLVER_MISSING");
 		Objects.requireNonNull(enterAreaPort, "DATA_DRIVEN_ENTER_AREA_PORT_MISSING");
@@ -549,7 +555,7 @@ public final class DataDrivenNativeRuntime {
 			Map.copyOf(acquireTalks), Map.copyOf(acquireItems), Map.copyOf(acquireWorlds), Map.copyOf(acquireLevels),
 			Map.copyOf(acquireZones), Map.copyOf(actionPlans), Map.copyOf(acquirePlans), Set.copyOf(owned),
 			Set.copyOf(routed), Map.copyOf(frozen), Set.copyOf(unresolved), inventoryPort, moviePort, teleportPort,
-			spawnPort, sayPort);
+			spawnPort, sayPort, timerPort);
 	}
 
 	/** 一行计划的中转结构（构建期）。 / Mutable per-row plan during construction. */
@@ -900,11 +906,48 @@ public final class DataDrivenNativeRuntime {
 						return reason;
 					}
 				}
+				case TIMER -> {
+					// 真端 case 10（`FUN_180c49610` case 10，2026-10-02 取证落面）：载荷 =
+					// `秒, 目标步, 旗标` 三整数（缺项 = 真端装载失败日志 "Add Timer - Timer Time /
+					// Dest Progress is Not Exists"）；旗标 0 = 到期推进到目标步 / 1 = 到期弃任
+					// （到期面 `FUN_180c46d80`：状态 3 ∧ `0 < 当前步 < 目标步` ⇒ `+0xf0` 直写 /
+					// `+0x160` 弃任；300~14100 数值域 = 秒，与 NPCServer 计时中转一致）。
+					// 字段复用先例同 SPAWN：movieId 槽 = 目标步、itemId 槽 = 旗标、count 槽 = 秒。
+					// Retail case 10 (FUN_180c49610 "Add Timer", adjudicated 2026-10-02): payload =
+					// `seconds, destStep, flag` (missing tokens are retail load failures); flag 0 =
+					// advance to destStep on expiry / 1 = abandon (expiry face FUN_180c46d80: status 3
+					// ∧ `0 < cur < dest` → +0xf0 direct write / +0x160 abandon). Field-slot reuse per
+					// the SPAWN precedent: movieId = destStep, itemId = flag, count = seconds.
+					String[] tokens = text.trim().split("[,\\s]+");
+					if (tokens.length < 3 || tokens[0].isEmpty() || tokens[1].isEmpty() || tokens[2].isEmpty()) {
+						return FreezeReason.ACTION_UNFACED;
+					}
+					int seconds = parseRetailInt(tokens[0]);
+					int destStep = parseRetailInt(tokens[1]);
+					int flag = parseRetailInt(tokens[2]);
+					if (seconds <= 0 || destStep <= 0 || destStep > DataDrivenProgress.STEP_MASK
+						|| (flag != 0 && flag != 1)) {
+						return FreezeReason.ACTION_UNFACED;
+					}
+					plans.add(new ActionPlan(ActionType.TIMER, flag, seconds, destStep, false, -1, 0, 0, 0, 0, false,
+						-1));
+				}
+				case ENTER_INSTANCE -> {
+					// 真端 case 9（`FUN_180c49610` case 9）：装载面 = `creationId, worldId,
+					// leaveProgress, [成员名…]`（2026-10-02 取证推翻"creationId→世界映射在客户端表"
+					// 的旧登记——worldId 是表内独立列）；离场检查面 = `FUN_180c46d80` 第一块
+					// （`ctx < 当前步 < leaveProgress` ⇒ 推进/弃任）。**立即执行面在 ScriptDLL64
+					// 无读者**（+0x40/+0x44 全文件仅装载器与离场检查两读者）⇒ 进实例的触发面
+					// EVIDENCE_MISSING，维持 fail-closed 冻结，禁止按"离场轴已坐实"半解冻。
+					// Retail case 9: the loader face (creationId, worldId, leaveProgress, members) and
+					// the leave-check face (FUN_180c46d80 block 1) are adjudicated, but the immediate
+					// entry face has no reader in ScriptDLL64 (+0x40/+0x44 have exactly two readers)
+					// ⇒ the trigger face stays EVIDENCE_MISSING; fail-closed freeze remains.
+					return FreezeReason.ACTION_UNFACED;
+				}
 				default -> {
-					// case 9/10（EnterInstance/Timer）：宿主渲染面未坐实（creationId 客户端表 /
-					// 到期分发面）⇒ fail-closed 冻结。
-					// Cases 9/10 stay frozen: the instance creation table and the timer expiry
-					// dispatch are un-adjudicated.
+					// 其余未落面动作一律 fail-closed 冻结。
+					// Anything else unfaced stays fail-closed frozen.
 					return FreezeReason.ACTION_UNFACED;
 				}
 			}
@@ -1216,6 +1259,8 @@ public final class DataDrivenNativeRuntime {
 				case SPAWN -> spawnPort.spawn(player, action.itemId(), action.count(), action.relative(), action.x(),
 					action.y(), action.z(), action.heading(), lifeSeconds(action));
 				case SAY -> sayPort.say(player, action.stringId());
+				case TIMER -> timerPort.schedule(player, questId, action.count(), action.movieId(),
+					action.itemId() == 1);
 			}
 		}
 	}
@@ -1225,6 +1270,42 @@ public final class DataDrivenNativeRuntime {
 		// ActionPlan 未用字段回收：SPAWN 的 movieId 槽存 time（见 scanFacedActions）。
 		// SPAWN reuses the movieId slot for the time parameter (see scanFacedActions).
 		return action.movieId();
+	}
+
+	/**
+	 * 任务计时到期判定（真端 `FUN_180c46d80` 镜像，2026-10-02 落面）：任务仍进行中（状态 START）
+	 * ∧ 守卫位正常 ∧ `0 < 当前步 < 目标步` ⇒ 旗标 0 = 直写步号到目标步（`+0xf0` SetQuestProgress
+	 * 面，纯进度写、不触发步动作执行器）/ 旗标 1 = 弃任（`+0x160` 面）。范围外/非进行中 = 无操作
+	 * （真端同款：玩家已过目标步或已完成时到期回调零动作）。
+	 * Quest-timer expiry verdict (mirror of retail FUN_180c46d80): while the quest is still in
+	 * progress (START) with clear guard bits and `0 < current step < dest`, flag 0 writes the step
+	 * directly to dest (the +0xf0 SetQuestProgress face — a pure progress write, no executor run)
+	 * and flag 1 abandons (+0x160). Out-of-range or non-active = a no-op, exactly like retail.
+	 */
+	public void onQuestTimerExpired(Player player, int questId, int destStep, boolean abandonOnExpiry) {
+		if (player == null || player.getQuestStateList() == null || !routedQuestIds.contains(questId)) {
+			return;
+		}
+		QuestState state = player.getQuestStateList().getQuestState(questId);
+		if (state == null || state.getStatus() != QuestStatus.START) {
+			return;
+		}
+		int vars = state.getQuestVars().getQuestVars();
+		if (!DataDrivenProgress.guardClear(vars)) {
+			return;
+		}
+		int currentStep = DataDrivenProgress.step(vars);
+		if (currentStep <= 0 || currentStep >= destStep) {
+			return;
+		}
+		if (abandonOnExpiry) {
+			QuestService.abandonQuest(player, questId);
+			return;
+		}
+		int newVars = DataDrivenProgress.jumpTo(vars, destStep);
+		state.getQuestVars().setVar(newVars);
+		state.setPersistentState(PersistentState.UPDATE_REQUIRED);
+		PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(questId, state.getStatus(), newVars));
 	}
 
 	/**

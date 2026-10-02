@@ -84,6 +84,7 @@ class DataDrivenNativeRuntimeGateTest {
 	private static RecordingTeleports teleports;
 	private static RecordingSpawns spawns;
 	private static RecordingSays says;
+	private static RecordingTimers timers;
 	private static DataDrivenNativeRuntime runtime;
 
 	@BeforeAll
@@ -110,21 +111,25 @@ class DataDrivenNativeRuntimeGateTest {
 		teleports = new RecordingTeleports();
 		spawns = new RecordingSpawns();
 		says = new RecordingSays();
+		timers = new RecordingTimers();
 		runtime = DataDrivenNativeRuntime.create(table, switchSet, NativeNpcNameResolver.instance(),
-			enterAreaPort, itemIndex, inventory, movies, teleports, spawns, says);
+			enterAreaPort, itemIndex, inventory, movies, teleports, spawns, says, timers);
 	}
 
 	/**
-	 * ① 生产单例 = 切换批语义（步 f 起）：切换集 1467 全量接管（routed 1444 / frozen 23），
-	 * 兴趣面非空；非路由行的事件仍恒 false（冻结行不接事件面）。
+	 * ① 生产单例 = 切换批语义（步 f 起）：切换集 1467 全量接管（routed 1453 / frozen 14——
+	 * 2026-10-02 偏差修复第三批把 col10 Timer 落面：9 行解冻，残留 = ZONE_ABSENT 9 +
+	 * ACTION_UNFACED 5〔col9 EnterInstance 3 + c8d0 col6 2〕）；非路由行的事件仍恒 false
+	 * （冻结行不接事件面）。
 	 * The production singleton owns the switch set since step f; non-routed rows still answer false.
 	 */
 	@Test
 	void productionRuntimeRoutesTheSwitchSet() {
 		DataDrivenNativeRuntime production = DataDrivenNativeRuntime.instance();
 		assertEquals(1467, production.ownedQuestIds().size(), "生产接管 = 切换集全量");
-		assertEquals(1444, production.routedQuestIds().size(), "可路由 1444（镜像同值）");
-		assertEquals(23, production.frozenQuestIds().size(), "显式冻结 23（§10.3 登记，非静默丢弃）");
+		assertEquals(1453, production.routedQuestIds().size(), "可路由 1453（col10 Timer 落面后）");
+		assertEquals(14, production.frozenQuestIds().size(),
+			"显式冻结 14（ZONE_ABSENT 9 + col9 3 + col6 2；镜像同值）");
 		assertFalse(production.killInterests().isEmpty(), "击杀兴趣面已注册");
 		assertFalse(production.zoneInterests().isEmpty(), "进区兴趣面已注册");
 		assertFalse(production.acquireTalkInterests().isEmpty(), "接取对话兴趣面已注册");
@@ -457,27 +462,28 @@ class DataDrivenNativeRuntimeGateTest {
 		assertEquals(Map.of(Kind.HUNT, 827, Kind.COLLECT_ITEM, 348, Kind.PVP, 207, Kind.TALK, 403,
 			Kind.ENTER_AREA, 153, Kind.ITEM_PLAY, 42, Kind.ENTER_WORLD, 34, Kind.TALK_FOBJ, 19), switchSteps,
 			"切换集逐类步数 = P7 步 1 契约");
-		// 步 e2 动作面收全 + con_quest 非闸门 + 挑战哨兵落面后的已路由步数（离线镜像逐值一致，见
-		// `.agents/summary/quest-engine-native/p7/tools/dd-planrow-e2-mirror.py`）。
-		assertEquals(Map.of(Kind.HUNT, 805, Kind.COLLECT_ITEM, 341, Kind.PVP, 207, Kind.TALK, 352,
-			Kind.ENTER_AREA, 125, Kind.ITEM_PLAY, 36, Kind.ENTER_WORLD, 31, Kind.TALK_FOBJ, 12), routedSteps,
-			"已路由行的逐类步数冻结（步 e2 后）");
-		assertEquals(1444, runtime.routedQuestIds().size(), "可路由行冻结（步 e2：1444 = 1467 − 23）");
-		assertEquals(23, runtime.frozenQuestIds().size(), "冻结行冻结（两桶，见离线镜像）");
+		// 步 e2 动作面收全后的已路由步数；2026-10-02 偏差修复第三批 col10 Timer 落面后随 9 行解冻
+		// 重冻（离线镜像逐值一致，见 `.agents/summary/quest-engine-native/p7/tools/dd-planrow-e2-mirror.py`）。
+		assertEquals(Map.of(Kind.HUNT, 816, Kind.COLLECT_ITEM, 345, Kind.PVP, 207, Kind.TALK, 379,
+			Kind.ENTER_AREA, 133, Kind.ITEM_PLAY, 39, Kind.ENTER_WORLD, 31, Kind.TALK_FOBJ, 13), routedSteps,
+			"已路由行的逐类步数冻结（col10 Timer 落面后）");
+		assertEquals(1453, runtime.routedQuestIds().size(), "可路由行冻结（Timer 落面：1453 = 1467 − 14）");
+		assertEquals(14, runtime.frozenQuestIds().size(), "冻结行冻结（两桶，见离线镜像）");
 		Map<FreezeReason, Integer> byReason = new TreeMap<>();
 		for (FreezeReason reason : runtime.frozenQuestIds().values()) {
 			byReason.merge(reason, 1, Integer::sum);
 		}
-		assertEquals(Map.of(FreezeReason.ZONE_ABSENT, 9, FreezeReason.ACTION_UNFACED, 14), byReason,
-			"冻结原因分桶冻结（步 e2：ZONE_ABSENT 9 §10.3-#23 + ACTION_UNFACED 14 = col9/col10/"
-				+ "c8d0 步 col6 未落面）");
+		assertEquals(Map.of(FreezeReason.ZONE_ABSENT, 9, FreezeReason.ACTION_UNFACED, 5), byReason,
+			"冻结原因分桶冻结（ZONE_ABSENT 9 §10.3-#23 + ACTION_UNFACED 5 = col9 EnterInstance 3"
+				+ "〔立即执行面 EVIDENCE_MISSING〕+ c8d0 步 col6 2；col10 Timer 已落面解冻 9 行）");
 		// 步 e2 后唯一未解析面 = 切换集行引用的 LF6 真端缺席进区别名（原文大小写，§10.3-#23）；
 		// 挑战哨兵 `_challengetask_` 已按 P0c-58 四源裁定落面（接取 NPC = reward_npc_name），
 		// MESSAGE 字符串键经 retail-quest-string-ids.tsv 全部解析。
-		// 接取直方图（去重任务数，离线镜像权威值）：talk 1126（含哨兵 6）/ itemplay 13 / enterworld 12 /
-		// leveluplogin 15 / enterarea 20（步 f kind-6 落面）/ none 258。
-		assertEquals(1126, runtime.acquireTalkInterests().values().stream().flatMap(List::stream).distinct().count(),
-			"接取 talk 去重任务数");
+		// 接取直方图（去重任务数，离线镜像权威值）：talk 1132（含哨兵 6；2026-10-02 col10 Timer
+		// 落面后 +6）/ itemplay 13 / enterworld 12 / leveluplogin 15 / enterarea 20（步 f kind-6
+		// 落面）/ none 258。
+		assertEquals(1132, runtime.acquireTalkInterests().values().stream().flatMap(List::stream).distinct().count(),
+			"接取 talk 去重任务数（Timer 落面后）");
 		assertEquals(13, runtime.acquireItemInterests().values().stream().flatMap(List::stream).distinct().count(),
 			"接取 itemplay 去重任务数");
 		assertEquals(12, runtime.acquireWorldInterests().values().stream().flatMap(List::stream).distinct().count(),
@@ -935,6 +941,78 @@ class DataDrivenNativeRuntimeGateTest {
 		@Override
 		public void say(Player player, int stringId) {
 			calls.add("say:" + stringId);
+		}
+	}
+
+	/** 记录式假计时端口。 / A recording fake timer port. */
+	/**
+	 * ①c 任务计时面（col10 落面，2026-10-02）：到期判定镜像真端 `FUN_180c46d80`——进行中 ∧
+	 * `0 < 当前步 < 目标步` 才动作（旗标 0 直写步号 / 旗标 1 弃任），范围外与非进行中零操作；
+	 * col9（EnterInstance）维持冻结（立即执行面 EVIDENCE_MISSING）。
+	 * ①c Quest-timer face: the expiry verdict mirrors FUN_180c46d80 — in-progress ∧
+	 * `0 < cur < dest` only (flag 0 writes the step, flag 1 abandons); out-of-range and
+	 * non-active states are no-ops; col9 stays frozen (entry face EVIDENCE_MISSING).
+	 */
+	@Test
+	void questTimerExpiryMirrorsTheRetailRangeCheck() {
+		// 13945 = 路由 Timer 行 `2700, 2, 0`（目标步 2，推进旗标）。
+		// 13945 = a routed timer row `2700, 2, 0` (dest step 2, advance flag).
+		assertTrue(runtime.routedQuestIds().contains(13945), "13945 应已解冻（col10 Timer 落面）");
+		assertFalse(runtime.routedQuestIds().contains(20032), "20032 应维持冻结（col9 立即面 EVIDENCE_MISSING）");
+		// 范围内：cur=1 → 直写到目标步 2。
+		Player inRange = new ObjenesisStd().newInstance(Player.class);
+		inRange.setQuestStateList(new QuestStateList());
+		inRange.getQuestStateList().addQuest(13945, new QuestState(13945, QuestStatus.START, 1, 0, null, 0, null));
+		runtime.onQuestTimerExpired(inRange, 13945, 2, false);
+		assertEquals(2, inRange.getQuestStateList().getQuestState(13945).getQuestVars().getQuestVars(),
+			"到期推进应直写步号到目标步（+0xf0 面）");
+		// 已过目标步 / 尚在第 0 步：零操作。
+		Player pastDest = new ObjenesisStd().newInstance(Player.class);
+		pastDest.setQuestStateList(new QuestStateList());
+		pastDest.getQuestStateList().addQuest(13945, new QuestState(13945, QuestStatus.START, 3, 0, null, 0, null));
+		runtime.onQuestTimerExpired(pastDest, 13945, 2, false);
+		assertEquals(3, pastDest.getQuestStateList().getQuestState(13945).getQuestVars().getQuestVars(),
+			"cur >= 目标步 ⇒ 零操作");
+		Player atZero = new ObjenesisStd().newInstance(Player.class);
+		atZero.setQuestStateList(new QuestStateList());
+		atZero.getQuestStateList().addQuest(13945, new QuestState(13945, QuestStatus.START, 0, 0, null, 0, null));
+		runtime.onQuestTimerExpired(atZero, 13945, 2, false);
+		assertEquals(0, atZero.getQuestStateList().getQuestState(13945).getQuestVars().getQuestVars(),
+			"cur = 0 ⇒ 零操作");
+		// 非进行中（REWARD）与未路由任务：零操作。
+		Player rewarded = new ObjenesisStd().newInstance(Player.class);
+		rewarded.setQuestStateList(new QuestStateList());
+		rewarded.getQuestStateList().addQuest(13945, new QuestState(13945, QuestStatus.REWARD, 1, 0, null, 0, null));
+		runtime.onQuestTimerExpired(rewarded, 13945, 2, false);
+		assertEquals(QuestStatus.REWARD, rewarded.getQuestStateList().getQuestState(13945).getStatus(),
+			"非进行中 ⇒ 零操作");
+		Player unrouted = new ObjenesisStd().newInstance(Player.class);
+		unrouted.setQuestStateList(new QuestStateList());
+		unrouted.getQuestStateList().addQuest(20032, new QuestState(20032, QuestStatus.START, 1, 0, null, 0, null));
+		runtime.onQuestTimerExpired(unrouted, 20032, 7, false);
+		assertEquals(1, unrouted.getQuestStateList().getQuestState(20032).getQuestVars().getQuestVars(),
+			"未路由（col9 冻结）行 ⇒ 零操作");
+	}
+
+	/** 记录式假计时端口。 / A recording fake timer port. */
+	private static final class RecordingTimers implements NativeTimerPort {
+
+		/** 武装记录（{@code questId:秒:目标步:旗标}）。 / Armed timers ({@code questId:sec:dest:flag}). */
+		private final List<String> calls = new ArrayList<>();
+
+		/** 清零调用记录。 / Clears the call log. */
+		void clear() {
+			calls.clear();
+		}
+
+		/** 武装记录。 / The arm log. */
+		List<String> calls() {
+			return List.copyOf(calls);
+		}
+
+		@Override
+		public void schedule(Player player, int questId, int seconds, int destStep, boolean abandonOnExpiry) {
+			calls.add(questId + ":" + seconds + ":" + destStep + ":" + (abandonOnExpiry ? 1 : 0));
 		}
 	}
 

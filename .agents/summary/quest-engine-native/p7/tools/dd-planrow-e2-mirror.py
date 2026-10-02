@@ -232,7 +232,20 @@ def scan_faced_actions(cat, cols, items, strings, by_desc, by_name, aliases, gro
             if cat in ('enterarea', 'talkfobj'):
                 return 'ACTION_UNFACED'  # def 侧槽未定名，活面步冻结
             # 其余 kind：真端执行器无 case 6/8 = 装载即死列 ⇒ 忽略
-        else:  # INSTANCE / TIMER
+        elif action == 'INSTANCE':
+            # 2026-10-02 偏差修复第三批取证：装载面已坐实（creationId, worldId, leaveProgress,
+            # 成员名），但立即执行面在 ScriptDLL64 无读者（+0x40/+0x44 仅两读者）⇒ 维持冻结。
+            return 'ACTION_UNFACED'
+        elif action == 'TIMER':
+            # 2026-10-02 落面（真端 FUN_180c49610 case 10 + 到期面 FUN_180c46d80）：
+            # 载荷 = `秒, 目标步, 旗标`，旗标 0=推进 / 1=弃任。
+            tokens = re.split(r'[,;\s]+', (text or '').strip())
+            if len(tokens) < 3 or not tokens[0] or not tokens[1] or not tokens[2]:
+                return 'ACTION_UNFACED'
+            seconds, dest, flag = (parse_retail_int(t) for t in tokens[:3])
+            if seconds <= 0 or dest <= 0 or dest > 63 or flag not in (0, 1):
+                return 'ACTION_UNFACED'
+        else:
             return 'ACTION_UNFACED'
     return None
 

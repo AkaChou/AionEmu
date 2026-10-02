@@ -118,6 +118,16 @@ public final class DataDrivenProgress {
 	}
 
 	/**
+	 * 跳步写（Timer 到期推进专用）：`vars = (vars & ~0x3F) | 目标步`——真端到期面 `FUN_180c46d80`
+	 * 经 `+0xf0`（SetQuestProgress）直写步号，不走 +1 步进（组槽保持原样）。
+	 * Timer-expiry jump write: the retail expiry face (FUN_180c46d80 via +0xf0 SetQuestProgress)
+	 * writes the step number directly instead of the +1 advance; group slots stay untouched.
+	 */
+	public static int jumpTo(int vars, int destStep) {
+		return (vars & ~STEP_MASK) | destStep;
+	}
+
+	/**
 	 * 处理一次「命中当前步某组槽」的事件。
 	 * Handles one event hitting one declared group of the current step.
 	 *
