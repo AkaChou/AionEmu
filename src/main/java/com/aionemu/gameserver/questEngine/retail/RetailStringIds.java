@@ -29,9 +29,12 @@ public final class RetailStringIds {
 	private static volatile RetailStringIds instance;
 
 	private final Map<String, Integer> idsByKey;
+	/** 字符串 id → 真端正文（say 气泡通道用）。 / String id to retail body (say-bubble channel). */
+	private final Map<Integer, String> bodiesById;
 
-	private RetailStringIds(Map<String, Integer> idsByKey) {
+	private RetailStringIds(Map<String, Integer> idsByKey, Map<Integer, String> bodiesById) {
 		this.idsByKey = Map.copyOf(idsByKey);
+		this.bodiesById = Map.copyOf(bodiesById);
 	}
 
 	public static RetailStringIds instance() {
@@ -56,6 +59,7 @@ public final class RetailStringIds {
 
 	static RetailStringIds load(InputStream input) throws IOException {
 		Map<String, Integer> ids = new HashMap<>();
+		Map<Integer, String> bodies = new HashMap<>();
 		try (BufferedReader reader = new BufferedReader(new InputStreamReader(input, StandardCharsets.UTF_8))) {
 			String line;
 			while ((line = reader.readLine()) != null) {
@@ -68,9 +72,15 @@ public final class RetailStringIds {
 					throw new IOException("RETAIL_STRING_ID_TABLE_MALFORMED: " + line);
 				}
 				ids.put(columns[0], Integer.valueOf(columns[1]));
+				// 第 3 列 = 真端 <body> 原文（实体已解码；say 气泡通道正文，缺列 = 旧格式兼容空正文）。
+				// Column 3 = the retail <body> text (entities decoded; say-bubble body; absent column
+				// = legacy-format compatibility with an empty body).
+				if (columns.length >= 3 && !columns[2].isBlank()) {
+					bodies.put(Integer.valueOf(columns[1]), columns[2]);
+				}
 			}
 		}
-		return new RetailStringIds(ids);
+		return new RetailStringIds(ids, bodies);
 	}
 
 	/** 键 → 字符串 id（查不到返回 null = 真端装载失败语义）。 / Key to string id (null = retail load failure). */
@@ -79,5 +89,20 @@ public final class RetailStringIds {
 			return null;
 		}
 		return idsByKey.get(key.trim());
+	}
+
+	/** 字符串 id → 真端正文（缺正文返回 null = 旧格式行，调用方走登记偏差兜底）。 / String id to retail body (null = legacy row; caller falls back). */
+	public String bodyOf(int stringId) {
+		return bodiesById.get(stringId);
+	}
+
+	/** 已登记正文覆盖率断言入口（门禁用）。 / Bodies view for gate assertions. */
+	public Map<Integer, String> bodies() {
+		return bodiesById;
+	}
+
+	/** 全部已登记键（门禁冻结键集用）。 / All registered keys (for gate key-set freezing). */
+	public java.util.Set<String> keys() {
+		return idsByKey.keySet();
 	}
 }
