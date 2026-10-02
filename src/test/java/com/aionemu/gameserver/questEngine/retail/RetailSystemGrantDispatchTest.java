@@ -14,7 +14,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -313,5 +315,30 @@ class RetailSystemGrantDispatchTest {
 		assertFalse(RetailSystemGrantDispatcher.isSystemGranted(catalog, 999999));
 		assertFalse(RetailSystemGrantDispatcher.isSystemGranted(catalog, 0));
 		assertFalse(RetailSystemGrantDispatcher.isSystemGranted(null, 35007));
+	}
+
+	/**
+	 * §10.3-#4 裁定钉（2026-10-02）：80281/80283 = 真端活动任务子系的内部测试任务
+	 * （category1=event ∧ minlevel 999 停用形 ∧ 无交付声明 ∧ 接取 NPC 831131 未刷）——裁定为
+	 * 按活动任务子系排除、fail-closed 保持。本断言防止未来数据"修复"（补交付名/改等级）让
+	 * 真端死行复活；子系立项须先取得 event_quest.xml（§10.3-#3 同口）。
+	 * §10.3-#4 pin: 80281/80283 are retail event-subsystem test quests (disabled form, no delivery
+	 * declaration, acquire NPC unspawned) — excluded by adjudication; this blocks any data "fix"
+	 * that would revive them before the event subsystem is properly sourced.
+	 */
+	@Test
+	void eventSubsystemTestRowsStayFailClosed() {
+		var questXml = com.aionemu.gameserver.questEngine.tablelane.NativeQuestXmlTable.instance();
+		var hunt = com.aionemu.gameserver.questEngine.tablelane.SimpleHuntHandler.instance();
+		for (int questId : new int[] {80281, 80283}) {
+			var row = questXml.find(questId)
+				.orElseThrow(() -> new AssertionError("quest.xml row " + questId + " disappeared"));
+			assertEquals("event", row.text("category1"),
+				"quest " + questId + " 必须仍是活动任务子系行");
+			assertEquals(Integer.valueOf(999), row.integer("minlevel_permitted"),
+				"quest " + questId + " 必须保持真端停用形（minlevel 999）");
+			assertNull(hunt.rewardNpc(questId),
+				"quest " + questId + " 不得获得交付面（真端本征无交付声明，§10.3-#4 排除）");
+		}
 	}
 }
