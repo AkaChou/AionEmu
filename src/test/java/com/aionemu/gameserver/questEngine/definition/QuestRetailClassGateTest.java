@@ -195,12 +195,18 @@ class QuestRetailClassGateTest {
 			int qid = entry.getKey();
 			ClassMeta meta = production.get(qid);
 			if (meta == null) {
-				// P8 重锚：native 行（owner RETAIL_TABLE，七族 ∨ DD 1467 行）退出 typed 目录，
-				// 其职业轴 = 显示元数据（§10.3-#18 裁定），无目录载体不算缺失；
+				// P8 重锚（§执行位取证 p8/class-axis-execution-position.zh-CN.md）：native 行
+				// （owner RETAIL_TABLE，七族 ∨ DD 1467 行）退出 typed 目录，无目录载体不算缺失——
+				// **不是**因为职业轴是显示元数据（该旧表述被反编译取证推翻：真端 CanAcquireQuest
+				// 第一道闸就是职业位测试，先于等级）；native 行的职业轴由
+				// {@code NativeQuestStartPort.eligibilityVerdict}（CLASS_BLOCKED）与
+				// {@code NativeFactionRotation.eligible} 直读真端 quest.xml 执行，
+				// 与本合同快照同源（恒等断言见 nativeClassAxisIsEnforcedThroughTheSharedPortWordlist）。
 				// 非 native 行缺目录载体仍是真回归。
-				// P8 re-anchor: native rows (owner RETAIL_TABLE) left the typed catalog — their class
-				// axis is display metadata (§10.3-#18), so a missing carrier is not a defect; for
-				// non-native rows it still is.
+				// P8 re-anchor: native rows left the typed catalog so a missing carrier is not a
+				// defect; the retail class axis is a server-side acquire gate enforced for native
+				// rows by the start port and faction rotation reading quest.xml directly. For
+				// non-native rows a missing carrier still is a regression.
 				if (!retailOwnedIds.contains(qid)) {
 					problems.add("contract quest " + qid + " missing from production catalog");
 				}
@@ -232,7 +238,7 @@ class QuestRetailClassGateTest {
 		for (Map.Entry<Integer, RetailClassRow> entry : contract.entrySet()) {
 			int qid = entry.getKey();
 			if (production.get(qid) == null && retailOwnedIds.contains(qid)) {
-				continue; // P8：native 行无 typed 目录载体（同上，职业轴 = 显示元数据）。
+				continue; // P8：native 行无 typed 目录载体（见第一个测试的执行位取证注）。 / Native rows: no typed carrier (see the execution-position note).
 			}
 			if (productionAliveClasses(production.get(qid)).equals(Set.of("WILDCARD"))
 				&& !EVIDENCE_BLOCKED.contains(qid) && !INTENTIONAL_WEAPON_ADAPTATION.contains(qid)) {
@@ -279,12 +285,52 @@ class QuestRetailClassGateTest {
 			assertTrue(registeredClassDivergences.contains(questId),
 				"quest " + questId + " must be registered in the classes divergence ledger");
 			if (production.get(questId) == null) {
-				// P8：native 行无 typed 目录载体——展开口径由真端 quest.xml 元数据承担（显示面）。
+				// P8：native 行无 typed 目录载体——展开口径由真端 quest.xml 元数据承担
+				// （执行位 = NativeQuestStartPort.eligibilityVerdict，见执行位取证注）。
 				continue;
 			}
 			assertEquals(expected, productionAliveClasses(production.get(questId)),
 				"quest " + questId + " must expose exactly its retail-expanded class set");
 		}
+	}
+
+	/**
+	 * 执行位恒等（P8 取证批，`p8/class-axis-execution-position.zh-CN.md`）：真端职业轴是服务端接取
+	 * 闸门（CanAcquireQuest 第一道位测试，先于等级），native 行的执行位 = start port / 阵营轮换
+	 * 直读真端 quest.xml。本断言把三点钉死：**评审快照 ↔ 真端行原文 ↔ port 词表**——对合同快照
+	 * 每一行，从 {@code NativeQuestXmlTable} 直读原文交给 port 的同一映射函数，结果必须等于门禁
+	 * 展开口径（快照陈旧 / quest.xml 重入仓漂移 / 词表映射改动，任何一端漂移即红）。
+	 * <p>
+	 * Execution-position identity: the retail class axis is a server-side acquire gate enforced for
+	 * native rows by the start port and faction rotation reading quest.xml directly. For every
+	 * contract row the same port mapping function on the raw retail row must equal the gate's
+	 * expanded expectation — drift on any side turns this red.
+	 */
+	@Test
+	void nativeClassAxisIsEnforcedThroughTheSharedPortWordlist() {
+		int checked = 0;
+		for (Map.Entry<Integer, RetailClassRow> entry : contract.entrySet()) {
+			int questId = entry.getKey();
+			com.aionemu.gameserver.questEngine.tablelane.NativeQuestXmlTable.QuestRow row =
+				com.aionemu.gameserver.questEngine.tablelane.NativeQuestXmlTable.instance()
+					.find(questId)
+					.orElseThrow(() -> new AssertionError(
+						"contract quest " + questId + " has no retail quest.xml row"));
+			int minLevel = row.integer("minlevel_permitted") == null
+				? 0 : row.integer("minlevel_permitted");
+			Set<String> portWordlist = com.aionemu.gameserver.questEngine.retail.RetailQuestMetadataCompiler
+				.permittedClassNames(row.text("class_permitted"), minLevel);
+			// port 口径：≥16 token = 全集通配（空集）；合同快照人口实测 1..13 token，该边界为防御位。
+			// Port semantics: >=16 tokens mean the unrestricted full set (empty wordlist).
+			Set<String> expected = entry.getValue().tokens().size() >= 16
+				? Set.of()
+				: retailExpandedClasses(entry.getValue());
+			assertEquals(expected, portWordlist,
+				() -> "quest " + questId + ": reviewed class contract, retail quest.xml row and the"
+					+ " port wordlist must stay one fact");
+			checked++;
+		}
+		assertTrue(checked > 100, "class contract population must stay meaningful: " + checked);
 	}
 
 	/** 真端全集行展开后的 11 个进阶职业。 / Every advanced class, i.e. the expanded full retail set. */

@@ -122,8 +122,11 @@ mvn -o test '-Dtest=*Quest*Test,*Retail*Test'
 
 详见 `p8/datadriven-itemplay-grant-gate.zh-CN.md`。`DataDrivenItemPlayGrantGateTest`：路由集 ∩ DD ItemPlay 步 = 42 步 / 37 任务全人口三源对拍（模板索引 / 行内 GIVE ∪ 任务掉落 / 工作物品采集面），18738/28738 = 真端宝箱 NPC 外部登记（登记必须仍被使用）；本门 1/1、DD 门全组 45/45。
 
-## 8. P8 剩余
+## 8. 第四批：原生行职业轴执行位取证（2026-10-02，已闭环）
 
-- **原生行职业轴执行位**（`QuestRetailClassGateTest` 豁免面：真端 class 限制是否为服务端闸门）；
+详见 `p8/class-axis-execution-position.zh-CN.md`。真端 class 限制 = **服务端接取闸门**（CanAcquireQuest 第一道位测试先于等级；装载 = token→32 位掩码同器铁证）；生产原生接取面执行位完整（start port CLASS_BLOCKED / 阵营轮换 / zoneVerdict / DD 入口）；第一刀豁免注释「显示元数据」表述推翻改写，新增快照↔原文↔port 词表恒等断言；本门 4/4 + port 9/9。
+
+## 9. P8 剩余
+
 - memory-bank 同步；客户端验收 `PENDING_CLIENT`（Say 气泡 / Spawn 回收 / DD 接取页词汇 /
-  进区接取 `*_QuestArea_*` 走查）。
+  进区接取 `*_QuestArea_*` 走查）；§10.3-#26 进区触发器（独立批取证接线）。
