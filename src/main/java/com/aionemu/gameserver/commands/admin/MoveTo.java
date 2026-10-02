@@ -48,7 +48,12 @@ public class MoveTo extends AdminCommand {
 			return;
 		}
 
-		if (WorldMapType.getWorld(worldId) == null) {
+		// WorldMapType 白名单外的世界（如 ldf5a 单人副本）只允许「已身处该世界」时传送：
+		// TeleportService2 仅在玩家已在目标世界时能解析到自己的活动实例，跨图直达实例歧义，仍拒绝。
+		// Worlds outside the WorldMapType whitelist (e.g. the ldf5a solo instance) may only be
+		// teleported within when the admin is already inside: TeleportService2 resolves the admin's
+		// own live instance only for the current world; cross-map jumps stay rejected.
+		if (WorldMapType.getWorld(worldId) == null && admin.getWorldId() != worldId) {
 			PacketSendUtility.sendMessage(admin, "Illegal WorldId %d " + worldId);
 		}
 		else {
