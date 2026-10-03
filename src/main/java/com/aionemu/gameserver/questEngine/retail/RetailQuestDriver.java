@@ -31,7 +31,7 @@ import com.aionemu.gameserver.questEngine.tablelane.SimpleUseItemHandler;
  * 旧 IR 编译车道已随切换原子退场；本类只剩三个职责：
  * <ol>
  *   <li><b>真端 quest.xml 元数据底座</b>（{@link #retailMetadataOf}，native 完成/领奖口的唯一事实来源）；</li>
- *   <li><b>生产覆盖校验</b>（{@link #overlayProduction}：保留清单 6224 行逐 id 核对 = 目录条目 ∨
+ *   <li><b>生产覆盖校验</b>（{@link #overlayProduction}：保留清单 6217 行逐 id 核对 = 目录条目 ∨
  *       原生 owner ∨ DD 运行时 owned〔routed 或显式冻结〕，缺一即拒启）；</li>
  *   <li><b>直通 overlay</b>（目录原样返回；保留清单内任务一律维持 XML）。</li>
  * </ol>
@@ -52,7 +52,7 @@ public final class RetailQuestDriver {
 	private static final String RANDOM_REWARDS = "/aion/data/static_data/quest/legacy/quest_random_rewards.xml";
 	private static final String NPC_DIR = "/aion/data/static_data/npcs/";
 	private static final String SWITCH_PROPERTY = "aion.quest.retailDriver";
-	private static final int PRODUCTION_QUEST_COUNT = 6224;
+	private static final int PRODUCTION_QUEST_COUNT = 6217;
 
 	/** 与生产资源一致的 npc 模板文件清单。 / NPC template files, matching production resources. */
 	private static final List<String> NPC_FILES = List.of("npc_template_200000_216188.xml",

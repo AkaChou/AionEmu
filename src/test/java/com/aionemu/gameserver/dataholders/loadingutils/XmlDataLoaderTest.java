@@ -250,7 +250,10 @@ class XmlDataLoaderTest {
 	void questDataSynthesizesFromProductionCatalog() {
 		com.aionemu.gameserver.dataholders.QuestsData quests = com.aionemu.gameserver.dataholders.QuestsData.fromCatalog(
 			com.aionemu.gameserver.questEngine.definition.ProductionQuestDefinitions.catalog());
-		assertEquals(6224, quests.size());
+		// 生产目录自 P7 步 f 起为直通 overlay：catalog() = XML 目录条目（保留清单 6217 − 原生覆盖 5484）。
+		// The production catalog is a pass-through overlay since P7 step f: catalog() = XML directory
+		// entries (retention manifest 6217 − native-covered 5484).
+		assertEquals(733, quests.size());
 		assertNotNull(quests.getQuestById(1000));
 		assertNotNull(quests.getQuestById(1001));
 		assertNotNull(quests.getQuestById(1002));

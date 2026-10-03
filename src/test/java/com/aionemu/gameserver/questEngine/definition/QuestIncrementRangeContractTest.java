@@ -59,7 +59,9 @@ class QuestIncrementRangeContractTest {
 			}
 		}
 		assertEquals(List.of(), violations, "精确匹配的计数增量必须自带上限守卫");
-		assertTrue(checked > 100, "生产审计必须覆盖全服被精确匹配消费的计数增量");
+		// 覆盖下限随生产语料重锚：2026-10-03 退役 7 件自造任务后实测 73（退役前 >100）。
+		// Coverage floor rebased with the corpus: 73 after the 2026-10-03 retirement of 7 self-made quests.
+		assertTrue(checked >= 73, "生产审计必须覆盖全服被精确匹配消费的计数增量（实测 " + checked + "）");
 	}
 
 	/**

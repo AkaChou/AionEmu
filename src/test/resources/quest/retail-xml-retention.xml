@@ -36657,34 +36657,6 @@
     <evidence>retired-xml-in-git-history qe-107-dd-handin-set-decisions.tsv basis=CLIENT_CONFIRMED_NPC_SET shared/onlyXml/onlyRetail=72/6/11</evidence>
   </quest>
   <quest>
-    <quest_id>50110</quest_id>
-    <owner>XML_RETENTION</owner>
-    <family>-</family>
-    <reason>NO_TABLE</reason>
-    <evidence>retail-none</evidence>
-  </quest>
-  <quest>
-    <quest_id>50111</quest_id>
-    <owner>XML_RETENTION</owner>
-    <family>-</family>
-    <reason>NO_TABLE</reason>
-    <evidence>retail-none</evidence>
-  </quest>
-  <quest>
-    <quest_id>50123</quest_id>
-    <owner>XML_RETENTION</owner>
-    <family>-</family>
-    <reason>NO_TABLE</reason>
-    <evidence>retail-none</evidence>
-  </quest>
-  <quest>
-    <quest_id>50124</quest_id>
-    <owner>XML_RETENTION</owner>
-    <family>-</family>
-    <reason>NO_TABLE</reason>
-    <evidence>retail-none</evidence>
-  </quest>
-  <quest>
     <quest_id>50125</quest_id>
     <owner>XML_RETENTION</owner>
     <family>DataDriven</family>
@@ -37061,20 +37033,6 @@
     <family>DataDriven</family>
     <reason>OK</reason>
     <evidence>retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CANONICAL</evidence>
-  </quest>
-  <quest>
-    <quest_id>51110</quest_id>
-    <owner>XML_RETENTION</owner>
-    <family>-</family>
-    <reason>NO_TABLE</reason>
-    <evidence>retail-none</evidence>
-  </quest>
-  <quest>
-    <quest_id>51111</quest_id>
-    <owner>XML_RETENTION</owner>
-    <family>-</family>
-    <reason>NO_TABLE</reason>
-    <evidence>retail-none</evidence>
   </quest>
   <quest>
     <quest_id>51125</quest_id>
@@ -43564,12 +43522,5 @@
     <family>DataDriven</family>
     <reason>OK</reason>
     <evidence>retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CANONICAL</evidence>
-  </quest>
-  <quest>
-    <quest_id>89999</quest_id>
-    <owner>XML_RETENTION</owner>
-    <family>-</family>
-    <reason>NO_TABLE</reason>
-    <evidence>retail-none</evidence>
   </quest>
 </retail_xml_retention>

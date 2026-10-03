@@ -84,7 +84,7 @@ class RetailOwnershipGateTest {
 		// The retention list is the production universe: XML catalog plus retail-injected quests.
 		assertTrue(rows.keySet().containsAll(catalogIds.keySet()),
 			"retention list must classify every XML-catalog quest exactly once");
-		assertEquals(6224, rows.size(), "retention list must keep the frozen production universe");
+		assertEquals(6217, rows.size(), "retention list must keep the frozen production universe");
 		List<String> orphanXml = catalogIds.keySet().stream()
 			.filter(id -> !rows.containsKey(id))
 			.map(String::valueOf)
@@ -175,7 +175,7 @@ class RetailOwnershipGateTest {
 		Set<Integer> overlap = new HashSet<>(ids.keySet());
 		overlap.retainAll(retired);
 		assertTrue(overlap.isEmpty(), "catalog must not keep retired quests: " + overlap);
-		assertEquals(6224, ids.size() + retired.size(),
+		assertEquals(6217, ids.size() + retired.size(),
 			"XML catalog plus retired fixtures must cover the production quest universe");
 		return ids;
 	}

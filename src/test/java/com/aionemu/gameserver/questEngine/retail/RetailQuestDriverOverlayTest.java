@@ -21,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * 生产接线门禁（提示词 §4.C）：真端优先 overlay 与完整目录护栏（P7 步 f 后口径）。
  * <ul>
  * <li>局部 overlay 关闭开关时返回同一 XML 目录实例；生产入口必须拒绝缺失已退役 XML 的回退；</li>
- * <li>生产全集恒等式：6224 = 生产目录条目 + 原生覆盖（七族 handler owns ∨ DD 运行时 owned——
+ * <li>生产全集恒等式：6217 = 生产目录条目 + 原生覆盖（七族 handler owns ∨ DD 运行时 owned——
  *     可路由或**显式冻结**）；</li>
  * <li>覆盖负例：目录缺一个 XML_RETENTION 行 ⇒ 拒启；</li>
  * <li>overlay 直通：开启开关后目录内容不变（旧 IR 编译产物已随 DD 车道删除）。</li>
@@ -64,7 +64,7 @@ class RetailQuestDriverOverlayTest {
 	void productionOverlayContainsExactlyTheManifestQuestUniverse() throws Exception {
 		System.setProperty("aion.quest.retailDriver", "true");
 		QuestCatalog production = com.aionemu.gameserver.questEngine.definition.ProductionQuestDefinitions.catalog();
-		// 生产全集恒等式（P7 步 f）：6224 = 目录条目 + 原生覆盖；DD 运行时 owned 含可路由 1444 与
+		// 生产全集恒等式（P7 步 f）：6217 = 目录条目 + 原生覆盖；DD 运行时 owned 含可路由 1444 与
 		// 显式冻结 23（FreezeReason 登记 §10.3 = 非静默丢弃）。
 		// Universe identity: catalog entries + native coverage (family handlers + the DD runtime,
 		// whose owned set includes routed and explicitly frozen rows).
@@ -82,7 +82,7 @@ class RetailQuestDriverOverlayTest {
 				nativeCovered++;
 			}
 		}
-		assertEquals(6224, production.entries().size() + nativeCovered);
+		assertEquals(6217, production.entries().size() + nativeCovered);
 		assertEquals(1467,
 			com.aionemu.gameserver.questEngine.tablelane.DataDrivenNativeRuntime.instance().ownedQuestIds().size(),
 			"DD 运行时必须接管 DataDriven 全部 1467 行（routed 1444 + frozen 23）");

@@ -80,3 +80,18 @@ title 不一致降级为告警）；2 行 `magician_apprentice` 与 2 行 `LDF5A
 ⇒ 建议顺序：**等并行台账转换落地并提交后**，在**新 XML 台账形态**上一次性执行
 ①7 件退役（删 XML + 台账标记）与 ②16 行 Guard 放开（生成器 + 门常量重冻），
 避免二次改写台账。
+
+## 执行记录（2026-10-03，已落地）
+
+- **7 件退役已执行**：删 `quests/{50110,50111,50123,50124,51110,51111,89999}.xml` +
+  删 `quest_definition_catalog.xml` 对应 7 行 + 删 `retail-xml-retention.xml`（含 `src/test/resources/quest/` 孪生副本）对应 7 行。
+- **生产全集重锚 6224 → 6217**：`RetailQuestDriver.PRODUCTION_QUEST_COUNT`、`RetailOwnershipGateTest`（2 处）、
+  `RetailQuestDriverOverlayTest`、`RetailMetadataEquivalenceGateTest`、`XmlDataLoaderTest`。
+- **顺带修正一处陈旧断言**：`XmlDataLoaderTest.questDataSynthesizesFromProductionCatalog` 原断言 6224 与
+  P7 步 f 后的直通 overlay 语义不符（`catalog()` = XML 目录条目），改为 **733**（= 6217 − 原生覆盖 5484）。
+- **计数审计下限重锚**：`QuestIncrementRangeContractTest` 的覆盖下限 `>100` → `>=73`（退役 7 件后实测值）。
+- 验证：`RetailOwnershipGateTest`、`RetailMetadataEquivalenceGateTest`、`RetailQuestDriverOverlayTest`、
+  `XmlDataLoaderTest`、`QuestIncrementRangeContractTest`、`QuestDefinitionCatalogManifestTest`、
+  `QuestInteractionObjectCatalogTest`、`QuestAutoStartDialogAuditTest`、`QuestNpcFactionRetailGateTest`
+  + 家族聚焦 10 类，共 **19 类 140 例全绿（EXIT=0）**。
+- 未执行：16 行 `GAb1_*_Guard` 放开（需生成器改出 XML 形态后再落，见 `../p11-quest-ai-lane/`）。

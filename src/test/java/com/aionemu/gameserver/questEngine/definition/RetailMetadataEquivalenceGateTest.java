@@ -99,11 +99,11 @@ class RetailMetadataEquivalenceGateTest {
 		List<CatalogEntry> catalog = loadCatalog();
 		// XML 目录已收敛（退役任务由真端驱动拥有，不再有 XML）；本门禁只对拍 XML 侧任务。
 		// The XML directory has converged; this gate compares the XML-owned quests only.
-		assertEquals(6224, catalog.size() + RetiredQuestIds.all().size(),
+		assertEquals(6217, catalog.size() + RetiredQuestIds.all().size(),
 			"XML-owned + retail-owned must cover the frozen universe");
 		// 下限不再用魔法数（M4-b 3866 / P0c 系列推进后旧值必然失效，且与上一行恒等式重复）：
-		// 精确覆盖由上一行的 6224 恒等式锁定——目录与保留清单任一侧被误删都会立刻红。
-		// No magic floor: the 6224 identity above pins the exact XML-owned coverage, so an accidentally
+		// 精确覆盖由上一行的 6217 恒等式锁定——目录与保留清单任一侧被误删都会立刻红。
+		// No magic floor: the 6217 identity above pins the exact XML-owned coverage, so an accidentally
 		// emptied directory (or a mis-registered retirement) fails that assertion instead.
 		Map<String, List<String>> diffs = new TreeMap<>();
 		int cleanRetail = 0;
