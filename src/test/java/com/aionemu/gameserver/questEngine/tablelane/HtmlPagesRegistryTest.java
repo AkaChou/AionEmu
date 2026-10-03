@@ -32,8 +32,8 @@ class HtmlPagesRegistryTest {
 	@Test
 	void loadsIngestedRetailPageTable() throws IOException {
 		HtmlPagesRegistry registry = HtmlPagesRegistry.load(getClass().getClassLoader());
-		// 行数与 P0a 审计/溯源清单一致（table-source-provenance.tsv: rows=5904）。
-		// The row count matches the P0a audit and the provenance manifest (table-source-provenance.tsv).
+		// 行数与 P0a 审计清单一致（rows=5904）。
+		// The row count matches the P0a audit (rows=5904).
 		assertEquals(EXPECTED_ROWS, registry.size());
 	}
 
