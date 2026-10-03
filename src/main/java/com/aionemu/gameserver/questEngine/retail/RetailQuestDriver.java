@@ -3,17 +3,17 @@ package com.aionemu.gameserver.questEngine.retail;
 import com.aionemu.gameserver.questEngine.definition.QuestCatalog;
 import com.aionemu.gameserver.questEngine.definition.QuestCatalogEntry;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
+
+import org.w3c.dom.Element;
+
 import com.aionemu.gameserver.questEngine.tablelane.DataDrivenNativeRuntime;
 import com.aionemu.gameserver.questEngine.tablelane.SimpleCollectItemHandler;
 import com.aionemu.gameserver.questEngine.tablelane.SimpleCombineTaskHandler;
@@ -46,9 +46,9 @@ public final class RetailQuestDriver {
 
 	/** 保留清单资源（quest_id, owner, family, reason, evidence）。 / The retention manifest resource. */
 	private static final String RETENTION_RESOURCE =
-		"/aion/data/static_data/quest/retail/retail-xml-retention.tsv";
+		"/aion/data/static_data/quest/retail/retail-xml-retention.xml";
 	private static final String RETAIL_QUEST_XML = "/aion/data/static_data/quest/retail/quest.xml";
-	private static final String NAME_IDS_TSV = "/aion/data/static_data/quest/retail/quest_name_string_ids.tsv";
+	private static final String NAME_IDS_XML = "/aion/data/static_data/quest/retail/quest_name_string_ids.xml";
 	private static final String RANDOM_REWARDS = "/aion/data/static_data/quest/legacy/quest_random_rewards.xml";
 	private static final String NPC_DIR = "/aion/data/static_data/npcs/";
 	private static final String SWITCH_PROPERTY = "aion.quest.retailDriver";
@@ -143,25 +143,22 @@ public final class RetailQuestDriver {
 	static void verifyProductionCoverage(QuestCatalog xmlCatalog, QuestCatalog actual, boolean enabled) {
 		Map<Integer, String> owners = new HashMap<>();
 		try {
-			for (String line : lines(open(RETENTION_RESOURCE))) {
-				if (line.startsWith("#") || line.isBlank()) {
-					continue;
+			for (Element row : RetailLedgerXml.rows(RetailLedgerXml.parse(open(RETENTION_RESOURCE)), "quest")) {
+				String owner = RetailLedgerXml.text(row, "owner");
+				if (!"RETAIL_TABLE".equals(owner) && !"XML_RETENTION".equals(owner)) {
+					throw new IllegalStateException("invalid retail quest owner row: owner=" + owner);
 				}
-				String[] parts = line.split("\t", -1);
-				if (parts.length != 5 || (!"RETAIL_TABLE".equals(parts[1])
-						&& !"XML_RETENTION".equals(parts[1]))) {
-					throw new IllegalStateException("invalid retail quest owner row: " + line);
-				}
+				String questIdText = RetailLedgerXml.text(row, "quest_id");
 				int questId;
 				try {
-					questId = Integer.parseInt(parts[0]);
+					questId = Integer.parseInt(questIdText);
 				} catch (NumberFormatException e) {
-					throw new IllegalStateException("invalid retail quest id in owner row: " + line, e);
+					throw new IllegalStateException("invalid retail quest id in owner row: " + questIdText, e);
 				}
 				if (questId <= 0) {
 					throw new IllegalStateException("nonpositive retail quest id in owner row: " + questId);
 				}
-				if (owners.putIfAbsent(questId, parts[1]) != null) {
+				if (owners.putIfAbsent(questId, owner) != null) {
 					throw new IllegalStateException("duplicate retail quest owner: " + questId);
 				}
 			}
@@ -310,27 +307,16 @@ public final class RetailQuestDriver {
 
 	private static Map<Integer, Integer> nameIds() throws IOException {
 		Map<Integer, Integer> ids = new HashMap<>();
-		for (String line : lines(open(NAME_IDS_TSV))) {
-			if (line.startsWith("#") || line.isBlank()) {
-				continue;
-			}
-			String[] parts = line.split("\t");
-			ids.put(Integer.parseInt(parts[0].substring("STR_QUEST_NAME_Q".length())), Integer.parseInt(parts[1]));
+		for (Element row : RetailLedgerXml.rows(RetailLedgerXml.parse(open(NAME_IDS_XML)), "name_string_id")) {
+			String key = RetailLedgerXml.text(row, "key");
+			String stringId = RetailLedgerXml.text(row, "string_id");
+			ids.put(Integer.parseInt(key.substring("STR_QUEST_NAME_Q".length())), Integer.parseInt(stringId));
 		}
 		return ids;
 	}
 
 	private static org.w3c.dom.Document parse(InputStream input) throws IOException {
-		try (input) {
-			var factory = javax.xml.parsers.DocumentBuilderFactory.newInstance();
-			factory.setFeature(javax.xml.XMLConstants.FEATURE_SECURE_PROCESSING, true);
-			factory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
-			return factory.newDocumentBuilder().parse(input);
-		} catch (IOException e) {
-			throw e;
-		} catch (Exception e) {
-			throw new IOException("xml parse failed", e);
-		}
+		return RetailLedgerXml.parse(input);
 	}
 
 	private static List<InputStream> openAll(String dir, List<String> files) throws IOException {
@@ -339,12 +325,6 @@ public final class RetailQuestDriver {
 			inputs.add(open(dir + file));
 		}
 		return inputs;
-	}
-
-	private static List<String> lines(InputStream input) throws IOException {
-		try (BufferedReader reader = new BufferedReader(new InputStreamReader(input, StandardCharsets.UTF_8))) {
-			return reader.lines().toList();
-		}
 	}
 
 	private static InputStream open(String resource) throws IOException {

@@ -1,15 +1,14 @@
 package com.aionemu.gameserver.questEngine.retail;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.w3c.dom.Element;
+
 /**
- * 旧存档自愈边登记（{@code quest_legacy_heal_rows.tsv}，只读视图）：单步行族 build() 装载时按
+ * 旧存档自愈边登记（{@code quest_legacy_heal_rows.xml}，只读视图）：单步行族 build() 装载时按
  * 登记发射 EnterWorld 自愈边（[REWARD, var0=staleRow] → var0:=rewardRow）。
  * <p>
  * 口径（判例 80290/80294）：客户端任务书单行任务真端投影在行 0（0 基末行），XML 时代存档停在
@@ -30,7 +29,7 @@ public final class RetailLegacySaveHealRows {
 	public record HealEdge(int staleRow, int rewardRow) {
 	}
 
-	private static final String REGISTRY = "/aion/data/static_data/quest/retail/quest_legacy_heal_rows.tsv";
+	private static final String REGISTRY = "/aion/data/static_data/quest/retail/quest_legacy_heal_rows.xml";
 	private static volatile Map<Integer, HealEdge> rows;
 
 	private RetailLegacySaveHealRows() {
@@ -63,23 +62,24 @@ public final class RetailLegacySaveHealRows {
 	}
 
 	/**
-	 * 解析登记表（quest_id / stale_row / reward_row / 依据；{@code #} 注释与空行跳过）。
-	 * Parses the registry TSV (quest_id / stale_row / reward_row / evidence).
+	 * 解析登记表（{@code quest_legacy_heal_rows.xml}：quest_id / stale_row / reward_row / evidence 列；
+	 * 旧 TSV 的「少于三列即 malformed」语义保留 = 三个前置列缺席即失败，evidence 列不读）。
+	 * Parses the registry XML (columns quest_id / stale_row / reward_row / evidence; the old
+	 * "fewer than three columns is malformed" semantics are preserved — the three leading columns
+	 * are mandatory, the evidence column is not read).
 	 */
 	static Map<Integer, HealEdge> load(InputStream input) throws IOException {
 		Map<Integer, HealEdge> parsed = new HashMap<>();
-		try (BufferedReader reader = new BufferedReader(new InputStreamReader(input, StandardCharsets.UTF_8))) {
-			String line;
-			while ((line = reader.readLine()) != null) {
-				if (line.startsWith("#") || line.isBlank()) {
-					continue;
+		try {
+			for (Element row : RetailLedgerXml.rows(RetailLedgerXml.parse(input), "heal_row")) {
+				String questId = RetailLedgerXml.text(row, "quest_id");
+				String staleRow = RetailLedgerXml.text(row, "stale_row");
+				String rewardRow = RetailLedgerXml.text(row, "reward_row");
+				if (questId == null || staleRow == null || rewardRow == null) {
+					throw new IOException("malformed heal registry row: quest_id=" + questId);
 				}
-				String[] parts = line.split("\t");
-				if (parts.length < 3) {
-					throw new IOException("malformed heal registry row: " + line);
-				}
-				parsed.put(Integer.parseInt(parts[0].trim()),
-					new HealEdge(Integer.parseInt(parts[1].trim()), Integer.parseInt(parts[2].trim())));
+				parsed.put(Integer.parseInt(questId),
+					new HealEdge(Integer.parseInt(staleRow), Integer.parseInt(rewardRow)));
 			}
 		} catch (RuntimeException e) {
 			throw new IOException("failed to parse legacy-save heal registry", e);

@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- retail-instance-entry-points.xml 表 schema（quest retail 表门禁用，2026-10-03 台账 XML 化同批）。
+     镜像口径 = 装载器 fail-closed 规则 ∪ 观察形全域钉（证据 + 生成器：
+     .agents/summary/quest-engine-native/p0b/）：
+     - 行 = <entry_point>（creation_id
+       全表唯一；creation_id/world_id/heading 非负 int；x/y/z 十进制 =
+       装载器 Float.parseFloat 的词法收窄形；resolved ∈
+       {true,false}）；resolved=false ⇒ x=y=z=0
+       占位（真端内在缺失）为共现约束，由装载器冻结兜底。
+     retail-instance-entry-points.xml schema (quest retail table gate, same batch as the 2026-10-03 ledger
+     XML conversion). Mirrors the loader fail-closed rules plus observed-universe shape pins (evidence +
+     generator under `.agents/summary/quest-engine-native/p0b/`):
+     - Rows are <entry_point> (unique creation_id; non-negative int ids and heading; x/y/z are decimals, a
+       narrowed lexical form of the loader Float.parseFloat; resolved ∈ {true,false}); the resolved=false ⇒
+       zero-placeholder co-occurrence (intrinsic retail absence) is loader-frozen. -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+  <xs:element name="retail_instance_entry_points">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="entry_point" minOccurs="1" maxOccurs="unbounded">
+          <xs:complexType>
+            <xs:all>
+              <xs:element name="creation_id" minOccurs="1">
+                <xs:simpleType>
+                  <xs:restriction base="xs:int">
+                    <xs:minInclusive value="0"/>
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="world_id" minOccurs="1">
+                <xs:simpleType>
+                  <xs:restriction base="xs:int">
+                    <xs:minInclusive value="0"/>
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="alias" minOccurs="1">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:whiteSpace value="collapse"/>
+                    <xs:minLength value="1"/>
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="x" minOccurs="1">
+                <xs:simpleType>
+                  <xs:restriction base="xs:decimal"/>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="y" minOccurs="1">
+                <xs:simpleType>
+                  <xs:restriction base="xs:decimal"/>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="z" minOccurs="1">
+                <xs:simpleType>
+                  <xs:restriction base="xs:decimal"/>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="heading" minOccurs="1">
+                <xs:simpleType>
+                  <xs:restriction base="xs:int">
+                    <xs:minInclusive value="0"/>
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="resolved" minOccurs="1">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:enumeration value="true"/>
+                    <xs:enumeration value="false"/>
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="source" minOccurs="1">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:whiteSpace value="collapse"/>
+                    <xs:minLength value="1"/>
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+            </xs:all>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+    <xs:unique name="retail-instance-entry-points-row-key-unique">
+      <xs:selector xpath="entry_point"/>
+      <xs:field xpath="creation_id"/>
+    </xs:unique>
+  </xs:element>
+</xs:schema>

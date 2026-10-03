@@ -764,7 +764,7 @@ public final class SimpleCollectItemHandler implements NativeSystemGrantLane {
 	/**
 	 * 交付 NPC 集合：真端 {@code reward_npc_name} 是**逻辑名**，静态数据唯一命中即单元素；未命中
 	 * （如 {@code <地图>_<势力名>} 复合名 LF4_GuardianOfDivine）时按客户端交付集合
-	 * （{@code quest_client_handin_npc_sets.tsv}）逐元素展开——与退役前的
+	 * （{@code quest_client_handin_npc_sets.xml}）逐元素展开——与退役前的
 	 * {@code RetailSimpleCollectItemDefinitionCompiler} 同一仲裁面；客户端未声明即 fail-closed。
 	 * <p>
 	 * Hand-in NPC set: a retail logical name resolves to one id when unique; names missing from static

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+questStringId source: STR_QUEST_SAY_* / STR_CHAT_* client string id
+source: <真端根>/Map/XML/strings.xml (retail server string table, verbatim)
+consumers: DataDrivenNativeRuntime extra-action case 7 (Say) key resolution + NativeSayPort bubble body
+body 元素 = 真端 <body> 原文（XML 实体解码为纯文本，供 say 气泡通道；2026-10-02 偏差修复第二批）
+-->
+<retail_quest_string_ids>
+  <quest_string_id>
+    <key>STR_QUEST_SAY_LF4_04</key>
+    <string_id>1122003</string_id>
+    <body>서쪽의 석화 흔적을 조사했다!</body>
+  </quest_string_id>
+  <quest_string_id>
+    <key>STR_QUEST_SAY_LF4_05</key>
+    <string_id>1122004</string_id>
+    <body>동쪽의 석화 흔적을 조사했다!</body>
+  </quest_string_id>
+  <quest_string_id>
+    <key>STR_QUEST_SAY_LF4_06</key>
+    <string_id>1122005</string_id>
+    <body>남쪽의 석화 흔적을 조사했다!</body>
+  </quest_string_id>
+  <quest_string_id>
+    <key>STR_QUEST_SAY_LF4_21</key>
+    <string_id>1800621</string_id>
+    <body>모두 진격 준비를 하라! 잉기스온 전초기지로 신호를 보내라!</body>
+  </quest_string_id>
+  <quest_string_id>
+    <key>STR_QUEST_SAY_AB1_005</key>
+    <string_id>1111205</string_id>
+    <body>에레슈키갈 군단장들의 형상을 본 딴 인형이군! 좋지 않은 느낌인걸…</body>
+  </quest_string_id>
+  <quest_string_id>
+    <key>STR_QUEST_SAY_LF5_001</key>
+    <string_id>1111568</string_id>
+    <body>브리트라군의 암습이다…!</body>
+  </quest_string_id>
+  <quest_string_id>
+    <key>STR_CHAT_DF5_Quest_Gossip_41</key>
+    <string_id>1501285</string_id>
+    <body>씨앗을 잘 심었다.</body>
+  </quest_string_id>
+</retail_quest_string_ids>

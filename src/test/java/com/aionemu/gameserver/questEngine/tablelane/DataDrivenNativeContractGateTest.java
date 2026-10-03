@@ -21,7 +21,9 @@ import java.util.regex.Pattern;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.w3c.dom.Element;
 
+import com.aionemu.gameserver.questEngine.retail.RetailLedgerRows;
 
 /**
  * P7 步 1 门（计划 §10.2「P7 DataDriven」）：DD 行的**原生 handler 契约**逐行冻结。
@@ -56,7 +58,7 @@ import org.junit.jupiter.api.Test;
 class DataDrivenNativeContractGateTest {
 
 	private static final String DD_TABLE = "/aion/data/static_data/quest/retail/data_driven_quest.xml";
-	private static final String RETENTION = "/quest/retail-xml-retention.tsv";
+	private static final String RETENTION = "/quest/retail-xml-retention.xml";
 	private static final String ABSENT_FIXTURE = "/quest/retail-data-driven-client-absent.tsv";
 
 	/** 切换集规模（真端 DD 活行 ∧ owner RETAIL_TABLE）。 / The switch set size. */
@@ -436,16 +438,9 @@ class DataDrivenNativeContractGateTest {
 
 	private static Map<Integer, String> retentionOwners() throws Exception {
 		Map<Integer, String> owners = new LinkedHashMap<>();
-		try (BufferedReader reader = new BufferedReader(
-				new InputStreamReader(resource(RETENTION), StandardCharsets.UTF_8))) {
-			String line;
-			while ((line = reader.readLine()) != null) {
-				if (line.isBlank() || line.startsWith("#")) {
-					continue;
-				}
-				String[] cells = line.split("\t", -1);
-				owners.putIfAbsent(Integer.parseInt(cells[0]), cells[1]);
-			}
+		for (Element row : RetailLedgerRows.rows(RETENTION, "quest")) {
+			owners.putIfAbsent(Integer.parseInt(RetailLedgerRows.cell(row, "quest_id")),
+				RetailLedgerRows.cell(row, "owner"));
 		}
 		return owners;
 	}

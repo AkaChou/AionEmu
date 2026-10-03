@@ -14,6 +14,8 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.w3c.dom.Element;
+
 /**
  * NPC {@code name_desc} → npc_id 索引。
  * <p>
@@ -219,10 +221,11 @@ public final class RetailNpcNameIndex {
 	}
 
 	/**
-	 * 同 {@link #build(Collection)}，并额外加载真端对话名组表（TSV：{@code 组名 \t 成员1,成员2,...}，
-	 * {@code #} 起头为注释行）。
-	 * Same as {@link #build(Collection)} plus the retail dialog-name group table (TSV rows
-	 * {@code name \t member1,member2,...}; {@code #} starts a comment line).
+	 * 同 {@link #build(Collection)}，并额外加载真端对话名组表（XML {@code retail-quest-ai-name-groups.xml}：
+	 * {@code quest_ai_name_group} 行的 quest_ai_name / member_name_descs 两列）。
+	 * Same as {@link #build(Collection)} plus the retail dialog-name group table (XML
+	 * {@code retail-quest-ai-name-groups.xml}: the quest_ai_name / member_name_descs columns of
+	 * the {@code quest_ai_name_group} rows).
 	 */
 	public static RetailNpcNameIndex build(Collection<InputStream> templates,
 			Collection<InputStream> questAiNameGroupTables) throws IOException {
@@ -230,8 +233,11 @@ public final class RetailNpcNameIndex {
 	}
 
 	/**
-	 * 同 {@link #build(Collection, Collection)}，并加载版本化 NPC id 别名表（TSV：{@code 别名 \t id1,id2,...}）。
-	 * Same as {@link #build(Collection, Collection)} plus the versioned NPC id alias table.
+	 * 同 {@link #build(Collection, Collection)}，并加载版本化 NPC id 别名表
+	 * （XML {@code retail-npc-name-aliases.xml}：{@code npc_name_alias} 行的 name / npc_ids 两列）。
+	 * Same as {@link #build(Collection, Collection)} plus the versioned NPC id alias table
+	 * (XML {@code retail-npc-name-aliases.xml}: the name / npc_ids columns of the
+	 * {@code npc_name_alias} rows).
 	 */
 	public static RetailNpcNameIndex build(Collection<InputStream> templates,
 			Collection<InputStream> questAiNameGroupTables, Collection<InputStream> npcIdAliasTables)
@@ -277,19 +283,16 @@ public final class RetailNpcNameIndex {
 		Map<String, Set<String>> groupMembers = new LinkedHashMap<>();
 		Map<String, Set<Integer>> groups = new LinkedHashMap<>();
 		for (InputStream input : questAiNameGroupTables) {
-			for (String line : new String(input.readAllBytes(), StandardCharsets.UTF_8).split("\n")) {
-				String row = line.strip();
-				if (row.isEmpty() || row.startsWith("#")) {
-					continue;
+			for (Element row : RetailLedgerXml.rows(RetailLedgerXml.parse(input), "quest_ai_name_group")) {
+				String name = RetailLedgerXml.text(row, "quest_ai_name");
+				String members = RetailLedgerXml.text(row, "member_name_descs");
+				if (name == null || members == null || members.isBlank()) {
+					throw new IOException("malformed dialog-name group row: quest_ai_name=" + name);
 				}
-				String[] parts = row.split("\t");
-				if (parts.length < 2 || parts[1].isBlank()) {
-					throw new IOException("malformed dialog-name group row: " + row);
-				}
-				String key = parts[0].strip().toLowerCase(Locale.ROOT);
+				String key = name.toLowerCase(Locale.ROOT);
 				Set<String> declared = new LinkedHashSet<>();
 				Set<Integer> ids = new LinkedHashSet<>();
-				for (String member : parts[1].split(",")) {
+				for (String member : members.split(",")) {
 					if (member.isBlank()) {
 						continue;
 					}
@@ -317,21 +320,18 @@ public final class RetailNpcNameIndex {
 	private static void addVersionedNpcIdAliases(Map<String, Set<Integer>> byName,
 			Collection<InputStream> npcIdAliasTables) throws IOException {
 		for (InputStream input : npcIdAliasTables) {
-			for (String line : new String(input.readAllBytes(), StandardCharsets.UTF_8).split("\n")) {
-				String row = line.strip();
-				if (row.isEmpty() || row.startsWith("#")) {
-					continue;
+			for (Element row : RetailLedgerXml.rows(RetailLedgerXml.parse(input), "npc_name_alias")) {
+				String name = RetailLedgerXml.text(row, "name");
+				String idsText = RetailLedgerXml.text(row, "npc_ids");
+				if (name == null || idsText == null || idsText.isBlank()) {
+					throw new IOException("malformed npc-id alias row: name=" + name);
 				}
-				String[] parts = row.split("\t", -1);
-				if (parts.length != 2 || parts[1].isBlank()) {
-					throw new IOException("malformed npc-id alias row: " + row);
-				}
-				String alias = parts[0].strip().toLowerCase(Locale.ROOT);
+				String alias = name.toLowerCase(Locale.ROOT);
 				Set<Integer> ids = new LinkedHashSet<>();
-				for (String value : parts[1].split(",")) {
+				for (String value : idsText.split(",")) {
 					String id = value.strip();
 					if (id.isEmpty() || !id.chars().allMatch(Character::isDigit) || !ids.add(Integer.parseInt(id))) {
-						throw new IOException("malformed or duplicate npc id in alias row: " + row);
+						throw new IOException("malformed or duplicate npc id in alias row: " + alias);
 					}
 				}
 				// 等集重复 = 同一事实已由既有条目承载（模板名 / NPC_ 剥前缀别名 / 击杀目标别名），

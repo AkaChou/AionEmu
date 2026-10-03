@@ -12,6 +12,11 @@
 5. 行子元素用 xs:all（装载器按标签名读取、与顺序无关）；容器（quest.xml 11 组职业奖励 /
    DD progress_info）递归建模，重复度按父节点内实测分布定型（>1 即 unbounded）。
 
+2026-10-03 扩展（台账 XML 化同批，八张自造台账）：新增 cfg 小能力——`string_patterns`（tag→全值
+模式钉；Xerces 实证模式为全值锚定）、`decimal_tags`（xs:decimal 定型）、`nonblank_tags`（观察形
+非空白钉）、`optional_tags`（显式可缺 = 镜像装载器旧格式兼容）、`key_type`（字符串行键）、
+`batch_zh`/`batch_en`（头注释批次注记，缺省 = 原十表文案）。
+
 输入 = 盘上最终文件（DOCTYPE 剥离后，ElementTree 解析；预定义实体语义与 Xerces 一致，已抽查）。
 输出 = 同目录 <stem>.xsd（2 空格缩进，UTF-8+LF，遵循 .agents/rules/formatting.md）。
 """
@@ -119,6 +124,107 @@ CONFIGS = [
 	     en='Retail source copy (no runtime loader in this repo; consumed by the contract ledger '
 	        'generation). Rows are <quest_id quest_id> (required unique non-negative attr); the '
 	        'weekday flags mon..sun are {0,1} (all-zero = the retail table itself does not rotate).'),
+	# ── 2026-10-03 台账 XML 化同批：八张自造台账（TSV → XML，同名 schema） ──
+	dict(stem='quest_client_handin_npc_sets', root='quest_client_handin_npc_sets', row='handin_npc_set',
+	     id_kind='child', id_name='quest_id',
+	     loader_required=[], int_tags={'quest_id'}, min_inclusive={'quest_id'}, enums={},
+	     string_patterns={'npc_ids': r'\d+(,\d+)+'},
+	     batch_zh='2026-10-03 台账 XML 化同批', batch_en='2026-10-03 ledger XML conversion',
+	     zh='行 = <handin_npc_set>（quest_id 非负 int 必填、全表唯一）；npc_ids = 逗号串、至少两个 id'
+	        '（模式 = 装载器 size()<2 fail-closed 的可表达形）；列表去重（如 1,1）与「与客户端集合'
+	        '逐元素相等」由装载器与家族门兜底，XSD 1.0 不可表达。',
+	     en='Rows are <handin_npc_set> (required unique non-negative int quest_id); npc_ids is a '
+	        'comma list of at least two ids (the pattern is the expressible half of the loader '
+	        'size()<2 fail-close); dedup and the per-element client-set equality stay loader/gate '
+	        'concerns, inexpressible in XSD 1.0.'),
+	dict(stem='quest_legacy_heal_rows', root='quest_legacy_heal_rows', row='heal_row',
+	     id_kind='child', id_name='quest_id',
+	     loader_required=[], int_tags={'quest_id', 'stale_row', 'reward_row'},
+	     min_inclusive={'quest_id', 'stale_row', 'reward_row'}, enums={},
+	     nonblank_tags={'evidence'},
+	     batch_zh='2026-10-03 台账 XML 化同批', batch_en='2026-10-03 ledger XML conversion',
+	     zh='行 = <heal_row>（quest_id 全表唯一；quest_id/stale_row/reward_row 非负 int 必填）；'
+	        'evidence = 逐任务依据（观察全域非空白钉）；stale_row≠reward_row 语义与「与测试侧归一化'
+	        '登记互斥」由回归与门禁兜底。',
+	     en='Rows are <heal_row> (unique quest_id; non-negative ints required); evidence is the '
+	        'per-quest ground (observed non-blank pin); the stale≠reward semantics and the test-side '
+	        'normalization disjointness stay regression/gate concerns.'),
+	dict(stem='quest_name_string_ids', root='quest_name_string_ids', row='name_string_id',
+	     id_kind='child', id_name='key', key_type='string',
+	     loader_required=[], int_tags={'string_id'}, min_inclusive={'string_id'}, enums={},
+	     string_patterns={'key': r'STR_QUEST_NAME_Q[0-9]+'},
+	     batch_zh='2026-10-03 台账 XML 化同批', batch_en='2026-10-03 ledger XML conversion',
+	     zh='行 = <name_string_id>（key 全表唯一，形 STR_QUEST_NAME_Q<questId>，数字段 = 装载器 '
+	        'substring 派生的 quest id）；string_id 非负 int 必填；string_id **允许重复**'
+	        '（镜像任务共用 displayNameId，禁加 unique）。',
+	     en='Rows are <name_string_id> (unique key shaped STR_QUEST_NAME_Q<questId>, whose digits are '
+	        'the quest id the loader derives via substring); string_id is a required non-negative int '
+	        'and may repeat (mirror quests share a displayNameId — do not add a uniqueness pin).'),
+	dict(stem='retail-instance-entry-points', root='retail_instance_entry_points', row='entry_point',
+	     id_kind='child', id_name='creation_id',
+	     loader_required=[], int_tags={'creation_id', 'world_id', 'heading'},
+	     min_inclusive={'creation_id', 'world_id', 'heading'},
+	     decimal_tags={'x', 'y', 'z'}, enums={'resolved': ['true', 'false']},
+	     nonblank_tags={'alias', 'source'},
+	     batch_zh='2026-10-03 台账 XML 化同批', batch_en='2026-10-03 ledger XML conversion',
+	     zh='行 = <entry_point>（creation_id 全表唯一；creation_id/world_id/heading 非负 int；'
+	        'x/y/z 十进制 = 装载器 Float.parseFloat 的词法收窄形；resolved ∈ {true,false}）；'
+	        'resolved=false ⇒ x=y=z=0 占位（真端内在缺失）为共现约束，由装载器冻结兜底。',
+	     en='Rows are <entry_point> (unique creation_id; non-negative int ids and heading; x/y/z are '
+	        'decimals, a narrowed lexical form of the loader Float.parseFloat; resolved ∈ {true,false}); '
+	        'the resolved=false ⇒ zero-placeholder co-occurrence (intrinsic retail absence) is '
+	        'loader-frozen.'),
+	dict(stem='retail-npc-name-aliases', root='retail_npc_name_aliases', row='npc_name_alias',
+	     id_kind='child', id_name='name', key_type='string',
+	     loader_required=[], int_tags=set(), min_inclusive=set(), enums={},
+	     string_patterns={'name': r'[A-Za-z0-9_]+', 'npc_ids': r'\d+(,\d+)*'},
+	     batch_zh='2026-10-03 台账 XML 化同批', batch_en='2026-10-03 ledger XML conversion',
+	     zh='行 = <npc_name_alias>（name 全表唯一、字母数字下划线；装载器归一 lower）；npc_ids = '
+	        '逗号串 id 列表（≥1）；列表去重（重复 id fail-closed）与「别名不得遮蔽模板名」由装载器'
+	        '运行期兜底。',
+	     en='Rows are <npc_name_alias> (unique alnum-underscore name; the loader lower-cases it); '
+	        'npc_ids is a comma id list (≥1); dedup (duplicate ids fail closed) and the '
+	        'no-shadowing-of-template-names rule stay loader-enforced.'),
+	dict(stem='retail-quest-ai-name-groups', root='retail_quest_ai_name_groups',
+	     row='quest_ai_name_group', id_kind='child', id_name='quest_ai_name', key_type='string',
+	     loader_required=[], int_tags=set(), min_inclusive=set(), enums={},
+	     string_patterns={'quest_ai_name': r'[A-Za-z0-9_]+',
+	                      'member_name_descs': r'[A-Za-z0-9_]+(,[A-Za-z0-9_]+)*'},
+	     batch_zh='2026-10-03 台账 XML 化同批', batch_en='2026-10-03 ledger XML conversion',
+	     zh='行 = <quest_ai_name_group>（quest_ai_name 全表唯一、字母数字下划线）；member_name_descs'
+	        ' = 逗号串成员 name_desc 列表；成员解析不到 = 两车道各自静默缺席（语义如此，非错误）；'
+	        '列表去重不可表达。',
+	     en='Rows are <quest_ai_name_group> (unique alnum-underscore quest_ai_name); '
+	        'member_name_descs is a comma list of member name_descs; an unresolvable member is a '
+	        'silent absence in both lanes (by semantics, not an error); dedup is inexpressible.'),
+	dict(stem='retail-quest-string-ids', root='retail_quest_string_ids', row='quest_string_id',
+	     id_kind='child', id_name='key', key_type='string',
+	     loader_required=[], int_tags={'string_id'}, min_inclusive={'string_id'}, enums={},
+	     string_patterns={'key': r'STR_(QUEST_SAY|CHAT)_[A-Za-z0-9_]+'},
+	     optional_tags={'body'},
+	     batch_zh='2026-10-03 台账 XML 化同批', batch_en='2026-10-03 ledger XML conversion',
+	     zh='行 = <quest_string_id>（key 全表唯一，形 STR_QUEST_SAY_* / STR_CHAT_*；string_id 非负 '
+	        'int）；body = 真端 <body> 原文、可缺（旧格式兼容行——在仓资源 7/7 有正文，schema 按'
+	        '可缺钉以镜像装载器契约）。',
+	     en='Rows are <quest_string_id> (unique key shaped STR_QUEST_SAY_* / STR_CHAT_*; non-negative '
+	        'int string_id); body is the retail <body> text and is optional (legacy-format rows — the '
+	        'in-repo resource carries 7/7; the schema keeps it optional to mirror the loader contract).'),
+	dict(stem='retail-xml-retention', root='retail_xml_retention', row='quest',
+	     id_kind='child', id_name='quest_id',
+	     loader_required=[], int_tags={'quest_id'}, min_inclusive={'quest_id'},
+	     enums={'owner': ['RETAIL_TABLE', 'XML_RETENTION'],
+	            'family': ['-'] + ['CombineTask', 'DataDriven', 'SimpleCollectItem', 'SimpleHunt',
+	                               'SimpleItemPlay', 'SimpleSerialHunt', 'SimpleTalk', 'SimpleUseItem']},
+	     string_patterns={'reason': r'(OK|SCRIPTED|NO_TABLE|ADJUDICATED:[A-Za-z0-9_]+)'},
+	     nonblank_tags={'evidence'},
+	     batch_zh='2026-10-03 台账 XML 化同批', batch_en='2026-10-03 ledger XML conversion',
+	     zh='行 = <quest>（quest_id 全表唯一）；owner/family 枚举 = 当前观察闭域（新族/新形态须显式'
+	        '扩）；reason = OK/SCRIPTED/NO_TABLE/ADJUDICATED:<码>；owner=RETAIL_TABLE 与 reason=OK 的'
+	        '共现、family="-" ⇒ XML_RETENTION 由 RetailOwnershipGateTest 兜底。',
+	     en='Rows are <quest> (unique quest_id); the owner/family enums pin the observed closed domain '
+	        '(extend explicitly for new families); reason = OK/SCRIPTED/NO_TABLE/ADJUDICATED:<code>; '
+	        'the owner/reason and family co-occurrence constraints are RetailOwnershipGateTest '
+	        'concerns.'),
 ]
 
 
@@ -204,6 +310,13 @@ def emit_element(spec, indent, lines):
 		lines.append(f'{indent}{IND}</xs:simpleType>')
 		lines.append(f'{indent}</xs:element>')
 		return
+	if spec.kind == 'decimal':
+		lines.append(f'{indent}<xs:element name="{spec.tag}" {occ}>')
+		lines.append(f'{indent}{IND}<xs:simpleType>')
+		lines.append(f'{indent}{IND}{IND}<xs:restriction base="xs:decimal"/>')
+		lines.append(f'{indent}{IND}</xs:simpleType>')
+		lines.append(f'{indent}</xs:element>')
+		return
 	if spec.kind == 'enum':
 		lines.append(f'{indent}<xs:element name="{spec.tag}" {occ}>')
 		lines.append(f'{indent}{IND}<xs:simpleType>')
@@ -254,23 +367,34 @@ def generate(cfg):
 		validate_int_values(path, int_tags, root)
 
 	loader_required = set(cfg['loader_required'])
+	string_patterns = cfg.get('string_patterns', {})
+	decimal_tags = set(cfg.get('decimal_tags', ()))
+	nonblank_tags = set(cfg.get('nonblank_tags', ()))
+	optional_tags = set(cfg.get('optional_tags', ()))
 	universal = Counter(child.tag for row in rows for child in row)
 	universal = {tag for tag, n in universal.items() if n == len(rows)}
 
 	def leaf_rule(tag):
+		if tag in string_patterns:
+			return 'pattern', string_patterns[tag]
 		if tag == cfg.get('id_name') and cfg['id_kind'] == 'child':
-			return 'int', True
+			return ('int', True) if cfg.get('key_type', 'int') == 'int' else ('string', True)
 		if tag in int_tags:
 			return 'int', tag in cfg.get('min_inclusive', set())
+		if tag in decimal_tags:
+			return 'decimal', None
 		if tag in cfg['enums']:
 			return 'enum', cfg['enums'][tag]
 		if cfg['stem'] == 'data_driven_quest' and tag == 'category_progress_':
 			return 'pattern', '|'.join(letter_classes(k) for k in cfg['progress_pattern_kinds'])
-		if tag in loader_required:
-			return 'string', True  # 非空白（isBlank fail-closed）
+		if tag in loader_required or tag in nonblank_tags:
+			return 'string', True  # 非空白（isBlank fail-closed / 观察形钉）
 		return 'string', False
 
 	specs = build_specs(rows, leaf_rule)
+	for spec in specs:
+		if spec.tag in optional_tags:
+			spec.min_occ = 0
 	if cfg.get('slots'):
 		existing = {spec.tag for spec in specs}
 		for base, arity in cfg['slots'].items():
@@ -279,22 +403,23 @@ def generate(cfg):
 					specs.append(Spec(f'{base}{i}', 0, 1, 'string', False))
 		specs.sort(key=lambda spec: spec.tag)
 
-	required = universal | loader_required
+	required = (universal | loader_required) - optional_tags
 	for spec in specs:
 		expected = 1 if spec.tag in required else 0
 		assert spec.min_occ == expected or spec.kind == 'container', \
 			f'{cfg["stem"]}:{spec.tag} minOccurs {spec.min_occ} != expected {expected}'
 
 	lines = ['<?xml version="1.0" encoding="UTF-8"?>',
-	         f"<!-- {cfg['stem']}.xml 表 schema（quest retail 表门禁用，2026-10-03 DOCTYPE 剥离同批）。",
+	         f"<!-- {cfg['stem']}.xml 表 schema（quest retail 表门禁用，"
+	         f"{cfg.get('batch_zh', '2026-10-03 DOCTYPE 剥离同批')}）。",
 	         '     镜像口径 = 装载器 fail-closed 规则 ∪ 观察形全域钉（证据 + 生成器：',
 	         '     .agents/summary/quest-engine-native/p0b/）：']
 	lines += textwrap.wrap(f"- {cfg['zh']}", width=62, initial_indent='     ',
 	                       subsequent_indent='       ')
 	lines += textwrap.wrap(f"{cfg['stem']}.xml schema (quest retail table gate, same batch as the "
-	                       "2026-10-03 DOCTYPE strip). Mirrors the loader fail-closed rules plus "
-	                       "observed-universe shape pins (evidence + generator under "
-	                       "`.agents/summary/quest-engine-native/p0b/`):",
+	                       f"{cfg.get('batch_en', '2026-10-03 DOCTYPE strip')}). Mirrors the loader "
+	                       "fail-closed rules plus observed-universe shape pins (evidence + generator "
+	                       "under `.agents/summary/quest-engine-native/p0b/`):",
 	                       width=108, initial_indent='     ', subsequent_indent='     ')
 	lines += textwrap.wrap(f"- {cfg['en']}", width=108, initial_indent='     ',
 	                       subsequent_indent='       ')

@@ -5,14 +5,15 @@
 # Read-only probe: recompute the resolver order over all switch-set payload names and
 # classify each failure against retail facts (quest_ai_name / world names / retail <name>).
 import re, sys, glob, os
+import xml.etree.ElementTree as ET
 from collections import OrderedDict
 
 REPO = '/Users/mc/IdeaProjects/AionEmu-test'
 RETAIL = '/Users/mc/IdeaProjects/58Server/Map/XML'
 NPC_DIR = REPO + '/src/main/resources/aion/data/static_data/npcs'
 DD_TABLE = REPO + '/src/main/resources/aion/data/static_data/quest/retail/data_driven_quest.xml'
-RETENTION = REPO + '/src/main/resources/aion/data/static_data/quest/retail/retail-xml-retention.tsv'
-ALIASES = REPO + '/src/main/resources/aion/data/static_data/quest/retail/retail-npc-name-aliases.tsv'
+RETENTION = REPO + '/src/main/resources/aion/data/static_data/quest/retail/retail-xml-retention.xml'
+ALIASES = REPO + '/src/main/resources/aion/data/static_data/quest/retail/retail-npc-name-aliases.xml'
 OUT = os.path.dirname(os.path.abspath(__file__)) + '/../dd-unresolved-name-adjudication.tsv'
 
 ATTR = re.compile(r'\b(npc_id|name|name_desc|quest_ai_name)="([^"]*)"')
@@ -42,12 +43,11 @@ def load_local_npcs():
 
 def load_aliases(path=None):
     m = {}
-    for line in open(path or ALIASES, encoding='utf-8'):
-        line = line.strip()
-        if not line or line.startswith('#'): continue
-        parts = line.split('\t')
-        if len(parts) >= 2 and parts[1].strip():
-            m[parts[0].strip().lower()] = [int(x) for x in parts[1].split(',') if x.strip()]
+    for row in ET.parse(path or ALIASES).getroot().findall('npc_name_alias'):
+        name = (row.findtext('name') or '').strip().lower()
+        ids_text = (row.findtext('npc_ids') or '').strip()
+        if name and ids_text:
+            m[name] = [int(x) for x in ids_text.split(',') if x.strip()]
     return m
 
 def load_retail_npcs():
@@ -84,16 +84,16 @@ def load_monster_target_keys():
     return out
 
 def load_declared_group_keys():
-    """旧车道对话名组表（quest/retail-quest-ai-name-groups.tsv）已声明的组键。
+    """旧车道对话名组表（quest/retail/retail-quest-ai-name-groups.xml）已声明的组键。
     组键的权威载体 = 该组表；台账不得收录组键（台账行会进旧车道 spawn 通道，
     破坏通道互斥闸——QE-133 同类事故的第二形态）。原生车道经 NativeNpcNameResolver
     的组通道直读同一张表。"""
     out = set()
-    path = REPO + '/src/main/resources/aion/data/static_data/quest/retail/retail-quest-ai-name-groups.tsv'
-    for line in open(path, encoding='utf-8'):
-        s = line.strip()
-        if not s or s.startswith('#') or s.startswith('quest_ai_name\t'): continue
-        out.add(s.split('\t')[0].strip().lower())
+    path = REPO + '/src/main/resources/aion/data/static_data/quest/retail/retail-quest-ai-name-groups.xml'
+    for row in ET.parse(path).getroot().findall('quest_ai_name_group'):
+        name = (row.findtext('quest_ai_name') or '').strip().lower()
+        if name:
+            out.add(name)
     return out
 
 def load_world_names():
@@ -130,12 +130,10 @@ def load_zone_names():
 
 def load_switch_set():
     owners = {}
-    for line in open(RETENTION, encoding='utf-8'):
-        line = line.strip()
-        if not line or line.startswith('#'): continue
-        cols = line.split('\t')
-        if len(cols) >= 2 and cols[0].isdigit():
-            owners[int(cols[0])] = cols[1]
+    for row in ET.parse(RETENTION).getroot().findall('quest'):
+        quest_id = (row.findtext('quest_id') or '').strip()
+        if quest_id.isdigit():
+            owners[int(quest_id)] = (row.findtext('owner') or '').strip()
     raw = open(DD_TABLE, encoding='utf-8').read()
     rows = {}
     for m in re.finditer(r'<quest_data_driven>(.*?)</quest_data_driven>', raw, re.S):
@@ -251,23 +249,28 @@ def main():
     with open(OUT, 'w', encoding='utf-8') as f:
         f.write('\n'.join(lines) + '\n')
     if emit:
-        alias_path = REPO + '/src/main/resources/aion/data/static_data/quest/retail/retail-npc-name-aliases.tsv'
+        alias_path = REPO + '/src/main/resources/aion/data/static_data/quest/retail/retail-npc-name-aliases.xml'
         existing = {}
-        for line in open(alias_path, encoding='utf-8'):
-            s = line.strip()
-            if not s or s.startswith('#'): continue
-            parts = s.split('\t')
-            if len(parts) >= 2:
-                existing[parts[0].strip().lower()] = parts[1].strip()
-        added = 0
-        with open(alias_path, 'a', encoding='utf-8') as f:
-            f.write('# P7 步 d2（2026-10-02）：DD 切换集载荷名的真端 quest_ai_name 组（dd-unresolved-name-probe.py 生成）。\n')
-            for k, (qid, cat, idx) in unresolved.items():
-                ids = qai.get(k)
-                if not ids or k in existing or k in kill_targets or k in declared_groups: continue
-                f.write(k + '\t' + ','.join(str(i) for i in sorted(ids)) + '\n')
-                added += 1
-        print('alias rows appended:', added)
+        for row in ET.parse(alias_path).getroot().findall('npc_name_alias'):
+            existing[(row.findtext('name') or '').strip().lower()] = row.findtext('npc_ids') or ''
+        new_rows = []
+        for k, (qid, cat, idx) in unresolved.items():
+            ids = qai.get(k)
+            if not ids or k in existing or k in kill_targets or k in declared_groups: continue
+            new_rows.append((k, ','.join(str(i) for i in sorted(ids))))
+        if new_rows:
+            text = open(alias_path, encoding='utf-8').read()
+            block = []
+            if 'dd-unresolved-name-probe.py 生成' not in text:
+                block.append('  <!-- P7 步 d2（2026-10-02）：DD 切换集载荷名的真端 quest_ai_name 组'
+                             '（dd-unresolved-name-probe.py 生成）。 -->')
+            for name, ids_text in new_rows:
+                block += ['  <npc_name_alias>', f'    <name>{name}</name>',
+                          f'    <npc_ids>{ids_text}</npc_ids>', '  </npc_name_alias>']
+            marker = '</retail_npc_name_aliases>'
+            open(alias_path, 'w', encoding='utf-8').write(
+                text.replace(marker, '\n'.join(block) + '\n' + marker))
+        print('alias rows appended:', len(new_rows))
     print('local npcs indexed names:', len(by_all))
     print('switch rows:', len(rows), ' unresolved names:', len(unresolved))
     from collections import Counter

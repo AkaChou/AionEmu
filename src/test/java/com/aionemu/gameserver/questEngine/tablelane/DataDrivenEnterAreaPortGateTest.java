@@ -31,7 +31,9 @@ import javax.xml.transform.stream.StreamSource;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.w3c.dom.Element;
 
+import com.aionemu.gameserver.questEngine.retail.RetailLedgerRows;
 import com.aionemu.gameserver.questEngine.tablelane.DataDrivenQuestTable.Kind;
 import com.aionemu.gameserver.questEngine.tablelane.DataDrivenQuestTable.Row;
 import com.aionemu.gameserver.questEngine.tablelane.DataDrivenQuestTable.Step;
@@ -60,7 +62,7 @@ import com.aionemu.gameserver.questEngine.tablelane.DataDrivenQuestTable.Step;
 class DataDrivenEnterAreaPortGateTest {
 
 	private static final String DD_TABLE = "/aion/data/static_data/quest/retail/data_driven_quest.xml";
-	private static final String RETENTION = "/quest/retail-xml-retention.tsv";
+	private static final String RETENTION = "/quest/retail-xml-retention.xml";
 	private static final String EVIDENCE = "/quest/retail-enterarea-zone-resolution.tsv";
 	private static final Path ZONES_DIR = Path.of("src/main/resources/aion/data/static_data/zones");
 	private static final Path ZONE_FILE = ZONES_DIR.resolve("zones_retail_enterarea.xml");
@@ -385,18 +387,9 @@ class DataDrivenEnterAreaPortGateTest {
 
 	private static Map<Integer, String> retentionOwners() throws Exception {
 		Map<Integer, String> owners = new LinkedHashMap<>();
-		try (BufferedReader reader = new BufferedReader(
-				new InputStreamReader(resource(RETENTION), StandardCharsets.UTF_8))) {
-			String line;
-			while ((line = reader.readLine()) != null) {
-				if (line.isBlank() || line.startsWith("#")) {
-					continue;
-				}
-				String[] cells = line.split("\t");
-				if (cells.length >= 2) {
-					owners.put(Integer.parseInt(cells[0].trim()), cells[1].trim());
-				}
-			}
+		for (Element row : RetailLedgerRows.rows(RETENTION, "quest")) {
+			String questId = RetailLedgerRows.cell(row, "quest_id");
+			owners.put(Integer.parseInt(questId), RetailLedgerRows.cell(row, "owner"));
 		}
 		return owners;
 	}

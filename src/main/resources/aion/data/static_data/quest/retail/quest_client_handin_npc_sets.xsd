@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- quest_client_handin_npc_sets.xml 表 schema（quest retail 表门禁用，2026-10-03 台账 XML 化同批）。
+     镜像口径 = 装载器 fail-closed 规则 ∪ 观察形全域钉（证据 + 生成器：
+     .agents/summary/quest-engine-native/p0b/）：
+     - 行 = <handin_npc_set>（quest_id 非负 int 必填、全表唯一）；npc_ids =
+       逗号串、至少两个 id（模式 = 装载器 size()<2 fail-closed 的可表达形）；列表去重（如
+       1,1）与「与客户端集合逐元素相等」由装载器与家族门兜底，XSD 1.0 不可表达。
+     quest_client_handin_npc_sets.xml schema (quest retail table gate, same batch as the 2026-10-03 ledger
+     XML conversion). Mirrors the loader fail-closed rules plus observed-universe shape pins (evidence +
+     generator under `.agents/summary/quest-engine-native/p0b/`):
+     - Rows are <handin_npc_set> (required unique non-negative int quest_id); npc_ids is a comma list of at
+       least two ids (the pattern is the expressible half of the loader size()<2 fail-close); dedup and the
+       per-element client-set equality stay loader/gate concerns, inexpressible in XSD 1.0. -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+  <xs:element name="quest_client_handin_npc_sets">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="handin_npc_set" minOccurs="1" maxOccurs="unbounded">
+          <xs:complexType>
+            <xs:all>
+              <xs:element name="quest_id" minOccurs="1">
+                <xs:simpleType>
+                  <xs:restriction base="xs:int">
+                    <xs:minInclusive value="0"/>
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="npc_ids" minOccurs="1">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:pattern value="\d+(,\d+)+"/>
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+            </xs:all>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+    <xs:unique name="quest_client_handin_npc_sets-row-key-unique">
+      <xs:selector xpath="handin_npc_set"/>
+      <xs:field xpath="quest_id"/>
+    </xs:unique>
+  </xs:element>
+</xs:schema>

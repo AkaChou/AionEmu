@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-生成 6224 全量 owner/保留清单 retail-xml-retention.tsv（提示词 §4.B / 门禁 E.1、E.5 的数据源）。
+生成 6224 全量 owner/保留清单 retail-xml-retention.xml（提示词 §4.B / 门禁 E.1、E.5 的数据源）。
 
 行 = (quest_id, owner, family, reason, evidence)：
   owner=RETAIL_TABLE   真端模板表族且**驱动已实现**（当前 SimpleHunt/SimpleTalk）；reason=OK
@@ -15,10 +15,14 @@
 
 多表重叠按优先级取首个（SimpleHunt > SimpleTalk > CombineTask > CollectItem > UseItem >
 ItemPlay > SerialHunt > DataDriven），重叠数记入 evidence 供复核。
-输出：.agents/summary/scriptdll-quest-driver/retail-xml-retention.tsv
+输出：三副本同字节——.agents/summary/scriptdll-quest-driver/retail-xml-retention.xml（本目录）、
+test 副本 src/test/resources/quest/retail-xml-retention.xml、main 副本
+src/main/resources/aion/data/static_data/quest/retail/retail-xml-retention.xml
+（2026-10-03 台账 XML 化批：原 TSV 三副本转 XML，行模型 = <quest> + 五列子元素）。
 """
 import os
 import re
+import xml.etree.ElementTree as ET
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
@@ -36,9 +40,9 @@ COMPILER_REJECTS = REPO / 'src/test/resources/quest/retail-simplehunt-compiler-r
 # Highest-priority downgrade registry (M3-d): retail-table rows that cannot express the client
 # contract and were deliberately reverted to XML ownership.
 DOWNGRADE_REGISTRY = HERE / 'm3d-downgraded-quests.tsv'
-OUT = HERE / 'retail-xml-retention.tsv'
-OUT_RESOURCE = REPO / 'src/test/resources/quest/retail-xml-retention.tsv'
-OUT_MAIN = REPO / 'src/main/resources/aion/data/static_data/quest_retail/retail-xml-retention.tsv'
+OUT = HERE / 'retail-xml-retention.xml'
+OUT_RESOURCE = REPO / 'src/test/resources/quest/retail-xml-retention.xml'
+OUT_MAIN = REPO / 'src/main/resources/aion/data/static_data/quest/retail/retail-xml-retention.xml'
 
 # 已实现驱动的家族：只有这里的家族才允许标 RETAIL_TABLE（生产 RetailQuestDriver 真正注入定义）。
 # 其余家族即使真端表有行，也必须标 XML_RETENTION/FAMILY_PENDING，避免清单虚报"已由真端驱动"。
@@ -116,10 +120,8 @@ def previous_ledger_ids():
     if not OUT_RESOURCE.is_file():
         return set()
     ids = set()
-    for line in OUT_RESOURCE.read_text(encoding='utf-8').splitlines():
-        if line.startswith('#') or not line.strip():
-            continue
-        ids.add(int(line.split('\t')[0]))
+    for row in ET.parse(OUT_RESOURCE).getroot().findall('quest'):
+        ids.add(int(row.findtext('quest_id')))
     return ids
 
 
@@ -575,13 +577,27 @@ def main():
         if base == 'FAMILY_PENDING':
             pending[reason] = pending.get(reason, 0) + 1
 
-    header = ('# 6224 全量 owner/保留清单（quest_id, owner, family, reason, evidence）\n'
-              '# 由 build_retention_list.py 生成；门禁 RetailOwnershipGateTest 消费本文件。\n')
+    def esc(text):
+        return text.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;')
+
+    lines = ['<?xml version="1.0" encoding="UTF-8"?>',
+             '<!--',
+             '6224 全量 owner/保留清单（quest_id, owner, family, reason, evidence）',
+             '由 build_retention_list.py 生成；门禁 RetailOwnershipGateTest 消费本文件。',
+             '-->',
+             '<retail_xml_retention>']
+    for qid, owner, family, reason, evidence in rows:
+        lines.append('  <quest>')
+        lines.append(f'    <quest_id>{qid}</quest_id>')
+        lines.append(f'    <owner>{esc(owner)}</owner>')
+        lines.append(f'    <family>{esc(family)}</family>')
+        lines.append(f'    <reason>{esc(reason)}</reason>')
+        lines.append(f'    <evidence>{esc(evidence)}</evidence>')
+        lines.append('  </quest>')
+    lines.append('</retail_xml_retention>')
+    data = '\n'.join(lines) + '\n'
     for out in (OUT, OUT_RESOURCE, OUT_MAIN):
-        with out.open('w', encoding='utf-8') as fh:
-            fh.write(header)
-            for row in rows:
-                fh.write('\t'.join(str(x) for x in row) + '\n')
+        out.write_text(data, encoding='utf-8')
     print(f'total={len(rows)}')
     for (owner, reason), n in sorted(counts.items(), key=lambda kv: (-kv[1], kv[0])):
         print(f'  {owner}/{reason}\t{n}')

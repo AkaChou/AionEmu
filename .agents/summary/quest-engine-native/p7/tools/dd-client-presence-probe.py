@@ -6,7 +6,7 @@
   B. <真端根>/Map/XML/quest.xml                  真端任务元数据
   C. <真端根>/Map/XML/challenge_task.xml         真端挑战任务表
   D. <客户端解包根>/quest.xml / data_driven_quest.xml / challenge_task.xml   客户端三表（玩家可渲染性判据）
-  E. <仓库根>/src/main/resources/.../retail-xml-retention.tsv  owner 台账 + quests/*.xml 存在性
+  E. <仓库根>/src/main/resources/.../retail-xml-retention.xml  owner 台账 + quests/*.xml 存在性
 
 裁定（P7 前置，与计划 §10.3-#5 对齐）：
   CLIENT_PRESENT           客户端任一表有该 id ⇒ 玩家可渲染 ⇒ P7 必须实现（不得冻结）
@@ -19,6 +19,7 @@ import argparse
 import pathlib
 import re
 import sys
+import xml.etree.ElementTree as ET
 from collections import Counter
 
 HERE = pathlib.Path(__file__).resolve()
@@ -45,7 +46,7 @@ REPO = find_repo(HERE)
 RETAIL = find_host_dir("58Server")
 CLIENT = find_host_dir("PycharmProjects/unpak/Quest_unpacked")
 RETAIL_XML = RETAIL / "Map/XML"
-RETENTION = REPO / "src/main/resources/aion/data/static_data/quest/retail/retail-xml-retention.tsv"
+RETENTION = REPO / "src/main/resources/aion/data/static_data/quest/retail/retail-xml-retention.xml"
 DEFS = REPO / "src/main/resources/aion/data/static_data/quest/definitions/quests"
 
 BLOCK = re.compile(r"<quest_data_driven>(.*?)</quest_data_driven>", re.S)
@@ -114,12 +115,10 @@ def quest_ids(path: pathlib.Path) -> set:
 
 def retention() -> dict:
     owners = {}
-    for line in RETENTION.read_text(encoding="utf-8").splitlines():
-        if line.startswith("#") or not line.strip():
-            continue
-        cells = line.split("\t", -1)
-        if cells[0].isdigit():
-            owners[int(cells[0])] = (cells[1], cells[3])
+    for row in ET.parse(RETENTION).getroot().findall('quest'):
+        quest_id = (row.findtext('quest_id') or '').strip()
+        if quest_id.isdigit():
+            owners[int(quest_id)] = (row.findtext('owner') or '', row.findtext('reason') or '')
     return owners
 
 

@@ -1,17 +1,16 @@
 package com.aionemu.gameserver.questEngine.retail;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.w3c.dom.Element;
+
 /**
- * 客户端「交付 NPC 集合」投影（{@code quest_client_handin_npc_sets.tsv}）。
+ * 客户端「交付 NPC 集合」投影（{@code quest_client_handin_npc_sets.xml}）。
  * <p>
  * 与接取轴对称：真端模板的 {@code reward_npc_name} 同样是**逻辑 NPC 名**（例如每日任务在任意
  * 一名住宅管理员处交付），客户端把它展开成可交付的 NPC 集合。当真端名解析出多于一个 id 时，
@@ -57,7 +56,7 @@ public final class RetailClientHandinNpcSets {
 		// Relocated 2026-10-02: single canonical home under quest/retail/; the old dual chain
 		// under src/main/resources/quest/ is retired.
 		InputStream in = RetailClientHandinNpcSets.class.getResourceAsStream(
-			"/aion/data/static_data/quest/retail/quest_client_handin_npc_sets.tsv");
+			"/aion/data/static_data/quest/retail/quest_client_handin_npc_sets.xml");
 		if (in == null) {
 			return EMPTY;
 		}
@@ -68,29 +67,31 @@ public final class RetailClientHandinNpcSets {
 		}
 	}
 
-	/** 解析投影表（UTF-8 TSV；{@code #} 注释行跳过）。 / Parses the projection TSV. */
+	/**
+	 * 解析投影表（{@code quest_client_handin_npc_sets.xml}，列 = quest_id / npc_ids 逗号串；
+	 * 旧 TSV 的「列数不足即跳过」语义保留：quest_id 或缺 npc_ids 的行跳过）。
+	 * Parses the projection XML (columns quest_id / npc_ids comma list; the old TSV
+	 * short-row-skip semantics are preserved: a row missing either column is skipped).
+	 */
 	public static RetailClientHandinNpcSets load(InputStream input) throws IOException {
 		Map<Integer, Set<Integer>> entries = new HashMap<>();
-		try (BufferedReader reader = new BufferedReader(new InputStreamReader(input, StandardCharsets.UTF_8))) {
-			String line;
-			while ((line = reader.readLine()) != null) {
-				if (line.startsWith("#") || line.isBlank()) {
-					continue;
-				}
-				String[] parts = line.split("\t");
-				if (parts.length < 2) {
+		try {
+			for (Element row : RetailLedgerXml.rows(RetailLedgerXml.parse(input), "handin_npc_set")) {
+				String questIdText = RetailLedgerXml.text(row, "quest_id");
+				String npcIdsText = RetailLedgerXml.text(row, "npc_ids");
+				if (questIdText == null || npcIdsText == null) {
 					continue;
 				}
 				Set<Integer> npcIds = new LinkedHashSet<>();
-				for (String id : parts[1].split(",")) {
+				for (String id : npcIdsText.split(",")) {
 					if (!id.isBlank()) {
 						npcIds.add(Integer.parseInt(id.trim()));
 					}
 				}
 				if (npcIds.size() < 2) {
-					throw new IOException("hand-in npc set must declare at least two ids: " + line);
+					throw new IOException("hand-in npc set must declare at least two ids: quest " + questIdText);
 				}
-				entries.put(Integer.parseInt(parts[0].trim()), Set.copyOf(npcIds));
+				entries.put(Integer.parseInt(questIdText), Set.copyOf(npcIds));
 			}
 		} catch (IOException e) {
 			throw e;

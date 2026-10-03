@@ -10,6 +10,7 @@
 # columns frozen, con_quest no longer gating, and the challenge sentinel resolved to the
 # reward npc. Read-only.
 import re, glob, sys
+import xml.etree.ElementTree as ET
 from collections import OrderedDict, Counter
 
 REPO = '/Users/mc/IdeaProjects/AionEmu-test'
@@ -17,10 +18,10 @@ NPC_DIR = REPO + '/src/main/resources/aion/data/static_data/npcs'
 ITEM_DIR = REPO + '/src/main/resources/aion/data/static_data/items/item'
 ZONE_FILE = REPO + '/src/main/resources/aion/data/static_data/zones/zones_retail_enterarea.xml'
 DD_TABLE = REPO + '/src/main/resources/aion/data/static_data/quest/retail/data_driven_quest.xml'
-RETENTION = REPO + '/src/main/resources/aion/data/static_data/quest/retail/retail-xml-retention.tsv'
-ALIASES = REPO + '/src/main/resources/aion/data/static_data/quest/retail/retail-npc-name-aliases.tsv'
-GROUPS_TSV = REPO + '/src/main/resources/aion/data/static_data/quest/retail/retail-quest-ai-name-groups.tsv'
-STRINGS_TSV = REPO + '/src/main/resources/aion/data/static_data/quest/retail/retail-quest-string-ids.tsv'
+RETENTION = REPO + '/src/main/resources/aion/data/static_data/quest/retail/retail-xml-retention.xml'
+ALIASES = REPO + '/src/main/resources/aion/data/static_data/quest/retail/retail-npc-name-aliases.xml'
+GROUPS_XML = REPO + '/src/main/resources/aion/data/static_data/quest/retail/retail-quest-ai-name-groups.xml'
+STRINGS_XML = REPO + '/src/main/resources/aion/data/static_data/quest/retail/retail-quest-string-ids.xml'
 
 ATTR = re.compile(r'\b(npc_id|name|name_desc|quest_ai_name)="([^"]*)"')
 TRAILING = re.compile(r'^(.*?)(?:\s*,\s*|\s+)(\d+)$')
@@ -36,12 +37,9 @@ SENTINEL = '_challengetask_'
 # 真端副本入口表（第九批入仓）：creationId → (resolved, worldId)。
 # The retail instance-entry table (batch 9): creationId → (resolved, worldId).
 INSTANCE_ENTRIES = {}
-for _line in open(REPO + '/src/main/resources/aion/data/static_data/quest/retail/retail-instance-entry-points.tsv', encoding='utf-8'):
-    _line = _line.strip()
-    if not _line or _line.startswith('#'):
-        continue
-    _c = _line.split('\t')
-    INSTANCE_ENTRIES[int(_c[0])] = ( _c[7].strip().lower() == 'true', int(_c[1]) )
+for _row in ET.parse(REPO + '/src/main/resources/aion/data/static_data/quest/retail/retail-instance-entry-points.xml').getroot().findall('entry_point'):
+    INSTANCE_ENTRIES[int(_row.findtext('creation_id'))] = (
+        (_row.findtext('resolved') or '').strip().lower() == 'true', int(_row.findtext('world_id')))
 
 def load_local_npcs():
     by_desc, by_name = {}, {}
@@ -63,22 +61,20 @@ def load_local_npcs():
 
 def load_aliases():
     m = {}
-    for line in open(ALIASES, encoding='utf-8'):
-        line = line.strip()
-        if not line or line.startswith('#'): continue
-        parts = line.split('\t')
-        if len(parts) >= 2 and parts[1].strip():
-            m[parts[0].strip().lower()] = [int(x) for x in parts[1].split(',') if x.strip()]
+    for row in ET.parse(ALIASES).getroot().findall('npc_name_alias'):
+        name = (row.findtext('name') or '').strip().lower()
+        ids_text = (row.findtext('npc_ids') or '').strip()
+        if name and ids_text:
+            m[name] = [int(x) for x in ids_text.split(',') if x.strip()]
     return m
 
 def load_groups():
     m = {}
-    for line in open(GROUPS_TSV, encoding='utf-8'):
-        line = line.strip()
-        if not line or line.startswith('#') or line.startswith('quest_ai_name\t'): continue
-        parts = line.split('\t')
-        if len(parts) < 2 or not parts[1].strip(): continue
-        m[parts[0].strip().lower()] = [x.strip().lower() for x in parts[1].split(',') if x.strip()]
+    for row in ET.parse(GROUPS_XML).getroot().findall('quest_ai_name_group'):
+        name = (row.findtext('quest_ai_name') or '').strip().lower()
+        members = (row.findtext('member_name_descs') or '').strip()
+        if name and members:
+            m[name] = [x.strip().lower() for x in members.split(',') if x.strip()]
     return m
 
 def load_items():
@@ -96,11 +92,10 @@ def load_items():
 
 def load_strings():
     m = {}
-    for line in open(STRINGS_TSV, encoding='utf-8'):
-        line = line.strip()
-        if not line or line.startswith('#'): continue
-        parts = line.split('\t')
-        if len(parts) >= 2: m[parts[0].strip()] = int(parts[1])
+    for row in ET.parse(STRINGS_XML).getroot().findall('quest_string_id'):
+        key = (row.findtext('key') or '').strip()
+        if key and row.findtext('string_id'):
+            m[key] = int(row.findtext('string_id'))
     return m
 
 def load_zones():
@@ -112,12 +107,10 @@ def load_zones():
 
 def load_switch_set():
     owners = {}
-    for line in open(RETENTION, encoding='utf-8'):
-        line = line.strip()
-        if not line or line.startswith('#'): continue
-        cols = line.split('\t')
-        if len(cols) >= 2 and cols[0].isdigit():
-            owners[int(cols[0])] = cols[1]
+    for row in ET.parse(RETENTION).getroot().findall('quest'):
+        quest_id = (row.findtext('quest_id') or '').strip()
+        if quest_id.isdigit():
+            owners[int(quest_id)] = (row.findtext('owner') or '').strip()
     raw = open(DD_TABLE, encoding='utf-8').read()
     rows = OrderedDict()
     for m in re.finditer(r'<quest_data_driven>(.*?)</quest_data_driven>', raw, re.S):
@@ -246,7 +239,7 @@ def scan_faced_actions(cat, cols, items, strings, by_desc, by_name, aliases, gro
             pass  # case 6 = 宿主 Npc 槽 +0x270 空桩（EXE FUN_140094480 = return;）⇒ 真端零效果，镜像忽略
         elif action == 'INSTANCE':
             # 2026-10-03 偏差修复第九批落面：载荷 = `creationId, worldId, leaveProgress[, 成员名…]`；
-            # 立即面落点 = retail-instance-entry-points.tsv（真端 instance_creation.xml ×
+            # 立即面落点 = retail-instance-entry-points.xml（真端 instance_creation.xml ×
             # Map/Worlds/<world>/world.xml location_alias_list）；creation 2 的别名在真端
             # idelim/world.xml 本就缺失（内在缺失）⇒ 该行维持冻结；离场检查面宿主触发链未定 ⇒
             # 登记残余偏差不实现；成员名尾巴解析忽略（仅冻结行携带）。

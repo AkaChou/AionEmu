@@ -5,9 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.io.BufferedReader;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -26,6 +24,7 @@ import java.util.stream.Stream;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.objenesis.ObjenesisStd;
+import org.w3c.dom.Element;
 
 import com.aionemu.gameserver.model.Gender;
 import com.aionemu.gameserver.model.PlayerClass;
@@ -38,6 +37,7 @@ import com.aionemu.gameserver.questEngine.definition.QuestDialogContract;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.questEngine.retail.RetailItemNameIndex;
+import com.aionemu.gameserver.questEngine.retail.RetailLedgerRows;
 import com.aionemu.gameserver.questEngine.tablelane.DataDrivenNativeRuntime.FreezeReason;
 import com.aionemu.gameserver.questEngine.tablelane.DataDrivenQuestTable.Kind;
 import com.aionemu.gameserver.questEngine.tablelane.DataDrivenQuestTable.Row;
@@ -69,7 +69,7 @@ import com.aionemu.gameserver.world.WorldPosition;
 class DataDrivenNativeRuntimeGateTest {
 
 	private static final String DD_TABLE = "/aion/data/static_data/quest/retail/data_driven_quest.xml";
-	private static final String RETENTION = "/quest/retail-xml-retention.tsv";
+	private static final String RETENTION = "/quest/retail-xml-retention.xml";
 	private static final Path ZONES_DIR = Path.of("src/main/resources/aion/data/static_data/zones");
 	private static final Pattern ZONE_NAME = Pattern.compile("<zone\\b[^>]*\\bname=\"([^\"]+)\"");
 
@@ -578,7 +578,7 @@ class DataDrivenNativeRuntimeGateTest {
 				+ "别名在真端 idelim/world.xml 本就缺失 = 内在缺失；10034/20034 已随第九批落面解冻〕）");
 		// 步 e2 后唯一未解析面 = 切换集行引用的 LF6 真端缺席进区别名（原文大小写，§10.3-#23）；
 		// 挑战哨兵 `_challengetask_` 已按 P0c-58 四源裁定落面（接取 NPC = reward_npc_name），
-		// MESSAGE 字符串键经 retail-quest-string-ids.tsv 全部解析。
+		// MESSAGE 字符串键经 retail-quest-string-ids.xml 全部解析。
 		// 接取直方图（去重任务数，离线镜像权威值）：talk 1133（含哨兵 6）/ itemplay 13 /
 		// enterworld 12 / leveluplogin 15 / enterarea 20（步 f kind-6 落面）/ none 264。
 		assertEquals(1133, runtime.acquireTalkInterests().values().stream().flatMap(List::stream).distinct().count(),
@@ -1236,17 +1236,11 @@ class DataDrivenNativeRuntimeGateTest {
 
 	private static Map<Integer, String> retentionOwners() throws Exception {
 		Map<Integer, String> owners = new LinkedHashMap<>();
-		try (BufferedReader reader = new BufferedReader(
-				new InputStreamReader(resource(RETENTION), StandardCharsets.UTF_8))) {
-			String line;
-			while ((line = reader.readLine()) != null) {
-				if (line.isBlank() || line.startsWith("#")) {
-					continue;
-				}
-				String[] columns = line.split("\t");
-				if (columns.length >= 2 && columns[0].chars().allMatch(Character::isDigit)) {
-					owners.put(Integer.parseInt(columns[0]), columns[1]);
-				}
+		for (Element row : RetailLedgerRows.rows(RETENTION, "quest")) {
+			String questId = RetailLedgerRows.cell(row, "quest_id");
+			String owner = RetailLedgerRows.cell(row, "owner");
+			if (questId != null && questId.chars().allMatch(Character::isDigit) && owner != null) {
+				owners.put(Integer.parseInt(questId), owner);
 			}
 		}
 		return owners;

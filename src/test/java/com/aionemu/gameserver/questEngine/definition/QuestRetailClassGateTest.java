@@ -2,6 +2,7 @@ package com.aionemu.gameserver.questEngine.definition;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.w3c.dom.Element;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -14,6 +15,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
+
+import com.aionemu.gameserver.questEngine.retail.RetailLedgerRows;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -47,7 +50,7 @@ class QuestRetailClassGateTest {
 	/** 真端元数据层已登记的职业轴分歧（真端优先）。 / Registered retail-priority class-axis divergences. */
 	private static final String DIVERGENCE_RESOURCE = "/quest/retail-metadata-divergences.tsv";
 	/** 保留清单：owner=RETAIL_TABLE 的任务由真端定义驱动。 / Retention manifest: retail-driven quest owners. */
-	private static final String RETENTION_RESOURCE = "/aion/data/static_data/quest/retail/retail-xml-retention.tsv";
+	private static final String RETENTION_RESOURCE = "/aion/data/static_data/quest/retail/retail-xml-retention.xml";
 
 	private static final String RETAIL_PLACEHOLDER = "RETAIL_PLACEHOLDER";
 
@@ -142,16 +145,9 @@ class QuestRetailClassGateTest {
 	/** 保留清单里 owner=RETAIL_TABLE 的任务（定义来自真端合成器）。 / Retail-driven quest ids. */
 	private static Set<Integer> retailOwnedIds() throws IOException {
 		Set<Integer> ids = new TreeSet<>();
-		try (BufferedReader reader = open(RETENTION_RESOURCE)) {
-			String line;
-			while ((line = reader.readLine()) != null) {
-				if (line.isEmpty() || line.startsWith("#")) {
-					continue;
-				}
-				String[] parts = line.split("\\t", -1);
-				if (parts.length >= 3 && "RETAIL_TABLE".equals(parts[1])) {
-					ids.add(Integer.parseInt(parts[0]));
-				}
+		for (Element row : RetailLedgerRows.rows(RETENTION_RESOURCE, "quest")) {
+			if ("RETAIL_TABLE".equals(RetailLedgerRows.cell(row, "owner"))) {
+				ids.add(Integer.parseInt(RetailLedgerRows.cell(row, "quest_id")));
 			}
 		}
 		return Set.copyOf(ids);

@@ -42,7 +42,7 @@ import com.aionemu.gameserver.questEngine.retail.RetailItemNameIndex;
 class SimpleTalkNativeFamilyGateTest {
 
 	private static final int EXPECTED_ROWS = 3152;
-	/** XML_RETENTION 行数（`retail-xml-retention.tsv` 中 SimpleTalk 家族的行数）。 / XML-retained SimpleTalk rows. */
+	/** XML_RETENTION 行数（`retail-xml-retention.xml` 中 SimpleTalk 家族的行数）。 / XML-retained SimpleTalk rows. */
 	private static final int XML_RETAINED_ROWS = 18;
 	/**
 	 * 未解析的 NPC 名数量（P9 语义层收口后冻结）：3 个系统发放哨兵 + 1 个真端缺名

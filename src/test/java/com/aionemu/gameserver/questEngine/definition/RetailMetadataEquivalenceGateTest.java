@@ -28,6 +28,7 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 
 import com.aionemu.gameserver.questEngine.retail.RetailItemNameIndex;
+import com.aionemu.gameserver.questEngine.retail.RetailLedgerRows;
 import com.aionemu.gameserver.questEngine.retail.RetailNpcNameIndex;
 import com.aionemu.gameserver.questEngine.retail.RetailQuestMetadataCompiler;
 import com.aionemu.gameserver.questEngine.retail.RetailQuestXmlTable;
@@ -54,7 +55,7 @@ class RetailMetadataEquivalenceGateTest {
 
 	private static final String RESOURCE_PREFIX = "/aion/data/static_data/";
 	private static final String RETAIL_QUEST_XML = RESOURCE_PREFIX + "quest/retail/quest.xml";
-	private static final String NAME_IDS_TSV = RESOURCE_PREFIX + "quest/retail/quest_name_string_ids.tsv";
+	private static final String NAME_IDS_XML = RESOURCE_PREFIX + "quest/retail/quest_name_string_ids.xml";
 	private static final String NPC_DIR = RESOURCE_PREFIX + "npcs/";
 	private static final String ITEM_DIR = RESOURCE_PREFIX + "items/item/";
 	private static final String RANDOM_REWARDS = RESOURCE_PREFIX + "quest/legacy/quest_random_rewards.xml";
@@ -310,12 +311,9 @@ class RetailMetadataEquivalenceGateTest {
 
 	private static Map<Integer, Integer> loadNameIds() throws IOException {
 		Map<Integer, Integer> ids = new HashMap<>();
-		for (String line : lines(open(NAME_IDS_TSV))) {
-			if (line.startsWith("#") || line.isBlank()) {
-				continue;
-			}
-			String[] parts = line.split("\t");
-			ids.put(Integer.parseInt(parts[0].substring("STR_QUEST_NAME_Q".length())), Integer.parseInt(parts[1]));
+		for (Element row : RetailLedgerRows.rows(NAME_IDS_XML, "name_string_id")) {
+			ids.put(Integer.parseInt(RetailLedgerRows.cell(row, "key").substring("STR_QUEST_NAME_Q".length())),
+				Integer.parseInt(RetailLedgerRows.cell(row, "string_id")));
 		}
 		return ids;
 	}

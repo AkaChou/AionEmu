@@ -16,6 +16,8 @@ import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.w3c.dom.Element;
+
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.PersistentState;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -27,6 +29,7 @@ import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.services.QuestService;
 import com.aionemu.gameserver.questEngine.retail.RetailItemNameIndex;
+import com.aionemu.gameserver.questEngine.retail.RetailLedgerXml;
 import com.aionemu.gameserver.questEngine.retail.RetailStringIds;
 import com.aionemu.gameserver.questEngine.tablelane.DataDrivenQuestTable.Kind;
 import com.aionemu.gameserver.questEngine.tablelane.DataDrivenQuestTable.Row;
@@ -375,7 +378,7 @@ public final class DataDrivenNativeRuntime {
 	}
 
 	/** retention 台账资源（owner/family 列 = 切换集权威来源）。 / The retention ledger (switch-set source). */
-	private static final String RETENTION_RESOURCE = "/aion/data/static_data/quest/retail/retail-xml-retention.tsv";
+	private static final String RETENTION_RESOURCE = "/aion/data/static_data/quest/retail/retail-xml-retention.xml";
 
 	private static DataDrivenNativeRuntime loadProduction() {
 		Set<Integer> switchSet = retentionSwitchSet();
@@ -410,14 +413,10 @@ public final class DataDrivenNativeRuntime {
 				throw new IllegalStateException("DATA_DRIVEN_RETENTION_MISSING: " + RETENTION_RESOURCE);
 			}
 			Set<Integer> ids = new java.util.TreeSet<>();
-			for (String line : new java.io.BufferedReader(new java.io.InputStreamReader(input,
-					java.nio.charset.StandardCharsets.UTF_8)).lines().toList()) {
-				if (line.isBlank() || line.startsWith("#")) {
-					continue;
-				}
-				String[] parts = line.split("\t", -1);
-				if ("RETAIL_TABLE".equals(parts[1]) && "DataDriven".equals(parts[2])) {
-					ids.add(Integer.parseInt(parts[0]));
+			for (Element row : RetailLedgerXml.rows(RetailLedgerXml.parse(input), "quest")) {
+				if ("RETAIL_TABLE".equals(RetailLedgerXml.text(row, "owner"))
+						&& "DataDriven".equals(RetailLedgerXml.text(row, "family"))) {
+					ids.add(Integer.parseInt(RetailLedgerXml.text(row, "quest_id")));
 				}
 			}
 			if (ids.isEmpty()) {

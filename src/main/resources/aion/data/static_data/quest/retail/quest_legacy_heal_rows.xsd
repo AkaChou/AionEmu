@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- quest_legacy_heal_rows.xml 表 schema（quest retail 表门禁用，2026-10-03 台账 XML 化同批）。
+     镜像口径 = 装载器 fail-closed 规则 ∪ 观察形全域钉（证据 + 生成器：
+     .agents/summary/quest-engine-native/p0b/）：
+     - 行 = <heal_row>（quest_id
+       全表唯一；quest_id/stale_row/reward_row 非负 int 必填）；evidence
+       = 逐任务依据（观察全域非空白钉）；stale_row≠reward_row
+       语义与「与测试侧归一化登记互斥」由回归与门禁兜底。
+     quest_legacy_heal_rows.xml schema (quest retail table gate, same batch as the 2026-10-03 ledger XML
+     conversion). Mirrors the loader fail-closed rules plus observed-universe shape pins (evidence +
+     generator under `.agents/summary/quest-engine-native/p0b/`):
+     - Rows are <heal_row> (unique quest_id; non-negative ints required); evidence is the per-quest ground
+       (observed non-blank pin); the stale≠reward semantics and the test-side normalization disjointness
+       stay regression/gate concerns. -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+  <xs:element name="quest_legacy_heal_rows">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="heal_row" minOccurs="1" maxOccurs="unbounded">
+          <xs:complexType>
+            <xs:all>
+              <xs:element name="quest_id" minOccurs="1">
+                <xs:simpleType>
+                  <xs:restriction base="xs:int">
+                    <xs:minInclusive value="0"/>
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="stale_row" minOccurs="1">
+                <xs:simpleType>
+                  <xs:restriction base="xs:int">
+                    <xs:minInclusive value="0"/>
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="reward_row" minOccurs="1">
+                <xs:simpleType>
+                  <xs:restriction base="xs:int">
+                    <xs:minInclusive value="0"/>
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="evidence" minOccurs="1">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:whiteSpace value="collapse"/>
+                    <xs:minLength value="1"/>
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+            </xs:all>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+    <xs:unique name="quest_legacy_heal_rows-row-key-unique">
+      <xs:selector xpath="heal_row"/>
+      <xs:field xpath="quest_id"/>
+    </xs:unique>
+  </xs:element>
+</xs:schema>

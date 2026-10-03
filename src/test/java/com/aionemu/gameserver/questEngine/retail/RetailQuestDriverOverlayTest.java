@@ -4,11 +4,9 @@ import com.aionemu.gameserver.questEngine.definition.QuestCatalog;
 import com.aionemu.gameserver.questEngine.definition.QuestCatalogEntry;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Test;
+import org.w3c.dom.Element;
 
-import java.io.BufferedReader;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
@@ -32,7 +30,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 class RetailQuestDriverOverlayTest {
 
-	private static final String RETENTION = "/aion/data/static_data/quest/retail/retail-xml-retention.tsv";
+	private static final String RETENTION = "/aion/data/static_data/quest/retail/retail-xml-retention.xml";
 	private static final String PREVIOUS_VALUE = System.getProperty("aion.quest.retailDriver");
 
 	@AfterAll
@@ -176,13 +174,9 @@ class RetailQuestDriverOverlayTest {
 
 	private Set<Integer> retailOwnedIds() throws Exception {
 		Set<Integer> ids = new TreeSet<>();
-		for (String line : lines(open(RETENTION))) {
-			if (line.startsWith("#") || line.isBlank()) {
-				continue;
-			}
-			String[] parts = line.split("\t", -1);
-			if ("RETAIL_TABLE".equals(parts[1])) {
-				ids.add(Integer.parseInt(parts[0]));
+		for (Element row : RetailLedgerRows.rows(RETENTION, "quest")) {
+			if ("RETAIL_TABLE".equals(RetailLedgerRows.cell(row, "owner"))) {
+				ids.add(Integer.parseInt(RetailLedgerRows.cell(row, "quest_id")));
 			}
 		}
 		return ids;
@@ -190,23 +184,17 @@ class RetailQuestDriverOverlayTest {
 
 	private Map<Integer, String> retentionOwners() throws Exception {
 		Map<Integer, String> owners = new java.util.HashMap<>();
-		for (String line : lines(open(RETENTION))) {
-			if (line.startsWith("#") || line.isBlank()) {
-				continue;
-			}
-			String[] parts = line.split("\t", -1);
-			owners.putIfAbsent(Integer.parseInt(parts[0]), parts[1]);
+		for (Element row : RetailLedgerRows.rows(RETENTION, "quest")) {
+			owners.putIfAbsent(Integer.parseInt(RetailLedgerRows.cell(row, "quest_id")),
+				RetailLedgerRows.cell(row, "owner"));
 		}
 		return owners;
 	}
 
 	private Set<Integer> catalogIds() throws Exception {
 		Set<Integer> ids = new TreeSet<>();
-		for (String line : lines(open(RETENTION))) {
-			if (line.startsWith("#") || line.isBlank()) {
-				continue;
-			}
-			ids.add(Integer.parseInt(line.split("\t", -1)[0]));
+		for (Element row : RetailLedgerRows.rows(RETENTION, "quest")) {
+			ids.add(Integer.parseInt(RetailLedgerRows.cell(row, "quest_id")));
 		}
 		return ids;
 	}
@@ -242,12 +230,10 @@ class RetailQuestDriverOverlayTest {
 
 	private java.util.Map<Integer, Integer> nameIds() throws Exception {
 		java.util.Map<Integer, Integer> ids = new java.util.HashMap<>();
-		for (String line : lines(open("/aion/data/static_data/quest/retail/quest_name_string_ids.tsv"))) {
-			if (line.startsWith("#") || line.isBlank()) {
-				continue;
-			}
-			String[] parts = line.split("\t");
-			ids.put(Integer.parseInt(parts[0].substring("STR_QUEST_NAME_Q".length())), Integer.parseInt(parts[1]));
+		for (Element row : RetailLedgerRows.rows(
+				"/aion/data/static_data/quest/retail/quest_name_string_ids.xml", "name_string_id")) {
+			ids.put(Integer.parseInt(RetailLedgerRows.cell(row, "key").substring("STR_QUEST_NAME_Q".length())),
+				Integer.parseInt(RetailLedgerRows.cell(row, "string_id")));
 		}
 		return ids;
 	}
@@ -258,12 +244,6 @@ class RetailQuestDriverOverlayTest {
 			factory.setFeature(javax.xml.XMLConstants.FEATURE_SECURE_PROCESSING, true);
 			factory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
 			return factory.newDocumentBuilder().parse(input);
-		}
-	}
-
-	private java.util.List<String> lines(InputStream input) throws Exception {
-		try (var reader = new BufferedReader(new InputStreamReader(input, StandardCharsets.UTF_8))) {
-			return reader.lines().toList();
 		}
 	}
 

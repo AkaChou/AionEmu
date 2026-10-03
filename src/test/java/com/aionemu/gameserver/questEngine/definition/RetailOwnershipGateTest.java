@@ -2,12 +2,13 @@ package com.aionemu.gameserver.questEngine.definition;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.w3c.dom.Element;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -17,8 +18,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import com.aionemu.gameserver.questEngine.retail.RetailLedgerRows;
 import com.aionemu.gameserver.questEngine.retail.RetailSimpleHuntTable;
 
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -26,17 +29,20 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 /**
  * 归属门禁（提示词 §4.E.1/E.5）：每个生产任务的定义来源唯一且与保留清单一致。
  * <ul>
- * <li>{@code retail-xml-retention.tsv} 必须覆盖生产任务全集（XML catalog ∪ 真端注入），且没有 XML 的任务必须是 {@code RETAIL_TABLE}；</li>
+ * <li>{@code retail-xml-retention.xml} 必须覆盖生产任务全集（XML catalog ∪ 真端注入），且没有 XML 的任务必须是 {@code RETAIL_TABLE}；</li>
  * <li>{@code RETAIL_TABLE} 行必须声明家族；保留行必须给出已知原因
  * （SCRIPTED / NO_TABLE / SEMANTIC_GAP:*）；</li>
- * <li>已入仓家族（当前 SimpleHunt）的清单判定必须与真端表逐任务一致。</li>
+ * <li>已入仓家族（当前 SimpleHunt）的清单判定必须与真端表逐任务一致；</li>
+ * <li>2026-10-03 台账 XML 化批新增：retention test 副本与 main 副本逐字节相等（此前无门禁守卫）。</li>
  * </ul>
- * Ownership gate: exactly one owner per catalog quest, consistent with the retail tables.
+ * Ownership gate: exactly one owner per catalog quest, consistent with the retail tables; the
+ * 2026-10-03 ledger-XML batch adds the byte-identity pin between the two retention copies.
  */
 class RetailOwnershipGateTest {
 
 	private static final String CATALOG = "/aion/data/static_data/quest/definitions/quest_definition_catalog.xml";
-	private static final String RETENTION = "/quest/retail-xml-retention.tsv";
+	private static final String RETENTION = "/quest/retail-xml-retention.xml";
+	private static final String MAIN_RETENTION = "/aion/data/static_data/quest/retail/retail-xml-retention.xml";
 	private static final String SIMPLE_HUNT_TABLE = "/aion/data/static_data/quest/retail/Quest_SimpleHunt.xml";
 	private static final String SIMPLE_TALK_TABLE = "/aion/data/static_data/quest/retail/Quest_SimpleTalk.xml";
 
@@ -184,23 +190,50 @@ class RetailOwnershipGateTest {
 
 	private static Map<Integer, Row> loadRetention() throws IOException {
 		Map<Integer, Row> rows = new HashMap<>();
-		try (BufferedReader reader = new BufferedReader(
-			new InputStreamReader(open(RETENTION), StandardCharsets.UTF_8))) {
-			String line;
-			while ((line = reader.readLine()) != null) {
-				if (line.startsWith("#") || line.isBlank()) {
-					continue;
-				}
-				String[] parts = line.split("\t", -1);
-				assertEquals(5, parts.length, "retention row must have 5 columns: " + line);
-				Row row = new Row(Integer.parseInt(parts[0]), parts[1], parts[2], parts[3]);
-				Row previous = rows.put(row.questId(), row);
-				if (previous != null) {
-					throw new AssertionError("duplicate owner row for quest " + row.questId());
-				}
+		for (Element element : RetailLedgerRows.rows(RETENTION, "quest")) {
+			String questId = RetailLedgerRows.cell(element, "quest_id");
+			String owner = RetailLedgerRows.cell(element, "owner");
+			String family = RetailLedgerRows.cell(element, "family");
+			String reason = RetailLedgerRows.cell(element, "reason");
+			String evidence = RetailLedgerRows.cell(element, "evidence");
+			// 旧 TSV「行必须 5 列」的钉子：五列任一缺席即红。
+			// The old five-column pin: any missing column is red.
+			assertNotNull(questId, "retention row must carry all five columns");
+			assertNotNull(owner, "retention row must carry all five columns");
+			assertNotNull(family, "retention row must carry all five columns");
+			assertNotNull(reason, "retention row must carry all five columns");
+			assertNotNull(evidence, "retention row must carry all five columns");
+			Row row = new Row(Integer.parseInt(questId), owner, family, reason);
+			Row previous = rows.put(row.questId(), row);
+			if (previous != null) {
+				throw new AssertionError("duplicate owner row for quest " + row.questId());
 			}
 		}
 		return rows;
+	}
+
+	/**
+	 * retention 双副本一致性（2026-10-03 台账 XML 化批新增）：test 副本与 main 副本逐字节相等。
+	 * <p>
+	 * 此前双副本零门禁守卫（唯一同步点 = 生成器同批落两副本）；漂移会让部分门禁静默跑在旧数据上。
+	 * Ledger-XML batch addition: the two retention copies must stay byte-identical. Previously
+	 * unguarded (the generator writes both in one run); drift would silently run some gates on
+	 * stale data.
+	 */
+	@Test
+	void retentionCopiesStayIdentical() throws IOException {
+		byte[] mainCopy = readAll(MAIN_RETENTION);
+		byte[] testCopy = readAll(RETENTION);
+		assertArrayEquals(mainCopy, testCopy,
+			() -> "retention copies drifted: main sha256=" + sha256(mainCopy) + " test sha256=" + sha256(testCopy));
+	}
+
+	private static String sha256(byte[] data) {
+		try {
+			return java.util.HexFormat.of().formatHex(MessageDigest.getInstance("SHA-256").digest(data));
+		} catch (NoSuchAlgorithmException e) {
+			throw new AssertionError(e);
+		}
 	}
 
 	/** 真端模板表里的任务 id（XML 形式，与 SimpleHunt 行同构）。 / Quest ids of a retail table. */

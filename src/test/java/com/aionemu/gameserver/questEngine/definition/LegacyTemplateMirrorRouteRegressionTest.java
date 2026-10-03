@@ -17,7 +17,7 @@ class LegacyTemplateMirrorRouteRegressionTest {
 	@Test
 	void itemCollectingMirrorsUseTheClientOwnedReportAndTurnInProtocol() throws Exception {
 		// 2237 仍是 XML_RETENTION 成员（真端 SimpleCollectItem 行的交付 NPC 三方不一致：
-		// retail-xml-retention.tsv:702 SEMANTIC_GAP:REPORT_NPC_DIVERGENCE），不进真端编译集合
+		// retail-xml-retention.xml：SEMANTIC_GAP:REPORT_NPC_DIVERGENCE），不进真端编译集合
 		// （RetailQuestDriver.java:413-440：只有 RETAIL_TABLE 行进 retailOwned*，XML_RETENTION 只记
 		// reasons），因此定义由 XML 驱动、不在 S1 面内——报告页 SELECT5(2375) 与 20002
 		// (CHECK_USER_HAS_QUEST_ITEM_SIMPLE) 双 prio 检查对逐字保留

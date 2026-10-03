@@ -25,7 +25,7 @@ import com.aionemu.gameserver.questEngine.tablelane.NativeQuestTableLoader;
  * （不复用 handler / 编译器判定），把「表行 → 退役 → NATIVE_READY」三段冻结下来：
  * <ul>
  *   <li>装载：{@code Quest_CombineTask.xml} 574 行（装载器逐行 = 真端表逐行）；</li>
- *   <li>退役集（{@code retail-xml-retention.tsv} owner=RETAIL_TABLE）；</li>
+ *   <li>退役集（{@code retail-xml-retention.xml} owner=RETAIL_TABLE）；</li>
  *   <li>NATIVE_READY = 退役 ∧ 非 XML-only ∧ 接取 NPC 名唯一 ×N ∧ 技能符号可解 ∧ 技能点与真端元数据一致
  *       ∧ 产物单槽且符号可解 ∧ 分量非空且全部可解 ∧ {@code (skill, product)} 配方唯一 ∧ 真端元数据
  *       产物/分量一致；</li>

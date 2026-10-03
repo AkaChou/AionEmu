@@ -22,7 +22,7 @@ import com.aionemu.gameserver.questEngine.retail.RetailQuestMetadataCompiler;
  * P5 两族的**行集/可行性冻结门**（计划 §7 批门第 1 条）：
  * <ul>
  *   <li>SimpleUseItem 160 行 / SimpleItemPlay 43 行（装载器逐行 = 真端表逐行）；</li>
- *   <li>退役集（{@code retail-xml-retention.tsv} owner=RETAIL_TABLE）= 104 / 6；</li>
+ *   <li>退役集（{@code retail-xml-retention.xml} owner=RETAIL_TABLE）= 104 / 6；</li>
  *   <li>NATIVE_READY = 退役 ∧ 非 XML-only ∧ 接取/交付 NPC 可解 ∧ 道具符号（两通道）可解 ∧
  *       中继 NPC 与第 K 步发/扣物品可解 ∧ 真端元数据可编译 ⇒ **102 / 6**；</li>
  *   <li>fail-closed 残余冻结 = SimpleUseItem {30720, 30723}（复合交付名无客户端登记，同 P4 39611/49611 类）。</li>

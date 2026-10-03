@@ -80,7 +80,7 @@ class RetailRewardWindowRouteTest {
 
 	/**
 	 * 已切到 native 车道的多交付 NPC 行：交付集由客户端任务书登记
-	 * （{@code quest_client_handin_npc_sets.tsv}，P8 起 reward_npcs 台账退役后为唯一登记面），
+	 * （{@code quest_client_handin_npc_sets.xml}，P8 起 reward_npcs 台账退役后为唯一登记面），
 	 * 处理器按集合逐个 NPC 受理奖励动作；native 车道不产生
 	 * quest 域全局 AUTO_REWARD 路由，结构上即不存在 typed 车道那条 {@code AMBIGUOUS_TRANSITION} 风险。
 	 * <p>

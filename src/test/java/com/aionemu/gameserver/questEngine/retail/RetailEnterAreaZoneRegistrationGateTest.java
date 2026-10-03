@@ -17,6 +17,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
+import org.w3c.dom.Element;
 
 import com.aionemu.gameserver.questEngine.tablelane.DataDrivenNativeRuntime;
 import com.aionemu.gameserver.questEngine.tablelane.DataDrivenQuestTable;
@@ -84,19 +85,17 @@ class RetailEnterAreaZoneRegistrationGateTest {
 		return NativeEnterAreaPort.create(table, retentionSwitchSet(), registeredNames);
 	}
 
-	/** 切换集 = retention 台账 owner RETAIL_TABLE ∧ family DataDriven（与运行时同源解析）。 /
-	 * Switch set from the retention ledger (same source the runtime uses). */
+	/** 切换集 = retention 台账 owner RETAIL_TABLE ∧ family DataDriven（与运行时同源解析；
+	 * 2026-10-03 台账 XML 化批：文件系统直读改 classpath 主副本，去掉 CWD 依赖）。 /
+	 * Switch set from the retention ledger (same source the runtime uses; the ledger-XML batch
+	 * replaced the working-tree file read with a classpath read of the main copy). */
 	private static Set<Integer> retentionSwitchSet() throws Exception {
 		Set<Integer> ids = new TreeSet<>();
-		for (String line : Files.readAllLines(
-				Path.of("src/main/resources/aion/data/static_data/quest/retail/retail-xml-retention.tsv"),
-				StandardCharsets.UTF_8)) {
-				if (line.isBlank() || line.startsWith("#")) {
-					continue;
-				}
-				String[] cells = line.split("\\t");
-			if (cells.length > 2 && "RETAIL_TABLE".equals(cells[1]) && "DataDriven".equals(cells[2])) {
-				ids.add(Integer.parseInt(cells[0]));
+		for (Element row : RetailLedgerRows.rows(
+				"/aion/data/static_data/quest/retail/retail-xml-retention.xml", "quest")) {
+			if ("RETAIL_TABLE".equals(RetailLedgerRows.cell(row, "owner"))
+					&& "DataDriven".equals(RetailLedgerRows.cell(row, "family"))) {
+				ids.add(Integer.parseInt(RetailLedgerRows.cell(row, "quest_id")));
 			}
 		}
 		assertFalse(ids.isEmpty(), "retention 切换集不得为空");

@@ -4,19 +4,20 @@
 口径（计划 §8.9）：断言只来自真端表行 + 静态数据 id（npc_template / item name_desc），
 不复用被测实现取数；生成一次后作为冻结金标（表行漂移即红灯）。
 
-输入：Quest_SimpleTalk.xml、quest.xml、npc_template_*.xml、items/item/*.xml、retail-npc-name-aliases.tsv
+输入：Quest_SimpleTalk.xml、quest.xml、npc_template_*.xml、items/item/*.xml、retail-npc-name-aliases.xml
 输出：src/test/java/com/aionemu/gameserver/questEngine/definition/<Class>.java
 """
 import pathlib
 import re
 import sys
+import xml.etree.ElementTree as ET
 
 REPO = pathlib.Path('/Users/mc/IdeaProjects/AionEmu-test')
 DATA = REPO / 'src/main/resources/aion/data/static_data'
 TALK = DATA / 'quest/retail/Quest_SimpleTalk.xml'
 QUEST = DATA / 'quest/retail/quest.xml'
-ALIASES = DATA / 'quest/retail/retail-npc-name-aliases.tsv'
-RETENTION = DATA / 'quest/retail/retail-xml-retention.tsv'
+ALIASES = DATA / 'quest/retail/retail-npc-name-aliases.xml'
+RETENTION = DATA / 'quest/retail/retail-xml-retention.xml'
 NPCS = DATA / 'npcs'
 ITEMS = DATA / 'items/item'
 OUT_DIR = REPO / 'src/test/java/com/aionemu/gameserver/questEngine/definition'
@@ -64,13 +65,10 @@ def load_xml_retained():
     """SimpleTalk 家族中仍保留 XML 定义（native 只装载不路由）的行。"""
     retained = set()
     if RETENTION.exists():
-        for line in read(RETENTION).splitlines():
-            if line.startswith('#'):
-                continue
-            parts = line.split('\t')
-            if len(parts) >= 3 and parts[0].strip().isdigit() and parts[1] == 'XML_RETENTION' \
-                    and parts[2] == 'SimpleTalk':
-                retained.add(int(parts[0]))
+        for row in ET.parse(RETENTION).getroot().findall('quest'):
+            if (row.findtext('owner') or '').strip() == 'XML_RETENTION' \
+                    and (row.findtext('family') or '').strip() == 'SimpleTalk':
+                retained.add(int(row.findtext('quest_id')))
     return retained
 
 
@@ -110,13 +108,11 @@ def load_npcs():
                     index.setdefault(value, set()).add(int(npc_id))
     aliases = {}
     if ALIASES.exists():
-        for line in read(ALIASES).splitlines():
-            if not line.strip() or line.startswith('#'):
-                continue
-            parts = line.split('\t')
-            if len(parts) >= 2 and parts[0].strip():
-                aliases.setdefault(parts[0].strip().lower(), set()).update(
-                    int(x) for x in re.findall(r'\d+', parts[1]))
+        for row in ET.parse(ALIASES).getroot().findall('npc_name_alias'):
+            name = (row.findtext('name') or '').strip()
+            if name:
+                aliases.setdefault(name.lower(), set()).update(
+                    int(x) for x in re.findall(r'\d+', row.findtext('npc_ids') or ''))
     return by_desc, by_name, aliases
 
 

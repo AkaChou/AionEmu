@@ -42,7 +42,7 @@ class SimpleHuntNativeFamilyGateTest {
 	private static NativeQuestTableLoader loader;
 	private static CameraRegistry cameraRegistry;
 
-	/** 真端表行仍带 XML 定义的行（`retail-xml-retention.tsv` = XML_RETENTION，SimpleHunt 3 行）。 */
+	/** 真端表行仍带 XML 定义的行（`retail-xml-retention.xml` = XML_RETENTION，SimpleHunt 3 行）。 */
 	private static final Set<Integer> XML_RETAINED_ROWS = Set.of(14112, 14123, 16961);
 
 	@BeforeAll

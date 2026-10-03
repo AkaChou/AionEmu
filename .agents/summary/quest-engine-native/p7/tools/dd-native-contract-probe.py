@@ -4,7 +4,7 @@
 证据面（全部只读、仓内可复算，不读外部根）：
   A. <仓库根>/src/main/resources/aion/data/static_data/quest/retail/data_driven_quest.xml
      真端 DD 表（仓内 vendor 副本；注释块不是行）
-  B. <仓库根>/src/main/resources/.../retail/retail-xml-retention.tsv   owner 台账
+  B. <仓库根>/src/main/resources/.../retail/retail-xml-retention.xml   owner 台账
   C. <仓库根>/src/test/resources/quest/retail-data-driven-client-absent.tsv
      客户端三表皆无的孤行 + 真端表注释禁用行（一次性客户端证据快照，P7 前置裁定）
 
@@ -26,6 +26,7 @@ import hashlib
 import json
 import pathlib
 import re
+import xml.etree.ElementTree as ET
 import sys
 
 HERE = pathlib.Path(__file__).resolve()
@@ -52,7 +53,7 @@ def find_repo(start: pathlib.Path) -> pathlib.Path:
 
 REPO = find_repo(HERE)
 DD_TABLE = REPO / "src/main/resources/aion/data/static_data/quest/retail/data_driven_quest.xml"
-RETENTION = REPO / "src/main/resources/aion/data/static_data/quest/retail/retail-xml-retention.tsv"
+RETENTION = REPO / "src/main/resources/aion/data/static_data/quest/retail/retail-xml-retention.xml"
 ABSENT_FIXTURE = REPO / "src/test/resources/quest/retail-data-driven-client-absent.tsv"
 
 BLOCK = re.compile(r"<quest_data_driven>(.*?)</quest_data_driven>", re.S)
@@ -101,11 +102,8 @@ def dd_rows() -> dict:
 
 def retention_owners() -> dict:
     owners = {}
-    for line in RETENTION.read_text("utf-8").splitlines():
-        if not line.strip() or line.startswith("#"):
-            continue
-        cells = line.split("\t")
-        owners.setdefault(int(cells[0]), cells[1])
+    for row in ET.parse(RETENTION).getroot().findall('quest'):
+        owners.setdefault(int(row.findtext('quest_id')), row.findtext('owner'))
     return owners
 
 

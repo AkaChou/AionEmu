@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+真端副本入口落点（偏差修复第九批入仓，2026-10-03）。
+数据源：真端 Map/XML/instance_creation.xml（creationId → worldId + start_point_alias_01/02）
+× 真端 Map/Worlds/<world>/world.xml <location_alias_list>（别名 → x/y/z/dir）。
+真端解析器 = WorldDb::LoadInstanceCreation → WorldBase::GetLocationAliasPoint；别名在
+world.xml 缺失时真端自身只记错误日志、落点空置 ⇒ resolved=false 行（creation 2 = IDElim）
+在 DD 车道维持 fail-closed 冻结。
+Retail instance-entry landing points (deviation-fix batch 9): instance_creation.xml × the
+per-world world.xml location_alias_list; the retail resolver logs an error and leaves the
+start point empty when the alias is missing ⇒ resolved=false rows stay fail-closed frozen.
+列：creation_id / world_id / alias / x / y / z / heading / resolved / source
+-->
+<retail_instance_entry_points>
+  <entry_point>
+    <creation_id>2</creation_id>
+    <world_id>300190000</world_id>
+    <alias>IDElim_Entrance_alias</alias>
+    <x>0</x>
+    <y>0</y>
+    <z>0</z>
+    <heading>0</heading>
+    <resolved>false</resolved>
+    <source>Map/Worlds/idelim/world.xml (alias absent in retail = intrinsic)</source>
+  </entry_point>
+  <entry_point>
+    <creation_id>3</creation_id>
+    <world_id>300150000</world_id>
+    <alias>IDTemple_SecretRoom_alias</alias>
+    <x>562.176941</x>
+    <y>223.046707</y>
+    <z>137.100006</z>
+    <heading>270</heading>
+    <resolved>true</resolved>
+    <source>Map/Worlds/IDTemple_Up/world.xml</source>
+  </entry_point>
+  <entry_point>
+    <creation_id>13</creation_id>
+    <world_id>300160000</world_id>
+    <alias>IDTemple_Low_Ent01</alias>
+    <x>794.989990</x>
+    <y>918.979980</y>
+    <z>154.000000</z>
+    <heading>213</heading>
+    <resolved>true</resolved>
+    <source>Map/Worlds/IDTemple_Low/world.xml</source>
+  </entry_point>
+</retail_instance_entry_points>

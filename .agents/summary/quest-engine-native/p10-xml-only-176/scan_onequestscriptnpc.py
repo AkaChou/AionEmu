@@ -8,12 +8,13 @@
 """
 import re
 import sys
+import xml.etree.ElementTree as ET
 from pathlib import Path
 
 SCRIPT = Path(sys.argv[1] if len(sys.argv) > 1 else
               "/Users/mc/IdeaProjects/58Server/server58/MainServer_ScriptDLL64/ScriptDLL64.c")
-TSV = Path(sys.argv[2] if len(sys.argv) > 2 else
-           "/Users/mc/IdeaProjects/AionEmu-test/src/main/resources/aion/data/static_data/quest/retail/retail-xml-retention.tsv")
+LEDGER = Path(sys.argv[2] if len(sys.argv) > 2 else
+              "/Users/mc/IdeaProjects/AionEmu-test/src/main/resources/aion/data/static_data/quest/retail/retail-xml-retention.xml")
 
 src = SCRIPT.read_text(encoding="latin-1", errors="replace")
 calls = re.findall(r"FUN_180cb5920\(([^;\n]*)\);", src)
@@ -31,13 +32,8 @@ for call in calls:
     ids[value] += 1
 
 owner = {}
-for line in TSV.read_text(encoding="utf-8").splitlines():
-    if not line or line.startswith("#"):
-        continue
-    parts = line.split("\t")
-    if len(parts) < 4:
-        continue
-    owner[int(parts[0])] = (parts[1], parts[3])
+for row in ET.parse(LEDGER).getroot().findall("quest"):
+    owner[int(row.findtext("quest_id"))] = (row.findtext("owner") or "", row.findtext("reason") or "")
 
 no_table = {q for q, (o, r) in owner.items() if r == "NO_TABLE"}
 xml_ret = {q for q, (o, r) in owner.items() if o == "XML_RETENTION"}

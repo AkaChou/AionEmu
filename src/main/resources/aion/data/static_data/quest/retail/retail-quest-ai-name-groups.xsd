@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- retail-quest-ai-name-groups.xml 表 schema（quest retail 表门禁用，2026-10-03 台账 XML 化同批）。
+     镜像口径 = 装载器 fail-closed 规则 ∪ 观察形全域钉（证据 + 生成器：
+     .agents/summary/quest-engine-native/p0b/）：
+     - 行 = <quest_ai_name_group>（quest_ai_name
+       全表唯一、字母数字下划线）；member_name_descs = 逗号串成员 name_desc
+       列表；成员解析不到 = 两车道各自静默缺席（语义如此，非错误）；列表去重不可表达。
+     retail-quest-ai-name-groups.xml schema (quest retail table gate, same batch as the 2026-10-03 ledger
+     XML conversion). Mirrors the loader fail-closed rules plus observed-universe shape pins (evidence +
+     generator under `.agents/summary/quest-engine-native/p0b/`):
+     - Rows are <quest_ai_name_group> (unique alnum-underscore quest_ai_name); member_name_descs is a comma
+       list of member name_descs; an unresolvable member is a silent absence in both lanes (by semantics,
+       not an error); dedup is inexpressible. -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+  <xs:element name="retail_quest_ai_name_groups">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="quest_ai_name_group" minOccurs="1" maxOccurs="unbounded">
+          <xs:complexType>
+            <xs:all>
+              <xs:element name="quest_ai_name" minOccurs="1">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:pattern value="[A-Za-z0-9_]+"/>
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="member_name_descs" minOccurs="1">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:pattern value="[A-Za-z0-9_]+(,[A-Za-z0-9_]+)*"/>
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+            </xs:all>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+    <xs:unique name="retail-quest-ai-name-groups-row-key-unique">
+      <xs:selector xpath="quest_ai_name_group"/>
+      <xs:field xpath="quest_ai_name"/>
+    </xs:unique>
+  </xs:element>
+</xs:schema>

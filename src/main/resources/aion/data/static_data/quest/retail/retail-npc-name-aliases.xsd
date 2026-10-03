@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- retail-npc-name-aliases.xml 表 schema（quest retail 表门禁用，2026-10-03 台账 XML 化同批）。
+     镜像口径 = 装载器 fail-closed 规则 ∪ 观察形全域钉（证据 + 生成器：
+     .agents/summary/quest-engine-native/p0b/）：
+     - 行 = <npc_name_alias>（name 全表唯一、字母数字下划线；装载器归一
+       lower）；npc_ids = 逗号串 id 列表（≥1）；列表去重（重复 id fail-
+       closed）与「别名不得遮蔽模板名」由装载器运行期兜底。
+     retail-npc-name-aliases.xml schema (quest retail table gate, same batch as the 2026-10-03 ledger XML
+     conversion). Mirrors the loader fail-closed rules plus observed-universe shape pins (evidence +
+     generator under `.agents/summary/quest-engine-native/p0b/`):
+     - Rows are <npc_name_alias> (unique alnum-underscore name; the loader lower-cases it); npc_ids is a
+       comma id list (≥1); dedup (duplicate ids fail closed) and the no-shadowing-of-template-names rule
+       stay loader-enforced. -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+  <xs:element name="retail_npc_name_aliases">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="npc_name_alias" minOccurs="1" maxOccurs="unbounded">
+          <xs:complexType>
+            <xs:all>
+              <xs:element name="name" minOccurs="1">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:pattern value="[A-Za-z0-9_]+"/>
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="npc_ids" minOccurs="1">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:pattern value="\d+(,\d+)*"/>
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+            </xs:all>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+    <xs:unique name="retail-npc-name-aliases-row-key-unique">
+      <xs:selector xpath="npc_name_alias"/>
+      <xs:field xpath="name"/>
+    </xs:unique>
+  </xs:element>
+</xs:schema>

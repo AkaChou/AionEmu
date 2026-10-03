@@ -19,7 +19,9 @@ import java.util.Set;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.w3c.dom.Element;
 
+import com.aionemu.gameserver.questEngine.retail.RetailLedgerRows;
 import com.aionemu.gameserver.questEngine.tablelane.DataDrivenQuestTable.ExtraAction;
 import com.aionemu.gameserver.questEngine.tablelane.DataDrivenQuestTable.Kind;
 import com.aionemu.gameserver.questEngine.tablelane.DataDrivenQuestTable.Row;
@@ -41,7 +43,7 @@ import com.aionemu.gameserver.questEngine.tablelane.DataDrivenQuestTable.Step;
 class DataDrivenQuestTableGateTest {
 
 	private static final String DD_TABLE = "/aion/data/static_data/quest/retail/data_driven_quest.xml";
-	private static final String RETENTION = "/quest/retail-xml-retention.tsv";
+	private static final String RETENTION = "/quest/retail-xml-retention.xml";
 	private static final String ABSENT_FIXTURE = "/quest/retail-data-driven-client-absent.tsv";
 
 	/** 真端 DD 活行（注释块不是行）。 / Live retail DD rows. */
@@ -208,16 +210,9 @@ class DataDrivenQuestTableGateTest {
 
 	private static Map<Integer, String> retentionOwners() throws Exception {
 		Map<Integer, String> owners = new LinkedHashMap<>();
-		try (BufferedReader reader = new BufferedReader(
-				new InputStreamReader(resource(RETENTION), StandardCharsets.UTF_8))) {
-			String line;
-			while ((line = reader.readLine()) != null) {
-				if (line.isBlank() || line.startsWith("#")) {
-					continue;
-				}
-				String[] cells = line.split("\t", -1);
-				owners.putIfAbsent(Integer.parseInt(cells[0]), cells[1]);
-			}
+		for (Element row : RetailLedgerRows.rows(RETENTION, "quest")) {
+			owners.putIfAbsent(Integer.parseInt(RetailLedgerRows.cell(row, "quest_id")),
+				RetailLedgerRows.cell(row, "owner"));
 		}
 		return owners;
 	}

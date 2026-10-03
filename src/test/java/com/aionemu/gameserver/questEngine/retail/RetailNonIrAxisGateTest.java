@@ -5,6 +5,7 @@ import com.aionemu.gameserver.questEngine.definition.ProductionQuestDefinitions;
 import com.aionemu.gameserver.questEngine.definition.QuestEvent;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.w3c.dom.Element;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -44,7 +45,7 @@ class RetailNonIrAxisGateTest {
 	private static final String CAP_LEDGER = "/quest/quest-start-metadata-retail-cap-exceptions.tsv";
 	private static final String HEAL_LEDGER = "/quest/retail-legacy-save-normalization.tsv";
 	private static final String DIVERGENCES = "/quest/retail-metadata-divergences.tsv";
-	private static final String RETENTION = "/quest/retail-xml-retention.tsv";
+	private static final String RETENTION = "/quest/retail-xml-retention.xml";
 
 	private static Map<Integer, String> capLedger;
 	private static Map<Integer, Integer> healLedgerEdgeCounts;
@@ -87,13 +88,11 @@ class RetailNonIrAxisGateTest {
 			}
 		}
 		owners = new HashMap<>();
-		for (String line : lines(open(RETENTION))) {
-			if (line.startsWith("#") || line.isBlank()) {
-				continue;
-			}
-			String[] parts = line.split("\t", -1);
-			if (parts.length > 3) {
-				owners.put(Integer.parseInt(parts[0]), parts[1]);
+		for (Element row : RetailLedgerRows.rows(RETENTION, "quest")) {
+			String questId = RetailLedgerRows.cell(row, "quest_id");
+			String owner = RetailLedgerRows.cell(row, "owner");
+			if (questId != null && owner != null) {
+				owners.put(Integer.parseInt(questId), owner);
 			}
 		}
 	}

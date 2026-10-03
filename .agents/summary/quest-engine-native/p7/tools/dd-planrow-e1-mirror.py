@@ -9,6 +9,7 @@
 # acquire axis (condition columns + acquire-parameter resolution, frozen before routing)
 # and the extra-action axis (faced cases 1/2/4 parsed, unfaced cases freeze). Read-only.
 import re, glob, sys
+import xml.etree.ElementTree as ET
 from collections import OrderedDict, Counter
 
 REPO = '/Users/mc/IdeaProjects/AionEmu-test'
@@ -16,9 +17,9 @@ NPC_DIR = REPO + '/src/main/resources/aion/data/static_data/npcs'
 ITEM_DIR = REPO + '/src/main/resources/aion/data/static_data/items/item'
 ZONE_FILE = REPO + '/src/main/resources/aion/data/static_data/zones/zones_retail_enterarea.xml'
 DD_TABLE = REPO + '/src/main/resources/aion/data/static_data/quest/retail/data_driven_quest.xml'
-RETENTION = REPO + '/src/main/resources/aion/data/static_data/quest/retail/retail-xml-retention.tsv'
-ALIASES = REPO + '/src/main/resources/aion/data/static_data/quest/retail/retail-npc-name-aliases.tsv'
-GROUPS_TSV = REPO + '/src/main/resources/aion/data/static_data/quest/retail/retail-quest-ai-name-groups.tsv'
+RETENTION = REPO + '/src/main/resources/aion/data/static_data/quest/retail/retail-xml-retention.xml'
+ALIASES = REPO + '/src/main/resources/aion/data/static_data/quest/retail/retail-npc-name-aliases.xml'
+GROUPS_XML = REPO + '/src/main/resources/aion/data/static_data/quest/retail/retail-quest-ai-name-groups.xml'
 
 ATTR = re.compile(r'\b(npc_id|name|name_desc|quest_ai_name)="([^"]*)"')
 TRAILING = re.compile(r'^(.*?)(?:\s*,\s*|\s+)(\d+)$')
@@ -59,22 +60,20 @@ def load_local_npcs():
 
 def load_aliases():
     m = {}
-    for line in open(ALIASES, encoding='utf-8'):
-        line = line.strip()
-        if not line or line.startswith('#'): continue
-        parts = line.split('\t')
-        if len(parts) >= 2 and parts[1].strip():
-            m[parts[0].strip().lower()] = [int(x) for x in parts[1].split(',') if x.strip()]
+    for row in ET.parse(ALIASES).getroot().findall('npc_name_alias'):
+        name = (row.findtext('name') or '').strip().lower()
+        ids_text = (row.findtext('npc_ids') or '').strip()
+        if name and ids_text:
+            m[name] = [int(x) for x in ids_text.split(',') if x.strip()]
     return m
 
 def load_groups():
     m = {}
-    for line in open(GROUPS_TSV, encoding='utf-8'):
-        line = line.strip()
-        if not line or line.startswith('#') or line.startswith('quest_ai_name\t'): continue
-        parts = line.split('\t')
-        if len(parts) < 2 or not parts[1].strip(): continue
-        m[parts[0].strip().lower()] = [x.strip().lower() for x in parts[1].split(',') if x.strip()]
+    for row in ET.parse(GROUPS_XML).getroot().findall('quest_ai_name_group'):
+        name = (row.findtext('quest_ai_name') or '').strip().lower()
+        members = (row.findtext('member_name_descs') or '').strip()
+        if name and members:
+            m[name] = [x.strip().lower() for x in members.split(',') if x.strip()]
     return m
 
 def load_items():
@@ -99,12 +98,10 @@ def load_zones():
 
 def load_switch_set():
     owners = {}
-    for line in open(RETENTION, encoding='utf-8'):
-        line = line.strip()
-        if not line or line.startswith('#'): continue
-        cols = line.split('\t')
-        if len(cols) >= 2 and cols[0].isdigit():
-            owners[int(cols[0])] = cols[1]
+    for row in ET.parse(RETENTION).getroot().findall('quest'):
+        quest_id = (row.findtext('quest_id') or '').strip()
+        if quest_id.isdigit():
+            owners[int(quest_id)] = (row.findtext('owner') or '').strip()
     raw = open(DD_TABLE, encoding='utf-8').read()
     rows = OrderedDict()
     for m in re.finditer(r'<quest_data_driven>(.*?)</quest_data_driven>', raw, re.S):

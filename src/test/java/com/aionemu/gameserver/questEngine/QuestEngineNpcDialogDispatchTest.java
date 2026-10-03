@@ -132,7 +132,7 @@ class QuestEngineNpcDialogDispatchTest {
 		// （Quest_SimpleTalk.xml:1313-1318 acquired=reward=Tree_NoMove_Lodas + quest.xml:10167-10168
 		// 的 collect_item），其 select1_1 续页随页链退场——canonical 接取流不含 SELECT1_1
 		// （RetailSimpleHuntDefinitionCompiler:1096-1122）；旧梯 1012 只剩 XML 保留行 1322
-		// （retail-xml-retention.tsv:152 NO_TABLE，XML 定义驱动）。
+		// （retail-xml-retention.xml：NO_TABLE，XML 定义驱动）。
 		// P0-3 S1: quest 1478 is a retail single-step row whose select1_1 continuation retires with
 		// the page chain (the canonical accept flow carries no SELECT1_1), so only the XML-retained
 		// 1322 keeps the legacy 1012 hop.

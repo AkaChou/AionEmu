@@ -24,21 +24,24 @@ Four sources: the client npc blocks (member ids), the server npc templates (name
 title_id), the client dictionary entry body (optional member list), and the legacy XML accept-flow
 npc set (a superset witness; extra ids must resolve as the reward npc of one of the group's quests).
 
-Output: quest_retail/retail-quest-ai-name-groups.tsv (only written with --emit).
+Output: quest/retail/retail-quest-ai-name-groups.xml (only written with --emit; XML since the
+2026-10-03 ledger-XML batch — rows are <quest_ai_name_group> with quest_ai_name /
+member_name_descs columns).
 """
 from __future__ import annotations
 import os
 
 import re
 import sys
+import xml.etree.ElementTree as ET
 from pathlib import Path
 
 REPO = next(p for p in Path(__file__).resolve().parents if (p / "pom.xml").is_file())
 NPC_TEMPLATE_DIR = REPO / "src/main/resources/aion/data/static_data/npcs"
 RETAIL_DIR = REPO / "src/main/resources/aion/data/static_data/quest/retail"
 DD_TABLE = RETAIL_DIR / "data_driven_quest.xml"
-RETENTION = RETAIL_DIR / "retail-xml-retention.tsv"
-OUT_TSV = RETAIL_DIR / "retail-quest-ai-name-groups.tsv"
+RETENTION = RETAIL_DIR / "retail-xml-retention.xml"
+OUT_XML = RETAIL_DIR / "retail-quest-ai-name-groups.xml"
 # 排除登记表已于 2026-09-28（批 P1）整表退役：生成器停写，只在标准输出打印。
 # The rejected-registry TSV was retired wholesale on 2026-09-28 (batch P1); the generator prints only.
 LEGACY_QUESTS = REPO / "src/main/resources/aion/data/static_data/quest/definitions/quests"
@@ -244,12 +247,10 @@ def main() -> int:
 	acq, reward = table_references()
 	accept_names = set(acq)
 	retention = {}
-	for line in RETENTION.read_text(encoding="utf-8").splitlines():
-		if line.startswith("#") or not line.strip():
-			continue
-		parts = line.split("\t")
-		if len(parts) >= 4 and "RETAIL_ACQUIRE_NPC_UNRESOLVED" in parts[3]:
-			retention[parts[0]] = parts[3]
+	for row in ET.parse(RETENTION).getroot().findall("quest"):
+		reason = row.findtext("reason") or ""
+		if "RETAIL_ACQUIRE_NPC_UNRESOLVED" in reason:
+			retention[row.findtext("quest_id")] = reason
 
 	referenced: dict[str, set[str]] = {}
 	for source in (acq, reward):
@@ -348,16 +349,26 @@ def main() -> int:
 	for name, code, detail in excluded:
 		print(f"   {name}\t{code}\t{detail}")
 	if emit:
-		header = (
-			"# 真端对话名组表（quest_ai_name → 成员 name_desc）——由 p0c52_quest_ai_name_groups.py 生成\n"
-			"# 依据：客户端 npc 块 <quest_ai_name> 的成员 id 集（第一手）+ 服务端 npc 模板（成员名与\n"
-			"# 共享 title_id）+ 客户端词典正文 STR_DIC_E_<名>（可选，存在时须与块 id 集一致）+ 遗留\n"
-			"# 生产 XML 的接取流 id 集（超集见证；多出的 id 必须解释为该组任务的交付 NPC）。\n"
-			"# 候选判据：全部家族表真的写出来的名字 ∧ 客户端声明 ≥2 成员 ∧ 组名不是任一成员自己的名字。\n"
-			"# quest_ai_name\tmember_name_descs\n")
-		body = "".join(f"{name}\t{','.join(members)}\n" for name, members in rows)
-		OUT_TSV.write_text(header + body, encoding="utf-8")
-		print(f"written {OUT_TSV.relative_to(REPO)}")
+		lines = [
+			'<?xml version="1.0" encoding="UTF-8"?>',
+			"<!--",
+			"真端对话名组表（quest_ai_name → 成员 name_desc）——由 p0c52_quest_ai_name_groups.py 生成",
+			"依据：客户端 npc 块 <quest_ai_name> 的成员 id 集（第一手）+ 服务端 npc 模板（成员名与",
+			"共享 title_id）+ 客户端词典正文 STR_DIC_E_<名>（可选，存在时须与块 id 集一致）+ 遗留",
+			"生产 XML 的接取流 id 集（超集见证；多出的 id 必须解释为该组任务的交付 NPC）。",
+			"候选判据：全部家族表真的写出来的名字 ∧ 客户端声明 ≥2 成员 ∧ 组名不是任一成员自己的名字。",
+			"quest_ai_name / member_name_descs（逗号串）",
+			"-->",
+			"<retail_quest_ai_name_groups>",
+		]
+		for name, members in rows:
+			lines.append("  <quest_ai_name_group>")
+			lines.append(f"    <quest_ai_name>{name}</quest_ai_name>")
+			lines.append(f"    <member_name_descs>{','.join(members)}</member_name_descs>")
+			lines.append("  </quest_ai_name_group>")
+		lines.append("</retail_quest_ai_name_groups>")
+		OUT_XML.write_text("\n".join(lines) + "\n", encoding="utf-8")
+		print(f"written {OUT_XML.relative_to(REPO)}")
 	return 0
 
 

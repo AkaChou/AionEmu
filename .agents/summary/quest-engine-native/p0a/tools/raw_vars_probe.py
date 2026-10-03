@@ -13,6 +13,7 @@ import csv
 import itertools
 import pathlib
 import sys
+import xml.etree.ElementTree as ET
 
 import pymysql  # noqa: N817
 
@@ -26,13 +27,10 @@ DB = dict(host='127.0.0.1', port=3306, user='root', password='123456',
 
 def load_retention_retail_ids():
     ids = set()
-    p = REPO / 'src/main/resources/aion/data/static_data/quest/retail/retail-xml-retention.tsv'
-    for line in p.read_text().splitlines():
-        if not line.strip() or line.startswith('#'):
-            continue
-        parts = line.split('\t')
-        if parts and parts[0].isdigit() and parts[1].startswith('RETAIL_TABLE'):
-            ids.add(int(parts[0]))
+    p = REPO / 'src/main/resources/aion/data/static_data/quest/retail/retail-xml-retention.xml'
+    for row in ET.parse(p).getroot().findall('quest'):
+        if (row.findtext('owner') or '').startswith('RETAIL_TABLE'):
+            ids.add(int(row.findtext('quest_id')))
     return ids
 
 

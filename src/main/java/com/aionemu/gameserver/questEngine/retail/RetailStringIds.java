@@ -1,20 +1,19 @@
 package com.aionemu.gameserver.questEngine.retail;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
+
+import org.w3c.dom.Element;
 
 /**
  * 真端任务字符串 id 索引（DD 附加动作 case 7 Message 的 `STR_*` 键解析，真端
  * `XML_ParseStringIndex` 的 Java 侧对位）。
  * <p>
- * 数据源 {@code retail-quest-string-ids.tsv}：逐键取自真端字符串表
+ * 数据源 {@code retail-quest-string-ids.xml}：逐键取自真端字符串表
  * （{@code Map/XML/strings.xml} 的 {@code <id>/<name>} 对，逐字入仓），与生产在用的
- * {@code quest_name_string_ids.tsv} 同源同型。查不到的键 = 真端装载失败
+ * {@code quest_name_string_ids.xml} 同源同型。查不到的键 = 真端装载失败
  * （"undefined string name"），调用方必须 fail-closed，不得猜 id。
  * <p>
  * Retail quest string-id index: resolves the {@code STR_*} keys of the DD Message extra
@@ -24,7 +23,7 @@ import java.util.Map;
 public final class RetailStringIds {
 
 	/** 真端字符串 id 表资源路径。 / The retail string-id table resource. */
-	public static final String RESOURCE = "/aion/data/static_data/quest/retail/retail-quest-string-ids.tsv";
+	public static final String RESOURCE = "/aion/data/static_data/quest/retail/retail-quest-string-ids.xml";
 
 	private static volatile RetailStringIds instance;
 
@@ -57,27 +56,30 @@ public final class RetailStringIds {
 		return local;
 	}
 
+	/**
+	 * 解析字符串 id 表（{@code retail-quest-string-ids.xml}：key / string_id / body 列；旧 TSV 的
+	 * 「第二列必须全数字、否则 MALFORMED」语义保留；{@code body} 列缺席 = 旧格式兼容空正文）。
+	 * Parses the string-id table (columns key / string_id / body; the old "second column must be
+	 * all digits or MALFORMED" rule is preserved; an absent {@code body} column keeps the
+	 * legacy-format empty-body semantics).
+	 */
 	static RetailStringIds load(InputStream input) throws IOException {
 		Map<String, Integer> ids = new HashMap<>();
 		Map<Integer, String> bodies = new HashMap<>();
-		try (BufferedReader reader = new BufferedReader(new InputStreamReader(input, StandardCharsets.UTF_8))) {
-			String line;
-			while ((line = reader.readLine()) != null) {
-				line = line.strip();
-				if (line.isEmpty() || line.startsWith("#")) {
-					continue;
-				}
-				String[] columns = line.split("\t");
-				if (columns.length < 2 || !columns[1].chars().allMatch(Character::isDigit)) {
-					throw new IOException("RETAIL_STRING_ID_TABLE_MALFORMED: " + line);
-				}
-				ids.put(columns[0], Integer.valueOf(columns[1]));
-				// 第 3 列 = 真端 <body> 原文（实体已解码；say 气泡通道正文，缺列 = 旧格式兼容空正文）。
-				// Column 3 = the retail <body> text (entities decoded; say-bubble body; absent column
-				// = legacy-format compatibility with an empty body).
-				if (columns.length >= 3 && !columns[2].isBlank()) {
-					bodies.put(Integer.valueOf(columns[1]), columns[2]);
-				}
+		for (Element row : RetailLedgerXml.rows(RetailLedgerXml.parse(input), "quest_string_id")) {
+			String key = RetailLedgerXml.text(row, "key");
+			String idText = RetailLedgerXml.text(row, "string_id");
+			if (key == null || idText == null || idText.isEmpty()
+					|| !idText.chars().allMatch(Character::isDigit)) {
+				throw new IOException("RETAIL_STRING_ID_TABLE_MALFORMED: " + key);
+			}
+			ids.put(key, Integer.valueOf(idText));
+			// body 列 = 真端 <body> 原文（实体已解码；say 气泡通道正文，缺席/空白 = 旧格式兼容空正文）。
+			// The body column = the retail <body> text (entities decoded; say-bubble body; absent or
+			// blank = legacy-format compatibility with an empty body).
+			String body = RetailLedgerXml.text(row, "body");
+			if (body != null && !body.isBlank()) {
+				bodies.put(Integer.valueOf(idText), body);
 			}
 		}
 		return new RetailStringIds(ids, bodies);

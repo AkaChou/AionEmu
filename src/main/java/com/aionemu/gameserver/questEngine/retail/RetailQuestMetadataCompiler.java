@@ -26,7 +26,7 @@ import java.util.TreeSet;
  * 关键映射口径（全部经全库对拍验证，见 .agents/summary/scriptdll-quest-driver/）：
  * <ul>
  * <li>name：真端只有 {@code Qxxxx} 符号名；英文名为在库人工资产且运行时无消费方（登记的全局口径分歧）；</li>
- * <li>displayNameId：客户端字符串表 id（{@code quest_name_string_ids.tsv}，已验证与生产一致）；</li>
+ * <li>displayNameId：客户端字符串表 id（{@code quest_name_string_ids.xml}，已验证与生产一致）；</li>
  * <li>等级/种族/性别/分类/重复策略/前置/交付/掉落/奖励/职业奖励：直接映射，符号名经
  * {@link RetailNpcNameIndex}/{@link RetailItemNameIndex}/随机组表解析；</li>
  * <li>称号奖励：{@link RetailQuestTitleIds} 快照；maxLevel：真端 0/998/999=无上限

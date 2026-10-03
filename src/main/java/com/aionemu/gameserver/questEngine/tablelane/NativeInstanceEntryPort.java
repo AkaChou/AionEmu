@@ -1,12 +1,13 @@
 package com.aionemu.gameserver.questEngine.tablelane;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.Optional;
+
+import org.w3c.dom.Element;
+
+import com.aionemu.gameserver.questEngine.retail.RetailLedgerXml;
 
 /**
  * 真端副本入口端口：DD 附加动作 case 9（Enter Instance）的落点解析面（偏差修复第九批落面，
@@ -29,7 +30,7 @@ public final class NativeInstanceEntryPort {
 
 	/** 真端副本入口表资源路径。 / The retail instance-entry table resource. */
 	public static final String TABLE_RESOURCE =
-		"/aion/data/static_data/quest/retail/retail-instance-entry-points.tsv";
+		"/aion/data/static_data/quest/retail/retail-instance-entry-points.xml";
 
 	/**
 	 * 一个副本入口落点。{@code resolved=false} = 真端世界文件本就无此别名（内在缺失，禁用）。
@@ -69,24 +70,30 @@ public final class NativeInstanceEntryPort {
 			if (input == null) {
 				throw new IllegalStateException("INSTANCE_ENTRY_TABLE_MISSING: " + TABLE_RESOURCE);
 			}
-			try (BufferedReader reader = new BufferedReader(new InputStreamReader(input, StandardCharsets.UTF_8))) {
-				String line;
-				while ((line = reader.readLine()) != null) {
-					if (line.isBlank() || line.startsWith("#")) {
-						continue;
-					}
-					String[] columns = line.split("\t");
-					if (columns.length < 9) {
-						throw new IllegalStateException("INSTANCE_ENTRY_TABLE_MALFORMED: " + line);
-					}
-					int creationId = Integer.parseInt(columns[0].trim());
-					int worldId = Integer.parseInt(columns[1].trim());
-					EntryPoint entry = new EntryPoint(creationId, worldId, columns[2].trim(),
-						Float.parseFloat(columns[3].trim()), Float.parseFloat(columns[4].trim()),
-						Float.parseFloat(columns[5].trim()), Integer.parseInt(columns[6].trim()),
-						Boolean.parseBoolean(columns[7].trim()));
-					byCreationId.put(creationId, entry);
+			// 旧 TSV「少于 9 列即 malformed」语义保留：九个列元素任一缺席即 MALFORMED
+			// （source 列装载器不读，但其存在性属旧列数检查的一部分）。
+			// The old "fewer than nine columns is malformed" rule is preserved: any of the nine
+			// column elements missing is MALFORMED (the source column is unread by the loader, but
+			// its presence was part of the old column-count check).
+			for (Element row : RetailLedgerXml.rows(RetailLedgerXml.parse(input), "entry_point")) {
+				String creationIdText = RetailLedgerXml.text(row, "creation_id");
+				String worldId = RetailLedgerXml.text(row, "world_id");
+				String alias = RetailLedgerXml.text(row, "alias");
+				String x = RetailLedgerXml.text(row, "x");
+				String y = RetailLedgerXml.text(row, "y");
+				String z = RetailLedgerXml.text(row, "z");
+				String heading = RetailLedgerXml.text(row, "heading");
+				String resolved = RetailLedgerXml.text(row, "resolved");
+				String source = RetailLedgerXml.text(row, "source");
+				if (creationIdText == null || worldId == null || alias == null || x == null || y == null
+						|| z == null || heading == null || resolved == null || source == null) {
+					throw new IllegalStateException("INSTANCE_ENTRY_TABLE_MALFORMED: creation_id=" + creationIdText);
 				}
+				int creationId = Integer.parseInt(creationIdText);
+				EntryPoint entry = new EntryPoint(creationId, Integer.parseInt(worldId), alias,
+					Float.parseFloat(x), Float.parseFloat(y), Float.parseFloat(z), Integer.parseInt(heading),
+					Boolean.parseBoolean(resolved));
+				byCreationId.put(creationId, entry);
 			}
 		} catch (IOException e) {
 			throw new IllegalStateException("INSTANCE_ENTRY_TABLE_UNREADABLE: " + TABLE_RESOURCE, e);

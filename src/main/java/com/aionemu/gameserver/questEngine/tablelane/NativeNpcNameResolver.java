@@ -14,6 +14,10 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import org.w3c.dom.Element;
+
+import com.aionemu.gameserver.questEngine.retail.RetailLedgerXml;
 /**
  * 真端 NPC 名解析器（计划 §6.2：任务表里的 {@code *_npc_name} 引用的是
  * {@code npcTemplates} 的 {@code name_desc} 全名，短名 {@code name} 亦有效；P0a
@@ -55,7 +59,7 @@ public final class NativeNpcNameResolver {
 
 	private static final String RESOURCE_DIR = "aion/data/static_data/npcs";
 	private static final String ALIASES_RESOURCE =
-			"aion/data/static_data/quest/retail/retail-npc-name-aliases.tsv";
+			"aion/data/static_data/quest/retail/retail-npc-name-aliases.xml";
 	/**
 	 * 真端对话名组表（quest_ai_name → 成员 name_desc）：组键的**权威载体**在旧车道组表，
 	 * 原生车道直读同一张表（组键不进别名台账——台账行会撞旧车道 spawn 通道的互斥闸，
@@ -67,7 +71,7 @@ public final class NativeNpcNameResolver {
 	 * {@code quest/retail/} (the old dual chain under {@code src/main/resources/quest/} retired).
 	 */
 	private static final String[] GROUPS_RESOURCES = {
-			"aion/data/static_data/quest/retail/retail-quest-ai-name-groups.tsv"};
+			"aion/data/static_data/quest/retail/retail-quest-ai-name-groups.xml"};
 	/** 与生产 XmlDataLoader 相同的分片命名约定。 / Same shard naming convention as XmlDataLoader. */
 	private static final Pattern SHARD_PATTERN = Pattern.compile("npc_template_(\\d+)_(\\d+)\\.xml");
 	private static final Pattern NPC_TAG = Pattern.compile("<npc_template\\b([^>]*)>");
@@ -188,18 +192,14 @@ public final class NativeNpcNameResolver {
 		Map<String, List<Integer>> aliases = new LinkedHashMap<>();
 		URL aliasesUrl = loader.getResource(ALIASES_RESOURCE);
 		if (aliasesUrl != null) {
-			try (var reader = new java.io.BufferedReader(new java.io.InputStreamReader(aliasesUrl.openStream(), java.nio.charset.StandardCharsets.UTF_8))) {
-				String line;
-				while ((line = reader.readLine()) != null) {
-					line = line.strip();
-					if (line.isEmpty() || line.startsWith("#")) {
-						continue;
-					}
-					String[] parts = line.split("\t");
-					if (parts.length >= 2) {
-						String key = parts[0].strip().toLowerCase(Locale.ROOT);
+			try (var stream = aliasesUrl.openStream()) {
+				for (Element row : RetailLedgerXml.rows(RetailLedgerXml.parse(stream), "npc_name_alias")) {
+					String name = RetailLedgerXml.text(row, "name");
+					String idsText = RetailLedgerXml.text(row, "npc_ids");
+					if (name != null && idsText != null) {
+						String key = name.toLowerCase(Locale.ROOT);
 						List<Integer> ids = new ArrayList<>();
-						for (String idStr : parts[1].split(",")) {
+						for (String idStr : idsText.split(",")) {
 							idStr = idStr.strip();
 							if (!idStr.isEmpty()) {
 								ids.add(Integer.parseInt(idStr));
@@ -224,20 +224,16 @@ public final class NativeNpcNameResolver {
 			if (groupsUrl == null) {
 				continue;
 			}
-			try (var reader = new java.io.BufferedReader(new java.io.InputStreamReader(groupsUrl.openStream(), java.nio.charset.StandardCharsets.UTF_8))) {
-				String line;
-				while ((line = reader.readLine()) != null) {
-					line = line.strip();
-					if (line.isEmpty() || line.startsWith("#") || line.startsWith("quest_ai_name\t")) {
+			try (var stream = groupsUrl.openStream()) {
+				for (Element row : RetailLedgerXml.rows(RetailLedgerXml.parse(stream), "quest_ai_name_group")) {
+					String name = RetailLedgerXml.text(row, "quest_ai_name");
+					String members = RetailLedgerXml.text(row, "member_name_descs");
+					if (name == null || members == null || members.isBlank()) {
 						continue;
 					}
-					String[] parts = line.split("\t");
-					if (parts.length < 2 || parts[1].isBlank()) {
-						continue;
-					}
-					String key = parts[0].strip().toLowerCase(Locale.ROOT);
+					String key = name.toLowerCase(Locale.ROOT);
 					List<Integer> ids = new ArrayList<>();
-					for (String member : parts[1].split(",")) {
+					for (String member : members.split(",")) {
 						member = member.strip().toLowerCase(Locale.ROOT);
 						if (member.isEmpty()) {
 							continue;

@@ -5,9 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.io.BufferedReader;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -19,9 +17,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.junit.jupiter.api.Test;
+import org.w3c.dom.Element;
 
 import com.aionemu.gameserver.questEngine.definition.QuestDialogContract;
 import com.aionemu.gameserver.questEngine.definition.QuestDialogPage;
+import com.aionemu.gameserver.questEngine.retail.RetailLedgerRows;
 import com.aionemu.gameserver.questEngine.tablelane.NativeItemSymbols.ItemStack;
 
 /**
@@ -48,7 +48,7 @@ import com.aionemu.gameserver.questEngine.tablelane.NativeItemSymbols.ItemStack;
 class ItemPlayFamilyRowInventoryGateTest {
 
 	private static final String RETENTION_RESOURCE =
-		"/aion/data/static_data/quest/retail/retail-xml-retention.tsv";
+		"/aion/data/static_data/quest/retail/retail-xml-retention.xml";
 	private static final String FAMILY = "SimpleItemPlay";
 
 	/** 真端表全量行数（真端 {@code quest_simpleitemplays}）。 / Retail table row count. */
@@ -298,22 +298,12 @@ class ItemPlayFamilyRowInventoryGateTest {
 	/** 真端清单：quest id → [owner, family, reason]（非本族行不载入）。 / The retention manifest. */
 	private static Map<Integer, String[]> manifest() throws Exception {
 		Map<Integer, String[]> result = new LinkedHashMap<>();
-		try (InputStream input = ItemPlayFamilyRowInventoryGateTest.class.getResourceAsStream(RETENTION_RESOURCE)) {
-			if (input == null) {
-				throw new IllegalStateException("missing resource " + RETENTION_RESOURCE);
-			}
-			try (BufferedReader reader = new BufferedReader(
-					new InputStreamReader(input, StandardCharsets.UTF_8))) {
-				String line;
-				while ((line = reader.readLine()) != null) {
-					if (line.startsWith("#") || line.isBlank()) {
-						continue;
-					}
-					String[] cells = line.split("\t", -1);
-					if (cells.length >= 3 && FAMILY.equals(cells[2])) {
-						result.put(Integer.parseInt(cells[0]), new String[] {cells[1], cells[2], cells[3]});
-					}
-				}
+		for (Element row : RetailLedgerRows.rows(RETENTION_RESOURCE, "quest")) {
+			String family = RetailLedgerRows.cell(row, "family");
+			if (FAMILY.equals(family)) {
+				result.put(Integer.parseInt(RetailLedgerRows.cell(row, "quest_id")),
+					new String[] {RetailLedgerRows.cell(row, "owner"), family,
+						RetailLedgerRows.cell(row, "reason")});
 			}
 		}
 		assertTrue(result.size() == ADJUDICATED_ROWS.size() + ROUTED_ROWS.size(),
