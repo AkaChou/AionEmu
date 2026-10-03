@@ -3092,7 +3092,7 @@ last_verified: 2026-10-03
 symptom: 「某批任务在真端零驱动面 ⇒ 真端死内容」的结论被推翻：XML-only 176 实测 142 个在真端 ScriptDLL 有注册
 root_cause: 扫描只查「首参 = quest id」的注册口（族表 row 注册 FUN_180cab520(questId, …) 等），漏掉 (name, questId) 形**第三参**注册口 FUN_180cb5920(out, L"name", questId)——函数体 ScriptDLL64.c:2146365 构造 IOneQuestScriptNpc（写 vftable + 拷名 + id 入全局表）
 fix_or_guardrail: 任何「真端无驱动」的否定结论必须列全注册口清单（首参/第三参/表行/客户端 CSV），并用三方交叉复算：本仓 XML 的 npc-id ↔ npcs.xml 的 quest_ai_name ↔ ScriptDLL (name↔questId)；只扫一种形态的 0 命中不构成「不存在」
-evidence: .agents/summary/quest-engine-native/p10-xml-only-176/XML-ONLY-176-ANALYSIS.zh-CN.md §7；同目录 scan_onequestscriptnpc.py、crosscheck_quest_ai.py；真端 ScriptDLL64.c:2146365、:1890496(Kalio↔1001)、真端 NPC 静态表 203067 Kalio 的 quest_ai_name 列；抽样 1001/14010/11279 三方交叉 3/3 全中
+evidence: .agents/summary/quest-engine-native/p10-xml-only-176/XML-ONLY-176-ANALYSIS.zh-CN.md §7；.agents/summary/quest-engine-native/p10-xml-only-176/XML-ONLY-176-ADJUDICATION.zh-CN.md；.agents/summary/quest-engine-native/p11-quest-ai-lane/P11-PREREQ-QUEST-AI-LANE.zh-CN.md；同目录 scan_onequestscriptnpc.py、crosscheck_quest_ai.py；真端 ScriptDLL64.c:2146365、:1890496(Kalio↔1001)、真端 NPC 静态表 203067 Kalio 的 quest_ai_name 列；抽样 1001/14010/11279 三方交叉 3/3 全中
 validation: 2026-10-03 静态：176 中 142 命中该注册口（18787 调用点 / 7148 唯一 id，其中 4682 落本仓 6224 任务集）；真端 quest.xml 有行 169/176、含目标列 144/176；客户端 quest_script_monster.csv 30/176、quest_monster.csv 38/176
 superseded_by: none
 boundaries: 注册口命中 = 存在 NPC 对话 ingress；「目标计数/完成是否全由 quest.xml 通用列驱动」尚未逐件验证（P11 待验）；34 个未命中件中 1000/2000/1195/18744/21030/28744/50038/50040/50041 需逐件裁定
@@ -3104,3 +3104,7 @@ keywords: 真端驱动面、ScriptDLL、FUN_180cb5920、IOneQuestScriptNpc、que
 - **判定规则**：「真端无驱动」= 必须穷举注册口形态后才成立；只扫「首参字面量」得出的 0 命中是**方法论盲区**，不是结论。
 - **三方交叉**：本仓 XML 的 `npc-id` ↔ `npcs.xml <quest_ai_name>` ↔ ScriptDLL `(name, questId)` 注册；抽样 3 件全中即可推翻「死内容」判定。
 - **三层结构**：对话层（quest_ai_name 车道）+ 目标层（quest.xml collect/drop/check 列，客户端镜像 quest_monster*.csv）+ 族表层（8 张 Quest_Simple*，只承担复杂形）。
+- **反例（2026-10-03）**：SimpleItemPlay 曾因「本族表无 `cs1_haction` 触发列」判声明行 fail-closed —— 属**本地假设判据**。
+  真端 row loader（`ScriptDLL64.c:2686058` 区间，逐列 `_wcsicmp` 取 `con_quest`/`cutsceneId1`/`cs1_haction`/`cs1_progress`）
+  只在**存在该列时**取值，缺列的槽恒空；缺列 ≠ 该行不可服务。拆除后路由集不变（真阻塞 = owner 未退役），
+  说明「闸门失真」与「裁定未决」是两类问题，须分别复算再定门。

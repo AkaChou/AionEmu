@@ -49,13 +49,14 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
  * </ul>
  * 缺行/名字多义/道具未解/未退役的行一律不路由（fail-closed）。中继链与第 K 步发/扣自 P5D 步 2 起已接线
  * （数据面 + 动作面 + 页 + 闸门），声明行仍因 **owner 未退役**（XML 保留裁定）而不上线；声明
- * {@code cutsceneid1} 的行为触发列缺失型休眠（§10.3-#21），仍不路由。
+ * {@code cutsceneid1} 按原文装载为证据面（本族 2 行：13400=859、23400=860），真端本表无
+ * {@code cs1_haction} 列 ⇒ 本车道不合成页动作触发，该面不作为路由闸门。
  * <p>
  * Retail SimpleItemPlay native handler (plan §6.2 / §7 P5). The routed six rows accept at the retail
  * acquire npc (page-4 ask window, 1002/20000 commits granting the play item), advance by using the
  * declared item (START → REWARD), re-open the reward window on the hand-in npc and settle through
  * {@link NativeReportRewardFlow}; the play item is recycled on the retail 1009 action exactly where
- * the retired compiler did it. Unresolved names/items and non-retired rows are never routed.
+ * the retired compiler did it. Unresolved names/items and non-retired rows are never routed; the declared cutsceneid1 rows load that column as an evidence face only (this table has no cs1_haction column, so no page-action trigger is synthesised).
  */
 public final class SimpleItemPlayHandler {
 
@@ -117,6 +118,9 @@ public final class SimpleItemPlayHandler {
 	/** 任务 ID → 第 K 步的扣除（位置保留）。 / Quest id → step removals (positions kept). */
 	private final Map<Integer, List<ItemStack>> stepRemoveByQuestId;
 
+	/** 任务 ID → 过场资源 id（真端交付节点 0x35 槽的 {@code cutsceneid1}，本族 2 行）。 / Quest id → the declared cutscene resource id (retail slot 0x35, two rows). */
+	private final Map<Integer, Integer> cutsceneByQuestId;
+
 	/** 任务 ID → 链式接取窗的下一环（真端交付节点 0x1e 槽的 {@code con_quest}）。 / Quest id → the next quest of the chain window. */
 	private final Map<Integer, Integer> conQuestByQuestId;
 	/** 链式接取窗未闭环的行（本族当前恒空：声明行未路由，闭环由逐行门复算）。 / Rows whose chain window is not realized. */
@@ -159,6 +163,7 @@ public final class SimpleItemPlayHandler {
 		Map<Integer, List<ItemStack>> stepGives = new LinkedHashMap<>();
 		Map<Integer, List<ItemStack>> stepRemoves = new LinkedHashMap<>();
 		Map<Integer, Integer> conQuests = new LinkedHashMap<>();
+		Map<Integer, Integer> cutscenes = new LinkedHashMap<>();
 		Set<Integer> unresolvedChain = new TreeSet<>();
 
 		for (NativeQuestTableLoader.SimpleItemPlayRow row : tableLoader.itemPlayRows()) {
@@ -240,10 +245,15 @@ public final class SimpleItemPlayHandler {
 				resolvable = false;
 			}
 
-			// 过场（真端 0x35 槽）与交付门：触发列在本表里不存在（§10.3-#21）⇒ 声明行保持 fail-closed。
-			// The cutscene slot 0x35 has no trigger column in this table (§10.3-#21): declaring rows fail closed.
-			if (row.cutsceneId() != null || row.itemCheck()) {
-				resolvable = false;
+			// 过场（真端 0x35 槽）：本表 2 行声明 cutsceneid1（13400=859、23400=860）。真端本表既无
+			// cs1_haction 也无 item_check 列（全表 0 命中，实测）⇒ 不存在页动作触发面；此面按证据装载、
+			// 不合成触发、**不作为路由闸门**（旧版「缺触发列即 fail-closed」属本地假设，已拆除）。
+			// The cutscene slot 0x35: two rows declare cutsceneid1 (13400=859, 23400=860). This retail
+			// table carries neither cs1_haction nor item_check (0 hits measured), so no page-action
+			// trigger exists; the face is loaded as evidence, synthesises no trigger and is NOT a
+			// routing gate (the former fail-closed rule rested on a local assumption).
+			if (row.cutsceneId() != null) {
+				cutscenes.put(questId, row.cutsceneId());
 			}
 
 			boolean retired = RetiredQuestIds.contains(questId);
@@ -258,16 +268,11 @@ public final class SimpleItemPlayHandler {
 
 			// 链式接取窗（真端 0x1e 槽）按原文装载：本族 9 行声明 con_quest，其中 2 行（13400/23400）
 			// 的目标落在本表内（13401/23401），其余 7 行在兄弟族。
-			// 过场（真端 0x35 槽）本族 2 行声明 cutsceneid1（859/860），但真端表**没有 cs1_haction 列**
-			// （全表 0 命中；对比 CollectItem 2 行带动作列）⇒ 0x35 槽的触发动作在真端数据里不存在，
-			// 本车道按「未被服务的动作不播」冻结为休眠面，只留证据、不合成页动作；声明行本身也因
-			// 中继/步物品/过场/交付门落在不路由长尾上（见上 resolvable 判定），运行期不上线。
-			// The chain window (slot 0x1e) loads verbatim: nine rows declare con_quest and two of them
-			// (13400/23400) target in-table quests (13401/23401). Two rows declare cutsceneid1 (859/860) for
-			// slot 0x35, yet this retail table carries no cs1_haction column at all (0 hits vs. 2 in
-			// CollectItem), so the slot's trigger action does not exist in the retail data: the face stays
-			// dormant with evidence recorded and no synthesised page. Declaring rows also sit in the
-			// unrouted long tail (see the resolvable check above).
+			// 过场（真端 0x35 槽）按原文装载为证据面（{@link #cutsceneId(int)}）：真端本表无 cs1_haction 列 ⇒
+			// 本车道不存在页动作触发点，不合成触发；播放点绑定（真端 thunk 的节点槽语义）属后续批，见 P9 §8。
+			// The cutscene (slot 0x35) loads as an evidence face (see cutsceneId): the table has no cs1_haction
+			// column, so this lane has no page action to trigger it and synthesises none; the playback
+			// binding is a later batch (P9 §8).
 			if (row.conQuest() != null) {
 				conQuests.put(questId, row.conQuest());
 			}
@@ -305,6 +310,7 @@ public final class SimpleItemPlayHandler {
 		this.unroutableQuestIds = Collections.unmodifiableSet(unroutable);
 		this.unresolvedNames = Collections.unmodifiableSet(unresolved);
 		this.unresolvedItemSymbols = Collections.unmodifiableSet(unresolvedItems);
+		this.cutsceneByQuestId = Collections.unmodifiableMap(cutscenes);
 		this.conQuestByQuestId = Collections.unmodifiableMap(conQuests);
 		this.unresolvedChainQuestIds = Collections.unmodifiableSet(unresolvedChain);
 	}
@@ -314,6 +320,12 @@ public final class SimpleItemPlayHandler {
 	 * The retail {@code con_quest} column (hand-in slot 0x1e); the window is realized by the next quest's
 	 * own accept route whenever that row acquires at this row's hand-in NPC.
 	 */
+	// 表声明的过场资源 id（本族 2 行：13400=859、23400=860；未声明返回 null）。
+	// The declared cutscene resource id (13400=859, 23400=860; null when none).
+	public Integer cutsceneId(int questId) {
+		return cutsceneByQuestId.get(questId);
+	}
+
 	public Integer conQuest(int questId) {
 		return conQuestByQuestId.get(questId);
 	}

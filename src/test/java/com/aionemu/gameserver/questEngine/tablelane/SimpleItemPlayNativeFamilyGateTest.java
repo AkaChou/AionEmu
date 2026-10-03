@@ -3,6 +3,7 @@ package com.aionemu.gameserver.questEngine.tablelane;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
@@ -81,6 +82,28 @@ class SimpleItemPlayNativeFamilyGateTest {
 		assertEquals(5, rows.stream().filter(row -> declared(row.stepGiveItems(), 2)).count(), "give_item2 覆盖 5 行");
 		assertEquals(1, rows.stream().filter(row -> declared(row.stepRemoveItems(), 1)).count(), "remove_item1 覆盖 1 行");
 		assertEquals(4, rows.stream().filter(row -> declared(row.stepRemoveItems(), 2)).count(), "remove_item2 覆盖 4 行");
+	}
+
+	@Test
+	void cutsceneColumnIsAnEvidenceFaceOnly() {
+		// 真端 Quest_SimpleItemPlay.xml 43 行仅 2 行声明 cutsceneid1（13400=859、23400=860），
+		// 且本表无 cs1_haction / item_check 列（0 命中）⇒ 过场面是证据面，不构成路由闸门。
+		// Only two of the 43 retail rows declare cutsceneid1 (13400=859, 23400=860), and the table
+		// carries neither cs1_haction nor item_check, so the face is evidence-only.
+		assertEquals(new java.util.TreeSet<>(java.util.List.of(13400, 23400)),
+			loader.itemPlayRows().stream().filter(row -> row.cutsceneId() != null)
+				.map(NativeQuestTableLoader.SimpleItemPlayRow::questId)
+				.collect(java.util.stream.Collectors.toCollection(java.util.TreeSet::new)),
+			"真端 cutsceneid1 覆盖行");
+		assertEquals(859, handler.cutsceneId(13400), "13400 的过场资源 id（客户端 CutScenes.xml 有 <id>859</id>）");
+		assertEquals(860, handler.cutsceneId(23400), "23400 的过场资源 id");
+		assertNull(handler.cutsceneId(19048), "未声明行无过场面");
+		for (int questId : java.util.List.of(13400, 23400)) {
+			assertTrue(handler.owns(questId), "真端表行仍在注册集: " + questId);
+			assertTrue(handler.unroutableQuestIds().contains(questId),
+				"owner 未退役（不在 retail-xml-retention 清单）⇒ 停在不可路由面: " + questId);
+			assertFalse(handler.routes(questId), "未被 owner 裁定的行不上线: " + questId);
+		}
 	}
 
 	@Test

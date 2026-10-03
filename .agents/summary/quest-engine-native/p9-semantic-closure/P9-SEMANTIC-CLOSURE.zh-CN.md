@@ -107,3 +107,21 @@ mvn -q -Dtest='*Quest*Test,*Retail*Test' test   # 聚焦套件（门禁债对比
 - `SimpleItemPlayHandler` 取消 `row.cutsceneId() != null → fail-closed`；把 `cutsceneId` 直接交给过场/电影端口。
 - 本族无 `item_check` 列，该判据可一并删除（或降级为装载期告警，保持证据面可观测）。
 - 门常量重冻**预期**（须以实测为准，勿照抄）：`routed 8 → 10`、`unroutable 35 → 33`。
+
+### 8.1 落地实测（2026-10-03，A 批）
+
+已按上节建议拆除该假设判据（**未**新增页动作触发）：
+
+- `SimpleItemPlayHandler`：删除 `row.cutsceneId() != null || row.itemCheck() → fail-closed`；
+  `cutsceneId1` 改为**证据面**（新字段 + `cutsceneId(int)` 访问器，2 行：13400=859、23400=860），
+  并注明本族无 `cs1_haction` ⇒ 不合成触发、不参与路由闸门。
+- 门禁新增 `cutsceneColumnIsAnEvidenceFaceOnly`（冻结覆盖行 + 2 个资源 id + 未声明行为 null）。
+- **门常量实测未变**：`routed 8` / `unroutable 35` 保持不变（上节"预期 8→10 / 35→33"**不成立**，已作废）。
+  真因：13400/23400 不在 `retail-xml-retention` 清单内 ⇒ `RetiredQuestIds` 不含 ⇒ owner 未退役，
+  该两行的开关是**owner 裁定**而不是过场判据。⇒ 若要上线这两行，须先做 owner 裁定（C 类事项）。
+- 新增反证/正证（`ScriptDLL64.c:2686058` 区间）：row loader 按 `_wcsicmp` 连续读取
+  `con_quest`(+0x2b4) / `cutsceneId1`(+0x2b8) / `cs1_haction`(+0x2bc) / `cs1_progress`(+0x2c0)
+  ⇒ 表列确为装载期字段；本表缺 `cs1_haction` ⇒ 该槽恒空，与"无页动作触发"一致。
+  thunk `FUN_180cacb30(questId, rowValue, 1, nodes, actions, curPtr, ctx)` 的**播放点绑定仍未坐实**
+  （函数体按 node/action 数组比较后播放 node 值），故本批不做推测实现。
+- 验证：`mvn -q -Dtest=SimpleItemPlayNativeFamilyGateTest test` EXIT=0。
