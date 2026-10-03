@@ -65,6 +65,70 @@ quest_ai_name / member_name_descs（逗号串）
     <member_name_descs>Amphibia,Mollusca</member_name_descs>
   </quest_ai_name_group>
   <quest_ai_name_group>
+    <quest_ai_name>GAb1_01_Village01_Guard</quest_ai_name>
+    <member_name_descs>GAb1_01_Village01_Guard02,GAb1_01_Village01_Guard03,GAb1_01_Village01_Guard04</member_name_descs>
+  </quest_ai_name_group>
+  <quest_ai_name_group>
+    <quest_ai_name>GAb1_01_Village02_Guard</quest_ai_name>
+    <member_name_descs>GAb1_01_Village02_Guard02,GAb1_01_Village02_Guard03,GAb1_01_Village02_Guard04</member_name_descs>
+  </quest_ai_name_group>
+  <quest_ai_name_group>
+    <quest_ai_name>GAb1_01_Village03_Guard</quest_ai_name>
+    <member_name_descs>GAb1_01_Village03_Guard02,GAb1_01_Village03_Guard03,GAb1_01_Village03_Guard04</member_name_descs>
+  </quest_ai_name_group>
+  <quest_ai_name_group>
+    <quest_ai_name>GAb1_01_Village04_Guard</quest_ai_name>
+    <member_name_descs>GAb1_01_Village04_Guard02,GAb1_01_Village04_Guard03,GAb1_01_Village04_Guard04</member_name_descs>
+  </quest_ai_name_group>
+  <quest_ai_name_group>
+    <quest_ai_name>GAb1_02_Village01_Guard</quest_ai_name>
+    <member_name_descs>GAb1_02_Village01_Guard01,GAb1_02_Village01_Guard03,GAb1_02_Village01_Guard04</member_name_descs>
+  </quest_ai_name_group>
+  <quest_ai_name_group>
+    <quest_ai_name>GAb1_02_Village02_Guard</quest_ai_name>
+    <member_name_descs>GAb1_02_Village02_Guard01,GAb1_02_Village02_Guard03,GAb1_02_Village02_Guard04</member_name_descs>
+  </quest_ai_name_group>
+  <quest_ai_name_group>
+    <quest_ai_name>GAb1_02_Village03_Guard</quest_ai_name>
+    <member_name_descs>GAb1_02_Village03_Guard01,GAb1_02_Village03_Guard03,GAb1_02_Village03_Guard04</member_name_descs>
+  </quest_ai_name_group>
+  <quest_ai_name_group>
+    <quest_ai_name>GAb1_02_Village04_Guard</quest_ai_name>
+    <member_name_descs>GAb1_02_Village04_Guard01,GAb1_02_Village04_Guard03,GAb1_02_Village04_Guard04</member_name_descs>
+  </quest_ai_name_group>
+  <quest_ai_name_group>
+    <quest_ai_name>GAb1_03_Village01_Guard</quest_ai_name>
+    <member_name_descs>GAb1_03_Village01_Guard01,GAb1_03_Village01_Guard02,GAb1_03_Village01_Guard04</member_name_descs>
+  </quest_ai_name_group>
+  <quest_ai_name_group>
+    <quest_ai_name>GAb1_03_Village02_Guard</quest_ai_name>
+    <member_name_descs>GAb1_03_Village02_Guard01,GAb1_03_Village02_Guard02,GAb1_03_Village02_Guard04</member_name_descs>
+  </quest_ai_name_group>
+  <quest_ai_name_group>
+    <quest_ai_name>GAb1_03_Village03_Guard</quest_ai_name>
+    <member_name_descs>GAb1_03_Village03_Guard01,GAb1_03_Village03_Guard02,GAb1_03_Village03_Guard04</member_name_descs>
+  </quest_ai_name_group>
+  <quest_ai_name_group>
+    <quest_ai_name>GAb1_03_Village04_Guard</quest_ai_name>
+    <member_name_descs>GAb1_03_Village04_Guard01,GAb1_03_Village04_Guard02,GAb1_03_Village04_Guard04</member_name_descs>
+  </quest_ai_name_group>
+  <quest_ai_name_group>
+    <quest_ai_name>GAb1_04_Village01_Guard</quest_ai_name>
+    <member_name_descs>GAb1_04_Village01_Guard01,GAb1_04_Village01_Guard02,GAb1_04_Village01_Guard03</member_name_descs>
+  </quest_ai_name_group>
+  <quest_ai_name_group>
+    <quest_ai_name>GAb1_04_Village02_Guard</quest_ai_name>
+    <member_name_descs>GAb1_04_Village02_Guard01,GAb1_04_Village02_Guard02,GAb1_04_Village02_Guard03</member_name_descs>
+  </quest_ai_name_group>
+  <quest_ai_name_group>
+    <quest_ai_name>GAb1_04_Village03_Guard</quest_ai_name>
+    <member_name_descs>GAb1_04_Village03_Guard01,GAb1_04_Village03_Guard02,GAb1_04_Village03_Guard03</member_name_descs>
+  </quest_ai_name_group>
+  <quest_ai_name_group>
+    <quest_ai_name>GAb1_04_Village04_Guard</quest_ai_name>
+    <member_name_descs>GAb1_04_Village04_Guard01,GAb1_04_Village04_Guard02,GAb1_04_Village04_Guard03</member_name_descs>
+  </quest_ai_name_group>
+  <quest_ai_name_group>
     <quest_ai_name>GAb1_Quest_E</quest_ai_name>
     <member_name_descs>GAb1_01_Quest_E,GAb1_02_Quest_E,GAb1_03_Quest_E,GAb1_04_Quest_E</member_name_descs>
   </quest_ai_name_group>

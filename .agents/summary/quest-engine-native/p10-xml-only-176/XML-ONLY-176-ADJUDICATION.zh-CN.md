@@ -94,4 +94,5 @@ title 不一致降级为告警）；2 行 `magician_apprentice` 与 2 行 `LDF5A
   `XmlDataLoaderTest`、`QuestIncrementRangeContractTest`、`QuestDefinitionCatalogManifestTest`、
   `QuestInteractionObjectCatalogTest`、`QuestAutoStartDialogAuditTest`、`QuestNpcFactionRetailGateTest`
   + 家族聚焦 10 类，共 **19 类 140 例全绿（EXIT=0）**。
-- 未执行：16 行 `GAb1_*_Guard` 放开（需生成器改出 XML 形态后再落，见 `../p11-quest-ai-lane/`）。
+- **16 行 `GAb1_*_Guard` 放开已执行**：生成器加 `MULTI_TITLE_ALLOWED_PREFIXES=("GAb1_",)`（title 不一致降级为告警），
+  组表 60 → 76 组（零删行），门禁零重冻全绿（见 P9 §5.1）。

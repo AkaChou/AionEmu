@@ -125,3 +125,14 @@ mvn -q -Dtest='*Quest*Test,*Retail*Test' test   # 聚焦套件（门禁债对比
   thunk `FUN_180cacb30(questId, rowValue, 1, nodes, actions, curPtr, ctx)` 的**播放点绑定仍未坐实**
   （函数体按 node/action 数组比较后播放 node 值），故本批不做推测实现。
 - 验证：`mvn -q -Dtest=SimpleItemPlayNativeFamilyGateTest test` EXIT=0。
+
+### 5.1 裁决执行（2026-10-03）：16 行 `GAb1_*_Guard` 已放开
+
+- 生成器 `p0c52_quest_ai_name_groups.py`：新增 `MULTI_TITLE_ALLOWED_PREFIXES = ("GAb1_",)`；
+  命中的组**不再排除**，只打印 `WARN <组>: members span title_ids …`（title 不一致降级为告警），
+  逐候选的 `title_ids != 1` 失败断言同步降级（仅非白名单前缀仍 fail-closed）。
+- 重建产物：`retail-quest-ai-name-groups.xml` 60 → **76 组**（+16 Guard 组，零删行），生成器自检 `OK: 76 groups`。
+- 门禁实测**零重冻**：家族聚焦 10 类 + `RetailTableSchemaGateTest` + `RetailOwnership/MetadataEquivalence/
+  DriverOverlay` + `XmlDataLoaderTest` + `NativeNpcNameResolverTest` + `QuestEngineNpcDialogDispatchTest`
+  + `QuestNpcFactionRetailGateTest` 全绿（EXIT=0）——16 组的成员此前已由其它解析通道供给，
+  本批修的是**证据面**（真端/client 分组登记）而非路由面。

@@ -146,6 +146,11 @@ def server_names_by_id() -> dict[int, str]:
 #   * 其余位列  reward_npc_name / talk_npcN（交付与中继：同一条真端名字节点语义）
 # Service surface = every NPC slot actually written by *any* family table (P9 widening: the original
 # implementation only collected the DD table). Accept columns keep the legacy accept-superset guard.
+# 客户端声明优先（2026-10-03 C 类裁定 / P9 §5）：GAb1_*_Guard 16 组由客户端 <quest_ai_name>
+# 明示共享对话名，但成员跨 4 个 title_id。裁定 = 收口并把 title 不一致降级为告警，
+# 不再作为排除判据；其余多 title_id 组维持原排除（fail-closed）。
+MULTI_TITLE_ALLOWED_PREFIXES = ("GAb1_",)
+
 FAMILY_TABLES = ("Quest_SimpleHunt.xml", "Quest_SimpleSerialHunt.xml", "Quest_SimpleTalk.xml",
 	"Quest_SimpleCollectItem.xml", "Quest_SimpleUseItem.xml", "Quest_SimpleItemPlay.xml",
 	"Quest_CombineTask.xml", "data_driven_quest.xml")
@@ -275,8 +280,12 @@ def main() -> int:
 			continue
 		title_ids = sorted({templates[member][1] for member in members})
 		if len(title_ids) != 1:
-			excluded.append((name, "MULTI_TITLE_ID", ",".join(title_ids)))
-			continue
+			if name.startswith(MULTI_TITLE_ALLOWED_PREFIXES):
+				print(f"   WARN  {name}: members span title_ids {','.join(title_ids)}"
+					" — 客户端声明优先，按裁定收口（title 不一致降级为告警）")
+			else:
+				excluded.append((name, "MULTI_TITLE_ID", ",".join(title_ids)))
+				continue
 		if name in REGISTERED_EXCLUSIONS:
 			excluded.append((name,) + REGISTERED_EXCLUSIONS[name])
 			continue
@@ -312,7 +321,7 @@ def main() -> int:
 			print("   dic members      - (missing from the shipped dump; names derived from the templates)")
 		elif sorted(templates[member][0] for member in dic_members) != ids:
 			failures.append(f"{name}: dic member ids != client block ids {ids}")
-		if len(title_ids) != 1:
+		if len(title_ids) != 1 and not name.startswith(MULTI_TITLE_ALLOWED_PREFIXES):
 			failures.append(f"{name}: members span title_ids {sorted(title_ids)}")
 		# 遗留 XML = 见证（非判据）：留存下来的部分给出接取流 id 集，成员应落在其中；证据不完整
 		#（同组任务已有退役）时只打印覆盖率，不做"相斥"推断。
