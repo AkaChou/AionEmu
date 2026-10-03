@@ -7,9 +7,15 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 import java.util.stream.IntStream;
+
+import javax.xml.XMLConstants;
+import javax.xml.transform.stream.StreamSource;
+import javax.xml.validation.SchemaFactory;
+import javax.xml.validation.Validator;
 
 import org.junit.jupiter.api.Test;
 
@@ -20,6 +26,8 @@ import org.junit.jupiter.api.Test;
 class HtmlPagesRegistryTest {
 
 	private static final int EXPECTED_ROWS = 5904;
+	private static final String XML_RESOURCE = "aion/data/static_data/quest/retail/HtmlPages.xml";
+	private static final String XSD_RESOURCE = "aion/data/static_data/quest/retail/HtmlPages.xsd";
 
 	@Test
 	void loadsIngestedRetailPageTable() throws IOException {
@@ -27,6 +35,23 @@ class HtmlPagesRegistryTest {
 		// 行数与 P0a 审计/溯源清单一致（table-source-provenance.tsv: rows=5904）。
 		// The row count matches the P0a audit and the provenance manifest (table-source-provenance.tsv).
 		assertEquals(EXPECTED_ROWS, registry.size());
+	}
+
+	/**
+	 * 真资源对 {@code HtmlPages.xsd} 全文校验：schema 镜像注册表 fail-closed 规则
+	 * （id 非负且唯一 / name 必填非空 / htmlpagename 可选但出现即唯一）——schema 形漂移即红。
+	 * The real resource must validate against {@code HtmlPages.xsd}, which mirrors the registry
+	 * fail-closed rules (unique non-negative id / required non-empty name / unique optional htmlpagename).
+	 */
+	@Test
+	void realResourceValidatesAgainstTheHtmlPagesXsd() throws Exception {
+		Validator validator = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI)
+				.newSchema(new StreamSource(getClass().getClassLoader().getResourceAsStream(XSD_RESOURCE)))
+				.newValidator();
+		try (InputStream input = getClass().getClassLoader().getResourceAsStream(XML_RESOURCE)) {
+			assertTrue(input != null, "missing " + XML_RESOURCE);
+			validator.validate(new StreamSource(input));
+		}
 	}
 
 	@Test

@@ -32,3 +32,19 @@
   （余 3 张 = challenge_task / quest_random_rewards / npcfactions_quest），**并钉死该行必须保持
   CONVERTED 形**——回退 BYTE_IDENTICAL 即与盘上 UTF-8 副本矛盾，门会红；
 - `HtmlPagesRegistry` javadoc：数据源描述同步为简化形。
+
+## 5. 二段：用户精简 + HtmlPages.xsd（2026-10-03 同日，零行为变更）
+
+**用户手改**（未提交工作区）：移除 DOCTYPE/内部实体子集（"文档"）+ 重排版（2 空格缩进、LF），
+新 sha256 `43ec7f7e…`（806,991 B）。语义复验：**5904 行 (id,name,htmlpagename) 三元组与上一形
+逐条全等**；DOCTYPE 移除安全性 = 文件内**零实体引用残留**（无未定义实体炸解析风险）。
+
+**新增 `HtmlPages.xsd`**（同目录，镜像注册表 fail-closed 规则）：
+- `id` = 非负 int + `xs:unique`（5904 唯一）；`name` = 必填非空；`htmlpagename` = 可选、
+  出现即非空 + `xs:unique`（5869 唯一；缺席行不入判定 = 字段缺席空节点集的规范行为）；
+- 承重面 = `HtmlPagesRegistryTest.realResourceValidatesAgainstTheHtmlPagesXsd`（真资源全文
+  schema 校验，schema 形漂移即红）——运行时解析路径不变（零行为变更）；
+- 连带同步：注册表 javadoc 与解析器注释（DOCTYPE 已移除，外部 DTD 拒绝转为纵深防御表述）、
+  溯源行 repo_sha256 更新 + transformation 注明 DOCTYPE 移除/重排版/xsd；
+- 门禁 = HtmlPagesRegistryTest 6/6 + TableSourceProvenanceGateTest 2/2。
+- 提交 `31bfa636e`（一段）→ 本二段提交；两段均为 commit 级 pathspec（零混入）。

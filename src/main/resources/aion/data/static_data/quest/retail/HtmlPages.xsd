@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- HtmlPages.xml 页字典 schema（quest 零散表门禁用）：镜像 HtmlPagesRegistry 的 fail-closed 规则——
+     id 非负整数且全表唯一、name 必填非空、htmlpagename 可选但出现即非空且全表唯一。
+     Html page dictionary schema (quest retail table gate): mirrors the HtmlPagesRegistry fail-closed
+     rules — id is a unique non-negative int, name is required non-empty, htmlpagename is optional but
+     must be non-empty and unique when present. -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+	<xs:element name="htmlpages">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="htmlpage" minOccurs="0" maxOccurs="unbounded">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="id">
+								<xs:simpleType>
+									<xs:restriction base="xs:int">
+										<xs:minInclusive value="0"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="name">
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:minLength value="1"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="htmlpagename" minOccurs="0">
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:minLength value="1"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+		<xs:unique name="uniquePageId">
+			<xs:selector xpath="htmlpage"/>
+			<xs:field xpath="id"/>
+		</xs:unique>
+		<!-- 缺省 htmlpagename 的行不入唯一性判定（字段缺席 = 空节点集，XSD 规范行为）。
+		     Rows without htmlpagename are excluded from uniqueness (absent field = empty node set). -->
+		<xs:unique name="uniqueHtmlPagename">
+			<xs:selector xpath="htmlpage"/>
+			<xs:field xpath="htmlpagename"/>
+		</xs:unique>
+	</xs:element>
+</xs:schema>
