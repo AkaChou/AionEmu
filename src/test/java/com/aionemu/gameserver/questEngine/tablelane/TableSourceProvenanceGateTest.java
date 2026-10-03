@@ -31,8 +31,9 @@ class TableSourceProvenanceGateTest {
 	@Test
 	void everyProvenanceRowMatchesRepoBytes() throws Exception {
 		Map<String, String[]> rows = readManifest();
-		// 13 = 9 张已转换表（P0a 已证 token 语义等价）+ 4 张 P0b byte 级表。
-		// 13 = 9 converted tables (P0a token-semantic-equal) + 4 P0b byte-identical tables.
+		// 13 = 10 张已转换表（P0a token 语义等价 9 张 + 精简批转码的 HtmlPages.xml）+ 3 张 P0b byte 级表。
+		// 13 = 10 converted tables (9 P0a token-semantic-equal + HtmlPages.xml from the simplify batch)
+		// + 3 P0b byte-identical tables.
 		assertEquals(13, rows.size());
 		for (Map.Entry<String, String[]> entry : rows.entrySet()) {
 			String[] cols = entry.getValue();
@@ -60,12 +61,20 @@ class TableSourceProvenanceGateTest {
 	@Test
 	void p0bByteIdenticalTablesArePresent() {
 		Map<String, String[]> rows = readManifest();
-		for (String table : new String[] {"HtmlPages.xml", "challenge_task.xml", "quest_random_rewards.xml",
+		for (String table : new String[] {"challenge_task.xml", "quest_random_rewards.xml",
 				"npcfactions_quest.xml"}) {
 			String[] cols = rows.get(table);
 			assertTrue(cols != null, "P0b table missing from provenance manifest: " + table);
 			assertEquals("BYTE_IDENTICAL", cols[6], table);
 		}
+		// HtmlPages.xml 已按精简批转为 CONVERTED_UTF8_WHITESPACE_NORMALIZED（字符级语义等价，
+		// 字节域与源脱钩）——钉死该行不得回退为 BYTE_IDENTICAL，否则与盘上 UTF-8 副本矛盾。
+		// HtmlPages.xml is now CONVERTED_UTF8_WHITESPACE_NORMALIZED (char-level semantic equal, byte domain
+		// decoupled from the source) — pin it so it can never silently regress to BYTE_IDENTICAL.
+		String[] htmlPages = rows.get("HtmlPages.xml");
+		assertTrue(htmlPages != null, "HtmlPages.xml missing from provenance manifest");
+		assertTrue(htmlPages[6].startsWith("CONVERTED_UTF8_WHITESPACE_NORMALIZED"), htmlPages[6]);
+		assertEquals("UTF-8", htmlPages[5], "HtmlPages.xml encoding");
 	}
 
 	private Map<String, String[]> readManifest() {
