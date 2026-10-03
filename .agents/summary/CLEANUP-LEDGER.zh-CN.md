@@ -846,5 +846,22 @@ ai-support-guard-npe、archives-of-eternity-door、charge-skill-damage、comment
 
 - tracked 文件（47 个门禁 tsv + 43 项旧主题）均可从 git 历史取回：`git show <清理提交>^:<path>`；
 - 未跟踪的 gate 日志由重跑对应聚焦套件再生成（关键读数已内联于各批次报告与 README，无需回读日志）；
-- 保留边界不变：`.py`/`.sh`/`.java` 工具与门禁脚本、`*-decisions*`/`*-registry*` 登记表、`.md` 报告与验收记录、
-  memory-bank `evidence:` 引用到的产物一律保留。
+- 保留边界（经 §9.3 修订）：`.py`/`.sh`/`.java` 工具与门禁脚本、`*-decisions*`/`*-registry*` 登记表、验收记录、
+  memory-bank `evidence:` 引用到的产物一律保留；零引用已完结报告按 §9.3 的逐文件判据处置。
+
+### 9.3 第二刀（同日）：逐文件零引用清理（72 个 / ≈530KB）
+
+判据（§9 同口径降到文件粒度）：**逐文件全库零引用**（同主题文件 + memory-bank / rules / ledger / docs /
+scripts / src-test / pom 的引用扫描）且任务已完结。
+
+| 组 | 文件数 | 说明 |
+|---|---:|---|
+| 派生物 / 门禁输出 | 5 | `talk-classification.tsv`、`itemplay-classification.tsv`（族门禁逐行结果）、`dd-classification-before/after.tsv`（漂移登记快照）、`batch52-residual.txt`（批次 52 残留清单） |
+| 零引用已完结报告 / 记录 | 67 | 分布 24 个主题：`quest-native-dispatch`×16、`quest`×15、`quest-e2e`×6、`quest-kill-contracts`×4、`startup-perf`×3、`ai-kb-index`×3，其余 18 个主题共 20 个（spawn-*、retail-template-reconciliation、quest-refactor-review 等；明细见 git 历史） |
+
+**保护边界（本轮明确）**：
+
+- `quest-acceptance/*.md` 零引用验收记录 33 个**保留**——验收记录是 quest-repair 规则约定的权威存档，
+  按约定独立存在，不以被引用为条件；
+- `.py`/`.sh`/`.java`/`.jsh` 工具与探针（零引用 73 个）**保留**——按既有保留边界；
+- 当日（2026-10-03）新产出文件**保留**（在办），如 `quest-native-dispatch/2026-10-03-*`。
