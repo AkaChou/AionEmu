@@ -266,22 +266,12 @@
     </build>
 
     <profiles>
-        <!-- 默认（IDE/测试）构建：源码树进 test/runtime classpath。
-             Default (IDE/test) build: source tree plus generated monster tables on the classpath.
-             activeByDefault 在 external-runtime-resources 激活时会自动失效。 -->
-        <profile>
-            <id>checkout-resources</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-            <build>
-                <resources>
-                    <resource>
-                        <directory>src/main/resources</directory>
-                    </resource>
-                </resources>
-            </build>
-        </profile>
+        <!-- 部署打包构建（-Daion.external-resources=true）：排除 aion/**；
+             运行期静态数据由 scripts/package.sh 同步到 AION_HOME，不打进 jar。
+             Deployment build (-Daion.external-resources=true): excludes aion/**;
+             runtime static data is synced to AION_HOME by scripts/package.sh.
+             默认（IDE/测试）构建直接使用 Maven 默认的 src/main/resources 资源目录。
+             Default (IDE/test) builds use Maven's default src/main/resources resource directory. -->
         <profile>
             <id>external-runtime-resources</id>
             <activation>
@@ -291,7 +281,7 @@
                 </property>
             </activation>
             <build>
-                <resources combine.self="override">
+                <resources>
                     <resource>
                         <directory>src/main/resources</directory>
                         <excludes>
