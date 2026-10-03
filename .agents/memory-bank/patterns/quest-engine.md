@@ -3095,7 +3095,7 @@ fix_or_guardrail: 任何「真端无驱动」的否定结论必须列全注册�
 evidence: .agents/summary/quest-engine-native/p10-xml-only-176/XML-ONLY-176-ANALYSIS.zh-CN.md §7；.agents/summary/quest-engine-native/p10-xml-only-176/XML-ONLY-176-ADJUDICATION.zh-CN.md；.agents/summary/quest-engine-native/p11-quest-ai-lane/P11-PREREQ-QUEST-AI-LANE.zh-CN.md；同目录 scan_onequestscriptnpc.py、crosscheck_quest_ai.py；真端 ScriptDLL64.c:2146365、:1890496(Kalio↔1001)、真端 NPC 静态表 203067 Kalio 的 quest_ai_name 列；抽样 1001/14010/11279 三方交叉 3/3 全中
 validation: 2026-10-03 静态：176 中 142 命中该注册口（18787 调用点 / 7148 唯一 id，其中 4682 落本仓 6224 任务集）；真端 quest.xml 有行 169/176、含目标列 144/176；客户端 quest_script_monster.csv 30/176、quest_monster.csv 38/176
 superseded_by: none
-boundaries: 注册口命中 = 存在 NPC 对话 ingress；「目标计数/完成是否全由 quest.xml 通用列驱动」尚未逐件验证（P11 待验）；34 个未命中件中 1000/2000/1195/18744/21030/28744/50038/50040/50041 需逐件裁定
+boundaries: 注册口命中 = 存在 NPC 对话 ingress；「目标计数/完成是否全由 quest.xml 通用列驱动」尚未逐件验证（P11 §4.1 待验）。34 个未命中件已裁定（2026-10-03）：7 件纯自造已退役（50110/50111/50123/50124/51110/51111/89999，生产全集 6224→6217），27 件保持 XML 车道；P9 残余 16 行 GAb1_*_Guard 已按「客户端声明优先」放开（组表 60→76，零门禁重冻）
 see_also: [QE-131], [QE-132]
 first_check: 判「真端无驱动」前先答：① 注册口清单是否覆盖 (name, id) 形第三参注册？② 是否用 npcs.xml quest_ai_name 做反向交叉？③ quest.xml 目标列与客户端 CSV 是否查过？④ 抽样 ≥3 件是否三方全中？
 keywords: 真端驱动面、ScriptDLL、FUN_180cb5920、IOneQuestScriptNpc、quest_ai_name、npcs.xml、quest.xml 目标列、quest_script_monster.csv、XML-only 176、QE-136
