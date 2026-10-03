@@ -125,5 +125,5 @@ if (hasQuestDialogContext(npcTarget, routedQuestId)) {
 - [任务排查与修复 Playbook](QUEST_REPAIR_PLAYBOOK.zh-CN.md)
 - [Pattern 指纹与提交索引](repair-playbook/PATTERNS.zh-CN.md)
 - [已验收代表案例 8.33](repair-playbook/CASES.zh-CN.md)
-- [客户端映射迁出记录](.agents/summary/headless-client-extraction/MIGRATION.zh-CN.md)
+- [客户端映射迁出记录](../../.agents/summary/headless-client-extraction/MIGRATION.zh-CN.md)
 - [验收记录模板](../../.agents/summary/quest-acceptance/README.zh-CN.md)

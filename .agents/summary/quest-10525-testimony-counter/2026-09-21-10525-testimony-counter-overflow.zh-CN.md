@@ -8,7 +8,7 @@
 - 状态：**实现完成、静态验证与 Maven 聚焦/生产门禁通过；客户端实机复测未做（PENDING_CLIENT）**
 - 后续实机又发现 s4/s5 报告链 `QUEST_SELECT(31)`/`SELECT6(2716)` 路由缺失，证据与修复见
   [quest-10525-report-dialog31/2026-09-21-10525-s4-s5-report-dialog31.zh-CN.md](../quest-10525-report-dialog31/2026-09-21-10525-s4-s5-report-dialog31.zh-CN.md)
-- 证据脚本：[audit_increment_range.py](audit_increment_range.py)、[simulate_testimony_counter.py](simulate_testimony_counter.py)、[increment-range-findings.csv](increment-range-findings.csv)
+- 证据脚本：[audit_increment_range.py](audit_increment_range.py)、[simulate_testimony_counter.py](simulate_testimony_counter.py)、increment-range-findings.csv（已清理，见 CLEANUP-LEDGER）
 
 ## 一、现象
 

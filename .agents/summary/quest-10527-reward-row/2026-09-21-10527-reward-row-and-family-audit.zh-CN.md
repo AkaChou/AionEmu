@@ -1,5 +1,7 @@
 # 任务 10527 领奖行投影错位（使用 182216075 后任务书仍停在“调查影子潜入部队秘密文书”）与同族行/状态对齐审计
 
+> **产物清理提示（2026-10-03）**：本文件引用的批次 evidence 表与审计输出（`audit-output.tsv`、`batch*-evidence.tsv`、`blank-journal-slots.tsv` 等）已按 `.agents` 保留口径清理，对应链接已改为「已清理」标注；原文可从 git 历史取回（清理提交见 `.agents/summary/CLEANUP-LEDGER.zh-CN.md`）。
+
 
 > **生成物清理提示（2026-09-30）**：本文件正文提到的 `*.tsv` / `*.log` / `*.txt` / `*.xml` 等中间转储已随 `chore(agents)` 清理删除；原文与留痕仍可从 git 历史取回，被删清单与再生成入口见 `.agents/summary/CLEANUP-LEDGER.zh-CN.md`。
 
@@ -23,7 +25,7 @@
   按 origin/history 旧 handler 恢复被迁移丢掉的行推进，新增 `SensoryAreaRideRowContractTest`（见第八节）
 - 证据脚本：[audit_reward_row_vs_client_steps.py](audit_reward_row_vs_client_steps.py)、
   [apply_batch5_sensory_area_rows.py](apply_batch5_sensory_area_rows.py)（批次 5 的可重放改动脚本）、
-  [audit-output.tsv](audit-output.tsv)、[audit-stdout.txt](audit-stdout.txt)
+  audit-output.tsv（已清理）、audit-stdout.txt（已清理）
 
 ## 一、现象（用户实机报障，10527）
 
@@ -1448,7 +1450,7 @@ var0 当 0→2 的投递计数，且客户端行内 `HousingLf_Event_ShugoSanta`
   `PRODUCTION_COMPILE_OK=6189 / FAILURES=0 / INTERACTION_OBJECT_FAILURES=0 / WHITELIST_VIOLATIONS=0`。
   第 1 轮曾因测试自身过紧（整张投影 Map 比较，27160/27161 的 `var1=10` 造成假失败）在 92 例中失败 1 例，
   已改为只比较 `var0` 后重跑全绿——**生产 XML 未因该断言改动**。
-- **证据表**：[batch18-evidence.tsv](batch18-evidence.tsv)（含 3 个锁定兄弟行）。
+- **证据表**：batch18-evidence.tsv（已清理）（含 3 个锁定兄弟行）。
 - 客户端实机复测：**PENDING_CLIENT**。要点：① 已进入 `REWARD/var0=0` 的旧存档在登录/切图时由自愈边纠正到镜像领奖行；
   ② 六个任务领奖对话正常打开、任务书高亮末行（14201 为第 3 行）。17160/17161 另需确认 `var1=10` 是否随领奖态保留。
 
@@ -1533,7 +1535,7 @@ var0 当 0→2 的投递计数，且客户端行内 `HousingLf_Event_ShugoSanta`
   `BUTTON_WITHOUT_ROUTE|15000|s1|804874|31|1352|1353`——`select2` 页的 `HACTION_SELECT2_1(1353)` 没有对应路由
   （且我当时把 1352 的落地页写成了 `SELECT2_1`）；已按客户端页按钮链拆成
   `1352 -> page SELECT2` 与 `1353 -> page SELECT2_1` 两条路由并加入门禁断言，重跑全绿。
-- **证据表**：[batch19-evidence.tsv](batch19-evidence.tsv)。
+- **证据表**：batch19-evidence.tsv（已清理）。
 - 客户端实机复测：**PENDING_CLIENT**。要点：① 15000 在米利亚德处交背囊后任务书切到行 1、接过修理工具后切到行 2、
   在人工奥德生成器附近使用修理工具后切到行 3 并可领奖；② 15670 与赫梅洛斯对话后行 1、调查 4 处痕迹后交出证据切到行 2、
   调查第五处痕迹后行 3 向伊利西亚报告领奖；③ 老存档（历史上已交物品、`REWARD+var0=0`）登录/切图后应落在领奖行。
@@ -1627,7 +1629,7 @@ QC 判据（与批次 18/19 同源，但落点不同）：同形镜像对 `q` / 
 - **Maven（授权后执行，2026-09-22 13:21）**：18 个测试类 **109 例全绿**（含本批新增 7 例），
   `PRODUCTION_COMPILE_OK=6189 / FAILURES=0 / INTERACTION_OBJECT_FAILURES=0 / WHITELIST_VIOLATIONS=0`
   （三棵 `quest_use_item` 树在 `QuestInteractionObjectValidator` 下仍满足“显式 TALK 路由或 catalog drop”合同）。
-- **证据表**：[batch20-evidence.tsv](batch20-evidence.tsv)。
+- **证据表**：batch20-evidence.tsv（已清理）。
 - 客户端实机复测：**PENDING_CLIENT**。要点：① 802429/802427 接取后任务书停在第 1 行；
   ② 依次使用三棵树（天/魔共用 730969/730970/730971），每棵树的页分别是“烧焦/烧剩/烧成灰烬”文案，
   点“结束调查”后任务书前进一行并拿到对应采集物；
@@ -1828,7 +1830,7 @@ QC 判据（与批次 18/19 同源，但落点不同）：同形镜像对 `q` / 
 - **已知无关红（不在本批范围，未修）**：`MissionItemConsumptionBatchRegressionTest` 断言 `20529 s9 -> reward` 与
   `29064 started -> reward` 两条转换存在，而这两条在 **HEAD（未改动的 XML）里本来就不存在**（`git show HEAD:…` 计数为 0），
   属既有失败，与本批无关；本批的 Maven 选择器因此不含该类。
-- **证据表**：[batch22-evidence.tsv](batch22-evidence.tsv)。
+- **证据表**：batch22-evidence.tsv（已清理）。
 - 客户端实机复测：**PENDING_CLIENT**。要点：① 与 Phyper/Srudgelmir/Galm 逐行推进时，任务书依次停在行 0→1→2→3；
   ② 与加尔姆对话结束的瞬间任务书应切到行 4（进副本），进入审判所副本后切到行 5（找 3F 出口）；
   ③ 用出口逃出并传送回主城后停在行 6（和 Srudgelmir 对话），对话结束任务书切到行 7（向 Muninn 报告）；
@@ -1926,7 +1928,7 @@ QC 判据（与批次 18/19 同源，但落点不同）：同形镜像对 `q` / 
   INTERACTION_OBJECT_FAILURES=0 / WHITELIST_VIOLATIONS=0`。
 - **已知无关红（不在本批范围，未修）**：`MissionItemConsumptionBatchRegressionTest` 断言 `20529 s9 -> reward` 与
   `29064 started -> reward` 两条转换存在，而这两条在 **HEAD（未改动的 XML）里本来就不存在**，属既有失败；本批的 Maven 选择器不含该类。
-- **证据表**：[batch23-evidence.tsv](batch23-evidence.tsv)。
+- **证据表**：batch23-evidence.tsv（已清理）。
 - 客户端实机复测：**PENDING_CLIENT**。要点：① 接任务后任务书停在行 0（和支部对话）；② 与任一名支部成员对话并点“收下净化粉末”后
   任务书切到行 1（把粉末撒在污染根源上）且背包拿到 182215285；③ 在污染区域使用粉末后任务书切到行 2（向支部报告）且粉末被消耗；
   ④ 再与任一名成员对话应看到报告页并可直接领奖（领奖行不再停在行 0）；⑤ 旧存档（`REWARD + var0=0`）登录/切图后任务书应自动落在行 2。
@@ -1994,7 +1996,7 @@ QC 判据（与批次 18/19 同源，但落点不同）：同形镜像对 `q` / 
 - **Maven（授权后执行，2026-09-22 14:51）**：7 个测试类 **32 例全绿**（含新增 `BlankJournalSlotBoundaryContractTest` 4 例、
   批次 23 的 `FactionDailyRowLadderContractTest` 7 例与 `Quest49713RetailFlowAlignmentTest` 6 例），
   `PRODUCTION_COMPILE_OK=6189 / FAILURES=0 / INTERACTION_OBJECT_FAILURES=0 / WHITELIST_VIOLATIONS=0`。
-- **证据表**：[batch24-evidence.tsv](batch24-evidence.tsv)、[blank-journal-slots.tsv](blank-journal-slots.tsv)。
+- **证据表**：batch24-evidence.tsv（已清理）、blank-journal-slots.tsv（已清理）。
 
 ### 二十八之四、边界与后续
 
@@ -2174,7 +2176,7 @@ QC 判据（与批次 18/19 同源，但落点不同）：同形镜像对 `q` / 
   INTERACTION_OBJECT_FAILURES=0 / WHITELIST_VIOLATIONS=0`。含 `QuestClientContractGateTest`（修复 `BUTTON_WITHOUT_ROUTE` 后转绿）
   与 `QuestDialogOrderAuditTest` 17 例。
   （已知无关红：`MissionItemConsumptionBatchRegressionTest` 的断言在 HEAD 本就不成立，本批不运行、不修。）
-- **证据表**：[batch26-evidence.tsv](batch26-evidence.tsv)。
+- **证据表**：batch26-evidence.tsv（已清理）。
 - **客户端实机：PENDING_CLIENT**（静态、Maven 与真机验收分层，未做真机复测）。
 
 ### 三十之五、边界与后续
@@ -2636,7 +2638,7 @@ QE-051 的行号口径对它们不适用——本批把这点写进审计脚本�
 3. **页面按钮链必须留在 IR 里**（`QuestClientContractGateTest` 会报 `BUTTON_WITHOUT_ROUTE`）：
    21217/21244 的行 0 是 `select2 -> SELECT2_1(1353) -> SETPRO1(10000)`，行 1 是 `select3 -> SELECT3_1(1694) -> SETPRO2(10001)`，
    行 2 是 `select5 -> SELECT_QUEST_REWARD(1009)`；21249 是 `select1 -> SETPRO1`、`select2 -> SET_SUCCEED(10255)`、
-   `select_success(10002 = DEFAULT_SUCCESS) -> SELECT_QUEST_REWARD`。逐任务证据见 [batch31-evidence.tsv](batch31-evidence.tsv)。
+   `select_success(10002 = DEFAULT_SUCCESS) -> SELECT_QUEST_REWARD`。逐任务证据见 batch31-evidence.tsv（已清理）。
 
 ### 三十五之二、落点（三节点阶梯 + 自愈边 + owner 收敛）
 
@@ -2705,7 +2707,7 @@ QE-051 的行号口径对它们不适用——本批把这点写进审计脚本�
    `started(0)`、`s1(1)`、`reward(2)` 承载，`visible=0 1 2`。
 3. **领奖 owner 必须收敛到末行点名的 NPC**：旧定义让传送点（804782/804753）也能 `started -> reward` 领奖；
    本批把 `npc-complete` 收到 802431/802433，并保留 `reward` 态 `select5` 开奖励页、`SELECT_QUEST_REWARD` 开奖励窗口。
-   逐任务证据见 [batch32-evidence.tsv](batch32-evidence.tsv)。
+   逐任务证据见 batch32-evidence.tsv（已清理）。
 
 ### 三十六之二、落点（两阶段阶梯 + 双自愈边 + letter 生命周期）
 
@@ -2783,7 +2785,7 @@ QE-051 的行号口径对它们不适用——本批把这点写进审计脚本�
    不写 nextStep（QE-054），所以旧存档实际落盘 `var0=0`，领奖态任务书会停在“把龙骨交给 Bakring”那一行。
 3. **reward 投影取 1（不是行号 2）**：按槽位口径，领奖行与行 1 同槽；本批把 `reward` 投影改成 1 并补
    `REWARD/var0=0 -> 1` 的 enter-world 自愈边，同时补上缺失的 `s1(1)` START 状态。逐任务证据见
-   [batch33-evidence.tsv](batch33-evidence.tsv)。
+   batch33-evidence.tsv（已清理）。
 
 ### 三十七之二、落点（两状态阶梯 + 双入口 + 共享槽位自愈边）
 
@@ -2859,7 +2861,7 @@ QE-051 的行号口径对它们不适用——本批把这点写进审计脚本�
    `started --USE_OBJECT(701098)--> s1`。
 3. **领奖 owner 取客户端末行点名的 Lition(205438)（QE-052）**：客户端末行、`select_success/select_quest_reward1`
    的说话人、`quest_complete` 三方一致；retail 的 `end_npc_ids=799536` 与之冲突，按客户端口径收敛并登记实机复测点
-   （见三十八之四）。逐任务证据见 [batch34-evidence.tsv](batch34-evidence.tsv)。
+   （见三十八之四）。逐任务证据见 batch34-evidence.tsv（已清理）。
 
 ### 三十八之二、落点（三行阶梯 + 柱物件接线 + 双自愈边）
 
@@ -2930,7 +2932,7 @@ QE-051 的行号口径对它们不适用——本批把这点写进审计脚本�
    SETPRO2 在 `s1` 上保留为就地 `close-dialog` 的确认路由，避免把任务推过“装饰巧克力塔”这一行。
 3. **塔物件由活动系统刷出**：本检出内无 701466/701467 的静态 spawn，因此除了塔的 `USE_OBJECT` 推进路由外，
    另补“直接找术古对话”的防呆入口（`s1 --QUEST_SELECT(202549)--> reward(2)` 并显示 `DEFAULT_SUCCESS`），
-   保证塔未刷出时不会卡在行 1。逐任务证据见 [batch35-evidence.tsv](batch35-evidence.tsv)。
+   保证塔未刷出时不会卡在行 1。逐任务证据见 batch35-evidence.tsv（已清理）。
 
 ### 三十九之二、落点（三行阶梯 + 交付改写 + 双自愈边）
 
@@ -3013,7 +3015,7 @@ QE-051 的行号口径对它们不适用——本批把这点写进审计脚本�
 
 #### 共同证据与三个关键判读
 
-1. **旧定义三种残留形态**（HEAD 审计，逐任务见 [batch36-evidence.tsv](batch36-evidence.tsv)）：
+1. **旧定义三种残留形态**（HEAD 审计，逐任务见 batch36-evidence.tsv（已清理））：
    - 塔族 5 个 + 货箱族的 50022/80302/80303/80308/80309：reward 节点 `var0=0`，`npc-item-report` 或交付直跳 REWARD，行 1/2 没有状态；
    - **50021/51021**：`a3`/`k15` 交付后落 reward `var0=15`，出现 `ROW_AHEAD / STATES_BEYOND_ROWS`：50021 的可见槽为
      `0 1 2 3 15`、51021 为 `0..15`。这与用户报障 10527 的「var0=15 被写成 14、下一步不显示」是同一类越界计数残留，
@@ -3058,7 +3060,7 @@ QE-051 的行号口径对它们不适用——本批把这点写进审计脚本�
   `ROW_BEHIND 170 -> 159`（-11）、`ROW_WITHOUT_STATE 502 -> 491`（-11）、`ROW_ALIGNED 2678 -> 2691`（+13）、
   `ROW_STATE_ALIGNED 2450 -> 2463`（+13）、`STATES_BEYOND_ROWS 2622 -> 2620`（-2，50021/51021 从越界计数形态转出）。
   13 个任务全部 `ALIGNED + ROW_ALIGNED + ROW_STATE_ALIGNED + visible=0 1 2 + recovery=True`；逐任务前后见
-  [batch36-evidence.tsv](batch36-evidence.tsv)。
+  batch36-evidence.tsv（已清理）。
 - **Maven（授权后执行）**：批次 35 的 31 类 + `Batch29RewardRowClosureContractTest`、
   `CutsceneHiddenQuestFamilyContractTest`、`Batch31`–`Batch36` 共 **35 个测试类全绿**，新增
   `Batch36EventRowLadderContractTest`（5 例：三行投影 + 禁直跳 / 塔族交付与装饰 / 货箱族 SETPRO2+can-act+
@@ -3153,7 +3155,7 @@ SELECT_QUEST_REWARD 和 npc-complete），同时把 end NPC 的行 0 对话写�
 - **全库行号审计**：`MISSING_TAIL_ROWS 62 -> 57`（-5）、`ROW_BEHIND 159 -> 154`（-5）、
   `ROW_WITHOUT_STATE 491 -> 486`（-5）、`ROW_ALIGNED 2691 -> 2696`（+5）、
   `ROW_STATE_ALIGNED 2463 -> 2468`（+5）；5 个任务全部 `ALIGNED + ROW_ALIGNED + ROW_STATE_ALIGNED +
-  visible=行全量 + recovery=True`，逐任务前后见 [batch37-evidence.tsv](batch37-evidence.tsv)。
+  visible=行全量 + recovery=True`，逐任务前后见 batch37-evidence.tsv（已清理）。
 - **Maven（授权后执行）**：36 个 reward/row/ladder/owner/catalog 测试类全绿（批次 36 的 35 类 + 新增
   `Batch37TalkKillReportRowLadderContractTest` 4 例：每行一个状态 / 三行族 start-end 分离与 owner 收敛 /
   四行族 Mias+术古+击杀+报告链 / 0..领奖行自愈边 + planner 收敛）；
@@ -3238,7 +3240,7 @@ Bitter or Sweet?”四个同构任务，客户端 `quest_summary` 都是三行�
   `ROW_WITHOUT_STATE 486 -> 482`（-4）、`ROW_ALIGNED 2696 -> 2700`（+4）、
   `ROW_STATE_ALIGNED 2468 -> 2472`（+4）；4 个任务全部
   `ALIGNED + ROW_ALIGNED + ROW_STATE_ALIGNED + visible=0 1 2 + recovery=True`，逐任务前后见
-  [batch38-evidence.tsv](batch38-evidence.tsv)。
+  batch38-evidence.tsv（已清理）。
 - **Maven（授权后执行）**：新增 `Batch38BranchChoiceRewardIndexContractTest`（4 例：
   每行一个状态 + 两个 REWARD 分支 / 客户端页链和窗口 1/2 / `CompleteQuest(1/2)` 与后续
   `reward-mode=1/2` / 旧 `REWARD var0=0` 自愈）4/4 绿；同批回归
@@ -3338,7 +3340,7 @@ Bitter or Sweet?”四个同构任务，客户端 `quest_summary` 都是三行�
   `ROW_WITHOUT_STATE 482 -> 479`（-3）、`ROW_ALIGNED 2700 -> 2703`（+3）、
   `ROW_STATE_ALIGNED 2472 -> 2475`（+3）；3 个任务全部
   `ALIGNED + ROW_ALIGNED + ROW_STATE_ALIGNED + visible=0 1 2 + recovery=True`，
-  逐任务前后见 [batch39-evidence.tsv](batch39-evidence.tsv)。
+  逐任务前后见 batch39-evidence.tsv（已清理）。
 - **Maven（授权后执行）**：新增 `Batch39TurnInTalkReportRowContractTest`（5 例：每行一个状态 /
   交付行推进到行 1 并回收物品（含失败页）/ `SET_SUCCEED` 收口行 1 且行 2 由报告 NPC 打开窗口 1 +
   完成索引 / 交付页与 Hecuba 三段链路由 / 旧 `REWARD var0=0` 自愈）5/5 绿；同批回归
@@ -3429,7 +3431,7 @@ Bitter or Sweet?”四个同构任务，客户端 `quest_summary` 都是三行�
   `ROW_WITHOUT_STATE 479 -> 476`（-3）、`ROW_ALIGNED 2703 -> 2706`（+3）、
   `ROW_STATE_ALIGNED 2475 -> 2478`（+3）；3 个任务全部
   `ALIGNED + ROW_ALIGNED + ROW_STATE_ALIGNED + visible=0 1 2 + recovery=True`，
-  逐任务前后见 [batch40-evidence.tsv](batch40-evidence.tsv)。
+  逐任务前后见 batch40-evidence.tsv（已清理）。
 - **Maven（授权后执行）**：新增 `Batch40ThreeNpcTalkLadderContractTest`（5 例：每行一个状态 /
   接取只留在接取 NPC / 行 owner 页链与 SETPRO1/SETPRO2 推进 + 行 2 开窗口 1 / 完成只在行 2 NPC
   且行 0/1 NPC 无领奖口 / 旧 `REWARD var0=0` 自愈）5/5 绿；同批回归
@@ -3510,7 +3512,7 @@ Bitter or Sweet?”四个同构任务，客户端 `quest_summary` 都是三行�
   `ROW_WITHOUT_STATE 476 -> 474`（-2）、`ROW_ALIGNED 2706 -> 2708`（+2）、
   `ROW_STATE_ALIGNED 2478 -> 2480`（+2）；两个任务全部
   `ALIGNED + ROW_ALIGNED + ROW_STATE_ALIGNED + visible=0 1 2 + recovery=True`，
-  逐任务前后见 [batch41-evidence.tsv](batch41-evidence.tsv)。
+  逐任务前后见 batch41-evidence.tsv（已清理）。
 - **Maven（授权后执行）**：新增 `Batch41PangaiaFortressRowContractTest`（5 例：每行一个状态 /
   接取页与行 0 推进 / 4 个情报员变体都能推进行 1 / 行 2 报告与窗口 1 只在接取 NPC 上 /
   旧 `REWARD var0=0` 自愈）5/5 绿；同批回归 `Batch40ThreeNpcTalkLadderContractTest` 5/5、
@@ -3579,7 +3581,7 @@ Bitter or Sweet?”四个同构任务，客户端 `quest_summary` 都是三行�
   `ROW_WITHOUT_STATE 474 -> 473`（-1）、`ROW_ALIGNED 2708 -> 2709`（+1）、
   `ROW_STATE_ALIGNED 2480 -> 2481`（+1）；任务转为
   `ALIGNED + ROW_ALIGNED + ROW_STATE_ALIGNED + visible=0 1 2 + recovery=True`，
-  前后见 [batch42-evidence.tsv](batch42-evidence.tsv)。
+  前后见 batch42-evidence.tsv（已清理）。
 - **Maven（授权后执行）**：新增 `Batch42TombstoneFlowerRowContractTest`（5 例：每行一个状态 /
   交花与制作花环推进行 1 / 墓碑献花限定在行 1 且带 ACTION_ITEM_USE 资格 / 行 2 的 select4 与
   窗口 1 / 旧 `REWARD var0=0` 自愈）5/5 绿；同批回归
@@ -3645,7 +3647,7 @@ Bitter or Sweet?”四个同构任务，客户端 `quest_summary` 都是三行�
   `ROW_WITHOUT_STATE 473 -> 472`（-1）、`ROW_ALIGNED 2709 -> 2710`（+1）、
   `ROW_STATE_ALIGNED 2481 -> 2482`（+1）；任务转为
   `ALIGNED + ROW_ALIGNED + ROW_STATE_ALIGNED + visible=0 1 2 + recovery=True`，
-  前后见 [batch43-evidence.tsv](batch43-evidence.tsv)。
+  前后见 batch43-evidence.tsv（已清理）。
 - **Maven（授权后执行）**：新增 `Batch43MalodorAntidoteRowContractTest`（5 例：每行一个状态 /
   接取只在 Gilungk / Vovetirn 的 select2 链与 select3 交皮链 + 解毒剂发放 / 行 2 的 select4 与
   窗口 1 且 Vovetirn 无领奖口 / 旧 `REWARD var0=0` 自愈）5/5 绿；同批回归
@@ -3724,7 +3726,7 @@ Bitter or Sweet?”四个同构任务，客户端 `quest_summary` 都是三行�
   `ROW_WITHOUT_STATE 472 -> 471`（-1）、`ROW_ALIGNED 2710 -> 2711`（+1）、
   `ROW_STATE_ALIGNED 2482 -> 2483`（+1）；任务转为
   `ALIGNED + ROW_ALIGNED + ROW_STATE_ALIGNED + visible=0 1 2 3 4 + recovery=True`，
-  前后见 [batch44-evidence.tsv](batch44-evidence.tsv)。
+  前后见 batch44-evidence.tsv（已清理）。
 - **Maven（授权后执行）**：新增 `Batch44FoamWispFiveRowContractTest`（5 例：五行各一个状态 /
   Cinisca 前两行与 s2 收尾按钮 / 妹妹 owner 修正与行 2-3 推进 / 哥哥领奖与窗口 1 /
   两条旧存档自愈）5/5 绿；同批回归 `Batch43MalodorAntidoteRowContractTest` 5/5、
@@ -3816,7 +3818,7 @@ Bitter or Sweet?”四个同构任务，客户端 `quest_summary` 都是三行�
   `MISSING_TAIL_ROWS 42 -> 40`、`ROW_BEHIND 139 -> 137`、`ROW_WITHOUT_STATE 471 -> 469`、
   `ROW_ALIGNED 2711 -> 2713`、`ALIGNED / ROW_STATE_ALIGNED 2483 -> 2485`；两个任务转为
   `ALIGNED + ROW_ALIGNED + ROW_STATE_ALIGNED + visible=0 1 2`，明细见
-  [batch45-evidence.tsv](batch45-evidence.tsv)。
+  batch45-evidence.tsv（已清理）。
   基线口径修正：`audit-missing-last-row.tsv`（HEAD 提交态）实际是 77 行数据，本会话早前记录的
   `MISSING_LAST_ROW=73` 属笔误，本次以提交态文件为准重新记录。
 - **客户端实机 PENDING_CLIENT**：① 1938 与 798069 对话走 `select2 -> select2_1 -> 结束对话` 后
@@ -3899,7 +3901,7 @@ Bitter or Sweet?”四个同构任务，客户端 `quest_summary` 都是三行�
 - **全库行号审计**：1123 判定不变（`ROW_ALIGNED | ALIGNED | ROW_STATE_ALIGNED`），唯一变化是
   `handovers` 由 `started->reward[enter-zone]` 变为 `started->reward[movie-end]`；
   全库计数与批次 45 相同（`MISSING_TAIL_ROWS 40`、`ROW_BEHIND 137`、`ROW_ALIGNED 2713`），
-  明细见 [batch46-evidence.tsv](batch46-evidence.tsv)。
+  明细见 batch46-evidence.tsv（已清理）。
 - **客户端实机 PENDING_CLIENT**：① 接取后行 0；② 进入 LF1 感应区先播影片 11（任务书仍行 0）；
   ③ **影片结束后**任务书切行 1 并出现“任务完成！和 Pernos 对话”；④ 与 790001 对话出现
   `select2`，点“回答被烤着吃了”弹奖励窗口并完成；⑤ 若影片结束事件丢失，离开再进入感应区应重放影片

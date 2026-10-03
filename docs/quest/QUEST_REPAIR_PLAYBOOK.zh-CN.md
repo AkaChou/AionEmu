@@ -7,7 +7,7 @@
 相关文档：
 
 - [任务 XML 编写指南](WRITING_GUIDE.zh-CN.md)：XML 状态图、领域积木和字段顺序。
-- [客户端映射迁出记录](.agents/summary/headless-client-extraction/MIGRATION.zh-CN.md)：客户端页面/动作映射与无头客户端已迁出本仓库，记录迁出清单、SHA-256 与影响边界。
+- [客户端映射迁出记录](../../.agents/summary/headless-client-extraction/MIGRATION.zh-CN.md)：客户端页面/动作映射与无头客户端已迁出本仓库，记录迁出清单、SHA-256 与影响边界。
 - [无任务上下文 NPC 对话专项记录](NPC_DIALOG_CONTEXT.zh-CN.md)：关闭普通任务标记后 `questId==0` 的协议证据、分流边界和回归矩阵。
 - [Pattern 指纹与提交索引](repair-playbook/PATTERNS.zh-CN.md)：可检索故障指纹、第一检查点和具体代表测试方法。
 - [已验收代表案例](repair-playbook/CASES.zh-CN.md)：完整症状、根因、修复层、验证结果和复用边界。
@@ -206,7 +206,7 @@ git log --all --oneline -- <path/to/legacy-handler.java>
 
 Aion 5.8 客户端是客户端页面、动作、字典和数据包的权威来源。当前任务缺少所需客户端文件、解包产物或抓包时，明确列出缺失项并向用户请求提供，在取得证据前不要猜测。优先使用：
 
-客户端映射数据（`quest-dialog-action-details.csv` 按钮动作、`quest-dialog-pages.csv` 页面存在性、`legacy-quest-dialog-contracts.csv` 旧模板合同）已迁出到本地 `aion-headless` 项目的 `data/client-dialog-mapping/`；本仓库内的入口是 [.agents/summary/headless-client-extraction/MIGRATION.zh-CN.md](.agents/summary/headless-client-extraction/MIGRATION.zh-CN.md)。
+客户端映射数据（`quest-dialog-action-details.csv` 按钮动作、`quest-dialog-pages.csv` 页面存在性、`legacy-quest-dialog-contracts.csv` 旧模板合同）已迁出到本地 `aion-headless` 项目的 `data/client-dialog-mapping/`；本仓库内的入口是 [.agents/summary/headless-client-extraction/MIGRATION.zh-CN.md](../../.agents/summary/headless-client-extraction/MIGRATION.zh-CN.md)。
 - 客户端生命周期对齐与逐路径顺序审计都按需运行（`align_client_quest_dialog_lifecycle.py`、`QuestDialogOrderAudit`），**产物不入库**：两者都以任务 XML 的路径/哈希为键，退役或改写后立即失效。
 
 客户端页面只证明客户端可见合同，不能单独证明服务端状态和奖励副作用；服务端 IR 也不能单独证明页面按钮真的可达。
@@ -424,7 +424,7 @@ python3 .agents/summary/quest/align_client_quest_dialog_lifecycle.py --check
 python3 .agents/summary/quest/generate_quest_dialog_enums.py --check
 ```
 
-顺序审计应在测试编译完成后执行，命令和字段说明见迁出项目的 `README.zh-CN.md`（在库入口 [.agents/summary/headless-client-extraction/MIGRATION.zh-CN.md](.agents/summary/headless-client-extraction/MIGRATION.zh-CN.md)）。`EVIDENCE_REQUIRED` 不是“已修复”，不能为了清零报告而猜测 page/action。
+顺序审计应在测试编译完成后执行，命令和字段说明见迁出项目的 `README.zh-CN.md`（在库入口 [.agents/summary/headless-client-extraction/MIGRATION.zh-CN.md](../../.agents/summary/headless-client-extraction/MIGRATION.zh-CN.md)）。`EVIDENCE_REQUIRED` 不是“已修复”，不能为了清零报告而猜测 page/action。
 
 ### 7.5 Playbook 结构和引用自检
 

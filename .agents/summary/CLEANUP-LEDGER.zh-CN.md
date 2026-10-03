@@ -17,6 +17,8 @@
 
 - 保留：`.md` 报告/台账/验收记录、`.py`/`.sh`/`.java` 工具与门禁、以及 `*-decisions*.tsv`、`*-registry*`、
   `retail-xml-retention.tsv` 等“人工裁定登记表”（不可从生产数据重算）。
+- **修订（2026-10-03，§9.3/§9.4）**：`.md` 报告按「零引用已完结」逐文件判据处置；`.py`/`.sh`/`.java`
+  仅保留**仍具用途**者（被引用 / 被 import / 属再生成链 / 维护中工具），一次性操作脚本随任务收口清理。
 - 删除：census / dump / diff / fingerprint / audit-output / gate 日志 / 备份 XML / 退役快照（`.retired-*`、
   `.before`/`.after`）等纯派生产物；同一信息的生产侧真源仍在 `src/main/resources/aion/data/**`。
 - 仍然被 memory-bank `evidence:` 引用的产物（82 个）保留，避免破坏 `verify_memory_bank.py` 门禁。
@@ -30,7 +32,7 @@
 | `quest_registry.tsv` | `.agents/summary/scriptdll-quest-driver/extract_quest_registry.py` |
 | `retail-xml-retention.tsv` | 生产真源 `src/main/resources/aion/data/static_data/quest/retail/retail-xml-retention.tsv` |
 | `m5b2b-quest-event-census.tsv` | `.agents/summary/scriptdll-quest-driver/m5b2b_handler_slot_scan.py --all --tsv` |
-| 其他 `p0c*` / `m5*` 中间表 | 同目录同名生成脚本（`*.py`）重新运行 |
+| 其他 `p0c*` / `m5*` 中间表 | 同名生成脚本已于 2026-10-03 随一次性脚本清理退场（§9.4）；表本身为冻结决策记录，重算脚本见 git 历史 |
 
 ## 4. 被删文件清单
 
@@ -865,3 +867,35 @@ scripts / src-test / pom 的引用扫描）且任务已完结。
   按约定独立存在，不以被引用为条件；
 - `.py`/`.sh`/`.java`/`.jsh` 工具与探针（零引用 73 个）**保留**——按既有保留边界；
 - 当日（2026-10-03）新产出文件**保留**（在办），如 `quest-native-dispatch/2026-10-03-*`。
+
+### 9.4 第三刀（同日）：过期 / 无效脚本清理（56 个 / ≈250KB）
+
+判据：**全库零引用**（含裸模块名 import 检查，防「引用不带 `.py` 后缀」的假阴性）且任务已收口。
+
+| 组 | 文件数 | 说明 |
+|---|---:|---|
+| 一次性批处理脚本 | 35 | 已完成批次的 fix/apply/audit 链：`quest-systemic-goal/fix_*`×9、`quest-15546-kill-progress/*`×5、`quest-10101-door-and-counter/*`×6、`quest-1192/audit_*`×2、`quest-multistep-contract-batch/*`×2、`quest-counter-residue/*`×2、`comment_i18n/*`×4（主题清空）、`item-format-migration/*`×2、`quest-search-audit/*`×1、`quest-10527-reward-row/（apply|scan)_batch51_*`×2 |
+| scriptdll 时代 census / retire 脚本 | 13 | `p0c14/16/32_retire_*`、`p0c36/52/55/6/p53/m5b2 census` 等；对应决策表保留为冻结记录，§3 明列条目不受影响 |
+| 一次性诊断探针 | 4 | `weather-theobomos/{DecompileAddress,FindWeatherStrings,FindWeatherSymbols,ListNamedFunctions}.java` |
+| 主题清空 | 1 | `comment_i18n/`：其最后一个外部引用者已随 §9.3 清理，主题目录整体退场 |
+
+**本轮「仍具用途」判定（保留）**：被 import 的 `quest/quest_dialog_symbols.py`；被报告/activeContext 裸名引用的
+`run_flip_probe.sh`（area-grant / dd-handin / enterarea 三主题，连其同 kit 探针源与 `compare_ir.py`）、
+`spawn-duplicate-spots/history.py`、`b1_forensics.py`（连 `b1_revert10.py`）、`build_quest_client_talk_pages.py`、
+`ZzIrDumpProbeTest.java`（连 `run_gates_nomvn.sh`）；生产测试基线再生成链 `retail-template-reconciliation/`
+`build_prereq_contract_tsv.py` 及其同链卫星（被 `QuestPrerequisiteRetailContractTest` 与生产 TSV 头注释引用）；
+维护中工具：playbook 测试×2、`aot-jar-run.sh`。
+
+### 9.5 失效文档链接修复（同日）
+
+| 位置 | 问题 | 处置 |
+|---|---|---|
+| `quest-10527-reward-row/2026-09-21-…audit.zh-CN.md` | 27 处链接指向第二轮已清理的批次 evidence / 审计输出（`audit-output.tsv`、`batch18..46-evidence.tsv`、`blank-journal-slots.tsv`） | 就地标注「（已清理）」+ 顶部清理提示 |
+| `quest-10525-testimony-counter/2026-09-21-…overflow.zh-CN.md` | 1 处死链（`increment-range-findings.csv`） | 就地标注 |
+| `memory-bank/archive/2026-09-30-active-context-closed-focus.md` | `patterns/ai-movement.md` 相对路径笔误 | 修为 `../patterns/ai-movement.md` |
+| `docs/README.zh-CN.md`、`docs/quest/{QUEST_REPAIR_PLAYBOOK,NPC_DIALOG_CONTEXT}.zh-CN.md` | 5 处指向 `.agents` 的链接缺 `../` 前缀（目标文件存在） | 补前缀修复 |
+
+**已知遗留（不属本刀）**：`docs/quest/repair-playbook/PATTERNS.zh-CN.md` 有 13 处「代表测试」引用指向已随
+`715a00136`（P7 步 f 原子切换批）退役或更名的测试类/方法（如 `QuestIlumaNorsvoldKillTargetCoverageTest`、
+`EarlyElyosQuestRegressionTest#ointmentAcceptance…`），`check_quest_repair_playbook.py` 因此为红；
+需 P7 车道按新原生覆盖映射后重锚，禁止机械替换。
