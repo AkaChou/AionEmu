@@ -3058,3 +3058,26 @@ see_also: [QE-114], [QE-120], [QE-108]
 first_check: 动接取轴/重锚职业相关门禁前先答：① native 行的职业判定在哪执行（port 词表 ≠ typed 目录）？② 豁免理由写的是「无载体」还是「不执行」？③ 快照↔原文↔词表三点是否有恒等断言钉住？④ grant() 路径的资格判定由哪个调用方承担？
 keywords: 职业轴、class_permitted、CanAcquireQuest、执行位、服务端闸门、显示元数据、CLASS_BLOCKED、eligibilityVerdict、permittedClassNames、NativeFactionRotation、恒等断言、QE-134
 -->
+
+## [QE-135] 一百三十五、真端表 DOCTYPE 剥离 = 实体语义逐字符保真：自名声明下预定义被忽略、非预定义展开为字面名 (RETAIL_XML_DOCTYPE_STRIP_ENTITY_FIDELITY)
+
+<!-- pattern-metadata
+status: CONFIRMED
+scope: 真端 retail XML（Map/XML 表）DOCTYPE/内部实体子集的解析语义与剥离、转码、重排的安全边界；不含表内容语义
+first_seen: 2026-10-03
+last_verified: 2026-10-03
+symptom: ① 直接删 DOCTYPE → 正文 `&hellip;` 等非预定义引用成未定义实体炸解析；② 凭直觉把 `&hellip;` "修复"成 U+2026（或反引号类字面化）→ 解析输出静默变化（现行为 = 字面量 `hellip`）；③ 重排版/转码批不带 DOM 逐元素对拍 ⇒ 实体面漂移不可见，直到某个测试或玩家侧字符串才暴露
+root_cause: JDK Xerces 对内部 DTD 子集的两层语义：① 五个预定义实体（lt/gt/amp/quot/apos）的自名重声明（`<!ENTITY quot "quot">`）被规范忽略，引用展开为标准字符（实测 `&quot;`→`"`）；② 非预定义自名实体（真端表 ~100 个，如 hellip）按声明文本展开为**字面量实体名**（实测 `&hellip;`→文本 `hellip`，不是 U+2026）⇒ "删 DOCTYPE 保语义"的唯一正确做法 = 非预定义引用替换为其当前展开字面量，预定义引用原样保留
+fix_or_guardrail: 剥离/转码批四件套——① 先以**运行时同款解析器配置**（FEATURE_SECURE_PROCESSING + ACCESS_EXTERNAL_DTD/SCHEMA="" + setExpandEntityReferences(true)）做变换前 DOM 全量转储（每元素 路径/属性/文本，Unicode 转义），变换后重转储逐行 diff；② 正文实体引用全量扫描（去注释/去 DOCTYPE），非预定义引用按实测展开落文（`&hellip;`→`hellip`），预定义引用字节不动；③ 门钉两件：真资源不得再现 DOCTYPE + 实体引用只允许预定义五实体（`RetailTableSchemaGateTest`）；④ 测试侧一切"从 DOCTYPE 提取实体表"的机制必须同步拆除（否则成死角；替换为预定义五实体表且替换顺序复刻单层展开语义，如 `&amp;quot;` 只展开一层）
+evidence: .agents/summary/quest-engine-native/p0b/retail-doctype-xsd.zh-CN.md; .agents/summary/quest-engine-native/p0b/retail-doctype-xsd/dom-equivalence.tsv; .agents/summary/quest-engine-native/p0b/tools/xml_dom_probe.java; src/test/java/com/aionemu/gameserver/questEngine/tablelane/RetailTableSchemaGateTest.java
+validation: 2026-10-03：十表（七张 Quest_Simple*/CombineTask + quest.xml + data_driven_quest + npcfactions_quest）变换前后 DOM 转储 **10/10 逐元素全等**（含 npcfactions UTF-16LE(BOM)+CRLF→UTF-8+LF 转码）；十张 XSD 真资源校验 10/10 通过（JDK SchemaFactory 同门测试路径）；门测试待授权运行
+superseded_by: none
+boundaries: ① 不裁决"真端本意是否 U+2026"——`hellip` 字面量为现行为，改动属语义变更批（须对拍）；② 本卡只保解析保真，不覆盖排版风格与编码改换本身（那些由字节级 diff + 门禁各自兜底）；③ XSD 1.0 表达不了的共现/列号约束（monsterN-无-countN、DD 列号合法性）仍由装载器 fail-closed 兜底
+see_also: [QE-129]
+first_check: 剥离/重排/转码真端表前先答：① 有没有运行时同款解析器配置的 DOM 前后对拍（不是"能解析"而是逐元素全等）？② 正文有没有非预定义实体引用（逐一按实测展开落文，禁止直觉字面化）？③ 测试侧有没有读 DOCTYPE 的机制要同步拆？④ 新 schema/门是否把"无 DOCTYPE + 仅预定义实体"钉住？
+keywords: DOCTYPE、内部 DTD 实体子集、hellip、实体展开、Xerces、DOM 对拍、零行为变更、RetailTableSchemaGateTest、RETAIL_XML_DOCTYPE_STRIP_ENTITY_FIDELITY、QE-135
+-->
+
+- **判定规则**：删 DOCTYPE 前必须拿运行时同款解析器做前后 DOM 逐元素对拍；"能解析"不算证据，"逐元素全等"才算。
+- **安全网**：非预定义实体引用按**实测展开**落文（hellip → 文本 `hellip`）；预定义五实体引用字节不动；门钉住"无 DOCTYPE + 仅预定义实体"。
+- **反漂移**：测试里一切依赖 DOCTYPE 内容的机制同步拆除/改写；字符串"修复"（如 U+2026）一律走语义变更批而不是顺手改。
