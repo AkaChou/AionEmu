@@ -57,3 +57,33 @@
   （本批抽 1001/14010/11279 已 3/3 通过）。收益：把「本仓自研 XML 的 NPC 绑定」从人工核对升级为真端权威校验。
 - **D2（中期）**：D1 落地且 §4.1 坐实后，再评估把 142 件纳入 native 车道的 ROI。
 - **D3（保底）**：维持 XML 车道，仅在 P10/P11 文档标注「真端溯源自 Quest-AI 注册面」。
+
+## 4.1 已坐实（2026-10-03 第二轮）：进度面是**服务端 item-driven**，不是客户端上报
+
+问题：142 件的击杀/收集计数由谁产生？答案：**计数不由"逐杀事件"产生，而是由持物 + 掉落规则表达**，
+整套逻辑在服务端（NPCServer 存储 + MainServer 读取），证据如下（全部第一手）：
+
+1. **设计数据侧**（`NPCSvr64.c:465400-465560`，`Quest::Set` 逐列分派）：quest.xml 的列被逐条解析进 quest 实例结构——
+   `Quest::Set, collect_ap`(+0x1c0) / `collect_ap_progress`(+0x1c4) / `collect_item1..4`(0x1e9..0x1ec) /
+   **`collect_progress`(+0x1bc)** / `drop_item1..5`(0x308..0x30c) / `drop_each_member` / `drop_prob` /
+   以及 reward_*、条件、`quest_work_item` 等（字面量族 `grep -o 'L"Quest::Set, …'` 40+ 列）。
+2. **进度读取口**（`MainServer_Server64/classes/NPC/NpcScriptMgr.cpp:8`，恢复名 `NpcScriptMgr_GetItemCollectingProgress`）：
+   按 questId 查玩家 quest 实例，返回其 **+0x1bc（= `collect_progress`）** 字段；查不到返回 0xffffffff。
+   ⇒ 进度是"收集类进度槽位"，**由持有物驱动**，不是击杀计数器。
+3. **进度存储/下发**（`NPCSvr64.c:485577/485665`）：写入口是 `User::SetQuestProgress` /
+   `User::SetQuestProgressMemoryOnly`（来源文件 `..\..\Shared\Quest.cpp:0x9d8/0x9ea`），底层落地到
+   `UserQuestData_SetQuestProgress`（`NPCSvr64.c:488391`）+ `GetQuestProgress/SetQuestSuccess/SetQuestBranch`；
+   写入后**服务端向客户端下发**进度包（opcode 头 0x1e…）——方向是服务端 → 客户端。
+4. **设计期校验**（`Server64.c:2295987/2295995`，`NpcScriptMgr::VerifyQuestData`）：
+   "have collect_item, but collect_progress is invalid" / 反之 —— 收集物与进度槽位必须成对声明，佐证模型。
+5. **反证**：`drop_monster` 在三个二进制中字面量 0 命中（NPCSvr64/Server64/ScriptDLL 全 0）；
+   客户端 `quest_monster.csv` / `quest_script_monster.csv` 是**客户端展示表**，服务端对应物是
+   `drop_item`/`drop_prob`/`collect_item`/`collect_progress`。
+
+**对路径 D 的含义**：第三条 native 车道**不需要**实现逐杀计数子系统——只要
+（a）NPC 对话 ingress（quest_ai_name 注册面，142 件已坐实）、（b）持物/掉落进度面
+（`collect_item` + `collect_progress` + `drop_item`/`drop_prob`）。本仓 XML 车道已等价实现这两面，
+故 **D1（注册面证据表 + NPC 绑定门）优先，D2（新建 runtime 车道）必要性下降**。
+
+**残余未坐实（低优先）**：176 中 30 件在客户端 `quest_script_monster.csv` 有 `killedByUser` 行；
+其服务端等价面是否为 `drop_item/drop_prob` 尚需逐件对拍（不阻塞 D1）。
