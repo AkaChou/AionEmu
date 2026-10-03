@@ -232,8 +232,10 @@ public final class NativeQuestXmlTable {
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		try {
 			factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
-			// 允许内部 DTD 子集（真端表的字符实体声明），但拒绝一切外部 DTD/实体。
-			// Allow the internal DTD subset (the retail table's character entities), refuse all external DTDs.
+			// 保留内部 DTD 子集兼容（解析器能力面，负例测试仍依赖）；拒绝一切外部 DTD/实体为纵深防御
+			// （精简副本已无 DOCTYPE，2026-10-03 剥离批；schema = 同目录 quest.xsd）。
+			// Keep internal-DTD-subset support (parser capability; negative tests still rely on it) and
+			// refuse all external DTDs/entities as defense in depth (the simplified copy carries no DOCTYPE).
 			factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
 			factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
 			factory.setExpandEntityReferences(true);

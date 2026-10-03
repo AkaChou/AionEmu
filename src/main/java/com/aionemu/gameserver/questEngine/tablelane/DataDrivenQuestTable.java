@@ -223,8 +223,11 @@ public final class DataDrivenQuestTable {
 	}
 
 	/**
-	 * 解析真端 DD 表（内部 DTD 只含纯文本实体；允许内部子集、禁止外部访问）。
-	 * Parses the retail DD table (internal text-only DTD allowed, external access denied).
+	 * 解析真端 DD 表（精简副本已无 DOCTYPE，2026-10-03 剥离批；schema = 同目录
+	 * {@code data_driven_quest.xsd}；解析器保留内部子集能力、外部访问一律拒绝）。
+	 * Parses the retail DD table (the repo copy carries no DOCTYPE after the 2026-10-03 strip batch;
+	 * schema in the sibling {@code data_driven_quest.xsd}; internal-subset capability kept, external
+	 * access denied).
 	 */
 	public static DataDrivenQuestTable load(InputStream input) throws IOException {
 		try {

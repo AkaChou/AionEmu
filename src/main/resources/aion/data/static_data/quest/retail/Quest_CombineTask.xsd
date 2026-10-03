@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Quest_CombineTask.xml 表 schema（quest retail 表门禁用，2026-10-03 DOCTYPE 剥离同批）。
+     镜像口径 = 装载器 fail-closed 规则 ∪ 观察形全域钉（证据 + 生成器：
+     .agents/summary/quest-engine-native/p0b/）：
+     - task_npc/combineskill/recipe_name/product
+       为装载器必填；combine_skillpoint 缺省 0、出现即非负整数（负值 fail-
+       closed）；give_component1..8 = 装载器八槽位（当前数据 1..2）。
+     Quest_CombineTask.xml schema (quest retail table gate, same batch as the 2026-10-03 DOCTYPE strip).
+     Mirrors the loader fail-closed rules plus observed-universe shape pins (evidence + generator under
+     `.agents/summary/quest-engine-native/p0b/`):
+     - task_npc/combineskill/recipe_name/product are loader-mandatory; combine_skillpoint defaults to 0 and
+       must be a non-negative int; give_component1..8 mirror the loader's eight slots (data currently uses
+       1..2). -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+  <xs:element name="quest_combinetasks">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="id" minOccurs="1" maxOccurs="unbounded">
+          <xs:complexType>
+            <xs:all>
+              <xs:element name="combine_skillpoint" minOccurs="1">
+                <xs:simpleType>
+                  <xs:restriction base="xs:int">
+                    <xs:minInclusive value="0"/>
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="combineskill" minOccurs="1">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:whiteSpace value="collapse"/>
+                    <xs:minLength value="1"/>
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="dev_name" minOccurs="1" type="xs:string"/>
+              <xs:element name="give_component1" minOccurs="1" type="xs:string"/>
+              <xs:element name="give_component2" minOccurs="0" type="xs:string"/>
+              <xs:element name="give_component3" minOccurs="0" type="xs:string"/>
+              <xs:element name="give_component4" minOccurs="0" type="xs:string"/>
+              <xs:element name="give_component5" minOccurs="0" type="xs:string"/>
+              <xs:element name="give_component6" minOccurs="0" type="xs:string"/>
+              <xs:element name="give_component7" minOccurs="0" type="xs:string"/>
+              <xs:element name="give_component8" minOccurs="0" type="xs:string"/>
+              <xs:element name="product" minOccurs="1">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:whiteSpace value="collapse"/>
+                    <xs:minLength value="1"/>
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="recipe_name" minOccurs="1">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:whiteSpace value="collapse"/>
+                    <xs:minLength value="1"/>
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="task_npc" minOccurs="1">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:whiteSpace value="collapse"/>
+                    <xs:minLength value="1"/>
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+            </xs:all>
+            <xs:attribute name="id" use="required">
+              <xs:simpleType>
+                <xs:restriction base="xs:int">
+                  <xs:minInclusive value="0"/>
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:attribute>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+    <xs:unique name="Quest_CombineTask-row-key-unique">
+      <xs:selector xpath="id"/>
+      <xs:field xpath="@id"/>
+    </xs:unique>
+  </xs:element>
+</xs:schema>

@@ -49,8 +49,10 @@ public final class RetailSimpleHuntTable {
 	}
 
 	/**
-	 * 解析真端模板表。文件带内部 DTD（实体是纯文本替换），因此允许内部子集、禁止外部访问。
-	 * Parses the retail template table; it carries an internal DTD subset with text-only entities.
+	 * 解析真端模板表。副本已无 DOCTYPE（2026-10-03 剥离批；schema = 同目录
+	 * {@code Quest_SimpleHunt.xsd}）；解析器保留内部子集能力、外部 DTD/实体一律拒绝（纵深防御）。
+	 * Parses the retail template table. The repo copy carries no DOCTYPE (2026-10-03 strip batch; schema
+	 * in the sibling {@code Quest_SimpleHunt.xsd}); internal-subset capability kept, external access denied.
 	 */
 	public static RetailSimpleHuntTable load(InputStream input) throws IOException {
 		try {

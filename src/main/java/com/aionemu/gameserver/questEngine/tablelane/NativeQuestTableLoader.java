@@ -26,7 +26,8 @@ import org.w3c.dom.NodeList;
 /**
  * 真端任务表装载器（计划 §6.2：家族逐个接入；本横切只装 {@code Quest_SimpleHunt.xml}）。
  * <p>
- * 数据源 = P0b 入仓副本（UTF-8、byte 级一致）。行模型：{@code <id id="N">} + 接取/交付 NPC 名 +
+ * 数据源 = P0b 入仓副本的精简形（UTF-8、DOCTYPE/实体子集已移除，2026-10-03 剥离批；
+ * 七张表各有同目录同名 .xsd）。行模型：{@code <id id="N">} + 接取/交付 NPC 名 +
  * {@code countN/monsterN}（槽 1..5）。真端数据事实（P1 对拍实证）：元素文本可跨行（37116 的
  * monster 名单含换行，必须归一内部空白）；存在零计数行（11013/11014/11208/11209，真端休眠行，
  * 合法装载但不得派生相机行）；存在有计数无 monster 的行（13912/23912 的槽 3——真端脚本也未给
@@ -38,7 +39,8 @@ import org.w3c.dom.NodeList;
  * 休眠：表有行、脚本无包装函数 ⇒ 原生侧同样不接 handler）。
  * <p>
  * The retail quest-table loader (plan §6.2: families plug in one by one; this tranche loads
- * {@code Quest_SimpleHunt.xml} only). Source = the P0b ingested copy (UTF-8, byte-identical).
+ * {@code Quest_SimpleHunt.xml} only). Source = the simplified P0b copy (UTF-8, DOCTYPE/entity subset
+ * removed in the 2026-10-03 strip batch; every table has a same-stem sibling .xsd).
  * Row model: {@code <id id="N">} + acquire/reward NPC names + {@code countN/monsterN}
  * (slots 1..5). Retail data facts (P1 reconciliation evidence): element text can span lines
  * (37116's monster list contains newlines — inner whitespace must be normalized); zero-count rows
@@ -947,8 +949,10 @@ public final class NativeQuestTableLoader {
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		try {
 			factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
-			// 允许内部 DTD 子集（真端表的字符实体声明），但拒绝一切外部 DTD/实体。
-			// Allow the internal DTD subset (the retail table's character entities), refuse all external DTDs.
+			// 保留内部 DTD 子集兼容（解析器能力面，负例测试仍依赖）；拒绝一切外部 DTD/实体为纵深防御
+			// （精简副本已无 DOCTYPE，2026-10-03 剥离批）。
+			// Keep internal-DTD-subset support (parser capability; negative tests still rely on it) and
+			// refuse all external DTDs/entities as defense in depth (the simplified copies carry no DOCTYPE).
 			factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
 			factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
 			factory.setExpandEntityReferences(true);

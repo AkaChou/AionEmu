@@ -21,8 +21,9 @@ import java.util.TreeMap;
  * <p>
  * 这是"真端元数据层"的原始数据源：任务的等级/种族/职业/前置/奖励/掉落等
  * {@link com.aionemu.gameserver.questEngine.definition.QuestMetadata} 全部字段都从这里映射
- * （见 {@link RetailQuestMetadataCompiler}）。文件带内部 DTD（实体是纯文本替换），
- * 装载策略与 {@link RetailSimpleHuntTable} 相同：允许内部子集、禁止外部访问。
+ * （见 {@link RetailQuestMetadataCompiler}）。入仓副本为精简形（UTF-8、DOCTYPE/实体子集已移除，
+ * 2026-10-03 剥离批；schema = 同目录 {@code quest.xsd}），装载策略与 {@link RetailSimpleHuntTable}
+ * 相同：解析器保留内部子集能力，外部 DTD/实体一律拒绝（纵深防御）。
  * Read-only view of the retail quest.xml template metadata for every quest.
  */
 public final class RetailQuestXmlTable {

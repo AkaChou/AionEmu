@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- data_driven_quest.xml 表 schema（quest retail 表门禁用，2026-10-03 DOCTYPE 剥离同批）。
+     镜像口径 = 装载器 fail-closed 规则 ∪ 观察形全域钉（证据 + 生成器：
+     .agents/summary/quest-engine-native/p0b/）：
+     - 行 = <quest_data_driven>（<id> 子元素必填 = 装载器 parseInt
+       直解）；progress_info 内 data = 1..N 个进度步，每步
+       category_progress_ 必填（8 kind 的大小写不敏感字母类模式 = 镜像装载端 lower
+       归一）且 value0_progress_ 必填（载荷列，缺失 fail-
+       closed）；列号合法性（含附加动作列）由装载器在运行期 fail-closed，XSD 1.0 不能表达。
+     data_driven_quest.xml schema (quest retail table gate, same batch as the 2026-10-03 DOCTYPE strip).
+     Mirrors the loader fail-closed rules plus observed-universe shape pins (evidence + generator under
+     `.agents/summary/quest-engine-native/p0b/`):
+     - Rows are <quest_data_driven> (required <id> = the loader parseInts it); each progress_info holds 1..N
+       <data> steps whose category_progress_ is required (case-insensitive letter-class pattern mirroring
+       the loader lower-casing) and value0_progress_ is required (payload column, missing = fail closed);
+       column-legality checks live in the loader because XSD 1.0 cannot express them. -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+  <xs:element name="quest_data_drivens">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="quest_data_driven" minOccurs="1" maxOccurs="unbounded">
+          <xs:complexType>
+            <xs:all>
+              <xs:element name="id" minOccurs="1">
+                <xs:simpleType>
+                  <xs:restriction base="xs:int">
+                    <xs:minInclusive value="0"/>
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="name" minOccurs="1" type="xs:string"/>
+              <xs:element name="dev_name" minOccurs="1" type="xs:string"/>
+              <xs:element name="category_acquire_" minOccurs="1" type="xs:string"/>
+              <xs:element name="value0_acquire_" minOccurs="0" type="xs:string"/>
+              <xs:element name="reward_npc_name" minOccurs="1" type="xs:string"/>
+              <xs:element name="progress_info" minOccurs="0">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="data" minOccurs="1" maxOccurs="unbounded">
+                      <xs:complexType>
+                        <xs:all>
+                          <xs:element name="category_progress_" minOccurs="1">
+                            <xs:simpleType>
+                              <xs:restriction base="xs:string">
+                                <xs:pattern value="[hH][uU][nN][tT]|[cC][oO][lL][lL][eE][cC][tT][iI][tT][eE][mM]|[pP][vV][pP]|[tT][aA][lL][kK]|[eE][nN][tT][eE][rR][aA][rR][eE][aA]|[iI][tT][eE][mM][pP][lL][aA][yY]|[eE][nN][tT][eE][rR][wW][oO][rR][lL][dD]|[tT][aA][lL][kK][fF][oO][bB][jJ]"/>
+                              </xs:restriction>
+                            </xs:simpleType>
+                          </xs:element>
+                          <xs:element name="value0_progress_" minOccurs="1" type="xs:string"/>
+                          <xs:element name="value1_progress_" minOccurs="0" type="xs:string"/>
+                          <xs:element name="value2_progress_" minOccurs="0" type="xs:string"/>
+                          <xs:element name="value3_progress_" minOccurs="0" type="xs:string"/>
+                          <xs:element name="value5_progress_" minOccurs="0" type="xs:string"/>
+                          <xs:element name="value4_progress_" minOccurs="0" type="xs:string"/>
+                          <xs:element name="value7_progress_" minOccurs="0" type="xs:string"/>
+                          <xs:element name="value9_progress_" minOccurs="0" type="xs:string"/>
+                          <xs:element name="value8_progress_" minOccurs="0" type="xs:string"/>
+                          <xs:element name="value6_progress_" minOccurs="0" type="xs:string"/>
+                          <xs:element name="value10_progress_" minOccurs="0" type="xs:string"/>
+                        </xs:all>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="value1_acquire_" minOccurs="0" type="xs:string"/>
+              <xs:element name="con_quest" minOccurs="0" type="xs:string"/>
+              <xs:element name="value4_acquire_" minOccurs="0" type="xs:string"/>
+              <xs:element name="value3_acquire_" minOccurs="0" type="xs:string"/>
+              <xs:element name="value10_acquire_" minOccurs="0" type="xs:string"/>
+              <xs:element name="con_quest_list" minOccurs="0" type="xs:string"/>
+            </xs:all>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+    <xs:unique name="data_driven_quest-row-key-unique">
+      <xs:selector xpath="quest_data_driven"/>
+      <xs:field xpath="id"/>
+    </xs:unique>
+  </xs:element>
+</xs:schema>

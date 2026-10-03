@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- npcfactions_quest.xml 表 schema（quest retail 表门禁用，2026-10-03 DOCTYPE 剥离同批）。
+     镜像口径 = 装载器 fail-closed 规则 ∪ 观察形全域钉（证据 + 生成器：
+     .agents/summary/quest-engine-native/p0b/）：
+     - 真端源件副本（本仓无运行时装载器；消费面 = 阵营合同台账生成）。行 = <quest_id
+       quest_id>（属性必填、非负、全表唯一）；星期位 mon..sun ∈ {0,1}（全 0 =
+       真端本征不轮换）。
+     npcfactions_quest.xml schema (quest retail table gate, same batch as the 2026-10-03 DOCTYPE strip).
+     Mirrors the loader fail-closed rules plus observed-universe shape pins (evidence + generator under
+     `.agents/summary/quest-engine-native/p0b/`):
+     - Retail source copy (no runtime loader in this repo; consumed by the contract ledger generation). Rows
+       are <quest_id quest_id> (required unique non-negative attr); the weekday flags mon..sun are {0,1}
+       (all-zero = the retail table itself does not rotate). -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+  <xs:element name="npcfactions_quests">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="quest_id" minOccurs="1" maxOccurs="unbounded">
+          <xs:complexType>
+            <xs:all>
+              <xs:element name="dev_name" minOccurs="1">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:whiteSpace value="collapse"/>
+                    <xs:minLength value="1"/>
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="npcfaction_name" minOccurs="1">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:whiteSpace value="collapse"/>
+                    <xs:minLength value="1"/>
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="mon" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:enumeration value="0"/>
+                    <xs:enumeration value="1"/>
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="tue" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:enumeration value="0"/>
+                    <xs:enumeration value="1"/>
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="wed" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:enumeration value="0"/>
+                    <xs:enumeration value="1"/>
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="thu" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:enumeration value="0"/>
+                    <xs:enumeration value="1"/>
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="fri" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:enumeration value="0"/>
+                    <xs:enumeration value="1"/>
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="sat" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:enumeration value="0"/>
+                    <xs:enumeration value="1"/>
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="sun" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:enumeration value="0"/>
+                    <xs:enumeration value="1"/>
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+            </xs:all>
+            <xs:attribute name="quest_id" use="required">
+              <xs:simpleType>
+                <xs:restriction base="xs:int">
+                  <xs:minInclusive value="0"/>
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:attribute>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+    <xs:unique name="npcfactions_quest-row-key-unique">
+      <xs:selector xpath="quest_id"/>
+      <xs:field xpath="@quest_id"/>
+    </xs:unique>
+  </xs:element>
+</xs:schema>

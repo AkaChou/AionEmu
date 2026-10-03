@@ -79,9 +79,6 @@ class SimpleTalkRowAlignmentGateTest {
 	private static final Pattern FIELD = Pattern.compile("<(\\w+)>(.*?)</\\1>", Pattern.DOTALL);
 	private static final Pattern QUEST = Pattern.compile("<quest>(.*?)</quest>", Pattern.DOTALL);
 
-	/** DOCTYPE 实体声明（真端文件自带 DTD：`&hellip;` 展开为字面量 "hellip"，不是 U+2026）。 */
-	private static final Pattern ENTITY = Pattern.compile("<!ENTITY\\s+(\\w+)\\s+\"([^\"]*)\"\\s*>");
-
 	private static Map<Integer, Map<String, String>> tableRaw;
 	private static Map<Integer, Map<String, List<String>>> questXmlRaw;
 	private static SimpleTalkHandler handler;
@@ -384,7 +381,7 @@ class SimpleTalkRowAlignmentGateTest {
 	}
 
 	private static Map<Integer, Map<String, String>> parseTable(String text) {
-		Map<String, String> entities = entities(text);
+		Map<String, String> entities = entities();
 		Map<Integer, Map<String, String>> rows = new LinkedHashMap<>();
 		Matcher row = ROW.matcher(text);
 		while (row.find()) {
@@ -399,7 +396,7 @@ class SimpleTalkRowAlignmentGateTest {
 	}
 
 	private static Map<Integer, Map<String, List<String>>> parseQuestXml(String text) {
-		Map<String, String> entities = entities(text);
+		Map<String, String> entities = entities();
 		Map<Integer, Map<String, List<String>>> quests = new LinkedHashMap<>();
 		Matcher quest = QUEST.matcher(text);
 		while (quest.find()) {
@@ -417,20 +414,19 @@ class SimpleTalkRowAlignmentGateTest {
 		return quests;
 	}
 
-	/** 从文件自带 DOCTYPE 提取实体表（与 DOM 装载器的实体展开口径一致）。 */
-	private static Map<String, String> entities(String text) {
+	/**
+	 * XML 预定义实体展开表（副本已无 DOCTYPE，2026-10-03 剥离批；替换顺序 = 解析器单层展开语义，
+	 * 如 {@code &amp;quot;} 只展开一层）。
+	 * The five XML predefined entities (the repo copy carries no DOCTYPE since the 2026-10-03 strip
+	 * batch; replacement order reproduces single-level parser expansion, e.g. {@code &amp;quot;}).
+	 */
+	private static Map<String, String> entities() {
 		Map<String, String> entities = new LinkedHashMap<>();
-		Matcher matcher = ENTITY.matcher(text);
-		while (matcher.find()) {
-			entities.put(matcher.group(1), matcher.group(2));
-		}
-		// XML 预定义五实体不受 DTD 重定义影响（DOM 口径）：真端 DTD 里 gt/lt/amp 等声明为字面量，
-		// 但解析器按规范始终展开为标准字符。
+		entities.put("quot", "\"");
 		entities.put("amp", "&");
+		entities.put("apos", "'");
 		entities.put("lt", "<");
 		entities.put("gt", ">");
-		entities.put("apos", "'");
-		entities.put("quot", "\"");
 		return entities;
 	}
 
