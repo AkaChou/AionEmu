@@ -87,3 +87,70 @@
 
 **残余未坐实（低优先）**：176 中 30 件在客户端 `quest_script_monster.csv` 有 `killedByUser` 行；
 其服务端等价面是否为 `drop_item/drop_prob` 尚需逐件对拍（不阻塞 D1）。
+
+## 6. D1 执行记录（2026-10-03）：注册面证据表 + NPC 绑定门
+
+D1 已落地（§5 首选落点）。**性质**：新增证据表 + 常设门，零生产行为变更（新资源只被测试消费）。
+
+| 交付物 | 路径 |
+|---|---|
+| 证据表生成器 | `.agents/summary/quest-engine-native/p11-quest-ai-lane/emit_quest_ai_registrations.py` |
+| 度量 + 冻结常量导出 | `.agents/summary/quest-engine-native/p11-quest-ai-lane/measure_binding_gate.py --emit-constants` |
+| 证据表 | `src/main/resources/aion/data/static_data/quest/retail/retail-quest-ai-registrations.xml`（+ 同名 `.xsd`） |
+| 常设门 | `src/test/java/com/aionemu/gameserver/questEngine/retail/QuestAiDialogBindingGateTest.java` |
+| schema 门登记 | `RetailTableSchemaGateTest`（十八 → 十九表） |
+
+### 6.1 口径修正：名匹配按真端 `_wcsicmp` = **大小写不敏感**
+
+D1 首轮按「注册名原文相等」展开，得 37 任务 / 41 引用跨界；复核时发现该口径**与真端语义不符**，证据三条：
+
+1. `NPCDB::Load` 的 `quest_ai_name` 走名→id 表 `FUN_140d18530`，二分比较两侧都是 `_wcsicmp`
+   —— `server58-source/MainServer_Server64/fun/fun_249.cpp:3018`（调用点 `fun_040.cpp:9923`，case 0x886）。
+2. ScriptDLL 的对话名 map 遍历同样用 `_wcsicmp` —— `ScriptDLL64.c:2075978/2076005`。
+3. 自洽性反证：`10110/10522/10525/10528/10529` 注册 `L"LF6_WEATHA_E"`，而真端 `npcs.xml` 只有
+   `LF6_Weatha_E`（npc 806075）。大小写敏感语义下这些注册**悬空**（真端不可服务），与真端可运行矛盾。
+
+改口径后：全局 Quest-AI NPC 集 9998 → **10136**；跨界 37→**21** 任务 / 41→**25** 引用；
+未注册任务 18 → **18**（不受影响，最稳）；另 6 个「注册名解析不到 npc」的行归零。
+**两个口径的读数都已留档**（首轮 37/41 清单可从此前度量重放：`measure_binding_gate.py` 由 `fold` 索引改回原文索引即可）。
+
+### 6.2 实测读数（大小写折叠口径）
+
+- 注册面：**18787** 个 `FUN_180cb5920` 调用点（= `grep` 出现数 18788 − 1 个函数定义；正则零漏抓）→
+  **7043** 个唯一 quest id、**8190** 个注册名；注册名折叠后 554 个映射到 >1 个 npc（真端 `_wcsicmp`
+  同键 ⇒ 同一 NPC 集合共享任务脚本，语义如此）。
+- XML 车道（`quest/definitions/quests/*.xml`，733 件）：695 件带 `<dialog>`/`<npc-complete>` 引用，
+  去重 (任务, NPC) 对 **1657**；命中全局 Quest-AI 集 **1402**；证据表 733 行中 **636** 行有注册展开。
+- 绑定判定：跨界 **21 任务 / 25 引用**（冻结）；真端无注册 **18 任务**（冻结）。
+
+### 6.3 冻结语义（为什么不是「全部必须自注册」）
+
+注册面是 **(注册名, 任务) 对**，而同一 Quest-AI NPC 承接多条任务，故本任务的对话位未必出现在本任务的
+注册展开里。21 件全部是这一形态，抽样（NPC ↔ 真端注册任务 ↔ 本仓引用任务）：
+
+| NPC | 名字 | 真端注册任务 | 本仓引用任务 |
+|---|---|---|---|
+| 204700 | Thor | 2514/2611/2619/2641/2646/24053 | 2633 |
+| 204837 | Hresvelgr | 4502/4503/4705/4913/4915/4916/… | 4914 |
+| 799522 | Shugo_IDNovice_1 | 18500/18501/18502/18508/18511/2850x | 18510 |
+| 205320 | Inggness | 28207/28208/28213 | 28209 |
+| 799763 | event_Sonaran | 80016/80017 | 80298–80309（12 件事件链） |
+| 700141/700142 | dragonportal/portaltrigger | 2022/24016/1020 | 14016 |
+
+**门形态**：证据表覆盖 XML 车道**恰好**（733 行 = 目录文件名 id 全等，行序升序）＋ 行 id ⊆ 全局 id 列
+＋ 两张清单**逐元素冻结**（`FROZEN_CROSS_QUEST` 21 任务 / `FROZEN_UNREGISTERED_TASKS` 18 件）
+＋ 绑定面命中数pin（1402）。新增跨界引用/未注册任务 **即红**；收缩须同批改常量（不做静默放行）。
+负例对照已做：给冻结表加一条假项 ⇒ 门红并打印实际集合 21 条。
+
+### 6.4 门态与残余
+
+- 本轮实测：`QuestAiDialogBindingGateTest` **2/2**、`RetailTableSchemaGateTest` **2/2** 绿
+  （`mvn -Dtest='QuestAiDialogBindingGateTest,RetailTableSchemaGateTest' test`，EXIT=0）。
+- 相关目录聚焦套件（`questEngine.retail` + `questEngine.tablelane` + 两张 definition 目录门）
+  = **287 例 / 4 类 6 红**，全部为本批**之前既有**的门禁债；已做基线对照：把本批文件移开、`RetailTableSchemaGateTest`
+  回退到 HEAD 后重跑同 4 类，**同样 6 红**（`RetailNonIrAxisGateTest` 2、`RetailQuestAiNameGroupGateTest` 1、
+  `ItemPlayFamilyRowInventoryGateTest` 1、`SimpleCollectItemRowAlignmentGateTest` 2）。
+- 残余（未冻结、登记为后续取证面）：1657 条对话引用里 **255** 条落在 Quest-AI 集外（其中 **67** 件任务的对话位
+  **全部**不在集合内）；「注册名 → npc id」折叠歧义 554 名；18 件未注册任务仍待逐件裁决（P10 §34 件裁定的子集）。
+- 证据表新鲜度：生成器**不在 CI**（依赖真端 `ScriptDLL64.c`/`npcs.xml`），门只保证「行集与 XML 车道全等 +
+  冻结面不漂移」；重出表须手工跑 `emit_quest_ai_registrations.py --emit`，读数用 `measure_binding_gate.py --emit-constants` 复核。

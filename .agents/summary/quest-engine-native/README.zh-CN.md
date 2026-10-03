@@ -31,6 +31,7 @@
 | **P3 未解析面冻结（步骤 3 归零）** | ✅ 白名单已归零 | `p3/simple-talk-unresolved-npcs.tsv` + `p3/simple-talk-unresolved-items.tsv` + `p3/P3-STEP3-REPORT.zh-CN.md` | NPC 39 名（接取列 207 行 / 交付列 86 行）仍为证据快照；**物品面 14 项白名单归零**——排查真端证实 14 项非静态数据缺失，而是沿用了老链路「无条件去 `ITEM_` 前缀」规则；1988 个 item_check 行 **1981 行门成立**，7 行门通道全缺=真端不可接取行 |
 | **P3 步骤 4 门态（本次实测）** | ❌ 347 红（门禁债，117 类） | 门禁产物已清理（读数见本行） | 聚焦套件 1678 例 / 162F+185E / 117 类；对 P2 基线 **REMOVED 1（`Quest30314RetailAlignmentTest`）/ ADDED 0**；P3 新增 34 类全部归零；`missing production quest definition` 230 → 158（余下 158 属基线 117 类内的 talk 行迁移债）|
 | P0a 重冻 | ⏸ 被 QE-112 门住 | — | QE-112 落地后重跑 `owner_identity.py` + `raw_vars_probe.py` |
+| **P11 D1（Quest-AI 注册面证据表 + NPC 绑定门）** | ✅ 已落地（2/2 + schema 门 2/2 绿） | `p11-quest-ai-lane/P11-PREREQ-QUEST-AI-LANE.zh-CN.md` §6 | 真端 `FUN_180cb5920(name, questId)` 注册面（18787 调用点 / 7043 任务 / 8190 注册名）× `npcs.xml quest_ai_name`（**名匹配按真端 `_wcsicmp` 大小写不敏感**：`fun_249.cpp:3018` + `ScriptDLL64.c:2075978`）→ 证据表 `retail-quest-ai-registrations.xml`（733 行 = XML 车道全量，全局 Quest-AI id 10136）+ 门 `QuestAiDialogBindingGateTest`：绑定面命中 1402，跨界冻结 21 任务/25 引用、无注册冻结 18 件；零生产行为变更 |
 
 **tablelane 生产组件现况**（全部纯新增、零切换、零触碰 QE-112 文件）：
 `HtmlPagesRegistry` / `RawQuestVarsCodec` / `ProgressCamera` / `CameraRegistry` /
@@ -111,3 +112,6 @@
   `p3-prereqs/simple-talk-codegen.md`（talk 页流/槽位/phase 门/物品解码 + §8 设计输入）
 - P7 前置：`p7-prereqs/dd-dispatcher-and-handlers.md` + `dd-host-interface-detail.md`（IUserImp 133 槽 /
   hash 节点 / 事件 tag 全链路）
+- P10：`p10-xml-only-176/XML-ONLY-176-ANALYSIS|ADJUDICATION`（176 件 XML-only 三方交叉与逐件裁定）
+- P11 前置 / D1：`p11-quest-ai-lane/P11-PREREQ-QUEST-AI-LANE`（§1-§5 只读取证：注册面语义边界、进度面 = 服务端 item-driven；
+  §6 = D1 执行记录）+ `emit_quest_ai_registrations.py` + `measure_binding_gate.py`

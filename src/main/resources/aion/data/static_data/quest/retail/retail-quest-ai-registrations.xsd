@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- retail-quest-ai-registrations.xml 表 schema（quest retail 表门禁用，D1 批）。
+     镜像口径 = 装载器 fail-closed 规则 ∪ 观察形全域钉（证据 + 生成器：
+     .agents/summary/quest-engine-native/p11-quest-ai-lane/）：
+     - 首元素 <quest_ai_npc_ids> = 全局 Quest-AI NPC id 逗号串（升序、去重，出现在每行 id
+       之前）；冻结真端注册面的观察形，不由本仓推导。
+     - 行 = <quest_ai_registration>（quest_id 全表唯一；registered_names = ScriptDLL
+       L"…" 注册名的原文逗号串，字符集 [A-Za-z0-9_]；registered_npc_ids = 按真端
+       `_wcsicmp` 语义解析出的 npc id 逗号串）。两列都允许空串：空 = 该任务无注册 /
+       注册名解析不到任何 npc，语义如此非错误。
+     retail-quest-ai-registrations.xml schema (quest retail table gate, D1 batch). Mirrors the loader
+     fail-closed rules plus observed-universe shape pins (evidence + generator under
+     `.agents/summary/quest-engine-native/p11-quest-ai-lane/`):
+     - The leading <quest_ai_npc_ids> element is the comma list of the global Quest-AI NPC ids
+       (ascending, deduplicated), freezing the observed retail registration surface.
+     - Rows are <quest_ai_registration> (unique quest_id; registered_names = verbatim ScriptDLL
+       L"…" registration names, charset [A-Za-z0-9_]; registered_npc_ids = npc ids resolved under
+       the retail `_wcsicmp` (case-insensitive) semantics). Both columns may be empty: empty means
+       "no registration for this quest" / "no npc resolves", by semantics, not an error. -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+  <xs:element name="quest_ai_registrations">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="quest_ai_npc_ids" minOccurs="1" maxOccurs="1">
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:pattern value="[0-9]+(,[0-9]+)*"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:element>
+        <xs:element name="quest_ai_registration" minOccurs="1" maxOccurs="unbounded">
+          <xs:complexType>
+            <xs:all>
+              <xs:element name="quest_id" minOccurs="1">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:pattern value="[0-9]+"/>
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="registered_names" minOccurs="1">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:pattern value="([A-Za-z0-9_]+(,[A-Za-z0-9_]+)*)?"/>
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="registered_npc_ids" minOccurs="1">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:pattern value="([0-9]+(,[0-9]+)*)?"/>
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+            </xs:all>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+    <xs:unique name="retail-quest-ai-registrations-row-key-unique">
+      <xs:selector xpath="quest_ai_registration"/>
+      <xs:field xpath="quest_id"/>
+    </xs:unique>
+  </xs:element>
+</xs:schema>

@@ -3091,14 +3091,14 @@ first_seen: 2026-10-03
 last_verified: 2026-10-03
 symptom: 「某批任务在真端零驱动面 ⇒ 真端死内容」的结论被推翻：XML-only 176 实测 142 个在真端 ScriptDLL 有注册
 root_cause: 扫描只查「首参 = quest id」的注册口（族表 row 注册 FUN_180cab520(questId, …) 等），漏掉 (name, questId) 形**第三参**注册口 FUN_180cb5920(out, L"name", questId)——函数体 ScriptDLL64.c:2146365 构造 IOneQuestScriptNpc（写 vftable + 拷名 + id 入全局表）
-fix_or_guardrail: 任何「真端无驱动」的否定结论必须列全注册口清单（首参/第三参/表行/客户端 CSV），并用三方交叉复算：本仓 XML 的 npc-id ↔ npcs.xml 的 quest_ai_name ↔ ScriptDLL (name↔questId)；只扫一种形态的 0 命中不构成「不存在」
-evidence: .agents/summary/quest-engine-native/p10-xml-only-176/XML-ONLY-176-ANALYSIS.zh-CN.md §7；.agents/summary/quest-engine-native/p10-xml-only-176/XML-ONLY-176-ADJUDICATION.zh-CN.md；.agents/summary/quest-engine-native/p11-quest-ai-lane/P11-PREREQ-QUEST-AI-LANE.zh-CN.md；同目录 scan_onequestscriptnpc.py、crosscheck_quest_ai.py；真端 ScriptDLL64.c:2146365、:1890496(Kalio↔1001)、真端 NPC 静态表 203067 Kalio 的 quest_ai_name 列；抽样 1001/14010/11279 三方交叉 3/3 全中
-validation: 2026-10-03 静态：176 中 142 命中该注册口（18787 调用点 / 7148 唯一 id，其中 4682 落本仓 6224 任务集）；真端 quest.xml 有行 169/176、含目标列 144/176；客户端 quest_script_monster.csv 30/176、quest_monster.csv 38/176
+fix_or_guardrail: 任何「真端无驱动」的否定结论必须列全注册口清单（首参/第三参/表行/客户端 CSV），并用三方交叉复算：本仓 XML 的 npc-id ↔ npcs.xml 的 quest_ai_name ↔ ScriptDLL (name↔questId)；只扫一种形态的 0 命中不构成「不存在」。**名匹配按真端 `_wcsicmp` 语义大小写不敏感**（原文相等口径会造出假跨界，见 2026-10-03 D1 修订块）；绑定门只冻结、不静默放行：新增跨界引用/未注册任务即红，收缩须同批改常量
+evidence: .agents/summary/quest-engine-native/p10-xml-only-176/XML-ONLY-176-ANALYSIS.zh-CN.md §7；.agents/summary/quest-engine-native/p11-quest-ai-lane/P11-PREREQ-QUEST-AI-LANE.zh-CN.md §6（D1 执行记录）；.agents/summary/quest-engine-native/p11-quest-ai-lane/emit_quest_ai_registrations.py + measure_binding_gate.py；src/main/resources/aion/data/static_data/quest/retail/retail-quest-ai-registrations.xml（+同名 xsd）；src/test/java/com/aionemu/gameserver/questEngine/retail/QuestAiDialogBindingGateTest.java；.agents/summary/quest-engine-native/p10-xml-only-176/XML-ONLY-176-ADJUDICATION.zh-CN.md；同目录 scan_onequestscriptnpc.py、crosscheck_quest_ai.py；真端 ScriptDLL64.c:2146365、:1890496(Kalio↔1001)、真端 NPC 静态表 203067 Kalio 的 quest_ai_name 列；抽样 1001/14010/11279 三方交叉 3/3 全中
+validation: 2026-10-03 静态：176 中 142 命中该注册口（18787 调用点 / 7148 唯一 id，其中 4682 落本仓 6224 任务集）；真端 quest.xml 有行 169/176、含目标列 144/176；客户端 quest_script_monster.csv 30/176、quest_monster.csv 38/176。2026-10-03 D1 落地：注册面 18787 调用点 / 7043 唯一 id / 8190 注册名（大小写折叠后 554 名映射 >1 npc）→ 全局 Quest-AI NPC 10136；XML 车道 733 件中 695 件带对话引用、去重 (任务,NPC) 对 1657、命中全局集 1402；跨界 21 任务/25 引用 + 未注册 18 件逐元素冻结；门 QuestAiDialogBindingGateTest 2/2、RetailTableSchemaGateTest 2/2 绿（mvn -Dtest='QuestAiDialogBindingGateTest,RetailTableSchemaGateTest' test EXIT=0，含负例对照）
 superseded_by: none
-boundaries: 注册口命中 = 存在 NPC 对话 ingress；「目标计数/完成是否全由 quest.xml 通用列驱动」尚未逐件验证（P11 §4.1 待验）。34 个未命中件已裁定（2026-10-03）：7 件纯自造已退役（50110/50111/50123/50124/51110/51111/89999，生产全集 6224→6217），27 件保持 XML 车道；P9 残余 16 行 GAb1_*_Guard 已按「客户端声明优先」放开（组表 60→76，零门禁重冻）
+boundaries: 注册口命中 = 存在 NPC 对话 ingress；绑定门只审 `<dialog>`/`<npc-complete>` 两个对话位（kill-npc/drop 等目标位不是 Quest-AI 对话位）；1657 条对话引用里 255 条落在 Quest-AI 集外（67 件任务的对话位全部不在集合内）未作判定、登记为残余；18 件未注册任务仍待逐件裁决；证据表新鲜度靠手工重跑生成器（依赖真端 ScriptDLL64.c/npcs.xml，不在 CI）；「目标计数/完成是否全由 quest.xml 通用列驱动」尚未逐件验证（P11 §4.1 待验）。34 个未命中件已裁定（2026-10-03）：7 件纯自造已退役（50110/50111/50123/50124/51110/51111/89999，生产全集 6224→6217），27 件保持 XML 车道；P9 残余 16 行 GAb1_*_Guard 已按「客户端声明优先」放开（组表 60→76，零门禁重冻）
 see_also: [QE-131], [QE-132]
 first_check: 判「真端无驱动」前先答：① 注册口清单是否覆盖 (name, id) 形第三参注册？② 是否用 npcs.xml quest_ai_name 做反向交叉？③ quest.xml 目标列与客户端 CSV 是否查过？④ 抽样 ≥3 件是否三方全中？
-keywords: 真端驱动面、ScriptDLL、FUN_180cb5920、IOneQuestScriptNpc、quest_ai_name、npcs.xml、quest.xml 目标列、quest_script_monster.csv、XML-only 176、QE-136
+keywords: 真端驱动面、ScriptDLL、FUN_180cb5920、IOneQuestScriptNpc、quest_ai_name、npcs.xml、quest.xml 目标列、quest_script_monster.csv、XML-only 176、_wcsicmp、大小写不敏感、retail-quest-ai-registrations.xml、QuestAiDialogBindingGateTest、跨界冻结、QE-136
 -->
 
 - **判定规则**：「真端无驱动」= 必须穷举注册口形态后才成立；只扫「首参字面量」得出的 0 命中是**方法论盲区**，不是结论。
@@ -3108,3 +3108,19 @@ keywords: 真端驱动面、ScriptDLL、FUN_180cb5920、IOneQuestScriptNpc、que
   真端 row loader（`ScriptDLL64.c:2686058` 区间，逐列 `_wcsicmp` 取 `con_quest`/`cutsceneId1`/`cs1_haction`/`cs1_progress`）
   只在**存在该列时**取值，缺列的槽恒空；缺列 ≠ 该行不可服务。拆除后路由集不变（真阻塞 = owner 未退役），
   说明「闸门失真」与「裁定未决」是两类问题，须分别复算再定门。
+
+**修订 2026-10-03（D1 落地：注册面证据表 + NPC 绑定门）**
+
+- **trigger**：把「XML 车道任务的对话 NPC 绑定」从人工核对升级为真端权威门（P11 §5 D1）。
+- **root_cause / 口径修正**：注册名 → npc 的展开在真端是**大小写不敏感**的（`NPCDB::Load` 的
+  `quest_ai_name` 走 `FUN_140d18530` 二分，两侧 `_wcsicmp`：`fun_249.cpp:3018`，调用点 `fun_040.cpp:9923`；
+  ScriptDLL 对话名 map 遍历 `ScriptDLL64.c:2075978/2076005`）。首轮按原文相等得 37 任务/41 引用跨界，
+  其中 16 件是拼写大小写差异造成的**假跨界**（例：`10110/10522/10525/10528/10529` 注册 `L"LF6_WEATHA_E"`，
+  npcs.xml 只有 `LF6_Weatha_E`=806075；原文相等语义下这些注册在真端会悬空 ⇒ 与真端可运行矛盾）。
+- **change**：新增 `retail-quest-ai-registrations.xml`（733 行 = XML 车道全量；全局 Quest-AI id 10136；
+  行 = 任务 → 注册名原文 + 折叠解析出的 npc id）与 `QuestAiDialogBindingGateTest`；schema 门登记为第十九张表。
+  门 = 行集与 XML 车道全等 + 行 id ⊆ 全局列 + 绑定面命中数 1402 + 两张冻结清单（跨界 21 任务/25 引用、
+  真端无注册 18 件）逐元素比对。
+- **证据 / validation**：见元数据 `evidence:` / `validation:`；负例对照（冻结表加假项 ⇒ 门红并打印实际 21 条）已做。
+- **边界**：冻结清单**只许收缩**、收缩须同批改常量；跨界语义 = 同一 Quest-AI NPC 承接多条任务
+  （204700 Thor / 204837 Hresvelgr / 799522 Shugo_IDNovice_1 / 799763 event_Sonaran 等），不是缺陷。
