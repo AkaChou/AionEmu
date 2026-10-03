@@ -37,11 +37,16 @@ import lombok.Setter;
 /**
  * AI2 抽象基类：管理状态、事件分发、思考锁、场景与通用钩子。
  * Abstract AI2 base: manages state, event dispatch, think lock, scenario and common hooks.
- * @author ATracer
  */
 @Getter
 @Setter
 public abstract class AbstractAI implements AI2 {
+
+	/**
+	 * 实例生效的 AI 注册名称（由引擎创建时指定，优先于注解默认值）。
+	 * Active registered AI name of this instance (assigned on engine setup, overrides annotation default).
+	 */
+	private String aiName;
 
 	/** AI 死亡监听器接口 / AI death listener interface */
 	public interface AiDeathListener {
@@ -191,15 +196,20 @@ public abstract class AbstractAI implements AI2 {
 	}
 
 	/**
-	 * 获取 AI 名称（来自 {@link AIName}，否则 "noname"）。
-	 * Returns the AI name from {@link AIName}, or "noname".
+	 * 获取 AI 名称（优先使用实例设置的 {@link #aiName}，否则取 {@link AIName} 声明的首个主名称，未标注时为 "noname"）。
+	 * Returns the AI name (prefers instance {@link #aiName}, falls back to first name from {@link AIName}, or "noname").
 	 * @return AI 名称 / AI name
 	 */
 	@Override
 	public String getName() {
+		if (aiName != null) {
+			return aiName;
+		}
 		if (getClass().isAnnotationPresent(AIName.class)) {
 			AIName annotation = getClass().getAnnotation(AIName.class);
-			return annotation.value();
+			String value = annotation.value();
+			int commaIndex = value.indexOf(',');
+			return commaIndex >= 0 ? value.substring(0, commaIndex).trim() : value.trim();
 		}
 		return "noname";
 	}

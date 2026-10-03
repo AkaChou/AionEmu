@@ -1,5 +1,6 @@
 package com.aionemu.gameserver.ai.quests;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -9,6 +10,7 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
+import com.aionemu.gameserver.ai2.AI2Engine;
 import com.aionemu.gameserver.questEngine.definition.QuestDialogAction;
 
 class QuestStartItemNpcAi2Test {
@@ -53,5 +55,23 @@ class QuestStartItemNpcAi2Test {
 	@Test
 	void canReceiveRewardRejectsNullPlayer() {
 		assertFalse(QuestStartItemNpcAi2.canReceiveReward(null, 1198, 182200559));
+	}
+
+	@Test
+	void registersAllAliasesAndInstantiatesViaEngine() {
+		AI2Engine engine = new AI2Engine();
+		assertDoesNotThrow(() -> engine.registerAI(QuestStartItemNpcAi2.class));
+
+		for (String alias : List.of(
+			"quest_start_use_item",
+			"scroll_q41",
+			"scroll_q49",
+			"scroll_q2498",
+			"npc_ai_box_q1559",
+			"npc_ai_fobj_q11036a",
+			"npc_ai_fobj_q11123a",
+			"npc_ai_fobj_q11143a")) {
+			assertNotNull(engine.setupAI(alias, null), "Expected setupAI to succeed for alias: " + alias);
+		}
 	}
 }

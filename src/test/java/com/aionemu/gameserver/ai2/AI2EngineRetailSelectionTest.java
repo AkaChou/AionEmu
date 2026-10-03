@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+
 class AI2EngineRetailSelectionTest {
 
 	@Test
@@ -46,6 +47,10 @@ class AI2EngineRetailSelectionTest {
 			assertEquals("retail_pattern", AI2Engine.selectNpcAi("general", 200000, null));
 			assertEquals("quest_use_item", AI2Engine.selectNpcAi("quest_use_item", 200000, null));
 			assertEquals("quest_start_use_item", AI2Engine.selectNpcAi("quest_start_use_item", 700004, null));
+			assertEquals("scroll_q41", AI2Engine.selectNpcAi("scroll_q41", 700009, null));
+			assertEquals("scroll_q49", AI2Engine.selectNpcAi("scroll_q49", 700004, null));
+			assertEquals("scroll_q2498", AI2Engine.selectNpcAi("scroll_q2498", 700302, null));
+			assertEquals("npc_ai_box_q1559", AI2Engine.selectNpcAi("npc_ai_box_q1559", 700513, null));
 			assertEquals("empyrean_blessing", AI2Engine.selectNpcAi("empyrean_blessing", 883959, null));
 			assertEquals("following", AI2Engine.selectNpcAi("following", 200000, null));
 			assertEquals("deliveryman", AI2Engine.selectNpcAi("deliveryman", 200000, null));

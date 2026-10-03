@@ -4,6 +4,7 @@ package com.aionemu.gameserver.ai2;
 import com.aionemu.boot.i18n.I18n;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -12,6 +13,7 @@ import java.util.TreeSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CountDownLatch;
+
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.scripting.classlistener.AggregatedClassListener;
@@ -30,19 +32,27 @@ import com.aionemu.gameserver.model.templates.npc.NpcTemplate;
 /**
  * AI2 引擎：负责加载、注册、校验并为生物装配 AI 实例。
  * AI2 engine: loads, registers, validates and attaches AI instances to creatures.
- * @author ATracer
  */
 @Slf4j
 public class AI2Engine implements GameEngine {
 
 	/**
 	 * -- SETTER --
-	 *  设置 Spring 实例 Provider。
-	 *  Sets the Spring instance provider.
+	 * 设置 Spring 实例 Provider。
+	 * Sets the Spring instance provider.
 	 */
 	@Setter
 	private static volatile ObjectProvider<AI2Engine> instanceProvider;
 	private final Map<String, Class<? extends AbstractAI>> aiMap = new HashMap<>();
+	/**
+	 * 这些自定义物品与任务交互协议、跟随与交付处理器拥有专属交互协议；零售 pattern 不能覆盖它们。
+	 * Scripted action item/quest interactions, follow and delivery protocols must not be overridden by retail patterns.
+	 */
+	private static final Set<String> SCRIPTED_ACTION_ITEM_AI = Set.of(
+		"quest_use_item", "quest_start_use_item", "scroll_q41", "scroll_q49", "scroll_q2498",
+		"npc_ai_box_q1559", "npc_ai_fobj_q11036a", "npc_ai_fobj_q11123a", "npc_ai_fobj_q11143a",
+		"empyrean_blessing", "following", "deliveryman");
+
 	/**
 	 * 这些自定义 AI 的交互协议、生命周期或战斗阶段副作用会生成可被任务引用的 NPC；零售 pattern 没有等价行为时，必须保留脚本 AI。
 	 * Scripted interaction protocols, lifecycle or combat-phase spawns must not be bypassed by an incomplete retail pattern.
@@ -65,6 +75,7 @@ public class AI2Engine implements GameEngine {
 	/**
 	 * 加载 AI 脚本并注册所有 AI 处理器。
 	 * Loads AI scripts and registers all AI handlers.
+	 *
 	 * @param progressLatch 进度倒计时锁 / progress latch
 	 */
 	@Override
@@ -100,27 +111,34 @@ public class AI2Engine implements GameEngine {
 	}
 
 	/**
-	 * 按 {@link AIName} 注解将 AI 类注册到名称映射表。
-	 * Registers an AI class into the name map using its {@link AIName} annotation.
+	 * 按 {@link AIName} 注解将 AI 类注册到名称映射表，支持以逗号分隔声明的多个别名。
+	 * Registers an AI class into the name map using its {@link AIName} annotation, supporting comma-separated aliases.
+	 *
 	 * @param class1 AI 实现类 / AI implementation class
 	 */
 	public void registerAI(Class<? extends AbstractAI> class1) {
 		AIName nameAnnotation = class1.getAnnotation(AIName.class);
 		if (nameAnnotation != null) {
-			String aiName = nameAnnotation.value();
-			Class<? extends AbstractAI> registeredClass = aiMap.get(aiName);
-			if (registeredClass != null && !registeredClass.equals(class1)) {
-				throw new IllegalStateException(I18n.get("log.ai_engine.duplicate_name", aiName,
-					registeredClass.getName(), class1.getName()));
+			for (String rawAiName : nameAnnotation.value().split(",")) {
+				String aiName = rawAiName.trim();
+				if (aiName.isEmpty()) {
+					continue;
+				}
+				Class<? extends AbstractAI> registeredClass = aiMap.get(aiName);
+				if (registeredClass != null && !registeredClass.equals(class1)) {
+					throw new IllegalStateException(I18n.get("log.ai_engine.duplicate_name", aiName,
+						registeredClass.getName(), class1.getName()));
+				}
+				aiMap.put(aiName, class1);
 			}
-			aiMap.put(aiName, class1);
 		}
 	}
 
 	/**
 	 * 按名称创建 AI 实例并绑定到所有者。
 	 * Creates an AI instance by name and binds it to the owner.
-	 * @param name AI 名称 / AI name
+	 *
+	 * @param name  AI 名称 / AI name
 	 * @param owner 所有者生物 / owner creature
 	 * @return 装配好的 AI 实例 / configured AI instance
 	 */
@@ -130,7 +148,12 @@ public class AI2Engine implements GameEngine {
 			if (owner instanceof Npc npc) {
 				name = selectNpcAi(name, npc.getNpcId(), npc);
 			}
-			aiInstance = aiMap.get(name).getDeclaredConstructor().newInstance();
+			Class<? extends AbstractAI> aiClass = aiMap.get(name);
+			if (aiClass == null) {
+				throw new IllegalStateException("未注册的 AI 名称：" + name);
+			}
+			aiInstance = aiClass.getDeclaredConstructor().newInstance();
+			aiInstance.setAiName(name);
 			aiInstance.setOwner(owner);
 			owner.setAi2(aiInstance);
 			if (AIConfig.ONCREATE_DEBUG) {
@@ -145,9 +168,7 @@ public class AI2Engine implements GameEngine {
 	public static String selectNpcAi(String fallback, int npcId, Npc npc) {
 		// These scripted action items and follow handlers own their interaction/follow protocol;
 		// a retail pattern would bypass it and fall through to generic dialogs or drop follow events.
-		if ("quest_use_item".equals(fallback) || "quest_start_use_item".equals(fallback)
-			|| "empyrean_blessing".equals(fallback) || "following".equals(fallback)
-			|| "deliveryman".equals(fallback)) {
+		if (SCRIPTED_ACTION_ITEM_AI.contains(fallback)) {
 			return fallback;
 		}
 		if (QUEST_SIDE_EFFECT_AI.contains(fallback)) {
@@ -168,8 +189,9 @@ public class AI2Engine implements GameEngine {
 	/**
 	 * 使用 {@link AiNames} 枚举为 NPC 装配 AI。
 	 * Sets up AI for an NPC using an {@link AiNames} enum value.
+	 *
 	 * @param aiName AI 名称枚举 / AI name enum
-	 * @param owner 目标 NPC / target NPC
+	 * @param owner  目标 NPC / target NPC
 	 */
 	public void setupAI(AiNames aiName, Npc owner) {
 		setupAI(aiName.getName(), owner);
@@ -190,6 +212,7 @@ public class AI2Engine implements GameEngine {
 	/**
 	 * 校验 NPC 引用覆盖与全部注册 AI 的无参构造可用性。
 	 * Validates NPC reference coverage and no-argument construction of every registered AI.
+	 *
 	 * @param referencedAiNames NPC 模板引用的 AI 名称 / AI names referenced by NPC templates
 	 */
 	void validateScripts(Collection<String> referencedAiNames) {
@@ -223,9 +246,10 @@ public class AI2Engine implements GameEngine {
 	 * <p>双源静态兜底已退役：缺少 provider 时直接 fail-fast，避免在容器之外静默创建第二套实例。
 	 * The legacy static fallback is retired: a missing provider now fails fast instead of silently
 	 * creating a second instance outside the container.</p>
+	 *
 	 * @return 由 Spring 提供的实例 / the Spring-provided instance
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean /
-	 *         when no provider or bean is available
+	 *                               when no provider or bean is available
 	 */
 	public static final AI2Engine getInstance() {
 		ObjectProvider<AI2Engine> provider = instanceProvider;

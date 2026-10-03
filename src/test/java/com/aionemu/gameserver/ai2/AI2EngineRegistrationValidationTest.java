@@ -41,6 +41,35 @@ class AI2EngineRegistrationValidationTest {
 		assertEquals("log.ai_engine.constructor_failed", exception.getMessage());
 	}
 
+	@Test
+	void registersMultipleCommaSeparatedAiNamesForSameClass() {
+		AI2Engine engine = new AI2Engine();
+		assertDoesNotThrow(() -> engine.registerAI(MultiAliasAi.class));
+		assertDoesNotThrow(() -> engine.validateScripts(Set.of("primary-alias", "secondary-alias", "third-alias")));
+	}
+
+	@Test
+	void rejectsDuplicateAcrossAliasesFromDifferentClasses() {
+		AI2Engine engine = new AI2Engine();
+		engine.registerAI(MultiAliasAi.class);
+
+		IllegalStateException exception = assertThrows(IllegalStateException.class,
+			() -> engine.registerAI(ConflictingAliasAi.class));
+		assertEquals("log.ai_engine.duplicate_name", exception.getMessage());
+	}
+
+	@Test
+	void instanceReturnsConfiguredNameOrFirstAlias() {
+		AI2Engine engine = new AI2Engine();
+		engine.registerAI(MultiAliasAi.class);
+
+		MultiAliasAi defaultInstance = new MultiAliasAi();
+		assertEquals("primary-alias", defaultInstance.getName());
+
+		AI2 customInstance = engine.setupAI("secondary-alias", null);
+		assertEquals("secondary-alias", customInstance.getName());
+	}
+
 	@AIName("registration-valid")
 	public static class ValidAi extends NpcAI2 {
 	}
@@ -58,5 +87,13 @@ class AI2EngineRegistrationValidationTest {
 
 		public MissingNoArgumentConstructorAi(String ignored) {
 		}
+	}
+
+	@AIName("primary-alias, secondary-alias, third-alias")
+	public static class MultiAliasAi extends NpcAI2 {
+	}
+
+	@AIName("other-alias, secondary-alias")
+	public static class ConflictingAliasAi extends NpcAI2 {
 	}
 }
