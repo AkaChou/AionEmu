@@ -1,5 +1,7 @@
 # P3 步骤 6 报告：native 完成/领奖口 + `bm_restrict_category` 语义坐实（跨族两阻塞闭环）
 
+> **门禁产物清理提示（2026-10-03）**：本文件引用的门禁运行产物（`gates/*.log`、`*-red-classes.tsv`、`*-delta.tsv` 等）已按「只记录重要的过程内容、不记录门禁」口径清理，不再随仓保留；关键读数已内联于正文，复现请重跑对应聚焦套件，清理说明见 `.agents/summary/CLEANUP-LEDGER.zh-CN.md`。
+
 > 主题：解决 §10.3-#11（native 领奖/完成段 NPE，QE-113）与 §10.3-#12（`bm_restrict_category`
 > 未坐实导致 44% talk 行不可接取，QE-114）——两个 P3 退出前置的跨族阻塞。
 > 日期：2026-10-01。分支：`quest`。

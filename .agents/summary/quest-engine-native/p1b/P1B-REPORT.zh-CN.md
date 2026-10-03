@@ -1,5 +1,7 @@
 # P1B 报告：SimpleHunt 残余轴批（`con_quest` 链式接取窗 + `cutscene` 过场装载面）
 
+> **门禁产物清理提示（2026-10-03）**：本文件引用的门禁运行产物（`gates/*.log`、`*-red-classes.tsv`、`*-delta.tsv` 等）已按「只记录重要的过程内容、不记录门禁」口径清理，不再随仓保留；关键读数已内联于正文，复现请重跑对应聚焦套件，清理说明见 `.agents/summary/CLEANUP-LEDGER.zh-CN.md`。
+
 > 主题：SimpleHunt 车道（939 行 / 1865 表行）**残余两轴**——真端交付节点 `0x1e` 槽（`con_quest` 132 行）
 > 与 `0x35` 槽（`cutsceneid1`/`cs1_haction` 3 行）——按 P4B 同一不变量接线装载/消费面，并把
 > 「动作未被服务 ⇒ 不播」的**休眠面**如实冻结。

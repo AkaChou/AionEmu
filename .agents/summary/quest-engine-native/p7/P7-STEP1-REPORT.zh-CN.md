@@ -1,5 +1,7 @@
 # P7 步 1：DD 原生 handler 契约冻结（零行为变更）
 
+> **门禁产物清理提示（2026-10-03）**：本文件引用的门禁运行产物（`gates/*.log`、`*-red-classes.tsv`、`*-delta.tsv` 等）已按「只记录重要的过程内容、不记录门禁」口径清理，不再随仓保留；关键读数已内联于正文，复现请重跑对应聚焦套件，清理说明见 `.agents/summary/CLEANUP-LEDGER.zh-CN.md`。
+
 > 日期：2026-10-01。分支：`quest`。性质：**只读证据 + 冻结门**（零运行时变更，不抢 P7 实现批）。
 > 计划位：§10.2「P7 DataDriven」→ 本批 = **前置步 1**（行语义闭环）；step 2 = 运行时 + 原子切换 + 同批删旧。
 > 工具：`p7/tools/dd-native-contract-probe.py`；逐行矩阵：`p7/dd-native-shape-matrix.tsv`（1467 行）；

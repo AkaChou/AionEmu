@@ -1,5 +1,7 @@
 # 聚焦套件红线归因（P2 收口时点）
 
+> **门禁产物清理提示（2026-10-03）**：本文件引用的门禁运行产物（`gates/*.log`、`*-red-classes.tsv`、`*-delta.tsv` 等）已按「只记录重要的过程内容、不记录门禁」口径清理，不再随仓保留；关键读数已内联于正文，复现请重跑对应聚焦套件，清理说明见 `.agents/summary/CLEANUP-LEDGER.zh-CN.md`。
+
 > 批次：2026-10-01（P2 SimpleSerialHunt 原生切换后，P3 开工前）。
 > 命令：`mvn test '-Dtest=*Quest*Test,*Retail*Test'`（用户已就该计划全程授权测试）。
 > 原始日志：`gates/2026-10-01-focused-run-p2.log`（含 clean 复核，见 §3）。

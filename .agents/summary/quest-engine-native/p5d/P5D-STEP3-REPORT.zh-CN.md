@@ -1,5 +1,7 @@
 # P5D 步 3 报告：ItemPlay 激活批（18213/28213 由 XML 保留转真端直驱）
 
+> **门禁产物清理提示（2026-10-03）**：本文件引用的门禁运行产物（`gates/*.log`、`*-red-classes.tsv`、`*-delta.tsv` 等）已按「只记录重要的过程内容、不记录门禁」口径清理，不再随仓保留；关键读数已内联于正文，复现请重跑对应聚焦套件，清理说明见 `.agents/summary/CLEANUP-LEDGER.zh-CN.md`。
+
 > 主题：把 P5D 步 2「接线 ≠ 激活」的两行**真正激活**——owner 由 `XML_RETENTION` 重裁为 `RETAIL_TABLE`、
 > 删除遗留 XML 定义与目录条目，并补上端到端中继用例（步 2 做不到，因为路由集不含中继行）。
 > 日期：2026-10-01。分支：`quest`。前置：`p5d/P5D-STEP1-REPORT.zh-CN.md`（真端形态）、

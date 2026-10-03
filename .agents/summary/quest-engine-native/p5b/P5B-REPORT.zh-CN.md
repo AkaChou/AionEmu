@@ -1,5 +1,7 @@
 # P5B 报告：SimpleUseItem / SimpleItemPlay 残余轴批（`con_quest` 链式接取窗 + itemplay 过场休眠面）
 
+> **门禁产物清理提示（2026-10-03）**：本文件引用的门禁运行产物（`gates/*.log`、`*-red-classes.tsv`、`*-delta.tsv` 等）已按「只记录重要的过程内容、不记录门禁」口径清理，不再随仓保留；关键读数已内联于正文，复现请重跑对应聚焦套件，清理说明见 `.agents/summary/CLEANUP-LEDGER.zh-CN.md`。
+
 > 主题：P5 两族（`Quest_SimpleUseItem.xml` **160 行** / `Quest_SimpleItemPlay.xml` **43 行**）的
 > **残余两轴**——真端交付节点 `0x1e` 槽（`con_quest`：UseItem 32 行 / ItemPlay 9 行）与 `0x35` 槽
 > （itemplay 2 行 `cutsceneid1`）——按 P4B/P1B 同一不变量接线，并把**触发面在真端表里不存在**的过场

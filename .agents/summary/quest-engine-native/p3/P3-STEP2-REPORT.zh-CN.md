@@ -1,5 +1,7 @@
 # P3 步骤 2 报告：SimpleTalk 原生直驱切换（物品面 + 接线 + 旧编译入口切断）
 
+> **门禁产物清理提示（2026-10-03）**：本文件引用的门禁运行产物（`gates/*.log`、`*-red-classes.tsv`、`*-delta.tsv` 等）已按「只记录重要的过程内容、不记录门禁」口径清理，不再随仓保留；关键读数已内联于正文，复现请重跑对应聚焦套件，清理说明见 `.agents/summary/CLEANUP-LEDGER.zh-CN.md`。
+
 > **批次**：P3 SimpleTalk（计划 §7）。**范围**：`Quest_SimpleTalk.xml` 3152 行。
 > **时点**：2026-10-01。**状态**：🟡 代码已落地（原生直驱 + 物品面 + 旧 IR 入口切断）；
 > 残余 = 旧金标重锚 34 类（`gates/2026-10-01-red-attribution-p3.zh-CN.md`）+ 客户端验收 `PENDING_CLIENT`。

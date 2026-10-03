@@ -1,4 +1,4 @@
-# 生成物清理台账（`chore(agents)` 第二轮） / Generated-artifact cleanup ledger
+# 生成物清理台账（`chore(agents)`，第二至七轮） / Generated-artifact cleanup ledger
 
 > 本台账记录本轮从 `.agents/` 删除的中间产物、删除理由与再生成方式。
 > 被删文件的实际内容仍可从 git 历史取得：`git show <删除提交>^:<path>`。
@@ -824,3 +824,27 @@
   保留夹具的 8 个运行时测试类共 24 个用例，21 绿。残余说明性引用两处
   （`RetailDataDrivenGateTest` 断言消息 2 行、`Batch44FoamWispFiveRowContractTest` 注释 1 行，非编译依赖），
   其中前者所在文件正被并发车道修改，未改动。
+
+---
+
+## 9. 第七轮（2026-10-03）：门禁产物、零引用旧主题与缓存清理
+
+> 保留口径（本轮起生效）：**只记录重要的过程内容，不记录门禁**——迁移计划、批次报告、裁定登记表与工具保留；
+> 门禁运行产物（`*.log`、`*-red-classes.tsv`、`*-delta.tsv` 等）不再入库、不再保留。
+
+| 组 | 内容 | 体积 | 说明 |
+|---|---|---:|---|
+| 门禁运行产物 | `quest-engine-native/gates/*.log`（87 个）+ `gates/*.tsv`（44 个）+ `p4/*-red-class-delta.tsv`（3 个） | ≈62 MB | `gates/` 仅保留聚焦基线与两份红线归因 md（重要过程内容）；33 份报告/README/迁移计划中的对应引用已就地加注「门禁产物清理提示（2026-10-03）」 |
+| 零引用旧主题 | 43 个已完结任务主题与报告（2026-09-09 ~ 09-30） | ≈0.4 MB | 判据 = 全库零引用（`.agents/summary/…` 前缀 + `主题名/` 相对路径两种形式，覆盖 memory-bank / rules / ledger / docs / scripts / src / 全部 summary）；今日在办的 `quest-owner-derived`、`ai-registration-gate` 保留 |
+| 缓存/垃圾 | `.DS_Store` ×3、`__pycache__` ×5 | — | 均已被 `.gitignore` 忽略 |
+
+### 9.1 零引用旧主题清单（43 项）
+
+ai-support-guard-npe、archives-of-eternity-door、charge-skill-damage、comment-quality-fix-2026-09-09.md、confuse-platform-edge、deadcode、heiron-undead-farm-day-night、idea-inspection-batch-fix、inggison-live-world-210050000、instance-reset、knownlist-move-notify、lombok-refactor-2026-09-09.md、maven4-migration、npc-immobile-retaliation、npc-soul-absorption-857783、npc-sp-chase-disengage、player-enter-world-event-quest-npe、quest-10100、quest-11323-reward-window、quest-130-audit-and-retirement、quest-15301-daevanion-flow、quest-15400-kill-counter、quest-16802-realtime-reward、quest-18504-wide-counter、quest-1916-accept-dispatch-verteron、quest-19637-kill-counter、quest-2947、quest-3934-reward-preview-ambiguity、quest-arena-reward-entrance、quest-catalog-audit、quest-conquest-offering-reachability、quest-contract-failure-convergence、quest-dialog-migration、quest-dialog-root-guard、quest-e2e-provider-cache、quest-runtime-resource-retirement、quest-snapshot-perf、quest-start-condition-retail-semantics、quest-trace-log、quest-wiki、resha-phantom-aggro、taloc-hollow-drop-index、tower-of-eternity-entrance-uptime
+
+### 9.2 恢复路径
+
+- tracked 文件（47 个门禁 tsv + 43 项旧主题）均可从 git 历史取回：`git show <清理提交>^:<path>`；
+- 未跟踪的 gate 日志由重跑对应聚焦套件再生成（关键读数已内联于各批次报告与 README，无需回读日志）；
+- 保留边界不变：`.py`/`.sh`/`.java` 工具与门禁脚本、`*-decisions*`/`*-registry*` 登记表、`.md` 报告与验收记录、
+  memory-bank `evidence:` 引用到的产物一律保留。

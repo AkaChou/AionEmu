@@ -1,5 +1,7 @@
 # P5D 步 1 报告：SimpleItemPlay 行集真实分解 + 真端节点槽形态（零行为变更）
 
+> **门禁产物清理提示（2026-10-03）**：本文件引用的门禁运行产物（`gates/*.log`、`*-red-classes.tsv`、`*-delta.tsv` 等）已按「只记录重要的过程内容、不记录门禁」口径清理，不再随仓保留；关键读数已内联于正文，复现请重跑对应聚焦套件，清理说明见 `.agents/summary/CLEANUP-LEDGER.zh-CN.md`。
+
 > 主题：计划 §10.3-#16① 的判据修正——原文「itemplay 37 行声明中继 / `cutsceneid1` / `item_check`」与真端表
 > 事实不符。本步按真端 `ScriptDLL64.c` **逐行对拍节点与槽**，得到真实分解与族不变量，并把结论冻结成门。
 > 日期：2026-10-01。分支：`quest`。前置：`p5/P5-REPORT.zh-CN.md`、`p5b/P5B-REPORT.zh-CN.md`、

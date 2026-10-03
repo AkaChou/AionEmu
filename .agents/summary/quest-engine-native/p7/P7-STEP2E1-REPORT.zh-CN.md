@@ -1,5 +1,7 @@
 # P7 步 2 步 e1 报告：四类接取面 + GIVE/REMOVE/CUTSCENE 动作面 + 两新冻结桶（零行为变更）
 
+> **门禁产物清理提示（2026-10-03）**：本文件引用的门禁运行产物（`gates/*.log`、`*-red-classes.tsv`、`*-delta.tsv` 等）已按「只记录重要的过程内容、不记录门禁」口径清理，不再随仓保留；关键读数已内联于正文，复现请重跑对应聚焦套件，清理说明见 `.agents/summary/CLEANUP-LEDGER.zh-CN.md`。
+
 - 批次：P7 DataDriven 步 2 步 e1（计划 §7「P7 DataDriven」/ §10.2 / §10.3-#24；证据笔记
   `p7/P7-STEP2E-PREREQ-ACQUIRE-ACTIONS.zh-CN.md`）
 - 日期：2026-10-02（承接步 d2 的 2026-10-02 收口）

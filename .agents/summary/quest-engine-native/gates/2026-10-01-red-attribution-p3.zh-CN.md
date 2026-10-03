@@ -1,5 +1,7 @@
 # 聚焦套件红灯归因（P3 SimpleTalk 切换批，2026-10-01）
 
+> **门禁产物清理提示（2026-10-03）**：本文件引用的门禁运行产物（`gates/*.log`、`*-red-classes.tsv`、`*-delta.tsv` 等）已按「只记录重要的过程内容、不记录门禁」口径清理，不再随仓保留；关键读数已内联于正文，复现请重跑对应聚焦套件，清理说明见 `.agents/summary/CLEANUP-LEDGER.zh-CN.md`。
+
 > 命令：`mvn test '-Dtest=*Quest*Test,*Retail*Test'`（日志：`gates/2026-10-01-focused-run-p3.log`）
 
 

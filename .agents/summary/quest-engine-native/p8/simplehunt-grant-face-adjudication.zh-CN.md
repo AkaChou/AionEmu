@@ -1,5 +1,7 @@
 # §10.3-#25 裁定笔记：SimpleHunt 哨兵发放宿主面（faction / area）
 
+> **门禁产物清理提示（2026-10-03）**：本文件引用的门禁运行产物（`gates/*.log`、`*-red-classes.tsv`、`*-delta.tsv` 等）已按「只记录重要的过程内容、不记录门禁」口径清理，不再随仓保留；关键读数已内联于正文，复现请重跑对应聚焦套件，清理说明见 `.agents/summary/CLEANUP-LEDGER.zh-CN.md`。
+
 - 日期：2026-10-02（P8 第二刀）
 - 问题：SimpleHunt `_faction_` / `_area_` 行在真端的发放分发路径是什么？与 Talk/Collect 是否同构？
 - 约束：禁止按 Talk/Collect 形态类比——以下每条都落到反编译源函数。

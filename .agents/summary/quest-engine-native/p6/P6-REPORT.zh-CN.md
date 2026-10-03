@@ -1,5 +1,7 @@
 # P6 报告：CombineTask 原生直驱切换（配方端口 + 同批删旧 + 放弃面收口）
 
+> **门禁产物清理提示（2026-10-03）**：本文件引用的门禁运行产物（`gates/*.log`、`*-red-classes.tsv`、`*-delta.tsv` 等）已按「只记录重要的过程内容、不记录门禁」口径清理，不再随仓保留；关键读数已内联于正文，复现请重跑对应聚焦套件，清理说明见 `.agents/summary/CLEANUP-LEDGER.zh-CN.md`。
+
 > 主题：按计划 §7 P6 把 CombineTask（**574 行**）切到真端表 + 真端 `quest.xml` + 生产配方表直驱，
 > 与旧 IR 车道一刀两断（同批删旧）；并收口本批暴露出来的 native 车道**共享放弃面**缺陷（QE-119）。
 > 日期：2026-10-01。分支：`quest`。前置：`p6/P6-STEP1-REPORT.zh-CN.md`、`p3-prereqs/family-table-shapes.md` §2.7。

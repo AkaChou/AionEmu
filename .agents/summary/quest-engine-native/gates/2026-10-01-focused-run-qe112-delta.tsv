@@ -1,9 +1,0 @@
-# P4 收口：聚焦套件逐类 tests/failures/errors 三元组差集（基线 = 上一批日志）
-# 命令：mvn -o test -Dtest=*Quest*Test,*Retail*Test -DfailIfNoTests=false
-# 日志：.agents/summary/quest-engine-native/gates/2026-10-01-focused-run-p7-dd-adjudication.log（基线） / .agents/summary/quest-engine-native/gates/2026-10-01-focused-run-qe112.log（本批）
-# 总量：基线 (1703, 162, 142, 2) / 本批 (1699, 161, 137, 2)
-class	base_tests	base_failures	base_errors	new_tests	new_failures	new_errors	delta
-com.aionemu.gameserver.questEngine.definition.QuestDataDrivenRetailFlowAlignmentTest	2	0	1	2	0	0	E-1
-com.aionemu.gameserver.questEngine.retail.RetailDataDrivenGateTest	8	1	0	9	0	0	F-1;T+1
-com.aionemu.gameserver.questEngine.retail.RetailSimpleSerialHuntGateTest	5	0	0	<absent>	<absent>	<absent>	REMOVED
-com.aionemu.gameserver.questEngine.runtime.QuestDataDrivenHuntProductionFlowTest	4	0	4	4	0	0	E-4

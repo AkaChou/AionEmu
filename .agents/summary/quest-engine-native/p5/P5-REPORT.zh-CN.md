@@ -1,5 +1,7 @@
 # P5 报告：SimpleUseItem / SimpleItemPlay 族原生直驱切换（用物事件轴 + 同批删旧）
 
+> **门禁产物清理提示（2026-10-03）**：本文件引用的门禁运行产物（`gates/*.log`、`*-red-classes.tsv`、`*-delta.tsv` 等）已按「只记录重要的过程内容、不记录门禁」口径清理，不再随仓保留；关键读数已内联于正文，复现请重跑对应聚焦套件，清理说明见 `.agents/summary/CLEANUP-LEDGER.zh-CN.md`。
+
 > 主题：按计划 §7 P5 把 SimpleUseItem（160 行）与 SimpleItemPlay（43 行）两族切到真端表 +
 > 真端 `quest.xml` + 客户端页/动作契约直驱，与旧 IR 车道一刀两断（同批删旧）。
 > 日期：2026-10-01。分支：`quest`。
