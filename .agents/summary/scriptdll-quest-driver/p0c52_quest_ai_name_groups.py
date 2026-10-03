@@ -35,14 +35,27 @@ from pathlib import Path
 
 REPO = next(p for p in Path(__file__).resolve().parents if (p / "pom.xml").is_file())
 NPC_TEMPLATE_DIR = REPO / "src/main/resources/aion/data/static_data/npcs"
-RETENTION = REPO / "src/main/resources/aion/data/static_data/quest_retail/retail-xml-retention.tsv"
-OUT_TSV = REPO / "src/main/resources/aion/data/static_data/quest_retail/retail-quest-ai-name-groups.tsv"
-OUT_REJECTED_TSV = (REPO / "src/main/resources/aion/data/static_data/quest_retail"
-	/ "retail-quest-ai-name-groups-rejected.tsv")
+RETAIL_DIR = REPO / "src/main/resources/aion/data/static_data/quest/retail"
+DD_TABLE = RETAIL_DIR / "data_driven_quest.xml"
+RETENTION = RETAIL_DIR / "retail-xml-retention.tsv"
+OUT_TSV = RETAIL_DIR / "retail-quest-ai-name-groups.tsv"
+# 排除登记表已于 2026-09-28（批 P1）整表退役：生成器停写，只在标准输出打印。
+# The rejected-registry TSV was retired wholesale on 2026-09-28 (batch P1); the generator prints only.
 LEGACY_QUESTS = REPO / "src/main/resources/aion/data/static_data/quest/definitions/quests"
-DD_TABLE = REPO / "src/main/resources/aion/data/static_data/quest_retail/data_driven_quest.xml"
-CLIENT_NPC = Path(f"{REPO.parent / 'PycharmProjects' / 'unpak'}/npcs_unpacked/client_npcs_npc.xml")
-CLIENT_DIC = Path(f"{REPO.parent / 'PycharmProjects' / 'unpak'}/strings_unpacked/client_strings_dic_etc.xml")
+
+
+# 客户端解包根：按同宿主目录约定解析，兼容 <workspace>/PycharmProjects 与 ~/PycharmProjects 两种布局。
+# Unpacked client root: sibling-directory convention with a home-directory fallback.
+def _client_root() -> Path:
+	for candidate in (REPO.parent / "PycharmProjects" / "unpak", Path.home() / "PycharmProjects" / "unpak"):
+		if (candidate / "npcs_unpacked" / "client_npcs_npc.xml").exists():
+			return candidate
+	return REPO.parent / "PycharmProjects" / "unpak"
+
+
+CLIENT_ROOT = _client_root()
+CLIENT_NPC = CLIENT_ROOT / "npcs_unpacked" / "client_npcs_npc.xml"
+CLIENT_DIC = CLIENT_ROOT / "strings_unpacked" / "client_strings_dic_etc.xml"
 
 # 遗留 XML 的接取流动作（NPC_START 之外的"对话即接取"形）。 / The legacy accept-flow actions.
 ACCEPT_ACTIONS = ("QUEST_ACCEPT_1", "QUEST_ACCEPT_SIMPLE", "ASK_QUEST_ACCEPT")
@@ -125,21 +138,56 @@ def server_names_by_id() -> dict[int, str]:
 	return out
 
 
-def dd_references() -> tuple[dict[str, list[str]], dict[str, list[str]]]:
-	"""{接取名: 任务 id} / {交付名: 任务 id} —— 组表只服务 DD 表真的写出来的位点。"""
+# 组表的服务面 = **全部家族表**真的写出来的 NPC 位点（P9 扩域：原实现只收 DD 表）。
+#   * 接取位列  acquired_npc_name / value0_acquire_（承接旧「接取流子集」守卫）
+#   * 其余位列  reward_npc_name / talk_npcN（交付与中继：同一条真端名字节点语义）
+# Service surface = every NPC slot actually written by *any* family table (P9 widening: the original
+# implementation only collected the DD table). Accept columns keep the legacy accept-superset guard.
+FAMILY_TABLES = ("Quest_SimpleHunt.xml", "Quest_SimpleSerialHunt.xml", "Quest_SimpleTalk.xml",
+	"Quest_SimpleCollectItem.xml", "Quest_SimpleUseItem.xml", "Quest_SimpleItemPlay.xml",
+	"Quest_CombineTask.xml", "data_driven_quest.xml")
+ROW_RE = re.compile(r"<id(?:\s+id=\"(\d+)\")?\s*>(.*?)</id>", re.S)
+NAME_FIELDS = re.compile(r"<(acquired_npc_name|reward_npc_name|value0_acquire_|talk_npc\d)>([^<]*)</\1>")
+ACCEPT_FIELDS = ("acquired_npc_name", "value0_acquire_")
+
+
+def table_references() -> tuple[dict[str, list[str]], dict[str, list[str]]]:
+	"""{接取名: 任务 id} / {其余名字: 任务 id} —— 组表服务全部家族表真的写出来的位点。"""
 	acq: dict[str, list[str]] = {}
 	reward: dict[str, list[str]] = {}
-	text = DD_TABLE.read_text(encoding="utf-8", errors="replace")
-	for block in re.findall(r"<quest_data_driven>.*?</quest_data_driven>", text, re.S):
-		qid = re.search(r"<id>(\d+)</id>", block)
-		if not qid:
+
+	def add(target: dict[str, list[str]], value: str, quest_id: str) -> None:
+		value = value.strip()
+		if value:
+			target.setdefault(value, []).append(quest_id)
+
+	# DD 表是容器形（<quest_data_driven> 行块，行内另有嵌套 <data><id>）：按块解析，不能被行正则切碎。
+	# The DD table is container-shaped (row blocks with nested <data><id>): parse by block, not by row regex.
+	if DD_TABLE.exists():
+		text = DD_TABLE.read_text(encoding="utf-8", errors="replace")
+		for block in re.findall(r"<quest_data_driven>.*?</quest_data_driven>", text, re.S):
+			qid = re.search(r"<id>(\d+)</id>", block)
+			if not qid:
+				continue
+			value = re.search(r"<value0_acquire_>([^<]*)</value0_acquire_>", block)
+			rew = re.search(r"<reward_npc_name>([^<]*)</reward_npc_name>", block)
+			if value:
+				add(acq, value.group(1), qid.group(1))
+			if rew:
+				add(reward, rew.group(1), qid.group(1))
+	for table_name in FAMILY_TABLES:
+		if table_name == "data_driven_quest.xml":
 			continue
-		value = re.search(r"<value0_acquire_>([^<]*)</value0_acquire_>", block)
-		rew = re.search(r"<reward_npc_name>([^<]*)</reward_npc_name>", block)
-		if value and value.group(1).strip():
-			acq.setdefault(value.group(1).strip(), []).append(qid.group(1))
-		if rew and rew.group(1).strip():
-			reward.setdefault(rew.group(1).strip(), []).append(qid.group(1))
+		path = RETAIL_DIR / table_name
+		if not path.exists():
+			continue
+		text = path.read_text(encoding="utf-8", errors="replace")
+		for qid, body in ROW_RE.findall(text):
+			if not qid:
+				continue
+			for field, value in NAME_FIELDS.findall(body):
+				target = acq if field in ACCEPT_FIELDS else reward
+				add(target, value, qid)
 	return acq, reward
 
 
@@ -169,17 +217,21 @@ def legacy_dialogs(quest_ids: list[str]) -> tuple[set[int], set[int]]:
 def reward_ids_of(quest_ids: list[str], templates: dict[str, tuple[int, str]]) -> set[int]:
 	"""该组名下各任务自己声明的交付 NPC id（遗留多给接取路由时的解释集）。"""
 	out: set[int] = set()
-	text = DD_TABLE.read_text(encoding="utf-8", errors="replace")
-	for block in re.findall(r"<quest_data_driven>.*?</quest_data_driven>", text, re.S):
-		qid = re.search(r"<id>(\d+)</id>", block)
-		if not qid or qid.group(1) not in quest_ids:
+	wanted = set(quest_ids)
+	for table_name in FAMILY_TABLES:
+		path = RETAIL_DIR / table_name
+		if not path.exists():
 			continue
-		rew = re.search(r"<reward_npc_name>([^<]*)</reward_npc_name>", block)
-		if not rew:
-			continue
-		hit = templates.get(rew.group(1).strip())
-		if hit:
-			out.add(hit[0])
+		text = path.read_text(encoding="utf-8", errors="replace")
+		for qid, body in ROW_RE.findall(text):
+			if qid not in wanted:
+				continue
+			rew = re.search(r"<reward_npc_name>([^<]*)</reward_npc_name>", body)
+			if not rew:
+				continue
+			hit = templates.get(rew.group(1).strip())
+			if hit:
+				out.add(hit[0])
 	return out
 
 
@@ -189,7 +241,8 @@ def main() -> int:
 	dic = client_dic_members()
 	templates = server_templates()
 	names_by_id = server_names_by_id()
-	acq, reward = dd_references()
+	acq, reward = table_references()
+	accept_names = set(acq)
 	retention = {}
 	for line in RETENTION.read_text(encoding="utf-8").splitlines():
 		if line.startswith("#") or not line.strip():
@@ -266,7 +319,7 @@ def main() -> int:
 		# contain the members; with incomplete evidence (sibling quests already retired) only the
 		# coverage is printed, and no contradiction is inferred.
 		retained = [quest for quest in quest_ids if (LEGACY_QUESTS / f"{quest}.xml").exists()]
-		if len(retained) == len(quest_ids) and accept and not set(ids) <= accept:
+		if name in accept_names and len(retained) == len(quest_ids) and accept and not set(ids) <= accept:
 			failures.append(f"{name}: client block ids {ids} not a subset of legacy accept {sorted(accept)}")
 		elif len(retained) < len(quest_ids):
 			covered = len(set(ids) & accept)
@@ -282,7 +335,7 @@ def main() -> int:
 		if flow and not set(ids) <= flow:
 			print(f"   legacy flow      members outside the retained flow: {sorted(set(ids) - flow)}")
 		if not quest_ids:
-			failures.append(f"{name}: no DD row uses this group name")
+			failures.append(f"{name}: no family-table row uses this group name")
 		rows.append((name, members))
 
 	if failures:
@@ -300,19 +353,11 @@ def main() -> int:
 			"# 依据：客户端 npc 块 <quest_ai_name> 的成员 id 集（第一手）+ 服务端 npc 模板（成员名与\n"
 			"# 共享 title_id）+ 客户端词典正文 STR_DIC_E_<名>（可选，存在时须与块 id 集一致）+ 遗留\n"
 			"# 生产 XML 的接取流 id 集（超集见证；多出的 id 必须解释为该组任务的交付 NPC）。\n"
-			"# 候选判据：DD 表引用的名字 ∧ 客户端声明 ≥2 成员 ∧ 组名不是任一成员自己的名字。\n"
+			"# 候选判据：全部家族表真的写出来的名字 ∧ 客户端声明 ≥2 成员 ∧ 组名不是任一成员自己的名字。\n"
 			"# quest_ai_name\tmember_name_descs\n")
 		body = "".join(f"{name}\t{','.join(members)}\n" for name, members in rows)
 		OUT_TSV.write_text(header + body, encoding="utf-8")
 		print(f"written {OUT_TSV.relative_to(REPO)}")
-		reject_header = (
-			"# 组表排除登记（候选判据通过、但被编制/遗留守卫挡在组表外的对话名）\n"
-			"# 排除码：MULTI_TITLE_ID = 成员跨编制（非同编制则不同名一队）；\n"
-			"# LEGACY_ACCEPT_CONTRADICTS_CLIENT = 客户端声明的成员与遗留接取流相斥（身份漂移，须逐行裁定）。\n"
-			"# name\tcode\tdetail\n")
-		reject_body = "".join(f"{name}\t{code}\t{detail}\n" for name, code, detail in excluded)
-		OUT_REJECTED_TSV.write_text(reject_header + reject_body, encoding="utf-8")
-		print(f"written {OUT_REJECTED_TSV.relative_to(REPO)}")
 	return 0
 
 

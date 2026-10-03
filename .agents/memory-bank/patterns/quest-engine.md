@@ -5,10 +5,10 @@
 
 本文档记录 AionEmu 声明式 XML 任务系统、状态机与 NPC 交互的实战避坑经验。
 
-> Pattern IDs: `QE-001`–`QE-085`
+> Pattern IDs: `QE-001`–`QE-136`
 > card_status: ACTIVE; existing entries retain their historical evidence boundary
 > scope: production quest XML/compiler, Quest runtime, and Aion 5.8 client/legacy evidence
-> last_reviewed: 2026-09-22
+> last_reviewed: 2026-10-03
 
 ---
 
@@ -3081,3 +3081,26 @@ keywords: DOCTYPE、内部 DTD 实体子集、hellip、实体展开、Xerces、D
 - **判定规则**：删 DOCTYPE 前必须拿运行时同款解析器做前后 DOM 逐元素对拍；"能解析"不算证据，"逐元素全等"才算。
 - **安全网**：非预定义实体引用按**实测展开**落文（hellip → 文本 `hellip`）；预定义五实体引用字节不动；门钉住"无 DOCTYPE + 仅预定义实体"。
 - **反漂移**：测试里一切依赖 DOCTYPE 内容的机制同步拆除/改写；字符串"修复"（如 U+2026）一律走语义变更批而不是顺手改。
+
+## [QE-136] 一百三十六、真端驱动面取证的注册口盲区：(name, questId) 第三参注册口 + quest_ai_name 对话车道 (RETAIL_DRIVER_SURFACE_REGISTRATION_BLINDSPOT)
+
+<!-- pattern-metadata
+status: CONFIRMED
+scope: 真端任务驱动面取证方法论（ScriptDLL 注册口 × npcs.xml quest_ai_name × quest.xml 目标列）
+first_seen: 2026-10-03
+last_verified: 2026-10-03
+symptom: 「某批任务在真端零驱动面 ⇒ 真端死内容」的结论被推翻：XML-only 176 实测 142 个在真端 ScriptDLL 有注册
+root_cause: 扫描只查「首参 = quest id」的注册口（族表 row 注册 FUN_180cab520(questId, …) 等），漏掉 (name, questId) 形**第三参**注册口 FUN_180cb5920(out, L"name", questId)——函数体 ScriptDLL64.c:2146365 构造 IOneQuestScriptNpc（写 vftable + 拷名 + id 入全局表）
+fix_or_guardrail: 任何「真端无驱动」的否定结论必须列全注册口清单（首参/第三参/表行/客户端 CSV），并用三方交叉复算：本仓 XML 的 npc-id ↔ npcs.xml 的 quest_ai_name ↔ ScriptDLL (name↔questId)；只扫一种形态的 0 命中不构成「不存在」
+evidence: .agents/summary/quest-engine-native/p10-xml-only-176/XML-ONLY-176-ANALYSIS.zh-CN.md §7；同目录 scan_onequestscriptnpc.py、crosscheck_quest_ai.py；真端 ScriptDLL64.c:2146365、:1890496(Kalio↔1001)、真端 NPC 静态表 203067 Kalio 的 quest_ai_name 列；抽样 1001/14010/11279 三方交叉 3/3 全中
+validation: 2026-10-03 静态：176 中 142 命中该注册口（18787 调用点 / 7148 唯一 id，其中 4682 落本仓 6224 任务集）；真端 quest.xml 有行 169/176、含目标列 144/176；客户端 quest_script_monster.csv 30/176、quest_monster.csv 38/176
+superseded_by: none
+boundaries: 注册口命中 = 存在 NPC 对话 ingress；「目标计数/完成是否全由 quest.xml 通用列驱动」尚未逐件验证（P11 待验）；34 个未命中件中 1000/2000/1195/18744/21030/28744/50038/50040/50041 需逐件裁定
+see_also: [QE-131], [QE-132]
+first_check: 判「真端无驱动」前先答：① 注册口清单是否覆盖 (name, id) 形第三参注册？② 是否用 npcs.xml quest_ai_name 做反向交叉？③ quest.xml 目标列与客户端 CSV 是否查过？④ 抽样 ≥3 件是否三方全中？
+keywords: 真端驱动面、ScriptDLL、FUN_180cb5920、IOneQuestScriptNpc、quest_ai_name、npcs.xml、quest.xml 目标列、quest_script_monster.csv、XML-only 176、QE-136
+-->
+
+- **判定规则**：「真端无驱动」= 必须穷举注册口形态后才成立；只扫「首参字面量」得出的 0 命中是**方法论盲区**，不是结论。
+- **三方交叉**：本仓 XML 的 `npc-id` ↔ `npcs.xml <quest_ai_name>` ↔ ScriptDLL `(name, questId)` 注册；抽样 3 件全中即可推翻「死内容」判定。
+- **三层结构**：对话层（quest_ai_name 车道）+ 目标层（quest.xml collect/drop/check 列，客户端镜像 quest_monster*.csv）+ 族表层（8 张 Quest_Simple*，只承担复杂形）。

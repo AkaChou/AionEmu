@@ -62,9 +62,11 @@ public final class SimpleHuntHandler implements NativeSystemGrantLane {
 	/** NPC ID → 监听该怪物的任务槽位集合。 / NPC ID → listening quest slots. */
 	private final Map<Integer, List<HuntTargetRef>> targetsByNpcId;
 	/** 任务 ID → 接取 NPC ID。 / Quest ID → acquire NPC ID. */
-	private final Map<Integer, Integer> acquireNpcByQuestId;
+	/** 接取 NPC 成员集（任一成员可接取）。 / Acquire NPC member set. */
+	private final Map<Integer, List<Integer>> acquireNpcIdsByQuestId;
 	/** 任务 ID → 交付 NPC ID。 / Quest ID → reward NPC ID. */
-	private final Map<Integer, Integer> rewardNpcByQuestId;
+	/** 交付 NPC 成员集（任一成员可交付）。 / Reward NPC member set. */
+	private final Map<Integer, List<Integer>> rewardNpcIdsByQuestId;
 	/** 本处理器拥有的真端任务 ID 集合。 / Managed retail quest IDs. */
 	private final Set<Integer> ownedQuestIds;
 	/** 路由集 = 注册集 − XML-only 行（单一 owner 不变量）。 / Routing set = registration set minus XML-owned rows. */
@@ -102,8 +104,8 @@ public final class SimpleHuntHandler implements NativeSystemGrantLane {
 		this.rewardFlow = rewardFlow;
 
 		Map<Integer, List<HuntTargetRef>> targets = new LinkedHashMap<>();
-		Map<Integer, Integer> acquires = new LinkedHashMap<>();
-		Map<Integer, Integer> rewards = new LinkedHashMap<>();
+		Map<Integer, List<Integer>> acquires = new LinkedHashMap<>();
+		Map<Integer, List<Integer>> rewards = new LinkedHashMap<>();
 		Map<Integer, Integer> conQuests = new LinkedHashMap<>();
 		Map<Integer, Cutscene> cutscenes = new LinkedHashMap<>();
 		Set<Integer> unresolvedChain = new TreeSet<>();
@@ -130,17 +132,17 @@ public final class SimpleHuntHandler implements NativeSystemGrantLane {
 				factions.put(qid, factionId);
 			}
 			if (row.acquiredNpcName() != null && !row.acquiredNpcName().isBlank()) {
-				NativeNpcNameResolver.Match m = nameResolver.resolve(row.acquiredNpcName());
-				if (m.resolution() == NativeNpcNameResolver.Resolution.UNIQUE) {
-					acquires.put(qid, m.npcIds().get(0));
+				List<Integer> members = nameResolver.resolveMembers(row.acquiredNpcName());
+				if (!members.isEmpty()) {
+					acquires.put(qid, members);
 				}
 			}
 
 			// 交付 NPC 索引
 			if (row.rewardNpcName() != null && !row.rewardNpcName().isBlank()) {
-				NativeNpcNameResolver.Match m = nameResolver.resolve(row.rewardNpcName());
-				if (m.resolution() == NativeNpcNameResolver.Resolution.UNIQUE) {
-					rewards.put(qid, m.npcIds().get(0));
+				List<Integer> members = nameResolver.resolveMembers(row.rewardNpcName());
+				if (!members.isEmpty()) {
+					rewards.put(qid, members);
 				}
 			}
 
@@ -177,17 +179,17 @@ public final class SimpleHuntHandler implements NativeSystemGrantLane {
 		for (Map.Entry<Integer, Integer> entry : conQuests.entrySet()) {
 			int questId = entry.getKey();
 			int next = entry.getValue();
-			Integer targetAcquire = acquires.get(next);
-			Integer sourceReward = rewards.get(questId);
-			if (routed.contains(next) && targetAcquire != null
-					&& !targetAcquire.equals(sourceReward)) {
+			List<Integer> targetAcquires = acquires.get(next);
+			List<Integer> sourceRewards = rewards.get(questId);
+			if (routed.contains(next) && targetAcquires != null
+					&& (sourceRewards == null || Collections.disjoint(targetAcquires, sourceRewards))) {
 				unresolvedChain.add(questId);
 			}
 		}
 
 		this.targetsByNpcId = Collections.unmodifiableMap(targets);
-		this.acquireNpcByQuestId = Collections.unmodifiableMap(acquires);
-		this.rewardNpcByQuestId = Collections.unmodifiableMap(rewards);
+		this.acquireNpcIdsByQuestId = Collections.unmodifiableMap(acquires);
+		this.rewardNpcIdsByQuestId = Collections.unmodifiableMap(rewards);
 		this.ownedQuestIds = Collections.unmodifiableSet(owned);
 		this.routedQuestIds = Collections.unmodifiableSet(routed);
 		this.conQuestByQuestId = Collections.unmodifiableMap(conQuests);
@@ -240,14 +242,26 @@ public final class SimpleHuntHandler implements NativeSystemGrantLane {
 		return ownedQuestIds;
 	}
 
-	/** 获取任务起始 NPC ID。 / Returns the acquire NPC ID for the quest. */
+	/** 获取任务起始 NPC ID（成员集首项；未解析为 null）。 / Returns the acquire NPC ID for the quest. */
 	public Integer acquireNpc(int questId) {
-		return acquireNpcByQuestId.get(questId);
+		List<Integer> members = acquireNpcIdsByQuestId.get(questId);
+		return members == null || members.isEmpty() ? null : members.get(0);
 	}
 
-	/** 获取任务交付 NPC ID。 / Returns the reward NPC ID for the quest. */
+	/** 接取 NPC 成员集（空表 = 未解析）。 / The acquire NPC member set. */
+	public List<Integer> acquireNpcs(int questId) {
+		return acquireNpcIdsByQuestId.getOrDefault(questId, List.of());
+	}
+
+	/** 获取任务交付 NPC ID（成员集首项；未解析为 null）。 / Returns the reward NPC ID for the quest. */
 	public Integer rewardNpc(int questId) {
-		return rewardNpcByQuestId.get(questId);
+		List<Integer> members = rewardNpcIdsByQuestId.get(questId);
+		return members == null || members.isEmpty() ? null : members.get(0);
+	}
+
+	/** 交付 NPC 成员集（空表 = 未解析）。 / The reward NPC member set. */
+	public List<Integer> rewardNpcs(int questId) {
+		return rewardNpcIdsByQuestId.getOrDefault(questId, List.of());
 	}
 
 	/**
@@ -346,13 +360,13 @@ public final class SimpleHuntHandler implements NativeSystemGrantLane {
 			return Collections.emptyList();
 		}
 		List<Integer> result = new ArrayList<>();
-		for (Map.Entry<Integer, Integer> e : acquireNpcByQuestId.entrySet()) {
-			if (e.getValue() == npcId) {
+		for (Map.Entry<Integer, List<Integer>> e : acquireNpcIdsByQuestId.entrySet()) {
+			if (e.getValue().contains(npcId)) {
 				result.add(e.getKey());
 			}
 		}
-		for (Map.Entry<Integer, Integer> e : rewardNpcByQuestId.entrySet()) {
-			if (e.getValue() == npcId && !result.contains(e.getKey())) {
+		for (Map.Entry<Integer, List<Integer>> e : rewardNpcIdsByQuestId.entrySet()) {
+			if (e.getValue().contains(npcId) && !result.contains(e.getKey())) {
 				result.add(e.getKey());
 			}
 		}
@@ -367,22 +381,24 @@ public final class SimpleHuntHandler implements NativeSystemGrantLane {
 		if (engine == null) {
 			return;
 		}
-		for (Map.Entry<Integer, Integer> entry : acquireNpcByQuestId.entrySet()) {
+		for (Map.Entry<Integer, List<Integer>> entry : acquireNpcIdsByQuestId.entrySet()) {
 			int qid = entry.getKey();
 			if (!routedQuestIds.contains(qid)) {
 				continue;
 			}
-			int npcId = entry.getValue();
-			engine.registerQuestNpc(npcId).addOnQuestStart(qid);
-			engine.registerQuestNpc(npcId).addOnTalkEvent(qid);
+			for (int npcId : entry.getValue()) {
+				engine.registerQuestNpc(npcId).addOnQuestStart(qid);
+				engine.registerQuestNpc(npcId).addOnTalkEvent(qid);
+			}
 		}
-		for (Map.Entry<Integer, Integer> entry : rewardNpcByQuestId.entrySet()) {
+		for (Map.Entry<Integer, List<Integer>> entry : rewardNpcIdsByQuestId.entrySet()) {
 			int qid = entry.getKey();
 			if (!routedQuestIds.contains(qid)) {
 				continue;
 			}
-			int npcId = entry.getValue();
-			engine.registerQuestNpc(npcId).addOnTalkEvent(qid);
+			for (int npcId : entry.getValue()) {
+				engine.registerQuestNpc(npcId).addOnTalkEvent(qid);
+			}
 		}
 		for (Map.Entry<Integer, List<HuntTargetRef>> entry : targetsByNpcId.entrySet()) {
 			int npcId = entry.getKey();
@@ -498,8 +514,8 @@ public final class SimpleHuntHandler implements NativeSystemGrantLane {
 
 		// 1. 未接取状态：处理接取对话流
 		if (status == QuestStatus.NONE || qs == null) {
-			Integer acqNpc = acquireNpcByQuestId.get(questId);
-			if (acqNpc != null && acqNpc == npcId) {
+			List<Integer> acqNpcs = acquireNpcIdsByQuestId.get(questId);
+			if (acqNpcs != null && acqNpcs.contains(npcId)) {
 				if (dialogId == 31 || dialogId == 26) {
 					// 接取入口页 = 真端信页/阶段页（页 4 只能由 1007 打开，见 QuestDialogContract#retailEntryPage）。
 					// The accept entry page is the retail letter/stage page (page 4 is 1007-only).
@@ -541,8 +557,8 @@ public final class SimpleHuntHandler implements NativeSystemGrantLane {
 
 		// 2. 进行中状态：检查中继对话或未完成提示
 		if (status == QuestStatus.START) {
-			Integer rewNpc = rewardNpcByQuestId.get(questId);
-			if (rewNpc != null && rewNpc == npcId) {
+			List<Integer> rewNpcs = rewardNpcIdsByQuestId.get(questId);
+			if (rewNpcs != null && rewNpcs.contains(npcId)) {
 				if (dialogId == 31 || dialogId == 26) {
 					// 尚未完成杀怪：常规未完成对话提示 (page 10)
 					PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 10, questId));
@@ -554,8 +570,8 @@ public final class SimpleHuntHandler implements NativeSystemGrantLane {
 
 		// 3. 待交付状态 (REWARD)：在交付 NPC 处领取奖励
 		if (status == QuestStatus.REWARD) {
-			Integer rewNpc = rewardNpcByQuestId.get(questId);
-			if (rewNpc != null && rewNpc == npcId) {
+			List<Integer> rewNpcs = rewardNpcIdsByQuestId.get(questId);
+			if (rewNpcs != null && rewNpcs.contains(npcId)) {
 				if (dialogId == 31 || dialogId == 26 || dialogId == 1009 || dialogId == -1) {
 					// 展示奖励选择窗口 (select_quest_reward1 / page 5)
 					PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 5, questId));

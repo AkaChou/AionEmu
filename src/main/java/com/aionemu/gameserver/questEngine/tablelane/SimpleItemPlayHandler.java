@@ -83,7 +83,8 @@ public final class SimpleItemPlayHandler {
 	private final QuestDialogContract dialogContract;
 
 	/** 任务 ID → 接取 NPC。 / Quest id → the acquire npc. */
-	private final Map<Integer, Integer> acquireNpcByQuestId;
+	/** 接取 NPC 成员集（任一成员可接取）。 / Acquire NPC member set. */
+	private final Map<Integer, List<Integer>> acquireNpcIdsByQuestId;
 	/** 任务 ID → 交付 NPC 集合。 / Quest id → hand-in npcs. */
 	private final Map<Integer, List<Integer>> rewardNpcsByQuestId;
 	/** 任务 ID → 接取发放（真端 {@code give_item}；演出道具）。 / Quest id → the accept grant. */
@@ -142,7 +143,7 @@ public final class SimpleItemPlayHandler {
 		this.dialogContract = QuestDialogContract.loadDefault();
 
 		Set<Integer> xmlOwnedIds = NativeQuestOwnerResolver.instance().xmlOnlyIds();
-		Map<Integer, Integer> acquires = new LinkedHashMap<>();
+		Map<Integer, List<Integer>> acquires = new LinkedHashMap<>();
 		Map<Integer, List<Integer>> rewards = new LinkedHashMap<>();
 		Map<Integer, ItemStack> acceptGives = new LinkedHashMap<>();
 		Map<Integer, Integer> playItems = new LinkedHashMap<>();
@@ -165,13 +166,14 @@ public final class SimpleItemPlayHandler {
 			owned.add(questId);
 			boolean resolvable = true;
 
-			// 接取 NPC（真端必填列）：非唯一解析即不可路由。 / The acquire npc (required): must resolve uniquely.
-			NativeNpcNameResolver.Match acquire = nameResolver.resolve(row.acquiredNpcName());
-			if (acquire.resolution() != NativeNpcNameResolver.Resolution.UNIQUE) {
+			// 接取 NPC（真端必填列）：名字节点语义 = 全部同名成员均可受理；完全无命中才不可路由。
+			// The acquire npc (required): the retail name node admits every member; only a total miss blocks.
+			List<Integer> acquireIds = nameResolver.resolveMembers(row.acquiredNpcName());
+			if (acquireIds.isEmpty()) {
 				unresolved.add(row.acquiredNpcName());
 				resolvable = false;
 			} else {
-				acquires.put(questId, acquire.npcIds().getFirst());
+				acquires.put(questId, acquireIds);
 			}
 
 			// 交付 NPC：真端逻辑名唯一解析，或客户端交付集合展开。 / Hand-in npcs: unique name or client set.
@@ -204,15 +206,16 @@ public final class SimpleItemPlayHandler {
 			List<String> talkNpcs = row.talkNpcNames();
 			relayCounts.put(questId, talkNpcs.size());
 			for (int index = 0; index < talkNpcs.size(); index++) {
-				NativeNpcNameResolver.Match relayMatch = nameResolver.resolve(talkNpcs.get(index));
-				if (relayMatch.resolution() != NativeNpcNameResolver.Resolution.UNIQUE) {
+				List<Integer> relayMembers = nameResolver.resolveMembers(talkNpcs.get(index));
+				if (relayMembers.isEmpty()) {
 					unresolved.add(talkNpcs.get(index));
 					resolvable = false;
 					continue;
 				}
-				int relayNpcId = relayMatch.npcIds().getFirst();
-				relays.computeIfAbsent(relayNpcId, key -> new ArrayList<>())
-					.add(new RelayStep(questId, index + 1, relayNpcId));
+				for (int relayNpcId : relayMembers) {
+					relays.computeIfAbsent(relayNpcId, key -> new ArrayList<>())
+						.add(new RelayStep(questId, index + 1, relayNpcId));
+				}
 			}
 
 			// 第 K 步发/扣（位置保留）：声明了却解析不出的行不可路由（不半接线）。
@@ -277,13 +280,13 @@ public final class SimpleItemPlayHandler {
 		for (Map.Entry<Integer, Integer> entry : conQuests.entrySet()) {
 			int questId = entry.getKey();
 			int next = entry.getValue();
-			Integer targetAcquire = acquires.get(next);
-			if (targetAcquire == null) {
+			List<Integer> targetAcquires = acquires.get(next);
+			if (targetAcquires == null) {
 				continue;
 			}
 			List<Integer> sourceRewards = rewards.get(questId);
 			if (routed.contains(next)
-					&& (sourceRewards == null || !sourceRewards.contains(targetAcquire))) {
+					&& (sourceRewards == null || Collections.disjoint(targetAcquires, sourceRewards))) {
 				unresolvedChain.add(questId);
 			}
 		}
@@ -292,7 +295,7 @@ public final class SimpleItemPlayHandler {
 		this.relayCountByQuestId = Collections.unmodifiableMap(relayCounts);
 		this.stepGiveByQuestId = Collections.unmodifiableMap(stepGives);
 		this.stepRemoveByQuestId = Collections.unmodifiableMap(stepRemoves);
-		this.acquireNpcByQuestId = Collections.unmodifiableMap(acquires);
+		this.acquireNpcIdsByQuestId = Collections.unmodifiableMap(acquires);
 		this.rewardNpcsByQuestId = Collections.unmodifiableMap(rewards);
 		this.acceptGiveByQuestId = Collections.unmodifiableMap(acceptGives);
 		this.playItemByQuestId = Collections.unmodifiableMap(playItems);
@@ -376,9 +379,15 @@ public final class SimpleItemPlayHandler {
 		return unresolvedItemSymbols;
 	}
 
-	/** 接取 NPC。 / The acquire npc. */
+	/** 接取 NPC（成员集首项；未解析为 null）。 / The acquire npc (first member; null when unresolved). */
 	public Integer acquireNpc(int questId) {
-		return acquireNpcByQuestId.get(questId);
+		List<Integer> members = acquireNpcIdsByQuestId.get(questId);
+		return members == null || members.isEmpty() ? null : members.getFirst();
+	}
+
+	/** 接取 NPC 成员集（空表 = 未解析）。 / The acquire NPC member set. */
+	public List<Integer> acquireNpcs(int questId) {
+		return acquireNpcIdsByQuestId.getOrDefault(questId, List.of());
 	}
 
 	/** 交付 NPC 集合。 / The hand-in npc set. */
@@ -462,12 +471,14 @@ public final class SimpleItemPlayHandler {
 		if (engine == null) {
 			return;
 		}
-		for (Map.Entry<Integer, Integer> entry : acquireNpcByQuestId.entrySet()) {
+		for (Map.Entry<Integer, List<Integer>> entry : acquireNpcIdsByQuestId.entrySet()) {
 			if (!routedQuestIds.contains(entry.getKey())) {
 				continue;
 			}
-			engine.registerQuestNpc(entry.getValue()).addOnQuestStart(entry.getKey());
-			engine.registerQuestNpc(entry.getValue()).addOnTalkEvent(entry.getKey());
+			for (int npcId : entry.getValue()) {
+				engine.registerQuestNpc(npcId).addOnQuestStart(entry.getKey());
+				engine.registerQuestNpc(npcId).addOnTalkEvent(entry.getKey());
+			}
 		}
 		for (Map.Entry<Integer, List<Integer>> entry : rewardNpcsByQuestId.entrySet()) {
 			if (!routedQuestIds.contains(entry.getKey())) {
@@ -666,8 +677,8 @@ public final class SimpleItemPlayHandler {
 	 * The retail npc accept shape (page-4 ask window, 1002/20000 commits granting the play item).
 	 */
 	private boolean onAcceptDialog(Player player, int questId, int npcId, int objectId, int dialogId) {
-		Integer acquireNpc = acquireNpcByQuestId.get(questId);
-		if (acquireNpc == null || acquireNpc != npcId) {
+		List<Integer> acquireNpcs = acquireNpcIdsByQuestId.get(questId);
+		if (acquireNpcs == null || !acquireNpcs.contains(npcId)) {
 			return false;
 		}
 		if (dialogId == 31 || dialogId == 26) {
@@ -769,9 +780,9 @@ public final class SimpleItemPlayHandler {
 	 * Hand-in npc set: a unique retail logical name, else the client-declared hand-in set.
 	 */
 	private List<Integer> rewardNpcIds(int questId, String retailName, Set<String> unresolved) {
-		NativeNpcNameResolver.Match match = nameResolver.resolve(retailName);
-		if (match.resolution() == NativeNpcNameResolver.Resolution.UNIQUE) {
-			return List.of(match.npcIds().getFirst());
+		List<Integer> members = nameResolver.resolveMembers(retailName);
+		if (!members.isEmpty()) {
+			return members;
 		}
 		unresolved.add(retailName);
 		Set<Integer> declared = RetailClientHandinNpcSets.defaultSets().npcIds(questId);

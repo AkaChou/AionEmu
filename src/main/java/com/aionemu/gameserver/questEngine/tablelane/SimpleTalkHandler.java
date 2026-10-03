@@ -116,8 +116,10 @@ public final class SimpleTalkHandler implements NativeSystemGrantLane {
 	 */
 	private final Set<Integer> unresolvedChainQuestIds;
 
-	private final Map<Integer, Integer> acquireNpcByQuestId;
-	private final Map<Integer, Integer> rewardNpcByQuestId;
+	/** 接取 NPC 成员集（真端名字节点语义：任一成员可接取）。 / Acquire NPC member set (any member may accept). */
+	private final Map<Integer, List<Integer>> acquireNpcIdsByQuestId;
+	/** 交付 NPC 成员集（任一成员可交付）。 / Reward NPC member set (any member may hand in). */
+	private final Map<Integer, List<Integer>> rewardNpcIdsByQuestId;
 	/** 中继 NPC ID → 该 NPC 上的全部中继步。 / Relay NPC id → every relay step bound to it. */
 	private final Map<Integer, List<RelayStep>> relaysByNpcId;
 	/** 任务 ID → 中继步数（0 = 直交形）。 / Quest id → relay step count (0 = direct hand-in). */
@@ -180,8 +182,8 @@ public final class SimpleTalkHandler implements NativeSystemGrantLane {
 		this.rewardFlow = rewardFlow;
 		this.dialogContract = QuestDialogContract.loadDefault();
 
-		Map<Integer, Integer> acquires = new LinkedHashMap<>();
-		Map<Integer, Integer> rewards = new LinkedHashMap<>();
+		Map<Integer, List<Integer>> acquires = new LinkedHashMap<>();
+		Map<Integer, List<Integer>> rewards = new LinkedHashMap<>();
 		Map<Integer, List<RelayStep>> relays = new LinkedHashMap<>();
 		Map<Integer, Integer> relayCounts = new LinkedHashMap<>();
 		Map<Integer, ItemStack> acceptGives = new LinkedHashMap<>();
@@ -215,19 +217,20 @@ public final class SimpleTalkHandler implements NativeSystemGrantLane {
 				cutscenes.put(qid, new Cutscene(row.cutsceneId(),
 						row.cutsceneAction() == null ? -1 : row.cutsceneAction()));
 			}
-			resolveInto(acquires, qid, row.acquiredNpcName(), unresolved);
-			resolveInto(rewards, qid, row.rewardNpcName(), unresolved);
+			resolveMembersInto(acquires, qid, row.acquiredNpcName(), unresolved);
+			resolveMembersInto(rewards, qid, row.rewardNpcName(), unresolved);
 			List<String> talkNpcs = row.talkNpcNames();
 			relayCounts.put(qid, talkNpcs.size());
 			for (int index = 0; index < talkNpcs.size(); index++) {
-				NativeNpcNameResolver.Match match = nameResolver.resolve(talkNpcs.get(index));
-				if (match.resolution() != NativeNpcNameResolver.Resolution.UNIQUE) {
+				List<Integer> relayMembers = nameResolver.resolveMembers(talkNpcs.get(index));
+				if (relayMembers.isEmpty()) {
 					unresolved.add(talkNpcs.get(index));
 					continue;
 				}
-				int npcId = match.npcIds().get(0);
-				relays.computeIfAbsent(npcId, key -> new ArrayList<>())
-						.add(new RelayStep(qid, index + 1, npcId));
+				for (int npcId : relayMembers) {
+					relays.computeIfAbsent(npcId, key -> new ArrayList<>())
+							.add(new RelayStep(qid, index + 1, npcId));
+				}
 			}
 
 			ItemStack acceptGive = parseSymbol(row.acceptGiveItem(), qid, itemIndex, unresolvedItems);
@@ -279,15 +282,15 @@ public final class SimpleTalkHandler implements NativeSystemGrantLane {
 			}
 			int questId = row.questId();
 			conQuests.put(questId, next);
-			Integer targetAcquire = acquires.get(next);
-			if (routed.contains(next) && targetAcquire != null
-					&& !targetAcquire.equals(rewards.get(questId))) {
+			List<Integer> targetAcquires = acquires.get(next);
+			if (routed.contains(next) && targetAcquires != null
+					&& Collections.disjoint(targetAcquires, rewards.getOrDefault(questId, List.of()))) {
 				unresolvedChain.add(questId);
 			}
 		}
 
-		this.acquireNpcByQuestId = Collections.unmodifiableMap(acquires);
-		this.rewardNpcByQuestId = Collections.unmodifiableMap(rewards);
+		this.acquireNpcIdsByQuestId = Collections.unmodifiableMap(acquires);
+		this.rewardNpcIdsByQuestId = Collections.unmodifiableMap(rewards);
 		this.relaysByNpcId = Collections.unmodifiableMap(relays);
 		this.relayCountByQuestId = Collections.unmodifiableMap(relayCounts);
 		this.acceptGiveByQuestId = Collections.unmodifiableMap(acceptGives);
@@ -400,13 +403,14 @@ public final class SimpleTalkHandler implements NativeSystemGrantLane {
 		return null;
 	}
 
-	private void resolveInto(Map<Integer, Integer> target, int questId, String npcName, Set<String> unresolved) {
-		NativeNpcNameResolver.Match match = nameResolver.resolve(npcName);
-		if (match.resolution() != NativeNpcNameResolver.Resolution.UNIQUE) {
+	private void resolveMembersInto(Map<Integer, List<Integer>> target, int questId, String npcName,
+			Set<String> unresolved) {
+		List<Integer> members = nameResolver.resolveMembers(npcName);
+		if (members.isEmpty()) {
 			unresolved.add(npcName);
 			return;
 		}
-		target.put(questId, match.npcIds().get(0));
+		target.put(questId, members);
 	}
 
 	public static SimpleTalkHandler instance() {
@@ -432,22 +436,24 @@ public final class SimpleTalkHandler implements NativeSystemGrantLane {
 		if (engine == null) {
 			return;
 		}
-		for (Map.Entry<Integer, Integer> entry : acquireNpcByQuestId.entrySet()) {
+		for (Map.Entry<Integer, List<Integer>> entry : acquireNpcIdsByQuestId.entrySet()) {
 			int questId = entry.getKey();
 			if (!routedQuestIds.contains(questId)) {
 				continue;
 			}
-			int npcId = entry.getValue();
-			engine.registerQuestNpc(npcId).addOnQuestStart(questId);
-			engine.registerQuestNpc(npcId).addOnTalkEvent(questId);
+			for (int npcId : entry.getValue()) {
+				engine.registerQuestNpc(npcId).addOnQuestStart(questId);
+				engine.registerQuestNpc(npcId).addOnTalkEvent(questId);
+			}
 		}
-		for (Map.Entry<Integer, Integer> entry : rewardNpcByQuestId.entrySet()) {
+		for (Map.Entry<Integer, List<Integer>> entry : rewardNpcIdsByQuestId.entrySet()) {
 			int questId = entry.getKey();
 			if (!routedQuestIds.contains(questId)) {
 				continue;
 			}
-			int npcId = entry.getValue();
-			engine.registerQuestNpc(npcId).addOnTalkEvent(questId);
+			for (int npcId : entry.getValue()) {
+				engine.registerQuestNpc(npcId).addOnTalkEvent(questId);
+			}
 		}
 		for (Map.Entry<Integer, List<RelayStep>> entry : relaysByNpcId.entrySet()) {
 			int npcId = entry.getKey();
@@ -639,14 +645,26 @@ public final class SimpleTalkHandler implements NativeSystemGrantLane {
 		return unresolvedItemSymbols;
 	}
 
-	/** 接取 NPC。 / The acquire NPC. */
+	/** 接取 NPC（成员集首项；未解析为 null）。 / The acquire NPC (first member; null when unresolved). */
 	public Integer acquireNpc(int questId) {
-		return acquireNpcByQuestId.get(questId);
+		List<Integer> members = acquireNpcIdsByQuestId.get(questId);
+		return members == null || members.isEmpty() ? null : members.get(0);
 	}
 
-	/** 交付 NPC。 / The reward NPC. */
+	/** 接取 NPC 成员集（空表 = 未解析）。 / The acquire NPC member set (empty means unresolved). */
+	public List<Integer> acquireNpcs(int questId) {
+		return acquireNpcIdsByQuestId.getOrDefault(questId, List.of());
+	}
+
+	/** 交付 NPC（成员集首项；未解析为 null）。 / The reward NPC (first member; null when unresolved). */
 	public Integer rewardNpc(int questId) {
-		return rewardNpcByQuestId.get(questId);
+		List<Integer> members = rewardNpcIdsByQuestId.get(questId);
+		return members == null || members.isEmpty() ? null : members.get(0);
+	}
+
+	/** 交付 NPC 成员集（空表 = 未解析）。 / The reward NPC member set (empty means unresolved). */
+	public List<Integer> rewardNpcs(int questId) {
+		return rewardNpcIdsByQuestId.getOrDefault(questId, List.of());
 	}
 
 	/** 任务的中继步数（0 = 直交形）。 / Relay step count (0 = direct hand-in). */
@@ -750,8 +768,8 @@ public final class SimpleTalkHandler implements NativeSystemGrantLane {
 		// 可重复行在 COMPLETE 态同样开放接取窗（真端 finishedcount < max_repeat_count 时再次可接）。
 		boolean fresh = qs == null || status == QuestStatus.NONE;
 		if (fresh || (status == QuestStatus.COMPLETE && repeatable(questId))) {
-			Integer acquireNpc = acquireNpcByQuestId.get(questId);
-			if (acquireNpc == null || acquireNpc != npcId) {
+			List<Integer> acquireNpcs = acquireNpcIdsByQuestId.get(questId);
+			if (acquireNpcs == null || !acquireNpcs.contains(npcId)) {
 				return false;
 			}
 			if (dialogId == 31 || dialogId == 26) {
@@ -828,8 +846,8 @@ public final class SimpleTalkHandler implements NativeSystemGrantLane {
 				}
 			}
 			// 3. 报告（真端 cabb10 finalStep + caad20 完成门）：中继全满且交付门通过才开奖励窗。
-			Integer rewardNpc = rewardNpcByQuestId.get(questId);
-			if (rewardNpc != null && rewardNpc == npcId) {
+			List<Integer> rewardNpcs = rewardNpcIdsByQuestId.get(questId);
+			if (rewardNpcs != null && rewardNpcs.contains(npcId)) {
 				if (dialogId == 1009 || dialogId == 31 || dialogId == 26 || dialogId == -1) {
 					if (vars >= relayCount(questId) && holdsGateItems(questId, player)) {
 						removeGateItems(questId, player);
@@ -850,8 +868,8 @@ public final class SimpleTalkHandler implements NativeSystemGrantLane {
 
 		// 4. 领奖：交付 NPC 的奖励窗与结算档位。
 		if (status == QuestStatus.REWARD) {
-			Integer rewardNpc = rewardNpcByQuestId.get(questId);
-			if (rewardNpc != null && rewardNpc == npcId) {
+			List<Integer> rewardNpcs = rewardNpcIdsByQuestId.get(questId);
+			if (rewardNpcs != null && rewardNpcs.contains(npcId)) {
 				if (dialogId == 31 || dialogId == 26 || dialogId == 1009 || dialogId == -1) {
 					PacketSendUtility.sendPacket(player,
 							new SM_DIALOG_WINDOW(targetObjectId, PAGE_REWARD_WINDOW, questId));

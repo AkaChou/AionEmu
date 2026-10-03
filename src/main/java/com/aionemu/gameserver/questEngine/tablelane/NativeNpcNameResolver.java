@@ -314,6 +314,67 @@ public final class NativeNpcNameResolver {
 	}
 
 	/**
+	 * 成员集解析：接取/交付/中继槽的真端语义。真端 codegen 把任务注册在**名字**节点上
+	 * （{@code FUN_180cb5920(node, npcName, questId)}），运行期由 NPC 自身的对话名匹配，
+	 * 因此同一个名字下的全部模板（同名多模板 NPC、{@code quest_ai_name} 组、别名表多值）都是
+	 * 合法的受理者——「任一成员可接取/交付/中继」，不是歧义；仅完全无命中返回空表（fail-closed）。
+	 * <p>
+	 * 单元格允许逗号分隔多名字（真端表实测 {@code TOWN_SHUGO_GARDENER_1001,1002,1003}）：逐名在
+	 * name_desc → name → 别名 → 对话名组 四个通道取首个非空通道，合并去重。
+	 * <p>
+	 * Member-set resolution for accept/hand-in/relay slots: the retail codegen registers a quest on
+	 * a *name* node that each NPC resolves through its own dialog name, so every template sharing
+	 * that name (or dialog-name group, or multi-value alias) is a legitimate owner — "any member may
+	 * accept or hand in" rather than an ambiguity. Only a total miss returns empty (fail closed).
+	 */
+	public List<Integer> resolveMembers(String rawName) {
+		if (rawName == null) {
+			return List.of();
+		}
+		List<Integer> members = new ArrayList<>();
+		for (String cell : rawName.split(",")) {
+			String normalized = cell.strip().toLowerCase(Locale.ROOT);
+			if (normalized.isEmpty()) {
+				continue;
+			}
+			List<Integer> hit = null;
+			for (Map<String, List<Integer>> channel : List.of(idsByNameDesc, idsByName, monsterAliases)) {
+				List<Integer> ids = channel.get(normalized);
+				if (ids != null && !ids.isEmpty()) {
+					hit = ids;
+					break;
+				}
+			}
+			if (hit == null) {
+				// 真端 NPC_ 前缀归一化（与旧车道 RetailNpcNameIndex 同规）：表写 {@code Gardugu} 而模板
+				// 写 {@code NPC_Gardugu}，反向亦然（表写 {@code NPC_Housing_FOBJ_01} 而模板写
+				// {@code Housing_FOBJ_01}）。只做精确前缀变体，不做模糊匹配。
+				// Retail NPC_ prefix normalization (same rule as the old lane): the table may drop or add
+				// the prefix relative to the template name; exact prefix variants only, never fuzzy.
+				String variant = normalized.startsWith("npc_") ? normalized.substring(4) : "npc_" + normalized;
+				for (Map<String, List<Integer>> channel : List.of(idsByNameDesc, idsByName)) {
+					List<Integer> ids = channel.get(variant);
+					if (ids != null && !ids.isEmpty()) {
+						hit = ids;
+						break;
+					}
+				}
+			}
+			if (hit == null) {
+				hit = questAiNameGroups.get(normalized);
+			}
+			if (hit != null) {
+				for (int id : hit) {
+					if (!members.contains(id)) {
+						members.add(id);
+					}
+				}
+			}
+		}
+		return members.isEmpty() ? List.of() : List.copyOf(members);
+	}
+
+	/**
 	 * 解析怪物候选 ID 集合（支持单个唯一 NPC 及真端同名多模板野怪）。
 	 * Resolves candidate NPC ids for monster matching (supports unique NPC and multi-template mobs).
 	 */

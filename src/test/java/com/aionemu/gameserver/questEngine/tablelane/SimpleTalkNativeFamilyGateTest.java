@@ -44,12 +44,17 @@ class SimpleTalkNativeFamilyGateTest {
 	private static final int EXPECTED_ROWS = 3152;
 	/** XML_RETENTION 行数（`retail-xml-retention.tsv` 中 SimpleTalk 家族的行数）。 / XML-retained SimpleTalk rows. */
 	private static final int XML_RETAINED_ROWS = 18;
-	/** 未唯一解析的 NPC 名数量（冻结证据：`p3/simple-talk-unresolved-npcs.tsv`）。 / Frozen unresolved count. */
-	private static final int FROZEN_UNRESOLVED = 39;
-	/** 接取列未解析行数（哨兵 181 + 数据缺口 26 行的接取面）。 / Rows whose acquire name stays unresolved. */
-	private static final int FROZEN_UNRESOLVED_ACQUIRE_ROWS = 207;
-	/** 交付列未解析行数。 / Rows whose reward name stays unresolved. */
-	private static final int FROZEN_UNRESOLVED_REWARD_ROWS = 86;
+	/**
+	 * 未解析的 NPC 名数量（P9 语义层收口后冻结）：3 个系统发放哨兵 + 1 个真端缺名
+	 * （{@code LDF5A_Munition_Vritra}，2 个中继单元格）。
+	 * Frozen unresolved count after the P9 semantic closure: the three system-grant sentinels plus the
+	 * single remaining retail data gap ({@code LDF5A_Munition_Vritra}).
+	 */
+	private static final int FROZEN_UNRESOLVED = 4;
+	/** 接取列未解析行数（= 三个哨兵的行数 98+75+8）。 / Rows whose acquire name stays unresolved. */
+	private static final int FROZEN_UNRESOLVED_ACQUIRE_ROWS = 181;
+	/** 交付列未解析行数（P9 收口后交付面全部可解析）。 / Rows whose reward name stays unresolved. */
+	private static final int FROZEN_UNRESOLVED_REWARD_ROWS = 0;
 	/** 系统发放哨兵的行数（接取列）。 / Row counts of the system-grant sentinels on the acquire column. */
 	private static final Map<String, Integer> FROZEN_SENTINEL_ROWS = Map.of(
 			"_faction_", 98, "_challengetask_", 75, "_area_", 8);
@@ -57,7 +62,7 @@ class SimpleTalkNativeFamilyGateTest {
 	 * 接取可解析但交付不可解析的行数（真端表交付列落在 DATA_GAP 名上，属静态数据缺口而非分派缺陷）。
 	 * Rows with a resolvable acquire NPC but a gapped reward NPC: a static-data gap on the retail reward column.
 	 */
-	private static final int FROZEN_ACQUIRE_OK_REWARD_GAP_ROWS = 9;
+	private static final int FROZEN_ACQUIRE_OK_REWARD_GAP_ROWS = 0;
 	/** 三段中继 + 三个发物 + item_check 的真端行。 / A three-relay retail row. */
 	private static final int CHAINED_QUEST = 41536;
 	/** 单中继步 + 接取发放 + 步内发放/扣除的真端行（与 cab520/cabb10 立即数对拍）。 / Retail row 1131. */

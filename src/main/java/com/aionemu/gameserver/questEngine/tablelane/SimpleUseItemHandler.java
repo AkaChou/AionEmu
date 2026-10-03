@@ -179,20 +179,21 @@ public final class SimpleUseItemHandler {
 				rewards.put(questId, rewardIds);
 			}
 
-			// 中继链：逐位解析（表序），任一位多义/未解即该行不可路由。
-			// Relay chain: resolved position by position; any ambiguous name makes the row unroutable.
+			// 中继链：逐位解析（表序）；真端名字节点的全部成员都可受理，完全无命中才不可路由。
+			// Relay chain: position by position; every member of the retail name node is admitted.
 			List<Integer> relayIds = new ArrayList<>(row.talkNpcNames().size());
-			for (String talkNpc : row.talkNpcNames()) {
-				NativeNpcNameResolver.Match match = nameResolver.resolve(talkNpc);
-				if (match.resolution() != NativeNpcNameResolver.Resolution.UNIQUE) {
-					unresolved.add(talkNpc);
+			for (int index = 0; index < row.talkNpcNames().size(); index++) {
+				List<Integer> relayMembers = nameResolver.resolveMembers(row.talkNpcNames().get(index));
+				if (relayMembers.isEmpty()) {
+					unresolved.add(row.talkNpcNames().get(index));
 					resolvable = false;
 					continue;
 				}
-				int npcId = match.npcIds().getFirst();
-				relayIds.add(npcId);
-				relays.computeIfAbsent(npcId, key -> new ArrayList<>())
-					.add(new RelayStep(questId, relayIds.size(), npcId));
+				for (int npcId : relayMembers) {
+					relays.computeIfAbsent(npcId, key -> new ArrayList<>())
+						.add(new RelayStep(questId, index + 1, npcId));
+				}
+				relayIds.add(relayMembers.getFirst());
 			}
 			if (!relayIds.isEmpty()) {
 				relayNpcs.put(questId, List.copyOf(relayIds));
@@ -663,9 +664,9 @@ public final class SimpleUseItemHandler {
 	 */
 	private static List<Integer> rewardNpcIds(NativeQuestTableLoader tableLoader,
 			NativeNpcNameResolver nameResolver, int questId, String retailName, Set<String> unresolved) {
-		NativeNpcNameResolver.Match match = nameResolver.resolve(retailName);
-		if (match.resolution() == NativeNpcNameResolver.Resolution.UNIQUE) {
-			return List.of(match.npcIds().getFirst());
+		List<Integer> members = nameResolver.resolveMembers(retailName);
+		if (!members.isEmpty()) {
+			return members;
 		}
 		unresolved.add(retailName);
 		Set<Integer> declared = RetailClientHandinNpcSets.defaultSets().npcIds(questId);

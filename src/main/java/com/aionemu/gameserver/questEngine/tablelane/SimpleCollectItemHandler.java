@@ -111,7 +111,8 @@ public final class SimpleCollectItemHandler implements NativeSystemGrantLane {
 	private final NativeMoviePort moviePort;
 	private final NativeReportRewardFlow rewardFlow;
 
-	private final Map<Integer, Integer> acquireNpcByQuestId;
+	/** 接取 NPC 成员集（任一成员可接取）。 / Acquire NPC member set. */
+	private final Map<Integer, List<Integer>> acquireNpcIdsByQuestId;
 	/** 任务 ID → 全部交付 NPC（真端逻辑名 + 客户端交付集合展开；首项为兼容易）。
 	 * Quest id → every hand-in NPC (retail logical name expanded through the client set). */
 	private final Map<Integer, List<Integer>> rewardNpcsByQuestId;
@@ -154,7 +155,7 @@ public final class SimpleCollectItemHandler implements NativeSystemGrantLane {
 		this.moviePort = moviePort;
 		this.rewardFlow = rewardFlow;
 
-		Map<Integer, Integer> acquires = new LinkedHashMap<>();
+		Map<Integer, List<Integer>> acquires = new LinkedHashMap<>();
 		Map<Integer, List<Integer>> rewards = new LinkedHashMap<>();
 		Map<Integer, List<Integer>> talks = new LinkedHashMap<>();
 		Map<Integer, List<Integer>> objects = new LinkedHashMap<>();
@@ -183,9 +184,9 @@ public final class SimpleCollectItemHandler implements NativeSystemGrantLane {
 				factions.put(questId, rowFactionId);
 			}
 
-			NativeNpcNameResolver.Match acquire = nameResolver.resolve(row.acquiredNpcName());
-			if (acquire.resolution() == NativeNpcNameResolver.Resolution.UNIQUE) {
-				acquires.put(questId, acquire.npcIds().get(0));
+			List<Integer> acquireIds = nameResolver.resolveMembers(row.acquiredNpcName());
+			if (!acquireIds.isEmpty()) {
+				acquires.put(questId, acquireIds);
 			}
 			List<Integer> rewardIds = rewardNpcIds(questId, row.rewardNpcName());
 			if (!rewardIds.isEmpty()) {
@@ -310,14 +311,14 @@ public final class SimpleCollectItemHandler implements NativeSystemGrantLane {
 		for (Map.Entry<Integer, Integer> entry : conQuests.entrySet()) {
 			int questId = entry.getKey();
 			int next = entry.getValue();
-			Integer targetAcquire = acquires.get(next);
-			if (routed.contains(next) && targetAcquire != null
-					&& !rewards.getOrDefault(questId, List.of()).contains(targetAcquire)) {
+			List<Integer> targetAcquires = acquires.get(next);
+			if (routed.contains(next) && targetAcquires != null
+					&& Collections.disjoint(targetAcquires, rewards.getOrDefault(questId, List.of()))) {
 				unresolvedChain.add(questId);
 			}
 		}
 
-		this.acquireNpcByQuestId = Collections.unmodifiableMap(acquires);
+		this.acquireNpcIdsByQuestId = Collections.unmodifiableMap(acquires);
 		this.rewardNpcsByQuestId = Collections.unmodifiableMap(rewards);
 		this.talkNpcsByQuestId = Collections.unmodifiableMap(talks);
 		this.objectsByQuestId = Collections.unmodifiableMap(objects);
@@ -508,9 +509,15 @@ public final class SimpleCollectItemHandler implements NativeSystemGrantLane {
 		return NativeQuestStartPort.instance().grant(player, questId).started();
 	}
 
-	/** 任务起始 NPC。 / The acquire NPC for the quest. */
+	/** 任务起始 NPC（成员集首项；未解析为 null）。 / The acquire NPC for the quest. */
 	public Integer acquireNpc(int questId) {
-		return acquireNpcByQuestId.get(questId);
+		List<Integer> members = acquireNpcIdsByQuestId.get(questId);
+		return members == null || members.isEmpty() ? null : members.getFirst();
+	}
+
+	/** 接取 NPC 成员集（空表 = 未解析）。 / The acquire NPC member set. */
+	public List<Integer> acquireNpcs(int questId) {
+		return acquireNpcIdsByQuestId.getOrDefault(questId, List.of());
 	}
 
 	/**
@@ -641,13 +648,15 @@ public final class SimpleCollectItemHandler implements NativeSystemGrantLane {
 		if (engine == null) {
 			return;
 		}
-		for (Map.Entry<Integer, Integer> entry : acquireNpcByQuestId.entrySet()) {
+		for (Map.Entry<Integer, List<Integer>> entry : acquireNpcIdsByQuestId.entrySet()) {
 			int questId = entry.getKey();
 			if (!routedQuestIds.contains(questId)) {
 				continue;
 			}
-			engine.registerQuestNpc(entry.getValue()).addOnQuestStart(questId);
-			engine.registerQuestNpc(entry.getValue()).addOnTalkEvent(questId);
+			for (int npcId : entry.getValue()) {
+				engine.registerQuestNpc(npcId).addOnQuestStart(questId);
+				engine.registerQuestNpc(npcId).addOnTalkEvent(questId);
+			}
 		}
 		for (Map.Entry<Integer, List<Integer>> entry : rewardNpcsByQuestId.entrySet()) {
 			int questId = entry.getKey();
@@ -763,9 +772,9 @@ public final class SimpleCollectItemHandler implements NativeSystemGrantLane {
 	 * same arbitration face the retired compiler used; an undeclared row stays fail-closed.
 	 */
 	private static List<Integer> rewardNpcIds(int questId, String retailName) {
-		NativeNpcNameResolver.Match match = NativeNpcNameResolver.instance().resolve(retailName);
-		if (match.resolution() == NativeNpcNameResolver.Resolution.UNIQUE) {
-			return List.of(match.npcIds().getFirst());
+		List<Integer> members = NativeNpcNameResolver.instance().resolveMembers(retailName);
+		if (!members.isEmpty()) {
+			return members;
 		}
 		Set<Integer> declared = RetailClientHandinNpcSets.defaultSets().npcIds(questId);
 		return declared.isEmpty() ? List.of() : List.copyOf(new TreeSet<>(declared));
@@ -931,8 +940,8 @@ public final class SimpleCollectItemHandler implements NativeSystemGrantLane {
 	}
 
 	private boolean onAcceptDialog(Player player, int questId, int npcId, int objectId, int dialogId) {
-		Integer acquireNpc = acquireNpcByQuestId.get(questId);
-		if (acquireNpc == null || acquireNpc != npcId) {
+		List<Integer> acquireNpcs = acquireNpcIdsByQuestId.get(questId);
+		if (acquireNpcs == null || !acquireNpcs.contains(npcId)) {
 			return false;
 		}
 		if (dialogId == 31 || dialogId == 26) {

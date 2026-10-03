@@ -109,13 +109,15 @@ class SimpleUseItemNativeFamilyGateTest {
 	void routingSplitAndResidueAreFrozen() {
 		assertEquals(160, handler.ownedQuestIds().size(), "注册集 = 真端表全量行");
 		assertEquals(102, handler.routedQuestIds().size(), "路由集（退役 ∧ 非 XML-only ∧ 可解）");
-		assertEquals(58, handler.unroutableQuestIds().size(), "不可路由行 = 未退役 56 + fail-closed 残余 2");
-		// 未解名证据面冻结：Greenhat = 未退役行 13060/23060 的交付名（仍归 XML 车道）、
-		// magician_apprentice = fail-closed 残余的复合交付名（真端名册无此名、客户端无登记）。
-		// The unresolved-name evidence is frozen: the two un-retired rows keep their XML lane, and the
-		// composite residue name has neither a retail roster entry nor a client registration.
-		assertEquals(Set.of("LDF5b_Greenhat_LD", "magician_apprentice"), handler.unresolvedNames(),
-			"未解 NPC 名证据面必须冻结（残余 + 未退役行）");
+		assertEquals(58, handler.unroutableQuestIds().size(),
+			"不可路由行 = 未退役行 56（含 Greenhat 两行）+ fail-closed 残余 2（复合交付名；P9 收口后）");
+		// 未解名证据面冻结：Greenhat（13060/23060 的交付名）在 P9 组表扩域后已唯一解出，只留在未退役面；
+		// 唯一残余 = magician_apprentice（fail-closed 行的复合交付名：真端名册无此名、客户端无登记）。
+		// The unresolved-name evidence is frozen: Greenhat now resolves through the P9 group expansion and
+		// remains only as an un-retired row; the sole residue is the composite hand-in name of the
+		// fail-closed rows, which has neither a retail roster entry nor a client registration.
+		assertEquals(Set.of("magician_apprentice"), handler.unresolvedNames(),
+			"未解 NPC 名证据面必须冻结（仅 fail-closed 残余）");
 		assertTrue(handler.unresolvedItemSymbols().isEmpty(), "未解物品符号证据面必须恒空");
 		for (int questId : FAIL_CLOSED_ROWS) {
 			assertTrue(handler.owns(questId), "残余行仍在注册集（真端表行）: " + questId);
