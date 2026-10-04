@@ -12,7 +12,7 @@
 | NPC 停在 FIGHT 挂着仇恨不还手；为该症状加的“受击即重排攻击”修复上线后，线程池线程反复抛 java.lang.StackOverflowError（ExecuteWrapper 记录，栈循环 AttackEventHandler#onAttack → AttackManager#scheduleNextAttack → SimpleAttackManager#attackAction → CreatureController#attackTarget → 对方 AggroList#addDamageInternal） | `AIM-005` | AttackEventHandler#onAttack 的受击分支是否直接调用 AttackManager#scheduleNextAttack（应为 resumeInterruptedAttack + 线程池去重） |
 | 点击乘坐/操作固定炮台、坦克、攻城炮、宝箱等对象就弹 load fail!（HtmlPageId 10 / QuestId 0，客户端找不到 IDYun_Siegeweapon_* 一类 HTML 页），可骑乘对象上不去；空规则 retail pattern 还会让原生 useitem 乘坐/宝箱交互整体失效 | `AIM-006` | 遇到 load fail / HtmlPageId 10 时，先看该 NPC 的 retail pattern 在 on_talked_by_user 是否为 use_skill / teleport_target(_alias)，再看 AI2Engine.selectNpcAi 是否被空 pattern 抢走 useitem |
 | 击杀本该“变身/换形态”的 Boss 后任务或场景不推进；爆发、一击、技能连招把人形从阈值以上直接打死时，替代形态完全不出现（例：任务 15300/25300 步骤 7「消灭盘龙巢穴的奥里萨」击杀 237230 不生成 237231，永远停在步骤 7） | `AIM-007` | 该 AI 是否在 handleAttack/checkPercentage 里 spawn 替代形态；handleDied 是否调用同一个 *Once() 生成闸门（只看次数，不重复判断 HP） |
-| 启动慢、Spring 单例锁竞争、重复解析、热路径动态查 Bean | `AR-001` | startup JFR, static-data pool, resource parse count and facade lookup sites |
+| 启动慢、Spring 单例锁竞争、重复解析、热路径动态查 Bean、共享索引重复全量扫描 | `AR-001` | startup JFR, static-data pool, resource parse count and facade lookup sites |
 | ServiceLoader 找不到 Provider、启动注册失败、静态扫描漏掉无扩展名服务文件 | `AR-002` | DAOManager provider parameter and startup bridge construction |
 | 封包无响应、opcode 已实现但 handler 未触发、收发链路失败 | `AR-003` | opcode map, handler registration and client protocol version |
 | 连接建立后立即断开、5 秒无限重连、"连接已丢失"/"游戏服务器已断开"、IndexOutOfBoundsException、ping/pong NPE、内嵌模式登录服侧始终无 CM_GS_AUTH 认证成功、登录服日志刷 "未实现类 BannedMacDAO/SvStatsDAO 的 DAO" | `AR-004` | NettyConnectionHandler.read 的 buffer 传递方式、ConnectionTransport 实现是否触发 initialized/onDisconnect |

@@ -14,13 +14,13 @@
 status: CONFIRMED
 scope: Spring startup, static-data loading pools and high-frequency service facades
 first_seen: 2026-08-23
-last_verified: 2026-09-29
-symptom: 启动慢、Spring 单例锁竞争、重复解析、热路径动态查 Bean
-keywords: 启动慢; 启动期 JFR; P0-P2 改造后 JFR 量化; P0–P2 改造后 JFR 量化; 单例锁竞争; 重复解析; 动态查 Bean
+last_verified: 2026-10-04
+symptom: 启动慢、Spring 单例锁竞争、重复解析、热路径动态查 Bean、共享索引重复全量扫描
+keywords: 启动慢; 启动期 JFR; P0-P2 改造后 JFR 量化; P0–P2 改造后 JFR 量化; 单例锁竞争; 重复解析; 动态查 Bean; 物品名索引重复扫描; 共享索引进程缓存
 root_cause: XML parsing and container singleton locks dominate startup while uncached lookups add hot-path contention
-fix_or_guardrail: Size pools for nested waits, share parsed resources and cache injected facade references
-evidence: .agents/summary/startup-perf/2026-08-23-jfr-lock-contention-and-pool-tuning.md:31; .agents/summary/architecture-performance-refactor/2026-09-15-runtime-jfr-after-refactor.md; .agents/summary/startup-perf/2026-09-29-quest-conflict-validation-bucketing.zh-CN.md; startup JFR findings
-validation: runtime JFR; 2026-09-15 复测（commit de4a66e20）未再出现 DefaultSingletonBeanRegistry 竞争，GC 708ms/33 次；性能结论仍需同工作量对比
+fix_or_guardrail: Size pools for nested waits, share parsed resources, process-cache shared read-only indexes (DCL) and cache injected facade references
+evidence: .agents/summary/startup-perf/2026-08-23-jfr-lock-contention-and-pool-tuning.md:31; .agents/summary/architecture-performance-refactor/2026-09-15-runtime-jfr-after-refactor.md; .agents/summary/startup-perf/2026-09-29-quest-conflict-validation-bucketing.zh-CN.md; .agents/summary/startup-perf/2026-10-04-static-data-window-quest-overlay-attribution.zh-CN.md; startup JFR findings
+validation: runtime JFR; 2026-09-15 复测（commit de4a66e20）未再出现 DefaultSingletonBeanRegistry 竞争，GC 708ms/33 次；2026-10-04 归因：overlay 逐家族构造 handler 时 RetailItemNameIndex.loadItemTemplates 重扫 ~87MB 索引 10+ 次（JFR：preload 线程 18.4s 中 875/1008 样本、main 阻塞 10.5s），已改 DCL 缓存（聚焦单测通过 + 真机复测：静态窗口 18.4s→9.17s、总启动 24s→15s，新 JFR 证实索引单次扫描 63 样本 vs 原 875）；性能结论仍需同工作量对比
 boundaries: JFR conclusions are workload-specific; do not infer a universal optimal pool size
 superseded_by: none
 first_check: startup JFR, static-data pool, resource parse count and facade lookup sites
@@ -36,6 +36,7 @@ first_check: startup JFR, static-data pool, resource parse count and facade look
    - **并行刷怪与服务门面缓存**：刷怪加载改为按地图并行（`world-spawner` 池），并为高频 Spring 门面提供解析态缓存（`GameHousingServices`、`GameFeatureServices`、`GameLocationBootstrapServices`）。
    - **任务编译让路与事件分桶**：Quest 编译池从 8 调降至 3 为静态数据让出 CPU；`validateTransitionConflicts` 按事件类型分桶校验（利用 Sealed Interface 特性，跨事件类型的冲突直接判定为 false），使 typed 编译完成时间大幅提前。
    - **任务校验二级状态分桶（EventConflictBucket）**：真端多段大计数任务（如 Q30244/Q30344 达 12.5 万条边）网格展开后，同事件键边按 `sourceNodeIndex` 二级分桶，单节点边仅与同节点边和跨节点多节点通配边比较，消除跨节点必然互斥的十亿次 `BitSet.intersects` 循环，生产目录加载耗时从 361.7 秒降至 10.76 秒。
+   - **共享只读索引必须进程内单例（DCL）**：`RetailItemNameIndex.loadItemTemplates()`（重扫 11 个分片 ~87MB 文本 + 正则、单次约 0.8–1s）曾被 overlay 逐家族构造 handler 触发 10+ 次——2026-10-04 JFR 实测静态数据窗口 18.4s 中约 8.7s 在此（main 阻塞链 10.5s：`verifyProductionCoverage → xxxHandler.instance()`）；改 DCL 缓存后收敛为单次（2026-10-04 真机复测：静态窗口 18.4s→9.17s、总启动 24s→15s）。新增 handler/家族前先查它用的索引是否已有进程缓存（对照：`NativeNpcNameResolver.instance()`、`ProductionQuestDefinitions.catalog()`、`RetailQuestDriver.currentOrLoad()` 均为 DCL）。
 
 3. **高频热路径严禁裸调 Spring 容器**：
    - 在封包分发、移动同步、AI 循环等高频服务门面热路径上：

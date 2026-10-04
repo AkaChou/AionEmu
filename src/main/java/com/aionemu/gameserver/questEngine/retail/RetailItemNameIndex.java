@@ -32,6 +32,9 @@ public final class RetailItemNameIndex {
 	private static final Pattern ITEM_ID = Pattern.compile("\\bid=\"(\\d+)\"");
 	private static final RetailItemNameIndex EMPTY = new RetailItemNameIndex(Map.of());
 
+	/** 进程内装载缓存（DCL）：见 {@link #loadItemTemplates()}。 / Process-wide load cache (DCL): see {@link #loadItemTemplates()}. */
+	private static volatile RetailItemNameIndex loaded;
+
 	/** 空索引单例。 / Empty index singleton. */
 	public static RetailItemNameIndex empty() {
 		return EMPTY;
@@ -65,11 +68,38 @@ public final class RetailItemNameIndex {
 	/**
 	 * 装载真端物品模板目录下的全部物品名索引（file / jar 两种资源协议均可）。
 	 * 原生车道与旧 retail 车道共用同一份装载路径，避免出现第二个物品名事实来源。
+	 * <p>
+	 * 装载结果按进程缓存（DCL）：overlay 构建期 {@code RetailQuestDriver.verifyProductionCoverage}
+	 * 逐个构造家族 handler，每个 handler 首次使用都要这份索引；若不缓存，每次调用都会重扫
+	 * 11 个分片（约 87MB 文本 + 正则匹配）。2026-10-04 JFR 实测：静态数据窗口 18.4s 中约 8.7s
+	 * 消耗在 10 次以上重复全量扫描上，因此这里必须走缓存单例。
 	 * Loads the item-name index from the retail item template directory (both file and jar
 	 * resource protocols). The native lane and the legacy retail lane share this single load
-	 * path so no second item-name fact source exists.
+	 * path so no second item-name fact source exists. The result is process-cached (DCL):
+	 * the overlay build constructs family handlers one by one and each first use needs this
+	 * index; without the cache every call re-scans all 11 shards (~87MB of text plus regex
+	 * matching). The 2026-10-04 JFR showed ~8.7s of the 18.4s static-data window spent on
+	 * 10+ repeated full scans, so this path must be cached.
 	 */
 	public static RetailItemNameIndex loadItemTemplates() throws IOException {
+		RetailItemNameIndex local = loaded;
+		if (local == null) {
+			synchronized (RetailItemNameIndex.class) {
+				local = loaded;
+				if (local == null) {
+					local = scanItemTemplates();
+					loaded = local;
+				}
+			}
+		}
+		return local;
+	}
+
+	/**
+	 * 未缓存的目录扫描；仅在 {@link #loadItemTemplates()} 的 DCL 临界区内调用。
+	 * Uncached directory scan; called only inside the {@link #loadItemTemplates()} DCL.
+	 */
+	private static RetailItemNameIndex scanItemTemplates() throws IOException {
 		List<String> names = listXmlNames(ITEM_TEMPLATE_DIR);
 		List<InputStream> inputs = new ArrayList<>(names.size());
 		for (String name : names) {
