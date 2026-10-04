@@ -2,6 +2,7 @@ package com.aionemu.gameserver.questEngine.tablelane;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -24,6 +25,9 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.gameobjects.player.PlayerCommonData;
 import com.aionemu.gameserver.model.gameobjects.player.QuestStateList;
 import com.aionemu.gameserver.model.templates.npc.NpcTemplate;
+import com.aionemu.gameserver.questEngine.definition.QuestCatalogDrop;
+import com.aionemu.gameserver.questEngine.definition.QuestDialogAction;
+import com.aionemu.gameserver.questEngine.definition.QuestDialogPage;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
@@ -67,6 +71,11 @@ class SimpleTalkNativeFamilyGateTest {
 	private static final int CHAINED_QUEST = 41536;
 	/** 单中继步 + 接取发放 + 步内发放/扣除的真端行（与 cab520/cabb10 立即数对拍）。 / Retail row 1131. */
 	private static final int ITEM_QUEST = 1131;
+	/**
+	 * 检查型报告行的代表行（routed ∩ 39 用户：select5 按钮 = 39、契约声明失败页 select6=2716）。
+	 * A routed check-form report row (the 39 button on select5, the fail page select6 declared).
+	 */
+	private static final int CHECK_BUTTON_QUEST = 1211;
 	/**
 	 * 未解析物品面冻结（`p3/simple-talk-unresolved-items.tsv`）：11 个交付门缺口 + 3 个部分缺口符号。
 	 * Frozen unresolved item face (evidence snapshot in `p3/simple-talk-unresolved-items.tsv`).
@@ -167,7 +176,12 @@ class SimpleTalkNativeFamilyGateTest {
 	@Test
 	void acceptEntryFollowsTheRetailCab520Routing() {
 		Player player = createTestPlayer();
-		int questId = CHAINED_QUEST;
+		// 入口路由用可接取行 1131（minlevel 10 < 玩家 20 级、天族、无前置）。
+		// CHAINED_QUEST 41536 的等级轴 999 = 真端不可达行：31 带 CanAcquireQuest 同源预检
+		// （P7-REPORT「清单与接取面同一判定函数」），资格不满足不得进接取面。
+		// Route with the eligible row 1131; 41536 (level axis 999) stays out of the acquire face —
+		// the 31 entry shares CanAcquireQuest with the nearby list.
+		int questId = ITEM_QUEST;
 		Npc acquire = createMockNpc(handler.acquireNpc(questId));
 
 		// QUEST_SELECT → 问询页（cab520 的入口动作）。
@@ -176,6 +190,11 @@ class SimpleTalkNativeFamilyGateTest {
 		assertFalse(handler.onDialog(new QuestEnv(createMockNpc(1), player, questId, 31)));
 		// 问询页只开窗、不落库；落库走 native 建档口（见 acceptCommitCreatesTheRetailRow）。
 		assertNull(player.getQuestStateList().getQuestState(questId));
+
+		// 不可达行（等级 999 + 前置 Q41535 未完成）：31 不得进接取面（与清单三值同源）。
+		Player ineligible = createTestPlayer();
+		assertFalse(handler.onDialog(new QuestEnv(createMockNpc(handler.acquireNpc(CHAINED_QUEST)),
+				ineligible, CHAINED_QUEST, 31)), "等级轴不可达/前置未完成不得进接取面");
 	}
 
 	/** 接取落库：真端条件轴（等级/种族/职业/性别/重复）通过后由 native 状态端口建档到 START。 */
@@ -316,6 +335,71 @@ class SimpleTalkNativeFamilyGateTest {
 		assertTrue(itemHandler.onDialog(new QuestEnv(rewardNpc, gatedPlayer, gated, 1009)));
 		assertEquals(QuestStatus.REWARD, gatedState.getStatus());
 		assertEquals(List.of("remove:182212534:1", "remove:182212535:1", "remove:182212536:1"), inventory.calls);
+	}
+
+	/**
+	 * 39 检查按钮（2026-10-04）：检查型报告页的确认动作 = {@code HACTION_CHECK_USER_HAS_QUEST_ITEM}(39)。
+	 * 持满交付门 → 与 1009 同义推进 REWARD + 奖励窗 + 扣门物；未持满 → 客户端声明的失败页
+	 * （1211 契约 select6=2716），零状态写、零扣物。
+	 * The 39 check button: with the gate held it advances like 1009; when the gate is missing it shows
+	 * the client-declared fail page (select6).
+	 */
+	@Test
+	void reportCheckButton39AdvancesOrShowsTheDeclaredFailPage() {
+		int questId = CHECK_BUTTON_QUEST;
+		Player player = NativeTalkFixture.player();
+		QuestState state = new QuestState(questId, QuestStatus.START, 0, 0, null, 0, null);
+		player.getQuestStateList().addQuest(questId, state);
+		Npc rewardNpc = createMockNpc(itemHandler.rewardNpc(questId));
+		int checkAction = QuestDialogAction.CHECK_USER_HAS_QUEST_ITEM.id();
+		inventory.clear();
+
+		// 未持满：39 → 声明失败页（select6=2716），状态仍 START、零扣物。
+		NativeTalkFixture.clearPackets(player);
+		assertTrue(itemHandler.onDialog(new QuestEnv(rewardNpc, player, questId, checkAction)));
+		NativeTalkFixture.assertOnlyDialogPage(player, QuestDialogPage.SELECT6.id());
+		assertEquals(QuestStatus.START, state.getStatus(), "失败检查不推进");
+		assertTrue(inventory.calls.isEmpty(), "失败检查不扣物品");
+
+		// 持满：39 与 1009 同义——REWARD + 奖励窗 + 按门扣除。
+		for (SimpleTalkHandler.ItemStack item : itemHandler.workItems(questId)) {
+			inventory.held.put(item.itemId(), (long) item.count());
+		}
+		List<String> expectedRemovals = itemHandler.workItems(questId).stream()
+			.map(item -> "remove:" + item.itemId() + ":" + item.count())
+			.toList();
+		NativeTalkFixture.clearPackets(player);
+		assertTrue(itemHandler.onDialog(new QuestEnv(rewardNpc, player, questId, checkAction)));
+		NativeTalkFixture.assertOnlyDialogPage(player, SimpleTalkHandler.PAGE_REWARD_WINDOW);
+		assertEquals(QuestStatus.REWARD, state.getStatus(), "39 持满即推进");
+		assertEquals(expectedRemovals, inventory.calls);
+	}
+
+	/**
+	 * Talk 族真端击杀掉落（2026-10-04 修复）：P3 迁移只接手对话面，退役 XML 连同其 {@code <drops>}
+	 * 退出 catalog 后本族 1031 行的击杀掉落断供（真机 1105：击杀 210079 无任务道具）。native 必须
+	 * 从 quest.xml drop 列接手注册；XML 保留行仍由 XML 车道供源（单一 owner，不得重复注册）。
+	 * The Talk family's retail kill drops (fixed 2026-10-04): the kill drops of 1031 rows went dark
+	 * with the retired XML; the native lane registers them from the quest.xml columns, and XML-owned
+	 * rows stay with the XML lane (single owner).
+	 */
+	@Test
+	void talkFamilyServesTheRetailKillDrops() throws Exception {
+		// 1105：击杀 MerdionQ_2_n（210079）掉落 quest_1105a（182200202），退役 XML
+		// `drop npc-id=210079 item-id=182200202 chance=100 each-member`。
+		Integer itemId = RetailItemNameIndex.loadItemTemplates().resolve("quest_1105a");
+		assertNotNull(itemId, "真端物品符号必须解析: quest_1105a");
+		List<QuestCatalogDrop> drops = itemHandler.questDropsFor(210079);
+		assertTrue(drops.stream().anyMatch(drop -> drop.questId() == 1105 && drop.itemId() == itemId),
+			"1105 必须携带 210079 的真端击杀掉落条目");
+
+		// XML 保留行（9548，XmasEvent_Rudolph 99）不得出现在 native 掉落面（单一 owner）。
+		List<Integer> rudolphIds = NativeNpcNameResolver.instance().resolveMonsterIds("XmasEvent_Rudolph_99_n");
+		assertFalse(rudolphIds.isEmpty(), "真端怪名必须解析: XmasEvent_Rudolph_99_n");
+		for (int npcId : rudolphIds) {
+			assertTrue(itemHandler.questDropsFor(npcId).stream().noneMatch(drop -> drop.questId() == 9548),
+				"XML 保留行的掉落不得由 native 重复供源: 9548 / npc " + npcId);
+		}
 	}
 
 	/** 记录式假背包端口（族门用）。 / Recording fake inventory port for the family gate. */

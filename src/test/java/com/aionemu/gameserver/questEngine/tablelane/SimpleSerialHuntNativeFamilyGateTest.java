@@ -31,7 +31,7 @@ import com.aionemu.gameserver.questEngine.model.QuestStatus;
  * 3. 严格串行阶梯推进：首个未满阶段计数推进（+0xf0），乱序或超前击杀零动作（NO_ACTION）；
  * 4. 简报 NPC 守卫门控：声明 talk_npc 的任务在 1<<30 标志位未清前击杀零动作，与简报 NPC 对话清位后方可开启击杀；
  * 5. 全阶段饱和收口：全部阶段打满后触发推进写入（+0x100）并翻转 REWARD 状态；
- * 6. 原生对话页流闭环：4（接取）、10（进行中/未完成）、5（领奖窗口）、1008（完成）。
+ * 6. 原生对话页流闭环：4（接取）、10（进行中/未完成）、5（领奖窗口）、10（领奖收尾回选择对话页）。
  */
 class SimpleSerialHuntNativeFamilyGateTest {
 

@@ -35,7 +35,9 @@ import com.aionemu.gameserver.model.gameobjects.player.QuestStateList;
 import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.questEngine.definition.QuestDialogContract;
 import com.aionemu.gameserver.questEngine.model.QuestState;
+import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
+import com.aionemu.gameserver.model.templates.QuestTemplate;
 import com.aionemu.gameserver.questEngine.retail.RetailItemNameIndex;
 import com.aionemu.gameserver.questEngine.retail.RetailLedgerRows;
 import com.aionemu.gameserver.questEngine.tablelane.DataDrivenNativeRuntime.FreezeReason;
@@ -86,6 +88,7 @@ class DataDrivenNativeRuntimeGateTest {
 	private static RecordingSpawns spawns;
 	private static RecordingSays says;
 	private static RecordingTimers timers;
+	private static RecordingClaims claims;
 	private static DataDrivenNativeRuntime runtime;
 
 	@BeforeAll
@@ -113,8 +116,27 @@ class DataDrivenNativeRuntimeGateTest {
 		spawns = new RecordingSpawns();
 		says = new RecordingSays();
 		timers = new RecordingTimers();
+		claims = new RecordingClaims();
+		if (com.aionemu.gameserver.questEngine.retail.RetailQuestDriver.current().isEmpty()) {
+			// 领奖口的元数据来源（真端驱动，与生产目录同一条装载路径；与领奖门禁同型初始化）。
+			// The claim flow's metadata source (same loader as production; mirrors the claim gate).
+			com.aionemu.gameserver.questEngine.retail.RetailQuestDriver.overlay(
+				com.aionemu.gameserver.questEngine.definition.ImmutableQuestCatalog.fromEntries(List.of()));
+		}
 		runtime = DataDrivenNativeRuntime.create(table, switchSet, NativeNpcNameResolver.instance(),
-			enterAreaPort, itemIndex, inventory, movies, teleports, spawns, says, timers);
+			enterAreaPort, itemIndex, inventory, movies, teleports, spawns, says, timers,
+			NativeReportRewardFlow.withSink(claims));
+	}
+
+	/** 记录式领奖结算体（交付报告面接线断言用）。 / A recording claim sink for the delivery face. */
+	private static final class RecordingClaims implements NativeReportRewardFlow.CompletionSink {
+		private int calls;
+
+		@Override
+		public boolean complete(QuestEnv env, int rewardTier, QuestTemplate template) {
+			calls++;
+			return true;
+		}
 	}
 
 	/**
@@ -599,9 +621,81 @@ class DataDrivenNativeRuntimeGateTest {
 	}
 
 	/**
+	 * ⑩a 接取入口的资格预检（P7-REPORT：清单与接取面同用 {@code CanAcquireQuest}，「不会出现能接但
+	 * 不在清单」）。80789 前置 {@code Q80787}：未完成时 31 不得进接取面（2026-10-03 真机 80790 案例：
+	 * 进了 4762 点 20000 却被静默拒），完成后 31 正常发接取入口页。
+	 * <p>
+	 * The acquire-entry eligibility precheck shares {@code CanAcquireQuest} with the nearby list:
+	 * a player missing quest 80789's prerequisite stays out of the acquire face entirely.
+	 */
+	@Test
+	void acquireEntryPageIsEligibilityGatedLikeTheNearbyList() {
+		int npcId = 833671;
+		Player without = NativeTalkFixture.player();
+		assertFalse(runtime.onDialog(without, npcId, 31, 1, 80789), "前置 Q80787 未完成不得进接取面");
+		assertTrue(NativeTalkFixture.dialogPages(without).isEmpty(), "资格不满足不下发任何页");
+
+		Player with = NativeTalkFixture.player();
+		NativeTalkFixture.completePrerequisites(with, 80787);
+		assertTrue(runtime.onDialog(with, npcId, 31, 1, 80789), "前置完成后 31 发接取入口页");
+		NativeTalkFixture.assertOnlyDialogPage(with, 4762);
+	}
+
+	/**
+	 * ⑩b 交付报告面（零步 Talk 行 = DD_TALK_SIMPLE；真端所有行恒注册交付对象 #2 {@code reward_npc_name}，
+	 * 槽 +0x238）：START 31 → 报告推进 REWARD + 页 5；REWARD 31 → 页 5；{@code 23} = NOREWARD
+	 * 无选择确认 → 结算 + 领奖收尾回选择对话页 10（真端 npc-complete finish=SELECTION_DIALOG；9/28
+	 * 旧引擎基线「状态=5 → 页=10」）。2026-10-03 回归补面：P7 步 f 切换批（715a00136）删旧后
+	 * 已接玩家在交付 NPC 上 31 零响应（quests.log 9/28 80790 基线：31 → REWARD+页5 → 23 → COMPLETE）。
+	 * <p>
+	 * The delivery-report face for zero-step Talk rows: 31 reports to REWARD + page 5 and the
+	 * no-selection confirm settles through the claim flow.
+	 */
+	@Test
+	void zeroStepTalkRowsReportAndClaimOnTheRewardNpc() {
+		// 80787：value0_acquire_ == reward_npc_name（event_Mongsil_Newbie），无 progress 步。
+		int npcId = 0;
+		for (Map.Entry<Integer, List<Integer>> entry : runtime.acquireTalkInterests().entrySet()) {
+			if (entry.getValue().contains(80787)) {
+				npcId = entry.getKey();
+				break;
+			}
+		}
+		assertTrue(npcId > 0, "80787 的接取/交付 NPC 必须可解析");
+
+		Player player = NativeTalkFixture.player();
+		NativeTalkFixture.start(player, 80787);
+
+		// 两步报告（裁定 a）：31 只发报告确认页（80787 契约声明 10002=select_success）不推进；
+		// 1009（10002 型由客户端自动回发）才推进 REWARD + 页 5。
+		NativeTalkFixture.clearPackets(player);
+		assertTrue(runtime.onDialog(player, npcId, 31, 1, 80787), "START 31 必须发报告确认页");
+		assertEquals(QuestStatus.START, player.getQuestStateList().getQuestState(80787).getStatus(),
+			"31 不推进状态（两步第一步）");
+		assertEquals(List.of(10002), NativeTalkFixture.dialogPages(player), "报告确认页 = 契约声明 10002");
+
+		NativeTalkFixture.clearPackets(player);
+		assertTrue(runtime.onDialog(player, npcId, 1009, 1, 80787), "START 1009 必须报告推进 REWARD");
+		assertEquals(QuestStatus.REWARD, player.getQuestStateList().getQuestState(80787).getStatus(),
+			"1009 报告确认 = 真端交付对象推进");
+		assertEquals(List.of(5), NativeTalkFixture.dialogPages(player), "推进后发奖励窗页 5");
+
+		NativeTalkFixture.clearPackets(player);
+		assertTrue(runtime.onDialog(player, npcId, 31, 1, 80787), "REWARD 31 必须再发奖励窗");
+		assertEquals(List.of(5), NativeTalkFixture.dialogPages(player));
+
+		claims.calls = 0;
+		NativeTalkFixture.clearPackets(player);
+		assertTrue(runtime.onDialog(player, npcId, 23, 1, 80787), "23 = NOREWARD 完成确认必须结算");
+		assertEquals(1, claims.calls, "领奖口必须被调用一次");
+		assertEquals(List.of(10), NativeTalkFixture.dialogPages(player),
+			"结算后回选择对话页 10（npc-complete finish=SELECTION_DIALOG）");
+	}
+
+	/**
 	 * ⑩ Talk 接取对话面（真端 `FUN_180c47220` 词汇，只服务无状态玩家）：打开 → 4762；1002 → 接取 +
-	 * 1003；1003 → 1004；20001 → 完成通道 1008；1008/其余 ≥1000 原样回发；&lt;1000 零动作；
-	 * 1007 → 客户端契约问询窗（fail-closed）；已接取玩家不得再见接取入口页。
+	 * 1003；1003 → 1004；20000/20001 收尾 → 关窗页 0（旧 XML close-dialog）；1008/其余 ≥1000 原样回发；
+	 * &lt;1000 零动作；1007 → 客户端契约问询窗（fail-closed）；已接取玩家不得再见接取入口页。
 	 * The Talk acquire dialog face (retail FUN_180c47220 vocabulary), served only to stateless players.
 	 */
 	@Test
@@ -613,7 +707,13 @@ class DataDrivenNativeRuntimeGateTest {
 		for (Map.Entry<Integer, List<Integer>> entry : runtime.acquireTalkInterests().entrySet()) {
 			for (int candidate : entry.getValue()) {
 				Player probe = NativeTalkFixture.player();
-				assertTrue(runtime.onDialog(probe, entry.getKey(), 31, 1, 0), "无状态玩家打开必发接取入口页");
+				// 31 入口带 CanAcquireQuest 同源预检（清单与接取面同一判定函数，P7-REPORT）：等级/前置/
+				// 种族/职业轴不满足的行对本探针（20 级天族战士）不进接取面——跳过，找放行的行走词汇。
+				// The 31 entry shares CanAcquireQuest with the nearby list; rows ineligible for this
+				// 20-level Elyos probe skip the acquire face — probe on for an eligible row.
+				if (!runtime.onDialog(probe, entry.getKey(), 31, 1, 0)) {
+					continue;
+				}
 				NativeTalkFixture.assertOnlyDialogPage(probe, 4762);
 				if (runtime.onDialog(probe, entry.getKey(), 1002, 1, 0)
 					&& probe.getQuestStateList().getQuestState(candidate) != null) {
@@ -635,13 +735,14 @@ class DataDrivenNativeRuntimeGateTest {
 		NativeTalkFixture.clearPackets(player);
 		runtime.onDialog(player, npcId, 31, 1, questId);
 		assertFalse(NativeTalkFixture.dialogPages(player).contains(4762), "已接取玩家不得再见接取入口页");
-		// 1003 → 1004；20001 → 1008；1008 回发；1012 回发；999 零动作。
+		// 1003 → 1004；20001（QUEST_REFUSE_SIMPLE 拒绝）→ 关窗页 0（旧 XML close-dialog）；
+		// 1008 回发；1012 回发；999 零动作。
 		Player other = NativeTalkFixture.player();
 		assertTrue(runtime.onDialog(other, npcId, 1003, 1, 0), "1003 必须发拒绝确认页");
 		NativeTalkFixture.assertOnlyDialogPage(other, 1004);
 		NativeTalkFixture.clearPackets(other);
-		assertTrue(runtime.onDialog(other, npcId, 20001, 1, 0), "20001 = 完成通道");
-		NativeTalkFixture.assertOnlyDialogPage(other, 1008);
+		assertTrue(runtime.onDialog(other, npcId, 20001, 1, 0), "20001 = 拒绝收尾 = 关窗");
+		NativeTalkFixture.assertOnlyDialogPage(other, 0);
 		NativeTalkFixture.clearPackets(other);
 		assertTrue(runtime.onDialog(other, npcId, 1008, 1, 0), "1008 原样回发");
 		NativeTalkFixture.assertOnlyDialogPage(other, 1008);

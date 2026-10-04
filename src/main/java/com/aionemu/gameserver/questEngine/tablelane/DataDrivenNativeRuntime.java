@@ -25,6 +25,7 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_DIALOG_WINDOW;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_QUEST_ACTION;
 import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.questEngine.definition.QuestDialogContract;
+import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.services.QuestService;
@@ -101,6 +102,9 @@ public final class DataDrivenNativeRuntime {
 	private static final int PAGE_REWARD_WINDOW = 5;
 	/** 完成页（真端 `mgr+0x5d8` 完成通道；与家族车道同页）。 / The completion page. */
 	private static final int PAGE_COMPLETE = 1008;
+	/** 领奖收尾页（真端 npc-complete finish=SELECTION_DIALOG）：回选择对话（页 10，questId=0）。 /
+	 * The claim tail page (retail npc-complete finish=SELECTION_DIALOG): the selection dialog. */
+	private static final int PAGE_SELECTION_DIALOG = 10;
 	/** 接取入口问询页（真端 `FUN_180c47220` 打开态字面量 `0x129a`）。 / The accept-entry ask page (retail 0x129a). */
 	private static final int PAGE_ACCEPT_ENTRY = 4762;
 	/** 接取确认页（真端 1002 成功后下发）。 / The accepted page (sent after retail 1002). */
@@ -123,6 +127,11 @@ public final class DataDrivenNativeRuntime {
 	private static final int ACTION_BOOK = 20000;
 	/** 拒绝动作（真端 20001）。 / The refuse action. */
 	private static final int ACTION_REFUSE = 20001;
+	/**
+	 * 奖励窗无选择确认动作（真端 SELECTED_QUEST_NOREWARD；选项段只有 REWARD1..15 = 8..22）。
+	 * / The reward-window no-selection confirm (options are SELECTED_QUEST_REWARD1..15 = 8..22 only).
+	 */
+	private static final int ACTION_NO_REWARD = 23;
 
 	/** 一次事件命中的步引用：任务 + 步号 + 组槽（直接步进类为 0）。 / One event hit: quest, step, group. */
 	public record StepHit(int questId, int stepIndex, int group) {
@@ -291,6 +300,14 @@ public final class DataDrivenNativeRuntime {
 	private final Map<Integer, List<Integer>> pvpStepsByQuestId;
 	/** 接取兴趣面：Talk 对话 NPC → 任务。 / Acquire interest: talk npc → quests. */
 	private final Map<Integer, List<Integer>> acquireTalksByNpcId;
+	/**
+	 * 交付报告面：零步 Talk 行（DD_TALK_SIMPLE，无 progress 步）的交付 NPC → 任务。真端所有行恒注册
+	 * 交付对象 #2（{@code reward_npc_name}，槽 +0x238，P7-STEP2E1）；START 态 31 报告 → REWARD，
+	 * REWARD 态发奖励窗/结算（quests.log 2026-09-28 80790 基线）。
+	 * <p>
+	 * Delivery-report face: reward npc → zero-step Talk rows (the retail reward object #2).
+	 */
+	private final Map<Integer, List<Integer>> reportTalksByNpcId;
 	/** 接取兴趣面：物品获得（kind 3，真端事件 5 双角色）→ 任务。 / Acquire interest: item acquire → quests. */
 	private final Map<Integer, List<Integer>> acquireItemsByItemId;
 	/** 接取兴趣面：进世界（kind 7，真端事件 0x12 双角色）→ 任务。 / Acquire interest: enter-world → quests. */
@@ -313,19 +330,23 @@ public final class DataDrivenNativeRuntime {
 	private final NativeSpawnPort spawnPort;
 	private final NativeSayPort sayPort;
 	private final NativeTimerPort timerPort;
+	/** 领奖口（交付报告面的奖励窗结算；生产 = {@link NativeReportRewardFlow#instance()}）。 / The claim flow. */
+	private final NativeReportRewardFlow rewardFlow;
 
 	private DataDrivenNativeRuntime(Map<Integer, List<StepPlan>> plansByQuestId,
 			Map<Integer, List<StepHit>> killsByNpcId, Map<Integer, List<StepHit>> talksByNpcId,
 			Map<Integer, List<StepHit>> fobjsByNpcId, Map<Integer, List<StepHit>> itemPlaysByItemId,
 			Map<String, List<StepHit>> zonesByName, Map<Integer, List<StepHit>> worldsByWorldId,
 			Map<Integer, List<Integer>> pvpStepsByQuestId, Map<Integer, List<Integer>> acquireTalksByNpcId,
+			Map<Integer, List<Integer>> reportTalksByNpcId,
 			Map<Integer, List<Integer>> acquireItemsByItemId, Map<Integer, List<Integer>> acquireWorldsByWorldId,
 			Map<Integer, List<Integer>> acquireLevelsByLevel, Map<String, List<Integer>> acquireZonesByName,
 			Map<Integer, List<List<ActionPlan>>> actionsByQuestId,
 			Map<Integer, AcquirePlan> acquireByQuestId, Set<Integer> ownedQuestIds,
 			Set<Integer> routedQuestIds, Map<Integer, FreezeReason> frozenQuestIds, Set<String> unresolvedNames,
 			NativeInventoryPort inventoryPort, NativeMoviePort moviePort, NativeTeleportPort teleportPort,
-			NativeSpawnPort spawnPort, NativeSayPort sayPort, NativeTimerPort timerPort) {
+			NativeSpawnPort spawnPort, NativeSayPort sayPort, NativeTimerPort timerPort,
+			NativeReportRewardFlow rewardFlow) {
 		this.plansByQuestId = plansByQuestId;
 		this.killsByNpcId = killsByNpcId;
 		this.talksByNpcId = talksByNpcId;
@@ -335,6 +356,7 @@ public final class DataDrivenNativeRuntime {
 		this.worldsByWorldId = worldsByWorldId;
 		this.pvpStepsByQuestId = pvpStepsByQuestId;
 		this.acquireTalksByNpcId = acquireTalksByNpcId;
+		this.reportTalksByNpcId = reportTalksByNpcId;
 		this.acquireItemsByItemId = acquireItemsByItemId;
 		this.acquireWorldsByWorldId = acquireWorldsByWorldId;
 		this.acquireLevelsByLevel = acquireLevelsByLevel;
@@ -351,6 +373,7 @@ public final class DataDrivenNativeRuntime {
 		this.spawnPort = spawnPort;
 		this.sayPort = sayPort;
 		this.timerPort = timerPort;
+		this.rewardFlow = rewardFlow;
 	}
 
 	/**
@@ -395,7 +418,8 @@ public final class DataDrivenNativeRuntime {
 		try {
 			return create(table, switchSet, NativeNpcNameResolver.instance(), enterAreaPort,
 				RetailItemNameIndex.loadItemTemplates(), NativeInventoryPort.live(), NativeMoviePort.live(),
-				NativeTeleportPort.live(), NativeSpawnPort.live(), NativeSayPort.live(), NativeTimerPort.live());
+				NativeTeleportPort.live(), NativeSpawnPort.live(), NativeSayPort.live(), NativeTimerPort.live(),
+				NativeReportRewardFlow.instance());
 		} catch (IOException e) {
 			throw new IllegalStateException("DATA_DRIVEN_PRODUCTION_WIRING_FAILED", e);
 		}
@@ -487,14 +511,15 @@ public final class DataDrivenNativeRuntime {
 	public static DataDrivenNativeRuntime create(DataDrivenQuestTable table, Set<Integer> routedQuestIds,
 			NativeNpcNameResolver nameResolver, NativeEnterAreaPort enterAreaPort, RetailItemNameIndex itemIndex,
 			NativeInventoryPort inventoryPort, NativeMoviePort moviePort, NativeTeleportPort teleportPort,
-			NativeSpawnPort spawnPort, NativeSayPort sayPort, NativeTimerPort timerPort) {
+			NativeSpawnPort spawnPort, NativeSayPort sayPort, NativeTimerPort timerPort,
+			NativeReportRewardFlow rewardFlow) {
 		if (table == null) {
 			throw new IllegalArgumentException("DATA_DRIVEN_TABLE_MISSING");
 		}
 		if (routedQuestIds == null || routedQuestIds.isEmpty()) {
 			return new DataDrivenNativeRuntime(Map.of(), Map.of(), Map.of(), Map.of(), Map.of(), Map.of(), Map.of(),
-				Map.of(), Map.of(), Map.of(), Map.of(), Map.of(), Map.of(), Map.of(), Map.of(), Set.of(), Set.of(),
-				Map.of(), Set.of(), null, null, null, null, null, null);
+				Map.of(), Map.of(), Map.of(), Map.of(), Map.of(), Map.of(), Map.of(), Map.of(), Map.of(), Set.of(),
+				Set.of(), Map.of(), Set.of(), null, null, null, null, null, null, null);
 		}
 		Objects.requireNonNull(nameResolver, "DATA_DRIVEN_NAME_RESOLVER_MISSING");
 		Objects.requireNonNull(enterAreaPort, "DATA_DRIVEN_ENTER_AREA_PORT_MISSING");
@@ -514,6 +539,7 @@ public final class DataDrivenNativeRuntime {
 		Map<Integer, List<StepHit>> worlds = new LinkedHashMap<>();
 		Map<Integer, List<Integer>> pvpSteps = new LinkedHashMap<>();
 		Map<Integer, List<Integer>> acquireTalks = new LinkedHashMap<>();
+		Map<Integer, List<Integer>> reportTalks = new LinkedHashMap<>();
 		Map<Integer, List<Integer>> acquireItems = new LinkedHashMap<>();
 		Map<Integer, List<Integer>> acquireWorlds = new LinkedHashMap<>();
 		Map<Integer, List<Integer>> acquireLevels = new LinkedHashMap<>();
@@ -561,6 +587,18 @@ public final class DataDrivenNativeRuntime {
 				actionPlans.put(questId, rowPlan.facedActions());
 			}
 			acquirePlans.put(questId, acquire);
+			if (acquire.kind() == 4 && rowPlan.steps().isEmpty()) {
+				// 零步 Talk 行（DD_TALK_SIMPLE）：交付对象 #2（reward_npc_name）注册交付报告面；
+				// 名字解析失败只缺席交付面（不冻结接取面，也不计入行冻结证据）。
+				// Zero-step Talk rows register the delivery-report face on the reward npc; an
+				// unresolvable name merely leaves the face absent (no row freeze, no evidence drift).
+				Set<Integer> rewardNpcIds = new LinkedHashSet<>();
+				if (resolveMonsters(row.rewardNpc() == null ? "" : row.rewardNpc(), nameResolver, rewardNpcIds,
+					new ArrayList<>())) {
+					rewardNpcIds.forEach(
+						npcId -> reportTalks.computeIfAbsent(npcId, key -> new ArrayList<>()).add(questId));
+				}
+			}
 			switch (acquire.kind()) {
 				case 4 -> acquire.npcIds().forEach(
 					npcId -> acquireTalks.computeIfAbsent(npcId, key -> new ArrayList<>()).add(questId));
@@ -575,10 +613,10 @@ public final class DataDrivenNativeRuntime {
 		}
 		return new DataDrivenNativeRuntime(Map.copyOf(plans), Map.copyOf(kills), Map.copyOf(talks), Map.copyOf(fobjs),
 			Map.copyOf(itemPlays), Map.copyOf(zones), Map.copyOf(worlds), Map.copyOf(pvpSteps),
-			Map.copyOf(acquireTalks), Map.copyOf(acquireItems), Map.copyOf(acquireWorlds), Map.copyOf(acquireLevels),
-			Map.copyOf(acquireZones), Map.copyOf(actionPlans), Map.copyOf(acquirePlans), Set.copyOf(owned),
-			Set.copyOf(routed), Map.copyOf(frozen), Set.copyOf(unresolved), inventoryPort, moviePort, teleportPort,
-			spawnPort, sayPort, timerPort);
+			Map.copyOf(acquireTalks), Map.copyOf(reportTalks), Map.copyOf(acquireItems), Map.copyOf(acquireWorlds),
+			Map.copyOf(acquireLevels), Map.copyOf(acquireZones), Map.copyOf(actionPlans), Map.copyOf(acquirePlans),
+			Set.copyOf(owned), Set.copyOf(routed), Map.copyOf(frozen), Set.copyOf(unresolved), inventoryPort,
+			moviePort, teleportPort, spawnPort, sayPort, timerPort, rewardFlow);
 	}
 
 	/** 一行计划的中转结构（构建期）。 / Mutable per-row plan during construction. */
@@ -1224,9 +1262,84 @@ public final class DataDrivenNativeRuntime {
 		if (dispatchAcquireDialog(player, acquireTalksByNpcId.get(npcId), dialogId, objectId, requestedOwner)) {
 			return true;
 		}
+		if (dispatchReportDialog(player, npcId, dialogId, objectId, requestedOwner)) {
+			return true;
+		}
 		boolean fobj = dispatch(player, fobjsByNpcId.get(npcId));
 		boolean plane = dispatchDialog(player, talksByNpcId.get(npcId), dialogId, objectId, requestedOwner);
 		return plane || fobj;
+	}
+
+	/**
+	 * 交付报告面（零步 Talk 行 = DD_TALK_SIMPLE；真端所有行恒注册交付对象 #2 `reward_npc_name`，
+	 * 槽 +0x238，P7-STEP2E1）：START 态 31/26/-1 → 报告推进 REWARD + 奖励窗页 5；REWARD 态
+	 * 31/26/-1/1009 → 页 5；奖励窗动作（8..22 = SELECTED_QUEST_REWARD1..15 选项下标；
+	 * {@link #ACTION_NO_REWARD} = 无选择确认，不占选项下标；108/110..124 = 自动确认通道）→
+	 * {@link NativeReportRewardFlow} 结算完成。
+	 * <p>
+	 * 2026-10-03 回归补面：P7 步 f 切换批（715a00136）删旧后该面缺失，已接玩家在交付 NPC 上
+	 * 31 零响应（quests.log 2026-09-28 80790 基线：31 → REWARD+页5 → 23 → COMPLETE）。
+	 * <p>
+	 * The delivery-report face for zero-step Talk rows (the always-registered retail reward object):
+	 * START 31 reports to REWARD + page 5, and reward-window actions settle through the native claim.
+	 */
+	private boolean dispatchReportDialog(Player player, int npcId, int dialogId, int objectId, int requestedOwner) {
+		List<Integer> questIds = reportTalksByNpcId.get(npcId);
+		if (player == null || questIds == null || questIds.isEmpty()) {
+			return false;
+		}
+		for (int questId : questIds) {
+			if (requestedOwner != 0 && requestedOwner != questId) {
+				continue;
+			}
+			// 不用 START-only 的 state() helper：交付面要看 START 与 REWARD 两态（报告推进 + 奖励窗）。
+			// Not the START-only state() helper: the delivery face serves START and REWARD alike.
+			QuestState state = player.getQuestStateList().getQuestState(questId);
+			if (state == null) {
+				continue;
+			}
+			// 报告两步语义（裁定 a，2026-10-03）：任务行（31）只发客户端声明的报告确认页
+			// （NPC_REPORT 分型 SELECT2=1352/SELECT5=2375/DEFAULT_SUCCESS=10002；10002 型由客户端
+			// 自动回发 1009）；报告确认（1009）才推进 REWARD + 奖励窗。开门动作（-1/26）不推进、
+			// 不跳步（9/28 80790 基线：31 → 10002 自动确认 → REWARD+页5，11ms 闭环）。契约无声明
+			// 降级为一步直达。
+			// Two-step report (adjudication a): the row selection shows the contract-declared
+			// report-confirm page; the confirm action (1009) advances to REWARD + the reward window.
+			if (state.getStatus() == QuestStatus.START && dialogId == 31) {
+				int reportPage = QuestDialogContract.loadDefault().reportConfirmPage(questId);
+				if (reportPage > 0) {
+					PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(objectId, reportPage, questId));
+					return true;
+				}
+			}
+			if (state.getStatus() == QuestStatus.START && (dialogId == 31 || dialogId == 1009)) {
+				state.setStatus(QuestStatus.REWARD);
+				state.setPersistentState(PersistentState.UPDATE_REQUIRED);
+				PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(questId, QuestStatus.REWARD.value(), 0));
+				PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(objectId, PAGE_REWARD_WINDOW, questId));
+				return true;
+			}
+			if (state.getStatus() == QuestStatus.REWARD) {
+				if (dialogId == 31 || dialogId == 1009) {
+					PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(objectId, PAGE_REWARD_WINDOW, questId));
+					return true;
+				}
+				if ((dialogId >= 8 && dialogId <= 22) || dialogId == ACTION_NO_REWARD || dialogId == 108
+					|| (dialogId >= 110 && dialogId <= 124)) {
+					int rewardIndex = dialogId >= 8 && dialogId <= 22 ? dialogId - 8 : 0;
+					if (rewardFlow.claim(new QuestEnv(null, player, questId, dialogId), rewardIndex).completed()) {
+						// 领奖收尾 = 真端 npc-complete finish=SELECTION_DIALOG（4801/4805）：回选择对话页
+						// （页 10，questId=0；9/28 旧引擎基线「状态=5 → 页=10」）。
+						// The claim tail follows the retail npc-complete finish=SELECTION_DIALOG: back to
+						// the selection dialog (page 10, questId=0; the legacy 9/28 log baseline).
+						PacketSendUtility.sendPacket(player,
+							new SM_DIALOG_WINDOW(objectId, PAGE_SELECTION_DIALOG));
+						return true;
+					}
+				}
+			}
+		}
+		return false;
 	}
 
 	/**
@@ -1249,12 +1362,19 @@ public final class DataDrivenNativeRuntime {
 			}
 			switch (dialogId) {
 				case 31, 26, -1 -> {
+					// 真端清单与接取面同用 CanAcquireQuest（P7-REPORT §「同一判定函数」）：资格不满足
+					// （等级/前置/种族/职业/限制位）不进接取面，避免「能点进 4762、点接受却被静默拒」。
+					// The retail list and acquire face share CanAcquireQuest: an ineligible player never
+					// enters the acquire face, instead of entering page 4762 and being silently refused.
+					if (!NativeQuestStartPort.instance().evaluateNpcAcquire(player, questId).started()) {
+						return false;
+					}
 					PacketSendUtility.sendPacket(player,
 						new SM_DIALOG_WINDOW(objectId, PAGE_ACCEPT_ENTRY, questId));
 					return true;
 				}
 				case ACTION_ACCEPT -> {
-					if (!NativeQuestStartPort.instance().start(player, questId).started()) {
+					if (!NativeQuestStartPort.instance().startTraced(player, questId, dialogId).started()) {
 						return false;
 					}
 					// 真端 1002 接取收尾 = FUN_180c4d5b0(user,-1,…,-1)，其 -1 路径跑步 0 动作
@@ -1280,7 +1400,7 @@ public final class DataDrivenNativeRuntime {
 				}
 				case ACTION_BOOK, ACTION_REFUSE, ACTION_COMPLETE -> {
 					if (dialogId == ACTION_BOOK
-						&& !NativeQuestStartPort.instance().start(player, questId).started()) {
+						&& !NativeQuestStartPort.instance().startTraced(player, questId, dialogId).started()) {
 						return false;
 					}
 					if (dialogId == ACTION_BOOK) {
@@ -1289,11 +1409,25 @@ public final class DataDrivenNativeRuntime {
 						// actions, same as the 1002 face.
 						runActions(player, questId, 0);
 					}
-					// 真端 `mgr+0x5d8` 完成通道（20001 的 +0x2a8 演出面未坐实，e1 只回完成页）。
-					// The retail mgr+0x5d8 completion channel (20001's +0x2a8 play face is
-					// un-adjudicated; e1 sends the completion page only).
-					PacketSendUtility.sendPacket(player,
-						new SM_DIALOG_WINDOW(objectId, PAGE_COMPLETE, questId));
+					if (dialogId == ACTION_COMPLETE) {
+						// 1008 完成通道动作回完成页（e1 裁定保留）。注：旧注释引用的「mgr+0x5d8 完成通道
+						// 即发页」解读已被 p7-prereqs/dd-host-interface-detail.md 勘误：+0x5D8 是 DLL 侧
+						// 对象（IOneQuestScriptNpc 体系）调用、非宿主发页槽——20000/20001 的「发 +0x5d8 页」
+						// 系误读，真机（9/28）证明 20000 收尾不发对话页（客户端接取后自行关窗）。
+						// The 1008 completion action still answers the completion page. Note: the old
+						// "mgr+0x5d8 = send completion page" reading was corrected in
+						// dd-host-interface-detail.md (+0x5D8 is a DLL-side object call, not a host
+						// page-send slot); the live 9/28 run proves 20000 sends no dialog page.
+						PacketSendUtility.sendPacket(player,
+							new SM_DIALOG_WINDOW(objectId, PAGE_COMPLETE, questId));
+						return true;
+					}
+					// 2026-10-04 修复：20000 接取 / 20001 拒绝收尾 = close-dialog（旧 XML
+					// QUEST_ACCEPT_SIMPLE/QUEST_REFUSE_SIMPLE → close-dialog），原实现误发完成页
+					// 1008（真机 80789 接取即弹「获得了礼物」完成文案）。
+					// Fixed 2026-10-04: the 20000 accept / 20001 refuse tails close the dialog (retail
+					// XML: close-dialog); the previous form wrongly sent the completion page 1008.
+					PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(0, 0));
 					return true;
 				}
 				default -> {

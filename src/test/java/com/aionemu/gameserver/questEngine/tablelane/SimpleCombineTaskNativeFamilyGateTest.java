@@ -42,7 +42,7 @@ import com.aionemu.gameserver.questEngine.tablelane.NativeQuestTableLoader.Combi
  *   <li>注册/路由分解（owns 574 = routes 574，零 fail-closed；未退役行不得进路由集）；</li>
  *   <li>接取（31 问询 → 客户端入口页；1002/20000 建档 + 发分量 + 学配方）→ 交付（产物门 → 回收剩余分量
  *       → REWARD 页 5；缺产物 → 真端回退页 1779）→ 领奖（8..23/108/110..124 → 真端奖励面结算 → 扣产物、
- *       忘配方 → 页 1008）；</li>
+ *       忘配方 → 领奖收尾回选择对话页 10，真端 npc-complete finish=SELECTION_DIALOG）；</li>
  *   <li>放弃（族级动作 = 忘配方）与原生放弃面接线（owner 判定 + 真端元数据轴）；</li>
  *   <li>失败面 fail-closed：非本族 NPC / 未路由行 / 越界按钮一律不接管，交付门未过时状态与背包零变更。</li>
  * </ol>
@@ -277,7 +277,8 @@ class SimpleCombineTaskNativeFamilyGateTest {
 		NativeTalkFixture.clearPackets(player);
 		assertTrue(local.onDialog(NativeTalkFixture.dialog(player, npcId, COMBINE_QUEST, 8)),
 			"奖励窗按钮 8 必须由 native 领奖段服务");
-		NativeTalkFixture.assertOnlyDialogPage(player, SimpleCombineTaskHandler.PAGE_COMPLETE);
+		// 领奖收尾 = 真端 npc-complete finish=SELECTION_DIALOG：回选择对话页（页 10，questId=0）。
+		NativeTalkFixture.assertOnlyDialogPage(player, QuestDialogPage.SELECT_QUEST.id());
 		assertEquals(1, claims.size(), "结算体必须被调用一次");
 		assertEquals(COMBINE_QUEST, claims.getFirst()[0]);
 		assertEquals(0, claims.getFirst()[1], "单槽行固定首档");

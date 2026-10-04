@@ -208,9 +208,37 @@ public class QuestEngine implements GameEngine {
 		return productionDispatcher.catalogRegistry();
 	}
 
-	/** Returns quest drops from the exact catalog snapshot used by live event routing. */
+	/**
+	 * 掉落查询 = 目录快照掉落 ∪ native 表车道掉落列（采集族 + Talk 族）。
+	 * <p>
+	 * 两族已切 native，退役 XML 从 catalog 退场后其 {@code <drops>} 一并消失——native 行必须从
+	 * 真端 {@code drop_*} 列接手（2026-10-04 修复：采集族此前对象交互与击杀装配都拿不到任务掉落，
+	 * 真机 1103 采集不产出 {@code quest_1103a}；Talk 族 1031 行同型，真机 1105 击杀 210079 无道具）。
+	 * 同一 questId 只信目录条目（单一 owner；XML 车道仍持有该行时 native 不重复供源）。
+	 * <p>
+	 * Quest drops = the catalog snapshot ∪ the native table-lane drop columns (collect + talk).
+	 * After the XML retirement the families' {@code <drops>} left the catalog with the XML; the
+	 * native rows serve them from the retail {@code drop_*} column (fixed 2026-10-04). A quest id
+	 * owned by the catalog keeps its catalog entries only (single-owner invariant).
+	 */
 	public List<QuestCatalogDrop> questDrops(int npcId) {
-		return productionDispatcher.questDrops(npcId);
+		List<QuestCatalogDrop> catalogDrops = productionDispatcher.questDrops(npcId);
+		List<QuestCatalogDrop> nativeDrops = SimpleCollectItemHandler.instance().questDropsFor(npcId);
+		List<QuestCatalogDrop> talkDrops = SimpleTalkHandler.instance().questDropsFor(npcId);
+		if (nativeDrops.isEmpty() && talkDrops.isEmpty()) {
+			return catalogDrops;
+		}
+		Set<Integer> catalogQuestIds = catalogDrops.stream().map(QuestCatalogDrop::questId)
+			.collect(java.util.stream.Collectors.toSet());
+		List<QuestCatalogDrop> combined = new java.util.ArrayList<>(catalogDrops);
+		for (List<QuestCatalogDrop> source : List.of(nativeDrops, talkDrops)) {
+			for (QuestCatalogDrop drop : source) {
+				if (!catalogQuestIds.contains(drop.questId())) {
+					combined.add(drop);
+				}
+			}
+		}
+		return List.copyOf(combined);
 	}
 
 	/**
@@ -337,16 +365,48 @@ public class QuestEngine implements GameEngine {
 			if (requestedOwner == 0 && npcId != 0) {
 				QuestEvent event = new QuestEvent.TalkToNpc(npcId, env.getDialogId(), npc.getObjectId());
 				// 客户端直接交互采集对象（questId==0 入口）：native 采集族先手匹配（单一 owner 不变量：
-				// 该行已切 native，typed 目录里没有它的路由）。
+				// 该行已切 native，typed 目录里没有它的路由）。2026-10-03 修复：先手原样 return true
+				// 吞掉交互且不下发任何包（真机 1103：右键谷物袋子零响应）——改为重放进 handler，
+				// 由 START 段 onObjectUse 推进收集并回页。
 				// Direct client interaction with a collect object (questId==0 entry): the native collect
-				// family matches first (single-owner invariant: switched rows carry no typed route).
+				// family matches first. Fixed 2026-10-03: the bare return swallowed the interaction with
+				// no packet (live quest 1103); it now replays into the handler so onObjectUse advances.
+				boolean collectObjectClaimed = false;
 				for (SimpleCollectItemHandler.CollectTargetRef ref
 						: SimpleCollectItemHandler.instance().targetsForNpc(npcId)) {
 					if (!SimpleCollectItemHandler.instance().routes(ref.questId())) {
 						continue;
 					}
-					env.setQuestId(ref.questId());
+					collectObjectClaimed = true;
+					if (onDialog(new QuestEnv(npc, player, ref.questId(), env.getDialogId()))) {
+						env.setQuestId(ref.questId());
+						return true;
+					}
+				}
+				if (collectObjectClaimed) {
+					// 物件交互已被 native 采集族认领（推进成功或真端零副作用：超杀/条件不满足）。
+					// 真端从不在采集物件上开对话窗——不得落到 TalkEventHandler 的通用页 10
+					// （2026-10-04 真机 1103：对谷物袋子开窗即客户端 load fail）。
+					// The interaction is claimed by the native collect family (advance or retail zero
+					// side effect). The retail server never opens a dialog window on a collect object;
+					// falling through to the generic page 10 makes the client fail to load it (live 1103).
 					return true;
+				}
+				// 右键开门（TalkEventHandler.onTalk → dialogId=-1, questId=0）：玩家在该 NPC 上有进行中/
+				// 可交任务时先进任务对话（真端对话平面 FUN_180c474b0「打开（-1/26）→ 阶段页」），否则
+				// 才落普通页 10。tablelane 车道按 requestedOwner!=0 路由，questId=0 的开门在此逐个
+				// 进行中任务重放（2026-10-03 真机 1102：REWARD 后右键交付 NPC 只剩「结束对话」）。
+				// The right-click open door (-1, questId=0): replay the player's in-progress quests on
+				// this npc through the table lanes first (retail dialog plane "open → stage page"),
+				// so a reportable quest opens its dialog instead of the plain page 10.
+				for (QuestState state : player.getQuestStateList().getAllQuestState()) {
+					QuestStatus status = state.getStatus();
+					if (status != QuestStatus.START && status != QuestStatus.REWARD) {
+						continue;
+					}
+					if (onDialog(new QuestEnv(npc, player, state.getQuestId(), env.getDialogId()))) {
+						return true;
+					}
 				}
 				// 参考 legacy 引擎：当调用方确实提供了 questId==0 的任务对话入口（交互物 AI 等）时，
 				// 按 NPC 任务顺序逐个尝试，让第一个真正处理该动作的 owner 胜出。

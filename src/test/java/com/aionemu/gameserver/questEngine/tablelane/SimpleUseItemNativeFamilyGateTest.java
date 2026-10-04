@@ -15,6 +15,7 @@ import org.junit.jupiter.api.Test;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.templates.QuestTemplate;
+import com.aionemu.gameserver.questEngine.definition.QuestDialogPage;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
@@ -251,8 +252,16 @@ class SimpleUseItemNativeFamilyGateTest {
 		assertTrue(inventory.calls().isEmpty(), "门未过不得扣除门物品");
 
 		inventory.hold(gateItem.itemId(), gateItem.count());
+		// 两步报告（裁定 a）：31 只发客户端声明的报告确认页（80482 契约声明 2375）不扣物品；
+		// 1009 报告确认才扣门物品 + 翻 REWARD + 奖励窗。
 		NativeTalkFixture.clearPackets(player);
-		assertTrue(local.onDialog(NativeTalkFixture.dialog(player, rewardNpc, GATE_QUEST, 26)));
+		assertTrue(local.onDialog(NativeTalkFixture.dialog(player, rewardNpc, GATE_QUEST, 31)));
+		NativeTalkFixture.assertOnlyDialogPage(player, 2375);
+		assertEquals(QuestStatus.START, player.getQuestStateList().getQuestState(GATE_QUEST).getStatus(),
+			"31 只发确认页不推进");
+		assertTrue(inventory.calls().isEmpty(), "第一步不得扣门物品");
+		NativeTalkFixture.clearPackets(player);
+		assertTrue(local.onDialog(NativeTalkFixture.dialog(player, rewardNpc, GATE_QUEST, 1009)));
 		NativeTalkFixture.assertOnlyDialogPage(player, SimpleUseItemHandler.PAGE_REWARD_WINDOW);
 		assertEquals(QuestStatus.REWARD, player.getQuestStateList().getQuestState(GATE_QUEST).getStatus());
 		assertEquals(List.of("remove:" + gateItem.itemId() + ":" + gateItem.count()), inventory.calls(),
@@ -267,8 +276,12 @@ class SimpleUseItemNativeFamilyGateTest {
 		NativeTalkFixture.start(player, ITEM_ACCEPT_QUEST);
 		int rewardNpc = local.rewardNpcs(ITEM_ACCEPT_QUEST).getFirst();
 
+		// 两步报告（裁定 a）：31 发 1107 契约声明的确认页（2375），1009 推进 REWARD。
 		NativeTalkFixture.clearPackets(player);
-		assertTrue(local.onDialog(NativeTalkFixture.dialog(player, rewardNpc, ITEM_ACCEPT_QUEST, 26)));
+		assertTrue(local.onDialog(NativeTalkFixture.dialog(player, rewardNpc, ITEM_ACCEPT_QUEST, 31)));
+		NativeTalkFixture.assertOnlyDialogPage(player, 2375);
+		NativeTalkFixture.clearPackets(player);
+		assertTrue(local.onDialog(NativeTalkFixture.dialog(player, rewardNpc, ITEM_ACCEPT_QUEST, 1009)));
 		NativeTalkFixture.assertOnlyDialogPage(player, SimpleUseItemHandler.PAGE_REWARD_WINDOW);
 		assertEquals(QuestStatus.REWARD,
 			player.getQuestStateList().getQuestState(ITEM_ACCEPT_QUEST).getStatus());
@@ -310,7 +323,8 @@ class SimpleUseItemNativeFamilyGateTest {
 		NativeTalkFixture.clearPackets(player);
 		assertTrue(local.onDialog(NativeTalkFixture.dialog(player, rewardNpc, ITEM_ACCEPT_QUEST, 8)),
 			"奖励窗按钮必须由 native 领奖段服务");
-		NativeTalkFixture.assertOnlyDialogPage(player, SimpleUseItemHandler.PAGE_COMPLETE);
+		// 领奖收尾 = 真端 npc-complete finish=SELECTION_DIALOG：回选择对话页（页 10，questId=0）。
+		NativeTalkFixture.assertOnlyDialogPage(player, QuestDialogPage.SELECT_QUEST.id());
 		assertEquals(1, calls.size());
 		assertEquals(ITEM_ACCEPT_QUEST, calls.getFirst().questId());
 		assertNotNull(calls.getFirst().template(), "结算体必须拿到真端奖励列重建的 typed 模板");

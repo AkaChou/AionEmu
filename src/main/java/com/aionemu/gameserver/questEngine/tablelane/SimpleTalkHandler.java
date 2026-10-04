@@ -14,6 +14,7 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_DIALOG_WINDOW;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_QUEST_ACTION;
 import com.aionemu.gameserver.questEngine.QuestEngine;
+import com.aionemu.gameserver.questEngine.definition.QuestCatalogDrop;
 import com.aionemu.gameserver.questEngine.definition.QuestDialogAction;
 import com.aionemu.gameserver.questEngine.definition.QuestDialogContract;
 import com.aionemu.gameserver.questEngine.definition.QuestDialogPage;
@@ -22,6 +23,8 @@ import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.questEngine.retail.RetailGrantKind;
 import com.aionemu.gameserver.questEngine.retail.RetailItemNameIndex;
+import com.aionemu.gameserver.questEngine.retail.RetailQuestDriver;
+import com.aionemu.gameserver.questEngine.retail.RetailQuestMetadataCompiler;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
@@ -95,8 +98,6 @@ public final class SimpleTalkHandler implements NativeSystemGrantLane {
 	public static final int PAGE_ACCEPTED = 1003;
 	/** 拒绝页。 / Refuse page. */
 	public static final int PAGE_REFUSED = 1004;
-	/** 完成页。 / Completion page. */
-	public static final int PAGE_COMPLETE = 1008;
 	/** 中继步页（真端 SELECT2/SELECT3/SELECT4）。 / Relay step pages (retail SELECT2..4). */
 	private static final int[] RELAY_STEP_PAGES = {1352, 1693, 2034};
 
@@ -151,6 +152,14 @@ public final class SimpleTalkHandler implements NativeSystemGrantLane {
 	private final Set<String> unresolvedNames;
 	/** 未解析的物品符号（证据面；非空即报告门 fail-closed）。 / Unresolved item symbols (evidence surface). */
 	private final Set<String> unresolvedItemSymbols;
+	/**
+	 * NPC id → 该 NPC 的真端击杀掉落（{@code quest.xml} {@code drop_*} 列）。P3 迁移只接手了对话面；
+	 * 退役 XML 从 catalog 退场后本族 1031 行的击杀掉落断供（2026-10-04 真机 1105：击杀 210079
+	 * 无任务道具），native 必须接手（概率/上限语义由 {@code QuestService.isQuestDrop} 承担）。
+	 * Retail kill drops of this family by npc (the {@code quest.xml} drop columns), served natively
+	 * after the retired XML left the catalog without them (live 1105, 2026-10-04).
+	 */
+	private final Map<Integer, List<QuestCatalogDrop>> dropsByNpcId;
 
 	private SimpleTalkHandler(NativeQuestTableLoader tableLoader, NativeNpcNameResolver nameResolver) {
 		this(tableLoader, nameResolver, retailItemIndex(), NativeQuestXmlTable.instance(), NativeInventoryPort.live(),
@@ -190,6 +199,7 @@ public final class SimpleTalkHandler implements NativeSystemGrantLane {
 		Map<Integer, List<ItemStack>> stepGives = new LinkedHashMap<>();
 		Map<Integer, List<ItemStack>> stepRemoves = new LinkedHashMap<>();
 		Map<Integer, List<ItemStack>> workItems = new LinkedHashMap<>();
+		Map<Integer, List<QuestCatalogDrop>> dropsByNpc = new LinkedHashMap<>();
 		Map<Integer, RetailGrantKind> grantKinds = new LinkedHashMap<>();
 		Map<Integer, Integer> factions = new LinkedHashMap<>();
 		Map<Integer, Cutscene> cutscenes = new LinkedHashMap<>();
@@ -267,6 +277,25 @@ public final class SimpleTalkHandler implements NativeSystemGrantLane {
 					workItems.put(qid, gate);
 				}
 			}
+
+			// 真端掉落列（{@code drop_monster_K → drop_item_K}，含 prob/each-member）：P3 迁移只接手了
+			// 对话面，退役 XML 连同其 {@code <drops>} 退出 catalog 后本族击杀掉落断供——native 从
+			// quest.xml 列接手注册（无条件注册；发放面判定 {@code QuestService.isQuestDrop} 判 START
+			// 状态 + collect_item/work-item 上限）。XML 保留行仍由 XML 车道供源（单一 owner，跳过）。
+			// Retail drop columns ({@code drop_monster_K -> drop_item_K}, incl. prob/each-member):
+			// the P3 migration only carried the dialog face, so the retired XML took the catalog drops
+			// with it; the native lane registers them from the quest.xml columns (unconditional
+			// registration; {@code QuestService.isQuestDrop} keeps the START/cap gates). XML-owned
+			// rows stay with the XML lane (single owner, skipped).
+			if (!xmlOwnedIds.contains(qid) && hasRetailDropColumns(questXml, qid)) {
+				RetailQuestMetadataCompiler.Outcome dropMeta = metadataOf(qid);
+				if (dropMeta != null && dropMeta.clean()) {
+					for (var drop : dropMeta.metadata().drops()) {
+						dropsByNpc.computeIfAbsent(drop.npcId(), key -> new ArrayList<>())
+							.add(QuestCatalogDrop.catalog(qid, dropMeta.metadata(), drop));
+					}
+				}
+			}
 		}
 
 		// 真端 0x1e 槽（交付 NPC 节点）：接续下一任务 {@code con_quest} 的接取窗。本车道的接取路由按
@@ -307,6 +336,35 @@ public final class SimpleTalkHandler implements NativeSystemGrantLane {
 		this.routedQuestIds = Collections.unmodifiableSet(routed);
 		this.unresolvedNames = Collections.unmodifiableSet(unresolved);
 		this.unresolvedItemSymbols = Collections.unmodifiableSet(unresolvedItems);
+		this.dropsByNpcId = Collections.unmodifiableMap(dropsByNpc);
+	}
+
+	/**
+	 * 该 NPC 的真端击杀掉落（{@code QuestService.getQuestDrop} 的消费面；经 {@link QuestEngine#questDrops}
+	 * 聚合）。 / Retail kill drops for the npc, consumed through the quest-drop aggregation.
+	 * @param npcId NPC 模板 id / the npc template id
+	 * @return 掉落条目（无则空表） / the drop entries (empty when none)
+	 */
+	public List<QuestCatalogDrop> questDropsFor(int npcId) {
+		return dropsByNpcId.getOrDefault(npcId, List.of());
+	}
+
+	/** 该行 quest.xml 是否声明了掉落列（{@code drop_item_*}/预筛，避免无谓的元数据编译）。 /
+	 * Whether the row declares retail drop columns (a pre-filter before the metadata compile). */
+	private static boolean hasRetailDropColumns(NativeQuestXmlTable questXml, int questId) {
+		return questXml.find(questId)
+			.map(row -> !row.text("drop_item_1").isBlank() || !row.text("drop_monster_1").isBlank())
+			.orElse(false);
+	}
+
+	/** 真端 quest.xml 元数据（native 掉落/完成/领奖的公共事实源；不可编译按未解处理，fail-closed）。 /
+	 * The retail quest.xml metadata (shared fact source; uncompilable rows fail closed). */
+	private static RetailQuestMetadataCompiler.Outcome metadataOf(int questId) {
+		try {
+			return RetailQuestDriver.ensureLoaded().retailMetadataOf(questId).orElse(null);
+		} catch (java.io.IOException | RuntimeException e) {
+			return null;
+		}
 	}
 
 	private static RetailItemNameIndex retailItemIndex() {
@@ -773,6 +831,13 @@ public final class SimpleTalkHandler implements NativeSystemGrantLane {
 				return false;
 			}
 			if (dialogId == 31 || dialogId == 26) {
+				// 真端清单与接取面同用 CanAcquireQuest（P7-REPORT §「同一判定函数」）：资格不满足
+				// （等级/前置/种族/职业/限制位）不进接取面，避免「能点进接取页、点接受却被静默拒」。
+				// The retail list and acquire face share CanAcquireQuest: an ineligible player never
+				// enters the acquire face instead of entering it and being silently refused.
+				if (!NativeQuestStartPort.instance().evaluateNpcAcquire(player, questId).started()) {
+					return false;
+				}
 				// 接取入口页 = 真端信页/阶段页（页 4 只能由 1007 打开，见 QuestDialogContract#retailEntryPage）。
 				// The accept entry page is the retail letter/stage page (page 4 is 1007-only).
 				PacketSendUtility.sendPacket(player,
@@ -799,8 +864,10 @@ public final class SimpleTalkHandler implements NativeSystemGrantLane {
 				return true;
 			}
 			if (dialogId == 1002 || dialogId == 20000) {
-				// 真端接取：条件判定 + 建档/复位走 native 状态端口（不依赖 typed QuestTemplate）。
-				if (NativeQuestStartPort.instance().start(player, questId).started()) {
+				// 真端接取：条件判定 + 建档/复位走 native 状态端口（不依赖 typed QuestTemplate；
+				// 拒绝走 startTraced 打 QUEST-TRACE，不再静默）。
+				// Retail acquire via the native state port; refusals are traced instead of silent.
+				if (NativeQuestStartPort.instance().startTraced(player, questId, dialogId).started()) {
 					if (dialogId == 20000) {
 						give(player, acceptGiveByQuestId.get(questId));
 					}
@@ -846,20 +913,48 @@ public final class SimpleTalkHandler implements NativeSystemGrantLane {
 				}
 			}
 			// 3. 报告（真端 cabb10 finalStep + caad20 完成门）：中继全满且交付门通过才开奖励窗。
+			// 两步语义（裁定 a，2026-10-03；39 检查按钮 2026-10-04）：任务行（31）只发客户端声明的报告
+			// 确认页（NPC_REPORT 分型 SELECT2=1352/SELECT5=2375/DEFAULT_SUCCESS=10002，契约与退役
+			// XML 交叉印证）；报告确认才推进 REWARD + 奖励窗——直翻型 = 1009（10002 型由客户端自动回发），
+			// 检查型 = 报告页的 39（HACTION_CHECK_USER_HAS_QUEST_ITEM；两族 39 用户全量普查 Talk 675 件），
+			// 39 未持满时下发客户端声明的失败页（select6=2716，如 1105「您别跟我开玩笑」）。
+			// 开门动作（26/-1）不推进、不跳步；契约无声明降级为一步直达。
+			// Two-step report (adjudication a; the 39 check button): the row selection (31) only shows the
+			// contract-declared report-confirm page; the confirm action — 1009 (direct) or 39 (the report
+			// page's item-check button) — advances to REWARD + the reward window; a failed 39 check shows
+			// the client-declared fail page (select6).
 			List<Integer> rewardNpcs = rewardNpcIdsByQuestId.get(questId);
 			if (rewardNpcs != null && rewardNpcs.contains(npcId)) {
-				if (dialogId == 1009 || dialogId == 31 || dialogId == 26 || dialogId == -1) {
-					if (vars >= relayCount(questId) && holdsGateItems(questId, player)) {
-						removeGateItems(questId, player);
-						qs.setStatus(QuestStatus.REWARD);
-						qs.setPersistentState(PersistentState.UPDATE_REQUIRED);
-						PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(questId, QuestStatus.REWARD, vars));
+				boolean reportReady = vars >= relayCount(questId) && holdsGateItems(questId, player);
+				if (dialogId == 31 && reportReady) {
+					int reportPage = dialogContract.reportConfirmPage(questId);
+					if (reportPage > 0) {
 						PacketSendUtility.sendPacket(player,
-								new SM_DIALOG_WINDOW(targetObjectId, PAGE_REWARD_WINDOW, questId));
+								new SM_DIALOG_WINDOW(targetObjectId, reportPage, questId));
 						return true;
 					}
+				}
+				if (dialogId == QuestDialogAction.CHECK_USER_HAS_QUEST_ITEM.id() && !reportReady) {
+					int failPage = dialogContract.checkFailPage(questId);
+					if (failPage > 0) {
+						PacketSendUtility.sendPacket(player,
+								new SM_DIALOG_WINDOW(targetObjectId, failPage, questId));
+						return true;
+					}
+				}
+				if (reportReady && (dialogId == 1009 || dialogId == 31
+						|| dialogId == QuestDialogAction.CHECK_USER_HAS_QUEST_ITEM.id())) {
+					removeGateItems(questId, player);
+					qs.setStatus(QuestStatus.REWARD);
+					qs.setPersistentState(PersistentState.UPDATE_REQUIRED);
+					PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(questId, QuestStatus.REWARD, vars));
 					PacketSendUtility.sendPacket(player,
-							new SM_DIALOG_WINDOW(targetObjectId, PAGE_IN_PROGRESS, questId));
+							new SM_DIALOG_WINDOW(targetObjectId, PAGE_REWARD_WINDOW, questId));
+					return true;
+				}
+				if (dialogId == 1009 || dialogId == 31 || dialogId == 26 || dialogId == -1) {
+					PacketSendUtility.sendPacket(player,
+							new SM_DIALOG_WINDOW(targetObjectId, PAGE_IN_PROGRESS));
 					return true;
 				}
 			}
@@ -875,14 +970,22 @@ public final class SimpleTalkHandler implements NativeSystemGrantLane {
 							new SM_DIALOG_WINDOW(targetObjectId, PAGE_REWARD_WINDOW, questId));
 					return true;
 				}
-				if ((dialogId >= 8 && dialogId <= 23) || dialogId == 108
-						|| (dialogId >= 110 && dialogId <= 124)) {
-					int rewardIndex = (dialogId >= 8 && dialogId <= 23) ? (dialogId - 8) : 0;
+				// 选项段只有 SELECTED_QUEST_REWARD1..15（8..22）；23 = SELECTED_QUEST_NOREWARD 是
+				// 无选择确认，不占选项下标——发放由结算体按 dialogId==23 + extendedRewardIndex 决定。
+				// Only SELECTED_QUEST_REWARD1..15 (8..22) index options; 23 is the no-selection confirm
+				// whose grant the settlement resolves via dialogId==23 + extendedRewardIndex.
+				if ((dialogId >= 8 && dialogId <= 22) || dialogId == QuestDialogAction.SELECTED_QUEST_NOREWARD.id()
+						|| dialogId == 108 || (dialogId >= 110 && dialogId <= 124)) {
+					int rewardIndex = (dialogId >= 8 && dialogId <= 22) ? (dialogId - 8) : 0;
 					// 结算走 native 完成口（真端 quest.xml 奖励列 + 共用结算体），不再依赖 typed 模板。
 					// Settlement goes through the native completion port; no typed template required.
 					if (rewardFlow.claim(env, rewardIndex).completed()) {
+						// 领奖收尾 = 真端 npc-complete finish=SELECTION_DIALOG（4801/4805）：回选择对话页
+						// （页 10，questId=0；9/28 旧引擎基线「状态=5 → 页=10」）。
+						// The claim tail follows the retail npc-complete finish=SELECTION_DIALOG: back to
+						// the selection dialog (page 10, questId=0; the legacy 9/28 log baseline).
 						PacketSendUtility.sendPacket(player,
-								new SM_DIALOG_WINDOW(targetObjectId, PAGE_COMPLETE, questId));
+								new SM_DIALOG_WINDOW(targetObjectId, QuestDialogPage.SELECT_QUEST.id()));
 						return true;
 					}
 				}

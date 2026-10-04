@@ -46,23 +46,9 @@ public final class CameraRegistry {
 	}
 
 	private final Map<Integer, CameraRow> rowsByQuestId;
-	/** 元数据不可编译、未派生相机行的采集行（当前 = 真端 minlevel 999 的休眠行）。 /
-	 * Collect rows without a derived camera row because their metadata does not compile (today the
-	 * retail {@code minlevel=999} dormant rows). */
-	private final Set<Integer> rowsWithoutCollectCamera;
 
 	private CameraRegistry(Map<Integer, CameraRow> rowsByQuestId) {
-		this(rowsByQuestId, Set.of());
-	}
-
-	private CameraRegistry(Map<Integer, CameraRow> rowsByQuestId, Set<Integer> rowsWithoutCollectCamera) {
 		this.rowsByQuestId = rowsByQuestId;
-		this.rowsWithoutCollectCamera = Set.copyOf(rowsWithoutCollectCamera);
-	}
-
-	/** 未派生相机行的采集行（诊断/门禁用）。 / Collect rows without a camera row (diagnostics and gates). */
-	public Set<Integer> collectRowsWithoutCamera() {
-		return rowsWithoutCollectCamera;
 	}
 
 	/** 从行规约构建并全量校验。 / Builds from row specs, validating every row. */
@@ -105,11 +91,6 @@ public final class CameraRegistry {
 					Map.copyOf(slotRequires)));
 		}
 		return new CameraRegistry(Map.copyOf(rows));
-	}
-
-	private static CameraRegistry withUnresolvedCollect(List<RowSpec> specs, Set<Integer> unresolvedCollectMetadata) {
-		CameraRegistry registry = fromSpecs(specs);
-		return new CameraRegistry(registry.rowsByQuestId, unresolvedCollectMetadata);
 	}
 
 	/** 已注册任务数。 / Number of registered quests. */
@@ -172,19 +153,11 @@ public final class CameraRegistry {
 				specs.add(loader.cameraSpec(row));
 			}
 		}
-		// 采集族（P4）：单槽相机，required 直接来自真端 quest.xml 的 collect_item 计数（与交付门同源）。
-		// 无采集计数的 9 行（事件/测试形态）不派生相机行，由处理器视为不可路由。
-		// Collect family (P4): a single-slot camera whose requirement comes straight from the retail
-		// quest.xml collect_item counts (the same source as the hand-in gate). The nine rows without a
-		// collect count (event/test shapes) derive no camera row and stay unroutable in the handler.
-		java.util.Set<Integer> unresolvedCollectMetadata = new java.util.TreeSet<>();
-		for (NativeQuestTableLoader.SimpleCollectItemRow row : loader.collectRows()) {
-			Map<Integer, Integer> slotRequires =
-				NativeCollectSpecs.collectSlotRequirements(row.questId(), unresolvedCollectMetadata);
-			if (!slotRequires.isEmpty()) {
-				specs.add(loader.cameraSpec(row.questId(), slotRequires));
-			}
-		}
-		return withUnresolvedCollect(List.copyOf(specs), unresolvedCollectMetadata);
+		// 采集族（P4）相机注册已撤销（2026-10-04）：本族真端无相机——camera-params.tsv 的 2463 个
+		// 调用点中本族 262 行 0 命中（对照 SimpleHunt 1812/1863），旧 XML 的交互/击杀转换亦零 var 写；
+		// 采集为物品驱动（掉落列 + collect_item 上限，见 SimpleCollectItemHandler）。
+		// The collect-family (P4) camera registration is revoked (2026-10-04): the family has no retail
+		// camera (0 of 262 rows among the 2463 camera call sites), and collection is item-driven.
+		return fromSpecs(specs);
 	}
 }

@@ -1212,32 +1212,10 @@ public final class NativeQuestTableLoader {
 	}
 
 	/**
-	 * 采集行 → 相机行规约：单槽（槽 1）+ {@code collect_item1} 的 required（真端 collect 表 262 行
-	 * 里 253 行有采集计数，最大 40；9 行为事件/测试形态不派生相机行）。宽度规则同狩猎族。
-	 * <p>
-	 * Collect row → camera row spec: one slot (slot 1) with the {@code collect_item1} requirement
-	 * (253 of the 262 retail collect rows carry a count, max 40; the 9 event/test shapes derive no
-	 * camera row). Width rule mirrors the hunt family.
+	 * 采集行 → 相机行规约已退役（2026-10-04）：采集族真端无相机（camera-params.tsv 262/262 无调用），
+	 * 采集为物品驱动；原 {@code cameraSpec(int, Map)} 重载随 P4 相机设计一并撤销。
+	 * The collect-row camera spec is retired (2026-10-04): the family has no retail camera call.
 	 */
-	public CameraRegistry.RowSpec cameraSpec(int questId, Map<Integer, Integer> slotRequires) {
-		if (slotRequires == null || slotRequires.isEmpty()) {
-			throw new IllegalStateException(
-					"NATIVE_CAMERA_ROW_MISSING: collect quest " + questId + " has no collect counts");
-		}
-		RawQuestVarsCodec.Width width = RawQuestVarsCodec.Width.SIX;
-		for (int required : slotRequires.values()) {
-			if (required > width.slotMask()) {
-				width = RawQuestVarsCodec.Width.TEN;
-				break;
-			}
-		}
-		Map<Integer, Integer> ordered = new TreeMap<>(slotRequires);
-		int fullValue = 0;
-		for (Map.Entry<Integer, Integer> entry : ordered.entrySet()) {
-			fullValue |= entry.getValue() << width.shift(entry.getKey());
-		}
-		return new CameraRegistry.RowSpec(questId, width, fullValue, ordered);
-	}
 
 	/**
 	 * 宽度规则：任一 count 超 6 位掩码 ⇒ 10 位，否则 6 位（对拍 1812 任务零失败）。

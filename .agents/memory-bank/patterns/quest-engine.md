@@ -2590,23 +2590,30 @@ keywords: bm_restrict_category、账号限制类别下标、类别+19位、quest
 
 <!-- pattern-metadata
 status: CONFIRMED
-scope: 真端 SimpleCollectItem 族（Quest_SimpleCollectItem.xml ×  quest.xml）的「对象/怪 → 相机槽」映射与 native SimpleCollectItemHandler 的 ProgressCamera 槽位；同理适用于任何按族切换后需要把「点击/击杀来源」映射到进度槽的家族
+scope: 真端 SimpleCollectItem 族（Quest_SimpleCollectItem.xml ×  quest.xml）的「对象/怪 → 交付列槽」映射与 native SimpleCollectItemHandler 的 collectSources 取数面；同理适用于任何按族切换后需要把「点击/击杀来源」映射到交付列位的家族（**推进消费面已修订，见修订块**）
 first_seen: 2026-10-01
-last_verified: 2026-10-01
+last_verified: 2026-10-04
 symptom: 单列采集正常，多列采集静默卡死——点击第二个及以后的对象只填第一槽，交付 NPC 处永远「进行中页」，任务不可完成（18501/28501/1487 等多列行）；或反向：一次点击把多槽一起填满
 root_cause: 直觉映射「object1..4 的列序 = 相机槽序」与真端数据不符。真端 quest.xml 的 `drop_monster_K` / `drop_item_K` 才是槽位来源：`drop_monster_K` 列出的来源（对象名或真怪名）产出 `drop_item_K`，该物品在交付列 `collect_itemN` 里的**位置**才是槽号。真端反例：4046（对象 1 个、drop_item_1 是 collect_item4）、2487（对象是 object1 但对应 drop 列 2，槽 1 由真怪 Pretor_38_An 产出）、2346/41216（槽 1 的来源是真怪/另一个 FOBJ）、1154/41510（一个 drop 列列出多个对象，全部灌同一槽）。全表按对象列序取槽会把 4046/2487/2346/1154/41510 这类行映射错；按来源查 drop 列则 295/300 个对象列可定槽，剩 5 个（4 个事件行 + 41216）真端本就无槽
-fix_or_guardrail: 1. **唯一映射入口**：handler 构造期由元数据 `drops()`（npcId,itemId）建「来源 → 槽」，槽 = `itemId` 在 `itemRequirements()`（collect_itemN）里的下标 + 1；对象列与击杀目标都查这张表，禁止用 `objectN` 的 N；2. **fail-closed**：来源不在任何 drop 列 ⇒ 不可路由（不猜槽）；drop 物品不在交付列 ⇒ 不可路由（本次真端 0 例，规则留作护栏）；3. **证据面**：`collectSources(questId)` 暴露来源→槽，逐行对齐门把真端 drop 列独立重解析后与它对拍，并冻结「objectK 与 drop_monster_K 同名 275 / 仅大小写差异 8 / 多来源 3 / 真怪 3」四类计数；4. **镜头/交付不分家**：相机 required 仍来自 collect_itemN 计数，交付门 = 相机满值 + 持有整组交付物
-evidence: .agents/summary/quest-engine-native/p4/P4-REPORT.zh-CN.md; .agents/summary/quest-engine-native/p4/tools/collect_feasibility.py; src/main/java/com/aionemu/gameserver/questEngine/tablelane/SimpleCollectItemHandler.java（dropSourceSlots/collectSources）; src/main/java/com/aionemu/gameserver/questEngine/tablelane/NativeCollectSpecs.java; src/test/java/com/aionemu/gameserver/questEngine/tablelane/SimpleCollectItemRowAlignmentGateTest.java; src/test/java/com/aionemu/gameserver/questEngine/tablelane/SimpleCollectItemNativeFamilyGateTest.java; src/test/java/com/aionemu/gameserver/questEngine/definition/Quest18501InteractionObjectTest.java
-validation: 2026-10-01 P4 收口：独立重解析真端表 + quest.xml 逐行对拍 5/5 绿（275/8/3/3 四类冻结 + 来源→槽逐列相等），族门 12/12（含 18501 两列 ×5 的正向交付：单列满不放行、两列满 + 持有整组才翻 REWARD 并两份扣除），18501 类 2/2、Haramel 四行 2/2、3734 2/2；聚焦套件 1695 例 / 162F+157E / 110 类红，对 P3 步骤 6 基线逐类 ADDED 0 / REMOVED 0（差集只在本次重锚类）
-boundaries: 本规则只描述「来源 → 槽」的取数；槽的宽度/推进/满值副作用仍由 ProgressCamera（6 位槽、守卫位）与家族 handler 决定；真端 drop_prob 概率与掉落发放归 QuestService 掉落族，不在本映射内；未跑真实客户端验收（PENDING_CLIENT）
+fix_or_guardrail: 1. **唯一映射入口**：handler 构造期由元数据 `drops()`（npcId,itemId）建「来源 → 槽」，槽 = `itemId` 在 `itemRequirements()`（collect_itemN）里的下标 + 1；对象列与击杀目标都查这张表，禁止用 `objectN` 的 N；2. **fail-closed**：来源不在任何 drop 列 ⇒ 不可路由（不猜槽）；drop 物品不在交付列 ⇒ 不可路由（本次真端 0 例，规则留作护栏）；3. **证据面**：`collectSources(questId)` 暴露来源→槽，逐行对齐门把真端 drop 列独立重解析后与它对拍，并冻结「objectK 与 drop_monster_K 同名 275 / 仅大小写差异 8 / 多来源 3 / 真怪 3」四类计数；4. ~~相机 required 仍来自 collect_itemN 计数，交付门 = 相机满值 + 持有整组交付物~~ **已修订（2026-10-04）**：采集族真端无相机，删除相机部分后该列的剩余职责 = 掉落上限判定（`isQuestDrop`）与交付门（持有整组交付物）——取数规则（槽 = drop_item_K 在 collect_itemN 的位置）仍以对拍面保留
+evidence: .agents/summary/quest-engine-native/p4/P4-REPORT.zh-CN.md; .agents/summary/quest-engine-native/p4/tools/collect_feasibility.py; src/main/java/com/aionemu/gameserver/questEngine/tablelane/SimpleCollectItemHandler.java（dropSourceSlots/collectSources）; src/test/java/com/aionemu/gameserver/questEngine/tablelane/SimpleCollectItemRowAlignmentGateTest.java; src/test/java/com/aionemu/gameserver/questEngine/tablelane/SimpleCollectItemNativeFamilyGateTest.java; src/test/java/com/aionemu/gameserver/questEngine/definition/Quest18501InteractionObjectTest.java
+validation: 2026-10-01 P4 收口：独立重解析真端表 + quest.xml 逐行对拍 5/5 绿（275/8/3/3 四类冻结 + 来源→槽逐列相等），族门 12/12（含 18501 两列 ×5 的正向交付：单列满不放行、两列满 + 持有整组才翻 REWARD 并两份扣除），18501 类 2/2、Haramel 四行 2/2、3734 2/2；聚焦套件 1695 例 / 162F+157E / 110 类红，对 P3 步骤 6 基线逐类 ADDED 0 / REMOVED 0（差集只在本次重锚类）。2026-10-04 修订后：行对齐门 7/7（275 冻结随 39611/49611 组表解析更新）、族门 14/14、18501 2/2、Haramel 2/2、3734 2/2（交付流改物品驱动，见 QE-139）
+boundaries: 本规则只描述「来源 → 槽」的取数（现为认领白名单/掉落对拍面）；槽的推进消费随采集族相机撤销退场（QE-139）；真端 drop_prob 概率与掉落发放归 QuestService 掉落族（isQuestDrop 的 collect_item 上限），不在本映射内；未跑真实客户端验收（PENDING_CLIENT）
 superseded_by: none
-see_also: [QE-089], [QE-113], [QE-116]
-first_check: 多列采集卡住时先答：①这行的对象列序与 drop 列序一致吗（打印 quest.xml 的 drop_monster_K/drop_item_K 与 collect_itemN）？②handler 的槽是从哪里取的（对象列号还是 drop 物品位置）？③该对象在真端任何 drop 列里出现过吗？④相机 required 与交付列计数同源吗？⑤有没有用例真的把两列都填满并走到 REWARD？
-keywords: 采集槽序、object列序不是槽序、drop_monster_K、drop_item_K、collect_itemN、多列采集卡死、进行中页永不翻REWARD、ProgressCamera槽、collectSources、fail-closed定槽、QE-115
+see_also: [QE-089], [QE-113], [QE-116], [QE-139]
+first_check: 多列采集卡住时先答：①这行的对象列序与 drop 列序一致吗（打印 quest.xml 的 drop_monster_K/drop_item_K 与 collect_itemN）？②handler 的来源→槽是从哪里取的（对象列号还是 drop 物品位置）？③该对象在真端任何 drop 列里出现过吗？④（2026-10-04 起）该族的推进是相机还是物品驱动（查相机调用集，见 QE-139）？⑤有没有用例真的把两列交付物都持齐并走到 REWARD？
+keywords: 采集槽序、object列序不是槽序、drop_monster_K、drop_item_K、collect_itemN、多列采集卡死、进行中页永不翻REWARD、collectSources、fail-closed定槽、QE-115
 -->
 
 - **判定规则**：槽 = `drop_item_K` 在 `collect_itemN` 交付列里的位置；来源（对象/怪）由 `drop_monster_K` 列出，一律查表取槽，不看 `objectN` 的下标。
-- **安全网**：来源无槽位即 fail-closed；族门必须有「多列都填满才交付」的正向用例，逐行对齐门冻结四类列计数。
+- **安全网**：来源无槽位即 fail-closed；族门必须有「多列交付物持齐才交付」的正向用例，逐行对齐门冻结四类列计数。
+
+**修订 2026-10-04（采集族物品驱动，见 QE-139）**
+
+  P4 的相机推进设计被推翻后，本条的「槽」不再驱动 ProgressCamera（采集族无相机）；
+  取数面保留为**认领白名单 + 掉落对拍**（来源必须在 drop 列、drop 物品必须在交付列），
+  计数职责移交 `isQuestDrop`（collect_item 上限）与交付门（持有整组）。
+  `NativeCollectSpecs` 已退役删除（相机 required 派生随 P4 撤销）；相机冻结断言改为"不得派生相机行"。
 
 ---
 
@@ -3091,11 +3098,11 @@ first_seen: 2026-10-03
 last_verified: 2026-10-03
 symptom: 「某批任务在真端零驱动面 ⇒ 真端死内容」的结论被推翻：XML-only 176 实测 142 个在真端 ScriptDLL 有注册
 root_cause: 扫描只查「首参 = quest id」的注册口（族表 row 注册 FUN_180cab520(questId, …) 等），漏掉 (name, questId) 形**第三参**注册口 FUN_180cb5920(out, L"name", questId)——函数体 ScriptDLL64.c:2146365 构造 IOneQuestScriptNpc（写 vftable + 拷名 + id 入全局表）
-fix_or_guardrail: 任何「真端无驱动」的否定结论必须列全注册口清单（首参/第三参/表行/客户端 CSV），并用三方交叉复算：本仓 XML 的 npc-id ↔ npcs.xml 的 quest_ai_name ↔ ScriptDLL (name↔questId)；只扫一种形态的 0 命中不构成「不存在」。**名匹配按真端 `_wcsicmp` 语义大小写不敏感**（原文相等口径会造出假跨界，见 2026-10-03 D1 修订块）；绑定门只冻结、不静默放行：新增跨界引用/未注册任务即红，收缩须同批改常量
-evidence: .agents/summary/quest-engine-native/p10-xml-only-176/XML-ONLY-176-ANALYSIS.zh-CN.md §7；.agents/summary/quest-engine-native/p11-quest-ai-lane/P11-PREREQ-QUEST-AI-LANE.zh-CN.md §6（D1 执行记录）；.agents/summary/quest-engine-native/p11-quest-ai-lane/emit_quest_ai_registrations.py + measure_binding_gate.py；src/main/resources/aion/data/static_data/quest/retail/retail-quest-ai-registrations.xml（+同名 xsd）；src/test/java/com/aionemu/gameserver/questEngine/retail/QuestAiDialogBindingGateTest.java；.agents/summary/quest-engine-native/p10-xml-only-176/XML-ONLY-176-ADJUDICATION.zh-CN.md；同目录 scan_onequestscriptnpc.py、crosscheck_quest_ai.py；真端 ScriptDLL64.c:2146365、:1890496(Kalio↔1001)、真端 NPC 静态表 203067 Kalio 的 quest_ai_name 列；抽样 1001/14010/11279 三方交叉 3/3 全中
-validation: 2026-10-03 静态：176 中 142 命中该注册口（18787 调用点 / 7148 唯一 id，其中 4682 落本仓 6224 任务集）；真端 quest.xml 有行 169/176、含目标列 144/176；客户端 quest_script_monster.csv 30/176、quest_monster.csv 38/176。2026-10-03 D1 落地：注册面 18787 调用点 / 7043 唯一 id / 8190 注册名（大小写折叠后 554 名映射 >1 npc）→ 全局 Quest-AI NPC 10136；XML 车道 733 件中 695 件带对话引用、去重 (任务,NPC) 对 1657、命中全局集 1402；跨界 21 任务/25 引用 + 未注册 18 件逐元素冻结；门 QuestAiDialogBindingGateTest 2/2、RetailTableSchemaGateTest 2/2 绿（mvn -Dtest='QuestAiDialogBindingGateTest,RetailTableSchemaGateTest' test EXIT=0，含负例对照）
+fix_or_guardrail: 任何「真端无驱动」的否定结论必须列全注册口清单（首参/第三参/表行/客户端 CSV），并用三方交叉复算：本仓 XML 的 npc-id ↔ npcs.xml 的 quest_ai_name ↔ ScriptDLL (name↔questId)；只扫一种形态的 0 命中不构成「不存在」。**名匹配按真端 `_wcsicmp` 语义大小写不敏感**（原文相等口径会造出假跨界，见 2026-10-03 D1 修订块）；绑定门只冻结、不静默放行：新增跨界引用/未注册任务即红，收缩须同批改常量；报「注册面命中/未命中」时必须声明口径是**字面注册口**（18787 处 `FUN_180cb5920`）还是**数据驱动注册口**（同一全局表 `DAT_1847204c8` 另有 `FUN_180c44720` 入口，`ScriptDLL64.c:2075xxx/2684xxx`）——字面零命中 ≠ 真端无脚本
+evidence: .agents/summary/quest-engine-native/p10-xml-only-176/XML-ONLY-176-ANALYSIS.zh-CN.md §7；.agents/summary/quest-engine-native/p11-quest-ai-lane/P11-PREREQ-QUEST-AI-LANE.zh-CN.md §6（D1 执行记录）；.agents/summary/quest-engine-native/p11-quest-ai-lane/emit_quest_ai_registrations.py + measure_binding_gate.py + audit_residual_bindings.py；.agents/summary/quest-engine-native/p11-quest-ai-lane/D1-RESIDUAL-ADJUDICATION.zh-CN.md（残余 85 件五轴裁决）；src/main/resources/aion/data/static_data/quest/retail/retail-quest-ai-registrations.xml（+同名 xsd）；src/test/java/com/aionemu/gameserver/questEngine/retail/QuestAiDialogBindingGateTest.java；.agents/summary/quest-engine-native/p10-xml-only-176/XML-ONLY-176-ADJUDICATION.zh-CN.md；同目录 scan_onequestscriptnpc.py、crosscheck_quest_ai.py；真端 ScriptDLL64.c:2146365、:1890496(Kalio↔1001)、真端 NPC 静态表 203067 Kalio 的 quest_ai_name 列；抽样 1001/14010/11279 三方交叉 3/3 全中
+validation: 2026-10-03 静态：176 中 142 命中该注册口（18787 调用点 / 7148 唯一 id，其中 4682 落本仓 6224 任务集）；真端 quest.xml 有行 169/176、含目标列 144/176；客户端 quest_script_monster.csv 30/176、quest_monster.csv 38/176。2026-10-03 D1 落地：注册面 18787 调用点 / 7043 唯一 id / 8190 注册名（大小写折叠后 554 名映射 >1 npc）→ 全局 Quest-AI NPC 10136；XML 车道 733 件中 695 件带对话引用、去重 (任务,NPC) 对 1657、命中全局集 1402；跨界 21 任务/25 引用 + 未注册 18 件逐元素冻结；门 QuestAiDialogBindingGateTest 2/2、RetailTableSchemaGateTest 2/2 绿（mvn -Dtest='QuestAiDialogBindingGateTest,RetailTableSchemaGateTest' test EXIT=0，含负例对照）；2026-10-03 残余裁决：冻结面外 85 件（67 集外对话位 + 18 无注册）用 5 条独立轴逐件对拍 = 85/85 至少一轴命中、0 件 NPC 不存在（LEGACY_BACKED 43 / DD_BACKED 22 / SCRIPTED_REGISTRY 10 / PLAIN_NPC 3 / DD_REWARD_DEFERRED 2 / CLIENT_PAGES_ONLY 5）
 superseded_by: none
-boundaries: 注册口命中 = 存在 NPC 对话 ingress；绑定门只审 `<dialog>`/`<npc-complete>` 两个对话位（kill-npc/drop 等目标位不是 Quest-AI 对话位）；1657 条对话引用里 255 条落在 Quest-AI 集外（67 件任务的对话位全部不在集合内）未作判定、登记为残余；18 件未注册任务仍待逐件裁决；证据表新鲜度靠手工重跑生成器（依赖真端 ScriptDLL64.c/npcs.xml，不在 CI）；「目标计数/完成是否全由 quest.xml 通用列驱动」尚未逐件验证（P11 §4.1 待验）。34 个未命中件已裁定（2026-10-03）：7 件纯自造已退役（50110/50111/50123/50124/51110/51111/89999，生产全集 6224→6217），27 件保持 XML 车道；P9 残余 16 行 GAb1_*_Guard 已按「客户端声明优先」放开（组表 60→76，零门禁重冻）
+boundaries: 注册口命中 = 存在 NPC 对话 ingress；绑定门只审 `<dialog>`/`<npc-complete>` 两个对话位（kill-npc/drop 等目标位不是 Quest-AI 对话位）；1657 条对话引用里 255 条落在 Quest-AI 集外（67 件任务的对话位全部不在集合内）未作判定、登记为残余；18 件未注册任务已裁决（13 件 DD 行接取/交付名命中 + 5 件遗留契约覆盖；非「凭空」）；唯一开口 = 5 件 `CLIENT_PAGES_ONLY`（1003/2005/2230/2288/14013：真端 quest.xml 有行 + 客户端 active 页，缺 NPC 绑定面背书）；证据表新鲜度靠手工重跑生成器（依赖真端 ScriptDLL64.c/npcs.xml，不在 CI）；「目标计数/完成是否全由 quest.xml 通用列驱动」尚未逐件验证（P11 §4.1 待验）。34 个未命中件已裁定（2026-10-03）：7 件纯自造已退役（50110/50111/50123/50124/51110/51111/89999，生产全集 6224→6217），27 件保持 XML 车道；P9 残余 16 行 GAb1_*_Guard 已按「客户端声明优先」放开（组表 60→76，零门禁重冻）
 see_also: [QE-131], [QE-132]
 first_check: 判「真端无驱动」前先答：① 注册口清单是否覆盖 (name, id) 形第三参注册？② 是否用 npcs.xml quest_ai_name 做反向交叉？③ quest.xml 目标列与客户端 CSV 是否查过？④ 抽样 ≥3 件是否三方全中？
 keywords: 真端驱动面、ScriptDLL、FUN_180cb5920、IOneQuestScriptNpc、quest_ai_name、npcs.xml、quest.xml 目标列、quest_script_monster.csv、XML-only 176、_wcsicmp、大小写不敏感、retail-quest-ai-registrations.xml、QuestAiDialogBindingGateTest、跨界冻结、QE-136
@@ -3124,3 +3131,110 @@ keywords: 真端驱动面、ScriptDLL、FUN_180cb5920、IOneQuestScriptNpc、que
 - **证据 / validation**：见元数据 `evidence:` / `validation:`；负例对照（冻结表加假项 ⇒ 门红并打印实际 21 条）已做。
 - **边界**：冻结清单**只许收缩**、收缩须同批改常量；跨界语义 = 同一 Quest-AI NPC 承接多条任务
   （204700 Thor / 204837 Hresvelgr / 799522 Shugo_IDNovice_1 / 799763 event_Sonaran 等），不是缺陷。
+
+**修订 2026-10-03（D1 残余裁决：85 件五轴对拍）**
+
+- **trigger**：D1 冻结面外仍有 67 件「Quest-AI 集外对话位」+ 18 件「真端无注册」，需判定是否「凭空对话位」。
+- **结论**：85/85 至少命中一条独立轴，**0 件对话 NPC 不存在于真端 npcs.xml**：遗留/客户端契约覆盖 43、
+  真端 DD 行（`value0_acquire_`/`reward_npc_name`）22、quest-id 直驱脚本口（`reason=SCRIPTED` +
+  `registry=FUN_…`）10、无 `quest_ai_name` 的通用 NPC 3、既有登记 2（`RETAIL_REWARD_NPC_UNRESOLVED`）；
+  唯一开口 = 5 件（1003/2005/2230/2288/14013）只剩「客户端 active 页 + 真端 quest.xml 行」单轴。
+- **30800 假警报**：834987 与契约声明的 834986 **共享同一 `quest_ai_name`**（真端名字键 = 同一脚本），
+  DD 行同时解析出两者 ⇒ 不是绑定冲突。
+- **口径边界（新增，适用于所有注册面结论）**：本仓 D1 的「注册面」= 字面 `FUN_180cb5920` 调用；
+  同一全局注册表 `DAT_1847204c8` 另有数据驱动入口（`FUN_180c44720` 于 `ScriptDLL64.c:2075210/2075774/…/2684218…`，
+  key = quest id、对象自带名字）⇒ 「字面零命中」必须写成「无字面注册」，不得写成「真端无脚本」。
+- **证据**：`.agents/summary/quest-engine-native/p11-quest-ai-lane/D1-RESIDUAL-ADJUDICATION.zh-CN.md`
+  + 同目录 `audit_residual_bindings.py` / `d1-residual-adjudication.tsv`。
+
+## [QE-137] 一百三十七、对话窗下发面契约：通用页必须 questId=0、采集物件不许开窗、questId=0 兜底需认领信号 (DIALOG_WINDOW_PAGE_CONTRACT)
+
+<!-- pattern-metadata
+status: CONFIRMED
+scope: SM_DIALOG_WINDOW 的下发面（页 id 与 questId 的搭配纪律）：任务对话 NPC 上开通用选择页 10、采集物件（collect object）交互后的回页、接取收尾页；不含契约页集合内正经任务页的下发
+first_seen: 2026-10-04
+last_verified: 2026-10-04
+symptom: ① 真机 1101（SimpleTalk 零步行，START 态）右键米雷斯 → 下发「页 10 带 questId=1101」×3 → 客户端 load fail（契约页集合 {4,1003,1004,1011,2375} 无页 10）；② 真机 1103 与谷物袋子交互：advance 状态同步（步数=1）后同帧下发「页 10（两参，questId=0）」到采集物对象 → 客户端 load fail（物件根本没有对话 html）；③ 真机 80789 接取（20000）收到页 1008（完成页）→ 玩家看到「获得了礼物」完成文案（实际只是接取）；④ 超杀（相机满后再点采集物）onObjectUse 返回 false 落空 → TalkEventHandler default 对物件补发通用页 10 → 再次 load fail
+root_cause: ① 三参 `SM_DIALOG_WINDOW(objectId, page, questId)` 让客户端**按该任务的 html 加载 page**——页不在客户端契约声明内即 load fail；通用选择页 10 是 NPC 级上下文页，必须 questId=0（9/30 基线日志全部如此）。② 采集物件不是对话对象：真端物件交互无 after-commit 页（1103 退役 XML `TALK_TO_NPC npc-id=700105 started→started` 无页；QE-044 口径 = PACKET_ONLY 状态同步，advance 内已发 SM_QUEST_ACTION）——在物件上开任何对话窗（含 questId=0 通用页）都 load fail。③ 真端接取收尾语义（80789/80790 退役 XML）= `QUEST_ACCEPT_SIMPLE → started + close-dialog`、`QUEST_REFUSE_SIMPLE → close-dialog`；1008 是「完成通道」动作（ACTION_COMPLETE）的回页，不是接取回页。④ QuestEngine questId=0 兜底对采集物先手重放后，未推进（超杀/条件不满足）会继续落到 TalkEventHandler 的通用页 10 回落——对物件同样 load fail；真端超杀 = 零副作用零包
+fix_or_guardrail: 1. **通用页 10 一律不带 questId**（七处修复：SimpleTalk / SimpleCollectItem×2 / SimpleUseItem / CombineTask / ItemPlay×2；SimpleHunt/SerialHunt 另 3 处字面量同型）；判定口径：页 ∈ 客户端契约页集合才可带 questId，NPC 通用选择页恒 questId=0；2. **物件交互零回页**：采集族 START 段命中物件目标只调 `onObjectUse`（推进或零副作用），不补发任何对话窗；3. **认领信号**：`QuestEngine` questId=0 兜底先手 loop 加 `collectObjectClaimed`——物件属 native 采集族（routes 通过）即认领，loop 全 false 也 return true，不得落 TalkEventHandler default 页 10；4. 接取收尾 20000/20001 → close-dialog（`SM_DIALOG_WINDOW(0,0)`），1008 只留给 ACTION_COMPLETE；5. 验证口径：真机日志三件套（状态同步 + 下发页 + 目标对象 id）逐帧对拍退役 XML 的 after-commit 页声明
+evidence: log/quests.log 2026-10-04 15:37（1103：状态同步步数=1 同帧「targetObj=11967 questId=0 下发页=10」）与 10:16（1101：页10 带 questId×3 → load fail）; 退役 XML（`git show 4ede058c0~1` 逐件取回，行为普查见 retired-xml-behavior-census.md）：1101=NPC_REPORT SELECT5 203057、1103=TALK_TO_NPC 700105 无 after-commit、80789/80790=QUEST_ACCEPT_SIMPLE + close-dialog; src/main/java/com/aionemu/gameserver/questEngine/QuestEngine.java（collectObjectClaimed）; src/main/java/com/aionemu/gameserver/questEngine/tablelane/SimpleCollectItemHandler.java（START 段物件交互 return onObjectUse）; 同族 7 处页10 去 questId + DataDrivenNativeRuntime 收尾分支; QE-044（PACKET_ONLY 口径）; .agents/summary/quest-accept-silent-refusal-20261003/DIAGNOSIS.zh-CN.md（缺陷 I/J/K）
+validation: 2026-10-04 IDEA MCP runner：SimpleCollectItemNativeFamilyGateTest 14/14、QuestEngineNpcDialogDispatchTest 6/6、SimpleTalk/SimpleUseItem/SimpleHunt/SimpleSerialHunt 族门 + NativeQuestRewardClaimGateTest + DataDrivenNativeRuntimeGateTest 全绿（8 类 91+/91+，DataDriven 20001 断言更新为关窗 0）；真机复测（1103 交互零窗口、1101 无 load fail、80789 接取关窗）待用户执行
+superseded_by: none
+boundaries: ① 契约页集合内的正经任务页（信页/阶段页/奖励窗/确认页）仍带 questId（客户端按任务 html authored）；② close-dialog 以 `SM_DIALOG_WINDOW(0,0)` 表达（真端 9/28 记录为零包，用户裁定后如改纯零包需同步 DataDrivenNativeRuntime 收尾分支）；③ XML 车道（typed）不在本 Pattern 范围；④ 物件多任务共挂 + 首个任务超杀的边缘场景按「认领即吞」处理（loop 不续投其余 ref，无实机证据存在此形态）
+see_also: [QE-044], [QE-100], [QE-093], [QE-132]
+first_check: 对某目标下发对话窗前先答：① 页 id 在客户端契约页集合里吗（不在 ⇒ 只能通用上下文 questId=0，且多半根本不该发）？② 目标对象是对话 NPC 还是采集物件（物件 ⇒ 一律不开窗，PACKET_ONLY）？③ 这个动作真端有 after-commit 页吗（查退役 XML 的 dialogue transition，不是所有交互都有回页）？④ questId=0 入口兜底是否会落到对物件补发通用页？
+keywords: SM_DIALOG_WINDOW、questId=0、通用页10、load fail、契约页集合、采集物、物件交互、PACKET_ONLY、QE-044、认领信号、collectObjectClaimed、close-dialog、20000、20001、1008、接取收尾、TalkEventHandler、DIALOG_WINDOW_PAGE_CONTRACT、QE-137
+-->
+
+- **判定规则**：页 ∈ 客户端契约页集合才可带 questId；NPC 通用选择页 10 恒 questId=0；采集物件交互零回页（只发 PACKET_ONLY 状态同步）。
+- **安全网**：questId=0 兜底的采集物先手必须有认领信号（collectObjectClaimed），超杀/条件不满足也不落 TalkEventHandler default 页 10；接取收尾 = close-dialog，1008 只属 ACTION_COMPLETE。
+- **反漂移**：别对非对话物件开任何对话窗（连通用页也会 load fail）；别把 1008 当接取回页；改页下发前先对拍退役 XML 的 after-commit 声明。
+
+## [QE-138] 一百三十八、NPC_REPORT 两步报告语义：31 只发确认页、确认动作推进 REWARD（直翻型 1009 / 检查型 39；三型确认页 1352/2375/10002） (REPORT_TWO_STEP_CONFIRM)
+
+<!-- pattern-metadata
+status: CONFIRMED
+scope: 真端 NPC_REPORT 报告的对话推进面（SimpleTalk/SimpleCollectItem/SimpleUseItem/DataDriven 零步交付等「报告 NPC」车道）；SimpleHunt/SerialHunt（杀满自动 REWARD 无报告步）与 SimpleCombineTask（已 1009 驱动）不适用
+first_seen: 2026-10-04
+last_verified: 2026-10-04
+symptom: ① 旧实现（715a00136 切换批之前）报告段对任何动作（31/26/1009/-1）无条件推进 REWARD + 奖励窗 ⇒ 玩家刚接取在交付 NPC 上点任务行即被推进到报告态（跳步，9/28 基线是点行只发确认页）；② DataDriven 零步行（80788 族）切 native 后报告面缺失（31 零响应）；③ 两步实现在第一步就调 handInComplete（内含扣物品）⇒ 第一次点 31 物品即被扣走，1009 第二步 handIn 失败（门禁实测：期望 [5] 实得 [10]）；④ 真机 1103 报告页（2375）点「拿出找到的谷物袋子」→ 客户端发 **39**（HACTION_CHECK_USER_HAS_QUEST_ITEM）→ 服务端落空零响应 → 玩家重开再点，页面在 select5 原地重复（16:27 quests.log 三连「动作=39」全无 S->C 回包）
+root_cause: 真端 NPC_REPORT 是**两步报告**：点任务行（31）只下发客户端声明的报告确认页，报告确认（1009）才推进 REWARD + 奖励窗（页 5）。6224 件退役 XML 普查：NPC_REPORT 分型三页——SELECT2(1352) 842 件 / SELECT5(2375) 522 件 / DEFAULT_SUCCESS(10002) 276 件，共 1640 件；10002 型由客户端自动回发 1009（9/28 80790 基线 11ms 闭环）。开门动作（-1/26）不推进不跳步。**确认动作随任务页而分（2026-10-04 全量客户端页普查，9127 件 html 含子目录）**：直翻型报告页按钮 = SELECT_QUEST_REWARD(1009)；检查型 = CHECK_USER_HAS_QUEST_ITEM(39)——报告页的整组检查按钮，服务端检查未通过时真端下发客户端声明的失败应答页 select6(2716)。普查口径：39 用户全库 2234 件；两族（Talk 675 + CollectItem 85）全部声明 select6 且无一声明 10000；UseItem/其余族 0 件；DD 表 10 件（1870/2870 归 XML 保留，其余 8 件为 10000/10001 结果页型 Shape B，非零步交付面所辖，未接线=悬案）
+fix_or_guardrail: 1. 31 → `QuestDialogContract.reportConfirmPage(questId)`（按 SELECT2/SELECT5/DEFAULT_SUCCESS 声明序取页，-1=未声明 → 降级一步直达保旧行为）；1009 → 推进 REWARD + SM_QUEST_ACTION(状态4) + 页 5；-1/26 永不推进；2. **就绪检查必须无副作用**：拆 `handInReady`（talkChain 完成 + 相机满 + 持有交付物，不扣）与 `handInComplete`（内部先 handInReady 再扣物品）——两步第一步只调 handInReady，第二步才 handInComplete；3. 五处改造面：SimpleTalk / DataDrivenNativeRuntime（零步交付面 dispatchReportDialog，用 raw `getQuestState` 不用 START-only state() helper）/ SimpleCollectItem / SimpleUseItem；4. 声明优先口径：客户端任务页契约（client_dialog_contract.tsv）是确认页判据，退役 XML 作交叉印证；5. **39 检查按钮（2026-10-04）**：`QuestDialogContract.checkFailPage(questId)`（select6=2716 声明即返回，未声明 -1 fail-closed）；两族报告段 39 与 1009 同义推进（持满时），`39 且未持满` → 下发 checkFailPage（失败应答页）；改造面 = SimpleTalkHandler + SimpleCollectItemHandler（两族 39 用户 675+85 全覆盖；UseItem/DataDriven 普查 0 件不接）
+evidence: 6224 件退役 XML 普查（`git show 4ede058c0~1` 逐件取回，分型见 retired-xml-behavior-census.md）; src/main/java/com/aionemu/gameserver/questEngine/definition/QuestDialogContract.java（reportConfirmPage）; src/main/java/com/aionemu/gameserver/questEngine/tablelane/SimpleCollectItemHandler.java（handInReady/handInComplete 拆分）与 SimpleTalkHandler/SimpleUseItemHandler/DataDrivenNativeRuntime（两步段）; 分型样例（同上退役 XML）：80787=10002 型、1101/1137/80482/1107=2375 型、1102=1352 型; 39 检查按钮：log/quests.log 2026-10-04 16:27（1103 动作=39 三连零响应）与同日 15:37 基线; 客户端 Dialogs 全量 html 抽查（QUEST_Q1103/Q1105/Q1000 select5 按钮=39 + select6 失败文案「你难道不会数数吗」；QUEST_Q1101 对照 select5 按钮=1009）; src/main/java/com/aionemu/gameserver/questEngine/definition/QuestDialogContract.java（checkFailPage）; quest.xml 1103/1105 行（collect_item 整组 = 检查门）; .agents/summary/quest-accept-silent-refusal-20261003/DIAGNOSIS.zh-CN.md（缺陷 H/M）与 retired-xml-behavior-census.md
+validation: 2026-10-04 IDEA MCP runner：全族 105/105 绿（SimpleCollectItem 1137/18501、SimpleUseItem 80482/1107 旧断言更新为两步流；DataDriven 80787 三步全链：31→页10002 不推进、1009→REWARD+5）；真机 80788/80790 全链（31→REWARD+页5→23→COMPLETE）；39 检查按钮（同日）：SimpleCollectItem 族门 15/15（新增 1137 39 持满推进 + 39 缺物→2716）、SimpleTalk 族门 11/11（新增 1211 同型）、NativeQuestRewardClaimGateTest 14/14、QuestEngineNpcDialogDispatchTest 6/6；真机 1103 报告链复测待用户执行
+superseded_by: none
+boundaries: ① SimpleHunt/SimpleSerialHunt 杀满自动 REWARD，无报告步（其 31/26 在未完成时发页 10 正常）；② SimpleCombineTask 已 1009 驱动（合成完成事件推进），不问 31；③ SimpleItemPlay 物品使用事件驱动；④ 裁定 a（2026-10-03 用户）：加报告确认页 = 两步报告语义，不做一步直达（除未声明降级）；⑤ DD 表 8 件 Shape B 行（3124/4121/4124/9691/9692/9716/9717/9801：select1 挂 39 + 10000/10001 结果页 + select_success 1009，属 DD 步进面而非零步交付面）未接线——悬案，需独立取证（对照：SimpleSerialHunt 16 行 0 相机悬案见 QE-139）；⑥ 39 在其它状态的动作（如 canonical 30217 的「1693 页确认按钮 39 在 REWARD 态开奖励窗」型）不在本 Pattern 的表车道两族范围
+see_also: [QE-044], [QE-137], [QE-132], [QE-140]
+first_check: 改报告 NPC 交互前先答：① 该任务客户端声明的报告确认页是哪型（1352/2375/10002，查 client_dialog_contract 或退役 XML）？② 该动作是真端报告两步的哪一步（31 确认 / 1009 推进 / -1、26 不推进）？③ 就绪检查有没有副作用（扣物品必须只在第二步）？④ 该族是不是杀满自动 REWARD（无报告步）？⑤ 报告页按钮是直翻型（1009）还是检查型（39）——检查型必须同时答「未持满时下发哪个声明失败页（checkFailPage：select6=2716）」？
+keywords: NPC_REPORT、两步报告、报告确认页、SELECT2、SELECT5、DEFAULT_SUCCESS、1352、2375、10002、31、1009、39、CHECK_USER_HAS_QUEST_ITEM、HACTION_CHECK_USER_HAS_QUEST_ITEM、select6、2716、checkFailPage、报错页重复、handInReady、handInComplete、无副作用就绪检查、reportConfirmPage、REPORT_TWO_STEP_CONFIRM、QE-138
+-->
+
+- **判定规则**：报告 NPC 上 31 = 只发客户端声明确认页（1352/2375/10002），确认动作推进 REWARD + 奖励窗——直翻型 1009 / 检查型 39（未持满 → checkFailPage 的 select6=2716）；-1/26 永不推进。
+- **安全网**：就绪检查拆无副作用 `handInReady` 与带扣除 `handInComplete`，扣物品只发生在第二步；39 失败页只发客户端声明的 select6（未声明 fail-closed 不发）。
+- **反漂移**：别对任何动作无条件推进（跳步）；别在第一步扣物品；确认页以客户端契约声明为准、退役 XML 作交叉印证；别把 39 当未知动作吞掉（两族 675+85 件报告页的主按钮）。
+
+## [QE-139] 一百三十九、族推进机制以真端相机调用集为准：采集族无相机 = 物品驱动；表车道击杀掉落须由 native 从 drop 列接手（Talk 1031 行同型断供） (COLLECT_FAMILY_ITEM_DRIVEN)
+
+<!-- pattern-metadata
+status: CONFIRMED
+scope: SimpleCollectItem 全族（262 行）的采集交互/击杀推进机制与物品发放面，以及表车道各族的击杀掉落发放面（Talk 族 1031 行，2026-10-04 扩展）；不含报告面（见 QE-138）与 SimpleHunt/SerialHunt 的相机（另行取证）
+first_seen: 2026-10-04
+last_verified: 2026-10-04
+symptom: ① 真机 1103：与谷物袋子交互 1 次后任务追踪显示"进入下一步"（任务要求采 3 个）；② 任务物品（quest_1103a）永不入包——交互后无掉落列表，无法凑齐交付物；③ 交付门被"相机满值"堵死（物品驱动下该条件永不成立）；④（Talk 族同型，2026-10-04）真机 1105：击杀 210079（MerdionQ_2_n）无任务道具——退役 XML 连同其 `<drops>` 退出 catalog 后本族 1031 行的击杀掉落断供
+root_cause: P4 批把真端 quest.xml 的 collect_itemN 计数误当作采集相机 required（NativeCollectSpecs 从 itemRequirements 派生相机），交互/击杀按相机 +1 写 var0。真端采集族**根本没有相机**：camera-params.tsv（2463 调用点/1812 任务）中本族 262 行 0 命中（对照 SimpleHunt 1812/1863）；真端源码复核 FUN_180cb13b0/14e0 对采集行（0x44f/0x470/0x465,）0 命中。旧 XML（1103/1137/2346）的交互/击杀转换同为 started→started 零 var 写，节点 var 全 0，collect_progress=0 覆盖 250/262 行（客户端在 var0==0 维持采集步与报告对白条件）。真实机制=物品驱动：交互掉物品（drop_monster_K→drop_item_K，prob 判定，每次 1 个）→ isQuestDrop 按 metadata.itemRequirements()（=collect_item 列）判"未持满才掉"（"采 3 个"即此上限）→ 报告门=持有 collect_item 整组（check_item）。另有次生缺口：退役 XML 后 catalog 无该行 <drops>（overlay 直通），native 侧未接手 ⇒ getQuestDrop 空 ⇒ 交互物 AI 早退、物品永不发放。**族级翻版（2026-10-04 缺陷 N）**：Talk 族同为表车道且只迁了对话面——退役 XML 的 <drops> 退出 catalog 后 1031 行击杀掉落断供（真机 1105 击杀 210079 无道具），同一机制缺口在每一条「表车道 + quest.xml drop 列」的行上都存在
+fix_or_guardrail: 1. **归属判定先查相机集**：某族/某行是否相机驱动，以真端相机调用集（camera-params.tsv 全量扫描，或对 FUN_180cb13b0/14e0 按 questId 词界 grep）为准——"有 collect_item 列/计数" ≠ "有相机"，相机 required 不得从任何其它列反推；2. **无相机族 = 事件/物品驱动**：交互只认领（零状态写、不发 SM_QUEST_ACTION），var0 保持（客户端按 collect_progress 维持步骤显示）；3. **掉落必须在 native 侧接手（族无关不变量）**：退役 XML 行的 <drops> 随 catalog 退场，**每个表车道族**都要从真端 drop 列在 native 侧注册（构建期先按 quest.xml drop_item/drop_monster 列预筛 → `retailMetadataOf` → `QuestCatalogDrop.catalog` 包装；概率/上限语义原样交 `isQuestDrop`），经 QuestEngine.questDrops 聚合（目录优先、同 questId 单一 owner；XML 保留行 xmlOwnedIds 跳供）；对象侧走 QuestItemNpcAI2 掉落列表、击杀侧走通用掉落装配——同一查询；4. **交付门只认物品**（check_item/collect_item 整组持有），不得再要求相机满值；5. routable 条件里"本行有对象"必须用本行对象列表而非外层 Map（`!objects.isEmpty()` 恒真的坑）
+evidence: .agents/summary/quest-engine-native/p0a/camera-params.tsv（2463 调用点，采集族 0 命中）与 semantic-matrix-camera-channels.md（双通道副作用矩阵：NORMAL_WRITE 也同步客户端 n/required——真端 var0 就是计数语义）；真端源码 MainServer_ScriptDLL64/fun/*.cpp 对 0x44f/0x470/0x465, 的 0 命中与 1102 对照 fun_760.cpp:517；退役 XML 1103/1137/2346（git show 4ede058c0~1，见 retired-xml-behavior-census.md）；src/main/java/com/aionemu/gameserver/questEngine/tablelane/SimpleCollectItemHandler.java（questDropsFor/认领零写/handInReady 去相机门）；src/main/java/com/aionemu/gameserver/questEngine/QuestEngine.java（questDrops 聚合）；src/main/java/com/aionemu/gameserver/services/QuestService.java:isQuestDrop（collect_item 上限判定）；quest.xml 1103 行（collect_item1=quest_1103a 3 / drop_monster_1=LF1_Cherubim_pouch / check_item1_1=3）；退役 XML 1105（`drop npc-id=210079 item-id=182200202 chance=100 each-member`）+ quest.xml 1105 行（drop_monster_1=MerdionQ_2_n）；src/main/java/com/aionemu/gameserver/questEngine/tablelane/SimpleTalkHandler.java（dropsByNpcId/questDropsFor/XML 保留行跳供）；QuestEngine.questDrops（catalog ∪ 采集 ∪ Talk 聚合）；缺口普查：quest.xml 全表 10035 行（含 drop 列 1779）∩ 表车道各族 = Talk 1031 / Collect 253 / UseItem 1 / 其余 0；.agents/summary/quest-accept-silent-refusal-20261003/DIAGNOSIS.zh-CN.md（缺陷 L/N）
+validation: 2026-10-04 IDEA MCP runner：采集族门 14/14（认领语义 4 用例改写）、行对齐门 7/7（无相机冻结 + 39611/49611 组表解析：路由列 273→275）、领奖门 14/14、18501 2/2、3734 2/2、Haramel 2/2、契约门 2/2、分发门 6/6、DataDriven 25/25、Talk 9/9、UseItem 11/11、Hunt 4/4、SerialHunt 4/4；缺陷 N 后（同日）：Talk 族 12/12（新增 1105 击杀掉落 + XML 保留行跳供断言）、采集族 15/15 回归、分发门 6/6；真机复测（1103 采 3 个/1105 击杀掉落，受报告面缺陷 M 叠加）待用户执行
+superseded_by: none
+boundaries: ① SimpleSerialHunt 16 行同为 0 相机（其 stage 相机写系 P2 批设计）——未动，需独立取证（悬案）；② 中继链（talk_npc1..3）的步位写（raw vars 16..17）本轮未动（无用户报告）；③ 采集族 collect_progress=1/3 的 3 个特例行仅装载，其 var0 特有语义（报告面写）未实现；④ camera-params.tsv 是 P0a 审计产物（.agents/summary），生产运行不消费——本 Pattern 的"相机集"是审计判据不是运行数据；⑤ **DD 表 221 行有掉落列且 DD 运行时无掉落面（悬案，需独立取证——其中 10 行同批出现在 39 检查按钮普查中，见 QE-138 boundaries ⑤）**；⑥ UseItem 2435（1 行）同型未接线（退役 XML drops=212548/212549→182204181 prob 80，悬案）；⑦ Talk 族 1031 行中 130 余行落非生产全集（quest.xml 全表 10035 ⊃ 生产 6217，惰性数据）
+see_also: [QE-044], [QE-138], [QE-137]
+first_check: 动某族推进机制或"计数"前先答：① 该族/该行在真端相机调用集里有吗（camera-params.tsv 或词界 grep；别从 collect_item 等列反推）？② 无相机族的交互该写什么（答：零写，只认领；计数在物品面）？③ 该任务的掉落条目从哪来（catalog 有吗；**表车道行的 drops 由各族 native 注册**——查 quest.xml drop_item 列与 QuestEngine.questDrops 聚合面）？④ 交付门判据是物品还是相机（无相机族=只认物品）？⑤ routable 的"有对象"用的是本行列表还是外层容器？
+keywords: 采集族、SimpleCollectItem、物品驱动、相机证伪、camera-params、262/262、collect_item 上限、isQuestDrop、掉落列表、QuestItemNpcAI2、questDropsFor、认领零写、采一个就下一步、var0、collect_progress、1103、谷物袋子、击杀掉落、drop 列接手、1105、210079、MerdionQ_2_n、Talk 族、掉落断供、COLLECT_FAMILY_ITEM_DRIVEN、QE-139
+-->
+
+- **判定规则**：族是否相机驱动只看真端相机调用集（camera-params.tsv / 词界 grep）——"有 collect_item" ≠ "有相机"；无相机族交互零写（认领），计数在物品面（drop 列 + isQuestDrop 的 collect_item 上限 + check_item 报告门）；击杀掉落同看 drop 列（表车道各族 native 注册，XML 保留行跳供）。
+- **安全网**：退役 XML 行的 drops 必须由 native 接手（QuestCatalogDrop 带 metadata 注册，经 QuestEngine.questDrops 聚合；采集族与 Talk 族已接，DD 221 行/UseItem 2435 悬案）；交付门只认持有物；routable 的"有对象"用本行列表。
+- **反漂移**：别从交付列/计数列反推相机 required；别在无相机族发状态写；别把外层 Map 的非空当本行条件；别只给对话面迁移收尾就宣布一族完成——掉落面同样是族的组成部分。
+
+## [QE-140] 一百四十、领奖结算收尾 = 回选择对话页（真端 npc-complete finish=SELECTION_DIALOG；旧引擎基线 状态5→页10；非 QUEST_COMPLETE 1008） (CLAIM_TAIL_SELECTION_DIALOG)
+
+<!-- pattern-metadata
+status: CONFIRMED
+scope: 表车道各族（Talk/CollectItem/UseItem/Hunt/SerialHunt/CombineTask/ItemPlay 领奖分支 + DataDriven 零步交付面）的领奖结算收尾页；不含报告两步（QE-138）与 DD 步进/接取面的 1008 完成通道（e1 裁定保留）
+first_seen: 2026-10-04
+last_verified: 2026-10-04
+symptom: 真机领奖（23/选项确认 → 状态=5）后客户端页面不正确——把「任务列表完成的任务信息」式页面（QUEST_COMPLETE=1008 完成页）展示在奖励对话之后；旧引擎（9/28 基线）为「回选择对话页（10，questId=0）」
+root_cause: P 系列表车道迁移把领奖收尾写成 `SM_DIALOG_WINDOW(objectId, QUEST_COMPLETE=1008, questId)`（带 questId 的完成页）。真端语义 = npc-complete finish 型：SELECTION_DIALOG 4801/4805（CLOSE_DIALOG 仅 4）；旧引擎实机日志（9/28 12:12，1103）：动作=23 → SM_QUEST_ACTION 状态=5 → SM_DIALOG_WINDOW questId=0 下发页=10；canonical 展开层同义（QuestXmlBlockExpander → AfterCommitAction.ShowQuestSelectionDialog(SELECT_QUEST=10)，PlayerQuestDialogPort 以 2 参 SM_DIALOG_WINDOW(objectId, 10) 发送）
+fix_or_guardrail: 1. **领奖成功收尾一律发页 10（questId=0）**：`new SM_DIALOG_WINDOW(objectId, QuestDialogPage.SELECT_QUEST.id())`（2 参 = questId 0；QE-137 通用页规则），八处投递点：SimpleTalk/SimpleCollectItem/SimpleUseItem/SimpleHunt/SimpleSerialHunt/SimpleCombineTask/SimpleItemPlay 的领奖分支 + DataDrivenNativeRuntime.dispatchReportDialog 的 23/选项确认分支；单点使用的 PAGE_COMPLETE(1008) 常量随改删除防漂移（DataDriven 保留——其步进/接取面 1008 完成通道 e1 裁定保留）；2. 判定口径：收尾页以 npc-complete finish 型 + 旧引擎实机日志为准，不得以「完成页=QUEST_COMPLETE 页」想当然；3. 测试面：各族门/领奖门断言收尾页 = SELECT_QUEST(10)
+evidence: 退役 XML 普查（.agents/summary/quest-accept-silent-refusal-20261003/retired-xml-behavior-census.md：npc-complete finish SELECTION_DIALOG=4801 / CLOSE_DIALOG=4）；log/quests.log 9/28 12:12（旧引擎 1103：23 → 状态5 → questId=0 页=10）；src/main/java/com/aionemu/gameserver/questEngine/definition/QuestXmlBlockExpander.java（ShowQuestSelectionDialog(SELECT_QUEST.id())）与 src/main/java/com/aionemu/gameserver/questEngine/runtime/PlayerQuestDialogPort.java:56（showSelectionDialog = 2 参页 10 发送）；八处投递点源码（src/main/java/com/aionemu/gameserver/questEngine/tablelane/SimpleTalkHandler.java / SimpleCollectItemHandler.java / SimpleUseItemHandler.java / SimpleHuntHandler.java / SimpleSerialHuntHandler.java / SimpleCombineTaskHandler.java / SimpleItemPlayHandler.java + src/main/java/com/aionemu/gameserver/questEngine/tablelane/DataDrivenNativeRuntime.java）；.agents/summary/quest-accept-silent-refusal-20261003/DIAGNOSIS.zh-CN.md（缺陷 O）
+validation: 2026-10-04 IDEA MCP runner：NativeQuestRewardClaimGateTest 14/14、SimpleTalk 族 12/12、SimpleCollectItem 族 15/15、SimpleUseItem 族 11/11、SimpleCombineTask 族 11/11、SimpleItemPlay 族 14/14、DataDriven 25/25、QuestDialog31RegressionTest 阶梯段通过（后段 26823 = 既存红）；真机复测待用户执行
+superseded_by: none
+boundaries: ① 4 件 CLOSE_DIALOG 型（普查未列 id）未分离——仍按页 10 收尾（悬案，量级 ~0.1%）；② DataDriven 步进面 ACTION_ADVANCE_COMPLETE/ACTION_COMPLETE 与接取面 1008 通道的完成页（1008）为 e1 裁定保留，不在本轮；③ canonical/定义层（QuestRuntimeRouter 车道）本就正确（ShowQuestSelectionDialog），无需改动；④ QuestDialog31RegressionTest 的 26823 行 = 既存红（26823 归 DD 表车道、catalog 无定义，测试期望过时，与既存红 1112 同型）
+see_also: [QE-137], [QE-138], [QE-044]
+first_check: 领奖收尾页出错前先答：① 该收尾在真端是哪种 finish 型（npc-complete finish=SELECTION_DIALOG ⇒ 页 10 / CLOSE_DIALOG ⇒ 关窗）？② 旧引擎实机日志（quests.log 9/28-10/03）该动作序列发的是什么页？③ canonical 展开层对该边给出什么 AfterCommitAction（ShowQuestSelectionDialog 是正解先例）？④ 是不是把「完成页」想当然成了 QUEST_COMPLETE(1008)？
+keywords: 领奖收尾、npc-complete、SELECTION_DIALOG、回选择对话、页10、SELECT_QUEST、1008、QUEST_COMPLETE、claim tail、任务列表、奖励对话之后、PAGE_COMPLETE、CLAIM_TAIL_SELECTION_DIALOG、QE-140
+-->
+
+- **判定规则**：领奖成功收尾 = 页 10（questId=0，2 参）；真端依据 = npc-complete finish=SELECTION_DIALOG（4801/4805）+ 旧引擎 9/28 日志。
+- **安全网**：八处投递点统一走 `QuestDialogPage.SELECT_QUEST.id()`；单点 PAGE_COMPLETE 常量删除防漂移（DataDriven 的 1008 通道保留）。
+- **反漂移**：别把完成收尾发成 QUEST_COMPLETE(1008)+questId；别只改一族——收尾语义是族无关不变量；DD 步进/接取通道的 1008 是另一裁定面，勿混改。

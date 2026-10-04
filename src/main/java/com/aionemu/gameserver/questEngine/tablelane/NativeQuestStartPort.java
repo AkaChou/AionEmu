@@ -4,6 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.aionemu.boot.i18n.I18n;
 import com.aionemu.gameserver.model.gameobjects.PersistentState;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.questEngine.retail.RetailQuestMetadataCompiler;
@@ -99,6 +103,9 @@ public final class NativeQuestStartPort {
 		}
 	}
 
+	/** 任务追踪日志出口，路由到 logback 的 quest logger。 / Quest trace sink for the quest logger. */
+	private static final Logger QUEST_TRACE_LOG = LoggerFactory.getLogger("quest");
+
 	private static volatile NativeQuestStartPort instance;
 
 	private final NativeQuestXmlTable questXml;
@@ -134,6 +141,25 @@ public final class NativeQuestStartPort {
 	public StartResult start(Player player, int questId) {
 		StartResult verdict = evaluateNpcAcquire(player, questId);
 		return verdict.started() ? commit(player, questId) : verdict;
+	}
+
+	/**
+	 * NPC 接取并打拒绝追踪（五个表车道接取面共用）：结论与 {@link #start(Player, int)} 完全一致，
+	 * 仅在拒绝时向 {@code quest} logger 输出结论轴 detail，消除「点了接受零反馈零日志」的静默面。
+	 * <p>
+	 * Acquire with a refusal trace shared by the five table-lane accept faces: the verdict is
+	 * identical to {@link #start(Player, int)}; only refusals are traced to the {@code quest} logger,
+	 * removing the silent accept face (no packet, no log).
+	 */
+	public StartResult startTraced(Player player, int questId, int dialogId) {
+		StartResult verdict = evaluateNpcAcquire(player, questId);
+		if (!verdict.started()) {
+			QUEST_TRACE_LOG.info(I18n.get("log.quest_trace.acquire_refused",
+				player == null ? "unknown" : player.getName(), questId, dialogId,
+				verdict.outcome() + ": " + verdict.detail()));
+			return verdict;
+		}
+		return commit(player, questId);
 	}
 
 	/**

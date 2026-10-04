@@ -170,6 +170,46 @@ public final class QuestDialogContract {
 		return hasButtonPage(questId, pageId) ? pageId : -1;
 	}
 
+	/**
+	 * 报告确认页（裁定 a，2026-10-03）：旧编译器 {@code NPC_REPORT} 分型三页
+	 * {@code SELECT2(1352)/SELECT5(2375)/DEFAULT_SUCCESS(10002)}，以客户端任务页声明为准
+	 * （契约与退役 XML 交叉印证一致：80787 族=10002、1101=2375、1102=1352）。两步语义：
+	 * 任务行选择（31）只发该页不推进，报告确认——直翻型 {@code 1009} 或检查型
+	 * {@code 39}（{@link #checkFailPage}）——才推进 REWARD + 奖励窗；
+	 * {@code 10002}(select_success) 为客户端自动确认页。无声明返回 {@code -1}（调用方按
+	 * DEFAULT_SUCCESS 行为一步直达奖励窗，保持可用）。
+	 * <p>
+	 * The report-confirm page (retail NPC_REPORT three-page typing, adjudicated by the client
+	 * contract): the row selection shows it without advancing; {@code 1009} advances to REWARD.
+	 * {@code -1} = undeclared, callers fall back to the one-step reward window.
+	 */
+	public int reportConfirmPage(int questId) {
+		for (int pageId : new int[] { QuestDialogPage.SELECT2.id(), QuestDialogPage.SELECT5.id(),
+				QuestDialogPage.DEFAULT_SUCCESS.id() }) {
+			if (hasButtonPage(questId, pageId)) {
+				return pageId;
+			}
+		}
+		return -1;
+	}
+
+	/**
+	 * 39 检查按钮（{@code HACTION_CHECK_USER_HAS_QUEST_ITEM}）的失败结果页（{@code select6=2716}）：
+	 * 报告页的「拿出…」按钮触发服务端整组检查，未通过时真端下发客户端声明的失败应答页
+	 * （任务作者写作 select6，如 1103「你难道不会数数吗」/ 1105「您别跟我开玩笑」）。
+	 * 两族 39 用户（SimpleTalk 675 + SimpleCollectItem 85，2026-10-04 全量客户端页普查）全部声明该页；
+	 * 未声明返回 {@code -1}（fail-closed，不发明页）。
+	 * <p>
+	 * The failure result page of the 39 check button ({@code select6=2716}): the report page's check
+	 * button triggers the server-side whole-group check; when the group is missing the retail server
+	 * shows the client-declared fail page. Every in-family 39 row declares it; undeclared rows return
+	 * {@code -1} (fail closed, never invent a page).
+	 */
+	public int checkFailPage(int questId) {
+		int pageId = QuestDialogPage.SELECT6.id();
+		return hasButtonPage(questId, pageId) ? pageId : -1;
+	}
+
 	public boolean hasButtonPage(int questId, int pageId) {
 		return buttonPages.getOrDefault(questId, Map.of()).containsKey(pageId);
 	}

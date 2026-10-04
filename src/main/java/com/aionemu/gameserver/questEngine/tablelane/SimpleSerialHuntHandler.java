@@ -372,9 +372,9 @@ public final class SimpleSerialHuntHandler {
 					PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, dialogId, questId));
 					return true;
 				} else if (dialogId == 1002 || dialogId == 20000) {
-					// 确认接取任务
-					// 真端接取：条件判定 + 建档走 native 状态端口（不依赖 typed QuestTemplate）。
-					if (NativeQuestStartPort.instance().start(player, questId).started()) {
+					// 确认接取任务（拒绝走 startTraced 打 QUEST-TRACE，不再静默）。
+					// Confirm acquire; refusals are traced instead of silent.
+					if (NativeQuestStartPort.instance().startTraced(player, questId, dialogId).started()) {
 						Set<Integer> briefingNpcs = briefingNpcsByQuestId.get(questId);
 						if (briefingNpcs != null && !briefingNpcs.isEmpty()) {
 							QuestState qs = player.getQuestStateList().getQuestState(questId);
@@ -402,7 +402,7 @@ public final class SimpleSerialHuntHandler {
 				int vars = state.getQuestVars().getQuestVars();
 				if (!RawQuestVarsCodec.guardClear(vars)) {
 					if (dialogId == 26 || dialogId == 31 || dialogId == -1) {
-						PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 10, questId));
+						PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 10));
 						return true;
 					} else if (dialogId == 10000 || dialogId == 1003 || dialogId == 10001 || dialogId == 31
 							|| dialogId == 20000) {
@@ -419,7 +419,7 @@ public final class SimpleSerialHuntHandler {
 			if (rewNpc != null && rewNpc == npcId) {
 				if (dialogId == 31 || dialogId == 26) {
 					// 尚未完成杀怪：常规未完成对话提示 (page 10)
-					PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 10, questId));
+					PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 10));
 					return true;
 				}
 			}
@@ -434,11 +434,21 @@ public final class SimpleSerialHuntHandler {
 					// 展示奖励选择窗口 (select_quest_reward1 / page 5)
 					PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 5, questId));
 					return true;
-				} else if ((dialogId >= 8 && dialogId <= 23) || dialogId == 108 || (dialogId >= 110 && dialogId <= 124)) {
-					// 结算奖励并完成任务
-					int rewardIndex = (dialogId >= 8 && dialogId <= 23) ? (dialogId - 8) : 0;
+				} else if ((dialogId >= 8 && dialogId <= 22)
+						|| dialogId == QuestDialogAction.SELECTED_QUEST_NOREWARD.id()
+						|| dialogId == 108 || (dialogId >= 110 && dialogId <= 124)) {
+					// 选项段只有 SELECTED_QUEST_REWARD1..15（8..22）；23 = NOREWARD 无选择确认，
+					// 不占选项下标——发放由结算体按 dialogId==23 + extendedRewardIndex 决定。
+					// Only SELECTED_QUEST_REWARD1..15 (8..22) index options; 23 is the no-selection
+					// confirm whose grant the settlement resolves via dialogId==23 + extendedRewardIndex.
+					int rewardIndex = (dialogId >= 8 && dialogId <= 22) ? (dialogId - 8) : 0;
 					if (rewardFlow.claim(env, rewardIndex).completed()) {
-						PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 1008, questId));
+						// 领奖收尾 = 真端 npc-complete finish=SELECTION_DIALOG（4801/4805）：回选择对话页
+						// （页 10，questId=0；9/28 旧引擎基线「状态=5 → 页=10」）。
+						// The claim tail follows the retail npc-complete finish=SELECTION_DIALOG: back to
+						// the selection dialog (page 10, questId=0; the legacy 9/28 log baseline).
+						PacketSendUtility.sendPacket(player,
+							new SM_DIALOG_WINDOW(targetObjectId, QuestDialogPage.SELECT_QUEST.id()));
 						return true;
 					}
 				}

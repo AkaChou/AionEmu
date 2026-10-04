@@ -14,6 +14,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
+import com.aionemu.gameserver.questEngine.definition.QuestDialogAction;
 import com.aionemu.gameserver.questEngine.definition.QuestDialogPage;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.questEngine.model.QuestState;
@@ -29,7 +30,7 @@ import com.aionemu.gameserver.questEngine.tablelane.NativeQuestTableLoader.Simpl
  * <ol>
  *   <li>262 行全量装载、双 NPC 结构 100%、9 行不可路由（5 TEST 无采集物 + 4 事件行无采集计数）；</li>
  *   <li>相机行与 {@code collect_item} 计数逐行一致（253 行有计数 − 3 行真端休眠 = 250 行，槽 = 交付列序）；</li>
- *   <li>接取 → 采集对象/CameraRegistry → 交付 → 领奖闭环；</li>
+ *   <li>接取 → 采集对象认领（物品驱动，真端无相机）→ 交付 → 领奖闭环；</li>
  *   <li>中继链（{@code talk_npc1..3}）门控与乱序零推进；</li>
  *   <li>失败面 fail-closed：未接取不推进、缺物品不放行、越界按钮不结算。</li>
  * </ol>
@@ -91,55 +92,37 @@ class SimpleCollectItemNativeFamilyGateTest {
 	}
 
 	@Test
-	void fiveTestRowsCarryNoObjectsAndTheNineEventRowsDeriveNoCamera() {
+	void fiveTestRowsCarryNoObjectsAndTheNineEventRowsStayUnrouted() {
 		for (int questId : TEST_ROWS) {
 			assertTrue(loader.requireCollect(questId).objects().isEmpty(), "TEST 行无采集物: " + questId);
 		}
 		for (int questId : NO_COLLECT_COUNT_ROWS) {
-			assertTrue(cameraRegistry.find(questId).isEmpty(),
-				"无采集计数的行不得派生相机行: " + questId);
 			assertFalse(handler.routes(questId), "无采集物/无计数的行不可路由: " + questId);
 		}
 		assertTrue(handler.owns(1137), "有采集物的行必须在注册集内");
 		for (int questId : DORMANT_LEVEL_ROWS) {
-			assertTrue(cameraRegistry.find(questId).isEmpty(),
-				"真端 minlevel=999 的休眠行不得派生相机行: " + questId);
-			assertTrue(cameraRegistry.collectRowsWithoutCamera().contains(questId),
-				"休眠行必须登记在未派生相机清单里: " + questId);
 			assertFalse(handler.routes(questId), "休眠行不可路由: " + questId);
 		}
 	}
 
+	/**
+	 * 采集族真端无相机（camera-params.tsv 262/262 无调用；2026-10-04 修正），且 native 侧必须
+	 * 从真端 drop 列接手任务掉落（退役 XML 的 {@code <drops>} 已随 catalog 退场）。
+	 * The collect family has no retail camera, and the native lane must serve the retail drop column.
+	 */
 	@Test
-	void cameraRowsMatchTheRetailCollectCounts() {
-		int derived = 0;
+	void collectFamilyDerivesNoCameraRowsAndServesRetailDrops() {
 		for (SimpleCollectItemRow row : loader.collectRows()) {
-			// 真端采集相机的 required = collect_itemN 的逐列计数（1487 = 槽 1/2/3 的 1/3/2）；
-			// 槽序由掉落列决定（见 SimpleCollectItemRowAlignmentGateTest）。
-			RetailQuestMetadataCompiler.Outcome metadata = metadata(row.questId()).orElse(null);
-			int expected = metadata == null || metadata.metadata().itemRequirements().isEmpty() ? 0
-				: metadata.metadata().itemRequirements().getFirst().count();
-			if (expected <= 0) {
-				assertTrue(cameraRegistry.find(row.questId()).isEmpty(), "无计数不得注册相机: " + row.questId());
-				continue;
-			}
-			var camera = cameraRegistry.require(row.questId());
-			for (int index = 0; index < metadata.metadata().itemRequirements().size(); index++) {
-				assertEquals(metadata.metadata().itemRequirements().get(index).count(),
-					camera.required(index + 1), "槽 " + (index + 1) + " required 必须等于 collect_item"
-						+ (index + 1) + ": " + row.questId());
-			}
-			derived++;
+			assertTrue(cameraRegistry.find(row.questId()).isEmpty(),
+				"采集族不得派生相机行（真端 262/262 无相机调用）: " + row.questId());
 		}
-		assertEquals(250, derived, "250 行可派生相机（253 有计数 − 3 行 minlevel=999 休眠）");
-		// 多交付物行逐槽对拍（真端 collect_item1=1 / collect_item2=3 / collect_item3=2）。
-		assertEquals(java.util.Map.of(1, 1, 2, 3, 3, 2),
-			cameraRegistry.require(1487).slotRequires(), "1487 三槽 required 必须逐项等于 collect_itemN");
-		assertEquals(250, List.copyOf(loader.collectRows()).stream()
-			.filter(row -> cameraRegistry.find(row.questId()).isPresent()).count(),
-			"相机行数 = 可派生计数的行数");
-		assertEquals(DORMANT_LEVEL_ROWS, cameraRegistry.collectRowsWithoutCamera(),
-			"未派生相机行的采集行 = 3 个 minlevel=999 休眠行");
+		// 1103：谷物袋子（700105）掉落 quest_1103a（182200201），chance=100（真端 drop_prob_1）。
+		var drops = handler.questDropsFor(700105);
+		assertTrue(drops.stream().anyMatch(drop -> drop.questId() == 1103
+			&& drop.itemId() == 182200201 && drop.chance() == 100),
+			"native 必须接手真端掉落列（真机 1103 谷物袋子）");
+		assertTrue(loader.collectRows().stream().anyMatch(row -> row.questId() == 1137),
+			"1137 仍在采集族装载面");
 	}
 
 	// ---------------------------------------------------------------- 行为面
@@ -176,44 +159,43 @@ class SimpleCollectItemNativeFamilyGateTest {
 	}
 
 	@Test
-	void collectingTheObjectAdvancesTheCameraWithoutLeavingStart() {
+	void collectingTheObjectClaimsTheInteractionWithoutWritingState() {
 		Player player = NativeTalkFixture.player();
 		NativeTalkFixture.completePrerequisites(player, 1102);
 		NativeTalkFixture.start(player, SINGLE_OBJECT_QUEST);
 		int objectNpc = handler.collectObjects(SINGLE_OBJECT_QUEST).getFirst();
+		QuestState state = player.getQuestStateList().getQuestState(SINGLE_OBJECT_QUEST);
+		int before = state.getQuestVars().getQuestVars();
 
 		assertTrue(handler.onObjectUse(player, SINGLE_OBJECT_QUEST, objectNpc),
-			"点击采集对象必须推进相机");
-		QuestState state = player.getQuestStateList().getQuestState(SINGLE_OBJECT_QUEST);
-		assertEquals(QuestStatus.START, state.getStatus(),
-			"采集族满值只表示采集完成，交付 NPC 处才翻 REWARD");
-		assertEquals(1, state.getQuestVars().getQuestVars(), "单槽 required=1 的满值");
+			"点击采集对象必须被认领（掉落链由 AI 侧接手）");
+		assertEquals(QuestStatus.START, state.getStatus(), "采集不改变状态");
+		assertEquals(before, state.getQuestVars().getQuestVars(),
+			"交互零状态写（物品驱动：var0 保持，客户端按 collect_progress=0 维持采集步）");
 	}
 
 	@Test
-	void repeatedCollectAfterFullIsANoOp() {
+	void repeatedObjectClaimsStayZeroWrite() {
 		Player player = NativeTalkFixture.player();
 		NativeTalkFixture.start(player, SINGLE_OBJECT_QUEST);
 		int objectNpc = handler.collectObjects(SINGLE_OBJECT_QUEST).getFirst();
+		QuestState state = player.getQuestStateList().getQuestState(SINGLE_OBJECT_QUEST);
 		assertTrue(handler.onObjectUse(player, SINGLE_OBJECT_QUEST, objectNpc));
-		assertFalse(handler.onObjectUse(player, SINGLE_OBJECT_QUEST, objectNpc),
-			"相机满值后再点对象必须零动作（真端超杀零副作用）");
+		assertTrue(handler.onObjectUse(player, SINGLE_OBJECT_QUEST, objectNpc),
+			"重复交互同样认领（数量由掉落上限控制，不在交互层）");
+		assertEquals(0, state.getQuestVars().getQuestVars(), "重复交互始终零写");
 	}
 
 	@Test
-	void killOfTheCollectMonsterAdvancesTheSameCamera() {
+	void killOfTheCollectMonsterWritesNoTaskState() {
 		Player player = NativeTalkFixture.player();
 		NativeTalkFixture.completePrerequisites(player, 1102);
 		NativeTalkFixture.start(player, MULTI_COUNT_QUEST);
 		int monster = handler.collectMonsterTargets(MULTI_COUNT_QUEST).getFirst();
 		QuestState state = player.getQuestStateList().getQuestState(MULTI_COUNT_QUEST);
 
-		assertTrue(handler.onKill(player, monster), "击杀采集怪必须推进相机");
-		assertEquals(1, state.getQuestVars().getQuestVars());
-		assertTrue(handler.onKill(player, monster));
-		assertTrue(handler.onKill(player, monster));
-		assertEquals(3, state.getQuestVars().getQuestVars(), "3 次击杀达到 collect_item 的 required=3");
-		assertFalse(handler.onKill(player, monster), "满值后超杀零动作");
+		assertFalse(handler.onKill(player, monster), "击杀不做任务侧写入（掉落由通用击杀装配）");
+		assertEquals(0, state.getQuestVars().getQuestVars(), "击杀零状态写");
 	}
 
 	@Test
@@ -231,7 +213,7 @@ class SimpleCollectItemNativeFamilyGateTest {
 	}
 
 	@Test
-	void handInRequiresTheCameraFullAndTheCollectItems() {
+	void handInRequiresTheCollectItems() {
 		Player player = NativeTalkFixture.player();
 		NativeTalkFixture.RecordingInventory inventory = new NativeTalkFixture.RecordingInventory();
 		SimpleCollectItemHandler local = handlerWith(inventory, NativeReportRewardFlow.instance());
@@ -239,26 +221,23 @@ class SimpleCollectItemNativeFamilyGateTest {
 		int rewardNpc = local.rewardNpc(SINGLE_OBJECT_QUEST);
 		int handInItem = local.handInItems(SINGLE_OBJECT_QUEST).getFirst();
 
-		// 未采集、未持有：交付 NPC 处仍是进行中页。
+		// 未持有：交付 NPC 处仍是进行中页。
 		NativeTalkFixture.clearPackets(player);
 		assertTrue(local.onDialog(NativeTalkFixture.dialog(player, rewardNpc, SINGLE_OBJECT_QUEST, 26)));
 		NativeTalkFixture.assertOnlyDialogPage(player, SimpleCollectItemHandler.PAGE_IN_PROGRESS);
 
-		// 持有交付物但相机未满（未采集）：同样不放行（真端 collect_progress 门）。
+		// 持有交付物即满足真端 check_item 门（无相机门——2026-10-04 起采集为物品驱动）。
 		inventory.hold(handInItem, 1);
 		NativeTalkFixture.clearPackets(player);
-		assertTrue(local.onDialog(NativeTalkFixture.dialog(player, rewardNpc, SINGLE_OBJECT_QUEST, 26)));
-		NativeTalkFixture.assertOnlyDialogPage(player, SimpleCollectItemHandler.PAGE_IN_PROGRESS);
-		assertTrue(inventory.calls().isEmpty(), "不放行时不得扣除交付物");
-
-		// 采集满值 ⇒ 仍在 START；交付 NPC 处扣物品并翻 REWARD + 开奖励窗。
-		int objectNpc = local.collectObjects(SINGLE_OBJECT_QUEST).getFirst();
-		assertTrue(local.onObjectUse(player, SINGLE_OBJECT_QUEST, objectNpc));
+		// 两步报告（裁定 a）：31 只发客户端声明的报告确认页（1137 契约声明 2375=select5）不推进；
+		// 1009 报告确认才翻 REWARD + 开奖励窗。开门动作（26/-1）不推进。
+		// Two-step report: 31 shows the declared confirm page; 1009 advances to REWARD.
+		assertTrue(local.onDialog(NativeTalkFixture.dialog(player, rewardNpc, SINGLE_OBJECT_QUEST, 31)));
+		NativeTalkFixture.assertOnlyDialogPage(player, 2375);
 		assertEquals(QuestStatus.START,
-			player.getQuestStateList().getQuestState(SINGLE_OBJECT_QUEST).getStatus(),
-			"采集完成不等于交付完成");
+			player.getQuestStateList().getQuestState(SINGLE_OBJECT_QUEST).getStatus(), "31 不推进状态");
 		NativeTalkFixture.clearPackets(player);
-		assertTrue(local.onDialog(NativeTalkFixture.dialog(player, rewardNpc, SINGLE_OBJECT_QUEST, 26)));
+		assertTrue(local.onDialog(NativeTalkFixture.dialog(player, rewardNpc, SINGLE_OBJECT_QUEST, 1009)));
 		NativeTalkFixture.assertOnlyDialogPage(player, SimpleCollectItemHandler.PAGE_REWARD_WINDOW);
 		assertEquals(QuestStatus.REWARD,
 			player.getQuestStateList().getQuestState(SINGLE_OBJECT_QUEST).getStatus(),
@@ -267,11 +246,47 @@ class SimpleCollectItemNativeFamilyGateTest {
 	}
 
 	/**
-	 * 多列行（18501 两列 ×5）必须逐列走满：单列满值不得放行交付，两列都满且持有两件交付物才翻 REWARD。
-	 * Multi-column rows must fill every column: one full column never opens the hand-in.
+	 * 39 检查按钮（2026-10-04 真机 1103 报告页按钮）：报告确认动作随任务页而分——检查型的
+	 * select5 按钮 = {@code HACTION_CHECK_USER_HAS_QUEST_ITEM}(39)。持满时 39 与 1009 同义
+	 * （推进 REWARD + 奖励窗 + 扣物）；未持满时下发客户端声明的失败页（1137 契约 select6=2716）。
+	 * The 39 check button (the live 1103 report page): the confirm action varies per task page — the
+	 * check form puts 39 on its select5 page. With the whole group held, 39 advances like 1009; when
+	 * the group is missing it shows the declared fail page (select6).
 	 */
 	@Test
-	void multiColumnRowsRequireEveryColumnBeforeHandInOpens() {
+	void reportPageCheckButton39AdvancesOrShowsTheDeclaredFailPage() {
+		Player player = NativeTalkFixture.player();
+		NativeTalkFixture.RecordingInventory inventory = new NativeTalkFixture.RecordingInventory();
+		SimpleCollectItemHandler local = handlerWith(inventory, NativeReportRewardFlow.instance());
+		NativeTalkFixture.start(player, SINGLE_OBJECT_QUEST);
+		int rewardNpc = local.rewardNpc(SINGLE_OBJECT_QUEST);
+		int handInItem = local.handInItems(SINGLE_OBJECT_QUEST).getFirst();
+		int checkAction = QuestDialogAction.CHECK_USER_HAS_QUEST_ITEM.id();
+
+		// 未持满：39 → 声明失败页（select6=2716），零状态写、零扣物。
+		NativeTalkFixture.clearPackets(player);
+		assertTrue(local.onDialog(NativeTalkFixture.dialog(player, rewardNpc, SINGLE_OBJECT_QUEST, checkAction)));
+		NativeTalkFixture.assertOnlyDialogPage(player, QuestDialogPage.SELECT6.id());
+		assertEquals(QuestStatus.START,
+			player.getQuestStateList().getQuestState(SINGLE_OBJECT_QUEST).getStatus(), "失败检查不推进");
+		assertTrue(inventory.calls().isEmpty(), "失败检查不扣物品");
+
+		// 持满：39 与 1009 同义——REWARD + 奖励窗 + 按真端计数扣物。
+		inventory.hold(handInItem, 1);
+		NativeTalkFixture.clearPackets(player);
+		assertTrue(local.onDialog(NativeTalkFixture.dialog(player, rewardNpc, SINGLE_OBJECT_QUEST, checkAction)));
+		NativeTalkFixture.assertOnlyDialogPage(player, SimpleCollectItemHandler.PAGE_REWARD_WINDOW);
+		assertEquals(QuestStatus.REWARD,
+			player.getQuestStateList().getQuestState(SINGLE_OBJECT_QUEST).getStatus(), "39 持满即推进");
+		assertEquals(List.of("remove:" + handInItem + ":1"), inventory.calls());
+	}
+
+	/**
+	 * 多列行（18501 两列 ×5）必须逐列持有：只持一列不得放行交付，两列交付物齐（真端 check_item）才翻 REWARD。
+	 * Multi-column rows need every column's items held: one column never opens the hand-in.
+	 */
+	@Test
+	void multiColumnRowsRequireEveryColumnsItemsBeforeHandInOpens() {
 		Player player = NativeTalkFixture.player();
 		NativeTalkFixture.RecordingInventory inventory = new NativeTalkFixture.RecordingInventory();
 		SimpleCollectItemHandler local = handlerWith(inventory, NativeReportRewardFlow.instance());
@@ -282,24 +297,22 @@ class SimpleCollectItemNativeFamilyGateTest {
 		assertEquals(2, handIns.size(), "18501 真端两列交付物");
 		int rewardNpc = local.rewardNpc(MULTI_COLUMN_QUEST);
 
-		// 第一列 5 件：槽 2 仍空 ⇒ 交付 NPC 处仍是进行中页。
-		for (int index = 0; index < MULTI_COLUMN_COUNT; index++) {
-			assertTrue(local.onObjectUse(player, MULTI_COLUMN_QUEST, objects.get(0)));
-		}
+		// 交互认领（零写）；只持第一列 ⇒ 第二列缺 ⇒ 交付 NPC 处仍是进行中页。
+		assertTrue(local.onObjectUse(player, MULTI_COLUMN_QUEST, objects.get(0)));
+		inventory.hold(handIns.get(0), MULTI_COLUMN_COUNT);
 		NativeTalkFixture.clearPackets(player);
 		assertTrue(local.onDialog(NativeTalkFixture.dialog(player, rewardNpc, MULTI_COLUMN_QUEST, 26)));
 		NativeTalkFixture.assertOnlyDialogPage(player, SimpleCollectItemHandler.PAGE_IN_PROGRESS);
-		assertTrue(inventory.calls().isEmpty(), "单列满值不得扣物品");
+		assertTrue(inventory.calls().isEmpty(), "缺列不得扣物品");
 
-		// 第二列 5 件 + 持有两件交付物 ⇒ 翻 REWARD、开奖励窗、两份都扣。
-		for (int index = 0; index < MULTI_COLUMN_COUNT; index++) {
-			assertTrue(local.onObjectUse(player, MULTI_COLUMN_QUEST, objects.get(1)));
-		}
-		for (int itemId : handIns) {
-			inventory.hold(itemId, MULTI_COLUMN_COUNT);
-		}
+		// 两列交付物齐 ⇒ 翻 REWARD、开奖励窗、两份都扣。
+		inventory.hold(handIns.get(1), MULTI_COLUMN_COUNT);
 		NativeTalkFixture.clearPackets(player);
-		assertTrue(local.onDialog(NativeTalkFixture.dialog(player, rewardNpc, MULTI_COLUMN_QUEST, 26)));
+		// 两步报告（裁定 a）：31 发 18501 契约声明的报告确认页（2375），1009 推进 REWARD。
+		assertTrue(local.onDialog(NativeTalkFixture.dialog(player, rewardNpc, MULTI_COLUMN_QUEST, 31)));
+		NativeTalkFixture.assertOnlyDialogPage(player, 2375);
+		NativeTalkFixture.clearPackets(player);
+		assertTrue(local.onDialog(NativeTalkFixture.dialog(player, rewardNpc, MULTI_COLUMN_QUEST, 1009)));
 		NativeTalkFixture.assertOnlyDialogPage(player, SimpleCollectItemHandler.PAGE_REWARD_WINDOW);
 		assertEquals(QuestStatus.REWARD,
 			player.getQuestStateList().getQuestState(MULTI_COLUMN_QUEST).getStatus());
@@ -325,7 +338,8 @@ class SimpleCollectItemNativeFamilyGateTest {
 		NativeTalkFixture.clearPackets(player);
 		assertTrue(local.onDialog(NativeTalkFixture.dialog(player, rewardNpc, SINGLE_OBJECT_QUEST, 8)),
 			"奖励窗按钮必须由 native 领奖段服务");
-		NativeTalkFixture.assertOnlyDialogPage(player, SimpleCollectItemHandler.PAGE_COMPLETE);
+		// 领奖收尾 = 真端 npc-complete finish=SELECTION_DIALOG：回选择对话页（页 10，questId=0）。
+		NativeTalkFixture.assertOnlyDialogPage(player, QuestDialogPage.SELECT_QUEST.id());
 		assertEquals(1, calls.size());
 		assertEquals(SINGLE_OBJECT_QUEST, calls.getFirst().questId());
 		assertEquals(0, calls.getFirst().tier(), "单奖励槽行固定首档（真端 reward_*1）");
@@ -461,7 +475,7 @@ class SimpleCollectItemNativeFamilyGateTest {
 
 	private static SimpleCollectItemHandler handlerWith(NativeInventoryPort inventory, NativeMoviePort moviePort,
 			NativeReportRewardFlow rewardFlow) {
-		return new SimpleCollectItemHandler(NativeQuestTableLoader.instance(), CameraRegistry.instance(),
+		return new SimpleCollectItemHandler(NativeQuestTableLoader.instance(),
 			NativeNpcNameResolver.instance(), HtmlPagesRegistry.instance(), inventory, moviePort, rewardFlow,
 			NativeQuestOwnerResolver.instance().xmlOnlyIds(), new java.util.TreeSet<>());
 	}

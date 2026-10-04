@@ -67,8 +67,6 @@ public final class SimpleCombineTaskHandler {
 	public static final int PAGE_ACCEPTED = QuestDialogPage.QUEST_ACCEPT_1.id();
 	/** 拒绝页。 / The refuse page. */
 	public static final int PAGE_REFUSED = QuestDialogPage.QUEST_REFUSE_1.id();
-	/** 完成页。 / The completion page. */
-	public static final int PAGE_COMPLETE = QuestDialogPage.QUEST_COMPLETE.id();
 	/** 交付门未过时的真端回退页（{@code SELECT3_2}）。 / The retail fallback page when the product is missing. */
 	public static final int PAGE_HANDIN_BLOCKED = QuestDialogPage.SELECT3_2.id();
 
@@ -454,7 +452,7 @@ public final class SimpleCombineTaskHandler {
 		}
 		if (dialogId == 31 || dialogId == 26 || dialogId == -1) {
 			PacketSendUtility.sendPacket(player,
-				new SM_DIALOG_WINDOW(objectId, PAGE_IN_PROGRESS, questId));
+				new SM_DIALOG_WINDOW(objectId, PAGE_IN_PROGRESS));
 			return true;
 		}
 		return false;
@@ -482,7 +480,12 @@ public final class SimpleCombineTaskHandler {
 			}
 			recycleProduct(player, questId);
 			forgetRecipe(player, questId);
-			PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(objectId, PAGE_COMPLETE, questId));
+			// 领奖收尾 = 真端 npc-complete finish=SELECTION_DIALOG（4801/4805）：回选择对话页
+			// （页 10，questId=0；9/28 旧引擎基线「状态=5 → 页=10」）。
+			// The claim tail follows the retail npc-complete finish=SELECTION_DIALOG: back to the
+			// selection dialog (page 10, questId=0; the legacy 9/28 log baseline).
+			PacketSendUtility.sendPacket(player,
+				new SM_DIALOG_WINDOW(objectId, QuestDialogPage.SELECT_QUEST.id()));
 			return true;
 		}
 		return false;

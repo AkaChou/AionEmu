@@ -422,6 +422,12 @@ public final class QuestService {
 			PacketSendUtility.sendMessage(player, "You're GM! So system won't apply countNextRepeatTime()");
 		}
 		PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(id, qs.getStatus(), qs.getQuestVars().getQuestVars()));
+		// 完成即从客户端活动列表移除（进世界同步同型，见 PlayerEnterWorldService 的
+		// removeQuestFromClientList）：可重复任务下一轮接取由 addQuest 重新插入。2026-10-03
+		// 真机 80790：只发 action2 更新不移除 ⇒ 每轮接取的 action1 添加在客户端累积成多行。
+		// Completion also removes the row from the client's active list (same shape as the
+		// enter-world sync): without it, every re-accept's add-action piles up duplicate rows.
+		PacketSendUtility.sendPacket(player, SM_QUEST_ACTION.removeQuestFromClientList(id));
 		if (player.getController() != null) {
 			player.getController().updateZone();
 			player.getController().updateNearbyQuests();

@@ -52,14 +52,15 @@ class QuestDialog31RegressionTest {
 	@Test
 	void nativeRowsKeepTheirRetailRelayAndAcceptWindows() {
 		SimpleTalkHandler handler = SimpleTalkHandler.instance();
-		// 真端页阶梯（族级常量）：接取问询 4 → 中继 1352/1693/2034 → 奖励窗 5 → 完成 1008。
-		// Retail page ladder: accept ask 4 -> relay 1352/1693/2034 -> reward window 5 -> complete 1008.
+		// 真端页阶梯（族级常量）：接取问询 4 → 中继 1352/1693/2034 → 奖励窗 5；领奖收尾 =
+		// 回选择对话页 10（真端 npc-complete finish=SELECTION_DIALOG，由族门/领奖门覆盖，非族级常量）。
+		// Retail page ladder: accept ask 4 -> relay 1352/1693/2034 -> reward window 5; the claim tail
+		// returns to the selection dialog (10) and is covered by the family/claim gates.
 		assertEquals(4, SimpleTalkHandler.PAGE_ASK_ACCEPT);
 		assertEquals(1352, SimpleTalkHandler.pageForStep(1));
 		assertEquals(1693, SimpleTalkHandler.pageForStep(2));
 		assertEquals(2034, SimpleTalkHandler.pageForStep(3));
 		assertEquals(5, SimpleTalkHandler.PAGE_REWARD_WINDOW);
-		assertEquals(1008, SimpleTalkHandler.PAGE_COMPLETE);
 
 		// 1963/1964：接取与交付同为 Polyidus(203726)，中继 Phokas(203851)/Noris(203776)。
 		assertNativeChain(handler, 1963, 203726, 203726, 203851);

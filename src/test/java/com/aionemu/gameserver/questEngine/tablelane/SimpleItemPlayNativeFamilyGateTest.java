@@ -19,6 +19,7 @@ import com.aionemu.gameserver.model.PlayerClass;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.templates.QuestTemplate;
+import com.aionemu.gameserver.questEngine.definition.QuestDialogPage;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.questEngine.retail.RetailItemNameIndex;
@@ -325,7 +326,8 @@ class SimpleItemPlayNativeFamilyGateTest {
 		NativeTalkFixture.clearPackets(player);
 		assertTrue(local.onDialog(NativeTalkFixture.dialog(player, rewardNpc, PLAY_QUEST, 8)),
 			"奖励窗按钮必须由 native 领奖段服务");
-		NativeTalkFixture.assertOnlyDialogPage(player, SimpleItemPlayHandler.PAGE_COMPLETE);
+		// 领奖收尾 = 真端 npc-complete finish=SELECTION_DIALOG：回选择对话页（页 10，questId=0）。
+		NativeTalkFixture.assertOnlyDialogPage(player, QuestDialogPage.SELECT_QUEST.id());
 		assertEquals(1, claims.size());
 		assertEquals(PLAY_QUEST, claims.getFirst()[0]);
 
@@ -339,7 +341,7 @@ class SimpleItemPlayNativeFamilyGateTest {
 	 * P5D 步 3 端到端：激活行（18213 天族 / 28213 魔族）按真端走完整链路——接取入口页 → 页动作 1007
 	 * 开问询窗 → 1002 提交（发第 1 步道具 A）→ 中继第 1 步（页 {@code select2}，零发扣）→
 	 * 中继第 2 步（页 {@code select3}，发 B 扣 A）→ 用道具 B（相机闸门：步号 == {@code relayCount}）→
-	 * 交付 NPC 处领奖（页 5 → 页 1008）。
+	 * 交付 NPC 处领奖（页 5 → 领奖收尾回选择对话页 10，真端 npc-complete finish=SELECTION_DIALOG）。
 	 * <p>
 	 * Step-3 end-to-end: an activated relay row runs the whole retail chain — accept entry page, the 1007 ask
 	 * window, the 1002 commit granting step-1 item A, relay step 1 (select2), relay step 2 (select3 with the
@@ -434,7 +436,8 @@ class SimpleItemPlayNativeFamilyGateTest {
 			NativeTalkFixture.clearPackets(player);
 			assertTrue(local.onDialog(NativeTalkFixture.dialog(player, rewardNpc, questId, 8)),
 				"奖励窗按钮必须由 native 领奖段服务: " + questId);
-			NativeTalkFixture.assertOnlyDialogPage(player, SimpleItemPlayHandler.PAGE_COMPLETE);
+			// 领奖收尾 = 真端 npc-complete finish=SELECTION_DIALOG：回选择对话页（页 10，questId=0）。
+			NativeTalkFixture.assertOnlyDialogPage(player, QuestDialogPage.SELECT_QUEST.id());
 			assertEquals(List.of(questId), claims, "领奖必须经真端派生模板结算: " + questId);
 		}
 	}

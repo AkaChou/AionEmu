@@ -66,9 +66,7 @@ class SimpleCollectItemRowAlignmentGateTest {
 	private static final int COLLECT_ITEM1_ROWS = 253;
 	private static final int COLLECT_ITEM2_ROWS = 27;
 	private static final int COLLECT_ITEM3_ROWS = 13;
-	/** 可派生相机行（253 有计数 − 3 行真端休眠 minlevel=999）。 / Derivable camera rows. */
-	private static final int CAMERA_ROWS = 250;
-	/** 真端 minlevel=999 的休眠行（元数据 min>max，不派生相机行）。 / Dormant retail rows. */
+	/** 真端 minlevel=999 的休眠行（元数据 min>max，不可路由）。 / Dormant retail rows. */
 	private static final Set<Integer> DORMANT_LEVEL_ROWS = Set.of(36017, 46017, 47112);
 	/** 表格声明了对象但真端不给槽位的行（41216 的来源是另一个 FOBJ）。 / Object without a retail slot. */
 	private static final Set<Integer> OBJECT_WITHOUT_SLOT_ROWS = Set.of(41216);
@@ -78,14 +76,15 @@ class SimpleCollectItemRowAlignmentGateTest {
 	/** XML-only 行（注册集里让位给 XML 车道）。 / XML-owned rows that yield to the XML lane. */
 	private static final Set<Integer> XML_ONLY_ROWS = Set.of(2237);
 	/**
-	 * 复合势力交付名且客户端登记缺失的行（39611/49611：{@code LDF5b_Silverlin_LD}，真端 min/max/client
-	 * level 全为 999 的停用行）。真端名册无此名、客户端交付登记（{@code quest_client_reward_npcs.tsv}）
-	 * 亦未登记 ⇒ 交付面不存在，按 fail-closed 不路由（退役编译器同判 {@code RETAIL_REWARD_NPC_FACTION_COMPOSITE}）。
-	 * Composite faction reward names with no client registration (the level-999 disabled rows 39611/49611):
-	 * the retail name index has no such npc and the client reward-npc registry declares none, so the
-	 * hand-in face does not exist and the row fails closed (the retired compiler rejected it the same way).
+	 * 复合势力交付名的行（39611/49611：{@code LDF5b_Silverlin_LD}）。组表
+	 * （{@code retail-quest-ai-name-groups.xml}）已声明该组名（成员 {@code LDF5b_*_Silverlin}）⇒
+	 * 交付面经组通道解析为要塞守护组（800927-9），可路由；两行真端 minlevel=999，由接取轴自然拒绝。
+	 * （2026-10-04 对齐：原判"无客户端集 ⇒ fail-closed 不路由"随组表扩批已过时。）
+	 * Composite faction reward names (rows 39611/49611): the dialog-name group table declares
+	 * {@code LDF5b_Silverlin_LD} (members {@code LDF5b_*_Silverlin}), so the hand-in face resolves to the
+	 * fortress-guard group (800927-9) and the row routes; minlevel=999 is refused by the accept axis.
 	 */
-	private static final Set<Integer> COMPOSITE_REWARD_WITHOUT_CLIENT_SET_ROWS = Set.of(39611, 49611);
+	private static final Set<Integer> COMPOSITE_REWARD_GROUP_ROWS = Set.of(39611, 49611);
 
 	/** 其他 retail 族表（跨族 {@code con_quest} 目标的接取 NPC 来源）。 / Sibling retail family tables. */
 	private static final List<String> SIBLING_RESOURCES = List.of(
@@ -179,18 +178,16 @@ class SimpleCollectItemRowAlignmentGateTest {
 			boolean expectRouted = !xmlOnly.contains(questId)
 				&& !DORMANT_LEVEL_ROWS.contains(questId)
 				&& !NO_COLLECT_COUNT_ROWS.contains(questId)
-				&& !OBJECT_WITHOUT_SLOT_ROWS.contains(questId)
-				&& !COMPOSITE_REWARD_WITHOUT_CLIENT_SET_ROWS.contains(questId);
+				&& !OBJECT_WITHOUT_SLOT_ROWS.contains(questId);
 			assertEquals(expectRouted, handler.routes(questId),
 				"路由/注册不一致 / routing differs from the derived verdict: " + questId);
 		}
 		assertEquals(ROWS - XML_ONLY_ROWS.size() - DORMANT_LEVEL_ROWS.size()
-			- NO_COLLECT_COUNT_ROWS.size() - OBJECT_WITHOUT_SLOT_ROWS.size()
-			- COMPOSITE_REWARD_WITHOUT_CLIENT_SET_ROWS.size(),
+			- NO_COLLECT_COUNT_ROWS.size() - OBJECT_WITHOUT_SLOT_ROWS.size(),
 			handler.routedQuestIds().size(), "路由集大小必须冻结");
-		for (int questId : COMPOSITE_REWARD_WITHOUT_CLIENT_SET_ROWS) {
-			assertTrue(handler.rewardNpcs(questId).isEmpty(),
-				() -> "无客户端登记的复合交付名不得凭空造出交付面: " + questId);
+		for (int questId : COMPOSITE_REWARD_GROUP_ROWS) {
+			assertEquals(java.util.List.of(800927, 800928, 800929), handler.rewardNpcs(questId),
+				() -> "复合交付名必须经组表解析为要塞守护组（不得凭空造交付面）: " + questId);
 			assertTrue(handler.ownedQuestIds().contains(questId),
 				() -> "复合行仍须装载（注册集逐行等于真端表）: " + questId);
 		}
@@ -198,35 +195,19 @@ class SimpleCollectItemRowAlignmentGateTest {
 			"路由集与 XML-only 集不得交叠 / the routing set must not intersect the XML-owned set");
 	}
 
-	/** ③ 相机行与真端交付计数逐行一致（槽 = 交付列序）。 */
+	/**
+	 * ③ 采集族不得派生相机行：真端相机调用（camera-params.tsv，2463 点）中本族 262 行 0 命中
+	 * （对照 SimpleHunt 1812/1863），旧 XML 的交互/击杀转换亦零 var 写——采集为物品驱动，
+	 * P4 的"相机 required = collect_item 计数"派生已撤销（2026-10-04）。
+	 * No collect row may derive a camera row: the family is item-driven.
+	 */
 	@Test
-	void cameraRowsFollowTheRetailCollectColumns() {
+	void collectRowsDeriveNoCameraRows() {
 		CameraRegistry registry = CameraRegistry.instance();
-		int derived = 0;
 		for (int questId : tableRaw.keySet()) {
-			List<String> collected = questNumbered(questId, "collect_item");
-			if (collected.isEmpty()) {
-				assertTrue(registry.find(questId).isEmpty(), "无交付列不得派生相机行: " + questId);
-				continue;
-			}
-			if (DORMANT_LEVEL_ROWS.contains(questId)) {
-				assertTrue(registry.find(questId).isEmpty(), "真端休眠行不得派生相机行: " + questId);
-				assertTrue(registry.collectRowsWithoutCamera().contains(questId),
-					"休眠行必须登记在未派生相机清单里: " + questId);
-				continue;
-			}
-			derived++;
-			for (int slot = 1; slot <= collected.size(); slot++) {
-				assertEquals(symbolCount(collected.get(slot - 1)), registry.require(questId).required(slot),
-					"槽 " + slot + " required 必须等于真端 collect_item" + slot + ": " + questId);
-			}
+			assertTrue(registry.find(questId).isEmpty(),
+				"采集族不得派生相机行（真端 262/262 无相机调用）: " + questId);
 		}
-		assertEquals(CAMERA_ROWS, derived, "可派生相机行数必须冻结");
-		assertEquals(CAMERA_ROWS, tableRaw.keySet().stream()
-			.filter(questId -> registry.find(questId).isPresent()).count(),
-			"本族相机注册行数必须冻结（全库相机表含其他已切换家族）");
-		assertEquals(DORMANT_LEVEL_ROWS, registry.collectRowsWithoutCamera(),
-			"未派生相机行的采集行 = 3 个 minlevel=999 休眠行");
 	}
 
 	/**
@@ -301,13 +282,13 @@ class SimpleCollectItemRowAlignmentGateTest {
 			}
 			assertFalse(objectIds.isEmpty(), () -> "有对象列的行必须解析出对象 id: " + questId);
 		}
-		// 真端冻结（限本族可路由行）：K 列与 objectK 同名的列 273 个、仅大小写差异 8 个、
+		// 真端冻结（限本族可路由行）：K 列与 objectK 同名的列 275 个、仅大小写差异 8 个、
 		// 一个掉落列列多个来源 3 个、掉落源是真怪（对象只是线索）3 个 —— 正因如此，槽不能按对象列序取。
-		// 39611/49611 两行（各有一个同名对齐列）因交付面缺失不路由，故不在这 273 个之内。
-		// Frozen over the routed rows: the object column order is not the slot order (273 aligned, 8
-		// case-only, 3 multi-source, 3 real-monster drop columns). The two unrouted composite rows
-		// 39611/49611 would each add one aligned column but are excluded with the whole routing scope.
-		assertEquals(273, alignedColumns, "objectK 与 drop_monster_K 同名的列数必须冻结（路由集口径）");
+		// 39611/49611 两行（各贡献一个同名对齐列）自组表解析生效起已路由，计入 275。
+		// Frozen over the routed rows: the object column order is not the slot order (275 aligned, 8
+		// case-only, 3 multi-source, 3 real-monster drop columns). The two composite rows 39611/49611
+		// (one aligned column each) now route and count toward the 275.
+		assertEquals(275, alignedColumns, "objectK 与 drop_monster_K 同名的列数必须冻结（路由集口径）");
 		assertEquals(8, caseOnlyColumns, "仅大小写差异的列数必须冻结");
 		assertEquals(3, multiSourceColumns, "一个掉落列列出多个来源的列数必须冻结");
 		assertEquals(3, monsterColumns, "掉落源是真怪（对象只是交付线索）的列数必须冻结");

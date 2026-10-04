@@ -13,7 +13,6 @@ import org.junit.jupiter.api.Test;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.questEngine.retail.RetailItemNameIndex;
-import com.aionemu.gameserver.questEngine.tablelane.CameraRegistry;
 import com.aionemu.gameserver.questEngine.tablelane.NativeNpcNameResolver;
 import com.aionemu.gameserver.questEngine.tablelane.NativeTalkFixture;
 import com.aionemu.gameserver.questEngine.tablelane.SimpleCollectItemHandler;
@@ -21,13 +20,13 @@ import com.aionemu.gameserver.questEngine.tablelane.SimpleCollectItemHandler;
 /**
  * 哈拉梅尔（Haramel）四件采集任务的交互物门控与交付主。
  * <p>
- * P4 重锚（计划 §8.9）：四行的真端列（接取/交付 NPC、{@code objectN}、{@code collect_itemN}）就是合同——
- * 交付门 = 整组真端交付物 + 相机逐列满值，交互物只在任务进行中可点击；旧 IR 断言（typed 节点、
- * SELECT5/SELECT6 页、39/20002 检查对、掉落 {@code collectingStep}）随本族切换批退场。
+ * 2026-10-04 修正（物品驱动）：四行的真端列（接取/交付 NPC、{@code objectN}、{@code collect_itemN}）就是
+ * 合同——交付门 = 整组真端交付物持有（无相机门，采集族真端 262/262 无相机调用），收集由掉落列发放
+ * （对象交互掉落列表，上限 = collect_item）；交互物只在任务进行中可点击（点击只认领、零状态写）。
  * <p>
  * Native contract of the four Haramel collecting quests: the retail columns are the contract — the
- * hand-in gate is the whole retail collect group plus a full per-column camera, and the interaction
- * objects are clickable only while the quest runs.
+ * hand-in gate is the whole retail collect group (no camera: the family has no retail camera), the
+ * drop column grants the items capped by {@code collect_item}, and interactions only claim.
  */
 class QuestHaramelItemCollectingRegressionTest {
 
@@ -48,9 +47,6 @@ class QuestHaramelItemCollectingRegressionTest {
 		new QuestCase(28503, 799523, "Shugo_IDNovice_2", 804605, "DF1a_Schwanz_E",
 			List.of("IDNovice_FOBJ_ODGrass"), List.of("quest_28503b")));
 
-	/** 真端四行的 collect_item1 计数都是 5。 / Every retail hand-in column of these rows counts five. */
-	private static final int HAND_IN_COUNT = 5;
-
 	@Test
 	void haramelRowsCarryTheirOwnAcceptAndHandInNpcFromTheRetailColumns() {
 		SimpleCollectItemHandler handler = SimpleCollectItemHandler.instance();
@@ -70,12 +66,15 @@ class QuestHaramelItemCollectingRegressionTest {
 			List<Integer> handIns = handler.handInItems(questId);
 			assertEquals(expectedItems(questCase), handIns,
 				"交付门必须是真端 collect_item 整组（同序同数量）: " + questId);
-			List<Integer> requires = new ArrayList<>();
-			for (int slot = 1; slot <= handIns.size(); slot++) {
-				requires.add(CameraRegistry.instance().require(questId).required(slot));
+			// 采集族真端无相机（2026-10-04）：收集由掉落列发放——每个对象携带其对应交付物的掉落条目。
+			List<Integer> objects = expectedObjects(questCase);
+			for (int index = 0; index < handIns.size(); index++) {
+				int handInItem = handIns.get(index);
+				int objectNpc = objects.get(index);
+				assertTrue(handler.questDropsFor(objectNpc).stream()
+					.anyMatch(drop -> drop.questId() == questId && drop.itemId() == handInItem),
+					"对象必须携带对应交付物的真端掉落条目: " + questId + " " + objectNpc);
 			}
-			assertEquals(List.of(HAND_IN_COUNT, HAND_IN_COUNT).subList(0, handIns.size()), requires,
-				"相机槽 required 必须等于真端 collect_item 的计数: " + questId);
 		}
 	}
 
@@ -97,9 +96,9 @@ class QuestHaramelItemCollectingRegressionTest {
 				assertTrue(handler.allowsItemUse(player, objectNpcId),
 					"进行中的交互物必须可交互: " + questId + " " + objectNpcId);
 			}
-			// 交付门是整组：单点一次仍然不满（真端 collect_item 计数 ≥1）。
+			// 交互认领（零状态写；收集数量由掉落链按 collect_item 上限控制）。
 			assertTrue(handler.onObjectUse(player, questId, objects.getFirst()),
-				"进行中点击交互物必须推进: " + questId);
+				"进行中点击交互物必须认领: " + questId);
 		}
 	}
 

@@ -395,11 +395,11 @@ class EarlyElyosQuestRegressionTest {
 				"领奖态自环必须被服务：" + dialogId);
 			NativeTalkFixture.assertOnlyDialogPage(chestPlayer, SimpleUseItemHandler.PAGE_REWARD_WINDOW);
 		}
-		// 领奖按钮（8..23/108/110..124）与完成页 1008 由族门禁覆盖；此处只锁用物接取窗的客户端面
-		// （奖励窗页 5 是服务端报告相位，不在任务页 HTML 索引里，不需要客户端声明）。
-		// The claim buttons and the 1008 page are covered by the family gate; here we only lock the
-		// item-use ask window against the client task page (the page-5 reward window is the server
-		// report phase and is not part of the quest HTML page index).
+		// 领奖按钮（8..23/108/110..124）与领奖收尾页（回选择对话 10）由族门禁覆盖；此处只锁用物接取窗
+		// 的客户端面（奖励窗页 5 是服务端报告相位，不在任务页 HTML 索引里，不需要客户端声明）。
+		// The claim buttons and the claim tail page (back to the selection dialog, 10) are covered by the
+		// family gate; here we only lock the item-use ask window against the client task page (the page-5
+		// reward window is the server report phase and is not part of the quest HTML page index).
 		assertTrue(QuestDialogContract.loadDefault().hasButtonPage(1561,
 			SimpleUseItemHandler.PAGE_ASK_ACCEPT), "1561 的接取窗页必须由客户端任务页声明（ask_quest_accept）");
 	}

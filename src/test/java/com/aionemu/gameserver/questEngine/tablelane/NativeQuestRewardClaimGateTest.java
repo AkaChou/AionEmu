@@ -24,6 +24,7 @@ import com.aionemu.gameserver.model.templates.quest.QuestItems;
 import com.aionemu.gameserver.model.templates.quest.Rewards;
 import com.aionemu.gameserver.dataholders.QuestsData;
 import com.aionemu.gameserver.questEngine.definition.ImmutableQuestCatalog;
+import com.aionemu.gameserver.questEngine.definition.QuestDialogPage;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.questEngine.retail.RetailItemNameIndex;
@@ -68,6 +69,8 @@ class NativeQuestRewardClaimGateTest {
 	private static final int TALK_EXT_QUEST = 4316;
 	/** 职业奖励（{@code use_class_reward=1}）的 talk 行。 / Talk row using per-class rewards. */
 	private static final int TALK_CLASS_QUEST = 1690;
+	/** 单物件采集行（SimpleCollectItem 侧回归锚点）。 / Single-object collect row (CollectItem regression anchor). */
+	private static final int COLLECT_SINGLE_OBJECT_QUEST = 1137;
 
 	private static RetailItemNameIndex items;
 
@@ -265,7 +268,8 @@ class NativeQuestRewardClaimGateTest {
 		NativeTalkFixture.clearPackets(player);
 		assertTrue(handler.onDialog(NativeTalkFixture.dialog(player, npcId, TALK_SELECTABLE_QUEST, 9)),
 			"奖励窗按钮必须被领奖段服务");
-		assertEquals(List.of(SimpleTalkHandler.PAGE_COMPLETE), NativeTalkFixture.dialogPages(player));
+		// 领奖收尾 = 真端 npc-complete finish=SELECTION_DIALOG：回选择对话页（页 10，questId=0）。
+		assertEquals(List.of(QuestDialogPage.SELECT_QUEST.id()), NativeTalkFixture.dialogPages(player));
 		assertEquals(1, sink.calls.size());
 		assertEquals(TALK_SELECTABLE_QUEST, sink.calls.getFirst().env().getQuestId());
 		assertRewardFaceFromRetailRow(sink.calls.getFirst().template(), TALK_SELECTABLE_QUEST);
@@ -282,10 +286,24 @@ class NativeQuestRewardClaimGateTest {
 		NativeTalkFixture.add(player, HUNT_SCALAR_QUEST, QuestStatus.REWARD, 0);
 		int npcId = handler.rewardNpc(HUNT_SCALAR_QUEST);
 
+		// REWARD 态任务行选择（31）必须开奖励窗（2026-10-03 真机 1102：步进到 REWARD 后报告卡壳）；
+		// 开门动作（-1，右键 NPC 经引擎 questId=0 兜底重放）同样必须开窗。
+		// The REWARD-state row selection (31) and the open-door action (-1) both open the window.
+		NativeTalkFixture.clearPackets(player);
+		assertTrue(handler.onDialog(NativeTalkFixture.dialog(player, npcId, HUNT_SCALAR_QUEST, -1)),
+			"REWARD -1（右键开门经引擎重放）必须开奖励窗");
+		assertEquals(List.of(5), NativeTalkFixture.dialogPages(player));
+
+		NativeTalkFixture.clearPackets(player);
+		assertTrue(handler.onDialog(NativeTalkFixture.dialog(player, npcId, HUNT_SCALAR_QUEST, 31)),
+			"REWARD 31 必须开奖励窗");
+		assertEquals(List.of(5), NativeTalkFixture.dialogPages(player));
+
 		NativeTalkFixture.clearPackets(player);
 		assertTrue(handler.onDialog(NativeTalkFixture.dialog(player, npcId, HUNT_SCALAR_QUEST, 8)),
 			"奖励窗按钮必须被领奖段服务");
-		assertEquals(List.of(1008), NativeTalkFixture.dialogPages(player));
+		// 领奖收尾 = 真端 npc-complete finish=SELECTION_DIALOG：回选择对话页（页 10，questId=0）。
+		assertEquals(List.of(QuestDialogPage.SELECT_QUEST.id()), NativeTalkFixture.dialogPages(player));
 		assertEquals(1, sink.calls.size());
 		assertRewardFaceFromRetailRow(sink.calls.getFirst().template(), HUNT_SCALAR_QUEST);
 	}
@@ -303,9 +321,56 @@ class NativeQuestRewardClaimGateTest {
 		NativeTalkFixture.clearPackets(player);
 		assertTrue(handler.onDialog(NativeTalkFixture.dialog(player, npcId, SERIAL_REWARD_QUEST, 8)),
 			"奖励窗按钮必须被领奖段服务");
-		assertEquals(List.of(1008), NativeTalkFixture.dialogPages(player));
+		// 领奖收尾 = 真端 npc-complete finish=SELECTION_DIALOG：回选择对话页（页 10，questId=0）。
+		assertEquals(List.of(QuestDialogPage.SELECT_QUEST.id()), NativeTalkFixture.dialogPages(player));
 		assertEquals(1, sink.calls.size());
 		assertRewardFaceFromRetailRow(sink.calls.getFirst().template(), SERIAL_REWARD_QUEST);
+	}
+
+	/**
+	 * 2026-10-03 回归（quests.log 1101）：客户端奖励窗的完成确认动作 23 = SELECTED_QUEST_NOREWARD，
+	 * 曾被「8..23 段 = 选项」的映射当成下标 15 ⇒ BUTTON_UNDECLARED 静默拒绝，四族领奖真机全灭。
+	 * 23 不占选项下标；实际发放由结算体按 dialogId==23 + extendedRewardIndex 决定。
+	 * <p>
+	 * Regression (quests.log quest 1101): the reward-window no-selection confirm 23 used to be
+	 * mapped to option index 15 and fail closed silently across all four table handlers. It indexes
+	 * no option — the settlement resolves the grant via dialogId==23 + extendedRewardIndex.
+	 */
+	@Test
+	void noRewardConfirmAction23IsServedNotMappedToOption15() {
+		RecordingSink sink = new RecordingSink();
+		SimpleTalkHandler handler = NativeTalkFixture.handler(NativeInventoryPort.live(),
+			NativeReportRewardFlow.withSink(sink));
+		Player player = NativeTalkFixture.player();
+		// 1207 声明 6 个可选项：旧映射 23-8=15 越界必红，23 必须作为无选择确认放行。
+		NativeTalkFixture.add(player, TALK_SELECTABLE_QUEST, QuestStatus.REWARD, 0);
+		int npcId = handler.rewardNpc(TALK_SELECTABLE_QUEST);
+
+		NativeTalkFixture.clearPackets(player);
+		assertTrue(handler.onDialog(NativeTalkFixture.dialog(player, npcId, TALK_SELECTABLE_QUEST, 23)),
+			"23 = SELECTED_QUEST_NOREWARD 完成确认必须被领奖段服务");
+		// 领奖收尾 = 真端 npc-complete finish=SELECTION_DIALOG：回选择对话页（页 10，questId=0）。
+		assertEquals(List.of(QuestDialogPage.SELECT_QUEST.id()), NativeTalkFixture.dialogPages(player));
+		assertEquals(1, sink.calls.size());
+		assertEquals(23, sink.calls.getFirst().env().getDialogId(), "结算体按 dialogId==23 自行解析发放面");
+	}
+
+	/** 同一回归的 SimpleCollectItem 侧（映射同构，独立防回归面）。 / The same regression on the SimpleCollectItem side. */
+	@Test
+	void noRewardConfirmAction23IsServedOnTheCollectItemLane() {
+		RecordingSink sink = new RecordingSink();
+		SimpleCollectItemHandler handler = new SimpleCollectItemHandler(NativeQuestTableLoader.instance(),
+			NativeNpcNameResolver.instance(), HtmlPagesRegistry.instance(),
+			NativeInventoryPort.live(), NativeMoviePort.live(), NativeReportRewardFlow.withSink(sink),
+			NativeQuestOwnerResolver.instance().xmlOnlyIds(), new TreeSet<>());
+		Player player = NativeTalkFixture.player();
+		NativeTalkFixture.add(player, COLLECT_SINGLE_OBJECT_QUEST, QuestStatus.REWARD, 0);
+		int npcId = handler.rewardNpc(COLLECT_SINGLE_OBJECT_QUEST);
+
+		NativeTalkFixture.clearPackets(player);
+		assertTrue(handler.onDialog(NativeTalkFixture.dialog(player, npcId, COLLECT_SINGLE_OBJECT_QUEST, 23)),
+			"23 = SELECTED_QUEST_NOREWARD 完成确认必须被领奖段服务");
+		assertEquals(1, sink.calls.size());
 	}
 
 	/**

@@ -62,8 +62,6 @@ public final class SimpleUseItemHandler {
 	public static final int PAGE_IN_PROGRESS = QuestDialogPage.SELECT_QUEST.id();
 	/** 奖励窗页。 / The reward window page. */
 	public static final int PAGE_REWARD_WINDOW = QuestDialogPage.SHOW_SELECT_QUEST_REWARD_WINDOW1.id();
-	/** 完成页。 / The completion page. */
-	public static final int PAGE_COMPLETE = QuestDialogPage.QUEST_COMPLETE.id();
 	/** 中继步页（真端 SELECT2/SELECT3/SELECT4；客户端未声明即不发页）。 / Relay step pages. */
 	private static final int[] RELAY_STEP_PAGES = {1352, 1693, 2034};
 
@@ -473,14 +471,28 @@ public final class SimpleUseItemHandler {
 				return true;
 			}
 			if (rewardNpcsByQuestId.getOrDefault(questId, List.of()).contains(npcId)) {
-				if (dialogId == 31 || dialogId == 26 || dialogId == 1009 || dialogId == -1) {
+				// 两步报告（裁定 a，2026-10-03）：任务行（31）只发客户端声明的报告确认页不推进；
+				// 报告确认（1009）才扣门物品 + 翻 REWARD + 奖励窗；开门（-1/26）不推进、不跳步。
+				// Two-step report (adjudication a): 31 shows the declared confirm page, 1009 advances.
+				boolean reportReady = handInReady(player, questId);
+				if (dialogId == 31 && reportReady) {
+					int reportPage = QuestDialogContract.loadDefault().reportConfirmPage(questId);
+					if (reportPage > 0) {
+						PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(objectId, reportPage, questId));
+						return true;
+					}
+				}
+				if (reportReady && (dialogId == 31 || dialogId == 1009)) {
 					if (handIn(player, questId, state)) {
 						PacketSendUtility.sendPacket(player,
 							new SM_DIALOG_WINDOW(objectId, PAGE_REWARD_WINDOW, questId));
-					} else {
-						PacketSendUtility.sendPacket(player,
-							new SM_DIALOG_WINDOW(objectId, PAGE_IN_PROGRESS, questId));
+						return true;
 					}
+					return false;
+				}
+				if (dialogId == 31 || dialogId == 26 || dialogId == 1009 || dialogId == -1) {
+					PacketSendUtility.sendPacket(player,
+						new SM_DIALOG_WINDOW(objectId, PAGE_IN_PROGRESS));
 					return true;
 				}
 			}
@@ -498,8 +510,12 @@ public final class SimpleUseItemHandler {
 						|| (dialogId >= 110 && dialogId <= 124)) {
 					int rewardIndex = dialogId >= 8 && dialogId <= 23 ? dialogId - 8 : 0;
 					if (rewardFlow.claim(env, rewardIndex).completed()) {
+						// 领奖收尾 = 真端 npc-complete finish=SELECTION_DIALOG（4801/4805）：回选择对话页
+						// （页 10，questId=0；9/28 旧引擎基线「状态=5 → 页=10」）。
+						// The claim tail follows the retail npc-complete finish=SELECTION_DIALOG: back to
+						// the selection dialog (page 10, questId=0; the legacy 9/28 log baseline).
 						PacketSendUtility.sendPacket(player,
-							new SM_DIALOG_WINDOW(objectId, PAGE_COMPLETE, questId));
+							new SM_DIALOG_WINDOW(objectId, QuestDialogPage.SELECT_QUEST.id()));
 						return true;
 					}
 				}
@@ -518,7 +534,8 @@ public final class SimpleUseItemHandler {
 			return false;
 		}
 		if (dialogId == 1002 || dialogId == 20000) {
-			if (NativeQuestStartPort.instance().start(player, questId).started()) {
+			// 拒绝走 startTraced 打 QUEST-TRACE，不再静默。 / Refusals are traced instead of silent.
+			if (NativeQuestStartPort.instance().startTraced(player, questId, dialogId).started()) {
 				PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(0, 0));
 				return true;
 			}
@@ -589,7 +606,7 @@ public final class SimpleUseItemHandler {
 	 * items are then consumed and the row flips to REWARD. A single shortfall holds it without any
 	 * partial removal.
 	 */
-	private boolean handIn(Player player, int questId, QuestState state) {
+	private boolean handInReady(Player player, int questId) {
 		if (!relayComplete(player, questId)) {
 			return false;
 		}
@@ -600,6 +617,16 @@ public final class SimpleUseItemHandler {
 					return false;
 				}
 			}
+		}
+		return true;
+	}
+
+	private boolean handIn(Player player, int questId, QuestState state) {
+		if (!handInReady(player, questId)) {
+			return false;
+		}
+		List<ItemStack> gate = gateItemsByQuestId.get(questId);
+		if (gate != null) {
 			for (ItemStack item : gate) {
 				if (!inventory.remove(player, item.itemId(), item.count())) {
 					return false;

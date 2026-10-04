@@ -68,8 +68,6 @@ public final class SimpleItemPlayHandler {
 	public static final int PAGE_ACCEPTED = QuestDialogPage.QUEST_ACCEPT_1.id();
 	/** 拒绝页。 / The refuse page. */
 	public static final int PAGE_REFUSED = QuestDialogPage.QUEST_REFUSE_1.id();
-	/** 完成页。 / The completion page. */
-	public static final int PAGE_COMPLETE = QuestDialogPage.QUEST_COMPLETE.id();
 
 	/** 中继步页（真端 SELECT2..4；客户端契约逐行已声明）。 / Relay step pages (retail SELECT2..4). */
 	private static final int[] RELAY_STEP_PAGES = {1352, 1693, 2034};
@@ -624,8 +622,12 @@ public final class SimpleItemPlayHandler {
 						|| (dialogId >= 110 && dialogId <= 124)) {
 					int rewardIndex = dialogId >= 8 && dialogId <= 23 ? dialogId - 8 : 0;
 					if (rewardFlow.claim(env, rewardIndex).completed()) {
+						// 领奖收尾 = 真端 npc-complete finish=SELECTION_DIALOG（4801/4805）：回选择对话页
+						// （页 10，questId=0；9/28 旧引擎基线「状态=5 → 页=10」）。
+						// The claim tail follows the retail npc-complete finish=SELECTION_DIALOG: back to
+						// the selection dialog (page 10, questId=0; the legacy 9/28 log baseline).
 						PacketSendUtility.sendPacket(player,
-							new SM_DIALOG_WINDOW(objectId, PAGE_COMPLETE, questId));
+							new SM_DIALOG_WINDOW(objectId, QuestDialogPage.SELECT_QUEST.id()));
 						return true;
 					}
 				}
@@ -675,7 +677,7 @@ public final class SimpleItemPlayHandler {
 			if (rewardNpcsByQuestId.getOrDefault(questId, List.of()).contains(npcId)
 					&& (dialogId == 31 || dialogId == 26 || dialogId == -1)) {
 				PacketSendUtility.sendPacket(player,
-					new SM_DIALOG_WINDOW(objectId, PAGE_IN_PROGRESS, questId));
+					new SM_DIALOG_WINDOW(objectId, PAGE_IN_PROGRESS));
 				return true;
 			}
 			return false;
@@ -742,7 +744,7 @@ public final class SimpleItemPlayHandler {
 			return true;
 		}
 		if (dialogId == 1008) {
-			PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(objectId, PAGE_IN_PROGRESS, questId));
+			PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(objectId, PAGE_IN_PROGRESS));
 			return true;
 		}
 		return false;
