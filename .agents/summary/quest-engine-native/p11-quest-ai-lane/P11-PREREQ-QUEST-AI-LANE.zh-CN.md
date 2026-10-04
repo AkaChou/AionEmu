@@ -150,7 +150,10 @@ D1 首轮按「注册名原文相等」展开，得 37 任务 / 41 引用跨界�
   = **287 例 / 4 类 6 红**，全部为本批**之前既有**的门禁债；已做基线对照：把本批文件移开、`RetailTableSchemaGateTest`
   回退到 HEAD 后重跑同 4 类，**同样 6 红**（`RetailNonIrAxisGateTest` 2、`RetailQuestAiNameGroupGateTest` 1、
   `ItemPlayFamilyRowInventoryGateTest` 1、`SimpleCollectItemRowAlignmentGateTest` 2）。
-- 残余（未冻结、登记为后续取证面）：1657 条对话引用里 **255** 条落在 Quest-AI 集外（其中 **67** 件任务的对话位
-  **全部**不在集合内）；「注册名 → npc id」折叠歧义 554 名；18 件未注册任务仍待逐件裁决（P10 §34 件裁定的子集）。
+- 残余（未冻结）已裁决（2026-10-03，见 `D1-RESIDUAL-ADJUDICATION.zh-CN.md`）：1657 条对话引用里 **255** 条落在
+  Quest-AI 集外（**67** 件任务的对话位全部不在集合内）+ 18 件无注册任务 = **85 件**；用 5 条独立轴（NPC 存在性 /
+  遗留-客户端契约 / 真端 DD 行 / 客户端 active 页 / quest-id 直驱脚本）逐件对拍后 **85/85 至少命中一条轴、0 件 NPC 不存在**，
+  只剩 **5 件**（1003/2005/2230/2288/14013）退化为单轴（客户端页 + 真端 quest.xml 行）→ 登记为待逐件取证；
+  「注册名 → npc id」折叠歧义 554 名（真端同键语义，非缺陷）。
 - 证据表新鲜度：生成器**不在 CI**（依赖真端 `ScriptDLL64.c`/`npcs.xml`），门只保证「行集与 XML 车道全等 +
   冻结面不漂移」；重出表须手工跑 `emit_quest_ai_registrations.py --emit`，读数用 `measure_binding_gate.py --emit-constants` 复核。
