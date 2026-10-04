@@ -618,9 +618,14 @@ public final class SimpleItemPlayHandler {
 						new SM_DIALOG_WINDOW(objectId, PAGE_REWARD_WINDOW, questId));
 					return true;
 				}
-				if ((dialogId >= 8 && dialogId <= 23) || dialogId == 108
-						|| (dialogId >= 110 && dialogId <= 124)) {
-					int rewardIndex = dialogId >= 8 && dialogId <= 23 ? dialogId - 8 : 0;
+				// 选项段只有 SELECTED_QUEST_REWARD1..15（8..22）；23 = SELECTED_QUEST_NOREWARD 是
+				// 无选择确认，不占选项下标（与 Talk/Collect/Hunt/SerialHunt/DataDriven 同口径）。
+				// Only SELECTED_QUEST_REWARD1..15 (8..22) index options; 23 is the no-selection
+				// confirm and maps to index 0 (same shape as the other families).
+				if ((dialogId >= 8 && dialogId <= 22)
+						|| dialogId == QuestDialogAction.SELECTED_QUEST_NOREWARD.id()
+						|| dialogId == 108 || (dialogId >= 110 && dialogId <= 124)) {
+					int rewardIndex = dialogId >= 8 && dialogId <= 22 ? dialogId - 8 : 0;
 					if (rewardFlow.claim(env, rewardIndex).completed()) {
 						// 领奖收尾 = 真端 npc-complete finish=SELECTION_DIALOG（4801/4805）：回选择对话页
 						// （页 10，questId=0；9/28 旧引擎基线「状态=5 → 页=10」）。
@@ -643,6 +648,16 @@ public final class SimpleItemPlayHandler {
 		// item use; (3) the hand-in npc serves the in-progress page until the gate passes.
 		if (status == QuestStatus.START) {
 			int vars = state.getQuestVars().getQuestVars();
+			// 选择对话续页（SELECT⟨n⟩_… 子页动作 = 页 id）：真端原样回发该页（9/28 基线跨任务
+			// 实证 1353/1354/1694/1695/2035/2376）；契约未声明该页即 fail-closed 零响应。
+			// Selection sub-page actions echo their page back (the 9/28 baseline); a page the client
+			// task HTML never declares fails closed.
+			if (QuestDialogPage.isSelectionSubPage(dialogId)
+					&& dialogContract.hasButtonPage(questId, dialogId)) {
+				PacketSendUtility.sendPacket(player,
+					new SM_DIALOG_WINDOW(objectId, dialogId, questId));
+				return true;
+			}
 			for (RelayStep relay : relaysForNpc(npcId)) {
 				if (relay.questId() != questId) {
 					continue;
@@ -663,14 +678,34 @@ public final class SimpleItemPlayHandler {
 						if (stepRemove != null) {
 							inventory.remove(player, stepRemove.itemId(), stepRemove.count());
 						}
+						// 推进 after-commit（退役 XML SETPRO1 明文）：sync-quest-state + 回选择对话页
+						//（页 10，questId=0；与领奖收尾 SELECTION_DIALOG 同型）。零响应会让客户端按
+						// 1s 级节奏重发 SETPRO1 直至 loop breaker（1115 实机 2026-10-04 19:57）。
+						// The retail after-commit (XML SETPRO1): sync the state and return to the selection
+						// page (10, questId=0) — the claim-tail shape. A silent response makes the client
+						// resend SETPRO1 on a one-second cadence until the loop breaker fires.
+						PacketSendUtility.sendPacket(player,
+							new SM_DIALOG_WINDOW(objectId, QuestDialogPage.SELECT_QUEST.id()));
+						return true;
 					}
-					int page = vars == step - 1 ? pageForStep(step) : pageForStep(Math.max(1, vars));
-					PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(objectId, page, questId));
+					// 未推进（重复/乱序重放）：真端无匹配转换 ⇒ close-dialog 兜底（本服 loop breaker 同语义）。
+					// No matching retail transition on a replayed advance: close the dialog.
+					PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(0, 0));
 					return true;
 				}
 				if (dialogId == 31 || dialogId == 26 || dialogId == -1) {
-					int page = vars >= step ? pageForStep(step) : PAGE_IN_PROGRESS;
-					PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(objectId, page, questId));
+					// 任务行打开该中继 NPC 的对话 = 该步页（9/28 基线：vars=0/step=1 点 31 → 1352）；
+					// 尚未轮到的步（vars < step-1）零响应不跳步。原实现在 vars<step 时发
+					// 「页 10 带 questId」，而任务页契约无页 10 ⇒ 客户端 load fail（1118 同型，
+					// 2026-10-04）。
+					// Row selection opens the step dialog (= the step page; the 9/28 baseline). A step
+					// not reached yet stays silent; the old quest-id-tagged page 10 is never declared
+					// by the task HTML and failed the client load.
+					if (vars < step - 1) {
+						return false;
+					}
+					PacketSendUtility.sendPacket(player,
+						new SM_DIALOG_WINDOW(objectId, pageForStep(step), questId));
 					return true;
 				}
 			}

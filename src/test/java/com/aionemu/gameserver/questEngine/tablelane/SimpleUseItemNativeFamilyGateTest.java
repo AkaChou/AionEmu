@@ -15,6 +15,7 @@ import org.junit.jupiter.api.Test;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.templates.QuestTemplate;
+import com.aionemu.gameserver.questEngine.definition.QuestDialogAction;
 import com.aionemu.gameserver.questEngine.definition.QuestDialogPage;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.questEngine.model.QuestState;
@@ -328,6 +329,20 @@ class SimpleUseItemNativeFamilyGateTest {
 		assertEquals(1, calls.size());
 		assertEquals(ITEM_ACCEPT_QUEST, calls.getFirst().questId());
 		assertNotNull(calls.getFirst().template(), "结算体必须拿到真端奖励列重建的 typed 模板");
+
+		// 23 = SELECTED_QUEST_NOREWARD（无选择确认，不占选项下标）：与选项 8 同义结算 + 同收尾页。
+		// 1107 实机 2026-10-04：旧区间（8..23）把 23 映射成下标 15 → 按钮面 fail-closed（无声明
+		// 选项）→ 发奖中止、奖励窗反复重开。
+		// 23 is the no-selection confirm and maps to index 0 (the 1107 live fix).
+		Player confirm = NativeTalkFixture.player();
+		NativeTalkFixture.add(confirm, ITEM_ACCEPT_QUEST, QuestStatus.REWARD, 0);
+		int confirmNpc = local.rewardNpcs(ITEM_ACCEPT_QUEST).getFirst();
+		NativeTalkFixture.clearPackets(confirm);
+		assertTrue(local.onDialog(NativeTalkFixture.dialog(confirm, confirmNpc, ITEM_ACCEPT_QUEST,
+			QuestDialogAction.SELECTED_QUEST_NOREWARD.id())), "23 无选择确认必须被领奖段服务");
+		NativeTalkFixture.assertOnlyDialogPage(confirm, QuestDialogPage.SELECT_QUEST.id());
+		assertEquals(2, calls.size(), "23 必须触发结算");
+		assertEquals(0, calls.getLast().tier(), "23 的结算档位必须归 0（NOREWARD 不占下标）");
 
 		// 越界按钮（非奖励窗动作）不得结算。
 		Player other = NativeTalkFixture.player();

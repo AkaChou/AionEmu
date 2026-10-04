@@ -205,6 +205,29 @@ public enum QuestDialogPage {
 
 
 	/**
+	 * 选择对话续页（{@code SELECT⟨n⟩_⟨m⟩…} 子页，如 {@code SELECT2_1}(1353)）：客户端把这些页的
+	 * 翻页按钮写作页 id 本身，真端对该动作**原样回发该页**（9/28 基线跨任务实证：1353/1354/
+	 * 1694/1695/2035/2376）。顶层页（{@code SELECT_QUEST}(10)、{@code SELECT_NONE}(4762)、
+	 * {@code SELECT1..14} 主线页）不是动作；{@code CHECK_USER_ITEM_OK/FAIL} 与
+	 * {@code DEFAULT_SUCCESS} 是动作常量而非页。
+	 * <p>
+	 * Selection sub-pages ({@code SELECT⟨n⟩_⟨m⟩…}): the client writes the target page id itself as
+	 * the turn-page button action, and the retail server echoes that page back (measured across the
+	 * 9/28 baseline). Top-level pages are not actions; the CHECK/SELECT_NONE top pages are excluded.
+	 */
+	public static boolean isSelectionSubPage(int id) {
+		QuestDialogPage page = BY_ID.get(id);
+		if (page == null) {
+			return false;
+		}
+		String name = page.name();
+		// 「SELECT+数字+下划线」才是子页：排除 SELECT_QUEST(10)/SELECT_NONE(4762) 等顶层含下划线名。
+		// Only SELECT⟨digits⟩_⟨…⟩ counts: excludes top-level underscore names such as SELECT_QUEST.
+		int underscore = name.indexOf('_');
+		return name.startsWith("SELECT") && underscore > 0 && Character.isDigit(name.charAt(underscore - 1));
+	}
+
+	/**
 	 * 第 N 档（0 基）奖励在客户端渲染的奖励窗口页面。
 	 * Client reward-window page rendering the zero-based Nth reward tier.
 	 * <p>客户端只声明 6 档奖励窗口：第 1~4 档对应页面 5..8，第 5/6 档对应页面 45/46；

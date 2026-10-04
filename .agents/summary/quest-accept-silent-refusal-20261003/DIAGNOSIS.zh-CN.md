@@ -354,6 +354,77 @@
 - 悬案（未分离）：4 件 CLOSE_DIALOG 型（普查未列 id）仍按页 10 收尾；DD 步进/接取面 1008 通道
   （e1 裁定）不动。
 
+## 修复落地（2026-10-04，缺陷 P：中继对话面——31 打开发「页 10 带 questId」（1118 load fail）+ 子页翻页缺失）
+
+- 用户复测："1118 和 npc 203070 对话，对话页 load fail"。
+- 实机日志（log/quests.log 19:19，玩家 Kk）：接取链正常（203059：1011→1007→4→1002→
+  状态3+1003）后与中继 NPC 203070 点任务行（31）×3 → 每次下发「页 10 带 questId=1118」
+  → 客户端 load fail（契约页集合 {4,1003,1004,1011,1352,1353,2375} 无页 10）。
+- 根因（两处，SimpleTalk/SimpleItemPlay 族级同构）：
+  1. 中继段 31 分支 `vars >= step ? pageForStep(step) : PAGE_IN_PROGRESS`——vars=0/step=1
+     （刚接取来中继 NPC 说话，最正常路径）落 false 分支发**三参页 10**（缺陷 J 修的是字面量
+     形态七处，变量形态这一处漏网）；9/28 基线同场景应发 1352（select2 中继页）。
+  2. 子页翻页动作（HACTION_SELECT2_1=1353 等，客户端把翻页按钮写作目标页 id）无处理——
+     9/28 基线跨任务（1118/1002/1004/1005/1006/1114/1115）实证真端**原样回发该页**
+     （1353/1354/1694/1695/2035/2376）；表车道零响应则玩家修完 load fail 也会卡在 select2 页。
+- 证据链：1118 客户端 html（select2 按钮=HACTION_SELECT2_1、select2_1 按钮=HACTION_SETPRO1）；
+  9/28 基线全族翻页序列；契约 tsv（1118/1131/18213 声明 1352/1353）；退役 XML 1118 交付/中继链。
+- 修复（主源码两族 + 定义层一处）：
+  1. `QuestDialogPage.isSelectionSubPage(int)`（新增）：SELECT+数字+_ 形态判定（排除
+     SELECT_QUEST(10)/SELECT_NONE(4762) 顶层页）；
+  2. `SimpleTalkHandler`/`SimpleItemPlayHandler` START 段顶部：子页动作 × 契约声明 → 原样回发
+     该页（未声明 fail-closed 零响应）；
+  3. 两族中继段 31/26（ItemPlay 含 -1）：`vars < step-1 → false`（跳步零响应）；
+     `vars >= step-1 → pageForStep(step)`（带 questId，9/28 基线 1118 31→1352）。
+- 验证（2026-10-04 IDEA MCP runner）：SimpleTalk 族 13/13（+2 用例：relayRowSelectionOpensTheStepDialog
+  / selectSubPageActionsEchoTheClientDeclaredPage）、SimpleItemPlay 族 15/15（同款两用例）全绿。
+
+### 缺陷 P 第二轮（1115 循环：推进动作重发旧步页）
+
+- 用户复测（同日 19:38，Kk）：1115 与 203072 → 31→1352 ✓、1353→1353 ✓（前修生效），但推进
+  动作（10000）后服务端**重发 1352（旧步页）**→ 客户端被拉回 select2 →「点 1353→10000」
+  无限循环（日志 19:38:41-47 十连）。
+- 根因：中继推进段原实现「推进后发 pageForStep(vars)」——vars 已推进到 step ⇒ 发回旧步页
+  （9/28 基线：所有 10000/10001/10002/10003 推进后**零页**，客户端「结束对话」按钮自行关窗）。
+- 修复（两族）：推进段改**零页**（只发 SM_QUEST_ACTION + 步物品）；ItemPlay e2e 两处页断言
+  改「推进零页」、Talk 门新用例补「推进零页」断言。
+- 验证（2026-10-04 IDEA MCP runner）：Talk 13/13、ItemPlay 15/15、UseItem 11/11 全绿。
+- 悬案登记：1006 型多段链的「推进后切段页」（旧引擎 10003 后发 SELECT8=3398）未在表车道
+  复现/未取证（QE-141 boundaries ⑥）。
+
+### 缺陷 P 第三轮（1115 定案：推进 after-commit = 回选择对话页 10）
+
+- 第二轮修复（推进零页）后复测（19:57，Kk）：31→1352 ✓、1353→1353 ✓、10000 → 状态3 步数=1
+  但**零包** ⇒ 客户端停在 1353 页、按 1s 级节奏重发 SETPRO1 ×3 → loop breaker 关窗。
+- 定案证据（退役 XML 1115 明文，git show 实读）：`started→v1` 的 SETPRO1 转换 after-commit =
+  `sync-quest-state(LEVEL_AND_VISIBILITY_REFRESH)` + **`SHOW_SELECTION_PAGE page="SELECT_QUEST"`**
+  （页 10，questId=0）；`unaccepted` 态 SETPRO1 = `close-dialog`。
+- 修复（两族推进段）：**推进成功 → 回选择对话页 10**（与领奖收尾 SELECTION_DIALOG 同型）；
+  **未推进（重复/乱序重放，无匹配转换）→ close-dialog (0,0)**；替换上一轮"零页"实现。
+- 验证（2026-10-04 IDEA MCP runner）：Talk 13/13（推进断言改「回选择页 10」+ 新增「重复推进 =
+  关窗」）、ItemPlay 15/15（e2e 两处推进断言改「回选择页 10」）、UseItem 11/11 全绿。
+- 教训（沉淀 QE-141）：中继面每个动作按退役 XML event/after-commit 逐条对齐——「结束对话」
+  按钮 = SETPRO1，after-commit 是**回选择页**（零包 → 客户端 1s 重发；旧步页 → 点击循环）。
+
+## 修复落地（2026-10-04，缺陷 Q：领奖动作 8..23 一刀切残留——1107 奖励窗点确定循环）
+
+- 用户复测："任务 1107「将斧柄送还给伐木工纳姆斯」，和 npc 203075 对话，点击确定没有反应"。
+- 实机日志（19:22，玩家 Kk）：报告两步正常（31→2375、1009→状态4+页5）后，奖励窗点确定
+  （动作 23=SELECTED_QUEST_NOREWARD）×6 → 每次「关窗(0,0) + 页 5（奖励窗重开）」→ 循环；
+  无 SM_QUEST_ACTION 状态5、无结算（发奖中止）。
+- 根因：`SimpleUseItemHandler`/`SimpleItemPlayHandler` 领奖段仍是旧区间 `dialogId >= 8 &&
+  <= 23`——23 被映射成选项下标 15 → `NativeReportRewardFlow.windowButtonProblem`
+  "index 15 without declared options" fail-closed → claim 不完成 → 引擎返回 false →
+  DialogService 关窗兜底（关窗来自其「未处理任务动作关窗」分支），奖励窗随后重开
+  （缺陷 A 的族级翻版：2026-10-03 修了 Talk/Hunt/SerialHunt/CollectItem 四族，
+  **UseItem/ItemPlay 两族漏网**；1107 无选项列 ⇒ 修好后 index 0 必过按钮面）。
+- 修复（2 处）：两族领奖段改 `8..22 + SELECTED_QUEST_NOREWARD(23)`（23 → rewardIndex=0，
+  与 DataDriven/Talk/Collect/Hunt/SerialHunt 同口径）。
+- 验证（2026-10-04 IDEA MCP runner）：UseItem 族 11/11、ItemPlay 族 15/15（claim 用例各加
+  23 断言：同义结算 + 同收尾页 10 + 档位归 0）全绿。
+- 全族账目：领奖动作映射六族全量对齐（Talk/Hunt/SerialHunt/CollectItem 10-03 + UseItem/ItemPlay
+  10-04）；DataDrivenNativeRuntime 早已为 8..22+NOREWARD 口径。
+
 ## 后续（未实施）
 
 1. "页面错乱"待复现样本再定位（领奖修复后优先复测 J 页/对话框是否仍乱）。

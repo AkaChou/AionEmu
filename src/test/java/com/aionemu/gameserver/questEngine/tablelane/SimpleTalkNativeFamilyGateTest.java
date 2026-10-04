@@ -255,6 +255,90 @@ class SimpleTalkNativeFamilyGateTest {
 		assertEquals(QuestStatus.REWARD, state.getStatus());
 	}
 
+	/**
+	 * 任务行打开中继对话（2026-10-04，1118 load fail 修复）：31/26 只发**该步页**
+	 * （9/28 基线 1118：vars=0/step=1 点 31 → 1352），不再发「页 10 带 questId」（任务页契约
+	 * 无页 10 ⇒ 客户端 load fail）；尚未轮到的步零响应不跳步；已推进的步可重看（零副作用）。
+	 * Row selection opens the step dialog with the step page (the 1118 load-fail fix); a step not
+	 * reached yet stays silent; an advanced step is replayable with no side effect.
+	 */
+	@Test
+	void relayRowSelectionOpensTheStepDialog() {
+		Player player = NativeTalkFixture.player();
+		int questId = CHAINED_QUEST;
+		List<String> relayNames = itemHandler.requireRow(questId).talkNpcNames();
+		Npc first = createMockNpc(resolve(relayNames.get(0)));
+		Npc second = createMockNpc(resolve(relayNames.get(1)));
+
+		QuestState state = new QuestState(questId, QuestStatus.START, 0, 0, null, 0, null);
+		player.getQuestStateList().addQuest(questId, state);
+
+		// 当前待推进步：31 → 该步页（契约声明 select2 = 1352），且不触碰物品通道。
+		inventory.clear();
+		NativeTalkFixture.clearPackets(player);
+		assertTrue(itemHandler.onDialog(new QuestEnv(first, player, questId, 31)));
+		NativeTalkFixture.assertOnlyDialogPage(player, SimpleTalkHandler.pageForStep(1));
+		assertTrue(inventory.calls.isEmpty(), "打开对话页不得触碰物品通道");
+
+		// 尚未轮到的步：零响应、零下发、零推进。
+		NativeTalkFixture.clearPackets(player);
+		assertFalse(itemHandler.onDialog(new QuestEnv(second, player, questId, 31)),
+				"未轮到的中继步不得服务 / an unreached relay step must not be served");
+		assertTrue(NativeTalkFixture.dialogPages(player).isEmpty(), "未轮到的步必须零下发");
+		assertEquals(0, state.getQuestVars().getQuestVars());
+
+		// 推进（动作 10000 = select2_1 页的「结束对话」按钮）：after-commit = sync-quest-state +
+		// 回选择对话页（10，questId=0；退役 XML 1115 SETPRO1 明文，与领奖收尾同型）。
+		NativeTalkFixture.clearPackets(player);
+		assertTrue(itemHandler.onDialog(new QuestEnv(first, player, questId, 10000)));
+		assertEquals(1, state.getQuestVars().getQuestVars(), "推进后步号 = 1");
+		NativeTalkFixture.assertOnlyDialogPage(player, QuestDialogPage.SELECT_QUEST.id());
+
+		// 重复推进（已推进后重放 SETPRO1）：真端无匹配转换 ⇒ close-dialog 兜底、零推进。
+		NativeTalkFixture.clearPackets(player);
+		assertTrue(itemHandler.onDialog(new QuestEnv(first, player, questId, 10000)));
+		NativeTalkFixture.assertOnlyDialogPage(player, 0);
+		assertEquals(1, state.getQuestVars().getQuestVars(), "重复推进不得再改步号");
+
+		// 已推进的步可重看（幂等，零状态写）。
+		state.getQuestVars().setVar(1);
+		NativeTalkFixture.clearPackets(player);
+		assertTrue(itemHandler.onDialog(new QuestEnv(first, player, questId, 31)));
+		NativeTalkFixture.assertOnlyDialogPage(player, SimpleTalkHandler.pageForStep(1));
+		assertEquals(1, state.getQuestVars().getQuestVars());
+	}
+
+	/**
+	 * 选择对话续页（2026-10-04，1118 全链修复）：客户端把翻页按钮写作页 id（SELECT2_1=1353），
+	 * 真端对该动作**原样回发该页**（9/28 基线跨任务实证 1353/1354/1694/1695/2035/2376）；
+	 * 契约未声明该页的行 fail-closed 零响应。
+	 * Selection sub-page actions echo their page back (the 9/28 baseline); undeclared pages fail closed.
+	 */
+	@Test
+	void selectSubPageActionsEchoTheClientDeclaredPage() {
+		// 1131 契约声明 1353（select2_1）。
+		Player player = NativeTalkFixture.player();
+		int questId = ITEM_QUEST;
+		player.getQuestStateList().addQuest(questId,
+				new QuestState(questId, QuestStatus.START, 0, 0, null, 0, null));
+		Npc relay = createMockNpc(resolve(itemHandler.requireRow(questId).talkNpcNames().getFirst()));
+
+		NativeTalkFixture.clearPackets(player);
+		assertTrue(itemHandler.onDialog(new QuestEnv(relay, player, questId, QuestDialogPage.SELECT2_1.id())));
+		NativeTalkFixture.assertOnlyDialogPage(player, QuestDialogPage.SELECT2_1.id());
+
+		// 41536 契约无 1353：fail-closed 零响应。
+		Player other = NativeTalkFixture.player();
+		int gapped = CHAINED_QUEST;
+		other.getQuestStateList().addQuest(gapped,
+				new QuestState(gapped, QuestStatus.START, 0, 0, null, 0, null));
+		Npc gappedRelay = createMockNpc(resolve(itemHandler.requireRow(gapped).talkNpcNames().get(0)));
+		NativeTalkFixture.clearPackets(other);
+		assertFalse(itemHandler.onDialog(new QuestEnv(gappedRelay, other, gapped, QuestDialogPage.SELECT2_1.id())),
+				"契约未声明的子页动作必须 fail-closed");
+		assertTrue(NativeTalkFixture.dialogPages(other).isEmpty());
+	}
+
 	/** 物品面：真端 cab520/cabb10 的物品通道与 item_check 交付门（含冻结缺口）。 */
 	@Test
 	void itemFaceFollowsTheRetailChannels() {

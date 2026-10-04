@@ -19,6 +19,7 @@ import com.aionemu.gameserver.model.PlayerClass;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.templates.QuestTemplate;
+import com.aionemu.gameserver.questEngine.definition.QuestDialogAction;
 import com.aionemu.gameserver.questEngine.definition.QuestDialogPage;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
@@ -331,10 +332,64 @@ class SimpleItemPlayNativeFamilyGateTest {
 		assertEquals(1, claims.size());
 		assertEquals(PLAY_QUEST, claims.getFirst()[0]);
 
+		// 23 = SELECTED_QUEST_NOREWARD（无选择确认，不占选项下标）：与选项 8 同义结算 + 同收尾页。
+		// 1107 同型修复（2026-10-04）：旧区间（8..23）把 23 映射成下标 15 → 按钮面 fail-closed。
+		// 23 is the no-selection confirm and maps to index 0 (the 1107 same-shape fix).
+		Player confirm = NativeTalkFixture.player();
+		NativeTalkFixture.add(confirm, PLAY_QUEST, QuestStatus.REWARD, 0);
+		NativeTalkFixture.clearPackets(confirm);
+		assertTrue(local.onDialog(NativeTalkFixture.dialog(confirm, rewardNpc, PLAY_QUEST,
+			QuestDialogAction.SELECTED_QUEST_NOREWARD.id())), "23 无选择确认必须被领奖段服务");
+		NativeTalkFixture.assertOnlyDialogPage(confirm, QuestDialogPage.SELECT_QUEST.id());
+		assertEquals(2, claims.size(), "23 必须触发结算");
+		assertEquals(0, claims.getLast()[1], "23 的结算档位必须归 0（NOREWARD 不占下标）");
+
 		Player other = NativeTalkFixture.player();
 		NativeTalkFixture.add(other, PLAY_QUEST, QuestStatus.REWARD, 0);
 		assertFalse(local.onDialog(NativeTalkFixture.dialog(other, rewardNpc, PLAY_QUEST, 9999)),
 			"非奖励窗动作不得被领奖段消费");
+	}
+
+	/**
+	 * 任务行打开中继对话 + 选择对话续页（2026-10-04，1118 同型修复）：31 发该步页、尚未轮到的步
+	 * 零响应；子页动作（SELECT2_1=1353）原样回发（9/28 基线），契约未声明的行 fail-closed。
+	 * Row selection opens the step page (unreached steps stay silent); selection sub-page actions echo
+	 * their page back (the 9/28 baseline) and fail closed when the contract never declares them.
+	 */
+	@Test
+	void relayRowSelectionAndSubPageEchoFollowTheClientContract() {
+		NativeTalkFixture.RecordingInventory inventory = new NativeTalkFixture.RecordingInventory();
+		SimpleItemPlayHandler local = handlerWith(inventory, NativeReportRewardFlow.forTest(
+			SimpleItemPlayNativeFamilyGateTest::metadata, (env, tier, template) -> true));
+		Player player = NativeTalkFixture.player(Race.ELYOS, PlayerClass.WARRIOR, 51);
+		NativeTalkFixture.completePrerequisites(player, 18212);
+		NativeTalkFixture.add(player, 18213, QuestStatus.START, 0);
+		List<SimpleItemPlayHandler.RelayStep> relays = local.relaysForQuest(18213);
+
+		// vars=0/step=1：31 → 该步页（18213 契约声明 select2 = 1352），不触碰物品通道。
+		NativeTalkFixture.clearPackets(player);
+		assertTrue(local.onDialog(NativeTalkFixture.dialog(player, relays.get(0).npcId(), 18213, 31)));
+		NativeTalkFixture.assertOnlyDialogPage(player, SimpleItemPlayHandler.pageForStep(1));
+		assertTrue(inventory.calls().isEmpty(), "打开对话页不得触碰物品通道");
+
+		// vars=0/step=2：未轮到，零响应不跳步。
+		NativeTalkFixture.clearPackets(player);
+		assertFalse(local.onDialog(NativeTalkFixture.dialog(player, relays.get(1).npcId(), 18213, 31)));
+		assertTrue(NativeTalkFixture.dialogPages(player).isEmpty(), "未轮到的步必须零下发");
+
+		// 子页动作 SELECT2_1(1353)（18213 契约声明）：原样回发。
+		NativeTalkFixture.clearPackets(player);
+		assertTrue(local.onDialog(NativeTalkFixture.dialog(player, relays.get(0).npcId(), 18213,
+			QuestDialogPage.SELECT2_1.id())));
+		NativeTalkFixture.assertOnlyDialogPage(player, QuestDialogPage.SELECT2_1.id());
+
+		// PLAY_QUEST(19048) 契约无子页：fail-closed 零响应。
+		Player other = NativeTalkFixture.player();
+		NativeTalkFixture.add(other, PLAY_QUEST, QuestStatus.START, 0);
+		NativeTalkFixture.clearPackets(other);
+		assertFalse(local.onDialog(NativeTalkFixture.dialog(other, local.rewardNpcs(PLAY_QUEST).getFirst(),
+			PLAY_QUEST, QuestDialogPage.SELECT2_1.id())), "契约未声明的子页动作必须 fail-closed");
+		assertTrue(NativeTalkFixture.dialogPages(other).isEmpty());
 	}
 
 	/**
@@ -392,11 +447,12 @@ class SimpleItemPlayNativeFamilyGateTest {
 			assertEquals(List.of("give:" + stepOneItem.itemId() + ":" + stepOneItem.count()),
 				inventory.calls(), "接取提交即发真端 give_item（第 1 步道具）: " + questId);
 
-			// 中继第 1 步：页 select2，零发扣，步号 = 1。
+			// 中继第 1 步（select2_1 页的「结束对话」按钮）：after-commit = 回选择对话页（10，
+			// questId=0；退役 XML SETPRO1 明文），零发扣，步号 = 1。
 			NativeTalkFixture.clearPackets(player);
 			assertTrue(local.onDialog(NativeTalkFixture.dialog(player, relays.get(0).npcId(), questId, 10000)),
 				"第 1 步动作 10000 必须被中继节点服务: " + questId);
-			NativeTalkFixture.assertOnlyDialogPage(player, SimpleItemPlayHandler.pageForStep(1));
+			NativeTalkFixture.assertOnlyDialogPage(player, QuestDialogPage.SELECT_QUEST.id());
 			assertEquals(1, player.getQuestStateList().getQuestState(questId).getQuestVars().getQuestVars(),
 				"第 1 步后步号 = 1: " + questId);
 			assertEquals(List.of("give:" + stepOneItem.itemId() + ":" + stepOneItem.count()),
@@ -408,11 +464,12 @@ class SimpleItemPlayNativeFamilyGateTest {
 			assertEquals(QuestStatus.START, player.getQuestStateList().getQuestState(questId).getStatus(),
 				"闸门拒绝后状态不变: " + questId);
 
-			// 中继第 2 步：页 select3，发 B 扣 A，步号 = 2。
+			// 中继第 2 步（select3_1 页的「结束对话」按钮）：after-commit = 回选择对话页（10），
+			// 发 B 扣 A，步号 = 2。
 			NativeTalkFixture.clearPackets(player);
 			assertTrue(local.onDialog(NativeTalkFixture.dialog(player, relays.get(1).npcId(), questId, 10001)),
 				"第 2 步动作 10001 必须被中继节点服务: " + questId);
-			NativeTalkFixture.assertOnlyDialogPage(player, SimpleItemPlayHandler.pageForStep(2));
+			NativeTalkFixture.assertOnlyDialogPage(player, QuestDialogPage.SELECT_QUEST.id());
 			assertEquals(2, player.getQuestStateList().getQuestState(questId).getQuestVars().getQuestVars(),
 				"第 2 步后步号 = 2: " + questId);
 			assertEquals(List.of("give:" + stepOneItem.itemId() + ":" + stepOneItem.count(),

@@ -16,6 +16,7 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_DIALOG_WINDOW;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_QUEST_ACTION;
 import com.aionemu.gameserver.questEngine.definition.QuestDialogContract;
+import com.aionemu.gameserver.questEngine.definition.QuestDialogAction;
 import com.aionemu.gameserver.questEngine.definition.QuestDialogPage;
 import com.aionemu.gameserver.questEngine.definition.RetiredQuestIds;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
@@ -506,9 +507,16 @@ public final class SimpleUseItemHandler {
 						new SM_DIALOG_WINDOW(objectId, PAGE_REWARD_WINDOW, questId));
 					return true;
 				}
-				if ((dialogId >= 8 && dialogId <= 23) || dialogId == 108
-						|| (dialogId >= 110 && dialogId <= 124)) {
-					int rewardIndex = dialogId >= 8 && dialogId <= 23 ? dialogId - 8 : 0;
+				// 选项段只有 SELECTED_QUEST_REWARD1..15（8..22）；23 = SELECTED_QUEST_NOREWARD 是
+				// 无选择确认，不占选项下标（与 Talk/Collect/Hunt/SerialHunt/DataDriven 同口径）。
+				// 1107 实机 2026-10-04：23 被旧区间（8..23）映射成下标 15 → 按钮面 fail-closed
+				// （无声明选项）→ 发奖中止，奖励窗反复重开。
+				// Only SELECTED_QUEST_REWARD1..15 (8..22) index options; 23 is the no-selection
+				// confirm and maps to index 0 (same shape as the other families).
+				if ((dialogId >= 8 && dialogId <= 22)
+						|| dialogId == QuestDialogAction.SELECTED_QUEST_NOREWARD.id()
+						|| dialogId == 108 || (dialogId >= 110 && dialogId <= 124)) {
+					int rewardIndex = dialogId >= 8 && dialogId <= 22 ? dialogId - 8 : 0;
 					if (rewardFlow.claim(env, rewardIndex).completed()) {
 						// 领奖收尾 = 真端 npc-complete finish=SELECTION_DIALOG（4801/4805）：回选择对话页
 						// （页 10，questId=0；9/28 旧引擎基线「状态=5 → 页=10」）。
