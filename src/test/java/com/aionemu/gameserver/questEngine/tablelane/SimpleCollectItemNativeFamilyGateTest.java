@@ -226,6 +226,16 @@ class SimpleCollectItemNativeFamilyGateTest {
 		assertTrue(local.onDialog(NativeTalkFixture.dialog(player, rewardNpc, SINGLE_OBJECT_QUEST, 26)));
 		NativeTalkFixture.assertOnlyDialogPage(player, SimpleCollectItemHandler.PAGE_IN_PROGRESS);
 
+		// 未持有交付物点任务行（2026-10-05 缺陷 T，实机 1126）：报告页照发（1137 契约 select5=2375）——
+		// 物品门只在确认动作（39/1009）上分叉，31 零推进零扣物。
+		// Row selection while the hand-in items are missing (defect T): the confirm page is sent anyway.
+		NativeTalkFixture.clearPackets(player);
+		assertTrue(local.onDialog(NativeTalkFixture.dialog(player, rewardNpc, SINGLE_OBJECT_QUEST, 31)));
+		NativeTalkFixture.assertOnlyDialogPage(player, 2375);
+		assertEquals(QuestStatus.START,
+			player.getQuestStateList().getQuestState(SINGLE_OBJECT_QUEST).getStatus(), "未持有 31 零推进");
+		assertTrue(inventory.calls().isEmpty(), "未持有 31 零扣物");
+
 		// 持有交付物即满足真端 check_item 门（无相机门——2026-10-04 起采集为物品驱动）。
 		inventory.hold(handInItem, 1);
 		NativeTalkFixture.clearPackets(player);

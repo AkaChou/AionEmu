@@ -452,6 +452,25 @@
 - 悬案：报告确认动作变体 CHECK_GOLD/CHECK_AP/CHECK_USER_HAS_QUEST_ITEM_SIMPLE（9655/9656/3340/
   3547）不在当前确认动作集（1009/39）——同型风险面，待实机样本再裁定。
 
+### 缺陷 T（2026-10-05）：报告页被物品门误挡——进行中点任务行回页 10（1126 暴露，用户提问「是否正确」）
+
+- 用户报告：任务 1126（已接取）与 203079 对话，列表里点 1126 无反应（09:12 日志五连：
+  31 → **questId=0 页=10**）。用户直接问"是否是正确的"。
+- 判定：**不正确**。真端（退役 XML 1126）：`started 态 TALK 31 → SHOW_QUEST_PAGE SELECT5`
+  **无 conditions**——报告页是"检查入口"，**物品门只在确认动作上分叉**（39 未持满 →
+  select6 失败页）。1137/80482 同型印证（80482 单中继步+门：`started 31→SELECT5` 亦无
+  conditions）。当前实现把 `reportReady`（含物品门）当作 31 的发页条件 → 未集齐时落
+  「页 10 兜底」→ 玩家体感"点了没反应"。
+- 修复（3 处）：Talk/UseItem/CollectItem 报告段 31 的**页条件从 reportReady 收窄为「报告步
+  已到」**——Talk=`vars >= relayCount`、UseItem=`relayComplete`、CollectItem=
+  `talkChainComplete`；推进分支（39/1009）的 reportReady 门保持不动。
+- 验证（2026-10-05 IDEA MCP runner）：Talk 14/14、UseItem 11/11、CollectItem 16/16、
+  ItemPlay 15/15 全绿（三族门各加"未持门点 31 → 报告页 2375 + 零推进零扣物"断言）。
+- 边界：26/-1（开门动作）与 1009 的未就绪兜底（页 10）**保持不变**——无真端正面证据 + 既有
+  断言冻结（1126 XML started 态 26/-1 无转换；unaccepted 态 FINISH_DIALOG→SELECT_QUEST 页 10
+  有 XML 背书）。中继未完（vars<relayCount）在交付 NPC 点 31 仍走页 10（真端无匹配转换的
+  本服温和兜底，真端形态为无响应——留观）。
+
 ## 修复落地（2026-10-04，缺陷 Q：领奖动作 8..23 一刀切残留——1107 奖励窗点确定循环）
 
 - 用户复测："任务 1107「将斧柄送还给伐木工纳姆斯」，和 npc 203075 对话，点击确定没有反应"。

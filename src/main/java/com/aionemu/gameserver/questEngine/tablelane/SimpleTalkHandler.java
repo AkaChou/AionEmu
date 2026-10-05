@@ -955,8 +955,14 @@ public final class SimpleTalkHandler implements NativeSystemGrantLane {
 			// the client-declared fail page (select6).
 			List<Integer> rewardNpcs = rewardNpcIdsByQuestId.get(questId);
 			if (rewardNpcs != null && rewardNpcs.contains(npcId)) {
-				boolean reportReady = vars >= relayCount(questId) && holdsGateItems(questId, player);
-				if (dialogId == 31 && reportReady) {
+				// 报告页只随「报告步已到」下发——**物品门不计入页条件**（缺陷 T，2026-10-05 实机 1126：
+				// 未集齐点任务行被回页 10＝「没反应」；退役 XML 1126/1137/80482：started 态 TALK 31 →
+				// SELECT5/报告页 无 conditions，就绪分叉在确认动作上：39 未持满 → 声明失败页）。
+				// The confirm page rides the report step alone (defect T): the item gate forks on the
+				// confirm action (39 → the declared fail page), never on the page send itself.
+				boolean reportStepReached = vars >= relayCount(questId);
+				boolean reportReady = reportStepReached && holdsGateItems(questId, player);
+				if (dialogId == 31 && reportStepReached) {
 					// 报告页分型跳过被中继步占用的 SELECT2（缺陷 S，2026-10-05）：1118 的 select2 是
 					// Kustanon 中继树（按钮翻页），报告页是 select5（按钮「拿出药膏」=SELECT_QUEST_REWARD）。
 					// The report-page typing skips SELECT2 when relay steps consume it (defect S).

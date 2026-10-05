@@ -419,6 +419,20 @@ class SimpleTalkNativeFamilyGateTest {
 		assertTrue(itemHandler.onDialog(new QuestEnv(rewardNpc, gatedPlayer, gated, 1009)));
 		assertEquals(QuestStatus.REWARD, gatedState.getStatus());
 		assertEquals(List.of("remove:182212534:1", "remove:182212535:1", "remove:182212536:1"), inventory.calls);
+
+		// 未持门点任务行（2026-10-05 缺陷 T，实机 1126）：报告页照发（41536 契约 select5=2375）——
+		// 物品门只在确认动作（39/1009）上分叉，31 零推进零扣物。
+		// Row selection with the gate still short (defect T): the confirm page is sent anyway;
+		// the item gate forks on the confirm action only.
+		Player pagePlayer = NativeTalkFixture.player();
+		QuestState pageState = new QuestState(gated, QuestStatus.START, 3, 0, null, 0, null);
+		pagePlayer.getQuestStateList().addQuest(gated, pageState);
+		inventory.calls.clear();
+		NativeTalkFixture.clearPackets(pagePlayer);
+		assertTrue(itemHandler.onDialog(new QuestEnv(rewardNpc, pagePlayer, gated, 31)));
+		NativeTalkFixture.assertOnlyDialogPage(pagePlayer, QuestDialogPage.SELECT5.id());
+		assertEquals(QuestStatus.START, pageState.getStatus(), "未持门 31 零推进");
+		assertTrue(inventory.calls.isEmpty(), "未持门 31 零扣物");
 	}
 
 	/**

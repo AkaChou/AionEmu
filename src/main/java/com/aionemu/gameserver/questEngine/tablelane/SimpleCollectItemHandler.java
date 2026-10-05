@@ -893,6 +893,11 @@ public final class SimpleCollectItemHandler implements NativeSystemGrantLane {
 				// handInReady 无副作用（不扣物品）：第一步发确认页后物品仍在，第二步才扣除推进。
 				// handInReady is side-effect-free: the first step must not consume the items.
 				boolean reportReady = handInReady(player, questId);
+				// 报告页只随「中继走完」下发——物品门不计入页条件（缺陷 T，2026-10-05；退役 XML 1137：
+				// started 态 31→SELECT5 无 conditions，就绪分叉在 39/1009 确认动作上）。
+				// The confirm page rides the completed relay alone (defect T); the item gate forks on
+				// the confirm action.
+				boolean relayDone = talkChainComplete(player, questId);
 				// 两步报告（裁定 a，2026-10-03；39 检查按钮 2026-10-04）：任务行（31）只发客户端声明的
 				// 报告确认页（NPC_REPORT 分型 1352/2375/10002）；报告确认才推进 REWARD + 奖励窗——确认
 				// 动作随任务页而分：直翻型 = 1009；检查型 = 报告页的 39（HACTION_CHECK_USER_HAS_QUEST_ITEM，
@@ -902,7 +907,7 @@ public final class SimpleCollectItemHandler implements NativeSystemGrantLane {
 				// Two-step report (adjudication a, 2026-10-03; the 39 check button, 2026-10-04): 31 shows the
 				// declared confirm page; the confirm action advances — 1009 for the direct form, 39 (the report
 				// page's item-check button) for the check form; a failed 39 check shows the declared fail page.
-				if (dialogId == 31 && reportReady) {
+				if (dialogId == 31 && relayDone) {
 					// 报告页分型跳过被中继步占用的 SELECT2（缺陷 S，2026-10-05）：9620/9655/9656 等
 					// 双页任务的 select2/3/4 是中继步页（SETPRO1/2/3），报告页是 select5。
 					// The report-page typing skips SELECT2 when relay steps consume it (defect S).

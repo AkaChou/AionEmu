@@ -252,6 +252,16 @@ class SimpleUseItemNativeFamilyGateTest {
 			"门未过不得翻 REWARD");
 		assertTrue(inventory.calls().isEmpty(), "门未过不得扣除门物品");
 
+		// 未持门点任务行（2026-10-05 缺陷 T，实机 1126）：报告页照发（80482 契约 select5=2375）——
+		// 物品门只在确认动作（39/1009）上分叉，31 零推进零扣物。
+		// Row selection with the gate still short (defect T): the confirm page is sent anyway.
+		NativeTalkFixture.clearPackets(player);
+		assertTrue(local.onDialog(NativeTalkFixture.dialog(player, rewardNpc, GATE_QUEST, 31)));
+		NativeTalkFixture.assertOnlyDialogPage(player, 2375);
+		assertEquals(QuestStatus.START, player.getQuestStateList().getQuestState(GATE_QUEST).getStatus(),
+			"未持门 31 零推进");
+		assertTrue(inventory.calls().isEmpty(), "未持门 31 零扣物");
+
 		inventory.hold(gateItem.itemId(), gateItem.count());
 		// 两步报告（裁定 a）：31 只发客户端声明的报告确认页（80482 契约声明 2375）不扣物品；
 		// 1009 报告确认才扣门物品 + 翻 REWARD + 奖励窗。

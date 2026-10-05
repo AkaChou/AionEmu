@@ -475,8 +475,13 @@ public final class SimpleUseItemHandler {
 				// 两步报告（裁定 a，2026-10-03）：任务行（31）只发客户端声明的报告确认页不推进；
 				// 报告确认（1009）才扣门物品 + 翻 REWARD + 奖励窗；开门（-1/26）不推进、不跳步。
 				// Two-step report (adjudication a): 31 shows the declared confirm page, 1009 advances.
+				// 报告页只随「中继走完」下发——物品门不计入页条件（缺陷 T；退役 XML 80482：started
+				// 态 31→SELECT5 无 conditions，就绪分叉在 39/1009 确认动作上）。
+				// The confirm page rides the completed relay alone (defect T); the item gate forks on
+				// the confirm action.
+				boolean relayDone = relayComplete(player, questId);
 				boolean reportReady = handInReady(player, questId);
-				if (dialogId == 31 && reportReady) {
+				if (dialogId == 31 && relayDone) {
 					// 报告页分型跳过被中继步占用的 SELECT2（缺陷 S，2026-10-05）：双页任务的 select2
 					// 是中继步页（按钮 SETPRO1/翻页），报告页是 select5（按钮 SELECT_QUEST_REWARD/39）。
 					// The report-page typing skips SELECT2 when relay steps consume it (defect S).
