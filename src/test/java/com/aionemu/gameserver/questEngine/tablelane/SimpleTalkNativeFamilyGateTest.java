@@ -287,17 +287,18 @@ class SimpleTalkNativeFamilyGateTest {
 		assertTrue(NativeTalkFixture.dialogPages(player).isEmpty(), "未轮到的步必须零下发");
 		assertEquals(0, state.getQuestVars().getQuestVars());
 
-		// 推进（动作 10000 = select2_1 页的「结束对话」按钮）：after-commit = sync-quest-state +
-		// 回选择对话页（10，questId=0；退役 XML 1115 SETPRO1 明文，与领奖收尾同型）。
+		// 推进（动作 10000 = select2_1 页的「结束对话」按钮）：after-commit = 真端 cabb10 关窗
+		// （SetQuestProgress + 0x5d8、**零发页**；2026-10-05 实机「一次点击即关窗」）——
+		// 旧「回选择对话页 10」系翻译夸大，2026-10-05 1131 实机「结束对话后多余弹页」已修正。
 		NativeTalkFixture.clearPackets(player);
 		assertTrue(itemHandler.onDialog(new QuestEnv(first, player, questId, 10000)));
 		assertEquals(1, state.getQuestVars().getQuestVars(), "推进后步号 = 1");
-		NativeTalkFixture.assertOnlyDialogPage(player, QuestDialogPage.SELECT_QUEST.id());
+		NativeTalkFixture.assertCloseDialog(player);
 
 		// 重复推进（已推进后重放 SETPRO1）：真端无匹配转换 ⇒ close-dialog 兜底、零推进。
 		NativeTalkFixture.clearPackets(player);
 		assertTrue(itemHandler.onDialog(new QuestEnv(first, player, questId, 10000)));
-		NativeTalkFixture.assertOnlyDialogPage(player, 0);
+		NativeTalkFixture.assertCloseDialog(player);
 		assertEquals(1, state.getQuestVars().getQuestVars(), "重复推进不得再改步号");
 
 		// 已推进的步可重看（幂等，零状态写）。

@@ -678,14 +678,13 @@ public final class SimpleItemPlayHandler {
 						if (stepRemove != null) {
 							inventory.remove(player, stepRemove.itemId(), stepRemove.count());
 						}
-						// 推进 after-commit（退役 XML SETPRO1 明文）：sync-quest-state + 回选择对话页
-						//（页 10，questId=0；与领奖收尾 SELECTION_DIALOG 同型）。零响应会让客户端按
-						// 1s 级节奏重发 SETPRO1 直至 loop breaker（1115 实机 2026-10-04 19:57）。
-						// The retail after-commit (XML SETPRO1): sync the state and return to the selection
-						// page (10, questId=0) — the claim-tail shape. A silent response makes the client
-						// resend SETPRO1 on a one-second cadence until the loop breaker fires.
-						PacketSendUtility.sendPacket(player,
-							new SM_DIALOG_WINDOW(objectId, QuestDialogPage.SELECT_QUEST.id()));
+						// 推进 after-commit = 关窗（真端 cabb10 同轴：10000/10001/10002 →
+						// SetQuestProgress + 0x5d8 + GiveItem + RemoveItem，**零发页**；0x5d8＝关窗，
+						// 2026-10-05 实机「仅状态包不关窗、补关窗包一次点击即关」确证）。旧「回页 10」
+						// 系翻译夸大（2026-10-05 1131 实机「结束对话后多余弹页」）。
+						// The retail after-commit (cabb10 axis) closes the window (0x5d8) and sends no
+						// page; the old page-10 tail was a translation artifact (live 1131, 2026-10-05).
+						PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(0, 0));
 						return true;
 					}
 					// 未推进（重复/乱序重放）：真端无匹配转换 ⇒ close-dialog 兜底（本服 loop breaker 同语义）。

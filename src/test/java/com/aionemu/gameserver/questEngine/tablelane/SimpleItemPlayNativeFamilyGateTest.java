@@ -447,12 +447,13 @@ class SimpleItemPlayNativeFamilyGateTest {
 			assertEquals(List.of("give:" + stepOneItem.itemId() + ":" + stepOneItem.count()),
 				inventory.calls(), "接取提交即发真端 give_item（第 1 步道具）: " + questId);
 
-			// 中继第 1 步（select2_1 页的「结束对话」按钮）：after-commit = 回选择对话页（10，
-			// questId=0；退役 XML SETPRO1 明文），零发扣，步号 = 1。
+			// 中继第 1 步（select2_1 页的「结束对话」按钮）：after-commit = 真端 cabb10 关窗
+			// （SetQuestProgress + 0x5d8、**零发页**；2026-10-05 实机「一次点击即关窗」），
+			// 零发扣，步号 = 1；旧「回选择对话页 10」系翻译夸大。
 			NativeTalkFixture.clearPackets(player);
 			assertTrue(local.onDialog(NativeTalkFixture.dialog(player, relays.get(0).npcId(), questId, 10000)),
 				"第 1 步动作 10000 必须被中继节点服务: " + questId);
-			NativeTalkFixture.assertOnlyDialogPage(player, QuestDialogPage.SELECT_QUEST.id());
+			NativeTalkFixture.assertCloseDialog(player);
 			assertEquals(1, player.getQuestStateList().getQuestState(questId).getQuestVars().getQuestVars(),
 				"第 1 步后步号 = 1: " + questId);
 			assertEquals(List.of("give:" + stepOneItem.itemId() + ":" + stepOneItem.count()),
@@ -464,12 +465,12 @@ class SimpleItemPlayNativeFamilyGateTest {
 			assertEquals(QuestStatus.START, player.getQuestStateList().getQuestState(questId).getStatus(),
 				"闸门拒绝后状态不变: " + questId);
 
-			// 中继第 2 步（select3_1 页的「结束对话」按钮）：after-commit = 回选择对话页（10），
+			// 中继第 2 步（select3_1 页的「结束对话」按钮）：after-commit = 关窗（同第 1 步），
 			// 发 B 扣 A，步号 = 2。
 			NativeTalkFixture.clearPackets(player);
 			assertTrue(local.onDialog(NativeTalkFixture.dialog(player, relays.get(1).npcId(), questId, 10001)),
 				"第 2 步动作 10001 必须被中继节点服务: " + questId);
-			NativeTalkFixture.assertOnlyDialogPage(player, QuestDialogPage.SELECT_QUEST.id());
+			NativeTalkFixture.assertCloseDialog(player);
 			assertEquals(2, player.getQuestStateList().getQuestState(questId).getQuestVars().getQuestVars(),
 				"第 2 步后步号 = 2: " + questId);
 			assertEquals(List.of("give:" + stepOneItem.itemId() + ":" + stepOneItem.count(),

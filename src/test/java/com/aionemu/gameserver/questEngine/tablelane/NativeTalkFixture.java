@@ -166,6 +166,26 @@ public final class NativeTalkFixture {
 		assertEquals(List.of(expected), dialogPages(player), "下发的对话页");
 	}
 
+	/**
+	 * 断言收到唯一一个关窗包：页 0、目标 0、questId 0——真端推进 after-commit（0x5d8）的关窗形态。
+	 * Asserts exactly one close-dialog packet (page 0, target 0, questId 0) — the retail 0x5d8
+	 * advance tail.
+	 */
+	public static void assertCloseDialog(Player player) {
+		List<SM_DIALOG_WINDOW> dialogs = new ArrayList<>();
+		for (AionServerPacket packet : packets(player)) {
+			if (packet instanceof SM_DIALOG_WINDOW dialog) {
+				dialogs.add(dialog);
+			}
+		}
+		assertEquals(1, dialogs.size(), "推进行必须且只下发一个关窗包 / exactly one close-dialog packet");
+		SM_DIALOG_WINDOW close = dialogs.getFirst();
+		assertEquals(0, intField(SM_DIALOG_WINDOW.class, close, "dialogID"), "关窗页 = 0 / close page");
+		assertEquals(0, intField(SM_DIALOG_WINDOW.class, close, "targetObjectId"), "关窗目标 = 0 / close target");
+		assertEquals(0, intField(SM_DIALOG_WINDOW.class, close, "questId"),
+				"关窗不得带任务上下文 / close carries no quest context");
+	}
+
 	/** NPC 桩（按真端 npc_id 建模板）。 / An NPC stub carrying the retail npc id. */
 	public static Npc npc(int npcId) {
 		Npc npc = new ObjenesisStd().newInstance(Npc.class);
