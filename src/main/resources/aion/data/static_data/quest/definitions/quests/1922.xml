@@ -81,13 +81,13 @@
       </after-commit>
     </transition>
     <!-- Fuchsia (203830)：STEP_TO_12 设置 choice=1 并推进 var0 0->4，随后打开任务选择列表。defaultCloseDialog(env, 0, 4)。 -->
+    <!-- 真端取证（ScriptDLL64 FUN_180f6fcd0）：SETPRO12 → 仅推进+刷新，零发页；页 10 系旧翻译夸大，已删（2026-10-05 同类排查）。 -->
     <transition source="started" target="s4">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="203830" action="SETPRO12"/>
       </event>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
-        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
     <!-- Fuchsia (203830)：START_DIALOG var0==4 -> 任务选择列表。sendQuestSelectionDialog。 -->

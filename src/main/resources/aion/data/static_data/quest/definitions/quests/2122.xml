@@ -132,13 +132,13 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT1_1_1_1"/>
       </after-commit>
     </transition>
+    <!-- 真端取证（ScriptDLL64 FUN_180f75120）：SETPRO1 → 仅推进+刷新，零发页；页 10 系旧翻译夸大，已删（2026-10-05 同类排查）。 -->
     <transition source="started" target="v1">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="203551" action="SETPRO1"/>
       </event>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
-        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
     <transition source="v1" target="v1" priority="0">

@@ -45,6 +45,7 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
       </after-commit>
     </transition>
+    <!-- 真端取证（ScriptDLL64 FUN_180f80030）：SETPRO1 → 仅推进+刷新，零发页；页 10 系旧翻译夸大，已删（2026-10-05 同类排查）。 -->
     <transition source="started" target="step1">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="203620" action="SETPRO1"/>
@@ -54,7 +55,6 @@
       </actions>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
-        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
     <transition source="step1" target="step1" priority="0">

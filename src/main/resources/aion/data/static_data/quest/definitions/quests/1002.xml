@@ -105,13 +105,14 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT1"/>
       </after-commit>
     </transition>
+    <!-- 真端取证（ScriptDLL64 FUN_180f734b0，SETPRO1=10000 分支）：SetProgress(1002,1) + 0x5d8
+         刷新，零发页——旧翻译的 SHOW_SELECTION_PAGE(页 10) 已删除（2026-10-05 六步 SETPROn 全核）。 -->
     <transition source="s0" target="s1">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="203076" action="SETPRO1"/>
       </event>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
     <!-- Forest Protector Noah (730007)。 -->
@@ -140,6 +141,8 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT2_1_1"/>
       </after-commit>
     </transition>
+    <!-- 真端取证（FUN_180f9f410，SETPRO2=0x2711 分支）：SetProgress(1002,2) + 0x410(发物哈希)
+         + 0x5d8 刷新，零发页——SHOW_SELECTION_PAGE(页 10) 已删除；give-item 保留（对应 0x410）。 -->
     <transition source="s1" target="s2">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="730007" action="SETPRO2"/>
@@ -149,7 +152,6 @@
       </actions>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
     <transition source="s5" target="s5">
@@ -160,6 +162,8 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT3"/>
       </after-commit>
     </transition>
+    <!-- 真端取证（FUN_180fbeaf0，SETPRO3=0x2712 分支）：SetProgress(1002,6) + 0x5d8 刷新，
+         零发页——SHOW_SELECTION_PAGE(页 10) 已删除。 -->
     <transition source="s5" target="s6">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="730007" action="SETPRO3"/>
@@ -169,7 +173,6 @@
       </actions>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
     <transition source="s6" target="s6">
@@ -203,12 +206,14 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT4_3"/>
       </after-commit>
     </transition>
+    <!-- 真端取证：FINISH_DIALOG(1008=0x3f0) 在同类处理器里只发 0x5d8 刷新（FUN_180fa5580 /
+         FUN_180fa5690 / FUN_180f9a430 三处同型 0x3f0 分支），客户端本地关窗——页 10 已删除。 -->
     <transition source="s6" target="s6">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="730007" action="FINISH_DIALOG"/>
       </event>
       <after-commit>
-        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
       </after-commit>
     </transition>
     <transition source="s12" target="s12">
@@ -219,13 +224,14 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT4_2"/>
       </after-commit>
     </transition>
+    <!-- 真端取证（FUN_180f8f690，SETPRO4=0x2713 分支）：SetProgress(1002,13) + 0x5d8 刷新，
+         零发页——SHOW_SELECTION_PAGE(页 10) 已删除。 -->
     <transition source="s12" target="s13">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="730007" action="SETPRO4"/>
       </event>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
     <!-- Sleeping Elder (730010): 交付吊坠并删除该静态 NPC。 -->
@@ -280,13 +286,16 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT5_2"/>
       </after-commit>
     </transition>
+    <!-- 真端取证（ScriptDLL64 FUN_180f90280）：SETPRO6(0x2715) → npc+0x100(完成/推进) +
+         mgr+0x5d8(刷新)，**不发任何页**——旧翻译多写的 SHOW_SELECTION_PAGE(页 10) 已删除
+         （2026-10-05 用户实机「点结束对话后多余弹页」+ 反编译取证修正；同函数邻例 SETPRO7 型
+         若需关窗真端会显式调 0x4b8，此处无）。 -->
     <transition source="s14" target="reward">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="730008" action="SETPRO6"/>
       </event>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
     <!-- Belpartan (205000): 飞行传送启动 + 43 秒延迟回程。 -->

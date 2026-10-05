@@ -1,0 +1,391 @@
+
+########## quest 1007 (0x3ef) target SETPRO[3] ##########
+!! SETPRO3 (0x2712) 未找到含 quest 引用的分支
+
+########## quest 1922 (0x782) target SETPRO[12] ##########
+-- FUN_180f6fcd0 @L2526495-2526540: 函数发页 1 处 / 推进 1 处
+     PAGE: (**(code **)(*param_1 + 0x188))(param_1,plVar2,uVar4,0x782);
+     PROG: (**(code **)(*plVar2 + 0xf0))(plVar2,0x782,uVar4,0);
+   >>> 分支上下文 L2526518..:
+   2526518:   }
+   2526519:   piVar3 = (int *)(*(code *)**(undefined8 **)(param_2 + 0x38))(param_2 + 0x38);
+   2526520:   iVar1 = *piVar3;
+   2526521:   if (iVar1 == 0x271a) {
+   2526522:     uVar4 = 1;
+   2526523:   }
+   2526524:   else if (iVar1 == 0x271b) {
+   2526525:     uVar4 = 4;
+   2526526:   }
+   2526527:   else {
+   2526528:     if (iVar1 != 0x271c) {
+   2526529:       FUN_180caf3c0(0x782,param_1,param_2,0xffff);
+   2526530:       return;
+   2526531:     }
+   2526532:     uVar4 = 9;
+   2526533:   }
+   2526534:   (**(code **)(*plVar2 + 0xf0))(plVar2,0x782,uVar4,0);
+   2526535:   (**(code **)(*param_1 + 0x5d8))(param_1,plVar2,&DAT_181383b10);
+   2526536:   return;
+   2526537: }
+   2526538: 
+   2526539: 
+   2526540: 
+   ----
+
+########## quest 1990 (0x7c6) target SETPRO[2, 3] ##########
+!! SETPRO2 (0x2711) 未找到含 quest 引用的分支
+-- FUN_180fc9fb0 @L2577729-2577760: 函数发页 2 处 / 推进 1 处
+     PAGE: (**(code **)(*param_1 + 0x188))(param_1,plVar1,0x69d,0x7c6);
+     PAGE: (**(code **)(*param_1 + 0x188))(param_1,plVar1,0x69e,0x7c6);
+     PROG: (**(code **)(*plVar1 + 0xf0))(plVar1,0x7c6,3);
+   >>> 分支上下文 L2577743..:
+   2577743:   (**(code **)(*param_1 + 0x188))(param_1,plVar1,0x69d,0x7c6);
+   2577744: LAB_180fca011:
+   2577745:   piVar2 = (int *)(*(code *)**(undefined8 **)(param_2 + 0x38))(param_2 + 0x38);
+   2577746:   if (*piVar2 == 0x69e) {
+   2577747:     (**(code **)(*param_1 + 0x188))(param_1,plVar1,0x69e,0x7c6);
+   2577748:   }
+   2577749:   else if (*piVar2 == 0x2712) {
+   2577750:     (**(code **)(*plVar1 + 0xf0))(plVar1,0x7c6,3);
+   2577751:     (**(code **)(*param_1 + 0x5d8))(param_1,plVar1,&DAT_181383b10);
+   2577752:   }
+   2577753:   else {
+   2577754:     FUN_180caf3c0(0x7c6,param_1,param_2,3);
+   2577755:   }
+   2577756:   return;
+   2577757: }
+   2577758: 
+   2577759: 
+   2577760: 
+   ----
+
+########## quest 2001 (0x7d1) target SETPRO[1, 3] ##########
+-- FUN_180f74830 @L2529154-2529191: 函数发页 4 处 / 推进 1 处
+     PAGE: (**(code **)(*param_1 + 0x188))(param_1,plVar2,0x3f3,0x7d1);
+     PAGE: (**(code **)(*param_1 + 0x188))(param_1,plVar2,0x3f4,0x7d1);
+     PAGE: (**(code **)(*param_1 + 0x188))(param_1,plVar2,0x3f5,0x7d1);
+     PAGE: (**(code **)(*param_1 + 0x188))(param_1,plVar2,0x3f6,0x7d1);
+     PROG: (**(code **)(*plVar2 + 0xf0))(plVar2,0x7d1,1);
+   >>> 分支上下文 L2529177..:
+   2529177:   else if (iVar1 == 0x3f5) {
+   2529178:     (**(code **)(*param_1 + 0x188))(param_1,plVar2,0x3f5,0x7d1);
+   2529179:   }
+   2529180:   else if (iVar1 == 0x3f6) {
+   2529181:     (**(code **)(*param_1 + 0x188))(param_1,plVar2,0x3f6,0x7d1);
+   2529182:   }
+   2529183:   else if (iVar1 == 10000) {
+   2529184:     (**(code **)(*plVar2 + 0xf0))(plVar2,0x7d1,1);
+   2529185:     (**(code **)(*param_1 + 0x5d8))(param_1,plVar2,&DAT_181383b10);
+   2529186:   }
+   2529187:   return;
+   2529188: }
+   2529189: 
+   2529190: 
+   2529191: 
+   ----
+!! SETPRO3 (0x2712) 未找到含 quest 引用的分支
+
+########## quest 2004 (0x7d4) target SETPRO[1, 3] ##########
+!! SETPRO1 (0x2710) 未找到含 quest 引用的分支
+!! SETPRO3 (0x2712) 未找到含 quest 引用的分支
+
+########## quest 2006 (0x7d6) target SETPRO[1] ##########
+!! SETPRO1 (0x2710) 未找到含 quest 引用的分支
+
+########## quest 2009 (0x7d9) target SETPRO[3] ##########
+!! SETPRO3 (0x2712) 未找到含 quest 引用的分支
+
+########## quest 2114 (0x842) target SETPRO[1, 2] ##########
+-- FUN_180f40160 @L2497134-2497198: 函数发页 6 处 / 推进 2 处
+     PAGE: (**(code **)(*param_1 + 0x188))(param_1,plVar2,0x548,0x842);
+     PAGE: (**(code **)(*param_1 + 0x188))(param_1,plVar2,0x69d,0x842);
+     PAGE: (**(code **)(*param_1 + 0x188))(param_1,plVar2,0x3fb,0x842);
+     PAGE: (**(code **)(*param_1 + 0x188))(param_1,plVar2,0x3f4,0x842);
+     PAGE: (**(code **)(*param_1 + 0x188))(param_1,plVar2,0x3f5,0x842);
+     PAGE: (**(code **)(*param_1 + 0x188))(param_1,plVar2,0x3f6,0x842);
+     PROG: (**(code **)(lVar4 + 0xf0))(plVar2,0x842,1);
+     PROG: (**(code **)(lVar4 + 0xf0))(plVar2,0x842,0xb);
+   >>> 分支上下文 L2497148..:
+   2497148:   {
+   2497149:     (**(code **)(*param_1 + 0x1a8))(param_1,plVar2,0x842);
+   2497150:   }
+   2497151:   piVar3 = (int *)(*(code *)**(undefined8 **)(param_2 + 0x38))(param_2 + 0x38);
+   2497152:   iVar1 = *piVar3;
+   2497153:   if (0x3fb < iVar1) {
+   2497154:     if (iVar1 == 10000) {
+   2497155:       iVar1 = (**(code **)(*plVar2 + 0xd8))(plVar2,0x842,0,0);
+   2497156:       lVar4 = *plVar2;
+   2497157:       if (iVar1 != 0) {
+   2497158:         (**(code **)(lVar4 + 0xf0))(plVar2,0x842,1);
+   2497159:         (**(code **)(*param_1 + 0x188))(param_1,plVar2,0x548,0x842);
+   2497160:         return;
+   2497161:       }
+   2497162:     }
+   2497163:     else {
+   2497164:       if (iVar1 != 0x2711) {
+   2497165:         return;
+   2497166:       }
+   2497167:       iVar1 = (**(code **)(*plVar2 + 0xd8))(plVar2,0x842,0,0);
+   2497168:       lVar4 = *plVar2;
+   2497169:       if (iVar1 != 0) {
+   2497170:         (**(code **)(lVar4 + 0xf0))(plVar2,0x842,0xb);
+   2497171:         (**(code **)(*param_1 + 0x188))(param_1,plVar2,0x69d,0x842);
+   ----
+!! SETPRO2 (0x2711) 未找到含 quest 引用的分支
+
+########## quest 2122 (0x84a) target SETPRO[1] ##########
+!! SETPRO1 (0x2710) 未找到含 quest 引用的分支
+
+########## quest 2221 (0x8ad) target SETPRO[1] ##########
+!! SETPRO1 (0x2710) 未找到含 quest 引用的分支
+
+########## quest 2223 (0x8af) target SETPRO[1] ##########
+!! SETPRO1 (0x2710) 未找到含 quest 引用的分支
+
+########## quest 2900 (0xb54) target SETPRO[1, 2, 3, 4, 10] ##########
+-- FUN_180f7a340 @L2532747-2532779: 函数发页 2 处 / 推进 1 处
+     PAGE: (**(code **)(*param_1 + 0x188))(param_1,plVar2,0x3f3,0xb54);
+     PAGE: (**(code **)(*param_1 + 0x188))(param_1,plVar2,0x3f4,0xb54);
+     PROG: iVar1 = (**(code **)(*plVar2 + 0xf0))(plVar2,0xb54,1);
+   >>> 分支上下文 L2532762..:
+   2532762:   (**(code **)(*param_1 + 0x188))(param_1,plVar2,0x3f3,0xb54);
+   2532763: LAB_180f7a3a1:
+   2532764:   piVar3 = (int *)(*(code *)**(undefined8 **)(param_2 + 0x38))(param_2 + 0x38);
+   2532765:   if (*piVar3 == 0x3f4) {
+   2532766:     (**(code **)(*param_1 + 0x188))(param_1,plVar2,0x3f4,0xb54);
+   2532767:   }
+   2532768:   else if (*piVar3 == 10000) {
+   2532769:     iVar1 = (**(code **)(*plVar2 + 0xf0))(plVar2,0xb54,1);
+   2532770:     if (iVar1 != 0) {
+   2532771:       (**(code **)(*param_1 + 0x5d8))(param_1,plVar2,&DAT_181383b10);
+   2532772:       (**(code **)(*plVar2 + 0x2d0))(plVar2,0xd1d1610,0x43c28000,0x44ed0000,0x43a38000,0x3d,1);
+   2532773:     }
+   2532774:   }
+   2532775:   return;
+   2532776: }
+   2532777: 
+   2532778: 
+   2532779: 
+   ----
+-- FUN_180f9a830 @L2551586-2551617: 函数发页 2 处 / 推进 1 处
+     PAGE: (**(code **)(*param_1 + 0x188))(param_1,plVar2,0x548,0xb54);
+     PAGE: (**(code **)(*param_1 + 0x188))(param_1,plVar2,0x549,0xb54);
+     PROG: iVar1 = (**(code **)(*plVar2 + 0xf0))(plVar2,0xb54,2);
+   >>> 分支上下文 L2551601..:
+   2551601:   (**(code **)(*param_1 + 0x188))(param_1,plVar2,0x548,0xb54);
+   2551602: LAB_180f9a891:
+   2551603:   piVar3 = (int *)(*(code *)**(undefined8 **)(param_2 + 0x38))(param_2 + 0x38);
+   2551604:   if (*piVar3 == 0x549) {
+   2551605:     (**(code **)(*param_1 + 0x188))(param_1,plVar2,0x549,0xb54);
+   2551606:   }
+   2551607:   else if (*piVar3 == 0x2711) {
+   2551608:     iVar1 = (**(code **)(*plVar2 + 0xf0))(plVar2,0xb54,2);
+   2551609:     if (iVar1 != 0) {
+   2551610:       (**(code **)(*param_1 + 0x5d8))(param_1,plVar2,&DAT_181383b10);
+   2551611:     }
+   2551612:   }
+   2551613:   return;
+   2551614: }
+   2551615: 
+   2551616: 
+   2551617: 
+   ----
+-- FUN_180fabcb0 @L2561054-2561085: 函数发页 2 处 / 推进 1 处
+     PAGE: (**(code **)(*param_1 + 0x188))(param_1,plVar2,0x69d,0xb54);
+     PAGE: (**(code **)(*param_1 + 0x188))(param_1,plVar2,0x69e,0xb54);
+     PROG: iVar1 = (**(code **)(*plVar2 + 0xf0))(plVar2,0xb54,3);
+   >>> 分支上下文 L2561069..:
+   2561069:   (**(code **)(*param_1 + 0x188))(param_1,plVar2,0x69d,0xb54);
+   2561070: LAB_180fabd11:
+   2561071:   piVar3 = (int *)(*(code *)**(undefined8 **)(param_2 + 0x38))(param_2 + 0x38);
+   2561072:   if (*piVar3 == 0x69e) {
+   2561073:     (**(code **)(*param_1 + 0x188))(param_1,plVar2,0x69e,0xb54);
+   2561074:   }
+   2561075:   else if (*piVar3 == 0x2712) {
+   2561076:     iVar1 = (**(code **)(*plVar2 + 0xf0))(plVar2,0xb54,3);
+   2561077:     if (iVar1 != 0) {
+   2561078:       (**(code **)(*param_1 + 0x5d8))(param_1,plVar2,&DAT_181383b10);
+   2561079:     }
+   2561080:   }
+   2561081:   return;
+   2561082: }
+   2561083: 
+   2561084: 
+   2561085: 
+   ----
+-- FUN_180fb3d40 @L2565390-2565421: 函数发页 2 处 / 推进 1 处
+     PAGE: (**(code **)(*param_1 + 0x188))(param_1,plVar2,0x7f2,0xb54);
+     PAGE: (**(code **)(*param_1 + 0x188))(param_1,plVar2,0x7f3,0xb54);
+     PROG: iVar1 = (**(code **)(*plVar2 + 0xf0))(plVar2,0xb54,4);
+   >>> 分支上下文 L2565405..:
+   2565405:   (**(code **)(*param_1 + 0x188))(param_1,plVar2,0x7f2,0xb54);
+   2565406: LAB_180fb3da1:
+   2565407:   piVar3 = (int *)(*(code *)**(undefined8 **)(param_2 + 0x38))(param_2 + 0x38);
+   2565408:   if (*piVar3 == 0x7f3) {
+   2565409:     (**(code **)(*param_1 + 0x188))(param_1,plVar2,0x7f3,0xb54);
+   2565410:   }
+   2565411:   else if (*piVar3 == 0x2713) {
+   2565412:     iVar1 = (**(code **)(*plVar2 + 0xf0))(plVar2,0xb54,4);
+   2565413:     if (iVar1 != 0) {
+   2565414:       (**(code **)(*param_1 + 0x5d8))(param_1,plVar2,&DAT_181383b10);
+   2565415:     }
+   2565416:   }
+   2565417:   return;
+   2565418: }
+   2565419: 
+   2565420: 
+   2565421: 
+   ----
+-- FUN_180f8d630 @L2544219-2544251: 函数发页 2 处 / 推进 0 处
+     PAGE: (**(code **)(*param_1 + 0x188))(param_1,plVar2,0xff0,0xb54);
+     PAGE: (**(code **)(*param_1 + 0x188))(param_1,plVar2,0xff1,0xb54);
+   >>> 分支上下文 L2544234..:
+   2544234:   (**(code **)(*param_1 + 0x188))(param_1,plVar2,0xff0,0xb54);
+   2544235: LAB_180f8d691:
+   2544236:   piVar3 = (int *)(*(code *)**(undefined8 **)(param_2 + 0x38))(param_2 + 0x38);
+   2544237:   if (*piVar3 == 0xff1) {
+   2544238:     (**(code **)(*param_1 + 0x188))(param_1,plVar2,0xff1,0xb54);
+   2544239:   }
+   2544240:   else if (*piVar3 == 0x2719) {
+   2544241:     iVar1 = (**(code **)(*plVar2 + 0x100))(plVar2,0xb54,0,0);
+   2544242:     if (iVar1 != 0) {
+   2544243:       (**(code **)(*param_1 + 0x5d8))(param_1,plVar2,&DAT_181383b10);
+   2544244:       (**(code **)(*plVar2 + 0x2d0))(plVar2,0x7273510,0x44a1a000,0x4497e000,0x43560000,0x2d,1);
+   2544245:     }
+   2544246:   }
+   2544247:   return;
+   2544248: }
+   2544249: 
+   2544250: 
+   2544251: 
+   ----
+
+########## quest 2990 (0xbae) target SETPRO[2, 3] ##########
+!! SETPRO2 (0x2711) 未找到含 quest 引用的分支
+-- FUN_180fca140 @L2577783-2577814: 函数发页 2 处 / 推进 1 处
+     PAGE: (**(code **)(*param_1 + 0x188))(param_1,plVar1,0x69d,0xbae);
+     PAGE: (**(code **)(*param_1 + 0x188))(param_1,plVar1,0x69e,0xbae);
+     PROG: (**(code **)(*plVar1 + 0xf0))(plVar1,0xbae,3);
+   >>> 分支上下文 L2577797..:
+   2577797:   (**(code **)(*param_1 + 0x188))(param_1,plVar1,0x69d,0xbae);
+   2577798: LAB_180fca1a1:
+   2577799:   piVar2 = (int *)(*(code *)**(undefined8 **)(param_2 + 0x38))(param_2 + 0x38);
+   2577800:   if (*piVar2 == 0x69e) {
+   2577801:     (**(code **)(*param_1 + 0x188))(param_1,plVar1,0x69e,0xbae);
+   2577802:   }
+   2577803:   else if (*piVar2 == 0x2712) {
+   2577804:     (**(code **)(*plVar1 + 0xf0))(plVar1,0xbae,3);
+   2577805:     (**(code **)(*param_1 + 0x5d8))(param_1,plVar1,&DAT_181383b10);
+   2577806:   }
+   2577807:   else {
+   2577808:     FUN_180caf3c0(0xbae,param_1,param_2,3);
+   2577809:   }
+   2577810:   return;
+   2577811: }
+   2577812: 
+   2577813: 
+   2577814: 
+   ----
+
+########## quest 3090 (0xc12) target SETPRO[1] ##########
+-- FUN_180fe3940 @L2595067-2595094: 函数发页 0 处 / 推进 1 处
+     PROG: (**(code **)(*plVar1 + 0xf0))(plVar1,0xc12,3);
+   >>> 分支上下文 L2595078..:
+   2595078:   plVar1 = (longlong *)(*(code *)**(undefined8 **)(param_2 + 0x20))(param_2 + 0x20);
+   2595079:   (**(code **)(*plVar1 + 0xd0))(plVar1,&local_res10,0xc12);
+   2595080:   if ((local_res10 == '\x03') && (local_res11 == 2)) {
+   2595081:     piVar2 = (int *)(*(code *)**(undefined8 **)(param_2 + 0x28))(param_2 + 0x28);
+   2595082:     if ((*piVar2 != 0) &&
+   2595083:        (plVar3 = (longlong *)(*(code *)**(undefined8 **)(param_2 + 0x18))(param_2 + 0x18),
+   2595084:        *plVar3 == 10000)) {
+   2595085:       (**(code **)(*plVar1 + 0xf0))(plVar1,0xc12,3);
+   2595086:       (**(code **)(*param_1 + 0x410))(param_1,plVar1,0xadc4632,1,&DAT_181383b10);
+   2595087:     }
+   2595088:     (**(code **)(*param_1 + 0x5d8))(param_1,plVar1,&DAT_181383b10);
+   2595089:   }
+   2595090:   return;
+   2595091: }
+   2595092: 
+   2595093: 
+   2595094: 
+   ----
+
+########## quest 3721 (0xe89) target SETPRO[1] ##########
+!! SETPRO1 (0x2710) 未找到含 quest 引用的分支
+
+########## quest 3940 (0xf64) target SETPRO[3] ##########
+-- FUN_180fca740 @L2577990-2578018: 函数发页 1 处 / 推进 1 处
+     PAGE: (**(code **)(*param_1 + 0x188))(param_1,plVar1,0x69d,0xf64);
+     PROG: (**(code **)(*plVar1 + 0xf0))(plVar1,0xf64,3);
+   >>> 分支上下文 L2578001..:
+   2578001:     piVar2 = (int *)(*(code *)**(undefined8 **)(param_2 + 0x28))(param_2 + 0x28);
+   2578002:     if (*piVar2 != 10) goto LAB_180fca7a1;
+   2578003:   }
+   2578004:   (**(code **)(*param_1 + 0x188))(param_1,plVar1,0x69d,0xf64);
+   2578005: LAB_180fca7a1:
+   2578006:   piVar2 = (int *)(*(code *)**(undefined8 **)(param_2 + 0x38))(param_2 + 0x38);
+   2578007:   if (*piVar2 == 0x2712) {
+   2578008:     (**(code **)(*plVar1 + 0xf0))(plVar1,0xf64,3);
+   2578009:     (**(code **)(*param_1 + 0x5d8))(param_1,plVar1,&DAT_181383b10);
+   2578010:   }
+   2578011:   else {
+   2578012:     FUN_180caf3c0(0xf64,param_1,param_2,5);
+   2578013:   }
+   2578014:   return;
+   2578015: }
+   2578016: 
+   2578017: 
+   2578018: 
+   ----
+
+########## quest 4914 (0x1332) target SETPRO[1] ##########
+!! SETPRO1 (0x2710) 未找到含 quest 引用的分支
+
+########## quest 4944 (0x1350) target SETPRO[3] ##########
+-- FUN_180fca3e0 @L2577873-2577901: 函数发页 1 处 / 推进 1 处
+     PAGE: (**(code **)(*param_1 + 0x188))(param_1,plVar1,0x69d,0x1350);
+     PROG: (**(code **)(*plVar1 + 0xf0))(plVar1,0x1350,3);
+   >>> 分支上下文 L2577884..:
+   2577884:     piVar2 = (int *)(*(code *)**(undefined8 **)(param_2 + 0x28))(param_2 + 0x28);
+   2577885:     if (*piVar2 != 10) goto LAB_180fca441;
+   2577886:   }
+   2577887:   (**(code **)(*param_1 + 0x188))(param_1,plVar1,0x69d,0x1350);
+   2577888: LAB_180fca441:
+   2577889:   piVar2 = (int *)(*(code *)**(undefined8 **)(param_2 + 0x38))(param_2 + 0x38);
+   2577890:   if (*piVar2 == 0x2712) {
+   2577891:     (**(code **)(*plVar1 + 0xf0))(plVar1,0x1350,3);
+   2577892:     (**(code **)(*param_1 + 0x5d8))(param_1,plVar1,&DAT_181383b10);
+   2577893:   }
+   2577894:   else {
+   2577895:     FUN_180caf3c0(0x1350,param_1,param_2,5);
+   2577896:   }
+   2577897:   return;
+   2577898: }
+   2577899: 
+   2577900: 
+   2577901: 
+   ----
+
+########## quest 14054 (0x36e6) target SETPRO[6] ##########
+!! SETPRO6 (0x2715) 未找到含 quest 引用的分支
+
+########## quest 21114 (0x527a) target SETPRO[2, 4] ##########
+-- FUN_180f9a4f0 @L2551472-2551491: 函数发页 0 处 / 推进 0 处
+   >>> 分支上下文 L2551477..:
+   2551477:   undefined8 uVar1;
+   2551478:   int *piVar2;
+   2551479:   
+   2551480:   uVar1 = (*(code *)**(undefined8 **)(param_2 + 0x30))(param_2 + 0x30);
+   2551481:   FUN_180caf740(0x527a,param_1,param_2);
+   2551482:   piVar2 = (int *)(*(code *)**(undefined8 **)(param_2 + 0x38))(param_2 + 0x38);
+   2551483:   if (*piVar2 == 0x2711) {
+   2551484:     (**(code **)(*param_1 + 0x410))(param_1,uVar1,0xadc4576,1,&DAT_181383b10);
+   2551485:   }
+   2551486:   FUN_180caf3c0(0x527a,param_1,param_2,4);
+   2551487:   return;
+   2551488: }
+   2551489: 
+   2551490: 
+   2551491: 
+   ----
+!! SETPRO4 (0x2713) 未找到含 quest 引用的分支

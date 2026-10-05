@@ -81,13 +81,13 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT1"/>
       </after-commit>
     </transition>
+    <!-- 真端取证（ScriptDLL64 FUN_180fa4310）：SETPRO1 → 仅推进+刷新，零发页；页 10 系旧翻译夸大，已删（2026-10-05 同类排查）。 -->
     <transition source="started" target="v1">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="203539" action="SETPRO1"/>
       </event>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
-        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
     <transition source="v1" target="v1">
@@ -145,6 +145,7 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT3"/>
       </after-commit>
     </transition>
+    <!-- 真端取证（ScriptDLL64 FUN_180fc0f00）：SETPRO3 → 仅推进+刷新，零发页；页 10 系旧翻译夸大，已删（2026-10-05 同类排查）。 -->
     <transition source="v2" target="k1">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="203550" action="SETPRO3"/>
@@ -154,7 +155,6 @@
       </actions>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
-        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
     <kill-routes source="k1" target="k2" npc-ids="210402 210403"/>

@@ -93,8 +93,7 @@ class Quest21114PoisonedFungiRetailFlowTest {
 			new QuestAction.GiveItem(182207862, 1),
 			new QuestAction.SetVariable("var0", 2)), giveLiquid.actions());
 		assertEquals(List.of(
-			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.PACKET_ONLY),
-			new AfterCommitAction.ShowQuestSelectionDialog(QuestDialogPage.SELECT_QUEST.id())),
+			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.PACKET_ONLY)),
 			giveLiquid.afterCommit());
 	}
 
@@ -126,8 +125,7 @@ class Quest21114PoisonedFungiRetailFlowTest {
 			QuestDialogAction.SETPRO4, null);
 		assertEquals(List.of(new QuestAction.SetVariable("var0", 4)), confirm.actions());
 		assertEquals(List.of(
-			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.PACKET_ONLY),
-			new AfterCommitAction.ShowQuestSelectionDialog(QuestDialogPage.SELECT_QUEST.id())),
+			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.PACKET_ONLY)),
 			confirm.afterCommit());
 
 		QuestTransition kill = definition.transitions().stream()

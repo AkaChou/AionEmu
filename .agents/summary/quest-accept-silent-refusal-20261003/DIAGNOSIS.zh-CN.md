@@ -422,6 +422,7 @@
 - 验证（2026-10-05 IDEA MCP runner）：DialogServiceQuestDialogTest 8/8（新增
   questContextNpcDialogNavigationEchoesThePageInsteadOfClosing + 两条关窗回归）、
   CMDialogSelectContextTest 6/6、QuestEngineNpcDialogDispatchTest 6/6 全绿。
+- 客户端实测（2026-10-05，用户确认）：**1115 复测通过**——中继推进回选择页后点「询问有关钓鱼的事情」正常回显（不再关窗）。
 - 边界：switch 有显式 case 的 NPC 动作（2/45/47…）在任务上下文被误拦为同类扩展面——无实机
   报告未动（QE-137 boundaries ⑥）。
 
@@ -449,6 +450,7 @@
   1131 双页 31→2375）、UseItem 11/11、CollectItem 16/16、ItemPlay 15/15、ItemPlayRowInventory 5/5
   （evidenceFacesStayFrozen 显式改表：5 组键随真端名组表解析面扩展已解，属既有红对齐、非本批引入）、
   DD Runtime 26/26、DD Contract 7/7、DialogService 8/8、RowAlignment 5/5。
+- 客户端实测（2026-10-05，用户确认）：**1118 交付链通过**——203079 发 select5 报告页、点「拿出药膏」进奖励窗、领奖完成。
 - 悬案：报告确认动作变体 CHECK_GOLD/CHECK_AP/CHECK_USER_HAS_QUEST_ITEM_SIMPLE（9655/9656/3340/
   3547）不在当前确认动作集（1009/39）——同型风险面，待实机样本再裁定。
 
@@ -466,10 +468,36 @@
   `talkChainComplete`；推进分支（39/1009）的 reportReady 门保持不动。
 - 验证（2026-10-05 IDEA MCP runner）：Talk 14/14、UseItem 11/11、CollectItem 16/16、
   ItemPlay 15/15 全绿（三族门各加"未持门点 31 → 报告页 2375 + 零推进零扣物"断言）。
+- 客户端实测（2026-10-05，用户确认）：**1126 检查页通过**——未集齐点任务行得「拿出蘑菇」检查页（不再回列表）。
 - 边界：26/-1（开门动作）与 1009 的未就绪兜底（页 10）**保持不变**——无真端正面证据 + 既有
   断言冻结（1126 XML started 态 26/-1 无转换；unaccepted 态 FINISH_DIALOG→SELECT_QUEST 页 10
   有 XML 背书）。中继未完（vars<relayCount）在交付 NPC 点 31 仍走页 10（真端无匹配转换的
   本服温和兜底，真端形态为无响应——留观）。
+
+### 缺陷 U（2026-10-05）：任务 1002「结束对话」后弹多余页面——真端取证裁定「退役 XML 翻译夸大」
+
+- 用户报告（08:53 后 09:30 时段）：1002 教程链，点 2461 页（select5_2）的「结束对话。」（SETPRO6=10005）
+  后收到「状态4 + 页 10（任务列表）」——"任务结束后点击结束对话，还会出现一个页面，里面也有结束
+  对话选项，应该点击结束对话就关闭对话窗口才对"；并质疑"退役 XML 和旧引擎可能不对，真端怎么做"。
+- 判定：**用户正确，退役 XML 的 after-commit 是翻译夸大**。真端反编译取证（ScriptDLL64.c：
+  FUN_180f90280＝1002 的 s14 树函数）：`SETPRO6(0x2715) → npc+0x100(完成/推进) + mgr+0x5d8(刷新)`，
+  **无发页、无关窗**；XML 却写 `SHOW_SELECTION_PAGE SELECT_QUEST`（页 10）。旁证链：9/28 旧引擎
+  「推进后零页」（QE-141 symptom③）与真端一致；对照函数 FUN_180f90430（任务 0x7d2 的 SETPRO7）
+  显式带 `0x4b8`（关窗）——证明真端的"页/关窗"逐处显式、不会凭空出现。
+- 修复（首轮）：1002.xml 的 `s14→reward`（SETPRO6）after-commit 删 `SHOW_SELECTION_PAGE`，
+  只留 `sync-quest-state`（对应真端 0x5d8）。
+- 修复（扩面，同日）：把 1002 其余同型行一次核准——六步 SETPROn + FINISH_DIALOG **7/7 零页**：
+  s0→s1（SETPRO1，FUN_180f734b0）、s1→s2（SETPRO2，FUN_180f9f410）、s5→s6（SETPRO3，
+  FUN_180fbeaf0）、s12→s13（SETPRO4，FUN_180f8f690）、s6→s6（FINISH_DIALOG=0x3f0，
+  FUN_180fa5580/FUN_180fa5690/FUN_180f9a430 三处同型）——五处 `SHOW_SELECTION_PAGE` 全删，
+  只留 sync（=真端 0x5d8）；同族合法页保留（open/回显/检查分支：2120/2035/2375/2461 等）。
+- 验证（2026-10-05 IDEA MCP runner）：生产目录全量编译绿（707 OK/0 失败，五处修正后复跑）；
+  **待用户实机复测**。普查收口（2026-10-05 同日，QE-143）：XML 车道 915 发页行全量排查——
+  SETPROn 全族 40 行/20 任务已逐一真端取证并修复（38 删 + 2114 两行改真端页），生产编译 707 绿 +
+  8 相关测试类全绿（见 .agents/summary/quest-page-exaggeration-sweep/REPORT.zh-CN.md）；FINISH_DIALOG
+  409 行真端零页但实机休眠（quests.log 0 上行，待批次对齐）；完成收尾族保持。残余：表车道
+  cabb10 推进后段（QE-141 的「回页 10」结论待回调）。
+- 方法沉淀：QE-142（真端对话处理器取证法 + vtable 词典 0x188/0x4b8/0x5d8/0x100/0xf8）。
 
 ## 修复落地（2026-10-04，缺陷 Q：领奖动作 8..23 一刀切残留——1107 奖励窗点确定循环）
 

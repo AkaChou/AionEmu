@@ -325,6 +325,7 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT1"/>
       </after-commit>
     </transition>
+    <!-- 真端取证（ScriptDLL64 FUN_180f7a340）：SETPRO1 → 仅推进+刷新，零发页；页 10 系旧翻译夸大，已删（2026-10-05 同类排查）。 -->
     <transition source="started0" target="started1">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="204182" action="SETPRO1"/>
@@ -335,7 +336,6 @@
       <after-commit>
         <teleport-player-current-or-default world-id="220010000" x="384.93204" y="1894.2833" z="327.375" heading="57"/>
         <sync-quest-state mode="PACKET_ONLY"/>
-        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
     <transition source="started1" target="started1">
@@ -346,6 +346,7 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
       </after-commit>
     </transition>
+    <!-- 真端取证（ScriptDLL64 FUN_180f9a830）：SETPRO2 → 仅推进+刷新，零发页；页 10 系旧翻译夸大，已删（2026-10-05 同类排查）。 -->
     <transition source="started1" target="started2">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="203550" action="SETPRO2"/>
@@ -356,7 +357,6 @@
       <after-commit>
         <teleport-player-current-or-default world-id="220010000" x="585.66656" y="2418.2014" z="280.625" heading="93"/>
         <sync-quest-state mode="PACKET_ONLY"/>
-        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
     <transition source="started2" target="started2">
@@ -367,6 +367,7 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT3"/>
       </after-commit>
     </transition>
+    <!-- 真端取证（ScriptDLL64 FUN_180fabcb0）：SETPRO3 → 仅推进+刷新，零发页；页 10 系旧翻译夸大，已删（2026-10-05 同类排查）。 -->
     <transition source="started2" target="started3">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="790003" action="SETPRO3"/>
@@ -377,7 +378,6 @@
       <after-commit>
         <teleport-player-current-or-default world-id="220010000" x="939.9381" y="2295.0532" z="265.6947" heading="41"/>
         <sync-quest-state mode="PACKET_ONLY"/>
-        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
     <transition source="started3" target="started3">
@@ -388,6 +388,7 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT4"/>
       </after-commit>
     </transition>
+    <!-- 真端取证（ScriptDLL64 FUN_180fb3d40）：SETPRO4 → 仅推进+刷新，零发页；页 10 系旧翻译夸大，已删（2026-10-05 同类排查）。 -->
     <transition source="started3" target="started4">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="790002" action="SETPRO4"/>
@@ -398,7 +399,6 @@
       <after-commit>
         <teleport-player-current-or-default world-id="220010000" x="1103.5642" y="1708.5078" z="270.05505" heading="112"/>
         <sync-quest-state mode="PACKET_ONLY"/>
-        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
     <transition source="started4" target="started4">
@@ -1249,6 +1249,7 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT10"/>
       </after-commit>
     </transition>
+    <!-- 真端取证（ScriptDLL64 FUN_180f8d630）：SETPRO10 → 仅推进+刷新，零发页；页 10 系旧翻译夸大，已删（2026-10-05 同类排查）。 -->
     <transition source="started10" target="reward">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="203550" action="SETPRO10"/>
@@ -1256,7 +1257,6 @@
       <after-commit>
         <teleport-player-current-or-default world-id="120010000" x="1294.64" y="1216.62" z="214.355" heading="0"/>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
     <npc-complete npc-id="204061" source="reward" target="complete" fixed-reward-indices="0 1 2" actions="SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">

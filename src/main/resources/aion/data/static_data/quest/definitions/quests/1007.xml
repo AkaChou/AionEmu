@@ -126,6 +126,7 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT3_1"/>
       </after-commit>
     </transition>
+    <!-- 真端取证（ScriptDLL64 FUN_180fa57d0）：SETPRO3 → 0x100(quest,10/20/30/40/50/60) 分档收尾，零发页；页 10 系旧翻译夸大，已删（2026-10-05 同类排查）。 -->
     <transition source="s2" target="reward10" priority="1">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="203752" action="SETPRO3"/>
@@ -135,9 +136,9 @@
       </conditions>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
+    <!-- 真端取证（ScriptDLL64 FUN_180fa57d0）：SETPRO3 → 0x100(quest,10/20/30/40/50/60) 分档收尾，零发页；页 10 系旧翻译夸大，已删（2026-10-05 同类排查）。 -->
     <transition source="s2" target="reward20" priority="2">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="203752" action="SETPRO3"/>
@@ -147,9 +148,9 @@
       </conditions>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
+    <!-- 真端取证（ScriptDLL64 FUN_180fa57d0）：SETPRO3 → 0x100(quest,10/20/30/40/50/60) 分档收尾，零发页；页 10 系旧翻译夸大，已删（2026-10-05 同类排查）。 -->
     <transition source="s2" target="reward30" priority="3">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="203752" action="SETPRO3"/>
@@ -159,9 +160,9 @@
       </conditions>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
+    <!-- 真端取证（ScriptDLL64 FUN_180fa57d0）：SETPRO3 → 0x100(quest,10/20/30/40/50/60) 分档收尾，零发页；页 10 系旧翻译夸大，已删（2026-10-05 同类排查）。 -->
     <transition source="s2" target="reward40" priority="4">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="203752" action="SETPRO3"/>
@@ -171,9 +172,9 @@
       </conditions>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
+    <!-- 真端取证（ScriptDLL64 FUN_180fa57d0）：SETPRO3 → 0x100(quest,10/20/30/40/50/60) 分档收尾，零发页；页 10 系旧翻译夸大，已删（2026-10-05 同类排查）。 -->
     <transition source="s2" target="reward50" priority="5">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="203752" action="SETPRO3"/>
@@ -183,9 +184,9 @@
       </conditions>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
+    <!-- 真端取证（ScriptDLL64 FUN_180fa57d0）：SETPRO3 → 0x100(quest,10/20/30/40/50/60) 分档收尾，零发页；页 10 系旧翻译夸大，已删（2026-10-05 同类排查）。 -->
     <transition source="s2" target="reward60" priority="6">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="203752" action="SETPRO3"/>
@@ -195,7 +196,6 @@
       </conditions>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
     <!-- 奖励:战士 → Macus (203758)。 -->

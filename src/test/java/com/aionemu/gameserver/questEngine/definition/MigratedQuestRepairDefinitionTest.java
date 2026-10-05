@@ -150,7 +150,9 @@ class MigratedQuestRepairDefinitionTest {
 			.filter(transition -> transition.event() instanceof QuestEvent.TalkToNpc talk
 				&& talk.npcId() == 798193 && talk.dialogId() == 10000)
 			.findFirst().orElseThrow();
-		assertTrue(feed.afterCommit().contains(new AfterCommitAction.ShowQuestSelectionDialog(10)));
+		// 真端取证（ScriptDLL64 FUN_180fe3940）：SETPRO1 仅推进+刷新，零发页（2026-10-05 同类排查）。
+		assertFalse(feed.afterCommit().contains(new AfterCommitAction.ShowQuestSelectionDialog(10)),
+			"3090 SETPRO1 推进不得再发页 10");
 		QuestTransition supply = definition.definition().transitions().stream()
 			.filter(transition -> transition.event() instanceof QuestEvent.TalkToNpc talk
 				&& talk.npcId() == 700421 && talk.dialogId() == 10255)
