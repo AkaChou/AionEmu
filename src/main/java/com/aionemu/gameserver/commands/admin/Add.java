@@ -306,6 +306,22 @@ public class Add extends AdminCommand {
             }
         }
 
+        if (params[0].equalsIgnoreCase("money")) {
+            // 未指定数量时默认发放 1000 万基纳 / Defaults to 10,000,000 kinah when the quantity is omitted
+            long count = 10000000L;
+            if (params.length >= 2) {
+                try {
+                    count = Long.parseLong(params[1]);
+                } catch (NumberFormatException e) {
+                    PacketSendUtility.sendMessage(player, "syntax //add money <ammount>");
+                    return;
+                }
+            }
+            // 与 //add 182400001 <count> 完全等效，交由下方通用发放流程处理
+            // Fully equivalent to //add 182400001 <count>; delegated to the generic grant flow below
+            params = new String[]{String.valueOf(ItemId.KINAH.value()), String.valueOf(count)};
+        }
+
         if (params[0].equals("deve")){
             if(player.getAccessLevel() < 2){
                 return;
@@ -521,6 +537,6 @@ public class Add extends AdminCommand {
         PacketSendUtility.sendMessage(player, "syntax //add <player> <item Id | link> <quantity>");
         PacketSendUtility.sendMessage(player, "syntax //add <item Id | link> <quantity>");
         PacketSendUtility.sendMessage(player, "syntax //add <item Id | link>");
-        PacketSendUtility.sendMessage(player, "===== CUSTOM ADDED FEATURES =====\n" + "syntax //add check <item id | link>\n" + "synax //add giveid <@Link>\n" + "syntax //add kinah <ammount>");
+        PacketSendUtility.sendMessage(player, "===== CUSTOM ADDED FEATURES =====\n" + "syntax //add check <item id | link>\n" + "synax //add giveid <@Link>\n" + "syntax //add kinah <ammount>\n" + "syntax //add money <ammount> (default: 10000000)");
     }
 }
