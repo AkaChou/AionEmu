@@ -1306,7 +1306,10 @@ public final class DataDrivenNativeRuntime {
 			// Two-step report (adjudication a): the row selection shows the contract-declared
 			// report-confirm page; the confirm action (1009) advances to REWARD + the reward window.
 			if (state.getStatus() == QuestStatus.START && dialogId == 31) {
-				int reportPage = QuestDialogContract.loadDefault().reportConfirmPage(questId);
+				// 本报告面只服务零步 Talk 行（DD_TALK_SIMPLE）；中继步 0 ⇒ SELECT2 不被占用，
+				// 分型不必跳过（缺陷 S 的 relaySteps 参数在此恒 0）。
+				// This report face serves zero-step Talk rows only; relaySteps is always 0 here.
+				int reportPage = QuestDialogContract.loadDefault().reportConfirmPage(questId, 0);
 				if (reportPage > 0) {
 					PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(objectId, reportPage, questId));
 					return true;

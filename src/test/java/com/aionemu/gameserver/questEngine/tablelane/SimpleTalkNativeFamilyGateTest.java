@@ -460,6 +460,28 @@ class SimpleTalkNativeFamilyGateTest {
 	}
 
 	/**
+	 * 报告页分型跳过被中继步占用的 SELECT2（缺陷 S，2026-10-05，1118 实机）：双页任务的中继完成后，
+	 * 交付 NPC 的任务行（31）发报告页 select5（2375；按钮「拿出药膏」=SELECT_QUEST_REWARD），
+	 * 而不是中继对话树 select2（1352；按钮 SELECT2_1 翻页）。误判让 31 发 1352，报告确认 10000
+	 * 落空关窗（1118 实机 2026-10-05 08:53）。1131 双页：select2=Shugo 中继树 / select5=Nadaelo 报告页。
+	 * The report-page typing skips the relay-consumed SELECT2 (defect S): with the relay chain done the
+	 * delivery npc's row selection shows the select5 report page, not the select2 relay dialog tree.
+	 */
+	@Test
+	void reportPageSkipsTheRelayConsumedSelect2() {
+		int questId = ITEM_QUEST; // 1131：单中继步 + 双页（select2 中继 / select5 报告）
+		Player player = NativeTalkFixture.player();
+		QuestState state = new QuestState(questId, QuestStatus.START, 0, 0, null, 0, null);
+		state.getQuestVars().setVar(1); // 中继完成（relayCount=1）
+		player.getQuestStateList().addQuest(questId, state);
+		Npc rewardNpc = createMockNpc(itemHandler.rewardNpc(questId));
+
+		NativeTalkFixture.clearPackets(player);
+		assertTrue(itemHandler.onDialog(new QuestEnv(rewardNpc, player, questId, 31)));
+		NativeTalkFixture.assertOnlyDialogPage(player, QuestDialogPage.SELECT5.id());
+	}
+
+	/**
 	 * Talk 族真端击杀掉落（2026-10-04 修复）：P3 迁移只接手对话面，退役 XML 连同其 {@code <drops>}
 	 * 退出 catalog 后本族 1031 行的击杀掉落断供（真机 1105：击杀 210079 无任务道具）。native 必须
 	 * 从 quest.xml drop 列接手注册；XML 保留行仍由 XML 车道供源（单一 owner，不得重复注册）。

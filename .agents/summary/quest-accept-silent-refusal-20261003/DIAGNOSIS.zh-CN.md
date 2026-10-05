@@ -406,6 +406,52 @@
 - 教训（沉淀 QE-141）：中继面每个动作按退役 XML event/after-commit 逐条对齐——「结束对话」
   按钮 = SETPRO1，after-commit 是**回选择页**（零包 → 客户端 1s 重发；旧步页 → 点击循环）。
 
+### 缺陷 R（2026-10-05）：带任务上下文的 NPC 对话页导航被关窗（1115 复测暴露）
+
+- 用户复测：1115 中继推进回选择页 ✓ 后，点「询问有关钓鱼的事情」（NPC 203072 对话树）→
+  「直接关闭对话窗口了」（应显示 1012 页）。
+- 实机日志（08:47:56）：动作=1012（SELECT1_1=1012，上一页=1011）questId=1115 →
+  DialogService「未处理任务动作关窗」拦截 → 关窗(0,0)；对照 08:49:00（questId=0 重试）→
+  回显 1012 页（NPC 对话平面 default 2 参回显 = 期望形态）。
+- 根因：客户端在任务语境附近把 questId 附到 NPC 对话项上（1012 是 NPC 对话树从 1011 发出的
+  页导航动作，非任务按钮动作）；2169b6332 的关窗规则（questId!=0 且非 31 一律关窗）为防
+  「动作 id 当页回显 load fail」（9550 的 1002 / 1220 的 10000）而过度拦截。
+- 修复：DialogService 拦截加例外 `!QuestDialogPage.isSelectionSubPage(dialogId)`——
+  SELECT⟨n⟩_… 子页动作（= 目标页 id 的导航动作）带任务上下文时按 NPC 对话平面回显
+  （下游 default 2 参、questId=0）；任务按钮动作（1002/10000）保持关窗（2169b6332 回归保留）。
+- 验证（2026-10-05 IDEA MCP runner）：DialogServiceQuestDialogTest 8/8（新增
+  questContextNpcDialogNavigationEchoesThePageInsteadOfClosing + 两条关窗回归）、
+  CMDialogSelectContextTest 6/6、QuestEngineNpcDialogDispatchTest 6/6 全绿。
+- 边界：switch 有显式 case 的 NPC 动作（2/45/47…）在任务上下文被误拦为同类扩展面——无实机
+  报告未动（QE-137 boundaries ⑥）。
+
+### 缺陷 S（2026-10-05）：报告页分型被中继页占位——1118 交付 NPC「对话没有反应」（08:53 复测暴露）
+
+- 用户复测："任务 1118，和 npc 203079 对话，没有反应，可能是这个任务没有获取到任务物品导致的"。
+  08:52 日志：接取 203059 ✓、中继 203070 ✓（31→1352→1353→10000→步数=1+回页 10）、
+  CM_USE_ITEM 182200214；08:53:04 与 203079：31→1352→1353→10000→**关窗(0,0)** 无状态变化。
+- 事实链：203079=Melpone=**领奖 NPC**（退役 XML：v1 QUEST_SELECT→SELECT5）；1352=SELECT2 是
+  **Kustanon（203070）中继树页**（按钮 SELECT2_1 翻页），不是报告页。玩家在误发的中继页上点
+  「结束对话」（SETPRO1=10000）→ 报告段确认动作集（1009/31/39）不认 → 落空 → DialogService
+  关窗（=用户看到的「没反应」）。「没拿到任务物品」不成立：182200224 接取时即发放，
+  交付门条件属报告第二步（本批未涉及）。
+- 根因：`QuestDialogContract.reportConfirmPage` 固定优先级 SELECT2 > SELECT5——1118 的客户端页
+  **两页并存**（select2=中继树 / select5=报告页），select2（中继步 1 页）被误判为报告页。
+  退役 XML 1118（203079 QUEST_SELECT→SELECT5）+ 客户端 HTML（select5 按钮「拿出药膏」=
+  SELECT_QUEST_REWARD）双印证报告页应为 2375。
+- 全量对账（reconcile_report_page.py，六族 × 客户端页）：233 件「中继 + select2&select5 双页」
+  逐件按钮对照**零反例**（select2 按钮全为翻页/步进 SETPRO1/SELECT2_1、select5 全为报告动作
+  SELECT_QUEST_REWARD/39/CHECK_GOLD/CHECK_AP/SIMPLE）；「有中继 + 仅 select2」0 件（跳过不空落）；
+  无中继任务（1102 型：select2 按钮=SELECT_QUEST_REWARD）不受影响。
+- 修复：`reportConfirmPage(questId, relaySteps)`——relaySteps>=1 跳过 SELECT2 候选；四调用方传
+  本族中继步数（Talk=relayCount / UseItem·CollectItem=relayNpcs.size() / DD 零步面恒 0）。
+- 验证（2026-10-05 IDEA MCP runner）：Talk 14/14（新增 reportPageSkipsTheRelayConsumedSelect2：
+  1131 双页 31→2375）、UseItem 11/11、CollectItem 16/16、ItemPlay 15/15、ItemPlayRowInventory 5/5
+  （evidenceFacesStayFrozen 显式改表：5 组键随真端名组表解析面扩展已解，属既有红对齐、非本批引入）、
+  DD Runtime 26/26、DD Contract 7/7、DialogService 8/8、RowAlignment 5/5。
+- 悬案：报告确认动作变体 CHECK_GOLD/CHECK_AP/CHECK_USER_HAS_QUEST_ITEM_SIMPLE（9655/9656/3340/
+  3547）不在当前确认动作集（1009/39）——同型风险面，待实机样本再裁定。
+
 ## 修复落地（2026-10-04，缺陷 Q：领奖动作 8..23 一刀切残留——1107 奖励窗点确定循环）
 
 - 用户复测："任务 1107「将斧柄送还给伐木工纳姆斯」，和 npc 203075 对话，点击确定没有反应"。

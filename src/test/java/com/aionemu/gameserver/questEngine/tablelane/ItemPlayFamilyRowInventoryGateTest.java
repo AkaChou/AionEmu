@@ -315,13 +315,18 @@ class ItemPlayFamilyRowInventoryGateTest {
 	 * 证据面**双向冻结**：未解析名集合必须逐元素等于下表（既不得新增——新面孔说明有名字解析回归或
 	 * 新接线面未解；也不得消失——已解必须显式改表）。P5D 步 2 起中继名也进入解析面，
 	 * {@code NPC_event_devasday_shugoseller}（50048 的 {@code talk_npc1}，静态数据里只有真端表命中）随之登记。
+	 * 2026-10-05 显式改表（缺陷 S 批次对齐，非该批引入）：5 个组键（HousingManager_Da/Li、
+	 * LDF5b_Greenhat_LD、NPC_event_devasday_shugo/shugoseller）随真端对话名组表接入原生解析面
+	 * 而解析成功（组表 retail-quest-ai-name-groups.xml 成员 name_desc 展开命中 npc 模板），
+	 * 仅剩系统发放哨兵 {@code _faction_} 未解析。
+	 * Explicit table update 2026-10-05 (defect-S batch alignment, not introduced by it): five group
+	 * keys now resolve through the retail dialog-name group table; only the system-grant sentinel
+	 * {@code _faction_} remains unresolved.
 	 */
 	@Test
 	void evidenceFacesStayFrozen() {
 		SimpleItemPlayHandler handler = SimpleItemPlayHandler.instance();
-		Set<String> expectedNames = new TreeSet<>(Set.of(
-			"HousingManager_Da", "HousingManager_Li", "LDF5b_Greenhat_LD",
-			"NPC_event_devasday_shugo", "NPC_event_devasday_shugoseller", "_faction_"));
+		Set<String> expectedNames = new TreeSet<>(Set.of("_faction_"));
 		assertEquals(expectedNames, new TreeSet<>(handler.unresolvedNames()), "未解析名证据面冻结");
 		assertTrue(handler.unresolvedChainQuestIds().isEmpty(), "本表内 con_quest 闭环不得回退");
 	}

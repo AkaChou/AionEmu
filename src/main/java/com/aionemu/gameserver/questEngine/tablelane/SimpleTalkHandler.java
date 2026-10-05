@@ -957,7 +957,10 @@ public final class SimpleTalkHandler implements NativeSystemGrantLane {
 			if (rewardNpcs != null && rewardNpcs.contains(npcId)) {
 				boolean reportReady = vars >= relayCount(questId) && holdsGateItems(questId, player);
 				if (dialogId == 31 && reportReady) {
-					int reportPage = dialogContract.reportConfirmPage(questId);
+					// 报告页分型跳过被中继步占用的 SELECT2（缺陷 S，2026-10-05）：1118 的 select2 是
+					// Kustanon 中继树（按钮翻页），报告页是 select5（按钮「拿出药膏」=SELECT_QUEST_REWARD）。
+					// The report-page typing skips SELECT2 when relay steps consume it (defect S).
+					int reportPage = dialogContract.reportConfirmPage(questId, relayCount(questId));
 					if (reportPage > 0) {
 						PacketSendUtility.sendPacket(player,
 								new SM_DIALOG_WINDOW(targetObjectId, reportPage, questId));

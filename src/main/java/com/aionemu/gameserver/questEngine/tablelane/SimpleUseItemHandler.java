@@ -477,7 +477,11 @@ public final class SimpleUseItemHandler {
 				// Two-step report (adjudication a): 31 shows the declared confirm page, 1009 advances.
 				boolean reportReady = handInReady(player, questId);
 				if (dialogId == 31 && reportReady) {
-					int reportPage = QuestDialogContract.loadDefault().reportConfirmPage(questId);
+					// 报告页分型跳过被中继步占用的 SELECT2（缺陷 S，2026-10-05）：双页任务的 select2
+					// 是中继步页（按钮 SETPRO1/翻页），报告页是 select5（按钮 SELECT_QUEST_REWARD/39）。
+					// The report-page typing skips SELECT2 when relay steps consume it (defect S).
+					int reportPage = QuestDialogContract.loadDefault().reportConfirmPage(questId,
+						relayNpcs(questId).size());
 					if (reportPage > 0) {
 						PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(objectId, reportPage, questId));
 						return true;

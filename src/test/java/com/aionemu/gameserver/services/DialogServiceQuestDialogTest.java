@@ -36,6 +36,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class DialogServiceQuestDialogTest {
 	private static final int PLAYER_ID = 7;
@@ -113,6 +114,23 @@ class DialogServiceQuestDialogTest {
 		DialogService.onDialogSelect(10000, player, npc(new NamedAi("normal")), QUEST_ID, 0);
 
 		assertOnlyDialog(player, 0, 0);
+	}
+
+	/**
+	 * 带任务上下文的 NPC 对话页导航（SELECT⟨n⟩_… 子页动作 = 目标页 id，如页 10 上发来的 1012）
+	 * 按 NPC 对话平面回显该页（2 参、questId=0）而不是关窗——任务按钮动作（1002/10000）
+	 * 仍关窗（见上两条）。1115 实机 2026-10-05 08:47：点「询问有关钓鱼的事情」被关窗。
+	 * An NPC dialog-page navigation carrying quest context (a SELECT⟨n⟩_ sub-page action) is echoed
+	 * on the NPC dialog plane (2-arg, questId=0) instead of closing the window.
+	 */
+	@Test
+	void questContextNpcDialogNavigationEchoesThePageInsteadOfClosing() throws Exception {
+		Player player = playerWithQuest(QuestStatus.START);
+
+		DialogService.onDialogSelect(QuestDialogPage.SELECT1_1.id(), player, npc(new NamedAi("normal")), QUEST_ID, 0);
+
+		assertOnlyDialog(player, NPC_OBJECT_ID, QuestDialogPage.SELECT1_1.id());
+		assertTrue(questEngine.dialogCalled);
 	}
 
 	@Test

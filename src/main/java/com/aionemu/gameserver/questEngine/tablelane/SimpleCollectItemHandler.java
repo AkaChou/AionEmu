@@ -903,7 +903,11 @@ public final class SimpleCollectItemHandler implements NativeSystemGrantLane {
 				// declared confirm page; the confirm action advances — 1009 for the direct form, 39 (the report
 				// page's item-check button) for the check form; a failed 39 check shows the declared fail page.
 				if (dialogId == 31 && reportReady) {
-					int reportPage = QuestDialogContract.loadDefault().reportConfirmPage(questId);
+					// 报告页分型跳过被中继步占用的 SELECT2（缺陷 S，2026-10-05）：9620/9655/9656 等
+					// 双页任务的 select2/3/4 是中继步页（SETPRO1/2/3），报告页是 select5。
+					// The report-page typing skips SELECT2 when relay steps consume it (defect S).
+					int reportPage = QuestDialogContract.loadDefault().reportConfirmPage(questId,
+						relayNpcs(questId).size());
 					if (reportPage > 0) {
 						PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(objectId, reportPage, questId));
 						return true;

@@ -179,13 +179,28 @@ public final class QuestDialogContract {
 	 * {@code 10002}(select_success) 为客户端自动确认页。无声明返回 {@code -1}（调用方按
 	 * DEFAULT_SUCCESS 行为一步直达奖励窗，保持可用）。
 	 * <p>
+	 * <b>被中继步占用的页不参与分型</b>（2026-10-05，缺陷 S）：中继步 1..3 的页恒为
+	 * {@code SELECT2/SELECT3/SELECT4}（{@code pageForStep} 的 RELAY_STEP_PAGES，按钮为
+	 * SETPRO1/2/3 或翻页），与报告页（按钮 SELECT_QUEST_REWARD / 39 检查）语义互斥。
+	 * 233 件"中继 + select2&select5 双页"任务的客户端页普查零反例：select2 按钮全为
+	 * 翻页/步进，select5 按钮全为报告动作。故 {@code relaySteps >= 1} 时跳过 SELECT2 候选
+	 * ——1118 实证（Kustanon 中继树 select2 / Melpone 报告页 select5，客户端 HTML 与退役
+	 * XML 双印证；误判让 31 发 1352，报告确认 10000 落空关窗）。
+	 * <p>
 	 * The report-confirm page (retail NPC_REPORT three-page typing, adjudicated by the client
 	 * contract): the row selection shows it without advancing; {@code 1009} advances to REWARD.
+	 * A page consumed by a relay step (1..3 → SELECT2..4, buttons SETPRO1/2/3 or page turns) is
+	 * never the report page: with {@code relaySteps >= 1} the SELECT2 candidate is skipped.
 	 * {@code -1} = undeclared, callers fall back to the one-step reward window.
+	 *
+	 * @param relaySteps 该任务的中继步数（0 = 无中继）/ the quest's relay step count (0 = none)
 	 */
-	public int reportConfirmPage(int questId) {
+	public int reportConfirmPage(int questId, int relaySteps) {
 		for (int pageId : new int[] { QuestDialogPage.SELECT2.id(), QuestDialogPage.SELECT5.id(),
 				QuestDialogPage.DEFAULT_SUCCESS.id() }) {
+			if (pageId == QuestDialogPage.SELECT2.id() && relaySteps >= 1) {
+				continue;
+			}
 			if (hasButtonPage(questId, pageId)) {
 				return pageId;
 			}

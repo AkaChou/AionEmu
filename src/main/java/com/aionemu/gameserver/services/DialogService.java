@@ -37,6 +37,7 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_TRADELIST;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_TRADE_IN_LIST;
 import com.aionemu.gameserver.questEngine.definition.QuestDialogAction;
+import com.aionemu.gameserver.questEngine.definition.QuestDialogPage;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
@@ -154,11 +155,20 @@ public class DialogService {
             }
             // 任务动作未被任务引擎处理时，dialogId 是按钮动作 ID 而不是页面 ID。
             // 回显会把动作当作页面下发，客户端找不到对应 html 页并触发 load fail；
-            // 除通用任务列表动作(31)外，必须关闭对话窗口而不是回显动作 ID。
+            // 除通用任务列表动作(31)与 NPC 对话页导航外，必须关闭对话窗口而不是回显动作 ID。
             // When the quest engine does not handle a quest action, dialogId is a button action id, not a page id.
             // Echoing it makes the client load an action id as a page and fail with "load fail";
-            // except for the generic quest-list action (31), close the window instead of echoing the action id.
-            if (questId != 0 && dialogId != QuestDialogAction.QUEST_SELECT.id()) {
+            // except for the generic quest-list action (31) and NPC dialog-page navigation, close the window.
+            //
+            // 选择对话续页（SELECT⟨n⟩_… 子页动作 = 目标页 id，如 NPC 对话树从 1011 发来的 1012）不是
+            // 任务按钮动作：玩家带着任务上下文点 NPC 对话项时（questId 由客户端附带），按 NPC 对话
+            // 平面照常回显该页（下游 default 以 2 参发送、questId=0），不得关窗（1115 实机
+            // 2026-10-05 08:47：从页 10 点「询问有关钓鱼的事情」被关窗）。
+            // Selection sub-page actions (SELECT⟨n⟩_… = the target page id, e.g. 1012 sent from an NPC
+            // dialog tree) are not quest button actions: echo the page on the NPC dialog plane (the
+            // downstream 2-arg default), never close the window.
+            if (questId != 0 && dialogId != QuestDialogAction.QUEST_SELECT.id()
+                    && !QuestDialogPage.isSelectionSubPage(dialogId)) {
                 player.clearNpcQuestDialogSelection();
                 PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(0, 0));
                 return;
