@@ -158,6 +158,11 @@ class SimpleSerialHuntNativeFamilyGateTest {
 		QuestEnv envDesc = new QuestEnv(ganofus, player, questId, 26);
 		assertTrue(handler.onDialog(envDesc));
 
+		// 1b. 打开（-1，无任务上下文）不被接取面认领——归引擎开门规则（进行中重放，否则通用页 10
+		// 列表；2026-10-05 同 DD 面修复，实机 NPC 834166 缺陷类别）。
+		QuestEnv envOpen = new QuestEnv(ganofus, player, questId, -1);
+		assertFalse(handler.onDialog(envOpen), "打开(-1) 不得被接取面认领");
+
 		// 2. 拒绝接取 (1003)
 		QuestEnv envRefuse = new QuestEnv(ganofus, player, questId, 1003);
 		assertTrue(handler.onDialog(envRefuse));

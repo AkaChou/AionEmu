@@ -544,11 +544,26 @@ public final class SimpleHuntHandler implements NativeSystemGrantLane {
 					// 确认接取任务（拒绝走 startTraced 打 QUEST-TRACE，不再静默）。
 					// Confirm acquire; refusals are traced instead of silent.
 					if (NativeQuestStartPort.instance().startTraced(player, questId, dialogId).started()) {
-						PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 1003, questId));
+						if (dialogId == 1002) {
+							// 真端 cab520 0x3ea：check → 页 1003（接取确认页；客户端契约声明该页）。
+							// Retail cab520 0x3ea: check → page 1003 (the declared accept-confirm page).
+							PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 1003, questId));
+						} else {
+							// 真端 cab520 0x4e20：check → 0x5d8 关窗（simple accept 无确认页；回页会让
+							// 未声明 1003 的任务客户端 load fail——实机 2026-10-05 quest 14110 同类）。
+							// Retail cab520 0x4e20: check → 0x5d8 close (no confirm page; a page reply
+							// load-fails quests that never declared it, live 14110 class).
+							PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(0, 0));
+						}
 						return true;
 					}
-				} else if (dialogId == 1003 || dialogId == 1004 || dialogId == 20001) {
+				} else if (dialogId == 1003 || dialogId == 1004) {
 					PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 1004, questId));
+					return true;
+				} else if (dialogId == 20001) {
+					// 真端 cab520 0x4e21：拒绝收尾 = 关窗（与 0x4e20 同族）。
+					// Retail cab520 0x4e21: refuse tail closes the dialog (same family as 0x4e20).
+					PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(0, 0));
 					return true;
 				}
 			}

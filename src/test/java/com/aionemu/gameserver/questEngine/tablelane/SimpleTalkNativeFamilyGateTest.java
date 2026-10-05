@@ -201,10 +201,14 @@ class SimpleTalkNativeFamilyGateTest {
 	@Test
 	void acceptCommitCreatesTheRetailRow() {
 		Player player = createTestPlayer();
-		Npc acquire = createMockNpc(handler.acquireNpc(ITEM_QUEST));
+		// 用 fake 背包端口实例：cab520 两支接取均发 give_item（1131 行），静态 handler 的真物品
+		// 端口在单测无 ItemData 服务栈。
+		// The fake-port instance: both cab520 accept branches grant the row's give item, and the
+		// static handler's real port needs the absent ItemData service stack in unit tests.
+		Npc acquire = createMockNpc(itemHandler.acquireNpc(ITEM_QUEST));
 
-		assertTrue(handler.onDialog(new QuestEnv(acquire, player, ITEM_QUEST, 31)), "问询页");
-		assertTrue(handler.onDialog(new QuestEnv(acquire, player, ITEM_QUEST, 1002)), "接取必须落库（native 建档口）");
+		assertTrue(itemHandler.onDialog(new QuestEnv(acquire, player, ITEM_QUEST, 31)), "问询页");
+		assertTrue(itemHandler.onDialog(new QuestEnv(acquire, player, ITEM_QUEST, 1002)), "接取必须落库（native 建档口）");
 		QuestState state = player.getQuestStateList().getQuestState(ITEM_QUEST);
 		assertEquals(QuestStatus.START, state.getStatus());
 		assertEquals(0, state.getQuestVars().getQuestVars(), "接取复位 raw vars");
@@ -212,9 +216,48 @@ class SimpleTalkNativeFamilyGateTest {
 		// 真端 max_repeat_count=1：完成后不得再次接取。
 		state.setStatus(QuestStatus.COMPLETE);
 		state.setCompleteCount(1);
-		assertFalse(handler.onDialog(new QuestEnv(acquire, player, ITEM_QUEST, 1002)),
+		assertFalse(itemHandler.onDialog(new QuestEnv(acquire, player, ITEM_QUEST, 1002)),
 				"不可重复行完成后必须拒绝接取");
 		assertEquals(QuestStatus.COMPLETE, state.getStatus(), "被拒时不得改写状态");
+	}
+
+	/**
+	 * 接取收尾（真端 cab520）：0x3ea（1002）→ 页 0x3eb（1003 确认页）+ 发物；0x4e20（20000）→
+	 * 0x5d8 关窗 + 发物（simple accept 无确认页——回任何页都会让未声明该页的任务客户端 load fail，
+	 * 实机 2026-10-05 quest 14110）；0x4e21（20001）→ 关窗。
+	 * The accept tail of the retail cab520 dispatcher: 1002 → page 1003 + give, 20000 → close + give
+	 * (simple accepts carry no confirm page; any page reply load-fails quests that never declared it),
+	 * 20001 → close.
+	 */
+	@Test
+	void acceptTailFollowsTheRetailCab520CloseSemantics() {
+		Npc acquire = createMockNpc(itemHandler.acquireNpc(ITEM_QUEST));
+		SimpleTalkHandler.ItemStack acceptGive = itemHandler.acceptGiveItem(ITEM_QUEST);
+
+		// 1002（真端 0x3ea）：建档 + 发物 + 页 1003。
+		Player viaConfirm = NativeTalkFixture.player();
+		inventory.clear();
+		assertTrue(itemHandler.onDialog(new QuestEnv(acquire, viaConfirm, ITEM_QUEST, 1002)),
+				"1002 接取必须落库");
+		NativeTalkFixture.assertOnlyDialogPage(viaConfirm, 1003);
+		assertEquals(List.of("give:" + acceptGive.itemId() + ":" + acceptGive.count()), inventory.calls,
+				"1002 须按 cab520 0x3ea 分支发放 give_item");
+
+		// 20000（真端 0x4e20）：建档 + 发物 + 关窗页 0（契约无 1003 的任务收到页即 load fail）。
+		Player viaSimple = NativeTalkFixture.player();
+		inventory.clear();
+		assertTrue(itemHandler.onDialog(new QuestEnv(acquire, viaSimple, ITEM_QUEST, 20000)),
+				"20000 simple accept 必须落库");
+		NativeTalkFixture.assertOnlyDialogPage(viaSimple, 0);
+		assertEquals(List.of("give:" + acceptGive.itemId() + ":" + acceptGive.count()), inventory.calls,
+				"20000 须按 cab520 0x4e20 分支发放 give_item");
+
+		// 20001（真端 0x4e21）：拒绝收尾 = 关窗页 0（不回 1004 页）。
+		Player refuser = NativeTalkFixture.player();
+		NativeTalkFixture.clearPackets(refuser);
+		assertTrue(itemHandler.onDialog(new QuestEnv(acquire, refuser, ITEM_QUEST, 20001)),
+				"20001 = 拒绝收尾 = 关窗");
+		NativeTalkFixture.assertOnlyDialogPage(refuser, 0);
 	}
 
 	@Test

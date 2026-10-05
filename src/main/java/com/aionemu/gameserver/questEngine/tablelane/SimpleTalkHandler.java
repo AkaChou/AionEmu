@@ -38,8 +38,9 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
  *       {@code select_none}(4762) → {@code select1}(1011) → 页 4 兜底，见
  *       {@link QuestDialogContract#retailEntryPage(int)}；{@code select1} 首屏的 1012/1013
  *       翻页动作按真端 cab520「原样回发」）；
- *       1002/20000 → {@code SetQuestAcquired} + 页 1003（20000 同时发放 {@code give_item}）；
- *       1003/1004/20001 → 页 1004；</li>
+ *       1002 → {@code SetQuestAcquired} + 页 1003；20000 → {@code SetQuestAcquired} + 关窗
+ *       （simple accept 无确认页，真端 0x4e20 → 0x5d8；两支均发放 {@code give_item}）；
+ *       1003/1004 → 页 1004；20001 → 关窗（真端 0x4e21）；</li>
  *   <li>对话侧（真端 {@code cabb10} 语义）：中继 NPC 按 {@code talk_npc1..3} 步进，
  *       {@code 10000/10001/10002} → {@code SetQuestProgress(+0xf0)}(quest, 1/2/3)
  *       + {@code GiveItem}(give_itemK) + {@code RemoveItem}(remove_itemK)，
@@ -868,17 +869,33 @@ public final class SimpleTalkHandler implements NativeSystemGrantLane {
 				// 拒绝走 startTraced 打 QUEST-TRACE，不再静默）。
 				// Retail acquire via the native state port; refusals are traced instead of silent.
 				if (NativeQuestStartPort.instance().startTraced(player, questId, dialogId).started()) {
-					if (dialogId == 20000) {
-						give(player, acceptGiveByQuestId.get(questId));
+					// 真端 cab520：0x3ea（1002）与 0x4e20（20000）两支均发物（param_5<1 = 无 give 行）。
+					// Retail cab520 grants the row's give item on the 1002 and 20000 accepts alike.
+					give(player, acceptGiveByQuestId.get(questId));
+					if (dialogId == 1002) {
+						// 真端 cab520 0x3ea：check → 页 0x3eb（1003 接取确认页；客户端契约声明该页）。
+						// Retail cab520 0x3ea: check → page 1003 (the client-declared accept-confirm page).
+						PacketSendUtility.sendPacket(player,
+								new SM_DIALOG_WINDOW(targetObjectId, PAGE_ACCEPTED, questId));
+					} else {
+						// 真端 cab520 0x4e20：check → 0x5d8 关窗（simple accept 无确认页；回任何页都会
+						// 让未声明该页的任务客户端 load fail——实机 2026-10-05 quest 14110）。
+						// Retail cab520 0x4e20: check → 0x5d8 close (simple accepts have no confirm
+						// page; any page load-fails quests that never declared it, live 14110).
+						PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(0, 0));
 					}
-					PacketSendUtility.sendPacket(player,
-							new SM_DIALOG_WINDOW(targetObjectId, PAGE_ACCEPTED, questId));
 					return true;
 				}
 				return false;
 			}
-			if (dialogId == 1003 || dialogId == 1004 || dialogId == 20001) {
+			if (dialogId == 1003 || dialogId == 1004) {
 				PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, PAGE_REFUSED, questId));
+				return true;
+			}
+			if (dialogId == 20001) {
+				// 真端 cab520 0x4e21：0x2a8（取消）+ 0x5d8 关窗（拒绝收尾 = 关窗，与 0x4e20 同族）。
+				// Retail cab520 0x4e21: cancel + 0x5d8 close (the refuse tail, same family as 0x4e20).
+				PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(0, 0));
 				return true;
 			}
 			return false;

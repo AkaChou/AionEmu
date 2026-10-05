@@ -693,9 +693,10 @@ class DataDrivenNativeRuntimeGateTest {
 	}
 
 	/**
-	 * ⑩ Talk 接取对话面（真端 `FUN_180c47220` 词汇，只服务无状态玩家）：打开 → 4762；1002 → 接取 +
+	 * ⑩ Talk 接取对话面（真端 `FUN_180c47220` 词汇，只服务无状态玩家）：行选 31/26 → 4762；1002 → 接取 +
 	 * 1003；1003 → 1004；20000/20001 收尾 → 关窗页 0（旧 XML close-dialog）；1008/其余 ≥1000 原样回发；
-	 * &lt;1000 零动作；1007 → 客户端契约问询窗（fail-closed）；已接取玩家不得再见接取入口页。
+	 * &lt;1000 零动作；1007 → 客户端契约问询窗（fail-closed）；已接取玩家不得再见接取入口页；
+	 * 打开（-1）不认领——归引擎开门规则（进行中重放，否则通用页 10 列表，2026-10-05 实机 834166 修复）。
 	 * The Talk acquire dialog face (retail FUN_180c47220 vocabulary), served only to stateless players.
 	 */
 	@Test
@@ -735,6 +736,11 @@ class DataDrivenNativeRuntimeGateTest {
 		NativeTalkFixture.clearPackets(player);
 		runtime.onDialog(player, npcId, 31, 1, questId);
 		assertFalse(NativeTalkFixture.dialogPages(player).contains(4762), "已接取玩家不得再见接取入口页");
+		// 打开（-1，无任务上下文）不得被接取面认领：宿主开门平面 = 进行中/可交重放，否则通用页 10
+		// 列表；原 -1 认领使 NPC 834166 打开直发 4762、任务列表不可见（实机 2026-10-05）。
+		Player opener = NativeTalkFixture.player();
+		assertFalse(runtime.onDialog(opener, npcId, -1, 1, 0), "打开(-1) 归引擎开门规则（页 10 列表），接取面不得认领");
+		assertTrue(NativeTalkFixture.dialogPages(opener).isEmpty(), "打开(-1) 本面零发页");
 		// 1003 → 1004；20001（QUEST_REFUSE_SIMPLE 拒绝）→ 关窗页 0（旧 XML close-dialog）；
 		// 1008 回发；1012 回发；999 零动作。
 		Player other = NativeTalkFixture.player();

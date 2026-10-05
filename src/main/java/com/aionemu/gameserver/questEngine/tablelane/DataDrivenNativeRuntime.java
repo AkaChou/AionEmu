@@ -1346,10 +1346,14 @@ public final class DataDrivenNativeRuntime {
 	}
 
 	/**
-	 * Talk 接取对话面（真端 `FUN_180c47220`：打开 → 页 4762；1002 → 接取 + 页 1003；1003 → 页 1004；
+	 * Talk 接取对话面（真端 `FUN_180c47220`：行选 31/26 → 页 4762；1002 → 接取 + 页 1003；1003 → 页 1004；
 	 * 1007 → 接取窗（客户端契约 fail-closed）；20000 → 接取 + 完成通道；20001/1008 → 完成通道；
 	 * 其余 ≥1000 原样回发）。只服务「尚未开始该任务」的玩家（真端按 0x640 条件路由到接取对象）。
+	 * 打开（-1，无任务上下文）不被本面认领：宿主开门平面 = 进行中/可交重放，否则通用页 10 列表
+	 * （2026-10-05 实机 NPC 834166 修复——原 -1 认领使打开直发 4762，任务列表不可见）。
 	 * The Talk acquire dialog face of retail FUN_180c47220, served only to players without the quest.
+	 * The open action (-1, no quest context) is not claimed here: the host open plane replays
+	 * in-progress/REWARD dialogs, otherwise the generic page-10 list.
 	 */
 	private boolean dispatchAcquireDialog(Player player, List<Integer> questIds, int dialogId, int objectId,
 			int requestedOwner) {
@@ -1364,11 +1368,13 @@ public final class DataDrivenNativeRuntime {
 				continue;
 			}
 			switch (dialogId) {
-				case 31, 26, -1 -> {
-					// 真端清单与接取面同用 CanAcquireQuest（P7-REPORT §「同一判定函数」）：资格不满足
-					// （等级/前置/种族/职业/限制位）不进接取面，避免「能点进 4762、点接受却被静默拒」。
-					// The retail list and acquire face share CanAcquireQuest: an ineligible player never
-					// enters the acquire face, instead of entering page 4762 and being silently refused.
+				case 31, 26 -> {
+					// 行选（31 = 列表任务行点击；26）：真端清单与接取面同用 CanAcquireQuest（P7-REPORT
+					// §「同一判定函数」）：资格不满足（等级/前置/种族/职业/限制位）不进接取面，避免
+					// 「能点进 4762、点接受却被静默拒」。
+					// The row selection (31 = a quest-list row click; 26): the retail list and acquire face
+					// share CanAcquireQuest: an ineligible player never enters the acquire face, instead of
+					// entering page 4762 and being silently refused.
 					if (!NativeQuestStartPort.instance().evaluateNpcAcquire(player, questId).started()) {
 						return false;
 					}

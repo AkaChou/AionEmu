@@ -28,6 +28,7 @@ import com.aionemu.gameserver.questEngine.definition.QuestTransition;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
+import com.aionemu.gameserver.questEngine.tablelane.NativeTalkFixture;
 import com.aionemu.gameserver.questEngine.tablelane.SimpleTalkHandler;
 
 /**
@@ -47,7 +48,11 @@ class QuestRepeatLifecycleTest {
 
 	@Test
 	void repeatable1963ReopensItsAcceptWindowAndRestartsFromCompletedState() {
-		SimpleTalkHandler handler = SimpleTalkHandler.instance();
+		// 用记录式假背包端口：1002 接取按真端 cab520 0x3ea 分支发放 give_item（182206032），
+		// 静态 handler 的真物品端口在单测无 ItemData 服务栈。
+		// The recording fake port: the 1002 accept grants the row's give_item per retail cab520
+		// 0x3ea, while the static handler's real port needs the absent ItemData service stack.
+		SimpleTalkHandler handler = NativeTalkFixture.handler(new NativeTalkFixture.RecordingInventory());
 		Player player = createTestPlayer();
 		Npc polyidus = createMockNpc(NATIVE_NPC);
 		player.getQuestStateList().addQuest(NATIVE_QUEST,

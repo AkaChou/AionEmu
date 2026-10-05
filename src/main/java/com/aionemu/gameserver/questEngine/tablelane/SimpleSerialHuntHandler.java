@@ -347,9 +347,11 @@ public final class SimpleSerialHuntHandler {
 		if (status == QuestStatus.NONE) {
 			Integer acqNpc = acquireNpcByQuestId.get(questId);
 			if (acqNpc != null && acqNpc == npcId) {
-				if (dialogId == 26 || dialogId == 31 || dialogId == -1) {
-					// 接取入口页 = 真端信页/阶段页（页 4 只能由 1007 打开，见 QuestDialogContract#retailEntryPage）。
-					// The accept entry page is the retail letter/stage page (page 4 is 1007-only).
+				if (dialogId == 26 || dialogId == 31) {
+					// 接取入口页 = 真端信页/阶段页（页 4 只能由 1007 打开，见 QuestDialogContract#retailEntryPage）；
+					// 打开（-1）不认领——归引擎开门规则（进行中重放，否则通用页 10 列表，2026-10-05 同 DD 面修复）。
+					// The accept entry page is the retail letter/stage page (page 4 is 1007-only); the open
+					// action (-1) is left to the engine open rule (page-10 list), same fix as the DD face.
 					PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId,
 							QuestDialogContract.loadDefault().retailEntryPage(questId), questId));
 					return true;
@@ -384,11 +386,26 @@ public final class SimpleSerialHuntHandler {
 										new SM_QUEST_ACTION(questId, QuestStatus.START, 0x40000000));
 							}
 						}
-						PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 1003, questId));
+						if (dialogId == 1002) {
+							// 真端 cab520 0x3ea：check → 页 1003（接取确认页；客户端契约声明该页）。
+							// Retail cab520 0x3ea: check → page 1003 (the declared accept-confirm page).
+							PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 1003, questId));
+						} else {
+							// 真端 cab520 0x4e20：check → 0x5d8 关窗（simple accept 无确认页；回页会让
+							// 未声明 1003 的任务客户端 load fail——实机 2026-10-05 quest 14110 同类）。
+							// Retail cab520 0x4e20: check → 0x5d8 close (no confirm page; a page reply
+							// load-fails quests that never declared it, live 14110 class).
+							PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(0, 0));
+						}
 						return true;
 					}
-				} else if (dialogId == 1003 || dialogId == 1004 || dialogId == 20001) {
+				} else if (dialogId == 1003 || dialogId == 1004) {
 					PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 1004, questId));
+					return true;
+				} else if (dialogId == 20001) {
+					// 真端 cab520 0x4e21：拒绝收尾 = 关窗（与 0x4e20 同族）。
+					// Retail cab520 0x4e21: refuse tail closes the dialog (same family as 0x4e20).
+					PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(0, 0));
 					return true;
 				}
 			}
