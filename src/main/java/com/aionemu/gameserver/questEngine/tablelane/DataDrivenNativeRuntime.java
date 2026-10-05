@@ -55,7 +55,8 @@ import com.aionemu.gameserver.utils.stats.AbyssRankEnum;
  * 对话打开（状态 0/10）→ 按当前步发阶段页 `select(K+1)`（1011/1352/…/7864，步 ≥15 不发）；
  * 页动作 `10000+K`（顺序守卫：K == 当前步 + 1，乱序静默零写）→ 步进写 K；
  * `1009` → 步进 + 报告通道（末步 = 待领奖 + 奖励窗页 5）；`1008` → 完成页原样回发；
- * `10255`（`0x280f`）→ 步进 + 完成页；其余 ≥1000 动作原样回发。Talk/CollectItem 载荷名允许真端
+ * `10255`（`0x280f`）→ 步进 + 完成通道 `mgr+0x5d8`＝关窗 + 可见性刷新（2026-10-05 实证裁定，
+ * 零发页）；其余 ≥1000 动作原样回发。Talk/CollectItem 载荷名允许真端
  * `quest_ai_name` 组（全组成员共担同一对话脚本，与 SimpleTalk 车道同轴）。
  * <p>
  * **本批不发运行期分流**（零行为变更）：DD 切换集行仍由旧 IR 车道 owns，生产 {@link #instance()} 的路由集为空
@@ -598,11 +599,18 @@ public final class DataDrivenNativeRuntime {
 				actionPlans.put(questId, rowPlan.facedActions());
 			}
 			acquirePlans.put(questId, acquire);
-			if (acquire.kind() == 4 && rowPlan.steps().isEmpty()) {
-				// 零步 Talk 行（DD_TALK_SIMPLE）：交付对象 #2（reward_npc_name）注册交付报告面；
+			if (acquire.kind() == 4) {
+				// 真端所有行恒建交付对象 #2（`reward_npc_name`，槽 +0x238，P7-STEP2E1）：零步 Talk 行
+				// （DD_TALK_SIMPLE）由本面做报告推进（31 → 报告确认页 → 1009 → REWARD + 奖励窗）；
+				// 中继步 Talk 链行（如 19671 蕾娜的欢迎问候：接取/交付教官 806698，进度商人 806699）
+				// 只由本面服务 REWARD 态交付（31/1009 → 奖励窗页 5、领奖动作 → 结算 + 回页 10），
+				// START 态由进度面 owns（见 dispatchReportDialog 的零步守卫）——2026-10-05 实机：
+				// 中继步行 REWARD 后教官处无交付路由（任务卡在「向成长支援教官报告」无法领奖）。
 				// 名字解析失败只缺席交付面（不冻结接取面，也不计入行冻结证据）。
-				// Zero-step Talk rows register the delivery-report face on the reward npc; an
-				// unresolvable name merely leaves the face absent (no row freeze, no evidence drift).
+				// All Talk rows register the retail delivery object #2 (reward_npc_name, slot +0x238):
+				// zero-step rows use this face for report-and-advance; relay-step chain rows are served
+				// only in REWARD (claim window / settlement back to page 10). An unresolvable name
+				// merely leaves the face absent (no row freeze, no evidence drift).
 				Set<Integer> rewardNpcIds = new LinkedHashSet<>();
 				if (resolveMonsters(row.rewardNpc() == null ? "" : row.rewardNpc(), nameResolver, rewardNpcIds,
 					new ArrayList<>())) {
@@ -1282,17 +1290,23 @@ public final class DataDrivenNativeRuntime {
 	}
 
 	/**
-	 * 交付报告面（零步 Talk 行 = DD_TALK_SIMPLE；真端所有行恒注册交付对象 #2 `reward_npc_name`，
-	 * 槽 +0x238，P7-STEP2E1）：START 态 31/26/-1 → 报告推进 REWARD + 奖励窗页 5；REWARD 态
-	 * 31/26/-1/1009 → 页 5；奖励窗动作（8..22 = SELECTED_QUEST_REWARD1..15 选项下标；
+	 * 交付报告面（真端所有行恒注册交付对象 #2 `reward_npc_name`，槽 +0x238，P7-STEP2E1）。
+	 * 零步 Talk 行（DD_TALK_SIMPLE）：START 态 31 → 报告确认页（契约声明）或一键推进 REWARD +
+	 * 奖励窗页 5；REWARD 态 31/1009 → 页 5。中继步 Talk 链行（如 19671 蕾娜的欢迎问候：
+	 * 教官 806698 接取/交付 + 商人 806699 中继）：START 态不认领（进度面 owns），REWARD 态
+	 * 31/1009 → 页 5——教官处领奖闭环。奖励窗动作（8..22 = SELECTED_QUEST_REWARD1..15 选项下标；
 	 * {@link #ACTION_NO_REWARD} = 无选择确认，不占选项下标；108/110..124 = 自动确认通道）→
-	 * {@link NativeReportRewardFlow} 结算完成。
+	 * {@link NativeReportRewardFlow} 结算完成（npc-complete finish=SELECTION_DIALOG → 回页 10）。
+	 * 打开（-1/26）不由本面认领（开门归引擎平面：重放或通用页 10 列表，2026-10-05 实机 834166）。
 	 * <p>
 	 * 2026-10-03 回归补面：P7 步 f 切换批（715a00136）删旧后该面缺失，已接玩家在交付 NPC 上
 	 * 31 零响应（quests.log 2026-09-28 80790 基线：31 → REWARD+页5 → 23 → COMPLETE）。
+	 * 2026-10-05 中继步行扩展：注册从零步行放至全部 Talk 行（真端恒建对象 #2），REWARD 态服务
+	 * 中继链行交付（实机 19671：收口后教官处无交付路由）。
 	 * <p>
-	 * The delivery-report face for zero-step Talk rows (the always-registered retail reward object):
-	 * START 31 reports to REWARD + page 5, and reward-window actions settle through the native claim.
+	 * The delivery-report face (the always-registered retail reward object #2). Zero-step rows use
+	 * START report paths; relay-step chain rows are served in REWARD only, where the reward window
+	 * and the native claim settle the quest.
 	 */
 	private boolean dispatchReportDialog(Player player, int npcId, int dialogId, int objectId, int requestedOwner) {
 		List<Integer> questIds = reportTalksByNpcId.get(npcId);
@@ -1307,6 +1321,16 @@ public final class DataDrivenNativeRuntime {
 			// Not the START-only state() helper: the delivery face serves START and REWARD alike.
 			QuestState state = player.getQuestStateList().getQuestState(questId);
 			if (state == null) {
+				continue;
+			}
+			// START 态的推进（报告确认/一键报告）只服务零步 Talk 行（DD_TALK_SIMPLE）：中继步 Talk 链行
+			// 在 START 态由进度面 owns（玩家必须先在中继 NPC 处走完进度步），本面只在 REWARD 态服务其
+			// 交付/领奖（真端交付对象 #2 对已收口行给奖励窗）。缺此守卫会让中继步行在教官处行选 31 时
+			// 被「一键报告」直接推进 REWARD（跳过中继步）——2026-10-05 实机 19671 回归面即按此收窄。
+			// The START-state advance paths serve zero-step Talk rows only; relay-step chain rows are
+			// owned by the progress face until REWARD, where this face serves delivery and claim.
+			boolean zeroStep = plansByQuestId.getOrDefault(questId, List.of()).isEmpty();
+			if (state.getStatus() == QuestStatus.START && !zeroStep) {
 				continue;
 			}
 			// 报告两步语义（裁定 a，2026-10-03）：任务行（31）只发客户端声明的报告确认页
@@ -1376,6 +1400,18 @@ public final class DataDrivenNativeRuntime {
 				continue;
 			}
 			if (state(player, questId) != null) {
+				continue;
+			}
+			// 待交付（REWARD）同样不属接取面：真端 0x640 条件把未接取玩家路由到对象 #1、活跃行
+			// 路由到交付对象 #2。缺此守卫时 REWARD 态的 ≥1000 动作（如 1009，客户端从成功页自动
+			// 回发）会被本面 default 原样回发，劫走交付面的奖励窗路由（2026-10-05 实机 19671 回归面；
+			// 旧视图 `reward + 1009 → 奖励窗` 断言 ReportToManySetSucceedAlignmentTest）。
+			// The REWARD state does not belong to the acquire face either: the retail 0x640
+			// condition routes active rows to the delivery object #2. Without the guard a REWARD
+			// action >= 1000 (e.g. the client auto-sent 1009) would be echoed here and steal the
+			// delivery face's reward-window route.
+			QuestState active = player.getQuestStateList().getQuestState(questId);
+			if (active != null && active.getStatus() == QuestStatus.REWARD) {
 				continue;
 			}
 			switch (dialogId) {
@@ -1735,8 +1771,9 @@ public final class DataDrivenNativeRuntime {
 	 * 2026-10-05 实机 834166：进行中阶段页不得占用开门/挡同 NPC 其余可接任务），顺序页动作
 	 * （`10000+K`，K == 当前步 + 1）步进，乱序静默零写；`1009` = 步进 + 报告通道（末步转待领奖
 	 * 并发奖励窗页 5）；`39` = 交付检查按钮（未持满 → 客户端声明失败页；持满 → 按门扣除 + 报告收尾，
-	 * 参考 `_80875FightAgainstMechanerk` 的 `checkQuestItems(0,1,false,10000,10001)`）；`10255` = 步进 +
-	 * 完成页；`1008` 与其余 ≥1000 动作原样回发（不写状态）。
+	 * 参考 `_80875FightAgainstMechanerk` 的 `checkQuestItems(0,1,false,10000,10001)`）；`10255` = 步进 + 关窗
+	 * （完成通道 `0x5d8`，零发页；退役 19671/10500/13961 尾 = `LEVEL_AND_VISIBILITY_REFRESH sync + close-dialog`）；
+	 * `1008` 与其余 ≥1000 动作原样回发（不写状态）。
 	 * The shared retail dialog plane: only the hit matching the quest's current step is served.
 	 */
 	private boolean dispatchDialog(Player player, List<StepHit> hits, int dialogId, int objectId,
@@ -1795,8 +1832,21 @@ public final class DataDrivenNativeRuntime {
 				return true;
 			}
 			if (dialogId == ACTION_ADVANCE_COMPLETE) {
-				advance(player, state, hit.stepIndex(), plan.lastStep());
-				PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(objectId, PAGE_COMPLETE, hit.questId()));
+				if (!advance(player, state, hit.stepIndex(), plan.lastStep())) {
+					return false;
+				}
+				// 真端 `0x280f` = SetProgress + 完成通道 `mgr+0x5d8`。2026-10-05 实机实证与全量普查
+				// （SETPRO 尾 3479/3923 = close-dialog+sync）裁定：0x5d8 = 关窗、零发页；收口另带
+				// `sync-quest-state mode=LEVEL_AND_VISIBILITY_REFRESH`（退役 19671/10500/13961 同形）⇒
+				// 刷新可见性/附近任务轴（NPC 任务标记）后关窗。不再下发「完成页」1008——2026-10-05
+				// 实机 19671：页 1008(QUEST_COMPLETE, 带 questId) 误显「任务已完成」，任务实际停在
+				// 待交付（回教官报告），且 Mellina 头顶标记不刷新、玩家卡在「有标记无对话」。
+				// Retail 0x280f = SetProgress + the mgr+0x5d8 completion channel, adjudicated as
+				// close-dialog with zero page (the 2026-10-05 live proof and the SETPRO census
+				// 3479/3923 close-dialog tails). The tail also refreshes level/visibility (retail
+				// LEVEL_AND_VISIBILITY_REFRESH) so npc quest markers update.
+				refreshLevelAndVisibility(player);
+				PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(0, 0));
 				return true;
 			}
 			if (dialogId == ACTION_COMPLETE) {
@@ -1848,6 +1898,27 @@ public final class DataDrivenNativeRuntime {
 		} else {
 			sendStagePage(player, objectId, state.getQuestId(), DataDrivenProgress.step(
 				state.getQuestVars().getQuestVars()));
+		}
+	}
+
+	/**
+	 * 收口后的等级与可见性刷新（真端 `sync-quest-state mode=LEVEL_AND_VISIBILITY_REFRESH` 的
+	 * {@code updateZone + updateNearbyQuests} 轴；与 {@link NativeQuestStartPort} 建档刷新同形）。
+	 * 单测/无控制器环境 best-effort（状态已提交）。等级任务重评估轴（`onQuestStateChanged`）在
+	 * tablelane 无先例，未镜像（登记于本主题 summary）。
+	 * The level-and-visibility refresh after an advance (the visibility axis of the retail
+	 * LEVEL_AND_VISIBILITY_REFRESH sync, mirroring the NativeQuestStartPort refresh). Best effort in
+	 * headless environments; the level-quest reevaluation axis is not mirrored (registered).
+	 */
+	private static void refreshLevelAndVisibility(Player player) {
+		try {
+			if (player.getController() != null) {
+				player.getController().updateZone();
+				player.getController().updateNearbyQuests();
+			}
+		} catch (RuntimeException ignored) {
+			// 单测/无控制器环境：状态已提交，刷新为尽力而为。
+			// Headless environments: the state is committed; the refresh is best effort.
 		}
 	}
 
@@ -2081,6 +2152,11 @@ public final class DataDrivenNativeRuntime {
 	/** 接取对话兴趣面（npcId → 任务）。 / Acquire talk interests (npc → quests). */
 	public Map<Integer, List<Integer>> acquireTalkInterests() {
 		return acquireTalksByNpcId;
+	}
+
+	/** 交付对象兴趣面（reward NPC → Talk 行）。 / Delivery-object interests (reward npc → Talk rows). */
+	public Map<Integer, List<Integer>> reportTalkInterests() {
+		return reportTalksByNpcId;
 	}
 
 	/** 接取物品兴趣面（itemId → 任务）。 / Acquire item interests (item → quests). */

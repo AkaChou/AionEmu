@@ -730,6 +730,75 @@ class DataDrivenNativeRuntimeGateTest {
 	}
 
 	/**
+	 * ⑤e 中继末步 SET_SUCCEED(10255) 收口（2026-10-05 实机 19671「蕾娜的欢迎问候」：商人梅利娜 806699
+	 * 对话收口）：真端 `0x280f` = SetProgress + 完成通道 `0x5d8`＝**关窗零发页**（退役 19671 尾 =
+	 * `LEVEL_AND_VISIBILITY_REFRESH sync + close-dialog`；SETPRO 全量普查 3479/3923 关窗尾）。
+	 * 旧实现的「完成页 1008」会让客户端误显「任务已完成」，任务实际停在待交付（回教官 806698 报告），
+	 * 且 NPC 任务标记不刷新、玩家卡在「有标记无对话」。
+	 * <p>
+	 * The relay last-step SET_SUCCEED tail: advance to REWARD, refresh visibility and close the
+	 * window (retail 0x280f / 0x5d8); no completion page is sent.
+	 */
+	@Test
+	void relaySetSucceedClosesTheWindowAfterTheAdvance() {
+		int questId = 19671;
+		assertTrue(runtime.routedQuestIds().contains(questId), "19671 必须被切换批路由");
+		int stepIndex = table.find(questId).orElseThrow().steps().getLast().index();
+		int npcId = keyOf(runtime.talkInterests(), questId, stepIndex);
+		Player player = NativeTalkFixture.player();
+		QuestState state = NativeTalkFixture.add(player, questId, QuestStatus.START, stepIndex);
+
+		NativeTalkFixture.clearPackets(player);
+		assertTrue(runtime.onDialog(player, npcId, 10255, 1, questId), "SET_SUCCEED 必须被进度面收口");
+		assertEquals(QuestStatus.REWARD, state.getStatus(), "收口 = 待交付（回教官报告）");
+		assertEquals(stepIndex + 1, DataDrivenProgress.step(state.getQuestVars().getQuestVars()),
+			"收口写步 = 步号 + 1");
+		NativeTalkFixture.assertCloseDialog(player);
+	}
+
+	/**
+	 * ⑩c 中继步 Talk 链行的交付对象 #2（教官 806698 = `LC1_L_grow_npc_Rena_01`）：START 态不认领
+	 * （进度面 owns——缺守卫会让「一键报告」跳过中继步直落 REWARD）；REWARD 态 31 → 奖励窗页 5，
+	 * 领奖确认（23）→ 结算 + npc-complete finish=SELECTION_DIALOG 回页 10（2026-10-05 实机 19671：
+	 * 收口后教官处无交付路由，任务卡在「向成长支援教官报告」无法领奖）。
+	 * <p>
+	 * The relay Talk chain delivery object: START is not claimed by this face; REWARD opens the
+	 * reward window and settles through the claim flow.
+	 */
+	@Test
+	void relayTalkChainRowsDeliverOnTheRewardInstructor() {
+		int questId = 19671;
+		Map<Integer, List<Integer>> reportInterests = runtime.reportTalkInterests();
+		assertTrue(reportInterests.getOrDefault(806698, List.of()).contains(questId),
+			"教官 806698（静态数据 LC1_L_grow_npc_Rena_01）必须注册 19671 的交付对象");
+		int rewardNpc = 806698;
+
+		// START（中继步未走）：教官处行选 31 不得跳步推进（进度面 owns）。
+		Player started = NativeTalkFixture.player();
+		NativeTalkFixture.add(started, questId, QuestStatus.START, 0);
+		NativeTalkFixture.clearPackets(started);
+		assertFalse(runtime.onDialog(started, rewardNpc, 31, 1, questId), "START 态交付面不得认领中继步行");
+		assertTrue(NativeTalkFixture.dialogPages(started).isEmpty(), "START 态零发页");
+
+		// REWARD（已收口）：31 → 奖励窗页 5；23（NOREWARD）→ 结算 + 回页 10。
+		Player rewarded = NativeTalkFixture.player();
+		NativeTalkFixture.add(rewarded, questId, QuestStatus.REWARD, 1);
+		NativeTalkFixture.clearPackets(rewarded);
+		assertTrue(runtime.onDialog(rewarded, rewardNpc, 31, 1, questId), "REWARD 31 必须开奖励窗");
+		NativeTalkFixture.assertOnlyDialogPage(rewarded, 5);
+		NativeTalkFixture.clearPackets(rewarded);
+		assertTrue(runtime.onDialog(rewarded, rewardNpc, 1009, 1, questId), "REWARD 1009 必须重开奖励窗");
+		NativeTalkFixture.assertOnlyDialogPage(rewarded, 5);
+
+		claims.calls = 0;
+		NativeTalkFixture.clearPackets(rewarded);
+		assertTrue(runtime.onDialog(rewarded, rewardNpc, 23, 1, questId), "领奖确认必须结算");
+		assertEquals(1, claims.calls, "领奖口必须被调用一次");
+		assertEquals(List.of(10), NativeTalkFixture.dialogPages(rewarded),
+			"结算后回选择对话页 10（npc-complete finish=SELECTION_DIALOG）");
+	}
+
+	/**
 	 * ⑩ Talk 接取对话面（真端 `FUN_180c47220` 词汇，只服务无状态玩家）：行选 31/26 → 4762；1002 → 接取 +
 	 * 1003；1003 → 1004；20000/20001 收尾 → 关窗页 0（旧 XML close-dialog）；1008/其余 ≥1000 原样回发；
 	 * &lt;1000 零动作；1007 → 客户端契约问询窗（fail-closed）；已接取玩家不得再见接取入口页；
