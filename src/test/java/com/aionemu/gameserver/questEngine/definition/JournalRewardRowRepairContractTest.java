@@ -1,7 +1,6 @@
 package com.aionemu.gameserver.questEngine.definition;
 
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
-import com.aionemu.gameserver.questEngine.retail.RetailQuestDriver;
 import com.aionemu.gameserver.questEngine.runtime.QuestMutationPlan;
 import com.aionemu.gameserver.questEngine.runtime.QuestMutationPlanner;
 import com.aionemu.gameserver.questEngine.runtime.QuestSnapshot;
@@ -252,6 +251,9 @@ class JournalRewardRowRepairContractTest {
 	@Test
 	void rewardRowEqualsTheClientJournalLastRow() throws Exception {
 		for (Contract contract : CONTRACTS) {
+			if (retiredOnly(contract.questId())) {
+				continue;
+			}
 			assertEquals(contract.rewardRow(), rewardRow(definition(contract.questId()).definition()),
 				() -> "quest " + contract.questId() + " reward journal row");
 		}
@@ -260,6 +262,9 @@ class JournalRewardRowRepairContractTest {
 	@Test
 	void persistedRewardRowsAreRepairedOnEnterWorld() throws Exception {
 		for (Contract contract : CONTRACTS) {
+			if (retiredOnly(contract.questId())) {
+				continue;
+			}
 			CompiledQuestDefinition compiled = definition(contract.questId());
 			QuestTransition recovery = recoveryRoute(compiled.definition());
 			assertEquals(List.of(
@@ -283,26 +288,27 @@ class JournalRewardRowRepairContractTest {
 	}
 
 	/**
-	 * 真端驱动的同一批行：不许再有 repair 边，且领奖态投影必须就是饱和计数（客户端看到的行由门控推导）。
-	 * The same rows under retail driving: no repair edge, and reward projects the saturated counter.
+	 * 真端驱动的同一批行（2026-10-05 重锚；原 lax overlay 视图随 P7 步 f 退场）：退役行无 IR，
+	 * 无 source 的 enter-world 修复边在结构上不可能；守卫 = 每一行必须确属退役行（防名单陈旧
+	 * 静默缩水）。领奖投影口径由 native 车道门承担。
+	 * The same rows under retail driving (re-anchored 2026-10-05): with no IR left a source-less
+	 * repair edge is structurally impossible; the guard keeps the list honest (every listed row must
+	 * be retired). The reward-projection caliber is owned by the native lane gates.
 	 */
 	@Test
-	void retailDrivenRowsCarryNoJournalRepairEdge() throws Exception {
+	void retailDrivenRowsCarryNoJournalRepairEdge() {
 		for (int questId : RETAIL_DRIVEN) {
-			QuestDefinition definition = definition(questId).definition();
-			assertTrue(definition.transitions().stream().noneMatch(route ->
-					route.sourceNode() == null && route.event() instanceof QuestEvent.EnterWorld),
-				() -> "quest " + questId + " is retail-driven and must not keep a source-less enter-world edge");
-			assertTrue(definition.nodes().stream()
-					.filter(node -> node.projection().status() == QuestStatus.REWARD)
-					.allMatch(node -> node.projection().variables().values().stream().anyMatch(value -> value > 0)),
-				() -> "quest " + questId + " reward must project the saturated kill counters");
+			assertTrue(RetiredQuestIds.contains(questId),
+				() -> "quest " + questId + " is retail-driven and must be a retired row");
 		}
 	}
 
 	@Test
 	void noRewardRouteWritesAStaleJournalRow() throws Exception {
 		for (Contract contract : CONTRACTS) {
+			if (retiredOnly(contract.questId())) {
+				continue;
+			}
 			QuestDefinition definition = definition(contract.questId()).definition();
 			List<QuestTransition> rewardRoutes = definition.transitions().stream()
 				.filter(candidate -> "reward".equals(candidate.targetNode()))
@@ -352,23 +358,33 @@ class JournalRewardRowRepairContractTest {
 	}
 
 	/**
-	 * 生产定义：XML 目录 + 真端 overlay。已退役任务（如 2542）的 XML 只在 git 历史里，
-	 * 定义必须走生产视图，否则本测试会在退役后失效。
-	 * Production definition: retired quests come from the retail driver, not from XML.
+	 * 定义只来自 XML 目录：退役行（如 1218/16900）无 IR——调用方先经 retiredOnly 跳过。
+	 * Definitions come from the XML directory only: retired rows (e.g. 1218/16900) have no IR and
+	 * are skipped by retiredOnly before the lookup.
 	 */
 	private static CompiledQuestDefinition definition(int questId) throws Exception {
-		// TEMP-VERIFY(view): 并行 SimpleTalk 批次落定前生产覆盖门不可用，用宽松 overlay 验证本断言。
-		return verificationView().find(questId)
+		return catalog().findExecutable(questId)
 			.orElseThrow(() -> new IllegalStateException("missing production quest definition " + questId));
 	}
 
-	// TEMP-VERIFY(view): 并行批次落定前的宽松生产视图（XML 目录 + 真端驱动，跳过覆盖门）。
+	/**
+	 * 退役行（目录缺行）跳过并要求确属退役（防名单陈旧静默缩水）；XML 保留行仍逐条断言。
+	 * Retired rows (absent from the catalog) are skipped but must be really retired; XML rows still assert.
+	 */
+	private static boolean retiredOnly(int questId) throws Exception {
+		if (catalog().findExecutable(questId).isPresent()) {
+			return false;
+		}
+		assertTrue(RetiredQuestIds.contains(questId), () -> "quest " + questId + " missing and not retired");
+		return true;
+	}
+
 	private static final java.util.concurrent.atomic.AtomicReference<QuestCatalog> VIEW =
 		new java.util.concurrent.atomic.AtomicReference<>();
 
-	private static QuestCatalog verificationView() {
+	private static QuestCatalog catalog() {
 		return VIEW.updateAndGet(current -> current != null ? current
-			: RetailQuestDriver.overlay(QuestDefinitionDirectoryLoader.compile(
-				JournalRewardRowRepairContractTest.class.getClassLoader())));
+			: QuestDefinitionDirectoryLoader.compile(
+				JournalRewardRowRepairContractTest.class.getClassLoader()));
 	}
 }

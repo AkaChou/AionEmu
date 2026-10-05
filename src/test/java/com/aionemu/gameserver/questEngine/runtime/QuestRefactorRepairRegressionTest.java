@@ -3,12 +3,9 @@ package com.aionemu.gameserver.questEngine.runtime;
 import com.aionemu.gameserver.questEngine.definition.QuestDefinitionDirectoryLoader;
 import com.aionemu.gameserver.questEngine.definition.AfterCommitAction;
 import com.aionemu.gameserver.questEngine.definition.CompiledQuestDefinition;
-import com.aionemu.gameserver.questEngine.definition.QuestAction;
 import com.aionemu.gameserver.questEngine.definition.QuestCatalog;
 import com.aionemu.gameserver.questEngine.definition.QuestEvent;
-import com.aionemu.gameserver.questEngine.definition.QuestStateSyncMode;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
-import com.aionemu.gameserver.questEngine.retail.RetailQuestDriver;
 import org.junit.jupiter.api.Test;
 
 
@@ -16,49 +13,19 @@ import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * 使用真实编译定义验证改造后的计数、客户端位域和交付边界。
+ * <p>
+ * 2026-10-05 清扫：24155（皮革翅膀简报清 SECTION_5 法）主语已退役（retention: RETAIL_TABLE）——
+ * IR 不复存在，方法随其车道退场（P7/P8 先例：退役任务的 IR 断言不保留；阶梯语义由 native 车道
+ * 门承担）。残余方法只服务 XML 保留行。
  * Exercises compiled production counters, client sections and hand-in boundaries after migration.
+ * The 24155 method retired with its quest (retention: RETAIL_TABLE): retail-driven rows have no IR,
+ * so the IR assertion leaves with the lane (the P7/P8 precedent). The remaining method only serves
+ * XML-retained quests.
  */
 class QuestRefactorRepairRegressionTest {
-
-	@Test
-	void leatherWingsBriefingTalkClearsSectionFiveWithoutCountingAKill() throws Exception {
-		var compiled = load(24155);
-		assertEquals(Map.of("var0", 0, "var5", 1), compiled.definition().nodes().stream()
-			.filter(n -> n.label().equals("started")).findFirst().orElseThrow().projection().variables());
-		var state = snapshot(compiled, Map.of("var0", 0, "var5", 1), Map.of());
-		// P0-2 规范形：简报入口是 QUEST_SELECT 一步清 SECTION_5（select2 页链与 SETPRO2 按钮不再下发）。
-		// Canonical since P0-2: the briefing entry is QUEST_SELECT clearing SECTION_5 in one step
-		// (the select2 page chain and its SETPRO2 button are no longer served).
-		var talk = onlyPlan(compiled, state, new QuestEvent.TalkToNpc(204785, 31));
-		// 清 SECTION_5 时任务书要从"去见简报 NPC"切到击杀行：LEVEL_AND_VISIBILITY_REFRESH
-		// （含可见性/等级刷新，PACKET_ONLY 的超集），与串行族一致。
-		// Clearing SECTION_5 must re-render the journal rows: LEVEL_AND_VISIBILITY_REFRESH, like the serial family.
-		assertEquals(List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
-			new AfterCommitAction.CloseDialog()), talk.afterCommit());
-		state = next(state, talk);
-		assertEquals(Map.of("var0", 0, "var5", 0),
-			compiled.definition().progressLayout().unpack(state.packedVariables()));
-		for (int count = 1; count <= 3; count++) {
-			// 未满段 QUEST_SELECT 不得进领奖（规范形交付边只挂满段节点）。
-			// Non-full QUEST_SELECT must not reach reward (the canonical delivery edge hangs off the
-			// full node only).
-			assertTrue(plans(compiled, state, new QuestEvent.TalkToNpc(204701, 31)).isEmpty());
-			state = next(state, onlyPlan(compiled, state, new QuestEvent.KillNpc(700290)));
-			assertEquals(Map.of("var0", count, "var5", 0),
-				compiled.definition().progressLayout().unpack(state.packedVariables()));
-		}
-		assertEquals(QuestStatus.REWARD,
-			onlyPlan(compiled, state, new QuestEvent.TalkToNpc(204701, 31)).nextStatus());
-	}
-
-	/** 交付边界契约行。 / One hand-in boundary contract row. */
-	private record HandInContract(int questId, int item, int required, int npc,
-			Map<Integer, Integer> successPlansByAction) {
-	}
 
 	@Test
 	void namusContinuationKeepsStateAndReturnsTheActualClientPage() throws Exception {
@@ -72,28 +39,21 @@ class QuestRefactorRepairRegressionTest {
 	}
 
 	private static CompiledQuestDefinition load(int id) throws Exception {
-		// 退役任务的生产 XML 只在 git 历史里：统一取生产视图（XML 目录 + 真端 overlay）。
-		// TEMP-VERIFY(view): 并行 SimpleTalk 批次落定前生产覆盖门不可用，用宽松 overlay 验证本断言。
-		return VIEW.updateAndGet(current -> current != null ? current
-				: RetailQuestDriver.overlay(QuestDefinitionDirectoryLoader.compile(
-					QuestRefactorRepairRegressionTest.class.getClassLoader())))
-			.find(id)
-			.orElseThrow(() -> new IllegalStateException("missing production quest definition " + id));
+		// XML 保留行直接取 XML 目录编译产物（退役任务无 IR，见类注释）。
+		// XML-retained rows come straight from the XML directory compile (retired rows have no IR).
+		return CATALOG.updateAndGet(current -> current != null ? current
+				: QuestDefinitionDirectoryLoader.compile(QuestRefactorRepairRegressionTest.class.getClassLoader()))
+			.findExecutable(id)
+			.orElseThrow(() -> new IllegalStateException("quest " + id + " is not XML-retained"));
 	}
 
-	// TEMP-VERIFY(view): 并行批次落定前的宽松生产视图（XML 目录 + 真端驱动，跳过覆盖门）。
-	private static final java.util.concurrent.atomic.AtomicReference<QuestCatalog> VIEW =
+	private static final java.util.concurrent.atomic.AtomicReference<QuestCatalog> CATALOG =
 		new java.util.concurrent.atomic.AtomicReference<>();
 
 	private static QuestSnapshot snapshot(CompiledQuestDefinition compiled, Map<String, Integer> variables,
 			Map<Integer, Integer> inventory) {
 		return new QuestSnapshot(7, compiled.id(), QuestStatus.START,
 			compiled.definition().progressLayout().pack(variables), inventory);
-	}
-
-	private static QuestSnapshot next(QuestSnapshot before, QuestMutationPlan plan) {
-		return new QuestSnapshot(before.playerId(), before.questId(), plan.nextStatus(),
-			plan.nextPackedVariables(), before.inventory());
 	}
 
 	private static List<QuestMutationPlan> plans(CompiledQuestDefinition compiled, QuestSnapshot state,
