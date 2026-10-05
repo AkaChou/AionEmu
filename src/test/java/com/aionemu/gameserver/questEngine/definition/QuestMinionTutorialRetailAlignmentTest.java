@@ -62,7 +62,11 @@ class QuestMinionTutorialRetailAlignmentTest {
 		assertTrue(handler.owns(28808), "28808 在真端表行集内");
 		assertFalse(handler.routes(28808), "28808 仍保留 XML 定义：native 只装载不路由（单一 owner）");
 		assertEquals(830392, handler.acquireNpc(28808), "接取 NPC");
-		assertNull(handler.rewardNpc(28808), "交付 NPC 未唯一解析（证据面冻结）");
+		// P9 前缀归一化解冻（91eaef381，2026-10-03）：表写 NPC_Housing_FOBJ_01 而模板写
+		// Housing_FOBJ_01——精确前缀变体解析到对象模板 730534（旧「未唯一解析」冻结已废止）。
+		// The P9 NPC_ prefix normalization lifts the old freeze: the table name resolves to the
+		// Housing_FOBJ_01 object template 730534.
+		assertEquals(730534, handler.rewardNpc(28808), "交付 NPC（Housing_FOBJ_01 对象模板）");
 		assertEquals(0, handler.relayCount(28808), "中继步数");
 		assertEquals(new SimpleTalkHandler.ItemStack(182213216, 1),
 				handler.acceptGiveItem(28808), "接取侧发放");

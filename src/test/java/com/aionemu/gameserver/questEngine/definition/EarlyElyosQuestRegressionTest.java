@@ -12,6 +12,7 @@ import com.aionemu.gameserver.questEngine.runtime.QuestStartEligibility;
 import com.aionemu.gameserver.questEngine.tablelane.NativeQuestStartPort;
 import com.aionemu.gameserver.questEngine.tablelane.NativeQuestXmlTable;
 import com.aionemu.gameserver.questEngine.tablelane.NativeTalkFixture;
+import com.aionemu.gameserver.questEngine.tablelane.SimpleCollectItemHandler;
 import com.aionemu.gameserver.questEngine.tablelane.SimpleTalkHandler;
 import com.aionemu.gameserver.questEngine.tablelane.SimpleUseItemHandler;
 import org.junit.jupiter.api.Test;
@@ -33,14 +34,21 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * <p>
  * P3 re-anchor (plan §8.9): the rows that switched to the native lane assert retail-row, quest.xml and
  * client-page facts only; the remaining quests keep their IR assertions.
+ * <p>
+ * 2026-10-05 语义重锚（对实机修正批的现行为）：真端 cab520 两支接取（1002/20000）均发物，尾部
+ * 分别为页 1003 与关窗（0x5d8）；中继推进（10000..02）after-commit = 关窗零发页；报告为两步语义
+ * （31 只发契约确认页，1009 推进）；1137 随 P4 采集族改为原生面断言。
+ * 2026-10-05 semantic re-anchor against the live-verified batch behavior: both cab520 accept branches
+ * grant; the accept tails are page 1003 / close; relay advances close the window (zero page); the
+ * report is two-step; 1137 asserts the native SimpleCollectItem lane.
  */
 class EarlyElyosQuestRegressionTest {
 	/**
-	 * 1118（폴리니아의 연고）：真端 cab520 只在 20000 分支发放 {@code give_item}
-	 * （{@code ITEM_QUEST_1118A} ×1），1002 仅建档；交付门由表的 {@code item_check} 声明，
-	 * 该行未声明 ⇒ 中继交还不回收工作物品。
-	 * 1118: the retail accept branch grants the work item on 20000 only, and the row declares no
-	 * {@code item_check}, so the hand-in neither gates nor consumes it.
+	 * 1118（폴리니아의 연고）：真端 cab520 的 1002/20000 两支接取均发放 {@code give_item}
+	 * （{@code ITEM_QUEST_1118A} ×1），尾部 = 页 1003 / 关窗（0x3ea / 0x4e20）；交付门由表的
+	 * {@code item_check} 声明，该行未声明 ⇒ 中继交还不回收工作物品。
+	 * 1118: both retail accept branches grant the work item, with the page-1003 and close tails;
+	 * the row declares no {@code item_check}, so the hand-in neither gates nor consumes it.
 	 */
 	@Test
 	void ointmentAcceptanceGrantsTheWorkItemOnTheRetailAcceptAction() {
@@ -54,29 +62,30 @@ class EarlyElyosQuestRegressionTest {
 		assertEquals(1, handler.relayCount(1118), "中继步数 = 1（Kustanon 203070）");
 		assertTrue(handler.workItems(1118).isEmpty(), "真端行未声明 item_check：交付门不生效");
 
-		// 1002（QUEST_ACCEPT_1）：只建档，不发放。
+		// 1002（QUEST_ACCEPT_1，真端 0x3ea）：建档 + 发放 give_item + 接取确认页 1003。
 		Player plainAccept = NativeTalkFixture.player(Race.ELYOS, PlayerClass.WARRIOR, 20);
 		NativeTalkFixture.clearPackets(plainAccept);
 		assertTrue(itemHandler.onDialog(NativeTalkFixture.dialog(plainAccept, 203059, 1118, 1002)), "1002 接取");
 		assertEquals(QuestStatus.START, plainAccept.getQuestStateList().getQuestState(1118).getStatus());
 		NativeTalkFixture.assertOnlyDialogPage(plainAccept, SimpleTalkHandler.PAGE_ACCEPTED);
-		assertEquals(List.of(), inventory.calls(), "1002 不发放");
+		assertEquals(List.of("give:182200224:1"), inventory.calls(), "1002 真端同发 give_item（两支均发物）");
 
-		// 20000：建档 + 发放工作物品（真端 cab520 的 give_item 分支）。
+		// 20000（真端 0x4e20）：建档 + 发放工作物品 + 关窗收尾（无确认页；实机 14110）。
 		inventory.clear();
 		Player itemAccept = NativeTalkFixture.player(Race.ELYOS, PlayerClass.WARRIOR, 20);
 		NativeTalkFixture.clearPackets(itemAccept);
 		assertTrue(itemHandler.onDialog(NativeTalkFixture.dialog(itemAccept, 203059, 1118, 20000)), "20000 接取");
 		assertEquals(QuestStatus.START, itemAccept.getQuestStateList().getQuestState(1118).getStatus());
-		NativeTalkFixture.assertOnlyDialogPage(itemAccept, SimpleTalkHandler.PAGE_ACCEPTED);
+		NativeTalkFixture.assertCloseDialog(itemAccept);
 		assertEquals(List.of("give:182200224:1"), inventory.calls(), "20000 发放工作物品");
 	}
 
 	/**
-	 * 1118 的交付段：中继步 1（Kustanon）推进到步 1，交付 NPC Melpone(203079) 的 1009 报告在
-	 * 中继全满后翻 REWARD 并下发奖励窗；真端行无 item_check ⇒ 报告不校验也不扣除工作物品。
-	 * 1118's hand-in: relay step 1 advances, then the report at Melpone(203079) flips REWARD with the
-	 * reward window; the row has no item_check, so the report neither checks nor consumes the item.
+	 * 1118 的交付段：中继步 1（Kustanon）推进到步 1（真端 0x5d8 关窗零发页），交付 NPC
+	 * Melpone(203079) 的 1009 报告在中继全满后翻 REWARD 并下发奖励窗；真端行无 item_check ⇒
+	 * 报告不校验也不扣除工作物品。
+	 * 1118's hand-in: relay step 1 advances (retail 0x5d8 close, zero page), then the report at
+	 * Melpone(203079) flips REWARD with the reward window; the row has no item_check.
 	 */
 	@Test
 	void ointmentDeliveryWalksTheRetailRelayChainIntoTheRewardWindow() {
@@ -94,7 +103,8 @@ class EarlyElyosQuestRegressionTest {
 		NativeTalkFixture.clearPackets(player);
 		assertTrue(handler.onDialog(NativeTalkFixture.dialog(player, 203070, 1118, 10000)), "中继步 1");
 		assertEquals(1, player.getQuestStateList().getQuestState(1118).getQuestVars().getQuestVars(), "步号 = 1");
-		NativeTalkFixture.assertOnlyDialogPage(player, 1352);
+		// 中继推进 after-commit = 真端关窗零发页（0x5d8）。
+		NativeTalkFixture.assertCloseDialog(player);
 
 		NativeTalkFixture.clearPackets(player);
 		assertTrue(handler.onDialog(NativeTalkFixture.dialog(player, 203079, 1118, 1009)), "交付报告");
@@ -103,10 +113,11 @@ class EarlyElyosQuestRegressionTest {
 	}
 
 	/**
-	 * 1131（요새 내부 대화 퀘스트）：接取 Hyacinte(203097) 发 ITEM_QUEST_1131A(182200506)，
-	 * 中继 Shugo_LF1a_01(799093) 的 10000 换手（发 DOC_QUEST_1131B 182200507、扣回 1131A），
-	 * 交付 Nadaelo(203101) 报告翻 REWARD；con_quest 链式接取窗 = 1132。
-	 * 1131: Hyacinte grants 1131A on accept, the Shugo relay swaps it for 1131B, Nadaelo hands in.
+	 * 1131（요새 내부 대화 퀘스트）：接取 Hyacinte(203097) 发 ITEM_QUEST_1131A(182200506)（20000
+	 * 尾部 = 关窗），中继 Shugo_LF1a_01(799093) 的 10000 换手（发 DOC_QUEST_1131B 182200507、
+	 * 扣回 1131A；真端 0x5d8 关窗零发页），交付 Nadaelo(203101) 报告翻 REWARD；con_quest = 1132。
+	 * 1131: Hyacinte grants 1131A on accept (20000 tail closes), the Shugo relay swaps it for 1131B
+	 * (retail 0x5d8 close, zero page), Nadaelo hands in.
 	 */
 	@Test
 	void armourTransferFollowsTheRetailRelayStepChannels() {
@@ -124,7 +135,7 @@ class EarlyElyosQuestRegressionTest {
 
 		NativeTalkFixture.clearPackets(player);
 		assertTrue(itemHandler.onDialog(NativeTalkFixture.dialog(player, 203097, 1131, 20000)), "接取");
-		NativeTalkFixture.assertOnlyDialogPage(player, SimpleTalkHandler.PAGE_ACCEPTED);
+		NativeTalkFixture.assertCloseDialog(player);
 		assertEquals(List.of("give:182200506:1"), inventory.calls(), "接取发放 1131A");
 
 		inventory.clear();
@@ -132,7 +143,7 @@ class EarlyElyosQuestRegressionTest {
 		assertTrue(itemHandler.onDialog(NativeTalkFixture.dialog(player, 799093, 1131, 10000)), "中继换手");
 		assertEquals(QuestStatus.START, player.getQuestStateList().getQuestState(1131).getStatus(),
 			"换手步不翻领奖态");
-		NativeTalkFixture.assertOnlyDialogPage(player, 1352);
+		NativeTalkFixture.assertCloseDialog(player);
 		assertEquals(List.of("give:182200507:1", "remove:182200506:1"), inventory.calls(), "步内先发后扣");
 
 		NativeTalkFixture.clearPackets(player);
@@ -191,7 +202,7 @@ class EarlyElyosQuestRegressionTest {
 
 		NativeTalkFixture.clearPackets(player);
 		assertTrue(itemHandler.onDialog(NativeTalkFixture.dialog(player, 700003, 1158, 10000)), "中继步 1");
-		NativeTalkFixture.assertOnlyDialogPage(player, 1352);
+		NativeTalkFixture.assertCloseDialog(player);
 		assertEquals(List.of("give:182200502:1"), inventory.calls(), "步内发放印章");
 
 		NativeTalkFixture.clearPackets(player);
@@ -340,7 +351,7 @@ class EarlyElyosQuestRegressionTest {
 		// The relay/report machinery continues on the row created through the real acquire axis.
 		NativeTalkFixture.clearPackets(player);
 		assertTrue(itemHandler.onDialog(NativeTalkFixture.dialog(player, 700175, 1414, 10000)), "中继步 1");
-		NativeTalkFixture.assertOnlyDialogPage(player, 1352);
+		NativeTalkFixture.assertCloseDialog(player);
 		assertEquals(List.of("give:182201349:1"), inventory.calls(), "步内发放");
 
 		NativeTalkFixture.clearPackets(player);
@@ -383,10 +394,17 @@ class EarlyElyosQuestRegressionTest {
 		assertEquals(QuestStatus.START, chestPlayer.getQuestStateList().getQuestState(1561).getStatus(),
 			"1002 只建档");
 
-		// 宝箱交付：31 直翻领奖态并下发奖励窗（真端报告领奖相位）；-1/1009 在领奖态自环重开窗。
-		// Chest hand-in: 31 flips REWARD with the reward window; -1/1009 re-open it at reward.
+		// 宝箱交付（两步报告，裁定 a）：31 只发契约声明的报告确认页（select5=2375）零推进；
+		// 报告确认（1009）才翻领奖态并下发奖励窗；-1/1009 在领奖态自环重开窗。
+		// Chest hand-in (two-step report): 31 shows the declared confirm page (select5=2375) without
+		// advancing; 1009 flips REWARD with the reward window; -1/1009 re-open it at reward.
 		NativeTalkFixture.clearPackets(chestPlayer);
-		assertTrue(chest.onDialog(NativeTalkFixture.dialog(chestPlayer, 700188, 1561, 31)), "宝箱 31 交付");
+		assertTrue(chest.onDialog(NativeTalkFixture.dialog(chestPlayer, 700188, 1561, 31)), "宝箱 31 报告确认页");
+		assertEquals(QuestStatus.START, chestPlayer.getQuestStateList().getQuestState(1561).getStatus(),
+			"31 零推进");
+		NativeTalkFixture.assertOnlyDialogPage(chestPlayer, 2375);
+		NativeTalkFixture.clearPackets(chestPlayer);
+		assertTrue(chest.onDialog(NativeTalkFixture.dialog(chestPlayer, 700188, 1561, 1009)), "宝箱 1009 交付");
 		assertEquals(QuestStatus.REWARD, chestPlayer.getQuestStateList().getQuestState(1561).getStatus());
 		NativeTalkFixture.assertOnlyDialogPage(chestPlayer, SimpleUseItemHandler.PAGE_REWARD_WINDOW);
 		for (int dialogId : List.of(-1, 1009)) {
@@ -497,12 +515,13 @@ class EarlyElyosQuestRegressionTest {
 		assertEquals(QuestStatus.START, player.getQuestStateList().getQuestState(1691).getStatus(),
 			"限制位集为空 ⇒ 建档 START");
 
-		// 接取后走三段阶梯与报告领奖的机械面。 / Walk the three-step ladder on the created row.
+		// 接取后走三段阶梯与报告领奖的机械面（每步推进 = 真端 0x5d8 关窗零发页）。
+		// Walk the three-step ladder on the created row (each advance closes, zero page).
 		for (int index = 0; index < ladder.length; index++) {
 			NativeTalkFixture.clearPackets(player);
 			assertTrue(itemHandler.onDialog(NativeTalkFixture.dialog(player, ladder[index][1], 1691,
 				10000 + index)), "第 " + (index + 1) + " 步推进");
-			NativeTalkFixture.assertOnlyDialogPage(player, SimpleTalkHandler.pageForStep(index + 1));
+			NativeTalkFixture.assertCloseDialog(player);
 		}
 		assertEquals(List.of("give:182201826:1"), inventory.calls(), "只有第 3 步发放");
 
@@ -513,28 +532,24 @@ class EarlyElyosQuestRegressionTest {
 	}
 
 	/**
-	 * 范围外红（登记不修）：1137 属 P4 SimpleCollectItem 族的真端行，其生产定义已由族编译器改为
-	 * 交付规范形，本用例仍按旧 IR 边的形状断言 ⇒ 随 P4 切换批重锚（不属 P3 步骤 5）。
-	 * Out-of-scope red (registered, not fixed): 1137 belongs to the P4 SimpleCollectItem family; its
-	 * production shape moved with the family compiler, so this IR-edge assertion re-anchors with P4.
+	 * 1137（요새 주변 상공 오브젝트 클릭퀘）：P4 起随 SimpleCollectItem 族原生直驱，原 IR 断言
+	 * 随车道退役（2026-10-05 重锚到原生面）：采集物 = 真端 collect_item1 的 quest_1137b(182200513)；
+	 * 交付 NPC Spiros(203111) 的交付门只认采集物，工作物品 quest_1137a(182200512) 不回收；
+	 * 交付/采集的端到端两步流程与零状态写由 {@code SimpleCollectItemNativeFamilyGateTest} 承担。
+	 * 1137 is driven natively by the SimpleCollectItem family since P4: the collected item is
+	 * quest_1137b (182200513); the hand-in at Spiros (203111) consumes only the collected item, never
+	 * the work item quest_1137a (182200512). The e2e flow lives in the family gate.
 	 */
 	@Test
 	void fossilCollectionPublishesProgressAndFinalNpcConsumesOnlyTheCollectedItem() {
-		CompiledQuestDefinition definition = load(1137);
-		QuestTransition collection = definition.definition().transitions().stream()
-			.filter(route -> Objects.equals(route.sourceNode(), "started")
-				&& route.targetNode().equals("started")
-				&& route.event().equals(new QuestEvent.CollectItem(182200513, 1)))
-			.findFirst().orElseThrow();
-		assertEquals(List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.PACKET_ONLY)),
-			collection.afterCommit());
-
-		QuestTransition report = route(definition, "started", "reward",
-			new QuestEvent.TalkToNpc(203111, 39));
-		assertTrue(report.conditions().contains(new QuestCondition.HasItem(182200513, 1)));
-		assertFalse(report.conditions().contains(new QuestCondition.HasItem(182200512, 1)));
-		assertTrue(report.actions().contains(new QuestAction.RemoveItem(182200513, 1)));
-		assertFalse(report.actions().contains(new QuestAction.RemoveItem(182200512, 1)));
+		SimpleCollectItemHandler handler = SimpleCollectItemHandler.instance();
+		assertTrue(handler.routes(1137), "1137 必须由 SimpleCollectItem native 车道路由");
+		assertEquals(203111, handler.rewardNpc(1137), "交付 NPC（真端 reward_npc_name = Spiros）");
+		assertFalse(handler.collectObjects(1137).isEmpty(), "真端 object1 = LF1_fossil（采集对象在册）");
+		assertEquals(List.of(182200513), handler.handInItems(1137),
+			"交付门 = 真端 collect_item1（quest_1137b），不含工作物品 quest_1137a");
+		assertEquals(List.of(182200512), handler.acceptGiveItems(1137),
+			"接取发放 = 真端 quest_work_item1（quest_1137a）");
 	}
 
 	@Test

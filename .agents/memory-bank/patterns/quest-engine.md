@@ -3370,7 +3370,7 @@ evidence: 2026-10-05 清扫批（AcceptAndConfirmationEntryContractTest 1877 法
 validation: 2026-10-05 IDEA MCP：编译绿 + 4 类全绿（AcceptAndConfirmation 2/2、QuestRefactorRepair 1/1、JournalRewardRow 4/4、QuestItemSource 3/3）；Memory Bank 校验三步绿；Playbook checker 14 项失败为 P7/P8/minion 批存量欠账（与本批无关，未动）
 superseded_by: none
 boundaries: ① Playbook 引用清扫是独立欠账（14 项存量，逐项重锚或删行——不在本卡）；② native 重锚 ≠ 行为重验——重锚只锁运行时注册面存在性，行为语义仍归 DD/族门；③ 历史 summary 报告中的被删类引用不追改（历史留痕）；④ 更大范围存量红（P8 口径 73 红类）由后续收录批清理
-see_also: [QE-051], [QE-144], [QE-145]
+see_also: [QE-051], [QE-144], [QE-145], [QE-147]
 first_check: 测试报 missing production quest definition N / 退役 XML 缺失 → 查该 id 的 retention owner：RETAIL_TABLE 即本场景，按三式处理；先 grep 该类有无 TEMP-VERIFY(view) 标记（宽松视图残留的指纹）
 keywords: 退役任务、IR 断言、missing production quest definition、TEMP-VERIFY、宽松视图、overlay 直通、RetiredQuestIds、skip+守卫、native 重锚、删法删类、AlignedMirror、RetailSequentialQuestFamily、24155、15010、1877、IR_TEST_RETIREMENT_TRIAGE
 -->
@@ -3378,3 +3378,27 @@ keywords: 退役任务、IR 断言、missing production quest definition、TEMP-
 - **判定规则**：退役行（RETAIL_TABLE）无 IR——凡 find/compile 其定义的断言：整主语退役就删；混合扫描就 skip（前提 = 确属退役）；有公共注册面就重锚 native。
 - **安全网**：skip 必须先断言 `RetiredQuestIds.contains`（禁裸跳过）；重锚只锁注册面存在性（owns/兴趣面），行为归 DD/族门；重锚保留方法名以维持 Playbook 引用。
 - **反漂移**：别再引入「宽松生产视图」（overlay 已直通，合成视图 = 无效）；别把退役行改回 XML 车道断言；别让 skip 掩盖误退役（守卫断言就是为此）。
+
+
+## [QE-147] 一百四十七、冻结测试的语义漂移重锚：实机修正批演进后，红 = 旧行为断言 vs 批文档/家族门现语义（先三步取证再重锚；不解冻面不锁在飞态） (FROZEN_TEST_SEMANTIC_DRIFT_REANCHOR)
+
+<!-- pattern-metadata
+status: CONFIRMED
+scope: questEngine 测试树：因主代码实机修正批（10-04/10-05 系列）改变对话/推进语义而变红的冻结测试；亦覆盖「证据冻结解冻」（断言前提被后续语义提交废止）。不含退役任务 IR 断言（QE-146）
+first_seen: 2026-10-05
+last_verified: 2026-10-05
+symptom: 测试红但形状 = 「下发的对话页 expected=[1352/1003] actual=[0]」/「expected=null actual=730534」/「1002 不发放却 give」——类名/方法名完好、断言值指向旧行为，全类无 missing-definition 报错
+root_cause: 上游实机修正批（f60f97633 中继推进=真端 0x5d8 关窗零发页；6a888b801 20000 收尾关窗；两步报告裁定 a〔31 只发契约确认页，1009 推进〕；P9 91eaef381 NPC_ 前缀归一化解冻）改变了对话面语义，冻结测试未随批重锚
+fix_or_guardrail: 三步取证后重锚：① git log 测试文件拿冻结点 + 对 P3/P5 期绿基线（.agents/summary/quest-engine-native/p3|p5）；② git log 主代码 + 批次主题文档（.agents/summary/quest-*）定位改语义的提交；③ 家族门（*NativeFamilyGateTest）读现语义绿参考 + 真端函数证据（FUN_180cabb10/FUN_180caf150/0x5d8）。重锚面：推进/接取尾 → assertCloseDialog；1002=页面 1003 / 20000=关窗；两步报告 31 只发契约确认页；解冻面按解冻依据提交换注新值
+evidence: 2026-10-05 存量红重锚批：EarlyElyosQuestRegressionTest 7 处重锚（含 1137 随 P4 采集族改原生面）+ ChainEliteLadderContractTest 整类重锚 SerialHunt 原生面（表行五阶段/resolveMonsterIds 精英命中/onKill 阶梯/固定奖励列）+ Quest26802ClientDialogAlignmentTest 整类重锚 DD 面（killInterests 两组网格/组计数守卫/收口清槽）+ QuestMinionTutorialRetailAlignmentTest 解冻 730534；.agents/summary/quest-stale-red-reanchor-20261005/README.zh-CN.md
+validation: 2026-10-05 IDEA MCP：build 零 problem；四类全绿（19/7/2/1 例，testFailed=0）；Playbook checker 绿（72/60/74/49）
+superseded_by: none
+boundaries: ① 不得锁「在飞/未裁定」状态（26802 报告面只注册 Talk 行且由并行 19671 批在飞演进——只锁行数据事实 reward_npc_name）；② 重锚保留方法名（Playbook 引用不断）；③ 证据解冻 ≠ 删断言——必须把新值的新依据写进注释；④ 与本批无关的并行在飞改动（DataDrivenNativeRuntime 未提交改动等）不 staging
+see_also: [QE-146], [QE-141], [QE-142], [QE-136]
+first_check: 测试红的断言值指向旧行为（旧页号/旧 null）且类内无退役 id 报错 → 按三步取证：git log 测试文件 → P3/P5 期绿基线 → git log 主代码定位实机批提交 + 读批次文档
+keywords: 语义漂移、assertCloseDialog、0x5d8、关窗、两步报告、2375、前缀归一化、解冻、730534、13918、26802、1137、EarlyElyos、ChainElite、FROZEN_TEST_SEMANTIC_DRIFT_REANCHOR
+-->
+
+- **判定规则**：红但非退役病（无 missing-definition）→ 大概率是实机批语义漂移：先对时（P3/P5 期绿 ⇒ 后红），再对批（git log 主代码 + `.agents/summary/quest-*` 主题文档），最后对家族门现语义。
+- **安全网**：重锚以批文档 + 家族门 + 真端函数证据为三源；在飞/未裁定面只锁数据事实不锁有无；解冻断言必须换注新依据。
+- **反漂移**：别按红点直接改期望值（先取证语义来源）；别把旧行为当权威（真端/实机批是权威，退役 XML 只是参考）；别锁并行会话正在改的面。
