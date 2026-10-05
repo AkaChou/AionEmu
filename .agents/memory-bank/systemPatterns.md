@@ -34,6 +34,8 @@
 | **客户端补丁与 pak 数据 (Client Patch)** | `CPK-001`, `CPK-002`, `CPK-003` | 改客户端 `.pak` 条目必须保持该条目原编码并只替换单条目——整包重封会把 `npcs.pak` 里的**二进制 XML** 换成文本 XML，客户端一进游戏即崩溃；`.pak` 容器三处 zip 签名 XOR 0xFF 且每条目压缩流前 32 字节另做前缀 XOR（v1/v2 按包探测）；二进制 XML 的字符串表索引 = **字节偏移 ÷ 2**（不是序号），改取值 = 换一个索引字节（等长）；NPC 头顶血条**本来就有**；「血条上的数字」＝ gauge 控件的 `num_type` 字段（`+0x8d4`，由 UI 数据属性写入，控件更新函数 `0x108e125d` 读它后调数字文本函数 `0x1097d290`），数据里有的控件可加 `num_type="small"`，其余只能打 DLL 补丁（`patch/Game.dll` = VIP + 强制 `num_type=small` + 去两处前置判定，已实机验收窗口内出数字）；**头顶世界血条没有数字通道**——它由代码构造并手动绘制（`0x108c3ed0`→`0x108c2250`），从不调用 `0x1097d290`，需要代码注入 | [patterns/client-pak-patching.md](patterns/client-pak-patching.md) |
 | **生物属性与血量同步** | `CV-001` | 客户端血条只认 `SM_ATTACK_STATUS` 的 0–100 整数百分比（包内无绝对 HP，1% 即协议粒度上限）；改血四出口分工——攻击走 `NpcController.onAttack`、直接改血走 `NpcLifeStats.setCurrentHp*` 覆写、等比重算走 `rescaleCurrentHp` 静默出口、非攻击扣血走 `reduceHpFromEffect`（技能侧唯一入口，delta 用实际差值）；`onReduceHp()` 有意保持空实现，禁止补发（会与攻击路径双包双飘字）；召唤物有两条客户端通道——血条广播 + 主人面板消费绝对 HP，需各自下发 `SM_SUMMON_UPDATE`；同步判据用百分比变化而非绝对值，且禁止用覆写内的前后百分比识别等比重算（新上限先生效会让读数失真，实例人数变化会引发整片假飘字）；禁止在 `reduceHp` 外套锁（`onDie` 锁外回调并跨对象取锁，外套锁会形成跨生物倒序死锁） | [patterns/creature-vitals.md](patterns/creature-vitals.md) |
 
+| **客户端动作状态与交互同步 (Client Action State)** | `CAS-001` | 客户端「使用物品」等本地动作状态只能由服务端 `SM_ITEM_USAGE_ANIMATION` 收尾（result=1 成功 / 3 取消）或角色移动解除；关闭契约窗口等收尾请求（`CM_USE_ITEM`）必须有应答——解析不到物品时静默 return 会让客户端卡状态，直到移动前交互都被本地以 901564 `STR_CANNOT_DO_WHILE_USING_ITEM` 拒绝 | [patterns/client-action-state.md](patterns/client-action-state.md) |
+
 ---
 
 ## 三、知识沉淀与追加准则 (How to Append)

@@ -22,10 +22,12 @@ import com.aionemu.gameserver.model.templates.item.actions.ItemActions;
 import com.aionemu.gameserver.model.templates.item.actions.MultiReturnAction;
 import com.aionemu.gameserver.network.aion.AionClientPacket;
 import com.aionemu.gameserver.network.aion.AionConnection.State;
+import com.aionemu.gameserver.network.aion.serverpackets.SM_ITEM_USAGE_ANIMATION;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.questEngine.handlers.HandlerResult;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.restrictions.RestrictionsManager;
+import com.aionemu.gameserver.services.toypet.MinionService;
 import com.aionemu.gameserver.skillengine.model.Skill;
 import com.aionemu.gameserver.skillengine.model.Skill.SkillMethod;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
@@ -102,6 +104,24 @@ public class CM_USE_ITEM extends AionClientPacket {
 		Item targetItem = player.getInventory().getItemByObjId(targetItemId);
 		HouseObject<?> targetHouseObject = null;
 		if (item == null) {
+			// 客户端在关闭契约窗口等场景会发来解析不到物品的使用请求；按取消处理并回取消动画，
+			// 客户端才会退出「使用物品」动作状态（对齐 AL-Game 的 item==null → cancelUseItem 分支
+			// 与真端 C_USE_ITEM(objId=0) → User::CancelUseItem 语义）。
+			// The client may send a use request that no longer resolves (e.g. when closing the
+			// contract window); treat it as a cancel and answer with the cancel animation so the
+			// client leaves its "using item" action state (AL-Game's item==null → cancelUseItem
+			// branch; retail C_USE_ITEM with objId=0 routes to User::CancelUseItem).
+			respondCanceledUse(player, uniqueItemId, 0);
+			return;
+		}
+		if (MinionService.isMinionContract(item)) {
+			// 守护灵契约书的契约动作由 CM_MINIONS(action=0) 驱动；客户端对同一物品的使用收尾请求
+			// 只回取消动画，不在此重复触发契约（真端该物品是物品动作，客户端以使用请求收尾）。
+			// The minion contract itself is driven by CM_MINIONS(action=0); an item-use wind-up
+			// request for the same item only gets the cancel animation back so the client's
+			// "using item" action ends, without triggering a duplicate contract (retail models
+			// this item as an item action).
+			respondCanceledUse(player, item.getObjectId(), item.getItemTemplate().getTemplateId());
 			return;
 		}
 		if (targetItem == null) {
@@ -221,5 +241,31 @@ public class CM_USE_ITEM extends AionClientPacket {
 				itemAction.act(player, item, targetItem);
 			}
 		}
+	}
+
+	/**
+	 * 回应对客户端使用/取消收尾请求的取消动画：已有挂起使用任务时由该任务自身的结束动画收尾，
+	 * 否则补发取消动画（result=3）并清除「使用中物品」状态，客户端才会退出「使用物品」动作。
+	 * Answers a client use/cancel wind-up request with the cancel animation: a pending use task
+	 * already ends through its own animation, otherwise the cancel animation (result=3) is
+	 * broadcast and the "using item" state is cleared so the client leaves its use action.
+	 * @param player 玩家 / player
+	 * @param itemObjId 请求中的物品对象 ID / item object id from the request
+	 * @param itemId 请求中的物品模板 ID（未知时传 0）/ item template id from the request (0 when unknown)
+	 */
+	private void respondCanceledUse(Player player, int itemObjId, int itemId) {
+		if (player.getController().hasTask(TaskId.ITEM_USE)) {
+			// 使用/契约进行中：其结束动画会自行下发。 / A use is in flight; its own end animation follows.
+			return;
+		}
+		Item usingItem = player.getUsingItem();
+		player.getController().cancelUseItem();
+		if (usingItem != null) {
+			// 以服务端记录的「使用中物品」为准回取消动画。 / Prefer the server-side "using item" when present.
+			itemObjId = usingItem.getObjectId();
+			itemId = usingItem.getItemTemplate().getTemplateId();
+		}
+		PacketSendUtility.broadcastPacket(player, new SM_ITEM_USAGE_ANIMATION(player.getObjectId(),
+				itemObjId, itemId, 0, 3, 0), true);
 	}
 }
