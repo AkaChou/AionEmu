@@ -209,18 +209,26 @@ public final class QuestDialogContract {
 	}
 
 	/**
-	 * 39 检查按钮（{@code HACTION_CHECK_USER_HAS_QUEST_ITEM}）的失败结果页（{@code select6=2716}）：
-	 * 报告页的「拿出…」按钮触发服务端整组检查，未通过时真端下发客户端声明的失败应答页
-	 * （任务作者写作 select6，如 1103「你难道不会数数吗」/ 1105「您别跟我开玩笑」）。
-	 * 两族 39 用户（SimpleTalk 675 + SimpleCollectItem 85，2026-10-04 全量客户端页普查）全部声明该页；
-	 * 未声明返回 {@code -1}（fail-closed，不发明页）。
+	 * 39 检查按钮（{@code HACTION_CHECK_USER_HAS_QUEST_ITEM}）的失败结果页：检查按钮触发服务端整组检查，
+	 * 未通过时下发客户端声明的失败应答页。两条命名通道：① 声明 {@code check_user_item_fail} 的事件/DD 行
+	 * （如 80875=10001，2026-10-05 实机）；② talk 族（SimpleTalk 675 + SimpleCollectItem 85，2026-10-04
+	 * 全量客户端页普查）作者写作 {@code select6=2716}。两通道皆未声明返回 {@code -1}（fail-closed，不发明页）。
 	 * <p>
-	 * The failure result page of the 39 check button ({@code select6=2716}): the report page's check
-	 * button triggers the server-side whole-group check; when the group is missing the retail server
-	 * shows the client-declared fail page. Every in-family 39 row declares it; undeclared rows return
-	 * {@code -1} (fail closed, never invent a page).
+	 * The failure result page of the 39 check button: the check triggers the server-side whole-group
+	 * check; a missing group shows the client-declared fail page. Two naming channels: (1) rows declaring
+	 * {@code check_user_item_fail} (event/DD rows, 80875=10001); (2) the talk-family {@code select6}
+	 * convention. Undeclared rows return {@code -1} (fail closed, never invent a page).
 	 */
 	public int checkFailPage(int questId) {
+		// 名称优先：契约声明 {@code check_user_item_fail} 的行（事件/DD 行，如 80875=10001；2026-10-05
+		// 实机 39 检查按钮）；回退 talk 族惯例 select6=2716（任务作者写作 select6）。
+		// Name first: rows declaring check_user_item_fail (event/DD rows, 80875=10001), falling back to
+		// the talk-family select6 convention; undeclared rows return -1 (fail closed).
+		for (Map.Entry<Integer, String> page : buttonPages.getOrDefault(questId, Map.of()).entrySet()) {
+			if ("check_user_item_fail".equals(page.getValue())) {
+				return page.getKey();
+			}
+		}
 		int pageId = QuestDialogPage.SELECT6.id();
 		return hasButtonPage(questId, pageId) ? pageId : -1;
 	}

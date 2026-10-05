@@ -13,6 +13,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -113,6 +114,11 @@ public final class DataDrivenNativeRuntime {
 	private static final int PAGE_REFUSE = 1004;
 	/** 报告动作（真端 `0x3f1`）。 / The report action. */
 	private static final int ACTION_REPORT = 1009;
+	/**
+	 * 交付检查按钮（39 = HACTION_CHECK_USER_HAS_QUEST_ITEM；收集型步页的「交出持有物品」）。
+	 * / The hand-over check button (39) on collect-step pages.
+	 */
+	private static final int ACTION_CHECK_ITEM = 39;
 	/** 完成动作（真端 `0x3f0`）。 / The complete action. */
 	private static final int ACTION_COMPLETE = 1008;
 	/** 步进 + 完成动作（真端 `0x280f`）。 / The advance-and-complete action. */
@@ -325,6 +331,10 @@ public final class DataDrivenNativeRuntime {
 	private final Map<Integer, FreezeReason> frozenQuestIds;
 	private final Set<String> unresolvedNames;
 	private final NativeInventoryPort inventoryPort;
+	/** 真端物品名索引（交付门符号「quest_80875a 7」类解析）。 / The retail item-name index (gate symbols). */
+	private final RetailItemNameIndex itemIndex;
+	/** 交付门计划（quest → quest.xml collect_item/quest_work_item，懒装载缓存）。 / Lazy gate plans. */
+	private final Map<Integer, GatePlan> gatePlanByQuestId = new ConcurrentHashMap<>();
 	private final NativeMoviePort moviePort;
 	private final NativeTeleportPort teleportPort;
 	private final NativeSpawnPort spawnPort;
@@ -346,7 +356,7 @@ public final class DataDrivenNativeRuntime {
 			Set<Integer> routedQuestIds, Map<Integer, FreezeReason> frozenQuestIds, Set<String> unresolvedNames,
 			NativeInventoryPort inventoryPort, NativeMoviePort moviePort, NativeTeleportPort teleportPort,
 			NativeSpawnPort spawnPort, NativeSayPort sayPort, NativeTimerPort timerPort,
-			NativeReportRewardFlow rewardFlow) {
+			NativeReportRewardFlow rewardFlow, RetailItemNameIndex itemIndex) {
 		this.plansByQuestId = plansByQuestId;
 		this.killsByNpcId = killsByNpcId;
 		this.talksByNpcId = talksByNpcId;
@@ -374,6 +384,7 @@ public final class DataDrivenNativeRuntime {
 		this.sayPort = sayPort;
 		this.timerPort = timerPort;
 		this.rewardFlow = rewardFlow;
+		this.itemIndex = itemIndex;
 	}
 
 	/**
@@ -519,7 +530,7 @@ public final class DataDrivenNativeRuntime {
 		if (routedQuestIds == null || routedQuestIds.isEmpty()) {
 			return new DataDrivenNativeRuntime(Map.of(), Map.of(), Map.of(), Map.of(), Map.of(), Map.of(), Map.of(),
 				Map.of(), Map.of(), Map.of(), Map.of(), Map.of(), Map.of(), Map.of(), Map.of(), Map.of(), Set.of(),
-				Set.of(), Map.of(), Set.of(), null, null, null, null, null, null, null);
+				Set.of(), Map.of(), Set.of(), null, null, null, null, null, null, null, null);
 		}
 		Objects.requireNonNull(nameResolver, "DATA_DRIVEN_NAME_RESOLVER_MISSING");
 		Objects.requireNonNull(enterAreaPort, "DATA_DRIVEN_ENTER_AREA_PORT_MISSING");
@@ -616,7 +627,7 @@ public final class DataDrivenNativeRuntime {
 			Map.copyOf(acquireTalks), Map.copyOf(reportTalks), Map.copyOf(acquireItems), Map.copyOf(acquireWorlds),
 			Map.copyOf(acquireLevels), Map.copyOf(acquireZones), Map.copyOf(actionPlans), Map.copyOf(acquirePlans),
 			Set.copyOf(owned), Set.copyOf(routed), Map.copyOf(frozen), Set.copyOf(unresolved), inventoryPort,
-			moviePort, teleportPort, spawnPort, sayPort, timerPort, rewardFlow);
+			moviePort, teleportPort, spawnPort, sayPort, timerPort, rewardFlow, itemIndex);
 	}
 
 	/** 一行计划的中转结构（构建期）。 / Mutable per-row plan during construction. */
@@ -1720,9 +1731,12 @@ public final class DataDrivenNativeRuntime {
 
 	/**
 	 * 共享对话平面（真端 `FUN_180c474b0`）：只服务「命中步 == 当前置步」的对话兴趣；
-	 * 打开动作发阶段页 `select(K+1)`，顺序页动作（`10000+K`，K == 当前步 + 1）步进，乱序静默零写；
-	 * `1009` = 步进 + 报告通道（末步转待领奖并发奖励窗页 5）；`10255` = 步进 + 完成页；
-	 * `1008` 与其余 ≥1000 动作原样回发（不写状态）。
+	 * 行选动作（31/26）发阶段页 `select(K+1)`（打开 -1 不认领——归引擎开门平面 → 通用页 10 列表，
+	 * 2026-10-05 实机 834166：进行中阶段页不得占用开门/挡同 NPC 其余可接任务），顺序页动作
+	 * （`10000+K`，K == 当前步 + 1）步进，乱序静默零写；`1009` = 步进 + 报告通道（末步转待领奖
+	 * 并发奖励窗页 5）；`39` = 交付检查按钮（未持满 → 客户端声明失败页；持满 → 按门扣除 + 报告收尾，
+	 * 参考 `_80875FightAgainstMechanerk` 的 `checkQuestItems(0,1,false,10000,10001)`）；`10255` = 步进 +
+	 * 完成页；`1008` 与其余 ≥1000 动作原样回发（不写状态）。
 	 * The shared retail dialog plane: only the hit matching the quest's current step is served.
 	 */
 	private boolean dispatchDialog(Player player, List<StepHit> hits, int dialogId, int objectId,
@@ -1743,11 +1757,39 @@ public final class DataDrivenNativeRuntime {
 				continue;
 			}
 			StepPlan plan = plansByQuestId.get(hit.questId()).get(hit.stepIndex());
-			if (dialogId == 31 || dialogId == 26 || dialogId == -1) {
+			if (dialogId == 31 || dialogId == 26) {
+				// 行选（31 = NPC 列表任务行；26）发阶段页 select(K+1)。打开（-1，无任务上下文）不认领：
+				// 宿主开门平面 = 进行中/可交重放，否则通用页 10 列表（2026-10-05 实机 834166 修复）。
+				// The row selection shows the stage page; the open action (-1) is left to the engine's
+				// open plane (the page-10 list), so in-progress stage quests never block the quest list.
 				sendStagePage(player, objectId, hit.questId(), DataDrivenProgress.step(vars));
 				return true;
 			}
 			if (dialogId == ACTION_REPORT) {
+				advance(player, state, hit.stepIndex(), plan.lastStep());
+				sendPostAdvancePage(player, objectId, state, plan);
+				return true;
+			}
+			if (dialogId == ACTION_CHECK_ITEM) {
+				// 39 = 交付检查按钮（HACTION_CHECK_USER_HAS_QUEST_ITEM；收集型步页的「交出持有物品」）。
+				// 未持满 → 客户端声明的失败应答页（事件行 80875=10001 check_user_item_fail；talk 族
+				// select6=2716 惯例）；持满（或无门声明）→ 按门扣除 + 报告收尾（REWARD + 奖励窗，同 1009）；
+				// 门符号未全解析 ⇒ fail-closed（从不放行未解析门）。
+				// The 39 hand-over check button: missing items → the client-declared fail page; held (or no
+				// gate declared) → consume the gate and report (the 1009 tail); unresolved symbols fail closed.
+				GatePlan gate = gatePlan(hit.questId());
+				if (!gate.resolvable() || !holdsGate(player, gate.items())) {
+					int failPage = QuestDialogContract.loadDefault().checkFailPage(hit.questId());
+					if (failPage < 0) {
+						return false;
+					}
+					PacketSendUtility.sendPacket(player,
+						new SM_DIALOG_WINDOW(objectId, failPage, hit.questId()));
+					return true;
+				}
+				for (GateItem item : gate.items()) {
+					inventoryPort.remove(player, item.itemId(), item.count());
+				}
 				advance(player, state, hit.stepIndex(), plan.lastStep());
 				sendPostAdvancePage(player, objectId, state, plan);
 				return true;
@@ -1807,6 +1849,81 @@ public final class DataDrivenNativeRuntime {
 			sendStagePage(player, objectId, state.getQuestId(), DataDrivenProgress.step(
 				state.getQuestVars().getQuestVars()));
 		}
+	}
+
+	// ------------------------------------------------------------------ 交付门（39 检查按钮）
+
+	/** 交付门物品（item_id + 数量）。 / One gate item stack. */
+	private record GateItem(int itemId, int count) {
+	}
+
+	/** 交付门计划：物品清单 + 符号全解析标志（未全解析 = fail-closed，永不报 ok）。 */
+	private record GatePlan(List<GateItem> items, boolean resolvable) {
+	}
+
+	/**
+	 * 交付门（quest.xml {@code collect_item1..N} → {@code quest_work_item1..N} 首项；符号「name count」
+	 * 经 {@link RetailItemNameIndex} 解析，与 SimpleTalk 工作物品同通道）。懒装载并按 quest 缓存。
+	 * The hand-over gate (the same quest.xml channel as the SimpleTalk work items), lazily resolved.
+	 */
+	private GatePlan gatePlan(int questId) {
+		return gatePlanByQuestId.computeIfAbsent(questId, id -> {
+			NativeQuestXmlTable.QuestRow row = NativeQuestXmlTable.instance().find(id).orElse(null);
+			if (row == null) {
+				return new GatePlan(List.of(), true);
+			}
+			boolean[] resolved = {true};
+			List<GateItem> collected = parseGateItems(row.numbered("collect_item"), resolved);
+			if (!collected.isEmpty()) {
+				return new GatePlan(collected, resolved[0]);
+			}
+			List<GateItem> work = parseGateItems(row.numbered("quest_work_item"), resolved);
+			return new GatePlan(work.isEmpty() ? List.of() : List.of(work.getFirst()), resolved[0]);
+		});
+	}
+
+	private List<GateItem> parseGateItems(List<String> symbols, boolean[] resolved) {
+		List<GateItem> parsed = new ArrayList<>(symbols.size());
+		for (String symbol : symbols) {
+			GateItem item = parseGateItem(symbol);
+			if (item == null) {
+				resolved[0] = false;
+				continue;
+			}
+			parsed.add(item);
+		}
+		return List.copyOf(parsed);
+	}
+
+	private GateItem parseGateItem(String symbol) {
+		if (symbol == null || symbol.isBlank()) {
+			return null;
+		}
+		String[] parts = symbol.trim().split("\\s+");
+		int count = 1;
+		if (parts.length > 1) {
+			try {
+				count = Integer.parseInt(parts[1]);
+			} catch (NumberFormatException e) {
+				return null;
+			}
+		}
+		String stem = parts[0].toLowerCase(Locale.ROOT);
+		Integer itemId = itemIndex.resolve(stem);
+		if (itemId == null && stem.startsWith("item_")) {
+			itemId = itemIndex.resolve(stem.substring("item_".length()));
+		}
+		return itemId == null ? null : new GateItem(itemId, count);
+	}
+
+	/** 门物品持有检查（缺一即 false）。 / The gate hold check; a single shortfall fails it. */
+	private boolean holdsGate(Player player, List<GateItem> items) {
+		for (GateItem item : items) {
+			if (inventoryPort.count(player, item.itemId()) < item.count()) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	private boolean dispatch(Player player, List<StepHit> hits) {

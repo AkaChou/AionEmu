@@ -84,3 +84,64 @@
   `SimpleHuntNativeFamilyGateTest` ✅、`SimpleCollectItemNativeFamilyGateTest` ✅、`SimpleHuntHandlerTest` ✅、
   `SimpleTalkRowAlignmentGateTest` ✅、`QuestRepeatLifecycleTest` ✅。
 - 实机回归：**待用户客户端验证**（14110：接受 → 应直接关窗入任务书；拒绝 → 同样关窗）。
+
+---
+
+# 续报 2：进行中阶段页抢占开门 + 39 交付检查按钮无处理（2026-10-05 17:21 实机）
+
+## 症状
+
+NPC 834166（Elly）有 3 个可接任务。80868、80875（Luna 事件，DD 表行）先后接取成功后：
+「继续和 npc834166 对话，应该能够继续接取任务才对，但是现在看到的是任务 80875 的
+『交出持有物品』对话」；且点该按钮零响应（日志：`页1011 questId=80875 → 动作=39 上一页=1011 → 关窗`）。
+
+完整日志链：`页10→31(80868)→4762→20000→状态3+关窗→页10→31(80875)→4762→20000→状态3+关窗→
+页1011 questId=80875→动作=39→关窗`。
+
+## 因果链（两处独立缺陷）
+
+1. **打开（-1）被进行中阶段页抢占**：第三次开门时 80875 已进行中（步 0，CollectItem），
+   引擎开门块（QuestEngine.java:402-410）逐一重放进行中任务 → DD `dispatchDialog` 的
+   `case 31, 26, -1` 阶段页分支命中（state+命中步守卫通过）→ 发阶段页 1011 并 return true →
+   引擎认定已认领 → TalkEventHandler 默认页 10 列表不可达。
+   第二次开门（仅 80868 进行中）之所以正常，是零步 Talk 行无步命中（无 StepHit）未触发该分支。
+2. **39 无处理**：80875 客户端 1011 页（select1，收集步）的按钮 = 「交出持有物品」
+   （HACTION_CHECK_USER_HAS_QUEST_ITEM = 39）；`dispatchDialog` 无 39 分支（39 < 1000，
+   落到末尾 `return false`）→ 零响应，客户端停页后关窗。
+
+## 证据
+
+- **真端 SimpleTalk 族既有约定（同形仲裁）**：`SimpleTalkHandler` 交付 NPC 面
+  - 进行中（START）：`dialogId == 1009 || 31 || 26 || -1` → `PAGE_IN_PROGRESS`（页 10 列表，
+    SimpleTalkHandler.java:1010）；
+  - 待领奖（REWARD）：`31 || 26 || 1009 || -1` → 页 5 奖励窗（SimpleTalkHandler.java:1023）。
+  即**阶段页只随行选 31/26 下发，开门（-1）回列表**。QD-144 中「保留 DD 的 -1（进行中阶段页）」
+  系静态推断、实测推翻。
+- **39 语义**：AL 参考 `_80875FightAgainstMechanerk.java`（39 → `checkQuestItems(0,1,false,10000,10001)`）；
+  真端 `FUN_180c474b0` 的顺序动作 10000..10013 步进 + `0x3f1(1009)` → `0x100`+`0x1b0` 结算；
+  真端 +0x268 槽（FUN_180c45f70）发 0x2711 = 10001（检查失败应答）。
+- **客户端契约**：80875 声明 1011/4762/10000/10001/10002（`check_user_item_fail`=10001）；
+  talk 族检查型惯例 `select6`=2716。
+- **数据**：quest.xml 80875 `collect_item1 = quest_80875a 7`（item 182216117，
+  `item_template_182005539_190200002.xml`）；data_driven_quest.xml 80875 progress=CollectItem 单步。
+
+## 修复（3 文件）
+
+| 文件 | 改动 |
+|---|---|
+| `DataDrivenNativeRuntime.java` | ① `dispatchDialog` 阶段页分支 `case 31, 26, -1` → `case 31, 26`（打开不认领，落引擎开门平面 → 列表）；② 新增 `ACTION_CHECK_ITEM(39)` 交付门分支：门 = quest.xml `collect_item`（回退 `quest_work_item`）经 `RetailItemNameIndex` 解析；未持满 → 契约 `check_user_item_fail` 页（80875=10001）；持满 → 按门扣除 + 步进 + （末步）奖励窗页 5；门符号未全解析 ⇒ fail-closed。构造器新增 `RetailItemNameIndex` 参数（2 个调用点同步） |
+| `QuestDialogContract.java` | `checkFailPage` 名称优先：先查声明 `check_user_item_fail` 的页（事件/DD 行），回退 select6=2716（talk 族惯例），未声明 -1 |
+| `DataDrivenNativeRuntimeGateTest.java` | `talkStepsFollowTheSharedRetailDialogPlane` 补「打开(-1) 零发页不认领」断言；新增 `checkButton39FollowsTheHandOverGate`（80875：无物 → 10001 + 零写；持 7 个 → remove:182216117:7 + REWARD + 页 5） |
+
+## 验证
+
+- IDEA 编译 ✅；门测试（exitCode 0）：`DataDrivenNativeRuntimeGateTest` ✅（含新 39 用例）、
+  `DataDrivenNativeContractGateTest` ✅、`DataDrivenItemPlayGrantGateTest` ✅、
+  `SimpleTalkNativeFamilyGateTest` ✅、`GelkmarosKanteleRowLadderContractTest` ✅、
+  `NativeAcceptEntryAskFlowGateTest` ✅、`QuestKillCounterRetailGateTest` ✅、
+  `RetailQuestDriverOverlayTest` ✅。
+- **存量红（与本次无关，需上游批次处理）**：`AcceptAndConfirmationEntryContractTest` 读取的
+  `definitions/quests/15010.xml` 已随 `fde615094`（DataDriven 归一，物理退役 XML）删除，
+  HEAD 即红。
+- 实机回归：**待用户客户端验证**（834166：接取 80868/80875 后再对话应见列表（可继续接第 3 个）；
+  点 80875 行 → 1011 收集页；无 quest_80875a 点「交出持有物品」→ 10001 失败页；集齐 7 个 → 扣除并弹领奖窗）。

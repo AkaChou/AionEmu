@@ -3317,18 +3317,41 @@ scope: 表车道七族（Talk/SerialHunt/Hunt/CollectItem/UseItem/ItemPlay/Combi
 first_seen: 2026-10-05
 last_verified: 2026-10-05
 symptom: ① 真机 2026-10-05（NPC 834166，DD 行 80868/80875）：「看不到任务列表，打开直接是任务接收的页面（4762）」——打开动作被 DD 接取面认领；② 真机 15:16/17:14（quest 14110/NPC 203111，SimpleTalk 行）：开门列表正常（页10→31→1011）后，动作 20000 接取收尾收到页 1003 → 客户端 load fail（弹窗 `Quest_Q14110.html (HtmlPageId 1003) (QuestId 14110)`；契约只声明 1011/2375）
-root_cause: ① 真端打开（-1、questId=0）走**宿主开门平面**：进行中/可交任务重放（阶段页），否则通用页 10（任务列表）；per-quest/接取面只在「动作携带任务上下文」（行选 31）时被路由。「state 0/10 → 任何动作发页」的函数内分支发生在该信封内、不含 -1——e1 移植把 DD/SerialHunt 接取面折叠出 -1 认领属过度外推（六族接取面均 31/26-only 且经 list→31→入口页实机验证）。② 客户端契约按任务声明确认页：3676/3665 个任务声明 1003/1004（quest_accept_1/2）⇒ 其接受钮发 1002（有确认页流程）；未声明的任务（14110 类）接受钮发 **20000（simple accept，无确认页）**——真端 cab520 收尾：`0x3ea(1002)→页 0x3eb(1003)+发物`、`0x4e20(20000)→0x5d8 关窗+发物`、`0x4e21(20001)→0x2a8+关窗`。四族（Talk/SerialHunt/Hunt/CollectItem）把 20000/20001 也回页（1003/1004）=下发未声明页 → load fail。正确形已先于 ItemPlay/CombineTask/DD 落地（10-04）
-fix_or_guardrail: 1. **打开（-1）不认领**：接取面只收 31/26；-1 落引擎开门规则（QuestEngine questId==0 块：采集物先手 → START/REWARD 重放 → TalkEventHandler 默认 `SM_DIALOG_WINDOW(oid, 10)` 列表）；DD `dispatchDialog` 的 -1（进行中阶段页）有 state+命中步守卫，保留。2. **收尾词汇（cab520）**：1002 → 页 1003（+give）；20000 → `SM_DIALOG_WINDOW(0, 0)` 关窗（+give）；1003/1004 → 页 1004；20001 → 关窗；give_item 在 1002/20000 两支都发（cab520 同源参数）。3. **路由判定是文件存在性**：native 路由集 = 表行 − XML 定义文件名（`NativeQuestOwnerResolver` 扫描 definitions/quests/`NNNN.xml`），与保留清单（retail-xml-retention 含 14110）无关——14110 无 XML 文件 ⇒ SimpleTalk 路由
+root_cause: ① 真端打开（-1、questId=0）走**宿主开门平面**：进行中/可交任务重放（START 落页 10 列表、REWARD 落奖励窗页 5——阶段页只随行选 31/26，见 QE-145），否则通用页 10（任务列表）；per-quest/接取面只在「动作携带任务上下文」（行选 31）时被路由。「state 0/10 → 任何动作发页」的函数内分支发生在该信封内、不含 -1——e1 移植把 DD/SerialHunt 接取面折叠出 -1 认领属过度外推（六族接取面均 31/26-only 且经 list→31→入口页实机验证）。② 客户端契约按任务声明确认页：3676/3665 个任务声明 1003/1004（quest_accept_1/2）⇒ 其接受钮发 1002（有确认页流程）；未声明的任务（14110 类）接受钮发 **20000（simple accept，无确认页）**——真端 cab520 收尾：`0x3ea(1002)→页 0x3eb(1003)+发物`、`0x4e20(20000)→0x5d8 关窗+发物`、`0x4e21(20001)→0x2a8+关窗`。四族（Talk/SerialHunt/Hunt/CollectItem）把 20000/20001 也回页（1003/1004）=下发未声明页 → load fail。正确形已先于 ItemPlay/CombineTask/DD 落地（10-04）
+fix_or_guardrail: 1. **打开（-1）不认领**：接取面只收 31/26；-1 落引擎开门规则（QuestEngine questId==0 块：采集物先手 → START/REWARD 重放 → TalkEventHandler 默认 `SM_DIALOG_WINDOW(oid, 10)` 列表）；DD `dispatchDialog` 同样**不认领** -1——原「进行中阶段页保留」判定已被 2026-10-05 17:21 实机推翻（阶段页抢占开门、列表被挡；见 QE-145）。2. **收尾词汇（cab520）**：1002 → 页 1003（+give）；20000 → `SM_DIALOG_WINDOW(0, 0)` 关窗（+give）；1003/1004 → 页 1004；20001 → 关窗；give_item 在 1002/20000 两支都发（cab520 同源参数）。3. **路由判定是文件存在性**：native 路由集 = 表行 − XML 定义文件名（`NativeQuestOwnerResolver` 扫描 definitions/quests/`NNNN.xml`），与保留清单（retail-xml-retention 含 14110）无关——14110 无 XML 文件 ⇒ SimpleTalk 路由
 evidence: 真端 ScriptDLL64.c FUN_180cab520（第 2139262-2139327 行：0x3ea→0x188(0x3eb)+0x410 发物；0x4e20→0xd8 check+0x5d8+0x410；0x4e21→0x2a8+0x5d8）；真机 trace 2026-10-05 15:16（14110：页10→31→1011→20000→状态3+页1003→load fail 截图）与复测通过（用户确认；17:14 一次为旧构建残留）；client_dialog_contract.tsv（3676/3665 声明 1003/1004；14110 仅 1011/2375）; QuestEngine.java 第 395-410 行（开门规则注释）与 TalkEventHandler.java 第 81 行（默认页 10）；六族接取面共识（Talk/Hunt/CollectItem/ItemPlay/CombineTask 31/26-only）；.agents/summary/quest-open-door-list-20261005/DIAGNOSIS.zh-CN.md（两缺陷全证据）
 validation: 2026-10-05 IDEA MCP：编译绿 + 8 测试类全绿（Talk 族门新增 acceptTailFollowsTheRetailCab520CloseSemantics：1002→1003+give/20000→页0+give/20001→页0；DD 门补开启 -1 不认领断言；SerialHunt 门补 envOpen；RepeatLifecycle 换 NativeTalkFixture 记录式端口）；用户实机复测通过（834166 开门见列表；14110 接受即关窗）
 superseded_by: none
 boundaries: ① 动作 1004 的回页保留（cab520 侧静默 / ItemPlay/CombineTask 侧关窗，三形不一且无实机样本，暂不动）；② UseItem 族接取面全关窗（物品触发、npcId==0）不在本批；③ DD 接取面 1002/20000 的 give 走 runActions(步0)，与表车道 give_item 单栈不同源；④ 页 10 列表由 TalkEventHandler 默认分支承担（两参、questId=0）；⑤ SerialHunt 接取面的 -1 实为死边（该处理器仅 requestedOwner≠0 可达）——删除是词汇对齐、零行为风险
 see_also: [QE-143], [QE-142], [QE-141], [QE-137]
-first_check: 接取面问题时先答：① 打开（-1）是不是被某个接取面认领了（应落页 10 列表，或进行中重放）？② 客户端确认动作是 1002 还是 20000（契约有无 1003——没有就是 20000，必须回关窗）？③ 该任务归 native 还是 XML（definitions/quests/NNNN.xml 是否存在）？
+first_check: 接取面问题时先答：① 打开（-1）是不是被某个接取面/阶段面认领了（应落页 10 列表；阶段页只随行选 31/26——QE-145）？② 客户端确认动作是 1002 还是 20000（契约有无 1003——没有就是 20000，必须回关窗）？③ 该任务归 native 还是 XML（definitions/quests/NNNN.xml 是否存在）？
 keywords: 接取面、打开-1、宿主开门平面、页10列表、834166、4762、20000、simple accept、关窗0x5d8、cab520、1002、1003、1004、20001、客户端契约声明、load fail、14110、Quest_Q14110、give_item、ACCEPT_FACE_OPEN_DOOR_AND_TAIL_VOCAB
 -->
 
 - **判定规则**：打开（-1、无任务上下文）不认领接取面——落宿主开门平面（进行中重放，否则页 10 列表）；确认动作三分支：1002 → 页 1003（+give）、20000 → 关窗（+give）、20001 → 关窗；路由归属按 `definitions/quests/NNNN.xml` 是否存在判（native vs XML 车道）。
 - **安全网**：族门覆盖「打开 -1 不认领（零发页）」与「收尾三分支（页 1003 / 关窗页 0 / 关窗页 0）」两组断言；契约统计（1003/1004 声明数）是 1002/20000 分型的直接凭据。
 - **反漂移**：别让接取面认领打开（-1）——列表被抢的根因；别对 20000/20001 回任何对话页（契约未声明的任务即 load fail）；别把 give_item 只挂在 20000（cab520 两支都发）；别用保留清单判路由（文件存在性才是判定）。
+
+## [QE-145] 一百四十五、开门零认领（阶段页只随行选 31/26，进行中阶段面不得抢占打开-1）＋ 39 交付检查门（事件/DD 行 check_user_item_fail 命名；quest.xml collect_item 门解析） (OPEN_DOOR_NOT_STAGE_CLAIMED_AND_CHECK39_GATE)
+
+<!-- pattern-metadata
+status: CONFIRMED
+scope: DD 共享对话平面（dispatchDialog）的打开边界（-1）与 39 交付检查分支；SimpleTalk 族同形约定作仲裁参照；含 QuestDialogContract.checkFailPage 两命名通道；不含 10000+K 步进词汇（QE-141/QE-143 域）与领奖收尾（QE-140）
+first_seen: 2026-10-05
+last_verified: 2026-10-05
+symptom: 真机 2026-10-05 17:21（NPC 834166，DD 行 80868/80875）：80868/80875 接取成功后再次对话，应见列表（继续接第 3 个），实际见 80875「交出持有物品」页（页 1011 抢占开门，列表不可达）；且点该按钮零响应关窗（动作=39 上一页=1011→关窗）
+root_cause: ① DD `dispatchDialog` 阶段页分支 `case 31, 26, -1` 把开门（-1）也认领——引擎开门块（QuestEngine.java:402-410）逐一重放进行中任务时命中该分支、发阶段页抢占列表。第二次开门（仅零步 Talk 行进行中）无 StepHit 不触发，故时好时坏。真端语义：per-quest 阶段页只在动作携带任务上下文（行选 31/26）时被路由；SimpleTalk 族既有实现即仲裁参照（交付 NPC：START && -1 → PAGE_IN_PROGRESS 页 10 列表；REWARD && -1 → 页 5 奖励窗；SimpleTalkHandler.java:1010/1023）。② 39（HACTION_CHECK_USER_HAS_QUEST_ITEM）= 80875 收集步页（select1）的「交出持有物品」按钮，DD 无该分支（39 < 1000 落空）→ 零响应。真端槽 +0x268（FUN_180c45f70）检查失败发 0x2711=10001；AL 参考 `_80875FightAgainstMechanerk` 两段式 checkQuestItems(0,1,false,10000,10001)
+fix_or_guardrail: 1. **打开（-1）零认领**：DD `dispatchDialog` 阶段页分支只收 31/26；打开落引擎开门平面 → 页 10 列表（或族内 REWARD 重放页 5）。2. **39 交付门**：门 = quest.xml `collect_item`（回退 `quest_work_item`）符号「物品名 数量」经 `RetailItemNameIndex` 解析（+`item_` 前缀回退）；未持满 → 契约 `checkFailPage`（名称优先 `check_user_item_fail`，如 80875=10001；回退 talk 族 select6=2716）；持满 → 按门扣除 + 步进 + `sendPostAdvancePage`（末步 → REWARD + 奖励窗页 5）；门符号未全解析 ⇒ fail-closed（从不放行未解析门）。3. **契约失败页双命名通道**：事件/DD 行声明 `check_user_item_fail`，talk 族作者写作 `select6`（`checkFailPage` 名称优先、惯例回退）
+evidence: 真机日志 2026-10-05 17:21:49（页10→31(80868)→4762→20000→状态3+关窗→页10→31(80875)→4762→20000→状态3+关窗→页1011 questId=80875→动作=39 上一页=1011→关窗）；SimpleTalkHandler.java:1010（START && -1 → PAGE_IN_PROGRESS）与 1023（REWARD && -1 → 页 5）；真端 ScriptDLL64.c FUN_180c45f70（槽 +0x268，发 0x2711=10001，第 2069944 行域）与 FUN_180c474b0（10000..10013 步进 + 0x3f1 结算，第 2071069 行）；AL 参考脚本 _80875FightAgainstMechanerk（luna 事件 handler，外部仓库）（39 → checkQuestItems(0,1,false,10000,10001)）；client_dialog_contract.tsv（80875=1011/4762/10000/10001/10002）；quest.xml 80875 collect_item1=quest_80875a 7（item 182216117）；.agents/summary/quest-open-door-list-20261005/DIAGNOSIS.zh-CN.md 续报 2
+validation: 2026-10-05 IDEA MCP：编译绿 + 8 测试类全绿（`DataDrivenNativeRuntimeGateTest` 新 checkButton39FollowsTheHandOverGate：80875 无物→10001+零写、持 7→remove:182216117:7+REWARD+页 5；talkSteps… 补「打开 -1 零发页」断言；SimpleTalk 族门/Gelkmaros 阶梯门/DD 契约门/接取入口门/击杀计数门/驱动覆盖门回归绿）；用户实机复测通过（834166 再对话见列表并继续接取；39 有响应）
+superseded_by: none
+boundaries: ① DD REWARD 态开门（-1）未随 SimpleTalk 族回奖励窗页 5（现落默认页 10）——无实机样本，未动；② 10002/10000 等动作词汇不在本片（QE-141/QE-143 域）；③ `checkFailPage` 名称通道只认 `check_user_item_fail` 精确名，其余命名需扩通道时先取客户端样本；④ 本卡推翻 QE-144 原「保留 DD dispatchDialog -1（进行中阶段页）」条目
+see_also: [QE-144], [QE-141], [QE-140]
+first_check: 「开门被阶段/收集页挡列表」先查打开（-1）是否被阶段面认领（阶段页只随 31/26，进行中重放=页 10/页 5）；「收集任务点按钮零响应」先查 39 是否未处理（契约 `check_user_item_fail` / quest.xml `collect_item` 门）
+keywords: 开门抢占、阶段页挡列表、-1零认领、834166、交出持有物品、39、CHECK_USER_HAS_QUEST_ITEM、check_user_item_fail、10001、select6、2716、collect_item、quest_work_item、RetailItemNameIndex、182216117、80875、交付门、fail-closed、PAGE_IN_PROGRESS、OPEN_DOOR_NOT_STAGE_CLAIMED_AND_CHECK39_GATE
+-->
+
+- **判定规则**：开门（-1）不被阶段面/接取面认领——阶段页只随行选 31/26 下发；进行中重放的结果是页 10 列表（SimpleTalk 族显式、DD 落默认）或 REWARD 页 5。39 = 收集步页的「交出持有物品」按钮：门从 quest.xml `collect_item`/`quest_work_item` 解析，未持满回契约失败页（`check_user_item_fail` 名称优先 / select6 惯例），持满扣除并收口发奖。
+- **安全网**：DD 门断言两组——打开（-1）零发页 + 39 双路径（无物 → 失败页且零写；持满 → 精确 remove 序列 + REWARD + 页 5）；门符号解析走 `RetailItemNameIndex`（name 列查 id），未解析 fail-closed 由测试锁死。
+- **反漂移**：别把「state 0/10 → 发阶段页」外推到打开（-1）——信封边界（行选才携带任务上下文）是根因面；别在 39 未持满时回任何非契约页（load fail 风险）；别对未解析门放行（fail-closed）；别把 DD 的 -1 判定复原为「阶段页展示」（已被实机推翻）。
 

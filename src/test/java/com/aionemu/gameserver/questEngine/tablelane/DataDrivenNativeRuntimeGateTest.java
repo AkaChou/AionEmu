@@ -380,10 +380,15 @@ class DataDrivenNativeRuntimeGateTest {
 		int npcId = keyOf(runtime.talkInterests(), questId, stepIndex);
 		Player player = NativeTalkFixture.player();
 		QuestState state = NativeTalkFixture.add(player, questId, QuestStatus.START, stepIndex);
-		// 打开：阶段页（select1 = 1011），步号不变。页动作携带任务上下文（真端客户端在进度页发 questId）。
+		// 行选：阶段页（select1 = 1011），步号不变。页动作携带任务上下文（真端客户端在进度页发 questId）。
 		assertTrue(runtime.onDialog(player, npcId, 31, 1, questId), "对话打开必须被对话平面服务");
 		NativeTalkFixture.assertOnlyDialogPage(player, DataDrivenNativeRuntime.stagePageForGate(stepIndex));
 		assertEquals(stepIndex, DataDrivenProgress.step(state.getQuestVars().getQuestVars()), "打开不写步号");
+		// 打开（-1，无任务上下文）不认领：零发页——归引擎开门平面落通用页 10 列表，进行中阶段页
+		// 不得占用开门（2026-10-05 实机 834166：进行中收集行挡掉同 NPC 其余可接任务）。
+		NativeTalkFixture.clearPackets(player);
+		assertFalse(runtime.onDialog(player, npcId, -1, 1, questId), "打开(-1) 不得被阶段面认领");
+		assertTrue(NativeTalkFixture.dialogPages(player).isEmpty(), "打开(-1) 零发页");
 		// 乱序动作（真端 `code-9999 != 当前步 + 1`）：零写、零回发。
 		NativeTalkFixture.clearPackets(player);
 		assertFalse(runtime.onDialog(player, npcId, 10000 + stepIndex + 2, 1, questId), "乱序动作必须静默");
@@ -410,6 +415,38 @@ class DataDrivenNativeRuntimeGateTest {
 		assertEquals(QuestStatus.REWARD, player.getQuestStateList().getQuestState(questId).getStatus(),
 			"末步 1009 = 真端 SetQuestSuccess ⇒ 待领奖");
 		NativeTalkFixture.assertOnlyDialogPage(player, 5);
+	}
+
+	/**
+	 * ⑤d 交付检查按钮 39（收集型行的「交出持有物品」；参考 `_80875FightAgainstMechanerk` 的
+	 * `checkQuestItems(0,1,false,10000,10001)`）：未持满 → 客户端声明的失败页（80875=10001，
+	 * 事件行命名通道）；持满 → 按门扣除（quest.xml collect_item1 = quest_80875a ×7）+ 报告收尾
+	 * （REWARD + 奖励窗页 5）。实机 2026-10-05：点击 39 静默关窗（无应答）修复。
+	 */
+	@Test
+	void checkButton39FollowsTheHandOverGate() {
+		int questId = 80875;
+		int stepIndex = table.find(questId).orElseThrow().steps().getFirst().index();
+		int npcId = keyOf(runtime.talkInterests(), questId, stepIndex);
+		Player player = NativeTalkFixture.player();
+		QuestState state = NativeTalkFixture.add(player, questId, QuestStatus.START, stepIndex);
+		inventory.clear();
+
+		// 未持满：39 → 客户端声明的失败页 10001（check_user_item_fail），状态仍 START、零扣物。
+		NativeTalkFixture.clearPackets(player);
+		assertTrue(runtime.onDialog(player, npcId, 39, 1, questId), "39 检查必须被服务");
+		NativeTalkFixture.assertOnlyDialogPage(player, 10001);
+		assertEquals(QuestStatus.START, state.getStatus(), "失败检查不推进");
+		assertTrue(inventory.calls().isEmpty(), "失败检查不扣物品");
+
+		// 持满 7×（物品 182216117 = quest_80875a）：39 → 扣门 + REWARD + 奖励窗页 5。
+		int gateItem = 182216117;
+		inventory.hold(gateItem, 7L);
+		NativeTalkFixture.clearPackets(player);
+		assertTrue(runtime.onDialog(player, npcId, 39, 1, questId), "持满后 39 必须收尾");
+		NativeTalkFixture.assertOnlyDialogPage(player, 5);
+		assertEquals(QuestStatus.REWARD, state.getStatus(), "持满 39 = 报告收尾");
+		assertEquals(List.of("remove:" + gateItem + ":7"), inventory.calls(), "按门扣除收集物");
 	}
 
 	/**
