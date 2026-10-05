@@ -279,13 +279,14 @@
       </after-commit>
     </transition>
 
-    <!-- 真端取证（ScriptDLL64 FUN_180caf150（通用口））：SETPRO2 → 仅推进+刷新，零发页；页 10 系旧翻译夸大，已删（2026-10-05 同类排查）。 -->
+    <!-- 真端取证（ScriptDLL64 FUN_180caf150（通用口））：SETPRO2 → 推进 + 0x5d8 关窗（实机 2026-10-05 两次点击实证）；页 10 系翻译夸大，已删。 -->
     <transition source="started1" target="started2">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="203771" action="SETPRO2"/>
       </event>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
+        <close-dialog/>
       </after-commit>
     </transition>
     <transition source="started2" target="started2-complete" priority="0">
@@ -437,7 +438,7 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT3"/>
       </after-commit>
     </transition>
-    <!-- 真端取证（ScriptDLL64 FUN_180fc9fb0）：SETPRO3 → 仅推进+刷新，零发页；页 10 系旧翻译夸大，已删（2026-10-05 同类排查）。 -->
+    <!-- 真端取证（ScriptDLL64 FUN_180fc9fb0）：SETPRO3 → 推进 + 0x5d8 关窗（实机 2026-10-05 两次点击实证）；页 10 系翻译夸大，已删。 -->
     <transition source="started2-complete" target="started3">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="203771" action="SETPRO3"/>
@@ -447,6 +448,7 @@
       </actions>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
+        <close-dialog/>
       </after-commit>
     </transition>
     <transition source="started3" target="started3">

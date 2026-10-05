@@ -92,9 +92,10 @@ class Quest21114PoisonedFungiRetailFlowTest {
 		assertEquals(List.of(
 			new QuestAction.GiveItem(182207862, 1),
 			new QuestAction.SetVariable("var0", 2)), giveLiquid.actions());
+		// 真端 FUN_180caf150（通用口）：SETPRO 推进后 0x5d8＝关窗（实机 2026-10-05 两次点击实证）。
 		assertEquals(List.of(
-			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.PACKET_ONLY)),
-			giveLiquid.afterCommit());
+			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.PACKET_ONLY),
+			new AfterCommitAction.CloseDialog()), giveLiquid.afterCommit());
 	}
 
 	@Test
@@ -125,8 +126,8 @@ class Quest21114PoisonedFungiRetailFlowTest {
 			QuestDialogAction.SETPRO4, null);
 		assertEquals(List.of(new QuestAction.SetVariable("var0", 4)), confirm.actions());
 		assertEquals(List.of(
-			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.PACKET_ONLY)),
-			confirm.afterCommit());
+			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.PACKET_ONLY),
+			new AfterCommitAction.CloseDialog()), confirm.afterCommit());
 
 		QuestTransition kill = definition.transitions().stream()
 			.filter(transition -> "s4".equals(transition.sourceNode()))

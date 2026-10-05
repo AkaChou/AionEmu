@@ -3295,9 +3295,9 @@ first_seen: 2026-10-05
 last_verified: 2026-10-05
 symptom: 缺陷 U（1002 结束对话多余弹页）修复后，需要排查同类面：XML 车道 915 个 SHOW_SELECTION_PAGE 行（SETPROn 40 / FINISH_DIALOG 409 / 完成族 447 / 其他 9）逐一对照真端
 root_cause: 旧 XML 翻译统一把「推进/关闭」写成「回选择页 10」，而真端的发页/关窗逐处显式：推进（SETPROn）只在打开/回显/检查分支发页，推进分支零页；FINISH_DIALOG(1008) 在真端=仅刷新（客户端本地关窗，与本仓 RetailDialogIntentClassifier 的 LOCAL_CLOSE 判定一致）
-fix_or_guardrail: **通用处理器族词典**：① `FUN_180caf150(quest,ctx,action,npc,wrapper,arg)`＝通用动作口——SETPRO 族（10000–10254）先做**防跳步校验**（`action-9999 != 当前步+1` → 记 "attempting to Jump Progress" 并拒绝），通过后 SetProgress+仅 0x5d8；0x3f0(1008)→仅 0x5d8；0x3ea(1002) 且 status<2→发 0x3eb(1003)；0x3f1(1009)→0x1b0 结算；0x3ef(1007)→0x1a0；0x280f→条件口。② `FUN_180caf460`＝按步页池：unaccepted→0x129a；START 第 n 族＝1011/1352/1693/2034/2375/2716/3057/3398/3739/4080/6500/6841/7182/7523/7864；REWARD→0x2712(10002)。③ `FUN_180caf740`＝发当前步页；`FUN_180caf350/3c0`＝通用口包装（action<1000 拒收）。④ vtable：0x2d0=传送（world+x/y/z+heading）、0x410(_,hash,1,_)=发物（名称哈希）、0x1b0=完成结算、0x1d0=标记位、0x1d8=影片、0x1e0=分档演出。⑤ 裁决口径：推进/关闭类行真端零页即删（附函数级注释）；打开/回显/检查分支的页必须保留。
-evidence: 真端反编译源 ScriptDLL64.c（反编译工作区）：FUN_180caf150（第 2141670-2141738 行）、FUN_180caf460（第 2141809-2141896 行）、FUN_180caf740（第 2141937 行起）、FUN_180caf350/3c0；SETPROn 40 行逐任务函数（见 .agents/summary/quest-page-exaggeration-sweep/REPORT.zh-CN.md 全表：FUN_180fa57d0/180fa2900/180f6fcd0/180fc9fb0/180f74830/180fa2d70/180fa4310/180fc0f00/180f81d30/180f40160/180f75120/180f80030/180f7a340/180f9a830/180fabcb0/180fb3d40/180f8d630/180fca140/180fe3940/180fca740/180fca3e0/180fce410/180fce860/180f9a4f0）；FINISH 抽样 10/10 + 自定义 4 处 + 通用口；log/quests.log 全量 0 次上行 1008（休眠实证）；Quest21114PoisonedFungiRetailFlowTest / MigratedQuestRepairDefinitionTest（3090）对齐
-validation: 2026-10-05：38 行删页 + 2114 两行改真端页（SELECT2/SELECT3）后生产目录全量编译绿（707/0）+ 8 个相关测试类全绿；FINISH 409 行判定休眠暂未改（待批次对齐）；kill-npc/use-item 9 行留待下批
+fix_or_guardrail: **通用处理器族词典**：① `FUN_180caf150(quest,ctx,action,npc,wrapper,arg)`＝通用动作口——SETPRO 族（10000–10254）先做**防跳步校验**（`action-9999 != 当前步+1` → 记 "attempting to Jump Progress" 并拒绝），通过后 SetProgress+0x5d8（**0x5d8＝关窗**——实机 2026-10-05 14:53 两次点击实证：仅状态包不关窗、关窗包才关）；0x3f0(1008)→0x5d8；0x3ea(1002) 且 status<2→发 0x3eb(1003)；0x3f1(1009)→0x1b0 结算；0x3ef(1007)→0x1a0；0x280f→条件口。② `FUN_180caf460`＝按步页池：unaccepted→0x129a；START 第 n 族＝1011/1352/1693/2034/2375/2716/3057/3398/3739/4080/6500/6841/7182/7523/7864；REWARD→0x2712(10002)。③ `FUN_180caf740`＝发当前步页；`FUN_180caf350/3c0`＝通用口包装（action<1000 拒收）。④ vtable：0x2d0=传送（world+x/y/z+heading）、0x410(_,hash,1,_)=发物（名称哈希）、0x1b0=完成结算、0x1d0=标记位、0x1d8=影片、0x1e0=分档演出。⑤ 裁决口径：推进/关闭类行真端零页即删（附函数级注释）；打开/回显/检查分支的页必须保留。
+evidence: 真端反编译源 ScriptDLL64.c（反编译工作区）：FUN_180caf150（第 2141670-2141738 行）、FUN_180caf460（第 2141809-2141896 行）、FUN_180caf740（第 2141937 行起）、FUN_180caf350/3c0；SETPROn 40 行逐任务函数（见 .agents/summary/quest-page-exaggeration-sweep/REPORT.zh-CN.md 全表：FUN_180fa57d0/180fa2900/180f6fcd0/180fc9fb0/180f74830/180fa2d70/180fa4310/180fc0f00/180f81d30/180f40160/180f75120/180f80030/180f7a340/180f9a830/180fabcb0/180fb3d40/180f8d630/180fca140/180fe3940/180fca740/180fca3e0/180fce410/180fce860/180f9a4f0）；FINISH 抽样 10/10 + 自定义 4 处 + 通用口；log/quests.log 全量 0 次上行 1008（休眠实证）、2026-10-05 14:53 两次点击 trace（0x5d8 关窗语义）；Quest21114PoisonedFungiRetailFlowTest / MigratedQuestRepairDefinitionTest（3090）对齐
+validation: 2026-10-05：38 行删页 + 2114 两行改真端页（SELECT2/SELECT3）+ 44 行补 close-dialog（真端 0x5d8 关窗）后生产目录全量编译绿（707/0）+ 相关测试类全绿（21114/3090 断言同步为 sync+CloseDialog）；FINISH 409 行判定休眠暂未改（待批次对齐）；kill-npc/use-item 9 行留待下批
 superseded_by: none
 boundaries: ① 完成/领奖收尾「回页 10」（完成族 447 行，quests.log 367 次实机正常）保持不动——另一机制（npc-complete/finish=SELECTION_DIALOG），是否与真端完全一致未取证；② FINISH 409 行协议上与真端不符但实机休眠（0 上行），改动需同步 20+ 测试文件，不阻塞；③ 「防跳步」意味着客户端乱序 SETPRO 会被真端拒绝——排查"点了没反应"类问题时先查步序校验
 see_also: [QE-142], [QE-141], [QE-138]
@@ -3305,7 +3305,7 @@ first_check: ① 怀疑推进类「多发页/没反应」先看 REPORT 全表任
 keywords: FUN_180caf150、FUN_180caf460、FUN_180caf740、防跳步、JumpProgress、按步页池、0x2710、SETPRO、FINISH_DIALOG、1008、本地关窗、0x3f0、0x1b0、0x2d0、0x410、GENERIC_DIALOG_HANDLER_FAMILY
 -->
 
-- **判定规则**：推进（SETPROn/完成）行真端零页（SetProgress+刷新）；页只在打开/回显/检查分支；FINISH_DIALOG=客户端本地关窗（实机 0 上行）；防跳步校验拒绝乱序推进。
+- **判定规则**：推进（SETPROn/完成）行真端零页但必 0x5d8 关窗（推进行须补 close-dialog）；页只在打开/回显/检查分支；FINISH_DIALOG=客户端本地关窗（实机 0 上行）；防跳步校验拒绝乱序推进。
 - **安全网**：改行前先定位任务函数核对分支；改后生产编译（707）+ 相关测试类全绿；实机以 quests.log 的 C->S/S->C trace 复核。
-- **反漂移**：别把「完成收尾回页 10」（另一机制，实机验证过）混入本轮结论；别按旧 XML/旧引擎的「统一回页」推断，逐函数取证。
+- **反漂移**：别把「完成收尾回页 10」（另一机制，实机验证过）混入本轮结论；别按旧 XML/旧引擎的「统一回页」推断，逐函数取证；「仅 sync 不关窗」不够——0x5d8 含关闭语义（实机两次点击实证）。
 

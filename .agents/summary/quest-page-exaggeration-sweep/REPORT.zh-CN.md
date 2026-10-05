@@ -7,7 +7,7 @@
 ## 一、SETPROn（推进类）40 行 / 20 任务 —— 已修复 ✅
 
 **真端铁律（逐任务函数体核实）**：六步 SETPROn + FINISH_DIALOG（1002 基准）与全部同类
-处理器，推进分支 = `SetProgress + 0x5d8 刷新`，**零发页**；页只在「打开/回显/检查结果」分支出现。
+处理器，推进分支 = `SetProgress + 0x5d8`＝**关窗**（实机 2026-10-05 14:53 两次点击实证：仅状态包客户端不关窗、关窗包才关），**零发页**；页只在「打开/回显/检查结果」分支出现。
 
 | 任务 | 行 | 真端函数 | 真端行为 |
 |---|---|---|---|
@@ -27,13 +27,13 @@
 | 14054 | SETPRO6 | FUN_180fce410/FUN_180fce860 | 0x100+刷新，零页 |
 | 21114 | SETPRO2/SETPRO4 | FUN_180f9a4f0（发物+通用口）/通用口 | 零页 |
 
-修改：38 行删页（每行附函数级注释）+ 2114 两行改为 SHOW_QUEST_PAGE SELECT2/SELECT3。
+修改：38 行删页（每行附函数级注释）+ 2114 两行改为 SHOW_QUEST_PAGE SELECT2/SELECT3；同日复测后 44 行（含 1002 六行）补 `<close-dialog/>`（真端 0x5d8 关窗，实机两次点击实证）。
 测试对齐：Quest21114PoisonedFungiRetailFlowTest ×2、MigratedQuestRepairDefinitionTest（3090 行）。
 验证：生产目录全量编译绿（707/0）+ 8 个相关测试类全绿。
 
 ## 二、FINISH_DIALOG（1008）409 行 / 295 任务 —— 真端零页，实机休眠（未改）
 
-- 真端：0x3f0 → 仅 0x5d8 刷新（通用口 FUN_180caf150 + 4 处自定义分支 +
+- 真端：0x3f0 → 0x5d8＝关窗（通用口 FUN_180caf150 + 4 处自定义分支 +
   抽样 10/10 任务的 0x3f0 全走通用口）——与本仓 `RetailDialogIntentClassifier`
   的 `FINISH_DIALOG → LOCAL_CLOSE`（本地关窗）判定一致。
 - 实机：`log/quests.log` 全量 **0 次**客户端上行 `动作=1008`（两周+）→ 该 409 行为休眠行，
