@@ -53,15 +53,29 @@ public class XMLStartCondition {
 						|| !checkReward(questId, reward, qs.getReward())) {
 					return false;
 				}
+				// 前置行的重复上限取生产目录元数据；前置已迁入原生车道（不在目录中）时回退真端 quest.xml
+				// 元数据——真端等价物是 QuestDB 全量静态表，前置行永远可查（Quest::CanAcquireQuest
+				// leadingquest 轴 → User::IsLeadingQuestComplete → UserQuestData::IsFinishedQuestWithBranch）。
+				// 两处都无行才 fail-closed（引用破损）。
+				// The prerequisite's repeat budget comes from the production catalog metadata; rows moved to
+				// the native lane fall back to the retail quest.xml metadata — the retail equivalent is the
+				// full QuestDB table, where a prerequisite row is always queryable (the leadingquest axis of
+				// Quest::CanAcquireQuest). Only a row absent from both sources fails closed.
 				var metadata = GameEngineServices.questEngine().questCatalog().findMetadata(questId).orElse(null);
+				if (metadata == null) {
+					metadata = GameEngineServices.questEngine().nativeMetadata(questId).orElse(null);
+				}
 				if (metadata == null) {
 					return false;
 				}
-				if (metadata.repeatPolicy().maxRepeatCount() != 1) {
-					if (metadata.repeatPolicy().maxRepeatCount() != 255
-							&& qs.getCompleteCount() != metadata.repeatPolicy().maxRepeatCount()) {
-						return false;
-					}
+				// 真端判定 = 「完成计数 >= 前置行 max_repeat_count」（IsFinishedQuestWithBranch：要求 <= 计数）；
+				// 1 = 完成一次即达上限，255 = 无限重复（完成过即通过）——两者不附加计数要求。
+				// The retail verdict is "finishCount >= the prerequisite row's max_repeat_count"
+				// (IsFinishedQuestWithBranch: required <= count); 1 and 255 (unlimited) add no count
+				// requirement beyond the completed state checked above.
+				int maxRepeat = metadata.repeatPolicy().maxRepeatCount();
+				if (maxRepeat != 1 && maxRepeat != 255 && qs.getCompleteCount() < maxRepeat) {
+					return false;
 				}
 			}
 		}
