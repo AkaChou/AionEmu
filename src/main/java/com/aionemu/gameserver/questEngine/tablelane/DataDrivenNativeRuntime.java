@@ -1393,7 +1393,8 @@ public final class DataDrivenNativeRuntime {
 	/**
 	 * Talk 接取对话面（真端 `FUN_180c47220`：行选 31/26 → 页 4762；1002 → 接取 + 页 1003；1003 → 页 1004；
 	 * 1007 → 接取窗（客户端契约 fail-closed）；20000 → 接取 + 完成通道；20001/1008 → 完成通道；
-	 * 其余 ≥1000 原样回发）。只服务「尚未开始该任务」的玩家（真端按 0x640 条件路由到接取对象）。
+	 * 其余 ≥1000 动作按客户端契约裁定——声明为页才原样回发，未声明不由本面认领（留给 NPC 自身层/AI））。只服务
+	 * 「尚未开始该任务」的玩家（真端按 0x640 条件路由到接取对象）。
 	 * 打开（-1，无任务上下文）不被本面认领：宿主开门平面 = 进行中/可交重放，否则通用页 10 列表
 	 * （2026-10-05 实机 NPC 834166 修复——原 -1 认领使打开直发 4762，任务列表不可见）。
 	 * The Talk acquire dialog face of retail FUN_180c47220, served only to players without the quest.
@@ -1497,12 +1498,28 @@ public final class DataDrivenNativeRuntime {
 					return true;
 				}
 				default -> {
-					if (dialogId >= 1000) {
+					if (dialogId >= 1000 && QuestDialogContract.loadDefault().hasButtonPage(questId, dialogId)) {
+						// 声明过的页动作才原样回发（契约纪律见 QE-137：页 ∈ 契约集合才可带 questId）。
+						// The verbatim echo holds for client-declared page actions only.
 						PacketSendUtility.sendPacket(player,
 							new SM_DIALOG_WINDOW(objectId, dialogId, questId));
 						return true;
 					}
-					return false;
+					if (dialogId < 1000) {
+						return false;
+					}
+					// 未声明的 ≥1000 动作不由接取面认领：真端把 NPC 对话按钮（如事件应援的
+					// HACTION_SETPRO1=10000）交给 NPC 自身层（AI 脚本/AI2）而不是任务接取面。
+					// 认领（回发或关窗）都会劫走 AI 的增益面——2026-10-06 实机 833671/833672：
+					// Ayas 应援 buff 因本面回发「页 10000 + questId」而整链不触发（load fail 只是
+					// 表象）；同日改为关窗后 buff 仍不触发（AI 的引擎前置守卫被 true 挡下）。
+					// 零发页继续候选循环，循环耗尽即返回 false，把动作留给 AI/后续面裁决。
+					// An undeclared >= 1000 action is not claimed here: retail routes NPC dialog
+					// buttons (e.g. the event-cheer HACTION_SETPRO1=10000) to the NPC's own layer
+					// (the AI script/AI2), not to the quest acquire face. Claiming it — by echoing a
+					// page or by closing — steals the AI's buff face. Zero-send and let the loop and
+					// the later faces decide.
+					continue;
 				}
 			}
 		}

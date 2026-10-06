@@ -3,6 +3,7 @@ package com.aionemu.gameserver.questEngine.tablelane;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.InputStream;
@@ -867,8 +868,17 @@ class DataDrivenNativeRuntimeGateTest {
 		assertTrue(runtime.onDialog(other, npcId, 1008, 1, 0), "1008 原样回发");
 		NativeTalkFixture.assertOnlyDialogPage(other, 1008);
 		NativeTalkFixture.clearPackets(other);
-		assertTrue(runtime.onDialog(other, npcId, 1012, 1, 0), "其余 ≥1000 动作原样回发");
-		NativeTalkFixture.assertOnlyDialogPage(other, 1012);
+		// ≥1000 动作：客户端契约声明过该页才原样回发；未声明不由接取面认领（零发页，留给
+		// NPC 自身层/AI——事件应援按钮 SETPRO1=10000 的增益面即靠此不被劫走；逐轴见
+		// acquireFaceEchoesOnlyClientDeclaredActionPages）。
+		// The >=1000 echo holds for client-declared pages only; undeclared actions stay unclaimed.
+		boolean page1012Declared = QuestDialogContract.loadDefault().hasButtonPage(questId, 1012);
+		assertEquals(page1012Declared, runtime.onDialog(other, npcId, 1012, 1, 0), "≥1000 动作按客户端契约裁定");
+		if (page1012Declared) {
+			NativeTalkFixture.assertOnlyDialogPage(other, 1012);
+		} else {
+			assertTrue(NativeTalkFixture.dialogPages(other).isEmpty(), "未声明动作零发页（不认领）");
+		}
 		NativeTalkFixture.clearPackets(other);
 		assertFalse(runtime.onDialog(other, npcId, 999, 1, 0), "<1000 非接取词汇零动作");
 		assertTrue(NativeTalkFixture.dialogPages(other).isEmpty(), "<1000 不发页");
@@ -879,6 +889,59 @@ class DataDrivenNativeRuntimeGateTest {
 		if (askPage >= 0) {
 			NativeTalkFixture.assertOnlyDialogPage(asker, askPage);
 		}
+	}
+
+	/**
+	 * ⑨b 接取面 ≥1000 动作的契约纪律：只有客户端任务页声明过的页动作才可原样回发；未声明的动作 id
+	 * 对未接取任务不是页——真端把 NPC 对话按钮（事件应援的 HACTION_SETPRO1=10000）交给 NPC 自身层
+	 * （AI 脚本 `World_event_NPC_support_buffer_01` / `ayas_support` 的增益面），接取面**不认领**
+	 * （零发页、零写），认领（回发页或关窗）都会劫走 AI 的 buff：实机 2026-10-06（NPC 833671/833672）
+	 * 先为「页 10000 + questId」load fail，改为关窗后 buff 仍不触发（AI 的引擎前置守卫被挡下）。
+	 * The acquire face echoes >=1000 actions only when the client contract declares the page;
+	 * undeclared actions stay unclaimed for the NPC's own AI layer.
+	 */
+	@Test
+	void acquireFaceEchoesOnlyClientDeclaredActionPages() {
+		QuestDialogContract contract = QuestDialogContract.loadDefault();
+		boolean undeclaredProbed = false;
+		boolean declaredProbed = false;
+		for (Map.Entry<Integer, List<Integer>> entry : runtime.acquireTalkInterests().entrySet()) {
+			for (int candidate : entry.getValue()) {
+				// 轴 1：未声明 —— 事件族（80787-80790）的 SETPRO1=10000 不在契约页集合里。
+				if (!undeclaredProbed && !contract.hasButtonPage(candidate, 10000)) {
+					Player player = NativeTalkFixture.player();
+					assertFalse(runtime.onDialog(player, entry.getKey(), 10000, 1, candidate),
+						"未声明动作不由接取面认领（零发页，留给 NPC 自身层/AI 的增益面）");
+					assertTrue(NativeTalkFixture.dialogPages(player).isEmpty(), "未声明动作零发页");
+					assertNull(player.getQuestStateList().getQuestState(candidate),
+						"未接取任务的 SETPRO1 零写（真端 SetQuestProgress 的 status∉{3,4} 过滤）");
+					undeclaredProbed = true;
+				}
+				// 轴 2：已声明 —— 声明了 ≥1000 页动作的行仍原样回发（如 80875 族声明 10000/10001）；
+				// 排除有专属分支的接取词汇（1002/1003/1004/1007/1008/20000/20001）。
+				if (!declaredProbed) {
+					int declared = contract.pagesForQuest(candidate).keySet().stream()
+						.filter(pageId -> pageId >= 1000 && pageId != 1002 && pageId != 1003 && pageId != 1004
+							&& pageId != 1007 && pageId != 1008 && pageId != 20000 && pageId != 20001)
+						.findFirst().orElse(-1);
+					if (declared > 0) {
+						Player player = NativeTalkFixture.player();
+						if (runtime.onDialog(player, entry.getKey(), declared, 1, candidate)) {
+							NativeTalkFixture.assertOnlyDialogPage(player, declared);
+							declaredProbed = true;
+						}
+					}
+				}
+				if (undeclaredProbed && declaredProbed) {
+					break;
+				}
+			}
+			if (undeclaredProbed && declaredProbed) {
+				break;
+			}
+		}
+		assertTrue(undeclaredProbed, "须有未声明 10000 的可接 Talk 行（80787-80790 事件族）");
+		assertTrue(declaredProbed, "须有声明 ≥1000 页动作的可接 Talk 行（如 80875 族）");
 	}
 
 	/**
