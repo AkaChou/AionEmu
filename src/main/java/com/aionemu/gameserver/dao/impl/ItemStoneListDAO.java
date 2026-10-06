@@ -125,6 +125,11 @@ public class ItemStoneListDAO extends com.aionemu.gameserver.dao.ItemStoneListDA
     /**
      * 保存物品上的全部镶嵌石变更。
      * Saves all item-stone changes for the given items.
+     * <p>幽灵 null 条目（并发脏读/运行时 patch 残留）跳过并告警，绝不让登出存盘因此中断；
+     * 来源容器维度的定位由 {@code PlayerStorageRegistry#getAllItems} 的读边界告警给出。
+     * Phantom null entries (concurrent dirty reads / runtime-patch residue) are skipped and warned
+     * about instead of aborting a logout save; per-source-container attribution comes from the
+     * read-boundary warning in {@code PlayerStorageRegistry#getAllItems}.</p>
      * @param items 物品列表 / item list
      */
     @Override
@@ -137,8 +142,13 @@ public class ItemStoneListDAO extends com.aionemu.gameserver.dao.ItemStoneListDA
         Set<ManaStone> fusionStones = Sets.newHashSet();
         Set<GodStone> godStones = Sets.newHashSet();
         Set<IdianStone> idianStones = Sets.newHashSet();
+        int phantomNullItems = 0;
 
         for (Item item : items) {
+            if (item == null) {
+                phantomNullItems++;
+                continue;
+            }
             if (item.hasManaStones()) {
                 manaStones.addAll(item.getItemStones());
             }
@@ -155,6 +165,11 @@ public class ItemStoneListDAO extends com.aionemu.gameserver.dao.ItemStoneListDA
             if (idianStone != null) {
                 idianStones.add(idianStone);
             }
+        }
+
+        if (phantomNullItems > 0) {
+            log.warn(I18n.get("log.item_stone_save_skip_null_items", phantomNullItems, items.size(),
+                    Thread.currentThread().getName()));
         }
 
         store(manaStones, ItemStoneType.MANASTONE);

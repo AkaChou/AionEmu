@@ -3,23 +3,28 @@ package com.aionemu.gameserver.model.gameobjects.player;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.aionemu.boot.i18n.I18n;
 import com.aionemu.gameserver.model.gameobjects.Item;
 import com.aionemu.gameserver.model.gameobjects.PersistentState;
 import com.aionemu.gameserver.model.items.storage.IStorage;
 import com.aionemu.gameserver.model.items.storage.LegionStorageProxy;
 import com.aionemu.gameserver.model.items.storage.Storage;
 import com.aionemu.gameserver.model.items.storage.StorageType;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 玩家储物注册表域。
  * Player storage-registry domain.
  * <p>该类型只服务 {@link Player}：负责 CUBE、宠物背包、房屋仓库、普通/账号/军团仓库的
- * 注册、查询，以及脏物品收集与“已存储”标记。字段和 Lombok 访问器仍留在
+ * 注册、查询，以及脏物品收集与“已存储”标记；合并读取（{@link #getAllItems(Player)}）在
+ * 来源容器边界过滤幽灵 null 并告警。字段和 Lombok 访问器仍留在
  * {@link Player}，此处为无状态静态策略。
  * This type only serves {@link Player}: it owns registration and lookup for CUBE, pet bags, house
- * cabinets, regular/account/legion warehouses, dirty-item collection and stored-state marking.
+ * cabinets, regular/account/legion warehouses, dirty-item collection and stored-state marking; the
+ * merged read ({@link #getAllItems(Player)}) filters phantom nulls per source container and warns.
  * Fields and Lombok accessors stay on {@link Player}; this is a stateless static policy.</p>
  */
+@Slf4j
 final class PlayerStorageRegistry {
 
 	private PlayerStorageRegistry() {
@@ -173,33 +178,58 @@ final class PlayerStorageRegistry {
 	/**
 	 * 返回玩家全部储物与装备中的物品。
 	 * Returns all items from player-owned storages and equipment.
+	 * <p>读取边界按来源容器过滤幽灵 null 并告警：容器可被并发写入（登录、任务事务、packet 线程），
+	 * 也可能携带运行时 patch 残留，读取时或观察到未安全发布的 null 槽；登出存盘不能因此中断。
+	 * The read boundary filters phantom nulls per source container and warns: containers are written
+	 * concurrently (login, quest transactions, packet threads) and may carry runtime-patch residue, so
+	 * a read can observe an unsafely published null slot; the logout save must not abort on it.</p>
 	 * @param player 玩家 / player
 	 * @return 全部物品 / all items
 	 */
 	static List<Item> getAllItems(Player player) {
 		List<Item> items = new ArrayList<>();
-		items.addAll(player.getInventory().getItemsWithKinah());
+		addAllChecked(items, player.getInventory().getItemsWithKinah(), player, "inventory");
 		if (player.getRegularWarehouse() != null) {
-			items.addAll(player.getRegularWarehouse().getItemsWithKinah());
+			addAllChecked(items, player.getRegularWarehouse().getItemsWithKinah(), player, "regularWarehouse");
 		}
 		if (player.getAccountWarehouse() != null) {
-			items.addAll(player.getAccountWarehouse().getItemsWithKinah());
+			addAllChecked(items, player.getAccountWarehouse().getItemsWithKinah(), player, "accountWarehouse");
 		}
 
 		for (int petBagId = StorageType.PET_BAG_MIN; petBagId <= StorageType.PET_BAG_MAX; petBagId++) {
 			IStorage petBag = getStorage(player, petBagId);
 			if (petBag != null) {
-				items.addAll(petBag.getItemsWithKinah());
+				addAllChecked(items, petBag.getItemsWithKinah(), player, "petBag:" + petBagId);
 			}
 		}
 
 		for (int houseWhId = StorageType.HOUSE_WH_MIN; houseWhId <= StorageType.HOUSE_WH_MAX; houseWhId++) {
 			IStorage cabinet = getStorage(player, houseWhId);
 			if (cabinet != null) {
-				items.addAll(cabinet.getItemsWithKinah());
+				addAllChecked(items, cabinet.getItemsWithKinah(), player, "cabinet:" + houseWhId);
 			}
 		}
-		items.addAll(player.getEquipment().getEquippedItems());
+		addAllChecked(items, player.getEquipment().getEquippedItems(), player, "equipment");
 		return items;
+	}
+
+	/**
+	 * 合并一个来源容器的物品，跳过并记录幽灵 null。
+	 * Merges one source container's items, skipping and recording phantom nulls.
+	 * @param target 目标列表 / target list
+	 * @param source 来源物品列表 / source item list
+	 * @param player 告警上下文玩家 / player used as the warning context
+	 * @param container 来源容器标识 / source container label
+	 */
+	private static void addAllChecked(List<Item> target, List<Item> source, Player player, String container) {
+		for (int i = 0; i < source.size(); i++) {
+			Item item = source.get(i);
+			if (item == null) {
+				log.warn(I18n.get("log.phantom_null_item", player.getObjectId(), player.getName(), container, i,
+						source.size(), Thread.currentThread().getName()));
+				continue;
+			}
+			target.add(item);
+		}
 	}
 }
