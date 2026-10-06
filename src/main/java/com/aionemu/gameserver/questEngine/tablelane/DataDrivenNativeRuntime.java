@@ -25,6 +25,7 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_DIALOG_WINDOW;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_QUEST_ACTION;
 import com.aionemu.gameserver.questEngine.QuestEngine;
+import com.aionemu.gameserver.questEngine.definition.QuestDialogAction;
 import com.aionemu.gameserver.questEngine.definition.QuestDialogContract;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.questEngine.model.QuestState;
@@ -36,6 +37,7 @@ import com.aionemu.gameserver.questEngine.retail.RetailStringIds;
 import com.aionemu.gameserver.questEngine.tablelane.DataDrivenQuestTable.Kind;
 import com.aionemu.gameserver.questEngine.tablelane.DataDrivenQuestTable.Row;
 import com.aionemu.gameserver.questEngine.tablelane.DataDrivenQuestTable.Step;
+import com.aionemu.gameserver.services.DialogService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.stats.AbyssRankEnum;
 
@@ -115,11 +117,6 @@ public final class DataDrivenNativeRuntime {
 	private static final int PAGE_REFUSE = 1004;
 	/** 报告动作（真端 `0x3f1`）。 / The report action. */
 	private static final int ACTION_REPORT = 1009;
-	/**
-	 * 交付检查按钮（39 = HACTION_CHECK_USER_HAS_QUEST_ITEM；收集型步页的「交出持有物品」）。
-	 * / The hand-over check button (39) on collect-step pages.
-	 */
-	private static final int ACTION_CHECK_ITEM = 39;
 	/** 完成动作（真端 `0x3f0`）。 / The complete action. */
 	private static final int ACTION_COMPLETE = 1008;
 	/** 步进 + 完成动作（真端 `0x280f`）。 / The advance-and-complete action. */
@@ -1494,7 +1491,7 @@ public final class DataDrivenNativeRuntime {
 					// 1008（真机 80789 接取即弹「获得了礼物」完成文案）。
 					// Fixed 2026-10-04: the 20000 accept / 20001 refuse tails close the dialog (retail
 					// XML: close-dialog); the previous form wrongly sent the completion page 1008.
-					PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(0, 0));
+					DialogService.closeDialog(player, objectId);
 					return true;
 				}
 				default -> {
@@ -1797,7 +1794,7 @@ public final class DataDrivenNativeRuntime {
 	 * 行选动作（31/26）发阶段页 `select(K+1)`（打开 -1 不认领——归引擎开门平面 → 通用页 10 列表，
 	 * 2026-10-05 实机 834166：进行中阶段页不得占用开门/挡同 NPC 其余可接任务），顺序页动作
 	 * （`10000+K`，K == 当前步 + 1）步进，乱序静默零写；`1009` = 步进 + 报告通道（末步转待领奖
-	 * 并发奖励窗页 5）；`39` = 交付检查按钮（未持满 → 客户端声明失败页；持满 → 按门扣除 + 报告收尾，
+	 * 并发奖励窗页 5）；交付检查按钮族（`39`/`20002`）未持满 → 客户端声明失败页；持满 → 按门扣除 + 报告收尾，
 	 * 参考 `_80875FightAgainstMechanerk` 的 `checkQuestItems(0,1,false,10000,10001)`）；`10255` = 步进 + 关窗
 	 * （完成通道 `0x5d8`，零发页；退役 19671/10500/13961 尾 = `LEVEL_AND_VISIBILITY_REFRESH sync + close-dialog`）；
 	 * `1008` 与其余 ≥1000 动作原样回发（不写状态）。
@@ -1834,12 +1831,13 @@ public final class DataDrivenNativeRuntime {
 				sendPostAdvancePage(player, objectId, state, plan);
 				return true;
 			}
-			if (dialogId == ACTION_CHECK_ITEM) {
-				// 39 = 交付检查按钮（HACTION_CHECK_USER_HAS_QUEST_ITEM；收集型步页的「交出持有物品」）。
+			if (QuestDialogAction.isItemCheckAction(dialogId)) {
+				// 交付检查按钮族（39 = HACTION_CHECK_USER_HAS_QUEST_ITEM / 20002 = ..._SIMPLE；
+				// 收集型步页的「交出持有物品」）。
 				// 未持满 → 客户端声明的失败应答页（事件行 80875=10001 check_user_item_fail；talk 族
 				// select6=2716 惯例）；持满（或无门声明）→ 按门扣除 + 报告收尾（REWARD + 奖励窗，同 1009）；
 				// 门符号未全解析 ⇒ fail-closed（从不放行未解析门）。
-				// The 39 hand-over check button: missing items → the client-declared fail page; held (or no
+				// The hand-over check button family: missing items → the client-declared fail page; held (or no
 				// gate declared) → consume the gate and report (the 1009 tail); unresolved symbols fail closed.
 				GatePlan gate = gatePlan(hit.questId());
 				if (!gate.resolvable() || !holdsGate(player, gate.items())) {
@@ -1873,7 +1871,7 @@ public final class DataDrivenNativeRuntime {
 				// 3479/3923 close-dialog tails). The tail also refreshes level/visibility (retail
 				// LEVEL_AND_VISIBILITY_REFRESH) so npc quest markers update.
 				refreshLevelAndVisibility(player);
-				PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(0, 0));
+				DialogService.closeDialog(player, objectId);
 				return true;
 			}
 			if (dialogId == ACTION_COMPLETE) {

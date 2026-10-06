@@ -25,6 +25,7 @@ import com.aionemu.gameserver.questEngine.retail.RetailGrantKind;
 import com.aionemu.gameserver.questEngine.retail.RetailItemNameIndex;
 import com.aionemu.gameserver.questEngine.retail.RetailQuestDriver;
 import com.aionemu.gameserver.questEngine.retail.RetailQuestMetadataCompiler;
+import com.aionemu.gameserver.services.DialogService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
@@ -882,7 +883,7 @@ public final class SimpleTalkHandler implements NativeSystemGrantLane {
 						// 让未声明该页的任务客户端 load fail——实机 2026-10-05 quest 14110）。
 						// Retail cab520 0x4e20: check → 0x5d8 close (simple accepts have no confirm
 						// page; any page load-fails quests that never declared it, live 14110).
-						PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(0, 0));
+						DialogService.closeDialog(npc, player);
 					}
 					return true;
 				}
@@ -895,7 +896,7 @@ public final class SimpleTalkHandler implements NativeSystemGrantLane {
 			if (dialogId == 20001) {
 				// 真端 cab520 0x4e21：0x2a8（取消）+ 0x5d8 关窗（拒绝收尾 = 关窗，与 0x4e20 同族）。
 				// Retail cab520 0x4e21: cancel + 0x5d8 close (the refuse tail, same family as 0x4e20).
-				PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(0, 0));
+				DialogService.closeDialog(npc, player);
 				return true;
 			}
 			return false;
@@ -934,12 +935,12 @@ public final class SimpleTalkHandler implements NativeSystemGrantLane {
 						// 系翻译夸大：2026-10-05 1131 实机「结束对话后多余弹页」即此（退役 XML 同断）。
 						// The retail after-commit (FUN_180cabb10) closes the window (0x5d8) and sends no
 						// page; the old page-10 tail was a translation artifact (live 1131, 2026-10-05).
-						PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(0, 0));
+						DialogService.closeDialog(npc, player);
 						return true;
 					}
 					// 未推进（重复/乱序重放）：真端无匹配转换 ⇒ close-dialog 兜底（本服 loop breaker 同语义）。
 					// No matching retail transition on a replayed advance: close the dialog.
-					PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(0, 0));
+					DialogService.closeDialog(npc, player);
 					return true;
 				}
 				if (dialogId == 31 || dialogId == 26) {
@@ -959,23 +960,26 @@ public final class SimpleTalkHandler implements NativeSystemGrantLane {
 				}
 			}
 			// 3. 报告（真端 cabb10 finalStep + caad20 完成门）：中继全满且交付门通过才开奖励窗。
-			// 两步语义（裁定 a，2026-10-03；39 检查按钮 2026-10-04）：任务行（31）只发客户端声明的报告
+			// 两步语义（裁定 a，2026-10-03；检查按钮族 2026-10-04/10-06）：任务行（31）只发客户端声明的报告
 			// 确认页（NPC_REPORT 分型 SELECT2=1352/SELECT5=2375/DEFAULT_SUCCESS=10002，契约与退役
 			// XML 交叉印证）；报告确认才推进 REWARD + 奖励窗——直翻型 = 1009（10002 型由客户端自动回发），
-			// 检查型 = 报告页的 39（HACTION_CHECK_USER_HAS_QUEST_ITEM；两族 39 用户全量普查 Talk 675 件），
-			// 39 未持满时下发客户端声明的失败页（select6=2716，如 1105「您别跟我开玩笑」）。
+			// 检查型 = 报告页的交付检查按钮（真端 cabb10 `0x4e22`/39 同族），未持满时下发客户端声明的
+			// 失败页（select6=2716，如 1105「您别跟我开玩笑」）。检查按钮族只在 39 上匹配会让
+			// `HACTION_CHECK_USER_HAS_QUEST_ITEM_SIMPLE`(20002) 页的按钮静默落空（2026-10-06 实机
+			// 14110：玩家持 5/5 `quest_14110a` 点「拿出革命家的象征」→ 关窗零推进；该族 Talk 604 行）。
 			// 开门动作（26/-1）不推进、不跳步；契约无声明降级为一步直达。
-			// Two-step report (adjudication a; the 39 check button): the row selection (31) only shows the
-			// contract-declared report-confirm page; the confirm action — 1009 (direct) or 39 (the report
-			// page's item-check button) — advances to REWARD + the reward window; a failed 39 check shows
-			// the client-declared fail page (select6).
+			// Two-step report (adjudication a; the check-button family): the row selection (31) only shows
+			// the contract-declared report-confirm page; the confirm action — 1009 (direct) or the report
+			// page's turn-in check button (39 / 20002, retail cabb10 `0x4e22` family) — advances to REWARD
+			// plus the reward window; a failed check shows the client-declared fail page (select6).
+			// Matching only 39 silently drops every 20002 button (live 14110, 2026-10-06).
 			List<Integer> rewardNpcs = rewardNpcIdsByQuestId.get(questId);
 			if (rewardNpcs != null && rewardNpcs.contains(npcId)) {
 				// 报告页只随「报告步已到」下发——**物品门不计入页条件**（缺陷 T，2026-10-05 实机 1126：
 				// 未集齐点任务行被回页 10＝「没反应」；退役 XML 1126/1137/80482：started 态 TALK 31 →
-				// SELECT5/报告页 无 conditions，就绪分叉在确认动作上：39 未持满 → 声明失败页）。
+				// SELECT5/报告页 无 conditions，就绪分叉在确认动作上：检查按钮未持满 → 声明失败页）。
 				// The confirm page rides the report step alone (defect T): the item gate forks on the
-				// confirm action (39 → the declared fail page), never on the page send itself.
+				// confirm action (the check button → the declared fail page), never on the page send itself.
 				boolean reportStepReached = vars >= relayCount(questId);
 				boolean reportReady = reportStepReached && holdsGateItems(questId, player);
 				if (dialogId == 31 && reportStepReached) {
@@ -989,7 +993,7 @@ public final class SimpleTalkHandler implements NativeSystemGrantLane {
 						return true;
 					}
 				}
-				if (dialogId == QuestDialogAction.CHECK_USER_HAS_QUEST_ITEM.id() && !reportReady) {
+				if (QuestDialogAction.isItemCheckAction(dialogId) && !reportReady) {
 					int failPage = dialogContract.checkFailPage(questId);
 					if (failPage > 0) {
 						PacketSendUtility.sendPacket(player,
@@ -998,7 +1002,7 @@ public final class SimpleTalkHandler implements NativeSystemGrantLane {
 					}
 				}
 				if (reportReady && (dialogId == 1009 || dialogId == 31
-						|| dialogId == QuestDialogAction.CHECK_USER_HAS_QUEST_ITEM.id())) {
+						|| QuestDialogAction.isItemCheckAction(dialogId))) {
 					removeGateItems(questId, player);
 					qs.setStatus(QuestStatus.REWARD);
 					qs.setPersistentState(PersistentState.UPDATE_REQUIRED);

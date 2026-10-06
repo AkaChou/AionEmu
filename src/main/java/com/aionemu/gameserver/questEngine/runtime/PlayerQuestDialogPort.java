@@ -2,6 +2,7 @@ package com.aionemu.gameserver.questEngine.runtime;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_DIALOG_WINDOW;
+import com.aionemu.gameserver.services.DialogService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 import java.util.Objects;
@@ -24,7 +25,9 @@ public final class PlayerQuestDialogPort implements QuestDialogPort {
 			return false;
 		}
 		player.clearNpcQuestDialogSelection();
-		PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(0, 0));
+		// 收尾同客户端关窗链：结束 NPC 对话态（DIALOG_FINISH），否则行进中的 NPC 停在半路。
+		// Same tail as the client close: end the NPC talk state so a walking NPC resumes.
+		DialogService.closeDialog(player, snapshot.targetlessDialog() ? 0 : snapshot.interactionObjectId());
 		return true;
 	}
 

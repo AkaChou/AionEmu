@@ -808,8 +808,7 @@ public sealed interface QuestEvent permits QuestEvent.TalkToNpc, QuestEvent.Kill
 	}
 
 	private static boolean isItemCheckDialogId(int dialogId) {
-		return dialogId == QuestDialogAction.CHECK_USER_HAS_QUEST_ITEM.id()
-			|| dialogId == QuestDialogAction.CHECK_USER_HAS_QUEST_ITEM_SIMPLE.id();
+		return QuestDialogAction.isItemCheckAction(dialogId);
 	}
 
 	/**

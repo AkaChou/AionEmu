@@ -518,6 +518,47 @@ class SimpleTalkNativeFamilyGateTest {
 	}
 
 	/**
+	 * 20002 检查按钮（{@code HACTION_CHECK_USER_HAS_QUEST_ITEM_SIMPLE}，2026-10-06 实机 14110）：
+	 * 交付检查按钮有 39 与 20002 两种客户端编码，同一任务页只会出现其一；native 只匹配 39 时，
+	 * 14110 报告页（select5=2375，按钮「拿出革命家的象征」=20002）的确认动作整体落空——玩家持
+	 * 5/5 {@code quest_14110a} 点按钮被关窗、任务停在 START（2026-10-06 实机：DB 内
+	 * 182215454×5、player_quests(14110)=START/0）。本测试在同一真端行上以 20002 重放 39 的两段
+	 * 语义，锁定两编码同族：持满 → REWARD + 奖励窗 + 按门扣除；未持满 → 客户端声明失败页。
+	 * The 20002 check button (the SIMPLE encoding) must behave exactly like 39: matching only 39
+	 * silently drops every 20002 button (live 14110, 2026-10-06).
+	 */
+	@Test
+	void reportCheckButtonSimpleEncodingBehavesLikeThePlainForm() {
+		int questId = CHECK_BUTTON_QUEST;
+		Player player = NativeTalkFixture.player();
+		QuestState state = new QuestState(questId, QuestStatus.START, 0, 0, null, 0, null);
+		player.getQuestStateList().addQuest(questId, state);
+		Npc rewardNpc = createMockNpc(itemHandler.rewardNpc(questId));
+		int checkAction = QuestDialogAction.CHECK_USER_HAS_QUEST_ITEM_SIMPLE.id();
+		inventory.clear();
+
+		// 未持满：20002 → 同 39，声明失败页（select6=2716），状态仍 START、零扣物。
+		NativeTalkFixture.clearPackets(player);
+		assertTrue(itemHandler.onDialog(new QuestEnv(rewardNpc, player, questId, checkAction)));
+		NativeTalkFixture.assertOnlyDialogPage(player, QuestDialogPage.SELECT6.id());
+		assertEquals(QuestStatus.START, state.getStatus(), "失败检查不推进");
+		assertTrue(inventory.calls.isEmpty(), "失败检查不扣物品");
+
+		// 持满：20002 与 1009 同义——REWARD + 奖励窗 + 按门扣除。
+		for (SimpleTalkHandler.ItemStack item : itemHandler.workItems(questId)) {
+			inventory.held.put(item.itemId(), (long) item.count());
+		}
+		List<String> expectedRemovals = itemHandler.workItems(questId).stream()
+			.map(item -> "remove:" + item.itemId() + ":" + item.count())
+			.toList();
+		NativeTalkFixture.clearPackets(player);
+		assertTrue(itemHandler.onDialog(new QuestEnv(rewardNpc, player, questId, checkAction)));
+		NativeTalkFixture.assertOnlyDialogPage(player, SimpleTalkHandler.PAGE_REWARD_WINDOW);
+		assertEquals(QuestStatus.REWARD, state.getStatus(), "20002 持满即推进");
+		assertEquals(expectedRemovals, inventory.calls);
+	}
+
+	/**
 	 * 报告页分型跳过被中继步占用的 SELECT2（缺陷 S，2026-10-05，1118 实机）：双页任务的中继完成后，
 	 * 交付 NPC 的任务行（31）发报告页 select5（2375；按钮「拿出药膏」=SELECT_QUEST_REWARD），
 	 * 而不是中继对话树 select2（1352；按钮 SELECT2_1 翻页）。误判让 31 发 1352，报告确认 10000

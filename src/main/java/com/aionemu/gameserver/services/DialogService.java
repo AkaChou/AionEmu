@@ -10,12 +10,15 @@ import com.aionemu.gameserver.lifecycle.GameCraftServices;
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import com.aionemu.gameserver.ai.ActionItemNpcAI2;
+import com.aionemu.gameserver.ai2.AI2;
+import com.aionemu.gameserver.ai2.event.AIEventType;
 import com.aionemu.gameserver.configs.main.CustomConfig;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.TeleportAnimation;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.Npc;
+import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.gameobjects.player.PlayerHouseOwnerFlags;
 import com.aionemu.gameserver.model.gameobjects.player.RequestResponseHandler;
@@ -57,6 +60,51 @@ import com.aionemu.gameserver.utils.stats.AbyssRankEnum;
 @Slf4j
 
 public class DialogService {
+    /**
+     * 服务端收尾关窗：真端 {@code 0x5d8} 关窗不仅关客户端窗口，也结束 NPC 的对话态——按客户端
+     * {@code CM_CLOSE_DIALOG} 的同一条收尾链补发 {@link AIEventType#DIALOG_FINISH} 并做既有清扫。
+     * <p>
+     * 不补这一步时，行进中的对话 NPC 会**停在半路永不恢复**：开门时
+     * {@code TalkEventHandler.onSimpleTalk} 置 {@code AISubState.TALK} 并把玩家设为目标，移动 tick 随即
+     * 把该子状态判为「已到达」（{@code AbstractAI#isDestinationReached}）并 {@code abortMove()}，
+     * 而恢复巡逻的唯一常规入口就是 {@code DIALOG_FINISH}（2026-10-06 实机 NPC 203111 Spiros）。
+     * 重复触发安全：目标的清除使第二次 {@code onFinishTalk} 自然成为空操作。
+     * <p>
+     * Server-side dialog close also ends the NPC's talk state (retail {@code 0x5d8}): fire
+     * {@code DIALOG_FINISH} exactly like the client {@code CM_CLOSE_DIALOG} tail does, otherwise a
+     * walking dialog NPC stays paused mid-route forever. Firing twice is safe: the second
+     * {@code onFinishTalk} no-ops once the target is cleared.
+     * @param npc 对话 NPC，未知时传 null（只关窗） / the dialog NPC, or null when unknown
+     * @param player 玩家 / player
+     */
+    public static void closeDialog(Npc npc, Player player) {
+        if (npc != null) {
+            // 只通知「已装配 AI」的生物：对话态（AISubState.TALK）本就挂在 AI 上，没有 AI 就没有可结束
+            // 的对话态；同时避免收尾路径以懒建 dummy AI 为副作用（getAi2IfPresent 即为此而设）。
+            // Only notify a creature that already has an AI: the talk substate lives on the AI, and a
+            // teardown path must not lazily attach the dummy AI.
+            AI2 ai = npc.getAi2IfPresent();
+            if (ai != null) {
+                ai.onCreatureEvent(AIEventType.DIALOG_FINISH, player);
+            }
+            onCloseDialog(npc, player);
+        }
+        PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(0, 0));
+    }
+
+    /**
+     * 服务端收尾关窗（按交互目标对象 id 解析 NPC）：解析不到时退化为纯关窗。
+     * Server-side close resolving the NPC from the interaction target object id; an unresolvable id
+     * degrades to a plain window close.
+     * @param player 玩家 / player
+     * @param targetObjectId 交互目标对象 ID，0 表示无 / interaction target object id, 0 for none
+     */
+    public static void closeDialog(Player player, int targetObjectId) {
+        VisibleObject target = targetObjectId > 0 && player.getKnownList() != null
+            ? player.getKnownList().getObject(targetObjectId) : null;
+        closeDialog(target instanceof Npc npc ? npc : null, player);
+    }
+
     /**
      * 关闭与 NPC 的对话框；对军团仓库管理员释放占用。
      * Close the NPC dialog; for legion warehouse keepers, release the warehouse user lock.
@@ -170,7 +218,7 @@ public class DialogService {
             if (questId != 0 && dialogId != QuestDialogAction.QUEST_SELECT.id()
                     && !QuestDialogPage.isSelectionSubPage(dialogId)) {
                 player.clearNpcQuestDialogSelection();
-                PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(0, 0));
+                closeDialog(npc, player);
                 return;
             }
         }

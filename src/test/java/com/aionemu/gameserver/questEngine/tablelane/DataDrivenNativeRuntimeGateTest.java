@@ -451,6 +451,39 @@ class DataDrivenNativeRuntimeGateTest {
 	}
 
 	/**
+	 * ⑤d' 交付检查按钮的 20002 编码（{@code HACTION_CHECK_USER_HAS_QUEST_ITEM_SIMPLE}）：切换集
+	 * 65 行的步页按钮（select1/2/3）用它。只匹配 39 时 20002 会落进「≥1000 原样回发」分支——动作 id
+	 * 被当页下发 ⇒ 客户端 load fail（同 QE-148 的 SETPRO1=10000 形）。20002 必须与 39 同族：
+	 * 未持满 → 客户端声明失败页（80875=10001）；持满 → 扣门 + REWARD + 奖励窗页 5。
+	 * The 20002 encoding of the check button must follow the same gate as 39.
+	 */
+	@Test
+	void checkButtonSimpleEncodingBehavesLikeThePlainForm() {
+		int questId = 80875;
+		int stepIndex = table.find(questId).orElseThrow().steps().getFirst().index();
+		int npcId = keyOf(runtime.talkInterests(), questId, stepIndex);
+		Player player = NativeTalkFixture.player();
+		QuestState state = NativeTalkFixture.add(player, questId, QuestStatus.START, stepIndex);
+		inventory.clear();
+
+		// 未持满：20002 → 同 39，客户端声明的失败页 10001，状态仍 START、零扣物。
+		NativeTalkFixture.clearPackets(player);
+		assertTrue(runtime.onDialog(player, npcId, 20002, 1, questId), "20002 检查必须被服务");
+		NativeTalkFixture.assertOnlyDialogPage(player, 10001);
+		assertEquals(QuestStatus.START, state.getStatus(), "失败检查不推进");
+		assertTrue(inventory.calls().isEmpty(), "失败检查不扣物品");
+
+		// 持满 7×（物品 182216117 = quest_80875a）：20002 → 扣门 + REWARD + 奖励窗页 5。
+		int gateItem = 182216117;
+		inventory.hold(gateItem, 7L);
+		NativeTalkFixture.clearPackets(player);
+		assertTrue(runtime.onDialog(player, npcId, 20002, 1, questId), "持满后 20002 必须收尾");
+		NativeTalkFixture.assertOnlyDialogPage(player, 5);
+		assertEquals(QuestStatus.REWARD, state.getStatus(), "持满 20002 = 报告收尾");
+		assertEquals(List.of("remove:" + gateItem + ":7"), inventory.calls(), "按门扣除收集物");
+	}
+
+	/**
 	 * ⑤c ItemPlay 步 = 物品获得事件（真端事件 5 / `FUN_180c46e90`）：物品 id 匹配 + 组 1 计数 +
 	 * 达标收口；未声明物品零动作。
 	 * ItemPlay steps count the acquired item id; undeclared items are zero actions.

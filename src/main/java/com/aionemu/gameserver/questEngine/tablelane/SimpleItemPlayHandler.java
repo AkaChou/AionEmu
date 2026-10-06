@@ -24,6 +24,7 @@ import com.aionemu.gameserver.questEngine.retail.RetailClientHandinNpcSets;
 import com.aionemu.gameserver.questEngine.retail.RetailItemNameIndex;
 import com.aionemu.gameserver.questEngine.retail.RetailQuestMetadataCompiler;
 import com.aionemu.gameserver.questEngine.tablelane.NativeItemSymbols.ItemStack;
+import com.aionemu.gameserver.services.DialogService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
@@ -684,12 +685,12 @@ public final class SimpleItemPlayHandler {
 						// 系翻译夸大（2026-10-05 1131 实机「结束对话后多余弹页」）。
 						// The retail after-commit (cabb10 axis) closes the window (0x5d8) and sends no
 						// page; the old page-10 tail was a translation artifact (live 1131, 2026-10-05).
-						PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(0, 0));
+						DialogService.closeDialog(player, objectId);
 						return true;
 					}
 					// 未推进（重复/乱序重放）：真端无匹配转换 ⇒ close-dialog 兜底（本服 loop breaker 同语义）。
 					// No matching retail transition on a replayed advance: close the dialog.
-					PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(0, 0));
+					DialogService.closeDialog(player, objectId);
 					return true;
 				}
 				if (dialogId == 31 || dialogId == 26 || dialogId == -1) {
@@ -763,7 +764,7 @@ public final class SimpleItemPlayHandler {
 					PacketSendUtility.sendPacket(player,
 						new SM_DIALOG_WINDOW(objectId, PAGE_ACCEPTED, questId));
 				} else {
-					PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(0, 0));
+					DialogService.closeDialog(player, objectId);
 				}
 				return true;
 			}
@@ -774,7 +775,7 @@ public final class SimpleItemPlayHandler {
 			return true;
 		}
 		if (dialogId == 1004 || dialogId == 20001) {
-			PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(0, 0));
+			DialogService.closeDialog(player, objectId);
 			return true;
 		}
 		if (dialogId == 1008) {

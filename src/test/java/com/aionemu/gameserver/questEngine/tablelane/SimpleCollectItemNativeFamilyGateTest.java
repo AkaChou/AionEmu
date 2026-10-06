@@ -292,6 +292,40 @@ class SimpleCollectItemNativeFamilyGateTest {
 	}
 
 	/**
+	 * 20002 检查按钮（{@code HACTION_CHECK_USER_HAS_QUEST_ITEM_SIMPLE}，2026-10-06 实机 14110 同类）：
+	 * 本族 93 行的报告页按钮用 20002 编码（如 1144「拿出南瓜」），只匹配 39 的判定会让这些行的
+	 * 确认动作整体落空。20002 必须与 39 同族同义：持满 → REWARD + 奖励窗 + 扣物；未持满 → 声明失败页。
+	 * The 20002 check button must behave exactly like 39 for this family's 93 rows.
+	 */
+	@Test
+	void reportPageCheckButtonSimpleEncodingBehavesLikeThePlainForm() {
+		Player player = NativeTalkFixture.player();
+		NativeTalkFixture.RecordingInventory inventory = new NativeTalkFixture.RecordingInventory();
+		SimpleCollectItemHandler local = handlerWith(inventory, NativeReportRewardFlow.instance());
+		NativeTalkFixture.start(player, SINGLE_OBJECT_QUEST);
+		int rewardNpc = local.rewardNpc(SINGLE_OBJECT_QUEST);
+		int handInItem = local.handInItems(SINGLE_OBJECT_QUEST).getFirst();
+		int checkAction = QuestDialogAction.CHECK_USER_HAS_QUEST_ITEM_SIMPLE.id();
+
+		// 未持满：20002 → 同 39，声明失败页（select6=2716），零状态写、零扣物。
+		NativeTalkFixture.clearPackets(player);
+		assertTrue(local.onDialog(NativeTalkFixture.dialog(player, rewardNpc, SINGLE_OBJECT_QUEST, checkAction)));
+		NativeTalkFixture.assertOnlyDialogPage(player, QuestDialogPage.SELECT6.id());
+		assertEquals(QuestStatus.START,
+			player.getQuestStateList().getQuestState(SINGLE_OBJECT_QUEST).getStatus(), "失败检查不推进");
+		assertTrue(inventory.calls().isEmpty(), "失败检查不扣物品");
+
+		// 持满：20002 与 1009 同义——REWARD + 奖励窗 + 按真端计数扣物。
+		inventory.hold(handInItem, 1);
+		NativeTalkFixture.clearPackets(player);
+		assertTrue(local.onDialog(NativeTalkFixture.dialog(player, rewardNpc, SINGLE_OBJECT_QUEST, checkAction)));
+		NativeTalkFixture.assertOnlyDialogPage(player, SimpleCollectItemHandler.PAGE_REWARD_WINDOW);
+		assertEquals(QuestStatus.REWARD,
+			player.getQuestStateList().getQuestState(SINGLE_OBJECT_QUEST).getStatus(), "20002 持满即推进");
+		assertEquals(List.of("remove:" + handInItem + ":1"), inventory.calls());
+	}
+
+	/**
 	 * 多列行（18501 两列 ×5）必须逐列持有：只持一列不得放行交付，两列交付物齐（真端 check_item）才翻 REWARD。
 	 * Multi-column rows need every column's items held: one column never opens the hand-in.
 	 */

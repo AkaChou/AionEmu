@@ -207,3 +207,27 @@ keywords: 阈值变身, 变身, 不灭之奥里萨, 虚脱的奥里萨, 237230, 
 - **不是同族**：`Lava_ProtectorAI2`（236227）与 `Heatvent_ProtectorAI2`（236228）的 `checkPercentage` 只启动 5 分钟牺牲/事件任务，不生成替代形态，其 `handleDied` 只掉宝箱，因此不进闸门名单——**同族判定看“阈值分支是否 spawn 替代形态”，不要按 NPC 名或目录聚类**。
 - **验证边界**：静态闸门只能证明“阈值路径与死亡路径共用同一个生成闸门”，不能证明阈值数值与真端一致；替代形态被击杀后的任务记账仍走 questEngine，任务侧复测必须打到 237231 死亡才能闭环。
 - **教训**：凡是“打到 X% 变形态/换阶段”的脚本 AI，都要问一句“如果这一击直接打死会怎样”；受击回调读到的 HP 永远滞后一次伤害，阈值分支不能作为唯一入口。
+
+---
+
+## [AIM-008] 八、服务端关窗必须收尾 NPC 对话态：行进中的对话 NPC 会停在半路 (SERVER_CLOSE_MUST_FINISH_TALK)
+<!-- pattern-metadata
+status: CONFIRMED
+scope: 所有由服务端单方面下发 SM_DIALOG_WINDOW(0,0) 的收尾路径（任务车道推进/拒绝/失败关窗、引擎兜底关窗、重发断路、任务提交口）与带 walker 的对话 NPC（模板 is_dialog=true）
+first_seen: 2026-10-06
+last_verified: 2026-10-06
+symptom: 与 NPC 对话后 NPC 不再巡逻（停在半路不动，区域无人 60s 后才随区域去激活恢复）；玩家报告「点按钮后弹窗关了，而且 NPC 不巡逻了」（2026-10-06 实机 NPC 203111 Spiros，quest 14110）
+root_cause: 开门（CM_SHOW_DIALOG → DIALOG_START → TalkEventHandler.onSimpleTalk）对 is_dialog 模板把行进中的 NPC 置 AISubState.TALK 并设玩家为目标；下一次移动 tick 的到达判定把 TALK 直接短路为「已到达」（AbstractAI#isDestinationReached），于是 WalkManager.targetReached 命中 case TALK → abortMove() 停半路且不再选下一个 waypoint（state 仍 WALKING、substate 仍 TALK）。恢复巡逻的唯一常规入口是 DIALOG_FINISH → TalkEventHandler.onFinishTalk → think() → WalkManager.startWalking；而 DIALOG_FINISH 全仓只有客户端 CM_CLOSE_DIALOG 一个发送方，服务端单方面关窗只发包、不碰 AI ⇒ 客户端不回发关闭包时 NPC 永久停住
+fix_or_guardrail: 服务端收尾关窗统一走 DialogService.closeDialog(npc, player) / closeDialog(player, targetObjectId)——按客户端 CM_CLOSE_DIALOG 同链补发 AIEventType.DIALOG_FINISH + 既有 onCloseDialog 清扫 + 关窗包；只通知「已装配 AI」的生物（Creature#getAi2IfPresent，不懒建 dummy：对话态本就挂在 AI 上，收尾路径不得有装配副作用）；重复触发安全（目标已清时 onFinishTalk 空操作）
+evidence: src/main/java/com/aionemu/gameserver/services/DialogService.java（closeDialog 两个重载）; src/main/java/com/aionemu/gameserver/model/gameobjects/Creature.java（getAi2IfPresent）; src/main/java/com/aionemu/gameserver/ai2/handler/TalkEventHandler.java:93-114; src/main/java/com/aionemu/gameserver/ai2/AbstractAI.java:753; src/main/java/com/aionemu/gameserver/ai2/manager/WalkManager.java:254-256; src/main/java/com/aionemu/gameserver/network/aion/clientpackets/CM_CLOSE_DIALOG.java:52（唯一 DIALOG_FINISH 发送方）; 改造面（11 文件 22 站点）：SimpleTalk/SimpleCollectItem/SimpleCombineTask/SimpleHunt/SimpleSerialHunt/SimpleItemPlay/DataDrivenNativeRuntime 各关窗点 + DialogService 兜底 + CM_DIALOG_SELECT 断路 + PlayerQuestDialogPort; src/test/java/com/aionemu/gameserver/services/DialogServiceTest.java（3 例）; .agents/summary/quest-14110-check-button/DIAGNOSIS.zh-CN.md §7.1
+validation: focused-test（DialogServiceTest 3/3；相关车道族门 SimpleTalk 16/16、SimpleCollectItem 16/16、DataDriven 30/30、CombineTask 11/11、ItemPlay 15/15、UseItem 11/11、Hunt 5/5、SerialHunt 4/4、PlayerQuestDialogPort 11/11、QuestEngineNpcDialogDispatch 6/6、QuestProductionStartupGate 2/2 全绿，2026-10-06 IDEA MCP runner）；runtime 实机复测通过（2026-10-06 用户实测确认：203111 关窗后恢复巡逻）
+boundaries: ① 未装配 AI 的生物不通知（无对话态可结束）；② 无 NPC 上下文的关窗（如 SimpleUseItem 的 ownerless 接取面）保持纯关窗；③ 客户端收到服务端关窗包后是否回发 CM_CLOSE_DIALOG 未实测（本修复对两种情形都安全：重复 DIALOG_FINISH 幂等）；④ 区域去激活/重生仍会清除 TALK 子状态（不是本缺陷的常规恢复路径，只是兜底）
+superseded_by: none
+first_check: 玩家报「NPC 不巡逻/站住不动」时先看：① 该 NPC 模板 is_dialog 且 spawn 带 walker_id？② 最近一次对话结束是客户端关窗还是服务端关窗（quests.log 的 0x5d8 关窗行）？③ 关窗站点走的是 DialogService.closeDialog 还是裸 SM_DIALOG_WINDOW(0,0)？
+keywords: NPC 不巡逻, 停止巡逻, 站住不动, 关窗, SM_DIALOG_WINDOW, 0x5d8, DIALOG_FINISH, CM_CLOSE_DIALOG, AISubState.TALK, abortMove, WalkManager, targetReached, Spiros, 203111, walker, is_dialog, 对话收尾
+-->
+
+- **症状**：和巡逻 NPC 对话后它停在半路一直不动；服务端悄悄关窗（任务推进/拒绝/检查失败）时尤其明显，玩家观感是「点了按钮弹窗关了，NPC 也不巡逻了」。
+- **根因链**：`TalkEventHandler.onSimpleTalk`（`is_dialog` 模板）置 `AISubState.TALK` + `setTarget` → `AbstractAI#isDestinationReached` 在 WALKING 下把 TALK 短路成「已到达」 → `WalkManager.targetReached` 的 `case TALK: abortMove()` 停半路不选下一点 → 恢复只发生在 `DIALOG_FINISH` → 全仓只有 `CM_CLOSE_DIALOG` 发它，服务端关窗站点全都只发包。
+- **修复契约**：服务端关窗 = `DialogService.closeDialog(...)`（`DIALOG_FINISH` + `onCloseDialog` + 关窗包）；只对已装配 AI 的生物发事件（`getAi2IfPresent`）；重复触发幂等。
+- **验证边界**：单测锁的是「关窗即发 DIALOG_FINISH」这条接线；「NPC 重新沿路线走」实机复测通过（2026-10-06）；区域去激活是另一条兜底恢复路径，容易造成"过一会儿自己好了"的误判）。

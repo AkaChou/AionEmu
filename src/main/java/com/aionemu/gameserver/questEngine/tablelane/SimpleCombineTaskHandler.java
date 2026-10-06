@@ -26,6 +26,7 @@ import com.aionemu.gameserver.questEngine.retail.RetailItemNameIndex;
 import com.aionemu.gameserver.questEngine.retail.RetailQuestMetadataCompiler;
 import com.aionemu.gameserver.questEngine.retail.RetailRecipeIndex;
 import com.aionemu.gameserver.questEngine.tablelane.NativeItemSymbols.ItemStack;
+import com.aionemu.gameserver.services.DialogService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
@@ -412,7 +413,7 @@ public final class SimpleCombineTaskHandler {
 			if (dialogId == 1002) {
 				PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(objectId, PAGE_ACCEPTED, questId));
 			} else {
-				PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(0, 0));
+				DialogService.closeDialog(player, objectId);
 			}
 			return true;
 		}
@@ -421,7 +422,7 @@ public final class SimpleCombineTaskHandler {
 			return true;
 		}
 		if (dialogId == 1004 || dialogId == 20001) {
-			PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(0, 0));
+			DialogService.closeDialog(player, objectId);
 			return true;
 		}
 		return false;

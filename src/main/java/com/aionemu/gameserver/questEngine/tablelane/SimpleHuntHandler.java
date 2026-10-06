@@ -21,6 +21,7 @@ import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.questEngine.definition.QuestDialogAction;
 import com.aionemu.gameserver.questEngine.definition.QuestDialogContract;
 import com.aionemu.gameserver.questEngine.definition.QuestDialogPage;
+import com.aionemu.gameserver.services.DialogService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
@@ -553,7 +554,7 @@ public final class SimpleHuntHandler implements NativeSystemGrantLane {
 							// 未声明 1003 的任务客户端 load fail——实机 2026-10-05 quest 14110 同类）。
 							// Retail cab520 0x4e20: check → 0x5d8 close (no confirm page; a page reply
 							// load-fails quests that never declared it, live 14110 class).
-							PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(0, 0));
+							DialogService.closeDialog(npc, player);
 						}
 						return true;
 					}
@@ -563,7 +564,7 @@ public final class SimpleHuntHandler implements NativeSystemGrantLane {
 				} else if (dialogId == 20001) {
 					// 真端 cab520 0x4e21：拒绝收尾 = 关窗（与 0x4e20 同族）。
 					// Retail cab520 0x4e21: refuse tail closes the dialog (same family as 0x4e20).
-					PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(0, 0));
+					DialogService.closeDialog(npc, player);
 					return true;
 				}
 			}

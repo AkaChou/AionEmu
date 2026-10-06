@@ -173,6 +173,19 @@ private final AggroList aggroList;
 	}
 
 	/**
+	 * 返回已装配的 AI，未装配时返回 null——**不**懒创建 dummy。
+	 * 查询与收尾路径（如关窗时向 NPC 补发对话结束事件）不得以「装配一个 dummy AI」为副作用：
+	 * 对话状态本就挂在 AI 上，没有 AI 的生物也就没有可结束的对话态。
+	 * Returns the attached AI, or null when none is attached (never lazily creates the dummy AI):
+	 * query and teardown paths must not attach a dummy as a side effect, and a creature without an
+	 * AI has no AI-held dialog state to finish.
+	 * @return 已装配的 AI 或 null / the attached AI, or null
+	 */
+	public AI2 getAi2IfPresent() {
+		return ai2;
+	}
+
+	/**
 	 * 是否延迟删除。
 	 * Whether the despawn is delayed.
 	 * @return 是否延迟删除 / whether delete delayed

@@ -242,6 +242,21 @@ public enum QuestDialogAction {
 		return BY_ID.get(id);
 	}
 
+	/**
+	 * 交付检查按钮动作族：{@code CHECK_USER_HAS_QUEST_ITEM}(39) 与
+	 * {@code CHECK_USER_HAS_QUEST_ITEM_SIMPLE}(20002) 是不同客户端修订对同一次交付检查的两种按钮编码
+	 * （同一任务页只会出现其一）。native 车道必须按族判定，只认 39 会让 20002 页的按钮静默落空。
+	 * The turn-in check button family: 39 and 20002 are two encodings of the same delivery check across
+	 * client revisions (a task page carries only one of them). The native lanes must match the family;
+	 * matching only 39 silently drops every 20002 button.
+	 * @param dialogId 对话动作 ID / dialog action id
+	 * @return 是否为交付检查按钮 / whether it is a turn-in check button
+	 */
+	public static boolean isItemCheckAction(int dialogId) {
+		return dialogId == CHECK_USER_HAS_QUEST_ITEM.id()
+			|| dialogId == CHECK_USER_HAS_QUEST_ITEM_SIMPLE.id();
+	}
+
 	/** 奖励窗口自动确认的可选槽位数（SELECTED_QUEST_AUTO_REWARD1..15 = 110..124）。 / Auto-confirm selectable slot count. */
 	public static final int AUTO_REWARD_SLOT_COUNT = 15;
 

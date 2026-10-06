@@ -14,7 +14,6 @@ import com.aionemu.gameserver.model.gameobjects.player.DialogSelectRepeat;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.AionClientPacket;
 import com.aionemu.gameserver.network.aion.AionConnection.State;
-import com.aionemu.gameserver.network.aion.serverpackets.SM_DIALOG_WINDOW;
 import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.questEngine.definition.QuestDialogAction;
 import com.aionemu.gameserver.questEngine.definition.QuestDialogPage;
@@ -24,8 +23,8 @@ import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.services.ClassChangeService;
+import com.aionemu.gameserver.services.DialogService;
 import com.aionemu.gameserver.services.QuestService;
-import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 选择 NPC/任务对话选项的客户端包。
  * Client packet selecting an NPC or quest dialog option.
@@ -273,7 +272,9 @@ public class CM_DIALOG_SELECT extends AionClientPacket {
 		int npcId = target instanceof Npc npc ? npc.getNpcId() : 0;
 		log.warn(I18n.get("log.quest_dialog_select_loop", player.getName(), npcId, targetObjectId, dialogId,
 			lastPage, questId, repeat.count()));
-		PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(0, 0));
+		// 打断重发死循环同样结束对话：按客户端关窗同链收尾（DIALOG_FINISH），否则行进中的 NPC 停在半路。
+		// Breaking the resend loop also ends the dialog: fire the client-close tail so a walking NPC resumes.
+		DialogService.closeDialog(player, targetObjectId);
 		return true;
 	}
 

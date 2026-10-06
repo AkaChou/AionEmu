@@ -26,6 +26,7 @@ import com.aionemu.gameserver.questEngine.retail.RetailClientHandinNpcSets;
 import com.aionemu.gameserver.questEngine.retail.RetailGrantKind;
 import com.aionemu.gameserver.questEngine.retail.RetailItemNameIndex;
 import com.aionemu.gameserver.questEngine.retail.RetailQuestMetadataCompiler;
+import com.aionemu.gameserver.services.DialogService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
@@ -898,15 +899,16 @@ public final class SimpleCollectItemHandler implements NativeSystemGrantLane {
 				// The confirm page rides the completed relay alone (defect T); the item gate forks on
 				// the confirm action.
 				boolean relayDone = talkChainComplete(player, questId);
-				// 两步报告（裁定 a，2026-10-03；39 检查按钮 2026-10-04）：任务行（31）只发客户端声明的
+				// 两步报告（裁定 a，2026-10-03；检查按钮族 2026-10-04/10-06）：任务行（31）只发客户端声明的
 				// 报告确认页（NPC_REPORT 分型 1352/2375/10002）；报告确认才推进 REWARD + 奖励窗——确认
-				// 动作随任务页而分：直翻型 = 1009；检查型 = 报告页的 39（HACTION_CHECK_USER_HAS_QUEST_ITEM，
-				// 真机 1103「拿出找到的谷物袋子」；两族 39 用户全量普查 Talk 675 + CollectItem 85）。
-				// 39 未持满时下发客户端声明的失败页（select6=2716，真端失败应答文案）。
+				// 动作随任务页而分：直翻型 = 1009；检查型 = 报告页的交付检查按钮族
+				// （39 `HACTION_CHECK_USER_HAS_QUEST_ITEM` / 20002 `..._SIMPLE`，真机 1103「拿出找到的
+				// 谷物袋子」为 39；本族 20002 页 93 行，只认 39 会静默落空，同 Talk 14110 缺陷）。
+				// 检查按钮未持满时下发客户端声明的失败页（select6=2716，真端失败应答文案）。
 				// 开门动作（-1/26）不推进、不跳步。
-				// Two-step report (adjudication a, 2026-10-03; the 39 check button, 2026-10-04): 31 shows the
-				// declared confirm page; the confirm action advances — 1009 for the direct form, 39 (the report
-				// page's item-check button) for the check form; a failed 39 check shows the declared fail page.
+				// Two-step report (adjudication a; the check-button family): 31 shows the declared confirm
+				// page; the confirm action advances — 1009 for the direct form, the report page's turn-in
+				// check button (39 or 20002) for the check form; a failed check shows the declared fail page.
 				if (dialogId == 31 && relayDone) {
 					// 报告页分型跳过被中继步占用的 SELECT2（缺陷 S，2026-10-05）：9620/9655/9656 等
 					// 双页任务的 select2/3/4 是中继步页（SETPRO1/2/3），报告页是 select5。
@@ -918,7 +920,7 @@ public final class SimpleCollectItemHandler implements NativeSystemGrantLane {
 						return true;
 					}
 				}
-				if (dialogId == QuestDialogAction.CHECK_USER_HAS_QUEST_ITEM.id() && !reportReady) {
+				if (QuestDialogAction.isItemCheckAction(dialogId) && !reportReady) {
 					int failPage = QuestDialogContract.loadDefault().checkFailPage(questId);
 					if (failPage > 0) {
 						PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(objectId, failPage, questId));
@@ -926,7 +928,7 @@ public final class SimpleCollectItemHandler implements NativeSystemGrantLane {
 					}
 				}
 				if (reportReady && (dialogId == 31 || dialogId == 1009
-						|| dialogId == QuestDialogAction.CHECK_USER_HAS_QUEST_ITEM.id())) {
+						|| QuestDialogAction.isItemCheckAction(dialogId))) {
 					if (!handInComplete(player, questId)) {
 						return false;
 					}
@@ -1025,7 +1027,7 @@ public final class SimpleCollectItemHandler implements NativeSystemGrantLane {
 					// 1003 的任务客户端 load fail——实机 2026-10-05 quest 14110 同类）。
 					// Retail cab520 0x4e20: check → 0x5d8 close (no confirm page; a page reply load-fails
 					// quests that never declared it, live 14110 class).
-					PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(0, 0));
+					DialogService.closeDialog(player, objectId);
 				}
 				return true;
 			}
@@ -1038,7 +1040,7 @@ public final class SimpleCollectItemHandler implements NativeSystemGrantLane {
 		if (dialogId == 20001) {
 			// 真端 cab520 0x4e21：拒绝收尾 = 关窗（与 0x4e20 同族）。
 			// Retail cab520 0x4e21: refuse tail closes the dialog (same family as 0x4e20).
-			PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(0, 0));
+			DialogService.closeDialog(player, objectId);
 			return true;
 		}
 		return false;
