@@ -3471,3 +3471,26 @@ keywords: DD 对话链、推进、10000+k、10002、hit 步守卫、当前步、
 - **判定规则**：DD 推进动作（10000+k）不受「hit 步 == 当前步」限制——推进后新步页由同一对话窗续链，其按钮必须在该窗被服务；基准 = 当前步（vars 的步）：顺序卫 `code-9999 == 当前步 + 1`、advance/plan/执行器全锚当前步。其余动作（31/26/报告/检查/完成/回发）仍只服务当前步。
 - **安全网**：`DataDrivenNativeRuntimeGateTest#dialogChainAdvanceIsServedAtANonCurrentStepNpc`（13403 实机行：乱序静默 + 非当前步 NPC 窗推进步进 + 单页续链三断言）。
 - **反漂移**：别把推进也绑「hit 步 == 当前步」（同窗续链的按钮会落 DialogService 兜底关窗、任务不推进）；别用 hit.stepIndex 作推进基准（要 currentStep）；别把「推进后发新步页」改成关窗（对话链模型，实机 10000 已验证）。
+
+## [QE-151] 一百五十一、迁移后「本行/引用他行」的元数据查询必须双源回退（目录 → 真端 quest.xml）＋真端 ≥ 计数语义：native 行在可重复/分享/前置/事件维护面 fail-closed 静默死亡（1157 及 180 链 / 传送门·分享面 / 318 事件任务中 315 行） (METADATA_DUAL_SOURCE_NATIVE_FALLBACK)
+
+<!-- pattern-metadata
+status: CONFIRMED
+scope: 生产目录（733 XML 保留行）与原生车道并存期间的所有「元数据查询」消费点——本行轴（canRepeat / 分享 / 事件维护发放重置）与引用他行轴（finished 前置的完成计数）；不含显式按 owner 分流的分支（QuestService nativeAcquireAllowed / NpcFactions / RetailAreaEngine / nativeZoneVerdict / abandonQuest 先例——那些是设计内分流）
+first_seen: 2026-10-06
+last_verified: 2026-10-06
+symptom: 迁移把行移出目录后各引用面静默死亡：① 1157 不显示可接（前置 1156 已 COMPLETE，180 条同型链自 10/2 起全灭）；② 已完成的可重复 native 行在传送门/专业 NPC 处不可接（canRepeat 无参版）；③ native 行不可分享（CM_QUEST_SHARE 静默无反应）；④ 活动任务登录维护/发放/循环重置全灭（318 事件任务中 315 为 native 行，仅 3 个 XML 保留行存活）
+root_cause: `questCatalog().findMetadata()` 只含 733 个 XML 保留行，native 行（retention 台账 RETAIL_TABLE，七族 + DataDriven）返回 empty；各消费点以 `metadata == null → 拒绝/跳过` fail-closed（edf65aaff 引入时全行都在目录，属防御式写法；715a00136「retail 编译产物清零」后立即引爆）。真端所有元数据查询直连 QuestDB 全量静态表（FUN_140d1df50），不存在「查不到行」的场景。事件面第二层：QuestsData 与目录同为 733 行集合（XmlDataLoader 已无 quests.xml 装载、生产恒为 fromCatalog），startEventQuest 的 template 门对 native 行同样 fail-closed
+fix_or_guardrail: 1. **双源回退**：`catalog.findMetadata(id).orElse(null)` 为 null 时回退 `QuestEngine.nativeMetadata(id)`（isNativeOwner 门 + RetailQuestMetadataCompiler 同源链），两处都无行才 fail-closed（引用破损）；施加点：XMLStartCondition.checkFinishedQuests、QuestState.canRepeat()、CM_QUEST_SHARE.runImpl、EventService.StartOrMaintainQuests（metadata + eligibility loader）、QuestService.startEventQuest（native 分支，metadata 轴驱动）；2. **真端 ≥ 计数语义**：前置完成判定 = `completeCount >= maxRepeat`（IsFinishedQuestWithBranch 的 required <= count），`maxRepeat ∈ {1, 255}` 不附加计数要求——`==`/`!=` 都会在计数溢出时误拒（XMLStartCondition 与 PlayerQuestStartEligibilityPort.repeatCompletionMatches 两处同型）；3. **事件语义 = 活动清单**（events_config maintainable），native 分支不套 quest.xml 的 category1 门（80900-80938 段为 mission/seen_marker/public）
+evidence: 实机 log/quests.log 2026-10-06（1157 不显示可接；9/29 同 NPC 可接 = 分水岭）；.agents/summary/quest-1157-prereq-fallback/2026-10-06-1157-prereq-catalog-fallback.zh-CN.md（真端反汇编对照表：Quest.cpp:319-336 / User.cpp:200830-200903 / UserQuestData.cpp:4075-4190）；.agents/summary/quest-event-maintenance-native/2026-10-06-event-maintenance-native-gap.zh-CN.md（318 归属扫描：311 RETAIL_TABLE + 4 不在台账 + 3 XML_RETENTION；扫脚本同目录）；commits fb078d13c（1157 面）、29e8f6e32（canRepeat/分享面）；DataManager.java:305,510-511 + XmlDataLoader.java:314-315（QuestsData 恒 = 目录派生）
+validation: 2026-10-06 IDEA MCP：EventQuestNativeMaintenanceTest 6/6（80022 SimpleTalk / 80900 DD-mission 建档 + 等级门 + 超限不重置 + 登录维护联动）；回归 NativeNearbyQuestAxisGateTest 8/8、QuestPrerequisiteRetailContractTest 2/2、EventServiceCanonicalMetadataTest 2/2、EventServiceTest 2/2、RetailQuestStateTest 2/2、CMQuestShareCanonicalMetadataTest 1/1；PlayerQuestStartEligibilityPortTest 16/17（1 红 = daevanionAuxiliarySlots 编译面组数存量红，与本族运行面零交集）；1157 实机验收通过（2026-10-06）
+superseded_by: none
+boundaries: ① 回退只在目录缺行时生效，typed 行行为逐字不变；② 车道内显式 owner 分流点（nativeAcquireAllowed / NpcFactions / RetailAreaEngine / nativeZoneVerdict / abandonQuest 先例）不适用本卡（本就正确）；③ 事件面 category 门只对 typed 分支保留，native 分支以清单为授权；④ QuestEngine 表现面（challenge 提示 / 每日广播）与 GM 工具面的 native 行少提示为低危，未在本卡修复
+see_also: [QE-146]
+first_check: 「native 行在 X 面无效/不显示/静默无反应」先答：① 该行是否原生车道行（isNativeOwner / retention 台账 owner=RETAIL_TABLE）？② 查询点是否双源（catalog 缺行有没有 nativeMetadata 回退）？③ 计数判定是否 `==`（应为 `>=`，溢出会误拒）？④ 事件面：template 门（QuestsData）是否拦住（需 native 分支）？
+keywords: 迁移、native 行、目录缺行、nativeMetadata、双源回退、fail-closed、1157、180 链、canRepeat、CM_QUEST_SHARE、事件维护、318、315、startEventQuest、QuestsData、max_repeat_count、溢出误拒、>= 语义、METADATA_DUAL_SOURCE_NATIVE_FALLBACK
+-->
+
+- **判定规则**：双车道并存期间，任何「本行元数据」或「引用他行元数据（前置计数）」查询都是**双源**——目录（733 XML 保留行）缺行时必须回退 `QuestEngine.nativeMetadata`（真端 quest.xml 同源编译链；真端等价物 = QuestDB 全量表，永可查）；两处都无才 fail-closed。前置完成计数一律 `completeCount >= maxRepeat`（溢出不误拒；`maxRepeat ∈ {1,255}` 短路）。
+- **安全网**：`EventQuestNativeMaintenanceTest`（80022/80900 建档、超限不重置、登录维护联动）、`QuestPrerequisiteRetailContractTest`（XML 行前置契约）、`NativeNearbyQuestAxisGateTest`（native 判定活基准）、`RetailQuestStateTest#repeatEligibilityUsesCanonicalRepeatPolicyAndCooldown`；诊断扫脚本 `.agents/summary/quest-event-maintenance-native/scan_event_native_owner.py`（318 行 owner 分布复现）。
+- **反漂移**：别在引用面只查目录（native 行 = empty ⇒ fail-closed 全灭；harness 症状见 1157）；别用 `==`/`!=` 写前置计数（真端是 `required <= count` 的 ≥ 语义）；别给事件 native 分支套 quest.xml category1 门（事件语义 = 活动清单 maintainable）；别把 `nativeMetadata` 当目录替代（它只覆盖 isNativeOwner 行，目录行仍走 catalog）；QuestsData 与目录同集合是现状事实——别再假设 `questsData.getQuestById` 能兜住 native 行。
