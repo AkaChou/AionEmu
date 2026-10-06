@@ -758,29 +758,34 @@ class DataDrivenNativeRuntimeGateTest {
 
 	/**
 	 * ⑩c 中继步 Talk 链行的交付对象 #2（教官 806698 = `LC1_L_grow_npc_Rena_01`）：START 态不认领
-	 * （进度面 owns——缺守卫会让「一键报告」跳过中继步直落 REWARD）；REWARD 态 31 → 奖励窗页 5，
-	 * 领奖确认（23）→ 结算 + npc-complete finish=SELECTION_DIALOG 回页 10（2026-10-05 实机 19671：
-	 * 收口后教官处无交付路由，任务卡在「向成长支援教官报告」无法领奖）。
+	 * （进度面 owns——缺守卫会让「一键报告」跳过中继步直落 REWARD）；REWARD 态 31/1009 与打开（-1，
+	 * 对齐 SimpleTalk 族交付 NPC 面）→ 奖励窗页 5，领奖确认（23）→ 结算 + npc-complete
+	 * finish=SELECTION_DIALOG 回页 10（2026-10-05 实机 19671：收口后教官处无交付路由，任务卡在
+	 * 「向成长支援教官报告」无法领奖；2026-10-06 实机 19683：REWARD 回教官打开落默认页 10、
+	 * 无交付行可点——-1 认领即此缺口，QE-145 边界①）。
 	 * <p>
 	 * The relay Talk chain delivery object: START is not claimed by this face; REWARD opens the
-	 * reward window and settles through the claim flow.
+	 * reward window on 31/1009 and on the open action (-1, matching the SimpleTalk delivery-NPC
+	 * face) and settles through the claim flow.
 	 */
 	@Test
 	void relayTalkChainRowsDeliverOnTheRewardInstructor() {
 		int questId = 19671;
 		Map<Integer, List<Integer>> reportInterests = runtime.reportTalkInterests();
-		assertTrue(reportInterests.getOrDefault(806698, List.of()).contains(questId),
-			"教官 806698（静态数据 LC1_L_grow_npc_Rena_01）必须注册 19671 的交付对象");
+		assertTrue(reportInterests.getOrDefault(806698, List.of()).containsAll(List.of(questId, 19683)),
+			"教官 806698（静态数据 LC1_L_grow_npc_Rena_01）必须注册 19671/19683 的交付对象");
 		int rewardNpc = 806698;
 
-		// START（中继步未走）：教官处行选 31 不得跳步推进（进度面 owns）。
+		// START（中继步未走）：教官处行选 31 与打开（-1）都不得跳步推进（进度面 owns）。
 		Player started = NativeTalkFixture.player();
 		NativeTalkFixture.add(started, questId, QuestStatus.START, 0);
 		NativeTalkFixture.clearPackets(started);
 		assertFalse(runtime.onDialog(started, rewardNpc, 31, 1, questId), "START 态交付面不得认领中继步行");
+		assertFalse(runtime.onDialog(started, rewardNpc, -1, 1, questId), "START 态打开不得被交付面认领");
 		assertTrue(NativeTalkFixture.dialogPages(started).isEmpty(), "START 态零发页");
 
-		// REWARD（已收口）：31 → 奖励窗页 5；23（NOREWARD）→ 结算 + 回页 10。
+		// REWARD（已收口）：31 → 奖励窗页 5；1009 → 页 5；打开（-1）→ 页 5（SimpleTalk 族同形）；
+		// 23（NOREWARD）→ 结算 + 回页 10。
 		Player rewarded = NativeTalkFixture.player();
 		NativeTalkFixture.add(rewarded, questId, QuestStatus.REWARD, 1);
 		NativeTalkFixture.clearPackets(rewarded);
@@ -788,6 +793,9 @@ class DataDrivenNativeRuntimeGateTest {
 		NativeTalkFixture.assertOnlyDialogPage(rewarded, 5);
 		NativeTalkFixture.clearPackets(rewarded);
 		assertTrue(runtime.onDialog(rewarded, rewardNpc, 1009, 1, questId), "REWARD 1009 必须重开奖励窗");
+		NativeTalkFixture.assertOnlyDialogPage(rewarded, 5);
+		NativeTalkFixture.clearPackets(rewarded);
+		assertTrue(runtime.onDialog(rewarded, rewardNpc, -1, 1, questId), "REWARD 打开（-1）必须开奖励窗");
 		NativeTalkFixture.assertOnlyDialogPage(rewarded, 5);
 
 		claims.calls = 0;

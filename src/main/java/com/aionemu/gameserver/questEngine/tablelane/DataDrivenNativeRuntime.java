@@ -1358,7 +1358,17 @@ public final class DataDrivenNativeRuntime {
 				return true;
 			}
 			if (state.getStatus() == QuestStatus.REWARD) {
-				if (dialogId == 31 || dialogId == 1009) {
+				// 打开（-1 = USE_OBJECT）同样开奖励窗：对齐 SimpleTalk 族的交付 NPC 面（REWARD && -1 →
+				// 页 5，SimpleTalkHandler 领奖段仲裁参照）——真端在交付对象 #2 上打开即弹奖励窗，不落
+				// 通用页 10 列表（该列表只含可接取行，无交付入口）。2026-10-06 实机 19683（蕾娜 806698
+				// 接取/交付 + Prina 806708 中继）：收口后回教官打开落默认页 10，客户端无交付行可点
+				//（「点击教官没有这个任务的对话」）；QE-145 边界①（DD REWARD 态开门未落面）即此缺口。
+				// The open action (-1 = USE_OBJECT) opens the reward window too, matching the SimpleTalk
+				// delivery-NPC face (REWARD && -1 -> page 5): retail pops the reward window when opened
+				// on reward object #2 instead of falling to the generic page-10 list, which carries
+				// acquire rows only. Live 2026-10-06 (quest 19683): the open on instructor 806698 after
+				// the relay close fell to page 10 with no delivery row to click.
+				if (dialogId == 31 || dialogId == 1009 || dialogId == -1) {
 					PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(objectId, PAGE_REWARD_WINDOW, questId));
 					return true;
 				}
