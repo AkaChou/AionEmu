@@ -782,3 +782,18 @@
 - 验证命令和结果：`xmllint --noout --schema src/main/resources/aion/data/static_data/quest/definitions/quest_definition.xsd` 对两份 XML 通过；修复前静态探针 `s10/806075/USE_OBJECT` 为 0，修复后两侧各 1 条；`mvn -B test -Dtest='JournalReportRowSplitContractTest,ProductionCatalogWhitelistVerificationTest,QuestDefinitionCatalogManifestTest'` 于 2026-09-24 共 20 例通过（9+1+10）、失败/错误/跳过均 0，`PRODUCTION_COMPILE_OK=2441`、`PRODUCTION_COMPILE_FAILURES=0`、`PRODUCTION_INTERACTION_OBJECT_FAILURES=0`、`PRODUCTION_WHITELIST_VIOLATIONS=0`；用户 2026-09-24 确认“客户端验证成功，提交”，按当前任务视为 10529 整条客户端链验收成功，20529 未单独验收。实机成功后的包轨迹与服务器启动日志未采集。
 - 复用边界：只适用于 NPC 首次点击确实先发 -1、当前进行中阶段需要任务页且没有可用任务行的场景；其他“只有结束对话”可能是 `NPC_DIALOG_ROUTE_GATE_COLLISION` 的多 owner 抢路由、`CONTEXTLESS_NPC_DIALOG_STAYS_PLAIN` 的普通选项保护，或 REWARD packed/预览门控不匹配。扫描自身生成 NPC 的同形候选 13 组，除本次双子外其余缺少客户端无任务行和首次点击的双重证据，不机械套用。客户端 10529 的确认不能自动视作 20529 已验收。
 - commit：`5bf5b70a2`。
+
+## 8.50 同 NPC 多任务并存时已完成任务不可交：开门重放被编号更小的进行中任务短路
+
+- Pattern ID：`OPEN_DOOR_REPLAY_REWARD_FIRST`。
+- 代表任务：14111「Prey for the Lepharists / 处决农场上的雷帕尔革命团」（天族序章）；同 NPC 203126（Abolos）上 1155（SimpleCollectItem，`START`）进行中。
+- 搜索症状：同一 NPC 上接了多个任务，已完成（击杀打满）的任务打开对话看不见、任务列表没有可交付行、NPC 头顶无可交付标记；实机 `SM_DIALOG_WINDOW` 落两参页 10（`questId=0`）而不是页 5 奖励窗。
+- 玩家可见症状：14111 的盗贼×9 与头目×1 已击杀（`状态=4 REWARD 步数=73`），再次与 Abolos 对话只见 1155 的未完成收集信息；任务列表看不到 14111 的交付状态。
+- 根因：开门重放（`questId==0, dialogId==-1`）按 `player.getQuestStateList().getAllQuestState()`（TreeMap → questId 升序）单遍遍历，各族 handler 认领即 `return true` 短路。1155（questId 更小）先以 START 分支认领 `-1`，下发两参通用页 10（`PAGE_IN_PROGRESS`）；14111 的 REWARD 奖励窗重放（SimpleHuntHandler `-1 → 页 5`）永远轮不到。客户端任务列表不渲染 REWARD 交付行（19683 教训 / QE-145 边界①），所以玩家侧任务「不可见」。
+- 修复层：仅改 `QuestEngine.onDialog` 的 questId==0 开门块——分两遍收集（先全部 `REWARD`、再全部 `START`，各遍内保持 questId 升序）后按序重放：可交付任务先于进行中任务取得开门对话；`dialogId != -1` 的其余动作链路与各族 `-1` 认领词汇逐位不变。
+- 修改文件：`src/main/java/com/aionemu/gameserver/questEngine/QuestEngine.java`、`src/test/java/com/aionemu/gameserver/questEngine/tablelane/QuestEngineOpenDoorReplayOrderTest.java`、`src/test/java/com/aionemu/gameserver/questEngine/tablelane/NativeTalkFixture.java`（新增 `assertOnlyDialogPageWithQuest` 三断言助手）。
+- 第一检查点：打开对话的实机页形——两参页 10 = 被短路（不是缺 owner、不是契约缺页）；核对同 NPC 上是否有编号更小的进行中任务；确认目标任务已 REWARD 且其交付 NPC 名解析含本 NPC（认领条件）。
+- 代表测试：`QuestEngineOpenDoorReplayOrderTest#openDoorReplaysTheDeliverableQuestBeforeAnEarlierLiveOne`（实机行 1155 `START` + 14111 `REWARD` 同挂 203126：开门 `-1` 必须唯一命中页 5 且 `questId=14111`）。
+- 验证命令和结果：IDEA MCP 单测 `QuestEngineOpenDoorReplayOrderTest` 1/1、`QuestEngineSelectionSubPageEchoTest` 1/1、`DataDrivenNativeRuntimeGateTest` 31/31、SimpleTalk 16/16、SimpleItemPlay 15/15——共 64/64 通过；用户 2026-10-06 实机验收「14111 已经实机验证成功」，验收记录 `.agents/summary/quest-acceptance/14111-2026-10-06-client-accepted.md`。
+- 复用边界：只适用于「开门重放该走哪个任务」的排序问题；缺 owner、契约缺页、typed/legacy 路由冲突各自另有 Pattern（`ACTIVE_NPC_DIALOG_MISSING_DIRECT_ENTRY`、`NPC_DIALOG_ROUTE_GATE_COLLISION` 等）。同 NPC 多个可交付任务按 questId 升序逐个交付是当前语义，未做「全部一次性可见」。
+- commit：`cfaaf4230`。
