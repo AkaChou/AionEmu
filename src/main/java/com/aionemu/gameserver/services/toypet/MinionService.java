@@ -153,7 +153,7 @@ public class MinionService {
 				}
 				player.removeItemCoolDown(item.getItemTemplate().getUseLimits().getDelayId());
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_ITEM_CANCELED(new DescriptionId(item.getItemTemplate().getNameId())));
-				PacketSendUtility.broadcastPacket(player, new SM_ITEM_USAGE_ANIMATION(player.getObjectId(), itemObjId, item.getItemId(), 0, 2), true);
+				broadcastContractUseEnd(player, itemObjId, item.getItemId());
 				player.getObserveController().removeObserver(this);
 			}
 		};
@@ -163,8 +163,7 @@ public class MinionService {
 			player.getObserveController().removeObserver(itemUseObserver);
 			player.getController().cancelTask(TaskId.ITEM_USE);
 			if (rejectIfMinionLimitReached(player)) {
-				PacketSendUtility.broadcastPacket(player,
-						new SM_ITEM_USAGE_ANIMATION(player.getObjectId(), itemObjId, item.getItemId(), 0, 2), true);
+				broadcastContractUseEnd(player, itemObjId, item.getItemId());
 				return;
 			}
 			int rnd = 0;
@@ -236,12 +235,9 @@ public class MinionService {
 
 			MinionTemplate minionTemplate = DataManager.MINION_DATA.getMinionTemplate(minionId);
 			if (minionTemplate == null || !player.getInventory().decreaseByObjectId(itemObjId, 1)) {
-				PacketSendUtility.broadcastPacket(player,
-						new SM_ITEM_USAGE_ANIMATION(player.getObjectId(), itemObjId, item.getItemId(), 0, 2), true);
+				broadcastContractUseEnd(player, itemObjId, item.getItemId());
 				return;
 			}
-			PacketSendUtility.broadcastPacket(player,
-					new SM_ITEM_USAGE_ANIMATION(player.getObjectId(), itemObjId, item.getItemId(), 0, 1), true);
 			grade = minionTemplate.getGrade();
 			level = minionTemplate.getLevel();
 			name = minionTemplate.getName();
@@ -251,12 +247,31 @@ public class MinionService {
 
 			if (addNewMinion == null) {
 				ItemService.addItem(player, item.getItemId(), 1);
+				broadcastContractUseEnd(player, itemObjId, item.getItemId());
 				return;
 			}
 			PacketSendUtility.sendPacket(player, new SM_MINIONS(1, addNewMinion, 0));
+			broadcastContractUseEnd(player, itemObjId, item.getItemId());
 			GameEngineServices.questEngine().onItemPlayCompletedEvent(player, item.getItemId());
 			checkQuest(player, item);
 		}, 1500);
+	}
+
+	/**
+	 * 广播契约使用的收尾帧（end=3）。客户端「使用物品」动作族在通用分支里只认 0=开始、3=停止：
+	 * end=1/2 会被它当成「重播 0x416 使用动作」且不再重新计时（[player+0xC38] 不更新），
+	 * 动作永不到期，玩家不移动/不关窗就无法与 NPC 交互——所以成功与失败一律用停止码收尾。
+	 * Broadcasts the contract use end frame (end=3). On its generic branch the client's "using item"
+	 * motion family only understands 0=start and 3=stop: end=1/2 are read as "replay motion 0x416"
+	 * without re-arming the action timer ([player+0xC38]), so the motion never expires and NPC
+	 * interaction stays blocked until the player moves. Success and failure both end with the stop code.
+	 * @param player 玩家 / player
+	 * @param itemObjId 契约书物品对象 ID / contract scroll item object id
+	 * @param itemId 契约书模板 ID / contract scroll template id
+	 */
+	private static void broadcastContractUseEnd(Player player, int itemObjId, int itemId) {
+		PacketSendUtility.broadcastPacket(player,
+				new SM_ITEM_USAGE_ANIMATION(player.getObjectId(), itemObjId, itemId, 0, 3), true);
 	}
 
 	static boolean isSupportedMinionContract(int itemId) {

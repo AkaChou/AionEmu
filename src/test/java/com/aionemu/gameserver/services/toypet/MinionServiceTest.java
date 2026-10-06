@@ -168,6 +168,20 @@ class MinionServiceTest {
 		assertTrue(questEvent > failedCreation);
 	}
 
+	@Test
+	void endsTheContractUseWithTheClientStopFrameOnly() throws Exception {
+		String service = Files.readString(Path.of("src/main/java/com/aionemu/gameserver/services/toypet/MinionService.java"));
+		int failedCreation = service.indexOf("if (addNewMinion == null)");
+		int notification = service.indexOf("new SM_MINIONS(1, addNewMinion, 0)", failedCreation);
+		int endFrame = service.indexOf("broadcastContractUseEnd(player, itemObjId, item.getItemId())", notification);
+
+		assertTrue(failedCreation >= 0);
+		assertTrue(notification > failedCreation);
+		assertTrue(endFrame > notification);
+		assertFalse(service.contains("item.getItemId(), 0, 1)"));
+		assertFalse(service.contains("item.getItemId(), 0, 2)"));
+	}
+
 	private static final class QuestContractTemplate extends ItemTemplate {
 		private final int templateId;
 
