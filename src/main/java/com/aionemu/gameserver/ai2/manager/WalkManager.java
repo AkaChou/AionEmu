@@ -146,12 +146,30 @@ public class WalkManager {
 	protected static RouteStep findNextRoutStep(Npc owner, List<RouteStep> route) {
 		int currentPoint = owner.getMoveController().getCurrentPoint();
 		RouteStep nextStep = null;
-		if (currentPoint != 0) {
+		if (shouldResumeIndividually(owner.getWalkerGroup() != null, currentPoint)) {
 			nextStep = findNextRouteStepAfterPause(owner, route, currentPoint);
 		} else {
+			// 编队成员按编队当前步恢复（findClosestRouteStep 内含编队分支：groupStep<2 → 第 1 步，
+			// 否则 groupStep 对应点）。绝不单独推进到下一步：对话/战斗打断后恢复时，偏移为 0 的队长
+			// 站在路线点 1m 内会被 findNextRouteStepAfterPause 抢跑下一步，领跑整整一段、编队从此
+			// 永久错开一步（2026-10-06 实机 205294 对话后「提前往前走、小动物没跟上」）。
+			// Walker-group members resume on the group's current step; never advance a solo step
+			// (a dialog-interrupted leader would otherwise walk a whole segment ahead of the pack).
 			nextStep = findClosestRouteStep(owner, route, nextStep);
 		}
 		return nextStep;
+	}
+
+	/**
+	 * 是否按个体续走（推进到下一步）：仅限无编队行走者；编队成员一律按编队当前步恢复。
+	 * Whether to resume individually (advance to the next step): ungrouped walkers only; group
+	 * members always resume on the group's current step.
+	 * @param inWalkerGroup 是否属于编队 / whether the walker belongs to a group
+	 * @param currentPoint 移动控制器当前路线点下标（0 = 无） / controller's current route point index
+	 * @return 是否个体续走 / whether to resume individually
+	 */
+	static boolean shouldResumeIndividually(boolean inWalkerGroup, int currentPoint) {
+		return !inWalkerGroup && currentPoint != 0;
 	}
 
 	protected static RouteStep findClosestRouteStep(Npc owner, List<RouteStep> route, RouteStep nextStep) {

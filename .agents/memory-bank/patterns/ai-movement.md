@@ -231,3 +231,72 @@ keywords: NPC 不巡逻, 停止巡逻, 站住不动, 关窗, SM_DIALOG_WINDOW, 0
 - **根因链**：`TalkEventHandler.onSimpleTalk`（`is_dialog` 模板）置 `AISubState.TALK` + `setTarget` → `AbstractAI#isDestinationReached` 在 WALKING 下把 TALK 短路成「已到达」 → `WalkManager.targetReached` 的 `case TALK: abortMove()` 停半路不选下一点 → 恢复只发生在 `DIALOG_FINISH` → 全仓只有 `CM_CLOSE_DIALOG` 发它，服务端关窗站点全都只发包。
 - **修复契约**：服务端关窗 = `DialogService.closeDialog(...)`（`DIALOG_FINISH` + `onCloseDialog` + 关窗包）；只对已装配 AI 的生物发事件（`getAi2IfPresent`）；重复触发幂等。
 - **验证边界**：单测锁的是「关窗即发 DIALOG_FINISH」这条接线；「NPC 重新沿路线走」实机复测通过（2026-10-06）；区域去激活是另一条兜底恢复路径，容易造成"过一会儿自己好了"的误判）。
+
+## [AIM-009] 九、编队航点 Z 必须按航点自身坐标采样：偏移航点距上一步最多 8m，斜坡/台阶段误差达米级 (FORMATION_WAYPOINT_Z_AT_WAYPOINT)
+
+<!-- pattern-metadata
+status: CONFIRMED
+scope: OFFSET/方阵编队（WalkerGroup）成员的路线航点（NpcMoveController.setRouteStep 的编队分支）与 WALK_PATH 行走态的 Z 处理；不含无编队行走者（行为未变）
+first_seen: 2026-10-06
+last_verified: 2026-10-06
+symptom: 编队巡逻的小动物上台阶悬空/上下跳、下台阶入地，编队偏移越大越明显、队长（偏移 0）完全正常（2026-10-06 实机 Verteron 210030000 LF1A_NPCPath_Ermona：799731/799736/799737/799746 偏移 −2/−3/−6/−8m）
+root_cause: setRouteStep 编队分支把航点 Z 取 resolveRouteStepZ(上一步)——上一步坐标处地面——而航点 X/Y 已按编队偏移沿路径后退 offsetsy 米，两者相距最多 8m；斜坡/台阶段上 Z 误差=该 8m 内的地面高差（离线复制 0.26/0.27/0.84/1.17m，随偏移放大）。且行走态 substate=WALK_PATH 被逐 tick 贴地修正排除（shouldApplyGeoHeightCorrection && ... && getSubState() != AISubState.WALK_PATH），错误 Z 即 NPC 真实 Z 与下发客户端的航点 Z：正误差=悬空、负误差=入地、相邻航点交替=上下跳
+fix_or_guardrail: 编队航点 Z 按航点自身 (pointX,pointY) 采样（新增 NpcMoveController#resolveGroundZ(x,y,fallbackZ)；resolveRouteStepZ 改为其薄封装；回退=上一步模板 Z，保持旧语义）；队长偏移 0 时采样坐标与旧值相同、无编队行走者完全不变。诊断口径：离线下投复刻 GeoMap.getZ = PHYSICAL 网格面 ∪ 地形高度图取 [z−100,z+2] 带内最高面（PNG 高度=u16/32，行列按 readHeightData 转置），可对任意路线出误差表
+evidence: src/main/java/com/aionemu/gameserver/controllers/movement/NpcMoveController.java（setRouteStep 编队分支/resolveGroundZ；WALK_PATH 贴地排除条件）; src/main/java/com/aionemu/gameserver/spawnengine/WalkerGroup.java（getLinePoint/offsets）; src/main/resources/aion/data/static_data/npc_walker/210030000_Verteron_Walkers.xml（LF1A_NPCPath_Ermona）; 实机 log/aidebug.log 2026-10-06 16:55-17:00（799737 航点目标与到达 Z）; .agents/summary/npc-walker-stairs/DIAGNOSIS.zh-CN.md + probe_route_ground.py（17/17 路线点与实机 resolveRouteStepZ 逐位吻合）+ decode_walker_offsets.py（13/13 目标反解命中）
+validation: 离线复刻对拍（17/17 与实机日志一致）；focused-test（NpcMoveControllerPathTest 62/62、InstanceWalkerFormationsPositionGroupingTest 7/7、WalkManagerTest 2/2，2026-10-06 IDEA MCP）；runtime 实机复测通过（2026-10-06 用户：不再悬空、不再入地；残留台阶段轻微上下跳=航段直线插值几何，见 boundaries ①）
+boundaries: ① 航段内仍按直线插值（每航点一个 SM_MOVE，服务端与客户端同直连）——台阶段弦切差约半个台阶高，实机残留轻微上下跳，未处理（备选：航段贴地子航点/加密路线点）；② 队长（偏移 0）与无编队行走者行为不变；③ 采样沿用 resolveRouteStepZ 的 instanceId=1 取样带
+superseded_by: none
+first_check: 编队 NPC 上下台阶悬空/入地/上下跳先答：① 该成员编队偏移几米（spawn walker_index 查 walker_template 的 offsetsy）？② 航点 Z 取航点自身坐标还是上一步坐标？③ substate 是否 WALK_PATH（被逐 tick 贴地修正排除）？
+keywords: 编队、OFFSET 队形、航点 Z、悬空、入地、上下跳、小动物、walker group、getLinePoint、offsetsy、resolveRouteStepZ、resolveGroundZ、WALK_PATH、贴地修正、GeoMap.getZ、台阶、799731、799736、799737、799746、Ermona、FORMATION_WAYPOINT_Z_AT_WAYPOINT
+-->
+
+- **症状**：编队小动物上台阶「上上下下地跳/升空又下来」、下台阶「入地」；偏移越大越明显，队长（偏移 0）完全正常。
+- **根因链**：航点 X/Y 已按编队偏移后退（最多 8m），Z 却取上一步坐标处地面 → 斜坡/台阶段 Z 误差=8m 地面高差（实机离线复刻 0.26~1.17m）；行走态 WALK_PATH 不做逐 tick 贴地 → 错误 Z 直接成为 NPC 真实 Z 与客户端航点 Z。
+- **修复契约**：编队航点 Z 按航点自身 (pointX,pointY) 采样（`resolveGroundZ`）；回退语义与旧实现一致；队长/无编队行走者不变。
+- **验证边界**：离线 `GeoMap.getZ` 复刻（网格 ∪ 地形）与实机日志 17/17 对拍；残留台阶段轻微上下跳=航段直线插值几何（弦切差≈半台阶高），未处理。
+
+## [AIM-010] 十、编队恢复必须按编队当前步：偏移 0 的队长站在路线点 1m 内会被「个体续走」抢跑下一步 (GROUP_RESUME_ON_GROUP_STEP)
+
+<!-- pattern-metadata
+status: CONFIRMED
+scope: WalkerGroup 成员的行走恢复路径（WalkManager.startWalking → startRouteWalking → findNextRoutStep），触发源含对话结束（DIALOG_FINISH → think）与战斗打断等一切 thinkWalking 恢复；不含无编队行走者
+first_seen: 2026-10-06
+last_verified: 2026-10-06
+symptom: 与编队领队对话结束后，领队「提前往前走」、后面的小动物没及时跟上，且掉队后不自愈（编队永久错开一步）。2026-10-06 实机 205294（Tenos，Verteron LF1A_NPCPath_Ermona 队，talk_info is_dialog=true）
+root_cause: 对话结束链 TalkEventHandler.onFinishTalk → think → ThinkEventHandler.thinkWalking → WalkManager.startWalking → startRouteWalking → findNextRoutStep：findNextRouteStepAfterPause 在 NPC 距「当前路线点」<1m 时直接推进下一步。队长编队偏移为 0、站位=路线点本身 ⇒ 命中该分支单独走一步；追随者偏移 2~8m、距路线点 >1m 不抢步，留在 WALK_WAIT_GROUP 等齐 ⇒ WalkerGroup.setStep 把 groupStep 抬到队长新步，编队从此永久超前一步
+fix_or_guardrail: 编队成员一律按编队当前步恢复（走 findClosestRouteStep 的编队分支：groupStep<2 → 第 1 步，否则 groupStep 对应点）；「个体续走」只限无编队行走者（WalkManager#shouldResumeIndividually(inWalkerGroup,currentPoint) 唯一判据）。违例症状=领队单飞一段 + 队伍永久错位
+evidence: src/main/java/com/aionemu/gameserver/ai2/manager/WalkManager.java（findNextRoutStep/shouldResumeIndividually/findNextRouteStepAfterPause/findClosestRouteStep 编队分支）; src/main/java/com/aionemu/gameserver/ai2/handler/TalkEventHandler.java:106-114; src/main/java/com/aionemu/gameserver/ai2/handler/ThinkEventHandler.java（thinkWalking）; .agents/summary/npc-walker-stairs/DIAGNOSIS.zh-CN.md §3
+validation: focused-test（WalkManagerTest.onlyUngroupedWalkersResumeIndividually 2/2、ThinkEventHandlerTest 1/1、FollowManagerTest 5/5，2026-10-06 IDEA MCP）；runtime 实机复测通过（2026-10-06 用户：对话后编队恢复、不再掉队）
+boundaries: ① 无编队行走者语义不变（仍按个体续走/最近点分支）；② currentPoint=0（新路线/首步）两分支同走最近点，不受影响
+superseded_by: none
+first_check: 编队对话/战斗中断后「领队先走、追随者掉队」先答：① 该 NPC 是否编队成员（spawn walker_id/walker_index）？② 恢复是否走个体续走分支（findNextRouteStepAfterPause）？③ groupStep 是否被抬高到队长步（WalkerGroup.setStep）？
+keywords: 编队、领队抢跑、对话后提前往前走、小动物掉队、WALK_WAIT_GROUP、groupStep、findNextRoutStep、findNextRouteStepAfterPause、shouldResumeIndividually、startWalking、205294、Ermona、GROUP_RESUME_ON_GROUP_STEP
+-->
+
+- **症状**：编队领队对话后单独超前走一步，追随者掉队且不自愈（永久错开一步）。
+- **根因链**：恢复链 findNextRoutStep → findNextRouteStepAfterPause；队长偏移 0、站在路线点 1m 内 → 推进下一步；追随者不抢步仍在 WALK_WAIT_GROUP → groupStep 被抬高 → 永久错位。
+- **修复契约**：编队成员按编队当前步恢复；个体续走仅限无编队行走者（`shouldResumeIndividually`）。
+- **验证边界**：单测锁「编队成员一律不抢步」规则；实机复测通过（编队恢复、不掉队）。
+
+## [AIM-011] 十一、客户端 NPC 移动包是「起→终直线 + 到达即停」：短段下发必须节奏对齐（前视 ≈ 一个下发周期的行程），过短=卡停+前跳、过长=入地+拉起 (NPC_MOVE_PACKET_ARRIVE_AND_STOP)
+
+<!-- pattern-metadata
+status: CONFIRMED
+scope: 服务端向客户端下发行走 NPC（WALK_PATH）移动更新的策略（NpcMoveController 广播块 + SM_MOVE 组成）；不含玩家移动（PlayableMoveController 向量形）与空间寻路（path!=null）的到点逻辑
+first_seen: 2026-10-06
+last_verified: 2026-10-06
+symptom: ① 短段下发节奏错配（包晚于客户端到达）时行走 NPC「卡在原地，然后往前瞬移」循环（v1 实机）；② 前视过长（1m，而每 tick 只走 0.1–0.2m）时台阶段「脚部入地然后拉起来」的周期性跳帧（v2 实机残留）——客户端每 tick 只爬弦线行程的 1/5–1/10，落后于地形，下一包地面真值重锚把它拉起
+root_cause: SM_MOVE 的 NPC 形态只携带 起点/终点/朝向/掩码，没有时长字段（速度由客户端掩码表决定；真端客户端包亦然，见真端 `Npc::MoveNpc` 25/37 字节构造，时长只用于服务端调度）⇒ 客户端对每个包按「从起点走直线到终点、到达即停」执行；移动中收到新包即「吸附到新起点 + 重定目标」。两条失效路径都由「前视 L 与每 tick 行程 w 的比值」决定：L < w（或包晚到）⇒ 客户端先到点停下、下个包起点已在前 ⇒ 停-跳；L ≫ w ⇒ 客户端一个 tick 只走弦线的 w/L，遇台阶/坡沿时竖向爬升滞后于地面（入地或浮空），下一包吸附回地面真值 ⇒ 每 tick 一次「入地→拉起」；换腿后若延迟若干 tick 才补发（门控/粘滞），客户端会先走完整段长弦（可达 8–9m）再被一次性拉回。真端靠「时长=距离/速度」的节奏保证「包 = 刚走完的一步」、每步解算贴地、到期即发，客户端始终沿贴地短弦推进
+fix_or_guardrail: ① 前视距离 = 本 tick 实测位移 × 1.3（下限 0.15m）——略大于一个下发周期的行程：客户端不会先到点，弦线又足够短（≈0.25m）贴住台阶；实测位移自动适配 100/200/500ms 三档移动周期，且休息后恢复的首个 tick 不受暂停时长影响；系数是可调旋钮（出现停顿 → 提到 1.5；仍见入地 → 降到 1.15）；② 行走态每个移动 tick 都补发（不设地形门控、换腿首 tick 即发短段，绝不发整段长弦）；③ 段端点 Z 必须贴地（AIM-009：按航点自身坐标采样）；④ 服务端逐 tick 贴地与短段下发必须成对引入（贴地是短段重锚不产生反向拉扯的前提）；⑤ v1 的教训：门控/节流让包间隔抖动到 300–500ms 即「卡在原地+前跳」——禁止再给补发加节流/门控（200ms 实机事故复现）
+evidence: src/main/java/com/aionemu/gameserver/controllers/movement/NpcMoveController.java:1112-1158（前视 = 实测位移 × 1.3、每 tick 补发、短段包起点=本 tick 贴地位置）、:1070-1095（行走态逐 tick 贴地）、walkStreamLookahead/shouldStreamWalkGround/walkGroundStreamTarget 辅助（:443-500）；src/main/java/com/aionemu/gameserver/network/aion/serverpackets/SM_MOVE.java（无时长字段、掩码决定目标坐标是否写入）；真端对照（每步碰撞/地表解算 + 带时长移动包）见 .agents/summary/npc-walker-stairs/RETAIL-WALK-SEMANTICS.zh-CN.md；实机日志定量复核（218 tick 贴地误差≡0；前视 1m 时 pop p90≈2.8cm/max 11.3cm/>4cm 9 次 + 换腿 6–7 tick 长弦一次拉 16.7cm；自适应 1.3 后 >4cm 仅 3 次且均在台阶棱线）见 .agents/summary/npc-walker-stairs/LOG-ANALYSIS-799737.zh-CN.md
+validation: runtime 实机 2026-10-06（v1 节奏错配实机「卡在原地然后往前瞬移」回退；v2 前视 1m 实机残留「脚部入地然后拉起来」，经 ai2 日志 + 离线客户端模拟定量确认为前视过长，v3 已实现待实机复测）；static（SM_MOVE 组包体 + 真端 Npc::MoveNpc 客户端包逐字段对账 + 既有客户端动画约定测试）；focused-test v3 NpcMoveControllerWalkStreamTest 3/3 + NpcMoveControllerPathTest 62/62（2026-10-06 IDEA MCP）
+boundaries: ① 只描述本仓库客户端对 NPC 移动包的行为（玩家移动走 PlayableMoveController 向量形，语义不同）；② 真端的精确对齐依赖其「包=刚走完的一步」+ 时长调度，本客户端无时长字段，只能用「前视 = 实测位移 × 1.3」近似（v3 待实机判定；余量仅 0.3 个 tick，极端 tick 抖动下理论上有 ≤30–60ms 微停）；③ 移动周期档位在行走中切换（玩家跨 30m/60m 边界）时，首个新档 tick 的余量按旧行程估计，可能有一次微停；④ AIM-009 的航点 Z 采样仍有效；⑤ v1/v2 两次实机仅证明「前视与行程错配会分别导致停-跳/入地-拉起」，不证明其它前视系数不可行
+superseded_by: none
+first_check: 给行走 NPC 加移动下发优化前先答：① 这个包改了目标还是只改了起点？② 本 tick 客户端实际能走多远（w），我给的弦线长度（L）与 w 的比值是多少？③ 客户端在移动中收到同掩码新包是重锚还是忽略（本客户端没有可靠证据）？④ 该改动是否只影响服务端模拟（客户端不可见）？
+keywords: SM_MOVE、到达即停、停跳、卡在原地往前瞬移、脚部入地然后拉起来、台阶跳帧、短段下发、前视距离、移动节奏对齐、高频重定目标、移动动画重启、WALK_PATH、逐 tick 贴地、带时长移动包、真端持续推进、NPC_MOVE_PACKET_ARRIVE_AND_STOP
+-->
+
+- **症状**：① 节奏错配（包晚于客户端到达）⇒「卡在原地，然后往前瞬移」；② 前视过长（1m vs 每 tick 行程 0.1–0.2m）⇒ 台阶段周期性「脚部入地然后拉起来」。
+- **根因**：客户端按「起→终直线、到达即停」执行移动包（无时长字段，速度由掩码表定），移动中被新包重锚到新起点。L/w 比值决定失效模式：L<w 停-跳；L≫w 弦线爬升滞后地形、每 tick 被地面真值拉起。真端以「包=刚走完的一步 + 时长=距离/速度」天然对齐。
+- **契约**：前视 = 本 tick 实测位移 × 1.3（下限 0.15m）；行走态每 tick 补发（无门控，换腿首 tick 即发）；配合服务端逐 tick 贴地（成对）；系数旋钮 1.15–1.5。
+- **留档**：真端客户端包与 SM_MOVE 同构（无时长），时长只用于服务端调度；v3 待实机复测（复测点与日志判据见 .agents/summary/npc-walker-stairs/LOG-ANALYSIS-799737.zh-CN.md）。

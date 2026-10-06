@@ -75,6 +75,10 @@ public class NpcMoveController
     private static final long HOME_RETURN_TIMEOUT_MS = 60_000;
     private static final long HOME_SP_RETURN_TIMEOUT_MS = 30_000;
     private static final long CHASE_MOVE_BROADCAST_INTERVAL_MS = 200;
+    /** 行走贴地短段：前视 = 本 tick 实测位移 × 该倍数（>1 保证客户端不会在下个包到达前走到点）。 / Walker stream lookahead = measured per-tick travel × this factor (>1 keeps the client from reaching the target before the next packet). */
+    static final float WALK_GROUND_STREAM_LEAD_STEPS = 1.3f;
+    /** 行走贴地短段：前视距离下限（米）。 / Minimum lookahead distance (m) for walker stream targets. */
+    static final float WALK_GROUND_STREAM_MIN_LOOKAHEAD = 0.15f;
     private static final long WAYPOINT_SKIP_INTERVAL_MS = 250;
     private static final long STUCK_SAMPLE_INTERVAL_MS = 500;
     private static final long STUCK_SAMPLE_MAX_DELAY_MS = 1_500;
@@ -430,6 +434,59 @@ public class NpcMoveController
     static boolean shouldSkipStationaryRandomWalkStep(float ownerX, float ownerY, float ownerZ,
             float newX, float newY, float newZ, int randomWalk) {
         return randomWalk > 0 && ownerX == newX && ownerY == newY && ownerZ == newZ;
+    }
+
+    /**
+     * 行走贴地短段本 tick 是否需要补发：行走态 + 未到点 + 剩余距离大于前视距离。
+     * 真端语义（反编译实证）：地面 NPC 每步做碰撞/地表解算，移动包按「到期即发」的节奏持续推进
+     * （见 .agents/summary/npc-walker-stairs/RETAIL-WALK-SEMANTICS.zh-CN.md）；本客户端移动包没有
+     * 时长字段，只能靠「前视点始终在客户端走到之前刷新」近似对齐节奏：前视取每 tick 行程的
+     * 1.3 倍（约 0.3 个下发周期的余量），既不会先到点，弦线也不会长到切出台阶棱线。
+     * Whether a ground-following walker needs a stream target this tick.
+     * @param walkPathSubState 是否行走子状态 / whether substate is WALK_PATH
+     * @param reachedWaypoint 是否已到点 / whether the waypoint was reached
+     * @param remaining 到目标剩余距离 / remaining distance to the destination
+     * @param lookahead 前视距离 / lookahead distance
+     * @return 是否补发 / whether to send
+     */
+    static boolean shouldStreamWalkGround(boolean walkPathSubState, boolean reachedWaypoint, float remaining,
+            float lookahead) {
+        return walkPathSubState && !reachedWaypoint && remaining > lookahead;
+    }
+
+    /**
+     * 行走贴地短段的前视距离：每 tick 行程 × 1.3，带下限。
+     * Walker stream lookahead: per-tick travel × 1.3, floored.
+     * @param travelPerTick 每 tick 行程（米）/ travel per movement tick (m)
+     * @return 前视距离（米）/ lookahead distance (m)
+     */
+    static float walkStreamLookahead(float travelPerTick) {
+        return Math.max(WALK_GROUND_STREAM_MIN_LOOKAHEAD, travelPerTick * WALK_GROUND_STREAM_LEAD_STEPS);
+    }
+
+    /**
+     * 沿当前段取前视点（X/Y 线性 + Z 线性回退，调用方再贴地）；剩余距离不足前视距离时返回 null。
+     * Computes the walker stream target along the current leg (linear XY/Z; caller snaps Z to ground);
+     * returns null when the remaining distance is not larger than the lookahead.
+     * @param fromX 起点 X / from X
+     * @param fromY 起点 Y / from Y
+     * @param fromZ 起点 Z / from Z
+     * @param toX 终点 X / destination X
+     * @param toY 终点 Y / destination Y
+     * @param toZ 终点 Z / destination Z
+     * @param lookahead 前视距离 / lookahead distance
+     * @return 前视点 {x,y,z} 或 null / lookahead point {x,y,z} or null
+     */
+    static float[] walkGroundStreamTarget(float fromX, float fromY, float fromZ, float toX, float toY, float toZ,
+            float lookahead) {
+        float dx = toX - fromX;
+        float dy = toY - fromY;
+        float length = (float)Math.hypot(dx, dy);
+        if (length <= lookahead) {
+            return null;
+        }
+        float fraction = lookahead / length;
+        return new float[] {fromX + dx * fraction, fromY + dy * fraction, fromZ + (toZ - fromZ) * fraction};
     }
 
     /**
@@ -1013,12 +1070,16 @@ public class NpcMoveController
         SpawnTemplate spawn = owner.getSpawn();
         boolean spawnDestination = spawn.getX() == targetDestX && spawn.getY() == targetDestY
                 && spawn.getEffectiveZ() == targetDestZ;
+        boolean walkingRoute = owner.getAi2().getSubState() == AISubState.WALK_PATH;
         if (shouldApplyGeoHeightCorrection(AIConfig.ENHANCED_HOME_RETURN, returning, spawnDestination, path != null)
                 && GeoDataConfig.GEO_NPC_MOVE && GeoDataConfig.GEO_ENABLE
-                && !GameWorldServices.pathService().usesSpatialPath(owner)
-                && owner.getAi2().getSubState() != AISubState.WALK_PATH) {
+                && !GameWorldServices.pathService().usesSpatialPath(owner)) {
             // 每 tick 采地表并半步插值：600ms 节流会在中间 5 个 tick 让 Z 漂回线性值，
             // 坡面不齐处表现为上下抖动。每 tick 平滑贴地消除锯齿。
+            // 行走态（WALK_PATH）同样贴地：真端地面 NPC 每步做碰撞/地表解算；服务端位置贴地也是
+            // 贴地短段下发的前提（否则短段重锚的起点会把客户端拉回弦线）。
+            // Walkers ground-follow too: the retail server resolves collisions and the walkable
+            // surface on every movement step for ground NPCs.
             float geoZ = GameWorldServices.geoService().getZ(owner.getWorldId(), newX, newY, newZ, 100, owner.getInstanceId());
             // 障碍物顶面等离散跳变：按移动速度限制单 tick Z 爬升幅度，避免瞬抬/瞬降
             float maxZStep = Math.max(0.5f, currentSpeed * elapsedMillis / 1000.0f * 1.5f);
@@ -1048,7 +1109,24 @@ public class NpcMoveController
         byte newMask = this.getMoveMask(directionChanged);
         boolean broadcastDestination = shouldBroadcastDestination(destination == Destination.TARGET_OBJECT,
                 pathWaypointTransition, destinationChanged, now, lastMoveBroadcastAt);
-        if (shouldBroadcastMovement(this.movementMask, newMask, broadcastDestination || directionChanged)) {
+        // 行走贴地短段（真端「持续推进」的近似复刻）：行走态每个移动 tick 补发一个前视点
+        // （前视 = 本 tick 实际位移 × 1.3，终点 Z 取地表），让客户端始终持有「还没走到」的新目标：
+        // 前视略大于一个 tick 的行程 ⇒ 客户端不会先到点停下（v1 停-跳），弦线又足够短（≈0.25m）
+        // 贴住台阶，不会再出现「前视 1m 只爬 1/5 行程 → 入地 → 下一包拉起来」的跳帧。
+        // 位移自本 tick 实测：自动适配 100/200/500ms 三档移动周期，且休息后恢复的首个 tick 不受暂停时长影响。
+        // Walker ground-following stream: re-send a short ground-true lookahead point every movement tick.
+        float walkRemaining = (float)MathUtil.getDistance(newX, newY, newZ, targetX, targetY, targetZ);
+        float walkStepDistance = (float)MathUtil.getDistance(ownerX, ownerY, ownerZ, newX, newY, newZ);
+        float streamLookahead = walkStreamLookahead(walkStepDistance);
+        float[] streamTarget = shouldStreamWalkGround(walkingRoute, reachedWaypoint, walkRemaining, streamLookahead)
+                        ? walkGroundStreamTarget(newX, newY, newZ, targetDestX, targetDestY, targetDestZ,
+                                streamLookahead)
+                        : null;
+        if (streamTarget != null) {
+            streamTarget[2] = resolveGroundZ(streamTarget[0], streamTarget[1], streamTarget[2]);
+        }
+        if (shouldBroadcastMovement(this.movementMask, newMask, broadcastDestination || directionChanged
+                || streamTarget != null)) {
             if (this.movementMask != newMask) {
                 if (this.owner.getAi2().isLogging()) {
                     AI2Logger.moveinfo(this.owner, "oldMask=" + this.movementMask + " newMask=" + newMask);
@@ -1056,8 +1134,27 @@ public class NpcMoveController
                 this.movementMask = newMask;
             }
             lastMoveBroadcastAt = now;
-            PacketSendUtility.broadcastPacket(owner, new SM_MOVE(owner.getObjectId(), ownerX, ownerY, ownerZ,
-                    targetDestX, targetDestY, targetDestZ, heading, movementMask));
+            float fromX = ownerX;
+            float fromY = ownerY;
+            float fromZ = ownerZ;
+            float toX = targetDestX;
+            float toY = targetDestY;
+            float toZ = targetDestZ;
+            if (streamTarget != null) {
+                // 短段包：起点用本 tick 贴地后的位置，终点用前视贴地点
+                fromX = newX;
+                fromY = newY;
+                fromZ = newZ;
+                toX = streamTarget[0];
+                toY = streamTarget[1];
+                toZ = streamTarget[2];
+            }
+            if (this.owner.getAi2().isLogging() && streamTarget != null) {
+                AI2Logger.moveinfo(this.owner, "walkGroundStream from=" + fromX + "," + fromY + "," + fromZ
+                        + " to=" + toX + "," + toY + "," + toZ);
+            }
+            PacketSendUtility.broadcastPacket(owner, new SM_MOVE(owner.getObjectId(), fromX, fromY, fromZ,
+                    toX, toY, toZ, heading, movementMask));
         }
     }
 
@@ -1883,11 +1980,22 @@ public class NpcMoveController
     }
 
     private float resolveRouteStepZ(RouteStep routeStep) {
-        float z = routeStep.getZ();
+        return resolveGroundZ(routeStep.getX(), routeStep.getY(), routeStep.getZ());
+    }
+
+    /**
+     * 按坐标解析地表高度；geo 不可用时回退到给定 Z。
+     * Resolves ground Z at the coordinates; falls back to the given Z when geo is unavailable.
+     * @param x X 坐标 / X
+     * @param y Y 坐标 / Y
+     * @param fallbackZ 回退高度 / fallback height
+     * @return 地表高度 / ground height
+     */
+    private float resolveGroundZ(float x, float y, float fallbackZ) {
         if (GeoDataConfig.GEO_ENABLE && GeoDataConfig.GEO_NPC_MOVE && !owner.isInFlyingState()) {
-            return GameWorldServices.geoService().getZ(owner.getWorldId(), routeStep.getX(), routeStep.getY(), z - 1, 100f, 1);
+            return GameWorldServices.geoService().getZ(owner.getWorldId(), x, y, fallbackZ - 1, 100f, 1);
         }
-        return z;
+        return fallbackZ;
     }
 
     public boolean isHomeReturnDestinationReached() {
@@ -2067,14 +2175,19 @@ public class NpcMoveController
                 return;
             }
             localPoint2D = WalkerGroup.getLinePoint(new Point2D(paramRouteStep2.getX(), paramRouteStep2.getY()), new Point2D(paramRouteStep1.getX(), paramRouteStep1.getY()), this.owner.getWalkerGroupShift());
-            this.pointZ = resolveRouteStepZ(paramRouteStep2);
             this.owner.getWalkerGroup().setStep(this.owner, paramRouteStep1.getRouteStep());
-        } else {
-            this.pointZ = resolveRouteStepZ(paramRouteStep1);
         }
         this.currentPoint = paramRouteStep1.getRouteStep() - 1;
         this.pointX = localPoint2D == null ? paramRouteStep1.getX() : localPoint2D.getX();
         this.pointY = localPoint2D == null ? paramRouteStep1.getY() : localPoint2D.getY();
+        // 编队成员的航点被编队偏移后移（本路线最多 8m）：Z 必须按航点自身坐标采样。取上一步坐标时，
+        // 斜坡/台阶段上误差随偏移放大（实机 LF1A_NPCPath_Ermona 离线复刻：-2/-3/-6/-8m 偏移 →
+        // 0.26/0.27/0.84/1.17m；2026-10-06 799731/799736/799737/799746「上台阶悬空、下台阶入地」；
+        // 队长偏移 0 不受影响）。回退值与旧实现一致（上一步模板 Z）。
+        // A formation waypoint sits up to 8 m behind the previous route point: sample the ground at
+        // the waypoint itself. Sampling at the previous point misses by up to ~1 m on steps/slopes.
+        this.pointZ = localPoint2D == null ? resolveRouteStepZ(paramRouteStep1)
+            : resolveGroundZ(this.pointX, this.pointY, paramRouteStep2.getZ());
         this.destination = Destination.POINT;
         this.walkPause = paramRouteStep1.getRestTime();
     }
