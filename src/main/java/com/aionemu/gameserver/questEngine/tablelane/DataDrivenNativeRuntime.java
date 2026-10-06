@@ -1814,7 +1814,18 @@ public final class DataDrivenNativeRuntime {
 				continue;
 			}
 			int vars = state.getQuestVars().getQuestVars();
-			if (!DataDrivenProgress.guardClear(vars) || DataDrivenProgress.step(vars) != hit.stepIndex()) {
+			// 推进动作（10000+k）不受「步 == 该 NPC 的步」限制：推进后的新步页由同一对话窗继续
+			// 承载（sendPostAdvancePage），其按钮必须能在该窗被服务（2026-10-06 实机 13403：页
+			// select3 的「结束对话」按钮 10002 被步守卫挡下 ⇒ 任务不推进、DialogService 兜底关窗，
+			// 玩家侧 =「点结束对话不关闭、循环一下才关闭」）。其余动作仍只服务当前步。
+			// Advance actions are not gated on the hit's step: the new-step page rides the same
+			// dialog window and its buttons must be served there (live 13403: the 10002 close button
+			// of select3 was blocked by the hit-step guard, so the quest never advanced and only the
+			// DialogService fallback closed the window). Every other action still requires the
+			// npc's step to be the current one.
+			boolean advanceAction = dialogId >= 10000 && dialogId < 10000 + STAGE_PAGES.length;
+			if (!advanceAction && (!DataDrivenProgress.guardClear(vars)
+					|| DataDrivenProgress.step(vars) != hit.stepIndex())) {
 				continue;
 			}
 			StepPlan plan = plansByQuestId.get(hit.questId()).get(hit.stepIndex());
@@ -1878,14 +1889,22 @@ public final class DataDrivenNativeRuntime {
 				PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(objectId, PAGE_COMPLETE, hit.questId()));
 				return true;
 			}
-			if (dialogId >= 10000 && dialogId < 10000 + STAGE_PAGES.length) {
+			if (advanceAction) {
 				int target = dialogId - 9999;
 				// 真端顺序守卫：`code-9999 != 当前置 + 1 ⇒ return`（乱序/重复零写、不回发）。
 				if (target != DataDrivenProgress.step(vars) + 1) {
 					return false;
 				}
-				advance(player, state, hit.stepIndex(), plan.lastStep());
-				sendPostAdvancePage(player, objectId, state, plan);
+				// 对话链推进以**当前步**（vars 的步）为基准：advance、plan 与步动作执行器全部锚在
+				// 当前步上（守卫放宽前 hit 步 == 当前步，语义不变；放宽后服务其他步 NPC 的对话窗）。
+				// The dialog-chain advance keys on the current step (the vars step), not the hit's:
+				// advance, plan and the step-action executor all anchor on the current step.
+				int currentStep = DataDrivenProgress.step(vars);
+				StepPlan currentPlan = plansByQuestId.get(hit.questId()).get(currentStep);
+				if (!advance(player, state, currentStep, currentPlan.lastStep())) {
+					return false;
+				}
+				sendPostAdvancePage(player, objectId, state, currentPlan);
 				return true;
 			}
 			if (dialogId >= 1000) {

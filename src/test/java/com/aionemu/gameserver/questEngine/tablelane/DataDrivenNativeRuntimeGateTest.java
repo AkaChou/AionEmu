@@ -401,6 +401,37 @@ class DataDrivenNativeRuntimeGateTest {
 	}
 
 	/**
+	 * ⑤c 对话链推进不受「hit 步」限制（2026-10-06 实机 13403 修复）：推进后的新步页由同一对话窗
+	 * 继续承载（`sendPostAdvancePage`），其按钮（10000+k，真端「结束对话」）必须在该窗被服务——
+	 * 基准 = 当前步（vars 的步），不是 hit 的步。修复前 10002（select3 的结束对话）被步守卫挡下
+	 * ⇒ 任务不推进、DialogService 兜底关窗（玩家侧「点结束对话不关闭、循环一下才关闭」）。
+	 * The dialog-chain advance is not gated on the hit's step (live 13403 fix): the new-step page
+	 * rides the same dialog window, so its buttons are served with the current step as the base.
+	 */
+	@Test
+	void dialogChainAdvanceIsServedAtANonCurrentStepNpc() {
+		// 实机行 13403：第 0 步 = Talk Kinesos(203096)；构造「对话链已推进过第 0 步」的中途状态。
+		// Live row 13403: the step-0 talk is Kinesos (203096); seed a mid-chain state past step 0.
+		int questId = 13403;
+		int firstStep = table.find(questId).orElseThrow().steps().getFirst().index();
+		int npcId = keyOf(runtime.talkInterests(), questId, firstStep);
+		assertEquals(203096, npcId, "夹具锚点：13403 第 0 步 Talk NPC = Kinesos");
+		Player player = NativeTalkFixture.player();
+		QuestState state = NativeTalkFixture.add(player, questId, QuestStatus.START, firstStep + 2);
+		// 乱序推进（真端守卫：code-9999 == 当前步 + 1）：零写、零回发。
+		NativeTalkFixture.clearPackets(player);
+		assertFalse(runtime.onDialog(player, npcId, 10000, 1, questId), "乱序推进必须静默");
+		assertTrue(NativeTalkFixture.dialogPages(player).isEmpty(), "乱序推进不发页");
+		// 当前步的「结束对话」按钮（dialogId = 10000 + 当前步）在该 NPC 的对话窗里必须推进。
+		NativeTalkFixture.clearPackets(player);
+		assertTrue(runtime.onDialog(player, npcId, 10000 + firstStep + 2, 1, questId),
+			"对话链推进必须在非当前步的 NPC 窗被服务");
+		assertTrue(DataDrivenProgress.step(state.getQuestVars().getQuestVars()) > firstStep + 2,
+			"推进后步号前进（含级联）");
+		assertEquals(1, NativeTalkFixture.dialogPages(player).size(), "推进后必须下发新步页（同窗续链）");
+	}
+
+	/**
 	 * ⑤b 报告动作 1009：步进 + 报告通道（末步 = 待领奖 + 奖励窗页 5；真端 `player+0x100` + `mgr+0x1b0`）。
 	 * The report action advances and opens the reward window on the final step.
 	 */

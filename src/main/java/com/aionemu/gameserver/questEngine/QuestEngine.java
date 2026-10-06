@@ -37,6 +37,7 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.templates.quest.QuestItems;
 import com.aionemu.gameserver.model.templates.quest.QuestNpc;
 import com.aionemu.gameserver.model.templates.rewards.BonusType;
+import com.aionemu.gameserver.network.aion.serverpackets.SM_DIALOG_WINDOW;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_ITEM_USAGE_ANIMATION;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.questEngine.definition.CompiledQuestDefinition;
@@ -50,6 +51,7 @@ import com.aionemu.gameserver.questEngine.definition.QuestDialogContract;
 import com.aionemu.gameserver.questEngine.definition.QuestCatalogRegistry;
 import com.aionemu.gameserver.questEngine.definition.QuestDropScope;
 import com.aionemu.gameserver.questEngine.definition.QuestDialogAction;
+import com.aionemu.gameserver.questEngine.definition.QuestDialogPage;
 import com.aionemu.gameserver.questEngine.definition.QuestEvent;
 import com.aionemu.gameserver.questEngine.definition.QuestMetadata;
 import com.aionemu.gameserver.questEngine.definition.QuestNpcAttackFacts;
@@ -333,6 +335,29 @@ public class QuestEngine implements GameEngine {
 				npc.getObjectId(), requestedOwner)) {
 				return true;
 			}
+			// 真端对话平面的统一兜底：子页动作（SELECT⟨n⟩_…，动作 id 即目标页 id，如 1694 = select3_1）
+			// 在 native 各族与 DD 都未认领时，按客户端契约原样回发该页——**必须携带 questId**（客户端按
+			// 任务 html 渲染该页；零上下文时去 NPC 对话 html 找该页 ⇒ load fail：2026-10-06 实机 13403
+			// 步推进后动作 1694 落三参/两参分叉，两参形态即此症状；9/28 基线与 1001-1007 的三参回发为
+			// 正确形）。与 Talk/ItemPlay 既有子页分支（QE-141）同语义，本兜底统一覆盖 DD 与其余缺该分支
+			// 的族；typed 车道保持原链路。
+			// Universal fallback of the retail dialog plane: a selection sub-page action (the action id is
+			// the target page id, e.g. 1694 = select3_1) echoes the declared page back WITH the quest
+			// context when no lane claimed it (live 13403: after an advance the step guard no longer
+			// matched and the echo dropped the context, so the client looked the page up in the NPC
+			// dialog html and failed to load; the 9/28 baseline sent it with the context). Same semantics
+			// as the existing Talk/ItemPlay sub-page branches (QE-141); the typed lane keeps its own path.
+			if (requestedOwner != 0 && npcId != 0 && !typed.owns(requestedOwner)
+					&& QuestDialogPage.isSelectionSubPage(env.getDialogId())
+					&& QuestDialogContract.loadDefault().hasButtonPage(requestedOwner, env.getDialogId())) {
+				QuestState subPageState = player.getQuestStateList().getQuestState(requestedOwner);
+				if (subPageState != null && (subPageState.getStatus() == QuestStatus.START
+						|| subPageState.getStatus() == QuestStatus.REWARD)) {
+					PacketSendUtility.sendPacket(player,
+						new SM_DIALOG_WINDOW(npc.getObjectId(), env.getDialogId(), requestedOwner));
+					return true;
+				}
+			}
 			if (requestedOwner != 0 && typed.owns(requestedOwner)) {
 				QuestEvent event = npcId == 0
 					? new QuestEvent.QuestDialog(env.getDialogId())
@@ -396,14 +421,28 @@ public class QuestEngine implements GameEngine {
 				// 可交任务时先进任务对话（真端对话平面 FUN_180c474b0「打开（-1/26）→ 阶段页」），否则
 				// 才落普通页 10。tablelane 车道按 requestedOwner!=0 路由，questId=0 的开门在此逐个
 				// 进行中任务重放（2026-10-03 真机 1102：REWARD 后右键交付 NPC 只剩「结束对话」）。
+				// 重放分两遍：可交付（REWARD）优先于进行中（START）。客户端任务列表不渲染交付行
+				// （2026-10-06 实机 19683 教训：REWARD 落页 10 时交付行不可点）；若单遍按 questId 升序遍历，
+				// NPC 上编号较小的进行中任务会先认领（START → 页 10）并短路循环，遮挡可交付任务的奖励窗
+				// （2026-10-06 实机 14111：NPC 203126 上 1155 先认领，14111 的奖励窗不可达、任务不可交）。
 				// The right-click open door (-1, questId=0): replay the player's in-progress quests on
 				// this npc through the table lanes first (retail dialog plane "open → stage page"),
-				// so a reportable quest opens its dialog instead of the plain page 10.
+				// so a reportable quest opens its dialog instead of the plain page 10. The replay runs
+				// REWARD before START: the client task list never renders a hand-in row (live 19683),
+				// so a live quest claiming the open (START -> page 10) must not shadow a deliverable
+				// one (live 14111: 1155 claimed first and hid 14111's reward window on npc 203126).
+				List<QuestState> openDoorReplay = new ArrayList<>();
 				for (QuestState state : player.getQuestStateList().getAllQuestState()) {
-					QuestStatus status = state.getStatus();
-					if (status != QuestStatus.START && status != QuestStatus.REWARD) {
-						continue;
+					if (state.getStatus() == QuestStatus.REWARD) {
+						openDoorReplay.add(state);
 					}
+				}
+				for (QuestState state : player.getQuestStateList().getAllQuestState()) {
+					if (state.getStatus() == QuestStatus.START) {
+						openDoorReplay.add(state);
+					}
+				}
+				for (QuestState state : openDoorReplay) {
 					if (onDialog(new QuestEnv(npc, player, state.getQuestId(), env.getDialogId()))) {
 						return true;
 					}

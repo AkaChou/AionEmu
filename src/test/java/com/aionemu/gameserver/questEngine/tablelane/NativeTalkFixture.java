@@ -167,6 +167,24 @@ public final class NativeTalkFixture {
 	}
 
 	/**
+	 * 断言收到唯一一页且携带指定任务上下文（交付面/领奖窗断言用）。
+	 * Asserts exactly one dialog page carrying the given quest context (hand-in / reward-window gates).
+	 */
+	public static void assertOnlyDialogPageWithQuest(Player player, int expectedPage, int expectedQuestId) {
+		List<SM_DIALOG_WINDOW> dialogs = new ArrayList<>();
+		for (AionServerPacket packet : packets(player)) {
+			if (packet instanceof SM_DIALOG_WINDOW dialog) {
+				dialogs.add(dialog);
+			}
+		}
+		assertEquals(1, dialogs.size(), "必须且只下发一个对话窗包 / exactly one dialog-window packet");
+		SM_DIALOG_WINDOW window = dialogs.getFirst();
+		assertEquals(expectedPage, intField(SM_DIALOG_WINDOW.class, window, "dialogID"), "下发页 / page");
+		assertEquals(expectedQuestId, intField(SM_DIALOG_WINDOW.class, window, "questId"),
+			"任务上下文 / quest id");
+	}
+
+	/**
 	 * 断言收到唯一一个关窗包：页 0、目标 0、questId 0——真端推进 after-commit（0x5d8）的关窗形态。
 	 * Asserts exactly one close-dialog packet (page 0, target 0, questId 0) — the retail 0x5d8
 	 * advance tail.
