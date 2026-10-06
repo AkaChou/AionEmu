@@ -87,8 +87,50 @@
 ## 8. 待办
 
 1. ~~实机验收 1157~~（2026-10-06 通过）。
-2. 同类 fail-closed 面排查：`CM_DELETE_QUEST:38` / `CM_DIALOG_SELECT:168` / `QuestService:572` /
-   `NpcFactions` / `RetailAreaEngine:145` 的 `questCatalog().findMetadata` 用法是否存在「引用 native 行」缺口。
+2. ~~同类 fail-closed 面排查~~（本批完成，见 §9）。
 3. pattern 化（候选不变量：「迁移后任何引用他行的元数据查询必须有真端全量表回退」）——**推迟**：
    `patterns/quest-engine.md` 当前含并行会话（13403/14111）未提交改动（QE-148 元数据更新 + QE-149 整节，
    与文件尾紧邻无法分离 hunk），待其提交后补 QE-150。
+
+## 9. 同类面排查（findMetadata 全量 20 文件，2026-10-06）
+
+方法：对每个 `questCatalog().findMetadata(...)` 调用点，判定「查询对象是否可能为 native 行（不在目录）」
+与「null 时行为是否静默丢失/误判」。
+
+### 9.1 已正确分流 / 无缺口
+
+| 调用点 | 机制 |
+|---|---|
+| `QuestService:572`（前置检查） | native 行在 `checkStartConditionsImpl:513-515` 提前分流到 `nativeAcquireAllowed` |
+| `QuestService:1212`（getLevelRequirement） | 仅 typed 行路径；native 行走 `nativeZoneVerdict` 分流（nearbyQuestFlag:1257-1263） |
+| `QuestService:1405`（abandonQuest） | **已有 `nativeMetadata` 回退**（本仓同款先例：cannot_giveup / quest_work_item 取真端行） |
+| `QuestService:1200`（checkLevelRequirement） | 无调用方（死代码） |
+| `NpcFactions:294-307` | 显式按 metadata 存在性分流（native → `NativeSystemGrantLanes`） |
+| `NpcFactions:348` | 存在性做 typed/native 归属去重（正确语义） |
+| `RetailAreaEngine:145` | 显式按行分流（native AREA → start port；其余按目录） |
+| `PlayerQuestStartEligibilityPort` | native 行不走它（车道设计）；其 `repeatCompletionMatches:191-196` 对前置 null 宽容（跳过计数检查） |
+| `PlayerQuestStatePort` / `StateSyncPort` / `SystemMessagePort` / `EffectPort` | typed 执行面（plan.questId 均为 XML 行）或带 null 保护（StateSyncPort:116、StatePort:128） |
+| `QuestEngine:487`（challenge 提示）、`QuestEngine:2560`（每日提醒广播） | 表现面：native 行少提示消息（低危，不静默丢失功能） |
+| `admin/Quest:143/299` | GM 工具面：native 行少诊断/清理输出（低危） |
+| `QuestStartAction:39/44` | 数据面实例 questid=450/500 均不在生产集（无 native 行实例；非有效缺口） |
+
+### 9.2 真实缺口（同型）
+
+| # | 位置 | 现象 | 处置 |
+|---|---|---|---|
+| A | `QuestState.canRepeat()`（无参，`QuestState.java:161-164`）→ catalog null → `canRepeat(metadata):167-169` false | **根子**：已 COMPLETE 的可重复 native 行被判"不可重复" | **已修**（2026-10-06）：无参版 metadata 获取加 `nativeMetadata` 回退（fail-closed 保留） |
+| B | `PortalDialogAI2:135` / `Specialize01PortalAI2:85`（`qs.canRepeat()`） | 传送门/专业 NPC 处，已完成的可重复 native 行不再列为可接候选（对话入口缺失） | **随 A 修复**（调用无参版） |
+| C | `CM_QUEST_SHARE`（`runImpl:43` 取数处） | native 行**不可分享**（静默无反应）；`CM_DIALOG_SELECT:179` 的共享接受分支为同缺口下游（被上游挡住，不可达） | **已修**（2026-10-06）：取数处加 `nativeMetadata` 回退；三 helper 的 null 契约（`canShare(null)→false`）保持不变 |
+| D | `EventService.matchesEventQuestMetadata:193-198`（metadata==null → false） | native 事件行（80029/80032/80034-80037 等 SimpleTalk 行）**登录时不参与事件开启/维护/循环重置**；tablelane 无 `EventQuestRefresh` 替代面 | **仅记录**（待专项：eligibility 深链对 native 行需走 native 判定） |
+
+低危/未深查：`QuestCatalogDrop` 的 `Optional<QuestMetadata>` 消费面（类型本身 null 安全，未发现 `.get()` 风险）。
+
+### 9.3 A/B/C 修复验证（2026-10-06，IDEA MCP）
+
+- `CMQuestShareCanonicalMetadataTest` 1/1 绿（helper 语义未变：`canShare(null) → false` 契约保留）；
+- `RetailQuestStateTest` 2/2 绿（含 `repeatEligibilityUsesCanonicalRepeatPolicyAndCooldown`）；
+- `NativeNearbyQuestAxisGateTest` 8/8 绿（回归）；
+- `PlayerQuestStartEligibilityPortTest` 16/17 绿，1 红 = `daevanionAuxiliarySlotsStayAlternativesInsteadOfOneConjunction`
+  （**存量红**：断言 15321 的**真端编译产物**组数 2→1；15321/15301/15311 全为 RETAIL_TABLE DataDriven 行，
+  测试经 `retailMetadataOf` 读编译面 —— 与 A/B/C 三个运行面改动零交集；另记为 DataDriven 编译面待归因项）。
+
