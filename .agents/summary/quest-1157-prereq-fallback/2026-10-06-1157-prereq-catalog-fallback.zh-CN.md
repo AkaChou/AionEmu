@@ -88,9 +88,11 @@
 
 1. ~~实机验收 1157~~（2026-10-06 通过）。
 2. ~~同类 fail-closed 面排查~~（本批完成，见 §9）。
-3. pattern 化（候选不变量：「迁移后任何引用他行的元数据查询必须有真端全量表回退」）——**推迟**：
-   `patterns/quest-engine.md` 当前含并行会话（13403/14111）未提交改动（QE-148 元数据更新 + QE-149 整节，
-   与文件尾紧邻无法分离 hunk），待其提交后补 QE-150。
+3. pattern 化（候选不变量：「迁移后任何引用他行的元数据查询必须有真端全量表回退」）——**已写**：
+   归入 **QE-151**（`METADATA_DUAL_SOURCE_NATIVE_FALLBACK`，1157+A/B/C+D 四面合一，2026-10-06）；
+   `patterns/quest-engine.md` + `systemPatterns.md` 路由均已落笔、sync+verify 绿，**提交待**并行会话
+   （DD/13403）提交后补（两份文件当前含其未提交改动，无法分离 hunk；处置记录见
+   `.agents/summary/quest-event-maintenance-native/…§8.4`）。
 
 ## 9. 同类面排查（findMetadata 全量 20 文件，2026-10-06）
 
@@ -121,7 +123,7 @@
 | A | `QuestState.canRepeat()`（无参，`QuestState.java:161-164`）→ catalog null → `canRepeat(metadata):167-169` false | **根子**：已 COMPLETE 的可重复 native 行被判"不可重复" | **已修**（2026-10-06）：无参版 metadata 获取加 `nativeMetadata` 回退（fail-closed 保留） |
 | B | `PortalDialogAI2:135` / `Specialize01PortalAI2:85`（`qs.canRepeat()`） | 传送门/专业 NPC 处，已完成的可重复 native 行不再列为可接候选（对话入口缺失） | **随 A 修复**（调用无参版） |
 | C | `CM_QUEST_SHARE`（`runImpl:43` 取数处） | native 行**不可分享**（静默无反应）；`CM_DIALOG_SELECT:179` 的共享接受分支为同缺口下游（被上游挡住，不可达） | **已修**（2026-10-06）：取数处加 `nativeMetadata` 回退；三 helper 的 null 契约（`canShare(null)→false`）保持不变 |
-| D | `EventService.matchesEventQuestMetadata:193-198`（metadata==null → false） | native 事件行（80029/80032/80034-80037 等 SimpleTalk 行）**登录时不参与事件开启/维护/循环重置**；tablelane 无 `EventQuestRefresh` 替代面 | **仅记录**（待专项：eligibility 深链对 native 行需走 native 判定） |
+| D | `EventService.matchesEventQuestMetadata:193-198`（metadata==null → false） | native 事件行（80029/80032/80034-80037 等 SimpleTalk 行）**登录时不参与事件开启/维护/循环重置**；tablelane 无 `EventQuestRefresh` 替代面 | **已修**（2026-10-06 专项：EventService 双源回退 + `QuestService.startEventQuest` native 分支 + eligibility loader 回退 + 计数 ≥ 语义；318 任务中 315 行恢复；见 `.agents/summary/quest-event-maintenance-native/`） |
 
 低危/未深查：`QuestCatalogDrop` 的 `Optional<QuestMetadata>` 消费面（类型本身 null 安全，未发现 `.get()` 风险）。
 

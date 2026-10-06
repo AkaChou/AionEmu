@@ -190,9 +190,14 @@ public final class PlayerQuestStartEligibilityPort implements QuestStartEligibil
 
 	private boolean repeatCompletionMatches(int questId, QuestState state) {
 		QuestMetadata prerequisite = metadataByQuest.apply(questId);
+		// 真端判定 = 「完成计数 >= 前置行 max_repeat_count」（IsFinishedQuestWithBranch：要求 <= 计数；
+		// 完成计数溢出不得误拒）。1 = 完成一次即达上限，255 = 无限重复——两者不附加计数要求。
+		// The retail verdict is "finishCount >= the prerequisite row's max_repeat_count"
+		// (IsFinishedQuestWithBranch: required <= count; an overflowed count never fails closed).
+		// 1 and 255 (unlimited) add no count requirement.
 		return prerequisite == null || prerequisite.repeatPolicy().maxRepeatCount() == 1
 			|| prerequisite.repeatPolicy().maxRepeatCount() == 255
-			|| state.getCompleteCount() == prerequisite.repeatPolicy().maxRepeatCount();
+			|| state.getCompleteCount() >= prerequisite.repeatPolicy().maxRepeatCount();
 	}
 
 	private static boolean rewardMatches(QuestStartCondition condition, QuestState state) {

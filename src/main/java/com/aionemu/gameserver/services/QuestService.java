@@ -786,40 +786,75 @@ public final class QuestService {
 	 * whether successful
 	 */
 	public static boolean startEventQuest(QuestEnv env, QuestStatus questStatus) {
-		QuestTemplate template = questsData.getQuestById(env.getQuestId());
-		if (template == null || template.getCategory() != QuestCategory.EVENT) {
-			return false;
-		}
 		int id = env.getQuestId();
-		Player player = env.getPlayer();
-		QuestStatus effectiveStatus = normalizeEventQuestStatus(questStatus);
-		PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(id, effectiveStatus, 0));
-		int minLevel = template.getMinlevelPermitted();
-		if ((player.getLevel() < minLevel) && (minLevel != 999)) {
+		QuestTemplate template = questsData.getQuestById(id);
+		if (template != null && template.getCategory() != QuestCategory.EVENT) {
 			return false;
 		}
-		if (template.getMaxlevelPermitted() != 0 && player.getLevel() > template.getMaxlevelPermitted()) {
-			return false;
-		}
-		if (!template.isRacePermitted(player.getRace())) {
-			return false;
-		}
-		if (!template.getClassPermitted().isEmpty()) {
-			if (!template.getClassPermitted().contains(player.getCommonData().getPlayerClass())) {
+		// native 事件行（QuestsData 与目录同为 733 行集合）：回退真端 quest.xml 元数据，以 metadata 轴
+		// 等价复现下方模板轴判定。「事件任务」语义来自活动清单（events_config maintainable），
+		// 不复用 quest.xml 的 category（客户端 UI 分组；清单内含 mission/seen_marker/public 段行）。
+		// Native-lane rows (QuestsData carries the same 733-row set as the catalog) fall back to the
+		// retail quest.xml metadata, mirroring the template axes below; the event semantics come from
+		// the activity lists, not the quest.xml category (a client UI grouping).
+		QuestMetadata metadata = null;
+		if (template == null) {
+			metadata = GameEngineServices.questEngine().nativeMetadata(id).orElse(null);
+			if (metadata == null) {
 				return false;
 			}
 		}
-		if (template.getGenderPermitted() != null) {
-			if (template.getGenderPermitted() != player.getGender()) {
+		Player player = env.getPlayer();
+		QuestStatus effectiveStatus = normalizeEventQuestStatus(questStatus);
+		PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(id, effectiveStatus, 0));
+		if (template != null) {
+			int minLevel = template.getMinlevelPermitted();
+			if ((player.getLevel() < minLevel) && (minLevel != 999)) {
+				return false;
+			}
+			if (template.getMaxlevelPermitted() != 0 && player.getLevel() > template.getMaxlevelPermitted()) {
+				return false;
+			}
+			if (!template.isRacePermitted(player.getRace())) {
+				return false;
+			}
+			if (!template.getClassPermitted().isEmpty()) {
+				if (!template.getClassPermitted().contains(player.getCommonData().getPlayerClass())) {
+					return false;
+				}
+			}
+			if (template.getGenderPermitted() != null) {
+				if (template.getGenderPermitted() != player.getGender()) {
+					return false;
+				}
+			}
+		} else {
+			if ((player.getLevel() < metadata.minLevel()) && (metadata.minLevel() != 999)) {
+				return false;
+			}
+			if (metadata.maxLevel() != Integer.MAX_VALUE && player.getLevel() > metadata.maxLevel()) {
+				return false;
+			}
+			if (!metadata.permitsRace(player.getRace() == null ? null : player.getRace().name())) {
+				return false;
+			}
+			if (!metadata.permittedClasses().isEmpty()
+					&& (player.getCommonData() == null || player.getCommonData().getPlayerClass() == null
+						|| !metadata.permittedClasses().contains(player.getCommonData().getPlayerClass().name()))) {
+				return false;
+			}
+			if (!metadata.permittedGender().isEmpty()
+					&& (player.getGender() == null || !metadata.permittedGender().equals(player.getGender().name()))) {
 				return false;
 			}
 		}
 		QuestState qs = player.getQuestStateList().getQuestState(id);
 		if (qs == null) {
-			qs = new QuestState(template.getId(), effectiveStatus, 0, 0, null, 0, null);
+			qs = new QuestState(id, effectiveStatus, 0, 0, null, 0, null);
 			player.getQuestStateList().addQuest(id, qs);
 		} else {
-			if (template.getMaxRepeatCount() >= qs.getCompleteCount()) {
+			int maxRepeat = template != null ? template.getMaxRepeatCount() : metadata.repeatPolicy().maxRepeatCount();
+			if (maxRepeat >= qs.getCompleteCount()) {
 				qs.setStatus(effectiveStatus);
 				qs.setQuestVar(0);
 			}
