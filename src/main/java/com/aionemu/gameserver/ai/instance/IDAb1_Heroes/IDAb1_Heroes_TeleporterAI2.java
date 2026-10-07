@@ -1,6 +1,7 @@
 package com.aionemu.gameserver.ai.instance.IDAb1_Heroes;
 
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
+import com.aionemu.gameserver.lifecycle.GameEventBootstrapServices;
 
 import com.aionemu.gameserver.ai.GeneralNpcAI2;
 
@@ -42,6 +43,8 @@ public class IDAb1_Heroes_TeleporterAI2 extends GeneralNpcAI2
 		if (GameEngineServices.questEngine().onDialog(env) && dialogId != 1011) {
 			return true;
 		} if (dialogId == 10000) {
+            // 飞行传送期间收起守护灵，落地后恢复。 / Hide the minion for the fly teleport; it is restored on landing.
+            GameEventBootstrapServices.minionService().suspendForFlyTeleport(player);
             switch (getNpcId()) {
                 case 835782: //IDAb1_Heroes_L_Teleporter.
                     player.setState(CreatureState.FLIGHT_TELEPORT);

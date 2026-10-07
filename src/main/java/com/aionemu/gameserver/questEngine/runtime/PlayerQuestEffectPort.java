@@ -1,6 +1,7 @@
 package com.aionemu.gameserver.questEngine.runtime;
 
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
+import com.aionemu.gameserver.lifecycle.GameEventBootstrapServices;
 import com.aionemu.gameserver.model.EmotionType;
 import com.aionemu.gameserver.model.EmotionId;
 import com.aionemu.gameserver.model.PlayerClass;
@@ -220,6 +221,8 @@ public final class PlayerQuestEffectPort implements QuestEffectPort {
 		player.setState(CreatureState.FLIGHT_TELEPORT);
 		player.unsetState(CreatureState.ACTIVE);
 		player.setFlightTeleportId(flightTeleportId);
+		// 飞行传送期间收起守护灵，落地后恢复。 / Hide the minion for the fly teleport; it is restored on landing.
+		GameEventBootstrapServices.minionService().suspendForFlyTeleport(player);
 		PacketSendUtility.sendPacket(player,
 			new SM_EMOTION(player, EmotionType.START_FLYTELEPORT, flightTeleportId, 0));
 		return true;

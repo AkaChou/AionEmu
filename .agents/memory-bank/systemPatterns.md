@@ -35,7 +35,7 @@
 | **生物属性与血量同步** | `CV-001` | 客户端血条只认 `SM_ATTACK_STATUS` 的 0–100 整数百分比（包内无绝对 HP，1% 即协议粒度上限）；改血四出口分工——攻击走 `NpcController.onAttack`、直接改血走 `NpcLifeStats.setCurrentHp*` 覆写、等比重算走 `rescaleCurrentHp` 静默出口、非攻击扣血走 `reduceHpFromEffect`（技能侧唯一入口，delta 用实际差值）；`onReduceHp()` 有意保持空实现，禁止补发（会与攻击路径双包双飘字）；召唤物有两条客户端通道——血条广播 + 主人面板消费绝对 HP，需各自下发 `SM_SUMMON_UPDATE`；同步判据用百分比变化而非绝对值，且禁止用覆写内的前后百分比识别等比重算（新上限先生效会让读数失真，实例人数变化会引发整片假飘字）；禁止在 `reduceHp` 外套锁（`onDie` 锁外回调并跨对象取锁，外套锁会形成跨生物倒序死锁） | [patterns/creature-vitals.md](patterns/creature-vitals.md) |
 
 | **客户端动作状态与交互同步 (Client Action State)** | `CAS-001` | 客户端「使用物品」等本地动作状态只能由服务端 `SM_ITEM_USAGE_ANIMATION` 收尾（result=1 成功 / 3 取消）或角色移动解除；关闭契约窗口等收尾请求（`CM_USE_ITEM`）必须有应答——解析不到物品时静默 return 会让客户端卡状态，直到移动前交互都被本地以 901564 `STR_CANNOT_DO_WHILE_USING_ITEM` 拒绝 | [patterns/client-action-state.md](patterns/client-action-state.md) |
-
+| **跟随物生命周期 (Companion Lifecycle)** | `CL-001` | 飞行传送（`FLIGHT_TELEPORT`）必须「进入收起、落地恢复」跟随物——飞行中客户端持续发 `CM_MOVE_IN_AIR` 刷新主人 KnownList，95m 可见距离会让高速移动的 minion 反复越界，客户端「取消召唤/召唤了」成对刷屏（周期≈95m÷速度+跟随 tick）；收起=世界层 `despawn`（保留授予技能/Buff/功能开关，禁止用 `despawnMinion` 完整收回）；全部进入点（传送门/风场/副本/任务）必须挂 `suspendForFlyTeleport`，由门禁全仓扫描 `.setState(CreatureState.FLIGHT_TELEPORT)` 守护 | [patterns/companion-lifecycle.md](patterns/companion-lifecycle.md) |
 ---
 
 ## 三、知识沉淀与追加准则 (How to Append)

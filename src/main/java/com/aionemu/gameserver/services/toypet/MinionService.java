@@ -6,6 +6,7 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 
 import java.sql.Timestamp;
 import java.util.HashSet;
@@ -438,6 +439,48 @@ public class MinionService {
 
 		minionbuff.end(player);
 		PacketSendUtility.broadcastPacketAndReceive(player, new SM_MINIONS(6, minionCommonData));
+	}
+
+	/**
+	 * 飞行传送开始时临时收起守护灵：仅从世界移除，保留主人关系、授予技能、增益与功能开关。
+	 * Temporarily hides the minion when a fly teleport starts: world-level removal only, keeping
+	 * ownership, granted skills, buffs and function toggles intact.
+	 * <p>与召唤兽的 {@code SummonsService#suspendForTeleport} 语义一致；隐藏而非收回，
+	 * 因此不做 {@link #despawnMinion} 的技能/增益清理，也不清空主人引用。</p>
+	 * <p>Matches the summon's {@code SummonsService#suspendForTeleport} semantics: hide instead of
+	 * release, so no skill/buff cleanup and no master reference reset.</p>
+	 * @param player 玩家 / Player
+	 */
+	public void suspendForFlyTeleport(Player player) {
+		Minion minion = player.getMinion();
+		if (minion == null) {
+			return;
+		}
+		synchronized (minion) {
+			if (minion.isSpawned()) {
+				GameWorldBootstrapServices.world().despawn(minion);
+			}
+		}
+	}
+
+	/**
+	 * 飞行传送结束后把仍被召唤的守护灵放回主人身边；未召唤或仍在场时不处理。
+	 * Restores a still-summoned minion next to its master after a fly teleport ends; no-op when
+	 * it was released or is already spawned.
+	 * @param player 玩家 / Player
+	 */
+	public void restoreAfterFlyTeleport(Player player) {
+		Minion minion = player.getMinion();
+		if (minion == null) {
+			return;
+		}
+		synchronized (minion) {
+			if (!minion.isSpawned()) {
+				GameWorldBootstrapServices.world().setPosition(minion, player.getWorldId(), player.getInstanceId(),
+						player.getX(), player.getY(), player.getZ(), player.getHeading());
+				GameWorldBootstrapServices.world().spawn(minion);
+			}
+		}
 	}
 
 	/**

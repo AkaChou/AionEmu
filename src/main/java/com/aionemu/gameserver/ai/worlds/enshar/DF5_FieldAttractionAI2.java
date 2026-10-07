@@ -2,6 +2,7 @@ package com.aionemu.gameserver.ai.worlds.enshar;
 
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.ai2.NpcAI2;
+import com.aionemu.gameserver.lifecycle.GameEventBootstrapServices;
 import com.aionemu.gameserver.model.EmotionType;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.gameobjects.state.CreatureState;
@@ -34,6 +35,8 @@ public class DF5_FieldAttractionAI2 extends NpcAI2
     @Override
     public boolean onDialogSelect(final Player player, int dialogId, int questId, int extendedRewardIndex) {
         if (dialogId == 10000) {
+            // 飞行传送期间收起守护灵，落地后恢复。 / Hide the minion for the fly teleport; it is restored on landing.
+            GameEventBootstrapServices.minionService().suspendForFlyTeleport(player);
             switch (getNpcId()) {
                 case 804822: // 遗弃的水桶 / Abandoned Bucket
                     player.setState(CreatureState.FLIGHT_TELEPORT);

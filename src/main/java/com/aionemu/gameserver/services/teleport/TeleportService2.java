@@ -5,6 +5,8 @@ import java.util.Set;
 
 import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
+import com.aionemu.gameserver.lifecycle.GameEventBootstrapServices;
+
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
 
 import com.aionemu.gameserver.lifecycle.GameGameplayServices;
@@ -183,6 +185,8 @@ public class TeleportService2 {
 
 		if (location.getType() == TeleportType.FLIGHT) {
 			SummonsService.suspendForTeleport(player);
+			// 飞行传送期间收起守护灵，落地后由 onFlyTeleportEnd 恢复。 / Hide the minion for the fly teleport; onFlyTeleportEnd restores it.
+			GameEventBootstrapServices.minionService().suspendForFlyTeleport(player);
 			player.unsetPlayerMode(PlayerMode.RIDE);
 			player.setState(CreatureState.FLIGHT_TELEPORT);
 			player.unsetState(CreatureState.ACTIVE);

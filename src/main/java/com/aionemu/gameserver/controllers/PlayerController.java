@@ -1174,6 +1174,8 @@ public class PlayerController extends CreatureController<Player> {
 			player.setState(CreatureState.ACTIVE);
 			updateZone();
 			SummonsService.restoreAfterTeleport(player);
+			// 飞行传送结束：把被收起的守护灵放回主人身边。 / Fly teleport ended: restore the hidden minion next to the master.
+			GameEventBootstrapServices.minionService().restoreAfterFlyTeleport(player);
 		}
 	}
 
