@@ -33,7 +33,8 @@ import com.aionemu.gameserver.questEngine.tablelane.NativeQuestTableLoader.Simpl
  * <ol>
  *   <li>160 行全量装载、{@code use_item_name}/{@code reward_npc_name} 100%、中继链与第 K 步物品列填充率冻结；</li>
  *   <li>注册/路由分解（owns 160 = routed 102 + 不可路由 58）与 fail-closed 残余 {30720, 30723}；</li>
- *   <li>用物开接取窗（页 4）→ 无主 1002 接取 → 中继链（第 3 步换物）→ 交付门 → 领奖闭环；</li>
+ *   <li>用物开接取窗（页 4）→ 无主 1002 接取 → 中继链（任务行 = 该步页、SETPRO 推进写 {@code var0}、
+ *       第 3 步换物）→ 交付门 → 领奖闭环；</li>
  *   <li>失败面 fail-closed：未接取不重复开窗、乱序中继零推进、门未持有不放行、越界按钮不结算。</li>
  * </ol>
  * <p>
@@ -188,24 +189,45 @@ class SimpleUseItemNativeFamilyGateTest {
 	}
 
 	@Test
-	void relayChainAdvancesInTableOrderAndSwapsItemsAtTheRedeclaredStep() {
+	void relayChainServesStepPagesAndAdvancesThroughSetproIntoVar0() {
 		NativeTalkFixture.RecordingInventory inventory = new NativeTalkFixture.RecordingInventory();
 		SimpleUseItemHandler local = handlerWith(inventory, NativeReportRewardFlow.instance());
 		Player player = NativeTalkFixture.player();
 		NativeTalkFixture.start(player, RELAY_QUEST);
+		QuestState state = player.getQuestStateList().getQuestState(RELAY_QUEST);
 		List<Integer> relays = local.relayNpcs(RELAY_QUEST);
 		assertEquals(3, relays.size(), "1559 三步中继（真端 talk_npc1..3）");
 
-		assertFalse(local.onDialog(NativeTalkFixture.dialog(player, relays.get(1), RELAY_QUEST, 26)),
-			"乱序中继必须零推进");
-		assertTrue(local.onDialog(NativeTalkFixture.dialog(player, relays.get(0), RELAY_QUEST, 26)));
-		assertEquals(1 << 16, player.getQuestStateList().getQuestState(RELAY_QUEST)
-			.getQuestVars().getQuestVars(), "第 1 步推进");
-		assertTrue(local.onDialog(NativeTalkFixture.dialog(player, relays.get(1), RELAY_QUEST, 26)));
-		assertTrue(local.onDialog(NativeTalkFixture.dialog(player, relays.get(2), RELAY_QUEST, 26)),
-			"第 3 步必须被服务");
-		assertEquals(3 << 16, player.getQuestStateList().getQuestState(RELAY_QUEST)
-			.getQuestVars().getQuestVars(), "第 3 步推进");
+		// 尚未轮到的第 2 步：任务行打开零响应、乱序推进动作零步进（关窗兜底，不越过步序）。
+		NativeTalkFixture.clearPackets(player);
+		assertFalse(local.onDialog(NativeTalkFixture.dialog(player, relays.get(1), RELAY_QUEST, 31)),
+			"尚未轮到的步不得打开步页");
+		assertTrue(local.onDialog(NativeTalkFixture.dialog(player, relays.get(1), RELAY_QUEST, 10001)));
+		NativeTalkFixture.assertCloseDialog(player);
+		assertEquals(0, state.getQuestVars().getQuestVars(), "乱序推进零步进");
+
+		// 任务行打开 = 该步页 SELECT2..4（带 questId）且不推进；子页动作按契约原样回发；
+		// SETPRO{K}（10000 + K - 1）推进把步号写 var0 = K（旧 bit16..17 私编的 65536 会让客户端
+		// 任务书步骤显示为空）并关窗（真端 0x5d8、零发页）。
+		int[] pages = {1352, 1693, 2034};
+		int[] subPages = {1353, 1694, 2035};
+		for (int step = 1; step <= 3; step++) {
+			int relayNpc = relays.get(step - 1);
+			NativeTalkFixture.clearPackets(player);
+			assertTrue(local.onDialog(NativeTalkFixture.dialog(player, relayNpc, RELAY_QUEST, 31)),
+				"第 " + step + " 步的任务行 = 该步页");
+			NativeTalkFixture.assertOnlyDialogPageWithQuest(player, pages[step - 1], RELAY_QUEST);
+			assertEquals(step - 1, state.getQuestVars().getQuestVars(), "打开步页不得写步号");
+			NativeTalkFixture.clearPackets(player);
+			assertTrue(local.onDialog(NativeTalkFixture.dialog(player, relayNpc, RELAY_QUEST,
+				subPages[step - 1])), "客户端声明的子页动作必须回发");
+			NativeTalkFixture.assertOnlyDialogPageWithQuest(player, subPages[step - 1], RELAY_QUEST);
+			NativeTalkFixture.clearPackets(player);
+			assertTrue(local.onDialog(NativeTalkFixture.dialog(player, relayNpc, RELAY_QUEST,
+				10000 + step - 1)), "SETPRO" + step + " 必须推进");
+			NativeTalkFixture.assertCloseDialog(player);
+			assertEquals(step, state.getQuestVars().getQuestVars(), "步号 = var0 = " + step);
+		}
 		// 第 3 步换物：真端 give_item3/remove_item3（1559 = 换出 1559A、换入 1559B）。
 		// The retail step-3 swap: give_item3/remove_item3 of row 1559.
 		NativeItemSymbols.ItemStack give = local.stepGiveItem(RELAY_QUEST, 3);
@@ -215,6 +237,80 @@ class SimpleUseItemNativeFamilyGateTest {
 		assertEquals(List.of("give:" + give.itemId() + ":" + give.count(),
 			"remove:" + remove.itemId() + ":" + remove.count()), inventory.calls(),
 			"第 3 步必须按真端列执行发放与扣除");
+
+		// 链满后任务行让位给交付面：1559 的 talk_npc1 = reward_npc，点任务行（31）必须发报告确认页
+		// select5=2375（中继步页 1352 不得再出现）。
+		// Once the chain is complete the hand-in face owns the row selection.
+		NativeTalkFixture.clearPackets(player);
+		assertTrue(local.onDialog(NativeTalkFixture.dialog(player, relays.getFirst(), RELAY_QUEST, 31)));
+		NativeTalkFixture.assertOnlyDialogPage(player, 2375);
+	}
+
+	/**
+	 * 用户实机回归（2026-10-08，3058 / NPC 798189 Oileus）：与 talk_npc1 对话后任务书步骤整块空白——
+	 * 旧私编把步号写 bit16..17（65536）让客户端按打包整数匹配任务 steps 行落空。
+	 * <p>
+	 * Live regression (2026-10-08): the relay advance of 3058 blanked the journal steps.
+	 */
+	@Test
+	void quest3058RelayWritesVar0AndRemovesItsItemAtStepTwo() {
+		NativeTalkFixture.RecordingInventory inventory = new NativeTalkFixture.RecordingInventory();
+		SimpleUseItemHandler local = handlerWith(inventory, NativeReportRewardFlow.instance());
+		Player player = NativeTalkFixture.player();
+		NativeTalkFixture.start(player, 3058);
+		QuestState state = player.getQuestStateList().getQuestState(3058);
+		assertTrue(local.routes(3058), "3058 必须在 native 路由集内（实机可玩面）");
+		List<Integer> relays = local.relayNpcs(3058);
+		assertEquals(2, relays.size(), "3058 两步中继（真端 Oileus/Lavirintos）");
+		assertEquals(798189, relays.getFirst(), "talk_npc1 = Oileus（实机 NPC 798189）");
+
+		// 与 Oileus：任务行 → 步 1 页（1352）→ 子页 1353 → SETPRO1 推 step=1。
+		NativeTalkFixture.clearPackets(player);
+		assertTrue(local.onDialog(NativeTalkFixture.dialog(player, relays.getFirst(), 3058, 31)),
+			"与 Oileus 的任务行必须开启步 1 页");
+		NativeTalkFixture.assertOnlyDialogPageWithQuest(player, 1352, 3058);
+		assertEquals(0, state.getQuestVars().getQuestVars(), "打开步页不得写步号");
+		NativeTalkFixture.clearPackets(player);
+		assertTrue(local.onDialog(NativeTalkFixture.dialog(player, relays.getFirst(), 3058, 1353)));
+		NativeTalkFixture.assertOnlyDialogPageWithQuest(player, 1353, 3058);
+		NativeTalkFixture.clearPackets(player);
+		assertTrue(local.onDialog(NativeTalkFixture.dialog(player, relays.getFirst(), 3058, 10000)));
+		NativeTalkFixture.assertCloseDialog(player);
+		assertEquals(1, state.getQuestVars().getQuestVars(),
+			"步号 = var0 = 1（bit16 私编的 65536 会让客户端任务书步骤空白——实机 2026-10-08）");
+
+		// 与 Lavirintos：步 2 页（1693）→ 1694 → SETPRO2 推 step=2 并移除 ITEM_QUEST_3058A。
+		NativeTalkFixture.clearPackets(player);
+		assertTrue(local.onDialog(NativeTalkFixture.dialog(player, relays.get(1), 3058, 31)));
+		NativeTalkFixture.assertOnlyDialogPageWithQuest(player, 1693, 3058);
+		NativeTalkFixture.clearPackets(player);
+		assertTrue(local.onDialog(NativeTalkFixture.dialog(player, relays.get(1), 3058, 1694)));
+		NativeTalkFixture.assertOnlyDialogPageWithQuest(player, 1694, 3058);
+		NativeTalkFixture.clearPackets(player);
+		assertTrue(local.onDialog(NativeTalkFixture.dialog(player, relays.get(1), 3058, 10001)));
+		NativeTalkFixture.assertCloseDialog(player);
+		assertEquals(2, state.getQuestVars().getQuestVars(), "步号 = var0 = 2");
+		NativeItemSymbols.ItemStack removed = local.stepRemoveItem(3058, 2);
+		assertNotNull(removed, "3058 remove_item2 = ITEM_QUEST_3058A");
+		assertEquals(List.of("remove:" + removed.itemId() + ":" + removed.count()), inventory.calls(),
+			"第 2 步必须按真端列移除接取道具");
+	}
+
+	@Test
+	void enterWorldNormalizesTheLegacyStepEncoding() {
+		Player player = NativeTalkFixture.player();
+		NativeTalkFixture.add(player, 3058, QuestStatus.START, 1 << 16);
+		QuestState state = player.getQuestStateList().getQuestState(3058);
+
+		assertTrue(handler.onEnterWorld(player),
+			"旧 bit16..17 编码必须在进世界时归一（否则任务书步骤显示为空）");
+		assertEquals(1, state.getQuestVars().getQuestVars(), "步号归一为 var0 = 1");
+
+		// 干净行（vars=0）不受影响。
+		Player clean = NativeTalkFixture.player();
+		NativeTalkFixture.start(clean, 3058);
+		assertFalse(handler.onEnterWorld(clean), "干净行不得被改写");
+		assertEquals(0, clean.getQuestStateList().getQuestState(3058).getQuestVars().getQuestVars());
 	}
 
 	@Test

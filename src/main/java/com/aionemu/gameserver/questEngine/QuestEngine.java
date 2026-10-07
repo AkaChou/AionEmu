@@ -973,6 +973,13 @@ public class QuestEngine implements GameEngine {
 				// Native enter-world heal is best-effort.
 			}
 			try {
+				// 用物族中继步旧私编（bit16..17 → var0）归一，修复客户端任务书步骤显示为空。
+				// UseItem relay-step normalization (legacy bits 16..17 → var0).
+				SimpleUseItemHandler.instance().onEnterWorld(player);
+			} catch (RuntimeException ignored) {
+				// Native enter-world heal is best-effort.
+			}
+			try {
 				// 真端表驱动车道：DataDriven EnterWorld 步（本批路由集为空 ⇒ 恒 false）。
 				// DataDriven EnterWorld steps: no-op until the atomic switch batch.
 				DataDrivenNativeRuntime.instance().onEnterWorld(player, player.getWorldId());

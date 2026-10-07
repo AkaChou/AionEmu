@@ -26,6 +26,7 @@ import com.aionemu.gameserver.questEngine.retail.RetailClientHandinNpcSets;
 import com.aionemu.gameserver.questEngine.retail.RetailItemNameIndex;
 import com.aionemu.gameserver.questEngine.retail.RetailQuestMetadataCompiler;
 import com.aionemu.gameserver.questEngine.tablelane.NativeItemSymbols.ItemStack;
+import com.aionemu.gameserver.services.DialogService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
@@ -37,8 +38,12 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
  *   <li><b>接取</b>：本族**没有** {@code acquired_npc_name} 列 ⇒ 接取 = 使用 {@code use_item_name}
  *       声明的道具（真端 codegen 的无主物品接取形 {@code canonicalItemAcceptFlow}：用物下发接取窗页 4，
  *       接受/拒绝/关窗为无主对话 1002/1003/1008）；</li>
- *   <li><b>中继链</b>：{@code talk_npc1..3} 严格表序推进；第 K 步按位置执行 {@code give_itemK}/
- *       {@code remove_itemK}（真端同源 codegen 的 cabb10 槽语义，实测声明这些列的行**都**声明第 K 个中继 NPC）；</li>
+ *   <li><b>中继链</b>：{@code talk_npc1..3} 严格表序推进（真端 cabb10 语义）：任务行打开（31/26/-1）=
+ *       **该步页** SELECT2..4（1352/1693/2034），不推进；推进 = SETPRO{K}（{@code 10000 + K - 1}）——
+ *       按位置执行 {@code give_itemK}/{@code remove_itemK} 并把步号写 {@code var0 = K}（客户端任务书
+ *       步骤轴）后关窗（真端 0x5d8、零发页；实测声明这些列的行**都**声明第 K 个中继 NPC）。
+ *       2026-10-08 修复（实机 3058）：旧实现对任何动作直接推进且把步号写 bit16..17——客户端步数
+ *       65536 匹配不到任何任务步骤（任务书步骤显示为空）；旧存档由 {@link #onEnterWorld} 归一；</li>
  *   <li><b>交付</b>：交付 NPC 处在中继链走完 + {@code item_check} 门通过时翻 REWARD 并下发奖励窗页 5；
  *       否则进行中页 10。{@code item_check} 是族表列（真端 record 的引擎开关）+ 门物品取真端
  *       {@code quest.xml} 的 {@code check_itemK_L} 列（同一行两条真端声明，缺一即 fail-closed）；</li>
@@ -66,9 +71,12 @@ public final class SimpleUseItemHandler {
 	/** 中继步页（真端 SELECT2/SELECT3/SELECT4；客户端未声明即不发页）。 / Relay step pages. */
 	private static final int[] RELAY_STEP_PAGES = {1352, 1693, 2034};
 
-	/** 中继步位段（真端守卫位 0x40000000 之下，避开该族未使用的低位）。 / The relay-step field. */
-	private static final int RELAY_STEP_SHIFT = 16;
-	private static final int RELAY_STEP_MASK = 0x3 << RELAY_STEP_SHIFT;
+	/** 推进动作基址（SETPRO{K} = 10000 + K − 1）。 / The advance action base (SETPRO{K}). */
+	private static final int SETPRO_ACTION_BASE = 10000;
+
+	/** 旧私编的步号位段（bit16..17）：2026-10-08 前的写入面，仅供旧存档兼容读与进世界归一。
+	 * The old private step field (bits 16..17): read-only legacy, normalized on enter-world. */
+	private static final int LEGACY_RELAY_STEP_SHIFT = 16;
 
 	private static final Pattern CHECK_ITEM = Pattern.compile("check_item(\\d+)_(\\d+)");
 
@@ -412,6 +420,36 @@ public final class SimpleUseItemHandler {
 	}
 
 	/**
+	 * 进世界自愈：把旧私编（步号在 bit16..17）归一为 {@code var0} 并重新同步——旧编码的打包整数
+	 * （步号 1 → 65536）让客户端任务书步骤匹配落空（步骤显示为空）。
+	 * <p>
+	 * Enter-world heal: normalize the old private encoding (the step sat in bits 16..17, so step 1
+	 * packed to 65536 and missed every client step row) into var0 and resync the row.
+	 */
+	public boolean onEnterWorld(Player player) {
+		if (player == null || player.getQuestStateList() == null) {
+			return false;
+		}
+		boolean healed = false;
+		for (int questId : relayNpcsByQuestId.keySet()) {
+			QuestState state = player.getQuestStateList().getQuestState(questId);
+			if (state == null) {
+				continue;
+			}
+			int vars = state.getQuestVars().getQuestVars();
+			int legacy = (vars >>> LEGACY_RELAY_STEP_SHIFT) & 0x3;
+			if (legacy == 0 || (vars & 0x3F) != 0) {
+				continue;
+			}
+			state.getQuestVars().setVar(legacy);
+			state.setPersistentState(PersistentState.UPDATE_REQUIRED);
+			PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(questId, state.getStatus(), legacy));
+			healed = true;
+		}
+		return healed;
+	}
+
+	/**
 	 * 用物接取口（真端 {@code UseItem} 无主事件）：道具命中且该行未接取（可重行的 COMPLETE 态亦开窗）
 	 * 时下发接取窗页 4。进行中/待领奖的行不改状态（消费由道具自身动作决定，引擎不代扣）。
 	 * <p>
@@ -476,7 +514,8 @@ public final class SimpleUseItemHandler {
 		}
 
 		if (status == QuestStatus.START) {
-			if (talkChainStep(player, questId, npcId, objectId)) {
+			if (relayNpcsByQuestId.getOrDefault(questId, List.of()).contains(npcId)
+					&& onRelayDialog(player, questId, npcId, objectId, dialogId)) {
 				return true;
 			}
 			if (rewardNpcsByQuestId.getOrDefault(questId, List.of()).contains(npcId)) {
@@ -574,13 +613,26 @@ public final class SimpleUseItemHandler {
 	}
 
 	/**
-	 * 中继链步进：命中表序中的下一个 NPC 才推进（乱序/重复零推进），步进即执行该步发/扣。
-	 * Relay-chain step: only the next npc in table order advances (out-of-order repeats are no-ops);
-	 * the step's give/remove columns execute on the step.
+	 * 中继对话面（与 SimpleTalk/SimpleItemPlay/SimpleCollectItem 同形，真端 cabb10 同轴）：
+	 * <ul>
+	 *   <li>任务行打开（31/26/-1）= 该步页 SELECT2..4（1352/1693/2034），**不推进**；
+	 *       尚未轮到的步零响应（不跳步）；</li>
+	 *   <li>推进 = SETPRO{K}（{@code 10000 + K - 1}）：步号等于 {@code K - 1} 时执行该步发/扣并把
+	 *       步号写 {@code var0 = K}（客户端任务书步骤轴）后关窗（真端推进 after-commit = 0x5d8、
+	 *       零发页）；重复/乱序重放无匹配转换 ⇒ 关窗兜底；</li>
+	 *   <li>子页动作（SELECT⟨n⟩_…，如 select2_1 = 1353）按客户端契约原样回发（带 questId）。</li>
+	 * </ul>
+	 * 2026-10-08 修复（实机 3058 / 798189）：旧私编把步号写 bit16..17（step 1 → 65536），客户端
+	 * 按打包整数匹配任务 steps 行落空（任务书步骤显示为空），且旧实现对任何动作一律推进。
+	 * <p>
+	 * The relay dialog face, the same shape as the Talk/ItemPlay/CollectItem lanes: the row selection
+	 * opens the step page; SETPRO{K} runs the step's give/remove and writes the step into var0 (the
+	 * axis the client step list reads) with a close-dialog tail; declared sub-page actions echo their
+	 * page back with the quest context.
 	 */
-	private boolean talkChainStep(Player player, int questId, int npcId, int objectId) {
+	private boolean onRelayDialog(Player player, int questId, int npcId, int objectId, int dialogId) {
 		List<Integer> npcs = relayNpcsByQuestId.get(questId);
-		if (npcs == null || npcs.isEmpty() || npcId <= 0) {
+		if (npcs == null || npcId <= 0) {
 			return false;
 		}
 		int index = npcs.indexOf(npcId);
@@ -588,29 +640,65 @@ public final class SimpleUseItemHandler {
 			return false;
 		}
 		QuestState state = player.getQuestStateList().getQuestState(questId);
-		if (state == null || index != relayStep(state)) {
+		if (state == null) {
 			return false;
 		}
 		int step = index + 1;
-		give(player, stepGiveItem(questId, step));
-		remove(player, stepRemoveItem(questId, step));
-		int vars = (state.getQuestVars().getQuestVars() & ~RELAY_STEP_MASK) | (step << RELAY_STEP_SHIFT);
-		state.getQuestVars().setVar(vars);
-		state.setPersistentState(PersistentState.UPDATE_REQUIRED);
-		PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(questId, state.getStatus(), vars));
-		// 步页（真端 SELECT2..4 协议常量）：客户端未声明该页即只推进状态、不发页（fail-closed）。
-		// The step page (retail SELECT2..4 protocol constants): undeclared pages advance the state
-		// without a page turn instead of guessing a renderable page.
-		int page = pageForStep(step);
-		if (dialogContract.hasButtonPage(questId, page)) {
-			PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(objectId, page, questId));
+		// 选择对话续页（SELECT⟨n⟩_… 子页动作 = 页 id）：真端原样回发该页（QE-141 同形）；
+		// 契约未声明即零响应（引擎兜底同样零响应）。
+		// A selection sub-page action echoes its declared page back with the quest context (the
+		// QE-141 shape); undeclared pages stay silent.
+		if (QuestDialogPage.isSelectionSubPage(dialogId)
+				&& dialogContract.hasButtonPage(questId, dialogId)) {
+			PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(objectId, dialogId, questId));
+			return true;
 		}
-		return true;
+		if (dialogId == SETPRO_ACTION_BASE + step - 1) {
+			if (relayStep(state) == step - 1) {
+				state.getQuestVars().setVar(step);
+				state.setPersistentState(PersistentState.UPDATE_REQUIRED);
+				PacketSendUtility.sendPacket(player,
+					new SM_QUEST_ACTION(questId, state.getStatus(), step));
+				give(player, stepGiveItem(questId, step));
+				remove(player, stepRemoveItem(questId, step));
+			}
+			// 推进 after-commit = 关窗（真端 cabb10 同轴：10000/10001/10002 → SetQuestProgress + 0x5d8，
+			// 零发页）；重复/乱序重放无匹配转换，同样以关窗兜底（与 SimpleTalk/SimpleItemPlay 同形）。
+			// The advance tail closes the window (retail 0x5d8, no page); a replayed advance gets the
+			// same close as its no-op tail.
+			DialogService.closeDialog(player, objectId);
+			return true;
+		}
+		if (dialogId == 31 || dialogId == 26 || dialogId == -1) {
+			// 任务行打开 = 该步页（9/28 基线 1118 同形）；尚未轮到的步零响应不跳步；中继已走完时
+			// 让位给交付面（本 NPC 兼任交付对象时由 reward 分支发报告页——1559 的 talk_npc1 =
+			// reward_npc，链满后点任务行必须给报告页而不是步 1 的页）。
+			// Row selection opens the step page; a step not yet reached stays silent; once the chain
+			// is complete the hand-in face owns the row selection (1559: talk_npc1 = reward_npc).
+			if (relayStep(state) < step - 1 || relayStep(state) >= npcs.size()) {
+				return false;
+			}
+			PacketSendUtility.sendPacket(player,
+				new SM_DIALOG_WINDOW(objectId, pageForStep(step), questId));
+			return true;
+		}
+		return false;
 	}
 
-	/** 当前中继步（= 已完成的 talk 数）。 / Current relay step (the number of finished talks). */
+	/**
+	 * 当前中继步（= 已完成的 talk 数；步号 = {@code var0}，与客户端任务书步骤同轴）。
+	 * 兼容读取旧编码（步号在 bit16..17）——旧编码的打包整数让客户端步骤匹配落空。
+	 * <p>
+	 * The current relay step (the number of finished talks, stored in var0 — the axis the client
+	 * step list reads); the legacy bits 16..17 encoding remains readable for unconverted saves.
+	 */
 	private static int relayStep(QuestState state) {
-		return (state.getQuestVars().getQuestVars() & RELAY_STEP_MASK) >>> RELAY_STEP_SHIFT;
+		int vars = state.getQuestVars().getQuestVars();
+		int current = vars & 0x3F;
+		if (current != 0) {
+			return current;
+		}
+		return (vars >>> LEGACY_RELAY_STEP_SHIFT) & 0x3;
 	}
 
 	/** 中继链是否走完。 / Whether the relay chain is complete. */
