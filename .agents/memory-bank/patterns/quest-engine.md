@@ -3640,3 +3640,27 @@ keywords: 光圈、光圈消失、世界标记、地面特效、侦测点、探�
 - **代表案例**：13403/23403 侦测点光圈（Verteron/Altgard）；2026-09-21 提交 216f970f8c 误关开关 → 16 天后（2026-10-07）恢复（提交 c2f772ea9）。
 - **安全网**：启用前做 55↔55 覆盖度核对（beritra_invasion 位置表 location ↔ spawns/Beritra 下 beritra_spawn id）；关闭态只跳过不报错，排查时按配置态而非加载失败处理。
 - **反漂移**：别把光圈缺失当任务脚本/特效 bug 去改 quest 数据；别在开关 false 时按「加载失败」排查（静默跳过是预期态）；恢复后须冷重启，并注意入侵窗口内光圈被替换的预期形。
+
+## [QE-158] 一百五十八、烙印教学「凹槽」是客户端跟随教学步数的会话内派生态（98 开 / 推进即关、服务端关窗与重发都救不回）：槽位资格必须由任务数据声明（`extend-stigma-slots` ⟺ 真端 `reward_extend_stigma1`）并在开窗前作为最后协议事实重发 (STIGMA_SLOT_STEP_COUPLED_DATA_DRIVEN)
+
+<!-- pattern-metadata
+status: CONFIRMED
+scope: 烙印之石教学链（1929/2900 及 55 级 30217/30317）的发放与安装阶段；StigmaService 槽位资格与下发；PlayerQuestDialogPort/DialogService 打开烙印窗口；定义 XML metadata 的 extend-stigma-slots（⟺ 真端 quest.xml reward_extend_stigma1）；Aion 5.8 客户端凹槽展开态
+first_seen: 2026-10-07
+last_verified: 2026-10-07
+symptom: 烙印教学任务领取结晶或推进教学后，客户端烙印凹槽关闭——提示「没有空余的烙印之石凹槽」（客户端字符串 1300408）、结晶装不进凹槽、任务卡死；重登（进入世界）后凹槽恢复、再次打开烙印窗口又关闭；同一轮对话出现两个「结束对话」按钮；每次与 NPC 对话都重复发放同一个结晶、整条 select5 剧情链重放
+root_cause: 三层叠加。① 客户端凹槽展开态是**跟随教学步数的会话内派生态**：步数 98（过场动画结束）时开启，一旦任务推进到 95 即关闭且**会话内不可恢复**——服务端 `SM_DIALOG_WINDOW(0,0)` 关窗与 `SM_CUBE_UPDATE` 槽位重发（无论包序、次数）都无法重建，只有进入世界（登录）的包序能重建（与 GM `.givestigma unlock`「Try Relog Now」同源）；真端/退役教学 XML 发放时**不推进步数**（98 → 装备后才到 96）。② 槽位资格被硬编码在任务 ID + 步数（旧 `getPossibleStigmaCount`：1929/2900 + vars==98/99），登录只下发 DB 存储字段 `AdvancedStigmaSlotSize`（常规角色恒 0），资格变化无任何推送 ⇒ 客户端从未拿到正确槽位数。③ 发放分支是「SELECT5_3 → spawned98 自环 → give-item → 无状态推进」，任务列表入口每轮回到 select5 剧情页 ⇒ 每次点击重复发放并出现两个结束按钮
+fix_or_guardrail: 1. 教学发放/装备分支**不得改动客户端用作派生态判据的步数**：1929 恢复真端形状——发放走 `spawned98` 自环（give-item + sync PACKET_ONLY + 直接打开烙印窗口，不推进步数、不关窗），装备后才推进 96 + sync + close；2. 槽位资格由**任务数据**声明：定义 XML `<metadata extend-stigma-slots="true">`（XSD + 编译器 + `QuestMetadata.extendStigmaSlots`；真端 `reward_extend_stigma1` 同列解析），仅 1929/2900/30217/30317 声明——禁止再按任务 ID/步数/结晶硬编码；3. `StigmaService.refreshStigmaSlots` = `max(存储, 按等级档位 20/30/40/45/50/55 计算)`，抬升即持久化（同 GM 解锁语义）并补真端 1402942（+1402933）开启通知；在登录、升级、被标记任务提交后、烙印窗口与被标记任务对话页下发前重发（`PlayerQuestDialogPort` / `DialogService.openStigmaWindow`），保证槽位是窗口渲染前最后到达的协议事实；4. 无状态发放自环必须按持有量门控（`has-item expected="false"`）+ 入口按持有量分流（priority 0 引导页 / priority 1 剧情页），否则重复发放与整链重放（本仓同形状 26 条/18 任务待逐件裁定）；5. 客户端按钮 targetless 时开窗对象回落到 `Player.getNpcQuestDialogObjectIdForQuest`（真端开窗前也会先登记对话对象），不用 templateId/target 猜
+evidence: src/main/java/com/aionemu/gameserver/services/StigmaService.java:337（refreshStigmaSlots）、:422（stigmaSlotCount 纯函数）、:463（hasStigmaSlotEntitlement 全任务状态扫描）、:505（declaresStigmaSlotExtension）、:522（reannounceStigmaSlots）；src/main/java/com/aionemu/gameserver/questEngine/runtime/PlayerQuestDialogPort.java:64（announceStigmaSlots）、:84（resolveObjectId）；src/main/java/com/aionemu/gameserver/questEngine/runtime/PlayerQuestStateSyncPort.java:122（被标记任务提交后重算派生状态）；src/main/java/com/aionemu/gameserver/services/DialogService.java:179（openStigmaWindow）；src/main/java/com/aionemu/gameserver/services/player/PlayerEnterWorldService.java:767（登录下发计算值）；src/main/java/com/aionemu/gameserver/model/gameobjects/player/Player.java:636（getNpcQuestDialogObjectIdForQuest）；src/main/resources/aion/data/static_data/quest/definitions/quests/1929.xml:3（extend-stigma-slots 声明 + 步数保持 98 的发放分支）；src/main/resources/aion/data/static_data/quest/definitions/quest_definition.xsd:402（extend-stigma-slots 属性）；commit b632ee3b5（repair）；.agents/summary/quest-1929-stigma-dialog/DIAGNOSIS.zh-CN.md（第 5–9 轮实机排除与第十轮验收）；.agents/summary/quest-acceptance/1929-2026-10-07-client-accepted.md（ACCEPTED_NEW_PATTERN）
+validation: static（XML 结构断言 + 707 全量生产目录编译 + 客户端页契约；三处新增测试类聚焦槽位资格与重发）；runtime（2026-10-07 用户实机整链复测：发放一次、凹槽开启可安装、装备后继续推进，回复「实机验证成功」）
+superseded_by: none
+boundaries: ①「凹槽跟随教学步数」的结论只在 Aion 5.8 客户端成立，重登才重建的判据未做多客户端版本对照；② 2900（魔族）/30217/30317 只同步了数据声明，未实机复测；③ 第 5–8 轮的「关窗包抹掉凹槽」「包序」假设均已被实机证伪，不得再按关窗顺序改数据；④ 发放自环形状另有 26 条/18 任务（10530/11216/1170/14052/18511 等），多数带变量门或属交互物语义，必须逐件对照客户端页面/真端裁定，禁止批量套改；⑤ 槽位计算档位只覆盖常规 1..7 槽，STIGMA_SPECIAL/会员 7 槽与 DB 会员解锁值的交互未实机核对
+see_also: [QE-143], [QE-145]
+first_check: 先逐轮排除而不是猜——① 发放/对话分支是否改动教学步数（98 是客户端凹槽的开启态，推进即关且会话内不可恢复）？② 发放时是否关窗、开窗前是否重发槽位（都发对也救不回来 ⇒ 判据在步数）？③ `StigmaService` 资格判定是否含任务 ID/步数、metadata 是否声明 `extend-stigma-slots`、登录路径下发值来自存储字段还是计算值？④ 发放分支是否「自环 + give-item + 无状态推进」且入口无持有量分流？
+keywords: 烙印、烙印之石、凹槽、烙印槽、没有空余的烙印之石凹槽、1300408、烙印教学、1929、2900、暗黑碎片、重复发放、两个结束对话、SM_CUBE_UPDATE、1402942、1402933、extend-stigma-slots、reward_extend_stigma1、205111、Ecus、STIGMA_SLOT_STEP_COUPLED_DATA_DRIVEN
+-->
+
+- **判定规则**：烙印教学链里客户端「凹槽」不是服务端资格的函数，而是**跟随教学步数的会话内派生态**（98 开、推进即关，只有登录包序能重建）；服务端能做且必须做的是——步数形状对齐真端、资格由任务数据声明、槽位与开启通知在开窗前作为最后协议事实下发。三者缺一，玩家侧就是「提示没有空余的烙印之石凹槽」。
+- **代表案例**：1929 天族烙印教学（NPC 205111 Ecus）；旧实现把发放推进到 95 并硬编码资格（1929/2900 + vars==98/99）、登录只发 DB 字段；修复 `b632ee3b5`（2026-10-07 实机验收）。
+- **安全网**：`extend-stigma-slots` 由 `StigmaSlotQuestFlagTest` 断言全库只有 1929/2900/30217/30317 声明；`StigmaServiceSlotCountTest` 锁定档位纯函数与「只有数据声明的任务授予资格」；`PlayerQuestDialogPortTest` 锁定「重发发生在窗口包之前」与 targetless 开窗回落；`Quest1929RetailAlignmentTest` 锁定步数保持 98、发放分支形状与持有量门控。
+- **反漂移**：别把「凹槽关闭」当服务端资格 bug 去加槽位数（已证伪）；别按「关窗顺序」改 after-commit（第 5/6 轮假设已回退）；别把任务 ID/步数写回 Java 资格判定；改教学步数前先问它是不是客户端派生态的判据。
