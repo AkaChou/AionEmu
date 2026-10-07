@@ -18,6 +18,7 @@ import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.ai2.poll.AIQuestion;
 import com.aionemu.gameserver.controllers.attack.AttackStatus;
 import com.aionemu.gameserver.dataholders.DataManager;
+import com.aionemu.gameserver.dataholders.RepeatedAbnormalStatusImmuneData;
 import com.aionemu.gameserver.model.SkillElement;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.Kisk;
@@ -25,6 +26,7 @@ import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.gameobjects.state.CreatureState;
 import com.aionemu.gameserver.model.stats.container.StatEnum;
+import com.aionemu.gameserver.model.templates.RepeatedAbnormalStatusImmuneTemplate;
 import com.aionemu.gameserver.skillengine.change.Change;
 import com.aionemu.gameserver.skillengine.condition.Conditions;
 import com.aionemu.gameserver.skillengine.effect.modifier.ActionModifier;
@@ -564,7 +566,8 @@ public abstract class EffectTemplate {
 					resistance += effected.getGameStats().getStat(StatEnum.STUNLIKE_RESISTANCE, 0).getCurrent();
 				}
 				int resistChance = calculateAbnormalResistChance(resistance, penetration,
-						getExclusiveStatusResistance(effect), effected.isInState(CreatureState.RESTING));
+						getExclusiveStatusResistance(effect) + applyRepeatedAbnormalStatusImmune(effect, statEnum),
+						effected.isInState(CreatureState.RESTING));
 				return Rnd.get(1, 1000) > resistChance;
 			}
 		int effectPower = 1000 - resistance + penetration;
@@ -577,6 +580,62 @@ public abstract class EffectTemplate {
 			chance = (int) (chance * 0.3f);
 		}
 		return Math.max(0, Math.min(1000, chance + exclusiveResistance));
+	}
+
+	/**
+	 * 结算真端「重复异常状态递减/免疫」：读取目标玩家的链、写追加抵抗与时长百分比，
+	 * 并在效果上登记施加成功后要写入的步数；仅 PvP（双方玩家）读取，但仍对任何来源打标记。
+	 * Resolves the retail repeated-abnormal decay: reads the target player's chain, writes the added
+	 * resist and duration percent, and marks the effect for post-application recording; only PvP
+	 * (both players) reads, yet the mark is set for any caster.
+	 * <p>近似 / Approximations：窗口使用本模板的原始时长（duration2 + duration1 × 技能等级）；
+	 * 追加抵抗并入 exclusive 抵抗位、不参与 resting ×0.3 折算——均为对真端的工程近似。
+	 * The window uses this template's base duration; the added resist joins the exclusive slot
+	 * outside the resting discount. Both are engineering approximations of retail behaviour.</p>
+	 * @param effect 运行中效果 / runtime effect
+	 * @param statEnum 抵抗属性 / resist stat
+	 * @return 追加抵抗（千分制），不参与时为 0 / added resist in per-mille, 0 when not applicable
+	 */
+	int applyRepeatedAbnormalStatusImmune(Effect effect, StatEnum statEnum) {
+		RepeatedAbnormalStatusImmuneData data = DataManager.REPEATED_ABNORMAL_STATUS_IMMUNE_DATA;
+		if (data == null || noResist) {
+			return 0;
+		}
+		RepeatedAbnormalStatusImmuneTemplate template = data.getTemplate(statEnum);
+		if (template == null) {
+			return 0;
+		}
+		if (!(effect.getEffected() instanceof Player target)) {
+			return 0;
+		}
+		if (effect.getRepeatedImmuneStatus() != null) {
+			// 同一次施法只认第一个表内状态模板（先到先得，与时长取首模板同口径）。
+			// Only the first tracked template of a cast takes part, matching the duration's first-template rule.
+			return 0;
+		}
+		long now = System.currentTimeMillis();
+		int step = target.getRepeatedAbnormalStep(template.getAbnormalState(), now,
+				template.getWindowMillis(getBaseDurationForWindow(effect)));
+		effect.setRepeatedImmuneStatus(template.getAbnormalState());
+		effect.setRepeatedImmuneStep(step);
+		if (effect.getEffector() instanceof Player && step > 0) {
+			effect.setRepeatedImmuneDurationPercent(template.getTimeValue(step));
+			return template.getResistValue(step);
+		}
+		// NPC 来源或全新链：只记录不调整（真端记录端不看施法者，调整端要求双方玩家）。
+		// NPC caster or a fresh chain: record-only (retail records regardless of caster, adjusts only for PvP).
+		return 0;
+	}
+
+	/**
+	 * 命中窗口使用的原始时长：本模板基础时长（与 getEffectsDuration 的首个非零模板同式）。
+	 * Base duration used for the hit window: this template's duration, matching the formula
+	 * getEffectsDuration applies to the first non-zero template.
+	 * @param effect 运行中效果 / runtime effect
+	 * @return 基础时长（毫秒）/ base duration in millis
+	 */
+	int getBaseDurationForWindow(Effect effect) {
+		return getDuration2() + getDuration1() * effect.getSkillLevel();
 	}
 
 	private boolean isImuneToAbnormal(Effect effect, StatEnum statEnum) {

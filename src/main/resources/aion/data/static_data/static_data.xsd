@@ -126,6 +126,7 @@
 	<xs:include schemaLocation="reward/tower_reward_template.xsd"/>
 	<xs:include schemaLocation="shugo_sweep.xsd"/>
 	<xs:include schemaLocation="skill_skins/skill_skins.xsd"/>
+	<xs:include schemaLocation="repeated_abnormal_status_immune.xsd"/>
 	<xs:element name="ae_static_data">
 		<xs:complexType>
 			<xs:choice minOccurs="0" maxOccurs="unbounded">

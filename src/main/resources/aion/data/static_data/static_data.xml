@@ -209,6 +209,7 @@
 	<import file="creativity/stone_cp.xml"/>
 	<import file="reward/tower_reward_template.xml"/>
 	<import file="shugo_sweep.xml"/>
+	<import file="repeated_abnormal_status_immune.xml"/>
 	<skill_skins>
         <import file="skill_skins" skipRoot="true"/>
     </skill_skins>

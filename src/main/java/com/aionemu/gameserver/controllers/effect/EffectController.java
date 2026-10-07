@@ -190,6 +190,14 @@ public class EffectController {
 		if (enteredAbnormals != 0 && owner instanceof Npc npc) {
 			npc.getAi2().onEnterAbnormalState(nextEffect.getEffector(), enteredAbnormals);
 		}
+		// 记录端不看施法者：任何来源成功施加都记到玩家目标上；登出补登走 startEffect(true) 直达
+		// 不会经过本钩子（PlayerEffectController.addSavedEffect），被拒效果在返回 false 前就已退出。
+		// Recording ignores the caster: any successful application lands on the player target; login
+		// restore calls startEffect(true) directly and never reaches this hook, and rejected effects
+		// already returned false above.
+		if (owner instanceof Player player) {
+			nextEffect.recordRepeatedAbnormalStatus(player, System.currentTimeMillis());
+		}
 		if (!nextEffect.isPassive()) {
 			broadCastEffects();
 		}

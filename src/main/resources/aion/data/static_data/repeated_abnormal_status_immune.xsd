@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<xs:schema version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:element name="repeated_abnormal_status_immune">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="abnormal_status" type="RepeatedAbnormalStatusImmuneEntry" minOccurs="0" maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:complexType name="RepeatedAbnormalStatusImmuneEntry">
+        <xs:attribute name="name" type="xs:string" use="required"/>
+        <xs:attribute name="holding_time1" type="xs:int" use="required"/>
+        <xs:attribute name="holding_time2" type="xs:int" use="required"/>
+        <xs:attribute name="resist_value" type="xs:string" use="required"/>
+        <xs:attribute name="time_value" type="xs:string" use="required"/>
+    </xs:complexType>
+</xs:schema>

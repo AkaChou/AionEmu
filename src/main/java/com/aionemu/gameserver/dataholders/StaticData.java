@@ -289,6 +289,8 @@ public class StaticData {
 	public ShugoSweepRewardData shugoSweepsRewardData;
 	@XmlElement(name = "skill_skins")
 	public SkillSkinData skillSkinData;
+	@XmlElement(name = "repeated_abnormal_status_immune")
+	public RepeatedAbnormalStatusImmuneData repeatedAbnormalStatusImmuneData;
 
 	/**
 	 * 全部静态定义加载完成后，按配置输出各分区加载数量摘要日志。
@@ -434,5 +436,6 @@ public class StaticData {
 		log.info(I18n.get("log.b9b36be371d6", towerReward.size()));
 		log.info(I18n.get("log.825d4d1861a2", shugoSweepsRewardData.size()));
 		log.info(I18n.get("log.de747e09a243", skillSkinData.size()));
+		log.info(I18n.get("log.7f4a2c9e1b63", repeatedAbnormalStatusImmuneData.size()));
 	}
 }

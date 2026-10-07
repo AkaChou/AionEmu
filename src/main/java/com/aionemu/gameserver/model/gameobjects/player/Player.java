@@ -28,6 +28,7 @@ import com.aionemu.gameserver.controllers.observer.ItemUseObserver;
 import com.aionemu.gameserver.dao.PlayerDAO;
 import com.aionemu.gameserver.dao.PlayerVarsDAO;
 import com.aionemu.gameserver.dataholders.DataManager;
+import com.aionemu.gameserver.dataholders.RepeatedAbnormalStatusImmuneData;
 import com.aionemu.gameserver.model.Gender;
 import com.aionemu.gameserver.model.NpcType;
 import com.aionemu.gameserver.model.PlayerClass;
@@ -94,6 +95,7 @@ import com.aionemu.gameserver.model.templates.item.ItemAttackType;
 import com.aionemu.gameserver.model.templates.item.ItemTemplate;
 import com.aionemu.gameserver.model.templates.item.ItemUseLimits;
 import com.aionemu.gameserver.model.templates.npc.AbyssNpcType;
+import com.aionemu.gameserver.model.templates.RepeatedAbnormalStatusImmuneTemplate;
 import com.aionemu.gameserver.model.templates.ride.RideInfo;
 import com.aionemu.gameserver.model.templates.stats.PlayerStatsTemplate;
 import com.aionemu.gameserver.model.templates.windstreams.WindstreamPath;
@@ -332,6 +334,8 @@ public class Player extends Creature {
 	private boolean setMinionSpawned;
 	/** 事件物品每日限购注册表 / Event-item daily purchase-limit registry */
 	private final PlayerItemDailyLimits itemDailyLimits = new PlayerItemDailyLimits();
+	/** 重复异常状态递减链（内存态，不持久化，首次写入才分配）/ Repeated-abnormal decay chain (in-memory only, allocated on first write). */
+	private PlayerRepeatedAbnormalStatus repeatedAbnormalStatus;
 	/**
 	 * 月华骰子游戏。
 	 * Luna Dice Game
@@ -1906,6 +1910,54 @@ public class Player extends Creature {
 	/** 清除物品本次数上限 / Clear item max this count */
 	public void clearItemMaxThisCount() {
 		itemDailyLimits.clear();
+	}
+
+	/**
+	 * 读取重复异常状态递减链的有效步数（无记录、从未命中或已出窗口为 0）。
+	 * Returns the effective repeated-abnormal chain step (0 when absent, never hit, or window-expired).
+	 * @param state 异常状态 / abnormal state
+	 * @param now 当前时刻（毫秒）/ current time in millis
+	 * @param windowMillis 命中窗口（毫秒）/ hit window in millis
+	 * @return 有效步数 0..5 / effective step 0..5
+	 */
+	public int getRepeatedAbnormalStep(AbnormalState state, long now, long windowMillis) {
+		if (repeatedAbnormalStatus == null) {
+			return 0;
+		}
+		return repeatedAbnormalStatus.currentStep(repeatedAbnormalIndexOf(state), now, windowMillis);
+	}
+
+	/**
+	 * 记录一次成功施加的重复异常状态命中（步数写入 1..5、刷新命中时刻；首次写入才分配）。
+	 * Records one successful repeated-abnormal hit (step stored in 1..5, timestamp refreshed; allocated on first write).
+	 * @param state 异常状态 / abnormal state
+	 * @param nextStep 新步数（读取端 step+1 传入）/ desired new step (read step + 1)
+	 * @param now 施加时刻（毫秒）/ application time in millis
+	 */
+	public void recordRepeatedAbnormalHit(AbnormalState state, int nextStep, long now) {
+		int index = repeatedAbnormalIndexOf(state);
+		if (index < 0) {
+			return;
+		}
+		if (repeatedAbnormalStatus == null) {
+			repeatedAbnormalStatus = new PlayerRepeatedAbnormalStatus();
+		}
+		repeatedAbnormalStatus.record(index, nextStep, now);
+	}
+
+	/**
+	 * 返回状态在递减表内的位置；静态表未加载或表外状态（含 STUN）为 -1。
+	 * Returns the state's position in the decay table; -1 when the table is unloaded or the state is untracked.
+	 * @param state 异常状态 / abnormal state
+	 * @return 数据表位置或 -1 / table position or -1
+	 */
+	private static int repeatedAbnormalIndexOf(AbnormalState state) {
+		RepeatedAbnormalStatusImmuneData data = DataManager.REPEATED_ABNORMAL_STATUS_IMMUNE_DATA;
+		if (data == null) {
+			return -1;
+		}
+		RepeatedAbnormalStatusImmuneTemplate template = data.getTemplate(state);
+		return template == null ? -1 : template.getIndex();
 	}
 
 	/**

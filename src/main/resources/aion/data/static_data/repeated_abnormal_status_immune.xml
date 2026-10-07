@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!--
+	真端重复异常状态递减/免疫表（逐位照抄 <真端根>/Map/XML/repeated_abnormal_status_immune.xml）。
+	Retail repeated-abnormal decay table, mirrored value-for-value from the retail file.
+	仅 PARALYZE / SLEEP / FEAR 三态参与递减链；STUN 等表外状态不受影响。
+ -->
+<repeated_abnormal_status_immune xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="repeated_abnormal_status_immune.xsd">
+    <abnormal_status name="PARALYZE" holding_time1="1" holding_time2="0" resist_value="0,0,200,400,1000" time_value="100,90,85,80,0"/>
+    <abnormal_status name="SLEEP" holding_time1="1" holding_time2="0" resist_value="0,0,200,400,1000" time_value="100,90,85,80,0"/>
+    <abnormal_status name="FEAR" holding_time1="1" holding_time2="2000" resist_value="0,0,200,400,1000" time_value="100,90,85,80,0"/>
+</repeated_abnormal_status_immune>

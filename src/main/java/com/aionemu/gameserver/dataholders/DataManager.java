@@ -173,6 +173,7 @@ public final class DataManager {
     public static TowerRewardData TOWER_REWARD_DATA;
     public static ShugoSweepRewardData SHUGO_SWEEP_REWARD_DATA;
     public static SkillSkinData SKILL_SKIN_DATA;
+    public static RepeatedAbnormalStatusImmuneData REPEATED_ABNORMAL_STATUS_IMMUNE_DATA;
 
     /** XML 加载器实例 / XML data loader instance */
     private XmlDataLoader loader;
@@ -417,6 +418,7 @@ public final class DataManager {
         TOWER_REWARD_DATA = data.towerReward;
         SHUGO_SWEEP_REWARD_DATA = data.shugoSweepsRewardData;
         SKILL_SKIN_DATA = data.skillSkinData;
+        REPEATED_ABNORMAL_STATUS_IMMUNE_DATA = data.repeatedAbnormalStatusImmuneData;
     }
 
     /** 首次卡住告警前的等待时长 / Delay before the first stall report */

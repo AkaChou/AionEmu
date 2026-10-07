@@ -22,6 +22,7 @@ import com.aionemu.gameserver.model.stats.container.StatEnum;
 import com.aionemu.gameserver.model.templates.item.ItemTemplate;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_PLAYER_STANCE;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SKILL_ACTIVATION;
+import com.aionemu.gameserver.skillengine.effect.AbnormalState;
 import com.aionemu.gameserver.skillengine.effect.AuthorizeBoostEffect;
 import com.aionemu.gameserver.skillengine.effect.DamageEffect;
 import com.aionemu.gameserver.skillengine.effect.DelayedSpellAttackInstantEffect;
@@ -374,6 +375,16 @@ public class Effect implements StatOwner {
 	private boolean forcedDuration = false;
 	private boolean isForcedEffect = false;
 	/**
+	 * 重复异常状态递减链：本效果参与的真端状态，null 表示不参与。
+	 * Repeated-abnormal decay chain: the retail state this effect takes part in; null when it takes no part.
+	 * 仅运行时标记，不持久化、不参与任何序列化。 / Runtime-only marker, never persisted or serialized.
+	 */
+	private AbnormalState repeatedImmuneStatus;
+	/** 读取端得到的有效链步数（0 = 全新链）/ effective chain step read by the resist phase, 0 for a fresh chain. */
+	private int repeatedImmuneStep;
+	/** 时长百分比（100 = 不变）/ duration percent, 100 means unchanged. */
+	private int repeatedImmuneDurationPercent = 100;
+	/**
 	 * 获取强度。
 	 * Gets power.
 	 */
@@ -396,6 +407,20 @@ public class Effect implements StatOwner {
 	 */
 	public void setAbnormal(int mask) {
 		abnormals |= mask;
+	}
+
+	/**
+	 * 施加成功后落账：步数 +1、刷新命中时刻。带标记时才会写入，故读取/写入天然配对。
+	 * Records a successful application (step + 1, refresh timestamp); only when this effect carries a mark,
+	 * so the resist-phase read and this write stay paired.
+	 * @param target 目标玩家 / target player
+	 * @param now 施加时刻（毫秒）/ application time in millis
+	 */
+	public void recordRepeatedAbnormalStatus(Player target, long now) {
+		if (repeatedImmuneStatus == null) {
+			return;
+		}
+		target.recordRepeatedAbnormalHit(repeatedImmuneStatus, repeatedImmuneStep + 1, now);
 	}
 
 	/**
@@ -1217,6 +1242,14 @@ public class Effect implements StatOwner {
 		// 按 PVP 持续时间调整 / adjust with pvp duration
 		if (effected instanceof Player && skillTemplate.getPvpDuration() != 0) {
 			duration = duration * skillTemplate.getPvpDuration() / 100;
+		}
+
+		// 真端重复异常递减：time_value[N]% 乘算；0% 档保住 1ms 生命周期，避免 startEffect 在
+		// duration==0 时早退，留下永久异常与映射泄漏（见 PlayerRepeatedAbnormalStatus）。
+		// Retail repeated-abnormal decay: multiply by time_value[N]%; the 0% tier keeps a 1 ms lifetime so
+		// startEffect's duration==0 early return cannot leave a permanent abnormal and a leaked map entry.
+		if (repeatedImmuneDurationPercent < 100 && duration > 0) {
+			duration = Math.max(1, (int) ((long) duration * repeatedImmuneDurationPercent / 100));
 		}
 		if (duration > 86400000) {
 			duration = 86400000;
