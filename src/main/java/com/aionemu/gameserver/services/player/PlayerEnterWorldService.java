@@ -330,10 +330,12 @@ public final class PlayerEnterWorldService {
 			if (player.getSkillCoolDowns() != null) {
 				client.sendPacket(new SM_SKILL_COOLDOWN(player, player.getSkillCoolDowns(), false));
 			}
-			// SM_ITEM_COOLDOWN
-			if (player.getItemCoolDowns() != null) {
-				client.sendPacket(new SM_ITEM_COOLDOWN(player.getItemCoolDowns()));
-			}
+			// SM_ITEM_COOLDOWN：物品冷却的计时器由客户端持有，进世界一律整表下发（空表即「没有任何物品冷却」），
+			// 这样同一个客户端实例重登时，上一轮残留的本地冷却扫描会被一并覆盖。
+			// SM_ITEM_COOLDOWN: the client owns item cooldowns, so the whole table is always loaded on
+			// enter-world (an empty table means "no item cooldown"); this also overwrites any sweep kept
+			// from the previous session on the same client instance.
+			client.sendPacket(SM_ITEM_COOLDOWN.load(player.getItemCoolDowns()));
 			// 升级街机 4.7 / Upgrade Arcade 4.7
 			if (EventsConfig.ENABLE_EVENT_ARCADE) {
 				GameFeatureServices.arcadeUpgradeService().onEnterWorld(player);

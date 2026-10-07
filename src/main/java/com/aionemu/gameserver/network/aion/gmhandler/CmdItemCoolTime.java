@@ -58,8 +58,13 @@ public class CmdItemCoolTime extends AbstractGMHandler {
 				playerT.addItemCoolDown(delayId, 0, 0);
 			}
 			delayIds.clear();
-			PacketSendUtility.sendPacket(playerT, new SM_ITEM_COOLDOWN(playerT.getItemCoolDowns()));
 		}
+		// 物品冷却的计时器由客户端持有，本包是唯一能改写它的手段：表为空时也必须整表下发，
+		// 否则客户端本地预测的冷却扫描会残留，道具一直置灰并被客户端拦住无法使用。
+		// The client owns the item-cooldown timers and this packet is the only way to rewrite them:
+		// it must be sent even when the table is empty, otherwise the client's locally predicted sweep
+		// stays and the item remains greyed out and unusable.
+		PacketSendUtility.sendPacket(playerT, SM_ITEM_COOLDOWN.load(playerT.getItemCoolDowns()));
 
 		if (playerT.getHouseRegistry() != null
 				&& playerT.getHouseObjectCooldownList().getHouseObjectCooldowns().size() > 0) {

@@ -61,8 +61,13 @@ public class RemoveCd extends AdminCommand {
 						player.addItemCoolDown(delayId, 0, 0);
 
 					delayIds.clear();
-					PacketSendUtility.sendPacket(player, new SM_ITEM_COOLDOWN(player.getItemCoolDowns()));
 				}
+				// 物品冷却的计时器由客户端持有，本包是唯一能改写它的手段：表为空时也必须整表下发，
+				// 否则客户端本地预测的冷却扫描会残留，道具一直置灰并被客户端拦住无法使用。
+				// The client owns the item-cooldown timers and this packet is the only way to rewrite them:
+				// it must be sent even when the table is empty, otherwise the client's locally predicted
+				// sweep stays and the item remains greyed out and unusable.
+				PacketSendUtility.sendPacket(player, SM_ITEM_COOLDOWN.load(player.getItemCoolDowns()));
 
 				if (player.getHouseRegistry() != null && player.getHouseObjectCooldownList().getHouseObjectCooldowns().size() > 0) {
 					Iterator<HouseObject<?>> iter = player.getHouseRegistry().getObjects().iterator();
