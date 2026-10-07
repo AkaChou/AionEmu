@@ -54,7 +54,13 @@ class JournalRewardRowRepairContractTest {
 		new Contract(1319, 8, 0),
 		new Contract(1322, 1, 0),
 		new Contract(1324, 1, 0),
-		new Contract(1361, 2, 1),
+		/* 1361 移出本批（2026-10-07 实机报障 + 真端/legacy 取证）：领奖态权威值是 legacy/真端的
+		 * packed step 1（QE-054/QE-045），不是末行索引 2；误抬为 2 会让客户端任务书步骤整块空白。
+		 * 基线由 Quest1361ClientDialogAlignmentTest 锁定（reward 投影 1、自愈边 REWARD/2 -> 1）。
+		 * 1361 left this batch (live report 2026-10-07 + retail/legacy evidence): the authoritative
+		 * reward value is the legacy/retail packed step 1 (QE-054/QE-045), not the last-row index 2,
+		 * which blanks the client journal steps. Its baseline is owned by
+		 * Quest1361ClientDialogAlignmentTest (reward projection 1, healing edge REWARD/2 -> 1). */
 		new Contract(1363, 1, 0),
 		new Contract(1430, 1, 0),
 		new Contract(1452, 1, 0),

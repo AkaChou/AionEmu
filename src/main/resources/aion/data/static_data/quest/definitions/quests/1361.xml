@@ -27,28 +27,39 @@
     <node label="v1" status="START">
       <var name="var0" value="1"/>
     </node>
+    <!-- QE-054：灌满水箱进 REWARD 时保持 legacy/真端的 packed step 1
+         （legacy `useQuestObject(env, 1, 1, true, ...)` 的 reward 分支不写 nextStep；
+         真端 FUN_180f98460 以 `0x100(0x551, 0, 0)` 推进、不带步号）。
+         领奖行批次的末行索引收口曾误改为 2，客户端任务书步骤整块空白（2026-10-07 实机报障）。
+         QE-054: entering REWARD keeps the legacy/retail packed step 1 (the reward branch of the
+         legacy useQuestObject(1, 1, true) does not write nextStep; retail FUN_180f98460 advances
+         via 0x100(0x551, 0, 0) without a step value). The last-row-index batch wrongly raised it
+         to 2 and blanked the client journal steps (live report 2026-10-07). -->
     <node label="reward" status="REWARD">
-      <var name="var0" value="2"/>
+      <var name="var0" value="1"/>
     </node>
     <node label="complete" status="COMPLETE">
       <var name="var0" value="1"/>
     </node>
   </nodes>
   <transitions>
-    <!-- QE-051 领奖行合同：客户端 quest_q1361.html 的 quest_summary 共 3 行，末行是领奖行
-         （STR_DIC_N_Turiel，对应该任务的领奖 NPC）；旧投影停在 1，进入世界时纠正为 2 并下发状态包。
-         Reward row contract (QE-051): the last of the 3 quest_q1361 journal rows is the reward row
-         (STR_DIC_N_Turiel, the reward NPC of this quest); saves persisted at 1 are repaired to 2 on enter-world. -->
+    <!-- QE-054/QE-045：领奖态保持 legacy/真端的 packed step 1；领奖行批次曾按末行索引误抬为 2，
+         该值在客户端任务书里落空（步骤整块空白，2026-10-07 实机报障，与 1926/2938 同型）。
+         无 source 自愈边把已被抬到 2 的存档归一为 1。
+         QE-054/QE-045: the reward state keeps the legacy/retail packed step 1; the last-row-index
+         batch wrongly raised it to 2, which matches no client journal row and blanks the steps
+         (live report 2026-10-07, same shape as 1926/2938). The source-less healing edge normalizes
+         saves persisted at 2 back to 1 on enter-world. -->
     <transition target="reward">
       <event>
         <enter-world/>
       </event>
       <conditions>
         <status-is status="REWARD"/>
-        <variable-is field="var0" value="1"/>
+        <variable-is field="var0" value="2"/>
       </conditions>
       <actions>
-        <set-variable field="var0" value="2"/>
+        <set-variable field="var0" value="1"/>
       </actions>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>

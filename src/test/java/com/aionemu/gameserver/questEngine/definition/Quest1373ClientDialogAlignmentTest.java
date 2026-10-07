@@ -5,6 +5,7 @@ import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import org.junit.jupiter.api.Test;
 
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -12,7 +13,14 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * 锁定任务 1373 获取温泉水后的交付分支与奖励页面合同。
+ * 步号轴遵循真端与 legacy 的权威值：打水后与领奖态都是 packed step 2
+ * （真端 FUN_180effb70 SetProgress(0x55d, 2)、legacy setQuestVar(2)）；2026-09-19 批次
+ * 按 collect_progress=1 误改为 1 曾使客户端任务书步骤整块空白（2026-10-07 实机报障）。
  * Locks quest 1373's hot-spring-water turn-in branches and reward-page contract.
+ * The step axis follows the retail/legacy authoritative values: both the post-draw and reward
+ * states keep packed step 2 (retail FUN_180effb70 SetProgress(0x55d, 2), legacy setQuestVar(2));
+ * the 2026-09-19 collect_progress=1 rewrite to 1 blanked the client journal steps (live report
+ * 2026-10-07).
  */
 class Quest1373ClientDialogAlignmentTest {
 	private static final int NPC_ID = 203949;
@@ -23,18 +31,18 @@ class Quest1373ClientDialogAlignmentTest {
 		QuestDefinition definition = definition().definition();
 
 		assertNode(definition, "started", QuestStatus.START, Map.of("var0", 0));
-		assertNode(definition, "v1", QuestStatus.START, Map.of("var0", 1));
-		assertNode(definition, "reward", QuestStatus.REWARD, Map.of("var0", 1));
+		assertNode(definition, "v2", QuestStatus.START, Map.of("var0", 2));
+		assertNode(definition, "reward", QuestStatus.REWARD, Map.of("var0", 2));
 		assertNode(definition, "complete", QuestStatus.COMPLETE, Map.of("var0", 0));
 
-		QuestTransition entry = transition(definition, "v1", "v1",
+		QuestTransition entry = transition(definition, "v2", "v2",
 			new QuestEvent.TalkToNpc(NPC_ID, QuestDialogAction.QUEST_SELECT.id()));
 		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(QuestDialogPage.SELECT5.id())),
 			entry.afterCommit());
 
 		// 交付成功必须在提交后的状态同步之后打开奖励窗口。
 		// A successful turn-in must open the reward window after the committed state sync.
-		QuestTransition success = transition(definition, "v1", "reward",
+		QuestTransition success = transition(definition, "v2", "reward",
 			new QuestEvent.TalkToNpc(NPC_ID, QuestDialogAction.CHECK_USER_HAS_QUEST_ITEM.id()));
 		assertEquals(Integer.valueOf(0), success.priority());
 		assertEquals(List.of(new QuestCondition.HasItem(HOT_SPRING_WATER_ID, 1)), success.conditions());
@@ -48,7 +56,7 @@ class Quest1373ClientDialogAlignmentTest {
 
 		// 未满足物品条件时回落到客户端实际存在的 SELECT6(2716) 页面。
 		// When the item condition is not met, fall back to the client-owned SELECT6(2716) page.
-		QuestTransition failure = transition(definition, "v1", "v1",
+		QuestTransition failure = transition(definition, "v2", "v2",
 			new QuestEvent.TalkToNpc(NPC_ID, QuestDialogAction.CHECK_USER_HAS_QUEST_ITEM.id()), 1);
 		assertEquals(List.of(), failure.conditions());
 		assertEquals(List.of(), failure.actions());
@@ -59,6 +67,35 @@ class Quest1373ClientDialogAlignmentTest {
 		// Both the normal reward-state talk and the client reward action must open page 5, not missing page 1352.
 		assertRewardPage(definition, QuestDialogAction.USE_OBJECT);
 		assertRewardPage(definition, QuestDialogAction.SELECT_QUEST_REWARD);
+
+		// 无 source 自愈边：START/持水且 var0=1 的错轴存档归一为 2；REWARD/var0=1 归一为 2。
+		// Source-less healing edges: wrong-axis saves at START/var0=1 (holding the water) and
+		// REWARD/var0=1 are both normalized to 2.
+		assertHealEdge(definition, QuestStatus.START, Map.of("var0", 1), 2,
+			List.of(new QuestCondition.HasItem(HOT_SPRING_WATER_ID, 1)),
+			QuestStateSyncMode.PACKET_ONLY);
+		assertHealEdge(definition, QuestStatus.REWARD, Map.of("var0", 1), 2,
+			List.of(), QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH);
+	}
+
+	private static void assertHealEdge(QuestDefinition definition, QuestStatus staleStatus,
+		Map<String, Integer> staleVariables, int healedRow, List<QuestCondition> extraConditions,
+		QuestStateSyncMode syncMode) {
+		List<QuestCondition> expectedConditions = new ArrayList<>();
+		expectedConditions.add(new QuestCondition.StatusIs(staleStatus));
+		staleVariables.forEach((field, value) -> expectedConditions.add(
+			new QuestCondition.QuestVariableIs(field, value)));
+		expectedConditions.addAll(extraConditions);
+		List<QuestTransition> matches = definition.transitions().stream()
+			.filter(candidate -> candidate.sourceNode() == null)
+			.filter(candidate -> candidate.event().equals(new QuestEvent.EnterWorld()))
+			.filter(candidate -> candidate.conditions().equals(expectedConditions))
+			.toList();
+		assertEquals(1, matches.size(),
+			() -> "quest 1373 heal edge for " + staleStatus + " " + staleVariables);
+		QuestTransition heal = matches.getFirst();
+		assertEquals(List.of(new QuestAction.SetVariable("var0", healedRow)), heal.actions());
+		assertEquals(List.of(new AfterCommitAction.SyncQuestState(syncMode)), heal.afterCommit());
 	}
 
 	private static void assertRewardPage(QuestDefinition definition, QuestDialogAction action) {
