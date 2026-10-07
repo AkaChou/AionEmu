@@ -48,6 +48,11 @@ public class CM_OBJECT_SEARCH extends AionClientPacket {
 	private static final int VENTUS_INTRO_STAGE = 0;
 	private static final int VENTUS_REWARD_STAGE = 6;
 	private static final int VENTUS_EXTENDED_REWARD_STAGE = 8;
+	// Q13403/Q23403 天/魔镜像隐形 NPC（地图常显标记）/ Elyos-Asmodian mirror invisible NPCs of Q13403/Q23403
+	private static final int LF1A_INVISIBLE_Q13403A = 805263;
+	private static final int LF1A_INVISIBLE_Q13403B = 805264;
+	private static final int DF1A_INVISIBLE_Q23403A = 805265;
+	private static final int DF1A_INVISIBLE_Q23403B = 805266;
 
 	private int npcId;
 	/**
@@ -113,7 +118,8 @@ public class CM_OBJECT_SEARCH extends AionClientPacket {
 		int searchNpcId = resolveAsteraSearchNpcId(player, requestedNpcId);
 		searchNpcId = resolveQuestSearchNpcId(player, searchNpcId);
 		searchNpcId = resolveEremitiaSearchNpcId(player, searchNpcId);
-		return resolveVentusSearchNpcId(player, searchNpcId);
+		searchNpcId = resolveVentusSearchNpcId(player, searchNpcId);
+		return resolveFactionMirrorSearchNpcId(player == null ? null : player.getRace(), searchNpcId);
 	}
 
 	/**
@@ -274,6 +280,35 @@ public class CM_OBJECT_SEARCH extends AionClientPacket {
 	 */
 	private static boolean isDf6BantusSlotTemplate(int npcId) {
 		return npcId == CLIENT_DF6_BANTUS || npcId == CLIENT_DF6_BANTUS_REPLACEMENT;
+	}
+
+	/**
+	 * 将天/魔镜像隐形 NPC 的地图搜索请求改写为本侧镜像。
+	 * Rewrites cross-faction invisible-NPC map searches to the player's own faction mirror.
+	 * <p>805263-805266 是 Q13403/Q23403 的四个隐形 NPC；天族名「记忆中的目击场所」与魔族名
+	 * 「记忆中的目击地点」仅差一字，客户端任务页链接与地图搜索会提交对侧镜像的 NPC ID，
+	 * GM 的地图点击传送因此落到对侧大陆（天族点「记忆中的目击地点」被送到阿尔特盖德）。
+	 * 这四个 ID 仅服务两个镜像任务、无同名冲突，直接按种族改写即可。</p>
+	 * <p>805263-805266 are the four invisible NPCs of Q13403/Q23403 whose Elyos and Asmodian
+	 * names differ by a single character; the client quest-page links and map searches submit
+	 * the cross-faction twin's ID, so a GM map click teleports to the other continent (an
+	 * Elyos clicking the Asmodian name lands in Altgard). The four ids serve only the two
+	 * mirror quests and collide with nothing else, so the rewrite is keyed on race alone.</p>
+	 * @param race 玩家种族，可为空 / player race, nullable
+	 * @param requestedNpcId 客户端请求的 NPC ID / NPC ID requested by the client
+	 * @return 本侧镜像 NPC ID，或原 ID / the same-faction mirror NPC id, or the original id
+	 */
+	static int resolveFactionMirrorSearchNpcId(Race race, int requestedNpcId) {
+		if (race == null) {
+			return requestedNpcId;
+		}
+		return switch (requestedNpcId) {
+			case DF1A_INVISIBLE_Q23403A -> race == Race.ELYOS ? LF1A_INVISIBLE_Q13403A : requestedNpcId;
+			case DF1A_INVISIBLE_Q23403B -> race == Race.ELYOS ? LF1A_INVISIBLE_Q13403B : requestedNpcId;
+			case LF1A_INVISIBLE_Q13403A -> race == Race.ASMODIANS ? DF1A_INVISIBLE_Q23403A : requestedNpcId;
+			case LF1A_INVISIBLE_Q13403B -> race == Race.ASMODIANS ? DF1A_INVISIBLE_Q23403B : requestedNpcId;
+			default -> requestedNpcId;
+		};
 	}
 
 	/**

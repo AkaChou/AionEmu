@@ -211,6 +211,24 @@ class CMObjectSearchTest {
 		assertEquals(List.of(asmodaeLoc, abyssLoc), asmodianFiltered);
 	}
 
+	@Test
+	void resolvesTheCrossFactionInvisibleQuestNpcMirror() {
+		assertEquals(805264, CM_OBJECT_SEARCH.resolveFactionMirrorSearchNpcId(Race.ELYOS, 805266));
+		assertEquals(805263, CM_OBJECT_SEARCH.resolveFactionMirrorSearchNpcId(Race.ELYOS, 805265));
+		assertEquals(805266, CM_OBJECT_SEARCH.resolveFactionMirrorSearchNpcId(Race.ASMODIANS, 805264));
+		assertEquals(805265, CM_OBJECT_SEARCH.resolveFactionMirrorSearchNpcId(Race.ASMODIANS, 805263));
+	}
+
+	@Test
+	void keepsSameFactionMirrorAndUnrelatedIdsUnchanged() {
+		assertEquals(805264, CM_OBJECT_SEARCH.resolveFactionMirrorSearchNpcId(Race.ELYOS, 805264));
+		assertEquals(805263, CM_OBJECT_SEARCH.resolveFactionMirrorSearchNpcId(Race.ELYOS, 805263));
+		assertEquals(805266, CM_OBJECT_SEARCH.resolveFactionMirrorSearchNpcId(Race.ASMODIANS, 805266));
+		assertEquals(805265, CM_OBJECT_SEARCH.resolveFactionMirrorSearchNpcId(Race.ASMODIANS, 805265));
+		assertEquals(NPC_ID, CM_OBJECT_SEARCH.resolveFactionMirrorSearchNpcId(Race.ELYOS, NPC_ID));
+		assertEquals(805266, CM_OBJECT_SEARCH.resolveFactionMirrorSearchNpcId(null, 805266));
+	}
+
 	private static QuestState questState(int questId, QuestStatus status, int questVar0) {
 		return new QuestState(questId, status, questVar0, 0, null, null, null);
 	}
