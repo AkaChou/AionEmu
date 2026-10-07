@@ -5,10 +5,10 @@
 
 本文档记录 AionEmu 声明式 XML 任务系统、状态机与 NPC 交互的实战避坑经验。
 
-> Pattern IDs: `QE-001`–`QE-136`
+> Pattern IDs: `QE-001`–`QE-156`
 > card_status: ACTIVE; existing entries retain their historical evidence boundary
 > scope: production quest XML/compiler, Quest runtime, and Aion 5.8 client/legacy evidence
-> last_reviewed: 2026-10-03
+> last_reviewed: 2026-10-07
 
 ---
 
@@ -3586,3 +3586,26 @@ keywords: 提示数量不符、杀多了才推进、击杀上限、count1、ques
 - **判定规则**：击杀次数以真端表 `countN` 与客户端 `quest_monster.csv` 门控为准（两者逐行一致）；客户端页面 `([%n]/N)` 与台词里的数字只是文案，可残留旧版本或被本地化改写，不能当合同；页面与合同冲突时先出三方对照，再由用户裁定改哪一侧。
 - **安全网**：`QuestSimpleHuntRetailContractTest`（真端快照 vs 生产 IR）、`RetailTableSchemaGateTest`（XSD + 无 DOCTYPE）、`SimpleHuntNativeFamilyGateTest`（全量行装载 + 相机 fullValue = 槽位需求）、`.agents/summary/quest-1217-kill-count/audit_client_gate_vs_retail_counts.py`（客户端门控 vs 真端全量对账）。
 - **反漂移**：别按客户端页面数字直接改服务端计数而不留痕（真端表副本的偏差必须行内注释 + 留痕文档）；别在只改服务端计数后断言「已修复」（客户端门控可能仍停在击杀行，须实机复测）；别把 1750/1840 一类旧版本页面当合同一起改。
+
+## [QE-156] 一百五十六、变形/伪装期间的仇恨中立位在**技能数据**（`neutral_to_npc` ⟺ 真端 `effectN_reserved14`，全量 284/0），不在任务面：真端 5.8 的 8197/267 无中立位 ⇒ 14114/24154 鹦鹉变身期间被雷帕尔营地怪仇恨是预期（裁定 B：不改数据） (POLYMORPH_NEUTRAL_FLAG_RETAIL_RESERVED14)
+
+<!-- pattern-metadata
+status: CONFIRMED
+scope: polymorph/deform 技能的中立位判读与「变身期间被攻击/应免仇恨」类报障裁定；compact 技能模板 ↔ 真端 `skill_base.xml` 的字段映射；案例 14114（8197 Polymorph_Parrot）与 24154（267 Q_Polymorph_Lehpar）
+first_seen: 2026-10-07
+last_verified: 2026-10-07
+symptom: 变身/伪装期间仍被 NPC 仇恨攻击（14114 鹦鹉变身进沃特伦船难雷帕尔营地）；玩家预期「变身免仇恨」；旧版数据带 `neutral_to_npc="true"` 而现状没有 ⇒ 疑似迁移丢失
+root_cause: 变身/伪装的仇恨中立性只由技能数据的 `neutral_to_npc` 决定：`PolymorphEffect.startEffect` → `setAdminNeutral(1)` → `ai2/handler/AggroEventHandler.java:47` 跳过仇恨；变身本身不改部落（`TransformEffect.applyTransform` 不设 tribe，全仓唯一 `setTribe` 在 `Creature.java:147` 的 NPC 出生模板路径）。字段映射判据：`neutral_to_npc` ⟺ 真端 `effectN_reserved14 == 1`（全量 284 处一致 / 0 不一致）；真端 5.8 的 Polymorph 行从不出现 `reserved14=1`（该字段在 Polymorph 行是武器名），8197 的 effect1 只有 reserved7=1 / reserved8=None / reserved9=Parrot_ex / reserved16=175。旧数据（Aion-Unique 时代）中 8197/267 带 `neutral_to_npc="true"`，在 01f4ec0bb（skills 家族切 compact）后不复存在——但真端 5.8 本就没有该位，compact 对真端是忠实映射。
+fix_or_guardrail: 1. 诊断顺序：① 查该技能 compact 模板有无 `neutral_to_npc`；② 与真端 `reserved14` 全量对拍（脚本 `.agents/summary/quest-14114-parrot-aggro/map-neutral-flag.py`）；③ 真端无位 ⇒ 现状即真端语义，是否偏离属**产品裁定**，禁止静默补属性；2. 2026-10-07 用户裁定 **B（真端权威）**：不恢复 8197/267 的 `neutral_to_npc`，船难雷帕尔营地（怪 LV19-21 aggressive）即为危险潜入区；24154（267）同裁定；3. 若将来改回，须显式裁定 + 行内双语注释 + 留痕（对真端副本身份的偏差必须留痕，同 QE-155 纪律）。
+evidence: compact：src/main/resources/aion/definitions/compact/skills/skill_templates_part_010.xml:21410（8197 polymorph，无 neutral_to_npc）、skill_templates_part_001.xml:7235（267 同）；机制：src/main/java/com/aionemu/gameserver/skillengine/effect/PolymorphEffect.java（startEffect → setAdminNeutral(1)）、src/main/java/com/aionemu/gameserver/skillengine/effect/TransformEffect.java（不设 tribe）、src/main/java/com/aionemu/gameserver/ai2/handler/AggroEventHandler.java:47；任务面：src/main/resources/aion/data/static_data/quest/definitions/quests/14114.xml:153-163（SETPRO1 应用 8197）；迁移前旧数据（已退役，见 commit 01f4ec0bb^ 的旧 skills 家族主表）：8197/267 带 neutral_to_npc="true"；真端（`<真端根>`，仓库外，按名引用）：技能主表 skill_base 的 8197 行（effect1 reserved7/8/9/16，无 reserved14=1）；对拍脚本与诊断笔记：.agents/summary/quest-14114-parrot-aggro/map-neutral-flag.py、.agents/summary/quest-14114-parrot-aggro/DIAGNOSIS.zh-CN.md
+validation: static：全量对拍 agree=284 mismatch=0（Deform 全表 123 行中 reserved14=1 的 3 个技能 21605/21920/22749 与 compact 的 3 个 `neutral_to_npc="true"` 一一对应；Polymorph 行零命中）；实机现象与裁定一致（用户确认 14114 变身后被攻击并选择保持真端口径）；无代码/数据变更 ⇒ 无回归门变更
+superseded_by: none
+boundaries: ① 只考证 polymorph/deform 家族的中立位；其他 effect 类型的 reserved14 语义未逐一核对；② 本裁定=真端 5.8 语义，不等于「所有变身场景都应被攻击」——逐技能以真端 reserved14 为准（Deform 的 21605/21920/22749 确有中立位）；③ 中立位是技能数据属性，禁止在任务 XML 或 AI 面加免仇恨补丁绕过；④ 旧版（Aion-Unique 时代）数据不作权威，回补必须显式裁定并留痕。
+see_also: [QE-001], [QE-155]
+first_check: 「变身/伪装期间被攻击/应免仇恨」先答：① 该技能 compact 模板有无 `neutral_to_npc`？② 对拍真端 `effectN_reserved14`（脚本全量 284/0 是否仍成立）？③ 真端无位 ⇒ 产品裁定点（2026-10-07 已裁定：保持真端）；④ 是否有改动把旧版属性当「迁移丢失」补回（禁止静默）？
+keywords: 变身被攻击、变鸟被打、鹦鹉、伪装、免仇恨、中性、neutral_to_npc、reserved14、setAdminNeutral、PolymorphEffect、Polymorph_Parrot、Q_Polymorph_Lehpar、8197、267、14114、24154、雷帕尔、船难营地、危险潜入区、Aion-Unique 残留、POLYMORPH_NEUTRAL_FLAG_RETAIL_RESERVED14
+-->
+
+- **判定规则**：变身/伪装的仇恨中立性 = 技能数据的 `neutral_to_npc`（真端 `effectN_reserved14`）；对真端无中立位的技能（如 5.8 的 8197/267），变身期间照常被仇恨即真端语义，是否偏离属产品裁定而非 bug。
+- **安全网**：对拍脚本 `.agents/summary/quest-14114-parrot-aggro/map-neutral-flag.py`（compact `neutral_to_npc` ↔ 真端 `reserved14` 全量对账，284/0）；机制锚点 `PolymorphEffect.startEffect` 的 `setAdminNeutral(1)` 与 `AggroEventHandler:47` 的 admin-neutral 门。
+- **反漂移**：别把旧版（Aion-Unique 时代）的 `neutral_to_npc="true"` 当「迁移丢失」静默补回（真端 5.8 无此位）；别在任务 XML/AI 面加免仇恨补丁绕过技能数据；别把本裁定外推到 Deform 的 3 个确有中立位的技能（21605/21920/22749）。
