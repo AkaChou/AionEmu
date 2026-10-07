@@ -59,8 +59,6 @@ public class KromedesTrialInstance extends GeneralInstanceHandler
 	private static final float INSTANCE_ROBSTIN_X = 657.200745f;
 	private static final float INSTANCE_ROBSTIN_Y = 585.777771f;
 	private static final float INSTANCE_ROBSTIN_Z = 200.362244f;
-		/** 技能种族 / skill race */
-		private Race skillRace;
 	/** 门映射 / door map */
 	private Map<Integer, StaticDoor> doors;
 	/** 已播放动画集合 / played-movie set */
@@ -82,10 +80,23 @@ public class KromedesTrialInstance extends GeneralInstanceHandler
 	public void onEnterInstance(Player player) {
 		synchronizeRobstinNpc(player);
 		restoreRelicKey(player);
-		final int transformation = skillRace == Race.ASMODIANS ? 19270 : 19220;
-		GameEngineServices.skillEngine().applyEffectDirectly(transformation, player, player, 3600000);
+		applyKromedeTransformation(player);
 		sendMovie(player, 453);
 		HTMLService.showHTML(player, GameStaticDataServices.htmlCache().getHTML("instances/kromedeTrial.xhtml"));
+	}
+
+	/**
+	 * 施加克罗梅德变身（进入恶梦后变身成克罗梅内；按玩家种族选择变身技能：天族 19220 / 魔族 19270）。
+	 * Applies the Kromede transformation after entering the nightmare, by the player's race
+	 * (Elyos 19220 / Asmodians 19270).
+	 * @param player 玩家 / player
+	 */
+	public void applyKromedeTransformation(Player player) {
+		if (player == null) {
+			return;
+		}
+		final int transformation = player.getRace() == Race.ASMODIANS ? 19270 : 19220;
+		GameEngineServices.skillEngine().applyEffectDirectly(transformation, player, player, 3600000);
 	}
 
 	/**

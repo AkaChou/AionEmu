@@ -35,6 +35,12 @@ public class PortalDialogAI2 extends PortalAI2 {
 
 	private static final int FISSURE_OF_OBLIVION_EXIT = 834194;
 	private static final int FISSURE_OF_OBLIVION_FINAL_ORB_ENTITY = 29;
+	/** 克萝梅德试炼（噩梦副本）世界。 / Kromede's Trial (nightmare instance) world. */
+	private static final int KROMEDE_TRIAL_WORLD_ID = 300230000;
+	/** 噩梦副本入口：天族兰尼尼亚。 / Kromede's Trial entrance (Elyos): Raninia. */
+	private static final int KROMEDE_TRIAL_ENTRY_ELYOS = 205229;
+	/** 噩梦副本入口：魔族布里奇特。 / Kromede's Trial entrance (Asmodians): Bridget. */
+	private static final int KROMEDE_TRIAL_ENTRY_ASMODIANS = 205234;
 
 	protected int rewardDialogId = 5;
 	protected int startingDialogId = 10;
@@ -85,7 +91,27 @@ public class PortalDialogAI2 extends PortalAI2 {
 		env.setExtendedRewardIndex(extendedRewardIndex);
 		if (questId > 0 && GameEngineServices.questEngine().onDialog(env)) {
 			return true;
-		} if (dialogId == DialogAction.INSTANCE_PARTY_MATCH.id()) {
+		}
+		// 克萝梅德试炼入口（兰尼尼亚/布里奇特）：questId=0 的「进入恶梦」(SETPRO1=10000) 在真端由任务脚本
+		// 处理（fun_893.cpp FUN_180f859b0：关窗 + 18602/28602 步=1 + 进副本），而非传送门。这里先让任务引擎
+		// 按该 NPC 的进行中任务重放（QuestEngine.onDialog 的 requestedOwner==0 候选分发）；引擎认领即推进任务
+		// 步并走任务侧传送（与 portal_loc 3002300 同坐标）。不认领（未接/步骤已过）时保持既有传送门行为。
+		// Kromede's Trial entrance (Raninia/Bridget): the questId=0 "enter the nightmare" (SETPRO1=10000) is
+		// served by the quest script in retail (step:=1 + enter), not by the portal. Route it through the quest
+		// engine first (QuestEngine.onDialog's requestedOwner==0 replay); the portal stays for everything else.
+		if (questId == 0 && dialogId == QuestDialogAction.SETPRO1.id()
+				&& isKromedeTrialEntryNpc(getNpcId())) {
+			if (GameEngineServices.questEngine().onDialog(env)) {
+				return true;
+			}
+			// 已在噩梦副本内（含同一包内任务侧传送后的重复派发）不再走传送门，避免二次传送。
+			// Already inside the nightmare instance (incl. a same-packet replay after the quest-side
+			// teleport): do not run the portal again.
+			if (player.getWorldId() == KROMEDE_TRIAL_WORLD_ID) {
+				return true;
+			}
+		}
+		if (dialogId == DialogAction.INSTANCE_PARTY_MATCH.id()) {
 			AutoGroupType agt = AutoGroupType.getAutoGroup(player.getLevel(), getNpcId());
 			if (agt != null) {
 				PacketSendUtility.sendPacket(player, new SM_AUTO_GROUP(agt.getInstanceMaskId()));
@@ -265,9 +291,36 @@ public class PortalDialogAI2 extends PortalAI2 {
 	}
 
 	static List<Integer> questFirstDialogIds(int npcId, int entityId) {
-		return npcId == FISSURE_OF_OBLIVION_EXIT && entityId == FISSURE_OF_OBLIVION_FINAL_ORB_ENTITY
-				? List.of(QuestDialogAction.QUEST_SELECT.id())
-				: List.of();
+		if (npcId == FISSURE_OF_OBLIVION_EXIT && entityId == FISSURE_OF_OBLIVION_FINAL_ORB_ENTITY) {
+			return List.of(QuestDialogAction.QUEST_SELECT.id());
+		}
+		// 克萝梅德试炼入口（兰尼尼亚/布里奇特）的开门对话由任务脚本承担（真端 FUN_180f859b0 的页轴）：
+		// 未接 → select_none 接取页；进行中 → select1；可交 → 领奖页。这些页必须携带 questId 发送，
+		// 否则客户端拿 questId=0 的页 10 去 NPC 通用对话 html 里查找并渲染失败——呈现为空白对话、
+		// 任务无法接取（2026-10-07 实机：Kk 满足前置却接不到 18602，只有页 10/questId=0 下发）。
+		// checkDialog 先经引擎重放本动作；引擎按 NPC 取所有含匹配路由的任务（未接也命中
+		// unaccepted 分支），认领即发出契约页并短路下方旧页轴。
+		// Kromede's Trial entrance open-door dialogs are served by the quest script (retail
+		// FUN_180f859b0 page axis): accept pages while unaccepted, select1 while in progress, reward
+		// pages while reportable. They must carry the questId, or the client renders the context-less
+		// page 10 against the NPC dialog html and shows an empty window (live 2026-10-07: Kk met the
+		// prerequisites yet could not accept 18602). checkDialog replays this action through the quest
+		// engine first; the engine considers every route-matching quest of the npc (unaccepted ones
+		// included) and the claim short-circuits the legacy page axis below.
+		if (isKromedeTrialEntryNpc(npcId)) {
+			return List.of(QuestDialogAction.QUEST_SELECT.id());
+		}
+		return List.of();
+	}
+
+	/**
+	 * 是否为克萝梅德试炼入口 NPC（天族兰尼尼亚 205229 / 魔族布里奇特 205234）——
+	 * 仅这两个 NPC 的「进入恶梦」动作需要先经任务引擎推进任务步。
+	 * Whether the npc is a Kromede's Trial entrance (Raninia 205229 / Bridget 205234): only these two
+	 * serve the "enter the nightmare" action through the quest engine first.
+	 */
+	static boolean isKromedeTrialEntryNpc(int npcId) {
+		return npcId == KROMEDE_TRIAL_ENTRY_ELYOS || npcId == KROMEDE_TRIAL_ENTRY_ASMODIANS;
 	}
 
 	private void announceIlluminaryObeliskOpen() {

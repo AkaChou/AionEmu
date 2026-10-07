@@ -197,6 +197,29 @@ class SimpleTalkNativeFamilyGateTest {
 				ineligible, CHAINED_QUEST, 31)), "等级轴不可达/前置未完成不得进接取面");
 	}
 
+	/**
+	 * 物件/NPC 的无上下文打开（USE_OBJECT -1）：进接取面并下发**携带 questId** 的入口页。
+	 * 真端物件接取 = USE_OBJECT 自环 → 入口页（QE-070/QE-093 客户端合同）；2026-10-07 实机
+	 * 18645/730777 教训：无上下文的两参兜底页在客户端渲染不出接取对话，玩家"点物件没有任务"。
+	 * A context-less object open (-1, USE_OBJECT) enters the acquire face with the quest-carrying
+	 * entry page (live 2026-10-07, quest 18645 / object 730777).
+	 */
+	@Test
+	void objectOpenEntersTheAcquireFaceWithQuestContext() {
+		Player player = NativeTalkFixture.player();
+		Npc acquire = createMockNpc(handler.acquireNpc(ITEM_QUEST));
+
+		assertTrue(handler.onDialog(new QuestEnv(acquire, player, ITEM_QUEST, QuestDialogAction.USE_OBJECT.id())),
+			"物件打开必须进接取面");
+		NativeTalkFixture.assertOnlyDialogPageWithQuest(player, NativeTalkFixture.clientEntryPage(ITEM_QUEST),
+			ITEM_QUEST);
+		assertNull(player.getQuestStateList().getQuestState(ITEM_QUEST), "入口页只开窗、不落库");
+
+		// 非接取 NPC 不响应（真端按节点槽分派，不跨 NPC）。
+		assertFalse(handler.onDialog(new QuestEnv(createMockNpc(1), player, ITEM_QUEST,
+			QuestDialogAction.USE_OBJECT.id())));
+	}
+
 	/** 接取落库：真端条件轴（等级/种族/职业/性别/重复）通过后由 native 状态端口建档到 START。 */
 	@Test
 	void acceptCommitCreatesTheRetailRow() {

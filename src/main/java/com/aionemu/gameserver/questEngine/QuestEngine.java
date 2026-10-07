@@ -455,6 +455,28 @@ public class QuestEngine implements GameEngine {
 						return true;
 					}
 				}
+				// 无任务上下文的**物件**打开（-1 = USE_OBJECT / 1001 = QUEST_SELECT）：按物件反查
+				// SimpleTalk 接取行重放——真端物件接取 = USE_OBJECT 自环 → 携带 questId 的接取入口页。
+				// 缺此重放时打开只落 AI 的两参兜底页，客户端无任务上下文渲染不出接取对话
+				// （2026-10-07 实机 18645/730777：点"卡利加的竖琴架"无可接取任务）。仅限物件族：
+				// 普通 NPC 的打开由客户端本地对话框驱动（页 10 任务列表 → 31），保持原行为（QE-093）。
+				// Context-less **object** open (-1 / QUEST_SELECT): replay the object's SimpleTalk acquire
+				// rows (the retail object accept self-loop grants the quest-carrying entry page). Without
+				// it the open only reaches the context-less AI fallback page (live 2026-10-07, quest
+				// 18645 / object 730777). Objects only: a plain npc's open is client-driven (page-10
+				// list → 31) and stays untouched.
+				boolean questObjectOpen = env.getDialogId() == QuestDialogAction.USE_OBJECT.id()
+						|| env.getDialogId() == QuestDialogAction.QUEST_SELECT.id();
+				if (questObjectOpen && (npc.getAi2() instanceof com.aionemu.gameserver.ai.QuestItemNpcAI2
+						|| npc.getAi2() instanceof com.aionemu.gameserver.ai.quests.QuestStartItemNpcAi2)) {
+					for (int acquireQuestId : SimpleTalkHandler.instance().acquireQuestIdsForNpc(npcId)) {
+						if (SimpleTalkHandler.instance().routes(acquireQuestId)
+								&& onDialog(new QuestEnv(npc, player, acquireQuestId, env.getDialogId()))) {
+							env.setQuestId(acquireQuestId);
+							return true;
+						}
+					}
+				}
 				// 参考 legacy 引擎：当调用方确实提供了 questId==0 的任务对话入口（交互物 AI 等）时，
 				// 按 NPC 任务顺序逐个尝试，让第一个真正处理该动作的 owner 胜出。
 				// 客户端 NPC 对话选择没有任务上下文时已在 CM_DIALOG_SELECT 按普通对话处理，不会走到这里。

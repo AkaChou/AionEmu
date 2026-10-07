@@ -121,6 +121,9 @@ public final class SimpleTalkHandler implements NativeSystemGrantLane {
 
 	/** 接取 NPC 成员集（真端名字节点语义：任一成员可接取）。 / Acquire NPC member set (any member may accept). */
 	private final Map<Integer, List<Integer>> acquireNpcIdsByQuestId;
+
+	/** NPC → 其承接的 SimpleTalk 接取行（无任务上下文的物件/NPC 打开时按 NPC 反查）。 / Npc id → its acquire rows (context-less open replay). */
+	private final Map<Integer, List<Integer>> acquireQuestIdsByNpcId;
 	/** 交付 NPC 成员集（任一成员可交付）。 / Reward NPC member set (any member may hand in). */
 	private final Map<Integer, List<Integer>> rewardNpcIdsByQuestId;
 	/** 中继 NPC ID → 该 NPC 上的全部中继步。 / Relay NPC id → every relay step bound to it. */
@@ -321,6 +324,12 @@ public final class SimpleTalkHandler implements NativeSystemGrantLane {
 		}
 
 		this.acquireNpcIdsByQuestId = Collections.unmodifiableMap(acquires);
+		// 反向索引：questId → npcIds 反转成 npcId → questIds（按行首现序稳定）。
+		// Reverse index: questId → npcIds inverted to npcId → questIds, stable by first occurrence.
+		Map<Integer, List<Integer>> acquireByNpc = new LinkedHashMap<>();
+		acquires.forEach((acquireQuestId, npcIds) -> npcIds.forEach(
+			npcId -> acquireByNpc.computeIfAbsent(npcId, key -> new ArrayList<>()).add(acquireQuestId)));
+		this.acquireQuestIdsByNpcId = Collections.unmodifiableMap(acquireByNpc);
 		this.rewardNpcIdsByQuestId = Collections.unmodifiableMap(rewards);
 		this.relaysByNpcId = Collections.unmodifiableMap(relays);
 		this.relayCountByQuestId = Collections.unmodifiableMap(relayCounts);
@@ -716,6 +725,15 @@ public final class SimpleTalkHandler implements NativeSystemGrantLane {
 		return acquireNpcIdsByQuestId.getOrDefault(questId, List.of());
 	}
 
+	/**
+	 * 该 NPC 承接的 SimpleTalk 接取行（无任务上下文的物件/NPC 打开按 NPC 反查；
+	 * 调用方按 {@link #routes(int)} 过滤）。 / The SimpleTalk acquire rows served at this npc
+	 * (context-less object/npc open replay; callers filter by {@link #routes(int)}).
+	 */
+	public List<Integer> acquireQuestIdsForNpc(int npcId) {
+		return acquireQuestIdsByNpcId.getOrDefault(npcId, List.of());
+	}
+
 	/** 交付 NPC（成员集首项；未解析为 null）。 / The reward NPC (first member; null when unresolved). */
 	public Integer rewardNpc(int questId) {
 		List<Integer> members = rewardNpcIdsByQuestId.get(questId);
@@ -839,7 +857,14 @@ public final class SimpleTalkHandler implements NativeSystemGrantLane {
 			if (acquireNpcs == null || !acquireNpcs.contains(npcId)) {
 				return false;
 			}
-			if (dialogId == 31 || dialogId == 26) {
+			// 入口动作：任务行/对话打开（31/26）与物件/NPC 的无上下文打开（-1 = USE_OBJECT）。
+			// 真端物件接取走 USE_OBJECT 自环后进同一入口页（QE-070/QE-093：物件的入口页属客户端合同）；
+			// 页必须携带 questId——2026-10-07 实机 18645/730777 教训：无任务上下文时客户端拿
+			// 两参兜底页渲染不出接取对话（物件可点但"没有任务"）。
+			// Entry actions: the quest-row open (31/26) and the context-less object/npc open (-1,
+			// USE_OBJECT). The retail object accept self-loop enters the same entry page, and the page
+			// must carry the quest id (live 2026-10-07, quest 18645 / object 730777).
+			if (dialogId == 31 || dialogId == 26 || dialogId == QuestDialogAction.USE_OBJECT.id()) {
 				// 真端清单与接取面同用 CanAcquireQuest（P7-REPORT §「同一判定函数」）：资格不满足
 				// （等级/前置/种族/职业/限制位）不进接取面，避免「能点进接取页、点接受却被静默拒」。
 				// The retail list and acquire face share CanAcquireQuest: an ineligible player never
