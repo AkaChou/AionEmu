@@ -171,10 +171,13 @@ public final class DataDrivenQuestTable {
 	 * @param rewardNpc    真端领奖 NPC 名（`reward_npc_name`）/ the reward npc name
 	 * @param conQuest     接取条件列原文（`con_quest`，语义未坐实只装载）/ raw acquire-condition column
 	 * @param conQuestList 接取条件列原文（`con_quest_list`，语义未坐实只装载）/ raw acquire-condition list column
+	 * @param acceptColumns 接取行附加动作列（`value1..10_acquire_`；真端 `FUN_180c49120` 装载进
+	 *                     `QuestProgressExtraInfo` 对象，接取收尾独取此表）/ the accept-side extra-action
+	 *                     columns, loaded into the retail QuestProgressExtraInfo object
 	 * @param steps        进度步序列（表序，index = 位置）/ the ordered progress steps
 	 */
 	public record Row(int questId, String acquireKind, String acquireParam, String rewardNpc, String conQuest,
-			String conQuestList, List<Step> steps) {
+			String conQuestList, Map<Integer, String> acceptColumns, List<Step> steps) {
 
 		/** 是否带未坐实的接取条件列。 / Whether the row carries un-adjudicated acquire conditions. */
 		public boolean hasAcquireConditions() {
@@ -267,6 +270,37 @@ public final class DataDrivenQuestTable {
 		// not adjudicated yet ⇒ step e1 only loads them, never interprets them).
 		String conQuest = text(element, "con_quest");
 		String conQuestList = text(element, "con_quest_list");
+		// 接取行附加动作列（value1..10_acquire_）：真端与进度列同轴解析（`FUN_180c49120` 循环
+		// `value%d_acquire_` → `FUN_180c4b980`），装载进 `QuestProgressExtraInfo` 对象，
+		// **由接取收尾独取**——不是进度步 0 的动作（13403 实机：误跑步 0 动作 ⇒ 探测器双发）。
+		// Accept-side extra-action columns (value1..10_acquire_): parsed on the same axis as the
+		// progress columns and stored in the retail QuestProgressExtraInfo object; the ACQUIRE tail
+		// executes them — never progress step 0's actions (live 13403 double-grant cause).
+		Map<Integer, String> acceptColumns = new TreeMap<>();
+		NodeList acquireFields = element.getChildNodes();
+		for (int child = 0; child < acquireFields.getLength(); child++) {
+			Node item = acquireFields.item(child);
+			if (!(item instanceof Element field)) {
+				continue;
+			}
+			String name = field.getTagName();
+			if (!name.startsWith("value") || !name.endsWith("_acquire_")) {
+				continue;
+			}
+			String value = field.getTextContent();
+			if (value == null || value.isBlank()) {
+				continue;
+			}
+			int column;
+			try {
+				column = Integer.parseInt(name.substring("value".length(), name.indexOf("_acquire_")));
+			} catch (NumberFormatException e) {
+				continue;
+			}
+			if (column >= 1) {
+				acceptColumns.put(column, value.trim());
+			}
+		}
 		List<Step> steps = new ArrayList<>();
 		NodeList infos = element.getElementsByTagName("data");
 		for (int index = 0; index < infos.getLength(); index++) {
@@ -308,7 +342,7 @@ public final class DataDrivenQuestTable {
 		}
 		return new Row(questId, acquire == null ? "" : acquire.trim().toLowerCase(Locale.ROOT), acquireParam,
 			reward, conQuest == null ? "" : conQuest.trim(), conQuestList == null ? "" : conQuestList.trim(),
-			List.copyOf(steps));
+			Map.copyOf(acceptColumns), List.copyOf(steps));
 	}
 
 	/** 列面 fail-closed 校验：每步必须声明载荷列，且每个列号必须落在真端放行的载荷/附加动作列内。 */

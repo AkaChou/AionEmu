@@ -11,6 +11,13 @@
 - 同批纠正步 d 的两处归属（QE-132）：`FUN_180c466a0` 是家族交付 handler（DD 行 +0x10 恒 -2 ⇒ 死代码），
   不是 DD Talk 推进面；CollectItem 不是「宿主采集/交付事件源」，与 Talk 同走共享对话平面。
 
+> **勘误（2026-10-06，13403 实机 + 真端复读）**：本报告「kind 3 ItemPlay 接入**物品获得事件**（注册事件 5）」
+> 的措辞有误——真端事件 5 的派发点在 `User__UseItem`（`User.cpp:58921`，`local_90 = 5` →
+> `mgr+0x268+5*0x10` walk，`ctx+8` = 被使用物品 id；`User_IdentifyItem`(59477)/`User__DoEnchantItem`(60047)
+> 同形），即**物品使用**事件；获得面不派发它。原接线使 DD ItemPlay 步在发放道具时被级联满足（13403
+> 实机：「使用探测器」步被跳过）。修正见 `DataDrivenNativeRuntime.onItemUsed` /
+> `QuestEngine.onItemUseEvent`（QE-152）；正文第 8/20/71 行的「物品获得」请按「物品使用」理解。
+
 ## 1. 真端事实（原码逐函数，本次复读）
 
 | 面 | 真端函数 | 本次坐实的关键语义 |

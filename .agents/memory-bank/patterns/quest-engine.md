@@ -3449,28 +3449,28 @@ keywords: 开门重放、重放顺序、短路、遮挡、可交付优先、REWA
 - **安全网**：`QuestEngineOpenDoorReplayOrderTest`（实机行 1155/14111/203126：唯一页 5 + questId=14111）；夹具 `assertOnlyDialogPageWithQuest` 锁「唯一包 + 页 + questId」三要素。
 - **反漂移**：别把两遍遍历改回单遍「按 questId 升序先到先得」（19683 与 14111 两案同型：REWARD 被遮挡即不可交）；别只为某族调优顺序（改引擎一处，全族受益）；别把「START && -1 → 页 10」从各族的 -1 面移除（QE-145 仲裁参照语义）；别忘 DD 只认领 REWARD（天然优先，见 QE-145）。
 
-## [QE-150] 一百五十、DD 对话链推进不受「hit 步」限制：推进后的新步页由同一对话窗续链，其按钮（10000+k）必须以当前步为基准被服务（13403：10002 被步守卫挡下 ⇒ 任务不推进、兜底关窗） (DD_DIALOG_CHAIN_ADVANCE_NOT_HIT_GATED)
+## [QE-150] 一百五十、DD 推进/收口（10000+k 与 10255）不受「hit 步」限制、以当前步为基准，尾 = 关窗零发页：「同窗续链」为误判已撤销（13403：末步 10255 被守卫挡下 ⇒ 只关窗、不进 REWARD） (DD_DIALOG_ADVANCE_NOT_HIT_GATED)
 
 <!-- pattern-metadata
 status: CONFIRMED
-scope: DD 共享对话平面（DataDrivenNativeRuntime.dispatchDialog）的推进动作（10000+k）路由与基准；不含页翻页动作（1694/1695 由引擎子页兜底服务，见 QE-141 扩）与接取/报告/检查面
+scope: DD 共享对话平面（DataDrivenNativeRuntime.dispatchDialog）的推进动作（10000+k）与收口动作（10255 SET_SUCCEED）的守卫与尾部；不含页翻页动作（1694/1695 由平面回显/引擎子页兜底服务，见 QE-141 扩）与接取/报告/检查面（1009/39 的非末步尾页未在本片单独裁定）
 first_seen: 2026-10-06
 last_verified: 2026-10-06
-symptom: 实机 13403（2026-10-06 18:54，NPC 203096 Kinesos）：select3 页链（1693→1694→1695，均已带 questId）的「结束对话」按钮 10002 到达 —— 任务不推进（无 SM_QUEST_ACTION）、仅 DialogService 兜底关窗；玩家侧「点结束对话不关闭、循环一下才关闭」
-root_cause: dispatchDialog 外层守卫 `step(vars) != hit.stepIndex() → continue` 假设「事件的 NPC 必须是当前步的 NPC」；但推进后的新步页 sendPostAdvancePage 发给同一对话窗（旧 NPC 的 objectId），玩家在该窗里点下一步的按钮时 hit（旧 NPC 的步）≠ 当前步 ⇒ 被守卫挡下 ⇒ 落 DialogService 的「未处理任务动作」兜底关窗（不推进）。真端的推进守卫只有顺序（code-9999 == 当前步 + 1），推进基准是当前步
-fix_or_guardrail: 1. **推进动作免 hit 步守卫**：`advanceAction = dialogId ≥ 10000 && < 10000 + STAGE_PAGES.length` 时跳过 `step(vars) == hit.stepIndex()` 判定；其余动作（31/26/报告 1009/检查 39,20002/完成 1008/回发 ≥1000）仍只服务当前步；2. **推进以当前步为基准**：`currentStep = step(vars)`、`currentPlan = plans.get(currentStep)`，advance/动作执行器/续链页全部锚当前步（守卫放宽前 hit 步 == 当前步，语义不变）；3. advance 失败（守卫位/异常）不发页、return false；4. 回归门 `dialogChainAdvanceIsServedAtANonCurrentStepNpc`（13403 实机行：乱序 10000 静默零发页 + 非当前步 NPC 窗推进必须步进 + 恰好一页续链）
-evidence: log/quests.log 2026-10-06 18:54:38-48（完整链：接取→1011/1012/1013→10000→步数 1、2 + 页 1693（questId）→1694/1695（questId）→10002→仅关窗 targetObj=0/questId=0/页=0、无 SM_QUEST_ACTION）；同日 18:38 首测同形；DataDrivenNativeRuntime.java dispatchDialog（advanceAction 豁免 + currentStep 基准）与 sendPostAdvancePage；DataDrivenNativeRuntimeGateTest#dialogChainAdvanceIsServedAtANonCurrentStepNpc；.agents/summary/quest-13403-subpage-echo/DIAGNOSIS.zh-CN.md（续报）
-validation: 2026-10-06 IDEA MCP：DataDrivenNativeRuntimeGateTest 31/31（含新用例）、SimpleTalkNativeFamilyGateTest 16/16、SimpleItemPlayNativeFamilyGateTest 15/15、QuestEngineSelectionSubPageEchoTest 1/1、QuestEngineOpenDoorReplayOrderTest 1/1——64/64 全绿；实机复测待用户（重启后 13403 在页 select3 点结束对话应推进续链、不再循环）
+symptom: 实机 13403（2026-10-06）三段：① 点击结束对话不关闭、循环一下才关闭（10002 被步守卫挡 ⇒ DialogService 兜底关窗）；② 修复守卫后整条链（10000/10002/10004/10005）在 Kinesos 一个对话窗里走完——玩家从未离开首个 NPC（Beris/Jenel/两台机器步形同虚设）；③ 链条停在末步页 select7(3057) 的按钮 10255（SET_SUCCEED）：从非当前步的对话窗到达被守卫挡下 ⇒ 只关窗、无 SM_QUEST_ACTION、任务不进 REWARD
+root_cause: ① 守卫把「事件的 NPC 必须是当前步的 NPC」当前提；真端对话平面（FUN_180c474b0）的推进守卫只有顺序（`code-9999 == 当前步 + 1`）、10255 连动作码守卫都没有，均无 NPC 门；② 推进尾被实现成「同窗续链」（sendPostAdvancePage 把新步页发回同一对话窗）——其证据来自本服自己发包后客户端跟点下一段按钮（循环论证）；真端/退役面推进尾 = 关窗零发页（退役 SETPRO 全量普查 3923 条 = 3479 close-dialog+sync / 142 SELECT_QUEST，同平台 SimpleTalk 1131 实机验收），错误尾部同时把非当前步窗口的按钮流带进首个 NPC 的窗
+fix_or_guardrail: 1. **推进/收口免 hit 步守卫且以当前步为基准**：10000+k 与 10255 不受 `step(vars) != hit.stepIndex` 限制，advance/plan/步动作执行器全锚当前步；2. **推进尾 = 关窗零发页**（`DialogService.closeDialog`，真端 `mgr+0x5d8`）：删除「发回新步页」，下一步骤由其自身 NPC 窗口的打开/行选服务；3. **收口尾 = 可见性刷新 + 关窗**（10255：refreshLevelAndVisibility + closeDialog；10528 同形 `LEVEL_AND_VISIBILITY_REFRESH → CloseDialog`）；4. 回归门：⑤a（推进尾关窗）、⑤c（非当前步窗推进）、⑤f（非当前步窗 10255 → REWARD）、⑤e（末步 SET_SUCCEED）
+evidence: log/quests.log 2026-10-06 20:52:20-38（完整链 + 末步 10255 仅关窗、无 SM_QUEST_ACTION；重开落页 10 + questId=0 的 1012 回显）；.agents/summary/quest-19671-relay-close-claim/README.zh-CN.md（19671 尾 = LEVEL_AND_VISIBILITY_REFRESH + close-dialog；SETPRO 普查 3479/3923 关窗尾）；.agents/summary/quest-acceptance/10528-2026-09-23-client-accepted.md（SET_SUCCEED after-commit = REFRESH → CloseDialog）；P7 分析（P7-STEP2D2-REPORT：推进只写 SetQuestProgress 0xF0；P7-STEPF-PREREQ-ADJUDICATIONS：推进/完成分支统一汇入 d5b0）；DataDrivenNativeRuntime.java dispatchDialog；DataDrivenNativeRuntimeGateTest ⑤a/⑤c/⑤e/⑤f；.agents/summary/quest-13403-subpage-echo/DIAGNOSIS.zh-CN.md（续报三）
+validation: 2026-10-06 IDEA MCP：DataDrivenNativeRuntimeGateTest 32/32（含 ⑤a 推进尾关窗、⑤c 非当前步窗推进、⑤f 非当前步窗 10255）+ 族门回归 SimpleTalk 16/16、SimpleItemPlay 15/15、QuestEngineSelectionSubPageEchoTest 1/1、QuestEngineOpenDoorReplayOrderTest 1/1（合计 65/65）；静态检查无错误；实机复测待用户（重启后 13403 全程：每次推进应关窗、任务书指向下一个 NPC，末步 10255 进 REWARD、可赴 Alaus 交付）
 superseded_by: none
-boundaries: ① 只放宽推进动作（10000+k），其余动作守卫不变；②「推进后发新步页」的对话链模型沿用既有（实机 10000 已验证；ItemPlay 步由级联跳过）；③ 乱序/重复推进 = 顺序卫 return false（静默）；④ typed 车道与 SimpleTalk/ItemPlay 的族内推进不受影响
+boundaries: ① 免守卫只放行 10000+k 与 10255——其余动作（31/26/报告 1009/检查 39,20002/完成 1008/回显 ≥1000）仍只服务当前步；② 推进尾不刷新可见性（与 SimpleTalk 1131 验收形一致；下一个 NPC 标记若滞后按实机证据再补）；③ 1009/39 的非末步尾页（sendPostAdvancePage else 分支）沿用既有、未单独裁定；④ typed 车道与 SimpleTalk/ItemPlay 族内推进不受影响
 see_also: [QE-141], [QE-145], [QE-144]
-first_check: DD 任务「点结束对话/推进按钮无反应、任务不推进」或「循环一下才关闭」先答：① 该动作是 10000+k 推进吗？② 当前步（vars & 0x3F）与该 NPC 的步（hit）是否一致（不一致 = 同窗续链场景）？③ 修复前是否只有 DialogService 关窗、无 SM_QUEST_ACTION（= 推进被守卫挡）？
-keywords: DD 对话链、推进、10000+k、10002、hit 步守卫、当前步、sendPostAdvancePage、13403、203096、select3、1693、1694、1695、结束对话、循环、dialogChainAdvanceIsServedAtANonCurrentStepNpc、DD_DIALOG_CHAIN_ADVANCE_NOT_HIT_GATED
+first_check: DD 任务「推进按钮无反应/任务不推进」「结束对话后窗口不关或不推进」「整条链在首个 NPC 处就能走完」「末步按钮无反应、不进 REWARD」先答：① 该动作是 10000+k 推进还是 10255 收口？② 当前步（vars & 0x3F）与事件 NPC 的步是否一致（不一致 = 非当前步窗）？③ 修复前是否只有 DialogService 关窗、无 SM_QUEST_ACTION（= 被守卫挡）？④ 推进后服务端是否把新步页发回了同窗（同窗续链 = 误判，应关窗）
+keywords: DD 对话链、推进、收口、10000+k、10002、10255、SET_SUCCEED、hit 步守卫、当前步、关窗、0x5d8、零发页、不进 REWARD、13403、203096、select7、3057、结束对话不关窗、同窗续链误判、DD_DIALOG_ADVANCE_NOT_HIT_GATED
 -->
 
-- **判定规则**：DD 推进动作（10000+k）不受「hit 步 == 当前步」限制——推进后新步页由同一对话窗续链，其按钮必须在该窗被服务；基准 = 当前步（vars 的步）：顺序卫 `code-9999 == 当前步 + 1`、advance/plan/执行器全锚当前步。其余动作（31/26/报告/检查/完成/回发）仍只服务当前步。
-- **安全网**：`DataDrivenNativeRuntimeGateTest#dialogChainAdvanceIsServedAtANonCurrentStepNpc`（13403 实机行：乱序静默 + 非当前步 NPC 窗推进步进 + 单页续链三断言）。
-- **反漂移**：别把推进也绑「hit 步 == 当前步」（同窗续链的按钮会落 DialogService 兜底关窗、任务不推进）；别用 hit.stepIndex 作推进基准（要 currentStep）；别把「推进后发新步页」改成关窗（对话链模型，实机 10000 已验证）。
+- **判定规则**：真端对话平面的推进（10000+k，顺序卫 `code-9999 == 当前步 + 1`）与收口（10255，无码卫）都以**当前步**为基准、**没有**「事件 NPC 必须是当前步」的门；尾 = **关窗零发页**（`mgr+0x5d8`；10255 另带可见性刷新）。下一步骤由其自身 NPC 窗口的打开/行选服务——不把新步页发回同一对话窗。
+- **安全网**：`DataDrivenNativeRuntimeGateTest` ⑤a（推进尾 = 关窗零发页）、⑤c（非当前步窗推进：步进 + 关窗）、⑤f（非当前步窗 10255：REWARD + 关窗）、⑤e（末步 SET_SUCCEED：步进 + 关窗）；夹具 `assertCloseDialog`（唯一关窗包、页/目标/questId 全 0）。
+- **反漂移**：别把推进尾改回「发新步页/同窗续链」（会把后续步骤全带进首个 NPC 的窗、玩家原地走完整条链；证据 = SETPRO 普查 3479/3923 关窗尾 + SimpleTalk/1131 验收）；别用 hit.stepIndex 作推进/收口基准（要 currentStep）；别给 10255 加动作码守卫（真端无）；别用「客户端跟点了下一段」反推服务端行为（那是本服发包造成的循环论证）。
 
 ## [QE-151] 一百五十一、迁移后「本行/引用他行」的元数据查询必须双源回退（目录 → 真端 quest.xml）＋真端 ≥ 计数语义：native 行在可重复/分享/前置/事件维护面 fail-closed 静默死亡（1157 及 180 链 / 传送门·分享面 / 318 事件任务中 315 行） (METADATA_DUAL_SOURCE_NATIVE_FALLBACK)
 
@@ -3494,3 +3494,72 @@ keywords: 迁移、native 行、目录缺行、nativeMetadata、双源回退、f
 - **判定规则**：双车道并存期间，任何「本行元数据」或「引用他行元数据（前置计数）」查询都是**双源**——目录（733 XML 保留行）缺行时必须回退 `QuestEngine.nativeMetadata`（真端 quest.xml 同源编译链；真端等价物 = QuestDB 全量表，永可查）；两处都无才 fail-closed。前置完成计数一律 `completeCount >= maxRepeat`（溢出不误拒；`maxRepeat ∈ {1,255}` 短路）。
 - **安全网**：`EventQuestNativeMaintenanceTest`（80022/80900 建档、超限不重置、登录维护联动）、`QuestPrerequisiteRetailContractTest`（XML 行前置契约）、`NativeNearbyQuestAxisGateTest`（native 判定活基准）、`RetailQuestStateTest#repeatEligibilityUsesCanonicalRepeatPolicyAndCooldown`；诊断扫脚本 `.agents/summary/quest-event-maintenance-native/scan_event_native_owner.py`（318 行 owner 分布复现）。
 - **反漂移**：别在引用面只查目录（native 行 = empty ⇒ fail-closed 全灭；harness 症状见 1157）；别用 `==`/`!=` 写前置计数（真端是 `required <= count` 的 ≥ 语义）；别给事件 native 分支套 quest.xml category1 门（事件语义 = 活动清单 maintainable）；别把 `nativeMetadata` 当目录替代（它只覆盖 isNativeOwner 行，目录行仍走 catalog）；QuestsData 与目录同集合是现状事实——别再假设 `questsData.getQuestById` 能兜住 native 行。
+
+## [QE-152] 一百五十二、DD ItemPlay 步 = 物品**使用**事件（真端 tag 5 在 `User__UseItem`/`User_IdentifyItem` 经 `mgr+0x268+5*0x10` walk 派发、ctx+8 = 被使用物品 id）：物品获得/发放不推进——13403 发放动作级联跳过探测器使用步 (DD_ITEMPLAY_USES_USE_EVENT)
+
+<!-- pattern-metadata
+status: CONFIRMED
+scope: DD 原生车道 ItemPlay（kind 3）步与 kind 3 接取行的触发事件接入点（`QuestEngine.onItemUseEvent` vs `onItemGet`）+ `DataDrivenNativeRuntime.onItemUsed` 的调用面；不含 SimpleUseItem/SimpleItemPlay 族内用物（各自 handler 自管）与 typed 车道 itemPlayAnimationMillis
+first_seen: 2026-10-06
+last_verified: 2026-10-06
+symptom: 实机 13403（2026-10-06 第四轮）：推进尾关窗已正确，但「使用探测器的步骤被跳过」——步 0 Talk(Kinesos) 的完成动作发放道具 QUEST_13403A 后，步 1 ItemPlay（使用 A）被级联满足（trace 中一次 10000 跳两步 =「步数=1、2」），玩家无需实际使用道具即被推到 Beris 步
+root_cause: DD ItemPlay 事件此前接在「物品获得」面（`QuestEngine.onItemGet` → `onItemAcquired`），发放/拾取即触发；真端事件 5 的派发点在 `User__UseItem`（User.cpp:58921，`local_90 = 5` → `mgr+0x268+5*0x10` walk，ctx+8 = 被使用物品 id），`User_IdentifyItem`(59477)/`User__DoEnchantItem`(60047) 同形——tag 5 = 物品**使用**；P7-STEP2D2 报告「物品获得事件 5」为误标；family-table-shapes.md:49「无 acquired_npc_name 列——接取 = 使用物品」佐证
+fix_or_guardrail: 1. **接线迁移**：`QuestEngine.onItemUseEvent`（CM_USE_ITEM:179）在 Simple 族先手后加 DD 钩子 `DataDrivenNativeRuntime.instance().onItemUsed(player, itemId)`；`onItemGet` 删除 DD 调用（保留 typed GetItem 广播）；2. **运行时改名**：`onItemAcquired` → `onItemUsed`，双角色不变（状态非 START 且接取 kind==3 → 使用物品接取 + 步 0 动作）；3. **回归门**：⑤d 改名 `itemPlayStepsCountTheUsedItem`、⑪ 双角色改走 `onItemUsed`、类 javadoc/兴趣面注释同步「物品使用」
+evidence: src/main/java/com/aionemu/gameserver/questEngine/tablelane/DataDrivenNativeRuntime.java:1262（onItemUsed 双角色）；src/main/java/com/aionemu/gameserver/questEngine/QuestEngine.java:1013-1020（onItemUseEvent DD 钩子）/1147-1150（onItemGet 不接 DD）；真端原码（`<真端根>`，classes/Account）：User.cpp:58921（User__UseItem，local_90 = 5）、59477（User_IdentifyItem）、60047（User__DoEnchantItem）（tag 5 walk 三处）；.agents/summary/quest-engine-native/p3-prereqs/family-table-shapes.md:49；.agents/summary/quest-13403-subpage-echo/DIAGNOSIS.zh-CN.md（续报四）
+validation: 2026-10-06 IDEA MCP：DataDrivenNativeRuntimeGateTest 32/32（含 ⑤d itemPlayStepsCountTheUsedItem、⑪ 双角色走 onItemUsed）+ 族门回归 SimpleTalk 16/16、SimpleItemPlay 15/15、QuestEngineSelectionSubPageEchoTest 1/1、QuestEngineOpenDoorReplayOrderTest 1/1（合计 65/65）；静态检查无错误；实机复测待用户（重启后 13403：发放 A 不得自动推进，须实际使用探测器才进下一步）
+superseded_by: none
+boundaries: ① 只动 ItemPlay/接取 kind 3 轴——其余 DD 事件面（击杀/对话/FOBJ/进区/进世界/PvP）与 Simple 族先手、typed itemPlayAnimationMillis 链路逐位不变；② CollectItem（kind 1）步仍由共享对话平面（31 行）服务，不由获得面喂，本次未动；③ 获得面（onItemGet）仍服务 typed GetItem 广播；④ 兴趣面（itemPlaysByItemId/acquireItemsByItemId）唯一派发入口 = onItemUsed
+see_also: [QE-150], [QE-141]
+first_check: 「ItemPlay/探测器步被跳过或不推进」先答：① 该步是否 kind 3（ItemPlay）？② DD 钩子挂在物品使用面（onItemUseEvent）还是获得面（onItemGet）？③ trace 里 10000 是否一次跳多步（= 发放/获得级联，应只在玩家实际用物后单步推进）？④ 玩家使用道具后是否推进？
+keywords: DD ItemPlay、物品使用事件、event 5、User__UseItem、User_IdentifyItem、mgr+0x268、ctx+8、onItemUsed、onItemUseEvent、CM_USE_ITEM、onItemGet 不推进、接取 kind 3、13403、探测器步被跳过、DD_ITEMPLAY_USES_USE_EVENT
+-->
+
+- **判定规则**：DD ItemPlay（kind 3）步与其接取双角色都由**物品使用**事件驱动（真端 tag 5 = `User__UseItem` 内 `mgr+0x268+5*0x10` walk，ctx+8 = 被使用物品 id；`User_IdentifyItem`/`DoEnchantItem` 同形）；接线 = `CM_USE_ITEM → QuestEngine.onItemUseEvent → DataDrivenNativeRuntime.onItemUsed`。物品**获得/发放不触发**——发放动作（give）不推进 ItemPlay 步，玩家必须实际使用道具。
+- **安全网**：`DataDrivenNativeRuntimeGateTest` ⑤d `itemPlayStepsCountTheUsedItem`（物品 id 匹配 + 组 1 计数 + 未声明物品零动作）、⑪（双角色物品接取走 `onItemUsed`）与 ⑤ 类族门整体回归；兴趣面注释断言（ItemPlay 步必须落物品使用兴趣）。
+- **反漂移**：别把 ItemPlay 钩子接回 `onItemGet`（发放即级联满足、步骤被跳过——13403 实机证据）；别信 P7-STEP2D2 报告「物品获得事件 5」的误标（真端 walk 在 `User__UseItem`；获得面没有 0x268 注册 walk）；别用「接取 = 获得物品」语义改写 kind 3（真端接取 = 使用物品）。
+
+## [QE-153] 一百五十三、DD 接取执行面 = 接取行附加动作（`valueN_acquire_` → 真端 `QuestProgressExtraInfo` 对象），**不是进度步 0 动作**：Talk 收尾 `d5b0(param_2<0)` 与双角色接取（`FUN_180c46e90`/`FUN_180c46bb0` 读 `entry+0x10`）执行同一张接取表——13403 接取误跑步 0 ⇒ 探测器双发；1817 反相（接取列发、步 0 空） (DD_ACQUIRE_RUNS_ACCEPT_ROW_ACTIONS)
+
+<!-- pattern-metadata
+status: CONFIRMED
+scope: 五类接取面（Talk 1002/20000 收尾、ItemPlay/EnterWorld/EnterArea/LevelUp·LevelUpLogIn 双角色）的已落面动作执行表；不含进度边的完成步执行器（执行矩阵）与接取页链（QE-122/QE-144）
+first_seen: 2026-10-06
+last_verified: 2026-10-07
+symptom: 实机 13403（2026-10-06 第五轮）「入侵探测器一次发放了 2 个」：接取收尾误执行进度步 0 列（= 发 A）⇒ 接取即发一次、步 0 完成（Kinesos 对话）再发一次；同误读的反相损失：1817 类行接取列发 `QUEST_1817A` 而步 0 列无动作 ⇒ 接取零发放（道具永不入手）；10500 类等级行的 Movie 32（步 0 列）在接取时提前播放
+root_cause: 步 f 裁定把 `FUN_180c4d5b0(user,-1,…,-1)` 的 -1 路径读成「跑步 0 动作」；2026-10-06 反编译复读坐实：d5b0 `param_2<0` 路径执行 `*(entry+0x10)`（= `category_acquire_` 装入的 QuestProgressExtraInfo 对象）+0x28；`FUN_180c46e90`（ItemPlay，6664 行）与 `FUN_180c46bb0`（LevelUp，6501 行）接取分支同样读 `*(entry+0x10)` 后调 `FUN_180c4cd50(对象+0x10)`——进度步 0 动作只在 `param_2≥0` 路径（完成步表）执行、与接取无关；接取列（value1..10_acquire_，全表 60 行：Talk 46 / LevelUpLogIn 14 / ItemPlay·EnterWorld·LevelUp 各 1 …）由 `FUN_180c49120` 解析，本服此前整列未装载
+fix_or_guardrail: 1. **装载**：`DataDrivenQuestTable.Row.acceptColumns` 解析 value1..10_acquire_（与进度列同 fail-closed 纪律，解析失败整行冻结）；2. **执行**：`DataDrivenNativeRuntime.runAcceptActions`（新 acceptActionsByQuestId）取代三处 `runActions(questId, 0)`——Talk 收尾（ACTION_ACCEPT/ACTION_BOOK）与 `acquire()` 双角色共用；3. **回归门**：⑩-b `talkDialogAcceptRunsTheAcceptRowActions`（探针行断言接取列执行）、新 `acceptTailDoesNotGrantTheStepZeroItemAgain`（13403：接取零发放 + 步 0 完成恰发一次 + 引用面断言）；⑪ 10500 断言改为「接取列空 ⇒ 接取零动作」
+evidence: src/main/java/com/aionemu/gameserver/questEngine/tablelane/DataDrivenNativeRuntime.java（runAcceptActions/scanAcceptActions/acceptActionsByQuestId）；src/main/java/com/aionemu/gameserver/questEngine/tablelane/DataDrivenQuestTable.java（acceptColumns 解析）；真端原码（`<真端根>`，MainServer_ScriptDLL64，`fun_718.cpp`）：10276（d5b0 -1 路径）、6664（FUN_180c46e90 接取分支）、6501（FUN_180c46bb0）、8239（FUN_180c49120 value%d_acquire_ 循环）、6854/6916（FUN_180c47220 1002/20000 收尾）；quest.xml 13403 行（quest_work_item1..4 = quest_13403a-d）；.agents/summary/quest-13403-subpage-echo/DIAGNOSIS.zh-CN.md（续报五）
+validation: 2026-10-07 IDEA MCP：DataDrivenNativeRuntimeGateTest 33/33（含新回归）+ SimpleTalk 16/16、SimpleItemPlay 15/15、QuestEngineSelectionSubPageEchoTest 1/1、QuestEngineOpenDoorReplayOrderTest 1/1（66/66）；静态检查无错误；实机复测待用户（13403：接取后探测器恰 1 个、步 0 完成发放、使用探测器推进）
+superseded_by: none
+boundaries: ① 更正 P7-STEPF-PREREQ-ADJUDICATIONS 的「步 0 动作」读法（含 ⑪ 的 10500 Movie 断言移出接取时）；② 非 Talk 接取类型（ItemPlay/EnterWorld/LevelUp/LevelUpLogIn）同样改走接取列（同反编译证据；LevelUp/LevelUpLogIn 无进度步族，扫描以全列集 1..10 为接取动作面）；③ acceptColumns 解析失败整行冻结（与进度列同纪律；60 行物品名已全解析、预检零冻结漂移）；④ typed/Simple 家族车道不受影响
+see_also: [QE-127], [QE-152], [QE-150]
+first_check: 「接取即发放/少发放/提前播放」先答：① 该动作在接取列（valueN_acquire_）还是进度步 0 列？② 执行点是否 runAcceptActions（Talk 收尾/双角色）？③ 是否装载了 acceptColumns（未装载 = 整列丢失）？④ 步 0 完成时是否重复执行了同一动作（双发放）？
+keywords: DD、接取收尾、双角色接取、valueN_acquire_、QuestProgressExtraInfo、FUN_180c49120、d5b0、FUN_180c46e90、FUN_180c46bb0、步 0 动作误读、探测器双发、1817、13403、DD_ACQUIRE_RUNS_ACCEPT_ROW_ACTIONS
+-->
+
+- **判定规则**：DD 五类接取面执行的都是**接取行附加动作**（`value1..10_acquire_` → 真端 QuestProgressExtraInfo 对象；Talk 收尾读 `entry+0x10`、双角色接取读同一对象），与进度步 0 列无关；进度步 0 列只在步 0 完成（推进边）执行。
+- **安全网**：`DataDrivenNativeRuntimeGateTest` ⑩-b（接取列执行）、`acceptTailDoesNotGrantTheStepZeroItemAgain`（13403 双发放回归：接取零发放 + 步 0 完成恰一次）、⑪（10500 接取零动作）；`DataDrivenQuestTable.Row.acceptColumns` 装载 + fail-closed。
+- **反漂移**：别把接取收尾/双角色接取改回 `runActions(questId, 0)`（步 0 列 ≠ 接取列；13403 双发/1817 丢发放都是它）；别只装载 value0_acquire_ 而丢 value1..10_acquire_；别信「d5b0 -1 跑步 0 动作」的旧裁定（见勘误）。
+
+## [QE-154] 一百五十四、销毁任务物品 = 确认窗（150001）+ 停止引用它的进行中任务（真端 `User_DestroyItem` → 确认 `0x249f1` → `User_DeleteQuest`）：全部不可放弃 ⇒ 拒绝 1300604；在途问询 ⇒ 重试 1300605；DD 引用面 = 发/扣/用物载荷反查 (DESTROY_QUEST_ITEM_STOPS_QUESTS)
+
+<!-- pattern-metadata
+status: CONFIRMED
+scope: CM_DELETE_ITEM 的任务引用面（`QuestEngine.tryQuestItemDestroy`）+ DD 物品引用索引（`questsReferencingItem`）；不含非任务物品的普通销毁与装备销毁路径
+first_seen: 2026-10-06
+last_verified: 2026-10-07
+symptom: 实机 13403 第五轮：扔掉探测器任务无任何反应（旧实现直删物品、任务面不感知）⇒ 引用物品被丢弃后任务断链/卡死；真端语义缺失
+root_cause: 原 CM_DELETE_ITEM 仅做可破坏性检查后 `inventory.delete`；真端 `User_DestroyItem`（User.cpp:61849）：对物品模板静态 quest 列表（+0x90/0x94，≤2 条）∩ 进行中任务——>1 条弹警告串「Breaking item is required to several quest proceedings…」；全部不可放弃 ⇒ 0x13d87c 拒绝；可放弃 ⇒ `User_Ask(…,0x249f1,…)` 确认；拒绝 ⇒ 0x13d87d；确认（回复分支 User.cpp:76230）⇒ 逐任务 `User_CanGiveupQuest` 命中即 `User_DeleteQuest`（放弃），随后删物品
+fix_or_guardrail: 1. `QuestEngine.tryQuestItemDestroy`：引用空 ⇒ false（普通销毁）；全部不可放弃 ⇒ 1300604 IMPOSSIBLE；否则 150001 问询窗 + 确认 ⇒ 逐任务 `QuestService.abandonQuest` + 删物品；拒绝/在途 ⇒ 1300605 RETRY；2. DD 引用面 `DataDrivenNativeRuntime.questsReferencingItem`（发/扣物品动作 + ItemPlay 载荷 + 接取列动作反查）；3. `QuestService.canAbandon(Player, questId)` 公开重载（目录 → nativeMetadata 同链、cannot_giveup 轴）
+evidence: 真端原码（`<真端根>`，MainServer_Server64，`User.cpp`）：61849-62020（DestroyItem 全链：警告串 61982 / 拒绝 0x13d87c 61992 / 问询 0x249f1 62002 / 拒绝回复 0x13d87d 62004）、76230-76252（确认回复：逐任务 User_CanGiveupQuest → User_DeleteQuest）；src/main/java/com/aionemu/gameserver/network/aion/clientpackets/CM_DELETE_ITEM.java；src/main/java/com/aionemu/gameserver/questEngine/QuestEngine.java（tryQuestItemDestroy/activeQuestsReferencingItem）；SM_QUESTION_WINDOW.STR_QUEST_GIVEUP_WHEN_DELETE_QUEST_ITEM=150001、SM_SYSTEM_MESSAGE 1300604/1300605；quest.xml 13403 行（cannot_giveup 缺省 = 可放弃 + quest_work_item1..4）
+validation: 2026-10-07：静态检查无错误；单测面 = DD 引用索引与进行中门（GateTest 回归内：`questsReferencingItem(探测器)=[13403]`、未引用零命中、`activeQuestsReferencingItem` START 门 + 完成退出）；确认窗/放弃/删除端到端 = 实机待用户（问询窗文案参数以客户端渲染为准，1300604 的 %1 任务名参数未传）
+superseded_by: none
+boundaries: ① 真端「>1 任务弹警告串」未实现（提示串，非门）；② 不可放弃判定走本服 cannot_giveup 元数据轴（真端 quest def +0x70 旗标等价物）；③ 引用面 = DD 行载荷 ∪ typed use-item 索引（非 item 模板静态表的逐字镜像；13403 侧与 work items a-d 吻合）；④ 确认后逐任务 re-check 进行中（真端 = 回复时重查同形）；⑤ 拒绝后物品保留（真端 0x13d87d 后不删）
+see_also: [QE-153], [QE-152]
+first_check: 「丢弃任务物品后任务断链/无提示/确认后没停任务」先答：① 物品是否被进行中任务引用（questsReferencingItem ∧ START/REWARD）？② 确认窗（150001）是否弹出、客户端回复是否到达？③ 全部不可放弃是否误判（cannot_giveup）？④ 确认后任务是否被 abandon + 物品是否删除？
+keywords: 销毁任务物品、User_DestroyItem、0x249f1、User_DeleteQuest、150001、1300604、1300605、tryQuestItemDestroy、questsReferencingItem、canAbandon、探测器、13403、DESTROY_QUEST_ITEM_STOPS_QUESTS
+-->
+
+- **判定规则**：销毁被进行中任务（START/REWARD）引用的物品 = 先确认（150001）再停止任务（逐任务 abandon）并删除物品；全部不可放弃 ⇒ 拒绝（1300604，不删）；问询在途/拒绝 ⇒ 重试提示（1300605，不删）；无引用 ⇒ 照常直删。
+- **安全网**：`DataDrivenNativeRuntimeGateTest.questsReferencingItem` 断言（探测器 = [13403]、未引用零命中）+ `QuestEngine.activeQuestsReferencingItem` 状态门断言；`QuestService.canAbandon(Player, questId)` 与 abandonQuest 同一元数据回退链。
+- **反漂移**：别在删除路径绕过 `tryQuestItemDestroy`（引用中的任务物品被直删 = 断链）；别把确认窗省成「自动放弃」或「直接拒绝」（真端先确认、确认才停任务）；别把不可放弃/在途混用同一条提示（1300604 vs 1300605）；别只查 DD 面而丢 typed `questItems` 索引（或反之）。

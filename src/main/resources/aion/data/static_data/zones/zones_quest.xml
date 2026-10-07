@@ -82,18 +82,18 @@
 	<zone mapid="210060000" name="LF2A_SENSORY_AREA_Q3090_210060000" area_type="SPHERE" zone_type="SUB">
 		<sphere x="208.02142" y="1346.6992" z="64.0" r="10.0"/>
 	</zone>
-	<!-- Beritra Grand Invasion -->
-	<zone mapid="210030000" name="LF1A_ITEMUSEAREA_Q13403A" area_type="SPHERE" zone_type="SUB">
-        <sphere x="1702.6613" y="1662.9213" z="102.19242" r="10.0"/>
+	<!-- Beritra Grand Invasion：球心与半径采信真端 Map/XML/Subzones/source_sphere.csv / center & radius from the retail source_sphere.csv -->
+	<zone mapid="210030000" name="LF1A_ITEMUSEAREA_Q13403A" area_type="SPHERE" zone_type="ITEM_USE">
+        <sphere x="1705.84" y="1663.02" z="105.40" r="59.37"/>
     </zone>
-	<zone mapid="210030000" name="LF1A_ITEMUSEAREA_Q13403B" area_type="SPHERE" zone_type="SUB">
-        <sphere x="1586.9154" y="2078.2305" z="155.875" r="10.0"/>
+	<zone mapid="210030000" name="LF1A_ITEMUSEAREA_Q13403B" area_type="SPHERE" zone_type="ITEM_USE">
+        <sphere x="1588.79" y="2078.18" z="173.22" r="55.90"/>
     </zone>
-	<zone mapid="220030000" name="DF1A_ITEMUSEAREA_Q23403A" area_type="SPHERE" zone_type="SUB">
-        <sphere x="1870.0000" y="1675.0000" z="247.3750" r="10.0"/>
+	<zone mapid="220030000" name="DF1A_ITEMUSEAREA_Q23403A" area_type="SPHERE" zone_type="ITEM_USE">
+        <sphere x="1873.01" y="1673.65" z="264.69" r="48.34"/>
     </zone>
-	<zone mapid="220030000" name="DF1A_ITEMUSEAREA_Q23403B" area_type="SPHERE" zone_type="SUB">
-        <sphere x="1761.3639" y="506.55444" z="247.3006" r="10.0"/>
+	<zone mapid="220030000" name="DF1A_ITEMUSEAREA_Q23403B" area_type="SPHERE" zone_type="ITEM_USE">
+        <sphere x="1759.56" y="504.04" z="255.52" r="51.29"/>
     </zone>
 	<zone mapid="220030000" name="DF1A_SENSORY_AREA_Q28500_220030000" area_type="SPHERE" zone_type="SUB">
 		<sphere x="2904.0000" y="1473.0000" z="252.0000" r="25.0"/>

@@ -28,17 +28,20 @@ import com.aionemu.gameserver.GameServerError;
 import com.aionemu.gameserver.configs.Config;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+import com.aionemu.gameserver.model.DescriptionId;
 import com.aionemu.gameserver.model.GameEngine;
 import com.aionemu.gameserver.model.TaskId;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.Item;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
+import com.aionemu.gameserver.model.gameobjects.player.RequestResponseHandler;
 import com.aionemu.gameserver.model.templates.quest.QuestItems;
 import com.aionemu.gameserver.model.templates.quest.QuestNpc;
 import com.aionemu.gameserver.model.templates.rewards.BonusType;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_DIALOG_WINDOW;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_ITEM_USAGE_ANIMATION;
+import com.aionemu.gameserver.network.aion.serverpackets.SM_QUESTION_WINDOW;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.questEngine.definition.CompiledQuestDefinition;
 import com.aionemu.gameserver.questEngine.definition.ImmutableQuestCatalog;
@@ -85,6 +88,7 @@ import com.aionemu.gameserver.questEngine.runtime.QuestRuntimeRouter;
 import com.aionemu.gameserver.questEngine.runtime.QuestRouteResult;
 import com.aionemu.gameserver.questEngine.runtime.QuestRuntimeComposition;
 import com.aionemu.gameserver.services.QuestService;
+import com.aionemu.gameserver.services.item.ItemPacketService.ItemDeleteType;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.stats.AbyssRankEnum;
 import com.aionemu.gameserver.world.zone.ZoneName;
@@ -1010,6 +1014,14 @@ public class QuestEngine implements GameEngine {
 						|| SimpleItemPlayHandler.instance().onItemUse(player, itemId)) {
 					return HandlerResult.SUCCESS;
 				}
+				// DD 原生车道：ItemPlay 步 = 物品使用事件（真端事件 5 在 `User__UseItem`/
+				// `User_IdentifyItem` 内经 `mgr+0x268+5*0x10` walk 派发，ctx+8 = 被使用物品 id；
+				// 接取 kind==3 的行由同一事件接取）。物品获得/发放不推进 ItemPlay 步。
+				// DD lane: ItemPlay steps advance on the item-USE event (retail tag 5 fired from
+				// User__UseItem with the used item's id); acquiring/granting the item does not.
+				if (DataDrivenNativeRuntime.instance().onItemUsed(player, itemId)) {
+					return HandlerResult.SUCCESS;
+				}
 				OptionalInt itemPlayDuration = typed.itemPlayAnimationMillis(itemId);
 				if (itemPlayDuration.isPresent()) {
 					scheduleTypedItemPlay(player, item, itemPlayDuration.getAsInt());
@@ -1136,10 +1148,10 @@ public class QuestEngine implements GameEngine {
 		}
 		QuestRuntimeDispatcher typed = productionDispatcher;
 		Player player = env == null ? null : env.getPlayer();
-		// 真端表驱动车道：DataDriven ItemPlay 步由物品获得事件推进（真端事件 5，`FUN_180c46e90`；
-		// 本批路由集为空 ⇒ 恒 false）。
-		// Table lane: DataDriven ItemPlay steps advance on the item-acquire event (no-op until step 2f).
-		DataDrivenNativeRuntime.instance().onItemAcquired(player, itemId);
+		// DD 原生车道的 ItemPlay 步不走获得面：真端事件 5 = 物品使用（`User__UseItem` walk），
+		// 接线在 onItemUseEvent（2026-10-06 实机 13403：发放动作曾在此级联跳过探测器使用步）。
+		// The DD ItemPlay steps are not wired to the obtain face: retail event 5 is item USE,
+		// hooked in onItemUseEvent (live 13403 round 4).
 		List<Integer> questIds = questItems.get(itemId);
 		if (player != null && itemId > 0 && questIds != null && questIds.stream().anyMatch(typed::owns)) {
 			// 物品进入玩家背包后先进入正式 typed owner；同一物品可被多个
@@ -1158,6 +1170,109 @@ public class QuestEngine implements GameEngine {
 				// Typed obtain dispatch is best-effort.
 			}
 		}
+	}
+
+	/**
+	 * 销毁任务物品前的确认与收口（真端 `User_DestroyItem` + 确认回复 `0x249f1` 分支镜像）：
+	 * 物品被玩家进行中的任务引用（真端 = item 模板静态 quest 列表）且全部不可放弃 ⇒ 拒绝并提示
+	 * （1300604 = 真端 0x13d87c）；否则弹确认窗（150001）——确认 ⇒ 依次放弃相关任务
+	 * （`User_DeleteQuest`）后删除物品；拒绝 ⇒ 提示重试（1300605 = 真端 0x13d87d）。
+	 * The retail destroy flow: referencing in-progress quests gate a confirmation window; on confirm
+	 * the quests are stopped (quest giveup) and the item deleted.
+	 *
+	 * @param player 玩家 / the player
+	 * @param item   待销毁物品 / the item being destroyed
+	 * @return true = 本方法认领销毁（已弹窗或已提示拒绝）；false = 无进行中任务引用，走普通销毁
+	 */
+	public boolean tryQuestItemDestroy(Player player, Item item) {
+		if (player == null || item == null || item.getItemTemplate() == null) {
+			return false;
+		}
+		int itemId = item.getItemTemplate().getTemplateId();
+		List<Integer> referencing = activeQuestsReferencingItem(player, itemId);
+		if (referencing.isEmpty()) {
+			return false;
+		}
+		boolean anyAbandonable = false;
+		for (int questId : referencing) {
+			if (QuestService.canAbandon(player, questId)) {
+				anyAbandonable = true;
+				break;
+			}
+		}
+		if (!anyAbandonable) {
+			PacketSendUtility.sendPacket(player,
+				SM_SYSTEM_MESSAGE.STR_QUEST_GIVEUP_WHEN_DELETE_QUEST_ITEM_IMPOSSIBLE(item.getItemName()));
+			return true;
+		}
+		int objectId = item.getObjectId();
+		RequestResponseHandler handler = new RequestResponseHandler(player) {
+			@Override
+			public void acceptRequest(Creature requester, Player responder) {
+				Item current = responder.getInventory() == null ? null
+					: responder.getInventory().getItemByObjId(objectId);
+				if (current == null) {
+					return;
+				}
+				for (int questId : activeQuestsReferencingItem(responder, itemId)) {
+					QuestService.abandonQuest(responder, questId);
+				}
+				responder.getInventory().delete(current, ItemDeleteType.DISCARD);
+			}
+
+			@Override
+			public void denyRequest(Creature requester, Player responder) {
+				PacketSendUtility.sendPacket(responder,
+					SM_SYSTEM_MESSAGE.STR_QUEST_GIVEUP_WHEN_DELETE_QUEST_ITEM_RETRY);
+			}
+		};
+		if (!player.getResponseRequester().putRequest(SM_QUESTION_WINDOW.STR_QUEST_GIVEUP_WHEN_DELETE_QUEST_ITEM,
+			handler)) {
+			// 有在途问询：真端重试提示（1300605）；物品不删。
+			// A pending request blocks the ask: the retail retry message, item kept.
+			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_QUEST_GIVEUP_WHEN_DELETE_QUEST_ITEM_RETRY);
+			return true;
+		}
+		PacketSendUtility.sendPacket(player, new SM_QUESTION_WINDOW(
+			SM_QUESTION_WINDOW.STR_QUEST_GIVEUP_WHEN_DELETE_QUEST_ITEM, 0, 0, new DescriptionId(item.getNameId())));
+		return true;
+	}
+
+	/**
+	 * 玩家进行中（START/REWARD）且引用该物品的任务：typed 目录索引（{@code questItems}，use-item
+	 * 注册面）∪ DD 原生行引用面（发/扣物品动作 + ItemPlay 载荷 + 接取行动作）。真端等价物 = item
+	 * 模板静态 quest 列表（≤2 条）∩ 进行中状态。
+	 * In-progress quests referencing the item (the typed index ∪ the DD row references).
+	 *
+	 * @param player 玩家 / the player
+	 * @param itemId 物品模板 id / the item template id
+	 * @return 按发现顺序的任务 id 列表 / the quest ids in discovery order
+	 */
+	public List<Integer> activeQuestsReferencingItem(Player player, int itemId) {
+		if (player == null || player.getQuestStateList() == null || itemId <= 0) {
+			return List.of();
+		}
+		Set<Integer> candidates = new java.util.LinkedHashSet<>();
+		IntArrayList typed = questItems.get(itemId);
+		if (typed != null) {
+			for (Integer questId : typed) {
+				candidates.add(questId);
+			}
+		}
+		try {
+			candidates.addAll(DataDrivenNativeRuntime.instance().questsReferencingItem(itemId));
+		} catch (RuntimeException ignored) {
+			// DD 面缺席（部分装配/测试）不影响 typed 面判定。
+			// A missing DD face does not block the typed verdict.
+		}
+		List<Integer> active = new ArrayList<>();
+		for (int questId : candidates) {
+			QuestState state = player.getQuestStateList().getQuestState(questId);
+			if (state != null && (state.getStatus() == QuestStatus.START || state.getStatus() == QuestStatus.REWARD)) {
+				active.add(questId);
+			}
+		}
+		return List.copyOf(active);
 	}
 
 	/**

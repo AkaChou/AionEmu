@@ -54,6 +54,13 @@
   id==页动作」重放步内过场（控制器 +0x190/+0x1b8）——节点 id 绑定布局未逐字坐实 ⇒ 步 f 不镜像，
   登记为 Talk 步演出回显偏差。
 
+> **勘误（2026-10-06，13403 实机 + 反编译复读）**：本节「Talk 对话接取（1002/20000）同样执行步 0
+> 动作」的读法有误——d5b0 `param_2<0` 路径执行的是 `*(entry+0x10)`（= `category_acquire_` 装入的
+> `QuestProgressExtraInfo` 对象）+0x28，即**接取行附加动作**（`value1..10_acquire_`），不是进度步 0
+> 的动作表；`FUN_180c46e90`（ItemPlay）与 `FUN_180c46bb0`（LevelUp）的接取分支同读 `entry+0x10`。
+> 步 0 进度列只在完成步（`param_2 ≥ 0` 路径）执行。13403 实机「探测器双发」与 1817「接取零发放」
+> 都是本误读的实害。更正实现见 QE-153（`runAcceptActions` / `Row.acceptColumns`）。
+
 ## 3. F3 Spawn 可行走校验（NP `IUserImp_Spawn` @1401877b0 全文）
 
 - **可行走化只在半径参数 ≥1 时发生**：`World_RandomWalkableSpawnLocation(世界, 出参, 玩家, 中心,

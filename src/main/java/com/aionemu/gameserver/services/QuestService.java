@@ -1481,6 +1481,29 @@ public final class QuestService {
 		return metadata != null && !metadata.cannotGiveup() && state != null;
 	}
 
+	/**
+	 * 单任务可否放弃（真端 `User_CanGiveupQuest` 语义面）：元数据解析与 {@link #abandonQuest} 同链
+	 * （目录 → nativeMetadata 回退），`cannot_giveup` 命中即不可。
+	 * Whether the quest may be abandoned (the retail User_CanGiveupQuest face).
+	 *
+	 * @param player  玩家 / the player
+	 * @param questId 任务 id / the quest id
+	 * @return 可否放弃 / whether abandonment is allowed
+	 */
+	public static boolean canAbandon(Player player, int questId) {
+		if (player == null || player.getQuestStateList() == null || questId <= 0) {
+			return false;
+		}
+		QuestEngine questEngine = GameEngineServices.questEngine();
+		QuestMetadata metadata = questEngine.questCatalog().findMetadata(questId).orElse(null);
+		if (metadata == null && questEngine.isNativeOwner(questId)) {
+			// 与 abandonQuest 同一条原生元数据回退链（cannot_giveup 轴）。
+			// The same native metadata fallback chain abandonQuest uses.
+			metadata = questEngine.nativeMetadata(questId).orElse(null);
+		}
+		return canAbandon(metadata, player.getQuestStateList().getQuestState(questId));
+	}
+
 	private static void finishAbandon(Player player, int questId, QuestMetadata metadata) {
 		if (metadata != null && metadata.npcFactionId() != 0 && player.getNpcFactions() != null) {
 			player.getNpcFactions().abortQuest(metadata.npcFactionId());

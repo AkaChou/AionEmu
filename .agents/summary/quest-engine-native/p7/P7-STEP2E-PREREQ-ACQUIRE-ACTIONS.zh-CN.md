@@ -33,6 +33,11 @@
 - ItemPlay 接取（acquire==3）：走对话平面（0x1E0 槽）？——**不是**：注册 event 5 用同一
   `FUN_180c46e90`（与上同行）。
 
+> **勘误（2026-10-06，13403 实机 + 反编译复读）**：本节「接取时执行的附加动作 = 进度 handler 的
+> `def+0x10`」的容器归属有误——接取分支执行的是 `*(entry+0x10)`（`category_acquire_` 装入的
+> `QuestProgressExtraInfo` 对象，即 **value1..10_acquire_ 接取列**），进度步 0 列只在完成步执行。
+> 详见 P7-STEPF-PREREQ-ADJUDICATIONS 勘误与 QE-153。
+
 ## 3. Talk 接取对话面（词汇与家族车道同源）
 
 **FUN_180c47220（+0x1D8，「可接取」面）**：
