@@ -248,6 +248,12 @@ QE-150 路由句扩与两卡 validation 回写）。
   `resolveSearchNpcId` 链尾；
 - 四个 ID 仅服务 Q13403/Q23403 这两个镜像任务、无其他占用，故按种族直接改写（不挂任务状态门）。
 
-**验证状态**：IDEA 静态检查（CM_OBJECT_SEARCH / CMObjectSearchTest）**无错误**；`CMObjectSearchTest`
-新增 2 例（跨族四向改写 + 同侧/无关 ID/null 种族保持）——单测（IDEA MCP）**待授权**；**实机复测通过**
+**验证状态**：IDEA 静态检查（CM_OBJECT_SEARCH / CMObjectSearchTest）**无错误**；**实机复测通过**
 （2026-10-07 冷重启后天族点该点位落至本侧 210030000 805264 一带）。
+
+**单测（IDEA MCP，2026-10-07，授权后补跑）**：首轮 `CMObjectSearchTest` **16/17**——既有用例
+`resolvesSearchNpcIdForNormalPlayerWithActiveQuest` 失败：新链尾读取 `player.getRace()`
+（`Player.getRace()` 委托 `playerCommonData.getRace()`），而 Objenesis 桩玩家无 `playerCommonData`
+⇒ NPE（生产玩家不受影响）。按本文件既有惯例（反射注入 `questStateList`）补桩 `playerWithRace`
+（注入 `PlayerCommonData(race)`），并新增全链用例 `rewritesTheCrossFactionMirrorThroughThePlayerSearchChain`
+（天/魔四向经 `resolveSearchNpcId` 全链）⇒ **17/17 全绿**；生产代码无需改动。

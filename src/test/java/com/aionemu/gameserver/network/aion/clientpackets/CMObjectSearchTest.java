@@ -15,6 +15,7 @@ import org.objenesis.ObjenesisStd;
 
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
+import com.aionemu.gameserver.model.gameobjects.player.PlayerCommonData;
 import com.aionemu.gameserver.model.gameobjects.player.QuestStateList;
 import com.aionemu.gameserver.world.WorldType;
 import com.aionemu.gameserver.model.gameobjects.Npc;
@@ -179,7 +180,7 @@ class CMObjectSearchTest {
 
 	@Test
 	void resolvesSearchNpcIdForNormalPlayerWithActiveQuest() {
-		Player player = OBJENESIS.newInstance(Player.class);
+		Player player = playerWithRace(Race.ELYOS);
 		QuestStateList qsl = OBJENESIS.newInstance(QuestStateList.class);
 		SortedMap<Integer, QuestState> quests = new TreeMap<>();
 		quests.put(14043, questState(14043, QuestStatus.START, 0));
@@ -227,6 +228,22 @@ class CMObjectSearchTest {
 		assertEquals(805265, CM_OBJECT_SEARCH.resolveFactionMirrorSearchNpcId(Race.ASMODIANS, 805265));
 		assertEquals(NPC_ID, CM_OBJECT_SEARCH.resolveFactionMirrorSearchNpcId(Race.ELYOS, NPC_ID));
 		assertEquals(805266, CM_OBJECT_SEARCH.resolveFactionMirrorSearchNpcId(null, 805266));
+	}
+
+	@Test
+	void rewritesTheCrossFactionMirrorThroughThePlayerSearchChain() {
+		assertEquals(805264, CM_OBJECT_SEARCH.resolveSearchNpcId(playerWithRace(Race.ELYOS), 805266));
+		assertEquals(805263, CM_OBJECT_SEARCH.resolveSearchNpcId(playerWithRace(Race.ELYOS), 805265));
+		assertEquals(805266, CM_OBJECT_SEARCH.resolveSearchNpcId(playerWithRace(Race.ASMODIANS), 805264));
+		assertEquals(805265, CM_OBJECT_SEARCH.resolveSearchNpcId(playerWithRace(Race.ASMODIANS), 805263));
+	}
+
+	private static Player playerWithRace(Race race) {
+		Player player = OBJENESIS.newInstance(Player.class);
+		PlayerCommonData commonData = OBJENESIS.newInstance(PlayerCommonData.class);
+		setField(PlayerCommonData.class, commonData, "race", race);
+		setField(Player.class, player, "playerCommonData", commonData);
+		return player;
 	}
 
 	private static QuestState questState(int questId, QuestStatus status, int questVar0) {
