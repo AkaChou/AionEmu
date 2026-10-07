@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-16" ?>
+
+<HtmlPages>
+
+  <HtmlPage name="select1">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>村里出现了病人。身上长满了疮，看上去非常可怜。</p>
+          <p> </p>
+          <p>由于病情太严重，药都吃不下去。</p>
+          <p> </p>
+          <p>如果能用温泉水擦拭全身的话，应该会有效果...不过我们作为人类，很难弄到温泉水。</p>
+        </body>
+        </html>
+    </Contents>
+    <Selects>
+      <Act href="HACTION_SELECT1_1">询问为什么难弄。</Act>
+    </Selects>
+  </HtmlPage>
+
+  <HtmlPage name="select1_1">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>温泉水本身不难找到。不过问题是如果不在水还热的时候擦拭的话，温泉水的效果就会消失。</p>
+          <p> </p>
+          <p>我们不像守护者那样长着翅膀可以飞着回来，让我们怎么在水冷掉之前带回来啊。</p>
+          <p> </p>
+          <p>所以虽然知道方法，但还是一样束手无策。</p>
+        </body>
+        </html>
+    </Contents>
+    <Selects>
+      <Act href="HACTION_ASK_QUEST_ACCEPT">询问是否需要帮忙。</Act>
+    </Selects>
+  </HtmlPage>
+
+  <HtmlPage name="ask_quest_accept">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>[%username]大人如果能帮忙的话，我们当然非常感谢。</p>
+          <p> </p>
+          <p>请您去[%dic:STR_DIC_W_LF2_SZ_G4]把温泉水打回来。</p>
+          <p> </p>
+          <p>因为没办法把病人送到温泉那边去，所以这是唯一的办法。</p>
+        </body>
+        </html>
+    </Contents>
+    <Selects>
+      <Act href="HACTION_QUEST_ACCEPT_1">接受。</Act>
+      <Act href="HACTION_QUEST_REFUSE_1">拒绝。</Act>
+    </Selects>
+  </HtmlPage>
+
+  <HtmlPage name="quest_accept_1">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>在[%dic:STR_DIC_W_LF2_SZ_G4]有一口会喷出热水的间歇泉。请您去用这个保温瓶把水打回来。</p>
+          <p> </p>
+          <p>请不要忘了。如果不在水还热的时候回来，温泉水的效果就会消失。</p>
+          <p> </p>
+          <p>请您一定要在有效时间内回来。</p>
+        </body>
+        </html>
+    </Contents>
+    <Selects>
+      <Act href="HACTION_FINISH_DIALOG">结束对话。</Act>
+    </Selects>
+  </HtmlPage>
+
+  <HtmlPage name="quest_refuse_1">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>虽说长点疮听上去好像没什么。但是如果您亲眼看到病人的话，一定会觉得太可怜而看不下去的。</p>
+          <p> </p>
+          <p>请您帮帮我们，就算是救活一个可怜的人。</p>
+          <p> </p>
+          <p>如果您改变了主意，请随时回来找我。拜托了。</p>
+        </body>
+        </html>
+    </Contents>
+    <Selects>
+      <Act href="HACTION_FINISH_DIALOG">结束对话。</Act>
+    </Selects>
+  </HtmlPage>
+
+  <HtmlPage name="select5">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>您在有效时间里回来啦！</p>
+          <p> </p>
+          <p>我就知道[%username]大人您一定会成功的。</p>
+          <p> </p>
+          <p>请您快把温泉水给我！</p>
+        </body>
+        </html>
+    </Contents>
+    <Selects>
+      <Act href="HACTION_CHECK_USER_HAS_QUEST_ITEM">拿出温泉水。</Act>
+    </Selects>
+  </HtmlPage>
+
+  <HtmlPage name="select6">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>您这么快回来又有什么用！</p>
+          <p> </p>
+          <p>您得把温泉水带回来啊！</p>
+          <p> </p>
+          <p>请您快去[%dic:STR_DIC_W_LF2_SZ_G4]把温泉水打回来。</p>
+        </body>
+        </html>
+    </Contents>
+    <Selects>
+      <Act href="HACTION_FINISH_DIALOG">结束对话。</Act>
+    </Selects>
+  </HtmlPage>
+
+  <HtmlPage name="select_quest_reward1">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>顺利地把温泉水带了回来，真是太好了。</p>
+          <p> </p>
+          <p>有了这个的话，长疮的病人应该很快就会好起来。</p>
+          <p> </p>
+          <p>谢谢您帮助我。</p>
+        </body>
+        </html>
+    </Contents>
+  </HtmlPage>
+
+   <HtmlPage name="quest_summary">
+    <Contents cdata="true">
+        <html>
+        <body>
+    <steps>
+               <step><p visible="[%0]"><font color="[%1]">去[%dic:STR_DIC_W_LF2_SZ_G4]的间歇泉打取温泉水</font></p></step>
+               <step><p visible="[%3]"><font color="[%4]">把装着温泉水的保温瓶在限定时间内交给[%dic:STR_DIC_N_Aerope]</font></p></step>
+    </steps>
+          <p><font font_xml="quest_summary">按照阿埃洛佩的拜托，去为长疮的病人打取温泉水吧。</font></p>
+        </body>
+        </html>
+    </Contents>
+  </HtmlPage>
+
+  <HtmlPage name="quest_complete">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>阿埃洛佩抱怨说有病人长了疮，但是却没有药。于是按照她的拜托，打取了温泉水并在限定时间内交给了她。</p>
+        </body>
+        </html>
+    </Contents>
+  </HtmlPage>
+
+  <HtmlPage name="select_acqusitive_quest_desc">
+    <Selects>
+      <Act>新任务：[%questname]</Act>
+    </Selects>
+  </HtmlPage>
+
+  <HtmlPage name="select_progressive_quest_desc">
+    <Selects>
+      <Act>进行中：[%questname]</Act>
+    </Selects>
+  </HtmlPage>
+
+</HtmlPages>

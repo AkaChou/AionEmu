@@ -689,7 +689,7 @@
 ## 8.44 收集步 `collect_progress` 与打包整型步数脱节：交互抢跑、计数残留与采集死锁
 
 - Pattern ID：`COLLECT_PROGRESS_PREMATURE_ADVANCE_DIALOG_DROPPED`。
-- 代表任务：10504「Confiscate the Slate / 没收石板」（ELYOS 60+ 主线使命，交付 NPC 阿斯特拉佩 804706、石板 702671、交付物 182215607，客户端 `collect_progress=3`）；同批同因 10503（计数残留使打包步数变 `(2<<6)|2=130`）、10530/20530（祭坛交互抢跑 `var0=8`）、20504、10506、10507、10527/20527、10528/20528、1373（跳步 `v2` 绕过 `v1`）。
+- 代表任务：10504「Confiscate the Slate / 没收石板」（ELYOS 60+ 主线使命，交付 NPC 阿斯特拉佩 804706、石板 702671、交付物 182215607，客户端 `collect_progress=3`）；同批同因 10503（计数残留使打包步数变 `(2<<6)|2=130`）、10530/20530（祭坛交互抢跑 `var0=8`）、20504、10506、10507、10527/20527、10528/20528。（2026-10-07 勘误：同批 1373 的 `v2(2)` 轴是真端/legacy 权威值——`collect_progress=1` 不是它的判据；本批对 1373 的改动已由 `a279fe6da` 回滚，见 8.54。）
 - 搜索症状：交付 NPC 点击只下发 `questId=0` 通用第 10 页、NPC 头顶任务标记不亮、`//quest set <id> START N` 覆写为纯净步数后对话立刻恢复、背包已有任务道具但任务停在收集步、采集物在后续步骤永久点不动（`can-act` 不通过）。
 - 玩家可见症状：背包已持有任务道具、任务也在收集步，但找交付 NPC 点击只得到通用对话（`SM_DIALOG_WINDOW 玩家=xx targetObj=xx questId=0 下发页=10`）；10503 修复前下发 `SM_QUEST_ACTION 状态=3 步数=130`，GM 覆写为纯净 `2` 后 804705 立刻恢复对白；10504 另表现为先击杀精英怪 236255 进入 s3 后石板 702671 永久无法采集（模式 C 死锁）。
 - 根因：Aion 5.8 客户端用 `quest.xml` 的 `<collect_progress>N`（DDQ 用 `CollectItem` 步骤 N）声明收集交付步，且仅在 `progress == N`（即打包整型步数 `var0 == N`、无高位残留）且持有任务道具时才发起该任务的专属对白（`QUEST_SELECT` → `CHECK_USER_HAS_QUEST_ITEM`）。生产 XML 有三种脱节形态：
@@ -705,7 +705,7 @@
 - 第一检查点：交付 NPC 下发 page 10 时，先取客户端 `collect_progress=N`，再读玩家 `quest_vars` 的打包整型步数——不等于 N（尤其是高位带计数残留）即命中本模式；随后沿收集步核对 drop 步数与 `can-act`/`USE_OBJECT` 的阶段许可。编译期「节点投影满足」不构成反证。
 - 代表测试：`SimpleCollectItemNativeFamilyGateTest#collectingTheObjectClaimsTheInteractionWithoutWritingState`（s1->s2 必须 `var0=2` + `var1=0`、`collecting-step=0`、s2/s3 双向 `can-act`/`USE_OBJECT`、s3 交付条件与事务动作）、`SimpleCollectItemNativeFamilyGateTest#multiColumnRowsRequireEveryColumnsItemsBeforeHandInOpens`、`SimpleCollectItemNativeFamilyGateTest#handInRequiresTheCollectItems`。
 - 验证命令和结果：`mvn test -Dtest=Quest10503ClientDialogAlignmentTest,Quest10504ClientDialogAlignmentTest,Quest10530ClientDialogAlignmentTest,Quest20530ClientDialogAlignmentTest,Quest1373ClientDialogAlignmentTest,QuestCollectProgressAlignmentGateTest` → BUILD SUCCESS（10/10）；`QuestDefinitionCatalogManifestTest` 10/10、`QuestItemSourceContractGateTest` 3/3。客户端实机：用户 2026-09-19 回复「10503 验证成功，提交」与「10504 验证成功」→ 10503/10504 `CLIENT_ACCEPTED`（记录见 `.agents/summary/quest-acceptance/10503-2026-09-19-client-accepted.md`、`10504-2026-09-19-client-accepted.md`）；同批 10507 也已实机验收（用户 2026-09-19「10507 验证成功」→ `.agents/summary/quest-acceptance/10507-2026-09-19-client-accepted.md`），10506 已随其进攻回廊修复单独验收；20504/10527/20527/10528/20528/10530/20530/1373 仍 `PENDING`，未逐任务实机复验。
-- 复用边界：只适用于客户端声明 `collect_progress`（或 DDQ `CollectItem`）的任务；无收集步骤的纯杀怪/纯对话任务不适用。只做四件套中的一项会在另一条路径上复现（例如只放宽 `collecting-step` 而不补后置阶段 `can-act`，交互物仍点不动）。单计数器门控漂移复用 8.41；`SECTION_0` 双语义复用 8.43；进入 `REWARD` 的同次交互响应复用 `REWARD_SELECTION_SAME_INTERACTION_RESPONSE`。
+- 复用边界：只适用于客户端声明 `collect_progress`（或 DDQ `CollectItem`）的任务；无收集步骤的纯杀怪/纯对话任务不适用。只做四件套中的一项会在另一条路径上复现（例如只放宽 `collecting-step` 而不补后置阶段 `can-act`，交互物仍点不动）。单计数器门控漂移复用 8.41；`SECTION_0` 双语义复用 8.43；进入 `REWARD` 的同次交互响应复用 `REWARD_SELECTION_SAME_INTERACTION_RESPONSE`。 `collect_progress` 只声明「客户端在哪个行发起交付对白」，不决定服务端步号轴值本身——轴值一律按真端 `SetProgress` 与 legacy 落盘取证（2026-10-07 1373 纠偏，见 8.54）；取水/itemUseArea 族尤其禁止用 `collect_progress` 反推轴。
 - commit：`7d5bb5317`；根因复盘与同批修复纪要 `.agents/summary/quest-collect-progress-alignment/README.md` 与 `.agents/summary/quest-10503/README.md`。
 
 ## 8.45 引擎外推进 REWARD 的任务缺少领奖态入口页与 packed 投影错位
@@ -842,3 +842,18 @@
 - 验证命令和结果：IDEA MCP——`SimpleCollectItemNativeFamilyGateTest` 19/19、`QuestInteractionObjectContractGateTest` 2/2，均 exit 0；生产 catalog/白名单门禁未在本会话运行（未获构建授权）。用户 2026-10-07 实机验收「实机验证成功，提交」（冷重启 + 旧存档自愈一并复测），验收记录 `.agents/summary/quest-acceptance/14120-2026-10-07-client-accepted.md`。
 - 复用边界：只适用于「中继步页 / 推进动作 / 步号轴」三件事的 native 车道形状；`SimpleUseItem` 族 90 个 `talk_npc` 行仍是同型私编（bit16..17 + 任意动作推进），未修未实机，禁止凭本条直接批量套改；跳过步（`vars<step-1` 零响应）与已推进步重看语义保留 Talk/ItemPlay 口径；采集族 talk 步的 `give_item1/remove_item2` 未消费（仅不可路由 TEST 行 9656 有数据）。
 - commit：`d12e4236e`。
+
+## 8.54 取水/使用道具任务的步号轴被索引推断改坏：任务书步骤整块空白
+
+- Pattern ID：`STEP_AXIS_RETAIL_SETPROGRESS_AUTHORITY`。
+- 代表任务：1373「Water Therapy / 帕诺的特制温泉水」（天族 34+ IMPORTANT；打水道具 182201372 -> 182201373；交付 NPC 203949 阿埃洛佩；客户端 quest_summary 2 行 `[%0]/[%3]`；`quest_script_monster` 的 `Progress(0) itemUseArea` 取水族）；同批同因 1361「Finding Drinking Water / 取得饮用水」（空桶 182201326 -> 水罐 182201327；灌水箱 700173；领奖 Turiel 203943；3 行 `[%0]/[%3]/[%6]`）。
+- 搜索症状：使用任务道具（打水/取水/灌装）推进后任务书「任务说明」只剩描述、步骤行整块空白；`//quest set <id> START <权威值>` 立即恢复、设回推断值立即复现空白；日志 `SM_QUEST_ACTION 步数=` 为推断值而非真端值；同型症状也出现在领奖态（灌满水箱/交付后）。
+- 玩家可见症状：1373 使用保温瓶打水后两行步骤全部消失（2026-10-07 实机报障，trace `任务=1373 状态=3 步数=1`）；1361 灌满水箱进入领奖前后同样空白。
+- 根因：两批「按索引机械推断」的审计批次把真端/legacy 的权威步号轴改坏：① `7d5bb5317`（收集进度批次）按客户端 `collect_progress=1` 把 1373 打水后的 `v2(var0=2)` 与 REWARD 投影 `2` 改成 `v1(1)/reward(1)`——但 `collect_progress` 只声明交付对白行，不是轴值；真端 `FUN_180effb70`（`status==START && step==0` 时 `SetProgress(0x55d, 2)` + 180s 计时器）与 legacy `_1373WaterTherapy`（`qs.setQuestVar(2)`；交付 `checkQuestItems(env, 2, 3, true, 5, 2716)` 的 reward 分支不写 nextStep、落盘 2）双证轴值是 2。② `7a7d27809`（领奖行批次）按「末行索引」把 1361 的 REWARD 投影 `1` 抬到 `2`——真端 `FUN_180f98460` 以 `0x100(0x551, 0, 0)` 推进不带步号、legacy `useQuestObject(env, 1, 1, true, ...)` 落盘 1。③ `7d5bb5317` 给 1373 加的自愈边写成带 source 的 `source=v1 + var0==2 -> 1`，被 `QuestMutationPlanner#matchesSourceNode` 的「source 节点投影全等」语义结构性挡死、从未生效。
+- 修复层：任务 XML。恢复真端/legacy 轴（1373：`v2(2)` + `reward(2)`，全部路由回 v2；1361：`reward(1)`）；自愈边一律无 source（1373：`START/var0=1/持水 -> 2` 与 `REWARD/var0=1 -> 2`；1361：`REWARD/var0=2 -> 1`）。
+- 修改文件：`src/main/resources/aion/data/static_data/quest/definitions/quests/1361.xml`、`1373.xml`；`src/test/java/com/aionemu/gameserver/questEngine/definition/Quest1361ClientDialogAlignmentTest.java`、`Quest1373ClientDialogAlignmentTest.java`、`JournalRewardRowRepairContractTest.java`（1361 移出领奖行批次名单）；证据 `.agents/summary/quest-1361-1373-water-step-axis/DIAGNOSIS.zh-CN.md`。
+- 第一检查点：先用 `//quest set <id> START 0/值A/值B` 实机对照任务书行定位轴值，再取三源双证：真端 `SetProgress(questId, 值)`、槽位注册 `FUN_180cb3070(_,_,questId,3,值,0)` 第 5 参（行 1 `[%3]` 绑定值）、legacy 落盘值；`collect_progress` 与客户端末行索引都不能当判据；自愈边检查 `sourceNode()==null`（带 source 的 enter-world 边一律视为结构性失效）。
+- 代表测试：`Quest1373ClientDialogAlignmentTest#reportsHotSpringWaterWithRewardAndClientFailurePages`（v2/2 轴 + 双无 source 自愈边）、`Quest1361ClientDialogAlignmentTest#keepsTheRetailStepAxisAcrossDrawFillAndReward`（0/1/1 轴 + 打水/灌水箱分支 + `REWARD/2 -> 1` 自愈边）。
+- 验证命令和结果：IDEA MCP（2026-10-07）——`Quest1361ClientDialogAlignmentTest` 1/1、`Quest1373ClientDialogAlignmentTest` 1/1、`JournalRewardRowRepairContractTest` 4/4、`QuestDefinitionCatalogManifestTest` 10/10、`ProductionCatalogWhitelistVerificationTest` 1/1（`PRODUCTION_COMPILE_OK=707`、`FAILURES=0`、`WHITELIST_VIOLATIONS=0`），均 exit 0。客户端实机：用户 2026-10-07 回复「实机验证成功，提交」（覆盖本报障的 1373 与 1361，未限定分支或步骤 → 整任务 `CLIENT_ACCEPTED`，含旧存档 `ENTER_WORLD` 自愈路径；记录见 `.agents/summary/quest-acceptance/1361-1373-2026-10-07-client-accepted.md`）。
+- 复用边界：只适用于「步号轴被推断批次改坏」的任务判定与纠正；对 10503/10504 等 `collect_progress` 确为交付判据之一的任务，轴值仍须由客户端 quest_summary + legacy/真端单独取证后成立，不得反向否定 8.44 的四件套。同族轴值不可互推（1361=1、1373=2 同为 itemUseArea 取水族）；REWARD 面单独残缺复用 `LEGACY_REWARD_STEP_PROJECTION_MISMATCH`；中继步号写高位复用 8.53。
+- commit：`a279fe6da`。
