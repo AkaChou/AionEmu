@@ -5,7 +5,7 @@
 
 本文档记录 AionEmu 声明式 XML 任务系统、状态机与 NPC 交互的实战避坑经验。
 
-> Pattern IDs: `QE-001`–`QE-156`
+> Pattern IDs: `QE-001`–`QE-158`
 > card_status: ACTIVE; existing entries retain their historical evidence boundary
 > scope: production quest XML/compiler, Quest runtime, and Aion 5.8 client/legacy evidence
 > last_reviewed: 2026-10-07
@@ -988,22 +988,29 @@ first_check: 见到“点任务后直接关窗/接不到、动作 20000 后 page
 ## [QE-043] 四十一、任务道具使用区域定义与剧本怪物触发收口 (QUEST_ITEM_USE_ZONE_AND_AMBUSH_CONTRACT)
 <!-- pattern-metadata
 status: CONFIRMED
-scope: 任务道具使用区域判定（ItemTemplate usearea 与 zones_quest.xml）、data_driven_quest.xml 的 ItemPlay 袭击怪物机制与唯一领奖人路由
+scope: 任务道具使用区域判定（ItemTemplate usearea 与 zones_quest.xml）、道具使用区球体几何权威（source_sphere.csv）、data_driven_quest.xml 的 ItemPlay 袭击怪物机制与唯一领奖人路由
 first_seen: 2026-09-19
-last_verified: 2026-09-19
+last_verified: 2026-10-07
 symptom: 到达任务指定地点使用道具时提示「无法在此处使用该物品」(1300143)；使用道具后本应出现的偷袭怪物缺失；领奖对话跳过故事页直接弹领奖框或接取 NPC 提前截胡完成
-root_cause: 1. 道具模板声明了 usearea（如 LF5_ITEMUSEAREA_Q30721），但 zones_quest.xml 中缺失对应 zone 定义，PlayerRestrictions#canUseItem 校验失败拦截；2. data_driven_quest.xml 中声明了 Relative 怪物生成，XML 漏配 spawn-npc-at-player 与对话后的 despawn-npc；3. npc-complete 预览包含 USE_OBJECT(-1) 跳过了 QUEST_SELECT 触发的 DEFAULT_SUCCESS；接取 NPC 被误写进 npc-complete 导致提前截胡
-fix_or_guardrail: 1. 道具 usearea 必须在 zones_quest.xml 中补入，坐标与半径采信 5.8 客户端解包 source_sphere.csv；2. data_driven_quest.xml 的 ItemPlay 袭击怪使用 spawn-npc-at-player 挂载对应 slot，并在后续 talk 或 SET_SUCCEED 中通过 despawn-npc 清理；3. npc-complete 预览仅保留 SELECT_QUEST_REWARD，移除 USE_OBJECT；非交付 NPC 严禁配置 npc-complete
-evidence: src/main/resources/aion/data/static_data/zones/zones_quest.xml; quest/retail/retail-xml-retention.xml 的 quest 30721 行（XML已退役并删除，见git历史）; quest/retail/retail-xml-retention.xml 的 quest 30771 行（XML已退役并删除，见git历史）; src/test/java/com/aionemu/gameserver/questEngine/definition/Quest30721And30771RetailFlowTest.java; .agents/summary/quest-30721/2026-09-19-quest-30721-and-30771-retail-flow-and-ambush-repair.zh-CN.md
-validation: focused-test (Quest30721And30771RetailFlowTest 3/3); production-gate 36/36 (PRODUCTION_COMPILE_OK=6189 / FAILURES=0); XML schema valid
-boundaries: 仅适用于道具自身限制了使用区域（hasAreaRestriction）的任务；无袭击怪物的纯使用道具任务只配 ItemPlay 不需要配怪物槽位
+root_cause: 1. 道具模板声明了 usearea（如 LF5_ITEMUSEAREA_Q30721），但 zones_quest.xml 中缺失对应 zone 定义，PlayerRestrictions#canUseItem 校验失败拦截；2. data_driven_quest.xml 中声明了 Relative 怪物生成，XML 漏配 spawn-npc-at-player 与对话后的 despawn-npc；3. npc-complete 预览包含 USE_OBJECT(-1) 跳过了 QUEST_SELECT 触发的 DEFAULT_SUCCESS；接取 NPC 被误写进 npc-complete 导致提前截胡；4. **注册存在≠几何正确**：已注册的 ITEM_USE 球体若球心/半径仍为旧导出值（13403 四区 r=10 且球心贴在贝里特拉和平态物件坐标上、距实际侦测点 32–34m），isInsideZone 同样失败（2026-10-07 修订）
+fix_or_guardrail: 1. 道具 usearea 必须在 zones_quest.xml 中补入，坐标与半径采信 source_sphere.csv（权威取真端 Map/XML/Subzones 副本；本仓 13403 四区即旧导出错位案例）；2. data_driven_quest.xml 的 ItemPlay 袭击怪使用 spawn-npc-at-player 挂载对应 slot，并在后续 talk 或 SET_SUCCEED 中通过 despawn-npc 清理；3. npc-complete 预览仅保留 SELECT_QUEST_REWARD，移除 USE_OBJECT；非交付 NPC 严禁配置 npc-complete
+evidence: src/main/resources/aion/data/static_data/zones/zones_quest.xml; src/main/resources/aion/data/static_data/zones/zones_quest.xml:86（13403 四区真端球值）; quest/retail/retail-xml-retention.xml 的 quest 30721 行（XML已退役并删除，见git历史）; quest/retail/retail-xml-retention.xml 的 quest 30771 行（XML已退役并删除，见git历史）; src/test/java/com/aionemu/gameserver/questEngine/definition/Quest30721And30771RetailFlowTest.java; .agents/summary/quest-30721/2026-09-19-quest-30721-and-30771-retail-flow-and-ambush-repair.zh-CN.md; commit c2f772ea9（13403 四区几何修复）; .agents/summary/quest-13403-subpage-echo/DIAGNOSIS.zh-CN.md（续报六）
+validation: focused-test (Quest30721And30771RetailFlowTest 3/3); production-gate 36/36 (PRODUCTION_COMPILE_OK=6189 / FAILURES=0); XML schema valid；2026-10-07 修订：static（XML 静态检查）+ runtime（用户实机确认原点位使用探测器成功）
+boundaries: 仅适用于道具自身限制了使用区域（hasAreaRestriction）的任务；无袭击怪物的纯使用道具任务只配 ItemPlay 不需要配怪物槽位；球心/半径对拍目前只覆盖 13403 四区，其余 ITEM_USE 区（含 30721/30771）存量值未逐区复核
 superseded_by: none
-see_also: [QE-042], [QE-031]
-first_check: 道具无法使用时先查 item_template 的 usearea 是否在 zones_*.xml 中注册；领奖直接弹窗时查 npc-complete 的 preview actions 是否包含 USE_OBJECT
+see_also: [QE-042], [QE-031], [QE-109], [QE-130], [QE-157]
+first_check: 道具无法使用时先查 item_template 的 usearea 是否在 zones_*.xml 中注册；已注册时继续对拍球心/半径与真端 source_sphere.csv（旧导出球心可能贴在别处物件坐标上；13403 四区曾偏 32–34m）；领奖直接弹窗时查 npc-complete 的 preview actions 是否包含 USE_OBJECT
+keywords: 无法在此处使用该物品、无法使用道具、1300143、usearea、ITEM_USE、zones_quest.xml、source_sphere.csv、球心错位、半径、isInsideZone、13403、182215794、LF1A_ITEMUSEAREA_Q13403A、探测器无法使用、QUEST_ITEM_USE_ZONE_AND_AMBUSH_CONTRACT
 -->
 
 - **判定规则**：`item_template` 的 `usearea` 必须在 `zones_quest.xml` 中以 `zone_type="ITEM_USE"` 形式存在，否则 `PlayerRestrictions` 会返回 1300143 拦截；`data_driven_quest.xml` 中带 `Relative` 的剧情袭击怪需在道具使用时刷出并在后续交互中销毁；汇报故事页依赖 `QUEST_SELECT`，`npc-complete` 预览不得包含 `USE_OBJECT` 以免故事页被跳过。
 - **代表案例**：30721/30771（Cygnea/Enshar 提亚马特城堡残骸任务；真端 `source_sphere.csv` 分别定义 `LF5_ITEMUSEAREA_Q30721` 与 `DF5_ITEMUSEAREA_Q30771`；使用镇静剂/恢复剂后偷袭怪为 `236654` 德拉坎）。
+- **修订 2026-10-07（13403 四区球心错位：注册存在 ≠ 几何正确）**：
+  - trigger：13403 天族站在隐形侦测点使用入侵感测器（182215794）被拒（1300143），而 LF1A/DF1A × Q13403A/B 四区均已在 `zones_quest.xml` 注册。
+  - root_cause：四区旧数据 r=10、球心为旧导出值（贴在贝里特拉 PEACE 物件坐标上，与 `src/main/resources/aion/data/static_data/spawns/Beritra/210030000_Verteron.xml` 里 702548 的坐标逐位相同），距实际侦测点（805263/805264）32–34m ⇒ `MapRegion.isInsideZone` 失败 ⇒ 拒用。
+  - change：`zones_quest.xml:86-96` 四区球心/半径替换为真端 `source_sphere.csv` 值（r=59.37/55.90/48.34/51.29；实机站位 3D 距离 38.95<59.37、36.26<55.90）；`zone_type` 维持 ITEM_USE。
+  - evidence：`src/main/resources/aion/data/static_data/zones/zones_quest.xml:86`；`commit c2f772ea9`；`.agents/summary/quest-13403-subpage-echo/DIAGNOSIS.zh-CN.md`（续报六）。
+  - validation：static（XML 静态检查）+ runtime（2026-10-07 用户实机确认：原点位使用探测器成功）。
 
 ## [QE-044] 四十二、收集步变量提前推进导致客户端交付对白脱节 (COLLECT_PROGRESS_PREMATURE_ADVANCE_DIALOG_DROPPED)
 <!-- pattern-metadata
@@ -3609,3 +3616,27 @@ keywords: 变身被攻击、变鸟被打、鹦鹉、伪装、免仇恨、中性�
 - **判定规则**：变身/伪装的仇恨中立性 = 技能数据的 `neutral_to_npc`（真端 `effectN_reserved14`）；对真端无中立位的技能（如 5.8 的 8197/267），变身期间照常被仇恨即真端语义，是否偏离属产品裁定而非 bug。
 - **安全网**：对拍脚本 `.agents/summary/quest-14114-parrot-aggro/map-neutral-flag.py`（compact `neutral_to_npc` ↔ 真端 `reserved14` 全量对账，284/0）；机制锚点 `PolymorphEffect.startEffect` 的 `setAdminNeutral(1)` 与 `AggroEventHandler:47` 的 admin-neutral 门。
 - **反漂移**：别把旧版（Aion-Unique 时代）的 `neutral_to_npc="true"` 当「迁移丢失」静默补回（真端 5.8 无此位）；别在任务 XML/AI 面加免仇恨补丁绕过技能数据；别把本裁定外推到 Deform 的 3 个确有中立位的技能（21605/21920/22749）。
+
+## [QE-157] 一百五十七、任务侦测点「光圈」= 贝里特拉和平态世界标记（`WorldRaid_SP_Object` npc 702548）：总开关 `gameserver.beritra.enable` 关闭 ⇒ 全服 PEACE 物件不刷、启动日志无「已加载 N 个贝里特拉位置」行（13403 两处侦测点；2026-09-21 误关 → 2026-10-07 恢复） (BERITRA_PEACE_MARKER_GATE)
+
+<!-- pattern-metadata
+status: CONFIRMED
+scope: 贝里特拉入侵活动的配置门控与服务生命周期；任务侦测点地面光圈（WorldRaid_SP_Object 702548，客户端模型 NPC/level_object/World_raid 的 PEACE 常驻物件）；覆盖 spawns/Beritra/* 全量 55 个 location
+first_seen: 2026-10-07
+last_verified: 2026-10-07
+symptom: 任务的「探测/侦测点」地面光圈（世界标记）消失——XML 时代存在、现网没有（13403 天/魔两阵营侦测点）；常被误判为任务脚本或特效缺失
+root_cause: 光圈不是任务物件，而是贝里特拉入侵系统 PEACE 状态在各入侵点常驻刷出的世界标记：WorldRaid_SP_Object（npc_id=702548，客户端模型 NPC/level_object/World_raid，ai=noaction）。gameserver.beritra.enable=false 时 BeritraService.initBeritraLocations() 的配置门（:66-67）不加载任何位置、VisibleObjectSpawner.spawnBeritraNpc 第二道门（:422-423）同源 ⇒ 全部 PEACE 物件不刷，启动日志「已加载 N 个贝里特拉位置」随之消失（该行只在此路径打印，是排查第一入口）。本仓 2026-09-21 提交 216f970f8c 把开关由 true 改为 false，全服光圈静默消失 16 天（无报错）。
+fix_or_guardrail: 1. 排查入口固定：先看 custom.properties 的 gameserver.beritra.enable 与启动日志有无「已加载 N 个贝里特拉位置」；2. 开关关闭是合法配置态（活跃活动停用），光圈消失属预期副作用，是否恢复为产品裁定；3. 启用前核对覆盖度：beritra_invasion 位置表 55 个 location 与 spawns/Beritra 下 55 个 beritra_spawn id 一一对应（spawn() 无空表 NPE 风险）；4. 开关恢复后须冷重启（启动期刷怪）；入侵窗口内光圈被入侵物件替换、结束后回归属预期（Verteron 每日 11/17/21 点，时长 1h）
+evidence: src/main/resources/aion/config/main/custom.properties:79（gameserver.beritra.enable）; src/main/java/com/aionemu/gameserver/configs/main/CustomConfig.java:350（@Property，defaultValue=true）; src/main/java/com/aionemu/gameserver/services/BeritraService.java:66（initBeritraLocations 门，另见同文件 :94 schedule 同门）; src/main/java/com/aionemu/gameserver/spawnengine/VisibleObjectSpawner.java:422（spawnBeritraNpc 第二道门）; src/main/resources/aion/data/static_data/spawns/Beritra/210030000_Verteron.xml:22（702548 PEACE 物件，另见同文件 :40、:58）; commit 216f970f8c（2026-09-21 关闭）; commit c2f772ea9（2026-10-07 恢复 + 55/55 覆盖度核对）; log/console.log（16:08 重启后「已加载 55 个贝里特拉位置」）; .agents/summary/quest-13403-subpage-echo/DIAGNOSIS.zh-CN.md（续报六）
+validation: static（开关/门控调用链核对 + 55↔55 覆盖度）；runtime（2026-10-07 冷重启后启动日志「已加载 55 个贝里特拉位置」实见；用户实机确认两处侦测点光圈恢复可见）
+superseded_by: none
+boundaries: ① 只核对 Verteron/Altgard 两处侦测点光圈，其余 52 个 location 未逐一目视（服务端加载已证、客户端渲染未逐一走查）；② 光圈可见性依赖客户端模型 NPC/level_object/World_raid；③ 入侵窗口内光圈被入侵物件替换属预期，不按缺陷处理；④ 其他活动（moltenus/agent/anoha 等）开关是否也有类似「世界标记」副作用未逐一核对
+see_also: [QE-043], [QE-150], [QE-152]
+first_check: 「任务点/侦测点光圈消失」先答：① gameserver.beritra.enable 现值？② 启动日志有没有「已加载 N 个贝里特拉位置」？③ 开关何时被谁改的（git log -S beritra.enable）？④ 恢复影响面：55 个 location 与 spawns/Beritra 覆盖度是否仍一一对应？⑤ 是否在入侵窗口内（替换属预期）？
+keywords: 光圈、光圈消失、世界标记、地面特效、侦测点、探测点、WorldRaid_SP_Object、World_raid、702548、贝里特拉、Beritra、PEACE、和平态、入侵、gameserver.beritra.enable、已加载 N 个贝里特拉位置、13403、BERITRA_PEACE_MARKER_GATE
+-->
+
+- **判定规则**：任务侦测点的「光圈」是贝里特拉 PEACE 常驻世界标记（702548），其存在由 `gameserver.beritra.enable` 总门控；开关关闭时全服光圈静默消失（无报错、无日志行），排查第一入口 = 启动日志有无「已加载 N 个贝里特拉位置」。
+- **代表案例**：13403/23403 侦测点光圈（Verteron/Altgard）；2026-09-21 提交 216f970f8c 误关开关 → 16 天后（2026-10-07）恢复（提交 c2f772ea9）。
+- **安全网**：启用前做 55↔55 覆盖度核对（beritra_invasion 位置表 location ↔ spawns/Beritra 下 beritra_spawn id）；关闭态只跳过不报错，排查时按配置态而非加载失败处理。
+- **反漂移**：别把光圈缺失当任务脚本/特效 bug 去改 quest 数据；别在开关 false 时按「加载失败」排查（静默跳过是预期态）；恢复后须冷重启，并注意入侵窗口内光圈被替换的预期形。
