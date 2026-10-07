@@ -31,28 +31,37 @@
     <node label="v2" status="START">
       <var name="var0" value="2"/>
     </node>
+    <!-- QE-054：装第二瓶水（use-item）后沿用 legacy/真端的 packed step 2——legacy
+         `useQuestItem(env, item, 2, 2, true, 182206707, 1)` 的 reward 分支不写 nextStep，落盘 2；
+         真端 FUN_180f03f20 在 status==START && step==2 时以 `0x100(0x2afe, 0, 0)` 推进。
+         领奖行批次（7a7d27809）曾按客户端末行索引抬到 3，客户端任务书步骤落空。
+         QE-054: after filling the second bottle the packed step stays the legacy/retail 2: the
+         reward branch of legacy useQuestItem(2, 2, true) does not write nextStep; retail
+         FUN_180f03f20 advances via 0x100(0x2afe, 0, 0) on START/step==2. The reward-row batch
+         (7a7d27809) raised it to the client last-row index 3, which matches no journal row. -->
     <node label="reward" status="REWARD">
-      <var name="var0" value="3"/>
+      <var name="var0" value="2"/>
     </node>
     <node label="complete" status="COMPLETE">
       <var name="var0" value="2"/>
     </node>
   </nodes>
   <transitions>
-    <!-- QE-051 领奖行合同：客户端 quest_q11006.html 的 quest_summary 共 4 行，末行是领奖行
-         （STR_DIC_N_Clodia，对应该任务的领奖 NPC）；旧投影停在 2，进入世界时纠正为 3 并下发状态包，与镜像 21006 对照。
-         Reward row contract (QE-051): the last of the 4 quest_q11006 journal rows is the reward row
-         (STR_DIC_N_Clodia, the reward NPC of this quest); saves persisted at 2 are repaired to 3 on enter-world, matching mirror 21006. -->
+    <!-- 无 source 自愈边：领奖行批次（7a7d27809）把领奖投影误抬到末行索引 3，并让该边把
+         按 legacy/真端正确落盘的存档从 2 改成 3；现改为反向归一（REWARD/3 → 2）。
+         Source-less healing edge: the reward-row batch (7a7d27809) raised the reward projection
+         to the last-row index 3 and made this edge rewrite correct legacy/retail saves from 2
+         to 3; it is reversed here (REWARD/3 → 2). -->
     <transition target="reward">
       <event>
         <enter-world/>
       </event>
       <conditions>
         <status-is status="REWARD"/>
-        <variable-is field="var0" value="2"/>
+        <variable-is field="var0" value="3"/>
       </conditions>
       <actions>
-        <set-variable field="var0" value="3"/>
+        <set-variable field="var0" value="2"/>
       </actions>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>

@@ -51,17 +51,58 @@
     <node label="s5" status="START">
       <var name="var0" value="5" />
     </node>
-    <node label="s6" status="START">
-      <var name="var0" value="6" />
-    </node>
+    <!-- QE-054：扔项链（use-item）后 = 真端 REWARD 且轴保持 5——真端 FUN_180f00820 在
+         status==START && step==5 时以 `0x100(0x10f2, 0, 0)` 推进；轴 5 由选向导的
+         `0x110(0x10f2, 4, 5, ...)`（FUN_180fb8390/FUN_180fb84d0）显式写入。
+         错误批次曾写成推进到 6、汇报后再抬到 7，两处都非真端值。
+         QE-054: throwing the necklace (use-item) enters REWARD with the axis kept at 5: retail
+         FUN_180f00820 advances via 0x100(0x10f2, 0, 0) on START/step==5, and step 5 itself is
+         written explicitly by 0x110(0x10f2, 4, 5, ...) in FUN_180fb8390/FUN_180fb84d0. The faulty
+         batch advanced to 6 and later raised to 7 — neither is the retail value. -->
     <node label="reward" status="REWARD">
-      <var name="var0" value="7" />
+      <var name="var0" value="5" />
     </node>
     <node label="complete" status="COMPLETE">
       <var name="var0" value="0" />
     </node>
   </nodes>
   <transitions>
+    <!-- 无 source 自愈边：错误轴（caf547879 批次）写坏的存档在登录时归一为权威值——
+         REWARD/var0=7 归一为 5；START/var0=6（扔过项链的中间态）回到 s5。
+         Source-less healing edges: saves persisted under the wrong axis (the caf547879 batch)
+         normalize to the authoritative value on enter-world — REWARD/var0=7 to 5; START/var0=6
+         (mid-state after the throw) back to s5. -->
+    <transition target="reward">
+      <event>
+        <enter-world/>
+      </event>
+      <conditions>
+        <status-is status="REWARD"/>
+        <variable-is field="var0" value="7"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="5"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
+    <transition target="s5">
+      <event>
+        <enter-world/>
+      </event>
+      <conditions>
+        <status-is status="START"/>
+        <variable-is field="var0" value="6"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="5"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+
     <!-- 接取：百夫长乌拉康 204391 -->
     <dialog type="NPC_START" npc-id="204391" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT_NONE" />
 
@@ -356,8 +397,10 @@
       </after-commit>
     </transition>
 
-    <!-- 步骤 5：在熔岩区使用被诅咒的项链 182215326 销毁 -->
-    <transition source="s5" target="s6">
+    <!-- 步骤 5：在熔岩区使用被诅咒的项链 182215326 销毁 → 直接进入领奖态（真端 0x100 推进、轴保持 5）。
+         Step 5: throwing the cursed necklace into the lava enters REWARD directly (retail 0x100
+         advance keeps the axis at 5). -->
+    <transition source="s5" target="reward">
       <event>
         <use-item item-id="182215326" />
       </event>
@@ -366,42 +409,13 @@
       </conditions>
       <actions>
         <remove-item item-id="182215326" count="1" />
-        <set-variable field="var0" value="6" />
-      </actions>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY" />
-      </after-commit>
-    </transition>
-
-    <!-- 步骤 6：向甘达尔彭 790020 汇报完成 -->
-    <transition source="s6" target="s6">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="790020" action="QUEST_SELECT" />
-      </event>
-      <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS" />
-      </after-commit>
-    </transition>
-    <transition source="s6" target="reward">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="790020" action="SELECT_QUEST_REWARD" />
-      </event>
-      <actions>
-        <set-variable field="var0" value="7" />
       </actions>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH" />
-        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1" />
       </after-commit>
     </transition>
-    <transition source="s6" target="s6">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="790020" action="FINISH_DIALOG" />
-      </event>
-      <after-commit>
-        <close-dialog />
-      </after-commit>
-    </transition>
+
+    <!-- 步骤 6：向甘达尔彭 790020 汇报领奖（REWARD 态对话在奖励节点处理；扔项链直接进入 REWARD）。 -->
 
     <!-- 奖励节点 -->
     <transition source="reward" target="reward">

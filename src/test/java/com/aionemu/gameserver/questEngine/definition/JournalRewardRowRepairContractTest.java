@@ -159,7 +159,17 @@ class JournalRewardRowRepairContractTest {
 		new Contract(4941, 1, 0),
 		new Contract(4943, 4, 0),
 		new Contract(11001, 3, 0),
-		new Contract(11006, 3, 2),
+		/* 11006 移出本批（2026-10-07 全族审计 + 真端/legacy 取证）：装第二瓶水后的权威 packed step 是
+		 * legacy/真端的 2（useQuestItem(env, item, 2, 2, true, ...) 的 reward 分支不写 nextStep；
+		 * 真端 FUN_180f03f20 在 START/step==2 时以 0x100(0x2afe, 0, 0) 推进），不是末行索引 3；
+		 * 误抬为 3 会让客户端任务书步骤整块空白（与 1361 同型）。基线与反向自愈边由
+		 * Quest11006ClientDialogAlignmentTest 锁定（reward 投影 2、REWARD/3 -> 2）。
+		 * 11006 left this batch (2026-10-07 family audit + retail/legacy evidence): the authoritative
+		 * packed step after the second fill is the legacy/retail 2 (the reward branch of
+		 * useQuestItem(item, 2, 2, true) does not write nextStep; retail FUN_180f03f20 advances via
+		 * 0x100(0x2afe, 0, 0) on START/step==2), not the last-row index 3, which blanks the client
+		 * journal steps (same shape as 1361). Its baseline is owned by
+		 * Quest11006ClientDialogAlignmentTest (reward projection 2, healing edge REWARD/3 -> 2). */
 		new Contract(11008, 1, 0),
 		new Contract(11009, 3, 0),
 		new Contract(11026, 1, 0),
@@ -208,7 +218,18 @@ class JournalRewardRowRepairContractTest {
 		new Contract(21114, 5, 4),
 		new Contract(21296, 1, 0),
 		new Contract(21460, 1, 0),
-		new Contract(24021, 5, 4),
+		/* 24021 移出本批（2026-10-07 全族审计 + 真端/legacy 取证）：撒 24021c（use-item）后的权威
+		 * packed step 是 legacy/真端的 4（useQuestItem(env, item, 4, 4, true, 88) 的 reward 分支不写
+		 * nextStep；真端选中 10003=SETPRO4 的 FUN_180faea90 显式 SetProgress(0x5dd5, 4)，随后
+		 * FUN_180f00500 以 0x100(0x5dd5, 0, 0) 推进），不是末行索引 5；误抬为 5 会让客户端任务书
+		 * 步骤整块空白（与 1361 同型）。基线与反向自愈边由 Quest24021ClientDialogAlignmentTest 锁定
+		 * （reward 投影 4、REWARD/5 -> 4）。
+		 * 24021 left this batch (2026-10-07 family audit + retail/legacy evidence): the authoritative
+		 * packed step after spreading 24021c is the legacy/retail 4 (the reward branch of
+		 * useQuestItem(item, 4, 4, true, 88) does not write nextStep; retail FUN_180faea90 writes
+		 * SetProgress(0x5dd5, 4) explicitly for option 10003=SETPRO4, then FUN_180f00500 advances via
+		 * 0x100(0x5dd5, 0, 0)), not the last-row index 5. Its baseline is owned by
+		 * Quest24021ClientDialogAlignmentTest (reward projection 4, healing edge REWARD/5 -> 4). */
 		new Contract(24022, 8, 7),
 		new Contract(24023, 4, 3),
 		new Contract(24024, 5, 4),

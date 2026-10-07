@@ -33,14 +33,42 @@
     <node label="v1" status="START">
       <var name="var0" value="1"/>
     </node>
+    <!-- QE-054：扔戒指（use-item）后沿用 legacy/真端的 packed step 1——legacy
+         `useQuestItem(env, item, 1, 2, true, 0, 0, 0)` 的 reward 分支不写 nextStep，落盘 1；
+         真端 FUN_180f03fc0 在 status==START && step==1 时以 `0x100(0x541, 0, 0)` 推进、不带步号
+         （Kreon 对话的 FUN_180f7d810 `SetProgress(0x541, 1)` 才是轴 1 的写入点）。
+         迁移期（0ab7e4db8 起）曾按客户端末行索引写成 2，交付前任务书步骤整块落空。
+         QE-054: after the ring is thrown (use-item) the packed step stays the legacy/retail 1: the
+         reward branch of legacy useQuestItem(1, 2, true) does not write nextStep; retail
+         FUN_180f03fc0 advances via 0x100(0x541, 0, 0) on START/step==1 (the Kreon dialog handler
+         FUN_180f7d810 writes the axis-1 SetProgress). The migration (since 0ab7e4db8) raised it to
+         the client last-row index 2, which matches no journal row. -->
     <node label="reward" status="REWARD">
-      <var name="var0" value="2"/>
+      <var name="var0" value="1"/>
     </node>
     <node label="complete" status="COMPLETE">
       <var name="var0" value="2"/>
     </node>
   </nodes>
   <transitions>
+    <!-- 无 source 自愈边：迁移期按末行索引写错的存档（REWARD/var0=2）在登录时归一为 1。
+         Source-less healing edge: saves persisted at REWARD/var0=2 by the last-row-index writing
+         are normalized to 1 on enter-world. -->
+    <transition target="reward">
+      <event>
+        <enter-world/>
+      </event>
+      <conditions>
+        <status-is status="REWARD"/>
+        <variable-is field="var0" value="2"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
     <transition source="unaccepted" target="unaccepted">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="204006" action="QUEST_SELECT"/>
