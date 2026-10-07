@@ -36,9 +36,9 @@ class Quest1926And2938ClientDialogAlignmentTest {
 			definition.metadata().questWorkItems());
 		assertNode(definition, "unaccepted", QuestStatus.NONE, Map.of("var0", 0));
 		assertNode(definition, "started", QuestStatus.START, Map.of("var0", 0));
-		// QE-051：reward 投影 = 客户端任务书领奖行（quest_q1926/quest_q2938 两行，槽位 %0/%3）。
-		// QE-051: the reward projection follows the client journal reward row (two rows, slots %0/%3).
-		assertNode(definition, "reward", QuestStatus.REWARD, Map.of("var0", 1));
+		// QE-045/QE-054：真端与 legacy handler 进入 REWARD 时保持 packed step 0（实机证实抬到 1 任务书步骤整块空白）。
+		// QE-045/QE-054: retail and legacy handlers keep packed step 0 on REWARD; step 1 blanks the client journal.
+		assertNode(definition, "reward", QuestStatus.REWARD, Map.of("var0", 0));
 		assertNode(definition, "complete", QuestStatus.COMPLETE, Map.of("var0", 0));
 
 		QuestTransition levelUp = transition(definition, "unaccepted", new QuestEvent.LevelUp());
@@ -53,8 +53,8 @@ class Quest1926And2938ClientDialogAlignmentTest {
 		assertEquals("reward", legacyRewardRecovery.targetNode());
 		assertEquals(List.of(
 			new QuestCondition.StatusIs(QuestStatus.REWARD),
-			new QuestCondition.QuestVariableIs("var0", 0)), legacyRewardRecovery.conditions());
-		assertEquals(List.of(new QuestAction.SetVariable("var0", 1)), legacyRewardRecovery.actions());
+			new QuestCondition.QuestVariableIs("var0", 1)), legacyRewardRecovery.conditions());
+		assertEquals(List.of(new QuestAction.SetVariable("var0", 0)), legacyRewardRecovery.actions());
 		assertEquals(List.of(new AfterCommitAction.SyncQuestState(
 			QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH)), legacyRewardRecovery.afterCommit());
 		assertNull(legacyRewardRecovery.priority());
@@ -70,7 +70,7 @@ class Quest1926And2938ClientDialogAlignmentTest {
 		assertEquals(List.of(new QuestAction.GiveItem(workItemId, 1)), handoff.actions());
 		assertEquals(List.of(
 			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
-			new AfterCommitAction.ShowQuestDialog(QuestDialogPage.SELECT1_2.id())), handoff.afterCommit());
+			new AfterCommitAction.CloseDialog()), handoff.afterCommit());
 		assertNull(handoff.priority());
 
 		assertPage(definition, "reward", secondNpcId, QuestDialogAction.QUEST_SELECT,

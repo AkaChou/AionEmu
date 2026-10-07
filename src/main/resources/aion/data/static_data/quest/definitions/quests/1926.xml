@@ -25,7 +25,7 @@
       <var name="var0" value="0"/>
     </node>
     <node label="reward" status="REWARD">
-      <var name="var0" value="1"/>
+      <var name="var0" value="0"/>
     </node>
     <node label="complete" status="COMPLETE">
       <var name="var0" value="0"/>
@@ -43,23 +43,19 @@
         <sync-quest-state mode="VISIBILITY_REFRESH"/>
       </after-commit>
     </transition>
-    <!-- QE-051 领奖行：客户端 quest_q1926.html 只有 2 行（行 0 目标/交付、行 1 与 Latri 对话）；
-         旧 reward 投影停在 0，所以领奖态仍渲染行 0。证据：客户端行 1 = 和 STR_DIC_N_Latri 对话；legacy `_1926Secret_Library_Access` 在 203894 talk 处 setStatus(REWARD)，REWARD 态在 203894 开 10002 -> 5。
-         因此 reward 投影固定为领奖行 1，并补 REWARD/var0=0 的 enter-world 自愈边（旧存档旧值
-         只会来自旧投影，语义无歧义）。
-         Reward-row contract (QE-051): the second client journal row talks to Latri(203894) and the
-         legacy handler enters REWARD on that same NPC, so the reward projection is 1 and stale
-         REWARD/var0=0 saves are healed on enter-world. -->
+    <!-- QE-045/QE-054：真端与 legacy handler 进入 REWARD 时保持 packed step var0=0。
+         实机实测证实（2026-10-07）：若投影为 1，客户端任务书步骤整块空白（因客户端领奖态累计超出范围）；
+         恢复 var0=0 投影，并补 REWARD/var0=1 -> 0 自愈边纠正错位存档。 -->
     <transition target="reward">
       <event>
         <enter-world/>
       </event>
       <conditions>
         <status-is status="REWARD"/>
-        <variable-is field="var0" value="0"/>
+        <variable-is field="var0" value="1"/>
       </conditions>
       <actions>
-        <set-variable field="var0" value="1"/>
+        <set-variable field="var0" value="0"/>
       </actions>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
@@ -71,7 +67,7 @@
       </event>
       <conditions>
         <status-is status="REWARD"/>
-        <variable-is field="var0" value="1"/>
+        <variable-is field="var0" value="0"/>
       </conditions>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
@@ -93,6 +89,8 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT1_1"/>
       </after-commit>
     </transition>
+    <!-- 拉比怖托斯递交推荐信并结束对话：真端 FUN_180caf150 在 0x280f(SET_SUCCEED) 执行 0x5d8 关窗，
+         不弹 SELECT1_2 拒信页（多余发页会导致客户端出现 2 个“结束对话”）。 -->
     <transition source="started" target="reward">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="203701" action="SET_SUCCEED"/>
@@ -102,7 +100,7 @@
       </actions>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT1_2"/>
+        <close-dialog/>
       </after-commit>
     </transition>
     <transition source="reward" target="reward">

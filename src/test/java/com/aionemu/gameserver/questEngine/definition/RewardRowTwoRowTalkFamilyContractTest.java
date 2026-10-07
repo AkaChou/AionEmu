@@ -46,11 +46,9 @@ class RewardRowTwoRowTalkFamilyContractTest {
 	private static final int REWARD_ROW = 1;
 	private static final int STALE_ROW = 0;
 
-	/* 批次 13 收口的 6 个任务；keepsLegacyEntryRoute 表示是否保留迁移期的 REWARD/var0=1 入口边。 */
-	/* The six quests closed by batch 13; keepsLegacyEntryRoute marks the migrated REWARD/var0=1 entry route. */
+	/* 批次 13 收口的 4 个任务；keepsLegacyEntryRoute 表示是否保留迁移期的 REWARD/var0=1 入口边。 */
+	/* The four quests closed by batch 13; keepsLegacyEntryRoute marks the migrated REWARD/var0=1 entry route. */
 	private static final List<Contract> CONTRACTS = List.of(
-		new Contract(1926, 203894, true),
-		new Contract(2938, 204267, true),
 		new Contract(39003, 800504, false),
 		new Contract(49003, 800505, false),
 		new Contract(80989, 836196, false),
@@ -58,8 +56,9 @@ class RewardRowTwoRowTalkFamilyContractTest {
 	);
 
 	/* QE-045 锁的同形姊妹任务：reward 投影必须停在 legacy packed step 0，本批不得改动。 */
+	/* 1926/2938 实机实测（2026-10-07 用户报障+截图）：抬到 var0=1 会导致客户端任务书步骤整块空白；退回 legacy packed step 0 锁定。 */
 	/* QE-045 locked same-shape siblings: the reward projection must stay at the legacy packed step 0. */
-	private static final List<Integer> QE045_LOCKED_SIBLINGS = List.of(13965, 23965, 15674, 25674);
+	private static final List<Integer> QE045_LOCKED_SIBLINGS = List.of(1926, 2938, 13965, 23965, 15674, 25674);
 
 	@Test
 	void rewardRowIsTheSecondClientRow() throws Exception {
