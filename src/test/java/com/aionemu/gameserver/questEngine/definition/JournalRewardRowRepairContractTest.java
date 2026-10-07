@@ -51,10 +51,15 @@ class JournalRewardRowRepairContractTest {
 		/* QE-054 批次收口（2026-10-07 全量审计）：以下 5 行原属第三批领奖行修复，任务定义已由
 		 * 真端表车道合成（retention 清单 RETAIL_TABLE 行），无 XML 即无自愈边结构；旧 legacy 取证
 		 * 见 .agents/summary/quest-step-axis-fullscan/。领奖投影口径由表车道门承担。
+		 * 遗留问题 A 复核（2026-10-07，.agents/summary/quest-residuals-dabc/A-triage.zh-CN.md）：
+		 * 原生投影 = 表结构中继数/步数（15613=6、25023=3、25606=8、80020=3、80021=3），与退役壳
+		 * XML 及批次值一致，不属 QE-054 抬行模式——无需修复，A 组关闭。
 		 * Five more rows joined the retail-driven list with the QE-054 batch close-out (2026-10-07):
 		 * their definitions are synthesized by the retail table lane (RETAIL_TABLE retention rows),
 		 * so no XML and structurally no repair edge; reward-projection caliber is owned by the
-		 * native-lane gates. */
+		 * native-lane gates. Residual-A review (2026-10-07, see the A-triage doc): the native
+		 * projection equals the table relay/step counts (15613=6, 25023=3, 25606=8, 80020=3,
+		 * 80021=3) and matches both the retired shell XML and the batch values; no lift defect. */
 		15613, 25023, 25606, 80020, 80021);
 
 	private static final List<Contract> CONTRACTS = List.of(

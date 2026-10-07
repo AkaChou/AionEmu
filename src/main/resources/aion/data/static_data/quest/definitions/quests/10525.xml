@@ -64,30 +64,31 @@
       <var name="var0" value="6"/>
     </node>
     <node label="reward" status="REWARD">
-      <var name="var0" value="7"/>
+      <var name="var0" value="6"/>
     </node>
     <node label="complete" status="COMPLETE"/>
   </nodes>
   <transitions>
-    <!-- 领奖行合同：客户端任务书行索引 = SECTION_0(var0)。quest_q10525.html 的 quest_summary 有 8 行（0..7），
-         第 6 行是“在巨大永恒之塔碎片前使用 quest_10525d”、第 7 行才是“和代理人维达对话”（领奖行）；
-         旧投影只到 6，第 7 行没有任何状态可指向。
-         Reward row contract: the client journal row index is SECTION_0 (var0); quest_q10525 has 8 rows and
-         row 7 is the "talk to agent Vida" reward row, which the previous projection (6) could never reach. -->
-    <!-- 旧存档修复：2026-09-21 之前的错误投影把领奖态落盘为 REWARD/var0=6，
-         进入世界时纠正为 7 并下发状态包，避免旧存档因 reward 节点源匹配失败而无法领奖。
-         Legacy save repair: saves persisted as REWARD/var0=6 by the earlier projection are rewritten on
-         enter-world so the reward routes match again. -->
+    <!-- 领奖态轴口径（QE-054）：真端 0x100 状态推进不写轴，使用工作道具后轴保持玩法末值 6
+         （legacy onItemUseEvent 只 setStatus(REWARD) 不写 var0；真端 SetProgress(10525) 仅写 1/2/3/6，
+         不含末行索引 7）。REWARD 态的领奖行由客户端按自身行门槛显示，投影抬到 7 会让任务书步骤空白。
+         Reward-axis caliber (QE-054): the retail 0x100 status advance keeps the play axis, so after the
+         work item the axis stays 6 (legacy only calls setStatus(REWARD); retail SetProgress(10525) writes
+         1/2/3/6 and never the final row 7). The client derives the report row from its own threshold at
+         REWARD; projecting row 7 blanks the journal. -->
+    <!-- 旧存档修复：2026-09-21 起的错误投影把领奖态落盘为 REWARD/var0=7，进入世界时纠正回 6 并下发状态包。
+         Legacy save repair: saves persisted as REWARD/var0=7 by the wrong projection are rewritten back
+         to 6 on enter-world. -->
     <transition target="reward">
       <event>
         <enter-world/>
       </event>
       <conditions>
         <status-is status="REWARD"/>
-        <variable-is field="var0" value="6"/>
+        <variable-is field="var0" value="7"/>
       </conditions>
       <actions>
-        <set-variable field="var0" value="7"/>
+        <set-variable field="var0" value="6"/>
       </actions>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>

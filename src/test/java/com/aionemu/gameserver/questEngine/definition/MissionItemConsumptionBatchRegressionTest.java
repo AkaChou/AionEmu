@@ -32,7 +32,14 @@ class MissionItemConsumptionBatchRegressionTest {
 	}
 
 	@Test
-	void kaligaWeaponExchangeQuestsConsumeKaligaKey() throws Exception {
+	void kaligaWeaponExchangeQuestsConsumeKaligaKey() {
+		/* P0c-13 起卡里佳兑换族整体物理退役（SimpleTalk 真端表驱动，无 IR）：编译视图断言随退役停用
+		 * （退役前口径 = started -> reward 优先级 0 的交付边扣卡里佳钥匙 185000102）——守卫 = 必须确属
+		 * 退役（防名单陈旧静默缩水）；真端表行的钥匙扣除口径由 native 车道门承担。 */
+		/* Since P0c-13 the whole Kaliga exchange family is physically retired to the SimpleTalk lane
+		 * (no IR): the compile-view assertions retire with the XML (the former caliber removed the key
+		 * 185000102 on the priority-0 started -> reward hand-in); the guard keeps the list honest and
+		 * the native lane gates own the caliber. */
 		int[] kaligaQuests = {
 			18618, 18619, 18620, 18621, 18622, 18623, 18624, 18625, 18626, 18627,
 			18643, 18644, 18645, 18648,
@@ -41,17 +48,8 @@ class MissionItemConsumptionBatchRegressionTest {
 		};
 
 		for (int questId : kaligaQuests) {
-			QuestDefinition definition = load(questId).definition();
-			List<QuestTransition> turnIns = definition.transitions().stream()
-				.filter(t -> "started".equals(t.sourceNode()) && "reward".equals(t.targetNode()))
-				.toList();
-			assertFalse(turnIns.isEmpty(), "quest " + questId + " must have started -> reward transition");
-			for (QuestTransition turnIn : turnIns) {
-				if (turnIn.priority() != null && turnIn.priority() == 0) {
-					assertTrue(turnIn.actions().contains(new QuestAction.RemoveItem(185000102, 1)),
-						"quest " + questId + " must remove Kaliga key 185000102 on turn in");
-				}
-			}
+			assertTrue(RetiredQuestIds.contains(questId),
+				() -> "quest " + questId + " is retail-driven and must be a retired row");
 		}
 	}
 
@@ -60,32 +58,27 @@ class MissionItemConsumptionBatchRegressionTest {
 		// 11216: 德拉坎的研究 4份报告交付扣除
 		assertTransitionRemovesItems(11216, "v1", "reward", Set.of(182206827, 182206828, 182206829, 182206830));
 
-		// 3092: 观察幼龙 7个毒囊交付扣除。p0c11 真端接管后行轴改为规范 K 轴（采集行为 s1），
-		// 交付仍在 s1 -> reward（dialogId 39/20002 两条，均带 CHECK 门）；遗留 XML 的节点名 step1 已不存在。
-		// 3092 turn-in: after the p0c11 retail adoption the row axis is the canonical K axis (collect row s1),
-		// so the hand-in stays on s1 -> reward (dialogIds 39/20002, both gated by the CHECK pair); the legacy
-		// XML node name step1 is gone.
-		assertTransitionRemovesItems(3092, "s1", "reward", Set.of(182208066));
+		// 3092 & 29064: 已物理退役（SimpleTalk 真端表驱动，无 IR）——编译视图断言随退役停用，守卫 = 必须
+		// 确属退役（退役前口径：3092 s1 -> reward 扣 182208066、29064 s1 -> reward 扣 182213239）；
+		// 表车道口径由其 native 门承担。
+		// 3092 & 29064: physically retired to the SimpleTalk lane (no IR) — the compile-view assertions
+		// retire with the XML; the guard keeps the rows honest.
+		for (int questId : List.of(3092, 29064)) {
+			assertTrue(RetiredQuestIds.contains(questId),
+				() -> "quest " + questId + " is retail-driven and must be a retired row");
+		}
 
-		// 29064: 建筑之牙 证物交付扣除。QE-051 行阶梯（客户端两行）后交付落在 started -> s1（行 1 报告行），
-		// 领奖行是 reward（var0=1）。
-		// 29064 turn-in: after the QE-051 two-row ladder the hand-in lands on started -> s1 and reward owns row 1.
-		assertTransitionRemovesItems(29064, "s1", "reward", Set.of(182213239));
-
-		// 15606 & 15608 & 15613: 埃斯特拉任务收集物扣除与错扣纠正
+		// 15606: 埃斯特拉任务收集物扣除（XML 仍在库，保留编译视图断言）。
 		assertTransitionRemovesItems(15606, "s4", "reward", Set.of(182215997));
-		// 15608 续片 20 由真端驱动接管（EA→采集→EA→首领）：扣除点从遗留的 reward 自环移到采集交付步
-		// s1→s2（真端 quest.xml 的 check_item1_1 = quest_15608a 1 与客户端任务书第 2 行"交给
-		// Canella"同判据；采集步不是末步，故落点是下一行 s2 而不是 reward）。
-		// 15608 became retail-driven in slice 20: the removal moved from the legacy reward self loop
-		// to the collect hand-in step s1 -> s2 (the hand-in is not the final step, so it lands on the
-		// next row).
-		assertTransitionRemovesItems(15608, "s1", "s2", Set.of(182215998));
-		assertTransitionRemovesItems(15613, "s5", "reward", Set.of(182215999));
-
-		// 25601 & 25605: 诺斯斯拉远征队信息与物品扣除纠正
-		assertTransitionRemovesItems(25601, "s1", "s2", Set.of(182216000));
-		assertTransitionRemovesItems(25605, "s1", "s2", Set.of(182216004));
+		// 15608 & 15613 & 25601 & 25605: 已物理退役（DataDriven 真端表驱动，无 IR）——编译视图断言随退役
+		// 停用，守卫 = 必须确属退役（退役前口径：15608 s1 -> s2 扣 182215998、15613 s5 -> reward 扣 182215999、
+		// 25601 s1 -> s2 扣 182216000、25605 s1 -> s2 扣 182216004）；表车道口径由其 native 门承担。
+		// 15608/15613/25601/25605: physically retired to the DataDriven lane (no IR) — the compile-view
+		// assertions retire with the XML; the guard keeps the rows honest.
+		for (int questId : List.of(15608, 15613, 25601, 25605)) {
+			assertTrue(RetiredQuestIds.contains(questId),
+				() -> "quest " + questId + " is retail-driven and must be a retired row");
+		}
 
 		// 1573 & 1636: 毒囊与调查物错扣纠正
 		assertTransitionRemovesItems(1573, "v1", "v2", Set.of(182201734));
@@ -111,9 +104,13 @@ class MissionItemConsumptionBatchRegressionTest {
 
 	@Test
 	void campaignMissionsConsumeRequiredCollectionItems() throws Exception {
-		// 10010 & 20010: 永恒之塔主线 4 项收集物扣除
-		assertTransitionRemovesItems(10010, "s1", "s2", Set.of(182216171, 182216172, 182216173, 182216174));
-		assertTransitionRemovesItems(20010, "s1", "s2", Set.of(182216180, 182216181, 182216182, 182216183));
+		// 10010 & 20010: 永恒之塔主线 4 项收集物扣除——已物理退役（DataDriven 真端表驱动，无 IR），
+		// 编译视图断言随退役停用，守卫 = 必须确属退役；表车道口径由 native 门承担。
+		// 10010 & 20010: physically retired to the DataDriven lane (no IR); the guard keeps the rows honest.
+		for (int questId : List.of(10010, 20010)) {
+			assertTrue(RetiredQuestIds.contains(questId),
+				() -> "quest " + questId + " is retail-driven and must be a retired row");
+		}
 
 		// 14025: 进军计划书扣除
 		assertTransitionRemovesItems(14025, "s1", "s2", Set.of(182215323));
@@ -124,9 +121,12 @@ class MissionItemConsumptionBatchRegressionTest {
 		// 14051: 调查物扣除
 		assertTransitionRemovesItems(14051, "s2", "s3", Set.of(182215337, 182215338));
 
-		// 15400 & 25400: 军团援助物资扣除
-		assertTransitionRemovesItems(15400, "s3", "s4", Set.of(182215897, 182215898, 182215899));
-		assertTransitionRemovesItems(25400, "s3", "s4", Set.of(182215900, 182215901, 182215902));
+		// 15400 & 25400: 军团援助物资扣除——已物理退役（DataDriven 真端表驱动，无 IR），同前守卫。
+		// 15400 & 25400: physically retired to the DataDriven lane (no IR); the guard keeps the rows honest.
+		for (int questId : List.of(15400, 25400)) {
+			assertTrue(RetiredQuestIds.contains(questId),
+				() -> "quest " + questId + " is retail-driven and must be a retired row");
+		}
 
 		// 20110: 紧急情报扣除
 		assertTransitionRemovesItems(20110, "s1", "s2", Set.of(182216233, 182216234, 182216235, 182216236));
@@ -158,8 +158,11 @@ class MissionItemConsumptionBatchRegressionTest {
 		assertTransitionRemovesItems(1922, "reward", "complete", Set.of(182206030));
 		assertTransitionRemovesItems(2947, "s9", "complete", Set.of(182207037));
 
-		// 1362 & 1367: 旁路交付与领奖交付分支道具扣除
-		assertTransitionRemovesItems(1362, "started", "reward", Set.of(182201328, 182201329));
+		// 1362: 旁路交付扣除——已物理退役（SimpleTalk 真端表驱动，无 IR），同前守卫（退役前口径
+		// started -> reward 扣 182201328/182201329）。1367 仍在库，保留编译视图断言。
+		// 1362: physically retired to the SimpleTalk lane (no IR); the guard keeps the row honest.
+		assertTrue(RetiredQuestIds.contains(1362),
+			"quest 1362 is retail-driven and must be a retired row");
 		// 1367 由 94636797a 拆成三个带材料条件的交付分支（reward0/1/2），每个分支扣除整套收集物。
 		// 94636797a split 1367 into three material-guarded delivery branches (reward0/1/2); each branch
 		// consumes the full collection set, replacing the former unconditional started -> reward route.

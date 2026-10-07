@@ -25,13 +25,35 @@
       <var name="var0" value="1"/>
     </node>
     <node label="reward" status="REWARD">
-      <var name="var0" value="2"/>
+      <var name="var0" value="1"/>
     </node>
     <node label="complete" status="COMPLETE">
       <var name="var0" value="0"/>
     </node>
   </nodes>
   <transitions>
+    <!-- 领奖态轴口径（遗留问题 B 复核，2026-10-07）：客户端任务书只有 2 行（0 杀 DrakanFi / 1 报告），
+         原 reward 投影 2 越出行数会让 REWARD 态步骤列表空白；镜像 46512 与同族 16 个都是 1。
+         旧存档修复：REWARD/var0=2 落盘的存档进入世界时纠正回 1。
+         Reward-axis caliber (residual-B review, 2026-10-07): the client journal has only two rows
+         (0 kill DrakanFi / 1 report); the old projection 2 was out of range and blanked the journal
+         at REWARD. The mirror 46512 and the other sixteen family members all use 1. Legacy saves
+         persisted as REWARD/var0=2 are rewritten back to 1 on enter-world. -->
+    <transition target="reward">
+      <event>
+        <enter-world/>
+      </event>
+      <conditions>
+        <status-is status="REWARD"/>
+        <variable-is field="var0" value="2"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
     <transition source="unaccepted" target="unaccepted">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="799837" action="QUEST_SELECT"/>
@@ -201,7 +223,7 @@
         <kill-npc npc-id="216616"/>
       </event>
       <actions>
-        <set-variable field="var0" value="2"/>
+        <set-variable field="var0" value="1"/>
       </actions>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>

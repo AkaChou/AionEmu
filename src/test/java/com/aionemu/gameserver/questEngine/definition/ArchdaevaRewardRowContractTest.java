@@ -59,8 +59,12 @@ class ArchdaevaRewardRowContractTest {
 
 	@Test
 	void awakenedSageHandoverDoesNotRequireTheSummoningItemToRemainInInventory() throws Exception {
-		Map<Integer, Integer> sages = Map.of(10526, 806292, 20526, 806297,
-			10528, 806292, 20528, 806297);
+		// 10526/20526 已于 9321e7663 物理退役（RETAIL_TABLE/DataDriven），贤者交接语义由表车道承担；
+		// 本用例保留仍在 XML 车道的 10528/20528 对（旧 10526/20526 分支的 expectedStep=12 随之移除）。
+		// 10526/20526 were physically retired in 9321e7663 (RETAIL_TABLE/DataDriven) and their sage
+		// handover is table-lane owned; this case keeps the XML-lane pair 10528/20528 and drops the
+		// old expectedStep=12 branch that only applied to the retired pair.
+		Map<Integer, Integer> sages = Map.of(10528, 806292, 20528, 806297);
 		for (var entry : sages.entrySet()) {
 			CompiledQuestDefinition compiled = definition(entry.getKey());
 			QuestTransition handover = transition(compiled.definition(), "s11",
@@ -70,8 +74,7 @@ class ArchdaevaRewardRowContractTest {
 				handover.event(), handover).orElseThrow(() -> new AssertionError(
 					"quest " + entry.getKey() + " cannot finish the sage dialog without the summoning item"));
 			assertEquals(QuestStatus.REWARD, plan.nextStatus(), () -> "quest " + entry.getKey());
-			int expectedStep = entry.getKey() == 10528 || entry.getKey() == 20528 ? 11 : 12;
-			assertEquals(expectedStep, unpack(compiled, plan).get("var0"), () -> "quest " + entry.getKey());
+			assertEquals(11, unpack(compiled, plan).get("var0"), () -> "quest " + entry.getKey());
 		}
 	}
 
@@ -93,9 +96,9 @@ class ArchdaevaRewardRowContractTest {
 	}
 
 	@Test
-	void quest10525AdvancesJournalToTheFinalRowWhenTheWorkItemIsUsed() throws Exception {
+	void quest10525KeepsTheLegacyPlayRowWhenTheWorkItemIsUsed() throws Exception {
 		CompiledQuestDefinition compiled = definition(10525);
-		assertEquals(7, rewardRow(compiled.definition()));
+		assertEquals(6, rewardRow(compiled.definition()));
 
 		QuestTransition handover = transition(compiled.definition(), "s6",
 			new QuestEvent.UseItem(182216072));
@@ -107,7 +110,7 @@ class ArchdaevaRewardRowContractTest {
 		assertEquals(List.of(new AfterCommitAction.SyncQuestState(
 			QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH)), handover.afterCommit());
 		assertNull(handover.priority());
-		assertPlannedHandover(compiled, handover, 6, 7, 182216072, "LF6_ITEMUSEAREA_Q10525");
+		assertPlannedHandover(compiled, handover, 6, 6, 182216072, "LF6_ITEMUSEAREA_Q10525");
 	}
 
 	@Test
@@ -115,15 +118,15 @@ class ArchdaevaRewardRowContractTest {
 		assertRecovery(10527, 14, 15);
 		assertRecovery(10528, 12, 11);
 		assertRecovery(20528, 12, 11);
-		assertRecovery(10525, 6, 7);
-		assertRecovery(20525, 6, 7);
+		assertRecovery(10525, 7, 6);
+		assertRecovery(20525, 7, 6);
 	}
 
 	@Test
 	void asmodianMirrorsKeepTheSameRewardRow() throws Exception {
 		assertMirrorRewardRow(10527, 20527, 15);
 		assertMirrorRewardRow(10528, 20528, 11);
-		assertMirrorRewardRow(10525, 20525, 7);
+		assertMirrorRewardRow(10525, 20525, 6);
 	}
 
 	private static void assertPlannedHandover(CompiledQuestDefinition compiled,

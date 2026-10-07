@@ -8,6 +8,11 @@
 - 状态：**AUDIT_COMPLETE / REPAIR_APPLIED_PENDING_GATE（需授权跑测试）与实机验收**
 - 增补（同日）：§8 第二批（triage 全量扫描候选 11 个）与 §9 镜像对批次（MirrorPair 6 个）同根因收口；
   最终修复合计 **56 个任务**。
+- 遗留问题 A-D 后续复核（2026-10-07，见 [../quest-residuals-dabc/](../quest-residuals-dabc/)）：
+  **A 关闭**（表车道 5 行原生投影 = 中继数/步数 = 退役壳 XML = 批次值，无抬行偏差，不修）；
+  **B 修 36512**（reward 2→1 越界修复 + 自愈边；其余 16 个在界内维持）+ 新门禁 `FactionDailyRewardRowInRangeContractTest`；
+  **C 全量界内复核**（260 在册 → 200 已退役、60 有 XML 全部 = 末行索引，OUT_OF_RANGE 0，不修）；
+  **D 修 10525/20525**（reward 7→6 + 自愈边反转；10101/20101/14014/14043 误报）。
 
 ## 1. 判据与方法（三源，QE-054 口径的推广）
 
