@@ -48,7 +48,9 @@ public record QuestMetadata(
 	Map<String, List<QuestReward>> classRewards,
 	List<QuestRewardGroup> rewardGroups,
 	List<QuestRewardGroup> extendedRewardGroups,
-	List<QuestStartConditionGroup> startConditionGroups) {
+	List<QuestStartConditionGroup> startConditionGroups,
+	/** 真端 {@code reward_extend_stigma1}：完成任务后扩展烙印槽位。 / Retail {@code reward_extend_stigma1}: completing the quest extends stigma slots. */
+	boolean extendStigmaSlots) {
 
 	/**
 	 * 初始定义 DSL 的向后兼容构造函数。
@@ -61,7 +63,8 @@ public record QuestMetadata(
 		this(name, displayNameId, minLevel, maxLevel, permittedRaces, category, repeatPolicy,
 			prerequisites, itemRequirements, rewards, drops, Set.of(), "", 0, 1, 1, false,
 			false, false, 0, null, null, false, Set.of(), 0, "NONE", "NONE", 0, List.of(),
-			List.of(), List.of(), List.of(), List.of(), List.of(), Map.of(), groupsOf(rewards), List.of(), List.of());
+			List.of(), List.of(), List.of(), List.of(), List.of(), Map.of(), groupsOf(rewards), List.of(), List.of(),
+			false);
 	}
 
 	/**
@@ -85,7 +88,7 @@ public record QuestMetadata(
 			useClassReward, combineSkill, combineSkillPoint, timer, repeatCycles, npcFactionId, mentorType,
 			targetType, titleId, inventoryItems, questWorkItems, extendedRewards, bonuses, kills,
 			startConditions, classRewards, groupsOf(rewards), groupsOf(extendedRewards),
-			startGroupsOf(startConditions));
+			startGroupsOf(startConditions), false);
 	}
 
 	public QuestMetadata {

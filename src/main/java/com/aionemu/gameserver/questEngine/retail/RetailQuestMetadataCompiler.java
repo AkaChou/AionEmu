@@ -314,7 +314,8 @@ public final class RetailQuestMetadataCompiler {
 			combineSkill, entry.integer("combine_skillpoint"), entry.bool("timer"), cycles,
 			npcFaction(entry), "NONE", targetType(entry), 0, inventoryItems, questWorkItems, extendedRewards,
 			List.of(), List.of(),
-			startConditions, classRewards, rewardGroups, extendedGroups, groupsOf(startConditions));
+			startConditions, classRewards, rewardGroups, extendedGroups, groupsOf(startConditions),
+			orZero(entry.integer("reward_extend_stigma1")) > 0);
 		return new Outcome(metadata, List.copyOf(unresolved));
 	}
 

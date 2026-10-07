@@ -81,7 +81,6 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_ABYSS_RANK;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_A_STATION;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_CHANNEL_INFO;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_CHARACTER_SELECT;
-import com.aionemu.gameserver.network.aion.serverpackets.SM_CUBE_UPDATE;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_EMOTION;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_EMOTION_LIST;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_ENTER_WORLD_CHECK;
@@ -760,7 +759,12 @@ public final class PlayerEnterWorldService {
 		}
 		client.sendPacket(new SM_INVENTORY_INFO(false, new ArrayList<>(0), npcExpands, questExpands, player));
 		client.sendPacket(new SM_STATS_INFO(player));
-		client.sendPacket(SM_CUBE_UPDATE.stigmaSlots(player.getCommonData().getAdvancedStigmaSlotSize()));
+		// 烙印槽数量按等级/教学资格实时计算（会员与 GM 解锁值取较大者），不能再直接下发存储字段，
+		// 否则常规角色恒为 0 —— 客户端认为没有打开的烙印凹槽，教学结晶拖不进凹槽。
+		// The stigma slot count is derived from level and tutorial entitlement (membership/GM unlocks win),
+		// never the raw stored field: regular characters would otherwise be told 0 and the client would refuse
+		// to drag the tutorial stone into a socket.
+		StigmaService.refreshStigmaSlots(player);
 	}
 
 	/**

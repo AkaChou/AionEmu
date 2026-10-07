@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="2900" version="1">
-  <metadata name="No Escaping Destiny" display-name-id="1104100" min-level="20" max-level="2147483647" category="MISSION" cannot-share="true" cannot-giveup="true" use-class-reward="1">
+  <metadata name="No Escaping Destiny" display-name-id="1104100" min-level="20" max-level="2147483647" category="MISSION" cannot-share="true" cannot-giveup="true" use-class-reward="1" extend-stigma-slots="true">
     <races>
       <race id="ASMODIANS"/>
     </races>

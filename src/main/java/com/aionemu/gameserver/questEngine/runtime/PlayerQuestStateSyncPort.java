@@ -14,6 +14,7 @@ import com.aionemu.gameserver.questEngine.definition.QuestMetadata;
 import com.aionemu.gameserver.questEngine.definition.QuestStateSyncMode;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
+import com.aionemu.gameserver.services.StigmaService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 import java.util.Objects;
@@ -28,6 +29,7 @@ public final class PlayerQuestStateSyncPort implements QuestStateSyncPort {
 	private final Consumer<Player> zoneRefresh;
 	private final Consumer<Player> nearbyQuestRefresh;
 	private final Consumer<QuestEnv> levelQuestRefresh;
+	private final Consumer<Player> derivedStateRefresh;
 
 	public PlayerQuestStateSyncPort(QuestPlayerPort players) {
 		this(players,
@@ -35,7 +37,8 @@ public final class PlayerQuestStateSyncPort implements QuestStateSyncPort {
 			objectId -> GameWorldBootstrapServices.world().findVisibleObject(objectId),
 			player -> player.getController().updateZone(),
 			player -> player.getController().updateNearbyQuests(),
-			env -> GameEngineServices.questEngine().onQuestStateChanged(env));
+			env -> GameEngineServices.questEngine().onQuestStateChanged(env),
+			StigmaService::onStigmaSlotQuestCommitted);
 	}
 
 	PlayerQuestStateSyncPort(QuestPlayerPort players, IntFunction<QuestMetadata> metadata) {
@@ -43,18 +46,28 @@ public final class PlayerQuestStateSyncPort implements QuestStateSyncPort {
 			objectId -> GameWorldBootstrapServices.world().findVisibleObject(objectId),
 			player -> player.getController().updateZone(),
 			player -> player.getController().updateNearbyQuests(),
-			env -> GameEngineServices.questEngine().onQuestStateChanged(env));
+			env -> GameEngineServices.questEngine().onQuestStateChanged(env),
+			StigmaService::onStigmaSlotQuestCommitted);
 	}
 
 	PlayerQuestStateSyncPort(QuestPlayerPort players, IntFunction<QuestMetadata> metadata,
 			IntFunction<VisibleObject> interactionObjects, Consumer<Player> zoneRefresh,
 			Consumer<Player> nearbyQuestRefresh, Consumer<QuestEnv> levelQuestRefresh) {
+		this(players, metadata, interactionObjects, zoneRefresh, nearbyQuestRefresh, levelQuestRefresh,
+			ignored -> { });
+	}
+
+	PlayerQuestStateSyncPort(QuestPlayerPort players, IntFunction<QuestMetadata> metadata,
+			IntFunction<VisibleObject> interactionObjects, Consumer<Player> zoneRefresh,
+			Consumer<Player> nearbyQuestRefresh, Consumer<QuestEnv> levelQuestRefresh,
+			Consumer<Player> derivedStateRefresh) {
 		this.players = Objects.requireNonNull(players, "players");
 		this.metadata = Objects.requireNonNull(metadata, "metadata");
 		this.interactionObjects = Objects.requireNonNull(interactionObjects, "interactionObjects");
 		this.zoneRefresh = Objects.requireNonNull(zoneRefresh, "zoneRefresh");
 		this.nearbyQuestRefresh = Objects.requireNonNull(nearbyQuestRefresh, "nearbyQuestRefresh");
 		this.levelQuestRefresh = Objects.requireNonNull(levelQuestRefresh, "levelQuestRefresh");
+		this.derivedStateRefresh = Objects.requireNonNull(derivedStateRefresh, "derivedStateRefresh");
 	}
 
 	@Override
@@ -100,6 +113,14 @@ public final class PlayerQuestStateSyncPort implements QuestStateSyncPort {
 		}
 		if (mode.notifyFinishedNpc() && interaction instanceof Npc npc) {
 			npc.getAi2().onQuestFinished(player, plan.questId());
+		}
+		// 任务推进可能改变派生状态（如烙印任务授予的槽位资格）；仅当任务数据声明了该派生效果时才重算，
+		// 其余任务保持静默。
+		// A transition can change derived player state (e.g. the stigma-slot entitlement a quest grants);
+		// recompute only when the quest data declares that effect, so other quests stay silent.
+		QuestMetadata committed = metadata.apply(plan.questId());
+		if (committed != null && committed.extendStigmaSlots()) {
+			derivedStateRefresh.accept(player);
 		}
 		return true;
 	}

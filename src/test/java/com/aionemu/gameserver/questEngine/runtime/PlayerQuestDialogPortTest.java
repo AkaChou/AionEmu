@@ -2,6 +2,7 @@ package com.aionemu.gameserver.questEngine.runtime;
 
 import com.aionemu.commons.network.AConnection;
 import com.aionemu.commons.network.ConnectionTransport;
+import com.aionemu.gameserver.model.DialogPage;
 import com.aionemu.gameserver.model.gameobjects.AionObject;
 import com.aionemu.gameserver.model.gameobjects.player.Equipment;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -145,6 +146,89 @@ class PlayerQuestDialogPortTest {
 		PlayerQuestDialogPort port = new PlayerQuestDialogPort(playerId -> player);
 
 		assertThrows(IllegalStateException.class, () -> port.showSelectionDialog(snapshot(), plan(), 10));
+	}
+
+	@Test
+	void stigmaWindowReannouncesSlotsBeforeTheWindowPacket() throws Exception {
+		Player player = emptyPlayer();
+		List<Player> announced = new ArrayList<>();
+		List<Integer> announcedPages = new ArrayList<>();
+		List<Integer> queuedAtAnnounce = new ArrayList<>();
+		PlayerQuestDialogPort port = new PlayerQuestDialogPort(playerId -> player, (refreshed, page) -> {
+			announced.add(refreshed);
+			announcedPages.add(page);
+			// 记录下发时的队尾：窗口包之前必须还没有排队，槽位才是窗口渲染前最后到达的协议事实。
+			// Record the queue size at call time: nothing may be queued yet, so the slot count is the
+			// last protocol fact to arrive before the window renders.
+			queuedAtAnnounce.add(packetQueue(refreshed.getClientConnection()).size());
+		}, questId -> false);
+
+		assertTrue(port.showDialogWindow(snapshot().withInteractionObjectId(204160), plan(),
+			DialogPage.STIGMA.id()));
+
+		assertEquals(List.of(player), announced);
+		assertEquals(List.of(DialogPage.STIGMA.id()), announcedPages);
+		assertEquals(List.of(0), queuedAtAnnounce);
+		SM_DIALOG_WINDOW packet = assertOnlyDialog(player);
+		assertEquals(DialogPage.STIGMA.id(), intField(SM_DIALOG_WINDOW.class, packet, "dialogID"));
+	}
+
+	@Test
+	void questDeclaringTheStigmaSlotExtensionReannouncesSlotsOnItsDialogPages() throws Exception {
+		Player player = emptyPlayer();
+		List<Player> announced = new ArrayList<>();
+		List<Integer> announcedPages = new ArrayList<>();
+		PlayerQuestDialogPort port = new PlayerQuestDialogPort(playerId -> player, (refreshed, page) -> {
+			announced.add(refreshed);
+			announcedPages.add(page);
+		}, questId -> questId == QUEST_ID);
+
+		assertTrue(port.showDialog(snapshot().withInteractionObjectId(204160), plan(), 2461));
+
+		assertEquals(List.of(player), announced);
+		assertEquals(List.of(2461), announcedPages);
+		assertOnlyDialog(player);
+	}
+
+	@Test
+	void otherDialogPagesDoNotReannounceSlots() throws Exception {
+		Player player = emptyPlayer();
+		List<Player> announced = new ArrayList<>();
+		PlayerQuestDialogPort port = new PlayerQuestDialogPort(playerId -> player,
+			(refreshed, page) -> announced.add(refreshed), questId -> false);
+
+		assertTrue(port.showDialogWindow(snapshot().withInteractionObjectId(204160), plan(), 1011));
+
+		assertTrue(announced.isEmpty());
+		assertOnlyDialog(player);
+	}
+
+	@Test
+	void targetlessStigmaWindowUsesTheRememberedDialogPeer() throws Exception {
+		Player player = emptyPlayer();
+		player.rememberNpcQuestDialogSelection(204160, QUEST_ID);
+		PlayerQuestDialogPort port = new PlayerQuestDialogPort(playerId -> player,
+			(refreshed, page) -> { }, questId -> false);
+
+		// 该按钮在客户端不带对象 ID（targetless），但玩家正在与 204160 进行任务对话：
+		// 烙印窗口必须落到这个对话对象上（真端开窗前会先登记对话对象）。
+		assertTrue(port.showDialogWindow(snapshot().withTargetlessDialog(), plan(), DialogPage.STIGMA.id()));
+
+		SM_DIALOG_WINDOW packet = assertOnlyDialog(player);
+		assertEquals(204160, intField(SM_DIALOG_WINDOW.class, packet, "targetObjectId"));
+		assertEquals(DialogPage.STIGMA.id(), intField(SM_DIALOG_WINDOW.class, packet, "dialogID"));
+	}
+
+	@Test
+	void targetlessStigmaWindowStaysUnboundWithoutADialogAuthorization() throws Exception {
+		Player player = emptyPlayer();
+		PlayerQuestDialogPort port = new PlayerQuestDialogPort(playerId -> player,
+			(refreshed, page) -> { }, questId -> false);
+
+		assertTrue(port.showDialogWindow(snapshot().withTargetlessDialog(), plan(), DialogPage.STIGMA.id()));
+
+		SM_DIALOG_WINDOW packet = assertOnlyDialog(player);
+		assertEquals(0, intField(SM_DIALOG_WINDOW.class, packet, "targetObjectId"));
 	}
 
 	private static QuestSnapshot snapshot() {

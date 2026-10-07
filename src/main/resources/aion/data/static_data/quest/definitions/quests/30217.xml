@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="30217" version="1">
-  <metadata name="[Group] Stigmas &amp; Scars" display-name-id="1114317" min-level="55" max-level="2147483647" category="SIGNIFICANT" cannot-share="true">
+  <metadata name="[Group] Stigmas &amp; Scars" display-name-id="1114317" min-level="55" max-level="2147483647" category="SIGNIFICANT" cannot-share="true" extend-stigma-slots="true">
     <races>
       <race id="ELYOS"/>
     </races>

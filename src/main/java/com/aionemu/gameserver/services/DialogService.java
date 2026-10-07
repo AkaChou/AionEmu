@@ -167,6 +167,19 @@ public class DialogService {
                 break;
         }
     }
+
+    /**
+     * 打开烙印之石窗口（页 1）：开窗前重发进阶烙印槽位数——窗口内的凹槽渲染读取客户端缓存的槽位数，
+     * 而该缓存会被关窗等事件重置，槽位必须是窗口渲染前最后到达的协议事实。
+     * Opens the stigma window (page 1); the advanced stigma slot count is re-announced first because the
+     * window renders its sockets from the client-cached count, which server-side dialog closes reset.
+     * @param player 玩家 / player
+     * @param targetObjectId 对话目标对象 ID / dialog target object id
+     */
+    private static void openStigmaWindow(Player player, int targetObjectId) {
+        StigmaService.refreshStigmaSlots(player);
+        PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 1));
+    }
     /**
      * 处理玩家选择的对话框选项（商店、传送、仓库、任务奖励等）。
      * Handle a player-selected dialog option (shop, teleport, warehouse, quest rewards, etc.).
@@ -533,7 +546,7 @@ public class DialogService {
                                 PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_HOUSING_CANT_OWN_NOT_COMPLETE_QUEST(1929));
                                 PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 27));
                             } else {
-                                PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 1));
+                                openStigmaWindow(player, targetObjectId);
                             }
                         } else if (player.getRace() == Race.ASMODIANS) {
                             QuestState qs = player.getQuestStateList().getQuestState(2900); // No Escaping Destiny.
@@ -541,7 +554,7 @@ public class DialogService {
                                 PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_HOUSING_CANT_OWN_NOT_COMPLETE_QUEST(2900));
                                 PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 27));
                             } else {
-                                PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 1));
+                                openStigmaWindow(player, targetObjectId);
                             }
                         }
                         break;

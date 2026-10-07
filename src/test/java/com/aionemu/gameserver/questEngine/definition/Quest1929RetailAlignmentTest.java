@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -31,6 +32,10 @@ class Quest1929RetailAlignmentTest {
 		assertEquals(457760, metadata.rewards().get(1).amount());
 		assertEquals(162000048, metadata.rewards().get(2).id());
 		assertEquals(11, metadata.classRewards().size());
+		// 真端 reward_extend_stigma1=1：槽位资格由任务数据声明，Java 侧不再硬编码任务 ID。
+		// Retail reward_extend_stigma1=1: the slot entitlement is declared by quest data, so the Java
+		// side no longer hardcodes quest ids.
+		assertTrue(metadata.extendStigmaSlots());
 
 		Map<String, Integer> expected = Map.ofEntries(
 			Map.entry("FIGHTER", 140001110), Map.entry("KNIGHT", 140001133),
@@ -65,7 +70,8 @@ class Quest1929RetailAlignmentTest {
 		assertTrue(movie.afterCommit().stream().anyMatch(action -> action instanceof AfterCommitAction.SpawnNpc spawn
 			&& spawn.templateId() == 205111));
 
-		assertEquals(4, transitions.stream().filter(t -> t.event() instanceof QuestEvent.EquipItem).count());
+		assertEquals(4, transitions.stream().filter(t -> t.event() instanceof QuestEvent.EquipItem
+			&& "spawned98".equals(t.sourceNode())).count());
 		long equippedBranches = transitions.stream()
 			.filter(t -> t.event() instanceof QuestEvent.TalkToNpc talk
 				&& talk.npcId() == 205111 && Integer.valueOf(-1).equals(talk.dialogId()))
@@ -80,6 +86,134 @@ class Quest1929RetailAlignmentTest {
 			.count();
 		assertEquals(11, equippedBranches);
 		assertEquals(11, unequippedBranches);
+	}
+
+	@Test
+	void grantsTheStigmaOnceAndKeepsTheInstallStep() throws Exception {
+		CompiledQuestDefinition compiled = load();
+		Map<String, Integer> stoneByClass = Map.ofEntries(
+			Map.entry("GLADIATOR", 140000003), Map.entry("TEMPLAR", 140000003),
+			Map.entry("ASSASSIN", 140000003), Map.entry("RANGER", 140000003),
+			Map.entry("SORCERER", 140000002), Map.entry("SPIRIT_MASTER", 140000002),
+			Map.entry("CLERIC", 140000002), Map.entry("CHANTER", 140000003),
+			Map.entry("GUNSLINGER", 140000004), Map.entry("SONGWEAVER", 140000004),
+			Map.entry("AETHERTECH", 140000004));
+		// 步数必须停在 98：客户端的烙印凹槽展开态跟随教学步数——98 时开启，一旦推进到 95 即关闭且会话内
+		// 不可恢复（第 5–8 轮实机：与是否关窗无关、重发槽位数无效，只有重登才由登录包序重建）；
+		// 真端/退役 XML 在发放时同样不推进步数（98 → 装备后才到 96）。
+		// The step must stay at 98: the client's stigma-slot expansion follows the tutorial step - open at 98,
+		// and once it advances to 95 the slots close and cannot be recovered in-session (live rounds 5-8:
+		// independent of the window close, slot re-announces do not help, only a re-login rebuilds them).
+		// Retail/retired XML likewise never advances the step on the grant (98 -> 96 only after the equip).
+		assertTrue(compiled.definition().nodes().stream().noneMatch(node -> node.label().equals("granted95")));
+		assertEquals(Map.of("step", 98), compiled.definition().nodes().stream()
+			.filter(node -> node.label().equals("spawned98")).findFirst().orElseThrow()
+			.projection().variables());
+
+		List<QuestTransition> branches = compiled.definition().transitions().stream()
+			.filter(t -> "spawned98".equals(t.sourceNode()) && "spawned98".equals(t.targetNode()))
+			.filter(t -> t.event().equals(new QuestEvent.TalkToNpc(205111, QuestDialogAction.SELECT5_2.id())))
+			.toList();
+		assertEquals(22, branches.size());
+		int handOvers = 0;
+		for (QuestTransition transition : branches) {
+			String playerClass = transition.conditions().stream()
+				.filter(QuestCondition.AdvancedClassIs.class::isInstance)
+				.map(QuestCondition.AdvancedClassIs.class::cast)
+				.map(condition -> condition.playerClass().name()).findFirst().orElseThrow();
+			int stone = stoneByClass.get(playerClass);
+			assertTrue(transition.actions().stream().noneMatch(QuestAction.SetVariable.class::isInstance));
+			boolean handsOverTheStone = transition.actions().stream().anyMatch(QuestAction.GiveItem.class::isInstance);
+			if (handsOverTheStone) {
+				handOvers++;
+				assertTrue(transition.conditions().contains(new QuestCondition.HasItem(stone, 1, false)));
+				assertEquals(List.of(new QuestAction.GiveItem(stone, 1)), transition.actions());
+				// 交付分支：同步（携带槽位推送）后直接打开烙印窗口，不关窗
+				assertEquals(List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.PACKET_ONLY),
+					new AfterCommitAction.ShowDialogWindow(1)), transition.afterCommit());
+			} else {
+				assertTrue(transition.conditions().contains(new QuestCondition.HasItem(stone, 1, true)));
+				assertEquals(List.of(), transition.actions());
+				assertEquals(List.of(new AfterCommitAction.ShowDialogWindow(1)), transition.afterCommit());
+			}
+		}
+		assertEquals(11, handOvers);
+	}
+
+	@Test
+	void routesHeldStoneTalksStraightToTheGuidePageAndTheWindow() throws Exception {
+		CompiledQuestDefinition compiled = load();
+		// 入口持有量门控（priority 0 先于 priority 1 的剧情页）：已持有结晶 ⇒ 直接出示装备引导页
+		QuestEvent questSelect = new QuestEvent.TalkToNpc(205111, QuestDialogAction.QUEST_SELECT.id());
+		List<QuestTransition> gated = compiled.definition().transitions().stream()
+			.filter(t -> "spawned98".equals(t.sourceNode()) && t.event().equals(questSelect))
+			.filter(t -> t.conditions().stream().anyMatch(QuestCondition.HasItem.class::isInstance))
+			.toList();
+		assertEquals(11, gated.size());
+		for (QuestTransition transition : gated) {
+			assertEquals(0, transition.priority().intValue());
+			assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(QuestDialogAction.SELECT5_2.id())),
+				transition.afterCommit());
+		}
+		QuestTransition storyFallback = compiled.definition().transitions().stream()
+			.filter(t -> "spawned98".equals(t.sourceNode()) && t.event().equals(questSelect))
+			.filter(t -> t.conditions().isEmpty())
+			.findFirst().orElseThrow();
+		assertEquals(1, storyFallback.priority().intValue());
+
+		// 引导页按钮（select5_3）⇒ 打开烙印窗口（页 1，由对话口绑定到进行中的任务对话对象）
+		QuestTransition windowRoute = compiled.definition().transitions().stream()
+			.filter(t -> "spawned98".equals(t.sourceNode()))
+			.filter(t -> t.event().equals(new QuestEvent.TalkToNpc(205111, QuestDialogAction.SELECT5_3.id())))
+			.findFirst().orElseThrow();
+		assertEquals(List.of(new AfterCommitAction.ShowDialogWindow(1)), windowRoute.afterCommit());
+
+		// 装备分支仍按真端形状：推进 96 + 同步 + 关窗（此时结晶已装上，槽位语义不再受影响）
+		List<QuestTransition> equipRoutes = compiled.definition().transitions().stream()
+			.filter(t -> "spawned98".equals(t.sourceNode()) && t.event() instanceof QuestEvent.EquipItem)
+			.toList();
+		assertEquals(4, equipRoutes.size());
+		for (QuestTransition transition : equipRoutes) {
+			assertEquals("equipped96", transition.targetNode());
+			assertEquals(List.of(new QuestAction.SetVariable("step", 96)), transition.actions());
+			assertEquals(List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.PACKET_ONLY),
+				new AfterCommitAction.CloseDialog()), transition.afterCommit());
+		}
+	}
+
+	@Test
+	void plansTheStigmaGrantOnlyWhileTheStoneIsAbsent() throws Exception {
+		CompiledQuestDefinition compiled = load();
+		QuestEvent tutorialClick = new QuestEvent.TalkToNpc(205111, QuestDialogAction.SELECT5_2.id());
+		List<QuestTransition> candidates = compiled.definition().transitions().stream()
+			.filter(t -> "spawned98".equals(t.sourceNode()) && t.event().equals(tutorialClick))
+			.filter(t -> t.conditions().contains(new QuestCondition.AdvancedClassIs(PlayerClass.GLADIATOR)))
+			.toList();
+		assertEquals(2, candidates.size());
+		QuestTransition granting = candidates.stream()
+			.filter(t -> t.actions().stream().anyMatch(QuestAction.GiveItem.class::isInstance))
+			.findFirst().orElseThrow();
+		QuestTransition alreadyHolding = candidates.stream()
+			.filter(t -> t.actions().stream().noneMatch(QuestAction.GiveItem.class::isInstance))
+			.findFirst().orElseThrow();
+
+		int packed98 = compiled.definition().progressLayout().pack(Map.of("step", 98));
+		QuestSnapshot withoutStone = new QuestSnapshot(7, 1929, QuestStatus.START, packed98, Map.of(), Map.of())
+			.withPlayerClass(PlayerClass.GLADIATOR);
+		var grantPlan = QuestMutationPlanner.plan(compiled, withoutStone, tutorialClick, granting).orElseThrow();
+		assertEquals(List.of(new QuestAction.GiveItem(140000003, 1)), grantPlan.requiredActions());
+		assertEquals(packed98, grantPlan.nextPackedVariables());
+		assertEquals(List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.PACKET_ONLY),
+			new AfterCommitAction.ShowDialogWindow(1)), grantPlan.afterCommit());
+		assertTrue(QuestMutationPlanner.plan(compiled, withoutStone, tutorialClick, alreadyHolding).isEmpty());
+
+		QuestSnapshot holdingStone = new QuestSnapshot(7, 1929, QuestStatus.START, packed98,
+			Map.of(140000003, 1), Map.of()).withPlayerClass(PlayerClass.GLADIATOR);
+		var heldPlan = QuestMutationPlanner.plan(compiled, holdingStone, tutorialClick, alreadyHolding).orElseThrow();
+		assertEquals(List.of(), heldPlan.requiredActions());
+		assertEquals(packed98, heldPlan.nextPackedVariables());
+		assertEquals(List.of(new AfterCommitAction.ShowDialogWindow(1)), heldPlan.afterCommit());
+		assertTrue(QuestMutationPlanner.plan(compiled, holdingStone, tutorialClick, granting).isEmpty());
 	}
 
 	@Test
@@ -137,6 +271,7 @@ class Quest1929RetailAlignmentTest {
 			&& grant.id() == 140001110));
 		assertTrue(plan.requiredActions().stream().anyMatch(QuestAction.CompleteQuest.class::isInstance));
 	}
+
 
 	private static CompiledQuestDefinition load() throws Exception {
 		try (InputStream input = Files.newInputStream(XML)) {

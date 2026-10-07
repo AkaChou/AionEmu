@@ -632,6 +632,12 @@ public class Player extends Creature {
 		return selection != null && selection.interactionObjectId() == interactionObjectId ? selection.questId() : 0;
 	}
 
+	/** 返回被该任务授权的对话对象 ID（对话授权属于该任务时）；没有授权时返回 0。 / Returns the dialog-authorization object id when it belongs to the given quest, or 0 when absent. */
+	public int getNpcQuestDialogObjectIdForQuest(int questId) {
+		NpcQuestDialogSelection selection = npcQuestDialogSelection;
+		return selection != null && selection.questId() == questId ? selection.interactionObjectId() : 0;
+	}
+
 	/** 清除 NPC 任务对话授权。 / Clears NPC quest-dialog authorization. */
 	public void clearNpcQuestDialogSelection() {
 		npcQuestDialogSelection = null;

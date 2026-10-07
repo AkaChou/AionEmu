@@ -172,7 +172,7 @@ class QuestRetailStartMetadataGateTest {
 			Set.of(), List.of(), rewards, List.of(), Set.of(), gender, 0, 1, 1,
 			false, false, false, 0, null, null, false, Set.of(), 0, "NONE", "NONE", 0,
 			List.of(), List.of(), List.of(), List.of(), List.of(), List.of(),
-			Map.of(), List.of(), List.of(), List.of());
+			Map.of(), List.of(), List.of(), List.of(), false);
 	}
 
 	private static List<Integer> metadataOnlyQuestIdsInternal() throws Exception {

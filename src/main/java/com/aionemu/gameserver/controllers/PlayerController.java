@@ -1049,6 +1049,11 @@ public class PlayerController extends CreatureController<Player> {
 			// 额外大型烙印之石槽位现已可用。 / An additional Major Stigma slot is now available.
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_STIGMA_OPEN_ENHANCED2_SLOT);
 		}
+		// 20/30/40/45/50/55 是烙印槽档位：升级到档位后把重新计算出的槽位数量推给客户端，
+		// 否则客户端要重登才知道新档位已开放。
+		// 20/30/40/45/50/55 are the stigma slot tiers: push the recomputed slot count so the client learns
+		// about the newly opened tier without a relogin.
+		StigmaService.refreshStigmaSlots(player);
 		// 精华核心 5.3 / Essence Cores 5.3
 		if (level == 66) {
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_CPSTONE_OPEN_SLOT);

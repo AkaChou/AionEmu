@@ -188,7 +188,8 @@ public final class QuestDefinitionXmlCompiler {
 			integerOrDefault(element, "npc-faction-id", 0), attributeOrDefault(element, "mentor-type", "NONE"),
 			attributeOrDefault(element, "target-type", "NONE"), integerOrDefault(element, "title-id", 0),
 			inventoryItems, questWorkItems, extendedRewards, bonuses, kills, startConditions, classRewards,
-			rewardGroups, extendedRewardGroups, startConditionGroups);
+			rewardGroups, extendedRewardGroups, startConditionGroups,
+			booleanOrDefault(element, "extend-stigma-slots", false));
 	}
 
 	private static Set<String> parseIdSet(Element parent, String childName) {

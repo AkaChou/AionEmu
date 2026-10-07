@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="30317" version="1">
-  <metadata name="[Group] Spirits And Stigma Slots" display-name-id="1114417" min-level="55" max-level="2147483647" category="SIGNIFICANT" cannot-share="true">
+  <metadata name="[Group] Spirits And Stigma Slots" display-name-id="1114417" min-level="55" max-level="2147483647" category="SIGNIFICANT" cannot-share="true" extend-stigma-slots="true">
     <races>
       <race id="ASMODIANS"/>
     </races>

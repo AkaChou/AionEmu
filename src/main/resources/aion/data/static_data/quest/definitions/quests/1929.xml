@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="1929" version="1">
-  <metadata name="A Sliver Of Darkness" display-name-id="1102929" min-level="20" max-level="2147483647" category="MISSION" cannot-share="true" cannot-giveup="true" use-class-reward="1">
+  <metadata name="A Sliver Of Darkness" display-name-id="1102929" min-level="20" max-level="2147483647" category="MISSION" cannot-share="true" cannot-giveup="true" use-class-reward="1" extend-stigma-slots="true">
     <races>
       <race id="ELYOS"/>
     </races>
@@ -238,7 +238,299 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
+    <!-- 发放分支（真端形状，步数保持 98）：
+         客户端的烙印凹槽展开态跟随教学步数——步数 98 时开启，一旦推进到 95（无论是否关窗、
+         关窗前后、之后重发多少次槽位数）就关闭且会话内不可恢复，只有重登才会由登录包序重建。
+         真端/退役 XML 在发放时同样不推进步数（98 → 装备后才到 96），故此处分发只给道具、开烙印窗口。
+         首次对话因此只有一个「结束对话」；再次对话由入口的持有量门控直接出示装备引导页。
+         Grant branches (retail shape, step stays 98): the client's stigma-slot expansion follows the
+         tutorial step - open at 98, and once the step advances to 95 it closes and cannot be recovered
+         in-session (no packet and no re-announce helps; only a re-login rebuilds it via the enter-world
+         packet sequence). Retail/retired XML does not advance the step on the grant either (98 -> 96 only
+         after the equip), so these branches hand over the item and open the stigma window. The first
+         conversation thus keeps a single end-dialog; re-talks are routed by the held-item entry gate
+         straight to the equip-guide page. -->
+    <transition source="spawned98" target="spawned98" priority="1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="205111" action="USE_OBJECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT5"/>
+      </after-commit>
+    </transition>
+    <transition source="spawned98" target="spawned98" priority="0">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="205111" action="QUEST_SELECT"/>
+      </event>
+      <conditions>
+        <advanced-class-is class="GLADIATOR"/>
+        <has-item item-id="140000003" count="1"/>
+      </conditions>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT5_2"/>
+      </after-commit>
+    </transition>
+    <transition source="spawned98" target="spawned98" priority="0">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="205111" action="QUEST_SELECT"/>
+      </event>
+      <conditions>
+        <advanced-class-is class="TEMPLAR"/>
+        <has-item item-id="140000003" count="1"/>
+      </conditions>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT5_2"/>
+      </after-commit>
+    </transition>
+    <transition source="spawned98" target="spawned98" priority="0">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="205111" action="QUEST_SELECT"/>
+      </event>
+      <conditions>
+        <advanced-class-is class="ASSASSIN"/>
+        <has-item item-id="140000003" count="1"/>
+      </conditions>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT5_2"/>
+      </after-commit>
+    </transition>
+    <transition source="spawned98" target="spawned98" priority="0">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="205111" action="QUEST_SELECT"/>
+      </event>
+      <conditions>
+        <advanced-class-is class="RANGER"/>
+        <has-item item-id="140000003" count="1"/>
+      </conditions>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT5_2"/>
+      </after-commit>
+    </transition>
+    <transition source="spawned98" target="spawned98" priority="0">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="205111" action="QUEST_SELECT"/>
+      </event>
+      <conditions>
+        <advanced-class-is class="CHANTER"/>
+        <has-item item-id="140000003" count="1"/>
+      </conditions>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT5_2"/>
+      </after-commit>
+    </transition>
+    <transition source="spawned98" target="spawned98" priority="0">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="205111" action="QUEST_SELECT"/>
+      </event>
+      <conditions>
+        <advanced-class-is class="SORCERER"/>
+        <has-item item-id="140000002" count="1"/>
+      </conditions>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT5_2"/>
+      </after-commit>
+    </transition>
+    <transition source="spawned98" target="spawned98" priority="0">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="205111" action="QUEST_SELECT"/>
+      </event>
+      <conditions>
+        <advanced-class-is class="SPIRIT_MASTER"/>
+        <has-item item-id="140000002" count="1"/>
+      </conditions>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT5_2"/>
+      </after-commit>
+    </transition>
+    <transition source="spawned98" target="spawned98" priority="0">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="205111" action="QUEST_SELECT"/>
+      </event>
+      <conditions>
+        <advanced-class-is class="CLERIC"/>
+        <has-item item-id="140000002" count="1"/>
+      </conditions>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT5_2"/>
+      </after-commit>
+    </transition>
+    <transition source="spawned98" target="spawned98" priority="0">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="205111" action="QUEST_SELECT"/>
+      </event>
+      <conditions>
+        <advanced-class-is class="GUNSLINGER"/>
+        <has-item item-id="140000004" count="1"/>
+      </conditions>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT5_2"/>
+      </after-commit>
+    </transition>
+    <transition source="spawned98" target="spawned98" priority="0">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="205111" action="QUEST_SELECT"/>
+      </event>
+      <conditions>
+        <advanced-class-is class="SONGWEAVER"/>
+        <has-item item-id="140000004" count="1"/>
+      </conditions>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT5_2"/>
+      </after-commit>
+    </transition>
+    <transition source="spawned98" target="spawned98" priority="0">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="205111" action="QUEST_SELECT"/>
+      </event>
+      <conditions>
+        <advanced-class-is class="AETHERTECH"/>
+        <has-item item-id="140000004" count="1"/>
+      </conditions>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT5_2"/>
+      </after-commit>
+    </transition>
+    <transition source="spawned98" target="spawned98" priority="0">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="205111" action="USE_OBJECT"/>
+      </event>
+      <conditions>
+        <advanced-class-is class="GLADIATOR"/>
+        <has-item item-id="140000003" count="1"/>
+      </conditions>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT5_2"/>
+      </after-commit>
+    </transition>
+    <transition source="spawned98" target="spawned98" priority="0">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="205111" action="USE_OBJECT"/>
+      </event>
+      <conditions>
+        <advanced-class-is class="TEMPLAR"/>
+        <has-item item-id="140000003" count="1"/>
+      </conditions>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT5_2"/>
+      </after-commit>
+    </transition>
+    <transition source="spawned98" target="spawned98" priority="0">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="205111" action="USE_OBJECT"/>
+      </event>
+      <conditions>
+        <advanced-class-is class="ASSASSIN"/>
+        <has-item item-id="140000003" count="1"/>
+      </conditions>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT5_2"/>
+      </after-commit>
+    </transition>
+    <transition source="spawned98" target="spawned98" priority="0">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="205111" action="USE_OBJECT"/>
+      </event>
+      <conditions>
+        <advanced-class-is class="RANGER"/>
+        <has-item item-id="140000003" count="1"/>
+      </conditions>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT5_2"/>
+      </after-commit>
+    </transition>
+    <transition source="spawned98" target="spawned98" priority="0">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="205111" action="USE_OBJECT"/>
+      </event>
+      <conditions>
+        <advanced-class-is class="CHANTER"/>
+        <has-item item-id="140000003" count="1"/>
+      </conditions>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT5_2"/>
+      </after-commit>
+    </transition>
+    <transition source="spawned98" target="spawned98" priority="0">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="205111" action="USE_OBJECT"/>
+      </event>
+      <conditions>
+        <advanced-class-is class="SORCERER"/>
+        <has-item item-id="140000002" count="1"/>
+      </conditions>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT5_2"/>
+      </after-commit>
+    </transition>
+    <transition source="spawned98" target="spawned98" priority="0">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="205111" action="USE_OBJECT"/>
+      </event>
+      <conditions>
+        <advanced-class-is class="SPIRIT_MASTER"/>
+        <has-item item-id="140000002" count="1"/>
+      </conditions>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT5_2"/>
+      </after-commit>
+    </transition>
+    <transition source="spawned98" target="spawned98" priority="0">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="205111" action="USE_OBJECT"/>
+      </event>
+      <conditions>
+        <advanced-class-is class="CLERIC"/>
+        <has-item item-id="140000002" count="1"/>
+      </conditions>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT5_2"/>
+      </after-commit>
+    </transition>
+    <transition source="spawned98" target="spawned98" priority="0">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="205111" action="USE_OBJECT"/>
+      </event>
+      <conditions>
+        <advanced-class-is class="GUNSLINGER"/>
+        <has-item item-id="140000004" count="1"/>
+      </conditions>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT5_2"/>
+      </after-commit>
+    </transition>
+    <transition source="spawned98" target="spawned98" priority="0">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="205111" action="USE_OBJECT"/>
+      </event>
+      <conditions>
+        <advanced-class-is class="SONGWEAVER"/>
+        <has-item item-id="140000004" count="1"/>
+      </conditions>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT5_2"/>
+      </after-commit>
+    </transition>
+    <transition source="spawned98" target="spawned98" priority="0">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="205111" action="USE_OBJECT"/>
+      </event>
+      <conditions>
+        <advanced-class-is class="AETHERTECH"/>
+        <has-item item-id="140000004" count="1"/>
+      </conditions>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT5_2"/>
+      </after-commit>
+    </transition>
     <transition source="spawned98" target="spawned98">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="205111" action="SELECT5_3"/>
+      </event>
+      <after-commit>
+        <show-dialog-window dialog-id="1"/>
+      </after-commit>
+    </transition>
+    <transition source="spawned98" target="spawned98" priority="1">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="205111" action="QUEST_SELECT"/>
       </event>
@@ -248,154 +540,308 @@
     </transition>
     <transition source="spawned98" target="spawned98">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="205111" action="SELECT5_3"/>
+        <dialog type="TALK_TO_NPC" npc-id="205111" action="SELECT5_2"/>
       </event>
       <conditions>
         <advanced-class-is class="GLADIATOR"/>
+        <has-item item-id="140000003" count="1" expected="false"/>
       </conditions>
       <actions>
         <give-item item-id="140000003" count="1"/>
       </actions>
       <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
         <show-dialog-window dialog-id="1"/>
       </after-commit>
     </transition>
     <transition source="spawned98" target="spawned98">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="205111" action="SELECT5_3"/>
+        <dialog type="TALK_TO_NPC" npc-id="205111" action="SELECT5_2"/>
       </event>
       <conditions>
         <advanced-class-is class="TEMPLAR"/>
+        <has-item item-id="140000003" count="1" expected="false"/>
       </conditions>
       <actions>
         <give-item item-id="140000003" count="1"/>
       </actions>
       <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
         <show-dialog-window dialog-id="1"/>
       </after-commit>
     </transition>
     <transition source="spawned98" target="spawned98">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="205111" action="SELECT5_3"/>
+        <dialog type="TALK_TO_NPC" npc-id="205111" action="SELECT5_2"/>
       </event>
       <conditions>
         <advanced-class-is class="ASSASSIN"/>
+        <has-item item-id="140000003" count="1" expected="false"/>
       </conditions>
       <actions>
         <give-item item-id="140000003" count="1"/>
       </actions>
       <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
         <show-dialog-window dialog-id="1"/>
       </after-commit>
     </transition>
     <transition source="spawned98" target="spawned98">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="205111" action="SELECT5_3"/>
+        <dialog type="TALK_TO_NPC" npc-id="205111" action="SELECT5_2"/>
       </event>
       <conditions>
         <advanced-class-is class="RANGER"/>
+        <has-item item-id="140000003" count="1" expected="false"/>
       </conditions>
       <actions>
         <give-item item-id="140000003" count="1"/>
       </actions>
       <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
         <show-dialog-window dialog-id="1"/>
       </after-commit>
     </transition>
     <transition source="spawned98" target="spawned98">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="205111" action="SELECT5_3"/>
+        <dialog type="TALK_TO_NPC" npc-id="205111" action="SELECT5_2"/>
       </event>
       <conditions>
         <advanced-class-is class="SORCERER"/>
+        <has-item item-id="140000002" count="1" expected="false"/>
       </conditions>
       <actions>
         <give-item item-id="140000002" count="1"/>
       </actions>
       <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
         <show-dialog-window dialog-id="1"/>
       </after-commit>
     </transition>
     <transition source="spawned98" target="spawned98">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="205111" action="SELECT5_3"/>
+        <dialog type="TALK_TO_NPC" npc-id="205111" action="SELECT5_2"/>
       </event>
       <conditions>
         <advanced-class-is class="SPIRIT_MASTER"/>
+        <has-item item-id="140000002" count="1" expected="false"/>
       </conditions>
       <actions>
         <give-item item-id="140000002" count="1"/>
       </actions>
       <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
         <show-dialog-window dialog-id="1"/>
       </after-commit>
     </transition>
     <transition source="spawned98" target="spawned98">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="205111" action="SELECT5_3"/>
+        <dialog type="TALK_TO_NPC" npc-id="205111" action="SELECT5_2"/>
       </event>
       <conditions>
         <advanced-class-is class="CLERIC"/>
+        <has-item item-id="140000002" count="1" expected="false"/>
       </conditions>
       <actions>
         <give-item item-id="140000002" count="1"/>
       </actions>
       <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
         <show-dialog-window dialog-id="1"/>
       </after-commit>
     </transition>
     <transition source="spawned98" target="spawned98">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="205111" action="SELECT5_3"/>
+        <dialog type="TALK_TO_NPC" npc-id="205111" action="SELECT5_2"/>
       </event>
       <conditions>
         <advanced-class-is class="CHANTER"/>
+        <has-item item-id="140000003" count="1" expected="false"/>
       </conditions>
       <actions>
         <give-item item-id="140000003" count="1"/>
       </actions>
       <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
         <show-dialog-window dialog-id="1"/>
       </after-commit>
     </transition>
     <transition source="spawned98" target="spawned98">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="205111" action="SELECT5_3"/>
+        <dialog type="TALK_TO_NPC" npc-id="205111" action="SELECT5_2"/>
       </event>
       <conditions>
         <advanced-class-is class="GUNSLINGER"/>
+        <has-item item-id="140000004" count="1" expected="false"/>
       </conditions>
       <actions>
         <give-item item-id="140000004" count="1"/>
       </actions>
       <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
         <show-dialog-window dialog-id="1"/>
       </after-commit>
     </transition>
     <transition source="spawned98" target="spawned98">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="205111" action="SELECT5_3"/>
+        <dialog type="TALK_TO_NPC" npc-id="205111" action="SELECT5_2"/>
       </event>
       <conditions>
         <advanced-class-is class="SONGWEAVER"/>
+        <has-item item-id="140000004" count="1" expected="false"/>
       </conditions>
       <actions>
         <give-item item-id="140000004" count="1"/>
       </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <show-dialog-window dialog-id="1"/>
+      </after-commit>
+    </transition>
+    <transition source="spawned98" target="spawned98">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="205111" action="SELECT5_2"/>
+      </event>
+      <conditions>
+        <advanced-class-is class="AETHERTECH"/>
+        <has-item item-id="140000004" count="1" expected="false"/>
+      </conditions>
+      <actions>
+        <give-item item-id="140000004" count="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <show-dialog-window dialog-id="1"/>
+      </after-commit>
+    </transition>
+    <transition source="spawned98" target="spawned98">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="205111" action="SELECT5_2"/>
+      </event>
+      <conditions>
+        <advanced-class-is class="GLADIATOR"/>
+        <has-item item-id="140000003" count="1"/>
+      </conditions>
       <after-commit>
         <show-dialog-window dialog-id="1"/>
       </after-commit>
     </transition>
     <transition source="spawned98" target="spawned98">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="205111" action="SELECT5_3"/>
+        <dialog type="TALK_TO_NPC" npc-id="205111" action="SELECT5_2"/>
+      </event>
+      <conditions>
+        <advanced-class-is class="TEMPLAR"/>
+        <has-item item-id="140000003" count="1"/>
+      </conditions>
+      <after-commit>
+        <show-dialog-window dialog-id="1"/>
+      </after-commit>
+    </transition>
+    <transition source="spawned98" target="spawned98">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="205111" action="SELECT5_2"/>
+      </event>
+      <conditions>
+        <advanced-class-is class="ASSASSIN"/>
+        <has-item item-id="140000003" count="1"/>
+      </conditions>
+      <after-commit>
+        <show-dialog-window dialog-id="1"/>
+      </after-commit>
+    </transition>
+    <transition source="spawned98" target="spawned98">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="205111" action="SELECT5_2"/>
+      </event>
+      <conditions>
+        <advanced-class-is class="RANGER"/>
+        <has-item item-id="140000003" count="1"/>
+      </conditions>
+      <after-commit>
+        <show-dialog-window dialog-id="1"/>
+      </after-commit>
+    </transition>
+    <transition source="spawned98" target="spawned98">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="205111" action="SELECT5_2"/>
+      </event>
+      <conditions>
+        <advanced-class-is class="SORCERER"/>
+        <has-item item-id="140000002" count="1"/>
+      </conditions>
+      <after-commit>
+        <show-dialog-window dialog-id="1"/>
+      </after-commit>
+    </transition>
+    <transition source="spawned98" target="spawned98">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="205111" action="SELECT5_2"/>
+      </event>
+      <conditions>
+        <advanced-class-is class="SPIRIT_MASTER"/>
+        <has-item item-id="140000002" count="1"/>
+      </conditions>
+      <after-commit>
+        <show-dialog-window dialog-id="1"/>
+      </after-commit>
+    </transition>
+    <transition source="spawned98" target="spawned98">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="205111" action="SELECT5_2"/>
+      </event>
+      <conditions>
+        <advanced-class-is class="CLERIC"/>
+        <has-item item-id="140000002" count="1"/>
+      </conditions>
+      <after-commit>
+        <show-dialog-window dialog-id="1"/>
+      </after-commit>
+    </transition>
+    <transition source="spawned98" target="spawned98">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="205111" action="SELECT5_2"/>
+      </event>
+      <conditions>
+        <advanced-class-is class="CHANTER"/>
+        <has-item item-id="140000003" count="1"/>
+      </conditions>
+      <after-commit>
+        <show-dialog-window dialog-id="1"/>
+      </after-commit>
+    </transition>
+    <transition source="spawned98" target="spawned98">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="205111" action="SELECT5_2"/>
+      </event>
+      <conditions>
+        <advanced-class-is class="GUNSLINGER"/>
+        <has-item item-id="140000004" count="1"/>
+      </conditions>
+      <after-commit>
+        <show-dialog-window dialog-id="1"/>
+      </after-commit>
+    </transition>
+    <transition source="spawned98" target="spawned98">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="205111" action="SELECT5_2"/>
+      </event>
+      <conditions>
+        <advanced-class-is class="SONGWEAVER"/>
+        <has-item item-id="140000004" count="1"/>
+      </conditions>
+      <after-commit>
+        <show-dialog-window dialog-id="1"/>
+      </after-commit>
+    </transition>
+    <transition source="spawned98" target="spawned98">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="205111" action="SELECT5_2"/>
       </event>
       <conditions>
         <advanced-class-is class="AETHERTECH"/>
+        <has-item item-id="140000004" count="1"/>
       </conditions>
-      <actions>
-        <give-item item-id="140000004" count="1"/>
-      </actions>
       <after-commit>
         <show-dialog-window dialog-id="1"/>
       </after-commit>
@@ -1769,14 +2215,6 @@
       </event>
       <after-commit>
         <dialog type="SHOW_QUEST_PAGE" page="SELECT4_1_1_1"/>
-      </after-commit>
-    </transition>
-    <transition source="spawned98" target="spawned98">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="205111" action="SELECT5_2"/>
-      </event>
-      <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT5_2"/>
       </after-commit>
     </transition>
     <transition source="equipped96" target="equipped96">
