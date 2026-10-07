@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+	仅存在于 GM 命令产物中的功能 NPC，2026-10-07 清理 New/ 目录时恢复至此。
+	Functional NPCs that existed only in the GM command artifacts, restored here on 2026-10-07.
+-->
+<spawns>
+  <spawn_map map_id="220110000">
+    <spawn custom="true" respawn_time="295" npc_id="810063" difficult_id="0">
+      <spot x="1797.6978" y="1989.1143" z="198.30534" h="114"/>
+    </spawn>
+    <spawn custom="true" respawn_time="295" npc_id="798461" difficult_id="0">
+      <spot x="1774.4667" y="2030.3984" z="197.87512" h="24"/>
+    </spawn>
+    <spawn custom="true" respawn_time="295" npc_id="799727" difficult_id="0">
+      <spot x="1771.3976" y="2016.6921" z="195.0" h="66"/>
+    </spawn>
+    <spawn custom="true" respawn_time="295" npc_id="799738" difficult_id="0"/>
+  </spawn_map>
+</spawns>
