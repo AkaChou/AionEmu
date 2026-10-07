@@ -1,13 +1,13 @@
 package com.aionemu.gameserver.questEngine.definition;
 
-import com.aionemu.gameserver.model.PlayerClass;
-import com.aionemu.gameserver.questEngine.model.QuestStatus;
-import com.aionemu.gameserver.questEngine.runtime.QuestEventIndex;
-import com.aionemu.gameserver.questEngine.runtime.QuestMutationPlanner;
-import com.aionemu.gameserver.questEngine.runtime.QuestSnapshot;
+import com.aionemu.gameserver.questEngine.retail.RetailQuestDriver;
+import com.aionemu.gameserver.questEngine.tablelane.DataDrivenNativeRuntime;
+import com.aionemu.gameserver.questEngine.tablelane.DataDrivenQuestTable;
+import com.aionemu.gameserver.questEngine.tablelane.NativeNpcNameResolver;
+
 import org.junit.jupiter.api.Test;
 
-import java.io.InputStream;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -15,191 +15,118 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * 五个阿斯莫升级型职业奖励任务的无目标奖励确认合同。
- * Targetless reward-confirmation contract for the five Asmodian level-up class-reward quests.
+ * 锁定 23830-23834（魔族升级型支援品五连，真端 LevelUpLogIn + ItemPlay 行）的接取等级、
+ * 发放文档与 11 职业奖励梯。
+ * Locks quests 23830-23834's (retail LevelUpLogIn + ItemPlay rows) acquire levels, granted documents
+ * and the eleven-class reward ladder.
+ * <p>
+ * 已退役（保留清单 owner=RETAIL_TABLE，family=DataDriven）：旧 typed planner 断言（每职业路由优先级、
+ * QuestDialog 双协议、after-commit 分形）随 P7 步 f 退场，其引擎层语义由 DD 运行时与领奖结算体承担；
+ * 按计划 §8.9（P3 重锚口径）改锚 DD 运行时公共面：等级接取面（acquireLevelInterests）、发放文档的
+ * 使用进度面（questsReferencingItem）、真端元数据的 11 职业奖励梯与领取面。
+ * <p>
+ * Re-anchored (plan §8.9) to the DD runtime faces: the level-acquire interest, the granted document's
+ * item-play interest, the retail metadata's eleven-class reward ladder and the reward-window face.
  */
 class Quest23830To23834TargetlessRewardTest {
-	private static final List<PlayerClass> CLASSES = List.of(
-		PlayerClass.GLADIATOR, PlayerClass.TEMPLAR, PlayerClass.RANGER, PlayerClass.ASSASSIN,
-		PlayerClass.SORCERER, PlayerClass.SPIRIT_MASTER, PlayerClass.CLERIC, PlayerClass.CHANTER,
-		PlayerClass.GUNSLINGER, PlayerClass.SONGWEAVER, PlayerClass.AETHERTECH);
+	private static final int REWARD_NPC_ID = 204061;
+	/**
+	 * 真端 class tag（{@code *_selectable_reward} 族）→ 生产职业名的登记键；元数据 classRewards 键 =
+	 * 真端 tag 大写形。框内对应关系（与 p3 class 轴审计一致）：fighter=GLADIATOR、knight=TEMPLAR、
+	 * wizard=SORCERER、elementalist=SPIRIT_MASTER、priest=CLERIC（cleric/priest 互换已复核）。
+	 * <p>
+	 * Retail class tags (the {@code *_selectable_reward} family); the metadata classRewards keys are the
+	 * uppercased retail tags: fighter=GLADIATOR, knight=TEMPLAR, wizard=SORCERER,
+	 * elementalist=SPIRIT_MASTER, priest=CLERIC (the cleric/priest swap is audited).
+	 */
+	private static final List<String> CLASS_TAGS = List.of(
+		"FIGHTER", "KNIGHT", "RANGER", "ASSASSIN", "WIZARD", "ELEMENTALIST", "PRIEST", "CHANTER",
+		"GUNSLINGER", "SONGWEAVER", "AETHERTECH");
 
 	private static final List<Spec> SPECS = List.of(
-		new Spec(23830, 182216123, 46544, false,
-			List.of(140001109, 140001130, 140001168, 140001145, 140001189, 140001202,
-				140001236, 140001221, 140001253, 140001289, 140001271)),
-		new Spec(23831, 182216124, 337255, false,
-			List.of(140001111, 140001128, 140001171, 140001142, 140001186, 140001203,
-				140001240, 140001220, 140001254, 140001290, 140001275)),
-		new Spec(23832, 182216125, 555019, true,
-			List.of(140001105, 140001123, 140001154, 140001136, 140001177, 140001196,
-				140001231, 140001216, 140001249, 140001284, 140001264)),
-		new Spec(23833, 182216126, 731094, false,
-			List.of(140001103, 140001124, 140001156, 140001137, 140001176, 140001198,
-				140001228, 140001214, 140001247, 140001282, 140001265)),
-		new Spec(23834, 182216127, 1005193, true,
-			List.of(140001118, 140001135, 140001173, 140001151, 140001192, 140001210,
-				140001245, 140001227, 140001262, 140001296, 140001279)));
+		new Spec(23830, 30, 182216123, 46544, List.of(
+			140001109, 140001130, 140001168, 140001145, 140001189, 140001202, 140001236, 140001221,
+			140001253, 140001289, 140001271)),
+		new Spec(23831, 40, 182216124, 337255, List.of(
+			140001111, 140001128, 140001171, 140001142, 140001186, 140001203, 140001240, 140001220,
+			140001254, 140001290, 140001275)),
+		new Spec(23832, 45, 182216125, 555019, List.of(
+			140001105, 140001123, 140001154, 140001136, 140001177, 140001196, 140001231, 140001216,
+			140001249, 140001284, 140001264)),
+		new Spec(23833, 50, 182216126, 731094, List.of(
+			140001103, 140001124, 140001156, 140001137, 140001176, 140001198, 140001228, 140001214,
+			140001247, 140001282, 140001265)),
+		new Spec(23834, 55, 182216127, 1005193, List.of(
+			140001118, 140001135, 140001173, 140001151, 140001192, 140001210, 140001245, 140001227,
+			140001262, 140001296, 140001279)));
 
 	@Test
-	void compilesNormalAndRealtimeTargetlessRewardsWithClassRewardsAndCloseOrder() throws Exception {
+	void retailRowsCarryTheLevelUpAcquireTheDocumentAndTheClassLadder() throws Exception {
+		DataDrivenNativeRuntime runtime = DataDrivenNativeRuntime.instance();
+		assertTrue(NativeNpcNameResolver.instance().resolveMembers("Aud").contains(REWARD_NPC_ID),
+			"交付 NPC 名必须解析到 204061");
+		DataDrivenQuestTable table = DataDrivenQuestTable.load(
+			Quest23830To23834TargetlessRewardTest.class
+				.getResourceAsStream(DataDrivenNativeRuntime.TABLE_RESOURCE));
+
 		for (Spec spec : SPECS) {
-			CompiledQuestDefinition compiled = load(spec.questId());
-			QuestEventIndex eventIndex = new QuestEventIndex(new ImmutableQuestCatalog(List.of(compiled)));
-			for (int classIndex = 0; classIndex < CLASSES.size(); classIndex++) {
-				PlayerClass playerClass = CLASSES.get(classIndex);
-				int rewardId = spec.rewardIds().get(classIndex);
-				// DD canonical：对话页确认通道（8）与奖励窗自动确认通道（110）都按职业梯展开，
-				// 职业路由优先级 = 职业序号（与遗留 priority=0..10 形对齐）。
-				// DD canonical: both the talk-page confirm channel (8) and the reward-window
-				// auto-confirm channel (110) expand per class ladder; class-route priority = class
-				// index (aligned with the legacy priority 0..10 shape).
-				assertTargetlessRoute(compiled, eventIndex, spec, playerClass, rewardId,
-					QuestDialogAction.SELECTED_QUEST_REWARD1.id(), classIndex);
-				assertTargetlessRoute(compiled, eventIndex, spec, playerClass, rewardId,
-					QuestDialogAction.SELECTED_QUEST_AUTO_REWARD1.id(), classIndex);
+			assertTrue(runtime.owns(spec.questId()), spec.questId() + " 必须由 DD 运行时拥有");
+			assertTrue(runtime.routes(spec.questId()), spec.questId() + " 必须由 DD 运行时路由");
 
-				QuestTransition npc = route(compiled, new QuestEvent.TalkToNpc(204061, 8), playerClass,
-					classIndex);
-				assertEquals("reward", npc.sourceNode());
-				assertEquals("complete", npc.targetNode());
-				// 动作两形等价（work item 清理定义尾追加或 planner 追加）。
-				// Both cleanup placements are equivalent (definition tail or planner appended).
-				List<QuestAction> expected = expectedActions(spec, rewardId);
-				List<QuestAction> withoutCleanup = expected.stream()
-					.filter(action -> !(action instanceof QuestAction.RemoveItem))
-					.toList();
-				assertTrue(npc.actions().equals(expected) || npc.actions().equals(withoutCleanup),
-					() -> "unexpected completion actions " + npc.actions());
-				assertEquals(List.of(new AfterCommitAction.RefreshPlayerStats(),
-					new AfterCommitAction.SyncQuestState(QuestStateSyncMode.COMPLETION),
-					new AfterCommitAction.ShowQuestSelectionDialog(QuestDialogPage.SELECT_QUEST.id())),
-					npc.afterCommit());
+			DataDrivenQuestTable.Row row = table.find(spec.questId()).orElseThrow();
+			assertEquals("leveluplogin", row.acquireKind(), spec.questId() + " 接取类别 = 真端 LevelUpLogIn");
+			assertEquals(String.valueOf(spec.level()), row.acquireParam(), spec.questId() + " 接取等级");
+			assertEquals("Aud", row.rewardNpc(), spec.questId() + " 交付 NPC 名 = 真端 reward_npc_name");
+
+			assertTrue(runtime.acquireLevelInterests().getOrDefault(spec.level(), List.of())
+				.contains(spec.questId()), spec.questId() + " 必须注册在等级 " + spec.level() + " 的接取面");
+			assertTrue(runtime.questsReferencingItem(spec.documentItem()).contains(spec.questId()),
+				spec.questId() + " 的发放文档必须注册使用进度面");
+
+			QuestMetadata metadata = RetailQuestDriver.ensureLoaded()
+				.retailMetadataOf(spec.questId()).orElseThrow().metadata();
+			assertEquals(spec.level(), metadata.minLevel(), spec.questId() + " 真端 minlevel_permitted");
+			assertEquals(java.util.Set.of("ASMODIANS"), metadata.permittedRaces(), "真端 pc_dark");
+			assertTrue(metadata.rewards().contains(new QuestReward("EXP", 0, spec.exp())),
+				() -> spec.questId() + " 奖励 " + metadata.rewards());
+
+			// 11 职业奖励梯：真端 tag 键 → 首个奖励物品 id（真端 *_selectable_reward 族）。
+			Map<String, Integer> expectedLadder = new LinkedHashMap<>();
+			for (int index = 0; index < CLASS_TAGS.size(); index++) {
+				expectedLadder.put(CLASS_TAGS.get(index), spec.classRewardIds().get(index));
 			}
+			Map<String, Integer> actualLadder = new LinkedHashMap<>();
+			metadata.classRewards().forEach((className, rewards) ->
+				actualLadder.put(className, rewards.get(0).id()));
+			assertEquals(expectedLadder, actualLadder, spec.questId() + " 职业奖励梯");
 		}
 	}
 
-	private static void assertTargetlessRoute(CompiledQuestDefinition compiled, QuestEventIndex index,
-			Spec spec, PlayerClass playerClass, int rewardId, int dialogId, Integer priority) {
-		// DD 形按 NPC 键注册路由（遗留形用 npc 无关的 QuestDialog 键）：交付 NPC 从产物
-		// reward→complete 路由自推。
-		// DD routes register under the npc key (the legacy shape used the npc-agnostic QuestDialog
-		// key); the reward npc derives from the compiled reward→complete routes.
-		int rewardNpc = compiled.definition().transitions().stream()
-			.filter(t -> "reward".equals(t.sourceNode()) && "complete".equals(t.targetNode()))
-			.map(t -> t.event())
-			.filter(QuestEvent.TalkToNpc.class::isInstance)
-			.map(QuestEvent.TalkToNpc.class::cast)
-			.mapToInt(QuestEvent.TalkToNpc::npcId)
-			.findFirst().orElseThrow();
-		QuestEvent event = new QuestEvent.TalkToNpc(rewardNpc, dialogId);
-		assertTrue(index.routesFor(event, spec.questId()).stream()
-			.anyMatch(candidate -> candidate.transition().conditions()
-				.contains(new QuestCondition.AdvancedClassIs(playerClass))));
-		QuestTransition targetless = route(compiled, event, playerClass, priority);
+	@Test
+	void documentPlayStepAndTheDeliveryFaceBoundaryFollowTheRetailRow() throws Exception {
+		DataDrivenNativeRuntime runtime = DataDrivenNativeRuntime.instance();
+		Spec spec = SPECS.get(0);
 
-		assertEquals("reward", targetless.sourceNode());
-		assertEquals("complete", targetless.targetNode());
-		// work item 清理两形等价（定义尾追加或 planner 提交时追加）。
-		// Both cleanup placements are equivalent (definition tail or planner at commit time).
-		List<QuestAction> expected = expectedActions(spec, rewardId);
-		List<QuestAction> withoutCleanup = expected.stream()
-			.filter(action -> !(action instanceof QuestAction.RemoveItem))
-			.toList();
-		assertTrue(targetless.actions().equals(expected)
-			|| targetless.actions().equals(withoutCleanup),
-			() -> "unexpected completion actions " + targetless.actions());
-		// 通道分形 afterCommit：对话页确认回任务选择页；奖励窗自动确认以 CloseDialog 收窗
-		// （遗留 targetless 契约形）。
-		// Channel-shaped afterCommit: the talk-page confirm returns to the quest-selection page;
-		// the reward-window auto-confirm closes the window (the legacy targetless contract shape).
-		boolean windowChannel = dialogId == QuestDialogAction.SELECTED_QUEST_AUTO_REWARD.id()
-			|| dialogId >= QuestDialogAction.SELECTED_QUEST_AUTO_REWARD1.id();
-		List<AfterCommitAction> expectedAfterCommit = windowChannel
-			? List.of(new AfterCommitAction.RefreshPlayerStats(),
-				new AfterCommitAction.SyncQuestState(QuestStateSyncMode.COMPLETION),
-				new AfterCommitAction.CloseDialog())
-			: List.of(new AfterCommitAction.RefreshPlayerStats(),
-				new AfterCommitAction.SyncQuestState(QuestStateSyncMode.COMPLETION),
-				new AfterCommitAction.ShowQuestSelectionDialog(QuestDialogPage.SELECT_QUEST.id()));
-		assertEquals(expectedAfterCommit, targetless.afterCommit());
-		if (windowChannel) {
-			// 奖励窗自动确认按双协议注册：同一逻辑路由必须同时存在 QuestDialog 无主键形。
-			// The reward-window auto-confirm registers under both protocols: the same logical route
-			// must also exist in the npc-agnostic QuestDialog form.
-			assertTrue(compiled.definition().transitions().stream()
-				.filter(transition -> transition.event().equals(new QuestEvent.QuestDialog(dialogId)))
-				.anyMatch(transition -> transition.conditions()
-					.contains(new QuestCondition.AdvancedClassIs(playerClass))),
-				"missing QuestDialog dual-protocol route for dialogId " + dialogId);
-		}
+		// 行数据：单步 ItemPlay（发放文档 = 进度载荷）；ItemPlay 可达性门由
+		// DataDrivenItemPlayGrantGateTest 承担。
+		DataDrivenQuestTable table = DataDrivenQuestTable.load(
+			Quest23830To23834TargetlessRewardTest.class
+				.getResourceAsStream(DataDrivenNativeRuntime.TABLE_RESOURCE));
+		DataDrivenQuestTable.Row row = table.find(spec.questId()).orElseThrow();
+		assertEquals(1, row.steps().size(), spec.questId() + " 单步进度行");
+		assertEquals(DataDrivenQuestTable.Kind.ITEM_PLAY, row.steps().get(0).kind(),
+			spec.questId() + " 进度类别 = 真端 ItemPlay");
 
-		var source = compiled.definition().nodes().stream()
-			.filter(node -> node.label().equals("reward")).findFirst().orElseThrow();
-		var complete = compiled.definition().nodes().stream()
-			.filter(node -> node.label().equals("complete")).findFirst().orElseThrow();
-		assertEquals(QuestStatus.REWARD, source.projection().status());
-		assertEquals(Map.of("var0", 1), source.projection().variables());
-		assertEquals(QuestStatus.COMPLETE, complete.projection().status());
-		assertEquals(Map.of("var0", 0), complete.projection().variables());
-
-		int packed = compiled.definition().progressLayout().pack(Map.of("var0", 1));
-		QuestSnapshot snapshot = new QuestSnapshot(7, spec.questId(), QuestStatus.REWARD, packed,
-			Map.of(spec.workItem(), 1)).withPlayerClass(playerClass);
-		var plan = QuestMutationPlanner.plan(compiled, snapshot, event, targetless).orElseThrow();
-		assertEquals(QuestStatus.COMPLETE, plan.nextStatus());
-		assertEquals(compiled.definition().progressLayout().pack(Map.of("var0", 0)),
-			plan.nextPackedVariables());
-		// work item 清理两形等价：定义携带或 planner 追加，去清理后必须逐项一致。
-		// Both cleanup placements are equivalent: definition-carried or planner-appended — the
-		// cleanup-stripped lists must match exactly.
-		java.util.function.Function<List<QuestAction>, List<QuestAction>> stripCleanup = list ->
-			list.stream().filter(action -> !(action instanceof QuestAction.RemoveItem remove
-				&& remove.itemId() == spec.workItem() && remove.removeAll())).toList();
-		assertEquals(stripCleanup.apply(targetless.actions()),
-			stripCleanup.apply(plan.requiredActions()));
-		assertEquals(targetless.afterCommit(), plan.afterCommit());
+		// 交付面边界（与 Quest26802 同类口径）：交付对象 #2 面（reportTalkInterests）只对 Talk 接取行
+		// 注册；LevelUpLogIn 行不在该面（文档使用推进 ≠ NPC 报告），奖励窗面由此不落本行。
+		// Delivery-face boundary: the retail object-#2 face registers for Talk-acquired rows only; a
+		// LevelUpLogIn row has no NPC report face, so no reward window hangs on Aud for this row.
+		assertTrue(runtime.reportTalkInterests().values().stream()
+				.noneMatch(questIds -> questIds.contains(spec.questId())),
+			spec.questId() + " 是 LevelUpLogIn 行，不得注册 Talk 交付面");
 	}
 
-	private static List<QuestAction> expectedActions(Spec spec, int rewardId) {
-		// DD canonical 形：固定奖励（元数据序）在前、职业物品次之、CompleteQuest 收尾；
-		// work item 的完成清理由 planner 追加（RemoveItem(ALL) 不进定义）。
-		// DD canonical shape: fixed rewards (metadata order) first, then the class item, closed by
-		// CompleteQuest; the planner appends the work-item completion cleanup (RemoveItem(ALL)
-		// stays out of the definition).
-		QuestAction item = new QuestAction.GrantReward("ITEM", rewardId, 1);
-		QuestAction exp = new QuestAction.GrantReward("EXP", 0, spec.exp(), QuestRewardAmountMode.QUEST_BASE);
-		QuestAction complete = new QuestAction.CompleteQuest(0);
-		QuestAction removeItem = new QuestAction.RemoveItem(spec.workItem(), QuestAction.RemoveItem.ALL);
-		// work item 清理两形等价（定义尾追加或 planner 提交时追加）。
-		// Both cleanup placements are equivalent (definition tail or planner at commit time).
-		return spec.itemFirst()
-			? List.of(item, exp, complete, removeItem)
-			: List.of(exp, item, complete, removeItem);
-	}
-
-	private static QuestTransition route(CompiledQuestDefinition compiled, QuestEvent event,
-			PlayerClass playerClass, Integer priority) {
-		return compiled.definition().transitions().stream()
-			.filter(transition -> transition.event().equals(event))
-			.filter(transition -> transition.sourceNode().equals("reward"))
-			.filter(transition -> transition.conditions().contains(new QuestCondition.AdvancedClassIs(playerClass)))
-			.filter(transition -> priority == null || priority.equals(transition.priority()))
-			.findFirst().orElseThrow();
-	}
-
-	// 退役任务统一走生产视图（真端 overlay 合成；旧 XML 只在 git 历史里）。
-	// Retired quests resolve through the production view (retail overlay; the old XML lives in
-	// git history only).
-	private static CompiledQuestDefinition load(int questId) throws Exception {
-		return ProductionQuestDefinitions.definition(questId);
-	}
-
-	// DD canonical：职业路由优先级统一为职业序号（遗留分任务旗标随两通道归一而废弃）；itemFirst
-	// 保留真端元数据序（该族部分行物品先于经验）。
-	// DD canonical: class-route priorities are uniformly the class index (the per-quest legacy
-	// flags are obsolete now that both channels share the shape); itemFirst keeps the retail
-	// metadata order (some rows grant the item before EXP).
-	private record Spec(int questId, int workItem, long exp, boolean itemFirst, List<Integer> rewardIds) {
+	/** 一条真端行的锚点事实。 / The anchor facts of one retail row. */
+	private record Spec(int questId, int level, int documentItem, int exp, List<Integer> classRewardIds) {
 	}
 }

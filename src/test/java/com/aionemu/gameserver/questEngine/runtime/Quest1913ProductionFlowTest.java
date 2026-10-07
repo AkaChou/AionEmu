@@ -1,286 +1,129 @@
 package com.aionemu.gameserver.questEngine.runtime;
 
-import com.aionemu.gameserver.questEngine.definition.AfterCommitAction;
-import com.aionemu.gameserver.questEngine.definition.CompiledQuestDefinition;
-import com.aionemu.gameserver.questEngine.definition.ImmutableQuestCatalog;
-import com.aionemu.gameserver.questEngine.definition.QuestAction;
-import com.aionemu.gameserver.questEngine.definition.QuestDefinitionXmlCompiler;
-import com.aionemu.gameserver.questEngine.definition.QuestEvent;
-import com.aionemu.gameserver.questEngine.definition.QuestStateSyncMode;
+import com.aionemu.gameserver.model.PlayerClass;
+import com.aionemu.gameserver.model.Race;
+import com.aionemu.gameserver.model.gameobjects.player.Player;
+import com.aionemu.gameserver.questEngine.definition.ProductionQuestDefinitions;
+import com.aionemu.gameserver.questEngine.definition.QuestMetadata;
+import com.aionemu.gameserver.questEngine.definition.QuestReward;
+import com.aionemu.gameserver.questEngine.definition.RetiredQuestIds;
+import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
+import com.aionemu.gameserver.questEngine.retail.RetailQuestDriver;
+import com.aionemu.gameserver.questEngine.tablelane.NativeNpcNameResolver;
+import com.aionemu.gameserver.questEngine.tablelane.NativeTalkFixture;
+import com.aionemu.gameserver.questEngine.tablelane.SimpleTalkHandler;
 import org.junit.jupiter.api.Test;
 
-import java.io.InputStream;
-import java.lang.reflect.Proxy;
-import java.sql.Connection;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicReference;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+/**
+ * 1913「베르테론 파견」的真端车道（native）生产流证明。
+ * <p>
+ * 1913 已退役（保留清单 owner=RETAIL_TABLE，旧 XML 只在 git 历史里）：typed dispatcher 与
+ * {@code ProductionQuestDefinitions.definition(1913)} 不再持有它，生产执行由 SimpleTalk native 车道接管。
+ * 本测试按 P3 重锚口径（同 {@code Quest80487ProductionFlowTest} / {@code Quest1112ProductionFlowTest}）
+ * 断言等价 native 事实：单 owner、单步中继合同、奖励事实、接取/中继/报告对话面。
+ * <p>
+ * 旧 typed 流程断言（步 1 传送 210030000、交付边锚在 started1、after-commit 序）随 typed 主体退场：
+ * 真端 talk 行未声明传送列，车道推进 = var0=1 + 关窗，「传送后才可领奖」由中继满门承担（未满 = 页 10）。
+ * <p>
+ * Production-flow proof for quest 1913 on the retail (native) lane: 1913 is retired to the SimpleTalk
+ * native handler, so the typed definition no longer exists. The old typed assertions (the step-1 teleport,
+ * the started1 delivery edge) retire with it: the retail talk row declares no teleport column, the lane
+ * advance is var0=1 plus close, and the "report only after the relay" gate is the relay-saturation check
+ * (unsaturated shows page 10).
+ */
 class Quest1913ProductionFlowTest {
-	private static final int PLAYER_ID = 7;
+
 	private static final int QUEST_ID = 1913;
-	private static final int START_NPC_ID = 203758;
-	private static final int TRANSPORT_NPC_ID = 203726;
-	private static final int REWARD_NPC_ID = 203097;
-	private static final int NPC_OBJECT_ID = 900_007;
 
 	@Test
-	void startDialogKeepsTheQuestUnacceptedAndAcceptDialogStartsIt() throws Exception {
-		CompiledQuestDefinition definition = definition();
-		AtomicReference<QuestStatus> status = new AtomicReference<>(QuestStatus.NONE);
-		AtomicInteger packedVariables = new AtomicInteger();
-		List<QuestMutationPlan> plans = new ArrayList<>();
-		List<AfterCommitAction> afterCommit = new ArrayList<>();
-		QuestProductionDispatcher dispatcher = dispatcher(definition, status, packedVariables, plans, afterCommit);
-
-		QuestEventRouter.DispatchResult offer = dispatch(dispatcher, START_NPC_ID, 31);
-
-		assertHandled(offer);
-		assertEquals(QuestStatus.NONE, status.get());
-		assertTrue(plans.isEmpty());
-		// S2 规范形接取：QUEST_SELECT(31) 从 unaccepted 直发接取窗页 4（SELECT1 页梯与 1007 中转已退场）。
-		// S2 canonical accept: QUEST_SELECT(31) pops the ask window page 4 straight from unaccepted.
-		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(4)), afterCommit);
-
-		plans.clear();
-		afterCommit.clear();
-		QuestEventRouter.DispatchResult accept = dispatch(dispatcher, START_NPC_ID, 1002);
-
-		assertHandled(accept);
-		assertEquals(QuestStatus.START, status.get());
-		assertEquals(0, packedVariables.get());
-		assertEquals(QuestStatus.START, plans.getLast().nextStatus());
-		assertEquals(List.of(
-			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.VISIBILITY_REFRESH),
-			new AfterCommitAction.ShowQuestDialog(1003)), afterCommit);
+	void retiredRowIsOwnedByTheNativeTalkLaneWithoutATypedDefinition() {
+		assertTrue(RetiredQuestIds.contains(QUEST_ID), "1913 必须在保留清单 owner=RETAIL_TABLE 内");
+		assertTrue(SimpleTalkHandler.instance().routes(QUEST_ID), "SimpleTalk native 车道必须路由 1913");
+		assertFalse(ProductionQuestDefinitions.catalog().findExecutable(QUEST_ID).isPresent(),
+			"退役后 typed 目录不得再持有 1913（旧 XML 只在 git 历史里）");
 	}
 
 	@Test
-	void stepToOneDialogAdvancesTheStartedQuestAndTeleportsToVerteron() throws Exception {
-		CompiledQuestDefinition definition = definition();
-		AtomicReference<QuestStatus> status = new AtomicReference<>(QuestStatus.START);
-		AtomicInteger packedVariables = new AtomicInteger();
-		List<QuestMutationPlan> plans = new ArrayList<>();
-		List<AfterCommitAction> afterCommit = new ArrayList<>();
-		QuestProductionDispatcher dispatcher = dispatcher(definition, status, packedVariables, plans, afterCommit);
+	void retailRowKeepsTheSingleRelayAndTheHyacinteHandIn() {
+		SimpleTalkHandler handler = SimpleTalkHandler.instance();
 
-		QuestEventRouter.DispatchResult offer = dispatch(dispatcher, TRANSPORT_NPC_ID, 31);
-
-		assertHandled(offer);
-		assertEquals(QuestStatus.START, status.get());
-		assertEquals(0, packedVariables.get());
-		assertTrue(plans.isEmpty());
-		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(1352)), afterCommit);
-
-		afterCommit.clear();
-		QuestEventRouter.DispatchResult teleport = dispatch(dispatcher, TRANSPORT_NPC_ID, 10000);
-
-		assertHandled(teleport);
-		assertEquals(QuestStatus.START, status.get());
-		assertEquals(1, packedVariables.get());
-		assertEquals(QuestStatus.START, plans.getLast().nextStatus());
-		assertEquals(1, plans.getLast().nextPackedVariables());
-		assertEquals(List.of(new QuestAction.SetVariable("var0", 1)), plans.getLast().requiredActions());
-		assertEquals(List.of(
-			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.PACKET_ONLY),
-			new AfterCommitAction.TeleportPlayer(210030000, 1643f, 1500f, 120f, (byte) 0),
-			new AfterCommitAction.CloseDialog()), afterCommit);
+		assertEquals("Macus", handler.requireRow(QUEST_ID).acquiredNpcName(), "真端 acquired_npc_name");
+		assertEquals(List.of("Polyidus"), handler.requireRow(QUEST_ID).talkNpcNames(), "真端 talk_npc1");
+		assertEquals("Hyacinte", handler.requireRow(QUEST_ID).rewardNpcName(), "真端 reward_npc_name");
+		assertEquals(1, handler.relayCount(QUEST_ID), "1913 是单步中继行");
+		assertNotNull(handler.acquireNpc(QUEST_ID), "接取 NPC 必须可解析");
+		assertNotNull(handler.rewardNpc(QUEST_ID), "交付 NPC 必须可解析");
 	}
 
 	@Test
-	void rewardDialogIsAvailableOnlyAfterTheVerteronTransfer() throws Exception {
-		CompiledQuestDefinition definition = definition();
-		AtomicReference<QuestStatus> status = new AtomicReference<>(QuestStatus.START);
-		AtomicInteger packedVariables = new AtomicInteger();
-		List<QuestMutationPlan> plans = new ArrayList<>();
-		List<AfterCommitAction> afterCommit = new ArrayList<>();
-		QuestProductionDispatcher dispatcher = dispatcher(definition, status, packedVariables, plans, afterCommit);
+	void rewardFactsComeFromTheRetailRow() throws Exception {
+		QuestMetadata metadata = RetailQuestDriver.ensureLoaded()
+			.retailMetadataOf(QUEST_ID).orElseThrow().metadata();
 
-		// 传送前（started，var0=0）：S2 交付边锚在 started1，QUEST_SELECT(31) 零路由 ——
-		// "必须先完成传送才可领奖"由交付边源节点承担，不再有 SELECT5 报告页与 1009 中转。
-		// Before the transfer (started, var0=0): the S2 delivery edge is anchored at started1, so
-		// QUEST_SELECT(31) has no route; the report page and the 1009 relay are gone.
-		QuestEventRouter.DispatchResult premature = dispatch(dispatcher, REWARD_NPC_ID, 31);
-
-		assertNotHandled(premature);
-		assertEquals(QuestStatus.START, status.get());
-		assertEquals(0, packedVariables.get());
-		assertTrue(plans.isEmpty());
-		assertTrue(afterCommit.isEmpty());
-
-		// 传送后（started1，var0=1）：点 31 即翻 REWARD 并下发本档奖励窗（单档 → 窗 1 页 5）。
-		// After the transfer (started1, var0=1): clicking 31 flips REWARD and shows the tiered
-		// reward window (one group -> window 1, page 5).
-		packedVariables.set(1);
-		QuestEventRouter.DispatchResult reward = dispatch(dispatcher, REWARD_NPC_ID, 31);
-
-		assertHandled(reward);
-		assertEquals(QuestStatus.REWARD, status.get());
-		assertEquals(1, packedVariables.get());
-		assertEquals(QuestStatus.REWARD, plans.getLast().nextStatus());
-		assertEquals(1, plans.getLast().nextPackedVariables());
-		assertTrue(plans.getLast().requiredActions().isEmpty());
-		assertEquals(List.of(
-			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
-			new AfterCommitAction.ShowQuestDialog(5)), afterCommit);
+		// 真端 quest.xml：minlevel_permitted=10、race_permitted=pc_light、class_permitted=fighter knight、
+		// reward_exp1=14046、reward_item1_1=FOOD_dpheal_40A 5（物品模板 160001273）。
+		// Retail quest.xml row: min level 10, light race, fighter/knight classes, 14046 exp and 5x food.
+		assertEquals(10, metadata.minLevel(), "真端 minlevel_permitted");
+		assertEquals(java.util.Set.of("ELYOS"), metadata.permittedRaces(), "真端 pc_light");
+		assertTrue(metadata.permittedClasses().contains("GLADIATOR")
+				&& metadata.permittedClasses().contains("TEMPLAR"), "真端 class_permitted=fighter knight");
+		List<QuestReward> rewards = metadata.rewards();
+		assertTrue(rewards.contains(new QuestReward("EXP", 0, 14046)), () -> rewards.toString());
+		assertTrue(rewards.contains(new QuestReward("ITEM", 160001273, 5)), () -> rewards.toString());
 	}
 
 	@Test
-	void completeClientDialogSequencePreservesStateAndRewardTiming() throws Exception {
-		CompiledQuestDefinition definition = definition();
-		AtomicReference<QuestStatus> status = new AtomicReference<>(QuestStatus.NONE);
-		AtomicInteger packedVariables = new AtomicInteger();
-		List<QuestMutationPlan> plans = new ArrayList<>();
-		List<AfterCommitAction> afterCommit = new ArrayList<>();
-		QuestProductionDispatcher dispatcher = dispatcher(definition, status, packedVariables, plans, afterCommit);
+	void acceptRelayAndReportFacesFollowTheNativeDialogPages() {
+		SimpleTalkHandler handler = SimpleTalkHandler.instance();
+		Player player = NativeTalkFixture.player(Race.ELYOS, PlayerClass.GLADIATOR, 10);
+		NativeTalkFixture.completePrerequisites(player, 1007);
+		Integer acquireNpc = handler.acquireNpc(QUEST_ID);
+		Integer progressNpc = NativeNpcNameResolver.instance().resolveMembers("Polyidus").get(0);
+		Integer reportNpc = handler.rewardNpc(QUEST_ID);
+		assertNotNull(acquireNpc);
+		assertNotNull(progressNpc);
+		assertNotNull(reportNpc);
 
-		assertResponse(dispatch(dispatcher, START_NPC_ID, 31), afterCommit,
-			new AfterCommitAction.ShowQuestDialog(4));
-		assertEquals(QuestStatus.NONE, status.get());
+		// 接取收尾（1002）：建档 START + 接取确认页 1003（带任务上下文）。
+		NativeTalkFixture.clearPackets(player);
+		assertTrue(handler.onDialog(NativeTalkFixture.dialog(player, acquireNpc, QUEST_ID, 1002)));
+		QuestState state = player.getQuestStateList().getQuestState(QUEST_ID);
+		assertEquals(QuestStatus.START, state.getStatus(), "接取收尾必须把任务建到 START");
+		assertEquals(0, state.getQuestVars().getQuestVars(), "接取收尾必须清零变量");
+		NativeTalkFixture.assertOnlyDialogPageWithQuest(player, 1003, QUEST_ID);
 
-		// S2 接取段退场：ASK_QUEST_ACCEPT(1007) 中转随 SELECT1 页梯消失，接取窗由 31 直发（页 4）。
-		// S2 retired accept relay: ASK_QUEST_ACCEPT(1007) goes with the SELECT1 ladder; 31 pops the
-		// ask window (page 4) itself.
-		assertNotHandled(dispatch(dispatcher, START_NPC_ID, 1007));
-		assertEquals(QuestStatus.NONE, status.get());
-		assertTrue(afterCommit.isEmpty());
+		// 中继未满时报告面只有未完成提示页 10（两参，不带任务上下文）。
+		NativeTalkFixture.clearPackets(player);
+		assertTrue(handler.onDialog(NativeTalkFixture.dialog(player, reportNpc, QUEST_ID, 31)),
+			"中继未满时交付面必须兜底响应");
+		NativeTalkFixture.assertOnlyDialogPage(player, 10);
 
-		assertResponse(dispatch(dispatcher, START_NPC_ID, 1003), afterCommit,
-			new AfterCommitAction.ShowQuestDialog(1004));
-		assertEquals(QuestStatus.NONE, status.get());
+		// 步 1（Polyidus）：任务行打开该步页（select2=1352）；推进（10000）= var0=1 + 关窗。
+		NativeTalkFixture.clearPackets(player);
+		assertTrue(handler.onDialog(NativeTalkFixture.dialog(player, progressNpc, QUEST_ID, 31)));
+		NativeTalkFixture.assertOnlyDialogPageWithQuest(player, 1352, QUEST_ID);
 
-		assertResponse(dispatch(dispatcher, START_NPC_ID, 1002), afterCommit,
-			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.VISIBILITY_REFRESH),
-			new AfterCommitAction.ShowQuestDialog(1003));
-		assertEquals(QuestStatus.START, status.get());
+		NativeTalkFixture.clearPackets(player);
+		assertTrue(handler.onDialog(NativeTalkFixture.dialog(player, progressNpc, QUEST_ID, 10000)));
+		assertEquals(1, state.getQuestVars().getQuestVars(), "步 1 推进必须写 var0=1");
+		NativeTalkFixture.assertCloseDialog(player);
 
-		assertResponse(dispatch(dispatcher, TRANSPORT_NPC_ID, 31), afterCommit,
-			new AfterCommitAction.ShowQuestDialog(1352));
-		assertResponse(dispatch(dispatcher, TRANSPORT_NPC_ID, 10000), afterCommit,
-			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.PACKET_ONLY),
-			new AfterCommitAction.TeleportPlayer(210030000, 1643f, 1500f, 120f, (byte) 0),
-			new AfterCommitAction.CloseDialog());
-		assertEquals(QuestStatus.START, status.get());
-		assertEquals(1, packedVariables.get());
+		// 中继满：报告确认页（select5=2375）→ 1009 推进 REWARD + 奖励窗（页 5）。
+		NativeTalkFixture.clearPackets(player);
+		assertTrue(handler.onDialog(NativeTalkFixture.dialog(player, reportNpc, QUEST_ID, 31)));
+		NativeTalkFixture.assertOnlyDialogPageWithQuest(player, 2375, QUEST_ID);
 
-		// S2 交付段退场：SELECT_QUEST_REWARD(1009) 中转消失，交付边只认 QUEST_SELECT(31)。
-		// S2 retired delivery relay: SELECT_QUEST_REWARD(1009) is gone; only QUEST_SELECT(31)
-		// commits the hand-in.
-		assertNotHandled(dispatch(dispatcher, REWARD_NPC_ID, 1009));
-		assertEquals(QuestStatus.START, status.get());
-		assertEquals(1, packedVariables.get());
-		assertTrue(afterCommit.isEmpty());
-
-		assertResponse(dispatch(dispatcher, REWARD_NPC_ID, 31), afterCommit,
-			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
-			new AfterCommitAction.ShowQuestDialog(5));
-		assertEquals(QuestStatus.REWARD, status.get());
-
-		assertResponse(dispatch(dispatcher, REWARD_NPC_ID, 8), afterCommit,
-			new AfterCommitAction.RefreshPlayerStats(),
-			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.COMPLETION),
-			new AfterCommitAction.ShowQuestSelectionDialog(10));
-		assertEquals(QuestStatus.COMPLETE, status.get());
-		assertEquals(0, packedVariables.get());
-		QuestMutationPlan completion = plans.getLast();
-		assertEquals(List.of(
-			new QuestAction.GrantReward("EXP", 0, 14046, com.aionemu.gameserver.questEngine.definition.QuestRewardAmountMode.QUEST_BASE),
-			new QuestAction.GrantReward("ITEM", 160001273, 5, com.aionemu.gameserver.questEngine.definition.QuestRewardAmountMode.EXACT),
-			new QuestAction.CompleteQuest(0)), completion.requiredActions());
-	}
-
-	private static QuestProductionDispatcher dispatcher(CompiledQuestDefinition definition,
-			AtomicReference<QuestStatus> status, AtomicInteger packedVariables, List<QuestMutationPlan> plans,
-			List<AfterCommitAction> afterCommit) {
-		QuestEventPort eventPort = (connection, playerId, questId, event) ->
-			new QuestSnapshot(playerId, questId, status.get(), packedVariables.get(), Map.of())
-				.withStartEligibility(QuestStartEligibility.allowed())
-				.withCompletedQuestIds(Set.of(1007));
-		QuestStatePort statePort = new QuestStatePort() {
-			@Override
-			public void apply(Connection connection, int playerId, QuestMutationPlan plan) {
-				plans.add(plan);
-				status.set(plan.nextStatus());
-				packedVariables.set(plan.nextPackedVariables());
-			}
-
-			@Override
-			public void publish(int playerId, QuestMutationPlan plan) {
-			}
-		};
-		return new QuestProductionDispatcher(
-			new ImmutableQuestCatalog(List.of(definition)),
-			new QuestExecutionCoordinator(new PlayerSerialExecutor()),
-			eventPort, noOpActions(), statePort,
-			(action, snapshot, plan) -> afterCommit.add(action),
-			Quest1913ProductionFlowTest::connection, ignored -> { },
-			new QuestRuntimeMetricsCollector());
-	}
-
-	private static QuestEventRouter.DispatchResult dispatch(QuestProductionDispatcher dispatcher,
-			int npcId, int dialogId) {
-		return dispatcher.dispatch(new QuestEvent.TalkToNpc(npcId, dialogId, NPC_OBJECT_ID),
-			PLAYER_ID, QUEST_ID, QuestDispatchContract.EXCLUSIVE);
-	}
-
-	private static CompiledQuestDefinition definition() throws Exception {
-		return com.aionemu.gameserver.questEngine.definition.ProductionQuestDefinitions.definitionInOverlay(1913);
-	}
-
-	private static QuestActionPort noOpActions() {
-		return new QuestActionPort() {
-			@Override
-			public void preflight(Connection connection, QuestSnapshot snapshot, List<QuestAction> actions) {
-			}
-
-			@Override
-			public QuestTransactionParticipant apply(Connection connection, QuestSnapshot snapshot,
-					List<QuestAction> actions) {
-				return QuestTransactionParticipant.none();
-			}
-		};
-	}
-
-	private static Connection connection() {
-		return (Connection) Proxy.newProxyInstance(Connection.class.getClassLoader(),
-			new Class<?>[]{Connection.class}, (proxy, method, args) -> switch (method.getName()) {
-				case "getAutoCommit" -> true;
-				case "setAutoCommit", "commit", "rollback", "close" -> null;
-				default -> method.getReturnType() == boolean.class ? false : null;
-			});
-	}
-
-	private static void assertHandled(QuestEventRouter.DispatchResult result) {
-		assertNoFailure(result);
-		assertTrue(result.handled(), result::toString);
-	}
-
-	/** 零路由断言：S2 退场的旧页链中转（1007/1009）不得再被任何 owner 接管。 /
-	 * Zero-route assertion: the S2-retired page-chain relays (1007/1009) must not be handled. */
-	private static void assertNotHandled(QuestEventRouter.DispatchResult result) {
-		assertNoFailure(result);
-		assertFalse(result.handled(), result::toString);
-	}
-
-	private static void assertNoFailure(QuestEventRouter.DispatchResult result) {
-		result.owners().stream().map(QuestEventRouter.OwnerResult::failure)
-			.filter(java.util.Objects::nonNull).findFirst().ifPresent(failure -> {
-				throw failure;
-			});
-	}
-
-	private static void assertResponse(QuestEventRouter.DispatchResult result,
-			List<AfterCommitAction> actual, AfterCommitAction... expected) {
-		assertHandled(result);
-		assertEquals(List.of(expected), actual);
-		actual.clear();
+		NativeTalkFixture.clearPackets(player);
+		assertTrue(handler.onDialog(NativeTalkFixture.dialog(player, reportNpc, QUEST_ID, 1009)));
+		assertEquals(QuestStatus.REWARD, state.getStatus(), "确认动作必须推进到 REWARD");
+		NativeTalkFixture.assertOnlyDialogPageWithQuest(player, 5, QUEST_ID);
 	}
 }

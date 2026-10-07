@@ -1,84 +1,99 @@
 package com.aionemu.gameserver.questEngine.definition;
 
+import com.aionemu.gameserver.model.PlayerClass;
+import com.aionemu.gameserver.model.Race;
+import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
+import com.aionemu.gameserver.questEngine.retail.RetailQuestDriver;
+import com.aionemu.gameserver.questEngine.tablelane.NativeNpcNameResolver;
+import com.aionemu.gameserver.questEngine.tablelane.NativeQuestTableLoader;
+import com.aionemu.gameserver.questEngine.tablelane.NativeTalkFixture;
+import com.aionemu.gameserver.questEngine.tablelane.SimpleHuntHandler;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
-import java.util.Map;
 
-import static com.aionemu.gameserver.questEngine.definition.QuestProjectionNodes.node;
-import static com.aionemu.gameserver.questEngine.definition.QuestProjectionNodes.assertTarget;
-import static com.aionemu.gameserver.questEngine.definition.QuestProjectionNodes.singleTalkRoute;
-import static com.aionemu.gameserver.questEngine.definition.QuestProjectionNodes.talkRoutes;
-import static com.aionemu.gameserver.questEngine.definition.QuestProjectionNodes.targetNpcs;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * 锁定任务 1347 的报告 NPC（203966）与奖励归属合同（P0-2 规范形：报告页 1352 与 1009 中转不再由服务端驱动）。
- * Locks quest 1347's report NPC (203966) and reward-owner contract (canonical since P0-2: the 1352
- * report page and the 1009 hop are no longer server-driven).
- * <p>legacy 合同（origin/history zz_retail_simple_quests.xml）写明：start_npc=203965、
- * end_npc=203966、report_owner=203966、reward_page=5。客户端 QUEST_Q1347.html 只在
- * 203966 这条链上提供 1352 页（按钮 1009「报告结果。」）；规范形后该页链不再下发，交付收敛为
- * 满段 QUEST_SELECT → 分档奖励窗。此前 XML 把 NPC_REPORT 挂在 203965，
- * 导致在 203966 点击任务行（31）没有路由、客户端卡在任务列表页。</p>
- * <p>The legacy contract (origin/history zz_retail_simple_quests.xml) states start_npc=203965,
- * end_npc=203966, report_owner=203966, reward_page=5. The client html for 1347 only provides page
- * 1352 on that chain (button 1009); canonical stopped driving that page chain and delivery collapsed
- * to the full node's QUEST_SELECT → tiered reward window. The XML used to hang NPC_REPORT on 203965,
- * so the quest-row click (31) at 203966 had no route and the client stayed on the quest-list page.</p>
- * <p>任务已退役：定义取生产视图，节点按 (状态, 打包投影) 定位。
- * The quest is retired, so the definition comes from the production view and nodes are located by
- * (status, packed projection).</p>
+ * 锁定任务 1347 的两槽击杀目标、报告 NPC 与奖励归属合同（真端 SimpleHunt 车道）。
+ * Locks quest 1347's two-slot kill goal, report NPC and reward-owner contract on the retail lane.
+ * <p>
+ * 旧 typed XML 期此处的关键裁定是「报告 owner = 交付 NPC（203966 Trillian），不是接取 NPC
+ * （203965 Castor）」；真端表行给出同一事实，故按计划 §8.9（P3 重锚口径）改锚 native 行 + 对话面。
+ * <p>
+ * The retired IR assertion here was "the report owner is the hand-in NPC (203966), not the accept NPC
+ * (203965)"; the retail row states the same fact, so the test is re-anchored (plan §8.9) to the native
+ * row and its dialog faces.
  */
 class Quest1347ClientDialogAlignmentTest {
 	private static final int QUEST_ID = 1347;
+	/** 真端行 acquired_npc_name=Castor / reward_npc_name=Trillian。 / Retail row NPC names. */
 	private static final int START_NPC = 203965;
 	private static final int REPORT_NPC = 203966;
-	/** 旧 XML 的 unaccepted / 最终击杀（a7b3）/ reward / complete 投影。 / Legacy node projections. */
-	private static final Map<String, Integer> UNACCEPTED = Map.of("var0", 0, "var1", 0);
-	private static final Map<String, Integer> FINAL_KILL = Map.of("var0", 7, "var1", 3);
-	private static final Map<String, Integer> REWARDED = Map.of("var0", 7, "var1", 3);
-	private static final Map<String, Integer> COMPLETED = Map.of("var0", 0, "var1", 0);
 
 	@Test
-	void reportsAtTheLegacyEndNpcInsteadOfTheStartNpc() {
-		QuestDefinition definition = load();
-
-		QuestTransition startPage = singleTalkRoute(definition, QuestStatus.NONE, UNACCEPTED, START_NPC,
-			QuestDialogAction.QUEST_SELECT);
-		assertTarget(definition, startPage, QuestStatus.NONE, UNACCEPTED);
-		/* 规范形接取（quest-native-dispatch P0-2）：入口页不再是 SELECT1(1011)，QUEST_SELECT 直发询问窗（页 4）。
-		   Canonical acquire (quest-native-dispatch P0-2): the entry page is no longer SELECT1(1011);
-		   QUEST_SELECT shows the ask-accept window (page 4) directly. */
-		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(
-			QuestDialogPage.SHOW_ASK_QUEST_ACCEPT_WINDOW.id())), startPage.afterCommit());
-		assertTrue(talkRoutes(definition, QuestStatus.START, FINAL_KILL, START_NPC).isEmpty(),
-			"the start NPC must not own the report chain");
-
-		/* 规范形交付：满段 QUEST_SELECT 直翻 REWARD 并按档位下发奖励窗；报告页（1352/SELECT2）与
-		   1009 中转不再由服务端驱动。
-		   Canonical delivery: the full node's QUEST_SELECT flips REWARD and shows the tiered window;
-		   the 1352/SELECT2 report page and the 1009 hop are no longer server-driven. */
-		QuestTransition report = singleTalkRoute(definition, QuestStatus.START, FINAL_KILL, REPORT_NPC,
-			QuestDialogAction.QUEST_SELECT);
-		assertTarget(definition, report, QuestStatus.REWARD, REWARDED);
-		assertTrue(report.actions().isEmpty());
-		assertEquals(List.of(
-			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
-			new AfterCommitAction.ShowQuestDialog(QuestDialogPage.SHOW_SELECT_QUEST_REWARD_WINDOW1.id())),
-			report.afterCommit());
-		assertTrue(talkRoutes(definition, QuestStatus.START, FINAL_KILL, REPORT_NPC,
-			QuestDialogAction.SELECT_QUEST_REWARD).isEmpty(),
-			"canonical removed the full-node 1009 hand-in / 规范形删除满段 1009 上交");
-
-		assertEquals(List.of(REPORT_NPC),
-			targetNpcs(definition, QuestStatus.REWARD, REWARDED, QuestStatus.COMPLETE));
-		node(definition, QuestStatus.REWARD, REWARDED);
+	void retiredRowIsOwnedByTheNativeLaneWithoutATypedDefinition() {
+		assertTrue(RetiredQuestIds.contains(QUEST_ID), "1347 必须在保留清单 owner=RETAIL_TABLE 内");
+		assertTrue(SimpleHuntHandler.instance().routes(QUEST_ID), "SimpleHunt native 车道必须路由 1347");
+		assertFalse(ProductionQuestDefinitions.catalog().findExecutable(QUEST_ID).isPresent(),
+			"退役后 typed 目录不得再持有 1347");
 	}
 
-	private static QuestDefinition load() {
-		return ProductionQuestDefinitions.definition(QUEST_ID).definition();
+	@Test
+	void retailRowReportsAtTheHandInNpcInsteadOfTheAcceptNpc() {
+		NativeQuestTableLoader.SimpleHuntRow row = NativeQuestTableLoader.instance().require(QUEST_ID);
+		assertEquals("Castor", row.acquiredNpcName());
+		assertEquals("Trillian", row.rewardNpcName());
+		assertEquals(List.of(1, 2), List.copyOf(row.killSlots().keySet()), "1347 是双槽杀怪行");
+		assertEquals(7, row.killSlots().get(1).count(), "真端 count1=7");
+		assertEquals(3, row.killSlots().get(2).count(), "真端 count2=3");
+		assertEquals(Integer.valueOf(1348), row.conQuest(), "真端 con_quest 链式接取窗");
+
+		SimpleHuntHandler handler = SimpleHuntHandler.instance();
+		assertEquals(START_NPC,
+			NativeNpcNameResolver.instance().resolve("Castor").npcIds().get(0), "Castor 解析");
+		assertEquals(REPORT_NPC,
+			NativeNpcNameResolver.instance().resolve("Trillian").npcIds().get(0), "Trillian 解析");
+		assertEquals(START_NPC, handler.acquireNpc(QUEST_ID));
+		assertEquals(REPORT_NPC, handler.rewardNpc(QUEST_ID));
+		assertEquals(Integer.valueOf(1348), handler.conQuest(QUEST_ID), "链式接取窗 = 1348");
+
+		// 报告 owner = 交付 NPC：只有 Castor 的接取面 + Trillian 的交付面成立。
+		// Report owner = the hand-in NPC: the accept face belongs to Castor, the hand-in face to Trillian.
+		assertTrue(handler.questsForNpc(REPORT_NPC).contains(QUEST_ID), "Trillian 必须服务 1347");
+	}
+
+	@Test
+	void rewardFactsComeFromTheRetailRow() throws Exception {
+		QuestMetadata metadata = RetailQuestDriver.ensureLoaded()
+			.retailMetadataOf(QUEST_ID).orElseThrow().metadata();
+
+		assertEquals(30, metadata.minLevel(), "真端 minlevel_permitted=30");
+		assertEquals(java.util.Set.of("ELYOS"), metadata.permittedRaces(), "真端 pc_light");
+		List<QuestReward> rewards = metadata.rewards();
+		// 真端 quest.xml：reward_exp1=340413、reward_item1_1=coin_03 1（186000003）。
+		assertTrue(rewards.contains(new QuestReward("EXP", 0, 340413)), () -> rewards.toString());
+		assertTrue(rewards.contains(new QuestReward("ITEM", 186000003, 1)), () -> rewards.toString());
+	}
+
+	@Test
+	void inProgressAndRewardFacesFollowTheNativeDialogPages() {
+		SimpleHuntHandler handler = SimpleHuntHandler.instance();
+		Player player = NativeTalkFixture.player(Race.ELYOS, PlayerClass.WARRIOR, 30);
+		Integer reportNpc = handler.rewardNpc(QUEST_ID);
+		assertNotNull(reportNpc, "真端行必须有可解析的交付 NPC");
+
+		NativeTalkFixture.add(player, QUEST_ID, QuestStatus.START, 0);
+		assertTrue(handler.onDialog(NativeTalkFixture.dialog(player, reportNpc, QUEST_ID, 31)));
+		NativeTalkFixture.assertOnlyDialogPage(player, 10);
+
+		NativeTalkFixture.clearPackets(player);
+		player.getQuestStateList().getQuestState(QUEST_ID).setStatus(QuestStatus.REWARD);
+		assertTrue(handler.onDialog(NativeTalkFixture.dialog(player, reportNpc, QUEST_ID, 31)));
+		NativeTalkFixture.assertOnlyDialogPageWithQuest(player, 5, QUEST_ID);
 	}
 }

@@ -1,194 +1,159 @@
 package com.aionemu.gameserver.questEngine.definition;
 
+import com.aionemu.gameserver.model.PlayerClass;
+import com.aionemu.gameserver.model.Race;
+import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
+import com.aionemu.gameserver.questEngine.retail.RetailQuestDriver;
+import com.aionemu.gameserver.questEngine.tablelane.NativeNpcNameResolver;
+import com.aionemu.gameserver.questEngine.tablelane.NativeTalkFixture;
+import com.aionemu.gameserver.questEngine.tablelane.SimpleTalkHandler;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * 验证任务 1553 将起始接取、中间说话镜子注入魔力、佩兰托军团长询问与皮埃拉完成交付限定在各自正规 NPC。
- * Verifies quest 1553 confines its start, talking mirror magic infusion, Perento inquiry, and Piera reward completion to their retail NPC owners.
+ * 锁定任务 1553 的真端中继链（会说话的镜子注入魔力 → 佩兰托军团长询问 → 皮埃拉交付）。
+ * Locks quest 1553's retail relay chain (talking mirror infusion → Perento inquiry → Piera hand-in).
+ * <p>
+ * 任务已退役（保留清单 owner=RETAIL_TABLE）：旧 typed 节点/转换金标随迁移退场，按计划 §8.9（P3 重锚口径）
+ * 改锚真端表行（接取 Diana / 中继 镜子→佩兰托 / 交付 Piera、步 1 物换物）、quest.xml 前置/奖励与 native 对话面。
+ * <p>
+ * The retired typed node/transition gold standard is re-anchored (plan §8.9) to the retail row (accept
+ * Diana / relays mirror → Perento / hand-in Piera, step-1 item swap), the quest.xml prerequisite/rewards
+ * and the native faces.
  */
 class Quest1553ClientDialogAlignmentTest {
-	private static final int START_NPC = 203786;
+	private static final int QUEST_ID = 1553;
+	private static final int DIANA_NPC = 203786;
 	private static final int TALKING_MIRROR_NPC = 730051;
 	private static final int PERENTO_NPC = 204500;
 	private static final int PIERA_NPC = 204584;
 
+	/** 真端 give_item = ITEM_QUEST_1553A 1（待注入的镜子）。 / The retail accept grant (plain mirror). */
 	private static final int INITIAL_MIRROR_ITEM = 182201794;
+	/** 真端 give_item1 = ITEM_QUEST_1553B 1（注入魔力后的镜子）。 / The step-1 grant (infused mirror). */
 	private static final int INFUSED_MIRROR_ITEM = 182201795;
 
 	@Test
-	void verifiesQuest1553DefinitionContractAndOwnerIsolation() {
-		QuestDefinition definition = load().definition();
+	void retailRowAnchorsTheMirrorChainAndThePieraHandIn() throws Exception {
+		assertTrue(RetiredQuestIds.contains(QUEST_ID));
+		assertTrue(SimpleTalkHandler.instance().routes(QUEST_ID), "SimpleTalk native 车道必须路由 1553");
+		assertFalse(ProductionQuestDefinitions.catalog().findExecutable(QUEST_ID).isPresent(),
+			"退役后 typed 目录不得再持有 1553");
 
-		assertNode(definition, "unaccepted", QuestStatus.NONE, Map.of("var0", 0));
-		assertNode(definition, "started", QuestStatus.START, Map.of("var0", 0));
-		assertNode(definition, "s1", QuestStatus.START, Map.of("var0", 1));
-		assertNode(definition, "s2", QuestStatus.START, Map.of("var0", 2));
-		// QE-051：客户端 QUEST_Q1553.html 共 3 行，末行为领奖行，reward 投影 = 2（批次 1-7 已收口）。
-		// QE-051: QUEST_Q1553.html has 3 journal rows and the last one is the reward row, so the REWARD
-		// projection is 2 (closed by batches 1-7).
-		assertNode(definition, "reward", QuestStatus.REWARD, Map.of("var0", 2));
-		assertNode(definition, "complete", QuestStatus.COMPLETE, Map.of("var0", 0));
+		SimpleTalkHandler handler = SimpleTalkHandler.instance();
+		assertEquals("Diana", handler.requireRow(QUEST_ID).acquiredNpcName(), "接取 owner 名");
+		assertEquals(List.of("DF2_NPC_TalkingMirror", "Perento"), handler.requireRow(QUEST_ID).talkNpcNames(),
+			"真端中继链（talk_npc1 → talk_npc2）");
+		assertEquals("Piera", handler.requireRow(QUEST_ID).rewardNpcName(), "交付 owner 名");
+		assertEquals(DIANA_NPC, NativeNpcNameResolver.instance().resolve("Diana").npcIds().get(0));
+		assertEquals(TALKING_MIRROR_NPC,
+			NativeNpcNameResolver.instance().resolve("DF2_NPC_TalkingMirror").npcIds().get(0));
+		assertEquals(PERENTO_NPC, NativeNpcNameResolver.instance().resolve("Perento").npcIds().get(0));
+		assertEquals(PIERA_NPC, NativeNpcNameResolver.instance().resolve("Piera").npcIds().get(0));
+		assertEquals(DIANA_NPC, handler.acquireNpc(QUEST_ID), "接取 owner = Diana");
+		assertEquals(PIERA_NPC, handler.rewardNpc(QUEST_ID), "交付 owner = Piera");
+		assertEquals(2, handler.relayCount(QUEST_ID), "1553 是两步中继行");
+		assertTrue(handler.relaysForNpc(TALKING_MIRROR_NPC).contains(
+			new SimpleTalkHandler.RelayStep(QUEST_ID, 1, TALKING_MIRROR_NPC)), "步 1 = 会说话的镜子");
+		assertTrue(handler.relaysForNpc(PERENTO_NPC).contains(
+			new SimpleTalkHandler.RelayStep(QUEST_ID, 2, PERENTO_NPC)), "步 2 = Perento");
+		assertEquals(Integer.valueOf(1554), handler.conQuest(QUEST_ID), "真端 con_quest = 1554");
 
-		// 1. 迪亚娜 (203786) 为唯一的接任务 NPC。S2：接取窗由 QUEST_SELECT 直发（页 4），
-		// select1 页梯与 1007 中转随规范接取段退场。
-		// 1. Diana (203786) is the only accept NPC. S2 canonical accept: QUEST_SELECT opens page 4 directly.
-		QuestTransition startDialog = route(definition, "unaccepted", START_NPC, QuestDialogAction.QUEST_SELECT);
-		assertContract(startDialog, "unaccepted", List.of(), List.of(
-			new AfterCommitAction.ShowQuestDialog(QuestDialogPage.SHOW_ASK_QUEST_ACCEPT_WINDOW.id())));
+		assertEquals(new SimpleTalkHandler.ItemStack(INITIAL_MIRROR_ITEM, 1), handler.acceptGiveItem(QUEST_ID),
+			"接取发放待注入的镜子");
+		assertEquals(new SimpleTalkHandler.ItemStack(INFUSED_MIRROR_ITEM, 1), handler.stepGiveItem(QUEST_ID, 1),
+			"步 1 发放注入魔力后的镜子");
+		assertEquals(new SimpleTalkHandler.ItemStack(INITIAL_MIRROR_ITEM, 1),
+			handler.stepRemoveItem(QUEST_ID, 1), "步 1 扣除待注入的镜子");
+		assertNull(handler.stepGiveItem(QUEST_ID, 2), "步 2 无发放");
+		assertNull(handler.stepRemoveItem(QUEST_ID, 2), "步 2 无扣除");
+		assertFalse(handler.requireRow(QUEST_ID).itemCheck(), "真端行不得声明 item_check");
+		assertEquals(List.of(), handler.workItems(QUEST_ID), "无 item_check 行不得带交付门物品");
 
-		QuestTransition accept = route(definition, "unaccepted", START_NPC, QuestDialogAction.QUEST_ACCEPT_1);
-		assertEquals("started", accept.targetNode());
-		assertEquals(List.of(new QuestCondition.StartEligible()), accept.conditions());
-		assertEquals(List.of(new QuestAction.GiveItem(INITIAL_MIRROR_ITEM, 1)), accept.actions());
+		QuestMetadata metadata = RetailQuestDriver.ensureLoaded()
+			.retailMetadataOf(QUEST_ID).orElseThrow().metadata();
+		assertEquals(43, metadata.minLevel(), "真端 minlevel_permitted=43");
+		assertEquals(java.util.Set.of("ELYOS"), metadata.permittedRaces(), "真端 pc_light");
+		assertTrue(metadata.prerequisites().contains(1550)
+				|| metadata.startConditions().contains(new QuestStartCondition("finished", 1550, 0)),
+			"前置 = 完成 1550");
+		List<QuestReward> rewards = metadata.rewards();
+		assertTrue(rewards.contains(new QuestReward("EXP", 0, 2954681)), () -> rewards.toString());
+		assertTrue(rewards.contains(new QuestReward("AP", 0, 200)), () -> rewards.toString());
+	}
 
-		QuestTransition inProgressDiana = route(definition, "started", START_NPC, QuestDialogAction.QUEST_SELECT);
-		assertContract(inProgressDiana, "started", List.of(), List.of(
-			new AfterCommitAction.ShowQuestDialog(QuestDialogPage.DEFAULT_SUCCESS.id())));
-		assertTrue(routes(definition, "reward", START_NPC).isEmpty());
+	@Test
+	void acceptFaceIsDianasAloneAndTheChainFacesOpenStepPages() {
+		NativeTalkFixture.RecordingInventory inventory = new NativeTalkFixture.RecordingInventory();
+		SimpleTalkHandler handler = NativeTalkFixture.handler(inventory);
+		Player player = NativeTalkFixture.player(Race.ELYOS, PlayerClass.WARRIOR, 43);
 
-		// 2. 会说话的镜子 (730051) 仅作为第 1 步 (started) 交互对象，严禁作为 Start / Complete NPC
-		assertTrue(routes(definition, "unaccepted", TALKING_MIRROR_NPC).isEmpty());
-		assertTrue(routes(definition, "s1", TALKING_MIRROR_NPC).isEmpty());
-		assertTrue(routes(definition, "reward", TALKING_MIRROR_NPC).isEmpty());
-
-		QuestTransition mirrorSelect2 = route(definition, "started", TALKING_MIRROR_NPC, QuestDialogAction.QUEST_SELECT);
-		assertContract(mirrorSelect2, "started", List.of(), List.of(
-			new AfterCommitAction.ShowQuestDialog(QuestDialogPage.SELECT2.id())));
-
-		QuestTransition mirrorSelect21 = route(definition, "started", TALKING_MIRROR_NPC, QuestDialogAction.SELECT2_1);
-		assertContract(mirrorSelect21, "started", List.of(), List.of(
-			new AfterCommitAction.ShowQuestDialog(QuestDialogPage.SELECT2_1.id())));
-
-		QuestTransition mirrorSetpro1 = route(definition, "started", TALKING_MIRROR_NPC, QuestDialogAction.SETPRO1);
-		assertEquals("s1", mirrorSetpro1.targetNode());
-		assertEquals(List.of(
-			new QuestAction.GiveItem(INFUSED_MIRROR_ITEM, 1),
-			new QuestAction.RemoveItem(INITIAL_MIRROR_ITEM, 1)
-		), mirrorSetpro1.actions());
-		assertEquals(List.of(
-			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
-			new AfterCommitAction.CloseDialog()
-		), mirrorSetpro1.afterCommit());
-
-		// 3. 佩兰托 (204500) 仅作为第 2 步 (stage1) 交互对象，严禁作为 Start / Complete NPC
-		assertTrue(routes(definition, "unaccepted", PERENTO_NPC).isEmpty());
-		assertTrue(routes(definition, "started", PERENTO_NPC).isEmpty());
-		assertTrue(routes(definition, "reward", PERENTO_NPC).isEmpty());
-
-		QuestTransition perentoSelect3 = route(definition, "s1", PERENTO_NPC, QuestDialogAction.QUEST_SELECT);
-		assertContract(perentoSelect3, "s1", List.of(), List.of(
-			new AfterCommitAction.ShowQuestDialog(QuestDialogPage.SELECT3.id())));
-
-		QuestTransition perentoSelect31 = route(definition, "s1", PERENTO_NPC, QuestDialogAction.SELECT3_1);
-		assertContract(perentoSelect31, "s1", List.of(), List.of(
-			new AfterCommitAction.ShowQuestDialog(QuestDialogPage.SELECT3_1.id())));
-
-		QuestTransition perentoSetpro2 = route(definition, "s1", PERENTO_NPC, QuestDialogAction.SETPRO2);
-		assertEquals("s2", perentoSetpro2.targetNode());
-		assertEquals(List.of(), perentoSetpro2.actions());
-		assertEquals(List.of(
-			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
-			new AfterCommitAction.CloseDialog()
-		), perentoSetpro2.afterCommit());
-
-		// 4. 皮埃拉 (204584) 仅作为第 3 步奖励交付 NPC，严禁作为 Start NPC
-		assertTrue(routes(definition, "unaccepted", PIERA_NPC).isEmpty());
-		assertTrue(routes(definition, "started", PIERA_NPC).isEmpty());
-		assertTrue(routes(definition, "s1", PIERA_NPC).isEmpty());
-		// S2：交付 = QUEST_SELECT(s2→reward) 空门直翻领奖态并下发奖励窗；SELECT5 报告页与 1009 检查中转
-		// 随规范交付段退场（未集齐零路由，关窗兜底交 DialogService）。
-		// S2 canonical delivery: QUEST_SELECT(s2→reward) flips REWARD with the reward window; the report
-		// page and the 1009 check relay retire with the canonical segment.
-		QuestTransition pieraReport = route(definition, "s2", PIERA_NPC, QuestDialogAction.QUEST_SELECT);
-		assertContract(pieraReport, "reward", List.of(), List.of(
-			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
-			new AfterCommitAction.ShowQuestDialog(deliveryWindowPage(definition.metadata()))));
-
-		assertTrue(routes(definition, "reward", PIERA_NPC).stream().noneMatch(transition ->
-			transition.event() instanceof QuestEvent.TalkToNpc talk
-				&& Integer.valueOf(QuestDialogAction.QUEST_SELECT.id()).equals(talk.dialogId())),
-			"quest 1553 reward 态不再保留 SELECT5 报告页路由");
-
-		// 完成流的领奖态预览出口（1009）保留：下发本档奖励窗（preview 形，cri=0 ⇒ 第 1 档）。
-		// The completion flow keeps its REWARD-state preview exit (1009), showing this tier's reward window.
-		QuestTransition pieraPreview = route(definition, "reward", PIERA_NPC, QuestDialogAction.SELECT_QUEST_REWARD);
-		assertContract(pieraPreview, "reward", List.of(), List.of(
-			new AfterCommitAction.ShowQuestDialog(QuestDialogPage.SHOW_SELECT_QUEST_REWARD_WINDOW1.id())));
-
-		List<QuestTransition> completionRoutes = routes(definition, "reward", PIERA_NPC).stream()
-			.filter(transition -> {
-				Integer dialogId = ((QuestEvent.TalkToNpc) transition.event()).dialogId();
-				return dialogId != null && dialogId >= QuestDialogAction.SELECTED_QUEST_REWARD1.id()
-					&& dialogId <= QuestDialogAction.SELECTED_QUEST_NOREWARD.id();
-			})
-			.toList();
-		assertEquals(16, completionRoutes.size());
-		for (QuestTransition completion : completionRoutes) {
-			assertContract(completion, "complete", List.of(
-				new QuestAction.GrantReward("EXP", 0, 2954681, QuestRewardAmountMode.QUEST_BASE),
-				new QuestAction.GrantReward("AP", 0, 200, QuestRewardAmountMode.QUEST_BASE),
-				new QuestAction.CompleteQuest(0)
-			), List.of(
-				new AfterCommitAction.RefreshPlayerStats(),
-				new AfterCommitAction.SyncQuestState(QuestStateSyncMode.COMPLETION),
-				new AfterCommitAction.ShowQuestSelectionDialog(QuestDialogPage.SELECT_QUEST.id())
-			));
+		// 未接取 owner 隔离：镜子/佩兰托/皮埃拉都不是接取面（零响应）。
+		for (int npcId : List.of(TALKING_MIRROR_NPC, PERENTO_NPC, PIERA_NPC)) {
+			NativeTalkFixture.clearPackets(player);
+			assertFalse(handler.onDialog(NativeTalkFixture.dialog(player, npcId, QUEST_ID, 31)),
+				"非接取 owner 不得开放接取面: " + npcId);
 		}
-	}
 
-	private static void assertContract(QuestTransition transition, String target,
-			List<QuestAction> actions, List<AfterCommitAction> afterCommit) {
-		assertEquals(target, transition.targetNode());
-		assertEquals(List.of(), transition.conditions());
-		assertEquals(actions, transition.actions());
-		assertEquals(afterCommit, transition.afterCommit());
-		assertNull(transition.priority());
-	}
+		// 未接取：完成前置 1550 后 Diana 打开客户端声明的入口页（信页 select1=1011）。
+		NativeTalkFixture.completePrerequisites(player, 1550);
+		NativeTalkFixture.clearPackets(player);
+		assertTrue(handler.onDialog(NativeTalkFixture.dialog(player, DIANA_NPC, QUEST_ID, 31)));
+		NativeTalkFixture.assertOnlyDialogPageWithQuest(player,
+			NativeTalkFixture.clientEntryPage(QUEST_ID), QUEST_ID);
 
-	private static QuestTransition route(QuestDefinition definition, String source, int npcId,
-			QuestDialogAction action) {
-		List<QuestTransition> matches = routes(definition, source, npcId).stream()
-			.filter(transition -> transition.event().equals(
-				new QuestEvent.TalkToNpc(npcId, action.id())))
-			.toList();
-		assertEquals(1, matches.size(), "quest 1553 " + source + " " + npcId + " " + action);
-		return matches.getFirst();
-	}
+		// 步 1（会说话的镜子）：任务行打开该步页（select2=1352，带任务上下文）。
+		NativeTalkFixture.add(player, QUEST_ID, QuestStatus.START, 0);
+		NativeTalkFixture.clearPackets(player);
+		assertTrue(handler.onDialog(NativeTalkFixture.dialog(player, TALKING_MIRROR_NPC, QUEST_ID, 31)));
+		NativeTalkFixture.assertOnlyDialogPageWithQuest(player, 1352, QUEST_ID);
 
-	private static List<QuestTransition> routes(QuestDefinition definition, String source, int npcId) {
-		return definition.transitions().stream()
-			.filter(transition -> Objects.equals(transition.sourceNode(), source))
-			.filter(transition -> transition.event() instanceof QuestEvent.TalkToNpc talk
-				&& talk.npcId() == npcId)
-			.toList();
-	}
+		// 步 1 推进（SETPRO1=10000）：var0=1 + 关窗 + 物换物（发放注入镜、扣除原镜）。
+		inventory.clear();
+		inventory.hold(INITIAL_MIRROR_ITEM, 1);
+		NativeTalkFixture.clearPackets(player);
+		assertTrue(handler.onDialog(NativeTalkFixture.dialog(player, TALKING_MIRROR_NPC, QUEST_ID, 10000)));
+		assertEquals(1, player.getQuestStateList().getQuestState(QUEST_ID).getQuestVars().getQuestVars(),
+			"步 1 推进必须写 var0=1");
+		NativeTalkFixture.assertCloseDialog(player);
+		assertEquals(List.of("give:" + INFUSED_MIRROR_ITEM + ":1", "remove:" + INITIAL_MIRROR_ITEM + ":1"),
+			inventory.calls(), "步 1 必须完成物换物");
 
-	private static void assertNode(QuestDefinition definition, String label, QuestStatus status,
-			Map<String, Integer> variables) {
-		QuestNode node = definition.nodes().stream()
-			.filter(candidate -> candidate.label().equals(label))
-			.findFirst().orElseThrow();
-		assertEquals(status, node.projection().status());
-		assertEquals(variables, node.projection().variables());
-	}
+		// 步 2（佩兰托）：任务行打开该步页（select3=1693）；子页 SELECT3_1 回发。
+		NativeTalkFixture.clearPackets(player);
+		assertTrue(handler.onDialog(NativeTalkFixture.dialog(player, PERENTO_NPC, QUEST_ID, 31)));
+		NativeTalkFixture.assertOnlyDialogPageWithQuest(player, 1693, QUEST_ID);
 
-	/** 交付窗页（与 RetailSimpleCollectItemDefinitionCompiler.deliveryWindowPage 同口径：档位查表，零奖励组回落窗 1）。 */
-	private static int deliveryWindowPage(QuestMetadata metadata) {
-		return metadata.rewardGroups().isEmpty()
-			? QuestDialogPage.SHOW_SELECT_QUEST_REWARD_WINDOW1.id()
-			: QuestDialogPage.rewardWindowForTier(metadata.rewardGroups().size() - 1).orElseThrow().id();
-	}
+		NativeTalkFixture.clearPackets(player);
+		assertTrue(handler.onDialog(NativeTalkFixture.dialog(player, PERENTO_NPC, QUEST_ID,
+			QuestDialogPage.SELECT3_1.id())));
+		NativeTalkFixture.assertOnlyDialogPageWithQuest(player, QuestDialogPage.SELECT3_1.id(), QUEST_ID);
 
-	private static CompiledQuestDefinition load() {
-		return ProductionQuestDefinitions.definitionInOverlay(1553);
+		// 步 2 推进（SETPRO2=10001）：var0=2 + 关窗，无物品通道流量。
+		inventory.clear();
+		NativeTalkFixture.clearPackets(player);
+		assertTrue(handler.onDialog(NativeTalkFixture.dialog(player, PERENTO_NPC, QUEST_ID, 10001)));
+		assertEquals(2, player.getQuestStateList().getQuestState(QUEST_ID).getQuestVars().getQuestVars(),
+			"步 2 推进必须写 var0=2");
+		NativeTalkFixture.assertCloseDialog(player);
+		assertEquals(List.of(), inventory.calls(), "步 2 不得触碰物品通道");
+
+		// 报告（皮埃拉）：中继满后才发报告确认页（select5=2375），1009 推进 REWARD + 奖励窗（页 5）。
+		NativeTalkFixture.clearPackets(player);
+		assertTrue(handler.onDialog(NativeTalkFixture.dialog(player, PIERA_NPC, QUEST_ID, 31)));
+		NativeTalkFixture.assertOnlyDialogPageWithQuest(player, 2375, QUEST_ID);
+
+		NativeTalkFixture.clearPackets(player);
+		assertTrue(handler.onDialog(NativeTalkFixture.dialog(player, PIERA_NPC, QUEST_ID, 1009)));
+		assertEquals(QuestStatus.REWARD,
+			player.getQuestStateList().getQuestState(QUEST_ID).getStatus(), "确认动作必须推进到 REWARD");
+		NativeTalkFixture.assertOnlyDialogPageWithQuest(player, 5, QUEST_ID);
 	}
 }

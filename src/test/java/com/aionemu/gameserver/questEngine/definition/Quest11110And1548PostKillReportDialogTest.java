@@ -1,161 +1,104 @@
 package com.aionemu.gameserver.questEngine.definition;
 
+import com.aionemu.gameserver.model.PlayerClass;
+import com.aionemu.gameserver.model.Race;
+import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
-import com.aionemu.gameserver.questEngine.runtime.QuestMutationPlan;
-import com.aionemu.gameserver.questEngine.runtime.QuestMutationPlanner;
-import com.aionemu.gameserver.questEngine.runtime.QuestSnapshot;
+import com.aionemu.gameserver.questEngine.retail.RetailQuestDriver;
+import com.aionemu.gameserver.questEngine.tablelane.CameraRegistry;
+import com.aionemu.gameserver.questEngine.tablelane.NativeQuestTableLoader;
+import com.aionemu.gameserver.questEngine.tablelane.NativeTalkFixture;
+import com.aionemu.gameserver.questEngine.tablelane.SimpleHuntHandler;
 import org.junit.jupiter.api.Test;
 
-import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * 锁定击杀完成后仍处于 START 中间节点的任务报告对话合同。
- * Locks the report-dialog contract for quests that remain in a START intermediate node after kills.
+ * 锁定「击杀打满后仍停在 START，直到报告动作」的两条真端狩猎线：11110 与 1548。
+ * Locks the two retail hunt rows whose START step saturates until the report action: 11110 and 1548.
+ * <p>
+ * 任务已退役（保留清单 owner=RETAIL_TABLE）：旧 XML 的阶梯节点金标随迁移退场，
+ * 按计划 §8.9（P3 重锚口径）改锚真端表行 + 相机满值 + quest.xml 前置/奖励事实 + native 对话面。
+ * <p>
+ * The retired IR step ladders are re-anchored (plan §8.9) to the retail rows, the camera gates, the
+ * quest.xml prerequisite/reward facts and the native faces.
  */
 class Quest11110And1548PostKillReportDialogTest {
+
 	@Test
-	void quest11110KeepsTheReportEntryAndRewardRoutesAfterTheFinalKill() throws Exception {
-		/* P0c-8c（2026-09-24）：11110 已由真端 SimpleHunt 表驱动（10 段击杀网格，count1=10），旧 XML 的
-		   k1（var0=1, var1=9）是同一语义的另一种表示；形状定位改用"START 饱和段"，不再写死标签。
-		   Since P0c-8c the quest is retail-driven: the legacy k1 labelling is replaced by the grid's
-		   saturated START step, located semantically rather than by label. */
-		CompiledQuestDefinition compiled = load(11110);
-		QuestDefinition definition = compiled.definition();
-		List<QuestNode> steps = startNodesByPack(definition);
-		QuestNode postKill = steps.getLast();
-		QuestNode beforeFinalKill = steps.get(steps.size() - 2);
-		assertEquals(new NodeProjection(QuestStatus.START, Map.of("var0", 10)), postKill.projection());
+	void retailRowsKeepTheKillGoalAndTheReportOwner() throws Exception {
+		assertRow(11110, "Suleion", 10, List.of("LF4_B8_Nepilim_55_An", "LF4_B8_Nepilim_Tech_55_An"));
+		assertRow(1548, "Senemonea", 5, List.of("LF3_Neutspawner_Q1053"));
+		assertEquals(Integer.valueOf(1549), SimpleHuntHandler.instance().conQuest(1548), "真端 con_quest");
 
-		for (int npcId : List.of(217039, 217040)) {
-			QuestTransition finalKill = transition(definition, beforeFinalKill.label(), postKill.label(),
-				new QuestEvent.KillNpc(npcId));
-			assertEquals(List.of(), finalKill.conditions());
-			assertEquals(List.of(), finalKill.actions());
-			assertEquals(List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.PACKET_ONLY)),
-				finalKill.afterCommit());
+		for (int questId : List.of(11110, 1548)) {
+			assertTrue(RetiredQuestIds.contains(questId), questId + " 必须在保留清单 owner=RETAIL_TABLE 内");
+			assertTrue(SimpleHuntHandler.instance().routes(questId), questId + " 必须由 native 车道执行");
+			assertFalse(ProductionQuestDefinitions.catalog().findExecutable(questId).isPresent(),
+				questId + " 退役后 typed 目录不得再持有");
 		}
-
-		/* P0-2 规范形：11110 满段 QUEST_SELECT 直翻 REWARD（报告页与 1009 中转删除）。
-		   Canonical since P0-2: the full node's QUEST_SELECT flips REWARD directly. */
-		assertPostKillReportContract(compiled, definition, postKill.label(), 799075, Map.of("var0", 10), true);
 	}
 
 	@Test
-	void quest1548KeepsTheReportEntryAndRewardRoutesAfterTheFinalKillChainStep() throws Exception {
-		CompiledQuestDefinition compiled = load(1548);
-		QuestDefinition definition = compiled.definition();
-		List<QuestNode> steps = startNodesByPack(definition);
-		QuestNode postKill = steps.getLast();
-		assertEquals(new NodeProjection(QuestStatus.START, Map.of("var0", 5)), postKill.projection());
-		QuestNode beforeFinalKill = steps.get(steps.size() - 2);
-		assertEquals(List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.PACKET_ONLY)),
-			transition(definition, beforeFinalKill.label(), postKill.label(),
-				new QuestEvent.KillNpc(700209)).afterCommit());
+	void prerequisitesAndRewardsComeFromTheRetailRow() throws Exception {
+		assertPrerequisite(11110, 11109);
+		assertPrerequisite(1548, 1547);
 
-		assertPostKillReportContract(compiled, definition, postKill.label(), 204583, Map.of("var0", 5), false);
+		List<QuestReward> ambitious = metadata(11110).rewards();
+		assertTrue(ambitious.contains(new QuestReward("GOLD", 0, 6900)), () -> ambitious.toString());
+		assertTrue(ambitious.contains(new QuestReward("EXP", 0, 2814541)), () -> ambitious.toString());
+		assertEquals(10, metadata(11110).repeatPolicy().maxRepeatCount(), "真端 max_repeat_count=10");
+
+		List<QuestReward> research = metadata(1548).rewards();
+		assertTrue(research.contains(new QuestReward("EXP", 0, 1496758)), () -> research.toString());
+		assertTrue(research.contains(new QuestReward("ITEM", 186000004, 3)), () -> research.toString());
 	}
 
-	/** START 节点按打包值升序：末位即"饱和段"（真端网格与旧 XML 阶梯通用）。 */
-	private static List<QuestNode> startNodesByPack(QuestDefinition definition) {
-		return definition.nodes().stream()
-			.filter(node -> node.projection().status() == QuestStatus.START)
-			.sorted(Comparator.comparingInt(node ->
-				definition.progressLayout().pack(node.projection().variables())))
-			.toList();
-	}
+	@Test
+	void inProgressAndRewardFacesFollowTheNativeDialogPages() {
+		SimpleHuntHandler handler = SimpleHuntHandler.instance();
+		Player player = NativeTalkFixture.player(Race.ELYOS, PlayerClass.WARRIOR, 53);
+		for (int questId : List.of(11110, 1548)) {
+			Integer reportNpc = handler.rewardNpc(questId);
+			assertNotNull(reportNpc, "真端行必须有可解析的交付 NPC: " + questId);
 
-	/**
-	 * 击杀饱和后的报告合同。canonical=true（P0-2 规范形：QUEST_SELECT 直翻 REWARD，1009 删除）；
-	 * canonical=false（1548 仍为 XML 保留行）：QUEST_SELECT 只开报告页、1009 中转进领奖。
-	 * The post-kill report contract. canonical=true (P0-2: QUEST_SELECT flips REWARD, no 1009);
-	 * canonical=false (1548 is XML-retained): QUEST_SELECT opens the report page and the 1009 hop
-	 * enters the reward state.
-	 */
-	private static void assertPostKillReportContract(CompiledQuestDefinition compiled,
-		QuestDefinition definition, String source, int npcId, Map<String, Integer> variables,
-		boolean canonical) {
-		if (canonical) {
-			QuestTransition deliver = transition(definition, source, "reward",
-				new QuestEvent.TalkToNpc(npcId, QuestDialogAction.QUEST_SELECT.id()));
-			assertEquals(List.of(), deliver.conditions());
-			assertEquals(List.of(), deliver.actions());
-			assertEquals(List.of(
-				new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
-				new AfterCommitAction.ShowQuestDialog(QuestDialogPage.SHOW_SELECT_QUEST_REWARD_WINDOW1.id())),
-				deliver.afterCommit());
-			assertTrue(definition.transitions().stream().noneMatch(candidate ->
-					source.equals(candidate.sourceNode())
-					&& candidate.event().equals(new QuestEvent.TalkToNpc(npcId, QuestDialogAction.SELECT_QUEST_REWARD.id()))),
-				"canonical removed the full-node 1009 hand-in / 规范形删除满段 1009 上交");
+			NativeTalkFixture.clearPackets(player);
+			NativeTalkFixture.add(player, questId, QuestStatus.START, 0);
+			assertTrue(handler.onDialog(NativeTalkFixture.dialog(player, reportNpc, questId, 31)));
+			NativeTalkFixture.assertOnlyDialogPage(player, 10);
 
-			int packed = definition.progressLayout().pack(variables);
-			QuestSnapshot snapshot = new QuestSnapshot(7, compiled.id(), QuestStatus.START, packed, Map.of());
-			QuestMutationPlan deliverPlan = QuestMutationPlanner.plan(compiled, snapshot,
-				new QuestEvent.TalkToNpc(npcId, QuestDialogAction.QUEST_SELECT.id()), deliver).orElseThrow();
-			assertEquals(QuestStatus.REWARD, deliverPlan.nextStatus());
-			assertEquals(variables, definition.progressLayout().unpack(deliverPlan.nextPackedVariables()));
-			return;
+			NativeTalkFixture.clearPackets(player);
+			player.getQuestStateList().getQuestState(questId).setStatus(QuestStatus.REWARD);
+			assertTrue(handler.onDialog(NativeTalkFixture.dialog(player, reportNpc, questId, 31)));
+			NativeTalkFixture.assertOnlyDialogPageWithQuest(player, 5, questId);
 		}
-
-		QuestTransition reportPage = transition(definition, source, source,
-			new QuestEvent.TalkToNpc(npcId, QuestDialogAction.QUEST_SELECT.id()));
-		assertEquals(List.of(), reportPage.conditions());
-		assertEquals(List.of(), reportPage.actions());
-		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(QuestDialogPage.SELECT2.id())),
-			reportPage.afterCommit());
-
-		int packed = definition.progressLayout().pack(variables);
-		QuestSnapshot snapshot = new QuestSnapshot(7, compiled.id(), QuestStatus.START, packed, Map.of());
-		QuestMutationPlan reportPagePlan = QuestMutationPlanner.plan(compiled, snapshot,
-			new QuestEvent.TalkToNpc(npcId, QuestDialogAction.QUEST_SELECT.id()), reportPage).orElseThrow();
-		assertEquals(QuestStatus.START, reportPagePlan.nextStatus());
-		assertEquals(variables, definition.progressLayout().unpack(reportPagePlan.nextPackedVariables()));
-
-		QuestTransition report = transition(definition, source, "reward",
-			new QuestEvent.TalkToNpc(npcId, QuestDialogAction.SELECT_QUEST_REWARD.id()));
-		assertEquals(List.of(), report.conditions());
-		assertEquals(List.of(), report.actions());
-		assertEquals(List.of(
-			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
-			new AfterCommitAction.ShowQuestDialog(QuestDialogPage.SHOW_SELECT_QUEST_REWARD_WINDOW1.id())),
-			report.afterCommit());
-
-		QuestMutationPlan reportPlan = QuestMutationPlanner.plan(compiled, snapshot,
-			new QuestEvent.TalkToNpc(npcId, QuestDialogAction.SELECT_QUEST_REWARD.id()), report).orElseThrow();
-		assertEquals(QuestStatus.REWARD, reportPlan.nextStatus());
 	}
 
-	private static QuestTransition transition(QuestDefinition definition, String source, String target,
-		QuestEvent event) {
-		return transition(definition, source, target, event, null);
+	private static void assertRow(int questId, String npcName, int count, List<String> monsters) {
+		NativeQuestTableLoader.SimpleHuntRow row = NativeQuestTableLoader.instance().require(questId);
+		assertEquals(npcName, row.acquiredNpcName(), questId + " 接取 NPC");
+		assertEquals(npcName, row.rewardNpcName(), questId + " 交付 NPC");
+		assertEquals(count, row.killSlots().get(1).count(), questId + " 真端 count1");
+		assertEquals(monsters, row.killSlots().get(1).monsters(), questId + " 真端 monster1");
+
+		CameraRegistry.CameraRow camera = CameraRegistry.instance().require(questId);
+		assertNotNull(camera, questId + " 必须有相机行");
+		assertEquals(count, camera.required(1), questId + " 相机槽 1 需求");
 	}
 
-	private static QuestTransition transition(QuestDefinition definition, String source, String target,
-		QuestEvent event, Integer priority) {
-		return definition.transitions().stream()
-			.filter(candidate -> source.equals(candidate.sourceNode())
-				&& target.equals(candidate.targetNode())
-				&& candidate.event().equals(event)
-				&& (priority == null || priority.equals(candidate.priority())))
-			.findFirst().orElseThrow();
+	private static void assertPrerequisite(int questId, int prerequisite) throws Exception {
+		QuestMetadata metadata = metadata(questId);
+		assertTrue(metadata.prerequisites().contains(prerequisite)
+				|| metadata.startConditions().contains(new QuestStartCondition("finished", prerequisite, 0)),
+			() -> questId + " 必须要求完成 " + prerequisite + "（实际前置 " + metadata.prerequisites() + "）");
 	}
 
-	private static void assertNode(QuestDefinition definition, String label, QuestStatus status,
-		Map<String, Integer> variables) {
-		QuestNode node = definition.nodes().stream()
-			.filter(candidate -> label.equals(candidate.label()))
-			.findFirst().orElseThrow();
-		assertEquals(new NodeProjection(status, variables), node.projection());
-	}
-
-	private static CompiledQuestDefinition load(int questId) throws Exception {
-		// 退役任务的生产 XML 只在 git 历史里：统一取生产视图（XML 目录 + 真端 overlay）。
-		// Retired quests live in git history only: use the production view (XML dir + retail overlay).
-		return ProductionQuestDefinitions.definition(questId);
+	private static QuestMetadata metadata(int questId) throws Exception {
+		return RetailQuestDriver.ensureLoaded().retailMetadataOf(questId).orElseThrow().metadata();
 	}
 }

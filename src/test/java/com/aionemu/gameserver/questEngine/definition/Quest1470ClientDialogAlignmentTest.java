@@ -1,102 +1,95 @@
 package com.aionemu.gameserver.questEngine.definition;
 
+import com.aionemu.gameserver.model.PlayerClass;
+import com.aionemu.gameserver.model.Race;
+import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
-import com.aionemu.gameserver.questEngine.runtime.QuestMutationPlan;
-import com.aionemu.gameserver.questEngine.runtime.QuestMutationPlanner;
-import com.aionemu.gameserver.questEngine.runtime.QuestSnapshot;
+import com.aionemu.gameserver.questEngine.retail.RetailQuestDriver;
+import com.aionemu.gameserver.questEngine.tablelane.NativeQuestTableLoader;
+import com.aionemu.gameserver.questEngine.tablelane.NativeTalkFixture;
+import com.aionemu.gameserver.questEngine.tablelane.SimpleHuntHandler;
 import org.junit.jupiter.api.Test;
 
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.List;
-import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * 锁定任务 1470 击杀两种克罗梅内模板后的哈克内报告对话合同。
- * Locks quest 1470's Hannet report-dialog contract after either Kromede template is killed.
+ * 锁定任务 1470 的击杀目标、哈克内报告对话与奖励合同（真端 SimpleHunt 车道）。
+ * Locks quest 1470's kill target, Hagne report dialog and reward contract on the retail SimpleHunt lane.
+ * <p>
+ * 旧 XML 期金标为「击杀两种克罗梅内模板（212846/214621）后打开报告页」；真端表行的击杀目标是
+ * 单只副本首领（{@code FireSanctuaryQueenBoss_37_Ae} ×1），报告与交付同为 Hagne（790004）。
+ * 按计划 §8.9（P3 重锚口径）改锚真端行 + quest.xml 奖励事实 + native 对话面。
+ * <p>
+ * The retired IR gold standard was "report after killing either Kromede template (212846/214621)"; the
+ * retail row's kill goal is a single instance boss with Hagne as both accept and hand-in NPC. The test
+ * is re-anchored (plan §8.9) to the retail row, the quest.xml reward facts and the native faces.
  */
 class Quest1470ClientDialogAlignmentTest {
-	private static final Path QUEST_PATH = Path.of(
-		"src/main/resources/aion/data/static_data/quest/definitions/quests/1470.xml");
-	private static final int HANNET_NPC_ID = 790004;
-	private static final List<Integer> KROMEDE_NPC_IDS = List.of(212846, 214621);
+	private static final int QUEST_ID = 1470;
+	/** 真端行 acquired_npc_name=Hagne / reward_npc_name=Hagne。 / Retail row NPC. */
+	private static final int HAGNE_NPC_ID = 790004;
 
 	@Test
-	void opensTheReportPageAfterEitherKromedeTemplateAndKeepsTheRewardContract() throws Exception {
-		CompiledQuestDefinition compiled = load();
-		QuestDefinition definition = compiled.definition();
-
-		assertEquals(new NodeProjection(QuestStatus.START, Map.of("var0", 1)), node(definition, "k1").projection());
-		assertEquals(new NodeProjection(QuestStatus.REWARD, Map.of("var0", 1)), node(definition, "reward").projection());
-
-		for (int npcId : KROMEDE_NPC_IDS) {
-			QuestTransition kill = transition(definition, "started", "k1", new QuestEvent.KillNpc(npcId));
-			assertEquals(List.of(), kill.conditions());
-			assertEquals(List.of(), kill.actions());
-			assertEquals(List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.PACKET_ONLY)),
-				kill.afterCommit());
-		}
-
-		QuestTransition reportPage = transition(definition, "k1", "k1",
-			new QuestEvent.TalkToNpc(HANNET_NPC_ID, QuestDialogAction.QUEST_SELECT.id()));
-		assertEquals(List.of(), reportPage.conditions());
-		assertEquals(List.of(), reportPage.actions());
-		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(QuestDialogPage.SELECT2.id())),
-			reportPage.afterCommit());
-
-		int packed = definition.progressLayout().pack(Map.of("var0", 1));
-		QuestSnapshot snapshot = new QuestSnapshot(7, 1470, QuestStatus.START, packed, Map.of());
-		QuestMutationPlan reportPagePlan = QuestMutationPlanner.plan(compiled, snapshot,
-			new QuestEvent.TalkToNpc(HANNET_NPC_ID, QuestDialogAction.QUEST_SELECT.id()), reportPage).orElseThrow();
-		assertEquals(QuestStatus.START, reportPagePlan.nextStatus());
-		assertEquals(Map.of("var0", 1), definition.progressLayout().unpack(reportPagePlan.nextPackedVariables()));
-
-		QuestTransition report = transition(definition, "k1", "reward",
-			new QuestEvent.TalkToNpc(HANNET_NPC_ID, QuestDialogAction.SELECT_QUEST_REWARD.id()));
-		assertEquals(List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
-			new AfterCommitAction.ShowQuestDialog(QuestDialogPage.SHOW_SELECT_QUEST_REWARD_WINDOW1.id())),
-			report.afterCommit());
-
-		QuestMutationPlan reportPlan = QuestMutationPlanner.plan(compiled, snapshot,
-			new QuestEvent.TalkToNpc(HANNET_NPC_ID, QuestDialogAction.SELECT_QUEST_REWARD.id()), report).orElseThrow();
-		assertEquals(QuestStatus.REWARD, reportPlan.nextStatus());
-		assertEquals(Map.of("var0", 1), definition.progressLayout().unpack(reportPlan.nextPackedVariables()));
-
-		QuestTransition completion = transition(definition, "reward", "complete",
-			new QuestEvent.TalkToNpc(HANNET_NPC_ID, QuestDialogAction.SELECTED_QUEST_REWARD1.id()));
-		assertEquals(List.of(
-			new QuestAction.GrantReward("EXP", 0, 1244918, QuestRewardAmountMode.QUEST_BASE),
-			new QuestAction.GrantReward("TITLE", 18, 1, QuestRewardAmountMode.EXACT),
-			new QuestAction.GrantReward("ITEM", 186000003, 40, QuestRewardAmountMode.EXACT),
-			new QuestAction.GrantReward("ITEM", 162000050, 20, QuestRewardAmountMode.EXACT),
-			new QuestAction.GrantReward("ITEM", 111101657, 1, QuestRewardAmountMode.EXACT),
-			new QuestAction.CompleteQuest(0)), completion.actions());
-		assertEquals(List.of(new AfterCommitAction.RefreshPlayerStats(),
-			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.COMPLETION),
-			new AfterCommitAction.ShowQuestSelectionDialog(QuestDialogPage.SELECT_QUEST.id())),
-			completion.afterCommit());
+	void retiredRowIsOwnedByTheNativeLaneWithoutATypedDefinition() {
+		assertTrue(RetiredQuestIds.contains(QUEST_ID), "1470 必须在保留清单 owner=RETAIL_TABLE 内");
+		assertTrue(SimpleHuntHandler.instance().routes(QUEST_ID), "SimpleHunt native 车道必须路由 1470");
+		assertFalse(ProductionQuestDefinitions.catalog().findExecutable(QUEST_ID).isPresent(),
+			"退役后 typed 目录不得再持有 1470");
 	}
 
-	private static QuestTransition transition(QuestDefinition definition, String source, String target,
-		QuestEvent event) {
-		return definition.transitions().stream()
-			.filter(candidate -> source.equals(candidate.sourceNode())
-				&& target.equals(candidate.targetNode()) && candidate.event().equals(event))
-			.findFirst().orElseThrow();
+	@Test
+	void retailRowKeepsTheInstanceBossKillGoalAndTheHagneReportOwner() {
+		NativeQuestTableLoader.SimpleHuntRow row = NativeQuestTableLoader.instance().require(QUEST_ID);
+		assertEquals("Hagne", row.acquiredNpcName());
+		assertEquals("Hagne", row.rewardNpcName());
+		assertEquals(List.of(1), List.copyOf(row.killSlots().keySet()), "1470 是单槽击杀行");
+		assertEquals(1, row.killSlots().get(1).count(), "真端 count1=1");
+		assertEquals(List.of("FireSanctuaryQueenBoss_37_Ae"), row.killSlots().get(1).monsters(),
+			"真端 monster1 = 副本首领单只");
+
+		SimpleHuntHandler handler = SimpleHuntHandler.instance();
+		assertEquals(HAGNE_NPC_ID, handler.acquireNpc(QUEST_ID));
+		assertEquals(HAGNE_NPC_ID, handler.rewardNpc(QUEST_ID), "报告 owner = 交付 NPC Hagne");
+		assertTrue(handler.questsForNpc(HAGNE_NPC_ID).contains(QUEST_ID), "Hagne 必须服务 1470");
 	}
 
-	private static QuestNode node(QuestDefinition definition, String label) {
-		return definition.nodes().stream()
-			.filter(candidate -> label.equals(candidate.label()))
-			.findFirst().orElseThrow();
+	@Test
+	void rewardFactsComeFromTheRetailRow() throws Exception {
+		QuestMetadata metadata = RetailQuestDriver.ensureLoaded()
+			.retailMetadataOf(QUEST_ID).orElseThrow().metadata();
+
+		assertEquals(30, metadata.minLevel(), "真端 minlevel_permitted=30");
+		assertEquals(java.util.Set.of("ELYOS"), metadata.permittedRaces(), "真端 pc_light");
+		List<QuestReward> rewards = metadata.rewards();
+		// 真端 quest.xml：reward_exp1=1244918、reward_item1_1=coin_03 40（186000003）、
+		// 六个 selectable_reward_item1_N 手套、reward_title1=light_title18。
+		assertTrue(rewards.contains(new QuestReward("EXP", 0, 1244918)), () -> rewards.toString());
+		assertTrue(rewards.contains(new QuestReward("ITEM", 186000003, 40)), () -> rewards.toString());
+		assertEquals(6, rewards.stream().filter(reward -> reward.kind().equals("SELECTABLE_ITEM")).count(),
+			"六个可选手套槽");
+		assertEquals(1, rewards.stream().filter(reward -> reward.kind().equals("TITLE")).count(),
+			"reward_title1 称号档");
 	}
 
-	private static CompiledQuestDefinition load() throws Exception {
-		try (InputStream input = Files.newInputStream(QUEST_PATH)) {
-			return QuestDefinitionXmlCompiler.compile(input);
-		}
+	@Test
+	void inProgressAndRewardFacesFollowTheNativeDialogPages() {
+		SimpleHuntHandler handler = SimpleHuntHandler.instance();
+		Player player = NativeTalkFixture.player(Race.ELYOS, PlayerClass.WARRIOR, 30);
+		Integer reportNpc = handler.rewardNpc(QUEST_ID);
+		assertNotNull(reportNpc, "真端行必须有可解析的交付 NPC");
+
+		NativeTalkFixture.add(player, QUEST_ID, QuestStatus.START, 0);
+		assertTrue(handler.onDialog(NativeTalkFixture.dialog(player, reportNpc, QUEST_ID, 31)));
+		NativeTalkFixture.assertOnlyDialogPage(player, 10);
+
+		NativeTalkFixture.clearPackets(player);
+		player.getQuestStateList().getQuestState(QUEST_ID).setStatus(QuestStatus.REWARD);
+		assertTrue(handler.onDialog(NativeTalkFixture.dialog(player, reportNpc, QUEST_ID, 31)));
+		NativeTalkFixture.assertOnlyDialogPageWithQuest(player, 5, QUEST_ID);
 	}
 }

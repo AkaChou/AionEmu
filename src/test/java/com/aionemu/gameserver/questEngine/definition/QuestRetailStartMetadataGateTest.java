@@ -17,6 +17,9 @@ import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.w3c.dom.Element;
 
+import com.aionemu.gameserver.questEngine.retail.RetailQuestDriver;
+import com.aionemu.gameserver.questEngine.retail.RetailQuestMetadataCompiler;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -110,8 +113,13 @@ class QuestRetailStartMetadataGateTest {
 		assertFalse(capExceptions.isEmpty(), "cap exception ledger must not be empty");
 
 		production = new HashMap<>();
-		// 生产视图 = XML 目录 + 真端 overlay：退役任务的接取元数据来自真端合成器。
-		// Production view: retired quests take their start metadata from the retail compiler.
+		// 生产视图 = XML 目录 + 真端 overlay：退役任务（retail-xml-retention owner=RETAIL_TABLE，
+		// XML 已删除）由 native 车道执行，接取元数据的唯一事实来源是 RetailQuestDriver.retailMetadataOf
+		// （native 完成/领奖口与接取资格口同源）。缺了这一段，退役行会被误判为「无生产定义」。
+		// Production view: the XML catalog plus the retail overlay. Retired rows (owner=RETAIL_TABLE in the
+		// retention manifest, XML deleted) run on the native lanes, whose single start-metadata source is
+		// RetailQuestDriver.retailMetadataOf — the same compiler the production catalog and the native
+		// completion/reward port use. Without it, retired rows look like they have no production definition.
 		QuestCatalog catalog = ProductionQuestDefinitions.catalog();
 		for (CompiledQuestDefinition compiled : catalog.all()) {
 			QuestMetadata meta = compiled.definition().metadata();
@@ -121,6 +129,13 @@ class QuestRetailStartMetadataGateTest {
 		}
 		for (int qid : metadataOnlyQuestIds()) {
 			production.putIfAbsent(qid, startMeta(questResource(qid)));
+		}
+		RetailQuestDriver driver = RetailQuestDriver.ensureLoaded();
+		for (int qid : RetiredQuestIds.all()) {
+			driver.retailMetadataOf(qid).map(RetailQuestMetadataCompiler.Outcome::metadata)
+				.ifPresent(meta -> production.putIfAbsent(qid, new StartMeta(meta.minLevel(),
+					meta.maxLevel(), meta.permittedRaces(), meta.permittedGender(),
+					meta.repeatPolicy().maxRepeatCount())));
 		}
 		assertFalse(production.isEmpty(), "production catalog must not be empty");
 	}

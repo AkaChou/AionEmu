@@ -1,42 +1,38 @@
 package com.aionemu.gameserver.questEngine.definition;
 
+import com.aionemu.gameserver.model.gameobjects.Npc;
+import com.aionemu.gameserver.model.gameobjects.VisibleObject;
+import com.aionemu.gameserver.model.gameobjects.player.Player;
+import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
-import com.aionemu.gameserver.questEngine.runtime.QuestMutationPlan;
-import com.aionemu.gameserver.questEngine.runtime.QuestMutationPlanner;
-import com.aionemu.gameserver.questEngine.runtime.QuestSnapshot;
+import com.aionemu.gameserver.questEngine.tablelane.DataDrivenNativeRuntime;
+import com.aionemu.gameserver.questEngine.tablelane.DataDrivenProgress;
+import com.aionemu.gameserver.questEngine.tablelane.DataDrivenQuestTable;
+import com.aionemu.gameserver.questEngine.tablelane.NativeTalkFixture;
+import com.aionemu.gameserver.world.WorldPosition;
 
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
-import java.util.TreeSet;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * 验证任务 16802 的真端区域顺序 SECTION 链合同（定义来自生产视图）：
- * <ul>
- * <li>接取 = 进区域系统发放（{@code SystemGrant} + {@code StartEligible}，无 NPC 接取路由，旧
- * EnterWorld/WorldIs/链条件随退役 XML 入 git 历史）；</li>
- * <li>进度 = 2 段顺序链（30 名 Leibo 图书管理员 → 2 只 BI Leibo 首领），链式前缀节点 a{0..30}b0、
- * a30b{1,2}，击杀边只推进首个未满段——旧 XML 的并行双计数（var1=30、var2=2）与 k1/k2 迁移标志
- * 一并退役；</li>
- * <li>报告：未满链节点 QUEST_SELECT 显示客户端完成页、1009 带双段满门禁；满节点 a30b2 无门禁进领奖；
- * 完成流按真端元数据奖励收尾 CompleteQuest。</li>
- * </ul>
- * Verifies the retail area-driven sequential SECTION chain of quest 16802 (production-view
- * definitions): area-entry system grant without NPC accept routes, the two-stage chain (30 librarians
- * then 2 sub-bosses) whose kill edges advance only the first unfinished stage, fully-gated recovery on
- * unfinished nodes, and the metadata-driven completion flow.
+ * 验证任务 16802（26802 的天族孪生）的真端 DD 行（DD_AREA_HUNT_GRID）合同。
+ * <p>
+ * 已退役（保留清单 owner=RETAIL_TABLE，family=DataDriven）：旧「生产视图」IR 节点断言随 P7 步 f 退场，
+ * 按计划 §8.9（P3 重锚口径）改锚 DD 运行时公共面：进区域系统发放（acquireZoneInterests，无 NPC 对话
+ * 接取面）、击杀网格（段 1 = 8 名 Leibo 图书管理员 ×30 落组 1，段 2 = 6 只 BI Leibo 首领 ×2 落组 2）、
+ * 组计数推进（真端 {@code counter<target} 守卫；全部组槽达标收口进 REWARD）。
+ * <p>
+ * Re-anchored (plan §8.9) to the DD runtime faces: the EnterArea acquire category, the two kill-grid group
+ * counters (30 librarians + 2 sub-bosses) and the retail counter guard with all-groups closure into REWARD.
  */
 class Quest16802ClientDialogAlignmentTest {
 	private static final int QUEST_ID = 16802;
-	private static final int DIALOG_NPC_ID = 806148;
 	private static final int STAGE_ONE_KILLS = 30;
 	private static final int STAGE_TWO_KILLS = 2;
 	/** 客户端段 1 清单（Leibo 图书管理员 8 变体）。 / Client stage-1 list (8 Leibo librarians). */
@@ -48,248 +44,86 @@ class Quest16802ClientDialogAlignmentTest {
 
 	@Test
 	void areaGrantStartsTheSequentialChainWithoutNpcRoutes() throws Exception {
-		QuestDefinition definition = definition().definition();
-		assertNode(definition, "unaccepted", QuestStatus.NONE, Map.of("var0", 0, "var1", 0));
-		for (int first = 0; first <= STAGE_ONE_KILLS; first++) {
-			assertNode(definition, "a" + first + "b0", QuestStatus.START,
-				Map.of("var0", first, "var1", 0));
-		}
-		assertNode(definition, "a" + STAGE_ONE_KILLS + "b1", QuestStatus.START,
-			Map.of("var0", STAGE_ONE_KILLS, "var1", 1));
-		assertNode(definition, "a" + STAGE_ONE_KILLS + "b" + STAGE_TWO_KILLS, QuestStatus.START,
-			Map.of("var0", STAGE_ONE_KILLS, "var1", STAGE_TWO_KILLS));
-		assertNode(definition, "reward", QuestStatus.REWARD,
-			Map.of("var0", STAGE_ONE_KILLS, "var1", STAGE_TWO_KILLS));
-		assertNode(definition, "complete", QuestStatus.COMPLETE, Map.of("var0", 0, "var1", 0));
+		DataDrivenNativeRuntime runtime = DataDrivenNativeRuntime.instance();
+		assertTrue(runtime.owns(QUEST_ID), "16802 必须由 DD 运行时拥有");
+		assertTrue(runtime.routes(QUEST_ID), "16802 必须由 DD 运行时路由");
 
-		QuestTransition grant = transition(definition, "unaccepted", "a0b0", new QuestEvent.SystemGrant());
-		assertEquals(List.of(new QuestCondition.StartEligible()), grant.conditions());
-		assertEquals(List.of(), grant.actions());
-		assertEquals(List.of(
-			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.VISIBILITY_REFRESH)),
-			grant.afterCommit());
-		// 进区域发放行不得有 NPC 接取路由（旧 XML 的 EnterWorld/WorldIs/链条件随退役一并移除）。
-		// Area-granted rows carry no NPC accept route (the legacy EnterWorld/WorldIs/chained
-		// conditions retired with the XML).
-		assertFalse(definition.transitions().stream().anyMatch(candidate ->
-				"unaccepted".equals(candidate.sourceNode())
-				&& candidate.event() instanceof QuestEvent.TalkToNpc),
-			"area-granted rows must not keep NPC accept routes");
+		// 接取类别 = 真端表的 EnterArea 行；不得有 NPC 对话接取面（旧 XML 的接取路由随退役入 git 历史）。
+		// The row is a retail EnterArea row; no NPC talk-acquire face may survive.
+		DataDrivenQuestTable table = DataDrivenQuestTable.load(
+			Quest16802ClientDialogAlignmentTest.class
+				.getResourceAsStream(DataDrivenNativeRuntime.TABLE_RESOURCE));
+		assertEquals("enterarea", table.find(QUEST_ID).orElseThrow().acquireKind(),
+			"16802 的接取类别 = 真端 EnterArea 行");
+		assertTrue(runtime.acquireTalkInterests().values().stream()
+				.noneMatch(questIds -> questIds.contains(QUEST_ID)),
+			"进区发放行不得保留 NPC 对话接取面");
 
-		// 未满链节点：无 QUEST_SELECT/1009 报告通道（P0-2 顺序链规范形，页链不再由服务端驱动，
-		// 提前上交不可达；FINISH_DIALOG 关窗出口保留）。
-		// Unfinished chain nodes: no QUEST_SELECT/1009 report channel (canonical sequential shape
-		// since P0-2; early turn-in is unreachable; the FINISH_DIALOG close exit stays).
-		List<String> unfinished = new ArrayList<>();
-		for (int first = 0; first < STAGE_ONE_KILLS; first++) {
-			unfinished.add("a" + first + "b0");
+		// 击杀网格两组互斥：图书管理员落组 1，首领落组 2（真端 value0 两段计数）。
+		for (int npcId : LIBRARIANS) {
+			assertTrue(hasKillHit(runtime, npcId, 1), "图书管理员 " + npcId + " 必须落段 1 组槽");
 		}
-		unfinished.add("a" + STAGE_ONE_KILLS + "b1");
-		for (String label : unfinished) {
-			final String node = label;
-			assertTrue(definition.transitions().stream().noneMatch(candidate ->
-				node.equals(candidate.sourceNode())
-					&& candidate.event() instanceof QuestEvent.TalkToNpc talk
-					&& talk.npcId() == DIALOG_NPC_ID && talk.dialogId() != null
-					&& (talk.dialogId() == QuestDialogAction.QUEST_SELECT.id()
-						|| talk.dialogId() == QuestDialogAction.SELECT_QUEST_REWARD.id())),
-				() -> node + " 不得保留报告通道路由");
+		for (int npcId : SUB_BOSSES) {
+			assertTrue(hasKillHit(runtime, npcId, 2), "首领 " + npcId + " 必须落段 2 组槽");
 		}
 
-		// 满节点：QUEST_SELECT 无门禁直翻领奖并按档位查表下发奖励窗（1009 中转删除）。
-		// Full node: the QUEST_SELECT flips reward ungated with the tiered window (no 1009 hop).
-		String fullLabel = "a" + STAGE_ONE_KILLS + "b" + STAGE_TWO_KILLS;
-		QuestTransition finish = talk(definition, fullLabel, "reward",
-			QuestDialogAction.QUEST_SELECT.id());
-		assertEquals(List.of(), finish.conditions());
-		assertEquals(List.of(
-			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
-			new AfterCommitAction.ShowQuestDialog(QuestDialogPage.rewardWindowForTier(
-				definition.metadata().rewardGroups().size() - 1).orElseThrow().id())),
-			finish.afterCommit());
-
-		// 领奖态预览：1009 只弹选择窗口。
-		// Reward-state preview: 1009 only re-opens the reward window.
-		QuestTransition rewardPreview = talk(definition, "reward", "reward",
-			QuestDialogAction.SELECT_QUEST_REWARD.id());
-		assertEquals(List.of(), rewardPreview.conditions());
-		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(
-			QuestDialogPage.SHOW_SELECT_QUEST_REWARD_WINDOW1.id())), rewardPreview.afterCommit());
-
-		// 完成流：确认段全覆盖、真端元数据奖励 + CompleteQuest 收尾。
-		// Completion: the full confirm range granting the retail metadata rewards ends in CompleteQuest.
-		assertCompletionFlow(definition, DIALOG_NPC_ID);
+		// 行 5 交付 NPC = 真端 reward_npc_name（IDEternity_Q_Weatha_E）；其报告面现只对 Talk 接取行
+		// 注册（对象 #2 面），不属本类断言范围——此处只锁行数据事实。
+		// The row-5 delivery NPC is the retail reward_npc_name; its report face is registered for
+		// Talk-acquired rows only and is out of this class's scope.
+		assertEquals("IDEternity_Q_Weatha_E", table.find(QUEST_ID).orElseThrow().rewardNpc(),
+			"行 5 交付 NPC = 真端 reward_npc_name");
 	}
 
 	@Test
-	void killEdgesAdvanceOnlyTheFirstUnfinishedStage() throws Exception {
-		CompiledQuestDefinition compiled = definition();
-		QuestDefinition definition = compiled.definition();
+	void killEdgesAdvanceOnlyTheFirstUnfinishedStage() {
+		DataDrivenNativeRuntime runtime = DataDrivenNativeRuntime.instance();
+		Player player = NativeTalkFixture.player();
+		place(player, 0f, 0f, 0f);
+		QuestState state = NativeTalkFixture.start(player, QUEST_ID);
 
-		// 链上击杀边：段 1 状态只挂图书管理员，段 2 状态只挂 BI 首领；每条边推进到下一链节点。
-		// Chain kill edges: stage-1 states carry only librarians, the stage-2 state only sub-bosses;
-		// every edge advances to the next chain node.
-		Map<String, Integer> zero = Map.of("var0", 0, "var1", 0);
-		List<Set<Integer>> perStateTargets = new ArrayList<>();
-		for (int first = 0; first < STAGE_ONE_KILLS; first++) {
-			perStateTargets.add(assertChainEdges(definition, "a" + first + "b0", "a" + (first + 1) + "b0"));
-		}
-		perStateTargets.add(assertChainEdges(definition, "a" + STAGE_ONE_KILLS + "b0",
-			"a" + STAGE_ONE_KILLS + "b1"));
-		perStateTargets.add(assertChainEdges(definition, "a" + STAGE_ONE_KILLS + "b1",
-			"a" + STAGE_ONE_KILLS + "b" + STAGE_TWO_KILLS));
-		Set<Integer> stageOneTargets = new TreeSet<>();
-		perStateTargets.subList(0, STAGE_ONE_KILLS).forEach(stageOneTargets::addAll);
-		Set<Integer> stageTwoTargets = perStateTargets.getLast();
-		assertTrue(stageOneTargets.containsAll(LIBRARIANS),
-			() -> "stage 1 kill set must cover the client librarians, got " + stageOneTargets);
-		assertTrue(stageTwoTargets.containsAll(SUB_BOSSES),
-			() -> "stage 2 kill set must cover the client sub-bosses, got " + stageTwoTargets);
-		assertTrue(java.util.Collections.disjoint(stageOneTargets, stageTwoTargets),
-			"stage target sets must stay disjoint");
-
-		// 乱序不计：段 1 未满时段 2 样本不得产生任何击杀计划。
-		// Out-of-order kills never count: a stage-2 sample produces no kill plan while stage 1 runs.
-		assertNoMatch(compiled, snapshot(compiled, zero), new QuestEvent.KillNpc(857450));
-
-		// 顺序推进模拟：30 名图书管理员只推进段 1；随后 2 只首领推进段 2 且末杀仍停在 START。
-		// Sequential walk: 30 librarians fill stage 1 only; the two sub-boss kills then fill stage 2,
-		// and even the final kill stays START — only the report enters reward.
-		QuestSnapshot current = snapshot(compiled, zero);
+		// 段 1：图书管理员逐杀推进组 1（30 杀）；组 2 计数独立，顺序填段时纹丝不动。
 		for (int kill = 1; kill <= STAGE_ONE_KILLS; kill++) {
-			current = nextSnapshot(current, dispatch(compiled, current, new QuestEvent.KillNpc(220306)));
-			assertEquals(Map.of("var0", kill, "var1", 0),
-				definition.progressLayout().unpack(current.packedVariables()),
-				"stage-1 kill " + kill + " must keep stage 2 untouched");
+			assertTrue(kill(runtime, player, 220306), "段 1 击杀 " + kill + " 必须计数");
+			assertEquals(kill, DataDrivenProgress.counter(state.getQuestVars().getQuestVars(), 1),
+				"段 1 计数 " + kill);
+			assertEquals(0, DataDrivenProgress.counter(state.getQuestVars().getQuestVars(), 2),
+				"段 2 计数不得被段 1 击杀带动");
+			assertEquals(QuestStatus.START, state.getStatus(), "两段未齐不得进领奖");
 		}
-		assertNoMatch(compiled, current, new QuestEvent.KillNpc(220306));
-		current = nextSnapshot(current, dispatch(compiled, current, new QuestEvent.KillNpc(857450)));
-		assertEquals(Map.of("var0", STAGE_ONE_KILLS, "var1", 1),
-			definition.progressLayout().unpack(current.packedVariables()));
-		assertEquals(QuestStatus.START, current.status());
-		current = nextSnapshot(current, dispatch(compiled, current, new QuestEvent.KillNpc(857459)));
-		assertEquals(QuestStatus.START, current.status());
-		assertEquals(Map.of("var0", STAGE_ONE_KILLS, "var1", STAGE_TWO_KILLS),
-			definition.progressLayout().unpack(current.packedVariables()));
-		assertNoMatch(compiled, current, new QuestEvent.KillNpc(857450));
+		// 满组超杀零写（真端 counter<target 守卫）。
+		assertFalse(kill(runtime, player, 220309), "已满组槽的超杀必须零写");
+		assertEquals(STAGE_ONE_KILLS, DataDrivenProgress.counter(state.getQuestVars().getQuestVars(), 1),
+			"超杀不得污染组 1 计数");
 
-		// 满链 QUEST_SELECT 交付进领奖（P0-2 顺序链规范形）。
-		// The full chain's QUEST_SELECT delivery enters reward (canonical sequential shape).
-		QuestMutationPlan report = dispatch(compiled, current,
-			new QuestEvent.TalkToNpc(DIALOG_NPC_ID, QuestDialogAction.QUEST_SELECT.id()));
-		assertEquals(QuestStatus.REWARD, report.nextStatus());
-		assertEquals(Map.of("var0", STAGE_ONE_KILLS, "var1", STAGE_TWO_KILLS),
-			definition.progressLayout().unpack(report.nextPackedVariables()));
+		// 段 2：首领推进组 2（2 杀）；首个首领不翻态，末杀全部组槽达标 ⇒ 收口进 REWARD（组槽清零）。
+		assertTrue(kill(runtime, player, 857450), "段 2 首个首领必须计数");
+		assertEquals(1, DataDrivenProgress.counter(state.getQuestVars().getQuestVars(), 2));
+		assertEquals(QuestStatus.START, state.getStatus(), "段 2 未满不得进领奖");
+		assertTrue(kill(runtime, player, 857459), "段 2 末杀收口");
+		assertEquals(QuestStatus.REWARD, state.getStatus(), "全部组槽达标 ⇒ 收口进领奖");
+		assertEquals(0, DataDrivenProgress.counter(state.getQuestVars().getQuestVars(), 2), "收口清槽");
+
+		// 领奖态：击杀零响应。
+		assertFalse(kill(runtime, player, 220306), "领奖态击杀零响应");
 	}
 
-	/** 链节点击杀边合同：目标集合、推进目标与 PACKET_ONLY。 / Chain-node kill-edge contract. */
-	private static Set<Integer> assertChainEdges(QuestDefinition definition, String source,
-			String target) {
-		List<QuestTransition> edges = definition.transitions().stream()
-			.filter(candidate -> source.equals(candidate.sourceNode()))
-			.filter(candidate -> candidate.event() instanceof QuestEvent.KillNpc)
-			.toList();
-		assertFalse(edges.isEmpty(), () -> source + " must carry the current stage's kill edges");
-		Set<Integer> targets = new TreeSet<>();
-		for (QuestTransition edge : edges) {
-			assertEquals(target, edge.targetNode(), edge::toString);
-			assertEquals(List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.PACKET_ONLY)),
-				edge.afterCommit(), edge::toString);
-			assertTrue(edge.event() instanceof QuestEvent.KillNpc killNpc && targets.add(killNpc.npcId()),
-				edge::toString);
-		}
-		return targets;
+	private static boolean kill(DataDrivenNativeRuntime runtime, Player player, int npcId) {
+		Npc npc = NativeTalkFixture.npc(npcId);
+		place(npc, 0f, 0f, 0f);
+		return runtime.onKill(player, npc);
 	}
 
-	/** 完成流合同：确认段 8..23 全覆盖、真端元数据奖励 + CompleteQuest 收尾。 / Completion contract. */
-	private static void assertCompletionFlow(QuestDefinition definition, int rewardNpc) {
-		List<QuestTransition> completions = definition.transitions().stream()
-			.filter(candidate -> "complete".equals(candidate.targetNode()))
-			.toList();
-		assertFalse(completions.isEmpty(), "the reward state must complete via the confirm range");
-		Set<Integer> actionIds = new TreeSet<>();
-		for (QuestTransition completion : completions) {
-			assertTrue(completion.event() instanceof QuestEvent.TalkToNpc talk
-					&& talk.npcId() == rewardNpc
-					&& talk.dialogId() >= QuestDialogAction.SELECTED_QUEST_REWARD1.id()
-					&& talk.dialogId() <= QuestDialogAction.SELECTED_QUEST_NOREWARD.id(),
-				() -> "completion routes must hang on the confirm range " + completion);
-			assertTrue(completion.actions().stream().anyMatch(action ->
-					action instanceof QuestAction.CompleteQuest),
-				() -> "completion routes must end in CompleteQuest " + completion);
-			assertTrue(completion.actions().stream().anyMatch(action ->
-					action instanceof QuestAction.GrantReward),
-				() -> "completion routes must grant the retail metadata rewards " + completion);
-			assertEquals(List.of(
-				new AfterCommitAction.RefreshPlayerStats(),
-				new AfterCommitAction.SyncQuestState(QuestStateSyncMode.COMPLETION),
-				new AfterCommitAction.ShowQuestSelectionDialog(QuestDialogPage.SELECT_QUEST.id())),
-				completion.afterCommit(), completion::toString);
-			if (completion.event() instanceof QuestEvent.TalkToNpc talk) {
-				actionIds.add(talk.dialogId());
-			}
-		}
-		for (int id = QuestDialogAction.SELECTED_QUEST_REWARD1.id();
-				id <= QuestDialogAction.SELECTED_QUEST_NOREWARD.id(); id++) {
-			final int dialogId = id;
-			assertTrue(actionIds.contains(dialogId), () -> "confirm range misses dialogId " + dialogId);
-		}
+	/** 反射放置坐标（距离门测试面；生产经 WorldPosition 正常初始化）。 / Reflective placement for the distance gate. */
+	private static void place(VisibleObject object, float x, float y, float z) {
+		WorldPosition position = new WorldPosition(110010000);
+		position.setXYZH(x, y, z, (byte) 0);
+		object.setPosition(position);
 	}
 
-	private static QuestMutationPlan dispatch(CompiledQuestDefinition compiled, QuestSnapshot snapshot,
-			QuestEvent event) {
-		List<QuestMutationPlan> plans = compiled.definition().transitions().stream()
-			.map(transition -> QuestMutationPlanner.plan(compiled, snapshot, event, transition).orElse(null))
-			.filter(Objects::nonNull)
-			.toList();
-		assertEquals(1, plans.size(), () -> compiled.id() + " " + event + " "
-			+ compiled.definition().progressLayout().unpack(snapshot.packedVariables()));
-		return plans.getFirst();
-	}
-
-	private static void assertNoMatch(CompiledQuestDefinition compiled, QuestSnapshot snapshot,
-			QuestEvent event) {
-		assertTrue(compiled.definition().transitions().stream().noneMatch(transition ->
-			QuestMutationPlanner.plan(compiled, snapshot, event, transition).isPresent()));
-	}
-
-	private static QuestSnapshot nextSnapshot(QuestSnapshot snapshot, QuestMutationPlan plan) {
-		return new QuestSnapshot(snapshot.playerId(), snapshot.questId(), plan.nextStatus(),
-			plan.nextPackedVariables(), snapshot.inventory());
-	}
-
-	private static QuestSnapshot snapshot(CompiledQuestDefinition compiled,
-			Map<String, Integer> variables) {
-		return new QuestSnapshot(7, compiled.id(), QuestStatus.START,
-			compiled.definition().progressLayout().pack(variables), Map.of());
-	}
-
-	private static QuestTransition talk(QuestDefinition definition, String source, String target,
-			int action) {
-		return transition(definition, source, target, new QuestEvent.TalkToNpc(DIALOG_NPC_ID, action));
-	}
-
-	private static QuestTransition transition(QuestDefinition definition, String source, String target,
-			QuestEvent event) {
-		List<QuestTransition> matches = definition.transitions().stream()
-			.filter(candidate -> Objects.equals(candidate.sourceNode(), source))
-			.filter(candidate -> Objects.equals(candidate.targetNode(), target))
-			.filter(candidate -> candidate.event().equals(event))
-			.toList();
-		assertEquals(1, matches.size(), () -> source + " -> " + target + " " + event);
-		return matches.getFirst();
-	}
-
-	private static void assertNode(QuestDefinition definition, String label, QuestStatus status,
-			Map<String, Integer> variables) {
-		QuestNode node = definition.nodes().stream()
-			.filter(candidate -> candidate.label().equals(label))
-			.findFirst().orElseThrow();
-		assertEquals(status, node.projection().status());
-		assertEquals(variables, node.projection().variables());
-	}
-
-	private static CompiledQuestDefinition definition() {
-		return ProductionQuestDefinitions.definition(QUEST_ID);
+	private static boolean hasKillHit(DataDrivenNativeRuntime runtime, int npcId, int group) {
+		List<DataDrivenNativeRuntime.StepHit> hits = runtime.killInterests().get(npcId);
+		return hits != null && hits.stream().anyMatch(hit -> hit.questId() == QUEST_ID
+			&& hit.stepIndex() == 0 && hit.group() == group);
 	}
 }

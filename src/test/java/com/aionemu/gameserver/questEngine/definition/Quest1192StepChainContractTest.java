@@ -1,190 +1,142 @@
 package com.aionemu.gameserver.questEngine.definition;
 
+import com.aionemu.gameserver.model.PlayerClass;
+import com.aionemu.gameserver.model.Race;
+import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
-import com.aionemu.gameserver.questEngine.runtime.QuestMutationPlan;
-import com.aionemu.gameserver.questEngine.runtime.QuestMutationPlanner;
-import com.aionemu.gameserver.questEngine.runtime.QuestSnapshot;
+import com.aionemu.gameserver.questEngine.retail.RetailQuestDriver;
+import com.aionemu.gameserver.questEngine.tablelane.NativeNpcNameResolver;
+import com.aionemu.gameserver.questEngine.tablelane.NativeTalkFixture;
+import com.aionemu.gameserver.questEngine.tablelane.SimpleTalkHandler;
 import org.junit.jupiter.api.Test;
 
-import java.io.InputStream;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * 锁定任务 1192「贝尔特伦要塞的支援请求 / Verteron Reinforcements」的三段交付链。
- * Locks the three-step hand-over chain of quest 1192.
- * <p>Aion 5.8 客户端 quest_summary 声明了三行：极乐世界把书信交给拉比临托斯(203701)、
- * 贤者书库和科赛诺芬(203833)对话、回贝尔特伦要塞和斯帕塔洛斯(203098)对话，三条对话链各自以
- * {@code HACTION_SETPRO1}、{@code HACTION_SETPRO2}、{@code HACTION_SELECT_QUEST_REWARD} 收口。
- * 迁移后的定义只剩一个 {@code started(var0=0)} 进行中状态，把 SETPRO1 同时挂在 203701 与 203833 上并直接进 reward，
- * {@code SETPRO2}/{@code SELECT3_1}/{@code SELECT5} 完全没有路由：玩家跟拉比临托斯说完话就能跳过第 2、3 步直接领奖，
- * wiki 侧表现为三步共用同一条 {@code //quest set 1192 START 0}。
- * The Aion 5.8 client journal declares three rows (Lavirintos in Sanctum, Xenophon in the Library of the Sages,
- * and Spatalos back at Verteron Citadel), each backed by its own dialog chain ending in
- * {@code HACTION_SETPRO1}, {@code HACTION_SETPRO2} and {@code HACTION_SELECT_QUEST_REWARD}. The migrated definition
- * kept a single {@code started(var0=0)} progress state, hung SETPRO1 on both 203701 and 203833 straight into reward,
- * and left {@code SETPRO2}/{@code SELECT3_1}/{@code SELECT5} unrouted, so talking to Lavirintos skipped steps 2 and 3
- * and jumped to the reward window.</p>
+ * 锁定任务 1192「贝尔特伦要塞的支援请求」的真端三段交付链。
+ * Locks quest 1192's retail three-step hand-over chain.
+ * <p>
+ * 任务已退役（保留清单 owner=RETAIL_TABLE）：旧 typed 节点/转换金标随迁移退场，按计划 §8.9（P3 重锚口径）
+ * 改锚真端表行（接取 Spatalos → Lavirintos 步 1 → Xenophon 步 2 → Spatalos 交付、步 1 扣书信）、
+ * quest.xml 奖励与 native 对话面。中继步按 var0 分轴门控：未轮到的步零响应，跳步领取只回未完成提示页。
+ * <p>
+ * The retired typed gold standard is re-anchored (plan §8.9) to the retail row (accept Spatalos →
+ * Lavirintos step 1 → Xenophon step 2 → Spatalos hand-in, step-1 letter removal), the quest.xml rewards
+ * and the native faces. Relay steps gate on var0: an unreached step stays silent and a skipped hand-in
+ * only gets the in-progress page.
  */
 class Quest1192StepChainContractTest {
+	private static final int QUEST_ID = 1192;
 	private static final int SPATALOS = 203098;
 	private static final int LAVIRINTOS = 203701;
 	private static final int XENOPHON = 203833;
+	/** 真端 give_item / remove_item1 = ITEM_DOC_QUEST_1192A 1。 / The retail letter item. */
 	private static final int REINFORCEMENT_REQUEST = 182200556;
 
 	@Test
-	void clientJournalRowsMapToOneProgressStateEach() throws Exception {
-		QuestDefinition definition = definition().definition();
-		// 客户端任务书三行各占一个 var0（QE-051：每一行都必须有 START/REWARD 状态），领奖行 = 第 3 行（var0=2）。
-		assertEquals(List.of(
-			"unaccepted:NONE:0",
-			"started:START:0",
-			"s1:START:1",
-			"s2:START:2",
-			"reward:REWARD:2",
-			"complete:COMPLETE:2"),
-			definition.nodes().stream()
-				.map(node -> node.label() + ":" + node.projection().status() + ":"
-					+ node.projection().variables().get("var0"))
-				.toList());
+	void retailRowKeepsTheThreeStepChainAndBothRelayOwners() throws Exception {
+		assertTrue(RetiredQuestIds.contains(QUEST_ID));
+		assertTrue(SimpleTalkHandler.instance().routes(QUEST_ID), "SimpleTalk native 车道必须路由 1192");
+		assertFalse(ProductionQuestDefinitions.catalog().findExecutable(QUEST_ID).isPresent(),
+			"退役后 typed 目录不得再持有 1192");
+
+		SimpleTalkHandler handler = SimpleTalkHandler.instance();
+		assertEquals("Spatalos", handler.requireRow(QUEST_ID).acquiredNpcName(), "接取 owner 名");
+		assertEquals(List.of("Lavirintos", "Xenophon"), handler.requireRow(QUEST_ID).talkNpcNames(),
+			"真端中继链（talk_npc1 → talk_npc2）");
+		assertEquals("Spatalos", handler.requireRow(QUEST_ID).rewardNpcName(), "交付 owner 名");
+		assertEquals(SPATALOS, NativeNpcNameResolver.instance().resolve("Spatalos").npcIds().get(0));
+		assertEquals(LAVIRINTOS, NativeNpcNameResolver.instance().resolve("Lavirintos").npcIds().get(0));
+		assertEquals(XENOPHON, NativeNpcNameResolver.instance().resolve("Xenophon").npcIds().get(0));
+		assertEquals(SPATALOS, handler.acquireNpc(QUEST_ID), "接取 owner = Spatalos");
+		assertEquals(SPATALOS, handler.rewardNpc(QUEST_ID), "交付 owner = Spatalos");
+		assertEquals(2, handler.relayCount(QUEST_ID), "1192 是两步中继行");
+		assertTrue(handler.relaysForNpc(LAVIRINTOS).contains(
+			new SimpleTalkHandler.RelayStep(QUEST_ID, 1, LAVIRINTOS)), "步 1 = Lavirintos");
+		assertTrue(handler.relaysForNpc(XENOPHON).contains(
+			new SimpleTalkHandler.RelayStep(QUEST_ID, 2, XENOPHON)), "步 2 = Xenophon");
+		assertEquals(Integer.valueOf(1193), handler.conQuest(QUEST_ID), "真端 con_quest = 1193");
+		assertEquals(new SimpleTalkHandler.ItemStack(REINFORCEMENT_REQUEST, 1),
+			handler.acceptGiveItem(QUEST_ID), "接取发放书信");
+		assertEquals(new SimpleTalkHandler.ItemStack(REINFORCEMENT_REQUEST, 1),
+			handler.stepRemoveItem(QUEST_ID, 1), "步 1 扣除书信");
+		assertEquals(List.of(), handler.workItems(QUEST_ID), "无 item_check 行不得带交付门物品");
+
+		QuestMetadata metadata = RetailQuestDriver.ensureLoaded()
+			.retailMetadataOf(QUEST_ID).orElseThrow().metadata();
+		assertEquals(18, metadata.minLevel(), "真端 minlevel_permitted=18");
+		assertEquals(java.util.Set.of("ELYOS"), metadata.permittedRaces(), "真端 pc_light");
+		List<QuestReward> rewards = metadata.rewards();
+		assertTrue(rewards.contains(new QuestReward("EXP", 0, 73200)), () -> rewards.toString());
+		assertTrue(rewards.contains(new QuestReward("ITEM", 188051196, 1)), () -> rewards.toString());
 	}
 
 	@Test
-	void eachStepAdvancesItsOwnStateAndNeverJumpsStraightToReward() throws Exception {
-		CompiledQuestDefinition compiled = definition();
-		QuestDefinition definition = compiled.definition();
+	void eachStepAdvancesItsOwnStateAndNeverJumpsStraightToReward() {
+		NativeTalkFixture.RecordingInventory inventory = new NativeTalkFixture.RecordingInventory();
+		SimpleTalkHandler handler = NativeTalkFixture.handler(inventory);
+		Player player = NativeTalkFixture.player(Race.ELYOS, PlayerClass.WARRIOR, 18);
 
-		// 步骤 1：把书信交给拉比临托斯 → s1（书信在交出时清空，存量为 0 的旧存档不得阻断）。
-		QuestTransition stepOne = talk(definition, "started", "s1", LAVIRINTOS,
-			QuestDialogAction.SETPRO1.id());
-		assertEquals(List.of(new QuestAction.RemoveItem(REINFORCEMENT_REQUEST, QuestAction.RemoveItem.ALL)),
-			stepOne.actions());
-		assertEquals(List.of(
-			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
-			new AfterCommitAction.CloseDialog()), stepOne.afterCommit());
-		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(QuestDialogPage.SELECT2_1.id())),
-			talk(definition, "started", "started", LAVIRINTOS, QuestDialogAction.SELECT2_1.id()).afterCommit());
+		// 未接取：任务行打开客户端声明的入口页（信页 select1=1011，带任务上下文）。
+		NativeTalkFixture.clearPackets(player);
+		assertTrue(handler.onDialog(NativeTalkFixture.dialog(player, SPATALOS, QUEST_ID, 31)));
+		NativeTalkFixture.assertOnlyDialogPageWithQuest(player,
+			NativeTalkFixture.clientEntryPage(QUEST_ID), QUEST_ID);
 
-		// 步骤 2：跟科赛诺芬对话 → s2。
-		QuestTransition stepTwo = talk(definition, "s1", "s2", XENOPHON,
-			QuestDialogAction.SETPRO2.id());
-		assertEquals(List.of(), stepTwo.actions());
-		assertEquals(List.of(
-			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
-			new AfterCommitAction.CloseDialog()), stepTwo.afterCommit());
-		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(QuestDialogPage.SELECT3_1.id())),
-			talk(definition, "s1", "s1", XENOPHON, QuestDialogAction.SELECT3_1.id()).afterCommit());
+		NativeTalkFixture.add(player, QUEST_ID, QuestStatus.START, 0);
 
-		// 步骤 3：回贝尔特伦要塞向斯帕塔洛斯报告 → reward（领奖行 var0=2）。
-		QuestTransition stepThree = talk(definition, "s2", "reward", SPATALOS,
-			QuestDialogAction.SELECT_QUEST_REWARD.id());
-		assertEquals(List.of(
-			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
-			new AfterCommitAction.ShowQuestDialog(QuestDialogPage.SHOW_SELECT_QUEST_REWARD_WINDOW1.id())),
-			stepThree.afterCommit());
-		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(QuestDialogPage.SELECT5.id())),
-			talk(definition, "s2", "s2", SPATALOS, QuestDialogAction.QUEST_SELECT.id()).afterCommit());
+		// 步 1（Lavirintos）：任务行打开该步页（select2=1352）；步 2 未轮到 → 零响应，不跳步。
+		NativeTalkFixture.clearPackets(player);
+		assertTrue(handler.onDialog(NativeTalkFixture.dialog(player, LAVIRINTOS, QUEST_ID, 31)));
+		NativeTalkFixture.assertOnlyDialogPageWithQuest(player, 1352, QUEST_ID);
 
-		// 回归防呆：SETPRO1/SETPRO2 是「推进到下一步」的动作，任何一条都不得直接落到 reward。
-		assertTrue(definition.transitions().stream()
-				.filter(candidate -> "reward".equals(candidate.targetNode()))
-				.filter(candidate -> candidate.event() instanceof QuestEvent.TalkToNpc)
-				.map(candidate -> (QuestEvent.TalkToNpc) candidate.event())
-				.noneMatch(talk -> talk.dialogId() != null
-					&& (talk.dialogId() == QuestDialogAction.SETPRO1.id()
-						|| talk.dialogId() == QuestDialogAction.SETPRO2.id())),
-			"SETPRO1/SETPRO2 must advance the step chain instead of claiming the reward");
+		NativeTalkFixture.clearPackets(player);
+		assertFalse(handler.onDialog(NativeTalkFixture.dialog(player, XENOPHON, QUEST_ID, 31)),
+			"未轮到的中继步必须零响应");
 
-		// 运行时：三跳依次落在 START/1、START/2、REWARD/2。
-		assertNextRow(compiled, QuestStatus.START, 0, stepOne, QuestStatus.START, 1);
-		assertNextRow(compiled, QuestStatus.START, 1, stepTwo, QuestStatus.START, 2);
-		assertNextRow(compiled, QuestStatus.START, 2, stepThree, QuestStatus.REWARD, 2);
-	}
+		// 跳步领取无效：交付 NPC 在未集齐中继时只回未完成提示页 10，状态保持 START。
+		NativeTalkFixture.clearPackets(player);
+		assertTrue(handler.onDialog(NativeTalkFixture.dialog(player, SPATALOS, QUEST_ID, 1009)));
+		NativeTalkFixture.assertOnlyDialogPage(player, 10);
+		assertEquals(QuestStatus.START,
+			player.getQuestStateList().getQuestState(QUEST_ID).getStatus(), "跳步领取不得推进状态");
 
-	@Test
-	void onlySpatalosClaimsTheRewardAndTheWorkItemStaysDeclared() throws Exception {
-		QuestDefinition definition = definition().definition();
-		List<QuestTransition> completions = definition.transitions().stream()
-			.filter(candidate -> "reward".equals(candidate.sourceNode())
-				&& "complete".equals(candidate.targetNode()))
-			.toList();
-		assertFalse(completions.isEmpty(), "reward → complete 领奖路由必须存在");
-		assertEquals(List.of(SPATALOS), completions.stream()
-				.map(candidate -> ((QuestEvent.TalkToNpc) candidate.event()).npcId())
-				.distinct().sorted().toList(),
-			"客户端只在斯帕塔洛斯处结束任务，旧定义让 203701/203833 也能领奖");
-		assertEquals(List.of(new QuestItemRequirement(REINFORCEMENT_REQUEST, 1)),
-			definition.metadata().questWorkItems());
-	}
+		// 步 1 推进（SETPRO1=10000）：var0=1 + 关窗 + 扣除书信。
+		inventory.clear();
+		inventory.hold(REINFORCEMENT_REQUEST, 1);
+		NativeTalkFixture.clearPackets(player);
+		assertTrue(handler.onDialog(NativeTalkFixture.dialog(player, LAVIRINTOS, QUEST_ID, 10000)));
+		assertEquals(1, player.getQuestStateList().getQuestState(QUEST_ID).getQuestVars().getQuestVars(),
+			"步 1 推进必须写 var0=1");
+		NativeTalkFixture.assertCloseDialog(player);
+		assertEquals(List.of("remove:" + REINFORCEMENT_REQUEST + ":1"), inventory.calls(),
+			"步 1 必须扣除书信");
 
-	@Test
-	void persistedRewardRowIsRepairedOnEnterWorld() throws Exception {
-		CompiledQuestDefinition compiled = definition();
-		QuestTransition recovery = recoveryRoute(compiled.definition());
-		assertEquals(List.of(
-			new QuestCondition.StatusIs(QuestStatus.REWARD),
-			new QuestCondition.QuestVariableIs("var0", 0)), recovery.conditions());
-		assertEquals(List.of(new QuestAction.SetVariable("var0", 2)), recovery.actions());
-		assertEquals(List.of(new AfterCommitAction.SyncQuestState(
-			QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH)), recovery.afterCommit());
-		assertNull(recovery.priority());
+		// 步 2（Xenophon）：任务行打开该步页（select3=1693）；推进（SETPRO2=10001）= var0=2 + 关窗。
+		NativeTalkFixture.clearPackets(player);
+		assertTrue(handler.onDialog(NativeTalkFixture.dialog(player, XENOPHON, QUEST_ID, 31)));
+		NativeTalkFixture.assertOnlyDialogPageWithQuest(player, 1693, QUEST_ID);
 
-		QuestMutationPlan plan = QuestMutationPlanner.plan(compiled,
-			snapshot(compiled, QuestStatus.REWARD, Map.of("var0", 0)), recovery.event(), recovery)
-			.orElseThrow();
-		assertEquals(QuestStatus.REWARD, plan.nextStatus());
-		assertEquals(2, unpack(compiled, plan).get("var0"));
-	}
+		NativeTalkFixture.clearPackets(player);
+		assertTrue(handler.onDialog(NativeTalkFixture.dialog(player, XENOPHON, QUEST_ID, 10001)));
+		assertEquals(2, player.getQuestStateList().getQuestState(QUEST_ID).getQuestVars().getQuestVars(),
+			"步 2 推进必须写 var0=2");
+		NativeTalkFixture.assertCloseDialog(player);
 
-	private static void assertNextRow(CompiledQuestDefinition definition, QuestStatus status, int var0,
-			QuestTransition transition, QuestStatus expectedStatus, int expectedVar0) {
-		QuestMutationPlan plan = QuestMutationPlanner.plan(definition,
-			snapshot(definition, status, Map.of("var0", var0)), transition.event(), transition).orElseThrow();
-		assertEquals(expectedStatus, plan.nextStatus());
-		assertEquals(expectedVar0, unpack(definition, plan).get("var0"));
-	}
+		// 中继满：交付确认页（select5=2375）→ 1009 推进 REWARD + 奖励窗（页 5）。
+		NativeTalkFixture.clearPackets(player);
+		assertTrue(handler.onDialog(NativeTalkFixture.dialog(player, SPATALOS, QUEST_ID, 31)));
+		NativeTalkFixture.assertOnlyDialogPageWithQuest(player, 2375, QUEST_ID);
 
-	private static QuestTransition talk(QuestDefinition definition, String source, String target, int npcId,
-			int action) {
-		return definition.transitions().stream()
-			.filter(candidate -> source.equals(candidate.sourceNode()) && target.equals(candidate.targetNode())
-				&& new QuestEvent.TalkToNpc(npcId, action).equals(candidate.event()))
-			.findFirst().orElseThrow(() -> new AssertionError(
-				"missing route " + source + " -> " + target + " npc=" + npcId + " action=" + action));
-	}
-
-	private static QuestTransition recoveryRoute(QuestDefinition definition) {
-		List<QuestTransition> matches = definition.transitions().stream()
-			.filter(candidate -> candidate.sourceNode() == null)
-			.filter(candidate -> "reward".equals(candidate.targetNode()))
-			.filter(candidate -> candidate.event().equals(new QuestEvent.EnterWorld()))
-			.toList();
-		assertEquals(1, matches.size(), "quest 1192 reward recovery route");
-		return matches.getFirst();
-	}
-
-	private static Map<String, Integer> unpack(CompiledQuestDefinition definition, QuestMutationPlan plan) {
-		return definition.definition().progressLayout().unpack(plan.nextPackedVariables());
-	}
-
-	private static QuestSnapshot snapshot(CompiledQuestDefinition definition, QuestStatus status,
-			Map<String, Integer> variables) {
-		Map<String, Integer> packedVariables = new LinkedHashMap<>(
-			definition.definition().progressLayout().unpack(0));
-		packedVariables.putAll(variables);
-		return new QuestSnapshot(7, definition.id(), status,
-			definition.definition().progressLayout().pack(packedVariables),
-			Map.of(REINFORCEMENT_REQUEST, 1), Map.of(),
-			true, true, 0, 0, 100000000, 1, 0f, 0f, 0f, (byte) 0);
-	}
-
-	private static CompiledQuestDefinition definition() throws Exception {
-		return ProductionQuestDefinitions.definitionInOverlay(1192);
+		NativeTalkFixture.clearPackets(player);
+		assertTrue(handler.onDialog(NativeTalkFixture.dialog(player, SPATALOS, QUEST_ID, 1009)));
+		assertEquals(QuestStatus.REWARD,
+			player.getQuestStateList().getQuestState(QUEST_ID).getStatus(), "确认动作必须推进到 REWARD");
+		NativeTalkFixture.assertOnlyDialogPageWithQuest(player, 5, QUEST_ID);
 	}
 }

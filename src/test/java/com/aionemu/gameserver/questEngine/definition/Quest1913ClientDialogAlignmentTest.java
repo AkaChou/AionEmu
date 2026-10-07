@@ -1,86 +1,124 @@
 package com.aionemu.gameserver.questEngine.definition;
 
+import com.aionemu.gameserver.model.PlayerClass;
+import com.aionemu.gameserver.model.Race;
+import com.aionemu.gameserver.model.gameobjects.player.Player;
+import com.aionemu.gameserver.questEngine.model.QuestStatus;
+import com.aionemu.gameserver.questEngine.retail.RetailQuestDriver;
+import com.aionemu.gameserver.questEngine.tablelane.NativeNpcNameResolver;
+import com.aionemu.gameserver.questEngine.tablelane.NativeTalkFixture;
+import com.aionemu.gameserver.questEngine.tablelane.SimpleTalkHandler;
 import org.junit.jupiter.api.Test;
 
-import java.io.InputStream;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+/**
+ * 锁定任务 1913（贝尔特伦派遣）的真端单步中继与交付 owner。
+ * Locks quest 1913's retail single-step relay and hand-in owners.
+ * <p>
+ * 任务已退役（保留清单 owner=RETAIL_TABLE）：旧 typed 转换金标随迁移退场，按计划 §8.9（P3 重锚口径）
+ * 改锚真端表行（接取 Macus → Polyidus 步 1 → Hyacinte 交付）、quest.xml 奖励与 native 对话面。
+ * 旧 typed 定义在步 1 上的传送（210030000）是退役 XML 的作者效果，真端 talk 行未声明任何传送列，
+ * 车道推进语义 = var0=1 + 关窗。
+ * <p>
+ * The retired typed transition gold standard is re-anchored (plan §8.9) to the retail row (accept
+ * Macus → Polyidus step 1 → Hyacinte hand-in), the quest.xml rewards and the native faces. The old
+ * typed teleport (210030000) was a retired-XML authoring effect; the retail talk row declares no
+ * teleport column, so the lane advance is var0=1 plus the close dialog.
+ */
 class Quest1913ClientDialogAlignmentTest {
+	private static final int QUEST_ID = 1913;
 	private static final int START_NPC = 203758;
 	private static final int PROGRESS_NPC = 203726;
 	private static final int REPORT_NPC = 203097;
+	/** 真端 reward_item1_1 = FOOD_dpheal_40A 5。 / The retail item reward. */
+	private static final int FOOD_ITEM = 160001273;
 
 	@Test
-	void followsTheClientAcceptProgressReportAndRewardLifecycle() throws Exception {
-		QuestDefinition definition = definition().definition();
-		List<QuestTransition> transitions = definition.transitions();
+	void retailRowAnchorsTheSingleStepChainAndTheHyacinteHandIn() throws Exception {
+		assertTrue(RetiredQuestIds.contains(QUEST_ID));
+		assertTrue(SimpleTalkHandler.instance().routes(QUEST_ID), "SimpleTalk native 车道必须路由 1913");
+		assertFalse(ProductionQuestDefinitions.catalog().findExecutable(QUEST_ID).isPresent(),
+			"退役后 typed 目录不得再持有 1913");
 
-		// S2：接取窗由 QUEST_SELECT 直发（页 4）；select1 页梯与 1007 中转随规范接取段退场。
-		// S2 canonical accept: QUEST_SELECT opens page 4 directly; the select1 ladder and the 1007 relay retire.
-		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(
-			QuestDialogPage.SHOW_ASK_QUEST_ACCEPT_WINDOW.id())),
-			talk(transitions, "unaccepted", START_NPC, QuestDialogAction.QUEST_SELECT).afterCommit());
-		assertEquals("started",
-			talk(transitions, "unaccepted", START_NPC, QuestDialogAction.QUEST_ACCEPT_1).targetNode());
-		assertEquals("unaccepted",
-			talk(transitions, "unaccepted", START_NPC, QuestDialogAction.QUEST_REFUSE_1).targetNode());
+		SimpleTalkHandler handler = SimpleTalkHandler.instance();
+		assertEquals("Macus", handler.requireRow(QUEST_ID).acquiredNpcName(), "接取 owner 名");
+		assertEquals(List.of("Polyidus"), handler.requireRow(QUEST_ID).talkNpcNames(), "真端中继链");
+		assertEquals("Hyacinte", handler.requireRow(QUEST_ID).rewardNpcName(), "交付 owner 名");
+		assertEquals(START_NPC, NativeNpcNameResolver.instance().resolve("Macus").npcIds().get(0));
+		assertEquals(PROGRESS_NPC, NativeNpcNameResolver.instance().resolve("Polyidus").npcIds().get(0));
+		assertEquals(REPORT_NPC, NativeNpcNameResolver.instance().resolve("Hyacinte").npcIds().get(0));
+		assertEquals(START_NPC, handler.acquireNpc(QUEST_ID), "接取 owner = Macus");
+		assertEquals(REPORT_NPC, handler.rewardNpc(QUEST_ID), "交付 owner = Hyacinte");
+		assertEquals(1, handler.relayCount(QUEST_ID), "1913 是单步中继行");
+		assertTrue(handler.relaysForNpc(PROGRESS_NPC).contains(
+			new SimpleTalkHandler.RelayStep(QUEST_ID, 1, PROGRESS_NPC)), "步 1 = Polyidus");
+		assertNull(handler.acceptGiveItem(QUEST_ID), "真端行无 give_item");
+		assertNull(handler.stepGiveItem(QUEST_ID, 1), "步 1 无发放");
+		assertNull(handler.stepRemoveItem(QUEST_ID, 1), "步 1 无扣除");
 
-		QuestTransition progress = talk(transitions, "started", PROGRESS_NPC, QuestDialogAction.SETPRO1);
-		assertEquals("started1", progress.targetNode());
-		assertTrue(progress.actions().contains(new QuestAction.SetVariable("var0", 1)));
-		assertEquals(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.PACKET_ONLY),
-			progress.afterCommit().getFirst());
-		AfterCommitAction.TeleportPlayer teleport = assertInstanceOf(AfterCommitAction.TeleportPlayer.class,
-			progress.afterCommit().get(1));
-		assertEquals(210030000, teleport.worldId());
-		assertEquals(new AfterCommitAction.CloseDialog(), progress.afterCommit().getLast());
-
-		// S2：交付 = QUEST_SELECT(started1→reward) 空门直翻领奖态并下发奖励窗；SELECT5 报告页与 1009
-		// 检查中转随规范交付段退场（未集齐零路由，关窗兜底交 DialogService）。传送后的语义靠交付边锚在
-		// started1 体现。
-		// S2 canonical delivery: QUEST_SELECT(started1→reward) flips REWARD with the reward window; the
-		// report page and the 1009 check relay retire. The teleport-gated stage is the started1 anchor.
-		QuestTransition delivery = talk(transitions, "started1", REPORT_NPC, QuestDialogAction.QUEST_SELECT);
-		assertEquals("reward", delivery.targetNode());
-		assertEquals(List.of(), delivery.conditions());
-		assertEquals(List.of(), delivery.actions());
-		assertEquals(List.of(new AfterCommitAction.SyncQuestState(
-			QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH), new AfterCommitAction.ShowQuestDialog(
-			deliveryWindowPage(definition.metadata()))), delivery.afterCommit());
-		assertTrue(transitions.stream().noneMatch(transition ->
-			"started1".equals(transition.sourceNode())
-				&& transition.event() instanceof QuestEvent.TalkToNpc talk
-				&& talk.npcId() == REPORT_NPC
-				&& Integer.valueOf(QuestDialogAction.SELECT_QUEST_REWARD.id()).equals(talk.dialogId())),
-			"quest 1913 的 1009 检查中转必须随规范交付段退场");
-
-		QuestTransition completion = talk(transitions, "reward", REPORT_NPC,
-			QuestDialogAction.SELECTED_QUEST_REWARD1);
-		assertEquals("complete", completion.targetNode());
-		assertTrue(completion.actions().contains(new QuestAction.CompleteQuest(0)));
+		QuestMetadata metadata = RetailQuestDriver.ensureLoaded()
+			.retailMetadataOf(QUEST_ID).orElseThrow().metadata();
+		assertEquals(10, metadata.minLevel(), "真端 minlevel_permitted=10");
+		assertEquals(java.util.Set.of("ELYOS"), metadata.permittedRaces(), "真端 pc_light");
+		assertTrue(metadata.permittedClasses().contains("GLADIATOR")
+				&& metadata.permittedClasses().contains("TEMPLAR"), "真端 class_permitted=fighter knight");
+		assertTrue(metadata.startConditions().contains(new QuestStartCondition("finished", 1007, 0))
+				|| metadata.prerequisites().contains(1007), "前置 = 完成 1007（奖励分支 1）");
+		List<QuestReward> rewards = metadata.rewards();
+		assertTrue(rewards.contains(new QuestReward("EXP", 0, 14046)), () -> rewards.toString());
+		assertTrue(rewards.contains(new QuestReward("ITEM", FOOD_ITEM, 5)), () -> rewards.toString());
 	}
 
-	private static QuestTransition talk(List<QuestTransition> transitions, String source, int npcId,
-			QuestDialogAction action) {
-		return transitions.stream()
-			.filter(transition -> transition.sourceNode().equals(source))
-			.filter(transition -> transition.event() instanceof QuestEvent.TalkToNpc talk
-				&& talk.npcId() == npcId && Integer.valueOf(action.id()).equals(talk.dialogId()))
-			.findFirst().orElseThrow();
-	}
+	@Test
+	void acceptRelayAndReportFacesFollowTheNativeDialogPages() {
+		SimpleTalkHandler handler = SimpleTalkHandler.instance();
+		Player player = NativeTalkFixture.player(Race.ELYOS, PlayerClass.GLADIATOR, 10);
+		Integer acquireNpc = handler.acquireNpc(QUEST_ID);
+		Integer reportNpc = handler.rewardNpc(QUEST_ID);
+		assertNotNull(acquireNpc);
+		assertNotNull(reportNpc);
 
-	/** 交付窗页（与 RetailSimpleCollectItemDefinitionCompiler.deliveryWindowPage 同口径：档位查表，零奖励组回落窗 1）。 */
-	private static int deliveryWindowPage(QuestMetadata metadata) {
-		return metadata.rewardGroups().isEmpty()
-			? QuestDialogPage.SHOW_SELECT_QUEST_REWARD_WINDOW1.id()
-			: QuestDialogPage.rewardWindowForTier(metadata.rewardGroups().size() - 1).orElseThrow().id();
-	}
+		// 未接取：完成前置 1007 后任务行打开客户端声明的入口页（信页 select1=1011）；1007 开接取窗页 4。
+		NativeTalkFixture.completePrerequisites(player, 1007);
+		NativeTalkFixture.clearPackets(player);
+		assertTrue(handler.onDialog(NativeTalkFixture.dialog(player, acquireNpc, QUEST_ID, 31)));
+		NativeTalkFixture.assertOnlyDialogPageWithQuest(player,
+			NativeTalkFixture.clientEntryPage(QUEST_ID), QUEST_ID);
 
-	private CompiledQuestDefinition definition() throws Exception {
-		return ProductionQuestDefinitions.definitionInOverlay(1913);
+		NativeTalkFixture.clearPackets(player);
+		assertTrue(handler.onDialog(NativeTalkFixture.dialog(player, acquireNpc, QUEST_ID,
+			QuestDialogAction.ASK_QUEST_ACCEPT.id())));
+		NativeTalkFixture.assertOnlyDialogPageWithQuest(player, 4, QUEST_ID);
+
+		// 步 1（Polyidus）：任务行打开该步页（select2=1352，带任务上下文）。
+		NativeTalkFixture.add(player, QUEST_ID, QuestStatus.START, 0);
+		NativeTalkFixture.clearPackets(player);
+		assertTrue(handler.onDialog(NativeTalkFixture.dialog(player, PROGRESS_NPC, QUEST_ID, 31)));
+		NativeTalkFixture.assertOnlyDialogPageWithQuest(player, 1352, QUEST_ID);
+
+		// 步 1 推进（SETPRO1=10000）：var0=1 + 关窗（真端 after-commit 零发页）。
+		NativeTalkFixture.clearPackets(player);
+		assertTrue(handler.onDialog(NativeTalkFixture.dialog(player, PROGRESS_NPC, QUEST_ID, 10000)));
+		assertEquals(1, player.getQuestStateList().getQuestState(QUEST_ID).getQuestVars().getQuestVars(),
+			"步 1 推进必须写 var0=1");
+		NativeTalkFixture.assertCloseDialog(player);
+
+		// 报告（Hyacinte）：中继满后才发报告确认页（select5=2375），1009 推进 REWARD + 奖励窗（页 5）。
+		NativeTalkFixture.clearPackets(player);
+		assertTrue(handler.onDialog(NativeTalkFixture.dialog(player, reportNpc, QUEST_ID, 31)));
+		NativeTalkFixture.assertOnlyDialogPageWithQuest(player, 2375, QUEST_ID);
+
+		NativeTalkFixture.clearPackets(player);
+		assertTrue(handler.onDialog(NativeTalkFixture.dialog(player, reportNpc, QUEST_ID, 1009)));
+		assertEquals(QuestStatus.REWARD,
+			player.getQuestStateList().getQuestState(QUEST_ID).getStatus(), "确认动作必须推进到 REWARD");
+		NativeTalkFixture.assertOnlyDialogPageWithQuest(player, 5, QUEST_ID);
 	}
 }
