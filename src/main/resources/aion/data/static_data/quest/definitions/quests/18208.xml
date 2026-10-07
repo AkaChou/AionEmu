@@ -31,13 +31,20 @@
       <var name="var0" value="1"/>
     </node>
     <node label="reward" status="REWARD">
-      <var name="var0" value="2"/>
+      <var name="var0" value="1"/>
     </node>
     <node label="complete" status="COMPLETE">
       <var name="var0" value="0"/>
     </node>
   </nodes>
   <transitions>
+    <!-- QE-054 修正（2026-10-07 全量审计）：REWARD 投影 = 真端/legacy 推进值 1（legacy 击杀链后
+         var0=1 + setStatus(REWARD)；真端集合 {1}；客户端第 3 行门槛 SECTION_0==1）。下方叙事注释中
+         「2=领奖行」是 QE-051 行号口径的旧说法，已按轴权威改正：轴 1 时客户端自会显示领奖行。
+         QE-054 correction (2026-10-07 audit): the REWARD projection is the retail/legacy progress
+         value 1 (the legacy kill chain left var0=1 before setStatus(REWARD); retail set {1}; the
+         client gates row 3 on SECTION_0==1). The "2 = reward row" wording below is the old QE-051
+         row-number caliber, corrected to the axis authority: at axis 1 the client shows the row. -->
     <!-- 客户端任务书三行 ↔ 服务端阶段：第 1 行“消灭最终训练对象 ([%2]/5)”= var0=0 时用 var1 计 5 次击杀，
          第 2 行“穿过…消灭 quest_18208a ([%5]/1)”= var0=1 时用 var2 计 1 次精英击杀，
          第 3 行“和 Molfus 对话”= REWARD 领奖行（var0=2，与 2620/4210 的 QE-051 领奖行合同一致）。
@@ -101,7 +108,7 @@
         <variable-below field="var0" value="2"/>
       </conditions>
       <actions>
-        <set-variable field="var0" value="2"/>
+        <set-variable field="var0" value="1"/>
       </actions>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
@@ -116,7 +123,22 @@
         <variable-at-least field="var0" value="3"/>
       </conditions>
       <actions>
-        <set-variable field="var0" value="2"/>
+        <set-variable field="var0" value="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
+    <transition target="reward">
+      <event>
+        <enter-world/>
+      </event>
+      <conditions>
+        <status-is status="REWARD"/>
+        <variable-is field="var0" value="2"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="1"/>
       </actions>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>

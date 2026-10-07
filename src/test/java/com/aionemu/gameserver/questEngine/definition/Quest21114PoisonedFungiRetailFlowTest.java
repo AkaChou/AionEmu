@@ -33,9 +33,12 @@ class Quest21114PoisonedFungiRetailFlowTest {
 		assertEquals(new NodeProjection(QuestStatus.START, Map.of("var0", 2)), node(definition, "s2").projection());
 		assertEquals(new NodeProjection(QuestStatus.START, Map.of("var0", 3)), node(definition, "s3").projection());
 		assertEquals(new NodeProjection(QuestStatus.START, Map.of("var0", 4)), node(definition, "s4").projection());
-		// QE-051：reward 投影 = 客户端任务书领奖行（quest_q21114 六行，末行是“向 Martinez 报告”行 5）。
-		// QE-051: the reward projection is the client journal reward row (six rows, report row index 5).
-		assertEquals(new NodeProjection(QuestStatus.REWARD, Map.of("var0", 5)),
+		// QE-054：领奖投影 = 真端/legacy 推进值 4——legacy defaultOnKillEvent(216563,4,true) 落盘 4、
+		// 真端集合 {1,3,4} 无 5，客户端 REWARD 态按自身 [%N] 门槛显示报告行（行 5）。
+		// QE-054: the reward projection is the retail/legacy progress value 4 — the legacy
+		// defaultOnKillEvent(216563,4,true) persisted 4 and the retail set {1,3,4} has no 5; the
+		// client shows the report row (row 5) through its own gate.
+		assertEquals(new NodeProjection(QuestStatus.REWARD, Map.of("var0", 4)),
 			node(definition, "reward").projection());
 
 		assertEquals(Set.of(

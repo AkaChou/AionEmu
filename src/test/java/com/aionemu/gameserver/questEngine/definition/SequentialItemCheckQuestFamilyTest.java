@@ -25,10 +25,12 @@ class SequentialItemCheckQuestFamilyTest {
 		assertNode(definition, "collect0", QuestStatus.START, 0);
 		assertNode(definition, "collected", QuestStatus.START, 1);
 		assertNode(definition, "ready", QuestStatus.START, 2);
-		// QE-051：客户端 QUEST_Q3082.html 共 4 行，末行为领奖行，reward 投影 = 3（批次 1-7 已收口）。
-		// QE-051: QUEST_Q3082.html has 4 journal rows and the last one is the reward row, so the REWARD
-		// projection is 3 (closed by batches 1-7).
-		assertNode(definition, "reward", QuestStatus.REWARD, 3);
+		// QE-054：领奖投影 = 真端/legacy 推进值 2——legacy useQuestObject(2,2,true) 落盘 2，
+		// 真端 0x100 不写轴、客户端 REWARD 态自行显示报告行；领奖行批次曾误抬为 3。
+		// QE-054: the reward projection is the retail/legacy progress value 2 — the legacy
+		// useQuestObject(2,2,true) persisted 2 and the retail 0x100 keeps the axis; the reward-row
+		// batch once mislifted it to 3.
+		assertNode(definition, "reward", QuestStatus.REWARD, 2);
 
 		assertPage(definition, "unaccepted", 798116,
 			QuestDialogAction.QUEST_SELECT, QuestDialogPage.SELECT_NONE);

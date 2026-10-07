@@ -29,16 +29,24 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * {@code changeQuestStep(3, 5)} 直接进副本，出口物件 700369 再做 5→6，于是客户端行 4 永远不亮；
  * reward 投影也停在 6，领奖行（行 7）与行 6 共用投影（QE-051 行错位）。
  * <p>
- * 本门禁锁：每个客户端行都有独立 START/REWARD 状态（0..7 连续）、副本段每步只推一格
- * （3→4 与加尔姆对话进副本、4→5 踏入副本世界、5→6 用出口逃出、6→REWARD(7) 向 Muninn 报告）、
- * 乱序/回看不产生计划、{@code REWARD + var0==6} 的旧存档在进入世界时自愈到 7、
- * 领奖与完成 owner 唯一（Muninn 203550）、出口物件只在行 5（副本内）可用并传送回主城，
- * 且 24046 不得混入镜像 14046 的道具/影片推进链。
+ * 本门禁锁：每个客户端行都有独立 START/REWARD 状态（0..6 连续）、副本段每步只推一格
+ * （3→4 与加尔姆对话进副本、4→5 踏入副本世界、5→6 用出口逃出、6 处向 Muninn 报告进 REWARD）、
+ * 乱序/回看不产生计划、领奖与完成 owner 唯一（Muninn 203550）、出口物件只在行 5（副本内）
+ * 可用并传送回主城，且 24046 不得混入镜像 14046 的道具/影片推进链。
  * <p>
- * Locks batch 22: the eight-row journal ladder of 24046, whose rows 4 and 5 were collapsed into one step by
- * the legacy {@code changeQuestStep(3, 5)} jump while the reward projection stayed at row 6. The Elyos twin
- * 14046 already owns all eight rows; this gate pins the Asmodian ladder, the instance/escape conditionality,
- * the legacy reward-row self-heal and the unique Muninn(203550) owner, and keeps the two variants apart.
+ * QE-054 步号轴收口（2026-10-07 全量审计）：领奖投影 = 真端/legacy 推进值 6——legacy
+ * {@code defaultCloseDialog(6,6,true)} 落盘 6、真端 SetProgress 集合 {4,6} 无 7，真端
+ * {@code 0x100} 状态推进不写轴，客户端 REWARD 态按自身 [%N] 门槛显示报告行（行 7）；
+ * 领奖行批次曾误抬为 7，{@code REWARD + var0==7} 的坏档在进入世界时回滚到 6。
+ * 中间阶梯（0..6 连续）与真端 {4,6} 集合的完整对照留待专项（见
+ * {@code .agents/summary/quest-step-axis-fullscan/}）。
+ * <p>
+ * Locks the eight-row journal ladder of 24046 (rows 4 and 5 were collapsed into one step by the
+ * legacy {@code changeQuestStep(3, 5)} jump). With the QE-054 close-out the reward projection is
+ * the retail/legacy progress value 6 (retail set {4,6}, {@code 0x100} never touches the axis and
+ * the client shows the report row via its own gate); the batch once mislifted it to 7 and
+ * {@code REWARD + var0==7} saves roll back to 6 on enter-world. The Elyos twin 14046 shares the
+ * projection contract; the full retail-vs-ladder comparison is a tracked follow-up.
  */
 class ShadowCourtRowLadderContractTest {
 
@@ -52,9 +60,9 @@ class ShadowCourtRowLadderContractTest {
 	private static final int KHRUDGELMIR = 204253;
 	private static final int MUNINN = 203550;
 	private static final int EXIT_OBJECT = 700369;
-	/** 领奖行号与旧投影 / reward row index and the legacy projection it replaces. */
-	private static final int REWARD_ROW = 7;
-	private static final int LEGACY_REWARD_ROW = 6;
+	/** 领奖投影（真端/legacy 值）与批次坏档值 / reward projection (retail/legacy) and the batch-corrupted value. */
+	private static final int REWARD_ROW = 6;
+	private static final int BATCH_MISLIFTED_ROW = 7;
 
 	@Test
 	void everyClientRowOwnsOneLadderState() throws Exception {
@@ -68,8 +76,9 @@ class ShadowCourtRowLadderContractTest {
 			BitField field = definition.progressLayout().field("var0");
 			assertNotNull(field, () -> "quest " + questId + " must declare var0 as the journal row index");
 			assertEquals(0, field.offset(), () -> "quest " + questId + " var0 must stay in SECTION_0");
-			assertEquals(REWARD_ROW, field.maxValue(),
-				() -> "quest " + questId + " var0 must be able to hold the reward row " + REWARD_ROW);
+			assertEquals(BATCH_MISLIFTED_ROW, field.maxValue(),
+				() -> "quest " + questId + " var0 must still hold the batch-mislifted row "
+					+ BATCH_MISLIFTED_ROW + " for the rollback to recognize it");
 			for (int row = 0; row <= 6; row++) {
 				final int currentRow = row;
 				QuestNode node = node(definition, rowNode(currentRow));
@@ -79,12 +88,14 @@ class ShadowCourtRowLadderContractTest {
 					() -> "quest " + questId + " node " + rowNode(currentRow) + " status");
 			}
 			assertEquals(REWARD_ROW, node(definition, "reward").projection().variables().get("var0"),
-				() -> "quest " + questId + " reward must project the client reward row");
+				() -> "quest " + questId + " reward must project the retail/legacy progress value");
 			assertEquals(QuestStatus.REWARD, node(definition, "reward").projection().status(),
 				() -> "quest " + questId + " reward status");
-			/* 每一行都必须在 START/REWARD 节点里出现过，否则客户端那一行永远不亮。 */
-			/* Every row must appear on a START/REWARD node or the client row can never light up. */
-			assertEquals(Set.of(0, 1, 2, 3, 4, 5, 6, 7), visibleRows(definition),
+			/* 行 0..6 各有独立轴状态；报告行（行 7）由客户端 REWARD 态按自身 [%N] 门槛显示
+			 * （QE-054：真端 0x100 不写轴，REWARD 投影保持 6）。 */
+			/* Rows 0..6 each own an axis state; the report row (row 7) is shown by the client's
+			 * own REWARD gate since the projection stays on the retail value 6 (QE-054). */
+			assertEquals(Set.of(0, 1, 2, 3, 4, 5, 6), visibleRows(definition),
 				() -> "quest " + questId + " rows without a state");
 		}
 	}
@@ -157,9 +168,12 @@ class ShadowCourtRowLadderContractTest {
 			QuestMutationPlan plan = plan(compiled, QuestStatus.START, currentRow, world, step, carried);
 			assertNotNull(plan, () -> "row " + currentRow + " must advance through " + step.sourceNode()
 				+ " -> " + step.targetNode());
-			assertEquals(currentRow + 1, row(compiled, plan),
-				() -> "row " + currentRow + " must advance exactly one row");
-			assertEquals(currentRow + 1 == REWARD_ROW ? QuestStatus.REWARD : QuestStatus.START,
+			/* 最后一步进 REWARD 时轴保持玩法末值（QE-054：真端 0x100 不写轴）。 */
+			/* The final step keeps the last gameplay value when entering REWARD (QE-054). */
+			int projected = currentRow == ladder.size() - 1 ? REWARD_ROW : currentRow + 1;
+			assertEquals(projected, row(compiled, plan),
+				() -> "row " + currentRow + " projection after the step");
+			assertEquals(currentRow == ladder.size() - 1 ? QuestStatus.REWARD : QuestStatus.START,
 				plan.nextStatus(), () -> "row " + currentRow + " status");
 			/* 同一步在别的行号上（回看/乱序）不得产生任何计划。 */
 			/* Replaying that step from another row must not produce a plan. */
@@ -175,7 +189,7 @@ class ShadowCourtRowLadderContractTest {
 	}
 
 	@Test
-	void legacyRewardRowSelfHealsOnEnterWorld() throws Exception {
+	void batchMisliftedRewardRowRollsBackOnEnterWorld() throws Exception {
 		CompiledQuestDefinition compiled = definition(ASMODIAN);
 		List<QuestTransition> recovery = compiled.definition().transitions().stream()
 			.filter(candidate -> candidate.sourceNode() == null)
@@ -185,17 +199,17 @@ class ShadowCourtRowLadderContractTest {
 		assertEquals(1, recovery.size(), "exactly one enter-world reward recovery route");
 		QuestTransition heal = recovery.getFirst();
 		assertEquals(List.of(new QuestCondition.StatusIs(QuestStatus.REWARD),
-			new QuestCondition.QuestVariableIs("var0", LEGACY_REWARD_ROW)), heal.conditions(),
-			"the recovery route must target the legacy reward projection");
+			new QuestCondition.QuestVariableIs("var0", BATCH_MISLIFTED_ROW)), heal.conditions(),
+			"the recovery route must target the batch-mislifted reward projection");
 		assertEquals(List.of(new QuestAction.SetVariable("var0", REWARD_ROW)), heal.actions(),
-			"the recovery route must write the reward row");
+			"the recovery route must write the retail/legacy progress value");
 		assertEquals(List.of(new AfterCommitAction.SyncQuestState(
 			QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH)), heal.afterCommit(),
 			"the recovery route must refresh the journal");
 
-		QuestMutationPlan repaired = plan(compiled, QuestStatus.REWARD, LEGACY_REWARD_ROW, PANDAEMONIUM, heal,
+		QuestMutationPlan repaired = plan(compiled, QuestStatus.REWARD, BATCH_MISLIFTED_ROW, PANDAEMONIUM, heal,
 			Map.of());
-		assertNotNull(repaired, "a REWARD save on the legacy row must be repaired");
+		assertNotNull(repaired, "a REWARD save on the batch-mislifted row must be repaired");
 		assertEquals(REWARD_ROW, row(compiled, repaired), "repaired reward row");
 		assertEquals(QuestStatus.REWARD, repaired.nextStatus(), "repair keeps the reward status");
 		assertNull(plan(compiled, QuestStatus.REWARD, REWARD_ROW, PANDAEMONIUM, heal, Map.of()),
@@ -259,8 +273,9 @@ class ShadowCourtRowLadderContractTest {
 			.noneMatch(action -> action instanceof AfterCommitAction.TeleportPlayer teleport
 				&& teleport.worldId() == SHADOW_COURT),
 			"the Elyos twin must not teleport into the Asmodian instance");
-		/* 两侧共用的行号口径：领奖行 = 客户端末行 7，且行 0 的接取 NPC 各自独立。 */
-		/* Shared row contract: reward row equals the client's last row (7), while the offer NPC stays per side. */
+		/* 两侧共用的投影口径：领奖投影 = 真端/legacy 推进值 6（QE-054），且行 0 的接取 NPC 各自独立。 */
+		/* Shared projection contract: the reward projection is the retail/legacy value 6 (QE-054), while the
+		   offer NPC stays per side. */
 		assertEquals(REWARD_ROW, visibleRows(asmodian).stream().max(Integer::compareTo).orElseThrow());
 		assertEquals(REWARD_ROW, visibleRows(elyos).stream().max(Integer::compareTo).orElseThrow());
 		assertEquals(PHYPER, ((QuestEvent.TalkToNpc) route(asmodian, "started", "s1").event()).npcId(),

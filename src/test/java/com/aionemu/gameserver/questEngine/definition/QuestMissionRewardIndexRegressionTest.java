@@ -28,11 +28,12 @@ class QuestMissionRewardIndexRegressionTest {
 		assertEquals(List.of("reward"), definition.nodes().stream()
 			.filter(node -> node.projection().status() == QuestStatus.REWARD)
 			.map(QuestNode::label).toList());
-		// QE-051：客户端 quest_q14026/q24026 各 6 行，末行为领奖行，reward 投影 = 5、complete 回到 4
-		//（批次 1-7 已收口）。
-		// QE-051: quest_q14026/q24026 each have 6 journal rows and the last one is the reward row, so the
-		// REWARD projection is 5 while COMPLETE returns to 4 (closed by batches 1-7).
-		assertNode(definition, "reward", QuestStatus.REWARD, 5);
+		// QE-054：reward 投影 = 真端/legacy 推进值 4——legacy STEP_TO_4 移除道具后 setStatus(REWARD)
+		// 不写 var（=4），真端 0x100 不写轴、客户端 REWARD 态自行显示报告行（行 5）；complete 回到 4。
+		// QE-054: the REWARD projection is the retail/legacy progress value 4 — the legacy STEP_TO_4
+		// entered REWARD without touching var0 (kept 4) and the client shows the report row (row 5)
+		// via its own gate; COMPLETE returns to 4.
+		assertNode(definition, "reward", QuestStatus.REWARD, 4);
 		assertNode(definition, "complete", QuestStatus.COMPLETE, 4);
 
 		for (QuestDialogAction action : List.of(QuestDialogAction.QUEST_SELECT,

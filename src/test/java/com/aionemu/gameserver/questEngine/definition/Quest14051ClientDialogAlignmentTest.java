@@ -30,10 +30,12 @@ class Quest14051ClientDialogAlignmentTest {
 		assertNode(definition, "s1", QuestStatus.START, Map.of("var0", 1));
 		assertNode(definition, "s2", QuestStatus.START, Map.of("var0", 2));
 		assertNode(definition, "s3", QuestStatus.START, Map.of("var0", 3));
-		// QE-051：客户端 quest_q14051.html 共 5 行，末行为领奖行，reward 投影 = 4（批次 1-7 已收口）。
-		// QE-051: quest_q14051.html has 5 journal rows and the last one is the reward row, so the REWARD
-		// projection is 4 (closed by batches 1-7).
-		assertNode(definition, "reward", QuestStatus.REWARD, Map.of("var0", 4));
+		// QE-054：领奖投影 = 真端/legacy 推进值 3——legacy STEP_TO_4 仅 setStatus(REWARD) 不写 var，
+		// 真端集合 {1,3} 无 4；领奖行批次曾误抬为 4，2026-10-07 全量审计收口回 3。
+		// QE-054: the reward projection is the retail/legacy progress value 3 — the legacy STEP_TO_4
+		// only entered REWARD without touching var0 and the retail set {1,3} has no 4; the reward-row
+		// batch once mislifted it to 4 and the 2026-10-07 audit rolled it back to 3.
+		assertNode(definition, "reward", QuestStatus.REWARD, Map.of("var0", 3));
 		assertNode(definition, "complete", QuestStatus.COMPLETE, Map.of("var0", 3));
 
 		// 204549 的三页介绍必须先按客户端 action 链翻页，再用 SETPRO2 进入 var0=2。

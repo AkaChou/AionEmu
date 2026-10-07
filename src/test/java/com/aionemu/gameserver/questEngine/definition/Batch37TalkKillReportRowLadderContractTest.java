@@ -27,7 +27,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  *       迁移把 end NPC 的行 0 对话直接写成 started -&gt; reward，reward 投影 0，行 1/2 永远不亮。</li>
  *   <li>3711/4711（Dredgion 舰长，四行）：行 0「和 Mias/Henir 对话」、行 1「搜集德雷得奇安情报」
  *       （730196 术古的 select2 链）、行 2「除掉 DrakanBoss(214823)」、行 3「向 Taranis/Votan 报告」。
- *       legacy 合同是 TALK/REWARD 链：reward 投影必须是行 3，报告入口是 reward + QUEST_SELECT(31) 到
+ *       legacy 合同是 TALK/REWARD 链：reward 投影 = 真端/legacy 推进值 2（QE-054；行 3 由客户端门槛显示），报告入口是 reward + QUEST_SELECT(31) 到
  *       DEFAULT_SUCCESS(10002)，1009 由 npc-complete 预览打开奖励窗。</li>
  * </ul>
  * 两族都补无 source 的 ENTER_WORLD 自愈边（把旧存档的 packed 行 0/1(/2) 推到领奖行），并禁止
@@ -62,22 +62,19 @@ class Batch37TalkKillReportRowLadderContractTest {
 	@Test
 	void everyJournalRowOwnsAState() throws Exception {
 		for (Kill3Contract contract : KILL3_FAMILY) {
-			/* P0c-6 起三行都走真端网格合成器：接取态（简报标志位 1）→ 简报完成零段 → 计数满段 → 领奖。 */
-			/* Since P0c-6 all three rows are grid-composed: briefing pending -> zero counters -> saturated. */
-			QuestDefinition definition = definition(contract.questId()).definition();
-			assertNode(definition, contract.questId(), QuestStatus.START, counters(0, true), "briefing-pending");
-			assertNode(definition, contract.questId(), QuestStatus.START, counters(0, false), "briefed");
-			assertNode(definition, contract.questId(), QuestStatus.START, counters(1, false), "killed");
-			assertNode(definition, contract.questId(), QuestStatus.REWARD, counters(1, false), "reward");
-			assertTrue(routes(definition, "started", "reward").isEmpty(),
-				() -> "quest " + contract.questId() + " must not keep a collapsed talk -> reward jump");
+			/* P0c-6 起三行走真端网格合成器直驱（无 IR）：编译视图断言随退役停用，守卫 = 必须确属
+			 * 退役（防名单陈旧静默缩水）；网格形（接取态/简报零段/计数满段/领奖）口径由 native 车道门承担。 */
+			/* Since P0c-6 the three rows are grid-composed natively (no IR): the compile-view assertions
+			 * retire with the XML; the guard keeps the list honest and the native lane gates own the caliber. */
+			assertTrue(RetiredQuestIds.contains(contract.questId()),
+				() -> "quest " + contract.questId() + " is retail-driven and must be a retired row");
 		}
 		for (Talk4Contract contract : TALK4_FAMILY) {
 			QuestDefinition definition = definition(contract.questId()).definition();
 			assertRow(definition, contract.questId(), "started", 0);
 			assertRow(definition, contract.questId(), "s1", 1);
 			assertRow(definition, contract.questId(), "s2", 2);
-			assertRow(definition, contract.questId(), "reward", 3);
+			assertRow(definition, contract.questId(), "reward", 2);
 			assertTrue(routes(definition, "started", "reward").isEmpty(),
 				() -> "quest " + contract.questId() + " must not keep a collapsed talk -> reward jump");
 		}
@@ -86,70 +83,16 @@ class Batch37TalkKillReportRowLadderContractTest {
 	@Test
 	void bountyFamilyAcceptsFromStarterAndReportsToJournalNpc() throws Exception {
 		for (Kill3Contract contract : KILL3_FAMILY) {
-			QuestDefinition definition = definition(contract.questId()).definition();
-			String started = nodeLabel(definition, contract.questId(), QuestStatus.START, counters(0, true));
-			String briefed = nodeLabel(definition, contract.questId(), QuestStatus.START, counters(0, false));
-			String killed = nodeLabel(definition, contract.questId(), QuestStatus.START, counters(1, false));
-			String reward = nodeLabel(definition, contract.questId(), QuestStatus.REWARD, counters(1, false));
-
-			assertTrue(routes(definition, "unaccepted", started).stream()
-					.anyMatch(route -> talk(route, contract.startNpc())),
-				() -> "quest " + contract.questId() + " accepts from the legacy start NPC");
-
-			/* 行 0：简报页（select2）由 QUEST_SELECT 打开，标志位保持不变。 */
-			/* Row 0: QUEST_SELECT opens the select2 briefing page and keeps the flag raised. */
-			assertTrue(routes(definition, started, started).stream()
-					.anyMatch(route -> talk(route, contract.endNpc())
-						&& route.afterCommit().equals(List.of(new AfterCommitAction.ShowQuestDialog(
-							QuestDialogPage.SELECT2.id())))),
-				() -> "quest " + contract.questId() + " shows the client select2 page on row 0");
-
-			/* 行 1：客户端末按钮（SETPRO1）清简报标志位，落入计数零段（由目标投影承担清位）。 */
-			/* Row 1: the client's SETPRO1 end button clears the briefing flag by reaching the zero grid node. */
-			List<QuestTransition> briefingClear = routes(definition, started, briefed);
-			assertEquals(1, briefingClear.size(),
-				() -> "quest " + contract.questId() + " clears the briefing exactly once");
-			assertEquals(new QuestEvent.TalkToNpc(contract.endNpc(),
-				QuestDialogAction.SETPRO1.id(), 0), briefingClear.getFirst().event(),
-				() -> "quest " + contract.questId() + " ends the briefing row on the client SETPRO1 button");
-			assertEquals(0, node(definition, briefed).projection().variables().get("var5"),
-				() -> "quest " + contract.questId() + " clears the briefing flag on its way to the counters");
-
-			/* 行 2：击杀把计数推到满段（客户端击杀行都以 SECTION_5==0 门控）。 */
-			/* Row 2: kills saturate the counter slot; the client gates every kill row on SECTION_5==0. */
-			List<QuestTransition> kill = routes(definition, briefed, killed);
-			assertFalse(kill.isEmpty(), () -> "quest " + contract.questId() + " counts the client hunt targets");
-			assertEquals(contract.kills(), kill.stream().map(route -> killTargets(route.event()))
-					.flatMap(Set::stream).collect(Collectors.toSet()),
-				() -> "quest " + contract.questId() + " counts the client monster-hunt targets");
-			assertTrue(kill.stream().allMatch(route -> route.afterCommit()
-					.equals(List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.PACKET_ONLY)))),
-				() -> "quest " + contract.questId() + " syncs kill progress as PACKET_ONLY");
-
-			/* 行 3：报告页是客户端的 select5（2375），交付按钮 SELECT_QUEST_REWARD 开奖励窗。 */
-			/* Row 3: the client select5 report page (2375); SELECT_QUEST_REWARD opens the reward window. */
-			assertTrue(routes(definition, killed, killed).stream()
-					.anyMatch(route -> talk(route, contract.endNpc())
-						&& route.afterCommit().equals(List.of(new AfterCommitAction.ShowQuestDialog(
-							QuestDialogPage.SELECT5.id())))),
-				() -> "quest " + contract.questId() + " shows the client select5 report page on the report row");
-			List<QuestTransition> claim = routes(definition, killed, reward);
-			assertEquals(1, claim.size(),
-				() -> "quest " + contract.questId() + " reports the saturated row -> reward exactly once");
-			assertEquals(new QuestEvent.TalkToNpc(contract.endNpc(),
-				QuestDialogAction.SELECT_QUEST_REWARD.id(), 0), claim.getFirst().event(),
-				() -> "quest " + contract.questId() + " opens the reward window from the select5 button");
-			assertTrue(claim.getFirst().afterCommit().contains(
-					new AfterCommitAction.ShowQuestDialog(
-						QuestDialogPage.SHOW_SELECT_QUEST_REWARD_WINDOW1.id())),
-				() -> "quest " + contract.questId() + " shows the reward window page");
-
-			assertTrue(routes(definition, reward, "complete").stream()
-					.allMatch(route -> talk(route, contract.endNpc())),
-				() -> "quest " + contract.questId() + " completes only on the journal end NPC");
-			assertTrue(routes(definition, reward, "complete").stream()
-					.noneMatch(route -> talk(route, contract.startNpc())),
-				() -> "quest " + contract.questId() + " must not let the starter claim the reward");
+			/* P0c-6：三行走真端网格合成器直驱（无 IR）：本方法原有一整段编译视图断言（简报页/
+			 * SETPRO1 清位/击杀计数/报告页/领奖路由）随退役整体停用——守卫 = 必须确属退役
+			 * （4ede058c0 重锚漏网段，2026-10-07 收口）；网格形口径由 native 车道门承担。 */
+			/* Since P0c-6 the three rows are grid-composed natively (no IR): this method's former
+			 * compile-view block (briefing page / SETPRO1 flag clear / kill counters / report page /
+			 * claim route) retired with the XML — the guard keeps the list honest (a block left
+			 * behind by the 4ede058c0 re-anchoring, closed today); the native lane gates own the
+			 * caliber. */
+			assertTrue(RetiredQuestIds.contains(contract.questId()),
+				() -> "quest " + contract.questId() + " is retail-driven and must be a retired row");
 		}
 	}
 
@@ -200,13 +143,21 @@ class Batch37TalkKillReportRowLadderContractTest {
 	void staleCollapsedRewardSavesHealToTheRewardRow() throws Exception {
 		for (Kill3Contract contract : KILL3_FAMILY) {
 			/* P0c-6：真端形状没有任务书行号（var0 是击杀计数，行由客户端 SECTION 门控推导），
-			 * 因此不再有也不该有"把旧存档行 0/1 推到领奖行"的无 source 自愈边（P3 既有裁定）。 */
-			/* Retail shape has no stored journal row, hence no source-less repair edge may remain. */
-			assertTrue(enterWorldRecoveries(definition(contract.questId()).definition()).isEmpty(),
-				() -> "quest " + contract.questId() + " is retail-driven and must not keep a reward heal edge");
+			 * 因此不再有也不该有"把旧存档行 0/1 推到领奖行"的无 source 自愈边（P3 既有裁定）；
+			 * 退役行无 IR，结构上不可能有修复边——守卫 = 必须确属退役（原 definition() 调用随
+			 * 4ede058c0 退役漏网，2026-10-07 收口）。 */
+			/* Retail shape has no stored journal row, hence no source-less repair edge may remain;
+			 * retired rows have no IR so the edge is structurally impossible — the guard keeps the
+			 * list honest (the former definition() call was left behind by 4ede058c0, closed today). */
+			assertTrue(RetiredQuestIds.contains(contract.questId()),
+				() -> "quest " + contract.questId() + " is retail-driven and must be a retired row");
 		}
+		/* QE-054：领奖投影 = 真端/legacy 推进值 2（legacy defaultOnKillEvent(214823,2,true) 落盘 2、
+		 * 真端集合 {2}），行 3 由客户端 REWARD 态按 [%N] 门槛显示；批次曾误抬为 3。 */
+		/* QE-054: the reward projection is the retail/legacy value 2 (legacy kill event persisted 2;
+		 * row 3 is shown by the client's own REWARD gate); the batch once mislifted it to 3. */
 		for (Talk4Contract contract : TALK4_FAMILY) {
-			assertHealsTo(contract.questId(), 3);
+			assertHealsTo(contract.questId(), 2);
 		}
 	}
 

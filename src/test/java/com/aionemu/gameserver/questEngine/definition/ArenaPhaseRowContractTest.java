@@ -25,14 +25,15 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * 旧 handler（`_18208IllusionOrInfiltration`/`_28208ARiftAdrift` 一类）同样用 var0 0 -&gt; 1、var1 0..4
  * （5 次 217819 击杀）、var2 0 -&gt; 1（精英击杀 218185/218200）并置 REWARD。
  * 迁移把天族侧的击杀路线整条丢掉（只剩“对话即领奖”），魔族侧改成每个击杀一个 var0 阶段（k1..k7），
- * 两边都与客户端声明冲突。本测试锁定两阶段模型、两条击杀路线、领奖行投影（var0=2，与 2620/4210
+ * 两边都与客户端声明冲突。本测试锁定两阶段模型、两条击杀路线、领奖投影 = 真端/legacy 推进值 1（QE-054；曾按 QE-051 行号口径误为 2，2026-10-07 已收口；另见 2620/4210
  * 的 QE-051 领奖行合同一致）、旧存档收敛边与天/魔镜像同形。
  * Locks the batch-6 “arena two-phase row advance” contract for 18208/18209 and their Asmodian mirrors
  * 28208/28209: the client journal has three rows (five 217819 kills counted in var1 while var0=0, the single
  * elite kill of 218185/218200 counted in var2 while var0=1, then the reward NPC). The migration dropped the
  * Elyos kill routes entirely and replaced the Asmodian side with a per-kill stage chain (k1..k7), both of
- * which conflict with the client script. The test pins the two-phase model, both kill routes, the reward row
- * projection (var0=2, the same QE-051 reward-row contract as 2620/4210), the legacy-save collapse edges, and
+ * which conflict with the client script. The test pins the two-phase model, both kill routes, the reward
+ * projection equals the retail/legacy progress value 1 (QE-054; the old QE-051 row caliber of 2
+ * was rolled back on 2026-10-07; cf. 2620/4210), the legacy-save collapse edges, and
  * Elyos/Asmodian mirror parity.
  */
 class ArenaPhaseRowContractTest {
@@ -48,8 +49,12 @@ class ArenaPhaseRowContractTest {
 			QuestDefinition definition = definition(questId).definition();
 			assertEquals(0, row(definition, "started"), () -> "quest " + questId + " first stage");
 			assertEquals(1, row(definition, "s1"), () -> "quest " + questId + " second stage");
-			assertEquals(2, row(definition, "reward"),
-				() -> "quest " + questId + " reward row (QE-051: reward projection = journal reward row)");
+			/* QE-054：领奖投影 = 真端/legacy 推进值 1（legacy 击杀链后 var0=1 + setStatus(REWARD)、
+			 * 真端集合 {1}、客户端第 3 行门槛 SECTION_0==1）；镜像批次曾误抬为 2。 */
+			/* QE-054: the reward projection is the retail/legacy progress value 1 (the legacy kill
+			 * chain left var0=1 before REWARD; retail set {1}; the client gates row 3 on SECTION_0==1). */
+			assertEquals(1, row(definition, "reward"),
+				() -> "quest " + questId + " reward projection (QE-054 retail progress value)");
 			BitField first = definition.progressLayout().field("var0");
 			BitField killCounter = definition.progressLayout().field("var1");
 			BitField eliteFlag = definition.progressLayout().field("var2");
@@ -121,7 +126,7 @@ class ArenaPhaseRowContractTest {
 				.orElseThrow();
 			assertEquals(QuestStatus.REWARD, plan.nextStatus(), () -> "quest " + questId + " elite status");
 			Map<String, Integer> variables = unpack(compiled, plan);
-			assertEquals(2, variables.get("var0"), () -> "quest " + questId + " reward row");
+			assertEquals(1, variables.get("var0"), () -> "quest " + questId + " reward projection");
 			assertEquals(1, variables.get("var2"), () -> "quest " + questId + " elite flag");
 		}
 	}
@@ -134,13 +139,15 @@ class ArenaPhaseRowContractTest {
 				.filter(candidate -> candidate.sourceNode() == null)
 				.filter(candidate -> candidate.event().equals(new QuestEvent.EnterWorld()))
 				.toList();
-			/* 迁移版魔族的 k1..k7（var0=1..7）在新行号模型下不再匹配任何节点，这里锁定四条收敛边：
-			   旧 k2..k4 回第 1 行、旧 k5..k7 进第 2 行、旧 REWARD 的低值与高值统一收敛到领奖行。
+			/* 迁移版魔族的 k1..k7（var0=1..7）在新行号模型下不再匹配任何节点，这里锁定五条收敛边：
+			   旧 k2..k4 回第 1 行、旧 k5..k7 进第 2 行、旧 REWARD 的低值/旧权威值 2/高值统一收敛到
+			   权威值 1（QE-054：领奖投影 = 真端/legacy 推进值 1，==2 是领奖行批次带来的坏档）。
 			   同型任务 2620/4210 的 QE-051 契约只有一条 REWARD 收敛边；本任务的旧值域同时覆盖 START 侧。 */
-			/* The migrated Asmodian k1..k7 stages (var0=1..7) match no node under the row model, so four
-			   collapse edges are pinned. The sibling 2620/4210 QE-051 contract only needs the REWARD edge
-			   because its legacy START values never left the new row set. */
-			assertEquals(4, recoveries.size(), () -> "quest " + questId + " enter-world repair edges");
+			/* The migrated Asmodian k1..k7 stages (var0=1..7) match no node under the row model, so five
+			   collapse edges are pinned; the reward wall collapses low values, the batch-era value 2 and
+			   high values onto the authoritative 1 (QE-054). The sibling 2620/4210 QE-051 contract only
+			   needs one REWARD edge because its legacy START values never left the new row set. */
+			assertEquals(5, recoveries.size(), () -> "quest " + questId + " enter-world repair edges");
 			List<QuestTransition> toStarted = recoveries.stream()
 				.filter(candidate -> "started".equals(candidate.targetNode())).toList();
 			List<QuestTransition> toSecondRow = recoveries.stream()
@@ -149,7 +156,7 @@ class ArenaPhaseRowContractTest {
 				.filter(candidate -> "reward".equals(candidate.targetNode())).toList();
 			assertEquals(1, toStarted.size(), () -> "quest " + questId + " first-row collapse edge");
 			assertEquals(1, toSecondRow.size(), () -> "quest " + questId + " second-row collapse edge");
-			assertEquals(2, toReward.size(), () -> "quest " + questId + " reward collapse edges");
+			assertEquals(3, toReward.size(), () -> "quest " + questId + " reward collapse edges");
 
 			QuestTransition firstRow = toStarted.getFirst();
 			assertEquals(List.of(
@@ -178,10 +185,16 @@ class ArenaPhaseRowContractTest {
 			List<QuestTransition> highRewards = toReward.stream()
 				.filter(edge -> edge.conditions().contains(new QuestCondition.VariableAtLeast("var0", 3)))
 				.toList();
+			List<QuestTransition> batchValueRewards = toReward.stream()
+				.filter(edge -> edge.conditions().contains(new QuestCondition.QuestVariableIs("var0", 2)))
+				.toList();
 			assertEquals(1, lowRewards.size(), () -> "quest " + questId + " low reward collapse edge");
 			assertEquals(1, highRewards.size(), () -> "quest " + questId + " high reward collapse edge");
+			assertEquals(1, batchValueRewards.size(),
+				() -> "quest " + questId + " batch-value reward rollback edge");
 			QuestTransition lowReward = lowRewards.getFirst();
 			QuestTransition highReward = highRewards.getFirst();
+			QuestTransition batchValueReward = batchValueRewards.getFirst();
 			assertEquals(List.of(
 				new QuestCondition.StatusIs(QuestStatus.REWARD),
 				new QuestCondition.VariableBelow("var0", 2)), lowReward.conditions(),
@@ -190,8 +203,12 @@ class ArenaPhaseRowContractTest {
 				new QuestCondition.StatusIs(QuestStatus.REWARD),
 				new QuestCondition.VariableAtLeast("var0", 3)), highReward.conditions(),
 				() -> "quest " + questId + " high reward collapse conditions");
+			assertEquals(List.of(
+				new QuestCondition.StatusIs(QuestStatus.REWARD),
+				new QuestCondition.QuestVariableIs("var0", 2)), batchValueReward.conditions(),
+				() -> "quest " + questId + " batch-value reward rollback conditions");
 			for (QuestTransition edge : toReward) {
-				assertEquals(List.of(new QuestAction.SetVariable("var0", 2)), edge.actions(),
+				assertEquals(List.of(new QuestAction.SetVariable("var0", 1)), edge.actions(),
 					() -> "quest " + questId + " reward collapse actions");
 			}
 
@@ -221,8 +238,8 @@ class ArenaPhaseRowContractTest {
 				snapshot(compiled, QuestStatus.REWARD, Map.of("var0", 7, "var1", 0, "var2", 1)),
 				highReward).orElseThrow();
 			assertEquals(QuestStatus.REWARD, repaired.nextStatus());
-			assertEquals(2, unpack(compiled, repaired).get("var0"),
-				() -> "quest " + questId + " legacy reward row");
+			assertEquals(1, unpack(compiled, repaired).get("var0"),
+				() -> "quest " + questId + " legacy reward row collapses onto the retail value");
 		}
 	}
 
@@ -242,7 +259,7 @@ class ArenaPhaseRowContractTest {
 				for (QuestAction action : route.actions()) {
 					if (action instanceof QuestAction.SetVariable(String field, int value)
 							&& "var0".equals(field)) {
-						assertEquals(2, value, () -> "quest " + questId + " route writes a foreign row");
+						assertEquals(1, value, () -> "quest " + questId + " route writes a foreign row");
 					}
 				}
 			}

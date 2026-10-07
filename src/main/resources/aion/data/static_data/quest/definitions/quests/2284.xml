@@ -30,27 +30,25 @@
       <var name="var0" value="2"/>
     </node>
     <node label="reward" status="REWARD">
-      <var name="var0" value="3"/>
+      <var name="var0" value="2"/>
     </node>
     <node label="complete" status="COMPLETE">
       <var name="var0" value="2"/>
     </node>
   </nodes>
   <transitions>
-    <!-- QE-051 领奖行合同：客户端 quest_q2284.html 的 quest_summary 共 4 行，末行是领奖行
-         （STR_DIC_N_Shugo_DF1_7，对应该任务的领奖 NPC）；旧投影停在 2，进入世界时纠正为 3 并下发状态包。
-         Reward row contract (QE-051): the last of the 4 quest_q2284 journal rows is the reward row
-         (STR_DIC_N_Shugo_DF1_7, the reward NPC of this quest); saves persisted at 2 are repaired to 3 on enter-world. -->
+    <!-- QE-054 步号轴权威：领奖投影 = 真端/legacy 推进值 2（真端 0x100 状态推进不写轴，客户端 REWARD 态按 [%N] 行门槛自行显示报告行）；真端 1|2 无 3；staleRow=2。曾被领奖行批次误抬为 3，本边把坏档回滚到 2。
+         Step-axis authority (QE-054): the reward projection is the retail/legacy progress value 2 (retail 0x100 state advances never touch the axis; the client shows the report row via its own [%N] gate); per the legacy/retail progress evidence on the Chinese line. The reward-row batch once mislifted it to 3 — this edge rolls bad saves back to 2. -->
     <transition target="reward">
       <event>
         <enter-world/>
       </event>
       <conditions>
         <status-is status="REWARD"/>
-        <variable-is field="var0" value="2"/>
+        <variable-is field="var0" value="3"/>
       </conditions>
       <actions>
-        <set-variable field="var0" value="3"/>
+        <set-variable field="var0" value="2"/>
       </actions>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>

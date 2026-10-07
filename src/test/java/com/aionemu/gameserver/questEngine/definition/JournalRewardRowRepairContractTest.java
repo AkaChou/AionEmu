@@ -47,11 +47,31 @@ class JournalRewardRowRepairContractTest {
 	 * source-less enter-world repair edge may remain.
 	 */
 	private static final List<Integer> RETAIL_DRIVEN = List.of(16900, 16901, 16902, 16903, 24201,
-		50126, 50127, 51126, 51127);
+		50126, 50127, 51126, 51127,
+		/* QE-054 批次收口（2026-10-07 全量审计）：以下 5 行原属第三批领奖行修复，任务定义已由
+		 * 真端表车道合成（retention 清单 RETAIL_TABLE 行），无 XML 即无自愈边结构；旧 legacy 取证
+		 * 见 .agents/summary/quest-step-axis-fullscan/。领奖投影口径由表车道门承担。
+		 * Five more rows joined the retail-driven list with the QE-054 batch close-out (2026-10-07):
+		 * their definitions are synthesized by the retail table lane (RETAIL_TABLE retention rows),
+		 * so no XML and structurally no repair edge; reward-projection caliber is owned by the
+		 * native-lane gates. */
+		15613, 25023, 25606, 80020, 80021);
 
 	private static final List<Contract> CONTRACTS = List.of(
+		/* QE-054 批次收口（2026-10-07 全量审计移出 40 行）：本批「客户端末行是领奖行 ⇒ 投影抬到末行
+		 * 索引」的判定对「玩法步后进 REWARD」的任务系统性不成立——真端 0x100 状态推进不写轴，客户端
+		 * REWARD 态按 [%N] 行门槛自行显示报告行；正确投影 = 真端/legacy 推进值（与 1361/11006/24021
+		 * 同根因）。40 行已回归权威值并反转自愈边，基线由 RewardRowProjectionRegressionTest 锁定；
+		 * 取证与逐任务证据见 .agents/summary/quest-step-axis-fullscan/。
+		 * QE-054 batch close-out (40 rows removed by the 2026-10-07 full audit): the batch rule
+		 * "client last row is the reward row => lift the projection to the last-row index" is
+		 * systematically wrong for quests entering REWARD right after a gameplay step — retail 0x100
+		 * state advances never touch the axis and the client shows the report row via its own [%N]
+		 * gate, so the correct projection is the retail/legacy progress value (same root cause as
+		 * 1361/11006/24021). The 40 rows were rolled back to the authoritative values with reversed
+		 * healing edges, locked by RewardRowProjectionRegressionTest; per-quest evidence lives in
+		 * .agents/summary/quest-step-axis-fullscan/. */
 		new Contract(1218, 1, 0),
-		new Contract(1319, 8, 0),
 		new Contract(1322, 1, 0),
 		new Contract(1324, 1, 0),
 		/* 1361 移出本批（2026-10-07 实机报障 + 真端/legacy 取证）：领奖态权威值是 legacy/真端的
@@ -74,26 +94,17 @@ class JournalRewardRowRepairContractTest {
 		new Contract(1574, 3, 0),
 		new Contract(1604, 1, 0),
 		new Contract(1614, 3, 2),
-		new Contract(1626, 7, 6),
-		new Contract(1636, 4, 3),
 		new Contract(1647, 1, 0),
-		new Contract(1900, 4, 0),
 		new Contract(1918, 1, 0),
-		new Contract(1921, 4, 3),
 		new Contract(1937, 3, 0),
 		new Contract(1988, 3, 2),
-		new Contract(2122, 2, 1),
-		new Contract(2208, 2, 1),
 		new Contract(2232, 1, 0),
 		new Contract(2271, 1, 0),
 		new Contract(2278, 3, 0),
 		new Contract(2279, 2, 0),
-		new Contract(2284, 3, 2),
-		new Contract(2333, 3, 2),
 		new Contract(2394, 2, 1),
 		new Contract(2423, 3, 0),
 		new Contract(2428, 2, 0),
-		new Contract(2436, 2, 1),
 		new Contract(2443, 1, 0),
 		new Contract(2449, 1, 0),
 		new Contract(2458, 1, 0),
@@ -107,7 +118,6 @@ class JournalRewardRowRepairContractTest {
 		new Contract(2538, 3, 0),
 		new Contract(2542, 1, 0),
 		new Contract(2564, 3, 0),
-		new Contract(2620, 2, 1),
 		new Contract(2634, 2, 1),
 		new Contract(2663, 1, 0),
 		new Contract(2664, 1, 0),
@@ -123,17 +133,13 @@ class JournalRewardRowRepairContractTest {
 		new Contract(3036, 1, 0),
 		new Contract(3037, 1, 0),
 		new Contract(3041, 1, 0),
-		new Contract(3056, 2, 1),
 		new Contract(3057, 1, 0),
-		new Contract(3082, 3, 2),
 		new Contract(3085, 1, 0),
 		new Contract(3086, 1, 0),
 		new Contract(3093, 3, 0),
-		new Contract(3200, 4, 3),
 		new Contract(3211, 1, 0),
 		new Contract(3319, 1, 0),
 		new Contract(3547, 1, 0),
-		new Contract(3721, 3, 2),
 		new Contract(3920, 1, 0),
 		new Contract(3965, 1, 0),
 		new Contract(3967, 1, 0),
@@ -143,21 +149,16 @@ class JournalRewardRowRepairContractTest {
 		new Contract(4004, 1, 0),
 		new Contract(4012, 1, 0),
 		new Contract(4015, 1, 0),
-		new Contract(4038, 3, 0),
 		new Contract(4052, 3, 0),
 		new Contract(4077, 1, 0),
 		new Contract(4210, 2, 1),
-		new Contract(4502, 3, 2),
-		new Contract(4721, 3, 2),
 		new Contract(4905, 3, 0),
 		new Contract(4906, 3, 0),
 		new Contract(4920, 1, 0),
 		new Contract(4937, 7, 0),
 		new Contract(4938, 9, 0),
-		new Contract(4939, 5, 0),
 		new Contract(4940, 1, 0),
 		new Contract(4941, 1, 0),
-		new Contract(4943, 4, 0),
 		new Contract(11001, 3, 0),
 		/* 11006 移出本批（2026-10-07 全族审计 + 真端/legacy 取证）：装第二瓶水后的权威 packed step 是
 		 * legacy/真端的 2（useQuestItem(env, item, 2, 2, true, ...) 的 reward 分支不写 nextStep；
@@ -173,24 +174,18 @@ class JournalRewardRowRepairContractTest {
 		new Contract(11008, 1, 0),
 		new Contract(11009, 3, 0),
 		new Contract(11026, 1, 0),
-		new Contract(10530, 9, 8),
 		new Contract(11068, 1, 0),
 		new Contract(11069, 1, 0),
 		new Contract(11070, 3, 0),
-		new Contract(11076, 4, 3),
 		new Contract(11103, 2, 0),
 		new Contract(11105, 2, 0),
 		new Contract(11106, 2, 0),
 		new Contract(11107, 3, 0),
-		new Contract(11116, 3, 0),
 		new Contract(11117, 2, 0),
 		new Contract(11460, 1, 0),
 		new Contract(13809, 3, 0),
-		new Contract(14046, 7, 6),
-		new Contract(14051, 4, 3),
 		new Contract(14121, 1, 0),
 		new Contract(14122, 2, 0),
-		new Contract(14153, 6, 5),
 		new Contract(15011, 1, 0),
 		new Contract(15012, 1, 0),
 		new Contract(15021, 1, 0),
@@ -206,16 +201,13 @@ class JournalRewardRowRepairContractTest {
 		new Contract(15230, 1, 0),
 		new Contract(15231, 1, 0),
 		new Contract(15232, 1, 0),
-		new Contract(15613, 6, 5),
 		new Contract(18809, 2, 0),
 		new Contract(19002, 1, 0),
-		new Contract(20530, 9, 8),
 		new Contract(21033, 1, 0),
 		new Contract(21036, 2, 0),
 		new Contract(21070, 1, 0),
 		new Contract(21073, 1, 0),
 		new Contract(21105, 1, 0),
-		new Contract(21114, 5, 4),
 		new Contract(21296, 1, 0),
 		new Contract(21460, 1, 0),
 		/* 24021 移出本批（2026-10-07 全族审计 + 真端/legacy 取证）：撒 24021c（use-item）后的权威
@@ -230,39 +222,23 @@ class JournalRewardRowRepairContractTest {
 		 * SetProgress(0x5dd5, 4) explicitly for option 10003=SETPRO4, then FUN_180f00500 advances via
 		 * 0x100(0x5dd5, 0, 0)), not the last-row index 5. Its baseline is owned by
 		 * Quest24021ClientDialogAlignmentTest (reward projection 4, healing edge REWARD/5 -> 4). */
-		new Contract(24022, 8, 7),
-		new Contract(24023, 4, 3),
-		new Contract(24024, 5, 4),
-		new Contract(24025, 4, 3),
-		new Contract(24030, 9, 8),
-		new Contract(24046, 7, 6),
-		new Contract(24051, 6, 5),
 		new Contract(24121, 2, 0),
 		new Contract(24202, 2, 1),
 		new Contract(24242, 2, 0),
 		new Contract(25000, 3, 2),
-		new Contract(25023, 3, 2),
-		new Contract(25606, 8, 7),
 		new Contract(26977, 1, 0),
 		new Contract(29000, 1, 0),
 		new Contract(30007, 1, 0),
 		new Contract(30055, 1, 0),
-		new Contract(30111, 2, 1),
 		new Contract(30202, 2, 0),
 		new Contract(30210, 1, 0),
-		new Contract(30217, 3, 2),
-		new Contract(30227, 3, 2),
 		new Contract(30302, 2, 0),
 		new Contract(30308, 1, 0),
 		new Contract(30310, 1, 0),
-		new Contract(30317, 3, 2),
-		new Contract(30327, 3, 2),
 		new Contract(30503, 1, 0),
 		new Contract(30553, 1, 0),
 		new Contract(30604, 1, 0),
 		new Contract(39713, 2, 0),
-		new Contract(80020, 3, 2),
-		new Contract(80021, 3, 2),
 		new Contract(80257, 1, 0),
 		new Contract(80258, 1, 0),
 		new Contract(80259, 1, 0),

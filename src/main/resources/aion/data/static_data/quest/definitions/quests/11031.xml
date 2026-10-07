@@ -37,13 +37,31 @@
       <var name="var0" value="2"/>
     </node>
     <node label="reward" status="REWARD">
-      <var name="var0" value="3"/>
+      <var name="var0" value="2"/>
     </node>
     <node label="complete" status="COMPLETE">
       <var name="var0" value="3"/>
     </node>
   </nodes>
   <transitions>
+    <!-- QE-054 步号轴权威：领奖投影 = 真端/legacy 推进值 2（真端 0x100 状态推进不写轴，客户端 REWARD 态按 [%N] 行门槛自行显示报告行）；legacy useQuestItem(2,3,true) 落盘 2。本边把非权威存档归一到 2。
+         Step-axis authority (QE-054): the reward projection is the retail/legacy progress value 2 (retail 0x100 state advances never touch the axis; the client shows the report row via its own [%N] gate); per the legacy/retail progress evidence on the Chinese line. This edge collapses off-axis saves onto 2. -->
+
+    <transition target="reward">
+      <event>
+        <enter-world/>
+      </event>
+      <conditions>
+        <status-is status="REWARD"/>
+        <variable-is field="var0" value="3"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="2"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
     <transition source="unaccepted" target="unaccepted">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="798959" action="QUEST_SELECT"/>

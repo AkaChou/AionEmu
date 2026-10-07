@@ -34,27 +34,25 @@
     <node label="lit5" status="START"><var name="var0" value="5"/></node>
     <node label="lit6" status="START"><var name="var0" value="6"/></node>
     <node label="reward" status="REWARD">
-      <var name="var0" value="7"/>
+      <var name="var0" value="6"/>
     </node>
     <node label="complete" status="COMPLETE">
       <var name="var0" value="0"/>
     </node>
   </nodes>
   <transitions>
-    <!-- QE-051 领奖行合同：客户端 quest_q1626.html 的 quest_summary 共 8 行，末行是领奖行
-         （STR_DIC_N_Voluptes，对应该任务的领奖 NPC）；旧投影停在 6，进入世界时纠正为 7 并下发状态包。
-         Reward row contract (QE-051): the last of the 8 quest_q1626 journal rows is the reward row
-         (STR_DIC_N_Voluptes, the reward NPC of this quest); saves persisted at 6 are repaired to 7 on enter-world. -->
+    <!-- QE-054 步号轴权威：领奖投影 = 真端/legacy 推进值 6（真端 0x100 状态推进不写轴，客户端 REWARD 态按 [%N] 行门槛自行显示报告行）；legacy useQuestObject(6,6,true) 落盘 6；真端 SetProgress 1..6。曾被领奖行批次误抬为 7，本边把坏档回滚到 6。
+         Step-axis authority (QE-054): the reward projection is the retail/legacy progress value 6 (retail 0x100 state advances never touch the axis; the client shows the report row via its own [%N] gate); per the legacy/retail progress evidence on the Chinese line. The reward-row batch once mislifted it to 7 — this edge rolls bad saves back to 6. -->
     <transition target="reward">
       <event>
         <enter-world/>
       </event>
       <conditions>
         <status-is status="REWARD"/>
-        <variable-is field="var0" value="6"/>
+        <variable-is field="var0" value="7"/>
       </conditions>
       <actions>
-        <set-variable field="var0" value="7"/>
+        <set-variable field="var0" value="6"/>
       </actions>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>

@@ -41,7 +41,7 @@
       <var name="var0" value="3"/>
     </node>
     <node label="reward" status="REWARD">
-      <var name="var0" value="4"/>
+      <var name="var0" value="3"/>
     </node>
     <node label="complete" status="COMPLETE">
       <var name="var0" value="0"/>
@@ -58,10 +58,10 @@
       </event>
       <conditions>
         <status-is status="REWARD"/>
-        <variable-is field="var0" value="3"/>
+        <variable-is field="var0" value="4"/>
       </conditions>
       <actions>
-        <set-variable field="var0" value="4"/>
+        <set-variable field="var0" value="3"/>
       </actions>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>

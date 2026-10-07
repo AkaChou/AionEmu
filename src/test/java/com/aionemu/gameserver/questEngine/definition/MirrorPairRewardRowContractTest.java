@@ -40,7 +40,15 @@ class MirrorPairRewardRowContractTest {
 	private static final List<Integer> RETAIL_DRIVEN = List.of(16960, 26960);
 
 	private static final List<Contract> CONTRACTS = List.of(
-		new Contract(10110, 6, 5),
+		/* QE-054 批次收口（2026-10-07 全量审计移出 8 行）：与第三批同根因——真端 0x100 状态推进不写轴，
+		 * 客户端 REWARD 态按 [%N] 行门槛自行显示报告行，「末行是领奖行 ⇒ 投影抬到末行」对玩法步后进
+		 * REWARD 的任务不成立。8 行已回归真端/legacy 权威值并反转自愈边，基线由
+		 * RewardRowProjectionRegressionTest 锁定（24052/28602 此前已由 itemUseArea 审计修复，本次移出名单）。
+		 * QE-054 close-out (8 rows removed by the 2026-10-07 full audit): same root cause as batch three —
+		 * retail 0x100 advances never touch the axis and the client gates the report row itself, so lifting
+		 * the projection to the last-row index is wrong after a gameplay step. The rows were rolled back to
+		 * the retail/legacy values with reversed healing edges, locked by RewardRowProjectionRegressionTest
+		 * (24052/28602 had already been fixed by the itemUseArea audit and just left this list). */
 		new Contract(11323, 5, 4),
 		new Contract(11458, 1, 0),
 		new Contract(13700, 1, 0),
@@ -48,9 +56,7 @@ class MirrorPairRewardRowContractTest {
 		new Contract(13961, 1, 0),
 		new Contract(13962, 1, 0),
 		new Contract(13968, 1, 0),
-		new Contract(14026, 5, 4),
 		new Contract(14031, 12, 11),
-		new Contract(14052, 5, 4),
 		new Contract(15052, 1, 0),
 		new Contract(15323, 1, 0),
 		new Contract(15335, 1, 0),
@@ -83,7 +89,6 @@ class MirrorPairRewardRowContractTest {
 		new Contract(18210, 1, 0),
 		new Contract(18252, 1, 0),
 		new Contract(18253, 1, 0),
-		new Contract(18602, 4, 3),
 		new Contract(18742, 1, 0),
 		new Contract(18745, 1, 0),
 		new Contract(18806, 1, 0),
@@ -101,7 +106,6 @@ class MirrorPairRewardRowContractTest {
 		new Contract(19022, 1, 0),
 		new Contract(19028, 1, 0),
 		new Contract(19034, 1, 0),
-		new Contract(20110, 6, 5),
 		new Contract(21323, 5, 4),
 		new Contract(21458, 1, 0),
 		new Contract(23700, 1, 0),
@@ -109,9 +113,7 @@ class MirrorPairRewardRowContractTest {
 		new Contract(23961, 1, 0),
 		new Contract(23962, 1, 0),
 		new Contract(23968, 1, 0),
-		new Contract(24026, 5, 4),
 		new Contract(24031, 12, 11),
-		new Contract(24052, 5, 4),
 		new Contract(25052, 1, 0),
 		new Contract(25323, 1, 0),
 		new Contract(25335, 1, 0),
@@ -142,7 +144,6 @@ class MirrorPairRewardRowContractTest {
 		new Contract(28210, 1, 0),
 		new Contract(28252, 1, 0),
 		new Contract(28253, 1, 0),
-		new Contract(28602, 4, 3),
 		new Contract(28742, 1, 0),
 		new Contract(28745, 1, 0),
 		new Contract(28806, 1, 0),
@@ -165,6 +166,9 @@ class MirrorPairRewardRowContractTest {
 	@Test
 	void rewardRowEqualsTheClientJournalLastRow() throws Exception {
 		for (Contract contract : CONTRACTS) {
+			if (retiredOnly(contract.questId())) {
+				continue;
+			}
 			assertEquals(contract.rewardRow(), rewardRow(definition(contract.questId()).definition()),
 				() -> "quest " + contract.questId() + " reward journal row");
 		}
@@ -177,6 +181,9 @@ class MirrorPairRewardRowContractTest {
 				continue;
 			}
 			int mirrorId = contract.questId() + 10000;
+			if (retiredOnly(contract.questId()) || retiredOnly(mirrorId)) {
+				continue;
+			}
 			assertEquals(contract.rewardRow(), rewardRow(definition(mirrorId).definition()),
 				() -> "mirror " + mirrorId + " must share quest " + contract.questId() + " reward row");
 		}
@@ -185,6 +192,9 @@ class MirrorPairRewardRowContractTest {
 	@Test
 	void persistedRewardRowsAreRepairedOnEnterWorld() throws Exception {
 		for (Contract contract : CONTRACTS) {
+			if (retiredOnly(contract.questId())) {
+				continue;
+			}
 			CompiledQuestDefinition compiled = definition(contract.questId());
 			QuestTransition recovery = recoveryRoute(compiled.definition());
 			assertEquals(List.of(
@@ -210,6 +220,9 @@ class MirrorPairRewardRowContractTest {
 	@Test
 	void noRewardRouteWritesAStaleJournalRow() throws Exception {
 		for (Contract contract : CONTRACTS) {
+			if (retiredOnly(contract.questId())) {
+				continue;
+			}
 			QuestDefinition definition = definition(contract.questId()).definition();
 			List<QuestTransition> rewardRoutes = definition.transitions().stream()
 				.filter(candidate -> "reward".equals(candidate.targetNode()))
@@ -244,19 +257,19 @@ class MirrorPairRewardRowContractTest {
 		return matches.getFirst();
 	}
 
-	/** 真端驱动的镜像对：不得保留修复边，领奖投影是饱和计数。 / Retail-driven pair: no repair edge. */
+	/**
+	 * 真端驱动的镜像对（2026-10-07 重锚；原生产 overlay 视图随直驱切换退场）：退役行无 IR，
+	 * 无 source 的 enter-world 修复边在结构上不可能；守卫 = 每个名单行必须确属退役
+	 * （防名单陈旧静默缩水）。领奖投影口径由 native 车道门承担。
+	 * The retail-driven mirror pair (re-anchored 2026-10-07): with no IR left a source-less repair
+	 * edge is structurally impossible; the guard keeps the list honest (every listed row must be
+	 * retired). The reward-projection caliber is owned by the native lane gates.
+	 */
 	@Test
-	void retailDrivenMirrorPairsCarryNoRewardRepairEdge() throws Exception {
+	void retailDrivenMirrorPairsCarryNoRewardRepairEdge() {
 		for (int questId : RETAIL_DRIVEN) {
-			QuestDefinition definition = definition(questId).definition();
-			assertTrue(definition.transitions().stream().noneMatch(route ->
-					route.sourceNode() == null && route.event() instanceof QuestEvent.EnterWorld),
-				() -> "quest " + questId + " is retail-driven and must not keep a source-less enter-world edge");
-			QuestNode reward = definition.nodes().stream()
-				.filter(node -> node.projection().status() == QuestStatus.REWARD)
-				.findFirst().orElseThrow(() -> new AssertionError("quest " + questId + " has no reward node"));
-			assertTrue(reward.projection().variables().values().stream().anyMatch(value -> value > 0),
-				() -> "quest " + questId + " reward must project the saturated kill counters");
+			assertTrue(RetiredQuestIds.contains(questId),
+				() -> "quest " + questId + " is retail-driven and must be a retired row");
 		}
 	}
 
@@ -274,9 +287,34 @@ class MirrorPairRewardRowContractTest {
 			true, true, 0, 0, 100000000, 1, 0f, 0f, 0f, (byte) 0);
 	}
 
+	/**
+	 * 定义只来自 XML 目录：退役行（如 11323/16960）无 IR——调用方先经 retiredOnly 跳过。
+	 * Definitions come from the XML directory only: retired rows (e.g. 11323/16960) have no IR and
+	 * are skipped by retiredOnly before the lookup.
+	 */
 	private static CompiledQuestDefinition definition(int questId) throws Exception {
-		// 退役任务的生产 XML 只在 git 历史里：统一取生产视图（XML 目录 + 真端 overlay）。
-		// Retired quests live in git history only: use the production view (XML dir + retail overlay).
-		return ProductionQuestDefinitions.definition(questId);
+		return catalog().findExecutable(questId)
+			.orElseThrow(() -> new IllegalStateException("missing production quest definition " + questId));
+	}
+
+	/**
+	 * 退役行（目录缺行）跳过并要求确属退役（防名单陈旧静默缩水）；XML 保留行仍逐条断言。
+	 * Retired rows (absent from the catalog) are skipped but must be really retired; XML rows still assert.
+	 */
+	private static boolean retiredOnly(int questId) throws Exception {
+		if (catalog().findExecutable(questId).isPresent()) {
+			return false;
+		}
+		assertTrue(RetiredQuestIds.contains(questId), () -> "quest " + questId + " missing and not retired");
+		return true;
+	}
+
+	private static final java.util.concurrent.atomic.AtomicReference<QuestCatalog> VIEW =
+		new java.util.concurrent.atomic.AtomicReference<>();
+
+	private static QuestCatalog catalog() {
+		return VIEW.updateAndGet(current -> current != null ? current
+			: QuestDefinitionDirectoryLoader.compile(
+				MirrorPairRewardRowContractTest.class.getClassLoader()));
 	}
 }
