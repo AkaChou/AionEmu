@@ -827,3 +827,18 @@
 - 验证命令和结果：IDEA MCP 运行点（用户 2026-10-07 授权）——`Quest1929RetailAlignmentTest` 7/7、`PlayerQuestDialogPortTest` 16/16、`QuestDefinitionCatalogManifestTest` 10/10（含 707 全量生产目录编译 + 无歧义校验）、`StigmaServiceSlotCountTest` 6/6、`StigmaSlotQuestFlagTest` 4/4、`QuestStepDialogTerminationTest` 1/1、`DialogServiceTest` 3/3、`QuestRawDialogAfterCommitTest` 2/2、`QuestMinionTutorialProductionFlowTest` 3/3，均 exit 0；`git diff --check` 干净。用户 2026-10-07 实机整链复测后回复「实机验证成功，提交」，验收记录 `.agents/summary/quest-acceptance/1929-2026-10-07-client-accepted.md`。
 - 复用边界：①「步数耦合」结论只对 Aion 5.8 客户端的烙印教学成立，重登才重建的判据未做多客户端版本对照；② 槽位资格数据化只同步了 1929/2900/30217/30317 四个声明的任务，其他「客户端派生状态」是否同样跟随任务步数未普查（发放自环形状另有 26 条/18 任务待逐件裁定，见诊断文档机械普查，禁止批量套改）；③ 魔族 2900 与 55 级 30217/30317 未实机复测；④ 关窗包被证伪为「抹掉凹槽」的判据（第 5–8 轮），不要在别处按「关窗顺序」改数据。
 - commit：`b632ee3b5`。
+
+## 8.53 native 中继对话面缺阶梯 + 步号写高位：点击中继 NPC 即跳步、任务书步骤显示为空
+
+- Pattern ID：`NATIVE_RELAY_STEP_VAR0_AXIS`。
+- 代表任务：14120「The Bucket List / 森林真正的主人」（天族；接取 203932 Phomona / 中继 730020 Tree_Move_Demro / 交付 730019 Tree_NoMove_Lodas；SimpleCollectItem 表车道；同族同形 14150 与 9620 受同一实现影响）。
+- 搜索症状：与中继 NPC 对话点击即推进（对话页全缺）、任务书步骤显示为空、`SM_QUEST_ACTION` 步数出现 65536/131072 等高位值、采集中继「链未走完」判定异常。
+- 玩家可见症状：接取 14120 后与 730020 对话，点击 NPC 直接跳步、没有 select2/select2_1 对话页；任务书当前步骤文本空白；服务端 trace 显示 `任务=14120 状态=3 步数=65536`。
+- 根因：`SimpleCollectItemHandler` 的中继实现是私编——`talkChainStep` 对任何对话动作（31/26/10000…）一律推进、不发该步页、不处理子页动作；且把步号写进 vars `bit16..17`（步号 1 → 打包整数 65536），客户端任务书按打包整数匹配 steps 行落空。退役 14120 任务 XML 与 SimpleTalk/SimpleItemPlay 已验收形状（QE-141）均为：`31 -> SELECT2(1352)` 页、`SELECT2_1(1353) -> 页 1353`、`SETPRO1(10000) -> 节点 var0=1 + close-dialog`。
+- 修复层：native 车道实现（非 XML）——`SimpleCollectItemHandler` 中继面对齐 Talk/ItemPlay 同形（任务行=该步页 / `SETPRO{K}=10000+K-1` 推进 + 关窗 / 子页动作按客户端契约原样回发；步号一律写 `var0`，旧 bit16 编码仅兼容读），并新增进世界自愈（`ENTER_WORLD` 把旧存档 65536 归一为 `var0`，`QuestEngine.onEnterWorld` 接线）。
+- 修改文件：`src/main/java/com/aionemu/gameserver/questEngine/tablelane/SimpleCollectItemHandler.java`、`src/main/java/com/aionemu/gameserver/questEngine/QuestEngine.java`、`src/test/java/com/aionemu/gameserver/questEngine/tablelane/SimpleCollectItemNativeFamilyGateTest.java`、`src/test/java/com/aionemu/gameserver/questEngine/runtime/QuestInteractionObjectContractGateTest.java`。
+- 第一检查点：先看实机 `SM_QUEST_ACTION` 的步数值——干净步号（1/2/3）还是 65536 一类高位值（⇒ 步号编码污染）；再确认中继 NPC 任务行（31）有没有下发该步页（1352/1693/2034，按 talk 序）；最后查推进动作是不是 `SETPRO{K}`（10000+K-1）且 after-commit 为关窗。
+- 代表测试：`SimpleCollectItemNativeFamilyGateTest#relayChainServesStepPageAndAdvancesOnSetpro`（14120：31→页 1352、1353 原样回发、SETPRO1→`var0=1`+关窗+可采集、重放零步进）、`SimpleCollectItemNativeFamilyGateTest#threeStepRelayServesEachStepPageInOrder`（9620 三步页序 1352/1693/2034 + 乱序零响应）、`SimpleCollectItemNativeFamilyGateTest#enterWorldNormalizesTheLegacyStepEncoding`（旧编码自愈）。
+- 验证命令和结果：IDEA MCP——`SimpleCollectItemNativeFamilyGateTest` 19/19、`QuestInteractionObjectContractGateTest` 2/2，均 exit 0；生产 catalog/白名单门禁未在本会话运行（未获构建授权）。用户 2026-10-07 实机验收「实机验证成功，提交」（冷重启 + 旧存档自愈一并复测），验收记录 `.agents/summary/quest-acceptance/14120-2026-10-07-client-accepted.md`。
+- 复用边界：只适用于「中继步页 / 推进动作 / 步号轴」三件事的 native 车道形状；`SimpleUseItem` 族 90 个 `talk_npc` 行仍是同型私编（bit16..17 + 任意动作推进），未修未实机，禁止凭本条直接批量套改；跳过步（`vars<step-1` 零响应）与已推进步重看语义保留 Talk/ItemPlay 口径；采集族 talk 步的 `give_item1/remove_item2` 未消费（仅不可路由 TEST 行 9656 有数据）。
+- commit：`d12e4236e`。
