@@ -77,8 +77,27 @@ public class NpcMoveController
     private static final long CHASE_MOVE_BROADCAST_INTERVAL_MS = 200;
     /** 行走贴地短段：前视 = 本 tick 实测位移 × 该倍数（>1 保证客户端不会在下个包到达前走到点）。 / Walker stream lookahead = measured per-tick travel × this factor (>1 keeps the client from reaching the target before the next packet). */
     static final float WALK_GROUND_STREAM_LEAD_STEPS = 1.3f;
-    /** 行走贴地短段：前视距离下限（米）。 / Minimum lookahead distance (m) for walker stream targets. */
-    static final float WALK_GROUND_STREAM_MIN_LOOKAHEAD = 0.15f;
+    /**
+     * 行走贴地短段：前视距离下限（米）。
+     * 客户端对 NPC 移动包有「接近目标即判定到达」的行为：目标太近时每 tick 判到达 → 停-走-停
+     * （2026-10-06 实机：前视 0.33m 时多个巡逻「卡一下→原地走→前进一小段」）。1m 是实机验证
+     * 不触发该判定的下限；把前视压到 1m 以下换台阶贴合度前，必须先用实机 A/B 找到不触发的不卡点。
+     * Minimum lookahead distance (m). The client treats very near targets as already reached
+     * (stop-start stutter, observed with a 0.33m lookahead); 1m is the field-proven floor.
+     */
+    static final float WALK_GROUND_STREAM_MIN_LOOKAHEAD = 1.0f;
+    /**
+     * 行走贴地短段：收尾段停发余量（米）——距航点不足该值后不再补发（目标已在上一包给到航点本身）。
+     * 客户端「接近目标即判定到达」同样作用于收尾段：若继续补发「距航点 0.1–0.3m」的包，客户端
+     * 会在每个包上判到达停一下再起步，到点前出现微抖（2026-10-06/07 实机 203111 收尾段）。
+     * 0.75m 取在实机触发点（0.33m）之上、前视下限（1m）之下：最后一个补发包的目标仍是航点本身，
+     * 客户端在无人补发的最后一段走完并恰在航点停下。
+     * Final-approach stop margin (m): below this remaining distance the stream stops and the client
+     * walks the last stretch to the waypoint (its last target) on its own.
+     */
+    private static final float WALK_GROUND_STREAM_FINAL_MARGIN = 0.75f;
+    /** 行走态转身平滑：每个移动 tick 的最大转角（度）——拐角处朝向逐 tick 过渡，避免客户端原地转身动画。 / Max walker heading change per movement tick (degrees); smooths corner turns. */
+    private static final float WALK_HEADING_STEP_DEGREES = 12.0f;
     private static final long WAYPOINT_SKIP_INTERVAL_MS = 250;
     private static final long STUCK_SAMPLE_INTERVAL_MS = 500;
     private static final long STUCK_SAMPLE_MAX_DELAY_MS = 1_500;
@@ -176,6 +195,9 @@ public class NpcMoveController
     private boolean pathStopSent;
     /** 上次移动目的地是否为中间 PATH 路点。 / Whether the previous destination was an intermediate PATH waypoint. */
     private boolean previousIntermediateWaypoint;
+    /** 行走态平滑朝向（连续度数值，可负；/3 后写入 heading 字节）与目标朝向；NaN = 未处于平滑。 / Smoothed walker heading (continuous degrees) and its target; NaN = not smoothing. */
+    private float walkHeadingDegrees = Float.NaN;
+    private float walkHeadingTargetDegrees = Float.NaN;
     private long lastMoveBroadcastAt;
     /** 最近一次确定无路的目标坐标。 / Last destination that was confirmed unreachable. */
     private float failedPathX = Float.NaN, failedPathY, failedPathZ;
@@ -437,21 +459,45 @@ public class NpcMoveController
     }
 
     /**
-     * 行走贴地短段本 tick 是否需要补发：行走态 + 未到点 + 剩余距离大于前视距离。
-     * 真端语义（反编译实证）：地面 NPC 每步做碰撞/地表解算，移动包按「到期即发」的节奏持续推进
-     * （见 .agents/summary/npc-walker-stairs/RETAIL-WALK-SEMANTICS.zh-CN.md）；本客户端移动包没有
-     * 时长字段，只能靠「前视点始终在客户端走到之前刷新」近似对齐节奏：前视取每 tick 行程的
-     * 1.3 倍（约 0.3 个下发周期的余量），既不会先到点，弦线也不会长到切出台阶棱线。
+     * 行走贴地短段本 tick 是否需要补发：行走态、未到点，且距航点仍有收尾余量。
+     * 收尾余量内的最后一段不再补发——目标已在上一包给到航点本身，客户端自己走完并恰在航点停下；
+     * 继续补发会让包目标落进客户端「接近目标即判定到达」区间，到点前产生停-走微抖。
      * Whether a ground-following walker needs a stream target this tick.
      * @param walkPathSubState 是否行走子状态 / whether substate is WALK_PATH
      * @param reachedWaypoint 是否已到点 / whether the waypoint was reached
-     * @param remaining 到目标剩余距离 / remaining distance to the destination
-     * @param lookahead 前视距离 / lookahead distance
+     * @param remaining 距航点剩余距离（米）/ remaining distance to the waypoint (m)
      * @return 是否补发 / whether to send
      */
-    static boolean shouldStreamWalkGround(boolean walkPathSubState, boolean reachedWaypoint, float remaining,
+    static boolean shouldStreamWalkGround(boolean walkPathSubState, boolean reachedWaypoint, float remaining) {
+        return walkPathSubState && !reachedWaypoint && remaining > WALK_GROUND_STREAM_FINAL_MARGIN;
+    }
+
+    /**
+     * 行走贴地短段的客户端目标：剩余距离大于前视距离时取前视点（X/Y 线性 + Z 线性回退，调用方再贴地）；
+     * 收尾段（剩余 ≤ 前视）直接取航点本身——客户端在航点处到点停下，避免「提前停住 → 下一段起步
+     * 回吸 + 原地转身」的观感（2026-10-06 实机 205294）。收尾段不再补发的门槛见
+     * {@link #WALK_GROUND_STREAM_FINAL_MARGIN}。
+     * Walker stream target: the lookahead point while the leg is long, or the waypoint itself during the
+     * final approach so the client stops exactly on the waypoint.
+     * @param fromX 起点 X / from X
+     * @param fromY 起点 Y / from Y
+     * @param fromZ 起点 Z / from Z
+     * @param toX 终点 X / destination X
+     * @param toY 终点 Y / destination Y
+     * @param toZ 终点 Z / destination Z
+     * @param lookahead 前视距离 / lookahead distance
+     * @return 目标点 {x,y,z} / target point {x,y,z}
+     */
+    static float[] walkGroundStreamTarget(float fromX, float fromY, float fromZ, float toX, float toY, float toZ,
             float lookahead) {
-        return walkPathSubState && !reachedWaypoint && remaining > lookahead;
+        float dx = toX - fromX;
+        float dy = toY - fromY;
+        float length = (float)Math.hypot(dx, dy);
+        if (length <= lookahead) {
+            return new float[] {toX, toY, toZ};
+        }
+        float fraction = lookahead / length;
+        return new float[] {fromX + dx * fraction, fromY + dy * fraction, fromZ + (toZ - fromZ) * fraction};
     }
 
     /**
@@ -465,28 +511,35 @@ public class NpcMoveController
     }
 
     /**
-     * 沿当前段取前视点（X/Y 线性 + Z 线性回退，调用方再贴地）；剩余距离不足前视距离时返回 null。
-     * Computes the walker stream target along the current leg (linear XY/Z; caller snaps Z to ground);
-     * returns null when the remaining distance is not larger than the lookahead.
-     * @param fromX 起点 X / from X
-     * @param fromY 起点 Y / from Y
-     * @param fromZ 起点 Z / from Z
-     * @param toX 终点 X / destination X
-     * @param toY 终点 Y / destination Y
-     * @param toZ 终点 Z / destination Z
-     * @param lookahead 前视距离 / lookahead distance
-     * @return 前视点 {x,y,z} 或 null / lookahead point {x,y,z} or null
+     * 行走态朝向平滑：把当前朝向朝目标方向转动最多 maxStepDegrees（取最短转角）。
+     * 返回值归一化到 (−180, 180]，与 atan2 原始取值范围一致（heading 字节 = 度数/3，保持原有编码语义）。
+     * Walker heading smoothing step: rotate current towards target by at most maxStepDegrees along the
+     * shortest arc; the result is normalised to (-180, 180], matching the atan2 convention the legacy
+     * heading byte (degrees / 3) encoding relies on.
+     * @param currentDegrees 当前朝向（度）/ current heading (degrees)
+     * @param targetDegrees 目标朝向（度）/ target heading (degrees)
+     * @param maxStepDegrees 单次最大转角（度）/ max rotation per step (degrees)
+     * @return 过渡后的朝向（度）/ stepped heading (degrees)
      */
-    static float[] walkGroundStreamTarget(float fromX, float fromY, float fromZ, float toX, float toY, float toZ,
-            float lookahead) {
-        float dx = toX - fromX;
-        float dy = toY - fromY;
-        float length = (float)Math.hypot(dx, dy);
-        if (length <= lookahead) {
-            return null;
+    static float stepHeadingDegrees(float currentDegrees, float targetDegrees, float maxStepDegrees) {
+        float delta = (targetDegrees - currentDegrees) % 360f;
+        if (delta > 180f) {
+            delta -= 360f;
+        } else if (delta < -180f) {
+            delta += 360f;
         }
-        float fraction = lookahead / length;
-        return new float[] {fromX + dx * fraction, fromY + dy * fraction, fromZ + (toZ - fromZ) * fraction};
+        if (delta > maxStepDegrees) {
+            delta = maxStepDegrees;
+        } else if (delta < -maxStepDegrees) {
+            delta = -maxStepDegrees;
+        }
+        float next = (currentDegrees + delta) % 360f;
+        if (next > 180f) {
+            next -= 360f;
+        } else if (next <= -180f) {
+            next += 360f;
+        }
+        return next;
     }
 
     /**
@@ -1013,7 +1066,23 @@ public class NpcMoveController
                 destination == Destination.TARGET_OBJECT,
                 owner.getAi2().getSubState() == AISubState.WALK_PATH, movementMask);
         if (destinationChanged) {
-            this.heading = (byte)(Math.toDegrees(Math.atan2(targetY - ownerY, targetX - ownerX)) / 3.0);
+            float newHeadingDegrees = (float)Math.toDegrees(Math.atan2(targetY - ownerY, targetX - ownerX));
+            if (owner.getAi2().getSubState() == AISubState.WALK_PATH) {
+                // 行走态转身平滑：新段朝向不瞬跳，逐 tick 以有限角速度转到新方向；起点取当前已生效朝向。
+                // 客户端对负角朝向按原编码（度/3，可为负）解释；这里保持同一语义，只做连续过渡。
+                // Walkers turn gradually: a sharp heading jump makes the client play its turn-in-place
+                // animation (observed corner stutter), so step the heading towards the new leg.
+                this.walkHeadingDegrees = this.heading * 3.0f;
+                this.walkHeadingTargetDegrees = newHeadingDegrees;
+            } else {
+                this.walkHeadingTargetDegrees = Float.NaN;
+                this.heading = (byte)(newHeadingDegrees / 3.0);
+            }
+        }
+        if (!Float.isNaN(this.walkHeadingTargetDegrees)) {
+            this.walkHeadingDegrees = stepHeadingDegrees(this.walkHeadingDegrees, this.walkHeadingTargetDegrees,
+                    WALK_HEADING_STEP_DEGREES);
+            this.heading = (byte)(this.walkHeadingDegrees / 3.0);
         }
         if (this.owner.getAi2().isLogging()) {
             AI2Logger.moveinfo(this.owner, "OLD targetDestX: " + this.targetDestX + " targetDestY: " + this.targetDestY + " targetDestZ " + this.targetDestZ);
@@ -1110,15 +1179,15 @@ public class NpcMoveController
         boolean broadcastDestination = shouldBroadcastDestination(destination == Destination.TARGET_OBJECT,
                 pathWaypointTransition, destinationChanged, now, lastMoveBroadcastAt);
         // 行走贴地短段（真端「持续推进」的近似复刻）：行走态每个移动 tick 补发一个前视点
-        // （前视 = 本 tick 实际位移 × 1.3，终点 Z 取地表），让客户端始终持有「还没走到」的新目标：
-        // 前视略大于一个 tick 的行程 ⇒ 客户端不会先到点停下（v1 停-跳），弦线又足够短（≈0.25m）
-        // 贴住台阶，不会再出现「前视 1m 只爬 1/5 行程 → 入地 → 下一包拉起来」的跳帧。
-        // 位移自本 tick 实测：自动适配 100/200/500ms 三档移动周期，且休息后恢复的首个 tick 不受暂停时长影响。
-        // Walker ground-following stream: re-send a short ground-true lookahead point every movement tick.
-        float walkRemaining = (float)MathUtil.getDistance(newX, newY, newZ, targetX, targetY, targetZ);
+        // （前视 = max(1m, 本 tick 实际位移 × 1.3)，终点 Z 取地表），让客户端始终持有「还没走到」的新目标；
+        // 距航点不足收尾余量（0.75m）后停发，最后一段由客户端走向「上一包已给到的航点本身」。
+        // 下限 1m 是客户端「接近目标即判定到达」的门槛：低于它会出现停-走-停（2026-10-06 实机 v3
+        // 实测前视 0.33m 时多个巡逻「卡一下→原地走→小段前移」）；1.3× 只对极速行走者生效，防止其先到点（v1 停-跳）。
+        // Walker ground-following stream: re-send a ground-true lookahead point every movement tick.
         float walkStepDistance = (float)MathUtil.getDistance(ownerX, ownerY, ownerZ, newX, newY, newZ);
         float streamLookahead = walkStreamLookahead(walkStepDistance);
-        float[] streamTarget = shouldStreamWalkGround(walkingRoute, reachedWaypoint, walkRemaining, streamLookahead)
+        float walkRemaining = (float)MathUtil.getDistance(newX, newY, newZ, targetDestX, targetDestY, targetDestZ);
+        float[] streamTarget = shouldStreamWalkGround(walkingRoute, reachedWaypoint, walkRemaining)
                         ? walkGroundStreamTarget(newX, newY, newZ, targetDestX, targetDestY, targetDestZ,
                                 streamLookahead)
                         : null;
@@ -1309,6 +1378,8 @@ public class NpcMoveController
         pointZ = 0;
         pathStopSent = false;
         previousIntermediateWaypoint = false;
+        walkHeadingDegrees = Float.NaN;
+        walkHeadingTargetDegrees = Float.NaN;
         resetTargetTracking();
         resetStuckShadow();
         resetPath();
