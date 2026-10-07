@@ -179,6 +179,43 @@ class SimpleSerialHuntNativeFamilyGateTest {
 		assertTrue(handler.onDialog(envReward));
 	}
 
+	/**
+	 * 可重复行 COMPLETE 重开局（真端 {@code finishedcount < max_repeat_count}）：9622 是本族唯一
+	 * max_repeat_count>1 的行（255）；完成后点任务行必须重新开放接取面并复位档案（含简报守卫位）。
+	 * <p>
+	 * Repeatable COMPLETE re-open: 9622 is the family's only row with max_repeat_count>1 (255); the
+	 * accept face must reopen and the row must reset (briefing guard bit included) on re-accept.
+	 */
+	@Test
+	void repeatableCompletedRowReopensTheAcceptFace() {
+		Player player = NativeTalkFixture.player();
+		QuestState state = NativeTalkFixture.add(player, 9622, QuestStatus.COMPLETE, 0);
+		state.setCompleteCount(1);
+		Integer acquireNpc = handler.acquireNpc(9622);
+		assertNotNull(acquireNpc, "真端行必须有可解析的接取 NPC");
+
+		NativeTalkFixture.clearPackets(player);
+		assertTrue(handler.onDialog(NativeTalkFixture.dialog(player, acquireNpc, 9622, 31)),
+			"可重复行 COMPLETE 态点任务行必须开放接取面");
+		NativeTalkFixture.assertOnlyDialogPageWithQuest(player, NativeTalkFixture.clientEntryPage(9622), 9622);
+
+		NativeTalkFixture.clearPackets(player);
+		assertTrue(handler.onDialog(NativeTalkFixture.dialog(player, acquireNpc, 9622, 1002)),
+			"重复接取收尾（0x3ea）必须由 native 接取口服务");
+		assertEquals(QuestStatus.START, state.getStatus(), "重复接取必须复位为 START");
+		assertEquals(0x40000000, state.getQuestVars().getQuestVars(),
+			"该行带简报 NPC ⇒ 接取后置简报守卫位（既有语义不变）");
+		NativeTalkFixture.assertOnlyDialogPageWithQuest(player, 1003, 9622);
+
+		// 非可重复行（30600：max_repeat_count=1）不受影响：COMPLETE 态仍不进接取面。
+		QuestState single = NativeTalkFixture.add(player, 30600, QuestStatus.COMPLETE, 0);
+		single.setCompleteCount(1);
+		NativeTalkFixture.clearPackets(player);
+		assertFalse(handler.onDialog(NativeTalkFixture.dialog(player, handler.acquireNpc(30600), 30600, 31)),
+			"max_repeat_count=1 的行 COMPLETE 态不得开放接取面");
+		assertTrue(NativeTalkFixture.dialogPages(player).isEmpty(), "非可重复行不得下发接取页");
+	}
+
 	private static Player createTestPlayer() {
 		Player player = new ObjenesisStd().newInstance(Player.class);
 		PlayerCommonData pcd = new PlayerCommonData(10001);

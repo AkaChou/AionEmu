@@ -158,6 +158,43 @@ class SimpleCollectItemNativeFamilyGateTest {
 		assertEquals(QuestStatus.START, state.getStatus());
 	}
 
+	/**
+	 * 可重复行 COMPLETE 重开局（真端 {@code finishedcount < max_repeat_count}）：9620
+	 * （max_repeat_count=255）完成后点任务行必须重新开放接取面并复位档案；1137（max=1）保持关闭。
+	 * <p>
+	 * Repeatable COMPLETE re-open: 9620 (max_repeat_count=255) must reopen its accept face after
+	 * completion and reset on re-accept; the single-shot 1137 stays closed.
+	 */
+	@Test
+	void repeatableCompletedRowReopensTheAcceptFace() {
+		Player player = NativeTalkFixture.player();
+		SimpleCollectItemHandler local = handlerWith(NativeTalkFixture.RecordingInventory.EMPTY,
+			NativeReportRewardFlow.instance());
+		QuestState state = NativeTalkFixture.add(player, 9620, QuestStatus.COMPLETE, 0);
+		state.setCompleteCount(1);
+		Integer acquireNpc = local.acquireNpc(9620);
+		assertNotNull(acquireNpc, "真端行必须有可解析的接取 NPC");
+
+		NativeTalkFixture.clearPackets(player);
+		assertTrue(local.onDialog(NativeTalkFixture.dialog(player, acquireNpc, 9620, 31)),
+			"可重复行 COMPLETE 态点任务行必须开放接取面");
+		NativeTalkFixture.assertOnlyDialogPageWithQuest(player, NativeTalkFixture.clientEntryPage(9620), 9620);
+
+		NativeTalkFixture.clearPackets(player);
+		assertTrue(local.onDialog(NativeTalkFixture.dialog(player, acquireNpc, 9620, 1002)),
+			"重复接取收尾（0x3ea）必须由 native 接取口服务");
+		assertEquals(QuestStatus.START, state.getStatus(), "重复接取必须复位为 START");
+		NativeTalkFixture.assertOnlyDialogPageWithQuest(player, 1003, 9620);
+
+		// 非可重复行（1137：max_repeat_count=1）不受影响：COMPLETE 态仍不进接取面。
+		QuestState single = NativeTalkFixture.add(player, SINGLE_OBJECT_QUEST, QuestStatus.COMPLETE, 0);
+		single.setCompleteCount(1);
+		NativeTalkFixture.clearPackets(player);
+		assertFalse(local.onDialog(NativeTalkFixture.dialog(player, local.acquireNpc(SINGLE_OBJECT_QUEST),
+			SINGLE_OBJECT_QUEST, 31)), "max_repeat_count=1 的行 COMPLETE 态不得开放接取面");
+		assertTrue(NativeTalkFixture.dialogPages(player).isEmpty(), "非可重复行不得下发接取页");
+	}
+
 	@Test
 	void collectingTheObjectClaimsTheInteractionWithoutWritingState() {
 		Player player = NativeTalkFixture.player();

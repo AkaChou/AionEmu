@@ -16,6 +16,7 @@ import org.junit.jupiter.api.Test;
 import org.objenesis.ObjenesisStd;
 
 import com.aionemu.gameserver.model.Gender;
+import com.aionemu.gameserver.model.PlayerClass;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -175,6 +176,44 @@ class SimpleHuntNativeFamilyGateTest {
 		qs.setStatus(QuestStatus.REWARD);
 		QuestEnv envRewardDialog = new QuestEnv(rewNpc, player, 2354, 31);
 		assertTrue(handler.onDialog(envRewardDialog));
+	}
+
+	/**
+	 * 可重复行 COMPLETE 重开局（真端 {@code finishedcount < max_repeat_count}）：实机 2026-10-07 报障
+	 * quest 3733——完成后点任务行（31）回退通用页 10、无法再次接取。接取面必须与首次接取同形：
+	 * 31 → 客户端入口页，20000 收尾（0x4e20）复位 START 且保留 complete_count（重复预算依据）。
+	 * <p>
+	 * Repeatable COMPLETE re-open (live 2026-10-07, quest 3733): the accept face must match the fresh
+	 * shape — 31 opens the client entry page and the 20000 tail resets to START while keeping the
+	 * complete count (the repeat budget). Non-repeatable rows stay closed.
+	 */
+	@Test
+	void repeatableCompletedRowReopensTheAcceptFace() {
+		Player player = NativeTalkFixture.player(Race.ELYOS, PlayerClass.WARRIOR, 26);
+		QuestState state = NativeTalkFixture.add(player, 3733, QuestStatus.COMPLETE, 0);
+		state.setCompleteCount(1);
+		Integer acquireNpc = handler.acquireNpc(3733);
+		assertNotNull(acquireNpc, "真端行必须有可解析的接取 NPC");
+
+		NativeTalkFixture.clearPackets(player);
+		assertTrue(handler.onDialog(NativeTalkFixture.dialog(player, acquireNpc, 3733, 31)),
+			"可重复行 COMPLETE 态点任务行必须开放接取面（真端 finishedcount < max_repeat_count）");
+		NativeTalkFixture.assertOnlyDialogPageWithQuest(player, NativeTalkFixture.clientEntryPage(3733), 3733);
+
+		NativeTalkFixture.clearPackets(player);
+		assertTrue(handler.onDialog(NativeTalkFixture.dialog(player, acquireNpc, 3733, 20000)),
+			"重复接取收尾（0x4e20）必须由 native 接取口服务");
+		assertEquals(QuestStatus.START, state.getStatus(), "重复接取必须复位为 START");
+		assertEquals(0, state.getQuestVars().getQuestVars(), "重复接取必须清零进度计数器");
+		assertEquals(1, state.getCompleteCount(), "重复接取不得重置完成次数（重复预算依据）");
+
+		// 非可重复行（2354：max_repeat_count=1）不受影响：COMPLETE 态仍不进接取面。
+		QuestState single = NativeTalkFixture.add(player, 2354, QuestStatus.COMPLETE, 0);
+		single.setCompleteCount(1);
+		NativeTalkFixture.clearPackets(player);
+		assertFalse(handler.onDialog(NativeTalkFixture.dialog(player, handler.acquireNpc(2354), 2354, 31)),
+			"max_repeat_count=1 的行 COMPLETE 态不得开放接取面");
+		assertTrue(NativeTalkFixture.dialogPages(player).isEmpty(), "非可重复行不得下发接取页");
 	}
 
 	/**

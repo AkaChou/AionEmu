@@ -513,8 +513,12 @@ public final class SimpleHuntHandler implements NativeSystemGrantLane {
 		QuestState qs = player.getQuestStateList().getQuestState(questId);
 		QuestStatus status = qs != null ? qs.getStatus() : QuestStatus.NONE;
 
-		// 1. 未接取状态：处理接取对话流
-		if (status == QuestStatus.NONE || qs == null) {
+		// 1. 未接取状态：处理接取对话流；可重复行在 COMPLETE 态同样开放接取面
+		//    （真端 finishedcount < max_repeat_count 时再次可接；与 Talk/ItemPlay/UseItem 同口径）。
+		// The accept dialog flow; a repeatable row re-opens at COMPLETE (retail
+		// finishedcount < max_repeat_count), same shape as the Talk/ItemPlay/UseItem lanes.
+		boolean fresh = qs == null || status == QuestStatus.NONE;
+		if (fresh || (status == QuestStatus.COMPLETE && repeatable(questId))) {
 			List<Integer> acqNpcs = acquireNpcIdsByQuestId.get(questId);
 			if (acqNpcs != null && acqNpcs.contains(npcId)) {
 				if (dialogId == 31 || dialogId == 26) {
@@ -623,5 +627,12 @@ public final class SimpleHuntHandler implements NativeSystemGrantLane {
 			return true;
 		}
 		return false;
+	}
+
+	/** 真端 {@code max_repeat_count} > 1 ⇒ 可重复（COMPLETE 态可再次开窗）。 / Repeatable per retail max_repeat_count. */
+	private boolean repeatable(int questId) {
+		NativeQuestXmlTable.QuestRow row = NativeQuestXmlTable.instance().find(questId).orElse(null);
+		Integer maxRepeat = row == null ? null : row.integer("max_repeat_count");
+		return maxRepeat != null && maxRepeat > 1;
 	}
 }

@@ -873,7 +873,12 @@ public final class SimpleCollectItemHandler implements NativeSystemGrantLane {
 		QuestState state = player.getQuestStateList().getQuestState(questId);
 		QuestStatus status = state != null ? state.getStatus() : QuestStatus.NONE;
 
-		if (state == null || status == QuestStatus.NONE) {
+		// 可重复行在 COMPLETE 态同样开放接取面（真端 finishedcount < max_repeat_count 时再次可接；
+		// 与 Talk/ItemPlay/UseItem 同口径）。
+		// A repeatable row re-opens at COMPLETE (retail finishedcount < max_repeat_count), same
+		// shape as the Talk/ItemPlay/UseItem lanes.
+		boolean fresh = state == null || status == QuestStatus.NONE;
+		if (fresh || (status == QuestStatus.COMPLETE && repeatable(questId))) {
 			return onAcceptDialog(player, questId, npcId, objectId, dialogId);
 		}
 
@@ -1162,6 +1167,13 @@ public final class SimpleCollectItemHandler implements NativeSystemGrantLane {
 	public boolean isCollectObject(int questId, int npcId) {
 		List<Integer> objects = objectsByQuestId.get(questId);
 		return objects != null && objects.contains(npcId);
+	}
+
+	/** 真端 {@code max_repeat_count} > 1 ⇒ 可重复（COMPLETE 态可再次开窗）。 / Repeatable per retail max_repeat_count. */
+	private boolean repeatable(int questId) {
+		NativeQuestXmlTable.QuestRow row = NativeQuestXmlTable.instance().find(questId).orElse(null);
+		Integer maxRepeat = row == null ? null : row.integer("max_repeat_count");
+		return maxRepeat != null && maxRepeat > 1;
 	}
 
 }

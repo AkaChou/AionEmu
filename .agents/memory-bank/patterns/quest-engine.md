@@ -825,22 +825,24 @@ first_check: 先跑 mvn -o test -Dtest='QuestKillCounterRetailGateTest'（planne
 ## [QE-036] 三十四、可重复任务的 COMPLETE 重开局对话必须显式 start-eligible (REPEAT_COMPLETE_START_DIALOG_GATE)
 <!-- pattern-metadata
 status: CONFIRMED
-scope: 任务开局对话路由；max-repeat-count > 1 的可重复任务；NPC_START 生成块与手写 complete→complete 路由
+scope: 任务开局对话路由；max-repeat-count > 1 的可重复任务；NPC_START 生成块与手写 complete→complete 路由；native 表驱动车道接取面（Talk/ItemPlay/UseItem/Hunt/SerialHunt/CollectItem 各族 handler）
 first_seen: 2026-09-18
-last_verified: 2026-09-18
-symptom: 生产目录门禁报 missing repeat dialog route: quest=<id> source=complete npc=<npc> dialog=<page>；或重复任务完成后无法重新打开开始页、或在不合格状态下仍显示开始页
-root_cause: `<dialog type="NPC_START">` 只为 source（unaccepted）生成开局路由，selection-sources 只影响 FINISH_DIALOG；COMPLETE 状态重开局必须手写 complete → complete 镜像。f00d6e538 用生成块替换手写块时补了镜像却漏掉 <start-eligible/>
-fix_or_guardrail: 1. 可重复任务的每个 NONE→NONE 开局路由（含页面自环）都必须在 COMPLETE 节点上有同 event + 同 after-commit 的镜像，且镜像必须带 <start-eligible/>；2. unaccepted 侧镜像保持无条件下发页面；3. 运行期依据：QuestMutationPlanner.matchesSourceStatus 只允许带 StartEligible 的转换把 COMPLETE/LOCKED 快照跨越到 NONE 起点
-evidence: src/test/java/com/aionemu/gameserver/questEngine/definition/QuestDefinitionCatalogManifestTest.java; src/main/java/com/aionemu/gameserver/questEngine/runtime/QuestMutationPlanner.java; commit f00d6e538; quest/retail/retail-xml-retention.xml 的 quest 2677 行（XML已退役并删除，见git历史）, quest/retail/retail-xml-retention.xml 的 quest 1742 行（XML 已退役并删除，内容见 git 历史；owner 记录见该清单）, quest/retail/retail-xml-retention.xml 的 quest 2317 行（XML 已退役并删除，内容见 git 历史；owner 记录见该清单）, quest/retail/retail-xml-retention.xml 的 quest 11202 行（XML 已退役并删除，内容见 git 历史；owner 记录见该清单）
-validation: production-gate：全库 2735 条重复开局检查本次仅 2677 缺失 1 条，补齐后 QuestDefinitionCatalogManifestTest 与 questEngine 全包全绿
-boundaries: 仅适用于 max-repeat-count > 1 的任务；单次任务不得为通过门禁硬加 StartEligible 镜像；页面自环只负责下发页面，不得携带状态推进动作
+last_verified: 2026-10-07
+symptom: 生产目录门禁报 missing repeat dialog route: quest=<id> source=complete npc=<npc> dialog=<page>；或重复任务完成后无法重新打开开始页、或在不合格状态下仍显示开始页；native 表驱动车道（2026-10-07 实机 3733）：可完成可重复行完成后点任务行（31）反复回退通用页 10（questId=0）循环、无接取页（三族同型缺口：SimpleHunt/SimpleSerialHunt/SimpleCollectItem）
+root_cause: `<dialog type="NPC_START">` 只为 source（unaccepted）生成开局路由，selection-sources 只影响 FINISH_DIALOG；COMPLETE 状态重开局必须手写 complete → complete 镜像。f00d6e538 用生成块替换手写块时补了镜像却漏掉 <start-eligible/>；native 面对应缺口：SimpleHunt/SimpleSerialHunt/SimpleCollectItem 三族 handleDialog 接取段只认 NONE（缺 `status == COMPLETE && repeatable(questId)`——Talk/ItemPlay/UseItem 三族已实现），COMPLETE 全部失配 → handler 返回 false → DialogService 回退页 10
+fix_or_guardrail: 1. 可重复任务的每个 NONE→NONE 开局路由（含页面自环）都必须在 COMPLETE 节点上有同 event + 同 after-commit 的镜像，且镜像必须带 <start-eligible/>；2. unaccepted 侧镜像保持无条件下发页面；3. 运行期依据：QuestMutationPlanner.matchesSourceStatus 只允许带 StartEligible 的转换把 COMPLETE/LOCKED 快照跨越到 NONE 起点；4. native 车道面：可重复行（quest.xml max_repeat_count>1）在 COMPLETE 态必须与 NONE 同形重开接取面（`fresh || (status == COMPLETE && repeatable(questId))`；repeatable 只读 max_repeat_count，已用次数由 NativeQuestStartPort.repeatVerdict 按 complete_count<max_repeat_count 结算），新增表车道 handler 时逐族核对接取段条件
+evidence: src/test/java/com/aionemu/gameserver/questEngine/definition/QuestDefinitionCatalogManifestTest.java; src/main/java/com/aionemu/gameserver/questEngine/runtime/QuestMutationPlanner.java; commit f00d6e538; quest/retail/retail-xml-retention.xml 的 quest 2677 行（XML已退役并删除，见git历史）, quest/retail/retail-xml-retention.xml 的 quest 1742 行（XML 已退役并删除，内容见 git 历史；owner 记录见该清单）, quest/retail/retail-xml-retention.xml 的 quest 2317 行（XML 已退役并删除，内容见 git 历史；owner 记录见该清单）, quest/retail/retail-xml-retention.xml 的 quest 11202 行（XML 已退役并删除，内容见 git 历史；owner 记录见该清单）; src/main/java/com/aionemu/gameserver/questEngine/tablelane/SimpleHuntHandler.java、SimpleSerialHuntHandler.java、SimpleCollectItemHandler.java（2026-10-07 补 COMPLETE 重开局分支；对照 SimpleTalkHandler:830、SimpleItemPlayHandler:599、SimpleUseItemHandler:466）; .agents/summary/quest-hunt-repeat-accept/DIAGNOSIS.zh-CN.md 与 audit_repeat_families.py（影响面 786/79/1 行）
+validation: production-gate：全库 2735 条重复开局检查本次仅 2677 缺失 1 条，补齐后 QuestDefinitionCatalogManifestTest 与 questEngine 全包全绿；2026-10-07 native 面：三族 gate tests 新增 repeatableCompletedRowReopensTheAcceptFace（锚点 3733/9622/9620 + 非可重复对照 2354/30600/1137）与 SimpleHuntHandlerTest/NativeQuestStartPortTest/QuestEngineNpcDialogDispatchTest 全绿（IDEA MCP，exitCode=0）；实机复测待重启服务端
+boundaries: 仅适用于 max-repeat-count > 1 的任务；单次任务不得为通过门禁硬加 StartEligible 镜像；页面自环只负责下发页面，不得携带状态推进动作；native 接取面重开不引入 evaluateNpcAcquire 预检（与 ItemPlay/UseItem 同口径，资格过滤在清单层 zoneVerdict）
 superseded_by: none
 see_also: [QE-006], [QE-011]
-first_check: 门禁失败时先确认失败路由是否属于 NPC_START 生成集合，再对比同族已对齐任务（如 1742/2317）的 complete 镜像写法，不要改门禁放宽
+first_check: 门禁失败时先确认失败路由是否属于 NPC_START 生成集合，再对比同族已对齐任务（如 1742/2317）的 complete 镜像写法，不要改门禁放宽；native 车道「点任务行回页 10 循环」先答：①该行是否可重复（quest.xml max_repeat_count>1）？②所属族 handler 接取段是否包含 COMPLETE 分支（对照 Talk/ItemPlay/UseItem）？③routes() 是否为 true（definitions/quests/<id>.xml 不存在）？
 -->
 
 - **判定规则**：开局页由 NONE 起点声明，重开局页由 COMPLETE 起点声明；两条镜像的差别就是后者必须带 `start-eligible`。
+- **native 判定规则**：表驱动车道的 COMPLETE 重开局与 XML 镜像等价——接取面条件必须是 `fresh || (COMPLETE && max_repeat_count>1)`；只写 `NONE` 就是 3733 缺陷（点任务行回页 10 循环）。
 - **代表案例**：2677 的 `complete → complete SELECT1_1(1012)` 缺条件，是 f00d6e538 结构化重写时的手工遗漏（同批 44 个任务都带条件）。
+- **代表案例（native）**：3733（SimpleHunt，max=5）完成一次后 31 回页 10 实机报障；三族补齐后 786+79+1 个可重复行恢复重开局（2026-10-07）。
 
 ---
 

@@ -344,8 +344,12 @@ public final class SimpleSerialHuntHandler {
 		QuestState state = player.getQuestStateList().getQuestState(questId);
 		QuestStatus status = state != null ? state.getStatus() : QuestStatus.NONE;
 
-		// 1. 未接取状态：在起始 NPC 处接取
-		if (status == QuestStatus.NONE) {
+		// 1. 未接取状态：在起始 NPC 处接取；可重复行在 COMPLETE 态同样开放接取面
+		//    （真端 finishedcount < max_repeat_count 时再次可接；与 Talk/ItemPlay/UseItem 同口径）。
+		// The accept flow at the start NPC; a repeatable row re-opens at COMPLETE (retail
+		// finishedcount < max_repeat_count), same shape as the Talk/ItemPlay/UseItem lanes.
+		boolean fresh = state == null || status == QuestStatus.NONE;
+		if (fresh || (status == QuestStatus.COMPLETE && repeatable(questId))) {
 			Integer acqNpc = acquireNpcByQuestId.get(questId);
 			if (acqNpc != null && acqNpc == npcId) {
 				if (dialogId == 26 || dialogId == 31) {
@@ -475,5 +479,12 @@ public final class SimpleSerialHuntHandler {
 		}
 
 		return false;
+	}
+
+	/** 真端 {@code max_repeat_count} > 1 ⇒ 可重复（COMPLETE 态可再次开窗）。 / Repeatable per retail max_repeat_count. */
+	private boolean repeatable(int questId) {
+		NativeQuestXmlTable.QuestRow row = NativeQuestXmlTable.instance().find(questId).orElse(null);
+		Integer maxRepeat = row == null ? null : row.integer("max_repeat_count");
+		return maxRepeat != null && maxRepeat > 1;
 	}
 }
