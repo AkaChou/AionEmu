@@ -1,0 +1,392 @@
+### 1006: _1006Ascension.java
+  L95: qs.setQuestVar(1);
+  L105: qs.setQuestVar(99);
+  L177: qs.setQuestVar(50);
+  L183: qs.setQuestVar(51);
+  L217: return HandlerResult.fromBoolean(useQuestItem(env, item, 1, 2, false, 182200008, 1, 0));
+  L243: return defaultOnKillEvent(env, 211042, 51, 54);
+  L246: qs.setQuestVar(4);
+  L284: changeQuestStep(env, 5, 5, true);
+  L295: qs.setQuestVar(3);
+  L311: qs.setQuestVar(3);
+  L337: qs.setQuestVar(5);
+  L344: qs.setQuestVar(3);
+### 1044: _1044Testing_Flight_Skills.java
+  L60: return defaultCloseDialog(env, 0, 1);
+  L83: return defaultCloseDialog(env, 1, 2);
+  L87: return defaultCloseDialog(env, 8, 2);
+  L91: qs.setStatus(QuestStatus.REWARD);
+  L119: changeQuestStep(env, 2, 3, false);
+  L122: changeQuestStep(env, 3, 4, false);
+  L125: changeQuestStep(env, 4, 5, false);
+  L128: changeQuestStep(env, 5, 6, false);
+  L131: changeQuestStep(env, 6, 7, false);
+  L134: changeQuestStep(env, 7, 9, false);
+  L149: changeQuestStep(env, var, 8, false);
+### 1922: _1922Deliveron_Your_Promises.java
+  L70: return defaultCloseDialog(env, 0, 4);
+  L82: qs.setStatus(QuestStatus.REWARD);
+  L102: changeQuestStep(env, 4, 5, false);
+  L105: changeQuestStep(env, 5, 7, false);
+  L140: return defaultOnKillEvent(env, mobIds, 0, 9, 4);
+  L142: defaultOnKillEvent(env, mobIds, 9, 10, 4);
+  L162: qs.setQuestVar(4);
+  L180: qs.setQuestVar(4);
+### 2008: _2008Ascension.java
+  L85: qs.setQuestVar(qs.getQuestVars().getQuestVars() + 1);
+  L89: qs.setQuestVar(5);
+  L150: qs.setQuestVar(1);
+  L159: qs.setQuestVar(99);
+  L241: qs.setQuestVar(2);
+  L261: qs.setQuestVar(3);
+  L280: qs.setQuestVar(4);
+  L295: qs.setQuestVar(50);
+  L300: qs.setQuestVar(51);
+  L337: qs.setQuestVar(4);
+  L361: qs.setQuestVar(6);
+  L371: changeQuestStep(env, 6, 7, true);
+  L387: qs.setQuestVar(4);
+### 2289: _2289RampagingMosbears.java
+  L69: return defaultCloseDialog(env, 5, 6); // 6
+  L72: return checkQuestItems(env, 7, 7, true, 5, 2120); // reward
+  L85: return defaultCloseDialog(env, 6, 7, 182203017, 1, 0, 0); // 7
+  L102: return defaultOnKillEvent(env, mobs, 0, 5); // 1, 2, 3, 4, 5
+### 2916: _2916ManInTheLongBlackRobe.java
+  L59: return defaultCloseDialog(env, 0, 1);
+  L68: return defaultCloseDialog(env, 1, 2);
+  L77: return defaultCloseDialog(env, 2, 3);
+  L86: return defaultCloseDialog(env, 3, 4);
+  L95: return defaultCloseDialog(env, 4, 5);
+  L108: return checkQuestItems(env, 6, 6, true, 5, 3143);
+  L130: changeQuestStep(env, 5, 6, false);
+### 2947: _2947Following_Through.java
+  L70: return defaultCloseDialog(env, 0, 4);
+  L72: return defaultCloseDialog(env, 4, 4);
+  L89: changeQuestStep(env, 4, 5, false);
+  L92: qs.setQuestVar(9);
+  L93: qs.setStatus(QuestStatus.REWARD);
+  L121: return defaultOnKillEvent(env, mobIds, 0, 9, 4);
+  L123: defaultOnKillEvent(env, mobIds, 9, 10, 4);
+  L143: qs.setQuestVar(4);
+  L162: qs.setQuestVar(4);
+### 3711: _3711To_Kill_A_Captain.java
+  L53: return defaultCloseDialog(env, 0, 1);
+  L61: return defaultCloseDialog(env, 1, 2);
+  L77: return defaultOnKillEvent(env, 214823, 2, true);
+### 4711: _4711The_Dredgion_Captain.java
+  L53: return defaultCloseDialog(env, 0, 1);
+  L61: return defaultCloseDialog(env, 1, 2);
+  L77: return defaultOnKillEvent(env, 214823, 2, true);
+### 10101: _10101Dismal_Developments.java
+  L58: return defaultOnKillEvent(env, 234680, 2, 4);
+  L80: return defaultCloseDialog(env, 0, 1, 182215521, 1, 0, 0);
+  L96: changeQuestStep(env, 1, 2, false, 0);
+  L112: return defaultCloseDialog(env, 5, 6, 182215520, 1, 0, 0);
+  L125: changeQuestStep(env, 6, 7, false, 0);
+  L141: return checkQuestItems(env, 7, 8, false, 10000, 10001);
+  L145: return defaultCloseDialog(env, 8, 9, true, false);
+  L174: changeQuestStep(env, 4, 5, false);
+  L189: qs.setQuestVar(0);
+  L205: qs.setQuestVar(0);
+### 20101: _20101Unraveling_The_Mystery.java
+  L59: return defaultOnKillEvent(env, 234680, 2, 4);
+  L81: return defaultCloseDialog(env, 0, 1, 182215523, 1, 0, 0);
+  L97: changeQuestStep(env, 1, 2, false, 0);
+  L113: return defaultCloseDialog(env, 5, 6, 182215522, 1, 0, 0);
+  L126: changeQuestStep(env, 6, 7, false, 0);
+  L142: return checkQuestItems(env, 7, 8, false, 10000, 10001);
+  L146: return defaultCloseDialog(env, 8, 9, true, false);
+  L175: changeQuestStep(env, 4, 5, false);
+  L190: qs.setQuestVar(0);
+  L206: qs.setQuestVar(0);
+### 10521: _10521Memories_Of_Eternity.java
+  L91: changeQuestStep(env, 0, 1, false);
+  L108: changeQuestStep(env, 1, 2, false);
+  L135: changeQuestStep(env, 5, 6, false);
+  L153: changeQuestStep(env, 6, 7, false);
+  L173: changeQuestStep(env, 8, 9, false);
+  L195: changeQuestStep(env, 9, 10, false);
+  L215: changeQuestStep(env, 11, 12, false);
+  L251: changeQuestStep(env, 3, 4, false);
+  L261: changeQuestStep(env, 7, 8, false);
+  L266: changeQuestStep(env, 10, 11, false);
+  L281: return defaultOnKillEvent(env, 857783, 4, 5); //IDEternity_Q_Sado_Fi_N_65_An_01.
+  L285: changeQuestStep(env, 13, 14, false);
+  L286: qs.setStatus(QuestStatus.REWARD);
+  L301: changeQuestStep(env, 12, 13, false);
+  L312: changeQuestStep(env, 2, 3, false);
+  L325: qs.setQuestVar(0);
+  L341: qs.setQuestVar(0);
+### 20521: _20521Recovered_Destiny.java
+  L90: changeQuestStep(env, 0, 1, false);
+  L107: changeQuestStep(env, 1, 2, false);
+  L133: changeQuestStep(env, 5, 6, false);
+  L150: changeQuestStep(env, 6, 7, false);
+  L170: changeQuestStep(env, 8, 9, false);
+  L192: changeQuestStep(env, 9, 10, false);
+  L212: changeQuestStep(env, 11, 12, false);
+  L248: changeQuestStep(env, 3, 4, false);
+  L258: changeQuestStep(env, 7, 8, false);
+  L263: changeQuestStep(env, 10, 11, false);
+  L278: return defaultOnKillEvent(env, 857783, 4, 5); //IDEternity_Q_Sado_Fi_N_65_An_01.
+  L282: changeQuestStep(env, 13, 14, false);
+  L283: qs.setStatus(QuestStatus.REWARD);
+  L301: changeQuestStep(env, 12, 13, false);
+  L307: changeQuestStep(env, 12, 13, false);
+  L320: changeQuestStep(env, 2, 3, false);
+  L333: qs.setQuestVar(0);
+  L349: qs.setQuestVar(0);
+### 10525: _10525Agent_Viola_Call.java
+  L77: changeQuestStep(env, 0, 1, false);
+  L110: changeQuestStep(env, 1, 2, false);
+  L113: changeQuestStep(env, 3, 4, false);
+  L116: return defaultCloseDialog(env, 5, 6, false, false, 182216072, 1, 0, 0); //Aether Boost Magic Stone
+  L118: return checkQuestItems(env, 4, 5, false, 10000, 10001);
+  L128: qs.setQuestVarById(1, qs.getQuestVarById(1) + 1);
+  L131: qs.setQuestVarById(1,0);
+  L132: changeQuestStep(env, 2, 3, false);
+  L144: qs.setQuestVarById(1, qs.getQuestVarById(1) + 2);
+  L147: qs.setQuestVarById(1,0);
+  L148: changeQuestStep(env, 2, 3, false);
+  L160: qs.setQuestVarById(1, qs.getQuestVarById(1) + 4);
+  L163: qs.setQuestVarById(1,0);
+  L164: changeQuestStep(env, 2, 3, false);
+  L176: qs.setQuestVarById(1, qs.getQuestVarById(1) + 8);
+  L179: qs.setQuestVarById(1,0);
+  L180: changeQuestStep(env, 2, 3, false);
+  L215: qs.setStatus(QuestStatus.REWARD);
+### 20525: _20525Agent_Peregrine_Call.java
+  L77: changeQuestStep(env, 0, 1, false);
+  L110: changeQuestStep(env, 1, 2, false);
+  L113: changeQuestStep(env, 3, 4, false);
+  L116: return defaultCloseDialog(env, 5, 6, false, false, 182216084, 1, 0, 0); //Aether Boost Magic Stone.
+  L118: return checkQuestItems(env, 4, 5, false, 10000, 10001);
+  L127: qs.setQuestVarById(1, qs.getQuestVarById(1) + 1);
+  L130: qs.setQuestVarById(1,0);
+  L131: changeQuestStep(env, 2, 3, false);
+  L143: qs.setQuestVarById(1, qs.getQuestVarById(1) + 2);
+  L146: qs.setQuestVarById(1,0);
+  L147: changeQuestStep(env, 2, 3, false);
+  L159: qs.setQuestVarById(1, qs.getQuestVarById(1) + 4);
+  L162: qs.setQuestVarById(1,0);
+  L163: changeQuestStep(env, 2, 3, false);
+  L175: qs.setQuestVarById(1, qs.getQuestVarById(1) + 8);
+  L178: qs.setQuestVarById(1,0);
+  L179: changeQuestStep(env, 2, 3, false);
+  L214: qs.setStatus(QuestStatus.REWARD);
+### 10529: _10529Protection_Artifact_2.java
+  L59: changeQuestStep(env, 4, 5, false);
+  L95: changeQuestStep(env, 0, 1, false);
+  L98: qs.setStatus(QuestStatus.REWARD);
+  L114: changeQuestStep(env, 1, 2, false);
+  L138: changeQuestStep(env, 3, 4, false);
+  L141: return checkQuestItems(env, 2, 3, false, 10000, 10001);
+  L155: changeQuestStep(env, 5, 6, false);
+  L169: changeQuestStep(env, 7, 8, false);
+  L186: qs.setStatus(QuestStatus.REWARD);
+  L188: changeQuestStep(env, 9, 10, false);
+  L221: return defaultOnKillEvent(env, 244111, 0, 6, 1);
+  L225: qs.setQuestVar(7);
+  L230: return defaultOnKillEvent(env, 244111, 6, 7, 1);
+  L237: return defaultOnKillEvent(env, 244112, 0, 2, 2);
+  L241: qs.setQuestVar(7);
+  L246: return defaultOnKillEvent(env, 244112, 2, 3, 2);
+  L257: qs.setQuestVarById(1, qs.getQuestVarById(1) + 1);
+  L261: qs.setQuestVarById(0, 9);
+### 20529: _20529Building_A_Protection_Artifact_2.java
+  L59: changeQuestStep(env, 4, 5, false);
+  L95: changeQuestStep(env, 0, 1, false);
+  L98: qs.setStatus(QuestStatus.REWARD);
+  L114: changeQuestStep(env, 1, 2, false);
+  L138: changeQuestStep(env, 3, 4, false);
+  L141: return checkQuestItems(env, 2, 3, false, 10000, 10001);
+  L155: changeQuestStep(env, 5, 6, false);
+  L169: changeQuestStep(env, 7, 8, false);
+  L186: changeQuestStep(env, 9, 10, false);
+  L187: qs.setStatus(QuestStatus.REWARD);
+  L221: return defaultOnKillEvent(env, 244127, 0, 6, 1);
+  L225: qs.setQuestVar(7);
+  L230: return defaultOnKillEvent(env, 244127, 6, 7, 1);
+  L237: return defaultOnKillEvent(env, 244128, 0, 2, 2);
+  L241: qs.setQuestVar(7);
+  L246: return defaultOnKillEvent(env, 244128, 2, 3, 2);
+  L257: qs.setQuestVarById(1, qs.getQuestVarById(1) + 1);
+  L261: qs.setQuestVarById(0, 9);
+### 11031: _11031Can_I_Eat_It.java
+  L62: qs.setQuestVarById(0, var + 1);
+  L71: qs.setQuestVarById(0, var + 1);
+  L100: return HandlerResult.fromBoolean(useQuestItem(env, item, 2, 3, true));
+### 11032: _11032Everything_Better_With_Tentacles.java
+  L61: qs.setQuestVarById(0, var + 1);
+  L70: qs.setQuestVarById(0, var + 1);
+  L99: return HandlerResult.fromBoolean(useQuestItem(env, item, 2, 3, true));
+### 11033: _11033You_Make_Me_Sick.java
+  L59: changeQuestStep(env, 0, 1, false);
+  L68: changeQuestStep(env, 1, 2, false);
+  L95: return HandlerResult.fromBoolean(useQuestItem(env, item, 2, 3, true));
+### 14014: _14014Turning_The_Ide.java
+  L74: return defaultCloseDialog(env, 0, 1);
+  L85: return defaultCloseDialog(env, 2, 3);
+  L95: return checkQuestItems(env, 3, 5, false, 0, 0); // 5
+  L124: return HandlerResult.fromBoolean(useQuestItem(env, item, 1, 2, false, 18));
+  L137: return defaultOnKillEvent(env, mobs, 5, 7);
+  L139: qs.setStatus(QuestStatus.REWARD);
+### 14021: _14021To_Cure_A_Curse.java
+  L64: return defaultCloseDialog(env, 0, 1);
+  L72: changeQuestStep(env, 7, 8, false);
+  L84: changeQuestStep(env, 8, 9, false);
+  L94: return defaultCloseDialog(env, 9, 9, true, false);
+  L126: qs.setQuestVarById(0, var + 1);
+### 14022: _14022The_Test_Of_The_Heart.java
+  L63: return defaultCloseDialog(env, 0, 1);
+  L75: return defaultCloseDialog(env, 1, 2);
+  L77: changeQuestStep(env, 7, 7, true);
+  L108: qs.setQuestVarById(0, var + 1);
+  L112: qs.setStatus(QuestStatus.REWARD);
+### 14026: _14026A_Lone_Defense.java
+  L86: qs.setQuestVar(1);
+  L99: qs.setQuestVar(2);
+  L117: qs.setQuestVar(3);
+  L124: qs.setStatus(QuestStatus.REWARD);
+  L154: qs.setQuestVar(4);
+  L170: qs.setQuestVar(2);
+  L184: qs.setQuestVar(2);
+### 14030: _14030Retrieved_Memory.java
+  L81: return defaultCloseDialog(env, 0, 1);
+  L94: return defaultCloseDialog(env, 1, 2);
+  L99: return defaultCloseDialog(env, 3, 4);
+  L126: changeQuestStep(qe, 4, 5, false);
+  L137: return useQuestObject(env, 56, 57, true, false);
+  L157: return defaultOnKillEvent(env, 214578, 2, 3);
+  L163: return defaultOnKillEvent(env, npcIds, 5, 55);
+  L165: return defaultOnKillEvent(env, 215400, 55, 56);
+  L178: changeQuestStep(env, var, 4, false);
+  L194: changeQuestStep(env, var, 4, false);
+### 14043: _14043Drawling_Balaur.java
+  L80: qs.setQuestVarById(0, var + 1);
+  L98: qs.setQuestVarById(0, var + 1);
+  L107: qs.setStatus(QuestStatus.REWARD);
+  L114: qs.setQuestVarById(0, var + 1);
+  L121: qs.setQuestVarById(0, var + 6);
+  L129: qs.setQuestVarById(0, var + 1);
+  L143: qs.setQuestVarById(0, var + 1);
+  L159: qs.setQuestVarById(0, var + 1);
+  L182: qs.setQuestVarById(0, qs.getQuestVarById(0) + 1);
+### 15300: _15300Taking_Arms.java
+  L82: changeQuestStep(env, 0, 1, false);
+  L99: changeQuestStep(env, 1, 2, false);
+  L103: changeQuestStep(env, 13, 14, true);
+  L126: changeQuestStep(env, 2, 3, false);
+  L142: changeQuestStep(env, 4, 5, false);
+  L155: changeQuestStep(env, 8, 9, false);
+  L158: changeQuestStep(env, 9, 10, false);
+  L170: changeQuestStep(env, 11, 12, false);
+  L200: qs.setQuestVar(4);
+  L208: qs.setQuestVar(6);
+  L218: qs.setQuestVar(7);
+  L226: qs.setQuestVar(8);
+  L234: qs.setQuestVar(11);
+  L242: qs.setQuestVar(13);
+### 25300: _25300A_Bloody_Battle_With_Beritra.java
+  L82: changeQuestStep(env, 0, 1, false);
+  L99: changeQuestStep(env, 1, 2, false);
+  L103: changeQuestStep(env, 13, 14, true);
+  L126: changeQuestStep(env, 2, 3, false);
+  L142: changeQuestStep(env, 4, 5, false);
+  L155: changeQuestStep(env, 8, 9, false);
+  L158: changeQuestStep(env, 9, 10, false);
+  L170: changeQuestStep(env, 11, 12, false);
+  L200: qs.setQuestVar(4);
+  L208: qs.setQuestVar(6);
+  L218: qs.setQuestVar(7);
+  L226: qs.setQuestVar(8);
+  L234: qs.setQuestVar(11);
+  L242: qs.setQuestVar(13);
+### 17511: _17511Reminiscing.java
+  L143: changeQuestStep(env, 1, 4, false);
+  L148: changeQuestStep(env, 5, 8, false);
+  L153: changeQuestStep(env, 9, 10, false);
+  L171: return defaultOnKillEvent(env, IDTransformMobs1, var1, var1 + 1, 1);
+  L173: qs.setQuestVar(1);
+  L180: return defaultOnKillEvent(env, IDTransformMobs2, var1, var1 + 1, 1);
+  L182: qs.setQuestVar(5);
+  L189: return defaultOnKillEvent(env, IDTransformMobs3, var1, var1 + 1, 1);
+  L191: qs.setQuestVar(9);
+  L247: qs.setStatus(QuestStatus.REWARD);
+### 27511: _27511The_Avatars.java
+  L143: changeQuestStep(env, 1, 4, false);
+  L148: changeQuestStep(env, 5, 8, false);
+  L153: changeQuestStep(env, 9, 10, false);
+  L171: return defaultOnKillEvent(env, IDTransformMobs1, var1, var1 + 1, 1);
+  L173: qs.setQuestVar(1);
+  L180: return defaultOnKillEvent(env, IDTransformMobs2, var1, var1 + 1, 1);
+  L182: qs.setQuestVar(5);
+  L189: return defaultOnKillEvent(env, IDTransformMobs3, var1, var1 + 1, 1);
+  L191: qs.setQuestVar(9);
+  L247: qs.setStatus(QuestStatus.REWARD);
+### 24011: _24011Funny_Floating_Fungus.java
+  L56: qs.setQuestVarById(0, qs.getQuestVarById(0) + 1);
+  L60: changeQuestStep(env, 6, 6, true);
+  L84: return defaultCloseDialog(env, 0, 1);
+  L94: return defaultCloseDialog(env, 1, 2);
+### 24014: _24014Stomp_Out_The_Plot.java
+  L61: return defaultCloseDialog(env, 0, 1);
+  L75: qs.setQuestVarById(0, var + 1);
+  L80: return checkQuestItems(env, 5, 5, true, 5, 2120);
+  L100: qs.setQuestVarById(0, var + 1);
+### 24015: _24015Totem_Plowed.java
+  L70: return defaultCloseDialog(env, 0, 1);
+  L98: qs.setQuestVarById(0, var + 1);
+  L102: qs.setStatus(QuestStatus.REWARD);
+  L118: changeQuestStep(env, 1, 2, false);
+### 24031: _24031Enemy_At_The_Doorstep.java
+  L88: return defaultCloseDialog(env, 0, 1);
+  L98: return defaultCloseDialog(env, 1, 2);
+  L109: return defaultCloseDialog(env, 2, 3);
+  L120: return defaultCloseDialog(env, 4, 5);
+  L133: return defaultCloseDialog(env, 6, 7);
+  L135: return defaultCloseDialog(env, 8, 9);
+  L148: changeQuestStep(env, 10, 11, false);
+  L157: qs.setStatus(QuestStatus.REWARD);
+  L176: qs.setQuestVarById(0, var + 1);
+  L205: qs.setQuestVarById(0, var + 1);
+  L221: qs.setQuestVarById(0, var + 1);
+  L236: qs.setQuestVarById(0, var + 1);
+  L252: qs.setQuestVar(8);
+  L268: qs.setQuestVar(8);
+  L286: changeQuestStep(env, 8, 9, false);
+### 24043: _24043Lazy_Language_Lessons.java
+  L57: return defaultCloseDialog(env, 0, 1);
+  L67: return defaultCloseDialog(env, 1, 2);
+  L77: return defaultCloseDialog(env, 3, 4);
+  L93: return defaultCloseDialog(env, 4, 5);
+  L95: return defaultCloseDialog(env, 6, 6, true, false);
+  L105: return defaultCloseDialog(env, 5, 6, 182215373, 1, 0, 0);
+  L133: changeQuestStep(env, 2, 3, false);
+### 18208: _18208IllusionOrInfiltration.java
+  L70: return defaultOnKillEvent(env, 217819, 0, 4, 1); // 1: 0 - 4
+  L73: qs.setQuestVar(1); // 1
+  L79: qs.setQuestVarById(2, 1); // 2: 1
+  L80: qs.setStatus(QuestStatus.REWARD); // reward
+### 18209: _18209ARiftInTheSpaceTwineContinuum.java
+  L66: return defaultOnKillEvent(env, 217819, 0, 4, 1);
+  L68: return defaultOnKillEvent(env, 217819, 0, 1, 0);
+  L70: qs.setQuestVarById(2, 1);
+  L71: qs.setStatus(QuestStatus.REWARD);
+### 28208: _28208ARiftAdrift.java
+  L71: return defaultOnKillEvent(env, 217819, 0, 4, 1); // 1: 0 - 4
+  L74: qs.setQuestVar(1); // 1
+  L80: qs.setQuestVarById(2, 1); // 2: 1
+  L81: qs.setStatus(QuestStatus.REWARD); // reward
+### 28209: _28209CatchingTheRift.java
+  L67: return defaultOnKillEvent(env, 217819, 0, 4, 1);
+  L69: return defaultOnKillEvent(env, 217819, 0, 1, 0);
+  L71: qs.setQuestVarById(2, 1);
+  L72: qs.setStatus(QuestStatus.REWARD);
+### 28602: _28602Into_The_Unknown.java
+  L49: changeQuestStep(env, var, 0, false);
+  L64: changeQuestStep(env, var, 0, false);
+  L82: return defaultOnKillEvent(env, targetId, 3, true);
+  L123: changeQuestStep(env, 0, 1, false);
+  L136: changeQuestStep(env, 1, 2, false);
+  L148: return defaultCloseDialog(env, 2, 3);
