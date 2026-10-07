@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-	仅存在于 GM 命令产物中的功能 NPC，2026-10-07 清理 New/ 目录时恢复至此。
-	Functional NPCs that existed only in the GM command artifacts, restored here on 2026-10-07.
+	仅在此处定义的功能 NPC：2026-10-07 清理 New/ 目录时删除，随后按原坐标恢复。
+	Functional NPCs defined nowhere else: removed in the 2026-10-07 New/ cleanup, restored here at their original coordinates.
 -->
 <spawns>
   <spawn_map map_id="220110000">
