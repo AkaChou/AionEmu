@@ -21,6 +21,7 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.templates.QuestTemplate;
 import com.aionemu.gameserver.questEngine.definition.QuestDialogAction;
 import com.aionemu.gameserver.questEngine.definition.QuestDialogPage;
+import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.questEngine.retail.RetailItemNameIndex;
@@ -348,6 +349,42 @@ class SimpleItemPlayNativeFamilyGateTest {
 		NativeTalkFixture.add(other, PLAY_QUEST, QuestStatus.REWARD, 0);
 		assertFalse(local.onDialog(NativeTalkFixture.dialog(other, rewardNpc, PLAY_QUEST, 9999)),
 			"非奖励窗动作不得被领奖段消费");
+	}
+
+	/**
+	 * 无目标领奖（真端 {@code QuestDialog} 无主键协议；任务窗/实时奖励槽确认包不带 NPC 上下文，
+	 * 引擎以 npcId=0 进入）：按 questId 结算 + 关窗（真端 0x5d8；Playbook 案例 8.3 合同）。
+	 * 退役迁移曾丢失该面（13830 实机 2026-10-07）。
+	 * <p>
+	 * The targetless claim: no NPC context, settled by quest id with the close-dialog tail.
+	 */
+	@Test
+	void targetlessClaimSettlesByQuestIdAndClosesTheWindow() {
+		List<int[]> claims = new ArrayList<>();
+		SimpleItemPlayHandler local = handlerWith(NativeTalkFixture.RecordingInventory.EMPTY,
+			NativeReportRewardFlow.forTest(SimpleItemPlayNativeFamilyGateTest::metadata,
+				(env, tier, template) -> {
+					claims.add(new int[] {env.getQuestId(), tier});
+					return template != null;
+				}));
+		Player player = NativeTalkFixture.player();
+		NativeTalkFixture.add(player, PLAY_QUEST, QuestStatus.REWARD, 0);
+
+		// 实时奖励槽 110（任务窗「实时奖励」按钮的原始动作）。
+		NativeTalkFixture.clearPackets(player);
+		assertTrue(local.onDialog(new QuestEnv(null, player, PLAY_QUEST, 110)),
+			"无目标实时奖励确认必须被领奖段服务");
+		NativeTalkFixture.assertCloseDialog(player);
+		assertEquals(1, claims.size());
+		assertEquals(PLAY_QUEST, claims.getFirst()[0], "结算体必须拿到 questId");
+
+		// 状态门：START 态零认领、零发页。
+		Player started = NativeTalkFixture.player();
+		NativeTalkFixture.add(started, PLAY_QUEST, QuestStatus.START, 0);
+		NativeTalkFixture.clearPackets(started);
+		assertFalse(local.onDialog(new QuestEnv(null, started, PLAY_QUEST, 110)),
+			"START 态不得认领无目标领奖");
+		assertTrue(NativeTalkFixture.dialogPages(started).isEmpty(), "START 态零发页");
 	}
 
 	/**

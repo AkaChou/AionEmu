@@ -821,6 +821,13 @@ public final class SimpleTalkHandler implements NativeSystemGrantLane {
 		int targetObjectId = npc != null ? npc.getObjectId() : 0;
 		int dialogId = env.getDialogId();
 
+		// 无目标领奖（真端 QuestDialog 无主键协议；任务窗/实时奖励槽的确认包不带 NPC 上下文）：
+		// 按 questId 结算 + 关窗收尾。owner 门由上面的 routes(questId) 保证。
+		// Targetless reward claim (the ownerless retail QuestDialog protocol used by the quest journal).
+		if (npcId == 0 && NativeTargetlessReward.claim(player, questId, dialogId, rewardFlow)) {
+			return true;
+		}
+
 		QuestState qs = player.getQuestStateList().getQuestState(questId);
 		QuestStatus status = qs != null ? qs.getStatus() : QuestStatus.NONE;
 

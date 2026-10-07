@@ -112,6 +112,9 @@ public final class DataDrivenNativeRuntime {
 	private static final int PAGE_SELECTION_DIALOG = 10;
 	/** 接取入口问询页（真端 `FUN_180c47220` 打开态字面量 `0x129a`）。 / The accept-entry ask page (retail 0x129a). */
 	private static final int PAGE_ACCEPT_ENTRY = 4762;
+	/** 进行中页（真端对象 #2 面 `FUN_180c473e0` 打开态字面量 `0x2712`；与共享对话平面空步集页同值）。
+	 * / The in-progress page (retail object-#2 open page 0x2712). */
+	private static final int PAGE_IN_PROGRESS = 10002;
 	/** 接取确认页（真端 1002 成功后下发）。 / The accepted page (sent after retail 1002). */
 	private static final int PAGE_ACCEPTED = 1003;
 	/** 拒绝确认页（真端 1003 下发）。 / The confirm-refuse page (sent after retail 1003). */
@@ -628,24 +631,22 @@ public final class DataDrivenNativeRuntime {
 				acceptActionPlans.put(questId, acceptActions);
 			}
 			acquirePlans.put(questId, acquire);
-			if (acquire.kind() == 4) {
-				// 真端所有行恒建交付对象 #2（`reward_npc_name`，槽 +0x238，P7-STEP2E1）：零步 Talk 行
-				// （DD_TALK_SIMPLE）由本面做报告推进（31 → 报告确认页 → 1009 → REWARD + 奖励窗）；
-				// 中继步 Talk 链行（如 19671 蕾娜的欢迎问候：接取/交付教官 806698，进度商人 806699）
-				// 只由本面服务 REWARD 态交付（31/1009 → 奖励窗页 5、领奖动作 → 结算 + 回页 10），
-				// START 态由进度面 owns（见 dispatchReportDialog 的零步守卫）——2026-10-05 实机：
-				// 中继步行 REWARD 后教官处无交付路由（任务卡在「向成长支援教官报告」无法领奖）。
-				// 名字解析失败只缺席交付面（不冻结接取面，也不计入行冻结证据）。
-				// All Talk rows register the retail delivery object #2 (reward_npc_name, slot +0x238):
-				// zero-step rows use this face for report-and-advance; relay-step chain rows are served
-				// only in REWARD (claim window / settlement back to page 10). An unresolvable name
-				// merely leaves the face absent (no row freeze, no evidence drift).
-				Set<Integer> rewardNpcIds = new LinkedHashSet<>();
-				if (resolveMonsters(row.rewardNpc() == null ? "" : row.rewardNpc(), nameResolver, rewardNpcIds,
-					new ArrayList<>())) {
-					rewardNpcIds.forEach(
-						npcId -> reportTalks.computeIfAbsent(npcId, key -> new ArrayList<>()).add(questId));
-				}
+			// 真端所有行恒建交付对象 #2（`reward_npc_name`，槽 +0x238 = `FUN_180c473e0`，P7-STEP2E1/§7）：
+			// 交付面**不限于 Talk 接取行**——LevelUpLogIn/ItemPlay 等行的「和交付 NPC 对话」路径同属该面
+			// （2026-10-07 实机 13830 奥尔佩：客户端任务书写明「在任务窗点击[领取奖励]% 或 和[奥尔佩]%对话」，
+			// 该行 LevelUpLogIn 未注册 ⇒ 对话无响应）。行为面由 dispatchReportDialog 按接取类别分形服务：
+			// Talk 行 = 现状基线（零步报告推进 / REWARD 31/1009/-1 → 页 5）；非 Talk 行 = 真端对象 #2 面
+			// （START 不认领；REWARD 打开 → 页 10002、1009 → 页 5、领奖 → 结算 + 页 10）。
+			// 名字解析失败只缺席交付面（不冻结接取面，也不计入行冻结证据）。
+			// All rows register the retail delivery object #2 (reward_npc_name, slot +0x238): the face is
+			// NOT restricted to Talk-acquired rows — rows like 13830 (LevelUpLogIn) serve their delivery npc
+			// dialog here too, with the REWARD shape split by acquire kind in dispatchReportDialog. An
+			// unresolvable name merely leaves the face absent (no row freeze, no evidence drift).
+			Set<Integer> rewardNpcIds = new LinkedHashSet<>();
+			if (resolveMonsters(row.rewardNpc() == null ? "" : row.rewardNpc(), nameResolver, rewardNpcIds,
+				new ArrayList<>())) {
+				rewardNpcIds.forEach(
+					npcId -> reportTalks.computeIfAbsent(npcId, key -> new ArrayList<>()).add(questId));
 			}
 			switch (acquire.kind()) {
 				case 4 -> acquire.npcIds().forEach(
@@ -1355,6 +1356,13 @@ public final class DataDrivenNativeRuntime {
 	 * @param requestedOwner 客户端携带的任务上下文（0 = 无；非 0 时只服务该任务）/ the client quest context
 	 */
 	public boolean onDialog(Player player, int npcId, int dialogId, int objectId, int requestedOwner) {
+		// 无目标领奖（真端 QuestDialog 无主键协议；任务窗/实时奖励槽的确认包不带 NPC 上下文）：
+		// 按 questId（requestedOwner）结算 + 关窗收尾。owner 门 = routedQuestIds。
+		// Targetless reward claim (the ownerless retail QuestDialog protocol used by the quest journal).
+		if (npcId == 0 && requestedOwner != 0 && routedQuestIds.contains(requestedOwner)
+				&& NativeTargetlessReward.claim(player, requestedOwner, dialogId, rewardFlow)) {
+			return true;
+		}
 		if (dispatchAcquireDialog(player, acquireTalksByNpcId.get(npcId), dialogId, objectId, requestedOwner)) {
 			return true;
 		}
@@ -1404,10 +1412,14 @@ public final class DataDrivenNativeRuntime {
 			// 在 START 态由进度面 owns（玩家必须先在中继 NPC 处走完进度步），本面只在 REWARD 态服务其
 			// 交付/领奖（真端交付对象 #2 对已收口行给奖励窗）。缺此守卫会让中继步行在教官处行选 31 时
 			// 被「一键报告」直接推进 REWARD（跳过中继步）——2026-10-05 实机 19671 回归面即按此收窄。
+			// 非 Talk 接取行（LevelUpLogIn/ItemPlay 等，交付面 2026-10-07 放开）进度由各自事件面推进，
+			// 对话在 START 态不认领、不跳步（真端对象 #2 面对进行中行只给页 10002）。
 			// The START-state advance paths serve zero-step Talk rows only; relay-step chain rows are
-			// owned by the progress face until REWARD, where this face serves delivery and claim.
+			// owned by the progress face until REWARD, and non-Talk rows never advance from dialogs.
 			boolean zeroStep = plansByQuestId.getOrDefault(questId, List.of()).isEmpty();
-			if (state.getStatus() == QuestStatus.START && !zeroStep) {
+			AcquirePlan rowAcquire = acquireByQuestId.get(questId);
+			boolean talkAcquired = rowAcquire != null && rowAcquire.kind() == 4;
+			if (state.getStatus() == QuestStatus.START && (!zeroStep || !talkAcquired)) {
 				continue;
 			}
 			// 报告两步语义（裁定 a，2026-10-03）：任务行（31）只发客户端声明的报告确认页
@@ -1435,19 +1447,44 @@ public final class DataDrivenNativeRuntime {
 				return true;
 			}
 			if (state.getStatus() == QuestStatus.REWARD) {
-				// 打开（-1 = USE_OBJECT）同样开奖励窗：对齐 SimpleTalk 族的交付 NPC 面（REWARD && -1 →
-				// 页 5，SimpleTalkHandler 领奖段仲裁参照）——真端在交付对象 #2 上打开即弹奖励窗，不落
-				// 通用页 10 列表（该列表只含可接取行，无交付入口）。2026-10-06 实机 19683（蕾娜 806698
-				// 接取/交付 + Prina 806708 中继）：收口后回教官打开落默认页 10，客户端无交付行可点
-				//（「点击教官没有这个任务的对话」）；QE-145 边界①（DD REWARD 态开门未落面）即此缺口。
-				// The open action (-1 = USE_OBJECT) opens the reward window too, matching the SimpleTalk
-				// delivery-NPC face (REWARD && -1 -> page 5): retail pops the reward window when opened
-				// on reward object #2 instead of falling to the generic page-10 list, which carries
-				// acquire rows only. Live 2026-10-06 (quest 19683): the open on instructor 806698 after
-				// the relay close fell to page 10 with no delivery row to click.
-				if (dialogId == 31 || dialogId == 1009 || dialogId == -1) {
-					PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(objectId, PAGE_REWARD_WINDOW, questId));
-					return true;
+				if (talkAcquired) {
+					// 打开（-1 = USE_OBJECT）同样开奖励窗：对齐 SimpleTalk 族的交付 NPC 面（REWARD && -1 →
+					// 页 5，SimpleTalkHandler 领奖段仲裁参照）——真端在交付对象 #2 上打开即弹奖励窗，不落
+					// 通用页 10 列表（该列表只含可接取行，无交付入口）。2026-10-06 实机 19683（蕾娜 806698
+					// 接取/交付 + Prina 806708 中继）：收口后回教官打开落默认页 10，客户端无交付行可点
+					//（「点击教官没有这个任务的对话」）；QE-145 边界①（DD REWARD 态开门未落面）即此缺口。
+					// The open action (-1 = USE_OBJECT) opens the reward window too, matching the SimpleTalk
+					// delivery-NPC face (REWARD && -1 -> page 5): retail pops the reward window when opened
+					// on reward object #2 instead of falling to the generic page-10 list, which carries
+					// acquire rows only. Live 2026-10-06 (quest 19683): the open on instructor 806698 after
+					// the relay close fell to page 10 with no delivery row to click.
+					if (dialogId == 31 || dialogId == 1009 || dialogId == -1) {
+						PacketSendUtility.sendPacket(player,
+							new SM_DIALOG_WINDOW(objectId, PAGE_REWARD_WINDOW, questId));
+						return true;
+					}
+				} else {
+					// 非 Talk 接取行的交付面（真端对象 #2 面 `FUN_180c473e0`：打开（0/10）→ 页 10002
+					// 进行中页；1009 → 报告通道 = 奖励窗）。2026-10-07 实机 13830（LevelUpLogIn 行，
+					// 交付 NPC 奥尔佩 203711）：客户端任务书写明「在任务窗点击[领取奖励]% 或 和[奥尔佩]%对话」，
+					// 页 10002 = select_success「点头」= SELECT_QUEST_REWARD(1009) → 奖励窗。
+					// 页 10002 必须由客户端任务 HTML 声明，未声明 fail-closed（不发合成页、本行不认领）。
+					// The delivery face of non-Talk rows (retail object-#2 face: open -> page 10002;
+					// 1009 -> the report channel = the reward window). The page must be declared by the
+					// client task HTML; an undeclared page fails closed.
+					if (dialogId == 31 || dialogId == 26 || dialogId == -1) {
+						if (!QuestDialogContract.loadDefault().hasButtonPage(questId, PAGE_IN_PROGRESS)) {
+							continue;
+						}
+						PacketSendUtility.sendPacket(player,
+							new SM_DIALOG_WINDOW(objectId, PAGE_IN_PROGRESS, questId));
+						return true;
+					}
+					if (dialogId == 1009) {
+						PacketSendUtility.sendPacket(player,
+							new SM_DIALOG_WINDOW(objectId, PAGE_REWARD_WINDOW, questId));
+						return true;
+					}
 				}
 				if ((dialogId >= 8 && dialogId <= 22) || dialogId == ACTION_NO_REWARD || dialogId == 108
 					|| (dialogId >= 110 && dialogId <= 124)) {

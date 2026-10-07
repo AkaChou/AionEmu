@@ -117,13 +117,14 @@ class Quest23830To23834TargetlessRewardTest {
 		assertEquals(DataDrivenQuestTable.Kind.ITEM_PLAY, row.steps().get(0).kind(),
 			spec.questId() + " 进度类别 = 真端 ItemPlay");
 
-		// 交付面边界（与 Quest26802 同类口径）：交付对象 #2 面（reportTalkInterests）只对 Talk 接取行
-		// 注册；LevelUpLogIn 行不在该面（文档使用推进 ≠ NPC 报告），奖励窗面由此不落本行。
-		// Delivery-face boundary: the retail object-#2 face registers for Talk-acquired rows only; a
-		// LevelUpLogIn row has no NPC report face, so no reward window hangs on Aud for this row.
-		assertTrue(runtime.reportTalkInterests().values().stream()
-				.noneMatch(questIds -> questIds.contains(spec.questId())),
-			spec.questId() + " 是 LevelUpLogIn 行，不得注册 Talk 交付面");
+		// 交付面（真端**所有行**恒建对象 #2 `reward_npc_name`，槽 +0x238 = `FUN_180c473e0`，
+		// P7-STEP2E1 §1/§7）：交付面不限于 Talk 接取行——LevelUpLogIn 行同样注册。2026-10-07 实机
+		// 13830：客户端任务书写明「在任务窗点击[领取奖励]% 或 和[奥尔佩]%对话」；旧断言
+		//（「LevelUpLogIn 行不得注册 Talk 交付面」）与真端原码证据冲突，已按真端修正。
+		// The delivery face registers for every row (the always-built retail object #2), not only
+		// Talk-acquired rows — corrected against the retail source evidence.
+		assertTrue(runtime.reportTalkInterests().getOrDefault(REWARD_NPC_ID, List.of()).contains(spec.questId()),
+			spec.questId() + " 必须注册在交付 NPC（Aud " + REWARD_NPC_ID + "）的交付面");
 	}
 
 	/** 一条真端行的锚点事实。 / The anchor facts of one retail row. */

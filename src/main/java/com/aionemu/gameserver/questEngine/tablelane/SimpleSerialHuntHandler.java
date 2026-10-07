@@ -335,12 +335,21 @@ public final class SimpleSerialHuntHandler {
 			return false;
 		}
 		Npc target = (Npc) env.getVisibleObject();
+		int npcId = target != null ? target.getNpcId() : 0;
+		int dialogId = env.getDialogId();
+		int targetObjectId = target != null ? target.getObjectId() : 0;
+
+		// 无目标领奖（真端 QuestDialog 无主键协议；任务窗/实时奖励槽的确认包不带 NPC 上下文）：
+		// 按 questId 结算 + 关窗收尾。owner 门由上面的 managedQuestIds 判定保证。
+		// Targetless reward claim (the ownerless retail QuestDialog protocol used by the quest journal).
+		if (npcId == 0 && NativeTargetlessReward.claim(player, questId, dialogId, rewardFlow)) {
+			return true;
+		}
+		// 其余对话面维持原硬门：无 NPC 对象不进入后续分发。
+		// The remaining dialog faces keep their hard NPC gate.
 		if (target == null) {
 			return false;
 		}
-		int npcId = target.getNpcId();
-		int dialogId = env.getDialogId();
-		int targetObjectId = target.getObjectId();
 		QuestState state = player.getQuestStateList().getQuestState(questId);
 		QuestStatus status = state != null ? state.getStatus() : QuestStatus.NONE;
 

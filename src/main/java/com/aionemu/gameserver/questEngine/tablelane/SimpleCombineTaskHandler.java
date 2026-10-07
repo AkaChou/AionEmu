@@ -362,10 +362,23 @@ public final class SimpleCombineTaskHandler {
 		Npc npc = env.getVisibleObject() instanceof Npc target ? target : null;
 		int npcId = npc != null ? npc.getNpcId() : 0;
 		int objectId = npc != null ? npc.getObjectId() : 0;
+		int dialogId = env.getDialogId();
+
+		// 无目标领奖（真端 QuestDialog 无主键协议；任务窗/实时奖励槽的确认包不带 NPC 上下文）：
+		// 按 questId 结算 + 关窗收尾，并走本族的完成流条件回收段（扣产物 + 忘配方，与 1009 交付同序）。
+		// owner 门由上面的 routes(questId) 保证。
+		// Targetless reward claim (the ownerless retail QuestDialog protocol), including this family's
+		// completion-flow recycling (product removal and recipe forgetting), in the hand-in order.
+		if (npcId == 0 && NativeTargetlessReward.claim(player, questId, dialogId, rewardFlow, () -> {
+			recycleProduct(player, questId);
+			forgetRecipe(player, questId);
+		})) {
+			return true;
+		}
+
 		if (!taskNpcsByQuestId.getOrDefault(questId, List.of()).contains(npcId)) {
 			return false;
 		}
-		int dialogId = env.getDialogId();
 		QuestState state = player.getQuestStateList() == null ? null
 			: player.getQuestStateList().getQuestState(questId);
 		QuestStatus status = state != null ? state.getStatus() : QuestStatus.NONE;
@@ -473,8 +486,17 @@ public final class SimpleCombineTaskHandler {
 			return true;
 		}
 		int first = QuestDialogAction.SELECTED_QUEST_REWARD1.id();
-		int last = QuestDialogAction.SELECTED_QUEST_NOREWARD.id();
-		if ((dialogId >= first && dialogId <= last) || dialogId == 108 || (dialogId >= 110 && dialogId <= 124)) {
+		int last = QuestDialogAction.SELECTED_QUEST_REWARD15.id();
+		// 选项段只有 SELECTED_QUEST_REWARD1..15（8..22）；23 = SELECTED_QUEST_NOREWARD 是无选择确认，
+		// 不占选项下标——发放由结算体按 dialogId==23 + extendedRewardIndex 决定。旧区间（8..23）会把
+		// 23 映射成下标 15 ⇒ 按钮面 fail-closed、奖励窗无法完成；与其余六族同口径修正（同型修复先例：
+		// 1107 领奖循环，99684c70d 覆盖两族；本族为当时的漏网族）。
+		// Only SELECTED_QUEST_REWARD1..15 (8..22) index options; 23 is the no-selection confirm, whose
+		// grant the settlement resolves via dialogId==23 + extendedRewardIndex. The old 8..23 band
+		// mapped 23 to option index 15 and failed the reward window closed.
+		if ((dialogId >= first && dialogId <= last)
+				|| dialogId == QuestDialogAction.SELECTED_QUEST_NOREWARD.id()
+				|| dialogId == 108 || (dialogId >= 110 && dialogId <= 124)) {
 			int rewardIndex = dialogId >= first && dialogId <= last ? dialogId - first : 0;
 			if (!rewardFlow.claim(env, rewardIndex).completed()) {
 				return false;

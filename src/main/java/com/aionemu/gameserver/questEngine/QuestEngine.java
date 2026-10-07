@@ -335,8 +335,12 @@ public class QuestEngine implements GameEngine {
 			// 真端表驱动车道：DataDriven Talk / CollectItem 步的共享对话平面（开页 + 页动作/1009/1008，
 			// `FUN_180c474b0`）与 TalkFOBJ 组计数（本批路由集为空 ⇒ 恒 false）。
 			// DataDriven dialog plane and TalkFOBJ groups: no-op until the atomic switch batch.
-			if (npcId != 0 && DataDrivenNativeRuntime.instance().onDialog(player, npcId, env.getDialogId(),
-				npc.getObjectId(), requestedOwner)) {
+			// 无目标领奖（npcId == 0）也进入 DD 面：真端 QuestDialog 无主键协议由本面按 questId 结算
+			// （存在性/状态/动作门全在 DD 内部；未认领返回 false 继续下方链路）。
+			// Targetless reward claims (npcId == 0) reach the DD face too: the ownerless QuestDialog
+			// protocol is settled by quest id inside the runtime; an unclaimed id falls through.
+			if (DataDrivenNativeRuntime.instance().onDialog(player, npcId, env.getDialogId(),
+				npc != null ? npc.getObjectId() : 0, requestedOwner)) {
 				return true;
 			}
 			// 真端对话平面的统一兜底：子页动作（SELECT⟨n⟩_…，动作 id 即目标页 id，如 1694 = select3_1）

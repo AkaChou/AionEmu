@@ -362,6 +362,42 @@ class SimpleUseItemNativeFamilyGateTest {
 			"非奖励窗动作不得被领奖段消费");
 	}
 
+	/**
+	 * 无目标领奖（真端 {@code QuestDialog} 无主键协议；任务窗/实时奖励槽确认包不带 NPC 上下文，
+	 * 引擎以 npcId=0 进入）：按 questId 结算 + 关窗（真端 0x5d8；Playbook 案例 8.3 合同）。
+	 * 退役迁移曾丢失该面（13830 实机 2026-10-07）。
+	 * <p>
+	 * The targetless claim: no NPC context, settled by quest id with the close-dialog tail.
+	 */
+	@Test
+	void targetlessClaimSettlesByQuestIdAndClosesTheWindow() {
+		List<ClaimCall> calls = new ArrayList<>();
+		SimpleUseItemHandler local = handlerWith(NativeTalkFixture.RecordingInventory.EMPTY,
+			NativeReportRewardFlow.forTest(SimpleUseItemNativeFamilyGateTest::metadata,
+				(env, tier, template) -> {
+					calls.add(new ClaimCall(env.getQuestId(), tier, template));
+					return true;
+				}));
+		Player player = NativeTalkFixture.player();
+		NativeTalkFixture.add(player, ITEM_ACCEPT_QUEST, QuestStatus.REWARD, 0);
+
+		// 实时奖励槽 110（任务窗「实时奖励」按钮的原始动作）。
+		NativeTalkFixture.clearPackets(player);
+		assertTrue(local.onDialog(new QuestEnv(null, player, ITEM_ACCEPT_QUEST, 110)),
+			"无目标实时奖励确认必须被领奖段服务");
+		NativeTalkFixture.assertCloseDialog(player);
+		assertEquals(1, calls.size());
+		assertEquals(ITEM_ACCEPT_QUEST, calls.getFirst().questId(), "结算体必须拿到 questId");
+
+		// 状态门：START 态零认领、零发页。
+		Player started = NativeTalkFixture.player();
+		NativeTalkFixture.add(started, ITEM_ACCEPT_QUEST, QuestStatus.START, 0);
+		NativeTalkFixture.clearPackets(started);
+		assertFalse(local.onDialog(new QuestEnv(null, started, ITEM_ACCEPT_QUEST, 110)),
+			"START 态不得认领无目标领奖");
+		assertTrue(NativeTalkFixture.dialogPages(started).isEmpty(), "START 态零发页");
+	}
+
 	private record ClaimCall(int questId, int tier, QuestTemplate template) {
 	}
 

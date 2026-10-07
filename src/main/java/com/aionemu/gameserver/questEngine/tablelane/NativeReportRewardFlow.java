@@ -7,6 +7,7 @@ import com.aionemu.gameserver.model.PlayerClass;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.templates.QuestTemplate;
 import com.aionemu.gameserver.model.templates.quest.QuestItems;
+import com.aionemu.gameserver.questEngine.definition.QuestDialogAction;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
@@ -146,9 +147,39 @@ public final class NativeReportRewardFlow {
 			// Undeclared reward-window buttons grant nothing and never complete the row.
 			return new Outcome(false, "NATIVE_REWARD_BUTTON_UNDECLARED:" + buttonProblem);
 		}
-		return sink.complete(env, tier, template)
+		return sink.complete(claimEnv(env, player, questId, rewardIndex), tier, template)
 			? new Outcome(true, "NATIVE_REWARD_COMPLETED")
 			: new Outcome(false, "NATIVE_REWARD_REJECTED");
+	}
+
+	/**
+	 * 领奖动作 → 结算体奖励窗语义的归一化（{@code QuestService.getRewardItems} 按 {@code dialogId} 推导
+	 * 奖励选项：8..22 选项段取 {@code dialogId-8}；23 = 无选择确认走 {@code extendedRewardIndex}；
+	 * 108/110..124 = 自动确认通道）。
+	 * <p>
+	 * 2026-10-07 实机 13830（任务窗「实时奖励」= 110）：原样传 110 ⇒ {@code selRewIndex = 110-8 = 102}
+	 * 越界 ⇒ 任务完成但职业奖励物品<strong>静默未发</strong>。归一化后：自动确认通道映射为
+	 * {@code 8 + rewardIndex}（等价「选中第 index 项」），23 保留动作 id 并补齐
+	 * {@code extendedRewardIndex = 8 + rewardIndex}；8..22 原样透传。
+	 * <p>
+	 * Normalises the claim action into the reward-window vocabulary the settlement body understands:
+	 * the auto-confirm channel (108/110..124) becomes {@code 8 + rewardIndex}, the no-selection confirm
+	 * (23) keeps its id with {@code extendedRewardIndex} filled in, and 8..22 pass through unchanged.
+	 */
+	static QuestEnv claimEnv(QuestEnv env, Player player, int questId, int rewardIndex) {
+		int rewardWindowDialog = env.getDialogId();
+		boolean autoConfirm = env.getDialogId() == QuestDialogAction.SELECTED_QUEST_AUTO_REWARD.id()
+			|| (env.getDialogId() >= QuestDialogAction.SELECTED_QUEST_AUTO_REWARD1.id()
+				&& env.getDialogId() < QuestDialogAction.SELECTED_QUEST_AUTO_REWARD1.id()
+					+ QuestDialogAction.AUTO_REWARD_SLOT_COUNT);
+		if (autoConfirm) {
+			rewardWindowDialog = QuestDialogAction.SELECTED_QUEST_REWARD1.id() + rewardIndex;
+		}
+		QuestEnv claimEnv = new QuestEnv(env.getVisibleObject(), player, questId, rewardWindowDialog);
+		if (env.getDialogId() == QuestDialogAction.SELECTED_QUEST_NOREWARD.id()) {
+			claimEnv.setExtendedRewardIndex(QuestDialogAction.SELECTED_QUEST_REWARD1.id() + rewardIndex);
+		}
+		return claimEnv;
 	}
 
 	/**

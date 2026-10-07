@@ -374,6 +374,120 @@ class NativeQuestRewardClaimGateTest {
 	}
 
 	/**
+	 * 无目标领奖（真端 {@code QuestDialog} 无主键协议；2026-10-07 实机 13830 任务窗「实时奖励」= 110
+	 * 无响应）：任务窗/实时奖励槽的确认包不带 NPC 上下文（{@code visibleObject == null}，引擎以
+	 * npcId=0 进入），各族按 questId 结算 + 关窗（真端 0x5d8；与 typed 车道 targetless CloseDialog
+	 * 及 13830-13834 退役 XML 的 Playbook 案例 8.3 合同一致）。退役迁移曾丢失该面。
+	 * <p>
+	 * The targetless claim on every lane: a quest-journal confirmation carries no NPC context and
+	 * settles by quest id alone with the close-dialog tail.
+	 */
+	@Test
+	void targetlessClaimsSettleByQuestIdOnEveryLane() {
+		// Talk：可选项行 1207。
+		RecordingSink talkSink = new RecordingSink();
+		SimpleTalkHandler talk = NativeTalkFixture.handler(NativeInventoryPort.live(),
+			NativeReportRewardFlow.withSink(talkSink));
+		assertTargetlessClaim("SimpleTalk", talk::onDialog, TALK_SELECTABLE_QUEST, talkSink);
+
+		// Hunt：纯标量行 1102。
+		RecordingSink huntSink = new RecordingSink();
+		SimpleHuntHandler hunt = new SimpleHuntHandler(NativeQuestTableLoader.instance(),
+			CameraRegistry.instance(), NativeNpcNameResolver.instance(), HtmlPagesRegistry.instance(),
+			NativeQuestOwnerResolver.instance().xmlOnlyIds(), NativeMoviePort.live(),
+			NativeReportRewardFlow.withSink(huntSink));
+		assertTargetlessClaim("SimpleHunt", hunt::onDialog, HUNT_SCALAR_QUEST, huntSink);
+
+		// SerialHunt：固定道具行 16991。
+		RecordingSink serialSink = new RecordingSink();
+		SimpleSerialHuntHandler serial = new SimpleSerialHuntHandler(NativeQuestTableLoader.instance(),
+			CameraRegistry.instance(), NativeNpcNameResolver.instance(),
+			NativeQuestOwnerResolver.instance().xmlOnlyIds(), NativeReportRewardFlow.withSink(serialSink));
+		assertTargetlessClaim("SimpleSerialHunt", serial::onDialog, SERIAL_REWARD_QUEST, serialSink);
+
+		// CollectItem：单物件采集行 1137。
+		RecordingSink collectSink = new RecordingSink();
+		SimpleCollectItemHandler collect = new SimpleCollectItemHandler(NativeQuestTableLoader.instance(),
+			NativeNpcNameResolver.instance(), HtmlPagesRegistry.instance(),
+			NativeInventoryPort.live(), NativeMoviePort.live(), NativeReportRewardFlow.withSink(collectSink),
+			NativeQuestOwnerResolver.instance().xmlOnlyIds(), new TreeSet<>());
+		assertTargetlessClaim("SimpleCollectItem", collect::onDialog, COLLECT_SINGLE_OBJECT_QUEST, collectSink);
+
+		// 状态门（代表族）：START 态零认领、零发页。
+		Player started = NativeTalkFixture.player();
+		NativeTalkFixture.add(started, TALK_SELECTABLE_QUEST, QuestStatus.START, 0);
+		NativeTalkFixture.clearPackets(started);
+		assertFalse(talk.onDialog(new QuestEnv(null, started, TALK_SELECTABLE_QUEST, 110)),
+			"START 态不得认领无目标领奖");
+		assertTrue(NativeTalkFixture.dialogPages(started).isEmpty(), "START 态零发页");
+
+		// 动作门（代表族）：非确认段动作零认领、零发页。
+		Player other = NativeTalkFixture.player();
+		NativeTalkFixture.add(other, TALK_SELECTABLE_QUEST, QuestStatus.REWARD, 0);
+		NativeTalkFixture.clearPackets(other);
+		assertFalse(talk.onDialog(new QuestEnv(null, other, TALK_SELECTABLE_QUEST, 31)),
+			"非确认段动作不得被无目标领奖认领");
+		assertTrue(NativeTalkFixture.dialogPages(other).isEmpty(), "非确认段动作零发页");
+	}
+
+	/**
+	 * 领奖动作 → 结算体奖励窗语义归一化（{@code QuestService.getRewardItems} 按 {@code dialogId} 推导选项：
+	 * 8..22 = {@code dialogId-8}；23 = 走 {@code extendedRewardIndex}；108/110..124 = 自动确认通道）。
+	 * <p>
+	 * 2026-10-07 实机 13830（任务窗「实时奖励」= 110）：原样传 110 ⇒ {@code selRewIndex = 102} 越界
+	 * ⇒ 任务完成但职业奖励物品**静默未发**（本次回归的根因）；23 通道同样因未补
+	 * {@code extendedRewardIndex} 而取不到选项。
+	 * <p>
+	 * The claim-action normalization: 108/110..124 map to {@code 8 + index}, 23 keeps its id with
+	 * {@code extendedRewardIndex} filled in, and 8..22 pass through unchanged.
+	 */
+	@Test
+	void claimActionsNormalizeIntoTheSettlementRewardWindowVocabulary() {
+		RecordingSink sink = new RecordingSink();
+		SimpleTalkHandler handler = NativeTalkFixture.handler(NativeInventoryPort.live(),
+			NativeReportRewardFlow.withSink(sink));
+		int questId = TALK_SELECTABLE_QUEST;
+
+		// 实时奖励槽 110 → 结算体看到 8（选中第 0 项；不再越界丢物品）。
+		Player auto = NativeTalkFixture.player();
+		NativeTalkFixture.add(auto, questId, QuestStatus.REWARD, 0);
+		int npcId = handler.rewardNpc(questId);
+		assertTrue(handler.onDialog(NativeTalkFixture.dialog(auto, npcId, questId, 110)),
+			"实时奖励 110 必须被领奖段服务");
+		assertEquals(8, sink.calls.getFirst().env().getDialogId(),
+			"110 必须归一为 8+index（结算体按 dialogId-8 取选项）");
+
+		// 普通选项 8 → 原样透传。
+		Player plain = NativeTalkFixture.player();
+		NativeTalkFixture.add(plain, questId, QuestStatus.REWARD, 0);
+		assertTrue(handler.onDialog(NativeTalkFixture.dialog(plain, npcId, questId, 8)),
+			"普通选项 8 必须被领奖段服务");
+		assertEquals(8, sink.calls.get(1).env().getDialogId(), "8 原样透传");
+
+		// 23 无选择确认 → 保留动作 id + 补 extendedRewardIndex = 8（选中第 0 项）。
+		Player confirm = NativeTalkFixture.player();
+		NativeTalkFixture.add(confirm, questId, QuestStatus.REWARD, 0);
+		assertTrue(handler.onDialog(NativeTalkFixture.dialog(confirm, npcId, questId, 23)),
+			"23 无选择确认必须被领奖段服务");
+		assertEquals(23, sink.calls.get(2).env().getDialogId(), "23 保留动作 id");
+		assertEquals(8, sink.calls.get(2).env().getExtendedRewardIndex(),
+			"23 必须补 extendedRewardIndex（结算体按它取选项）");
+	}
+
+	/** 一族一例的无目标领奖断言：REWARD + null 目标 + 110 → 结算一次 + 关窗。 /
+	 * One lane's targetless claim: REWARD + a null target + 110 settles once and closes the window. */
+	private static void assertTargetlessClaim(String lane, java.util.function.Predicate<QuestEnv> onDialog,
+			int questId, RecordingSink sink) {
+		Player player = NativeTalkFixture.player();
+		NativeTalkFixture.add(player, questId, QuestStatus.REWARD, 0);
+		NativeTalkFixture.clearPackets(player);
+		assertTrue(onDialog.test(new QuestEnv(null, player, questId, 110)),
+			lane + "：无目标实时奖励确认必须被领奖段服务");
+		assertEquals(1, sink.calls.size(), lane + "：领奖口必须被调用一次");
+		NativeTalkFixture.assertCloseDialog(player);
+	}
+
+	/**
 	 * 已切换行里只有两条真端行声明多档（18706/28706，等级轴 999 = 不可达），可达行全部单档。
 	 * 多档行的档位语义属计划 P6，本口对其 fail-closed（见第二条断言），此冻结断言先破。
 	 * Only two switched rows declare multiple reward slots (18706/28706, level-axis 999 = unreachable);

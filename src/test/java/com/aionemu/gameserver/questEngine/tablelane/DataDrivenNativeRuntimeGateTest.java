@@ -901,6 +901,100 @@ class DataDrivenNativeRuntimeGateTest {
 	}
 
 	/**
+	 * ⑪ 无目标领奖（真端 QuestDialog 无主键协议；2026-10-07 实机 13830 任务窗「实时奖励」= 110 无响应）：
+	 * 确认包不带 NPC 上下文（{@code visibleObject == null}，引擎以 npcId=0 进入本面），按 questId 结算 +
+	 * 关窗；非 REWARD 态与非确认段动作零副作用。13830-13834/23830-23834 退役前的 XML 合同（Playbook
+	 * 案例 8.3，commit 4a23cf0a）即此语义，native 重建时曾丢失。
+	 * <p>
+	 * The targetless reward claim: a quest-journal confirmation carries no NPC context and settles by
+	 * quest id alone, with the close-dialog tail (the retired XML contract of Playbook case 8.3).
+	 */
+	@Test
+	void targetlessRewardClaimSettlesByQuestIdAndClosesTheWindow() {
+		int questId = 13830;
+		assertTrue(runtime.routes(questId), "13830 必须由 DD 运行时路由（退役行基线）");
+		// 职业奖励梯只认转职后职业（与结算段同一映射）⇒ 探针用高级职业。
+		// The class ladder only admits advanced classes (the settlement's own mapping).
+		Player player = NativeTalkFixture.player(Race.ELYOS, PlayerClass.GLADIATOR, 30);
+		NativeTalkFixture.add(player, questId, QuestStatus.REWARD, 1);
+
+		// 实时奖励槽 110（任务窗「实时奖励」按钮的原始动作）。
+		NativeTalkFixture.clearPackets(player);
+		claims.calls = 0;
+		assertTrue(runtime.onDialog(player, 0, 110, 0, questId), "无目标实时奖励确认必须结算");
+		assertEquals(1, claims.calls, "领奖口必须被调用一次");
+		NativeTalkFixture.assertCloseDialog(player);
+
+		// 普通奖励槽 8（任务书「在任务窗点击[领取奖励]%」）同形。
+		NativeTalkFixture.clearPackets(player);
+		claims.calls = 0;
+		assertTrue(runtime.onDialog(player, 0, 8, 0, questId), "无目标普通奖励确认必须结算");
+		assertEquals(1, claims.calls, "领奖口必须被调用一次");
+		NativeTalkFixture.assertCloseDialog(player);
+
+		// 状态门：START 态零认领、零发页。
+		Player started = NativeTalkFixture.player(Race.ELYOS, PlayerClass.GLADIATOR, 30);
+		NativeTalkFixture.add(started, questId, QuestStatus.START, 0);
+		NativeTalkFixture.clearPackets(started);
+		claims.calls = 0;
+		assertFalse(runtime.onDialog(started, 0, 110, 0, questId), "START 态不得认领无目标领奖");
+		assertEquals(0, claims.calls);
+		assertTrue(NativeTalkFixture.dialogPages(started).isEmpty(), "START 态零发页");
+
+		// 动作门：非确认段动作零认领、零发页。
+		NativeTalkFixture.clearPackets(player);
+		claims.calls = 0;
+		assertFalse(runtime.onDialog(player, 0, 31, 0, questId), "非确认段动作不得被无目标领奖认领");
+		assertEquals(0, claims.calls);
+		assertTrue(NativeTalkFixture.dialogPages(player).isEmpty());
+	}
+
+	/**
+	 * ⑫ 非 Talk 接取行的交付面（真端所有行恒建对象 #2，槽 +0x238 = `FUN_180c473e0`，P7-STEP2E1）：
+	 * 2026-10-07 实机 13830（LevelUpLogIn 行）任务书写明「在任务窗点击[领取奖励]% 或 和[奥尔佩]%对话」，
+	 * 退役迁移曾把交付面收窄到 Talk 接取行 ⇒ 奥尔佩处无响应。行为分形：START 不认领（进度面 owns）；
+	 * REWARD 打开（31/26/-1）→ 页 10002（客户端 select_success 声明，未声明 fail-closed）；
+	 * 1009（「点头」= SELECT_QUEST_REWARD）→ 页 5；领奖确认（23）→ 结算 + 页 10。
+	 * <p>
+	 * The delivery face of non-Talk rows (the always-registered retail object #2): open -> page 10002,
+	 * the ack (1009) -> the reward window, the confirm -> settlement plus page 10; START stays silent.
+	 */
+	@Test
+	void nonTalkRowsServeTheDeliveryNpcWithTheRetailObjectTwoShape() {
+		int questId = 13830;
+		int orphe = 203711;
+		assertTrue(runtime.reportTalkInterests().getOrDefault(orphe, List.of()).contains(questId),
+			"13830 必须注册在奥尔佩（203711）的交付面");
+
+		// START（说明书未使用）：不认领、不跳步、零发页。
+		Player started = NativeTalkFixture.player(Race.ELYOS, PlayerClass.GLADIATOR, 30);
+		NativeTalkFixture.add(started, questId, QuestStatus.START, 0);
+		NativeTalkFixture.clearPackets(started);
+		assertFalse(runtime.onDialog(started, orphe, 31, 1, questId), "START 态交付面不得认领非 Talk 行");
+		assertFalse(runtime.onDialog(started, orphe, -1, 1, questId), "START 态打开不得被交付面认领");
+		assertTrue(NativeTalkFixture.dialogPages(started).isEmpty(), "START 态零发页");
+
+		// REWARD：打开（31/-1）→ 页 10002；1009 → 页 5；23 → 结算 + 页 10。
+		Player rewarded = NativeTalkFixture.player(Race.ELYOS, PlayerClass.GLADIATOR, 30);
+		NativeTalkFixture.add(rewarded, questId, QuestStatus.REWARD, 1);
+		NativeTalkFixture.clearPackets(rewarded);
+		assertTrue(runtime.onDialog(rewarded, orphe, 31, 1, questId), "REWARD 行选必须发进行中页");
+		NativeTalkFixture.assertOnlyDialogPageWithQuest(rewarded, 10002, questId);
+		NativeTalkFixture.clearPackets(rewarded);
+		assertTrue(runtime.onDialog(rewarded, orphe, -1, 1, questId), "REWARD 打开（-1）必须发进行中页");
+		NativeTalkFixture.assertOnlyDialogPageWithQuest(rewarded, 10002, questId);
+		NativeTalkFixture.clearPackets(rewarded);
+		assertTrue(runtime.onDialog(rewarded, orphe, 1009, 1, questId), "点头（1009）必须开奖励窗");
+		NativeTalkFixture.assertOnlyDialogPageWithQuest(rewarded, 5, questId);
+		claims.calls = 0;
+		NativeTalkFixture.clearPackets(rewarded);
+		assertTrue(runtime.onDialog(rewarded, orphe, 23, 1, questId), "领奖确认必须结算");
+		assertEquals(1, claims.calls, "领奖口必须被调用一次");
+		assertEquals(List.of(10), NativeTalkFixture.dialogPages(rewarded),
+			"结算后回选择对话页 10（npc-complete finish=SELECTION_DIALOG）");
+	}
+
+	/**
 	 * ⑩ Talk 接取对话面（真端 `FUN_180c47220` 词汇，只服务无状态玩家）：行选 31/26 → 4762；1002 → 接取 +
 	 * 1003；1003 → 1004；20000/20001 收尾 → 关窗页 0（旧 XML close-dialog）；1008/其余 ≥1000 原样回发；
 	 * &lt;1000 零动作；1007 → 客户端契约问询窗（fail-closed）；已接取玩家不得再见接取入口页；

@@ -24,6 +24,7 @@ import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.questEngine.definition.QuestDialogPage;
 import com.aionemu.gameserver.questEngine.definition.QuestMetadata;
 import com.aionemu.gameserver.questEngine.definition.RetiredQuestIds;
+import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.questEngine.retail.RetailItemNameIndex;
@@ -291,6 +292,75 @@ class SimpleCombineTaskNativeFamilyGateTest {
 		NativeTalkFixture.add(other, COMBINE_QUEST, QuestStatus.REWARD, 0);
 		assertFalse(local.onDialog(NativeTalkFixture.dialog(other, npcId, COMBINE_QUEST, 9999)),
 			"非奖励窗动作不得被领奖段消费");
+	}
+
+	/**
+	 * 无目标领奖（真端 {@code QuestDialog} 无主键协议；任务窗/实时奖励槽确认包不带 NPC 上下文，
+	 * 引擎以 npcId=0 进入）：按 questId 结算 + 关窗，并同样走本族完成流的条件回收段（扣产物 + 忘配方）。
+	 * <p>
+	 * The targetless claim including this family's completion-flow recycling (product removal and
+	 * recipe forgetting), with the close-dialog tail.
+	 */
+	@Test
+	void targetlessClaimSettlesAndRunsTheCompletionRecycling() {
+		NativeTalkFixture.RecordingInventory inventory = new NativeTalkFixture.RecordingInventory();
+		RecordingRecipes recipes = new RecordingRecipes();
+		List<int[]> claims = new ArrayList<>();
+		SimpleCombineTaskHandler local = handler(inventory, recipes,
+			NativeReportRewardFlow.forTest(SimpleCombineTaskNativeFamilyGateTest::metadata,
+				(env, tier, template) -> {
+					claims.add(new int[] {env.getQuestId(), tier});
+					return template != null;
+				}));
+		Player player = NativeTalkFixture.player();
+		NativeTalkFixture.add(player, COMBINE_QUEST, QuestStatus.REWARD, 0);
+		ItemStack product = local.product(COMBINE_QUEST);
+		int recipeId = local.recipeId(COMBINE_QUEST);
+		inventory.hold(product.itemId(), product.count() + 1L);
+		recipes.known.add(recipeId);
+
+		// 实时奖励槽 110：结算 + 条件回收（扣产物 + 忘配方）+ 关窗。
+		NativeTalkFixture.clearPackets(player);
+		assertTrue(local.onDialog(new QuestEnv(null, player, COMBINE_QUEST, 110)),
+			"无目标实时奖励确认必须被领奖段服务");
+		NativeTalkFixture.assertCloseDialog(player);
+		assertEquals(1, claims.size());
+		assertEquals(List.of("remove:" + product.itemId() + ":" + (product.count() + 1)), inventory.calls(),
+			"无目标领奖同样走完成流条件回收段：扣产物（ALL）");
+		assertEquals(List.of("forget:" + recipeId), recipes.calls(), "无目标领奖同样忘配方");
+	}
+
+	/**
+	 * 23 = SELECTED_QUEST_NOREWARD 是无选择确认，不占选项下标（与其余六族同口径；同型修复先例：
+	 * 1107 领奖循环，99684c70d 覆盖两族，本族为当时的漏网族）：旧区间（8..23）曾把 23 映射成
+	 * 下标 15 ⇒ 按钮面 fail-closed、奖励窗无法完成。
+	 * <p>
+	 * The no-selection confirm indexes no option on the CombineTask lane either.
+	 */
+	@Test
+	void noRewardConfirmAction23MapsToIndexZeroNotFifteen() {
+		List<int[]> claims = new ArrayList<>();
+		NativeTalkFixture.RecordingInventory inventory = new NativeTalkFixture.RecordingInventory();
+		RecordingRecipes recipes = new RecordingRecipes();
+		SimpleCombineTaskHandler local = handler(inventory, recipes,
+			NativeReportRewardFlow.forTest(SimpleCombineTaskNativeFamilyGateTest::metadata,
+				(env, tier, template) -> {
+					claims.add(new int[] {env.getQuestId(), tier});
+					return template != null;
+				}));
+		Player player = NativeTalkFixture.player();
+		NativeTalkFixture.add(player, COMBINE_QUEST, QuestStatus.REWARD, 0);
+		int npcId = local.taskNpcs(COMBINE_QUEST).getFirst();
+		ItemStack product = local.product(COMBINE_QUEST);
+		inventory.hold(product.itemId(), product.count() + 1L);
+		recipes.known.add(local.recipeId(COMBINE_QUEST));
+
+		NativeTalkFixture.clearPackets(player);
+		assertTrue(local.onDialog(NativeTalkFixture.dialog(player, npcId, COMBINE_QUEST, 23)),
+			"23 无选择确认必须被领奖段服务");
+		NativeTalkFixture.assertOnlyDialogPage(player, QuestDialogPage.SELECT_QUEST.id());
+		assertEquals(1, claims.size(), "23 必须触发结算");
+		assertEquals(0, claims.getFirst()[1], "23 的结算档位必须归 0（NOREWARD 不占下标）");
 	}
 
 	@Test
