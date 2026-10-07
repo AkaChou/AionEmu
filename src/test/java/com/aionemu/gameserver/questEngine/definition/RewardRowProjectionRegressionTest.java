@@ -74,7 +74,16 @@ class RewardRowProjectionRegressionTest {
 			 * retail {2,3,5} without 6; 14052/14026/24026 entered REWARD without touching var0
 			 * (kept 4); 18602 retail {1,2,3} without 4 (mirror of 28602). */
 			new Row(10110, 6, 5, false), new Row(20110, 6, 5, false), new Row(14052, 5, 4, false),
-			new Row(14026, 5, 4, false), new Row(24026, 5, 4, false), new Row(18602, 4, 3, false));
+			new Row(14026, 5, 4, false), new Row(24026, 5, 4, false), new Row(18602, 4, 3, false),
+			/* 遗留行（2026-10-07 实机报障后入批）：3036 批次把领奖投影从 legacy 0 抬到末行索引 1
+			 * （`useQuestObject(env, 0, 1, true, false)` 的 reward 分支不写 var0），两行任务书在
+			 * REWARD/1 下两条 <p visible> 全不亮；权威值 0 = 批次前值，只留 REWARD/1 -> 0 回滚边
+			 * （无 0 自愈边，故 legacyZeroProjection=false）。
+			 * Latecomer row (added after the live report 2026-10-07): the batch raised 3036's reward
+			 * projection from the legacy 0 to the last-row index 1, blanking both <p visible> rows at
+			 * REWARD/1. The authoritative value is the pre-batch 0, so only the REWARD/1 -> 0 rollback
+			 * edge exists (no zero-save heal, hence legacyZeroProjection=false). */
+			new Row(3036, 1, 0, false));
 	}
 
 	@ParameterizedTest

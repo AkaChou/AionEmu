@@ -135,7 +135,15 @@ class JournalRewardRowRepairContractTest {
 		new Contract(2946, 4, 3),
 		new Contract(2954, 1, 0),
 		new Contract(2988, 3, 2),
-		new Contract(3036, 1, 0),
+		/* 3036 移出本批（2026-10-07 实机报障 + legacy/真端取证）：领奖态权威 packed step 是 legacy 落盘 0
+		 * （`useQuestObject(env, 0, 1, true, false)` 的 reward 分支只置状态、不写 var0；真端 0x100 状态
+		 * 推进同样不写轴），不是末行索引 1；误抬为 1 会让两行任务书步骤整块空白（与 1123/1361/11006 同型）。
+		 * 基线由 Quest3036ClientDialogAlignmentTest 锁定（reward 投影 0、自愈边 REWARD/1 -> 0）。
+		 * 3036 left this batch (live report 2026-10-07 + legacy/retail evidence): the authoritative reward
+		 * packed step is the legacy value 0 (the reward branch of useQuestObject(0, 1, true, false) only
+		 * sets REWARD and writes no var; retail's 0x100 state advance never touches the axis), not the
+		 * last-row index 1, which blanks the 2-row journal steps. Its baseline is owned by
+		 * Quest3036ClientDialogAlignmentTest (reward projection 0, healing edge REWARD/1 -> 0). */
 		new Contract(3037, 1, 0),
 		new Contract(3041, 1, 0),
 		new Contract(3057, 1, 0),

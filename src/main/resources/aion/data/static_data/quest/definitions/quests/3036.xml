@@ -27,40 +27,81 @@
       <var name="var0" value="0"/>
     </node>
     <node label="reward" status="REWARD">
-      <var name="var0" value="1"/>
+      <var name="var0" value="0"/>
     </node>
     <node label="complete" status="COMPLETE">
       <var name="var0" value="0"/>
     </node>
   </nodes>
   <transitions>
-    <!-- QE-051 领奖行合同：客户端 quest_q3036.html 的 quest_summary 共 2 行，末行是领奖行
-         （STR_DIC_N_Atropos，对应该任务的领奖 NPC）；旧投影停在 0，进入世界时纠正为 1 并下发状态包。
-         Reward row contract (QE-051): the last of the 2 quest_q3036 journal rows is the reward row
-         (STR_DIC_N_Atropos, the reward NPC of this quest); saves persisted at 0 are repaired to 1 on enter-world. -->
+    <!-- 领奖态步号轴（QE-054/QE-056 口径）：客户端 quest_q3036.html 的 quest_summary 共 2 行，
+         末行是领奖行（STR_DIC_N_Atropos）；领奖态权威 packed step = legacy 落盘值 0——
+         legacy `useQuestObject(env, 0, 1, true, false)` 的 reward 分支只 `setStatus(REWARD)`、不写 var0
+         （真端 0x100 状态推进同样不写轴），客户端 REWARD 态按自身 [%N] 行门槛显示报告行。
+         领奖行批次（7a7d27809）曾按「末行索引」把投影抬到 1 并加 0 -> 1 自愈边：2026-10-07 实机
+         显示 2 行任务书在 REWARD/1 下两条 <p visible> 全不亮（任务步骤整块空白，与 1123/1361/11006 同型）,
+         故反转自愈边为 REWARD/1 -> 0 回滚坏档。
+         Reward-state step axis (QE-054/QE-056): the authoritative packed step is the legacy value 0
+         (the reward branch of `useQuestObject(0, 1, true, false)` only sets REWARD and writes no var,
+         same as retail's 0x100 state advance), and the client renders the report row through its own
+         [%N] gate. The reward-row batch raised it to the last-row index 1 with a 0 -> 1 heal edge;
+         live 2026-10-07 both <p visible> rows of the 2-row journal went dark at REWARD/1, so the edge
+         is reversed to REWARD/1 -> 0 to roll batch-corrupted saves back. -->
     <transition target="reward">
       <event>
         <enter-world/>
       </event>
       <conditions>
         <status-is status="REWARD"/>
-        <variable-is field="var0" value="0"/>
+        <variable-is field="var0" value="1"/>
       </conditions>
       <actions>
-        <set-variable field="var0" value="1"/>
+        <set-variable field="var0" value="0"/>
       </actions>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
       </after-commit>
     </transition>
+    <!-- 接取面：Atropos（798155）——select_none(4762) → 接取窗(4) → 成功(1003)/拒绝(1004)。
+         物件 700398 不承担接取：客户端 QUEST_Q3036.html 全篇文案（select_none/ask/accept/refuse）
+         都是 Atropos 的台词，legacy `registerQuestNpc(798155).addOnQuestStart` 也只注册 Atropos。
+         Start face: Atropos only; every authored page of QUEST_Q3036.html is Atropos's line and the
+         legacy handler registers the quest start on 798155 alone. -->
     <dialog type="NPC_START" npc-id="798155" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT_NONE"/>
-    <dialog type="NPC_REPORT" npc-id="798155" source="started" target="reward" page="DEFAULT_SUCCESS"/>
+
+    <!-- 行 0：在圣物（700398）上使用充能发动石 → 推进到领奖行，物件交互零回页。
+         真端物件没有对话 html（客户端按 npc 名解析 LF2a_Artifact_Q3036.html，该文件不存在），
+         2026-10-07 实机「领奖收尾页 10 → 物件」即因此 load fail；legacy
+         `useQuestObject(env, 0, 1, true, false)` 只写 var0=1 并置 REWARD、不发页，与真端脚本
+         ScriptDLL64 的状态推进通道（零发页）同形（对照 11006 同型证据）。
+         Row 0: use the charged stone on the artifact and advance; interaction objects never get a
+         dialog page (the client resolves LF2a_Artifact_Q3036.html from the object name and fails to
+         load it — live 2026-10-07). The legacy handler writes var0=1 and REWARD with no page, the
+         same shape as the retail ScriptDLL64 progress channel (quest 11006 sibling evidence). -->
+    <transition source="started" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="700398" action="USE_OBJECT"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
+
+    <!-- 行 1 / 领奖行：Atropos（798155）是唯一 completion owner（客户端任务书末行 STR_DIC_N_Atropos，
+         QE-052）。行选（31）下发报告页 select_success(10002)；客户端自回 1009 → 奖励窗（页 5）；
+         领取（8..23）→ 完成 + 领奖收尾页 10（Atropos 有对话 html，页 10 = select_quest 可加载）。
+         Reward row: Atropos is the single completion owner (the journal's last row names Atropos,
+         QE-052). Row select shows the report page 10002; the client confirms with 1009 into the
+         reward window; the claim ends on page 10, which Atropos's own html declares. -->
+    <transition source="reward" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="798155" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
+      </after-commit>
+    </transition>
     <npc-complete npc-id="798155" source="reward" target="complete" fixed-reward-indices="0 1 2" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
-      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
-    </npc-complete>
-    <dialog type="NPC_START" npc-id="700398" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SHOW_ASK_QUEST_ACCEPT_WINDOW"/>
-    <dialog type="NPC_REPORT" npc-id="700398" source="started" target="reward" page="DEFAULT_SUCCESS"/>
-    <npc-complete npc-id="700398" source="reward" target="complete" fixed-reward-indices="0 1 2" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
   </transitions>

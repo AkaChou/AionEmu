@@ -145,6 +145,14 @@ LEGACY_STEP_EXCEPTION = {
     # Client retest of 10528 showed an empty step list at REWARD/12; legacy REWARD/11 is the
     # persisted handover step. The 20528 mirror shares the contract but needs its own client retest.
     10528, 20528,
+    # 3036（2026-10-07 实机报障 + legacy 取证）：领奖态权威 packed step 是 legacy 落盘 0
+    # （`useQuestObject(env, 0, 1, true, false)` 的 reward 分支只 setStatus(REWARD)、不写 var0），
+    # 行号口径会误报为 ROW_BEHIND；批次抬到 1 曾让两行任务书步骤整块空白（与 1123/10528 同型）。
+    # 门禁 Quest3036ClientDialogAlignmentTest + RewardRowProjectionRegressionTest `Row(3036, 1, 0, false)`。
+    # 3036 (live report + legacy evidence, 2026-10-07): the authoritative reward value is the legacy 0
+    # (the reward branch of useQuestObject(0, 1, true, false) writes no var), so the row-index caliber
+    # would misreport ROW_BEHIND; the batch value 1 blanked the 2-row journal.
+    3036,
     # 批次 29 逐任务取证（2026-09-22，明细 batch29-triage.tsv / batch29-evidence.tsv：
     # legacy handler 进入 REWARD 时落盘的 step 与当前 XML reward 投影逐一对上）
     1149, 1157, 1170, 14123, 1722, 1920, 2006, 2007, 2600, 2633, 2722, 2925, 2945, 3722,
