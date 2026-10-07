@@ -28,19 +28,19 @@ class QuestMovieAndDialogLoopRegressionTest {
 	@Test
 	void quest14047OnlyPlaysMovieOnActualKillStage() throws Exception {
 		QuestDefinition def14047 = definition(14047).definition();
-		// 非目标击杀阶段禁止错配 214599 循环播放电影 422
+		// 非目标击杀阶段禁止错配城堡 Boss 233877 循环播放电影 422
 		for (String invalidNode : List.of("started", "s1", "s2", "s3", "s4", "s6")) {
 			boolean hasBadKill = def14047.transitions().stream()
 				.anyMatch(t -> invalidNode.equals(t.sourceNode())
-					&& ((t.event() instanceof QuestEvent.KillNpc kill && kill.npcId() == 214599)
-					|| (t.event() instanceof QuestEvent.KillNpcSet killSet && killSet.npcIds().contains(214599))));
-			assertFalse(hasBadKill, "Quest 14047 must not trigger kill-npc 214599 on node " + invalidNode);
+					&& ((t.event() instanceof QuestEvent.KillNpc kill && kill.npcId() == 233877)
+					|| (t.event() instanceof QuestEvent.KillNpcSet killSet && killSet.npcIds().contains(233877))));
+			assertFalse(hasBadKill, "Quest 14047 must not trigger kill-npc 233877 on node " + invalidNode);
 		}
 		// 目标阶段 s5 -> s6 正确推进并播放电影 422
 		QuestTransition validKill = def14047.transitions().stream()
 			.filter(t -> "s5".equals(t.sourceNode()) && "s6".equals(t.targetNode())
-				&& ((t.event() instanceof QuestEvent.KillNpc kill && kill.npcId() == 214599)
-				|| (t.event() instanceof QuestEvent.KillNpcSet killSet && killSet.npcIds().contains(214599))))
+				&& ((t.event() instanceof QuestEvent.KillNpc kill && kill.npcId() == 233877)
+				|| (t.event() instanceof QuestEvent.KillNpcSet killSet && killSet.npcIds().contains(233877))))
 			.findFirst().orElseThrow();
 		assertTrue(validKill.actions().stream().anyMatch(a -> a instanceof QuestAction.SetVariable set && "var0".equals(set.field()) && set.value() == 6));
 		assertTrue(validKill.afterCommit().stream().anyMatch(a -> a instanceof AfterCommitAction.PlayMovie movie && movie.movieId() == 422));

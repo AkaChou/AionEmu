@@ -1,6 +1,7 @@
 package com.aionemu.gameserver.questEngine.definition;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import java.io.InputStream;
@@ -20,8 +21,12 @@ import org.w3c.dom.NodeList;
  */
 class Quest14047ClientDialogAlignmentTest {
 	private static final int PEITHO = 802052;
-	private static final int ICARONIX_ENTRY_FORM = 233877;
-	private static final int ICARONIX_KILL_FORM = 214599;
+	/** 副本静态刷的城堡 Boss：真端 ScriptDLL64 把 14047 注册在它身上（pattern D2_FnA 为空，无变身）。
+	 *  The statically spawned castle boss the retail script binds quest 14047 to (empty D2_FnA pattern). */
+	private static final int ICARONIX_BOSS = 233877;
+	/** 214598 的变身产物，只服务任务 3530/4526 的计数链，不是 14047 的击杀目标。
+	 *  The transform product of 214598; it serves the quest 3530/4526 counter chains only. */
+	private static final int ICARONIX_TRANSFORM_FORM = 214599;
 	private static final Path AZOTURAN_SPAWNS = Path.of(
 		"src/main/resources/aion/data/static_data/spawns/Instances/310100000_Azoturan_Fortress.xml");
 
@@ -77,7 +82,7 @@ class Quest14047ClientDialogAlignmentTest {
 
 		QuestTransition finalKill = definition.transitions().stream()
 			.filter(transition -> "s5".equals(transition.sourceNode()))
-			.filter(transition -> transition.event().equals(new QuestEvent.KillNpc(ICARONIX_KILL_FORM)))
+			.filter(transition -> transition.event().equals(new QuestEvent.KillNpc(ICARONIX_BOSS)))
 			.findFirst().orElseThrow();
 		assertEquals("s6", finalKill.targetNode());
 		assertEquals(new NodeProjection(QuestStatus.START, Map.of("var0", 5)), node(definition, "s5").projection());
@@ -137,7 +142,7 @@ class Quest14047ClientDialogAlignmentTest {
 	}
 
 	@Test
-	void keepsOnlyTheQuestPeithoAndSpawnsTheIcaronixEntryForm() throws Exception {
+	void keepsOnlyTheQuestPeithoAndSpawnsTheIcarinoxKillTarget() throws Exception {
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		factory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
 		var document = factory.newDocumentBuilder().parse(AZOTURAN_SPAWNS.toFile());
@@ -145,14 +150,27 @@ class Quest14047ClientDialogAlignmentTest {
 		NodeList peithoSpawns = (NodeList) xpath.evaluate(
 			"/spawns/spawn_map[@map_id='310100000']/spawn[@npc_id='802052' or @npc_id='204653']",
 			document, XPathConstants.NODESET);
-		NodeList icaronixSpawns = (NodeList) xpath.evaluate(
-			"/spawns/spawn_map[@map_id='310100000']/spawn[@npc_id='233877' or @npc_id='214599']",
+		NodeList bossSpawns = (NodeList) xpath.evaluate(
+			"/spawns/spawn_map[@map_id='310100000']/spawn[@npc_id='233877']",
+			document, XPathConstants.NODESET);
+		NodeList transformFormSpawns = (NodeList) xpath.evaluate(
+			"/spawns/spawn_map[@map_id='310100000']/spawn[@npc_id='214599']",
 			document, XPathConstants.NODESET);
 
 		assertEquals(1, peithoSpawns.getLength());
 		assertEquals(Integer.toString(PEITHO), ((Element) peithoSpawns.item(0)).getAttribute("npc_id"));
-		assertEquals(1, icaronixSpawns.getLength());
-		assertEquals(Integer.toString(ICARONIX_ENTRY_FORM), ((Element) icaronixSpawns.item(0)).getAttribute("npc_id"));
+		// 击杀目标必须是静态刷新的城堡 Boss；214599 只能由 214598 的变身生成，不得静态刷新。
+		// The kill target is the statically spawned castle boss; 214599 only ever comes from the
+		// 214598 transform and must not be spawned statically.
+		assertEquals(1, bossSpawns.getLength());
+		assertEquals(Integer.toString(ICARONIX_BOSS), ((Element) bossSpawns.item(0)).getAttribute("npc_id"));
+		assertEquals(0, transformFormSpawns.getLength());
+		// 定义不得再监听 214599：那是 214598 变身产物、任务 3530/4526 的目标（2026-10-07 真端收口）。
+		// The definition must not listen to 214599 again: it is the 214598 transform product owned by
+		// quests 3530/4526 (retail-aligned on 2026-10-07).
+		assertTrue(definition().transitions().stream().noneMatch(transition ->
+			transition.event() instanceof QuestEvent.KillNpc kill && kill.npcId() == ICARONIX_TRANSFORM_FORM),
+			"quest 14047 must not route the 214598 transform product");
 	}
 
 	private static void assertPage(QuestDefinition definition, String source, int sourceVar, int npcId,

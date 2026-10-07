@@ -3716,3 +3716,27 @@ keywords: 退役丢面、实时奖励无响应、任务窗领奖、npcId=0、无
 - **代表案例**：13830 退役到 DD 车道后两张面全缺（实时奖励无响应 + 奥尔佩交付无面）；退役前 XML 合同见 Playbook 8.3。修复 `526afff8b`（2026-10-07 实机验收）。
 - **安全网**：`DataDrivenNativeRuntimeGateTest` 的 targetless/交付面两用例（含 START 与页声明 fail-closed）；`NativeQuestRewardClaimGateTest#targetlessClaimsSettleByQuestIdOnEveryLane` 锁七族入口；族门 targetless 用例锁族级后置（CombineTask 回收）。
 - **反漂移**：别只按 npcId 路由新增领奖路径（无目标包必丢）；别把交付面继续限定 Talk 行（真端所有行恒建对象 #2）；别在 START 态让非 Talk 行从对话推进（跳过进度面）；别为无声明页的行合成页 10002（fail-closed）。
+
+## [QE-161] 一百六十一、击杀目标必须落在真端注册面绑定的 NPC 上；变身的宿主只能挂给 pattern 的宿主（空 pattern 的 Boss 不得挂变身 AI） (KILL_TARGET_BOUND_TO_RETAIL_REGISTRATION)
+
+<!-- pattern-metadata
+status: CONFIRMED
+scope: 脚本化任务击杀步的目标裁定：真端 ScriptDLL 注册面（FUN_180cb5920(name, questId)，本仓镜像 retail-quest-ai-registrations.xml）与该 NPC 的真端 AI pattern 归属；含「阈值变身 AI 该挂给谁」的裁定。表驱动族（SimpleHunt/DD/SerialHunt）的计数目标不在本片（见 QE-048）
+first_seen: 2026-10-07
+last_verified: 2026-10-08
+symptom: 玩家击杀任务文字与飞行路径指向的那只 Boss 任务不推进（步号不动、无 SM_QUEST_ACTION、零报错）；只有杀掉 AI 自造的「第二形态」才推进，或永远卡步
+root_cause: 退役 XML（Aion-Unique 时代）把 14047 的击杀目标写成 214599（214598 的变身产物），而真端把 14047 注册在静态刷新的城堡 Boss 233877 上（该 NPC 的真端 pattern D2_FnA 为空、无变身）；214598→214599 的变身链（ND2_AhC_1）与 214599 的击杀口（NLehpar_BhB）属任务 3530/4526。本服为迁就退役目标，把变身 AI 同时挂到 233877 与 214598，形成「必须杀第二形态」的人造路径：玩家按任务指示击杀 233877 时不触发隐藏目标 ⇒ 不推进；且 233877 若挂变身 AI，75% 自删（despawn）本就不产生击杀事件
+fix_or_guardrail: 1. 击杀步目标以真端注册面为准：ScriptDLL `FUN_180cb5920(name, questId)` 的 (questId, name) 对（本仓镜像 retail-quest-ai-registrations.xml 与生成器 p11-quest-ai-lane/emit_quest_ai_registrations.py），并与定义里的 talk/kill 对象逐一对账。2. AI 变身的宿主只能是真端 pattern 的宿主：空 pattern（如 D2_FnA）的 NPC 不得挂变身/死亡生成 AI。3. 14047 收口：s5→s6 改 kill-npc 233877（保留 sync + movie 422）；233877 模板 ai 改 aggressive；214598 保持 betrayer_icaronix；测试重锚（定义击杀目标 + 出生点断言：233877 静态 1 只、214599 静态 0 只、定义不得再监听 214599）
+evidence: 真端反编译源 ScriptDLL64.c（反编译工作区）:1887148（14047↔IDLF3_Castle_Lehpar_LehparIcaronixQ_45_Q_Ae）、:1081721 与 :1081733（214598↔3530/4526）；真端 AI pattern 表（NpcAIPatterns）的 D2_FnA（空 event_handlers）/ND2_AhC_1/NLehpar_BhB 三块正文；真端 idlf3_castle_lehpar 世界数据（233877 与 214598 两个领地坐标）；src/main/resources/aion/data/static_data/quest/definitions/quests/14047.xml；src/main/resources/aion/data/static_data/npcs/npc_template_216189_235748.xml:65296；src/main/resources/aion/data/static_data/npcs/npc_template_200000_216188.xml:76972；src/main/java/com/aionemu/gameserver/ai/instance/azoturanFortress/Betrayer_IcaronixAI2.java；src/test/resources/quest/quest-simple-hunt-retail-contract.tsv:554,658；.agents/summary/quest-14047-icaronix-kill-target/DIAGNOSIS.zh-CN.md
+validation: static（真端 0x36df 注册面 41 处全量列举、三块 AI pattern 正文、副本领地坐标 + 飞行路径落点比对）；测试（IDEA MCP 2026-10-07：Quest14047ClientDialogAlignmentTest 7/7、QuestMovieAndDialogLoopRegressionTest 15/15、ThresholdTransformDeathFallbackGateTest 2/2、Betrayer_IcaronixAI2Test 2/2、AI2EngineRetailSelectionTest 3/3、QuestAiDialogBindingGateTest 2/2、QuestDefinitionDirectoryLoaderTest 2/2、QuestKillCounterRetailGateTest 3/3、QuestKillItemRewardEntryDialogGateTest 13/13、ProductionCatalogWhitelistVerificationTest 1/1 = PRODUCTION_COMPILE_OK 707/0）；runtime（2026-10-08 用户确认「实机验收成功」，见 .agents/summary/quest-acceptance/14047-2026-10-08-client-accepted.md）
+superseded_by: none
+boundaries: ① 只裁定 14047 与该类「变身 AI 宿主」；3530/4526 的 SimpleHunt 计数链未实机核对。② 214599 仍可由 214598 的变身产生（本服保留该链），只是不再与 14047 挂钩。③ 客户端 Quest.pak 内的 step/怪物名单未直接取证，客户端侧击杀目标未独立核对（以真端注册面为准）。④ 副本内两条 Icaronix 线（城堡 233877 / Named 214598）服务不同任务，勿因坐标相近互相替代。
+see_also: [QE-048], [QE-022], [AIM-007]
+first_check: 「杀了任务指的那只怪却不推进」先答：① 该 questId 在真端注册面（retail-quest-ai-registrations.xml）绑定的 NPC 名/ID 是谁？② 本仓定义的 kill-npc 目标是否等于该 ID？③ 该 NPC 的真端 AI pattern 是否为空（空 ⇒ 不得挂变身/生成 AI）？④ 变身的宿主与本仓 npc_template 的 ai 属性是否与 pattern 归属一致？
+keywords: 击杀不推进、杀掉Boss没反应、14047、233877、214599、214598、D2_FnA、ND2_AhC_1、NLehpar_BhB、变身、第二形态、Aion-Unique遗留、真端注册面、KILL_TARGET_BOUND_TO_RETAIL_REGISTRATION
+-->
+
+- **判定规则**：击杀步的目标不是「哪只怪名字对」，而是**真端注册面**（`FUN_180cb5920(name, questId)` 的 (questId, name) 对）绑定的 NPC；变身的宿主 NPC 必须是真端 pattern 的宿主，空 pattern 的 NPC 不得挂变身 AI（空 pattern 的 Boss 被击杀即是完成事件）。
+- **代表案例**：14047 定义听 214599（Aion-Unique 遗留），真端注册在 233877（空 pattern 城堡 Boss），214598→214599 属 3530/4526；为迁就错误目标而给 233877 挂变身 AI，导致「击杀任务指向的 Boss 不推进」。修复（2026-10-07）：kill 目标改 233877 + 233877 模板 ai 改 aggressive。
+- **安全网**：`Quest14047ClientDialogAlignmentTest`（击杀目标=233877；233877 静态 1 只 / 214599 静态 0 只；定义不得再监听 214599）；`QuestAiDialogBindingGateTest`（真端注册面镜像表对账）；`QuestMovieAndDialogLoopRegressionTest`（击杀点电影唯一）。
+- **反漂移**：别拿退役 XML 当击杀目标权威（本卡即反例）；别给真端空 pattern 的 Boss 补「变身/死亡生成」以求推进（自删不是击杀事件）；别按坐标/同名把两条 Icaronix 线的任务互相替代；改击杀目标必须同步重锚定义断言与出生点断言。

@@ -65293,7 +65293,7 @@
     </equipment>
     <bound_radius side="1.1" upper="4" front="2.4"/>
   </npc_template>
-<npc_template name_desc="IDLF3_Castle_Lehpar_LehparIcaronixQ_45_Q_Ae" attack_range="2" npc_type="ATTACKABLE" race="DEMIHUMANOID" level="45" attack_rate="2" rating="ELITE" ai="betrayer_icaronix" hpgauge_level="5" type="MONSTER" name_id="330632" attack_delay="1900" npc_id="233877" sensory_range="8" tribe="LEHPAR" name="Betrayer Icaronix" rank="EXPERT" height="2">
+<npc_template name_desc="IDLF3_Castle_Lehpar_LehparIcaronixQ_45_Q_Ae" attack_range="2" npc_type="ATTACKABLE" race="DEMIHUMANOID" level="45" attack_rate="2" rating="ELITE" ai="aggressive" hpgauge_level="5" type="MONSTER" name_id="330632" attack_delay="1900" npc_id="233877" sensory_range="8" tribe="LEHPAR" name="Betrayer Icaronix" rank="EXPERT" height="2">
     <stats hp_regen="5573" maxHp="11145" pdef="595" walk_speed="1.5" mresist="905" mboost_resist="0" run_speed="6" accuracy="2370" main_hand_attack="696" main_hand_crit_rate="9" mdef="0" mboost="0" parry="0" crit_spell="9" maxXp="39604" block="1077" main_hand_accuracy="1140" power="1232" evasion="0" run_speed_fight="4.2"/>
     <equipment>
       <item>114600308</item>

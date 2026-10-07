@@ -363,9 +363,16 @@
         <close-dialog/>
       </after-commit>
     </transition>
+    <!-- 击杀目标是副本静态刷的城堡 Boss 233877（IDLF3_Castle_Lehpar_LehparIcaronixQ_45_Q_Ae）：
+         真端 ScriptDLL64 用 FUN_180cb5920(...,"IDLF3_Castle_Lehpar_LehparIcaronixQ_45_Q_Ae",0x36df)
+         把 14047 注册在它身上，其 AI pattern D2_FnA 为空（无变身）；214599 只属于 214598
+         （ND2_AhC_1，75%/死亡生成）与任务 3530/4526 的计数链，不在 14047 的注册面内。
+         The kill target is the statically spawned castle boss 233877; the retail script binds
+         14047 to it (D2_FnA is an empty pattern), while 214599 belongs to the 214598 transform
+         chain of quests 3530/4526. -->
     <transition source="s5" target="s6">
       <event>
-        <kill-npc npc-id="214599"/>
+        <kill-npc npc-id="233877"/>
       </event>
       <conditions>
         <variable-is field="var0" value="5"/>
