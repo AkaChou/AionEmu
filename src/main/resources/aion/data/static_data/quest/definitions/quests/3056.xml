@@ -121,7 +121,8 @@
       </event>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
+        <!-- 真端取证（ScriptDLL64 FUN_180ed9330，注册于 LF2A_SpectreFxQ_50_An）：击杀在 START 计数达标时 0x100 推进 + 0x110 计数通报，零发页；页 10 系翻译夸大，已删。
+             Retail evidence (ScriptDLL64 FUN_180ed9330, registered for LF2A_SpectreFxQ_50_An): a kill at the START counter threshold advances via 0x100 and notifies via 0x110 with no page; page 10 was translation exaggeration and is removed. -->
       </after-commit>
     </transition>
     <transition source="reward" target="reward">

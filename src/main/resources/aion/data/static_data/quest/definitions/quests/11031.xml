@@ -196,7 +196,8 @@
       </event>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
+        <!-- 真端取证（ScriptDLL64 FUN_180f00ac0，注册于 0xadc4104）：用物在 START/step==2 时 0x270 + 0x100 推进 + 0x2b8 通告，零发页；页 10 系翻译夸大，已删。
+             Retail evidence (ScriptDLL64 FUN_180f00ac0, registered at 0xadc4104): the item use at START/step==2 runs 0x270 + 0x100 advance + 0x2b8 notice with no page; page 10 was translation exaggeration and is removed. -->
       </after-commit>
     </transition>
     <transition source="reward" target="reward">

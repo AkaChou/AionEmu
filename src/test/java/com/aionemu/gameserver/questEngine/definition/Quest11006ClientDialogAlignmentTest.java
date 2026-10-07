@@ -61,16 +61,19 @@ class Quest11006ClientDialogAlignmentTest {
 			new QuestAction.GiveItem(SECOND_BOTTLE_ID, 1)), talk.actions());
 
 		// 装第二瓶水：进 REWARD，步号保持 2（真端 0x100 推进；legacy reward 分支不写 nextStep）。
+		// 真端取证（ScriptDLL64 FUN_180f03f20，注册于 0xadc40f1）：只做 0x100 推进 + 0x2f8 通告，零发页；
+		// 旧的页 10 尾随是翻译夸大（用物没有对话对象，下发 SM_DIALOG_WINDOW(0, 10) 即 load fail），已删。
 		// Second fill: enters REWARD keeping step 2 (retail 0x100 advance; the legacy reward branch
-		// writes no nextStep).
+		// writes no nextStep). Retail evidence (ScriptDLL64 FUN_180f03f20, registered at 0xadc40f1):
+		// only a 0x100 advance plus a 0x2f8 notice, no page; the old trailing page 10 was translation
+		// exaggeration (an item use has no dialog object, so SM_DIALOG_WINDOW(0, 10) fails to load) and is removed.
 		QuestTransition secondFill = transition(definition, "v2", "reward",
 			new QuestEvent.UseItem(SECOND_BOTTLE_ID));
 		assertEquals(List.of(
 			new QuestAction.RemoveItem(SECOND_BOTTLE_ID, 1),
 			new QuestAction.GiveItem(SECOND_SAMPLE_ID, 1)), secondFill.actions());
 		assertEquals(List.of(
-			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
-			new AfterCommitAction.ShowQuestSelectionDialog(QuestDialogPage.SELECT_QUEST.id())),
+			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH)),
 			secondFill.afterCommit());
 
 		// 无 source 自愈边：领奖行批次写的反向边（2 -> 3）已改为归一（REWARD/3 -> 2）。

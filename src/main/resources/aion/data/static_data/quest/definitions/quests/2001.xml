@@ -205,7 +205,8 @@
       </event>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
+        <!-- 真端取证（ScriptDLL64 FUN_180edded0）：击杀按变量阶梯推进（3..8），末击 0x100 收尾 + 0x110 计数通报，零发页；奖励窗 5 系翻译夸大，已删。
+             Retail evidence (ScriptDLL64 FUN_180edded0): kills walk the variable ladder (3..8) and the final kill closes via 0x100 plus a 0x110 counter notify with no page; the reward window page 5 was translation exaggeration and is removed. -->
       </after-commit>
     </transition>
     <transition source="k6" target="reward">
@@ -214,7 +215,8 @@
       </event>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
+        <!-- 真端取证（ScriptDLL64 FUN_180edded0）：击杀按变量阶梯推进（3..8），末击 0x100 收尾 + 0x110 计数通报，零发页；奖励窗 5 系翻译夸大，已删。
+             Retail evidence (ScriptDLL64 FUN_180edded0): kills walk the variable ladder (3..8) and the final kill closes via 0x100 plus a 0x110 counter notify with no page; the reward window page 5 was translation exaggeration and is removed. -->
       </after-commit>
     </transition>
     <transition source="reward" target="reward">
