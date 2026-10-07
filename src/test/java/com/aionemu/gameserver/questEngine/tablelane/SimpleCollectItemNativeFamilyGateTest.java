@@ -48,6 +48,8 @@ class SimpleCollectItemNativeFamilyGateTest {
 	private static final int MULTI_COUNT_QUEST = 1103;
 	/** 带中继 NPC 的采集任务（talk_npc1）。 / Retail collect quest with a relay npc. */
 	private static final int RELAY_QUEST = 14120;
+	/** 三步中继链的 TEST 行（talk_npc1..3 = Lostes/Gogohas/Gapir）。 / The three-step relay TEST row. */
+	private static final int TRIPLE_RELAY_QUEST = 9620;
 	/** 真端多列采集行（object1/object2 两列 × collect_item1/2 各 5 件）。 / Retail multi-column row. */
 	private static final int MULTI_COLUMN_QUEST = 18501;
 	private static final int MULTI_COLUMN_COUNT = 5;
@@ -236,17 +238,89 @@ class SimpleCollectItemNativeFamilyGateTest {
 	}
 
 	@Test
-	void relayChainGatesCollectionInTableOrder() {
+	void relayChainServesStepPageAndAdvancesOnSetpro() {
 		Player player = NativeTalkFixture.player();
 		NativeTalkFixture.start(player, RELAY_QUEST);
+		QuestState state = player.getQuestStateList().getQuestState(RELAY_QUEST);
 		int objectNpc = handler.collectObjects(RELAY_QUEST).getFirst();
+		int relayNpc = handler.relayNpcs(RELAY_QUEST).getFirst();
 		assertFalse(handler.onObjectUse(player, RELAY_QUEST, objectNpc),
 			"中继链未走完时不得开始采集");
-		int relayNpc = handler.relayNpcs(RELAY_QUEST).getFirst();
-		assertTrue(handler.onDialog(NativeTalkFixture.dialog(player, relayNpc, RELAY_QUEST, 26)),
-			"中继 NPC 对话必须推进链条");
-		assertTrue(handler.onObjectUse(player, RELAY_QUEST, objectNpc),
-			"中继链走完后必须可采集");
+
+		// 任务行打开 = 该步页 SELECT2（1352），不推进（步号与客户端任务书步骤同轴）。
+		NativeTalkFixture.clearPackets(player);
+		assertTrue(handler.onDialog(NativeTalkFixture.dialog(player, relayNpc, RELAY_QUEST, 31)),
+			"中继 NPC 任务行必须下发该步页");
+		NativeTalkFixture.assertOnlyDialogPageWithQuest(player, 1352, RELAY_QUEST);
+		assertEquals(0, state.getQuestVars().getQuestVars(), "打开步页不得写步号");
+		assertFalse(handler.onObjectUse(player, RELAY_QUEST, objectNpc), "打开步页不推进链条");
+
+		// 子页动作（select2_1 = 1353）按客户端契约原样回发。
+		NativeTalkFixture.clearPackets(player);
+		assertTrue(handler.onDialog(NativeTalkFixture.dialog(player, relayNpc, RELAY_QUEST, 1353)),
+			"客户端声明的子页动作必须回发");
+		NativeTalkFixture.assertOnlyDialogPageWithQuest(player, 1353, RELAY_QUEST);
+
+		// SETPRO1（10000）推进：步号写 var0 = 1（旧私编 bit16..17 的 65536 会让客户端任务书步骤空白）、
+		// 关窗（真端 0x5d8）。 / SETPRO1 advances the step into var0 and closes the window.
+		NativeTalkFixture.clearPackets(player);
+		assertTrue(handler.onDialog(NativeTalkFixture.dialog(player, relayNpc, RELAY_QUEST, 10000)),
+			"SETPRO1 必须推进一步");
+		NativeTalkFixture.assertCloseDialog(player);
+		assertEquals(1, state.getQuestVars().getQuestVars(), "步号 = var0 = 1（不是 bit16 私编）");
+		assertTrue(handler.onObjectUse(player, RELAY_QUEST, objectNpc), "中继链走完后必须可采集");
+
+		// 重复/乱序重放：零推进（关窗兜底，不得越过步序）。
+		NativeTalkFixture.clearPackets(player);
+		assertTrue(handler.onDialog(NativeTalkFixture.dialog(player, relayNpc, RELAY_QUEST, 10000)));
+		NativeTalkFixture.assertCloseDialog(player);
+		assertEquals(1, state.getQuestVars().getQuestVars(), "重放不得越过步序");
+	}
+
+	@Test
+	void enterWorldNormalizesTheLegacyStepEncoding() {
+		Player player = NativeTalkFixture.player();
+		NativeTalkFixture.add(player, RELAY_QUEST, QuestStatus.START, 1 << 16);
+		QuestState state = player.getQuestStateList().getQuestState(RELAY_QUEST);
+
+		assertTrue(handler.onEnterWorld(player), "旧 bit16..17 编码必须在进世界时归一（否则任务书步骤显示为空）");
+		assertEquals(1, state.getQuestVars().getQuestVars(), "步号归一为 var0 = 1");
+
+		// 干净行（vars=0）不受影响。
+		Player clean = NativeTalkFixture.player();
+		NativeTalkFixture.start(clean, RELAY_QUEST);
+		assertFalse(handler.onEnterWorld(clean), "干净行不得被改写");
+		assertEquals(0, clean.getQuestStateList().getQuestState(RELAY_QUEST).getQuestVars().getQuestVars());
+	}
+
+	@Test
+	void threeStepRelayServesEachStepPageInOrder() {
+		Player player = NativeTalkFixture.player();
+		NativeTalkFixture.start(player, TRIPLE_RELAY_QUEST);
+		QuestState state = player.getQuestStateList().getQuestState(TRIPLE_RELAY_QUEST);
+		List<Integer> relays = handler.relayNpcs(TRIPLE_RELAY_QUEST);
+		assertEquals(3, relays.size(), "真端 9620 三个中继 NPC（Lostes/Gogohas/Gapir）");
+
+		// 尚未轮到的第二步：任务行打开零响应、乱序推进动作零步进。
+		NativeTalkFixture.clearPackets(player);
+		assertFalse(handler.onDialog(NativeTalkFixture.dialog(player, relays.get(1), TRIPLE_RELAY_QUEST, 31)),
+			"尚未轮到的步不得打开");
+		assertTrue(handler.onDialog(NativeTalkFixture.dialog(player, relays.get(1), TRIPLE_RELAY_QUEST, 10001)));
+		NativeTalkFixture.assertCloseDialog(player);
+		assertEquals(0, state.getQuestVars().getQuestVars(), "乱序推进零步进");
+
+		int[] pages = {1352, 1693, 2034};
+		for (int step = 1; step <= 3; step++) {
+			int relayNpc = relays.get(step - 1);
+			NativeTalkFixture.clearPackets(player);
+			assertTrue(handler.onDialog(NativeTalkFixture.dialog(player, relayNpc, TRIPLE_RELAY_QUEST, 31)),
+				"第 " + step + " 步的任务行 = 该步页");
+			NativeTalkFixture.assertOnlyDialogPageWithQuest(player, pages[step - 1], TRIPLE_RELAY_QUEST);
+			NativeTalkFixture.clearPackets(player);
+			assertTrue(handler.onDialog(NativeTalkFixture.dialog(player, relayNpc, TRIPLE_RELAY_QUEST,
+				10000 + step - 1)), "SETPRO" + step + " 必须推进");
+			assertEquals(step, state.getQuestVars().getQuestVars(), "步号 = var0 = " + step);
+		}
 	}
 
 	@Test

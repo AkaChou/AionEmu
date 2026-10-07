@@ -37,8 +37,12 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
  * <ul>
  *   <li><b>接取</b>：{@code acquired_npc_name} → 问询页 4 / 确认 1002/20000 → {@link NativeQuestStartPort}
  *       （真端 Quest::CanAcquireQuest 轴），随后按 {@code give_item} 原样发放；</li>
- *   <li><b>中继链</b>：{@code talk_npc1..3} 严格按表序推进（真端 cabb10 语义，乱序零推进）；
- *       {@code collect_progress} 与 talk 链长一致（实测 9620=3、14150/14120=1、其余 0），
+ *   <li><b>中继链</b>：{@code talk_npc1..3} 严格按表序推进（真端 cabb10 语义，乱序零推进）：
+ *       任务行打开（31/26/-1）= 该步页 SELECT2..4（1352/1693/2034），**不推进**；推进 = SETPRO{K}
+ *       （{@code 10000 + K - 1}）把步号写 {@code var0 = K} 并关窗（真端 0x5d8，零发页）——步号与
+ *       客户端任务书步骤同轴（2026-10-07 修复：旧实现把步号写 bit16..17 且任何动作即推进，客户端
+ *       步数 65536 匹配不到任务步骤、显示为空，点击 NPC 直接跳步）；{@code collect_progress} 与
+ *       talk 链长一致（实测 9620=3、14150/14120=1、其余 0），
  *       因此"链未走完不得开始采集"就是真端该列的直接含义；</li>
  *   <li><b>采集（物品驱动，2026-10-04 修正）</b>：本族真端无相机——camera-params.tsv 的 2463 个
  *       相机调用点中本族 262 行 0 命中（对照 SimpleHunt 1812/1863），旧 XML 的交互/击杀转换亦零
@@ -892,8 +896,8 @@ public final class SimpleCollectItemHandler implements NativeSystemGrantLane {
 				// window aimed at a collect object makes the client fail to load it (live 1103).
 				return onObjectUse(player, questId, npcId);
 			}
-			if (talkChainStep(player, questId, npcId)) {
-				return true;
+			if (talkNpcsByQuestId.getOrDefault(questId, List.of()).contains(npcId)) {
+				return onRelayDialog(player, questId, npcId, objectId, dialogId);
 			}
 			if (rewardNpcsByQuestId.getOrDefault(questId, List.of()).contains(npcId)) {
 				// handInReady 无副作用（不扣物品）：第一步发确认页后物品仍在，第二步才扣除推进。
@@ -1062,12 +1066,25 @@ public final class SimpleCollectItemHandler implements NativeSystemGrantLane {
 	}
 
 	/**
-	 * 中继链步进：命中表序中的下一个 NPC 才推进（乱序/重复零推进）。
-	 * Relay-chain step: only the next NPC in table order advances (out-of-order repeats are no-ops).
+	 * 中继对话面（与 SimpleTalk/SimpleItemPlay 同形，真端 cabb10 同轴）：
+	 * <ul>
+	 *   <li>任务行打开（31/26/-1）= 该步页 SELECT2..4，**不推进**；尚未轮到的步零响应（不跳步）；</li>
+	 *   <li>推进 = SETPRO{K}（{@code 10000 + K - 1}）：步号等于 {@code K - 1} 时写 {@code var0 = K}
+	 *       （客户端任务书步骤同轴）并关窗（真端推进 after-commit = 0x5d8、零发页）；重复/乱序重放
+	 *       无匹配转换 ⇒ 关窗兜底；</li>
+	 *   <li>子页动作（SELECT⟨n⟩_…，如 select2_1 = 1353）按客户端契约原样回发（带 questId）。</li>
+	 * </ul>
+	 * 2026-10-07 修复（实机 14120 / 730020）：旧实现对任何动作直接推进且把步号写 bit16..17——
+	 * 客户端步数 65536 匹配不到任何任务步骤（任务书步骤显示为空），点击 NPC 即跳步、对话页全缺。
+	 * <p>
+	 * The relay dialog face, same shape as SimpleTalk/SimpleItemPlay: the row selection opens the
+	 * step page; SETPRO{K} advances (writing the step into var0, the axis the client step list
+	 * reads) and closes the window; declared sub-page actions echo their page back with the quest
+	 * context.
 	 */
-	private boolean talkChainStep(Player player, int questId, int npcId) {
+	private boolean onRelayDialog(Player player, int questId, int npcId, int objectId, int dialogId) {
 		List<Integer> talkNpcs = talkNpcsByQuestId.get(questId);
-		if (talkNpcs == null || talkNpcs.isEmpty()) {
+		if (talkNpcs == null) {
 			return false;
 		}
 		int index = talkNpcs.indexOf(npcId);
@@ -1078,27 +1095,76 @@ public final class SimpleCollectItemHandler implements NativeSystemGrantLane {
 		if (state == null) {
 			return false;
 		}
-		if (index != talkStep(state)) {
-			return false;
+		int step = index + 1;
+		// 选择对话续页（SELECT⟨n⟩_… 子页动作 = 页 id）：真端原样回发该页（QE-141 同形）；
+		// 契约未声明即零响应（引擎兜底同样零响应）。
+		// A selection sub-page action echoes its declared page back with the quest context (the
+		// QE-141 shape); undeclared pages stay silent.
+		if (QuestDialogPage.isSelectionSubPage(dialogId)
+				&& QuestDialogContract.loadDefault().hasButtonPage(questId, dialogId)) {
+			PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(objectId, dialogId, questId));
+			return true;
 		}
-		int next = index + 1;
-		int vars = (state.getQuestVars().getQuestVars() & ~RELAY_STEP_MASK) | (next << RELAY_STEP_SHIFT);
-		state.getQuestVars().setVar(vars);
-		state.setPersistentState(PersistentState.UPDATE_REQUIRED);
-		PacketSendUtility.sendPacket(player,
-			new SM_QUEST_ACTION(questId, state.getStatus(), state.getQuestVars().getQuestVars()));
-		return true;
+		if (dialogId == SETPRO_ACTION_BASE + step - 1) {
+			if (talkStep(state) == step - 1) {
+				state.getQuestVars().setVar(step);
+				state.setPersistentState(PersistentState.UPDATE_REQUIRED);
+				PacketSendUtility.sendPacket(player,
+					new SM_QUEST_ACTION(questId, state.getStatus(), step));
+			}
+			// 推进 after-commit = 关窗（真端 cabb10 同轴：10000/10001/10002 → SetQuestProgress + 0x5d8，
+			// 零发页）；重复/乱序重放无匹配转换，同样以关窗兜底（与 SimpleTalk/SimpleItemPlay 同形）。
+			// The advance tail closes the window (retail 0x5d8, no page); a replayed advance gets the
+			// same close as its no-op tail.
+			DialogService.closeDialog(player, objectId);
+			return true;
+		}
+		if (dialogId == 31 || dialogId == 26 || dialogId == -1) {
+			// 任务行打开 = 该步页（9/28 基线 1118 同形）；尚未轮到的步零响应不跳步。
+			// Row selection opens the step page; a step not yet reached stays silent.
+			if (talkStep(state) < step - 1) {
+				return false;
+			}
+			PacketSendUtility.sendPacket(player,
+				new SM_DIALOG_WINDOW(objectId, pageForStep(step), questId));
+			return true;
+		}
+		return false;
 	}
 
-	/** 中继步位段（相机槽 0..5，中继步放 16..17，恒低于真端守卫位 0x40000000）。 /
-	 * Relay-step field: the camera uses bits 0..5, the relay step lives at bits 16..17, always
-	 * below the retail guard bit 0x40000000. */
-	private static final int RELAY_STEP_SHIFT = 16;
-	private static final int RELAY_STEP_MASK = 0x3 << RELAY_STEP_SHIFT;
+	/** 中继步页（真端 SELECT2..4 协议常量，与 SimpleTalk/SimpleItemPlay 同源）。 /
+	 * The relay step pages (retail SELECT2..4 constants, shared with the Talk/ItemPlay lanes). */
+	private static final int[] RELAY_STEP_PAGES = {1352, 1693, 2034};
 
-	/** 当前中继步（= 已完成的 talk 数）。 / Current relay step (the number of finished talks). */
+	/** 推进动作基址（SETPRO{K} = 10000 + K − 1）。 / The advance action base (SETPRO{K}). */
+	private static final int SETPRO_ACTION_BASE = 10000;
+
+	/** 第 K 步（1 基）的对话页；越界即编程错误。 / The dialog page of step K (1-based). */
+	private static int pageForStep(int step) {
+		if (step < 1 || step > RELAY_STEP_PAGES.length) {
+			throw new IllegalArgumentException("relay step out of range: " + step);
+		}
+		return RELAY_STEP_PAGES[step - 1];
+	}
+
+	/** 旧私编的步号位段（bit16..17）：2026-10-07 前的写入面，仅供旧存档兼容读与进世界归一。
+	 * The old private step field (bits 16..17): read-only legacy, normalized on enter-world. */
+	private static final int LEGACY_RELAY_STEP_SHIFT = 16;
+
+	/**
+	 * 当前中继步（= 已完成的 talk 数；步号 = {@code var0}，与客户端任务书步骤同轴）。
+	 * 兼容读取旧编码（步号在 bit16..17）——旧编码的打包整数让客户端步骤匹配落空。
+	 * <p>
+	 * The current relay step (the number of finished talks, stored in var0 — the axis the client
+	 * step list reads); the legacy bits 16..17 encoding remains readable for unconverted saves.
+	 */
 	private static int talkStep(QuestState state) {
-		return (state.getQuestVars().getQuestVars() & RELAY_STEP_MASK) >>> RELAY_STEP_SHIFT;
+		int vars = state.getQuestVars().getQuestVars();
+		int current = vars & 0x3F;
+		if (current != 0) {
+			return current;
+		}
+		return (vars >>> LEGACY_RELAY_STEP_SHIFT) & 0x3;
 	}
 
 	/**
@@ -1167,6 +1233,36 @@ public final class SimpleCollectItemHandler implements NativeSystemGrantLane {
 	public boolean isCollectObject(int questId, int npcId) {
 		List<Integer> objects = objectsByQuestId.get(questId);
 		return objects != null && objects.contains(npcId);
+	}
+
+	/**
+	 * 进世界自愈：把旧私编（步号在 bit16..17）归一为 {@code var0} 并重新同步——旧编码的打包整数
+	 * （步号 1 → 65536）让客户端任务书步骤匹配落空（步骤显示为空）。
+	 * <p>
+	 * Enter-world heal: normalize the old private encoding (the step sat in bits 16..17, so step 1
+	 * packed to 65536 and missed every client step row) into var0 and resync the row.
+	 */
+	public boolean onEnterWorld(Player player) {
+		if (player == null || player.getQuestStateList() == null) {
+			return false;
+		}
+		boolean healed = false;
+		for (int questId : talkNpcsByQuestId.keySet()) {
+			QuestState state = player.getQuestStateList().getQuestState(questId);
+			if (state == null) {
+				continue;
+			}
+			int vars = state.getQuestVars().getQuestVars();
+			int legacy = (vars >>> LEGACY_RELAY_STEP_SHIFT) & 0x3;
+			if (legacy == 0 || (vars & 0x3F) != 0) {
+				continue;
+			}
+			state.getQuestVars().setVar(legacy);
+			state.setPersistentState(PersistentState.UPDATE_REQUIRED);
+			PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(questId, state.getStatus(), legacy));
+			healed = true;
+		}
+		return healed;
 	}
 
 	/** 真端 {@code max_repeat_count} > 1 ⇒ 可重复（COMPLETE 态可再次开窗）。 / Repeatable per retail max_repeat_count. */

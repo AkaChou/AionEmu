@@ -91,8 +91,14 @@ class QuestInteractionObjectContractGateTest {
 			int objectNpc = handler.collectObjects(questId).getFirst();
 			assertFalse(handler.onObjectUse(player, questId, objectNpc),
 				() -> "quest " + questId + " 中继链未走完时采集对象不得推进");
+			// 任务行打开只下发该步页、不推进；SETPRO1（真端 cabb10）才推进链条。
+			// The row selection only opens the step page; SETPRO1 advances the chain.
 			assertTrue(handler.onDialog(NativeTalkFixture.dialog(player, relays.getFirst(), questId, 26)),
-				() -> "quest " + questId + " 与 talk_npc1 对话必须推进链条");
+				() -> "quest " + questId + " 任务行必须下发该步页");
+			assertFalse(handler.onObjectUse(player, questId, objectNpc),
+				() -> "quest " + questId + " 打开步页不得推进链条");
+			assertTrue(handler.onDialog(NativeTalkFixture.dialog(player, relays.getFirst(), questId, 10000)),
+				() -> "quest " + questId + " SETPRO1 必须推进链条");
 			assertTrue(handler.onObjectUse(player, questId, objectNpc),
 				() -> "quest " + questId + " 中继链走完后采集对象必须推进（采集行生效）");
 		}
