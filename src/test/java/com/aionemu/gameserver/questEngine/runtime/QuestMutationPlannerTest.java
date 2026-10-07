@@ -3,7 +3,6 @@ package com.aionemu.gameserver.questEngine.runtime;
 import com.aionemu.gameserver.questEngine.definition.CompiledQuestDefinition;
 import com.aionemu.gameserver.questEngine.definition.AfterCommitAction;
 import com.aionemu.gameserver.questEngine.definition.PersistenceMode;
-import com.aionemu.gameserver.questEngine.definition.ProductionQuestDefinitions;
 import com.aionemu.gameserver.questEngine.definition.QuestAction;
 import com.aionemu.gameserver.questEngine.definition.QuestCondition;
 import com.aionemu.gameserver.questEngine.definition.QuestDefinitionXmlCompiler;
@@ -433,58 +432,12 @@ class QuestMutationPlannerTest {
 			new QuestEvent.TalkToNpc(700001), definition.definition().transitions().get(0)).isEmpty());
 	}
 
-	@Test
-	void npcFactionLifecycleIsScheduledAroundTypedQuestStateTransitions() throws Exception {
-		CompiledQuestDefinition definition;
-		try (InputStream input = Objects.requireNonNull(getClass().getResourceAsStream(
-			"/aion/data/static_data/quest/definitions/quests/36539.xml"))) {
-			definition = QuestDefinitionXmlCompiler.compile(input);
-		}
-
-		var accept = definition.definition().transitions().stream()
-			.filter(transition -> "unaccepted".equals(transition.sourceNode())
-				&& "started".equals(transition.targetNode()))
-			.findFirst().orElseThrow();
-		var acceptPlan = QuestMutationPlanner.plan(definition,
-			new QuestSnapshot(7, 36539, QuestStatus.NONE, 0, Map.of())
-				.withStartEligibility(QuestStartEligibility.allowed()),
-			new QuestEvent.TalkToNpc(804952, 1002), accept).orElseThrow();
-		assertInstanceOf(AfterCommitAction.StartNpcFactionQuest.class, acceptPlan.afterCommit().get(0));
-		assertEquals(4, ((AfterCommitAction.StartNpcFactionQuest) acceptPlan.afterCommit().get(0)).npcFactionId());
-
-		var completion = definition.definition().transitions().stream()
-			.filter(transition -> "reward".equals(transition.sourceNode())
-				&& "complete".equals(transition.targetNode()))
-			.findFirst().orElseThrow();
-		var completionPlan = QuestMutationPlanner.plan(definition,
-			new QuestSnapshot(7, 36539, QuestStatus.REWARD, 1, Map.of()),
-			new QuestEvent.TalkToNpc(804952, 8), completion).orElseThrow();
-		assertInstanceOf(AfterCommitAction.CompleteNpcFactionQuest.class, completionPlan.afterCommit().get(0));
-		assertEquals(4, ((AfterCommitAction.CompleteNpcFactionQuest) completionPlan.afterCommit().get(0)).npcFactionId());
-	}
-
-	@Test
-	void dailyRotatingNpcFactionQuestStartsTheFactionLifecycleOnAccept() throws Exception {
-		// 真实依据:36525 阵营任务每日轮换,daily 标志不可靠;NONE→START 接取即应
-		// 启动阵营生命周期,不再按 timeBased 取消。
-		// P0c-2 起 36525 由真端系统发放驱动：接取边是 SystemGrant，不再有客户端手势；
-		// 这里锁定同一条"进入 START 即启动阵营生命周期"的提交语义。
-		// Since P0c-2 quest 36525 is granted by the retail system (SystemGrant edge, no client
-		// gesture); the committed "entering START starts the faction lifecycle" stays locked.
-		CompiledQuestDefinition definition = ProductionQuestDefinitions.definitionInOverlay(36525);
-
-		var accept = definition.definition().transitions().stream()
-			.filter(transition -> "unaccepted".equals(transition.sourceNode())
-				&& transition.event() instanceof QuestEvent.SystemGrant)
-			.findFirst().orElseThrow();
-		var acceptPlan = QuestMutationPlanner.plan(definition,
-			new QuestSnapshot(7, 36525, QuestStatus.NONE, 0, Map.of())
-				.withStartEligibility(QuestStartEligibility.allowed()),
-			new QuestEvent.SystemGrant(), accept).orElseThrow();
-
-		assertTrue(acceptPlan.afterCommit().stream()
-			.anyMatch(AfterCommitAction.StartNpcFactionQuest.class::isInstance));
-	}
+	// 36539 / 36525 两条阵营生命周期行的 typed 断言已随退役（保留清单 owner=RETAIL_TABLE，XML 只在
+	// git 历史）退场；planner 的同一语义（NONE→START 启动 / COMPLETE 完成 / daily 标志不可靠）由
+	// NpcFactionQuestMutationPlannerTest 以合成定义常绿覆盖，native 车道的阵营轮换面由
+	// NativeSystemGrantLanes/NativeFactionRotation 的族门承担。
+	// The typed faction-lifecycle rows 36539/36525 retired with the XML; the same planner semantics are
+	// held by NpcFactionQuestMutationPlannerTest on synthetic definitions.
 
 	private static CompiledQuestDefinition definition() {
 		return QuestDsl.quest(QUEST_ID)

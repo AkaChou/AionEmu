@@ -24,10 +24,11 @@ class DisabledClientQuestPlaceholderCatalogTest {
 	private static final List<Integer> DISABLED_PLACEHOLDERS = List.of(
 		2285, 3959, 4963, 10036, 18316, 18395, 19055, 19056, 20036, 20038,
 		28316, 28395, 29055, 29056, 80313, 80314);
+	// 天族孪生 10031 已退役（保留清单 owner=RETAIL_TABLE，XML 只在 git 历史）⇒ XML 目录不再承载其
+	// start-conditions；魔族半 20031 仍存 XML，条件锁定照旧。
+	// The Elyos twin 10031 is retired (XML in git history only), so its start conditions no longer live
+	// in the XML directory; the Asmodian half 20031 keeps the lock.
 	private static final Map<Integer, List<QuestStartCondition>> SUPPORT_ORDER_CONDITIONS = Map.of(
-		10031, List.of(
-			new QuestStartCondition("unfinished", 10025, 0),
-			new QuestStartCondition("unfinished", 14062, 0)),
 		20031, List.of(
 			new QuestStartCondition("unfinished", 20025, 0),
 			new QuestStartCondition("unfinished", 24062, 0)));

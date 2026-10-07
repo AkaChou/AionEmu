@@ -1,5 +1,8 @@
 package com.aionemu.gameserver.questEngine.definition;
 
+import com.aionemu.gameserver.model.PlayerClass;
+import com.aionemu.gameserver.model.Race;
+import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.questEngine.e2e.QuestE2ePacketValidator;
 import com.aionemu.gameserver.questEngine.e2e.client.ClientActionOutcome;
 import com.aionemu.gameserver.questEngine.e2e.client.ClientActionRequest;
@@ -7,6 +10,10 @@ import com.aionemu.gameserver.questEngine.e2e.client.QuestProtocolLoop;
 import com.aionemu.gameserver.questEngine.e2e.client.ServerPacketObservation;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.questEngine.runtime.QuestE2eRuntime;
+import com.aionemu.gameserver.questEngine.tablelane.NativeNpcNameResolver;
+import com.aionemu.gameserver.questEngine.tablelane.NativeQuestTableLoader;
+import com.aionemu.gameserver.questEngine.tablelane.NativeTalkFixture;
+import com.aionemu.gameserver.questEngine.tablelane.SimpleHuntHandler;
 import org.junit.jupiter.api.Test;
 
 import java.io.InputStream;
@@ -62,21 +69,45 @@ class QuestPacketOrderRegressionTest {
 	}
 
 	@Test
-	void quest24153SynchronizesRewardStateBeforeRewardWindow() throws Exception {
-		// 客户端 SECTION_0..4 是 5 只冰冻独眼巨人的独立计数（SECTION_5==0 门控），报告行是计数满段节点
-		// （P0c-6 起真端网格合成：五段全满 = 网格名 a1b1c1d1e1）。P0-2 规范形后交付动作是满段 QUEST_SELECT。
-		// Client SECTION_0..4 are the five cyclops counters gated by SECTION_5==0; since P0c-6 the report row
-		// is the grid's fully saturated node a1b1c1d1e1. Canonical since P0-2: delivery is the full node's
-		// QUEST_SELECT.
-		assertRouteContract(24153, "a1b1c1d1e1",
-			new NodeProjection(QuestStatus.START, Map.of("var0", 1, "var1", 1, "var2", 1, "var3", 1, "var4", 1,
-				"var5", 0)), "reward",
-			new NodeProjection(QuestStatus.REWARD, Map.of("var0", 1, "var1", 1, "var2", 1, "var3", 1, "var4", 1,
-				"var5", 0)),
-			204787, QuestDialogAction.QUEST_SELECT, null,
-			List.of(), List.of(),
-			List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
-				new AfterCommitAction.ShowQuestDialog(QuestDialogPage.SHOW_SELECT_QUEST_REWARD_WINDOW1.id())));
+	void quest24153SynchronizesRewardStateBeforeRewardWindow() {
+		// 24153 已退役（保留清单 owner=RETAIL_TABLE，SimpleHunt 车道，XML 只在 git 历史）：typed 满段
+		// 节点（a1b1c1d1e1）随 XML 退场，同一不变式改由 native 面复核——五杀各推进一格（末杀
+		// ADVANCE_WRITE → REWARD）并在击杀时即发 SM_QUEST_ACTION，随后交付 NPC 的报告动作才发奖励窗页 5。
+		// Quest 24153 is retired (SimpleHunt lane), so the typed full node retires with the XML; the same
+		// invariant is re-anchored natively: five kills advance the grid (the last one flips REWARD and
+		// emits SM_QUEST_ACTION), and only the later report dialog sends reward page 5.
+		SimpleHuntHandler handler = SimpleHuntHandler.instance();
+		assertTrue(RetiredQuestIds.contains(24153));
+		assertTrue(handler.routes(24153), "SimpleHunt native 车道必须路由 24153");
+		assertFalse(ProductionQuestDefinitions.catalog().findExecutable(24153).isPresent(),
+			"退役后 typed 目录不得再持有 24153");
+		NativeQuestTableLoader.SimpleHuntRow row = NativeQuestTableLoader.instance().require(24153);
+		assertEquals("DF3_NPC_Akigatan", row.acquiredNpcName(), "真端接取 NPC");
+		assertEquals("DF3_NPC_Akigatan", row.rewardNpcName(), "真端交付 NPC");
+		assertEquals(204787, handler.rewardNpc(24153), "交付 NPC = DF3_NPC_Akigatan");
+		assertEquals(204784, NativeNpcNameResolver.instance().resolve("Delris").npcIds().getFirst(),
+			"真端 talk_npc1 = Delris");
+
+		Player player = NativeTalkFixture.player(Race.ASMODIANS, PlayerClass.WARRIOR, 43);
+		NativeTalkFixture.add(player, 24153, QuestStatus.START, 0);
+		NativeTalkFixture.clearPackets(player);
+		int expectedVars = 0;
+		for (int slot = 1; slot <= 5; slot++) {
+			int npcId = NativeNpcNameResolver.instance()
+				.resolveMonsterIds(row.killSlots().get(slot).monsters().getFirst()).getFirst();
+			assertTrue(handler.onKill(player, npcId), "槽 " + slot + " 击杀必须推进网格");
+			expectedVars |= row.killSlots().get(slot).count() << (6 * (slot - 1));
+		}
+		assertEquals(QuestStatus.REWARD, player.getQuestStateList().getQuestState(24153).getStatus(),
+			"末杀满段必须翻领奖态");
+		assertEquals(expectedVars, player.getQuestStateList().getQuestState(24153).getQuestVars().getQuestVars(),
+			"满段网格 = 五格各自计数（真端 6 位/槽打包）");
+
+		// 不清队列：击杀时的状态包必须先于交付 NPC 报告动作的页面（同一条不变式）。
+		// The kill-time state packets stay in the queue: they must precede the report page.
+		assertTrue(handler.onDialog(NativeTalkFixture.dialog(player, 204787, 24153, 31)), "交付 NPC 报告动作");
+		NativeTalkFixture.assertQuestActionBeforeDialogWindow(player);
+		NativeTalkFixture.assertOnlyDialogPageWithQuest(player, 5, 24153);
 	}
 
 	@Test
@@ -87,8 +118,11 @@ class QuestPacketOrderRegressionTest {
 		assertProtocolPacketOrder(2392, "started", QuestDialogAction.SETPRO3.id(), 0);
 		assertProtocolPacketOrder(2533, "v1", QuestDialogAction.QUEST_SELECT.id(), null);
 		assertProtocolPacketOrder(10032, "s7", QuestDialogAction.CHECK_USER_HAS_QUEST_ITEM.id(), 0);
-		// P0-2 规范形：24153 交付 = 满段 QUEST_SELECT。 / Canonical since P0-2: delivery = full-node QUEST_SELECT.
-		assertProtocolPacketOrder(24153, "a1b1c1d1e1", QuestDialogAction.QUEST_SELECT.id(), null);
+		// 24153 已退役（SimpleHunt 车道）：typed 满段节点不存在，协议回环不可跑；同一条
+		// 「已提交状态先于页面」不变式由 quest24153SynchronizesRewardStateBeforeRewardWindow
+		// 在 native 包队列上复核。
+		// Quest 24153 is retired (SimpleHunt lane): no typed full node remains, so the protocol loop
+		// cannot run it; the sibling method re-checks the same invariant on the native packet queue.
 	}
 
 	private static void assertItemRewardRoute(QuestDialogAction action, int itemId, String target, int variable,

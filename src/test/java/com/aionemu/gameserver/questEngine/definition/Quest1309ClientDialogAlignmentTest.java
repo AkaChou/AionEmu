@@ -79,9 +79,22 @@ class Quest1309ClientDialogAlignmentTest {
 
 		int rewardNpc = handler.rewardNpcs(QUEST_ID).getFirst();
 		assertFalse(relays.contains(rewardNpc), "交付 NPC 独立于中继链");
+		// 中继走完后交付 NPC 走两步报告（裁定 a）：31 只发报告确认页不推进——select2 已被中继步
+		// 占用，分型取客户端声明的 select5=2375；1009 报告确认才翻 REWARD 并开奖励窗。
+		// The completed relay hands in via the two-step report (adjudication a): 31 only shows the
+		// report-confirm page without advancing (SELECT2 is consumed by the relay step, so the
+		// client-declared SELECT5=2375 is picked); 1009 confirms, flips REWARD and opens the window.
 		NativeTalkFixture.clearPackets(player);
-		assertTrue(handler.onDialog(NativeTalkFixture.dialog(player, rewardNpc, QUEST_ID, 26)),
-			"中继走完后交付 NPC 翻 REWARD 并开奖励窗");
+		assertTrue(handler.onDialog(NativeTalkFixture.dialog(player, rewardNpc, QUEST_ID, 31)));
+		NativeTalkFixture.assertOnlyDialogPage(player, QuestDialogPage.SELECT5.id());
+		assertTrue(NativeTalkFixture.clientDeclares(QUEST_ID, QuestDialogPage.SELECT5.id()),
+			"报告确认页必须是客户端声明的可渲染页");
+		assertEquals(QuestStatus.START, player.getQuestStateList().getQuestState(QUEST_ID).getStatus(),
+			"31 只发确认页，不推进状态");
+
+		NativeTalkFixture.clearPackets(player);
+		assertTrue(handler.onDialog(NativeTalkFixture.dialog(player, rewardNpc, QUEST_ID, 1009)),
+			"报告确认动作推进交付");
 		NativeTalkFixture.assertOnlyDialogPage(player, SimpleUseItemHandler.PAGE_REWARD_WINDOW);
 		assertEquals(QuestStatus.REWARD, player.getQuestStateList().getQuestState(QUEST_ID).getStatus());
 	}

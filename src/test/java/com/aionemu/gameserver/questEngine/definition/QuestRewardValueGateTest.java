@@ -92,6 +92,11 @@ class QuestRewardValueGateTest {
 		for (int qid : QuestRetailStartMetadataGateTest.metadataOnlyQuestIds()) {
 			production.putIfAbsent(qid, QuestRetailStartMetadataGateTest.parseQuestMetadata(qid));
 		}
+		// 退役行（owner=RETAIL_TABLE）的生产元数据由真端表提供：缺此段会把契约里的退役任务误判为
+		// 「不在生产目录」（16800/16801 等即此）。
+		// Retired rows take their production metadata from the retail table; without this the contract's
+		// retired quests look absent from the production catalog.
+		QuestRetailStartMetadataGateTest.addRetiredRetailMetadata(production);
 		assertFalse(production.isEmpty(), "production catalog must not be empty");
 	}
 

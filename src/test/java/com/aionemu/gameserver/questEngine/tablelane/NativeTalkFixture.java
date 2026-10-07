@@ -1,6 +1,7 @@
 package com.aionemu.gameserver.questEngine.tablelane;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -25,6 +26,7 @@ import com.aionemu.gameserver.model.templates.npc.NpcTemplate;
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_DIALOG_WINDOW;
+import com.aionemu.gameserver.network.aion.serverpackets.SM_QUEST_ACTION;
 import com.aionemu.gameserver.questEngine.definition.QuestDialogContract;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.questEngine.model.QuestState;
@@ -202,6 +204,33 @@ public final class NativeTalkFixture {
 		assertEquals(0, intField(SM_DIALOG_WINDOW.class, close, "targetObjectId"), "关窗目标 = 0 / close target");
 		assertEquals(0, intField(SM_DIALOG_WINDOW.class, close, "questId"),
 				"关窗不得带任务上下文 / close carries no quest context");
+	}
+
+	/**
+	 * 断言「已提交状态先于页面」：包队列里第一条任务状态包（{@code SM_QUEST_ACTION}）出现在第一条
+	 * 对话页（{@code SM_DIALOG_WINDOW}）之前——native 车道版的协议回环不变式（typed 行由
+	 * {@code QuestE2ePacketValidator} 承担；退役行无编译定义，用本面复核同一条不变式）。
+	 * Asserts the committed-state-before-page order on the raw packet queue: the first
+	 * {@code SM_QUEST_ACTION} precedes the first {@code SM_DIALOG_WINDOW}.
+	 */
+	public static void assertQuestActionBeforeDialogWindow(Player player) {
+		List<AionServerPacket> queue = packets(player);
+		int actionIndex = -1;
+		int pageIndex = -1;
+		for (int index = 0; index < queue.size(); index++) {
+			if (actionIndex < 0 && queue.get(index) instanceof SM_QUEST_ACTION) {
+				actionIndex = index;
+			}
+			if (pageIndex < 0 && queue.get(index) instanceof SM_DIALOG_WINDOW) {
+				pageIndex = index;
+			}
+		}
+		int action = actionIndex;
+		int page = pageIndex;
+		assertTrue(action >= 0 && page > action,
+			() -> "状态包必须先于对话页 / state packet must precede the page: action=" + action
+				+ " page=" + page + " queue="
+				+ queue.stream().map(packet -> packet.getClass().getSimpleName()).toList());
 	}
 
 	/** NPC 桩（按真端 npc_id 建模板）。 / An NPC stub carrying the retail npc id. */

@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 
 import com.aionemu.gameserver.questEngine.retail.RetailQuestDriver;
+import com.aionemu.gameserver.questEngine.retail.RetailQuestMetadataCompiler;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -34,9 +35,12 @@ class QuestTitleRewardCoverageTest {
 		assertEquals(173, actual.regular().size(), "unexpected regular title-owner count");
 		assertEquals(3, actual.extended().size(), "unexpected extended title-owner count");
 		assertEquals(176, ownerIds(actual).size(), "unexpected total title-owner count");
+		// 可执行性双车道：XML 目录可执行（typed）或已退役由 native 车道执行；两者皆非即悬空称号合同。
+		// Executability spans both lanes: executable in the XML catalog (typed) or retired to a native
+		// lane; anything else would be a dangling title contract.
 		assertEquals(173, actual.regular().keySet().stream()
-			.filter(id -> catalog.findExecutable(id).isPresent()).count(),
-			"unexpected executable regular title-owner count");
+			.filter(id -> catalog.findExecutable(id).isPresent() || RetiredQuestIds.contains(id))
+			.count(), "unexpected executable regular title-owner count");
 	}
 
 	@Test
@@ -149,14 +153,17 @@ class QuestTitleRewardCoverageTest {
 			putTitles(regular, entry.id(), entry.metadata().rewards());
 			putTitles(extended, entry.id(), entry.metadata().extendedRewards());
 		}
-		// 退役任务的 XML 已删除，但称号奖励合同继续生效：证据取生产视图（真端 overlay）的元数据。
-		// Retired quests keep their title contract through the production (retail overlay) metadata.
-		for (QuestCatalogEntry entry : ProductionQuestDefinitions.catalog().entries()) {
-			if (!RetiredQuestIds.contains(entry.id())) {
-				continue;
-			}
-			putTitles(regular, entry.id(), entry.metadata().rewards());
-			putTitles(extended, entry.id(), entry.metadata().extendedRewards());
+		// 退役任务的 XML 已删除，但称号奖励合同继续生效：逐行取真端表元数据（与接取/奖励门禁同源；
+		// overlay 目录不含退役行，若走目录会把退役称号任务整批漏算）。
+		// Retired quests keep their title contract through the retail table itself (same source as the
+		// sibling gates; the overlay catalog does not carry retired rows).
+		RetailQuestDriver driver = RetailQuestDriver.ensureLoaded();
+		for (int questId : RetiredQuestIds.all()) {
+			driver.retailMetadataOf(questId).map(RetailQuestMetadataCompiler.Outcome::metadata)
+				.ifPresent(meta -> {
+					putTitles(regular, questId, meta.rewards());
+					putTitles(extended, questId, meta.extendedRewards());
+				});
 		}
 		return new TitleRewards(Map.copyOf(regular), Map.copyOf(extended));
 	}

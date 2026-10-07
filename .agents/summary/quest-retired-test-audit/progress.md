@@ -60,24 +60,42 @@
 套件复核（授权命令 `mvn -o test '-Dtest=*Quest*Test,*Retail*Test'`）：**1384 例 / 11F + 19E = 30 红**
 （原 1485 例 / 179 红；Playbook 引用门禁复跑通过）。
 
-## 当前红灯（21 类，2026-10-07 复核）
+## 批次修复（2026-10-07，B/D 批，全部 IDEA MCP 复跑绿）
 
-- 原生断言待裁定（原生测试，失败=行为差异）：Quest1309（[5]vs[10]）、QuestEventQuestBatchDefinition（REWARD vs START）、
-  QuestLunarEventDefinition（80034 重开窗）、QuestMultistepChainContract（[1352]vs[0]、[5]vs[10]）、
-  PlayerQuestStartEligibilityPort（2 vs 1）。
-- 门禁/登记表：QuestRewardValueGate（契约 16800/16801 缺目录）、QuestTitleRewardCoverage（173 vs 76）、
-  RetailQuestAiNameGroupGate（title_id 非唯一样本）、RetailNonIrAxisGate（saveHeal 查 16900 走 typed 面）。
-- 待查（NPE/文件缺失，锚点是否已退役）：RetailPatternAI2、CompletedQuestPrerequisiteRegression、
-  DisabledClientQuestPlaceholderCatalog、QuestInstanceExitRecovery、Quest10031And20031（10031/20032 半退役）、
-  Quest10032ItemPlayClientCounter（20032 半退役）、QuestCorridorAndDestinyCounter。
-- Playbook `#method` 引用（暂缓，改写需同步 Playbook）：Quest1220、Quest18600、QuestPacketOrderRegression、
-  QuestStartItemDefinitionRegression、QuestMutationPlannerTest。
+**B 批·半退役混锚（3 类）**：
+- Quest10031And20031ZoneMissionBroadcastTest → 拆出 `Quest20031ZoneMissionBroadcastTest`（只保魔族半；退役目标 20032-20034 跳过路由核对，以 `checked>=1` 保证 live 目标（20035）仍受核对）。
+- Quest10032ItemPlayClientCounterProductionFlowTest → 契约收缩到 live 半（10032，182215618-182215620）。
+- QuestCorridorAndDestinyCounterProductionFlowTest → 只保 CORRIDOR_CONTRACTS(20035)；INGGISON_TARGETS 移除。
 
-## 待办（原登记）
+**D 批·门禁/登记表（4 类）**：
+- QuestRewardValueGateTest → 生产视图并入退役行真端元数据（复用 `QuestRetailStartMetadataGateTest.addRetiredRetailMetadata`）。
+- QuestTitleRewardCoverageTest → 退役行逐行取 `RetailQuestDriver.retailMetadataOf`；可执行性双车道（XML typed ∨ 已退役）。
+- RetailQuestAiNameGroupGateTest → 全表不变式口径修正：title 判据改「组内 title 存在性一致」（16 组多 title_id 的 GAb1 族 + 2 组无 title 的 HousingManager 族）；精确通道一致性（精确命中只能为空或与声明集等集——别名表 5 条逻辑名与组表等集收敛）。
+- RetailNonIrAxisGateTest → saveHeal「零 EnterWorld 路由」改三条现代表达（无 XML 定义 ∧ 未登记编译自愈边 ∧ SimpleHunt 车道 owns+routes）。
 
-- SimpleTalk 断言族：10506 / 1309 / 15400+25400 / 30721+30771 / 80312 / 80318（含断言裁定，需逐条判）。
-- SimpleTalk 结构族：28932 / 13944 / 3961-3964 / 23830-23834（先核族属与行）。
-- CollectItem 族：25608（collect_progress 6 + check 页族）。
-- DD 族：16802 / 19637（DataDrivenNativeRuntime）。
-- 跨切/引擎：QuestBatchReportNpcAlignmentTest（10E）、QuestPrematureRewardRouteExclusionTest（20E）、QuestDialog31RegressionTest、QuestStepDialogResponseRegressionTest、RetailSimpleTalkMigrationReviewContractTest、XmlQuestFamilyDefinitionTest 等。
-- 被 Playbook/CASES 引用的类（Quest18600 / Quest1220 / QuestMutationPlannerTest / QuestPacketOrderRegressionTest / QuestStartItemDefinitionRegressionTest / DisabledClientQuestPlaceholderCatalogTest）暂缓：改写需同步改 Playbook 引用，避免门禁断裂。
+**E 批·NPE/文件缺失（4 类）**：
+- RetailPatternAI2Test → Objenesis 夹具补 objectId（`setField(AionObject.class, ..., "objectId", n)`，选目标逻辑按 id 比对）。
+- CompletedQuestPrerequisiteRegressionTest → 摘除已退役 subject（10035 方法删除、20032 行删除；DD 车道面由 DataDrivenNativeRuntimeGateTest 承担）。
+- DisabledClientQuestPlaceholderCatalogTest → SUPPORT_ORDER 摘除退役的 10031 半；目录编译面随并行会话 4338.xml 收敛后 3/3 复验绿。
+- QuestInstanceExitRecoveryTest → 摘除退役的 20034 场景（DataDriven 车道）。
+
+**C 批·原生断言裁定（5 类）**：
+- Quest1309ClientDialogAlignmentTest → 交付段按裁定 a 重锚：31 → 报告确认页 2375（select2 被中继占用）、1009 → REWARD + 页 5。
+- QuestEventQuestBatchDefinitionTest → cake 行同为两步报告（31 → select5=2375、1009 → REWARD + 页 5）。
+- QuestMultistepChainContractTest → 步面拆开：31 → 步页；推进（10000+step-1）after-commit 零发页 = 关窗（真端 FUN_180cabb10）；1514 交付同步裁定 a。
+- QuestLunarEventDefinitionTest → COMPLETE 重开窗仍走 CanAcquireQuest 资格轴 ⇒ 先完成真端前置（Q80029/Q80032）。
+- PlayerQuestStartEligibilityPortTest → 15321 退役（DD 车道）⇒ 用客户端槽位形状夹具锁定端口「组间或、组内与」语义。
+
+**A 批·Playbook 引用（5 类，方法名保持、引用门禁复跑通过）**：
+- Quest18600ClientDialogAlignmentTest → 全量重锚 SimpleTalk 行（Perento 接取/交付、Kurochin→Herthia 两步中继、give/remove 列、cutscene 189/10001）+ 客户端页链 + 两步报告。
+- Quest1220ClientDialogAlignmentTest → 同上口径（Une 接取发箱、Shugo3 换箱、shugo_Lender 交付；1009 报告）。
+- QuestStartItemDefinitionRegressionTest → 1323 退役半改锚 native 接取面（LF2_Lost_JewelBox=730032）；1582 typed 路由照旧。
+- QuestPacketOrderRegressionTest → 24153 退役（SimpleHunt）⇒ typed 满段断言退场，新增 `NativeTalkFixture.assertQuestActionBeforeDialogWindow` 在 native 包队列上复核「已提交状态先于页面」；其余 4 行协议回环照旧。
+- QuestMutationPlannerTest → 36539/36525 两条阵营生命周期行退役 ⇒ 方法删除（同一 planner 语义由 NpcFactionQuestMutationPlannerTest 合成定义常绿覆盖）。
+
+## 当前红灯
+
+本会话 21 个存量红灯类全部处理完毕（B 3 / D 4 / E 4 / C 5 / A 5），逐类经 IDEA MCP 复跑绿；
+Playbook 引用门禁 `check_quest_repair_playbook.py` 复跑通过（81 条代表测试引用全部可解析）。
+待办：全量套件复核（授权命令 `mvn -o test '-Dtest=*Quest*Test,*Retail*Test'`）宜待并行会话工作树收敛后执行
+（当前工作树含其未提交的 tablelane 源码与 5 个 quest XML 在途改动，Maven/IDEA 共享 target/ 不宜并发）。

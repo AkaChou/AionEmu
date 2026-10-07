@@ -21,6 +21,7 @@ import com.aionemu.gameserver.model.Gender;
 import com.aionemu.gameserver.model.PlayerClass;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.TribeClass;
+import com.aionemu.gameserver.model.gameobjects.AionObject;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
@@ -353,10 +354,16 @@ class RetailPatternAI2Test {
 		// The generic random-skill branch would cast 22868, whose effects are 24h Root/Silence/Bind.
 		ObjenesisStd objenesis = new ObjenesisStd();
 		SkillNpc owner = objenesis.newInstance(SkillNpc.class);
+		// Objenesis 绕过构造器 ⇒ objectId 为 null；选目标逻辑按 objectId 比对当前目标与最恨目标，
+		// 须给两个夹具对象补上身份（其余 AI 用例同惯例）。
+		// Objenesis bypasses the constructor, so objectId is null; the intention picker compares the
+		// current target with the most-hated one by object id — assign identities to both fixtures.
+		setField(AionObject.class, owner, "objectId", 1);
 		owner.setLifeStats(objenesis.newInstance(FixedNpcLifeStats.class));
 		owner.objectTemplate = objenesis.newInstance(NpcTemplate.class);
 		owner.skillList = skillList(List.of(new NpcSkillTemplate(22868, 65, 100, 0, 0, false, 0)));
 		MasterNpc target = objenesis.newInstance(MasterNpc.class);
+		setField(AionObject.class, target, "objectId", 2);
 		target.setLifeStats(objenesis.newInstance(NpcLifeStats.class));
 		setField(Creature.class, owner, "aggroList", new SingleTargetAggroList(owner, target));
 		setField(VisibleObject.class, owner, "target", target);

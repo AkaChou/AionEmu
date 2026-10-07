@@ -145,6 +145,20 @@ class QuestRetailStartMetadataGateTest {
 		return metadataOnlyQuestIdsInternal();
 	}
 
+	/**
+	 * 供同类门禁复用：把退役行（owner=RETAIL_TABLE，XML 已删除）的真端表元数据并入生产视图——
+	 * native 车道的唯一事实来源是 {@link RetailQuestDriver#retailMetadataOf}。
+	 * Reusable by sibling gates: merges the retired rows' retail-table metadata into the production
+	 * view (the native lanes' single source of truth).
+	 */
+	static void addRetiredRetailMetadata(Map<Integer, QuestMetadata> production) throws Exception {
+		RetailQuestDriver driver = RetailQuestDriver.ensureLoaded();
+		for (int qid : RetiredQuestIds.all()) {
+			driver.retailMetadataOf(qid).map(RetailQuestMetadataCompiler.Outcome::metadata)
+				.ifPresent(meta -> production.putIfAbsent(qid, meta));
+		}
+	}
+
 	/** 供同类门禁复用：解析任务 XML 的 metadata（min/max/races/gender/repeat）。 */
 	static QuestMetadata parseQuestMetadata(int questId) throws Exception {
 		Element root = parseQuestXml(questId).getDocumentElement();

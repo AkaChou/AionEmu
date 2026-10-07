@@ -47,9 +47,11 @@ class Quest10032ItemPlayClientCounterProductionFlowTest {
 
 	@TestFactory
 	Stream<DynamicTest> keepsClientJournalStageAndReadableTearsCounter() {
+		// 魔族孪生 20032 已退役（XML 只在 git 历史）转 native 车道，typed 契约只剩天族 10032。
+		// The Asmodian twin 20032 is retired (XML only in git history) on the native lane; only the
+		// Elyos 10032 keeps the typed contract.
 		return Stream.of(
-			new QuestContract(10032, 182215618, 182215619, 182215620),
-			new QuestContract(20032, 182215593, 182215592, 0))
+			new QuestContract(10032, 182215618, 182215619, 182215620))
 			.map(contract -> DynamicTest.dynamicTest("quest " + contract.questId(),
 				() -> assertContract(contract)));
 	}
@@ -264,17 +266,6 @@ class Quest10032ItemPlayClientCounterProductionFlowTest {
 			.findFirst().orElseThrow();
 		assertEquals(status, node.projection().status());
 		assertEquals(variables, node.projection().variables());
-	}
-
-	private static QuestTransition transition(QuestDefinition definition, String source, String target,
-			QuestEvent event) {
-		List<QuestTransition> matches = definition.transitions().stream()
-			.filter(candidate -> candidate.sourceNode().equals(source))
-			.filter(candidate -> candidate.targetNode().equals(target))
-			.filter(candidate -> candidate.event().equals(event))
-			.toList();
-		assertEquals(1, matches.size(), () -> source + " -> " + target + " " + event);
-		return matches.getFirst();
 	}
 
 	private static CompiledQuestDefinition load(int questId) throws Exception {

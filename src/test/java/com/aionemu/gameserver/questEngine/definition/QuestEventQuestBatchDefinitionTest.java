@@ -23,7 +23,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 /**
  * 80008/80009（Cake 系：用物接取 + NPC 交付）与 80028/80031/80032（Fayrefolk 系：接取/交付同主对话）：
  * 两族都已随 P5/P3 切到 native 直驱（真端表行 + 真端 {@code quest.xml} + 客户端页契约），断言面只写真端
- * 事实——用物开接取窗页 4、无主 1002 建档、交付动作直翻领奖态并下发奖励窗、无中继步、无工作物品门。
+ * 事实——用物开接取窗页 4、无主 1002 建档、两步报告（31 发确认页、1009 直翻领奖态并下发奖励窗）、
+ * 无中继步、无工作物品门。
  * <p>
  * 已退场的旧 IR 合成语义（真端无据，随切换批删除，边界见 {@code p5/P5-REPORT.zh-CN.md}）：
  * ① 由 {@code quest_work_item1} 反推的 {@code HasItem} 车位门与 {@code RemoveItem} 代扣——真端记录开关
@@ -81,9 +82,20 @@ class QuestEventQuestBatchDefinitionTest {
 				"无主 1002 必须建档: " + questId);
 			assertEquals(QuestStatus.START, player.getQuestStateList().getQuestState(questId).getStatus());
 
+			// 两步报告（裁定 a）：31 只发客户端声明的报告确认页（select5=2375）不推进；
+			// 1009 报告确认才直翻领奖态并下发奖励窗。
+			// Two-step report (adjudication a): 31 only shows the client-declared report-confirm page
+			// (SELECT5=2375); 1009 confirms and flips to REWARD with the reward window.
 			NativeTalkFixture.clearPackets(player);
 			assertTrue(USE.onDialog(NativeTalkFixture.dialog(player, rewardNpc, questId, 31)),
-				"交付动作 31 必须直翻领奖态: " + questId);
+				"报告行 31 必须只发确认页: " + questId);
+			assertEquals(QuestStatus.START, player.getQuestStateList().getQuestState(questId).getStatus(),
+				"31 不推进: " + questId);
+			NativeTalkFixture.assertOnlyDialogPage(player, QuestDialogPage.SELECT5.id());
+
+			NativeTalkFixture.clearPackets(player);
+			assertTrue(USE.onDialog(NativeTalkFixture.dialog(player, rewardNpc, questId, 1009)),
+				"报告确认 1009 必须直翻领奖态: " + questId);
 			assertEquals(QuestStatus.REWARD, player.getQuestStateList().getQuestState(questId).getStatus());
 			NativeTalkFixture.assertOnlyDialogPage(player, SimpleUseItemHandler.PAGE_REWARD_WINDOW);
 		}

@@ -316,10 +316,25 @@ class PlayerQuestStartEligibilityPortTest {
 
 	@Test
 	void daevanionAuxiliarySlotsStayAlternativesInsteadOfOneConjunction() throws Exception {
-		// 客户端 quest.xml:15321/15323 的 acquired 槽位 1/2 分别为 Q15301、Q15311;
-		// 零售 NPC 服务端在槽位之间取“或”、槽位内取“与”。修复前两个槽位被并成单个 AND 组,
-		// 已接 15301 的玩家因此被拒绝,而客户端任务列表照常给出该行。
-		QuestMetadata auxiliary = metadata(15321);
+		// 客户端 quest.xml:15321/15323 的 acquired 槽位 1/2 分别为 Q15301、Q15311；零售 NPC
+		// 服务端在槽位之间取「或」、槽位内取「与」（修复前两个槽位被并成单个 AND 组，已接 15301
+		// 的玩家因此被拒绝，而客户端任务列表照常给出该行）。15321 现已退役（保留清单
+		// owner=RETAIL_TABLE，DD 车道，XML 只在 git 历史），其生产接取面走 NativeQuestStartPort
+		// 的原始 quest.xml 轴；本判据以客户端槽位形状的元数据夹具体锁定资格端口的
+		// 「组间或、组内与」语义（15301/15311 槽位即真端 quest.xml 的 acquired_quest_cond1/2）。
+		// Quest 15321 is retired (DD lane, XML in git history only), so its production acquire face
+		// runs the raw quest.xml axes of NativeQuestStartPort; this judgement locks the eligibility
+		// port's OR-across-groups / AND-within-group semantics with a client-shaped fixture whose
+		// slots mirror the retail acquired_quest_cond1/2 columns.
+		QuestMetadata auxiliary = metadataFromXml("""
+			<metadata name="auxiliary" display-name-id="1" min-level="65" max-level="99" category="QUEST">
+			  <races><race id="ELYOS"/></races>
+			  <start-condition-groups>
+			    <group><condition type="acquired" quest-id="15301"/></group>
+			    <group><condition type="acquired" quest-id="15311"/></group>
+			  </start-condition-groups>
+			</metadata>
+			""");
 		assertEquals(2, auxiliary.startConditionGroups().size());
 		assertEquals(List.of(new QuestStartCondition("acquired", 15301, 0)),
 			auxiliary.startConditionGroups().get(0).conditions());
@@ -329,11 +344,11 @@ class PlayerQuestStartEligibilityPortTest {
 		Player holding15301 = player(65);
 		holding15301.getQuestStateList().addQuest(15301,
 			new QuestState(15301, QuestStatus.START, 0, 0, null, 0, null));
-		assertTrue(port(holding15301, Map.of(15321, auxiliary))
-			.snapshot(PLAYER_ID, 15321, new QuestEvent.LevelUp()).eligible());
+		assertTrue(port(holding15301, Map.of(990002, auxiliary))
+			.snapshot(PLAYER_ID, 990002, new QuestEvent.LevelUp()).eligible());
 
 		Player withoutPrerequisites = player(65);
-		assertRejected(port(withoutPrerequisites, Map.of(15321, auxiliary)), 15321,
+		assertRejected(port(withoutPrerequisites, Map.of(990002, auxiliary)), 990002,
 			new QuestEvent.LevelUp(), "START_CONDITION_REJECTED");
 	}
 

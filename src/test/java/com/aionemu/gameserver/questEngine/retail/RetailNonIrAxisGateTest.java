@@ -1,8 +1,7 @@
 package com.aionemu.gameserver.questEngine.retail;
 
-import com.aionemu.gameserver.questEngine.definition.CompiledQuestDefinition;
 import com.aionemu.gameserver.questEngine.definition.ProductionQuestDefinitions;
-import com.aionemu.gameserver.questEngine.definition.QuestEvent;
+import com.aionemu.gameserver.questEngine.tablelane.SimpleHuntHandler;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.w3c.dom.Element;
@@ -31,8 +30,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  *   <li>统一登记表与两个逐任务源（封顶清单 / 自愈边登记）**逐任务新鲜一致**——采纳切片落地后必须重跑生成器；</li>
  *   <li>登记了 {@code CAP_LEVEL} 的任务**不得已采纳**（owner=RETAIL_TABLE 的行生产==真端 UNLIMITED，
  *       封顶只可能存在于保留 XML 行；P0c-8c/9 的 8060x 先例）；</li>
- *   <li>登记了 {@code LEGACY_SAVE_HEAL} 的任务必须已采纳，且其真端定义**不含任何 EnterWorld 路由**
- *       （自愈边按 P0c-6 先例登记而不编译）；</li>
+ *   <li>登记了 {@code LEGACY_SAVE_HEAL} 的任务必须已采纳，且以三条现代表达取证「零 EnterWorld 路由」：
+ *       旧 XML 已不在生产目录、未登记编译自愈边（自愈边按 P0c-6 先例登记而不编译）、由无 EnterWorld 面的
+ *       SimpleHunt 车道 owns+routes；</li>
  *   <li>{@code PREREQ_DUAL_EXPRESSION} 轴级行在案，且 M1 分歧表两表达轴均有登记行。</li>
  * </ol>
  * Non-IR axis registry gate: adoption can change axes outside the node/transition IR (server caps,
@@ -131,12 +131,26 @@ class RetailNonIrAxisGateTest {
 				violations.add(questId + ": owner=" + owner);
 				continue;
 			}
-			CompiledQuestDefinition definition = ProductionQuestDefinitions.definition(questId);
-			long enterWorldRoutes = definition.definition().transitions().stream()
-				.filter(transition -> transition.event() instanceof QuestEvent.EnterWorld)
-				.count();
-			if (enterWorldRoutes > 0) {
-				violations.add(questId + ": enterWorldRoutes=" + enterWorldRoutes);
+			// P7 步 f 起退役行没有编译产物（native 车道 owns，retail 编译车道已退场），
+			// 「零 EnterWorld 路由」按三条互相独立的现代表达取证：
+			// ①旧 XML 已不在生产目录（XML 事件不可能复活，本表登记的旧自愈边随之失效）；
+			// ②登记行不得出现在编译自愈边表（RetailLegacySaveHealRows 与本表互斥：已编译的
+			//   EnterWorld 自愈边是真端形状的一部分，80290/80294 先例，不入本表）；
+			// ③SimpleHunt 车道 owns 并 routes 该行，而该车道没有 EnterWorld 面（引擎的 EnterWorld
+			//   分发只经过 SimpleTalk/SimpleItemPlay/SimpleCollectItem/DataDriven 四条车道；
+			//   真端形状 = 击杀计数 + 客户端 SECTION 门控推导任务书行，服务端无登录期改写）。
+			// Retired rows have no compiled definition since step f (the native lanes own them), so
+			// "zero EnterWorld routes" rests on three independent facts: the old XML is gone from the
+			// production catalog, no compiled enter-world heal edge is registered for the row, and the
+			// SimpleHunt lane owns and routes it — that lane has no enter-world face.
+			if (ProductionQuestDefinitions.catalog().find(questId).isPresent()) {
+				violations.add(questId + ": retired row still has an XML definition");
+			}
+			if (RetailLegacySaveHealRows.forQuest(questId) != null) {
+				violations.add(questId + ": compiled enter-world heal edge registered");
+			}
+			if (!SimpleHuntHandler.instance().routes(questId)) {
+				violations.add(questId + ": not owned and routed by the SimpleHunt native lane");
 			}
 		}
 		assertTrue(violations.isEmpty(), () -> "save-heal quests must be retail-driven without enter-world"

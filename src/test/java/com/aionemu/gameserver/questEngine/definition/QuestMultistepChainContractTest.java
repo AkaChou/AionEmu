@@ -152,9 +152,20 @@ class QuestMultistepChainContractTest {
 		NativeTalkFixture.assertOnlyDialogPage(player, QuestDialogPage.SELECT3.id());
 
 		int rewardNpc = handler.rewardNpcs(1514).getFirst();
+		// 两步报告（裁定 a）：31 只发报告确认页——select2/3 都被中继步占用，分型取客户端声明的
+		// select5=2375；1009 报告确认才翻 REWARD 并开奖励窗。
+		// Two-step report (adjudication a): 31 only shows the report-confirm page (SELECT2/3 are
+		// consumed by the relay steps, so the client-declared SELECT5=2375 is picked); 1009 confirms,
+		// flips REWARD and opens the reward window.
 		NativeTalkFixture.clearPackets(player);
-		assertTrue(handler.onDialog(NativeTalkFixture.dialog(player, rewardNpc, 1514, 26)),
-			"中继走完后交付 NPC 翻 REWARD 并开奖励窗");
+		assertTrue(handler.onDialog(NativeTalkFixture.dialog(player, rewardNpc, 1514, 31)));
+		NativeTalkFixture.assertOnlyDialogPage(player, QuestDialogPage.SELECT5.id());
+		assertEquals(QuestStatus.START, player.getQuestStateList().getQuestState(1514).getStatus(),
+			"31 只发确认页，不推进状态");
+
+		NativeTalkFixture.clearPackets(player);
+		assertTrue(handler.onDialog(NativeTalkFixture.dialog(player, rewardNpc, 1514, 1009)),
+			"报告确认后交付 NPC 翻 REWARD 并开奖励窗");
 		NativeTalkFixture.assertOnlyDialogPage(player, SimpleUseItemHandler.PAGE_REWARD_WINDOW);
 		assertEquals(QuestStatus.REWARD, player.getQuestStateList().getQuestState(1514).getStatus());
 	}
@@ -426,23 +437,31 @@ class QuestMultistepChainContractTest {
 
 		for (int index = 0; index < chain.steps().size(); index++) {
 			Step step = chain.steps().get(index);
+			// 任务行打开面（31/26）：下发该步页（客户端声明为准）。
+			NativeTalkFixture.clearPackets(player);
+			assertTrue(itemHandler.onDialog(NativeTalkFixture.dialog(player, step.npcId(), chain.questId(), 31)),
+				"第 " + (index + 1) + " 步打开面");
+			NativeTalkFixture.assertOnlyDialogPage(player, step.page().id());
+			// 推进面（10000+step-1）after-commit 零发页：var0=步号 + 状态包 + 步物品发扣 + 关窗
+			// （真端 FUN_180cabb10；2026-10-05 实机 1131 确证）。
+			// The advance face sends no page (retail FUN_180cabb10): vars, action packet, step items, close.
 			NativeTalkFixture.clearPackets(player);
 			assertTrue(itemHandler.onDialog(NativeTalkFixture.dialog(player, step.npcId(), chain.questId(),
 				10000 + index)), "第 " + (index + 1) + " 步推进被受理");
 			assertEquals(index + 1, state.getQuestVars().getQuestVars(),
 				"第 " + (index + 1) + " 步后 raw vars = 步号");
 			assertEquals(QuestStatus.START, state.getStatus(), "中继中保持 START");
-			NativeTalkFixture.assertOnlyDialogPage(player, step.page().id());
+			NativeTalkFixture.assertCloseDialog(player);
 		}
 		assertEquals(List.of("give:182200550:1", "give:182200565:1", "remove:182200550:1"), inventory.calls(),
 			"步内发扣按真端顺序执行");
 
-		// 重复第 1 步：vars 已推进，零副作用、页回落到当前步。
+		// 重复第 1 步：vars 已推进，零副作用、关窗兜底（真端无匹配转换）。
 		NativeTalkFixture.clearPackets(player);
 		assertTrue(itemHandler.onDialog(NativeTalkFixture.dialog(player, chain.steps().get(0).npcId(),
-			chain.questId(), 10000)), "重复步不得被拒（客户端仍等页）");
+			chain.questId(), 10000)), "重复步不得被拒（客户端仍等关窗）");
 		assertEquals(2, state.getQuestVars().getQuestVars(), "重复步不得推进");
-		NativeTalkFixture.assertOnlyDialogPage(player, SimpleTalkHandler.pageForStep(2));
+		NativeTalkFixture.assertCloseDialog(player);
 		assertEquals(List.of("give:182200550:1", "give:182200565:1", "remove:182200550:1"), inventory.calls(),
 			"重复步零发放/扣除");
 

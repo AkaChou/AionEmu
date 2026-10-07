@@ -149,6 +149,11 @@ class QuestLunarEventDefinitionTest {
 		SimpleTalkHandler handler = NativeTalkFixture.handler();
 		for (LunarQuest quest : QUESTS) {
 			Player player = NativeTalkFixture.player(quest.race(), PlayerClass.WARRIOR, 10);
+			// COMPLETE 态重开窗仍走同一 CanAcquireQuest 资格轴（前置必须已满足，否则不进接取面）；
+			// 本判据隔离的是重复轴，故先按真端前置建档。
+			// Reopening at COMPLETE passes the same CanAcquireQuest axes; this judgement isolates the
+			// repeat axis, so the retail prerequisite is completed first.
+			NativeTalkFixture.completePrerequisites(player, Integer.parseInt(quest.prerequisite().substring(1)));
 			NativeTalkFixture.add(player, quest.questId(), QuestStatus.COMPLETE, 0);
 			NativeTalkFixture.clearPackets(player);
 			assertTrue(handler.onDialog(NativeTalkFixture.dialog(player, quest.npcId(), quest.questId, 31)),

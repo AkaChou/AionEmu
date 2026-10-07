@@ -87,15 +87,10 @@ class CompletedQuestPrerequisiteRegressionTest {
 		state.put(current, 2);
 	}
 
-	@Test
-	void gatesInggisonMissionAutomaticStartsOnAllFourPriorMissions() throws Exception {
-		CompiledQuestDefinition definition = load(10035);
-		for (QuestEvent event : new QuestEvent[] {new QuestEvent.LevelUp(), new QuestEvent.ZoneMissionEnd()}) {
-			assertFalse(plan(definition, event, Set.of()).isPresent());
-			assertFalse(plan(definition, event, Set.of(10031, 10032, 10033)).isPresent());
-			assertTrue(plan(definition, event, Set.of(10031, 10032, 10033, 10034)).isPresent());
-		}
-	}
+	// 10035 已退役（保留清单 owner=RETAIL_TABLE，DataDriven 车道，XML 只在 git 历史）⇒ typed 接取
+	// 条件形状不存在；DD 车道的接取/步骤路由面由 DataDrivenNativeRuntimeGateTest 承担。
+	// Quest 10035 is retired (DataDriven native lane, XML in git history only), so its typed
+	// start-condition shape is gone; the DD lane's acquire/step routing is held by the DD lane gate.
 
 	@Test
 	void gatesViolaLevelUpStartOn10521() throws Exception {
@@ -142,7 +137,8 @@ class CompletedQuestPrerequisiteRegressionTest {
 		assertAutomaticStart(14014, new QuestEvent.LevelUp(), Set.of(14010));
 		assertAutomaticStart(14016, new QuestEvent.LevelUp(), Set.of(14010, 14011, 14012, 14013, 14014, 14015));
 		assertAutomaticStart(14016, new QuestEvent.ZoneMissionEnd(), Set.of(14010, 14011, 14012, 14013, 14014, 14015));
-		assertAutomaticStart(20032, new QuestEvent.LevelUp(), Set.of(20031));
+		// 20032 已退役（DataDriven 车道，路由冻结，见 DataDrivenNativeRuntimeGateTest）⇒ typed 接取
+		// 条件形状不存在。 / 20032 is retired (DataDriven lane, routing frozen) — no typed shape remains.
 		assertAutomaticStart(2042, new QuestEvent.LevelUp(), Set.of(2947));
 		assertAutomaticStart(2042, new QuestEvent.EnterWorld(), Set.of(2947));
 		assertAutomaticStart(2947, new QuestEvent.LevelUp(), Set.of(2946));

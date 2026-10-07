@@ -13,38 +13,35 @@ import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * 锁定任务 10031/20031 领奖区的区域任务结束广播合同：只广播给真正拥有 zone-mission-end 路由的后续任务，
+ * 锁定任务 20031 领奖区的区域任务结束广播合同：只广播给具备 zone-mission-end 路由的后续任务，
  * 且完成方绝不把自己列为目标；广播位置与 after-commit 顺序同时锁定。
- * Locks the 10031/20031 reward-stage zone-mission-end broadcast contract: only follow-ups that really own a
+ * Locks quest 20031's reward-stage zone-mission-end broadcast contract: only follow-ups that own a
  * zone-mission-end route may be targeted, the completing owner must never target itself, and both the
  * broadcast placement and after-commit ordering stay fixed.
+ * <p>
+ * 天族孪生 10031 已退役（保留清单 owner=RETAIL_TABLE，XML 只在 git 历史）⇒ 本类只保魔族半；
+ * 广播目标中的已退役后续任务（20032/20033/20034）转 native 车道后无 typed 定义，其路由归属由
+ * 车道承担，此处只对仍存 XML 的目标核对路由。
+ * <p>
+ * The Elyos twin 10031 is retired (XML only in git history), so only the Asmodian half remains. The
+ * retired follow-ups (20032/20033/20034) moved to the native lanes and have no typed definition, so the
+ * route ownership check covers the XML-owned targets only; the broadcast list itself stays a definition fact.
  */
-class Quest10031And20031ZoneMissionBroadcastTest {
-	private static final int[] ELYOS_FOLLOW_UPS = {10032, 10033, 10034, 10035};
+class Quest20031ZoneMissionBroadcastTest {
 	private static final int[] ASMODIAN_FOLLOW_UPS = {20032, 20033, 20034, 20035};
 
 	@Test
-	void elyosMissionBroadcastsOnlyRoutableFollowUps() throws Exception {
-		assertBroadcastContract(10031, 798927, ELYOS_FOLLOW_UPS);
-	}
-
-	@Test
 	void asmodianMissionBroadcastsOnlyRoutableFollowUps() throws Exception {
-		assertBroadcastContract(20031, 799225, ASMODIAN_FOLLOW_UPS);
-	}
-
-	private static void assertBroadcastContract(int questId, int rewardNpcId, int[] followUps)
-			throws Exception {
-		QuestDefinition definition = load(questId).definition();
-		assertNoSelfTarget(definition, questId, followUps);
+		QuestDefinition definition = load(20031).definition();
+		assertNoSelfTarget(definition);
 
 		// 动作 1009 预览：先广播后续任务，再下发奖励选择窗口。
 		// Action 1009 preview: broadcast follow-ups first, then show the reward selection window.
 		QuestTransition preview = transition(definition, "reward", "reward",
-			new QuestEvent.TalkToNpc(rewardNpcId, QuestDialogAction.SELECT_QUEST_REWARD.id()));
+			new QuestEvent.TalkToNpc(799225, QuestDialogAction.SELECT_QUEST_REWARD.id()));
 		List<AfterCommitAction> previewAfterCommit = preview.afterCommit();
 		assertEquals(2, previewAfterCommit.size(), "reward preview after-commit size");
-		assertArrayEquals(followUps, assertInstanceOf(AfterCommitAction.BroadcastZoneMissionEnd.class,
+		assertArrayEquals(ASMODIAN_FOLLOW_UPS, assertInstanceOf(AfterCommitAction.BroadcastZoneMissionEnd.class,
 			previewAfterCommit.get(0)).questIds());
 		assertEquals(new AfterCommitAction.ShowQuestDialog(
 			QuestDialogPage.SHOW_SELECT_QUEST_REWARD_WINDOW1.id()), previewAfterCommit.get(1));
@@ -62,7 +59,7 @@ class Quest10031And20031ZoneMissionBroadcastTest {
 			assertInstanceOf(AfterCommitAction.RefreshPlayerStats.class, afterCommit.get(0));
 			assertEquals(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.COMPLETION),
 				afterCommit.get(1));
-			assertArrayEquals(followUps, assertInstanceOf(AfterCommitAction.BroadcastZoneMissionEnd.class,
+			assertArrayEquals(ASMODIAN_FOLLOW_UPS, assertInstanceOf(AfterCommitAction.BroadcastZoneMissionEnd.class,
 				afterCommit.get(2)).questIds());
 			assertEquals(new AfterCommitAction.ShowQuestSelectionDialog(QuestDialogPage.SELECT_QUEST.id()),
 				afterCommit.get(3));
@@ -71,31 +68,39 @@ class Quest10031And20031ZoneMissionBroadcastTest {
 		// USE_OBJECT 只打开领奖入口页；旧 Handler 在该分支不广播。
 		// USE_OBJECT only opens the claim page; the legacy handler does not broadcast on that branch.
 		QuestTransition open = transition(definition, "reward", "reward",
-			new QuestEvent.TalkToNpc(rewardNpcId, QuestDialogAction.USE_OBJECT.id()));
+			new QuestEvent.TalkToNpc(799225, QuestDialogAction.USE_OBJECT.id()));
 		assertFalse(open.afterCommit().stream()
 			.anyMatch(AfterCommitAction.BroadcastZoneMissionEnd.class::isInstance));
 
-		// 每个广播目标都必须实际拥有 zone-mission-end 路由，否则 dispatchOwners 会按缺路由判定投递失败。
-		// Every target must own a zone-mission-end route; otherwise dispatchOwners reports a missing route and fails.
-		for (int followUp : followUps) {
+		// 仍存 XML 的广播目标必须实际拥有 zone-mission-end 路由；已退役目标（native 车道）跳过路由核对，
+		// 但其退役身份必须成立——广播命中由车道面承担。
+		// XML-owned targets must own a zone-mission-end route; retired targets skip the route check but
+		// their retirement must hold (the lane faces carry the broadcast delivery).
+		int checked = 0;
+		for (int followUp : ASMODIAN_FOLLOW_UPS) {
+			if (RetiredQuestIds.contains(followUp)) {
+				continue;
+			}
 			assertTrue(hasZoneMissionEndRoute(load(followUp).definition()),
 				"quest " + followUp + " must own a zone-mission-end route");
+			checked++;
 		}
+		assertTrue(checked >= 1, "至少一个仍存 XML 的广播目标必须接受路由核对");
 	}
 
-	private static void assertNoSelfTarget(QuestDefinition definition, int questId, int[] followUps) {
+	private static void assertNoSelfTarget(QuestDefinition definition) {
 		int broadcasts = 0;
 		for (QuestTransition transition : definition.transitions()) {
 			for (AfterCommitAction action : transition.afterCommit()) {
 				if (action instanceof AfterCommitAction.BroadcastZoneMissionEnd broadcast) {
 					broadcasts++;
-					assertArrayEquals(followUps, broadcast.questIds(),
-						"quest " + questId + " broadcast must target the routable follow-ups only");
+					assertArrayEquals(ASMODIAN_FOLLOW_UPS, broadcast.questIds(),
+						"quest 20031 broadcast must target the routable follow-ups only");
 				}
 			}
 		}
 		assertTrue(broadcasts >= 4,
-			"quest " + questId + " must broadcast on the reward preview and every completion branch");
+			"quest 20031 must broadcast on the reward preview and every completion branch");
 	}
 
 	private static boolean hasZoneMissionEndRoute(QuestDefinition definition) {
@@ -113,7 +118,7 @@ class Quest10031And20031ZoneMissionBroadcastTest {
 	}
 
 	private static CompiledQuestDefinition load(int questId) throws Exception {
-		try (InputStream input = Quest10031And20031ZoneMissionBroadcastTest.class.getResourceAsStream(
+		try (InputStream input = Quest20031ZoneMissionBroadcastTest.class.getResourceAsStream(
 			"/aion/data/static_data/quest/definitions/quests/" + questId + ".xml")) {
 			return QuestDefinitionXmlCompiler.compile(Objects.requireNonNull(input,
 				"missing quest definition " + questId + ".xml"));

@@ -32,12 +32,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  */
 class QuestCorridorAndDestinyCounterProductionFlowTest {
 	private static final int CORRIDOR_KILL_COUNT = 10;
-	private static final Set<Integer> INGGISON_TARGETS = Set.of(216775, 220021, 220022);
 	private static final Set<Integer> GELKMAROS_TARGETS = Set.of(
 		216107, 216450, 216104, 216449, 216112, 216451, 216109, 216108, 216101, 216448);
 	private static final Set<Integer> DESTINY_TARGETS = Set.of(798342, 798343, 798344, 798345, 798346);
+	// 天族孪生 10035 已退役（XML 只在 git 历史）转 native 车道，typed 契约只剩魔族 20035。
+	// The Elyos twin 10035 is retired (XML only in git history) on the native lane; only the Asmodian
+	// 20035 keeps the typed contract.
 	private static final List<CorridorContract> CORRIDOR_CONTRACTS = List.of(
-		new CorridorContract(10035, INGGISON_TARGETS, 216775),
 		new CorridorContract(20035, GELKMAROS_TARGETS, 216107));
 
 	@TestFactory
