@@ -3563,3 +3563,26 @@ keywords: 销毁任务物品、User_DestroyItem、0x249f1、User_DeleteQuest、1
 - **判定规则**：销毁被进行中任务（START/REWARD）引用的物品 = 先确认（150001）再停止任务（逐任务 abandon）并删除物品；全部不可放弃 ⇒ 拒绝（1300604，不删）；问询在途/拒绝 ⇒ 重试提示（1300605，不删）；无引用 ⇒ 照常直删。
 - **安全网**：`DataDrivenNativeRuntimeGateTest.questsReferencingItem` 断言（探测器 = [13403]、未引用零命中）+ `QuestEngine.activeQuestsReferencingItem` 状态门断言；`QuestService.canAbandon(Player, questId)` 与 abandonQuest 同一元数据回退链。
 - **反漂移**：别在删除路径绕过 `tryQuestItemDestroy`（引用中的任务物品被直删 = 断链）；别把确认窗省成「自动放弃」或「直接拒绝」（真端先确认、确认才停任务）；别把不可放弃/在途混用同一条提示（1300604 vs 1300605）；别只查 DD 面而丢 typed `questItems` 索引（或反之）。
+
+## [QE-155] 一百五十五、击杀计数的「提示数量」不是合同：以真端表 `countN` ∪ 客户端 `quest_monster.csv` 门控为准，页面/台词数字可残留偏差（1217 提示 7、实际 10） (KILL_COUNT_CONTRACT_NOT_PAGE_TEXT)
+
+<!-- pattern-metadata
+status: CONFIRMED
+scope: SimpleHunt 族击杀计数与本服差异裁定：真端表 `Quest_SimpleHunt.xml` 的 `countN`、客户端 `quest_monster.csv` 的 `Progress(SECTION_n<count; SECTION_5==0)` 门控、客户端页面 `quest_summary` 的 `([%n]/N)` 与接取台词数字；覆盖全量 1863 行真端表与 KR/CHS 两套客户端页面
+first_seen: 2026-10-07
+last_verified: 2026-10-07
+symptom: 玩家报「任务提示击杀 7 个箱子怪，实际杀到 10 个才进下一步」（1217）；任务书计数分母与推进点不一致，杀满提示数不推进
+root_cause: 击杀数量有三个可互不相同的来源：① 真端模板表 `countN`（服务端生产合同）；② 客户端 `quest_monster.csv` 的 `Progress` 门控（客户端任务书进度合同，1,718 个 `simpleQuest` 行与真端 `countN` 100% 一致）；③ 客户端页面/台词里的数字（纯文案，可残留旧版本值，也可能被本地化改写）。1217 三方实测：真端 10、客户端门控 10、KR 原页 10（台词 12）、CHS 页 7（台词 7）；CHS 页对真端只有 3 例偏差（1217 10→7、1750 15→5、1840 44→43），其中 1750 页面连点名怪都是旧模板、1840 与自身门控冲突
+fix_or_guardrail: 1. 诊断顺序固定为「真端表 countN → 客户端 quest_monster 门控 → 页面/台词」，前两者一致即视为合同，页面数字只是玩家可见口径；2. 页面口径与合同冲突时属**产品裁定**（改服务端表 or 补客户端单条目），必须显式记录，不得静默；3. 改服务端计数时客户端门控仍是客户端渲染的输入（实机 1217：任务按 7 正确推进，但完成态计数条分子显示客户端门控的 10，呈 `10/7`）⇒ 显示要对齐时对客户端 `quest_monster.csv` 做 CPK-001 口径单条目补丁（同值收口），功能是否已变以实机推进点为准；4. 对真端表副本的偏差要在行内加双语注释指向留痕文档并加回归钉（本仓 1217：真端 10 → 本服 7，`RetailSimpleHuntTableTest#quest1217KeepsThePlayerVisibleKillCountOfSeven`）
+evidence: src/main/resources/aion/data/static_data/quest/retail/Quest_SimpleHunt.xml 1217 行（count1 10→7 + 双语偏差注释）；.agents/summary/quest-1217-kill-count/DIAGNOSIS.zh-CN.md 与同目录审计脚本/对账产物（kr-vs-retail、chs-vs-retail、client-gate-vs-retail）；真端根 Map/XML 下 SimpleHunt 模板表 1217 行 count1=10（按名引用，仓库外）；客户端侧按名引用：客户端根 Quest.pak 内的任务怪物进度表 1217 行 SECTION_0<10、基础页与 CHS 覆盖包内的 1217 页面（KR /10、CHS /7）；本仓退役 1217 定义见 commit 4ede058c0^（required=10）；repair commit 8509228d9（含回归钉 RetailSimpleHuntTableTest#quest1217KeepsThePlayerVisibleKillCountOfSeven；验收记录 .agents/summary/quest-acceptance/1217-2026-10-07-client-accepted.md）
+validation: 2026-10-07 IDEA MCP 五个门禁类全绿：RetailSimpleHuntTableTest 4/4（含新增 1217 玩家可见口径钉）、SimpleHuntNativeFamilyGateTest 5/5、RetailOwnershipGateTest 5/5、QuestSimpleHuntRetailContractTest 1/1、RetailTableSchemaGateTest 2/2（1217 在合同门禁中由 handler-owned 提前放行，无真端快照更新）；静态：xmllint XSD 校验通过、`git diff --check` 通过；审计：客户端门控 vs 真端 1,718/1,718 全等、CHS 页 3 处偏差；实机验收（2026-10-07，用户）：杀到 7 个即推进到报告步、任务正确完成，完成态计数条显示 `10/7` 为客户端门控未同步的观感残留（见 .agents/summary/quest-acceptance/1217-2026-10-07-client-accepted.md）
+superseded_by: none
+boundaries: ① 只对 1217 按页面口径改数；1750/1840 的页面为旧版本残留/与客户端门控冲突，保持真端值；② 页面口径改数的前提是页面文本自洽（摘要与台词同值），KR 原页台词 12 vs 要求 10 同属残留、不作为合同；③ 不是编译/打包缺陷（服务端 IR 与真端逐字段一致）；④ 客户端侧单条目补丁若执行，按 CPK-001（客户端现用文件为基准、差异条目数 = 1）
+see_also: [QE-012], [QE-053], [QE-040], [CPK-001]
+first_check: 「提示 N 个、实际要 M 个」先答：① 真端表该任务 `countN` 是多少？② 客户端 `quest_monster.csv` 该任务门控的 count 是多少（与真端一致吗）？③ 页面/台词里的 N 出自哪一版客户端（KR/CHS 分别是什么）？④ 裁定改哪一侧（真端表 or 客户端单条目），偏差有没有留痕？⑤ 改后实机是否推进，客户端门控是否也需要同值收口？
+keywords: 提示数量不符、杀多了才推进、击杀上限、count1、quest_monster.csv、SECTION_0<N、SECTION_5、quest_summary、([%n]/N)、台词数字、CHS 本地化残留、页面不是合同、1217、FakeBox、Mimic、10520、1750、1840、KILL_COUNT_CONTRACT_NOT_PAGE_TEXT
+-->
+
+- **判定规则**：击杀次数以真端表 `countN` 与客户端 `quest_monster.csv` 门控为准（两者逐行一致）；客户端页面 `([%n]/N)` 与台词里的数字只是文案，可残留旧版本或被本地化改写，不能当合同；页面与合同冲突时先出三方对照，再由用户裁定改哪一侧。
+- **安全网**：`QuestSimpleHuntRetailContractTest`（真端快照 vs 生产 IR）、`RetailTableSchemaGateTest`（XSD + 无 DOCTYPE）、`SimpleHuntNativeFamilyGateTest`（全量行装载 + 相机 fullValue = 槽位需求）、`.agents/summary/quest-1217-kill-count/audit_client_gate_vs_retail_counts.py`（客户端门控 vs 真端全量对账）。
+- **反漂移**：别按客户端页面数字直接改服务端计数而不留痕（真端表副本的偏差必须行内注释 + 留痕文档）；别在只改服务端计数后断言「已修复」（客户端门控可能仍停在击杀行，须实机复测）；别把 1750/1840 一类旧版本页面当合同一起改。

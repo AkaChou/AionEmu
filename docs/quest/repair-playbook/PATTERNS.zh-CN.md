@@ -92,6 +92,8 @@
 | `SATURATED_COUNTER_EXTRA_KILL_SILENT` | 进度不涨却提示任务更新、计数满后多杀还提示、任务书刷新但数值没变 | 收口自环只有下界（`variable-at-least varN 3 -> set varN 4`）在计数器饱和后仍命中，planner 产出与当前 packed 相同的计划；after-commit 的 `sync-quest-state PACKET_ONLY` 照发 `SM_QUEST_ACTION.updateQuest` | 条件是否只有下界而动作 `set` 到上限；planner 结果是否等于当前快照；after-commit 是否带 `sync-quest-state` | `2813dd5e4`、`QuestExecutionCoordinatorTest#stateIdenticalExecutionDropsTheRedundantStateSync` |
 | `OPEN_DOOR_REPLAY_REWARD_FIRST` | 同一 NPC 上并存多个任务时已完成任务不可见不可交、任务列表没有可交付行、打开对话只见编号更小的进行中任务的未完成面 | 开门重放（`questId=0, dialogId=-1`）按 `getAllQuestState()`（TreeMap → questId 升序）单遍遍历、首个认领者 `return true` 短路：编号更小的 START 任务先认领 -1 并下发两参 `PAGE_IN_PROGRESS=10`，同 NPC 上 REWARD 任务的奖励窗重放（页 5）永不执行；客户端任务列表不渲染交付行 | 打开对话的实机页形（两参页 10 = 被短路）；该 NPC 上是否有编号更小的进行中任务；目标任务是否 REWARD 且其交付 NPC 解析含本 NPC | `cfaaf4230`、`QuestEngineOpenDoorReplayOrderTest#openDoorReplaysTheDeliverableQuestBeforeAnEarlierLiveOne` |
 
+| `KILL_COUNT_CONTRACT_NOT_PAGE_TEXT` | 任务提示击杀 N 个实际要杀 M 个、杀满提示数不推进、任务书计数分母与推进点不一致 | 击杀数三源：真端模板表 `countN` 与客户端 `quest_monster.csv` 的 `Progress(SECTION_n<count; SECTION_5==0)` 门控为合同（本仓 1,718 个 `simpleQuest` 行逐行一致），客户端页面 `quest_summary` 的 `([%n]/N)` 与接取台词只是文案（1217：真端/门控/韩文页 = 10，CHS 页与台词 = 7） | 先取真端表 `countN`、再取客户端门控 count、最后才看页面/台词数字；三者不一致时裁定改哪一侧（服务端表副本 or 客户端单条目补丁），并在服务端表副本行内留双语偏差注释 + 回归钉 | `8509228d9`、`RetailSimpleHuntTableTest#quest1217KeepsThePlayerVisibleKillCountOfSeven` |
+
 指纹表至少维护以上五列。一个代表提交可以支撑多个独立 Pattern；这属于对复合修复的检索拆分，不是新增重复案例。新增代表模式时，案例正文记录完整验收证据，指纹表只提炼可搜索的症状别名和抽象 IR/owner 特征，具体 action/page 仅作为代表实例；后续同型任务不把任务 ID 追加进表中。
 
 `DUPLICATE_QUEST_SIDE_EFFECT_OWNER` 的代表证明是刻意拆开的复合证据：提交 diff 证明旧 Java AI owner 被移除，具体测试方法证明 typed XML owner 接管同一击杀生成合同。只运行该测试不能单独证明没有第二 owner。复用本模式时还必须检查当前 catalog/XML/AI 源 owner，并在实际路径可用时记录同一事件产生的 NPC object ID、生成次数和清理次数；这些 runtime 证据使用验收记录模板留存。
@@ -148,3 +150,4 @@
 | `2813dd5e4` | 15546 击杀不计数与打满后多杀误报任务更新（同批 43 个 Iluma/Norsvold 任务 + 引擎状态同步护栏） | 击杀目标必须覆盖客户端 quest_monster/SECTION 声明的同族全部变体且至少一个目标有活跃地图刷新；状态未变化且无必需动作时不得下发 `sync-quest-state`，收口自环必须有精确上界 |
 | `5bf5b70a2` | 10529 倒下贤者重复“结束对话”、代理人报告阶段没有任务（镜像 20529 同形） | 进行中 NPC 首次点击的 `USE_OBJECT(-1)` 必须在当前 source 建立任务页上下文；不能只声明客户端没有机会发送的 `QUEST_SELECT(31)`，且不得抢占 `reward` 态预览 owner |
 | `cfaaf4230` | 14111 同 NPC 多任务并存时已完成任务打开对话不可见（1155 进行中先认领开门重放） | 开门重放必须分两遍、REWARD 优先于 START：`getAllQuestState()` 的 questId 升序加首个认领短路会让编号更小的进行中任务截走 `-1`（两参页 10），可交付任务的奖励窗永不可达；多个 REWARD 任务按 questId 升序逐个交付 |
+| `8509228d9` | 1217 提示击杀 7 个箱子怪、实际杀到 10 个才推进（CHS 本地化页残留数字） | 击杀数的提示数字不是合同：以真端表 `countN` ∪ 客户端 `quest_monster.csv` 门控为准。按玩家可见口径改服务端计数（真端 10→7）必须在真端表副本留双语偏差注释 + 回归钉；客户端门控未同步时完成态计数条分子仍渲染客户端的 10（`10/7` 观感残留，不影响推进与完成） |

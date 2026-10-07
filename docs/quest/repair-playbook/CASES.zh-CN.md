@@ -797,3 +797,18 @@
 - 验证命令和结果：IDEA MCP 单测 `QuestEngineOpenDoorReplayOrderTest` 1/1、`QuestEngineSelectionSubPageEchoTest` 1/1、`DataDrivenNativeRuntimeGateTest` 31/31、SimpleTalk 16/16、SimpleItemPlay 15/15——共 64/64 通过；用户 2026-10-06 实机验收「14111 已经实机验证成功」，验收记录 `.agents/summary/quest-acceptance/14111-2026-10-06-client-accepted.md`。
 - 复用边界：只适用于「开门重放该走哪个任务」的排序问题；缺 owner、契约缺页、typed/legacy 路由冲突各自另有 Pattern（`ACTIVE_NPC_DIALOG_MISSING_DIRECT_ENTRY`、`NPC_DIALOG_ROUTE_GATE_COLLISION` 等）。同 NPC 多个可交付任务按 questId 升序逐个交付是当前语义，未做「全部一次性可见」。
 - commit：`cfaaf4230`。
+
+## 8.51 击杀任务提示数量与实际需求不一致：客户端本地化页面数字不是合同
+
+- Pattern ID：`KILL_COUNT_CONTRACT_NOT_PAGE_TEXT`。
+- 代表任务：1217「해안을 더럽히는 상자 / Flotsam」（天族 Verteron 坎塔斯海岸；接取与交付 NPC 203184 Phorcys；击杀目标 210197 FakeBox_19_n / 210085 Mimic_19_n）。
+- 搜索症状：任务提示击杀 7 个箱子怪、实际杀到 10 个才进下一步；任务书计数分母与推进点不一致；杀满提示数不推进。
+- 玩家可见症状：中文（CHS）客户端任务书摘要 `([%2]/7)`、接取台词「您能帮我清除掉7个…」，服务端到第 10 杀才推进到报告步。
+- 根因：击杀数有三个可互不相同的来源——① 真端模板表 `countN`（服务端生产合同，1217=10）；② 客户端 `quest_monster.csv` 的 `Progress(SECTION_0<10; SECTION_5==0)` 门控（客户端任务书进度合同；本仓全量 1,718 个 `simpleQuest` 行与真端逐行一致）；③ 客户端页面与台词里的数字（纯文案，可为旧版本值或被本地化改写；1217 的 CHS 页与台词 = 7，韩文原页 = 10 而台词 12）。CHS 页对真端的偏差只有 3 例：1217（10→7）、1750（15→5，页面连点名怪都是旧模板）、1840（44→43）。
+- 修复层：真端表副本 `Quest_SimpleHunt.xml` 的 1217 `count1` 10→7——按玩家可见口径裁定，行内加双语偏差注释，并在 `RetailSimpleHuntTableTest` 加回归钉防止真端表重导入时静默改回；服务端计数链路（`RetailHuntCounterLayout.goal/isComplete`、`CameraRegistry.fullValue = Σ count<<shift`）由同一行派生，自动跟随，无第二处硬编码。
+- 修改文件：`src/main/resources/aion/data/static_data/quest/retail/Quest_SimpleHunt.xml`、`src/test/java/com/aionemu/gameserver/questEngine/retail/RetailSimpleHuntTableTest.java`。
+- 第一检查点：先读真端表 `countN`，再读客户端 `quest_monster.csv` 该任务门控的 count（两者应逐行一致），最后才看页面/台词数字；三者不一致时确认裁定改哪一侧，禁止只按页面数字静默改表。
+- 代表测试：`RetailSimpleHuntTableTest#quest1217KeepsThePlayerVisibleKillCountOfSeven`（1217 的 `required` 与 `goal` 必须为 7）。
+- 验证命令和结果：IDEA MCP 聚焦门禁全绿——`RetailSimpleHuntTableTest` 4/4、`SimpleHuntNativeFamilyGateTest` 5/5、`RetailOwnershipGateTest` 5/5、`QuestSimpleHuntRetailContractTest` 1/1、`RetailTableSchemaGateTest` 2/2；`xmllint --schema Quest_SimpleHunt.xsd` 通过；用户 2026-10-07 实机验收「击杀 6 个显示 6/7，击杀 7 个显示 10/7，但是任务是正确完成了的」，验收记录 `.agents/summary/quest-acceptance/1217-2026-10-07-client-accepted.md`。
+- 复用边界：只适用于「计数数字来源不一致」的提示类问题。进度不涨（击杀目标零刷新）、多打一只才完成（收口 N+1）、打满后多杀仍提示，各自另有 Pattern（`KILL_TARGET_COVERS_CLIENT_VARIANT_FAMILY`、`SINGLE_COUNTER_KILL_GATE_OVERSHOOT`、`SATURATED_COUNTER_EXTRA_KILL_SILENT`）。同型页面残留（1750/1840）不自动跟随，必须逐例裁定；客户端门控是客户端渲染输入，改服务端计数后完成态分子仍可能是客户端门控值（1217 实机 `10/7`），要求显示完全一致时按 CPK-001 对客户端 `Quest.pak` 内 `quest_monster.csv` 做单条目补丁。
+- commit：`8509228d9`。
