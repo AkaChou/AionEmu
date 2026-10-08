@@ -4,6 +4,11 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
+import com.aionemu.gameserver.questEngine.tablelane.DataDrivenNativeRuntime;
+import com.aionemu.gameserver.questEngine.tablelane.SimpleCollectItemHandler;
+import com.aionemu.gameserver.questEngine.tablelane.SimpleTalkHandler;
+import com.aionemu.gameserver.questEngine.tablelane.SimpleUseItemHandler;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -63,53 +68,19 @@ class LegacyTemplateMirrorRouteRegressionTest {
 		assertEquals(List.of(new AfterCommitAction.CloseDialog()), legacyFailure.afterCommit(),
 			"quest 2237 failure response");
 
-		// P0-2 规范形（SimpleCollectItem 族）：2527/3096 是 RETAIL_TABLE 成员，随页链退役改走
-		// QUEST_SELECT(31；QE-017 页 id 与按钮动作共号) 交付——客户端模板索引把交付挂在报告
-		// NPC 204811 / 798225（Pyrrha，start/end 同体）上，采集对象 700328/700423..426 本就
-		// 不在客户端契约内。整组 HasItem 门控直翻 REWARD，领奖窗按分档查表（单档=5）；
-		// 39/20002 检查对与报告页 2375 一并删除。
-		// P0-2 canonical (the SimpleCollectItem family): 2527/3096 are RETAIL_TABLE members;
-		// with the page chain retired they deliver on QUEST_SELECT (31; QE-017 page/action shared
-		// numbering) — the client template index owns the turn-in on the report NPCs 204811 /
-		// 798225 (Pyrrha); the collect objects 700328/700423..426 were never in the client
-		// contract. The whole HasItem hand-in set flips REWARD with the tiered reward window
-		// (single tier = 5); the 39/20002 check pairs and report page 2375 are gone.
-		// P0-3 S1：SimpleTalk 接取/交付切真端规范形（页 4 / 分档窗）——11003/80356/80365 是真端单步
-		// item_check 行（Quest_SimpleTalk.xml：item_check=1 且 quest.xml 已声明 collect_item），交付
-		// 与采集族同构（canonicalDelivery 单一真源），随 S1 页链退役一并改锚。P0c-19 裁定（真端对、
-		// XML 错）：客户端模板索引 start/end 列声明接取/交付分离——11003 接取 798933(Phailos)、交付
-		// 798942(Strabon)；80356 接取 831815、交付 831819；80365 接取 831827、交付 831819（真端表
-		// acquired/reward 同对）；遗留 XML 的对称双 NPC 全形状是手工漂移，已退役（git 历史可回溯）。
-		// P0-3 S1: the SimpleTalk item_check rows 11003/80356/80365 deliver through the same
-		// canonicalDelivery shape as the collect family. P0c-19 adjudication (retail-right,
-		// XML-wrong): the client template index declares the asymmetric acquire/hand-in split and the
-		// retail table agrees; the legacy symmetric dual-NPC shape was drift and is retired.
-		for (int[] mirror : new int[][] {
-			{2527, 204811}, {3096, 798225}, {11003, 798942}, {80356, 831819}, {80365, 831819}}) {
-			QuestDefinition definition = compile(mirror[0]);
-			List<QuestTransition> delivery = talkRoutes(definition, "started", mirror[1],
-				QuestDialogAction.QUEST_SELECT.id());
-			assertEquals(1, delivery.size(), "quest " + mirror[0] + " canonical delivery route count");
-			QuestTransition deliver = delivery.getFirst();
-			assertEquals("reward", deliver.targetNode(), "quest " + mirror[0] + " delivery target");
-			assertEquals(definition.metadata().itemRequirements().stream()
-				.map(item -> (QuestCondition) new QuestCondition.HasItem(item.itemId(), item.count(), true))
-				.toList(), deliver.conditions(), "quest " + mirror[0] + " delivery conditions");
-			assertEquals(definition.metadata().itemRequirements().stream()
-				.map(item -> (QuestAction) new QuestAction.RemoveItem(item.itemId(), item.count()))
-				.toList(), deliver.actions(), "quest " + mirror[0] + " delivery removals");
-			int rewardWindow = QuestDialogPage
-				.rewardWindowForTier(definition.metadata().rewardGroups().size() - 1).orElseThrow().id();
-			assertEquals(List.of(
-				new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
-				new AfterCommitAction.ShowQuestDialog(rewardWindow)), deliver.afterCommit(),
-				"quest " + mirror[0] + " delivery response");
-			assertTrue(talkRoutes(definition, "started", mirror[1], 39).isEmpty(),
-				"quest " + mirror[0] + " legacy item-check route removed");
-			assertTrue(talkRoutes(definition, "started", mirror[1], 20002).isEmpty(),
-				"quest " + mirror[0] + " legacy simple item-check route removed");
-			assertTrue(talkRoutes(definition, "started", mirror[1], 2375).isEmpty(),
-				"quest " + mirror[0] + " legacy report page route removed");
+		// P0-2/P0-3/P0c-19 规范形主语（SimpleCollectItem 2527/3096、SimpleTalk 11003/80356/80365）已随
+		// 各族真端采纳退役（XML 删除、生产视图无 IR）：IR 测试退役三式（QE-146）下，原本固定的交付路由
+		// 断言（QUEST_SELECT 直翻 REWARD + 分档窗 + 39/20002 检查对缺席）改锚 native 注册面；交付形状
+		// 语义归各族族门承担（RetailSimpleCollectItemFamilyGateTest/RetailSimpleTalkFamilyGateTest 等）。
+		// The P0-2/P0-3/P0c-19 canonical-delivery subjects (SimpleCollectItem 2527/3096, SimpleTalk
+		// 11003/80356/80365) were retired with their family adoptions (XML deleted, no production IR):
+		// under the QE-146 IR-test retirement triage their delivery-route assertions are re-anchored to
+		// the native registration surface; the delivery shapes live in the family gates now.
+		for (int questId : new int[] {2527, 3096}) {
+			assertRetiredOwnedByNativeLane(questId, id -> SimpleCollectItemHandler.instance().owns(id));
+		}
+		for (int questId : new int[] {11003, 80356, 80365}) {
+			assertRetiredOwnedByNativeLane(questId, id -> SimpleTalkHandler.instance().owns(id));
 		}
 	}
 
@@ -278,6 +249,15 @@ class LegacyTemplateMirrorRouteRegressionTest {
 				List.of(new AfterCommitAction.ShowQuestDialog(5))),
 			new DialogRoute(27510, "unaccepted", 806079, 10000, "unaccepted",
 				List.of(new AfterCommitAction.CloseDialog())))) {
+			if (RetiredQuestIds.contains(expected.questId())) {
+				// 15672/20032/25672/27510（DataDriven 族）已随族采纳退役、生产视图无 IR（QE-146）：
+				// 本行的后续对话/关窗断言改锚 native 注册面；页语义归 DataDriven 族门承担。
+				// 15672/20032/25672/27510 (DataDriven) are retired with no production IR (QE-146):
+				// their follow-up dialog assertions are re-anchored to the native registration surface.
+				assertRetiredOwnedByNativeLane(expected.questId(),
+					id -> DataDrivenNativeRuntime.instance().owns(id));
+				continue;
+			}
 			QuestDefinition definition = compile(expected.questId());
 			List<QuestTransition> routes = talkRoutes(definition, expected.source(), expected.npcId(),
 				expected.actionId()).stream()
@@ -358,54 +338,56 @@ class LegacyTemplateMirrorRouteRegressionTest {
 	}
 
 	@Test
-	void legacyTemplateCloseControlsDoNotChangeQuestState() throws Exception {
-		for (DialogRoute expected : List.of(
-			new DialogRoute(1115, "unaccepted", 203072, 10000, "unaccepted",
-				List.of(new AfterCommitAction.CloseDialog())),
-			new DialogRoute(1131, "shugo", 799093, 10000, "shugo",
-				List.of(new AfterCommitAction.CloseDialog())),
-			new DialogRoute(1309, "reward", 203830, 10000, "reward",
-				List.of(new AfterCommitAction.CloseDialog())),
-			new DialogRoute(1323, "reward", 203939, 10000, "reward",
-				List.of(new AfterCommitAction.CloseDialog())),
-			new DialogRoute(2107, "k1", 203516, 10000, "k1",
-				List.of(new AfterCommitAction.CloseDialog())),
-			new DialogRoute(2321, "reward", 790018, 10000, "reward",
-				List.of(new AfterCommitAction.CloseDialog())),
-			new DialogRoute(2435, "reward", 204390, 10000, "reward",
-				List.of(new AfterCommitAction.CloseDialog())),
-			new DialogRoute(2578, "reward", 204746, 10000, "reward",
-				List.of(new AfterCommitAction.CloseDialog())),
-			new DialogRoute(2670, "reward", 204208, 10000, "reward",
-				List.of(new AfterCommitAction.CloseDialog())),
-			new DialogRoute(26820, "s1", 806233, 10000, "s1",
-				List.of(new AfterCommitAction.CloseDialog())),
-			new DialogRoute(35025, "started", 798972, 10000, "started",
-				List.of(new AfterCommitAction.CloseDialog())),
-			new DialogRoute(13950, "unaccepted", 806075, 20000, "started",
-				List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.PACKET_ONLY),
-					new AfterCommitAction.CloseDialog())))) {
-			QuestDefinition definition = compile(expected.questId());
-			List<QuestTransition> routes = talkRoutes(definition, expected.source(), expected.npcId(),
-				expected.actionId());
-			assertEquals(1, routes.size(), "quest " + expected.questId() + " action " + expected.actionId());
-			assertEquals(expected.targetNode(), routes.getFirst().targetNode(),
-				"quest " + expected.questId() + " target");
-			assertEquals(expected.afterCommit(), routes.getFirst().afterCommit(),
-				"quest " + expected.questId() + " response");
+	void legacyTemplateCloseControlsDoNotChangeQuestState() {
+		// 原断言：这批旧模板的「关窗控制」（dialog 10000/20000 → CloseDialog）不改变任务状态。各主语已随
+		// 族采纳退役（XML 删除、生产视图无 IR）：IR 测试退役三式（QE-146）下改锚 native 注册面——关窗
+		// 出口语义归各族族门承担（SimpleTalk/SimpleUseItem/DataDriven）。
+		// Originally: the legacy close controls (dialog 10000/20000 -> CloseDialog) must not change quest
+		// state. Every subject has been retired with its family adoption (XML deleted, no production IR):
+		// under the QE-146 triage the rows are re-anchored to the native registration surface, and the
+		// close-exit semantics live in the family gates.
+		for (int questId : new int[] {1115, 1131, 1323, 35025}) {
+			assertRetiredOwnedByNativeLane(questId, id -> SimpleTalkHandler.instance().owns(id));
+		}
+		for (int questId : new int[] {1309, 2107, 2321, 2435, 2578, 2670}) {
+			assertRetiredOwnedByNativeLane(questId, id -> SimpleUseItemHandler.instance().owns(id));
+		}
+		for (int questId : new int[] {26820, 13950}) {
+			assertRetiredOwnedByNativeLane(questId, id -> DataDrivenNativeRuntime.instance().owns(id));
 		}
 	}
 
 	@Test
-	void laterItemReportNpcsShowTheTurnInPageAndBoundStartItemsAreGranted() throws Exception {
-		for (int[] route : List.of(
-			new int[] {16976, 801762},
-			new int[] {26976, 801764},
-			new int[] {16985, 804864},
-			new int[] {26985, 804866})) {
-			QuestDefinition definition = compile(route[0]);
-			assertPage(definition, "s1", route[1], 1352);
+	void laterItemReportNpcsShowTheTurnInPageAndBoundStartItemsAreGranted() {
+		// 原断言：这批交付 NPC 在 s1 态下发交付页 select2(1352)（并发放绑定接取物）。四个主语均已随
+		// DataDriven 族采纳退役（XML 删除、生产视图无 IR）：按 QE-146 改锚 native 注册面，页语义归族门。
+		// Originally: these turn-in NPCs showed the select2(1352) page from s1 (with bound start items).
+		// All four subjects were retired with the DataDriven adoption (XML deleted, no production IR):
+		// re-anchored to the native registration surface per QE-146; the page semantics live in the gate.
+		for (int questId : new int[] {16976, 26976, 16985, 26985}) {
+			assertRetiredOwnedByNativeLane(questId, id -> DataDrivenNativeRuntime.instance().owns(id));
 		}
+	}
+
+	/**
+	 * IR 测试退役三式（QE-146，2026-10-05 清扫批口径）：退役行（retention owner=RETAIL_TABLE）生产视图无
+	 * IR，凡 find/compile 其定义的路由断言必红——本类对退役主语改锚 native 注册面：先守卫「确属退役且
+	 * 无定义」，再要求所属家族 handler owns。行为语义归 DD/族门承担；方法名保留（Playbook 引用不断）。
+	 * QE-146 IR-test retirement triage: a retired row (RETAIL_TABLE owner) has no production IR, so its
+	 * route assertions are re-anchored to the native registration surface: guard that the row is really
+	 * retired with no definition, then require the owning family handler. Behavior semantics stay with the
+	 * family lanes; method names are kept.
+	 */
+	private static void assertRetiredOwnedByNativeLane(int questId, NativeLane lane) {
+		assertTrue(RetiredQuestIds.contains(questId),
+			() -> "quest " + questId + " must really be retired before its IR assertion is re-anchored");
+		assertTrue(ProductionQuestDefinitions.catalog().find(questId).isEmpty(),
+			() -> "quest " + questId + " is retired but the production view still exposes a definition");
+		assertTrue(lane.owns(questId), () -> "quest " + questId + " must be owned by its native lane");
+	}
+
+	private interface NativeLane {
+		boolean owns(int questId);
 	}
 
 	private static QuestDefinition compile(int questId) throws Exception {

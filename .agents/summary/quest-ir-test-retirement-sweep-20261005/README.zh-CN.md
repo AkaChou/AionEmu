@@ -50,3 +50,19 @@
 2. 历史 summary 报告中对被删类的引用不追改（历史留痕）。
 3. 更大范围的存量红（P8 报告口径「73 红类」）由其收录批继续清理；本批只收 TEMP-VERIFY 同形集群。
 4. 无客户端行为变更（纯测试面），不需要实机复测。
+
+## 补充（2026-10-08）：两处漏收类的补扫
+
+用户在核对「物件 owner 同型批次」的既存红时指出 `1115` 的断言此前是绿的——复核确认：
+`LegacyTemplateMirrorRouteRegressionTest` 与 `LegacyKillFlowRepairDefinitionTest` 未随本批清扫
+（前者无 `TEMP-VERIFY(view)` 指纹，后者红点在 15304/23702），红点与清扫批同根因（退役行无 IR），
+但此前多轮报告按「慢性项」挂账未收。按 QE-146 三式补扫：
+
+| 类 | 红主语 | 处置 |
+|---|---|---|
+| `LegacyTemplateMirrorRouteRegressionTest` | 镜像循环 2527/3096（SimpleCollectItem）+ 11003/80356/80365（SimpleTalk）；后续对话 15672/20032/25672/27510（DD）；关窗控制 1115/1131/1323/35025（SimpleTalk）+ 1309/2107/2321/2435/2578/2670（SimpleUseItem）+ 26820/13950（DD）；后续交付 16976/26976/16985/26985（DD） | 三式③**重锚 native**：`assertRetiredOwnedByNativeLane`（守卫 = `RetiredQuestIds.contains` + 生产视图无定义 + 族 handler `owns`）；2237（XML 保有）断言照常；混合循环内退役行 skip+守卫 |
+| `LegacyKillFlowRepairDefinitionTest` | 23702/23703/23705（SimpleHunt 网格族）；15304/15306（DD 混合链/五段 hunt） | 23702/23703/23705 重锚 `SimpleHuntHandler.owns`（网格报告行形状归 SimpleHunt 族门）；15304/15306 两主语全退役 ⇒ 式①**删法**：删 `daevanionKillStagesUseClientCountsAndResetTheSharedPackedCounter` + 其 snapshot/apply/assertProjection/rewardReady 机器与两个专属 helper（方法无 Playbook 引用；行为由 `QuestDaevanionLeggingsProductionFlowTest` + DD 族门承担，历史报告引用按边界②不追改） |
+
+验证（IDEA MCP，2026-10-08）：`LegacyTemplateMirrorRouteRegressionTest` 9/9 ✅、
+`LegacyKillFlowRepairDefinitionTest` 3/3 ✅；两文件 IDEA lint 仅余既存风格警告（本批新增的
+`throws Exception` 残留已清）。
