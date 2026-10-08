@@ -1,7 +1,7 @@
 # 任务 3058 中继对话面修复（798189 · 与 Oileus 对话后任务书步骤消失）+ 同型面全量排查
 
 日期：2026-10-08（实机玩家报障 / 任务 3058 马波路之石 / NPC 798189 Oileus）
-状态：**修复已提交、实机验收 PENDING**（提交 `f84393452`；待用户重启服务端复测）
+状态：**已验收**（2026-10-08 用户实机验证成功；修复提交 `f84393452`、沉淀 `98ba6fc69`；验收记录 [3058-2026-10-08-client-accepted.md](../quest-acceptance/3058-2026-10-08-client-accepted.md)）
 
 ## 现象（用户实机报告）
 
@@ -58,9 +58,11 @@
   `SimpleItemPlayNativeFamilyGateTest` 16/16、`UseItemFamilyRowAlignmentGateTest` 7/7、
   `QuestProductionStartupGateTest` 2/2、`QuestInteractionObjectContractGateTest` 2/2；
   `git diff --check` 干净；IDE lint 无编译错误。
-- 实机验收 PENDING（口径）：① 旧档进世界自愈（任务书步骤恢复，`步数=1`）；② 与 Oileus：
-  31→页 1352→1353→「结束对话」→ `步数=1` + 关窗 + 任务书亮行 1；③ 与 Lavirintos：
-  1693→1694→SETPRO2→`步数=2` + 移除 3058A；④ 向 Siraus 报告领奖。
+- 实机验收通过（2026-10-08 用户确认「实机验证成功」）：整链按复测口径验收——① 旧档进世界
+  自愈（任务书步骤恢复，`步数=1`）；② 与 Oileus：31→页 1352→1353→「结束对话」→ `步数=1` +
+  关窗 + 任务书亮行 1；③ 与 Lavirintos：1693→1694→SETPRO2→`步数=2` + 移除 3058A；④ 向 Siraus
+  报告领奖。逐步 trace/截图 not captured；验收记录见
+  [3058-2026-10-08-client-accepted.md](../quest-acceptance/3058-2026-10-08-client-accepted.md)。
 
 ## 同型面全量排查（2026-10-08，随本次修复）
 
