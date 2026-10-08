@@ -3,6 +3,7 @@ package com.aionemu.gameserver.commands.admin;
 import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.dataholders.DataManager;
+import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
@@ -13,9 +14,9 @@ import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 import java.io.IOException;
 
 /**
- * NPC 生成指令；在管理员位置按模板 ID 生成单位，支持 {@code <npcid>*<num>} 批量写法，并可持久化到刷怪数据。
- * Admin command that spawns a template at the admin position, supports the {@code <npcid>*<num>} batch form,
- * and optionally persists the spawn.
+ * NPC 生成指令；在管理员位置按模板 ID 生成单位，支持 {@code <npcid>*<num>} 与 {@code *<num>} 批量写法，并可持久化到刷怪数据。
+ * Admin command that spawns a template at the admin position, supports the {@code <npcid>*<num>} and
+ * {@code *<num>} batch forms, and optionally persists the spawn.
  * @author Luno
  */
 @Slf4j
@@ -40,20 +41,24 @@ public class SpawnNpc extends AdminCommand {
 	/**
 	 * 解析后的刷怪目标。
 	 * Parsed spawn target.
-	 * @param templateId NPC 模板 ID / npc template id
+	 * @param templateId NPC 模板 ID；{@code null} 表示取管理员当前选中的目标
+	 *                   / npc template id; {@code null} means the admin's currently selected target
 	 * @param count 生成数量，至少为 1 / spawn count, at least 1
-	 * @param batch 是否使用了 {@code <npcid>*<num>} 批量写法 / whether the {@code <npcid>*<num>} batch form was used
+	 * @param batch 是否使用了 {@code *} 批量写法 / whether the {@code *} batch form was used
 	 */
-	record SpawnTarget(int templateId, int count, boolean batch) {
+	record SpawnTarget(Integer templateId, int count, boolean batch) {
 	}
 
 	/**
-	 * 解析刷怪目标参数，支持 {@code <npcid>} 与 {@code <npcid>*<num>} 两种写法。
-	 * Parses the spawn target argument, accepting both the {@code <npcid>} and {@code <npcid>*<num>} forms.
+	 * 解析刷怪目标参数，支持 {@code <npcid>}、{@code <npcid>*<num>} 与 {@code *<num>} 三种写法。
+	 * Parses the spawn target argument, accepting the {@code <npcid>}, {@code <npcid>*<num>} and
+	 * {@code *<num>} forms.
 	 * <p>
-	 * 两种写法的两段均容错首尾空白；任何一段不是整数，或数量超出 [1, {@value #MAX_BATCH_COUNT}]，一律判为非法。
-	 * Both parts tolerate surrounding whitespace in either form; a non-integer part, or a count outside
-	 * [1, {@value #MAX_BATCH_COUNT}], is rejected as malformed.
+	 * 各段均容错首尾空白；任何一段不是整数，或数量超出 [1, {@value #MAX_BATCH_COUNT}]，一律判为非法。
+	 * {@code *<num>} 写法本身不携带模板 ID，该值由调用方从管理员选中目标解析。
+	 * Every part tolerates surrounding whitespace; a non-integer part, or a count outside
+	 * [1, {@value #MAX_BATCH_COUNT}], is rejected as malformed. The {@code *<num>} form carries no template
+	 * id of its own; the caller resolves it from the admin's selected target.
 	 * @param raw 原始参数 / raw argument
 	 * @return 解析结果；格式非法时返回 {@code null} / parse result, or {@code null} when malformed
 	 */
@@ -68,12 +73,15 @@ public class SpawnNpc extends AdminCommand {
 				return new SpawnTarget(Integer.parseInt(raw.trim()), 1, false);
 			}
 
-			int templateId = Integer.parseInt(raw.substring(0, starIndex).trim());
 			int count = Integer.parseInt(raw.substring(starIndex + 1).trim());
 			if (count < 1 || count > MAX_BATCH_COUNT) {
 				return null;
 			}
-			return new SpawnTarget(templateId, count, true);
+
+			String idPart = raw.substring(0, starIndex).trim();
+			return idPart.isEmpty()
+					? new SpawnTarget(null, count, true)
+					: new SpawnTarget(Integer.parseInt(idPart), count, true);
 		}
 		catch (NumberFormatException e) {
 			return null;
@@ -85,10 +93,12 @@ public class SpawnNpc extends AdminCommand {
 	 * Executes this admin command.
 	 * <p>
 	 * {@code //spawn <npcid> [respawn_time]} 生成单个单位；{@code //spawn <npcid>*<num> [respawn_time]}
-	 * 在管理员位置一次生成 {@code num} 个完全重叠的单位，未显式给出重生时间时按临时刷怪处理（不写盘）。
+	 * 与 {@code //spawn *<num> [respawn_time]}（模板取自当前选中目标）在管理员位置一次生成 {@code num}
+	 * 个完全重叠的单位，未显式给出重生时间时按临时刷怪处理（不写盘）。
 	 * {@code //spawn <npcid> [respawn_time]} spawns a single unit; {@code //spawn <npcid>*<num> [respawn_time]}
-	 * spawns {@code num} fully overlapping units at the admin position and treats them as temporary
-	 * (not persisted) unless a respawn time is given explicitly.
+	 * and {@code //spawn *<num> [respawn_time]} (template taken from the currently selected target) spawn
+	 * {@code num} fully overlapping units at the admin position and treat them as temporary (not persisted)
+	 * unless a respawn time is given explicitly.
 	 * @param admin 执行指令的管理员 / admin executing the command
 	 */
 	@Override
@@ -102,6 +112,17 @@ public class SpawnNpc extends AdminCommand {
 		if (target == null) {
 			onFail(admin, null);
 			return;
+		}
+
+		Integer templateId = target.templateId();
+
+		if (templateId == null) {
+			VisibleObject selected = admin.getTarget();
+			if (!(selected instanceof Npc npc)) {
+				PacketSendUtility.sendMessage(admin, "Select an NPC target first, or use //spawn <id>*<num>.");
+				return;
+			}
+			templateId = npc.getNpcId();
 		}
 
 		int respawnTime = target.batch() ? 0 : DEFAULT_RESPAWN_TIME;
@@ -126,7 +147,7 @@ public class SpawnNpc extends AdminCommand {
 		int spawned = 0;
 
 		for (int i = 0; i < target.count(); i++) {
-			SpawnTemplate spawn = SpawnEngine.addNewSpawn(worldId, target.templateId(), x, y, z, heading, respawnTime);
+			SpawnTemplate spawn = SpawnEngine.addNewSpawn(worldId, templateId, x, y, z, heading, respawnTime);
 
 			if (spawn == null) {
 				break;
@@ -154,7 +175,7 @@ public class SpawnNpc extends AdminCommand {
 		}
 
 		if (firstSpawned == null) {
-			PacketSendUtility.sendMessage(admin, "There is no template with id " + target.templateId());
+			PacketSendUtility.sendMessage(admin, "There is no template with id " + templateId);
 			return;
 		}
 
@@ -172,5 +193,7 @@ public class SpawnNpc extends AdminCommand {
 	public void onFail(Player player, String message) {
 		PacketSendUtility.sendMessage(player, "syntax //spawn <template_id> [respawn_time] | "
 				+ "//spawn <template_id>*<num> [respawn_time] (0 for temp)");
+		PacketSendUtility.sendMessage(player, "       //spawn *<num> [respawn_time]: "
+				+ "spawns copies of the selected target");
 	}
 }
