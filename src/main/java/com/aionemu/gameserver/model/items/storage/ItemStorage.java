@@ -1,6 +1,7 @@
 package com.aionemu.gameserver.model.items.storage;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import com.aionemu.gameserver.model.gameobjects.Item;
@@ -12,6 +13,17 @@ import lombok.Getter;
 /**
  * 物品仓库模型。
  * Item Storage model.
+ * <p>
+ * 并发语义：背包既会被玩家 IO 线程增删，也会被后台任务（如活动掉落、
+ * 定时保存）遍历，因此底层 map 使用 synchronizedMap，所有单次读写自带
+ * 同一把监视器互斥；类内的批量迭代与 check-then-put 复合操作必须以
+ * {@code synchronized (items)} 包住，禁止在锁外裸迭代 map。
+ * </p>
+ * Concurrency semantics: the storage is mutated by the player's IO thread
+ * and iterated by background tasks (event drops, periodic saves). The
+ * backing map is a synchronizedMap so single reads/writes share one
+ * monitor; bulk iterations and the check-then-put compound operation must
+ * be wrapped in {@code synchronized (items)}. Never iterate the map raw.
  */
 
 @Getter
@@ -25,13 +37,15 @@ public class ItemStorage {
 	public ItemStorage(StorageType storageType) {
 		this.limit = storageType.getLimit();
 		this.specialLimit = storageType.getSpecialLimit();
-		this.items = new LinkedHashMap<>();
+		this.items = Collections.synchronizedMap(new LinkedHashMap<>());
 	}
 
 	/** 获取物品。 / Returns the items. */
 	public List<Item> getItems() {
 		List<Item> temp = new ArrayList<>();
-		temp.addAll(items.values());
+		synchronized (items) {
+			temp.addAll(items.values());
+		}
 		return temp;
 	}
 
@@ -47,9 +61,11 @@ public class ItemStorage {
 
 	/** 按物品 ID 返回第一件物品 / Returns the first item by id */
 	public Item getFirstItemById(int itemId) {
-		for (Item item : items.values()) {
-			if (item.getItemTemplate().getTemplateId() == itemId) {
-				return item;
+		synchronized (items) {
+			for (Item item : items.values()) {
+				if (item.getItemTemplate().getTemplateId() == itemId) {
+					return item;
+				}
 			}
 		}
 		return null;
@@ -58,9 +74,11 @@ public class ItemStorage {
 	/** 返回按 ID 的物品 / Returns the items by id */
 	public List<Item> getItemsById(int itemId) {
 		List<Item> temp = new ArrayList<>();
-		for (Item item : items.values()) {
-			if (item.getItemTemplate().getTemplateId() == itemId) {
-				temp.add(item);
+		synchronized (items) {
+			for (Item item : items.values()) {
+				if (item.getItemTemplate().getTemplateId() == itemId) {
+					temp.add(item);
+				}
 			}
 		}
 		return temp;
@@ -73,9 +91,11 @@ public class ItemStorage {
 
 	/** 按物品 ID 返回槽位 ID / Returns the slot id by item id */
 	public long getSlotIdByItemId(int itemId) {
-		for (Item item : this.items.values()) {
-			if (item.getItemTemplate().getTemplateId() == itemId) {
-				return item.getEquipmentSlot();
+		synchronized (items) {
+			for (Item item : this.items.values()) {
+				if (item.getItemTemplate().getTemplateId() == itemId) {
+					return item.getEquipmentSlot();
+				}
 			}
 		}
 		return -1;
@@ -118,11 +138,13 @@ public class ItemStorage {
 
 	/** 放入物品。 / Put item. */
 	public boolean putItem(Item item) {
-		if (this.items.containsKey(item.getObjectId())) {
-			return false;
+		synchronized (items) {
+			if (this.items.containsKey(item.getObjectId())) {
+				return false;
+			}
+			this.items.put(item.getObjectId(), item);
+			return true;
 		}
-		this.items.put(item.getObjectId(), item);
-		return true;
 	}
 
 	/** 移除物品。 / Removes item. */
@@ -145,9 +167,11 @@ public class ItemStorage {
 	/** 返回特殊魔立方物品 / Returns the special cube items */
 	public List<Item> getSpecialCubeItems() {
 		List<Item> result = new ArrayList<>();
-		for (Item item : items.values()) {
-			if (item.getItemTemplate().getExtraInventoryId() > 0) {
-				result.add(item);
+		synchronized (items) {
+			for (Item item : items.values()) {
+				if (item.getItemTemplate().getExtraInventoryId() > 0) {
+					result.add(item);
+				}
 			}
 		}
 		return result;
@@ -156,9 +180,11 @@ public class ItemStorage {
 	/** 获取魔立方物品。 / Returns the cube items. */
 	public List<Item> getCubeItems() {
 		List<Item> result = new ArrayList<>();
-		for (Item item : items.values()) {
-			if (item.getItemTemplate().getExtraInventoryId() < 1) {
-				result.add(item);
+		synchronized (items) {
+			for (Item item : items.values()) {
+				if (item.getItemTemplate().getExtraInventoryId() < 1) {
+					result.add(item);
+				}
 			}
 		}
 		return result;
