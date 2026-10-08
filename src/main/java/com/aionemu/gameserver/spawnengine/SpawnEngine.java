@@ -400,8 +400,9 @@ public class SpawnEngine {
 	}
 
 	/**
-	 * 将可见对象登记、定位并刷入世界。
-	 * Stores, positions and spawns a visible object into the world.
+	 * 将可见对象登记、定位并刷入世界；目标实例已注销（副本销毁竞态）时放弃生成并记警告。
+	 * Stores, positions and spawns a visible object into the world; when the target instance is already
+	 * unregistered (instance-teardown race) the spawn is abandoned with a warning.
 	 * @param visibleObject 可见对象 / the visible object
 	 * @param worldId 世界 ID / world id
 	 * @param instanceIndex 实例索引 / instance index
@@ -413,6 +414,21 @@ public class SpawnEngine {
 	public static void bringIntoWorld(VisibleObject visibleObject, int worldId, int instanceIndex, float x, float y,
 			float z, byte h) {
 		World world = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world();
+		// 目标实例可能已在副本销毁流程中注销：destroyInstance 先 removeWorldMapInstance 再逐个删除场内对象，
+		// 期间 AI 的 despawn 链仍会执行 spawn 动作（AI 路径不在实例处理器的 isInstanceDestroyed 护栏内）；
+		// 此时 setPosition 会静默失败、mapRegion 保持 null，继续 spawn 必然在 onBeforeSpawn 处 NPE，
+		// 并在 World 注册表里残留未生成的幽灵对象。
+		// The target instance may already be unregistered during instance teardown: destroyInstance removes it
+		// before deleting its objects, while AI despawn chains can still execute spawn actions (the AI path is
+		// outside the instance handler's isInstanceDestroyed guard). setPosition would then silently leave
+		// mapRegion null, and spawning would NPE in onBeforeSpawn while leaving an unborn ghost object
+		// registered in World.
+		if (world.getWorldMap(worldId).getWorldMapInstanceById(instanceIndex) == null) {
+			VisibleObjectTemplate objectTemplate = visibleObject.getObjectTemplate();
+			int objectTemplateId = objectTemplate == null ? visibleObject.getObjectId() : objectTemplate.getTemplateId();
+			log.warn(I18n.get("log.3e552d08a3b9", objectTemplateId, worldId, instanceIndex));
+			return;
+		}
 		world.storeObject(visibleObject);
 		world.setPosition(visibleObject, worldId, instanceIndex, x, y, z, h);
 		world.spawn(visibleObject);
