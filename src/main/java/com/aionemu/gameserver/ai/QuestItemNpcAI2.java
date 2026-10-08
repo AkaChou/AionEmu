@@ -19,6 +19,8 @@ import com.aionemu.gameserver.questEngine.definition.QuestDialogAction;
 import com.aionemu.gameserver.questEngine.definition.QuestDialogPage;
 import com.aionemu.gameserver.questEngine.model.QuestActionType;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
+import com.aionemu.gameserver.questEngine.model.QuestState;
+import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.questEngine.tablelane.DataDrivenNativeRuntime;
 import com.aionemu.gameserver.questEngine.tablelane.SimpleCollectItemHandler;
 import com.aionemu.gameserver.model.templates.quest.QuestNpc;
@@ -81,12 +83,13 @@ public class QuestItemNpcAI2 extends ActionItemNpcAI2
 		if (dialogResult == null || !dialogResult.isSuccess()) {
 			switch (failedInteractionReply(isDialogNpc(),
 					!SimpleCollectItemHandler.instance().targetsForNpc(getNpcId()).isEmpty()
-						|| DataDrivenNativeRuntime.instance().isCollectObject(getNpcId()))) {
+						|| DataDrivenNativeRuntime.instance().isCollectObject(getNpcId()),
+					relatedQuestsFinished(player))) {
 				case START_DIALOG -> PacketSendUtility.sendPacket(player,
 					new SM_DIALOG_WINDOW(getObjectId(), QuestDialogPage.SELECT1.id()));
 				case REMIND_UNFINISHED_QUEST -> PacketSendUtility.sendPacket(player,
 					SM_SYSTEM_MESSAGE.STR_CANNOT_MOVE_TO_AIRPORT_NEED_FINISH_QUEST);
-				case SILENT_COLLECT -> {
+				case SILENT_COLLECT, SILENT_FINISHED_QUEST -> {
 				}
 			}
 			return;
@@ -126,6 +129,9 @@ public class QuestItemNpcAI2 extends ActionItemNpcAI2
 		/** 采集对象：零发包（真端超杀/条件不满足零副作用口径，QE-137）。 /
 		 * A collect object: zero packets (the retail zero-side-effect shape, QE-137). */
 		SILENT_COLLECT,
+		/** 关联任务已全部了结（COMPLETE/REWARD）：零发包，不再提醒。 /
+		 * Every related quest is finished (COMPLETE/REWARD): zero packets, no reminder. */
+		SILENT_FINISHED_QUEST,
 		/** 其余任务物件：任务未完成提醒。 / Any other quest object: the unfinished-quest reminder. */
 		REMIND_UNFINISHED_QUEST
 	}
@@ -135,22 +141,53 @@ public class QuestItemNpcAI2 extends ActionItemNpcAI2
 	 * <p>
 	 * 采集族物件保持真端零包口径（QE-137：条件不满足零副作用、不补发任何对话窗）；其余任务物件在
 	 * 任务条件不满足（未接取/步骤不符）时给系统消息提醒而不是静默——形态同 {@code CM_USE_ITEM} 的
-	 * 欧比斯入场拦截（{@code meetsAbyssEntryRequirement} 失败 → {@code STR_MSG_CANNOT_TELEPORT_TO_ABYSS}）。
+	 * 欧比斯入场拦截（{@code meetsAbyssEntryRequirement} 失败 → {@code STR_MSG_CANNOT_TELEPORT_TO_ABYSS}）；
+	 * 关联任务已全部了结（完成/待领奖）的物件已"用完"，保持静默（2026-10-08 用户裁定：10035
+	 * 完成后点 702663 不得再弹 1300690）。
 	 * <p>
 	 * Classifies the reply of an interaction that every lane left unclaimed. Collect objects keep the
 	 * retail zero-packet shape (QE-137: no side effects when the condition is not met); other quest
 	 * objects get a system-message reminder instead of staying silent, mirroring the Abyss-entry
-	 * interception in {@code CM_USE_ITEM}.
+	 * interception in {@code CM_USE_ITEM}; objects whose related quests are all finished stay silent.
 	 * @param dialogNpc 是否为对话物件 / whether the object is a dialog npc
 	 * @param collectObject 是否为采集对象 / whether the object is a collect object
+	 * @param relatedQuestsFinished 关联任务是否已全部了结 / whether every related quest is finished
 	 * @return 应答形态 / the reply shape
 	 */
-	static FailedInteractionReply failedInteractionReply(boolean dialogNpc, boolean collectObject) {
+	static FailedInteractionReply failedInteractionReply(boolean dialogNpc, boolean collectObject,
+			boolean relatedQuestsFinished) {
 		if (dialogNpc) {
 			return FailedInteractionReply.START_DIALOG;
 		}
-		return collectObject ? FailedInteractionReply.SILENT_COLLECT
+		if (collectObject) {
+			return FailedInteractionReply.SILENT_COLLECT;
+		}
+		return relatedQuestsFinished ? FailedInteractionReply.SILENT_FINISHED_QUEST
 			: FailedInteractionReply.REMIND_UNFINISHED_QUEST;
+	}
+
+	/**
+	 * 物件的关联任务（onTalkEvent）是否已全部了结（COMPLETE/REWARD）。列表为空视为未了结，
+	 * 保持既有通用提醒口径。
+	 * Whether every quest routed through this object is already finished (COMPLETE/REWARD). An empty
+	 * route list counts as not finished, keeping the generic reminder shape.
+	 * @param player 玩家 / player
+	 * @return 是否全部了结 / whether all related quests are finished
+	 */
+	private boolean relatedQuestsFinished(Player player) {
+		List<Integer> relatedQuests = GameEngineServices.questEngine()
+			.getQuestNpc(getObjectTemplate().getTemplateId()).getOnTalkEvent();
+		if (relatedQuests.isEmpty()) {
+			return false;
+		}
+		for (int questId : relatedQuests) {
+			QuestState questState = player.getQuestStateList().getQuestState(questId);
+			if (questState == null || (questState.getStatus() != QuestStatus.COMPLETE
+					&& questState.getStatus() != QuestStatus.REWARD)) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	private boolean isDialogNpc() {

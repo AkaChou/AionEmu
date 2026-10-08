@@ -329,6 +329,9 @@
 	<portal_loc world_id="400060000" loc_id="4000618" x="1024.3502" y="2033.9099" z="1427.7714" h="90"/>
 	<portal_loc world_id="400060000" loc_id="4000619" x="1023.74243" y="15.678959" z="1427.7427" h="24"/>
 	<portal_loc world_id="400060000" loc_id="4000620" x="2031.2289" y="1024.4161" z="1427.7427" h="60"/>
+	<!-- Silentera Canyon (Underpass) -->
+	<portal_loc world_id="600010000" loc_id="6000100" x="542.741211" y="398.857178" z="327.124481" h="60"/> <!-- Elyos Entry (From_LF4_1_OP_To_UNDERPASS_S1) -->
+	<portal_loc world_id="600010000" loc_id="6000101" x="487.650238" y="1171.729248" z="331.671967" h="0"/> <!-- Asmodians Entry (From_DF4_2_OP_To_UNDERPASS_S2) -->
 	<!-- Tiamaranta's Eye 5.8 -->
 	<portal_loc world_id="600040000" loc_id="6000400" x="754.08765" y="30.9985" z="1196.8104" h="30"/> <!-- Tiamaranta's Eye Elyos -->
 	<portal_loc world_id="600040000" loc_id="6000401" x="754.55330" y="1506.3683" z="1196.8643" h="90"/> <!-- Tiamaranta's Eye Asmodians -->

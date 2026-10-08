@@ -99,6 +99,16 @@ public class PortalService {
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_CANNOT_TELEPORT_TO_ABYSS);
 			return;
 		}
+		// 回廊（锡兰泰拉峡谷）入口的硬门禁：须完成本族「回廊进军准备」使命；与欧比斯/龙界硬门禁
+		// 同口径，不受管理员/会员的任务跳过权限影响。
+		// Hard gate for the corridor (Silentera Canyon) entry: the racial "corridor advance preparation"
+		// mission must be complete; like the Abyss/Balaurea hard gates it is not bypassable by
+		// admin/membership quest-skip permissions.
+		if (TeleportService2.isSilenteraCorridorEntryWorld(mapId)
+				&& !TeleportService2.meetsSilenteraCorridorEntryRequirement(player)) {
+			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_CANNOT_MOVE_TO_AIRPORT_NEED_FINISH_QUEST);
+			return;
+		}
 		InstanceCooltime clt = DataManager.INSTANCE_COOLTIME_DATA.getInstanceCooltimeByWorldId(mapId);
 		if (player.getAccessLevel() < AdminConfig.INSTANCE_REQ) {
 			instanceTitleReq = !player.havePermission(MembershipConfig.INSTANCES_TITLE_REQ);

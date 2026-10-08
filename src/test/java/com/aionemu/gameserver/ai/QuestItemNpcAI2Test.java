@@ -27,12 +27,14 @@ class QuestItemNpcAI2Test {
 	@Test
 	void failedInteractionsReplyByObjectKind() {
 		assertEquals(QuestItemNpcAI2.FailedInteractionReply.START_DIALOG,
-			QuestItemNpcAI2.failedInteractionReply(true, false));
+			QuestItemNpcAI2.failedInteractionReply(true, false, false));
 		assertEquals(QuestItemNpcAI2.FailedInteractionReply.START_DIALOG,
-			QuestItemNpcAI2.failedInteractionReply(true, true));
+			QuestItemNpcAI2.failedInteractionReply(true, true, true));
 		assertEquals(QuestItemNpcAI2.FailedInteractionReply.SILENT_COLLECT,
-			QuestItemNpcAI2.failedInteractionReply(false, true));
+			QuestItemNpcAI2.failedInteractionReply(false, true, false));
 		assertEquals(QuestItemNpcAI2.FailedInteractionReply.REMIND_UNFINISHED_QUEST,
-			QuestItemNpcAI2.failedInteractionReply(false, false));
+			QuestItemNpcAI2.failedInteractionReply(false, false, false));
+		assertEquals(QuestItemNpcAI2.FailedInteractionReply.SILENT_FINISHED_QUEST,
+			QuestItemNpcAI2.failedInteractionReply(false, false, true));
 	}
 }

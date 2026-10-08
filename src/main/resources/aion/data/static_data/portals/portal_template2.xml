@@ -666,6 +666,10 @@
 	<portal_use npc_id="731860">
 		<portal_path loc_id="2101307"/>
 	</portal_use>
+	<!-- Silentera Canyon To Inggison (LF4_UnderPass_out, live) -->
+	<portal_use npc_id="730270">
+		<portal_path loc_id="2101307"/>
+	</portal_use>
 	<!-- Silentera Canyon To Agrief Ruins -->
 	<portal_use npc_id="730257">
 		<portal_path loc_id="2101308"/>
@@ -680,6 +684,10 @@
 	</portal_use>
 	<!-- Silentera Canyon To Gelkmaros -->
 	<portal_use npc_id="731861">
+		<portal_path loc_id="2201407"/>
+	</portal_use>
+	<!-- Silentera Canyon To Gelkmaros (DF4_UnderPass_out, live) -->
+	<portal_use npc_id="730271">
 		<portal_path loc_id="2201407"/>
 	</portal_use>
 	<!-- Silentera Canyon To Mitrakand -->
@@ -3378,6 +3386,22 @@
 	<portal_dialog npc_id="731828">
 		<portal_path dialog="104" loc_id="6001101" race="ASMODIANS">
 			<portal_req min_level="55" err_level="27"/>
+		</portal_path>
+	</portal_dialog>
+	<!-- Silentera Westgate Elyos (LF4_UnderPass_In, live Inggison) -->
+	<portal_dialog npc_id="730256">
+		<portal_path dialog="104" loc_id="6000100" race="ELYOS">
+			<portal_req min_level="55" err_level="27">
+				<quest_req quest_id="10035" quest_step="0"/>
+			</portal_req>
+		</portal_path>
+	</portal_dialog>
+	<!-- Silentera Eastgate Asmodians (DF4_UnderPass_In, live Gelkmaros) -->
+	<portal_dialog npc_id="730260">
+		<portal_path dialog="104" loc_id="6000101" race="ASMODIANS">
+			<portal_req min_level="55" err_level="27">
+				<quest_req quest_id="20035" quest_step="0"/>
+			</portal_req>
 		</portal_path>
 	</portal_dialog>
 	<!-- SILENTERA CANYON END -->

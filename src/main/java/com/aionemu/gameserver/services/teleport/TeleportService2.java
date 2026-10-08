@@ -100,6 +100,12 @@ public class TeleportService2 {
 	private static final int ELYOS_KAHRUN_ENTRY_QUEST_ID = 10100;
 	private static final int ASMODIAN_KAHRUN_ENTRY_QUEST_ID = 20100;
 	private static final int KAHRUN_ENTRY_QUEST_STEP = 1;
+	/** 锡兰泰拉峡谷（回廊）世界。 / Silentera Canyon (the corridor) world. */
+	private static final int SILENTERA_CANYON_WORLD_ID = 600010000;
+	// 回廊入口的硬门禁：须完成本族「回廊进军准备」使命（10035/20035）后开放。
+	// Hard gate for the corridor entry: the racial "corridor advance preparation" mission (10035/20035) must be complete.
+	private static final int ELYOS_SILENTERA_ENTRY_QUEST_ID = 10035;
+	private static final int ASMODIAN_SILENTERA_ENTRY_QUEST_ID = 20035;
 	private static final int ELYOS_ILUMA_WORLD_ID = 210100000;
 	private static final int ASMODIAN_NORSVOLD_WORLD_ID = 220110000;
 	// 任务推进到传送到伊鲁玛/诺斯珀德的步骤后即开放本阵营新大陆交通。
@@ -347,6 +353,41 @@ public class TeleportService2 {
 		return switch (race) {
 			case ELYOS -> ELYOS_KAHRUN_ENTRY_QUEST_ID;
 			case ASMODIANS -> ASMODIAN_KAHRUN_ENTRY_QUEST_ID;
+			default -> 0;
+		};
+	}
+
+	/**
+	 * 判断目标世界是否为锡兰泰拉峡谷（回廊）。
+	 * Returns whether the target world is Silentera Canyon (the corridor).
+	 * @param worldId 世界 ID / World id
+	 * @return 是否为回廊 / whether it is the corridor
+	 */
+	public static boolean isSilenteraCorridorEntryWorld(int worldId) {
+		return worldId == SILENTERA_CANYON_WORLD_ID;
+	}
+
+	/**
+	 * 回廊入口门禁：须完成本族「回廊进军准备」使命（天族 10035 / 魔族 20035）。
+	 * The corridor entry requirement: the racial "corridor advance preparation" mission must be complete.
+	 * @param player 玩家 / Player
+	 * @return 是否允许进入回廊 / whether corridor entry is allowed
+	 */
+	public static boolean meetsSilenteraCorridorEntryRequirement(Player player) {
+		int questId = getSilenteraCorridorEntryQuestId(player.getRace());
+		return questId != 0 && meetsQuestRequirement(player.getQuestStateList().getQuestState(questId), 0);
+	}
+
+	static boolean meetsSilenteraCorridorEntryRequirement(Race race, QuestState questState) {
+		int questId = getSilenteraCorridorEntryQuestId(race);
+		return questId != 0 && questState != null && questState.getQuestId() == questId
+				&& meetsQuestRequirement(questState, 0);
+	}
+
+	static int getSilenteraCorridorEntryQuestId(Race race) {
+		return switch (race) {
+			case ELYOS -> ELYOS_SILENTERA_ENTRY_QUEST_ID;
+			case ASMODIANS -> ASMODIAN_SILENTERA_ENTRY_QUEST_ID;
 			default -> 0;
 		};
 	}

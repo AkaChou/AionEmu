@@ -27,7 +27,7 @@
 ## 5. 边界与遗留
 - 已知边界：「引擎不认领即提醒」——任务完成后点击残留物件同样会提醒（文案不精确但不再是静默）；如需区分「相关任务全部 COMPLETE 则静默」，需按 `questNpc.getOnTalkEvent()` ∩ 玩家任务状态再叠一层过滤（待用户裁定）。
 - **实机验收（2026-10-08，用户确认）**：冷重启后未接 10035 状态点击 702663 → 3 秒进度条后出现 1300690「尚未完成所需的任务，无法移动。」——验收通过。
-- 相关但未处理：730256 `LF4_UnderPass_In`（silentera westgate「锡兰泰拉西门」）「动作 104」无响应——`PortalDialogAI2` 无 `portal_template2.xml` 配置、且不在任何任务路由；真端由 ScriptDLL `LF4_UnderPass_In_simple` 脚本处理（`58Server/server58-source/MainServer_ScriptDLL64/classes/NPC/IAIScriptNpcImp.cpp`），待专门批次。
+- 相关但未处理：730256 `LF4_UnderPass_In`（silentera westgate「锡兰泰拉西门」）「动作 104」无响应——`PortalDialogAI2` 无 `portal_template2.xml` 配置、且不在任何任务路由；真端由 ScriptDLL `LF4_UnderPass_In_simple` 脚本处理（`58Server/server58-source/MainServer_ScriptDLL64/classes/NPC/IAIScriptNpcImp.cpp`）。**已由 `silentera-underpass-live-gates` 批次处理**（活服入口门 730256/730260 补配，见 `.agents/summary/silentera-underpass-live-gates/README.zh-CN.md`）。
 
 ## 6. 证据坐标
 - `log/quests.log` 2026-10-08（Kk；702663/10035 无痕 = CM_SHOW_DIALOG 与 AI 层静默均无打点；730256 动作 104 ×7 无响应）。
