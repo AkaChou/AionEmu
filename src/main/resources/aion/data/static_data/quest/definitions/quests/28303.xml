@@ -35,121 +35,61 @@
     <node label="k2" status="START">
       <var name="var0" value="2"/>
     </node>
-    <node label="k3" status="START">
-      <var name="var0" value="3"/>
-    </node>
-    <node label="k4" status="START">
-      <var name="var0" value="4"/>
-    </node>
-    <node label="k5" status="START">
-      <var name="var0" value="5"/>
-    </node>
     <node label="reward" status="REWARD">
-      <var name="var0" value="5"/>
+      <var name="var0" value="2"/>
     </node>
     <node label="complete" status="COMPLETE">
       <var name="var0" value="0"/>
     </node>
   </nodes>
   <transitions>
+    <!-- 物件 owner 收口 + 阶梯回归 legacy/真端值（2026-10-08，QE-052 同型批次；代表先例 3036）：
+         legacy `_28303Char_Bombom_Boom`：两条击杀各一步（`defaultOnKillEvent(217382, 0, 1)` /
+         `(217376, 1, 2)`；真端 FUN_180ed7990/FUN_180ed7ab0 直接写 var0=1 / var0=2，绝对赋值）；
+         动力物件 700980（IDStation_FOBJ_POWER，无对话 html）在 var==2 时 `useQuestObject(env, 2, 3,
+         true, true)` = 只置 REWARD（不写轴）+ 销毁物件，零回页；领奖（页 10002 → 5 → 结束对话）只在
+         Nineveh 804821（任务书末行 STR_DIC_N_DF5_Nineveh_E）上；传送球 730390 的对话由
+         SteamTachysphereAI2 承担（其 html 声明 select1/select_quest），XML 不参与。
+         旧 XML 把 730390/700980/804821/799530 生成成四份相同全文，物件都带 npc-complete
+         （无 html 的 700980 会吃到收尾页 10 → load fail），且阶梯被抬成 5 步（每类击杀重复 2/3 次）。
+         本形状 = 击杀 1+1 步、物件零回页推进、领奖 owner 唯一 = Nineveh。
+         Object-owner trim + ladder rollback (2026-10-08, QE-052 machine-variant batch; 3036 is the
+         reference case): the two kills advance var0 to 1 then 2 (retail writes absolute 1/2), the
+         power object flips REWARD at var0==2 with zero pages and dies, and the claim lives on
+         Nineveh 804821, the journal's reward row. The transport sphere's dialog is owned by
+         SteamTachysphereAI2, not by this definition. -->
     <dialog type="NPC_START" npc-id="799530" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT_NONE"/>
-    <transition source="started" target="started">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="799530" action="QUEST_SELECT"/>
-      </event>
-      <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
-      </after-commit>
-    </transition>
-    <kill-chain nodes="started k1 k2">
+    <transition source="started" target="k1">
       <event>
         <kill-npc npc-id="217382"/>
       </event>
-    </kill-chain>
-    <kill-chain nodes="k2 k3 k4 k5">
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="k1" target="k2">
       <event>
         <kill-npc npc-id="217376"/>
       </event>
-    </kill-chain>
-    <transition source="k5" target="reward">
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="k2" target="reward">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="799530" action="SELECT_QUEST_REWARD"/>
+        <dialog type="TALK_TO_NPC" npc-id="700980" action="USE_OBJECT"/>
       </event>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
+        <delete-interaction-npc schedule-respawn="true"/>
       </after-commit>
     </transition>
-    <npc-complete npc-id="799530" source="reward" target="complete" fixed-reward-indices="0 1" complete-reward-index="0" finish="SELECTION_DIALOG">
-      <choice action="SELECTED_QUEST_REWARD1" reward-index="2"/>
-      <choice action="SELECTED_QUEST_REWARD2" reward-index="3"/>
-      <choice action="SELECTED_QUEST_REWARD3" reward-index="4"/>
-      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
-    </npc-complete>
-    <dialog type="NPC_START" npc-id="730390" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SHOW_ASK_QUEST_ACCEPT_WINDOW"/>
-    <transition source="started" target="started">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="730390" action="QUEST_SELECT"/>
-      </event>
-      <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
-      </after-commit>
-    </transition>
-    <transition source="k5" target="reward">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="730390" action="SELECT_QUEST_REWARD"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
-      </after-commit>
-    </transition>
-    <npc-complete npc-id="730390" source="reward" target="complete" fixed-reward-indices="0 1" complete-reward-index="0" finish="SELECTION_DIALOG">
-      <choice action="SELECTED_QUEST_REWARD1" reward-index="2"/>
-      <choice action="SELECTED_QUEST_REWARD2" reward-index="3"/>
-      <choice action="SELECTED_QUEST_REWARD3" reward-index="4"/>
-      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
-    </npc-complete>
-    <dialog type="NPC_START" npc-id="700980" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SHOW_ASK_QUEST_ACCEPT_WINDOW"/>
-    <transition source="started" target="started">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="700980" action="QUEST_SELECT"/>
-      </event>
-      <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
-      </after-commit>
-    </transition>
-    <transition source="k5" target="reward">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="700980" action="SELECT_QUEST_REWARD"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
-      </after-commit>
-    </transition>
-    <npc-complete npc-id="700980" source="reward" target="complete" fixed-reward-indices="0 1" complete-reward-index="0" finish="SELECTION_DIALOG">
-      <choice action="SELECTED_QUEST_REWARD1" reward-index="2"/>
-      <choice action="SELECTED_QUEST_REWARD2" reward-index="3"/>
-      <choice action="SELECTED_QUEST_REWARD3" reward-index="4"/>
-      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
-    </npc-complete>
-    <dialog type="NPC_START" npc-id="804821" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SHOW_ASK_QUEST_ACCEPT_WINDOW"/>
-    <transition source="started" target="started">
+    <transition source="reward" target="reward">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="804821" action="QUEST_SELECT"/>
       </event>
       <after-commit>
         <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
-      </after-commit>
-    </transition>
-    <transition source="k5" target="reward">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="804821" action="SELECT_QUEST_REWARD"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
       </after-commit>
     </transition>
     <npc-complete npc-id="804821" source="reward" target="complete" fixed-reward-indices="0 1" complete-reward-index="0" finish="SELECTION_DIALOG">
@@ -158,41 +98,5 @@
       <choice action="SELECTED_QUEST_REWARD3" reward-index="4"/>
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
-
-    <transition source="started" target="reward">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="700980" action="SELECT_QUEST_REWARD"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
-      </after-commit>
-    </transition>
-    <transition source="started" target="reward">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="730390" action="SELECT_QUEST_REWARD"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
-      </after-commit>
-    </transition>
-    <transition source="started" target="reward">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="799530" action="SELECT_QUEST_REWARD"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
-      </after-commit>
-    </transition>
-    <transition source="started" target="reward">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="804821" action="SELECT_QUEST_REWARD"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
-      </after-commit>
-    </transition></transitions>
+  </transitions>
 </quest-definition>

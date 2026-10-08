@@ -48,12 +48,18 @@ class QuestStartItemDefinitionRegressionTest {
 		assertEquals(QuestDialogPage.SELECT1.id(), NativeTalkFixture.clientEntryPage(RETIRED_QUEST),
 			"入口页 = 客户端声明的 select1(1011)");
 
-		// 1582（XML 保有）：started 态 700196 的 QUEST_SELECT 路由仍在 typed 定义里。
+		// 1582（XML 保有）：物件 owner 收口（2026-10-08，3036 实机验收同形）后，started 态 700196 只保留
+		// USE_OBJECT(-1) 零回页推进；迁移期由 npc-report 展开出来的 31/报告页路由是「向物件发页」噪声，已移除。
+		// 1582 (XML-owned): after the object-owner trim (2026-10-08, same shape as the live-accepted 3036)
+		// the started-state route on 700196 is the zero-page USE_OBJECT(-1) advance; the migration's
+		// npc-report 31/page route on the object is gone.
 		CompiledQuestDefinition definition = ProductionQuestDefinitions.definitionInOverlay(TALK_QUEST);
 		assertTrue(definition.definition().transitions().stream()
 			.filter(transition -> "started".equals(transition.sourceNode()))
 			.anyMatch(transition -> transition.event() instanceof QuestEvent.TalkToNpc talk
-				&& talk.npcId() == TALK_NPC && talk.dialogId() == QuestDialogAction.QUEST_SELECT.id()),
+				&& talk.npcId() == TALK_NPC && talk.dialogId() == QuestDialogAction.USE_OBJECT.id()
+				&& transition.afterCommit().equals(List.of(
+					new AfterCommitAction.SyncQuestState(QuestStateSyncMode.PACKET_ONLY)))),
 			"quest " + TALK_QUEST + " NPC " + TALK_NPC);
 	}
 }

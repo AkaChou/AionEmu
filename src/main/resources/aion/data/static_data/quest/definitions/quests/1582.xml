@@ -22,30 +22,74 @@
     <node label="started" status="START">
       <var name="var0" value="0"/>
     </node>
+    <node label="found1" status="START">
+      <var name="var0" value="1"/>
+    </node>
+    <node label="reported2" status="START">
+      <var name="var0" value="2"/>
+    </node>
     <node label="reward" status="REWARD">
-      <var name="var0" value="0"/>
+      <var name="var0" value="2"/>
     </node>
     <node label="complete" status="COMPLETE">
       <var name="var0" value="0"/>
     </node>
   </nodes>
   <transitions>
+    <!-- 物件 owner 收口 + 阶梯与选择支回归 legacy/真端形状（2026-10-08，QE-052 同型批次；代表先例 3036）：
+         legacy `_1582ThePriestsNightmare` 三段分明——
+         1) 墓碑物件 700196（LF3_Tombstone_Q1582）：START/var0==0 时 USE_OBJECT → var0=1，零回页；
+         2) Trou 204560（任务书行 1）：var0==1 时页 1352（select2）→ 1353（select2_1）→ 1354
+            （select2_1_1）→ `SETPRO2`(10001) 置 var0=2，`closeDialogWindow` 零回页；
+         3) Nerison 204573（任务书行 2）：var0==2 时页 1693（select3）→ 1694/1695/1716 →
+            `SETPRO3`(10002)/`SETPRO4`(10003) 两支进入 REWARD（legacy STEP_TO_3/STEP_TO_4 的两个
+            reward 变体；真端 FUN_180fa9210 对 0x2712/0x2713 两支同样只做推进 + 设奖励序号，
+            零发页），REWARD 态结束对话。
+         客户端页/按钮契约由 client_dialog_contract.tsv 的 1582 行逐条锁定（1352/1353/1354/1693/
+         1694/1695/1716/10002 与 select1..select3_1_2 的实际按钮一一对应）。
+         旧 XML 把三个 owner 生成成同一份 NPC_REPORT + npc-complete + 单跳 SETPRO2 形状：物件被登记
+         为领奖 owner（发页 10002/收尾页 10 到无对话 html 的物件 → load fail），且三步阶梯塌成一步。
+         本形状 = 物件零回页推进、Trou 单步阶梯、领奖 owner 唯一 = Nerison（任务书该行的对话人；
+         第 4 行 Kirene 为客户端数据遗留行，legacy/真端均无此步）。奖励变体索引（legacy 的
+         sendQuestEndDialog(env, 0/1)）本轮未在 completion 上建模，留待后续取证。
+         Object-owner trim + ladder fidelity (2026-10-08, QE-052 machine-variant batch; 3036 is the
+         reference case): the tombstone only advances var0 0->1 with zero pages, Trou runs the
+         select2 page chain into SETPRO2 (var0=2), and Nerison (the journal's row-2 NPC) owns the
+         select3 chain, the SETPRO3/SETPRO4 ending branches (retail FUN_180fa9210 advances with zero
+         pages) and the completion. The legacy reward variants are not modelled on completion yet. -->
+    <transition target="reward">
+      <event>
+        <enter-world/>
+      </event>
+      <conditions>
+        <status-is status="REWARD"/>
+        <variable-is field="var0" value="0"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="2"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
     <dialog type="NPC_START" npc-id="204560" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT_NONE"/>
-    <dialog type="NPC_REPORT" npc-id="204560" source="started" target="reward" page="SELECT2"/>
-    <npc-complete npc-id="204560" source="reward" target="complete" fixed-reward-indices="0 1 2 3 4" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
-      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
-    </npc-complete>
-
-    <dialog type="NPC_REPORT" npc-id="700196" source="started" target="reward" page="SELECT2"/>
-    <npc-complete npc-id="700196" source="reward" target="complete" fixed-reward-indices="0 1 2 3 4" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
-      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
-    </npc-complete>
-
-    <dialog type="NPC_REPORT" npc-id="204573" source="started" target="reward" page="SELECT2"/>
-    <npc-complete npc-id="204573" source="reward" target="complete" fixed-reward-indices="0 1 2 3 4" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
-      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
-    </npc-complete>
-    <transition source="started" target="started">
+    <transition source="started" target="found1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="700196" action="USE_OBJECT"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="found1" target="found1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204560" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
+      </after-commit>
+    </transition>
+    <transition source="found1" target="found1">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="204560" action="SELECT2_1"/>
       </event>
@@ -53,23 +97,7 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT2_1"/>
       </after-commit>
     </transition>
-    <transition source="started" target="started">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="204573" action="SELECT2_1"/>
-      </event>
-      <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT2_1"/>
-      </after-commit>
-    </transition>
-    <transition source="started" target="started">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="700196" action="SELECT2_1"/>
-      </event>
-      <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT2_1"/>
-      </after-commit>
-    </transition>
-    <transition source="started" target="started">
+    <transition source="found1" target="found1">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="204560" action="SELECT2_1_1"/>
       </event>
@@ -77,48 +105,75 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT2_1_1"/>
       </after-commit>
     </transition>
-    <transition source="started" target="started">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="204573" action="SELECT2_1_1"/>
-      </event>
-      <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT2_1_1"/>
-      </after-commit>
-    </transition>
-    <transition source="started" target="started">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="700196" action="SELECT2_1_1"/>
-      </event>
-      <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT2_1_1"/>
-      </after-commit>
-    </transition>
-    <transition source="started" target="reward">
+    <transition source="found1" target="reported2">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="204560" action="SETPRO2"/>
       </event>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
+        <close-dialog/>
       </after-commit>
     </transition>
-    <transition source="started" target="reward">
+    <transition source="reported2" target="reported2">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="204573" action="SETPRO2"/>
+        <dialog type="TALK_TO_NPC" npc-id="204573" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT3"/>
+      </after-commit>
+    </transition>
+    <transition source="reported2" target="reported2">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204573" action="SELECT3_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT3_1"/>
+      </after-commit>
+    </transition>
+    <transition source="reported2" target="reported2">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204573" action="SELECT3_1_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT3_1_1"/>
+      </after-commit>
+    </transition>
+    <transition source="reported2" target="reported2">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204573" action="SELECT3_1_2"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT3_1_2"/>
+      </after-commit>
+    </transition>
+    <transition source="reported2" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204573" action="SETPRO3"/>
       </event>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
+        <close-dialog/>
       </after-commit>
     </transition>
-    <transition source="started" target="reward">
+    <transition source="reported2" target="reward">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="700196" action="SETPRO2"/>
+        <dialog type="TALK_TO_NPC" npc-id="204573" action="SETPRO4"/>
       </event>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
+        <close-dialog/>
       </after-commit>
     </transition>
+    <transition source="reward" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204573" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
+      </after-commit>
+    </transition>
+    <npc-complete npc-id="204573" source="reward" target="complete" fixed-reward-indices="0 1 2 3 4" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
+      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
+    </npc-complete>
   </transitions>
 </quest-definition>

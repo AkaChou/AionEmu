@@ -125,7 +125,13 @@ class JournalRewardRowRepairContractTest {
 		new Contract(2564, 3, 0),
 		new Contract(2634, 2, 1),
 		new Contract(2663, 1, 0),
-		new Contract(2664, 1, 0),
+		/* 2664 移出本批（2026-10-08 物件 owner 收口 + legacy/真端取证）：领奖态权威 packed step 是 legacy
+		 * 阶梯计数的落盘值 4（物件五次使用 0..4，第五次 `setStatus(REWARD)`、不写轴），不是末行索引 1；
+		 * 基线由 QuestObjectOwnerTrimContractTest（物件零回页 + owner 唯一 = Dewi）与
+		 * RewardRowProjectionRegressionTest 的 `Row(2664, 1, 4, true)` 锁定（批次值 1 与迁移零值 0 都有回滚边）。
+		 * 2664 left this batch (2026-10-08 object-owner sweep + legacy/retail evidence): the authoritative
+		 * reward step is the legacy ladder value 4 (five object uses 0..4; the fifth only sets REWARD), not
+		 * the last-row index 1. Owned by QuestObjectOwnerTrimContractTest and Row(2664, 1, 4, true). */
 		new Contract(2669, 2, 1),
 		new Contract(2912, 3, 0),
 		new Contract(2913, 2, 0),
@@ -159,8 +165,16 @@ class JournalRewardRowRepairContractTest {
 		new Contract(3969, 1, 0),
 		new Contract(3970, 3, 0),
 		new Contract(3973, 3, 0),
-		new Contract(4004, 1, 0),
-		new Contract(4012, 1, 0),
+		/* 4004/4012 移出本批（2026-10-08 物件 owner 收口 + legacy/真端取证）：
+		 * 4004 同 2664——legacy `useQuestObject(env, var, var+1, false, true)` 计数到 4、
+		 * `useQuestObject(env, 4, 4, true, true)` 只置状态，权威值 = 4（非末行索引 1）；
+		 * 4012——legacy 全程不写 var0（物件只掉落、Virhu 的 1009 分支只置 REWARD），权威值 = 0，
+		 * 批次抬到 1 由 REWARD/1 -> 0 回滚边收口。
+		 * 基线由 QuestObjectOwnerTrimContractTest 与 RewardRowProjectionRegressionTest 的
+		 * `Row(4004, 1, 4, true)` / `Row(4012, 1, 0, false)` 锁定。
+		 * 4004/4012 left this batch (2026-10-08 object-owner sweep + legacy/retail evidence): 4004's
+		 * authoritative value is the legacy counter 4, and 4012 never writes var0 (objects only drop,
+		 * Virhu's 1009 branch only sets REWARD), so batches raised it to 1 must roll back to 0. */
 		new Contract(4015, 1, 0),
 		new Contract(4052, 3, 0),
 		new Contract(4077, 1, 0),

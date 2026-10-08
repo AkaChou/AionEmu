@@ -20,14 +20,19 @@ class LegacyTemplateMirrorRouteRegressionTest {
 		// retail-xml-retention.xml：SEMANTIC_GAP:REPORT_NPC_DIVERGENCE），不进真端编译集合
 		// （RetailQuestDriver.java:413-440：只有 RETAIL_TABLE 行进 retailOwned*，XML_RETENTION 只记
 		// reasons），因此定义由 XML 驱动、不在 S1 面内——报告页 SELECT5(2375) 与 20002
-		// (CHECK_USER_HAS_QUEST_ITEM_SIMPLE) 双 prio 检查对逐字保留
-		// （quest/definitions/quests/2237.xml:143-165：prio0 成功→reward + 窗 1，prio1 失败→CloseDialog）。
+		// (CHECK_USER_HAS_QUEST_ITEM_SIMPLE) 双 prio 检查对逐字保留在交付 NPC 832822 上
+		// （prio0 成功→reward + 窗 1，prio1 失败→CloseDialog）；物件 700145 已在物件 owner 收口
+		// （2026-10-08）中收敛为纯采集掉落（can-act + loot），不带任何对话/发页路由。
 		// 该行的真端校验动作是 20002（SIMPLE 变体）：真端 collect 行与 quest.xml 均无 39 检查轴。
 		// 2237 stays XML-retained and outside the S1 face (only RETAIL_TABLE rows enter the retail
-		// driver), so its SELECT5(2375) report page and the 20002 (CHECK_USER_HAS_QUEST_ITEM_SIMPLE)
-		// dual-priority check pair are preserved verbatim; the retail row carries no 39 check axis.
-		int legacyNpc = 700145;
+		// driver), so its SELECT5(2375) report page and the 20002 dual-priority check pair are preserved
+		// verbatim on the turn-in NPC 832822; the object 700145 was trimmed to the pure collection drop
+		// (can-act + loot, no dialog routes) by the 2026-10-08 object-owner sweep. The retail row
+		// carries no 39 check axis.
+		int legacyNpc = 832822;
 		QuestDefinition legacy = compile(2237);
+		assertTrue(talkRoutes(legacy, "started", 700145, QuestDialogAction.QUEST_SELECT.id()).isEmpty(),
+			"quest 2237 object keeps no page routes");
 		assertPage(legacy, "started", legacyNpc, 2375);
 
 		List<QuestTransition> legacyChecks = talkRoutes(legacy, "started", legacyNpc, 20002);

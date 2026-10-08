@@ -27,18 +27,56 @@
     <node label="started" status="START">
       <var name="var0" value="0"/>
     </node>
-    <node label="reward" status="REWARD">
+    <node label="used1" status="START">
       <var name="var0" value="1"/>
+    </node>
+    <node label="used2" status="START">
+      <var name="var0" value="2"/>
+    </node>
+    <node label="used3" status="START">
+      <var name="var0" value="3"/>
+    </node>
+    <node label="used4" status="START">
+      <var name="var0" value="4"/>
+    </node>
+    <node label="reward" status="REWARD">
+      <var name="var0" value="4"/>
     </node>
     <node label="complete" status="COMPLETE">
       <var name="var0" value="0"/>
     </node>
   </nodes>
   <transitions>
-    <!-- QE-051 领奖行合同：客户端 quest_q2664.html 的 quest_summary 共 2 行，末行是领奖行
-         （STR_DIC_N_Dewi，对应该任务的领奖 NPC）；旧投影停在 0，进入世界时纠正为 1 并下发状态包。
-         Reward row contract (QE-051): the last of the 2 quest_q2664 journal rows is the reward row
-         (STR_DIC_N_Dewi, the reward NPC of this quest); saves persisted at 0 are repaired to 1 on enter-world. -->
+    <!-- 物件 owner 收口（2026-10-08，QE-052 同型批次；代表先例 3036）：
+         legacy `_2664AnAntidotetotheLepharists` 里物件 700324（DF3_FOBJ_Q2664A）只在 START 态吃
+         USE_OBJECT：var 0..3 各 +1（只写轴、零回页），var==4 时 `setStatus(REWARD)`（同样零回页）；
+         领奖（页 10002 → 5 → 结束对话）只在 Dewi 204777（任务书末行 STR_DIC_N_Dewi）上。
+         旧 XML 把物件登记成 NPC_START/NPC_REPORT/npc-complete：三处都会向无对话 html 的物件发页
+         （4762/10002/收尾页 10），收尾页 10 以 questId=0 解析物件自身的 html 名称 → 客户端 load fail。
+         本形状改为阶梯式零回页推进（参照同型入库样本 quest 1612），计数经 PACKET_ONLY 同步刷新
+         任务书行 0 的 ([%2]/5) 计数，领奖 owner 唯一 = Dewi。
+         Object-owner trim (2026-10-08, QE-052 machine-variant batch; 3036 is the reference case): the
+         legacy object only advances var (0..3, zero page) and flips REWARD at var==4 (zero page); the
+         claim (10002 -> 5 -> end dialog) lives on Dewi 204777, the journal's reward row. The old XML
+         registered the object as NPC_START/NPC_REPORT/npc-complete, all of which send pages (4762/10002
+         and the SELECT_QUEST tail with questId=0) to a dialog-less object -> client load fail. The
+         ladder below keeps the counting with zero pages (cf. quest 1612) and confines completion to
+         Dewi. -->
+    <transition target="reward">
+      <event>
+        <enter-world/>
+      </event>
+      <conditions>
+        <status-is status="REWARD"/>
+        <variable-is field="var0" value="1"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="4"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
     <transition target="reward">
       <event>
         <enter-world/>
@@ -48,21 +86,78 @@
         <variable-is field="var0" value="0"/>
       </conditions>
       <actions>
-        <set-variable field="var0" value="1"/>
+        <set-variable field="var0" value="4"/>
       </actions>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
       </after-commit>
     </transition>
     <dialog type="NPC_START" npc-id="204777" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT_NONE"/>
-    <dialog type="NPC_REPORT" npc-id="204777" source="started" target="reward" page="DEFAULT_SUCCESS"/>
+    <transition source="reward" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204777" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
+      </after-commit>
+    </transition>
     <npc-complete npc-id="204777" source="reward" target="complete" fixed-reward-indices="0 1 2 3" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
-    <dialog type="NPC_START" npc-id="700324" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SHOW_ASK_QUEST_ACCEPT_WINDOW"/>
-    <dialog type="NPC_REPORT" npc-id="700324" source="started" target="reward" page="DEFAULT_SUCCESS"/>
-    <npc-complete npc-id="700324" source="reward" target="complete" fixed-reward-indices="0 1 2 3" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
-      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
-    </npc-complete>
+    <transition source="started" target="used1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="700324" action="USE_OBJECT"/>
+      </event>
+      <conditions>
+        <has-item item-id="182204489" count="1"/>
+      </conditions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="used1" target="used2">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="700324" action="USE_OBJECT"/>
+      </event>
+      <conditions>
+        <has-item item-id="182204489" count="1"/>
+      </conditions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="used2" target="used3">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="700324" action="USE_OBJECT"/>
+      </event>
+      <conditions>
+        <has-item item-id="182204489" count="1"/>
+      </conditions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="used3" target="used4">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="700324" action="USE_OBJECT"/>
+      </event>
+      <conditions>
+        <has-item item-id="182204489" count="1"/>
+      </conditions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="used4" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="700324" action="USE_OBJECT"/>
+      </event>
+      <conditions>
+        <has-item item-id="182204489" count="1"/>
+      </conditions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
   </transitions>
 </quest-definition>

@@ -34,26 +34,54 @@
     <node label="started" status="START">
       <var name="var0" value="0"/>
     </node>
+    <node label="soupPlaced" status="START">
+      <var name="var0" value="1"/>
+    </node>
     <node label="reward" status="REWARD">
-      <var name="var0" value="0"/>
+      <var name="var0" value="1"/>
     </node>
     <node label="complete" status="COMPLETE">
       <var name="var0" value="0"/>
     </node>
   </nodes>
   <transitions>
-    <dialog type="NPC_START" npc-id="204378" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT_NONE"/>
-    <dialog type="NPC_REPORT" npc-id="204378" source="started" target="reward" page="DEFAULT_SUCCESS"/>
-    <transition source="started" target="reward" priority="0">
+    <!-- 物件 owner 收口 + 选择支回归 legacy 形状（2026-10-08，QE-052 同型批次；代表先例 3036）：
+         legacy `_2307IrresistibleSoup` 三段分明——
+         1) 汤锅物件 700247（DF2_FOBJ_Soup_Q2307）：START/var0==0 时 USE_OBJECT → var0=1，零回页；
+         2) Spedor 204336：START/var0==1 时先页 1011（客户端 select1 的四个 `HACTION_SELECT1_1..4`
+            按钮；typed 动作 SELECT1_1=1012 / SELECT1_2=1097 / SELECT1_3=1182 / SELECT1_4=1267），
+            legacy 只接 SETPRO1(10000)/1182/1267 三支：分别置 var0=2 / 1 / 1 并移除对应汤道具
+            （182204106 / 107 / 108）、`closeDialogWindow` 零回页进入 REWARD；第 4 支无 legacy 分支，不建模；
+         3) Fathir 204378（任务书末行 STR_DIC_N_Fathir）：REWARD 态移除四种汤道具并 `sendQuestEndDialog`
+            （页 10002 → 5 → 领取）。
+         旧 XML 把物件与两个 NPC 生成成完全相同的 NPC_START/NPC_REPORT/npc-complete 三份全文，
+         向无对话 html 的物件发页（4762/10002/收尾页 10）→ load fail。本形状 = 物件零回页推进、
+         Spedor 零回页选择支、领奖 owner 唯一 = Fathir；reward 投影按 legacy 落盘值（1 或 2，
+         取两支的默认 1，并把迁移期的 0 自愈到 1）。
+         Object-owner trim + choice fidelity (2026-10-08, QE-052 machine-variant batch; 3036 is the
+         reference case): the pot only advances var0 0->1 with zero pages, Spedor serves the page-1011
+         choice (legacy handles SETPRO1/SELECT1_3/SELECT1_4 only) and flips REWARD with zero pages, and
+         the claim lives on Fathir 204378, the journal's reward row. -->
+    <transition target="reward">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="204378" action="SELECT_QUEST_REWARD"/>
+        <enter-world/>
       </event>
       <conditions>
-        <has-item item-id="182204105" count="1"/>
-        <has-item item-id="182204106" count="1"/>
-        <has-item item-id="182204107" count="1"/>
-        <has-item item-id="182204108" count="1"/>
+        <status-is status="REWARD"/>
+        <variable-is field="var0" value="0"/>
       </conditions>
+      <actions>
+        <set-variable field="var0" value="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
+    <dialog type="NPC_START" npc-id="204378" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT_NONE"/>
+    <transition source="reward" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204378" action="QUEST_SELECT"/>
+      </event>
       <actions>
         <remove-item item-id="182204105" count="1"/>
         <remove-item item-id="182204106" count="1"/>
@@ -61,62 +89,68 @@
         <remove-item item-id="182204108" count="1"/>
       </actions>
       <after-commit>
-        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT5"/>
       </after-commit>
     </transition>
-    <transition source="started" target="started" priority="1">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="204378" action="SELECT_QUEST_REWARD"/>
-      </event>
-      <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="CHECK_USER_ITEM_FAIL"/>
-      </after-commit>
-    </transition>
-    <transition source="started" target="started">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="204378" action="FINISH_DIALOG"/>
-      </event>
-      <after-commit>
-        <close-dialog/>
-      </after-commit>
-    </transition>
-
     <npc-complete npc-id="204378" source="reward" target="complete" fixed-reward-indices="0 1 2" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
-    <dialog type="NPC_START" npc-id="204336" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT_NONE"/>
-    <dialog type="NPC_REPORT" npc-id="204336" source="started" target="reward" page="DEFAULT_SUCCESS"/>
-    <transition source="started" target="reward" priority="0">
+    <transition source="started" target="soupPlaced">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="204336" action="SELECT_QUEST_REWARD"/>
+        <dialog type="TALK_TO_NPC" npc-id="700247" action="USE_OBJECT"/>
       </event>
-      <conditions>
-        <has-item item-id="182204105" count="1"/>
-        <has-item item-id="182204106" count="1"/>
-        <has-item item-id="182204107" count="1"/>
-        <has-item item-id="182204108" count="1"/>
-      </conditions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="soupPlaced" target="soupPlaced">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204336" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT1"/>
+      </after-commit>
+    </transition>
+    <transition source="soupPlaced" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204336" action="SETPRO1"/>
+      </event>
       <actions>
-        <remove-item item-id="182204105" count="1"/>
+        <set-variable field="var0" value="2"/>
         <remove-item item-id="182204106" count="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <transition source="soupPlaced" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204336" action="SELECT1_3"/>
+      </event>
+      <actions>
+        <set-variable field="var0" value="1"/>
         <remove-item item-id="182204107" count="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <transition source="soupPlaced" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204336" action="SELECT1_4"/>
+      </event>
+      <actions>
+        <set-variable field="var0" value="1"/>
         <remove-item item-id="182204108" count="1"/>
       </actions>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
+        <close-dialog/>
       </after-commit>
     </transition>
-    <transition source="started" target="started" priority="1">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="204336" action="SELECT_QUEST_REWARD"/>
-      </event>
-      <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="CHECK_USER_ITEM_FAIL"/>
-      </after-commit>
-    </transition>
-    <transition source="started" target="started">
+    <transition source="soupPlaced" target="soupPlaced">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="204336" action="FINISH_DIALOG"/>
       </event>
@@ -124,52 +158,5 @@
         <close-dialog/>
       </after-commit>
     </transition>
-
-    <npc-complete npc-id="204336" source="reward" target="complete" fixed-reward-indices="0 1 2" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
-      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
-    </npc-complete>
-    <dialog type="NPC_START" npc-id="700247" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT_NONE"/>
-    <dialog type="NPC_REPORT" npc-id="700247" source="started" target="reward" page="DEFAULT_SUCCESS"/>
-    <transition source="started" target="reward" priority="0">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="700247" action="SELECT_QUEST_REWARD"/>
-      </event>
-      <conditions>
-        <has-item item-id="182204105" count="1"/>
-        <has-item item-id="182204106" count="1"/>
-        <has-item item-id="182204107" count="1"/>
-        <has-item item-id="182204108" count="1"/>
-      </conditions>
-      <actions>
-        <remove-item item-id="182204105" count="1"/>
-        <remove-item item-id="182204106" count="1"/>
-        <remove-item item-id="182204107" count="1"/>
-        <remove-item item-id="182204108" count="1"/>
-      </actions>
-      <after-commit>
-        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
-      </after-commit>
-    </transition>
-    <transition source="started" target="started" priority="1">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="700247" action="SELECT_QUEST_REWARD"/>
-      </event>
-      <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="CHECK_USER_ITEM_FAIL"/>
-      </after-commit>
-    </transition>
-    <transition source="started" target="started">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="700247" action="FINISH_DIALOG"/>
-      </event>
-      <after-commit>
-        <close-dialog/>
-      </after-commit>
-    </transition>
-
-    <npc-complete npc-id="700247" source="reward" target="complete" fixed-reward-indices="0 1 2" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
-      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
-    </npc-complete>
   </transitions>
 </quest-definition>

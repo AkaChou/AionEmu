@@ -30,27 +30,36 @@
       <var name="var0" value="0"/>
     </node>
     <node label="reward" status="REWARD">
-      <var name="var0" value="1"/>
+      <var name="var0" value="0"/>
     </node>
     <node label="complete" status="COMPLETE">
       <var name="var0" value="0"/>
     </node>
   </nodes>
   <transitions>
-    <!-- QE-051 领奖行合同：客户端 quest_q4012.html 的 quest_summary 共 2 行，末行是领奖行
-         （STR_DIC_N_Scarecrow_Virhu，对应该任务的领奖 NPC）；旧投影停在 0，进入世界时纠正为 1 并下发状态包。
-         Reward row contract (QE-051): the last of the 2 quest_q4012 journal rows is the reward row
-         (STR_DIC_N_Scarecrow_Virhu, the reward NPC of this quest); saves persisted at 0 are repaired to 1 on enter-world. -->
+    <!-- 物件 owner 收口 + 领奖态步号轴回归 legacy 值（2026-10-08，QE-052/QE-054 同型批次；代表先例 3036）：
+         legacy `_4012TroublesomePromise` 里物件 700342（DF2A_FOBJ_Q4012）只吃 USE_OBJECT 的采集掉落
+         （`return true; // loot`，掉 182209005），零发页；Vidohunir 205142 只做接取；领奖只在
+         Scarecrow_Virhu 730104（任务书末行 STR_DIC_N_Scarecrow_Virhu）上：dialogId 1009 → 移除道具 +
+         setStatus(REWARD) + 页 5，REWARD 态结束对话——**全程不写 var0（权威值 0）**。
+         旧 XML 把物件登记成完整 NPC 块（NPC_START/NPC_REPORT/npc-complete，向无对话 html 的物件发页
+         4762/10002/收尾页 10 → load fail），并让 Vidohunir 也能领奖；批次 7a7d27809 又把领奖投影
+         按「末行索引」抬到 1。本形状 = 物件收敛为「can-act + 掉落」纯采集面、领奖 owner 唯一 =
+         Virhu、投影回 0、自愈边反转 REWARD/1 -> 0（同 3036/1123 口径）。
+         Object-owner trim + reward-axis rollback (2026-10-08, QE-052/QE-054 machine-variant batch;
+         3036 is the reference case): the legacy object only serves the loot drop, Vidohunir only
+         starts the quest, and the claim lives on Virhu 730104 (the journal's reward row) without ever
+         writing var0 — the authoritative value is 0, so the batch's last-row lift is reversed. -->
     <transition target="reward">
       <event>
         <enter-world/>
       </event>
       <conditions>
         <status-is status="REWARD"/>
-        <variable-is field="var0" value="0"/>
+        <variable-is field="var0" value="1"/>
       </conditions>
       <actions>
-        <set-variable field="var0" value="1"/>
+        <set-variable field="var0" value="0"/>
       </actions>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
@@ -62,43 +71,6 @@
       </event>
     </transition>
     <dialog type="NPC_START" npc-id="205142" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1"/>
-    <dialog type="NPC_REPORT" npc-id="205142" source="started" target="reward" page="SELECT2"/>
-    <transition source="started" target="reward" priority="0">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="205142" action="SELECT_QUEST_REWARD"/>
-      </event>
-      <conditions>
-        <has-item item-id="182209005" count="1"/>
-      </conditions>
-      <actions>
-        <remove-item item-id="182209005" count="1"/>
-      </actions>
-      <after-commit>
-        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
-      </after-commit>
-    </transition>
-    <transition source="started" target="started" priority="1">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="205142" action="SELECT_QUEST_REWARD"/>
-      </event>
-      <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="CHECK_USER_ITEM_FAIL"/>
-      </after-commit>
-    </transition>
-    <transition source="started" target="started">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="205142" action="FINISH_DIALOG"/>
-      </event>
-      <after-commit>
-        <close-dialog/>
-      </after-commit>
-    </transition>
-
-    <npc-complete npc-id="205142" source="reward" target="complete" fixed-reward-indices="0 1 2" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
-      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
-    </npc-complete>
-    <dialog type="NPC_START" npc-id="730104" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1"/>
     <dialog type="NPC_REPORT" npc-id="730104" source="started" target="reward" page="SELECT2"/>
     <transition source="started" target="reward" priority="0">
       <event>
@@ -133,43 +105,6 @@
     </transition>
 
     <npc-complete npc-id="730104" source="reward" target="complete" fixed-reward-indices="0 1 2" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
-      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
-    </npc-complete>
-    <dialog type="NPC_START" npc-id="700342" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1"/>
-    <dialog type="NPC_REPORT" npc-id="700342" source="started" target="reward" page="SELECT2"/>
-    <transition source="started" target="reward" priority="0">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="700342" action="SELECT_QUEST_REWARD"/>
-      </event>
-      <conditions>
-        <has-item item-id="182209005" count="1"/>
-      </conditions>
-      <actions>
-        <remove-item item-id="182209005" count="1"/>
-      </actions>
-      <after-commit>
-        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
-      </after-commit>
-    </transition>
-    <transition source="started" target="started" priority="1">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="700342" action="SELECT_QUEST_REWARD"/>
-      </event>
-      <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="CHECK_USER_ITEM_FAIL"/>
-      </after-commit>
-    </transition>
-    <transition source="started" target="started">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="700342" action="FINISH_DIALOG"/>
-      </event>
-      <after-commit>
-        <close-dialog/>
-      </after-commit>
-    </transition>
-
-    <npc-complete npc-id="700342" source="reward" target="complete" fixed-reward-indices="0 1 2" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
   </transitions>

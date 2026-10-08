@@ -37,6 +37,20 @@
     </node>
   </nodes>
   <transitions>
+    <!-- 物件 owner 收口（2026-10-08，QE-052 同型批次；代表先例 3036）：
+         legacy `_2237AFertileField` 里物件 700145（DF1A_Manure）只吃 USE_OBJECT 的采集掉落
+         （`return true; // loot`，肥料袋掉 3 个 182203226），没有任何发页、没有领奖分支；
+         交任务/领奖（checkQuestItems(env, 0, 0, true, 5, 0) → 页 5 → 结束对话）只在 832822 上。
+         旧 XML 把物件登记成与 832822 完全相同的 NPC_START/NPC_REPORT/npc-complete/CHECK 路由，
+         向无对话 html 的物件发页（4762/10002/收尾页 10），收尾页 10 以 questId=0 解析物件自身
+         html → 客户端 load fail。本形状把物件收敛为「can-act + 掉落」纯采集面。
+         注：客户端任务书把交付人写作 Daike（203629），服务端注册面按保留清单裁定仍为 832822
+         （retail-xml-retention.xml 的 ADJUDICATED:REPORT_NPC_DIVERGENCE 行），本批不动该裁定。
+         Object-owner trim (2026-10-08, QE-052 machine-variant batch; 3036 is the reference case):
+         the legacy manure sack only serves the loot drop and never sends pages or hands out the
+         reward — the hand-in stays on 832822. Note: the client journal names Daike (203629) as the
+         reporter; the retention list already adjudicated the server-side reporter as 832822
+         (ADJUDICATED:REPORT_NPC_DIVERGENCE) and this batch keeps that decision. -->
     <transition source="started" target="started">
       <event>
         <can-act template-id="700145" action-type="ACTION_ITEM_USE"/>
@@ -79,43 +93,6 @@
     <npc-complete npc-id="832822" source="reward" target="complete" fixed-reward-indices="0 1 2" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
-    <dialog type="NPC_START" npc-id="700145" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1"/>
-    <dialog type="NPC_REPORT" npc-id="700145" source="started" target="reward" page="SELECT5"/>
-    <transition source="started" target="reward" priority="0">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="700145" action="SELECT_QUEST_REWARD"/>
-      </event>
-      <conditions>
-        <has-item item-id="182203226" count="3"/>
-      </conditions>
-      <actions>
-        <remove-item item-id="182203226" count="3"/>
-      </actions>
-      <after-commit>
-        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
-      </after-commit>
-    </transition>
-    <transition source="started" target="started" priority="1">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="700145" action="SELECT_QUEST_REWARD"/>
-      </event>
-      <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="CHECK_USER_ITEM_FAIL"/>
-      </after-commit>
-    </transition>
-    <transition source="started" target="started">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="700145" action="FINISH_DIALOG"/>
-      </event>
-      <after-commit>
-        <close-dialog/>
-      </after-commit>
-    </transition>
-
-    <npc-complete npc-id="700145" source="reward" target="complete" fixed-reward-indices="0 1 2" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
-      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
-    </npc-complete>
     <transition source="started" target="reward" priority="0">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="832822" action="CHECK_USER_HAS_QUEST_ITEM_SIMPLE"/>
@@ -139,28 +116,5 @@
         <close-dialog/>
       </after-commit>
     </transition>
-      <transition source="started" target="reward" priority="0">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="700145" action="CHECK_USER_HAS_QUEST_ITEM_SIMPLE"/>
-      </event>
-      <conditions>
-        <has-item item-id="182203226" count="3"/>
-      </conditions>
-      <actions>
-        <remove-item item-id="182203226" count="3"/>
-      </actions>
-      <after-commit>
-        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
-      </after-commit>
-    </transition>
-    <transition source="started" target="started" priority="1">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="700145" action="CHECK_USER_HAS_QUEST_ITEM_SIMPLE"/>
-      </event>
-      <after-commit>
-        <close-dialog/>
-      </after-commit>
-    </transition>
-</transitions>
+  </transitions>
 </quest-definition>

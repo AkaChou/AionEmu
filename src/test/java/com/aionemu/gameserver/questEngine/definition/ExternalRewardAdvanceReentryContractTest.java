@@ -54,6 +54,22 @@ class ExternalRewardAdvanceReentryContractTest {
 				+ " / the engine-external REWARD writer set changed; refresh the audit script and baseline");
 
 		for (BaselineRow row : rows) {
+			// 写入方检查与 XML 无关，先做：退役行的 Java 写入方（如 MinionService）仍必须存在。
+			// The writer check is XML-independent and runs first: the Java writer of a retired row
+			// (e.g. MinionService) must still exist.
+			assertWriterStillExists(row);
+			// 退役行（15545/25545：XML 随 2026-09-27 真端表驱动迁移删除，retention owner=RETAIL_TABLE）：
+			// 生产视图无定义，本测试的 XML 侧合同（投影/入口页/自愈边）不再适用，口径由真端表车道承担；
+			// 守卫要求缺席行必须确属退役，防止基线行静默失效（与 JournalRewardRowRepairContractTest 同构）。
+			// Retired rows (15545/25545: their XML was deleted by the 2026-09-27 table-driven migration,
+			// retention owner=RETAIL_TABLE): the production view has no definition, so the XML-side
+			// contract no longer applies and the caliber lives in the retail table lane. The guard keeps
+			// absent rows honest (they must really be retired), mirroring JournalRewardRowRepairContractTest.
+			if (ProductionQuestDefinitions.catalog().find(row.questId()).isEmpty()) {
+				assertTrue(RetiredQuestIds.contains(row.questId()), () -> "quest " + row.questId()
+					+ " is missing from the production catalog and not retired; refresh the audit baseline");
+				continue;
+			}
 			QuestDefinition definition = definition(row.questId()).definition();
 			assertEquals(row.writerStep(), row.rewardProjection(),
 				"quest " + row.questId() + " baseline must record the aligned writer step");
@@ -114,8 +130,6 @@ class ExternalRewardAdvanceReentryContractTest {
 					"quest " + row.questId() + " recovery response");
 				assertNull(recovery.priority(), "quest " + row.questId() + " recovery priority");
 			}
-
-			assertWriterStillExists(row);
 		}
 	}
 

@@ -1,0 +1,155 @@
+# quest 1582 （1582.xml）
+
+## 服务端 owner 面 / server owners
+- npc-complete: 204560 ai=general tribe=GENERAL name_desc=Trou
+- npc-complete: 700196 ai=quest_start_use_item tribe=FIELD_OBJECT_LIGHT name_desc=LF3_Tombstone_Q1582
+- npc-complete: 204573 ai=aggressive tribe=GUARD name_desc=Nerison
+- dialog:NPC_START: 204560 ai=general tribe=GENERAL name_desc=Trou
+- dialog:NPC_REPORT: 204560 ai=general tribe=GENERAL name_desc=Trou
+- dialog:NPC_REPORT: 700196 ai=quest_start_use_item tribe=FIELD_OBJECT_LIGHT name_desc=LF3_Tombstone_Q1582
+- dialog:NPC_REPORT: 204573 ai=aggressive tribe=GUARD name_desc=Nerison
+
+## 客户端任务书 / client journal
+- QUEST_Q1582.html: 存在
+  - <p visible="[%0]"><font color="[%1]">寻找[%dic:STR_DIC_W_LF3_SZ_006]中奇兰内的坟墓</font></p>
+  - <p visible="[%3]"><font color="[%4]">向[%dic:STR_DIC_N_Trou]报告</font></p>
+  - <p visible="[%6]"><font color="[%7]">和[%dic:STR_DIC_N_Nerison]对话</font></p>
+  - <p visible="[%9]"><font color="[%10]">和[%dic:STR_DIC_N_Kirene]对话</font></p>
+  - STR_DIC_N_Kirene -> 未解析
+  - STR_DIC_N_Nerison -> [204573]
+  - STR_DIC_N_Trou -> [204560]
+  - STR_DIC_W_LF3_SZ_006 -> 未解析
+
+## 客户端可加载页 / loadable quest pages
+(无 quest_q<id>.html)
+
+## legacy handler
+`src/main/java/com/aionemu/gameserver/quest/handlers/heiron/_1582ThePriestsNightmare.java` @ 7e9f0316c^
+
+```java
+package com.aionemu.gameserver.quest.handlers.heiron;
+
+import com.aionemu.gameserver.model.gameobjects.player.Player;
+import com.aionemu.gameserver.questEngine.handlers.QuestHandler;
+import com.aionemu.gameserver.questEngine.model.QuestDialog;
+import com.aionemu.gameserver.questEngine.model.QuestEnv;
+import com.aionemu.gameserver.questEngine.model.QuestState;
+import com.aionemu.gameserver.questEngine.model.QuestStatus;
+import com.aionemu.gameserver.questEngine.model.QuestActionType;
+
+/**
+ * 希隆任务脚本：The Priests Nightmare（任务 ID 1582）。
+ * Heiron quest script: The Priests Nightmare (quest ID 1582).
+ *
+ * @author Balthazar
+ */
+public class _1582ThePriestsNightmare extends QuestHandler {
+
+	private final static int questId = 1582;
+	private int reward;
+	public _1582ThePriestsNightmare() {
+		super(questId);
+	}
+
+	@Override
+	public void register() {
+		qe.registerQuestNpc(204560).addOnQuestStart(questId);
+		qe.registerQuestNpc(204560).addOnTalkEvent(questId);
+		qe.registerQuestNpc(700196).addOnTalkEvent(questId);
+		qe.registerQuestNpc(204573).addOnTalkEvent(questId);
+	}
+
+	@Override
+	public boolean onDialogEvent(QuestEnv env) {
+		final Player player = env.getPlayer();
+		int targetId = env.getTargetId();
+		QuestState qs = player.getQuestStateList().getQuestState(questId);
+		if (qs == null || qs.getStatus() == QuestStatus.NONE) {
+			if (targetId == 204560) {
+				if (env.getDialog() == QuestDialog.START_DIALOG)
+					return sendQuestDialog(env, 4762);
+				else
+					return sendQuestStartDialog(env);
+			}
+		}
+		if (qs == null)
+			return false;
+		if (qs.getStatus() == QuestStatus.START) {
+			switch (targetId) {
+				case 700196: {
+					switch (env.getDialog()) {
+						case USE_OBJECT: {
+							if (qs.getQuestVarById(0) == 0) {
+								qs.setQuestVarById(0, qs.getQuestVarById(0) + 1);
+								updateQuestStatus(env);
+								return true;
+							}
+						}
+					}
+				}
+				case 204560: {
+					switch (env.getDialog()) {
+						case START_DIALOG: {
+							if (qs.getQuestVarById(0) == 1) {
+								return sendQuestDialog(env, 1352);
+							}
+						}
+						case STEP_TO_2: {
+							if (qs.getQuestVarById(0) == 1) {
+								qs.setQuestVarById(0, qs.getQuestVarById(0) + 1);
+								updateQuestStatus(env);
+								return closeDialogWindow(env);
+							}
+						}
+					}
+				}
+				case 204573: {
+					switch (env.getDialog()) {
+						case START_DIALOG: {
+							if (qs.getQuestVarById(0) == 2) {
+								return sendQuestDialog(env, 1693);
+							}
+						}
+						case STEP_TO_3: {
+							if (qs.getQuestVarById(0) == 2) {
+						        reward = 0;
+					            qs.setStatus(QuestStatus.REWARD);
+					            updateQuestStatus(env);
+					            return closeDialogWindow(env);
+							}
+						}
+						case STEP_TO_4: {
+							if (qs.getQuestVarById(0) == 2) {
+						        reward = 1;
+					            qs.setStatus(QuestStatus.REWARD);
+					            updateQuestStatus(env);
+					            return closeDialogWindow(env);
+							}
+						}
+					}
+				}
+			}
+		}
+		else if (qs.getStatus() == QuestStatus.REWARD) {
+			if (targetId == 700196) {
+				return sendQuestEndDialog(env, reward);
+            }
+		}
+		return false;
+	}
+
+	@Override
+	public boolean onCanAct(QuestEnv env, QuestActionType questEventType, Object... objects) {
+		Player player = env.getPlayer();
+		QuestState qs = player.getQuestStateList().getQuestState(env.getQuestId());
+		int targetId = env.getTargetId();
+		if (targetId == 700196) {
+			if (qs == null && (qs.getStatus() == QuestStatus.START || qs.getStatus() == QuestStatus.REWARD)) {
+				return false;
+			}
+		}
+		return true;
+	}
+}
+
+```

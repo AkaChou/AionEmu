@@ -34,10 +34,11 @@
     </node>
   </nodes>
   <transitions>
-    <!-- QE-051 领奖行合同：客户端 quest_q21105.html 的 quest_summary 共 2 行，末行是领奖行
-         （STR_DIC_N_Shulack_DF4_4，对应该任务的领奖 NPC）；旧投影停在 0，进入世界时纠正为 1 并下发状态包，与镜像 11105 对照。
-         Reward row contract (QE-051): the last of the 2 quest_q21105 journal rows is the reward row
-         (STR_DIC_N_Shulack_DF4_4, the reward NPC of this quest); saves persisted at 0 are repaired to 1 on enter-world, matching mirror 11105. -->
+    <!-- 领奖行修复边（第三批领奖行合同，JournalRewardRowRepairContractTest 的 Contract(21105, 1, 0)）：
+         旧形状的 SET_SUCCEED 只置 REWARD 不写轴，存量存档停在 REWARD/0；本边按 reward 投影回填 var0=1。
+         Reward-row repair edge (batch-3 contract, Contract(21105, 1, 0) in JournalRewardRowRepairContractTest):
+         the old SET_SUCCEED route only flipped REWARD without writing the axis, so persisted saves sit at
+         REWARD/0; this edge back-fills var0=1 to match the reward projection. -->
     <transition target="reward">
       <event>
         <enter-world/>
@@ -53,6 +54,25 @@
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
       </after-commit>
     </transition>
+    <!-- 物件 owner 收口（2026-10-08，QE-052 同型批次；代表先例 3036）：
+         legacy `_21105CoweringRefugee` 三段分明——
+         1) 笛子物件 700812（DF4_FOBJ_Q21105，客户端无对话 html）：START 态 USE_OBJECT 在物件位置
+            随机生成难民（799366/216086）、让物件重生并消失，零回页、不改任务轴；
+         2) 难民 799366：页 1011（select1）→ `SET_REWARD`(10255) → `defaultCloseDialog(env, 0, 1, true,
+            false)` = var0=1 + REWARD + 移除笛子道具（182207857）+ 难民消失，零回页；
+         3) 领奖（10002 → 5 → 结束对话）只在 Shulack_DF4_4 799276（任务书末行 STR_DIC_N_Shulack_DF4_4）上。
+         真端注册面（retail-quest-ai-registrations.xml）= 700812/799276/799366 三实体，页下发只有
+         accept/refuse（0x3eb/0x3ec）。
+         旧 XML 把三个实体生成成同一份 NPC_REPORT + npc-complete 全文：无对话 html 的笛子会吃到
+         收尾页 10（questId=0 → 客户端按物件名解析 html 失败 → load fail），且领奖入口不唯一。
+         本形状 = 笛子零回页占位（legacy 的随机生成依赖物件实时坐标，typed 无等价动作，
+         待补：以物件刷点坐标改写 spawn-npc-current-or-default）、难民承担 SET_SUCCEED 步、
+         领奖 owner 唯一 = 799276。
+         Object-owner trim (2026-10-08, QE-052 machine-variant batch; 3036 is the reference case):
+         the flute object (no client dialog html) must never be a page target or a completion owner;
+         the refugee carries the SET_SUCCEED step (var0=1 + REWARD + work-item removal), and the claim
+         lives on 799276, the journal's reward row. The legacy spawn of a refugee at the object's live
+         position has no typed equivalent yet (needs the spawn point coordinates). -->
     <dialog type="NPC_START" npc-id="799276" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT_NONE">
       <accept-actions>
         <give-item item-id="182207857" count="1"/>
@@ -66,27 +86,12 @@
         <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
       </after-commit>
     </transition>
-    <transition source="started" target="reward" priority="0">
+    <transition source="reward" target="reward">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="799276" action="SELECT_QUEST_REWARD"/>
-      </event>
-      <conditions>
-        <has-item item-id="182207857" count="1"/>
-      </conditions>
-      <actions>
-        <remove-item item-id="182207857" count="1"/>
-      </actions>
-      <after-commit>
-        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
-      </after-commit>
-    </transition>
-    <transition source="started" target="started" priority="1">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="799276" action="SELECT_QUEST_REWARD"/>
+        <dialog type="TALK_TO_NPC" npc-id="799276" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <close-dialog/>
+        <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
       </after-commit>
     </transition>
     <npc-complete npc-id="799276" source="reward" target="complete" fixed-reward-indices="0 1" complete-reward-index="0" finish="SELECTION_DIALOG">
@@ -95,89 +100,34 @@
       <choice action="SELECTED_QUEST_REWARD3" reward-index="4"/>
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
-    <dialog type="NPC_START" npc-id="700812" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT_NONE">
-      <accept-actions>
-        <give-item item-id="182207857" count="1"/>
-      </accept-actions>
-    </dialog>
-    <transition source="started" target="started">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="700812" action="QUEST_SELECT"/>
-      </event>
-      <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
-      </after-commit>
-    </transition>
-    <transition source="started" target="reward" priority="0">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="700812" action="SELECT_QUEST_REWARD"/>
-      </event>
-      <conditions>
-        <has-item item-id="182207857" count="1"/>
-      </conditions>
-      <actions>
-        <remove-item item-id="182207857" count="1"/>
-      </actions>
-      <after-commit>
-        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
-      </after-commit>
-    </transition>
-    <transition source="started" target="started" priority="1">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="700812" action="SELECT_QUEST_REWARD"/>
-      </event>
-      <after-commit>
-        <close-dialog/>
-      </after-commit>
-    </transition>
-    <npc-complete npc-id="700812" source="reward" target="complete" fixed-reward-indices="0 1" complete-reward-index="0" finish="SELECTION_DIALOG">
-      <choice action="SELECTED_QUEST_REWARD1" reward-index="2"/>
-      <choice action="SELECTED_QUEST_REWARD2" reward-index="3"/>
-      <choice action="SELECTED_QUEST_REWARD3" reward-index="4"/>
-      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
-    </npc-complete>
-    <dialog type="NPC_START" npc-id="799366" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT_NONE">
-      <accept-actions>
-        <give-item item-id="182207857" count="1"/>
-      </accept-actions>
-    </dialog>
     <transition source="started" target="started">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="799366" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT1"/>
       </after-commit>
     </transition>
-    <transition source="started" target="reward" priority="0">
+    <transition source="started" target="reward">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="799366" action="SELECT_QUEST_REWARD"/>
+        <dialog type="TALK_TO_NPC" npc-id="799366" action="SET_SUCCEED"/>
       </event>
-      <conditions>
-        <has-item item-id="182207857" count="1"/>
-      </conditions>
       <actions>
+        <set-variable field="var0" value="1"/>
         <remove-item item-id="182207857" count="1"/>
       </actions>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
+        <delete-interaction-npc schedule-respawn="false"/>
       </after-commit>
     </transition>
-    <transition source="started" target="started" priority="1">
+    <transition source="started" target="started">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="799366" action="SELECT_QUEST_REWARD"/>
+        <dialog type="TALK_TO_NPC" npc-id="700812" action="USE_OBJECT"/>
       </event>
       <after-commit>
-        <close-dialog/>
+        <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-    <npc-complete npc-id="799366" source="reward" target="complete" fixed-reward-indices="0 1" complete-reward-index="0" finish="SELECTION_DIALOG">
-      <choice action="SELECTED_QUEST_REWARD1" reward-index="2"/>
-      <choice action="SELECTED_QUEST_REWARD2" reward-index="3"/>
-      <choice action="SELECTED_QUEST_REWARD3" reward-index="4"/>
-      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
-    </npc-complete>
   </transitions>
 </quest-definition>

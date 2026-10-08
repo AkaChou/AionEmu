@@ -93,12 +93,12 @@
       </after-commit>
     </transition>
 
-    <!-- 领奖态入口页：符文宝珠激活由 RiftOrbAI2 直接把任务置为 REWARD(var0 不变)，玩家随后在
-         798941/798926/730275 上选择任务行（客户端动作 31）时必须拿回 select_success(10002)，
-         其按钮 1009 再打开奖励窗口。
-         Reward-state entry page: RiftOrbAI2 sets the quest to REWARD directly when the orb is activated
-         (var0 unchanged), so a later quest-row selection (client action 31) on 798941/798926/730275 must
-         return select_success(10002); its 1009 button then opens the reward window. -->
+    <!-- 领奖态入口页：符文宝珠激活由 RiftOrbAI2 把任务置为 REWARD 并写入领奖行 1，玩家随后在
+         798941/798926 上选择任务行（客户端动作 31）时必须拿回 select_success(10002)，其按钮 1009
+         再打开奖励窗口。
+         Reward-state entry page: RiftOrbAI2 sets the quest to REWARD with the reward row var0=1, so a
+         later quest-row selection (client action 31) on 798941/798926 must return select_success(10002);
+         its 1009 button then opens the reward window. -->
     <transition source="reward" target="reward">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="798941" action="QUEST_SELECT"/>
@@ -160,51 +160,20 @@
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
 
-    <dialog type="NPC_REPORT" npc-id="730275" source="started" target="reward" page="DEFAULT_SUCCESS"/>
-    <transition source="started" target="reward" priority="0">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="730275" action="SELECT_QUEST_REWARD"/>
-      </event>
-      <conditions>
-        <has-item item-id="182209617" count="1"/>
-      </conditions>
-      <actions>
-        <remove-item item-id="182209617" count="1"/>
-      </actions>
-      <after-commit>
-        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
-      </after-commit>
-    </transition>
-    <transition source="started" target="started" priority="1">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="730275" action="SELECT_QUEST_REWARD"/>
-      </event>
-      <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="CHECK_USER_ITEM_FAIL"/>
-      </after-commit>
-    </transition>
-    <transition source="started" target="started">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="730275" action="FINISH_DIALOG"/>
-      </event>
-      <after-commit>
-        <close-dialog/>
-      </after-commit>
-    </transition>
-
-    <transition source="reward" target="reward">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="730275" action="QUEST_SELECT"/>
-      </event>
-      <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
-      </after-commit>
-    </transition>
-    <npc-complete npc-id="730275" source="reward" target="complete" fixed-reward-indices="0 1" complete-reward-index="0" finish="SELECTION_DIALOG">
-      <choice action="SELECTED_QUEST_REWARD1" reward-index="2"/>
-      <choice action="SELECTED_QUEST_REWARD2" reward-index="3"/>
-      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
-    </npc-complete>
+    <!-- 物件 owner 收口（2026-10-08，QE-052 同型批次；代表先例 3036，姊妹任务 30313 同形：
+         「730275 的交互整体被注释禁用，没有原版证据不得启用」）：
+         真端注册面（retail-quest-ai-registrations.xml）把符文宝珠 730275 挂到 riftorb AI，其对话由
+         RiftOrbAI2 承担（页 1011 开窗 → 按钮 10000 → var0=1 + REWARD，零回页，见
+         src/main/java/com/aionemu/gameserver/ai/instance/beshmundirTemple/RiftOrbAI2.java#forQuest）；
+         legacy `_30213GroupMagicalEssence` 里 730275 的注册与对话块整体被注释禁用
+         （`/* qe.registerQuestNpc(730275).addOnTalkEvent(questId); */`），领奖只在任务书末行
+         STR_DIC_N_Cainus（798926）上。旧 XML 把宝珠生成成第二份完整 NPC 块
+         （NPC_REPORT/领取路由/npc-complete），使物件成为第二领取入口并进入 completion owner
+         集合（QE-052 违规）——本形状按姊妹任务 30313 的既裁先例整体移除宝珠面。
+         Object-owner trim (2026-10-08, QE-052 machine-variant batch; 3036 is the reference case and
+         30313 the adjudicated sibling): retail registers the orb 730275 to the riftorb AI whose dialog is
+         owned by RiftOrbAI2 (dialogId 10000 -> var0=1 + REWARD, zero pages) and the legacy handler has
+         the orb's registration and dialog block commented out; the claim lives on Cainus 798926, the
+         journal's reward row. The orb's duplicate NPC block is removed wholesale. -->
   </transitions>
 </quest-definition>

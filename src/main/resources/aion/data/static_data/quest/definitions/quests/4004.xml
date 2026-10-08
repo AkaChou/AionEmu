@@ -26,18 +26,54 @@
     <node label="started" status="START">
       <var name="var0" value="0"/>
     </node>
-    <node label="reward" status="REWARD">
+    <node label="planted1" status="START">
       <var name="var0" value="1"/>
+    </node>
+    <node label="planted2" status="START">
+      <var name="var0" value="2"/>
+    </node>
+    <node label="planted3" status="START">
+      <var name="var0" value="3"/>
+    </node>
+    <node label="planted4" status="START">
+      <var name="var0" value="4"/>
+    </node>
+    <node label="reward" status="REWARD">
+      <var name="var0" value="4"/>
     </node>
     <node label="complete" status="COMPLETE">
       <var name="var0" value="0"/>
     </node>
   </nodes>
   <transitions>
-    <!-- QE-051 领奖行合同：客户端 quest_q4004.html 的 quest_summary 共 2 行，末行是领奖行
-         （STR_DIC_N_Randet，对应该任务的领奖 NPC）；旧投影停在 0，进入世界时纠正为 1 并下发状态包。
-         Reward row contract (QE-051): the last of the 2 quest_q4004 journal rows is the reward row
-         (STR_DIC_N_Randet, the reward NPC of this quest); saves persisted at 0 are repaired to 1 on enter-world. -->
+    <!-- 物件 owner 收口（2026-10-08，QE-052 同型批次；代表先例 3036）：
+         legacy `_4004TheSeedsOfHope` 里物件 700340（DF2A_FOBJ_Q4004）只在 START 态吃 USE_OBJECT：
+         `useQuestObject(env, var, var+1, false, true)`（var<4，只写轴、零回页），
+         `useQuestObject(env, 4, 4, true, true)`（var==4 → reward 分支只 setStatus(REWARD)、不写轴）；
+         领奖（10002 → 结束对话）只在 Randet 205128（任务书末行 STR_DIC_N_Randet）上。
+         旧 XML 把物件登记成 NPC_START/NPC_REPORT/npc-complete：向无对话 html 的物件发页
+         （4762/10002/收尾页 10），收尾页 10 以 questId=0 解析物件自身 html → 客户端 load fail。
+         本形状 = 阶梯式零回页推进（参照 quest 1612），计数由 PACKET_ONLY 同步刷新任务书行 0 的
+         ([%2]/5)，领奖 owner 唯一 = Randet。
+         Object-owner trim (2026-10-08, QE-052 machine-variant batch; 3036 is the reference case):
+         the legacy object only counts var (0..3, zero page) and flips REWARD at var==4 through the
+         reward branch of useQuestObject (setStatus only, no var write); the claim lives on Randet
+         205128, the journal's reward row. -->
+    <transition target="reward">
+      <event>
+        <enter-world/>
+      </event>
+      <conditions>
+        <status-is status="REWARD"/>
+        <variable-is field="var0" value="1"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="4"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
     <transition target="reward">
       <event>
         <enter-world/>
@@ -47,21 +83,78 @@
         <variable-is field="var0" value="0"/>
       </conditions>
       <actions>
-        <set-variable field="var0" value="1"/>
+        <set-variable field="var0" value="4"/>
       </actions>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
       </after-commit>
     </transition>
     <dialog type="NPC_START" npc-id="205128" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT_NONE"/>
-    <dialog type="NPC_REPORT" npc-id="205128" source="started" target="reward" page="DEFAULT_SUCCESS"/>
+    <transition source="reward" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="205128" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
+      </after-commit>
+    </transition>
     <npc-complete npc-id="205128" source="reward" target="complete" fixed-reward-indices="0 1 2" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
-    <dialog type="NPC_START" npc-id="700340" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SHOW_ASK_QUEST_ACCEPT_WINDOW"/>
-    <dialog type="NPC_REPORT" npc-id="700340" source="started" target="reward" page="DEFAULT_SUCCESS"/>
-    <npc-complete npc-id="700340" source="reward" target="complete" fixed-reward-indices="0 1 2" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
-      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
-    </npc-complete>
+    <transition source="started" target="planted1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="700340" action="USE_OBJECT"/>
+      </event>
+      <conditions>
+        <has-item item-id="182209002" count="1"/>
+      </conditions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="planted1" target="planted2">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="700340" action="USE_OBJECT"/>
+      </event>
+      <conditions>
+        <has-item item-id="182209002" count="1"/>
+      </conditions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="planted2" target="planted3">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="700340" action="USE_OBJECT"/>
+      </event>
+      <conditions>
+        <has-item item-id="182209002" count="1"/>
+      </conditions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="planted3" target="planted4">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="700340" action="USE_OBJECT"/>
+      </event>
+      <conditions>
+        <has-item item-id="182209002" count="1"/>
+      </conditions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="planted4" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="700340" action="USE_OBJECT"/>
+      </event>
+      <conditions>
+        <has-item item-id="182209002" count="1"/>
+      </conditions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
   </transitions>
 </quest-definition>

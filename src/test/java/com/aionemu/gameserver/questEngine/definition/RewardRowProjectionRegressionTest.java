@@ -83,7 +83,15 @@ class RewardRowProjectionRegressionTest {
 			 * projection from the legacy 0 to the last-row index 1, blanking both <p visible> rows at
 			 * REWARD/1. The authoritative value is the pre-batch 0, so only the REWARD/1 -> 0 rollback
 			 * edge exists (no zero-save heal, hence legacyZeroProjection=false). */
-			new Row(3036, 1, 0, false));
+			new Row(3036, 1, 0, false),
+			/* 物件 owner 同型批次（2026-10-08）：2664/4004 的权威值是 legacy 阶梯计数的落盘 4
+			 * （物件使用 0..4；批次按末行索引抬到 1、迁移期为 0，两个坏值都有回滚边）；
+			 * 4012 全程不写 var0（物件只掉落、Virhu 的 1009 分支只置 REWARD），权威值 0，
+			 * 只留 REWARD/1 -> 0 回滚边（无 0 自愈边，legacyZeroProjection=false）。
+			 * Object-owner sweep (2026-10-08): 2664/4004 keep the legacy ladder counter 4 (batch raised 1
+			 * and the migration's 0 both roll back); 4012 never writes var0 (authoritative 0, only the
+			 * REWARD/1 -> 0 rollback edge, hence legacyZeroProjection=false). */
+			new Row(2664, 1, 4, true), new Row(4004, 1, 4, true), new Row(4012, 1, 0, false));
 	}
 
 	@ParameterizedTest
