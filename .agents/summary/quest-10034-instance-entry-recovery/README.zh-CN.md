@@ -65,11 +65,12 @@
   ⑧c/⑧d/⑧e/⑧f 与既有 ⑧b/冻结面/routed 1457 回归）、`NativeTeleportPortTest` 2/2、
   `QuestProductionStartupGateTest` 2/2、`RetailOwnershipGateTest` 5/5、`RetailTableSchemaGateTest` 2/2、
   `SimpleTalkNativeFamilyGateTest` 17/17、`SimpleHuntNativeFamilyGateTest` 6/6 —— **合计 84 项，0 失败 0 错误**。
-- **实机 PENDING（服务端需重启）**：
-  1. ELYOS 做 10034 至步 3，与 730295 对话进副本 ⇒ 应能看到 hidden switch（700604）与 HIDDEN_LIBRARY 区 NPC
+- **实机验收通过（2026-10-08）**：用户确认「实机验证成功，提交」（整体确认；逐步未逐字回报）：
+  1. ELYOS 做 10034 至步 3，与 730295 对话进副本 ⇒ 可见 hidden switch（700604）与 HIDDEN_LIBRARY 区 NPC
      （不再空图）；
   2. 副本内掉线/被弹出后重登 ⇒ 步回到 3 并补回 `Jagged Sword`（182215627），可再次进入；
-  3. 副本内正常下线重登（实例 10 分钟销毁窗内）⇒ 不应回滚（仍在 4/5/6，注册复用回副本）。
+  3. 副本内正常下线重登（实例 10 分钟销毁窗内）⇒ 不回滚（仍在 4/5/6，注册复用回副本）。
+  验收记录：`.agents/summary/quest-acceptance/10034-instance-entry-2026-10-08-client-accepted.md`。
 
 ## 4. 残留 / 风险
 
@@ -80,9 +81,10 @@
 4. 20034 退役 typed XML 的 `s5 → s2` / `QUEST_FAILED` / `var1=0` 三条属 typed 漂移，不镜像
    （DD 载荷窗口 = {3,4}；⑧d 已以"步 5 越窗零动作"钉死）。
 
-## 5. memory-bank / Playbook 收口（待实机验收后）
+## 5. memory-bank / Playbook 收口（2026-10-08 验收后完成）
 
-- 验收通过后：评估更新 `QE-163`（DD 车道接取/执行面）或新建卡记录"col9 实例语义 + 离场恢复"通用结论；
-  按 Automatic Wrap-up Protocol 跑 `sync_memory_bank.py` + `verify_memory_bank.py`。
-- Playbook：本修复属 `UNREACHABLE_INSTANCE_REENTRY_RECOVERY` 已覆盖模式（14047 代表），如无新契约差异
-  则不新增案例（按规则 13 在验收后复核）。
+- memory-bank：新增 `QE-165` 卡（`INSTANCE_ENTRY_MUST_ALLOCATE_AND_REGISTER`，含进入腿与离场腿），
+  "col9 实例语义 + 离场恢复"作为新的长期护栏沉淀（不改 QE-163——该卡只覆盖链式接取面；关联见卡内 see_also）。
+- Playbook：规则 13 复核结论——进入腿（空实例）与既有 `UNREACHABLE_INSTANCE_REENTRY_RECOVERY`
+  按四轴（症状/根因/修复层/修复合同）比对均不同 ⇒ 新增指纹 `INSTANCE_ENTRY_MUST_ALLOCATE_AND_REGISTER` 与案例 8.63；
+  离场回退腿完全复用该既有模式（ENTER_WORLD 回退、不在 LOG_OUT 回退），不另建案例。
