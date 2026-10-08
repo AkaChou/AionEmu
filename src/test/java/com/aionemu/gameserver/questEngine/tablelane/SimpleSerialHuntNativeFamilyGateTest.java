@@ -116,7 +116,9 @@ class SimpleSerialHuntNativeFamilyGateTest {
 	void briefingGateEnforcesTalkBeforeKills() {
 		// 任务 30600: Hejitor (800325) 接取/交付, Linocus (800324) 简报
 		int questId = 30600;
-		Player player = createTestPlayer();
+		// 需要包捕获（简报页/关窗断言）：用 fixture 玩家（Elyos，含 clientConnection 捕获）。
+		// Packet capture is required here: use the fixture player (Elyos, recording connection).
+		Player player = NativeTalkFixture.player();
 		Npc acqNpc = createMockNpc(800325);
 		Npc briefingNpc = createMockNpc(800324);
 		Npc stage1Mob = createMockNpc(219256); // IDDreadgion_03_DrakanFiNamedAA_60_Ae
@@ -134,15 +136,22 @@ class SimpleSerialHuntNativeFamilyGateTest {
 		assertFalse(handler.onKill(envKillWithGuard));
 		assertEquals(0x40000000, qs.getQuestVars().getQuestVars());
 
-		// 4. 向简报 NPC 对话并确认：清除简报标志位
-		QuestEnv envBriefingDialog = new QuestEnv(briefingNpc, player, questId, 26);
+		// 4. 向简报 NPC 对话：任务行（QUEST_SELECT=31）→ 简报页 select2（1352，带 questId），
+		//    状态不变（真端行 0a）；实机 2026-10-08：「点击任务无下一步」= 曾发通用页 10 循环。
+		NativeTalkFixture.clearPackets(player);
+		QuestEnv envBriefingDialog = new QuestEnv(briefingNpc, player, questId, 31);
 		assertTrue(handler.onDialog(envBriefingDialog));
+		NativeTalkFixture.assertOnlyDialogPageWithQuest(player, 1352, questId);
+		assertEquals(0x40000000, qs.getQuestVars().getQuestVars(), "打开简报页不得清位");
 
+		// 5. 简报页「结束对话」（SETPRO1=10000）→ 清 var5 + 关窗（真端行 0b close-dialog）。
+		NativeTalkFixture.clearPackets(player);
 		QuestEnv envBriefingConfirm = new QuestEnv(briefingNpc, player, questId, 10000);
 		assertTrue(handler.onDialog(envBriefingConfirm));
+		NativeTalkFixture.assertCloseDialog(player);
 		assertEquals(0, qs.getQuestVars().getQuestVars());
 
-		// 5. 简报完成后击杀怪物：合法推进
+		// 6. 简报完成后击杀怪物：合法推进
 		assertTrue(handler.onKill(envKillWithGuard));
 		assertEquals(1, qs.getQuestVars().getQuestVars());
 	}

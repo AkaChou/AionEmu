@@ -432,16 +432,30 @@ public final class SimpleSerialHuntHandler {
 			if (briefingNpcs != null && briefingNpcs.contains(npcId)) {
 				int vars = state.getQuestVars().getQuestVars();
 				if (!RawQuestVarsCodec.guardClear(vars)) {
-					if (dialogId == 26 || dialogId == 31 || dialogId == -1) {
+					if (dialogId == QuestDialogAction.QUEST_SELECT.id()) {
+						// 行 0a（真端退役 XML）：任务行 QUEST_SELECT(31) → 展示简报页 select2
+						// （SHOW_QUEST_PAGE SELECT2；带 questId 下发；三个简报行契约均声明 1352）。
+						// 实机 2026-10-08：曾发通用页 10，点击任务无下一步（循环重发页 10）。
+						// Row 0a (retired XML): QUEST_SELECT opens the select2 briefing page (1352,
+						// declared by all three briefing rows); page 10 looped with no next step.
+						PacketSendUtility.sendPacket(player,
+								new SM_DIALOG_WINDOW(targetObjectId, QuestDialogPage.SELECT2.id(), questId));
+						return true;
+					} else if (dialogId == 26 || dialogId == -1) {
+						// 打开类动作维持通用选择页 10（与引擎开门规则同口径）。
+						// Generic open keeps the page-10 selection list.
 						PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 10));
 						return true;
-					} else if (dialogId == 10000 || dialogId == 1003 || dialogId == 10001 || dialogId == 31
-							|| dialogId == 20000) {
+					} else if (dialogId == QuestDialogAction.SETPRO1.id()) {
+						// 行 0b（真端退役 XML）：简报页「结束对话」SETPRO1(10000) → 清 var5
+						// （briefed 投影 = var0/var1/var5 全 0）+ 状态同步 + 关窗（真端 close-dialog，
+						// 同 3058 已验收的 SETPRO 口径；不再把动作码 10000 当页号下发）。
+						// Row 0b: end-dialog SETPRO1 clears the briefing flag, syncs state and closes.
 						state.getQuestVars().setVar(0);
 						state.setPersistentState(PersistentState.UPDATE_REQUIRED);
 						PacketSendUtility.sendPacket(player,
 								new SM_QUEST_ACTION(questId, QuestStatus.START, 0));
-						PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 10000, questId));
+						DialogService.closeDialog(player, targetObjectId);
 						return true;
 					}
 				}
