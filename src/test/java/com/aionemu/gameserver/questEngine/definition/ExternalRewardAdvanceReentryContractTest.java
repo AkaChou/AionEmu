@@ -46,6 +46,24 @@ class ExternalRewardAdvanceReentryContractTest {
 	private static final List<Integer> EXPECTED_QUEST_IDS = List.of(
 		10522, 15542, 15545, 20522, 25542, 25545, 30211, 30213, 30311, 30313);
 
+	/**
+	 * 领奖态入口面的遗留收集物清扫（2026-10-08）：引擎外写入方（RiftOrbAI2 宝珠推进）绕过 1009 交付，
+	 * 收集物会残留到完成之后。legacy `_30211GroupTheRodandtheOrb` 的 REWARD 面在入口处
+	 * {@code removeQuestItem} 后才发页 10002（其 id 182209617 是 30213 复制粘贴手误，按各任务自己的
+	 * 收集物裁决）；未登记行保持零动作入口。count=ALL 对空背包幂等安全（执行器只对非 ALL 校验库存）。
+	 * <p>
+	 * The leftover-collectible sweep on the reward-state entry face (live 2026-10-08): the engine-external
+	 * writer (RiftOrbAI2 orb advance) skips the 1009 turn-in, so the collectible survives completion. The
+	 * legacy 30211 handler's REWARD face removes the quest item at entry before page 10002 (its id
+	 * 182209617 is a 30213 copy-paste slip; each quest sweeps its own collectible here). Unmapped rows
+	 * keep the action-free entry; count=ALL is a safe no-op on an empty bag.
+	 */
+	private static final Map<Integer, Integer> ENTRY_SWEEP_ITEMS = Map.of(
+		30211, 182209614,
+		30213, 182209617,
+		30311, 182209714,
+		30313, 182209717);
+
 	@Test
 	void engineExternalRewardWritersKeepProjectionAndReentryRoutesAligned() throws Exception {
 		List<BaselineRow> rows = readBaseline();
@@ -101,7 +119,12 @@ class ExternalRewardAdvanceReentryContractTest {
 				QuestTransition entry = rewardEntryRoute(definition, npcId);
 				assertEquals("reward", entry.targetNode(), "quest " + row.questId() + " entry target");
 				assertEquals(List.of(), entry.conditions(), "quest " + row.questId() + " entry conditions");
-				assertEquals(List.of(), entry.actions(), "quest " + row.questId() + " entry actions");
+				// 登记了遗留清扫行的入口必须带 RemoveItem(ALL)；其余行保持零动作入口。
+				// Mapped rows sweep their leftover collectible (RemoveItem ALL); unmapped rows stay action-free.
+				Integer sweepItem = ENTRY_SWEEP_ITEMS.get(row.questId());
+				assertEquals(sweepItem == null ? List.of()
+						: List.of(new QuestAction.RemoveItem(sweepItem, QuestAction.RemoveItem.ALL)),
+					entry.actions(), "quest " + row.questId() + " entry actions");
 				assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(QuestDialogPage.DEFAULT_SUCCESS.id())),
 					entry.afterCommit(), "quest " + row.questId() + " entry response");
 				assertNull(entry.priority(), "quest " + row.questId() + " entry priority");

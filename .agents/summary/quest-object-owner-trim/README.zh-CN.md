@@ -90,6 +90,14 @@ QuestDialogMigrationGateTest 4/4、QuestInteractionObjectContractGateTest 2/2、
 6. `audit_external_reward_advance.py` 漂移（漏 MinionService 行）与
    `journal` 大小写检索（`gather_evidence.py` 只查大写 `QUEST_Q<id>.html`，本批 30211/30213/30311
    均为小写 `quest_q<id>.html`，需统一为大小写不敏感）。
+7. **领奖态遗留物清扫——已修并实机验收（2026-10-08 实机缺陷）**：宝珠路径（RiftOrbAI2 直接置 REWARD）绕过
+   1009 交付，水晶棒/时空之宝珠等收集物残留到完成之后。legacy `_30211GroupTheRodandtheOrb` REWARD
+   面入口 `removeQuestItem` → 10002（其 id 182209617 为 30213 复制粘贴手误）即为清扫锚证据。处置 =
+   四 XML 的 REWARD 入口路由（31 → 10002）加 `<remove-item count="ALL"/>`（执行器对空背包幂等），
+   各任务扫自己的收集物：30211=182209614、30213=182209617、30311=182209714、30313=182209717；
+   合同测试 `ENTRY_SWEEP_ITEMS` 参数化；门禁五件套全绿、实机复测通过（用户确认）。**同型审计线索**（未取证不动）：其余零回页推进任务
+   （1582/2307/2664/4004/28302/28303/21105）若存在「物件/写入方直接置 REWARD」的完成路径，其收集物
+   是否残留需逐件核对 legacy 交付面。
 
 ## 5. 实机验收（2026-10-08）
 

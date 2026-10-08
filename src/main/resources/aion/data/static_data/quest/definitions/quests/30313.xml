@@ -108,10 +108,18 @@
          Reward-state entry page: RiftOrbAI2 sets the quest to REWARD directly when the orb is activated
          (var0 unchanged), so a later quest-row selection (client action 31) on 799322/799225 must return
          select_success(10002); its 1009 button then opens the reward window. -->
+    <!-- 领奖态遗留物清扫（2026-10-08 实机缺陷：宝珠路径不经 1009 交付，任务道具 182209717 残留）：
+         legacy REWARD 面在入口处 removeQuestItem → 页 10002；count=ALL 对空背包幂等安全。
+         Reward-state leftover sweep (live 2026-10-08: the orb path skips the 1009 turn-in, leaving item
+         182209717): the legacy REWARD face removes the quest item at entry before page 10002;
+         count=ALL is a safe no-op on an empty bag. -->
     <transition source="reward" target="reward">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="799322" action="QUEST_SELECT"/>
       </event>
+      <actions>
+        <remove-item item-id="182209717" count="ALL"/>
+      </actions>
       <after-commit>
         <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
       </after-commit>
@@ -185,6 +193,9 @@
       <event>
         <dialog type="TALK_TO_NPC" npc-id="799225" action="QUEST_SELECT"/>
       </event>
+      <actions>
+        <remove-item item-id="182209717" count="ALL"/>
+      </actions>
       <after-commit>
         <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
       </after-commit>

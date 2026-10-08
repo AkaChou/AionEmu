@@ -98,10 +98,20 @@
          Reward-state entry page: RiftOrbAI2 sets the quest to REWARD with var0 left at the persisted
          value 0 (QE-056), so a later quest-row selection (client action 31) on 798941 must return
          select_success(10002); its 1009 button then opens the reward window. -->
+    <!-- 领奖态遗留物清扫（2026-10-08 实机缺陷：宝珠路径不经 1009 交付，水晶棒 182209614 残留）：
+         legacy `_30211GroupTheRodandtheOrb` 的 REWARD 面在入口处 removeQuestItem → 页 10002（其物品 id
+         182209617 为 30213 复制粘贴手误，本任务应为 182209614）；count=ALL 对空背包幂等安全。
+         Reward-state leftover sweep (live 2026-10-08: the orb path skips the 1009 turn-in, leaving the
+         rod 182209614): the legacy handler's REWARD face removes the quest item at entry before page
+         10002 (its id 182209617 is a 30213 copy-paste slip; this quest's is 182209614); count=ALL is a
+         safe no-op on an empty bag. -->
     <transition source="reward" target="reward">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="798941" action="QUEST_SELECT"/>
       </event>
+      <actions>
+        <remove-item item-id="182209614" count="ALL"/>
+      </actions>
       <after-commit>
         <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
       </after-commit>
