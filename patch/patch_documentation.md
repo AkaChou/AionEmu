@@ -10,7 +10,7 @@
 | `Game.dll` | 29,795,000 | `71a146481980f284e1144967037e3ab1` | 覆盖客户端 `bin64/Game.dll` 后**完全重启**；回滚 = 同目录 `Game.dll.bak` 覆盖回去 |
 | `Game.hpnum.zip`（包内 `Game.dll`） | 10,199,380（解出 29,795,000） | 包内 DLL `94daba7832635d8290eee81952f0f889` | 解压出的 `Game.dll` 覆盖客户端 `bin64/Game.dll` 后**完全重启**；回滚同上。**不含 VIP**，只有血条数字 |
 | `Levels/lf2a/Level.pak` | 9,809,347 | `f72b44b54f0989b9235519a4f3d21571` | 按目录结构覆盖客户端根目录后**完全重启**；回滚 = 原版 `Level.pak`（`fb49f0c3f1fce43d798b453e1def6dcf`） |
-| `L10N/CHS/Data/data.pak` | 95,915,185 | `a8c48709b06a4fc8d0236af5d4e1eb84` | ⛔ **不可部署**，见该节（2026-10-08 已并入 4 项对话页修复） |
+| `L10N/CHS/Data/data.pak` | 94,240,837 | `772b0555f80d38ecf865ea184494e6fa` | ✅ **可部署**（客户端现用版本基准 + 4 项对话页修复，diff==4）；覆盖后**完全重启**；回滚 = 备份覆盖回去。见该节 |
 
 ## Game.dll：VIP + 血条数字（已实机验收）
 
@@ -46,17 +46,21 @@ python3 aion_pak.py unpack "<客户端>/Levels/lf2a/Level.pak" -o unpacked --ove
 python3 aion_pak.py pack unpacked -o Level.pak --template "<原 Level.pak>" --overwrite
 ```
 
-## L10N/CHS/Data/data.pak：⛔ 不可部署
+## L10N/CHS/Data/data.pak：对话页结构修复（2026-10-08 起为可部署包）
 
-内容 = 任务对话字典变量修复 + 清空 `npcs/npc_mesh_replace.txt`（禁用 NPC 模型替换）。
-它与客户端原版差 **58 个条目**（55 个 `Dialogs/*`、2 个 `Strings/*`、1 个 `npcs/npc_mesh_replace.txt`），
-这些改动**从未在本客户端验证过**，整包替换会让客户端崩溃 → 只能按 `CPK-001` 逐条目二分后再启用。
-
-**2026-10-08 已并入 4 项对话页结构修复**（`ldf4b_li/linocus`、`ldf4b_da/aluna`、
+本包 = **客户端现用版本基准 + 4 项对话页结构修复**（`ldf4b_li/linocus`、`ldf4b_da/aluna`、
 `df4_m/df4_v06_d_master_stigma`、`ideternity_war_l_wpseller_sp_03`——npcfuncs 混排文本 /
-开标签缺失 `>`，客户端解析器报 both-cdata 错误或打不开对话页）。同字节修复已以实机现用文件为基准
-单独部署到客户端（2026-10-08，待复测）。并入后本包与客户端原版差 **62 个条目**
-（58 项未验证候选 + 4 项修复）；⛔ 整包不可部署状态不变。
+开标签缺失 `>`，客户端解析器报 both-cdata 错误或对话页打不开）。与基准差 **4 个条目**
+（每处仅含修复行）。已以客户端现用文件为基准部署到本机实机客户端目录
+（备份 `data.pak.bak-2026-10-08`）。
+
+**原「58 项任务对话字典修复候选」已从交付物移除**：2026-10-08 客户端实测该候选整包替换后
+**启动崩溃**（原警告被实证）。其资料归档于 git 历史（含并入版的 `e05348f55` 及其前序提交）
+与 `/tmp/data.pak.patch-backup-2026-10-08`；将来若要启用，仍按 `CPK-001` 逐条目二分。
+
+部署注意：本包基准 = 2026-09-23 版客户端文件（SHA-256 `cf78b2b8…`；本包 `3df976d5…`）。
+对其它基准的客户端（如另一台机器），先核对现用 `data.pak` 的 SHA-256：等于 `cf78b2b8…`
+可直接用本包替换；不一致时须以该机现用文件为基准重做 4 项单条目替换，避免把基准差异一并带入。
 记录：`.agents/summary/client-dialog-html-repair/`
 
 ## English
@@ -69,7 +73,7 @@ python3 aion_pak.py pack unpacked -o Level.pak --template "<原 Level.pak>" --ov
 | `Game.dll` | 29,795,000 | `71a146481980f284e1144967037e3ab1` | Overwrite the client's `bin64/Game.dll`, then **fully restart**; roll back with the sibling `Game.dll.bak` |
 | `Game.hpnum.zip` (contains `Game.dll`) | 10,199,380 (29,795,000 uncompressed) | inner DLL `94daba7832635d8290eee81952f0f889` | Unzip and overwrite the client's `bin64/Game.dll`, then **fully restart**; same rollback. **No VIP** — gauge numbers only |
 | `Levels/lf2a/Level.pak` | 9,809,347 | `f72b44b54f0989b9235519a4f3d21571` | Overwrite the same path under the client root, then **fully restart**; roll back with the original `Level.pak` (`fb49f0c3f1fce43d798b453e1def6dcf`) |
-| `L10N/CHS/Data/data.pak` | 95,915,185 | `a8c48709b06a4fc8d0236af5d4e1eb84` | ⛔ **do not deploy** (4 dialog-page fixes merged 2026-10-08) |
+| `L10N/CHS/Data/data.pak` | 94,240,837 | `772b0555f80d38ecf865ea184494e6fa` | ✅ **deployable** (client-current baseline + 4 dialog-page fixes, diff==4); overwrite then **fully restart**; roll back with your backup. See the section |
 
 **`Game.dll` — VIP + gauge numbers, verified in client.** Window gauges (target window / party / basic
 status) show numbers; the over-head world bar still shows none — it is drawn manually by the NPC display
@@ -82,15 +86,18 @@ the original (497 VIP + 9 numbers, non-overlapping). Rebuild: `patch_game_dll_vi
 `WeatherOption` entries and the invasion/world-raid cutscene `TimeEnv` in `mission_mission0.xml`;
 notes in `.agents/summary/weather-theobomos/`.
 
-**`L10N/CHS/Data/data.pak` — ⛔ do not deploy.** Quest-dialog variable fixes plus clearing
-`npcs/npc_mesh_replace.txt`; it differs from the client's pristine original in **58 entries**
-(55 `Dialogs/*`, 2 `Strings/*`, 1 `npcs/*`) that were never verified in this client, so a whole-file swap
-crashes it — enable it only through a `CPK-001` entry-by-entry bisect.
+**`L10N/CHS/Data/data.pak` — deployable since 2026-10-08.** The package is the **client's current
+version as baseline + 4 dialog-page structure fixes** (`ldf4b_li/linocus`, `ldf4b_da/aluna`,
+`df4_m/df4_v06_d_master_stigma`, `ideternity_war_l_wpseller_sp_03` — mixed npcfuncs cdata/child or
+a missing `>` in an opening tag, which the client parser rejects with a both-cdata error). It differs
+from its baseline in exactly **4 entries** (fix lines only) and was deployed against the live client's
+current file (backup `data.pak.bak-2026-10-08`).
 
-**2026-10-08: 4 dialog-page structure fixes merged** (`ldf4b_li/linocus`, `ldf4b_da/aluna`,
-`df4_m/df4_v06_d_master_stigma`, `ideternity_war_l_wpseller_sp_03` — mixed npcfuncs cdata/child
-or a missing `>` in an opening tag; the client parser rejects them with a both-cdata error). The same
-byte-level fix was deployed separately to the live client, baselined on its current file (2026-10-08,
-pending retest). With these merged the package differs from the pristine original in **62 entries**
-(58 unverified candidates + 4 fixes); the ⛔ do-not-deploy status is unchanged.
+**The former 58-entry quest-dialog candidate has been removed from the deliverable**: on 2026-10-08 a
+client test with that whole candidate swapped in **crashed on startup** (the original warning is now
+confirmed). Its data stays in git history (merge commit `e05348f55` and its predecessors) and at
+`/tmp/data.pak.patch-backup-2026-10-08`; enabling it later still requires a `CPK-001` entry-by-entry
+bisect. Deploy note: this package's baseline is the 2026-09-23 client file (SHA-256 `cf78b2b8…`;
+package `3df976d5…`). For a client on any other baseline, compare its current `data.pak` SHA-256
+first — if it differs, redo the 4 single-entry replacements against that machine's own file.
 Records: `.agents/summary/client-dialog-html-repair/`
