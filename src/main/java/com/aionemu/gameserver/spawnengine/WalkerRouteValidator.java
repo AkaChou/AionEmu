@@ -100,7 +100,7 @@ public final class WalkerRouteValidator {
 		if (closedLoopDuplicate(closure)) {
 			log.info(I18n.get("log.walker.route.closed_loop", routeId, closure));
 		}
-		if (legsNeedingPath > 0 || problems > 0) {
+		if (GeoDataConfig.GEO_NPC_WALK_ROUTE_VALIDATE_SUMMARY_ENABLE && (legsNeedingPath > 0 || problems > 0)) {
 			log.info(I18n.get("log.walker.route.summary", routeId, worldId, route.size(), legsNeedingPath, problems));
 		}
 	}

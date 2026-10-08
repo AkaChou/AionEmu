@@ -137,4 +137,14 @@ public class GeoDataConfig {
 	@Property(key = "gameserver.geo.npc.walk.route.validate", defaultValue = "log")
 	public static String GEO_NPC_WALK_ROUTE_VALIDATE;
 
+	/**
+	 * 行走路线校验汇总日志开关：开启时按 (世界, 路线) 打印一次统计汇总（步数、需要沿 Path 的段数、
+	 * 问题数），默认关闭。问题本身（不在可行走面、段超长）仍逐条 warn，不受本开关影响。
+	 * Walker route validation summary log: when enabled, prints one per-(world, route) statistics line
+	 * (steps, legs needing the Path, problems); disabled by default. Individual problems (no walkable
+	 * surface, over-long leg) stay per-item warnings regardless of this switch.
+	 */
+	@Property(key = "gameserver.geo.npc.walk.route.validate.summary.enable", defaultValue = "false")
+	public static boolean GEO_NPC_WALK_ROUTE_VALIDATE_SUMMARY_ENABLE;
+
 }
