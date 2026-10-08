@@ -996,4 +996,28 @@
 			<point x="496.497009" y="2299.823730"/>
 		</points>
 	</zone>
+	<!-- 2026-10-08 全库 usearea 注册覆盖审计补入（QE-043 同类；几何采信真端 source_sphere.csv，缺球值者用 Map/Worlds world.xml）
+	     Added by the 2026-10-08 catalog-wide usearea registry audit (QE-043 family; geometry from retail source_sphere.csv, falling back to Map/Worlds world.xml) -->
+	<zone mapid="400010000" name="AB1_ItemUseArea_Q2060" area_type="SPHERE" zone_type="ITEM_USE">
+		<sphere x="1524.98" y="1590.73" z="1599.15" r="77.80"/>
+	</zone>
+	<zone mapid="300610000" name="IDRaksha_ItemUseArea_Q28703" area_type="SPHERE" zone_type="ITEM_USE">
+		<sphere x="676.68" y="667.03" z="527.06" r="19.57"/>
+	</zone>
+	<zone mapid="301400000" name="IDSWEEP_ITEMAREA_SUMMON" area_type="POLYGON" zone_type="ITEM_USE">
+		<points bottom="391.304840" top="441.304840">
+			<point x="526.073364" y="278.304413"/>
+			<point x="567.296997" y="279.958954"/>
+			<point x="565.754272" y="327.809937"/>
+			<point x="524.576599" y="328.173157"/>
+		</points>
+	</zone>
+	<zone mapid="301590000" name="IDSWEEP_ITEMAREA_SUMMON" area_type="POLYGON" zone_type="ITEM_USE">
+		<points bottom="391.304840" top="441.304840">
+			<point x="526.073364" y="278.304413"/>
+			<point x="567.296997" y="279.958954"/>
+			<point x="565.754272" y="327.809937"/>
+			<point x="524.576599" y="328.173157"/>
+		</points>
+	</zone>
 </zones>

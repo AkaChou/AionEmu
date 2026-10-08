@@ -100,7 +100,9 @@
             <point x="724.9234" y="426.92004"/>
         </points>
     </zone>
-    <zone mapid="300240000" name="IDSTATION_ITEM_USE_AREA_1" area_type="POLYGON" zone_type="ITEM_USE" flags="6">
+    <!-- 2026-10-08 更名：item 模板声明 usearea=IDStation_ItemUseArea_3F（旧名 IDSTATION_ITEM_USE_AREA_1 无 item 引用；几何与真端 Map/Worlds/idstation/world.xml 的 <item_use_area> 逐点相同）
+         Renamed 2026-10-08: item templates declare usearea=IDStation_ItemUseArea_3F (the legacy name had no item references; geometry is point-identical to retail Map/Worlds/idstation/world.xml <item_use_area>) -->
+    <zone mapid="300240000" name="IDStation_ItemUseArea_3F" area_type="POLYGON" zone_type="ITEM_USE" flags="6">
         <points bottom="890.0" top="940.0">
             <point x="92.283775" y="619.9553"/>
             <point x="100.90118" y="724.5449"/>

@@ -106,33 +106,74 @@ def scan_retail_worlds(names: set[str]) -> dict[str, list[str]]:
     return found
 
 
+def retail_world_mapids() -> dict[str, str]:
+    """真端 world 短名(小写) → 本仓 mapid。
+
+    首选 WorldId.xml 的 id（当该 id 存在于本仓 world_maps.xml 时可信：ab1/lf4/lf6/df6/
+    idstation/IDRaksha_solo/IDSweep 等）；600x 段真端 id 与客户端 id 不同号，故对
+    content 反查过的世界用显式覆盖（ldf5a ↔ 600050000：本仓该 map 的区名含 LDF5A_ITEMUSEAREA_*）。
+    """
+    repo_maps = set()
+    world_maps = REPO / "src/main/resources/aion/data/static_data/world_maps.xml"
+    text = world_maps.read_text(encoding="utf-8", errors="ignore")
+    text = re.sub(r"<!--.*?-->", "", text, flags=re.S)  # 注释掉的 map（如 [Master Server]）不算存在
+    for m in re.finditer(r'<map id="(\d+)"', text):
+        repo_maps.add(m.group(1))
+    overrides = {"ldf5a": "600050000"}  # 内容反查（LDF5A_ITEMUSEAREA_* 同时出现在两处）
+    out: dict[str, str] = dict(overrides)
+    world_id = RETAIL / "Map" / "XML" / "Subzones" / "WorldId.xml"
+    if world_id.is_file():
+        text = world_id.read_text(encoding="utf-16", errors="ignore")
+        for attrs, name in re.findall(r"<data\b([^>]*)>([^<]+)</data>", text):
+            mid = re.search(r'id="(\d+)"', attrs)
+            if mid and mid.group(1) in repo_maps:
+                out.setdefault(name.strip().lower(), mid.group(1))
+    return out
+
+
 def main() -> None:
     registered = scan_registered_zones()
     uses = scan_item_useareas()
     spheres = scan_retail_spheres()
     worlds = scan_retail_worlds(set(uses))
+    world_mapids = retail_world_mapids()
 
     out = Path(__file__).resolve().parent / "itemusearea-zone-registry.tsv"
     gaps: list[str] = []
+    bucket: dict[str, list[str]] = {"fixable": [], "world_absent": [], "no_retail_def": []}
     rows: list[str] = []
     for usearea in sorted(uses):
         zone_file = registered.get(usearea.upper())
         geo = spheres.get(usearea.upper(), [])
         geo_txt = " | ".join("zone=%s layer=%s x=%s y=%s z=%s r=%s" % g for g in geo) or "-"
-        world_txt = ",".join(worlds.get(usearea.upper(), [])) or "-"
-        rows.append("\t".join([usearea, zone_file or "*** GAP ***", geo_txt, world_txt, "; ".join(uses[usearea])]))
+        world_list = worlds.get(usearea.upper(), [])
+        world_txt = ",".join(world_list) or "-"
+        candidates = world_list + [g[0] for g in geo]  # world.xml 目录名 + source_sphere 的 zone 短名
+        resolved = sorted({w.lower() for w in candidates if w.lower() in world_mapids})
+        if zone_file is not None:
+            status = "REGISTERED"
+        elif resolved:
+            status = "GAP:fixable"
+            bucket["fixable"].append(usearea)
+        elif candidates:
+            status = "GAP:world_absent"
+            bucket["world_absent"].append(usearea)
+        else:
+            status = "GAP:no_retail_def"
+            bucket["no_retail_def"].append(usearea)
+        resolved_txt = "mapid=" + ",".join(world_mapids[w] for w in resolved) if resolved else "-"
         if zone_file is None:
             gaps.append(usearea)
-    out.write_text("usearea\tregistered_in\tretail_source_sphere\tretail_world_xml\titems\n" + "\n".join(rows) + "\n",
-                   encoding="utf-8")
+        rows.append("\t".join([usearea, status, zone_file or "-", resolved_txt, geo_txt, world_txt, "; ".join(uses[usearea])]))
+    out.write_text("usearea\tstatus\tregistered_in\tresolved_mapid\tretail_source_sphere\tretail_world_xml\titems\n"
+                   + "\n".join(rows) + "\n", encoding="utf-8")
 
     print("usearea 总数: %d / 已注册: %d / GAP(未注册): %d" % (len(uses), len(uses) - len(gaps), len(gaps)))
-    for g in gaps:
-        geo = spheres.get(g.upper(), [])
-        geo_txt = " | ".join("zone=%s layer=%s x=%s y=%s z=%s r=%s" % gg for gg in geo) or "(真端 source_sphere 无该行)"
-        print("  GAP %-40s %s" % (g, geo_txt))
-        for item in uses[g]:
-            print("      item: %s" % item)
+    print("  GAP:fixable=%d  world_absent=%d  no_retail_def=%d" % (
+        len(bucket["fixable"]), len(bucket["world_absent"]), len(bucket["no_retail_def"])))
+    for group in ("fixable", "world_absent", "no_retail_def"):
+        for g in bucket[group]:
+            print("  [%s] %s" % (group, g))
     print("明细输出: %s" % out)
 
 

@@ -75,3 +75,37 @@ usearea_lf5_itemusearea_q15000,itemUseArea,lf5,0,2890.31,826.17,706.21,28.50,,0,
 | 本次修复 | 1 | `LF5_ITEMUSEAREA_Q15000` |
 
 **未批量修复的理由**：剩余两类分别缺「世界短名→mapid 证据」与「真端缺区语义证据」，按规则不做猜测；待用户决定是否继续做批量对齐与修复（可作为独立任务，含注册覆盖棘轮测试）。
+
+## 7. 同类批量排查与修复（2026-10-08，用户「排查类似问题修复」）
+
+### 7.1 方法
+
+1. 审计脚本升级为可行动分类（`audit_itemusearea_zone_registry.py`）：`REGISTERED` / `GAP:fixable` / `GAP:world_absent` / `GAP:no_retail_def`；判定「世界是否存在」用真端 `WorldId.xml` 的 id 对本仓 `world_maps.xml` 求交（**剔除注释行**——`[Master Server]` 等 map 是注释掉的），600x 段真端 id 与客户端 id 不同号，故仅对内容反查过的 `ldf5a ↔ 600050000`（`LDF5A_ITEMUSEAREA_*` 区名同时出现在两处）做显式覆盖。
+2. 几何取源沿用 QE-043 口径：优先真端 `source_sphere.csv`（球心+外接半径），无球值时用真端 `Map/Worlds/<world>/world.xml` 的 `<item_use_area>` 多边形（含 bottom/top）。
+3. 落面复核：目标 map 必须存在于本仓 `world_maps.xml`；坐标须落在该图 world_size 内；区内不得与既有区重名。
+
+### 7.2 已修复（4 个 usearea / 6 处落面）
+
+| usearea | 落面 | 几何（真端源） | 备注 |
+|---|---|---|---|
+| `AB1_ItemUseArea_Q2060` | 400010000（Reshanta） | SPHERE 1524.98/1590.73/1599.15 r=77.80（source_sphere，zone=ab1 layer=1） | 任务 2060 道具「Empty Glass Bottle」 |
+| `IDRaksha_ItemUseArea_Q28703` | 300610000（Raksang Ruins） | SPHERE 676.68/667.03/527.06 r=19.57（source_sphere，zone=idraksha_solo layer=2） | 任务 18703/28703 道具（Abandoned Balaur Egg） |
+| `IDStation_ItemUseArea_3F` | 300240000 + 300241000 | 既有 POLYGON 原样保留（更名） | 旧名 `IDSTATION_ITEM_USE_AREA_1`（300240000）/`_2`（300241000）**无任何 item 引用**，且几何与真端 `Map/Worlds/idstation(_event)/world.xml` 的同名区**逐点相同** ⇒ 直接更名，不新增重复区 |
+| `IDSWEEP_ITEMAREA_SUMMON` | 301400000（Shugo Emperor's Vault）+ 301590000（Emperor Trillirunerk's Safe） | POLYGON 4 点（world.xml，bottom=391.304840 top=441.304840；两世界同形） | 商城召唤道具（cash summon，无球值源） |
+
+### 7.3 未修复（46 - 4 = 42 个 GAP，均列明理由，不做猜测）
+
+| 分类 | 数量 | 理由 | 例 |
+|---|---|---|---|
+| `GAP:world_absent` | 29 | 所属世界不在本仓 5.8 世界表（Danaria/LDF4b、LDF4a、Tiamat's Down、LDF5b —— 真端 id 600031000/600021000/600041100/600061000 均不存在），注册到不存在的 map 无意义 | `LDF4B_ItemUseArea_Q*` × 23、`LDF4a_ItemUseArea_Q*` × 4、`TDown_ItemUseArea_Q*` × 2 |
+| `GAP:no_retail_def` | 16 | 真端两源（source_sphere + 全 worlds world.xml）均无该区名定义；含 `_ABYSS_CASTLE_AREA_`（代码特判 FORT 区，非真 GAP）与 `LF5_ITEMUSEAREA_Q10503`（物品名即 "(Unused)"）等退役内容 | `DF6_ITEMUSEAREA_Q15692`、`LF4_ITEMUSEAREA_Q10035`、`IDCatacome_ItemUseArea_Q20025` 等 |
+| 事件区（刻意不修） | 1 | `F6_EVENT_ITEM_USEAREA`（真端 LF6/df6 定义为**整图**多边形事件区，供 2017 开发者日变身/刷怪道具）——注册=放行整图使用事件道具，属产品决策而非数据修复，留待用户定夺 | item 188010012/188010013 |
+
+补充证据（宽松子串扫描，排除「拼写差异」）：`Q10035` 处只有 `LF4_QuestArea_Q10035`/`LF4_FOBJ_Q10035A`/`LF4_SensoryArea_Q10035A`，无 `LF4_ITEMUSEAREA_Q10035`；`Q10503` 处只有 FOBJ `LF5_FOBJ_Tiamat_SealWatcherN_Q10503a` 等；`Q20025` 处只有 `IDCatacome_SensoryArea_Q20025`（Sensory≠ItemUse 族，不可互替）——故这些 item 的 usearea 在真端 5.8 已无对应区。
+
+### 7.4 验证与状态
+
+- 静态：三份改动文件 `xmllint --schema zones.xsd` 全通过；审计复扫 **133 / 87 注册 / 46 GAP**（fixable 仅剩事件区 1 个）；新增区与既有区无重名。
+- 回归门：`ItemUseAreaZoneRegistrationTest`（锁 4 个新区的区名/地图/区类/球心半径/多边形首点与底顶 + Aturam 更名不回退 + 三文件 XSD）。
+- 测试（IDEA MCP，2026-10-08 用户授权）：`ItemUseAreaZoneRegistrationTest` 4/4、`MultiCellSensoryZoneRegistrationTest` 5/5、`QuestProductionStartupGateTest` 2/2，合计 **11/11 全绿**。首跑 3/4：新门「环数」断言误把 `getPoints()`（环列表）当顶点数，已改「1 环 × 4 顶点」后复跑通过（首跑第二轮的相同失败文本为旧字节码，重跑即刷新）。
+- 待办：本批 4 个区的实机验收未做（需冷重启后分别验证对应道具：任务 2060、任务 18703/28703、Aturam 技能道具、商城召唤道具）。
