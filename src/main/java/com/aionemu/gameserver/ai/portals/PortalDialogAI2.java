@@ -16,9 +16,12 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_DIALOG_WINDOW;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_FIND_GROUP;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.questEngine.definition.QuestDialogAction;
+import com.aionemu.gameserver.questEngine.definition.QuestDialogContract;
+import com.aionemu.gameserver.questEngine.definition.QuestDialogPage;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
+import com.aionemu.gameserver.services.DialogService;
 import com.aionemu.gameserver.services.QuestService;
 import com.aionemu.gameserver.services.teleport.PortalService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
@@ -129,10 +132,74 @@ public class PortalDialogAI2 extends PortalAI2 {
 					PortalService.port(portalPath, player, getObjectId());
 				}
 			} else {
-				PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(getObjectId(), dialogId, questId));
+				switch (unclaimedReply(questId, dialogId)) {
+					case DECLARED_SUB_PAGE ->
+						// 声明过的子页动作（SELECT⟨n⟩_… = 目标页 id，客户端任务 html 渲染）：原样回显并
+						// 携带任务上下文（引擎子页兜底同形；零上下文会让客户端去 NPC 对话 html 找该页
+						// 并 load fail）。
+						// A declared selection sub-page echoes back with the quest context (the engine's
+						// own sub-page fallback shape).
+						PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(getObjectId(), dialogId, questId));
+					case PLAIN_SUB_PAGE ->
+						// 未声明的子页动作 = NPC 对话树的页导航（如从 1011 发来的 1012）：按 NPC 对话平面
+						// 回显、不带任务上下文（DialogService「未处理任务动作」守卫的既有语义，实机 1115）。
+						// An undeclared sub-page is NPC dialog-tree navigation: echo on the plain dialog
+						// plane without the quest context (the DialogService guard's shape, live 1115).
+						PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(getObjectId(), dialogId));
+					case CLOSE ->
+						// 其余未认领的任务动作是按钮动作而不是页：回显会让客户端按动作 id 查找 html 页并
+						// load fail（2026-10-08 实机 19640：在接取对象 799022 上点奖励窗动作 8 → 服务端
+						// 下发页 8 → `Quest_Q19640.html (HtmlPageId 8)` load fail）。与 DialogService
+						// 「未处理任务动作关窗」同语义，不得回显动作 id。
+						// Every other unclaimed quest action is a button id, not a page: echoing it makes
+						// the client load it as a page and fail (live 19640). Close the dialog, matching
+						// DialogService.
+						DialogService.closeDialog(getOwner(), player);
+				}
 			}
 		}
 		return true;
+	}
+
+	/**
+	 * 未认领任务对话动作的应答形态（任务引擎全部未处理之后）。
+	 * The reply shape for a quest dialog action no lane claimed.
+	 */
+	enum UnclaimedReply {
+		/** 客户端任务页声明过的子页动作：原样回显 + 任务上下文。 / A declared sub-page: echo with quest context. */
+		DECLARED_SUB_PAGE,
+		/** 未声明的子页动作（NPC 对话树页导航）：按 NPC 对话平面回显、无任务上下文。 /
+		 * An undeclared sub-page (NPC dialog-tree navigation): echo without quest context. */
+		PLAIN_SUB_PAGE,
+		/** 其余任务动作是按钮而非页：关窗，绝不回显动作 id。 /
+		 * Every other action is a button id, not a page: close, never echo it as a page. */
+		CLOSE
+	}
+
+	/**
+	 * 分类未认领的任务对话动作（{@link UnclaimedReply}）。
+	 * <p>
+	 * 判据与 DialogService「未处理任务动作」守卫同语义：子页动作（{@code SELECT⟨n⟩_…}，动作 id 即目标页
+	 * id）是 NPC/任务对话导航，按声明面选择携带或不携带任务上下文回显；其余动作是按钮动作——回显会让
+	 * 客户端把动作 id 当页加载并触发 {@code load fail}（2026-10-08 实机 19640：奖励窗动作 8 → 页 8）。
+	 * <p>
+	 * Classifies an unclaimed quest dialog action with the same semantics as the DialogService guard:
+	 * selection sub-pages are navigation (echo with the quest context when the client task page declares
+	 * them, on the plain dialog plane otherwise); any other action is a button id and must never be
+	 * echoed as a page (live 19640: reward-window action 8).
+	 * @param questId  客户端携带/记忆的任务 id / the quest id carried by the client
+	 * @param dialogId 对话动作 id / the dialog action id
+	 * @return 应答形态 / the reply shape
+	 */
+	static UnclaimedReply unclaimedReply(int questId, int dialogId) {
+		if (questId > 0 && QuestDialogPage.isSelectionSubPage(dialogId)
+				&& QuestDialogContract.loadDefault().hasButtonPage(questId, dialogId)) {
+			return UnclaimedReply.DECLARED_SUB_PAGE;
+		}
+		if (QuestDialogPage.isSelectionSubPage(dialogId)) {
+			return UnclaimedReply.PLAIN_SUB_PAGE;
+		}
+		return UnclaimedReply.CLOSE;
 	}
 
 	@Override

@@ -64,6 +64,7 @@ import com.aionemu.gameserver.questEngine.handlers.HandlerResult;
 import com.aionemu.gameserver.questEngine.tablelane.HtmlPagesRegistry;
 import com.aionemu.gameserver.questEngine.tablelane.CameraRegistry;
 import com.aionemu.gameserver.questEngine.tablelane.NativeQuestStartPort;
+import com.aionemu.gameserver.questEngine.tablelane.NativeUnpinnedRewardWindow;
 import com.aionemu.gameserver.questEngine.tablelane.DataDrivenNativeRuntime;
 import com.aionemu.gameserver.questEngine.tablelane.SimpleCollectItemHandler;
 import com.aionemu.gameserver.questEngine.tablelane.SimpleCombineTaskHandler;
@@ -341,6 +342,26 @@ public class QuestEngine implements GameEngine {
 			// protocol is settled by quest id inside the runtime; an unclaimed id falls through.
 			if (DataDrivenNativeRuntime.instance().onDialog(player, npcId, env.getDialogId(),
 				npc != null ? npc.getObjectId() : 0, requestedOwner)) {
+				return true;
+			}
+			// native 车道奖励窗确认动作的按 questId 恢复面（真端 QuestDialog 无主键协议；与 typed 车道
+			// QuestRuntimeDispatcher#dispatchRewardWindowAction 的恢复同裁定）：奖励窗由全局 UI 打开，
+			// 客户端可能携带上一个交互对象，不能要求交互对象等于完成路由的交付 NPC。八族严格绑定全部
+			// 未命中后按 questId + action 结算——传送门类 AI 的开门页轴会在「接取对象 ≠ 交付对象」的行
+			// 的接取对象上开出奖励窗（2026-10-08 实机 19640：洛塔斯 799022 上点奖励窗 → 无人认领 →
+			// 动作 id 被 AI 回显为页 8 → 客户端 load fail）。门 = 奖励窗动作段 + REWARD 态 + native owner；
+			// 结算体继续验真端元数据/档位/按钮声明，任何一门不过零副作用继续既有链路。
+			// Native-lane quest-id recovery for reward-window confirmations (the retail ownerless
+			// QuestDialog protocol; same adjudication as the typed lane's recovery). The reward window is
+			// opened by global UI, so the carried interaction object must not be required to equal the
+			// completion route's delivery NPC. After all eight families miss on strict binding, settle by
+			// quest id + action; every retail gate still runs inside the settlement and any failure keeps
+			// zero side effects (live 2026-10-08, quest 19640: the portal-type AI's open-door page axis
+			// pops the reward window on the acquire npc, the action was unclaimed and echoed back as
+			// page 8, failing the client load).
+			if (requestedOwner != 0 && npc != null && isNativeOwner(requestedOwner)
+					&& NativeUnpinnedRewardWindow.claim(player, requestedOwner, env.getDialogId(),
+						npc.getObjectId())) {
 				return true;
 			}
 			// 真端对话平面的统一兜底：子页动作（SELECT⟨n⟩_…，动作 id 即目标页 id，如 1694 = select3_1）

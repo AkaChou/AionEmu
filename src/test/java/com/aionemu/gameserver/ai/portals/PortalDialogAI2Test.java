@@ -73,4 +73,50 @@ class PortalDialogAI2Test {
 		// 非入口 NPC 不进入引擎重放。 / Non-entrance npcs do not enter the engine replay.
 		assertEquals(List.of(), PortalDialogAI2.questFirstDialogIds(205230, 0));
 	}
+
+	/**
+	 * 未认领任务动作的分类（2026-10-08 实机 19640）：奖励窗确认动作 8 是按钮而不是页——回显会让
+	 * 客户端按动作 id 加载 {@code Quest_Q19640.html} 的页 8 并 load fail，必须关窗；声明过的子页动作
+	 * 按任务页回显（带 questId，1115 声明 1353=select2_1），未声明的子页按 NPC 对话平面回显（不带 questId，
+	 * DialogService 守卫的既有语义）。
+	 * The unclaimed-action classification (live 19640): the reward-window button 8 must close the dialog
+	 * instead of being echoed as a page; declared sub-pages echo with the quest context (1115 declares
+	 * 1353) and undeclared sub-pages echo on the plain NPC dialog plane (the DialogService guard shape).
+	 */
+	@Test
+	void unclaimedQuestActionsClassifyIntoEchoOrClose() {
+		assertEquals(PortalDialogAI2.UnclaimedReply.CLOSE, PortalDialogAI2.unclaimedReply(19640, 8),
+			"奖励窗确认动作 8 不是页 / action 8 is a button, not a page");
+		assertEquals(PortalDialogAI2.UnclaimedReply.CLOSE, PortalDialogAI2.unclaimedReply(19640, 31),
+			"行选动作不是页导航 / row selection is not page navigation");
+		assertEquals(PortalDialogAI2.UnclaimedReply.CLOSE, PortalDialogAI2.unclaimedReply(19640, 1009),
+			"报告动作不是页导航 / the report action is not page navigation");
+		assertEquals(PortalDialogAI2.UnclaimedReply.CLOSE, PortalDialogAI2.unclaimedReply(19640, 4762),
+			"顶层页 id（select_none）不是子页动作 / a top-level page id is not a sub-page action");
+		assertEquals(PortalDialogAI2.UnclaimedReply.DECLARED_SUB_PAGE,
+			PortalDialogAI2.unclaimedReply(1115, 1353),
+			"声明的子页带 questId 回显 / declared sub-pages echo with the quest context");
+		assertEquals(PortalDialogAI2.UnclaimedReply.PLAIN_SUB_PAGE,
+			PortalDialogAI2.unclaimedReply(1115, 1012),
+			"未声明子页按 NPC 对话平面回显 / undeclared sub-pages echo on the plain dialog plane");
+	}
+
+	/**
+	 * 两个传送门类 AI 共用同一分类判据：{@code onDialogSelect} 未认领分支必须走
+	 * {@code unclaimedReply}（PortalDialogAI2 本类判定；Specialize01PortalAI2 委托），
+	 * 按钮动作一律关窗、绝不回显动作 id。
+	 * Both portal AIs must share the classification: the unclaimed branch reads {@code unclaimedReply},
+	 * and button actions close the dialog instead of being echoed as pages.
+	 */
+	@Test
+	void bothPortalAisRouteUnclaimedActionsThroughTheSharedClassification() throws IOException {
+		assertTrue(Files.readString(SOURCE).contains("unclaimedReply(questId, dialogId)"),
+			"PortalDialogAI2 未认领分支必须走分类判据 / the unclaimed branch reads the classification");
+		String specialize = Files.readString(Path.of(
+			"src/main/java/com/aionemu/gameserver/ai/portals/Specialize01PortalAI2.java"));
+		assertTrue(specialize.contains("PortalDialogAI2.unclaimedReply("),
+			"Specialize01PortalAI2 必须委托同一判据 / the sibling delegates to the same classification");
+		assertTrue(specialize.contains("DialogService.closeDialog("),
+			"按钮动作必须关窗 / button actions must close the dialog");
+	}
 }

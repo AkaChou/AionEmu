@@ -1,0 +1,44 @@
+接取≠交付 行总数: 2106（接取名未解析: 596）
+按接取对象 AI 分组：
+  portal_dialog: 29 行  <== 传送门类（同一缺口）
+  IDAb1_Heroes_Teleporter: 2 行
+  aggressive: 303 行
+  bollvig: 1 行
+  general: 1148 行
+  murugan: 2 行
+  noaction: 12 行
+  npc_support: 4 行
+  quest_start_use_item: 1 行
+  quest_use_item: 4 行
+  slim: 4 行
+
+传送门类接取对象的完整清单：
+  [DataDriven] quest 19640: 接取 Elim_DF4_01(799022) -> 交付 Barus
+  [SimpleTalk] quest 18711: 接取 Silion(799531) -> 交付 Lagia
+  [SimpleTalk] quest 18713: 接取 Silion(799531) -> 交付 Lagia
+  [SimpleTalk] quest 18715: 接取 Silion(799531) -> 交付 Lagia
+  [SimpleTalk] quest 18717: 接取 Silion(799531) -> 交付 Lagia
+  [SimpleTalk] quest 18719: 接取 Silion(799531) -> 交付 Lagia
+  [SimpleTalk] quest 18721: 接取 Silion(799531) -> 交付 Lagia
+  [SimpleTalk] quest 18723: 接取 Silion(799531) -> 交付 Lagia
+  [SimpleTalk] quest 18725: 接取 Silion(799531) -> 交付 Lagia
+  [SimpleTalk] quest 18727: 接取 Silion(799531) -> 交付 Lagia
+  [SimpleTalk] quest 28711: 接取 Silion(799531) -> 交付 Zaellen
+  [SimpleTalk] quest 28713: 接取 Silion(799531) -> 交付 Zaellen
+  [SimpleTalk] quest 28715: 接取 Silion(799531) -> 交付 Zaellen
+  [SimpleTalk] quest 28717: 接取 Silion(799531) -> 交付 Zaellen
+  [SimpleTalk] quest 28719: 接取 Silion(799531) -> 交付 Zaellen
+  [SimpleTalk] quest 28721: 接取 Silion(799531) -> 交付 Zaellen
+  [SimpleTalk] quest 28723: 接取 Silion(799531) -> 交付 Zaellen
+  [SimpleTalk] quest 28725: 接取 Silion(799531) -> 交付 Zaellen
+  [SimpleTalk] quest 28727: 接取 Silion(799531) -> 交付 Zaellen
+  [SimpleTalk] quest 80279: 接取 IDEvent01_In_NPC(831117) -> 交付 IDEvent01_Treasure_Room
+  [SimpleTalk] quest 80282: 接取 IDEvent01_In_NPC(831117) -> 交付 IDEvent01_Treasure_Room
+  [SimpleTalk] quest 18729: 接取 Silion(799531) -> 交付 Lagia
+  [SimpleTalk] quest 18731: 接取 Silion(799531) -> 交付 Lagia
+  [SimpleTalk] quest 18733: 接取 Silion(799531) -> 交付 Lagia
+  [SimpleTalk] quest 18735: 接取 Silion(799531) -> 交付 Lagia
+  [SimpleTalk] quest 28729: 接取 Silion(799531) -> 交付 Zaellen
+  [SimpleTalk] quest 28731: 接取 Silion(799531) -> 交付 Zaellen
+  [SimpleTalk] quest 28733: 接取 Silion(799531) -> 交付 Zaellen
+  [SimpleTalk] quest 28735: 接取 Silion(799531) -> 交付 Zaellen

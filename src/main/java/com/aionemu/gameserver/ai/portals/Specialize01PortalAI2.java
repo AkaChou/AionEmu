@@ -13,6 +13,7 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_DIALOG_WINDOW;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
+import com.aionemu.gameserver.services.DialogService;
 import com.aionemu.gameserver.services.QuestService;
 import com.aionemu.gameserver.services.teleport.PortalService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
@@ -59,7 +60,18 @@ public class Specialize01PortalAI2 extends PortalAI2
 					PortalService.port(portalPath, player, getObjectId());
 				}
 			} else {
-				PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(getObjectId(), dialogId, questId));
+				// 未认领任务动作的应答形态与 PortalDialogAI2 同一判据：声明子页回显（带任务上下文）、
+				// 未声明子页按 NPC 对话平面回显、其余按钮动作关窗（绝不把动作 id 当页回显——实机 19640）。
+				// Same unclaimed-action classification as PortalDialogAI2: declared sub-pages echo with the
+				// quest context, plain sub-pages echo on the NPC dialog plane, and every other button id
+				// closes the dialog instead of being echoed as a page (live 19640).
+				switch (PortalDialogAI2.unclaimedReply(questId, dialogId)) {
+					case DECLARED_SUB_PAGE -> PacketSendUtility.sendPacket(player,
+						new SM_DIALOG_WINDOW(getObjectId(), dialogId, questId));
+					case PLAIN_SUB_PAGE -> PacketSendUtility.sendPacket(player,
+						new SM_DIALOG_WINDOW(getObjectId(), dialogId));
+					case CLOSE -> DialogService.closeDialog(getOwner(), player);
+				}
 			}
 		}
 		return true;
