@@ -351,6 +351,20 @@ public class PortalService {
 				&& TeleportService2.isGelkmarosEntryWorld(currentWorldId);
 	}
 
+	/**
+	 * 判断玩家是否可跳过副本进入的组队要求：管理员等级（{@link AdminConfig#INSTANCE_REQ}）或
+	 * 会员特权（{@link MembershipConfig#INSTANCES_GROUP_REQ}），与 port() 进入流程的豁免口径一致。
+	 * Whether the player may skip the instance-entry group requirement: the admin access level
+	 * ({@link AdminConfig#INSTANCE_REQ}) or the membership perk
+	 * ({@link MembershipConfig#INSTANCES_GROUP_REQ}), aligned with the exemption in the port() entry flow.
+	 * @param accessLevel 玩家管理员等级 / player admin access level
+	 * @param hasMembershipPerk 是否持有会员组队豁免特权 / whether the membership group perk is held
+	 * @return 可跳过组队要求则为 true / true when the group requirement may be skipped
+	 */
+	public static boolean canBypassInstanceGroupRequirement(int accessLevel, boolean hasMembershipPerk) {
+		return accessLevel >= AdminConfig.INSTANCE_REQ || hasMembershipPerk;
+	}
+
 	private static boolean checkKinah(Player player, int kinah) {
 		Storage inventory = player.getInventory();
 		if (!inventory.tryDecreaseKinah(kinah)) {

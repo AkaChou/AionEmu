@@ -4,6 +4,7 @@ import com.aionemu.gameserver.ai.ActionItemNpcAI2;
 import com.aionemu.gameserver.ai2.AI2Actions;
 import com.aionemu.gameserver.ai2.AI2Request;
 import com.aionemu.gameserver.ai2.AIName;
+import com.aionemu.gameserver.configs.main.MembershipConfig;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.DescriptionId;
 import com.aionemu.gameserver.model.autogroup.AutoGroupType;
@@ -48,9 +49,15 @@ public class BeshmundirsWalkAI2 extends ActionItemNpcAI2
 			break;
 			case 65:
 				if (!player.isInGroup2()) {
-					PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1390256));
-					return true;
-				} if (player.getPlayerGroup2().isLeader(player)) {
+					if (!PortalService.canBypassInstanceGroupRequirement(player.getAccessLevel(),
+							player.havePermission(MembershipConfig.INSTANCES_GROUP_REQ))) {
+						PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1390256));
+						return true;
+					}
+					// 豁免者（管理员/会员）可单人进入：与队长同口径，弹出难度选择。
+					// Exempt players (admin/membership) may enter solo with the leader's difficulty dialog.
+					PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(getObjectId(), 4762));
+				} else if (player.getPlayerGroup2().isLeader(player)) {
 					PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(getObjectId(), 4762));
 				} else {
 					if (!isAGroupMemberInInstance(player)) {

@@ -5,10 +5,10 @@
 
 本文档记录副本特殊逻辑、运行时配置、实例刷怪分组和事件安全方面可跨任务复用的排查结论。代码提交、静态审计和聚焦测试不会自动等同于 Maven、运行时或客户端验收。
 
-> Pattern IDs: `IR-001`–`IR-013`
+> Pattern IDs: `IR-001`–`IR-014`
 > card_status: ACTIVE; runtime-sensitive findings retain their validation boundary
-> scope: instance handlers, drop/stat registration, GM command loading, walker formations and event services in AionEmu-test
-> last_reviewed: 2026-09-20
+> scope: instance entrance-door AIs, instance handlers, drop/stat registration, GM command loading, walker formations and event services in AionEmu-test
+> last_reviewed: 2026-10-08
 
 ---
 
@@ -290,3 +290,24 @@ keywords: NPC 在石头下面, 出生在下方地面, curZ 等于 terrainZ, path
 - **修复契约**：地形与作者 Z 贴合（≤1m）才用地形；不贴合时用“与作者 Z 贴合（≤2m）的 geo 碰撞面”；两者都不贴合才退回地形。这样既修“站在道具上被压到地面”，也保留“作者 Z 悬空（真端数据错误）时压回地形”的既有修复。
 - **取证方法**：离线用 `models.mesh` + `geo/<world>.geo.gz` 复现 `GeoMap.getZ`（PHYSICAL 面 + 放置物 loc/rotation/scale），即可在不启动服务端的前提下给出该点全部碰撞面高度；见 `.agents/summary/inggison-somation-rock-z/geo_surface_probe.py` 与 `.agents/summary/spawn-z-audit/audit_surface_delta.py`（运行脚本后在本地生成全量审计输出）。
 - **教训**：任何“贴地/兜底”修复都要区分“地表高度”与“碰撞面高度”，并用同族审计（world 级全量刷点 × geo 面）给出影响面，而不是只修报障的那一个点。
+
+## [IR-014] 十四、副本入口门 AI 的组队检查必须接入 PortalService 的豁免口径 (DOOR_AI_ENTRY_CHECK_SHARES_PORTAL_EXEMPTION)
+<!-- pattern-metadata
+status: CONFIRMED
+scope: 副本入口门 AI2 的对话分支（如 BeshmundirsWalkAI2）与 PortalService.port() 的副本进入条件块
+first_seen: 2026-10-08
+last_verified: 2026-10-08
+symptom: GM（或 instancereq=0 部署下的任意玩家）单人点击副本入口门（如帕休曼迪尔寺院 730231），收到「此区域仅小队可进入」（SYS 1390256）而无法进本
+root_cause: 门 AI 自带硬编码的 player.isInGroup2() 组队检查，从不咨询 PortalService 的豁免；而当前部署 gameserver.administration.instancereq=0 使 PortalService 的 instance*Req 块（含 checkPlayerSize 组队要求）对全体玩家关闭，门 AI 的硬检查成为唯一拦截点，与配置意图矛盾
+fix_or_guardrail: 门 AI 的组队检查统一走 PortalService.canBypassInstanceGroupRequirement(accessLevel, hasMembershipPerk)（= accessLevel >= AdminConfig.INSTANCE_REQ 或会员 INSTANCES_GROUP_REQ）；豁免者单人进入与队长同口径弹难度选择（4762），非豁免者保留 1390256；勿在门 AI 复制新的检查分支而不接入该共享判据
+evidence: src/main/java/com/aionemu/gameserver/ai/instance/beshmundirTemple/BeshmundirsWalkAI2.java; src/main/java/com/aionemu/gameserver/services/teleport/PortalService.java; src/test/java/com/aionemu/gameserver/ai/instance/beshmundirTemple/BeshmundirsWalkAI2Test.java; .agents/summary/beshmundir-temple-door-solo-entry/README.zh-CN.md
+validation: static/IDE checks passed; focused test BeshmundirsWalkAI2Test 3/3 passed (IDEA MCP, 2026-10-08); client/live verification passed (user, 2026-10-08, GM solo entry into world 300170000)
+boundaries: 只修了帕休曼迪尔寺院入口门；其余副本门 AI 是否存在同类硬编码检查未普查（ai 包 isInGroup2 的剩余命中为宝箱/任务 NPC 场景）。instancereq=0 时豁免对全体玩家生效；instancereq>0 时仅管理员/会员豁免。会员豁免者（非管理员）如处于门户冷却禁用窗口仍会被 STR_MSG_CANNOT_MAKE_INSTANCE_COOL_TIME 拦截（既有口径）
+superseded_by: none
+first_check: 门 NPC 的 AI 类（npc 模板 ai 属性）→ 其 onDialogSelect 组队分支 → PortalService.port() 的 instance*Req 块 → 生效的 gameserver.administration.instancereq 值
+keywords: 只有在组队状态下才可以使用的地区, 此区域仅小队可进入, 1390256, 门点不进去, 单人进本, 帕休曼迪尔寺院, 贝斯蒙迪尔, Beshmundir, 730231, Instances group requirement, instancereq, 组队才能进副本
+-->
+
+- **两层检查**：门 AI 的对话分支（硬编码、可能无豁免）与 `PortalService.port()` 的 `instance*Req` 块（可豁免：管理员 `instancereq` / 会员特权）是两层独立检查；只查一层会误判「配置已经放行为什么还被挡」。
+- **拦截判据**：当前部署 `gameserver.administration.instancereq = 0` ⇒ `accessLevel < 0` 恒假 ⇒ PortalService 的全部副本进入条件对所有人关闭；此时若玩家仍被系统消息挡住，拦截点必然在门 AI（或别的硬编码层）。
+- **豁免语义**：`accessLevel >= AdminConfig.INSTANCE_REQ || havePermission(MembershipConfig.INSTANCES_GROUP_REQ)`，与 `port()` 的 `instanceGroupReq` 口径同源；与 IR-003（有效运行时配置）同族——先核对生效配置值，再判断检查是否应放行。
