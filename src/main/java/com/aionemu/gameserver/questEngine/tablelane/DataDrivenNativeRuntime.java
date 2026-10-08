@@ -1900,6 +1900,28 @@ public final class DataDrivenNativeRuntime {
 				engine.registerQuestNpc(entry.getKey()).addOnTalkEvent(hit.questId());
 			}
 		}
+		// 交付对象 #2（reward_npc_name）也必须进对话注册：传送门类 AI 的开门页判定
+		// （PortalDialogAI2/Specialize01PortalAI2.checkDialog）只读本注册表——NPC 不在表内时回落
+		// 传送门页（1011, questId=0），交付/领奖窗不可达。2026-10-08 实机 Kk：19638 杀满进 REWARD
+		// 后三次右键洛塔斯（799022）全落「进入卡斯帕内部」页、零 C->S；同族 19637（交付 NPC 为普通
+		// NPC）与已进表的接取面（19639 接取 NPC 同为本 NPC）无此缺口。其余六族的 installInterest
+		// 均注册交付 NPC（如 SimpleHuntHandler 的 rewardNpcIdsByQuestId）；本面刻意不写 onQuestStart——
+		// 交付 NPC 不得进附近任务提示候选集（该候选面只属接取面）。
+		// The delivery object #2 (reward_npc_name) must join the dialog registry too: portal-type AIs
+		// decide the open-door page (PortalDialogAI2/Specialize01PortalAI2.checkDialog) from this
+		// registry alone — an NPC missing here falls back to the portal page (1011, questId=0) and the
+		// reward window stays unreachable. Live 2026-10-08 (Kk): after 19638 reached REWARD, three
+		// right-click opens on Lothas (799022) all landed on the "enter Taloc's Hollow" page with zero
+		// C->S; family sibling 19637 (ordinary delivery npc) and the already-installed acquire face
+		// (19639 acquires at this very npc) are unaffected. Every other family's installInterest
+		// registers its reward npc (SimpleHuntHandler.rewardNpcIdsByQuestId); this face deliberately
+		// skips onQuestStart — delivery npcs must not enter the nearby-quests candidate set, which
+		// belongs to the acquire face alone.
+		for (Map.Entry<Integer, List<Integer>> entry : reportTalksByNpcId.entrySet()) {
+			for (int questId : entry.getValue()) {
+				engine.registerQuestNpc(entry.getKey()).addOnTalkEvent(questId);
+			}
+		}
 		// 接取 NPC 也要进对话注册（玩家无任务状态时客户端才能打开对话）。
 		// Acquire NPCs join the dialog registry too (clients can only open the dialog of a
 		// registered npc while the player has no quest state).

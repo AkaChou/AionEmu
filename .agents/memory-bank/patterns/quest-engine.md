@@ -8,7 +8,7 @@
 > Pattern IDs: `QE-001`–`QE-158`
 > card_status: ACTIVE; existing entries retain their historical evidence boundary
 > scope: production quest XML/compiler, Quest runtime, and Aion 5.8 client/legacy evidence
-> last_reviewed: 2026-10-07
+> last_reviewed: 2026-10-08
 
 ---
 
@@ -3743,3 +3743,27 @@ keywords: 击杀不推进、杀掉Boss没反应、14047、233877、214599、2145
 - **代表案例**：14047 定义听 214599（Aion-Unique 遗留），真端注册在 233877（空 pattern 城堡 Boss），214598→214599 属 3530/4526；为迁就错误目标而给 233877 挂变身 AI，导致「击杀任务指向的 Boss 不推进」。修复（2026-10-07）：kill 目标改 233877 + 233877 模板 ai 改 aggressive。
 - **安全网**：`Quest14047ClientDialogAlignmentTest`（击杀目标=233877；233877 静态 1 只 / 214599 静态 0 只；定义不得再监听 214599）；`QuestAiDialogBindingGateTest`（真端注册面镜像表对账）；`QuestMovieAndDialogLoopRegressionTest`（击杀点电影唯一）。
 - **反漂移**：别拿退役 XML 当击杀目标权威（本卡即反例）；别给真端空 pattern 的 Boss 补「变身/死亡生成」以求推进（自删不是击杀事件）；别按坐标/同名把两条 Icaronix 线的任务互相替代；改击杀目标必须同步重锚定义断言与出生点断言。
+
+## [QE-162] 一百六十二、native 交付面还必须装进 QuestEngine 的 NPC 注册表：传送门类 AI 的开门页只读该表 (DELIVERY_FACE_MUST_JOIN_THE_NPC_DIALOG_REGISTRY)
+
+<!-- pattern-metadata
+status: CONFIRMED
+scope: native 车道的兴趣面安装（DataDrivenNativeRuntime.installInterest 的 kills/talks/fobjs/acquireTalks/reportTalks × QuestEngine QuestNpc 注册表）与传送门类 AI（PortalDialogAI2/Specialize01PortalAI2.checkDialog）的开门页判定；typed 目录路由注册（installProductionDefinitions）与引擎派发面（dispatchReportDialog）不在本片
+first_seen: 2026-10-08
+last_verified: 2026-10-08
+symptom: DD 行杀满/收口进 REWARD 后右键交付 NPC（reward_npc_name）只见传送门功能选项（如「进入卡斯帕内部」），无任务行/奖励窗；quests.log 只见 `SM_DIALOG_WINDOW targetObj=… questId=0 下发页=1011` 且零 C->S；同类行交付 NPC 为普通 NPC 时一切正常
+root_cause: 交付对象 #2（reportTalksByNpcId）只接了引擎派发面（dispatchReportDialog 认领 31/1009/-1），未在 installInterest 安装进 QuestEngine 的 NPC 注册表 ⇒ QuestNpc.getOnTalkEvent() 看不到该 NPC 上可交任务；传送门类 AI 的开门判定只读该表（有 REWARD → 页 5+questId、START → 页 10、表空 → getTeleportDialogId 默认 1011），于是回落传送门页。其余六族 installInterest 均注册交付 NPC（SimpleHuntHandler 的 rewardNpcIdsByQuestId 等），DD 车道是唯一漏项（reportTalksByNpcId 自 ca3f35be8 引入、cc74a3249/QE-160 526afff8b 扩展，三次都只接派发面）
+fix_or_guardrail: 1. installInterest 增补 reportTalksByNpcId → addOnTalkEvent（**不写 onQuestStart**——附近任务提示候选集只属接取面）。2. native 面的「注册表面」必须与 QuestEngine 注册表的消费面逐一对齐：传送门类 AI 的开门页（PortalDialogAI2.java:152 / Specialize01PortalAI2.java:76）与 QuestItemNpcAI2 的可交互判定（onTalkEvent 非空即视为可交互）都读该表。3. 退役/新面迁移的面清单必须包含「注册表面」——派发面全绿不代表开门页可达。
+evidence: src/main/java/com/aionemu/gameserver/questEngine/tablelane/DataDrivenNativeRuntime.java:1903（新增安装段）/1920（循环）/649（reportTalks 构建）/1397（dispatchReportDialog）；src/main/java/com/aionemu/gameserver/ai/portals/PortalDialogAI2.java:151,152,173,287；src/main/java/com/aionemu/gameserver/ai/portals/Specialize01PortalAI2.java:76；src/main/java/com/aionemu/gameserver/dataholders/Portal2Data.java:140（默认 1011）；src/main/java/com/aionemu/gameserver/questEngine/tablelane/SimpleHuntHandler.java:401 与 SimpleCollectItemHandler.java:683（六族注册约定）；src/main/java/com/aionemu/gameserver/questEngine/QuestEngine.java:2683（启动安装点）；src/main/resources/aion/data/static_data/portals/portal_template2.xml:2185（799022 Taloc's Hollow 入口）；src/main/resources/aion/data/static_data/quest/retail/data_driven_quest.xml:13779（19638 reward_npc_name=Elim_DF4_01）；src/main/resources/aion/data/static_data/npcs/npc_template_286321_800030.xml:71535（799022 ai=portal_dialog）；src/test/java/com/aionemu/gameserver/questEngine/tablelane/DataDrivenNativeRuntimeGateTest.java:224（新用例）；log/quests.log 2026-10-08 00:34:58（19638 状态=4 步数=1）与 00:35:50/00:35:54/00:36:31（三次下发页=1011 questId=0）；影响类审计 .agents/summary/quest-19638-portal-report/audit_portal_delivery_rows.py（28 行：19638/19639→799022、15301-15316→805327、25301-25316→805339）；诊断全文 .agents/summary/quest-19638-portal-report/README.zh-CN.md；引入史 commit ca3f35be8、commit cc74a3249、commit 526afff8b
+validation: focused-test（IDEA MCP 2026-10-08：DataDrivenNativeRuntimeGateTest 36/36 含新用例 reportTalkInterestsAlsoRegisterTheDeliveryDialogFace、Quest19637ClientDialogAlignmentTest 2/2、PortalDialogAI2Test 5/5、QuestProductionStartupGateTest 2/2）；production-gate（ProductionCatalogWhitelistVerificationTest 1/1 = PRODUCTION_COMPILE_OK 707 / FAILURES=0 / INTERACTION_OBJECT_FAILURES=0 / WHITELIST_VIOLATIONS=0）；runtime（PENDING_CLIENT：需重启服务端后 Kk 在 REWARD 态右键 799022 应弹奖励窗并领取，验收记录待补 .agents/summary/quest-acceptance/ 同族命名文档）
+superseded_by: none
+boundaries: ① 只裁定传送门类 AI 的开门判定面；QuestItemNpcAI2 也读 onTalkEvent（可交互判定），若某交付 NPC 恰为 quest_use_item 物件会改变可交互性——DD 交付 NPC 均为具名 NPC，未取样本（登记）② 交付面不写 onQuestStart（19638 不得出现在 799022 的 onQuestStart，测试锁定）③ 非 Talk 行在传送门交付 NPC 上的 REWARD 页形（真端对象 #2 为页 10002）与传送门 AI 硬编码的 rewardDialogId=5 的差异未动——「非 Talk 行 × 传送门交付 NPC」组合未取样本（登记）④ 影响类名单由审计脚本解析（未含别名表/名组表，MISSING 行未逐条裁定）⑤ 安装发生在启动期（QuestEngine.load → installInterest），改动需重启生效
+see_also: [QE-160], [QE-145], [QE-052], [QE-137]
+first_check: 「传送门 NPC 上任务对话/奖励窗不见了」先答：① 该 NPC 的 AI（portal_dialog/specialize_portal）与 getTeleportDialogId 页？② questEngine().getQuestNpc(npcId).getOnTalkEvent() 是否含该行（注册表面）？③ 该行 reward_npc_name 是否解析进 reportTalks（区分派发面 vs 注册面）？④ 换普通交付 NPC 是否恢复正常（隔离注册面）？
+keywords: 传送门NPC没对话、只有进入副本选项、奖励窗不可达、799022、洛塔斯、19638、19639、checkDialog、getOnTalkEvent、reportTalks、installInterest、1011、DELIVERY_FACE_MUST_JOIN_THE_NPC_DIALOG_REGISTRY
+-->
+
+- **判定规则**：native 车道的每个面都有「派发面」与「注册表面」两半；交付对象 #2 只接派发面时，普通 NPC 因走引擎开门平面而正常，但**传送门类 AI（开门页只读 QuestEngine 的 NPC 注册表）会回落传送门页（默认 1011）**，表现为「只有进入副本选项、任务对话消失」。
+- **代表案例**：19638（DD talk-hunt 行）杀满进 REWARD 后右键洛塔斯 799022 三次全落页 1011/questId=0；根因 = `installInterest` 漏装 `reportTalksByNpcId`（其余六族均注册交付 NPC）；修复 = 补装 `addOnTalkEvent`（2026-10-08，门禁 `DataDrivenNativeRuntimeGateTest#reportTalkInterestsAlsoRegisterTheDeliveryDialogFace`）。
+- **安全网**：门禁逐项断言交付面进表 + 799022/19638/19639 类锚点 + 交付面不进 `onQuestStart` + 冻结行不借道；`PortalDialogAI2Test` 锁传送门 AI 的既有页轴；`ProductionCatalogWhitelistVerificationTest` 锁生产目录。
+- **反漂移**：别只给交付面接引擎派发（传送门交付 NPC 仍会丢面）；别把交付 NPC 写进 `onQuestStart`（污染附近任务提示候选集）；排查时先分辨「派发面 vs 注册表面」——同一任务在普通 NPC 正常、在传送门 NPC 失败即是注册表面缺口。

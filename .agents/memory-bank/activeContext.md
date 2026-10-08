@@ -4,7 +4,7 @@
 
 记录当前正在推进的任务与未解决的问题焦点。跨 Agent 接力时，先读此文件了解当前状态。
 
-> last_updated: 2026-10-02
+> last_updated: 2026-10-08
 > status: ACTIVE
 > scope: current checkout only
 > owner: shared agents
@@ -44,6 +44,8 @@
     部署到 16 GB 机器不要 `-Xmx16g`（用 `-Xmx10g -Xms4g`），并显式设 `-XX:MaxDirectMemorySize=2g`（默认 = Xmx，Netty 直接内存不计入堆直方图）。
 
   - **待客户端验收（生物血量同步收口，`CV-001`，两轮已修复）**：客户端血条在绕过 `Controller.onAttack` 的改血后停在旧值。第一轮修**直接改血**：收敛到 `NpcLifeStats` 的 `setCurrentHp`/`setCurrentHpPercent` 覆写（未 spawn 短路 + 锁外补发 `TYPE.HP` + 有符号 delta），并给等比重算加显式静默出口 `CreatureLifeStats.rescaleCurrentHp`（**不能用覆写内的前后百分比推断等比重算**——`checkHPStats` 先让新 maxHp 生效，读数会失真，实例人数变化会引发整片假飘字）。第二轮修**非攻击扣血**：技能侧三个调用点（负治疗量、`hpuse` 施法耗血、周期耗血）统一走新入口 `CreatureLifeStats.reduceHpFromEffect`，NPC 覆写只广播，召唤物覆写额外下发 `SM_SUMMON_UPDATE`（主人面板消费绝对 HP，只发血条会让面板停住）；负治疗量（精灵星「精灵吸收」`EL_Unsummon`）的扣血经用户确认为零售语义、保留。**禁止在 `reduceHp` 外套锁**（`onDie` 锁外回调并跨对象取锁，外套锁会造成跨生物倒序死锁）。聚焦测试 28/28、定向回归 113/114（唯一失败为已归档的既有 `RetailPatternAI2:893` NPE）全绿；**客户端实机复测待用户执行**：确认阶段转换/回满时血条即时跳变、常规打怪无双重广播、多人进出副本无假飘字、精灵星对被召唤物施放「精灵吸收」时召唤物血条与主人面板同步下降。模式卡 `CV-001`，证据在 `.agents/summary/npc-hp-sync/`（`2026-09-23-npc-direct-hp-sync.zh-CN.md` 与 `2026-09-23-npc-effect-hp-reduction-sync.zh-CN.md`）。
+
+  - **待客户端验收（19638 传送门交付 NPC 无交付对话，`QE-162`，已修复，2026-10-08）**：DD 行杀满进 REWARD 后右键洛塔斯（799022，Taloc's Hollow 入口）只见「进入卡斯帕内部」（`下发页=1011 questId=0`、零 C->S）——根因 = `DataDrivenNativeRuntime.installInterest` 漏装 `reportTalksByNpcId`（交付对象 #2 只接了引擎派发面；传送门类 AI 的开门页判定只读 QuestEngine 的 NPC 注册表）。修复 = 补装 `addOnTalkEvent`（不写 onQuestStart）+ 门禁 `DataDrivenNativeRuntimeGateTest#reportTalkInterestsAlsoRegisterTheDeliveryDialogFace`；同类审计 28 行（19638/19639→799022、15301-15316→805327、25301-25316→805339，脚本 `.agents/summary/quest-19638-portal-report/audit_portal_delivery_rows.py`）。IDEA MCP 2026-10-08 全绿（DD 门禁 36/36、19637 合同 2/2、PortalDialogAI2Test 5/5、启动门 2/2、白名单 `PRODUCTION_COMPILE_OK=707/FAILURES=0`）。**客户端实机复测待用户执行（PENDING_CLIENT）**：重启服务端后 REWARD 态右键 799022 应弹奖励窗（页 5 + questId=19638）并领取完成。证据 `.agents/summary/quest-19638-portal-report/README.zh-CN.md`、模式卡 QE-162。
 
 ---
 

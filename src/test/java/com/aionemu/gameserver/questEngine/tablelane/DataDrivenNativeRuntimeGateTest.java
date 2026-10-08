@@ -211,6 +211,50 @@ class DataDrivenNativeRuntimeGateTest {
 		}
 	}
 
+	/**
+	 * ①c 交付对象 #2（reward_npc_name）必须同时进对话注册表：传送门类 AI（PortalDialogAI2 /
+	 * Specialize01PortalAI2）的开门页判定只读该表，缺注册时回落传送门页 1011（2026-10-08 实机 Kk：
+	 * 19638 REWARD 后右键洛塔斯 799022 只见「进入卡斯帕内部」、零 C->S，奖励窗不可达）；且交付 NPC
+	 * 不得进 onQuestStart（附近任务提示候选集只属接取面）。
+	 * <p>
+	 * The delivery object #2 must also land in the dialog registry (portal AIs decide the open page
+	 * from it) while keeping out of onQuestStart (that candidate face belongs to acquire npcs).
+	 */
+	@Test
+	void reportTalkInterestsAlsoRegisterTheDeliveryDialogFace() {
+		com.aionemu.gameserver.dataholders.NpcData previous = com.aionemu.gameserver.dataholders.DataManager.NPC_DATA;
+		com.aionemu.gameserver.dataholders.DataManager.NPC_DATA = new com.aionemu.gameserver.dataholders.NpcData();
+		try {
+			QuestEngine engine = new QuestEngine();
+			runtime.installInterest(engine);
+			Map<Integer, List<Integer>> reportTalks = runtime.reportTalkInterests();
+			assertFalse(reportTalks.isEmpty(), "交付对话兴趣面非空（口径失效）");
+			for (Map.Entry<Integer, List<Integer>> entry : reportTalks.entrySet()) {
+				List<Integer> onTalk = engine.getQuestNpc(entry.getKey()).getOnTalkEvent();
+				for (int questId : entry.getValue()) {
+					assertTrue(onTalk.contains(questId), () -> "交付 NPC " + entry.getKey()
+						+ " 的任务 " + questId + " 未进 onTalkEvent（传送门开门页/领奖窗不可达）");
+				}
+			}
+			// 实机类锚点：洛塔斯 799022 承载 19638/19639 的交付面；19638 的接取 NPC 是凯西内尔
+			// 798926，因此不得借移交面进入本 NPC 的 onQuestStart。
+			List<Integer> lothasReport = reportTalks.getOrDefault(799022, List.of());
+			assertTrue(lothasReport.containsAll(List.of(19638, 19639)),
+				() -> "洛塔斯 799022 的交付面必须覆盖 19638/19639：" + lothasReport);
+			assertFalse(engine.getQuestNpc(799022).getOnQuestStart().contains(19638),
+				"交付面不得写 onQuestStart（19638 接取 NPC 是 798926）");
+			// 冻结行不得借道任何交付 NPC 的 onTalkEvent 注册。
+			for (int frozenId : runtime.frozenQuestIds().keySet()) {
+				for (int npcId : reportTalks.keySet()) {
+					assertFalse(engine.getQuestNpc(npcId).getOnTalkEvent().contains(frozenId),
+						() -> "冻结行 " + frozenId + " 不应出现在交付 NPC " + npcId + " 的 onTalkEvent");
+				}
+			}
+		} finally {
+			com.aionemu.gameserver.dataholders.DataManager.NPC_DATA = previous;
+		}
+	}
+
 	/** ② 逐行裁定闭合：切换集 = 可路由 ∪ 冻结（互斥，无第三桶）。 / Closed routed/frozen split. */
 	@Test
 	void routedAndFrozenPartitionTheSwitchSet() {
