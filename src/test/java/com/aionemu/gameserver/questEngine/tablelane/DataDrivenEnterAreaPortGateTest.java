@@ -42,16 +42,21 @@ import com.aionemu.gameserver.questEngine.tablelane.DataDrivenQuestTable.Step;
  * P7 步 2 步 c 门（计划 §10.2「P7 DataDriven」）：DD `enterarea` 轴的**真端同名区**解析与冻结。
  * <p>
  * 真端进区 handler `FUN_180c47bf0` 用名哈希（`FUN_1810798b0`）把当前步别名与进区区名逐值比对 ⇒ 绑定 = 同名。
- * 本门把该轴的三个面冻死，防止漂移：
+ * 本门把该轴的四个面冻死，防止漂移：
  * <ol>
  *   <li><b>逐行裁定</b>：切换集（1467 行）里每个 `EnterArea` 步的别名，要么落到同名注册区，要么落在
  *       {@link NativeEnterAreaPort#RETAIL_ABSENT_ALIASES}（真端世界文件无定义）——两者并集必须覆盖全部别名，
  *       任何第三个桶都是 fail-closed 异常；</li>
  *   <li><b>几何逐字来自真端</b>：注册区的胞数、mapid 与多边形摘要必须等于冻结台账
  *       `quest/retail-enterarea-zone-resolution.tsv` 的复算值（坐标与 top/bottom 逐字取自
- *       `<真端根>/Map/Worlds/<world>/world{,_M,_N}.xml`）；</li>
+ *       `<真端根>/Map/Worlds/<world>/world{,_M,_N}.xml`；`_M` 大师服行按 R5 归一到活图 mapid，
+ *       真端宿主留痕在台账 `normalized_from` 列）；</li>
  *   <li><b>禁止近似补</b>：冻结别名不得出现在任何 zones XML 里（旧「出生点 + r=10 球体」不许复活），
- *       且端口对未登记别名必须抛稳定码异常，不得静默成为死边。</li>
+ *       且端口对未登记别名必须抛稳定码异常，不得静默成为死边；</li>
+ *   <li><b>活图归一（R5，2026-10-08）</b>：真端把英吉斯温/格国的感官区只写在 `_M`（大师服）世界文件里
+ *       （lf4=0/LF4_M=15、df4=0/DF4_M=13；其余世界都在普通文件里），而镜像世界不是玩家可达目标
+ *       （`a7da0ad67` 活图迁移）⇒ DD 进区一律不得注册在镜像世界，`_M` 行必须归一到活图 mapid
+ *       （10035 安格利浦关卡进区即活图死步实例）；归一仅换宿主，几何逐字不变。</li>
  * </ol>
  * 证据面：`p7/tools/enterarea-retail-zone-probe.py`（复算工具）、
  * `p7/tools/qe-enterarea-retail-zone-resolution.tsv`（逐行裁定）、`p7/P7-STEP2C-REPORT.zh-CN.md`（报告）。
@@ -94,7 +99,7 @@ class DataDrivenEnterAreaPortGateTest {
 
 	/** 冻结台账的一行。 / One frozen evidence row. */
 	private record EvidenceRow(String alias, String axis, String status, String kind, String worldDir, String mapid,
-			int cells, String digest) {
+			int cells, String digest, String normalizedFrom) {
 	}
 
 	@BeforeAll
@@ -263,7 +268,8 @@ class DataDrivenEnterAreaPortGateTest {
 			}
 		}
 		assertEquals("IDAB1_ERE_SENSORYAREA_Q10011A",
-			port.zoneName(10011, enterAreaStepOf(10011)).orElseThrow().toUpperCase(Locale.ROOT),
+			port.zoneName(10011, enterAreaStepOf(10011, "IDAb1_Ere_SensoryArea_Q10011a")).orElseThrow()
+				.toUpperCase(Locale.ROOT),
 			"真端 IDAb1_Ere_SensoryArea_Q10011a 只能解析到同名区（不是 IDAB1_ERE_Q10011_A_302340000）");
 	}
 
@@ -283,13 +289,67 @@ class DataDrivenEnterAreaPortGateTest {
 			"未解析别名必须使用稳定码: " + failure.getMessage());
 	}
 
-	private static int enterAreaStepOf(int questId) {
+	/**
+	 * ⑥ 活图归一（R5，2026-10-08）：真端把英吉斯温/格国的感官区只写在 `_M`（大师服）世界文件里
+	 * （实读 `lf4`=0/`LF4_M`=15、`df4`=0/`DF4_M`=13；其余 254 个世界目录都在普通文件里），而镜像世界
+	 * 不是玩家可达目标（`a7da0ad67` 活图迁移：传送/门户/任务/区域统一 210050000）⇒ DD 进区一律不得
+	 * 注册在镜像世界；`_M` 行必须归一到活图 mapid，几何逐字不变（② 的胞数/摘要断言继续钉死几何）。
+	 * 代表实例：10035 第 5 步（安格利浦关卡进区）曾注册在 210130000 ⇒ 活图英吉斯温死步。
+	 */
+	@Test
+	void mirrorAuthoredEnterAreasRegisterOnTheLiveWorld() throws Exception {
+		Map<String, String> worldNames = worldMapNames();
+		int normalized = 0;
+		for (EvidenceRow row : evidence.values()) {
+			if (!"OK".equals(row.status())) {
+				continue;
+			}
+			Map<String, String> zone = registeredZones.get(row.alias().toUpperCase(Locale.ROOT));
+			assertTrue(zone != null, "登记缺失: " + row.alias());
+			String host = worldNames.get(zone.get("mapid"));
+			assertTrue(host != null,
+				"注册宿主世界必须存在于 world_maps.xml: " + row.alias() + " -> " + zone.get("mapid"));
+			assertFalse(host.contains("[Master Server]"),
+				"DD 进区不得注册在镜像（大师服）世界（玩家不可达 ⇒ 活图死步）: " + row.alias() + " -> " + host);
+			if (row.normalizedFrom().isEmpty()) {
+				continue;
+			}
+			normalized++;
+			String source = worldNames.get(row.normalizedFrom());
+			assertTrue(source != null && source.contains("[Master Server]"),
+				"归一行必须留痕真端镜像宿主: " + row.alias() + " -> " + row.normalizedFrom());
+			assertEquals("210050000", zone.get("mapid"),
+				"当前唯一归一行（LF4_M 感官区）的活图宿主 = 英吉斯温 210050000: " + row.alias());
+		}
+		assertEquals(1, normalized, "归一行数冻结（新增/消失都要按真端实读复核 LIVE_WORLD_MAPID）");
+		// 代表任务 10035：安格利浦关卡感官区必须解析到活图注册的同名区，且端口绑定 = 同名。
+		Map<String, String> zone = registeredZones.get("LF4_SENSORYAREA_Q10035A");
+		assertTrue(zone != null, "10035 进区必须已注册（活图英吉斯温）");
+		assertEquals("210050000", zone.get("mapid"), "安格利浦关卡感官区注册宿主 = 活图英吉斯温");
+		assertEquals("210130000", evidence.get("LF4_SensoryArea_Q10035A").normalizedFrom(),
+			"真端宿主（LF4_M = 210130000）必须留痕在台账 normalized_from");
+		assertEquals("LF4_SENSORYAREA_Q10035A",
+			port.zoneName(10035, enterAreaStepOf(10035, "LF4_SensoryArea_Q10035A")).orElseThrow()
+				.toUpperCase(Locale.ROOT),
+			"10035 第 5 步进区绑定 = 同名，且必须落在活图注册面");
+	}
+
+	private static int enterAreaStepOf(int questId, String aliasPrefix) {
 		for (Step step : table.find(questId).orElseThrow().steps()) {
-			if (step.kind() == Kind.ENTER_AREA && step.payload().startsWith("IDAb1_Ere_SensoryArea_Q10011a")) {
+			if (step.kind() == Kind.ENTER_AREA && step.payload().startsWith(aliasPrefix)) {
 				return step.index();
 			}
 		}
-		throw new AssertionError("quest " + questId + " has no Q10011a enter-area step");
+		throw new AssertionError("quest " + questId + " has no enter-area step " + aliasPrefix);
+	}
+
+	/** world_maps.xml 的 id → name 视图（镜像世界以 `[Master Server]` 命名）。 / World map id → name. */
+	private static Map<String, String> worldMapNames() throws Exception {
+		Map<String, String> names = new LinkedHashMap<>();
+		for (Element map : elements(Path.of("src/main/resources/aion/data/static_data/world_maps.xml"), "map")) {
+			names.put(map.getAttribute("id"), map.getAttribute("name"));
+		}
+		return names;
 	}
 
 	// ---------------------------------------------------------------- 复算辅助
@@ -379,7 +439,7 @@ class DataDrivenEnterAreaPortGateTest {
 					continue;
 				}
 				rows.put(cells[0], new EvidenceRow(cells[0], cells[1], cells[3], cells[5], cells[6], cells[7],
-					Integer.parseInt(cells[8]), cells[9]));
+					Integer.parseInt(cells[8]), cells[9], cells.length > 15 ? cells[15] : ""));
 			}
 		}
 		return rows;

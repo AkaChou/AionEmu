@@ -44,6 +44,12 @@
   "cells_total": 134,
   "progress_cells_total": 120,
   "already_registered_same_name": 0,
+  "live_world_normalized": {
+    "LF4_SensoryArea_Q10035A": {
+      "from": "210130000",
+      "to": "210050000"
+    }
+  },
   "binding_mismatch": [],
   "legacy_cross_check_mismatch": [
     "DF5_SensoryArea_Q25084",

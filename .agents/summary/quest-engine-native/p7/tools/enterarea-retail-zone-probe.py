@@ -13,9 +13,17 @@
   R2 真端感官区**世界前缀同名**（DD 别名 = `<worldDir>_` + 世界文件里的区名）。
   R3 任务脚本区**按 `<quest>` 绑定**（别名 quest 集 ⊆ 区 quest 集，且区在世界目录命中）。
   R4 fail-closed：真端世界的世界文件全无该区定义 ⇒ `NO_RETAIL_AREA`（不注册、不猜几何）。
+  R5 活图归一（mapid 级，解析结果不变）：镜像（大师服）世界目录的区按本服单图拓扑注册到活图 mapid。
 
 mapid 来源 = 仓内既存的客户端派生映射 `<仓库根>/src/main/resources/aion/definitions/compact/id-mappings.xml`
 （`id/worldid.xml`：世界目录名小写 → mapid）。
+
+R5 依据（2026-10-08，任务 10035 安格利浦关卡进区活图断链）：真端把**英吉斯温/格国的感官区只写在 `_M`
+大师服世界文件里**（实读：`lf4`=0/LF4_M=15、`df4`=0/DF4_M=13；其余 254 个世界目录的感官区都在普通
+世界文件里），而 DD 别名按**同名**引用它们 ⇒ 若不归一，注册宿主落在镜像世界。本服活图口径
+（`a7da0ad67`「玩家可见英吉斯温/格国 = 普通世界」；`TeleportService2.resolveInggisonWorldId` /
+`HotspotTeleportService.resolveLiveWorldId` 同一张映射）里镜像世界不是玩家可达目标 ⇒ 活图上无此区 =
+死步。归一**仅替换注册宿主 mapid**，几何/胞数/摘要逐字不变（台账 `normalized_from` 列留痕真端宿主）。
 
 用法 / usage:
   python3 -B enterarea-retail-zone-probe.py                 # 只计算并写 TSV/JSON
@@ -56,6 +64,11 @@ JSON_OUT = HERE.parent / "qe-enterarea-retail-zone-resolution.json"
 WORLD_FILES = ("world.xml", "world_M.xml", "world_N.xml")
 # 几何同时出现在 world.xml 与 world_N.xml 时优先取「更全」的那份：N > M > 基准。
 FILE_RANK = {"world_N.xml": 0, "world_M.xml": 1, "world.xml": 2}
+
+# R5 活图归一：镜像（大师服）世界 mapid → 本服活图 mapid（键值对逐字对齐运行时同一张映射：
+# TeleportService2.resolveInggisonWorldId / HotspotTeleportService.resolveLiveWorldId；Silentera 大师服
+# 变体不在运行时映射内且无 DD 进区别名引用，不预置）。归一仅换注册宿主，几何不动。
+LIVE_WORLD_MAPID = {"210130000": "210050000", "220140000": "220070000"}
 
 
 def read_world_text(path: pathlib.Path) -> str:
@@ -292,12 +305,22 @@ def main() -> int:
 	registered = load_registered_zones()
 
 	rows = []
+	live_mapids = set(world_ids.values())
 	for alias in sorted(aliases):
 		axes = sorted(aliases[alias]["axes"])
 		quests = sorted(aliases[alias]["quests"])
 		result = resolve(alias, quests, areas)
+		result["normalized_from"] = ""
 		if result["status"] == "OK":
-			result["mapid"] = world_ids.get(result["world_dir"].lower(), "?")
+			mapid = world_ids.get(result["world_dir"].lower(), "?")
+			live = LIVE_WORLD_MAPID.get(mapid)
+			if live is not None:
+				if live not in live_mapids:
+					# 归一只许落到仓内既有活图；id-mappings 缺活图即 fail-closed，不静默写 '?'。
+					raise SystemExit("LIVE_WORLD_MAPID target missing in id-mappings: " + live)
+				result["normalized_from"] = mapid
+				mapid = live
+			result["mapid"] = mapid
 			if result["mapid"] == "?":
 				result["status"] = "NO_MAPID"
 		reuse = registered.get(alias.upper())
@@ -326,6 +349,7 @@ def main() -> int:
 			"legacy_cross_check": legacy_note,
 			"twin_evidence": ("%s:%s" % (twin["world_dir"], twin["kind"])) if twin else "",
 			"source": "%s:%s" % (result["file"], result["kind"]) if result["kind"] else (result["rule"]),
+			"normalized_from": result["normalized_from"],
 			"rings": result["rings"],
 		})
 
@@ -349,6 +373,8 @@ def main() -> int:
 		"cells_total": sum(r["cells"] for r in ok),
 		"progress_cells_total": sum(r["cells"] for r in progress_ok),
 		"already_registered_same_name": sum(1 for r in rows if r["zone_registered"]),
+		"live_world_normalized": {r["alias"]: {"from": r["normalized_from"], "to": r["mapid"]}
+			for r in ok if r["normalized_from"]},
 		"binding_mismatch": [r["alias"] for r in ok if r["kind"] == "questscript_area" and r["binding_ok"] is False],
 		"legacy_cross_check_mismatch": [r["alias"] for r in ok if r["legacy_cross_check"]
 			and r["legacy_cross_check"].split("cells=")[1].split("/")[0] != r["legacy_cross_check"].split("cells=")[1].split("/")[1].split(":")[0]],
@@ -359,7 +385,7 @@ def main() -> int:
 	}
 
 	columns = ("alias", "axis", "quests", "status", "rule", "kind", "world_dir", "mapid", "cells", "points_digest",
-		"zone_name", "zone_registered", "legacy_cross_check", "twin_evidence", "source")
+		"zone_name", "zone_registered", "legacy_cross_check", "twin_evidence", "source", "normalized_from")
 	tsv = ["\t".join(columns)]
 	tsv += ["\t".join(str(r[key]) for key in columns) for r in rows]
 	tsv_text = "\n".join(tsv) + "\n"
@@ -389,6 +415,10 @@ def emit_zone_file(rows: list[dict]) -> None:
 		'\t生成工具：.agents/summary/quest-engine-native/p7/tools/enterarea-retail-zone-probe.py（emit-zones 模式）。',
 		'\t坐标与 top/bottom 逐字取自 真端根 Map/Worlds/<world>/world{,_M,_N}.xml 的 sensory_area、',
 		'\tquestscript_area、item_use_area 段；mapid 取自 id-mappings.xml（客户端派生）。禁止手改。',
+		'\tR5 活图归一：真端 `_M`（大师服）世界目录的区按本服活图注册（LIVE_WORLD_MAPID：210130000→210050000、',
+		'\t220140000→220070000，与 TeleportService2/HotspotTeleportService 的运行时归一同一张映射）；',
+		'\t真端把英吉斯温/格国的感官区只写在 `_M` 世界文件里（lf4=0/LF4_M=15、df4=0/DF4_M=13），',
+		'\t归一仅换注册宿主 mapid，几何/胞数/摘要逐字不变；台账 normalized_from 列留痕真端宿主。',
 		'-->',
 		'<zones>']
 	written = 0

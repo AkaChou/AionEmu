@@ -2980,22 +2980,23 @@ keywords: 迁移期、双解析器、逐行对拍、DataDriven、原生行模型
 status: CONFIRMED
 scope: 真端 DataDriven 表 `EnterArea` 步（kind 6）的「步内别名 → 注册区」绑定规则与区几何来源（DD 进区轴）
 first_seen: 2026-10-01
-last_verified: 2026-10-01
-symptom: ① 把 DD 步里的区名（如 `IDAb1_Ere_SensoryArea_Q10011a`）当成需要「名字换算」的别名，用大小写归一/去前缀/`AtoB`→`A_TO_B`/`SENSORYAREA`→`SENSORY_AREA` 之类的规则去猜注册区名 ⇒ 命中旧 Encom 壳区（出生点 + r=10 球体）而不是真端多边形，进区判定与真端不一致；② 看到客户端只有 SP NPC 位点（+ `sensory_range = 10`）就补一个球体近似区；③ 真端某世界没有该区定义时，去镜像世界（DF6 ↔ LF6）搬几何
+last_verified: 2026-10-08
+symptom: ① 把 DD 步里的区名（如 `IDAb1_Ere_SensoryArea_Q10011a`）当成需要「名字换算」的别名，用大小写归一/去前缀/`AtoB`→`A_TO_B`/`SENSORYAREA`→`SENSORY_AREA` 之类的规则去猜注册区名 ⇒ 命中旧 Encom 壳区（出生点 + r=10 球体）而不是真端多边形，进区判定与真端不一致；② 看到客户端只有 SP NPC 位点（+ `sensory_range = 10`）就补一个球体近似区；③ 真端某世界没有该区定义时，去镜像世界（DF6 ↔ LF6）搬几何；④ 区注册在**镜像（大师服）世界**而玩家在活图 ⇒ 进区步在活图永不触发（解析成功但事件不存在；10035 安格利浦关卡实例）
 root_cause: 真端进区 handler `FUN_180c47bf0` 用 `FUN_1810798b0`（0x1003F 名哈希）把当前步的别名哈希与进区区名哈希**逐值比对**（`ScriptDLL64.c:2071405`）⇒ 绑定就是**同名**，没有任何名字换算规则；区几何只在真端世界文件里：感官区 = 同名 `<npc><sensory_area><points>…<top>/<bottom>`（多胞 = 多个同名 `<npc>`），任务脚本区 = `<questscript_area><name>…<quest>id,…<points_info>`（自带 quest 绑定，与世界文件名无需逐字相同）；客户端 Level.pak 的 SP NPC 只有位点，没有多边形
-fix_or_guardrail: 1. 进区解析只许**恒等**（别名 → 同名注册区），任何换算规则都不得进运行期（旧壳名只许留在待删的遗留车道台账里）；2. 几何逐字誊抄真端世界文件（生成器只做誊抄 + 同名多胞归并，禁插值/取整/球体近似），门内以「胞数 + mapid + 原文摘要 sha256」三重冻结；3. `<questscript_area>` 以 `<quest>` 绑定为准（名字形会错绑，反例 `QuestArea_Q13965` 绑 13975/23975）；4. `progress` 轴与 `acquire` 轴别名集合互斥，接取轴数据随接取批落盘（本批不得预置死数据，门内有断言）；5. 真端缺席 ⇒ 冻结 + 登记，不注册、不猜几何、不跨世界搬镜像
-evidence: src/main/java/com/aionemu/gameserver/questEngine/tablelane/NativeEnterAreaPort.java; src/main/resources/aion/data/static_data/zones/zones_retail_enterarea.xml; src/test/java/com/aionemu/gameserver/questEngine/tablelane/DataDrivenEnterAreaPortGateTest.java; src/test/resources/quest/retail-enterarea-zone-resolution.tsv; .agents/summary/quest-engine-native/p7/P7-STEP2C-REPORT.zh-CN.md; .agents/summary/quest-engine-native/p7/tools/enterarea-retail-zone-probe.py
-validation: 2026-10-01：真端反编译 + 256 世界目录全量扫描（`<sensory_area>` 407 名 / 464 名字-世界对）复算切换集 120 别名（progress 105 = 91 解析 + 14 缺席；acquire 15 = 14 + 1，两轴互斥 0 例外），注册 91 区 / 120 胞覆盖 19 个世界目录，与遗留壳几何交叉核对 0 条其它差异（30 条遗留壳是球体）；门 `DataDrivenEnterAreaPortGateTest` **6/6**；族门 + tablelane **170/170**；聚焦套件 **1703 / 161F+137E / 105 红类**（ADDED 0 / REMOVED 0）
+fix_or_guardrail: 1. 进区解析只许**恒等**（别名 → 同名注册区），任何换算规则都不得进运行期（旧壳名只许留在待删的遗留车道台账里）；2. 几何逐字誊抄真端世界文件（生成器只做誊抄 + 同名多胞归并，禁插值/取整/球体近似），门内以「胞数 + mapid + 原文摘要 sha256」三重冻结；3. `<questscript_area>` 以 `<quest>` 绑定为准（名字形会错绑，反例 `QuestArea_Q13965` 绑 13975/23975）；4. `progress` 轴与 `acquire` 轴别名集合互斥，接取轴数据随接取批落盘（本批不得预置死数据，门内有断言）；5. 真端缺席 ⇒ 冻结 + 登记，不注册、不猜几何、不跨世界搬镜像；6. 注册宿主**活图归一（R5）**：真端 `_M`（大师服）世界目录的区按活图 mapid 注册（`LIVE_WORLD_MAPID`：210130000→210050000、220140000→220070000，与 `TeleportService2.resolveInggisonWorldId`/`HotspotTeleportService.resolveLiveWorldId` 同一张映射），台账 `normalized_from` 留痕真端宿主；只换宿主、几何/胞数/摘要逐字不动；DD 进区不得注册在镜像世界（门禁 ⑥ 全局禁）
+evidence: src/main/java/com/aionemu/gameserver/questEngine/tablelane/NativeEnterAreaPort.java; src/main/resources/aion/data/static_data/zones/zones_retail_enterarea.xml; src/test/java/com/aionemu/gameserver/questEngine/tablelane/DataDrivenEnterAreaPortGateTest.java; src/test/resources/quest/retail-enterarea-zone-resolution.tsv; .agents/summary/quest-engine-native/p7/P7-STEP2C-REPORT.zh-CN.md; .agents/summary/quest-engine-native/p7/tools/enterarea-retail-zone-probe.py; src/main/java/com/aionemu/gameserver/services/teleport/TeleportService2.java; .agents/summary/quest-10035-enterarea-live-world/README.zh-CN.md
+validation: 2026-10-01：真端反编译 + 256 世界目录全量扫描（`<sensory_area>` 407 名 / 464 名字-世界对）复算切换集 120 别名（progress 105 = 91 解析 + 14 缺席；acquire 15 = 14 + 1，两轴互斥 0 例外），注册 91 区 / 120 胞覆盖 19 个世界目录，与遗留壳几何交叉核对 0 条其它差异（30 条遗留壳是球体）；门 `DataDrivenEnterAreaPortGateTest` **6/6**；族门 + tablelane **170/170**；聚焦套件 **1703 / 161F+137E / 105 红类**（ADDED 0 / REMOVED 0）；2026-10-08：10035 活图断链修复（R5 活图归一）——真端实读 lf4/df4 感官区=0、LF4_M=15/DF4_M=13；归一行=1（LF4_SensoryArea_Q10035A→210050000，几何逐字不变）；门 `DataDrivenEnterAreaPortGateTest` **7/7**（+⑥ 活图归一）、`RetailEnterAreaZoneRegistrationGateTest` 2/2、`DataDrivenNativeRuntimeGateTest` 50/50、`QuestProductionStartupGateTest` 2/2（61 项 0 失败）；实机 PENDING（重启由用户管理）
 superseded_by: none
-boundaries: ① 本护照只到「绑定规则 + 几何来源 + 缺席处置」，不含进区运行期分流接线（随 P7 步 2 步 d 的 `QuestEngine` 进区兴趣与原生分流落地）；② `acquire` 轴（15 别名）的区数据与接线随接取批（步 e）落盘；③ 旧 Encom 壳区名与 `quest_enterarea_zone_resolution.tsv` 在遗留 IR 车道退役前仍并存（两套 `ZoneName` 不同，事件各发一次），不得据此判定「重复注册」；④ LF6 侧 14 条 progress 别名与 `DF6_QuestArea_Q25674` 的冻结不阻塞步 d/e，只阻塞步 f 全量切换（§10.3-#23）
-see_also: [QE-126], [QE-127], [QE-124]
-first_check: 动 DD 进区轴前先答：① 解析是不是恒等（别名 → 同名区），有没有偷偷加换算规则？② 几何是不是逐字来自真端世界文件（胞数/mapid/摘要三重冻结过没）？③ 任务脚本区是不是按 `<quest>` 绑定而不是名字形？④ 真端缺席的行是不是冻结登记而不是近似补/跨世界搬？⑤ 进区事件与 `QuestEngine` 的原生分流是否只认新注册名（不是旧壳名）？
-keywords: DataDriven、EnterArea、kind 6、进区、同名区、FUN_180c47bf0、0x1003F、名哈希、感官区、sensory_area、questscript_area、多胞区、NativeEnterAreaPort、zones_retail_enterarea.xml、fail-closed、RETAIL_ABSENT_ALIASES、LF6、DF6、DATA_DRIVEN_ENTER_AREA_IDENTITY、QE-130
+boundaries: ① 本护照只到「绑定规则 + 几何来源 + 缺席处置」，不含进区运行期分流接线（随 P7 步 2 步 d 的 `QuestEngine` 进区兴趣与原生分流落地）；② `acquire` 轴（15 别名）的区数据与接线随接取批（步 e）落盘；③ 旧 Encom 壳区名与 `quest_enterarea_zone_resolution.tsv` 在遗留 IR 车道退役前仍并存（两套 `ZoneName` 不同，事件各发一次），不得据此判定「重复注册」；④ LF6 侧 14 条 progress 别名与 `DF6_QuestArea_Q25674` 的冻结不阻塞步 d/e，只阻塞步 f 全量切换（§10.3-#23）；⑤ R5 活图归一只对齐运行时白名单两对（英吉斯温/格国）；LF4_M 其余 14 个感官区暂无 DD 引用（门禁归一行数冻结 =1，新增即红色复核），Silentera 大师服变体（600110000）不在映射内
+see_also: [QE-126], [QE-127], [QE-124], [QE-110]
+first_check: 动 DD 进区轴前先答：① 解析是不是恒等（别名 → 同名区），有没有偷偷加换算规则？② 几何是不是逐字来自真端世界文件（胞数/mapid/摘要三重冻结过没）？③ 任务脚本区是不是按 `<quest>` 绑定而不是名字形？④ 真端缺席的行是不是冻结登记而不是近似补/跨世界搬？⑤ 进区事件与 `QuestEngine` 的原生分流是否只认新注册名（不是旧壳名）？⑥ 注册宿主是不是玩家可达的活图（`_M` 大师服行必须按 R5 归一；镜像注册 = 活图死步）？
+keywords: DataDriven、EnterArea、kind 6、进区、同名区、名哈希、感官区、sensory_area、questscript_area、多胞区、NativeEnterAreaPort、zones_retail_enterarea.xml、fail-closed、RETAIL_ABSENT_ALIASES、LF6、DF6、活图归一、LIVE_WORLD_MAPID、normalized_from、镜像世界、大师服、210130000→210050000、DATA_DRIVEN_ENTER_AREA_IDENTITY、QE-130
 -->
 
 - **判定规则**：DD 进区绑定 = 真端**同名区**（名哈希逐值比对，零换算）；几何只来自真端世界文件（同名多胞归并），脚本区按 `<quest>` 绑定优先于名字形。
 - **安全网**：门内三重冻结（胞数 + mapid + 原文摘要）；真端缺席的 14 条 progress 别名 + 1 条 acquire 别名冻结在端口常量里，未登记别名一律 `DATA_DRIVEN_ENTER_AREA_ZONE_UNRESOLVED`。
 - **反漂移**：别用「出生点 + 半径」球体近似复活旧壳区，也别跨世界搬镜像几何（DF6 ↔ LF6）——真端没有就是没有。
+- **活图归一（R5，2026-10-08）**：真端英吉斯温/格国的感官区只写在 `_M`（大师服）世界文件里 ⇒ 注册宿主按活图 mapid 归一（只换宿主、几何不动；台账 `normalized_from` 留痕）；注册在镜像世界 = 活图死步（10035 安格利浦关卡实例）。
 
 ---
 
