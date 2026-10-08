@@ -558,12 +558,16 @@ public class World {
 	 * @param clearKnownlist 是否清空已知列表 / whether to clear known list
 	 */
 	public void despawn(VisibleObject object, boolean clearKnownlist) {
+		// 区域只读一次并全程复用局部变量：getActiveRegion() 以 isSpawned 为门（未生成即返回 null），
+		// 并发双删除时另一线程会在判空与调用之间翻转该标志，二次读取拿到 null（判例：副本 on_message→despawn_self 广播链竞态 NPE）。
+		// Read the region exactly once into the local: getActiveRegion() gates on isSpawned (null when not
+		// spawned), so a concurrent double-despawn flipping that flag between the check and the call used to NPE the re-read.
 		MapRegion oldMapRegion = object.getActiveRegion();
-		if (object.getActiveRegion() != null) {
-			if (object.getActiveRegion().getParent() != null) {
-				object.getActiveRegion().getParent().removeObject(object);
+		if (oldMapRegion != null) {
+			if (oldMapRegion.getParent() != null) {
+				oldMapRegion.getParent().removeObject(object);
 			}
-			object.getActiveRegion().remove(object);
+			oldMapRegion.remove(object);
 		}
 		object.getPosition().setIsSpawned(false);
 		if (oldMapRegion != null && object instanceof Creature) {
