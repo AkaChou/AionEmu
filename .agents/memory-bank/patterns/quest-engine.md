@@ -992,17 +992,17 @@ first_check: 见到“点任务后直接关窗/接不到、动作 20000 后 page
 status: CONFIRMED
 scope: 任务道具使用区域判定（ItemTemplate usearea 与 zones_quest.xml）、道具使用区球体几何权威（source_sphere.csv）、data_driven_quest.xml 的 ItemPlay 袭击怪物机制与唯一领奖人路由
 first_seen: 2026-09-19
-last_verified: 2026-10-07
+last_verified: 2026-10-08
 symptom: 到达任务指定地点使用道具时提示「无法在此处使用该物品」(1300143)；使用道具后本应出现的偷袭怪物缺失；领奖对话跳过故事页直接弹领奖框或接取 NPC 提前截胡完成
 root_cause: 1. 道具模板声明了 usearea（如 LF5_ITEMUSEAREA_Q30721），但 zones_quest.xml 中缺失对应 zone 定义，PlayerRestrictions#canUseItem 校验失败拦截；2. data_driven_quest.xml 中声明了 Relative 怪物生成，XML 漏配 spawn-npc-at-player 与对话后的 despawn-npc；3. npc-complete 预览包含 USE_OBJECT(-1) 跳过了 QUEST_SELECT 触发的 DEFAULT_SUCCESS；接取 NPC 被误写进 npc-complete 导致提前截胡；4. **注册存在≠几何正确**：已注册的 ITEM_USE 球体若球心/半径仍为旧导出值（13403 四区 r=10 且球心贴在贝里特拉和平态物件坐标上、距实际侦测点 32–34m），isInsideZone 同样失败（2026-10-07 修订）
 fix_or_guardrail: 1. 道具 usearea 必须在 zones_quest.xml 中补入，坐标与半径采信 source_sphere.csv（权威取真端 Map/XML/Subzones 副本；本仓 13403 四区即旧导出错位案例）；2. data_driven_quest.xml 的 ItemPlay 袭击怪使用 spawn-npc-at-player 挂载对应 slot，并在后续 talk 或 SET_SUCCEED 中通过 despawn-npc 清理；3. npc-complete 预览仅保留 SELECT_QUEST_REWARD，移除 USE_OBJECT；非交付 NPC 严禁配置 npc-complete
-evidence: src/main/resources/aion/data/static_data/zones/zones_quest.xml; src/main/resources/aion/data/static_data/zones/zones_quest.xml:86（13403 四区真端球值）; quest/retail/retail-xml-retention.xml 的 quest 30721 行（XML已退役并删除，见git历史）; quest/retail/retail-xml-retention.xml 的 quest 30771 行（XML已退役并删除，见git历史）; 测试类 Quest30721And30771RetailFlowTest（专属测试已随退役删除，见 76ff95145）; .agents/summary/quest-30721/2026-09-19-quest-30721-and-30771-retail-flow-and-ambush-repair.zh-CN.md; commit c2f772ea9（13403 四区几何修复）; .agents/summary/quest-13403-subpage-echo/DIAGNOSIS.zh-CN.md（续报六）
-validation: focused-test (Quest30721And30771RetailFlowTest 3/3); production-gate 36/36 (PRODUCTION_COMPILE_OK=6189 / FAILURES=0); XML schema valid；2026-10-07 修订：static（XML 静态检查）+ runtime（用户实机确认原点位使用探测器成功）
-boundaries: 仅适用于道具自身限制了使用区域（hasAreaRestriction）的任务；无袭击怪物的纯使用道具任务只配 ItemPlay 不需要配怪物槽位；球心/半径对拍目前只覆盖 13403 四区，其余 ITEM_USE 区（含 30721/30771）存量值未逐区复核
+evidence: src/main/resources/aion/data/static_data/zones/zones_quest.xml; src/main/resources/aion/data/static_data/zones/zones_quest.xml:86（13403 四区真端球值）; quest/retail/retail-xml-retention.xml 的 quest 30721 行（XML已退役并删除，见git历史）; quest/retail/retail-xml-retention.xml 的 quest 30771 行（XML已退役并删除，见git历史）; 测试类 Quest30721And30771RetailFlowTest（专属测试已随退役删除，见 76ff95145）; .agents/summary/quest-30721/2026-09-19-quest-30721-and-30771-retail-flow-and-ambush-repair.zh-CN.md; commit c2f772ea9（13403 四区几何修复）; .agents/summary/quest-13403-subpage-echo/DIAGNOSIS.zh-CN.md（续报六）; .agents/summary/quest-15000-itemusearea/DIAGNOSIS.zh-CN.md（Q15000 修复+全库注册覆盖审计）; .agents/summary/quest-15000-itemusearea/audit_itemusearea_zone_registry.py（审计工具，输出 itemusearea-zone-registry.tsv）
+validation: focused-test (Quest30721And30771RetailFlowTest 3/3); production-gate 36/36 (PRODUCTION_COMPILE_OK=6189 / FAILURES=0); XML schema valid；2026-10-07 修订：static（XML 静态检查）+ runtime（用户实机确认原点位使用探测器成功）；2026-10-08 Q15000：static（xmllint zones.xsd 通过 + 注册覆盖复扫 82→83，GAP 关闭）+ runtime（用户实机确认在生成器处使用维修工具成功，验收记录 .agents/summary/quest-acceptance/15000-2026-10-08-client-accepted.md）
+boundaries: 仅适用于道具自身限制了使用区域（hasAreaRestriction）的任务；无袭击怪物的纯使用道具任务只配 ItemPlay 不需要配怪物槽位；球心/半径对拍已覆盖 13403 四区与 Q15000，其余已注册 ITEM_USE 区存量值未逐区复核；2026-10-08 完成全库 usearea 注册覆盖审计：133 个 usearea 中 50 个未注册（35 个真端 world.xml 有定义但需世界短名→mapid 对齐、15 个真端两源均无定义为疑似退役内容，含代码特判的 _ABYSS_CASTLE_AREA_），未批量修复的原因与分组见 DIAGNOSIS §6
 superseded_by: none
 see_also: [QE-042], [QE-031], [QE-109], [QE-130], [QE-157]
 first_check: 道具无法使用时先查 item_template 的 usearea 是否在 zones_*.xml 中注册；已注册时继续对拍球心/半径与真端 source_sphere.csv（旧导出球心可能贴在别处物件坐标上；13403 四区曾偏 32–34m）；领奖直接弹窗时查 npc-complete 的 preview actions 是否包含 USE_OBJECT
-keywords: 无法在此处使用该物品、无法使用道具、1300143、usearea、ITEM_USE、zones_quest.xml、source_sphere.csv、球心错位、半径、isInsideZone、13403、182215794、LF1A_ITEMUSEAREA_Q13403A、探测器无法使用、QUEST_ITEM_USE_ZONE_AND_AMBUSH_CONTRACT
+keywords: 无法在此处使用该物品、无法使用道具、1300143、usearea、ITEM_USE、zones_quest.xml、source_sphere.csv、球心错位、半径、isInsideZone、13403、182215794、LF1A_ITEMUSEAREA_Q13403A、探测器无法使用、QUEST_ITEM_USE_ZONE_AND_AMBUSH_CONTRACT、缺少区域、LF5_ITEMUSEAREA_Q15000、182215662、维修工具、usearea 注册覆盖审计
 -->
 
 - **判定规则**：`item_template` 的 `usearea` 必须在 `zones_quest.xml` 中以 `zone_type="ITEM_USE"` 形式存在，否则 `PlayerRestrictions` 会返回 1300143 拦截；`data_driven_quest.xml` 中带 `Relative` 的剧情袭击怪需在道具使用时刷出并在后续交互中销毁；汇报故事页依赖 `QUEST_SELECT`，`npc-complete` 预览不得包含 `USE_OBJECT` 以免故事页被跳过。
@@ -1013,6 +1013,12 @@ keywords: 无法在此处使用该物品、无法使用道具、1300143、useare
   - change：`zones_quest.xml:86-96` 四区球心/半径替换为真端 `source_sphere.csv` 值（r=59.37/55.90/48.34/51.29；实机站位 3D 距离 38.95<59.37、36.26<55.90）；`zone_type` 维持 ITEM_USE。
   - evidence：`src/main/resources/aion/data/static_data/zones/zones_quest.xml:86`；`commit c2f772ea9`；`.agents/summary/quest-13403-subpage-echo/DIAGNOSIS.zh-CN.md`（续报六）。
   - validation：static（XML 静态检查）+ runtime（2026-10-07 用户实机确认：原点位使用探测器成功）。
+- **修订 2026-10-08（Q15000 维修工具被拒：缺区告警特征 + 全库注册覆盖审计）**：
+  - trigger：任务 15000 使用维修工具（182215662）被拒，实机日志每次 `CM_USE_ITEM` 恒定两条 `ZoneName - 缺少区域：LF5_ITEMUSEAREA_Q15000`。
+  - root_cause：同根因 #1；双告警可定位拦截点 = `PlayerRestrictions#canUseItem` 的 `hasAreaRestriction()` + `getUseArea()` 各调一次 `ZoneName.get`（缺名回退 `NONE` 实例 ⇒ `isInsideZone(NONE)` 恒 false ⇒ 1300143）。
+  - change：`zones_quest.xml` Cygnea 段新增 `LF5_ITEMUSEAREA_Q15000`（SPHERE, zone_type=ITEM_USE, 2890.31/826.17/706.21 r=28.50，真端 `source_sphere.csv:95696`；lf5→210070000 由 WorldId.xml 与既有 LF5 区双证）。
+  - evidence：`.agents/summary/quest-15000-itemusearea/DIAGNOSIS.zh-CN.md`；审计工具 `audit_itemusearea_zone_registry.py`（133 usearea / 83 注册 / 50 GAP，含逐项真端两源）。
+  - validation：static（`xmllint --schema zones.xsd` 通过；覆盖复扫 GAP 关闭；既有 `MultiCellSensoryZoneRegistrationTest` 不含总量断言）+ runtime（2026-10-08 用户实机确认使用成功；验收记录 `.agents/summary/quest-acceptance/15000-2026-10-08-client-accepted.md`）。
 
 ## [QE-044] 四十二、收集步变量提前推进导致客户端交付对白脱节 (COLLECT_PROGRESS_PREMATURE_ADVANCE_DIALOG_DROPPED)
 <!-- pattern-metadata

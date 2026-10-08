@@ -187,6 +187,9 @@
 	<zone mapid="210070000" name="LF5_ITEMUSEAREA_Q30721" area_type="SPHERE" zone_type="ITEM_USE">
         <sphere x="152.65" y="1430.13" z="488.10" r="41.04"/>
     </zone>
+	<zone mapid="210070000" name="LF5_ITEMUSEAREA_Q15000" area_type="SPHERE" zone_type="ITEM_USE">
+        <sphere x="2890.31" y="826.17" z="706.21" r="28.50"/>
+    </zone>
     <!-- Gelkmaros [Normal Server]
 	<zone mapid="220070000" name="DF4_ITEMUSEAREA_Q20033" area_type="SPHERE" zone_type="SUB">
 		<sphere x="278.7311" y="1535.613" z="356.4207" r="10.0"/>
