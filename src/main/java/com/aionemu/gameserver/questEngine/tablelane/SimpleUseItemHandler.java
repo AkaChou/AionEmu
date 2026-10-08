@@ -15,6 +15,7 @@ import com.aionemu.gameserver.model.gameobjects.PersistentState;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_DIALOG_WINDOW;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_QUEST_ACTION;
+import com.aionemu.gameserver.questEngine.definition.QuestCatalogDrop;
 import com.aionemu.gameserver.questEngine.definition.QuestDialogContract;
 import com.aionemu.gameserver.questEngine.definition.QuestDialogAction;
 import com.aionemu.gameserver.questEngine.definition.QuestDialogPage;
@@ -24,6 +25,7 @@ import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.questEngine.retail.RetailClientHandinNpcSets;
 import com.aionemu.gameserver.questEngine.retail.RetailItemNameIndex;
+import com.aionemu.gameserver.questEngine.retail.RetailQuestDriver;
 import com.aionemu.gameserver.questEngine.retail.RetailQuestMetadataCompiler;
 import com.aionemu.gameserver.questEngine.tablelane.NativeItemSymbols.ItemStack;
 import com.aionemu.gameserver.services.DialogService;
@@ -111,6 +113,14 @@ public final class SimpleUseItemHandler {
 	private final Map<Integer, List<ItemStack>> stepRemoveByQuestId;
 	/** 任务 ID → item_check 门的工作物品（真端 quest.xml {@code check_itemK_L}）。 / The gate items. */
 	private final Map<Integer, List<ItemStack>> gateItemsByQuestId;
+	/**
+	 * NPC id → 该 NPC 的真端击杀掉落（quest.xml {@code drop_*} 列编译；同 Talk/Collect 口径，
+	 * 退役 XML 的 {@code <drops>} 随 catalog 退场后由本车道接手，经 {@code QuestEngine#questDrops} 聚合）。
+	 * <p>
+	 * Retail kill drops per npc, compiled from the quest.xml {@code drop_*} columns (same contract as
+	 * the Talk/Collect families; aggregated through {@code QuestEngine#questDrops}).
+	 */
+	private final Map<Integer, List<QuestCatalogDrop>> dropsByNpcId;
 	/** 表行全量（注册集）。 / Every table row (the registration set). */
 	private final Set<Integer> ownedQuestIds;
 	/** 路由集 = 退役 ∧ 非 XML-only ∧ 全部声明面可解。 / The routing set. */
@@ -155,6 +165,7 @@ public final class SimpleUseItemHandler {
 		Map<Integer, List<ItemStack>> stepGives = new LinkedHashMap<>();
 		Map<Integer, List<ItemStack>> stepRemoves = new LinkedHashMap<>();
 		Map<Integer, List<ItemStack>> gates = new LinkedHashMap<>();
+		Map<Integer, List<QuestCatalogDrop>> dropsByNpc = new LinkedHashMap<>();
 		Set<Integer> owned = new TreeSet<>();
 		Set<Integer> routed = new TreeSet<>();
 		Set<Integer> unroutable = new TreeSet<>();
@@ -248,6 +259,20 @@ public final class SimpleUseItemHandler {
 				if (useItem != null) {
 					acceptByItem.computeIfAbsent(useItem.itemId(), key -> new ArrayList<>()).add(questId);
 				}
+				// 真端掉落列注册（2026-10-08，与 Talk/Collect 同型缺口）：退役 XML 的 {@code <drops>}
+				// 退出 catalog 后本族击杀掉落断供（行 2435：击杀 MosbearBaby 无 quest_2435a）；
+				// 概率/上限语义原样交 {@code QuestService.isQuestDrop}。
+				// Retail drop-column registration (machine case 2026-10-08, quest 2435): same gap the
+				// Talk/Collect families fixed; probability/cap semantics pass through to isQuestDrop.
+				if (questXml.hasRetailDropColumns(questId)) {
+					RetailQuestMetadataCompiler.Outcome dropMeta = metadataOf(questId);
+					if (dropMeta != null && dropMeta.clean()) {
+						for (var drop : dropMeta.metadata().drops()) {
+							dropsByNpc.computeIfAbsent(drop.npcId(), key -> new ArrayList<>())
+								.add(QuestCatalogDrop.catalog(questId, dropMeta.metadata(), drop));
+						}
+					}
+				}
 			}
 
 			// 链式接取窗（真端 0x1e 槽）按原文装载：本族的接取面是「用物品」，没有自己的接取 NPC，
@@ -275,6 +300,7 @@ public final class SimpleUseItemHandler {
 		this.stepGiveByQuestId = Collections.unmodifiableMap(stepGives);
 		this.stepRemoveByQuestId = Collections.unmodifiableMap(stepRemoves);
 		this.gateItemsByQuestId = Collections.unmodifiableMap(gates);
+		this.dropsByNpcId = Collections.unmodifiableMap(dropsByNpc);
 		this.ownedQuestIds = Collections.unmodifiableSet(owned);
 		this.routedQuestIds = Collections.unmodifiableSet(routed);
 		this.unroutableQuestIds = Collections.unmodifiableSet(unroutable);
@@ -340,6 +366,16 @@ public final class SimpleUseItemHandler {
 	/** 已装载但当前不可路由的行（未退役/缺面未解）。 / Loaded but unroutable rows. */
 	public Set<Integer> unroutableQuestIds() {
 		return unroutableQuestIds;
+	}
+
+	/**
+	 * 该 NPC 的真端击杀掉落（{@code QuestService.getQuestDrop} 的消费面；经
+	 * {@code QuestEngine#questDrops} 聚合——击杀装配与对象交互共用同一条查询）。
+	 * <p>
+	 * Retail kill drops for the npc, aggregated through {@code QuestEngine#questDrops}.
+	 */
+	public List<QuestCatalogDrop> questDropsFor(int npcId) {
+		return dropsByNpcId.getOrDefault(npcId, List.of());
 	}
 
 	/** 唯一解析失败的 NPC 名（证据面，恒空为门禁）。 / NPC names that did not resolve uniquely. */
@@ -871,13 +907,16 @@ public final class SimpleUseItemHandler {
 
 	/** 真端 {@code quest.xml} 元数据可编译（缺行/未解即不可路由）。 / Retail metadata must compile cleanly. */
 	private static boolean metadataClean(int questId) {
+		RetailQuestMetadataCompiler.Outcome meta = metadataOf(questId);
+		return meta != null && meta.clean();
+	}
+
+	/** 真端 {@code quest.xml} 元数据（不可编译/驱动不可用按未解处理，fail-closed）。 / Retail metadata, fail-closed. */
+	private static RetailQuestMetadataCompiler.Outcome metadataOf(int questId) {
 		try {
-			return com.aionemu.gameserver.questEngine.retail.RetailQuestDriver.ensureLoaded()
-				.retailMetadataOf(questId)
-				.map(RetailQuestMetadataCompiler.Outcome::clean)
-				.orElse(false);
+			return RetailQuestDriver.ensureLoaded().retailMetadataOf(questId).orElse(null);
 		} catch (java.io.IOException | RuntimeException e) {
-			return false;
+			return null;
 		}
 	}
 }

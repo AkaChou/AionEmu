@@ -17,14 +17,18 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 
+import com.aionemu.boot.i18n.I18n;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.PersistentState;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_DIALOG_WINDOW;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_QUEST_ACTION;
 import com.aionemu.gameserver.questEngine.QuestEngine;
+import com.aionemu.gameserver.questEngine.definition.QuestCatalogDrop;
 import com.aionemu.gameserver.questEngine.definition.QuestDialogAction;
 import com.aionemu.gameserver.questEngine.definition.QuestDialogContract;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
@@ -33,6 +37,8 @@ import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.services.QuestService;
 import com.aionemu.gameserver.questEngine.retail.RetailItemNameIndex;
 import com.aionemu.gameserver.questEngine.retail.RetailLedgerXml;
+import com.aionemu.gameserver.questEngine.retail.RetailQuestDriver;
+import com.aionemu.gameserver.questEngine.retail.RetailQuestMetadataCompiler;
 import com.aionemu.gameserver.questEngine.retail.RetailStringIds;
 import com.aionemu.gameserver.questEngine.tablelane.DataDrivenQuestTable.Kind;
 import com.aionemu.gameserver.questEngine.tablelane.DataDrivenQuestTable.Row;
@@ -262,14 +268,48 @@ public final class DataDrivenNativeRuntime {
 		 * Quest timer (executor case 10: `seconds, destStep, flag`; flag 0 = advance / 1 = abandon). */
 		TIMER,
 		/** case 9：进副本（`creationId, worldId, leaveProgress[, 成员名…]`；落点 =
-		 * `NativeInstanceEntryPort` 真端别名坐标；movieId 槽 = creationId）。Enter instance
-		 * (executor case 9; landing point from the retail alias table; movieId slot = creationId). */
+		 * `NativeInstanceEntryPort` 真端别名坐标；movieId 槽 = creationId、count 槽 = leaveProgress）。
+		 * Enter instance (executor case 9; landing point from the retail alias table; movieId slot =
+		 * creationId, count slot = leaveProgress). */
 		ENTER_INSTANCE
 	}
 
 	/** 一个已解析的附加动作（未用字段 = -1/0）。 / One resolved extra action (unused fields = -1/0). */
 	private record ActionPlan(ActionType type, int itemId, int count, int movieId, boolean movieToken, int worldId,
 			float x, float y, float z, int heading, boolean relative, int stringId) {
+	}
+
+	/** 一次发放（回滚补发的物品条目；门禁断言面）。 / One grant (an item to restore on rollback; gate face). */
+	record ItemGrant(int itemId, int count) {
+	}
+
+	/**
+	 * 一行 case 9（Enter Instance）的离场恢复元数据（装载期从动作表收集）。
+	 * <p>
+	 * 语义（真端 `FUN_180c46d80` 块 1：`锚 < 步 < leaveProgress ⇒ +0xf0 写回锚`；锚 = 动作所在步）：
+	 * 进世界事件时若步号落在 (enterStep, leaveProgress) 且玩家不在该副本世界 ⇒ 写回 enterStep，
+	 * 并补发进入步被扣的物品（退役 typed XML 的 `s4/s5/s6 → s3 + give-item` 同款）。边界：
+	 * <ul>
+	 *   <li>补发是**去重栅栏**（`count == 0` 才给），不是「曾扣除」证据——DD 车道无 has-item 闸门，
+	 *       物品在 DD 侧是装饰性的（typed 车的 `CHECK_USER_ITEM_FAIL` 无对应面）；</li>
+	 *   <li>复用口径 = 单人注册（`registerPlayerWithInstance` / 玩家 `objectId`；组队 teamId 查找不在本批，
+	 *       与 typed 车道 `PlayerQuestTeleportPort.NextAvailable` 一致）；</li>
+	 *   <li>同一行多条 case 9 步时窗口重叠 = 首条写回后其余天然不成立（幂等安全，当前数据无此形）；</li>
+	 *   <li>写回复用 `jumpTo`（保留组槽，同 Timer 到期面）：10034 窗口含步 5（Hunt 目标 1 ⇒ 组槽必 0）
+	 *       故实际等价；若未来该行 Hunt 目标改成 &gt;1，需复核 `QuestService.isQuestDrop` 的 raw vars 直比。</li>
+	 * </ul>
+	 * <p>
+	 * The leave-recovery metadata of one case-9 row (collected at load time). Retail semantics
+	 * (FUN_180c46d80 block 1: `anchor < step < leaveProgress ⇒ write back the anchor`, the anchor
+	 * being the action's own step): on an enter-world event, a step inside (enterStep, leaveProgress)
+	 * while the player is outside that instance world writes the step back to enterStep and restores
+	 * the items the enter step consumed. The restore is a count-zero fence (not proof of prior
+	 * consumption); the reuse face is solo-registration only (no teamId lookup), matching the typed
+	 * lane; overlapping windows on the same row and the jumpTo group-slot retention are idempotent
+	 * for the current data.
+	 */
+	record LeaveRollback(int questId, int enterStep, int worldId, int leaveProgress,
+			List<ItemGrant> restoreItems) {
 	}
 
 	/**
@@ -354,6 +394,41 @@ public final class DataDrivenNativeRuntime {
 	private final NativeTimerPort timerPort;
 	/** 领奖口（交付报告面的奖励窗结算；生产 = {@link NativeReportRewardFlow#instance()}）。 / The claim flow. */
 	private final NativeReportRewardFlow rewardFlow;
+	/** 链式接取边（`acquire=none` 后继；已过滤到 owned ∧ routed ∧ 非冻结，资源序 = 后继升序）。 */
+	private final List<ChainAcquireEdges.Edge> chainAcquireEdges;
+	/** 前序 → 该前序完成时定向走查的链边。 / Predecessor → edges walked when it completes. */
+	private final Map<Integer, List<ChainAcquireEdges.Edge>> chainAcquireByPredecessor;
+	/**
+	 * NPC id → 该 NPC 的真端任务掉落（quest.xml {@code drop_*} 列编译；退役 XML 的 {@code <drops>}
+	 * 随 catalog 退场后由本车道接手）。经 {@link QuestEngine#questDrops} 聚合并被
+	 * {@code QuestService.isQuestDrop}（START + 步号 + 上限）门控。
+	 * <p>
+	 * Retail quest drops per npc, compiled from the quest.xml {@code drop_*} columns (the retired XML
+	 * took its {@code <drops>} out of the catalog); aggregated through questDrops and gated by isQuestDrop.
+	 */
+	private final Map<Integer, List<QuestCatalogDrop>> dropsByNpcId;
+	/**
+	 * CollectItem 步的追加 FOBJ 列（{@code value1..4_progress_}）对象 → 步命中：采集物件的使用面
+	 * （可交互资格 + 交互认领）。2026-10-08 实机 15011（右击 702730 零响应）：本列此前从未被消费，
+	 * 物件的 ACTION_ITEM_USE 资格与交互认领双缺 ⇒ 交互 AI 在 can-act 门早退（零包）。
+	 * <p>
+	 * The CollectItem appended-FOBJ columns (retail {@code value1..4_progress_}) keyed by object npc:
+	 * the collect object's use face (eligibility + claim). Live 2026-10-08 (quest 15011): the columns
+	 * were never consumed, so both the ACTION_ITEM_USE eligibility and the interaction claim were
+	 * missing and the interaction AI bailed at the can-act gate with zero packets.
+	 */
+	private final Map<Integer, List<StepHit>> collectObjectsByNpcId;
+	/**
+	 * case 9 行的离场恢复表（进世界事件把"副本内失配阶段"写回进入步；见 {@link LeaveRollback}）。
+	 * 生产 = 10034 / 20034 两行（20032 冻结不路由）。
+	 * <p>
+	 * The case-9 leave-recovery table (an enter-world event writes an unreachable in-instance stage
+	 * back to its enter step; see {@link LeaveRollback}). Production = rows 10034 / 20034.
+	 */
+	private final List<LeaveRollback> instanceLeaveRollbacks;
+
+	/** 任务追踪日志出口（链式发放拒绝面；与 {@code NativeQuestStartPort} 同一 logger）。 */
+	private static final Logger QUEST_TRACE_LOG = LoggerFactory.getLogger("quest");
 
 	private DataDrivenNativeRuntime(Map<Integer, List<StepPlan>> plansByQuestId,
 			Map<Integer, List<StepHit>> killsByNpcId, Map<Integer, List<StepHit>> talksByNpcId,
@@ -369,7 +444,11 @@ public final class DataDrivenNativeRuntime {
 			Set<Integer> routedQuestIds, Map<Integer, FreezeReason> frozenQuestIds, Set<String> unresolvedNames,
 			NativeInventoryPort inventoryPort, NativeMoviePort moviePort, NativeTeleportPort teleportPort,
 			NativeSpawnPort spawnPort, NativeSayPort sayPort, NativeTimerPort timerPort,
-			NativeReportRewardFlow rewardFlow, RetailItemNameIndex itemIndex) {
+			NativeReportRewardFlow rewardFlow, RetailItemNameIndex itemIndex,
+			List<ChainAcquireEdges.Edge> chainAcquireEdges,
+			Map<Integer, List<ChainAcquireEdges.Edge>> chainAcquireByPredecessor,
+			Map<Integer, List<QuestCatalogDrop>> dropsByNpcId, List<LeaveRollback> instanceLeaveRollbacks,
+			Map<Integer, List<StepHit>> collectObjectsByNpcId) {
 		this.plansByQuestId = plansByQuestId;
 		this.killsByNpcId = killsByNpcId;
 		this.talksByNpcId = talksByNpcId;
@@ -400,6 +479,11 @@ public final class DataDrivenNativeRuntime {
 		this.timerPort = timerPort;
 		this.rewardFlow = rewardFlow;
 		this.itemIndex = itemIndex;
+		this.chainAcquireEdges = chainAcquireEdges;
+		this.chainAcquireByPredecessor = chainAcquireByPredecessor;
+		this.dropsByNpcId = dropsByNpcId;
+		this.collectObjectsByNpcId = collectObjectsByNpcId;
+		this.instanceLeaveRollbacks = instanceLeaveRollbacks;
 	}
 
 	/**
@@ -445,7 +529,7 @@ public final class DataDrivenNativeRuntime {
 			return create(table, switchSet, NativeNpcNameResolver.instance(), enterAreaPort,
 				RetailItemNameIndex.loadItemTemplates(), NativeInventoryPort.live(), NativeMoviePort.live(),
 				NativeTeleportPort.live(), NativeSpawnPort.live(), NativeSayPort.live(), NativeTimerPort.live(),
-				NativeReportRewardFlow.instance());
+				NativeReportRewardFlow.instance(), ChainAcquireEdges.instance());
 		} catch (IOException e) {
 			throw new IllegalStateException("DATA_DRIVEN_PRODUCTION_WIRING_FAILED", e);
 		}
@@ -533,19 +617,23 @@ public final class DataDrivenNativeRuntime {
 	 *                       routing; the e1 give/remove action face)
 	 * @param moviePort      过场端口（路由集非空时必需；步 e1 CUTSCENE 动作面）/ movie port (required when
 	 *                       routing; the e1 cutscene action face)
+	 * @param chainAcquireTable  链式接取边表（`acquire=none` 后继的自动发放面；生产 =
+	 *                       {@link ChainAcquireEdges#instance()}）/ the chain-acquire edge table (the
+	 *                       auto-grant face of acquire=none successors; production = instance())
 	 */
 	public static DataDrivenNativeRuntime create(DataDrivenQuestTable table, Set<Integer> routedQuestIds,
 			NativeNpcNameResolver nameResolver, NativeEnterAreaPort enterAreaPort, RetailItemNameIndex itemIndex,
 			NativeInventoryPort inventoryPort, NativeMoviePort moviePort, NativeTeleportPort teleportPort,
 			NativeSpawnPort spawnPort, NativeSayPort sayPort, NativeTimerPort timerPort,
-			NativeReportRewardFlow rewardFlow) {
+			NativeReportRewardFlow rewardFlow, ChainAcquireEdges chainAcquireTable) {
 		if (table == null) {
 			throw new IllegalArgumentException("DATA_DRIVEN_TABLE_MISSING");
 		}
 		if (routedQuestIds == null || routedQuestIds.isEmpty()) {
 			return new DataDrivenNativeRuntime(Map.of(), Map.of(), Map.of(), Map.of(), Map.of(), Map.of(), Map.of(),
 				Map.of(), Map.of(), Map.of(), Map.of(), Map.of(), Map.of(), Map.of(), Map.of(), Map.of(), Map.of(),
-				Map.of(), Set.of(), Set.of(), Map.of(), Set.of(), null, null, null, null, null, null, null, null);
+				Map.of(), Set.of(), Set.of(), Map.of(), Set.of(), null, null, null, null, null, null, null, null,
+				List.of(), Map.of(), Map.of(), List.of(), Map.of());
 		}
 		Objects.requireNonNull(nameResolver, "DATA_DRIVEN_NAME_RESOLVER_MISSING");
 		Objects.requireNonNull(enterAreaPort, "DATA_DRIVEN_ENTER_AREA_PORT_MISSING");
@@ -577,6 +665,7 @@ public final class DataDrivenNativeRuntime {
 		Set<Integer> routed = new TreeSet<>();
 		Map<Integer, FreezeReason> frozen = new TreeMap<>();
 		Set<String> unresolved = new TreeSet<>();
+		List<LeaveRollback> instanceLeaveRollbacks = new ArrayList<>();
 
 		for (int questId : new TreeSet<>(routedQuestIds)) {
 			Row row = table.find(questId).orElse(null);
@@ -614,6 +703,9 @@ public final class DataDrivenNativeRuntime {
 			}
 			routed.add(questId);
 			plans.put(questId, rowPlan.steps());
+			// case 9 离场恢复元数据（进世界事件写回进入步的通用面；只收可路由行）。
+			// Case-9 leave-recovery metadata (the generic write-back face; routed rows only).
+			collectInstanceLeaveRollbacks(questId, rowPlan.facedActions(), instanceLeaveRollbacks);
 			rowPlan.kills().forEach(hit -> kills.computeIfAbsent(hit.npcKey(), key -> new ArrayList<>()).add(hit.hit()));
 			rowPlan.talks().forEach(hit -> talks.computeIfAbsent(hit.npcKey(), key -> new ArrayList<>()).add(hit.hit()));
 			rowPlan.fobjs().forEach(hit -> fobjs.computeIfAbsent(hit.npcKey(), key -> new ArrayList<>()).add(hit.hit()));
@@ -667,13 +759,155 @@ public final class DataDrivenNativeRuntime {
 		autoRegisterItemRefs(questRefSets, actionPlans, acceptActionPlans, itemPlays);
 		Map<Integer, List<Integer>> questRefs = new LinkedHashMap<>();
 		questRefSets.forEach((refItemId, refQuestIds) -> questRefs.put(refItemId, List.copyOf(refQuestIds)));
+		// 链式接取边过滤：只注册「被本车道接管 ∧ 可路由 ∧ 接取类别 none ∧ 非冻结」的后继——冻结行
+		// 不得有任何发放面（门禁 frozenRowsAreNeverRouted 的互斥不变量）；XML_RETENTION 行不属本车道。
+		// 未过滤前先按资源序吸附（资源 = 后继升序）。
+		// Chain-acquire filter: only owned ∧ routed ∧ acquire-kind-none ∧ unfrozen successors register
+		// (frozen rows must never gain a grant face); XML_RETENTION rows belong to the typed lane.
+		List<ChainAcquireEdges.Edge> chainEdges = new ArrayList<>();
+		if (chainAcquireTable != null) {
+			for (ChainAcquireEdges.Edge edge : chainAcquireTable.all().values()) {
+				Row successorRow = table.find(edge.successor()).orElse(null);
+				if (successorRow == null || !owned.contains(edge.successor()) || !routed.contains(edge.successor())
+						|| frozen.containsKey(edge.successor()) || !"none".equals(successorRow.acquireKind())) {
+					continue;
+				}
+				chainEdges.add(edge);
+			}
+		}
+		Map<Integer, List<ChainAcquireEdges.Edge>> chainByPredecessor = new LinkedHashMap<>();
+		for (ChainAcquireEdges.Edge edge : chainEdges) {
+			for (int predecessor : edge.predecessors()) {
+				chainByPredecessor.computeIfAbsent(predecessor, key -> new ArrayList<>()).add(edge);
+			}
+		}
+		Map<Integer, List<ChainAcquireEdges.Edge>> immutableChainByPredecessor = new LinkedHashMap<>();
+		chainByPredecessor.forEach((key, value) -> immutableChainByPredecessor.put(key, List.copyOf(value)));
+		// 真端掉落列注册（2026-10-08 实机 10034：击杀 216494 不掉 quest_10034a）。退役 XML 连同其
+		// {@code <drops>} 退出 catalog 后本族击杀掉落断供；与 Talk/Collect 两族同口径，从 quest.xml
+		// {@code drop_monster_*}/{@code drop_item_*} 列接手（概率/each-member/collect_progress 原样交
+		// QuestService.isQuestDrop 的 START + 步号 + 上限门；注册无条件、激活由该门负责）。
+		// 只注册 routed（owned ∧ 可路由 ∧ 非冻结；冻结行不得有任何面，XML_RETENTION/非台账行
+		// 本就不在切换集）；真端元数据不可编译/不 clean 逐行 fail-closed 跳过（由门禁对拍暴露）。
+		// Retail drop-column registration (machine case 2026-10-08, quest 10034): the retired XML took
+		// its {@code <drops>} out of the catalog; like the Talk/Collect families this lane serves the
+		// retail drop_* columns. Probability / each-member / collect_progress pass through to
+		// isQuestDrop unchanged; only routed rows register, uncompilable metadata fails closed per row.
+		Map<Integer, List<QuestCatalogDrop>> dropsByNpc = new LinkedHashMap<>();
+		registerRetailDrops(routed, dropsByNpc);
+		// 采集物件的使用面注册（2026-10-08 实机 15011：右击 702730 零响应）。CollectItem 步的追加
+		// FOBJ 列（value1..4）对象此前零触点——物件的 ACTION_ITEM_USE 资格与交互认领双缺 ⇒ 交互 AI
+		// 在 can-act 门早退（零包）。只注册 routed；名字不可解析逐条 fail-closed 跳过（由门禁的独立
+		// 重算对拍暴露，不假绿）。
+		// Collect-object use-face registration (live 2026-10-08, quest 15011): the CollectItem appended-
+		// FOBJ columns had zero consumers, leaving both the ACTION_ITEM_USE eligibility and the
+		// interaction claim missing. Only routed rows register; unresolvable names fail closed per entry
+		// (surfaced by the gate's independent recomputation).
+		Map<Integer, List<StepHit>> collectObjects = new LinkedHashMap<>();
+		registerCollectObjects(table, routed, nameResolver, collectObjects);
 		return new DataDrivenNativeRuntime(Map.copyOf(plans), Map.copyOf(kills), Map.copyOf(talks), Map.copyOf(fobjs),
 			Map.copyOf(itemPlays), Map.copyOf(zones), Map.copyOf(worlds), Map.copyOf(pvpSteps),
 			Map.copyOf(acquireTalks), Map.copyOf(reportTalks), Map.copyOf(acquireItems), Map.copyOf(acquireWorlds),
 			Map.copyOf(acquireLevels), Map.copyOf(acquireZones), Map.copyOf(actionPlans),
 			Map.copyOf(acceptActionPlans), Map.copyOf(questRefs), Map.copyOf(acquirePlans),
 			Set.copyOf(owned), Set.copyOf(routed), Map.copyOf(frozen), Set.copyOf(unresolved), inventoryPort,
-			moviePort, teleportPort, spawnPort, sayPort, timerPort, rewardFlow, itemIndex);
+			moviePort, teleportPort, spawnPort, sayPort, timerPort, rewardFlow, itemIndex,
+			List.copyOf(chainEdges), Map.copyOf(immutableChainByPredecessor), Map.copyOf(dropsByNpc),
+			List.copyOf(instanceLeaveRollbacks), Map.copyOf(collectObjects));
+	}
+
+	/**
+	 * 逐行注册真端掉落列到「npc id → 条目」表（{@code routed} 为 TreeSet ⇒ 序稳定）。
+	 * <p>
+	 * Registers the retail drop columns row by row; uncompilable or unclean metadata fails closed.
+	 */
+	private static void registerRetailDrops(Set<Integer> routed, Map<Integer, List<QuestCatalogDrop>> sink) {
+		NativeQuestXmlTable questXml = NativeQuestXmlTable.instance();
+		for (int questId : routed) {
+			if (!questXml.hasRetailDropColumns(questId)) {
+				continue;
+			}
+			RetailQuestMetadataCompiler.Outcome meta = retailDropMetadata(questId);
+			if (meta == null || !meta.clean()) {
+				continue;
+			}
+			for (var drop : meta.metadata().drops()) {
+				sink.computeIfAbsent(drop.npcId(), key -> new ArrayList<>())
+					.add(QuestCatalogDrop.catalog(questId, meta.metadata(), drop));
+			}
+		}
+	}
+
+	/** 真端 quest.xml 元数据（不可编译/驱动不可用按未解处理，fail-closed）。 / Retail metadata, fail-closed. */
+	private static RetailQuestMetadataCompiler.Outcome retailDropMetadata(int questId) {
+		try {
+			return RetailQuestDriver.ensureLoaded().retailMetadataOf(questId).orElse(null);
+		} catch (IOException | RuntimeException e) {
+			return null;
+		}
+	}
+
+	/**
+	 * 注册 CollectItem 步的追加 FOBJ 列对象（{@code value1..4_progress_}，真端载荷词典：列 1..4 =
+	 * 追加 FOBJ、列 5 = 整数）到「物件 npc id → 步命中」表（{@code routed} 为 TreeSet ⇒ 序稳定；
+	 * 每条列值一个对象名，解析失败逐条 fail-closed 跳过）。
+	 * <p>
+	 * Registers the CollectItem appended-FOBJ objects; unresolvable names fail closed per entry.
+	 */
+	private static void registerCollectObjects(DataDrivenQuestTable table, Set<Integer> routed,
+			NativeNpcNameResolver nameResolver, Map<Integer, List<StepHit>> sink) {
+		for (int questId : routed) {
+			DataDrivenQuestTable.Row row = table.find(questId).orElse(null);
+			if (row == null) {
+				continue;
+			}
+			for (DataDrivenQuestTable.Step step : row.steps()) {
+				if (step.kind() != Kind.COLLECT_ITEM) {
+					continue;
+				}
+				for (int column = 1; column <= 4; column++) {
+					String raw = step.column(column);
+					if (raw == null || raw.isBlank()) {
+						continue;
+					}
+					Set<Integer> npcIds = new LinkedHashSet<>();
+					if (!resolveMonsters(raw, nameResolver, npcIds, new ArrayList<>())) {
+						continue;
+					}
+					for (int npcId : npcIds) {
+						sink.computeIfAbsent(npcId, key -> new ArrayList<>())
+							.add(new StepHit(questId, step.index(), column));
+					}
+				}
+			}
+		}
+	}
+
+	/**
+	 * 装载期收集 case 9 的离场恢复元数据：逐行逐步找 ENTER_INSTANCE 动作（`count` 槽 = leaveProgress），
+	 * 配对该步的 REMOVE_ITEMS 物品（回滚时补发）。
+	 * <p>
+	 * Collects the case-9 leave-recovery metadata at load time: per row and step, an ENTER_INSTANCE
+	 * action (count slot = leaveProgress) pairs with that step's REMOVE_ITEMS grants (restored on
+	 * rollback).
+	 */
+	private static void collectInstanceLeaveRollbacks(int questId, List<List<ActionPlan>> perStep,
+			List<LeaveRollback> sink) {
+		for (int stepIndex = 0; stepIndex < perStep.size(); stepIndex++) {
+			ActionPlan entry = null;
+			List<ItemGrant> removals = new ArrayList<>();
+			for (ActionPlan action : perStep.get(stepIndex)) {
+				if (action.type() == ActionType.ENTER_INSTANCE) {
+					entry = action;
+				} else if (action.type() == ActionType.REMOVE_ITEMS) {
+					removals.add(new ItemGrant(action.itemId(), action.count()));
+				}
+			}
+			if (entry != null) {
+				sink.add(new LeaveRollback(questId, stepIndex, entry.worldId(), entry.count(),
+					List.copyOf(removals)));
+			}
+		}
 	}
 
 	/** 汇总物品引用（发/扣动作 + ItemPlay 载荷）到「物品 → 路由行」集合。 / Collects the item-reference sets. */
@@ -1091,17 +1325,20 @@ public final class DataDrivenNativeRuntime {
 					// → 真端 `Map/Worlds/<world>/world.xml` `location_alias_list` 坐标（解析器
 					// `WorldDb::LoadInstanceCreation`）。别名在真端 world.xml 缺失时真端自身只记
 					// 错误日志、落点空置（creation 2 = IDElim 即此内在缺失）⇒ 镜像 fail-closed
-					// 冻结该行。离场检查面（`FUN_180c46d80` 块 1：`def+0x40 锚 < 步 < def+0x44`
-					// ⇒ `+0xf0` 写回锚值）的宿主触发链停在 DLL 数据段（mgr+0x48 表全库无读者）
-					// 且写锚 param_7 身份未定 ⇒ 不实现，本批登记为携带行上的残余偏差；成员名尾巴
-					// （仅冻结行 20032 携带）语义未证 ⇒ 解析忽略。
+					// 冻结该行。离场检查面（`FUN_180c46d80` 块 1：`锚 < 步 < leaveProgress`
+					// ⇒ `+0xf0` 写回锚）在真端拓扑不可达（第十批终裁），本服按**行为修复**口径落面：
+					// 进世界事件时对 (动作步, leaveProgress) 区间写回动作步（退役 typed XML 的
+					// s4/s5/s6 → s3 + 补发物品同款；Playbook UNREACHABLE_INSTANCE_REENTRY_RECOVERY）。
+					// leaveProgress 存 count 槽，装载期由 collectInstanceLeaveRollbacks 收集；
+					// 成员名尾巴（仅冻结行 20032 携带）语义未证 ⇒ 解析忽略。
 					// Retail case 9 (batch 9, 2026-10-03): payload = `creationId, worldId,
 					// leaveProgress[, names]`; the immediate face enters the instance world at the
 					// start point resolved from the retail world files. An intrinsically absent
 					// alias (creation 2 = IDElim) keeps that row fail-closed frozen. The
-					// leave-check face stays unmirrored (the host-side trigger and the write
-					// anchor are unresolved); trailing member names (frozen row 20032 only) are
-					// parsed and ignored.
+					// leave-check face is topologically unreachable at retail (batch 10); this
+					// build faces it as a deliberate behavior repair (enter-world writes back to
+					// the action step inside (step, leaveProgress), the retired typed-XML shape).
+					// leaveProgress rides the count slot; member names are parsed and ignored.
 					String[] tokens = text.trim().split("[,\\s]+");
 					if (tokens.length < 3) {
 						return FreezeReason.PAYLOAD_INVALID;
@@ -1120,8 +1357,8 @@ public final class DataDrivenNativeRuntime {
 						// world mismatch ⇒ fail closed.
 						return FreezeReason.ACTION_UNFACED;
 					}
-					plans.add(new ActionPlan(ActionType.ENTER_INSTANCE, 0, 0, creationId, false, payloadWorldId,
-						entry.x(), entry.y(), entry.z(), entry.heading(), false, -1));
+					plans.add(new ActionPlan(ActionType.ENTER_INSTANCE, 0, leaveProgress, creationId, false,
+						payloadWorldId, entry.x(), entry.y(), entry.z(), entry.heading(), false, -1));
 				}
 				default -> {
 					// 其余未落面动作一律 fail-closed 冻结。
@@ -1363,6 +1600,10 @@ public final class DataDrivenNativeRuntime {
 				&& NativeTargetlessReward.claim(player, requestedOwner, dialogId, rewardFlow)) {
 			return true;
 		}
+		// 采集物件使用认领（CollectItem 步的追加 FOBJ 列对象；2026-10-08 实机 15011 右击 702730）。
+		if (dispatchCollectObjectUse(player, npcId, requestedOwner)) {
+			return true;
+		}
 		if (dispatchAcquireDialog(player, acquireTalksByNpcId.get(npcId), dialogId, objectId, requestedOwner)) {
 			return true;
 		}
@@ -1372,6 +1613,40 @@ public final class DataDrivenNativeRuntime {
 		boolean fobj = dispatch(player, fobjsByNpcId.get(npcId));
 		boolean plane = dispatchDialog(player, talksByNpcId.get(npcId), dialogId, objectId, requestedOwner);
 		return plane || fobj;
+	}
+
+	/**
+	 * 采集物件的使用认领（CollectItem 步追加 FOBJ 列对象）：START + 当前步命中即认领（零状态写、
+	 * 零发包——掉落列表由交互 AI 的 {@code registerDrop} 路径按 {@code getQuestDrop} 下发，对齐采集族
+	 * {@code onObjectUse} 的认领语义）。打开（requestedOwner=0）不认领：由 {@code QuestEngine} 按候选
+	 * 先手重放（认领须携带 owner——组队每人一枚的掉落过滤用 questId）。
+	 * <p>
+	 * Claims the collect object's use (START plus the current-step guard; zero state writes, zero
+	 * packets). The ownerless open falls to the engine's first-hand replay, which supplies the owner id.
+	 */
+	private boolean dispatchCollectObjectUse(Player player, int npcId, int requestedOwner) {
+		if (requestedOwner == 0) {
+			return false;
+		}
+		List<StepHit> hits = collectObjectsByNpcId.get(npcId);
+		if (hits == null || hits.isEmpty()) {
+			return false;
+		}
+		for (StepHit hit : hits) {
+			if (hit.questId() != requestedOwner) {
+				continue;
+			}
+			QuestState state = state(player, hit.questId());
+			if (state == null) {
+				continue;
+			}
+			int vars = state.getQuestVars().getQuestVars();
+			if (!DataDrivenProgress.guardClear(vars) || DataDrivenProgress.step(vars) != hit.stepIndex()) {
+				continue;
+			}
+			return true;
+		}
+		return false;
 	}
 
 	/**
@@ -1695,6 +1970,10 @@ public final class DataDrivenNativeRuntime {
 	/** 执行一个已落面动作表（步表与接取表共用）。 / Runs one faced-action list (step or accept table). */
 	private void runActionList(Player player, int questId, List<ActionPlan> actions) {
 		if (inventoryPort == null || moviePort == null) {
+			// 端口缺席（空路由视图/极端装配）整表早退——注意：这会连 case 9 进副本一并吞掉（登记为
+			// 既有行为；空路由视图本就不该收到任务事件）。
+			// A missing port short-circuits the whole list, case 9 included (registered behavior; the
+			// empty-routing view never receives quest events).
 			return;
 		}
 		for (ActionPlan action : actions) {
@@ -1716,12 +1995,14 @@ public final class DataDrivenNativeRuntime {
 				case TIMER -> timerPort.schedule(player, questId, action.count(), action.movieId(),
 					action.itemId() == 1);
 				case ENTER_INSTANCE -> {
-					// 真端 case 9 立即面 = `+0x220(creationId)` → `User::EnterInstance` → 落点 =
-					// 别名坐标（NativeInstanceEntryPort）；传送端口 = Java 侧等价面（与 case 3 同
-					// 通道，heading 度）。
-					// Retail case 9 immediate face: enter the instance world at the alias-resolved
-					// start point (the teleport port is the Java-side equivalent, degree heading).
-					teleportPort.teleport(player, action.worldId(), action.x(), action.y(), action.z(),
+					// 真端 case 9 立即面 = `+0x220(creationId)` → `User::EnterInstance`：本服 = 复用
+					// 已注册实例 / 下一可用实例 + 注册 + 带 instanceId 传送（裸传送会落到副本默认空
+					// 实例 instanceId=1，2026-10-08 实机 10034 空副本事故）。
+					// Retail case 9 immediate face: reuse the registered instance or allocate the
+					// next available one, register the player, then teleport with that instance id
+					// (a bare teleport lands in the never-spawned default instance 1 — the
+					// 2026-10-08 10034 empty-instance incident).
+					teleportPort.enterInstance(player, action.worldId(), action.x(), action.y(), action.z(),
 						action.heading());
 				}
 			}
@@ -1794,10 +2075,71 @@ public final class DataDrivenNativeRuntime {
 	 * Enter-world event (EnterWorld advance) plus the dual-role acquire branch (kind 7).
 	 */
 	public boolean onEnterWorld(Player player, int worldId) {
+		boolean recovered = recoverUnreachableInstanceSteps(player, worldId);
 		if (acquire(player, acquireWorldsByWorldId.get(worldId), 7)) {
 			return true;
 		}
-		return dispatch(player, worldsByWorldId.get(worldId));
+		return dispatch(player, worldsByWorldId.get(worldId)) || recovered;
+	}
+
+	/**
+	 * 不可达副本阶段恢复（Playbook `UNREACHABLE_INSTANCE_REENTRY_RECOVERY`，14047 同族）：
+	 * 进世界事件时若任务仍停留在 case 9 的副本内阶段（`enterStep < 步 < leaveProgress`）而玩家不在
+	 * 该副本世界，写回进入步并补发被进入步移除的物品（退役 typed XML 的 `s4/s5/s6 → s3 + give-item`
+	 * 同款；真端 `FUN_180c46d80` 块 1 的行为面，落面决策见 case 9 解析处注释）。纯进度写、不触发步
+	 * 执行器（与 {@link #onQuestTimerExpired} 同款）；守卫同时包住补发（CM_LEVEL_READY 无 once-only，
+	 * 重发不得重复发物）。
+	 * <p>
+	 * `worldId != 载荷世界` 是**载重判断**而非可选优化：本方法挂的进世界事件在**进入副本**时同样触发
+	 * （CM_LEVEL_READY 每次地图加载都发），而进入步的推进先写步号再跑动作 ⇒ 若无条件回滚，玩家一进
+	 * 副本即被写回进入步（雕像在英吉斯温、副本内无法完成该步）= 硬性软锁。退役 typed XML 的回滚边
+	 * 同样带 `world-is … expected="false"` 条件；14047 typed 版无此条件，因其定义无世界证据，而 DD
+	 * 载荷自带 worldId ⇒ 精确条件优于照抄。
+	 * <p>
+	 * Unreachable-instance-stage recovery: on an enter-world event, a persistent step inside
+	 * (enterStep, leaveProgress) while the player is outside that instance world writes back to the
+	 * enter step and restores the items the enter step consumed. A pure progress write (no step
+	 * executors, same as the timer expiry face); the guard also fences the restores because
+	 * CM_LEVEL_READY has no once-only protection.
+	 */
+	private boolean recoverUnreachableInstanceSteps(Player player, int worldId) {
+		if (player == null || player.getQuestStateList() == null || instanceLeaveRollbacks.isEmpty()) {
+			return false;
+		}
+		boolean recovered = false;
+		for (LeaveRollback rollback : instanceLeaveRollbacks) {
+			if (worldId == rollback.worldId()) {
+				// 玩家在该副本世界内（含刚被传送进入）：副本内阶段可达，保持不动。
+				// Inside the instance world (including a fresh entry): the stage is reachable.
+				continue;
+			}
+			QuestState state = state(player, rollback.questId());
+			if (state == null) {
+				continue;
+			}
+			int vars = state.getQuestVars().getQuestVars();
+			if (!DataDrivenProgress.guardClear(vars)) {
+				continue;
+			}
+			int step = DataDrivenProgress.step(vars);
+			if (step <= rollback.enterStep() || step >= rollback.leaveProgress()) {
+				continue;
+			}
+			int newVars = DataDrivenProgress.jumpTo(vars, rollback.enterStep());
+			state.getQuestVars().setVar(newVars);
+			state.setPersistentState(PersistentState.UPDATE_REQUIRED);
+			PacketSendUtility.sendPacket(player,
+				new SM_QUEST_ACTION(state.getQuestId(), state.getStatus(), newVars));
+			if (inventoryPort != null) {
+				for (ItemGrant item : rollback.restoreItems()) {
+					if (inventoryPort.count(player, item.itemId()) == 0) {
+						inventoryPort.give(player, item.itemId(), item.count());
+					}
+				}
+			}
+			recovered = true;
+		}
+		return recovered;
 	}
 
 	/**
@@ -1809,7 +2151,102 @@ public final class DataDrivenNativeRuntime {
 	 * counterpart on this server ⇒ not mirrored (the start-port conditions still gate).
 	 */
 	public boolean onLevelReached(Player player, int level, boolean loginWalk) {
-		return acquire(player, acquireLevelsByLevel.get(level), loginWalk ? Integer.valueOf(10) : null);
+		boolean acquired = acquire(player, acquireLevelsByLevel.get(level), loginWalk ? Integer.valueOf(10) : null);
+		// 链式发放重走（真端 `<level-up/> + <start-eligible/>` 发放边的镜像）：完成时被等级/unfinished
+		// 条件挡住的后继在此补发。**注意**：本方法同时是 native 完成通知的到达点
+		// （`QuestService.setFinishingState` → `QuestEngine.onLvlUp` → 此处），typed 车道完成另经
+		// `QuestEngine.onQuestStateChanged` → `onQuestCompleted`；两条入口都不可删除。
+		// Re-walk of the chain-acquire face (the mirror of the retail level-up + start-eligible edge):
+		// successors blocked by the level/unfinished axes at completion time are granted here. NOTE:
+		// this method is also where native completions arrive (setFinishingState → onLvlUp → here);
+		// typed-lane completions arrive via onQuestStateChanged → onQuestCompleted. Keep both entries.
+		return recheckChainAcquires(player) || acquired;
+	}
+
+	/**
+	 * 前序任务完成后的定向链式发放（typed 车道完成通知入口；native 完成经
+	 * {@code QuestService.setFinishingState → QuestEngine.onLvlUp → onLevelReached} 的重走面覆盖）。
+	 * <p>
+	 * 自守卫 = 该任务当前确为 COMPLETE：{@code onQuestStateChanged} 也服务非完成同步
+	 * （VISIBILITY_REFRESH 等），非完成状态零动作。
+	 * <p>
+	 * The targeted chain grant after a predecessor completes (the typed-lane completion entry; native
+	 * completions are covered by the re-walk in onLevelReached). Self-guarded on the live COMPLETE
+	 * status because onQuestStateChanged also serves non-completion syncs.
+	 */
+	public boolean onQuestCompleted(Player player, int completedQuestId) {
+		if (player == null || player.getQuestStateList() == null || completedQuestId <= 0) {
+			return false;
+		}
+		List<ChainAcquireEdges.Edge> edges = chainAcquireByPredecessor.get(completedQuestId);
+		if (edges == null || edges.isEmpty()) {
+			return false;
+		}
+		QuestState completed = player.getQuestStateList().getQuestState(completedQuestId);
+		if (completed == null || completed.getStatus() != QuestStatus.COMPLETE) {
+			return false;
+		}
+		return walkChainAcquires(player, edges, true);
+	}
+
+	/** 全表重走（升级/登入/完成通知路径）：达标即补发，未达标静默零动作。 / The full re-walk; silent when not yet eligible. */
+	private boolean recheckChainAcquires(Player player) {
+		return !chainAcquireEdges.isEmpty() && walkChainAcquires(player, chainAcquireEdges, false);
+	}
+
+	/**
+	 * 链式发放行走：全部前置 COMPLETE + 后继 unfinished 条件全清 ⇒ 经 {@link NativeQuestStartPort#start}
+	 * 建档（等级/种族/职业/性别/限制位/finished 前置/重复上限全轴；commit 自带 add 包与可见性刷新）。
+	 * 冻结/未路由行进不了注册面（{@link #create} 已过滤），行走本身零写、天然幂等（ALREADY_RUNNING 静默）。
+	 * <p>
+	 * The chain-acquire walk: every predecessor COMPLETE plus the successor's unfinished conditions
+	 * clear ⇒ start through the full retail eligibility face. Frozen/unrouted rows never enter the
+	 * registered view; the walk itself performs no writes and is idempotent.
+	 */
+	private boolean walkChainAcquires(Player player, List<ChainAcquireEdges.Edge> edges, boolean traceRefusals) {
+		if (player == null || player.getQuestStateList() == null || edges == null || edges.isEmpty()) {
+			return false;
+		}
+		boolean granted = false;
+		for (ChainAcquireEdges.Edge edge : edges) {
+			if (!predecessorsComplete(player, edge.predecessors())
+					|| !NativeQuestStartPort.instance().unfinishedConditionsPass(player, edge.successor())) {
+				continue;
+			}
+			NativeQuestStartPort.StartResult verdict =
+				NativeQuestStartPort.instance().start(player, edge.successor());
+			if (verdict.started()) {
+				granted = true;
+				continue;
+			}
+			if (traceRefusals && blockingRefusal(verdict.outcome())) {
+				QUEST_TRACE_LOG.info(I18n.get("log.quest_trace.acquire_refused", player.getName(), edge.successor(),
+					"chain " + edge.predecessors(), verdict.outcome() + ": " + verdict.detail()));
+			}
+		}
+		return granted;
+	}
+
+	/** 全部前序已完成（跨车道只认状态面：10033←10032 的 10032 是 XML 行）。 / All predecessors COMPLETE (cross-lane, status only). */
+	private static boolean predecessorsComplete(Player player, List<Integer> predecessors) {
+		for (int predecessor : predecessors) {
+			QuestState state = player.getQuestStateList().getQuestState(predecessor);
+			if (state == null || state.getStatus() != QuestStatus.COMPLETE) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	/**
+	 * 阻塞类拒绝（值得记 trace）；{@code ALREADY_RUNNING}/{@code REPEAT_LIMIT} 属已完成链的稳态，静默。
+	 * Blocking refusals only; ALREADY_RUNNING / REPEAT_LIMIT are the settled steady state.
+	 */
+	private static boolean blockingRefusal(NativeQuestStartPort.Outcome outcome) {
+		return switch (outcome) {
+			case ALREADY_RUNNING, REPEAT_LIMIT -> false;
+			default -> true;
+		};
 	}
 
 	/**
@@ -2301,6 +2738,97 @@ public final class DataDrivenNativeRuntime {
 	/** 被冻结的行 → 原因。 / Frozen rows by reason. */
 	public Map<Integer, FreezeReason> frozenQuestIds() {
 		return frozenQuestIds;
+	}
+
+	/** 链式接取面：已注册的全部后继（owned ∧ routed ∧ acquire=none ∧ 非冻结）。 / Registered chain-acquire successors. */
+	public Set<Integer> chainAcquireSuccessors() {
+		return chainAcquireEdges.stream().map(ChainAcquireEdges.Edge::successor)
+			.collect(java.util.stream.Collectors.toUnmodifiableSet());
+	}
+
+	/** 链式接取面：已注册的发放边（门禁逐条对拍用）。 / The registered chain edges (per-row gate face). */
+	public List<ChainAcquireEdges.Edge> chainAcquireEdges() {
+		return chainAcquireEdges;
+	}
+
+	/** 链式接取面：前序 → 该前序完成时定向走查的边。 / Predecessor → edges walked on completion. */
+	public Map<Integer, List<ChainAcquireEdges.Edge>> chainAcquireByPredecessor() {
+		return chainAcquireByPredecessor;
+	}
+
+	/**
+	 * 该 NPC 的真端任务掉落（{@code QuestService.getQuestDrop} 的消费面；经 {@link QuestEngine#questDrops}
+	 * 聚合——击杀装配与对象交互共用同一条查询）。
+	 * <p>
+	 * Retail quest drops for the npc, aggregated through {@link QuestEngine#questDrops} (shared by the
+	 * kill assembly and object interaction).
+	 */
+	public List<QuestCatalogDrop> questDropsFor(int npcId) {
+		return dropsByNpcId.getOrDefault(npcId, List.of());
+	}
+
+	/** 掉落注册面（npcId → 条目；门禁的复算与负例对拍面）。 / The registered drop face, for the gate. */
+	public Map<Integer, List<QuestCatalogDrop>> dropInterests() {
+		return dropsByNpcId;
+	}
+
+	/**
+	 * 采集物件可交互资格（供 {@code QuestEngine.onCanAct(ACTION_ITEM_USE)} 判定）：玩家在该物件
+	 * 上有 START 且当前步命中该物件的步（CollectItem 步追加 FOBJ 列；对齐采集族 {@code allowsItemUse}）。
+	 * <p>
+	 * The collect object eligibility consulted by onCanAct(ACTION_ITEM_USE): a STARTED quest whose
+	 * current step is the object's step.
+	 */
+	public boolean allowsItemUse(Player player, int objectNpcId) {
+		List<StepHit> hits = collectObjectsByNpcId.get(objectNpcId);
+		if (hits == null || hits.isEmpty()) {
+			return false;
+		}
+		for (StepHit hit : hits) {
+			QuestState state = state(player, hit.questId());
+			if (state == null) {
+				continue;
+			}
+			int vars = state.getQuestVars().getQuestVars();
+			if (DataDrivenProgress.guardClear(vars) && DataDrivenProgress.step(vars) == hit.stepIndex()) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/** 是否为采集物件（交互失败应答分型用；对齐采集族 {@code isCollectObject}）。 /
+	 * Whether the npc is a collect object (consulted by the failed-interaction reply shape). */
+	public boolean isCollectObject(int npcId) {
+		return collectObjectsByNpcId.containsKey(npcId);
+	}
+
+	/** 物件挂载的采集任务 id（去重、稳定序；引擎先手重放用）。 /
+	 * The quest ids riding the object (deduplicated, stable order; the engine first-hand replay). */
+	public List<Integer> collectObjectQuestIds(int npcId) {
+		List<StepHit> hits = collectObjectsByNpcId.get(npcId);
+		if (hits == null || hits.isEmpty()) {
+			return List.of();
+		}
+		List<Integer> questIds = new ArrayList<>();
+		for (StepHit hit : hits) {
+			if (!questIds.contains(hit.questId())) {
+				questIds.add(hit.questId());
+			}
+		}
+		return questIds;
+	}
+
+	/** 采集物件兴趣面（门禁独立重算对拍用）。 / The collect-object interest face (gate recomputation). */
+	public Map<Integer, List<StepHit>> collectObjectInterests() {
+		return collectObjectsByNpcId;
+	}
+
+	/** 离场恢复表（case 9 行 → 进入步/副本世界/leaveProgress/补发物品；门禁对拍面）。 /
+	 * The leave-recovery table (case-9 rows → enter step / instance world / leaveProgress /
+	 * restore items; the gate face). */
+	public List<LeaveRollback> instanceLeaveRollbacks() {
+		return instanceLeaveRollbacks;
 	}
 
 	/** 解析不到的名字（冻结行的证据面）。 / Names that failed to resolve. */

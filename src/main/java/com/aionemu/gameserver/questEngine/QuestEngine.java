@@ -216,29 +216,34 @@ public class QuestEngine implements GameEngine {
 	}
 
 	/**
-	 * 掉落查询 = 目录快照掉落 ∪ native 表车道掉落列（采集族 + Talk 族）。
+	 * 掉落查询 = 目录快照掉落 ∪ native 表车道掉落列（采集族 + Talk 族 + UseItem 族 + DataDriven 族）。
 	 * <p>
-	 * 两族已切 native，退役 XML 从 catalog 退场后其 {@code <drops>} 一并消失——native 行必须从
+	 * 各族已切 native，退役 XML 从 catalog 退场后其 {@code <drops>} 一并消失——native 行必须从
 	 * 真端 {@code drop_*} 列接手（2026-10-04 修复：采集族此前对象交互与击杀装配都拿不到任务掉落，
-	 * 真机 1103 采集不产出 {@code quest_1103a}；Talk 族 1031 行同型，真机 1105 击杀 210079 无道具）。
-	 * 同一 questId 只信目录条目（单一 owner；XML 车道仍持有该行时 native 不重复供源）。
+	 * 真机 1103 采集不产出 {@code quest_1103a}；Talk 族 1031 行同型，真机 1105 击杀 210079 无道具。
+	 * 2026-10-08 补齐 UseItem 族 2435 与 DataDriven 族 160 行：真机 10034 击杀 216494 无
+	 * {@code quest_10034a}）。同一 questId 只信目录条目（单一 owner；XML 车道仍持有该行时 native
+	 * 不重复供源；native 各族按 owner 族列互斥，重复即缺陷——由门禁报红，不在运行期静默吸收）。
 	 * <p>
-	 * Quest drops = the catalog snapshot ∪ the native table-lane drop columns (collect + talk).
-	 * After the XML retirement the families' {@code <drops>} left the catalog with the XML; the
-	 * native rows serve them from the retail {@code drop_*} column (fixed 2026-10-04). A quest id
-	 * owned by the catalog keeps its catalog entries only (single-owner invariant).
+	 * Quest drops = the catalog snapshot ∪ the native table-lane drop columns (collect + talk +
+	 * use-item + data-driven). After the XML retirement the families' {@code <drops>} left the catalog
+	 * with the XML; the native rows serve them from the retail {@code drop_*} column (2026-10-04 for
+	 * collect/talk, 2026-10-08 for use-item/data-driven). A quest id owned by the catalog keeps its
+	 * catalog entries only (single-owner invariant).
 	 */
 	public List<QuestCatalogDrop> questDrops(int npcId) {
 		List<QuestCatalogDrop> catalogDrops = productionDispatcher.questDrops(npcId);
-		List<QuestCatalogDrop> nativeDrops = SimpleCollectItemHandler.instance().questDropsFor(npcId);
+		List<QuestCatalogDrop> collectDrops = SimpleCollectItemHandler.instance().questDropsFor(npcId);
 		List<QuestCatalogDrop> talkDrops = SimpleTalkHandler.instance().questDropsFor(npcId);
-		if (nativeDrops.isEmpty() && talkDrops.isEmpty()) {
+		List<QuestCatalogDrop> useItemDrops = SimpleUseItemHandler.instance().questDropsFor(npcId);
+		List<QuestCatalogDrop> dataDrivenDrops = DataDrivenNativeRuntime.instance().questDropsFor(npcId);
+		if (collectDrops.isEmpty() && talkDrops.isEmpty() && useItemDrops.isEmpty() && dataDrivenDrops.isEmpty()) {
 			return catalogDrops;
 		}
 		Set<Integer> catalogQuestIds = catalogDrops.stream().map(QuestCatalogDrop::questId)
 			.collect(java.util.stream.Collectors.toSet());
 		List<QuestCatalogDrop> combined = new java.util.ArrayList<>(catalogDrops);
-		for (List<QuestCatalogDrop> source : List.of(nativeDrops, talkDrops)) {
+		for (List<QuestCatalogDrop> source : List.of(collectDrops, talkDrops, useItemDrops, dataDrivenDrops)) {
 			for (QuestCatalogDrop drop : source) {
 				if (!catalogQuestIds.contains(drop.questId())) {
 					combined.add(drop);
@@ -444,6 +449,26 @@ public class QuestEngine implements GameEngine {
 					// The interaction is claimed by the native collect family (advance or retail zero
 					// side effect). The retail server never opens a dialog window on a collect object;
 					// falling through to the generic page 10 makes the client fail to load it (live 1103).
+					return true;
+				}
+				// DD 采集物件（CollectItem 步的追加 FOBJ 列对象，2026-10-08 实机 15011 右击 702730）同形先手：
+				// 按候选重放回 DD 面按 questId 认领（认领零状态写零发包；携带 owner 供组队每人一枚的
+				// 掉落过滤）。DD 行无 typed 路由，认领只能由 DD 面自己做——此先手与上面采集族同责。
+				// DD collect objects (CollectItem appended-FOBJ columns): the same first-hand replay so the
+				// claim carries the owner id (used by the group each-member drop filter).
+				boolean dataDrivenObjectClaimed = false;
+				for (int objectQuestId : DataDrivenNativeRuntime.instance().collectObjectQuestIds(npcId)) {
+					dataDrivenObjectClaimed = true;
+					if (onDialog(new QuestEnv(npc, player, objectQuestId, env.getDialogId()))) {
+						env.setQuestId(objectQuestId);
+						return true;
+					}
+				}
+				if (dataDrivenObjectClaimed) {
+					// 物件已被 DD 采集面接管（认领成功或真端零副作用：步不符/未接取）——同采集族口径，
+					// 不得落到通用页 10（物件开窗即客户端 load fail）。
+					// Claimed by the DD collect face (or the retail zero-side-effect shape); a dialog
+					// window aimed at a collect object makes the client fail to load it.
 					return true;
 				}
 				// 右键开门（TalkEventHandler.onTalk → dialogId=-1, questId=0）：玩家在该 NPC 上有进行中/
@@ -776,6 +801,19 @@ public class QuestEngine implements GameEngine {
 			productionDispatcher.dispatchQuestStateChanged(env.getPlayer().getObjectId(), env.getQuestId());
 		} catch (RuntimeException ignored) {
 			// Typed dependency refresh is best-effort, matching level-up refresh behavior.
+		}
+		// native 车道链式发放面（DD `acquire=none` 后继）：本方法是 typed 车道完成同步的唯一出口
+		// （PlayerQuestStateSyncPort 的 COMPLETION 分支），XML 前置（如 10032）完成后经此定向发放后继；
+		// 方法也服务非完成同步 ⇒ 运行期以「该任务当前确为 COMPLETE」自守卫，非完成零动作。
+		// native 完成侧（setFinishingState → onLvlUp → onLevelReached 重走）不在本方法内。
+		// The native chain-acquire face: this is the typed lane's only completion-sync outlet, so XML
+		// predecessors (e.g. 10032) reach the successor grant here; the runtime self-guards on the live
+		// COMPLETE status because non-completion syncs share this method. Native completions arrive via
+		// setFinishingState → onLvlUp → the onLevelReached re-walk instead.
+		try {
+			DataDrivenNativeRuntime.instance().onQuestCompleted(env.getPlayer(), env.getQuestId());
+		} catch (RuntimeException ignored) {
+			// Native chain acquire is best-effort, matching the other native notifications.
 		}
 	}
 
@@ -1647,12 +1685,15 @@ public class QuestEngine implements GameEngine {
 		QuestRuntimeDispatcher typed = productionDispatcher;
 		QuestEvent event = new QuestEvent.CanAct(templateId, questActionType.name());
 		try {
-			// 真端表驱动车道：采集对象（QUEST_USE_ITEM 交互物）的可交互性由 native 侧按
-			// START 态 + 中继链完成度判定（族切换后没有 typed 路由可查）。
-			// Native lane: a collect object's usability is adjudicated natively (START state plus
-			// relay-chain completion); after the family switch there is no typed route to consult.
+			// 真端表驱动车道：采集对象（QUEST_USE_ITEM 交互物）的可交互性由 native 侧判定——采集族按
+			// START 态 + 中继链完成度；DD 族按 START + 当前步命中（CollectItem 步的追加 FOBJ 列对象，
+			// 2026-10-08 实机 15011 右击 702730）。族切换后两者都没有 typed 路由可查。
+			// Native lane: a collect object's usability is adjudicated natively (the collect family by
+			// START plus relay-chain completion, the DD family by START plus the current-step hit on its
+			// appended-FOBJ objects); after the family switch there is no typed route to consult.
 			if (questActionType == QuestActionType.ACTION_ITEM_USE
-					&& SimpleCollectItemHandler.instance().allowsItemUse(env.getPlayer(), templateId)) {
+					&& (SimpleCollectItemHandler.instance().allowsItemUse(env.getPlayer(), templateId)
+						|| DataDrivenNativeRuntime.instance().allowsItemUse(env.getPlayer(), templateId))) {
 				return true;
 			}
 			var result = typed.dispatch(event, env.getPlayer().getObjectId(), 0,

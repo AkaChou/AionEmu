@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- quest_chain_acquire_edges.xml 表 schema（quest retail 表门禁用）。
+     镜像口径 = 装载器 fail-closed 规则 ∪ 生成器形状钉（证据 + 生成器：
+     .agents/summary/quest-chain-acquire-native/build_quest_chain_acquire_edges.py）：
+     - 行 = <edge>（successor 全表唯一；successor ≥ 1；predecessors = 空格分隔的正整数序列；
+       source ∈ {retail-finished-cond, retired-xml, retired-handler}；evidence 非空）；
+       自环（successor ∈ predecessors）与重复 successor 由装载器 fail-closed 兜底。
+     quest_chain_acquire_edges.xml schema (quest retail table gate). Mirrors the loader fail-closed rules
+     plus the generator's shape pins: rows are <edge> (unique successor ≥ 1; predecessors = a
+     space-separated positive-integer sequence; source ∈ the three evidence buckets; non-blank evidence);
+     self edges and duplicate successors are loader-frozen. -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+  <xs:element name="quest_chain_acquire_edges">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="edge" minOccurs="1" maxOccurs="unbounded">
+          <xs:complexType>
+            <xs:all>
+              <xs:element name="successor" minOccurs="1">
+                <xs:simpleType>
+                  <xs:restriction base="xs:int">
+                    <xs:minInclusive value="1"/>
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="predecessors" minOccurs="1">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:whiteSpace value="collapse"/>
+                    <xs:pattern value="\d+( \d+)*"/>
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="source" minOccurs="1">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:enumeration value="retail-finished-cond"/>
+                    <xs:enumeration value="retired-xml"/>
+                    <xs:enumeration value="retired-handler"/>
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="evidence" minOccurs="1">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:whiteSpace value="collapse"/>
+                    <xs:minLength value="1"/>
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+            </xs:all>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+    <xs:unique name="quest-chain-acquire-edges-row-key-unique">
+      <xs:selector xpath="edge"/>
+      <xs:field xpath="successor"/>
+    </xs:unique>
+  </xs:element>
+</xs:schema>

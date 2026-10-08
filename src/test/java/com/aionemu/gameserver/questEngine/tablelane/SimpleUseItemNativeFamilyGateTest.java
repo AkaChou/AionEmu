@@ -108,6 +108,32 @@ class SimpleUseItemNativeFamilyGateTest {
 		}
 	}
 
+	/**
+	 * 真端击杀掉落列接手（2026-10-08，与 Talk/Collect 同型）：退役 XML 的 {@code <drops>} 退出 catalog
+	 * 后本族唯一掉落行 2435（덩굴 목걸이 / Vine Necklace）击杀 MosbearBaby 断供；native 必须从
+	 * quest.xml {@code drop_monster_1=MosbearBaby_36_An MosbearBaby_37_An / drop_item_1=quest_2435a /
+	 * drop_prob_1=80} 接手注册（概率/上限语义交 {@code QuestService.isQuestDrop}）。
+	 * <p>
+	 * The UseItem family's only retail drop row (2435) is served by the native lane from the quest.xml
+	 * drop columns, same contract as the Talk/Collect families.
+	 */
+	@Test
+	void useItemFamilyServesTheRetailKillDrops() throws Exception {
+		assertTrue(handler.routes(2435), "2435 必须保持可路由（否则掉落注册随路由面消失）");
+		Integer itemId = RetailItemNameIndex.loadItemTemplates().resolve("quest_2435a");
+		assertNotNull(itemId, "真端物品符号必须解析: quest_2435a");
+		assertEquals(Integer.valueOf(182204181), itemId, "quest_2435a = 182204181");
+		for (int npcId : List.of(212548, 212549)) {
+			var drops = handler.questDropsFor(npcId);
+			assertTrue(drops.stream().anyMatch(drop -> drop.questId() == 2435 && drop.itemId() == itemId
+				&& drop.chance() == 80 && drop.collectingStep() == 0),
+				"2435 必须携带 " + npcId + " 的真端击杀掉落（80% / step 0）");
+			// 负例：本族唯一掉落行是 2435 ⇒ 该 NPC 的掉落面不得出现其它任务条目（多条目即错注册）。
+			assertTrue(drops.stream().allMatch(drop -> drop.questId() == 2435),
+				"UseItem 掉落面只服务已声明掉落列的行：" + npcId);
+		}
+	}
+
 	@Test
 	void routingSplitAndResidueAreFrozen() {
 		assertEquals(160, handler.ownedQuestIds().size(), "注册集 = 真端表全量行");

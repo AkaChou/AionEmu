@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+DD 链式接取发放边（`category_acquire_=none`；本表生成物，禁止手改）。
+生成器：.agents/summary/quest-chain-acquire-native/build_quest_chain_acquire_edges.py
+数据源：① 真端 quest.xml finished_quest_condN（source=retail-finished-cond）；
+        ② 退役/存活任务定义 XML 的 <prerequisites> / <start-conditions type="finished"> 与
+           退役 Java handler 的 defaultOnLvlUpEvent(env, <前序>, true)（source=retired-xml / retired-handler，
+           证据 = git 提交 ^ 路径）。
+运行期消费：DataDrivenNativeRuntime 只注册「owned ∧ routed ∧ acquire=none ∧ 非冻结」的后继
+（XML_RETENTION 行与冻结行被过滤，逐行理由见门禁 QuestChainAcquireResourceGateTest）。
+DD chain-acquire edges (acquire=none rows; generated file — do not hand-edit). The runtime registers
+only successors that are owned, routed, acquire=none and unfrozen; XML_RETENTION and frozen rows are
+filtered with per-row reasons pinned by the resource gate.
+列 / Columns: successor / predecessors（空格分隔）/ source（retail-finished-cond|retired-xml|retired-handler）/ evidence
+-->
+<quest_chain_acquire_edges>
+  <edge>
+    <successor>10011</successor>
+    <predecessors>10010</predecessors>
+    <source>retail-finished-cond</source>
+    <evidence>quest.xml finished_quest_cond=Q10010</evidence>
+  </edge>
+  <edge>
+    <successor>10032</successor>
+    <predecessors>10031</predecessors>
+    <source>retired-handler</source>
+    <evidence>56c28337fade16bde2250e8b879caa9d206701e9^:src/main/java/com/aionemu/gameserver/quest/handlers/inggison/_10032Help_In_The_Hollow.java return defaultOnLvlUpEvent(env, 10031, true);</evidence>
+  </edge>
+  <edge>
+    <successor>10033</successor>
+    <predecessors>10032</predecessors>
+    <source>retired-handler</source>
+    <evidence>2c4a0de78351cbb0b111393863411a5808b0a635^:src/main/java/com/aionemu/gameserver/quest/handlers/inggison/_10033Petrified_Subside.java return defaultOnLvlUpEvent(env, 10032, true);</evidence>
+  </edge>
+  <edge>
+    <successor>10034</successor>
+    <predecessors>10033</predecessors>
+    <source>retired-handler</source>
+    <evidence>2c4a0de78351cbb0b111393863411a5808b0a635^:src/main/java/com/aionemu/gameserver/quest/handlers/inggison/_10034Found_Underground.java return defaultOnLvlUpEvent(env, 10033, true);</evidence>
+  </edge>
+  <edge>
+    <successor>10035</successor>
+    <predecessors>10031 10032 10033 10034</predecessors>
+    <source>retired-xml</source>
+    <evidence>9321e7663d5b00508007c8d4b65338f1d8bf9d95 src/main/resources/aion/data/static_data/quest_definition/quests/10035.xml</evidence>
+  </edge>
+  <edge>
+    <successor>10111</successor>
+    <predecessors>10110</predecessors>
+    <source>retail-finished-cond</source>
+    <evidence>quest.xml finished_quest_cond=Q10110</evidence>
+  </edge>
+  <edge>
+    <successor>10112</successor>
+    <predecessors>10111</predecessors>
+    <source>retail-finished-cond</source>
+    <evidence>quest.xml finished_quest_cond=Q10111</evidence>
+  </edge>
+  <edge>
+    <successor>10113</successor>
+    <predecessors>10112</predecessors>
+    <source>retail-finished-cond</source>
+    <evidence>quest.xml finished_quest_cond=Q10112</evidence>
+  </edge>
+  <edge>
+    <successor>10501</successor>
+    <predecessors>10500</predecessors>
+    <source>retail-finished-cond</source>
+    <evidence>quest.xml finished_quest_cond=Q10500</evidence>
+  </edge>
+  <edge>
+    <successor>10502</successor>
+    <predecessors>10501</predecessors>
+    <source>retail-finished-cond</source>
+    <evidence>quest.xml finished_quest_cond=Q10501</evidence>
+  </edge>
+  <edge>
+    <successor>10503</successor>
+    <predecessors>10502</predecessors>
+    <source>retail-finished-cond</source>
+    <evidence>quest.xml finished_quest_cond=Q10502</evidence>
+  </edge>
+  <edge>
+    <successor>10504</successor>
+    <predecessors>10503</predecessors>
+    <source>retail-finished-cond</source>
+    <evidence>quest.xml finished_quest_cond=Q10503</evidence>
+  </edge>
+  <edge>
+    <successor>10505</successor>
+    <predecessors>10504</predecessors>
+    <source>retail-finished-cond</source>
+    <evidence>quest.xml finished_quest_cond=Q10504</evidence>
+  </edge>
+  <edge>
+    <successor>10506</successor>
+    <predecessors>10505</predecessors>
+    <source>retail-finished-cond</source>
+    <evidence>quest.xml finished_quest_cond=Q10505</evidence>
+  </edge>
+  <edge>
+    <successor>10507</successor>
+    <predecessors>10506</predecessors>
+    <source>retail-finished-cond</source>
+    <evidence>quest.xml finished_quest_cond=Q10506</evidence>
+  </edge>
+  <edge>
+    <successor>10526</successor>
+    <predecessors>10525</predecessors>
+    <source>retail-finished-cond</source>
+    <evidence>quest.xml finished_quest_cond=Q10525</evidence>
+  </edge>
+  <edge>
+    <successor>10527</successor>
+    <predecessors>10526</predecessors>
+    <source>retail-finished-cond</source>
+    <evidence>quest.xml finished_quest_cond=Q10526</evidence>
+  </edge>
+  <edge>
+    <successor>20011</successor>
+    <predecessors>20010</predecessors>
+    <source>retail-finished-cond</source>
+    <evidence>quest.xml finished_quest_cond=Q20010</evidence>
+  </edge>
+  <edge>
+    <successor>20032</successor>
+    <predecessors>20031</predecessors>
+    <source>retired-handler</source>
+    <evidence>56c28337fade16bde2250e8b879caa9d206701e9^:src/main/java/com/aionemu/gameserver/quest/handlers/gelkmaros/_20032All_About_Abnormal_Aether.java return defaultOnLvlUpEvent(env, 20031, true);</evidence>
+  </edge>
+  <edge>
+    <successor>20033</successor>
+    <predecessors>20032</predecessors>
+    <source>retired-handler</source>
+    <evidence>2c4a0de78351cbb0b111393863411a5808b0a635^:src/main/java/com/aionemu/gameserver/quest/handlers/gelkmaros/_20033Drana_Solution.java return defaultOnLvlUpEvent(env, 20032, true);</evidence>
+  </edge>
+  <edge>
+    <successor>20034</successor>
+    <predecessors>20033</predecessors>
+    <source>retired-handler</source>
+    <evidence>56c28337fade16bde2250e8b879caa9d206701e9^:src/main/java/com/aionemu/gameserver/quest/handlers/gelkmaros/_20034Rescue_The_Reians.java return defaultOnLvlUpEvent(env, 20033, true);</evidence>
+  </edge>
+  <edge>
+    <successor>20035</successor>
+    <predecessors>20031 20032 20033 20034</predecessors>
+    <source>retired-xml</source>
+    <evidence>HEAD src/main/resources/aion/data/static_data/quest/definitions/quests/20035.xml</evidence>
+  </edge>
+  <edge>
+    <successor>20111</successor>
+    <predecessors>20110</predecessors>
+    <source>retail-finished-cond</source>
+    <evidence>quest.xml finished_quest_cond=Q20110</evidence>
+  </edge>
+  <edge>
+    <successor>20112</successor>
+    <predecessors>20111</predecessors>
+    <source>retail-finished-cond</source>
+    <evidence>quest.xml finished_quest_cond=Q20111</evidence>
+  </edge>
+  <edge>
+    <successor>20113</successor>
+    <predecessors>20112</predecessors>
+    <source>retail-finished-cond</source>
+    <evidence>quest.xml finished_quest_cond=Q20112</evidence>
+  </edge>
+  <edge>
+    <successor>20501</successor>
+    <predecessors>20500</predecessors>
+    <source>retail-finished-cond</source>
+    <evidence>quest.xml finished_quest_cond=Q20500</evidence>
+  </edge>
+  <edge>
+    <successor>20502</successor>
+    <predecessors>20501</predecessors>
+    <source>retail-finished-cond</source>
+    <evidence>quest.xml finished_quest_cond=Q20501</evidence>
+  </edge>
+  <edge>
+    <successor>20503</successor>
+    <predecessors>20502</predecessors>
+    <source>retail-finished-cond</source>
+    <evidence>quest.xml finished_quest_cond=Q20502</evidence>
+  </edge>
+  <edge>
+    <successor>20504</successor>
+    <predecessors>20503</predecessors>
+    <source>retail-finished-cond</source>
+    <evidence>quest.xml finished_quest_cond=Q20503</evidence>
+  </edge>
+  <edge>
+    <successor>20505</successor>
+    <predecessors>20504</predecessors>
+    <source>retail-finished-cond</source>
+    <evidence>quest.xml finished_quest_cond=Q20504</evidence>
+  </edge>
+  <edge>
+    <successor>20506</successor>
+    <predecessors>20505</predecessors>
+    <source>retail-finished-cond</source>
+    <evidence>quest.xml finished_quest_cond=Q20505</evidence>
+  </edge>
+  <edge>
+    <successor>20507</successor>
+    <predecessors>20506</predecessors>
+    <source>retail-finished-cond</source>
+    <evidence>quest.xml finished_quest_cond=Q20506</evidence>
+  </edge>
+  <edge>
+    <successor>20526</successor>
+    <predecessors>20525</predecessors>
+    <source>retail-finished-cond</source>
+    <evidence>quest.xml finished_quest_cond=Q20525</evidence>
+  </edge>
+  <edge>
+    <successor>20527</successor>
+    <predecessors>20526</predecessors>
+    <source>retail-finished-cond</source>
+    <evidence>quest.xml finished_quest_cond=Q20526</evidence>
+  </edge>
+</quest_chain_acquire_edges>

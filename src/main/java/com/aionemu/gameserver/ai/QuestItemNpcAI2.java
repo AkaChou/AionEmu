@@ -13,11 +13,14 @@ import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_DIALOG_WINDOW;
+import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.questEngine.definition.QuestDialogAction;
 import com.aionemu.gameserver.questEngine.definition.QuestDialogPage;
 import com.aionemu.gameserver.questEngine.model.QuestActionType;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
+import com.aionemu.gameserver.questEngine.tablelane.DataDrivenNativeRuntime;
+import com.aionemu.gameserver.questEngine.tablelane.SimpleCollectItemHandler;
 import com.aionemu.gameserver.model.templates.quest.QuestNpc;
 import com.aionemu.gameserver.services.QuestService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
@@ -76,8 +79,15 @@ public class QuestItemNpcAI2 extends ActionItemNpcAI2
 			}
 		}
 		if (dialogResult == null || !dialogResult.isSuccess()) {
-			if (isDialogNpc()) {
-				PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(getObjectId(), QuestDialogPage.SELECT1.id()));
+			switch (failedInteractionReply(isDialogNpc(),
+					!SimpleCollectItemHandler.instance().targetsForNpc(getNpcId()).isEmpty()
+						|| DataDrivenNativeRuntime.instance().isCollectObject(getNpcId()))) {
+				case START_DIALOG -> PacketSendUtility.sendPacket(player,
+					new SM_DIALOG_WINDOW(getObjectId(), QuestDialogPage.SELECT1.id()));
+				case REMIND_UNFINISHED_QUEST -> PacketSendUtility.sendPacket(player,
+					SM_SYSTEM_MESSAGE.STR_CANNOT_MOVE_TO_AIRPORT_NEED_FINISH_QUEST);
+				case SILENT_COLLECT -> {
+				}
 			}
 			return;
 		}
@@ -104,6 +114,43 @@ public class QuestItemNpcAI2 extends ActionItemNpcAI2
 		} else if (registeredPlayers.contains(player)) {
 			GameCoreGameplayServices.dropService().requestDropList(player, getObjectId());
 		}
+	}
+
+	/**
+	 * 失败交互（任务引擎未认领任何动作）的应答形态。
+	 * The reply shape of a finished interaction that no lane claimed.
+	 */
+	enum FailedInteractionReply {
+		/** 对话物件：开首对话页（既有行为）。 / A dialog npc: open the start dialog page (existing behavior). */
+		START_DIALOG,
+		/** 采集对象：零发包（真端超杀/条件不满足零副作用口径，QE-137）。 /
+		 * A collect object: zero packets (the retail zero-side-effect shape, QE-137). */
+		SILENT_COLLECT,
+		/** 其余任务物件：任务未完成提醒。 / Any other quest object: the unfinished-quest reminder. */
+		REMIND_UNFINISHED_QUEST
+	}
+
+	/**
+	 * 按物件类别分类失败交互的应答（USE_OBJECT / QUEST_SELECT 全部未被任务引擎认领时）。
+	 * <p>
+	 * 采集族物件保持真端零包口径（QE-137：条件不满足零副作用、不补发任何对话窗）；其余任务物件在
+	 * 任务条件不满足（未接取/步骤不符）时给系统消息提醒而不是静默——形态同 {@code CM_USE_ITEM} 的
+	 * 欧比斯入场拦截（{@code meetsAbyssEntryRequirement} 失败 → {@code STR_MSG_CANNOT_TELEPORT_TO_ABYSS}）。
+	 * <p>
+	 * Classifies the reply of an interaction that every lane left unclaimed. Collect objects keep the
+	 * retail zero-packet shape (QE-137: no side effects when the condition is not met); other quest
+	 * objects get a system-message reminder instead of staying silent, mirroring the Abyss-entry
+	 * interception in {@code CM_USE_ITEM}.
+	 * @param dialogNpc 是否为对话物件 / whether the object is a dialog npc
+	 * @param collectObject 是否为采集对象 / whether the object is a collect object
+	 * @return 应答形态 / the reply shape
+	 */
+	static FailedInteractionReply failedInteractionReply(boolean dialogNpc, boolean collectObject) {
+		if (dialogNpc) {
+			return FailedInteractionReply.START_DIALOG;
+		}
+		return collectObject ? FailedInteractionReply.SILENT_COLLECT
+			: FailedInteractionReply.REMIND_UNFINISHED_QUEST;
 	}
 
 	private boolean isDialogNpc() {

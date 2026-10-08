@@ -292,7 +292,7 @@ public final class SimpleTalkHandler implements NativeSystemGrantLane {
 			// with it; the native lane registers them from the quest.xml columns (unconditional
 			// registration; {@code QuestService.isQuestDrop} keeps the START/cap gates). XML-owned
 			// rows stay with the XML lane (single owner, skipped).
-			if (!xmlOwnedIds.contains(qid) && hasRetailDropColumns(questXml, qid)) {
+			if (!xmlOwnedIds.contains(qid) && questXml.hasRetailDropColumns(qid)) {
 				RetailQuestMetadataCompiler.Outcome dropMeta = metadataOf(qid);
 				if (dropMeta != null && dropMeta.clean()) {
 					for (var drop : dropMeta.metadata().drops()) {
@@ -358,14 +358,6 @@ public final class SimpleTalkHandler implements NativeSystemGrantLane {
 	 */
 	public List<QuestCatalogDrop> questDropsFor(int npcId) {
 		return dropsByNpcId.getOrDefault(npcId, List.of());
-	}
-
-	/** 该行 quest.xml 是否声明了掉落列（{@code drop_item_*}/预筛，避免无谓的元数据编译）。 /
-	 * Whether the row declares retail drop columns (a pre-filter before the metadata compile). */
-	private static boolean hasRetailDropColumns(NativeQuestXmlTable questXml, int questId) {
-		return questXml.find(questId)
-			.map(row -> !row.text("drop_item_1").isBlank() || !row.text("drop_monster_1").isBlank())
-			.orElse(false);
 	}
 
 	/** 真端 quest.xml 元数据（native 掉落/完成/领奖的公共事实源；不可编译按未解处理，fail-closed）。 /

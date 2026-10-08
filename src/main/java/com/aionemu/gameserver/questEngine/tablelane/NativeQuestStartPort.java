@@ -345,6 +345,44 @@ public final class NativeQuestStartPort {
 	}
 
 	/**
+	 * {@code unfinished_quest_cond1..N}：被引用行必须**未** COMPLETE 才算通过（真端该列的"未进行"语义，
+	 * 与 typed {@code UnfinishedQuest} 同轴：{@code state == null || status != COMPLETE}）。
+	 * <p>
+	 * 只服务 DD 链式接取面（{@code DataDrivenNativeRuntime} 对 {@code acquire=none} 后继行的发放行走）；
+	 * {@link #start(Player, int)} 的判定面刻意不含该轴——其它 native 接取面（Talk/ItemPlay/EnterWorld/
+	 * EnterArea/LevelUp 与七族）口径不变，避免扩大影响面。缺真端行或条件名解析失败一律 fail-closed。
+	 * <p>
+	 * The unfinished-quest axis: every referenced row must NOT be COMPLETE. Scoped to the DD
+	 * chain-acquire face only — {@code start()}'s verdicts deliberately stay unchanged for every other
+	 * native acquire face. A missing retail row or an unresolvable condition token fails closed.
+	 */
+	public boolean unfinishedConditionsPass(Player player, int questId) {
+		if (player == null || player.getQuestStateList() == null || questId <= 0) {
+			return false;
+		}
+		NativeQuestXmlTable.QuestRow row = questXml.find(questId).orElse(null);
+		if (row == null) {
+			return false;
+		}
+		for (String value : row.numbered("unfinished_quest_cond")) {
+			for (String token : value.trim().split("[\\s,]+")) {
+				if (token.isBlank()) {
+					continue;
+				}
+				int conditionId = prerequisiteId(token);
+				if (conditionId <= 0) {
+					return false;
+				}
+				QuestState state = player.getQuestStateList().getQuestState(conditionId);
+				if (state != null && state.getStatus() == QuestStatus.COMPLETE) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+
+	/**
 	 * {@code finished_quest_condN} 取值 → 前置任务 ID。
 	 * <p>
 	 * 真端该列写的是**目标行的 {@code <name>}**，并可选带 {@code :n} 奖励分支后缀：绝大多数为

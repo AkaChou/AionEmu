@@ -255,6 +255,23 @@ public final class NativeQuestXmlTable {
 		return Optional.ofNullable(rowsByQuestId.get(questId));
 	}
 
+	/**
+	 * 该行是否声明真端掉落列（{@code drop_item_*}/{@code drop_monster_*}，**任意槽位**）——native
+	 * 各族的击杀掉落注册共享预筛（退役 XML 的 {@code <drops>} 已随 catalog 退场，掉落由各族从本列接手）。
+	 * 不得只看第 1 槽：任务 4105 的掉落只写在 {@code drop_monster_2}/{@code drop_item_2}（2026-10-08
+	 * 跨族护栏暴露，补注册）。
+	 * <p>
+	 * Whether the row declares retail drop columns in **any** slot; the shared pre-filter of every
+	 * native family's kill-drop registration. Slot 1 is not enough: quest 4105 declares its drops only
+	 * in slot 2 (surfaced by the cross-family coverage gate, 2026-10-08).
+	 */
+	public boolean hasRetailDropColumns(int questId) {
+		return find(questId)
+			.map(row -> row.numbered("drop_item_").stream().anyMatch(value -> !value.isBlank())
+				|| row.numbered("drop_monster_").stream().anyMatch(value -> !value.isBlank()))
+			.orElse(false);
+	}
+
 	/** 按任务查询，缺行 fail-closed。 / Looks a row up; missing rows fail closed. */
 	public QuestRow require(int questId) {
 		QuestRow row = rowsByQuestId.get(questId);

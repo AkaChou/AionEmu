@@ -23,4 +23,16 @@ class QuestItemNpcAI2Test {
 		assertEquals(List.of(QuestDialogAction.USE_OBJECT.id(), QuestDialogAction.QUEST_SELECT.id()),
 			QuestItemNpcAI2.dialogIds());
 	}
+
+	@Test
+	void failedInteractionsReplyByObjectKind() {
+		assertEquals(QuestItemNpcAI2.FailedInteractionReply.START_DIALOG,
+			QuestItemNpcAI2.failedInteractionReply(true, false));
+		assertEquals(QuestItemNpcAI2.FailedInteractionReply.START_DIALOG,
+			QuestItemNpcAI2.failedInteractionReply(true, true));
+		assertEquals(QuestItemNpcAI2.FailedInteractionReply.SILENT_COLLECT,
+			QuestItemNpcAI2.failedInteractionReply(false, true));
+		assertEquals(QuestItemNpcAI2.FailedInteractionReply.REMIND_UNFINISHED_QUEST,
+			QuestItemNpcAI2.failedInteractionReply(false, false));
+	}
 }

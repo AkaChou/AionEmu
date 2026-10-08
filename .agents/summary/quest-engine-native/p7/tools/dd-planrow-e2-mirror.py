@@ -241,8 +241,11 @@ def scan_faced_actions(cat, cols, items, strings, by_desc, by_name, aliases, gro
             # 2026-10-03 偏差修复第九批落面：载荷 = `creationId, worldId, leaveProgress[, 成员名…]`；
             # 立即面落点 = retail-instance-entry-points.xml（真端 instance_creation.xml ×
             # Map/Worlds/<world>/world.xml location_alias_list）；creation 2 的别名在真端
-            # idelim/world.xml 本就缺失（内在缺失）⇒ 该行维持冻结；离场检查面宿主触发链未定 ⇒
-            # 登记残余偏差不实现；成员名尾巴解析忽略（仅冻结行携带）。
+            # idelim/world.xml 本就缺失（内在缺失）⇒ 该行维持冻结；离场检查面第十批终裁
+            # "真端拓扑不可达"，但 2026-10-08 本服按**行为修复**口径主动落面（进世界事件把
+            # (动作步, leaveProgress) 区间写回动作步 + 补发被移除物品；Playbook
+            # UNREACHABLE_INSTANCE_REENTRY_RECOVERY 同族）——本离线镜像工具未镜像该面，
+            # 与 Java 运行时的差异属预期；成员名尾巴解析忽略（仅冻结行携带）。
             toks = [t for t in re.split(r'[,\s]+', text.strip()) if t]
             if len(toks) < 3:
                 return 'PAYLOAD_INVALID'

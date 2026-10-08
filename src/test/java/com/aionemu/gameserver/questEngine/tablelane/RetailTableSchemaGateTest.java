@@ -23,24 +23,25 @@ import org.junit.jupiter.api.Test;
  * 承重面 = 每个 XSD 镜像其装载器的 fail-closed 规则 ∪ 观察形全域钉（口径与证据见
  * {@code .agents/summary/quest-engine-native/p0b/retail-doctype-xsd.zh-CN.md} 与
  * {@code .agents/summary/quest-engine-native/p0b/ledger-xml.zh-CN.md}）——schema 形漂移即红；
- * 另两钉子：①十八表不得再出现 DOCTYPE（剥离批不得回退）；②正文实体引用只允许 XML 预定义五实体
+ * 另两钉子：①二十表不得再出现 DOCTYPE（剥离批不得回退）；②正文实体引用只允许 XML 预定义五实体
  * （非预定义实体在无 DTD 时是未定义实体炸解析，且真端自名实体语义 = 字面量展开，见批证据
- * `&hellip;` → 字面 `hellip`）。九张自造台账（原 TSV + D1 的 Quest-AI 注册面证据表）在本门与十张真端表同规：
- * 同目录同名 xml/xsd 对 + 同两条钉子。
+ * `&hellip;` → 字面 `hellip`）。十张自造台账（原 TSV + D1 的 Quest-AI 注册面证据表 + 链式接取发放边表）
+ * 在本门与十张真端表同规：同目录同名 xml/xsd 对 + 同两条钉子。
  * <p>
  * Gate for the retail tables (the 2026-10-03 DOCTYPE strip plus the ledger-XML batch): the real
  * resources must validate against their sibling XSDs, which mirror the loader fail-closed rules
  * plus observed-universe shape pins (evidence under
  * {@code .agents/summary/quest-engine-native/p0b/}). Two further pins: no DOCTYPE may reappear,
- * and entity references in the bodies may only use the five XML predefined entities. The nine
- * self-made ledgers (formerly TSVs, plus the D1 Quest-AI registration evidence table) follow the
- * same rules as the ten retail tables: same-stem xml/xsd pairs and the same two pins.
+ * and entity references in the bodies may only use the five XML predefined entities. The ten
+ * self-made ledgers (formerly TSVs, plus the D1 Quest-AI registration evidence table and the
+ * chain-acquire edge table) follow the same rules as the ten retail tables: same-stem xml/xsd
+ * pairs and the same two pins.
  */
 class RetailTableSchemaGateTest {
 
 	private static final String DIR = "aion/data/static_data/quest/retail/";
 
-	/** 十九张表 = (xml, xsd) 同名对（十张真端表 + 九张台账）。 / The nineteen same-stem (xml, xsd) pairs. */
+	/** 二十张表 = (xml, xsd) 同名对（十张真端表 + 十张台账）。 / The twenty same-stem (xml, xsd) pairs. */
 	private static final List<Table> TABLES = List.of(
 			new Table("Quest_SimpleHunt"),
 			new Table("Quest_SimpleSerialHunt"),
@@ -52,6 +53,7 @@ class RetailTableSchemaGateTest {
 			new Table("quest"),
 			new Table("data_driven_quest"),
 			new Table("npcfactions_quest"),
+			new Table("quest_chain_acquire_edges"),
 			new Table("quest_client_handin_npc_sets"),
 			new Table("quest_legacy_heal_rows"),
 			new Table("quest_name_string_ids"),

@@ -125,6 +125,16 @@ public final class NativeTalkFixture {
 		}
 	}
 
+	/**
+	 * 直接改写等级字段（单测无经验表；镜像生产「先升级、后通知」的顺序）——接取等级轴读的是模型等级。
+	 * <p>
+	 * Writes the level field directly (no exp table in unit tests; production order is level up, then
+	 * notify). The level axis reads the model level, not the notification parameter.
+	 */
+	public static void levelUp(Player player, int level) {
+		setField(PlayerCommonData.class, player.getCommonData(), "level", level);
+	}
+
 	/** 测试玩家（默认天族战士 20 级，带包捕获连接）。 / The test player (Elyos warrior level 20, packet capture on). */
 	public static Player player() {
 		return player(Race.ELYOS, PlayerClass.WARRIOR, 20);
@@ -161,6 +171,27 @@ public final class NativeTalkFixture {
 	/** 清空包队列。 / Clears the packet queue. */
 	public static void clearPackets(Player player) {
 		packets(player).clear();
+	}
+
+	/**
+	 * 任务状态包四元视图（questId / action / status / step；链式发放的 add/update 与进度写回断言用）。
+	 * The (questId, action, status, step) view of the quest-action packets since the last clear.
+	 */
+	public record QuestActionView(int questId, int action, int status, int step) {
+	}
+
+	/** 任务状态包序列（最近一次清空之后）。 / The quest-action views since the last clear. */
+	public static List<QuestActionView> questActionViews(Player player) {
+		List<QuestActionView> views = new ArrayList<>();
+		for (AionServerPacket packet : packets(player)) {
+			if (packet instanceof SM_QUEST_ACTION action) {
+				views.add(new QuestActionView(intField(SM_QUEST_ACTION.class, action, "questId"),
+					intField(SM_QUEST_ACTION.class, action, "action"),
+					intField(SM_QUEST_ACTION.class, action, "status"),
+					intField(SM_QUEST_ACTION.class, action, "step")));
+			}
+		}
+		return views;
 	}
 
 	/** 断言收到唯一一页。 / Asserts exactly one dialog page was sent. */

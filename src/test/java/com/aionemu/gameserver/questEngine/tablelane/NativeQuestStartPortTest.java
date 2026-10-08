@@ -1,6 +1,7 @@
 package com.aionemu.gameserver.questEngine.tablelane;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -175,6 +176,26 @@ class NativeQuestStartPortTest {
 
 	private static Player player(int level) {
 		return player(level, PlayerClass.WARRIOR);
+	}
+
+	/**
+	 * unfinished 轴（DD 链式接取面专属，2026-10-08 缺口修复批）：10033 的真端
+	 * {@code unfinished_quest_cond = Q10025/Q14062}——引用行"未"COMPLETE 才通过（方向不许写反）；
+	 * 共享的 {@link NativeQuestStartPort#start} 判定面刻意不含该轴（其它 native 接取面口径不扩大）。
+	 */
+	@Test
+	void unfinishedConditionsGateOnlyTheChainFace() {
+		NativeQuestStartPort port = port();
+		Player player = player(52);
+		assertTrue(port.unfinishedConditionsPass(player, 10033), "引用行未 COMPLETE ⇒ 通过");
+
+		Player blocked = player(52);
+		blocked.getQuestStateList().addQuest(10025,
+			new QuestState(10025, QuestStatus.COMPLETE, 0, 0, null, 0, null));
+		assertFalse(port.unfinishedConditionsPass(blocked, 10033), "引用行已 COMPLETE ⇒ 不通过");
+		// 共享口口径锁定：start() 不判 unfinished（链式面自行判定，见方法注释）。
+		// The shared port stays unchanged on purpose: start() does not adjudicate the unfinished axis.
+		assertTrue(port.start(blocked, 10033).started(), "start() 判定面不含 unfinished 轴");
 	}
 
 	private static Player player(int level, PlayerClass playerClass) {
