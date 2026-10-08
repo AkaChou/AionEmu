@@ -267,7 +267,7 @@
       </event>
       <after-commit>
         <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
-        <broadcast-zone-mission-end quest-ids="10521 10522 10525 10526 10527 10528 10529 10530"/>
+        <broadcast-zone-mission-end quest-ids="10521 10522 10525 10527 10528 10529 10530"/>
       </after-commit>
     </transition>
     <transition source="reward" target="reward">

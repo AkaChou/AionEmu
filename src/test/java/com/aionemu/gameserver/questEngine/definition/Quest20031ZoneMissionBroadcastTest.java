@@ -20,15 +20,16 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * broadcast placement and after-commit ordering stay fixed.
  * <p>
  * 天族孪生 10031 已退役（保留清单 owner=RETAIL_TABLE，XML 只在 git 历史）⇒ 本类只保魔族半；
- * 广播目标中的已退役后续任务（20032/20033/20034）转 native 车道后无 typed 定义，其路由归属由
- * 车道承担，此处只对仍存 XML 的目标核对路由。
+ * 已退役后续任务（20032/20033/20034）转 native 车道后无 typed 定义，其命中由链式发放面承担，
+ * 因此 20031 的广播目标收敛为 20035——清单只保留具备 zone-mission-end 路由的 typed 任务。
  * <p>
  * The Elyos twin 10031 is retired (XML only in git history), so only the Asmodian half remains. The
- * retired follow-ups (20032/20033/20034) moved to the native lanes and have no typed definition, so the
- * route ownership check covers the XML-owned targets only; the broadcast list itself stays a definition fact.
+ * retired follow-ups (20032/20033/20034) moved to the native lanes without typed definitions; the
+ * chain-acquire grant face carries their delivery, so 20031's broadcast converges to 20035 — the
+ * target list keeps only typed quests that own a zone-mission-end route.
  */
 class Quest20031ZoneMissionBroadcastTest {
-	private static final int[] ASMODIAN_FOLLOW_UPS = {20032, 20033, 20034, 20035};
+	private static final int[] ASMODIAN_FOLLOW_UPS = {20035};
 
 	@Test
 	void asmodianMissionBroadcastsOnlyRoutableFollowUps() throws Exception {
@@ -72,20 +73,13 @@ class Quest20031ZoneMissionBroadcastTest {
 		assertFalse(open.afterCommit().stream()
 			.anyMatch(AfterCommitAction.BroadcastZoneMissionEnd.class::isInstance));
 
-		// 仍存 XML 的广播目标必须实际拥有 zone-mission-end 路由；已退役目标（native 车道）跳过路由核对，
-		// 但其退役身份必须成立——广播命中由车道面承担。
-		// XML-owned targets must own a zone-mission-end route; retired targets skip the route check but
-		// their retirement must hold (the lane faces carry the broadcast delivery).
-		int checked = 0;
+		// 广播目标必须全部实际拥有 zone-mission-end 路由；已退役/native 任务不得入列（其命中由链式发放面承担）。
+		// Every broadcast target must own a zone-mission-end route; retired/native quests must never be
+		// listed (the chain-acquire grant face carries their delivery).
 		for (int followUp : ASMODIAN_FOLLOW_UPS) {
-			if (RetiredQuestIds.contains(followUp)) {
-				continue;
-			}
 			assertTrue(hasZoneMissionEndRoute(load(followUp).definition()),
 				"quest " + followUp + " must own a zone-mission-end route");
-			checked++;
 		}
-		assertTrue(checked >= 1, "至少一个仍存 XML 的广播目标必须接受路由核对");
 	}
 
 	private static void assertNoSelfTarget(QuestDefinition definition) {

@@ -141,7 +141,7 @@ class Quest10520ClientDialogAlignmentTest {
 	@Test
 	void broadcastsOnlyTypedFollowUpMissionOwners() throws Exception {
 		QuestDefinition definition = load().definition();
-		assertArrayEquals(new int[]{10521, 10522, 10525, 10526, 10527, 10528, 10529, 10530},
+		assertArrayEquals(new int[]{10521, 10522, 10525, 10527, 10528, 10529, 10530},
 			broadcastTargets(definition, 806076).questIds());
 	}
 
@@ -149,7 +149,7 @@ class Quest10520ClientDialogAlignmentTest {
 	void asmodianCompanionAlsoBroadcastsOnlyTypedFollowUpMissionOwners() throws Exception {
 		QuestDefinition definition = load(20520).definition();
 
-		assertArrayEquals(new int[]{20521, 20522, 20525, 20526, 20527, 20528, 20529, 20530},
+		assertArrayEquals(new int[]{20521, 20522, 20525, 20527, 20528, 20529, 20530},
 			broadcastTargets(definition, 806080).questIds());
 	}
 
