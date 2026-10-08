@@ -101,5 +101,6 @@
 
 `git commit`（2026-10-08 用户「实机验证完成，提交」授权）：
 
-- 第一提交（repair）：`NativeUnpinnedRewardWindow.java`、`QuestEngine.java`（仅本任务 hunk）、两个 portal AI、两个测试、本目录证据；
-- 第二提交（docs）：Playbook 8.60（`UNPINNED_REWARD_WINDOW_QUEST_ID_RECOVERY`）+ 验收记录。两提交 hash 见验收记录。
+- 第一提交（repair）：`NativeUnpinnedRewardWindow.java`、`QuestEngine.java`（仅本任务 hunk）、两个 portal AI、两个测试、本目录证据；`f09d74cc5`；
+- 第二提交（docs）：Playbook 8.60（`UNPINNED_REWARD_WINDOW_QUEST_ID_RECOVERY`）+ 验收记录；`ea1d085f0`；
+- 第三提交（memory，用户「补」授权）：QE-164 卡 + `systemPatterns`/`symptom-index`/派生索引登记（仅本任务子集——并行未提交的链式接取主题不卷入；hash 见 git log）。
