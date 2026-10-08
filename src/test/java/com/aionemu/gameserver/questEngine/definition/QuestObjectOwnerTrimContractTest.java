@@ -62,9 +62,9 @@ class QuestObjectOwnerTrimContractTest {
 		new TrimCase(2664, Set.of(700324), Set.of(204777), 4),
 		new TrimCase(4004, Set.of(700340), Set.of(205128), 4),
 		new TrimCase(4012, Set.of(700342), Set.of(730104), 0),
-		new TrimCase(30211, Set.of(730275), Set.of(798941), 1),
-		new TrimCase(30213, Set.of(730275), Set.of(798926, 798941), 1),
-		new TrimCase(30311, Set.of(730275), Set.of(799322), 1));
+		new TrimCase(30211, Set.of(730275), Set.of(798941), 0),
+		new TrimCase(30213, Set.of(730275), Set.of(798926, 798941), 0),
+		new TrimCase(30311, Set.of(730275), Set.of(799322), 0));
 
 	/** 物件不得成为领奖 owner：reward→complete 的路由集合必须与物件不相交。 */
 	@Test

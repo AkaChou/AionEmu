@@ -59,9 +59,13 @@ public class RiftOrbAI2 extends NpcAI2 {
     for (int questId : questsToComplete) {
         final QuestState qs = player.getQuestStateList().getQuestState(questId);
         if (qs != null && qs.getStatus() == QuestStatus.START) {
-            // QE-046/QE-051 领奖行：写入方把 var0 推进到末行（和 NPC 对话）再置 REWARD，与 reward 节点投影一致。
-            // QE-046/QE-051 reward row: the writer advances var0 to the last journal row (talk to the NPC) before REWARD so it matches the reward projection.
-            qs.setQuestVarById(0, 1);
+            // QE-056 领奖态步号轴（2026-10-08 实机 A/B 定谳）：这四条任务的任务书是 2 行 [%0]/[%3] 且无
+            // 客户端脚本，REWARD 必须停在落盘值 0——实机写 1 时任务书步骤整块空白、写 0 正常渲染。
+            // 写入方只置状态，不动 var0。
+            // QE-056 reward-state step axis (settled by the live A/B on 2026-10-08): these quests have
+            // 2-row [%0]/[%3] journals with no client script, so REWARD must stay at the persisted value
+            // 0 — writing 1 rendered a fully blank journal live while 0 rendered normally. The writer
+            // only flips the status and leaves var0 alone.
             qs.setStatus(QuestStatus.REWARD);
             PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(questId, qs.getStatus(), qs.getQuestVars().getQuestVars()));
             }

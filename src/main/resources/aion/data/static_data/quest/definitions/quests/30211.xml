@@ -31,25 +31,29 @@
       <var name="var0" value="0"/>
     </node>
     <node label="reward" status="REWARD">
-      <var name="var0" value="1"/>
+      <var name="var0" value="0"/>
     </node>
     <node label="complete" status="COMPLETE">
       <var name="var0" value="0"/>
     </node>
   </nodes>
   <transitions>
-    <!-- QE-046/QE-051 领奖行合同：客户端 quest_q30211.html 的 quest_summary 共 2 行，末行是领奖行
-         （和 Pilomenes 对话，NPC id 798941）；写入方在该行推进 var0=1 后置 REWARD，旧存档 REWARD/var0=0 由本边按 reward 投影自愈。
-         Reward row contract (QE-051/QE-046): the last of the 2 quest_q30211.html journal
-         rows is the reward row (和 Pilomenes 对话, npc id 798941); the engine-external writer now leaves
-         var0=1 before REWARD, and this edge repairs saves persisted at REWARD/var0=0. -->
+    <!-- QE-056 领奖态步号轴（2026-10-08 实机 A/B 定谳）：客户端 quest_q30211.html 的 quest_summary 共
+         2 行 [%0]/[%3]、无客户端脚本（末行 = 和 Pilomenes 对话，NPC id 798941），REWARD 态必须停在落盘值
+         0——实机写 1 时任务书步骤整块空白、写 0 正常渲染。旧写入方（QE-046 抬轴时代）遗留的
+         REWARD/var0=1 存档由本边进世界自愈回 0。
+         QE-056 reward-state step axis (settled by the live A/B on 2026-10-08): quest_q30211.html has a
+         2-row [%0]/[%3] journal with no client script (the last row = talk to Pilomenes, npc id 798941),
+         so REWARD must stay at the persisted value 0 — a live save at 1 rendered a fully blank journal
+         while 0 rendered normally. This edge repairs saves left at REWARD/var0=1 by the old
+         QE-046 axis-lifting writer back to 0 on enter-world. -->
     <transition target="reward">
       <event>
         <enter-world/>
       </event>
       <conditions>
         <status-is status="REWARD"/>
-        <variable-is field="var0" value="0"/>
+        <variable-is field="var0" value="1"/>
       </conditions>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
@@ -89,11 +93,11 @@
       </after-commit>
     </transition>
 
-    <!-- 领奖态入口页：符文宝珠激活由 RiftOrbAI2 把任务置为 REWARD 并写入领奖行 1，玩家随后在 798941
-         上选择任务行（客户端动作 31）时必须拿回 select_success(10002)，其按钮 1009 再打开奖励窗口。
-         Reward-state entry page: RiftOrbAI2 sets the quest to REWARD with the reward row var0=1, so a
-         later quest-row selection (client action 31) on 798941 must return select_success(10002); its
-         1009 button then opens the reward window. -->
+    <!-- 领奖态入口页：符文宝珠激活由 RiftOrbAI2 把任务置为 REWARD（var0 停在落盘值 0，QE-056），玩家随后
+         在 798941 上选择任务行（客户端动作 31）时必须拿回 select_success(10002)，其按钮 1009 再打开奖励窗口。
+         Reward-state entry page: RiftOrbAI2 sets the quest to REWARD with var0 left at the persisted
+         value 0 (QE-056), so a later quest-row selection (client action 31) on 798941 must return
+         select_success(10002); its 1009 button then opens the reward window. -->
     <transition source="reward" target="reward">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="798941" action="QUEST_SELECT"/>

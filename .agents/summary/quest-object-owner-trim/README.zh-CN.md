@@ -72,12 +72,13 @@ QuestDialogMigrationGateTest 4/4、QuestInteractionObjectContractGateTest 2/2、
 
 ## 4. 遗留项 / 未收口
 
-1. **宝珠三任务领奖态步号轴（QE-051 vs QE-056 冲突，待实机 A/B）**：30211/30213/30311 的
-   `reward var0=1` 由批次 8 的 QE-046 基线锁住（写入方 RiftOrbAI2 同写 1）；但三任务客户端
-   `quest_summary` 均为 2 行 `[%0]/[%3]`、无客户端脚本（`quest_script_monster.csv` 无行），与
-   3036/1123 同型——QE-056（2026-10-07 扩展）称此类任务 reward 投影必须停在落盘值、抬到行号会让
-   步骤整块空白。需按 QE-056 first_check 做一次实机观测（`//quest set 30211 REWARD 0/1` 对比任务书
-   高亮行）；若确认 1 为坏值，则须按批次 8 边界「写入方 + 投影 + 基线三处同改」回滚到 0。
+1. **宝珠三任务领奖态步号轴——已收口（2026-10-08 实机 A/B 定谳）**：用户实机观测 30211 在
+   宝珠激活（QE-046 时代写入方写 `var0=1` + REWARD）后任务书步骤整块空白，`//quest set 30211
+   REWARD 0` 后恢复显示——1 为坏值、权威轴 = 落盘值 0，与 3036/1123 同判（QE-056）。已按批次 8
+   边界「写入方 + 投影 + 基线三处同改」回滚（范围含同挂 RiftOrbAI2 的姊妹任务 30313，共四任务）：
+   `RiftOrbAI2#forQuest` 删 `setQuestVarById(0,1)`；四 XML reward 投影 `1→0`、自愈边反转为
+   `REWARD/1 → 0`（治抬轴时代坏档）；基线 TSV 四行 `0/0/stale=1`；`QuestObjectOwnerTrimContractTest`
+   三处 `rewardVar0` 断言回 0。四 XML xmllint + XSD validates；门禁复跑与实机复测待办。
 2. 30213 的接取 NPC 798941 在既有形状里带一份与 798926 相同的领取面（legacy REWARD 分支只注册
    798926；客户端交付 NPC 集合为单件）——本批按姊妹任务 30313 先例保留，未收口。
 3. 21105 笛子 700812 的 legacy 随机刷怪（在物件实时坐标生成难民）尚无 typed 等价动作，待以物件
