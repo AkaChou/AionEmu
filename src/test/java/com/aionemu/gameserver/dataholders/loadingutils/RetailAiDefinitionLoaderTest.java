@@ -181,7 +181,63 @@ class RetailAiDefinitionLoaderTest {
 		assertEquals(276, data.skillAreaCount());
 		// 5ccb10261 为塔洛克之 Hollow 补齐了 9 条零售条件刷怪定义。
 		// 5ccb10261 added the nine retail condition-spawn definitions for Taloc's Hollow.
-		assertEquals(4439, data.conditionSpawnCount());
+		// beshmundir-macunbello-conditional-spawn 又为 BT（300170000）补齐 11 条 Macunbello 阶段条件刷：
+		// DebuffLich 触发器 3 条 + N 套变体 4 条 + H 套变体 4 条（页切换走 bt_page）。
+		// beshmundir-ahbana-specter-spawn 再补 2 条 Ahbana 条件刷（阈值 10，纪念碑 pattern 计数驱动）。
+		// beshmundir-corridor-statue-array 再补 10 条走廊雕像阵（每组按真端权重随机 1 只）。
+		// The BT repairs then added the 11 Macunbello stage condition spawns plus 2 Ahbana rows
+		// (threshold 10, driven by the monument patterns) and the 10 corridor statue-array rows
+		// (one weighted random NPC per group) for world 300170000.
+		assertEquals(4462, data.conditionSpawnCount());
+		assertTrue(data.supportsConditionVariable(300170000, "debufflich"));
+		assertTrue(data.supportsConditionVariable(300170000, "bt_page"));
+		assertTrue(data.supportsConditionVariable(300170000, "IDCT_SpecterN_Spawn"));
+		assertTrue(data.supportsConditionVariable(300170000, "IDCT_SpecterH_Spawn"));
+		var btStages = data.getConditionSpawns(300170000).stream()
+			.filter(condition -> condition.id() >= 5010 && condition.id() <= 5022).toList();
+		assertEquals(13, btStages.size());
+		assertEquals(3, btStages.stream().filter(RetailAiData.ConditionSpawn::despawnAtOther).count());
+		// bt_page 分流：Macunbello N 4 + Ahbana N 1 / Macunbello H 4 + Ahbana H 1。
+		// bt_page split: Macunbello 4+4 plus one Ahbana row per page.
+		assertEquals(5, btStages.stream().filter(condition -> condition.expression().contains("bt_page == 0")).count());
+		assertEquals(5, btStages.stream().filter(condition -> condition.expression().contains("bt_page == 1")).count());
+		var macunbelloNpc = firstConditionNpc(btStages, 5013);
+		assertEquals(216245, macunbelloNpc.id());
+		assertEquals(980.805420f, macunbelloNpc.x());
+		assertEquals(134.411575f, macunbelloNpc.y());
+		assertEquals(244.5f, macunbelloNpc.z());
+		// 触发器（delay 1-2s）先于阶段变体（delay 10-11s）落地 —— 真端时序不变量。
+		// Trigger rows (1-2s delay) land before the stage variants (10-11s delay) - the retail timing invariant.
+		assertEquals(1, firstConditionNpc(btStages, 5010).initialDelay());
+		assertEquals(10, macunbelloNpc.initialDelay());
+		// Ahbana：阈值 10 条件刷；落点取真端 x/y + 我方 geo 面高 246.27（真端 z=250 会悬空 3.7m）。
+		// Ahbana: threshold 10; retail x/y with our geo surface height for z.
+		assertTrue(btStages.stream().filter(condition -> condition.id() == 5021).findFirst().orElseThrow()
+			.expression().contains("IDCT_SpecterN_Spawn >= 10"));
+		var ahbanaNpc = firstConditionNpc(btStages, 5021);
+		assertEquals(216239, ahbanaNpc.id());
+		assertEquals(1356.546875f, ahbanaNpc.x());
+		assertEquals(147.808456f, ahbanaNpc.y());
+		assertEquals(246.27036f, ahbanaNpc.z());
+		assertEquals(90, ahbanaNpc.heading());
+		assertEquals(1, ahbanaNpc.initialDelay());
+		// 走廊雕像阵 10 组：恒真表达式承载"进本每组按权重随机 1 只"（真 Fi 30% / 真 Sc 30% / 假 Fi 20% / 假 Sc 20%）。
+		// Corridor statue array, 10 groups: always-true expression carrying the retail per-instance weighted draw
+		// (true Fi 30% / true Sc 30% / fake Fi 20% / fake Sc 20%).
+		var btStatues = data.getConditionSpawns(300170000).stream()
+			.filter(condition -> condition.id() >= 5023 && condition.id() <= 5032).toList();
+		assertEquals(10, btStatues.size());
+		assertTrue(btStatues.stream().allMatch(condition -> condition.expression().contains("1 >= 1")));
+		var statueChoices = btStatues.stream().filter(condition -> condition.id() == 5023).findFirst().orElseThrow()
+			.groups().get(0).slots().get(0);
+		assertEquals(4, statueChoices.size());
+		assertEquals(10000, statueChoices.stream().mapToInt(RetailAiData.ConditionSpawnChoice::probability).sum());
+		assertEquals(216295, statueChoices.get(0).members().get(0).id());
+		assertEquals(1187.38147f, statueChoices.get(0).members().get(0).x());
+		assertEquals(509.407745f, statueChoices.get(0).members().get(0).y());
+		assertEquals(0, statueChoices.get(0).members().get(0).heading());
+		assertEquals(216298, statueChoices.get(3).members().get(0).id());
+		assertEquals(1, statueChoices.get(3).members().get(0).initialDelay());
 		assertTrue(data.getConditionSpawns(302340000).stream()
 			.flatMap(condition -> condition.groups().stream())
 			.flatMap(group -> group.slots().stream())
@@ -302,6 +358,15 @@ class RetailAiDefinitionLoaderTest {
 		assertTrue(RetailPatternAI2.supports(data.getPattern(230820)));
 		assertTrue(RetailPatternAI2.supports(data.getPattern(282420)));
 		assertTrue(RetailPatternAI2.supports(data.getPattern(219358)));
+		// beshmundir-macunbello-conditional-spawn：BT 的灵魂/Lichkey1/阶段变体/触发器 pattern 结构完整，
+		// 且 debufflich 已声明（运行时门禁解锁），保持 retail_pattern 执行而非回落模板 AI。
+		// The BT soul/Lichkey1/stage-variant/trigger patterns are structurally supported, and with
+		// debufflich declared the runtime gate unlocks, keeping them on retail_pattern execution.
+		for (int npcId : new int[] { 216206, 216207, 216208, 216209, 216210, 216211, 216212, 216213, 216583,
+				216245, 216164, 216733, 216734, 216735, 216736, 216737, 216738, 281696, 281759, 281760,
+				216239, 216158, 216739, 216740 }) {
+			assertTrue(RetailPatternAI2.supports(data.getPattern(npcId)), data.getPattern(npcId).name());
+		}
 	}
 
 	@Test
@@ -348,5 +413,11 @@ class RetailAiDefinitionLoaderTest {
 		}
 
 		assertEquals(132, supported);
+	}
+
+	private static RetailAiData.ConditionSpawnNpc firstConditionNpc(List<RetailAiData.ConditionSpawn> conditions,
+			int id) {
+		return conditions.stream().filter(condition -> condition.id() == id).findFirst().orElseThrow()
+			.groups().get(0).slots().get(0).get(0).members().get(0);
 	}
 }

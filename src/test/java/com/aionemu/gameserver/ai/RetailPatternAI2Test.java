@@ -293,6 +293,52 @@ class RetailPatternAI2Test {
 	}
 
 	@Test
+	void btConditionChainNpcsKeepRetailSupportWithProductionData() throws ReflectiveOperationException {
+		// BT（300170000）条件链的关键 NPC：灵魂/Lichkey/阶段变体/纪念碑/两 boss/触发器。
+		// 判定必须带真实 owner（worldId + 技能组），否则看不出「变量未声明 / 技能缺失 / 模板缺口」
+		// 造成的静默回落——这是 handler 自造链删除后条件刷能否接管的先决条件。
+		// BT condition-chain NPCs judged with the real owner (worldId + skill group): a bare
+		// pattern-level check cannot see the silent fallback caused by an undeclared variable or a
+		// missing skill, which is the precondition for the condition spawns to take over.
+		String previousDefinitions = System.getProperty("aion.game.definitions.dir");
+		NpcSkillData previousNpcSkills = DataManager.NPC_SKILL_DATA;
+		RetailAiData previousRetailAi = DataManager.RETAIL_AI_DATA;
+		try {
+			System.setProperty("aion.game.definitions.dir", "src/main/resources/aion/definitions");
+			XmlDataLoader loader = new XmlDataLoader();
+			DataManager.NPC_SKILL_DATA = loader.loadNpcSkillData();
+			DataManager.RETAIL_AI_DATA = loader.loadRetailAiData();
+
+			ObjenesisStd objenesis = new ObjenesisStd();
+			for (int npcId : new int[] { 216206, 216207, 216208, 216209, 216210, 216211, 216212, 216213,
+					216583, 216584, 216585, 216245, 216736, 216737, 216738, 216739, 216239, 216158, 281696,
+					216295, 216296, 216297, 216298 }) {
+				Pattern pattern = DataManager.RETAIL_AI_DATA.getPattern(npcId);
+				assertNotNull(pattern, "missing pattern: " + npcId);
+				SkillNpc owner = objenesis.newInstance(SkillNpc.class);
+				owner.npcId = npcId;
+				owner.worldId = 300170000;
+				owner.objectTemplate = objenesis.newInstance(NpcTemplate.class);
+				owner.controller = new RecordingNpcController();
+				owner.controller.setOwner(owner);
+				var templates = DataManager.NPC_SKILL_DATA.getNpcSkillList(npcId);
+				owner.skillList = skillList(templates == null ? List.of() : templates.getNpcSkills());
+				owner.setLifeStats(objenesis.newInstance(FixedNpcLifeStats.class));
+				assertTrue(RetailPatternAI2.supports(pattern, owner),
+					"retail pattern must stay supported for npc " + npcId + " (" + pattern.name() + ")");
+			}
+		} finally {
+			DataManager.NPC_SKILL_DATA = previousNpcSkills;
+			DataManager.RETAIL_AI_DATA = previousRetailAi;
+			if (previousDefinitions == null) {
+				System.clearProperty("aion.game.definitions.dir");
+			} else {
+				System.setProperty("aion.game.definitions.dir", previousDefinitions);
+			}
+		}
+	}
+
+	@Test
 	void supportsArchivesOfEternityLeversWithoutServerSideWakeUpSkills() throws ReflectiveOperationException {
 		String previousDefinitions = System.getProperty("aion.game.definitions.dir");
 		NpcSkillData previousNpcSkills = DataManager.NPC_SKILL_DATA;

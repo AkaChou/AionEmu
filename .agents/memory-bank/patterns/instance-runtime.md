@@ -311,3 +311,48 @@ keywords: 只有在组队状态下才可以使用的地区, 此区域仅小队�
 - **两层检查**：门 AI 的对话分支（硬编码、可能无豁免）与 `PortalService.port()` 的 `instance*Req` 块（可豁免：管理员 `instancereq` / 会员特权）是两层独立检查；只查一层会误判「配置已经放行为什么还被挡」。
 - **拦截判据**：当前部署 `gameserver.administration.instancereq = 0` ⇒ `accessLevel < 0` 恒假 ⇒ PortalService 的全部副本进入条件对所有人关闭；此时若玩家仍被系统消息挡住，拦截点必然在门 AI（或别的硬编码层）。
 - **豁免语义**：`accessLevel >= AdminConfig.INSTANCE_REQ || havePermission(MembershipConfig.INSTANCES_GROUP_REQ)`，与 `port()` 的 `instanceGroupReq` 口径同源；与 IR-003（有效运行时配置）同族——先核对生效配置值，再判断检查是否应放行。
+
+## [IR-015] 十五、真端条件刷阶段链的三道开关：变量声明、阈值条件与延迟时序 (CONDITION_SPAWN_STAGE_CHAIN_GATES)
+<!-- pattern-metadata
+status: CONFIRMED
+scope: condition-spawns.xml 阈值条件刷的落地与实例脚本自造链迁移（RetailConditionSpawnEngine + RetailPatternAI2 运行时门禁 + spawn 静态数据）
+first_seen: 2026-10-08
+last_verified: 2026-10-08
+symptom: 阶段 boss / 阶段怪被真端广播链抹除后永久消失（如帕休曼迪尔寺院马昆贝罗：1400469「离开了藏身处」后 boss 不在）；或转写落地的真端阶段条件刷永远不触发；或自造阈值与真端不一致（如 Ahbana：真端砸 10 个纪念碑即出，handler 写死 15，砸 10-14 个看不到 boss）
+root_cause: 真端阶段推进由「变量阈值条件刷」承担——每阶段一条独立条件（阈值递增），条件转真时首刷、无补刷，被抹除/击杀的变体 no_respawn 不重生；写变量（on_die set_condition_spawn_variable）的 pattern 与条件评估共享同一变量声明表（condition-spawns <variable>）：变量未声明时写它的 pattern 被运行时门禁整体拦下、静默回落模板 AI（IR-010 同族），计数器永不增长 → 全链死锁；触发器（广播/消息）的 initial_delay 若不小于阶段变体，新刷变体会被触发器广播当场清除
+fix_or_guardrail: 1. 先落变量声明再评估解锁面：声明一个变量 = 解锁全部引用它的 pattern（本次 9 个从模板 AI 切 retail_pattern，属行为变化，需回归）；2. 每阶段一条条件、阈值递增（保留真端 1/12/24/36 不调），不要指望补刷语义；3. 保留触发器 delay（1-2s）< 变体 delay（10-11s）的时序不变量；4. 单页实例用工程页变量（bt_page）分流条件表达式表达真端双页，默认页 = 当前实机套；5. 删 handler 自造逻辑（计数/消息/状态切换）前确认承接链三道全齐：数据（条件+变量）、门禁（pattern 支持 + 变量已声明）、语义（无补刷/不重生与真端一致）；6. 顺手删除与既有条件刷重复的 sp() 分支（本次摆渡人 799518-520 双刷）；7. handler 自造阈值/落点/延迟三要素逐一对照真端 territory 再删（本次两例：Ahbana 阈值 15 vs 真端 10；落点 z 需按我方 geo 面高校正，真端 z 可能悬空）；8. 接线前先查模板 AI 名是否落在 `AI2Engine` 的 `SCRIPTED_ACTION_ITEM_AI` / `QUEST_SIDE_EFFECT_AI` 短路名单（如 `warrior_monument`，契约由 `AI2EngineRetailSelectionTest` 锁定）——命中的 NPC 即使变量声明齐全、pattern 结构支持，`selectNpcAi` 也永远返回模板 AI，pattern 永不执行；承接方只能按 IR-010 在模板 AI 类里做幂等适配器（直接调 `RetailConditionSpawnEngine.setVariable` + 补发真端消息），并注明"若放开短路需同批删适配器"防双计数
+evidence: src/main/resources/aion/definitions/compact/ai/condition-spawns.xml:22184; src/main/resources/aion/definitions/compact/ai/condition-spawns.xml:22304; src/main/resources/aion/data/static_data/spawns/Instances/300170000_Beshmundir_Temple.xml:1027; src/main/java/com/aionemu/gameserver/instance/handlers/scripts/BeshmundirTempleInstance.java:315; src/main/java/com/aionemu/gameserver/ai/worlds/heiron/warrior_monumentAI2.java; src/main/java/com/aionemu/gameserver/ai2/AI2Engine.java; src/test/java/com/aionemu/gameserver/ai/RetailPatternAI2Test.java; .agents/summary/beshmundir-macunbello-conditional-spawn/README.zh-CN.md; .agents/summary/beshmundir-macunbello-conditional-spawn/condition-rows.tsv; .agents/summary/beshmundir-ahbana-specter-spawn/README.zh-CN.md
+validation: static 通过（xmllint / IDE / pattern 白名单审计 18 pattern 0 问题 / 变量写入逐模板核对 / 页 0 零重复坐标 / geo 面高探针）；focused-test 通过（RetailAiDefinitionLoaderTest 6/6，IDEA MCP，2026-10-08 两批，含条件总数 4452、24 NPC supports 与 Ahbana 落点断言）；runtime 待执行（实机验收待用户）
+boundaries: 本次只覆盖 BT（300170000）；SpecialServer_Cond 不声明（无 pattern 写入 → 恒 0，普通服）；H 套变体（bt_page==1）当前不刷，预留给未来难度页；Ahbana 的 H 套无写入方（我方无 216740 纪念碑刷点），#5022 当前不可达；真端 BT 小号门（1/3/4…）与我方重编号门（471/467/473）的映射未做，pattern 的 control_door 会落空，handler 门分支暂留为执行者；`warrior_monument` 适配器与短路名单是互斥边界（放开名单必须同批删适配器，否则纪念碑计数翻倍）；被抹除 boss 的关联任务（30227）在本实例内不可完成与真端 no_respawn 一致，不作兜底；真端 move_area_points 区域巡逻未实现，条件刷用固定落点
+superseded_by: none
+first_check: 阶段怪不出现/被抹除后消失 → 依次查 (1) 真端承接条件是否落地（condition-spawns 阈值条件）(2) 计数器变量的写入方 pattern 是否被门禁拦（变量是否在 condition-spawns 声明）(3) 触发器与变体的 initial_delay 次序 (4) handler 是否还留着自造链或与条件刷双刷的 sp()
+keywords: 马昆贝罗, Macunbello, boss 不在, 离开了藏身处, 1400469, debufflich, 条件刷不触发, set_condition_spawn_variable 门禁, 变量未声明, 阶段变体, bt_page, 帕休曼迪尔, 贝丝蒙迪尔, Beshmundir, 300170000, 216245, 281696, despawn_at_other, 双刷, 摆渡人, 阿巴纳, Ahbana, 纪念碑, Warrior Monument, IDCT_SpecterN_Spawn, 砸碑不出 boss, 看守者之枢纽, 216239, 216739
+-->
+
+- **三道开关**：①变量声明（`condition-spawns.xml` 的 `<variable>`）——同时是**写入方 pattern 的门禁开关**；②阈值条件（每阶段一条，`initial_delay` 10s 级）；③时序（触发器 delay 必须小于变体 delay）。
+- **无补刷语义**：`RetailConditionSpawnEngine` 在条件转真时刷一次、转假且 `despawn_at_other` 时删；阶段推进靠变量越过下一阈值触发新条件首激活，不要试图实现或依赖「重刷」。
+- **门禁联动**：`AI2Engine.selectNpcAi` 对 `RetailPatternAI2.supports` 不通过的 pattern **静默**回落模板 AI（无日志）——变量声明这类数据侧开关会一次性改变一批 NPC 的 AI 走向，声明前先清点引用面（本次 = 8 灵魂 + Lichkey1）。
+- **删硬编码的前提**：实例 handler 的自造计数/消息/状态链在真端由 pattern + 条件刷承担时，删除前必须确认承接方在**门禁层面已解锁**，否则重演 IR-010 的静默消失。
+- **案例（Ahbana）**：真端 `IDCT_SpecterN_Spawn >= 10`（砸 10 个 Warrior Monument）条件刷，我方 handler 写死 15 且计数器变量未声明 → 砸 10-14 个看不到 boss、砸碑也无消息。修复 = 声明计数器变量 + 2 条条件（N/H + bt_page）+ 删 handler 计数链；`control_door(1)` 因我方门号重编号（→471）在本图落空，门动作暂留 handler（门号映射属独立批次）。落点 z 用我方 geo 面高（探针 246.27），真端 z=250 会悬空。
+- **第四道门禁（模板 AI 短路）**：216739 的模板 `ai="warrior_monument"` 在 `QUEST_SIDE_EFFECT_AI` 名单里，`selectNpcAi` 硬短路——声明变量、条件齐全也无用，pattern 永不执行。修法 = 在 `warrior_monumentAI2.handleDied` 做幂等适配器（`setVariable("IDCT_SpecterN_Spawn", 0, 1)` + 全实例消息 1400465），保留打碑手感（`maxHp=20` + `modifyDamage=1` → 打 20 下碎）。**判定顺序**：先查短路名单，再查变量声明，再查 pattern 支持——三者是串行门禁，任何一道不过都是静默回落。
+
+## [IR-016] 十六、真端 select_prob 权重随机 territory 的条件刷承载 (CONDITION_SPAWN_WEIGHTED_DRAW)
+<!-- pattern-metadata
+status: CONFIRMED
+scope: 真端非条件 territory（进本随机抽取型）向 RetailConditionSpawnEngine 的转写口径（condition-spawns.xml + loader party/slot 解析 + select/Expression）
+first_seen: 2026-10-08
+last_verified: 2026-10-08
+symptom: 真端走廊小怪阵（如帕休曼迪尔 SPG_C_StDrakan_55_Ae_1..10，每组按权重随机 1 只）在我方整段缺失；或 `//movetonpc <真身 id>` 报「未找到 NPC 生成配置」；或把真端"永久无敌装饰怪"当缺陷修（如 216297 balaur statue 的 BNFI_Invincible_Statue 不消失）
+root_cause: 真端 territory 的 select_prob 是「生成时按权重抽 1 条 npc 条目」（N 页权重和恰 10000）；我方静态 spawn 表没有 spot 级概率字段（SpawnSpotTemplate 无 probability），无法表达"每次进本每组随机 1 只"；另一类误区：把真端 Fake pattern（on_wake_up 自施无敌 + 感知/受击事件全部显式 do_nothing + 移速 0）的"永久无敌站桩装饰"误判为模拟端自造缺陷——真端三层原始数据（服务端 monster 表技能位序 / 原始 NpcAIPatterns XML / 客户端模板 mesh+速度）逐层核对即可定案
+fix_or_guardrail: 1. 权重随机用 condition-spawn 承载：恒真表达式 `1 >= 1`（Expression 原生支持数字字面量；未声明变量回退 0，Ahbana 批次 SpecialServer_Cond 同例）+ 1 group + 1 slot × N 个 `<party probability="…">`（party 即 ConditionSpawnChoice，slot 内多 party = 权重选 1）；2. `RetailConditionSpawnEngine.select` 要求 slot 内 choice 权重和**恰为 10000**，落空即抛 IllegalStateException——"50% 不出"语义无法表达（H 页真身 Sc 单条 5000 因此未落地）；3. party 内 npc 仍需完整 x/y/z/heading/initial_delay/initial_delay_extra 属性（loader 逐项读取），z 可写真端值（引擎 spawn 强制 setResolveZ(true) 贴地）；4. party 的 token 属性必填（loader attribute 直读）；5. 判断"怪该不该能打/无敌该不该消失"先查真端三层：服务端表（unattackable / 技能位序）→ 原始 pattern XML（do_nothing 是显式屏蔽默认 AI，不是无操作）→ 客户端模板（mesh/速度）；Fake 后缀的 pattern 多为装饰语义，不要按战斗怪补解锁链
+evidence: src/main/resources/aion/definitions/compact/ai/condition-spawns.xml:22329; src/main/java/com/aionemu/gameserver/ai/RetailConditionSpawnEngine.java:213; src/main/java/com/aionemu/gameserver/ai/RetailConditionSpawnEngine.java:240; src/main/java/com/aionemu/gameserver/dataholders/loadingutils/RetailAiDefinitionLoader.java:499; src/test/java/com/aionemu/gameserver/dataholders/loadingutils/RetailAiDefinitionLoaderTest.java:232; .agents/summary/beshmundir-corridor-statue-array/README.zh-CN.md
+validation: static 通过（xmllint / IDE / git diff --check / 真端 world_N.xml 10 组 territory 逐条目对账：5 条目概率 3000/3000/2000/2000/5000 与坐标朝向逐位一致）；focused-test 通过（RetailAiDefinitionLoaderTest 6/6 含 4462 计数与雕像阵断言、RetailPatternAI2Test#btConditionChain… 23 NPC supports 全过，IDEA MCP 2026-10-08）；runtime 待执行（实机验收待用户重启）
+boundaries: 本批只覆盖 BT 走廊雕像阵；H 页真身 Sc(216215) 5000 权重未落地（权重和约束 + bt_page==1 预留双原因）；真端 StatueNPC 机关（消息 7000 广播 30m）在我方的刷点与装配未核查——若实机打真身不解除无敌沿此方向查；顶楼孤 216297 点位（真端无出处）已删除；NPC 追击跨水 z 崩坏 / reset instance NPE / 广播遍历不跳尸体三问题独立立项未修
+superseded_by: none
+first_check: 真端"每组随机 1 只"的阵缺失 → (1) 查真端 territory 的 select_prob 分布与权重和 (2) 我方静态 spawn 是否根本没转写（movetonpc warn）(3) 用 condition-spawn 恒真表达式 + slot 内多 party 还原抽取，权重和必须=10000；「无敌 buff 不消失」先查真端 pattern 是否 Fake 装饰（三层原始数据），再查解无敌触发链（同伴联动 / 机关消息）
+keywords: select_prob, 权重随机, 雕像阵, StDrakan, balaur statue, 无敌雕像, BNFI_Invincible_Statue, NEL_DispelInvincible_Self, 216295, 216296, 216297, 216298, 216214, 216215, IDCT_StDrakanFi, IDCT_StDrakanFi_Fake, IDCT_StatueNPC, 7000, party, 恒真表达式, 永久无敌, 装饰怪, 帕休曼迪尔, Beshmundir, 300170000
+-->
+
+- **承载口径**：真端"进本每组按权重随机 1 只"（select_prob，权重和=10000）→ 我方 condition-spawn：恒真表达式 `1 >= 1` + 1 slot × N `<party probability>`；loader 的 party=Choice、slot 内多 party 即抽取池，`select()` 权重和不足 10000 直接抛异常。
+- **三层定案法**（怪"该不该打/无敌该不该消失"）：服务端 monster 表（unattackable、技能位序）→ 原始 NpcAIPatterns XML（`do_nothing` 是显式屏蔽默认 AI 反应，非空操作）→ 客户端模板（mesh、移速）。Fake pattern = 永久无敌站桩装饰（216297 案），不要按缺陷修。
+- **解无敌链**：真身 StDrakanFi/Sc 出生自施 19126（无敌），解除靠同伴被攻击联动或雕像机关 `IDCT_StatueNPC` 广播消息 7000（30m）→ 自施 18129；机关在我方的落地未核查，实机打真身不解除时先查它。

@@ -147,3 +147,27 @@ first_check: 目标字段是数值类型但值以 `"` 开头；数据里是否�
    于是这 8 处被**静默读成 0 而非报错**——与 SDJ-004 同类，都属于"不报错但结果错"。
 4. **这条边界只在自写绑定器上成立**：JAXB 走 `Integer.parseInt`，本就不受前导零影响。
    因此格式迁移期间，**XML 与 JSONL 两条路径都必须留在逐字段比对的覆盖范围内**。
+
+---
+
+## [SDJ-006] 六、传送门主服/活服孪生双写、落点朝向编码与玩家级硬门禁的落点（instancereq 空转）
+<!-- pattern-metadata
+status: CONFIRMED
+scope: 传送门静态数据（portal_loc.xml/portal_template2.xml）与 PortalService/PortalAI2 门禁面：主服/活服孪生 NPC、真端落点与 h 编码、portal_req 与硬门禁的分工、热更缓存
+first_seen: 2026-10-08
+last_verified: 2026-10-08
+symptom: 点击传送门 NPC 零响应；数据里配了 portal_req（quest_req/min_level）却完全不生效（管理员、普通玩家都不拦）；主服世界落点把玩家送进惰性镜像
+root_cause: ① 58Server 数据为主服血统：同一功能面常成对出现 `_M` 主服孪生 NPC（spawn 于惰性 [Master Server] 图），既有配置只挂在主服孪生上、活服 NPC 漏配 ⇒ getPortalDialog/getPortalUse 返回 null ⇒ 点击静默（Silentera 入口 730256/730260 与出口 730270/730271 两次同型命中）；② portal_req 的全部检查位于 `accessLevel < AdminConfig.INSTANCE_REQ` 分支内，且本部署 `gameserver.administration.instancereq = 0` ⇒ 所有 portal_req 空转（并非只旁路管理员）；③ PortalAI2（ai=portal）的 portalUse 在 handleSpawned 缓存，数据热更后旧 NPC 实例仍持旧值
+fix_or_guardrail: 活服孪生必须补配（目标 loc 对齐 `_M` 孪生）；玩家级故事门禁必须落**代码硬门禁**（`isXxxEntryWorld/meetsXxxEntryRequirement` + 在 port() 权限块之前检查并发 1300690——Kahrun/Balaurea 成式，不受权限旁路），数据 quest_req 仅作 instancereq>0 部署的双保险；真端落点/朝向：`Map/Worlds/<dir>/world.xml` direct_portals 为权威，`h = dir(度)/3`（MathUtil.convertDegreeToHeading）；世界 ID 以 `id/worldid.xml` 区分活/主服（600010000 Underpass 活 / 600110000 主服；210050000 / 220070000 活）
+evidence: commit 735d1c117; src/main/java/com/aionemu/gameserver/services/teleport/TeleportService2.java（isSilenteraCorridorEntryWorld/meetsSilenteraCorridorEntryRequirement）; services/teleport/PortalService.java（port() 硬门禁）; ai/QuestItemNpcAI2.java（失败交互三态）; static_data/portals/portal_loc.xml:333-334; portal_template2.xml（730256/730260/730270/730271）; .agents/summary/silentera-underpass-live-gates/README.zh-CN.md
+validation: focused-test（IDEA MCP 2026-10-08 用户授权）SilenteraCorridorEntryRequirementTest 4/4、QuestItemNpcAI2Test 3/3、KahrunEntryRequirementTest 4/4、BalaureaTeleporterQuestRequirementTest 6/6 = 17/17；实机（用户逐轮驱动：冷重启 + //reload portal + //reload_spawn Silentera）
+boundaries: instancereq=0 为本部署选择（portal_req 整体空转是现状，不得据 XML 有配置推断门禁生效）；回廊出口的龙界 10031 门禁不做豁免（用户裁定"要求 10031、和真端一致"）；Gelkmaros 侧 22014xx 落点仍在 220140000（主服）世界（19 条遗留，未迁移）；真端 ScriptDLL 的门禁条件表静态不可取证（通用 IAIScriptNpcImp 实现）
+superseded_by: none
+first_check: `grep npc_id 目标NPC` 于 portal_template2.xml（连同活服孪生）；`grep instancereq src/main/resources/aion/config/administration/admin.properties`（=0 ⇒ portal_req 空转）；ai=portal 的门改动后需 `//reload_spawn <图>` 或重启（ai=portal_dialog 每击实时查）
+-->
+
+1. **主服/活服孪生双写**：传送门 NPC 常成对（例：入口 730256 `LF4_UnderPass_In` ↔ 主服 731824 `LF4_UnderPass_M_In`；出口 730270 ↔ 731860；三族相同功能面同理）。既有配置常只挂 `_M` 孪生——而 `_M` 孪生的 spawn 在惰性 [Master Server] 图里、玩家不可达 ⇒ 活服侧点击静默。排查顺序：先 `grep npc_id` 看配置挂在哪个孪生、再 `grep` spawn 文件确认哪个孪生活在玩家可达世界。
+2. **玩家级硬门禁必须落代码**：`portal_req`（含 quest_req/min_level）整体在 `accessLevel < INSTANCE_REQ` 分支内，且本部署 `instancereq = 0` ⇒ 数据门禁对所有玩家空转。故事级门禁照 Kahrun/Balaurea 硬门禁成式在 `port()` 权限块之前硬检查（Silentera 入口：仅本族「回廊进军准备」10035/20035 COMPLETE 放行，失败发 1300690）；XML 的 quest_req 保留为 `instancereq>0` 部署的双保险。
+3. **落点与朝向的真端编码**：落点坐标誊自真端 world.xml 的 direct_portals（`From_..._To_..._S1/S2` 与 `Op_Risen_coord` 复活点互证）；`portal_loc.h`（signed byte）= 真端 `dir`(度)/3（`MathUtil.convertDegreeToHeading`，`RetailDirectPortalEngine` 同式，dir>127 也是除法而非补码）；世界以 `id/worldid.xml` 判别名与主/活（Underpass=600010000 活、Underpass_M=600110000 主服）。
+4. **热更与缓存**：`PortalAI2`(ai=portal) 的 `portalUse` 在 `handleSpawned()` 一次性缓存 ⇒ `//reload portal` 后必须 `//reload_spawn <图>`（对应世界名如 Silentera）或重启才生效；`PortalDialogAI2`(ai=portal_dialog) 每次点击实时查 `PORTAL2_DATA` ⇒ `//reload portal` 即可。zone 注册等结构数据与代码变更仍需冷重启。
+5. **任务物件失败交互三态**（QuestItemNpcAI2）：引擎全未认领时——采集物零包（QE-137）；关联任务（onTalkEvent）全部 COMPLETE/REWARD ⇒ 静默（物件已用完）；其余（未接/进行中）⇒ 1300690 提醒。三态由 `failedInteractionReply(dialogNpc, collectObject, relatedQuestsFinished)` 分类、单测锁定。

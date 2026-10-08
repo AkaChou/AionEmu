@@ -1,7 +1,5 @@
 package com.aionemu.gameserver.instance.handlers.scripts;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
-
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.*;
@@ -22,7 +20,6 @@ import com.aionemu.gameserver.network.aion.serverpackets.*;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.lifecycle.GameWorldServices;
-import com.aionemu.gameserver.skillengine.effect.AbnormalState;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
@@ -36,10 +33,6 @@ import com.aionemu.gameserver.world.knownlist.Visitor;
 @InstanceID(300170000)
 public class BeshmundirTempleInstance extends GeneralInstanceHandler
 {
-		/** macunbello soul / macunbello soul */
-		private int macunbelloSoul;
-		/** warrior monument / warrior monument */
-		private int warriorMonument;
 	/** 副本是否已销毁 / whether the instance is destroyed */
 	private boolean isInstanceDestroyed;
 	/** 门映射 / door map */
@@ -253,11 +246,10 @@ public class BeshmundirTempleInstance extends GeneralInstanceHandler
 	public void onInstanceCreate(WorldMapInstance instance) {
 		super.onInstanceCreate(instance);
         doors = instance.getDoors();
-		Npc npc = instance.getNpc(216245); //Macunbello.
-		if (npc != null) {
-			npc.getEffectController().unsetAbnormal(AbnormalState.SLEEP.getId());
-			GameEngineServices.skillEngine().getSkill(npc, 19046, 60, npc).useNoAnimationSkill(); //Soul Starved I.
-		}
+		// Macunbello（216245）改由 condition-spawns#5013 的条件刷（debufflich >= 1）生成，
+		// 创建期的 SLEEP/19046「Soul Starved」处理已移除（真端无该逻辑）。
+		// Macunbello (216245) is now spawned by condition-spawns#5013 (debufflich >= 1);
+		// the creation-time SLEEP/19046 "Soul Starved" handling was removed (not present retail).
     }
 
 	/**
@@ -321,15 +313,12 @@ public class BeshmundirTempleInstance extends GeneralInstanceHandler
 				sendMsgByRace(1401839, Race.PC_ALL, 0);
             break;
 			case 216739: //Warrior Monument.
-                warriorMonument++;
-				if (warriorMonument == 15) {
-                	// 邪恶的阿巴纳已出现在看守者之枢纽。 / Ahbana the Wicked has appeared in the Watcher's Nexus.
-					sendMsgByRace(1400470, Race.PC_ALL, 5000);
-					sp(216239, 1356.9945f, 149.51117f, 246.27036f, (byte) 29, 5000, 0, null); //Ahbana The Wicked.
-                }
 				despawnNpc(npc);
-				// 战士纪念碑已被摧毁。邪恶的阿巴纳进入警戒。 / The Warrior Monument has been destroyed. Ahbana the Wicked is on alert.
-				sendMsgByRace(1400465, Race.PC_ALL, 0);
+				// 计数器（IDCT_SpecterN_Spawn +1）与消息 1400465 由真端 pattern（IDCT_Quest_Reric_Normal.on_die）承担；
+				// Ahbana（216239）由 condition-spawns#5021（IDCT_SpecterN_Spawn >= 10，真端阈值）条件刷生成，
+				// 出现消息 1400470 由其 pattern 的 on_wake_up 发出。
+				// The counter and message 1400465 are served by the retail pattern's on_die; Ahbana is spawned
+				// by condition-spawns#5021 (threshold 10) and announces itself via its on_wake_up pattern.
             break;
 			case 216239: //Ahbana The Wicked.
 			    doors.get(471).setOpen(true);
@@ -337,43 +326,18 @@ public class BeshmundirTempleInstance extends GeneralInstanceHandler
 				sendMsgByRace(1401839, Race.PC_ALL, 0);
             break;
 
-			case 216583: //Brutal Soulwatcher (1st Island)
-				sp(799518, 933.982971f, 444.269104f, 222.00f, (byte) 21, 3000, 0, null); //Plegeton Boatman II.
-			break;
-			case 216584: //Brutal Soulwatcher (2nd Island)
-				sp(799519, 788.744690f, 442.353271f, 222.00f, (byte) 0, 3000, 0, null); //Plegeton Boatman III.
-			break;
-			case 216585: //Brutal Soulwatcher (3th Island)
-				sp(799520, 818.578740f, 277.745270f, 220.19f, (byte) 53, 3000, 0, null); //Plegeton Boatman IV.
-			break;
-			case 216206: //Elyos Spiritblade.
-			case 216207: //Elyos Spiritmage.
-			case 216208: //Elyos Spiritbow.
-			case 216209: //Elyos Spiritsalve.
-			case 216210: //Asmodian Soulsword.
-			case 216211: //Asmodian Soulspell.
-			case 216212: //Asmodian Soulranger.
-			case 216213: //Asmodian Soulmedic.
-			    Npc macunbello = instance.getNpc(216245); //Macunbello.
-			    macunbelloSoul++;
-				if (macunbello != null) {
-				    if (macunbelloSoul == 7) {
-					    // 马昆贝洛的力量正在减弱。 / Macunbello's power is weakening.
-					    sendMsgByRace(1400466, Race.PC_ALL, 2000);
-						macunbello.getEffectController().removeEffect(19046); //Soul Starved I.
-						GameEngineServices.skillEngine().applyEffectDirectly(19047, macunbello, macunbello, 0); //Soul Starved II.
-				    } else if (macunbelloSoul == 14) {
-					    // 马昆贝洛的力量已减弱。 / Macunbello's power has weakened.
-					    sendMsgByRace(1400467, Race.PC_ALL, 2000);
-						macunbello.getEffectController().removeEffect(19047); //Soul Starved II.
-						GameEngineServices.skillEngine().applyEffectDirectly(19048, macunbello, macunbello, 0); //Soul Starved III.
-				    } else if (macunbelloSoul == 21) {
-					    // 马昆贝洛已被削弱。 / Macunbello has been crippled.
-					    sendMsgByRace(1400468, Race.PC_ALL, 2000);
-						macunbello.getEffectController().removeEffect(19048); //Soul Starved III.
-				    }
-				}
-			break;
+			// 216583-216585（Brutal Soulwatcher / Lichkey1-3）死亡后的摆渡人（799518-799520）
+			// 已由 condition-spawns#2093-2095（lichkey1/2/3 == 1）条件刷承担，此处不再重复生成（避免双刷）。
+			// The Plegeton Boatmen (799518-799520) spawned on Lichkey1-3 death are served by
+			// condition-spawns#2093-2095 (lichkey1/2/3 == 1); the duplicate spawns here were removed.
+
+			// 216206-216213（Elyos / Asmodian 灵魂）的 debufflich 计数由真端 pattern 的 on_die 写入；
+			// 「力量减弱 / 已减弱 / 已被削弱」消息与阶段推进由 DebuffLich 触发器与阶段变体条件刷承担
+			// （condition-spawns#5010-#5016）。
+			// The soul debufflich counter is written by the retail patterns' on_die actions; the weakening
+			// messages and stage progression come from the DebuffLich triggers and stage-variant conditions
+			// (condition-spawns#5010-#5016).
+
 			case 216586: //Temadaro.
 			    sendMovie(player, 445);
 				doors.get(467).setOpen(true);
