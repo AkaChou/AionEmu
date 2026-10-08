@@ -91,7 +91,14 @@ QuestDialogMigrationGateTest 4/4、QuestInteractionObjectContractGateTest 2/2、
    `journal` 大小写检索（`gather_evidence.py` 只查大写 `QUEST_Q<id>.html`，本批 30211/30213/30311
    均为小写 `quest_q<id>.html`，需统一为大小写不敏感）。
 
-## 5. 证据文件（本目录）
+## 5. 实机验收（2026-10-08）
+
+天族英吉森链 **30201–30213 共 13 条实机验证通过**（含 30204 的客户端「未满 65级普通任务标记」
+选项排障、30209/30210 交付人对调、30211 宝珠轴回滚后端到端）。验收记录：
+`.agents/summary/quest-acceptance/30201-30213-2026-10-08-client-accepted.md`。魔族镜像
+30311/30313 轴修复同形（`c6662f637` 已覆盖），阵营侧复测待记账。
+
+## 6. 证据文件（本目录）
 
 - `gather_evidence.py` / `scan-object-owners.tsv` / `evidence-<quest>.txt`：全库物件 owner 扫描与逐任务证据。
 - `analyze_legacy.py` / `legacy-facts.tsv`：`7e9f0316c^` legacy handler 的逐目标事实（sets_reward/pages/status）。
