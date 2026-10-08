@@ -712,6 +712,13 @@ public final class SimpleItemPlayHandler {
 					if (vars < step - 1) {
 						return false;
 					}
+					// 已完成的步不再回放（2026-10-08 实机 Talk 族 13700/13800 死循环同根）：步走完后
+					// 本 NPC 落穿到交付面/默认处理（SimpleUseItemHandler 1559 先例同构）。
+					// A finished step is never replayed (same root as the live Talk-family 13700/13800
+					// loop): past its step the NPC falls through to the hand-in face or default handling.
+					if (vars >= step) {
+						continue;
+					}
 					PacketSendUtility.sendPacket(player,
 						new SM_DIALOG_WINDOW(objectId, pageForStep(step), questId));
 					return true;

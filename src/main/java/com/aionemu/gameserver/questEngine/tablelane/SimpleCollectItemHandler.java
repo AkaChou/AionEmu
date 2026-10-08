@@ -1129,8 +1129,11 @@ public final class SimpleCollectItemHandler implements NativeSystemGrantLane {
 		}
 		if (dialogId == 31 || dialogId == 26 || dialogId == -1) {
 			// 任务行打开 = 该步页（9/28 基线 1118 同形）；尚未轮到的步零响应不跳步。
-			// Row selection opens the step page; a step not yet reached stays silent.
-			if (talkStep(state) < step - 1) {
+			// 已完成的步不再回放（2026-10-08 Talk 族 13700/13800 死循环同根）：步走完后本 NPC
+			// 让位给交付面/默认处理（SimpleUseItemHandler 1559 先例同构）。
+			// Row selection opens the step page; a step not yet reached stays silent, and a finished
+			// step is never replayed — the NPC yields to the hand-in face (the 1559 precedent shape).
+			if (talkStep(state) != step - 1) {
 				return false;
 			}
 			PacketSendUtility.sendPacket(player,

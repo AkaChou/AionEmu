@@ -978,6 +978,21 @@ public final class SimpleTalkHandler implements NativeSystemGrantLane {
 					if (vars < step - 1) {
 						return false;
 					}
+					// 已完成的步不再回放（2026-10-08 实机 13700/13800 死循环）：中继分支无条件回放
+					// 步页并 return true，把下面的报告分支永久遮蔽——末位中继与交付同名节点时
+					// （13700 talk_npc1=reward=Elger 802350；13800 talk_npc2=reward=Alphion 802431），
+					// 31 恒回步页 → 10000/10001 重放只关窗，任务永远到不了报告页。真端节点步进后
+					// 即越过该步：退役 XML 投影同证（13700: NPC_REPORT page=SELECT5@802350；
+					// 13800: REWARD 态 QUEST_SELECT → SELECT5@802431），与 reportConfirmPage 的
+					// 缺陷 S 跳占用页规则一致。步已完成 ⇒ continue 落穿：后续步 / 报告分支 / 默认处理。
+					// A finished step is never replayed (live 13700/13800 loop, 2026-10-08): replaying
+					// the step page here permanently shadows the report branch below, so a quest whose
+					// last relay NPC is also its reward NPC could never be turned in. Past its step the
+					// NPC falls through to later steps, the report branch, or default handling (the
+					// retired XML projections agree; same typing rule as reportConfirmPage's defect-S).
+					if (vars >= step) {
+						continue;
+					}
 					PacketSendUtility.sendPacket(player,
 							new SM_DIALOG_WINDOW(targetObjectId, pageForStep(step), questId));
 					return true;
