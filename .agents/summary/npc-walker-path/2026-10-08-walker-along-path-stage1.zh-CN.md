@@ -6,7 +6,9 @@
 13:14 轮：重复预取根因（`moveToNextPoint` 丢预取）修复后每段恰好一次 `PATH request` ✓。
 聚焦测试 7 类 112 例全绿 + 复跑 PathTest/WalkStreamTest 全绿；静态 0 error。
 第三轮（长等待「原地空踏步」）修复：编队暂停停包改为**移动包截止驱动**（真端 `_CommonUpdate` 口径，§6.7）；
-Ermona 休息点数据错位一顶点已按真端修正（§6.8）。两项均**待实机复验**。
+Ermona 休息点数据错位一顶点已按真端修正（§6.8）。两项**实机复验通过（2026-10-08 用户确认）**；
+`NpcMoveControllerPathTest` 65/65（含 +2 用例）、`NpcMoveControllerWalkStreamTest` 11/11 全绿（IDEA MCP）。
+提交 a922fbd7b。
 （回滚：两开关改回 `off` / `false` 即完全恢复旧行为。）
 关联：`npc-walker-stairs/RETAIL-WALK-SEMANTICS.zh-CN.md`（真端四层机制逐函数坐实）；AIM-009/010/011（贴地/编队/短段契约，本切片全部保留）。
 
@@ -206,9 +208,10 @@ gameserver.geo.npc.walk.route.validate = log     # off | log | enforce
      逐字保留）；等待超过该时刻才 `setAndSendStopMove`，并发 AI2 log
      `pauseStop at route point (move packet deadline passed)`；
   3. 从未下发过移动包（截止为 0）不发停——真端同款护栏（其运动截止为 0 时不发停）。
-- 验证：静态 0 error（仅存量警告）；`NpcMoveControllerPathTest` +2 用例
-  （`pauseStopIsAnchoredToTheMovePacketDeadline`、`pauseWhileClientStillWalksTheLastSegmentSendsNoStop`）
-  待跑。**待实机复验**：等队伍期间客户端在走完最后一段后即站定、不空踏步；恢复时无「回吸」。
+- 验证：静态 0 error（仅存量警告）；`NpcMoveControllerPathTest` **65/65**（含 +2 用例
+  `pauseStopIsAnchoredToTheMovePacketDeadline`、`pauseWhileClientStillWalksTheLastSegmentSendsNoStop`）、
+  `NpcMoveControllerWalkStreamTest` **11/11**（2026-10-08 IDEA MCP）。
+  **实机复验通过（2026-10-08 用户确认）**：等队伍期间客户端在走完最后一段后即站定、不空踏步；恢复时无「回吸」。
 
 ### 6.8 数据修复：Ermona 休息点错位一个顶点（2026-10-08）
 
@@ -222,4 +225,4 @@ gameserver.geo.npc.walk.route.validate = log     # off | log | enforce
   （`NPC::GotoWayPoint` 读当前索引航点，NPC.cpp:5330-5343）同语义。
 - 修复：`aion/data/static_data/npc_walker/210030000_Verteron_Walkers.xml` Ermona 的 `rest_time` 由
   2/7/13 移至 1/6/12（坐标/Z 未动）。对照 LehparAs_9 无此问题（我们 step 1/43/86 的 rest 坐标与真端
-  点 1/44/88 物理吻合，仅编号差）。**待实机复验**：休息位置应在真端三点（较修复前沿路线前移一个顶点）。
+  点 1/44/88 物理吻合，仅编号差）。**实机复验通过（2026-10-08 用户确认）**：休息位置在真端三点（较修复前沿路线前移一个顶点）。

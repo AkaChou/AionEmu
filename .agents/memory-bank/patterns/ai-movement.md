@@ -5,10 +5,10 @@
 
 本文档记录脚本 AI 选型、跟随/护送行为与移动控制器在非凸几何下的实战避坑经验。
 
-> Pattern IDs: `AIM-001`–`AIM-007`
+> Pattern IDs: `AIM-001`–`AIM-013`
 > card_status: ACTIVE; movement conclusions are tied to the observed geometry and path-data availability
 > scope: AI2Engine selection, follow/escort handlers, NpcMoveController pathing, and AI2 attack-event re-entry
-> last_reviewed: 2026-09-19
+> last_reviewed: 2026-10-08
 
 ---
 
@@ -300,3 +300,50 @@ keywords: SM_MOVE、到达即停、停跳、卡在原地往前瞬移、脚部入
 - **根因**：客户端按「起→终直线、到达即停」执行移动包（无时长字段，速度由掩码表定），移动中被新包重锚到新起点，且对很近的目标立即判到达、对朝向突变播原地转身。L < w 停-跳；L ≫ w 弦线滞后地形、被地面真值拉起；L 低于到达判定门槛则走-停-走；收尾段若停发/终点取前视点，客户端的落点距航点 = 剩余 − 前视，起步即回吸；收尾段若继续补发近目标包，客户端每个包判一次到达 ⇒ 停-走微抖。真端以「包=刚走完的一步 + 时长=距离/速度」天然对齐。
 - **契约**：前视 = max(1m, 本 tick 实测位移 × 1.3)；行走态每 tick 补发（门控 = 到点判定 + 收尾余量，换腿首 tick 即发；收尾段终点取航点本身，距航点 ≤0.75m 停发、最后一段交给客户端）；行走态朝向逐 tick 限速过渡（stepHeadingDegrees ≤12°/tick）；配合服务端逐 tick 贴地（成对）；更短前视必须实机 A/B 验证不触发到达判定。
 - **留档**：真端客户端包与 SM_MOVE 同构（无时长），时长只用于服务端调度；客户端到达判定门槛的实机区间（0.33m 触发 / 1m 安全）见 .agents/summary/npc-walker-stairs/LOG-ANALYSIS-799737.zh-CN.md；下一个候选旋钮 = 移动分档的 30m/60m 边界滞回（玩家贴着 30m 观察时 tick 间隔在 100/200ms 高频翻转，而验收顺滑的窗口是稳定 190–200ms），未实机验证前不要继续动前视/贴地。
+
+## [AIM-012] 十二、行走航段必须沿 Path 连通图推进并逐步解算碰撞/步高：直线弦切差与「每段 A*」都是坑 (WALKER_ALONG_PATH_AND_STEP_COLLISION)
+
+<!-- pattern-metadata
+status: CONFIRMED
+scope: 行走 NPC（WALK_PATH 子状态）的航段推进与每步位移解算（NpcMoveController setRouteStep/refreshWalkerLegPath/moveAlongPath/贴地段、PathService.canWalkStraightLine、WalkerRouteValidator）；编队队长（偏移 0）与独行行走者走 Path，非零偏移编队成员保持直线成员段；不含追击/归家（动态目标寻路）
+first_seen: 2026-10-08
+last_verified: 2026-10-08
+symptom: 台阶段航段「轻微上下跳帧」（直线弦切差，AIM-011 收尾后的残留）；被挡段（拐角/台阶/矮障碍）贴直线走、不抬升；装载校验把本该「需要沿 Path」的段全判成「直线即可」（假阴性）
+root_cause: 航段原为直线 3D 插值且 walker 被显式排除出寻路（usesPath）；真端 `NPC::GetCurWayPointGoalPos` 返回当前航点 + 该段 Path，航点之间沿 Path 连通图推进，并按 fun_043 每步做碰撞/步高解算。校验器假阴性：模板 Z 与真实地面差 3–5m（LF1A 路线 124.1 vs ~121.3），`Sector.find` 垂直容差仅 0.7m ⇒ projectPoint 全 null ⇒ LoS 一律「视为可达」
+fix_or_guardrail: ① 换段时一次廉价 PATH-LoS（canWalkStraightLine：0.5m 格 Bresenham + **地面解算端点 Z**）——通过零变更，不通才异步预取本段 Path（单 NPC 单在途 + 队列背压）；**禁止每段同步 A\***（spawn 数据 walker_id 引用 7717、换段数百段/秒）；② 沿折线推进的流式口径 = 「沿折线到航点的弧长剩余」（walkPathRemaining/walkPathStreamTarget；AIM-011 的 1m 前视/0.75m 停发语义不变，节点 0.5m 密度不得落进客户端到达判定区间）；③ 每步碰撞阶梯（真端 fun_043）：线段可通行检测 → 被挡按 1.5m/步抬升（≤9 次、封顶 2.0m）→ 向下打地面装回面上 → 仍不通截断在墙前（绝不穿墙）；④ 开关 gameserver.geo.npc.walk.path.mode（off/blocked/always）+ walk.collision.enable，off/false 与旧行为逐分支等价（回滚）；⑤ 校验器 LoS 端点 Z 必须用地面解算值（projectGroundZ），禁用模板 Z；⑥ 编队资格用「非零偏移 = 跟随者」判据（OFFSET 型给队长也设 walkerGroup shift (0,0)，`walkerGroup != null` 会把整队含队长挡在门外）
+evidence: commit a922fbd7b; src/main/java/com/aionemu/gameserver/controllers/movement/NpcMoveController.java（shouldUseWalkerPath/walkerPathEligible/isFormationFollower/refreshWalkerLegPath/walkerPathTargetsCurrentLeg/moveAlongPath 的 walker 分支/walkPathStreamTarget/walkPathRemaining/resolveWalkerCollisionStep/walkerLiftOffset）; src/main/java/com/aionemu/gameserver/world/geo/path/PathService.java（canWalkStraightLine）; src/main/java/com/aionemu/gameserver/spawnengine/WalkerRouteValidator.java（log 模式：无地面段/超长段 >100m/闭环 <1m）; src/main/java/com/aionemu/gameserver/ai2/manager/WalkManager.java（startRouteWalking 挂载校验）; src/test/java/com/aionemu/gameserver/controllers/movement/NpcMoveControllerWalkStreamTest.java（编队队长资格/同航点去重/步高封顶 2.0m/挡墙截断）; .agents/summary/npc-walker-path/2026-10-08-walker-along-path-stage1.zh-CN.md（§6.3–§6.6）+ .agents/summary/npc-walker-path/probe_bump_profile.py + .agents/summary/npc-walker-path/analyze_aidebug_trace.py + .agents/summary/npc-walker-path/analyze_arrivals.py; .agents/summary/npc-walker-stairs/RETAIL-WALK-SEMANTICS.zh-CN.md（真端四层机制逐函数坐实）
+validation: static（改动文件 0 error）；focused-test（WalkStreamTest 11/11 含编队队长沿 Path/同航点去重/碰撞两用例、PathTest 65/65，2026-10-08 IDEA MCP）；runtime 实机验收通过（2026-10-08 三轮：spiros 6/6 被挡段沿 Path、队长生效且每段恰一次 PATH request、四只非零偏移成员零请求；行走中 Z 反向 ≥2cm 10→2 处、剩余两处经 ≤1mm 离线复刻证实为真实地形（7cm 矮棱/12cm 台阶边）；无停-走-停、不穿墙不卡死）
+boundaries: ① 非零偏移编队成员保持直线成员段（成员沿折线未做，留待 A/B）；② 预取晚到的段前半走直线、Path 到达后下一 tick 切折线（接受的折中，切段瞬间有朝向平滑与 Z 限幅掩护）；③ 校验器仍 log 模式（enforce 净化未实现）；④ 判据是 0.5m 格 LoS（≤10cm 高度偏差），「直线可达但走线不佳」的段不会被接管；⑤ 重复预取的第二道防线 = 同航点去重（5cm/0.5m），根因修复 = moveToNextPoint 的 resetPath 改为条件执行（walkerPathTargetsCurrentLeg）
+superseded_by: none
+first_check: 行走 NPC 台阶/被挡/抖动问题先答：① 该 NPC 是 walker 还是编队成员（walker_index 查 offsetsy 是否非零）？② walk.path.mode 与 walk.collision.enable 取值？③ 被挡段是否出现 PATH request（blocked 下被挡段应有、平地段不应有）？④ 校验器报「需要沿 Path」的段数与实机请求数是否一致（不一致先怀疑端点 Z 口径）？
+keywords: 沿 Path、Path 连通图、航段直线插值、上下跳帧、台阶段、矮障碍、步高抬升、碰撞解算、fun_043、PATH-LoS、canWalkStraightLine、异步预取、重复预取、moveToNextPoint、resetPath、walkerLegNeedsPath、编队队长、偏移 0、投影假阴性、模板 Z、WalkerRouteValidator、Spiros、Ermona、WALKER_ALONG_PATH
+-->
+
+- **症状**：台阶段航段「轻微上下跳帧」；被挡段贴直线走、拐角切墙、矮障碍不抬升；装载校验把需要沿 Path 的段全报 0（假阴性）。
+- **根因链**：① 航段=直线 3D 插值 + walker 被排除出寻路（真端是 Path 连通图 + 每步碰撞解算）；② 校验器 LoS 端点用模板 Z（与地面差 3–5m）⇒ `Sector.find` 0.7m 容差全 miss ⇒ 一律「视为可达」；③ 编队门用 `walkerGroup != null` 排除 ⇒ OFFSET 型给队长也设 walkerGroup（shift 0,0）⇒ 整队（含队长）被挡在门外；④ 每个被挡段成对 PATH request——第二个不是重复 setRouteStep，而是 `moveToNextPoint()` 无条件 `resetPath()` 丢弃刚预取的路径，首 tick 见 `!cachedPathValid` 重发 A*。
+- **契约**：换段一次廉价 LoS（通过零 A*）→ 不通异步预取 → 沿折线推进（弧长口径流式）→ 每步碰撞/步高阶梯（1.5m/步、封顶 2.0m、≤9 次、向下打地、9 次不通截墙前）；开关 off/blocked/always + collision.enable，off/false 即回滚。
+- **实测**：spiros 16 步 6 段、Ermona 17 步 7 段需沿 Path（修复前 0）；每段恰一次预取（requestId 连续）；抖动反向点 10→2（剩余 2 处为真实地形，≤1mm 离线复刻吻合）；用户判读：台阶段不穿墙不卡死、无停-走-停。
+- **验证边界**：成员沿折线未做；enforce 未做；「直线可达但走线不佳」的段不接管。
+
+## [AIM-013] 十三、编队路点等待的停包必须锚定「移动包截止」：固定宽限/不发停都会原地空踏步 (PAUSE_STOP_ON_MOVE_PACKET_DEADLINE)
+
+<!-- pattern-metadata
+status: CONFIRMED
+scope: 编队（WalkerGroup.targetReached 等队伍分支）在路点暂停时的停包下发（NpcMoveController.pauseAtRoutePoint/movePacketDeadline）；不含休息点暂停（rest_time 走 abortMove 立即停）与追击/归家的停包
+first_seen: 2026-10-08
+last_verified: 2026-10-08
+symptom: 队长 205294 与跟随者在等 −8m 成员（~5s）时「原地空踏步、前进极小距离」（2026-10-08 实机，Verteron LF1A_NPCPath_Ermona）
+root_cause: pauseAtRoutePoint 立即 resetMove 且按契约保留行走掩码、不发停（历史上为避免暂停瞬间客户端尚在走最后 ~1m 时被冻住半途、恢复回吸）；长等待（等队伍/休息更久）期间客户端保持行走态 ⇒ 播行走动画原地踏步。日志窗口证明服务端零移动零包（现象在客户端侧）。真端不存在该窗口：NpcMotionController::_CommonUpdate 每 tick 在「移动包截止已到（motion[1] <= now）且没有排队的下一段移动（motion[0xd] == 0）」时广播 SendStopMovePacket——停包锚定客户端走完最后一条移动包的时刻
+fix_or_guardrail: 每条移动包广播记「客户端走完估计时刻」movePacketDeadlineMs = now + dist/speed；pauseAtRoutePoint 把停包排到 截止 + 100ms（覆盖包延迟/调度抖动），该时刻前恢复即代数作废不发停（短暂停行为逐字保留）；**截止为 0（从未下发移动）不发停**（真端同款护栏 motion[1]==0）；停包发出后清零截止；发 AI2 log `pauseStop at route point (move packet deadline passed)` 供实机判读
+evidence: commit a922fbd7b; src/main/java/com/aionemu/gameserver/controllers/movement/NpcMoveController.java（movePacketDeadline/pauseStopDelayMs/pauseAtRoutePoint/sendPauseStopAtDeadline/shouldSendPauseStop；移动包广播点记录截止）; src/test/java/com/aionemu/gameserver/controllers/movement/NpcMoveControllerPathTest.java（formationWaypointPauseDoesNotSendStopOrResetTheMoveMask 补截止 0 护栏断言、delayedPauseStopOnlyFiresWhileStillWaiting、pauseStopIsAnchoredToTheMovePacketDeadline、pauseWhileClientStillWalksTheLastSegmentSendsNoStop）; 真端反编译对照（外部 58Server 工作树，不随本仓）：NpcMotionController.cpp:193-195（_CommonUpdate 截止停包）与 :61-67（暂停态 0x890 停包）、NPC.cpp:17703/17816/17839/17841（NPC_UpdateGotoWayPointState 等队伍 = 不推进航点、667ms 重询、不发任何移动包）、NpcParty.cpp:1113（NpcParty::CanMoveToNextWayPoint：滞后成员距离/速度归一 <0.5 才放行）、NPC.cpp:5330-5343（pending stay：停留=不发包+按截止重排）; .agents/summary/npc-walker-path/2026-10-08-walker-along-path-stage1.zh-CN.md §6.7
+validation: static（0 error）；focused-test（PathTest 65/65、WalkStreamTest 11/11，2026-10-08 IDEA MCP）；runtime 实机验收通过（2026-10-08 用户：等队伍不再空踏步、恢复无回吸）
+boundaries: ① 只覆盖等队伍暂停；休息点仍走 abortMove 立即停（实机无观察问题）；② 真端放行阈值（滞后成员追到半个航段即放行）比本实现（等全员到位）宽松——等待时长差异属独立决策点，未对齐；③ 100ms 余量为估计口径的补量（真端以包自带截止 + 服务器时钟精确判定）
+superseded_by: none
+first_check: 「原地空踏步/停不住/等队伍」先答：① 是否 WALK_WAIT_GROUP 且服务端窗口内零移动零包（先判定现象在客户端侧）？② 停包是否锚定移动包截止（而非固定宽限），截止为 0 时是否误发停？③ 该时刻前恢复是否不发停（否则恢复会回吸）？
+keywords: 原地空踏步、原地踏步、等队伍、等成员、WALK_WAIT_GROUP、停包、移动包截止、deadline、SendStopMovePacket、_CommonUpdate、pauseAtRoutePoint、resetMove、行走掩码、回吸、205294、799737、rest_time、stay_duration、Ermona、PAUSE_STOP_ON_MOVE_PACKET_DEADLINE
+-->
+
+- **症状**：等队伍时队长与跟随者原地空踏步；服务端窗口内零移动零包。
+- **真端做法**：到达航点后 `NpcParty::CanMoveToNextWayPoint` 门控（滞后成员距离/速度归一 <0.5 才放行，被拒则 667ms 重询、不发任何移动包）；停包由运动控制器在「移动包截止 + 无排队下一段移动」时广播——客户端走完最后一段即被明确停住。休息点（world.xml stay_duration）走同模式（pending stay：不发包、按截止重排）。
+- **契约**：停包延迟 = 移动包截止 + 100ms；恢复即代数作废；从未下发移动（截止 0）不发停。
+- **数据保真附注（同批发现）**：route XML 的 `rest_time` 必须落在真端 world.xml `stay_duration` 的**同一顶点**上——本引擎语义（setRouteStep 取当前目标步的 getRestTime、到达该步时消费 WalkManager.chooseNextRouteStep）与真端（停留读自刚到达的航点）一致，可逐坐标对拍；Ermona 曾整体错位一个顶点（我们 2/7/13 vs 真端 1/6/12，坐标逐位一致），已按真端修正（commit a922fbd7b）；LehparAs_9 复核无此问题（编号不同但物理顶点吻合）。
