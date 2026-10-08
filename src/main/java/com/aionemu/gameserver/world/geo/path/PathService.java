@@ -321,6 +321,34 @@ public final class PathService implements DisposableBean {
 		return projected == null ? null : new float[] {x, y, projected.z()};
 	}
 
+	/**
+	 * 任意两点的 PATH 网格直线可达（廉价 LoS：0.5m 格 Bresenham，直线高度偏差 ≤ 10cm）——
+	 * 行走航段判断「直线即可 / 需要沿 Path」的判据，刻意不经 {@link #canReachWaypoint}（那是有界 A*）。
+	 * 端点不在 PATH 网格上或世界无 PATH 数据时返回 true：视作「直线即可」，由调用方决定是否寻路。
+	 * Cheap PATH-grid straight-line reachability between two points (0.5 m grid Bresenham, straight-line
+	 * height deviation &lt;= 10 cm). Used to decide whether a walker leg can stay straight or needs the Path
+	 * graph; deliberately not {@link #canReachWaypoint}, which runs a bounded A*. Returns true when either
+	 * endpoint is off-grid or the world has no PATH data: the caller treats that as "straight is fine".
+	 */
+	public boolean canWalkStraightLine(int worldId, float fromX, float fromY, float fromZ,
+			float toX, float toY, float toZ) {
+		PathData.MapData map;
+		try {
+			map = data.getMap(worldId);
+		} catch (IllegalStateException e) {
+			return true;
+		}
+		if (map == null) {
+			return true;
+		}
+		PathData.HeightProvider terrain = terrain(worldId);
+		if (map.projectPoint(fromX, fromY, fromZ, terrain) == null
+				|| map.projectPoint(toX, toY, toZ, terrain) == null) {
+			return true;
+		}
+		return map.canWalkStraight(fromX, fromY, fromZ, toX, toY, toZ, terrain, null);
+	}
+
 	public float[] nearestGroundPoint(Creature owner, float maxRadius, float maxVerticalDelta) {
 		if (owner == null || owner.isFlying()) {
 			return null;

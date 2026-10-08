@@ -149,6 +149,11 @@ public class WalkerTemplate {
 		rowValues = null;
 	}
 
+	/** 返回路线模板 ID（walker_template 的 route_id）/ Returns the route template id (walker_template route_id) */
+	public String getRouteId() {
+		return routeId;
+	}
+
 	/** 返回路线步骤列表 / Returns the route steps */
 	public List<RouteStep> getRouteSteps() {
 		return routeStepList;

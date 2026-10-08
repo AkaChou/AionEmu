@@ -26,6 +26,7 @@ import com.aionemu.gameserver.model.templates.BoundRadius;
 import com.aionemu.gameserver.model.templates.walker.RouteStep;
 import com.aionemu.gameserver.model.templates.walker.WalkerTemplate;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_MOVE;
+import com.aionemu.gameserver.spawnengine.WalkerRouteValidator;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.MathUtil;
 
@@ -111,6 +112,9 @@ public class WalkManager {
 	protected static void startRouteWalking(NpcAI2 npcAI, Npc owner, WalkerTemplate template) {
 		if (!AIConfig.ACTIVE_NPC_MOVEMENT)
 			return;
+		// 路线装载校验（每 (world, route) 一次；log 模式只记录，见 WalkerRouteValidator）。
+		// Route load-time validation (once per world/route; log mode only records, see WalkerRouteValidator).
+		WalkerRouteValidator.validate(owner.getWorldId(), template);
 		List<RouteStep> route = template.getRouteSteps();
 		int currentPoint = owner.getMoveController().getCurrentPoint();
 		RouteStep nextStep = findNextRoutStep(owner, route);

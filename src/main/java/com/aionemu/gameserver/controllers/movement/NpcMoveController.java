@@ -12,7 +12,11 @@ import com.aionemu.gameserver.ai2.manager.WalkManager;
 import com.aionemu.gameserver.configs.main.AIConfig;
 import com.aionemu.gameserver.configs.main.GeoDataConfig;
 import com.aionemu.gameserver.dataholders.DataManager;
+import com.aionemu.gameserver.geoEngine.collision.CollisionIntention;
+import com.aionemu.gameserver.geoEngine.math.Vector3f;
+import com.aionemu.gameserver.geoEngine.models.GeoMap;
 import com.aionemu.gameserver.lifecycle.GameMovementLoopServices;
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.model.actions.NpcActions;
@@ -31,6 +35,7 @@ import com.aionemu.gameserver.movement.processors.movement.motor.FollowMotor;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_MOVE;
 import com.aionemu.gameserver.spawnengine.WalkerFormator;
 import com.aionemu.gameserver.spawnengine.WalkerGroup;
+import com.aionemu.gameserver.spawnengine.WalkerGroupShift;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.collections.LastUsedCache;
@@ -98,6 +103,16 @@ public class NpcMoveController
     private static final float WALK_GROUND_STREAM_FINAL_MARGIN = 0.75f;
     /** 行走态转身平滑：每个移动 tick 的最大转角（度）——拐角处朝向逐 tick 过渡，避免客户端原地转身动画。 / Max walker heading change per movement tick (degrees); smooths corner turns. */
     private static final float WALK_HEADING_STEP_DEGREES = 12.0f;
+    /** 行走者每步碰撞解算：步高抬升的单步/上限（米）与最大尝试次数（真端 fun_043：默认 1.5、上限 2.0、最多 9 次）。 / Walker per-step collision lift: step/max in meters and attempts (retail fun_043: 1.5 default, 2.0 cap, 9 tries). */
+    static final float WALKER_COLLISION_LIFT_STEP = 1.5f;
+    static final float WALKER_COLLISION_LIFT_MAX = 2.0f;
+    static final int WALKER_COLLISION_LIFT_ATTEMPTS = 9;
+    /** 行走者每步碰撞解算：抬升后向下打地面的探测下落深度（米）。 / Downward ground-probe drop after a lift (m). */
+    private static final float WALKER_COLLISION_GROUND_PROBE_DROP = 3f;
+    /** 编队偏移近似零容差（米）：|shift| 小于该值视为队长站位（与航点重合）。 / Approximate zero formation shift (m): below this the member stands on the route point itself (leader). */
+    static final float FORMATION_SHIFT_EPSILON = 0.01f;
+    /** 编队路点暂停停包的截止余量（毫秒）：停包排在「客户端走完最后一条移动包」的估计时刻 + 该余量（覆盖包延迟与一个 AI tick 的调度抖动）。真端以移动包截止驱动停包，本余量是估计口径下的小补量。 / Margin (ms) over the estimated client-walk-finish instant for a formation-waypoint pause stop: the stop is scheduled at the last move packet's deadline plus this margin (packet latency + one AI tick of scheduling jitter). Retail drives the stop off the move-packet deadline; this margin is the small allowance of our estimated variant. */
+    static final long WALKER_STOP_DEADLINE_MARGIN_MS = 100;
     private static final long WAYPOINT_SKIP_INTERVAL_MS = 250;
     private static final long STUCK_SAMPLE_INTERVAL_MS = 500;
     private static final long STUCK_SAMPLE_MAX_DELAY_MS = 1_500;
@@ -148,6 +163,29 @@ public class NpcMoveController
     private byte stepSequenceNr = 0;
     /** 停止偏移 / Stop offset */
     private float offset = 0.1f;
+    /**
+     * 本段行走是否需要沿 Path（setRouteStep 时按配置模式与 PATH-LoS 判定）。
+     * 行走 NPC（WALK_PATH）沿 Path 推进的真端语义开关：blocked 模式只对被挡段启用，always 全段启用。
+     * Whether the current walk leg needs the Path, decided in setRouteStep from the configured mode and the
+     * PATH line-of-sight check. Retail walkers follow the Path connectivity graph between waypoints.
+     */
+    private boolean walkerLegNeedsPath;
+    /**
+     * 「本段需要沿 Path」判定与预取对应的航点（同一航点重复刷新去重用；NaN = 尚未记录）。
+     * Waypoint the current walker-leg Path verdict and pre-fetch belong to (duplicate-refresh
+     * de-duplication; NaN = nothing recorded yet).
+     */
+    private float walkerLegPathKeyX = Float.NaN;
+    private float walkerLegPathKeyY = Float.NaN;
+    private float walkerLegPathKeyZ = Float.NaN;
+    /**
+     * 编队暂停延迟停包的代数：暂停/恢复/重置时递增，使早先排定的停包任务失效。
+     * Generation of the delayed formation-pause stop: bumped on every pause/reset/resume so earlier
+     * scheduled stop tasks become no-ops.
+     */
+    private volatile long pauseStopGeneration;
+    /** 最近一条移动包走完的估计时刻（毫秒时间戳；0=从未下发移动包）。 / Estimated instant (ms) the client finishes walking the last issued move packet (0 = none issued yet). */
+    volatile long movePacketDeadlineMs;
     /** 当前巡逻路线 / Current walk route */
     List<RouteStep> currentRoute;
     /** 当前路线点索引 / Current route point index
@@ -372,6 +410,74 @@ public class NpcMoveController
         return pathEnabled && !walkingRoute;
     }
 
+    /**
+     * 行走 NPC（WALK_PATH）本段是否沿 Path 推进：off 恒否；always 恒是；blocked 仅当本段被判定需要 Path。
+     * Whether a walking NPC follows the Path on this leg: off never, always always, blocked only when the
+     * leg was judged to need it.
+     * @param mode 配置模式（off/blocked/always）/ configured mode
+     * @param legNeedsPath 本段 PATH-LoS 判定结果 / whether this leg needs the Path
+     * @return 是否沿 Path / whether to follow the Path
+     */
+    static boolean shouldUseWalkerPath(String mode, boolean legNeedsPath) {
+        return "always".equalsIgnoreCase(mode) || ("blocked".equalsIgnoreCase(mode) && legNeedsPath);
+    }
+
+    /**
+     * 是否为「带非零编队偏移」的编队跟随者：跟随者航点被偏移到成员站位（本路线最多 8m，非路线点本身），
+     * 保持直线成员段（AIM-009/010 语义）；队长（shift 0,0）站位与航点重合，按独行语义可沿 Path。
+     * 编队内缺 shift 属异常态（setRouteStep 会 warn），保守按跟随者排除。
+     * Whether the walker is an offset formation follower: followers stand up to 8 m off the route point and
+     * keep straight member segments (AIM-009/010 semantics); the leader (shift 0,0) stands on the route
+     * point itself and is treated like a solo walker. A missing shift inside a group is a broken state
+     * (setRouteStep warns) and is conservatively treated as a follower.
+     * @param hasWalkerGroup 是否属于编队 / whether inside a walker group
+     * @param hasShift 是否带偏移对象 / whether a shift object exists
+     * @param sagittalShift 矢状（前后）偏移（米）/ sagittal (front/back) shift in meters
+     * @param coronalShift 冠状（左右）偏移（米）/ coronal (left/right) shift in meters
+     * @return 跟随者返回 true / true for a follower
+     */
+    static boolean isFormationFollower(boolean hasWalkerGroup, boolean hasShift, float sagittalShift,
+            float coronalShift) {
+        if (!hasWalkerGroup) {
+            return false;
+        }
+        return !hasShift || Math.abs(sagittalShift) >= FORMATION_SHIFT_EPSILON
+                || Math.abs(coronalShift) >= FORMATION_SHIFT_EPSILON;
+    }
+
+    /**
+     * 行走 NPC 是否具备沿 Path 预取的静态资格：PATH 总开关开、非编队跟随者、非飞行、非空间寻路。
+     * Whether the walking NPC is statically eligible for Path pre-fetch: PATH enabled, not an offset
+     * formation follower, not flying, not using spatial (3-D flight/swim) pathfinding.
+     * @param pathEnabled PATH 总开关 / global PATH toggle
+     * @param formationFollower 非零偏移编队跟随者 / offset formation follower
+     * @param flying 飞行中 / flying
+     * @param spatialPath 空间寻路 / spatial pathfinding
+     * @return 有资格返回 true / true when eligible
+     */
+    static boolean walkerPathEligible(boolean pathEnabled, boolean formationFollower, boolean flying,
+            boolean spatialPath) {
+        return pathEnabled && !formationFollower && !flying && !spatialPath;
+    }
+
+    /**
+     * 是否为同一航点（重复刷新去重口径）：平面 5cm、垂直 0.5m 内视为同一点——重复刷新会按当次坐标
+     * 重解地面 Z，同一点会有厘米级抖动；NaN 键（未记录）恒不相等。
+     * Whether two waypoints count as the same leg target for duplicate-refresh de-duplication: 5 cm
+     * horizontally / 0.5 m vertically (re-resolving the leg ground Z wobbles Z by centimeters); NaN keys
+     * never compare equal.
+     * @param x1 航点 X / waypoint X
+     * @param y1 航点 Y / waypoint Y
+     * @param z1 航点 Z / waypoint Z
+     * @param x2 已记录 X / recorded X
+     * @param y2 已记录 Y / recorded Y
+     * @param z2 已记录 Z / recorded Z
+     * @return 同一航点返回 true / true when the same target
+     */
+    static boolean sameWalkerLegTarget(float x1, float y1, float z1, float x2, float y2, float z2) {
+        return Math.abs(x1 - x2) < 0.05f && Math.abs(y1 - y2) < 0.05f && Math.abs(z1 - z2) < 0.5f;
+    }
+
     static boolean shouldBroadcastDestination(boolean chasingTarget, boolean pathWaypointTransition,
             boolean destinationChanged, long now, long lastBroadcastAt) {
         return destinationChanged && (pathWaypointTransition || !chasingTarget
@@ -511,6 +617,137 @@ public class NpcMoveController
     }
 
     /**
+     * 行走沿 Path 推进时的短段剩余量：从当前位置沿「剩余折线 → 本段航点」的总弧长（米）。
+     * 与直线版（直接到目标点的距离）同语义；Path 为 null 时退化为到航点的水平距离。
+     * Remaining walk distance while following a Path: total arc length from the current position along the
+     * remaining polyline to the leg waypoint (m). With a null Path it degenerates to the straight distance.
+     * @param fromX 当前位置 X / current X
+     * @param fromY 当前位置 Y / current Y
+     * @param fromZ 当前位置 Z / current Z
+     * @param path 剩余折线（含下一节点在 [0]）/ remaining polyline, next node at [0]
+     * @param waypointX 本段航点 X / leg waypoint X
+     * @param waypointY 本段航点 Y / leg waypoint Y
+     * @param waypointZ 本段航点 Z / leg waypoint Z
+     * @return 剩余弧长（米）/ remaining arc length (m)
+     */
+    static float walkPathRemaining(float fromX, float fromY, float fromZ, float[][] path,
+            float waypointX, float waypointY, float waypointZ) {
+        float remaining = 0;
+        float lastX = fromX;
+        float lastY = fromY;
+        if (path != null) {
+            for (float[] node : path) {
+                remaining += (float) Math.hypot(node[0] - lastX, node[1] - lastY);
+                lastX = node[0];
+                lastY = node[1];
+            }
+        }
+        return remaining + (float) Math.hypot(waypointX - lastX, waypointY - lastY);
+    }
+
+    /**
+     * 行走沿 Path 推进时的短段目标：沿「剩余折线 → 本段航点」按弧长取前视点；
+     * 整条折线（含收尾到航点的一段）不超过前视距离时返回航点本身——与
+     * {@link #walkGroundStreamTarget} 的收尾分支同语义（Path 为 null 时两者等价）。
+     * Stream target while following a Path: the lookahead point by arc length along the remaining polyline
+     * towards the leg waypoint; returns the waypoint itself when the whole polyline is within the lookahead,
+     * matching {@link #walkGroundStreamTarget} (the two are equivalent with a null Path).
+     * @param fromX 当前位置 X / current X
+     * @param fromY 当前位置 Y / current Y
+     * @param fromZ 当前位置 Z / current Z
+     * @param path 剩余折线（含下一节点在 [0]）/ remaining polyline, next node at [0]
+     * @param waypointX 本段航点 X / leg waypoint X
+     * @param waypointY 本段航点 Y / leg waypoint Y
+     * @param waypointZ 本段航点 Z / leg waypoint Z
+     * @param lookahead 前视距离（米）/ lookahead distance (m)
+     * @return 短段目标点 {x,y,z} / stream target point {x,y,z}
+     */
+    static float[] walkPathStreamTarget(float fromX, float fromY, float fromZ, float[][] path,
+            float waypointX, float waypointY, float waypointZ, float lookahead) {
+        float remaining = lookahead;
+        float lastX = fromX;
+        float lastY = fromY;
+        float lastZ = fromZ;
+        if (path != null) {
+            for (float[] node : path) {
+                if (remaining <= 0) {
+                    return new float[] {lastX, lastY, lastZ};
+                }
+                float segment = (float) Math.hypot(node[0] - lastX, node[1] - lastY);
+                if (segment >= remaining) {
+                    float fraction = segment <= 0 ? 1f : remaining / segment;
+                    return new float[] {lastX + (node[0] - lastX) * fraction, lastY + (node[1] - lastY) * fraction,
+                            lastZ + (node[2] - lastZ) * fraction};
+                }
+                remaining -= segment;
+                lastX = node[0];
+                lastY = node[1];
+                lastZ = node[2];
+            }
+        }
+        float toWaypoint = (float) Math.hypot(waypointX - lastX, waypointY - lastY);
+        if (toWaypoint <= remaining) {
+            return new float[] {waypointX, waypointY, waypointZ};
+        }
+        float fraction = remaining / toWaypoint;
+        return new float[] {lastX + (waypointX - lastX) * fraction, lastY + (waypointY - lastY) * fraction,
+                lastZ + (waypointZ - lastZ) * fraction};
+    }
+
+    /**
+     * 行走者每步碰撞解算的第 i 次抬升量（米）：i × 1.5，上限 2.0（真端 fun_043 的 fVar26 语义）。
+     * Per-step collision lift for attempt i (m): i × 1.5 capped at 2.0 (retail fun_043 fVar26 semantics).
+     * @param attempt 第几次尝试（从 1 起）/ attempt index (1-based)
+     * @return 抬升量（米）/ lift in meters
+     */
+    static float walkerLiftOffset(int attempt) {
+        return Math.min(attempt * WALKER_COLLISION_LIFT_STEP, WALKER_COLLISION_LIFT_MAX);
+    }
+
+    /**
+     * 行走者每步碰撞/步高抬升解算（真端 fun_043 结构）：
+     * ① 水平通行检测（{@link GeoMap#canPassWalker}：两端抬高 0.5m、跳过首个命中——地形小高差不挡、墙挡）；
+     * ② 被挡 → 抬升循环 i=1..9（{@link #walkerLiftOffset}）在更高处重查；通过即向下打地面把移动点放回面上；
+     * ③ 9 次仍冲突 → 返回最远可达点（{@link GeoMap#getClosestCollision}，含 0.5m 回退与贴地），
+     * 即障碍前停住、不瞬移（真端「Too many collisions」分支的保守等价物：真端取值路径节点，这里不越障）。
+     * 返回点仅在「被挡」时非 null——未被挡/无地图时调用方保持原线性推进点，由逐 tick 贴地接管。
+     * Walker per-step collision / step-height lift resolution (retail fun_043 shape): (1) horizontal passability
+     * via {@link GeoMap#canPassWalker} (both ends raised 0.5 m, first hit skipped — terrain micro-steps pass,
+     * walls block); (2) when blocked, lift i×1.5 (cap 2.0) for up to 9 tries and drop the point back onto the
+     * walkable surface; (3) after 9 tries return the closest collision point (0.5 m fallback + ground snap) so
+     * the walker stops at the obstacle instead of phasing through it. Non-null only when blocked.
+     * @param map 地理地图（可空）/ geo map (nullable)
+     * @param instanceId 实例 ID / instance id
+     * @param fromX 起点 X / from X
+     * @param fromY 起点 Y / from Y
+     * @param fromZ 起点 Z / from Z
+     * @param toX 计划推进点 X / planned step X
+     * @param toY 计划推进点 Y / planned step Y
+     * @param toZ 计划推进点 Z / planned step Z
+     * @return 解算后的移动点 {x,y,z}；null = 未受阻 / resolved step {x,y,z}; null when unobstructed
+     */
+    static float[] resolveWalkerCollisionStep(GeoMap map, int instanceId, float fromX, float fromY, float fromZ,
+            float toX, float toY, float toZ) {
+        if (map == null) {
+            return null;
+        }
+        float limit = (float) Math.hypot(toX - fromX, toY - fromY) + 1f;
+        if (map.canPassWalker(fromX, fromY, fromZ, toX, toY, toZ, limit, instanceId)) {
+            return null;
+        }
+        for (int i = 1; i <= WALKER_COLLISION_LIFT_ATTEMPTS; i++) {
+            float lifted = toZ + walkerLiftOffset(i);
+            if (map.canPassWalker(fromX, fromY, fromZ, toX, toY, lifted, limit, instanceId)) {
+                float groundZ = map.getZ(toX, toY, lifted, lifted - WALKER_COLLISION_GROUND_PROBE_DROP, instanceId);
+                return Float.isNaN(groundZ) ? new float[] {toX, toY, lifted} : new float[] {toX, toY, groundZ};
+            }
+        }
+        Vector3f closest = map.getClosestCollision(fromX, fromY, fromZ, toX, toY, toZ, true, false, instanceId,
+                CollisionIntention.DEFAULT_COLLISIONS.getId(), null);
+        return closest == null ? null : new float[] {closest.getX(), closest.getY(), closest.getZ()};
+    }
+
+    /**
      * 行走态朝向平滑：把当前朝向朝目标方向转动最多 maxStepDegrees（取最短转角）。
      * 返回值归一化到 (−180, 180]，与 atan2 原始取值范围一致（heading 字节 = 度数/3，保持原有编码语义）。
      * Walker heading smoothing step: rotate current towards target by at most maxStepDegrees along the
@@ -608,13 +845,25 @@ public class NpcMoveController
      * Start moving toward the next walk-route point.
      */
     public synchronized void moveToNextPoint() {
+        pauseStopGeneration++;
         if (started.compareAndSet(false, true)) {
             if (owner.getAi2().isLogging()) {
                 AI2Logger.moveinfo(owner, "MC: moveToNextPoint started");
             }
             destination = Destination.POINT;
             resetTargetTracking();
-            resetPath();
+            // 行走者本段预取的 Path 必须活过本次启动：WalkManager 在 setRouteStep 之后立即调用本方法，
+            // 无条件的 resetPath 会丢弃刚预取（或在途）的路径，使首个移动 tick 的 moveAlongPath 判定
+            // 「无有效路径」再发一次 A*（实机 2026-10-08：每个被挡航段成对 PATH request，第二次即来自
+            // tick）。仅当在途/缓存路径的目标仍是当前航点时保留。
+            // A walker leg's pre-fetched Path must survive this call: WalkManager invokes moveToNextPoint
+            // right after setRouteStep, and an unconditional resetPath() drops the fresh (or in-flight)
+            // request, so the first movement tick's moveAlongPath sees no valid path and issues a second A*
+            // (field logs 2026-10-08: paired PATH requests on every blocked leg, the second from the tick).
+            // The path is kept only while its target is still the current leg waypoint.
+            if (!walkerPathTargetsCurrentLeg()) {
+                resetPath();
+            }
         }
         updateLastMove();
         GameMovementLoopServices.moveTaskManager().addCreature(owner);
@@ -1140,7 +1389,26 @@ public class NpcMoveController
         boolean spawnDestination = spawn.getX() == targetDestX && spawn.getY() == targetDestY
                 && spawn.getEffectiveZ() == targetDestZ;
         boolean walkingRoute = owner.getAi2().getSubState() == AISubState.WALK_PATH;
-        if (shouldApplyGeoHeightCorrection(AIConfig.ENHANCED_HOME_RETURN, returning, spawnDestination, path != null)
+        // 行走者被挡段的每步碰撞/步高抬升解算（真端 fun_043 结构；独立开关，默认关时零差异）。
+        // 只对被判「需要沿 Path」的段启用：平地段一次通行检测即返回，成本 O(1)。
+        // Per-step collision/lift resolution for blocked walker legs (retail fun_043 shape; behind its own
+        // switch). Only enabled on legs judged to need the Path: flat legs cost one passability probe.
+        if (GeoDataConfig.GEO_NPC_WALK_COLLISION_ENABLE && walkingRoute && walkerLegNeedsPath
+                && GeoDataConfig.GEO_ENABLE) {
+            float[] resolvedStep = resolveWalkerCollisionStep(GameWorldServices.geoService().getGeoMap(owner.getWorldId()),
+                    owner.getInstanceId(), ownerX, ownerY, ownerZ, newX, newY, newZ);
+            if (resolvedStep != null) {
+                newX = resolvedStep[0];
+                newY = resolvedStep[1];
+                newZ = resolvedStep[2];
+            }
+        }
+        // 行走者沿 Path 推进时同样逐 tick 贴地：真端地面 NPC 每步做碰撞/地表解算，
+        // 且贴地是短段重锚不产生反向拉扯的前提（AIM-011）。path != null 的排除只适用于追击/归家。
+        // Walkers keep per-tick ground following even while following a Path: retail ground NPCs resolve
+        // the surface on every step, and the ground-true stream re-anchoring depends on it (AIM-011).
+        if (shouldApplyGeoHeightCorrection(AIConfig.ENHANCED_HOME_RETURN, returning, spawnDestination,
+                path != null && !walkingRoute)
                 && GeoDataConfig.GEO_NPC_MOVE && GeoDataConfig.GEO_ENABLE
                 && !GameWorldServices.pathService().usesSpatialPath(owner)) {
             // 每 tick 采地表并半步插值：600ms 节流会在中间 5 个 tick 让 Z 漂回线性值，
@@ -1186,10 +1454,21 @@ public class NpcMoveController
         // Walker ground-following stream: re-send a ground-true lookahead point every movement tick.
         float walkStepDistance = (float)MathUtil.getDistance(ownerX, ownerY, ownerZ, newX, newY, newZ);
         float streamLookahead = walkStreamLookahead(walkStepDistance);
-        float walkRemaining = (float)MathUtil.getDistance(newX, newY, newZ, targetDestX, targetDestY, targetDestZ);
+        // 沿 Path 推进的行走者：剩余量按「剩余折线 → 本段航点」的弧长计、短段目标沿折线取点——
+        // Path 节点间距只有 0.5m 级，若按「到最近节点」计剩余，0.75m 停发门槛会吞掉整段短段补发，
+        // 客户端就会收到 <1m 的到点包（触发「接近目标即判定到达」→ 停-走-停，AIM-011 实机否决）。
+        // Path-following walkers measure the remaining distance along the polyline to the leg waypoint and
+        // take the stream target on the polyline: node spacing is sub-meter, so a nearest-node reading would
+        // swallow the stream and expose sub-1m targets to the client's reach check (AIM-011).
+        boolean walkerPathStream = walkingRoute && path != null;
+        float walkRemaining = walkerPathStream
+                ? walkPathRemaining(newX, newY, newZ, path, pointX, pointY, pointZ)
+                : (float)MathUtil.getDistance(newX, newY, newZ, targetDestX, targetDestY, targetDestZ);
         float[] streamTarget = shouldStreamWalkGround(walkingRoute, reachedWaypoint, walkRemaining)
-                        ? walkGroundStreamTarget(newX, newY, newZ, targetDestX, targetDestY, targetDestZ,
-                                streamLookahead)
+                        ? (walkerPathStream
+                                ? walkPathStreamTarget(newX, newY, newZ, path, pointX, pointY, pointZ, streamLookahead)
+                                : walkGroundStreamTarget(newX, newY, newZ, targetDestX, targetDestY, targetDestZ,
+                                        streamLookahead))
                         : null;
         if (streamTarget != null) {
             streamTarget[2] = resolveGroundZ(streamTarget[0], streamTarget[1], streamTarget[2]);
@@ -1222,6 +1501,12 @@ public class NpcMoveController
                 AI2Logger.moveinfo(this.owner, "walkGroundStream from=" + fromX + "," + fromY + "," + fromZ
                         + " to=" + toX + "," + toY + "," + toZ);
             }
+            // 记下客户端走完本包的估计时刻（真端移动包截止语义）：编队路点暂停的停包以此为锚——
+            // 暂停瞬间客户端仍在走最后一段时不会被打断，等待超过该时刻仍不恢复才发停。
+            // Record the estimated instant the client finishes this packet (retail's move deadline):
+            // the formation-waypoint pause stop is anchored to it, so a pause while the client still
+            // walks its last segment is never interrupted and a longer wait still ends with a stop.
+            this.movePacketDeadlineMs = movePacketDeadline(now, fromX, fromY, fromZ, toX, toY, toZ, currentSpeed);
             PacketSendUtility.broadcastPacket(owner, new SM_MOVE(owner.getObjectId(), fromX, fromY, fromZ,
                     toX, toY, toZ, heading, movementMask));
         }
@@ -1364,6 +1649,7 @@ public class NpcMoveController
      * Reset move state, destination points, and follow motor.
      */
     public void resetMove() {
+        pauseStopGeneration++;
         if (owner.getAi2().isLogging()) {
             AI2Logger.moveinfo(owner, "MC perform stop");
         }
@@ -1386,11 +1672,86 @@ public class NpcMoveController
     }
 
     /**
-     * 在编队路点暂停服务端推进，但保留客户端移动掩码和已发送的路点目标。
-     * Pauses server movement at a formation waypoint while preserving the client mask and sent target.
+     * 在编队路点暂停服务端推进：立即保留客户端移动掩码和已发送的路点目标（暂停瞬间客户端多半
+     * 还在走最后 ~1m——最后流式目标=航点本身——立刻发停会把它冻在半途、恢复时再被拉一步），
+     * 同时按**移动包截止**排定停包：真端运动控制器在「移动包截止已到且没有排队的下一段移动」时
+     * 广播停包（NpcMotionController::_CommonUpdate）；这里等价地把停包排在「客户端走完最后一条
+     * 移动包」的估计时刻 + {@link #WALKER_STOP_DEADLINE_MARGIN_MS}——在该时刻前恢复则停包作废
+     * （短暂停旧行为逐字保留），等待超过该时刻才广播停，避免长等待期间客户端一直播放行走动画
+     * （实机 2026-10-08：等 −8m 成员 ~5s「原地空踏步」）。从未下发过移动包（截止为 0）时无停可发——
+     * 真端同款护栏（其运动截止为 0 时不发停）。
+     * Pauses server movement at a formation waypoint: keeps the client mask and the already-sent
+     * waypoint target immediately (at the pause instant the client is usually still walking the last
+     * ~1 m; an immediate stop would freeze it mid-stride and the resume would pull it forward), and
+     * arms the stop off the move-packet deadline, retail-style (NpcMotionController::_CommonUpdate
+     * broadcasts the stop once the deadline passed with no queued next move): the stop is scheduled
+     * for the estimated instant the client finishes its last move packet plus
+     * {@link #WALKER_STOP_DEADLINE_MARGIN_MS} — a resume before that instant voids it (short pauses
+     * keep the previous behaviour byte-for-byte), a longer wait gets an explicit stop so the client
+     * does not animate a walk in place (field 2026-10-08: ~5 s waiting for the -8 m member). With no
+     * move packet ever issued (deadline 0) there is nothing to stop — the same guard as retail (its
+     * motion deadline 0 skips the stop).
      */
     public void pauseAtRoutePoint() {
         resetMove();
+        long deadline = this.movePacketDeadlineMs;
+        if (deadline == 0) {
+            return;
+        }
+        long generation = ++pauseStopGeneration;
+        GameThreadPoolServices.threadPoolManager().schedule(() -> sendPauseStopAtDeadline(generation),
+                pauseStopDelayMs(deadline, System.currentTimeMillis()));
+    }
+
+    /**
+     * 停包排定延迟：到移动包截止（客户端走完最后一段的估计时刻）加余量；已过期则为 0（立即）。
+     * Delay before the scheduled pause stop: up to the move-packet deadline (estimated client walk
+     * finish) plus the margin; an already-past deadline yields 0 (immediate).
+     * @param packetDeadlineMs 移动包截止时间戳 / move-packet deadline timestamp
+     * @param nowMs 当前时间戳 / current timestamp
+     * @return 延迟毫秒（≥0）/ delay in ms (>= 0)
+     */
+    static long pauseStopDelayMs(long packetDeadlineMs, long nowMs) {
+        return Math.max(0L, packetDeadlineMs + WALKER_STOP_DEADLINE_MARGIN_MS - nowMs);
+    }
+
+    /**
+     * 由本条移动包（起点→终点、速度）估算客户端走完时刻；速度非正时视为即刻走完。
+     * Estimates the instant the client finishes this move packet from its from/to positions and
+     * speed; a non-positive speed counts as already finished.
+     * @return 估算时间戳 / estimated timestamp
+     */
+    static long movePacketDeadline(long nowMs, float fromX, float fromY, float fromZ, float toX, float toY, float toZ,
+            float speed) {
+        if (speed <= 0f) {
+            return nowMs;
+        }
+        float distance = (float)MathUtil.getDistance(fromX, fromY, fromZ, toX, toY, toZ);
+        return nowMs + (long)(distance / speed * 1000.0f);
+    }
+
+    /**
+     * 截止到期后的停包发送（见 {@link #pauseAtRoutePoint}）；代数不符（期间暂停/恢复/重置）或已不
+     * 在等待时不发；发出后清零截止——该包对应的客户端行走已结束，重复暂停不重发。
+     * Deadline stop broadcast (see {@link #pauseAtRoutePoint}); skipped when the generation changed
+     * (pause/resume/reset happened meanwhile) or the member is no longer waiting. Clears the deadline
+     * on send: the walk it referred to is over, so a repeated pause does not re-send.
+     * @param generation 排定时的暂停代数 / pause generation captured when scheduled
+     */
+    private void sendPauseStopAtDeadline(long generation) {
+        if (!shouldSendPauseStop(generation == pauseStopGeneration, started.get(),
+                owner.getAi2().getSubState() == AISubState.WALK_WAIT_GROUP) || NpcActions.isAlreadyDead(owner)) {
+            return;
+        }
+        this.movePacketDeadlineMs = 0;
+        if (owner.getAi2().isLogging()) {
+            AI2Logger.moveinfo(owner, "pauseStop at route point (move packet deadline passed)");
+        }
+        setAndSendStopMove(owner);
+    }
+
+    static boolean shouldSendPauseStop(boolean generationMatches, boolean started, boolean waitingGroup) {
+        return generationMatches && !started && waitingGroup;
     }
 
     private void moveAlongPath() {
@@ -1398,6 +1759,7 @@ public class NpcMoveController
             moveToLocation(pointX, pointY, pointZ, offset);
             return;
         }
+        boolean walkingRoute = owner != null && owner.getAi2().getSubState() == AISubState.WALK_PATH;
         long now = System.currentTimeMillis();
         if (!cachedPathValid && GameWorldServices.pathService().hasPathingData(owner)
                 && now >= pathRetryAt) {
@@ -1407,7 +1769,12 @@ public class NpcMoveController
         if (path != null && path.length > 0) {
             float[] waypoint = path[0];
             moveToLocation(waypoint[0], waypoint[1], waypoint[2], pathMoveOffset(path), path);
-        } else if (!GameWorldServices.pathService().hasPathingData(owner)) {
+        } else if (walkingRoute || !GameWorldServices.pathService().hasPathingData(owner)) {
+            // 行走者无 Path / 已走完 / 请求失败：回退直线走完本段，绝不进入追击的停车阶梯
+            // （stopForPath / finishFailedPointMove 会让巡逻停走）。到点由 isReachedPoint 判定、
+            // 换段由 WalkManager.targetReached 收口；本段走完前 Path 若晚到，下一 tick 自然切回沿 Path。
+            // Walkers fall back to the straight leg when the Path is absent/finished/failed and never enter
+            // the chase stop ladder; arrival and leg switching stay with the existing AI/WalkManager flow.
             moveToLocation(pointX, pointY, pointZ, offset);
         } else if (shouldFinishFailedPointMove(firstPathFailureAt, pathFailureHandled, pendingPath != null, now)) {
             pathFailureHandled = true;
@@ -1443,8 +1810,13 @@ public class NpcMoveController
     }
 
     private boolean usesPath() {
-        return shouldUsePath(GeoDataConfig.GEO_PATH_ENABLE,
-                owner != null && owner.getAi2().getSubState() == AISubState.WALK_PATH);
+        if (owner != null && owner.getAi2().getSubState() == AISubState.WALK_PATH) {
+            // 行走者按真端语义逐段决定是否沿 Path（mode=off 时与旧行为逐分支等价）。
+            // Walkers decide per leg whether to follow the Path (mode=off matches the old behaviour exactly).
+            return GeoDataConfig.GEO_PATH_ENABLE
+                    && shouldUseWalkerPath(GeoDataConfig.GEO_NPC_WALK_PATH_MODE, walkerLegNeedsPath);
+        }
+        return GeoDataConfig.GEO_PATH_ENABLE;
     }
 
     private boolean usesSpatialArrival() {
@@ -1688,7 +2060,14 @@ public class NpcMoveController
             return true;
         }
         float[][] path = pathSnapshot();
-        boolean blocked = path != null && path.length > 0
+        // 行走者的 Path 是「本段折线」（起点=段起点、终点=本段航点），不是动态追击目标：不做
+        // 每 tick 的「path 头可达」复检（那是有界 A*），也不进重规划停车分支；动态障碍由上面的
+        // obstacleVersion 检查兜底。短段推进保持 10Hz 的 O(1) 预算，且绝不发停包（AIM-011）。
+        // Walker paths are per-leg polylines with fixed endpoints, not moving chase targets: skip the
+        // per-tick head-reachability replan check (a bounded A*) and never enter the stop branch;
+        // obstacleVersion above still covers dynamic obstacles, keeping the 10 Hz step O(1).
+        boolean walkingRoute = owner != null && owner.getAi2().getSubState() == AISubState.WALK_PATH;
+        boolean blocked = !walkingRoute && path != null && path.length > 0
                 && !canReachWaypointCached(path[0][0], path[0][1], path[0][2]);
         if (shouldKeepPathResult(path, blocked)) {
             return true;
@@ -2261,6 +2640,77 @@ public class NpcMoveController
             : resolveGroundZ(this.pointX, this.pointY, paramRouteStep2.getZ());
         this.destination = Destination.POINT;
         this.walkPause = paramRouteStep1.getRestTime();
+        refreshWalkerLegPath();
+    }
+
+    /**
+     * 换段时刷新「本段是否需要沿 Path」并按需预取本段 Path：
+     * blocked 模式对「当前位置 → 本段航点」做一次廉价 PATH-LoS（网格 Bresenham），不通才预取；
+     * always 模式无条件预取；off 模式、带非零编队偏移的跟随者、飞行/游泳不预取（保持直线，与旧行为一致）；
+     * 编队队长（shift 0,0）站位与航点重合，按独行语义参与预取。
+     * 预取走异步队列（单 NPC 单在途 + 背压），绝不阻塞移动；Path 到达前本段沿直线先走，
+     * 到达后 moveAlongPath 下一 tick 自然切到沿 Path 推进。
+     * Refreshes whether the current walk leg follows the Path and pre-fetches it when needed: blocked mode
+     * runs one cheap PATH line-of-sight check (grid Bresenham) and fetches only when it fails; always mode
+     * always fetches; off mode, offset formation followers and flying/swimming walkers stay straight. The
+     * formation leader (shift 0,0) stands on the route point itself and is fetched like a solo walker.
+     * The fetch is async (single in-flight request per NPC, queue back-pressure) and never blocks movement;
+     * until it lands the leg walks straight and moveAlongPath switches over on the next tick.
+     */
+    /**
+     * 本段的沿 Path 预取（在途请求或已缓存路径）是否仍指向当前航点——moveToNextPoint 保留预取的判据。
+     * Whether this leg's Path pre-fetch (in-flight request or cached path) still targets the current
+     * waypoint; used by moveToNextPoint to keep it instead of resetting.
+     * @return 预取属于当前航点返回 true / true when the pre-fetch belongs to the current leg
+     */
+    private boolean walkerPathTargetsCurrentLeg() {
+        if (!walkerLegNeedsPath) {
+            return false;
+        }
+        if (pendingPath != null) {
+            return sameWalkerLegTarget(pointX, pointY, pointZ, pendingPathX, pendingPathY, pendingPathZ);
+        }
+        return cachedPathValid && sameWalkerLegTarget(pointX, pointY, pointZ,
+                walkerLegPathKeyX, walkerLegPathKeyY, walkerLegPathKeyZ);
+    }
+
+    private void refreshWalkerLegPath() {
+        WalkerGroupShift shift = owner.getWalkerGroupShift();
+        boolean follower = isFormationFollower(owner.getWalkerGroup() != null, shift != null,
+                shift == null ? 0f : shift.getSagittalShift(), shift == null ? 0f : shift.getCoronalShift());
+        if (!walkerPathEligible(GeoDataConfig.GEO_PATH_ENABLE, follower, owner.isFlying(),
+                GameWorldServices.pathService().usesSpatialPath(owner))) {
+            this.walkerLegNeedsPath = false;
+            return;
+        }
+        String mode = GeoDataConfig.GEO_NPC_WALK_PATH_MODE;
+        boolean always = "always".equalsIgnoreCase(mode);
+        if (!always && !"blocked".equalsIgnoreCase(mode)) {
+            this.walkerLegNeedsPath = false;
+            return;
+        }
+        // 同一航点的重复刷新（行走 AI 重入 startWalking/恢复走路）复用已有判定与在途请求：
+        // 不再 resetPath 丢弃在途 A* 再重发。
+        // A duplicate refresh for the same waypoint (the walking AI re-enters startWalking / resumes the
+        // walk) reuses the existing verdict and in-flight request instead of resetting and re-issuing.
+        if (this.walkerLegNeedsPath && sameWalkerLegTarget(pointX, pointY, pointZ,
+                walkerLegPathKeyX, walkerLegPathKeyY, walkerLegPathKeyZ)) {
+            return;
+        }
+        this.walkerLegNeedsPath = false;
+        // 换段统一收口：清掉上一段的路径缓存与在途请求（追击/归家不走本入口，不受影响）。
+        // Single place to drop the previous leg's path cache and in-flight request (chase/home never
+        // enter through setRouteStep).
+        resetPath();
+        if (!always && GameWorldServices.pathService().canWalkStraightLine(owner.getWorldId(),
+                owner.getX(), owner.getY(), owner.getZ(), pointX, pointY, pointZ)) {
+            return;
+        }
+        this.walkerLegNeedsPath = true;
+        this.walkerLegPathKeyX = pointX;
+        this.walkerLegPathKeyY = pointY;
+        this.walkerLegPathKeyZ = pointZ;
+        requestLocationPath();
     }
 
 	/**

@@ -109,4 +109,32 @@ public class GeoDataConfig {
 	@Property(key = "gameserver.geo.path.queue.capacity", defaultValue = "256")
 	public static int GEO_PATH_QUEUE_CAPACITY;
 
+	/**
+	 * 行走 NPC（WALK_PATH）沿 Path 推进模式：off=关闭（回滚态）；blocked=仅当航段直线不可达时沿 Path（默认）；
+	 * always=所有航段沿 Path（实机 A/B 用）。真端语义：航点之间用 Path 连通图连接，不是直线。
+	 * Walker (WALK_PATH) along-Path mode: off = disabled (rollback); blocked = only legs whose straight line is
+	 * unreachable (default); always = every leg follows the Path (for live A/B). Retail legs follow the Path
+	 * connectivity graph between waypoints, not a straight line.
+	 */
+	@Property(key = "gameserver.geo.npc.walk.path.mode", defaultValue = "off")
+	public static String GEO_NPC_WALK_PATH_MODE;
+
+	/**
+	 * 行走 NPC 每步碰撞/步高抬升解算开关（真端：线段碰撞查询 + 按步高抬升 + 向下打地面）。
+	 * Per-step collision / step-height lift resolution for walkers (retail: segment collision query +
+	 * step-height lift + downward ground probe).
+	 */
+	@Property(key = "gameserver.geo.npc.walk.collision.enable", defaultValue = "false")
+	public static boolean GEO_NPC_WALK_COLLISION_ENABLE;
+
+	/**
+	 * 行走路线装载校验模式：off=关闭；log=只记录不改数据（默认）；enforce=按世界生成净化副本
+	 * （截断超长/LoS 失败段、闭环去重）。对照真端 WayPointInfo::CalcWayPointZPos 的装载期校验。
+	 * Walker route validation mode: off; log = record only (default); enforce = per-world sanitized copy
+	 * (truncate over-long / LoS-failed legs, de-duplicate closed loops). Mirrors the retail load-time
+	 * checks in WayPointInfo::CalcWayPointZPos.
+	 */
+	@Property(key = "gameserver.geo.npc.walk.route.validate", defaultValue = "log")
+	public static String GEO_NPC_WALK_ROUTE_VALIDATE;
+
 }
