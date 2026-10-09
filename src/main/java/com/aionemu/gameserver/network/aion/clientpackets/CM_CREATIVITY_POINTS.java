@@ -100,12 +100,17 @@ public class CM_CREATIVITY_POINTS extends AionClientPacket {
 	}
 	
 	private void checkQuestCompletion(Player player) {
+		// 真端 0x100 状态推进不写轴：这两个任务没有玩法内进度步，注入创造力后直接置 REWARD，
+		// var0 保持接取值 0。写入打包步数 1 会让客户端任务书按 0 基行匹配落空（镜像任务 10522
+		// 实机 2026-10-08 报障：REWARD/var0=1 步骤空白，//quest set 10522 reward 0 后恢复）。
+		// The retail 0x100 status advance never writes the axis: neither quest has an in-play progress
+		// step, so applying creativity points only sets REWARD and var0 stays at its acquired 0.
+		// Writing packed step 1 breaks the client journal row match -- the journal goes blank at
+		// REWARD/var0=1; per the mirror quest 10522 live report of 2026-10-08, //quest set 10522
+		// reward 0 restores it.
 		if (player.getQuestStateList().hasQuest(20522)) {
 			QuestState qs = player.getQuestStateList().getQuestState(20522);
 			if (qs != null && qs.getStatus() == QuestStatus.START) {
-				// QE-046/QE-051 领奖行：写入方把 var0 推进到末行（和代理人对话）再置 REWARD，与 reward 节点投影一致。
-				// QE-046/QE-051 reward row: the writer advances var0 to the last journal row (talk to the agent) before REWARD so it matches the reward projection.
-				qs.setQuestVarById(0, 1);
 				qs.setStatus(QuestStatus.REWARD);
 				PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(20522, qs.getStatus(), qs.getQuestVars().getQuestVars()));
 				player.getController().updateNearbyQuests();
@@ -114,9 +119,6 @@ public class CM_CREATIVITY_POINTS extends AionClientPacket {
 		if (player.getQuestStateList().hasQuest(10522)) {
 			QuestState qs = player.getQuestStateList().getQuestState(10522);
 			if (qs != null && qs.getStatus() == QuestStatus.START) {
-				// QE-046/QE-051 领奖行：写入方把 var0 推进到末行（和代理人对话）再置 REWARD，与 reward 节点投影一致。
-				// QE-046/QE-051 reward row: the writer advances var0 to the last journal row (talk to the agent) before REWARD so it matches the reward projection.
-				qs.setQuestVarById(0, 1);
 				qs.setStatus(QuestStatus.REWARD);
 				PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(10522, qs.getStatus(), qs.getQuestVars().getQuestVars()));
 				player.getController().updateNearbyQuests();

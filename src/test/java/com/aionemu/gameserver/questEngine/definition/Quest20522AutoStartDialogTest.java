@@ -20,12 +20,12 @@ class Quest20522AutoStartDialogTest {
 		QuestDefinition definition = definition().definition();
 		assertNode(definition, "unaccepted", QuestStatus.NONE, Map.of("var0", 0));
 		assertNode(definition, "started", QuestStatus.START, Map.of("var0", 0));
-		// 领奖态投影必须等于引擎外写入方（CM_CREATIVITY_POINTS#checkQuestCompletion）写入的打包步数 1，
-		// 即客户端任务摘要末行（与代理人 Feregran 对话）对应的投影行；否则该状态匹配不到领奖路由。
-		// The REWARD projection must equal packed step 1 written by the engine-external writer
-		// (CM_CREATIVITY_POINTS#checkQuestCompletion), matching the client summary tail row so the
-		// reward route stays reachable.
-		assertNode(definition, "reward", QuestStatus.REWARD, Map.of("var0", 1));
+		// 领奖态投影 = 接取值 0（真端 0x100 状态推进不写轴；写入方不再落盘步数）：客户端任务书按
+		// 0 基行匹配，REWARD/var0=1 会让行匹配落空、任务书步骤空白（镜像 10522 实机 2026-10-08 同因）。
+		// The REWARD projection stays at the acquired 0 (the retail 0x100 status advance never writes
+		// the axis; the writer no longer persists a step): the client journal matches rows zero-based,
+		// and REWARD/var0=1 breaks the match leaving a blank journal (mirror 10522, live 2026-10-08).
+		assertNode(definition, "reward", QuestStatus.REWARD, Map.of("var0", 0));
 		assertEquals(List.of(List.of("finished:20521")), startConditionGroups(definition));
 
 		assertAutoStart(definition, new QuestEvent.LevelUp());
@@ -64,16 +64,16 @@ class Quest20522AutoStartDialogTest {
 		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(QuestDialogPage.DEFAULT_SUCCESS.id())),
 			rewardEntry.afterCommit());
 
-		// 旧存档自愈：批次 8 之前的写入方只置 REWARD 而不写打包步数，这类存档停在 REWARD/var0=0，
-		// 而领奖行投影现在是 var0=1；进入世界时按 reward 节点投影把步数推进到领奖行并同步给客户端。
-		// Legacy save recovery: writers predating batch 8 only set REWARD without writing the packed step,
-		// leaving saves at REWARD/var0=0 while the reward row now projects var0=1; entering the world
-		// advances the packed step to the reward row and re-syncs the client.
+		// 旧档自愈：批次 8 的错误投影把领奖态落盘为 REWARD/var0=1（任务书步骤空白），进入世界时
+		// 纠正回权威值 0 并同步客户端（与 10525/20525 自愈边反转同构）。
+		// Legacy save repair: the wrong batch-8 projection persisted REWARD/var0=1 (blank journal);
+		// entering the world rewrites it back to the authoritative 0 and re-syncs the client
+		// (same shape as the 10525/20525 recovery-edge reversal).
 		QuestTransition recovery = unsourcedTransition(definition, new QuestEvent.EnterWorld(), "reward");
 		assertEquals(List.of(
 			new QuestCondition.StatusIs(QuestStatus.REWARD),
-			new QuestCondition.QuestVariableIs("var0", 0)), recovery.conditions());
-		assertEquals(List.of(), recovery.actions());
+			new QuestCondition.QuestVariableIs("var0", 1)), recovery.conditions());
+		assertEquals(List.of(new QuestAction.SetVariable("var0", 0)), recovery.actions());
 		assertEquals(List.of(new AfterCommitAction.SyncQuestState(
 			QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH)), recovery.afterCommit());
 

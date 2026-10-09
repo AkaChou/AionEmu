@@ -22,7 +22,7 @@
       <var name="var0" value="0"/>
     </node>
     <node label="reward" status="REWARD">
-      <var name="var0" value="1"/>
+      <var name="var0" value="0"/>
     </node>
     <node label="complete" status="COMPLETE">
       <var name="var0" value="0"/>
@@ -83,19 +83,27 @@
         <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
       </after-commit>
     </transition>
-    <!-- QE-046/QE-051 领奖行合同：客户端 quest_q10522.html 的 quest_summary 共 2 行，末行是领奖行
-         （和代理人 Weatha 对话，NPC id 806075）；写入方在该行推进 var0=1 后置 REWARD，旧存档 REWARD/var0=0 由本边按 reward 投影自愈。
-         Reward row contract (QE-051/QE-046): the last of the 2 quest_q10522.html journal
-         rows is the reward row (和代理人 Weatha 对话, npc id 806075); the engine-external writer now leaves
-         var0=1 before REWARD, and this edge repairs saves persisted at REWARD/var0=0. -->
+    <!-- 领奖态轴合同（真端 0x100 状态推进不写轴）：本任务没有玩法内进度步，注入创造力（引擎外写入方
+         CM_CREATIVITY_POINTS）只置 REWARD，var0 保持接取值 0。客户端任务书按 0 基行匹配（[%0] 行 = 步 0），
+         写入打包步数 1 会让行匹配落空——实机 2026-10-08 报障 REWARD/var0=1 步骤空白，//quest set 10522
+         reward 0 后恢复。本边把 2026-09-21 批次 8 错误投影（REWARD/var0=1）落盘的旧档纠正回 0。
+         Reward-state axis contract (retail 0x100 status advance never writes the axis): this quest has no
+         in-play progress step, so the engine-external writer (CM_CREATIVITY_POINTS) only sets REWARD and
+         var0 stays at its acquired 0. The client journal matches rows zero-based ([%0] row = step 0); writing
+         packed step 1 breaks the row match — live 2026-10-08 report showed blank steps at REWARD/var0=1,
+         restored by //quest set 10522 reward 0. This edge rewrites saves persisted by the wrong
+         2026-09-21 batch-8 projection (REWARD/var0=1) back to 0. -->
     <transition target="reward">
       <event>
         <enter-world/>
       </event>
       <conditions>
         <status-is status="REWARD"/>
-        <variable-is field="var0" value="0"/>
+        <variable-is field="var0" value="1"/>
       </conditions>
+      <actions>
+        <set-variable field="var0" value="0"/>
+      </actions>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
       </after-commit>
