@@ -14,7 +14,7 @@
 - `RvrService.java`：移除错误的 `@Slf4j(topic = "com.aionemu.gameserver.services.SvsService")`，恢复自身 logger。
 - `ConquestService.java`：移除错误的 `@Slf4j(topic = "com.aionemu.gameserver.services.ZorshivDredgionService")`，恢复自身 logger。
 - `AbyssLandingSpecialService.java`：将 24 个特殊据点的遍历状态输出由 `log.info` 下调至 `log.debug`，保留总体统计。
-- `TownService.java`：修正天魔城镇统计中天族城镇数量传参错误。
+- `TownService.java`：修正天魔城镇统计中天族城镇数量传参错误；现代化 switch 分支语法并移除静态方法冗余的 final 修饰符。
 - `AtreianPassportService.java`：修正中英双语 Javadoc 描述。
 
 ### 2. 游戏术语与国际化资源校准

@@ -2,14 +2,6 @@ package com.aionemu.gameserver.services;
 
 
 import com.aionemu.boot.i18n.I18n;
-
-import java.util.List;
-import java.util.Map;
-
-import lombok.Setter;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.ObjectProvider;
-
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.dao.TownDAO;
 import com.aionemu.gameserver.dataholders.DataManager;
@@ -26,6 +18,12 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_TOWNS_LIST;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.MapRegion;
 import com.aionemu.gameserver.world.zone.ZoneInstance;
+import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.ObjectProvider;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * 城镇服务，加载/初始化阵营城镇并查询玩家所在城镇。
@@ -54,7 +52,7 @@ public class TownService {
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean /
 	 *                               when no provider or bean is available
 	 */
-	public static final TownService getInstance() {
+	public static TownService getInstance() {
 		ObjectProvider<TownService> provider = instanceProvider;
 		TownService provided = provider == null ? null : provider.getIfAvailable();
 		if (provided == null) {
@@ -72,21 +70,18 @@ public class TownService {
 	public TownService() {
 		elyosTowns = DAOManager.getDAO(TownDAO.class).load(Race.ELYOS);
 		asmosTowns = DAOManager.getDAO(TownDAO.class).load(Race.ASMODIANS);
-		if (elyosTowns.size() == 0 && asmosTowns.size() == 0) {
+		if (elyosTowns.isEmpty() && asmosTowns.isEmpty()) {
 			for (HousingLand land : DataManager.HOUSE_DATA.getLands()) {
 				for (HouseAddress address : land.getAddresses()) {
-					if (address.getTownId() == 0)
-						continue;
-					else {
+					if (address.getTownId() != 0) {
 						Race townRace = DataManager.NPC_DATA.getNpcTemplate(land.getManagerNpcId())
 							.getTribe() == TribeClass.GENERAL ? Race.ELYOS : Race.ASMODIANS;
 						if ((townRace == Race.ELYOS && !elyosTowns.containsKey(address.getTownId()))
 							|| (townRace == Race.ASMODIANS && !asmosTowns.containsKey(address.getTownId()))) {
 							Town town = new Town(address.getTownId(), townRace);
-							if (townRace == Race.ELYOS) {
-								elyosTowns.put(town.getId(), town);
-							} else if (townRace == Race.ASMODIANS) {
-								asmosTowns.put(town.getId(), town);
+							switch (townRace) {
+								case ELYOS -> elyosTowns.put(town.getId(), town);
+								case ASMODIANS -> asmosTowns.put(town.getId(), town);
 							}
 							DAOManager.getDAO(TownDAO.class).store(town);
 						}
