@@ -30972,7 +30972,7 @@
     <bound_radius side="10" upper="15" front="10"/>
     <talk_info delay="3" distance="5"/>
   </npc_template>
-<npc_template name_desc="GAb1_01_chief05_L_65_An" attack_range="2" npc_type="NON_ATTACKABLE" race="GCHIEF_LIGHT" level="75" attack_rate="1000" title_id="464935" rating="ELITE" ai="aggressive" hpgauge_level="3" type="ABYSS_GUARD" name_id="347321" abyss_type="GUARD" attack_delay="2100" npc_id="880132" sensory_range="7" tribe="GAB1_01_POINT_01" name="Belfarth Warcaptain" rank="EXPERT" height="2">
+<npc_template name_desc="GAb1_01_chief05_L_65_An" attack_range="2" npc_type="ATTACKABLE" race="GCHIEF_LIGHT" level="75" attack_rate="1000" title_id="464935" rating="ELITE" ai="aggressive" hpgauge_level="3" type="ABYSS_GUARD" name_id="347321" abyss_type="GUARD" attack_delay="2100" npc_id="880132" sensory_range="7" tribe="GAB1_01_POINT_01" name="Belfarth Warcaptain" rank="EXPERT" height="2">
     <stats hp_regen="14249" maxHp="28498" pdef="1447" walk_speed="1.419" mresist="1428" mboost_resist="0" run_speed="6" accuracy="2370" main_hand_attack="746" main_hand_crit_rate="15" mdef="515" mboost="0" parry="454" crit_spell="11" maxXp="110520" block="809" main_hand_accuracy="2059" power="1232" evasion="354" run_speed_fight="7"/>
     <equipment>
       <item>114601479</item>
@@ -30985,7 +30985,7 @@
     </equipment>
     <bound_radius side="0.7" upper="2" front="0.5"/>
   </npc_template>
-<npc_template name_desc="GAb1_01_chief06_L_65_An" attack_range="2" npc_type="NON_ATTACKABLE" race="GCHIEF_DARK" level="75" attack_rate="1000" title_id="464936" rating="ELITE" ai="aggressive" hpgauge_level="3" type="ABYSS_GUARD" name_id="347322" abyss_type="GUARD" attack_delay="2100" npc_id="880133" sensory_range="7" tribe="GAB1_02_POINT_01" name="Belfarth Warcaptain" rank="EXPERT" height="2">
+<npc_template name_desc="GAb1_01_chief06_L_65_An" attack_range="2" npc_type="ATTACKABLE" race="GCHIEF_DARK" level="75" attack_rate="1000" title_id="464936" rating="ELITE" ai="aggressive" hpgauge_level="3" type="ABYSS_GUARD" name_id="347322" abyss_type="GUARD" attack_delay="2100" npc_id="880133" sensory_range="7" tribe="GAB1_02_POINT_01" name="Belfarth Warcaptain" rank="EXPERT" height="2">
     <stats hp_regen="14249" maxHp="28498" pdef="1447" walk_speed="1.419" mresist="1428" mboost_resist="0" run_speed="6" accuracy="2370" main_hand_attack="746" main_hand_crit_rate="15" mdef="515" mboost="0" parry="454" crit_spell="11" maxXp="110520" block="809" main_hand_accuracy="2059" power="1232" evasion="354" run_speed_fight="7"/>
     <equipment>
       <item>114601479</item>
@@ -31011,7 +31011,7 @@
     </equipment>
     <bound_radius side="0.7" upper="2" front="0.5"/>
   </npc_template>
-<npc_template name_desc="GAb1_01_chief08_L_65_An" attack_range="2" npc_type="NON_ATTACKABLE" race="GCHIEF_LIGHT" level="75" attack_rate="1000" title_id="464938" rating="ELITE" ai="aggressive" hpgauge_level="3" type="ABYSS_GUARD" name_id="347324" abyss_type="GUARD" attack_delay="2100" npc_id="880135" sensory_range="7" tribe="GAB1_04_POINT_01" name="Belfarth Warcaptain" rank="EXPERT" height="2">
+<npc_template name_desc="GAb1_01_chief08_L_65_An" attack_range="2" npc_type="ATTACKABLE" race="GCHIEF_LIGHT" level="75" attack_rate="1000" title_id="464938" rating="ELITE" ai="aggressive" hpgauge_level="3" type="ABYSS_GUARD" name_id="347324" abyss_type="GUARD" attack_delay="2100" npc_id="880135" sensory_range="7" tribe="GAB1_04_POINT_01" name="Belfarth Warcaptain" rank="EXPERT" height="2">
     <stats hp_regen="14249" maxHp="28498" pdef="1447" walk_speed="1.419" mresist="1428" mboost_resist="0" run_speed="6" accuracy="2370" main_hand_attack="746" main_hand_crit_rate="15" mdef="515" mboost="0" parry="454" crit_spell="11" maxXp="110520" block="809" main_hand_accuracy="2059" power="1232" evasion="354" run_speed_fight="7"/>
     <equipment>
       <item>114601513</item>
@@ -31044,7 +31044,7 @@
     </equipment>
     <bound_radius side="0.7" upper="2" front="0.5"/>
   </npc_template>
-<npc_template name_desc="GAb1_02_chief06_L_65_An" attack_range="2" npc_type="NON_ATTACKABLE" race="GCHIEF_LIGHT" level="75" attack_rate="1000" title_id="464936" rating="ELITE" ai="aggressive" hpgauge_level="3" type="ABYSS_GUARD" name_id="347327" abyss_type="GUARD" attack_delay="2100" npc_id="880138" sensory_range="7" tribe="GAB1_02_POINT_01" name="Aspatyr Warcaptain" rank="EXPERT" height="2">
+<npc_template name_desc="GAb1_02_chief06_L_65_An" attack_range="2" npc_type="ATTACKABLE" race="GCHIEF_LIGHT" level="75" attack_rate="1000" title_id="464936" rating="ELITE" ai="aggressive" hpgauge_level="3" type="ABYSS_GUARD" name_id="347327" abyss_type="GUARD" attack_delay="2100" npc_id="880138" sensory_range="7" tribe="GAB1_02_POINT_01" name="Aspatyr Warcaptain" rank="EXPERT" height="2">
     <stats hp_regen="14249" maxHp="28498" pdef="1447" walk_speed="1.419" mresist="1428" mboost_resist="0" run_speed="6" accuracy="2370" main_hand_attack="746" main_hand_crit_rate="15" mdef="515" mboost="0" parry="454" crit_spell="11" maxXp="110520" block="809" main_hand_accuracy="2059" power="1232" evasion="354" run_speed_fight="7"/>
     <equipment>
       <item>114601479</item>
@@ -31057,7 +31057,7 @@
     </equipment>
     <bound_radius side="0.7" upper="2" front="0.5"/>
   </npc_template>
-<npc_template name_desc="GAb1_02_chief07_L_65_An" attack_range="2" npc_type="NON_ATTACKABLE" race="GCHIEF_DARK" level="75" attack_rate="1000" title_id="464937" rating="ELITE" ai="aggressive" hpgauge_level="3" type="ABYSS_GUARD" name_id="347328" abyss_type="GUARD" attack_delay="2100" npc_id="880139" sensory_range="7" tribe="GAB1_03_POINT_01" name="Aspatyr Warcaptain" rank="EXPERT" height="2">
+<npc_template name_desc="GAb1_02_chief07_L_65_An" attack_range="2" npc_type="ATTACKABLE" race="GCHIEF_DARK" level="75" attack_rate="1000" title_id="464937" rating="ELITE" ai="aggressive" hpgauge_level="3" type="ABYSS_GUARD" name_id="347328" abyss_type="GUARD" attack_delay="2100" npc_id="880139" sensory_range="7" tribe="GAB1_03_POINT_01" name="Aspatyr Warcaptain" rank="EXPERT" height="2">
     <stats hp_regen="14249" maxHp="28498" pdef="1447" walk_speed="1.419" mresist="1428" mboost_resist="0" run_speed="6" accuracy="2370" main_hand_attack="746" main_hand_crit_rate="15" mdef="515" mboost="0" parry="454" crit_spell="11" maxXp="110520" block="809" main_hand_accuracy="2059" power="1232" evasion="354" run_speed_fight="7"/>
     <equipment>
       <item>114601479</item>
@@ -31116,7 +31116,7 @@
     </equipment>
     <bound_radius side="0.7" upper="2" front="0.5"/>
   </npc_template>
-<npc_template name_desc="GAb1_03_chief07_L_65_An" attack_range="2" npc_type="NON_ATTACKABLE" race="GCHIEF_LIGHT" level="75" attack_rate="1000" title_id="464937" rating="ELITE" ai="aggressive" hpgauge_level="3" type="ABYSS_GUARD" name_id="347333" abyss_type="GUARD" attack_delay="2100" npc_id="880144" sensory_range="7" tribe="GAB1_03_POINT_01" name="Atair Warcaptain" rank="EXPERT" height="2">
+<npc_template name_desc="GAb1_03_chief07_L_65_An" attack_range="2" npc_type="ATTACKABLE" race="GCHIEF_LIGHT" level="75" attack_rate="1000" title_id="464937" rating="ELITE" ai="aggressive" hpgauge_level="3" type="ABYSS_GUARD" name_id="347333" abyss_type="GUARD" attack_delay="2100" npc_id="880144" sensory_range="7" tribe="GAB1_03_POINT_01" name="Atair Warcaptain" rank="EXPERT" height="2">
     <stats hp_regen="14249" maxHp="28498" pdef="1447" walk_speed="1.419" mresist="1428" mboost_resist="0" run_speed="6" accuracy="2370" main_hand_attack="746" main_hand_crit_rate="15" mdef="515" mboost="0" parry="454" crit_spell="11" maxXp="110520" block="809" main_hand_accuracy="2059" power="1232" evasion="354" run_speed_fight="7"/>
     <equipment>
       <item>114601479</item>
@@ -31129,7 +31129,7 @@
     </equipment>
     <bound_radius side="0.7" upper="2" front="0.5"/>
   </npc_template>
-<npc_template name_desc="GAb1_03_chief08_L_65_An" attack_range="2" npc_type="NON_ATTACKABLE" race="GCHIEF_DARK" level="75" attack_rate="1000" title_id="464938" rating="ELITE" ai="aggressive" hpgauge_level="3" type="ABYSS_GUARD" name_id="347334" abyss_type="GUARD" attack_delay="2100" npc_id="880145" sensory_range="7" tribe="GAB1_04_POINT_01" name="Atair Warcaptain" rank="EXPERT" height="2">
+<npc_template name_desc="GAb1_03_chief08_L_65_An" attack_range="2" npc_type="ATTACKABLE" race="GCHIEF_DARK" level="75" attack_rate="1000" title_id="464938" rating="ELITE" ai="aggressive" hpgauge_level="3" type="ABYSS_GUARD" name_id="347334" abyss_type="GUARD" attack_delay="2100" npc_id="880145" sensory_range="7" tribe="GAB1_04_POINT_01" name="Atair Warcaptain" rank="EXPERT" height="2">
     <stats hp_regen="14249" maxHp="28498" pdef="1447" walk_speed="1.419" mresist="1428" mboost_resist="0" run_speed="6" accuracy="2370" main_hand_attack="746" main_hand_crit_rate="15" mdef="515" mboost="0" parry="454" crit_spell="11" maxXp="110520" block="809" main_hand_accuracy="2059" power="1232" evasion="354" run_speed_fight="7"/>
     <equipment>
       <item>114601479</item>
@@ -31175,7 +31175,7 @@
     </equipment>
     <bound_radius side="0.7" upper="2" front="0.5"/>
   </npc_template>
-<npc_template name_desc="GAb1_04_chief07_L_65_An" attack_range="2" npc_type="NON_ATTACKABLE" race="GCHIEF_LIGHT" level="75" attack_rate="1000" title_id="464937" rating="ELITE" ai="aggressive" hpgauge_level="3" type="ABYSS_GUARD" name_id="347338" abyss_type="GUARD" attack_delay="2100" npc_id="880149" sensory_range="7" tribe="GAB1_03_POINT_01" name="Disilveir Warcaptain" rank="EXPERT" height="2">
+<npc_template name_desc="GAb1_04_chief07_L_65_An" attack_range="2" npc_type="ATTACKABLE" race="GCHIEF_LIGHT" level="75" attack_rate="1000" title_id="464937" rating="ELITE" ai="aggressive" hpgauge_level="3" type="ABYSS_GUARD" name_id="347338" abyss_type="GUARD" attack_delay="2100" npc_id="880149" sensory_range="7" tribe="GAB1_03_POINT_01" name="Disilveir Warcaptain" rank="EXPERT" height="2">
     <stats hp_regen="14249" maxHp="28498" pdef="1447" walk_speed="1.419" mresist="1428" mboost_resist="0" run_speed="6" accuracy="2370" main_hand_attack="746" main_hand_crit_rate="15" mdef="515" mboost="0" parry="454" crit_spell="11" maxXp="110520" block="809" main_hand_accuracy="2059" power="1232" evasion="354" run_speed_fight="7"/>
     <equipment>
       <item>114601479</item>
@@ -31188,7 +31188,7 @@
     </equipment>
     <bound_radius side="0.7" upper="2" front="0.5"/>
   </npc_template>
-<npc_template name_desc="GAb1_04_chief08_L_65_An" attack_range="2" npc_type="NON_ATTACKABLE" race="GCHIEF_DARK" level="75" attack_rate="1000" title_id="464938" rating="ELITE" ai="aggressive" hpgauge_level="3" type="ABYSS_GUARD" name_id="347339" abyss_type="GUARD" attack_delay="2100" npc_id="880150" sensory_range="7" tribe="GAB1_04_POINT_01" name="Disilveir Warcaptain" rank="EXPERT" height="2">
+<npc_template name_desc="GAb1_04_chief08_L_65_An" attack_range="2" npc_type="ATTACKABLE" race="GCHIEF_DARK" level="75" attack_rate="1000" title_id="464938" rating="ELITE" ai="aggressive" hpgauge_level="3" type="ABYSS_GUARD" name_id="347339" abyss_type="GUARD" attack_delay="2100" npc_id="880150" sensory_range="7" tribe="GAB1_04_POINT_01" name="Disilveir Warcaptain" rank="EXPERT" height="2">
     <stats hp_regen="14249" maxHp="28498" pdef="1447" walk_speed="1.419" mresist="1428" mboost_resist="0" run_speed="6" accuracy="2370" main_hand_attack="746" main_hand_crit_rate="15" mdef="515" mboost="0" parry="454" crit_spell="11" maxXp="110520" block="809" main_hand_accuracy="2059" power="1232" evasion="354" run_speed_fight="7"/>
     <equipment>
       <item>114601479</item>
@@ -31208,7 +31208,7 @@
     </equipment>
     <bound_radius side="1.6" upper="3" front="2"/>
   </npc_template>
-<npc_template name_desc="GAb1_01_chief09_L_65_An" attack_range="2" npc_type="NON_ATTACKABLE" race="GCHIEF_LIGHT" level="75" attack_rate="1000" title_id="464935" rating="ELITE" ai="aggressive" hpgauge_level="3" type="ABYSS_GUARD" name_id="347341" abyss_type="GUARD" attack_delay="2100" npc_id="880152" sensory_range="7" tribe="GAB1_01_POINT_01" name="Beling Warcaptain" rank="EXPERT" height="2">
+<npc_template name_desc="GAb1_01_chief09_L_65_An" attack_range="2" npc_type="ATTACKABLE" race="GCHIEF_LIGHT" level="75" attack_rate="1000" title_id="464935" rating="ELITE" ai="aggressive" hpgauge_level="3" type="ABYSS_GUARD" name_id="347341" abyss_type="GUARD" attack_delay="2100" npc_id="880152" sensory_range="7" tribe="GAB1_01_POINT_01" name="Beling Warcaptain" rank="EXPERT" height="2">
     <stats hp_regen="14249" maxHp="28498" pdef="1447" walk_speed="1.419" mresist="1428" mboost_resist="0" run_speed="6" accuracy="2370" main_hand_attack="746" main_hand_crit_rate="15" mdef="515" mboost="0" parry="454" crit_spell="11" maxXp="110520" block="809" main_hand_accuracy="2059" power="1232" evasion="354" run_speed_fight="7"/>
     <equipment>
       <item>114601479</item>
@@ -31221,7 +31221,7 @@
     </equipment>
     <bound_radius side="0.7" upper="2" front="0.5"/>
   </npc_template>
-<npc_template name_desc="GAb1_01_chief10_L_65_An" attack_range="2" npc_type="NON_ATTACKABLE" race="GCHIEF_DARK" level="75" attack_rate="1000" title_id="464936" rating="ELITE" ai="aggressive" hpgauge_level="3" type="ABYSS_GUARD" name_id="347342" abyss_type="GUARD" attack_delay="2100" npc_id="880153" sensory_range="7" tribe="GAB1_02_POINT_01" name="Beling Warcaptain" rank="EXPERT" height="2">
+<npc_template name_desc="GAb1_01_chief10_L_65_An" attack_range="2" npc_type="ATTACKABLE" race="GCHIEF_DARK" level="75" attack_rate="1000" title_id="464936" rating="ELITE" ai="aggressive" hpgauge_level="3" type="ABYSS_GUARD" name_id="347342" abyss_type="GUARD" attack_delay="2100" npc_id="880153" sensory_range="7" tribe="GAB1_02_POINT_01" name="Beling Warcaptain" rank="EXPERT" height="2">
     <stats hp_regen="14249" maxHp="28498" pdef="1447" walk_speed="1.419" mresist="1428" mboost_resist="0" run_speed="6" accuracy="2370" main_hand_attack="746" main_hand_crit_rate="15" mdef="515" mboost="0" parry="454" crit_spell="11" maxXp="110520" block="809" main_hand_accuracy="2059" power="1232" evasion="354" run_speed_fight="7"/>
     <equipment>
       <item>114601479</item>
@@ -31352,7 +31352,7 @@
     </equipment>
     <bound_radius side="0.7" upper="2" front="0.5"/>
   </npc_template>
-<npc_template name_desc="GAb1_03_chief11_L_65_An" attack_range="2" npc_type="NON_ATTACKABLE" race="GCHIEF_LIGHT" level="75" attack_rate="1000" title_id="464937" rating="ELITE" ai="aggressive" hpgauge_level="3" type="ABYSS_GUARD" name_id="347353" abyss_type="GUARD" attack_delay="2100" npc_id="880164" sensory_range="7" tribe="GAB1_03_POINT_01" name="Atangal Warcaptain" rank="EXPERT" height="2">
+<npc_template name_desc="GAb1_03_chief11_L_65_An" attack_range="2" npc_type="ATTACKABLE" race="GCHIEF_LIGHT" level="75" attack_rate="1000" title_id="464937" rating="ELITE" ai="aggressive" hpgauge_level="3" type="ABYSS_GUARD" name_id="347353" abyss_type="GUARD" attack_delay="2100" npc_id="880164" sensory_range="7" tribe="GAB1_03_POINT_01" name="Atangal Warcaptain" rank="EXPERT" height="2">
     <stats hp_regen="14249" maxHp="28498" pdef="1447" walk_speed="1.419" mresist="1428" mboost_resist="0" run_speed="6" accuracy="2370" main_hand_attack="746" main_hand_crit_rate="15" mdef="515" mboost="0" parry="454" crit_spell="11" maxXp="110520" block="809" main_hand_accuracy="2059" power="1232" evasion="354" run_speed_fight="7"/>
     <equipment>
       <item>114601479</item>
@@ -31365,7 +31365,7 @@
     </equipment>
     <bound_radius side="0.7" upper="2" front="0.5"/>
   </npc_template>
-<npc_template name_desc="GAb1_03_chief12_L_65_An" attack_range="2" npc_type="NON_ATTACKABLE" race="GCHIEF_DARK" level="75" attack_rate="1000" title_id="464938" rating="ELITE" ai="aggressive" hpgauge_level="3" type="ABYSS_GUARD" name_id="347354" abyss_type="GUARD" attack_delay="2100" npc_id="880165" sensory_range="7" tribe="GAB1_04_POINT_01" name="Atangal Warcaptain" rank="EXPERT" height="2">
+<npc_template name_desc="GAb1_03_chief12_L_65_An" attack_range="2" npc_type="ATTACKABLE" race="GCHIEF_DARK" level="75" attack_rate="1000" title_id="464938" rating="ELITE" ai="aggressive" hpgauge_level="3" type="ABYSS_GUARD" name_id="347354" abyss_type="GUARD" attack_delay="2100" npc_id="880165" sensory_range="7" tribe="GAB1_04_POINT_01" name="Atangal Warcaptain" rank="EXPERT" height="2">
     <stats hp_regen="14249" maxHp="28498" pdef="1447" walk_speed="1.419" mresist="1428" mboost_resist="0" run_speed="6" accuracy="2370" main_hand_attack="746" main_hand_crit_rate="15" mdef="515" mboost="0" parry="454" crit_spell="11" maxXp="110520" block="809" main_hand_accuracy="2059" power="1232" evasion="354" run_speed_fight="7"/>
     <equipment>
       <item>114601479</item>
@@ -31411,7 +31411,7 @@
     </equipment>
     <bound_radius side="0.7" upper="2" front="0.5"/>
   </npc_template>
-<npc_template name_desc="GAb1_04_chief11_L_65_An" attack_range="2" npc_type="NON_ATTACKABLE" race="GCHIEF_LIGHT" level="75" attack_rate="1000" title_id="464937" rating="ELITE" ai="aggressive" hpgauge_level="3" type="ABYSS_GUARD" name_id="347358" abyss_type="GUARD" attack_delay="2100" npc_id="880169" sensory_range="7" tribe="GAB1_03_POINT_01" name="Disiltroll Warcaptain" rank="EXPERT" height="2">
+<npc_template name_desc="GAb1_04_chief11_L_65_An" attack_range="2" npc_type="ATTACKABLE" race="GCHIEF_LIGHT" level="75" attack_rate="1000" title_id="464937" rating="ELITE" ai="aggressive" hpgauge_level="3" type="ABYSS_GUARD" name_id="347358" abyss_type="GUARD" attack_delay="2100" npc_id="880169" sensory_range="7" tribe="GAB1_03_POINT_01" name="Disiltroll Warcaptain" rank="EXPERT" height="2">
     <stats hp_regen="14249" maxHp="28498" pdef="1447" walk_speed="1.419" mresist="1428" mboost_resist="0" run_speed="6" accuracy="2370" main_hand_attack="746" main_hand_crit_rate="15" mdef="515" mboost="0" parry="454" crit_spell="11" maxXp="110520" block="809" main_hand_accuracy="2059" power="1232" evasion="354" run_speed_fight="7"/>
     <equipment>
       <item>114601479</item>
@@ -31424,7 +31424,7 @@
     </equipment>
     <bound_radius side="0.7" upper="2" front="0.5"/>
   </npc_template>
-<npc_template name_desc="GAb1_04_chief12_L_65_An" attack_range="2" npc_type="NON_ATTACKABLE" race="GCHIEF_DARK" level="75" attack_rate="1000" title_id="464938" rating="ELITE" ai="aggressive" hpgauge_level="3" type="ABYSS_GUARD" name_id="347359" abyss_type="GUARD" attack_delay="2100" npc_id="880170" sensory_range="7" tribe="GAB1_04_POINT_01" name="Disiltroll Warcaptain" rank="EXPERT" height="2">
+<npc_template name_desc="GAb1_04_chief12_L_65_An" attack_range="2" npc_type="ATTACKABLE" race="GCHIEF_DARK" level="75" attack_rate="1000" title_id="464938" rating="ELITE" ai="aggressive" hpgauge_level="3" type="ABYSS_GUARD" name_id="347359" abyss_type="GUARD" attack_delay="2100" npc_id="880170" sensory_range="7" tribe="GAB1_04_POINT_01" name="Disiltroll Warcaptain" rank="EXPERT" height="2">
     <stats hp_regen="14249" maxHp="28498" pdef="1447" walk_speed="1.419" mresist="1428" mboost_resist="0" run_speed="6" accuracy="2370" main_hand_attack="746" main_hand_crit_rate="15" mdef="515" mboost="0" parry="454" crit_spell="11" maxXp="110520" block="809" main_hand_accuracy="2059" power="1232" evasion="354" run_speed_fight="7"/>
     <equipment>
       <item>114601479</item>
@@ -31444,7 +31444,7 @@
     </equipment>
     <bound_radius side="1.6" upper="3" front="2"/>
   </npc_template>
-<npc_template name_desc="GAb1_01_chief13_L_65_An" attack_range="2" npc_type="NON_ATTACKABLE" race="GCHIEF_LIGHT" level="75" attack_rate="1000" title_id="464935" rating="ELITE" ai="aggressive" hpgauge_level="3" type="ABYSS_GUARD" name_id="347361" abyss_type="GUARD" attack_delay="2100" npc_id="880172" sensory_range="7" tribe="GAB1_01_POINT_01" name="Belsal Warcaptain" rank="EXPERT" height="2">
+<npc_template name_desc="GAb1_01_chief13_L_65_An" attack_range="2" npc_type="ATTACKABLE" race="GCHIEF_LIGHT" level="75" attack_rate="1000" title_id="464935" rating="ELITE" ai="aggressive" hpgauge_level="3" type="ABYSS_GUARD" name_id="347361" abyss_type="GUARD" attack_delay="2100" npc_id="880172" sensory_range="7" tribe="GAB1_01_POINT_01" name="Belsal Warcaptain" rank="EXPERT" height="2">
     <stats hp_regen="14249" maxHp="28498" pdef="1447" walk_speed="1.419" mresist="1428" mboost_resist="0" run_speed="6" accuracy="2370" main_hand_attack="746" main_hand_crit_rate="15" mdef="515" mboost="0" parry="454" crit_spell="11" maxXp="110520" block="809" main_hand_accuracy="2059" power="1232" evasion="354" run_speed_fight="7"/>
     <equipment>
       <item>114601479</item>
@@ -31457,7 +31457,7 @@
     </equipment>
     <bound_radius side="0.7" upper="2" front="0.5"/>
   </npc_template>
-<npc_template name_desc="GAb1_01_chief14_L_65_An" attack_range="2" npc_type="NON_ATTACKABLE" race="GCHIEF_DARK" level="75" attack_rate="1000" title_id="464936" rating="ELITE" ai="aggressive" hpgauge_level="3" type="ABYSS_GUARD" name_id="347362" abyss_type="GUARD" attack_delay="2100" npc_id="880173" sensory_range="7" tribe="GAB1_02_POINT_01" name="Belsal Warcaptain" rank="EXPERT" height="2">
+<npc_template name_desc="GAb1_01_chief14_L_65_An" attack_range="2" npc_type="ATTACKABLE" race="GCHIEF_DARK" level="75" attack_rate="1000" title_id="464936" rating="ELITE" ai="aggressive" hpgauge_level="3" type="ABYSS_GUARD" name_id="347362" abyss_type="GUARD" attack_delay="2100" npc_id="880173" sensory_range="7" tribe="GAB1_02_POINT_01" name="Belsal Warcaptain" rank="EXPERT" height="2">
     <stats hp_regen="14249" maxHp="28498" pdef="1447" walk_speed="1.419" mresist="1428" mboost_resist="0" run_speed="6" accuracy="2370" main_hand_attack="746" main_hand_crit_rate="15" mdef="515" mboost="0" parry="454" crit_spell="11" maxXp="110520" block="809" main_hand_accuracy="2059" power="1232" evasion="354" run_speed_fight="7"/>
     <equipment>
       <item>114601479</item>
@@ -31516,7 +31516,7 @@
     </equipment>
     <bound_radius side="0.7" upper="2" front="0.5"/>
   </npc_template>
-<npc_template name_desc="GAb1_02_chief14_L_65_An" attack_range="2" npc_type="NON_ATTACKABLE" race="GCHIEF_LIGHT" level="75" attack_rate="1000" title_id="464936" rating="ELITE" ai="aggressive" hpgauge_level="3" type="ABYSS_GUARD" name_id="347367" abyss_type="GUARD" attack_delay="2100" npc_id="880178" sensory_range="7" tribe="GAB1_02_POINT_01" name="Aspal Warcaptain" rank="EXPERT" height="2">
+<npc_template name_desc="GAb1_02_chief14_L_65_An" attack_range="2" npc_type="ATTACKABLE" race="GCHIEF_LIGHT" level="75" attack_rate="1000" title_id="464936" rating="ELITE" ai="aggressive" hpgauge_level="3" type="ABYSS_GUARD" name_id="347367" abyss_type="GUARD" attack_delay="2100" npc_id="880178" sensory_range="7" tribe="GAB1_02_POINT_01" name="Aspal Warcaptain" rank="EXPERT" height="2">
     <stats hp_regen="14249" maxHp="28498" pdef="1447" walk_speed="1.419" mresist="1428" mboost_resist="0" run_speed="6" accuracy="2370" main_hand_attack="746" main_hand_crit_rate="15" mdef="515" mboost="0" parry="454" crit_spell="11" maxXp="110520" block="809" main_hand_accuracy="2059" power="1232" evasion="354" run_speed_fight="7"/>
     <equipment>
       <item>114601479</item>
@@ -31529,7 +31529,7 @@
     </equipment>
     <bound_radius side="0.7" upper="2" front="0.5"/>
   </npc_template>
-<npc_template name_desc="GAb1_02_chief15_L_65_An" attack_range="2" npc_type="NON_ATTACKABLE" race="GCHIEF_DARK" level="75" attack_rate="1000" title_id="464936" rating="ELITE" ai="aggressive" hpgauge_level="3" type="ABYSS_GUARD" name_id="347368" abyss_type="GUARD" attack_delay="2100" npc_id="880179" sensory_range="7" tribe="GAB1_03_POINT_01" name="Aspal Warcaptain" rank="EXPERT" height="2">
+<npc_template name_desc="GAb1_02_chief15_L_65_An" attack_range="2" npc_type="ATTACKABLE" race="GCHIEF_DARK" level="75" attack_rate="1000" title_id="464936" rating="ELITE" ai="aggressive" hpgauge_level="3" type="ABYSS_GUARD" name_id="347368" abyss_type="GUARD" attack_delay="2100" npc_id="880179" sensory_range="7" tribe="GAB1_03_POINT_01" name="Aspal Warcaptain" rank="EXPERT" height="2">
     <stats hp_regen="14249" maxHp="28498" pdef="1447" walk_speed="1.419" mresist="1428" mboost_resist="0" run_speed="6" accuracy="2370" main_hand_attack="746" main_hand_crit_rate="15" mdef="515" mboost="0" parry="454" crit_spell="11" maxXp="110520" block="809" main_hand_accuracy="2059" power="1232" evasion="354" run_speed_fight="7"/>
     <equipment>
       <item>114601479</item>
@@ -31588,7 +31588,7 @@
     </equipment>
     <bound_radius side="0.7" upper="2" front="0.5"/>
   </npc_template>
-<npc_template name_desc="GAb1_03_chief15_L_65_An" attack_range="2" npc_type="NON_ATTACKABLE" race="GCHIEF_LIGHT" level="75" attack_rate="1000" title_id="464937" rating="ELITE" ai="aggressive" hpgauge_level="3" type="ABYSS_GUARD" name_id="347373" abyss_type="GUARD" attack_delay="2100" npc_id="880184" sensory_range="7" tribe="GAB1_03_POINT_01" name="Ataj Warcaptain" rank="EXPERT" height="2">
+<npc_template name_desc="GAb1_03_chief15_L_65_An" attack_range="2" npc_type="ATTACKABLE" race="GCHIEF_LIGHT" level="75" attack_rate="1000" title_id="464937" rating="ELITE" ai="aggressive" hpgauge_level="3" type="ABYSS_GUARD" name_id="347373" abyss_type="GUARD" attack_delay="2100" npc_id="880184" sensory_range="7" tribe="GAB1_03_POINT_01" name="Ataj Warcaptain" rank="EXPERT" height="2">
     <stats hp_regen="14249" maxHp="28498" pdef="1447" walk_speed="1.419" mresist="1428" mboost_resist="0" run_speed="6" accuracy="2370" main_hand_attack="746" main_hand_crit_rate="15" mdef="515" mboost="0" parry="454" crit_spell="11" maxXp="110520" block="809" main_hand_accuracy="2059" power="1232" evasion="354" run_speed_fight="7"/>
     <equipment>
       <item>114601479</item>
@@ -31601,7 +31601,7 @@
     </equipment>
     <bound_radius side="0.7" upper="2" front="0.5"/>
   </npc_template>
-<npc_template name_desc="GAb1_03_chief16_L_65_An" attack_range="2" npc_type="NON_ATTACKABLE" race="GCHIEF_DARK" level="75" attack_rate="1000" title_id="464938" rating="ELITE" ai="aggressive" hpgauge_level="3" type="ABYSS_GUARD" name_id="347374" abyss_type="GUARD" attack_delay="2100" npc_id="880185" sensory_range="7" tribe="GAB1_04_POINT_01" name="Ataj Warcaptain" rank="EXPERT" height="2">
+<npc_template name_desc="GAb1_03_chief16_L_65_An" attack_range="2" npc_type="ATTACKABLE" race="GCHIEF_DARK" level="75" attack_rate="1000" title_id="464938" rating="ELITE" ai="aggressive" hpgauge_level="3" type="ABYSS_GUARD" name_id="347374" abyss_type="GUARD" attack_delay="2100" npc_id="880185" sensory_range="7" tribe="GAB1_04_POINT_01" name="Ataj Warcaptain" rank="EXPERT" height="2">
     <stats hp_regen="14249" maxHp="28498" pdef="1447" walk_speed="1.419" mresist="1428" mboost_resist="0" run_speed="6" accuracy="2370" main_hand_attack="746" main_hand_crit_rate="15" mdef="515" mboost="0" parry="454" crit_spell="11" maxXp="110520" block="809" main_hand_accuracy="2059" power="1232" evasion="354" run_speed_fight="7"/>
     <equipment>
       <item>114601479</item>
@@ -31647,7 +31647,7 @@
     </equipment>
     <bound_radius side="0.7" upper="2" front="0.5"/>
   </npc_template>
-<npc_template name_desc="GAb1_04_chief15_L_65_An" attack_range="2" npc_type="NON_ATTACKABLE" race="GCHIEF_LIGHT" level="75" attack_rate="1000" title_id="464937" rating="ELITE" ai="aggressive" hpgauge_level="3" type="ABYSS_GUARD" name_id="347378" abyss_type="GUARD" attack_delay="2100" npc_id="880189" sensory_range="7" tribe="GAB1_03_POINT_01" name="Disilheim Warcaptain" rank="EXPERT" height="2">
+<npc_template name_desc="GAb1_04_chief15_L_65_An" attack_range="2" npc_type="ATTACKABLE" race="GCHIEF_LIGHT" level="75" attack_rate="1000" title_id="464937" rating="ELITE" ai="aggressive" hpgauge_level="3" type="ABYSS_GUARD" name_id="347378" abyss_type="GUARD" attack_delay="2100" npc_id="880189" sensory_range="7" tribe="GAB1_03_POINT_01" name="Disilheim Warcaptain" rank="EXPERT" height="2">
     <stats hp_regen="14249" maxHp="28498" pdef="1447" walk_speed="1.419" mresist="1428" mboost_resist="0" run_speed="6" accuracy="2370" main_hand_attack="746" main_hand_crit_rate="15" mdef="515" mboost="0" parry="454" crit_spell="11" maxXp="110520" block="809" main_hand_accuracy="2059" power="1232" evasion="354" run_speed_fight="7"/>
     <equipment>
       <item>114601479</item>
@@ -31660,7 +31660,7 @@
     </equipment>
     <bound_radius side="0.7" upper="2" front="0.5"/>
   </npc_template>
-<npc_template name_desc="GAb1_04_chief16_L_65_An" attack_range="2" npc_type="NON_ATTACKABLE" race="GCHIEF_DARK" level="75" attack_rate="1000" title_id="464938" rating="ELITE" ai="aggressive" hpgauge_level="3" type="ABYSS_GUARD" name_id="347379" abyss_type="GUARD" attack_delay="2100" npc_id="880190" sensory_range="7" tribe="GAB1_04_POINT_01" name="Disilheim Warcaptain" rank="EXPERT" height="2">
+<npc_template name_desc="GAb1_04_chief16_L_65_An" attack_range="2" npc_type="ATTACKABLE" race="GCHIEF_DARK" level="75" attack_rate="1000" title_id="464938" rating="ELITE" ai="aggressive" hpgauge_level="3" type="ABYSS_GUARD" name_id="347379" abyss_type="GUARD" attack_delay="2100" npc_id="880190" sensory_range="7" tribe="GAB1_04_POINT_01" name="Disilheim Warcaptain" rank="EXPERT" height="2">
     <stats hp_regen="14249" maxHp="28498" pdef="1447" walk_speed="1.419" mresist="1428" mboost_resist="0" run_speed="6" accuracy="2370" main_hand_attack="746" main_hand_crit_rate="15" mdef="515" mboost="0" parry="454" crit_spell="11" maxXp="110520" block="809" main_hand_accuracy="2059" power="1232" evasion="354" run_speed_fight="7"/>
     <equipment>
       <item>114601479</item>
@@ -57215,7 +57215,7 @@
     </equipment>
     <bound_radius side="1.5" upper="3.5" front="2"/>
   </npc_template>
-<npc_template name_desc="Ab1_v01_Li_Fi_Boss_65_Ae" attack_range="2" npc_type="NON_ATTACKABLE" race="GCHIEF_LIGHT" level="75" attack_rate="1000" title_id="337432" rating="ELITE" ai="aggressive" hpgauge_level="11" type="ABYSS_GUARD" name_id="336107" abyss_type="GUARD" attack_delay="2100" npc_id="883076" sensory_range="10" tribe="PROTECTGUARD_LIGHT" name="Ab1_v01_Li_Fi_Boss_65_Ae" rank="EXPERT" height="2">
+<npc_template name_desc="Ab1_v01_Li_Fi_Boss_65_Ae" attack_range="2" npc_type="ATTACKABLE" race="GCHIEF_LIGHT" level="75" attack_rate="1000" title_id="337432" rating="ELITE" ai="aggressive" hpgauge_level="11" type="ABYSS_GUARD" name_id="336107" abyss_type="GUARD" attack_delay="2100" npc_id="883076" sensory_range="10" tribe="PROTECTGUARD_LIGHT" name="Ab1_v01_Li_Fi_Boss_65_Ae" rank="EXPERT" height="2">
     <stats hp_regen="20548" maxHp="41097" pdef="1583" walk_speed="1.457" mresist="1811" mboost_resist="0" run_speed="6" accuracy="2370" main_hand_attack="1396" main_hand_crit_rate="33" mdef="539" mboost="0" parry="3088" crit_spell="24" maxXp="310021" block="0" main_hand_accuracy="3130" power="1232" evasion="0" run_speed_fight="7"/>
     <equipment>
       <item>114601479</item>
@@ -57291,7 +57291,7 @@
     </equipment>
     <bound_radius side="0.7" upper="2" front="0.5"/>
   </npc_template>
-<npc_template name_desc="Ab1_v01_Da_Fi_Boss_65_Ae" attack_range="2" npc_type="NON_ATTACKABLE" race="GCHIEF_DARK" level="75" attack_rate="1000" title_id="337433" rating="ELITE" ai="aggressive" hpgauge_level="11" type="ABYSS_GUARD" name_id="336113" abyss_type="GUARD" attack_delay="2100" npc_id="883082" sensory_range="10" tribe="PROTECTGUARD_DARK" name="Ab1_v01_Da_Fi_Boss_65_Ae" rank="EXPERT" height="2">
+<npc_template name_desc="Ab1_v01_Da_Fi_Boss_65_Ae" attack_range="2" npc_type="ATTACKABLE" race="GCHIEF_DARK" level="75" attack_rate="1000" title_id="337433" rating="ELITE" ai="aggressive" hpgauge_level="11" type="ABYSS_GUARD" name_id="336113" abyss_type="GUARD" attack_delay="2100" npc_id="883082" sensory_range="10" tribe="PROTECTGUARD_DARK" name="Ab1_v01_Da_Fi_Boss_65_Ae" rank="EXPERT" height="2">
     <stats hp_regen="20548" maxHp="41097" pdef="1583" walk_speed="1.457" mresist="1811" mboost_resist="0" run_speed="6" accuracy="2370" main_hand_attack="1396" main_hand_crit_rate="33" mdef="539" mboost="0" parry="3088" crit_spell="24" maxXp="310021" block="0" main_hand_accuracy="3130" power="1232" evasion="0" run_speed_fight="7"/>
     <equipment>
       <item>114601479</item>
@@ -57367,7 +57367,7 @@
     </equipment>
     <bound_radius side="0.7" upper="2" front="0.5"/>
   </npc_template>
-<npc_template name_desc="Ab1_v02_Li_Fi_Boss_65_Ae" attack_range="2" npc_type="NON_ATTACKABLE" race="GCHIEF_LIGHT" level="75" attack_rate="1000" title_id="337432" rating="ELITE" ai="aggressive" hpgauge_level="11" type="ABYSS_GUARD" name_id="336119" abyss_type="GUARD" attack_delay="2100" npc_id="883088" sensory_range="10" tribe="PROTECTGUARD_LIGHT" name="Ab1_v02_Li_Fi_Boss_65_Ae" rank="EXPERT" height="2">
+<npc_template name_desc="Ab1_v02_Li_Fi_Boss_65_Ae" attack_range="2" npc_type="ATTACKABLE" race="GCHIEF_LIGHT" level="75" attack_rate="1000" title_id="337432" rating="ELITE" ai="aggressive" hpgauge_level="11" type="ABYSS_GUARD" name_id="336119" abyss_type="GUARD" attack_delay="2100" npc_id="883088" sensory_range="10" tribe="PROTECTGUARD_LIGHT" name="Ab1_v02_Li_Fi_Boss_65_Ae" rank="EXPERT" height="2">
     <stats hp_regen="20548" maxHp="41097" pdef="1583" walk_speed="1.457" mresist="1811" mboost_resist="0" run_speed="6" accuracy="2370" main_hand_attack="1396" main_hand_crit_rate="33" mdef="539" mboost="0" parry="3088" crit_spell="24" maxXp="310021" block="0" main_hand_accuracy="3130" power="1232" evasion="0" run_speed_fight="7"/>
     <equipment>
       <item>114601479</item>
@@ -57443,7 +57443,7 @@
     </equipment>
     <bound_radius side="0.7" upper="2" front="0.5"/>
   </npc_template>
-<npc_template name_desc="Ab1_v02_Da_Fi_Boss_65_Ae" attack_range="2" npc_type="NON_ATTACKABLE" race="GCHIEF_DARK" level="75" attack_rate="1000" title_id="337433" rating="ELITE" ai="aggressive" hpgauge_level="11" type="ABYSS_GUARD" name_id="336125" abyss_type="GUARD" attack_delay="2100" npc_id="883094" sensory_range="10" tribe="PROTECTGUARD_DARK" name="Ab1_v02_Da_Fi_Boss_65_Ae" rank="EXPERT" height="2">
+<npc_template name_desc="Ab1_v02_Da_Fi_Boss_65_Ae" attack_range="2" npc_type="ATTACKABLE" race="GCHIEF_DARK" level="75" attack_rate="1000" title_id="337433" rating="ELITE" ai="aggressive" hpgauge_level="11" type="ABYSS_GUARD" name_id="336125" abyss_type="GUARD" attack_delay="2100" npc_id="883094" sensory_range="10" tribe="PROTECTGUARD_DARK" name="Ab1_v02_Da_Fi_Boss_65_Ae" rank="EXPERT" height="2">
     <stats hp_regen="20548" maxHp="41097" pdef="1583" walk_speed="1.457" mresist="1811" mboost_resist="0" run_speed="6" accuracy="2370" main_hand_attack="1396" main_hand_crit_rate="33" mdef="539" mboost="0" parry="3088" crit_spell="24" maxXp="310021" block="0" main_hand_accuracy="3130" power="1232" evasion="0" run_speed_fight="7"/>
     <equipment>
       <item>114601479</item>
@@ -57519,7 +57519,7 @@
     </equipment>
     <bound_radius side="0.7" upper="2" front="0.5"/>
   </npc_template>
-<npc_template name_desc="Ab1_v03_Li_Fi_Boss_65_Ae" attack_range="2" npc_type="NON_ATTACKABLE" race="GCHIEF_LIGHT" level="75" attack_rate="1000" title_id="337432" rating="ELITE" ai="aggressive" hpgauge_level="11" type="ABYSS_GUARD" name_id="336131" abyss_type="GUARD" attack_delay="2100" npc_id="883100" sensory_range="10" tribe="PROTECTGUARD_LIGHT" name="Ab1_v03_Li_Fi_Boss_65_Ae" rank="EXPERT" height="2">
+<npc_template name_desc="Ab1_v03_Li_Fi_Boss_65_Ae" attack_range="2" npc_type="ATTACKABLE" race="GCHIEF_LIGHT" level="75" attack_rate="1000" title_id="337432" rating="ELITE" ai="aggressive" hpgauge_level="11" type="ABYSS_GUARD" name_id="336131" abyss_type="GUARD" attack_delay="2100" npc_id="883100" sensory_range="10" tribe="PROTECTGUARD_LIGHT" name="Ab1_v03_Li_Fi_Boss_65_Ae" rank="EXPERT" height="2">
     <stats hp_regen="20548" maxHp="41097" pdef="1583" walk_speed="1.457" mresist="1811" mboost_resist="0" run_speed="6" accuracy="2370" main_hand_attack="1396" main_hand_crit_rate="33" mdef="539" mboost="0" parry="3088" crit_spell="24" maxXp="310021" block="0" main_hand_accuracy="3130" power="1232" evasion="0" run_speed_fight="7"/>
     <equipment>
       <item>114601479</item>
@@ -57595,7 +57595,7 @@
     </equipment>
     <bound_radius side="0.7" upper="2" front="0.5"/>
   </npc_template>
-<npc_template name_desc="Ab1_v03_Da_Fi_Boss_65_Ae" attack_range="2" npc_type="NON_ATTACKABLE" race="GCHIEF_DARK" level="75" attack_rate="1000" title_id="337433" rating="ELITE" ai="aggressive" hpgauge_level="11" type="ABYSS_GUARD" name_id="336137" abyss_type="GUARD" attack_delay="2100" npc_id="883106" sensory_range="10" tribe="PROTECTGUARD_DARK" name="Ab1_v03_Da_Fi_Boss_65_Ae" rank="EXPERT" height="2">
+<npc_template name_desc="Ab1_v03_Da_Fi_Boss_65_Ae" attack_range="2" npc_type="ATTACKABLE" race="GCHIEF_DARK" level="75" attack_rate="1000" title_id="337433" rating="ELITE" ai="aggressive" hpgauge_level="11" type="ABYSS_GUARD" name_id="336137" abyss_type="GUARD" attack_delay="2100" npc_id="883106" sensory_range="10" tribe="PROTECTGUARD_DARK" name="Ab1_v03_Da_Fi_Boss_65_Ae" rank="EXPERT" height="2">
     <stats hp_regen="20548" maxHp="41097" pdef="1583" walk_speed="1.457" mresist="1811" mboost_resist="0" run_speed="6" accuracy="2370" main_hand_attack="1396" main_hand_crit_rate="33" mdef="539" mboost="0" parry="3088" crit_spell="24" maxXp="310021" block="0" main_hand_accuracy="3130" power="1232" evasion="0" run_speed_fight="7"/>
     <equipment>
       <item>114601479</item>
@@ -57671,7 +57671,7 @@
     </equipment>
     <bound_radius side="0.7" upper="2" front="0.5"/>
   </npc_template>
-<npc_template name_desc="Ab1_v04_Li_Fi_Boss_65_Ae" attack_range="2" npc_type="NON_ATTACKABLE" race="GCHIEF_LIGHT" level="75" attack_rate="1000" title_id="337432" rating="ELITE" ai="aggressive" hpgauge_level="11" type="ABYSS_GUARD" name_id="336143" abyss_type="GUARD" attack_delay="2100" npc_id="883112" sensory_range="10" tribe="PROTECTGUARD_LIGHT" name="Ab1_v04_Li_Fi_Boss_65_Ae" rank="EXPERT" height="2">
+<npc_template name_desc="Ab1_v04_Li_Fi_Boss_65_Ae" attack_range="2" npc_type="ATTACKABLE" race="GCHIEF_LIGHT" level="75" attack_rate="1000" title_id="337432" rating="ELITE" ai="aggressive" hpgauge_level="11" type="ABYSS_GUARD" name_id="336143" abyss_type="GUARD" attack_delay="2100" npc_id="883112" sensory_range="10" tribe="PROTECTGUARD_LIGHT" name="Ab1_v04_Li_Fi_Boss_65_Ae" rank="EXPERT" height="2">
     <stats hp_regen="20548" maxHp="41097" pdef="1583" walk_speed="1.457" mresist="1811" mboost_resist="0" run_speed="6" accuracy="2370" main_hand_attack="1396" main_hand_crit_rate="33" mdef="539" mboost="0" parry="3088" crit_spell="24" maxXp="310021" block="0" main_hand_accuracy="3130" power="1232" evasion="0" run_speed_fight="7"/>
     <equipment>
       <item>114601479</item>
@@ -57747,7 +57747,7 @@
     </equipment>
     <bound_radius side="0.7" upper="2" front="0.5"/>
   </npc_template>
-<npc_template name_desc="Ab1_v04_Da_Fi_Boss_65_Ae" attack_range="2" npc_type="NON_ATTACKABLE" race="GCHIEF_DARK" level="75" attack_rate="1000" title_id="337433" rating="ELITE" ai="aggressive" hpgauge_level="11" type="ABYSS_GUARD" name_id="336149" abyss_type="GUARD" attack_delay="2100" npc_id="883118" sensory_range="10" tribe="PROTECTGUARD_DARK" name="Ab1_v04_Da_Fi_Boss_65_Ae" rank="EXPERT" height="2">
+<npc_template name_desc="Ab1_v04_Da_Fi_Boss_65_Ae" attack_range="2" npc_type="ATTACKABLE" race="GCHIEF_DARK" level="75" attack_rate="1000" title_id="337433" rating="ELITE" ai="aggressive" hpgauge_level="11" type="ABYSS_GUARD" name_id="336149" abyss_type="GUARD" attack_delay="2100" npc_id="883118" sensory_range="10" tribe="PROTECTGUARD_DARK" name="Ab1_v04_Da_Fi_Boss_65_Ae" rank="EXPERT" height="2">
     <stats hp_regen="20548" maxHp="41097" pdef="1583" walk_speed="1.457" mresist="1811" mboost_resist="0" run_speed="6" accuracy="2370" main_hand_attack="1396" main_hand_crit_rate="33" mdef="539" mboost="0" parry="3088" crit_spell="24" maxXp="310021" block="0" main_hand_accuracy="3130" power="1232" evasion="0" run_speed_fight="7"/>
     <equipment>
       <item>114601479</item>
@@ -57823,7 +57823,7 @@
     </equipment>
     <bound_radius side="0.7" upper="2" front="0.5"/>
   </npc_template>
-<npc_template name_desc="Ab1_v05_Li_Fi_Boss_65_Ae" attack_range="2" npc_type="NON_ATTACKABLE" race="GCHIEF_LIGHT" level="75" attack_rate="1000" title_id="337432" rating="ELITE" ai="aggressive" hpgauge_level="11" type="ABYSS_GUARD" name_id="336155" abyss_type="GUARD" attack_delay="2100" npc_id="883124" sensory_range="10" tribe="PROTECTGUARD_LIGHT" name="Ab1_v05_Li_Fi_Boss_65_Ae" rank="EXPERT" height="2">
+<npc_template name_desc="Ab1_v05_Li_Fi_Boss_65_Ae" attack_range="2" npc_type="ATTACKABLE" race="GCHIEF_LIGHT" level="75" attack_rate="1000" title_id="337432" rating="ELITE" ai="aggressive" hpgauge_level="11" type="ABYSS_GUARD" name_id="336155" abyss_type="GUARD" attack_delay="2100" npc_id="883124" sensory_range="10" tribe="PROTECTGUARD_LIGHT" name="Ab1_v05_Li_Fi_Boss_65_Ae" rank="EXPERT" height="2">
     <stats hp_regen="20548" maxHp="41097" pdef="1583" walk_speed="1.457" mresist="1811" mboost_resist="0" run_speed="6" accuracy="2370" main_hand_attack="1396" main_hand_crit_rate="33" mdef="539" mboost="0" parry="3088" crit_spell="24" maxXp="310021" block="0" main_hand_accuracy="3130" power="1232" evasion="0" run_speed_fight="7"/>
     <equipment>
       <item>114601479</item>
@@ -57899,7 +57899,7 @@
     </equipment>
     <bound_radius side="0.7" upper="2" front="0.5"/>
   </npc_template>
-<npc_template name_desc="Ab1_v05_Da_Fi_Boss_65_Ae" attack_range="2" npc_type="NON_ATTACKABLE" race="GCHIEF_DARK" level="75" attack_rate="1000" title_id="337433" rating="ELITE" ai="aggressive" hpgauge_level="11" type="ABYSS_GUARD" name_id="336161" abyss_type="GUARD" attack_delay="2100" npc_id="883130" sensory_range="10" tribe="PROTECTGUARD_DARK" name="Ab1_v05_Da_Fi_Boss_65_Ae" rank="EXPERT" height="2">
+<npc_template name_desc="Ab1_v05_Da_Fi_Boss_65_Ae" attack_range="2" npc_type="ATTACKABLE" race="GCHIEF_DARK" level="75" attack_rate="1000" title_id="337433" rating="ELITE" ai="aggressive" hpgauge_level="11" type="ABYSS_GUARD" name_id="336161" abyss_type="GUARD" attack_delay="2100" npc_id="883130" sensory_range="10" tribe="PROTECTGUARD_DARK" name="Ab1_v05_Da_Fi_Boss_65_Ae" rank="EXPERT" height="2">
     <stats hp_regen="20548" maxHp="41097" pdef="1583" walk_speed="1.457" mresist="1811" mboost_resist="0" run_speed="6" accuracy="2370" main_hand_attack="1396" main_hand_crit_rate="33" mdef="539" mboost="0" parry="3088" crit_spell="24" maxXp="310021" block="0" main_hand_accuracy="3130" power="1232" evasion="0" run_speed_fight="7"/>
     <equipment>
       <item>114601479</item>
@@ -57975,7 +57975,7 @@
     </equipment>
     <bound_radius side="0.7" upper="2" front="0.5"/>
   </npc_template>
-<npc_template name_desc="Ab1_v06_Li_Fi_Boss_65_Ae" attack_range="2" npc_type="NON_ATTACKABLE" race="GCHIEF_LIGHT" level="75" attack_rate="1000" title_id="337432" rating="ELITE" ai="aggressive" hpgauge_level="11" type="ABYSS_GUARD" name_id="336167" abyss_type="GUARD" attack_delay="2100" npc_id="883136" sensory_range="10" tribe="PROTECTGUARD_LIGHT" name="Ab1_v06_Li_Fi_Boss_65_Ae" rank="EXPERT" height="2">
+<npc_template name_desc="Ab1_v06_Li_Fi_Boss_65_Ae" attack_range="2" npc_type="ATTACKABLE" race="GCHIEF_LIGHT" level="75" attack_rate="1000" title_id="337432" rating="ELITE" ai="aggressive" hpgauge_level="11" type="ABYSS_GUARD" name_id="336167" abyss_type="GUARD" attack_delay="2100" npc_id="883136" sensory_range="10" tribe="PROTECTGUARD_LIGHT" name="Ab1_v06_Li_Fi_Boss_65_Ae" rank="EXPERT" height="2">
     <stats hp_regen="20548" maxHp="41097" pdef="1583" walk_speed="1.457" mresist="1811" mboost_resist="0" run_speed="6" accuracy="2370" main_hand_attack="1396" main_hand_crit_rate="33" mdef="539" mboost="0" parry="3088" crit_spell="24" maxXp="310021" block="0" main_hand_accuracy="3130" power="1232" evasion="0" run_speed_fight="7"/>
     <equipment>
       <item>114601479</item>
@@ -58051,7 +58051,7 @@
     </equipment>
     <bound_radius side="0.7" upper="2" front="0.5"/>
   </npc_template>
-<npc_template name_desc="Ab1_v06_Da_Fi_Boss_65_Ae" attack_range="2" npc_type="NON_ATTACKABLE" race="GCHIEF_DARK" level="75" attack_rate="1000" title_id="337433" rating="ELITE" ai="aggressive" hpgauge_level="11" type="ABYSS_GUARD" name_id="336173" abyss_type="GUARD" attack_delay="2100" npc_id="883142" sensory_range="10" tribe="PROTECTGUARD_DARK" name="Ab1_v06_Da_Fi_Boss_65_Ae" rank="EXPERT" height="2">
+<npc_template name_desc="Ab1_v06_Da_Fi_Boss_65_Ae" attack_range="2" npc_type="ATTACKABLE" race="GCHIEF_DARK" level="75" attack_rate="1000" title_id="337433" rating="ELITE" ai="aggressive" hpgauge_level="11" type="ABYSS_GUARD" name_id="336173" abyss_type="GUARD" attack_delay="2100" npc_id="883142" sensory_range="10" tribe="PROTECTGUARD_DARK" name="Ab1_v06_Da_Fi_Boss_65_Ae" rank="EXPERT" height="2">
     <stats hp_regen="20548" maxHp="41097" pdef="1583" walk_speed="1.457" mresist="1811" mboost_resist="0" run_speed="6" accuracy="2370" main_hand_attack="1396" main_hand_crit_rate="33" mdef="539" mboost="0" parry="3088" crit_spell="24" maxXp="310021" block="0" main_hand_accuracy="3130" power="1232" evasion="0" run_speed_fight="7"/>
     <equipment>
       <item>114601479</item>
@@ -58127,7 +58127,7 @@
     </equipment>
     <bound_radius side="0.7" upper="2" front="0.5"/>
   </npc_template>
-<npc_template name_desc="Ab1_v07_Li_Fi_Boss_65_Ae" attack_range="2" npc_type="NON_ATTACKABLE" race="GCHIEF_LIGHT" level="75" attack_rate="1000" title_id="337432" rating="ELITE" ai="aggressive" hpgauge_level="11" type="ABYSS_GUARD" name_id="336179" abyss_type="GUARD" attack_delay="2100" npc_id="883148" sensory_range="10" tribe="PROTECTGUARD_LIGHT" name="Ab1_v07_Li_Fi_Boss_65_Ae" rank="EXPERT" height="2">
+<npc_template name_desc="Ab1_v07_Li_Fi_Boss_65_Ae" attack_range="2" npc_type="ATTACKABLE" race="GCHIEF_LIGHT" level="75" attack_rate="1000" title_id="337432" rating="ELITE" ai="aggressive" hpgauge_level="11" type="ABYSS_GUARD" name_id="336179" abyss_type="GUARD" attack_delay="2100" npc_id="883148" sensory_range="10" tribe="PROTECTGUARD_LIGHT" name="Ab1_v07_Li_Fi_Boss_65_Ae" rank="EXPERT" height="2">
     <stats hp_regen="20548" maxHp="41097" pdef="1583" walk_speed="1.457" mresist="1811" mboost_resist="0" run_speed="6" accuracy="2370" main_hand_attack="1396" main_hand_crit_rate="33" mdef="539" mboost="0" parry="3088" crit_spell="24" maxXp="310021" block="0" main_hand_accuracy="3130" power="1232" evasion="0" run_speed_fight="7"/>
     <equipment>
       <item>114601479</item>
@@ -58203,7 +58203,7 @@
     </equipment>
     <bound_radius side="0.7" upper="2" front="0.5"/>
   </npc_template>
-<npc_template name_desc="Ab1_v07_Da_Fi_Boss_65_Ae" attack_range="2" npc_type="NON_ATTACKABLE" race="GCHIEF_DARK" level="75" attack_rate="1000" title_id="337433" rating="ELITE" ai="aggressive" hpgauge_level="11" type="ABYSS_GUARD" name_id="336185" abyss_type="GUARD" attack_delay="2100" npc_id="883154" sensory_range="10" tribe="PROTECTGUARD_DARK" name="Ab1_v07_Da_Fi_Boss_65_Ae" rank="EXPERT" height="2">
+<npc_template name_desc="Ab1_v07_Da_Fi_Boss_65_Ae" attack_range="2" npc_type="ATTACKABLE" race="GCHIEF_DARK" level="75" attack_rate="1000" title_id="337433" rating="ELITE" ai="aggressive" hpgauge_level="11" type="ABYSS_GUARD" name_id="336185" abyss_type="GUARD" attack_delay="2100" npc_id="883154" sensory_range="10" tribe="PROTECTGUARD_DARK" name="Ab1_v07_Da_Fi_Boss_65_Ae" rank="EXPERT" height="2">
     <stats hp_regen="20548" maxHp="41097" pdef="1583" walk_speed="1.457" mresist="1811" mboost_resist="0" run_speed="6" accuracy="2370" main_hand_attack="1396" main_hand_crit_rate="33" mdef="539" mboost="0" parry="3088" crit_spell="24" maxXp="310021" block="0" main_hand_accuracy="3130" power="1232" evasion="0" run_speed_fight="7"/>
     <equipment>
       <item>114601479</item>
@@ -58279,7 +58279,7 @@
     </equipment>
     <bound_radius side="0.7" upper="2" front="0.5"/>
   </npc_template>
-<npc_template name_desc="Ab1_v08_Li_Fi_Boss_65_Ae" attack_range="2" npc_type="NON_ATTACKABLE" race="GCHIEF_LIGHT" level="75" attack_rate="1000" title_id="337432" rating="ELITE" ai="aggressive" hpgauge_level="11" type="ABYSS_GUARD" name_id="336191" abyss_type="GUARD" attack_delay="2100" npc_id="883160" sensory_range="10" tribe="PROTECTGUARD_LIGHT" name="Ab1_v08_Li_Fi_Boss_65_Ae" rank="EXPERT" height="2">
+<npc_template name_desc="Ab1_v08_Li_Fi_Boss_65_Ae" attack_range="2" npc_type="ATTACKABLE" race="GCHIEF_LIGHT" level="75" attack_rate="1000" title_id="337432" rating="ELITE" ai="aggressive" hpgauge_level="11" type="ABYSS_GUARD" name_id="336191" abyss_type="GUARD" attack_delay="2100" npc_id="883160" sensory_range="10" tribe="PROTECTGUARD_LIGHT" name="Ab1_v08_Li_Fi_Boss_65_Ae" rank="EXPERT" height="2">
     <stats hp_regen="20548" maxHp="41097" pdef="1583" walk_speed="1.457" mresist="1811" mboost_resist="0" run_speed="6" accuracy="2370" main_hand_attack="1396" main_hand_crit_rate="33" mdef="539" mboost="0" parry="3088" crit_spell="24" maxXp="310021" block="0" main_hand_accuracy="3130" power="1232" evasion="0" run_speed_fight="7"/>
     <equipment>
       <item>114601479</item>
@@ -58355,7 +58355,7 @@
     </equipment>
     <bound_radius side="0.7" upper="2" front="0.5"/>
   </npc_template>
-<npc_template name_desc="Ab1_v08_Da_Fi_Boss_65_Ae" attack_range="2" npc_type="NON_ATTACKABLE" race="GCHIEF_DARK" level="75" attack_rate="1000" title_id="337433" rating="ELITE" ai="aggressive" hpgauge_level="11" type="ABYSS_GUARD" name_id="336197" abyss_type="GUARD" attack_delay="2100" npc_id="883166" sensory_range="10" tribe="PROTECTGUARD_DARK" name="Ab1_v08_Da_Fi_Boss_65_Ae" rank="EXPERT" height="2">
+<npc_template name_desc="Ab1_v08_Da_Fi_Boss_65_Ae" attack_range="2" npc_type="ATTACKABLE" race="GCHIEF_DARK" level="75" attack_rate="1000" title_id="337433" rating="ELITE" ai="aggressive" hpgauge_level="11" type="ABYSS_GUARD" name_id="336197" abyss_type="GUARD" attack_delay="2100" npc_id="883166" sensory_range="10" tribe="PROTECTGUARD_DARK" name="Ab1_v08_Da_Fi_Boss_65_Ae" rank="EXPERT" height="2">
     <stats hp_regen="20548" maxHp="41097" pdef="1583" walk_speed="1.457" mresist="1811" mboost_resist="0" run_speed="6" accuracy="2370" main_hand_attack="1396" main_hand_crit_rate="33" mdef="539" mboost="0" parry="3088" crit_spell="24" maxXp="310021" block="0" main_hand_accuracy="3130" power="1232" evasion="0" run_speed_fight="7"/>
     <equipment>
       <item>114601479</item>
@@ -58431,7 +58431,7 @@
     </equipment>
     <bound_radius side="0.7" upper="2" front="0.5"/>
   </npc_template>
-<npc_template name_desc="Ab1_v09_Li_Fi_Boss_65_Ae" attack_range="2" npc_type="NON_ATTACKABLE" race="GCHIEF_LIGHT" level="75" attack_rate="1000" title_id="337432" rating="ELITE" ai="aggressive" hpgauge_level="11" type="ABYSS_GUARD" name_id="336203" abyss_type="GUARD" attack_delay="2100" npc_id="883172" sensory_range="10" tribe="PROTECTGUARD_LIGHT" name="Ab1_v09_Li_Fi_Boss_65_Ae" rank="EXPERT" height="2">
+<npc_template name_desc="Ab1_v09_Li_Fi_Boss_65_Ae" attack_range="2" npc_type="ATTACKABLE" race="GCHIEF_LIGHT" level="75" attack_rate="1000" title_id="337432" rating="ELITE" ai="aggressive" hpgauge_level="11" type="ABYSS_GUARD" name_id="336203" abyss_type="GUARD" attack_delay="2100" npc_id="883172" sensory_range="10" tribe="PROTECTGUARD_LIGHT" name="Ab1_v09_Li_Fi_Boss_65_Ae" rank="EXPERT" height="2">
     <stats hp_regen="20548" maxHp="41097" pdef="1583" walk_speed="1.457" mresist="1811" mboost_resist="0" run_speed="6" accuracy="2370" main_hand_attack="1396" main_hand_crit_rate="33" mdef="539" mboost="0" parry="3088" crit_spell="24" maxXp="310021" block="0" main_hand_accuracy="3130" power="1232" evasion="0" run_speed_fight="7"/>
     <equipment>
       <item>114601479</item>
@@ -58507,7 +58507,7 @@
     </equipment>
     <bound_radius side="0.7" upper="2" front="0.5"/>
   </npc_template>
-<npc_template name_desc="Ab1_v09_Da_Fi_Boss_65_Ae" attack_range="2" npc_type="NON_ATTACKABLE" race="GCHIEF_DARK" level="75" attack_rate="1000" title_id="337433" rating="ELITE" ai="aggressive" hpgauge_level="11" type="ABYSS_GUARD" name_id="336209" abyss_type="GUARD" attack_delay="2100" npc_id="883178" sensory_range="10" tribe="PROTECTGUARD_DARK" name="Ab1_v09_Da_Fi_Boss_65_Ae" rank="EXPERT" height="2">
+<npc_template name_desc="Ab1_v09_Da_Fi_Boss_65_Ae" attack_range="2" npc_type="ATTACKABLE" race="GCHIEF_DARK" level="75" attack_rate="1000" title_id="337433" rating="ELITE" ai="aggressive" hpgauge_level="11" type="ABYSS_GUARD" name_id="336209" abyss_type="GUARD" attack_delay="2100" npc_id="883178" sensory_range="10" tribe="PROTECTGUARD_DARK" name="Ab1_v09_Da_Fi_Boss_65_Ae" rank="EXPERT" height="2">
     <stats hp_regen="20548" maxHp="41097" pdef="1583" walk_speed="1.457" mresist="1811" mboost_resist="0" run_speed="6" accuracy="2370" main_hand_attack="1396" main_hand_crit_rate="33" mdef="539" mboost="0" parry="3088" crit_spell="24" maxXp="310021" block="0" main_hand_accuracy="3130" power="1232" evasion="0" run_speed_fight="7"/>
     <equipment>
       <item>114601479</item>
@@ -58583,7 +58583,7 @@
     </equipment>
     <bound_radius side="0.7" upper="2" front="0.5"/>
   </npc_template>
-<npc_template name_desc="Ab1_v10_Li_Fi_Boss_65_Ae" attack_range="2" npc_type="NON_ATTACKABLE" race="GCHIEF_LIGHT" level="75" attack_rate="1000" title_id="337432" rating="ELITE" ai="aggressive" hpgauge_level="11" type="ABYSS_GUARD" name_id="336215" abyss_type="GUARD" attack_delay="2100" npc_id="883184" sensory_range="10" tribe="PROTECTGUARD_LIGHT" name="Ab1_v10_Li_Fi_Boss_65_Ae" rank="EXPERT" height="2">
+<npc_template name_desc="Ab1_v10_Li_Fi_Boss_65_Ae" attack_range="2" npc_type="ATTACKABLE" race="GCHIEF_LIGHT" level="75" attack_rate="1000" title_id="337432" rating="ELITE" ai="aggressive" hpgauge_level="11" type="ABYSS_GUARD" name_id="336215" abyss_type="GUARD" attack_delay="2100" npc_id="883184" sensory_range="10" tribe="PROTECTGUARD_LIGHT" name="Ab1_v10_Li_Fi_Boss_65_Ae" rank="EXPERT" height="2">
     <stats hp_regen="20548" maxHp="41097" pdef="1583" walk_speed="1.457" mresist="1811" mboost_resist="0" run_speed="6" accuracy="2370" main_hand_attack="1396" main_hand_crit_rate="33" mdef="539" mboost="0" parry="3088" crit_spell="24" maxXp="310021" block="0" main_hand_accuracy="3130" power="1232" evasion="0" run_speed_fight="7"/>
     <equipment>
       <item>114601479</item>
@@ -58659,7 +58659,7 @@
     </equipment>
     <bound_radius side="0.7" upper="2" front="0.5"/>
   </npc_template>
-<npc_template name_desc="Ab1_v10_Da_Fi_Boss_65_Ae" attack_range="2" npc_type="NON_ATTACKABLE" race="GCHIEF_DARK" level="75" attack_rate="1000" title_id="337433" rating="ELITE" ai="aggressive" hpgauge_level="11" type="ABYSS_GUARD" name_id="336221" abyss_type="GUARD" attack_delay="2100" npc_id="883190" sensory_range="10" tribe="PROTECTGUARD_DARK" name="Ab1_v10_Da_Fi_Boss_65_Ae" rank="EXPERT" height="2">
+<npc_template name_desc="Ab1_v10_Da_Fi_Boss_65_Ae" attack_range="2" npc_type="ATTACKABLE" race="GCHIEF_DARK" level="75" attack_rate="1000" title_id="337433" rating="ELITE" ai="aggressive" hpgauge_level="11" type="ABYSS_GUARD" name_id="336221" abyss_type="GUARD" attack_delay="2100" npc_id="883190" sensory_range="10" tribe="PROTECTGUARD_DARK" name="Ab1_v10_Da_Fi_Boss_65_Ae" rank="EXPERT" height="2">
     <stats hp_regen="20548" maxHp="41097" pdef="1583" walk_speed="1.457" mresist="1811" mboost_resist="0" run_speed="6" accuracy="2370" main_hand_attack="1396" main_hand_crit_rate="33" mdef="539" mboost="0" parry="3088" crit_spell="24" maxXp="310021" block="0" main_hand_accuracy="3130" power="1232" evasion="0" run_speed_fight="7"/>
     <equipment>
       <item>114601479</item>
@@ -58735,7 +58735,7 @@
     </equipment>
     <bound_radius side="0.7" upper="2" front="0.5"/>
   </npc_template>
-<npc_template name_desc="Ab1_v11_Li_Fi_Boss_65_Ae" attack_range="2" npc_type="NON_ATTACKABLE" race="GCHIEF_LIGHT" level="75" attack_rate="1000" title_id="337432" rating="ELITE" ai="aggressive" hpgauge_level="11" type="ABYSS_GUARD" name_id="336227" abyss_type="GUARD" attack_delay="2100" npc_id="883196" sensory_range="10" tribe="PROTECTGUARD_LIGHT" name="Ab1_v11_Li_Fi_Boss_65_Ae" rank="EXPERT" height="2">
+<npc_template name_desc="Ab1_v11_Li_Fi_Boss_65_Ae" attack_range="2" npc_type="ATTACKABLE" race="GCHIEF_LIGHT" level="75" attack_rate="1000" title_id="337432" rating="ELITE" ai="aggressive" hpgauge_level="11" type="ABYSS_GUARD" name_id="336227" abyss_type="GUARD" attack_delay="2100" npc_id="883196" sensory_range="10" tribe="PROTECTGUARD_LIGHT" name="Ab1_v11_Li_Fi_Boss_65_Ae" rank="EXPERT" height="2">
     <stats hp_regen="20548" maxHp="41097" pdef="1583" walk_speed="1.457" mresist="1811" mboost_resist="0" run_speed="6" accuracy="2370" main_hand_attack="1396" main_hand_crit_rate="33" mdef="539" mboost="0" parry="3088" crit_spell="24" maxXp="310021" block="0" main_hand_accuracy="3130" power="1232" evasion="0" run_speed_fight="7"/>
     <equipment>
       <item>114601479</item>
@@ -58811,7 +58811,7 @@
     </equipment>
     <bound_radius side="0.7" upper="2" front="0.5"/>
   </npc_template>
-<npc_template name_desc="Ab1_v11_Da_Fi_Boss_65_Ae" attack_range="2" npc_type="NON_ATTACKABLE" race="GCHIEF_DARK" level="75" attack_rate="1000" title_id="337433" rating="ELITE" ai="aggressive" hpgauge_level="11" type="ABYSS_GUARD" name_id="336233" abyss_type="GUARD" attack_delay="2100" npc_id="883202" sensory_range="10" tribe="PROTECTGUARD_DARK" name="Ab1_v11_Da_Fi_Boss_65_Ae" rank="EXPERT" height="2">
+<npc_template name_desc="Ab1_v11_Da_Fi_Boss_65_Ae" attack_range="2" npc_type="ATTACKABLE" race="GCHIEF_DARK" level="75" attack_rate="1000" title_id="337433" rating="ELITE" ai="aggressive" hpgauge_level="11" type="ABYSS_GUARD" name_id="336233" abyss_type="GUARD" attack_delay="2100" npc_id="883202" sensory_range="10" tribe="PROTECTGUARD_DARK" name="Ab1_v11_Da_Fi_Boss_65_Ae" rank="EXPERT" height="2">
     <stats hp_regen="20548" maxHp="41097" pdef="1583" walk_speed="1.457" mresist="1811" mboost_resist="0" run_speed="6" accuracy="2370" main_hand_attack="1396" main_hand_crit_rate="33" mdef="539" mboost="0" parry="3088" crit_spell="24" maxXp="310021" block="0" main_hand_accuracy="3130" power="1232" evasion="0" run_speed_fight="7"/>
     <equipment>
       <item>114601479</item>
@@ -58887,7 +58887,7 @@
     </equipment>
     <bound_radius side="0.7" upper="2" front="0.5"/>
   </npc_template>
-<npc_template name_desc="Ab1_v12_Li_Fi_Boss_65_Ae" attack_range="2" npc_type="NON_ATTACKABLE" race="GCHIEF_LIGHT" level="75" attack_rate="1000" title_id="337432" rating="ELITE" ai="aggressive" hpgauge_level="11" type="ABYSS_GUARD" name_id="336239" abyss_type="GUARD" attack_delay="2100" npc_id="883208" sensory_range="10" tribe="PROTECTGUARD_LIGHT" name="Ab1_v12_Li_Fi_Boss_65_Ae" rank="EXPERT" height="2">
+<npc_template name_desc="Ab1_v12_Li_Fi_Boss_65_Ae" attack_range="2" npc_type="ATTACKABLE" race="GCHIEF_LIGHT" level="75" attack_rate="1000" title_id="337432" rating="ELITE" ai="aggressive" hpgauge_level="11" type="ABYSS_GUARD" name_id="336239" abyss_type="GUARD" attack_delay="2100" npc_id="883208" sensory_range="10" tribe="PROTECTGUARD_LIGHT" name="Ab1_v12_Li_Fi_Boss_65_Ae" rank="EXPERT" height="2">
     <stats hp_regen="20548" maxHp="41097" pdef="1583" walk_speed="1.457" mresist="1811" mboost_resist="0" run_speed="6" accuracy="2370" main_hand_attack="1396" main_hand_crit_rate="33" mdef="539" mboost="0" parry="3088" crit_spell="24" maxXp="310021" block="0" main_hand_accuracy="3130" power="1232" evasion="0" run_speed_fight="7"/>
     <equipment>
       <item>114601479</item>
@@ -58963,7 +58963,7 @@
     </equipment>
     <bound_radius side="0.7" upper="2" front="0.5"/>
   </npc_template>
-<npc_template name_desc="Ab1_v12_Da_Fi_Boss_65_Ae" attack_range="2" npc_type="NON_ATTACKABLE" race="GCHIEF_DARK" level="75" attack_rate="1000" title_id="337433" rating="ELITE" ai="aggressive" hpgauge_level="11" type="ABYSS_GUARD" name_id="336245" abyss_type="GUARD" attack_delay="2100" npc_id="883214" sensory_range="10" tribe="PROTECTGUARD_DARK" name="Ab1_v12_Da_Fi_Boss_65_Ae" rank="EXPERT" height="2">
+<npc_template name_desc="Ab1_v12_Da_Fi_Boss_65_Ae" attack_range="2" npc_type="ATTACKABLE" race="GCHIEF_DARK" level="75" attack_rate="1000" title_id="337433" rating="ELITE" ai="aggressive" hpgauge_level="11" type="ABYSS_GUARD" name_id="336245" abyss_type="GUARD" attack_delay="2100" npc_id="883214" sensory_range="10" tribe="PROTECTGUARD_DARK" name="Ab1_v12_Da_Fi_Boss_65_Ae" rank="EXPERT" height="2">
     <stats hp_regen="20548" maxHp="41097" pdef="1583" walk_speed="1.457" mresist="1811" mboost_resist="0" run_speed="6" accuracy="2370" main_hand_attack="1396" main_hand_crit_rate="33" mdef="539" mboost="0" parry="3088" crit_spell="24" maxXp="310021" block="0" main_hand_accuracy="3130" power="1232" evasion="0" run_speed_fight="7"/>
     <equipment>
       <item>114601479</item>

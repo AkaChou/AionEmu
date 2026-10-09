@@ -226,3 +226,4 @@
 | 某张静态数据表被改成"零子元素"后在启动期抛 NullPointerException；实体 getter 返回 null 而不是空集合 | `SDJ-004` | 目标字段是否声明为 List/Collection、XSD 与数据是否允许 0 个子元素、getter 是否可能返回 null |
 | 自写绑定器把 `"questid":"04450"` 读成 0，8 处静默错误；只有逐字段比对才暴露 | `SDJ-005` | 目标字段是数值类型但值以 `"` 开头；数据里是否存在前导零数字（`grep -oE '"[a-z_]+":"0[0-9]+"'`） |
 | 点击传送门 NPC 零响应；数据里配了 portal_req（quest_req/min_level）却完全不生效（管理员、普通玩家都不拦）；主服世界落点把玩家送进惰性镜像 | `SDJ-006` | `grep npc_id 目标NPC` 于 portal_template2.xml（连同活服孪生）；`grep instancereq src/main/resources/aion/config/administration/admin.properties`（=0 ⇒ portal_req 空转）；ai=portal 的门改动后需 `//reload_spawn <图>` 或重启（ai=portal_dialog 每击实时查） |
+| 击杀基地全部可见 NPC 基地仍不易主（实机报障：欧比斯 400010000 base 60 焰毁前哨，天族打魔族基地无反应）；凡 CHIEF/SLAYER 标 NON_ATTACKABLE 的基地，占领或袭击闭环永久失效且服务端零报错 | `SDJ-007` | 遇「基地占领不触发/NPC 打不了」类报障，先跑 python3 -I .agents/summary/base-chief-attackable-audit/audit_base_chief_attackable.py 看违约清单；再核对涉事模板 npc_type 与 spawns/Bases 的 handler 标注是否脱节 |

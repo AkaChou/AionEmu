@@ -22512,7 +22512,7 @@
     </equipment>
     <bound_radius side="0.7" upper="2" front="0.5"/>
   </npc_template>
-<npc_template name_desc="LDF5_Fortress_7011_Guard_Kn_MistOn_L_1" attack_range="2" npc_type="NON_ATTACKABLE" race="GCHIEF_LIGHT" level="75" attack_rate="1000" title_id="331353" rating="ELITE" ai="ldf5_fortress_chief" hpgauge_level="14" type="ABYSS_GUARD" name_id="331097" abyss_type="GUARD" attack_delay="2100" npc_id="251880" sensory_range="10" tribe="PROTECTGUARD_LIGHT" name="Garrison Elite Templar" rank="EXPERT" height="2">
+<npc_template name_desc="LDF5_Fortress_7011_Guard_Kn_MistOn_L_1" attack_range="2" npc_type="ATTACKABLE" race="GCHIEF_LIGHT" level="75" attack_rate="1000" title_id="331353" rating="ELITE" ai="ldf5_fortress_chief" hpgauge_level="14" type="ABYSS_GUARD" name_id="331097" abyss_type="GUARD" attack_delay="2100" npc_id="251880" sensory_range="10" tribe="PROTECTGUARD_LIGHT" name="Garrison Elite Templar" rank="EXPERT" height="2">
     <stats hp_regen="114025" maxHp="228050" pdef="1782" walk_speed="1.457" mresist="1924" mboost_resist="1262" run_speed="6" accuracy="2370" main_hand_attack="2467" main_hand_crit_rate="172" mdef="635" mboost="0" parry="901" crit_spell="116" maxXp="2992441" block="1702" main_hand_accuracy="3621" power="1332" evasion="801" run_speed_fight="6"/>
     <equipment>
       <item>114601479</item>
@@ -22525,7 +22525,7 @@
     </equipment>
     <bound_radius side="0.7" upper="2" front="0.5"/>
   </npc_template>
-<npc_template name_desc="LDF5_Fortress_7011_Guard_Kn_MistOn_L_2" attack_range="2" npc_type="NON_ATTACKABLE" race="GCHIEF_LIGHT" level="75" attack_rate="1000" title_id="331353" rating="ELITE" ai="ldf5_fortress_chief" hpgauge_level="14" type="ABYSS_GUARD" name_id="331098" abyss_type="GUARD" attack_delay="2100" npc_id="251881" sensory_range="10" tribe="PROTECTGUARD_LIGHT" name="Garrison Elite Templar" rank="EXPERT" height="2">
+<npc_template name_desc="LDF5_Fortress_7011_Guard_Kn_MistOn_L_2" attack_range="2" npc_type="ATTACKABLE" race="GCHIEF_LIGHT" level="75" attack_rate="1000" title_id="331353" rating="ELITE" ai="ldf5_fortress_chief" hpgauge_level="14" type="ABYSS_GUARD" name_id="331098" abyss_type="GUARD" attack_delay="2100" npc_id="251881" sensory_range="10" tribe="PROTECTGUARD_LIGHT" name="Garrison Elite Templar" rank="EXPERT" height="2">
     <stats hp_regen="128278" maxHp="256556" pdef="1782" walk_speed="1.457" mresist="1924" mboost_resist="1262" run_speed="6" accuracy="2370" main_hand_attack="2467" main_hand_crit_rate="172" mdef="635" mboost="0" parry="901" crit_spell="116" maxXp="2992441" block="1702" main_hand_accuracy="3621" power="1332" evasion="801" run_speed_fight="6"/>
     <equipment>
       <item>114601479</item>
@@ -22538,7 +22538,7 @@
     </equipment>
     <bound_radius side="0.7" upper="2" front="0.5"/>
   </npc_template>
-<npc_template name_desc="LDF5_Fortress_7011_Guard_Kn_MistOn_L_3" attack_range="2" npc_type="NON_ATTACKABLE" race="GCHIEF_LIGHT" level="75" attack_rate="1000" title_id="331353" rating="ELITE" ai="ldf5_fortress_chief" hpgauge_level="14" type="ABYSS_GUARD" name_id="331099" abyss_type="GUARD" attack_delay="2100" npc_id="251882" sensory_range="10" tribe="PROTECTGUARD_LIGHT" name="Garrison Elite Templar" rank="EXPERT" height="2">
+<npc_template name_desc="LDF5_Fortress_7011_Guard_Kn_MistOn_L_3" attack_range="2" npc_type="ATTACKABLE" race="GCHIEF_LIGHT" level="75" attack_rate="1000" title_id="331353" rating="ELITE" ai="ldf5_fortress_chief" hpgauge_level="14" type="ABYSS_GUARD" name_id="331099" abyss_type="GUARD" attack_delay="2100" npc_id="251882" sensory_range="10" tribe="PROTECTGUARD_LIGHT" name="Garrison Elite Templar" rank="EXPERT" height="2">
     <stats hp_regen="142531" maxHp="285062" pdef="1782" walk_speed="1.457" mresist="1924" mboost_resist="1262" run_speed="6" accuracy="2370" main_hand_attack="2467" main_hand_crit_rate="172" mdef="635" mboost="0" parry="901" crit_spell="116" maxXp="2992441" block="1702" main_hand_accuracy="3621" power="1332" evasion="801" run_speed_fight="6"/>
     <equipment>
       <item>114601479</item>
@@ -23504,7 +23504,7 @@
     </equipment>
     <bound_radius side="0.7" upper="2" front="0.5"/>
   </npc_template>
-<npc_template name_desc="LDF5_Fortress_7011_Guard_Kn_MistOn_D_1" attack_range="2" npc_type="NON_ATTACKABLE" race="GCHIEF_DARK" level="75" attack_rate="1000" title_id="331354" rating="ELITE" ai="ldf5_fortress_chief" hpgauge_level="14" type="ABYSS_GUARD" name_id="331177" abyss_type="GUARD" attack_delay="2100" npc_id="251960" sensory_range="10" tribe="PROTECTGUARD_DARK" name="Squad Elite Knight" rank="EXPERT" height="2">
+<npc_template name_desc="LDF5_Fortress_7011_Guard_Kn_MistOn_D_1" attack_range="2" npc_type="ATTACKABLE" race="GCHIEF_DARK" level="75" attack_rate="1000" title_id="331354" rating="ELITE" ai="ldf5_fortress_chief" hpgauge_level="14" type="ABYSS_GUARD" name_id="331177" abyss_type="GUARD" attack_delay="2100" npc_id="251960" sensory_range="10" tribe="PROTECTGUARD_DARK" name="Squad Elite Knight" rank="EXPERT" height="2">
     <stats hp_regen="142531" maxHp="285062" pdef="1782" walk_speed="1.457" mresist="1924" mboost_resist="1262" run_speed="6" accuracy="2370" main_hand_attack="2467" main_hand_crit_rate="172" mdef="635" mboost="0" parry="901" crit_spell="116" maxXp="2992441" block="1702" main_hand_accuracy="3621" power="1332" evasion="801" run_speed_fight="6"/>
     <equipment>
       <item>114601479</item>
@@ -23517,7 +23517,7 @@
     </equipment>
     <bound_radius side="0.7" upper="2" front="0.5"/>
   </npc_template>
-<npc_template name_desc="LDF5_Fortress_7011_Guard_Kn_MistOn_D_2" attack_range="2" npc_type="NON_ATTACKABLE" race="GCHIEF_DARK" level="75" attack_rate="1000" title_id="331354" rating="ELITE" ai="ldf5_fortress_chief" hpgauge_level="14" type="ABYSS_GUARD" name_id="331178" abyss_type="GUARD" attack_delay="2100" npc_id="251961" sensory_range="10" tribe="PROTECTGUARD_DARK" name="Squad Elite Knight" rank="EXPERT" height="2">
+<npc_template name_desc="LDF5_Fortress_7011_Guard_Kn_MistOn_D_2" attack_range="2" npc_type="ATTACKABLE" race="GCHIEF_DARK" level="75" attack_rate="1000" title_id="331354" rating="ELITE" ai="ldf5_fortress_chief" hpgauge_level="14" type="ABYSS_GUARD" name_id="331178" abyss_type="GUARD" attack_delay="2100" npc_id="251961" sensory_range="10" tribe="PROTECTGUARD_DARK" name="Squad Elite Knight" rank="EXPERT" height="2">
     <stats hp_regen="160348" maxHp="320695" pdef="1782" walk_speed="1.457" mresist="1924" mboost_resist="1262" run_speed="6" accuracy="2370" main_hand_attack="2467" main_hand_crit_rate="172" mdef="635" mboost="0" parry="901" crit_spell="116" maxXp="2992441" block="1702" main_hand_accuracy="3621" power="1332" evasion="801" run_speed_fight="6"/>
     <equipment>
       <item>114601479</item>
@@ -23530,7 +23530,7 @@
     </equipment>
     <bound_radius side="0.7" upper="2" front="0.5"/>
   </npc_template>
-<npc_template name_desc="LDF5_Fortress_7011_Guard_Kn_MistOn_D_3" attack_range="2" npc_type="NON_ATTACKABLE" race="GCHIEF_DARK" level="75" attack_rate="1000" title_id="331354" rating="ELITE" ai="ldf5_fortress_chief" hpgauge_level="14" type="ABYSS_GUARD" name_id="331179" abyss_type="GUARD" attack_delay="2100" npc_id="251962" sensory_range="10" tribe="PROTECTGUARD_DARK" name="Squad Elite Knight" rank="EXPERT" height="2">
+<npc_template name_desc="LDF5_Fortress_7011_Guard_Kn_MistOn_D_3" attack_range="2" npc_type="ATTACKABLE" race="GCHIEF_DARK" level="75" attack_rate="1000" title_id="331354" rating="ELITE" ai="ldf5_fortress_chief" hpgauge_level="14" type="ABYSS_GUARD" name_id="331179" abyss_type="GUARD" attack_delay="2100" npc_id="251962" sensory_range="10" tribe="PROTECTGUARD_DARK" name="Squad Elite Knight" rank="EXPERT" height="2">
     <stats hp_regen="178164" maxHp="356328" pdef="1782" walk_speed="1.457" mresist="1924" mboost_resist="1262" run_speed="6" accuracy="2370" main_hand_attack="2467" main_hand_crit_rate="172" mdef="635" mboost="0" parry="901" crit_spell="116" maxXp="2992441" block="1702" main_hand_accuracy="3621" power="1332" evasion="801" run_speed_fight="6"/>
     <equipment>
       <item>114601479</item>

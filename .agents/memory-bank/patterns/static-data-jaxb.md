@@ -171,3 +171,25 @@ first_check: `grep npc_id 目标NPC` 于 portal_template2.xml（连同活服孪�
 3. **落点与朝向的真端编码**：落点坐标誊自真端 world.xml 的 direct_portals（`From_..._To_..._S1/S2` 与 `Op_Risen_coord` 复活点互证）；`portal_loc.h`（signed byte）= 真端 `dir`(度)/3（`MathUtil.convertDegreeToHeading`，`RetailDirectPortalEngine` 同式，dir>127 也是除法而非补码）；世界以 `id/worldid.xml` 判别名与主/活（Underpass=600010000 活、Underpass_M=600110000 主服）。
 4. **热更与缓存**：`PortalAI2`(ai=portal) 的 `portalUse` 在 `handleSpawned()` 一次性缓存 ⇒ `//reload portal` 后必须 `//reload_spawn <图>`（对应世界名如 Silentera）或重启才生效；`PortalDialogAI2`(ai=portal_dialog) 每次点击实时查 `PORTAL2_DATA` ⇒ `//reload portal` 即可。zone 注册等结构数据与代码变更仍需冷重启。
 5. **任务物件失败交互三态**（QuestItemNpcAI2）：引擎全未认领时——采集物零包（QE-137）；关联任务（onTalkEvent）全部 COMPLETE/REWARD ⇒ 静默（物件已用完）；其余（未接/进行中）⇒ 1300690 提醒。三态由 `failedInteractionReply(dialogNpc, collectObject, relatedQuestsFinished)` 分类、单测锁定。
+
+---
+
+## [SDJ-007] 七、基地占领关键 NPC 的 npc_type 合同——CHIEF/SLAYER 必须 ATTACKABLE
+<!-- pattern-metadata
+status: CONFIRMED
+scope: 基地（Base）占领/袭击闭环的静态数据合同：spawns/Bases/*.xml 的 handler=CHIEF/SLAYER 条目与 npc_templates 的 npc_type 联动；Base.spawnBoss/BaseService.capture 占领链路
+first_seen: 2026-10-09
+last_verified: 2026-10-09
+symptom: 击杀基地全部可见 NPC 基地仍不易主（实机报障：欧比斯 400010000 base 60 焰毁前哨，天族打魔族基地无反应）；凡 CHIEF/SLAYER 标 NON_ATTACKABLE 的基地，占领或袭击闭环永久失效且服务端零报错
+root_cause: Encom 数据包系统性错标 npc_type，与代码行为合同脱节：占领只由 CHIEF 死亡驱动（Base.spawnBoss 仅给 handler=CHIEF 挂 BaseBossDeathListener → onBeforeDie → BaseService.capture），而 Npc.isAttackableNpc 仅认 NpcType.ATTACKABLE → NON_ATTACKABLE 指挥官玩家无法攻击；全库 487 条基地 CHIEF/SLAYER spawn 中 260 条违约（242 个模板，11 图：深渊前哨 24 个天/魔指挥官、冒险家基地 DF2/DF3、Panesterra GAb1、Katalam/Levinshor/Kaldor LF2/LDF4/LDF5 系）；同族龙系指挥官为 ATTACKABLE（对照先例，龙族前哨可正常占领）
+fix_or_guardrail: 合同=spawns/Bases 的 CHIEF/SLAYER 模板必须 npc_type="ATTACKABLE"；全库审计用 .agents/summary/base-chief-attackable-audit/audit_base_chief_attackable.py（当前 487/487 合规、violations.tsv 归零），新基地数据入包或批量改 npc_templates 后必须复跑；复测提醒：指挥官由 delayedSpawn 在基地启动/易主后 5~10 分钟刷新，杀空普通守卫不易主是设计行为，勿误判为未修复
+evidence: src/main/java/com/aionemu/gameserver/services/base/Base.java:387-401（spawnBoss 只认 CHIEF）、Base.java:591-621（spawnAttackers 只认 SLAYER）、Base.java:379-385（delayedSpawn 5-10min）；services/base/BaseBossDeathListener.java:47-85（onBeforeDie 占领结算）；model/gameobjects/Npc.java:405-407（isAttackableNpc 仅认 ATTACKABLE）；.agents/summary/base-chief-attackable-audit/（审计脚本+归零 TSV+验收文档 2026-10-09-base-chief-attackable-capture-fix.zh-CN.md）
+validation: 静态审计 487 条 CHIEF/SLAYER 全部 ATTACKABLE（0 违约）；diff 剥离 npc_type 后 532 行完全成对（4 个 npc_template_*.xml 266 行，其余字段零漂移）；242 个 id 全 spawns/ 反查仅被 spawns/Bases/ 引用、零复用误伤；实机 2026-10-09 用户确认深渊前哨杀指挥官易主成功
+boundaries: 修复面仅限基地占领关键 NPC，勿把 NON_ATTACKABLE→ATTACKABLE 泛化到装饰/任务/旗帜 NPC；SLAYER（NPC 袭击军）抢指挥官尾刀会留下短暂无 boss 死角（capture→stop→start 才重刷）属逻辑层遗留未修，见 summary 验收文档；指挥官 5-10 分钟延迟刷新为真端对齐设计
+superseded_by: none
+first_check: 遇「基地占领不触发/NPC 打不了」类报障，先跑 python3 -I .agents/summary/base-chief-attackable-audit/audit_base_chief_attackable.py 看违约清单；再核对涉事模板 npc_type 与 spawns/Bases 的 handler 标注是否脱节
+-->
+
+1. **占领是 CHIEF 单点驱动**：`Base.spawnBoss()` 只给 `handler="CHIEF"` 的 spawn 挂 `BaseBossDeathListener`，普通守卫（`handlerType == null`）死亡设计上就不易主——排查此类报障先确认玩家杀的是不是指挥官，而不是先怀疑占领逻辑。
+2. **npc_type 是服务端攻击合同**：`Npc.isAttackableNpc()` 仅认 `NpcType.ATTACKABLE`；`NON_ATTACKABLE` 的 NPC 客户端不可选攻、服务端拒攻击包，且**零报错静默失效**。数据包同族对照是快速定位法（深渊龙系指挥官 ATTACKABLE vs 天/魔系 NON_ATTACKABLE，直接暴露错标模式）。
+3. **批量修复的安全三步**：违约 id 全 spawns/ 反查确认零复用 → 仅替换目标模板行内 `npc_type` 字段（diff 剥离该字段后必须成对一致）→ 复跑审计脚本归零。审计脚本同时覆盖 SLAYER（袭击军须可被击杀）。

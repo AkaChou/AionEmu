@@ -29459,7 +29459,7 @@
     <bound_radius side="7" upper="8" front="16"/>
     <talk_info delay="3" distance="5"/>
   </npc_template>
-<npc_template name_desc="GAb1_01_chief01_L_65_An" attack_range="2" npc_type="NON_ATTACKABLE" race="ELYOS" level="75" attack_rate="1000" title_id="464935" rating="ELITE" ai="aggressive" hpgauge_level="3" type="ABYSS_GUARD" name_id="346536" abyss_type="GUARD" attack_delay="2100" npc_id="277576" sensory_range="6" tribe="GAB1_01_POINT_01" name="Belani Warcaptain" rank="SEASONED" height="2">
+<npc_template name_desc="GAb1_01_chief01_L_65_An" attack_range="2" npc_type="ATTACKABLE" race="ELYOS" level="75" attack_rate="1000" title_id="464935" rating="ELITE" ai="aggressive" hpgauge_level="3" type="ABYSS_GUARD" name_id="346536" abyss_type="GUARD" attack_delay="2100" npc_id="277576" sensory_range="6" tribe="GAB1_01_POINT_01" name="Belani Warcaptain" rank="SEASONED" height="2">
     <stats hp_regen="14249" maxHp="28498" pdef="1447" walk_speed="1.419" mresist="1428" mboost_resist="0" run_speed="6" accuracy="2370" main_hand_attack="746" main_hand_crit_rate="15" mdef="515" mboost="0" parry="454" crit_spell="11" maxXp="110520" block="809" main_hand_accuracy="2059" power="1232" evasion="354" run_speed_fight="7"/>
     <equipment>
       <item>114601479</item>
@@ -29472,7 +29472,7 @@
     </equipment>
     <bound_radius side="0.7" upper="2" front="0.5"/>
   </npc_template>
-<npc_template name_desc="GAb1_01_chief02_L_65_An" attack_range="2" npc_type="NON_ATTACKABLE" race="ASMODIANS" level="75" attack_rate="1000" title_id="464936" rating="ELITE" ai="aggressive" hpgauge_level="3" type="ABYSS_GUARD" name_id="346537" abyss_type="GUARD" attack_delay="2100" npc_id="277577" sensory_range="6" tribe="GAB1_02_POINT_01" name="Belani Warcaptain" rank="SEASONED" height="2">
+<npc_template name_desc="GAb1_01_chief02_L_65_An" attack_range="2" npc_type="ATTACKABLE" race="ASMODIANS" level="75" attack_rate="1000" title_id="464936" rating="ELITE" ai="aggressive" hpgauge_level="3" type="ABYSS_GUARD" name_id="346537" abyss_type="GUARD" attack_delay="2100" npc_id="277577" sensory_range="6" tribe="GAB1_02_POINT_01" name="Belani Warcaptain" rank="SEASONED" height="2">
     <stats hp_regen="14249" maxHp="28498" pdef="1447" walk_speed="1.419" mresist="1428" mboost_resist="0" run_speed="6" accuracy="2370" main_hand_attack="746" main_hand_crit_rate="15" mdef="515" mboost="0" parry="454" crit_spell="11" maxXp="110520" block="809" main_hand_accuracy="2059" power="1232" evasion="354" run_speed_fight="7"/>
     <equipment>
       <item>114601479</item>
@@ -29498,7 +29498,7 @@
     </equipment>
     <bound_radius side="0.7" upper="2" front="0.5"/>
   </npc_template>
-<npc_template name_desc="GAb1_01_chief04_L_65_An" attack_range="2" npc_type="NON_ATTACKABLE" race="ELYOS" level="75" attack_rate="1000" title_id="464938" rating="ELITE" ai="aggressive" hpgauge_level="3" type="ABYSS_GUARD" name_id="346539" abyss_type="GUARD" attack_delay="2100" npc_id="277579" sensory_range="6" tribe="GAB1_04_POINT_01" name="Belani Warcaptain" rank="SEASONED" height="2">
+<npc_template name_desc="GAb1_01_chief04_L_65_An" attack_range="2" npc_type="ATTACKABLE" race="ELYOS" level="75" attack_rate="1000" title_id="464938" rating="ELITE" ai="aggressive" hpgauge_level="3" type="ABYSS_GUARD" name_id="346539" abyss_type="GUARD" attack_delay="2100" npc_id="277579" sensory_range="6" tribe="GAB1_04_POINT_01" name="Belani Warcaptain" rank="SEASONED" height="2">
     <stats hp_regen="14249" maxHp="28498" pdef="1447" walk_speed="1.419" mresist="1428" mboost_resist="0" run_speed="6" accuracy="2370" main_hand_attack="746" main_hand_crit_rate="15" mdef="515" mboost="0" parry="454" crit_spell="11" maxXp="110520" block="809" main_hand_accuracy="2059" power="1232" evasion="354" run_speed_fight="7"/>
     <equipment>
       <item>114601513</item>
@@ -29518,7 +29518,7 @@
     </equipment>
     <bound_radius side="1.6" upper="3" front="2"/>
   </npc_template>
-<npc_template name_desc="GAb1_02_chief01_L_65_An" attack_range="2" npc_type="NON_ATTACKABLE" race="ASMODIANS" level="75" attack_rate="1000" title_id="464935" rating="ELITE" ai="aggressive" hpgauge_level="3" type="ABYSS_GUARD" name_id="346541" abyss_type="GUARD" attack_delay="2100" npc_id="277581" sensory_range="6" tribe="GAB1_01_POINT_01" name="Aspamon Warcaptain" rank="SEASONED" height="2">
+<npc_template name_desc="GAb1_02_chief01_L_65_An" attack_range="2" npc_type="ATTACKABLE" race="ASMODIANS" level="75" attack_rate="1000" title_id="464935" rating="ELITE" ai="aggressive" hpgauge_level="3" type="ABYSS_GUARD" name_id="346541" abyss_type="GUARD" attack_delay="2100" npc_id="277581" sensory_range="6" tribe="GAB1_01_POINT_01" name="Aspamon Warcaptain" rank="SEASONED" height="2">
     <stats hp_regen="14249" maxHp="28498" pdef="1447" walk_speed="1.419" mresist="1428" mboost_resist="0" run_speed="6" accuracy="2370" main_hand_attack="746" main_hand_crit_rate="15" mdef="515" mboost="0" parry="454" crit_spell="11" maxXp="110520" block="809" main_hand_accuracy="2059" power="1232" evasion="354" run_speed_fight="7"/>
     <equipment>
       <item>114601514</item>
@@ -29531,7 +29531,7 @@
     </equipment>
     <bound_radius side="0.7" upper="2" front="0.5"/>
   </npc_template>
-<npc_template name_desc="GAb1_02_chief02_L_65_An" attack_range="2" npc_type="NON_ATTACKABLE" race="ELYOS" level="75" attack_rate="1000" title_id="464936" rating="ELITE" ai="aggressive" hpgauge_level="3" type="ABYSS_GUARD" name_id="346542" abyss_type="GUARD" attack_delay="2100" npc_id="277582" sensory_range="6" tribe="GAB1_02_POINT_01" name="Aspamon Warcaptain" rank="SEASONED" height="2">
+<npc_template name_desc="GAb1_02_chief02_L_65_An" attack_range="2" npc_type="ATTACKABLE" race="ELYOS" level="75" attack_rate="1000" title_id="464936" rating="ELITE" ai="aggressive" hpgauge_level="3" type="ABYSS_GUARD" name_id="346542" abyss_type="GUARD" attack_delay="2100" npc_id="277582" sensory_range="6" tribe="GAB1_02_POINT_01" name="Aspamon Warcaptain" rank="SEASONED" height="2">
     <stats hp_regen="14249" maxHp="28498" pdef="1447" walk_speed="1.419" mresist="1428" mboost_resist="0" run_speed="6" accuracy="2370" main_hand_attack="746" main_hand_crit_rate="15" mdef="515" mboost="0" parry="454" crit_spell="11" maxXp="110520" block="809" main_hand_accuracy="2059" power="1232" evasion="354" run_speed_fight="7"/>
     <equipment>
       <item>114601479</item>
@@ -29544,7 +29544,7 @@
     </equipment>
     <bound_radius side="0.7" upper="2" front="0.5"/>
   </npc_template>
-<npc_template name_desc="GAb1_02_chief03_L_65_An" attack_range="2" npc_type="NON_ATTACKABLE" race="ASMODIANS" level="75" attack_rate="1000" title_id="464937" rating="ELITE" ai="aggressive" hpgauge_level="3" type="ABYSS_GUARD" name_id="346543" abyss_type="GUARD" attack_delay="2100" npc_id="277583" sensory_range="6" tribe="GAB1_03_POINT_01" name="Aspamon Warcaptain" rank="SEASONED" height="2">
+<npc_template name_desc="GAb1_02_chief03_L_65_An" attack_range="2" npc_type="ATTACKABLE" race="ASMODIANS" level="75" attack_rate="1000" title_id="464937" rating="ELITE" ai="aggressive" hpgauge_level="3" type="ABYSS_GUARD" name_id="346543" abyss_type="GUARD" attack_delay="2100" npc_id="277583" sensory_range="6" tribe="GAB1_03_POINT_01" name="Aspamon Warcaptain" rank="SEASONED" height="2">
     <stats hp_regen="14249" maxHp="28498" pdef="1447" walk_speed="1.419" mresist="1428" mboost_resist="0" run_speed="6" accuracy="2370" main_hand_attack="746" main_hand_crit_rate="15" mdef="515" mboost="0" parry="454" crit_spell="11" maxXp="110520" block="809" main_hand_accuracy="2059" power="1232" evasion="354" run_speed_fight="7"/>
     <equipment>
       <item>114601479</item>
@@ -29577,7 +29577,7 @@
     </equipment>
     <bound_radius side="1.6" upper="3" front="2"/>
   </npc_template>
-<npc_template name_desc="GAb1_03_chief01_L_65_An" attack_range="2" npc_type="NON_ATTACKABLE" race="ASMODIANS" level="75" attack_rate="1000" title_id="464935" rating="ELITE" ai="aggressive" hpgauge_level="3" type="ABYSS_GUARD" name_id="346546" abyss_type="GUARD" attack_delay="2100" npc_id="277586" sensory_range="6" tribe="GAB1_01_POINT_01" name="Atasin Warcaptain" rank="SEASONED" height="2">
+<npc_template name_desc="GAb1_03_chief01_L_65_An" attack_range="2" npc_type="ATTACKABLE" race="ASMODIANS" level="75" attack_rate="1000" title_id="464935" rating="ELITE" ai="aggressive" hpgauge_level="3" type="ABYSS_GUARD" name_id="346546" abyss_type="GUARD" attack_delay="2100" npc_id="277586" sensory_range="6" tribe="GAB1_01_POINT_01" name="Atasin Warcaptain" rank="SEASONED" height="2">
     <stats hp_regen="14249" maxHp="28498" pdef="1447" walk_speed="1.419" mresist="1428" mboost_resist="0" run_speed="6" accuracy="2370" main_hand_attack="746" main_hand_crit_rate="15" mdef="515" mboost="0" parry="454" crit_spell="11" maxXp="110520" block="809" main_hand_accuracy="2059" power="1232" evasion="354" run_speed_fight="7"/>
     <equipment>
       <item>114601514</item>
@@ -29603,7 +29603,7 @@
     </equipment>
     <bound_radius side="0.7" upper="2" front="0.5"/>
   </npc_template>
-<npc_template name_desc="GAb1_03_chief03_L_65_An" attack_range="2" npc_type="NON_ATTACKABLE" race="ELYOS" level="75" attack_rate="1000" title_id="464937" rating="ELITE" ai="aggressive" hpgauge_level="3" type="ABYSS_GUARD" name_id="346548" abyss_type="GUARD" attack_delay="2100" npc_id="277588" sensory_range="6" tribe="GAB1_03_POINT_01" name="Atasin Warcaptain" rank="SEASONED" height="2">
+<npc_template name_desc="GAb1_03_chief03_L_65_An" attack_range="2" npc_type="ATTACKABLE" race="ELYOS" level="75" attack_rate="1000" title_id="464937" rating="ELITE" ai="aggressive" hpgauge_level="3" type="ABYSS_GUARD" name_id="346548" abyss_type="GUARD" attack_delay="2100" npc_id="277588" sensory_range="6" tribe="GAB1_03_POINT_01" name="Atasin Warcaptain" rank="SEASONED" height="2">
     <stats hp_regen="14249" maxHp="28498" pdef="1447" walk_speed="1.419" mresist="1428" mboost_resist="0" run_speed="6" accuracy="2370" main_hand_attack="746" main_hand_crit_rate="15" mdef="515" mboost="0" parry="454" crit_spell="11" maxXp="110520" block="809" main_hand_accuracy="2059" power="1232" evasion="354" run_speed_fight="7"/>
     <equipment>
       <item>114601479</item>
@@ -29616,7 +29616,7 @@
     </equipment>
     <bound_radius side="0.7" upper="2" front="0.5"/>
   </npc_template>
-<npc_template name_desc="GAb1_03_chief04_L_65_An" attack_range="2" npc_type="NON_ATTACKABLE" race="ASMODIANS" level="75" attack_rate="1000" title_id="464938" rating="ELITE" ai="aggressive" hpgauge_level="3" type="ABYSS_GUARD" name_id="346549" abyss_type="GUARD" attack_delay="2100" npc_id="277589" sensory_range="6" tribe="GAB1_04_POINT_01" name="Atasin Warcaptain" rank="SEASONED" height="2">
+<npc_template name_desc="GAb1_03_chief04_L_65_An" attack_range="2" npc_type="ATTACKABLE" race="ASMODIANS" level="75" attack_rate="1000" title_id="464938" rating="ELITE" ai="aggressive" hpgauge_level="3" type="ABYSS_GUARD" name_id="346549" abyss_type="GUARD" attack_delay="2100" npc_id="277589" sensory_range="6" tribe="GAB1_04_POINT_01" name="Atasin Warcaptain" rank="SEASONED" height="2">
     <stats hp_regen="14249" maxHp="28498" pdef="1447" walk_speed="1.419" mresist="1428" mboost_resist="0" run_speed="6" accuracy="2370" main_hand_attack="746" main_hand_crit_rate="15" mdef="515" mboost="0" parry="454" crit_spell="11" maxXp="110520" block="809" main_hand_accuracy="2059" power="1232" evasion="354" run_speed_fight="7"/>
     <equipment>
       <item>114601479</item>
@@ -29636,7 +29636,7 @@
     </equipment>
     <bound_radius side="1.6" upper="3" front="2"/>
   </npc_template>
-<npc_template name_desc="GAb1_04_chief01_L_65_An" attack_range="2" npc_type="NON_ATTACKABLE" race="BROWNIE" level="75" attack_rate="1000" title_id="464935" rating="ELITE" ai="general" hpgauge_level="3" type="GENERAL" name_id="346551" attack_delay="2100" npc_id="277591" sensory_range="6" tribe="GAB1_01_POINT_01" name="Disilgot Warcaptain" rank="SEASONED" height="2">
+<npc_template name_desc="GAb1_04_chief01_L_65_An" attack_range="2" npc_type="ATTACKABLE" race="BROWNIE" level="75" attack_rate="1000" title_id="464935" rating="ELITE" ai="general" hpgauge_level="3" type="GENERAL" name_id="346551" attack_delay="2100" npc_id="277591" sensory_range="6" tribe="GAB1_01_POINT_01" name="Disilgot Warcaptain" rank="SEASONED" height="2">
     <stats hp_regen="14249" maxHp="28498" pdef="1447" walk_speed="1.419" mresist="1428" mboost_resist="0" run_speed="6" accuracy="2370" main_hand_attack="746" main_hand_crit_rate="15" mdef="515" mboost="0" parry="454" crit_spell="11" maxXp="110520" block="809" main_hand_accuracy="2059" power="1232" evasion="354" run_speed_fight="7"/>
     <equipment>
       <item>114601514</item>
@@ -29662,7 +29662,7 @@
     </equipment>
     <bound_radius side="0.7" upper="2" front="0.5"/>
   </npc_template>
-<npc_template name_desc="GAb1_04_chief03_L_65_An" attack_range="2" npc_type="NON_ATTACKABLE" race="GCHIEF_LIGHT" level="75" attack_rate="1000" title_id="464937" rating="ELITE" ai="aggressive" hpgauge_level="3" type="ABYSS_GUARD" name_id="346553" abyss_type="GUARD" attack_delay="2100" npc_id="277593" sensory_range="6" tribe="GAB1_03_POINT_01" name="Disilgot Warcaptain" rank="EXPERT" height="2">
+<npc_template name_desc="GAb1_04_chief03_L_65_An" attack_range="2" npc_type="ATTACKABLE" race="GCHIEF_LIGHT" level="75" attack_rate="1000" title_id="464937" rating="ELITE" ai="aggressive" hpgauge_level="3" type="ABYSS_GUARD" name_id="346553" abyss_type="GUARD" attack_delay="2100" npc_id="277593" sensory_range="6" tribe="GAB1_03_POINT_01" name="Disilgot Warcaptain" rank="EXPERT" height="2">
     <stats hp_regen="14249" maxHp="28498" pdef="1447" walk_speed="1.419" mresist="1428" mboost_resist="0" run_speed="6" accuracy="2370" main_hand_attack="746" main_hand_crit_rate="15" mdef="515" mboost="0" parry="454" crit_spell="11" maxXp="110520" block="809" main_hand_accuracy="2059" power="1232" evasion="354" run_speed_fight="7"/>
     <equipment>
       <item>114601479</item>
@@ -29675,7 +29675,7 @@
     </equipment>
     <bound_radius side="0.7" upper="2" front="0.5"/>
   </npc_template>
-<npc_template name_desc="GAb1_04_chief04_L_65_An" attack_range="2" npc_type="NON_ATTACKABLE" race="GCHIEF_DARK" level="75" attack_rate="1000" title_id="464938" rating="ELITE" ai="aggressive" hpgauge_level="3" type="ABYSS_GUARD" name_id="346554" abyss_type="GUARD" attack_delay="2100" npc_id="277594" sensory_range="6" tribe="GAB1_04_POINT_01" name="Disilgot Warcaptain" rank="EXPERT" height="2">
+<npc_template name_desc="GAb1_04_chief04_L_65_An" attack_range="2" npc_type="ATTACKABLE" race="GCHIEF_DARK" level="75" attack_rate="1000" title_id="464938" rating="ELITE" ai="aggressive" hpgauge_level="3" type="ABYSS_GUARD" name_id="346554" abyss_type="GUARD" attack_delay="2100" npc_id="277594" sensory_range="6" tribe="GAB1_04_POINT_01" name="Disilgot Warcaptain" rank="EXPERT" height="2">
     <stats hp_regen="14249" maxHp="28498" pdef="1447" walk_speed="1.419" mresist="1428" mboost_resist="0" run_speed="6" accuracy="2370" main_hand_attack="746" main_hand_crit_rate="15" mdef="515" mboost="0" parry="454" crit_spell="11" maxXp="110520" block="809" main_hand_accuracy="2059" power="1232" evasion="354" run_speed_fight="7"/>
     <equipment>
       <item>114601479</item>
@@ -30988,7 +30988,7 @@
     </equipment>
     <bound_radius side="0.7" upper="2" front="0.5"/>
   </npc_template>
-<npc_template name_desc="GAb1_02_Recon04_Fi_L_65_An" attack_range="2" npc_type="NON_ATTACKABLE" race="BROWNIE" level="75" attack_rate="1000" title_id="464943" rating="NORMAL" ai="general" hpgauge_level="3" type="GENERAL" name_id="346876" attack_delay="2100" npc_id="277705" sensory_range="7" tribe="GAB1_04_POINT_01" name="Aspamon Scout Infantry" rank="DISCIPLINED" height="2">
+<npc_template name_desc="GAb1_02_Recon04_Fi_L_65_An" attack_range="2" npc_type="ATTACKABLE" race="BROWNIE" level="75" attack_rate="1000" title_id="464943" rating="NORMAL" ai="general" hpgauge_level="3" type="GENERAL" name_id="346876" attack_delay="2100" npc_id="277705" sensory_range="7" tribe="GAB1_04_POINT_01" name="Aspamon Scout Infantry" rank="DISCIPLINED" height="2">
     <stats hp_regen="13630" maxHp="27259" pdef="1447" walk_speed="1.457" mresist="1428" mboost_resist="0" run_speed="6" accuracy="2370" main_hand_attack="755" main_hand_crit_rate="15" mdef="515" mboost="0" parry="809" crit_spell="11" maxXp="110520" block="0" main_hand_accuracy="2059" power="1232" evasion="709" run_speed_fight="7"/>
     <equipment>
       <item>114601513</item>
