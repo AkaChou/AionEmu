@@ -128,13 +128,13 @@ public class GeoDataConfig {
 	public static boolean GEO_NPC_WALK_COLLISION_ENABLE;
 
 	/**
-	 * 行走路线装载校验模式：off=关闭；log=只记录不改数据（默认）；enforce=按世界生成净化副本
+	 * 行走路线装载校验模式：off=关闭（默认）；log=只记录不改数据；enforce=按世界生成净化副本
 	 * （截断超长/LoS 失败段、闭环去重）。对照真端 WayPointInfo::CalcWayPointZPos 的装载期校验。
-	 * Walker route validation mode: off; log = record only (default); enforce = per-world sanitized copy
-	 * (truncate over-long / LoS-failed legs, de-duplicate closed loops). Mirrors the retail load-time
-	 * checks in WayPointInfo::CalcWayPointZPos.
+	 * Walker route validation mode: off = disabled (default); log = record only; enforce = per-world
+	 * sanitized copy (truncate over-long / LoS-failed legs, de-duplicate closed loops). Mirrors the retail
+	 * load-time checks in WayPointInfo::CalcWayPointZPos.
 	 */
-	@Property(key = "gameserver.geo.npc.walk.route.validate", defaultValue = "log")
+	@Property(key = "gameserver.geo.npc.walk.route.validate", defaultValue = "off")
 	public static String GEO_NPC_WALK_ROUTE_VALIDATE;
 
 	/**

@@ -16,16 +16,16 @@ import java.util.concurrent.ConcurrentHashMap;
  * （相邻点 ≤100m、每点必须落在可行走面、相邻点必须可寻路、闭环末点 &lt;1m 去重）。
  * <p>
  * 惰性 per-(worldId, routeId) 一次：首次在该世界启动某条路线巡逻时触发，结果只记一次。
- * 默认 {@code log} 模式只记录不改数据；{@code off} 关闭；{@code enforce}
+ * 默认 {@code off} 关闭；{@code log} 模式只记录不改数据；{@code enforce}
  * （按世界生成净化副本：截断超长/不可达段、闭环去重）留待后续切片实现。
  * 校验只消费静态数据与只读查询（geo 探测 + PATH 网格直线检查），不改动 {@link WalkerTemplate} 共享数据。
  * <p>
  * Walker route load-time validation, mirroring the retail {@code WayPointInfo::CalcWayPointZPos} checks
  * (adjacent steps &le; 100 m, every step on a walkable surface, adjacent steps pathable, closed-loop
  * de-duplication below 1 m). Lazy once per (worldId, routeId) when a route first starts walking in that
- * world. The default {@code log} mode only records; {@code off} disables; {@code enforce} (per-world
- * sanitized copy) is left for a later slice. Validation only reads static data and read-only queries; it
- * never mutates the shared {@link WalkerTemplate}.
+ * world. The default mode is {@code off} (disabled); {@code log} mode only records; {@code enforce}
+ * (per-world sanitized copy) is left for a later slice. Validation only reads static data and read-only
+ * queries; it never mutates the shared {@link WalkerTemplate}.
  */
 @Slf4j
 public final class WalkerRouteValidator {
