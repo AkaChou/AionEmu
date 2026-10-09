@@ -108,6 +108,7 @@ import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.idfactory.IDFactory;
 import com.aionemu.gameserver.world.knownlist.CreatureAwareKnownList;
+import com.aionemu.gameserver.world.knownlist.MinionKnownList;
 import com.aionemu.gameserver.world.knownlist.NpcKnownList;
 import com.aionemu.gameserver.world.knownlist.PlayerAwareKnownList;
 /**
@@ -969,7 +970,9 @@ public class VisibleObjectSpawner {
 
         MinionController controller = new MinionController();
         Minion minion = new Minion(minionTemplate, controller, minionCommonData, player);
-        minion.setKnownlist(new PlayerAwareKnownList(minion));
+        // 主仆对不受 95m 可见距离约束：风之路/高移速不再触发召唤/收回循环（CL-001）。
+        // The master-minion pair ignores the 95m visibility distance: no more unsummon/summon loops on windstreams or fast movement (CL-001).
+        minion.setKnownlist(new MinionKnownList(minion));
         player.setMinion(minion);
 
         float x = player.getX() - 2;
