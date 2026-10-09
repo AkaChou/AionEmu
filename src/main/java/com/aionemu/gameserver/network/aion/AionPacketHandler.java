@@ -3,6 +3,7 @@ package com.aionemu.gameserver.network.aion;
 
 import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
+
 import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.Map;
@@ -21,13 +22,28 @@ import com.aionemu.gameserver.utils.Util;
 @Slf4j
 public class AionPacketHandler {
 
-	/** 操作码到客户端包原型 / opcode to client packet prototype */
+	/**
+	 * 操作码最大寻址边界（16 位无符号整数上限）。
+	 * Maximum opcode addressing boundary (unsigned 16-bit integer upper bound).
+	 */
+	private static final int MAX_OPCODE_TABLE_SIZE = 0x10000;
+
+	/**
+	 * 操作码到客户端包原型 / opcode to client packet prototype
+	 */
 	private final Map<Integer, AionClientPacket> packetsPrototypes = new HashMap<>();
+
+	/**
+	 * 直接数组索引缓存：消除高频网络入站包由于 Map 查找导致的 Integer 装箱与哈希开销。
+	 * Direct array index cache: eliminates Integer boxing and hashing overhead from Map lookups on high-frequency inbound packets.
+	 */
+	private final AionClientPacket[] prototypesByOpcode = new AionClientPacket[MAX_OPCODE_TABLE_SIZE];
 
 	/**
 	 * 从给定 ByteBuffer 读取一个包。
 	 * Reads one packet from the given ByteBuffer.
-	 * @param data 包数据 / packet data
+	 *
+	 * @param data   包数据 / packet data
 	 * @param client 客户端连接 / client connection
 	 * @return 解析出的客户端包，未知包返回 null / client packet, or null if unknown
 	 */
@@ -43,43 +59,52 @@ public class AionPacketHandler {
 	/**
 	 * 注册客户端包原型。
 	 * Registers a client packet prototype.
+	 *
 	 * @param packetPrototype 包原型 / packet prototype
 	 */
 	public void addPacketPrototype(AionClientPacket packetPrototype) {
-		AionClientPacket previous = packetsPrototypes.putIfAbsent(packetPrototype.getOpcode(), packetPrototype);
-		if (previous != null)
-			throw new IllegalArgumentException(String.format("Duplicate opcode 0x%04X: %s and %s", packetPrototype.getOpcode(),
-					previous.getPacketName(), packetPrototype.getPacketName()));
+		int opcode = packetPrototype.getOpcode();
+		AionClientPacket previous = packetsPrototypes.putIfAbsent(opcode, packetPrototype);
+		if (previous != null) {
+			throw new IllegalArgumentException(String.format("Duplicate opcode 0x%04X: %s and %s", opcode,
+				previous.getPacketName(), packetPrototype.getPacketName()));
+		}
+		if (opcode >= 0 && opcode < MAX_OPCODE_TABLE_SIZE) {
+			prototypesByOpcode[opcode] = packetPrototype;
+		}
 	}
 
 	/**
 	 * 按 opcode 获取并克隆包实例；可选在聊天中展示包名/十六进制。
 	 * Resolves and clones a packet by opcode; optionally shows name/hex in chat.
+	 *
 	 * @param state 连接状态 / connection state
-	 * @param id opcode
-	 * @param buf 包缓冲区 / packet buffer
-	 * @param con 连接 / connection
+	 * @param id    opcode
+	 * @param buf   包缓冲区 / packet buffer
+	 * @param con   连接 / connection
 	 * @return 包实例或 null / packet instance or null
 	 */
 	private AionClientPacket getPacket(State state, int id, ByteBuffer buf, AionConnection con) {
-		AionClientPacket prototype = packetsPrototypes.get(id);
+		AionClientPacket prototype = (id >= 0 && id < MAX_OPCODE_TABLE_SIZE)
+			? prototypesByOpcode[id]
+			: packetsPrototypes.get(id);
 
 		if (prototype == null) {
 			unknownPacket(state, id, buf);
 			return null;
 		}
 
-        Player player = con.getActivePlayer();
+		Player player = con.getActivePlayer();
 
 		if (con.getState().equals(State.IN_GAME) && player != null
-				&& player.getAccessLevel() >= DeveloperConfig.SHOW_PACKETS_INCHAT_ACCESSLEVEL) {
+			&& player.getAccessLevel() >= DeveloperConfig.SHOW_PACKETS_INCHAT_ACCESSLEVEL) {
 			if (isPacketFilterd(DeveloperConfig.FILTERED_PACKETS_INCHAT, prototype.getPacketName())) {
 				if (DeveloperConfig.SHOW_PACKET_BYTES_INCHAT) {
 					String PckName = String.format("0x%04X : %s", id, prototype.getPacketName());
 					PacketSendUtility.sendMessage(player, "********************************************");
 					PacketSendUtility.sendMessage(player, PckName);
 					PacketSendUtility.sendMessage(player,
-							Util.toHexStream(getByteBuffer(buf, DeveloperConfig.TOTAL_PACKET_BYTES_INCHAT)));
+						Util.toHexStream(getByteBuffer(buf, DeveloperConfig.TOTAL_PACKET_BYTES_INCHAT)));
 					buf.position(5);
 
 				} else if (DeveloperConfig.SHOW_PACKET_NAMES_INCHAT) {
@@ -94,7 +119,7 @@ public class AionPacketHandler {
 
 		if (con.getState().equals(State.IN_GAME) && con.getActivePlayer().getPlayerAccount().getMembership() == 10) {
 			PacketSendUtility.sendMessage(con.getActivePlayer(),
-					"0x" + Integer.toHexString(res.getOpcode()).toUpperCase() + " : " + res.getPacketName());
+				"0x" + Integer.toHexString(res.getOpcode()).toUpperCase() + " : " + res.getPacketName());
 		}
 		return res;
 	}
@@ -102,6 +127,7 @@ public class AionPacketHandler {
 	/**
 	 * 判断包名是否命中聊天展示过滤列表（* 或空表示全部）。
 	 * Whether the packet name matches the chat display filter (* or empty = all).
+	 *
 	 * @param filterlist 逗号分隔过滤列表 / comma-separated filter list
 	 * @param PacketName 包名 / packet name
 	 * @return 若 shown 则为 true / true if shown
@@ -112,7 +138,7 @@ public class AionPacketHandler {
 		if (filterlist == null || filterlist.equalsIgnoreCase("*")) {
 			return true;
 		}
-		String[] Parts = null;
+		String[] Parts;
 		Parts = filterlist.trim().split(",");
 
 		for (String p : Parts) {
@@ -126,13 +152,14 @@ public class AionPacketHandler {
 	/**
 	 * 从缓冲区复制前 count 字节（从偏移 5 起）用于调试展示。
 	 * Copies the first count bytes from the buffer (from offset 5) for debug display.
-	 * @param buf 源缓冲区 / source buffer
+	 *
+	 * @param buf   源缓冲区 / source buffer
 	 * @param count 字节数 / byte count
 	 * @return 复制缓冲区 / copy buffer
 	 */
 	private ByteBuffer getByteBuffer(ByteBuffer buf, int count) {
 
-		count = (count <= buf.capacity()) ? count : buf.capacity();
+		count = Math.min(count, buf.capacity());
 		ByteBuffer tmpBuffer = buf.asReadOnlyBuffer();
 		tmpBuffer.position(5);
 		tmpBuffer.limit(count);
@@ -153,9 +180,10 @@ public class AionPacketHandler {
 	/**
 	 * 记录未知客户端包。
 	 * Logs an unknown client packet.
+	 *
 	 * @param state 连接状态 / connection state
-	 * @param id opcode
-	 * @param data 包数据 / packet data
+	 * @param id    opcode
+	 * @param data  包数据 / packet data
 	 */
 	private void unknownPacket(State state, int id, ByteBuffer data) {
 		if (NetworkConfig.DISPLAY_UNKNOWNPACKETS) {
