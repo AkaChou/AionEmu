@@ -19,7 +19,6 @@ import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.commons.utils.Rnd;
-import com.aionemu.gameserver.controllers.MinionController;
 import com.aionemu.gameserver.controllers.observer.ItemUseObserver;
 import com.aionemu.gameserver.dao.PlayerDAO;
 import com.aionemu.gameserver.dao.PlayerMinionsDAO;
@@ -401,8 +400,7 @@ public class MinionService {
 		player.setVar(MinionList.LAST_USED_VAR, minionObjId, true);
 		minionbuff.apply(player, minionCommonData.getMinionId());
 
-		((MinionController) minion.getController()).startFollowing(player);
-
+		// 跟随移动由客户端本地模拟（真端架构），服务端不再驱动。 / Following is client-simulated (retail architecture); the server does not drive it.
 		PacketSendUtility.broadcastPacketAndReceive(player, new SM_MINIONS(5, minionCommonData));
 	}
 
@@ -433,7 +431,6 @@ public class MinionService {
 		minionCommonData.setIsLooting(false);
 		minionCommonData.setIsBuffing(false);
 
-		((MinionController) minion.getController()).stopFollowing(player);
 		minion.getController().delete();
 		player.setMinion(null);
 

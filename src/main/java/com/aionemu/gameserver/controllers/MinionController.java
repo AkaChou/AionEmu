@@ -1,38 +1,31 @@
 package com.aionemu.gameserver.controllers;
 
 
-import com.aionemu.boot.i18n.I18n;
-import lombok.extern.slf4j.Slf4j;
-
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
-
-import com.aionemu.gameserver.controllers.movement.MinionMoveController;
-import com.aionemu.gameserver.model.TaskId;
 import com.aionemu.gameserver.model.gameobjects.Minion;
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
-import com.aionemu.gameserver.model.gameobjects.player.Player;
-import com.aionemu.gameserver.network.aion.serverpackets.SM_MOVE;
-import com.aionemu.gameserver.utils.MathUtil;
-import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
- * 小跟班（Minion）控制器，管理跟随与距离过远时的瞬移。
- * Minion controller managing follow behavior and teleport-when-too-far.
- * @author ATracer, Improved by Neon
+ * 小跟班（Minion）控制器：移动完全由客户端本地模拟，服务端零参与（真端架构）。
+ * Minion controller: movement is fully client-simulated, the server takes no part (retail architecture).
+ * <p>真端证据：5.8 真端服务端 {@code Familiar}/{@code FamiliarMapMgr}（含 4311 行地图管理器）中
+ * move/follow/position/speed 关键词零命中，方法全集只有数据管理与召唤/收回状态帧，
+ * 协议层也没有 minion 移动通道——零售的 minion 同速跟随由每个客户端基于主人移动流本地模拟，
+ * 因此不存在「追不上→掉队→瞬拉」。本仓宠物（Pet）即同一待遇（PetController 无任何跟随调度）且实机跟随正常。</p>
+ * <p>Retail evidence: the 5.8 retail server's {@code Familiar}/{@code FamiliarMapMgr} (including the
+ * 4311-line map manager) contains no move/follow/position/speed logic at all — its method set is data
+ * management plus summon/abandon state frames, and the protocol has no minion-movement channel. Retail
+ * minions follow by per-client simulation over the master's movement stream, so the "fall behind →
+ * blink-teleport" loop cannot exist. Our pets already run the same way (no follow scheduling in
+ * PetController) and follow correctly.</p>
+ * <p>服务端只在这些事件触碰 minion：召唤/收回（SM_MINIONS 5/6）、跨图与飞行传送的位置重置（CL-001 的
+ * suspend/restore）、死亡与登出的完整收回。禁止重新引入服务端跟随 tick / SM_MOVE 移动包 / 距离瞬拉
+ * （门禁 {@code MinionKnownListTest#minionMovementStaysClientAuthored} 守护）。</p>
+ * <p>The server touches the minion only on lifecycle events: summon/release (SM_MINIONS 5/6),
+ * cross-map and fly-teleport repositioning (CL-001 suspend/restore), and full release on death/logout.
+ * Never reintroduce server-side follow ticks, SM_MOVE segments or distance teleports — the
+ * {@code MinionKnownListTest#minionMovementStaysClientAuthored} gate enforces this.</p>
  */
-@Slf4j
 public class MinionController extends VisibleObjectController<Minion> {
-
-    /** 开始跟随的距离阈值。 / Distance threshold to start following. */
-    private static final int FOLLOW_RANGE = 5;
-    /** 超出该距离则瞬移到主人身边。 / Distance beyond which the minion teleports to the master. */
-    private static final int TELEPORT_RANGE = 25;
-    /** 跟随移动任务间隔（毫秒）。 / Follow-move task interval in milliseconds. */
-    private static final int MOVE_UPDATE_RATE = 1000;
-    /** 瞬移检测任务间隔（毫秒）。 / Teleport-check task interval in milliseconds. */
-    private static final int TELEPORT_CHECK_RATE = 2000;
-    /** 移动状态掩码。 / Move state mask. */
-    private static final byte MOVE_MASK = (byte) 0x40;
 
     /**
      * 小跟班看到其他对象时的回调（当前无逻辑）。
@@ -53,180 +46,5 @@ public class MinionController extends VisibleObjectController<Minion> {
     @Override
     public void notSee(VisibleObject object, boolean isOutOfRange) {
 
-    }
-
-    /**
-     * 开始跟随指定玩家，启动移动与瞬移检测任务。
-     * Starts following the given player by scheduling move and teleport-check tasks.
-     * @param player master player
-     */
-    public void startFollowing(Player player) {
-        Minion minion = getOwner();
-        if (minion == null || player == null) {
-            return;
-        }
-
-        player.getController().cancelTask(TaskId.MINION_UPDATE);
-        player.getController().cancelTask(TaskId.MINION_TELEPORT_CHECK);
-
-        player.getController().addTask(TaskId.MINION_UPDATE, GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new MinionFollowTask(player), 1000, MOVE_UPDATE_RATE));
-
-        player.getController().addTask(TaskId.MINION_TELEPORT_CHECK, GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new MinionTeleportTask(player), 2000, TELEPORT_CHECK_RATE));
-    }
-
-    /**
-     * 停止跟随并取消相关任务。
-     * Stops following and cancels related tasks.
-     * @param player master player
-     */
-    public void stopFollowing(Player player) {
-        if (player != null) {
-            player.getController().cancelTask(TaskId.MINION_UPDATE);
-            player.getController().cancelTask(TaskId.MINION_TELEPORT_CHECK);
-        }
-    }
-
-    /**
-     * 将小跟班瞬移到玩家当前位置。
-     * Teleports the minion to the player's current position.
-     * @param player master player
-     */
-    public void teleportToPlayer(Player player) {
-        Minion minion = getOwner();
-        if (minion == null || player == null || minion.getMaster() != player || player.getMinion() != minion
-                || !minion.isSpawned()) {
-            return;
-        }
-
-        float oldX = minion.getX();
-        float oldY = minion.getY();
-        float oldZ = minion.getZ();
-
-        com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().updatePosition(minion, player.getX(), player.getY(), player.getZ(), player.getHeading());
-
-        PacketSendUtility.broadcastPacketAndReceive(minion, new SM_MOVE(minion.getObjectId(), oldX, oldY, oldZ, player.getX(), player.getY(), player.getZ(), player.getHeading(), (byte) 0));
-    }
-
-    /**
-     * 周期性跟随任务：按距离移动或瞬移。
-     * Periodic follow task that moves or teleports based on distance.
-     */
-    public class MinionFollowTask implements Runnable {
-
-        /** 主人玩家。 / Master player. */
-        private final Player player;
-
-        /**
-         * 构造跟随任务。
-         * Constructs a follow task.
-         * @param player master player
-         */
-        public MinionFollowTask(Player player) {
-            this.player = player;
-        }
-
-        /**
-         * 执行一次跟随逻辑。
-         * Runs one follow tick.
-         */
-        @Override
-        public void run() {
-            try {
-                Minion minion = getOwner();
-                if (minion == null || player == null || player.getMinion() != minion) {
-                    return;
-                }
-
-                if (minion.getMaster() != player) {
-                    return;
-                }
-
-                if (!minion.isSpawned()) {
-                    return;
-                }
-
-                double distance = MathUtil.getDistance(minion, player);
-
-                if (distance > TELEPORT_RANGE) {
-                    teleportToPlayer(player);
-                    return;
-                }
-
-                MinionMoveController moveController = (MinionMoveController) minion.getMoveController();
-
-                if (distance > FOLLOW_RANGE) {
-                    moveController.setNewDirection(player.getX(), player.getY(), player.getZ(), player.getHeading());
-
-                    PacketSendUtility.broadcastPacket(minion, new SM_MOVE(minion.getObjectId(), minion.getX(), minion.getY(), minion.getZ(), player.getX(), player.getY(), player.getZ(), minion.getHeading(), MOVE_MASK));
-                } else {
-                    moveController.abortMove();
-                    PacketSendUtility.broadcastPacket(minion, new SM_MOVE(minion.getObjectId(), minion.getX(), minion.getY(), minion.getZ(), minion.getX(), minion.getY(), minion.getZ(), minion.getHeading(), (byte) 0));
-                }
-
-            } catch (Exception e) {
-                log.error(I18n.get("log.77d741ca3881", player == null ? 0 : player.getObjectId(),
-                        getOwner() == null ? 0 : getOwner().getObjectId()), e);
-            }
-        }
-    }
-
-    /**
-     * 周期性瞬移检测任务：距离过大时拉回或加速靠近。
-     * Periodic teleport-check task that pulls the minion back or speeds approach when far.
-     */
-    public class MinionTeleportTask implements Runnable {
-
-        /** 主人玩家。 / Master player. */
-        private final Player player;
-
-        /**
-         * 构造瞬移检测任务。
-         * Constructs a teleport-check task.
-         * @param player master player
-         */
-        public MinionTeleportTask(Player player) {
-            this.player = player;
-        }
-
-        /**
-         * 执行一次瞬移检测。
-         * Runs one teleport-check tick.
-         */
-        @Override
-        public void run() {
-            try {
-                Minion minion = getOwner();
-                if (minion == null || player == null || player.getMinion() != minion) {
-                    return;
-                }
-
-                if (minion.getMaster() != player) {
-                    return;
-                }
-
-                if (!minion.isSpawned()) {
-                    return;
-                }
-
-                double distance = MathUtil.getDistance(minion, player);
-
-                if (distance > TELEPORT_RANGE) {
-                    teleportToPlayer(player);
-                    return;
-                }
-
-                if (distance > FOLLOW_RANGE * 2) {
-                    MinionMoveController moveController = (MinionMoveController) minion.getMoveController();
-
-                    moveController.setNewDirection(player.getX(), player.getY(), player.getZ(), player.getHeading());
-
-                    PacketSendUtility.broadcastPacket(minion, new SM_MOVE(minion.getObjectId(), minion.getX(), minion.getY(), minion.getZ(), player.getX(), player.getY(), player.getZ(), minion.getHeading(), MOVE_MASK));
-                }
-
-            } catch (Exception e) {
-                log.error(I18n.get("log.d83820e1fe0d", player == null ? 0 : player.getObjectId(),
-                        getOwner() == null ? 0 : getOwner().getObjectId()), e);
-            }
-        }
     }
 }

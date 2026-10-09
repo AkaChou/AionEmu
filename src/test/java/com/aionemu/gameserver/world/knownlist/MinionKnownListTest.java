@@ -1,5 +1,6 @@
 package com.aionemu.gameserver.world.knownlist;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.lang.reflect.Field;
@@ -51,5 +52,23 @@ class MinionKnownListTest {
 				"守护灵必须装配 MinionKnownList / the minion must be wired with MinionKnownList");
 		assertTrue(spawner.contains("pet.setKnownlist(new PlayerAwareKnownList(pet))"),
 				"宠物保持原感知规则 / the pet keeps the default awareness rules");
+	}
+
+	@Test
+	void minionMovementStaysClientAuthored() throws Exception {
+		String controller = Files.readString(
+				Path.of("src/main/java/com/aionemu/gameserver/controllers/MinionController.java"));
+		String service = Files.readString(
+				Path.of("src/main/java/com/aionemu/gameserver/services/toypet/MinionService.java"));
+
+		// 真端架构：minion 移动由客户端本地模拟，服务端禁止跟随 tick / SM_MOVE 移动包 / 距离瞬拉。
+		// 断言匹配代码形态（import/调用），避免命中本文档注释中的术语字样。
+		// Retail architecture: minion movement is client-simulated; the server must not run follow
+		// ticks, emit SM_MOVE segments or blink-teleport by distance. Assertions match code shapes
+		// (imports/calls) so the prose terms in this controller's own doc comment never trip them.
+		assertFalse(controller.contains("scheduleAtFixedRate"), "禁止重新引入服务端跟随任务 / no server-side follow tasks");
+		assertFalse(controller.contains("serverpackets.SM_MOVE"), "禁止服务端下发 minion 移动包 / no server-driven SM_MOVE");
+		assertFalse(controller.contains("teleportToPlayer(Player"), "禁止距离瞬拉 / no distance teleport");
+		assertFalse(service.contains("startFollowing"), "召唤路径不得重启跟随调度 / spawning must not restart follow scheduling");
 	}
 }
