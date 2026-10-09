@@ -49,7 +49,13 @@ class Quest1311ClientDialogAlignmentTest {
 	@Test
 	void soilDeliveryEntersRewardAndTheReportShowsTheRetailPage() throws Exception {
 		QuestDefinition definition = definition().definition();
-		assertNode(definition, "reward", QuestStatus.REWARD, Map.of("var0", 3));
+		// 领奖态投影 = 接取值 0：交付边（物件 USE_OBJECT）只扣工作物品不写轴，任务从接取到
+		// REWARD 没有任何 var0 写入面，客户端任务书按 0 基行匹配（批次抬行值 3 会让行匹配落空）。
+		// The REWARD projection stays at the acquired 0: the delivery edge (object USE_OBJECT) only
+		// removes the work item and never writes the axis, so the quest has no var0 writer from
+		// acquire to REWARD; the client journal matches rows zero-based (the lifted batch value 3
+		// breaks the row match).
+		assertNode(definition, "reward", QuestStatus.REWARD, Map.of("var0", 0));
 
 		// 使用可交互苗木扣除任务物品并把状态推进到 REWARD。
 		// Using the interactive soil removes the quest item and advances to REWARD.
