@@ -267,14 +267,6 @@
 			<spot x="1208.11" y="845.88" z="277.581"/>
 			<spot x="1225.63" y="845.801" z="278.131" h="35"/>
 		</spawn>
-		<!-- Magic Artifact -->
-		<spawn npc_id="281542">
-			<spot x="1605.62" y="1580.52" z="306.034" h="76"/>
-		</spawn>
-		<!-- Divine Artifact -->
-		<spawn npc_id="281541">
-			<spot x="1589.62" y="1591.07" z="307.034" h="76"/>
-		</spawn>
 		<!-- Manadar Slayer -->
 		<spawn npc_id="216279">
 			<spot x="1092.44" y="423.574" z="230.232" h="119"/>
