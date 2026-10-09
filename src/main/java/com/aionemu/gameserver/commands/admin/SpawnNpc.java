@@ -14,9 +14,11 @@ import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 import java.io.IOException;
 
 /**
- * NPC 生成指令；在管理员位置按模板 ID 生成单位，支持 {@code <npcid>*<num>} 与 {@code *<num>} 批量写法，并可持久化到刷怪数据。
- * Admin command that spawns a template at the admin position, supports the {@code <npcid>*<num>} and
- * {@code *<num>} batch forms, and optionally persists the spawn.
+ * NPC 生成指令（非持久化）；在管理员位置按模板 ID 生成单位，支持 {@code <npcid>*<num>} 与 {@code *<num>} 批量写法。
+ * 生成的单位仅在本次运行实例内生效，不写入刷怪数据；需要持久化时使用 {@code //spawns}。
+ * Temporary spawn command; spawns a template at the admin position and supports the {@code <npcid>*<num>} and
+ * {@code *<num>} batch forms. Spawned units live only for the current server session and are not written to
+ * the spawn data; use {@code //spawns} to persist them.
  * @author Luno
  */
 @Slf4j
@@ -36,6 +38,16 @@ public class SpawnNpc extends AdminCommand {
 
 	public SpawnNpc() {
 		super("spawn");
+	}
+
+	/**
+	 * 执行该管理指令（非持久化版本）。
+	 * Executes this admin command (non-persisting variant).
+	 * @param admin 执行指令的管理员 / admin executing the command
+	 */
+	@Override
+	public void execute(Player admin, String... params) {
+		executeSpawn(admin, false, params);
 	}
 
 	/**
@@ -89,28 +101,29 @@ public class SpawnNpc extends AdminCommand {
 	}
 
 	/**
-	 * 执行该管理指令。
-	 * Executes this admin command.
+	 * 刷怪共享执行体；{@code persist=false} 时生成临时单位（默认不重生、不写盘），{@code persist=true}
+	 * 时保持原有持久化语义（非批量默认重生时间，重生时间大于 0 时写入刷怪数据）。
+	 * Shared spawn executor; with {@code persist=false} the units are temporary (no respawn by default,
+	 * nothing written to disk), while {@code persist=true} keeps the legacy persisting behavior
+	 * (default respawn time for a non-batch spawn, spawn data written when the respawn time is positive).
 	 * <p>
-	 * {@code //spawn <npcid> [respawn_time]} 生成单个单位；{@code //spawn <npcid>*<num> [respawn_time]}
-	 * 与 {@code //spawn *<num> [respawn_time]}（模板取自当前选中目标）在管理员位置一次生成 {@code num}
-	 * 个完全重叠的单位，未显式给出重生时间时按临时刷怪处理（不写盘）。
-	 * {@code //spawn <npcid> [respawn_time]} spawns a single unit; {@code //spawn <npcid>*<num> [respawn_time]}
-	 * and {@code //spawn *<num> [respawn_time]} (template taken from the currently selected target) spawn
-	 * {@code num} fully overlapping units at the admin position and treat them as temporary (not persisted)
-	 * unless a respawn time is given explicitly.
+	 * {@code <npcid>} 生成单个单位；{@code <npcid>*<num>} 与 {@code *<num>}（模板取自当前选中目标）
+	 * 在管理员位置一次生成 {@code num} 个完全重叠的单位。
+	 * {@code <npcid>} spawns a single unit; {@code <npcid>*<num>} and {@code *<num>} (template taken from the
+	 * currently selected target) spawn {@code num} fully overlapping units at the admin position.
 	 * @param admin 执行指令的管理员 / admin executing the command
+	 * @param persist 是否把刷出结果写入刷怪数据 / whether to write spawned spots to the spawn data
+	 * @param params 命令参数 / command parameters
 	 */
-	@Override
-	public void execute(Player admin, String... params) {
+	static void executeSpawn(Player admin, boolean persist, String... params) {
 		if (params.length < 1) {
-			onFail(admin, null);
+			printSpawnUsage(admin, persist);
 			return;
 		}
 
 		SpawnTarget target = parseTarget(params[0]);
 		if (target == null) {
-			onFail(admin, null);
+			printSpawnUsage(admin, persist);
 			return;
 		}
 
@@ -125,14 +138,14 @@ public class SpawnNpc extends AdminCommand {
 			templateId = npc.getNpcId();
 		}
 
-		int respawnTime = target.batch() ? 0 : DEFAULT_RESPAWN_TIME;
+		int respawnTime = target.batch() || !persist ? 0 : DEFAULT_RESPAWN_TIME;
 
 		if (params.length >= 2) {
 			try {
 				respawnTime = Integer.parseInt(params[1].trim());
 			}
 			catch (NumberFormatException e) {
-				onFail(admin, null);
+				printSpawnUsage(admin, persist);
 				return;
 			}
 		}
@@ -162,7 +175,7 @@ public class SpawnNpc extends AdminCommand {
 			firstSpawned = visibleObject;
 			spawned++;
 
-			if (respawnTime > 0) {
+			if (persist && respawnTime > 0) {
 				try {
 					DataManager.SPAWNS_DATA2.saveSpawn(admin, visibleObject, false);
 				}
@@ -188,12 +201,27 @@ public class SpawnNpc extends AdminCommand {
 	 * 参数错误时输出用法。
 	 * Prints usage when arguments are invalid.
 	 * @param player 接收提示的玩家 / player receiving the message
+	 * @param persist 持久化变体时打印对应命令名 / prints the persisting command name when true
+	 */
+	static void printSpawnUsage(Player player, boolean persist) {
+		String command = persist ? "spawns" : "spawn";
+		PacketSendUtility.sendMessage(player, "syntax //" + command + " <template_id> [respawn_time] | "
+				+ "//" + command + " <template_id>*<num> [respawn_time] (0 for temp)");
+		PacketSendUtility.sendMessage(player, "       //" + command + " *<num> [respawn_time]: "
+				+ "spawns copies of the selected target");
+		if (!persist) {
+			PacketSendUtility.sendMessage(player, "       (//" + command
+					+ " is temporary, not saved; use //spawns to persist)");
+		}
+	}
+
+	/**
+	 * 参数错误时输出用法。
+	 * Prints usage when arguments are invalid.
+	 * @param player 接收提示的玩家 / player receiving the message
 	 */
 	@Override
 	public void onFail(Player player, String message) {
-		PacketSendUtility.sendMessage(player, "syntax //spawn <template_id> [respawn_time] | "
-				+ "//spawn <template_id>*<num> [respawn_time] (0 for temp)");
-		PacketSendUtility.sendMessage(player, "       //spawn *<num> [respawn_time]: "
-				+ "spawns copies of the selected target");
+		printSpawnUsage(player, false);
 	}
 }
