@@ -68,30 +68,47 @@
     <node label="s10" status="START">
       <var name="var0" value="10"/>
     </node>
+    <!-- 领奖投影 = legacy 落盘值 10（SETPRO10 分支 changeQuestStep(9,10,false)，to=11 从不写盘，
+         QE-051）；客户端 summary 第 11 行「和代理人对话」与第 0 行逐字重复，属 QE-054
+         「末行 = 第 0 行复述行」例外（10528 勘误同型）。2026-10-09 实机裁决：REWARD/var0=11
+         时任务书步骤整块空白（SECTION_0 越出客户端 0..10 进度域）。
+         Reward projection = the legacy persisted 10 (SETPRO10's changeQuestStep(9,10,false);
+         to=11 is never written, QE-051). Client summary row 11 ("talk to the agent") repeats
+         row 0 verbatim — the QE-054 "last row repeats row 0" exception (same as the 10528
+         erratum). Live ruling 2026-10-09: REWARD/var0=11 blanks the whole journal step block
+         (SECTION_0 outside the client's 0..10 progress domain). -->
     <node label="reward" status="REWARD">
-      <var name="var0" value="11"/>
+      <var name="var0" value="10"/>
     </node>
     <node label="complete" status="COMPLETE"/>
   </nodes>
   <transitions>
-    <!-- 领奖行合同：客户端任务书行索引 = SECTION_0(var0)，quest_q20529.html 共 12 行，
-         第 10 行“带上陷入沉睡的卫扎波波，向代理人报告”是 START（s10），
-         第 11 行“和代理人对话”才是领奖行；旧投影把 REWARD 压在报告行（10）上。
-         Reward row contract: the journal row index is SECTION_0 (var0); row 10 of the 12
-         quest_q20529.html rows ("carry the sleeping Wizabobo back and report") is a START step,
-         and row 11 ("talk to the agent") is the reward row. -->
-    <!-- 旧存档修复：此前 reward 投影停在 10，进入世界时纠正为 11 并下发状态包。
-         Legacy save repair: saves persisted as REWARD/var0=10 are rewritten on enter-world. -->
+    <!-- 报告行合同：客户端任务书行索引 = SECTION_0(var0)，quest_q20529.html 共 12 行，
+         第 10 行“带上陷入沉睡的卫扎波波，向代理人报告”是 START（s10，10529 天族侧
+         2026-09-24 实机截图同构证实高亮）；第 11 行“和代理人对话”与第 0 行逐字重复，
+         属 QE-054「末行 = 第 0 行复述行」例外（10528 勘误同型），不点亮。legacy REWARD
+         落盘 = 10（2026-10-09 实机裁决 REWARD/11 步骤整块空白）。
+         Report row contract: the journal row index is SECTION_0 (var0); row 10 of the 12
+         quest_q20529.html rows ("carry the sleeping Wizabobo back and report") is a START step
+         (mirroring the 10529 live screenshot of 2026-09-24); row 11 ("talk to the agent")
+         repeats row 0 verbatim — the QE-054 "last row repeats row 0" exception (same as the
+         10528 erratum), never lit. Legacy REWARD persists 10 (live ruling 2026-10-09: REWARD/11
+         blanks the journal step block). -->
     <transition target="reward">
       <event>
         <enter-world/>
       </event>
       <conditions>
         <status-is status="REWARD"/>
-        <variable-is field="var0" value="10"/>
+        <variable-is field="var0" value="11"/>
       </conditions>
       <actions>
-        <set-variable field="var0" value="11"/>
+        <!-- 2026-10-09 前落盘的 REWARD/var0=11 档回滚到 legacy 值 10（QE-051 反向带毒边反转）。
+             REWARD/var0=11 saves persisted before 2026-10-09 roll back to the legacy 10 (the
+             QE-051 reverse-poison edge inverted). -->
+        <set-variable field="var0" value="10"/>
+        <set-variable field="var1" value="0"/>
+        <set-variable field="var2" value="0"/>
       </actions>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
@@ -376,6 +393,13 @@
       </conditions>
       <actions>
         <set-variable field="var0" value="7"/>
+        <!-- 离开计数阶段必须清零全部计数：残留高位会让客户端整型步数与本地步骤表脱节，
+             交接 NPC 头顶不显示任务标记（QE-044 同根因）。
+             Leaving a counting stage must zero every counter: leftover high bits desync the
+             client's integral step from its local step table, hiding the hand-in NPC's quest
+             marker (same root cause as QE-044). -->
+        <set-variable field="var1" value="0"/>
+        <set-variable field="var2" value="0"/>
       </actions>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
@@ -423,6 +447,8 @@
       </conditions>
       <actions>
         <set-variable field="var0" value="7"/>
+        <set-variable field="var1" value="0"/>
+        <set-variable field="var2" value="0"/>
       </actions>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
@@ -454,6 +480,7 @@
       <actions>
         <set-variable field="var0" value="8"/>
         <set-variable field="var1" value="0"/>
+        <set-variable field="var2" value="0"/>
       </actions>
       <after-commit>
         <play-movie movie-id="878"/>
@@ -485,6 +512,7 @@
       <actions>
         <set-variable field="var0" value="9"/>
         <set-variable field="var1" value="0"/>
+        <set-variable field="var2" value="0"/>
       </actions>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
@@ -539,6 +567,11 @@
         <remove-item item-id="182216092" count="1"/>
         <give-item item-id="182216108" count="1"/>
         <set-variable field="var0" value="10"/>
+        <!-- 报告行 packed 步数必须纯净为 10：高位残留会让代理人头顶不显示任务标记。
+             The report row's packed step must be a clean 10: leftover high bits hide the
+             agent's overhead quest marker. -->
+        <set-variable field="var1" value="0"/>
+        <set-variable field="var2" value="0"/>
       </actions>
       <after-commit>
         <teleport-player-current-or-default world-id="220110000" x="228.99796" y="209.33243" z="287.2919" heading="69"/>
@@ -587,7 +620,11 @@
         <dialog type="TALK_TO_NPC" npc-id="806079" action="SET_SUCCEED"/>
       </event>
       <actions>
-        <set-variable field="var0" value="11"/>
+        <!-- 领奖交接不回写 var0：由 reward 目标投影补足 10（legacy 落盘值，10528 勘误同构）。
+             The reward hand-in never writes var0: the reward target projection fills in 10
+             (the legacy persisted value, mirroring the 10528 erratum). -->
+        <set-variable field="var1" value="0"/>
+        <set-variable field="var2" value="0"/>
       </actions>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
@@ -739,5 +776,96 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT10_1_1"/>
       </after-commit>
     </transition>
+    <!-- 计数纯净自愈：s6 计数残留（var1/var2）带进 s7..reward 时，客户端整型步数与本地步骤表
+         脱节，报告代理人头顶不显示任务标记（QE-044 同根因）。以下无 source 自愈边只清计数、
+         不动阶段，只服务修复前落盘的旧档；s7..s9 边限定副本内（world-is 301690000），世界外
+         s4..s9 场景仍由副本失败回退边独占接管（回退边自身已清零计数）；s10/reward 与回退边的
+         source 集不相交。
+         Counter purity self-heal: when s6 counter residue (var1/var2) is carried into
+         s7..reward, the client's integral step desyncs from its local step table and the
+         reporting agent shows no overhead quest marker (same root cause as QE-044). These
+         source-less edges only clear counters and never touch the stage; they only serve legacy
+         saves persisted before this fix. s7..s9 edges are instance-bound (world-is 301690000) so
+         the instance-failure fallback edges keep out-of-instance s4..s9 exclusively (their own
+         actions already zero the counters); s10/reward residues never overlap the fallback set. -->
+    <transition target="s7">
+      <event>
+        <enter-world/>
+      </event>
+      <conditions>
+        <status-is status="START"/>
+        <variable-is field="var0" value="7"/>
+        <!-- 副本内限定：世界外的 s7 残留档由副本失败回退边接管（与该边条件精确互斥）。
+             Instance-bound: out-of-instance s7 residue belongs to the instance-failure
+             fallback edge (the world axes are exactly exclusive). -->
+        <world-is world-id="301690000"/>
+      </conditions>
+      <actions>
+        <set-variable field="var1" value="0"/>
+        <set-variable field="var2" value="0"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
+    <transition target="s8">
+      <event>
+        <enter-world/>
+      </event>
+      <conditions>
+        <status-is status="START"/>
+        <variable-is field="var0" value="8"/>
+        <!-- 副本内限定：世界外的 s8 残留档由副本失败回退边接管（与该边条件精确互斥）。
+             Instance-bound: out-of-instance s8 residue belongs to the instance-failure
+             fallback edge (the world axes are exactly exclusive). -->
+        <world-is world-id="301690000"/>
+      </conditions>
+      <actions>
+        <set-variable field="var1" value="0"/>
+        <set-variable field="var2" value="0"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
+    <transition target="s9">
+      <event>
+        <enter-world/>
+      </event>
+      <conditions>
+        <status-is status="START"/>
+        <variable-is field="var0" value="9"/>
+        <!-- 副本内限定：世界外的 s9 残留档由副本失败回退边接管（与该边条件精确互斥）。
+             Instance-bound: out-of-instance s9 residue belongs to the instance-failure
+             fallback edge (the world axes are exactly exclusive). -->
+        <world-is world-id="301690000"/>
+      </conditions>
+      <actions>
+        <set-variable field="var1" value="0"/>
+        <set-variable field="var2" value="0"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
+    <transition target="s10">
+      <event>
+        <enter-world/>
+      </event>
+      <conditions>
+        <status-is status="START"/>
+        <variable-is field="var0" value="10"/>
+      </conditions>
+      <actions>
+        <set-variable field="var1" value="0"/>
+        <set-variable field="var2" value="0"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
+    <!-- REWARD 档的计数/回滚自愈由顶部 target="reward" 反转边（REWARD/11 -> 10）统一承担。
+         Reward-stage counter/rollback self-heal is handled solely by the top target="reward"
+         inversion edge (REWARD/11 -> 10). -->
 </transitions>
 </quest-definition>

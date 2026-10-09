@@ -18,19 +18,29 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * 锁定“折叠报告行”收尾批次：10529/20529 的客户端任务书共 12 行，第 10 行“带上陷入沉睡的
- * 德扎波波/卫扎波波，向代理人报告”此前直接压在 REWARD 上，第 11 行“和代理人对话”反而没有任何
- * 状态；修复把第 10 行拆成独立 START 节点 s10，reward 投影推进到第 11 行并补无 source 的进入
- * 世界自愈边，同时接回 806075/806079 的报告对话链（QUEST_SELECT → SELECT11 → SELECT11_1 →
+ * 锁定“折叠报告行”批次（2026-10-09 实机修订版）：10529/20529 的客户端任务书共 12 行，第 10 行
+ * “带上陷入沉睡的德扎波波/卫扎波波，向代理人报告”是独立 START 节点 s10（2026-09-24 实机截图
+ * 证实高亮），同时接回 806075/806079 的报告对话链（QUEST_SELECT → SELECT11 → SELECT11_1 →
  * SELECT11_1_1 → SET_SUCCEED）。
+ * <p>2026-10-09 修订：批次 4 原把 reward 投影推到第 11 行，实机裁决该形态让任务书步骤整块空白——
+ * 第 11 行“和代理人对话”与第 0 行逐字重复，属 QE-054「末行 = 第 0 行复述行」例外（10528 勘误
+ * 同型，10529/20529 在该勘误的“禁止按任一方向批量改”清单里）。reward 投影回滚到 legacy 落盘值
+ * 10（SETPRO10 分支 changeQuestStep(9,10,false)，to 从不写盘，QE-051），SET_SUCCEED 不回写
+ * var0，无 source enter-world 恢复边反转为 REWARD/var0=11 → 10（QE-051 反向带毒边反转）。
+ * SETPRO10/SET_SUCCEED 交接同时清零 var1/var2（QE-044 计数纯净，2026-10-09 头顶标记修复）。</p>
  * 另外锁定 3090（皮皮任务）的位段布局：var1/var2 原先落在 SECTION_0（bit 2/3）内，会把客户端
  * 任务书行索引污染成 var0|var1&lt;&lt;2|var2&lt;&lt;3；修复把它们移到各自的 6 bit SECTION，并把领奖行从
  * 第 3 行推到第 4 行（“向 LF2A_NPC_Morati 报告”）。
- * Locks the “folded report row” follow-up batch (10529/20529: the report row becomes its own START
- * node and the reward row moves to the final journal row, with a source-less enter-world repair edge
- * and the restored 806075/806079 report dialog chain) and 3090 (its counter fields no longer sit
- * inside SECTION_0, so the client journal row index stays the raw var0; the reward row moves from 3
- * to 4).
+ * Locks the “folded report row” batch (2026-10-09 revision) for 10529/20529: the report row keeps
+ * its own START node s10 (highlighted per the 2026-09-24 live screenshot) with the restored
+ * 806075/806079 report dialog chain, while the reward projection rolls back to the legacy persisted
+ * 10 — the batch-4 "reward moves to the final row" shape was overturned live on 2026-10-09 (journal
+ * rows went blank), because journal row 11 repeats row 0 verbatim (the QE-054 "last row repeats
+ * row 0" exception, same as the 10528 erratum) and the legacy REWARD persists 10 (QE-051). The
+ * enter-world repair edge is inverted to REWARD/var0=11 -> 10, and both hand-ins clear var1/var2
+ * (the 2026-10-09 QE-044 counter-purity marker fix). Also locks 3090 (its counter fields no longer
+ * sit inside SECTION_0, so the client journal row index stays the raw var0; the reward row moves
+ * from 3 to 4).
  */
 class JournalReportRowSplitContractTest {
 
@@ -38,13 +48,14 @@ class JournalReportRowSplitContractTest {
 			Map<Integer, Integer> carrierInventory, int reportRow, int rewardRow) {
 	}
 
+	/** reportRow = s10 报告行；rewardRow = legacy 领奖投影（2026-10-09 实机修订：= 10，非末行 11）。 reportRow = the s10 report row; rewardRow = the legacy reward projection (2026-10-09 revision: 10, not the final row 11). */
 	private static final List<ReportContract> REPORTS = List.of(
-		new ReportContract(10529, 806294, 806075, Map.of(182216107, 1), 10, 11),
+		new ReportContract(10529, 806294, 806075, Map.of(182216107, 1), 10, 10),
 		new ReportContract(20529, 806299, 806079,
-			Map.of(182216090, 1, 182216091, 1, 182216092, 1, 182216108, 1), 10, 11));
+			Map.of(182216090, 1, 182216091, 1, 182216092, 1, 182216108, 1), 10, 10));
 
 	@Test
-	void reportRowGetsItsOwnStartNodeAndTheRewardMovesToTheFinalRow() throws Exception {
+	void reportRowKeepsItsOwnStartNodeAndTheRewardProjectionMatchesLegacy() throws Exception {
 		for (ReportContract contract : REPORTS) {
 			QuestDefinition definition = definition(contract.questId()).definition();
 			QuestNode report = definition.nodes().stream()
@@ -98,7 +109,10 @@ class JournalReportRowSplitContractTest {
 			QuestMutationPlan handoverPlan = QuestMutationPlanner.plan(compiled, afterBossKill,
 				handover.event(), handover).orElseThrow();
 			assertEquals(QuestStatus.START, handoverPlan.nextStatus());
-			assertEquals(Map.of("var0", contract.reportRow(), "var1", 0, "var2", 3),
+			// SETPRO10 交接同时清零 var1/var2（QE-044 计数纯净）：真实杀怪计数残值不得带进报告行。
+			// The SETPRO10 hand-in also clears var1/var2 (QE-044 counter purity): real kill-counter
+			// residue must not ride into the report row.
+			assertEquals(Map.of("var0", contract.reportRow(), "var1", 0, "var2", 0),
 				unpack(compiled, handoverPlan),
 				() -> "quest " + contract.questId() + " must leave the fallen sage on the report row");
 			assertTrue(handoverPlan.requiredActions().contains(new QuestAction.GiveItem(
@@ -163,7 +177,10 @@ class JournalReportRowSplitContractTest {
 			QuestMutationPlan rewardPlan = QuestMutationPlanner.plan(compiled, report,
 				handover.event(), handover).orElseThrow();
 			assertEquals(QuestStatus.REWARD, rewardPlan.nextStatus());
-			assertEquals(Map.of("var0", contract.rewardRow(), "var1", 0, "var2", 3),
+			// SET_SUCCEED 不回写 var0（reward 投影补 legacy 10），并清零 var1/var2（QE-044）。
+			// SET_SUCCEED never writes var0 (the reward projection fills the legacy 10) and clears
+			// var1/var2 (QE-044).
+			assertEquals(Map.of("var0", contract.rewardRow(), "var1", 0, "var2", 0),
 				unpack(compiled, rewardPlan));
 			assertEquals(List.of(
 				new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
@@ -189,23 +206,29 @@ class JournalReportRowSplitContractTest {
 	}
 
 	@Test
-	void persistedReportRowsAreRepairedOnEnterWorld() throws Exception {
+	void persistedRewardRowElevenSavesAreRolledBackOnEnterWorld() throws Exception {
 		for (ReportContract contract : REPORTS) {
 			CompiledQuestDefinition compiled = definition(contract.questId());
 			QuestTransition recovery = recoveryRoute(compiled.definition());
+			// 反转边：批次 4 误推的 REWARD/11 档回滚到 legacy 落盘值 10（QE-051 反向带毒边反转）。
+			// The inverted edge: batch-4's mistaken REWARD/11 saves roll back to the legacy 10
+			// (the QE-051 reverse-poison edge inverted).
 			assertEquals(List.of(
 				new QuestCondition.StatusIs(QuestStatus.REWARD),
-				new QuestCondition.QuestVariableIs("var0", contract.reportRow())), recovery.conditions(),
+				new QuestCondition.QuestVariableIs("var0", 11)), recovery.conditions(),
 				() -> "quest " + contract.questId() + " recovery conditions");
-			assertEquals(List.of(new QuestAction.SetVariable("var0", contract.rewardRow())),
-				recovery.actions(), () -> "quest " + contract.questId() + " recovery actions");
+			assertEquals(List.of(
+				new QuestAction.SetVariable("var0", contract.rewardRow()),
+				new QuestAction.SetVariable("var1", 0),
+				new QuestAction.SetVariable("var2", 0)), recovery.actions(),
+				() -> "quest " + contract.questId() + " recovery actions");
 			assertEquals(List.of(new AfterCommitAction.SyncQuestState(
 				QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH)), recovery.afterCommit(),
 				() -> "quest " + contract.questId() + " recovery after-commit");
 			assertNull(recovery.priority());
 
 			QuestMutationPlan plan = QuestMutationPlanner.plan(compiled,
-				snapshot(compiled, QuestStatus.REWARD, Map.of("var0", contract.reportRow()), Map.of()),
+				snapshot(compiled, QuestStatus.REWARD, Map.of("var0", 11), Map.of()),
 				recovery.event(), recovery).orElseThrow();
 			assertEquals(QuestStatus.REWARD, plan.nextStatus());
 			assertEquals(contract.rewardRow(), unpack(compiled, plan).get("var0"),
