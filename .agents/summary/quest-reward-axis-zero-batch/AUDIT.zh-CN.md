@@ -60,6 +60,27 @@ started→reward 边判据的漏网）：
 - ExternalRewardAdvanceReentryContractTest 2/2
 - EarlyElyosQuestRegressionTest 19/19
 
+## 方向修正（2026-10-09 实测推翻双路径批次）
+
+80255 用户 A/B 实测（//reload quest 后）：
+- `//quest set 80255 reward 0` → 步骤显示**行 0（使用烟花）**＝接取行，**错行**；
+- `//quest set 80255 reward 1` → 显示**「和帕尔图对话」＝领奖行，正确**。
+
+⇒ **33 个双路径任务的「投影 0」修复方向错误，已全部回滚到 batch8 形态**
+（git checkout 07f69dc0e~1，投影 1 + 原 ENTER 自愈边），//reload quest 实机验收无误。
+
+**模型修正**：客户端任务书行匹配存在**任务级差异**，不能从单一任务 A/B 推广全库——
+- 10522（62 组口径）：REWARD/0 用户验收正确、REWARD/1 报空白；其行 2 带
+  `[%dic:STR_DIC_N_LF6_Weatha_E]` 字典占位符；
+- 80255（33 组口径）：REWARD/1 正确；其行 2 是纯文本（无 dic 键）。
+两组唯一结构差异即行 2 是否带 `[%dic:]` 键，疑似渲染层差异，**语义未定谳**。
+后续观察名单：62 组中 REWARD 态显示「进行行而非领奖行」的任务，按「行 2 是否带
+字典键」细分后再动。
+
+**遗留**：帕尔图（831163）全库无静态生成配置——真端 npc 表标注
+`__spawn_zonename__=Housing_LF_Personal`（天族住宅区庆典活动 NPC），本库 spawns 无行；
+测试用 `//spawn 831163` 临时生成。正式落活动生成配置另立任务。
+
 ## 方法论教训
 
 1. **写轴动作形态全集**必须穷举：`set-variable`、`increment-variable`、引擎外写入方、
