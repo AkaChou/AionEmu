@@ -41,7 +41,7 @@ class ArchivesRewardStepLadderContractTest {
 	/** 客户端任务书末行的索引（= 领奖态 packed step）。 */
 	private static final int REWARD_ROW = 2;
 
-	/** 任务 / 接取 NPC / 行 1 NPC / 领奖 NPC / 塔感应区 / 知识书库区 / 影片 / 旧投影行（登记用，真端链统一为 var0=0 修复）。 */
+	/** 任务 / 接取 NPC / 行 1 NPC / 领奖 NPC / 塔感应区 / 知识书库区 / 影片 / 旧投影行（登记用，原版链统一为 var0=0 修复）。 */
 	private record Contract(int questId, int starterNpc, int handoffNpc, int rewardNpc,
 			String towerZone, String archivesZone, int movieId, int staleRow) {
 	}
@@ -77,7 +77,7 @@ class ArchivesRewardStepLadderContractTest {
 			CompiledQuestDefinition compiled = definition(contract.questId());
 			QuestDefinition definition = compiled.definition();
 
-			// 真端把三段行门写进节点投影（started/s1/s2 = {var0=0/1/2}，引擎按投影匹配源行），
+			// 原版把三段行门写进节点投影（started/s1/s2 = {var0=0/1/2}，引擎按投影匹配源行），
 			// 条件下不再有显式 var0 断言；推进边照旧显式回写行号（packed step 与客户端末行一致）。
 			// The retail ladder writes the row guards into the node projections (started/s1/s2 =
 			// {var0=0/1/2}, the engine matches source rows through them) so the conditions carry no
@@ -111,7 +111,7 @@ class ArchivesRewardStepLadderContractTest {
 				() -> "quest " + contract.questId() + " s2 projection");
 			assertEquals(List.of(), archivesArrival.conditions(),
 				() -> "quest " + contract.questId() + " archives arrival");
-			// 真端显式回写 target 行（= reward 投影 var0=2）——packed step 仍是客户端末行 2。
+			// 原版显式回写 target 行（= reward 投影 var0=2）——packed step 仍是客户端末行 2。
 			// The retail edge writes the target row back (= the reward projection var0=2); the packed
 			// step still lands on the client's last row 2.
 			assertEquals(List.of(new QuestAction.SetVariable("var0", 2)), archivesArrival.actions(),
@@ -165,7 +165,7 @@ class ArchivesRewardStepLadderContractTest {
 		for (Contract contract : CONTRACTS) {
 			CompiledQuestDefinition compiled = definition(contract.questId());
 			QuestTransition recovery = recoveryRoute(compiled.definition());
-			// 真端链的通用修复边只覆盖规范未设值（var0=0）：本链的领奖投影两侧同为 2，遗留 XML 的每侧
+			// 原版链的通用修复边只覆盖规范未设值（var0=0）：本链的领奖投影两侧同为 2，遗留 XML 的每侧
 			// 过期行（16800=1 / 26800=3）随旧投影退役——旧世代存档不再逐侧修复（台账已登记）。
 			// The retail generic repair edge covers only the canonical unset (var0=0): the reward
 			// projection is 2 on both sides, and the legacy per-side stale rows (16800=1 / 26800=3)
@@ -206,7 +206,7 @@ class ArchivesRewardStepLadderContractTest {
 	void rewardOwnerStaysOnTheAgentNamedByTheJournalRow() throws Exception {
 		for (Contract contract : CONTRACTS) {
 			QuestDefinition definition = definition(contract.questId()).definition();
-			// 真端把领奖分支同时铺成 TalkToNpc（带 owner）与 QuestDialog（无 owner，npcId=-1 哨兵）两种
+			// 原版把领奖分支同时铺成 TalkToNpc（带 owner）与 QuestDialog（无 owner，npcId=-1 哨兵）两种
 			// 客户端路由；owner 断言只看带 NPC 的那些，并单独把无 owner 集合钉在 QuestDialog 形上。
 			// The retail chain fans the reward branches onto TalkToNpc routes (with an owner) and
 			// ownerless QuestDialog routes (npcId = -1); the owner assertion covers the npc-owned ones
@@ -354,7 +354,7 @@ class ArchivesRewardStepLadderContractTest {
 		return compiled.definition().progressLayout().unpack(plan.nextPackedVariables());
 	}
 
-	/** 节点投影（引擎按它匹配源行——显式 var0 条件在真端形里由投影承担）。 / Node projection. */
+	/** 节点投影（引擎按它匹配源行——显式 var0 条件在原版形里由投影承担）。 / Node projection. */
 	private static Map<String, Integer> nodeVariables(QuestDefinition definition, String label) {
 		return definition.nodes().stream()
 			.filter(node -> label.equals(node.label()))
@@ -363,8 +363,8 @@ class ArchivesRewardStepLadderContractTest {
 	}
 
 	private static CompiledQuestDefinition definition(int questId) throws IOException {
-		// 16800/26800 已由真端驱动退役（wave4 enterarea 区名解析）：退役任务的 XML 只在 git 历史里，
-		// 统一取生产视图（XML 目录 + 真端 overlay）——未退役任务与直接编译 XML 等价。
+		// 16800/26800 已由原版驱动退役（wave4 enterarea 区名解析）：退役任务的 XML 只在 git 历史里，
+		// 统一取生产视图（XML 目录 + 原版 overlay）——未退役任务与直接编译 XML 等价。
 		// The archives quests 16800/26800 are retail-driven now (wave4 enterarea zone resolution), so
 		// their XML lives only in git history; the production view (XML directory plus retail overlay)
 		// is the single source.

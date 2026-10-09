@@ -103,7 +103,7 @@ public final class QuestProductionDispatcher implements QuestRuntimeDispatcher {
 	}
 
 	/**
-	 * 使用共享执行协调器构建生产 dispatcher，使 XML 与真端 owner 仍按玩家串行执行。
+	 * 使用共享执行协调器构建生产 dispatcher，使 XML 与原版 owner 仍按玩家串行执行。
 	 * Builds a production dispatcher with a shared execution coordinator so XML and retail owners
 	 * remain serialized per player.
 	 * @param catalog 该子运行时独占的目录 / catalog owned exclusively by this child runtime

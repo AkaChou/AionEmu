@@ -247,7 +247,7 @@ public class BeshmundirTempleInstance extends GeneralInstanceHandler
 		super.onInstanceCreate(instance);
         doors = instance.getDoors();
 		// Macunbello（216245）改由 condition-spawns#5013 的条件刷（debufflich >= 1）生成，
-		// 创建期的 SLEEP/19046「Soul Starved」处理已移除（真端无该逻辑）。
+		// 创建期的 SLEEP/19046「Soul Starved」处理已移除（原版无该逻辑）。
 		// Macunbello (216245) is now spawned by condition-spawns#5013 (debufflich >= 1);
 		// the creation-time SLEEP/19046 "Soul Starved" handling was removed (not present retail).
     }
@@ -314,8 +314,8 @@ public class BeshmundirTempleInstance extends GeneralInstanceHandler
             break;
 			case 216739: //Warrior Monument.
 				despawnNpc(npc);
-				// 计数器（IDCT_SpecterN_Spawn +1）与消息 1400465 由真端 pattern（IDCT_Quest_Reric_Normal.on_die）承担；
-				// Ahbana（216239）由 condition-spawns#5021（IDCT_SpecterN_Spawn >= 10，真端阈值）条件刷生成，
+				// 计数器（IDCT_SpecterN_Spawn +1）与消息 1400465 由原版 pattern（IDCT_Quest_Reric_Normal.on_die）承担；
+				// Ahbana（216239）由 condition-spawns#5021（IDCT_SpecterN_Spawn >= 10，原版阈值）条件刷生成，
 				// 出现消息 1400470 由其 pattern 的 on_wake_up 发出。
 				// The counter and message 1400465 are served by the retail pattern's on_die; Ahbana is spawned
 				// by condition-spawns#5021 (threshold 10) and announces itself via its on_wake_up pattern.
@@ -331,7 +331,7 @@ public class BeshmundirTempleInstance extends GeneralInstanceHandler
 			// The Plegeton Boatmen (799518-799520) spawned on Lichkey1-3 death are served by
 			// condition-spawns#2093-2095 (lichkey1/2/3 == 1); the duplicate spawns here were removed.
 
-			// 216206-216213（Elyos / Asmodian 灵魂）的 debufflich 计数由真端 pattern 的 on_die 写入；
+			// 216206-216213（Elyos / Asmodian 灵魂）的 debufflich 计数由原版 pattern 的 on_die 写入；
 			// 「力量减弱 / 已减弱 / 已被削弱」消息与阶段推进由 DebuffLich 触发器与阶段变体条件刷承担
 			// （condition-spawns#5010-#5016）。
 			// The soul debufflich counter is written by the retail patterns' on_die actions; the weakening

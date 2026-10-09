@@ -126,7 +126,7 @@ public class QuestItemNpcAI2 extends ActionItemNpcAI2
 	enum FailedInteractionReply {
 		/** 对话物件：开首对话页（既有行为）。 / A dialog npc: open the start dialog page (existing behavior). */
 		START_DIALOG,
-		/** 采集对象：零发包（真端超杀/条件不满足零副作用口径，QE-137）。 /
+		/** 采集对象：零发包（原版超杀/条件不满足零副作用口径，QE-137）。 /
 		 * A collect object: zero packets (the retail zero-side-effect shape, QE-137). */
 		SILENT_COLLECT,
 		/** 关联任务已全部了结（COMPLETE/REWARD）：零发包，不再提醒。 /
@@ -139,7 +139,7 @@ public class QuestItemNpcAI2 extends ActionItemNpcAI2
 	/**
 	 * 按物件类别分类失败交互的应答（USE_OBJECT / QUEST_SELECT 全部未被任务引擎认领时）。
 	 * <p>
-	 * 采集族物件保持真端零包口径（QE-137：条件不满足零副作用、不补发任何对话窗）；其余任务物件在
+	 * 采集族物件保持原版零包口径（QE-137：条件不满足零副作用、不补发任何对话窗）；其余任务物件在
 	 * 任务条件不满足（未接取/步骤不符）时给系统消息提醒而不是静默——形态同 {@code CM_USE_ITEM} 的
 	 * 欧比斯入场拦截（{@code meetsAbyssEntryRequirement} 失败 → {@code STR_MSG_CANNOT_TELEPORT_TO_ABYSS}）；
 	 * 关联任务已全部了结（完成/待领奖）的物件已"用完"，保持静默（2026-10-08 用户裁定：10035

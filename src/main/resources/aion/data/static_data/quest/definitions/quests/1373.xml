@@ -27,7 +27,7 @@
     <node label="started" status="START">
       <var name="var0" value="0"/>
     </node>
-    <!-- QE-054：打水后与领奖态都保持真端/legacy 的 packed step 2（真端 FUN_180effb70 在
+    <!-- QE-054：打水后与领奖态都保持原版/legacy 的 packed step 2（原版 FUN_180effb70 在
          status==START && step==0 时 SetProgress(0x55d, 2)；legacy `qs.setQuestVar(2)`；
          checkQuestItems(2, 3, true) 的 reward 分支不写 nextStep，落盘仍为 2）。
          2026-09-19 批次曾按 collect_progress=1 误改为 1，客户端任务书步骤整块空白

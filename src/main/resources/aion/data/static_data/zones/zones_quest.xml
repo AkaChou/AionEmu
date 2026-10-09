@@ -82,7 +82,7 @@
 	<zone mapid="210060000" name="LF2A_SENSORY_AREA_Q3090_210060000" area_type="SPHERE" zone_type="SUB">
 		<sphere x="208.02142" y="1346.6992" z="64.0" r="10.0"/>
 	</zone>
-	<!-- Beritra Grand Invasion：球心与半径采信真端 Map/XML/Subzones/source_sphere.csv / center & radius from the retail source_sphere.csv -->
+	<!-- Beritra Grand Invasion：球心与半径采信原版 Map/XML/Subzones/source_sphere.csv / center & radius from the retail source_sphere.csv -->
 	<zone mapid="210030000" name="LF1A_ITEMUSEAREA_Q13403A" area_type="SPHERE" zone_type="ITEM_USE">
         <sphere x="1705.84" y="1663.02" z="105.40" r="59.37"/>
     </zone>
@@ -560,7 +560,7 @@
     <zone mapid="300160000" name="SENSORYAREA_Q30011_300160000" area_type="SPHERE" zone_type="SUB">
         <sphere x="1641.6322" y="978.67078" z="110.00001" r="10.0"/>
     </zone>
-	<!-- 任务 14263/24263 真端世界 questscript_area（idlf1/world.xml），Cradle of Eternity LF1。
+	<!-- 任务 14263/24263 原版世界 questscript_area（idlf1/world.xml），Cradle of Eternity LF1。
 	     Quest 14263/24263 retail world questscript_area (idlf1/world.xml), Cradle of Eternity LF1. -->
 	<zone mapid="301550000" name="IDLF1_QuestArea_MasterBoss01" area_type="POLYGON" zone_type="SUB">
 		<points bottom="56.6875" top="556.6875">
@@ -711,8 +711,8 @@
 			<point x="2643.808350" y="1512.045044"/>
 		</points>
 	</zone>
-	<!-- QE-109 多胞感官区：区名 = 真端别名大写 + _mapid，逐胞 <points>（进入任一胞即算进入） -->
-	<!-- 感官区（真端世界文件 6 胞）：IDEternity_War_ShugoSeller -->
+	<!-- QE-109 多胞感官区：区名 = 原版别名大写 + _mapid，逐胞 <points>（进入任一胞即算进入） -->
+	<!-- 感官区（原版世界文件 6 胞）：IDEternity_War_ShugoSeller -->
 	<zone mapid="302350000" name="IDETERNITY_WAR_SHUGOSELLER_302350000" area_type="POLYGON" zone_type="SUB">
 		<points bottom="50.000000" top="400.000000">
 			<point x="983.012390" y="1007.448181"/>
@@ -751,7 +751,7 @@
 			<point x="750.909729" y="964.582764"/>
 		</points>
 	</zone>
-	<!-- 感官区（真端世界文件 3 胞）：DF5_SensoryArea_65_Deva_Q15322b -->
+	<!-- 感官区（原版世界文件 3 胞）：DF5_SensoryArea_65_Deva_Q15322b -->
 	<zone mapid="220080000" name="DF5_SENSORYAREA_65_DEVA_Q15322B_220080000" area_type="POLYGON" zone_type="SUB">
 		<points bottom="295.534332" top="315.534332">
 			<point x="1380.166748" y="2660.849609"/>
@@ -780,7 +780,7 @@
 			<point x="1626.658081" y="2907.110596"/>
 		</points>
 	</zone>
-	<!-- 感官区（真端世界文件 3 胞）：DF5_SensoryArea_65_Deva_Q15322d -->
+	<!-- 感官区（原版世界文件 3 胞）：DF5_SensoryArea_65_Deva_Q15322d -->
 	<zone mapid="220080000" name="DF5_SENSORYAREA_65_DEVA_Q15322D_220080000" area_type="POLYGON" zone_type="SUB">
 		<points bottom="338.627441" top="353.627441">
 			<point x="2739.835693" y="1603.607422"/>
@@ -802,7 +802,7 @@
 			<point x="2410.627930" y="1670.617676"/>
 		</points>
 	</zone>
-	<!-- 感官区（真端世界文件 3 胞）：DF5_SensoryArea_65_Deva_Q15322f -->
+	<!-- 感官区（原版世界文件 3 胞）：DF5_SensoryArea_65_Deva_Q15322f -->
 	<zone mapid="220080000" name="DF5_SENSORYAREA_65_DEVA_Q15322F_220080000" area_type="POLYGON" zone_type="SUB">
 		<points bottom="307.342255" top="327.342255">
 			<point x="313.356812" y="1878.563599"/>
@@ -825,7 +825,7 @@
 			<point x="91.775940" y="1646.335083"/>
 		</points>
 	</zone>
-	<!-- 感官区（真端世界文件 3 胞）：DF5_SensoryArea_65_Deva_Q15322h -->
+	<!-- 感官区（原版世界文件 3 胞）：DF5_SensoryArea_65_Deva_Q15322h -->
 	<zone mapid="220080000" name="DF5_SENSORYAREA_65_DEVA_Q15322H_220080000" area_type="POLYGON" zone_type="SUB">
 		<points bottom="235.539520" top="255.539520">
 			<point x="1829.919800" y="503.295776"/>
@@ -852,7 +852,7 @@
 			<point x="1912.539429" y="567.029846"/>
 		</points>
 	</zone>
-	<!-- 感官区（真端世界文件 3 胞）：DF5_SensoryArea_65_Deva_Q15322j -->
+	<!-- 感官区（原版世界文件 3 胞）：DF5_SensoryArea_65_Deva_Q15322j -->
 	<zone mapid="220080000" name="DF5_SENSORYAREA_65_DEVA_Q15322J_220080000" area_type="POLYGON" zone_type="SUB">
 		<points bottom="273.561859" top="303.561859">
 			<point x="2711.069092" y="979.991211"/>
@@ -876,7 +876,7 @@
 			<point x="2852.847900" y="868.669922"/>
 		</points>
 	</zone>
-	<!-- 感官区（真端世界文件 3 胞）：LF5_SensoryArea_65_Deva_Q25322b -->
+	<!-- 感官区（原版世界文件 3 胞）：LF5_SensoryArea_65_Deva_Q25322b -->
 	<zone mapid="210070000" name="LF5_SENSORYAREA_65_DEVA_Q25322B_210070000" area_type="POLYGON" zone_type="SUB">
 		<points bottom="557.272766" top="587.272766">
 			<point x="1891.704956" y="473.045044"/>
@@ -900,7 +900,7 @@
 			<point x="1703.794067" y="540.552795"/>
 		</points>
 	</zone>
-	<!-- 感官区（真端世界文件 3 胞）：LF5_SensoryArea_65_Deva_Q25322d -->
+	<!-- 感官区（原版世界文件 3 胞）：LF5_SensoryArea_65_Deva_Q25322d -->
 	<zone mapid="210070000" name="LF5_SENSORYAREA_65_DEVA_Q25322D_210070000" area_type="POLYGON" zone_type="SUB">
 		<points bottom="467.714508" top="497.714508">
 			<point x="716.178833" y="1495.964722"/>
@@ -924,7 +924,7 @@
 			<point x="809.133484" y="1797.425049"/>
 		</points>
 	</zone>
-	<!-- 感官区（真端世界文件 3 胞）：LF5_SensoryArea_65_Deva_Q25322f -->
+	<!-- 感官区（原版世界文件 3 胞）：LF5_SensoryArea_65_Deva_Q25322f -->
 	<zone mapid="210070000" name="LF5_SENSORYAREA_65_DEVA_Q25322F_210070000" area_type="POLYGON" zone_type="SUB">
 		<points bottom="453.124390" top="483.124390">
 			<point x="1881.506714" y="1047.473511"/>
@@ -948,7 +948,7 @@
 			<point x="2012.615967" y="1316.545166"/>
 		</points>
 	</zone>
-	<!-- 感官区（真端世界文件 3 胞）：LF5_SensoryArea_65_Deva_Q25322h -->
+	<!-- 感官区（原版世界文件 3 胞）：LF5_SensoryArea_65_Deva_Q25322h -->
 	<zone mapid="210070000" name="LF5_SENSORYAREA_65_DEVA_Q25322H_210070000" area_type="POLYGON" zone_type="SUB">
 		<points bottom="317.142090" top="347.142090">
 			<point x="1859.292847" y="2853.196289"/>
@@ -972,7 +972,7 @@
 			<point x="1764.313599" y="2532.050537"/>
 		</points>
 	</zone>
-	<!-- 感官区（真端世界文件 3 胞）：LF5_SensoryArea_65_Deva_Q25322j -->
+	<!-- 感官区（原版世界文件 3 胞）：LF5_SensoryArea_65_Deva_Q25322j -->
 	<zone mapid="210070000" name="LF5_SENSORYAREA_65_DEVA_Q25322J_210070000" area_type="POLYGON" zone_type="SUB">
 		<points bottom="312.795654" top="342.795654">
 			<point x="772.885193" y="2905.658936"/>
@@ -996,7 +996,7 @@
 			<point x="496.497009" y="2299.823730"/>
 		</points>
 	</zone>
-	<!-- 2026-10-08 全库 usearea 注册覆盖审计补入（QE-043 同类；几何采信真端 source_sphere.csv，缺球值者用 Map/Worlds world.xml）
+	<!-- 2026-10-08 全库 usearea 注册覆盖审计补入（QE-043 同类；几何采信原版 source_sphere.csv，缺球值者用 Map/Worlds world.xml）
 	     Added by the 2026-10-08 catalog-wide usearea registry audit (QE-043 family; geometry from retail source_sphere.csv, falling back to Map/Worlds world.xml) -->
 	<zone mapid="400010000" name="AB1_ItemUseArea_Q2060" area_type="SPHERE" zone_type="ITEM_USE">
 		<sphere x="1524.98" y="1590.73" z="1599.15" r="77.80"/>

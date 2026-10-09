@@ -10,12 +10,12 @@ import org.w3c.dom.Element;
 import com.aionemu.gameserver.questEngine.retail.RetailLedgerXml;
 
 /**
- * 真端副本入口端口：DD 附加动作 case 9（Enter Instance）的落点解析面（偏差修复第九批落面，
- * 2026-10-03）。数据 = 真端 {@code Map/XML/instance_creation.xml}（creationId → worldId +
- * {@code start_point_alias_01/02}）× 真端 {@code Map/Worlds/<world>/world.xml} 的
- * {@code location_alias_list}（别名 → x/y/z/dir），两表均在真端服务器数据内（本批复核推翻
- * 「别名→坐标四路不可达」旧登记）。真端解析器 = {@code WorldDb::LoadInstanceCreation} →
- * {@code WorldBase::GetLocationAliasPoint}：别名在 world.xml 缺失时真端自身只记错误日志、
+ * 原版副本入口端口：DD 附加动作 case 9（Enter Instance）的落点解析面（偏差修复第九批落面，
+ * 2026-10-03）。数据 = 原版 {@code Map/XML/instance_creation.xml}（creationId → worldId +
+ * {@code start_point_alias_01/02}）× 原版 {@code Map/Worlds/<world>/world.xml} 的
+ * {@code location_alias_list}（别名 → x/y/z/dir），两表均在原版服务器数据内（本批复核推翻
+ * 「别名→坐标四路不可达」旧登记）。原版解析器 = {@code WorldDb::LoadInstanceCreation} →
+ * {@code WorldBase::GetLocationAliasPoint}：别名在 world.xml 缺失时原版自身只记错误日志、
  * 落点空置（creation 2 = IDElim 的 {@code IDElim_Entrance_alias} 即此内在缺失）⇒
  * {@code resolved=false} 行在 DD 车道维持 fail-closed 冻结。
  * <p>
@@ -28,12 +28,12 @@ import com.aionemu.gameserver.questEngine.retail.RetailLedgerXml;
  */
 public final class NativeInstanceEntryPort {
 
-	/** 真端副本入口表资源路径。 / The retail instance-entry table resource. */
+	/** 原版副本入口表资源路径。 / The retail instance-entry table resource. */
 	public static final String TABLE_RESOURCE =
 		"/aion/data/static_data/quest/retail/retail-instance-entry-points.xml";
 
 	/**
-	 * 一个副本入口落点。{@code resolved=false} = 真端世界文件本就无此别名（内在缺失，禁用）。
+	 * 一个副本入口落点。{@code resolved=false} = 原版世界文件本就无此别名（内在缺失，禁用）。
 	 * One entry point; {@code resolved=false} = the alias is intrinsically absent in the retail
 	 * world file (unusable).
 	 */

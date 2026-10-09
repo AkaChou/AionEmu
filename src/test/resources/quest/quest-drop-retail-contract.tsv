@@ -1,4 +1,4 @@
-# 真端 Aion 5.8 客户端 quest.xml 掉落契约基线（由 Quest_unpacked/quest.xml 生成）。
+# 原版 Aion 5.8 客户端 quest.xml 掉落契约基线（由 Quest_unpacked/quest.xml 生成）。
 # Retail Aion 5.8 client quest.xml drop-contract baseline (generated from Quest_unpacked/quest.xml).
 # 列 / columns: questId <TAB> distinctDropItems <TAB> per-monster chance histogram (chance:monsterCount, ...)
 # 语义 / semantics: 生产目录允许比基线多来源（>=），但不得少于基线的怪物数或丢失概率档；

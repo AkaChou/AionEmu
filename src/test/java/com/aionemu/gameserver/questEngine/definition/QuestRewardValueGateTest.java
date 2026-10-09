@@ -21,20 +21,20 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * 任务档位 1 数值奖励（EXP/GOLD/AP/GP）真端合同门禁。
+ * 任务档位 1 数值奖励（EXP/GOLD/AP/GP）原版合同门禁。
  * <p>
- * 以 Aion 5.8 真端 quest.xml 的档位 1 数值快照
+ * 以 Aion 5.8 原版 quest.xml 的档位 1 数值快照
  * ({@code /quest/quest-reward-value-retail-contract.tsv}) 为权威：
  * <ul>
- * <li>真端字段存在（含 0=真端明确无此奖励）即权威，生产对应 kind 数值必须一致；</li>
- * <li>真端字段缺失（RETAIL_UNSET）= 真端未配置，生产侧奖励属服务端设计，跳过比对；</li>
+ * <li>原版字段存在（含 0=原版明确无此奖励）即权威，生产对应 kind 数值必须一致；</li>
+ * <li>原版字段缺失（RETAIL_UNSET）= 原版未配置，生产侧奖励属服务端设计，跳过比对；</li>
  * <li>生产读取口径：档位 1 = 平铺 &lt;rewards&gt;，多档任务取第一个 &lt;group&gt;
- * （其余档位对应真端 _2/_3 字段，不在本门禁范围）。</li>
+ * （其余档位对应原版 _2/_3 字段，不在本门禁范围）。</li>
  * </ul>
  * 例外（逐条列明，禁止通配豁免）：
  * <ul>
  * <li>AP 服务端 4 倍版本倍率族（11279~11286、21281~21288、18849、18850、28849、28850，
- * 生产 = 真端 × 4，5.8 欧比斯点数版本倍率）。</li>
+ * 生产 = 原版 × 4，5.8 欧比斯点数版本倍率）。</li>
  * </ul>
  * 基线由 .agents/summary/quest-systemic-goal/build_reward_value_contract_tsv.py 再算。
  */
@@ -45,14 +45,14 @@ class QuestRewardValueGateTest {
 
 	private static final String RETAIL_UNSET = "RETAIL_UNSET";
 
-	/** AP 服务端 4 倍版本倍率族（生产 = 真端精确 × 4）。 */
+	/** AP 服务端 4 倍版本倍率族（生产 = 原版精确 × 4）。 */
 	private static final Set<Integer> AP_SERVER_QUADRUPLE = Set.of(
 		11279, 11280, 11281, 11282, 11283, 11284, 11285, 11286,
 		21281, 21282, 21283, 21284, 21285, 21286, 21287, 21288,
 		18849, 18850, 28849, 28850);
 
 	/**
-	 * 真端 EXP=0 而生产保留 1 点经验占位的任务：删除会位移 npc-complete 的
+	 * 原版 EXP=0 而生产保留 1 点经验占位的任务：删除会位移 npc-complete 的
 	 * fixed-reward-indices 合同（1 点经验对玩家无可感知差异），按索引合同保留。
 	 */
 	private static final Set<Integer> PLACEHOLDER_EXP_KEPT = Set.of(80989, 80990);
@@ -82,7 +82,7 @@ class QuestRewardValueGateTest {
 		assertFalse(contract.isEmpty(), "reward contract must not be empty");
 
 		production = new HashMap<>();
-		// 生产视图 = XML 目录 + 真端驱动 overlay：已退役任务的生产元数据现由真端表提供。
+		// 生产视图 = XML 目录 + 原版驱动 overlay：已退役任务的生产元数据现由原版表提供。
 		// Production view = XML catalog plus the retail-driver overlay (retired quests included).
 		QuestCatalog catalog = RetailQuestDriver.overlay(QuestDefinitionDirectoryLoader.compile(
 			QuestRewardValueGateTest.class.getClassLoader()));
@@ -92,7 +92,7 @@ class QuestRewardValueGateTest {
 		for (int qid : QuestRetailStartMetadataGateTest.metadataOnlyQuestIds()) {
 			production.putIfAbsent(qid, QuestRetailStartMetadataGateTest.parseQuestMetadata(qid));
 		}
-		// 退役行（owner=RETAIL_TABLE）的生产元数据由真端表提供：缺此段会把契约里的退役任务误判为
+		// 退役行（owner=RETAIL_TABLE）的生产元数据由原版表提供：缺此段会把契约里的退役任务误判为
 		// 「不在生产目录」（16800/16801 等即此）。
 		// Retired rows take their production metadata from the retail table; without this the contract's
 		// retired quests look absent from the production catalog.
@@ -122,7 +122,7 @@ class QuestRewardValueGateTest {
 		return values;
 	}
 
-	/** 档位 1 的 EXP/GOLD/AP/GP 必须与真端一致（缺失字段与 4 倍 AP 族除外）。 */
+	/** 档位 1 的 EXP/GOLD/AP/GP 必须与原版一致（缺失字段与 4 倍 AP 族除外）。 */
 	@Test
 	void tierOneNumericRewardsMatchTheRetailContract() {
 		List<String> problems = new ArrayList<>();

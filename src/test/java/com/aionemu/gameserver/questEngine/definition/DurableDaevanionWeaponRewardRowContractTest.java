@@ -99,7 +99,7 @@ class DurableDaevanionWeaponRewardRowContractTest {
 			int questId = entry.getKey();
 			assertEquals(Set.of(entry.getValue()), rewardOwners(definition(questId).definition()),
 				() -> "quest " + questId + " reward completion owner must be the family NPC only");
-			// 生产 XML 已退役：完成 owner 从 reward→complete 路由反推（真端合成定义）。
+			// 生产 XML 已退役：完成 owner 从 reward→complete 路由反推（原版合成定义）。
 			// The production XML is retired; the owner is derived from the completion routes.
 			assertEquals(Set.of(entry.getValue()), completionOwners(definition(questId).definition()),
 				() -> "quest " + questId + " npc-complete owner");
@@ -237,7 +237,7 @@ class DurableDaevanionWeaponRewardRowContractTest {
 	}
 
 	private static CompiledQuestDefinition definition(int questId) throws IOException {
-		// 退役任务的生产 XML 只在 git 历史里：统一取生产视图（XML 目录 + 真端 overlay）。
+		// 退役任务的生产 XML 只在 git 历史里：统一取生产视图（XML 目录 + 原版 overlay）。
 		return ProductionQuestDefinitions.definition(questId);
 	}
 }

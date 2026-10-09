@@ -227,7 +227,7 @@ class RewardRowResidualTwoRowContractTest {
 	}
 
 	private static CompiledQuestDefinition definition(int questId) throws IOException {
-		// 退役任务的生产 XML 只在 git 历史里：统一取生产视图（XML 目录 + 真端 overlay）。
+		// 退役任务的生产 XML 只在 git 历史里：统一取生产视图（XML 目录 + 原版 overlay）。
 		return ProductionQuestDefinitions.definition(questId);
 	}
 }

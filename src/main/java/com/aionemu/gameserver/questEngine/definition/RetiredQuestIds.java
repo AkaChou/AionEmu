@@ -9,7 +9,7 @@ import org.w3c.dom.Element;
 import com.aionemu.gameserver.questEngine.retail.RetailLedgerXml;
 
 /**
- * 已退役任务的 id 集合：生产 XML 已删除、定义由真端驱动合成。
+ * 已退役任务的 id 集合：生产 XML 已删除、定义由原版驱动合成。
  * <p>
  * 2026-09-23 口径（用户指令）：退役任务的 XML 不再进仓——历史内容在 git 里可回溯，仓库只保留
  * "谁已退役"的机器可读清单，即保留清单 {@code retail-xml-retention.xml} 里 {@code owner=RETAIL_TABLE} 的行。

@@ -95,7 +95,7 @@ public class PortalDialogAI2 extends PortalAI2 {
 		if (questId > 0 && GameEngineServices.questEngine().onDialog(env)) {
 			return true;
 		}
-		// 克萝梅德试炼入口（兰尼尼亚/布里奇特）：questId=0 的「进入恶梦」(SETPRO1=10000) 在真端由任务脚本
+		// 克萝梅德试炼入口（兰尼尼亚/布里奇特）：questId=0 的「进入恶梦」(SETPRO1=10000) 在原版由任务脚本
 		// 处理（fun_893.cpp FUN_180f859b0：关窗 + 18602/28602 步=1 + 进副本），而非传送门。这里先让任务引擎
 		// 按该 NPC 的进行中任务重放（QuestEngine.onDialog 的 requestedOwner==0 候选分发）；引擎认领即推进任务
 		// 步并走任务侧传送（与 portal_loc 3002300 同坐标）。不认领（未接/步骤已过）时保持既有传送门行为。
@@ -361,7 +361,7 @@ public class PortalDialogAI2 extends PortalAI2 {
 		if (npcId == FISSURE_OF_OBLIVION_EXIT && entityId == FISSURE_OF_OBLIVION_FINAL_ORB_ENTITY) {
 			return List.of(QuestDialogAction.QUEST_SELECT.id());
 		}
-		// 克萝梅德试炼入口（兰尼尼亚/布里奇特）的开门对话由任务脚本承担（真端 FUN_180f859b0 的页轴）：
+		// 克萝梅德试炼入口（兰尼尼亚/布里奇特）的开门对话由任务脚本承担（原版 FUN_180f859b0 的页轴）：
 		// 未接 → select_none 接取页；进行中 → select1；可交 → 领奖页。这些页必须携带 questId 发送，
 		// 否则客户端拿 questId=0 的页 10 去 NPC 通用对话 html 里查找并渲染失败——呈现为空白对话、
 		// 任务无法接取（2026-10-07 实机：Kk 满足前置却接不到 18602，只有页 10/questId=0 下发）。

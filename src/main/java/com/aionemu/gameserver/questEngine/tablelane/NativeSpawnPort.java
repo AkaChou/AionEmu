@@ -10,13 +10,13 @@ import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.geo.GeoService;
 
 /**
- * 原生任务车道的刷怪端口：DD 附加动作 case 5（`Spawn Npcs`，真端执行器 case 5 →
+ * 原生任务车道的刷怪端口：DD 附加动作 case 5（`Spawn Npcs`，原版执行器 case 5 →
  * `IUserImp::Spawn`，NP `NpcAIOrderFunc.cpp` @1401877b0）的唯一出口。
  * <p>
- * 真端语义（步 f 逐字坐实）：count 只逐只生成；Relative（半径参数 ≥1）= 每只在中心 ±半径的
+ * 原版语义（步 f 逐字坐实）：count 只逐只生成；Relative（半径参数 ≥1）= 每只在中心 ±半径的
  * **正方形**内均匀采样，最多 0x20 次，逐次查可行走格子 + 世界 AABB + 高差容差 4 + 路径可达
  * （`World_RandomWalkableSpawnLocation`），全败回退中心坐标；Absolute = 坐标原样不校正；
- * time = 刷怪单存活参数（到期回收者真端侧不可见 = 登记偏差）。
+ * time = 刷怪单存活参数（到期回收者原版侧不可见 = 登记偏差）。
  * <p>
  * The spawn port of the native quest lane: the single exit for the DD Spawn Npcs extra action
  * (retail executor case 5 → IUserImp::Spawn). Retail semantics (step-f evidence): Relative spawns
@@ -27,11 +27,11 @@ import com.aionemu.gameserver.world.geo.GeoService;
  */
 public interface NativeSpawnPort {
 
-	/** 随机采样半径（真端执行器 case 5 Relative 形的半径参数）。 / The Relative sampling radius. */
+	/** 随机采样半径（原版执行器 case 5 Relative 形的半径参数）。 / The Relative sampling radius. */
 	float RELATIVE_RADIUS = 5.0f;
-	/** 高差容差（真端 z 容差参数 = 4）。 / The retail z-tolerance argument. */
+	/** 高差容差（原版 z 容差参数 = 4）。 / The retail z-tolerance argument. */
 	float Z_TOLERANCE = 4.0f;
-	/** 采样重试上限（真端 0x20）。 / The retail retry cap. */
+	/** 采样重试上限（原版 0x20）。 / The retail retry cap. */
 	int SAMPLE_TRIES = 0x20;
 
 	/**
@@ -92,9 +92,9 @@ public interface NativeSpawnPort {
 		}
 
 		/**
-		 * 真端 `World_RandomWalkableSpawnLocation` 镜像：中心 ±半径正方形均匀采样 ×32，逐次在
+		 * 原版 `World_RandomWalkableSpawnLocation` 镜像：中心 ±半径正方形均匀采样 ×32，逐次在
 		 * 中心 ±100 高度窗内投射地表（NaN = 不可站立）+ 高差容差 + 步行路径可达；全败回退中心
-		 * （真端同款回退）。地理地图占位（未加载）时也回退中心。
+		 * （原版同款回退）。地理地图占位（未加载）时也回退中心。
 		 * Mirror of World_RandomWalkableSpawnLocation: uniform square sampling around the center,
 		 * ground cast within ±100 of the center z (NaN = not standable) + z-tolerance + walker-path
 		 * check per try, center fallback on exhaustion or placeholder geo.

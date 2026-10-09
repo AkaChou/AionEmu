@@ -30,8 +30,8 @@ class Quest14051ClientDialogAlignmentTest {
 		assertNode(definition, "s1", QuestStatus.START, Map.of("var0", 1));
 		assertNode(definition, "s2", QuestStatus.START, Map.of("var0", 2));
 		assertNode(definition, "s3", QuestStatus.START, Map.of("var0", 3));
-		// QE-054：领奖投影 = 真端/legacy 推进值 3——legacy STEP_TO_4 仅 setStatus(REWARD) 不写 var，
-		// 真端集合 {1,3} 无 4；领奖行批次曾误抬为 4，2026-10-07 全量审计收口回 3。
+		// QE-054：领奖投影 = 原版/legacy 推进值 3——legacy STEP_TO_4 仅 setStatus(REWARD) 不写 var，
+		// 原版集合 {1,3} 无 4；领奖行批次曾误抬为 4，2026-10-07 全量审计收口回 3。
 		// QE-054: the reward projection is the retail/legacy progress value 3 — the legacy STEP_TO_4
 		// only entered REWARD without touching var0 and the retail set {1,3} has no 4; the reward-row
 		// batch once mislifted it to 4 and the 2026-10-07 audit rolled it back to 3.

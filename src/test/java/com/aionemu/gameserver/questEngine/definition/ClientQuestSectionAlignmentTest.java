@@ -28,7 +28,7 @@ class ClientQuestSectionAlignmentTest {
 	 * SECTION_0（bit 0..5），var1 起必须落在 6N 才能与客户端脚本的 SECTION_N 对齐；
 	 * 这 11 个任务是 2026-09-22 审计时仅存的例外（全库 6161 个带位段任务），逐个收口前先锁定清单；
 	 * 16800 在批次 28 退役了 var1 影片旗标（行阶梯改用 zone 触发）已从名单移除；18738/28738
-	 * 按 DD_ITEMPLAY_VARIANTS 批次退役（多播 ItemPlay 变体家族，真端段布局 var1@6）后离开生产目录，
+	 * 按 DD_ITEMPLAY_VARIANTS 批次退役（多播 ItemPlay 变体家族，原版段布局 var1@6）后离开生产目录，
 	 * 相应从本名单移除（P0c-49 顺带偿还，口径 = 生产目录内的例外集）。
 	 * Legacy quests that name counters varN yet still park them outside SECTION_N. The client journal
 	 * row index reads SECTION_0 (bits 0..5), so var1 and later must sit at 6N to line up with the
@@ -142,7 +142,7 @@ class ClientQuestSectionAlignmentTest {
 	}
 
 	/**
-	 * 生产视图加载：退役行返回真端合成定义（P0c-9 起 11102 已退役），保留行返回同一 XML 定义。
+	 * 生产视图加载：退役行返回原版合成定义（P0c-9 起 11102 已退役），保留行返回同一 XML 定义。
 	 * Loads through the production view: retired rows yield the retail-compiled definition
 	 * (11102 retired in P0c-9), retained rows the very same XML definition.
 	 */

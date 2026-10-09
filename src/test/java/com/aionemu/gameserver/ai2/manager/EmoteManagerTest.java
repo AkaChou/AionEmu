@@ -78,7 +78,7 @@ class EmoteManagerTest {
 				"脱战提示必须先判定目标玩家是否还看得见该 NPC。"
 						+ " / The disengage notice must be gated on the player still seeing the NPC.");
 		assertTrue(body.contains("STR_UI_COMBAT_NPC_RETURN"),
-				"闸门内仍要下发真端 1300039 提示，不能把提示整体删掉。"
+				"闸门内仍要下发原版 1300039 提示，不能把提示整体删掉。"
 						+ " / The gate must keep the retail 1300039 notice for players that still see the NPC.");
 	}
 

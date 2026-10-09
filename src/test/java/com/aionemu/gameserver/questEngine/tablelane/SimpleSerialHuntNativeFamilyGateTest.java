@@ -26,7 +26,7 @@ import com.aionemu.gameserver.questEngine.model.QuestStatus;
  * SimpleSerialHunt 原生表驱动家族门禁测试（计划 §6.2 / §7 / P2 切换批）。
  * <p>
  * 验证：
- * 1. 真端表行全量 16 个 SimpleSerialHunt 任务 100% 装载并纳入 SimpleSerialHuntHandler 管理；
+ * 1. 原版表行全量 16 个 SimpleSerialHunt 任务 100% 装载并纳入 SimpleSerialHuntHandler 管理；
  * 2. CameraRegistry 完整包含全部 16 行相机参数，且 fullValue 与阶段需求一致；
  * 3. 严格串行阶梯推进：首个未满阶段计数推进（+0xf0），乱序或超前击杀零动作（NO_ACTION）；
  * 4. 简报 NPC 守卫门控：声明 talk_npc 的任务在 1<<30 标志位未清前击杀零动作，与简报 NPC 对话清位后方可开启击杀；
@@ -137,14 +137,14 @@ class SimpleSerialHuntNativeFamilyGateTest {
 		assertEquals(0x40000000, qs.getQuestVars().getQuestVars());
 
 		// 4. 向简报 NPC 对话：任务行（QUEST_SELECT=31）→ 简报页 select2（1352，带 questId），
-		//    状态不变（真端行 0a）；实机 2026-10-08：「点击任务无下一步」= 曾发通用页 10 循环。
+		//    状态不变（原版行 0a）；实机 2026-10-08：「点击任务无下一步」= 曾发通用页 10 循环。
 		NativeTalkFixture.clearPackets(player);
 		QuestEnv envBriefingDialog = new QuestEnv(briefingNpc, player, questId, 31);
 		assertTrue(handler.onDialog(envBriefingDialog));
 		NativeTalkFixture.assertOnlyDialogPageWithQuest(player, 1352, questId);
 		assertEquals(0x40000000, qs.getQuestVars().getQuestVars(), "打开简报页不得清位");
 
-		// 5. 简报页「结束对话」（SETPRO1=10000）→ 清 var5 + 关窗（真端行 0b close-dialog）。
+		// 5. 简报页「结束对话」（SETPRO1=10000）→ 清 var5 + 关窗（原版行 0b close-dialog）。
 		NativeTalkFixture.clearPackets(player);
 		QuestEnv envBriefingConfirm = new QuestEnv(briefingNpc, player, questId, 10000);
 		assertTrue(handler.onDialog(envBriefingConfirm));
@@ -189,7 +189,7 @@ class SimpleSerialHuntNativeFamilyGateTest {
 	}
 
 	/**
-	 * 可重复行 COMPLETE 重开局（真端 {@code finishedcount < max_repeat_count}）：9622 是本族唯一
+	 * 可重复行 COMPLETE 重开局（原版 {@code finishedcount < max_repeat_count}）：9622 是本族唯一
 	 * max_repeat_count>1 的行（255）；完成后点任务行必须重新开放接取面并复位档案（含简报守卫位）。
 	 * <p>
 	 * Repeatable COMPLETE re-open: 9622 is the family's only row with max_repeat_count>1 (255); the
@@ -201,7 +201,7 @@ class SimpleSerialHuntNativeFamilyGateTest {
 		QuestState state = NativeTalkFixture.add(player, 9622, QuestStatus.COMPLETE, 0);
 		state.setCompleteCount(1);
 		Integer acquireNpc = handler.acquireNpc(9622);
-		assertNotNull(acquireNpc, "真端行必须有可解析的接取 NPC");
+		assertNotNull(acquireNpc, "原版行必须有可解析的接取 NPC");
 
 		NativeTalkFixture.clearPackets(player);
 		assertTrue(handler.onDialog(NativeTalkFixture.dialog(player, acquireNpc, 9622, 31)),

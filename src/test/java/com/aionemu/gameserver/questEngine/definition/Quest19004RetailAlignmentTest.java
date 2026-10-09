@@ -17,11 +17,11 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * 锁定任务 19004（圣所对话链）的真端中继链与交付 owner。
+ * 锁定任务 19004（圣所对话链）的原版中继链与交付 owner。
  * Locks quest 19004's retail talk chain and hand-in owners.
  * <p>
  * 任务已退役（保留清单 owner=RETAIL_TABLE）：旧 typed 转换金标随迁移退场，按计划 §8.9（P3 重锚口径）
- * 改锚真端表行（Perikles → Jucleas 步 1 → Lavirintos 步 2 → Hilarus 交付）、quest.xml 奖励与 native 对话面。
+ * 改锚原版表行（Perikles → Jucleas 步 1 → Lavirintos 步 2 → Hilarus 交付）、quest.xml 奖励与 native 对话面。
  * <p>
  * The retired typed transition gold standard is re-anchored (plan §8.9) to the retail row (Perikles →
  * Jucleas step 1 → Lavirintos step 2 → Hilarus hand-in), the quest.xml rewards and the native faces.
@@ -43,7 +43,7 @@ class Quest19004RetailAlignmentTest {
 		SimpleTalkHandler handler = SimpleTalkHandler.instance();
 		assertEquals("Perikles", handler.requireRow(QUEST_ID).acquiredNpcName(), "接取 owner 名");
 		assertEquals(List.of("Jucleas", "Lavirintos"), handler.requireRow(QUEST_ID).talkNpcNames(),
-			"真端中继链（talk_npc1 → talk_npc2）");
+			"原版中继链（talk_npc1 → talk_npc2）");
 		assertEquals("Hilarus", handler.requireRow(QUEST_ID).rewardNpcName(), "交付 owner 名");
 		assertEquals(PERIKLES_NPC, handler.acquireNpc(QUEST_ID), "接取 owner = Perikles");
 		assertEquals(HILARUS_NPC, handler.rewardNpc(QUEST_ID), "交付 owner = Hilarus");
@@ -59,8 +59,8 @@ class Quest19004RetailAlignmentTest {
 
 		QuestMetadata metadata = RetailQuestDriver.ensureLoaded()
 			.retailMetadataOf(QUEST_ID).orElseThrow().metadata();
-		assertEquals(29, metadata.minLevel(), "真端 minlevel_permitted=29");
-		assertEquals(java.util.Set.of("ELYOS"), metadata.permittedRaces(), "真端 pc_light");
+		assertEquals(29, metadata.minLevel(), "原版 minlevel_permitted=29");
+		assertEquals(java.util.Set.of("ELYOS"), metadata.permittedRaces(), "原版 pc_light");
 		List<QuestReward> rewards = metadata.rewards();
 		assertTrue(rewards.contains(new QuestReward("GOLD", 0, 9830)), () -> rewards.toString());
 		assertTrue(rewards.contains(new QuestReward("EXP", 0, 37405)), () -> rewards.toString());
@@ -82,7 +82,7 @@ class Quest19004RetailAlignmentTest {
 		assertFalse(handler.onDialog(NativeTalkFixture.dialog(player, LAVIRINTOS_NPC, QUEST_ID, 31)),
 			"未轮到的中继步必须零响应");
 
-		// 步 1 推进（SETPRO1=10000）：var0=1 + 关窗（真端 after-commit 零发页）。
+		// 步 1 推进（SETPRO1=10000）：var0=1 + 关窗（原版 after-commit 零发页）。
 		NativeTalkFixture.clearPackets(player);
 		assertTrue(handler.onDialog(NativeTalkFixture.dialog(player, JUCLEAS_NPC, QUEST_ID, 10000)));
 		assertEquals(1, player.getQuestStateList().getQuestState(QUEST_ID).getQuestVars().getQuestVars(),

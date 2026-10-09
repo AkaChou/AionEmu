@@ -21,7 +21,7 @@ import java.util.regex.Pattern;
 /**
  * 物品 {@code name_desc} → item_id 索引。
  * <p>
- * 真端 quest.xml 用符号名（如 {@code quest_1002b}、{@code %Quest_L_magical_30a} 的成员）描述奖励与
+ * 原版 quest.xml 用符号名（如 {@code quest_1002b}、{@code %Quest_L_magical_30a} 的成员）描述奖励与
  * 交付物，而服务端运行时按 item_id 工作；本索引与 {@link RetailNpcNameIndex} 同构，桥接两者。
  * Index from item {@code name_desc} to item ids, the item-side twin of {@link RetailNpcNameIndex}.
  */
@@ -62,11 +62,11 @@ public final class RetailItemNameIndex {
 		return byName.size();
 	}
 
-	/** 真端物品模板目录（含 {@code name_desc} 的 item_template 文件）。 / Retail item template directory. */
+	/** 原版物品模板目录（含 {@code name_desc} 的 item_template 文件）。 / Retail item template directory. */
 	public static final String ITEM_TEMPLATE_DIR = "/aion/data/static_data/items/item/";
 
 	/**
-	 * 装载真端物品模板目录下的全部物品名索引（file / jar 两种资源协议均可）。
+	 * 装载原版物品模板目录下的全部物品名索引（file / jar 两种资源协议均可）。
 	 * 原生车道与旧 retail 车道共用同一份装载路径，避免出现第二个物品名事实来源。
 	 * <p>
 	 * 装载结果按进程缓存（DCL）：overlay 构建期 {@code RetailQuestDriver.verifyProductionCoverage}
@@ -156,7 +156,7 @@ public final class RetailItemNameIndex {
 	}
 
 	/**
-	 * 从若干物品模板文件流构建索引；同一 name_desc 重复出现时保留首个（真端同名同 id）。
+	 * 从若干物品模板文件流构建索引；同一 name_desc 重复出现时保留首个（原版同名同 id）。
 	 * Builds the index from item template streams; the first id wins on duplicate names.
 	 */
 	public static RetailItemNameIndex build(Collection<InputStream> templates) throws IOException {

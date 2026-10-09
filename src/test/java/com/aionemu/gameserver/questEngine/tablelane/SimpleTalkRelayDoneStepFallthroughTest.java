@@ -20,7 +20,7 @@ import java.util.List;
  * 13800：talk_npc2=reward=LDF5_Fortress_Alphion_E）。缺陷形态：中继分支对任务行打开（31）只
  * 静默「未轮到」的步，**已完成的步照样回放步页并接管**，把报告分支永久遮蔽——31 恒回步页 →
  * 10000/10001 重放只关窗，玩家在「步页 → 子页 → 重放关窗」里无限打转，任务永远交不了。
- * 真端投影（退役 XML）：13700 = NPC_REPORT page=SELECT5@802350；13800 = REWARD 态
+ * 原版投影（退役 XML）：13700 = NPC_REPORT page=SELECT5@802350；13800 = REWARD 态
  * QUEST_SELECT → SELECT5@802431——节点步进后 NPC 即越过该步，31 落到报告页。
  * <p>
  * A finished relay step must never replay (live 13700/13800 loop regression, 2026-10-08). Both
@@ -40,7 +40,7 @@ class SimpleTalkRelayDoneStepFallthroughTest {
 	void sharedRelayRewardNpcOpensTheReportPageOnceTheStepIsDone() {
 		SimpleTalkHandler handler = SimpleTalkHandler.instance();
 		assertTrue(handler.routes(QUEST_13700), "13700 必须由 native SimpleTalk 车道路由");
-		assertEquals(1, handler.relayCount(QUEST_13700), "真端 talk_npc1 单步中继");
+		assertEquals(1, handler.relayCount(QUEST_13700), "原版 talk_npc1 单步中继");
 		int elger = NativeNpcNameResolver.instance().resolveMembers("LDF4_Advance_Elger_E").get(0);
 		assertTrue(handler.rewardNpcs(QUEST_13700).contains(elger),
 			"交付节点与中继节点同名（死循环前提）");
@@ -57,7 +57,7 @@ class SimpleTalkRelayDoneStepFallthroughTest {
 		assertTrue(handler.onDialog(NativeTalkFixture.dialog(player, elger, QUEST_13700, 1353)));
 		NativeTalkFixture.assertOnlyDialogPageWithQuest(player, 1353, QUEST_13700);
 
-		// 推进 10000：var0=1 + 关窗（实机轨迹第三拍；真端 cabb10 零发页）。
+		// 推进 10000：var0=1 + 关窗（实机轨迹第三拍；原版 cabb10 零发页）。
 		NativeTalkFixture.clearPackets(player);
 		assertTrue(handler.onDialog(NativeTalkFixture.dialog(player, elger, QUEST_13700, 10000)));
 		assertEquals(1, state.getQuestVars().getQuestVars(), "步 1 推进必须写 var0=1");
@@ -82,7 +82,7 @@ class SimpleTalkRelayDoneStepFallthroughTest {
 		// unit tests; the live port would NPE).
 		SimpleTalkHandler handler = NativeTalkFixture.handler(NativeTalkFixture.RecordingInventory.EMPTY);
 		assertTrue(handler.routes(QUEST_13800), "13800 必须由 native SimpleTalk 车道路由");
-		assertEquals(2, handler.relayCount(QUEST_13800), "真端 talk_npc1..2 两步中继");
+		assertEquals(2, handler.relayCount(QUEST_13800), "原版 talk_npc1..2 两步中继");
 		int teleport = NativeNpcNameResolver.instance().resolveMembers("LF5_OP1_ZoneTeleport_L").get(0);
 		int alphion = NativeNpcNameResolver.instance().resolveMembers("LDF5_Fortress_Alphion_E").get(0);
 		assertTrue(handler.rewardNpcs(QUEST_13800).contains(alphion),
@@ -103,7 +103,7 @@ class SimpleTalkRelayDoneStepFallthroughTest {
 		assertEquals(1, state.getQuestVars().getQuestVars(), "步 1 推进必须写 var0=1");
 		NativeTalkFixture.assertCloseDialog(player);
 
-		// 回归点（中链）：已完成的步不再回放——传送点被真端节点越过，native 车道零接管回默认对话。
+		// 回归点（中链）：已完成的步不再回放——传送点被原版节点越过，native 车道零接管回默认对话。
 		NativeTalkFixture.clearPackets(player);
 		assertFalse(handler.onDialog(NativeTalkFixture.dialog(player, teleport, QUEST_13800, 31)),
 			"已完成的步不得再由中继分支接管");

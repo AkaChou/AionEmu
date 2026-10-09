@@ -43,7 +43,7 @@ class QuestEngineOpenDoorReplayOrderTest {
 	}
 
 	/**
-	 * 实机数据行：1155 与 14111 同为 NPC 203126（Abolos）的接取/交付任务（真端表
+	 * 实机数据行：1155 与 14111 同为 NPC 203126（Abolos）的接取/交付任务（原版表
 	 * {@code Quest_SimpleCollectItem.xml} / {@code Quest_SimpleHunt.xml}）。1155 为进行中且 questId
 	 * 较小，14111 可交付——开门必须命中 14111 的奖励窗（页 5 带 questId），而不是 1155 的通用页 10。
 	 * Live rows: 1155 and 14111 both acquire and hand in at npc 203126 (Abolos) per the retail table.

@@ -17,7 +17,7 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 任务相关 NPC AI：Quest Start Item Npc Ai2，继承 ActionItemNpcAI2。
  * 对应野外场景中交互后开出任务启动道具的物体（如贝尔特伦信函 700009、克拉尔书 700004、旧箱子 700513 等）。
- * 遵循真端原生分层：发道具与物体消失为 NPC AI 行为，任务系统本身保持真端表驱动解耦。
+ * 遵循原版原生分层：发道具与物体消失为 NPC AI 行为，任务系统本身保持原版表驱动解耦。
  */
 @AIName("quest_start_use_item,scroll_q41,scroll_q49,scroll_q2498,npc_ai_box_q1559,npc_ai_fobj_q11036a,npc_ai_fobj_q11123a,npc_ai_fobj_q11143a")
 public class QuestStartItemNpcAi2 extends ActionItemNpcAI2 {

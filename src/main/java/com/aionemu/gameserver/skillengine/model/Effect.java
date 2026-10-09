@@ -375,7 +375,7 @@ public class Effect implements StatOwner {
 	private boolean forcedDuration = false;
 	private boolean isForcedEffect = false;
 	/**
-	 * 重复异常状态递减链：本效果参与的真端状态，null 表示不参与。
+	 * 重复异常状态递减链：本效果参与的原版状态，null 表示不参与。
 	 * Repeated-abnormal decay chain: the retail state this effect takes part in; null when it takes no part.
 	 * 仅运行时标记，不持久化、不参与任何序列化。 / Runtime-only marker, never persisted or serialized.
 	 */
@@ -1244,7 +1244,7 @@ public class Effect implements StatOwner {
 			duration = duration * skillTemplate.getPvpDuration() / 100;
 		}
 
-		// 真端重复异常递减：time_value[N]% 乘算；0% 档保住 1ms 生命周期，避免 startEffect 在
+		// 原版重复异常递减：time_value[N]% 乘算；0% 档保住 1ms 生命周期，避免 startEffect 在
 		// duration==0 时早退，留下永久异常与映射泄漏（见 PlayerRepeatedAbnormalStatus）。
 		// Retail repeated-abnormal decay: multiply by time_value[N]%; the 0% tier keeps a 1 ms lifetime so
 		// startEffect's duration==0 early return cannot leave a permanent abnormal and a leaked map entry.

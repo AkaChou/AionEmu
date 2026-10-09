@@ -111,7 +111,7 @@
     </npc-complete>
     <!-- 物件 owner 收口（2026-10-08，QE-052 同型批次；代表先例 3036，姊妹任务 30313 同形：
          「730275 的交互整体被注释禁用，没有原版证据不得启用」）：
-         真端注册面（retail-quest-ai-registrations.xml）把符文宝珠 730275 挂到 riftorb AI，其对话由
+         原版注册面（retail-quest-ai-registrations.xml）把符文宝珠 730275 挂到 riftorb AI，其对话由
          RiftOrbAI2 承担（页 1011 开窗 → 按钮 10000 → var0=1 + REWARD，零回页，见
          src/main/java/com/aionemu/gameserver/ai/instance/beshmundirTemple/RiftOrbAI2.java#forQuest）；
          legacy `_30311GroupAQuartzIsaQuartz` 里 730275 的注册与对话块整体被注释禁用

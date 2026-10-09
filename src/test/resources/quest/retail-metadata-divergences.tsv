@@ -1,4 +1,4 @@
-# 真端元数据层已登记分歧（quest_id, axis, reason）；由 audit_generate_metadata_divergences.py 生成
+# 原版元数据层已登记分歧（quest_id, axis, reason）；由 audit_generate_metadata_divergences.py 生成
 # 生成源：RetailMetadataEquivalenceGateTest -Dretail.metadata.diffOut 导出 + 人工定性
 1007	classRewards	RETAIL_PRIORITY
 1007	prerequisites	RETAIL_COND_PLACEMENT

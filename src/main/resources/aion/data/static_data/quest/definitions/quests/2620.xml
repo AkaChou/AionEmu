@@ -41,7 +41,7 @@
     </node>
   </nodes>
   <transitions>
-    <!-- QE-054 步号轴权威：领奖投影 = 真端/legacy 推进值 1（真端 0x100 状态推进不写轴，客户端 REWARD 态按 [%N] 行门槛自行显示报告行）；legacy setStatus(REWARD) 不写 var（var0=1）；staleRow=1。曾被领奖行批次误抬为 2，本边把坏档回滚到 1。
+    <!-- QE-054 步号轴权威：领奖投影 = 原版/legacy 推进值 1（原版 0x100 状态推进不写轴，客户端 REWARD 态按 [%N] 行门槛自行显示报告行）；legacy setStatus(REWARD) 不写 var（var0=1）；staleRow=1。曾被领奖行批次误抬为 2，本边把坏档回滚到 1。
          Step-axis authority (QE-054): the reward projection is the retail/legacy progress value 1 (retail 0x100 state advances never touch the axis; the client shows the report row via its own [%N] gate); per the legacy/retail progress evidence on the Chinese line. The reward-row batch once mislifted it to 2 — this edge rolls bad saves back to 1. -->
     <transition target="reward">
       <event>

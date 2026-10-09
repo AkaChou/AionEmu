@@ -45,9 +45,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * REWARD state on the last var0; row i advances through that row's client NPC with {@code SETPROi}, the reward
  * row enters REWARD through its own client {@code SELECT_QUEST_REWARD}, entry pages come from the client chain,
  * and only the reward row NPC may complete the quest.</p>
- * <p>P3 重锚（计划 §8.9）：1183 属真端 SimpleTalk 表行（{@code 엘람족}），随 P3 切换批移出 IR 车道；
- * 本类对它的断言改为真端表行锚（接取/交付 NPC 同主、两步中继树、步内发扣、页阶梯取自客户端链），
- * 其余 12 个任务未在真端表内，仍按 IR 合同断言。
+ * <p>P3 重锚（计划 §8.9）：1183 属原版 SimpleTalk 表行（{@code 엘람족}），随 P3 切换批移出 IR 车道；
+ * 本类对它的断言改为原版表行锚（接取/交付 NPC 同主、两步中继树、步内发扣、页阶梯取自客户端链），
+ * 其余 12 个任务未在原版表内，仍按 IR 合同断言。
  * P3 re-anchor (plan §8.9): 1183 is a retail SimpleTalk row and left the IR lane with the P3 switch
  * batch; it is now pinned through the retail row (same-NPC accept/hand-in, two relay trees, per-step
  * grants/removals, client-chain page ladder), while the remaining 12 quests stay on the IR contract.</p>
@@ -65,7 +65,7 @@ class QuestMultistepChainContractTest {
 	 * Per-quest three-way evidence (client quest_summary rows, client dialog chains, retail steps).
 	 */
 	/**
-	 * 已随 P3 SimpleTalk 切换批移出 IR 的真端行（10 个）：接取/交付 owner 与中继 NPC 取自真端表，
+	 * 已随 P3 SimpleTalk 切换批移出 IR 的原版行（10 个）：接取/交付 owner 与中继 NPC 取自原版表，
 	 * 步页取自客户端对话链；证据见 .agents/summary/quest-engine-native/p3/step5-anchor-evidence.tsv。
 	 * Retail rows that left the IR lane with the P3 SimpleTalk switch batch (10 quests): owners and relay
 	 * NPCs come from the retail row, step pages from the client dialog chain.
@@ -120,8 +120,8 @@ class QuestMultistepChainContractTest {
 			new Step(798115, QuestDialogPage.SELECT1)), 798080, QuestDialogPage.DEFAULT_SUCCESS));
 
 	/**
-	 * 1514 属 P5 SimpleUseItem 族（真端 {@code Quest_SimpleUseItem.xml} 行）：P5 切换批把它交给
-	 * {@link SimpleUseItemHandler} 原生直驱，typed 目录里不再有它的压缩定义。行阶梯锚改为真端行锚：
+	 * 1514 属 P5 SimpleUseItem 族（原版 {@code Quest_SimpleUseItem.xml} 行）：P5 切换批把它交给
+	 * {@link SimpleUseItemHandler} 原生直驱，typed 目录里不再有它的压缩定义。行阶梯锚改为原版行锚：
 	 * {@code talk_npc1/2} 两级中继（客户端声明 SELECT2/SELECT3 页）+ 交付 NPC 翻 REWARD。
 	 * <p>
 	 * 1514 belongs to the P5 SimpleUseItem family: the P5 switch batch hands it to the native lane, so the
@@ -134,11 +134,11 @@ class QuestMultistepChainContractTest {
 		assertTrue(handler.routes(1514), "1514 必须由 P5 SimpleUseItem native 车道直驱");
 		assertTrue(ProductionQuestDefinitions.catalog().findExecutable(1514).isEmpty(),
 			"已切换行不得再出现在 typed 目录（单一 owner）");
-		assertNotNull(handler.useItemId(1514), "真端 use_item_name 必须解析");
+		assertNotNull(handler.useItemId(1514), "原版 use_item_name 必须解析");
 
-		// 真端 talk_npc1/2 两级中继 = 该行阶梯；每级页必须是客户端声明的可渲染页。
+		// 原版 talk_npc1/2 两级中继 = 该行阶梯；每级页必须是客户端声明的可渲染页。
 		List<Integer> relays = handler.relayNpcs(1514);
-		assertEquals(2, relays.size(), "真端 talk_npc1/2 两级中继");
+		assertEquals(2, relays.size(), "原版 talk_npc1/2 两级中继");
 		assertTrue(NativeTalkFixture.clientDeclares(1514, QuestDialogPage.SELECT2.id()));
 		assertTrue(NativeTalkFixture.clientDeclares(1514, QuestDialogPage.SELECT3.id()));
 
@@ -317,7 +317,7 @@ class QuestMultistepChainContractTest {
 		}
 	}
 
-	/** 真端行 → native 处理器：owner / 中继树 / 步页 / 交付门逐行对拍。 /
+	/** 原版行 → native 处理器：owner / 中继树 / 步页 / 交付门逐行对拍。 /
 	 * Retail rows against the native handler: owners, relay trees, step pages and gates. */
 	@Test
 	void retailTalkChainsFollowTheRetailRows() {
@@ -326,7 +326,7 @@ class QuestMultistepChainContractTest {
 			int questId = chain.questId();
 			assertTrue(handler.routes(questId), questId + " 必须由 native 车道路由");
 			assertEquals(RetailGrantKind.NPC, handler.grantKind(questId), questId + " 为 NPC 接取行");
-			assertEquals(chain.rewardNpc(), handler.rewardNpc(questId), questId + " 交付 NPC（真端 reward_npc_name）");
+			assertEquals(chain.rewardNpc(), handler.rewardNpc(questId), questId + " 交付 NPC（原版 reward_npc_name）");
 			assertEquals(chain.steps().size(), handler.relayCount(questId),
 				questId + " 中继步数 = 客户端链步数");
 			for (int index = 0; index < chain.steps().size(); index++) {
@@ -340,21 +340,21 @@ class QuestMultistepChainContractTest {
 				assertTrue(NativeTalkFixture.clientDeclares(questId, step.page().id()),
 					questId + " 客户端任务页必须声明该步页 " + step.page());
 			}
-			// 这 10 行真端均未声明 item_check：交付门不生效（quest.xml 的 work 通道只对 item_check 行生效）。
+			// 这 10 行原版均未声明 item_check：交付门不生效（quest.xml 的 work 通道只对 item_check 行生效）。
 			assertTrue(handler.workItems(questId).isEmpty(), questId + " 无 item_check 门");
 			assertFalse(handler.unresolvedGate(questId), questId + " 非 item_check 行无门");
-			// 真端入口页表：信页优先（select_none 4762 → select1 1011），页 4 只由页动作 1007 打开。
+			// 原版入口页表：信页优先（select_none 4762 → select1 1011），页 4 只由页动作 1007 打开。
 			// Retail entry page table: letter page first (4762 → 1011); page 4 is 1007-only.
 			int expectedEntry = NativeTalkFixture.clientDeclares(questId, QuestDialogPage.SELECT_NONE.id())
 				? QuestDialogPage.SELECT_NONE.id()
 				: NativeTalkFixture.clientDeclares(questId, QuestDialogPage.SELECT1.id())
 					? QuestDialogPage.SELECT1.id() : QuestDialogPage.SHOW_ASK_QUEST_ACCEPT_WINDOW.id();
 			assertEquals(expectedEntry, NativeTalkFixture.clientEntryPage(questId),
-				questId + " 接取入口页（真端信页偏好序）");
+				questId + " 接取入口页（原版信页偏好序）");
 		}
 	}
 
-	/** 真端 give_item / give_itemN / remove_itemN → native 物品通道（含分档与回收）。 /
+	/** 原版 give_item / give_itemN / remove_itemN → native 物品通道（含分档与回收）。 /
 	 * Retail give_item / give_itemN / remove_itemN against the native item channels. */
 	@Test
 	void retailTalkChainsCarryTheirItemChannels() {
@@ -399,7 +399,7 @@ class QuestMultistepChainContractTest {
 		assertNull(handler.acceptGiveItem(4501), "4501 接取无发放");
 		assertEquals(new SimpleTalkHandler.ItemStack(182204533, 1), handler.stepGiveItem(4501, 2), "4501 步 2 发放");
 
-		// 链式接取窗（真端 con_quest）逐行冻结：1483→1484、3966→3967、3968→3969，其余该列缺席。
+		// 链式接取窗（原版 con_quest）逐行冻结：1483→1484、3966→3967、3968→3969，其余该列缺席。
 		assertEquals(1484, handler.conQuest(1483), "1483 链式接取窗");
 		assertEquals(3967, handler.conQuest(3966), "3966 链式接取窗");
 		assertEquals(3969, handler.conQuest(3968), "3968 链式接取窗");
@@ -443,7 +443,7 @@ class QuestMultistepChainContractTest {
 				"第 " + (index + 1) + " 步打开面");
 			NativeTalkFixture.assertOnlyDialogPage(player, step.page().id());
 			// 推进面（10000+step-1）after-commit 零发页：var0=步号 + 状态包 + 步物品发扣 + 关窗
-			// （真端 FUN_180cabb10；2026-10-05 实机 1131 确证）。
+			// （原版 FUN_180cabb10；2026-10-05 实机 1131 确证）。
 			// The advance face sends no page (retail FUN_180cabb10): vars, action packet, step items, close.
 			NativeTalkFixture.clearPackets(player);
 			assertTrue(itemHandler.onDialog(NativeTalkFixture.dialog(player, step.npcId(), chain.questId(),
@@ -454,9 +454,9 @@ class QuestMultistepChainContractTest {
 			NativeTalkFixture.assertCloseDialog(player);
 		}
 		assertEquals(List.of("give:182200550:1", "give:182200565:1", "remove:182200550:1"), inventory.calls(),
-			"步内发扣按真端顺序执行");
+			"步内发扣按原版顺序执行");
 
-		// 重复第 1 步：vars 已推进，零副作用、关窗兜底（真端无匹配转换）。
+		// 重复第 1 步：vars 已推进，零副作用、关窗兜底（原版无匹配转换）。
 		NativeTalkFixture.clearPackets(player);
 		assertTrue(itemHandler.onDialog(NativeTalkFixture.dialog(player, chain.steps().get(0).npcId(),
 			chain.questId(), 10000)), "重复步不得被拒（客户端仍等关窗）");
@@ -465,7 +465,7 @@ class QuestMultistepChainContractTest {
 		assertEquals(List.of("give:182200550:1", "give:182200565:1", "remove:182200550:1"), inventory.calls(),
 			"重复步零发放/扣除");
 
-		// 报告：中继全满（真端 finalStep）→ 领奖态 + 奖励窗。
+		// 报告：中继全满（原版 finalStep）→ 领奖态 + 奖励窗。
 		NativeTalkFixture.clearPackets(player);
 		assertTrue(handler.onDialog(NativeTalkFixture.dialog(player, acquireNpc, chain.questId(), 1009)), "报告");
 		assertEquals(QuestStatus.REWARD, state.getStatus(), "报告翻 REWARD");
@@ -519,7 +519,7 @@ class QuestMultistepChainContractTest {
 	}
 
 	private static CompiledQuestDefinition compiled(int questId) {
-		// 行已由真端表驱动（退役），改从生产视图取定义。
+		// 行已由原版表驱动（退役），改从生产视图取定义。
 		// The rows are retail-driven since retirement; load via the production view.
 		return ProductionQuestDefinitions.definition(questId);
 	}

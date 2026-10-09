@@ -48,7 +48,7 @@ class QuestProductionAcceptProtocolRegressionTest {
 
 	/**
 	 * 确认范围：f737cfef1 从 level-up 误改为残缺手写 1002 的任务、同构审计缺陷及客户端实测失败任务。
-	 * 16802–16804 已由真端 DataDriven EnterArea 猎杀网格接管（进区域 SystemGrant 发放、无 NPC
+	 * 16802–16804 已由原版 DataDriven EnterArea 猎杀网格接管（进区域 SystemGrant 发放、无 NPC
 	 * 接取协议），与本扫盲名单一贯的处理一致（16805 从未入列）——无 1002 可残缺，移出确认范围。
 	 * Confirmed range: quests f737cfef1 mis-changed from level-up to incomplete hand-written 1002,
 	 * the isomorphic audit gaps, and client-verified failures. 16802-16804 are retail DataDriven
@@ -123,7 +123,7 @@ class QuestProductionAcceptProtocolRegressionTest {
 	}
 
 	/**
-	 * 接取首屏（S2 分片）：链式双块行（1913–1916，真端 NPC_START + NPC_REPORT）由规范段接管，
+	 * 接取首屏（S2 分片）：链式双块行（1913–1916，原版 NPC_START + NPC_REPORT）由规范段接管，
 	 * {@code QUEST_SELECT}(31) 直发原生接取询问窗（页 4）；仍由 XML 拥有的行保持手写首屏——
 	 * 1149 的显式路由与 80028/80031/80032 的 {@code npc-start start-page="SELECT1"} 都是简报信页 1011。
 	 * The accept first screen (S2 split): the chain double-block rows (1913-1916) open the native ask
@@ -140,7 +140,7 @@ class QuestProductionAcceptProtocolRegressionTest {
 		80031, QuestDialogPage.SELECT1.id(),
 		80032, QuestDialogPage.SELECT1.id());
 
-	/** 原生车道的接取职业（真端 {@code class_permitted} 词表 → PlayerClass）。 /
+	/** 原生车道的接取职业（原版 {@code class_permitted} 词表 → PlayerClass）。 /
 	 * The native accept class per quest (retail {@code class_permitted} tokens → PlayerClass). */
 	private static final Map<Integer, PlayerClass> NATIVE_ACCEPT_CLASSES = Map.of(
 		1913, PlayerClass.GLADIATOR,
@@ -151,7 +151,7 @@ class QuestProductionAcceptProtocolRegressionTest {
 		80031, PlayerClass.WARRIOR,
 		80032, PlayerClass.WARRIOR);
 
-	/** 真端前置 {@code Q1007:n} 的奖励档（0 基；转职仪式 1..4 → 0..3）。 /
+	/** 原版前置 {@code Q1007:n} 的奖励档（0 基；转职仪式 1..4 → 0..3）。 /
 	 * The reward slot of the retail {@code Q1007:n} prerequisite (zero-based). */
 	private static final Map<Integer, Integer> NATIVE_PREREQ_SLOTS = Map.of(
 		1913, 0, 1914, 1, 1915, 2, 1916, 3);
@@ -162,7 +162,7 @@ class QuestProductionAcceptProtocolRegressionTest {
 		for (int questId : CONFIRMED_QUESTS) {
 			if (nativeTalk.routes(questId)) {
 				// P3 重锚（计划 §8.9）：SimpleTalk 切换批后这些行由 native 车道驱动，接取首屏取客户端任务页
-				// 声明的可渲染页（80028/80031/80032 也声明真端接取窗页 4）；旧的 IR 首屏 1011 随之退场。
+				// 声明的可渲染页（80028/80031/80032 也声明原版接取窗页 4）；旧的 IR 首屏 1011 随之退场。
 				// P3 re-anchor (plan §8.9): these rows are native now; the first screen is the page the client
 				// task HTML declares (page 4), so the retired IR first screen 1011 no longer applies.
 				Integer npcId = nativeTalk.acquireNpc(questId);
@@ -190,8 +190,8 @@ class QuestProductionAcceptProtocolRegressionTest {
 	}
 
 	/**
-	 * 原生车道的接取协议（真端 cab520）：{@code QUEST_SELECT}(31) 只开客户端契约页、不落库；
-	 * 1002 建档到 START 并回 1003。前置（{@code Q1007:n}）由 native 建档口按真端轴判定。
+	 * 原生车道的接取协议（原版 cab520）：{@code QUEST_SELECT}(31) 只开客户端契约页、不落库；
+	 * 1002 建档到 START 并回 1003。前置（{@code Q1007:n}）由 native 建档口按原版轴判定。
 	 * <p>
 	 * The native accept protocol (retail cab520): dialog 31 only opens the client-declared page and
 	 * persists nothing; 1002 creates the row at START and answers 1003.
@@ -218,7 +218,7 @@ class QuestProductionAcceptProtocolRegressionTest {
 		NativeTalkFixture.assertOnlyDialogPage(player, SimpleTalkHandler.PAGE_ACCEPTED);
 	}
 
-	/** 原生行的测试玩家：真端种族/最低等级 + 冻结职业 + 转职仪式前置档。 /
+	/** 原生行的测试玩家：原版种族/最低等级 + 冻结职业 + 转职仪式前置档。 /
 	 * The test player for a native row: retail race/level, frozen class, ascension prerequisite slot. */
 	private static Player nativePlayer(int questId) {
 		NativeQuestXmlTable.QuestRow meta = NativeQuestXmlTable.instance().find(questId).orElseThrow();
@@ -295,7 +295,7 @@ class QuestProductionAcceptProtocolRegressionTest {
 	}
 
 	private static CompiledQuestDefinition definition(int questId) throws Exception {
-		// 退役任务的生产 XML 只在 git 历史里：统一取生产视图（XML 目录 + 真端 overlay）。
+		// 退役任务的生产 XML 只在 git 历史里：统一取生产视图（XML 目录 + 原版 overlay）。
 		// TEMP-VERIFY(view): 并行 SimpleTalk 批次落定前生产覆盖门不可用，用宽松 overlay 验证本断言。
 		return VIEW.updateAndGet(current -> current != null ? current
 				: RetailQuestDriver.overlay(QuestDefinitionDirectoryLoader.compile(
@@ -304,7 +304,7 @@ class QuestProductionAcceptProtocolRegressionTest {
 			.orElseThrow(() -> new IllegalStateException("missing production quest definition " + questId));
 	}
 
-	// TEMP-VERIFY(view): 并行批次落定前的宽松生产视图（XML 目录 + 真端驱动，跳过覆盖门）。
+	// TEMP-VERIFY(view): 并行批次落定前的宽松生产视图（XML 目录 + 原版驱动，跳过覆盖门）。
 	private static final AtomicReference<QuestCatalog> VIEW = new AtomicReference<>();
 
 	private static Connection connection() {

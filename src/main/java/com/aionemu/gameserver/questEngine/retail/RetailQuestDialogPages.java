@@ -8,7 +8,7 @@ import com.aionemu.gameserver.questEngine.definition.QuestDialogAction;
 import com.aionemu.gameserver.questEngine.definition.QuestDialogContract;
 
 /**
- * 从客户端任务页契约推导真端任务阶段的首个本地页面。
+ * 从客户端任务页契约推导原版任务阶段的首个本地页面。
  * Derives the first local page of a retail quest stage from the client quest-page contract.
  * <p>
  * 只使用客户端契约中的页面名称和编号，不维护逐任务页梯，也不把页面按钮转成服务端事件。

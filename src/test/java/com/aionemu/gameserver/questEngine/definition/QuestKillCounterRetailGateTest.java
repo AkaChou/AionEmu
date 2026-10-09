@@ -29,8 +29,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * 用客户端击杀门控（quest_monster.csv 的 SECTION_1&lt;N）校验**生产**任务的"完成所需击杀数"。
  * 击杀数由 {@link QuestKillCounterSimulator} 经真实 planner 模拟得出，而不是从 XML 形状反推，
  * 因此既能抓住 13758 族那种"客户端 5 杀、XML 要 15 杀"的漂移，也不会被 +1 记账形态误伤。
- * <p>目录是生产视图（真端优先 overlay，见 {@link ProductionQuestDefinitions}）：退役行的击杀台阶
- * 只存在于真端 IR 里，XML-only 目录对它们不可见。
+ * <p>目录是生产视图（原版优先 overlay，见 {@link ProductionQuestDefinitions}）：退役行的击杀台阶
+ * 只存在于原版 IR 里，XML-only 目录对它们不可见。
  * <p>Validates the production "kills required" against the client kill gate by simulating kills through
  * the real planner. The simulator is shape-independent: it catches drift without guessing accounting
  * forms. The catalog is the production view (retail-first overlay), because retired rows answer only
@@ -58,7 +58,7 @@ class QuestKillCounterRetailGateTest {
 		}
 	}
 
-	/** 生产视图目录（真端优先 overlay）。 / The production-view catalog (retail-first overlay). */
+	/** 生产视图目录（原版优先 overlay）。 / The production-view catalog (retail-first overlay). */
 	private static QuestCatalog catalog() {
 		return ProductionQuestDefinitions.catalog();
 	}
@@ -122,7 +122,7 @@ class QuestKillCounterRetailGateTest {
 	/**
 	 * 第 2 项：`<kills>` 声明只是展示性狩猎步骤，其 npc 必须真实出现在击杀转换里；
 	 * 计数一律以计数器（上面的门禁）为准，禁止再用声明条数当合同。
-	 * <p>人口护栏在真端化改造后换了口径：声明只活在 XML 侧——真端元数据没有 kills 源（该轴的分歧在
+	 * <p>人口护栏在原版化改造后换了口径：声明只活在 XML 侧——原版元数据没有 kills 源（该轴的分歧在
 	 * {@link RetailMetadataEquivalenceGateTest} 注册），所以"审阅过的人口"由机房 XML 目录自证：磁盘上
 	 * 含 {@code <kills>} 的保留 XML 集合必须与目录里的声明行集合逐一对应。这比原来的魔法下限
 	 * （&ge;90）更强：解析器漏读声明会少行、目录装配漏带声明会多行，两个方向都会红；而退役本来就会

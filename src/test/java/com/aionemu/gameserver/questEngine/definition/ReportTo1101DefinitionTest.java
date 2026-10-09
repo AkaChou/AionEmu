@@ -17,14 +17,14 @@ import static org.junit.jupiter.api.Assertions.*;
 
 /** Full vertical proof for the current ReportTo owner of quest 1101. */
 class ReportTo1101DefinitionTest {
-	/** 生产视图（XML 目录 + 真端 overlay）；1101 已迁到真端驱动，目录本身不再持有它。 */
+	/** 生产视图（XML 目录 + 原版 overlay）；1101 已迁到原版驱动，目录本身不再持有它。 */
 	private static final int QUEST_ID = 1101;
 
 	@Test
 	void productionDirectoryCompilesTheTaskDefinition() throws Exception {
 		QuestCatalog catalog = productionCatalog();
 		assertTrue(catalog.find(1101).isPresent());
-		// 1102 已迁到真端驱动：不再由 XML 目录拥有，生产证据 = 真端合成定义（旧 XML 在 git 历史里）。
+		// 1102 已迁到原版驱动：不再由 XML 目录拥有，生产证据 = 原版合成定义（旧 XML 在 git 历史里）。
 		// 1102 is retail-driven: no longer XML-owned; the evidence is the synthesized retail definition.
 		assertTrue(catalog.find(1102).isPresent());
 	}
@@ -35,7 +35,7 @@ class ReportTo1101DefinitionTest {
 		List<QuestTransition> transitions = compiled.definition().transitions();
 
 		// 客户端 1101 HTML 无 select1_1(1012) 页：select1 按钮直接是 ASK_QUEST_ACCEPT(1007)。
-		// 真端合成器另加报告 NPC 的关窗出口（select6 失败页的 FINISH_DIALOG=1008），故为 30 条。
+		// 原版合成器另加报告 NPC 的关窗出口（select6 失败页的 FINISH_DIALOG=1008），故为 30 条。
 		// The client 1101 HTML has no select1_1 (1012) page; the retail synthesis adds the report
 		// NPC's close-dialog exit (select6 failure page), hence 30 transitions.
 		assertEquals(30, transitions.size());
@@ -58,7 +58,7 @@ class ReportTo1101DefinitionTest {
 
 	@Test
 	void retiredQuestIsNoLongerXmlOwned() {
-		// 1101 已退役：生产 XML 不在仓库里（内容在 git 历史里），定义由真端驱动合成，
+		// 1101 已退役：生产 XML 不在仓库里（内容在 git 历史里），定义由原版驱动合成，
 		// 且合成结果不含任何"证据/归属"元数据。
 		// 1101 is retired: no production XML ships any more and the definition is synthesized.
 		assertFalse(QuestXmlFixtures.productionXmlPresent(QUEST_ID),
@@ -94,7 +94,7 @@ class ReportTo1101DefinitionTest {
 			new AfterCommitAction.CloseDialog()),
 			transition(compiled, "unaccepted", 203049, 20000).afterCommit());
 
-		// P0-3 S1：SimpleTalk 接取/交付切真端规范形（页 4 / 分档窗）。真端行 1101 只有
+		// P0-3 S1：SimpleTalk 接取/交付切原版规范形（页 4 / 分档窗）。原版行 1101 只有
 		// acquired=Elpis / reward=Mires 两列（Quest_SimpleTalk.xml:262-267），零 item_check——交付 =
 		// QUEST_SELECT(31) 空门直翻领奖态并下发第 1 档奖励窗；报告页 SELECT5 与 1009 中转随页链退场。
 		// P0-3 S1: the canonical delivery is the empty-gate QUEST_SELECT(31) into REWARD with the first
@@ -118,7 +118,7 @@ class ReportTo1101DefinitionTest {
 	@Test
 	void everyCompletionPathUsesTypedRewardsAndCompleteLifecycle() throws Exception {
 		CompiledQuestDefinition compiled = definition();
-		// 发放顺序 = 真端 quest.xml 的奖励字段顺序（GOLD/EXP/ITEM）；XML 时代的
+		// 发放顺序 = 原版 quest.xml 的奖励字段顺序（GOLD/EXP/ITEM）；XML 时代的
 		// fixed-reward-indices="2 3 4 0 1"（道具先行）是旧 DSL 的排序痕迹，退役后不再保留。
 		// Grant order follows the retail quest.xml field order.
 		List<QuestAction> expected = List.of(
@@ -186,7 +186,7 @@ class ReportTo1101DefinitionTest {
 		return ProductionQuestDefinitions.definition(QUEST_ID);
 	}
 
-	/** 生产视图 = XML 目录 + 真端 overlay（退役任务由真端定义提供）。 / Production view with the retail overlay. */
+	/** 生产视图 = XML 目录 + 原版 overlay（退役任务由原版定义提供）。 / Production view with the retail overlay. */
 	private static QuestCatalog productionCatalog() {
 		return ProductionQuestDefinitions.catalog();
 	}

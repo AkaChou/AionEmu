@@ -37,14 +37,14 @@ import com.aionemu.gameserver.questEngine.tablelane.NativeQuestTableLoader.Combi
 /**
  * CombineTask 原生表驱动家族门禁（计划 §7 P6 切换批）。
  * <p>
- * 断言面全部来自真端表行 + 真端 {@code quest.xml} + 生产静态数据（物品名索引 / 配方表），不合成语义：
+ * 断言面全部来自原版表行 + 原版 {@code quest.xml} + 生产静态数据（物品名索引 / 配方表），不合成语义：
  * <ol>
  *   <li>574 行全量装载与列填充率冻结（双接取/交付 NPC、技能/技能点、配方符号、产物、分量 1..2 槽）；</li>
  *   <li>注册/路由分解（owns 574 = routes 574，零 fail-closed；未退役行不得进路由集）；</li>
  *   <li>接取（31 问询 → 客户端入口页；1002/20000 建档 + 发分量 + 学配方）→ 交付（产物门 → 回收剩余分量
- *       → REWARD 页 5；缺产物 → 真端回退页 1779）→ 领奖（8..23/108/110..124 → 真端奖励面结算 → 扣产物、
- *       忘配方 → 领奖收尾回选择对话页 10，真端 npc-complete finish=SELECTION_DIALOG）；</li>
- *   <li>放弃（族级动作 = 忘配方）与原生放弃面接线（owner 判定 + 真端元数据轴）；</li>
+ *       → REWARD 页 5；缺产物 → 原版回退页 1779）→ 领奖（8..23/108/110..124 → 原版奖励面结算 → 扣产物、
+ *       忘配方 → 领奖收尾回选择对话页 10，原版 npc-complete finish=SELECTION_DIALOG）；</li>
+ *   <li>放弃（族级动作 = 忘配方）与原生放弃面接线（owner 判定 + 原版元数据轴）；</li>
  *   <li>失败面 fail-closed：非本族 NPC / 未路由行 / 越界按钮一律不接管，交付门未过时状态与背包零变更。</li>
  * </ol>
  * <p>
@@ -53,9 +53,9 @@ import com.aionemu.gameserver.questEngine.tablelane.NativeQuestTableLoader.Combi
  */
 class SimpleCombineTaskNativeFamilyGateTest {
 
-	/** 代表行（真端 5000 = weaponsmith / r_ws_q5000；天族接取 NPC Anteros）。 / The representative row. */
+	/** 代表行（原版 5000 = weaponsmith / r_ws_q5000；天族接取 NPC Anteros）。 / The representative row. */
 	private static final int COMBINE_QUEST = 5000;
-	/** 真端 Quest_CombineTask.xml 行数。 / The frozen retail row count. */
+	/** 原版 Quest_CombineTask.xml 行数。 / The frozen retail row count. */
 	private static final int FROZEN_ROWS = 574;
 
 	private static NativeQuestTableLoader loader;
@@ -71,7 +71,7 @@ class SimpleCombineTaskNativeFamilyGateTest {
 
 	@Test
 	void loadsAll574RetailRowsWithTheCombineShape() {
-		assertEquals(FROZEN_ROWS, loader.combineSize(), "真端 quest_combinetasks 全量行");
+		assertEquals(FROZEN_ROWS, loader.combineSize(), "原版 quest_combinetasks 全量行");
 		List<CombineTaskRow> rows = List.copyOf(loader.combineRows());
 		assertTrue(rows.stream().allMatch(row -> row.taskNpcNames().size() == 2),
 			"task_npc 必须 100% 两名（天/魔各一）");
@@ -80,12 +80,12 @@ class SimpleCombineTaskNativeFamilyGateTest {
 		assertEquals(FROZEN_ROWS, rows.stream().filter(row -> declared(row.components(), 1)).count(),
 			"give_component1 覆盖 574 行");
 		assertEquals(152, rows.stream().filter(row -> declared(row.components(), 2)).count(),
-			"give_component2 覆盖 152 行（真端第 3 槽起恒空）");
+			"give_component2 覆盖 152 行（原版第 3 槽起恒空）");
 	}
 
 	@Test
 	void routingSplitIsFrozenToTheRetiredRows() {
-		assertEquals(FROZEN_ROWS, handler.ownedQuestIds().size(), "注册集 = 真端表全量行");
+		assertEquals(FROZEN_ROWS, handler.ownedQuestIds().size(), "注册集 = 原版表全量行");
 		assertEquals(FROZEN_ROWS, handler.routedQuestIds().size(), "路由集 = 全部退役且可解的行（P6 步骤 1 已冻结）");
 		assertTrue(handler.unroutableQuestIds().isEmpty(), "本族不得有 fail-closed 行");
 		assertTrue(handler.unresolvedNames().isEmpty(), "不得有未解析 NPC 名");
@@ -100,7 +100,7 @@ class SimpleCombineTaskNativeFamilyGateTest {
 		}
 	}
 
-	/** 逐行对拍：handler 的每张面都必须逐元素等于真端表行。 / Per-row element-wise alignment. */
+	/** 逐行对拍：handler 的每张面都必须逐元素等于原版表行。 / Per-row element-wise alignment. */
 	@Test
 	void handlerSurfacesFollowTheRetailRow() throws IOException {
 		RetailItemNameIndex items = RetailItemNameIndex.loadItemTemplates();
@@ -169,7 +169,7 @@ class SimpleCombineTaskNativeFamilyGateTest {
 		NativeTalkFixture.assertOnlyDialogPage(player, NativeTalkFixture.clientEntryPage(COMBINE_QUEST));
 		assertEquals(QuestDialogPage.SHOW_ASK_QUEST_ACCEPT_WINDOW.id(),
 			NativeTalkFixture.clientEntryPage(COMBINE_QUEST),
-			"本族 574 行未登记任务页 ⇒ 契约回落真端接取窗页 4");
+			"本族 574 行未登记任务页 ⇒ 契约回落原版接取窗页 4");
 
 		NativeTalkFixture.clearPackets(player);
 		assertTrue(local.onDialog(NativeTalkFixture.dialog(player, npcId, COMBINE_QUEST, 1002)),
@@ -182,7 +182,7 @@ class SimpleCombineTaskNativeFamilyGateTest {
 		for (ItemStack component : local.components(COMBINE_QUEST)) {
 			expectedGives.add("give:" + component.itemId() + ":" + component.count());
 		}
-		assertEquals(expectedGives, inventory.calls(), "接取提交即按表序发真端 give_component1..8");
+		assertEquals(expectedGives, inventory.calls(), "接取提交即按表序发原版 give_component1..8");
 		assertEquals(List.of("learn:" + local.recipeId(COMBINE_QUEST)), recipes.calls(),
 			"接取提交即学 (combineskill, product) 反查出的配方");
 		assertTrue(recipes.holds(player, local.recipeId(COMBINE_QUEST)), "接取后配方必须已掌握");
@@ -219,7 +219,7 @@ class SimpleCombineTaskNativeFamilyGateTest {
 		List<String> expectedRemovals = new ArrayList<>();
 		List<String> expectedHold = new ArrayList<>();
 		for (ItemStack component : local.components(COMBINE_QUEST)) {
-			// 剩余分量 = 真端 RemoveItem(component, ALL)：按当前持有量清空（刻意多持 3 件）。
+			// 剩余分量 = 原版 RemoveItem(component, ALL)：按当前持有量清空（刻意多持 3 件）。
 			// Leftovers follow the retail RemoveItem(x, ALL) semantics, so the fixture over-holds by three.
 			inventory.hold(component.itemId(), component.count() + 3L);
 			expectedHold.add(component.itemId() + "=" + (component.count() + 3));
@@ -232,7 +232,7 @@ class SimpleCombineTaskNativeFamilyGateTest {
 		NativeTalkFixture.assertOnlyDialogPage(player, SimpleCombineTaskHandler.PAGE_REWARD_WINDOW);
 		assertEquals(QuestStatus.REWARD,
 			player.getQuestStateList().getQuestState(COMBINE_QUEST).getStatus(), "交付成功即翻 REWARD");
-		assertEquals(expectedRemovals, inventory.calls(), "交付成功即回收剩余分量（真端 RemoveItem ALL）: "
+		assertEquals(expectedRemovals, inventory.calls(), "交付成功即回收剩余分量（原版 RemoveItem ALL）: "
 			+ expectedHold);
 	}
 
@@ -250,7 +250,7 @@ class SimpleCombineTaskNativeFamilyGateTest {
 			"缺产物时交付动作仍须被服务（回退页而不是静默）");
 		NativeTalkFixture.assertOnlyDialogPage(player, SimpleCombineTaskHandler.PAGE_HANDIN_BLOCKED);
 		assertEquals(SimpleCombineTaskHandler.PAGE_HANDIN_BLOCKED, QuestDialogPage.SELECT3_2.id(),
-			"回退页 = 真端 SELECT3_2(1779)");
+			"回退页 = 原版 SELECT3_2(1779)");
 		assertEquals(QuestStatus.START,
 			player.getQuestStateList().getQuestState(COMBINE_QUEST).getStatus(), "缺产物不得翻态");
 		assertTrue(inventory.calls().isEmpty(), "缺产物不得扣任何分量");
@@ -278,13 +278,13 @@ class SimpleCombineTaskNativeFamilyGateTest {
 		NativeTalkFixture.clearPackets(player);
 		assertTrue(local.onDialog(NativeTalkFixture.dialog(player, npcId, COMBINE_QUEST, 8)),
 			"奖励窗按钮 8 必须由 native 领奖段服务");
-		// 领奖收尾 = 真端 npc-complete finish=SELECTION_DIALOG：回选择对话页（页 10，questId=0）。
+		// 领奖收尾 = 原版 npc-complete finish=SELECTION_DIALOG：回选择对话页（页 10，questId=0）。
 		NativeTalkFixture.assertOnlyDialogPage(player, QuestDialogPage.SELECT_QUEST.id());
 		assertEquals(1, claims.size(), "结算体必须被调用一次");
 		assertEquals(COMBINE_QUEST, claims.getFirst()[0]);
 		assertEquals(0, claims.getFirst()[1], "单槽行固定首档");
 		assertEquals(List.of("remove:" + product.itemId() + ":" + (product.count() + 1)), inventory.calls(),
-			"真端完成流的条件回收段：扣产物（ALL）");
+			"原版完成流的条件回收段：扣产物（ALL）");
 		assertEquals(List.of("forget:" + recipeId), recipes.calls(), "完成即忘配方");
 		assertFalse(recipes.holds(player, recipeId), "完成后配方必须已忘");
 
@@ -295,7 +295,7 @@ class SimpleCombineTaskNativeFamilyGateTest {
 	}
 
 	/**
-	 * 无目标领奖（真端 {@code QuestDialog} 无主键协议；任务窗/实时奖励槽确认包不带 NPC 上下文，
+	 * 无目标领奖（原版 {@code QuestDialog} 无主键协议；任务窗/实时奖励槽确认包不带 NPC 上下文，
 	 * 引擎以 npcId=0 进入）：按 questId 结算 + 关窗，并同样走本族完成流的条件回收段（扣产物 + 忘配方）。
 	 * <p>
 	 * The targetless claim including this family's completion-flow recycling (product removal and
@@ -379,7 +379,7 @@ class SimpleCombineTaskNativeFamilyGateTest {
 	}
 
 	/**
-	 * 原生放弃面接线：owner 判定 ∪ 真端 {@code quest.xml} 元数据轴（{@code cannot_giveup}）∪
+	 * 原生放弃面接线：owner 判定 ∪ 原版 {@code quest.xml} 元数据轴（{@code cannot_giveup}）∪
 	 * {@code QuestService} 的原生分支。前两面在引擎上实测，第三面锁生产源（放弃需要在线玩家控制器，
 	 * 单测栈无该面——由族门锁源码而不是伪造）。
 	 * The native abandon wiring: owner detection plus the retail metadata axis are exercised on the
@@ -392,14 +392,14 @@ class SimpleCombineTaskNativeFamilyGateTest {
 		assertTrue(engine.isNativeOwner(COMBINE_QUEST), "CombineTask 行必须被识别为原生 owner");
 		assertTrue(engine.hasNativeAbandonRoute(COMBINE_QUEST), "原生行必须有放弃面");
 		QuestMetadata metadata = engine.nativeMetadata(COMBINE_QUEST).orElse(null);
-		assertNotNull(metadata, "原生放弃的元数据轴必须取到真端 quest.xml 行（不干净即 empty ⇒ fail-closed）");
-		assertFalse(metadata.cannotGiveup(), "真端 cannot_giveup=0 ⇒ 可放弃");
+		assertNotNull(metadata, "原生放弃的元数据轴必须取到原版 quest.xml 行（不干净即 empty ⇒ fail-closed）");
+		assertFalse(metadata.cannotGiveup(), "原版 cannot_giveup=0 ⇒ 可放弃");
 		assertEquals(localComponentCount(), metadata.questWorkItems().size(),
-			"共用清理段的工作物品面 = 真端 quest_work_item*（与表列 give_component* 同形）");
+			"共用清理段的工作物品面 = 原版 quest_work_item*（与表列 give_component* 同形）");
 
 		String service = Files.readString(Path.of("src/main/java/com/aionemu/gameserver/services/QuestService.java"));
 		assertTrue(service.contains("questEngine.isNativeOwner(questId)"), "QuestService 必须按 owner 分流");
-		assertTrue(service.contains("questEngine.nativeMetadata(questId)"), "QuestService 必须取真端元数据轴");
+		assertTrue(service.contains("questEngine.nativeMetadata(questId)"), "QuestService 必须取原版元数据轴");
 		assertTrue(service.contains("questEngine.onNativeAbandon(player, questId)"), "QuestService 必须派发族级放弃动作");
 	}
 

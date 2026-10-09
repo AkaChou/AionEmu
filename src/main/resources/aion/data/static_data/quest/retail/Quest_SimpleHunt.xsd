@@ -3,7 +3,7 @@
      镜像口径 = 装载器 fail-closed 规则 ∪ 观察形全域钉（证据 + 生成器：
      .agents/summary/quest-engine-native/p0b/）：
      - 行 = <id id>（id 属性必填、非负、全表唯一）；count1..5 为整数（装载器
-       requireOwnInt），monsterN 缺 countN 属真端非法形——共现约束 XSD 1.0
+       requireOwnInt），monsterN 缺 countN 属原版非法形——共现约束 XSD 1.0
        无法表达，由装载器 fail-closed 兜底。
      Quest_SimpleHunt.xml schema (quest retail table gate, same batch as the 2026-10-03 DOCTYPE strip).
      Mirrors the loader fail-closed rules plus observed-universe shape pins (evidence + generator under

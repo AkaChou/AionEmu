@@ -17,7 +17,7 @@
       <item id="182215172" count="3"/>
     </items>
     <!--
-      真端 collect_item1 = quest_50011a 3，drop_monster_1 = ValentineEvent_Brownie_Solo，drop_prob=100，
+      原版 collect_item1 = quest_50011a 3，drop_monster_1 = ValentineEvent_Brownie_Solo，drop_prob=100，
       drop_each_member=1；npc 模板名已核对为 219315（Happy Singleton，ATTACKABLE/aggressive）。
       该活动怪的生成由活动配置负责（本检出内无 spawn 记录），但掉落行本身在迁移时丢失，
       导致 npc-item-report 交付永远无法满足。

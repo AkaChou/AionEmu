@@ -18,11 +18,11 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * 锁定任务 3961-3964（副角色育成，天族四档）的真端灵符链与整组交付门。
+ * 锁定任务 3961-3964（副角色育成，天族四档）的原版灵符链与整组交付门。
  * Locks quests 3961-3964's retail charm chain and whole-set hand-in gate.
  * <p>
  * 任务已退役（保留清单 owner=RETAIL_TABLE）：旧 typed 节点/转换金标随迁移退场，按计划 §8.9（P3 重锚口径）
- * 改锚真端表行（接取 Flora → erdos 步 1 交灵符 → Flora 交付、item_check 整组门）、quest.xml 检查物与奖励。
+ * 改锚原版表行（接取 Flora → erdos 步 1 交灵符 → Flora 交付、item_check 整组门）、quest.xml 检查物与奖励。
  * 门语义：检查按钮（39）未持满整组 → 客户端声明的失败页 2716；持满 → 扣整组 + REWARD + 奖励窗（页 5）。
  * <p>
  * The retired typed gold standard is re-anchored (plan §8.9) to the retail rows (accept Flora → erdos
@@ -33,7 +33,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class Quest3961To3964RetailAlignmentTest {
 	private static final int FLORA = 798384;
 	private static final int ERDOS = 203740;
-	/** 真端金币符号 gold = 182400001。 / The retail gold (kinah) item. */
+	/** 原版金币符号 gold = 182400001。 / The retail gold (kinah) item. */
 	private static final int GOLD = 182400001;
 	private static final List<Spec> SPECS = List.of(
 		new Spec(3961, 35, 182206108, 169621001, List.of(new WorkItem(GOLD, 40000))),
@@ -68,15 +68,15 @@ class Quest3961To3964RetailAlignmentTest {
 				handler.acceptGiveItem(spec.questId()), "接取发放灵符");
 			assertEquals(new SimpleTalkHandler.ItemStack(spec.acceptItem(), 1),
 				handler.stepRemoveItem(spec.questId(), 1), "步 1 扣除灵符");
-			assertTrue(handler.requireRow(spec.questId()).itemCheck(), "真端行声明 item_check 整组门");
+			assertTrue(handler.requireRow(spec.questId()).itemCheck(), "原版行声明 item_check 整组门");
 			assertEquals(spec.workItems().stream()
 				.map(item -> new SimpleTalkHandler.ItemStack(item.itemId(), item.count())).toList(),
 				handler.workItems(spec.questId()), "整组检查物（顺序 = check_item1_K）");
 
 			QuestMetadata metadata = RetailQuestDriver.ensureLoaded()
 				.retailMetadataOf(spec.questId()).orElseThrow().metadata();
-			assertEquals(spec.minLevel(), metadata.minLevel(), "真端 minlevel_permitted");
-			assertEquals(java.util.Set.of("ELYOS"), metadata.permittedRaces(), "真端 pc_light");
+			assertEquals(spec.minLevel(), metadata.minLevel(), "原版 minlevel_permitted");
+			assertEquals(java.util.Set.of("ELYOS"), metadata.permittedRaces(), "原版 pc_light");
 			List<QuestReward> rewards = metadata.rewards();
 			assertTrue(rewards.contains(new QuestReward("ITEM", spec.xpBoostItem(), 5)),
 				() -> spec.questId() + " 奖励 " + rewards);
@@ -141,11 +141,11 @@ class Quest3961To3964RetailAlignmentTest {
 		}
 	}
 
-	/** 一条真端行的锚点事实。 / The anchor facts of one retail row. */
+	/** 一条原版行的锚点事实。 / The anchor facts of one retail row. */
 	private record Spec(int questId, int minLevel, int acceptItem, int xpBoostItem, List<WorkItem> workItems) {
 	}
 
-	/** 真端 check_item 组员。 / One check_item member. */
+	/** 原版 check_item 组员。 / One check_item member. */
 	private record WorkItem(int itemId, int count) {
 	}
 }

@@ -20,14 +20,14 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 /**
- * 真端 DataDriven 模板表的**原生行模型**（计划 §10.2「P7 DataDriven」步 2）。
+ * 原版 DataDriven 模板表的**原生行模型**（计划 §10.2「P7 DataDriven」步 2）。
  * <p>
- * 与旧 IR 面（`RetailDataDrivenTable` + `RetailDataDriven*Compiler`）的区别：本类按真端
- * 「每步 = 一条 handler 记录」建模——步 kind（真端 `QuestProgressExtraInfo_*` 对象）+
- * 类别载荷列 + 通用附加动作列（真端 `LoadExtraAction`，证据与守卫见
+ * 与旧 IR 面（`RetailDataDrivenTable` + `RetailDataDriven*Compiler`）的区别：本类按原版
+ * 「每步 = 一条 handler 记录」建模——步 kind（原版 `QuestProgressExtraInfo_*` 对象）+
+ * 类别载荷列 + 通用附加动作列（原版 `LoadExtraAction`，证据与守卫见
  * `p7/P7-STEP2-PREREQ-COLUMN-SEMANTICS.zh-CN.md`），供 `DataDrivenProgress` 与 DD 原生 handler 直接消费。
  * <p>
- * 装载即校验（fail-closed）：未知类别、缺 `value0_progress_`、类别与列号的非法组合（真端 guard 不放行的组合）
+ * 装载即校验（fail-closed）：未知类别、缺 `value0_progress_`、类别与列号的非法组合（原版 guard 不放行的组合）
  * 一律抛稳定码异常，绝不静默吞列。
  * <p>
  * Native row model of the retail DataDriven template table: one record per step with the step kind
@@ -38,7 +38,7 @@ import org.w3c.dom.NodeList;
  */
 public final class DataDrivenQuestTable {
 
-	/** 步 kind（真端 `QuestProgressExtraInfo_*`；1=CollectItem / 2=Hunt / 3=ItemPlay / 4=Talk / 5=PvP / 6=EnterArea / 7=EnterWorld / 9=TalkFOBJ）。 */
+	/** 步 kind（原版 `QuestProgressExtraInfo_*`；1=CollectItem / 2=Hunt / 3=ItemPlay / 4=Talk / 5=PvP / 6=EnterArea / 7=EnterWorld / 9=TalkFOBJ）。 */
 	public enum Kind {
 		HUNT("hunt"),
 		COLLECT_ITEM("collectitem"),
@@ -76,7 +76,7 @@ public final class DataDrivenQuestTable {
 	}
 
 	/**
-	 * 通用附加动作（真端 `FUN_180c49610` = `DataDrivenQuestLoader::LoadExtraAction`，按列号分派）。
+	 * 通用附加动作（原版 `FUN_180c49610` = `DataDrivenQuestLoader::LoadExtraAction`，按列号分派）。
 	 * Generic extra action, dispatched by the value column index.
 	 */
 	public enum ExtraAction {
@@ -127,13 +127,13 @@ public final class DataDrivenQuestTable {
 	/**
 	 * 一个进度步。 / One progress step.
 	 *
-	 * @param index   步号（真端注册期写入的 `expectedStep`，落 vars bit0-5）/ the step number
+	 * @param index   步号（原版注册期写入的 `expectedStep`，落 vars bit0-5）/ the step number
 	 * @param kind    步类别 / the step kind
 	 * @param columns 该步声明的全部非空 `valueN_progress_` 列（列号 → 原文）/ non-empty value columns
 	 */
 	public record Step(int index, Kind kind, Map<Integer, String> columns) {
 
-		/** 类别载荷（真端 `value0_progress_`）。 / The category payload (retail {@code value0_progress_}). */
+		/** 类别载荷（原版 `value0_progress_`）。 / The category payload (retail {@code value0_progress_}). */
 		public String payload() {
 			return columns.getOrDefault(0, "");
 		}
@@ -146,7 +146,7 @@ public final class DataDrivenQuestTable {
 			Set<Integer> payloads = PAYLOAD_COLUMNS.get(kind);
 			for (Integer column : new TreeMap<>(columns).keySet()) {
 				if (payloads.contains(column)) {
-					// 类别载荷列（真端 FUN_180c4b980 先解析）不是附加动作：PvP 的列 3 = 等级差、
+					// 类别载荷列（原版 FUN_180c4b980 先解析）不是附加动作：PvP 的列 3 = 等级差、
 					// CollectItem 的列 1..4 = 追加 FOBJ、列 5 = 整数。
 					// Category payload columns are parsed before the extra-action pass and never act as actions.
 					continue;
@@ -166,12 +166,12 @@ public final class DataDrivenQuestTable {
 	 * 一行 DD 行。 / One DataDriven row.
 	 *
 	 * @param questId      任务 id / quest id
-	 * @param acquireKind  真端接取类别原文（小写规范形）/ the acquire category
+	 * @param acquireKind  原版接取类别原文（小写规范形）/ the acquire category
 	 * @param acquireParam 接取参数（`value0_acquire_`）/ the acquire parameter
-	 * @param rewardNpc    真端领奖 NPC 名（`reward_npc_name`）/ the reward npc name
+	 * @param rewardNpc    原版领奖 NPC 名（`reward_npc_name`）/ the reward npc name
 	 * @param conQuest     接取条件列原文（`con_quest`，语义未坐实只装载）/ raw acquire-condition column
 	 * @param conQuestList 接取条件列原文（`con_quest_list`，语义未坐实只装载）/ raw acquire-condition list column
-	 * @param acceptColumns 接取行附加动作列（`value1..10_acquire_`；真端 `FUN_180c49120` 装载进
+	 * @param acceptColumns 接取行附加动作列（`value1..10_acquire_`；原版 `FUN_180c49120` 装载进
 	 *                     `QuestProgressExtraInfo` 对象，接取收尾独取此表）/ the accept-side extra-action
 	 *                     columns, loaded into the retail QuestProgressExtraInfo object
 	 * @param steps        进度步序列（表序，index = 位置）/ the ordered progress steps
@@ -185,7 +185,7 @@ public final class DataDrivenQuestTable {
 		}
 	}
 
-	/** 类别载荷列（真端 `FUN_180c4b980` 按 kind 解析的列号）。 / Category payload columns per kind. */
+	/** 类别载荷列（原版 `FUN_180c4b980` 按 kind 解析的列号）。 / Category payload columns per kind. */
 	private static final Map<Kind, Set<Integer>> PAYLOAD_COLUMNS = Map.of(
 		Kind.HUNT, Set.of(0),
 		Kind.COLLECT_ITEM, Set.of(0, 1, 2, 3, 4, 5),
@@ -196,7 +196,7 @@ public final class DataDrivenQuestTable {
 		Kind.ENTER_WORLD, Set.of(0),
 		Kind.TALK_FOBJ, Set.of(0));
 
-	/** 真端 `LoadExtraAction` guard 放行的附加动作列。 / Extra-action columns the retail guard admits. */
+	/** 原版 `LoadExtraAction` guard 放行的附加动作列。 / Extra-action columns the retail guard admits. */
 	private static final Map<Kind, Set<Integer>> EXTRA_ACTION_COLUMNS = Map.of(
 		Kind.HUNT, Set.of(4, 5),
 		Kind.ITEM_PLAY, Set.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10),
@@ -226,7 +226,7 @@ public final class DataDrivenQuestTable {
 	}
 
 	/**
-	 * 解析真端 DD 表（精简副本已无 DOCTYPE，2026-10-03 剥离批；schema = 同目录
+	 * 解析原版 DD 表（精简副本已无 DOCTYPE，2026-10-03 剥离批；schema = 同目录
 	 * {@code data_driven_quest.xsd}；解析器保留内部子集能力、外部访问一律拒绝）。
 	 * Parses the retail DD table (the repo copy carries no DOCTYPE after the 2026-10-03 strip batch;
 	 * schema in the sibling {@code data_driven_quest.xsd}; internal-subset capability kept, external
@@ -265,12 +265,12 @@ public final class DataDrivenQuestTable {
 		String acquire = text(element, "category_acquire_");
 		String acquireParam = text(element, "value0_acquire_");
 		String reward = text(element, "reward_npc_name");
-		// 真端 LoadBasicInfo 解析的接取条件列（0x640 条目 type 表未坐实 ⇒ 步 e1 只装载不解释）。
+		// 原版 LoadBasicInfo 解析的接取条件列（0x640 条目 type 表未坐实 ⇒ 步 e1 只装载不解释）。
 		// The acquire-condition columns parsed by retail LoadBasicInfo (the 0x640 entry type table is
 		// not adjudicated yet ⇒ step e1 only loads them, never interprets them).
 		String conQuest = text(element, "con_quest");
 		String conQuestList = text(element, "con_quest_list");
-		// 接取行附加动作列（value1..10_acquire_）：真端与进度列同轴解析（`FUN_180c49120` 循环
+		// 接取行附加动作列（value1..10_acquire_）：原版与进度列同轴解析（`FUN_180c49120` 循环
 		// `value%d_acquire_` → `FUN_180c4b980`），装载进 `QuestProgressExtraInfo` 对象，
 		// **由接取收尾独取**——不是进度步 0 的动作（13403 实机：误跑步 0 动作 ⇒ 探测器双发）。
 		// Accept-side extra-action columns (value1..10_acquire_): parsed on the same axis as the
@@ -345,7 +345,7 @@ public final class DataDrivenQuestTable {
 			Map.copyOf(acceptColumns), List.copyOf(steps));
 	}
 
-	/** 列面 fail-closed 校验：每步必须声明载荷列，且每个列号必须落在真端放行的载荷/附加动作列内。 */
+	/** 列面 fail-closed 校验：每步必须声明载荷列，且每个列号必须落在原版放行的载荷/附加动作列内。 */
 	private static void validateColumns(int questId, Kind kind, Map<Integer, String> columns) {
 		if (!columns.containsKey(0)) {
 			throw new IllegalStateException("DATA_DRIVEN_STEP_PAYLOAD_MISSING: quest " + questId

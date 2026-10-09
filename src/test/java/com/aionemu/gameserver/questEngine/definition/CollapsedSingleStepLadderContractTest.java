@@ -114,7 +114,7 @@ class CollapsedSingleStepLadderContractTest {
 		QuestTransition takeTool = routes(definition, "s1", "s2").getFirst();
 		assertEquals(new QuestEvent.TalkToNpc(MILLIARD, QuestDialogAction.SETPRO2.id(), 0), takeTool.event(),
 			() -> "15000 row 1 ends with the client SETPRO2 page");
-		// 真端凭证模型：维修工具（quest_work_item1 = 182215662）改为接取边同事务发放，行 1 只升行——
+		// 原版凭证模型：维修工具（quest_work_item1 = 182215662）改为接取边同事务发放，行 1 只升行——
 		// 遗留 XML 把工具挂在行 1 的 SETPRO2 边上是旧形。
 		// The retail credential model grants the repair tool (quest_work_item1 = 182215662) on the
 		// acceptance edges in the same transaction; row 1 only bumps the row. The legacy XML hung the
@@ -143,7 +143,7 @@ class CollapsedSingleStepLadderContractTest {
 
 		assertEquals(1, routes(definition, "s2", "reward").size(),
 			() -> "15000 row 2 advances into the reward row exactly once");
-		// 真端把带演出的道具使用步写成 ItemPlay(itemId, animationMillis)：引擎的同一条"使用道具"
+		// 原版把带演出的道具使用步写成 ItemPlay(itemId, animationMillis)：引擎的同一条"使用道具"
 		// 客户端动作先查 ItemPlay 注册（有则播 3s 演出并派发 ItemPlay），未注册才落到 UseItem 通道。
 		// The retail chain models an animated item-use step as ItemPlay(itemId, animationMillis): the
 		// engine's single "use item" client action first consults the ItemPlay registry (playing the 3s
@@ -308,7 +308,7 @@ class CollapsedSingleStepLadderContractTest {
 	}
 
 	private static CompiledQuestDefinition definition(int questId) {
-		// 15670/25670 已由真端驱动（DD_TALK_COLLECT_CHAIN）：统一问生产视图（15000/25000 仍来自 XML）。
+		// 15670/25670 已由原版驱动（DD_TALK_COLLECT_CHAIN）：统一问生产视图（15000/25000 仍来自 XML）。
 		// 15670/25670 are retail-driven now (DD_TALK_COLLECT_CHAIN): ask the production view for
 		// both (15000/25000 still resolve from XML).
 		return ProductionQuestDefinitions.definition(questId);

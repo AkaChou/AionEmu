@@ -72,7 +72,7 @@ public final class NativeSystemGrantLanes {
 		return lane == null ? RetailGrantKind.NPC : lane.grantKind(questId);
 	}
 
-	/** 真端势力 id（无归属或未声明返回 0）。 / The retail faction id, or 0. */
+	/** 原版势力 id（无归属或未声明返回 0）。 / The retail faction id, or 0. */
 	public static int factionId(int questId) {
 		NativeSystemGrantLane lane = laneOf(questId);
 		return lane == null ? 0 : lane.factionId(questId);

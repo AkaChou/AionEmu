@@ -24,13 +24,13 @@ import com.aionemu.gameserver.questEngine.tablelane.SimpleTalkHandler;
 import com.aionemu.gameserver.questEngine.tablelane.SimpleUseItemHandler;
 
 /**
- * 生产装载链的"真端优先"驱动（提示词 §4.C 的 overlay 落点）。
+ * 生产装载链的"原版优先"驱动（提示词 §4.C 的 overlay 落点）。
  * <p>
  * P7 步 f 起七族（SimpleHunt/SimpleSerialHunt/SimpleTalk/SimpleCollectItem/SimpleUseItem/
  * SimpleItemPlay/CombineTask）与 DataDriven 1467 行全部由 tablelane 原生 handler/运行时直驱，
  * 旧 IR 编译车道已随切换原子退场；本类只剩三个职责：
  * <ol>
- *   <li><b>真端 quest.xml 元数据底座</b>（{@link #retailMetadataOf}，native 完成/领奖口的唯一事实来源）；</li>
+ *   <li><b>原版 quest.xml 元数据底座</b>（{@link #retailMetadataOf}，native 完成/领奖口的唯一事实来源）；</li>
  *   <li><b>生产覆盖校验</b>（{@link #overlayProduction}：保留清单 6217 行逐 id 核对 = 目录条目 ∨
  *       原生 owner ∨ DD 运行时 owned〔routed 或显式冻结〕，缺一即拒启）；</li>
  *   <li><b>直通 overlay</b>（目录原样返回；保留清单内任务一律维持 XML）。</li>
@@ -68,7 +68,7 @@ public final class RetailQuestDriver {
 	private final RetailItemNameIndex itemIndex;
 	private final Map<String, Integer> randomRewards;
 	private final Map<Integer, Integer> nameIds;
-	/** 真端 quest.xml 元数据缓存（native 完成口与目录构建共用同一条编译器）。 /
+	/** 原版 quest.xml 元数据缓存（native 完成口与目录构建共用同一条编译器）。 /
 	 * Retail quest.xml metadata cache shared by the native completion port and the catalog build. */
 	private final Map<Integer, Optional<RetailQuestMetadataCompiler.Outcome>> metadataCache =
 		new ConcurrentHashMap<>();
@@ -109,7 +109,7 @@ public final class RetailQuestDriver {
 	}
 
 	/**
-	 * 生产装载入口：驱动不可用、保留清单缺行或任何真端 owner 未落到最终目录时拒绝启动。
+	 * 生产装载入口：驱动不可用、保留清单缺行或任何原版 owner 未落到最终目录时拒绝启动。
 	 * 关闭开关只在 XML 目录仍包含全部任务时才可回退，不能把已退役任务静默丢弃。
 	 * Production entry point: fails closed unless every manifest owner is present in the catalog.
 	 */
@@ -219,10 +219,10 @@ public final class RetailQuestDriver {
 	}
 
 	/**
-	 * 真端 {@code quest.xml} 行的规范元数据（native 完成/领奖口的数据底座）。
+	 * 原版 {@code quest.xml} 行的规范元数据（native 完成/领奖口的数据底座）。
 	 * <p>
 	 * 与生产目录走同一条 {@link RetailQuestMetadataCompiler}（同 npc/物品/随机奖励/name id 索引），
-	 * 按任务缓存；缺行返回 empty。奖励面因此只有一个事实来源 = 真端表列本身，不引入 IR。
+	 * 按任务缓存；缺行返回 empty。奖励面因此只有一个事实来源 = 原版表列本身，不引入 IR。
 	 * <p>
 	 * Canonical retail {@code quest.xml} metadata for the native completion port: the very compiler
 	 * (and indexes) that build the production catalog, cached per quest id; empty when the row is
@@ -237,13 +237,13 @@ public final class RetailQuestDriver {
 			RetailSpawnedNpcIds.load())));
 	}
 
-	/** 装载是否降级（真端资源不可用）。 / Whether the driver degraded on load. */
+	/** 装载是否降级（原版资源不可用）。 / Whether the driver degraded on load. */
 	public static boolean isDegraded() {
 		return loadFailed;
 	}
 
 	/**
-	 * 确保真端驱动已按类路径资源装载并返回（供 native 车道只读消费元数据，不触发目录覆盖校验）。
+	 * 确保原版驱动已按类路径资源装载并返回（供 native 车道只读消费元数据，不触发目录覆盖校验）。
 	 * Ensures the retail driver is loaded from classpath resources and returns it; the native lane
 	 * consumes metadata read-only through this entry without running catalog overlay verification.
 	 */
@@ -267,7 +267,7 @@ public final class RetailQuestDriver {
 	}
 
 	/**
-	 * 装载真端表与索引（P7 步 f 后 = 元数据底座；家族切换史：SimpleHunt 939 / SimpleSerialHunt 16 /
+	 * 装载原版表与索引（P7 步 f 后 = 元数据底座；家族切换史：SimpleHunt 939 / SimpleSerialHunt 16 /
 	 * SimpleTalk 3152 / SimpleCollectItem 262 / SimpleUseItem 160 / SimpleItemPlay 43 / CombineTask 574
 	 * 已随 P1-P6 原生直驱，DataDriven 1467 随 P7 步 f 由 {@link DataDrivenNativeRuntime} 接管，
 	 * 旧 IR 编译车道原子退场）。归属核验见 {@link #verifyProductionCoverage}。
@@ -280,7 +280,7 @@ public final class RetailQuestDriver {
 		try (InputStream input = open(RETAIL_QUEST_XML)) {
 			retailTable = RetailQuestXmlTable.load(input);
 		}
-		// 真端对话名组表（守备队同组共用 ScriptDLL 对话名）：接取/交付字段可写组名的唯一展开通道。
+		// 原版对话名组表（守备队同组共用 ScriptDLL 对话名）：接取/交付字段可写组名的唯一展开通道。
 		// The retail dialog-name group table: the only expansion channel for group names written in
 		// the acquire/hand-in fields (one guard squad shares a ScriptDLL dialog name).
 		RetailNpcNameIndex npcIndex = RetailNpcNameIndex.build(openAll(NPC_DIR, NPC_FILES),

@@ -13,7 +13,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 /**
- * 锁定两个次元之门副本只保留真端的单点 NPC 出生位置。
+ * 锁定两个次元之门副本只保留原版的单点 NPC 出生位置。
  * Locks the dimensional-gate instances to the retail single-point NPC spawns.
  */
 class DimensionalGateRetailSpawnTest {

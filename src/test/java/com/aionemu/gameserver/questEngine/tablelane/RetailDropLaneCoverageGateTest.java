@@ -16,7 +16,7 @@ import com.aionemu.gameserver.questEngine.retail.RetailLedgerRows;
 
 /**
  * 表车道 native 掉落的跨族护栏（2026-10-08，第三/四例同因事故后补）：退役 XML 的 {@code <drops>}
- * 随 catalog 退场后，每一个 {@code owner=RETAIL_TABLE} 且声明真端 {@code drop_*} 列的行都必须落在
+ * 随 catalog 退场后，每一个 {@code owner=RETAIL_TABLE} 且声明原版 {@code drop_*} 列的行都必须落在
  * **已注册掉落的车道**里（Talk / Collect / UseItem / DataDriven 四族——各族从 quest.xml 列在 native
  * 侧注册，经 {@code QuestEngine#questDrops} 聚合），且在其所属车道路由（DD 的冻结 ∩ drop 3 行钉为
  * 显式惰性残差）；{@code XML_RETENTION} 行保持单一 owner，由目录供源，native 四车道不得路由。
@@ -33,7 +33,7 @@ class RetailDropLaneCoverageGateTest {
 
 	/** 台账资源（测试副本；与主副本逐字节一致由 RetailOwnershipGateTest 守护）。 / The retention ledger. */
 	private static final String RETENTION = "/quest/retail-xml-retention.xml";
-	/** 已注册掉落的车道族（其余族真端 drop 列 0 行；出现即新缺口）。 / The drop-registering lane families. */
+	/** 已注册掉落的车道族（其余族原版 drop 列 0 行；出现即新缺口）。 / The drop-registering lane families. */
 	private static final Set<String> DROP_LANES =
 		Set.of("SimpleTalk", "SimpleCollectItem", "SimpleUseItem", "DataDriven");
 	/** DD 冻结 ∩ drop 的惰性残差（ZONE_ABSENT；解冻后此处翻红强制复核与重生成证据）。 */
@@ -72,7 +72,7 @@ class RetailDropLaneCoverageGateTest {
 		// ① 车道归属闭合：带 drop 列的 native 行必须落在四张已注册车道之一（新族出现即红）。
 		for (String family : histogram.keySet()) {
 			assertTrue(DROP_LANES.contains(family),
-				"带真端 drop 列的 native 行出现在未注册掉落的族：" + family);
+				"带原版 drop 列的 native 行出现在未注册掉落的族：" + family);
 		}
 		assertEquals(Map.of("SimpleTalk", 654, "SimpleCollectItem", 177, "SimpleUseItem", 1,
 			"DataDriven", 163), histogram, "native drop 行按族冻结（2026-10-08 复算）");

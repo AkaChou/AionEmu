@@ -583,13 +583,13 @@ public abstract class EffectTemplate {
 	}
 
 	/**
-	 * 结算真端「重复异常状态递减/免疫」：读取目标玩家的链、写追加抵抗与时长百分比，
+	 * 结算原版「重复异常状态递减/免疫」：读取目标玩家的链、写追加抵抗与时长百分比，
 	 * 并在效果上登记施加成功后要写入的步数；仅 PvP（双方玩家）读取，但仍对任何来源打标记。
 	 * Resolves the retail repeated-abnormal decay: reads the target player's chain, writes the added
 	 * resist and duration percent, and marks the effect for post-application recording; only PvP
 	 * (both players) reads, yet the mark is set for any caster.
 	 * <p>近似 / Approximations：窗口使用本模板的原始时长（duration2 + duration1 × 技能等级）；
-	 * 追加抵抗并入 exclusive 抵抗位、不参与 resting ×0.3 折算——均为对真端的工程近似。
+	 * 追加抵抗并入 exclusive 抵抗位、不参与 resting ×0.3 折算——均为对原版的工程近似。
 	 * The window uses this template's base duration; the added resist joins the exclusive slot
 	 * outside the resting discount. Both are engineering approximations of retail behaviour.</p>
 	 * @param effect 运行中效果 / runtime effect
@@ -622,7 +622,7 @@ public abstract class EffectTemplate {
 			effect.setRepeatedImmuneDurationPercent(template.getTimeValue(step));
 			return template.getResistValue(step);
 		}
-		// NPC 来源或全新链：只记录不调整（真端记录端不看施法者，调整端要求双方玩家）。
+		// NPC 来源或全新链：只记录不调整（原版记录端不看施法者，调整端要求双方玩家）。
 		// NPC caster or a fresh chain: record-only (retail records regardless of caster, adjusts only for PvP).
 		return 0;
 	}

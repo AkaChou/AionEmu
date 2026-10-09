@@ -18,11 +18,11 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * 锁定任务 1553 的真端中继链（会说话的镜子注入魔力 → 佩兰托军团长询问 → 皮埃拉交付）。
+ * 锁定任务 1553 的原版中继链（会说话的镜子注入魔力 → 佩兰托军团长询问 → 皮埃拉交付）。
  * Locks quest 1553's retail relay chain (talking mirror infusion → Perento inquiry → Piera hand-in).
  * <p>
  * 任务已退役（保留清单 owner=RETAIL_TABLE）：旧 typed 节点/转换金标随迁移退场，按计划 §8.9（P3 重锚口径）
- * 改锚真端表行（接取 Diana / 中继 镜子→佩兰托 / 交付 Piera、步 1 物换物）、quest.xml 前置/奖励与 native 对话面。
+ * 改锚原版表行（接取 Diana / 中继 镜子→佩兰托 / 交付 Piera、步 1 物换物）、quest.xml 前置/奖励与 native 对话面。
  * <p>
  * The retired typed node/transition gold standard is re-anchored (plan §8.9) to the retail row (accept
  * Diana / relays mirror → Perento / hand-in Piera, step-1 item swap), the quest.xml prerequisite/rewards
@@ -35,9 +35,9 @@ class Quest1553ClientDialogAlignmentTest {
 	private static final int PERENTO_NPC = 204500;
 	private static final int PIERA_NPC = 204584;
 
-	/** 真端 give_item = ITEM_QUEST_1553A 1（待注入的镜子）。 / The retail accept grant (plain mirror). */
+	/** 原版 give_item = ITEM_QUEST_1553A 1（待注入的镜子）。 / The retail accept grant (plain mirror). */
 	private static final int INITIAL_MIRROR_ITEM = 182201794;
-	/** 真端 give_item1 = ITEM_QUEST_1553B 1（注入魔力后的镜子）。 / The step-1 grant (infused mirror). */
+	/** 原版 give_item1 = ITEM_QUEST_1553B 1（注入魔力后的镜子）。 / The step-1 grant (infused mirror). */
 	private static final int INFUSED_MIRROR_ITEM = 182201795;
 
 	@Test
@@ -50,7 +50,7 @@ class Quest1553ClientDialogAlignmentTest {
 		SimpleTalkHandler handler = SimpleTalkHandler.instance();
 		assertEquals("Diana", handler.requireRow(QUEST_ID).acquiredNpcName(), "接取 owner 名");
 		assertEquals(List.of("DF2_NPC_TalkingMirror", "Perento"), handler.requireRow(QUEST_ID).talkNpcNames(),
-			"真端中继链（talk_npc1 → talk_npc2）");
+			"原版中继链（talk_npc1 → talk_npc2）");
 		assertEquals("Piera", handler.requireRow(QUEST_ID).rewardNpcName(), "交付 owner 名");
 		assertEquals(DIANA_NPC, NativeNpcNameResolver.instance().resolve("Diana").npcIds().get(0));
 		assertEquals(TALKING_MIRROR_NPC,
@@ -64,7 +64,7 @@ class Quest1553ClientDialogAlignmentTest {
 			new SimpleTalkHandler.RelayStep(QUEST_ID, 1, TALKING_MIRROR_NPC)), "步 1 = 会说话的镜子");
 		assertTrue(handler.relaysForNpc(PERENTO_NPC).contains(
 			new SimpleTalkHandler.RelayStep(QUEST_ID, 2, PERENTO_NPC)), "步 2 = Perento");
-		assertEquals(Integer.valueOf(1554), handler.conQuest(QUEST_ID), "真端 con_quest = 1554");
+		assertEquals(Integer.valueOf(1554), handler.conQuest(QUEST_ID), "原版 con_quest = 1554");
 
 		assertEquals(new SimpleTalkHandler.ItemStack(INITIAL_MIRROR_ITEM, 1), handler.acceptGiveItem(QUEST_ID),
 			"接取发放待注入的镜子");
@@ -74,13 +74,13 @@ class Quest1553ClientDialogAlignmentTest {
 			handler.stepRemoveItem(QUEST_ID, 1), "步 1 扣除待注入的镜子");
 		assertNull(handler.stepGiveItem(QUEST_ID, 2), "步 2 无发放");
 		assertNull(handler.stepRemoveItem(QUEST_ID, 2), "步 2 无扣除");
-		assertFalse(handler.requireRow(QUEST_ID).itemCheck(), "真端行不得声明 item_check");
+		assertFalse(handler.requireRow(QUEST_ID).itemCheck(), "原版行不得声明 item_check");
 		assertEquals(List.of(), handler.workItems(QUEST_ID), "无 item_check 行不得带交付门物品");
 
 		QuestMetadata metadata = RetailQuestDriver.ensureLoaded()
 			.retailMetadataOf(QUEST_ID).orElseThrow().metadata();
-		assertEquals(43, metadata.minLevel(), "真端 minlevel_permitted=43");
-		assertEquals(java.util.Set.of("ELYOS"), metadata.permittedRaces(), "真端 pc_light");
+		assertEquals(43, metadata.minLevel(), "原版 minlevel_permitted=43");
+		assertEquals(java.util.Set.of("ELYOS"), metadata.permittedRaces(), "原版 pc_light");
 		assertTrue(metadata.prerequisites().contains(1550)
 				|| metadata.startConditions().contains(new QuestStartCondition("finished", 1550, 0)),
 			"前置 = 完成 1550");

@@ -22,15 +22,15 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 /**
  * 系统发放接线门禁（P0c）。守的是接线契约本身：
  * <ol>
- * <li><b>哨兵行必须可发放</b>：真端 {@code Quest_SimpleCollectItem.xml} / {@code Quest_SimpleTalk.xml} 里
+ * <li><b>哨兵行必须可发放</b>：原版 {@code Quest_SimpleCollectItem.xml} / {@code Quest_SimpleTalk.xml} 里
  * {@code _faction_} 的每一行，在其所属车道（P3 起 SimpleTalk、P4 起 SimpleCollectItem 均走 native）必须
  * 既进得了势力轮换池、又过得了发放入口 —— 否则 {@code NpcFactions.sendDailyQuest()} 分配后无法发放
- * （只发提示、永远接不了）；未切换家族仍断言生产定义（真端 overlay）的
+ * （只发提示、永远接不了）；未切换家族仍断言生产定义（原版 overlay）的
  * {@code QuestEvent.SystemGrant} 边；</li>
  * <li><b>无发放入口的哨兵不得被发放</b>：{@code _challengetask_}（挑战任务；本服只有完成回调）
  * 的 SimpleTalk 行仍由 XML 驱动，不得带该边；</li>
  * <li><b>区域行必须双满足</b>：{@code _area_} 的已退役行既要在 {@code ai-areas.xml} 的 quest_area 里
- * 有绑定（P0c-4 按真端世界文件补齐），又要带 {@code SystemGrant} 边；</li>
+ * 有绑定（P0c-4 按原版世界文件补齐），又要带 {@code SystemGrant} 边；</li>
  * <li><b>普通行不得被系统发放</b>：NPC 接取的任务（如 1103 = Mires）不带该边，行为与改造前一致；</li>
  * <li><b>未知任务/非法 ID 安全返回 false</b>。</li>
  * </ol>
@@ -40,9 +40,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class RetailSystemGrantDispatchTest {
 	/** 生产区域发放表（quest_area 绑定）。 / Production quest-area grant table. */
 	private static final String QUEST_AREAS = "/aion/definitions/compact/ai/ai-areas.xml";
-	/** 真端 SimpleHunt 表（类别哨兵来源）。 / Retail SimpleHunt table path. */
+	/** 原版 SimpleHunt 表（类别哨兵来源）。 / Retail SimpleHunt table path. */
 	private static final String SIMPLE_HUNT_TABLE = "/aion/data/static_data/quest/retail/Quest_SimpleHunt.xml";
-	/** 真端 {@code _faction_} 行的历史下限：CollectItem 实测 43 / SimpleTalk 实测 98。 */
+	/** 原版 {@code _faction_} 行的历史下限：CollectItem 实测 43 / SimpleTalk 实测 98。 */
 	private static final int COLLECT_ITEM_FACTION_FLOOR = 40;
 	/** SimpleTalk 已退役 {@code _faction_} 行的下限（P0c-2 批）。 / Retirement batch floor. */
 	private static final int SIMPLE_TALK_FACTION_FLOOR = 40;
@@ -100,7 +100,7 @@ class RetailSystemGrantDispatchTest {
 	}
 
 	/**
-	 * SimpleCollectItem 已切原生车道的 {@code _faction_} 行（真端 43 行）必须可发放：阵营轮换池
+	 * SimpleCollectItem 已切原生车道的 {@code _faction_} 行（原版 43 行）必须可发放：阵营轮换池
 	 * （{@link NativeSystemGrantLanes#factionRotationCandidates(int)}）收得进、发放入口
 	 * （{@link NativeSystemGrantLanes#isSystemGranted(int)}）放得过，两轴缺一即「分配后永远接不了」。
 	 * P4 前该断言落在 typed 目录的 {@code SystemGrant} 边上，该边随本族切换批退出生产视图。
@@ -151,7 +151,7 @@ class RetailSystemGrantDispatchTest {
 		List<Integer> routed = simpleTalkIds(RetailGrantKind.FACTION).stream()
 			.filter(handler::routes)
 			.toList();
-		// 真端表 98 行 `_faction_`，其中 4 行仍由 XML 定义拥有（owner 归 XML 车道）；路由 94 行里
+		// 原版表 98 行 `_faction_`，其中 4 行仍由 XML 定义拥有（owner 归 XML 车道）；路由 94 行里
 		// 71 行的 quest.xml npcfaction_name 落在本服 10 个守备队势力内（= 轮换宇宙），另 23 行是
 		// Mentee_Li/Mentee_Da（师徒系统），不在轮换宇宙，故不参与「轮换池收得进」这条断言。
 		// Of the retail table's 98 `_faction_` rows, 4 are still XML-owned; of the 94 routed rows 71
@@ -185,7 +185,7 @@ class RetailSystemGrantDispatchTest {
 	}
 
 	/**
-	 * SimpleHunt 已退役的 {@code _faction_} 行必须可发放（§10.3-#25 已闭环）：真端宿主面裁定 =
+	 * SimpleHunt 已退役的 {@code _faction_} 行必须可发放（§10.3-#25 已闭环）：原版宿主面裁定 =
 	 * 阵营日常发放链与家族无关（{@code NpcFactionDB} 星期位 → {@code CheckNewFactionQuest} 随机挑选 →
 	 * {@code InitFactionQuest} → cab520 状态面受理 → AddQuest type 3；数据面 = 125/127 哨兵行在
 	 * npcfactions_quest.xml 池内）。SimpleHuntHandler 已注册为第三发放车道，这些行必须
@@ -236,10 +236,10 @@ class RetailSystemGrantDispatchTest {
 	}
 
 	/**
-	 * {@code _area_} 行的发放入口是区域引擎：绑定面以**真端世界文件**为权威
-	 * （`questscript_area` 的 {@code quest} 子元素；P0c-4「ai-areas = 真端镜像」的前提在
-	 * §10.3-#26 取证中被推翻——ai-areas 曾含真端没有的幻影绑定，2026-10-02 已校正为空绑定）。
-	 * SimpleHunt 的 {@code _area_} 行在 ai-areas 中的绑定必须恰好等于真端活集
+	 * {@code _area_} 行的发放入口是区域引擎：绑定面以**原版世界文件**为权威
+	 * （`questscript_area` 的 {@code quest} 子元素；P0c-4「ai-areas = 原版镜像」的前提在
+	 * §10.3-#26 取证中被推翻——ai-areas 曾含原版没有的幻影绑定，2026-10-02 已校正为空绑定）。
+	 * SimpleHunt 的 {@code _area_} 行在 ai-areas 中的绑定必须恰好等于原版活集
 	 * （双向：活行必绑、死行必不绑），且发放面（laneOf ∧ isSystemGranted）保持。
 	 * Area rows are granted on area entry; the binding authority is the retail world files
 	 * (the questscript_area quest child). P0c-4's "ai-areas mirrors retail" premise was
@@ -273,7 +273,7 @@ class RetailSystemGrantDispatchTest {
 			.filter(RetiredQuestIds::contains)
 			.toList();
 		assertFalse(retired.isEmpty(), "P0c-4 退役的 _area_ 行不应为空");
-		// 真端活集（§10.3-#26 全量对拍 258 世界目录三类区）：SimpleHunt 侧 4 行。
+		// 原版活集（§10.3-#26 全量对拍 258 世界目录三类区）：SimpleHunt 侧 4 行。
 		// The retail-live set (full three-area-type scan of 258 world dirs): four SimpleHunt rows.
 		Set<Integer> retailLive = Set.of(12505, 12524, 22524, 39005);
 		List<String> unbound = retired.stream()
@@ -281,15 +281,15 @@ class RetailSystemGrantDispatchTest {
 			.filter(questId -> !bound.contains(questId))
 			.map(Object::toString)
 			.toList();
-		assertTrue(unbound.isEmpty(), () -> "真端活绑定行缺 quest_area 绑定（进区域无法发放）: " + unbound);
+		assertTrue(unbound.isEmpty(), () -> "原版活绑定行缺 quest_area 绑定（进区域无法发放）: " + unbound);
 		List<String> phantom = retired.stream()
 			.filter(questId -> !retailLive.contains(questId))
 			.filter(bound::contains)
 			.map(Object::toString)
 			.toList();
-		assertTrue(phantom.isEmpty(), () -> "真端死边行不得保留 quest_area 绑定（幻影发放）: " + phantom);
+		assertTrue(phantom.isEmpty(), () -> "原版死边行不得保留 quest_area 绑定（幻影发放）: " + phantom);
 		// §10.3-#25 闭环（发放面）：SimpleHunt 车道已注册，_area_ 行同享「laneOf 命中 ∧ isSystemGranted」；
-		// 进区触发器（真端 MoveNew 入队 + tick 排水 + AddAreaQuest(type 3)）= 引擎级独立轴 §10.3-#26，
+		// 进区触发器（原版 MoveNew 入队 + tick 排水 + AddAreaQuest(type 3)）= 引擎级独立轴 §10.3-#26，
 		// 对 Talk（8 行）与 SimpleHunt（17 行）同时待接线，不在本门断言范围。
 		// §10.3-#25 closed (the grant face): SimpleHunt is a registered lane and _area_ rows share the
 		// same face; the area-entry trigger (retail MoveNew enqueue + tick drain + AddAreaQuest type 3)
@@ -305,7 +305,7 @@ class RetailSystemGrantDispatchTest {
 	@Test
 	void plainNpcAcceptRowsAreNotSystemGranted() {
 		QuestCatalog catalog = ProductionQuestDefinitions.catalog();
-		// 1103 = Mires 对话接取（真端三元组齐全），不是系统发放。
+		// 1103 = Mires 对话接取（原版三元组齐全），不是系统发放。
 		assertFalse(RetailSystemGrantDispatcher.isSystemGranted(catalog, 1103));
 	}
 
@@ -318,10 +318,10 @@ class RetailSystemGrantDispatchTest {
 	}
 
 	/**
-	 * §10.3-#4 裁定钉（2026-10-02）：80281/80283 = 真端活动任务子系的内部测试任务
+	 * §10.3-#4 裁定钉（2026-10-02）：80281/80283 = 原版活动任务子系的内部测试任务
 	 * （category1=event ∧ minlevel 999 停用形 ∧ 无交付声明 ∧ 接取 NPC 831131 未刷）——裁定为
 	 * 按活动任务子系排除、fail-closed 保持。本断言防止未来数据"修复"（补交付名/改等级）让
-	 * 真端死行复活；子系立项须先取得 event_quest.xml（§10.3-#3 同口）。
+	 * 原版死行复活；子系立项须先取得 event_quest.xml（§10.3-#3 同口）。
 	 * §10.3-#4 pin: 80281/80283 are retail event-subsystem test quests (disabled form, no delivery
 	 * declaration, acquire NPC unspawned) — excluded by adjudication; this blocks any data "fix"
 	 * that would revive them before the event subsystem is properly sourced.
@@ -336,9 +336,9 @@ class RetailSystemGrantDispatchTest {
 			assertEquals("event", row.text("category1"),
 				"quest " + questId + " 必须仍是活动任务子系行");
 			assertEquals(Integer.valueOf(999), row.integer("minlevel_permitted"),
-				"quest " + questId + " 必须保持真端停用形（minlevel 999）");
+				"quest " + questId + " 必须保持原版停用形（minlevel 999）");
 			assertNull(hunt.rewardNpc(questId),
-				"quest " + questId + " 不得获得交付面（真端本征无交付声明，§10.3-#4 排除）");
+				"quest " + questId + " 不得获得交付面（原版本征无交付声明，§10.3-#4 排除）");
 		}
 	}
 }

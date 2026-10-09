@@ -69,8 +69,8 @@
     <node label="complete" status="COMPLETE"/>
   </nodes>
   <transitions>
-    <!-- 领奖态轴口径（QE-054）：真端 0x100 状态推进不写轴，使用工作道具后轴保持玩法末值 6
-         （legacy onItemUseEvent 只 setStatus(REWARD) 不写 var0；真端 SetProgress(10525) 仅写 1/2/3/6，
+    <!-- 领奖态轴口径（QE-054）：原版 0x100 状态推进不写轴，使用工作道具后轴保持玩法末值 6
+         （legacy onItemUseEvent 只 setStatus(REWARD) 不写 var0；原版 SetProgress(10525) 仅写 1/2/3/6，
          不含末行索引 7）。REWARD 态的领奖行由客户端按自身行门槛显示，投影抬到 7 会让任务书步骤空白。
          Reward-axis caliber (QE-054): the retail 0x100 status advance keeps the play axis, so after the
          work item the axis stays 6 (legacy only calls setStatus(REWARD); retail SetProgress(10525) writes

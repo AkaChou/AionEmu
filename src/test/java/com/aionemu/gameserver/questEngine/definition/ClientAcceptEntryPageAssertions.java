@@ -8,7 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 /**
  * 接取入口页断言夹具（对齐测试的取页预言机）。
  * <p>
- * 5.8 客户端按任务页 HTML 解析"未接态第一屏"，服务端只能下发该任务页实际声明的页：真端接取窗页(4)
+ * 5.8 客户端按任务页 HTML 解析"未接态第一屏"，服务端只能下发该任务页实际声明的页：原版接取窗页(4)
  * 仅当客户端声明 {@code ask_quest_accept} 时可用，其余任务下发信页 select_none(4762) / select1(1011)，
  * 否则客户端 {@code load fail}。生产主代码的「页 4 优先」typed 形（{@code RetailClientAcceptEntryPage}）
  * 已随 P7 步 f 的 DD 编译车道退场（§10.3-#22）；本夹具以同一偏好序（页 4 → 4762 → 1011）为

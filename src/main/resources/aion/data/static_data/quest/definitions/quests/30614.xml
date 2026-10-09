@@ -9081,7 +9081,7 @@
          「向 Astella 报告」），旧 reward 投影停在行 0。领奖 NPC 核实为 Astella=800327：
          ① 客户端行 1 直指 Astella；② 同文件 quest_complete「阿斯泰拉说必须…」与同族
          30610/30611/30612/30613 的「客户端命名 NPC ↔ 定义 NPC」4/4 一致；③ 2026-08-06
-         客户端/真端交叉审计 f737cfef1 即使用 800327。legacy contract terath_dredgion.xml 的
+         客户端/原版交叉审计 f737cfef1 即使用 800327。legacy contract terath_dredgion.xml 的
          start_npc_ids=800326 是单一派生源（该文件对 30610 也丢掉了中间的 Aluna 对话步骤），
          10a2e7e57 仅据此把 800327 改成 800326，本修订恢复 800327。旧存档 REWARD/var0=0
          在进入世界时自愈到 1。

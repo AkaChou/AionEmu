@@ -15,12 +15,12 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * 锁定任务 1842（深层克罗坦全歼，可重复）的真端重开生命周期：完成后可再次接取并清零两路计数。
+ * 锁定任务 1842（深层克罗坦全歼，可重复）的原版重开生命周期：完成后可再次接取并清零两路计数。
  * Locks quest 1842's retail repeat lifecycle: a completed row re-opens and both counters reset.
  * <p>
  * 任务已退役（保留清单 owner=RETAIL_TABLE）：旧断言按 typed 目录的 unaccepted 转换 + planner 投影，
  * 随迁移退场；按计划 §8.9（P3 重锚口径）改锚 native 接取面（可重复行 COMPLETE 态开放接取窗，
- * 与 3733 同形）——真端 80+1 双槽计数在 20000 建档时清零（`NativeQuestStartPort.start`）。
+ * 与 3733 同形）——原版 80+1 双槽计数在 20000 建档时清零（`NativeQuestStartPort.start`）。
  * <p>
  * The retired typed assertions (unaccepted transition + planner projection) are re-anchored (plan §8.9)
  * to the native accept face: a repeatable row re-opens at COMPLETE and the 80+1 kill counters reset on
@@ -38,9 +38,9 @@ class Quest1842RepeatLifecycleTest {
 		assertEquals(80, row.killSlots().get(1).count());
 		assertEquals(1, row.killSlots().get(2).count());
 		assertEquals(255, RetailQuestDriver.ensureLoaded().retailMetadataOf(QUEST_ID).orElseThrow()
-			.metadata().repeatPolicy().maxRepeatCount(), "真端 max_repeat_count=255 ⇒ 可重复");
+			.metadata().repeatPolicy().maxRepeatCount(), "原版 max_repeat_count=255 ⇒ 可重复");
 		Integer acquireNpc = handler.acquireNpc(QUEST_ID);
-		assertNotNull(acquireNpc, "真端行必须有可解析的接取 NPC");
+		assertNotNull(acquireNpc, "原版行必须有可解析的接取 NPC");
 
 		com.aionemu.gameserver.model.gameobjects.player.Player player = NativeTalkFixture.player(
 			com.aionemu.gameserver.model.Race.ELYOS, com.aionemu.gameserver.model.PlayerClass.WARRIOR, 45);

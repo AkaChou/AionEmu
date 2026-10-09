@@ -72,7 +72,7 @@ name / npc_ids（逗号串）
     <name>ldf4a_public_quest_monster_11</name>
     <npc_ids>282923</npc_ids>
   </npc_name_alias>
-  <!-- P7 步 d2（2026-10-02）：DD 切换集载荷名的真端 quest_ai_name 组（dd-unresolved-name-probe.py 生成）。 -->
+  <!-- P7 步 d2（2026-10-02）：DD 切换集载荷名的原版 quest_ai_name 组（dd-unresolved-name-probe.py 生成）。 -->
   <npc_name_alias>
     <name>ab1_lizardman_q1869</name>
     <npc_ids>220257,220258,220262,220263,220267,220268,220272,220273</npc_ids>
@@ -717,5 +717,5 @@ name / npc_ids（逗号串）
     <name>f6_raid_drop_light</name>
     <npc_ids>246457,246458,246459,246460,246461</npc_ids>
   </npc_name_alias>
-  <!-- P7 步 d2（2026-10-02）：DD 切换集载荷名的真端 quest_ai_name 组（dd-unresolved-name-probe.py 生成）。 -->
+  <!-- P7 步 d2（2026-10-02）：DD 切换集载荷名的原版 quest_ai_name 组（dd-unresolved-name-probe.py 生成）。 -->
 </retail_npc_name_aliases>

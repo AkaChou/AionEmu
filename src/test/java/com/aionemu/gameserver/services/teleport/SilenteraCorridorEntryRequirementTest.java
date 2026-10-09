@@ -66,8 +66,8 @@ class SilenteraCorridorEntryRequirementTest {
 
 	@Test
 	void corridorOriginsKeepTheBalaureaEntryGate() {
-		// 2026-10-08 用户裁定：从回廊（含大师服变体）回英吉斯温/格尔克马罗斯仍走真端既有的
-		// 10031 龙界门禁——不得为回廊起点做豁免（Zz 无 10031 被拦 = 真端口径）。
+		// 2026-10-08 用户裁定：从回廊（含大师服变体）回英吉斯温/格尔克马罗斯仍走原版既有的
+		// 10031 龙界门禁——不得为回廊起点做豁免（Zz 无 10031 被拦 = 原版口径）。
 		// User ruling 2026-10-08: leaving the corridor keeps the retail Balaurea entry gate (10031);
 		// no corridor-origin exemption.
 		assertFalse(PortalService.isBalaureaEntryAllowed(210050000, 600010000, false, false));

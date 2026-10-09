@@ -9,7 +9,7 @@ import com.aionemu.gameserver.questEngine.definition.QuestTransition;
  * <p>
  * 这是启动期 {@code QuestEngine.prepareProductionDefinitions} 的第二道合同（在交互对象合同之后）。
  * 它此前只作为 {@code QuestEngine} 里的内联 instanceof 链存在，于是新增事件类型（如 P0c 的
- * {@link QuestEvent.SystemGrant}）一旦被真端定义使用，就会在服务端启动时抛
+ * {@link QuestEvent.SystemGrant}）一旦被原版定义使用，就会在服务端启动时抛
  * {@code typed production event is not wired into QuestEngine}——而 T3 全绿（无测试覆盖该链）。
  * 现在清单归一到本类，启动路径与门禁共用同一份口径。
  * <p>

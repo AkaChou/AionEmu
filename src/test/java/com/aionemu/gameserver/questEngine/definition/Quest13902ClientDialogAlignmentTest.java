@@ -15,7 +15,7 @@ import com.aionemu.gameserver.questEngine.tablelane.SimpleTalkHandler;
  * 验证任务 13902 将客户端简易接取与报告、领奖路由限定在各自的正式 NPC owner。
  * <p>
  * P3 重锚（计划 §8.9）：旧 IR 形状断言（节点名/条件/动作/页链）随 SimpleTalk 切换批退场，
- * 本类改为真端表行锚——接取/交付 NPC、中继步、发扣物品、交付门均取自
+ * 本类改为原版表行锚——接取/交付 NPC、中继步、发扣物品、交付门均取自
  * {@code Quest_SimpleTalk.xml} + {@code quest.xml} 与静态数据（{@code npc_template} /
  * 物品 {@code name_desc}），native 处理器必须逐项一致。
  * <p>
@@ -28,7 +28,7 @@ class Quest13902ClientDialogAlignmentTest {
 	void keepsTheRetailSimpleStartReportAndRewardOwnersExclusive() {
 		SimpleTalkHandler handler = SimpleTalkHandler.instance();
 
-		// 真端行 13900：LF5_Atmos_E → Corridor_L_MainQuest_E
+		// 原版行 13900：LF5_Atmos_E → Corridor_L_MainQuest_E
 		assertTrue(handler.routes(13900), "13900 必须由 native 车道路由");
 		assertEquals(804699, handler.acquireNpc(13900), "接取 NPC");
 		assertEquals(798514, handler.rewardNpc(13900), "交付 NPC");
@@ -44,7 +44,7 @@ class Quest13902ClientDialogAlignmentTest {
 		assertFalse(handler.unresolvedGate(13900), "无门行不得 fail-closed");
 		assertNull(handler.cutscene(13900), "该行无过场");
 
-		// 真端行 13902：Corridor_L_MainQuest_E → Cainus
+		// 原版行 13902：Corridor_L_MainQuest_E → Cainus
 		assertTrue(handler.routes(13902), "13902 必须由 native 车道路由");
 		assertEquals(798514, handler.acquireNpc(13902), "接取 NPC");
 		assertEquals(798926, handler.rewardNpc(13902), "交付 NPC");

@@ -25,7 +25,7 @@ class Quest30311RetailAlignmentTest {
 				.toList();
 
 			// 物件 owner 收口（2026-10-08，QE-052 同型批次）：符文宝珠 730275 的对话由 RiftOrbAI2 承担
-			// （真端注册面挂 riftorb AI，legacy 注册与对话块整体注释禁用），交付对象只剩任务书末行的
+			// （原版注册面挂 riftorb AI，legacy 注册与对话块整体注释禁用），交付对象只剩任务书末行的
 			// Herka 799322；形状与姊妹任务 30313 一致。
 			// Object-owner trim (2026-10-08, QE-052 machine-variant batch): the orb 730275 is owned by
 			// RiftOrbAI2 (retail AI registration; the legacy registration and dialog block are commented

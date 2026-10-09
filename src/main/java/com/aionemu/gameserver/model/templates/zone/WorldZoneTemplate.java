@@ -12,7 +12,7 @@ public class WorldZoneTemplate extends ZoneTemplate {
 
 	public WorldZoneTemplate(int size, Integer mapId) {
 		float maxZ = Math.round((float) size / WorldConfig.WORLD_REGION_SIZE) * WorldConfig.WORLD_REGION_SIZE;
-		// 世界大区 = 单环多边形（多胞区只用于真端感官区一类的显式多环声明）。
+		// 世界大区 = 单环多边形（多胞区只用于原版感官区一类的显式多环声明）。
 		// A world zone is a single-ring polygon; multi-cell zones are only for explicitly declared
 		// multi-ring areas such as the retail sensory areas.
 		Points worldRing = new Points(-1, maxZ + 1);

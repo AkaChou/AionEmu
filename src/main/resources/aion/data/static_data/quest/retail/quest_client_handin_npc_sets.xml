@@ -3,7 +3,7 @@
 Aion 5.8 客户端交付 NPC 集合投影（quest_id / npc_ids 逗号串）
 来源：客户端对话映射 legacy-quest-dialog-contracts.csv 的 end_npc_ids 多于一个的行（客户端声明的交付/领奖 NPC 集）
 source_sha256=85016518d757e07f829c5a92fa8189053f65d9db865b1ee34690079486b6adb7
-消费：RetailSimpleTalkDefinitionCompiler / RetailSimpleItemPlayDefinitionCompiler——真端名解析出 >1 id 时与该集合逐元素对拍，不等即 fail-closed
+消费：RetailSimpleTalkDefinitionCompiler / RetailSimpleItemPlayDefinitionCompiler——原版名解析出 >1 id 时与该集合逐元素对拍，不等即 fail-closed
 -->
 <quest_client_handin_npc_sets>
   <handin_npc_set>

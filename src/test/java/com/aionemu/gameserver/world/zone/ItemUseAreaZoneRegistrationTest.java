@@ -23,10 +23,10 @@ import com.aionemu.gameserver.model.templates.zone.ZoneClassName;
 import com.aionemu.gameserver.model.templates.zone.ZoneInfo;
 
 /**
- * 常设门：全库 usearea 注册覆盖审计（2026-10-08，QE-043 同类）补入的使用区必须保留真端几何，
+ * 常设门：全库 usearea 注册覆盖审计（2026-10-08，QE-043 同类）补入的使用区必须保留原版几何，
  * 且 Aturam 使用区必须使用 item 模板声明的区名。
- * 几何权威：球体 = 真端 {@code Map/XML/Subzones/source_sphere.csv} 的 itemUseArea 行；
- * 多边形 = 真端 {@code Map/Worlds/<world>/world.xml} 的 {@code <item_use_area>}（本次并已逐点核对
+ * 几何权威：球体 = 原版 {@code Map/XML/Subzones/source_sphere.csv} 的 itemUseArea 行；
+ * 多边形 = 原版 {@code Map/Worlds/<world>/world.xml} 的 {@code <item_use_area>}（本次并已逐点核对
  * 与既有旧名区完全一致）。断言区名/所属地图/区类/球心半径与多边形首点，防止静默漂移回旧值。
  * <p>
  * Standing gate: the item-use zones added by the 2026-10-08 catalog-wide usearea registry audit
@@ -42,7 +42,7 @@ class ItemUseAreaZoneRegistrationTest {
 	private static final Path ZONES_DIR = Path.of("src/main/resources/aion/data/static_data/zones");
 	private static final Path ZONES_XSD = ZONES_DIR.resolve("zones.xsd");
 
-	/** 球体使用区：区名 → 真端 source_sphere.csv 的球心/半径（mapid 锁定在其所在文件断言内）。 */
+	/** 球体使用区：区名 → 原版 source_sphere.csv 的球心/半径（mapid 锁定在其所在文件断言内）。 */
 	@Test
 	void sphereItemUseAreasKeepRetailSourceSphereGeometry() throws Exception {
 		Map<Integer, Map<String, ZoneInfo>> quest = zonesOf("zones_quest.xml");
@@ -50,7 +50,7 @@ class ItemUseAreaZoneRegistrationTest {
 		assertSphere(quest, 300610000, "IDRAKSHA_ITEMUSEAREA_Q28703", 676.68f, 667.03f, 527.06f, 19.57f);
 	}
 
-	/** 多边形使用区（真端 world.xml，无球值源）：两地图同形登记，首点/底顶锁定。 */
+	/** 多边形使用区（原版 world.xml，无球值源）：两地图同形登记，首点/底顶锁定。 */
 	@Test
 	void polygonItemUseAreasKeepRetailWorldXmlGeometry() throws Exception {
 		Map<Integer, Map<String, ZoneInfo>> quest = zonesOf("zones_quest.xml");
@@ -66,7 +66,7 @@ class ItemUseAreaZoneRegistrationTest {
 		}
 	}
 
-	/** Aturam 使用区：item 模板声明 IDStation_ItemUseArea_3F；旧名（_1/_2）不得回归，几何维持真端多边形。 */
+	/** Aturam 使用区：item 模板声明 IDStation_ItemUseArea_3F；旧名（_1/_2）不得回归，几何维持原版多边形。 */
 	@Test
 	void aturamItemUseAreaUsesTheItemDeclaredName() throws Exception {
 		assertAturam("zones_300240000.xml", 300240000, "IDSTATION_ITEM_USE_AREA_1");

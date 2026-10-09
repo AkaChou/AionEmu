@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 
 /**
  * NPC 名解析器门测试（夹具事实来自 P1 对拍与分片实读：模板定义 87968 个、独立规范名 116225 个、
- * 分片间重复 id 836025、真端占位 name=" "）。 / NPC name resolver gate tests (fixture facts from the
+ * 分片间重复 id 836025、原版占位 name=" "）。 / NPC name resolver gate tests (fixture facts from the
  * P1 reconciliation and live shard reads: 87968 template definitions, 116225 distinct normalized
  * names, cross-shard duplicate id 836025, retail name=" " placeholders).
  */
@@ -44,7 +44,7 @@ class NativeNpcNameResolverTest {
 		IllegalStateException missing = assertThrows(IllegalStateException.class,
 				() -> resolver.uniqueId("not_a_real_npc_zz"));
 		assertTrue(missing.getMessage().startsWith("NATIVE_NAME_UNRESOLVED"), missing.getMessage());
-		// null / 空白按无命中，真端 name=" " 占位永不成为索引键。 / null/blank miss; name=" " placeholders are never keys.
+		// null / 空白按无命中，原版 name=" " 占位永不成为索引键。 / null/blank miss; name=" " placeholders are never keys.
 		assertEquals(NativeNpcNameResolver.Resolution.MISSING, resolver.resolve(null).resolution());
 		assertEquals(NativeNpcNameResolver.Resolution.MISSING, resolver.resolve("  ").resolution());
 	}
@@ -71,7 +71,7 @@ class NativeNpcNameResolverTest {
 
 	@Test
 	void nameDescPriorityEliminatesPhantomAmbiguity() {
-		// 证实排查结论：Theon 的真端 name_desc 为 278516，活动 NPC 800274 的 name_desc 为 event_hc_Theon；
+		// 证实排查结论：Theon 的原版 name_desc 为 278516，活动 NPC 800274 的 name_desc 为 event_hc_Theon；
 		// 优先按 name_desc 解析消除了本地化短名冲突引发的假多义，精确命中 278516。
 		NativeNpcNameResolver resolver = NativeNpcNameResolver.instance();
 		NativeNpcNameResolver.Match match = resolver.resolve("Theon");

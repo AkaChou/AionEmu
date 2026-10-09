@@ -25,10 +25,10 @@ import com.aionemu.gameserver.questEngine.retail.RetailLedgerRows;
 /**
  * 链式接取发放边资源门（2026-10-08 `acquire=none` 缺口修复批）。
  * <p>
- * 冻结点：① 资源 = DD `none` 行 ∩ 仓库内有链路证据者（真端 {@code finished_quest_cond} 或退役
+ * 冻结点：① 资源 = DD `none` 行 ∩ 仓库内有链路证据者（原版 {@code finished_quest_cond} 或退役
  * XML/handler 证据），恰 34 行、两证据桶 26 + 8；② 运行期注册面 = 资源 − 6 个 XML_RETENTION 行
- * （属 typed 车道）− 1 个冻结行（20032 落点别名真端内在缺失）⇒ 恰 27 行；③ 全部前序 ∈ retention
- * 宇宙；④ 5 个带 {@code unfinished_quest_cond} 的链式行条件词法 = {@code Q<id>} 且目标行在真端表。
+ * （属 typed 车道）− 1 个冻结行（20032 落点别名原版内在缺失）⇒ 恰 27 行；③ 全部前序 ∈ retention
+ * 宇宙；④ 5 个带 {@code unfinished_quest_cond} 的链式行条件词法 = {@code Q<id>} 且目标行在原版表。
  * <p>
  * Gate for the chain-acquire edge resource: the file must equal the evidence-derived none-row set
  * (34 rows, 26 + 8 by provenance), the runtime must register exactly 27 successors (drops = six
@@ -46,7 +46,7 @@ class QuestChainAcquireResourceGateTest {
 		10011, 10033, 10034, 10035, 10111, 10113, 10501, 10502, 10503, 10504, 10505, 10506, 10507, 10526,
 		20011, 20033, 20034, 20111, 20113, 20501, 20502, 20503, 20504, 20505, 20506, 20507, 20526);
 
-	/** 仅退役证据（真端 quest.xml 无 finished 条件）的 8 行冻结表。 / The eight retired-evidence rows. */
+	/** 仅退役证据（原版 quest.xml 无 finished 条件）的 8 行冻结表。 / The eight retired-evidence rows. */
 	private static final Map<Integer, List<Integer>> RETIRED_EVIDENCE = Map.of(
 		10032, List.of(10031),
 		10033, List.of(10032),
@@ -57,7 +57,7 @@ class QuestChainAcquireResourceGateTest {
 		20034, List.of(20033),
 		20035, List.of(20031, 20032, 20033, 20034));
 
-	/** 带 {@code unfinished_quest_cond} 的链式行（真端列）。 / The chain rows carrying unfinished conditions. */
+	/** 带 {@code unfinished_quest_cond} 的链式行（原版列）。 / The chain rows carrying unfinished conditions. */
 	private static final Map<Integer, List<Integer>> UNFINISHED_CONDITIONS = Map.of(
 		10033, List.of(10025, 14062),
 		10034, List.of(10025, 14062),
@@ -91,7 +91,7 @@ class QuestChainAcquireResourceGateTest {
 		questXml = new String(resource(QUEST_XML).readAllBytes(), StandardCharsets.UTF_8);
 	}
 
-	/** ① 资源良构 + 两证据桶冻结（26 真端条件 + 8 退役证据），前序不得自环/重复。 */
+	/** ① 资源良构 + 两证据桶冻结（26 原版条件 + 8 退役证据），前序不得自环/重复。 */
 	@Test
 	void resourceRowsAreUniqueWellFormedAndCarryProvenance() {
 		assertEquals(34, edges.all().size(), "资源行数冻结");
@@ -110,7 +110,7 @@ class QuestChainAcquireResourceGateTest {
 	}
 
 	/**
-	 * ② 后继集合 = 证据推导集：DD `none` 行里「真端 quest.xml 有 finished 条件」∪「退役证据冻结表」
+	 * ② 后继集合 = 证据推导集：DD `none` 行里「原版 quest.xml 有 finished 条件」∪「退役证据冻结表」
 	 * ——资源不得多行也不得少行（无证据的 none 行必须留在面外）。
 	 */
 	@Test
@@ -125,19 +125,19 @@ class QuestChainAcquireResourceGateTest {
 		for (int successor : edges.successors()) {
 			assertTrue(ddNoneIds.contains(successor), "资源后继必须是 DD none 行：" + successor);
 		}
-		// 退役证据行逐条对拍（真端 quest.xml 无 finished 条件，证据在 git 历史）。
+		// 退役证据行逐条对拍（原版 quest.xml 无 finished 条件，证据在 git 历史）。
 		for (Map.Entry<Integer, List<Integer>> entry : RETIRED_EVIDENCE.entrySet()) {
 			assertTrue(finishedConditions(entry.getKey()).isEmpty(),
-				"退役证据行的真端行不得含 finished 条件：" + entry.getKey());
+				"退役证据行的原版行不得含 finished 条件：" + entry.getKey());
 			assertEquals(entry.getValue(), edges.edge(entry.getKey()).orElseThrow().predecessors(),
 				"退役证据前序冻结：" + entry.getKey());
 		}
-		// 真端条件行逐条对拍。
+		// 原版条件行逐条对拍。
 		for (int successor : edges.successors()) {
 			List<Integer> finished = finishedConditions(successor);
 			if (!finished.isEmpty()) {
 				assertEquals(finished, edges.edge(successor).orElseThrow().predecessors(),
-					"真端 finished 条件逐行对拍：" + successor);
+					"原版 finished 条件逐行对拍：" + successor);
 				assertEquals(ChainAcquireEdges.Source.RETAIL_FINISHED_COND, edges.edge(successor).orElseThrow().source(),
 					"证据轴 = retail-finished-cond：" + successor);
 			}
@@ -174,7 +174,7 @@ class QuestChainAcquireResourceGateTest {
 		}
 	}
 
-	/** ⑤ unfinished 条件词法 = {@code Q<id>} 且目标行在真端表（运行期解析永不落 0）。 */
+	/** ⑤ unfinished 条件词法 = {@code Q<id>} 且目标行在原版表（运行期解析永不落 0）。 */
 	@Test
 	void unfinishedConditionTokensResolveToPlainRetailIds() {
 		for (Map.Entry<Integer, List<Integer>> entry : UNFINISHED_CONDITIONS.entrySet()) {
@@ -187,15 +187,15 @@ class QuestChainAcquireResourceGateTest {
 			}
 			assertEquals(entry.getValue(), parsed, "unfinished 条件冻结：" + entry.getKey());
 			for (int condition : parsed) {
-				// 目标行必须在真端 quest.xml（哨兵行如 10025/20025 不在 retention 保留清单内，属正常）。
+				// 目标行必须在原版 quest.xml（哨兵行如 10025/20025 不在 retention 保留清单内，属正常）。
 				// The referenced row must exist in retail quest.xml (sentinel rows such as 10025/20025 sit
 				// outside the retention manifest, which is expected).
-				assertFalse(rowBlock(condition).isEmpty(), "unfinished 目标行在真端表：" + condition);
+				assertFalse(rowBlock(condition).isEmpty(), "unfinished 目标行在原版表：" + condition);
 			}
 		}
 	}
 
-	/** 真端 quest.xml 某行的 finished_quest_condN 解析（Q<digits> 词法）。 / Parses the retail finished conditions. */
+	/** 原版 quest.xml 某行的 finished_quest_condN 解析（Q<digits> 词法）。 / Parses the retail finished conditions. */
 	private static List<Integer> finishedConditions(int questId) {
 		List<Integer> conditions = new ArrayList<>();
 		Matcher matcher = Pattern.compile("<finished_quest_cond\\d+>(\\w+)</finished_quest_cond\\d+>")

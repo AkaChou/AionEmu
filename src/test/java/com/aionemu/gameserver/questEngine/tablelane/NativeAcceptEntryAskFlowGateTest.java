@@ -19,9 +19,9 @@ import com.aionemu.gameserver.questEngine.definition.QuestDialogPage;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
 
 /**
- * 跨族接取页链门：真端入口页表（信页/阶段页）与页动作 {@code 1007} 的 ask 流。
+ * 跨族接取页链门：原版入口页表（信页/阶段页）与页动作 {@code 1007} 的 ask 流。
  * <p>
- * 真端入口选择器（{@code fun_731}）对未接态只回 {@code select_none}(4762)、阶段页 {@code select1}(1011)
+ * 原版入口选择器（{@code fun_731}）对未接态只回 {@code select_none}(4762)、阶段页 {@code select1}(1011)
  * 或 {@code default_success}(10002)，**从不回接取窗页 4**；页 4 由页动作 {@code 1007}
  * （{@code ASK_QUEST_ACCEPT} → {@code mgr+0x1a0}）打开。故本门冻结两件事：① 入口页必须等于客户端任务页
  * 声明中偏好最高的信页，绝不发明页；② 声明页 4 的行由 {@code 1007} 打开页 4，未声明页 4 的行必须
@@ -37,7 +37,7 @@ class NativeAcceptEntryAskFlowGateTest {
 	private static final String HUNT_RESOURCE = "aion/data/static_data/quest/retail/Quest_SimpleHunt.xml";
 	private static final String TALK_RESOURCE = "aion/data/static_data/quest/retail/Quest_SimpleTalk.xml";
 
-	/** 真端 ask 流挂在过场上的行（hunt 3 + talk 2）：quest → movie。 */
+	/** 原版 ask 流挂在过场上的行（hunt 3 + talk 2）：quest → movie。 */
 	private static final Map<Integer, Integer> ASK_CUTSCENE_ROWS = Map.of(
 		3016, 362, 4007, 391, 4014, 393, 3020, 363, 4056, 403);
 
@@ -67,9 +67,9 @@ class NativeAcceptEntryAskFlowGateTest {
 				: declared.contains(SELECT1) ? SELECT1
 				: declared.contains(ASK_WINDOW) ? ASK_WINDOW : ASK_WINDOW;
 			int actual = contract.retailEntryPage(questId);
-			assertEquals(expected, actual, "真端入口页偏好序（信页 → 阶段页 → 页 4 兜底）: " + questId);
+			assertEquals(expected, actual, "原版入口页偏好序（信页 → 阶段页 → 页 4 兜底）: " + questId);
 			if (!declared.contains(actual)) {
-				// 兜底：客户端三类页都未声明 ⇒ 仍回真端接取窗页 4（不发明新页号）。
+				// 兜底：客户端三类页都未声明 ⇒ 仍回原版接取窗页 4（不发明新页号）。
 				if (declared.contains(SELECT_NONE) || declared.contains(SELECT1) || declared.contains(ASK_WINDOW)) {
 					invented.add(questId);
 				} else {
@@ -150,7 +150,7 @@ class NativeAcceptEntryAskFlowGateTest {
 		return pages;
 	}
 
-	/** 真端表行的接取 NPC 名（独立重解析）。 / The retail rows' acquire npc names (independent re-parse). */
+	/** 原版表行的接取 NPC 名（独立重解析）。 / The retail rows' acquire npc names (independent re-parse). */
 	private static Map<Integer, String> acquireNpcs() throws Exception {
 		Map<Integer, String> acquires = new LinkedHashMap<>();
 		for (String resource : List.of(HUNT_RESOURCE, TALK_RESOURCE)) {
@@ -186,7 +186,7 @@ class NativeAcceptEntryAskFlowGateTest {
 	private static int npcIdOf(SimpleHuntHandler hunt, SimpleTalkHandler talk, int questId, String npcName)
 			throws Exception {
 		int npcId = hunt.owns(questId) ? hunt.acquireNpc(questId) : talk.acquireNpc(questId);
-		assertTrue(npcId > 0, "真端行必须有可解析的接取 NPC: " + questId + " (" + npcName + ")");
+		assertTrue(npcId > 0, "原版行必须有可解析的接取 NPC: " + questId + " (" + npcName + ")");
 		return npcId;
 	}
 

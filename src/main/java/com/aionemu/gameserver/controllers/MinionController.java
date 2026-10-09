@@ -5,9 +5,9 @@ import com.aionemu.gameserver.model.gameobjects.Minion;
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 
 /**
- * 小跟班（Minion）控制器：移动完全由客户端本地模拟，服务端零参与（真端架构）。
+ * 小跟班（Minion）控制器：移动完全由客户端本地模拟，服务端零参与（原版架构）。
  * Minion controller: movement is fully client-simulated, the server takes no part (retail architecture).
- * <p>真端证据：5.8 真端服务端 {@code Familiar}/{@code FamiliarMapMgr}（含 4311 行地图管理器）中
+ * <p>原版证据：5.8 原版服务端 {@code Familiar}/{@code FamiliarMapMgr}（含 4311 行地图管理器）中
  * move/follow/position/speed 关键词零命中，方法全集只有数据管理与召唤/收回状态帧，
  * 协议层也没有 minion 移动通道——零售的 minion 同速跟随由每个客户端基于主人移动流本地模拟，
  * 因此不存在「追不上→掉队→瞬拉」。本仓宠物（Pet）即同一待遇（PetController 无任何跟随调度）且实机跟随正常。</p>

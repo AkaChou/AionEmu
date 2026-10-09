@@ -32,7 +32,7 @@ class Quest1929RetailAlignmentTest {
 		assertEquals(457760, metadata.rewards().get(1).amount());
 		assertEquals(162000048, metadata.rewards().get(2).id());
 		assertEquals(11, metadata.classRewards().size());
-		// 真端 reward_extend_stigma1=1：槽位资格由任务数据声明，Java 侧不再硬编码任务 ID。
+		// 原版 reward_extend_stigma1=1：槽位资格由任务数据声明，Java 侧不再硬编码任务 ID。
 		// Retail reward_extend_stigma1=1: the slot entitlement is declared by quest data, so the Java
 		// side no longer hardcodes quest ids.
 		assertTrue(metadata.extendStigmaSlots());
@@ -100,7 +100,7 @@ class Quest1929RetailAlignmentTest {
 			Map.entry("AETHERTECH", 140000004));
 		// 步数必须停在 98：客户端的烙印凹槽展开态跟随教学步数——98 时开启，一旦推进到 95 即关闭且会话内
 		// 不可恢复（第 5–8 轮实机：与是否关窗无关、重发槽位数无效，只有重登才由登录包序重建）；
-		// 真端/退役 XML 在发放时同样不推进步数（98 → 装备后才到 96）。
+		// 原版/退役 XML 在发放时同样不推进步数（98 → 装备后才到 96）。
 		// The step must stay at 98: the client's stigma-slot expansion follows the tutorial step - open at 98,
 		// and once it advances to 95 the slots close and cannot be recovered in-session (live rounds 5-8:
 		// independent of the window close, slot re-announces do not help, only a re-login rebuilds them).
@@ -168,7 +168,7 @@ class Quest1929RetailAlignmentTest {
 			.findFirst().orElseThrow();
 		assertEquals(List.of(new AfterCommitAction.ShowDialogWindow(1)), windowRoute.afterCommit());
 
-		// 装备分支仍按真端形状：推进 96 + 同步 + 关窗（此时结晶已装上，槽位语义不再受影响）
+		// 装备分支仍按原版形状：推进 96 + 同步 + 关窗（此时结晶已装上，槽位语义不再受影响）
 		List<QuestTransition> equipRoutes = compiled.definition().transitions().stream()
 			.filter(t -> "spawned98".equals(t.sourceNode()) && t.event() instanceof QuestEvent.EquipItem)
 			.toList();

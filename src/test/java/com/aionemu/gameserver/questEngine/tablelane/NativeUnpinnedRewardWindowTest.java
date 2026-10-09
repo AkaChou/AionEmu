@@ -42,7 +42,7 @@ class NativeUnpinnedRewardWindowTest {
 
 	@BeforeAll
 	static void loadRetailFixtures() {
-		// 与领奖门禁同型：真端驱动是结算口的元数据来源（与生产目录同一条装载路径）。
+		// 与领奖门禁同型：原版驱动是结算口的元数据来源（与生产目录同一条装载路径）。
 		// Same shape as the claim gate: the retail driver is the settlement's metadata source.
 		if (RetailQuestDriver.current().isEmpty()) {
 			RetailQuestDriver.overlay(ImmutableQuestCatalog.fromEntries(List.of()));
@@ -65,7 +65,7 @@ class NativeUnpinnedRewardWindowTest {
 
 	/**
 	 * 用户实机场景：引擎在 native 全族未按 NPC 绑定认领时按 questId 收下奖励窗确认动作，
-	 * 结算体收到真端行档位与原始动作，收尾下发选择对话页（页 10、questId=0）。
+	 * 结算体收到原版行档位与原始动作，收尾下发选择对话页（页 10、questId=0）。
 	 * The live scenario: the engine claims the reward-window confirmation by quest id after all
 	 * native families miss, the settlement receives the retail tier and the raw action, and the
 	 * tail sends the selection dialog page (page 10, no quest context).

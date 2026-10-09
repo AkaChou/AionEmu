@@ -448,9 +448,9 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 			    }
 			break;
 			case IMMORTAL_ORISSAN_NPC_ID: //Immortal Orissan.
-				// 不灭之奥里萨（237230）死亡后必须出现任务击杀目标 237231：真端 pattern 的 on_die / 异常状态分支
+				// 不灭之奥里萨（237230）死亡后必须出现任务击杀目标 237231：原版 pattern 的 on_die / 异常状态分支
 				// 与模板 AI 都会生成它，但 pattern 未接管或子对象被提前清掉时目标会缺失，任务 15300/25300 就会
-				// 永久停在「消灭盘龙巢穴的奥里萨(0/1)」。这里做一次延迟幂等兜底，真端生成成功时不会多刷。
+				// 永久停在「消灭盘龙巢穴的奥里萨(0/1)」。这里做一次延迟幂等兜底，原版生成成功时不会多刷。
 				// The quest kill target 237231 must exist after the immortal form dies: the retail pattern's
 				// on_die / abnormal-state branches and the template AI all spawn it, but when the pattern did not take
 				// over the quest stays stuck at (0/1). This delayed idempotent fallback never duplicates a working spawn.
@@ -1289,7 +1289,7 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 	/**
 	 * 幂等补生成任务击杀目标「虚脱的奥里萨」。
 	 * Idempotently spawns the quest kill target, the Exhausted Orissan.
-	 * <p>237230 的死亡处理链由真端 pattern（{@code IDSeal_Q_Oritsa_01} 的 {@code on_die}）或模板 AI 负责生成
+	 * <p>237230 的死亡处理链由原版 pattern（{@code IDSeal_Q_Oritsa_01} 的 {@code on_die}）或模板 AI 负责生成
 	 * 237231，两者都在本实例 {@code onDie} 之后才执行；因此这里延迟一拍再检查，只有目标仍缺失时才补刷，
 	 * 保证任务 15300/25300 的击杀步骤不会被卡住，同时不会与正常生成叠加出第二只。
 	 * The death chain of 237230 (retail {@code on_die} or the template AI) spawns 237231 after this instance

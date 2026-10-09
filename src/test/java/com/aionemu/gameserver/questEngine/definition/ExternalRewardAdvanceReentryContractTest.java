@@ -76,8 +76,8 @@ class ExternalRewardAdvanceReentryContractTest {
 			// The writer check is XML-independent and runs first: the Java writer of a retired row
 			// (e.g. MinionService) must still exist.
 			assertWriterStillExists(row);
-			// 退役行（15545/25545：XML 随 2026-09-27 真端表驱动迁移删除，retention owner=RETAIL_TABLE）：
-			// 生产视图无定义，本测试的 XML 侧合同（投影/入口页/自愈边）不再适用，口径由真端表车道承担；
+			// 退役行（15545/25545：XML 随 2026-09-27 原版表驱动迁移删除，retention owner=RETAIL_TABLE）：
+			// 生产视图无定义，本测试的 XML 侧合同（投影/入口页/自愈边）不再适用，口径由原版表车道承担；
 			// 守卫要求缺席行必须确属退役，防止基线行静默失效（与 JournalRewardRowRepairContractTest 同构）。
 			// Retired rows (15545/25545: their XML was deleted by the 2026-09-27 table-driven migration,
 			// retention owner=RETAIL_TABLE): the production view has no definition, so the XML-side
@@ -252,7 +252,7 @@ class ExternalRewardAdvanceReentryContractTest {
 		return List.copyOf(values);
 	}
 
-	// 退役任务统一走生产视图（真端 overlay 合成；旧 XML 只在 git 历史里）。
+	// 退役任务统一走生产视图（原版 overlay 合成；旧 XML 只在 git 历史里）。
 	// Retired quests resolve through the production view (retail overlay; the old XML lives in
 	// git history only).
 	private static CompiledQuestDefinition definition(int questId) throws Exception {

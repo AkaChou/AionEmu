@@ -5,10 +5,10 @@ import com.aionemu.gameserver.questEngine.retail.RetailQuestDriver;
 import java.util.Objects;
 
 /**
- * 生产任务定义视图：XML 目录 + 真端驱动 overlay。
+ * 生产任务定义视图：XML 目录 + 原版驱动 overlay。
  * <p>
  * 迁移后的任务不再保留 quest-definition XML（历史版本在 git 里可回溯），因此"该任务现在是什么定义"
- * 只能问生产视图：已退役任务由真端模板表 + quest.xml 元数据合成，其余任务仍来自 XML 目录。
+ * 只能问生产视图：已退役任务由原版模板表 + quest.xml 元数据合成，其余任务仍来自 XML 目录。
  * 一次编译后缓存整个视图，逐任务断言不再重复编译 6224 个定义。
  * <p>
  * Production quest-definition view: the XML directory plus the retail overlay, compiled once and cached.

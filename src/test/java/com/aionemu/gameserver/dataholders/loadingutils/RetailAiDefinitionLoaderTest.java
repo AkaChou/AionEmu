@@ -170,7 +170,7 @@ class RetailAiDefinitionLoaderTest {
 		// existed there and the per-world duplicate check rejects a second copy, so pin the deduped 133.
 		assertEquals(133, data.areaCount());
 		assertEquals(18, data.resurrectAreaCount());
-		// P0c-4 真端绑定补齐：InvadePortalDest 42/41 的 questArea_02/03 四条（39005/39007/39009/49004-49007）
+		// P0c-4 原版绑定补齐：InvadePortalDest 42/41 的 questArea_02/03 四条（39005/39007/39009/49004-49007）
 		// + LDF4_Advance_QuestArea_PVP_ALL（13745/23745，DD 家族区域发放批）。
 		// P0c-4 retail bindings restored: the four InvadePortalDest questArea_02/03 rows plus
 		// LDF4_Advance_QuestArea_PVP_ALL (the 13745/23745 area-grant batch).
@@ -184,7 +184,7 @@ class RetailAiDefinitionLoaderTest {
 		// beshmundir-macunbello-conditional-spawn 又为 BT（300170000）补齐 11 条 Macunbello 阶段条件刷：
 		// DebuffLich 触发器 3 条 + N 套变体 4 条 + H 套变体 4 条（页切换走 bt_page）。
 		// beshmundir-ahbana-specter-spawn 再补 2 条 Ahbana 条件刷（阈值 10，纪念碑 pattern 计数驱动）。
-		// beshmundir-corridor-statue-array 再补 10 条走廊雕像阵（每组按真端权重随机 1 只）。
+		// beshmundir-corridor-statue-array 再补 10 条走廊雕像阵（每组按原版权重随机 1 只）。
 		// The BT repairs then added the 11 Macunbello stage condition spawns plus 2 Ahbana rows
 		// (threshold 10, driven by the monument patterns) and the 10 corridor statue-array rows
 		// (one weighted random NPC per group) for world 300170000.
@@ -206,11 +206,11 @@ class RetailAiDefinitionLoaderTest {
 		assertEquals(980.805420f, macunbelloNpc.x());
 		assertEquals(134.411575f, macunbelloNpc.y());
 		assertEquals(244.5f, macunbelloNpc.z());
-		// 触发器（delay 1-2s）先于阶段变体（delay 10-11s）落地 —— 真端时序不变量。
+		// 触发器（delay 1-2s）先于阶段变体（delay 10-11s）落地 —— 原版时序不变量。
 		// Trigger rows (1-2s delay) land before the stage variants (10-11s delay) - the retail timing invariant.
 		assertEquals(1, firstConditionNpc(btStages, 5010).initialDelay());
 		assertEquals(10, macunbelloNpc.initialDelay());
-		// Ahbana：阈值 10 条件刷；落点取真端 x/y + 我方 geo 面高 246.27（真端 z=250 会悬空 3.7m）。
+		// Ahbana：阈值 10 条件刷；落点取原版 x/y + 我方 geo 面高 246.27（原版 z=250 会悬空 3.7m）。
 		// Ahbana: threshold 10; retail x/y with our geo surface height for z.
 		assertTrue(btStages.stream().filter(condition -> condition.id() == 5021).findFirst().orElseThrow()
 			.expression().contains("IDCT_SpecterN_Spawn >= 10"));

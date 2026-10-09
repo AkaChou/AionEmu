@@ -25,7 +25,7 @@ import org.junit.jupiter.api.Test;
 import com.aionemu.gameserver.questEngine.definition.QuestDialogPage;
 
 /**
- * SimpleCollectItem 族级**逐行对齐门**（P4 收口，计划 §8.9）：以真端表 {@code Quest_SimpleCollectItem.xml}
+ * SimpleCollectItem 族级**逐行对齐门**（P4 收口，计划 §8.9）：以原版表 {@code Quest_SimpleCollectItem.xml}
  * 与 {@code quest.xml} 的**独立重解析**为唯一事实，逐行对拍 native 映射；不复用
  * {@link NativeQuestTableLoader} 的 DOM 装载路径，也不保留任何旧 IR 形状（typed 节点 / 条件 / 动作 /
  * SELECT 页链 / 掉落 {@code collectingStep}）断言。
@@ -45,7 +45,7 @@ class SimpleCollectItemRowAlignmentGateTest {
 		"aion/data/static_data/quest/retail/Quest_SimpleCollectItem.xml";
 	private static final String QUEST_XML_RESOURCE = "aion/data/static_data/quest/retail/quest.xml";
 
-	/** 真端表事实（全量复算）。 / Retail-table facts (whole-table recomputation). */
+	/** 原版表事实（全量复算）。 / Retail-table facts (whole-table recomputation). */
 	private static final int ROWS = 262;
 	private static final int OBJECT1_ROWS = 257;
 	private static final int OBJECT2_ROWS = 22;
@@ -66,9 +66,9 @@ class SimpleCollectItemRowAlignmentGateTest {
 	private static final int COLLECT_ITEM1_ROWS = 253;
 	private static final int COLLECT_ITEM2_ROWS = 27;
 	private static final int COLLECT_ITEM3_ROWS = 13;
-	/** 真端 minlevel=999 的休眠行（元数据 min>max，不可路由）。 / Dormant retail rows. */
+	/** 原版 minlevel=999 的休眠行（元数据 min>max，不可路由）。 / Dormant retail rows. */
 	private static final Set<Integer> DORMANT_LEVEL_ROWS = Set.of(36017, 46017, 47112);
-	/** 表格声明了对象但真端不给槽位的行（41216 的来源是另一个 FOBJ）。 / Object without a retail slot. */
+	/** 表格声明了对象但原版不给槽位的行（41216 的来源是另一个 FOBJ）。 / Object without a retail slot. */
 	private static final Set<Integer> OBJECT_WITHOUT_SLOT_ROWS = Set.of(41216);
 	/** 无采集计数的行（TEST 5 + 事件行 4）：不可路由。 / Rows without a collect count. */
 	private static final Set<Integer> NO_COLLECT_COUNT_ROWS =
@@ -78,7 +78,7 @@ class SimpleCollectItemRowAlignmentGateTest {
 	/**
 	 * 复合势力交付名的行（39611/49611：{@code LDF5b_Silverlin_LD}）。组表
 	 * （{@code retail-quest-ai-name-groups.xml}）已声明该组名（成员 {@code LDF5b_*_Silverlin}）⇒
-	 * 交付面经组通道解析为要塞守护组（800927-9），可路由；两行真端 minlevel=999，由接取轴自然拒绝。
+	 * 交付面经组通道解析为要塞守护组（800927-9），可路由；两行原版 minlevel=999，由接取轴自然拒绝。
 	 * （2026-10-04 对齐：原判"无客户端集 ⇒ fail-closed 不路由"随组表扩批已过时。）
 	 * Composite faction reward names (rows 39611/49611): the dialog-name group table declares
 	 * {@code LDF5b_Silverlin_LD} (members {@code LDF5b_*_Silverlin}), so the hand-in face resolves to the
@@ -94,12 +94,12 @@ class SimpleCollectItemRowAlignmentGateTest {
 		"aion/data/static_data/quest/retail/Quest_SimpleUseItem.xml",
 		"aion/data/static_data/quest/retail/Quest_SimpleItemPlay.xml",
 		"aion/data/static_data/quest/retail/Quest_SimpleSerialHunt.xml");
-	/** 链式接取窗目标的分布（真端全表冻结）。 / Distribution of the chain-window targets (frozen). */
+	/** 链式接取窗目标的分布（原版全表冻结）。 / Distribution of the chain-window targets (frozen). */
 	private static final int CHAIN_TARGET_IN_TABLE = 6;
 	private static final int CHAIN_TARGET_SIBLING = 24;
 	private static final int CHAIN_TARGET_NO_ROW = 7;
 	private static final int CHAIN_TARGET_NO_ROW_XML_OWNED = 3;
-	/** 真端声明的过场（交付节点 0x35 槽）：两行同为 movie 456 / 动作 SELECT1_1(1012)。 /
+	/** 原版声明的过场（交付节点 0x35 槽）：两行同为 movie 456 / 动作 SELECT1_1(1012)。 /
 	 * The declared cutscenes (hand-in node slot 0x35): both rows are movie 456 / action SELECT1_1(1012). */
 	private static final int CUTSCENE_MOVIE = 456;
 	private static final int CUTSCENE_ACTION = QuestDialogPage.SELECT1_1.id();
@@ -120,14 +120,14 @@ class SimpleCollectItemRowAlignmentGateTest {
 		handler = SimpleCollectItemHandler.instance();
 	}
 
-	/** ① 行集与逐行字段：native 映射必须与真端表原文逐行一致（含长尾列）。 */
+	/** ① 行集与逐行字段：native 映射必须与原版表原文逐行一致（含长尾列）。 */
 	@Test
 	void everyRetailRowIsMappedVerbatim() {
-		assertEquals(ROWS, tableRaw.size(), "真端表行数漂移 / retail row count drifted");
+		assertEquals(ROWS, tableRaw.size(), "原版表行数漂移 / retail row count drifted");
 		NativeQuestTableLoader loader = NativeQuestTableLoader.instance();
 		assertEquals(tableRaw.keySet(), handler.ownedQuestIds(),
-			"注册集必须逐行等于真端表 id 集 / registration set must equal the retail id set");
-		assertEquals(tableRaw.size(), loader.collectSize(), "装载器行数必须等于真端表行数");
+			"注册集必须逐行等于原版表 id 集 / registration set must equal the retail id set");
+		assertEquals(tableRaw.size(), loader.collectSize(), "装载器行数必须等于原版表行数");
 
 		for (Map.Entry<Integer, Map<String, String>> entry : tableRaw.entrySet()) {
 			int questId = entry.getKey();
@@ -173,7 +173,7 @@ class SimpleCollectItemRowAlignmentGateTest {
 		Set<Integer> xmlOnly = NativeQuestOwnerResolver.instance().xmlOnlyIds();
 		assertEquals(XML_ONLY_ROWS, new TreeSet<>(xmlOnly).stream()
 				.filter(tableRaw::containsKey).collect(java.util.stream.Collectors.toCollection(TreeSet::new)),
-			"本族 XML-only 行（真端表 ∩ XML 保留）必须冻结");
+			"本族 XML-only 行（原版表 ∩ XML 保留）必须冻结");
 		for (int questId : handler.ownedQuestIds()) {
 			boolean expectRouted = !xmlOnly.contains(questId)
 				&& !DORMANT_LEVEL_ROWS.contains(questId)
@@ -189,14 +189,14 @@ class SimpleCollectItemRowAlignmentGateTest {
 			assertEquals(java.util.List.of(800927, 800928, 800929), handler.rewardNpcs(questId),
 				() -> "复合交付名必须经组表解析为要塞守护组（不得凭空造交付面）: " + questId);
 			assertTrue(handler.ownedQuestIds().contains(questId),
-				() -> "复合行仍须装载（注册集逐行等于真端表）: " + questId);
+				() -> "复合行仍须装载（注册集逐行等于原版表）: " + questId);
 		}
 		assertTrue(java.util.Collections.disjoint(handler.routedQuestIds(), xmlOnly),
 			"路由集与 XML-only 集不得交叠 / the routing set must not intersect the XML-owned set");
 	}
 
 	/**
-	 * ③ 采集族不得派生相机行：真端相机调用（camera-params.tsv，2463 点）中本族 262 行 0 命中
+	 * ③ 采集族不得派生相机行：原版相机调用（camera-params.tsv，2463 点）中本族 262 行 0 命中
 	 * （对照 SimpleHunt 1812/1863），旧 XML 的交互/击杀转换亦零 var 写——采集为物品驱动，
 	 * P4 的"相机 required = collect_item 计数"派生已撤销（2026-10-04）。
 	 * No collect row may derive a camera row: the family is item-driven.
@@ -206,12 +206,12 @@ class SimpleCollectItemRowAlignmentGateTest {
 		CameraRegistry registry = CameraRegistry.instance();
 		for (int questId : tableRaw.keySet()) {
 			assertTrue(registry.find(questId).isEmpty(),
-				"采集族不得派生相机行（真端 262/262 无相机调用）: " + questId);
+				"采集族不得派生相机行（原版 262/262 无相机调用）: " + questId);
 		}
 	}
 
 	/**
-	 * ④ 槽对齐（P4 真端复核）：真端 {@code drop_monster_K} 列出的来源产出 {@code drop_item_K}，
+	 * ④ 槽对齐（P4 原版复核）：原版 {@code drop_monster_K} 列出的来源产出 {@code drop_item_K}，
 	 * 该物品在交付列里的位置就是相机槽；对象列序**不是**槽序（4046/2487/2346/1154/41510 反例）。
 	 * The retail drop column decides the slot: the object column order is not the slot order.
 	 */
@@ -238,7 +238,7 @@ class SimpleCollectItemRowAlignmentGateTest {
 				if (sources == null || item == null) {
 					continue;
 				}
-				// 真端一致性：掉落物必须是交付列里的一项，槽 = 该项的位置。
+				// 原版一致性：掉落物必须是交付列里的一项，槽 = 该项的位置。
 				String symbol = symbol(item);
 				int dropColumn = column;
 				assertTrue(collectSymbols.containsValue(symbol),
@@ -257,7 +257,7 @@ class SimpleCollectItemRowAlignmentGateTest {
 				int dropSlot = slot;
 				for (String source : sources.split("\\s+")) {
 					List<Integer> ids = NativeNpcNameResolver.instance().resolveMonsterIds(source);
-					assertEquals(1, ids.size(), () -> "真端来源名必须唯一解析: " + source);
+					assertEquals(1, ids.size(), () -> "原版来源名必须唯一解析: " + source);
 					dropSources.put(dropSlot, source);
 					assertEquals(dropSlot, handler.collectSources(questId).get(ids.getFirst()),
 						() -> "来源 " + source + " 的相机槽必须等于掉落列物品在交付列里的位置: " + questId);
@@ -282,7 +282,7 @@ class SimpleCollectItemRowAlignmentGateTest {
 			}
 			assertFalse(objectIds.isEmpty(), () -> "有对象列的行必须解析出对象 id: " + questId);
 		}
-		// 真端冻结（限本族可路由行）：K 列与 objectK 同名的列 275 个、仅大小写差异 8 个、
+		// 原版冻结（限本族可路由行）：K 列与 objectK 同名的列 275 个、仅大小写差异 8 个、
 		// 一个掉落列列多个来源 3 个、掉落源是真怪（对象只是线索）3 个 —— 正因如此，槽不能按对象列序取。
 		// 39611/49611 两行（各贡献一个同名对齐列）自组表解析生效起已路由，计入 275。
 		// Frozen over the routed rows: the object column order is not the slot order (275 aligned, 8
@@ -353,7 +353,7 @@ class SimpleCollectItemRowAlignmentGateTest {
 	}
 
 	/**
-	 * ⑥ 链式接取窗（真端 0x1e 槽）：{@code con_quest} 的下一环必须在本行的交付 NPC 上可接取
+	 * ⑥ 链式接取窗（原版 0x1e 槽）：{@code con_quest} 的下一环必须在本行的交付 NPC 上可接取
 	 * （本车道接取路由按 NPC 建表，该等价物即窗口本身）；跨族目标按同一不变量独立复算。
 	 * <p>
 	 * The chain window (retail slot 0x1e): the next quest must acquire at this row's hand-in NPC;
@@ -408,8 +408,8 @@ class SimpleCollectItemRowAlignmentGateTest {
 	}
 
 	/**
-	 * ⑦ 过场装载（真端交付节点 0x35 槽）：{@code cutsceneid1}/{@code cs1_haction} 逐行进 native 消费面；
-	 * 未声明的行不得有过场面（真端 thunk 不内联 movie，本车道以表列为唯一事实）。
+	 * ⑦ 过场装载（原版交付节点 0x35 槽）：{@code cutsceneid1}/{@code cs1_haction} 逐行进 native 消费面；
+	 * 未声明的行不得有过场面（原版 thunk 不内联 movie，本车道以表列为唯一事实）。
 	 * <p>
 	 * The cutscene face (retail slot 0x35): declared rows map into the native consumption face and rows
 	 * without the column expose none.
@@ -497,7 +497,7 @@ class SimpleCollectItemRowAlignmentGateTest {
 		return tail.chars().allMatch(Character::isDigit) ? Integer.parseInt(tail) : 1;
 	}
 
-	/** 按真端列序取 {@code prefixN}（缺号视为 0）。 / Numbered columns in retail order. */
+	/** 按原版列序取 {@code prefixN}（缺号视为 0）。 / Numbered columns in retail order. */
 	private static List<String> numbered(Map<String, String> raw, String prefix) {
 		Map<Integer, String> ordered = new TreeMap<>();
 		for (Map.Entry<String, String> entry : raw.entrySet()) {

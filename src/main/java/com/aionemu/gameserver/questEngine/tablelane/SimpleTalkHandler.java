@@ -29,45 +29,45 @@ import com.aionemu.gameserver.services.DialogService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
- * 真端 SimpleTalk 原生任务处理器（计划 §7 P3 步骤 2；**本步未接线**，族门未开）。
+ * 原版 SimpleTalk 原生任务处理器（计划 §7 P3 步骤 2；**本步未接线**，族门未开）。
  * <p>
- * 完全由真端表 {@code Quest_SimpleTalk.xml}（{@link NativeQuestTableLoader.SimpleTalkRow}）驱动，
- * 不生成 IR 节点图、不经旧编译器。对话状态机按真端 DLL 的两段分派器还原：
+ * 完全由原版表 {@code Quest_SimpleTalk.xml}（{@link NativeQuestTableLoader.SimpleTalkRow}）驱动，
+ * 不生成 IR 节点图、不经旧编译器。对话状态机按原版 DLL 的两段分派器还原：
  * <ul>
- *   <li>接取侧（真端 {@code cab520} 语义）：接取 NPC 的 QUEST_SELECT → 接取入口页
- *       （真端表只有 NPC/物品列、没有页列，故取客户端任务页声明的可渲染页：
+ *   <li>接取侧（原版 {@code cab520} 语义）：接取 NPC 的 QUEST_SELECT → 接取入口页
+ *       （原版表只有 NPC/物品列、没有页列，故取客户端任务页声明的可渲染页：
  *       {@code select_none}(4762) → {@code select1}(1011) → 页 4 兜底，见
  *       {@link QuestDialogContract#retailEntryPage(int)}；{@code select1} 首屏的 1012/1013
- *       翻页动作按真端 cab520「原样回发」）；
+ *       翻页动作按原版 cab520「原样回发」）；
  *       1002 → {@code SetQuestAcquired} + 页 1003；20000 → {@code SetQuestAcquired} + 关窗
- *       （simple accept 无确认页，真端 0x4e20 → 0x5d8；两支均发放 {@code give_item}）；
- *       1003/1004 → 页 1004；20001 → 关窗（真端 0x4e21）；</li>
- *   <li>对话侧（真端 {@code cabb10} 语义）：中继 NPC 按 {@code talk_npc1..3} 步进，
+ *       （simple accept 无确认页，原版 0x4e20 → 0x5d8；两支均发放 {@code give_item}）；
+ *       1003/1004 → 页 1004；20001 → 关窗（原版 0x4e21）；</li>
+ *   <li>对话侧（原版 {@code cabb10} 语义）：中继 NPC 按 {@code talk_npc1..3} 步进，
  *       {@code 10000/10001/10002} → {@code SetQuestProgress(+0xf0)}(quest, 1/2/3)
  *       + {@code GiveItem}(give_itemK) + {@code RemoveItem}(remove_itemK)，
  *       步页 = SELECT2/SELECT3/SELECT4（1352/1693/2034）；乱序或重复的动作零推进；</li>
- *   <li>报告（真端 {@code cabb10} finalStep + {@code caad20} 完成门）：中继全满且交付门通过时，
+ *   <li>报告（原版 {@code cabb10} finalStep + {@code caad20} 完成门）：中继全满且交付门通过时，
  *       交付 NPC 的 1009 → 扣除工作物品 + REWARD + 奖励窗（页 5）；未满/未持有 → 进行中页 10；</li>
  *   <li>领奖：8..23 / 108 / 110+k → 结算并完成（页 1008）。</li>
  * </ul>
  * <p>
- * 交付门（{@code item_check=1}，1988 行）与工作物品按真端通道解析：{@code quest.xml} 的
+ * 交付门（{@code item_check=1}，1988 行）与工作物品按原版通道解析：{@code quest.xml} 的
  * {@code collect_item1..N} → {@code quest_work_item1..N} → 表内发放符号，解析失败即 fail-closed
  * （记入 {@link #unresolvedItemSymbols()}，报告门不放行）。物品id←符号名的解析复用
  * {@link RetailItemNameIndex}（两侧车道同一份物品名事实来源）。
  * <p>
- * 另外三条表声明面同样按真端还原：
+ * 另外三条表声明面同样按原版还原：
  * <ul>
- *   <li>{@code _faction_} 等接取哨兵（真端系统发放）：本类只提供发放判定与发放入口，
+ *   <li>{@code _faction_} 等接取哨兵（原版系统发放）：本类只提供发放判定与发放入口，
  *       由发放子系统（NPC 阵营日常轮换）调用，见 {@link #isSystemGranted(int)} /
  *       {@link #factionRotationCandidates(int)} / {@link #grantSystemStart(Player, int)}；</li>
- *   <li>{@code cutsceneid1}/{@code cs1_haction} 过场（真端槽 0x35 PlayMovie）：动作命中触发行时
+ *   <li>{@code cutsceneid1}/{@code cs1_haction} 过场（原版槽 0x35 PlayMovie）：动作命中触发行时
  *       经 {@link NativeMoviePort} 播放，见 {@link #cutscene(int)}；</li>
- *   <li>旧存档任务书行自愈（真端编译边登记 P0c-28）：{@code REWARD} 态进入世界时把异常行值修回
- *       真端投影行，见 {@link #onEnterWorld(Player)}。</li>
+ *   <li>旧存档任务书行自愈（原版编译边登记 P0c-28）：{@code REWARD} 态进入世界时把异常行值修回
+ *       原版投影行，见 {@link #onEnterWorld(Player)}。</li>
  * </ul>
  * <p>
- * 路由集 = 真端表行 **减去** XML-only 行（XML 定义仍在 = XML 车道 owns，native 不路由，
+ * 路由集 = 原版表行 **减去** XML-only 行（XML 定义仍在 = XML 车道 owns，native 不路由，
  * 见 {@link #routes(int)}）：表行与 XML 定义的交集不再是双主，而是「XML 保留」的显式结论。
  * <p>
  * Retail SimpleTalk native handler (plan §7 P3 step 2). Driven purely by the retail table; the
@@ -90,7 +90,7 @@ public final class SimpleTalkHandler implements NativeSystemGrantLane {
 	public record Cutscene(int movieId, int triggerAction) {
 	}
 
-	/** 接取问询页（真端 select1 之前的一步）。 / The accept ask page. */
+	/** 接取问询页（原版 select1 之前的一步）。 / The accept ask page. */
 	public static final int PAGE_ASK_ACCEPT = 4;
 	/** 进行中（未满足报告门）页。 / In-progress page. */
 	public static final int PAGE_IN_PROGRESS = 10;
@@ -100,7 +100,7 @@ public final class SimpleTalkHandler implements NativeSystemGrantLane {
 	public static final int PAGE_ACCEPTED = 1003;
 	/** 拒绝页。 / Refuse page. */
 	public static final int PAGE_REFUSED = 1004;
-	/** 中继步页（真端 SELECT2/SELECT3/SELECT4）。 / Relay step pages (retail SELECT2..4). */
+	/** 中继步页（原版 SELECT2/SELECT3/SELECT4）。 / Relay step pages (retail SELECT2..4). */
 	private static final int[] RELAY_STEP_PAGES = {1352, 1693, 2034};
 
 	private static volatile SimpleTalkHandler instance;
@@ -111,7 +111,7 @@ public final class SimpleTalkHandler implements NativeSystemGrantLane {
 	/** 完成/领奖口（计划 §6.2 NativeReportRewardFlow 完成半边）。 / The native completion/reward port. */
 	private final NativeReportRewardFlow rewardFlow;
 
-	/** 任务 ID → 真端 {@code con_quest}（链式接取窗的下一环；无声明则缺席）。 / Quest id → retail {@code con_quest}. */
+	/** 任务 ID → 原版 {@code con_quest}（链式接取窗的下一环；无声明则缺席）。 / Quest id → retail {@code con_quest}. */
 	private final Map<Integer, Integer> conQuestByQuestId;
 	/**
 	 * 链式接取窗未在本行交付 NPC 上闭环的行（fail-closed 证据面）。
@@ -119,7 +119,7 @@ public final class SimpleTalkHandler implements NativeSystemGrantLane {
 	 */
 	private final Set<Integer> unresolvedChainQuestIds;
 
-	/** 接取 NPC 成员集（真端名字节点语义：任一成员可接取）。 / Acquire NPC member set (any member may accept). */
+	/** 接取 NPC 成员集（原版名字节点语义：任一成员可接取）。 / Acquire NPC member set (any member may accept). */
 	private final Map<Integer, List<Integer>> acquireNpcIdsByQuestId;
 
 	/** NPC → 其承接的 SimpleTalk 接取行（无任务上下文的物件/NPC 打开时按 NPC 反查）。 / Npc id → its acquire rows (context-less open replay). */
@@ -130,7 +130,7 @@ public final class SimpleTalkHandler implements NativeSystemGrantLane {
 	private final Map<Integer, List<RelayStep>> relaysByNpcId;
 	/** 任务 ID → 中继步数（0 = 直交形）。 / Quest id → relay step count (0 = direct hand-in). */
 	private final Map<Integer, Integer> relayCountByQuestId;
-	/** 任务 ID → 接取侧发放（真端 give_item）。 / Quest id → accept-side grant (retail give_item). */
+	/** 任务 ID → 接取侧发放（原版 give_item）。 / Quest id → accept-side grant (retail give_item). */
 	private final Map<Integer, ItemStack> acceptGiveByQuestId;
 	/** 任务 ID → 第 K 中继步的发放（下标 0..2，null = 无）。 / Quest id → step grants (index 0..2, null = none). */
 	private final Map<Integer, List<ItemStack>> stepGiveByQuestId;
@@ -142,7 +142,7 @@ public final class SimpleTalkHandler implements NativeSystemGrantLane {
 	private final Set<Integer> unresolvedGateQuestIds;
 	/** 任务 ID → 接取名类别（{@code _faction_} 等哨兵 = 系统发放）。 / Quest id → acquire-name category. */
 	private final Map<Integer, RetailGrantKind> grantKindByQuestId;
-	/** 任务 ID → 真端势力 id（{@code quest.xml npcfaction_name}；无则 0）。 / Quest id → retail faction id. */
+	/** 任务 ID → 原版势力 id（{@code quest.xml npcfaction_name}；无则 0）。 / Quest id → retail faction id. */
 	private final Map<Integer, Integer> factionByQuestId;
 	/** 任务 ID → 过场引用（表 {@code cutsceneid1}/{@code cs1_haction}）。 / Quest id → cutscene reference. */
 	private final Map<Integer, Cutscene> cutsceneByQuestId;
@@ -158,7 +158,7 @@ public final class SimpleTalkHandler implements NativeSystemGrantLane {
 	/** 未解析的物品符号（证据面；非空即报告门 fail-closed）。 / Unresolved item symbols (evidence surface). */
 	private final Set<String> unresolvedItemSymbols;
 	/**
-	 * NPC id → 该 NPC 的真端击杀掉落（{@code quest.xml} {@code drop_*} 列）。P3 迁移只接手了对话面；
+	 * NPC id → 该 NPC 的原版击杀掉落（{@code quest.xml} {@code drop_*} 列）。P3 迁移只接手了对话面；
 	 * 退役 XML 从 catalog 退场后本族 1031 行的击杀掉落断供（2026-10-04 真机 1105：击杀 210079
 	 * 无任务道具），native 必须接手（概率/上限语义由 {@code QuestService.isQuestDrop} 承担）。
 	 * Retail kill drops of this family by npc (the {@code quest.xml} drop columns), served natively
@@ -268,7 +268,7 @@ public final class SimpleTalkHandler implements NativeSystemGrantLane {
 				unresolvedItems.addAll(gateUnresolved);
 				boolean gateSymbolsFailed = !gateUnresolved.isEmpty();
 				if (gate.isEmpty()) {
-					// 回退：真端该行的发放符号（老链路的 workItemRequirement 同法）。
+					// 回退：原版该行的发放符号（老链路的 workItemRequirement 同法）。
 					ItemStack fallback = acceptGive != null ? acceptGive : lastNonNull(stepGive);
 					if (fallback != null) {
 						gate = List.of(fallback);
@@ -283,7 +283,7 @@ public final class SimpleTalkHandler implements NativeSystemGrantLane {
 				}
 			}
 
-			// 真端掉落列（{@code drop_monster_K → drop_item_K}，含 prob/each-member）：P3 迁移只接手了
+			// 原版掉落列（{@code drop_monster_K → drop_item_K}，含 prob/each-member）：P3 迁移只接手了
 			// 对话面，退役 XML 连同其 {@code <drops>} 退出 catalog 后本族击杀掉落断供——native 从
 			// quest.xml 列接手注册（无条件注册；发放面判定 {@code QuestService.isQuestDrop} 判 START
 			// 状态 + collect_item/work-item 上限）。XML 保留行仍由 XML 车道供源（单一 owner，跳过）。
@@ -303,7 +303,7 @@ public final class SimpleTalkHandler implements NativeSystemGrantLane {
 			}
 		}
 
-		// 真端 0x1e 槽（交付 NPC 节点）：接续下一任务 {@code con_quest} 的接取窗。本车道的接取路由按
+		// 原版 0x1e 槽（交付 NPC 节点）：接续下一任务 {@code con_quest} 的接取窗。本车道的接取路由按
 		// NPC 建表，故该窗的等价物 = 「下一环的接取 NPC 恰是本行的交付 NPC」。逐行验证并把不闭环的
 		// 行登记为 fail-closed 证据（不新增第二套路由：下一环的接取路由永远由它自己那一行提供）。
 		// Retail slot 0x1e (on the reward-NPC node) opens the next quest's accept window. This lane keys
@@ -351,7 +351,7 @@ public final class SimpleTalkHandler implements NativeSystemGrantLane {
 	}
 
 	/**
-	 * 该 NPC 的真端击杀掉落（{@code QuestService.getQuestDrop} 的消费面；经 {@link QuestEngine#questDrops}
+	 * 该 NPC 的原版击杀掉落（{@code QuestService.getQuestDrop} 的消费面；经 {@link QuestEngine#questDrops}
 	 * 聚合）。 / Retail kill drops for the npc, consumed through the quest-drop aggregation.
 	 * @param npcId NPC 模板 id / the npc template id
 	 * @return 掉落条目（无则空表） / the drop entries (empty when none)
@@ -360,7 +360,7 @@ public final class SimpleTalkHandler implements NativeSystemGrantLane {
 		return dropsByNpcId.getOrDefault(npcId, List.of());
 	}
 
-	/** 真端 quest.xml 元数据（native 掉落/完成/领奖的公共事实源；不可编译按未解处理，fail-closed）。 /
+	/** 原版 quest.xml 元数据（native 掉落/完成/领奖的公共事实源；不可编译按未解处理，fail-closed）。 /
 	 * The retail quest.xml metadata (shared fact source; uncompilable rows fail closed). */
 	private static RetailQuestMetadataCompiler.Outcome metadataOf(int questId) {
 		try {
@@ -379,7 +379,7 @@ public final class SimpleTalkHandler implements NativeSystemGrantLane {
 	}
 
 	/**
-	 * item_check 交付门的工作物品：真端 quest.xml {@code collect_item1..N}（收集交付物）
+	 * item_check 交付门的工作物品：原版 quest.xml {@code collect_item1..N}（收集交付物）
 	 * → {@code quest_work_item1..N}（工作物品通道，取首项，与老链路同法）。
 	 * <p>
 	 * The work items of the item_check hand-in gate: retail quest.xml collect_item1..N first,
@@ -422,7 +422,7 @@ public final class SimpleTalkHandler implements NativeSystemGrantLane {
 	}
 
 	/**
-	 * 解析真端物品符号（形如 {@code ITEM_QUEST_1131A 1}）。
+	 * 解析原版物品符号（形如 {@code ITEM_QUEST_1131A 1}）。
 	 * Parses a retail item symbol ({@code NAME COUNT}); count defaults to 1.
 	 */
 	private static ItemStack parseSymbol(String symbol, int questId,
@@ -438,11 +438,11 @@ public final class SimpleTalkHandler implements NativeSystemGrantLane {
 			throw new IllegalStateException(
 					"NATIVE_TABLE_PARSE_FAILED: quest " + questId + " has a non-numeric item count in " + symbol);
 		}
-		// 两个通道各有一套统一约定（真端表事实，2026-10-01 全量复算）：SimpleTalk 表 give/remove 列
+		// 两个通道各有一套统一约定（原版表事实，2026-10-01 全量复算）：SimpleTalk 表 give/remove 列
 		// 663 个符号全为 {@code ITEM_X} 形式；quest.xml collect_item_/quest_work_item 列 3394 个符号
 		// 全为原名形式，其中含 {@code item_*} 真名（如 item_idunderrune_quest_01）。故先按原名查，
 		// 未命中再按 {@code ITEM_} 前缀别名重查；3145 个去重符号两步规则 0 冲突 0 未解。
-		// （真端运行期不做名字解析：thunk 内是离线 codegen 解析好的数值 id。）
+		// （原版运行期不做名字解析：thunk 内是离线 codegen 解析好的数值 id。）
 		String stem = parts[0].toLowerCase(java.util.Locale.ROOT);
 		Integer itemId = itemIndex.resolve(stem);
 		if (itemId == null && stem.startsWith("item_")) {
@@ -490,7 +490,7 @@ public final class SimpleTalkHandler implements NativeSystemGrantLane {
 	}
 
 	/**
-	 * 启动期把本族全部 NPC 标记注册进任务引擎（真端 codegen 的静态注册表等价物）。
+	 * 启动期把本族全部 NPC 标记注册进任务引擎（原版 codegen 的静态注册表等价物）。
 	 * Registers the family's NPC marks into the engine at startup (the retail codegen registry equivalent).
 	 */
 	public void installInterest(QuestEngine engine) {
@@ -545,7 +545,7 @@ public final class SimpleTalkHandler implements NativeSystemGrantLane {
 		return routedQuestIds;
 	}
 
-	/** 接取名类别（真端哨兵 = 系统发放）。 / Acquire-name category (a retail sentinel means system-granted). */
+	/** 接取名类别（原版哨兵 = 系统发放）。 / Acquire-name category (a retail sentinel means system-granted). */
 	public RetailGrantKind grantKind(int questId) {
 		return grantKindByQuestId.getOrDefault(questId, RetailGrantKind.NPC);
 	}
@@ -564,13 +564,13 @@ public final class SimpleTalkHandler implements NativeSystemGrantLane {
 		return routes(questId) && kind != RetailGrantKind.NPC && kind.grantable();
 	}
 
-	/** 真端势力 id（quest.xml {@code npcfaction_name}；无则 0）。 / The retail faction id, or 0. */
+	/** 原版势力 id（quest.xml {@code npcfaction_name}；无则 0）。 / The retail faction id, or 0. */
 	public int factionId(int questId) {
 		return factionByQuestId.getOrDefault(questId, 0);
 	}
 
 	/**
-	 * 指定势力的当前可轮换任务 id（真端 {@code _faction_} 行 ∩ 路由集）。
+	 * 指定势力的当前可轮换任务 id（原版 {@code _faction_} 行 ∩ 路由集）。
 	 * Faction-rotation candidates of one faction: routed rows whose acquire name is {@code _faction_}.
 	 */
 	public Set<Integer> factionRotationCandidates(int factionId) {
@@ -596,9 +596,9 @@ public final class SimpleTalkHandler implements NativeSystemGrantLane {
 	}
 
 	/**
-	 * 真端 {@code con_quest}（链式接取窗的下一环）；未声明返回 null。
+	 * 原版 {@code con_quest}（链式接取窗的下一环）；未声明返回 null。
 	 * <p>
-	 * 真端该列由交付 NPC 节点上的 0x1e 槽消费（{@code mgr+0x1a8(player, con_quest)} = 下一环的接取窗）。
+	 * 原版该列由交付 NPC 节点上的 0x1e 槽消费（{@code mgr+0x1a8(player, con_quest)} = 下一环的接取窗）。
 	 * 本车道按 NPC 建接取路由，故只要下一环的接取 NPC 等于本行的交付 NPC，该窗即已由下一环自身那一行
 	 * 实现；{@link #unresolvedChainQuestIds()} 为空即全表闭环。
 	 * <p>
@@ -637,7 +637,7 @@ public final class SimpleTalkHandler implements NativeSystemGrantLane {
 	}
 
 	/**
-	 * 阵营日常轮换的 native 资格判定（真端 {@code quest.xml} 轴：势力/等级/种族/职业/性别/可重复）。
+	 * 阵营日常轮换的 native 资格判定（原版 {@code quest.xml} 轴：势力/等级/种族/职业/性别/可重复）。
 	 * <p>
 	 * typed 元数据在本族切走后不复存在，因此上层的 {@code PlayerQuestStartEligibilityPort} 会以
 	 * {@code QUEST_METADATA_MISSING} 拒绝；本方法是同一判据在 native 车道的直读实现（不构造 IR 元数据）。
@@ -653,10 +653,10 @@ public final class SimpleTalkHandler implements NativeSystemGrantLane {
 	}
 
 	/**
-	 * 进世界自愈（真端 P0c-28 旧存档修复边的 native 等价物）：
+	 * 进世界自愈（原版 P0c-28 旧存档修复边的 native 等价物）：
 	 * <ul>
-	 *   <li>链形行（中继 ≥1）在 {@code REWARD} 态且 vars=0（XML 时代存档）→ vars = 中继步数（真端投影行）；</li>
-	 *   <li>单步行在 {@code REWARD} 态且 vars=1（1 基行号残留）→ vars = 0（真端投影在行 0）。</li>
+	 *   <li>链形行（中继 ≥1）在 {@code REWARD} 态且 vars=0（XML 时代存档）→ vars = 中继步数（原版投影行）；</li>
+	 *   <li>单步行在 {@code REWARD} 态且 vars=1（1 基行号残留）→ vars = 0（原版投影在行 0）。</li>
 	 * </ul>
 	 * Enter-world save heal for the native lane (the retail-table equivalent of the P0c-28 heal edges).
 	 *
@@ -747,7 +747,7 @@ public final class SimpleTalkHandler implements NativeSystemGrantLane {
 		return relaysByNpcId.getOrDefault(npcId, List.of());
 	}
 
-	/** 接取侧发放（真端 give_item）。 / Accept-side grant (retail give_item). */
+	/** 接取侧发放（原版 give_item）。 / Accept-side grant (retail give_item). */
 	public ItemStack acceptGiveItem(int questId) {
 		return acceptGiveByQuestId.get(questId);
 	}
@@ -774,12 +774,12 @@ public final class SimpleTalkHandler implements NativeSystemGrantLane {
 		return workItemsByQuestId.getOrDefault(questId, List.of());
 	}
 
-	/** 真端行（缺行 fail-closed）。 / The retail row (missing rows fail closed). */
+	/** 原版行（缺行 fail-closed）。 / The retail row (missing rows fail closed). */
 	public NativeQuestTableLoader.SimpleTalkRow requireRow(int questId) {
 		return tableLoader.requireTalk(questId);
 	}
 
-	/** 中继步对应的页 id（真端 SELECT2..4）。 / The page id of a relay step (retail SELECT2..4). */
+	/** 中继步对应的页 id（原版 SELECT2..4）。 / The page id of a relay step (retail SELECT2..4). */
 	public static int pageForStep(int step) {
 		if (step < 1 || step > RELAY_STEP_PAGES.length) {
 			throw new IllegalArgumentException("relay step out of range: " + step);
@@ -806,7 +806,7 @@ public final class SimpleTalkHandler implements NativeSystemGrantLane {
 	}
 
 	/**
-	 * 真端过场（槽 0x35 PlayMovie）：动作命中 {@code cs1_haction} 时按 CUTSCENE 类型下发，
+	 * 原版过场（槽 0x35 PlayMovie）：动作命中 {@code cs1_haction} 时按 CUTSCENE 类型下发，
 	 * 是状态机之外的副作用（不推进节点）。 / Retail cutscene: sent as a side effect when the
 	 * client action matches cs1_haction; it never advances the node.
 	 */
@@ -831,7 +831,7 @@ public final class SimpleTalkHandler implements NativeSystemGrantLane {
 		int targetObjectId = npc != null ? npc.getObjectId() : 0;
 		int dialogId = env.getDialogId();
 
-		// 无目标领奖（真端 QuestDialog 无主键协议；任务窗/实时奖励槽的确认包不带 NPC 上下文）：
+		// 无目标领奖（原版 QuestDialog 无主键协议；任务窗/实时奖励槽的确认包不带 NPC 上下文）：
 		// 按 questId 结算 + 关窗收尾。owner 门由上面的 routes(questId) 保证。
 		// Targetless reward claim (the ownerless retail QuestDialog protocol used by the quest journal).
 		if (npcId == 0 && NativeTargetlessReward.claim(player, questId, dialogId, rewardFlow)) {
@@ -841,8 +841,8 @@ public final class SimpleTalkHandler implements NativeSystemGrantLane {
 		QuestState qs = player.getQuestStateList().getQuestState(questId);
 		QuestStatus status = qs != null ? qs.getStatus() : QuestStatus.NONE;
 
-		// 1. 接取（真端 cab520）：接取 NPC 的问询 → 确认（20000 同时发放 give_item）/ 拒绝。
-		// 可重复行在 COMPLETE 态同样开放接取窗（真端 finishedcount < max_repeat_count 时再次可接）。
+		// 1. 接取（原版 cab520）：接取 NPC 的问询 → 确认（20000 同时发放 give_item）/ 拒绝。
+		// 可重复行在 COMPLETE 态同样开放接取窗（原版 finishedcount < max_repeat_count 时再次可接）。
 		boolean fresh = qs == null || status == QuestStatus.NONE;
 		if (fresh || (status == QuestStatus.COMPLETE && repeatable(questId))) {
 			List<Integer> acquireNpcs = acquireNpcIdsByQuestId.get(questId);
@@ -850,28 +850,28 @@ public final class SimpleTalkHandler implements NativeSystemGrantLane {
 				return false;
 			}
 			// 入口动作：任务行/对话打开（31/26）与物件/NPC 的无上下文打开（-1 = USE_OBJECT）。
-			// 真端物件接取走 USE_OBJECT 自环后进同一入口页（QE-070/QE-093：物件的入口页属客户端合同）；
+			// 原版物件接取走 USE_OBJECT 自环后进同一入口页（QE-070/QE-093：物件的入口页属客户端合同）；
 			// 页必须携带 questId——2026-10-07 实机 18645/730777 教训：无任务上下文时客户端拿
 			// 两参兜底页渲染不出接取对话（物件可点但"没有任务"）。
 			// Entry actions: the quest-row open (31/26) and the context-less object/npc open (-1,
 			// USE_OBJECT). The retail object accept self-loop enters the same entry page, and the page
 			// must carry the quest id (live 2026-10-07, quest 18645 / object 730777).
 			if (dialogId == 31 || dialogId == 26 || dialogId == QuestDialogAction.USE_OBJECT.id()) {
-				// 真端清单与接取面同用 CanAcquireQuest（P7-REPORT §「同一判定函数」）：资格不满足
+				// 原版清单与接取面同用 CanAcquireQuest（P7-REPORT §「同一判定函数」）：资格不满足
 				// （等级/前置/种族/职业/限制位）不进接取面，避免「能点进接取页、点接受却被静默拒」。
 				// The retail list and acquire face share CanAcquireQuest: an ineligible player never
 				// enters the acquire face instead of entering it and being silently refused.
 				if (!NativeQuestStartPort.instance().evaluateNpcAcquire(player, questId).started()) {
 					return false;
 				}
-				// 接取入口页 = 真端信页/阶段页（页 4 只能由 1007 打开，见 QuestDialogContract#retailEntryPage）。
+				// 接取入口页 = 原版信页/阶段页（页 4 只能由 1007 打开，见 QuestDialogContract#retailEntryPage）。
 				// The accept entry page is the retail letter/stage page (page 4 is 1007-only).
 				PacketSendUtility.sendPacket(player,
 						new SM_DIALOG_WINDOW(targetObjectId, dialogContract.retailEntryPage(questId), questId));
 				return true;
 			}
 			if (dialogId == QuestDialogAction.ASK_QUEST_ACCEPT.id()) {
-				// 真端页动作 1007（ASK_QUEST_ACCEPT → mgr+0x1a0）：打开接取窗页 4；客户端未声明即 fail-closed。
+				// 原版页动作 1007（ASK_QUEST_ACCEPT → mgr+0x1a0）：打开接取窗页 4；客户端未声明即 fail-closed。
 				// Retail page action 1007 (mgr+0x1a0) opens ask window page 4; undeclared pages fail closed.
 				int askWindow = dialogContract.askWindowPage(questId);
 				if (askWindow < 0) {
@@ -880,7 +880,7 @@ public final class SimpleTalkHandler implements NativeSystemGrantLane {
 				PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, askWindow, questId));
 				return true;
 			}
-			// select1 续页翻页（真端 cab520 对 1012/1013 原样回发）；客户端未声明该页即 fail-closed。
+			// select1 续页翻页（原版 cab520 对 1012/1013 原样回发）；客户端未声明该页即 fail-closed。
 			// select1 page turns (cab520 echoes 1012/1013); undeclared pages fail closed.
 			if (dialogId == QuestDialogPage.SELECT1_1.id() || dialogId == QuestDialogPage.SELECT1_1_1.id()) {
 				if (!dialogContract.hasButtonPage(questId, dialogId)) {
@@ -890,20 +890,20 @@ public final class SimpleTalkHandler implements NativeSystemGrantLane {
 				return true;
 			}
 			if (dialogId == 1002 || dialogId == 20000) {
-				// 真端接取：条件判定 + 建档/复位走 native 状态端口（不依赖 typed QuestTemplate；
+				// 原版接取：条件判定 + 建档/复位走 native 状态端口（不依赖 typed QuestTemplate；
 				// 拒绝走 startTraced 打 QUEST-TRACE，不再静默）。
 				// Retail acquire via the native state port; refusals are traced instead of silent.
 				if (NativeQuestStartPort.instance().startTraced(player, questId, dialogId).started()) {
-					// 真端 cab520：0x3ea（1002）与 0x4e20（20000）两支均发物（param_5<1 = 无 give 行）。
+					// 原版 cab520：0x3ea（1002）与 0x4e20（20000）两支均发物（param_5<1 = 无 give 行）。
 					// Retail cab520 grants the row's give item on the 1002 and 20000 accepts alike.
 					give(player, acceptGiveByQuestId.get(questId));
 					if (dialogId == 1002) {
-						// 真端 cab520 0x3ea：check → 页 0x3eb（1003 接取确认页；客户端契约声明该页）。
+						// 原版 cab520 0x3ea：check → 页 0x3eb（1003 接取确认页；客户端契约声明该页）。
 						// Retail cab520 0x3ea: check → page 1003 (the client-declared accept-confirm page).
 						PacketSendUtility.sendPacket(player,
 								new SM_DIALOG_WINDOW(targetObjectId, PAGE_ACCEPTED, questId));
 					} else {
-						// 真端 cab520 0x4e20：check → 0x5d8 关窗（simple accept 无确认页；回任何页都会
+						// 原版 cab520 0x4e20：check → 0x5d8 关窗（simple accept 无确认页；回任何页都会
 						// 让未声明该页的任务客户端 load fail——实机 2026-10-05 quest 14110）。
 						// Retail cab520 0x4e20: check → 0x5d8 close (simple accepts have no confirm
 						// page; any page load-fails quests that never declared it, live 14110).
@@ -918,7 +918,7 @@ public final class SimpleTalkHandler implements NativeSystemGrantLane {
 				return true;
 			}
 			if (dialogId == 20001) {
-				// 真端 cab520 0x4e21：0x2a8（取消）+ 0x5d8 关窗（拒绝收尾 = 关窗，与 0x4e20 同族）。
+				// 原版 cab520 0x4e21：0x2a8（取消）+ 0x5d8 关窗（拒绝收尾 = 关窗，与 0x4e20 同族）。
 				// Retail cab520 0x4e21: cancel + 0x5d8 close (the refuse tail, same family as 0x4e20).
 				DialogService.closeDialog(npc, player);
 				return true;
@@ -928,7 +928,7 @@ public final class SimpleTalkHandler implements NativeSystemGrantLane {
 
 		if (status == QuestStatus.START) {
 			int vars = qs.getQuestVars().getQuestVars();
-			// 选择对话续页（SELECT⟨n⟩_… 子页动作 = 页 id）：真端原样回发该页（9/28 基线跨任务
+			// 选择对话续页（SELECT⟨n⟩_… 子页动作 = 页 id）：原版原样回发该页（9/28 基线跨任务
 			// 实证 1353/1354/1694/1695/2035/2376）；契约未声明该页即 fail-closed 零响应。
 			// Selection sub-page actions echo their page back (the 9/28 baseline); a page the client
 			// task HTML never declares fails closed.
@@ -938,7 +938,7 @@ public final class SimpleTalkHandler implements NativeSystemGrantLane {
 						new SM_DIALOG_WINDOW(targetObjectId, dialogId, questId));
 				return true;
 			}
-			// 2. 中继步（真端 cabb10）：只推进「当前步」，乱序/重复零副作用；步进即发放/扣除该步物品。
+			// 2. 中继步（原版 cabb10）：只推进「当前步」，乱序/重复零副作用；步进即发放/扣除该步物品。
 			for (RelayStep relay : relaysForNpc(npcId)) {
 				if (relay.questId() != questId) {
 					continue;
@@ -953,7 +953,7 @@ public final class SimpleTalkHandler implements NativeSystemGrantLane {
 								new SM_QUEST_ACTION(questId, QuestStatus.START, step));
 						give(player, stepGiveItem(questId, step));
 						remove(player, stepRemoveItem(questId, step));
-						// 推进 after-commit = 关窗（真端 FUN_180cabb10：10000/10001/10002 →
+						// 推进 after-commit = 关窗（原版 FUN_180cabb10：10000/10001/10002 →
 						// SetQuestProgress + 0x5d8 + GiveItem + RemoveItem，**零发页**；0x5d8＝关窗，
 						// 2026-10-05 实机「仅状态包不关窗、补关窗包一次点击即关」确证）。旧「回页 10」
 						// 系翻译夸大：2026-10-05 1131 实机「结束对话后多余弹页」即此（退役 XML 同断）。
@@ -962,7 +962,7 @@ public final class SimpleTalkHandler implements NativeSystemGrantLane {
 						DialogService.closeDialog(npc, player);
 						return true;
 					}
-					// 未推进（重复/乱序重放）：真端无匹配转换 ⇒ close-dialog 兜底（本服 loop breaker 同语义）。
+					// 未推进（重复/乱序重放）：原版无匹配转换 ⇒ close-dialog 兜底（本服 loop breaker 同语义）。
 					// No matching retail transition on a replayed advance: close the dialog.
 					DialogService.closeDialog(npc, player);
 					return true;
@@ -981,7 +981,7 @@ public final class SimpleTalkHandler implements NativeSystemGrantLane {
 					// 已完成的步不再回放（2026-10-08 实机 13700/13800 死循环）：中继分支无条件回放
 					// 步页并 return true，把下面的报告分支永久遮蔽——末位中继与交付同名节点时
 					// （13700 talk_npc1=reward=Elger 802350；13800 talk_npc2=reward=Alphion 802431），
-					// 31 恒回步页 → 10000/10001 重放只关窗，任务永远到不了报告页。真端节点步进后
+					// 31 恒回步页 → 10000/10001 重放只关窗，任务永远到不了报告页。原版节点步进后
 					// 即越过该步：退役 XML 投影同证（13700: NPC_REPORT page=SELECT5@802350；
 					// 13800: REWARD 态 QUEST_SELECT → SELECT5@802431），与 reportConfirmPage 的
 					// 缺陷 S 跳占用页规则一致。步已完成 ⇒ continue 落穿：后续步 / 报告分支 / 默认处理。
@@ -998,11 +998,11 @@ public final class SimpleTalkHandler implements NativeSystemGrantLane {
 					return true;
 				}
 			}
-			// 3. 报告（真端 cabb10 finalStep + caad20 完成门）：中继全满且交付门通过才开奖励窗。
+			// 3. 报告（原版 cabb10 finalStep + caad20 完成门）：中继全满且交付门通过才开奖励窗。
 			// 两步语义（裁定 a，2026-10-03；检查按钮族 2026-10-04/10-06）：任务行（31）只发客户端声明的报告
 			// 确认页（NPC_REPORT 分型 SELECT2=1352/SELECT5=2375/DEFAULT_SUCCESS=10002，契约与退役
 			// XML 交叉印证）；报告确认才推进 REWARD + 奖励窗——直翻型 = 1009（10002 型由客户端自动回发），
-			// 检查型 = 报告页的交付检查按钮（真端 cabb10 `0x4e22`/39 同族），未持满时下发客户端声明的
+			// 检查型 = 报告页的交付检查按钮（原版 cabb10 `0x4e22`/39 同族），未持满时下发客户端声明的
 			// 失败页（select6=2716，如 1105「您别跟我开玩笑」）。检查按钮族只在 39 上匹配会让
 			// `HACTION_CHECK_USER_HAS_QUEST_ITEM_SIMPLE`(20002) 页的按钮静默落空（2026-10-06 实机
 			// 14110：玩家持 5/5 `quest_14110a` 点「拿出革命家的象征」→ 关窗零推进；该族 Talk 604 行）。
@@ -1075,10 +1075,10 @@ public final class SimpleTalkHandler implements NativeSystemGrantLane {
 				if ((dialogId >= 8 && dialogId <= 22) || dialogId == QuestDialogAction.SELECTED_QUEST_NOREWARD.id()
 						|| dialogId == 108 || (dialogId >= 110 && dialogId <= 124)) {
 					int rewardIndex = (dialogId >= 8 && dialogId <= 22) ? (dialogId - 8) : 0;
-					// 结算走 native 完成口（真端 quest.xml 奖励列 + 共用结算体），不再依赖 typed 模板。
+					// 结算走 native 完成口（原版 quest.xml 奖励列 + 共用结算体），不再依赖 typed 模板。
 					// Settlement goes through the native completion port; no typed template required.
 					if (rewardFlow.claim(env, rewardIndex).completed()) {
-						// 领奖收尾 = 真端 npc-complete finish=SELECTION_DIALOG（4801/4805）：回选择对话页
+						// 领奖收尾 = 原版 npc-complete finish=SELECTION_DIALOG（4801/4805）：回选择对话页
 						// （页 10，questId=0；9/28 旧引擎基线「状态=5 → 页=10」）。
 						// The claim tail follows the retail npc-complete finish=SELECTION_DIALOG: back to
 						// the selection dialog (page 10, questId=0; the legacy 9/28 log baseline).
@@ -1091,7 +1091,7 @@ public final class SimpleTalkHandler implements NativeSystemGrantLane {
 			return false;
 		}
 
-		// 表声明的过场触发动作（真端把 movie 挂在页动作上，如 SELECT2_1/SELECT3_1/QUEST_REFUSE_4）：
+		// 表声明的过场触发动作（原版把 movie 挂在页动作上，如 SELECT2_1/SELECT3_1/QUEST_REFUSE_4）：
 		// 不推进状态，但必须被服务（否则客户端停在页上），movie 由 onDialog 包装层下发。
 		Cutscene cutscene = cutsceneByQuestId.get(questId);
 		if (cutscene != null && cutscene.triggerAction() == dialogId) {
@@ -1120,7 +1120,7 @@ public final class SimpleTalkHandler implements NativeSystemGrantLane {
 		}
 	}
 
-	/** 真端 {@code max_repeat_count} > 1 ⇒ 可重复（COMPLETE 态可再次开窗）。 / Repeatable per retail max_repeat_count. */
+	/** 原版 {@code max_repeat_count} > 1 ⇒ 可重复（COMPLETE 态可再次开窗）。 / Repeatable per retail max_repeat_count. */
 	private boolean repeatable(int questId) {
 		NativeQuestXmlTable.QuestRow row = NativeQuestXmlTable.instance().find(questId).orElse(null);
 		Integer maxRepeat = row == null ? null : row.integer("max_repeat_count");

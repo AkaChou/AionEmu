@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * 14112 的任务刷怪边：交付 NPC {@code Soul_Kato}(203195) 在本服 {@code spawns/**} 里没有任何静态 spot，
- * 只由本任务在接取/登入时刷到玩家身边；真端家族表没有刷怪列，因此该行按
+ * 只由本任务在接取/登入时刷到玩家身边；原版家族表没有刷怪列，因此该行按
  * {@code SEMANTIC_GAP:QUEST_SPAWN_UNEXPRESSED} 保留 XML（P0c-6 裁定），本文件即该裁定的证据锁。
  * Quest 14112 keeps its XML (P0c-6, SEMANTIC_GAP:QUEST_SPAWN_UNEXPRESSED): the hand-in NPC exists in
  * the world only through this quest's own spawn edges, which no retail table column can express.

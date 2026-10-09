@@ -2,7 +2,7 @@
 # 生成：python3 -B .agents/summary/scriptdll-quest-driver/p0c6_build_client_briefing_chains.py
 # entry_page = 入口页（服务端 QUEST_SELECT 展示的 select2 页）；hops 为空格分隔的
 # action_id:page_id（客户端按钮链）；page_id=0 表示终结点（清简报标志位并关窗）。
-# 消费方：真端 SimpleHunt 的 talk_npc1 简报接线（其余家族的 select2 链由各自合成器处理）。
+# 消费方：原版 SimpleHunt 的 talk_npc1 简报接线（其余家族的 select2 链由各自合成器处理）。
 1000	1352	1353:1353 10000:0
 1001	1352	1353:1353 10001:0
 1002	1352	1353:1353 1354:1354 10001:0

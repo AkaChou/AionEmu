@@ -18,7 +18,7 @@ import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 
 /**
- * native 接取建档口（计划 §6.2 NativeQuestStatePort）：真端 quest.xml 轴判定 + 建档/复位，
+ * native 接取建档口（计划 §6.2 NativeQuestStatePort）：原版 quest.xml 轴判定 + 建档/复位，
  * 不依赖 typed {@code QuestTemplate}（{@code QuestService.startQuest} 对已切换行必然缺模板）。
  * <p>
  * Native start port gate: retail-axis adjudication and state creation without the typed template.
@@ -34,7 +34,7 @@ class NativeQuestStartPortTest {
 	private static final int GATE_QUEST = 1131;
 	/** {@code bm_restrict_category=1}（账号限制位 20 = {@code quest_acquire1}）。 */
 	private static final int BM_RESTRICTED = 1329;
-	/** {@code minlevel_permitted=999}：真端不可接取行。 */
+	/** {@code minlevel_permitted=999}：原版不可接取行。 */
 	private static final int UNREACHABLE = 2732;
 
 	@Test
@@ -54,14 +54,14 @@ class NativeQuestStartPortTest {
 		NativeQuestStartPort.StartResult result = port().start(player, UNREACHABLE);
 
 		assertEquals(NativeQuestStartPort.Outcome.LEVEL_BLOCKED, result.outcome(),
-				"minlevel=999 是真端不可达值，不是无限制");
+				"minlevel=999 是原版不可达值，不是无限制");
 		assertNull(player.getQuestStateList().getQuestState(UNREACHABLE), "被拒时不得建档");
 	}
 
 	@Test
 	void bmRestrictedRowsFollowTheAccountRestrictionBit() {
 		Player player = player(40);
-		// 真端判定 = 玩家限制位图第 (类别 + 19) 位：类别 1 ⇒ quest_acquire1(20)。
+		// 原版判定 = 玩家限制位图第 (类别 + 19) 位：类别 1 ⇒ quest_acquire1(20)。
 		// The retail check is bit (category + 19) of the player's restriction bitmap: 1 ⇒ quest_acquire1.
 		int[] requestedBit = {-1};
 		NativeQuestStartPort restricted = new NativeQuestStartPort(NativeQuestXmlTable.instance(),
@@ -75,7 +75,7 @@ class NativeQuestStartPortTest {
 			"类别 1 必须查 quest_acquire1 位");
 		assertNull(player.getQuestStateList().getQuestState(BM_RESTRICTED), "拒接不得建档");
 
-		// 本服无计费来源 ⇒ 生产位集为空（真端全订阅账号同形）⇒ 该行按真端可接取。
+		// 本服无计费来源 ⇒ 生产位集为空（原版全订阅账号同形）⇒ 该行按原版可接取。
 		// No billing source here ⇒ the production bitmap is empty ⇒ the row is acquirable.
 		assertTrue(port().start(player, BM_RESTRICTED).started(), "限制位未命中 ⇒ 可接取");
 		assertEquals(QuestStatus.START, player.getQuestStateList().getQuestState(BM_RESTRICTED).getStatus());
@@ -129,16 +129,16 @@ class NativeQuestStartPortTest {
 		assertEquals(NativeQuestStartPort.Outcome.ALREADY_RUNNING, port().start(player, PLAIN).outcome());
 	}
 
-	/** 真端 class_permitted 词表限职业：{@code fighter knight}（1913，min 10 ⇒ 展开 GLADIATOR/TEMPLAR）。 */
+	/** 原版 class_permitted 词表限职业：{@code fighter knight}（1913，min 10 ⇒ 展开 GLADIATOR/TEMPLAR）。 */
 	private static final int CLASS_RESTRICTED = 1913;
 
 	@Test
 	void classRestrictedRowsFollowTheRetailTokenMapping() {
-		// 真端 token（fighter/knight/wizard…）不是 PlayerClass 枚举名；逐字比较会让限职业行永远拒接。
+		// 原版 token（fighter/knight/wizard…）不是 PlayerClass 枚举名；逐字比较会让限职业行永远拒接。
 		// Retail tokens (fighter/knight/wizard…) are not PlayerClass names; a literal comparison would
 		// reject every class-restricted row forever.
 		Player gladiator = player(20, PlayerClass.GLADIATOR);
-		// 真端前置 {@code Q1007:1} = 奖励档 1（0 基 0），必须先完成前置任务。
+		// 原版前置 {@code Q1007:1} = 奖励档 1（0 基 0），必须先完成前置任务。
 		gladiator.getQuestStateList().addQuest(1007,
 			new QuestState(1007, QuestStatus.COMPLETE, 0, 1, null, 0, null));
 		assertTrue(port().start(gladiator, CLASS_RESTRICTED).started(), "fighter ⇒ GLADIATOR 必须放行");
@@ -179,7 +179,7 @@ class NativeQuestStartPortTest {
 	}
 
 	/**
-	 * unfinished 轴（DD 链式接取面专属，2026-10-08 缺口修复批）：10033 的真端
+	 * unfinished 轴（DD 链式接取面专属，2026-10-08 缺口修复批）：10033 的原版
 	 * {@code unfinished_quest_cond = Q10025/Q14062}——引用行"未"COMPLETE 才通过（方向不许写反）；
 	 * 共享的 {@link NativeQuestStartPort#start} 判定面刻意不含该轴（其它 native 接取面口径不扩大）。
 	 */

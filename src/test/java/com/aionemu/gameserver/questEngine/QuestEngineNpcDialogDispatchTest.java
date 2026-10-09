@@ -128,7 +128,7 @@ class QuestEngineNpcDialogDispatchTest {
 		assertEquals(List.of(1320, 1478, 1321, 1322), engine.npcDialogDispatchOwners(player, npc,
 			new QuestEvent.TalkToNpc(REFERENCE_NPC_TEMPLATE_ID, QuestDialogAction.QUEST_SELECT.id(),
 				NPC_OBJECT_ID)));
-		// P0-3 S1：SimpleTalk 接取/交付切真端规范形（页 4 / 分档窗）。1478 是真端单步行
+		// P0-3 S1：SimpleTalk 接取/交付切原版规范形（页 4 / 分档窗）。1478 是原版单步行
 		// （Quest_SimpleTalk.xml:1313-1318 acquired=reward=Tree_NoMove_Lodas + quest.xml:10167-10168
 		// 的 collect_item），其 select1_1 续页随页链退场——canonical 接取流不含 SELECT1_1
 		// （RetailSimpleHuntDefinitionCompiler:1096-1122）；旧梯 1012 只剩 XML 保留行 1322
@@ -195,8 +195,8 @@ class QuestEngineNpcDialogDispatchTest {
 		return engine;
 	}
 
-	/** 生产视图目录（XML 目录 + 真端 overlay）；退役任务的旧 XML 只在 git 历史里。 */
-	/** 真端 quest.xml 的 category1（大写；缺省 QUEST）。 / Retail quest.xml category1 (upper case; default QUEST). */
+	/** 生产视图目录（XML 目录 + 原版 overlay）；退役任务的旧 XML 只在 git 历史里。 */
+	/** 原版 quest.xml 的 category1（大写；缺省 QUEST）。 / Retail quest.xml category1 (upper case; default QUEST). */
 	private static String categoryOf(int questId) {
 		return com.aionemu.gameserver.questEngine.tablelane.NativeQuestXmlTable.instance().find(questId)
 			.map(row -> row.text("category1"))
@@ -215,7 +215,7 @@ class QuestEngineNpcDialogDispatchTest {
 					QuestDialogAction.QUEST_SELECT.id()));
 			} else if (SimpleTalkHandler.instance().owns(questId)) {
 				// P3 原生表驱动切换：SimpleTalk 行进原生车道，typed 目录里没有该行；派发门禁只需
-				// 该 NPC 上的 QUEST_SELECT 谈话 owner 形状（类别取自真端 quest.xml category1，
+				// 该 NPC 上的 QUEST_SELECT 谈话 owner 形状（类别取自原版 quest.xml category1，
 				// 页链由 SimpleTalkNativeFamilyGateTest 冻结）。
 				int npcId = questId == 1478 ? REFERENCE_NPC_TEMPLATE_ID : NPC_TEMPLATE_ID;
 				String category = categoryOf(questId);

@@ -21,17 +21,17 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 
 /**
- * 真端 quest.xml 行 → {@link QuestMetadata} 的映射器（"真端元数据层"的编译核心）。
+ * 原版 quest.xml 行 → {@link QuestMetadata} 的映射器（"原版元数据层"的编译核心）。
  * <p>
  * 关键映射口径（全部经全库对拍验证，见 .agents/summary/scriptdll-quest-driver/）：
  * <ul>
- * <li>name：真端只有 {@code Qxxxx} 符号名；英文名为在库人工资产且运行时无消费方（登记的全局口径分歧）；</li>
+ * <li>name：原版只有 {@code Qxxxx} 符号名；英文名为在库人工资产且运行时无消费方（登记的全局口径分歧）；</li>
  * <li>displayNameId：客户端字符串表 id（{@code quest_name_string_ids.xml}，已验证与生产一致）；</li>
  * <li>等级/种族/性别/分类/重复策略/前置/交付/掉落/奖励/职业奖励：直接映射，符号名经
  * {@link RetailNpcNameIndex}/{@link RetailItemNameIndex}/随机组表解析；</li>
- * <li>称号奖励：{@link RetailQuestTitleIds} 快照；maxLevel：真端 0/998/999=无上限
+ * <li>称号奖励：{@link RetailQuestTitleIds} 快照；maxLevel：原版 0/998/999=无上限
  * （与生产 82 封顶轴的差异由既有 cap-exceptions 门禁登记）；</li>
- * <li>职业：真端 token → PlayerClass；base token 在 min-level ≥ 10 时展开为进阶线；
+ * <li>职业：原版 token → PlayerClass；base token 在 min-level ≥ 10 时展开为进阶线；
  * 16-token 全集 = 通配。</li>
  * </ul>
  * 无法解析的符号名进入 {@link Outcome#unresolved()}，调用方据此降级该任务到 XML。
@@ -45,7 +45,7 @@ public final class RetailQuestMetadataCompiler {
 	private static final List<String> KIND_ORDER = List.of("GOLD", "KINAH", "EXP", "AP", "GP", "DP", "CP",
 		"EXP_BOOST", "ABYSS_OP", "TITLE", "ITEM", "RANDOM", "SELECTABLE_ITEM");
 
-	/** 真端职业 token → PlayerClass（来自既有 class 轴审计，cleric/priest 互换已复核）。 / Retail token to class. */
+	/** 原版职业 token → PlayerClass（来自既有 class 轴审计，cleric/priest 互换已复核）。 / Retail token to class. */
 	private static final Map<String, String> CLASS_TOKENS = Map.ofEntries(
 		Map.entry("warrior", "WARRIOR"), Map.entry("fighter", "GLADIATOR"), Map.entry("knight", "TEMPLAR"),
 		Map.entry("scout", "SCOUT"), Map.entry("assassin", "ASSASSIN"), Map.entry("ranger", "RANGER"),
@@ -61,7 +61,7 @@ public final class RetailQuestMetadataCompiler {
 		"engineer", List.of("GUNSLINGER", "AETHERTECH"), "artist", List.of("SONGWEAVER"));
 
 	/**
-	 * 职业奖励标签 → class id。真端表对三个技术职业用**短名**标签（{@code gunner/bard/rider}），
+	 * 职业奖励标签 → class id。原版表对三个技术职业用**短名**标签（{@code gunner/bard/rider}），
 	 * 与生产 class-rewards 的长名（GUNSLINGER/SONGWEAVER/AETHERTECH）并存（全库 90 任务均为
 	 * 短名+长名成对出现），两套别名映射到同一 class id。
 	 * Class reward tag to class id. The retail table spells the three technician classes with
@@ -79,11 +79,11 @@ public final class RetailQuestMetadataCompiler {
 		Map.entry("rider_selectable_reward", "AETHERTECH"));
 
 	/**
-	 * 真端工艺技能名 → 生产数字 id（全库投票无歧义；{@code any} 无在库对应，见分歧台账）。
+	 * 原版工艺技能名 → 生产数字 id（全库投票无歧义；{@code any} 无在库对应，见分歧台账）。
 	 * Retail craft-skill name to the production numeric id (library-wide unambiguous votes).
 	 */
 	/**
-	 * 真端 CombineTask 表的 {@code combineskill} 符号名 → 技能 id（包内共享，供合成器复用同一张表）。
+	 * 原版 CombineTask 表的 {@code combineskill} 符号名 → 技能 id（包内共享，供合成器复用同一张表）。
 	 * Retail craft-skill symbol to skill id; shared package-wide so the synthesizer reuses one table.
 	 */
 	static final Map<String, Integer> COMBINE_SKILLS = Map.of(
@@ -91,15 +91,15 @@ public final class RetailQuestMetadataCompiler {
 		"cooking", 40001, "menuisier", 40010, "gathering_b", 30002, "aerial_gathering", 30003);
 
 	/**
-	 * 真端 NPC 势力名 → 势力 id（全库投票无歧义；真端 Shugo 在库无 npc-faction-id，映射为 0）。
-	 * 真端家族表的奖励引用 {@code <地图>_<势力名>} 复合名靠它识别（合成器共用）。
+	 * 原版 NPC 势力名 → 势力 id（全库投票无歧义；原版 Shugo 在库无 npc-faction-id，映射为 0）。
+	 * 原版家族表的奖励引用 {@code <地图>_<势力名>} 复合名靠它识别（合成器共用）。
 	 * Retail NPC-faction name to faction id (library-wide unambiguous votes); shared with the
 	 * synthesizer to recognize {@code <map>_<faction>} reward references.
 	 */
 	static final Map<String, Integer> NPC_FACTIONS = NativeNpcFactionNames.all();
 
 	/**
-	 * 奖励名是否为 {@code <地图>_<势力名>} 复合引用（去掉首个下划线前缀后是已知真端势力名；
+	 * 奖励名是否为 {@code <地图>_<势力名>} 复合引用（去掉首个下划线前缀后是已知原版势力名；
 	 * {@code _LD} 双侧变体按同势力 {@code _L}/{@code _D} 识别）。系统发放行常用它代替真实交付 NPC 名。
 	 * Whether the reward name is a {@code <map>_<faction>} composite over a known retail faction;
 	 * two-side {@code _LD} variants count via their {@code _L}/{@code _D} bases.
@@ -168,9 +168,9 @@ public final class RetailQuestMetadataCompiler {
 	}
 
 	/**
-	 * 把真端 quest.xml 行编译成任务元数据。
+	 * 把原版 quest.xml 行编译成任务元数据。
 	 * Compiles a retail quest.xml row into quest metadata.
-	 * @param entry 真端行 / retail row
+	 * @param entry 原版行 / retail row
 	 * @param npcs NPC 名索引 / npc name index
 	 * @param items 物品名索引 / item name index
 	 * @param randomRewardIds {@code %随机奖励组名} → 组 id（来自 quest_random_rewards.xml）
@@ -239,7 +239,7 @@ public final class RetailQuestMetadataCompiler {
 		}
 
 		List<QuestDrop> drops = new ArrayList<>();
-		// 真端掉落族带下划线（drop_monster_1 / drop_item_1 / drop_prob_1 / drop_each_member_1）。
+		// 原版掉落族带下划线（drop_monster_1 / drop_item_1 / drop_prob_1 / drop_each_member_1）。
 		// The retail drop family carries an underscore between the base and the slot number.
 		for (int slot = 1; slot <= maxNumberedSlot(entry, "drop_monster_"); slot++) {
 			List<String> monsters = splitNames(entry.text("drop_monster_" + slot));
@@ -253,16 +253,16 @@ public final class RetailQuestMetadataCompiler {
 				continue;
 			}
 			int chance = orZero(entry.integer("drop_prob_" + slot));
-			// 真端缺省 drop_each_member 时按生产约定视为 true（GROUP 掉落）。
+			// 原版缺省 drop_each_member 时按生产约定视为 true（GROUP 掉落）。
 			// A missing retail drop_each_member defaults to true (GROUP drops) per production.
 			Integer eachMemberRaw = entry.integer("drop_each_member_" + slot);
 			boolean eachMember = eachMemberRaw == null || eachMemberRaw > 0;
-			// 生产 collecting-step = 真端任务级 collect_progress（掉落生效的交付步）。
+			// 生产 collecting-step = 原版任务级 collect_progress（掉落生效的交付步）。
 			// The production collecting-step equals the quest-level retail collect_progress.
 			int collectingStep = orZero(entry.integer("collect_progress"));
 			for (String monster : monsters) {
 				// 掉落 npc = 精确解析；仅当名单内 id 全部未实刷时，按 M2-c 同判据并入同显示名的
-				// 实刷兄弟 id（2631 实证：真端模板 id 213775 已退役、实刷 236924 才是世界体）。
+				// 实刷兄弟 id（2631 实证：原版模板 id 213775 已退役、实刷 236924 才是世界体）。
 				// 有活 id 的名单不扩展——不同任务的同显示名箱子互不归属（700127/700188 同
 				// name_id 350769 分属 2119/1561 的掉落契约，盲并会交叉污染）。
 				// Drop npcs resolve exactly; only when EVERY resolved id is unspawned do we attach
@@ -370,7 +370,7 @@ public final class RetailQuestMetadataCompiler {
 	}
 
 	/**
-	 * 真端 {@code class_permitted} 词表 → 允许的 {@code PlayerClass} 名集合（空集 = 不限职业）。
+	 * 原版 {@code class_permitted} 词表 → 允许的 {@code PlayerClass} 名集合（空集 = 不限职业）。
 	 * 规则与生产元数据同源：≥16 token = 全集通配；基础职业在最低等级 ≥ 10 时展开为两条进阶线；
 	 * 未登记 token 忽略。原生接取端口复用本方法，避免第二套职业轴。
 	 * <p>
@@ -407,7 +407,7 @@ public final class RetailQuestMetadataCompiler {
 	}
 
 	private static String targetType(RetailQuestXmlTable.Entry entry) {
-		// 真端 battlegroup 在生产 XML 从未出现（该轴在登记表按类记录）；其余按枚举名直映。
+		// 原版 battlegroup 在生产 XML 从未出现（该轴在登记表按类记录）；其余按枚举名直映。
 		// Retail battlegroup never appears in production XML; the other values map by enum name.
 		String raw = entry.text("target_type");
 		if (raw == null || "battlegroup".equals(raw)) {
@@ -416,13 +416,13 @@ public final class RetailQuestMetadataCompiler {
 		return raw.toUpperCase(Locale.ROOT);
 	}
 
-	/** 真端 NPC 势力名 → 势力 id；未知名映射为 0（与生产缺省一致）。 / Maps faction names, else 0. */
+	/** 原版 NPC 势力名 → 势力 id；未知名映射为 0（与生产缺省一致）。 / Maps faction names, else 0. */
 	private static int npcFaction(RetailQuestXmlTable.Entry entry) {
 		String name = entry.text("npcfaction_name");
 		return name == null ? 0 : NPC_FACTIONS.getOrDefault(name.trim(), 0);
 	}
 
-	/** 真端工艺技能名 → 数字 id；{@code any} 与未知名按生产缺省置空。 / Maps a craft-skill name, else null. */
+	/** 原版工艺技能名 → 数字 id；{@code any} 与未知名按生产缺省置空。 / Maps a craft-skill name, else null. */
 	private static Integer combineSkill(RetailQuestXmlTable.Entry entry) {
 		String raw = entry.text("combineskill");
 		if (raw == null || "any".equals(raw.trim())) {
@@ -432,7 +432,7 @@ public final class RetailQuestMetadataCompiler {
 	}
 
 	/**
-	 * 真端 CombineTask 表的技能符号名 → 技能 id；{@code any} 与未知名返回 null。native CombineTask
+	 * 原版 CombineTask 表的技能符号名 → 技能 id；{@code any} 与未知名返回 null。native CombineTask
 	 * 车道（{@code SimpleCombineTaskHandler}）复用同一张表，故本方法对包外可见。
 	 * Maps a CombineTask table craft-skill symbol to its id; {@code any} and unknown names yield null.
 	 * The native CombineTask lane reuses this very table, so the accessor is public.
@@ -488,7 +488,7 @@ public final class RetailQuestMetadataCompiler {
 		}
 		int raw = Integer.parseInt(token.substring(colon + 1));
 		if (questId == 1007 || questId == 2009) {
-			// NCSoft 真端 quest.xml 中 Q1007:1..6 与 Q2009:1..6 对应 1 基奖励槽（reward_exp1..6：战士、斥候、法师、祭司、枪炮、乐手）；
+			// NCSoft 原版 quest.xml 中 Q1007:1..6 与 Q2009:1..6 对应 1 基奖励槽（reward_exp1..6：战士、斥候、法师、祭司、枪炮、乐手）；
 			// AionEmu 转职仪式（1007.xml / 2009.xml）与数据库 player_quests.reward 以及 quest_data.xml 一致采用 0 基索引（0..5）。
 			// Retail Q1007:1..6 / Q2009:1..6 map to 1-based reward slots in retail XML, whereas AionEmu
 			// ascension rites, DB player_quests.reward, and quest_data.xml use zero-based reward indices (0..5).
@@ -684,7 +684,7 @@ public final class RetailQuestMetadataCompiler {
 
 	private static List<QuestReward> sortRewards(List<QuestReward> rewards) {
 		List<QuestReward> sorted = new ArrayList<>(rewards);
-		// 仅按 kind 档位稳定排序：同 kind 保留真端表序（与生产奖励组顺序约定一致）。
+		// 仅按 kind 档位稳定排序：同 kind 保留原版表序（与生产奖励组顺序约定一致）。
 		// Stable sort by kind only: same-kind rewards keep the retail table order.
 		sorted.sort(Comparator.comparingInt((QuestReward reward) -> {
 			int index = KIND_ORDER.indexOf(reward.kind());

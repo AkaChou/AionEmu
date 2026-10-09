@@ -36,7 +36,7 @@ class QuestNpcFactionRetailGateTest {
 	/** 合同快照规模：防止基线被误删或生成脚本漏项。 / Guard against silent baseline shrink. */
 	private static final int EXPECTED_CONTRACT_ROWS = 287;
 
-	/** 契约快照行：评审势力归属 + 真端星期位掩码（mon..sun 七位）。 / One reviewed row. */
+	/** 契约快照行：评审势力归属 + 原版星期位掩码（mon..sun 七位）。 / One reviewed row. */
 	private record ContractRow(int factionId, String mask) {
 	}
 
@@ -56,7 +56,7 @@ class QuestNpcFactionRetailGateTest {
 			int questId = entry.getKey();
 			// P8 重锚（§10.3-#25）：可达行——native 车道行走 laneOf → factionId，XML 保留行走 typed
 			// 元数据；两者都必须命中评审基线。既无路由也无移植定义的休眠行（until-ported，沿用
-			// quest-prerequisite 契约的既有模式）必须至少持有真端 quest.xml 的阵营绑定，待覆盖后
+			// quest-prerequisite 契约的既有模式）必须至少持有原版 quest.xml 的阵营绑定，待覆盖后
 			// 由第一分支自动转为强制。
 			// P8 re-anchor: reachable rows declare through the grant lane or typed metadata and must
 			// match the reviewed snapshot; dormant rows (no lane route, no ported definition) must at
@@ -91,7 +91,7 @@ class QuestNpcFactionRetailGateTest {
 			"quests declaring a faction owner must be part of the reviewed contract snapshot");
 	}
 
-	/** 休眠行的兜底证明：真端 quest.xml 仍绑定评审势力（覆盖后自动收紧）。 / Dormant-row proof. */
+	/** 休眠行的兜底证明：原版 quest.xml 仍绑定评审势力（覆盖后自动收紧）。 / Dormant-row proof. */
 	private static int dormantRetailBinding(int questId) {
 		String name = com.aionemu.gameserver.questEngine.tablelane.NativeQuestXmlTable.instance()
 			.find(questId)
@@ -160,7 +160,7 @@ class QuestNpcFactionRetailGateTest {
 
 	/**
 	 * 轮换表保真：每条契约行必须在轮换表有行，势力与星期位掩码逐位等于评审快照——
-	 * 掩码全 0 是真端本征不轮换（P0c-3 判例），按快照冻结，禁止本地"修复"。
+	 * 掩码全 0 是原版本征不轮换（P0c-3 判例），按快照冻结，禁止本地"修复"。
 	 * <p>Rotation fidelity: every contract row must exist with the reviewed faction and the exact
 	 * retail weekday bitmask; all-zero masks are retail-intrinsic and frozen, never "fixed" locally.
 	 */

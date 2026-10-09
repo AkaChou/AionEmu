@@ -120,7 +120,7 @@ public class QuestsData {
 	}
 
 	/**
-	 * 从真端生产目录统一构造任务模板数据容器。
+	 * 从原版生产目录统一构造任务模板数据容器。
 	 * Synthesizes the quest template data container directly from the production quest catalog.
 	 */
 	public static QuestsData fromCatalog(com.aionemu.gameserver.questEngine.definition.QuestCatalog catalog) {

@@ -1,10 +1,10 @@
 package com.aionemu.gameserver.questEngine.tablelane;
 
 /**
- * 真端 32 位 raw quest vars 的 6 位/10 位槽编解码（计划 §6.2，P0a 证据：fun_731.cpp:5306/5356）。
+ * 原版 32 位 raw quest vars 的 6 位/10 位槽编解码（计划 §6.2，P0a 证据：fun_731.cpp:5306/5356）。
  * <p>
  * 6 位 = 5 槽（bit0..29，槽 1 起）；10 位 = 3 槽（bit0..29）；bit30/31 为守卫哨兵区——
- * 真端相机在 {@code vars >= 0x40000000} 时整体放弃写入。本类不复用 {@code QuestVars}
+ * 原版相机在 {@code vars >= 0x40000000} 时整体放弃写入。本类不复用 {@code QuestVars}
  * （那只服务 XML IR 车道）；槽越界或 vars 带守卫位一律 fail-closed。
  * <p>
  * Retail 32-bit raw quest vars codec for 6-bit/10-bit slot layouts (plan §6.2; P0a evidence

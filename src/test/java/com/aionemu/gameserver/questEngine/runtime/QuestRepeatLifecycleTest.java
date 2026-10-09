@@ -32,23 +32,23 @@ import com.aionemu.gameserver.questEngine.tablelane.NativeTalkFixture;
 import com.aionemu.gameserver.questEngine.tablelane.SimpleTalkHandler;
 
 /**
- * 重复任务生命周期：typed 行（15476）与真端 native 行（1963，可重复谈资任务）都必须能从 COMPLETE 态再次接取。
+ * 重复任务生命周期：typed 行（15476）与原版 native 行（1963，可重复谈资任务）都必须能从 COMPLETE 态再次接取。
  * <p>
  * P3 重锚（计划 §8.9）：1963 的旧 IR 形状断言（repeat 别名边 / 1007 中转）随 SimpleTalk 切换批退场，
- * 改为真端表行 + native 状态端口断言；接取窗页由族级页阶梯（4/1352/1693/2034/5/1008）承担。
+ * 改为原版表行 + native 状态端口断言；接取窗页由族级页阶梯（4/1352/1693/2034/5/1008）承担。
  * <p>
  * Repeat lifecycle: the typed row 15476 and the native retail row 1963 must both restart from COMPLETE.
  */
 class QuestRepeatLifecycleTest {
 
-	/** 真端行 1963：acquired/reward = Polyidus(203726)，中继 Phokas(203851)，接取发放并第 1 步回收 182206032。 */
+	/** 原版行 1963：acquired/reward = Polyidus(203726)，中继 Phokas(203851)，接取发放并第 1 步回收 182206032。 */
 	private static final int NATIVE_QUEST = 1963;
 	private static final int NATIVE_NPC = 203726;
 	private static final int NATIVE_ITEM = 182206032;
 
 	@Test
 	void repeatable1963ReopensItsAcceptWindowAndRestartsFromCompletedState() {
-		// 用记录式假背包端口：1002 接取按真端 cab520 0x3ea 分支发放 give_item（182206032），
+		// 用记录式假背包端口：1002 接取按原版 cab520 0x3ea 分支发放 give_item（182206032），
 		// 静态 handler 的真物品端口在单测无 ItemData 服务栈。
 		// The recording fake port: the 1002 accept grants the row's give_item per retail cab520
 		// 0x3ea, while the static handler's real port needs the absent ItemData service stack.
@@ -58,7 +58,7 @@ class QuestRepeatLifecycleTest {
 		player.getQuestStateList().addQuest(NATIVE_QUEST,
 				new QuestState(NATIVE_QUEST, QuestStatus.COMPLETE, 0x1f, 3, null, 0, null));
 
-		// 真端表行事实：接取与交付同 NPC、一个中继步、接取发放且第 1 步回收同一工作物品。
+		// 原版表行事实：接取与交付同 NPC、一个中继步、接取发放且第 1 步回收同一工作物品。
 		assertEquals(NATIVE_NPC, handler.acquireNpc(NATIVE_QUEST));
 		assertEquals(NATIVE_NPC, handler.rewardNpc(NATIVE_QUEST));
 		assertEquals(1, handler.relayCount(NATIVE_QUEST));

@@ -35,9 +35,9 @@ import com.aionemu.gameserver.questEngine.retail.RetailItemNameIndex;
 import com.aionemu.gameserver.questEngine.tablelane.NativeQuestTableLoader.SimpleTalkRow;
 
 /**
- * 原生 SimpleTalk 车道测试夹具：真端行取数、假背包端口、Objenesis 玩家/NPC、对话窗口包捕获。
+ * 原生 SimpleTalk 车道测试夹具：原版行取数、假背包端口、Objenesis 玩家/NPC、对话窗口包捕获。
  * <p>
- * 只服务 P3 重锚（计划 §8.9）后的断言面：断言值全部来自真端表行 + 静态数据 id + 客户端页契约，
+ * 只服务 P3 重锚（计划 §8.9）后的断言面：断言值全部来自原版表行 + 静态数据 id + 客户端页契约，
  * 夹具不合成语义、不改写行数据。
  * <p>
  * Test fixture for the native SimpleTalk lane: retail row accessors, a recording inventory port,
@@ -49,7 +49,7 @@ public final class NativeTalkFixture {
 	private NativeTalkFixture() {
 	}
 
-	/** 生产处理器（真端表行 + 生产背包端口）。 / The production handler. */
+	/** 生产处理器（原版表行 + 生产背包端口）。 / The production handler. */
 	public static SimpleTalkHandler handler() {
 		return SimpleTalkHandler.instance();
 	}
@@ -76,13 +76,13 @@ public final class NativeTalkFixture {
 		}
 	}
 
-	/** 真端行（缺行 fail-closed）。 / The retail row (missing rows fail closed). */
+	/** 原版行（缺行 fail-closed）。 / The retail row (missing rows fail closed). */
 	public static SimpleTalkRow row(int questId) {
 		return handler().requireRow(questId);
 	}
 
 	/**
-	 * 真端表车道的接取入口页（信页优先；页 4 只由页动作 1007 打开）。
+	 * 原版表车道的接取入口页（信页优先；页 4 只由页动作 1007 打开）。
 	 * The native-lane accept entry page (letter page first; page 4 is 1007-only).
 	 */
 	public static int clientEntryPage(int questId) {
@@ -218,7 +218,7 @@ public final class NativeTalkFixture {
 	}
 
 	/**
-	 * 断言收到唯一一个关窗包：页 0、目标 0、questId 0——真端推进 after-commit（0x5d8）的关窗形态。
+	 * 断言收到唯一一个关窗包：页 0、目标 0、questId 0——原版推进 after-commit（0x5d8）的关窗形态。
 	 * Asserts exactly one close-dialog packet (page 0, target 0, questId 0) — the retail 0x5d8
 	 * advance tail.
 	 */
@@ -264,7 +264,7 @@ public final class NativeTalkFixture {
 				+ queue.stream().map(packet -> packet.getClass().getSimpleName()).toList());
 	}
 
-	/** NPC 桩（按真端 npc_id 建模板）。 / An NPC stub carrying the retail npc id. */
+	/** NPC 桩（按原版 npc_id 建模板）。 / An NPC stub carrying the retail npc id. */
 	public static Npc npc(int npcId) {
 		Npc npc = new ObjenesisStd().newInstance(Npc.class);
 		setField(AionObject.class, npc, "objectId", 9999000 + npcId);

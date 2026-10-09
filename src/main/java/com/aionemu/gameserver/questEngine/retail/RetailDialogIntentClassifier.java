@@ -6,10 +6,10 @@ import com.aionemu.gameserver.questEngine.definition.QuestDialogAction;
 import com.aionemu.gameserver.questEngine.definition.QuestDialogContract;
 
 /**
- * 从全局对话动作词汇表和客户端页面合同中识别真端本地导航意图。
+ * 从全局对话动作词汇表和客户端页面合同中识别原版本地导航意图。
  * Identifies retail-local navigation intents from the global dialog vocabulary and client page contract.
  * <p>
- * 本类不按任务 ID 或家族登记页链。生命周期动作始终优先由真端编译器生成的语义路由处理；只有
+ * 本类不按任务 ID 或家族登记页链。生命周期动作始终优先由原版编译器生成的语义路由处理；只有
  * 明确属于客户端页面的动作才可能返回本地导航意图。
  * This class never registers page ladders by quest id or family. Lifecycle actions always take priority
  * through compiler-generated semantic routes; only actions explicitly present as client pages can be
@@ -21,7 +21,7 @@ public final class RetailDialogIntentClassifier {
 	}
 
 	/**
-	 * 判断动作是否为真端本地对话意图。
+	 * 判断动作是否为原版本地对话意图。
 	 * Classifies an action as a retail-local dialog intent.
 	 * @param questId 对话任务 ID / dialog quest id
 	 * @param actionId 客户端对话动作 ID / client dialog action id

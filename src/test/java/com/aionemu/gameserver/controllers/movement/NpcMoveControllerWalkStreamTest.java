@@ -148,9 +148,9 @@ class NpcMoveControllerWalkStreamTest {
 
 	@Test
 	void walkerCollisionLiftCapsAtRetailStepHeight() {
-		assertEquals(1.5f, NpcMoveController.walkerLiftOffset(1), 1e-4f, "真端步高抬升单步 1.5m");
+		assertEquals(1.5f, NpcMoveController.walkerLiftOffset(1), 1e-4f, "原版步高抬升单步 1.5m");
 		assertEquals(2.0f, NpcMoveController.walkerLiftOffset(2), 1e-4f, "第二次抬升封顶在 2.0m（3.0 被截）");
-		assertEquals(2.0f, NpcMoveController.walkerLiftOffset(9), 1e-4f, "上限对整个循环生效（真端 NPC 自带上限 2.0）");
+		assertEquals(2.0f, NpcMoveController.walkerLiftOffset(9), 1e-4f, "上限对整个循环生效（原版 NPC 自带上限 2.0）");
 	}
 
 	@Test

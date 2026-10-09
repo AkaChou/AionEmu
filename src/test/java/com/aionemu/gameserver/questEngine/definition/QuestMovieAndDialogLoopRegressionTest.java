@@ -552,7 +552,7 @@ class QuestMovieAndDialogLoopRegressionTest {
 	}
 
 	private CompiledQuestDefinition definition(int questId) throws Exception {
-		// 退役任务的生产 XML 只在 git 历史里：统一取生产视图（XML 目录 + 真端 overlay）。
+		// 退役任务的生产 XML 只在 git 历史里：统一取生产视图（XML 目录 + 原版 overlay）。
 		// Retired quests live in git history only: use the production view (XML dir + retail overlay).
 		return ProductionQuestDefinitions.definition(questId);
 	}

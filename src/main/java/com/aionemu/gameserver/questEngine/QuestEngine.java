@@ -219,7 +219,7 @@ public class QuestEngine implements GameEngine {
 	 * 掉落查询 = 目录快照掉落 ∪ native 表车道掉落列（采集族 + Talk 族 + UseItem 族 + DataDriven 族）。
 	 * <p>
 	 * 各族已切 native，退役 XML 从 catalog 退场后其 {@code <drops>} 一并消失——native 行必须从
-	 * 真端 {@code drop_*} 列接手（2026-10-04 修复：采集族此前对象交互与击杀装配都拿不到任务掉落，
+	 * 原版 {@code drop_*} 列接手（2026-10-04 修复：采集族此前对象交互与击杀装配都拿不到任务掉落，
 	 * 真机 1103 采集不产出 {@code quest_1103a}；Talk 族 1031 行同型，真机 1105 击杀 210079 无道具。
 	 * 2026-10-08 补齐 UseItem 族 2435 与 DataDriven 族 160 行：真机 10034 击杀 216494 无
 	 * {@code quest_10034a}）。同一 questId 只信目录条目（单一 owner；XML 车道仍持有该行时 native
@@ -294,7 +294,7 @@ public class QuestEngine implements GameEngine {
 			int requestedOwner = env.getQuestId();
 			int npcId = npc == null ? 0 : npc.getNpcId();
 			QuestRuntimeDispatcher typed = productionDispatcher;
-			// 真端表驱动车道：SimpleHunt 任务直接由原生处理器驱动，不走 IR 节点状态机
+			// 原版表驱动车道：SimpleHunt 任务直接由原生处理器驱动，不走 IR 节点状态机
 			if (requestedOwner != 0 && SimpleHuntHandler.instance().routes(requestedOwner)) {
 				if (SimpleHuntHandler.instance().onDialog(env)) {
 					return true;
@@ -305,31 +305,31 @@ public class QuestEngine implements GameEngine {
 					return true;
 				}
 			}
-			// 真端表驱动车道：SimpleTalk 任务由原生处理器直驱（cab520 接取 / cabb10 中继与报告）
+			// 原版表驱动车道：SimpleTalk 任务由原生处理器直驱（cab520 接取 / cabb10 中继与报告）
 			if (requestedOwner != 0 && SimpleTalkHandler.instance().routes(requestedOwner)) {
 				if (SimpleTalkHandler.instance().onDialog(env)) {
 					return true;
 				}
 			}
-			// 真端表驱动车道：SimpleCollectItem 采集对象/交付 NPC 由原生处理器直驱（P4 切换批）
+			// 原版表驱动车道：SimpleCollectItem 采集对象/交付 NPC 由原生处理器直驱（P4 切换批）
 			if (requestedOwner != 0 && SimpleCollectItemHandler.instance().routes(requestedOwner)) {
 				if (SimpleCollectItemHandler.instance().onDialog(env)) {
 					return true;
 				}
 			}
-			// 真端表驱动车道：SimpleUseItem 用物接取后的无主对话/中继/交付由原生处理器直驱（P5 切换批）
+			// 原版表驱动车道：SimpleUseItem 用物接取后的无主对话/中继/交付由原生处理器直驱（P5 切换批）
 			if (requestedOwner != 0 && SimpleUseItemHandler.instance().routes(requestedOwner)) {
 				if (SimpleUseItemHandler.instance().onDialog(env)) {
 					return true;
 				}
 			}
-			// 真端表驱动车道：SimpleItemPlay 接取/交付预览/领奖由原生处理器直驱（P5 切换批）
+			// 原版表驱动车道：SimpleItemPlay 接取/交付预览/领奖由原生处理器直驱（P5 切换批）
 			if (requestedOwner != 0 && SimpleItemPlayHandler.instance().routes(requestedOwner)) {
 				if (SimpleItemPlayHandler.instance().onDialog(env)) {
 					return true;
 				}
 			}
-			// 真端表驱动车道：CombineTask 接取（发分量 + 学配方）/ 交付（产物门 + 回收分量）/ 领奖由
+			// 原版表驱动车道：CombineTask 接取（发分量 + 学配方）/ 交付（产物门 + 回收分量）/ 领奖由
 			// 原生处理器直驱（P6 切换批）。
 			// The CombineTask lane (accept with component grants and recipe learn, product-gated
 			// hand-in with component recycling, reward-window settlement) is driven natively.
@@ -338,10 +338,10 @@ public class QuestEngine implements GameEngine {
 					return true;
 				}
 			}
-			// 真端表驱动车道：DataDriven Talk / CollectItem 步的共享对话平面（开页 + 页动作/1009/1008，
+			// 原版表驱动车道：DataDriven Talk / CollectItem 步的共享对话平面（开页 + 页动作/1009/1008，
 			// `FUN_180c474b0`）与 TalkFOBJ 组计数（本批路由集为空 ⇒ 恒 false）。
 			// DataDriven dialog plane and TalkFOBJ groups: no-op until the atomic switch batch.
-			// 无目标领奖（npcId == 0）也进入 DD 面：真端 QuestDialog 无主键协议由本面按 questId 结算
+			// 无目标领奖（npcId == 0）也进入 DD 面：原版 QuestDialog 无主键协议由本面按 questId 结算
 			// （存在性/状态/动作门全在 DD 内部；未认领返回 false 继续下方链路）。
 			// Targetless reward claims (npcId == 0) reach the DD face too: the ownerless QuestDialog
 			// protocol is settled by quest id inside the runtime; an unclaimed id falls through.
@@ -349,13 +349,13 @@ public class QuestEngine implements GameEngine {
 				npc != null ? npc.getObjectId() : 0, requestedOwner)) {
 				return true;
 			}
-			// native 车道奖励窗确认动作的按 questId 恢复面（真端 QuestDialog 无主键协议；与 typed 车道
+			// native 车道奖励窗确认动作的按 questId 恢复面（原版 QuestDialog 无主键协议；与 typed 车道
 			// QuestRuntimeDispatcher#dispatchRewardWindowAction 的恢复同裁定）：奖励窗由全局 UI 打开，
 			// 客户端可能携带上一个交互对象，不能要求交互对象等于完成路由的交付 NPC。八族严格绑定全部
 			// 未命中后按 questId + action 结算——传送门类 AI 的开门页轴会在「接取对象 ≠ 交付对象」的行
 			// 的接取对象上开出奖励窗（2026-10-08 实机 19640：洛塔斯 799022 上点奖励窗 → 无人认领 →
 			// 动作 id 被 AI 回显为页 8 → 客户端 load fail）。门 = 奖励窗动作段 + REWARD 态 + native owner；
-			// 结算体继续验真端元数据/档位/按钮声明，任何一门不过零副作用继续既有链路。
+			// 结算体继续验原版元数据/档位/按钮声明，任何一门不过零副作用继续既有链路。
 			// Native-lane quest-id recovery for reward-window confirmations (the retail ownerless
 			// QuestDialog protocol; same adjudication as the typed lane's recovery). The reward window is
 			// opened by global UI, so the carried interaction object must not be required to equal the
@@ -369,7 +369,7 @@ public class QuestEngine implements GameEngine {
 						npc.getObjectId())) {
 				return true;
 			}
-			// 真端对话平面的统一兜底：子页动作（SELECT⟨n⟩_…，动作 id 即目标页 id，如 1694 = select3_1）
+			// 原版对话平面的统一兜底：子页动作（SELECT⟨n⟩_…，动作 id 即目标页 id，如 1694 = select3_1）
 			// 在 native 各族与 DD 都未认领时，按客户端契约原样回发该页——**必须携带 questId**（客户端按
 			// 任务 html 渲染该页；零上下文时去 NPC 对话 html 找该页 ⇒ load fail：2026-10-06 实机 13403
 			// 步推进后动作 1694 落三参/两参分叉，两参形态即此症状；9/28 基线与 1001-1007 的三参回发为
@@ -443,8 +443,8 @@ public class QuestEngine implements GameEngine {
 					}
 				}
 				if (collectObjectClaimed) {
-					// 物件交互已被 native 采集族认领（推进成功或真端零副作用：超杀/条件不满足）。
-					// 真端从不在采集物件上开对话窗——不得落到 TalkEventHandler 的通用页 10
+					// 物件交互已被 native 采集族认领（推进成功或原版零副作用：超杀/条件不满足）。
+					// 原版从不在采集物件上开对话窗——不得落到 TalkEventHandler 的通用页 10
 					// （2026-10-04 真机 1103：对谷物袋子开窗即客户端 load fail）。
 					// The interaction is claimed by the native collect family (advance or retail zero
 					// side effect). The retail server never opens a dialog window on a collect object;
@@ -465,14 +465,14 @@ public class QuestEngine implements GameEngine {
 					}
 				}
 				if (dataDrivenObjectClaimed) {
-					// 物件已被 DD 采集面接管（认领成功或真端零副作用：步不符/未接取）——同采集族口径，
+					// 物件已被 DD 采集面接管（认领成功或原版零副作用：步不符/未接取）——同采集族口径，
 					// 不得落到通用页 10（物件开窗即客户端 load fail）。
 					// Claimed by the DD collect face (or the retail zero-side-effect shape); a dialog
 					// window aimed at a collect object makes the client fail to load it.
 					return true;
 				}
 				// 右键开门（TalkEventHandler.onTalk → dialogId=-1, questId=0）：玩家在该 NPC 上有进行中/
-				// 可交任务时先进任务对话（真端对话平面 FUN_180c474b0「打开（-1/26）→ 阶段页」），否则
+				// 可交任务时先进任务对话（原版对话平面 FUN_180c474b0「打开（-1/26）→ 阶段页」），否则
 				// 才落普通页 10。tablelane 车道按 requestedOwner!=0 路由，questId=0 的开门在此逐个
 				// 进行中任务重放（2026-10-03 真机 1102：REWARD 后右键交付 NPC 只剩「结束对话」）。
 				// 重放分两遍：可交付（REWARD）优先于进行中（START）。客户端任务列表不渲染交付行
@@ -502,7 +502,7 @@ public class QuestEngine implements GameEngine {
 					}
 				}
 				// 无任务上下文的**物件**打开（-1 = USE_OBJECT / 1001 = QUEST_SELECT）：按物件反查
-				// SimpleTalk 接取行重放——真端物件接取 = USE_OBJECT 自环 → 携带 questId 的接取入口页。
+				// SimpleTalk 接取行重放——原版物件接取 = USE_OBJECT 自环 → 携带 questId 的接取入口页。
 				// 缺此重放时打开只落 AI 的两参兜底页，客户端无任务上下文渲染不出接取对话
 				// （2026-10-07 实机 18645/730777：点"卡利加的竖琴架"无可接取任务）。仅限物件族：
 				// 普通 NPC 的打开由客户端本地对话框驱动（页 10 任务列表 → 31），保持原行为（QE-093）。
@@ -663,18 +663,18 @@ public class QuestEngine implements GameEngine {
 		if (env == null || env.getPlayer() == null || !(env.getVisibleObject() instanceof Npc npc)) {
 			return false;
 		}
-		// 真端表驱动车道：SimpleHunt 怪物击杀由原生相机直接推进，不走 IR 边分派
+		// 原版表驱动车道：SimpleHunt 怪物击杀由原生相机直接推进，不走 IR 边分派
 		if (SimpleHuntHandler.instance().onKill(env.getPlayer(), npc.getNpcId())) {
 			return true;
 		}
 		if (SimpleSerialHuntHandler.instance().onKill(env.getPlayer(), npc.getNpcId())) {
 			return true;
 		}
-		// 真端表驱动车道：SimpleCollectItem 采集怪击杀推进同一相机（掉落仍由掉落族发放）。
+		// 原版表驱动车道：SimpleCollectItem 采集怪击杀推进同一相机（掉落仍由掉落族发放）。
 		if (SimpleCollectItemHandler.instance().onKill(env.getPlayer(), npc.getNpcId())) {
 			return true;
 		}
-		// 真端表驱动车道：DataDriven Hunt 步组计数（带真端 50m 距离门——处理函数前奏 case 0，
+		// 原版表驱动车道：DataDriven Hunt 步组计数（带原版 50m 距离门——处理函数前奏 case 0，
 		// def+0x70 恒 0，见 DataDrivenNativeRuntime.RETAIL_KILL_DISTANCE_SQ 取证链）。
 		// DataDriven hunt steps with the retail 50 m distance gate (handler-preamble case 0).
 		if (DataDrivenNativeRuntime.instance().onKill(env.getPlayer(), npc)) {
@@ -754,7 +754,7 @@ public class QuestEngine implements GameEngine {
 			QuestRuntimeDispatcher typed = productionDispatcher;
 			if (player != null) {
 				try {
-					// 真端表驱动车道：DD LevelUp 接取面（kind 8 与 10，等级等值；路由集为空 ⇒ 恒 false）。
+					// 原版表驱动车道：DD LevelUp 接取面（kind 8 与 10，等级等值；路由集为空 ⇒ 恒 false）。
 					// DataDriven LevelUp acquire face (kinds 8 and 10, exact level equality).
 					DataDrivenNativeRuntime.instance().onLevelReached(player, player.getLevel(), false);
 				} catch (RuntimeException ignored) {
@@ -773,7 +773,7 @@ public class QuestEngine implements GameEngine {
 	}
 
 	/**
-	 * 分发登录事件（真端 DD LevelUpLogIn 接取遍历：等级等值、只服务 kind 10）。
+	 * 分发登录事件（原版 DD LevelUpLogIn 接取遍历：等级等值、只服务 kind 10）。
 	 * Dispatch the login event (the retail DD LevelUpLogIn acquire walk: exact level equality,
 	 * kind 10 only).
 	 * @param player 登录玩家 / the logged-in player
@@ -1012,7 +1012,7 @@ public class QuestEngine implements GameEngine {
 		try {
 			Player player = env.getPlayer();
 			QuestRuntimeDispatcher typed = productionDispatcher;
-			// 原生车道：链形行/单步行的旧存档任务书行自愈（真端编译边登记 P0c-28 的 native 等价物）。
+			// 原生车道：链形行/单步行的旧存档任务书行自愈（原版编译边登记 P0c-28 的 native 等价物）。
 			// Native lane: enter-world save heal for chain/single-step rows (the P0c-28 heal-edge equivalent).
 			try {
 				SimpleTalkHandler.instance().onEnterWorld(player);
@@ -1039,7 +1039,7 @@ public class QuestEngine implements GameEngine {
 				// Native enter-world heal is best-effort.
 			}
 			try {
-				// 真端表驱动车道：DataDriven EnterWorld 步（本批路由集为空 ⇒ 恒 false）。
+				// 原版表驱动车道：DataDriven EnterWorld 步（本批路由集为空 ⇒ 恒 false）。
 				// DataDriven EnterWorld steps: no-op until the atomic switch batch.
 				DataDrivenNativeRuntime.instance().onEnterWorld(player, player.getWorldId());
 			} catch (RuntimeException ignored) {
@@ -1105,7 +1105,7 @@ public class QuestEngine implements GameEngine {
 			Player player = env.getPlayer();
 			if (player != null) {
 				int itemId = item.getItemTemplate().getTemplateId();
-				// P5 真端族用物事件：SimpleUseItem 用物开接取窗、SimpleItemPlay 用物推进入 REWARD。
+				// P5 原版族用物事件：SimpleUseItem 用物开接取窗、SimpleItemPlay 用物推进入 REWARD。
 				// 两个原生车道先手认领各自道具（单一 owner：已切换行的 typed 目录里没有它的路由）。
 				// P5 native item-use events: SimpleUseItem opens the accept window, SimpleItemPlay
 				// advances to REWARD. The native lanes claim their own items first (single owner).
@@ -1113,7 +1113,7 @@ public class QuestEngine implements GameEngine {
 						|| SimpleItemPlayHandler.instance().onItemUse(player, itemId)) {
 					return HandlerResult.SUCCESS;
 				}
-				// DD 原生车道：ItemPlay 步 = 物品使用事件（真端事件 5 在 `User__UseItem`/
+				// DD 原生车道：ItemPlay 步 = 物品使用事件（原版事件 5 在 `User__UseItem`/
 				// `User_IdentifyItem` 内经 `mgr+0x268+5*0x10` walk 派发，ctx+8 = 被使用物品 id；
 				// 接取 kind==3 的行由同一事件接取）。物品获得/发放不推进 ItemPlay 步。
 				// DD lane: ItemPlay steps advance on the item-USE event (retail tag 5 fired from
@@ -1247,7 +1247,7 @@ public class QuestEngine implements GameEngine {
 		}
 		QuestRuntimeDispatcher typed = productionDispatcher;
 		Player player = env == null ? null : env.getPlayer();
-		// DD 原生车道的 ItemPlay 步不走获得面：真端事件 5 = 物品使用（`User__UseItem` walk），
+		// DD 原生车道的 ItemPlay 步不走获得面：原版事件 5 = 物品使用（`User__UseItem` walk），
 		// 接线在 onItemUseEvent（2026-10-06 实机 13403：发放动作曾在此级联跳过探测器使用步）。
 		// The DD ItemPlay steps are not wired to the obtain face: retail event 5 is item USE,
 		// hooked in onItemUseEvent (live 13403 round 4).
@@ -1272,10 +1272,10 @@ public class QuestEngine implements GameEngine {
 	}
 
 	/**
-	 * 销毁任务物品前的确认与收口（真端 `User_DestroyItem` + 确认回复 `0x249f1` 分支镜像）：
-	 * 物品被玩家进行中的任务引用（真端 = item 模板静态 quest 列表）且全部不可放弃 ⇒ 拒绝并提示
-	 * （1300604 = 真端 0x13d87c）；否则弹确认窗（150001）——确认 ⇒ 依次放弃相关任务
-	 * （`User_DeleteQuest`）后删除物品；拒绝 ⇒ 提示重试（1300605 = 真端 0x13d87d）。
+	 * 销毁任务物品前的确认与收口（原版 `User_DestroyItem` + 确认回复 `0x249f1` 分支镜像）：
+	 * 物品被玩家进行中的任务引用（原版 = item 模板静态 quest 列表）且全部不可放弃 ⇒ 拒绝并提示
+	 * （1300604 = 原版 0x13d87c）；否则弹确认窗（150001）——确认 ⇒ 依次放弃相关任务
+	 * （`User_DeleteQuest`）后删除物品；拒绝 ⇒ 提示重试（1300605 = 原版 0x13d87d）。
 	 * The retail destroy flow: referencing in-progress quests gate a confirmation window; on confirm
 	 * the quests are stopped (quest giveup) and the item deleted.
 	 *
@@ -1327,7 +1327,7 @@ public class QuestEngine implements GameEngine {
 		};
 		if (!player.getResponseRequester().putRequest(SM_QUESTION_WINDOW.STR_QUEST_GIVEUP_WHEN_DELETE_QUEST_ITEM,
 			handler)) {
-			// 有在途问询：真端重试提示（1300605）；物品不删。
+			// 有在途问询：原版重试提示（1300605）；物品不删。
 			// A pending request blocks the ask: the retail retry message, item kept.
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_QUEST_GIVEUP_WHEN_DELETE_QUEST_ITEM_RETRY);
 			return true;
@@ -1339,7 +1339,7 @@ public class QuestEngine implements GameEngine {
 
 	/**
 	 * 玩家进行中（START/REWARD）且引用该物品的任务：typed 目录索引（{@code questItems}，use-item
-	 * 注册面）∪ DD 原生行引用面（发/扣物品动作 + ItemPlay 载荷 + 接取行动作）。真端等价物 = item
+	 * 注册面）∪ DD 原生行引用面（发/扣物品动作 + ItemPlay 载荷 + 接取行动作）。原版等价物 = item
 	 * 模板静态 quest 列表（≤2 条）∩ 进行中状态。
 	 * In-progress quests referencing the item (the typed index ∪ the DD row references).
 	 *
@@ -1394,7 +1394,7 @@ public class QuestEngine implements GameEngine {
 		try {
 			QuestRuntimeDispatcher typed = productionDispatcher;
 			Player recipient = env == null ? null : env.getPlayer();
-			// 真端表驱动车道：DataDriven PvP 步（军衔区间 + 等级差闸门；本批路由集为空 ⇒ 恒 false）。
+			// 原版表驱动车道：DataDriven PvP 步（军衔区间 + 等级差闸门；本批路由集为空 ⇒ 恒 false）。
 			// DataDriven PvP steps: no-op until the atomic switch batch.
 			try {
 				if (recipient != null && env.getVisibleObject() instanceof Player victim) {
@@ -1476,7 +1476,7 @@ public class QuestEngine implements GameEngine {
 		try {
 			QuestRuntimeDispatcher typed = productionDispatcher;
 			Player player = env.getPlayer();
-			// 真端表驱动车道：DataDriven EnterArea 步（本批路由集为空 ⇒ 恒 false）。
+			// 原版表驱动车道：DataDriven EnterArea 步（本批路由集为空 ⇒ 恒 false）。
 			// DataDriven EnterArea steps: no-op until the atomic switch batch.
 			DataDrivenNativeRuntime.instance().onEnterZone(player, zoneName.name());
 			if (player != null) {
@@ -1685,7 +1685,7 @@ public class QuestEngine implements GameEngine {
 		QuestRuntimeDispatcher typed = productionDispatcher;
 		QuestEvent event = new QuestEvent.CanAct(templateId, questActionType.name());
 		try {
-			// 真端表驱动车道：采集对象（QUEST_USE_ITEM 交互物）的可交互性由 native 侧判定——采集族按
+			// 原版表驱动车道：采集对象（QUEST_USE_ITEM 交互物）的可交互性由 native 侧判定——采集族按
 			// START 态 + 中继链完成度；DD 族按 START + 当前步命中（CollectItem 步的追加 FOBJ 列对象，
 			// 2026-10-08 实机 15011 右击 702730）。族切换后两者都没有 typed 路由可查。
 			// Native lane: a collect object's usability is adjudicated natively (the collect family by
@@ -2362,7 +2362,7 @@ public class QuestEngine implements GameEngine {
 	}
 
 	/**
-	 * 原生行的真端 {@code quest.xml} 元数据（与生产目录同一条 {@code RetailQuestMetadataCompiler} 装载链）。
+	 * 原生行的原版 {@code quest.xml} 元数据（与生产目录同一条 {@code RetailQuestMetadataCompiler} 装载链）。
 	 * 缺行或元数据不干净一律 empty（fail-closed）。
 	 * The retail {@code quest.xml} metadata of a native row, from the same compiler chain as the
 	 * production catalog; missing rows and unclean metadata return empty (fail-closed).
@@ -2381,7 +2381,7 @@ public class QuestEngine implements GameEngine {
 	}
 
 	/**
-	 * 原生行的区域任务清单结论（真端 opcode 127 三值：平条目 / {@code 0x20000} 软标记 / 不入列表）。
+	 * 原生行的区域任务清单结论（原版 opcode 127 三值：平条目 / {@code 0x20000} 软标记 / 不入列表）。
 	 * 非 owner 行返回 {@code OMITTED}，调用方按 typed 车道自有规则处理。
 	 * <p>
 	 * The retail zone-quest verdict of a native-owned row (opcode 127). Non-owned rows answer
@@ -2395,7 +2395,7 @@ public class QuestEngine implements GameEngine {
 	}
 
 	/**
-	 * 原生行的接取资格硬判定（真端 {@code CanAcquireQuest} = 2）：NPC 对话、传送门与势力任务列表面。
+	 * 原生行的接取资格硬判定（原版 {@code CanAcquireQuest} = 2）：NPC 对话、传送门与势力任务列表面。
 	 * 「只差 1 级」是清单面的软结论，在本判定下仍是拒绝。
 	 * <p>
 	 * The hard acquisition verdict of a native-owned row (retail {@code CanAcquireQuest} == 2), used by
@@ -2407,7 +2407,7 @@ public class QuestEngine implements GameEngine {
 
 	/**
 	 * 原生行是否可放弃：owner 命中即由 {@link #onNativeAbandon(Player, int)} + 共用清理段收尾；
-	 * 「能否放弃」由真端 {@code cannot_giveup} 元数据轴在 {@code QuestService} 侧判定。
+	 * 「能否放弃」由原版 {@code cannot_giveup} 元数据轴在 {@code QuestService} 侧判定。
 	 * Whether the native lane declares the abandon path for the row; the retail {@code cannot_giveup}
 	 * axis stays with {@code QuestService}.
 	 */
@@ -2433,8 +2433,8 @@ public class QuestEngine implements GameEngine {
 
 	/**
 	 * 从显式 production catalog 加载已通过 owner 审核的 typed 定义。
-	 * 真端驱动开关（{@code aion.quest.retailDriver}，默认开启）开启时，保留清单判定为
-	 * RETAIL_TABLE 的任务用真端定义替换/补入（retail-package overlay）；关闭开关时
+	 * 原版驱动开关（{@code aion.quest.retailDriver}，默认开启）开启时，保留清单判定为
+	 * RETAIL_TABLE 的任务用原版定义替换/补入（retail-package overlay）；关闭开关时
 	 * 只有 XML 目录仍覆盖全部生产任务才允许启动，已退役的 XML 不会被开关恢复。
 	 * Loads the typed catalog; the retail-first overlay replaces retail-owned definitions when
 	 * the switch is on; the off state requires a complete legacy XML catalog.
@@ -2577,7 +2577,7 @@ public class QuestEngine implements GameEngine {
 	}
 
 	/**
-	 * 将生产目录按真端保留清单拆成 XML 与真端两个互斥子目录。
+	 * 将生产目录按原版保留清单拆成 XML 与原版两个互斥子目录。
 	 * Splits the production catalog into disjoint XML and retail child catalogs according to the retail owner manifest.
 	 * <p>
 	 * P7 步 f 起 retail 编译产物为零（七族 + DataDriven 1467 行全部原生直驱），retail 子目录恒空，
@@ -2728,7 +2728,7 @@ public class QuestEngine implements GameEngine {
 	public void load(CountDownLatch progressLatch, PreparedProductionDefinitions prepared) {
 		log.info(I18n.get("log.5359e35f8f99"));
 		try {
-			// P0b 数据基础：启动期装载真端页注册表；缺失/损坏页表必须让启动失败（fail-fast）。
+			// P0b 数据基础：启动期装载原版页注册表；缺失/损坏页表必须让启动失败（fail-fast）。
 			// P0b data foundation: eagerly load the retail page registry at startup; a missing or
 			// corrupt page table must fail the boot (fail-fast).
 			HtmlPagesRegistry.ensureLoaded();

@@ -8,7 +8,7 @@ import com.aionemu.gameserver.model.templates.zone.Points;
 import com.aionemu.gameserver.world.zone.ZoneName;
 
 /**
- * 多胞多边形区域：一个区名由若干互不相连的多边形胞组成（真端感官区常见形）。
+ * 多胞多边形区域：一个区名由若干互不相连的多边形胞组成（原版感官区常见形）。
  * 进入任意一胞即视为进入该区；每胞保留自己的 top/bottom，不做全局 Z 合并（否则错胞的高度会被放行）。
  * <p>
  * Multi-cell polygon area: one zone name made of several disjoint polygon cells (the usual retail
@@ -21,7 +21,7 @@ public class MultiPolyArea extends AbstractArea {
 	private final List<PolyArea> cells;
 
 	/**
-	 * 由若干环（真端 {@code <sensory_area>} 胞）构造多胞区域。
+	 * 由若干环（原版 {@code <sensory_area>} 胞）构造多胞区域。
 	 * Builds the multi-cell area from the given rings (retail {@code <sensory_area>} cells).
 	 * @param zoneName 区域名称 / zone name
 	 * @param worldId 世界 ID / world id

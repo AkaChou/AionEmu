@@ -24,10 +24,10 @@ import com.aionemu.gameserver.questEngine.tablelane.NativeQuestTableLoader;
  * P6 步骤 1 的行集/可行性冻结门（计划 §7 批门第 1 条，**本步零切换**）：CombineTask 表行逐行独立复算
  * （不复用 handler / 编译器判定），把「表行 → 退役 → NATIVE_READY」三段冻结下来：
  * <ul>
- *   <li>装载：{@code Quest_CombineTask.xml} 574 行（装载器逐行 = 真端表逐行）；</li>
+ *   <li>装载：{@code Quest_CombineTask.xml} 574 行（装载器逐行 = 原版表逐行）；</li>
  *   <li>退役集（{@code retail-xml-retention.xml} owner=RETAIL_TABLE）；</li>
- *   <li>NATIVE_READY = 退役 ∧ 非 XML-only ∧ 接取 NPC 名唯一 ×N ∧ 技能符号可解 ∧ 技能点与真端元数据一致
- *       ∧ 产物单槽且符号可解 ∧ 分量非空且全部可解 ∧ {@code (skill, product)} 配方唯一 ∧ 真端元数据
+ *   <li>NATIVE_READY = 退役 ∧ 非 XML-only ∧ 接取 NPC 名唯一 ×N ∧ 技能符号可解 ∧ 技能点与原版元数据一致
+ *       ∧ 产物单槽且符号可解 ∧ 分量非空且全部可解 ∧ {@code (skill, product)} 配方唯一 ∧ 原版元数据
  *       产物/分量一致；</li>
  *   <li>不可路由行按稳定原因集合冻结（新增或消失都必须显式改本类）。</li>
  * </ul>
@@ -118,9 +118,9 @@ class CombineTaskFamilyRowInventoryGateTest {
 		}
 
 		org.junit.jupiter.api.Assertions.assertEquals(EXPECTED_ROWS, loader.combineSize(),
-			"真端 Quest_CombineTask.xml 行数必须冻结");
+			"原版 Quest_CombineTask.xml 行数必须冻结");
 		org.junit.jupiter.api.Assertions.assertEquals(EXPECTED_ROWS, retired,
-			"该族 retention owner=RETAIL_TABLE 行数必须冻结（真端表逐行 ⇔ 退役行）");
+			"该族 retention owner=RETAIL_TABLE 行数必须冻结（原版表逐行 ⇔ 退役行）");
 		org.junit.jupiter.api.Assertions.assertEquals(EXPECTED_ROWS, ready,
 			"NATIVE_READY 行数必须冻结：全族 NPC/技能/技能点/产物/分量/配方/元数据七轴全通，零 fail-closed 残余");
 		org.junit.jupiter.api.Assertions.assertEquals(Map.of(), reasons,

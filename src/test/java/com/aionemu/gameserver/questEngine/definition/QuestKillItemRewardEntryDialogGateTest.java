@@ -22,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 /**
  * 门禁：击杀 / 用物事件把任务推进到 REWARD 时不得下发对话页。
  * Gate: kill / item events that advance a quest into REWARD must not push a dialog page.
- * <p>真端取证（ScriptDLL64.c 反编译源）：击杀处理器 {@code FUN_180ed93d0}/{@code FUN_180ed9410}
+ * <p>原版取证（ScriptDLL64.c 反编译源）：击杀处理器 {@code FUN_180ed93d0}/{@code FUN_180ed9410}
  * 经通用计数口 {@code FUN_180caa850}（3031，0xbd7；仅 0xf0 位域累加 + 0x120 计数通报）、
  * {@code FUN_180ed9330}（3056，0xbf0；0x100 推进 + 0x110 通报）、{@code FUN_180edded0}
  * （2001，0x7d1；变量阶梯 3..8 + 0x100 收尾 + 0x110 通报），用物处理器 {@code FUN_180f03f20}
@@ -127,7 +127,7 @@ class QuestKillItemRewardEntryDialogGateTest {
 		assertTrue(entry.afterCommit().stream().noneMatch(QuestKillItemRewardEntryDialogGateTest::isDialogPage));
 	}
 
-	/** 击杀 / 用物事件族：真端这些处理器族已逐一体检为发页静默。 Kill/item event families, each verified silent in retail. */
+	/** 击杀 / 用物事件族：原版这些处理器族已逐一体检为发页静默。 Kill/item event families, each verified silent in retail. */
 	private static boolean isKillOrItemEvent(QuestEvent event) {
 		return event instanceof QuestEvent.KillNpc
 			|| event instanceof QuestEvent.KillNpcSet

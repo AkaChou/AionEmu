@@ -15,11 +15,11 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.AionConnection;
 
 /**
- * {@code SM_NEARBY_QUESTS}（真端 opcode 127 = {@code S_UPDATE_ZONE_QUEST}）条目字节面门禁。
+ * {@code SM_NEARBY_QUESTS}（原版 opcode 127 = {@code S_UPDATE_ZONE_QUEST}）条目字节面门禁。
  * <p>
- * 真端 {@code MainServer/User::_UpdateQuestAcquireCondition} 每条写 4 字节：{@code CanAcquireQuest == 2}
+ * 原版 {@code MainServer/User::_UpdateQuestAcquireCondition} 每条写 4 字节：{@code CanAcquireQuest == 2}
  * 写 {@code questId}，{@code == 1}（只差 1 级）写 {@code questId | 0x20000}；包首两字段 = 段计数与
- * 「负号收尾」的条目数。真端网关解出的 opcode {@code 0x0181} 按 {@code (op + 0xD5) ^ 0xD5} 反解即 127。
+ * 「负号收尾」的条目数。原版网关解出的 opcode {@code 0x0181} 按 {@code (op + 0xD5) ^ 0xD5} 反解即 127。
  * <p>
  * Wire-format gate for the nearby-quest packet: the entries must keep the retail four-byte shape for
  * both plain and soft-marked rows, including quest ids above {@code 0xFFFF} (703 such retail table
@@ -27,26 +27,26 @@ import com.aionemu.gameserver.network.aion.AionConnection;
  */
 class SMNearbyQuestsPacketTest {
 
-	/** 真端软标记位。 / The retail soft marker bit. */
+	/** 原版软标记位。 / The retail soft marker bit. */
 	private static final int LEVEL_SOON_MARKER = 0x20000;
 
 	@Test
 	void writesPlainRetailEntries() {
 		assertArrayEquals(new byte[] { 0, (byte) 0xFF, (byte) 0xFF, (byte) 0x88, 0x13, 0, 0 },
-			payload(entry(5000, 0)), "平条目 = questId 四字节（真端 2）");
+			payload(entry(5000, 0)), "平条目 = questId 四字节（原版 2）");
 	}
 
 	@Test
 	void writesSoftMarkedRetailEntries() {
 		byte[] actual = payload(entry(5000, 1));
 		assertArrayEquals(new byte[] { 0, (byte) 0xFF, (byte) 0xFF, (byte) 0x88, 0x13, 2, 0 }, actual,
-			"软标记条目 = questId | 0x20000（真端 1）");
+			"软标记条目 = questId | 0x20000（原版 1）");
 	}
 
 	@Test
 	void writesQuestIdsAboveSixteenBitsWithTheSameMarkerBit() {
-		// 真端表 703 行 id > 0xFFFF（SimpleTalk 526 / SimpleHunt 142 / SimpleUseItem 33 / SimpleItemPlay 2）；
-		// 真端按四字节写 id | 0x20000。
+		// 原版表 703 行 id > 0xFFFF（SimpleTalk 526 / SimpleHunt 142 / SimpleUseItem 33 / SimpleItemPlay 2）；
+		// 原版按四字节写 id | 0x20000。
 		// 703 retail table rows carry ids above 0xFFFF; retail writes id | 0x20000 as a four-byte entry.
 		assertArrayEquals(new byte[] { 0, (byte) 0xFF, (byte) 0xFF, (byte) 0x8A, 0x38, 3, 0 },
 			payload(entry(80010, 1)), "80010 | 0x20000 = 0x3388A");

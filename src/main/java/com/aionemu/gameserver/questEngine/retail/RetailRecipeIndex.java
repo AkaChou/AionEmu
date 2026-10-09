@@ -15,9 +15,9 @@ import java.util.regex.Pattern;
 /**
  * 本服配方索引：{@code (skillid, productid)} → recipe id 集合。
  * <p>
- * 真端 CombineTask 表只给配方符号名（{@code recipe_name}，如 {@code r_ws_q5000}），而服务端运行时按
+ * 原版 CombineTask 表只给配方符号名（{@code recipe_name}，如 {@code r_ws_q5000}），而服务端运行时按
  * recipe id 工作（{@code learn-recipe}/{@code forget-recipe}）；本索引桥接两者，等价于
- * {@link RetailItemNameIndex} 在物品侧的作用。键为技能 id + 产物物品 id，因为真端表已经同时给出
+ * {@link RetailItemNameIndex} 在物品侧的作用。键为技能 id + 产物物品 id，因为原版表已经同时给出
  * {@code combineskill}/{@code product}，不需要再解析符号名。
  * <p>
  * Index from {@code (skillid, productid)} to recipe template ids; the recipe-side bridge the retail

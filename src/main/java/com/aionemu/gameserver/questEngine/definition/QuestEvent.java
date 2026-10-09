@@ -24,8 +24,8 @@ public sealed interface QuestEvent permits QuestEvent.TalkToNpc, QuestEvent.Kill
 	String type();
 
 	/**
-	 * 系统发放事件（M5-b3x）：任务由真端发放系统（NPC 阵营日常轮换 / 挑战任务 / 世界 quest_area）
-	 * 直接启动，而不是 NPC 对话接取。真端普查证据：哨兵行 43/43 无生命周期三元组事件处理器。
+	 * 系统发放事件（M5-b3x）：任务由原版发放系统（NPC 阵营日常轮换 / 挑战任务 / 世界 quest_area）
+	 * 直接启动，而不是 NPC 对话接取。原版普查证据：哨兵行 43/43 无生命周期三元组事件处理器。
 	 * 该事件由发放服务显式分发；定义合成器用它表达 "NONE → START" 的系统发放边，
 	 * 让定义图在无接取路由时仍然连通。
 	 * <p>

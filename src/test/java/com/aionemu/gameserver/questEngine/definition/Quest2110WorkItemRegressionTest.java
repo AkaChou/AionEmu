@@ -11,11 +11,11 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 /**
- * 锁定 2110 的真端行事实：无工作物品门、接取不发放物品。
+ * 锁定 2110 的原版行事实：无工作物品门、接取不发放物品。
  * <p>
  * P3 重锚（计划 §8.9）：2110 自 SimpleTalk 切换批起由 native 车道直驱，typed 定义退出生产视图，
  * 旧断言（{@code ProductionQuestDefinitions.definition(2110)} 的 unaccepted→started 边、SELECT5 报告页）
- * 属 IR 形状，随切换批退场。改锚真端表行 + {@code quest.xml} 交付通道。
+ * 属 IR 形状，随切换批退场。改锚原版表行 + {@code quest.xml} 交付通道。
  * <p>
  * Locks quest 2110's retail row: no work-item gate and no grant on accept. The former IR-shape
  * assertions retired with the SimpleTalk switch batch (P3, plan §8.9).
@@ -28,7 +28,7 @@ class Quest2110WorkItemRegressionTest {
 	@Test
 	void retailRowCarriesNoWorkItemGateAndAcceptsWithoutGrantingTheLegacyItem() {
 		SimpleTalkHandler handler = SimpleTalkHandler.instance();
-		// 真端行：acquired=Kaindal / reward=Motgar、单步、零发放零回收列。
+		// 原版行：acquired=Kaindal / reward=Motgar、单步、零发放零回收列。
 		// Retail row: acquired=Kaindal / reward=Motgar, single step, no grant or removal column.
 		assertEquals(ACQUIRE_NPC, handler.acquireNpc(QUEST_ID));
 		assertEquals(REWARD_NPC, handler.rewardNpc(QUEST_ID));
@@ -39,7 +39,7 @@ class Quest2110WorkItemRegressionTest {
 
 		// 无 item_check ⇒ 无交付门；也不得因门通道缺失而 fail-closed。
 		// No item_check means no hand-in gate, and a missing gate channel must not fail closed here.
-		assertFalse(handler.requireRow(QUEST_ID).itemCheck(), "2110 真端行不得声明 item_check");
+		assertFalse(handler.requireRow(QUEST_ID).itemCheck(), "2110 原版行不得声明 item_check");
 		assertEquals(List.of(), handler.workItems(QUEST_ID), "无 item_check 行不得带交付门物品");
 		assertFalse(handler.unresolvedGate(QUEST_ID), "无 item_check 行不得 fail-closed");
 

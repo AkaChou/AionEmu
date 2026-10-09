@@ -31,9 +31,9 @@
     <node label="v2" status="START">
       <var name="var0" value="2"/>
     </node>
-    <!-- QE-054：装第二瓶水（use-item）后沿用 legacy/真端的 packed step 2——legacy
+    <!-- QE-054：装第二瓶水（use-item）后沿用 legacy/原版的 packed step 2——legacy
          `useQuestItem(env, item, 2, 2, true, 182206707, 1)` 的 reward 分支不写 nextStep，落盘 2；
-         真端 FUN_180f03f20 在 status==START && step==2 时以 `0x100(0x2afe, 0, 0)` 推进。
+         原版 FUN_180f03f20 在 status==START && step==2 时以 `0x100(0x2afe, 0, 0)` 推进。
          领奖行批次（7a7d27809）曾按客户端末行索引抬到 3，客户端任务书步骤落空。
          QE-054: after filling the second bottle the packed step stays the legacy/retail 2: the
          reward branch of legacy useQuestItem(2, 2, true) does not write nextStep; retail
@@ -48,7 +48,7 @@
   </nodes>
   <transitions>
     <!-- 无 source 自愈边：领奖行批次（7a7d27809）把领奖投影误抬到末行索引 3，并让该边把
-         按 legacy/真端正确落盘的存档从 2 改成 3；现改为反向归一（REWARD/3 → 2）。
+         按 legacy/原版正确落盘的存档从 2 改成 3；现改为反向归一（REWARD/3 → 2）。
          Source-less healing edge: the reward-row batch (7a7d27809) raised the reward projection
          to the last-row index 3 and made this edge rewrite correct legacy/retail saves from 2
          to 3; it is reversed here (REWARD/3 → 2). -->
@@ -163,7 +163,7 @@
       </actions>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-        <!-- 真端取证（ScriptDLL64 FUN_180f03f20，注册于 0xadc40f1）：装第二瓶水在 START/step==2 时 0x100 推进 + 0x2f8 通告，零发页；页 10 系翻译夸大，已删。
+        <!-- 原版取证（ScriptDLL64 FUN_180f03f20，注册于 0xadc40f1）：装第二瓶水在 START/step==2 时 0x100 推进 + 0x2f8 通告，零发页；页 10 系翻译夸大，已删。
              Retail evidence (ScriptDLL64 FUN_180f03f20, registered at 0xadc40f1): the second water fill at START/step==2 advances via 0x100 and notifies via 0x2f8 with no page; page 10 was translation exaggeration and is removed. -->
       </after-commit>
     </transition>

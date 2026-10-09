@@ -103,7 +103,7 @@ public class ZoneData {
 	}
 
 	/**
-	 * 按环数构造多边形区域：单环沿用 {@link PolyArea}；多环（真端多胞感官区）构造
+	 * 按环数构造多边形区域：单环沿用 {@link PolyArea}；多环（原版多胞感官区）构造
 	 * {@link MultiPolyArea}——每胞保留自己的 top/bottom，进入任一胞即算进入该区。
 	 * Builds the polygon area by ring count: a single ring keeps {@link PolyArea}; several rings (the
 	 * retail multi-cell sensory areas) become a {@link MultiPolyArea}, where every cell keeps its own

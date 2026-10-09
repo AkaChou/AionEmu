@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * 烙印槽位资格的数据面：真端 {@code reward_extend_stigma1} ↔ 定义 XML 的 {@code extend-stigma-slots} 属性。
+ * 烙印槽位资格的数据面：原版 {@code reward_extend_stigma1} ↔ 定义 XML 的 {@code extend-stigma-slots} 属性。
  * Java 侧据元数据判定资格，不再硬编码任务 ID、步数或教学结晶。
  * <p>
  * The data face of the stigma-slot entitlement: retail {@code reward_extend_stigma1} maps to the
@@ -25,7 +25,7 @@ class StigmaSlotQuestFlagTest {
 	private static final Path QUESTS = Path.of(
 		"src/main/resources/aion/data/static_data/quest/definitions/quests");
 
-	/** 真端 quest.xml 中带 {@code reward_extend_stigma1=1} 的 16 行中，本仓已有定义 XML 的 4 行。 / The four flagged retail rows that already have a definition XML here. */
+	/** 原版 quest.xml 中带 {@code reward_extend_stigma1=1} 的 16 行中，本仓已有定义 XML 的 4 行。 / The four flagged retail rows that already have a definition XML here. */
 	private static final Set<Integer> FLAGGED_QUESTS = Set.of(1929, 2900, 30217, 30317);
 
 	@Test

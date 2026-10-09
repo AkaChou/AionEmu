@@ -21,14 +21,14 @@ class LegacyTemplateMirrorRouteRegressionTest {
 
 	@Test
 	void itemCollectingMirrorsUseTheClientOwnedReportAndTurnInProtocol() throws Exception {
-		// 2237 仍是 XML_RETENTION 成员（真端 SimpleCollectItem 行的交付 NPC 三方不一致：
-		// retail-xml-retention.xml：SEMANTIC_GAP:REPORT_NPC_DIVERGENCE），不进真端编译集合
+		// 2237 仍是 XML_RETENTION 成员（原版 SimpleCollectItem 行的交付 NPC 三方不一致：
+		// retail-xml-retention.xml：SEMANTIC_GAP:REPORT_NPC_DIVERGENCE），不进原版编译集合
 		// （RetailQuestDriver.java:413-440：只有 RETAIL_TABLE 行进 retailOwned*，XML_RETENTION 只记
 		// reasons），因此定义由 XML 驱动、不在 S1 面内——报告页 SELECT5(2375) 与 20002
 		// (CHECK_USER_HAS_QUEST_ITEM_SIMPLE) 双 prio 检查对逐字保留在交付 NPC 832822 上
 		// （prio0 成功→reward + 窗 1，prio1 失败→CloseDialog）；物件 700145 已在物件 owner 收口
 		// （2026-10-08）中收敛为纯采集掉落（can-act + loot），不带任何对话/发页路由。
-		// 该行的真端校验动作是 20002（SIMPLE 变体）：真端 collect 行与 quest.xml 均无 39 检查轴。
+		// 该行的原版校验动作是 20002（SIMPLE 变体）：原版 collect 行与 quest.xml 均无 39 检查轴。
 		// 2237 stays XML-retained and outside the S1 face (only RETAIL_TABLE rows enter the retail
 		// driver), so its SELECT5(2375) report page and the 20002 dual-priority check pair are preserved
 		// verbatim on the turn-in NPC 832822; the object 700145 was trimmed to the pure collection drop
@@ -69,7 +69,7 @@ class LegacyTemplateMirrorRouteRegressionTest {
 			"quest 2237 failure response");
 
 		// P0-2/P0-3/P0c-19 规范形主语（SimpleCollectItem 2527/3096、SimpleTalk 11003/80356/80365）已随
-		// 各族真端采纳退役（XML 删除、生产视图无 IR）：IR 测试退役三式（QE-146）下，原本固定的交付路由
+		// 各族原版采纳退役（XML 删除、生产视图无 IR）：IR 测试退役三式（QE-146）下，原本固定的交付路由
 		// 断言（QUEST_SELECT 直翻 REWARD + 分档窗 + 39/20002 检查对缺席）改锚 native 注册面；交付形状
 		// 语义归各族族门承担（RetailSimpleCollectItemFamilyGateTest/RetailSimpleTalkFamilyGateTest 等）。
 		// The P0-2/P0-3/P0c-19 canonical-delivery subjects (SimpleCollectItem 2527/3096, SimpleTalk
@@ -391,7 +391,7 @@ class LegacyTemplateMirrorRouteRegressionTest {
 	}
 
 	private static QuestDefinition compile(int questId) throws Exception {
-		// 退役任务的生产 XML 只在 git 历史里：统一取生产视图（XML 目录 + 真端 overlay）。
+		// 退役任务的生产 XML 只在 git 历史里：统一取生产视图（XML 目录 + 原版 overlay）。
 		return ProductionQuestDefinitions.definition(questId).definition();
 	}
 

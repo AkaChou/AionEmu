@@ -62,7 +62,7 @@ class NativeQuestXmlTableTest {
 	@Test
 	void classPermittedFieldIsPreservedVerbatim() {
 		NativeQuestXmlTable.QuestRow row85 = NativeQuestXmlTable.instance().require(85);
-		// 真端 17 职业令牌空格分隔；字段保真不切分（切分语义归切换批）。 / 17 retail class tokens
+		// 原版 17 职业令牌空格分隔；字段保真不切分（切分语义归切换批）。 / 17 retail class tokens
 		// space-separated; the field is preserved verbatim (splitting is a switch-batch concern).
 		assertEquals("warrior scout mage cleric engineer artist fighter knight assassin ranger wizard "
 				+ "elementallist chanter priest gunner bard rider", row85.text("class_permitted"));

@@ -43,7 +43,7 @@
         <sync-quest-state mode="VISIBILITY_REFRESH"/>
       </after-commit>
     </transition>
-    <!-- QE-045/QE-054：真端与 legacy handler 进入 REWARD 时保持 packed step var0=0。
+    <!-- QE-045/QE-054：原版与 legacy handler 进入 REWARD 时保持 packed step var0=0。
          实机实测证实（2026-10-07）：若投影为 1，客户端任务书步骤整块空白（因客户端领奖态累计超出范围）；
          恢复 var0=0 投影，并补 REWARD/var0=1 -> 0 自愈边纠正错位存档。 -->
     <transition target="reward">
@@ -89,7 +89,7 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT1_1"/>
       </after-commit>
     </transition>
-    <!-- 拉比怖托斯递交推荐信并结束对话：真端 FUN_180caf150 在 0x280f(SET_SUCCEED) 执行 0x5d8 关窗，
+    <!-- 拉比怖托斯递交推荐信并结束对话：原版 FUN_180caf150 在 0x280f(SET_SUCCEED) 执行 0x5d8 关窗，
          不弹 SELECT1_2 拒信页（多余发页会导致客户端出现 2 个“结束对话”）。 -->
     <transition source="started" target="reward">
       <event>

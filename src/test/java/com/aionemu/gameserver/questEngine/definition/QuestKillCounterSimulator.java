@@ -140,9 +140,9 @@ final class QuestKillCounterSimulator {
 	}
 
 	/**
-	 * 台阶计数（真端 IR 形态）：击杀把局面一级一级推上节点台阶，转换上没有动作；每级往前挪的
-	 * 那个进度字段就是计数器（13765 真端形态为 a0→a1→…→a5，全部钉在 var0 上）。
-	 * 只在动作口径一无所获时才走这条路——否则真端"台阶 + 附带动词"的写法会把阶段标记也算进来。
+	 * 台阶计数（原版 IR 形态）：击杀把局面一级一级推上节点台阶，转换上没有动作；每级往前挪的
+	 * 那个进度字段就是计数器（13765 原版形态为 a0→a1→…→a5，全部钉在 var0 上）。
+	 * 只在动作口径一无所获时才走这条路——否则原版"台阶 + 附带动词"的写法会把阶段标记也算进来。
 	 * Ladder counters (the retail IR form): kills walk a node ladder whose transitions carry no
 	 * actions, and the progress field advanced by every rung is the counter. This rule only runs when
 	 * the action rule found nothing, so a mixed retail form cannot promote stage markers to counters.

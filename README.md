@@ -1,238 +1,170 @@
+<div align="center">
+
 # AionEmu
 
-[中文](docs/README.zh-CN.md)
+### High-performance, Authentic Aion 5.8 Community Server
+#### Single Maven project • Java 25 • Spring Boot 4.1
 
-Aion 5.8 community server. Single Maven project, JDK 25, Spring Boot starts login / game / chat.
+[![Java 25](https://img.shields.io/badge/Java-25-ED8B00?logo=openjdk&logoColor=white)](https://openjdk.org/)
+[![Spring Boot](https://img.shields.io/badge/Spring%20Boot-4.1-6DB33F?logo=springboot&logoColor=white)](https://spring.io/projects/spring-boot)
+[![Maven](https://img.shields.io/badge/Maven-Single--Module-C71A36?logo=apachemaven&logoColor=white)](https://maven.apache.org/)
+[![Protocol](https://img.shields.io/badge/Aion-5.8%20Emu-darkgreen)](https://github.com)
+[![License](https://img.shields.io/badge/License-GPL--3.0-blue.svg)](LICENSE)
 
-## Table of Contents
+[English](README.md) | [中文](docs/README.zh-CN.md)
 
-- [Highlights](#highlights)
-- [Tech Stack](#tech-stack)
-- [Quick Start](#quick-start)
-- [Client Setup](#client-setup)
-- [Configuration](#configuration)
-- [Runtime Scripts](#runtime-scripts)
-- [Environment Variables](#environment-variables)
-- [Network Endpoints](#network-endpoints)
-- [Project Layout](#project-layout)
-- [Documentation](#documentation)
-- [Development](#development)
-- [Troubleshooting](#troubleshooting)
-- [Credits](#credits)
-- [License](#license)
+</div>
 
-## Highlights
+---
 
-| Area | What is included |
-| --- | --- |
-| Runtime | Embedded login, game, and chat services with shared lifecycle and Netty transport. |
-| Game data | Data-driven quests, NPCs, spawns, skills, items, instances, events, housing, and world definitions. |
-| Drops | Deeply optimized NPC, quest, event, and global drop calculation; scalable Kinah rewards and level-based reduction; group distribution, roll/bid, auto-loot, pet/minion pickup, unique-drop announcements, and corpse lifecycle handling. |
-| AI & movement | Deeply optimized perception, aggro, skill selection, patrol, flee, escort, crowd avoidance, terrain-aware movement, and bounded stuck recovery. |
-| Geo & pathfinding | Terrain height, materials, visibility, and collision queries; original PATH `.path/.idx` multi-layer A*; long-distance block/portal search; PATH-Z-preserving smoothing with final GEO validation; 3D flight and swimming paths. |
-| Operations | External `aion.home` runtime directory, separated configuration and logs, packaged JAR/scripts, and admin/diagnostic commands. |
+## 📖 Introduction
 
-## Tech Stack
+**AionEmu** is a modern, modular, and high-performance server emulator for **Aion 5.8**, designed for production stability, maintainability, and authentic game mechanics.
 
-| Component | Choice |
-| --- | --- |
-| Language | Java 25 |
-| Framework | Spring Boot 4.1 (non-web application, Netty transport) |
-| Build | Maven, single module |
-| Database | MySQL |
-| Networking | Netty |
-| Scheduling | Quartz |
-| XML | Jakarta XML Binding / JAXB |
-| Testing | JUnit Jupiter |
+By unifying Login, Game, and Chat services into a single Spring Boot application, AionEmu combines cutting-edge Java 25 capabilities with deep original server/client behavioral parity.
 
-## Quick Start
+**Core Highlights:**
+- 📜 **Data-Driven Quests** — Replaces fragmented Java handlers with a unified native data-driven runtime (`tablelane`).
+- 🎯 **Authentic Behavior Parity** — Rigorously aligned dialogue ladders, state advancement axes, reward projections, and drop mechanics.
+- 🧠 **Modern AI & Movement** — Terrain-aware navigation, crowd avoidance, and client-side simulated minion following without server lag.
+- ⚔️ **Authentic Combat & CC** — Complete original PvP crowd-control decay chains (paralyze, sleep, fear resistance scaling).
+- 🛠️ **Developer & Ops Friendly** — Externalized runtime (`aion.home`), zero-touch config preservation, and streamlined GM diagnostic toolsets.
 
-### Requirements
+---
 
-- JDK 25 or newer
-- Maven 3.7 or newer
-- MySQL for login and game persistence
-- An Aion 5.8 client for connecting to the server
+## ⭐ Core Features
 
-### 1. Initialize the databases
+| Feature | Description | Parity & Status |
+| --- | --- | :---: |
+| 📜 [**Data-Driven Quest Engine**](docs/quest/QUEST_REPAIR_PLAYBOOK.zh-CN.md) | Native table-driven execution engine replacing 1,500+ hardcoded Java files; full coverage of multi-stage dialogue, hunt, collect, and movie sequences. | ✅ Authentic Parity |
+| 🧠 **AI & Pathfinding Engine** | Original `.path/.idx` multi-layer A* 3D navigation; optimized aggro, patrol, escort, and obstacle handling. | ✅ Enhanced |
+| 🐾 **Client-Simulated Minions** | Fully authentic minion follow model simulated on the client side, eliminating server pathfinding overhead and spammy teleport broadcasts. | ✅ Client Simulation |
+| ⚔️ **PvP CC Decay Chains** | Port of original abnormal status diminishing returns with dynamic resistance increase and tiered time windows. | ✅ Authentic Parity |
+| 🎁 **Scalable Drops & Economy** | Dynamic drop calculations, level-based reduction, group roll/bid, auto-loot, and corpse lifecycle management. | ✅ Complete |
+| 🛠️ **Operations & GM Tooling** | Batch spawning (`//spawn <id>*<count>`), persistent/non-persistent spawn separation (`//spawn` vs `//spawns`), and automated packaging. | ✅ Ready |
 
-The SQL dumps create the required databases and tables:
+---
+
+## 🗺️ Roadmap
+
+| Milestone & Direction | Scope & Objectives | Status |
+| --- | --- | :---: |
+| 📜 **Data-Driven Quest Migration** | Full migration of 1,500+ hardcoded Java quest handlers to a unified native table-driven runtime aligned with authentic 5.8. | [x] |
+| 🏰 **Instance Engine & Original Mechanics** | Deep alignment of 5.8 original instance workflows, boss phase AI decoupling, and data-driven instance script orchestration. | [ ] |
+| ⚡ **Go Transformation & Microservices** | Incremental re-architecture with Go: high-concurrency connection gateway, decoupled login/chat standalone services, and low-latency packet routing. | [ ] |
+| 📦 **Static Data Modernization** | Migrating voluminous XML static datasets into streaming, memory-mapped compact JSONL / binary formats to minimize startup footprint. | [ ] |
+
+---
+
+## ⚡ Quick Start
+
+### Prerequisites
+
+- **JDK 25** or newer
+- **Maven 3.7** or newer
+- **MySQL 8.0+**
+- **Aion 5.8 Client**
+
+### 1. Database Initialization
+
+Database schemas and initial data scripts are located at:
+- **Login Server**: `src/main/resources/db/mysql/al_server_ls.sql`
+- **Game Server**: `src/main/resources/db/mysql/al_server_gs.sql`
+
+### 2. Build & Deploy
 
 ```bash
-mysql -u root -p < src/main/resources/db/mysql/al_server_ls.sql
-mysql -u root -p < src/main/resources/db/mysql/al_server_gs.sql
-```
-
-### 2. Package the server
-
-```bash
+# Package server and deploy to local aion/ runtime directory
 ./scripts/package.sh
 ```
 
-This builds `target/AionEmu.jar` and deploys the JAR, resources, and lifecycle scripts to `aion/` (or the directory in `AION_HOME`). The default build skips tests; see [Development](#development) for test and repackaging options.
+> **Tip**: Use `./scripts/re-package.sh` for subsequent builds to automatically preserve existing configurations under `aion/config/`.
 
-### 3. Configure the runtime
-
-Edit the deployed configuration after the first package:
-
-```text
-aion/config/login/database.properties
-aion/config/network/database.properties
-aion/config/network/network.properties
-```
-
-Set the database credentials and the public game/chat addresses before allowing clients to connect. Use `./scripts/re-package.sh` for later builds when existing runtime configuration must be preserved.
-
-### 4. Start and stop
+### 3. Start & Monitor
 
 ```bash
+# Start background server
 ./aion/start-silent.sh
+
+# Follow live log
 tail -f aion/log/aionemu.log
-./aion/shutdown.sh       # graceful shutdown
+
+# Graceful shutdown
+./aion/shutdown.sh
+# or immediate stop
 ./aion/stop-silent.sh
 ```
 
-Use `AION_HOME=/path/to/runtime` to deploy or run from another runtime directory. `AION_HEAP_OPTS` and the other `AION_*_OPTS` variables can override JVM settings.
+---
 
-```bash
-AION_HOME=/path/to/runtime ./aion/start-silent.sh
-```
+## 🎮 Client Patch Setup
 
-To clean runtime data before starting (keeps the JAR and scripts):
+The `patch/` directory contains client-side patches and enhancements for the Aion 5.8 client:
 
-```bash
-./aion/start-silent.sh -c
-```
+- **`bin64/`** — Modified core runtime library (`Game.dll`) for client compatibility.
+- **`L10N/CHS/`** — Localized quest and interface text data (`data.pak`).
+- **`Levels/`** — World and level terrain fixes (`Level.pak`).
+- **`Textures/ui/`** — UI icons and visual texture updates (`ui.pak`).
 
-## Client Setup
+### How to Install
 
-See [Client patch documentation](patch/patch_documentation.md) for optional Aion 5.8 client patches (quest localization and VIP `Game.dll`).
+> ⚠️ **Warning**: Always back up the corresponding files and directories in your Aion 5.8 client folder before applying any patches!
 
-## Configuration
+1. Locate your **Aion 5.8 Client** root installation directory.
+2. Back up the original `bin64/`, `L10N/`, `Levels/`, and `Textures/` folders.
+3. Copy all folders inside `patch/` (`bin64`, `L10N`, `Levels`, `Textures`) and paste them directly into your client root directory, overwriting existing files when prompted.
 
-The main runtime configuration files under `aion/config/` are:
+---
 
-| File | Purpose |
+## 🛠️ Operations & Development
+
+### Common Commands
+
+| Command | Purpose |
 | --- | --- |
-| `login/database.properties` | Login database (`al_server_ls`) connection settings |
-| `network/database.properties` | Game database (`al_server_gs`) connection settings |
-| `network/network.properties` | Client ports, public addresses, internal service addresses, and service passwords |
-| `main/*.properties` | Gameplay, AI, drops, rates, instances, and other server behavior |
-| `administration/*.properties` | Admin/GM commands, panels, and restrictions |
-| `schedule/*.xml` | Scheduled events, instances, sieges, and world activities |
+| `./scripts/package.sh` | Clean, compile, package, and deploy fresh runtime to `aion/` |
+| `./scripts/re-package.sh` | Rebuild and deploy while preserving customized `aion/config/` |
+| `AION_HOME=/path/to/dir ./aion/start-silent.sh` | Run using an externalized runtime directory |
+| `./aion/start-silent.sh -c` | Clean transient runtime data while preserving JARs and configs |
+| `mvn test` | Run project test suites |
 
-Service enablement is configured in `src/main/resources/application.yml` (bundled inside the JAR): which of the login, game, and chat services start, and the Netty transport mode.
+### Key Project Paths
 
-## Runtime Scripts
+- **Entry Point**: `src/main/java/com/aionemu/AionBootApplication.java`
+- **Application Config**: `src/main/resources/application.yml`
+- **Game Static Data**: `src/main/resources/aion/data/`
+- **Runtime Deployment**: `aion/` (`aion.home`)
 
-| Script | Description |
-| --- | --- |
-| `start-silent.sh` | Start the server in the background, write PID and log files |
-| `start-silent.sh -c` | Clean runtime data before starting (keeps JAR and scripts) |
-| `shutdown.sh` | Request graceful shutdown and wait up to `AION_SHUTDOWN_TIMEOUT` seconds |
-| `stop-silent.sh` | Stop the server, with optional force-kill after `AION_STOP_TIMEOUT` seconds |
+---
 
-## Environment Variables
+## 💡 Contributing
 
-| Variable | Default | Description |
-| --- | --- | --- |
-| `AION_HOME` | `aion/` or the script directory | Runtime directory for JAR, config, data, and logs |
-| `AION_JAR_FILE` | `$AION_HOME/AionEmu.jar` | Path to the server JAR |
-| `AION_LOG_DIR` | `$AION_HOME/log` | Log directory |
-| `AION_LOG_FILE` | `$AION_LOG_DIR/aionemu.log` | Main log file |
-| `AION_PID_FILE` | `$AION_LOG_DIR/aionemu.pid` | PID file |
-| `AION_HEAP_OPTS` | `-Xms2g -Xmx8g` | JVM heap settings |
-| `AION_GC_OPTS` | G1GC with bounded pause targets | JVM garbage-collection settings |
-| `AION_SAFETY_OPTS` | Heap dump and exit-on-OOM | JVM crash-safety settings |
-| `AION_SYSTEM_OPTS` | UTF-8, IPv4, Asia/Shanghai timezone | JVM system properties |
-| `AION_PATH_OPTS` | `-Daion.home=$AION_HOME -Daion.log.dir=$AION_LOG_DIR` | Path system properties pointing to the runtime and log directories |
-| `AION_JVM_OPTS` | Composed from the `AION_*_OPTS` above | Full JVM option line |
-| `AION_SHUTDOWN_TIMEOUT` | `120` | Graceful shutdown timeout in seconds |
-| `AION_STOP_TIMEOUT` | `30` | Stop timeout before force-kill in seconds |
-| `AION_FORCE_STOP` | `true` | Whether to force-kill after `AION_STOP_TIMEOUT` |
-| `AION_PRESERVE_CONFIG` | `false` | Preserve existing runtime config during `scripts/package.sh` when `true` |
-| `MAVEN_THREADS` | `1C` | Maven parallel build threads used by `scripts/package.sh` and `scripts/re-package.sh` (`1` disables reactor parallelism) |
+We welcome community contributions, bug reports, and authentic parity fixes! To contribute:
 
-## Network Endpoints
+1. **Fork the Repository**: Create your feature branch (`git checkout -b feature/amazing-feature`).
+2. **Follow Project Guidelines**:
+   - Class and core method documentation must include **bilingual (EN/ZH)** Javadoc.
+   - Adhere to data-driven design — avoid hardcoded exceptions in the engine.
+   - Ensure clean code standards (immutability, Java 25 features, zero swallowing of exceptions).
+3. **Verify & Test**: Run project unit and regression tests (`mvn test`) before submitting.
+4. **Open a Pull Request**: Provide a clear description of your changes, reference any relevant issue, and include test verification evidence.
 
-| Service | Default port | Purpose |
-| --- | ---: | --- |
-| Login client | `2106` | Client login |
-| Game client | `7777` | World/game connection |
-| Chat client | `10241` | Chat connection |
-| Game -> login | `9014` | Internal service connection |
-| Game -> chat | `9021` | Internal service connection |
+---
 
-Ports and advertised addresses are configured in [`network.properties`](src/main/resources/aion/config/network/network.properties).
+## 🤝 Acknowledgments & Credits
 
-## Project Layout
+- Based on **Aion 5.8 Community Emulator** and earlier community work.
+- Architecture and original protocol insights inspired by [Beyond Aion](https://github.com/beyond-aion/aion-server) (Aion 4.8, GPL-3.0).
+- Special thanks to **Aion-Lightning**, **Encom**, and the open-source Aion emulation community.
 
-| Path | Purpose |
-| --- | --- |
-| `src/main/java/com/aionemu/` | Boot, shared infrastructure, login, game, and chat source |
-| `src/main/resources/application.yml` | Spring Boot entry configuration |
-| `src/main/resources/aion/data/` | Versioned static game data, quests, definitions, and packets |
-| `src/main/resources/aion/definitions/` | Compact data definitions, schemas, and generation inputs |
-| `src/main/resources/aion/geo/` | Terrain, collision, and original PATH resources |
-| `src/main/resources/aion/config/` | Versioned configuration defaults |
-| `src/main/resources/db/mysql/` | Login and game database schemas |
-| `aion/` | Local deployment directory for JAR, runtime config, and logs |
-| `scripts/` | Runtime, packaging, auditing, data generation, and maintenance tools |
-| `docs/` | Quest, pathfinding, terminology, and maintenance documentation |
-| `patch/` | Aion 5.8 client patch files and usage notes |
+---
 
-## Documentation
+## 📄 License
 
-- [A* PATH pathfinding plan](docs/PATH_ASTAR_REFACTOR_PLAN.md)
-- [Static data XML → JSONL migration plan](docs/STATIC_DATA_JSONL_MIGRATION.zh-CN.md)
-- [Quest writing guide](docs/quest/WRITING_GUIDE.md) / [中文](docs/quest/WRITING_GUIDE.zh-CN.md)
-- [Quest repair playbook](docs/quest/QUEST_REPAIR_PLAYBOOK.zh-CN.md)
-- [Quest client-dialog mapping](docs/quest/client-dialog-mapping/README.zh-CN.md)
-- [Game terminology EN/中文](docs/aion-game-terms-en-zh.md)
-- [Client patch documentation](patch/patch_documentation.md)
+This project is licensed under the [GNU General Public License v3.0](LICENSE).
 
-## Development
+<div align="center">
 
-Run the test suite from the repository root:
+**AionEmu** • Crafting the ultimate Aion 5.8 server experience.
 
-```bash
-mvn test
-```
-
-Build a runnable JAR:
-
-```bash
-mvn package
-```
-
-Or use the packaging wrapper to build and deploy in one step:
-
-```bash
-./scripts/package.sh                              # default: clean + skip tests + package + deploy, using 1C Maven threads
-MAVEN_THREADS=2C ./scripts/package.sh             # use two Maven threads per available CPU core
-./scripts/package.sh -DskipTests=false package    # run tests during packaging
-./scripts/re-package.sh                           # deploy while preserving existing runtime config
-```
-
-The application entry point is `com.aionemu.AionBootApplication`.
-
-## Troubleshooting
-
-| Symptom | Likely fix |
-| --- | --- |
-| `Missing target/AionEmu.jar` | Run `./scripts/package.sh` first. |
-| `AionEmu is already running` | Use `./aion/shutdown.sh` or `./aion/stop-silent.sh`; check `aion/log/aionemu.pid`. |
-| Database connection failure | Verify MySQL is running, credentials in `aion/config/login/database.properties` and `aion/config/network/database.properties`, and that both SQL dumps were imported. |
-| Client cannot connect | Check `aion/config/network/network.properties` public addresses/ports and firewall rules. |
-| Runtime config overwritten by build | Use `./scripts/re-package.sh` or set `AION_PRESERVE_CONFIG=true` when running `./scripts/package.sh`. |
-| Need a clean runtime | Run `./aion/start-silent.sh -c` (keeps JAR and scripts). |
-
-## Credits
-
-Based on Aion 5.8 Community Emulator and earlier community work.
-
-Thanks to Aion-Lightning, Encom, [Beyond Aion](https://github.com/beyond-aion/aion-server), and the many community contributors behind earlier Aion server work.
-
-## License
-
-This project is licensed under [GPL-3.0](LICENSE).
+</div>

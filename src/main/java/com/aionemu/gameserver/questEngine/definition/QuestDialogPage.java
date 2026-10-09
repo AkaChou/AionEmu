@@ -206,7 +206,7 @@ public enum QuestDialogPage {
 
 	/**
 	 * 选择对话续页（{@code SELECT⟨n⟩_⟨m⟩…} 子页，如 {@code SELECT2_1}(1353)）：客户端把这些页的
-	 * 翻页按钮写作页 id 本身，真端对该动作**原样回发该页**（9/28 基线跨任务实证：1353/1354/
+	 * 翻页按钮写作页 id 本身，原版对该动作**原样回发该页**（9/28 基线跨任务实证：1353/1354/
 	 * 1694/1695/2035/2376）。顶层页（{@code SELECT_QUEST}(10)、{@code SELECT_NONE}(4762)、
 	 * {@code SELECT1..14} 主线页）不是动作；{@code CHECK_USER_ITEM_OK/FAIL} 与
 	 * {@code DEFAULT_SUCCESS} 是动作常量而非页。

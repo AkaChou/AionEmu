@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * 14123 的任务刷怪边：击杀目标 {@code Peddler Hippola}(206360) 在本服 {@code spawns/**} 里没有任何静态
- * spot，只由本任务在接取/进区/登入时刷出——真端家族表没有刷怪列，因此该行按
+ * spot，只由本任务在接取/进区/登入时刷出——原版家族表没有刷怪列，因此该行按
  * {@code SEMANTIC_GAP:QUEST_SPAWN_UNEXPRESSED} 保留 XML（P0c-6 裁定），本文件即该裁定的证据锁。
  * Quest 14123 keeps its XML (P0c-6, SEMANTIC_GAP:QUEST_SPAWN_UNEXPRESSED): its kill target exists in
  * the world only through this quest's own spawn edges, which no retail table column can express.

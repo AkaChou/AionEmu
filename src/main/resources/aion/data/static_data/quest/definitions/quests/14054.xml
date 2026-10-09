@@ -258,7 +258,7 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT6"/>
       </after-commit>
     </transition>
-    <!-- 真端取证（ScriptDLL64 FUN_180fce410/FUN_180fce860）：SETPRO6 → 推进 + 0x5d8 关窗（实机 2026-10-05 两次点击实证）；页 10 系翻译夸大，已删。 -->
+    <!-- 原版取证（ScriptDLL64 FUN_180fce410/FUN_180fce860）：SETPRO6 → 推进 + 0x5d8 关窗（实机 2026-10-05 两次点击实证）；页 10 系翻译夸大，已删。 -->
     <transition source="s4" target="reward">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="802050" action="SETPRO6"/>

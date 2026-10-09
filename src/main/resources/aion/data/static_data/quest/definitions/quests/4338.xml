@@ -51,10 +51,10 @@
     <node label="s5" status="START">
       <var name="var0" value="5" />
     </node>
-    <!-- QE-054：扔项链（use-item）后 = 真端 REWARD 且轴保持 5——真端 FUN_180f00820 在
+    <!-- QE-054：扔项链（use-item）后 = 原版 REWARD 且轴保持 5——原版 FUN_180f00820 在
          status==START && step==5 时以 `0x100(0x10f2, 0, 0)` 推进；轴 5 由选向导的
          `0x110(0x10f2, 4, 5, ...)`（FUN_180fb8390/FUN_180fb84d0）显式写入。
-         错误批次曾写成推进到 6、汇报后再抬到 7，两处都非真端值。
+         错误批次曾写成推进到 6、汇报后再抬到 7，两处都非原版值。
          QE-054: throwing the necklace (use-item) enters REWARD with the axis kept at 5: retail
          FUN_180f00820 advances via 0x100(0x10f2, 0, 0) on START/step==5, and step 5 itself is
          written explicitly by 0x110(0x10f2, 4, 5, ...) in FUN_180fb8390/FUN_180fb84d0. The faulty
@@ -397,7 +397,7 @@
       </after-commit>
     </transition>
 
-    <!-- 步骤 5：在熔岩区使用被诅咒的项链 182215326 销毁 → 直接进入领奖态（真端 0x100 推进、轴保持 5）。
+    <!-- 步骤 5：在熔岩区使用被诅咒的项链 182215326 销毁 → 直接进入领奖态（原版 0x100 推进、轴保持 5）。
          Step 5: throwing the cursed necklace into the lava enters REWARD directly (retail 0x100
          advance keeps the axis at 5). -->
     <transition source="s5" target="reward">

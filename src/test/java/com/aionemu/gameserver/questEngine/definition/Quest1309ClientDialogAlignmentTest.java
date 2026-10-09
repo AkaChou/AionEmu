@@ -19,7 +19,7 @@ import com.aionemu.gameserver.questEngine.tablelane.NativeTalkFixture;
 import com.aionemu.gameserver.questEngine.tablelane.SimpleUseItemHandler;
 
 /**
- * 任务 1309（真端 SimpleUseItem 行）的接取页契约：物品接取只下发客户端声明的问询窗，无主 1002 接受
+ * 任务 1309（原版 SimpleUseItem 行）的接取页契约：物品接取只下发客户端声明的问询窗，无主 1002 接受
  * 只刷新状态并**关窗**，绝不回发不存在的接取页。
  * <p>
  * P5 重锚（计划 §8.9）：该行已由 {@link SimpleUseItemHandler} 原生直驱，typed 目录里不再有它的定义
@@ -40,10 +40,10 @@ class Quest1309ClientDialogAlignmentTest {
 		assertTrue(ProductionQuestDefinitions.catalog().findExecutable(QUEST_ID).isEmpty(),
 			"已切换行不得再出现在 typed 目录（单一 owner）");
 
-		// 真端 minlevel_permitted = 22，故用 30 级玩家过 CanAcquireQuest 轴。
+		// 原版 minlevel_permitted = 22，故用 30 级玩家过 CanAcquireQuest 轴。
 		Player player = NativeTalkFixture.player(Race.ELYOS, PlayerClass.WARRIOR, 30);
 		Integer useItem = handler.useItemId(QUEST_ID);
-		assertNotNull(useItem, "真端 use_item_name 必须解析");
+		assertNotNull(useItem, "原版 use_item_name 必须解析");
 
 		// 用物只下发接取问询窗（页 4，客户端任务页声明），不得回发其他页。
 		NativeTalkFixture.clearPackets(player);
@@ -65,11 +65,11 @@ class Quest1309ClientDialogAlignmentTest {
 	void theRelayStepAndHandInUseClientDeclaredPages() {
 		SimpleUseItemHandler handler = SimpleUseItemHandler.instance();
 		List<Integer> relays = handler.relayNpcs(QUEST_ID);
-		assertEquals(1, relays.size(), "真端 talk_npc1 = 单步中继");
+		assertEquals(1, relays.size(), "原版 talk_npc1 = 单步中继");
 		assertTrue(NativeTalkFixture.clientDeclares(QUEST_ID, QuestDialogPage.SELECT2.id()),
 			"中继步页必须是客户端声明的 SELECT2");
 
-		// 真端 minlevel_permitted = 22，故用 30 级玩家过 CanAcquireQuest 轴。
+		// 原版 minlevel_permitted = 22，故用 30 级玩家过 CanAcquireQuest 轴。
 		Player player = NativeTalkFixture.player(Race.ELYOS, PlayerClass.WARRIOR, 30);
 		NativeTalkFixture.start(player, QUEST_ID);
 		NativeTalkFixture.clearPackets(player);

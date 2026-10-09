@@ -2,9 +2,9 @@
 <!-- npcfactions_quest.xml 表 schema（quest retail 表门禁用，2026-10-03 DOCTYPE 剥离同批）。
      镜像口径 = 装载器 fail-closed 规则 ∪ 观察形全域钉（证据 + 生成器：
      .agents/summary/quest-engine-native/p0b/）：
-     - 真端源件副本（本仓无运行时装载器；消费面 = 阵营合同台账生成）。行 = <quest_id
+     - 原版源件副本（本仓无运行时装载器；消费面 = 阵营合同台账生成）。行 = <quest_id
        quest_id>（属性必填、非负、全表唯一）；星期位 mon..sun ∈ {0,1}（全 0 =
-       真端本征不轮换）。
+       原版本征不轮换）。
      npcfactions_quest.xml schema (quest retail table gate, same batch as the 2026-10-03 DOCTYPE strip).
      Mirrors the loader fail-closed rules plus observed-universe shape pins (evidence + generator under
      `.agents/summary/quest-engine-native/p0b/`):

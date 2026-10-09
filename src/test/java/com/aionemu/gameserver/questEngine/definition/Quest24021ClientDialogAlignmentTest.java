@@ -12,10 +12,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * 锁定任务 24021 Ghosts in the Desert 的步号轴与撒药分支（QE-054 口径）。
- * 步号轴遵循真端与 legacy 的权威值：接取/对话递进 0 -&gt; 1 -&gt; 2 -&gt; 3 -&gt; 4
- * （真端选项 10003 = SETPRO4 的 FUN_180faea90 显式 SetProgress(0x5dd5, 4)；legacy
+ * 步号轴遵循原版与 legacy 的权威值：接取/对话递进 0 -&gt; 1 -&gt; 2 -&gt; 3 -&gt; 4
+ * （原版选项 10003 = SETPRO4 的 FUN_180faea90 显式 SetProgress(0x5dd5, 4)；legacy
  * defaultCloseDialog(env, 3, 4, 182215363, ...)），撒 24021c（use-item + 区域
- * DF2_ITEMUSEAREA_Q2032）进 REWARD 时保持 4（真端 FUN_180f00500 以 0x100(0x5dd5, 0, 0) 推进；
+ * DF2_ITEMUSEAREA_Q2032）进 REWARD 时保持 4（原版 FUN_180f00500 以 0x100(0x5dd5, 0, 0) 推进；
  * legacy useQuestItem(env, item, 4, 4, true, 88) 的 reward 分支不写 nextStep）。
  * 领奖行批次（7a7d27809）曾按末行索引把领奖投影抬到 5 并把自愈边写成 4 -&gt; 5（会改坏正确存档）。
  * Locks quest 24021's step axis and scatter branch (QE-054 caliber).
@@ -39,7 +39,7 @@ class Quest24021ClientDialogAlignmentTest {
 		assertNode(definition, "s4", QuestStatus.START, Map.of("var0", 4));
 		assertNode(definition, "reward", QuestStatus.REWARD, Map.of("var0", 4));
 
-		// Tofynir 给道具并推进 3 -> 4（真端选项 10003=SETPRO4；legacy defaultCloseDialog(3, 4, ...)）。
+		// Tofynir 给道具并推进 3 -> 4（原版选项 10003=SETPRO4；legacy defaultCloseDialog(3, 4, ...)）。
 		// Tofynir hands the item and advances 3 -> 4 (retail option 10003=SETPRO4; legacy
 		// defaultCloseDialog(3, 4, ...)).
 		QuestTransition handover = transition(definition, "s3", "s4",
@@ -49,7 +49,7 @@ class Quest24021ClientDialogAlignmentTest {
 			new QuestAction.GiveItem(SCATTER_ITEM_ID, 1),
 			new QuestAction.SetVariable("var0", 4)), handover.actions());
 
-		// 撒 24021c：进 REWARD，步号保持 4（真端 0x100 推进；legacy reward 分支不写 nextStep）。
+		// 撒 24021c：进 REWARD，步号保持 4（原版 0x100 推进；legacy reward 分支不写 nextStep）。
 		// Scatter: enters REWARD keeping step 4 (retail 0x100 advance; the legacy reward branch
 		// writes no nextStep).
 		QuestTransition scatter = transition(definition, "s4", "reward",

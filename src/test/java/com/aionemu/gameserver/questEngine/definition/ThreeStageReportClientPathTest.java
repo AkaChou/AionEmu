@@ -146,7 +146,7 @@ class ThreeStageReportClientPathTest {
 	}
 
 	private static QuestDefinition definition(int questId) {
-		// 退役任务不再有 XML：统一走生产视图（1876 等链行已真端驱动）。
+		// 退役任务不再有 XML：统一走生产视图（1876 等链行已原版驱动）。
 		// Retired quests have no XML: resolve through the production view.
 		return ProductionQuestDefinitions.definition(questId).definition();
 	}

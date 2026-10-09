@@ -5,7 +5,7 @@ import java.util.Arrays;
 /**
  * 玩家「重复异常状态递减链」运行时状态（内存态，不持久化）。
  * Per-player repeated-abnormal decay chain state (in-memory only, never persisted).
- * <p>该类型只服务 {@link Player}：按数据表位置记录每种受控状态（真端表仅 PARALYZE / SLEEP /
+ * <p>该类型只服务 {@link Player}：按数据表位置记录每种受控状态（原版表仅 PARALYZE / SLEEP /
  * FEAR）的累积命中步数与上次命中时刻；数组首次写入才分配，未记录、从未命中或已出窗口
  * 一律返回 0（视为全新链），无需定时任务归零——陈旧时间戳会让链自然失效。
  * This type only serves {@link Player}: it stores, per table position, the accumulated hit step
@@ -19,7 +19,7 @@ import java.util.Arrays;
  */
 final class PlayerRepeatedAbnormalStatus {
 
-	/** 真端步数上限：档位 1..5 读取，5 为封顶 / Retail step ceiling: tiers 1..5, capped at 5. */
+	/** 原版步数上限：档位 1..5 读取，5 为封顶 / Retail step ceiling: tiers 1..5, capped at 5. */
 	static final int MAX_STEP = 5;
 
 	/** 各状态的累积步数，索引 = 数据表位置 / accumulated steps indexed by table position. */

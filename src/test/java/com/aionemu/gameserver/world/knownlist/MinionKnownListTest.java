@@ -61,7 +61,7 @@ class MinionKnownListTest {
 		String service = Files.readString(
 				Path.of("src/main/java/com/aionemu/gameserver/services/toypet/MinionService.java"));
 
-		// 真端架构：minion 移动由客户端本地模拟，服务端禁止跟随 tick / SM_MOVE 移动包 / 距离瞬拉。
+		// 原版架构：minion 移动由客户端本地模拟，服务端禁止跟随 tick / SM_MOVE 移动包 / 距离瞬拉。
 		// 断言匹配代码形态（import/调用），避免命中本文档注释中的术语字样。
 		// Retail architecture: minion movement is client-simulated; the server must not run follow
 		// ticks, emit SM_MOVE segments or blink-teleport by distance. Assertions match code shapes

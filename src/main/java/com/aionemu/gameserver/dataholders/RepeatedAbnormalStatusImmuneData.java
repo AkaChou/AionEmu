@@ -17,7 +17,7 @@ import com.aionemu.gameserver.skillengine.effect.AbnormalState;
 /**
  * 重复异常状态免疫数据容器，按异常状态与抵抗属性双重索引。
  * Repeated-abnormal-status immunity data holder indexing entries by abnormal state and resist stat.
- * <p>仅收录真端表内状态（PARALYZE / SLEEP / FEAR）；表外状态（含 STUN）在读取端
+ * <p>仅收录原版表内状态（PARALYZE / SLEEP / FEAR）；表外状态（含 STUN）在读取端
  * 自然查不到条目，不参与递减链。
  * Only states present in the retail table (PARALYZE / SLEEP / FEAR) are indexed; states absent
  * from it (STUN included) resolve to no entry and take no part in the decay chain.</p>

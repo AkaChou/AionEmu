@@ -3,7 +3,7 @@
   1114 仙女的礼服：两条交付分支各对应一档奖励，档位必须与客户端窗口一致。
   * 阿斯特罗斯(203058) 分支 = 诚实交还，下发 select_quest_reward1，领取第 1 档(GOLD 1920 / EXP 4367)；
   * 纳摩斯(203075) 分支 = 满足其愿望，下发 select_quest_reward2，领取第 2 档(GOLD 960 / EXP 3120)。
-  证据：旧版 handler 中 Asteros 发送页面 5、Namus 发送页面 6；真端 quest.xml 第 1/2 档奖励分别
+  证据：旧版 handler 中 Asteros 发送页面 5、Namus 发送页面 6；原版 quest.xml 第 1/2 档奖励分别
   为 4367/1920 与 3120/960；客户端 select_quest_reward1 文案为“被你的正直感动”的正直奖赏。
   1114 The Nymph's Gown: each hand-in branch owns exactly one reward tier and must open its own
   client window. Asteros (203058) = honest return -> select_quest_reward1 -> tier 1 (GOLD 1920 /

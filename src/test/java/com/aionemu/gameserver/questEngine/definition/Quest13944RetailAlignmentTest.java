@@ -23,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * 锁定任务 13944（[연합] 신성의 요새 상급 정찰부대 처치）的真端 DD 行（Talk + Hunt）与三杀交付。
+ * 锁定任务 13944（[연합] 신성의 요새 상급 정찰부대 처치）的原版 DD 行（Talk + Hunt）与三杀交付。
  * Locks quest 13944's retail DD row (Talk + Hunt) and its three-kill hand-in.
  * <p>
  * 已退役（保留清单 owner=RETAIL_TABLE，family=DataDriven）：旧测试直接读生产 quests/13944.xml（已删除，
@@ -52,9 +52,9 @@ class Quest13944RetailAlignmentTest {
 			Quest13944RetailAlignmentTest.class
 				.getResourceAsStream(DataDrivenNativeRuntime.TABLE_RESOURCE));
 		DataDrivenQuestTable.Row row = table.find(QUEST_ID).orElseThrow();
-		assertEquals("talk", row.acquireKind(), "接取类别 = 真端 Talk 行");
-		assertEquals("Ab1_Dian_E", row.acquireParam(), "接取 NPC 名 = 真端 value0_acquire_");
-		assertEquals("Ab1_Dian_E", row.rewardNpc(), "交付 NPC 名 = 真端 reward_npc_name");
+		assertEquals("talk", row.acquireKind(), "接取类别 = 原版 Talk 行");
+		assertEquals("Ab1_Dian_E", row.acquireParam(), "接取 NPC 名 = 原版 value0_acquire_");
+		assertEquals("Ab1_Dian_E", row.rewardNpc(), "交付 NPC 名 = 原版 reward_npc_name");
 		assertTrue(runtime.acquireTalkInterests().getOrDefault(DIAN_NPC_ID, List.of()).contains(QUEST_ID),
 			"Dian 必须注册 13944 的接取谈话面");
 
@@ -71,8 +71,8 @@ class Quest13944RetailAlignmentTest {
 
 		QuestMetadata metadata = RetailQuestDriver.ensureLoaded()
 			.retailMetadataOf(QUEST_ID).orElseThrow().metadata();
-		assertEquals(66, metadata.minLevel(), "真端 minlevel_permitted=66");
-		assertEquals(java.util.Set.of("ELYOS"), metadata.permittedRaces(), "真端 pc_light");
+		assertEquals(66, metadata.minLevel(), "原版 minlevel_permitted=66");
+		assertEquals(java.util.Set.of("ELYOS"), metadata.permittedRaces(), "原版 pc_light");
 		List<QuestReward> rewards = metadata.rewards();
 		assertTrue(rewards.contains(new QuestReward("EXP", 0, 93626245)), () -> rewards.toString());
 		assertTrue(rewards.contains(new QuestReward("ITEM", 188058110, 1)), () -> rewards.toString());
@@ -84,7 +84,7 @@ class Quest13944RetailAlignmentTest {
 		Player player = NativeTalkFixture.player(Race.ELYOS, PlayerClass.WARRIOR, 66);
 		place(player, 0f, 0f, 0f);
 
-		// 未接取：任务行打开真端接取入口页（4762 = 客户端声明的 select_none），带任务上下文。
+		// 未接取：任务行打开原版接取入口页（4762 = 客户端声明的 select_none），带任务上下文。
 		// Dian 同时服务 13943 的接取面 ⇒ 必须带客户端任务上下文（requestedOwner）精确定位本行。
 		NativeTalkFixture.clearPackets(player);
 		assertTrue(runtime.onDialog(player, DIAN_NPC_ID, 31, OBJECT_ID, QUEST_ID));

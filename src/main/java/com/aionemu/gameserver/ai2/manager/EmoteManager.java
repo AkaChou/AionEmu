@@ -52,7 +52,7 @@ public class EmoteManager {
 	/**
 	 * 判断脱战 NPC 是否仍在目标玩家的已知列表内（玩家客户端仍能看到它）。
 	 * Whether the disengaging NPC is still inside the target player's known list (the client still renders it).
-	 * <p>背景：真端 {@code max_chase_time} 到期同样会结束战斗。克罗坦要塞的空中防空眼 276225
+	 * <p>背景：原版 {@code max_chase_time} 到期同样会结束战斗。克罗坦要塞的空中防空眼 276225
 	 * （{@code max_chase_time=8}、0 移速）追不上飞行玩家，8 秒后脱战返回出生点；此时目标玩家可能已在数百米外的
 	 * 空中，若仍无条件下发 {@code STR_UI_COMBAT_NPC_RETURN}(1300039)，玩家就会在周围无怪处看到
 	 * “龙族监视者之眼放弃追踪”这类幽灵提示（2026-09-21 报障）。脱战本身不变，只是不再向已经看不见该 NPC 的

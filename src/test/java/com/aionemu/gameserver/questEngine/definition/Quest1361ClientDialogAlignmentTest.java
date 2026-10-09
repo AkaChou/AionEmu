@@ -12,9 +12,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * 锁定任务 1361 取得饮用水的步号轴与交付分支（QE-054/QE-045 口径）。
- * 步号轴遵循真端与 legacy 的权威值：打水后 0 -&gt; 1（真端 FUN_180f01180 SetProgress(0x551, 1)、
+ * 步号轴遵循原版与 legacy 的权威值：打水后 0 -&gt; 1（原版 FUN_180f01180 SetProgress(0x551, 1)、
  * legacy setQuestVar(1)），灌满水箱进 REWARD 时保持 1（legacy useQuestObject(env, 1, 1, true) 的
- * reward 分支不写 nextStep；真端 FUN_180f98460 以 0x100(0x551, 0, 0) 推进、不带步号）。
+ * reward 分支不写 nextStep；原版 FUN_180f98460 以 0x100(0x551, 0, 0) 推进、不带步号）。
  * 领奖行批次曾按末行索引把 reward 投影误抬为 2，客户端任务书步骤整块空白（2026-10-07 实机报障）。
  * Locks quest 1361's drinking-water step axis and turn-in branches (QE-054/QE-045 caliber).
  * The axis follows the retail/legacy authoritative values: drawing water 0 -&gt; 1 (retail
@@ -38,7 +38,7 @@ class Quest1361ClientDialogAlignmentTest {
 		assertNode(definition, "v1", QuestStatus.START, Map.of("var0", 1));
 		assertNode(definition, "reward", QuestStatus.REWARD, Map.of("var0", 1));
 
-		// 打水：空桶 -> 水罐，步号 0 -> 1；真端 FUN_180f01180 在 START/step==0 时推进。
+		// 打水：空桶 -> 水罐，步号 0 -> 1；原版 FUN_180f01180 在 START/step==0 时推进。
 		// Drawing water: empty bucket -> filled bucket, step 0 -> 1; retail FUN_180f01180 advances
 		// on START/step==0.
 		QuestTransition draw = transition(definition, "started", "v1",

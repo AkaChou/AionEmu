@@ -18,9 +18,9 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * 批次 30：真端“过场/影片播放用隐藏任务”族的服务端边界。
+ * 批次 30：原版“过场/影片播放用隐藏任务”族的服务端边界。
  * <p>
- * 真端 58Server `Map/XML/quest.xml` 的 `dev_name` 直接点名了这批任务的用途：
+ * 原版 58Server `Map/XML/quest.xml` 的 `dev_name` 直接点名了这批任务的用途：
  * `18744/28744` = 「타메스 컷신 재생용(천)」（泰梅斯过场播放用），`16984/26984` =
  * 「룬의 안식처 컷신 재생용 히든 퀘스트 (천)」（符文圣所过场播放用隐藏任务），`20015` =
  * 「[5.5 업데이트 인트로 영상 재생용 히든 퀘스트] …」。它们的客户端 quest_summary 固定渲染若干空 `<step>` 槽（18744/28744 为 4 槽，step0 只挂 `[%collectitem]` 占位），
@@ -31,7 +31,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * （`cs_id_132.seq`，文本为拉科兰遗迹开场：精神支配实验 / 三岔路），而 CutSceneMovies.xml 只有 id 1..37，
  * 所以包类型必须是 {@code CUTSCENE}(0)；迁移前 handler 写的 `SM_PLAY_MOVIE(1, 912)` 落在影片表之外，
  * 不能照抄。其余 8 个（16984/26984 无过场 id 与触发世界证据、20015 无行为证据、18706/28706 是客户端
- * 999 级占位、3959/4963 是真端前置被取消的禁用占位、29706 在客户端 quest.xml 与真端 quest.xml 中都不存在）
+ * 999 级占位、3959/4963 是原版前置被取消的禁用占位、29706 在客户端 quest.xml 与原版 quest.xml 中都不存在）
  * 保持隔离，仅登记证据（审计脚本 CUTSCENE_HIDDEN_QUEST_REGISTRY 与社区任务目录（生成物不入库））。
  * <p>
  * Batch 30 contract for the retail "cutscene playback hidden quest" family: the journal has blank <step> slots, so
@@ -50,7 +50,7 @@ class CutsceneHiddenQuestFamilyContractTest {
 		18744, "ELYOS",
 		28744, "ASMODIANS");
 	private static final List<Integer> METADATA_ONLY_CUTSCENE_QUESTS = List.of(16984, 26984);
-	/* 客户端 quest.xml 缺失（29706）或真端 quest.xml 明确禁用/999 占位（其余）的 id：
+	/* 客户端 quest.xml 缺失（29706）或原版 quest.xml 明确禁用/999 占位（其余）的 id：
 	 * 不得出现在生产目录里，也不得被重新打包。 / Must stay unregistered and unpackaged. */
 	private static final List<Integer> ISOLATED_CLIENT_ONLY_QUESTS = List.of(3959, 4963, 18706, 28706, 20015, 29706);
 

@@ -31,11 +31,11 @@ import com.aionemu.gameserver.questEngine.retail.RetailRecipeIndex;
 /**
  * P6 CombineTask 的**逐行对齐门**（计划 §8.9）。
  * <p>
- * 以真端 {@code Quest_CombineTask.xml} 与真端 {@code quest.xml} 的**独立重解析**（正则，不走
+ * 以原版 {@code Quest_CombineTask.xml} 与原版 {@code quest.xml} 的**独立重解析**（正则，不走
  * {@link NativeQuestTableLoader} 的 DOM 路径）为唯一事实：① 逐行字段与装载器逐元素对拍；② 家族列填充率
  * 冻结；③ 路由判据（退役 ∧ 非 XML-only ∧ 双 NPC 名唯一 ∧ 技能符号可解 ∧ 产物/分量可解 ∧
  * {@code (skill, product)} 配方唯一 ∧ 元数据干净）在本类内独立复算，必须与处理器路由集逐元素相等；
- * ④ 接取入口页必须来自客户端任务页契约（本族 574 行未登记 ⇒ 回落真端接取窗页 4）。
+ * ④ 接取入口页必须来自客户端任务页契约（本族 574 行未登记 ⇒ 回落原版接取窗页 4）。
  * <p>
  * Per-row alignment gate for the P6 CombineTask family: the retail tables are re-parsed independently
  * (regex) and compared against the native loader row by row; the routing verdict is recomputed here and
@@ -47,13 +47,13 @@ class CombineTaskRowAlignmentGateTest {
 	private static final String COMBINE_TABLE = "aion/data/static_data/quest/retail/Quest_CombineTask.xml";
 	private static final String RECIPE_TEMPLATES = "/aion/data/static_data/recipe/recipe_templates.xml";
 
-	/** 真端表事实（全量复算）。 / Retail-table facts (whole-table recomputation). */
+	/** 原版表事实（全量复算）。 / Retail-table facts (whole-table recomputation). */
 	private static final int ROWS = 574;
 	private static final int TASK_NPCS = 574;
 	private static final int COMPONENT_SLOTS = 574;
 	private static final int SECOND_COMPONENT = 152;
 	private static final int ROUTED = 574;
-	/** 真端 helper 允许的分量槽位数（{@code lVar4 = 8}）。 / The retail component slot count. */
+	/** 原版 helper 允许的分量槽位数（{@code lVar4 = 8}）。 / The retail component slot count. */
 	private static final int RETAIL_COMPONENT_SLOTS = 8;
 
 	private static final Pattern ROW = Pattern.compile("<id id=\"(\\d+)\">(.*?)</id>", Pattern.DOTALL);
@@ -67,12 +67,12 @@ class CombineTaskRowAlignmentGateTest {
 		combineRaw = parseTable(readResource(COMBINE_TABLE));
 	}
 
-	/** ① 行集与逐行字段：native 装载必须与真端表原文逐行一致（含位置保留的分量槽）。 */
+	/** ① 行集与逐行字段：native 装载必须与原版表原文逐行一致（含位置保留的分量槽）。 */
 	@Test
 	void everyCombineRowIsMappedVerbatim() {
-		assertEquals(ROWS, combineRaw.size(), "真端表行数漂移");
+		assertEquals(ROWS, combineRaw.size(), "原版表行数漂移");
 		NativeQuestTableLoader loader = NativeQuestTableLoader.instance();
-		assertEquals(ROWS, loader.combineSize(), "装载器行数必须等于真端表行数");
+		assertEquals(ROWS, loader.combineSize(), "装载器行数必须等于原版表行数");
 		for (Map.Entry<Integer, Map<String, String>> entry : combineRaw.entrySet()) {
 			int questId = entry.getKey();
 			Map<String, String> raw = entry.getValue();
@@ -97,7 +97,7 @@ class CombineTaskRowAlignmentGateTest {
 		assertEquals(SECOND_COMPONENT, countDeclared(combineRaw, "give_component", 2), "give_component2 覆盖");
 		for (int slot = 3; slot <= RETAIL_COMPONENT_SLOTS; slot++) {
 			assertEquals(0, countDeclared(combineRaw, "give_component", slot),
-				"give_component" + slot + " 必须恒空（真端数据只有 1/2 两槽）");
+				"give_component" + slot + " 必须恒空（原版数据只有 1/2 两槽）");
 		}
 		assertEquals(ROWS, combineRaw.values().stream().filter(raw -> value(raw, "product") != null).count(),
 			"product 覆盖 574 行");
@@ -146,7 +146,7 @@ class CombineTaskRowAlignmentGateTest {
 
 	/**
 	 * ④ 接取入口页契约：每行的入口页必须等于客户端任务页声明的第一页；本族 574 行无页登记 ⇒ 回落
-	 * 真端接取窗页 4（不得发明新页）。
+	 * 原版接取窗页 4（不得发明新页）。
 	 * Accept entry pages must come from the client task-page contract; with no registration in this
 	 * family the contract falls back to the retail ask window page 4.
 	 */
@@ -161,7 +161,7 @@ class CombineTaskRowAlignmentGateTest {
 				registered++;
 			}
 			assertEquals(contract.retailEntryPage(questId), askWindow,
-				"本族行的入口页 = 真端接取窗页 4（客户端页登记缺失即回落）: " + questId);
+				"本族行的入口页 = 原版接取窗页 4（客户端页登记缺失即回落）: " + questId);
 		}
 		assertEquals(0, registered, "本族 574 行客户端页索引完全无登记（P6 步骤 1 冻结事实）");
 	}
@@ -194,7 +194,7 @@ class CombineTaskRowAlignmentGateTest {
 		return itemId;
 	}
 
-	/** 真端 {@code task_npc}（逗号分隔，按列序去空）。 / The comma-separated retail npc list. */
+	/** 原版 {@code task_npc}（逗号分隔，按列序去空）。 / The comma-separated retail npc list. */
 	private static List<String> declaredNames(Map<String, String> raw, String key) {
 		String text = value(raw, key);
 		if (text == null) {
@@ -203,7 +203,7 @@ class CombineTaskRowAlignmentGateTest {
 		List<String> names = new ArrayList<>();
 		for (String part : text.split(",")) {
 			String name = part.trim();
-			// 表内换行/制表符归一后再比较（真端原文用空白缩进）。 / Normalize the retail whitespace.
+			// 表内换行/制表符归一后再比较（原版原文用空白缩进）。 / Normalize the retail whitespace.
 			name = name.replaceAll("\\s+", " ");
 			if (!name.isBlank()) {
 				names.add(name);
@@ -234,7 +234,7 @@ class CombineTaskRowAlignmentGateTest {
 	}
 
 	/**
-	 * 按真端列序取 {@code prefixN}，**保留位置**（未声明的位为 null；与装载器的定长槽位同形状）。
+	 * 按原版列序取 {@code prefixN}，**保留位置**（未声明的位为 null；与装载器的定长槽位同形状）。
 	 * Numbered columns with fixed-length positions preserved (undeclared slots are null).
 	 */
 	private static List<String> numberedSlots(Map<String, String> raw, String prefix, int slots) {

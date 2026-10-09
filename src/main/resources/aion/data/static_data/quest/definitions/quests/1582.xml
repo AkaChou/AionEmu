@@ -36,21 +36,21 @@
     </node>
   </nodes>
   <transitions>
-    <!-- 物件 owner 收口 + 阶梯与选择支回归 legacy/真端形状（2026-10-08，QE-052 同型批次；代表先例 3036）：
+    <!-- 物件 owner 收口 + 阶梯与选择支回归 legacy/原版形状（2026-10-08，QE-052 同型批次；代表先例 3036）：
          legacy `_1582ThePriestsNightmare` 三段分明——
          1) 墓碑物件 700196（LF3_Tombstone_Q1582）：START/var0==0 时 USE_OBJECT → var0=1，零回页；
          2) Trou 204560（任务书行 1）：var0==1 时页 1352（select2）→ 1353（select2_1）→ 1354
             （select2_1_1）→ `SETPRO2`(10001) 置 var0=2，`closeDialogWindow` 零回页；
          3) Nerison 204573（任务书行 2）：var0==2 时页 1693（select3）→ 1694/1695/1716 →
             `SETPRO3`(10002)/`SETPRO4`(10003) 两支进入 REWARD（legacy STEP_TO_3/STEP_TO_4 的两个
-            reward 变体；真端 FUN_180fa9210 对 0x2712/0x2713 两支同样只做推进 + 设奖励序号，
+            reward 变体；原版 FUN_180fa9210 对 0x2712/0x2713 两支同样只做推进 + 设奖励序号，
             零发页），REWARD 态结束对话。
          客户端页/按钮契约由 client_dialog_contract.tsv 的 1582 行逐条锁定（1352/1353/1354/1693/
          1694/1695/1716/10002 与 select1..select3_1_2 的实际按钮一一对应）。
          旧 XML 把三个 owner 生成成同一份 NPC_REPORT + npc-complete + 单跳 SETPRO2 形状：物件被登记
          为领奖 owner（发页 10002/收尾页 10 到无对话 html 的物件 → load fail），且三步阶梯塌成一步。
          本形状 = 物件零回页推进、Trou 单步阶梯、领奖 owner 唯一 = Nerison（任务书该行的对话人；
-         第 4 行 Kirene 为客户端数据遗留行，legacy/真端均无此步）。奖励变体索引（legacy 的
+         第 4 行 Kirene 为客户端数据遗留行，legacy/原版均无此步）。奖励变体索引（legacy 的
          sendQuestEndDialog(env, 0/1)）本轮未在 completion 上建模，留待后续取证。
          Object-owner trim + ladder fidelity (2026-10-08, QE-052 machine-variant batch; 3036 is the
          reference case): the tombstone only advances var0 0->1 with zero pages, Trou runs the

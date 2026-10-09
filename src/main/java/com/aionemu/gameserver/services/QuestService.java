@@ -122,7 +122,7 @@ public final class QuestService {
 		QuestTemplate template = questsData == null ? null : questsData.getQuestById(env.getQuestId());
 		if (template == null) {
 			// 已切换到 native 车道的行没有 typed 模板：旧完成口 fail-closed，由 native 完成口
-			// （NativeReportRewardFlow）用真端 quest.xml 元数据构造模板后走同一条发放路径。
+			// （NativeReportRewardFlow）用原版 quest.xml 元数据构造模板后走同一条发放路径。
 			// Rows owned by the native lane carry no typed template here: this legacy entry point
 			// fails closed, and the native completion port supplies the retail-derived template.
 			return false;
@@ -136,7 +136,7 @@ public final class QuestService {
 	 * settlement body used by the native completion port as well as the legacy XML lane.
 	 * @param env 任务环境 / quest environment
 	 * @param reward 奖励档位（奖励组下标，已在调用方校验范围）/ reward tier (validated group index)
-	 * @param template 奖励面模板（真端元数据映射或 XML 模板）/ reward template
+	 * @param template 奖励面模板（原版元数据映射或 XML 模板）/ reward template
 	 * @return 是否成功 / whether the settlement succeeded
 	 */
 	public static boolean finishQuest(QuestEnv env, int reward, QuestTemplate template) {
@@ -505,7 +505,7 @@ public final class QuestService {
 	private static boolean checkStartConditionsImpl(QuestEnv env, boolean warn) {
 		Player player = env.getPlayer();
 		QuestEngine engine = GameEngineServices.questEngine();
-		// 原生行没有 typed 模板：起始条件走真端 quest.xml 轴（owner 分流同 QE-113/QE-119）。
+		// 原生行没有 typed 模板：起始条件走原版 quest.xml 轴（owner 分流同 QE-113/QE-119）。
 		// warn 面只有 typed 的 startQuest 会用到，而该入口要求 typed 模板 ⇒ native 行不经过它。
 		// Native rows carry no typed template: their start conditions come from the retail quest.xml
 		// axes (the same owner split as QE-113/QE-119). The warn face exists only on the typed
@@ -791,7 +791,7 @@ public final class QuestService {
 		if (template != null && template.getCategory() != QuestCategory.EVENT) {
 			return false;
 		}
-		// native 事件行（QuestsData 与目录同为 733 行集合）：回退真端 quest.xml 元数据，以 metadata 轴
+		// native 事件行（QuestsData 与目录同为 733 行集合）：回退原版 quest.xml 元数据，以 metadata 轴
 		// 等价复现下方模板轴判定。「事件任务」语义来自活动清单（events_config maintainable），
 		// 不复用 quest.xml 的 category（客户端 UI 分组；清单内含 mission/seen_marker/public 段行）。
 		// Native-lane rows (QuestsData carries the same 733-row set as the catalog) fall back to the
@@ -1255,9 +1255,9 @@ public final class QuestService {
 	}
 
 	/**
-	 * 附近任务提示清单（真端 opcode 127 / {@code S_UPDATE_ZONE_QUEST} = {@code SM_NEARBY_QUESTS}）。
+	 * 附近任务提示清单（原版 opcode 127 / {@code S_UPDATE_ZONE_QUEST} = {@code SM_NEARBY_QUESTS}）。
 	 * <p>
-	 * 真端 {@code User::_UpdateQuestAcquireCondition} 对世界「可接取任务清单」（NPC 生成/消失维护的
+	 * 原版 {@code User::_UpdateQuestAcquireCondition} 对世界「可接取任务清单」（NPC 生成/消失维护的
 	 * 任务集合）逐行调用 {@code Quest::CanAcquireQuest}：返回 {@code 2} ⇒ 平条目；返回 {@code 1}
 	 * （仅等级差 1 级）⇒ {@code questId | 0x20000} 软标记条目；返回 {@code 0} ⇒ 不入列表。
 	 * 原生行的三值判定见 {@code QuestEngine.nativeZoneVerdict}；typed 车道（未迁移族）沿用原有
@@ -1440,7 +1440,7 @@ public final class QuestService {
 		QuestMetadata metadata = questEngine.questCatalog().findMetadata(questId).orElse(null);
 		if (metadata == null && questEngine.isNativeOwner(questId)) {
 			// 已切原生车道的行不在 typed 目录里：放弃的元数据轴（cannot_giveup / quest_work_item*）
-			// 取自真端 quest.xml 行——与 native 完成口同一条装载链，缺行/不干净即 fail-closed。
+			// 取自原版 quest.xml 行——与 native 完成口同一条装载链，缺行/不干净即 fail-closed。
 			// Rows on the native lane are absent from the typed catalog: their abandon metadata
 			// (cannot_giveup / quest_work_item*) comes from the same retail quest.xml chain the native
 			// completion port uses; missing or unclean rows fail closed.
@@ -1482,7 +1482,7 @@ public final class QuestService {
 	}
 
 	/**
-	 * 单任务可否放弃（真端 `User_CanGiveupQuest` 语义面）：元数据解析与 {@link #abandonQuest} 同链
+	 * 单任务可否放弃（原版 `User_CanGiveupQuest` 语义面）：元数据解析与 {@link #abandonQuest} 同链
 	 * （目录 → nativeMetadata 回退），`cannot_giveup` 命中即不可。
 	 * Whether the quest may be abandoned (the retail User_CanGiveupQuest face).
 	 *

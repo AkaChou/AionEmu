@@ -15,7 +15,7 @@ import com.aionemu.gameserver.questEngine.tablelane.SimpleTalkHandler;
  * 验证任务 3103 的前置条件以及接取、报告和领奖 NPC owner 合同。
  * <p>
  * P3 重锚（计划 §8.9）：旧 IR 形状断言（节点名/条件/动作/页链）随 SimpleTalk 切换批退场，
- * 本类改为真端表行锚——接取/交付 NPC、中继步、发扣物品、交付门均取自
+ * 本类改为原版表行锚——接取/交付 NPC、中继步、发扣物品、交付门均取自
  * {@code Quest_SimpleTalk.xml} + {@code quest.xml} 与静态数据（{@code npc_template} /
  * 物品 {@code name_desc}），native 处理器必须逐项一致。
  * <p>
@@ -28,7 +28,7 @@ class Quest3103ClientDialogAlignmentTest {
 	void keepsTheRetailStartReportAndRewardOwnersExclusive() {
 		SimpleTalkHandler handler = SimpleTalkHandler.instance();
 
-		// 真端行 3102：Pygmalion → Pyrrha
+		// 原版行 3102：Pygmalion → Pyrrha
 		assertTrue(handler.routes(3102), "3102 必须由 native 车道路由");
 		assertEquals(798206, handler.acquireNpc(3102), "接取 NPC");
 		assertEquals(798225, handler.rewardNpc(3102), "交付 NPC");
@@ -44,7 +44,7 @@ class Quest3103ClientDialogAlignmentTest {
 		assertFalse(handler.unresolvedGate(3102), "无门行不得 fail-closed");
 		assertNull(handler.cutscene(3102), "该行无过场");
 
-		// 真端行 3103：Pyrrha → Cyprus
+		// 原版行 3103：Pyrrha → Cyprus
 		assertTrue(handler.routes(3103), "3103 必须由 native 车道路由");
 		assertEquals(798225, handler.acquireNpc(3103), "接取 NPC");
 		assertEquals(798226, handler.rewardNpc(3103), "交付 NPC");

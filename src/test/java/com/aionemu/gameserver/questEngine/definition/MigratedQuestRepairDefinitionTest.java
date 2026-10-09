@@ -150,11 +150,11 @@ class MigratedQuestRepairDefinitionTest {
 			.filter(transition -> transition.event() instanceof QuestEvent.TalkToNpc talk
 				&& talk.npcId() == 798193 && talk.dialogId() == 10000)
 			.findFirst().orElseThrow();
-		// 真端取证（ScriptDLL64 FUN_180fe3940）：SETPRO1 仅推进+刷新+关窗（0x5d8），零发页（2026-10-05 实证）。
+		// 原版取证（ScriptDLL64 FUN_180fe3940）：SETPRO1 仅推进+刷新+关窗（0x5d8），零发页（2026-10-05 实证）。
 		assertFalse(feed.afterCommit().contains(new AfterCommitAction.ShowQuestSelectionDialog(10)),
 			"3090 SETPRO1 推进不得再发页 10");
 		assertTrue(feed.afterCommit().contains(new AfterCommitAction.CloseDialog()),
-			"3090 SETPRO1 推进须关窗（真端 0x5d8）");
+			"3090 SETPRO1 推进须关窗（原版 0x5d8）");
 		QuestTransition supply = definition.definition().transitions().stream()
 			.filter(transition -> transition.event() instanceof QuestEvent.TalkToNpc talk
 				&& talk.npcId() == 700421 && talk.dialogId() == 10255)
@@ -445,8 +445,8 @@ class MigratedQuestRepairDefinitionTest {
 			QuestTransition report = definition.definition().transitions().stream()
 				.filter(transition -> transition.event() instanceof QuestEvent.TalkToNpc talk
 					&& talk.dialogId() == 39).findFirst().orElseThrow();
-			// 移除量以真端 collect_item 计数为权威（遗留迁移的 ALL 没收无真端/客户端痕迹，
-			// 四家组队任务元数据同为 drop_each_member=1 无机械判据，按真端优先裁剪）。
+			// 移除量以原版 collect_item 计数为权威（遗留迁移的 ALL 没收无原版/客户端痕迹，
+			// 四家组队任务元数据同为 drop_each_member=1 无机械判据，按原版优先裁剪）。
 			// Removal follows the retail collect_item counts (the legacy ALL confiscation has no
 			// retail/client trace — all four party quests share drop_each_member=1 with no
 			// mechanical discriminator — trimmed retail-first).
@@ -478,7 +478,7 @@ class MigratedQuestRepairDefinitionTest {
 	}
 
 	private static CompiledQuestDefinition load(int questId) {
-		// 退役任务不再有 XML：统一走生产视图（保留任务解析内容不变，退役任务走真端 overlay）。
+		// 退役任务不再有 XML：统一走生产视图（保留任务解析内容不变，退役任务走原版 overlay）。
 		// Retired quests have no XML: resolve through the production view (XML catalog + retail overlay).
 		return ProductionQuestDefinitions.definition(questId);
 	}

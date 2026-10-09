@@ -25,9 +25,9 @@ import com.aionemu.gameserver.services.DialogService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
- * 真端 SimpleHunt 原生任务处理器（计划 §6.2 / P1 切换批）。
+ * 原版 SimpleHunt 原生任务处理器（计划 §6.2 / P1 切换批）。
  * <p>
- * 完全基于真端表数据 {@link NativeQuestTableLoader} 与相机注册表 {@link CameraRegistry} 驱动，
+ * 完全基于原版表数据 {@link NativeQuestTableLoader} 与相机注册表 {@link CameraRegistry} 驱动，
  * 绝不生成 IR 节点图或通过旧编译器分派。
  * 状态基于 32 位 raw vars 与 ProgressCamera 双通道（0xf0 普通写入 / 0x100 推进写入）原子演进。
  * <p>
@@ -57,7 +57,7 @@ public final class SimpleHuntHandler implements NativeSystemGrantLane {
 	private final CameraRegistry cameraRegistry;
 	private final NativeNpcNameResolver nameResolver;
 	private final HtmlPagesRegistry pagesRegistry;
-	/** 过场出口（真端交付节点 0x35 槽 PlayMovie）。 / The cutscene exit (retail hand-in slot 0x35). */
+	/** 过场出口（原版交付节点 0x35 槽 PlayMovie）。 / The cutscene exit (retail hand-in slot 0x35). */
 	private final NativeMoviePort moviePort;
 
 	/** NPC ID → 监听该怪物的任务槽位集合。 / NPC ID → listening quest slots. */
@@ -68,12 +68,12 @@ public final class SimpleHuntHandler implements NativeSystemGrantLane {
 	/** 任务 ID → 交付 NPC ID。 / Quest ID → reward NPC ID. */
 	/** 交付 NPC 成员集（任一成员可交付）。 / Reward NPC member set. */
 	private final Map<Integer, List<Integer>> rewardNpcIdsByQuestId;
-	/** 本处理器拥有的真端任务 ID 集合。 / Managed retail quest IDs. */
+	/** 本处理器拥有的原版任务 ID 集合。 / Managed retail quest IDs. */
 	private final Set<Integer> ownedQuestIds;
 	/** 路由集 = 注册集 − XML-only 行（单一 owner 不变量）。 / Routing set = registration set minus XML-owned rows. */
 	private final Set<Integer> routedQuestIds;
 
-	/** 任务 ID → 链式接取窗的下一环（真端交付节点 0x1e 槽的 {@code con_quest}）。 / Quest id → the next quest of the chain window. */
+	/** 任务 ID → 链式接取窗的下一环（原版交付节点 0x1e 槽的 {@code con_quest}）。 / Quest id → the next quest of the chain window. */
 	private final Map<Integer, Integer> conQuestByQuestId;
 	/** 链式接取窗未闭环的行（fail-closed 证据面）。 / Rows whose chain window is not realized. */
 	private final Set<Integer> unresolvedChainQuestIds;
@@ -83,9 +83,9 @@ public final class SimpleHuntHandler implements NativeSystemGrantLane {
 	/** 完成/领奖口（计划 §6.2 NativeReportRewardFlow 完成半边）。 / The native completion/reward port. */
 	private final NativeReportRewardFlow rewardFlow;
 
-	/** 任务 ID → 接取名类别（真端哨兵 = 系统发放）。 / Quest id → acquire-name category. */
+	/** 任务 ID → 接取名类别（原版哨兵 = 系统发放）。 / Quest id → acquire-name category. */
 	private final Map<Integer, RetailGrantKind> grantKindByQuestId;
-	/** 任务 ID → 真端势力 id（quest.xml {@code npcfaction_name}）。 / Quest id → retail faction id. */
+	/** 任务 ID → 原版势力 id（quest.xml {@code npcfaction_name}）。 / Quest id → retail faction id. */
 	private final Map<Integer, Integer> factionIdByQuestId;
 
 	private SimpleHuntHandler(NativeQuestTableLoader tableLoader, CameraRegistry cameraRegistry,
@@ -123,7 +123,7 @@ public final class SimpleHuntHandler implements NativeSystemGrantLane {
 			}
 
 			// 接取 NPC 索引（哨兵行解析必然失败 = 无 NPC 接取面，接取归系统发放——
-			// 真端宿主面裁定 §10.3-#25：faction/area 发放路径与家族无关）。
+			// 原版宿主面裁定 §10.3-#25：faction/area 发放路径与家族无关）。
 			// Acquire-NPC index (sentinel names intentionally fail to resolve — their acquire face is
 			// the system grant; the retail host path is family-agnostic, §10.3-#25 adjudication).
 			grantKinds.put(qid, RetailGrantKind.of(row.acquiredNpcName()));
@@ -159,7 +159,7 @@ public final class SimpleHuntHandler implements NativeSystemGrantLane {
 				}
 			}
 
-			// 链式接取窗（真端 0x1e 槽）与过场（真端 0x35 槽）按原文装载，语义在构造尾与 onDialog 消费。
+			// 链式接取窗（原版 0x1e 槽）与过场（原版 0x35 槽）按原文装载，语义在构造尾与 onDialog 消费。
 			// The chain window (slot 0x1e) and the cutscene (slot 0x35) load verbatim; their semantics are
 			// consumed in the constructor tail and in onDialog.
 			if (row.conQuest() != null) {
@@ -171,7 +171,7 @@ public final class SimpleHuntHandler implements NativeSystemGrantLane {
 			}
 		}
 
-		// 真端 0x1e 槽（交付节点）：接续下一任务 {@code con_quest} 的接取窗。本车道接取路由按 NPC 建表，
+		// 原版 0x1e 槽（交付节点）：接续下一任务 {@code con_quest} 的接取窗。本车道接取路由按 NPC 建表，
 		// 故该窗的等价物 = 「下一环的接取 NPC 恰是本行的交付 NPC」；本表内目标逐行验证，不闭环即登记
 		// fail-closed 证据（跨族目标由逐行门按同一条不变量复算，不新增第二套路由）。
 		// Retail slot 0x1e (on the hand-in node) opens the next quest's accept window. This lane keys accept
@@ -225,7 +225,7 @@ public final class SimpleHuntHandler implements NativeSystemGrantLane {
 
 	/**
 	 * 判断该任务是否由 native 车道**路由**（注册集 − XML-only 行）。
-	 * XML 定义仍在的真端表行由 XML 车道 owns，native 只装载不路由（单一 owner 不变量）。
+	 * XML 定义仍在的原版表行由 XML 车道 owns，native 只装载不路由（单一 owner 不变量）。
 	 * Whether the native lane routes this quest (registration set minus XML-owned rows).
 	 * Retail table rows that still carry an XML definition stay owned by the XML lane.
 	 */
@@ -266,7 +266,7 @@ public final class SimpleHuntHandler implements NativeSystemGrantLane {
 	}
 
 	/**
-	 * 真端 {@code con_quest}（链式接取窗的下一环，交付节点 0x1e 槽）；未声明返回 null。
+	 * 原版 {@code con_quest}（链式接取窗的下一环，交付节点 0x1e 槽）；未声明返回 null。
 	 * <p>
 	 * 本车道接取路由按 NPC 建表，故只要下一环的接取 NPC 等于本行的交付 NPC，该窗即已由下一环自身
 	 * 那一行实现；{@link #unresolvedChainQuestIds()} 为空即全表闭环。
@@ -307,7 +307,7 @@ public final class SimpleHuntHandler implements NativeSystemGrantLane {
 		return routes(questId) && kind != RetailGrantKind.NPC && kind.grantable();
 	}
 
-	/** 真端势力 id（quest.xml {@code npcfaction_name}；无则 0）。 / The retail faction id, or 0. */
+	/** 原版势力 id（quest.xml {@code npcfaction_name}；无则 0）。 / The retail faction id, or 0. */
 	@Override
 	public int factionId(int questId) {
 		return factionIdByQuestId.getOrDefault(questId, 0);
@@ -329,7 +329,7 @@ public final class SimpleHuntHandler implements NativeSystemGrantLane {
 
 	/**
 	 * 系统发放入口：无进度时直接建档到 START（与 Talk/Collect 车道同一条
-	 * {@code NativeQuestStartPort.grant} 面——真端宿主发放链对全部家族共用同一原语）。
+	 * {@code NativeQuestStartPort.grant} 面——原版宿主发放链对全部家族共用同一原语）。
 	 * The grant entry: create the row at START via the same port as the Talk/Collect lanes — the
 	 * retail host grant chain shares one primitive across families (§10.3-#25 verdict).
 	 */
@@ -345,7 +345,7 @@ public final class SimpleHuntHandler implements NativeSystemGrantLane {
 		return NativeQuestStartPort.instance().grant(player, questId).started();
 	}
 
-	/** 阵营日常轮换资格（真端 quest.xml 轴直读，判据抽到 NativeFactionRotation 共用）。 / Rotation eligibility. */
+	/** 阵营日常轮换资格（原版 quest.xml 轴直读，判据抽到 NativeFactionRotation 共用）。 / Rotation eligibility. */
 	@Override
 	public boolean factionRotationEligible(Player player, int questId, int factionId) {
 		return NativeFactionRotation.eligible(player, questId, factionId, isSystemGranted(questId),
@@ -413,7 +413,7 @@ public final class SimpleHuntHandler implements NativeSystemGrantLane {
 	}
 
 	/**
-	 * 处理怪物击杀事件（真端相机推进）。
+	 * 处理怪物击杀事件（原版相机推进）。
 	 * Handles a monster kill event by advancing the retail progress camera.
 	 *
 	 * @param player 击杀玩家 / The killer player
@@ -448,13 +448,13 @@ public final class SimpleHuntHandler implements NativeSystemGrantLane {
 					ProgressCamera.Status.START, currentVars, row, ref.slot(), true);
 
 			if (result.outcome() == ProgressCamera.Outcome.NO_ACTION) {
-				// 超杀或未达守卫条件：真端规范零动作
+				// 超杀或未达守卫条件：原版规范零动作
 				continue;
 			}
 
 			qs.getQuestVars().setVar(result.newVars());
 			if (result.outcome() == ProgressCamera.Outcome.ADVANCE_WRITE) {
-				// 推进通道（真端 +0x100）：进入 REWARD 待领奖状态
+				// 推进通道（原版 +0x100）：进入 REWARD 待领奖状态
 				qs.setStatus(QuestStatus.REWARD);
 			}
 
@@ -483,7 +483,7 @@ public final class SimpleHuntHandler implements NativeSystemGrantLane {
 	}
 
 	/**
-	 * 真端过场（交付节点 0x35 槽 PlayMovie）：动作命中 {@code cs1_haction} 时经 {@link NativeMoviePort}
+	 * 原版过场（交付节点 0x35 槽 PlayMovie）：动作命中 {@code cs1_haction} 时经 {@link NativeMoviePort}
 	 * 下发，是状态机之外的副作用（不推进节点、不建任务档）。
 	 * Retail cutscene (hand-in slot 0x35): sent as a side effect when the client action matches
 	 * cs1_haction; it never advances the node or creates quest state.
@@ -510,7 +510,7 @@ public final class SimpleHuntHandler implements NativeSystemGrantLane {
 		int targetObjectId = npc != null ? npc.getObjectId() : 0;
 		int dialogId = env.getDialogId();
 
-		// 无目标领奖（真端 QuestDialog 无主键协议；任务窗/实时奖励槽的确认包不带 NPC 上下文）：
+		// 无目标领奖（原版 QuestDialog 无主键协议；任务窗/实时奖励槽的确认包不带 NPC 上下文）：
 		// 按 questId 结算 + 关窗收尾。owner 门由上面的 routes(questId) 保证。
 		// Targetless reward claim (the ownerless retail QuestDialog protocol used by the quest journal).
 		if (npcId == 0 && NativeTargetlessReward.claim(player, questId, dialogId, rewardFlow)) {
@@ -521,7 +521,7 @@ public final class SimpleHuntHandler implements NativeSystemGrantLane {
 		QuestStatus status = qs != null ? qs.getStatus() : QuestStatus.NONE;
 
 		// 1. 未接取状态：处理接取对话流；可重复行在 COMPLETE 态同样开放接取面
-		//    （真端 finishedcount < max_repeat_count 时再次可接；与 Talk/ItemPlay/UseItem 同口径）。
+		//    （原版 finishedcount < max_repeat_count 时再次可接；与 Talk/ItemPlay/UseItem 同口径）。
 		// The accept dialog flow; a repeatable row re-opens at COMPLETE (retail
 		// finishedcount < max_repeat_count), same shape as the Talk/ItemPlay/UseItem lanes.
 		boolean fresh = qs == null || status == QuestStatus.NONE;
@@ -529,13 +529,13 @@ public final class SimpleHuntHandler implements NativeSystemGrantLane {
 			List<Integer> acqNpcs = acquireNpcIdsByQuestId.get(questId);
 			if (acqNpcs != null && acqNpcs.contains(npcId)) {
 				if (dialogId == 31 || dialogId == 26) {
-					// 接取入口页 = 真端信页/阶段页（页 4 只能由 1007 打开，见 QuestDialogContract#retailEntryPage）。
+					// 接取入口页 = 原版信页/阶段页（页 4 只能由 1007 打开，见 QuestDialogContract#retailEntryPage）。
 					// The accept entry page is the retail letter/stage page (page 4 is 1007-only).
 					PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId,
 							QuestDialogContract.loadDefault().retailEntryPage(questId), questId));
 					return true;
 				} else if (dialogId == QuestDialogAction.ASK_QUEST_ACCEPT.id()) {
-					// 真端页动作 1007（ASK_QUEST_ACCEPT → mgr+0x1a0）：打开接取窗页 4；客户端未声明即 fail-closed。
+					// 原版页动作 1007（ASK_QUEST_ACCEPT → mgr+0x1a0）：打开接取窗页 4；客户端未声明即 fail-closed。
 					// Retail page action 1007 (mgr+0x1a0) opens ask window page 4; undeclared pages fail closed.
 					int askWindow = QuestDialogContract.loadDefault().askWindowPage(questId);
 					if (askWindow < 0) {
@@ -545,7 +545,7 @@ public final class SimpleHuntHandler implements NativeSystemGrantLane {
 					return true;
 				} else if (dialogId == QuestDialogPage.SELECT1_1.id()
 						|| dialogId == QuestDialogPage.SELECT1_1_1.id()) {
-					// select1 首屏翻页（真端 cab520 原样回发）；客户端未声明该页即 fail-closed。
+					// select1 首屏翻页（原版 cab520 原样回发）；客户端未声明该页即 fail-closed。
 					// select1 page turns (cab520 echoes them); undeclared pages fail closed.
 					if (!QuestDialogContract.loadDefault().hasButtonPage(questId, dialogId)) {
 						return false;
@@ -557,11 +557,11 @@ public final class SimpleHuntHandler implements NativeSystemGrantLane {
 					// Confirm acquire; refusals are traced instead of silent.
 					if (NativeQuestStartPort.instance().startTraced(player, questId, dialogId).started()) {
 						if (dialogId == 1002) {
-							// 真端 cab520 0x3ea：check → 页 1003（接取确认页；客户端契约声明该页）。
+							// 原版 cab520 0x3ea：check → 页 1003（接取确认页；客户端契约声明该页）。
 							// Retail cab520 0x3ea: check → page 1003 (the declared accept-confirm page).
 							PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 1003, questId));
 						} else {
-							// 真端 cab520 0x4e20：check → 0x5d8 关窗（simple accept 无确认页；回页会让
+							// 原版 cab520 0x4e20：check → 0x5d8 关窗（simple accept 无确认页；回页会让
 							// 未声明 1003 的任务客户端 load fail——实机 2026-10-05 quest 14110 同类）。
 							// Retail cab520 0x4e20: check → 0x5d8 close (no confirm page; a page reply
 							// load-fails quests that never declared it, live 14110 class).
@@ -573,7 +573,7 @@ public final class SimpleHuntHandler implements NativeSystemGrantLane {
 					PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 1004, questId));
 					return true;
 				} else if (dialogId == 20001) {
-					// 真端 cab520 0x4e21：拒绝收尾 = 关窗（与 0x4e20 同族）。
+					// 原版 cab520 0x4e21：拒绝收尾 = 关窗（与 0x4e20 同族）。
 					// Retail cab520 0x4e21: refuse tail closes the dialog (same family as 0x4e20).
 					DialogService.closeDialog(npc, player);
 					return true;
@@ -612,7 +612,7 @@ public final class SimpleHuntHandler implements NativeSystemGrantLane {
 					// confirm whose grant the settlement resolves via dialogId==23 + extendedRewardIndex.
 					int rewardIndex = (dialogId >= 8 && dialogId <= 22) ? (dialogId - 8) : 0;
 					if (rewardFlow.claim(env, rewardIndex).completed()) {
-						// 领奖收尾 = 真端 npc-complete finish=SELECTION_DIALOG（4801/4805）：回选择对话页
+						// 领奖收尾 = 原版 npc-complete finish=SELECTION_DIALOG（4801/4805）：回选择对话页
 						// （页 10，questId=0；9/28 旧引擎基线「状态=5 → 页=10」）。
 						// The claim tail follows the retail npc-complete finish=SELECTION_DIALOG: back to
 						// the selection dialog (page 10, questId=0; the legacy 9/28 log baseline).
@@ -625,7 +625,7 @@ public final class SimpleHuntHandler implements NativeSystemGrantLane {
 			return false;
 		}
 
-		// 表声明的过场触发动作（真端把 movie 挂在页动作上；本族 3 行 = 1007 拒绝流页）：
+		// 表声明的过场触发动作（原版把 movie 挂在页动作上；本族 3 行 = 1007 拒绝流页）：
 		// 不推进状态，但被服务时 movie 由 onDialog 包装层下发。
 		// The declared cutscene trigger action (this family's three rows use the 1007 refuse page):
 		// it advances no state, and the wrapper sends the movie whenever it is served.
@@ -636,7 +636,7 @@ public final class SimpleHuntHandler implements NativeSystemGrantLane {
 		return false;
 	}
 
-	/** 真端 {@code max_repeat_count} > 1 ⇒ 可重复（COMPLETE 态可再次开窗）。 / Repeatable per retail max_repeat_count. */
+	/** 原版 {@code max_repeat_count} > 1 ⇒ 可重复（COMPLETE 态可再次开窗）。 / Repeatable per retail max_repeat_count. */
 	private boolean repeatable(int questId) {
 		NativeQuestXmlTable.QuestRow row = NativeQuestXmlTable.instance().find(questId).orElse(null);
 		Integer maxRepeat = row == null ? null : row.integer("max_repeat_count");

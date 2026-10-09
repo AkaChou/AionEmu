@@ -48,7 +48,7 @@ public class CM_DELETE_ITEM extends AionClientPacket {
 				PacketSendUtility.sendPacket(player,
 						SM_SYSTEM_MESSAGE.STR_UNBREAKABLE_ITEM(new DescriptionId(item.getNameId())));
 			} else {
-				// 任务引用面（真端 `User_DestroyItem`）：进行中的任务引用该物品 ⇒ 由引擎发确认窗
+				// 任务引用面（原版 `User_DestroyItem`）：进行中的任务引用该物品 ⇒ 由引擎发确认窗
 				// （确认后放弃相关任务并删物品；不可放弃/拒绝/在途请求各有提示），物品暂不删。
 				// The quest-reference gate (retail User_DestroyItem): the engine claims the destroy when
 				// in-progress quests reference the item (confirm → stop the quests + delete).

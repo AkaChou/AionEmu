@@ -61,7 +61,7 @@ class RewardRowEventTwoRowContractTest {
 	/* Dredgion chain heads: the kill transaction must keep the legacy var0=1 (SECTION_0 = report row). */
 	private static final List<Integer> DREDGION_CHAIN_HEADS = List.of(80601, 80606);
 	/**
-	 * P0c-8c（2026-09-24）起已由真端 SimpleHunt 表驱动的合同行：击杀只把 START 段推进到饱和段
+	 * P0c-8c（2026-09-24）起已由原版 SimpleHunt 表驱动的合同行：击杀只把 START 段推进到饱和段
 	 * （`a0 --击杀--> a1`，无动作），报告路由 `a1 --1009--> reward` 才进领奖态；旧的"击杀事务写行号
 	 * var0=1"与"REWARD/var0=0 自愈边"都不再由服务端表达（任务书行号改由客户端 SECTION 门控推导），
 	 * 旧存档按 `p0c6-legacy-save-normalization.tsv` 做一次性 DB 归一化。
@@ -103,7 +103,7 @@ class RewardRowEventTwoRowContractTest {
 					new QuestCondition.QuestVariableIs("var0", STALE_ROW))))
 				.toList();
 			if (RETAIL_DRIVEN_CONTRACTS.contains(contract.questId())) {
-				// 真端网格下不保留行号自愈边：所有进 REWARD 的路由都落在 reward 节点（投影 var0=1），
+				// 原版网格下不保留行号自愈边：所有进 REWARD 的路由都落在 reward 节点（投影 var0=1），
 				// 新存档不可能停在 REWARD/0；领奖行由客户端 SECTION 门控推导，旧存档走一次性 DB 归一化。
 				assertTrue(matches.isEmpty(), () -> "quest " + contract.questId()
 					+ " retail grid must not keep the legacy journal-row heal edge");
@@ -170,7 +170,7 @@ class RewardRowEventTwoRowContractTest {
 
 	/**
 	 * 德雷得奇安链头本的击杀事务：XML 行保留 legacy 的 `started --击杀--> reward [var0==0] [var0:=1]`；
-	 * 真端驱动的行（P0c-8c）改为"击杀推进网格段、报告路由进领奖态"，两种形状都必须把玩家送进
+	 * 原版驱动的行（P0c-8c）改为"击杀推进网格段、报告路由进领奖态"，两种形状都必须把玩家送进
 	 * `reward` 节点（投影 var0=1）。
 	 * Kill transaction of the Dredgion chain heads: XML rows keep the legacy set-var step, retail-driven rows
 	 * step the grid, and both must land in the `reward` node projecting the reward row.
@@ -186,7 +186,7 @@ class RewardRowEventTwoRowContractTest {
 				.toList();
 			assertFalse(killRoutes.isEmpty(), () -> "quest " + questId + " kill routes from " + preKill);
 			if (RETAIL_DRIVEN_CONTRACTS.contains(questId)) {
-				// 真端网格：击杀无条件下发，只推进段（a0→a1），不进领奖态也不写行号。
+				// 原版网格：击杀无条件下发，只推进段（a0→a1），不进领奖态也不写行号。
 				for (QuestTransition killRoute : killRoutes) {
 					assertEquals(List.of(), killRoute.conditions(),
 						() -> "quest " + questId + " grid kill conditions");
@@ -261,14 +261,14 @@ class RewardRowEventTwoRowContractTest {
 	}
 
 	private static CompiledQuestDefinition definition(int questId) throws Exception {
-		// 退役任务的生产 XML 只在 git 历史里：统一取生产视图（XML 目录 + 真端 overlay）。
+		// 退役任务的生产 XML 只在 git 历史里：统一取生产视图（XML 目录 + 原版 overlay）。
 		// Retired quests live in git history only: use the production view (XML dir + retail overlay).
 		return ProductionQuestDefinitions.definition(questId);
 	}
 
 	/**
 	 * 击杀前的 START 节点：80257..80260/80255/80256 仍是 XML（标签 `started`），
-	 * 80601/80606 已由真端网格驱动（标签 `a0`）；按打包值最小的 START 节点定位两者通用。
+	 * 80601/80606 已由原版网格驱动（标签 `a0`）；按打包值最小的 START 节点定位两者通用。
 	 * The pre-kill START node: XML rows use `started`, retail-driven rows use the grid's `a0`, so locate
 	 * the START node with the smallest packed value instead of hard-coding a label.
 	 */

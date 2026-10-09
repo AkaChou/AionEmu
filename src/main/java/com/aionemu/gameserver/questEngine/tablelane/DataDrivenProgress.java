@@ -3,22 +3,22 @@ package com.aionemu.gameserver.questEngine.tablelane;
 import java.util.List;
 
 /**
- * 真端 DataDriven 进度算术（计划 §10.2「P7 DataDriven」步 2；证据 `ScriptDLL64.c` 逐指令：
+ * 原版 DataDriven 进度算术（计划 §10.2「P7 DataDriven」步 2；证据 `ScriptDLL64.c` 逐指令：
  * `FUN_180c46020` Hunt / `FUN_180c46980` PvP / `FUN_180c478e0` TalkFOBJ / `FUN_180c466a0` Talk
  * / `FUN_180c47bf0` EnterArea / `FUN_180c467b0` EnterWorld）。
  * <p>
- * DD 行**不走相机**（真端 DD handler 内联算术，无 `fun_731.cpp:5306` 那种相机 vtable 调用），
+ * DD 行**不走相机**（原版 DD handler 内联算术，无 `fun_731.cpp:5306` 那种相机 vtable 调用），
  * 其 raw vars 布局 = 「6 位步号（bit0-5）+ 每 6 位一个组槽（bit6..）」：
  * <ul>
  *   <li>步号守卫：`(prog & 0x3F) != expectedStep` ⇒ 该事件不属于当前步，零动作；</li>
  *   <li>命中自增：字面 `prog += (1 << shift)`——**不做 6 位掩码**，因此计数 63 再 +1 会进位污染下一组槽
- *       （真端 80817 的 100 杀即此形：槽回绕后 `counter < target` 永不成立 ⇒ 真端自身不可完成，
+ *       （原版 80817 的 100 杀即此形：槽回绕后 `counter < target` 永不成立 ⇒ 原版自身不可完成，
  *       本类按 §10.3-#5 裁定**原样复刻**，禁止改成 10 位相机或显式禁用）；</li>
- *   <li>自增**只在 `counter < target` 时发生**（真端 `FUN_180c46020`：`if (uVar11 &lt; target) { vars += …; }`
+ *   <li>自增**只在 `counter < target` 时发生**（原版 `FUN_180c46020`：`if (uVar11 &lt; target) { vars += …; }`
  *       ——计满的组槽不再自增，因此不会溢出污染下一组；全部组槽已达标时仍按收口步进）；</li>
  *   <li>本步收口：仅当**该步声明的全部组槽**都在新字里达标时才步进，步进形 = `(prog & 0x3F) + 1`
- *       （真端 `prog = (prog & 0x3F) + 1` ⇒ 组槽清零、守卫位一并丢弃）；</li>
- *   <li>区分中间步（真端 `SetQuestProgress`，继续走下一步）与末步（真端 `SetQuestSuccess`，转待领奖）。</li>
+ *       （原版 `prog = (prog & 0x3F) + 1` ⇒ 组槽清零、守卫位一并丢弃）；</li>
+ *   <li>区分中间步（原版 `SetQuestProgress`，继续走下一步）与末步（原版 `SetQuestSuccess`，转待领奖）。</li>
  * </ul>
  * 用到组槽的类别：Hunt（多组，每组一个子目标）、TalkFOBJ（同形）、CollectItem 与 PvP（单组）；
  * Talk / EnterArea / EnterWorld / ItemPlay 无组槽（直接步进）。持久化与客户端同步属 state port，不在本类。
@@ -33,22 +33,22 @@ import java.util.List;
  */
 public final class DataDrivenProgress {
 
-	/** 步号掩码（真端 `(prog & 0x3F) == expectedStep`）。 / The step-number mask. */
+	/** 步号掩码（原版 `(prog & 0x3F) == expectedStep`）。 / The step-number mask. */
 	public static final int STEP_MASK = 0x3F;
 	/** 单组槽最大合法计数（6 位）。 / The largest legal per-group counter (6 bits). */
 	public static final int GROUP_MASK = 0x3F;
-	/** 组槽数量（bit6..29，四组；真端 Hunt 声明 5 组，但第 5 组落在 bit30/31 守卫区，数据零使用）。 */
+	/** 组槽数量（bit6..29，四组；原版 Hunt 声明 5 组，但第 5 组落在 bit30/31 守卫区，数据零使用）。 */
 	public static final int MAX_GROUPS = 4;
 
 	/** 一次事件的裁决。 / The verdict of one progress event. */
 	public enum Outcome {
 		/** 守卫未过（非当前步 / 位形异常 / 组未声明）：零动作。 / Guard failed: no action. */
 		NO_ACTION,
-		/** 组槽自增（真端 `SetQuestProgress` 中间写）。 / Group counter incremented (retail mid-step write). */
+		/** 组槽自增（原版 `SetQuestProgress` 中间写）。 / Group counter incremented (retail mid-step write). */
 		COUNTER_INCREMENT,
 		/** 本步收口且仍有后续步：步号 +1、组槽清零。 / Step closed with further steps left. */
 		STEP_ADVANCE,
-		/** 本步收口且为末步：真端 `SetQuestSuccess`（转待领奖）。 / Final step closed (retail {@code SetQuestSuccess}). */
+		/** 本步收口且为末步：原版 `SetQuestSuccess`（转待领奖）。 / Final step closed (retail {@code SetQuestSuccess}). */
 		STEP_COMPLETE
 	}
 
@@ -85,7 +85,7 @@ public final class DataDrivenProgress {
 	}
 
 	/**
-	 * 位形守卫（本服 fail-closed 策略）：真端 DD handler 不查守卫位，但真端 DD 行也不会产生
+	 * 位形守卫（本服 fail-closed 策略）：原版 DD handler 不查守卫位，但原版 DD 行也不会产生
 	 * bit30/31 或负值；本服遇到异常位形一律零动作（计划 §11「raw vars 位形异常 → fail-closed」）。
 	 * Defensive guard: the retail DD handler does not test bits 30/31, but never produces them either;
 	 * this server fails closed on such shapes (plan §11).
@@ -94,7 +94,7 @@ public final class DataDrivenProgress {
 		return RawQuestVarsCodec.guardClear(vars);
 	}
 
-	/** 命中自增（真端字面 `prog += (1 << shift)`，无掩码 ⇒ 饱和后进位）。 / Literal retail increment (carries once saturated). */
+	/** 命中自增（原版字面 `prog += (1 << shift)`，无掩码 ⇒ 饱和后进位）。 / Literal retail increment (carries once saturated). */
 	public static int increment(int vars, int group) {
 		if (group < 1 || group > MAX_GROUPS) {
 			throw new IllegalArgumentException("DATA_DRIVEN_GROUP_INVALID: group " + group);
@@ -112,13 +112,13 @@ public final class DataDrivenProgress {
 		return true;
 	}
 
-	/** 步进写：真端 `prog = (prog & 0x3F) + 1`（组槽清零、守卫位丢弃）。 / Retail step advance write. */
+	/** 步进写：原版 `prog = (prog & 0x3F) + 1`（组槽清零、守卫位丢弃）。 / Retail step advance write. */
 	public static int advance(int vars) {
 		return (vars & STEP_MASK) + 1;
 	}
 
 	/**
-	 * 跳步写（Timer 到期推进专用）：`vars = (vars & ~0x3F) | 目标步`——真端到期面 `FUN_180c46d80`
+	 * 跳步写（Timer 到期推进专用）：`vars = (vars & ~0x3F) | 目标步`——原版到期面 `FUN_180c46d80`
 	 * 经 `+0xf0`（SetQuestProgress）直写步号，不走 +1 步进（组槽保持原样）。
 	 * Timer-expiry jump write: the retail expiry face (FUN_180c46d80 via +0xf0 SetQuestProgress)
 	 * writes the step number directly instead of the +1 advance; group slots stay untouched.
@@ -132,8 +132,8 @@ public final class DataDrivenProgress {
 	 * Handles one event hitting one declared group of the current step.
 	 *
 	 * @param vars         当前 raw vars / current raw vars word
-	 * @param expectedStep 该步的步号（真端注册期写入 `expectedStep`）/ the registered step number
-	 * @param slots        该步声明的组槽（真端 `data+8` 子目标数组）/ the step's declared group slots
+	 * @param expectedStep 该步的步号（原版注册期写入 `expectedStep`）/ the registered step number
+	 * @param slots        该步声明的组槽（原版 `data+8` 子目标数组）/ the step's declared group slots
 	 * @param group        本次命中的组（1..4）/ the hit group
 	 * @param lastStep     是否为该行最后一步 / whether this is the row's final step
 	 */
@@ -161,7 +161,7 @@ public final class DataDrivenProgress {
 				break;
 			}
 		}
-		// 真端只在本组未达标时自增（`FUN_180c46020`/`FUN_180c46980` 的 `counter < target` 守卫）：
+		// 原版只在本组未达标时自增（`FUN_180c46020`/`FUN_180c46980` 的 `counter < target` 守卫）：
 		// 已满组槽的超杀零写（不得进位污染下一组），但「全部组槽已达标」仍按收口步进。
 		// The retail increment is guarded by counter < target; an over-target hit writes nothing,
 		// while an all-satisfied shape still closes the step.

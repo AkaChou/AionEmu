@@ -19,7 +19,7 @@ import org.w3c.dom.Element;
 /**
  * NPC {@code name_desc} → npc_id 索引。
  * <p>
- * 真端任务表用 spawn 名（如 {@code CherubimL_1_n}、{@code DF3_NPC_Hasyaditan}）描述目标，
+ * 原版任务表用 spawn 名（如 {@code CherubimL_1_n}、{@code DF3_NPC_Hasyaditan}）描述目标，
  * 而服务端运行时按 npc_id 计数；本索引就是两者之间的桥（Phase 4 对账已验证 1:1 无歧义）。
  * <p>
  * 同一只怪在本服常常存在多个 npc_id（如 Draupnir 副官的 {@code 213802} 与实刷变体 {@code 237267}，
@@ -44,7 +44,7 @@ public final class RetailNpcNameIndex {
 	public static final int DISPLAY_NAME_FAMILY_LIMIT = 16;
 
 	/**
-	 * 真端任务表会省略 {@code NPC_} 前缀：真端 npc 注册表（{@code Map/XML/npcs.xml}）里写着
+	 * 原版任务表会省略 {@code NPC_} 前缀：原版 npc 注册表（{@code Map/XML/npcs.xml}）里写着
 	 * {@code NPC_Gardugu}，而 {@code Quest_SimpleHunt.xml} 的接取名写 {@code Gardugu}。
 	 * 本索引为带前缀的 {@code name_desc} 额外登记一条"去前缀"别名，让该写法可解析。
 	 * The retail quest table drops the {@code NPC_} prefix, so the index registers the stripped name as an alias.
@@ -53,7 +53,7 @@ public final class RetailNpcNameIndex {
 
 	private final Map<String, Set<Integer>> byName;
 	private final Map<Integer, Set<Integer>> byDisplayNameFamily;
-	/** 真端对话名组：{@code quest_ai_name} → 成员 {@code name_desc} 原文（表内声明）与解析后的 id 集。 /
+	/** 原版对话名组：{@code quest_ai_name} → 成员 {@code name_desc} 原文（表内声明）与解析后的 id 集。 /
 	 * Retail dialog-name groups: the declared member list and the resolved npc id set per name. */
 	private final Map<String, Set<String>> questAiNameGroupMembers;
 	private final Map<String, Set<Integer>> questAiNameGroups;
@@ -88,7 +88,7 @@ public final class RetailNpcNameIndex {
 	}
 
 	/**
-	 * 前缀变体解析：精确未命中时展开 {@code 前缀_} 变体家族（18738 形：真端表接取名
+	 * 前缀变体解析：精确未命中时展开 {@code 前缀_} 变体家族（18738 形：原版表接取名
 	 * {@code IDRaksha_Solo_StageStart} 无独立模板，实际模板为 {@code _A.._F} 六个阶段变体，
 	 * 每个变体都是合法接取 NPC）；再未命中时展开中缀变体（28738 形：表名
 	 * {@code ..._StageStart_Dark} 的 {@code _Dark} 段插在变体字母之前，模板为
@@ -141,10 +141,10 @@ public final class RetailNpcNameIndex {
 	}
 
 	/**
-	 * 真端对话名组判定：名字在组表里声明（{@code quest_ai_name} 是 ScriptDLL 的对话路由名，
+	 * 原版对话名组判定：名字在组表里声明（{@code quest_ai_name} 是 ScriptDLL 的对话路由名，
 	 * 一只哨卫的"守备队"同组若干 npc 共用同一个对话名）。
 	 * <p>
-	 * 与普通 spawn 名解析**刻意分道**：组名只在真端数据自己写出组名的字段（接取/交付）上使用，
+	 * 与普通 spawn 名解析**刻意分道**：组名只在原版数据自己写出组名的字段（接取/交付）上使用，
 	 * 不会让别的照常单值解析的位点（步内 npc、采集目标等）静默变宽。
 	 * Declared retail dialog-name group: the ScriptDLL dialog routing name shared by the members of
 	 * one guard squad. The channel is deliberately separate from plain spawn-name resolution so that
@@ -171,7 +171,7 @@ public final class RetailNpcNameIndex {
 	}
 
 	/**
-	 * 先精确解析，未命中再看真端对话名组。供真端数据里写着对话名的字段（接取 / 交付）使用：
+	 * 先精确解析，未命中再看原版对话名组。供原版数据里写着对话名的字段（接取 / 交付）使用：
 	 * 精确名与组名互斥（永久门校验），因此不存在"精确命中被组展开覆盖"的歧义。
 	 * Exact resolution first, then the declared dialog-name group. Used for the retail fields that
 	 * carry a dialog name (acquire / hand-in); exact names and group names are disjoint (checked by
@@ -183,7 +183,7 @@ public final class RetailNpcNameIndex {
 	}
 
 	/**
-	 * 接取/交付位点的**统一名字通道**：精确 → 真端对话名组（客户端声明的 {@code quest_ai_name} 组，
+	 * 接取/交付位点的**统一名字通道**：精确 → 原版对话名组（客户端声明的 {@code quest_ai_name} 组，
 	 * 成员全展开）→ 名前变体（18738/28738 形：前缀 `_A..`、中缀 `..._Dark` 家族）。命中即止。
 	 * <p>
 	 * 顺序的理由：**客户端声明优先于名字形态推导**——同一基名可能横跨阵营镜像（`IDRaksha_Solo_
@@ -221,7 +221,7 @@ public final class RetailNpcNameIndex {
 	}
 
 	/**
-	 * 同 {@link #build(Collection)}，并额外加载真端对话名组表（XML {@code retail-quest-ai-name-groups.xml}：
+	 * 同 {@link #build(Collection)}，并额外加载原版对话名组表（XML {@code retail-quest-ai-name-groups.xml}：
 	 * {@code quest_ai_name_group} 行的 quest_ai_name / member_name_descs 两列）。
 	 * Same as {@link #build(Collection)} plus the retail dialog-name group table (XML
 	 * {@code retail-quest-ai-name-groups.xml}: the quest_ai_name / member_name_descs columns of
@@ -348,7 +348,7 @@ public final class RetailNpcNameIndex {
 	}
 
 	/**
-	 * 为真端击杀目标名称增加别名解析与补全（挑战大怪、副本全清、活动代号与要塞神长）。
+	 * 为原版击杀目标名称增加别名解析与补全（挑战大怪、副本全清、活动代号与要塞神长）。
 	 * Adds monster target aliases for challenge bosses, instance all-kill clusters, event bosses, and fortress generals.
 	 */
 	private static void addMonsterTargetAliases(Map<String, Set<Integer>> byName) {
@@ -438,7 +438,7 @@ public final class RetailNpcNameIndex {
 	/**
 	 * 击杀目标等价集：每个 npc_id 加上与它同客户端显示名（同 {@code name_id}）的其它 npc_id。
 	 * <p>
-	 * 用于把真端表里的目标 id 展开成本服实际可击杀的 id 集合；族未知或族过大时只返回原 id。
+	 * 用于把原版表里的目标 id 展开成本服实际可击杀的 id 集合；族未知或族过大时只返回原 id。
 	 * Kill-target equivalence set: each npc id plus the other ids sharing its display name.
 	 */
 	public Set<Integer> withDisplayNameVariants(Collection<Integer> npcIds) {

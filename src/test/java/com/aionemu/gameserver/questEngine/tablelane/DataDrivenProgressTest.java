@@ -12,10 +12,10 @@ import com.aionemu.gameserver.questEngine.tablelane.DataDrivenProgress.Result;
 import com.aionemu.gameserver.questEngine.tablelane.DataDrivenProgress.Slot;
 
 /**
- * P7 步 2 门：DD 原生进度算术（真端 `DataDrivenQuestLoader` + DD handler 逐指令算术）。
+ * P7 步 2 门：DD 原生进度算术（原版 `DataDrivenQuestLoader` + DD handler 逐指令算术）。
  * <p>
  * 冻结点：① 步号 = `vars & 0x3F`、组槽 = bit6/12/18/24 起 6 位；② 命中自增是**无掩码**的
- * `vars += (1 << shift)` ⇒ 计满 63 再 +1 进位污染下一组槽（80817 的 100 杀在真端自身不可完成，
+ * `vars += (1 << shift)` ⇒ 计满 63 再 +1 进位污染下一组槽（80817 的 100 杀在原版自身不可完成，
  * 原样复刻）；③ 本步收口要求**全部**声明组槽达标，步进写 = `(vars & 0x3F) + 1`（组槽清零）；
  * ④ 非当前步 / 未声明组 / 守卫位异常 ⇒ 零动作。
  * <p>
@@ -40,7 +40,7 @@ class DataDrivenProgressTest {
 		List<Slot> slots = List.of(new Slot(1, 3));
 		Result first = DataDrivenProgress.hit(0, 0, slots, 1, true);
 		assertEquals(Outcome.COUNTER_INCREMENT, first.outcome());
-		assertEquals(1 << 6, first.newVars(), "命中一次 = 组 1 +1（真端 prog += 0x40）");
+		assertEquals(1 << 6, first.newVars(), "命中一次 = 组 1 +1（原版 prog += 0x40）");
 		Result second = DataDrivenProgress.hit(first.newVars(), 0, slots, 1, true);
 		assertEquals(Outcome.COUNTER_INCREMENT, second.outcome());
 		Result third = DataDrivenProgress.hit(second.newVars(), 0, slots, 1, true);
@@ -89,7 +89,7 @@ class DataDrivenProgressTest {
 	void offStepAndUndeclaredGroupAreZeroActions() {
 		List<Slot> slots = List.of(new Slot(1, 2), new Slot(3, 1));
 		assertEquals(Outcome.NO_ACTION, DataDrivenProgress.hit(5, 0, slots, 1, false).outcome(),
-			"非当前步（真端 prog&0x3F != expectedStep）⇒ 零动作");
+			"非当前步（原版 prog&0x3F != expectedStep）⇒ 零动作");
 		assertEquals(Outcome.NO_ACTION, DataDrivenProgress.hit(0, 0, slots, 2, false).outcome(),
 			"未声明的组槽 ⇒ 零动作（不得误自增）");
 		assertEquals(Outcome.NO_ACTION, DataDrivenProgress.hit(0, 0, List.of(), 1, false).outcome(),
@@ -98,7 +98,7 @@ class DataDrivenProgressTest {
 
 	@Test
 	void saturatedCounterCarriesIntoTheNextGroupAndNeverCloses() {
-		// 80817 形：目标 100 > 6 位组槽上限 63（真端自身不可完成，§10.3-#5 原样复刻）。
+		// 80817 形：目标 100 > 6 位组槽上限 63（原版自身不可完成，§10.3-#5 原样复刻）。
 		int vars = 0;
 		boolean closed = false;
 		for (int kill = 0; kill < 200; kill++) {
@@ -109,24 +109,24 @@ class DataDrivenProgressTest {
 			vars = result.newVars();
 			assertTrue(DataDrivenProgress.counter(vars, 1) < 100, "组 1 计数永不达 100（6 位回绕）");
 		}
-		assertTrue(!closed, "80817 在真端算术下不可完成（禁止改成 10 位相机或显式禁用）");
-		assertTrue(DataDrivenProgress.counter(vars, 2) > 0, "饱和进位污染下一组槽（真端原样行为）");
+		assertTrue(!closed, "80817 在原版算术下不可完成（禁止改成 10 位相机或显式禁用）");
+		assertTrue(DataDrivenProgress.counter(vars, 2) > 0, "饱和进位污染下一组槽（原版原样行为）");
 		assertEquals(0, DataDrivenProgress.step(vars), "步号永不推进");
 	}
 
 	@Test
 	void saturatedGroupIsNotIncrementedAgain() {
-		// 真端 `FUN_180c46020`：自增只在 `counter < target` 时发生（`if (uVar11 < target) { vars += … }`）。
+		// 原版 `FUN_180c46020`：自增只在 `counter < target` 时发生（`if (uVar11 < target) { vars += … }`）。
 		// 组 1 计满后超杀必须零写（不得进位污染组 2），组 2 未满 ⇒ NO_ACTION。
 		List<Slot> slots = List.of(new Slot(1, 2), new Slot(2, 3));
 		int vars = (2 << 6); // 组 1 已满（2/2），组 2 = 0/3
 		Result over = DataDrivenProgress.hit(vars, 0, slots, 1, true);
-		assertEquals(Outcome.NO_ACTION, over.outcome(), "满组槽超杀 ⇒ 零动作（真端 counter < target 守卫）");
+		assertEquals(Outcome.NO_ACTION, over.outcome(), "满组槽超杀 ⇒ 零动作（原版 counter < target 守卫）");
 		assertEquals(vars, over.newVars(), "零动作不得写 vars（无进位污染）");
-		// 全部组槽已达标时仍按真端收口步进（`bVar3 == true` 分支）。
+		// 全部组槽已达标时仍按原版收口步进（`bVar3 == true` 分支）。
 		int satisfied = (2 << 6) | (3 << 12);
 		Result closed = DataDrivenProgress.hit(satisfied, 0, slots, 1, true);
-		assertEquals(Outcome.STEP_COMPLETE, closed.outcome(), "全组达标形按真端收口步进");
+		assertEquals(Outcome.STEP_COMPLETE, closed.outcome(), "全组达标形按原版收口步进");
 		assertEquals(1, closed.newVars());
 	}
 
@@ -134,7 +134,7 @@ class DataDrivenProgressTest {
 	void guardShapesFailClosed() {
 		assertEquals(Outcome.NO_ACTION,
 			DataDrivenProgress.hit(0x40000000, 0, List.of(new Slot(1, 1)), 1, true).outcome(),
-			"守卫位异常 ⇒ 零动作（本服 fail-closed 策略，真端不会产生该位形）");
+			"守卫位异常 ⇒ 零动作（本服 fail-closed 策略，原版不会产生该位形）");
 		assertEquals(Outcome.NO_ACTION,
 			DataDrivenProgress.hit(-1, 0, List.of(new Slot(1, 1)), 1, true).outcome(), "负值 ⇒ 零动作");
 	}

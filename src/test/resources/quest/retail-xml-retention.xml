@@ -22528,7 +22528,7 @@
     <owner>XML_RETENTION</owner>
     <family>DataDriven</family>
     <reason>ADJUDICATED:CURATED_LEGACY_CONTRACT_LOCK</reason>
-    <evidence>flip-evidence(2026-09-30) retail-vs-XML IR shared/onlyXml/onlyRetail=23/13/32: hunt 段数/目标不同（XML 折叠阶梯 + var0 4→5 治愈 + PlayMovie 473；真端 = 多段多目标 + QuestDialog(108)）; 翻转属生产行为变更，待真机验收 .agents/summary/quest-owner-flip-7/README.zh-CN.md</evidence>
+    <evidence>flip-evidence(2026-09-30) retail-vs-XML IR shared/onlyXml/onlyRetail=23/13/32: hunt 段数/目标不同（XML 折叠阶梯 + var0 4→5 治愈 + PlayMovie 473；原版 = 多段多目标 + QuestDialog(108)）; 翻转属生产行为变更，待真机验收 .agents/summary/quest-owner-flip-7/README.zh-CN.md</evidence>
   </quest>
   <quest>
     <quest_id>17541</quest_id>
@@ -24495,7 +24495,7 @@
     <owner>XML_RETENTION</owner>
     <family>DataDriven</family>
     <reason>ADJUDICATED:CURATED_LEGACY_CONTRACT_LOCK</reason>
-    <evidence>flip-evidence(2026-09-30) retail-vs-XML IR shared/onlyXml/onlyRetail=0/54/77: 逐行零共享：54 条 XML 边与 77 条真端边完全不同（含接取门、阶段页、推进按钮、报告与领奖面）; 翻转属生产行为变更，待真机验收 .agents/summary/quest-owner-flip-7/README.zh-CN.md</evidence>
+    <evidence>flip-evidence(2026-09-30) retail-vs-XML IR shared/onlyXml/onlyRetail=0/54/77: 逐行零共享：54 条 XML 边与 77 条原版边完全不同（含接取门、阶段页、推进按钮、报告与领奖面）; 翻转属生产行为变更，待真机验收 .agents/summary/quest-owner-flip-7/README.zh-CN.md</evidence>
   </quest>
   <quest>
     <quest_id>20032</quest_id>
@@ -36661,7 +36661,7 @@
     <owner>XML_RETENTION</owner>
     <family>DataDriven</family>
     <reason>ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING</reason>
-    <evidence>QE-110 HOLD: 真端 tiamat_down/world.xml 的 questscript_area 计数=0，区域名只出现在 DD 行与 NpcAIPatterns_Event_KJS.xml 的 enable_area（同族悬空引用 43/385）；客户端 world.pak 条目 client_world_tiamat_down.xml 同样无此区域；证据 .agents/summary/quest-acquire-area-q50125/forensics_acquire_area_unbound.tsv 与 2026-09-30-qe110-acquire-area-unbound.zh-CN.md</evidence>
+    <evidence>QE-110 HOLD: 原版 tiamat_down/world.xml 的 questscript_area 计数=0，区域名只出现在 DD 行与 NpcAIPatterns_Event_KJS.xml 的 enable_area（同族悬空引用 43/385）；客户端 world.pak 条目 client_world_tiamat_down.xml 同样无此区域；证据 .agents/summary/quest-acquire-area-q50125/forensics_acquire_area_unbound.tsv 与 2026-09-30-qe110-acquire-area-unbound.zh-CN.md</evidence>
   </quest>
   <quest>
     <quest_id>50126</quest_id>
@@ -37039,7 +37039,7 @@
     <owner>XML_RETENTION</owner>
     <family>DataDriven</family>
     <reason>ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING</reason>
-    <evidence>QE-110 HOLD: 真端 tiamat_down/world.xml 的 questscript_area 计数=0，区域名只出现在 DD 行与 NpcAIPatterns_Event_KJS.xml 的 enable_area（同族悬空引用 43/385）；客户端 world.pak 条目 client_world_tiamat_down.xml 同样无此区域；证据 .agents/summary/quest-acquire-area-q50125/forensics_acquire_area_unbound.tsv 与 2026-09-30-qe110-acquire-area-unbound.zh-CN.md</evidence>
+    <evidence>QE-110 HOLD: 原版 tiamat_down/world.xml 的 questscript_area 计数=0，区域名只出现在 DD 行与 NpcAIPatterns_Event_KJS.xml 的 enable_area（同族悬空引用 43/385）；客户端 world.pak 条目 client_world_tiamat_down.xml 同样无此区域；证据 .agents/summary/quest-acquire-area-q50125/forensics_acquire_area_unbound.tsv 与 2026-09-30-qe110-acquire-area-unbound.zh-CN.md</evidence>
   </quest>
   <quest>
     <quest_id>51126</quest_id>

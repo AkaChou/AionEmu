@@ -21,8 +21,8 @@ class NpcFactionQuestDataTest {
 
 	@Test
 	void retailSnapshotContainsAll436QuestWeekdayEntries() throws Exception {
-		// P8 §10.3-#25 镜像同步：补 11 条真端行（35027-35030/45027-45030/36514/36517/37006），
-		// 总行数对齐真端 npcfactions_quest.xml 的 436 行。
+		// P8 §10.3-#25 镜像同步：补 11 条原版行（35027-35030/45027-45030/36514/36517/37006），
+		// 总行数对齐原版 npcfactions_quest.xml 的 436 行。
 		// P8 mirror sync: 11 retail rows added, total aligned with the retail table's 436 rows.
 		assertEquals(436, load().size());
 	}

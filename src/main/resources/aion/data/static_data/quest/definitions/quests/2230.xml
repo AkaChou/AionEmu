@@ -63,7 +63,7 @@
         <close-dialog/>
       </after-commit>
     </transition>
-    <!-- 交付成功即结束 30 分钟打赌倒计时（真端 handler: 成功交付时 questTimerEnd）。
+    <!-- 交付成功即结束 30 分钟打赌倒计时（原版 handler: 成功交付时 questTimerEnd）。
          Successful hand-in ends the 30-minute wager countdown (retail handler called questTimerEnd). -->
     <transition source="started" target="reward" priority="0">
       <event>

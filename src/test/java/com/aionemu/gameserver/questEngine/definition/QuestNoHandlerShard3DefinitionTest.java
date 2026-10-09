@@ -113,7 +113,7 @@ class QuestNoHandlerShard3DefinitionTest {
 	}
 
 	private CompiledQuestDefinition definition(String file) {
-		// Shard3 行已由真端表驱动（退役），改从生产视图取定义；file 形如 "29634.xml"。
+		// Shard3 行已由原版表驱动（退役），改从生产视图取定义；file 形如 "29634.xml"。
 		// The shard-3 rows are retail-driven since retirement; load via the production view.
 		return ProductionQuestDefinitions.definition(Integer.parseInt(file.substring(0, file.length() - 4)));
 	}

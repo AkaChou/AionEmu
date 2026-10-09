@@ -49,7 +49,7 @@ public final class PlayerQuestDialogPort implements QuestDialogPort {
 
 	/**
 	 * 对话页下发前的烙印槽位再通告：本页会把客户端带进烙印窗口（页 1），或该任务数据声明「扩展烙印槽」时，
-	 * 把玩家的槽位数再发一次（页 1 由服务侧附带真端「任务开启凹槽」通知）。
+	 * 把玩家的槽位数再发一次（页 1 由服务侧附带原版「任务开启凹槽」通知）。
 	 * 客户端缓存的槽位数会被服务端关窗重置，且重置晚于同一批包生效，
 	 * 所以教学链里之后的每一次交互都必须重新确立这条协议事实，窗口内的凹槽才渲染得出来。
 	 * Slot re-announce before a dialog page goes out: when the page leads the client into the stigma window
@@ -70,7 +70,7 @@ public final class PlayerQuestDialogPort implements QuestDialogPort {
 	/**
 	 * 解析目标对话对象 ID：目标缺失（客户端某些按钮不带对象 ID）且目标页是烙印窗口时，
 	 * 用玩家正在进行的任务对话授权作为对话对象——授权由任务列表点击时登记（同一 NPC + 同一任务），
-	 * 是服务端自己的权威记录，不是猜测（真端开烙印窗前同样先登记对话对象）。
+	 * 是服务端自己的权威记录，不是猜测（原版开烙印窗前同样先登记对话对象）。
 	 * Resolves the dialog target object id: when the target is missing (the client sends no object id for
 	 * some buttons) and the page is the stigma window, the player's ongoing quest-dialog authorization is
 	 * used — it was registered on the quest-list click (same NPC, same quest), i.e. the server's own

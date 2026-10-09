@@ -12,9 +12,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * 锁定任务 1345 Bearer Of Bad News 的步号轴与交付分支（QE-054 口径）。
- * 步号轴遵循真端与 legacy 的权威值：和 Kreon 对话后 0 -&gt; 1（真端 FUN_180f7d810
+ * 步号轴遵循原版与 legacy 的权威值：和 Kreon 对话后 0 -&gt; 1（原版 FUN_180f7d810
  * SetProgress(0x541, 1)、legacy defaultCloseDialog(env, 0, 1)），扔戒指（use-item）进 REWARD 时
- * 保持 1（真端 FUN_180f03fc0 在 START/step==1 时以 0x100(0x541, 0, 0) 推进、不带步号；
+ * 保持 1（原版 FUN_180f03fc0 在 START/step==1 时以 0x100(0x541, 0, 0) 推进、不带步号；
  * legacy useQuestItem(env, item, 1, 2, true, ...) 的 reward 分支不写 nextStep）。
  * 迁移期曾按末行索引把 reward 投影写成 2，交付前客户端任务书步骤整块落空。
  * Locks quest 1345's step axis and turn-in branches (QE-054 caliber).
@@ -38,14 +38,14 @@ class Quest1345ClientDialogAlignmentTest {
 		assertNode(definition, "v1", QuestStatus.START, Map.of("var0", 1));
 		assertNode(definition, "reward", QuestStatus.REWARD, Map.of("var0", 1));
 
-		// Kreon 对话：0 -> 1（真端 FUN_180f7d810 SetProgress(0x541, 1)；legacy defaultCloseDialog(0, 1)）。
+		// Kreon 对话：0 -> 1（原版 FUN_180f7d810 SetProgress(0x541, 1)；legacy defaultCloseDialog(0, 1)）。
 		// Kreon dialog: 0 -> 1 (retail FUN_180f7d810; legacy defaultCloseDialog(0, 1)).
 		QuestTransition talk = transition(definition, "started", "v1",
 			new QuestEvent.TalkToNpc(KREON_ID, QuestDialogAction.SETPRO1.id()));
 		assertEquals(List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.PACKET_ONLY),
 			new AfterCommitAction.CloseDialog()), talk.afterCommit());
 
-		// 扔戒指：直接进 REWARD，步号保持 1（不写轴）；真端 0x100 推进同型。
+		// 扔戒指：直接进 REWARD，步号保持 1（不写轴）；原版 0x100 推进同型。
 		// Ring throw: straight into REWARD keeping step 1; retail advances via 0x100 the same way.
 		QuestTransition throwRing = transition(definition, "v1", "reward",
 			new QuestEvent.UseItem(TARNISHED_RING_ID));

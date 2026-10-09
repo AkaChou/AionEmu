@@ -18,7 +18,7 @@ class LegacyKillFlowRepairDefinitionTest {
 	void killMilestonesRemainStartedUntilTheLegacyHandoff() {
 		for (int questId : List.of(2620, 4210, 18302, 18303, 18510, 23702, 23703, 23705)) {
 			if (RetiredQuestIds.contains(questId)) {
-				// 23702/23703/23705 自 P0c-6/P0c-8c 起走真端 SimpleHunt 网格合成器、已随族采纳退役
+				// 23702/23703/23705 自 P0c-6/P0c-8c 起走原版 SimpleHunt 网格合成器、已随族采纳退役
 				// （XML 删除、生产视图无 IR）：IR 测试退役三式（QE-146）下改锚 native 注册面——「报告行 =
 				// 计数满段节点」「路由不带第二计数器门控」等网格形状语义归 SimpleHunt 族门承担。
 				// 23702/23703/23705 are grid-composed since P0c-6/P0c-8c and retired with the SimpleHunt
@@ -173,7 +173,7 @@ class LegacyKillFlowRepairDefinitionTest {
 	}
 
 	private static CompiledQuestDefinition load(int questId)  {
-		// 退役任务的生产 XML 只在 git 历史里：统一取生产视图（XML 目录 + 真端 overlay）。
+		// 退役任务的生产 XML 只在 git 历史里：统一取生产视图（XML 目录 + 原版 overlay）。
 		// Retired quests live in git history only: use the production view (XML dir + retail overlay).
 		return ProductionQuestDefinitions.definition(questId);
 	}

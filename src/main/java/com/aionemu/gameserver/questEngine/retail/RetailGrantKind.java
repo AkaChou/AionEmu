@@ -3,7 +3,7 @@ package com.aionemu.gameserver.questEngine.retail;
 import java.util.Locale;
 
 /**
- * 真端接取名类别（M5-b2c 起）：真端族表的 {@code acquired_npc_name} 允许写"类别哨兵"
+ * 原版接取名类别（M5-b2c 起）：原版族表的 {@code acquired_npc_name} 允许写"类别哨兵"
  * （{@code _faction_} / {@code _challengetask_} / {@code _area_}）而不是 NPC 名，此时接取不是
  * 由 NPC 对话触发，而是由对应子系统发放。
  * <p>
@@ -27,7 +27,7 @@ public enum RetailGrantKind {
 	AREA,
 	/** {@code EnterWorld}：进世界发放（地图 ID 在 worldAcquireId 中）。 / World-entry grant. */
 	WORLD,
-	/** 未知的 {@code _..._} 哨兵（不对应任何真端发放系统）。 / Unknown sentinel shape. */
+	/** 未知的 {@code _..._} 哨兵（不对应任何原版发放系统）。 / Unknown sentinel shape. */
 	UNKNOWN_SENTINEL;
 
 	/** 是否为系统发放（无 NPC 接取路由）。 / Whether the row is system-granted (no accept route). */
@@ -35,7 +35,7 @@ public enum RetailGrantKind {
 		return this != NPC;
 	}
 
-	/** 真端已知的发放哨兵（未知哨兵不在此列）。 / Known grant sentinels only. */
+	/** 原版已知的发放哨兵（未知哨兵不在此列）。 / Known grant sentinels only. */
 	public boolean knownGrant() {
 		return this == FACTION || this == CHALLENGE_TASK || this == AREA || this == WORLD;
 	}
@@ -46,7 +46,7 @@ public enum RetailGrantKind {
 	}
 
 	/**
-	 * 接取名 → 类别：三类真端发放哨兵大小写不敏感识别；其余 {@code _..._} 形状记为未知哨兵；
+	 * 接取名 → 类别：三类原版发放哨兵大小写不敏感识别；其余 {@code _..._} 形状记为未知哨兵；
 	 * 非哨兵形状（含 null）按普通 NPC 名。
 	 * Classifies an acquire name: the three known sentinels case-insensitively, any other
 	 * {@code _..._} shape as an unknown sentinel, everything else as a plain NPC name.

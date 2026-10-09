@@ -12,10 +12,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * 锁定任务 4338 The Cursed Necklace 的步号轴与焚毁项链分支（QE-054 口径）。
- * 步号轴遵循真端：选向导（SETPRO5）显式 4 -&gt; 5（FUN_180fb8390/FUN_180fb84d0 的
+ * 步号轴遵循原版：选向导（SETPRO5）显式 4 -&gt; 5（FUN_180fb8390/FUN_180fb84d0 的
  * 0x110(0x10f2, 4, 5, ...)），把项链扔进岩浆（use-item）直接进 REWARD 且轴保持 5
  * （FUN_180f00820 在 START/step==5 时以 0x100(0x10f2, 0, 0) 推进）。
- * 错误批次（caf547879）曾写成推进到 6、汇报对话再抬到 7，与真端冲突；s6 仅作为旧存档
+ * 错误批次（caf547879）曾写成推进到 6、汇报对话再抬到 7，与原版冲突；s6 仅作为旧存档
  * 兼容节点保留。任务于 2026-09-17 promote 时从未有 legacy handler 对照。
  * Locks quest 4338's step axis and necklace-burn branch (QE-054 caliber).
  * The axis follows retail: picking a guide (SETPRO5) explicitly writes 4 -&gt; 5
@@ -38,13 +38,13 @@ class Quest4338ClientDialogAlignmentTest {
 		assertNode(definition, "s5", QuestStatus.START, Map.of("var0", 5));
 		assertNode(definition, "reward", QuestStatus.REWARD, Map.of("var0", 5));
 
-		// 选向导：4 -> 5（真端 0x110(0x10f2, 4, 5, ...) 的显式轴推进）。
+		// 选向导：4 -> 5（原版 0x110(0x10f2, 4, 5, ...) 的显式轴推进）。
 		// Picking a guide: 4 -> 5 (retail 0x110(0x10f2, 4, 5, ...) explicit axis write).
 		QuestTransition pickGuide = transition(definition, "s4", "s5",
 			new QuestEvent.TalkToNpc(GUIDE_ID, QuestDialogAction.SETPRO5.id()));
 		assertEquals(List.of(new QuestAction.SetVariable("var0", 5)), pickGuide.actions());
 
-		// 扔项链：直接进 REWARD，步号保持 5（真端 0x100 推进同型）。
+		// 扔项链：直接进 REWARD，步号保持 5（原版 0x100 推进同型）。
 		// Necklace throw: straight into REWARD keeping step 5 (retail 0x100 advance).
 		QuestTransition throwNecklace = transition(definition, "s5", "reward",
 			new QuestEvent.UseItem(CURSED_NECKLACE_ID));

@@ -211,7 +211,7 @@ class PlayerQuestDialogPortTest {
 			(refreshed, page) -> { }, questId -> false);
 
 		// 该按钮在客户端不带对象 ID（targetless），但玩家正在与 204160 进行任务对话：
-		// 烙印窗口必须落到这个对话对象上（真端开窗前会先登记对话对象）。
+		// 烙印窗口必须落到这个对话对象上（原版开窗前会先登记对话对象）。
 		assertTrue(port.showDialogWindow(snapshot().withTargetlessDialog(), plan(), DialogPage.STIGMA.id()));
 
 		SM_DIALOG_WINDOW packet = assertOnlyDialog(player);

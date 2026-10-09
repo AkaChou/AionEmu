@@ -8,7 +8,7 @@ import com.aionemu.gameserver.questEngine.definition.QuestCatalogRegistry;
 import com.aionemu.gameserver.questEngine.definition.QuestEvent;
 
 /**
- * 任务运行时统一入口，隔离 XML owner 与真端 owner 的目录和派发边界。
+ * 任务运行时统一入口，隔离 XML owner 与原版 owner 的目录和派发边界。
  * Unified quest-runtime entry point that isolates XML-owned and retail-owned catalogs and dispatch boundaries.
  * <p>
  * 实现必须保证单个 owner 只由一个子运行时拥有；跨 owner 事件由路由器组合结果，但不得让两个

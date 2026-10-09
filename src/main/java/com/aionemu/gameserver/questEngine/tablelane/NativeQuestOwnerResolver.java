@@ -10,9 +10,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * 真端表 id 集 × XML-only id 集的 owner 解析器（计划 §6.2：替代 retention 台账的推导式 owner）。
+ * 原版表 id 集 × XML-only id 集的 owner 解析器（计划 §6.2：替代 retention 台账的推导式 owner）。
  * <p>
- * 集合来源：family loader 装载的真端表行 id（本批 = SimpleHunt，后续家族批逐个并入）∪
+ * 集合来源：family loader 装载的原版表行 id（本批 = SimpleHunt，后续家族批逐个并入）∪
  * {@code quest/definitions/quests/*.xml} 文件名 id（XML-only 车道目录）。迁移期内两集合允许交叠
  * （交叠即「表行已有 XML 定义残留」的切换待办清单）；{@link #requireDisjoint()} 是 go-live 门：
  * 家族切换批在生产路由生效前必须消掉本族交叠，否则 {@code NATIVE_OWNER_CONFLICT} fail-fast。
@@ -39,7 +39,7 @@ public final class NativeQuestOwnerResolver {
 
 	/** owner 结论。 / Ownership verdict. */
 	public enum Owner {
-		/** 真端表车道。 / Retail-table lane. */
+		/** 原版表车道。 / Retail-table lane. */
 		NATIVE_TABLE,
 		/** XML-only IR 车道。 / XML-only IR lane. */
 		XML_ONLY,
@@ -84,7 +84,7 @@ public final class NativeQuestOwnerResolver {
 		instance();
 	}
 
-	/** 从 classpath 装载：真端表行 id（现有 family loader）∪ XML 定义目录文件名 id。 / Loads retail-table ids from the family loaders and XML ids from the definitions directory. */
+	/** 从 classpath 装载：原版表行 id（现有 family loader）∪ XML 定义目录文件名 id。 / Loads retail-table ids from the family loaders and XML ids from the definitions directory. */
 	static NativeQuestOwnerResolver load(ClassLoader loader) {
 		Set<Integer> retailTableIds = new TreeSet<>();
 		// 家族 loader 清单：SimpleHunt 先行；后续家族切换批把各自 loader 并入此处。
@@ -136,7 +136,7 @@ public final class NativeQuestOwnerResolver {
 		return new NativeQuestOwnerResolver(Set.copyOf(retailTableIds), Set.copyOf(xmlOnlyIds));
 	}
 
-	/** 真端表 id 集（跨已接入 family 的并集）。 / The retail-table id set (union over plugged-in families). */
+	/** 原版表 id 集（跨已接入 family 的并集）。 / The retail-table id set (union over plugged-in families). */
 	public Set<Integer> retailTableIds() {
 		return retailTableIds;
 	}
@@ -168,7 +168,7 @@ public final class NativeQuestOwnerResolver {
 	}
 
 	/**
-	 * 单任务归属：真端表优先（迁移期语义：切换后表车道赢），两侧皆无 = UNOWNED。
+	 * 单任务归属：原版表优先（迁移期语义：切换后表车道赢），两侧皆无 = UNOWNED。
 	 * Per-quest ownership: retail-table precedence (migration semantics: the table lane wins after
 	 * a switch); neither side = UNOWNED.
 	 */

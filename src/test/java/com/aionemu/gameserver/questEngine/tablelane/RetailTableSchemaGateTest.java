@@ -24,9 +24,9 @@ import org.junit.jupiter.api.Test;
  * {@code .agents/summary/quest-engine-native/p0b/retail-doctype-xsd.zh-CN.md} 与
  * {@code .agents/summary/quest-engine-native/p0b/ledger-xml.zh-CN.md}）——schema 形漂移即红；
  * 另两钉子：①二十表不得再出现 DOCTYPE（剥离批不得回退）；②正文实体引用只允许 XML 预定义五实体
- * （非预定义实体在无 DTD 时是未定义实体炸解析，且真端自名实体语义 = 字面量展开，见批证据
+ * （非预定义实体在无 DTD 时是未定义实体炸解析，且原版自名实体语义 = 字面量展开，见批证据
  * `&hellip;` → 字面 `hellip`）。十张自造台账（原 TSV + D1 的 Quest-AI 注册面证据表 + 链式接取发放边表）
- * 在本门与十张真端表同规：同目录同名 xml/xsd 对 + 同两条钉子。
+ * 在本门与十张原版表同规：同目录同名 xml/xsd 对 + 同两条钉子。
  * <p>
  * Gate for the retail tables (the 2026-10-03 DOCTYPE strip plus the ledger-XML batch): the real
  * resources must validate against their sibling XSDs, which mirror the loader fail-closed rules
@@ -41,7 +41,7 @@ class RetailTableSchemaGateTest {
 
 	private static final String DIR = "aion/data/static_data/quest/retail/";
 
-	/** 二十张表 = (xml, xsd) 同名对（十张真端表 + 十张台账）。 / The twenty same-stem (xml, xsd) pairs. */
+	/** 二十张表 = (xml, xsd) 同名对（十张原版表 + 十张台账）。 / The twenty same-stem (xml, xsd) pairs. */
 	private static final List<Table> TABLES = List.of(
 			new Table("Quest_SimpleHunt"),
 			new Table("Quest_SimpleSerialHunt"),

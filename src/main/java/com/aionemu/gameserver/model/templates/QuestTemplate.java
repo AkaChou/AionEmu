@@ -579,7 +579,7 @@ public class QuestTemplate {
 	}
 
 	/**
-	 * 从真端规范元数据映射生成 QuestTemplate 实例。
+	 * 从原版规范元数据映射生成 QuestTemplate 实例。
 	 * Synthesizes a QuestTemplate instance directly from canonical QuestMetadata.
 	 */
 	public static QuestTemplate fromMetadata(int id, QuestMetadata m) {

@@ -25,7 +25,7 @@ class MonsterHunt1102DefinitionTest {
 		List<QuestTransition> transitions = compiled.definition().transitions();
 
 		// 客户端 1102 HTML 无 select1_1(1012) 页：select1 的按钮直接是 ASK_QUEST_ACCEPT(1007)，
-		// 接取链不含 1012 翻页。节点标签是真端合成器的规范形（a0..a3 = 0..3 次击杀）。
+		// 接取链不含 1012 翻页。节点标签是原版合成器的规范形（a0..a3 = 0..3 次击杀）。
 		// The client 1102 HTML has no select1_1 (1012) page: select1 goes straight to
 		// ASK_QUEST_ACCEPT; grid labels are the retail canonical form a0..a3.
 		assertEquals(35, transitions.size());
@@ -95,7 +95,7 @@ class MonsterHunt1102DefinitionTest {
 
 	@Test
 	void packagedDefinitionContainsOnlyQuestSemanticsAndHasNoLegacyOwner() {
-		// 1102 已退役：生产 XML 不再进仓（内容在 git 历史里），定义由真端驱动合成，
+		// 1102 已退役：生产 XML 不再进仓（内容在 git 历史里），定义由原版驱动合成，
 		// 合成结果只含任务语义（无证据/归属元数据）。
 		// 1102 is retired: no production XML ships; the synthesized definition carries quest semantics only.
 		assertFalse(QuestXmlFixtures.productionXmlPresent(1102),
@@ -121,7 +121,7 @@ class MonsterHunt1102DefinitionTest {
 	}
 
 	private CompiledQuestDefinition definition() {
-		// 1102 已迁到真端驱动（XML 不进仓）；装载走生产视图。
+		// 1102 已迁到原版驱动（XML 不进仓）；装载走生产视图。
 		// 1102 is retail-driven now; the definition comes from the production view.
 		return ProductionQuestDefinitions.definition(1102);
 	}

@@ -164,7 +164,7 @@ class RewardOwnerTrimContractTest {
 			CompiledQuestDefinition compiled = definition(questId);
 			assertEquals(Set.of(279042), rewardOwners(compiled.definition()),
 				() -> "sibling " + questId + " must complete on 279042 (STR_DIC_N_Henir)");
-			// 4714/4716 已退役（P0c-8b 领奖确认段批）：XML 只在 git 历史里，完成 owner 由真端驱动定义承担；
+			// 4714/4716 已退役（P0c-8b 领奖确认段批）：XML 只在 git 历史里，完成 owner 由原版驱动定义承担；
 			// 仍在 XML 名下的同族任务继续按 XML 文本断言（源真相未变）。
 			// 4714/4716 are retired: the retail-driven definition carries the completion owner instead of an
 			// in-tree XML, while the remaining siblings still assert the XML text.
@@ -254,7 +254,7 @@ class RewardOwnerTrimContractTest {
 		}
 	}
 
-	/** 生产定义：XML 目录 + 真端 overlay（退役任务不再有 XML，只在 git 历史里）。 */
+	/** 生产定义：XML 目录 + 原版 overlay（退役任务不再有 XML，只在 git 历史里）。 */
 	private static CompiledQuestDefinition definition(int questId) {
 		return ProductionQuestDefinitions.definition(questId);
 	}

@@ -19,7 +19,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 /**
- * 真端 {@code quest.xml} 元数据行装载器（计划 §6.2：quest.xml 划归 NativeQuestTableLoader 族；
+ * 原版 {@code quest.xml} 元数据行装载器（计划 §6.2：quest.xml 划归 NativeQuestTableLoader 族；
  * 本类是数据层——只装载与类型化访问，不做任何语义合成；起始条件/奖励组/职业奖励的语义提取
  * 属各家族切换批）。行模型：{@code <quests><quest>…</quest></quests>}，id 为行内
  * {@code <id>} 子元素。字段 = 行的**直接子元素**（实测全部单值；模型仍按多值保留首现序，以防
@@ -256,7 +256,7 @@ public final class NativeQuestXmlTable {
 	}
 
 	/**
-	 * 该行是否声明真端掉落列（{@code drop_item_*}/{@code drop_monster_*}，**任意槽位**）——native
+	 * 该行是否声明原版掉落列（{@code drop_item_*}/{@code drop_monster_*}，**任意槽位**）——native
 	 * 各族的击杀掉落注册共享预筛（退役 XML 的 {@code <drops>} 已随 catalog 退场，掉落由各族从本列接手）。
 	 * 不得只看第 1 槽：任务 4105 的掉落只写在 {@code drop_monster_2}/{@code drop_item_2}（2026-10-08
 	 * 跨族护栏暴露，补注册）。
@@ -282,9 +282,9 @@ public final class NativeQuestXmlTable {
 	}
 
 	/**
-	 * 按真端 {@code <name>} 反查行（该列在真端表内唯一）。
+	 * 按原版 {@code <name>} 反查行（该列在原版表内唯一）。
 	 * <p>
-	 * 真端 {@code finished_quest_condN} 写的就是目标行的 {@code <name>}：绝大多数是
+	 * 原版 {@code finished_quest_condN} 写的就是目标行的 {@code <name>}：绝大多数是
 	 * {@code Q<id>}，574 行（CombineTask 全族）是符号（如 {@code ws_q5015}）。
 	 * <p>
 	 * Looks a row up by its retail {@code <name>}, which is what {@code finished_quest_condN}

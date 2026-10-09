@@ -25,7 +25,7 @@ import com.aionemu.gameserver.model.templates.RepeatedAbnormalStatusImmuneTempla
 import com.aionemu.gameserver.skillengine.effect.AbnormalState;
 
 /**
- * 固化真端「重复异常状态免疫表」的加载语义：数值逐位一致、STUN 等表外状态不参与、
+ * 固化原版「重复异常状态免疫表」的加载语义：数值逐位一致、STUN 等表外状态不参与、
  * 窗口公式与非法配置 fail-fast。
  * Pins the retail repeated-abnormal immunity table: value-for-value tiers, untracked states
  * (STUN included) excluded, and the window formula plus fail-fast behaviour on invalid input.
@@ -56,7 +56,7 @@ class RepeatedAbnormalStatusImmuneDataTest {
 		assertEquals(AbnormalState.SLEEP, data.getTemplate(StatEnum.SLEEP_RESISTANCE).getAbnormalState());
 		assertEquals(AbnormalState.PARALYZE, data.getTemplate(StatEnum.PARALYZE_RESISTANCE).getAbnormalState());
 		assertEquals(AbnormalState.FEAR, data.getTemplate(StatEnum.FEAR_RESISTANCE).getAbnormalState());
-		// 晕厥等表外状态没有条目（真端表不含 STUN）/ untracked states (STUN included) resolve to no entry
+		// 晕厥等表外状态没有条目（原版表不含 STUN）/ untracked states (STUN included) resolve to no entry
 		assertNull(data.getTemplate(StatEnum.STUN_RESISTANCE));
 		assertNull(data.getTemplate(StatEnum.ROOT_RESISTANCE));
 		assertNull(data.getTemplate(AbnormalState.STUN));

@@ -1,4 +1,4 @@
-# Aion 5.8 真端 quest.xml finished_quest_condN 快照：分支内逗号=AND，分号=OR
+# Aion 5.8 原版 quest.xml finished_quest_condN 快照：分支内逗号=AND，分号=OR
 # 由 .agents/summary/retail-template-reconciliation/build_prereq_contract_tsv.py 生成
 quest_id	finished_quest_branches
 1021	1015

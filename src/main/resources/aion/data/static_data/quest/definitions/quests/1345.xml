@@ -33,9 +33,9 @@
     <node label="v1" status="START">
       <var name="var0" value="1"/>
     </node>
-    <!-- QE-054：扔戒指（use-item）后沿用 legacy/真端的 packed step 1——legacy
+    <!-- QE-054：扔戒指（use-item）后沿用 legacy/原版的 packed step 1——legacy
          `useQuestItem(env, item, 1, 2, true, 0, 0, 0)` 的 reward 分支不写 nextStep，落盘 1；
-         真端 FUN_180f03fc0 在 status==START && step==1 时以 `0x100(0x541, 0, 0)` 推进、不带步号
+         原版 FUN_180f03fc0 在 status==START && step==1 时以 `0x100(0x541, 0, 0)` 推进、不带步号
          （Kreon 对话的 FUN_180f7d810 `SetProgress(0x541, 1)` 才是轴 1 的写入点）。
          迁移期（0ab7e4db8 起）曾按客户端末行索引写成 2，交付前任务书步骤整块落空。
          QE-054: after the ring is thrown (use-item) the packed step stays the legacy/retail 1: the

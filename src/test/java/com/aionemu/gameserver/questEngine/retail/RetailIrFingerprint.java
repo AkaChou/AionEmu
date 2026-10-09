@@ -15,7 +15,7 @@ import java.util.Map;
 
 /**
  * 定义 IR 的规范化指纹：删除 quest-definition XML 之后，用它在**没有 XML** 的情况下继续证明
- * "真端驱动的定义 == 删除前 XML 编译出的定义"。
+ * "原版驱动的定义 == 删除前 XML 编译出的定义"。
  * <p>
  * 归一化口径（与家族等价门禁一致）：节点按 {@code (status, packed)} 记一行、转换把
  * source/target 标签换成同口径的规范键，事件/条件/动作/after-commit/priority 用其规范文本，

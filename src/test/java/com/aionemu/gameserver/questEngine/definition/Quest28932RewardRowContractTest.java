@@ -23,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * 锁定 28932（[인던/파티] 함선 지휘관 처치，可重复）的真端 DD 行（Talk + 单杀网格）与领奖行。
+ * 锁定 28932（[인던/파티] 함선 지휘관 처치，可重复）的原版 DD 行（Talk + 单杀网格）与领奖行。
  * Locks 28932's retail DD row (Talk + single-kill grid) and its reward row.
  * <p>
  * 已退役（保留清单 owner=RETAIL_TABLE，family=DataDriven）：旧「生产视图」网格节点/行号投影断言随
@@ -54,13 +54,13 @@ class Quest28932RewardRowContractTest {
 			Quest28932RewardRowContractTest.class
 				.getResourceAsStream(DataDrivenNativeRuntime.TABLE_RESOURCE));
 		DataDrivenQuestTable.Row row = table.find(QUEST_ID).orElseThrow();
-		assertEquals("talk", row.acquireKind(), "接取类别 = 真端 Talk 行");
-		assertEquals("IDDreadgion_04_Lenanti_E", row.acquireParam(), "接取 NPC 名 = 真端 value0_acquire_");
-		assertEquals("DF6_Olivia_E", row.rewardNpc(), "交付 NPC 名 = 真端 reward_npc_name");
+		assertEquals("talk", row.acquireKind(), "接取类别 = 原版 Talk 行");
+		assertEquals("IDDreadgion_04_Lenanti_E", row.acquireParam(), "接取 NPC 名 = 原版 value0_acquire_");
+		assertEquals("DF6_Olivia_E", row.rewardNpc(), "交付 NPC 名 = 原版 reward_npc_name");
 		assertTrue(runtime.acquireTalkInterests().getOrDefault(LENANTI_NPC_ID, List.of()).contains(QUEST_ID),
 			"Lenanti 必须注册 28932 的接取谈话面");
 
-		// 单杀网格：德拉克忍者落组 1（真端 value0_progress_ 单行 1 杀）。
+		// 单杀网格：德拉克忍者落组 1（原版 value0_progress_ 单行 1 杀）。
 		List<Integer> ninjas = NativeNpcNameResolver.instance().resolveMonsterIds(DRAKAN_NINJA);
 		assertTrue(!ninjas.isEmpty(), "德拉克忍者名必须可解析");
 		for (int mobId : ninjas) {
@@ -69,9 +69,9 @@ class Quest28932RewardRowContractTest {
 
 		QuestMetadata metadata = RetailQuestDriver.ensureLoaded()
 			.retailMetadataOf(QUEST_ID).orElseThrow().metadata();
-		assertEquals(66, metadata.minLevel(), "真端 minlevel_permitted=66");
-		assertEquals(java.util.Set.of("ASMODIANS"), metadata.permittedRaces(), "真端 pc_dark");
-		assertEquals(255, metadata.repeatPolicy().maxRepeatCount(), "真端 max_repeat_count=255 ⇒ 可重复");
+		assertEquals(66, metadata.minLevel(), "原版 minlevel_permitted=66");
+		assertEquals(java.util.Set.of("ASMODIANS"), metadata.permittedRaces(), "原版 pc_dark");
+		assertEquals(255, metadata.repeatPolicy().maxRepeatCount(), "原版 max_repeat_count=255 ⇒ 可重复");
 		List<QuestReward> rewards = metadata.rewards();
 		assertTrue(rewards.contains(new QuestReward("EXP", 0, 7911702)), () -> rewards.toString());
 		assertTrue(rewards.contains(new QuestReward("ITEM", 188056947, 1)), () -> rewards.toString());
@@ -86,7 +86,7 @@ class Quest28932RewardRowContractTest {
 		Player player = NativeTalkFixture.player(Race.ASMODIANS, PlayerClass.WARRIOR, 66);
 		place(player, 0f, 0f, 0f);
 
-		// 未接取：任务行打开真端接取入口页（4762 = 客户端声明的 select_none），带任务上下文。
+		// 未接取：任务行打开原版接取入口页（4762 = 客户端声明的 select_none），带任务上下文。
 		NativeTalkFixture.clearPackets(player);
 		assertTrue(runtime.onDialog(player, LENANTI_NPC_ID, 31, OBJECT_ID, QUEST_ID));
 		NativeTalkFixture.assertOnlyDialogPageWithQuest(player, 4762, QUEST_ID);

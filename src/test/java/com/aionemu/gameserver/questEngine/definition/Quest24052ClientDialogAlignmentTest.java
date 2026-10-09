@@ -37,7 +37,7 @@ class Quest24052ClientDialogAlignmentTest {
 		assertNode(definition, "s4", QuestStatus.START, Map.of("var0", 4));
 		assertNode(definition, "reward", QuestStatus.REWARD, Map.of("var0", 4));
 
-		// 道具递进：任一在场道具在当前阶段推进一步（s1 -> s2，真端同样接受任意道具）。
+		// 道具递进：任一在场道具在当前阶段推进一步（s1 -> s2，原版同样接受任意道具）。
 		// Item chain: any carried item advances one step at the current stage (s1 -> s2; retail
 		// accepts any of the three items the same way).
 		QuestTransition firstStep = transition(definition, "s1", "s2",

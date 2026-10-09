@@ -61,7 +61,7 @@
          2) 难民 799366：页 1011（select1）→ `SET_REWARD`(10255) → `defaultCloseDialog(env, 0, 1, true,
             false)` = var0=1 + REWARD + 移除笛子道具（182207857）+ 难民消失，零回页；
          3) 领奖（10002 → 5 → 结束对话）只在 Shulack_DF4_4 799276（任务书末行 STR_DIC_N_Shulack_DF4_4）上。
-         真端注册面（retail-quest-ai-registrations.xml）= 700812/799276/799366 三实体，页下发只有
+         原版注册面（retail-quest-ai-registrations.xml）= 700812/799276/799366 三实体，页下发只有
          accept/refuse（0x3eb/0x3ec）。
          旧 XML 把三个实体生成成同一份 NPC_REPORT + npc-complete 全文：无对话 html 的笛子会吃到
          收尾页 10（questId=0 → 客户端按物件名解析 html 失败 → load fail），且领奖入口不唯一。

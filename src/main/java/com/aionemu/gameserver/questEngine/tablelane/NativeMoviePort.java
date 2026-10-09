@@ -6,20 +6,20 @@ import com.aionemu.gameserver.questEngine.definition.QuestMovieType;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
- * 原生任务车道的过场端口：真端表 {@code cutsceneid1}/{@code cs1_haction} 声明的 movie 唯一出口。
+ * 原生任务车道的过场端口：原版表 {@code cutsceneid1}/{@code cs1_haction} 声明的 movie 唯一出口。
  * <p>
- * 真端 codegen 在交付/报告节点的槽 0x35 挂 {@code PlayMovie} thunk；本端口是它在 Java 侧的等价物
+ * 原版 codegen 在交付/报告节点的槽 0x35 挂 {@code PlayMovie} thunk；本端口是它在 Java 侧的等价物
  * （包类型取自 {@link QuestMovieType#CUTSCENE}，与旧 IR 的 {@code AfterCommitAction.PlayMovie} 同型）。
  * The cutscene port of the native quest lane: the single exit for movies declared by the retail table
  * ({@code cutsceneid1}/{@code cs1_haction}), the Java-side equivalent of the retail 0x35 slot thunk.
  */
 public interface NativeMoviePort {
 
-	/** 播放过场（真端 PlayMovie）。 / Plays the cutscene (retail PlayMovie). */
+	/** 播放过场（原版 PlayMovie）。 / Plays the cutscene (retail PlayMovie). */
 	void play(Player player, int movieId);
 
 	/**
-	 * 播放电影型资源（真端 `PlayMovie` 独立槽 +0x1b8，对应 DD 附加动作 `Movie|Movie2 N` 词形；
+	 * 播放电影型资源（原版 `PlayMovie` 独立槽 +0x1b8，对应 DD 附加动作 `Movie|Movie2 N` 词形；
 	 * 与 {@link #play} 的差异只在客户端资源包型）。
 	 * Plays a movie-type resource (the retail PlayMovie slot +0x1b8, the DD extra-action
 	 * {@code Movie|Movie2 N} token); differs from {@link #play} only in the client resource

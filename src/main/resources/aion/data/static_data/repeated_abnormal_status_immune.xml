@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <!--
-	真端重复异常状态递减/免疫表（逐位照抄 <真端根>/Map/XML/repeated_abnormal_status_immune.xml）。
+	原版重复异常状态递减/免疫表（逐位照抄 <原版根>/Map/XML/repeated_abnormal_status_immune.xml）。
 	Retail repeated-abnormal decay table, mirrored value-for-value from the retail file.
 	仅 PARALYZE / SLEEP / FEAR 三态参与递减链；STUN 等表外状态不受影响。
  -->

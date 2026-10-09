@@ -325,7 +325,7 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT1"/>
       </after-commit>
     </transition>
-    <!-- 真端取证（ScriptDLL64 FUN_180f7a340）：SETPRO1 → 推进 + 0x5d8 关窗（实机 2026-10-05 两次点击实证）；页 10 系翻译夸大，已删。 -->
+    <!-- 原版取证（ScriptDLL64 FUN_180f7a340）：SETPRO1 → 推进 + 0x5d8 关窗（实机 2026-10-05 两次点击实证）；页 10 系翻译夸大，已删。 -->
     <transition source="started0" target="started1">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="204182" action="SETPRO1"/>
@@ -347,7 +347,7 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
       </after-commit>
     </transition>
-    <!-- 真端取证（ScriptDLL64 FUN_180f9a830）：SETPRO2 → 推进 + 0x5d8 关窗（实机 2026-10-05 两次点击实证）；页 10 系翻译夸大，已删。 -->
+    <!-- 原版取证（ScriptDLL64 FUN_180f9a830）：SETPRO2 → 推进 + 0x5d8 关窗（实机 2026-10-05 两次点击实证）；页 10 系翻译夸大，已删。 -->
     <transition source="started1" target="started2">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="203550" action="SETPRO2"/>
@@ -369,7 +369,7 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT3"/>
       </after-commit>
     </transition>
-    <!-- 真端取证（ScriptDLL64 FUN_180fabcb0）：SETPRO3 → 推进 + 0x5d8 关窗（实机 2026-10-05 两次点击实证）；页 10 系翻译夸大，已删。 -->
+    <!-- 原版取证（ScriptDLL64 FUN_180fabcb0）：SETPRO3 → 推进 + 0x5d8 关窗（实机 2026-10-05 两次点击实证）；页 10 系翻译夸大，已删。 -->
     <transition source="started2" target="started3">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="790003" action="SETPRO3"/>
@@ -391,7 +391,7 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT4"/>
       </after-commit>
     </transition>
-    <!-- 真端取证（ScriptDLL64 FUN_180fb3d40）：SETPRO4 → 推进 + 0x5d8 关窗（实机 2026-10-05 两次点击实证）；页 10 系翻译夸大，已删。 -->
+    <!-- 原版取证（ScriptDLL64 FUN_180fb3d40）：SETPRO4 → 推进 + 0x5d8 关窗（实机 2026-10-05 两次点击实证）；页 10 系翻译夸大，已删。 -->
     <transition source="started3" target="started4">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="790002" action="SETPRO4"/>
@@ -1253,7 +1253,7 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT10"/>
       </after-commit>
     </transition>
-    <!-- 真端取证（ScriptDLL64 FUN_180f8d630）：SETPRO10 → 推进 + 0x5d8 关窗（实机 2026-10-05 两次点击实证）；页 10 系翻译夸大，已删。 -->
+    <!-- 原版取证（ScriptDLL64 FUN_180f8d630）：SETPRO10 → 推进 + 0x5d8 关窗（实机 2026-10-05 两次点击实证）；页 10 系翻译夸大，已删。 -->
     <transition source="started10" target="reward">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="203550" action="SETPRO10"/>

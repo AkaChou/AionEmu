@@ -33,8 +33,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * 本门禁同时锁死：简报标志位的接取/清除、每只（组）怪只推自己那一槽、击杀必须发生在简报之后、
  * 报告与 completion owner 收敛到任务书行 0/行 3 点名的 NPC、饱和领奖投影。
  * <p>
- * P0c-6 起 24112 也由真端表驱动（XML 已退役）：它的"存档修复边"按 P3 既有裁定一并移除
- * （旧 XML 的 AionEmu 历史包袱，真端表没有修复列），因此单槽族与双槽族共用同一组
+ * P0c-6 起 24112 也由原版表驱动（XML 已退役）：它的"存档修复边"按 P3 既有裁定一并移除
+ * （旧 XML 的 AionEmu 历史包袱，原版表没有修复列），因此单槽族与双槽族共用同一组
  * "retail 不迁移旧存档"断言。节点名不进契约：门禁用 (状态, 投影) 语义查找节点，
  * 网格族（a0/a1..）与串行族（briefed/k1..）的命名差异不应影响本文件要锁的语义。
  * <p>
@@ -255,9 +255,9 @@ class CounterChainBriefingStageContractTest {
 				() -> "quest " + contract.questId() + " must not resync the saturated reward state");
 
 			if (contract.bossKill() == null) {
-				/* 24112 自 P0c-6 起也由真端表驱动（XML 已退役）：旧 XML 的 AionEmu 历史包袱
+				/* 24112 自 P0c-6 起也由原版表驱动（XML 已退役）：旧 XML 的 AionEmu 历史包袱
 				 * （"接取后未听简报就先杀怪" 的归一化、旧 reward 投影 var0=0 的自愈）按 P3 既有裁定
-				 * 一并移除——真端表没有"存档修复"列。一次性 DB 归一化是可选项，登记在 P0c-6 报告。 */
+				 * 一并移除——原版表没有"存档修复"列。一次性 DB 归一化是可选项，登记在 P0c-6 报告。 */
 				/* 24112 is retail-driven since P0c-6: the legacy save-repair edges are gone (P3 ruling);
 				 * the optional one-time DB normalization is registered in the P0c-6 report. */
 				assertTrue(plans(compiled, QuestStatus.START, Map.of("var0", 1, "var5", 1),
@@ -268,7 +268,7 @@ class CounterChainBriefingStageContractTest {
 					() -> "quest " + contract.questId() + " must not heal the old reward save");
 				continue;
 			}
-			/* 30600/30610 已按真端串行表驱动：旧 step 档（var0=2 的步骤号）不再迁移，也没有自愈边；
+			/* 30600/30610 已按原版串行表驱动：旧 step 档（var0=2 的步骤号）不再迁移，也没有自愈边；
 			 * P3 裁定见 P3 报告与 p3-serial-hunt-decisions.tsv。 */
 			/* 30600/30610 are retail-driven: legacy step saves are not migrated and no repair edge remains. */
 			assertTrue(plans(compiled, QuestStatus.START, Map.of("var0", 2), new QuestEvent.EnterWorld()).isEmpty(),

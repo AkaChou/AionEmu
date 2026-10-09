@@ -18,7 +18,7 @@ import com.aionemu.gameserver.questEngine.definition.QuestEvent;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 
 /**
- * 验证 XML 与真端运行时隔离以及真端本地对话页动作的 no-op 语义。
+ * 验证 XML 与原版运行时隔离以及原版本地对话页动作的 no-op 语义。
  * Verifies XML/retail runtime isolation and no-op semantics for retail-local dialog page actions.
  */
 class QuestRuntimeRouterTest {

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 questStringId source: STR_QUEST_SAY_* / STR_CHAT_* client string id
-source: <真端根>/Map/XML/strings.xml (retail server string table, verbatim)
+source: <原版根>/Map/XML/strings.xml (retail server string table, verbatim)
 consumers: DataDrivenNativeRuntime extra-action case 7 (Say) key resolution + NativeSayPort bubble body
-body 元素 = 真端 <body> 原文（XML 实体解码为纯文本，供 say 气泡通道；2026-10-02 偏差修复第二批）
+body 元素 = 原版 <body> 原文（XML 实体解码为纯文本，供 say 气泡通道；2026-10-02 偏差修复第二批）
 -->
 <retail_quest_string_ids>
   <quest_string_id>

@@ -23,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * 1913「베르테론 파견」的真端车道（native）生产流证明。
+ * 1913「베르테론 파견」的原版车道（native）生产流证明。
  * <p>
  * 1913 已退役（保留清单 owner=RETAIL_TABLE，旧 XML 只在 git 历史里）：typed dispatcher 与
  * {@code ProductionQuestDefinitions.definition(1913)} 不再持有它，生产执行由 SimpleTalk native 车道接管。
@@ -31,7 +31,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * 断言等价 native 事实：单 owner、单步中继合同、奖励事实、接取/中继/报告对话面。
  * <p>
  * 旧 typed 流程断言（步 1 传送 210030000、交付边锚在 started1、after-commit 序）随 typed 主体退场：
- * 真端 talk 行未声明传送列，车道推进 = var0=1 + 关窗，「传送后才可领奖」由中继满门承担（未满 = 页 10）。
+ * 原版 talk 行未声明传送列，车道推进 = var0=1 + 关窗，「传送后才可领奖」由中继满门承担（未满 = 页 10）。
  * <p>
  * Production-flow proof for quest 1913 on the retail (native) lane: 1913 is retired to the SimpleTalk
  * native handler, so the typed definition no longer exists. The old typed assertions (the step-1 teleport,
@@ -55,9 +55,9 @@ class Quest1913ProductionFlowTest {
 	void retailRowKeepsTheSingleRelayAndTheHyacinteHandIn() {
 		SimpleTalkHandler handler = SimpleTalkHandler.instance();
 
-		assertEquals("Macus", handler.requireRow(QUEST_ID).acquiredNpcName(), "真端 acquired_npc_name");
-		assertEquals(List.of("Polyidus"), handler.requireRow(QUEST_ID).talkNpcNames(), "真端 talk_npc1");
-		assertEquals("Hyacinte", handler.requireRow(QUEST_ID).rewardNpcName(), "真端 reward_npc_name");
+		assertEquals("Macus", handler.requireRow(QUEST_ID).acquiredNpcName(), "原版 acquired_npc_name");
+		assertEquals(List.of("Polyidus"), handler.requireRow(QUEST_ID).talkNpcNames(), "原版 talk_npc1");
+		assertEquals("Hyacinte", handler.requireRow(QUEST_ID).rewardNpcName(), "原版 reward_npc_name");
 		assertEquals(1, handler.relayCount(QUEST_ID), "1913 是单步中继行");
 		assertNotNull(handler.acquireNpc(QUEST_ID), "接取 NPC 必须可解析");
 		assertNotNull(handler.rewardNpc(QUEST_ID), "交付 NPC 必须可解析");
@@ -68,13 +68,13 @@ class Quest1913ProductionFlowTest {
 		QuestMetadata metadata = RetailQuestDriver.ensureLoaded()
 			.retailMetadataOf(QUEST_ID).orElseThrow().metadata();
 
-		// 真端 quest.xml：minlevel_permitted=10、race_permitted=pc_light、class_permitted=fighter knight、
+		// 原版 quest.xml：minlevel_permitted=10、race_permitted=pc_light、class_permitted=fighter knight、
 		// reward_exp1=14046、reward_item1_1=FOOD_dpheal_40A 5（物品模板 160001273）。
 		// Retail quest.xml row: min level 10, light race, fighter/knight classes, 14046 exp and 5x food.
-		assertEquals(10, metadata.minLevel(), "真端 minlevel_permitted");
-		assertEquals(java.util.Set.of("ELYOS"), metadata.permittedRaces(), "真端 pc_light");
+		assertEquals(10, metadata.minLevel(), "原版 minlevel_permitted");
+		assertEquals(java.util.Set.of("ELYOS"), metadata.permittedRaces(), "原版 pc_light");
 		assertTrue(metadata.permittedClasses().contains("GLADIATOR")
-				&& metadata.permittedClasses().contains("TEMPLAR"), "真端 class_permitted=fighter knight");
+				&& metadata.permittedClasses().contains("TEMPLAR"), "原版 class_permitted=fighter knight");
 		List<QuestReward> rewards = metadata.rewards();
 		assertTrue(rewards.contains(new QuestReward("EXP", 0, 14046)), () -> rewards.toString());
 		assertTrue(rewards.contains(new QuestReward("ITEM", 160001273, 5)), () -> rewards.toString());

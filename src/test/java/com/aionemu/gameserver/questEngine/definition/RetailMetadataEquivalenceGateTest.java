@@ -39,14 +39,14 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * 真端元数据层等价门禁：对全部生产目录任务证明
- * "真端 quest.xml 行 → {@link RetailQuestMetadataCompiler} 的元数据" 与
+ * 原版元数据层等价门禁：对全部生产目录任务证明
+ * "原版 quest.xml 行 → {@link RetailQuestMetadataCompiler} 的元数据" 与
  * quest-definition XML 元数据一致（除已登记的口径分歧）。
  * <p>
- * - 已知全局口径：name 轴采用真端 Qxxxx 约定（英文名为在库人工资产，无运行时消费方）；
+ * - 已知全局口径：name 轴采用原版 Qxxxx 约定（英文名为在库人工资产，无运行时消费方）；
  * - 已知登记轴：max-level 82 封顶（复用 {@code quest-start-metadata-retail-cap-exceptions.tsv}）；
  * - 其余任何轴差异都必须出现在 {@code /quest/retail-metadata-divergences.tsv}（逐任务逐轴登记）；
- * - 真端行缺失或含未解析符号名的任务必须登记（axis=RETAIL_MISSING / RETAIL_UNRESOLVED）。
+ * - 原版行缺失或含未解析符号名的任务必须登记（axis=RETAIL_MISSING / RETAIL_UNRESOLVED）。
  * <p>
  * 排查模式：{@code -Dretail.metadata.diffOut=<path>} 导出全部差异后失败，供生成登记表。
  * The retail metadata equivalence gate over the whole production catalog.
@@ -97,7 +97,7 @@ class RetailMetadataEquivalenceGateTest {
 	@Test
 	void retailMetadataMatchesProductionXml() throws Exception {
 		List<CatalogEntry> catalog = loadCatalog();
-		// XML 目录已收敛（退役任务由真端驱动拥有，不再有 XML）；本门禁只对拍 XML 侧任务。
+		// XML 目录已收敛（退役任务由原版驱动拥有，不再有 XML）；本门禁只对拍 XML 侧任务。
 		// The XML directory has converged; this gate compares the XML-owned quests only.
 		assertEquals(6217, catalog.size() + RetiredQuestIds.all().size(),
 			"XML-owned + retail-owned must cover the frozen universe");
@@ -197,7 +197,7 @@ class RetailMetadataEquivalenceGateTest {
 	}
 
 	private static String maxKey(int maxLevel) {
-		// 生产/真端均以 0/998/999 与 2147483647 表达无上限（与既有 retail 门禁同口径）。
+		// 生产/原版均以 0/998/999 与 2147483647 表达无上限（与既有 retail 门禁同口径）。
 		// Production and retail both express "unlimited" as 0/998/999 or Integer.MAX_VALUE.
 		return maxLevel >= Integer.MAX_VALUE || maxLevel == 998 || maxLevel == 999 || maxLevel == 0
 			? "UNLIMITED" : Integer.toString(maxLevel);
@@ -237,7 +237,7 @@ class RetailMetadataEquivalenceGateTest {
 
 	/**
 	 * 掉落键：npc 轴按同名族闭包归一（同一客户端显示名的 npc_id 视为同一只怪）。
-	 * 两侧同口径展开，避免"真端驱动的掉落绑在别名 id 上"被误判成差异。
+	 * 两侧同口径展开，避免"原版驱动的掉落绑在别名 id 上"被误判成差异。
 	 * Drop keys normalize the npc axis through the display-name closure on both sides.
 	 */
 	private static String dropsKey(List<QuestDrop> drops) {
@@ -286,7 +286,7 @@ class RetailMetadataEquivalenceGateTest {
 			entries.add(new CatalogEntry(Integer.parseInt(element.getAttribute("id")),
 				element.getAttribute("resource"), element.getAttribute("mode")));
 		}
-		// 已退役任务的 XML 不再进仓（历史内容在 git 里可回溯）：XML↔真端 的元数据对拍只覆盖仍由 XML 拥有的任务。
+		// 已退役任务的 XML 不再进仓（历史内容在 git 里可回溯）：XML↔原版 的元数据对拍只覆盖仍由 XML 拥有的任务。
 		// 退役集合改由保留清单冻结（RetailOwnershipGateTest），本门禁不再读取冻结副本。
 		// Retired quests no longer ship their XML, so the XML-vs-retail comparison covers XML-owned quests only.
 		return entries;

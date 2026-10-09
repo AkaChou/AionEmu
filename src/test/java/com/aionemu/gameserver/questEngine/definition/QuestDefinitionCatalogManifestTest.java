@@ -35,12 +35,12 @@ class QuestDefinitionCatalogManifestTest {
 		assertTrue(catalog.entries().size() > catalog.executables().size());
 		assertTrue(catalog.entries().stream().allMatch(entry -> catalog.findMetadata(entry.id()).isPresent()));
 		// P3b 后 11036/11143（SimpleUseItem）、P5-2 后 16977/15517（DataDriven 交付型）、
-		// enterworld 批后 10010、链式接取批后 10011 已由真端驱动退役；XML 目录抽检只保留仍在库的
+		// enterworld 批后 10010、链式接取批后 10011 已由原版驱动退役；XML 目录抽检只保留仍在库的
 		// can-act 任务 14153（交互物 700282），并反向锁死 10011 的退役可见性。10011 遗留壳的
-		// can-act 自环（731785/731786/731787，均是 ai=quest_use_item 的对话 NPC）在真端表与
-		// quest.xml 元数据里都没有对应声明（真端链 = 4×talk + EA + 2×hunt + EA + talk，无掉落、
+		// can-act 自环（731785/731786/731787，均是 ai=quest_use_item 的对话 NPC）在原版表与
+		// quest.xml 元数据里都没有对应声明（原版链 = 4×talk + EA + 2×hunt + EA + talk，无掉落、
 		// 无 collect 步）；交互物 AI 的放行由 talk 路由满足（QuestItemNpcAI2.canStartInteraction），
-		// 掉落归属过滤只对带掉落的行有意义，故真端形状无需这些自环。
+		// 掉落归属过滤只对带掉落的行有意义，故原版形状无需这些自环。
 		// After P3b, P5-2, the enterworld batch and the chain-acquire batch, 10010/10011 are
 		// retail-driven; the XML-catalog spot check keeps the still-live 14153 and asserts 10011's
 		// retirement is visible. The legacy 10011 can-act self loops (731785/731786/731787, all
@@ -160,16 +160,16 @@ class QuestDefinitionCatalogManifestTest {
 	@Test
 	void quest26930UsesTheSimpleItemCheckForCollectionTurnIn() {
 		// P3 重锚（计划 §8.9）：26930 自 SimpleTalk 切换批起由 native 车道直驱，typed 定义退出生产视图；
-		// 旧断言（overlay 里的 started→reward 边 + HasItem/RemoveItem 动作）属 IR 形状，改锚真端表行 +
+		// 旧断言（overlay 里的 started→reward 边 + HasItem/RemoveItem 动作）属 IR 形状，改锚原版表行 +
 		// quest.xml 收集通道 + 族级奖励窗页。
 		// P3 re-anchor (plan §8.9): quest 26930 is native-lane driven since the SimpleTalk switch batch, so
 		// the IR-shape assertions are replaced by the retail row, the quest.xml collect channel and the
 		// family reward-window page.
 		SimpleTalkHandler handler = SimpleTalkHandler.instance();
-		assertEquals(804627, handler.acquireNpc(26930), "真端 acquired_npc_name = LDF4_Advance_Ekthe_E");
-		assertEquals(804627, handler.rewardNpc(26930), "真端 reward_npc_name = LDF4_Advance_Ekthe_E");
+		assertEquals(804627, handler.acquireNpc(26930), "原版 acquired_npc_name = LDF4_Advance_Ekthe_E");
+		assertEquals(804627, handler.rewardNpc(26930), "原版 reward_npc_name = LDF4_Advance_Ekthe_E");
 		assertEquals(0, handler.relayCount(26930), "26930 是单步行");
-		assertTrue(handler.requireRow(26930).itemCheck(), "26930 真端行必须声明 item_check");
+		assertTrue(handler.requireRow(26930).itemCheck(), "26930 原版行必须声明 item_check");
 		// 交付门 = quest.xml collect_item1 声明的 186000257×10（整组门，不做子集放行）。
 		// The hand-in gate is the whole quest.xml collect_item1 group, 186000257 x10.
 		assertEquals(List.of(new SimpleTalkHandler.ItemStack(186000257, 10)), handler.workItems(26930));

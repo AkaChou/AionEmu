@@ -21,14 +21,14 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * 非 IR 轴统一登记门禁（P0c-11）：采纳真端形状会连带改变"节点/转换之外"的轴
+ * 非 IR 轴统一登记门禁（P0c-11）：采纳原版形状会连带改变"节点/转换之外"的轴
  * （服务器侧封顶、旧存档自愈边、前置条件两表达），这些轴不在家族等价普查里，散落登记曾导致
  * 采纳后静默丢失（P0c-8a/8c 判例）。本门禁把三处登记合并在
  * {@code /quest/retail-non-ir-axis-registry.tsv}（由 {@code p0c11_build_non_ir_registry.py} 生成）
  * 并锁四条不变量：
  * <ol>
  *   <li>统一登记表与两个逐任务源（封顶清单 / 自愈边登记）**逐任务新鲜一致**——采纳切片落地后必须重跑生成器；</li>
- *   <li>登记了 {@code CAP_LEVEL} 的任务**不得已采纳**（owner=RETAIL_TABLE 的行生产==真端 UNLIMITED，
+ *   <li>登记了 {@code CAP_LEVEL} 的任务**不得已采纳**（owner=RETAIL_TABLE 的行生产==原版 UNLIMITED，
  *       封顶只可能存在于保留 XML 行；P0c-8c/9 的 8060x 先例）；</li>
  *   <li>登记了 {@code LEGACY_SAVE_HEAL} 的任务必须已采纳，且以三条现代表达取证「零 EnterWorld 路由」：
  *       旧 XML 已不在生产目录、未登记编译自愈边（自愈边按 P0c-6 先例登记而不编译）、由无 EnterWorld 面的
@@ -112,7 +112,7 @@ class RetailNonIrAxisGateTest {
 		List<Integer> violations = new ArrayList<>();
 		for (int questId : new TreeSet<>(capLedger.keySet())) {
 			String owner = owners.get(questId);
-			// 采纳（owner=RETAIL_TABLE）后生产==真端 UNLIMITED，封顶随旧 XML 一起失效；
+			// 采纳（owner=RETAIL_TABLE）后生产==原版 UNLIMITED，封顶随旧 XML 一起失效；
 			// 登记行必须随采纳切片同步移除（P0c-8c/9 的 8060x 先例）。
 			// Adopted rows run UNLIMITED like the retail row; the ledger row must retire with the XML.
 			if (owner == null || !"XML_RETENTION".equals(owner)) {
@@ -135,10 +135,10 @@ class RetailNonIrAxisGateTest {
 			// 「零 EnterWorld 路由」按三条互相独立的现代表达取证：
 			// ①旧 XML 已不在生产目录（XML 事件不可能复活，本表登记的旧自愈边随之失效）；
 			// ②登记行不得出现在编译自愈边表（RetailLegacySaveHealRows 与本表互斥：已编译的
-			//   EnterWorld 自愈边是真端形状的一部分，80290/80294 先例，不入本表）；
+			//   EnterWorld 自愈边是原版形状的一部分，80290/80294 先例，不入本表）；
 			// ③SimpleHunt 车道 owns 并 routes 该行，而该车道没有 EnterWorld 面（引擎的 EnterWorld
 			//   分发只经过 SimpleTalk/SimpleItemPlay/SimpleCollectItem/DataDriven 四条车道；
-			//   真端形状 = 击杀计数 + 客户端 SECTION 门控推导任务书行，服务端无登录期改写）。
+			//   原版形状 = 击杀计数 + 客户端 SECTION 门控推导任务书行，服务端无登录期改写）。
 			// Retired rows have no compiled definition since step f (the native lanes own them), so
 			// "zero EnterWorld routes" rests on three independent facts: the old XML is gone from the
 			// production catalog, no compiled enter-world heal edge is registered for the row, and the

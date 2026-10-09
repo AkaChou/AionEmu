@@ -9,7 +9,7 @@ import java.util.Map;
 import org.junit.jupiter.api.Test;
 
 /**
- * {@link CameraRegistry} 门测试：真端锚点行 + 四类 fail-fast 负例（计划 §6.3）。
+ * {@link CameraRegistry} 门测试：原版锚点行 + 四类 fail-fast 负例（计划 §6.3）。
  * Gate tests for {@link CameraRegistry}: retail-evidence rows plus the four fail-fast negatives (plan §6.3).
  * <p>
  * 锚点（P0a camera-params.tsv，带文件:行号）：1143 = 6位{1:10}/0xa；1842 = 10位{1:80,2:1}/0x450；
@@ -54,7 +54,7 @@ class CameraRegistryTest {
 
 	@Test
 	void rejectsFullValueMismatch() {
-		// 真端自身分歧形态（13912/23912：fullValue 含未声明槽）必须由数据层显式登记，本类直接拒绝。
+		// 原版自身分歧形态（13912/23912：fullValue 含未声明槽）必须由数据层显式登记，本类直接拒绝。
 		// The retail-side divergence shape (13912/23912: fullValue claims an undeclared slot) must be
 		// registered explicitly by the data layer; the registry refuses it.
 		IllegalStateException e = assertThrows(IllegalStateException.class, () -> CameraRegistry

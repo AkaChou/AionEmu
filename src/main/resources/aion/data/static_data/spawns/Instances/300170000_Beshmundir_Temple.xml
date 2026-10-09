@@ -202,7 +202,7 @@
 		<spawn npc_id="799504">
 			<spot x="1115.03" y="277.158" z="232.497" h="54"/>
 		</spawn>
-		<!-- Balaur Statue（216297 假雕像）：真端无此点位（旧 emu 遗留），改由走廊雕像阵条件刷 #5023-#5032 承担。
+		<!-- Balaur Statue（216297 假雕像）：原版无此点位（旧 emu 遗留），改由走廊雕像阵条件刷 #5023-#5032 承担。
 		     Balaur statue (216739-style fake, 216297): retail has no such spot (legacy emu leftover); now served by
 		     corridor statue-array conditions #5023-#5032. -->
 		<!-- Roving Obscura -->

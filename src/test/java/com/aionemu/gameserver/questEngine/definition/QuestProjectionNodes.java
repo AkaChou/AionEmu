@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 /**
  * 按 (状态, 打包投影) 定位节点/转移的测试工具。
  * <p>
- * 任务退役后由真端网格合成，节点**标签与旧 XML 不同**（网格用 {@code a1..a9}，旧 XML 用
+ * 任务退役后由原版网格合成，节点**标签与旧 XML 不同**（网格用 {@code a1..a9}，旧 XML 用
  * {@code k1..k9}），因此锁合同的测试不能再按标签断言。这里的定位口径与家族等价门禁一致：
  * 状态相同且 {@link ProgressLayout#pack} 后的变量值相同即视为同一节点。
  * <p>

@@ -56,18 +56,18 @@ class QuestWorkItemMigrationCoverageTest {
 	@Test
 	void verteronReinforcementsDeclaresItsWorkItemAndTurnsItInAtLavirintos() {
 		// P3 重锚（计划 §8.9）：1192 自 SimpleTalk 切换批起由 native 车道直驱，旧断言（typed metadata 的
-		// {@code <work-items>} 声明 + QUEST_ACCEPT_1/SETPRO1 边）属 IR 形状，改锚真端表行的两条物品通道。
-		// 真端事实不变：接取发工作物品、首步 Lavirintos(203701) 回收同一物品、第 2 步 Xenophon(203833)。
+		// {@code <work-items>} 声明 + QUEST_ACCEPT_1/SETPRO1 边）属 IR 形状，改锚原版表行的两条物品通道。
+		// 原版事实不变：接取发工作物品、首步 Lavirintos(203701) 回收同一物品、第 2 步 Xenophon(203833)。
 		// P3 re-anchor (plan §8.9): quest 1192 is native-lane driven since the SimpleTalk switch batch, so
 		// the IR-shape assertions are replaced by the retail row's two item channels.
 		SimpleTalkHandler handler = SimpleTalkHandler.instance();
-		assertEquals(203098, handler.acquireNpc(QUEST_1192), "真端 acquired_npc_name = Spatalos");
-		assertEquals(203098, handler.rewardNpc(QUEST_1192), "真端 reward_npc_name = Spatalos");
-		assertEquals(2, handler.relayCount(QUEST_1192), "真端行有 talk_npc1(Lavirintos)/talk_npc2(Xenophon)");
+		assertEquals(203098, handler.acquireNpc(QUEST_1192), "原版 acquired_npc_name = Spatalos");
+		assertEquals(203098, handler.rewardNpc(QUEST_1192), "原版 reward_npc_name = Spatalos");
+		assertEquals(2, handler.relayCount(QUEST_1192), "原版行有 talk_npc1(Lavirintos)/talk_npc2(Xenophon)");
 		// 接取发放工作物品：与 quest.xml 的 work item 声明同物（182200556）。
 		// Accept grants the work item, the same item quest.xml declares (182200556).
 		assertEquals(new SimpleTalkHandler.ItemStack(WORK_ITEM_1192, 1), handler.acceptGiveItem(QUEST_1192));
-		// 首步交出：真端 remove_item1 = ITEM_DOC_QUEST_1192A 1，落在 Lavirintos 步上。
+		// 首步交出：原版 remove_item1 = ITEM_DOC_QUEST_1192A 1，落在 Lavirintos 步上。
 		// First-step hand-over: remove_item1 lands on the Lavirintos step.
 		assertTrue(handler.relaysForNpc(203701).contains(new SimpleTalkHandler.RelayStep(QUEST_1192, 1, 203701)),
 			"1192 的首步必须挂在 Lavirintos(203701)");

@@ -17,9 +17,9 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 /**
- * 真端 {@code HtmlPages.xml} 页注册表（P0b 数据基础，计划 §4.6.1/§6.2）。
+ * 原版 {@code HtmlPages.xml} 页注册表（P0b 数据基础，计划 §4.6.1/§6.2）。
  * <p>
- * 数据来源为真端入仓副本的精简形（UTF-8 转码、DOCTYPE/实体子集移除、重排版；字符级语义等价、
+ * 数据来源为原版入仓副本的精简形（UTF-8 转码、DOCTYPE/实体子集移除、重排版；字符级语义等价、
  * 5904 行逐条对拍，schema = 同目录 {@code HtmlPages.xsd}），
  * 本类只读、启动期一次构建、
  * 不可变；未知页/重复 id/重复页名一律 fail-closed（语义错误码 {@code NATIVE_PAGE_UNREGISTERED} /

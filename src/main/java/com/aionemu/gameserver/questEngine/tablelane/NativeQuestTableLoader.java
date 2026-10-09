@@ -24,18 +24,18 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 /**
- * 真端任务表装载器（计划 §6.2：家族逐个接入；本横切只装 {@code Quest_SimpleHunt.xml}）。
+ * 原版任务表装载器（计划 §6.2：家族逐个接入；本横切只装 {@code Quest_SimpleHunt.xml}）。
  * <p>
  * 数据源 = P0b 入仓副本的精简形（UTF-8、DOCTYPE/实体子集已移除，2026-10-03 剥离批；
  * 七张表各有同目录同名 .xsd）。行模型：{@code <id id="N">} + 接取/交付 NPC 名 +
- * {@code countN/monsterN}（槽 1..5）。真端数据事实（P1 对拍实证）：元素文本可跨行（37116 的
- * monster 名单含换行，必须归一内部空白）；存在零计数行（11013/11014/11208/11209，真端休眠行，
- * 合法装载但不得派生相机行）；存在有计数无 monster 的行（13912/23912 的槽 3——真端脚本也未给
+ * {@code countN/monsterN}（槽 1..5）。原版数据事实（P1 对拍实证）：元素文本可跨行（37116 的
+ * monster 名单含换行，必须归一内部空白）；存在零计数行（11013/11014/11208/11209，原版休眠行，
+ * 合法装载但不得派生相机行）；存在有计数无 monster 的行（13912/23912 的槽 3——原版脚本也未给
  * 该槽事件源，行为 = 永不满足，本类如实装载不修复）；注释掉的行由 DOM 天然忽略。
  * <p>
  * 相机行推导（纯函数 {@link #cameraSpec}）：宽度规则 = 任一 count 超 6 位掩码 ⇒ 10 位，否则
  * 6 位（对拍 1812 任务零失败）；fullValue = 各槽 count 按位移或（对拍与脚本字面 fullValue 全等，
- * 含 13912/23912）。哪些行注册进 {@link CameraRegistry} 由切换批按脚本接线集决定（51 行真端
+ * 含 13912/23912）。哪些行注册进 {@link CameraRegistry} 由切换批按脚本接线集决定（51 行原版
  * 休眠：表有行、脚本无包装函数 ⇒ 原生侧同样不接 handler）。
  * <p>
  * The retail quest-table loader (plan §6.2: families plug in one by one; this tranche loads
@@ -58,7 +58,7 @@ import org.w3c.dom.NodeList;
  */
 public final class NativeQuestTableLoader {
 
-	/** 单槽狩猎目标：required 计数 + 怪物名（真端 13912 形允许空名单）。 / One hunt slot: required count + monster names (the retail 13912 shape allows an empty list). */
+	/** 单槽狩猎目标：required 计数 + 怪物名（原版 13912 形允许空名单）。 / One hunt slot: required count + monster names (the retail 13912 shape allows an empty list). */
 	public record KillSlot(int count, List<String> monsters) {
 	}
 
@@ -83,7 +83,7 @@ public final class NativeQuestTableLoader {
 	}
 
 	/**
-	 * SimpleTalk 表行（真端 {@code quest_simpletalks}，3152 行）。形状实测：双 NPC 结构 100%、
+	 * SimpleTalk 表行（原版 {@code quest_simpletalks}，3152 行）。形状实测：双 NPC 结构 100%、
 	 * {@code talk_npc1..3} 中继链 15%、{@code item_check} 63%（值恒为 1，语义 = 交付前须持有工作物品）、
 	 * {@code con_quest} 16%（链式接取窗的下一条）、give/remove 物品与 cutscene 为长尾列。
 	 * <p>
@@ -103,7 +103,7 @@ public final class NativeQuestTableLoader {
 	}
 
 	/**
-	 * SimpleCollectItem 表行（真端 {@code quest_simplecollectitems}，262 行）。形状实测：
+	 * SimpleCollectItem 表行（原版 {@code quest_simplecollectitems}，262 行）。形状实测：
 	 * 双 NPC 100%、{@code object1..4} 257 行（9649/9650/9654/9655/9656 五个 TEST 行只声明
 	 * {@code reward_check} 无采集物）、{@code talk_npc1..3} 8 行、{@code party_drop} 80 行、
 	 * {@code give_item}/{@code give_item1}/{@code remove_item2}/cutscene 长尾列按原文装载。
@@ -120,7 +120,7 @@ public final class NativeQuestTableLoader {
 	}
 
 	/**
-	 * SimpleUseItem 表行（真端 {@code quest_simpleuseitems}，160 行）。形状实测：本族**没有**
+	 * SimpleUseItem 表行（原版 {@code quest_simpleuseitems}，160 行）。形状实测：本族**没有**
 	 * {@code acquired_npc_name}——接取 = 使用 {@code use_item_name} 声明的道具；{@code use_item_name}/
 	 * {@code reward_npc_name} 100%，{@code talk_npc1..3} 54/26/10 行（用物后中继链），{@code con_quest} 32 行，
 	 * {@code give_itemN}/{@code remove_itemN} 8/4/3 与 10/6/3 行（第 N 步发/扣，实测这些行**都**声明了第 N 个中继 NPC），
@@ -136,7 +136,7 @@ public final class NativeQuestTableLoader {
 	}
 
 	/**
-	 * SimpleItemPlay 表行（真端 {@code quest_simpleitemplays}，43 行）。形状实测：{@code acquired_npc_name}/
+	 * SimpleItemPlay 表行（原版 {@code quest_simpleitemplays}，43 行）。形状实测：{@code acquired_npc_name}/
 	 * {@code reward_npc_name} 100%（NPC 接取），{@code use_item_name} 41 行（接取后使用道具推进），
 	 * {@code give_item} 34 行（接取即发），{@code talk_npc1/2} 11/6 行，{@code con_quest} 9 行，
 	 * {@code give_item1/2} 7/5 行、{@code remove_item1/2} 1/4 行（第 N 步发/扣，均带第 N 个中继 NPC），
@@ -152,10 +152,10 @@ public final class NativeQuestTableLoader {
 	}
 
 	/**
-	 * CombineTask 表行（真端 {@code quest_combinetasks}，574 行）。形状实测：{@code task_npc} 100%
+	 * CombineTask 表行（原版 {@code quest_combinetasks}，574 行）。形状实测：{@code task_npc} 100%
 	 * （574/574 均为两名 = 天/魔各一）、{@code combineskill} / {@code combine_skillpoint} /
 	 * {@code recipe_name} / {@code product} / {@code give_component1} 各 100%、{@code give_component2} 152 行；
-	 * 真端 helper 允许 8 个分量槽位（{@code lVar4 = 8}），装载按位置保留（缺位 = {@code null}）。
+	 * 原版 helper 允许 8 个分量槽位（{@code lVar4 = 8}），装载按位置保留（缺位 = {@code null}）。
 	 * <p>
 	 * One CombineTask row. Measured shape: all 574 rows carry two accept npcs, a combine skill, a skill
 	 * point, a recipe name, a single product slot and at least one component; 152 rows add a second
@@ -179,7 +179,7 @@ public final class NativeQuestTableLoader {
 	private static final String EXPECTED_ITEM_PLAY_ROOT = "quest_simpleitemplays";
 	private static final String COMBINE_RESOURCE = "aion/data/static_data/quest/retail/Quest_CombineTask.xml";
 	private static final String EXPECTED_COMBINE_ROOT = "quest_combinetasks";
-	/** 真端 CombineTask helper 的分量槽位数（{@code lVar4 = 8}）。 / Retail component slot count. */
+	/** 原版 CombineTask helper 的分量槽位数（{@code lVar4 = 8}）。 / Retail component slot count. */
 	private static final int COMBINE_COMPONENT_SLOTS = 8;
 	private static final String EXPECTED_ROOT = "quest_simplehunts";
 	private static final String ROW_TAG = "id";
@@ -429,7 +429,7 @@ public final class NativeQuestTableLoader {
 	}
 
 	/**
-	 * SimpleTalk 行解析：双 NPC 为**必填**（真端 3152/3152），缺失即 fail-closed；
+	 * SimpleTalk 行解析：双 NPC 为**必填**（原版 3152/3152），缺失即 fail-closed；
 	 * give/remove 物品与 cutscene 按原文装载（不在装载层发明 count/id 语义）。
 	 * <p>
 	 * SimpleTalk row parsing: the two-NPC pair is mandatory in retail (3152/3152) and missing
@@ -454,7 +454,7 @@ public final class NativeQuestTableLoader {
 				talkNpcs.add(talk.strip());
 			}
 		}
-		// 物品列按真端语义分槽：give_item = 接取侧发放；give_itemK/remove_itemK = 第 K 中继步的发放/扣除
+		// 物品列按原版语义分槽：give_item = 接取侧发放；give_itemK/remove_itemK = 第 K 中继步的发放/扣除
 		// （与 1131 的 cab520/cabb10 立即数逐字节对拍，见 p3-prereqs/simple-talk-codegen.md §5/§6）。
 		String acceptGiveItem = null;
 		String give = optionalText(element, "give_item");
@@ -564,7 +564,7 @@ public final class NativeQuestTableLoader {
 	}
 
 	/**
-	 * 装载 SimpleCollectItem 表：双 NPC 必填（真端 262/262），采集物 0..4 个按原文装载
+	 * 装载 SimpleCollectItem 表：双 NPC 必填（原版 262/262），采集物 0..4 个按原文装载
 	 * （五个 TEST 行无采集物，由处理器 at-load 视为不可路由，不在装载层伪造对象）。
 	 * <p>
 	 * Loads the SimpleCollectItem table: the two-NPC pair is mandatory in retail (262/262); the
@@ -673,7 +673,7 @@ public final class NativeQuestTableLoader {
 	}
 
 	/**
-	 * SimpleUseItem 行解析：{@code use_item_name} 与 {@code reward_npc_name} 为必填（真端 160/160），
+	 * SimpleUseItem 行解析：{@code use_item_name} 与 {@code reward_npc_name} 为必填（原版 160/160），
 	 * 中继 NPC 与第 K 步发/扣物品按原文装载（位置保留，缺位为 {@code null}）。
 	 * <p>
 	 * SimpleUseItem row parsing: the use-item symbol and the reward npc are mandatory in retail
@@ -744,7 +744,7 @@ public final class NativeQuestTableLoader {
 	}
 
 	/**
-	 * SimpleItemPlay 行解析：接取/交付 NPC 为必填（真端 43/43），{@code give_item} = 接取发放，
+	 * SimpleItemPlay 行解析：接取/交付 NPC 为必填（原版 43/43），{@code give_item} = 接取发放，
 	 * {@code give_itemK}/{@code remove_itemK} = 第 K 中继步的发/扣（位置保留）。
 	 * <p>
 	 * SimpleItemPlay row parsing: the accept and hand-in npcs are mandatory in retail (43/43);
@@ -819,7 +819,7 @@ public final class NativeQuestTableLoader {
 	}
 
 	/**
-	 * CombineTask 行解析：{@code task_npc}（逗号分隔，真端 574/574 两名）、{@code combineskill}、
+	 * CombineTask 行解析：{@code task_npc}（逗号分隔，原版 574/574 两名）、{@code combineskill}、
 	 * {@code recipe_name}、{@code product} 为必填；{@code combine_skillpoint} 缺省 0（与元数据交叉校验同口径）；
 	 * 分量按 {@code give_component1..8} **位置保留**（缺位 = {@code null}）。
 	 * <p>
@@ -903,7 +903,7 @@ public final class NativeQuestTableLoader {
 		Map<Integer, KillSlot> killSlots = new TreeMap<>();
 		for (Map.Entry<Integer, Integer> entry : counts.entrySet()) {
 			int slot = entry.getKey();
-			// 有计数无 monster 属真端 13912 形（空名单 = 事件源缺失，行为永不满足），如实装载。
+			// 有计数无 monster 属原版 13912 形（空名单 = 事件源缺失，行为永不满足），如实装载。
 			// Count-without-monster is the retail 13912 shape (empty list = missing event source,
 			// never satisfied); loaded as-is.
 			String rawMonsters = monsterTexts.getOrDefault(slot, "");
@@ -920,7 +920,7 @@ public final class NativeQuestTableLoader {
 		}
 		for (int slot : monsterTexts.keySet()) {
 			if (!killSlots.containsKey(slot)) {
-				// 有 monster 无 count = 相机 required 缺失，真端不存在此形，fail-closed。
+				// 有 monster 无 count = 相机 required 缺失，原版不存在此形，fail-closed。
 				// Monster-without-count lacks the camera required; retail has no such shape — fail closed.
 				throw new IllegalStateException(
 						"NATIVE_TABLE_PARSE_FAILED: quest " + questId + " has monster" + slot + " without count"
@@ -985,7 +985,7 @@ public final class NativeQuestTableLoader {
 		return nodes.getLength() == 0 ? null : nodes.item(0).getTextContent();
 	}
 
-	/** 行 id 在真端表里是行元素自身的 {@code id} 属性（{@code <id id="N">}）。 / The row id is the row element's own {@code id} attribute ({@code <id id="N">}). */
+	/** 行 id 在原版表里是行元素自身的 {@code id} 属性（{@code <id id="N">}）。 / The row id is the row element's own {@code id} attribute ({@code <id id="N">}). */
 	private static int rowId(Element row) {
 		String raw = row.getAttribute("id");
 		if (raw.isBlank()) {
@@ -1169,7 +1169,7 @@ public final class NativeQuestTableLoader {
 	}
 
 	/**
-	 * 表行 → 相机行规约（纯函数；零计数行拒绝——真端休眠行不得派生相机）。
+	 * 表行 → 相机行规约（纯函数；零计数行拒绝——原版休眠行不得派生相机）。
 	 * Table row → camera row spec (pure; zero-count rows are rejected — dormant retail rows must
 	 * never derive a camera row).
 	 */
@@ -1212,7 +1212,7 @@ public final class NativeQuestTableLoader {
 	}
 
 	/**
-	 * 采集行 → 相机行规约已退役（2026-10-04）：采集族真端无相机（camera-params.tsv 262/262 无调用），
+	 * 采集行 → 相机行规约已退役（2026-10-04）：采集族原版无相机（camera-params.tsv 262/262 无调用），
 	 * 采集为物品驱动；原 {@code cameraSpec(int, Map)} 重载随 P4 相机设计一并撤销。
 	 * The collect-row camera spec is retired (2026-10-04): the family has no retail camera call.
 	 */

@@ -73,7 +73,7 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT1"/>
       </after-commit>
     </transition>
-    <!-- 真端取证（ScriptDLL64 FUN_180f81d30）：SETPRO1 → 推进 + 0x5d8 关窗（实机 2026-10-05 两次点击实证）；页 10 系翻译夸大，已删。 -->
+    <!-- 原版取证（ScriptDLL64 FUN_180f81d30）：SETPRO1 → 推进 + 0x5d8 关窗（实机 2026-10-05 两次点击实证）；页 10 系翻译夸大，已删。 -->
     <transition source="started" target="v1">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="203540" action="SETPRO1"/>

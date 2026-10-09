@@ -12,10 +12,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * 锁定任务 11006 Testing The Waters 的步号轴与两段装水分支（QE-054 口径）。
- * 步号轴遵循真端与 legacy 的权威值：装第一瓶水 0 -&gt; 1（真端 FUN_180f00a50
+ * 步号轴遵循原版与 legacy 的权威值：装第一瓶水 0 -&gt; 1（原版 FUN_180f00a50
  * SetProgress(0x2afe, 1)、legacy useQuestItem(env, item, 0, 1, false, ...)），Clodia 对话
  * 1 -&gt; 2（legacy defaultCloseDialog(env, 1, 2)），装第二瓶水进 REWARD 时保持 2
- * （真端 FUN_180f03f20 在 START/step==2 时以 0x100(0x2afe, 0, 0) 推进；legacy
+ * （原版 FUN_180f03f20 在 START/step==2 时以 0x100(0x2afe, 0, 0) 推进；legacy
  * useQuestItem(env, item, 2, 2, true, ...) 的 reward 分支不写 nextStep）。
  * 领奖行批次（7a7d27809）曾把领奖投影按末行索引抬到 3 并把自愈边写成 2 -&gt; 3（会改坏正确存档）。
  * Locks quest 11006's step axis and both water-fill branches (QE-054 caliber).
@@ -43,7 +43,7 @@ class Quest11006ClientDialogAlignmentTest {
 		assertNode(definition, "v2", QuestStatus.START, Map.of("var0", 2));
 		assertNode(definition, "reward", QuestStatus.REWARD, Map.of("var0", 2));
 
-		// 装第一瓶水：0 -> 1（真端 SetProgress(0x2afe, 1)；legacy useQuestItem(0, 1, false)）。
+		// 装第一瓶水：0 -> 1（原版 SetProgress(0x2afe, 1)；legacy useQuestItem(0, 1, false)）。
 		// First fill: 0 -> 1 (retail SetProgress(0x2afe, 1); legacy useQuestItem(0, 1, false)).
 		QuestTransition firstFill = transition(definition, "started", "v1",
 			new QuestEvent.UseItem(EMPTY_BOTTLE_ID));
@@ -60,8 +60,8 @@ class Quest11006ClientDialogAlignmentTest {
 			new QuestAction.RemoveItem(FIRST_SAMPLE_ID, 1),
 			new QuestAction.GiveItem(SECOND_BOTTLE_ID, 1)), talk.actions());
 
-		// 装第二瓶水：进 REWARD，步号保持 2（真端 0x100 推进；legacy reward 分支不写 nextStep）。
-		// 真端取证（ScriptDLL64 FUN_180f03f20，注册于 0xadc40f1）：只做 0x100 推进 + 0x2f8 通告，零发页；
+		// 装第二瓶水：进 REWARD，步号保持 2（原版 0x100 推进；legacy reward 分支不写 nextStep）。
+		// 原版取证（ScriptDLL64 FUN_180f03f20，注册于 0xadc40f1）：只做 0x100 推进 + 0x2f8 通告，零发页；
 		// 旧的页 10 尾随是翻译夸大（用物没有对话对象，下发 SM_DIALOG_WINDOW(0, 10) 即 load fail），已删。
 		// Second fill: enters REWARD keeping step 2 (retail 0x100 advance; the legacy reward branch
 		// writes no nextStep). Retail evidence (ScriptDLL64 FUN_180f03f20, registered at 0xadc40f1):

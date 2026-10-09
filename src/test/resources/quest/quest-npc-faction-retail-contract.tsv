@@ -1,8 +1,8 @@
 # Aion 5.8 阵营日常归属契约 v2（native 车道时代）
-# 人口 = 真端轮换表 ∧ 势力名可解析 ∧（家族车道路由 ∪ 旧评审 253 行）= 287 行；
+# 人口 = 原版轮换表 ∧ 势力名可解析 ∧（家族车道路由 ∪ 旧评审 253 行）= 287 行；
 # 无路由且无移植定义的行为休眠行（until-ported：覆盖后自动转为强制）；
-# 掩码列 = 真端 npcfactions_quest.xml 星期位逐位镜像（mon..sun），全 0 = 真端本征不轮换。
-# 来源：真端 npcfactions_quest.xml + 三发放车道哨兵行普查（P8 §10.3-#25）。
+# 掩码列 = 原版 npcfactions_quest.xml 星期位逐位镜像（mon..sun），全 0 = 原版本征不轮换。
+# 来源：原版 npcfactions_quest.xml + 三发放车道哨兵行普查（P8 §10.3-#25）。
 # Faction daily ownership contract v2: retail rotation rows with a resolvable faction,
 # unioned with the reviewed 253-row snapshot; dormant rows stay until-ported; the mask
 # column mirrors the retail weekday bits exactly.

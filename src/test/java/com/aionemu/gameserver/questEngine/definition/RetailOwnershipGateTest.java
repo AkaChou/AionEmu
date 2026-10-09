@@ -29,10 +29,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 /**
  * 归属门禁（提示词 §4.E.1/E.5）：每个生产任务的定义来源唯一且与保留清单一致。
  * <ul>
- * <li>{@code retail-xml-retention.xml} 必须覆盖生产任务全集（XML catalog ∪ 真端注入），且没有 XML 的任务必须是 {@code RETAIL_TABLE}；</li>
+ * <li>{@code retail-xml-retention.xml} 必须覆盖生产任务全集（XML catalog ∪ 原版注入），且没有 XML 的任务必须是 {@code RETAIL_TABLE}；</li>
  * <li>{@code RETAIL_TABLE} 行必须声明家族；保留行必须给出已知原因
  * （SCRIPTED / NO_TABLE / SEMANTIC_GAP:*）；</li>
- * <li>已入仓家族（当前 SimpleHunt）的清单判定必须与真端表逐任务一致；</li>
+ * <li>已入仓家族（当前 SimpleHunt）的清单判定必须与原版表逐任务一致；</li>
  * <li>2026-10-03 台账 XML 化批新增：retention test 副本与 main 副本逐字节相等（此前无门禁守卫）。</li>
  * </ul>
  * Ownership gate: exactly one owner per catalog quest, consistent with the retail tables; the
@@ -48,7 +48,7 @@ class RetailOwnershipGateTest {
 
 	/** 清单允许的保留原因前缀。 / Allowed retention reason prefixes. */
 	/**
-	 * 清单允许的保留原因前缀。{@code FAMILY_PENDING} = 真端表有行但该族驱动尚未实现
+	 * 清单允许的保留原因前缀。{@code FAMILY_PENDING} = 原版表有行但该族驱动尚未实现
 	 * （禁止虚报为 RETAIL_TABLE，见 build_retention_list.py 的 IMPLEMENTED_FAMILIES）；
 	 * {@code ADJUDICATED:<码>} = 缺口批逐行裁定的保留行（冒号后必须仍是原编译器拒绝码，
 	 * 由家族门 fail-closed 复核"裁定行必须仍以同码被拒"）。
@@ -58,7 +58,7 @@ class RetailOwnershipGateTest {
 	 */
 	private static final Set<String> RETENTION_REASONS =
 		Set.of("SCRIPTED", "NO_TABLE", "SEMANTIC_GAP", "FAMILY_PENDING", "ADJUDICATED");
-	/** 已入仓真端表（后续族切片逐个加入）。 / In-repo retail tables so far. */
+	/** 已入仓原版表（后续族切片逐个加入）。 / In-repo retail tables so far. */
 	private static final Set<String> IN_REPO_FAMILIES = Set.of("SimpleHunt", "SimpleTalk");
 
 	private static Map<Integer, String> catalogIds;
@@ -79,8 +79,8 @@ class RetailOwnershipGateTest {
 
 	@Test
 	void retentionListCoversProductionUniverse() {
-		// 已退役（真端驱动）的任务不再出现在 XML catalog，但仍是生产任务：
-		// 清单 = XML 目录 ∪ 真端注入，且"没有 XML 的任务必须由真端表驱动"。
+		// 已退役（原版驱动）的任务不再出现在 XML catalog，但仍是生产任务：
+		// 清单 = XML 目录 ∪ 原版注入，且"没有 XML 的任务必须由原版表驱动"。
 		// The retention list is the production universe: XML catalog plus retail-injected quests.
 		assertTrue(rows.keySet().containsAll(catalogIds.keySet()),
 			"retention list must classify every XML-catalog quest exactly once");
@@ -112,8 +112,8 @@ class RetailOwnershipGateTest {
 
 	@Test
 	void simpleTalkFamilyTableMatchesList() {
-		// SimpleTalk：真端表有行 ⇔ 清单 family=SimpleTalk（RETAIL_TABLE/OK 或 XML_RETENTION/SEMANTIC_GAP:*）。
-		// 与 SimpleHunt 同口径：family 记录数据来源，owner 记录能否由真端驱动。
+		// SimpleTalk：原版表有行 ⇔ 清单 family=SimpleTalk（RETAIL_TABLE/OK 或 XML_RETENTION/SEMANTIC_GAP:*）。
+		// 与 SimpleHunt 同口径：family 记录数据来源，owner 记录能否由原版驱动。
 		List<String> problems = new java.util.ArrayList<>();
 		for (Map.Entry<Integer, Row> entry : rows.entrySet()) {
 			int questId = entry.getKey();
@@ -129,8 +129,8 @@ class RetailOwnershipGateTest {
 
 	@Test
 	void inRepoFamilyTablesMatchList() {
-		// SimpleHunt：真端表有行 ⇔ 清单行 family=SimpleHunt（RETAIL_TABLE/OK 或 XML_RETENTION/SEMANTIC_GAP）。
-		// 其余家族当前一律 FAMILY_PENDING（驱动未实现），因此"family 列 = 真端表有行"这条不变量
+		// SimpleHunt：原版表有行 ⇔ 清单行 family=SimpleHunt（RETAIL_TABLE/OK 或 XML_RETENTION/SEMANTIC_GAP）。
+		// 其余家族当前一律 FAMILY_PENDING（驱动未实现），因此"family 列 = 原版表有行"这条不变量
 		// 对已实现家族成立，也对未实现家族成立（family 记录数据来源，owner 记录是否可驱动）。
 		// The retail table row must match any list row that names the SimpleHunt family.
 		List<String> problems = new java.util.ArrayList<>();
@@ -236,7 +236,7 @@ class RetailOwnershipGateTest {
 		}
 	}
 
-	/** 真端模板表里的任务 id（XML 形式，与 SimpleHunt 行同构）。 / Quest ids of a retail table. */
+	/** 原版模板表里的任务 id（XML 形式，与 SimpleHunt 行同构）。 / Quest ids of a retail table. */
 	private static Set<Integer> loadRetailIds(String resource) throws IOException {
 		String text = new String(readAll(resource), StandardCharsets.UTF_8);
 		return Pattern.compile("<id id=\"(\\d+)\"").matcher(text).results()

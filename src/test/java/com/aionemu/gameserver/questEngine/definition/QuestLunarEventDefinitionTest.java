@@ -20,12 +20,12 @@ import com.aionemu.gameserver.questEngine.tablelane.NativeTalkFixture;
 import com.aionemu.gameserver.questEngine.tablelane.SimpleTalkHandler;
 
 /**
- * 80034-80037 农历（구정 / LUNAR）事件任务：真端表行 = 单步 NPC 接取 + {@code item_check} 交付门
+ * 80034-80037 农历（구정 / LUNAR）事件任务：原版表行 = 单步 NPC 接取 + {@code item_check} 交付门
  * （{@code check_item1_1} 与 {@code collect_item1} 同值）+ 交付领奖，四行的种族/前置/交付物各不相同。
  * <p>
- * P3 重锚（计划 §8.9）：本类只断言真端表行、真端 {@code quest.xml} 与客户端页契约可实证的事实。
+ * P3 重锚（计划 §8.9）：本类只断言原版表行、原版 {@code quest.xml} 与客户端页契约可实证的事实。
  * 旧 IR 断言的「onLvlUp 背包达标自动接取」「LUNAR bonus 事件保持状态」「活动失效弃任」只存在于本地 XML
- * 与旧 handler：真端 codegen 对这四行注册的是普通 SimpleTalk 槽位（{@code event_Harmonan}/{@code event_Druike}
+ * 与旧 handler：原版 codegen 对这四行注册的是普通 SimpleTalk 槽位（{@code event_Harmonan}/{@code event_Druike}
  * NPC 节点 + cab520 接取 thunk + cabb10 对话 thunk），活动任务子系表 {@code quest/event_quest.xml} 全域缺失
  * （计划 §10.3-#3）⇒ 那些轴登记为**不可实证假设**，不再作为断言面，也不在 native 车道发明。
  * <p>
@@ -36,7 +36,7 @@ import com.aionemu.gameserver.questEngine.tablelane.SimpleTalkHandler;
  */
 class QuestLunarEventDefinitionTest {
 
-	/** 真端行事实：{@code Quest_SimpleTalk.xml} 的 NPC 列 + {@code quest.xml} 的门/种族/前置列。 */
+	/** 原版行事实：{@code Quest_SimpleTalk.xml} 的 NPC 列 + {@code quest.xml} 的门/种族/前置列。 */
 	private record LunarQuest(int questId, int npcId, int gateItemId, int gateCount, Race race,
 			String prerequisite) {
 	}
@@ -55,19 +55,19 @@ class QuestLunarEventDefinitionTest {
 			int questId = quest.questId();
 			assertTrue(handler.routes(questId), "quest " + questId + " 必须由 native 车道路由");
 			assertEquals(RetailGrantKind.NPC, handler.grantKind(questId), "NPC 接取行");
-			assertEquals(quest.npcId(), handler.acquireNpc(questId), "接取 NPC（真端 acquired_npc_name）");
-			assertEquals(quest.npcId(), handler.rewardNpc(questId), "交付 NPC（真端同主）");
+			assertEquals(quest.npcId(), handler.acquireNpc(questId), "接取 NPC（原版 acquired_npc_name）");
+			assertEquals(quest.npcId(), handler.rewardNpc(questId), "交付 NPC（原版同主）");
 			assertEquals(0, handler.relayCount(questId), "无中继步");
 			assertEquals(List.of(new SimpleTalkHandler.ItemStack(quest.gateItemId(), quest.gateCount())),
 				handler.workItems(questId), "交付门 = check_item1_1 工作物品");
 			assertFalse(handler.unresolvedGate(questId), "交付门必须可解");
-			// 真端行无 give_item：活动收集物由活动自身产出，接取不发放。
+			// 原版行无 give_item：活动收集物由活动自身产出，接取不发放。
 			assertNull(handler.acceptGiveItem(questId), "无接取发放");
 			assertNull(handler.stepGiveItem(questId, 1), "无步进发放");
 			assertNull(handler.stepRemoveItem(questId, 1), "无步进扣除");
 			assertNull(handler.cutscene(questId), "无过场");
 			assertTrue(NativeTalkFixture.clientDeclares(questId, SimpleTalkHandler.PAGE_ASK_ACCEPT),
-				"客户端任务页声明真端接取窗页 4");
+				"客户端任务页声明原版接取窗页 4");
 		}
 	}
 
@@ -76,19 +76,19 @@ class QuestLunarEventDefinitionTest {
 		for (LunarQuest quest : QUESTS) {
 			NativeQuestXmlTable.QuestRow row = NativeQuestXmlTable.instance().find(quest.questId()).orElseThrow();
 			String gateText = row.text("collect_item1");
-			assertEquals("event", row.text("category1"), "真端类别");
-			assertEquals(10, row.integer("minlevel_permitted"), "真端等级下限");
-			assertEquals(255, row.integer("max_repeat_count"), "真端重复上限（活动可重复）");
+			assertEquals("event", row.text("category1"), "原版类别");
+			assertEquals(10, row.integer("minlevel_permitted"), "原版等级下限");
+			assertEquals(255, row.integer("max_repeat_count"), "原版重复上限（活动可重复）");
 			assertEquals(quest.race() == Race.ELYOS ? "pc_light" : "pc_dark", row.text("race_permitted"),
-				"真端种族轴");
-			assertEquals(quest.prerequisite(), row.text("finished_quest_cond1"), "真端前置任务");
-			assertEquals(gateText, row.text("check_item1_1"), "交付门与收集列同值（真端原始形态）");
+				"原版种族轴");
+			assertEquals(quest.prerequisite(), row.text("finished_quest_cond1"), "原版前置任务");
+			assertEquals(gateText, row.text("check_item1_1"), "交付门与收集列同值（原版原始形态）");
 			assertEquals(quest.gateCount(), Integer.parseInt(gateText.trim().split("\\s+")[1]), "交付数量");
 			assertEquals("0", row.text("reward_exp1"), "经验由 LUNAR bonus 子系下发：quest.xml 为 0");
 			assertEquals("0", row.text("reward_gold1"), "金币由 LUNAR bonus 子系下发：quest.xml 为 0");
 		}
 		assertEquals("%Quest_A_BranchLunarEvent_10a", questRow(80034).text("reward_item1_1"),
-			"真端奖励列为活动子系占位符号 10a");
+			"原版奖励列为活动子系占位符号 10a");
 		assertEquals("%Quest_A_BranchLunarEvent_10b", questRow(80035).text("reward_item1_1"), "占位符号 10b");
 		assertEquals("%Quest_A_BranchLunarEvent_10c", questRow(80036).text("reward_item1_1"), "占位符号 10c");
 		assertEquals("%Quest_A_BranchLunarEvent_10a", questRow(80037).text("reward_item1_1"),
@@ -105,7 +105,7 @@ class QuestLunarEventDefinitionTest {
 			SimpleTalkHandler itemHandler = NativeTalkFixture.handler(inventory);
 			Player player = NativeTalkFixture.player(quest.race(), PlayerClass.WARRIOR, 10);
 
-			// 前置未完成：真端 finished_quest_cond1 未满足 ⇒ 拒接建档。
+			// 前置未完成：原版 finished_quest_cond1 未满足 ⇒ 拒接建档。
 			assertEquals(NativeQuestStartPort.Outcome.PREREQUISITE_MISSING,
 				NativeQuestStartPort.instance().evaluateNpcAcquire(player, questId).outcome(),
 				"quest " + questId + " 前置未完成必须拒接");
@@ -124,7 +124,7 @@ class QuestLunarEventDefinitionTest {
 			assertTrue(handler.onDialog(NativeTalkFixture.dialog(player, quest.npcId(), questId, 1002)), "接取确认");
 			assertEquals(QuestStatus.START, player.getQuestStateList().getQuestState(questId).getStatus());
 			NativeTalkFixture.assertOnlyDialogPage(player, SimpleTalkHandler.PAGE_ACCEPTED);
-			assertEquals(List.of(), inventory.calls(), "真端行无 give_item：接取不发物品");
+			assertEquals(List.of(), inventory.calls(), "原版行无 give_item：接取不发物品");
 
 			// 未集齐交付物：报告门保持 START（进行中页）。 / Without the items the gate holds.
 			NativeTalkFixture.clearPackets(player);
@@ -140,7 +140,7 @@ class QuestLunarEventDefinitionTest {
 			assertEquals(QuestStatus.REWARD, player.getQuestStateList().getQuestState(questId).getStatus());
 			NativeTalkFixture.assertOnlyDialogPage(player, SimpleTalkHandler.PAGE_REWARD_WINDOW);
 			assertEquals(List.of("remove:" + quest.gateItemId() + ":" + quest.gateCount()), inventory.calls(),
-				"交付门按真端扣除整组");
+				"交付门按原版扣除整组");
 		}
 	}
 
@@ -150,7 +150,7 @@ class QuestLunarEventDefinitionTest {
 		for (LunarQuest quest : QUESTS) {
 			Player player = NativeTalkFixture.player(quest.race(), PlayerClass.WARRIOR, 10);
 			// COMPLETE 态重开窗仍走同一 CanAcquireQuest 资格轴（前置必须已满足，否则不进接取面）；
-			// 本判据隔离的是重复轴，故先按真端前置建档。
+			// 本判据隔离的是重复轴，故先按原版前置建档。
 			// Reopening at COMPLETE passes the same CanAcquireQuest axes; this judgement isolates the
 			// repeat axis, so the retail prerequisite is completed first.
 			NativeTalkFixture.completePrerequisites(player, Integer.parseInt(quest.prerequisite().substring(1)));
@@ -167,7 +167,7 @@ class QuestLunarEventDefinitionTest {
 		SimpleTalkHandler handler = NativeTalkFixture.handler();
 		for (LunarQuest quest : QUESTS) {
 			int questId = quest.questId();
-			// 真端 codegen 注册的是 NPC 节点，活动子系默认槽不在 retail codegen 面内。
+			// 原版 codegen 注册的是 NPC 节点，活动子系默认槽不在 retail codegen 面内。
 			assertFalse(handler.isSystemGranted(questId), "quest " + questId + " 只能由 NPC 接取");
 			assertEquals(0, handler.factionId(questId), "quest " + questId + " 不是阵营日常行");
 			assertNull(handler.conQuest(questId), "quest " + questId + " 无链式接取窗");

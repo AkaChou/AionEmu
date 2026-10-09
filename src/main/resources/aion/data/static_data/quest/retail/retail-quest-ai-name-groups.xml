@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-真端对话名组表（quest_ai_name → 成员 name_desc）——由 p0c52_quest_ai_name_groups.py 生成
+原版对话名组表（quest_ai_name → 成员 name_desc）——由 p0c52_quest_ai_name_groups.py 生成
 依据：客户端 npc 块 <quest_ai_name> 的成员 id 集（第一手）+ 服务端 npc 模板（成员名与
 共享 title_id）+ 客户端词典正文 STR_DIC_E_<名>（可选，存在时须与块 id 集一致）+ 遗留
 生产 XML 的接取流 id 集（超集见证；多出的 id 必须解释为该组任务的交付 NPC）。

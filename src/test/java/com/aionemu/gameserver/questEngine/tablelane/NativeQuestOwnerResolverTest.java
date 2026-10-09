@@ -9,7 +9,7 @@ import java.util.Set;
 import org.junit.jupiter.api.Test;
 
 /**
- * owner 解析器门测试（夹具事实 2026-10-01 冻结：XML 目录 742 定义、真端表 id 集 =
+ * owner 解析器门测试（夹具事实 2026-10-01 冻结：XML 目录 742 定义、原版表 id 集 =
  * SimpleHunt 1863 + SimpleCollectItem 262 = 2125、交叠恰 4 个 = 2237/14112/14123/16961）。
  * / Owner resolver gate tests (fixture facts frozen at 2026-10-01: 742 XML definitions, the retail
  * table id set = 1863 SimpleHunt + 262 SimpleCollectItem = 2125 rows, exactly four overlapping ids).
@@ -19,7 +19,7 @@ class NativeQuestOwnerResolverTest {
 	@Test
 	void derivesBothIdSetsFromSources() {
 		NativeQuestOwnerResolver resolver = NativeQuestOwnerResolver.instance();
-		// 真端表行全量在册：SimpleHunt 1863 + SimpleCollectItem 262（P4 切换批并入）。
+		// 原版表行全量在册：SimpleHunt 1863 + SimpleCollectItem 262（P4 切换批并入）。
 		// All retail table rows: 1863 SimpleHunt + 262 SimpleCollectItem (added by the P4 batch).
 		assertEquals(2125, resolver.retailTableIds().size());
 		assertTrue(resolver.retailTableIds().contains(2354));

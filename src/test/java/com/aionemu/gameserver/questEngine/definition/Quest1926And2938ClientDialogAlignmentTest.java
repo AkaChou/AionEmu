@@ -36,7 +36,7 @@ class Quest1926And2938ClientDialogAlignmentTest {
 			definition.metadata().questWorkItems());
 		assertNode(definition, "unaccepted", QuestStatus.NONE, Map.of("var0", 0));
 		assertNode(definition, "started", QuestStatus.START, Map.of("var0", 0));
-		// QE-045/QE-054：真端与 legacy handler 进入 REWARD 时保持 packed step 0（实机证实抬到 1 任务书步骤整块空白）。
+		// QE-045/QE-054：原版与 legacy handler 进入 REWARD 时保持 packed step 0（实机证实抬到 1 任务书步骤整块空白）。
 		// QE-045/QE-054: retail and legacy handlers keep packed step 0 on REWARD; step 1 blanks the client journal.
 		assertNode(definition, "reward", QuestStatus.REWARD, Map.of("var0", 0));
 		assertNode(definition, "complete", QuestStatus.COMPLETE, Map.of("var0", 0));
@@ -180,7 +180,7 @@ class Quest1926And2938ClientDialogAlignmentTest {
 	}
 
 	private static CompiledQuestDefinition definition(int questId) throws Exception {
-		// 退役任务的生产 XML 只在 git 历史里：统一取生产视图（XML 目录 + 真端 overlay）。
+		// 退役任务的生产 XML 只在 git 历史里：统一取生产视图（XML 目录 + 原版 overlay）。
 		return ProductionQuestDefinitions.definition(questId);
 	}
 }

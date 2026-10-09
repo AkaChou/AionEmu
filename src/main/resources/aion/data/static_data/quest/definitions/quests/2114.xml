@@ -49,7 +49,7 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT1"/>
       </after-commit>
     </transition>
-    <!-- 真端取证（ScriptDLL64 FUN_180f40160（真端页 0x548））：推进后真端发页 SELECT2（HTML 族页），非页 10——已按真端替换。 -->
+    <!-- 原版取证（ScriptDLL64 FUN_180f40160（原版页 0x548））：推进后原版发页 SELECT2（HTML 族页），非页 10——已按原版替换。 -->
     <transition source="unaccepted" target="active">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="203533" action="SETPRO1"/>
@@ -65,7 +65,7 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
       </after-commit>
     </transition>
-    <!-- 真端取证（ScriptDLL64 FUN_180f40160（真端页 0x69d））：推进后真端发页 SELECT3（HTML 族页），非页 10——已按真端替换。 -->
+    <!-- 原版取证（ScriptDLL64 FUN_180f40160（原版页 0x69d））：推进后原版发页 SELECT3（HTML 族页），非页 10——已按原版替换。 -->
     <transition source="unaccepted" target="active">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="203533" action="SETPRO2"/>

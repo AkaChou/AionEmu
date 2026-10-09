@@ -24,7 +24,7 @@ import lombok.Getter;
 public class ZoneTemplate {
 
 	/**
-	 * 多边形环列表：单环 = 普通多边形区；多环 = 多胞区（真端感官区常见形，进入任一胞即算进入）。
+	 * 多边形环列表：单环 = 普通多边形区；多环 = 多胞区（原版感官区常见形，进入任一胞即算进入）。
 	 * Polygon ring list: one ring is a plain polygon zone; several rings make a multi-cell zone
 	 * (the usual retail sensory-area shape: being inside any cell counts as being inside the zone).
 	 */

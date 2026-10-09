@@ -324,7 +324,7 @@ public class StigmaService {
 
 	/**
 	 * 重算并推送可用烙印之石槽位数：计算值高于已存值时按 GM 解锁同语义**持久化**，
-	 * 并按「任务开启」向客户端发一次开启通知（真端 {@code STR_MSG_STIGMA_OPEN_SLOT_BY_QUEST} 1402942）。
+	 * 并按「任务开启」向客户端发一次开启通知（原版 {@code STR_MSG_STIGMA_OPEN_SLOT_BY_QUEST} 1402942）。
 	 * <p>客户端只在收到槽位数与开启通知后展开窗口槽位；持久化保证重登后登录路径下发的值同样正确，
 	 * 通知只在数值首次抬升时发送一次（幂等），不会在每次任务推进时重复刷屏。</p>
 	 * Recomputes and pushes the stigma-slot count. When the computed value exceeds the stored one it is
@@ -357,7 +357,7 @@ public class StigmaService {
 	}
 
 	/**
-	 * 发送「凹槽已开启」通知：真端 1402942（任务开启）+ 1402933（普通槽扩展）。
+	 * 发送「凹槽已开启」通知：原版 1402942（任务开启）+ 1402933（普通槽扩展）。
 	 * <p>客户端按凹槽类型/来源分别处理开启通知与槽位数，二者都发才覆盖它的展开判据。</p>
 	 * Sends the slot-open notifications: retail 1402942 (opened by quest) and 1402933 (normal slot
 	 * expanded). The client handles the open notification and the slot count per socket type, so both
@@ -375,7 +375,7 @@ public class StigmaService {
 	}
 
 	/**
-	 * 被任务数据标记「扩展烙印槽」的任务状态提交后：重算推送槽位数并补发真端「任务开启凹槽」通知。
+	 * 被任务数据标记「扩展烙印槽」的任务状态提交后：重算推送槽位数并补发原版「任务开启凹槽」通知。
 	 * <p>通知在玩家处于世界内、正在与任务/烙印窗口交互时下发，避免只在登录早期发送而丢失；
 	 * 仅标记任务会走到这里（同步口已按元数据门控），其余任务不产生任何额外包。</p>
 	 * After a quest flagged by the data commits, recompute and push the slot count and send the retail
@@ -449,7 +449,7 @@ public class StigmaService {
 
 	/**
 	 * 判定玩家是否已获得常规烙印槽资格：任一被任务数据标记扩展烙印槽的任务处于进行、待交付或完成态。
-	 * <p>资格完全由任务数据（真端 {@code reward_extend_stigma1}）驱动，不依赖任务 ID、步数或结晶道具：
+	 * <p>资格完全由任务数据（原版 {@code reward_extend_stigma1}）驱动，不依赖任务 ID、步数或结晶道具：
 	 * 教学任务进行中即开启槽位，领取结晶后的装备、战斗与报告步都保持开启，否则装备中的烙印会在登录
 	 * 校验中被卸下；放弃或未接取时数据不满足，槽位随之关闭。</p>
 	 * Whether the player earned the regular stigma slots: any quest flagged by the quest data (retail
@@ -484,7 +484,7 @@ public class StigmaService {
 	}
 
 	/**
-	 * 元数据是否声明扩展烙印槽位（真端 {@code reward_extend_stigma1}，见定义 XML 的
+	 * 元数据是否声明扩展烙印槽位（原版 {@code reward_extend_stigma1}，见定义 XML 的
 	 * {@code extend-stigma-slots} 属性）。
 	 * Whether the metadata declares a stigma-slot extension (retail {@code reward_extend_stigma1}, the
 	 * {@code extend-stigma-slots} attribute of the definition XML).
@@ -509,7 +509,7 @@ public class StigmaService {
 	}
 
 	/**
-	 * 对话页下发前的槽位再通告：重发槽位数；目标页是烙印窗口（页 1）时补发真端「任务开启凹槽」通知。
+	 * 对话页下发前的槽位再通告：重发槽位数；目标页是烙印窗口（页 1）时补发原版「任务开启凹槽」通知。
 	 * <p>窗口正是玩家核对凹槽来源的界面，而客户端对「开启通知」与「槽位数」分别处理凹槽展开；
 	 * 其余页面只重发槽位数，避免刷提示。</p>
 	 * Slot re-announce before a dialog page goes out: the slot count is re-sent, and when the target page

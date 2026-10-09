@@ -25,18 +25,18 @@ import com.aionemu.gameserver.questEngine.retail.RetailLedgerRows;
 import com.aionemu.gameserver.questEngine.tablelane.NativeItemSymbols.ItemStack;
 
 /**
- * P5D 步 1/3 门：SimpleItemPlay **行集真实分解**冻结 + 真端节点槽形态裁定交叉校验 + 激活批证据面。
+ * P5D 步 1/3 门：SimpleItemPlay **行集真实分解**冻结 + 原版节点槽形态裁定交叉校验 + 激活批证据面。
  * <p>
- * 计划 §10.3-#16① 原判据写作「37 行声明中继 / {@code cutsceneid1} / {@code item_check}」，与真端表事实不符。
- * P5D 复算（工具 {@code p5d/tools/itemplay-shape-audit.py}，真端 {@code ScriptDLL64.c} 节点/槽逐行对拍）得到的
+ * 计划 §10.3-#16① 原判据写作「37 行声明中继 / {@code cutsceneid1} / {@code item_check}」，与原版表事实不符。
+ * P5D 复算（工具 {@code p5d/tools/itemplay-shape-audit.py}，原版 {@code ScriptDLL64.c} 节点/槽逐行对拍）得到的
  * 真实分解是：43 行 = **8 路由**（owner {@code RETAIL_TABLE}）+ **7 XML 保留**（owner {@code XML_RETENTION}，
  * 各有 {@code ADJUDICATED:*} 理由）+ **28 无 owner 条目**（不在本服生产：无 XML、清单无行）；
  * 其中 18213/28213 由「接线 ≠ 激活」转为激活（P5D 步 3：retention 重裁 + 删 XML + 删目录条目）。
  * <p>
- * 同一复算还把 9 行的裁定理由与真端槽形态对齐：{@code slot 0} = 接取节点、{@code slot 3#K} = 第 K 步
+ * 同一复算还把 9 行的裁定理由与原版槽形态对齐：{@code slot 0} = 接取节点、{@code slot 3#K} = 第 K 步
  * （{@code talk_npcK} 从 0 起，交付节点 = {@code min(relays+1, 3)}）、{@code slot 4} = 交付节点。39/43 行
  * 与该不变量完全一致；偏离的 4 行恰好是裁定为 {@code ADVANCE_UNEXPRESSED}(80255/80256) 与
- * {@code ACQUIRE_NPC_SENTINEL}(39713/49713) 的行 ⇒ 理由与真端形态互证；其余 5 行
+ * {@code ACQUIRE_NPC_SENTINEL}(39713/49713) 的行 ⇒ 理由与原版形态互证；其余 5 行
  * （{@code TALK_CHAIN}/{@code CON_QUEST}）形态已成立；P5D 步 3 激活其中名字轴干净、owner 可退役的两行
  * （18213/28213），其余 3 行（{@code CON_QUEST} 跨表目标 18829/28829 不存在、50048 中继名零命中）保持 XML 保留。
  * <p>
@@ -51,9 +51,9 @@ class ItemPlayFamilyRowInventoryGateTest {
 		"/aion/data/static_data/quest/retail/retail-xml-retention.xml";
 	private static final String FAMILY = "SimpleItemPlay";
 
-	/** 真端表全量行数（真端 {@code quest_simpleitemplays}）。 / Retail table row count. */
+	/** 原版表全量行数（原版 {@code quest_simpleitemplays}）。 / Retail table row count. */
 	private static final int TABLE_ROWS = 43;
-	/** 真端表的 43 个 id。 / The 43 retail table ids. */
+	/** 原版表的 43 个 id。 / The 43 retail table ids. */
 	private static final Set<Integer> TABLE_IDS = Set.of(
 		9623, 19048, 29048, 41267, 41514, 41540, 41300, 41577, 41593, 18828, 28828, 12066, 22066, 50013,
 		50014, 51013, 51014, 80255, 80256, 18014, 28014, 39713, 49713, 12525, 12562, 22525, 22562, 13054,
@@ -66,7 +66,7 @@ class ItemPlayFamilyRowInventoryGateTest {
 	private static final Set<Integer> ROUTED_ROWS =
 		Set.of(13704, 13708, 19048, 23704, 23708, 29048, 18213, 28213);
 
-	/** XML 保留的 7 行及其裁定理由（真端清单逐字）。 / The seven XML-retention rows and their reasons. */
+	/** XML 保留的 7 行及其裁定理由（原版清单逐字）。 / The seven XML-retention rows and their reasons. */
 	private static final Map<Integer, String> ADJUDICATED_ROWS = Map.of(
 		50048, "ADJUDICATED:RETAIL_TALK_CHAIN",
 		18828, "ADJUDICATED:RETAIL_CON_QUEST",
@@ -76,14 +76,14 @@ class ItemPlayFamilyRowInventoryGateTest {
 		80255, "ADJUDICATED:RETAIL_ADVANCE_UNEXPRESSED",
 		80256, "ADJUDICATED:RETAIL_ADVANCE_UNEXPRESSED");
 
-	/** 真端槽形态偏离本族不变量的 4 行（P5D 逐行复算）。 / Rows deviating from the retail slot shape. */
+	/** 原版槽形态偏离本族不变量的 4 行（P5D 逐行复算）。 / Rows deviating from the retail slot shape. */
 	private static final Set<Integer> SHAPE_DEVIATING_ROWS = Set.of(80255, 80256, 39713, 49713);
 
-	/** 真端槽形态已成立、仍留 XML 的 3 行（名字轴无解 ⇒ fail-closed）。 / Remaining shape-ready XML rows. */
+	/** 原版槽形态已成立、仍留 XML 的 3 行（名字轴无解 ⇒ fail-closed）。 / Remaining shape-ready XML rows. */
 	private static final Set<Integer> SHAPE_READY_ADJUDICATED = Set.of(18828, 28828, 50048);
 
 	/**
-	 * 真端 {@code quest.xml} 的等级门：{@code minlevel_permitted = 999} = **停用形**（真端
+	 * 原版 {@code quest.xml} 的等级门：{@code minlevel_permitted = 999} = **停用形**（原版
 	 * {@code Quest::CanAcquireQuest} 对 {@code level < minlevel} 一律拒绝 ⇒ 不可接取；本车道
 	 * {@code NativeQuestStartPort} 同一口径）。
 	 */
@@ -97,7 +97,7 @@ class ItemPlayFamilyRowInventoryGateTest {
 		23708, 50048);
 
 	/**
-	 * 行集真实分解：真端表 43 行 = 6 路由 + 9 XML 保留裁定 + 28 不在生产；三者互斥且覆盖全表，
+	 * 行集真实分解：原版表 43 行 = 6 路由 + 9 XML 保留裁定 + 28 不在生产；三者互斥且覆盖全表，
 	 * 任何行漂移（新增/消失/换桶）都会红灯。
 	 */
 	@Test
@@ -108,9 +108,9 @@ class ItemPlayFamilyRowInventoryGateTest {
 
 		Set<Integer> table = new TreeSet<>();
 		loader.itemPlayRows().forEach(row -> table.add(row.questId()));
-		assertEquals(TABLE_ROWS, table.size(), "真端表行数");
-		assertEquals(TABLE_ROWS, loader.itemPlaySize(), "装载器行数 = 真端表行数");
-		assertEquals(TABLE_ROWS, handler.ownedQuestIds().size(), "注册集 = 真端表全量行");
+		assertEquals(TABLE_ROWS, table.size(), "原版表行数");
+		assertEquals(TABLE_ROWS, loader.itemPlaySize(), "装载器行数 = 原版表行数");
+		assertEquals(TABLE_ROWS, handler.ownedQuestIds().size(), "注册集 = 原版表全量行");
 		assertEquals(ROUTED_ROWS, new TreeSet<>(handler.routedQuestIds()), "路由集冻结");
 		assertEquals(TABLE_ROWS - ROUTED_ROWS.size(), handler.unroutableQuestIds().size(), "不可路由行数");
 
@@ -144,7 +144,7 @@ class ItemPlayFamilyRowInventoryGateTest {
 	}
 
 	/**
-	 * 裁定理由 ↔ 真端槽形态互证：偏离不变量的 4 行 = 裁定为避免不成立型（advance/sentinel）；
+	 * 裁定理由 ↔ 原版槽形态互证：偏离不变量的 4 行 = 裁定为避免不成立型（advance/sentinel）；
 	 * 形态已成立的 5 行 = 裁定为轴线未接线型（talk chain / con_quest）⇒ 下一增量目标集。
 	 */
 	@Test
@@ -162,17 +162,17 @@ class ItemPlayFamilyRowInventoryGateTest {
 			}
 		}
 		assertEquals(SHAPE_DEVIATING_ROWS, deviating,
-			"真端槽形态偏离（advance 未表达 / 接取哨兵）的行集 = 4 行冻结");
+			"原版槽形态偏离（advance 未表达 / 接取哨兵）的行集 = 4 行冻结");
 		assertEquals(SHAPE_READY_ADJUDICATED, shapeReady,
-			"真端槽形态已成立、仍留 XML 的行集 = 3 行冻结");
+			"原版槽形态已成立、仍留 XML 的行集 = 3 行冻结");
 		assertTrue(java.util.Collections.disjoint(deviating, shapeReady), "两集合互斥");
 		assertEquals(ADJUDICATED_ROWS.size(), deviating.size() + shapeReady.size(), "7 行归属完整");
 	}
 
 	/**
-	 * 可接取轴冻结：43 行按真端 {@code quest.xml} 的 {@code minlevel_permitted} 分桶（停用 27 / 可接取 16），
+	 * 可接取轴冻结：43 行按原版 {@code quest.xml} 的 {@code minlevel_permitted} 分桶（停用 27 / 可接取 16），
 	 * 且**停用形上的长尾缺口没有运行期影响**——声明过场的两行（13400/23400）落在停用形里，
-	 * 故 §10.3-#21 的「触发列缺失」不需要接线（真端与客户端 {@code quest.xml} 双向 999 一致）。
+	 * 故 §10.3-#21 的「触发列缺失」不需要接线（原版与客户端 {@code quest.xml} 双向 999 一致）。
 	 */
 	@Test
 	void acquirableAxisSplitsTheFamilyAndClosesTheCutsceneGap() throws Exception {
@@ -190,7 +190,7 @@ class ItemPlayFamilyRowInventoryGateTest {
 		assertEquals(LIVE_ROWS, live, "可接取形行集冻结");
 		assertEquals(TABLE_ROWS, stopped.size() + live.size(), "两桶互斥且覆盖全表");
 
-		// 过场行（真端表 cutsceneid1 859/860）在停用形里 ⇒ 触发列缺失无运行期影响（§10.3-#21 闭环）。
+		// 过场行（原版表 cutsceneid1 859/860）在停用形里 ⇒ 触发列缺失无运行期影响（§10.3-#21 闭环）。
 		assertTrue(stopped.containsAll(Set.of(13400, 23400)), "声明过场的两行必须是停用形");
 		SimpleItemPlayHandler handler = SimpleItemPlayHandler.instance();
 		for (int questId : Set.of(13400, 23400)) {
@@ -212,8 +212,8 @@ class ItemPlayFamilyRowInventoryGateTest {
 	}
 
 	/**
-	 * P5D 步 3 激活证据面：激活的 18213/28213 必须同时满足真端三源——① 表行声明两步中继且交付节点
-	 * 落在 {@code slot 3}；② 真端 {@code quest.xml} 可接取（{@code minlevel_permitted = 51}，非停用形）
+	 * P5D 步 3 激活证据面：激活的 18213/28213 必须同时满足原版三源——① 表行声明两步中继且交付节点
+	 * 落在 {@code slot 3}；② 原版 {@code quest.xml} 可接取（{@code minlevel_permitted = 51}，非停用形）
 	 * 且前置 {@code finished_quest_cond1} 为同族上一环；③ 客户端页阶梯声明入口 {@code select1}(1011)、
 	 * 问询窗 {@code ask_quest_accept}(4) 与两步页 {@code select2}(1352)/{@code select3}(1693)，
 	 * 与 native 处理器的页序逐页一致；④ 处理器对两行路由且保留清单为 {@code RETAIL_TABLE}。
@@ -231,24 +231,24 @@ class ItemPlayFamilyRowInventoryGateTest {
 		for (int questId : Set.of(18213, 28213)) {
 			assertTrue(ROUTED_ROWS.contains(questId), "激活行必须在路由集里: " + questId);
 			assertEquals("RETAIL_TABLE", manifest.get(questId)[0], "激活行 owner 必须退役: " + questId);
-			assertEquals(51, minLevel.get(questId), "激活行真端等级门: " + questId);
-			assertEquals(2, handler.relayCount(questId), "真端 slot 3 #0/#1 ⇒ 两步中继: " + questId);
+			assertEquals(51, minLevel.get(questId), "激活行原版等级门: " + questId);
+			assertEquals(2, handler.relayCount(questId), "原版 slot 3 #0/#1 ⇒ 两步中继: " + questId);
 
-			// 客户端页阶梯（真端客户端 quest.xml 派生的页动作契约）↔ native 页序逐页一致。
+			// 客户端页阶梯（原版客户端 quest.xml 派生的页动作契约）↔ native 页序逐页一致。
 			assertTrue(contract.hasButtonPage(questId, QuestDialogPage.SELECT1.id()),
 				"客户端必须声明入口页 select1: " + questId);
 			assertTrue(contract.hasButtonPage(questId, QuestDialogPage.SHOW_ASK_QUEST_ACCEPT_WINDOW.id()),
 				"客户端必须声明问询窗页 4: " + questId);
 			assertEquals(SimpleItemPlayHandler.pageForStep(1), QuestDialogPage.SELECT2.id(),
-				"第 1 步页 = 真端 select2");
+				"第 1 步页 = 原版 select2");
 			assertEquals(SimpleItemPlayHandler.pageForStep(2), QuestDialogPage.SELECT3.id(),
-				"第 2 步页 = 真端 select3");
+				"第 2 步页 = 原版 select3");
 			for (int step = 1; step <= handler.relayCount(questId); step++) {
 				assertTrue(contract.hasButtonPage(questId, SimpleItemPlayHandler.pageForStep(step)),
 					"客户端必须声明第 " + step + " 步页: " + questId);
 			}
 
-			// 步物品轴：接取发第 1 步道具、第 2 步换物（真端 give_item/give_item2/remove_item2 逐列）。
+			// 步物品轴：接取发第 1 步道具、第 2 步换物（原版 give_item/give_item2/remove_item2 逐列）。
 			ItemStack acceptGive = handler.acceptGiveItem(questId);
 			ItemStack stepTwoGive = handler.stepGiveItem(questId, 2);
 			ItemStack stepTwoRemove = handler.stepRemoveItem(questId, 2);
@@ -263,7 +263,7 @@ class ItemPlayFamilyRowInventoryGateTest {
 		}
 	}
 
-	/** 真端 {@code quest.xml} 本族 43 行的 {@code minlevel_permitted}（独立重解析）。 */
+	/** 原版 {@code quest.xml} 本族 43 行的 {@code minlevel_permitted}（独立重解析）。 */
 	private static Map<Integer, Integer> minLevels() throws Exception {
 		String text = readResource("/aion/data/static_data/quest/retail/quest.xml");
 		Map<Integer, Integer> result = new TreeMap<>();
@@ -281,7 +281,7 @@ class ItemPlayFamilyRowInventoryGateTest {
 			Matcher minLevel = Pattern.compile("<minlevel_permitted>\\s*(\\d+)").matcher(body);
 			result.put(questId, minLevel.find() ? Integer.parseInt(minLevel.group(1)) : 0);
 		}
-		assertEquals(TABLE_ROWS, result.size(), "本族 43 行必须在真端 quest.xml 内有等级门");
+		assertEquals(TABLE_ROWS, result.size(), "本族 43 行必须在原版 quest.xml 内有等级门");
 		return result;
 	}
 
@@ -295,7 +295,7 @@ class ItemPlayFamilyRowInventoryGateTest {
 		}
 	}
 
-	/** 真端清单：quest id → [owner, family, reason]（非本族行不载入）。 / The retention manifest. */
+	/** 原版清单：quest id → [owner, family, reason]（非本族行不载入）。 / The retention manifest. */
 	private static Map<Integer, String[]> manifest() throws Exception {
 		Map<Integer, String[]> result = new LinkedHashMap<>();
 		for (Element row : RetailLedgerRows.rows(RETENTION_RESOURCE, "quest")) {
@@ -314,9 +314,9 @@ class ItemPlayFamilyRowInventoryGateTest {
 	/**
 	 * 证据面**双向冻结**：未解析名集合必须逐元素等于下表（既不得新增——新面孔说明有名字解析回归或
 	 * 新接线面未解；也不得消失——已解必须显式改表）。P5D 步 2 起中继名也进入解析面，
-	 * {@code NPC_event_devasday_shugoseller}（50048 的 {@code talk_npc1}，静态数据里只有真端表命中）随之登记。
+	 * {@code NPC_event_devasday_shugoseller}（50048 的 {@code talk_npc1}，静态数据里只有原版表命中）随之登记。
 	 * 2026-10-05 显式改表（缺陷 S 批次对齐，非该批引入）：5 个组键（HousingManager_Da/Li、
-	 * LDF5b_Greenhat_LD、NPC_event_devasday_shugo/shugoseller）随真端对话名组表接入原生解析面
+	 * LDF5b_Greenhat_LD、NPC_event_devasday_shugo/shugoseller）随原版对话名组表接入原生解析面
 	 * 而解析成功（组表 retail-quest-ai-name-groups.xml 成员 name_desc 展开命中 npc 模板），
 	 * 仅剩系统发放哨兵 {@code _faction_} 未解析。
 	 * Explicit table update 2026-10-05 (defect-S batch alignment, not introduced by it): five group

@@ -15,7 +15,7 @@ import com.aionemu.gameserver.questEngine.tablelane.SimpleTalkHandler;
  * 验证 28625/28626 在卡里加陈列柜上使用钥匙的客户端对话合同。
  * <p>
  * P3 重锚（计划 §8.9）：旧 IR 形状断言（节点名/条件/动作/页链）随 SimpleTalk 切换批退场，
- * 本类改为真端表行锚——接取/交付 NPC、中继步、发扣物品、交付门均取自
+ * 本类改为原版表行锚——接取/交付 NPC、中继步、发扣物品、交付门均取自
  * {@code Quest_SimpleTalk.xml} + {@code quest.xml} 与静态数据（{@code npc_template} /
  * 物品 {@code name_desc}），native 处理器必须逐项一致。
  * <p>
@@ -28,7 +28,7 @@ class Quest28625And28626ClientDialogAlignmentTest {
 	void reportsTheKaligaCollectionAtTheDisplayCabinet() {
 		SimpleTalkHandler handler = SimpleTalkHandler.instance();
 
-		// 真端行 28625：IDCromede_book → IDCromede_book
+		// 原版行 28625：IDCromede_book → IDCromede_book
 		assertTrue(handler.routes(28625), "28625 必须由 native 车道路由");
 		assertEquals(730333, handler.acquireNpc(28625), "接取 NPC");
 		assertEquals(730333, handler.rewardNpc(28625), "交付 NPC");
@@ -37,7 +37,7 @@ class Quest28625And28626ClientDialogAlignmentTest {
 		assertEquals(List.of(new SimpleTalkHandler.ItemStack(185000102, 1)), handler.workItems(28625), "交付门");
 		assertNull(handler.cutscene(28625), "该行无过场");
 
-		// 真端行 28626：IDCromede_orb → IDCromede_orb
+		// 原版行 28626：IDCromede_orb → IDCromede_orb
 		assertTrue(handler.routes(28626), "28626 必须由 native 车道路由");
 		assertEquals(730334, handler.acquireNpc(28626), "接取 NPC");
 		assertEquals(730334, handler.rewardNpc(28626), "交付 NPC");

@@ -38,8 +38,8 @@
     </node>
   </nodes>
   <transitions>
-    <!-- QE-054 修正（2026-10-07 全量审计）：REWARD 投影 = 真端/legacy 推进值 1（legacy 击杀链后
-         var0=1 + setStatus(REWARD)；真端集合 {1}；客户端第 3 行门槛 SECTION_0==1）。下方叙事注释中
+    <!-- QE-054 修正（2026-10-07 全量审计）：REWARD 投影 = 原版/legacy 推进值 1（legacy 击杀链后
+         var0=1 + setStatus(REWARD)；原版集合 {1}；客户端第 3 行门槛 SECTION_0==1）。下方叙事注释中
          「2=领奖行」是 QE-051 行号口径的旧说法，已按轴权威改正：轴 1 时客户端自会显示领奖行。
          QE-054 correction (2026-10-07 audit): the REWARD projection is the retail/legacy progress
          value 1 (the legacy kill chain left var0=1 before setStatus(REWARD); retail set {1}; the

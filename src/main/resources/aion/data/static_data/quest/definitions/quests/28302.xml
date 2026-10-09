@@ -106,7 +106,7 @@
          legacy `_28302Document_Saved` 里 S_BOX 730375（IDStation_FOBJ_S_BOX，客户端有对话 html）
          只做对话与收尾推进：var==5 时 USE_OBJECT → 页 1352（select2）/默认 → 页 2716（select6）、
          `SET_REWARD`(10255) → setStatus(REWARD) + 关窗（零回页）；领奖（1004/5/结束对话）只在
-         Hariken 799530（任务书末行 STR_DIC_N_Hariken）上。真端只对击杀计数（FUN_180ed7c00
+         Hariken 799530（任务书末行 STR_DIC_N_Hariken）上。原版只对击杀计数（FUN_180ed7c00
          逐次 +1）并有 accept/refuse 页。
          旧 XML 给箱子和 Hariken 各生成了一份完整 NPC 块（含 npc-complete 与领取路由）——箱子成了
          第二领取入口（QE-052 违规），且两处 `SET_SUCCEED` 都是 `started→reward` 无门（任意进度都能

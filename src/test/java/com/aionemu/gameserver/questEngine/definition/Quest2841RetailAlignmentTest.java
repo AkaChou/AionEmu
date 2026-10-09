@@ -19,11 +19,11 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * 锁定任务 2841（上层面阿斯特里亚全歼）的真端狩猎合同：44 杀门、报告 NPC 与奖励面。
+ * 锁定任务 2841（上层面阿斯特里亚全歼）的原版狩猎合同：44 杀门、报告 NPC 与奖励面。
  * Locks quest 2841's retail hunt contract: the 44-kill gate, the report NPC and the reward face.
  * <p>
  * 任务已退役（保留清单 owner=RETAIL_TABLE）：旧 XML 的节点/转换金标（hunting / hunting-complete /
- * reward 标签）随迁移退场，按计划 §8.9（P3 重锚口径）改锚真端表行 + 相机（CameraRegistry）满值 +
+ * reward 标签）随迁移退场，按计划 §8.9（P3 重锚口径）改锚原版表行 + 相机（CameraRegistry）满值 +
  * quest.xml 奖励事实 + native 对话面。「第 44 杀仍保持 START、报告动作才进 REWARD」在原生车道
  * 由相机满值语义承担（{@code SimpleHuntNativeFamilyGateTest} 全族不变量）。
  * <p>
@@ -33,7 +33,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 class Quest2841RetailAlignmentTest {
 	private static final int QUEST_ID = 2841;
-	/** 真端行 reward_npc_name=Herz。 / Retail row report NPC. */
+	/** 原版行 reward_npc_name=Herz。 / Retail row report NPC. */
 	private static final int REPORT_NPC = 278003;
 
 	@Test
@@ -47,8 +47,8 @@ class Quest2841RetailAlignmentTest {
 	@Test
 	void cameraRegistryCarriesTheFortyFourKillGateOnTheRetailMonsterGroup() {
 		NativeQuestTableLoader.SimpleHuntRow row = NativeQuestTableLoader.instance().require(QUEST_ID);
-		assertEquals(44, row.killSlots().get(1).count(), "真端 count1=44");
-		assertEquals(List.of("IDAbRe_Up_Asteria"), row.killSlots().get(1).monsters(), "真端 monster1 组名");
+		assertEquals(44, row.killSlots().get(1).count(), "原版 count1=44");
+		assertEquals(List.of("IDAbRe_Up_Asteria"), row.killSlots().get(1).monsters(), "原版 monster1 组名");
 		assertEquals("Herz", row.rewardNpcName());
 
 		// 满值语义：槽 1 需求 = 44，fullValue = 44 << shift(1)。
@@ -59,7 +59,7 @@ class Quest2841RetailAlignmentTest {
 		assertEquals(44 << camera.width().shift(1), camera.fullValue(), "相机满值");
 
 		SimpleHuntHandler handler = SimpleHuntHandler.instance();
-		assertNotNull(handler.acquireNpc(QUEST_ID), "真端行必须有可解析的接取 NPC");
+		assertNotNull(handler.acquireNpc(QUEST_ID), "原版行必须有可解析的接取 NPC");
 		assertEquals(REPORT_NPC, handler.rewardNpc(QUEST_ID));
 		assertTrue(handler.questsForNpc(REPORT_NPC).contains(QUEST_ID), "Herz 必须服务 2841");
 	}
@@ -69,11 +69,11 @@ class Quest2841RetailAlignmentTest {
 		QuestMetadata metadata = RetailQuestDriver.ensureLoaded()
 			.retailMetadataOf(QUEST_ID).orElseThrow().metadata();
 
-		assertEquals(45, metadata.minLevel(), "真端 minlevel_permitted=45");
-		assertEquals(java.util.Set.of("ASMODIANS"), metadata.permittedRaces(), "真端 pc_dark");
-		assertEquals(255, metadata.repeatPolicy().maxRepeatCount(), "真端 max_repeat_count=255（可重复）");
+		assertEquals(45, metadata.minLevel(), "原版 minlevel_permitted=45");
+		assertEquals(java.util.Set.of("ASMODIANS"), metadata.permittedRaces(), "原版 pc_dark");
+		assertEquals(255, metadata.repeatPolicy().maxRepeatCount(), "原版 max_repeat_count=255（可重复）");
 		List<QuestReward> rewards = metadata.rewards();
-		// 真端 quest.xml：reward_exp1=2068277、reward_abyss_point1=700。
+		// 原版 quest.xml：reward_exp1=2068277、reward_abyss_point1=700。
 		assertTrue(rewards.contains(new QuestReward("EXP", 0, 2068277)), () -> rewards.toString());
 		assertTrue(rewards.contains(new QuestReward("AP", 0, 700)), () -> rewards.toString());
 	}

@@ -31,7 +31,7 @@ import com.aionemu.gameserver.questEngine.model.QuestStatus;
  * SimpleHunt 原生表驱动家族门禁测试（计划 §6.6 / §7 / P1 切换批）。
  * <p>
  * 验证：
- * 1. 真端表行全量 939 个 SimpleHunt 任务 100% 装载并纳入 SimpleHuntHandler 管理；
+ * 1. 原版表行全量 939 个 SimpleHunt 任务 100% 装载并纳入 SimpleHuntHandler 管理；
  * 2. CameraRegistry 完整包含全部 939 行相机参数，且 fullValue 与槽位需求一致；
  * 3. 击杀三守卫约束：非 START 状态不动作、已满槽超杀零动作、合规击杀单次加一；
  * 4. 双通道推进：未达满值普通写入 (0xf0)，达到整行满值触发推进写入 (0x100) 并进入 REWARD 状态；
@@ -43,7 +43,7 @@ class SimpleHuntNativeFamilyGateTest {
 	private static NativeQuestTableLoader loader;
 	private static CameraRegistry cameraRegistry;
 
-	/** 真端表行仍带 XML 定义的行（`retail-xml-retention.xml` = XML_RETENTION，SimpleHunt 3 行）。 */
+	/** 原版表行仍带 XML 定义的行（`retail-xml-retention.xml` = XML_RETENTION，SimpleHunt 3 行）。 */
 	private static final Set<Integer> XML_RETAINED_ROWS = Set.of(14112, 14123, 16961);
 
 	@BeforeAll
@@ -57,7 +57,7 @@ class SimpleHuntNativeFamilyGateTest {
 	void all939SimpleHuntRowsAreLoadedAndManaged() {
 		assertNotNull(handler);
 		Set<Integer> owned = handler.ownedQuestIds();
-		// 验证真端 SimpleHunt 全量行纳入原生处理器管理
+		// 验证原版 SimpleHunt 全量行纳入原生处理器管理
 		assertTrue(owned.size() >= 939, "Expected at least 939 managed quests, found: " + owned.size());
 
 		// 单一 owner 不变量：注册集 = 路由集 + XML_RETENTION 行（表行仍带 XML 定义者交给 XML 车道）。
@@ -75,7 +75,7 @@ class SimpleHuntNativeFamilyGateTest {
 			assertTrue(handler.owns(qid), "Handler must own quest " + qid);
 
 			if (row.killSlots().isEmpty()) {
-				// 11013/11014/11208/11209 等真端休眠零计数行，无相机行
+				// 11013/11014/11208/11209 等原版休眠零计数行，无相机行
 				continue;
 			}
 
@@ -179,7 +179,7 @@ class SimpleHuntNativeFamilyGateTest {
 	}
 
 	/**
-	 * 可重复行 COMPLETE 重开局（真端 {@code finishedcount < max_repeat_count}）：实机 2026-10-07 报障
+	 * 可重复行 COMPLETE 重开局（原版 {@code finishedcount < max_repeat_count}）：实机 2026-10-07 报障
 	 * quest 3733——完成后点任务行（31）回退通用页 10、无法再次接取。接取面必须与首次接取同形：
 	 * 31 → 客户端入口页，20000 收尾（0x4e20）复位 START 且保留 complete_count（重复预算依据）。
 	 * <p>
@@ -193,11 +193,11 @@ class SimpleHuntNativeFamilyGateTest {
 		QuestState state = NativeTalkFixture.add(player, 3733, QuestStatus.COMPLETE, 0);
 		state.setCompleteCount(1);
 		Integer acquireNpc = handler.acquireNpc(3733);
-		assertNotNull(acquireNpc, "真端行必须有可解析的接取 NPC");
+		assertNotNull(acquireNpc, "原版行必须有可解析的接取 NPC");
 
 		NativeTalkFixture.clearPackets(player);
 		assertTrue(handler.onDialog(NativeTalkFixture.dialog(player, acquireNpc, 3733, 31)),
-			"可重复行 COMPLETE 态点任务行必须开放接取面（真端 finishedcount < max_repeat_count）");
+			"可重复行 COMPLETE 态点任务行必须开放接取面（原版 finishedcount < max_repeat_count）");
 		NativeTalkFixture.assertOnlyDialogPageWithQuest(player, NativeTalkFixture.clientEntryPage(3733), 3733);
 
 		NativeTalkFixture.clearPackets(player);
@@ -217,7 +217,7 @@ class SimpleHuntNativeFamilyGateTest {
 	}
 
 	/**
-	 * P1B 残余轴①：链式接取窗（真端交付节点 0x1e 槽 = {@code mgr+0x1a8(player, con_quest)}）。
+	 * P1B 残余轴①：链式接取窗（原版交付节点 0x1e 槽 = {@code mgr+0x1a8(player, con_quest)}）。
 	 * <p>
 	 * 132 行逐行装载；本表内 65 行的下一环必须在本行的交付 NPC 上可接取（本车道接取路由按 NPC 建表
 	 * ⇒ 该窗已由下一环自身那一行实现）；跨族/无行目标由独立审计复算（`p4b/tools/conquest-axis-audit.py`）。
@@ -253,15 +253,15 @@ class SimpleHuntNativeFamilyGateTest {
 					"链式接取窗未在本行交付 NPC 上闭环: " + row.questId() + "->" + next);
 			}
 		}
-		assertEquals(132, declared, "真端 SimpleHunt con_quest 覆盖 132 行");
+		assertEquals(132, declared, "原版 SimpleHunt con_quest 覆盖 132 行");
 		assertEquals(65, inTable, "本表内链式目标 65 行（其余为跨族/无行，由审计复算）");
 		assertTrue(handler.unresolvedChainQuestIds().isEmpty(),
 			() -> "本族链式接取窗未闭环: " + handler.unresolvedChainQuestIds());
 	}
 
 	/**
-	 * P1B 残余轴②：过场（真端交付节点 0x35 槽 PlayMovie）。3 行声明（3016=362 / 4007=391 / 4014=393，
-	 * 动作均 1007 = 真端 ask 流）；P5C 起 1007（ASK_QUEST_ACCEPT，真端 {@code mgr+0x1a0}）由本行服务，
+	 * P1B 残余轴②：过场（原版交付节点 0x35 槽 PlayMovie）。3 行声明（3016=362 / 4007=391 / 4014=393，
+	 * 动作均 1007 = 原版 ask 流）；P5C 起 1007（ASK_QUEST_ACCEPT，原版 {@code mgr+0x1a0}）由本行服务，
 	 * 过场面随之可达，且只在命中表声明动作时下发。
 	 * The cutscene slot (0x35): three rows declare it (movie 362/391/393 on action 1007 = the retail ask
 	 * flow). Since P5C the row serves action 1007 (page 4), so the face is reachable and only fires on the
@@ -273,8 +273,8 @@ class SimpleHuntNativeFamilyGateTest {
 		SimpleHuntHandler local = new SimpleHuntHandler(loader, cameraRegistry,
 			NativeNpcNameResolver.instance(), HtmlPagesRegistry.instance(),
 			NativeQuestOwnerResolver.instance().xmlOnlyIds(), movies, NativeReportRewardFlow.instance());
-		assertEquals(362, local.cutscene(3016).movieId(), "3016 真端 cutsceneid1");
-		assertEquals(1007, local.cutscene(3016).triggerAction(), "3016 真端 cs1_haction");
+		assertEquals(362, local.cutscene(3016).movieId(), "3016 原版 cutsceneid1");
+		assertEquals(1007, local.cutscene(3016).triggerAction(), "3016 原版 cs1_haction");
 		assertEquals(391, local.cutscene(4007).movieId());
 		assertEquals(393, local.cutscene(4014).movieId());
 		assertNull(local.cutscene(2354), "未声明过场的行不得有过场面");
@@ -290,7 +290,7 @@ class SimpleHuntNativeFamilyGateTest {
 		assertTrue(movies.played().isEmpty(), "非触发动作不得下发过场");
 	}
 
-	/** 记录式假过场端口（真端 0x35 槽）。 / A recording fake cutscene port (retail slot 0x35). */
+	/** 记录式假过场端口（原版 0x35 槽）。 / A recording fake cutscene port (retail slot 0x35). */
 	private static final class RecordingMovies implements NativeMoviePort {
 		private final List<Integer> played = new ArrayList<>();
 

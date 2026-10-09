@@ -46,7 +46,7 @@
     <node label="s4" status="START">
       <var name="var0" value="4"/>
     </node>
-    <!-- QE-054：击杀寄生冰灵 233864 后沿用 legacy/真端的 packed step 4——legacy
+    <!-- QE-054：击杀寄生冰灵 233864 后沿用 legacy/原版的 packed step 4——legacy
          `defaultOnKillEvent(env, 233864, 4, true)` 的 reward 分支不写 nextStep，落盘 4
          （道具递进 1→2→3→4 与其 use-item 分支一致）。领奖行批次曾按末行索引抬到 5。
          QE-054: after killing the parasitic ice spirit 233864 the packed step stays the
@@ -62,7 +62,7 @@
   </nodes>
   <transitions>
     <!-- 无 source 自愈边：领奖行批次（7a7d27809）按末行索引把领奖投影抬到 5，并让该边把
-         按 legacy/真端正确落盘的存档从 4 改成 5；现改为反向归一（REWARD/5 → 4）。
+         按 legacy/原版正确落盘的存档从 4 改成 5；现改为反向归一（REWARD/5 → 4）。
          Source-less healing edge: the reward-row batch (7a7d27809) raised the reward projection
          to the last-row index 5 and made this edge rewrite correct legacy/retail saves from 4
          to 5; it is reversed here (REWARD/5 → 4). -->

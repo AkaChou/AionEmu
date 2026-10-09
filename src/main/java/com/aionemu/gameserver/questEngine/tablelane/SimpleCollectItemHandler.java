@@ -30,21 +30,21 @@ import com.aionemu.gameserver.services.DialogService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
- * 真端 SimpleCollectItem 原生任务处理器（计划 §6.2 / §7 P4 切换批）。
+ * 原版 SimpleCollectItem 原生任务处理器（计划 §6.2 / §7 P4 切换批）。
  * <p>
- * 完全由真端表 {@link NativeQuestTableLoader#collectRows()} 与 {@code quest.xml} 元数据驱动，
+ * 完全由原版表 {@link NativeQuestTableLoader#collectRows()} 与 {@code quest.xml} 元数据驱动，
  * 绝不生成 IR 节点、绝不回退旧编译器。逐项证据：
  * <ul>
  *   <li><b>接取</b>：{@code acquired_npc_name} → 问询页 4 / 确认 1002/20000 → {@link NativeQuestStartPort}
- *       （真端 Quest::CanAcquireQuest 轴），随后按 {@code give_item} 原样发放；</li>
- *   <li><b>中继链</b>：{@code talk_npc1..3} 严格按表序推进（真端 cabb10 语义，乱序零推进）：
+ *       （原版 Quest::CanAcquireQuest 轴），随后按 {@code give_item} 原样发放；</li>
+ *   <li><b>中继链</b>：{@code talk_npc1..3} 严格按表序推进（原版 cabb10 语义，乱序零推进）：
  *       任务行打开（31/26/-1）= 该步页 SELECT2..4（1352/1693/2034），**不推进**；推进 = SETPRO{K}
- *       （{@code 10000 + K - 1}）把步号写 {@code var0 = K} 并关窗（真端 0x5d8，零发页）——步号与
+ *       （{@code 10000 + K - 1}）把步号写 {@code var0 = K} 并关窗（原版 0x5d8，零发页）——步号与
  *       客户端任务书步骤同轴（2026-10-07 修复：旧实现把步号写 bit16..17 且任何动作即推进，客户端
  *       步数 65536 匹配不到任务步骤、显示为空，点击 NPC 直接跳步）；{@code collect_progress} 与
  *       talk 链长一致（实测 9620=3、14150/14120=1、其余 0），
- *       因此"链未走完不得开始采集"就是真端该列的直接含义；</li>
- *   <li><b>采集（物品驱动，2026-10-04 修正）</b>：本族真端无相机——camera-params.tsv 的 2463 个
+ *       因此"链未走完不得开始采集"就是原版该列的直接含义；</li>
+ *   <li><b>采集（物品驱动，2026-10-04 修正）</b>：本族原版无相机——camera-params.tsv 的 2463 个
  *       相机调用点中本族 262 行 0 命中（对照 SimpleHunt 1812/1863），旧 XML 的交互/击杀转换亦零
  *       var 写。点击采集对象或击杀 {@code drop_monster_N} 只认领交互；任务物品由掉落列
  *       （{@code drop_monster_K → drop_item_K}，经 {@code QuestEngine.questDrops} 聚合本类的
@@ -52,11 +52,11 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
  *       "未持满才掉"。var0 保持 0（250/262 行 {@code collect_progress=0}）；</li>
  *   <li><b>交付</b>：交付 NPC 处按 {@code check_item} 门（{@code NativeInventoryPort} 持有量）
  *       扣工作物品 → REWARD + 奖励窗页 5；未持有 → 进行中页 10；</li>
- *   <li><b>领奖</b>：{@link NativeReportRewardFlow}（真端 reward 列 → 共用结算体），完成页 1008；</li>
- *   <li><b>链式接取窗</b>：{@code con_quest}（真端交付节点 0x1e 槽 {@code mgr+0x1a8(player, con_quest)}）
+ *   <li><b>领奖</b>：{@link NativeReportRewardFlow}（原版 reward 列 → 共用结算体），完成页 1008；</li>
+ *   <li><b>链式接取窗</b>：{@code con_quest}（原版交付节点 0x1e 槽 {@code mgr+0x1a8(player, con_quest)}）
  *       —— 本车道按 NPC 建接取路由，该窗的等价物 = 「下一环的接取 NPC 就是本行的交付 NPC」，
  *       逐行验证、不闭环的行登记 fail-closed（{@link #unresolvedChainQuestIds()}）；</li>
- *   <li><b>过场</b>：{@code cutsceneid1}/{@code cs1_haction}（真端交付节点 0x35 槽 PlayMovie）经
+ *   <li><b>过场</b>：{@code cutsceneid1}/{@code cs1_haction}（原版交付节点 0x35 槽 PlayMovie）经
  *       {@link NativeMoviePort} 下发，是页动作上的副作用、不推进节点。</li>
  * </ul>
  * 缺行/名字多义/物品未解的行走 fail-closed（不路由、不发放）。
@@ -86,10 +86,10 @@ public final class SimpleCollectItemHandler implements NativeSystemGrantLane {
 	public static final int PAGE_REWARD_WINDOW = 5;
 
 	/**
-	 * 采集对象引用：任务 id + 目标 NPC 模板 id + 真端列序槽位。
+	 * 采集对象引用：任务 id + 目标 NPC 模板 id + 原版列序槽位。
 	 * <p>
-	 * 槽位由真端掉落列决定（{@code drop_monster_K} → {@code drop_item_K} → 该物品在 {@code collect_itemN}
-	 * 交付列里的位置），对象点击只能推进它自己那一槽；对象列序**不是**槽序（真端 4046/2487/2346/1154/41510）。
+	 * 槽位由原版掉落列决定（{@code drop_monster_K} → {@code drop_item_K} → 该物品在 {@code collect_itemN}
+	 * 交付列里的位置），对象点击只能推进它自己那一槽；对象列序**不是**槽序（原版 4046/2487/2346/1154/41510）。
 	 * Collect-object reference: quest id + object npc template id + the retail camera slot. The slot comes
 	 * from the retail drop column (drop_monster_K → drop_item_K → its position among collect_itemN), not
 	 * from the object column order (retail rows 4046/2487/2346/1154/41510 show the difference).
@@ -120,12 +120,12 @@ public final class SimpleCollectItemHandler implements NativeSystemGrantLane {
 
 	/** 接取 NPC 成员集（任一成员可接取）。 / Acquire NPC member set. */
 	private final Map<Integer, List<Integer>> acquireNpcIdsByQuestId;
-	/** 任务 ID → 全部交付 NPC（真端逻辑名 + 客户端交付集合展开；首项为兼容易）。
+	/** 任务 ID → 全部交付 NPC（原版逻辑名 + 客户端交付集合展开；首项为兼容易）。
 	 * Quest id → every hand-in NPC (retail logical name expanded through the client set). */
 	private final Map<Integer, List<Integer>> rewardNpcsByQuestId;
 	private final Map<Integer, List<Integer>> talkNpcsByQuestId;
 	private final Map<Integer, List<Integer>> objectsByQuestId;
-	/** 掉落列来源（对象/怪，模板 id）→ 任务掉落条目（真端 quest.xml drop 列编译产物）。
+	/** 掉落列来源（对象/怪，模板 id）→ 任务掉落条目（原版 quest.xml drop 列编译产物）。
 	 * Drop-column source (object/monster template id) → quest drop entries. */
 	private final Map<Integer, List<QuestCatalogDrop>> dropsByNpcId;
 	private final Map<Integer, List<ItemStack>> handInByQuestId;
@@ -137,12 +137,12 @@ public final class SimpleCollectItemHandler implements NativeSystemGrantLane {
 
 	/** 任务 ID → 接取名类别（{@code _faction_} 等哨兵 = 系统发放）。 / Quest id → acquire-name category. */
 	private final Map<Integer, RetailGrantKind> grantKindByQuestId;
-	/** 任务 ID → 真端势力 id（{@code quest.xml npcfaction_name}；无则 0）。 / Quest id → retail faction id. */
+	/** 任务 ID → 原版势力 id（{@code quest.xml npcfaction_name}；无则 0）。 / Quest id → retail faction id. */
 	private final Map<Integer, Integer> factionByQuestId;
 
 	private final Map<Integer, List<CollectTargetRef>> objectsByNpcId;
 
-	/** 任务 ID → 链式接取窗的下一环（真端交付节点 0x1e 槽的 {@code con_quest}）。 / Quest id → the next quest of the chain window. */
+	/** 任务 ID → 链式接取窗的下一环（原版交付节点 0x1e 槽的 {@code con_quest}）。 / Quest id → the next quest of the chain window. */
 	private final Map<Integer, Integer> conQuestByQuestId;
 
 	/** 链式接取窗未闭环的行（fail-closed 证据面）。 / Rows whose chain window is not realized. */
@@ -214,8 +214,8 @@ public final class SimpleCollectItemHandler implements NativeSystemGrantLane {
 			if (metadata == null) {
 				unresolvedMetadata.add(questId);
 			}
-			// 采集槽由真端掉落列决定：{@code drop_monster_K} 列出的来源（对象或怪）产出
-			// {@code drop_item_K}，该物品在交付列里的位置就是相机槽（真端数据里一行的对象列序**不等于**槽序，
+			// 采集槽由原版掉落列决定：{@code drop_monster_K} 列出的来源（对象或怪）产出
+			// {@code drop_item_K}，该物品在交付列里的位置就是相机槽（原版数据里一行的对象列序**不等于**槽序，
 			// 见 4046/2487/2346/1154/41510；同一来源也不会同时落在两个槽上）。
 			// The camera slot comes from the retail drop column: drop_monster_K yields drop_item_K and
 			// the position of that item among the hand-in columns is the slot. The retail data shows the
@@ -234,7 +234,7 @@ public final class SimpleCollectItemHandler implements NativeSystemGrantLane {
 				int objectId = candidates.get(0);
 				Integer slot = slotByDropSource.get(objectId);
 				if (slot == null) {
-					// 对象不在任何掉落列里 ⇒ 真端没有给它槽位（如 41216 的来源是另一个 FOBJ）；
+					// 对象不在任何掉落列里 ⇒ 原版没有给它槽位（如 41216 的来源是另一个 FOBJ）；
 					// fail-closed，不按列序猜槽。
 					// The object appears in no drop column, so the retail data assigns it no slot: fail
 					// closed instead of guessing from the column order.
@@ -262,7 +262,7 @@ public final class SimpleCollectItemHandler implements NativeSystemGrantLane {
 			}
 			if (metadata != null && metadata.clean()) {
 				for (var drop : metadata.metadata().drops()) {
-					// 掉落注册无条件（真端 drop 列就是发放面：对象交互走 QuestItemNpcAI2 掉落列表、
+					// 掉落注册无条件（原版 drop 列就是发放面：对象交互走 QuestItemNpcAI2 掉落列表、
 					// 击杀走通用击杀掉落装配，两侧都经 QuestService.getQuestDrop → isQuestDrop 的
 					// collect_item 上限判定）。2026-10-04 修复：退役 XML 删除后 catalog 掉落缺席，
 					// native 侧必须接手（原实现漏注册，真机 1103 采集拿不到 quest_1103a）。
@@ -283,7 +283,7 @@ public final class SimpleCollectItemHandler implements NativeSystemGrantLane {
 			}
 
 			// 可路由 = 本行有采集对象（objectIds）+ 元数据可解 + 名字唯一 + 非 XML-only。
-			// 采集族真端无相机（camera-params.tsv 262/262 无调用；旧 XML 交互亦无 var 写），
+			// 采集族原版无相机（camera-params.tsv 262/262 无调用；旧 XML 交互亦无 var 写），
 			// 路由不再要求相机参数（原条件随 P4 相机设计撤销；原"无计数即无相机即不路由"的
 			// 拦截由本行无对象承接）。交付门在该行 itemRequirements 非空但解析失败时同样
 			// fail-closed（handIns 缺项即门永不放行）。
@@ -302,7 +302,7 @@ public final class SimpleCollectItemHandler implements NativeSystemGrantLane {
 				routed.add(questId);
 			}
 
-			// 链式接取窗（真端 0x1e 槽）与过场（真端 0x35 槽）按原文装载：两侧语义分别在构造函数尾部
+			// 链式接取窗（原版 0x1e 槽）与过场（原版 0x35 槽）按原文装载：两侧语义分别在构造函数尾部
 			// 与 onDialog 上消费，装载面不做任何推断。
 			// The chain window (retail slot 0x1e) and the cutscene (retail slot 0x35) load verbatim; their
 			// semantics are consumed in the constructor tail and in onDialog.
@@ -316,7 +316,7 @@ public final class SimpleCollectItemHandler implements NativeSystemGrantLane {
 			}
 		}
 
-		// 真端 0x1e 槽（交付节点）：接续下一任务 {@code con_quest} 的接取窗。本车道的接取路由按 NPC 建表，
+		// 原版 0x1e 槽（交付节点）：接续下一任务 {@code con_quest} 的接取窗。本车道的接取路由按 NPC 建表，
 		// 故该窗的等价物 = 「下一环的接取 NPC 恰是本行的交付 NPC」。本表内目标逐行验证，不闭环的行登记为
 		// fail-closed 证据（跨族目标由逐行对拍门按同一条不变量复算）；不新增第二套路由：下一环的接取路由
 		// 永远由它自己那一行提供。
@@ -358,7 +358,7 @@ public final class SimpleCollectItemHandler implements NativeSystemGrantLane {
 			return com.aionemu.gameserver.questEngine.retail.RetailQuestDriver.ensureLoaded()
 				.retailMetadataOf(questId).orElse(null);
 		} catch (java.io.IOException | RuntimeException e) {
-			// 元数据不可编译（真端休眠行 36017/46017/47112 的 minlevel=999）：按未解处理，fail-closed。
+			// 元数据不可编译（原版休眠行 36017/46017/47112 的 minlevel=999）：按未解处理，fail-closed。
 			// Uncompilable metadata (the retail dormant rows 36017/46017/47112 with minlevel=999)
 			// counts as unresolved and fails closed.
 			return null;
@@ -366,8 +366,8 @@ public final class SimpleCollectItemHandler implements NativeSystemGrantLane {
 	}
 
 	/**
-	 * 采集族的交付/发放物品：交付面 = {@code itemRequirements}（真端 {@code collect_item}），
-	 * 接取发放面 = {@code questWorkItems}（真端 {@code quest_work_item}）。
+	 * 采集族的交付/发放物品：交付面 = {@code itemRequirements}（原版 {@code collect_item}），
+	 * 接取发放面 = {@code questWorkItems}（原版 {@code quest_work_item}）。
 	 * <p>
 	 * Retail hand-in items ({@code collect_item}) and accept-time grants ({@code quest_work_item}).
 	 */
@@ -460,20 +460,20 @@ public final class SimpleCollectItemHandler implements NativeSystemGrantLane {
 		return unroutableQuestIds;
 	}
 
-	/** 接取名类别（真端哨兵 = 系统发放）。 / The acquire-name category (a sentinel means system-granted). */
+	/** 接取名类别（原版哨兵 = 系统发放）。 / The acquire-name category (a sentinel means system-granted). */
 	@Override
 	public RetailGrantKind grantKind(int questId) {
 		return grantKindByQuestId.getOrDefault(questId, RetailGrantKind.NPC);
 	}
 
-	/** 真端 {@code quest.xml} 的势力 id（{@code npcfaction_name}；无则 0）。 / The retail faction id, or 0. */
+	/** 原版 {@code quest.xml} 的势力 id（{@code npcfaction_name}；无则 0）。 / The retail faction id, or 0. */
 	@Override
 	public int factionId(int questId) {
 		return factionByQuestId.getOrDefault(questId, 0);
 	}
 
 	/**
-	 * 指定势力的当前可轮换任务 id（真端 {@code _faction_} 行 ∩ 本族路由集）。
+	 * 指定势力的当前可轮换任务 id（原版 {@code _faction_} 行 ∩ 本族路由集）。
 	 * Faction-rotation candidates of one faction: routed rows whose acquire name is {@code _faction_}.
 	 */
 	@Override
@@ -501,7 +501,7 @@ public final class SimpleCollectItemHandler implements NativeSystemGrantLane {
 		return routes(questId) && kind != RetailGrantKind.NPC && kind.grantable();
 	}
 
-	/** 阵营日常轮换资格（与 SimpleTalk 共用 {@link NativeFactionRotation} 的真端轴判定）。 /
+	/** 阵营日常轮换资格（与 SimpleTalk 共用 {@link NativeFactionRotation} 的原版轴判定）。 /
 	 * Rotation eligibility, sharing the retail axis adjudication with the SimpleTalk lane. */
 	@Override
 	public boolean factionRotationEligible(Player player, int questId, int factionId) {
@@ -545,7 +545,7 @@ public final class SimpleCollectItemHandler implements NativeSystemGrantLane {
 		return npcs == null || npcs.isEmpty() ? null : npcs.getFirst();
 	}
 
-	/** 任务的全部交付 NPC（真端逻辑名 + 客户端交付集合展开）。 / Every hand-in NPC of the quest. */
+	/** 任务的全部交付 NPC（原版逻辑名 + 客户端交付集合展开）。 / Every hand-in NPC of the quest. */
 	public List<Integer> rewardNpcs(int questId) {
 		return rewardNpcsByQuestId.getOrDefault(questId, List.of());
 	}
@@ -573,7 +573,7 @@ public final class SimpleCollectItemHandler implements NativeSystemGrantLane {
 		return List.copyOf(monsters);
 	}
 
-	/** 任务的接取发放物品 id（真端 {@code quest_work_item}）。 / The accept-time grant item ids of the quest (retail quest_work_item). */
+	/** 任务的接取发放物品 id（原版 {@code quest_work_item}）。 / The accept-time grant item ids of the quest (retail quest_work_item). */
 	public List<Integer> acceptGiveItems(int questId) {
 		List<ItemStack> items = acceptGiveByQuestId.get(questId);
 		if (items == null) {
@@ -586,7 +586,7 @@ public final class SimpleCollectItemHandler implements NativeSystemGrantLane {
 		return List.copyOf(ids);
 	}
 
-	/** 任务的交付物品 id（真端 {@code collect_item}，与相机计数同源）。 / The hand-in item ids of the quest (retail collect_item). */
+	/** 任务的交付物品 id（原版 {@code collect_item}，与相机计数同源）。 / The hand-in item ids of the quest (retail collect_item). */
 	public List<Integer> handInItems(int questId) {
 		List<ItemStack> items = handInByQuestId.get(questId);
 		if (items == null) {
@@ -605,9 +605,9 @@ public final class SimpleCollectItemHandler implements NativeSystemGrantLane {
 	}
 
 	/**
-	 * 任务的全部采集来源 → 真端交付列槽（对象与怪同源；证据/对拍面）。
+	 * 任务的全部采集来源 → 原版交付列槽（对象与怪同源；证据/对拍面）。
 	 * <p>
-	 * 槽 = 该来源产出的物品在交付列（{@code collect_itemN}）里的位置（真端数据契约面，供对拍；
+	 * 槽 = 该来源产出的物品在交付列（{@code collect_itemN}）里的位置（原版数据契约面，供对拍；
 	 * 采集推进本身是物品驱动，不消费该槽）；不在交付列的来源不出现（该行走 fail-closed）。
 	 * Every collect source (object or monster) of the quest mapped to its retail hand-in slot; the slot is
 	 * the position of the produced item among the hand-in columns. Sources without a hand-in column are
@@ -633,9 +633,9 @@ public final class SimpleCollectItemHandler implements NativeSystemGrantLane {
 	}
 
 	/**
-	 * 真端 {@code con_quest}（链式接取窗的下一环）；未声明返回 null。
+	 * 原版 {@code con_quest}（链式接取窗的下一环）；未声明返回 null。
 	 * <p>
-	 * 真端该列由交付节点上的 0x1e 槽消费（{@code mgr+0x1a8(player, con_quest)} = 下一环的接取窗：
+	 * 原版该列由交付节点上的 0x1e 槽消费（{@code mgr+0x1a8(player, con_quest)} = 下一环的接取窗：
 	 * ScriptDLL64 注册 {@code FUN_180cb2ac0(..., 0x1e, FUN_180d39370, 0)}，quest 1103 的 thunk 内是
 	 * {@code mgr+0x1a8(player, 1104)}）。本车道按 NPC 建接取路由，故只要下一环的接取 NPC 等于本行的
 	 * 交付 NPC，该窗即已由下一环自身那一行实现；{@link #unresolvedChainQuestIds()} 为空即全表闭环。
@@ -711,9 +711,9 @@ public final class SimpleCollectItemHandler implements NativeSystemGrantLane {
 	}
 
 	/**
-	 * 击杀采集怪（真端 {@code drop_monster_N} 的怪来源）：**零任务侧写入**。
+	 * 击杀采集怪（原版 {@code drop_monster_N} 的怪来源）：**零任务侧写入**。
 	 * <p>
-	 * 采集族真端无相机（camera-params.tsv 的 2463 个调用点中本族 262 行 0 命中，对照
+	 * 采集族原版无相机（camera-params.tsv 的 2463 个调用点中本族 262 行 0 命中，对照
 	 * SimpleHunt 1812/1863；旧 XML 的交互/击杀转换同样零 var 写）——击杀的任务物品由通用
 	 * 击杀掉落装配（{@code QuestService.getQuestDrop} → {@code isQuestDrop} 的
 	 * {@code collect_item} 上限判定）发放，本方法不做任何动作。
@@ -729,7 +729,7 @@ public final class SimpleCollectItemHandler implements NativeSystemGrantLane {
 	/**
 	 * 采集对象（{@code objectN}）被点击时的认领口（**零状态写入**）。
 	 * <p>
-	 * 真端采集族是物品驱动：交互由掉落链（对象 AI 的掉落列表，经 {@code QuestService.getQuestDrop}
+	 * 原版采集族是物品驱动：交互由掉落链（对象 AI 的掉落列表，经 {@code QuestService.getQuestDrop}
 	 * → {@code isQuestDrop} 的 {@code collect_item} 上限判定）发放任务物品，var0 保持 0
 	 * （250/262 行 {@code collect_progress=0}——客户端据此维持采集步与报告对白条件）。
 	 * 本方法只认领交互（返回 true 抑制通用页回落，配合 {@code QuestEngine} 的采集物先手），
@@ -759,7 +759,7 @@ public final class SimpleCollectItemHandler implements NativeSystemGrantLane {
 	}
 
 	/**
-	 * 该 NPC（掉落列来源的模板 id）的全部任务掉落条目（真端 quest.xml drop 列编译产物）。
+	 * 该 NPC（掉落列来源的模板 id）的全部任务掉落条目（原版 quest.xml drop 列编译产物）。
 	 * 由 {@code QuestEngine.questDrops} 聚合进掉落查询（对象交互与击杀装配共用同一条查询）。
 	 * <p>
 	 * Every quest drop entry keyed by the drop-column source's template id; aggregated by
@@ -770,7 +770,7 @@ public final class SimpleCollectItemHandler implements NativeSystemGrantLane {
 	}
 
 	/**
-	 * 真端掉落来源（对象或怪）→ 相机槽。槽 = {@code drop_item_K} 在交付列（{@code collect_itemN}）里的位置；
+	 * 原版掉落来源（对象或怪）→ 相机槽。槽 = {@code drop_item_K} 在交付列（{@code collect_itemN}）里的位置；
 	 * 掉落物不在交付列时该来源不定槽（调用方 fail-closed）。
 	 * <p>
 	 * Retail drop source (object or monster) to camera slot: the slot is the position of the drop's item
@@ -792,7 +792,7 @@ public final class SimpleCollectItemHandler implements NativeSystemGrantLane {
 	}
 
 	/**
-	 * 交付 NPC 集合：真端 {@code reward_npc_name} 是**逻辑名**，静态数据唯一命中即单元素；未命中
+	 * 交付 NPC 集合：原版 {@code reward_npc_name} 是**逻辑名**，静态数据唯一命中即单元素；未命中
 	 * （如 {@code <地图>_<势力名>} 复合名 LF4_GuardianOfDivine）时按客户端交付集合
 	 * （{@code quest_client_handin_npc_sets.xml}）逐元素展开——与退役前的
 	 * {@code RetailSimpleCollectItemDefinitionCompiler} 同一仲裁面；客户端未声明即 fail-closed。
@@ -821,7 +821,7 @@ public final class SimpleCollectItemHandler implements NativeSystemGrantLane {
 	}
 
 	/**
-	 * 中继链是否走完：talk_npc1..3 按表序推进（真端 {@code collect_progress} 的直接语义）。
+	 * 中继链是否走完：talk_npc1..3 按表序推进（原版 {@code collect_progress} 的直接语义）。
 	 * Whether the relay chain is done: talk_npc1..3 are visited in table order, which is exactly what
 	 * the retail {@code collect_progress} column states for this family.
 	 */
@@ -850,7 +850,7 @@ public final class SimpleCollectItemHandler implements NativeSystemGrantLane {
 	}
 
 	/**
-	 * 真端过场（槽 0x35 PlayMovie）：动作命中 {@code cs1_haction} 时按 CUTSCENE 类型下发，
+	 * 原版过场（槽 0x35 PlayMovie）：动作命中 {@code cs1_haction} 时按 CUTSCENE 类型下发，
 	 * 是状态机之外的副作用（不推进节点）。 / Retail cutscene: sent as a side effect when the
 	 * client action matches cs1_haction; it never advances the node.
 	 */
@@ -875,7 +875,7 @@ public final class SimpleCollectItemHandler implements NativeSystemGrantLane {
 		int objectId = npc != null ? npc.getObjectId() : 0;
 		int dialogId = env.getDialogId();
 
-		// 无目标领奖（真端 QuestDialog 无主键协议；任务窗/实时奖励槽的确认包不带 NPC 上下文）：
+		// 无目标领奖（原版 QuestDialog 无主键协议；任务窗/实时奖励槽的确认包不带 NPC 上下文）：
 		// 按 questId 结算 + 关窗收尾。owner 门由上面的 routes(questId) 保证。
 		// Targetless reward claim (the ownerless retail QuestDialog protocol used by the quest journal).
 		if (npcId == 0 && NativeTargetlessReward.claim(player, questId, dialogId, rewardFlow)) {
@@ -885,7 +885,7 @@ public final class SimpleCollectItemHandler implements NativeSystemGrantLane {
 		QuestState state = player.getQuestStateList().getQuestState(questId);
 		QuestStatus status = state != null ? state.getStatus() : QuestStatus.NONE;
 
-		// 可重复行在 COMPLETE 态同样开放接取面（真端 finishedcount < max_repeat_count 时再次可接；
+		// 可重复行在 COMPLETE 态同样开放接取面（原版 finishedcount < max_repeat_count 时再次可接；
 		// 与 Talk/ItemPlay/UseItem 同口径）。
 		// A repeatable row re-opens at COMPLETE (retail finishedcount < max_repeat_count), same
 		// shape as the Talk/ItemPlay/UseItem lanes.
@@ -896,7 +896,7 @@ public final class SimpleCollectItemHandler implements NativeSystemGrantLane {
 
 		if (status == QuestStatus.START) {
 			if (objectsByQuestId.containsKey(questId) && objectsByQuestId.get(questId).contains(npcId)) {
-				// 真端采集物交互（1103 旧 XML：TALK_TO_NPC npc-id=700105 started→started）无
+				// 原版采集物交互（1103 旧 XML：TALK_TO_NPC npc-id=700105 started→started）无
 				// after-commit 页；QE-044 口径=只发 PACKET_ONLY 状态同步（advance 内已发
 				// SM_QUEST_ACTION）。2026-10-04 修复：原实现对采集物件开对话窗（页10）导致
 				// 客户端 load fail（真机 1103 谷物袋子）。
@@ -921,7 +921,7 @@ public final class SimpleCollectItemHandler implements NativeSystemGrantLane {
 				// 动作随任务页而分：直翻型 = 1009；检查型 = 报告页的交付检查按钮族
 				// （39 `HACTION_CHECK_USER_HAS_QUEST_ITEM` / 20002 `..._SIMPLE`，真机 1103「拿出找到的
 				// 谷物袋子」为 39；本族 20002 页 93 行，只认 39 会静默落空，同 Talk 14110 缺陷）。
-				// 检查按钮未持满时下发客户端声明的失败页（select6=2716，真端失败应答文案）。
+				// 检查按钮未持满时下发客户端声明的失败页（select6=2716，原版失败应答文案）。
 				// 开门动作（-1/26）不推进、不跳步。
 				// Two-step report (adjudication a; the check-button family): 31 shows the declared confirm
 				// page; the confirm action advances — 1009 for the direct form, the report page's turn-in
@@ -979,7 +979,7 @@ public final class SimpleCollectItemHandler implements NativeSystemGrantLane {
 						|| dialogId == 108 || (dialogId >= 110 && dialogId <= 124)) {
 					int rewardIndex = dialogId >= 8 && dialogId <= 22 ? dialogId - 8 : 0;
 					if (rewardFlow.claim(env, rewardIndex).completed()) {
-						// 领奖收尾 = 真端 npc-complete finish=SELECTION_DIALOG（4801/4805）：回选择对话页
+						// 领奖收尾 = 原版 npc-complete finish=SELECTION_DIALOG（4801/4805）：回选择对话页
 						// （页 10，questId=0；9/28 旧引擎基线「状态=5 → 页=10」）。
 						// The claim tail follows the retail npc-complete finish=SELECTION_DIALOG: back to
 						// the selection dialog (page 10, questId=0; the legacy 9/28 log baseline).
@@ -992,7 +992,7 @@ public final class SimpleCollectItemHandler implements NativeSystemGrantLane {
 			return false;
 		}
 
-		// 表声明的过场触发动作（真端把 movie 挂在页动作上；本族两行 = SELECT1_1(1012)）：
+		// 表声明的过场触发动作（原版把 movie 挂在页动作上；本族两行 = SELECT1_1(1012)）：
 		// 不推进状态，但必须被服务（否则客户端停在页上），movie 由 onDialog 包装层下发。
 		// The declared cutscene trigger action (the retail page action; SELECT1_1(1012) for this family's
 		// two rows) advances no state but must be served, otherwise the client stalls on the page; the
@@ -1015,7 +1015,7 @@ public final class SimpleCollectItemHandler implements NativeSystemGrantLane {
 			return true;
 		}
 		if (dialogId == QuestDialogAction.ASK_QUEST_ACCEPT.id()) {
-			// 真端页动作 1007（ASK_QUEST_ACCEPT → mgr+0x1a0）：打开接取窗页 4；客户端未声明即 fail-closed。
+			// 原版页动作 1007（ASK_QUEST_ACCEPT → mgr+0x1a0）：打开接取窗页 4；客户端未声明即 fail-closed。
 			// Retail page action 1007 (mgr+0x1a0) opens ask window page 4; undeclared pages fail closed.
 			int askWindow = QuestDialogContract.loadDefault().askWindowPage(questId);
 			if (askWindow < 0) {
@@ -1036,11 +1036,11 @@ public final class SimpleCollectItemHandler implements NativeSystemGrantLane {
 			if (NativeQuestStartPort.instance().startTraced(player, questId, dialogId).started()) {
 				grantAcceptItems(player, questId);
 				if (dialogId == 1002) {
-					// 真端 cab520 0x3ea：check → 页 1003（接取确认页；客户端契约声明该页）。
+					// 原版 cab520 0x3ea：check → 页 1003（接取确认页；客户端契约声明该页）。
 					// Retail cab520 0x3ea: check → page 1003 (the declared accept-confirm page).
 					PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(objectId, PAGE_ACCEPTED, questId));
 				} else {
-					// 真端 cab520 0x4e20：check → 0x5d8 关窗（simple accept 无确认页；回页会让未声明
+					// 原版 cab520 0x4e20：check → 0x5d8 关窗（simple accept 无确认页；回页会让未声明
 					// 1003 的任务客户端 load fail——实机 2026-10-05 quest 14110 同类）。
 					// Retail cab520 0x4e20: check → 0x5d8 close (no confirm page; a page reply load-fails
 					// quests that never declared it, live 14110 class).
@@ -1055,7 +1055,7 @@ public final class SimpleCollectItemHandler implements NativeSystemGrantLane {
 			return true;
 		}
 		if (dialogId == 20001) {
-			// 真端 cab520 0x4e21：拒绝收尾 = 关窗（与 0x4e20 同族）。
+			// 原版 cab520 0x4e21：拒绝收尾 = 关窗（与 0x4e20 同族）。
 			// Retail cab520 0x4e21: refuse tail closes the dialog (same family as 0x4e20).
 			DialogService.closeDialog(player, objectId);
 			return true;
@@ -1074,11 +1074,11 @@ public final class SimpleCollectItemHandler implements NativeSystemGrantLane {
 	}
 
 	/**
-	 * 中继对话面（与 SimpleTalk/SimpleItemPlay 同形，真端 cabb10 同轴）：
+	 * 中继对话面（与 SimpleTalk/SimpleItemPlay 同形，原版 cabb10 同轴）：
 	 * <ul>
 	 *   <li>任务行打开（31/26/-1）= 该步页 SELECT2..4，**不推进**；尚未轮到的步零响应（不跳步）；</li>
 	 *   <li>推进 = SETPRO{K}（{@code 10000 + K - 1}）：步号等于 {@code K - 1} 时写 {@code var0 = K}
-	 *       （客户端任务书步骤同轴）并关窗（真端推进 after-commit = 0x5d8、零发页）；重复/乱序重放
+	 *       （客户端任务书步骤同轴）并关窗（原版推进 after-commit = 0x5d8、零发页）；重复/乱序重放
 	 *       无匹配转换 ⇒ 关窗兜底；</li>
 	 *   <li>子页动作（SELECT⟨n⟩_…，如 select2_1 = 1353）按客户端契约原样回发（带 questId）。</li>
 	 * </ul>
@@ -1104,7 +1104,7 @@ public final class SimpleCollectItemHandler implements NativeSystemGrantLane {
 			return false;
 		}
 		int step = index + 1;
-		// 选择对话续页（SELECT⟨n⟩_… 子页动作 = 页 id）：真端原样回发该页（QE-141 同形）；
+		// 选择对话续页（SELECT⟨n⟩_… 子页动作 = 页 id）：原版原样回发该页（QE-141 同形）；
 		// 契约未声明即零响应（引擎兜底同样零响应）。
 		// A selection sub-page action echoes its declared page back with the quest context (the
 		// QE-141 shape); undeclared pages stay silent.
@@ -1120,7 +1120,7 @@ public final class SimpleCollectItemHandler implements NativeSystemGrantLane {
 				PacketSendUtility.sendPacket(player,
 					new SM_QUEST_ACTION(questId, state.getStatus(), step));
 			}
-			// 推进 after-commit = 关窗（真端 cabb10 同轴：10000/10001/10002 → SetQuestProgress + 0x5d8，
+			// 推进 after-commit = 关窗（原版 cabb10 同轴：10000/10001/10002 → SetQuestProgress + 0x5d8，
 			// 零发页）；重复/乱序重放无匹配转换，同样以关窗兜底（与 SimpleTalk/SimpleItemPlay 同形）。
 			// The advance tail closes the window (retail 0x5d8, no page); a replayed advance gets the
 			// same close as its no-op tail.
@@ -1143,7 +1143,7 @@ public final class SimpleCollectItemHandler implements NativeSystemGrantLane {
 		return false;
 	}
 
-	/** 中继步页（真端 SELECT2..4 协议常量，与 SimpleTalk/SimpleItemPlay 同源）。 /
+	/** 中继步页（原版 SELECT2..4 协议常量，与 SimpleTalk/SimpleItemPlay 同源）。 /
 	 * The relay step pages (retail SELECT2..4 constants, shared with the Talk/ItemPlay lanes). */
 	private static final int[] RELAY_STEP_PAGES = {1352, 1693, 2034};
 
@@ -1179,7 +1179,7 @@ public final class SimpleCollectItemHandler implements NativeSystemGrantLane {
 	}
 
 	/**
-	 * 交付就绪检查（**无副作用**，两步报告的第一、二步共用）：中继链走完 + 持有交付物（真端 check_item）。
+	 * 交付就绪检查（**无副作用**，两步报告的第一、二步共用）：中继链走完 + 持有交付物（原版 check_item）。
 	 * 采集族无相机（2026-10-04 修复：原实现要求相机满值，物品驱动下该条件永真不成立即把门堵死）。
 	 * Side-effect-free hand-in readiness check shared by both report steps: the relay chain is done and
 	 * the hand-in items are held (the retail check_item gate). The collect family has no camera.
@@ -1276,7 +1276,7 @@ public final class SimpleCollectItemHandler implements NativeSystemGrantLane {
 		return healed;
 	}
 
-	/** 真端 {@code max_repeat_count} > 1 ⇒ 可重复（COMPLETE 态可再次开窗）。 / Repeatable per retail max_repeat_count. */
+	/** 原版 {@code max_repeat_count} > 1 ⇒ 可重复（COMPLETE 态可再次开窗）。 / Repeatable per retail max_repeat_count. */
 	private boolean repeatable(int questId) {
 		NativeQuestXmlTable.QuestRow row = NativeQuestXmlTable.instance().find(questId).orElse(null);
 		Integer maxRepeat = row == null ? null : row.integer("max_repeat_count");

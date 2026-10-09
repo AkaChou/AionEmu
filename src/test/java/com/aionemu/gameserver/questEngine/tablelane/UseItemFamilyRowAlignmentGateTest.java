@@ -31,7 +31,7 @@ import com.aionemu.gameserver.questEngine.retail.RetailQuestMetadataCompiler;
 /**
  * P5 两族（SimpleUseItem / SimpleItemPlay）的**逐行对齐门**（计划 §8.9）。
  * <p>
- * 以真端表与真端 {@code quest.xml} 的**独立重解析**为唯一事实（正则逐行，不复用
+ * 以原版表与原版 {@code quest.xml} 的**独立重解析**为唯一事实（正则逐行，不复用
  * {@link NativeQuestTableLoader} 的 DOM 路径），逐行对拍 native 装载与路由映射；再按同一判据独立复算
  * 路由集，必须与处理器路由集逐元素相等。任何一行漂移即红灯。
  * <p>
@@ -47,7 +47,7 @@ class UseItemFamilyRowAlignmentGateTest {
 		"aion/data/static_data/quest/retail/Quest_SimpleItemPlay.xml";
 	private static final String QUEST_XML_RESOURCE = "aion/data/static_data/quest/retail/quest.xml";
 
-	/** 真端表事实（全量复算）。 / Retail-table facts (whole-table recomputation). */
+	/** 原版表事实（全量复算）。 / Retail-table facts (whole-table recomputation). */
 	private static final int USE_ITEM_ROWS = 160;
 	private static final int USE_ITEM_TALK1 = 54;
 	private static final int USE_ITEM_TALK2 = 26;
@@ -81,7 +81,7 @@ class UseItemFamilyRowAlignmentGateTest {
 		"aion/data/static_data/quest/retail/Quest_SimpleSerialHunt.xml",
 		"aion/data/static_data/quest/retail/Quest_SimpleUseItem.xml",
 		"aion/data/static_data/quest/retail/Quest_SimpleItemPlay.xml");
-	/** 链式接取窗目标分布（真端全表冻结）：UseItem 0/30/2、ItemPlay 2/7/0。 / Chain-target distribution. */
+	/** 链式接取窗目标分布（原版全表冻结）：UseItem 0/30/2、ItemPlay 2/7/0。 / Chain-target distribution. */
 	private static final int USE_ITEM_CHAIN_IN_TABLE = 0;
 	private static final int USE_ITEM_CHAIN_SIBLING = 30;
 	private static final int USE_ITEM_CHAIN_NO_ROW = 2;
@@ -108,12 +108,12 @@ class UseItemFamilyRowAlignmentGateTest {
 		questXmlRaw = parseQuestXml(readResource(QUEST_XML_RESOURCE));
 	}
 
-	/** ① 行集与逐行字段：native 装载必须与真端表原文逐行一致（含长尾列）。 */
+	/** ① 行集与逐行字段：native 装载必须与原版表原文逐行一致（含长尾列）。 */
 	@Test
 	void everyUseItemRowIsMappedVerbatim() {
-		assertEquals(USE_ITEM_ROWS, useItemRaw.size(), "真端表行数漂移");
+		assertEquals(USE_ITEM_ROWS, useItemRaw.size(), "原版表行数漂移");
 		NativeQuestTableLoader loader = NativeQuestTableLoader.instance();
-		assertEquals(USE_ITEM_ROWS, loader.useItemSize(), "装载器行数必须等于真端表行数");
+		assertEquals(USE_ITEM_ROWS, loader.useItemSize(), "装载器行数必须等于原版表行数");
 		for (Map.Entry<Integer, Map<String, String>> entry : useItemRaw.entrySet()) {
 			int questId = entry.getKey();
 			Map<String, String> raw = entry.getValue();
@@ -137,7 +137,7 @@ class UseItemFamilyRowAlignmentGateTest {
 	}
 
 	/**
-	 * 链式接取窗（真端交付节点 0x1e 槽）：两族的 {@code con_quest} 行逐行对拍，且下一环必须在本行的
+	 * 链式接取窗（原版交付节点 0x1e 槽）：两族的 {@code con_quest} 行逐行对拍，且下一环必须在本行的
 	 * 交付 NPC 上可接取（UseItem 无接取面 ⇒ 目标一律在兄弟族；ItemPlay 有 2 行本表内目标）。
 	 * <p>
 	 * The chain window (retail slot 0x1e): both families map every {@code con_quest} row and every target
@@ -199,9 +199,9 @@ class UseItemFamilyRowAlignmentGateTest {
 
 	@Test
 	void everyItemPlayRowIsMappedVerbatim() {
-		assertEquals(ITEM_PLAY_ROWS, itemPlayRaw.size(), "真端表行数漂移");
+		assertEquals(ITEM_PLAY_ROWS, itemPlayRaw.size(), "原版表行数漂移");
 		NativeQuestTableLoader loader = NativeQuestTableLoader.instance();
-		assertEquals(ITEM_PLAY_ROWS, loader.itemPlaySize(), "装载器行数必须等于真端表行数");
+		assertEquals(ITEM_PLAY_ROWS, loader.itemPlaySize(), "装载器行数必须等于原版表行数");
 		for (Map.Entry<Integer, Map<String, String>> entry : itemPlayRaw.entrySet()) {
 			int questId = entry.getKey();
 			Map<String, String> raw = entry.getValue();
@@ -245,7 +245,7 @@ class UseItemFamilyRowAlignmentGateTest {
 		assertEquals(ITEM_PLAY_CUTSCENE, countDeclared(itemPlayRaw, "cutsceneid1", 0));
 	}
 
-	/** ③ 第 K 步发/扣列必须与第 K 个中继 NPC 同步声明（真端 codegen 槽语义前提）。 */
+	/** ③ 第 K 步发/扣列必须与第 K 个中继 NPC 同步声明（原版 codegen 槽语义前提）。 */
 	@Test
 	void stepScopedItemColumnsPairWithTheSameIndexRelayNpc() {
 		for (Map<String, String> raw : useItemRaw.values()) {
@@ -301,8 +301,8 @@ class UseItemFamilyRowAlignmentGateTest {
 		for (Map.Entry<Integer, Map<String, String>> entry : itemPlayRaw.entrySet()) {
 			int questId = entry.getKey();
 			Map<String, String> raw = entry.getValue();
-			// P5D 步 2/3 起长尾面（中继链 / 步发扣）已按真端接线 ⇒ 独立复算同样逐面判定，
-			// 不再按「有长尾即不路由」冻结；只有真端数据里无解的面才 fail-closed。
+			// P5D 步 2/3 起长尾面（中继链 / 步发扣）已按原版接线 ⇒ 独立复算同样逐面判定，
+			// 不再按「有长尾即不路由」冻结；只有原版数据里无解的面才 fail-closed。
 			// Since P5D the long-tail faces are wired per retail, so the recomputation checks every declared
 			// face; only faces the retail data cannot resolve stay fail-closed.
 			boolean resolvable = unique(value(raw, "acquired_npc_name"), npcs)
@@ -330,7 +330,7 @@ class UseItemFamilyRowAlignmentGateTest {
 	}
 
 	/**
-	 * ⑤ 门与页契约：{@code item_check} 行的门物品必须来自真端 quest.xml {@code check_itemK_L}，
+	 * ⑤ 门与页契约：{@code item_check} 行的门物品必须来自原版 quest.xml {@code check_itemK_L}，
 	 * 且中继步页（SELECT2..4）必须是客户端任务页声明的可渲染页。
 	 * The gate rows must read their items from the retail {@code quest.xml check_itemK_L} columns, and
 	 * every relay step page must be declared by the client task-page contract.
@@ -403,7 +403,7 @@ class UseItemFamilyRowAlignmentGateTest {
 		return itemId;
 	}
 
-	/** 该行真端 {@code check_itemK_L} 声明（按槽序）。 / The row's retail check_itemK_L cells. */
+	/** 该行原版 {@code check_itemK_L} 声明（按槽序）。 / The row's retail check_itemK_L cells. */
 	private static List<String> checkItems(int questId) {
 		Map<Integer, String> bySlot = new TreeMap<>();
 		for (Map.Entry<String, List<String>> field
@@ -441,7 +441,7 @@ class UseItemFamilyRowAlignmentGateTest {
 	}
 
 	/**
-	 * 按真端列序取 {@code prefixN}，**保留位置**（未声明的位为 null；与装载器的定长槽位同形状）。
+	 * 按原版列序取 {@code prefixN}，**保留位置**（未声明的位为 null；与装载器的定长槽位同形状）。
 	 * Numbered columns in retail order with fixed-length positions preserved (undeclared slots are
 	 * null, matching the loader's positional shape).
 	 */

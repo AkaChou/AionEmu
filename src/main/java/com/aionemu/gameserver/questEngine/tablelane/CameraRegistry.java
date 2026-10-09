@@ -10,12 +10,12 @@ import java.util.Set;
 import java.util.TreeMap;
 
 /**
- * 真端相机注册表（计划 §6.2：启动期由真端表构建、不可变、逐行可对拍；P0a 相机矩阵为对拍基线）。
+ * 原版相机注册表（计划 §6.2：启动期由原版表构建、不可变、逐行可对拍；P0a 相机矩阵为对拍基线）。
  * <p>
  * 每任务一行：宽型别（同任务禁止 6/10 位混用——{@code NATIVE_CAMERA_WIDTH_MIXED}）、槽→required
  * （超掩码即 {@code NATIVE_CAMERA_REQUIRED_EXCEEDS_MASK}）、fullValue 必须等于各槽满值按位组合
  * （{@code NATIVE_CAMERA_FULL_VALUE_INVALID}）；重复注册同一任务 fail-fast。
- * 真端基线：2463 调用点全 SimpleHunt、零混宽、零 fullValue 矛盾、零超掩码（2 例真端自身表/脚本
+ * 原版基线：2463 调用点全 SimpleHunt、零混宽、零 fullValue 矛盾、零超掩码（2 例原版自身表/脚本
  * 分歧 13912/23912 由表行数据层显式登记，不在本类兜底）。
  * <p>
  * The retail camera registry (plan §6.2: built from true-end tables at startup, immutable, row-by-row
@@ -60,7 +60,7 @@ public final class CameraRegistry {
 						+ " has no slot requirements");
 			}
 			if (rows.containsKey(spec.questId())) {
-				// 真端同一任务只出现一行（零混宽）；重复注册 = 数据矛盾。
+				// 原版同一任务只出现一行（零混宽）；重复注册 = 数据矛盾。
 				// Retail has exactly one row per quest (zero width mixing); duplicates are data conflicts.
 				throw new IllegalStateException("NATIVE_CAMERA_WIDTH_MIXED: quest " + spec.questId()
 						+ " registered more than once");
@@ -153,7 +153,7 @@ public final class CameraRegistry {
 				specs.add(loader.cameraSpec(row));
 			}
 		}
-		// 采集族（P4）相机注册已撤销（2026-10-04）：本族真端无相机——camera-params.tsv 的 2463 个
+		// 采集族（P4）相机注册已撤销（2026-10-04）：本族原版无相机——camera-params.tsv 的 2463 个
 		// 调用点中本族 262 行 0 命中（对照 SimpleHunt 1812/1863），旧 XML 的交互/击杀转换亦零 var 写；
 		// 采集为物品驱动（掉落列 + collect_item 上限，见 SimpleCollectItemHandler）。
 		// The collect-family (P4) camera registration is revoked (2026-10-04): the family has no retail

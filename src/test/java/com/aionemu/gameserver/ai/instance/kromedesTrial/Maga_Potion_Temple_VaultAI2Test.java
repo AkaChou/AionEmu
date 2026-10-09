@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * 马加之药水（730308）对话行为回归测试：入口页必须携带 questId 且以客户端契约 fail-closed；
- * SETPRO2 兜底只看钥匙——扣 1 把 + 第 2 步记 var0=2 + 切换罗勃斯汀 + 传送到真端别名点；
+ * SETPRO2 兜底只看钥匙——扣 1 把 + 第 2 步记 var0=2 + 切换罗勃斯汀 + 传送到原版别名点；
  * 无钥匙下发失败页；翻页/收尾按契约处理。
  * Regression coverage for Maga's Potion (730308): questId-carrying entry pages, key-only SETPRO2
  * fallback (consume one + mark var0=2 from step 1 + sync Robstin + teleport to the retail alias
@@ -74,7 +74,7 @@ class Maga_Potion_Temple_VaultAI2Test {
 		assertEquals(687.631104f, staticFloat("HOME_X"));
 		assertEquals(675.972412f, staticFloat("HOME_Y"));
 		assertEquals(201.040802f, staticFloat("HOME_Z"));
-		// 真端别名 dir 270° → 压缩 byte heading 90（度/3，0-120）。
+		// 原版别名 dir 270° → 压缩 byte heading 90（度/3，0-120）。
 		// Retail alias dir 270 deg -> compressed byte heading 90 (degrees/3, 0-120).
 		assertEquals((byte) 90, staticByte("HOME_HEADING"));
 	}

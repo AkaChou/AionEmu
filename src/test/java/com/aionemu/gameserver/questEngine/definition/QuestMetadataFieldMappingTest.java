@@ -15,9 +15,9 @@ class QuestMetadataFieldMappingTest {
 		QuestCatalog catalog = ProductionQuestDefinitions.catalog();
 		QuestsData questsData = QuestsData.fromCatalog(catalog);
 
-		// P8 重锚：typed 目录 = XML 保留行（实测 733；2026-10-03 b22e1e971 退役 7 件无真端/客户端登记的
+		// P8 重锚：typed 目录 = XML 保留行（实测 733；2026-10-03 b22e1e971 退役 7 件无原版/客户端登记的
 		// 自造任务后由 740 收缩）；native 行（七族 ∨ DD 1467 行）的模板轴由
-		// 真端 quest.xml 元数据（NativeQuestXmlTable / retailMetadataOf）承担，不在此目录内。
+		// 原版 quest.xml 元数据（NativeQuestXmlTable / retailMetadataOf）承担，不在此目录内。
 		// P8 re-anchor: the typed catalog holds only XML-retained rows (observed 733; shrank from 740 when
 		// b22e1e971 retired 7 self-made quests with no retail/client registration); native rows'
 		// template axis lives in the retail quest.xml metadata (NativeQuestXmlTable / retailMetadataOf).
@@ -53,7 +53,7 @@ class QuestMetadataFieldMappingTest {
 		}
 
 		// P8 重锚：扫描域 = typed 目录的 XML 保留行（733）；native 行的模板轴
-		// 由真端 quest.xml 元数据承担。以下下限全部按 XML 保留行人口重新冻结。
+		// 由原版 quest.xml 元数据承担。以下下限全部按 XML 保留行人口重新冻结。
 		// P8 re-anchor: the sweep domain is the typed catalog's XML-retained rows (733);
 		// native rows' template axis lives in the retail quest.xml metadata.
 		assertTrue(withRewards > 700, "expected > 700 quests with rewards, got " + withRewards);

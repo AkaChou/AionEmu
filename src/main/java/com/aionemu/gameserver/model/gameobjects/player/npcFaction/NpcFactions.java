@@ -298,7 +298,7 @@ public class NpcFactions {
 				int today = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
 				List<Integer> quests = new ArrayList<>(canonicalDailyQuestCandidates(catalog, faction.getId(),
 					questEngine::isHaveHandler,
-					// typed 元数据缺席 = 已切原生车道的行：资格判定改由 native 车道直读真端 quest.xml 轴。
+					// typed 元数据缺席 = 已切原生车道的行：资格判定改由 native 车道直读原版 quest.xml 轴。
 					// Missing typed metadata means the row moved to the native lane: eligibility comes
 					// from the native lane, which reads the retail quest.xml axes directly.
 					id -> catalog.findMetadata(id).isPresent()
@@ -339,7 +339,7 @@ public class NpcFactions {
 	}
 
 	/**
-	 * 原生车道的阵营日常候选（真端 {@code _faction_} 行 ∩ 路由集，且未由 typed 目录覆盖）。
+	 * 原生车道的阵营日常候选（原版 {@code _faction_} 行 ∩ 路由集，且未由 typed 目录覆盖）。
 	 * Native faction-rotation candidates: routed {@code _faction_} rows the typed catalog does not cover.
 	 */
 	private List<Integer> nativeFactionRotationCandidates(QuestCatalog catalog, int factionId, int today) {

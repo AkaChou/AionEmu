@@ -15,7 +15,7 @@ import com.aionemu.gameserver.questEngine.tablelane.SimpleTalkHandler;
  * 验证任务 2151 将客户端简易接取、报告和领奖路由保留在各自的正式 NPC owner。
  * <p>
  * P3 重锚（计划 §8.9）：旧 IR 形状断言（节点名/条件/动作/页链）随 SimpleTalk 切换批退场，
- * 本类改为真端表行锚——接取/交付 NPC、中继步、发扣物品、交付门均取自
+ * 本类改为原版表行锚——接取/交付 NPC、中继步、发扣物品、交付门均取自
  * {@code Quest_SimpleTalk.xml} + {@code quest.xml} 与静态数据（{@code npc_template} /
  * 物品 {@code name_desc}），native 处理器必须逐项一致。
  * <p>
@@ -28,7 +28,7 @@ class Quest2151ClientDialogAlignmentTest {
 	void keepsTheRetailSimpleStartReportAndRewardOwnersExclusive() {
 		SimpleTalkHandler handler = SimpleTalkHandler.instance();
 
-		// 真端行 2151：DF1_Noelen_DHM → DF1_Riam_E_DHM
+		// 原版行 2151：DF1_Noelen_DHM → DF1_Riam_E_DHM
 		assertTrue(handler.routes(2151), "2151 必须由 native 车道路由");
 		assertEquals(801035, handler.acquireNpc(2151), "接取 NPC");
 		assertEquals(801034, handler.rewardNpc(2151), "交付 NPC");

@@ -18,15 +18,15 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * 锁定 28313 的真端网格三槽合同与 2842/1841 的饱和领奖投影。
+ * 锁定 28313 的原版网格三槽合同与 2842/1841 的饱和领奖投影。
  * <p>
- * 28313 已在 P0c-9 退役为真端文件驱动（{@code <class>_selectable_reward} 职业奖励区块落地后采纳）。
+ * 28313 已在 P0c-9 退役为原版文件驱动（{@code <class>_selectable_reward} 职业奖励区块落地后采纳）。
  * 客户端合同不变：{@code Quest_unpacked/quest_monster.csv} 三条 0/1 计数记录（行 0..2 各占
- * {@code SECTION_n<1}），真端形状是三槽 6 位计数网格（var0/var1/var2 @ 0/6/12），每只（组）怪只推
- * 自己那一槽、**各维度独立推进（乱序击杀也计数——真端网格语义）**、领奖投影三槽全 1
+ * {@code SECTION_n<1}），原版形状是三槽 6 位计数网格（var0/var1/var2 @ 0/6/12），每只（组）怪只推
+ * 自己那一槽、**各维度独立推进（乱序击杀也计数——原版网格语义）**、领奖投影三槽全 1
  * （REWARD/4161）、完成段按 11 职业条件展开 27 件职业物品 × 确认段 dialogId 8..23。
  * 旧 XML 的"步骤号单槽 + 乱序不计数 + EnterWorld 存档自愈边"是历史错误/历史形状，已按
- * 真端权威退役；自愈边按 P0c-6 先例登记进 p0c6-legacy-save-normalization.tsv（可选 DB 归一化）。
+ * 原版权威退役；自愈边按 P0c-6 先例登记进 p0c6-legacy-save-normalization.tsv（可选 DB 归一化）。
  * 节点定位一律按 (状态, 打包投影)，不再依赖旧标签（started/k1..k3）。
  * <p>
  * 2842（天族镜像 1841）：客户端门控是 {@code SECTION_0<39; SECTION_5==0} 的单行狩猎计数，var0 是 0..39 的
@@ -45,9 +45,9 @@ class CounterChainTripletContractTest {
 	}
 
 	/**
-	 * 18033/28033 已在 P0c-4 退役为真端区域发放（{@code _area_}）：真端形状是"产性格子
+	 * 18033/28033 已在 P0c-4 退役为原版区域发放（{@code _area_}）：原版形状是"产性格子
 	 * （{@code a0b0c0..a1b1c1}）+ SystemGrant 边"，不是本 XML 的链式 {@code k1..k3} 阶梯，
-	 * 也不再有点名接取 NPC；其真端 IR 由 {@code retail-simple-hunt-adjudicated-ir-fingerprints.tsv} 冻结，
+	 * 也不再有点名接取 NPC；其原版 IR 由 {@code retail-simple-hunt-adjudicated-ir-fingerprints.tsv} 冻结，
 	 * 区域绑定与系统发放边由 {@code RetailSystemGrantDispatchTest} 守。本门禁只锁仍由 XML 承载的行。
 	 * 18033/28033 retired to the retail area grant in P0c-4: the retail shape is a product grid plus a
 	 * {@code SystemGrant} edge (no offer NPC), frozen separately; this gate keeps the XML-owned rows.
@@ -94,7 +94,7 @@ class CounterChainTripletContractTest {
 				layout.fields().stream().map(BitField::name).collect(Collectors.toSet()),
 				() -> "quest " + contract.questId() + " must declare exactly three counter slots");
 
-			/* 真端网格：三槽 {0,1} 全组合 8 个 START 节点 + NONE/0 + REWARD/4161 + COMPLETE/0。 */
+			/* 原版网格：三槽 {0,1} 全组合 8 个 START 节点 + NONE/0 + REWARD/4161 + COMPLETE/0。 */
 			/* Retail grid: all eight {0,1}^3 START combos plus NONE/0, REWARD/4161, COMPLETE/0. */
 			for (int var0 = 0; var0 <= 1; var0++) {
 				for (int var1 = 0; var1 <= 1; var1++) {
@@ -141,8 +141,8 @@ class CounterChainTripletContractTest {
 	void outOfOrderKillsAdvanceOnlyTheirOwnSlot() throws Exception {
 		for (Contract contract : CONTRACTS) {
 			CompiledQuestDefinition compiled = definition(contract.questId());
-			/* 真端网格语义：各维度独立推进——任意网格状态下，组 i 的怪把 var_i 0→1、
-			 * 其余槽保持不变；旧 XML 的"乱序不计数"链式约束已按真端权威退役。 */
+			/* 原版网格语义：各维度独立推进——任意网格状态下，组 i 的怪把 var_i 0→1、
+			 * 其余槽保持不变；旧 XML 的"乱序不计数"链式约束已按原版权威退役。 */
 			/* Retail grid semantics: dimensions advance independently — a group-i kill flips var_i
 			 * from any grid state; the legacy "out-of-order kills do not count" chain is retired. */
 			for (int index = 0; index < contract.killGroups().size(); index++) {
@@ -186,8 +186,8 @@ class CounterChainTripletContractTest {
 	void reportAndCompletionStayOnTheJournalRowNpc() throws Exception {
 		for (Contract contract : CONTRACTS) {
 			QuestDefinition definition = definition(contract.questId()).definition();
-			/* 真端形状按 (状态, 打包投影) 定位边：客户端任务书行 0（接取）/行 1（报告+领奖）
-			 * 都点名 Nineveh(804821)，真端合成定义必须保持同一 NPC 归属。 */
+			/* 原版形状按 (状态, 打包投影) 定位边：客户端任务书行 0（接取）/行 1（报告+领奖）
+			 * 都点名 Nineveh(804821)，原版合成定义必须保持同一 NPC 归属。 */
 			/* Retail shape, located by (status, packed projection): client journal rows 0 (accept)
 			 * and 1 (report + reward) both name Nineveh(804821); the retail definition keeps that. */
 			assertEquals(Set.of(contract.offerNpc()),
@@ -239,7 +239,7 @@ class CounterChainTripletContractTest {
 	void legacySaveHealEdgesAreRetiredWithTheXml() throws Exception {
 		for (Contract contract : CONTRACTS) {
 			CompiledQuestDefinition compiled = definition(contract.questId());
-			/* 真端网格不表达旧 XML 的 EnterWorld 存档自愈边（步骤号→行号归一）：登录边按 P0c-6 先例
+			/* 原版网格不表达旧 XML 的 EnterWorld 存档自愈边（步骤号→行号归一）：登录边按 P0c-6 先例
 			 * 登记进 p0c6-legacy-save-normalization.tsv（可选一次性 DB 归一化），不再编入定义。
 			 * The retail grid drops the legacy EnterWorld save-heal edges; they are registered
 			 * per the P0c-6 precedent instead of being compiled. */
@@ -260,7 +260,7 @@ class CounterChainTripletContractTest {
 	void ninevehKeepsEveryClassRewardBranch() throws Exception {
 		QuestDefinition definition = definition(28313).definition();
 		ProgressLayout layout = definition.progressLayout();
-		/* 完成段 = 源投影 REWARD/4161、目标投影 COMPLETE/0 的全部确认路由（真端规范确认段 8..23）。 */
+		/* 完成段 = 源投影 REWARD/4161、目标投影 COMPLETE/0 的全部确认路由（原版规范确认段 8..23）。 */
 		/* Completions = every confirm route from REWARD/4161 to COMPLETE/0 (retail confirm range 8..23). */
 		List<QuestTransition> completions = definition.transitions().stream()
 			.filter(route -> projectionStatus(definition, layout, route.sourceNode()) == QuestStatus.REWARD
@@ -276,7 +276,7 @@ class CounterChainTripletContractTest {
 			fullConfirmRange.add(id);
 		}
 		assertEquals(fullConfirmRange, confirmDialogs, "28313 must keep the retail confirm range 8..23");
-		/* 27 个 (职业, 物品) 分支：真端表逐职业点名的 27 件物品全部保留（× 16 确认 id = 432 条路由）。 */
+		/* 27 个 (职业, 物品) 分支：原版表逐职业点名的 27 件物品全部保留（× 16 确认 id = 432 条路由）。 */
 		/* 27 (class, item) branches: every retail-named class item survives (×16 confirm ids = 432 routes). */
 		Map<String, Set<Integer>> itemsByClass = new LinkedHashMap<>();
 		for (QuestTransition route : completions) {
@@ -304,7 +304,7 @@ class CounterChainTripletContractTest {
 			"28313 must keep all 27 class reward items");
 	}
 
-	/** 按 (状态, 打包投影) 找节点投影（真端网格标签与旧标签不同）。 / Node lookup by (status, packed). */
+	/** 按 (状态, 打包投影) 找节点投影（原版网格标签与旧标签不同）。 / Node lookup by (status, packed). */
 	private static Map<String, Integer> projectionAt(QuestDefinition definition, QuestStatus status,
 			int packed) {
 		return definition.nodes().stream()
@@ -405,7 +405,7 @@ class CounterChainTripletContractTest {
 	}
 
 	private static CompiledQuestDefinition definition(int questId) {
-		// 生产视图：XML 目录 + 真端 overlay（退役行返回真端形状，未退役行返回 XML）。
+		// 生产视图：XML 目录 + 原版 overlay（退役行返回原版形状，未退役行返回 XML）。
 		// Production view: XML directory plus the retail overlay.
 		return ProductionQuestDefinitions.definition(questId);
 	}

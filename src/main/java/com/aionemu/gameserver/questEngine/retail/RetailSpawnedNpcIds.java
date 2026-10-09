@@ -12,7 +12,7 @@ import java.util.regex.Pattern;
 
 /**
  * 世界实刷 npc id 集（懒加载一次）：扫 {@code static_data/spawns/**} 与 {@code static_data/town_spawns/**}
- * 的 {@code npc_id="N"}。消费方是真端元数据编译器的掉落死 id 修复——真端模板 id 可能已退役、
+ * 的 {@code npc_id="N"}。消费方是原版元数据编译器的掉落死 id 修复——原版模板 id 可能已退役、
  * 同显示名兄弟 id 才是实刷体（2631 实证：213775 已退役、实刷 236924）。
  * <p>
  * The set of world-spawned npc ids (loaded lazily once) by scanning {@code npc_id="N"} across

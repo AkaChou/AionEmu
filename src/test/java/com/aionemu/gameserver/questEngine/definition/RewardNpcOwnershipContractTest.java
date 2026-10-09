@@ -220,7 +220,7 @@ class RewardNpcOwnershipContractTest {
 	}
 
 	/**
-	 * 生产定义入口：本族里 30610 等已退役 XML，定义改由真端表合成；未退役 id 仍回落到 XML 目录。
+	 * 生产定义入口：本族里 30610 等已退役 XML，定义改由原版表合成；未退役 id 仍回落到 XML 目录。
 	 * Production entry point: retired ids such as 30610 resolve through the retail table, while
 	 * non-retired ids still fall back to the XML directory.
 	 */

@@ -31,7 +31,7 @@ class MirrorPairRewardRowContractTest {
 	}
 
 	/**
-	 * P0c-6 起由真端 SimpleHunt 表驱动的镜像对（16960/26960）：var0 变成击杀计数（真端 count1=1），
+	 * P0c-6 起由原版 SimpleHunt 表驱动的镜像对（16960/26960）：var0 变成击杀计数（原版 count1=1），
 	 * 任务书行由客户端 {@code SECTION_0} 门控推导，因此没有"存档行号"可漂移，也不得保留修复边
 	 * （P3 既有裁定：修复边是 AionEmu 历史包袱）。
 	 * Retail-driven mirror pair since P0c-6: var0 is a kill counter and the journal row is derived from
@@ -40,9 +40,9 @@ class MirrorPairRewardRowContractTest {
 	private static final List<Integer> RETAIL_DRIVEN = List.of(16960, 26960);
 
 	private static final List<Contract> CONTRACTS = List.of(
-		/* QE-054 批次收口（2026-10-07 全量审计移出 8 行）：与第三批同根因——真端 0x100 状态推进不写轴，
+		/* QE-054 批次收口（2026-10-07 全量审计移出 8 行）：与第三批同根因——原版 0x100 状态推进不写轴，
 		 * 客户端 REWARD 态按 [%N] 行门槛自行显示报告行，「末行是领奖行 ⇒ 投影抬到末行」对玩法步后进
-		 * REWARD 的任务不成立。8 行已回归真端/legacy 权威值并反转自愈边，基线由
+		 * REWARD 的任务不成立。8 行已回归原版/legacy 权威值并反转自愈边，基线由
 		 * RewardRowProjectionRegressionTest 锁定（24052/28602 此前已由 itemUseArea 审计修复，本次移出名单）。
 		 * QE-054 close-out (8 rows removed by the 2026-10-07 full audit): same root cause as batch three —
 		 * retail 0x100 advances never touch the axis and the client gates the report row itself, so lifting
@@ -258,7 +258,7 @@ class MirrorPairRewardRowContractTest {
 	}
 
 	/**
-	 * 真端驱动的镜像对（2026-10-07 重锚；原生产 overlay 视图随直驱切换退场）：退役行无 IR，
+	 * 原版驱动的镜像对（2026-10-07 重锚；原生产 overlay 视图随直驱切换退场）：退役行无 IR，
 	 * 无 source 的 enter-world 修复边在结构上不可能；守卫 = 每个名单行必须确属退役
 	 * （防名单陈旧静默缩水）。领奖投影口径由 native 车道门承担。
 	 * The retail-driven mirror pair (re-anchored 2026-10-07): with no IR left a source-less repair

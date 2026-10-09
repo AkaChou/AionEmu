@@ -239,7 +239,7 @@ public class CM_DIALOG_SELECT extends AionClientPacket {
 				&& questEngine.onDialog(new QuestEnv(null, player, questId, dialogId))) {
 			// 目标对象不可解析（客户端在任务窗/实时奖励界面把上一个交互对象或本地引用带进包；
 			// 2026-10-07 实机 13830：npcId=0 targetObj=151512 动作=110 曾被静默丢弃）：奖励窗确认动作
-			// 仍按 questId 路由到 owner 族结算——真端无主键协议（QuestDialogAction.isRewardWindowAction
+			// 仍按 questId 路由到 owner 族结算——原版无主键协议（QuestDialogAction.isRewardWindowAction
 			// 的契约注释：这些动作必须按 questId + action 解析，不能把包内对象当作完成 NPC 绑定）；
 			// 引擎内保持状态/owner/动作门，未认领零副作用（与原静默丢弃等价）。
 			// The carried object is unresolvable: a reward-window confirmation is still routed by quest id

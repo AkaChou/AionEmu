@@ -28,14 +28,14 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * 早期天族任务回归：已随真端表切换到 native 车道的行（1117/1118/1131/1141/1156/1158/1414/1691）
- * 只按真端表行 + quest.xml + 客户端页契约断言；其余任务仍走 IR 车道（1311/1647/1371/1561/1612/1626/
+ * 早期天族任务回归：已随原版表切换到 native 车道的行（1117/1118/1131/1141/1156/1158/1414/1691）
+ * 只按原版表行 + quest.xml + 客户端页契约断言；其余任务仍走 IR 车道（1311/1647/1371/1561/1612/1626/
  * 1114/1464/1111/1162），断言面不变。
  * <p>
  * P3 re-anchor (plan §8.9): the rows that switched to the native lane assert retail-row, quest.xml and
  * client-page facts only; the remaining quests keep their IR assertions.
  * <p>
- * 2026-10-05 语义重锚（对实机修正批的现行为）：真端 cab520 两支接取（1002/20000）均发物，尾部
+ * 2026-10-05 语义重锚（对实机修正批的现行为）：原版 cab520 两支接取（1002/20000）均发物，尾部
  * 分别为页 1003 与关窗（0x5d8）；中继推进（10000..02）after-commit = 关窗零发页；报告为两步语义
  * （31 只发契约确认页，1009 推进）；1137 随 P4 采集族改为原生面断言。
  * 2026-10-05 semantic re-anchor against the live-verified batch behavior: both cab520 accept branches
@@ -44,7 +44,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 class EarlyElyosQuestRegressionTest {
 	/**
-	 * 1118（폴리니아의 연고）：真端 cab520 的 1002/20000 两支接取均发放 {@code give_item}
+	 * 1118（폴리니아의 연고）：原版 cab520 的 1002/20000 两支接取均发放 {@code give_item}
 	 * （{@code ITEM_QUEST_1118A} ×1），尾部 = 页 1003 / 关窗（0x3ea / 0x4e20）；交付门由表的
 	 * {@code item_check} 声明，该行未声明 ⇒ 中继交还不回收工作物品。
 	 * 1118: both retail accept branches grant the work item, with the page-1003 and close tails;
@@ -58,19 +58,19 @@ class EarlyElyosQuestRegressionTest {
 
 		assertEquals(203059, handler.acquireNpc(1118), "接取 NPC（Polinia）");
 		assertEquals(new SimpleTalkHandler.ItemStack(182200224, 1), handler.acceptGiveItem(1118),
-			"真端 give_item = ITEM_QUEST_1118A ×1");
+			"原版 give_item = ITEM_QUEST_1118A ×1");
 		assertEquals(1, handler.relayCount(1118), "中继步数 = 1（Kustanon 203070）");
-		assertTrue(handler.workItems(1118).isEmpty(), "真端行未声明 item_check：交付门不生效");
+		assertTrue(handler.workItems(1118).isEmpty(), "原版行未声明 item_check：交付门不生效");
 
-		// 1002（QUEST_ACCEPT_1，真端 0x3ea）：建档 + 发放 give_item + 接取确认页 1003。
+		// 1002（QUEST_ACCEPT_1，原版 0x3ea）：建档 + 发放 give_item + 接取确认页 1003。
 		Player plainAccept = NativeTalkFixture.player(Race.ELYOS, PlayerClass.WARRIOR, 20);
 		NativeTalkFixture.clearPackets(plainAccept);
 		assertTrue(itemHandler.onDialog(NativeTalkFixture.dialog(plainAccept, 203059, 1118, 1002)), "1002 接取");
 		assertEquals(QuestStatus.START, plainAccept.getQuestStateList().getQuestState(1118).getStatus());
 		NativeTalkFixture.assertOnlyDialogPage(plainAccept, SimpleTalkHandler.PAGE_ACCEPTED);
-		assertEquals(List.of("give:182200224:1"), inventory.calls(), "1002 真端同发 give_item（两支均发物）");
+		assertEquals(List.of("give:182200224:1"), inventory.calls(), "1002 原版同发 give_item（两支均发物）");
 
-		// 20000（真端 0x4e20）：建档 + 发放工作物品 + 关窗收尾（无确认页；实机 14110）。
+		// 20000（原版 0x4e20）：建档 + 发放工作物品 + 关窗收尾（无确认页；实机 14110）。
 		inventory.clear();
 		Player itemAccept = NativeTalkFixture.player(Race.ELYOS, PlayerClass.WARRIOR, 20);
 		NativeTalkFixture.clearPackets(itemAccept);
@@ -81,8 +81,8 @@ class EarlyElyosQuestRegressionTest {
 	}
 
 	/**
-	 * 1118 的交付段：中继步 1（Kustanon）推进到步 1（真端 0x5d8 关窗零发页），交付 NPC
-	 * Melpone(203079) 的 1009 报告在中继全满后翻 REWARD 并下发奖励窗；真端行无 item_check ⇒
+	 * 1118 的交付段：中继步 1（Kustanon）推进到步 1（原版 0x5d8 关窗零发页），交付 NPC
+	 * Melpone(203079) 的 1009 报告在中继全满后翻 REWARD 并下发奖励窗；原版行无 item_check ⇒
 	 * 报告不校验也不扣除工作物品。
 	 * 1118's hand-in: relay step 1 advances (retail 0x5d8 close, zero page), then the report at
 	 * Melpone(203079) flips REWARD with the reward window; the row has no item_check.
@@ -97,13 +97,13 @@ class EarlyElyosQuestRegressionTest {
 		assertTrue(handler.relaysForNpc(203070).stream()
 				.anyMatch(relay -> relay.questId() == 1118 && relay.step() == 1),
 			"中继步 1 挂在 Kustanon 203070");
-		// 20000 分支会经物品端口发放，走假背包处理器（真端 cab520 give_item 分支）。
+		// 20000 分支会经物品端口发放，走假背包处理器（原版 cab520 give_item 分支）。
 		assertTrue(itemHandler.onDialog(NativeTalkFixture.dialog(player, 203059, 1118, 20000)), "接取");
 
 		NativeTalkFixture.clearPackets(player);
 		assertTrue(handler.onDialog(NativeTalkFixture.dialog(player, 203070, 1118, 10000)), "中继步 1");
 		assertEquals(1, player.getQuestStateList().getQuestState(1118).getQuestVars().getQuestVars(), "步号 = 1");
-		// 中继推进 after-commit = 真端关窗零发页（0x5d8）。
+		// 中继推进 after-commit = 原版关窗零发页（0x5d8）。
 		NativeTalkFixture.assertCloseDialog(player);
 
 		NativeTalkFixture.clearPackets(player);
@@ -115,7 +115,7 @@ class EarlyElyosQuestRegressionTest {
 	/**
 	 * 1131（요새 내부 대화 퀘스트）：接取 Hyacinte(203097) 发 ITEM_QUEST_1131A(182200506)（20000
 	 * 尾部 = 关窗），中继 Shugo_LF1a_01(799093) 的 10000 换手（发 DOC_QUEST_1131B 182200507、
-	 * 扣回 1131A；真端 0x5d8 关窗零发页），交付 Nadaelo(203101) 报告翻 REWARD；con_quest = 1132。
+	 * 扣回 1131A；原版 0x5d8 关窗零发页），交付 Nadaelo(203101) 报告翻 REWARD；con_quest = 1132。
 	 * 1131: Hyacinte grants 1131A on accept (20000 tail closes), the Shugo relay swaps it for 1131B
 	 * (retail 0x5d8 close, zero page), Nadaelo hands in.
 	 */
@@ -154,7 +154,7 @@ class EarlyElyosQuestRegressionTest {
 
 	/**
 	 * 1156（톨바스 마을 도난 사건 &lt;2&gt;）：接取 Santenius(203128)，中继 BrownieLump_Q43(700003) 步骤 1，
-	 * 交付 Gapir(798003)；真端行无 give/remove、无 item_check ⇒ 全程无物品通道；con_quest = 1157。
+	 * 交付 Gapir(798003)；原版行无 give/remove、无 item_check ⇒ 全程无物品通道；con_quest = 1157。
 	 * 1156: Santenius acquires, the Brownie relays, Gapir hands in; the row declares no item channels.
 	 */
 	@Test
@@ -191,9 +191,9 @@ class EarlyElyosQuestRegressionTest {
 		assertEquals(203128, handler.rewardNpc(1158), "交付 NPC（Santenius）");
 		assertEquals(new SimpleTalkHandler.ItemStack(182200502, 1), handler.stepGiveItem(1158, 1), "步内发放印章");
 		assertNull(handler.stepRemoveItem(1158, 1), "步内无扣除");
-		assertTrue(handler.workItems(1158).isEmpty(), "真端行未声明 item_check：交付门不生效");
+		assertTrue(handler.workItems(1158).isEmpty(), "原版行未声明 item_check：交付门不生效");
 		assertEquals("Q1157", NativeQuestXmlTable.instance().require(1158).text("finished_quest_cond1"),
-			"真端前置轴");
+			"原版前置轴");
 
 		NativeTalkFixture.completePrerequisites(player, 1157);
 		NativeTalkFixture.clearPackets(player);
@@ -228,7 +228,7 @@ class EarlyElyosQuestRegressionTest {
 		assertTrue(handler.workItems(1141).isEmpty(), "无 item_check 门");
 		assertNull(handler.acceptGiveItem(1141), "接取无发放");
 		assertEquals("Q1143", NativeQuestXmlTable.instance().require(1141).text("finished_quest_cond1"),
-			"真端前置轴");
+			"原版前置轴");
 
 		NativeTalkFixture.completePrerequisites(player, 1143);
 		NativeTalkFixture.clearPackets(player);
@@ -304,7 +304,7 @@ class EarlyElyosQuestRegressionTest {
 
 	/**
 	 * 1414（카이단 괴멸작전 시작）：接取/交付同主 Aeolus(203989)，中继 LF2_Gear_Q1414(700175) 步 1 发
-	 * ITEM_QUEST_1414A(182201349)；quest.xml 前置 Q1413 未完成时真端拒接（native fail-closed）。
+	 * ITEM_QUEST_1414A(182201349)；quest.xml 前置 Q1413 未完成时原版拒接（native fail-closed）。
 	 * 1414: same-NPC owners, one relay that grants 1414A; acquisition fails closed without Q1413.
 	 */
 	@Test
@@ -316,24 +316,24 @@ class EarlyElyosQuestRegressionTest {
 
 		assertTrue(handler.routes(1414), "1414 必须由 native 车道路由");
 		assertEquals(203989, handler.acquireNpc(1414), "接取 NPC（Aeolus）");
-		assertEquals(203989, handler.rewardNpc(1414), "交付 NPC（真端同主）");
+		assertEquals(203989, handler.rewardNpc(1414), "交付 NPC（原版同主）");
 		assertEquals(1, handler.relayCount(1414), "中继步数 = 1");
 		assertTrue(handler.relaysForNpc(700175).stream()
 				.anyMatch(relay -> relay.questId() == 1414 && relay.step() == 1),
 			"中继步 1 挂在 LF2_Gear_Q1414");
 		assertEquals(new SimpleTalkHandler.ItemStack(182201349, 1), handler.stepGiveItem(1414, 1), "步内发放");
-		assertTrue(handler.workItems(1414).isEmpty(), "真端行未声明 item_check：交付门不生效");
+		assertTrue(handler.workItems(1414).isEmpty(), "原版行未声明 item_check：交付门不生效");
 		assertEquals("Q1413", NativeQuestXmlTable.instance().require(1414).text("finished_quest_cond1"),
-			"真端前置轴");
+			"原版前置轴");
 
-		// 真端 quest.xml 声明 bm_restrict_category=1 ⇒ 账号限制位 20（quest_acquire1）；本服无计费来源
-		// ⇒ 限制位集为空（真端全订阅账号同形）⇒ 该行按真端可接取（被限制账号的拒绝面见
+		// 原版 quest.xml 声明 bm_restrict_category=1 ⇒ 账号限制位 20（quest_acquire1）；本服无计费来源
+		// ⇒ 限制位集为空（原版全订阅账号同形）⇒ 该行按原版可接取（被限制账号的拒绝面见
 		// NativeQuestStartPortTest 的位集注入用例）。
 		// bm_restrict_category=1 maps to account-restriction bit 20 (quest_acquire1); this server has no
 		// billing source, so the bitmap is empty and the row is acquirable (the deny path is covered by
 		// the injected-bitmap case in NativeQuestStartPortTest).
 		assertEquals(1, NativeQuestStartPort.restrictCategory(NativeQuestXmlTable.instance().require(1414)),
-			"真端 bm 轴");
+			"原版 bm 轴");
 		// 前置 Q1413 未完成时拒接（bm 轴坐实后由前置轴接管 fail-closed）。
 		// Without prerequisite Q1413 the acquire is refused (the prerequisite axis takes over).
 		NativeTalkFixture.clearPackets(player);
@@ -347,7 +347,7 @@ class EarlyElyosQuestRegressionTest {
 			"限制位集为空 ⇒ 建档 START");
 		NativeTalkFixture.assertOnlyDialogPage(player, SimpleTalkHandler.PAGE_ACCEPTED);
 
-		// 接取后的形状（中继发物 → 报告领奖）沿真端行继续验证。
+		// 接取后的形状（中继发物 → 报告领奖）沿原版行继续验证。
 		// The relay/report machinery continues on the row created through the real acquire axis.
 		NativeTalkFixture.clearPackets(player);
 		assertTrue(itemHandler.onDialog(NativeTalkFixture.dialog(player, 700175, 1414, 10000)), "中继步 1");
@@ -374,21 +374,21 @@ class EarlyElyosQuestRegressionTest {
 		route(flowers, "flowers-delivered", "reward", new QuestEvent.TalkToNpc(730039, -1));
 		assertNoUnacceptedObjectRoute(flowers, 730039);
 
-		// 1561 已随 P5 切到 SimpleUseItem 原生车道：断言面改读真端行 + 真端 quest.xml + 客户端页契约。
+		// 1561 已随 P5 切到 SimpleUseItem 原生车道：断言面改读原版行 + 原版 quest.xml + 客户端页契约。
 		// 1561 switched to the SimpleUseItem native lane in P5: its assertions now read the retail row,
 		// the retail quest.xml and the client page contract only.
 		SimpleUseItemHandler chest = SimpleUseItemHandler.instance();
 		assertEquals(List.of(700188), chest.rewardNpcs(1561),
-			"真端 reward_npc_name = LF3_JewelBox_Q1561(700188)");
-		assertTrue(chest.relayNpcs(1561).isEmpty(), "真端该行无 talk_npc 列 ⇒ 无中继步");
-		assertTrue(chest.gateItems(1561).isEmpty(), "真端该行未声明 item_check ⇒ 交付不设工作物品门");
+			"原版 reward_npc_name = LF3_JewelBox_Q1561(700188)");
+		assertTrue(chest.relayNpcs(1561).isEmpty(), "原版该行无 talk_npc 列 ⇒ 无中继步");
+		assertTrue(chest.gateItems(1561).isEmpty(), "原版该行未声明 item_check ⇒ 交付不设工作物品门");
 		Integer chestItem = chest.useItemId(1561);
-		assertNotNull(chestItem, "真端 use_item_name 必须解析为生产物品 id");
+		assertNotNull(chestItem, "原版 use_item_name 必须解析为生产物品 id");
 		assertTrue(chest.acceptQuestIdsForItem(chestItem).contains(1561), "接取道具必须指回 1561");
 
 		Player chestPlayer = NativeTalkFixture.player(Race.ELYOS, PlayerClass.WARRIOR, 40);
 		NativeTalkFixture.clearPackets(chestPlayer);
-		assertTrue(chest.onItemUse(chestPlayer, chestItem), "宝箱道具使用开接取窗（真端 UseItem 无主事件）");
+		assertTrue(chest.onItemUse(chestPlayer, chestItem), "宝箱道具使用开接取窗（原版 UseItem 无主事件）");
 		NativeTalkFixture.assertOnlyDialogPage(chestPlayer, SimpleUseItemHandler.PAGE_ASK_ACCEPT);
 		assertTrue(chest.onDialog(NativeTalkFixture.dialog(chestPlayer, 0, 1561, 1002)), "无主 1002 接取");
 		assertEquals(QuestStatus.START, chestPlayer.getQuestStateList().getQuestState(1561).getStatus(),
@@ -486,7 +486,7 @@ class EarlyElyosQuestRegressionTest {
 
 		assertTrue(handler.routes(1691), "1691 必须由 native 车道路由");
 		assertEquals(798386, handler.acquireNpc(1691), "接取 NPC（Harmone）");
-		assertEquals(798386, handler.rewardNpc(1691), "交付 NPC（真端同主）");
+		assertEquals(798386, handler.rewardNpc(1691), "交付 NPC（原版同主）");
 		assertEquals(3, handler.relayCount(1691), "中继步数 = 3");
 		int[][] ladder = {{1, 790005}, {2, 798386}, {3, 700563}};
 		for (int[] step : ladder) {
@@ -499,12 +499,12 @@ class EarlyElyosQuestRegressionTest {
 		assertEquals(new SimpleTalkHandler.ItemStack(182201826, 1), handler.stepGiveItem(1691, 3), "第 3 步发放");
 		assertEquals(1692, handler.conQuest(1691), "链式接取窗下一环");
 		assertEquals("Q1932", NativeQuestXmlTable.instance().require(1691).text("finished_quest_cond1"),
-			"真端前置轴");
+			"原版前置轴");
 
-		// 真端 bm 轴同 1414：类别 1 ⇒ 限制位 20，本服位集为空 ⇒ 可接取（拒绝面见 NativeQuestStartPortTest）。
+		// 原版 bm 轴同 1414：类别 1 ⇒ 限制位 20，本服位集为空 ⇒ 可接取（拒绝面见 NativeQuestStartPortTest）。
 		// Same bm axis as 1414: category 1 ⇒ restriction bit 20, empty bitmap here ⇒ acquirable.
 		assertEquals(1, NativeQuestStartPort.restrictCategory(NativeQuestXmlTable.instance().require(1691)),
-			"真端 bm 轴");
+			"原版 bm 轴");
 		// 前置 Q1932 未完成时拒接，完成后可接取。/ Refused without prerequisite Q1932, then acquirable.
 		NativeTalkFixture.clearPackets(player);
 		assertFalse(handler.onDialog(NativeTalkFixture.dialog(player, 798386, 1691, 1002)), "前置未完成拒接");
@@ -515,7 +515,7 @@ class EarlyElyosQuestRegressionTest {
 		assertEquals(QuestStatus.START, player.getQuestStateList().getQuestState(1691).getStatus(),
 			"限制位集为空 ⇒ 建档 START");
 
-		// 接取后走三段阶梯与报告领奖的机械面（每步推进 = 真端 0x5d8 关窗零发页）。
+		// 接取后走三段阶梯与报告领奖的机械面（每步推进 = 原版 0x5d8 关窗零发页）。
 		// Walk the three-step ladder on the created row (each advance closes, zero page).
 		for (int index = 0; index < ladder.length; index++) {
 			NativeTalkFixture.clearPackets(player);
@@ -533,7 +533,7 @@ class EarlyElyosQuestRegressionTest {
 
 	/**
 	 * 1137（요새 주변 상공 오브젝트 클릭퀘）：P4 起随 SimpleCollectItem 族原生直驱，原 IR 断言
-	 * 随车道退役（2026-10-05 重锚到原生面）：采集物 = 真端 collect_item1 的 quest_1137b(182200513)；
+	 * 随车道退役（2026-10-05 重锚到原生面）：采集物 = 原版 collect_item1 的 quest_1137b(182200513)；
 	 * 交付 NPC Spiros(203111) 的交付门只认采集物，工作物品 quest_1137a(182200512) 不回收；
 	 * 交付/采集的端到端两步流程与零状态写由 {@code SimpleCollectItemNativeFamilyGateTest} 承担。
 	 * 1137 is driven natively by the SimpleCollectItem family since P4: the collected item is
@@ -544,12 +544,12 @@ class EarlyElyosQuestRegressionTest {
 	void fossilCollectionPublishesProgressAndFinalNpcConsumesOnlyTheCollectedItem() {
 		SimpleCollectItemHandler handler = SimpleCollectItemHandler.instance();
 		assertTrue(handler.routes(1137), "1137 必须由 SimpleCollectItem native 车道路由");
-		assertEquals(203111, handler.rewardNpc(1137), "交付 NPC（真端 reward_npc_name = Spiros）");
-		assertFalse(handler.collectObjects(1137).isEmpty(), "真端 object1 = LF1_fossil（采集对象在册）");
+		assertEquals(203111, handler.rewardNpc(1137), "交付 NPC（原版 reward_npc_name = Spiros）");
+		assertFalse(handler.collectObjects(1137).isEmpty(), "原版 object1 = LF1_fossil（采集对象在册）");
 		assertEquals(List.of(182200513), handler.handInItems(1137),
-			"交付门 = 真端 collect_item1（quest_1137b），不含工作物品 quest_1137a");
+			"交付门 = 原版 collect_item1（quest_1137b），不含工作物品 quest_1137a");
 		assertEquals(List.of(182200512), handler.acceptGiveItems(1137),
-			"接取发放 = 真端 quest_work_item1（quest_1137a）");
+			"接取发放 = 原版 quest_work_item1（quest_1137a）");
 	}
 
 	@Test
@@ -614,7 +614,7 @@ class EarlyElyosQuestRegressionTest {
 	}
 
 	private static CompiledQuestDefinition load(int questId) {
-		// 退役任务的生产 XML 只在 git 历史里：统一取生产视图（XML 目录 + 真端 overlay）。
+		// 退役任务的生产 XML 只在 git 历史里：统一取生产视图（XML 目录 + 原版 overlay）。
 		return ProductionQuestDefinitions.definition(questId);
 	}
 	@Test
@@ -646,15 +646,15 @@ class EarlyElyosQuestRegressionTest {
 		Player player = NativeTalkFixture.player(Race.ELYOS, PlayerClass.WARRIOR, 20);
 
 		assertEquals(203074, handler.acquireNpc(1117), "接取 NPC（Pranoa）");
-		assertEquals(203074, handler.rewardNpc(1117), "交付 NPC（真端同主）");
+		assertEquals(203074, handler.rewardNpc(1117), "交付 NPC（原版同主）");
 		assertEquals(0, handler.relayCount(1117), "无中继步");
 		assertTrue(NativeTalkFixture.row(1117).itemCheck(), "表行声明 item_check");
 		assertEquals(List.of(new SimpleTalkHandler.ItemStack(182200208, 3)), handler.workItems(1117),
 			"交付门 = quest.xml collect_item1 ×3");
 		assertFalse(handler.unresolvedGate(1117), "交付门必须可解");
 		NativeQuestXmlTable.QuestRow row = NativeQuestXmlTable.instance().require(1117);
-		assertEquals("quest_1117a 3", row.text("collect_item1"), "真端收集列");
-		assertEquals("quest_1117a 3", row.text("check_item1_1"), "真端交付门列");
+		assertEquals("quest_1117a 3", row.text("collect_item1"), "原版收集列");
+		assertEquals("quest_1117a 3", row.text("check_item1_1"), "原版交付门列");
 
 		NativeTalkFixture.clearPackets(player);
 		assertTrue(itemHandler.onDialog(NativeTalkFixture.dialog(player, 203074, 1117, 1002)), "接取");
@@ -672,7 +672,7 @@ class EarlyElyosQuestRegressionTest {
 		assertTrue(itemHandler.onDialog(NativeTalkFixture.dialog(player, 203074, 1117, 1009)), "交付报告");
 		assertEquals(QuestStatus.REWARD, player.getQuestStateList().getQuestState(1117).getStatus());
 		NativeTalkFixture.assertOnlyDialogPage(player, SimpleTalkHandler.PAGE_REWARD_WINDOW);
-		assertEquals(List.of("remove:182200208:3"), inventory.calls(), "交付门按真端扣除整组");
+		assertEquals(List.of("remove:182200208:3"), inventory.calls(), "交付门按原版扣除整组");
 	}
 
 	@Test

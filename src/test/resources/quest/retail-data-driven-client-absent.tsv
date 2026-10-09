@@ -1,4 +1,4 @@
-# §10.3-#5 裁定冻结：客户端三表皆无的 DD 活行（CLIENT_ABSENT_LIVE ⇒ P7 不得路由/注册） + 真端表内注释禁用的行（COMMENTED_OUT ⇒ 装载器不含；逐行证据见 p7/dd-client-presence.tsv）
+# §10.3-#5 裁定冻结：客户端三表皆无的 DD 活行（CLIENT_ABSENT_LIVE ⇒ P7 不得路由/注册） + 原版表内注释禁用的行（COMMENTED_OUT ⇒ 装载器不含；逐行证据见 p7/dd-client-presence.tsv）
 quest_id	dev_name	acquire_category	hunt_first	retention_owner	xml_in_repo	verdict
 99003	[주간] 중심기지 수호	Talk	LDF5_Fortress_D2_ShadowStalker_65_An 15; LDF5_Fortress_C1_ElementalFire3_65_An 15; LDF5_Fortress_B1_Statue_M_Rune_65_An 15;	ABSENT	False	CLIENT_ABSENT_LIVE
 99004	[주간] 중심기지 수호	Talk	LDF5_Fortress_D2_ShadowStalker_65_An 15; LDF5_Fortress_C1_ElementalFire3_65_An 15; LDF5_Fortress_B1_Statue_M_Rune_65_An 15;	ABSENT	False	CLIENT_ABSENT_LIVE

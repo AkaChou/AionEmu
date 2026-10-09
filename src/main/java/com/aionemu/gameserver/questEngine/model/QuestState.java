@@ -159,7 +159,7 @@ public class QuestState {
 	 * @return true 可重复；false 不可 / true if repeatable; false otherwise
 	 */
 	public boolean canRepeat() {
-		// 元数据取生产目录；行已迁入原生车道（不在目录中）时回退真端 quest.xml 元数据——真端等价物是
+		// 元数据取生产目录；行已迁入原生车道（不在目录中）时回退原版 quest.xml 元数据——原版等价物是
 		// QuestDB 全量静态表（重复上限永远可查）。两处都无行才按「不可重复」处理（fail-closed）。
 		// Catalog-first metadata with a retail quest.xml fallback for rows on the native lane (the
 		// retail equivalent is the full QuestDB table); only a row absent from both stays

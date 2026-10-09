@@ -23,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * 验证任务 19637（[신발] 지역 몬스터 처치）的真端 DD 行（DD_TALK_HUNT_GRID）合同。
+ * 验证任务 19637（[신발] 지역 몬스터 처치）的原版 DD 行（DD_TALK_HUNT_GRID）合同。
  * <p>
  * 已退役（保留清单 owner=RETAIL_TABLE，family=DataDriven）：旧「生产视图」IR 节点断言随 P7 步 f 退场，
  * 按计划 §8.9（P3 重锚口径）改锚 DD 运行时公共面：Talk 接取（Cainus，con_quest 19638 装载列）、
@@ -51,9 +51,9 @@ class Quest19637ClientDialogAlignmentTest {
 			Quest19637ClientDialogAlignmentTest.class
 				.getResourceAsStream(DataDrivenNativeRuntime.TABLE_RESOURCE));
 		DataDrivenQuestTable.Row row = table.find(QUEST_ID).orElseThrow();
-		assertEquals("talk", row.acquireKind(), "接取类别 = 真端 Talk 行");
-		assertEquals("Cainus", row.acquireParam(), "接取 NPC 名 = 真端 value0_acquire_");
-		assertEquals("Cainus", row.rewardNpc(), "交付 NPC 名 = 真端 reward_npc_name");
+		assertEquals("talk", row.acquireKind(), "接取类别 = 原版 Talk 行");
+		assertEquals("Cainus", row.acquireParam(), "接取 NPC 名 = 原版 value0_acquire_");
+		assertEquals("Cainus", row.rewardNpc(), "交付 NPC 名 = 原版 reward_npc_name");
 		assertEquals("19638", row.conQuest(), "con_quest 装载列");
 
 		// 接取 talk 兴趣面注册本行（对象 #1 = 接取 NPC）。
@@ -72,12 +72,12 @@ class Quest19637ClientDialogAlignmentTest {
 		Player player = NativeTalkFixture.player(Race.ELYOS, PlayerClass.WARRIOR, 50);
 		place(player, 0f, 0f, 0f);
 
-		// 未接取：任务行打开真端接取入口页（4762 = 客户端声明的 select_none），带任务上下文。
+		// 未接取：任务行打开原版接取入口页（4762 = 客户端声明的 select_none），带任务上下文。
 		NativeTalkFixture.clearPackets(player);
 		assertTrue(runtime.onDialog(player, CAINUS_NPC_ID, 31, OBJECT_ID, QUEST_ID));
 		NativeTalkFixture.assertOnlyDialogPageWithQuest(player, 4762, QUEST_ID);
 
-		// 接取收尾（20000）：建档 START + 关窗（真端 20000 收尾不发对话页）。
+		// 接取收尾（20000）：建档 START + 关窗（原版 20000 收尾不发对话页）。
 		NativeTalkFixture.clearPackets(player);
 		assertTrue(runtime.onDialog(player, CAINUS_NPC_ID, 20000, OBJECT_ID, QUEST_ID));
 		QuestState state = player.getQuestStateList().getQuestState(QUEST_ID);
@@ -106,15 +106,15 @@ class Quest19637ClientDialogAlignmentTest {
 		assertTrue(runtime.onDialog(player, CAINUS_NPC_ID, 1009, OBJECT_ID, QUEST_ID));
 		NativeTalkFixture.assertOnlyDialogPageWithQuest(player, 5, QUEST_ID);
 
-		// 行数据一致性：真端元数据（minlevel=50、pc_light、EXP 与可选鞋奖励）。
+		// 行数据一致性：原版元数据（minlevel=50、pc_light、EXP 与可选鞋奖励）。
 		QuestMetadata metadata = RetailQuestDriver.ensureLoaded()
 			.retailMetadataOf(QUEST_ID).orElseThrow().metadata();
-		assertEquals(50, metadata.minLevel(), "真端 minlevel_permitted=50");
-		assertEquals(java.util.Set.of("ELYOS"), metadata.permittedRaces(), "真端 pc_light");
+		assertEquals(50, metadata.minLevel(), "原版 minlevel_permitted=50");
+		assertEquals(java.util.Set.of("ELYOS"), metadata.permittedRaces(), "原版 pc_light");
 		assertTrue(metadata.rewards().contains(new QuestReward("EXP", 0, 6937236)),
 			() -> metadata.rewards().toString());
 		assertEquals(6, metadata.rewards().stream()
-			.filter(reward -> reward.kind().equals("SELECTABLE_ITEM")).count(), "真端 6 件可选鞋奖励");
+			.filter(reward -> reward.kind().equals("SELECTABLE_ITEM")).count(), "原版 6 件可选鞋奖励");
 	}
 
 	private static boolean kill(DataDrivenNativeRuntime runtime, Player player, int npcId) {

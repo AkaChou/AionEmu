@@ -11,7 +11,7 @@ import java.util.Set;
  * {@link QuestEvent.KillNpc}，与运行期 {@code QuestEventIndex.routeKeys} 的口径一致。
  * <p>
  * quest-definition XML 允许把一组击杀目标写成单个 {@code KillNpcSet} 转换，
- * 而真端合成器为每个 npc id 生成一条转换；两者在运行期路由到同一批击杀事件，
+ * 而原版合成器为每个 npc id 生成一条转换；两者在运行期路由到同一批击杀事件，
  * 因此对拍与冻结指纹都必须按本归一化口径比较，否则会报出"表达差异"这种伪不等价。
  * <p>
  * Route-level normalization for kill events, matching {@code QuestEventIndex.routeKeys}.

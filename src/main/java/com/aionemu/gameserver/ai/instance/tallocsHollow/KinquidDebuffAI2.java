@@ -8,7 +8,7 @@ import com.aionemu.gameserver.model.gameobjects.Creature;
 import java.util.concurrent.Future;
 
 /**
- * 真端烟雾 AI 的生命周期适配器，实际技能逻辑由 Elim_SmogEffect pattern 执行。
+ * 原版烟雾 AI 的生命周期适配器，实际技能逻辑由 Elim_SmogEffect pattern 执行。
  * Retail smoke AI lifecycle adapter; the Elim_SmogEffect pattern performs the actual skills.
  * @author Encom
  */

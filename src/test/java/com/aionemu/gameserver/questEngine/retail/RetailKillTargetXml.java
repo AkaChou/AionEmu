@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 
 /**
  * 对拍用 XML 归一化：把击杀目标 id 集合展开成同名族闭包
- * （{@link RetailNpcNameIndex#withDisplayNameVariants}），与真端驱动侧落在同一等价集上。
+ * （{@link RetailNpcNameIndex#withDisplayNameVariants}），与原版驱动侧落在同一等价集上。
  * <p>
  * 覆盖三个携带击杀目标的元素：{@code dimension}、{@code kill-routes}、{@code kill-npc}
  * （{@code kill-npc} 的单值写法会改写成 {@code npc-ids}）；对话类 {@code npc-ids} 不动。

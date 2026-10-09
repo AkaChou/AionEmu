@@ -132,7 +132,7 @@
             <spot h="0" z="1150.000000" y="585.417419" x="167.436493" random_walk="3" resolve_z="true"/>
             <spot h="14" z="1138.743" y="534.5071" x="145.18086" random_walk="3"/>
 		</spawn>
-		<!-- 真端烟雾刷怪组：三个喷口中选一个，魔法/物理烟雾各 50%。 / Retail smoke group: one of three vents, 50% magic or physical. -->
+		<!-- 原版烟雾刷怪组：三个喷口中选一个，魔法/物理烟雾各 50%。 / Retail smoke group: one of three vents, 50% magic or physical. -->
 		<spawn npc_id="282008" pool="1" respawn_time="1">
 			<spot x="292.024658" y="719.713196" z="1174.000000" h="0" alternate_id="282009" select_prob="5000"/>
 			<spot x="266.706848" y="680.673279" z="1174.000000" h="0" alternate_id="282009" select_prob="5000"/>

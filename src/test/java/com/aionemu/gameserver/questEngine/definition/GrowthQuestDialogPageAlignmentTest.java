@@ -52,7 +52,7 @@ class GrowthQuestDialogPageAlignmentTest {
 	@Test
 	void deliveryOnlyGrowthQuestsFollowTheRetailTalkRow() {
 		// P3 重锚（计划 §8.9）：80369-80386 / 80487-80538 共 70 行自 SimpleTalk 切换批起由 native 车道
-		// 直驱。真端行只有 acquired/reward 两列（零中继、零交付门、零发扣、零过场），所以页阶梯是
+		// 直驱。原版行只有 acquired/reward 两列（零中继、零交付门、零发扣、零过场），所以页阶梯是
 		// 「接取入口页（客户端任务页声明页）→ 1003 确认 → 交付 NPC 1009 直开奖励窗（页 5）」。
 		// P3 re-anchor (plan §8.9): the seventy delivery-only rows run on the native lane; their retail
 		// rows carry nothing but acquired/reward, so the dialogs are entry page → 1003 → reward window 5.
@@ -65,7 +65,7 @@ class GrowthQuestDialogPageAlignmentTest {
 		}
 	}
 
-	/** 74 行成长任务的接取 NPC（真端表列 → 静态 npc_template 解析，冻结）。 /
+	/** 74 行成长任务的接取 NPC（原版表列 → 静态 npc_template 解析，冻结）。 /
 	 * The acquire NPCs of the growth rows (retail column → static npc_template, frozen). */
 	private static final Map<String, Integer> ACQUIRE_NPCS = Map.of(
 		"event_Cherylin", 831833,
@@ -82,7 +82,7 @@ class GrowthQuestDialogPageAlignmentTest {
 		Integer expectedAcquire = ACQUIRE_NPCS.get(acquireName);
 		assertNotNull(expectedAcquire, "接取名未冻结 / unfrozen acquire name: " + acquireName);
 		assertEquals(expectedAcquire, handler.acquireNpc(questId), "quest " + questId + " 接取 NPC");
-		// 交付 NPC：真端 reward 列必须唯一解析；同名列（80487 族）接取/交付同主，异名列交付 owner 分离。
+		// 交付 NPC：原版 reward 列必须唯一解析；同名列（80487 族）接取/交付同主，异名列交付 owner 分离。
 		// Reward NPC: the retail reward column must resolve; same-name rows share the owner, others split it.
 		assertNotNull(handler.rewardNpc(questId), "quest " + questId + " 交付 NPC 未解析: "
 			+ handler.requireRow(questId).rewardNpcName());
@@ -93,9 +93,9 @@ class GrowthQuestDialogPageAlignmentTest {
 			assertNotEquals(handler.acquireNpc(questId), handler.rewardNpc(questId),
 				"quest " + questId + " 接取与交付 owner 分离");
 		}
-		assertEquals(0, handler.relayCount(questId), "quest " + questId + " 是单步行（真端行无 talk_npc 列）");
+		assertEquals(0, handler.relayCount(questId), "quest " + questId + " 是单步行（原版行无 talk_npc 列）");
 		assertTrue(handler.workItems(questId).isEmpty(),
-			"quest " + questId + " 无交付门（真端行无 item_check 列）");
+			"quest " + questId + " 无交付门（原版行无 item_check 列）");
 		assertFalse(handler.unresolvedGate(questId), "quest " + questId + " 无门不得 fail-closed");
 		assertNull(handler.acceptGiveItem(questId), "quest " + questId + " 接取侧无发放");
 		assertNull(handler.stepGiveItem(questId, 1), "quest " + questId + " 无步进发放");
@@ -123,12 +123,12 @@ class GrowthQuestDialogPageAlignmentTest {
 		NativeTalkFixture.assertOnlyDialogPage(player, SimpleTalkHandler.PAGE_REWARD_WINDOW);
 	}
 
-	/** 真端行的种族轴（{@code race_permitted}）。 / The retail race axis. */
+	/** 原版行的种族轴（{@code race_permitted}）。 / The retail race axis. */
 	private static Race acquireRace(NativeQuestXmlTable.QuestRow meta) {
 		return "pc_dark".equals(meta.text("race_permitted")) ? Race.ASMODIANS : Race.ELYOS;
 	}
 
-	/** 真端行的等级下限（等级上限同样受 {@link com.aionemu.gameserver.questEngine.tablelane.NativeQuestStartPort} 约束）。 /
+	/** 原版行的等级下限（等级上限同样受 {@link com.aionemu.gameserver.questEngine.tablelane.NativeQuestStartPort} 约束）。 /
 	 * The retail minimum level (the ceiling is adjudicated by the native start port as well). */
 	private static int acceptLevel(NativeQuestXmlTable.QuestRow meta) {
 		Integer min = meta.integer("minlevel_permitted");
@@ -147,7 +147,7 @@ class GrowthQuestDialogPageAlignmentTest {
 	}
 
 	private static QuestDefinition compile(int questId) throws Exception {
-		// 退役任务的生产 XML 只在 git 历史里：统一取生产视图（XML 目录 + 真端 overlay）。
+		// 退役任务的生产 XML 只在 git 历史里：统一取生产视图（XML 目录 + 原版 overlay）。
 		return ProductionQuestDefinitions.definition(questId).definition();
 	}
 

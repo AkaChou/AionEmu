@@ -53,7 +53,7 @@ class ProgressCameraTest {
 
 	@Test
 	void overkillIsNoAction() {
-		// 槽已满：再杀零副作用（真端 (count&mask)<required 守卫）。
+		// 槽已满：再杀零副作用（原版 (count&mask)<required 守卫）。
 		// A full slot: further kills are side-effect free (retail (count&mask)<required guard).
 		int full = RawQuestVarsCodec.withSlotValue(SIX, 0, 1, 6);
 		Result result = ProgressCamera.advance(Status.START, full, SIX, 1, 6, 0x106, true);
@@ -78,7 +78,7 @@ class ProgressCameraTest {
 
 	@Test
 	void flagFalseForcesNormalChannel() {
-		// 真端 2463 个调用点 flag 全为 1；语义上 flag=0 时即使到满值也走普通写入。
+		// 原版 2463 个调用点 flag 全为 1；语义上 flag=0 时即使到满值也走普通写入。
 		// All 2463 retail call sites pass flag=1; semantically flag=0 keeps full values on the normal channel.
 		// 起点 vars=0xc6（槽1:6 已满、槽2:3），最后一杀到 0x106。
 		// Start vars=0xc6 (slot1:6 full, slot2:3); the final kill lands on 0x106.

@@ -1,4 +1,4 @@
-# SimpleHunt 裁定行（真端优先）真端侧冻结 IR（P0c-3 哨兵批 + P0c-6 简报批）
+# SimpleHunt 裁定行（原版优先）原版侧冻结 IR（P0c-3 哨兵批 + P0c-6 简报批）
 # quest_id	retail_fingerprint	nodes	transitions
 1113	d9a73c3c1d845d120acaa8be1777a7c017453f541ded52534b5e64993a9a3ba6	12	47
 1120	505b102f6e550c4df13b7eccb16d6b40817a00fbfd647f55f6a3855d491bd76c	13	49

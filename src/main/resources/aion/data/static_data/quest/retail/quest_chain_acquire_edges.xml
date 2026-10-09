@@ -2,7 +2,7 @@
 <!--
 DD 链式接取发放边（`category_acquire_=none`；本表生成物，禁止手改）。
 生成器：.agents/summary/quest-chain-acquire-native/build_quest_chain_acquire_edges.py
-数据源：① 真端 quest.xml finished_quest_condN（source=retail-finished-cond）；
+数据源：① 原版 quest.xml finished_quest_condN（source=retail-finished-cond）；
         ② 退役/存活任务定义 XML 的 <prerequisites> / <start-conditions type="finished"> 与
            退役 Java handler 的 defaultOnLvlUpEvent(env, <前序>, true)（source=retired-xml / retired-handler，
            证据 = git 提交 ^ 路径）。

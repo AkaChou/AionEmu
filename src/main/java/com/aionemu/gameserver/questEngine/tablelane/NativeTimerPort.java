@@ -4,10 +4,10 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
- * 原生任务车道的计时端口：DD 附加动作 case 10（`Add Timer`，真端执行器 case 10 →
+ * 原生任务车道的计时端口：DD 附加动作 case 10（`Add Timer`，原版执行器 case 10 →
  * `IUserImp::AddQuestTimer` → NPCServer 计时中转）的唯一出口。
  * <p>
- * 真端语义链（2026-10-02 取证闭环）：装载器 `FUN_180c49610` case 10 解析 `时间, 目标步, 旗标`；
+ * 原版语义链（2026-10-02 取证闭环）：装载器 `FUN_180c49610` case 10 解析 `时间, 目标步, 旗标`；
  * 执行时武装（Server64 `AddQuestTimer` = `ServerToNPCServer` opcode 0xff93 转发 NPCServer 计时）；
  * 到期由宿主按 quest id 回调 ScriptDLL64 注册表 → `FUN_180c46d80` 检查：任务状态 3（进行中）
  * ∧ `0 < 当前步 < 目标步` ⇒ 旗标 0 推进到目标步（`+0xf0` 直写）/ 旗标 1 弃任（`+0x160`）。
@@ -24,7 +24,7 @@ import com.aionemu.gameserver.utils.ThreadPoolManager;
 public interface NativeTimerPort {
 
 	/**
-	 * 武装一个任务计时器（真端 AddQuestTimer 面）。
+	 * 武装一个任务计时器（原版 AddQuestTimer 面）。
 	 * Arms one quest timer (the retail AddQuestTimer face).
 	 */
 	void schedule(Player player, int questId, int seconds, int destStep, boolean abandonOnExpiry);
@@ -45,7 +45,7 @@ public interface NativeTimerPort {
 		@Override
 		public void schedule(Player player, int questId, int seconds, int destStep, boolean abandonOnExpiry) {
 			ThreadPoolManager.getInstance().schedule(() -> {
-				// 玩家离线时放弃判定（真端到期回调以在线 User 为前提）。
+				// 玩家离线时放弃判定（原版到期回调以在线 User 为前提）。
 				// Skip when the player went offline (the retail expiry callback addresses a live User).
 				if (player == null || !player.isOnline()) {
 					return;

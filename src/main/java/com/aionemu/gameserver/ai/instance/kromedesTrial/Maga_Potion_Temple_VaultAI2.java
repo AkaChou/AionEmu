@@ -28,8 +28,8 @@ public class Maga_Potion_Temple_VaultAI2 extends NpcAI2
 	private static final int QUEST_ID = 18602;
 	private static final int RELIC_KEY_ID = 185000109;
 	/**
-	 * 真端 idcromede_alias_02 落点（Map/Worlds/idcromede/world.xml）：「拿出药水，瞬间移动到宅邸」的目标坐标/朝向。
-	 * 注意朝向单位：真端 dir 为度数（270°），服务端存储用压缩 byte heading（度/3，0-120），故 270° = 90。
+	 * 原版 idcromede_alias_02 落点（Map/Worlds/idcromede/world.xml）：「拿出药水，瞬间移动到宅邸」的目标坐标/朝向。
+	 * 注意朝向单位：原版 dir 为度数（270°），服务端存储用压缩 byte heading（度/3，0-120），故 270° = 90。
 	 * The retail idcromede_alias_02 point (Map/Worlds/idcromede/world.xml): where "teleport to the manor" lands.
 	 * Heading units: retail 'dir' is degrees (270°); the server stores a compressed byte heading (deg/3, 0-120),
 	 * so 270° maps to 90.
@@ -45,7 +45,7 @@ public class Maga_Potion_Temple_VaultAI2 extends NpcAI2
         boolean potionStep = questState != null && questState.getStatus() == QuestStatus.START
                 && questState.getQuestVarById(0) == 1;
         boolean hasKey = player.getInventory().getFirstItemByItemId(RELIC_KEY_ID) != null;
-        // 真端 730308（fun_896.cpp FUN_180f961e0）：用药水入口只看钥匙（任务第 2 步时同页）。页面必须携带
+        // 原版 730308（fun_896.cpp FUN_180f961e0）：用药水入口只看钥匙（任务第 2 步时同页）。页面必须携带
         // questId，否则客户端会按其它进行中任务渲染该页（2026-10-07 实机：页 1011 被渲染成 18605 的对话，
         // 玩家点到别任务的按钮后无人认领、交互死锁）。
         // Retail 730308 (fun_896.cpp FUN_180f961e0): the potion entry keys on the relic key alone (same page
@@ -71,7 +71,7 @@ public class Maga_Potion_Temple_VaultAI2 extends NpcAI2
 			}
 			return true;
 		}
-		// 引擎不认领时的兜底（对齐真端 FUN_180f961e0）：SETPRO2「拿出药水，瞬间移动到宅邸」只看钥匙——
+		// 引擎不认领时的兜底（对齐原版 FUN_180f961e0）：SETPRO2「拿出药水，瞬间移动到宅邸」只看钥匙——
 		// 有钥匙：扣 1 把 +（任务在第 2 步时）记 var0=2 + 切换罗勃斯汀 + 传送到宅邸；无钥匙：失败页。
 		// The engine-miss fallback mirroring retail FUN_180f961e0: SETPRO2 keys on the relic key alone —
 		// with a key: consume one, mark var0=2 (only from step 1), sync Robstin, teleport to the manor;

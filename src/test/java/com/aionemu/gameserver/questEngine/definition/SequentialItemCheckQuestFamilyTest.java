@@ -25,8 +25,8 @@ class SequentialItemCheckQuestFamilyTest {
 		assertNode(definition, "collect0", QuestStatus.START, 0);
 		assertNode(definition, "collected", QuestStatus.START, 1);
 		assertNode(definition, "ready", QuestStatus.START, 2);
-		// QE-054：领奖投影 = 真端/legacy 推进值 2——legacy useQuestObject(2,2,true) 落盘 2，
-		// 真端 0x100 不写轴、客户端 REWARD 态自行显示报告行；领奖行批次曾误抬为 3。
+		// QE-054：领奖投影 = 原版/legacy 推进值 2——legacy useQuestObject(2,2,true) 落盘 2，
+		// 原版 0x100 不写轴、客户端 REWARD 态自行显示报告行；领奖行批次曾误抬为 3。
 		// QE-054: the reward projection is the retail/legacy progress value 2 — the legacy
 		// useQuestObject(2,2,true) persisted 2 and the retail 0x100 keeps the axis; the reward-row
 		// batch once mislifted it to 3.

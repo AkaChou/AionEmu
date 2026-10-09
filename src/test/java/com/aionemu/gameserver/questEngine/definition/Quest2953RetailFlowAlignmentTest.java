@@ -19,11 +19,11 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * 锁定任务 2953「配送申请书传递」（可重复）的真端单步物品链与唯一 NPC 归属。
+ * 锁定任务 2953「配送申请书传递」（可重复）的原版单步物品链与唯一 NPC 归属。
  * Locks quest 2953's retail single-step item chain and its exclusive NPC owners.
  * <p>
  * 任务已退役（保留清单 owner=RETAIL_TABLE）：旧 typed 节点/转换金标随迁移退场，按计划 §8.9（P3 重锚口径）
- * 改锚真端表行（接取 Doman → Veldina 步 1 → Doman 交付、步 1 扣申请书）、quest.xml 奖励与 native 对话面。
+ * 改锚原版表行（接取 Doman → Veldina 步 1 → Doman 交付、步 1 扣申请书）、quest.xml 奖励与 native 对话面。
  * <p>
  * The retired typed gold standard is re-anchored (plan §8.9) to the retail row (accept Doman →
  * Veldina step 1 → Doman hand-in, step-1 request removal), the quest.xml rewards and the native faces.
@@ -32,7 +32,7 @@ class Quest2953RetailFlowAlignmentTest {
 	private static final int QUEST_ID = 2953;
 	private static final int START_AND_REWARD_NPC = 204191;
 	private static final int DELIVERY_NPC = 204071;
-	/** 真端 give_item / remove_item1 = ITEM_QUEST_2953A 1。 / The retail supply-request item. */
+	/** 原版 give_item / remove_item1 = ITEM_QUEST_2953A 1。 / The retail supply-request item. */
 	private static final int SUPPLY_REQUEST = 182207039;
 
 	@Test
@@ -44,7 +44,7 @@ class Quest2953RetailFlowAlignmentTest {
 
 		SimpleTalkHandler handler = SimpleTalkHandler.instance();
 		assertEquals("Doman", handler.requireRow(QUEST_ID).acquiredNpcName(), "接取 owner 名");
-		assertEquals(List.of("Veldina"), handler.requireRow(QUEST_ID).talkNpcNames(), "真端中继链");
+		assertEquals(List.of("Veldina"), handler.requireRow(QUEST_ID).talkNpcNames(), "原版中继链");
 		assertEquals("Doman", handler.requireRow(QUEST_ID).rewardNpcName(), "交付 owner 名");
 		assertEquals(START_AND_REWARD_NPC, NativeNpcNameResolver.instance().resolve("Doman").npcIds().get(0));
 		assertEquals(DELIVERY_NPC, NativeNpcNameResolver.instance().resolve("Veldina").npcIds().get(0));
@@ -61,9 +61,9 @@ class Quest2953RetailFlowAlignmentTest {
 
 		QuestMetadata metadata = RetailQuestDriver.ensureLoaded()
 			.retailMetadataOf(QUEST_ID).orElseThrow().metadata();
-		assertEquals(10, metadata.minLevel(), "真端 minlevel_permitted=10");
-		assertEquals(java.util.Set.of("ASMODIANS"), metadata.permittedRaces(), "真端 pc_dark");
-		assertEquals(100, metadata.repeatPolicy().maxRepeatCount(), "真端 max_repeat_count=100 ⇒ 可重复");
+		assertEquals(10, metadata.minLevel(), "原版 minlevel_permitted=10");
+		assertEquals(java.util.Set.of("ASMODIANS"), metadata.permittedRaces(), "原版 pc_dark");
+		assertEquals(100, metadata.repeatPolicy().maxRepeatCount(), "原版 max_repeat_count=100 ⇒ 可重复");
 		List<QuestReward> rewards = metadata.rewards();
 		assertTrue(rewards.contains(new QuestReward("EXP", 0, 150)), () -> rewards.toString());
 		assertTrue(rewards.contains(new QuestReward("GOLD", 0, 500)), () -> rewards.toString());

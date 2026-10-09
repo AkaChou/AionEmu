@@ -35,7 +35,7 @@ import com.aionemu.gameserver.questEngine.tablelane.NativeQuestTableLoader.Simpl
 class NativeQuestTableLoaderTest {
 
 	private static final int EXPECTED_ROWS = 1863;
-	/** 真端休眠零计数行（相机行必须拒绝派生）。 / Retail-dormant zero-count rows (camera derivation must refuse). */
+	/** 原版休眠零计数行（相机行必须拒绝派生）。 / Retail-dormant zero-count rows (camera derivation must refuse). */
 	private static final Set<Integer> ZERO_COUNT_ROWS = Set.of(11013, 11014, 11208, 11209);
 
 	@Test
@@ -80,10 +80,10 @@ class NativeQuestTableLoaderTest {
 		assertEquals(362, row3016.cutsceneId());
 		assertEquals(1007, row3016.cutsceneAction());
 		assertEquals(132, loader.rows().stream().filter(row -> row.conQuest() != null).count(),
-				"真端 SimpleHunt con_quest 覆盖 132 行");
+				"原版 SimpleHunt con_quest 覆盖 132 行");
 		assertEquals(3, loader.rows().stream().filter(row -> row.cutsceneId() != null).count(),
-				"真端 SimpleHunt cutsceneid1 覆盖 3 行（3016/4007/4014）");
-		// 13912 形：槽 1 有怪，槽 3 有计数无怪（真端自身无事件源，行为永不满足）。 / The 13912 shape:
+				"原版 SimpleHunt cutsceneid1 覆盖 3 行（3016/4007/4014）");
+		// 13912 形：槽 1 有怪，槽 3 有计数无怪（原版自身无事件源，行为永不满足）。 / The 13912 shape:
 		// slot 1 has monsters; slot 3 has a count and no monsters (retail wires no event source either).
 		NativeQuestTableLoader.SimpleHuntRow row13912 = loader.require(13912);
 		assertEquals(List.of(), row13912.killSlots().get(3).monsters());
@@ -152,7 +152,7 @@ class NativeQuestTableLoaderTest {
 	}
 
 	/**
-	 * SimpleTalk 行模型装载门（P3 第一步）：真端 3152 行全量、双 NPC 结构 100%、列填充率与表侧实测一致。
+	 * SimpleTalk 行模型装载门（P3 第一步）：原版 3152 行全量、双 NPC 结构 100%、列填充率与表侧实测一致。
 	 * SimpleTalk row-model gate (P3 step one): all 3152 retail rows load; the two-NPC shape is total;
 	 * column fill rates match the measured table facts.
 	 */
@@ -163,7 +163,7 @@ class NativeQuestTableLoaderTest {
 		List<SimpleTalkRow> rows = List.copyOf(loader.talkRows());
 		assertTrue(rows.stream().allMatch(row ->
 			!row.acquiredNpcName().isBlank() && !row.rewardNpcName().isBlank()),
-			"真端 3152/3152 行都带接取与交付 NPC / every retail row carries both NPCs");
+			"原版 3152/3152 行都带接取与交付 NPC / every retail row carries both NPCs");
 		assertEquals(468, rows.stream().filter(row -> !row.talkNpcNames().isEmpty()).count(),
 			"talk_npc1..3 中继链行数 / relay-chain rows");
 		assertEquals(1988, rows.stream().filter(SimpleTalkRow::itemCheck).count(),
@@ -172,12 +172,12 @@ class NativeQuestTableLoaderTest {
 			"con_quest 行数 / chain-acquire rows");
 	}
 
-	/** 长尾列按原文装载并按真端分槽：give_item = 接取侧，give_itemK/remove_itemK = 第 K 步。 */
+	/** 长尾列按原文装载并按原版分槽：give_item = 接取侧，give_itemK/remove_itemK = 第 K 步。 */
 	@Test
 	void talkRowsKeepRetailTextForLongTailColumns() {
 		NativeQuestTableLoader loader = NativeQuestTableLoader.instance();
 
-		// 1131 与真端 cab520/cabb10 立即数逐字节对拍：接取发 1131A；步 1 发 1131B 且扣 1131A。
+		// 1131 与原版 cab520/cabb10 立即数逐字节对拍：接取发 1131A；步 1 发 1131B 且扣 1131A。
 		SimpleTalkRow single = loader.requireTalk(1131);
 		assertEquals("Hyacinte", single.acquiredNpcName());
 		assertEquals("Nadaelo", single.rewardNpcName());
@@ -204,7 +204,7 @@ class NativeQuestTableLoaderTest {
 		assertEquals(1009, cutscene.cutsceneAction());
 	}
 
-	/** 双 NPC 缺一即 fail-closed（真端不存在此形）。 / A missing NPC fails closed: retail has no such shape. */
+	/** 双 NPC 缺一即 fail-closed（原版不存在此形）。 / A missing NPC fails closed: retail has no such shape. */
 	@Test
 	void talkRowsFailClosedWhenAnNpcIsMissing() throws IOException {
 		IllegalStateException missingReward = assertThrows(IllegalStateException.class,
@@ -255,7 +255,7 @@ class NativeQuestTableLoaderTest {
 				</quest_simplehunts>
 				""".getBytes(StandardCharsets.UTF_8))));
 		assertTrue(duplicate.getMessage().startsWith("NATIVE_TABLE_PARSE_FAILED"), duplicate.getMessage());
-		// 有 monster 无 count：真端不存在此形。 / Monster without count: no such retail shape.
+		// 有 monster 无 count：原版不存在此形。 / Monster without count: no such retail shape.
 		IllegalStateException missingCount = assertThrows(IllegalStateException.class,
 				() -> NativeQuestTableLoader.parse(new ByteArrayInputStream("""
 				<?xml version="1.0" encoding="UTF-8"?>
@@ -285,7 +285,7 @@ class NativeQuestTableLoaderTest {
 		NativeQuestTableLoader loader = NativeQuestTableLoader.instance();
 		assertEquals(160, loader.useItemSize());
 		assertEquals(43, loader.itemPlaySize());
-		// 1559 = 三步中继 + 第 3 步换物（真端表原文）。 / 1559 = three relay steps with a step-3 exchange.
+		// 1559 = 三步中继 + 第 3 步换物（原版表原文）。 / 1559 = three relay steps with a step-3 exchange.
 		SimpleUseItemRow row1559 = loader.requireUseItem(1559);
 		assertEquals("ITEM_QUEST_1559A", row1559.useItemName());
 		assertEquals("Shugo_LF3_4", row1559.rewardNpcName());
@@ -326,7 +326,7 @@ class NativeQuestTableLoaderTest {
 			row.components());
 		// 全表形状冻结：task_npc 574/574 两名、分量 1..8 位置保留、第 2 分量 152 行。
 		assertTrue(loader.combineRows().stream().allMatch(candidate -> candidate.taskNpcNames().size() == 2),
-			"真端 574/574 均为双 NPC");
+			"原版 574/574 均为双 NPC");
 		assertTrue(loader.combineRows().stream()
 			.allMatch(candidate -> candidate.components().size() == 8), "分量槽位必须位置保留");
 		assertTrue(loader.combineRows().stream()
@@ -335,6 +335,6 @@ class NativeQuestTableLoaderTest {
 			.filter(candidate -> candidate.components().get(1) != null).count(), "give_component2 152 行");
 		assertTrue(loader.combineRows().stream()
 			.allMatch(candidate -> candidate.components().subList(2, 8).stream().allMatch(java.util.Objects::isNull)),
-			"真端数据只有 1/2 两个分量槽");
+			"原版数据只有 1/2 两个分量槽");
 	}
 }

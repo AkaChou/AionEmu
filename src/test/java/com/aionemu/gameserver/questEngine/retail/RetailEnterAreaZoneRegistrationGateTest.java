@@ -28,10 +28,10 @@ import com.aionemu.gameserver.questEngine.tablelane.NativeEnterAreaPort;
  * <p>
  * P8 重锚：旧解析表 {@code quest_enterarea_zone_resolution.tsv} 与其读者
  * {@code RetailEnterAreaZoneResolution} 已随编译车道退役——别名解析现在只活在
- * {@link NativeEnterAreaPort#create}（表别名 ∈ 登记名才落面，缺席真端区定义的别名落
+ * {@link NativeEnterAreaPort#create}（表别名 ∈ 登记名才落面，缺席原版区定义的别名落
  * {@code RETAIL_ABSENT_ALIASES} 冻结集）。本门按生产同源输入重建端口，断言：
  * ①解析面非空且每个已解析目标都在 zones XML 登记名内（防空扫描/防静默死边）；
- * ②缺席冻结集恰等于 {@code RETAIL_ABSENT_ALIASES}（防真端区定义补齐后忘记解冻、
+ * ②缺席冻结集恰等于 {@code RETAIL_ABSENT_ALIASES}（防原版区定义补齐后忘记解冻、
  * 或新增缺席别名被静默吞掉）。进区事件的运行时接取面由
  * {@code DataDrivenNativeRuntimeGateTest}（⑪-b）承担。
  * <p>
@@ -71,7 +71,7 @@ class RetailEnterAreaZoneRegistrationGateTest {
 	void frozenAbsentAliasesStayExactlyTheRetailAbsentSet() throws Exception {
 		NativeEnterAreaPort port = productionPort(registeredZoneNames());
 		assertEquals(NativeEnterAreaPort.RETAIL_ABSENT_ALIASES, port.frozenAbsentAliases(),
-			"缺席别名冻结集漂移——真端补区或新增缺席别名都必须显式裁定");
+			"缺席别名冻结集漂移——原版补区或新增缺席别名都必须显式裁定");
 	}
 
 	/** 生产同源端口重建（表 + 切换集 + zones 登记名）。 / Port rebuilt from production inputs. */

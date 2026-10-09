@@ -30,23 +30,23 @@ import com.aionemu.gameserver.services.DialogService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
- * 真端 CombineTask 原生任务处理器（计划 §7 P6 切换批）。
+ * 原版 CombineTask 原生任务处理器（计划 §7 P6 切换批）。
  * <p>
- * 完全由真端表 {@link NativeQuestTableLoader#combineRows()}、真端 {@code quest.xml} 与共用结算口驱动，
- * 绝不生成 IR 节点、绝不回退退役编译器。真端 helper（{@code f731:1355 FUN_180caac10} 一系）的参数序
+ * 完全由原版表 {@link NativeQuestTableLoader#combineRows()}、原版 {@code quest.xml} 与共用结算口驱动，
+ * 绝不生成 IR 节点、绝不回退退役编译器。原版 helper（{@code f731:1355 FUN_180caac10} 一系）的参数序
  * 逐段落在这里：
  * <ol>
  *   <li><b>接取</b>：接取 NPC 的 31/26 问询 → 客户端任务页声明的接取入口页（本族 574 行未登记页 ⇒
  *       契约回落页 4）；1002/20000 建档 START + 按表序发 {@code give_component1..8} + 学配方
- *       （真端表只有配方符号，配方 id 由 {@code (combineskill, product)} 在生产配方表唯一反查）；
+ *       （原版表只有配方符号，配方 id 由 {@code (combineskill, product)} 在生产配方表唯一反查）；
  *       1003 → 页 1004、1004/20001 → 收窗；</li>
  *   <li><b>交付</b>：交付 NPC 的 {@code SELECT_QUEST_REWARD}(1009)：持有产物（表列 {@code product} 的
  *       符号与数量）→ 回收剩余分量（{@code RemoveItem(component, ALL)}）+ 翻 REWARD + 开奖励窗页 5；
- *       缺产物 → 真端回退页 {@code SELECT3_2}(1779)，状态与背包零变更；</li>
- *   <li><b>领奖</b>：{@link NativeReportRewardFlow}（真端 reward 列 → 共用结算体）→ 完成后再走真端
+ *       缺产物 → 原版回退页 {@code SELECT3_2}(1779)，状态与背包零变更；</li>
+ *   <li><b>领奖</b>：{@link NativeReportRewardFlow}（原版 reward 列 → 共用结算体）→ 完成后再走原版
  *       条件回收段（扣产物 + 忘配方）→ 完成页 1008；</li>
  *   <li><b>放弃</b>：{@link #onAbandon(Player, int)} 只做族级动作（忘配方）；共用清理段（状态复位 +
- *       真端 {@code quest_work_item*} 工作物品回收）由 {@code QuestService} 的原生放弃路径承担。</li>
+ *       原版 {@code quest_work_item*} 工作物品回收）由 {@code QuestService} 的原生放弃路径承担。</li>
  * </ol>
  * 缺行/名字多义/符号未解/配方非唯一/元数据不干净/未退役的行一律不路由（fail-closed）。
  * <p>
@@ -68,7 +68,7 @@ public final class SimpleCombineTaskHandler {
 	public static final int PAGE_ACCEPTED = QuestDialogPage.QUEST_ACCEPT_1.id();
 	/** 拒绝页。 / The refuse page. */
 	public static final int PAGE_REFUSED = QuestDialogPage.QUEST_REFUSE_1.id();
-	/** 交付门未过时的真端回退页（{@code SELECT3_2}）。 / The retail fallback page when the product is missing. */
+	/** 交付门未过时的原版回退页（{@code SELECT3_2}）。 / The retail fallback page when the product is missing. */
 	public static final int PAGE_HANDIN_BLOCKED = QuestDialogPage.SELECT3_2.id();
 
 	private static volatile SimpleCombineTaskHandler instance;
@@ -82,11 +82,11 @@ public final class SimpleCombineTaskHandler {
 	private final NativeReportRewardFlow rewardFlow;
 	private final QuestDialogContract dialogContract;
 
-	/** 任务 ID → 接取/交付 NPC 集合（真端 {@code task_npc}，天/魔各一）。 / Quest id → accept/hand-in npcs. */
+	/** 任务 ID → 接取/交付 NPC 集合（原版 {@code task_npc}，天/魔各一）。 / Quest id → accept/hand-in npcs. */
 	private final Map<Integer, List<Integer>> taskNpcsByQuestId;
-	/** 任务 ID → 产物（真端 {@code product} 单元）。 / Quest id → the product stack. */
+	/** 任务 ID → 产物（原版 {@code product} 单元）。 / Quest id → the product stack. */
 	private final Map<Integer, ItemStack> productByQuestId;
-	/** 任务 ID → 接取发放的分量（真端 {@code give_component1..8}，按表序）。 / Quest id → the component grants. */
+	/** 任务 ID → 接取发放的分量（原版 {@code give_component1..8}，按表序）。 / Quest id → the component grants. */
 	private final Map<Integer, List<ItemStack>> componentsByQuestId;
 	/** 任务 ID → 配方 id（{@code (combineskill, product)} 唯一反查）。 / Quest id → the resolved recipe id. */
 	private final Map<Integer, Integer> recipeIdByQuestId;
@@ -103,7 +103,7 @@ public final class SimpleCombineTaskHandler {
 	/** 未解析的合成技能 / 配方符号（证据面）。 / Unresolved combine-skill or recipe symbols. */
 	private final Set<String> unresolvedRecipeSymbols;
 
-	/** 生产实例构造（真端表 + 生产背包/配方/结算口）。 / The production wiring. */
+	/** 生产实例构造（原版表 + 生产背包/配方/结算口）。 / The production wiring. */
 	private SimpleCombineTaskHandler(NativeQuestTableLoader tableLoader, NativeNpcNameResolver nameResolver,
 			RetailItemNameIndex itemIndex, RetailRecipeIndex recipeIndex, NativeInventoryPort inventory) {
 		this(tableLoader, nameResolver, itemIndex, recipeIndex, inventory, NativeRecipePort.live(),
@@ -143,7 +143,7 @@ public final class SimpleCombineTaskHandler {
 			owned.add(questId);
 			boolean resolvable = true;
 
-			// 接取/交付 NPC（真端必填列，两名）：非唯一解析即不可路由。 / Required accept npcs.
+			// 接取/交付 NPC（原版必填列，两名）：非唯一解析即不可路由。 / Required accept npcs.
 			Set<Integer> npcIds = new LinkedHashSet<>();
 			for (String name : row.taskNpcNames()) {
 				NativeNpcNameResolver.Match match = nameResolver.resolve(name);
@@ -160,7 +160,7 @@ public final class SimpleCombineTaskHandler {
 				taskNpcs.put(questId, List.copyOf(npcIds));
 			}
 
-			// 产物（真端 product 单元，全族单槽）。 / The single product slot.
+			// 产物（原版 product 单元，全族单槽）。 / The single product slot.
 			ItemStack product = parseSymbol(row.product(), questId, unresolvedItems);
 			if (product == null) {
 				resolvable = false;
@@ -168,7 +168,7 @@ public final class SimpleCombineTaskHandler {
 				products.put(questId, product);
 			}
 
-			// 分量（真端 give_component1..8，按位置保留；全缺即不可路由）。 / The declared components.
+			// 分量（原版 give_component1..8，按位置保留；全缺即不可路由）。 / The declared components.
 			List<ItemStack> componentStacks = new ArrayList<>();
 			for (String cell : row.components()) {
 				if (cell == null || cell.isBlank()) {
@@ -223,7 +223,7 @@ public final class SimpleCombineTaskHandler {
 		this.unresolvedRecipeSymbols = Collections.unmodifiableSet(unresolvedRecipes);
 	}
 
-	/** 生产单例（真端表 + 生产端口）。 / The production singleton. */
+	/** 生产单例（原版表 + 生产端口）。 / The production singleton. */
 	public static SimpleCombineTaskHandler instance() {
 		SimpleCombineTaskHandler local = instance;
 		if (local == null) {
@@ -260,7 +260,7 @@ public final class SimpleCombineTaskHandler {
 		}
 	}
 
-	/** 是否拥有该任务（注册集 = 真端表全量行）。 / Checks whether the row is in the registration set. */
+	/** 是否拥有该任务（注册集 = 原版表全量行）。 / Checks whether the row is in the registration set. */
 	public boolean owns(int questId) {
 		return ownedQuestIds.contains(questId);
 	}
@@ -298,17 +298,17 @@ public final class SimpleCombineTaskHandler {
 		return unresolvedRecipeSymbols;
 	}
 
-	/** 接取/交付 NPC 集合（真端 {@code task_npc}）。 / The accept/hand-in npcs. */
+	/** 接取/交付 NPC 集合（原版 {@code task_npc}）。 / The accept/hand-in npcs. */
 	public List<Integer> taskNpcs(int questId) {
 		return taskNpcsByQuestId.getOrDefault(questId, List.of());
 	}
 
-	/** 产物（真端 {@code product}；无则 null）。 / The product, or null. */
+	/** 产物（原版 {@code product}；无则 null）。 / The product, or null. */
 	public ItemStack product(int questId) {
 		return productByQuestId.get(questId);
 	}
 
-	/** 接取发放的分量（真端 {@code give_component1..8}，按表序）。 / The accept component grants. */
+	/** 接取发放的分量（原版 {@code give_component1..8}，按表序）。 / The accept component grants. */
 	public List<ItemStack> components(int questId) {
 		return componentsByQuestId.getOrDefault(questId, List.of());
 	}
@@ -328,7 +328,7 @@ public final class SimpleCombineTaskHandler {
 	}
 
 	/**
-	 * 启动期把本族全部 NPC 标记注册进任务引擎（真端 codegen 的静态注册表等价物）。
+	 * 启动期把本族全部 NPC 标记注册进任务引擎（原版 codegen 的静态注册表等价物）。
 	 * Registers the family's npc marks at startup (the retail codegen registry equivalent).
 	 */
 	public void installInterest(QuestEngine engine) {
@@ -364,7 +364,7 @@ public final class SimpleCombineTaskHandler {
 		int objectId = npc != null ? npc.getObjectId() : 0;
 		int dialogId = env.getDialogId();
 
-		// 无目标领奖（真端 QuestDialog 无主键协议；任务窗/实时奖励槽的确认包不带 NPC 上下文）：
+		// 无目标领奖（原版 QuestDialog 无主键协议；任务窗/实时奖励槽的确认包不带 NPC 上下文）：
 		// 按 questId 结算 + 关窗收尾，并走本族的完成流条件回收段（扣产物 + 忘配方，与 1009 交付同序）。
 		// owner 门由上面的 routes(questId) 保证。
 		// Targetless reward claim (the ownerless retail QuestDialog protocol), including this family's
@@ -397,7 +397,7 @@ public final class SimpleCombineTaskHandler {
 	}
 
 	/**
-	 * 接取对话（真端 NPC 接取形：31/26 → 接取入口页；1002 提交 + 页 1003；20000 提交 + 收窗；
+	 * 接取对话（原版 NPC 接取形：31/26 → 接取入口页；1002 提交 + 页 1003；20000 提交 + 收窗；
 	 * 1003 → 页 1004；1004/20001 → 收窗）。
 	 * The retail npc accept shape (page-4 ask window with the 1002/20000 commits).
 	 */
@@ -408,7 +408,7 @@ public final class SimpleCombineTaskHandler {
 			return true;
 		}
 		if (dialogId == QuestDialogAction.ASK_QUEST_ACCEPT.id()) {
-			// 真端页动作 1007（ASK_QUEST_ACCEPT → mgr+0x1a0）：打开接取窗页 4；客户端未声明即 fail-closed。
+			// 原版页动作 1007（ASK_QUEST_ACCEPT → mgr+0x1a0）：打开接取窗页 4；客户端未声明即 fail-closed。
 			// Retail page action 1007 (mgr+0x1a0) opens ask window page 4; undeclared pages fail closed.
 			int askWindow = dialogContract.askWindowPage(questId);
 			if (askWindow < 0) {
@@ -443,7 +443,7 @@ public final class SimpleCombineTaskHandler {
 
 	/**
 	 * 交付对话：{@code SELECT_QUEST_REWARD}(1009) 持有产物 → 回收剩余分量 + 翻 REWARD + 奖励窗；
-	 * 缺产物 → 真端回退页（状态与背包零变更）。其余对话动作给进行中页。
+	 * 缺产物 → 原版回退页（状态与背包零变更）。其余对话动作给进行中页。
 	 * Hand-in: holding the product recycles the leftover components and flips to REWARD; a missing
 	 * product answers the retail fallback page with no state or inventory mutation.
 	 */
@@ -473,7 +473,7 @@ public final class SimpleCombineTaskHandler {
 	}
 
 	/**
-	 * 领奖段：奖励窗重开面 + 确认动作区间（8..23 / 108 / 110..124）。真端完成流先写任务成功、
+	 * 领奖段：奖励窗重开面 + 确认动作区间（8..23 / 108 / 110..124）。原版完成流先写任务成功、
 	 * 再走条件回收（扣产物 + 忘配方），故本段按该序执行。
 	 * Claim segment: window re-open actions plus the confirmation range. The retail completion helper
 	 * sets the quest state first and runs its removal loop afterwards, so the order here is fixed.
@@ -503,7 +503,7 @@ public final class SimpleCombineTaskHandler {
 			}
 			recycleProduct(player, questId);
 			forgetRecipe(player, questId);
-			// 领奖收尾 = 真端 npc-complete finish=SELECTION_DIALOG（4801/4805）：回选择对话页
+			// 领奖收尾 = 原版 npc-complete finish=SELECTION_DIALOG（4801/4805）：回选择对话页
 			// （页 10，questId=0；9/28 旧引擎基线「状态=5 → 页=10」）。
 			// The claim tail follows the retail npc-complete finish=SELECTION_DIALOG: back to the
 			// selection dialog (page 10, questId=0; the legacy 9/28 log baseline).
@@ -515,7 +515,7 @@ public final class SimpleCombineTaskHandler {
 	}
 
 	/**
-	 * 放弃的族级动作：忘配方（真端放弃段清配方）。共用清理段（状态复位 + 工作物品回收）由
+	 * 放弃的族级动作：忘配方（原版放弃段清配方）。共用清理段（状态复位 + 工作物品回收）由
 	 * {@code QuestService} 的原生放弃路径执行，本方法只做本族声明面。
 	 * The family-level abandon action: forget the recipe. The shared cleanup (state reset plus work-item
 	 * recycling) belongs to {@code QuestService}'s native abandon path.
@@ -528,14 +528,14 @@ public final class SimpleCombineTaskHandler {
 		return recipeId != null && recipes.forget(player, recipeId);
 	}
 
-	/** 接取发放真端 {@code give_component1..8}（按表序，一条一个端口调用）。 / Grants the retail components in table order. */
+	/** 接取发放原版 {@code give_component1..8}（按表序，一条一个端口调用）。 / Grants the retail components in table order. */
 	private void grantComponents(Player player, int questId) {
 		for (ItemStack component : componentsByQuestId.getOrDefault(questId, List.of())) {
 			inventory.give(player, component.itemId(), component.count());
 		}
 	}
 
-	/** 交付段回收剩余分量（真端 {@code RemoveItem(component, ALL)}）：按当前持有量清空。 /
+	/** 交付段回收剩余分量（原版 {@code RemoveItem(component, ALL)}）：按当前持有量清空。 /
 	 * Recycles the leftover components on hand-in exactly as the retail @{code RemoveItem(x, ALL)} does. */
 	private void recycleComponents(Player player, int questId) {
 		for (ItemStack component : componentsByQuestId.getOrDefault(questId, List.of())) {
@@ -546,7 +546,7 @@ public final class SimpleCombineTaskHandler {
 		}
 	}
 
-	/** 完成段扣产物（真端完成流的条件回收段）。 / Removes the product on completion (the retail removal loop). */
+	/** 完成段扣产物（原版完成流的条件回收段）。 / Removes the product on completion (the retail removal loop). */
 	private void recycleProduct(Player player, int questId) {
 		ItemStack product = productByQuestId.get(questId);
 		if (product == null) {
@@ -572,7 +572,7 @@ public final class SimpleCombineTaskHandler {
 		}
 	}
 
-	/** 真端 {@code max_repeat_count} > 1 ⇒ 可重复（COMPLETE 态可再次开窗）。 / Repeatable per retail max_repeat_count. */
+	/** 原版 {@code max_repeat_count} > 1 ⇒ 可重复（COMPLETE 态可再次开窗）。 / Repeatable per retail max_repeat_count. */
 	private boolean repeatable(int questId) {
 		NativeQuestXmlTable.QuestRow row = NativeQuestXmlTable.instance().find(questId).orElse(null);
 		Integer maxRepeat = row == null ? null : row.integer("max_repeat_count");
@@ -583,7 +583,7 @@ public final class SimpleCombineTaskHandler {
 		return NativeItemSymbols.parse(symbol, questId, itemIndex, unresolved);
 	}
 
-	/** 真端 {@code quest.xml} 元数据可编译（缺行/未解即不可路由）。 / Retail metadata must compile cleanly. */
+	/** 原版 {@code quest.xml} 元数据可编译（缺行/未解即不可路由）。 / Retail metadata must compile cleanly. */
 	private static boolean metadataClean(int questId) {
 		try {
 			return com.aionemu.gameserver.questEngine.retail.RetailQuestDriver.ensureLoaded()

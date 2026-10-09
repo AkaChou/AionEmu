@@ -99,7 +99,7 @@ class QuestSection0ReportRowContractTest {
 					break;
 				}
 			}
-			// P5-1：击杀饱和后真端行需要报告对话（QUEST_SELECT 重谈 → 1009 上交）才进领奖；
+			// P5-1：击杀饱和后原版行需要报告对话（QUEST_SELECT 重谈 → 1009 上交）才进领奖；
 			// 按当前节点实际挂载的对话路由尝试，避免硬编码 NPC。
 			if (chosen == null) {
 				chosen = planReportDialog(compiled, definition, variables, status);
@@ -144,7 +144,7 @@ class QuestSection0ReportRowContractTest {
 		return null;
 	}
 
-	/** 真端驱动形判据：击杀边不带行号钉扎动作（网格边无动作；采集行无击杀边）。 */
+	/** 原版驱动形判据：击杀边不带行号钉扎动作（网格边无动作；采集行无击杀边）。 */
 	private static boolean isRetailDrivenShape(QuestDefinition definition) {
 		List<QuestTransition> kills = definition.transitions().stream()
 			.filter(transition -> isKillEvent(transition.event()))
@@ -167,7 +167,7 @@ class QuestSection0ReportRowContractTest {
 	}
 
 	/**
-	 * 真端形 SECTION_0 闭包：零段存在、满段/领奖投影一致、报告协议（满段 QUEST_SELECT + 1009）
+	 * 原版形 SECTION_0 闭包：零段存在、满段/领奖投影一致、报告协议（满段 QUEST_SELECT + 1009）
 	 * 可达领奖、未满段 1009 门控不可达。
 	 */
 	private static void assertRetailReportClosure(CompiledQuestDefinition compiled) {
@@ -236,7 +236,7 @@ class QuestSection0ReportRowContractTest {
 	}
 
 	private static CompiledQuestDefinition load(int questId) {
-		// Section0 报告行已由真端表驱动（退役），改从生产视图取定义。
+		// Section0 报告行已由原版表驱动（退役），改从生产视图取定义。
 		// The section-0 report rows are retail-driven since retirement; load via the production view.
 		return ProductionQuestDefinitions.definition(questId);
 	}

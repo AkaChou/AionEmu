@@ -163,7 +163,7 @@ public class AttackManager {
 			npc.getMoveController().moveToTargetObject();
 			return;
 		}
-		// 不可移动的 NPC（卵、固定炮台等）不因“够不着”放弃目标：真端数据里没有这个驱动
+		// 不可移动的 NPC（卵、固定炮台等）不因“够不着”放弃目标：原版数据里没有这个驱动
 		// （0 移速不会产生寻路失败、max_chase_time=0 不设追击超时、pattern 在进入战斗时 do_nothing），
 		// 而放弃会清空仇恨，并被下一次受击/视野事件立刻重新拉进战斗，客户端就会反复播放脱战表现。
 		// Immobile NPCs (eggs, fixed turrets) must not abandon an unreachable target: retail data defines no such
@@ -172,7 +172,7 @@ public class AttackManager {
 		// event, which makes the client replay the disengage animation over and over.
 		// 但“保留目标”不等于“放弃出手”：可移动 NPC 靠追击到达事件复位攻击链，0 移速 NPC 没有这条路径，
 		// 于是会停在 FIGHT 里既不移动也不还手（0 移速远程怪 Lurking Clamshell Oculis 235805 即为此例）。
-		// 这里按攻击间隔重排一次尝试，直到目标重新进入射程/视线，或真端 max_chase_time 规则结束战斗。
+		// 这里按攻击间隔重排一次尝试，直到目标重新进入射程/视线，或原版 max_chase_time 规则结束战斗。
 		// Keeping the target must not mean dropping the attack chain: mobile NPCs resume through the chase-arrival
 		// event, immobile ones have no such path and would sit in FIGHT without moving or retaliating (the zero-speed
 		// ranged monster Lurking Clamshell Oculis 235805 is such a case). Retry once per attack interval until the

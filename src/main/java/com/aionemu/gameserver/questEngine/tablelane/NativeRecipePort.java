@@ -5,10 +5,10 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.templates.recipe.RecipeTemplate;
 
 /**
- * 原生任务车道的**配方端口**：真端表声明的配方学习（CombineTask 接取）与忘记（完成 / 放弃）的
+ * 原生任务车道的**配方端口**：原版表声明的配方学习（CombineTask 接取）与忘记（完成 / 放弃）的
  * 唯一出口，处理器本身不直接触碰配方表或 DAO。
  * <p>
- * 真端 CombineTask helper（{@code FUN_180caac10}）在接取段写配方、在完成/放弃段清配方；本端口把
+ * 原版 CombineTask helper（{@code FUN_180caac10}）在接取段写配方、在完成/放弃段清配方；本端口把
  * 这两个调用面收敛到与 typed 车道同一条实现（{@code RecipeList}：DB + {@code SM_LEARN_RECIPE} /
  * {@code SM_RECIPE_DELETE} 一并下发），避免 native 车道另造一套。
  * <p>
@@ -22,7 +22,7 @@ public interface NativeRecipePort {
 	boolean holds(Player player, int recipeId);
 
 	/**
-	 * 学习配方（已掌握时为幂等成功；配方 id 在真端表里不存在则 fail-closed 返回 false）。
+	 * 学习配方（已掌握时为幂等成功；配方 id 在原版表里不存在则 fail-closed 返回 false）。
 	 * Learns the recipe (idempotent when already known; an unknown retail recipe id fails closed).
 	 */
 	boolean learn(Player player, int recipeId);
@@ -60,7 +60,7 @@ final class RecipeListRecipePort implements NativeRecipePort {
 		}
 		RecipeTemplate template = DataManager.RECIPE_DATA.getRecipeTemplateById(recipeId);
 		if (template == null) {
-			// 真端表声明的配方 id 在静态数据里不存在 ⇒ 不落库、不假装学会。 /
+			// 原版表声明的配方 id 在静态数据里不存在 ⇒ 不落库、不假装学会。 /
 			// A retail-declared recipe id missing from the static data is never faked.
 			return false;
 		}

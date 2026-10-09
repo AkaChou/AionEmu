@@ -40,7 +40,7 @@ class Quest28808ClientDialogAlignmentTest {
 		assertEquals("started", accept.targetNode());
 		assertEquals(List.of(new QuestCondition.StartEligible()), accept.conditions());
 		// 接取发放工作物：legacy `_28808OpenSaysMe` 在 ACCEPT_QUEST_SIMPLE 分支 giveQuestItem(182213216)；
-		// 真端 quest_work_item 同为该锁箱（client quest_28808a），迁移一度漏发。
+		// 原版 quest_work_item 同为该锁箱（client quest_28808a），迁移一度漏发。
 		// Accept-time work item: the legacy handler granted 182213216 and the metadata declares it as work item.
 		assertEquals(List.of(new QuestAction.GiveItem(182213216, 1)), accept.actions());
 		assertEquals(List.of(
@@ -140,7 +140,7 @@ class Quest28808ClientDialogAlignmentTest {
 	}
 
 	private static CompiledQuestDefinition load() {
-		// 退役任务的生产 XML 只在 git 历史里：统一取生产视图（XML 目录 + 真端 overlay）。
+		// 退役任务的生产 XML 只在 git 历史里：统一取生产视图（XML 目录 + 原版 overlay）。
 		return ProductionQuestDefinitions.definition(28808);
 	}
 }

@@ -20,7 +20,7 @@ import javax.xml.validation.Validator;
 import org.junit.jupiter.api.Test;
 
 /**
- * {@link HtmlPagesRegistry} 门测试：真端数据形状 + fail-closed 负例（计划 §4.6.1/§6.3）。
+ * {@link HtmlPagesRegistry} 门测试：原版数据形状 + fail-closed 负例（计划 §4.6.1/§6.3）。
  * Gate tests for {@link HtmlPagesRegistry}: retail data shape plus fail-closed negatives (plan §4.6.1/§6.3).
  */
 class HtmlPagesRegistryTest {
@@ -59,7 +59,7 @@ class HtmlPagesRegistryTest {
 		HtmlPagesRegistry registry = HtmlPagesRegistry.instance();
 		HtmlPagesRegistry.HtmlPage nullPage = registry.find(0).orElseThrow();
 		assertEquals("HTML_PAGE_NULL", nullPage.name());
-		// 该行未声明 htmlpagename（真端仅 35 行如此）。 / This row declares no htmlpagename (only 35 retail rows do).
+		// 该行未声明 htmlpagename（原版仅 35 行如此）。 / This row declares no htmlpagename (only 35 retail rows do).
 		assertTrue(nullPage.htmlPagename() == null || nullPage.htmlPagename().isBlank());
 		HtmlPagesRegistry.HtmlPage menuDialog = registry.find(3).orElseThrow();
 		assertEquals("HTML_PAGE_MENU_DIALOG", menuDialog.name());
@@ -166,7 +166,7 @@ class HtmlPagesRegistryTest {
 				""";
 	}
 
-	/** UTF-16LE + BOM，模拟真端表字节形态。 / UTF-16LE + BOM, mirroring the retail table bytes. */
+	/** UTF-16LE + BOM，模拟原版表字节形态。 / UTF-16LE + BOM, mirroring the retail table bytes. */
 	private static byte[] utf16(String xml) {
 		return ('\uFEFF' + xml).getBytes(StandardCharsets.UTF_16LE);
 	}

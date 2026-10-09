@@ -26,20 +26,20 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * 任务接取元数据（start-metadata）真端合同门禁。
+ * 任务接取元数据（start-metadata）原版合同门禁。
  * <p>
- * 以 Aion 5.8 真端解包 quest.xml 的快照
+ * 以 Aion 5.8 原版解包 quest.xml 的快照
  * ({@code /quest/quest-start-metadata-retail-contract.tsv}) 为权威，逐任务锁定：
  * <ul>
- * <li>min-level 精确匹配（真端占位任务跳过）；</li>
- * <li>max-level sentinel 语义（真端 0/998/999 与生产 2147483647/999/998 均为无上限，
+ * <li>min-level 精确匹配（原版占位任务跳过）；</li>
+ * <li>max-level sentinel 语义（原版 0/998/999 与生产 2147483647/999/998 均为无上限，
  * 服务端有意封顶值 82 以例外清单放行，其余数值必须精确匹配）；</li>
- * <li>faction 等价表达（真端 pc_light pc_dark = 生产 PC_ALL）与阵营拆分配对例外；</li>
+ * <li>faction 等价表达（原版 pc_light pc_dark = 生产 PC_ALL）与阵营拆分配对例外；</li>
  * <li>gender 与 max_repeat_count 全量匹配（当前全库 0 差异，防止回归）。</li>
  * </ul>
  * 覆盖全部 catalog 条目：EXECUTABLE 取编译后 metadata，METADATA_ONLY 按其 resource
  * XML 解析 metadata（两类任务对玩家都生效接取资格）。
- * 基线由 .agents/summary/quest-systemic-goal/build_retail_contract_tsv.py 从真端数据再算。
+ * 基线由 .agents/summary/quest-systemic-goal/build_retail_contract_tsv.py 从原版数据再算。
  */
 class QuestRetailStartMetadataGateTest {
 
@@ -48,19 +48,19 @@ class QuestRetailStartMetadataGateTest {
 	private static final String CATALOG_RESOURCE =
 		"/aion/data/static_data/quest/definitions/quest_definition_catalog.xml";
 
-	/** 真端占位任务（minlevel_permitted=999）：不可接取，min-level 不纳入比对。 */
+	/** 原版占位任务（minlevel_permitted=999）：不可接取，min-level 不纳入比对。 */
 	private static final String RETAIL_PLACEHOLDER = "RETAIL_PLACEHOLDER";
 	private static final String UNLIMITED = "UNLIMITED";
 	/** 服务端有意版本封顶的唯一合法值（全局配置上限 83 的邻近封顶，5.8 玩家 66 级封顶无可见影响）。 */
 	private static final int INTENTIONAL_SERVER_CAP = 82;
 
 	/**
-	 * 阵营拆分配对例外：真端为双阵营，服务端按阵营拆成 1xxxx/2xxxx 成对任务。
+	 * 阵营拆分配对例外：原版为双阵营，服务端按阵营拆成 1xxxx/2xxxx 成对任务。
 	 * 每条必须同时证明成对镜像存在且阵营互补，禁止新增无配对证据的单边例外。
 	 */
 	private static final Map<Integer, Integer> FACTION_SPLIT_PAIRS = Map.of(15205, 25205);
 
-	/** 服务端自有任务（真端数据包不存在），全部为 EVENT/活动派发任务。 */
+	/** 服务端自有任务（原版数据包不存在），全部为 EVENT/活动派发任务。 */
 	private static final Set<Integer> SERVER_ONLY_QUESTS = Set.of(
 		50110, 50111, 50123, 50124, 51110, 51111, 89999);
 
@@ -113,7 +113,7 @@ class QuestRetailStartMetadataGateTest {
 		assertFalse(capExceptions.isEmpty(), "cap exception ledger must not be empty");
 
 		production = new HashMap<>();
-		// 生产视图 = XML 目录 + 真端 overlay：退役任务（retail-xml-retention owner=RETAIL_TABLE，
+		// 生产视图 = XML 目录 + 原版 overlay：退役任务（retail-xml-retention owner=RETAIL_TABLE，
 		// XML 已删除）由 native 车道执行，接取元数据的唯一事实来源是 RetailQuestDriver.retailMetadataOf
 		// （native 完成/领奖口与接取资格口同源）。缺了这一段，退役行会被误判为「无生产定义」。
 		// Production view: the XML catalog plus the retail overlay. Retired rows (owner=RETAIL_TABLE in the
@@ -146,7 +146,7 @@ class QuestRetailStartMetadataGateTest {
 	}
 
 	/**
-	 * 供同类门禁复用：把退役行（owner=RETAIL_TABLE，XML 已删除）的真端表元数据并入生产视图——
+	 * 供同类门禁复用：把退役行（owner=RETAIL_TABLE，XML 已删除）的原版表元数据并入生产视图——
 	 * native 车道的唯一事实来源是 {@link RetailQuestDriver#retailMetadataOf}。
 	 * Reusable by sibling gates: merges the retired rows' retail-table metadata into the production
 	 * view (the native lanes' single source of truth).
@@ -246,7 +246,7 @@ class QuestRetailStartMetadataGateTest {
 	}
 
 	/**
-	 * 已退役（真端文件驱动接管）的任务 id，来自保留清单 owner=RETAIL_TABLE。
+	 * 已退役（原版文件驱动接管）的任务 id，来自保留清单 owner=RETAIL_TABLE。
 	 * 旧 XML 已随 git 历史保存，仓库不再保留测试作用域冻结副本。
 	 * <p>
 	 * Quest ids retired to the retail driver, sourced from the retention ledger; the legacy XML
@@ -291,7 +291,7 @@ class QuestRetailStartMetadataGateTest {
 	}
 
 	/**
-	 * 生产目录中的每个任务都必须有真端合同行（服务端自有任务除外），
+	 * 生产目录中的每个任务都必须有原版合同行（服务端自有任务除外），
 	 * 且合同行不得引用生产目录之外的任务，保证基线与目录同步收敛。
 	 */
 	@Test
@@ -310,7 +310,7 @@ class QuestRetailStartMetadataGateTest {
 		assertTrue(problems.isEmpty(), () -> "contract/catalog mismatch: " + problems);
 	}
 
-	/** min-level 必须与真端精确一致；真端占位任务跳过。 */
+	/** min-level 必须与原版精确一致；原版占位任务跳过。 */
 	@Test
 	void minLevelsMatchTheRetailContract() {
 		List<String> problems = new ArrayList<>();
@@ -329,8 +329,8 @@ class QuestRetailStartMetadataGateTest {
 	}
 
 	/**
-	 * max-level 必须与真端一致（sentinel 归一后）；
-	 * 服务端有意封顶 82 只允许出现在例外清单中，清单外一律按真端对齐。
+	 * max-level 必须与原版一致（sentinel 归一后）；
+	 * 服务端有意封顶 82 只允许出现在例外清单中，清单外一律按原版对齐。
 	 */
 	@Test
 	void maxLevelsMatchTheRetailContractWithSentinelsAndCapLedger() {
@@ -365,7 +365,7 @@ class QuestRetailStartMetadataGateTest {
 	}
 
 	/**
-	 * faction：真端单阵营必须精确一致；真端双阵营接受 PC_ALL 等价表达；
+	 * faction：原版单阵营必须精确一致；原版双阵营接受 PC_ALL 等价表达；
 	 * 15205/25205 类服务端阵营拆分必须有互补配对任务佐证。
 	 */
 	@Test
@@ -380,7 +380,7 @@ class QuestRetailStartMetadataGateTest {
             switch (retailFaction) {
                 case "PC_ALL":
                     if (!wildcard && !both) {
-                        // 服务端阵营拆分（真端双阵营 -> 生产 1xxxx/2xxxx 单阵营成对任务）。
+                        // 服务端阵营拆分（原版双阵营 -> 生产 1xxxx/2xxxx 单阵营成对任务）。
                         Integer mirror = FACTION_SPLIT_PAIRS.get(qid);
                         if (mirror == null) {
                             problems.add("quest " + qid + " races=" + races
@@ -425,7 +425,7 @@ class QuestRetailStartMetadataGateTest {
 		}
 	}
 
-	/** gender 与重复次数：当前全库与真端 0 差异，锁定为基线防回归。 */
+	/** gender 与重复次数：当前全库与原版 0 差异，锁定为基线防回归。 */
 	@Test
 	void genderAndRepeatMatchTheRetailContract() {
 		List<String> problems = new ArrayList<>();
@@ -449,7 +449,7 @@ class QuestRetailStartMetadataGateTest {
 	}
 
 	/**
-	 * P1 修复的 9 个 min-level 任务与其镜像任务互证：同一族天/魔任务保持真端一致的同档等级。
+	 * P1 修复的 9 个 min-level 任务与其镜像任务互证：同一族天/魔任务保持原版一致的同档等级。
 	 */
 	@Test
 	void repairedMinLevelQuestsAgreeWithTheirMirrors() {

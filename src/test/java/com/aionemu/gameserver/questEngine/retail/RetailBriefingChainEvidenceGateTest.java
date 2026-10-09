@@ -23,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * 背景：{@code quest_client_briefing_chains.tsv}（3225 行）随 W5-g4 退役——生产侧不再读它，两处受理门
  * 子句（{@code RETAIL_BRIEFING_CHAIN_MISSING} / {@code RETAIL_BRIEFING_TERMINAL_UNEXPECTED} /
  * {@code RETAIL_BRIEFING_CHAIN_UNREGISTERED}）一并删除。原门保护的**结构不变量**在此冻结为构建期断言：
- * 真端模板表里每个非空 {@code talk_npc1} 行（消费该列的两族 = SimpleHunt / SimpleCollectItem）都必须有
+ * 原版模板表里每个非空 {@code talk_npc1} 行（消费该列的两族 = SimpleHunt / SimpleCollectItem）都必须有
  * 一条客户端登记链，且链末跳是 SETPRO 家族终点（{@code pageId=0}，清 SECTION_5 标志位并关窗）。数据修订
  * 若新增简报行而客户端没有对应链，本门立刻变红——生产侧的 fail-closed 防线移到构建期。
  * <p>
@@ -37,13 +37,13 @@ class RetailBriefingChainEvidenceGateTest {
 	/** 冻结登记（原 {@code quest_client_briefing_chains.tsv} 的只读快照）。 / Frozen registry snapshot. */
 	private static final Path FROZEN_REGISTRY =
 		Path.of("src/test/resources/quest/retail-client-briefing-chains.tsv");
-	/** 真端模板表目录。 / The retail template-table directory. */
+	/** 原版模板表目录。 / The retail template-table directory. */
 	private static final Path RETAIL_DIR = Path.of("src/main/resources/aion/data/static_data/quest/retail");
 	/** 冻结基数：登记行数 / SimpleHunt 简报行数 / SimpleCollectItem 简报行数。 / Frozen cardinalities. */
 	private static final int FROZEN_REGISTRY_SIZE = 3225;
 	private static final int HUNT_BRIEFING_ROWS = 47;
 	private static final int COLLECT_BRIEFING_ROWS = 5;
-	/** 真端模板行块与简报列。 / Template row blocks and the briefing column. */
+	/** 原版模板行块与简报列。 / Template row blocks and the briefing column. */
 	private static final Pattern ROW = Pattern.compile("<id id=\"(\\d+)\">(.*?)</id>", Pattern.DOTALL);
 	private static final Pattern TALK_NPC = Pattern.compile("<talk_npc1>(.*?)</talk_npc1>", Pattern.DOTALL);
 

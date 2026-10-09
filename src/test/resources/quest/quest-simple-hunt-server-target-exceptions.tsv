@@ -1,4 +1,4 @@
-# 服务端可达击杀目标例外台账（真端表口径之外、但本服运行期必须接受的目标）
+# 服务端可达击杀目标例外台账（原版表口径之外、但本服运行期必须接受的目标）
 # 生成/复核：.agents/summary/scriptdll-quest-driver/restore_server_targets.py
 # reason: KILL_DECLARATION | SERVER_SPAWN_VARIANT | RETAIL_TARGET_UNREACHABLE
 quest_id	field	npc_id	reason	evidence

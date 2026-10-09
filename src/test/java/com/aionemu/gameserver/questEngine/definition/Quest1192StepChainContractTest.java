@@ -18,11 +18,11 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * 锁定任务 1192「贝尔特伦要塞的支援请求」的真端三段交付链。
+ * 锁定任务 1192「贝尔特伦要塞的支援请求」的原版三段交付链。
  * Locks quest 1192's retail three-step hand-over chain.
  * <p>
  * 任务已退役（保留清单 owner=RETAIL_TABLE）：旧 typed 节点/转换金标随迁移退场，按计划 §8.9（P3 重锚口径）
- * 改锚真端表行（接取 Spatalos → Lavirintos 步 1 → Xenophon 步 2 → Spatalos 交付、步 1 扣书信）、
+ * 改锚原版表行（接取 Spatalos → Lavirintos 步 1 → Xenophon 步 2 → Spatalos 交付、步 1 扣书信）、
  * quest.xml 奖励与 native 对话面。中继步按 var0 分轴门控：未轮到的步零响应，跳步领取只回未完成提示页。
  * <p>
  * The retired typed gold standard is re-anchored (plan §8.9) to the retail row (accept Spatalos →
@@ -35,7 +35,7 @@ class Quest1192StepChainContractTest {
 	private static final int SPATALOS = 203098;
 	private static final int LAVIRINTOS = 203701;
 	private static final int XENOPHON = 203833;
-	/** 真端 give_item / remove_item1 = ITEM_DOC_QUEST_1192A 1。 / The retail letter item. */
+	/** 原版 give_item / remove_item1 = ITEM_DOC_QUEST_1192A 1。 / The retail letter item. */
 	private static final int REINFORCEMENT_REQUEST = 182200556;
 
 	@Test
@@ -48,7 +48,7 @@ class Quest1192StepChainContractTest {
 		SimpleTalkHandler handler = SimpleTalkHandler.instance();
 		assertEquals("Spatalos", handler.requireRow(QUEST_ID).acquiredNpcName(), "接取 owner 名");
 		assertEquals(List.of("Lavirintos", "Xenophon"), handler.requireRow(QUEST_ID).talkNpcNames(),
-			"真端中继链（talk_npc1 → talk_npc2）");
+			"原版中继链（talk_npc1 → talk_npc2）");
 		assertEquals("Spatalos", handler.requireRow(QUEST_ID).rewardNpcName(), "交付 owner 名");
 		assertEquals(SPATALOS, NativeNpcNameResolver.instance().resolve("Spatalos").npcIds().get(0));
 		assertEquals(LAVIRINTOS, NativeNpcNameResolver.instance().resolve("Lavirintos").npcIds().get(0));
@@ -60,7 +60,7 @@ class Quest1192StepChainContractTest {
 			new SimpleTalkHandler.RelayStep(QUEST_ID, 1, LAVIRINTOS)), "步 1 = Lavirintos");
 		assertTrue(handler.relaysForNpc(XENOPHON).contains(
 			new SimpleTalkHandler.RelayStep(QUEST_ID, 2, XENOPHON)), "步 2 = Xenophon");
-		assertEquals(Integer.valueOf(1193), handler.conQuest(QUEST_ID), "真端 con_quest = 1193");
+		assertEquals(Integer.valueOf(1193), handler.conQuest(QUEST_ID), "原版 con_quest = 1193");
 		assertEquals(new SimpleTalkHandler.ItemStack(REINFORCEMENT_REQUEST, 1),
 			handler.acceptGiveItem(QUEST_ID), "接取发放书信");
 		assertEquals(new SimpleTalkHandler.ItemStack(REINFORCEMENT_REQUEST, 1),
@@ -69,8 +69,8 @@ class Quest1192StepChainContractTest {
 
 		QuestMetadata metadata = RetailQuestDriver.ensureLoaded()
 			.retailMetadataOf(QUEST_ID).orElseThrow().metadata();
-		assertEquals(18, metadata.minLevel(), "真端 minlevel_permitted=18");
-		assertEquals(java.util.Set.of("ELYOS"), metadata.permittedRaces(), "真端 pc_light");
+		assertEquals(18, metadata.minLevel(), "原版 minlevel_permitted=18");
+		assertEquals(java.util.Set.of("ELYOS"), metadata.permittedRaces(), "原版 pc_light");
 		List<QuestReward> rewards = metadata.rewards();
 		assertTrue(rewards.contains(new QuestReward("EXP", 0, 73200)), () -> rewards.toString());
 		assertTrue(rewards.contains(new QuestReward("ITEM", 188051196, 1)), () -> rewards.toString());

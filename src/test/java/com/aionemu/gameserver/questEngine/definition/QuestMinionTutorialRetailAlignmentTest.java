@@ -15,7 +15,7 @@ import com.aionemu.gameserver.questEngine.tablelane.SimpleTalkHandler;
  * QuestMinionTutorialRetailAlignmentTest
  * <p>
  * P3 重锚（计划 §8.9）：旧 IR 形状断言（节点名/条件/动作/页链）随 SimpleTalk 切换批退场，
- * 本类改为真端表行锚——接取/交付 NPC、中继步、发扣物品、交付门均取自
+ * 本类改为原版表行锚——接取/交付 NPC、中继步、发扣物品、交付门均取自
  * {@code Quest_SimpleTalk.xml} + {@code quest.xml} 与静态数据（{@code npc_template} /
  * 物品 {@code name_desc}），native 处理器必须逐项一致。
  * <p>
@@ -28,7 +28,7 @@ class QuestMinionTutorialRetailAlignmentTest {
 	void legacyAcceptItemGrantsSurviveTheTypedMigration() {
 		SimpleTalkHandler handler = SimpleTalkHandler.instance();
 
-		// 真端行 2266：Valuerin → Aurtri
+		// 原版行 2266：Valuerin → Aurtri
 		assertTrue(handler.routes(2266), "2266 必须由 native 车道路由");
 		assertEquals(203558, handler.acquireNpc(2266), "接取 NPC");
 		assertEquals(203654, handler.rewardNpc(2266), "交付 NPC");
@@ -43,7 +43,7 @@ class QuestMinionTutorialRetailAlignmentTest {
 		assertFalse(handler.unresolvedGate(2266), "无门行不得 fail-closed");
 		assertNull(handler.cutscene(2266), "该行无过场");
 
-		// 真端行 3085：Talos → Shugo_LF2a_1
+		// 原版行 3085：Talos → Shugo_LF2a_1
 		assertTrue(handler.routes(3085), "3085 必须由 native 车道路由");
 		assertEquals(798144, handler.acquireNpc(3085), "接取 NPC");
 		assertEquals(798132, handler.rewardNpc(3085), "交付 NPC");
@@ -58,8 +58,8 @@ class QuestMinionTutorialRetailAlignmentTest {
 		assertFalse(handler.unresolvedGate(3085), "无门行不得 fail-closed");
 		assertNull(handler.cutscene(3085), "该行无过场");
 
-		// 真端行 28808：Aruza → NPC_Housing_FOBJ_01
-		assertTrue(handler.owns(28808), "28808 在真端表行集内");
+		// 原版行 28808：Aruza → NPC_Housing_FOBJ_01
+		assertTrue(handler.owns(28808), "28808 在原版表行集内");
 		assertFalse(handler.routes(28808), "28808 仍保留 XML 定义：native 只装载不路由（单一 owner）");
 		assertEquals(830392, handler.acquireNpc(28808), "接取 NPC");
 		// P9 前缀归一化解冻（91eaef381，2026-10-03）：表写 NPC_Housing_FOBJ_01 而模板写

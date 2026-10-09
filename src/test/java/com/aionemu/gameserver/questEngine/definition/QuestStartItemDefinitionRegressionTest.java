@@ -16,10 +16,10 @@ import com.aionemu.gameserver.questEngine.tablelane.SimpleTalkHandler;
 /**
  * 任务对话/交互路由回归测试。
  * <p>
- * 遵循真端原则：1197(700004)、1198(700009)、1559(700513) 已按真端设计回归 NPC AI 层（QuestStartItemNpcAi2）
- * 独立发放道具，任务系统本身保持真端 SimpleUseItem 表驱动解耦，任务定义不再包含非标的 NPC USE_OBJECT 路由。
+ * 遵循原版原则：1197(700004)、1198(700009)、1559(700513) 已按原版设计回归 NPC AI 层（QuestStartItemNpcAi2）
+ * 独立发放道具，任务系统本身保持原版 SimpleUseItem 表驱动解耦，任务定义不再包含非标的 NPC USE_OBJECT 路由。
  * <p>
- * 1323（真端 SimpleTalk 行，acquired_npc = 交互物 LF2_Lost_JewelBox=730032）已退役：typed USE_OBJECT
+ * 1323（原版 SimpleTalk 行，acquired_npc = 交互物 LF2_Lost_JewelBox=730032）已退役：typed USE_OBJECT
  * 路由随 XML 退场，接取面改由 native 车道承载（31 → 客户端声明入口页）；1582 仍由 XML 拥有，typed
  * 路由断言照旧。
  * <p>
@@ -34,12 +34,12 @@ class QuestStartItemDefinitionRegressionTest {
 
 	@Test
 	void startItemNpcsExposeTheDialogRoutesUsedAfterReading() throws Exception {
-		// 1323（退役）：真端 acquired_npc_name 解析为交互物 NPC，任务行（31）下发客户端入口页。
+		// 1323（退役）：原版 acquired_npc_name 解析为交互物 NPC，任务行（31）下发客户端入口页。
 		assertTrue(RetiredQuestIds.contains(RETIRED_QUEST));
 		SimpleTalkHandler handler = SimpleTalkHandler.instance();
 		assertTrue(handler.routes(RETIRED_QUEST), "SimpleTalk native 车道必须路由 1323");
 		assertEquals(JEWEL_BOX_NPC, handler.acquireNpc(RETIRED_QUEST),
-			"真端 acquired_npc_name = LF2_Lost_JewelBox");
+			"原版 acquired_npc_name = LF2_Lost_JewelBox");
 		Player player = NativeTalkFixture.player(Race.ELYOS, PlayerClass.WARRIOR, 22);
 		NativeTalkFixture.clearPackets(player);
 		assertTrue(handler.onDialog(NativeTalkFixture.dialog(player, JEWEL_BOX_NPC, RETIRED_QUEST, 31)),

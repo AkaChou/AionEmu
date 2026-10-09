@@ -1,6 +1,6 @@
-# 非 IR 轴统一登记表（P0c-11）——采纳真端会连带改变的"节点/转换之外"的轴
+# 非 IR 轴统一登记表（P0c-11）——采纳原版会连带改变的"节点/转换之外"的轴
 # 生成：python3 -B .agents/summary/scriptdll-quest-driver/p0c11_build_non_ir_registry.py（采纳切片落地后必须重跑）
-# 门禁：RetailNonIrAxisGateTest（登记新鲜度 + 封顶行不得为已采纳 + 自愈边任务必须真端驱动且无 EnterWorld 路由）
+# 门禁：RetailNonIrAxisGateTest（登记新鲜度 + 封顶行不得为已采纳 + 自愈边任务必须原版驱动且无 EnterWorld 路由）
 # quest_id	axis	disposition	detail	source
 15300	CAP_LEVEL	SERVER_SIDE_CAP_INTENTIONAL	cap=82 intentional server cap (family-consistent)	quest-start-metadata-retail-cap-exceptions.tsv
 25300	CAP_LEVEL	SERVER_SIDE_CAP_INTENTIONAL	cap=82 intentional server cap (family-consistent)	quest-start-metadata-retail-cap-exceptions.tsv

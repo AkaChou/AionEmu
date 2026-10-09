@@ -17,9 +17,9 @@ import java.util.Optional;
 import java.util.TreeMap;
 
 /**
- * 真端 {@code quest.xml}（Map/XML/quest.xml，10035 个任务的模板元数据）只读视图。
+ * 原版 {@code quest.xml}（Map/XML/quest.xml，10035 个任务的模板元数据）只读视图。
  * <p>
- * 这是"真端元数据层"的原始数据源：任务的等级/种族/职业/前置/奖励/掉落等
+ * 这是"原版元数据层"的原始数据源：任务的等级/种族/职业/前置/奖励/掉落等
  * {@link com.aionemu.gameserver.questEngine.definition.QuestMetadata} 全部字段都从这里映射
  * （见 {@link RetailQuestMetadataCompiler}）。入仓副本为精简形（UTF-8、DOCTYPE/实体子集已移除，
  * 2026-10-03 剥离批；schema = 同目录 {@code quest.xsd}），装载策略与 {@link RetailSimpleHuntTable}
@@ -47,7 +47,7 @@ public final class RetailQuestXmlTable {
 	}
 
 	/**
-	 * 解析真端 quest.xml。 / Parses the retail quest.xml.
+	 * 解析原版 quest.xml。 / Parses the retail quest.xml.
 	 */
 	public static RetailQuestXmlTable load(InputStream input) throws IOException {
 		try {

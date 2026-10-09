@@ -19,11 +19,11 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * 锁定任务 1347 的两槽击杀目标、报告 NPC 与奖励归属合同（真端 SimpleHunt 车道）。
+ * 锁定任务 1347 的两槽击杀目标、报告 NPC 与奖励归属合同（原版 SimpleHunt 车道）。
  * Locks quest 1347's two-slot kill goal, report NPC and reward-owner contract on the retail lane.
  * <p>
  * 旧 typed XML 期此处的关键裁定是「报告 owner = 交付 NPC（203966 Trillian），不是接取 NPC
- * （203965 Castor）」；真端表行给出同一事实，故按计划 §8.9（P3 重锚口径）改锚 native 行 + 对话面。
+ * （203965 Castor）」；原版表行给出同一事实，故按计划 §8.9（P3 重锚口径）改锚 native 行 + 对话面。
  * <p>
  * The retired IR assertion here was "the report owner is the hand-in NPC (203966), not the accept NPC
  * (203965)"; the retail row states the same fact, so the test is re-anchored (plan §8.9) to the native
@@ -31,7 +31,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 class Quest1347ClientDialogAlignmentTest {
 	private static final int QUEST_ID = 1347;
-	/** 真端行 acquired_npc_name=Castor / reward_npc_name=Trillian。 / Retail row NPC names. */
+	/** 原版行 acquired_npc_name=Castor / reward_npc_name=Trillian。 / Retail row NPC names. */
 	private static final int START_NPC = 203965;
 	private static final int REPORT_NPC = 203966;
 
@@ -49,9 +49,9 @@ class Quest1347ClientDialogAlignmentTest {
 		assertEquals("Castor", row.acquiredNpcName());
 		assertEquals("Trillian", row.rewardNpcName());
 		assertEquals(List.of(1, 2), List.copyOf(row.killSlots().keySet()), "1347 是双槽杀怪行");
-		assertEquals(7, row.killSlots().get(1).count(), "真端 count1=7");
-		assertEquals(3, row.killSlots().get(2).count(), "真端 count2=3");
-		assertEquals(Integer.valueOf(1348), row.conQuest(), "真端 con_quest 链式接取窗");
+		assertEquals(7, row.killSlots().get(1).count(), "原版 count1=7");
+		assertEquals(3, row.killSlots().get(2).count(), "原版 count2=3");
+		assertEquals(Integer.valueOf(1348), row.conQuest(), "原版 con_quest 链式接取窗");
 
 		SimpleHuntHandler handler = SimpleHuntHandler.instance();
 		assertEquals(START_NPC,
@@ -72,10 +72,10 @@ class Quest1347ClientDialogAlignmentTest {
 		QuestMetadata metadata = RetailQuestDriver.ensureLoaded()
 			.retailMetadataOf(QUEST_ID).orElseThrow().metadata();
 
-		assertEquals(30, metadata.minLevel(), "真端 minlevel_permitted=30");
-		assertEquals(java.util.Set.of("ELYOS"), metadata.permittedRaces(), "真端 pc_light");
+		assertEquals(30, metadata.minLevel(), "原版 minlevel_permitted=30");
+		assertEquals(java.util.Set.of("ELYOS"), metadata.permittedRaces(), "原版 pc_light");
 		List<QuestReward> rewards = metadata.rewards();
-		// 真端 quest.xml：reward_exp1=340413、reward_item1_1=coin_03 1（186000003）。
+		// 原版 quest.xml：reward_exp1=340413、reward_item1_1=coin_03 1（186000003）。
 		assertTrue(rewards.contains(new QuestReward("EXP", 0, 340413)), () -> rewards.toString());
 		assertTrue(rewards.contains(new QuestReward("ITEM", 186000003, 1)), () -> rewards.toString());
 	}
@@ -85,7 +85,7 @@ class Quest1347ClientDialogAlignmentTest {
 		SimpleHuntHandler handler = SimpleHuntHandler.instance();
 		Player player = NativeTalkFixture.player(Race.ELYOS, PlayerClass.WARRIOR, 30);
 		Integer reportNpc = handler.rewardNpc(QUEST_ID);
-		assertNotNull(reportNpc, "真端行必须有可解析的交付 NPC");
+		assertNotNull(reportNpc, "原版行必须有可解析的交付 NPC");
 
 		NativeTalkFixture.add(player, QUEST_ID, QuestStatus.START, 0);
 		assertTrue(handler.onDialog(NativeTalkFixture.dialog(player, reportNpc, QUEST_ID, 31)));

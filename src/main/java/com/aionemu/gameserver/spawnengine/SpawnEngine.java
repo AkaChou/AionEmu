@@ -553,12 +553,12 @@ public class SpawnEngine {
 	}
 
 	/**
-	 * 刷出指定世界实例，并独立匹配难度与真端出生页。
+	 * 刷出指定世界实例，并独立匹配难度与原版出生页。
 	 * Spawns a world instance while matching difficulty and retail spawn page independently.
 	 * @param worldId 世界 ID / world id
 	 * @param instanceId 实例 ID / instance id
 	 * @param difficultId 难度 ID / difficulty id
-	 * @param spawnPage 真端出生页 / retail spawn page
+	 * @param spawnPage 原版出生页 / retail spawn page
 	 * @param ownerId 房屋所有者 ID / house owner id
 	 */
 	public static void spawnInstance(int worldId, int instanceId, int difficultId, int spawnPage, int ownerId) {

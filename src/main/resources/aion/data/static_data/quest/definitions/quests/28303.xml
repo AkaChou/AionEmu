@@ -43,9 +43,9 @@
     </node>
   </nodes>
   <transitions>
-    <!-- 物件 owner 收口 + 阶梯回归 legacy/真端值（2026-10-08，QE-052 同型批次；代表先例 3036）：
+    <!-- 物件 owner 收口 + 阶梯回归 legacy/原版值（2026-10-08，QE-052 同型批次；代表先例 3036）：
          legacy `_28303Char_Bombom_Boom`：两条击杀各一步（`defaultOnKillEvent(217382, 0, 1)` /
-         `(217376, 1, 2)`；真端 FUN_180ed7990/FUN_180ed7ab0 直接写 var0=1 / var0=2，绝对赋值）；
+         `(217376, 1, 2)`；原版 FUN_180ed7990/FUN_180ed7ab0 直接写 var0=1 / var0=2，绝对赋值）；
          动力物件 700980（IDStation_FOBJ_POWER，无对话 html）在 var==2 时 `useQuestObject(env, 2, 3,
          true, true)` = 只置 REWARD（不写轴）+ 销毁物件，零回页；领奖（页 10002 → 5 → 结束对话）只在
          Nineveh 804821（任务书末行 STR_DIC_N_DF5_Nineveh_E）上；传送球 730390 的对话由

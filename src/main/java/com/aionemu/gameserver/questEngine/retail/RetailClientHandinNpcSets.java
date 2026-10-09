@@ -12,8 +12,8 @@ import org.w3c.dom.Element;
 /**
  * 客户端「交付 NPC 集合」投影（{@code quest_client_handin_npc_sets.xml}）。
  * <p>
- * 与接取轴对称：真端模板的 {@code reward_npc_name} 同样是**逻辑 NPC 名**（例如每日任务在任意
- * 一名住宅管理员处交付），客户端把它展开成可交付的 NPC 集合。当真端名解析出多于一个 id 时，
+ * 与接取轴对称：原版模板的 {@code reward_npc_name} 同样是**逻辑 NPC 名**（例如每日任务在任意
+ * 一名住宅管理员处交付），客户端把它展开成可交付的 NPC 集合。当原版名解析出多于一个 id 时，
  * 合成器只认本投影：解析集必须与该任务客户端声明的集合**逐元素相等**才放行，否则维持
  * fail-closed（{@code RETAIL_REWARD_NPC_AMBIGUOUS}）——客户端是唯一仲裁。
  * <p>

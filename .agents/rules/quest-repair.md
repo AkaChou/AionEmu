@@ -22,7 +22,7 @@ globs: "src/main/resources/aion/data/static_data/quest/definitions/**/*.xml, src
 
 1. 在设计或编辑修复前，将玩家表现、编译后 IR、所有者形态（owner shape）以及副作用契约（side-effect contract）与 Playbook 的模式指纹（pattern fingerprints）进行比对。通读最具代表性 commit 的完整 diff 与测试代码，记录匹配和相异的契约字段；仅查阅单行的案例索引是不充分的。
 2. 综合审查当前 XML 编译后的状态、事件、条件、事务性动作（transactional actions）以及 `after-commit` 的执行顺序。
-3. 当存在 `origin/history` 引用时，将状态、对话页面与副作用顺序与遗留处理器（legacy handler）或真端零售模板进行比对。
+3. 当存在 `origin/history` 引用时，将状态、对话页面与副作用顺序与遗留处理器（legacy handler）或原版零售模板进行比对。
 4. 客户端证据统一称为“Aion 5.8 客户端”。切勿假定其存在于某台特定机器或固定路径上。
 5. 若任务需要 Aion 5.8 客户端的页面、动作、字典、封包、解包资源、抓包数据或其他在当前对话或仓库中无法获取的外部证据，列出缺失项并请求用户提供。在获得证据前，切勿凭空猜测或标记任务已修复。
 6. 根据具体情况，使用日志、对象 ID、NPC 模板 ID、地图或副本上下文以及登录/登出行为来验证实际的运行时路径。
@@ -35,7 +35,7 @@ globs: "src/main/resources/aion/data/static_data/quest/definitions/**/*.xml, src
 4. 测试必须精确锁定源状态、目标状态、状态位（status）、变量（variables）、事件（event）、条件（conditions）、事务动作以及完整的 `after-commit` 顺序。仅断言最终状态是不充分的。
 5. 当状态正确但对话页展示、关闭行为、NPC 生成（spawn）、跟随（follow）、传送（teleportation）或其他副作用依然有误时，视为修复未完成。
 6. **严禁在任务引擎与编译器中引入硬编码特例 (No Hardcoded Exceptions in Quest Engine or Retail Compilers)**：
-   零售任务编译器（`Retail*Compiler`）、生产调度器（`QuestProductionDispatcher`）与任务引擎必须严格遵循从真端表与客户端模板的 1:1 数据驱动纯粹转换。**严禁**在任务编译器或任务引擎中引入特定任务 ID、特定物品/NPC ID 映射的硬编码特例代码（如合成的 `questId -> npcId` 路由、合成的 `USE_OBJECT` 跳转，或硬编码的道具/NPC 对）来绕过缺失的 AI 或运行时行为。
+   零售任务编译器（`Retail*Compiler`）、生产调度器（`QuestProductionDispatcher`）与任务引擎必须严格遵循从原版表与客户端模板的 1:1 数据驱动纯粹转换。**严禁**在任务编译器或任务引擎中引入特定任务 ID、特定物品/NPC ID 映射的硬编码特例代码（如合成的 `questId -> npcId` 路由、合成的 `USE_OBJECT` 跳转，或硬编码的道具/NPC 对）来绕过缺失的 AI 或运行时行为。
    属于 NPC AI 职责的行为（如场景物体交互发放道具、物体消失进入刷新冷却、自定义对话或脚本化动作）必须在 NPC AI 层或专用的场景物体交互处理器中实现，以保持清晰的领域边界，使任务引擎保持解耦且无硬编码特例。
 
 ## 验收与 Playbook 更新 (Acceptance and Playbook Updates)

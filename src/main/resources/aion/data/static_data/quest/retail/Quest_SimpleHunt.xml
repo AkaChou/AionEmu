@@ -156,7 +156,7 @@
 	<id id="1217">
 		<dev_name>상자처리</dev_name>
 		<acquired_npc_name>Phorcys</acquired_npc_name>
-		<!-- 本服偏差（2026-10-07）：真端 count1=10，但中文（CHS）客户端页 QUEST_Q1217.html 的摘要
+		<!-- 本服偏差（2026-10-07）：原版 count1=10，但中文（CHS）客户端页 QUEST_Q1217.html 的摘要
 		     ([%2]/7) 与接取台词「清除掉7个」均为 7；按玩家可见口径取 7。证据与影响面见
 		     .agents/summary/quest-1217-kill-count/DIAGNOSIS.zh-CN.md。
 		     Local deviation (2026-10-07): retail count1=10, but the CHS client page shows 7 in both the

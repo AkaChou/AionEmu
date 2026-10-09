@@ -48,25 +48,25 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.stats.AbyssRankEnum;
 
 /**
- * 真端 DataDriven 原生**进度运行时**（计划 §10.2「P7 DataDriven」步 2 步 d / 步 d2）。
+ * 原版 DataDriven 原生**进度运行时**（计划 §10.2「P7 DataDriven」步 2 步 d / 步 d2）。
  * <p>
- * 按真端「每步一条 handler 记录」驱动进度：兴趣面（击杀/对话/FOBJ/进区/进世界/PvP/物品使用）按 DD 步载荷建索引，
- * 事件到达后走 {@link DataDrivenProgress} 的真端算术（Hunt/TalkFOBJ 多组计数；PvP 单组 + 军衔/等级闸门；
- * ItemPlay 单组物品使用计数；Talk/EnterArea/EnterWorld **直接步进**），末步转待领奖（真端 {@code SetQuestSuccess}）。
- * 真端逐 handler 原码：`FUN_180c46020`（Hunt，4 组 × 6 位、组内命中即 +1、全组达标才步进）、
+ * 按原版「每步一条 handler 记录」驱动进度：兴趣面（击杀/对话/FOBJ/进区/进世界/PvP/物品使用）按 DD 步载荷建索引，
+ * 事件到达后走 {@link DataDrivenProgress} 的原版算术（Hunt/TalkFOBJ 多组计数；PvP 单组 + 军衔/等级闸门；
+ * ItemPlay 单组物品使用计数；Talk/EnterArea/EnterWorld **直接步进**），末步转待领奖（原版 {@code SetQuestSuccess}）。
+ * 原版逐 handler 原码：`FUN_180c46020`（Hunt，4 组 × 6 位、组内命中即 +1、全组达标才步进）、
  * `FUN_180c46980`（PvP，单组 + `killerLevel <= victimLevel + gap` 与军衔区间闸门）、
  * `FUN_180c47bf0`（EnterArea，名哈希同名区比对后直接步进）、`FUN_180c467b0`（EnterWorld，步号校验后直接步进）、
  * `FUN_180c478e0`（TalkFOBJ，组计数 0→1 二值）、`FUN_180c46e90`（ItemPlay，物品 id 键控事件 5，
  * 步 kind==3 校验 + 物品 id 匹配 + 组 1 计数步进）。
  * <p>
- * **步 d2 对话平面**（真端 `FUN_180c474b0`，kind 1 CollectItem / kind 4 Talk 的主对象共用）：
+ * **步 d2 对话平面**（原版 `FUN_180c474b0`，kind 1 CollectItem / kind 4 Talk 的主对象共用）：
  * 对话打开（状态 0/10）→ 按当前步发阶段页 `select(K+1)`（1011/1352/…/7864，步 ≥15 不发）；
  * 页动作 `10000+K`（顺序守卫：K == 当前步 + 1，乱序静默零写）→ 步进写 K + **关窗零发页**
  * （`mgr+0x5d8`；退役 XML SETPRO 全量普查 3479/3923 关窗尾、同平台 SimpleTalk/1131 验收形——
  * 下一步骤由其自身 NPC 窗口的打开/行选服务，不把新步页发回同窗）；`1009` → 步进 + 报告通道
  * （末步 = 待领奖 + 奖励窗页 5）；`1008` → 完成页原样回发；`10255`（`0x280f`）→ 步进 + 完成通道
  * `mgr+0x5d8`＝关窗 + 可见性刷新（2026-10-05 实证裁定，零发页）；其余 ≥1000 动作原样回发。
- * Talk/CollectItem 载荷名允许真端 `quest_ai_name` 组（全组成员共担同一对话脚本，与 SimpleTalk 车道同轴）。
+ * Talk/CollectItem 载荷名允许原版 `quest_ai_name` 组（全组成员共担同一对话脚本，与 SimpleTalk 车道同轴）。
  * <p>
  * **本批不发运行期分流**（零行为变更）：DD 切换集行仍由旧 IR 车道 owns，生产 {@link #instance()} 的路由集为空
  * ——兴趣表不建、事件恒 false；字面切换（路由集 = switch set）随 P7 步 2 步 f 的原子切换批落地。
@@ -79,11 +79,11 @@ import com.aionemu.gameserver.utils.stats.AbyssRankEnum;
  */
 public final class DataDrivenNativeRuntime {
 
-	/** 真端 DD 表资源路径。 / The retail DD table resource. */
+	/** 原版 DD 表资源路径。 / The retail DD table resource. */
 	public static final String TABLE_RESOURCE = "/aion/data/static_data/quest/retail/data_driven_quest.xml";
 
 	/**
-	 * 真端击杀/PvP 距离门（平方米）。8 批取证链：处理函数前奏（Hunt 槽 `FUN_180c46020` / Pvp 槽
+	 * 原版击杀/PvP 距离门（平方米）。8 批取证链：处理函数前奏（Hunt 槽 `FUN_180c46020` / Pvp 槽
 	 * `FUN_180c46980`，注册于 `DAT_184720a50` / `DAT_184720a08`）按 def+0x70 案值取界
 	 * {&lt;0:跳过, 0/1:2500, 2:10000, 5/6:40000, 其他:跳过}；DD 装载器对 def+0x70 **零写入**（解析记录
 	 * 初始化恒 0，全库无存储点）⇒ 运行时恒走 case 0 = 2500（50m）。实参 = 成员与死亡对象的平方欧氏
@@ -103,46 +103,46 @@ public final class DataDrivenNativeRuntime {
 	private static final Pattern TRAILING_INT = Pattern.compile("^(.*?)(?:\\s*,\\s*|\\s+)(\\d+)$");
 
 	/**
-	 * 真端 DD 阶段页（`FUN_180c474b0` 页表：switch 下标 0..14 → `select1..select15`；下标 ≥15 不发页）。
+	 * 原版 DD 阶段页（`FUN_180c474b0` 页表：switch 下标 0..14 → `select1..select15`；下标 ≥15 不发页）。
 	 * Retail DD stage pages (`FUN_180c474b0` switch table); indexes ≥15 send no page.
 	 */
 	private static final int[] STAGE_PAGES = {1011, 1352, 1693, 2034, 2375, 2716, 3057, 3398, 3739, 4080, 6500,
 		6841, 7182, 7523, 7864};
 
-	/** 奖励窗页（真端报告通道打开的选择窗；与家族车道同页）。 / The reward-window page. */
+	/** 奖励窗页（原版报告通道打开的选择窗；与家族车道同页）。 / The reward-window page. */
 	private static final int PAGE_REWARD_WINDOW = 5;
-	/** 完成页（真端 `mgr+0x5d8` 完成通道；与家族车道同页）。 / The completion page. */
+	/** 完成页（原版 `mgr+0x5d8` 完成通道；与家族车道同页）。 / The completion page. */
 	private static final int PAGE_COMPLETE = 1008;
-	/** 领奖收尾页（真端 npc-complete finish=SELECTION_DIALOG）：回选择对话（页 10，questId=0）。 /
+	/** 领奖收尾页（原版 npc-complete finish=SELECTION_DIALOG）：回选择对话（页 10，questId=0）。 /
 	 * The claim tail page (retail npc-complete finish=SELECTION_DIALOG): the selection dialog. */
 	private static final int PAGE_SELECTION_DIALOG = 10;
-	/** 接取入口问询页（真端 `FUN_180c47220` 打开态字面量 `0x129a`）。 / The accept-entry ask page (retail 0x129a). */
+	/** 接取入口问询页（原版 `FUN_180c47220` 打开态字面量 `0x129a`）。 / The accept-entry ask page (retail 0x129a). */
 	private static final int PAGE_ACCEPT_ENTRY = 4762;
-	/** 进行中页（真端对象 #2 面 `FUN_180c473e0` 打开态字面量 `0x2712`；与共享对话平面空步集页同值）。
+	/** 进行中页（原版对象 #2 面 `FUN_180c473e0` 打开态字面量 `0x2712`；与共享对话平面空步集页同值）。
 	 * / The in-progress page (retail object-#2 open page 0x2712). */
 	private static final int PAGE_IN_PROGRESS = 10002;
-	/** 接取确认页（真端 1002 成功后下发）。 / The accepted page (sent after retail 1002). */
+	/** 接取确认页（原版 1002 成功后下发）。 / The accepted page (sent after retail 1002). */
 	private static final int PAGE_ACCEPTED = 1003;
-	/** 拒绝确认页（真端 1003 下发）。 / The confirm-refuse page (sent after retail 1003). */
+	/** 拒绝确认页（原版 1003 下发）。 / The confirm-refuse page (sent after retail 1003). */
 	private static final int PAGE_REFUSE = 1004;
-	/** 报告动作（真端 `0x3f1`）。 / The report action. */
+	/** 报告动作（原版 `0x3f1`）。 / The report action. */
 	private static final int ACTION_REPORT = 1009;
-	/** 完成动作（真端 `0x3f0`）。 / The complete action. */
+	/** 完成动作（原版 `0x3f0`）。 / The complete action. */
 	private static final int ACTION_COMPLETE = 1008;
-	/** 步进 + 完成动作（真端 `0x280f`）。 / The advance-and-complete action. */
+	/** 步进 + 完成动作（原版 `0x280f`）。 / The advance-and-complete action. */
 	private static final int ACTION_ADVANCE_COMPLETE = 10255;
-	/** 接取动作（真端 0x3ea）。 / The accept action. */
+	/** 接取动作（原版 0x3ea）。 / The accept action. */
 	private static final int ACTION_ACCEPT = 1002;
-	/** 接取确认动作（真端 0x3eb）。 / The accepted-ack action. */
+	/** 接取确认动作（原版 0x3eb）。 / The accepted-ack action. */
 	private static final int ACTION_ACCEPTED = 1003;
-	/** 问询动作（真端 0x3ef → mgr+0x1a0 接取窗）。 / The ask action (retail mgr+0x1a0). */
+	/** 问询动作（原版 0x3ef → mgr+0x1a0 接取窗）。 / The ask action (retail mgr+0x1a0). */
 	private static final int ACTION_ASK = 1007;
-	/** 建档动作（真端 20000）。 / The book-entry accept action. */
+	/** 建档动作（原版 20000）。 / The book-entry accept action. */
 	private static final int ACTION_BOOK = 20000;
-	/** 拒绝动作（真端 20001）。 / The refuse action. */
+	/** 拒绝动作（原版 20001）。 / The refuse action. */
 	private static final int ACTION_REFUSE = 20001;
 	/**
-	 * 奖励窗无选择确认动作（真端 SELECTED_QUEST_NOREWARD；选项段只有 REWARD1..15 = 8..22）。
+	 * 奖励窗无选择确认动作（原版 SELECTED_QUEST_NOREWARD；选项段只有 REWARD1..15 = 8..22）。
 	 * / The reward-window no-selection confirm (options are SELECTED_QUEST_REWARD1..15 = 8..22 only).
 	 */
 	private static final int ACTION_NO_REWARD = 23;
@@ -155,20 +155,20 @@ public final class DataDrivenNativeRuntime {
 	public enum FreezeReason {
 		/** 名字解析不到唯一 NPC / 怪物 / 物品 / 字符串键。 / A payload name or string key did not resolve. */
 		NAME_UNRESOLVED,
-		/** 进区别名在真端世界文件里没有定义（{@code NativeEnterAreaPort.RETAIL_ABSENT_ALIASES}）。 / Retail-absent zone alias. */
+		/** 进区别名在原版世界文件里没有定义（{@code NativeEnterAreaPort.RETAIL_ABSENT_ALIASES}）。 / Retail-absent zone alias. */
 		ZONE_ABSENT,
 		/** 进区别名未登记成区。 / Zone alias not registered. */
 		ZONE_UNRESOLVED,
 		/** 载荷语法不合法（空组 / 非整数世界 id / 非整数计数）。 / Malformed payload. */
 		PAYLOAD_INVALID,
-		/** 步携带仍未落面的附加动作（第九批后仅剩：真端世界文件本就缺落点别名的 ENTER_INSTANCE 行
+		/** 步携带仍未落面的附加动作（第九批后仅剩：原版世界文件本就缺落点别名的 ENTER_INSTANCE 行
 		 * 〔20032，creation 2〕；col8 Message8 = `Npc::Die` 零 routed 人口不计）。A step carries an
 		 * extra action still unfaced (after batch 9: only the Enter Instance row whose landing alias
 		 * is intrinsically absent from the retail world files). */
 		ACTION_UNFACED
 	}
 
-	/** 真端 PvP 闸门（`PvP Target Min Rank` / `Max Rank` / `Level Gap`；0 = 该轴无闸门）。 / PvP gate. */
+	/** 原版 PvP 闸门（`PvP Target Min Rank` / `Max Rank` / `Level Gap`；0 = 该轴无闸门）。 / PvP gate. */
 	private record PvpGate(int minRank, int maxRank, int levelGap) {
 	}
 
@@ -177,11 +177,11 @@ public final class DataDrivenNativeRuntime {
 			boolean lastStep) {
 	}
 
-	/** 挑战任务接取哨兵（真端 DD 表字面；P0c-58 四源裁定 = 接取 NPC 即交付 NPC 本人）。 */
+	/** 挑战任务接取哨兵（原版 DD 表字面；P0c-58 四源裁定 = 接取 NPC 即交付 NPC 本人）。 */
 	private static final String CHALLENGE_TASK_SENTINEL = "_challengetask_";
 
 	/**
-	 * 接取计划（真端 LoadBasicInfo 注册面）。返回 {@code null} = 接取参数名解析失败（fail-closed 冻结）。
+	 * 接取计划（原版 LoadBasicInfo 注册面）。返回 {@code null} = 接取参数名解析失败（fail-closed 冻结）。
 	 * The per-row acquire plan; {@code null} = the acquire parameter name did not resolve (fail closed).
 	 */
 	private static AcquirePlan acquirePlan(Row row, NativeNpcNameResolver nameResolver,
@@ -236,7 +236,7 @@ public final class DataDrivenNativeRuntime {
 					? new AcquirePlan("leveluplogin".equals(kind) ? 10 : 8, level, 0, 0, List.of(), "") : null;
 			}
 			case "enterarea" -> {
-				// 真端接取侧独立名字哈希树：别名登记原文，区未注册时永不命中（真端自身死边）。
+				// 原版接取侧独立名字哈希树：别名登记原文，区未注册时永不命中（原版自身死边）。
 				// The retail acquire-side name-hash tree keys on the alias; an unregistered zone
 				// name is never dispatched, mirroring the retail-dead edge.
 				String alias = (row.acquireParam() == null ? "" : row.acquireParam()).trim();
@@ -250,7 +250,7 @@ public final class DataDrivenNativeRuntime {
 	private record PayloadGroup(List<String> names, int trailing) {
 	}
 
-	/** 步 e2 已落面的附加动作类型（真端执行器 case 1/2/3/4/5/7）。 / The extra-action types faced in step e2. */
+	/** 步 e2 已落面的附加动作类型（原版执行器 case 1/2/3/4/5/7）。 / The extra-action types faced in step e2. */
 	private enum ActionType {
 		/** case 1：发物品（`Give/Remove Items` 发半边）。 / Give items (executor case 1). */
 		GIVE_ITEMS,
@@ -258,7 +258,7 @@ public final class DataDrivenNativeRuntime {
 		REMOVE_ITEMS,
 		/** case 4：过场/电影（`Cutscene|Cutscene2|Movie|Movie2 N`）。 / Cutscene or movie (executor case 4). */
 		CUTSCENE,
-		/** case 3：传送（`世界 x y z heading`，真端 z+1 落地）。 / Teleport (executor case 3). */
+		/** case 3：传送（`世界 x y z heading`，原版 z+1 落地）。 / Teleport (executor case 3). */
 		TELEPORT,
 		/** case 5：刷怪（`Absolute|Relative 名, 数量, 时间[, x y z heading]`）。 / Spawn npcs (executor case 5). */
 		SPAWN,
@@ -268,7 +268,7 @@ public final class DataDrivenNativeRuntime {
 		 * Quest timer (executor case 10: `seconds, destStep, flag`; flag 0 = advance / 1 = abandon). */
 		TIMER,
 		/** case 9：进副本（`creationId, worldId, leaveProgress[, 成员名…]`；落点 =
-		 * `NativeInstanceEntryPort` 真端别名坐标；movieId 槽 = creationId、count 槽 = leaveProgress）。
+		 * `NativeInstanceEntryPort` 原版别名坐标；movieId 槽 = creationId、count 槽 = leaveProgress）。
 		 * Enter instance (executor case 9; landing point from the retail alias table; movieId slot =
 		 * creationId, count slot = leaveProgress). */
 		ENTER_INSTANCE
@@ -286,7 +286,7 @@ public final class DataDrivenNativeRuntime {
 	/**
 	 * 一行 case 9（Enter Instance）的离场恢复元数据（装载期从动作表收集）。
 	 * <p>
-	 * 语义（真端 `FUN_180c46d80` 块 1：`锚 < 步 < leaveProgress ⇒ +0xf0 写回锚`；锚 = 动作所在步）：
+	 * 语义（原版 `FUN_180c46d80` 块 1：`锚 < 步 < leaveProgress ⇒ +0xf0 写回锚`；锚 = 动作所在步）：
 	 * 进世界事件时若步号落在 (enterStep, leaveProgress) 且玩家不在该副本世界 ⇒ 写回 enterStep，
 	 * 并补发进入步被扣的物品（退役 typed XML 的 `s4/s5/s6 → s3 + give-item` 同款）。边界：
 	 * <ul>
@@ -313,17 +313,17 @@ public final class DataDrivenNativeRuntime {
 	}
 
 	/**
-	 * 接取计划（真端 LoadBasicInfo 注册面：Talk=0x640 对话面 / ItemPlay=事件 5 / EnterWorld=事件 0x12 /
-	 * LevelUpLogIn=vec0+vec3 等级等值；EnterArea=e1 缺面（区几何未导入，接取缺席镜像真端注册树未填）；
+	 * 接取计划（原版 LoadBasicInfo 注册面：Talk=0x640 对话面 / ItemPlay=事件 5 / EnterWorld=事件 0x12 /
+	 * LevelUpLogIn=vec0+vec3 等级等值；EnterArea=e1 缺面（区几何未导入，接取缺席镜像原版注册树未填）；
 	 * none/其余 = 无接取注册）。
 	 * The per-row acquire plan (retail LoadBasicInfo registration face). EnterArea is unfaced in e1
 	 * (zone geometry not imported); none/other kinds have no acquire registration.
 	 */
 	/**
-	 * 接取计划（真端 6 类接取 kind 的解析产物）。
+	 * 接取计划（原版 6 类接取 kind 的解析产物）。
 	 * <p>
-	 * kind 6（EnterArea）只带区别名：真端接取侧是**独立的名字哈希注册树**（`FUN_180c47bf0` 尾段，
-	 * 0x1003F 逐值比较），区不存在时注册项永不命中（真端自身即死边）⇒ 镜像 = 兴趣键登记别名原文，
+	 * kind 6（EnterArea）只带区别名：原版接取侧是**独立的名字哈希注册树**（`FUN_180c47bf0` 尾段，
+	 * 0x1003F 逐值比较），区不存在时注册项永不命中（原版自身即死边）⇒ 镜像 = 兴趣键登记别名原文，
 	 * 进区事件按注册区名派发，未注册区名永不派发。
 	 * The acquire plan parsed from one retail acquire kind. Kind 6 (EnterArea) carries only the zone
 	 * alias: retail registers it in a separate name-hash tree (tail of FUN_180c47bf0) that can only be
@@ -349,25 +349,25 @@ public final class DataDrivenNativeRuntime {
 	/** 接取兴趣面：Talk 对话 NPC → 任务。 / Acquire interest: talk npc → quests. */
 	private final Map<Integer, List<Integer>> acquireTalksByNpcId;
 	/**
-	 * 交付报告面：零步 Talk 行（DD_TALK_SIMPLE，无 progress 步）的交付 NPC → 任务。真端所有行恒注册
+	 * 交付报告面：零步 Talk 行（DD_TALK_SIMPLE，无 progress 步）的交付 NPC → 任务。原版所有行恒注册
 	 * 交付对象 #2（{@code reward_npc_name}，槽 +0x238，P7-STEP2E1）；START 态 31 报告 → REWARD，
 	 * REWARD 态发奖励窗/结算（quests.log 2026-09-28 80790 基线）。
 	 * <p>
 	 * Delivery-report face: reward npc → zero-step Talk rows (the retail reward object #2).
 	 */
 	private final Map<Integer, List<Integer>> reportTalksByNpcId;
-	/** 接取兴趣面：物品使用（kind 3，真端事件 5 双角色）→ 任务。 / Acquire interest: item use → quests. */
+	/** 接取兴趣面：物品使用（kind 3，原版事件 5 双角色）→ 任务。 / Acquire interest: item use → quests. */
 	private final Map<Integer, List<Integer>> acquireItemsByItemId;
-	/** 接取兴趣面：进世界（kind 7，真端事件 0x12 双角色）→ 任务。 / Acquire interest: enter-world → quests. */
+	/** 接取兴趣面：进世界（kind 7，原版事件 0x12 双角色）→ 任务。 / Acquire interest: enter-world → quests. */
 	private final Map<Integer, List<Integer>> acquireWorldsByWorldId;
 	/** 接取兴趣面：等级等值（kind 8/10）→ 任务。 / Acquire interest: exact level → quests. */
 	private final Map<Integer, List<Integer>> acquireLevelsByLevel;
-	/** 接取兴趣面：进区别名（kind 6，真端接取侧名字哈希树）→ 任务。 / Acquire interest: zone alias (kind 6). */
+	/** 接取兴趣面：进区别名（kind 6，原版接取侧名字哈希树）→ 任务。 / Acquire interest: zone alias (kind 6). */
 	private final Map<String, List<Integer>> acquireZonesByName;
 	/** 已落面附加动作（quest → 逐步 ActionPlan，与步序对齐）。 / Faced extra actions per quest and step. */
 	private final Map<Integer, List<List<ActionPlan>>> actionsByQuestId;
 	/**
-	 * 接取行附加动作（`value1..10_acquire_` → 真端 `QuestProgressExtraInfo` 对象）：接取收尾
+	 * 接取行附加动作（`value1..10_acquire_` → 原版 `QuestProgressExtraInfo` 对象）：接取收尾
 	 * （Talk 1002/20000 的 d5b0 `param_2<0` 路径）与双角色接取（`FUN_180c46e90`/`FUN_180c46bb0`
 	 * 的 state!=3 分支读到 `*(entry+0x10)` 后调 cd50/c8d0）执行的都是**这张表**，不是进度步 0 动作。
 	 * The accept-side extra actions (retail QuestProgressExtraInfo object): both the Talk accept tail
@@ -383,7 +383,7 @@ public final class DataDrivenNativeRuntime {
 	private final Map<Integer, FreezeReason> frozenQuestIds;
 	private final Set<String> unresolvedNames;
 	private final NativeInventoryPort inventoryPort;
-	/** 真端物品名索引（交付门符号「quest_80875a 7」类解析）。 / The retail item-name index (gate symbols). */
+	/** 原版物品名索引（交付门符号「quest_80875a 7」类解析）。 / The retail item-name index (gate symbols). */
 	private final RetailItemNameIndex itemIndex;
 	/** 交付门计划（quest → quest.xml collect_item/quest_work_item，懒装载缓存）。 / Lazy gate plans. */
 	private final Map<Integer, GatePlan> gatePlanByQuestId = new ConcurrentHashMap<>();
@@ -399,7 +399,7 @@ public final class DataDrivenNativeRuntime {
 	/** 前序 → 该前序完成时定向走查的链边。 / Predecessor → edges walked when it completes. */
 	private final Map<Integer, List<ChainAcquireEdges.Edge>> chainAcquireByPredecessor;
 	/**
-	 * NPC id → 该 NPC 的真端任务掉落（quest.xml {@code drop_*} 列编译；退役 XML 的 {@code <drops>}
+	 * NPC id → 该 NPC 的原版任务掉落（quest.xml {@code drop_*} 列编译；退役 XML 的 {@code <drops>}
 	 * 随 catalog 退场后由本车道接手）。经 {@link QuestEngine#questDrops} 聚合并被
 	 * {@code QuestService.isQuestDrop}（START + 步号 + 上限）门控。
 	 * <p>
@@ -487,7 +487,7 @@ public final class DataDrivenNativeRuntime {
 	}
 
 	/**
-	 * 生产单例：装载真端 DD 表并按切换集（retention 台账 owner=RETAIL_TABLE ∧ family=DataDriven = 1467
+	 * 生产单例：装载原版 DD 表并按切换集（retention 台账 owner=RETAIL_TABLE ∧ family=DataDriven = 1467
 	 * 候选行）建立路由视图；行级冻结在 {@link #create} 内逐行裁定（2026-10-03 偏差修复第七批后 =
 	 * 可路由 1455 / 冻结 12）。
 	 * Production singleton: loads the retail DD table and builds the routing view for the switch set
@@ -607,11 +607,11 @@ public final class DataDrivenNativeRuntime {
 	 * 按路由集建立原生运行时视图。
 	 * Builds the native runtime view for one routing set.
 	 *
-	 * @param table          真端 DD 原生行模型 / the native DD row model
+	 * @param table          原版 DD 原生行模型 / the native DD row model
 	 * @param routedQuestIds 本车道接管的 quest id（P7 步 f 的切换集）/ the quest ids this lane owns
-	 * @param nameResolver   真端名字解析器（路由集非空时必需）/ retail name resolver (required when routing)
-	 * @param enterAreaPort  真端同名区端口（路由集非空时必需）/ retail same-name zone port (required when routing)
-	 * @param itemIndex      真端物品名索引（路由集非空时必需；ItemPlay 载荷解析）/ retail item-name index
+	 * @param nameResolver   原版名字解析器（路由集非空时必需）/ retail name resolver (required when routing)
+	 * @param enterAreaPort  原版同名区端口（路由集非空时必需）/ retail same-name zone port (required when routing)
+	 * @param itemIndex      原版物品名索引（路由集非空时必需；ItemPlay 载荷解析）/ retail item-name index
 	 *                       (required when routing; resolves ItemPlay payloads)
 	 * @param inventoryPort  发扣物品端口（路由集非空时必需；步 e1 动作面）/ inventory port (required when
 	 *                       routing; the e1 give/remove action face)
@@ -682,7 +682,7 @@ public final class DataDrivenNativeRuntime {
 			if (freeze == null && acquire == null) {
 				freeze = FreezeReason.NAME_UNRESOLVED;
 			}
-			// 接取行附加动作（valueN_acquire_，真端 QuestProgressExtraInfo）：与进度列同纪律扫描，
+			// 接取行附加动作（valueN_acquire_，原版 QuestProgressExtraInfo）：与进度列同纪律扫描，
 			// 失败整行冻结（解析器与被执行面同一张表：Talk 收尾 d5b0<0 / 双角色接取均取此表）。
 			// Accept-side extra actions: scanned with the same fail-closed discipline as the progress
 			// columns; the Talk accept tail and the dual-role acquires both execute this table.
@@ -723,11 +723,11 @@ public final class DataDrivenNativeRuntime {
 				acceptActionPlans.put(questId, acceptActions);
 			}
 			acquirePlans.put(questId, acquire);
-			// 真端所有行恒建交付对象 #2（`reward_npc_name`，槽 +0x238 = `FUN_180c473e0`，P7-STEP2E1/§7）：
+			// 原版所有行恒建交付对象 #2（`reward_npc_name`，槽 +0x238 = `FUN_180c473e0`，P7-STEP2E1/§7）：
 			// 交付面**不限于 Talk 接取行**——LevelUpLogIn/ItemPlay 等行的「和交付 NPC 对话」路径同属该面
 			// （2026-10-07 实机 13830 奥尔佩：客户端任务书写明「在任务窗点击[领取奖励]% 或 和[奥尔佩]%对话」，
 			// 该行 LevelUpLogIn 未注册 ⇒ 对话无响应）。行为面由 dispatchReportDialog 按接取类别分形服务：
-			// Talk 行 = 现状基线（零步报告推进 / REWARD 31/1009/-1 → 页 5）；非 Talk 行 = 真端对象 #2 面
+			// Talk 行 = 现状基线（零步报告推进 / REWARD 31/1009/-1 → 页 5）；非 Talk 行 = 原版对象 #2 面
 			// （START 不认领；REWARD 打开 → 页 10002、1009 → 页 5、领奖 → 结算 + 页 10）。
 			// 名字解析失败只缺席交付面（不冻结接取面，也不计入行冻结证据）。
 			// All rows register the retail delivery object #2 (reward_npc_name, slot +0x238): the face is
@@ -753,7 +753,7 @@ public final class DataDrivenNativeRuntime {
 			}
 		}
 		// 物品引用面（销毁任务物品的「停止相关任务」判定）：发/扣/用物载荷 → 物品 id 反查路由行。
-		// 真端等价物 = item 模板上的静态 quest 列表（User.cpp DestroyItem 读 template+0x90）。
+		// 原版等价物 = item 模板上的静态 quest 列表（User.cpp DestroyItem 读 template+0x90）。
 		// Item-reference face for the destroy flow: give/remove/play payloads resolve to routed rows.
 		Map<Integer, Set<Integer>> questRefSets = new LinkedHashMap<>();
 		autoRegisterItemRefs(questRefSets, actionPlans, acceptActionPlans, itemPlays);
@@ -783,12 +783,12 @@ public final class DataDrivenNativeRuntime {
 		}
 		Map<Integer, List<ChainAcquireEdges.Edge>> immutableChainByPredecessor = new LinkedHashMap<>();
 		chainByPredecessor.forEach((key, value) -> immutableChainByPredecessor.put(key, List.copyOf(value)));
-		// 真端掉落列注册（2026-10-08 实机 10034：击杀 216494 不掉 quest_10034a）。退役 XML 连同其
+		// 原版掉落列注册（2026-10-08 实机 10034：击杀 216494 不掉 quest_10034a）。退役 XML 连同其
 		// {@code <drops>} 退出 catalog 后本族击杀掉落断供；与 Talk/Collect 两族同口径，从 quest.xml
 		// {@code drop_monster_*}/{@code drop_item_*} 列接手（概率/each-member/collect_progress 原样交
 		// QuestService.isQuestDrop 的 START + 步号 + 上限门；注册无条件、激活由该门负责）。
 		// 只注册 routed（owned ∧ 可路由 ∧ 非冻结；冻结行不得有任何面，XML_RETENTION/非台账行
-		// 本就不在切换集）；真端元数据不可编译/不 clean 逐行 fail-closed 跳过（由门禁对拍暴露）。
+		// 本就不在切换集）；原版元数据不可编译/不 clean 逐行 fail-closed 跳过（由门禁对拍暴露）。
 		// Retail drop-column registration (machine case 2026-10-08, quest 10034): the retired XML took
 		// its {@code <drops>} out of the catalog; like the Talk/Collect families this lane serves the
 		// retail drop_* columns. Probability / each-member / collect_progress pass through to
@@ -817,7 +817,7 @@ public final class DataDrivenNativeRuntime {
 	}
 
 	/**
-	 * 逐行注册真端掉落列到「npc id → 条目」表（{@code routed} 为 TreeSet ⇒ 序稳定）。
+	 * 逐行注册原版掉落列到「npc id → 条目」表（{@code routed} 为 TreeSet ⇒ 序稳定）。
 	 * <p>
 	 * Registers the retail drop columns row by row; uncompilable or unclean metadata fails closed.
 	 */
@@ -838,7 +838,7 @@ public final class DataDrivenNativeRuntime {
 		}
 	}
 
-	/** 真端 quest.xml 元数据（不可编译/驱动不可用按未解处理，fail-closed）。 / Retail metadata, fail-closed. */
+	/** 原版 quest.xml 元数据（不可编译/驱动不可用按未解处理，fail-closed）。 / Retail metadata, fail-closed. */
 	private static RetailQuestMetadataCompiler.Outcome retailDropMetadata(int questId) {
 		try {
 			return RetailQuestDriver.ensureLoaded().retailMetadataOf(questId).orElse(null);
@@ -848,7 +848,7 @@ public final class DataDrivenNativeRuntime {
 	}
 
 	/**
-	 * 注册 CollectItem 步的追加 FOBJ 列对象（{@code value1..4_progress_}，真端载荷词典：列 1..4 =
+	 * 注册 CollectItem 步的追加 FOBJ 列对象（{@code value1..4_progress_}，原版载荷词典：列 1..4 =
 	 * 追加 FOBJ、列 5 = 整数）到「物件 npc id → 步命中」表（{@code routed} 为 TreeSet ⇒ 序稳定；
 	 * 每条列值一个对象名，解析失败逐条 fail-closed 跳过）。
 	 * <p>
@@ -999,7 +999,7 @@ public final class DataDrivenNativeRuntime {
 					steps.add(new StepPlan(step.kind(), true, List.copyOf(slots), null, lastStep));
 				}
 				case TALK, COLLECT_ITEM -> {
-					// 真端 kind 4（Talk）/ kind 1（CollectItem）：载荷 = NPC 名（组名展开全组成员），
+					// 原版 kind 4（Talk）/ kind 1（CollectItem）：载荷 = NPC 名（组名展开全组成员），
 					// 推进面 = 共享对话平面（`FUN_180c474b0`：开页 select(K+1) + 页动作/1009）。
 					// Retail kinds 4/1: the payload names (quest_ai_name groups expand to every member)
 					// feed the shared dialog plane.
@@ -1033,7 +1033,7 @@ public final class DataDrivenNativeRuntime {
 						freeze = FreezeReason.PAYLOAD_INVALID;
 						break;
 					}
-					// 真端 TalkFOBJ 组计数是 0→1 二值（`FUN_180c478e0`：仅 `counter == 0` 时置 1），
+					// 原版 TalkFOBJ 组计数是 0→1 二值（`FUN_180c478e0`：仅 `counter == 0` 时置 1），
 					// 载荷尾整数是**动作类型**（0/1/2），不是计数 ⇒ 目标恒 1。
 					// The retail TalkFOBJ counter is binary (0→1) and the trailing integer is the action type.
 					List<DataDrivenProgress.Slot> slots = new ArrayList<>();
@@ -1060,7 +1060,7 @@ public final class DataDrivenNativeRuntime {
 					steps.add(new StepPlan(step.kind(), true, List.copyOf(slots), null, lastStep));
 				}
 				case ITEM_PLAY -> {
-					// 真端 kind 3：载荷 = 物品名（可选「, 计数」，装载器缺省计数 1）；进度 = 物品使用事件
+					// 原版 kind 3：载荷 = 物品名（可选「, 计数」，装载器缺省计数 1）；进度 = 物品使用事件
 					// （事件 5，`FUN_180c46e90`：物品 id 匹配 + 组 1 计数 + 步进/收口）。
 					// Retail kind 3: payload = item name with an optional count (loader default 1); the
 					// progress event is the item-USE event (User__UseItem) keyed by the resolved item id.
@@ -1136,9 +1136,9 @@ public final class DataDrivenNativeRuntime {
 	}
 
 	/**
-	 * 步 e2 附加动作面：逐步扫描附加动作列。已落面（真端执行器 case 1/2/3/4/5/7）解析成
+	 * 步 e2 附加动作面：逐步扫描附加动作列。已落面（原版执行器 case 1/2/3/4/5/7）解析成
 	 * {@link ActionPlan}；case 6/8 只在 EnterArea/TalkFOBJ 步活（def 侧槽未定名 ⇒ 这两类步冻结，
-	 * 其余 kind 真端执行器无该 case = 装载即死列，镜像忽略）；case 9/10（EnterInstance/Timer）
+	 * 其余 kind 原版执行器无该 case = 装载即死列，镜像忽略）；case 9/10（EnterInstance/Timer）
 	 * 宿主渲染面未坐实 ⇒ ACTION_UNFACED；物品符号/字符串键解析失败返回 NAME_UNRESOLVED，
 	 * 成功返回 {@code null}。
 	 * e2 extra-action face: parse the faced executor cases (1/2/3/4/5/7); cases 6/8 are live only on
@@ -1154,7 +1154,7 @@ public final class DataDrivenNativeRuntime {
 			String text = step.column(columnIndex);
 			switch (action) {
 				case GIVE_ITEMS, REMOVE_ITEMS -> {
-					// 真端 `符号 数量`（可多对，`,`/空格分隔）；符号经物品名索引解析。
+					// 原版 `符号 数量`（可多对，`,`/空格分隔）；符号经物品名索引解析。
 					// Retail `symbol count` pairs separated by commas/spaces; symbols resolve via the item index.
 					String[] tokens = text.trim().split("[,\\s]+");
 					if (tokens.length % 2 != 0) {
@@ -1177,8 +1177,8 @@ public final class DataDrivenNativeRuntime {
 					}
 				}
 				case CUTSCENE -> {
-					// 真端 `Cutscene|Cutscene2|Movie|Movie2 N`（+可选 HACTION 链接，忽略）；
-					// 未知词形 = 真端 Wrong Type!!（记日志跳过），不冻结。
+					// 原版 `Cutscene|Cutscene2|Movie|Movie2 N`（+可选 HACTION 链接，忽略）；
+					// 未知词形 = 原版 Wrong Type!!（记日志跳过），不冻结。
 					// Retail `Cutscene|Cutscene2|Movie|Movie2 N` (+ optional HACTION links, ignored);
 					// an unknown token is the retail Wrong Type!! (log + skip), mirrored without freezing.
 					String[] tokens = text.trim().split("[,\\s]+");
@@ -1199,7 +1199,7 @@ public final class DataDrivenNativeRuntime {
 					}
 				}
 				case TELEPORT -> {
-					// 真端 case 3 → `IUserImp::Teleport(world, x, y, z+1, heading, 1)`；载荷 = 5 个整数。
+					// 原版 case 3 → `IUserImp::Teleport(world, x, y, z+1, heading, 1)`；载荷 = 5 个整数。
 					// Retail case 3 → IUserImp::Teleport; the payload is five integers.
 					String[] tokens = text.trim().split("[,\\s]+");
 					if (tokens.length < 5) {
@@ -1217,7 +1217,7 @@ public final class DataDrivenNativeRuntime {
 						-1));
 				}
 				case SPAWN -> {
-					// 真端 case 5 → `IUserImp::Spawn`：`Absolute|Relative 名, 数量, 时间[, x y z heading]`
+					// 原版 case 5 → `IUserImp::Spawn`：`Absolute|Relative 名, 数量, 时间[, x y z heading]`
 					// 可 `;` 连多组；名字经 NPC 名空间解析。
 					// Retail case 5 → IUserImp::Spawn: multi-group spawn declarations.
 					String[] tokens = text.trim().split("[,\\s;]+");
@@ -1261,8 +1261,8 @@ public final class DataDrivenNativeRuntime {
 					}
 				}
 				case MESSAGE -> {
-					// case 7（列 7）→ `IUserImp::Say`（字符串表 id，键经真端字符串表解析）；
-					// case 8（列 8）= 宿主 `Npc` 槽 +0x3a0 = `Npc::Die`（宿主 NPC 死亡，真端唯一载荷行
+					// case 7（列 7）→ `IUserImp::Say`（字符串表 id，键经原版字符串表解析）；
+					// case 8（列 8）= 宿主 `Npc` 槽 +0x3a0 = `Npc::Die`（宿主 NPC 死亡，原版唯一载荷行
 					// 9696 = `_TEST_` 串且不路由）⇒ fail-closed 维持冻结（`defSideAction`）。
 					// Column 7 → IUserImp::Say with a string-table id; column 8 targets the host-Npc
 					// vtable +0x3a0 = Npc::Die (the sole retail payload row 9696 is a _TEST_ string on
@@ -1282,12 +1282,12 @@ public final class DataDrivenNativeRuntime {
 					plans.add(new ActionPlan(ActionType.SAY, 0, 0, 0, false, -1, 0, 0, 0, 0, false, stringId));
 				}
 				case DELAY -> {
-					// case 6（列 6，2026-10-03 落面 = 零效果镜像）：真端装载器 `FUN_180c49610` case 6 读
+					// case 6（列 6，2026-10-03 落面 = 零效果镜像）：原版装载器 `FUN_180c49610` case 6 读
 					// "DataDrivenQuest - Delay Time" 整数入动作向量；运行时应用器 `FUN_180c4c8d0` case 6 =
 					// `(*param_3 + 0x270)(param_3, 延迟值)`，param_3 = 宿主侧 `Npc`（EXE `Npc::vftable`
 					// 199 槽 @0x12b8470，槽 +0x3a0 = `Npc::Die` 交叉验证），槽 +0x270 = **空桩**
-					// （`FUN_140094480` = `return;`）⇒ 真端 Delay = 装载存储、调用空桩、零效果。
-					// 镜像 = 忽略该动作（真端一致，不冻结）；真端仅 10035/25606 携带（值 8/3/2）。
+					// （`FUN_140094480` = `return;`）⇒ 原版 Delay = 装载存储、调用空桩、零效果。
+					// 镜像 = 忽略该动作（原版一致，不冻结）；原版仅 10035/25606 携带（值 8/3/2）。
 					// Retail case 6 (2026-10-03, zero-effect mirror): the loader FUN_180c49610 stores the
 					// "Delay Time" int; the applier FUN_180c4c8d0 case 6 calls vtable +0x270 on the
 					// host-side Npc (EXE Npc::vftable, 199 slots, +0x3a0 = Npc::Die cross-check) whose
@@ -1296,8 +1296,8 @@ public final class DataDrivenNativeRuntime {
 					// only 10035/25606 carry it (values 8/3/2).
 				}
 				case TIMER -> {
-					// 真端 case 10（`FUN_180c49610` case 10，2026-10-02 取证落面）：载荷 =
-					// `秒, 目标步, 旗标` 三整数（缺项 = 真端装载失败日志 "Add Timer - Timer Time /
+					// 原版 case 10（`FUN_180c49610` case 10，2026-10-02 取证落面）：载荷 =
+					// `秒, 目标步, 旗标` 三整数（缺项 = 原版装载失败日志 "Add Timer - Timer Time /
 					// Dest Progress is Not Exists"）；旗标 0 = 到期推进到目标步 / 1 = 到期弃任
 					// （到期面 `FUN_180c46d80`：状态 3 ∧ `0 < 当前步 < 目标步` ⇒ `+0xf0` 直写 /
 					// `+0x160` 弃任；300~14100 数值域 = 秒，与 NPCServer 计时中转一致）。
@@ -1322,15 +1322,15 @@ public final class DataDrivenNativeRuntime {
 						-1));
 				}
 				case ENTER_INSTANCE -> {
-					// 真端 case 9（`FUN_180c49610` case 9，2026-10-03 第九批落面）：载荷 =
+					// 原版 case 9（`FUN_180c49610` case 9，2026-10-03 第九批落面）：载荷 =
 					// `creationId, worldId, leaveProgress[, 成员名…]`；立即执行面 = 完成步应用器
 					// `FUN_180c4c8d0` case 9 = `(*param_2+0x220)(param_2, creationId)` 单参虚调
 					// `User::EnterInstance` → 落点 = `instance_creation.xml` 的 `start_point_alias`
-					// → 真端 `Map/Worlds/<world>/world.xml` `location_alias_list` 坐标（解析器
-					// `WorldDb::LoadInstanceCreation`）。别名在真端 world.xml 缺失时真端自身只记
+					// → 原版 `Map/Worlds/<world>/world.xml` `location_alias_list` 坐标（解析器
+					// `WorldDb::LoadInstanceCreation`）。别名在原版 world.xml 缺失时原版自身只记
 					// 错误日志、落点空置（creation 2 = IDElim 即此内在缺失）⇒ 镜像 fail-closed
 					// 冻结该行。离场检查面（`FUN_180c46d80` 块 1：`锚 < 步 < leaveProgress`
-					// ⇒ `+0xf0` 写回锚）在真端拓扑不可达（第十批终裁），本服按**行为修复**口径落面：
+					// ⇒ `+0xf0` 写回锚）在原版拓扑不可达（第十批终裁），本服按**行为修复**口径落面：
 					// 进世界事件时对 (动作步, leaveProgress) 区间写回动作步（退役 typed XML 的
 					// s4/s5/s6 → s3 + 补发物品同款；Playbook UNREACHABLE_INSTANCE_REENTRY_RECOVERY）。
 					// leaveProgress 存 count 槽，装载期由 collectInstanceLeaveRollbacks 收集；
@@ -1356,7 +1356,7 @@ public final class DataDrivenNativeRuntime {
 					NativeInstanceEntryPort.EntryPoint entry = NativeInstanceEntryPort.instance()
 						.entry(creationId).orElse(null);
 					if (entry == null || !entry.resolved() || entry.worldId() != payloadWorldId) {
-						// 真端注册表缺行 / 别名真端本就缺失 / 载荷与注册表 worldId 不符 ⇒ fail-closed。
+						// 原版注册表缺行 / 别名原版本就缺失 / 载荷与注册表 worldId 不符 ⇒ fail-closed。
 						// Missing registry row / intrinsically absent alias / payload-vs-registry
 						// world mismatch ⇒ fail closed.
 						return FreezeReason.ACTION_UNFACED;
@@ -1376,9 +1376,9 @@ public final class DataDrivenNativeRuntime {
 	}
 
 	/**
-	 * 接取行附加动作扫描（`value1..10_acquire_`）：复用步列扫描器（真端同一解析器路径 `FUN_180c4b980`
-	 * → `FUN_180c49610`），类别取接取 kind；LevelUp/LevelUpLogIn（真端 kind 8/10，本表无对应进度步族）
-	 * 以全列集（= TALK 列集 1..10）为附加动作面（真端 guard 放行 8/10，列语义与 kind 无关）。
+	 * 接取行附加动作扫描（`value1..10_acquire_`）：复用步列扫描器（原版同一解析器路径 `FUN_180c4b980`
+	 * → `FUN_180c49610`），类别取接取 kind；LevelUp/LevelUpLogIn（原版 kind 8/10，本表无对应进度步族）
+	 * 以全列集（= TALK 列集 1..10）为附加动作面（原版 guard 放行 8/10，列语义与 kind 无关）。
 	 * Scans the accept-side extra actions with the step-column scanner (the same retail parser path);
 	 * the level acquire kinds (8/10) use the full 1..10 column set, matching the retail guard.
 	 */
@@ -1390,8 +1390,8 @@ public final class DataDrivenNativeRuntime {
 
 	/**
 	 * case 8（MESSAGE 列 8）的活面判定：EnterArea/TalkFOBJ 步 = 宿主 `Npc` 槽 +0x3a0 = `Npc::Die`
-	 * （真端语义 = 宿主 NPC 死亡；EXE `Npc::vftable` 199 槽交叉验证）⇒ 未落面维持冻结；
-	 * 其余 kind = 真端执行器变体（`FUN_180c4cd50`/`FUN_180c4d190`）无 case 8 = 装载即死列 ⇒ 忽略。
+	 * （原版语义 = 宿主 NPC 死亡；EXE `Npc::vftable` 199 槽交叉验证）⇒ 未落面维持冻结；
+	 * 其余 kind = 原版执行器变体（`FUN_180c4cd50`/`FUN_180c4d190`）无 case 8 = 装载即死列 ⇒ 忽略。
 	 * （case 6 DELAY 已另案落面 = 空桩零效果镜像忽略，不经此函数。）
 	 * Kind-8 (MESSAGE column 8) live-face test: EnterArea/TalkFOBJ steps target the host-Npc vtable
 	 * +0x3a0 = Npc::Die (retail semantics: the host NPC dies; EXE Npc::vftable cross-check) ⇒ the
@@ -1414,7 +1414,7 @@ public final class DataDrivenNativeRuntime {
 	}
 
 	/**
-	 * 真端数字 token 解析镜像（`FUN_18107c0f0` = `wcstoul` base 10：前导整数截断，
+	 * 原版数字 token 解析镜像（`FUN_18107c0f0` = `wcstoul` base 10：前导整数截断，
 	 * `83.9`→83、无数字→0）。
 	 * The retail numeric-token parse mirror (wcstoul: leading integer truncated, no digits → 0).
 	 */
@@ -1437,7 +1437,7 @@ public final class DataDrivenNativeRuntime {
 
 
 	/**
-	 * 解析组内怪物名：先整体解析；失败且名字含空白时按空白拆分逐一解析（真端表里有
+	 * 解析组内怪物名：先整体解析；失败且名字含空白时按空白拆分逐一解析（原版表里有
 	 * `LF2A_StatueT_49_An LF2A_StatueT_50_An` 这类空格分隔名单），仍失败则登记未解析名。
 	 * Resolves one monster name; a whitespace-joined name list falls back to per-token resolution.
 	 */
@@ -1560,7 +1560,7 @@ public final class DataDrivenNativeRuntime {
 	// ------------------------------------------------------------------ 事件面
 
 	/**
-	 * 击杀事件（Hunt 组计数；生产入口，带真端距离门）。50m 外死亡对象不产生进度（真端处理函数前奏
+	 * 击杀事件（Hunt 组计数；生产入口，带原版距离门）。50m 外死亡对象不产生进度（原版处理函数前奏
 	 * case 0：{@code 2500.0 < param_6 → return}；param_6 = 成员↔死亡对象平方欧氏距离，见
 	 * {@link #RETAIL_KILL_DISTANCE_SQ}）。
 	 * Kill event (Hunt group counters; the production entry with the retail distance gate). Dead
@@ -1597,7 +1597,7 @@ public final class DataDrivenNativeRuntime {
 	}
 
 	/**
-	 * 真端距离门判定（平方欧氏 ≤ {@link #RETAIL_KILL_DISTANCE_SQ}）。
+	 * 原版距离门判定（平方欧氏 ≤ {@link #RETAIL_KILL_DISTANCE_SQ}）。
 	 * The retail gate test (squared Euclidean distance within the bound).
 	 */
 	static boolean withinRetailKillDistance(float dx, float dy, float dz) {
@@ -1605,7 +1605,7 @@ public final class DataDrivenNativeRuntime {
 	}
 
 	/**
-	 * 物品使用事件（ItemPlay 组计数；真端事件 5 = `User__UseItem`/`User_IdentifyItem` 在
+	 * 物品使用事件（ItemPlay 组计数；原版事件 5 = `User__UseItem`/`User_IdentifyItem` 在
 	 * `mgr+0x268+5*0x10` walk 派发、`ctx+8` = 被使用物品 id；`FUN_180c46e90`：当前步 kind==3 +
 	 * 物品 id 匹配 + 组 1 计数步进）+ 接取双角色（状态非 START 且接取 kind==3 → 使用物品接取 +
 	 * 接取行附加动作）。**物品获得/发放不触发**（2026-10-06 实机 13403：发放动作曾级联跳过探测器使用步）。
@@ -1621,7 +1621,7 @@ public final class DataDrivenNativeRuntime {
 	}
 
 	/**
-	 * 对话事件（真端 `FUN_180c474b0` 共享对话平面：打开 → 阶段页；顺序动作/1009/10255 → 步进；
+	 * 对话事件（原版 `FUN_180c474b0` 共享对话平面：打开 → 阶段页；顺序动作/1009/10255 → 步进；
 	 * 1008/其余 ≥1000 动作 → 原样回发。TalkFOBJ 组计数与动作无关，保持步 d 语义）。
 	 * Dialog event: the shared retail stage-dialog plane for Talk/CollectItem steps, plus the
 	 * action-agnostic TalkFOBJ binary groups.
@@ -1633,7 +1633,7 @@ public final class DataDrivenNativeRuntime {
 	 * @param requestedOwner 客户端携带的任务上下文（0 = 无；非 0 时只服务该任务）/ the client quest context
 	 */
 	public boolean onDialog(Player player, int npcId, int dialogId, int objectId, int requestedOwner) {
-		// 无目标领奖（真端 QuestDialog 无主键协议；任务窗/实时奖励槽的确认包不带 NPC 上下文）：
+		// 无目标领奖（原版 QuestDialog 无主键协议；任务窗/实时奖励槽的确认包不带 NPC 上下文）：
 		// 按 questId（requestedOwner）结算 + 关窗收尾。owner 门 = routedQuestIds。
 		// Targetless reward claim (the ownerless retail QuestDialog protocol used by the quest journal).
 		if (npcId == 0 && requestedOwner != 0 && routedQuestIds.contains(requestedOwner)
@@ -1690,7 +1690,7 @@ public final class DataDrivenNativeRuntime {
 	}
 
 	/**
-	 * 交付报告面（真端所有行恒注册交付对象 #2 `reward_npc_name`，槽 +0x238，P7-STEP2E1）。
+	 * 交付报告面（原版所有行恒注册交付对象 #2 `reward_npc_name`，槽 +0x238，P7-STEP2E1）。
 	 * 零步 Talk 行（DD_TALK_SIMPLE）：START 态 31 → 报告确认页（契约声明）或一键推进 REWARD +
 	 * 奖励窗页 5；REWARD 态 31/1009 → 页 5。中继步 Talk 链行（如 19671 蕾娜的欢迎问候：
 	 * 教官 806698 接取/交付 + 商人 806699 中继）：START 态不认领（进度面 owns），REWARD 态
@@ -1701,7 +1701,7 @@ public final class DataDrivenNativeRuntime {
 	 * <p>
 	 * 2026-10-03 回归补面：P7 步 f 切换批（715a00136）删旧后该面缺失，已接玩家在交付 NPC 上
 	 * 31 零响应（quests.log 2026-09-28 80790 基线：31 → REWARD+页5 → 23 → COMPLETE）。
-	 * 2026-10-05 中继步行扩展：注册从零步行放至全部 Talk 行（真端恒建对象 #2），REWARD 态服务
+	 * 2026-10-05 中继步行扩展：注册从零步行放至全部 Talk 行（原版恒建对象 #2），REWARD 态服务
 	 * 中继链行交付（实机 19671：收口后教官处无交付路由）。
 	 * <p>
 	 * The delivery-report face (the always-registered retail reward object #2). Zero-step rows use
@@ -1725,10 +1725,10 @@ public final class DataDrivenNativeRuntime {
 			}
 			// START 态的推进（报告确认/一键报告）只服务零步 Talk 行（DD_TALK_SIMPLE）：中继步 Talk 链行
 			// 在 START 态由进度面 owns（玩家必须先在中继 NPC 处走完进度步），本面只在 REWARD 态服务其
-			// 交付/领奖（真端交付对象 #2 对已收口行给奖励窗）。缺此守卫会让中继步行在教官处行选 31 时
+			// 交付/领奖（原版交付对象 #2 对已收口行给奖励窗）。缺此守卫会让中继步行在教官处行选 31 时
 			// 被「一键报告」直接推进 REWARD（跳过中继步）——2026-10-05 实机 19671 回归面即按此收窄。
 			// 非 Talk 接取行（LevelUpLogIn/ItemPlay 等，交付面 2026-10-07 放开）进度由各自事件面推进，
-			// 对话在 START 态不认领、不跳步（真端对象 #2 面对进行中行只给页 10002）。
+			// 对话在 START 态不认领、不跳步（原版对象 #2 面对进行中行只给页 10002）。
 			// The START-state advance paths serve zero-step Talk rows only; relay-step chain rows are
 			// owned by the progress face until REWARD, and non-Talk rows never advance from dialogs.
 			boolean zeroStep = plansByQuestId.getOrDefault(questId, List.of()).isEmpty();
@@ -1764,7 +1764,7 @@ public final class DataDrivenNativeRuntime {
 			if (state.getStatus() == QuestStatus.REWARD) {
 				if (talkAcquired) {
 					// 打开（-1 = USE_OBJECT）同样开奖励窗：对齐 SimpleTalk 族的交付 NPC 面（REWARD && -1 →
-					// 页 5，SimpleTalkHandler 领奖段仲裁参照）——真端在交付对象 #2 上打开即弹奖励窗，不落
+					// 页 5，SimpleTalkHandler 领奖段仲裁参照）——原版在交付对象 #2 上打开即弹奖励窗，不落
 					// 通用页 10 列表（该列表只含可接取行，无交付入口）。2026-10-06 实机 19683（蕾娜 806698
 					// 接取/交付 + Prina 806708 中继）：收口后回教官打开落默认页 10，客户端无交付行可点
 					//（「点击教官没有这个任务的对话」）；QE-145 边界①（DD REWARD 态开门未落面）即此缺口。
@@ -1779,7 +1779,7 @@ public final class DataDrivenNativeRuntime {
 						return true;
 					}
 				} else {
-					// 非 Talk 接取行的交付面（真端对象 #2 面 `FUN_180c473e0`：打开（0/10）→ 页 10002
+					// 非 Talk 接取行的交付面（原版对象 #2 面 `FUN_180c473e0`：打开（0/10）→ 页 10002
 					// 进行中页；1009 → 报告通道 = 奖励窗）。2026-10-07 实机 13830（LevelUpLogIn 行，
 					// 交付 NPC 奥尔佩 203711）：客户端任务书写明「在任务窗点击[领取奖励]% 或 和[奥尔佩]%对话」，
 					// 页 10002 = select_success「点头」= SELECT_QUEST_REWARD(1009) → 奖励窗。
@@ -1805,7 +1805,7 @@ public final class DataDrivenNativeRuntime {
 					|| (dialogId >= 110 && dialogId <= 124)) {
 					int rewardIndex = dialogId >= 8 && dialogId <= 22 ? dialogId - 8 : 0;
 					if (rewardFlow.claim(new QuestEnv(null, player, questId, dialogId), rewardIndex).completed()) {
-						// 领奖收尾 = 真端 npc-complete finish=SELECTION_DIALOG（4801/4805）：回选择对话页
+						// 领奖收尾 = 原版 npc-complete finish=SELECTION_DIALOG（4801/4805）：回选择对话页
 						// （页 10，questId=0；9/28 旧引擎基线「状态=5 → 页=10」）。
 						// The claim tail follows the retail npc-complete finish=SELECTION_DIALOG: back to
 						// the selection dialog (page 10, questId=0; the legacy 9/28 log baseline).
@@ -1820,10 +1820,10 @@ public final class DataDrivenNativeRuntime {
 	}
 
 	/**
-	 * Talk 接取对话面（真端 `FUN_180c47220`：行选 31/26 → 页 4762；1002 → 接取 + 页 1003；1003 → 页 1004；
+	 * Talk 接取对话面（原版 `FUN_180c47220`：行选 31/26 → 页 4762；1002 → 接取 + 页 1003；1003 → 页 1004；
 	 * 1007 → 接取窗（客户端契约 fail-closed）；20000 → 接取 + 完成通道；20001/1008 → 完成通道；
 	 * 其余 ≥1000 动作按客户端契约裁定——声明为页才原样回发，未声明不由本面认领（留给 NPC 自身层/AI））。只服务
-	 * 「尚未开始该任务」的玩家（真端按 0x640 条件路由到接取对象）。
+	 * 「尚未开始该任务」的玩家（原版按 0x640 条件路由到接取对象）。
 	 * 打开（-1，无任务上下文）不被本面认领：宿主开门平面 = 进行中/可交重放，否则通用页 10 列表
 	 * （2026-10-05 实机 NPC 834166 修复——原 -1 认领使打开直发 4762，任务列表不可见）。
 	 * The Talk acquire dialog face of retail FUN_180c47220, served only to players without the quest.
@@ -1842,7 +1842,7 @@ public final class DataDrivenNativeRuntime {
 			if (state(player, questId) != null) {
 				continue;
 			}
-			// 待交付（REWARD）同样不属接取面：真端 0x640 条件把未接取玩家路由到对象 #1、活跃行
+			// 待交付（REWARD）同样不属接取面：原版 0x640 条件把未接取玩家路由到对象 #1、活跃行
 			// 路由到交付对象 #2。缺此守卫时 REWARD 态的 ≥1000 动作（如 1009，客户端从成功页自动
 			// 回发）会被本面 default 原样回发，劫走交付面的奖励窗路由（2026-10-05 实机 19671 回归面；
 			// 旧视图 `reward + 1009 → 奖励窗` 断言 ReportToManySetSucceedAlignmentTest）。
@@ -1856,7 +1856,7 @@ public final class DataDrivenNativeRuntime {
 			}
 			switch (dialogId) {
 				case 31, 26 -> {
-					// 行选（31 = 列表任务行点击；26）：真端清单与接取面同用 CanAcquireQuest（P7-REPORT
+					// 行选（31 = 列表任务行点击；26）：原版清单与接取面同用 CanAcquireQuest（P7-REPORT
 					// §「同一判定函数」）：资格不满足（等级/前置/种族/职业/限制位）不进接取面，避免
 					// 「能点进 4762、点接受却被静默拒」。
 					// The row selection (31 = a quest-list row click; 26): the retail list and acquire face
@@ -1873,7 +1873,7 @@ public final class DataDrivenNativeRuntime {
 					if (!NativeQuestStartPort.instance().startTraced(player, questId, dialogId).started()) {
 						return false;
 					}
-					// 真端 1002 接取收尾 = FUN_180c4d5b0(user,-1,…,-1)，其 -1 路径执行**接取行动作**
+					// 原版 1002 接取收尾 = FUN_180c4d5b0(user,-1,…,-1)，其 -1 路径执行**接取行动作**
 					// （`*(entry+0x10)` = QuestProgressExtraInfo 对象，门 = 接取 kind==4）。
 					// Retail 1002 accept tail = FUN_180c4d5b0(user,-1,…,-1) whose -1 path executes the
 					// accept-row actions (`*(entry+0x10)` = the QuestProgressExtraInfo object).
@@ -1900,7 +1900,7 @@ public final class DataDrivenNativeRuntime {
 						return false;
 					}
 					if (dialogId == ACTION_BOOK) {
-						// 真端 20000 接取收尾同样走 FUN_180c4d5b0(-1,-1) ⇒ 接取行动作（同 1002 面）。
+						// 原版 20000 接取收尾同样走 FUN_180c4d5b0(-1,-1) ⇒ 接取行动作（同 1002 面）。
 						// The retail 20000 accept tail funnels into FUN_180c4d5b0(-1,-1) too: the
 						// accept-row actions, same as the 1002 face.
 						runAcceptActions(player, questId);
@@ -1937,7 +1937,7 @@ public final class DataDrivenNativeRuntime {
 					if (dialogId < 1000) {
 						return false;
 					}
-					// 未声明的 ≥1000 动作不由接取面认领：真端把 NPC 对话按钮（如事件应援的
+					// 未声明的 ≥1000 动作不由接取面认领：原版把 NPC 对话按钮（如事件应援的
 					// HACTION_SETPRO1=10000）交给 NPC 自身层（AI 脚本/AI2）而不是任务接取面。
 					// 认领（回发或关窗）都会劫走 AI 的增益面——2026-10-06 实机 833671/833672：
 					// Ayas 应援 buff 因本面回发「页 10000 + questId」而整链不触发（load fail 只是
@@ -1956,7 +1956,7 @@ public final class DataDrivenNativeRuntime {
 	}
 
 	/**
-	 * 双角色接取（真端 progress handler 的 state!=3 分支）：接取成功即执行**接取行附加动作**
+	 * 双角色接取（原版 progress handler 的 state!=3 分支）：接取成功即执行**接取行附加动作**
 	 * （`FUN_180c46e90`/`FUN_180c46bb0` 接取分支读 `entry+0x10` = QuestProgressExtraInfo 对象后调
 	 * `FUN_180c4cd50(对象+0x10)`——不是进度步 0 动作，2026-10-06 反编译复读 + 13403 实机双发放裁定）。
 	 * The dual-role acquire of the retail progress handlers; a successful acquire runs the accept-row
@@ -1985,7 +1985,7 @@ public final class DataDrivenNativeRuntime {
 	}
 
 	/**
-	 * 执行一步的已落面动作（真端执行器 case 1/2/3/4/5/7：发/扣物品对、Cutscene/Movie、传送、刷怪、播报）。
+	 * 执行一步的已落面动作（原版执行器 case 1/2/3/4/5/7：发/扣物品对、Cutscene/Movie、传送、刷怪、播报）。
 	 * Runs one step's faced actions (retail executor cases 1/2/3/4/5/7).
 	 */
 	private void runActions(Player player, int questId, int stepIndex) {
@@ -1997,7 +1997,7 @@ public final class DataDrivenNativeRuntime {
 	}
 
 	/**
-	 * 接取收尾/双角色接取的已落面动作（真端 `QuestProgressExtraInfo` 对象 = `valueN_acquire_` 表）：
+	 * 接取收尾/双角色接取的已落面动作（原版 `QuestProgressExtraInfo` 对象 = `valueN_acquire_` 表）：
 	 * Talk 1002/20000 收尾（d5b0 `param_2<0`）与 `FUN_180c46e90`/`FUN_180c46bb0` 的接取分支
 	 * 都执行此表——**不是进度步 0 动作**（13403 实机：误跑步 0 动作 ⇒ 接取即发放探测器、步 0 完成再发一次）。
 	 * The accept-side faced actions (the retail QuestProgressExtraInfo object): the Talk accept tail
@@ -2035,7 +2035,7 @@ public final class DataDrivenNativeRuntime {
 				case TIMER -> timerPort.schedule(player, questId, action.count(), action.movieId(),
 					action.itemId() == 1);
 				case ENTER_INSTANCE -> {
-					// 真端 case 9 立即面 = `+0x220(creationId)` → `User::EnterInstance`：本服 = 复用
+					// 原版 case 9 立即面 = `+0x220(creationId)` → `User::EnterInstance`：本服 = 复用
 					// 已注册实例 / 下一可用实例 + 注册 + 带 instanceId 传送（裸传送会落到副本默认空
 					// 实例 instanceId=1，2026-10-08 实机 10034 空副本事故）。
 					// Retail case 9 immediate face: reuse the registered instance or allocate the
@@ -2049,7 +2049,7 @@ public final class DataDrivenNativeRuntime {
 		}
 	}
 
-	/** 刷怪存活秒（真端刷怪单 time 参数；0 = 不定时回收）。 / The spawn lifetime seconds (0 = no despawn). */
+	/** 刷怪存活秒（原版刷怪单 time 参数；0 = 不定时回收）。 / The spawn lifetime seconds (0 = no despawn). */
 	private static int lifeSeconds(ActionPlan action) {
 		// ActionPlan 未用字段回收：SPAWN 的 movieId 槽存 time（见 scanFacedActions）。
 		// SPAWN reuses the movieId slot for the time parameter (see scanFacedActions).
@@ -2057,10 +2057,10 @@ public final class DataDrivenNativeRuntime {
 	}
 
 	/**
-	 * 任务计时到期判定（真端 `FUN_180c46d80` 镜像，2026-10-02 落面）：任务仍进行中（状态 START）
+	 * 任务计时到期判定（原版 `FUN_180c46d80` 镜像，2026-10-02 落面）：任务仍进行中（状态 START）
 	 * ∧ 守卫位正常 ∧ `0 < 当前步 < 目标步` ⇒ 旗标 0 = 直写步号到目标步（`+0xf0` SetQuestProgress
 	 * 面，纯进度写、不触发步动作执行器）/ 旗标 1 = 弃任（`+0x160` 面）。范围外/非进行中 = 无操作
-	 * （真端同款：玩家已过目标步或已完成时到期回调零动作）。
+	 * （原版同款：玩家已过目标步或已完成时到期回调零动作）。
 	 * Quest-timer expiry verdict (mirror of retail FUN_180c46d80): while the quest is still in
 	 * progress (START) with clear guard bits and `0 < current step < dest`, flag 0 writes the step
 	 * directly to dest (the +0xf0 SetQuestProgress face — a pure progress write, no executor run)
@@ -2093,9 +2093,9 @@ public final class DataDrivenNativeRuntime {
 	}
 
 	/**
-	 * 进区事件：接取双角色（真端区 handler `FUN_180c47bf0` 尾段的独立接取侧名字哈希树：接取 kind==6 且
-	 * 区名哈希命中 → `(+0xd8)` 接取 + 接取行附加动作）+ EnterArea 直接步进。未注册的别名（如真端无区定义的
-	 * `DF6_QuestArea_Q25674`）在本服永不派发进区事件 ⇒ 兴趣键登记原文 = 镜像真端死边。
+	 * 进区事件：接取双角色（原版区 handler `FUN_180c47bf0` 尾段的独立接取侧名字哈希树：接取 kind==6 且
+	 * 区名哈希命中 → `(+0xd8)` 接取 + 接取行附加动作）+ EnterArea 直接步进。未注册的别名（如原版无区定义的
+	 * `DF6_QuestArea_Q25674`）在本服永不派发进区事件 ⇒ 兴趣键登记原文 = 镜像原版死边。
 	 * Enter-zone event: the dual-role acquire of the retail zone handler's separate acquire-side
 	 * name-hash tree (kind 6 → SetQuestAcquired + accept-row actions), then the EnterArea advance.
 	 */
@@ -2126,7 +2126,7 @@ public final class DataDrivenNativeRuntime {
 	 * 不可达副本阶段恢复（Playbook `UNREACHABLE_INSTANCE_REENTRY_RECOVERY`，14047 同族）：
 	 * 进世界事件时若任务仍停留在 case 9 的副本内阶段（`enterStep < 步 < leaveProgress`）而玩家不在
 	 * 该副本世界，写回进入步并补发被进入步移除的物品（退役 typed XML 的 `s4/s5/s6 → s3 + give-item`
-	 * 同款；真端 `FUN_180c46d80` 块 1 的行为面，落面决策见 case 9 解析处注释）。纯进度写、不触发步
+	 * 同款；原版 `FUN_180c46d80` 块 1 的行为面，落面决策见 case 9 解析处注释）。纯进度写、不触发步
 	 * 执行器（与 {@link #onQuestTimerExpired} 同款）；守卫同时包住补发（CM_LEVEL_READY 无 once-only，
 	 * 重发不得重复发物）。
 	 * <p>
@@ -2183,8 +2183,8 @@ public final class DataDrivenNativeRuntime {
 	}
 
 	/**
-	 * 登录/升级接取（kind 8/10，真端 vec0/vec3 遍历：`ctx+8 == def+8` **等级等值**才接取；
-	 * 登录面只服务 kind 10，升级面 8 与 10 都服务）。真端登录面另有 +0x138 否决槽（拒绝/删除簿），
+	 * 登录/升级接取（kind 8/10，原版 vec0/vec3 遍历：`ctx+8 == def+8` **等级等值**才接取；
+	 * 登录面只服务 kind 10，升级面 8 与 10 都服务）。原版登录面另有 +0x138 否决槽（拒绝/删除簿），
 	 * 本服无对应簿面 ⇒ 不镜像（接取仍受 `NativeQuestStartPort.start` 条件面约束）。
 	 * Login/level-up acquire (kinds 8/10; the retail walks acquire on **exact level equality**;
 	 * login serves kind 10 only, level-up serves both). The retail login veto slot +0x138 has no
@@ -2192,7 +2192,7 @@ public final class DataDrivenNativeRuntime {
 	 */
 	public boolean onLevelReached(Player player, int level, boolean loginWalk) {
 		boolean acquired = acquire(player, acquireLevelsByLevel.get(level), loginWalk ? Integer.valueOf(10) : null);
-		// 链式发放重走（真端 `<level-up/> + <start-eligible/>` 发放边的镜像）：完成时被等级/unfinished
+		// 链式发放重走（原版 `<level-up/> + <start-eligible/>` 发放边的镜像）：完成时被等级/unfinished
 		// 条件挡住的后继在此补发。**注意**：本方法同时是 native 完成通知的到达点
 		// （`QuestService.setFinishingState` → `QuestEngine.onLvlUp` → 此处），typed 车道完成另经
 		// `QuestEngine.onQuestStateChanged` → `onQuestCompleted`；两条入口都不可删除。
@@ -2296,9 +2296,9 @@ public final class DataDrivenNativeRuntime {
 		if (killer == null || victim == null || victimRank == null || pvpStepsByQuestId.isEmpty()) {
 			return false;
 		}
-		// 真端 Pvp 处理函数（`FUN_180c46980`，槽 +0x528）与 Hunt 共用同一距离前奏：成员↔死亡玩家
+		// 原版 Pvp 处理函数（`FUN_180c46980`，槽 +0x528）与 Hunt 共用同一距离前奏：成员↔死亡玩家
 		// 平方距离 > 2500（50m）⇒ 该次进度零动作（def+0x70 恒 0 ⇒ 恒 case 0，见
-		// RETAIL_KILL_DISTANCE_SQ；真端 GetValidMember 同样以死亡对象为距离基准）。
+		// RETAIL_KILL_DISTANCE_SQ；原版 GetValidMember 同样以死亡对象为距离基准）。
 		// The retail PvP handler shares the Hunt distance preamble: beyond 50 m squared the progress
 		// is a no-op (def+0x70 is uniformly 0 ⇒ case 0 always; retail measures against the dead object).
 		if (!withinRetailKillDistance(killer.getX() - victim.getX(), killer.getY() - victim.getY(),
@@ -2336,7 +2336,7 @@ public final class DataDrivenNativeRuntime {
 		if (gate.maxRank() > 0 && rank > gate.maxRank()) {
 			return false;
 		}
-		// 真端 `killerLevel <= victimLevel + levelGap`（`FUN_180c46980`：`uVar5 <= uVar1 + def+0x14`）。
+		// 原版 `killerLevel <= victimLevel + levelGap`（`FUN_180c46980`：`uVar5 <= uVar1 + def+0x14`）。
 		return killer.getLevel() <= victim.getLevel() + gate.levelGap();
 	}
 
@@ -2423,7 +2423,7 @@ public final class DataDrivenNativeRuntime {
 	// ------------------------------------------------------------------ 执行面
 
 	/**
-	 * 共享对话平面（真端 `FUN_180c474b0`）：只服务「命中步 == 当前置步」的对话兴趣；
+	 * 共享对话平面（原版 `FUN_180c474b0`）：只服务「命中步 == 当前置步」的对话兴趣；
 	 * 行选动作（31/26）发阶段页 `select(K+1)`（打开 -1 不认领——归引擎开门平面 → 通用页 10 列表，
 	 * 2026-10-05 实机 834166：进行中阶段页不得占用开门/挡同 NPC 其余可接任务），顺序页动作
 	 * （`10000+K`，K == 当前步 + 1）步进，乱序静默零写；`1009` = 步进 + 报告通道（末步转待领奖
@@ -2447,7 +2447,7 @@ public final class DataDrivenNativeRuntime {
 				continue;
 			}
 			int vars = state.getQuestVars().getQuestVars();
-			// 推进/收口动作（10000+k 与 10255 SET_SUCCEED）不受「步 == 该 NPC 的步」限制：真端守卫
+			// 推进/收口动作（10000+k 与 10255 SET_SUCCEED）不受「步 == 该 NPC 的步」限制：原版守卫
 			// 只有顺序（`code-9999 == 当前步 + 1`，`FUN_180c474b0`），不含 NPC 门。尾 = 步进 + 关窗
 			// 零发页（`mgr+0x5d8`；退役 SETPRO 全量普查 3479/3923 关窗尾、SimpleTalk/1131 验收形），
 			// 下一步骤由其自身 NPC 窗口服务——旧实现把新步页发回同窗（「同窗续链」）会让玩家在首个
@@ -2504,7 +2504,7 @@ public final class DataDrivenNativeRuntime {
 				return true;
 			}
 			if (dialogId == ACTION_ADVANCE_COMPLETE) {
-				// 收口基准 = 当前步（vars 的步），非 hit 步：真端 0x280f 无动作码守卫、也不含 NPC 门
+				// 收口基准 = 当前步（vars 的步），非 hit 步：原版 0x280f 无动作码守卫、也不含 NPC 门
 				// （13403 实机第三轮：末步按钮 10255 从非当前步的对话窗到达被守卫挡下 ⇒ 只关窗、
 				// 任务不进 REWARD）。
 				// The completion keys on the current step, not the hit's (live 13403 round 3).
@@ -2513,7 +2513,7 @@ public final class DataDrivenNativeRuntime {
 				if (!advance(player, state, currentStep, currentPlan.lastStep())) {
 					return false;
 				}
-				// 真端 `0x280f` = SetProgress + 完成通道 `mgr+0x5d8`。2026-10-05 实机实证与全量普查
+				// 原版 `0x280f` = SetProgress + 完成通道 `mgr+0x5d8`。2026-10-05 实机实证与全量普查
 				// （SETPRO 尾 3479/3923 = close-dialog+sync）裁定：0x5d8 = 关窗、零发页；收口另带
 				// `sync-quest-state mode=LEVEL_AND_VISIBILITY_REFRESH`（退役 19671/10500/13961 同形）⇒
 				// 刷新可见性/附近任务轴（NPC 任务标记）后关窗。不再下发「完成页」1008——2026-10-05
@@ -2533,12 +2533,12 @@ public final class DataDrivenNativeRuntime {
 			}
 			if (advanceAction) {
 				int target = dialogId - 9999;
-				// 真端顺序守卫：`code-9999 != 当前置 + 1 ⇒ return`（乱序/重复零写、不回发）。
+				// 原版顺序守卫：`code-9999 != 当前置 + 1 ⇒ return`（乱序/重复零写、不回发）。
 				if (target != DataDrivenProgress.step(vars) + 1) {
 					return false;
 				}
 				// 推进以**当前步**（vars 的步）为基准：advance、plan 与步动作执行器全部锚在当前步上
-				// （真端守卫只见动作码与当前步，无 hit 步门）。尾 = 关窗零发页（`mgr+0x5d8`）——
+				// （原版守卫只见动作码与当前步，无 hit 步门）。尾 = 关窗零发页（`mgr+0x5d8`）——
 				// 下一步骤由其自身 NPC 窗口的打开/行选服务（2026-10-06 实机 13403 第三轮修正：
 				// 旧「同窗续链」把新步页发回同窗，玩家可原地走完整条链且末步 10255 被守卫挡下）。
 				// The advance keys on the current step (the vars step), not the hit's; the tail
@@ -2553,7 +2553,7 @@ public final class DataDrivenNativeRuntime {
 				return true;
 			}
 			if (dialogId >= 1000) {
-				// 真端缺省分支：其余动作原样回发（`mgr+0x188`，如 1012/1013 翻页）。
+				// 原版缺省分支：其余动作原样回发（`mgr+0x188`，如 1012/1013 翻页）。
 				PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(objectId, dialogId, hit.questId()));
 				return true;
 			}
@@ -2562,7 +2562,7 @@ public final class DataDrivenNativeRuntime {
 		return false;
 	}
 
-	/** 阶段页（真端 `select1..15` 页表；步 ≥15 不发页）。 / The retail stage page for one step. */
+	/** 阶段页（原版 `select1..15` 页表；步 ≥15 不发页）。 / The retail stage page for one step. */
 	private static void sendStagePage(Player player, int objectId, int questId, int stepIndex) {
 		int page = stagePage(stepIndex);
 		if (page > 0) {
@@ -2592,7 +2592,7 @@ public final class DataDrivenNativeRuntime {
 	}
 
 	/**
-	 * 收口后的等级与可见性刷新（真端 `sync-quest-state mode=LEVEL_AND_VISIBILITY_REFRESH` 的
+	 * 收口后的等级与可见性刷新（原版 `sync-quest-state mode=LEVEL_AND_VISIBILITY_REFRESH` 的
 	 * {@code updateZone + updateNearbyQuests} 轴；与 {@link NativeQuestStartPort} 建档刷新同形）。
 	 * 单测/无控制器环境 best-effort（状态已提交）。等级任务重评估轴（`onQuestStateChanged`）在
 	 * tablelane 无先例，未镜像（登记于本主题 summary）。
@@ -2734,7 +2734,7 @@ public final class DataDrivenNativeRuntime {
 		state.setPersistentState(PersistentState.UPDATE_REQUIRED);
 		PacketSendUtility.sendPacket(player,
 			new SM_QUEST_ACTION(state.getQuestId(), state.getStatus(), state.getQuestVars().getQuestVars()));
-		// 真端动作执行矩阵（步 f 逐 handler 修正）：推进/收口分支对 Hunt/EnterArea/TalkFOBJ **和 Talk**
+		// 原版动作执行矩阵（步 f 逐 handler 修正）：推进/收口分支对 Hunt/EnterArea/TalkFOBJ **和 Talk**
 		// 调执行器——对话平面推进/完成统一汇入 `FUN_180c4d5b0(…,-1)`，其 -1 路径在 C:2075066 直调
 		// `FUN_180c4c8d0(完成步动作)`，门 = 完成步 kind==4（Talk）；CollectItem 拾取分支无执行器、
 		// 门也只放行 kind 4 ⇒ 排除；ItemPlay/EnterWorld 推进边零执行器调用（e2 取证 §1）。
@@ -2797,7 +2797,7 @@ public final class DataDrivenNativeRuntime {
 	}
 
 	/**
-	 * 该 NPC 的真端任务掉落（{@code QuestService.getQuestDrop} 的消费面；经 {@link QuestEngine#questDrops}
+	 * 该 NPC 的原版任务掉落（{@code QuestService.getQuestDrop} 的消费面；经 {@link QuestEngine#questDrops}
 	 * 聚合——击杀装配与对象交互共用同一条查询）。
 	 * <p>
 	 * Retail quest drops for the npc, aggregated through {@link QuestEngine#questDrops} (shared by the
@@ -2916,7 +2916,7 @@ public final class DataDrivenNativeRuntime {
 	}
 
 	/**
-	 * 引用该物品的路由行（发/扣物品动作 + ItemPlay 载荷 + 接取行动作；真端等价物 = item 模板上的
+	 * 引用该物品的路由行（发/扣物品动作 + ItemPlay 载荷 + 接取行动作；原版等价物 = item 模板上的
 	 * 静态 quest 列表，`User.cpp DestroyItem` 读 template+0x90/0x94）。销毁任务物品时判定「停止相关任务」。
 	 * The routed rows referencing the item (give/remove/play payloads); the DD side of the
 	 * destroy-time quest stop (retail reads the static quest list on the item template).

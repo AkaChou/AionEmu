@@ -39,12 +39,12 @@ import com.aionemu.gameserver.world.WorldPosition;
 /**
  * native 行的附近任务提示轴门禁（计划 §10.3-#18）。
  * <p>
- * 真端事实基线：{@code MainServer/User::_UpdateQuestAcquireCondition} 对世界「可接取任务清单」逐行调
+ * 原版事实基线：{@code MainServer/User::_UpdateQuestAcquireCondition} 对世界「可接取任务清单」逐行调
  * {@code Quest::CanAcquireQuest}（清单形态 {@code param_5 = 0}：不短路、不提示），按返回值写 opcode 127
  * 条目 —— {@code 2} ⇒ 平条目 {@code questId}；{@code 1}（仅等级轴不达且
  * {@code minlevel_permitted <= level + 1}）⇒ {@code questId | 0x20000} 软标记；{@code 0} ⇒ 丢弃。
  * 清单来源 = 世界中 NPC 携带的任务集合（{@code World::CheckAcquirableQuestFromNewNpc}），与模拟器
- * {@code WorldMapInstance#getQuestIds()}（NPC 任务并集）同源；opcode {@code 0x0181} 按真端混淆式
+ * {@code WorldMapInstance#getQuestIds()}（NPC 任务并集）同源；opcode {@code 0x0181} 按原版混淆式
  * {@code (op + 0xD5) ^ 0xD5} 反解 = {@code 127}。
  * <p>
  * The native nearby-quest axis gate (plan §10.3-#18). Every assertion is sourced from the retail
@@ -69,19 +69,19 @@ class NativeNearbyQuestAxisGateTest {
 	private static final int TALK_MINLEVEL_10_FEMALE = 3966;
 	/** SimpleTalk 行：{@code max_repeat_count=1}（一次性任务）。 */
 	private static final int TALK_ONCE = 1101;
-	/** 线上等级上限（真端 {@code minlevel_permitted > 80} 的行永不入列）。 / The live level cap. */
+	/** 线上等级上限（原版 {@code minlevel_permitted > 80} 的行永不入列）。 / The live level cap. */
 	private static final int LEVEL_CAP = 80;
 
-	// ------------------------------------------------------------ 真端三值分档
+	// ------------------------------------------------------------ 原版三值分档
 
 	@Test
 	void levelAxisKeepsTheRetailTriple() {
 		assertEquals(ZoneVerdict.ACQUIRABLE, port().zoneVerdict(elyosWarrior(9), COMBINE_MINLEVEL_9),
-			"达到 minlevel ⇒ 真端 2（平条目）");
+			"达到 minlevel ⇒ 原版 2（平条目）");
 		assertEquals(ZoneVerdict.LEVEL_SOON, port().zoneVerdict(elyosWarrior(8), COMBINE_MINLEVEL_9),
-			"只差 1 级 ⇒ 真端 1（0x20000 软标记）");
+			"只差 1 级 ⇒ 原版 1（0x20000 软标记）");
 		assertEquals(ZoneVerdict.OMITTED, port().zoneVerdict(elyosWarrior(7), COMBINE_MINLEVEL_9),
-			"差 2 级 ⇒ 真端 0（不入列表）");
+			"差 2 级 ⇒ 原版 0（不入列表）");
 	}
 
 	@Test
@@ -91,7 +91,7 @@ class NativeNearbyQuestAxisGateTest {
 		assertEquals(ZoneVerdict.ACQUIRABLE, port().zoneVerdict(elyosWarrior(46), questId), "下限可达");
 		assertEquals(ZoneVerdict.ACQUIRABLE, port().zoneVerdict(elyosWarrior(50), questId), "上限可达");
 		assertEquals(ZoneVerdict.OMITTED, port().zoneVerdict(elyosWarrior(51), questId),
-			"超 maxlevel 是真端硬 0，不得落成软标记");
+			"超 maxlevel 是原版硬 0，不得落成软标记");
 	}
 
 	@Test
@@ -102,7 +102,7 @@ class NativeNearbyQuestAxisGateTest {
 		assertEquals(Outcome.RACE_BLOCKED,
 			port().evaluateNpcAcquire(elyosWarrior(10), TALK_MINLEVEL_10_DARK).outcome());
 		assertEquals(ZoneVerdict.OMITTED, port().zoneVerdict(elyos, TALK_MINLEVEL_10_DARK),
-			"非等级轴失败 ⇒ 真端清单形态仍判 0");
+			"非等级轴失败 ⇒ 原版清单形态仍判 0");
 		assertEquals(ZoneVerdict.LEVEL_SOON, port().zoneVerdict(asmodian, TALK_MINLEVEL_10_DARK),
 			"其余轴通过且只差 1 级 ⇒ 软 1");
 
@@ -132,7 +132,7 @@ class NativeNearbyQuestAxisGateTest {
 		int repeatable = TALK_MINLEVEL_10_REPEAT_100;
 		Player player = elyosWarrior(11);
 		NativeTalkFixture.add(player, repeatable, QuestStatus.START, 0);
-		assertEquals(ZoneVerdict.OMITTED, port().zoneVerdict(player, repeatable), "进行中 ⇒ 真端状态字节非 0");
+		assertEquals(ZoneVerdict.OMITTED, port().zoneVerdict(player, repeatable), "进行中 ⇒ 原版状态字节非 0");
 
 		Player repeatFresh = elyosWarrior(11);
 		complete(repeatFresh, repeatable, 0);
@@ -142,12 +142,12 @@ class NativeNearbyQuestAxisGateTest {
 		QuestState spent = complete(repeatSpent, repeatable, 100);
 		assertEquals(100, spent.getCompleteCount());
 		assertEquals(ZoneVerdict.OMITTED, port().zoneVerdict(repeatSpent, repeatable),
-			"finishedcount >= max_repeat_count ⇒ 真端 0");
+			"finishedcount >= max_repeat_count ⇒ 原版 0");
 
 		Player once = elyosWarrior(1);
 		complete(once, TALK_ONCE, 1);
 		assertEquals(ZoneVerdict.OMITTED, port().zoneVerdict(once, TALK_ONCE),
-			"max_repeat_count=1 且已完成 ⇒ 真端 0");
+			"max_repeat_count=1 且已完成 ⇒ 原版 0");
 	}
 
 	// ------------------------------------------------------------ 全族扫描
@@ -155,9 +155,9 @@ class NativeNearbyQuestAxisGateTest {
 	@Test
 	void softVerdictNeverMasksANonLevelAxisAcrossTheNativeUnion() {
 		List<Integer> routed = nativeRoutedQuestIds();
-		assertTrue(routed.size() > 5000, "原生路由行规模（真端 6224 清单里的已切换族）=" + routed.size());
+		assertTrue(routed.size() > 5000, "原生路由行规模（原版 6224 清单里的已切换族）=" + routed.size());
 		assertTrue(routed.stream().anyMatch(id -> id > 0xFFFF),
-			"路由集必须含 id > 0xFFFF 的真端行（包编码回归面）");
+			"路由集必须含 id > 0xFFFF 的原版行（包编码回归面）");
 
 		Player player = elyosWarrior(1);
 		int soft = 0;
@@ -190,8 +190,8 @@ class NativeNearbyQuestAxisGateTest {
 				hardZeroWithNonLevelFailure++;
 			}
 		}
-		assertTrue(capped > 0, "已切换族含真端 minlevel_permitted=999 的不可接取行（本批实测 " + capped + " 行）");
-		assertTrue(soft > 0, "软档必须在真端数据里可达（否则本轴是死码）；本批实测 " + soft + " 行");
+		assertTrue(capped > 0, "已切换族含原版 minlevel_permitted=999 的不可接取行（本批实测 " + capped + " 行）");
+		assertTrue(soft > 0, "软档必须在原版数据里可达（否则本轴是死码）；本批实测 " + soft + " 行");
 		assertTrue(hardZeroWithNonLevelFailure > 0,
 			"必须覆盖「非等级轴失败」的反例；本批实测 " + hardZeroWithNonLevelFailure + " 行");
 	}
@@ -206,13 +206,13 @@ class NativeNearbyQuestAxisGateTest {
 			Map<Integer, Integer> flags = QuestService.nearbyQuestFlags(atLevel,
 				List.of(TALK_MINLEVEL_10_DARK, COMBINE_MINLEVEL_9, 1132, 999999));
 			assertEquals(Map.of(COMBINE_MINLEVEL_9, 0), flags,
-				"平条目：真端判定通过的行才进清单（种族不符/前置未完成/非原生行不入列）");
+				"平条目：原版判定通过的行才进清单（种族不符/前置未完成/非原生行不入列）");
 
 			Map<Integer, Integer> mixed = QuestService.nearbyQuestFlags(elyosWarrior(9),
 				List.of(HUNT_OVER_16BIT_MINLEVEL_10, TALK_MINLEVEL_10_REPEAT_100, COMBINE_MINLEVEL_9));
 			assertEquals(Map.of(COMBINE_MINLEVEL_9, 0, TALK_MINLEVEL_10_REPEAT_100, 1,
 				HUNT_OVER_16BIT_MINLEVEL_10, 1), mixed,
-				"平条目与软标记共存，且含 id > 0xFFFF 的真端行（按 ID 升序）");
+				"平条目与软标记共存，且含 id > 0xFFFF 的原版行（按 ID 升序）");
 		} finally {
 			restoreEngine(previous);
 		}
@@ -241,7 +241,7 @@ class NativeNearbyQuestAxisGateTest {
 			SM_NEARBY_QUESTS packet = lastNearbyPacket(player);
 			assertNotNull(packet, "控制器必须下发 SM_NEARBY_QUESTS");
 			assertEquals(Map.of(COMBINE_MINLEVEL_9, 0, HUNT_OVER_16BIT_MINLEVEL_10, 1),
-				nearbyList(packet), "清单内容 = 真端判定（种族不符行不入列）");
+				nearbyList(packet), "清单内容 = 原版判定（种族不符行不入列）");
 		} finally {
 			restoreEngine(previous);
 		}
@@ -279,7 +279,7 @@ class NativeNearbyQuestAxisGateTest {
 		return value == null ? 0 : value;
 	}
 
-	/** 建一条已完成记录并写入完成次数（真端 finishedcount）。 / Seeds a completed record with a finish count. */
+	/** 建一条已完成记录并写入完成次数（原版 finishedcount）。 / Seeds a completed record with a finish count. */
 	private static QuestState complete(Player player, int questId, int finishedCount) {
 		QuestState state = NativeTalkFixture.add(player, questId, QuestStatus.COMPLETE, 0);
 		state.setCompleteCount(finishedCount);

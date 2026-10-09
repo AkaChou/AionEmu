@@ -6,7 +6,7 @@
        全表唯一；creation_id/world_id/heading 非负 int；x/y/z 十进制 =
        装载器 Float.parseFloat 的词法收窄形；resolved ∈
        {true,false}）；resolved=false ⇒ x=y=z=0
-       占位（真端内在缺失）为共现约束，由装载器冻结兜底。
+       占位（原版内在缺失）为共现约束，由装载器冻结兜底。
      retail-instance-entry-points.xml schema (quest retail table gate, same batch as the 2026-10-03 ledger
      XML conversion). Mirrors the loader fail-closed rules plus observed-universe shape pins (evidence +
      generator under `.agents/summary/quest-engine-native/p0b/`):

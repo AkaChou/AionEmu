@@ -391,7 +391,7 @@ class NpcMoveControllerPathTest {
 		controller.started.set(true);
 		controller.movementMask = MovementMask.NPC_WALK_SLOW;
 
-		// 从未下发过移动包（真端运动截止为 0）：没有要停的客户端行走，暂停只保留掩码。
+		// 从未下发过移动包（原版运动截止为 0）：没有要停的客户端行走，暂停只保留掩码。
 		assertEquals(0L, controller.movePacketDeadlineMs);
 		controller.pauseAtRoutePoint();
 
@@ -413,13 +413,13 @@ class NpcMoveControllerPathTest {
 	@Test
 	void pauseStopIsAnchoredToTheMovePacketDeadline() {
 		assertEquals(6_000L, NpcMoveController.movePacketDeadline(1_000, 0, 0, 0, 10, 0, 0, 2f),
-				"10m / 2m每秒：移动包再过 5s 走完（真端 stop 于截止时刻）");
+				"10m / 2m每秒：移动包再过 5s 走完（原版 stop 于截止时刻）");
 		assertEquals(1_000L, NpcMoveController.movePacketDeadline(1_000, 0, 0, 0, 10, 0, 0, 0f),
 				"速度非正：视为即刻走完");
 		assertEquals(5_100L, NpcMoveController.pauseStopDelayMs(6_000, 1_000),
 				"停包延迟 = 移动包截止 + 余量 − 当前时刻");
 		assertEquals(0L, NpcMoveController.pauseStopDelayMs(900, 1_000),
-				"截止已过：立即（真端 deadline<=now 即发停包）");
+				"截止已过：立即（原版 deadline<=now 即发停包）");
 	}
 
 	@Test
@@ -442,7 +442,7 @@ class NpcMoveControllerPathTest {
 			controller.pauseAtRoutePoint();
 
 			assertEquals(1, packetQueue(observer.getClientConnection()).size(),
-					"客户端仍在走最后一段：暂停瞬间不发停包（真端要等移动包截止）");
+					"客户端仍在走最后一段：暂停瞬间不发停包（原版要等移动包截止）");
 			assertFalse(controller.started.get());
 		} finally {
 			snapshot.restore();

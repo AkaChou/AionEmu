@@ -1,4 +1,4 @@
-# DD enterarea 别名 → 服务端登记区名（遗留 enter-zone 证据 + 真端世界 questscript_area）。
+# DD enterarea 别名 → 服务端登记区名（遗留 enter-zone 证据 + 原版世界 questscript_area）。
 # DD enterarea alias to the registered server zone name (legacy enter-zone evidence + retail
 # world questscript_area).
 #quest_id	dd_alias	zone_name	source

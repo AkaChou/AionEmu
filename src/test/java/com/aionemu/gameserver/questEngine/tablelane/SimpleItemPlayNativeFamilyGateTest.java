@@ -33,7 +33,7 @@ import com.aionemu.gameserver.questEngine.tablelane.NativeQuestTableLoader.Simpl
 /**
  * SimpleItemPlay 原生表驱动家族门禁（计划 §6.6 / §7 P5 切换批）。
  * <p>
- * 断言面全部来自真端表行 + 真端 {@code quest.xml} + 生产静态数据 id，不合成语义：
+ * 断言面全部来自原版表行 + 原版 {@code quest.xml} + 生产静态数据 id，不合成语义：
  * <ol>
  *   <li>43 行全量装载与列填充率冻结（接取/交付 NPC 100%、{@code give_item} 34 行、中继链长尾）；</li>
  *   <li>注册/路由分解（owns 43 = routed 8 + 不可路由 35：未退役行与中继/cutscene 长尾行）；</li>
@@ -47,13 +47,13 @@ import com.aionemu.gameserver.questEngine.tablelane.NativeQuestTableLoader.Simpl
  */
 class SimpleItemPlayNativeFamilyGateTest {
 
-	/** 真端接取 = 交付 NPC 的演出任务（19048：Andreas 发 doc 道具 → 用后回交）。 / Retail item-play row. */
+	/** 原版接取 = 交付 NPC 的演出任务（19048：Andreas 发 doc 道具 → 用后回交）。 / Retail item-play row. */
 	private static final int PLAY_QUEST = 19048;
 	/** P5D 步 3 激活的两行（18213 天族 / 28213 魔族，各两步中继）。 / Step-3 activated relay rows. */
 	private static final Set<Integer> ACTIVATED_RELAY_ROWS = Set.of(18213, 28213);
-	/** 直交形行（真端无 {@code talk_npcK}，接取即发演出道具）。 / The direct hand-in rows. */
+	/** 直交形行（原版无 {@code talk_npcK}，接取即发演出道具）。 / The direct hand-in rows. */
 	private static final Set<Integer> DIRECT_ROWS = Set.of(13704, 13708, 19048, 23704, 23708, 29048);
-	/** 本批路由集（真端退役 8 行）。 / The eight routed rows. */
+	/** 本批路由集（原版退役 8 行）。 / The eight routed rows. */
 	private static final Set<Integer> ROUTED_ROWS = Set.of(
 		13704, 13708, 19048, 23704, 23708, 29048, 18213, 28213);
 
@@ -70,11 +70,11 @@ class SimpleItemPlayNativeFamilyGateTest {
 
 	@Test
 	void loadsAll43RetailRowsWithTheNpcAcceptShape() {
-		assertEquals(43, loader.itemPlaySize(), "真端 quest_simpleitemplays 全量行");
+		assertEquals(43, loader.itemPlaySize(), "原版 quest_simpleitemplays 全量行");
 		List<SimpleItemPlayRow> rows = List.copyOf(loader.itemPlayRows());
 		assertTrue(rows.stream().allMatch(row ->
 			!row.acquiredNpcName().isBlank() && !row.rewardNpcName().isBlank()),
-			"acquired_npc_name/reward_npc_name 必须 100%（真端 43/43）");
+			"acquired_npc_name/reward_npc_name 必须 100%（原版 43/43）");
 		assertEquals(41, rows.stream().filter(row -> row.useItemName() != null).count(), "use_item_name 覆盖 41 行");
 		assertEquals(34, rows.stream().filter(row -> row.acceptGiveItem() != null).count(), "give_item 覆盖 34 行");
 		assertEquals(11, rows.stream().filter(row -> row.talkNpcNames().size() >= 1).count(), "talk_npc1 覆盖 11 行");
@@ -89,7 +89,7 @@ class SimpleItemPlayNativeFamilyGateTest {
 
 	@Test
 	void cutsceneColumnIsAnEvidenceFaceOnly() {
-		// 真端 Quest_SimpleItemPlay.xml 43 行仅 2 行声明 cutsceneid1（13400=859、23400=860），
+		// 原版 Quest_SimpleItemPlay.xml 43 行仅 2 行声明 cutsceneid1（13400=859、23400=860），
 		// 且本表无 cs1_haction / item_check 列（0 命中）⇒ 过场面是证据面，不构成路由闸门。
 		// Only two of the 43 retail rows declare cutsceneid1 (13400=859, 23400=860), and the table
 		// carries neither cs1_haction nor item_check, so the face is evidence-only.
@@ -97,12 +97,12 @@ class SimpleItemPlayNativeFamilyGateTest {
 			loader.itemPlayRows().stream().filter(row -> row.cutsceneId() != null)
 				.map(NativeQuestTableLoader.SimpleItemPlayRow::questId)
 				.collect(java.util.stream.Collectors.toCollection(java.util.TreeSet::new)),
-			"真端 cutsceneid1 覆盖行");
+			"原版 cutsceneid1 覆盖行");
 		assertEquals(859, handler.cutsceneId(13400), "13400 的过场资源 id（客户端 CutScenes.xml 有 <id>859</id>）");
 		assertEquals(860, handler.cutsceneId(23400), "23400 的过场资源 id");
 		assertNull(handler.cutsceneId(19048), "未声明行无过场面");
 		for (int questId : java.util.List.of(13400, 23400)) {
-			assertTrue(handler.owns(questId), "真端表行仍在注册集: " + questId);
+			assertTrue(handler.owns(questId), "原版表行仍在注册集: " + questId);
 			assertTrue(handler.unroutableQuestIds().contains(questId),
 				"owner 未退役（不在 retail-xml-retention 清单）⇒ 停在不可路由面: " + questId);
 			assertFalse(handler.routes(questId), "未被 owner 裁定的行不上线: " + questId);
@@ -111,8 +111,8 @@ class SimpleItemPlayNativeFamilyGateTest {
 
 	@Test
 	void routingSplitIsFrozenToTheRetiredRows() {
-		assertEquals(43, handler.ownedQuestIds().size(), "注册集 = 真端表全量行");
-		assertEquals(ROUTED_ROWS, handler.routedQuestIds(), "路由集 = 真端退役且接取/交付/道具全可解的 8 行");
+		assertEquals(43, handler.ownedQuestIds().size(), "注册集 = 原版表全量行");
+		assertEquals(ROUTED_ROWS, handler.routedQuestIds(), "路由集 = 原版退役且接取/交付/道具全可解的 8 行");
 		assertEquals(35, handler.unroutableQuestIds().size(), "不可路由行 = 43 − 8");
 		assertTrue(new TreeSet<>(handler.routedQuestIds()).containsAll(ROUTED_ROWS));
 		for (int questId : ROUTED_ROWS) {
@@ -135,12 +135,12 @@ class SimpleItemPlayNativeFamilyGateTest {
 		for (int questId : DIRECT_ROWS) {
 			SimpleItemPlayRow row = loader.requireItemPlay(questId);
 			ItemStack acceptGive = handler.acceptGiveItem(questId);
-			assertNotNull(acceptGive, "真端 give_item（接取即发演出道具）: " + questId);
-			assertEquals(row.useItemName(), row.acceptGiveItem(), "真端两列必须同源: " + questId);
+			assertNotNull(acceptGive, "原版 give_item（接取即发演出道具）: " + questId);
+			assertEquals(row.useItemName(), row.acceptGiveItem(), "原版两列必须同源: " + questId);
 			assertEquals(handler.playItemId(questId), acceptGive.itemId(),
 				"接取发放的道具必须是演出道具本体: " + questId);
 		}
-		// 中继形：接取发第 1 步道具（A），演出道具（B）由第 2 步「发 B 扣 A」换得（真端 give_item2/remove_item2）。
+		// 中继形：接取发第 1 步道具（A），演出道具（B）由第 2 步「发 B 扣 A」换得（原版 give_item2/remove_item2）。
 		// Relay rows: the accept grants step-1 item A; the play item B arrives with the step-2 give/remove pair.
 		for (int questId : ACTIVATED_RELAY_ROWS) {
 			ItemStack acceptGive = handler.acceptGiveItem(questId);
@@ -162,7 +162,7 @@ class SimpleItemPlayNativeFamilyGateTest {
 	void acceptOpensTheClientEntryPageGrantsThePlayItemAndStartsTheRow() {
 		NativeTalkFixture.RecordingInventory inventory = new NativeTalkFixture.RecordingInventory();
 		SimpleItemPlayHandler local = handlerWith(inventory, NativeReportRewardFlow.instance());
-		// 19048 真端 minlevel_permitted = 29（真端 CanAcquireQuest 轴），故用 30 级玩家过接取门。
+		// 19048 原版 minlevel_permitted = 29（原版 CanAcquireQuest 轴），故用 30 级玩家过接取门。
 		// Row 19048 carries the retail minlevel_permitted axis, so the accept test uses a level-30 player.
 		Player player = NativeTalkFixture.player(Race.ELYOS, PlayerClass.WARRIOR, 30);
 		int acquireNpc = local.acquireNpc(PLAY_QUEST);
@@ -182,22 +182,22 @@ class SimpleItemPlayNativeFamilyGateTest {
 		assertNotNull(state, "接取后必须建档");
 		assertEquals(QuestStatus.START, state.getStatus());
 		assertEquals(List.of("give:" + playItem.itemId() + ":" + playItem.count()), inventory.calls(),
-			"接取提交即发真端 give_item");
+			"接取提交即发原版 give_item");
 	}
 
 	/**
-	 * P5D 步 2/3：中继链/步物品/页的接线面按真端证据冻结（交付节点 {@code slot 3 #K} 每 NPC 一节点 +
+	 * P5D 步 2/3：中继链/步物品/页的接线面按原版证据冻结（交付节点 {@code slot 3 #K} 每 NPC 一节点 +
 	 * 行主 thunk 相机）；步 3 已把两行激活（retention 重裁 + 删 XML），其余名字轴无解的行仍 fail-closed。
 	 */
 	@Test
 	void relayFaceIsWiredAndActivatesOnlyTheResolvableRows() {
 		assertEquals(0, handler.relayCount(PLAY_QUEST), "直交形行无中继（6 路由行全为直交形）");
-		assertEquals(2, handler.relayCount(18213), "18213 真端 slot 3 #0/#1 ⇒ 两步中继");
+		assertEquals(2, handler.relayCount(18213), "18213 原版 slot 3 #0/#1 ⇒ 两步中继");
 		assertEquals(2, handler.relayCount(9623), "9623 两步中继");
 		assertEquals(1, handler.relayCount(50048), "50048 一步中继");
-		assertEquals(1352, SimpleItemPlayHandler.pageForStep(1), "真端步页 select2");
-		assertEquals(1693, SimpleItemPlayHandler.pageForStep(2), "真端步页 select3");
-		assertEquals(2034, SimpleItemPlayHandler.pageForStep(3), "真端步页 select4");
+		assertEquals(1352, SimpleItemPlayHandler.pageForStep(1), "原版步页 select2");
+		assertEquals(1693, SimpleItemPlayHandler.pageForStep(2), "原版步页 select3");
+		assertEquals(2034, SimpleItemPlayHandler.pageForStep(3), "原版步页 select4");
 
 		// 中继步序 = 表序（talk_npc1/2），绑定到各自 NPC 节点。
 		List<SimpleItemPlayHandler.RelayStep> relays = handler.relaysForQuest(18213);
@@ -209,7 +209,7 @@ class SimpleItemPlayNativeFamilyGateTest {
 		assertTrue(handler.relaysForNpc(relays.get(1).npcId()).stream()
 				.anyMatch(relay -> relay.questId() == 18213 && relay.step() == 2), "第 2 步绑定该 NPC");
 
-		// 第 K 步发/扣（18213 真端 give_item2/remove_item2；第 1 步无声明）。
+		// 第 K 步发/扣（18213 原版 give_item2/remove_item2；第 1 步无声明）。
 		ItemStack stepTwoGive = handler.stepGiveItem(18213, 2);
 		ItemStack stepTwoRemove = handler.stepRemoveItem(18213, 2);
 		assertNotNull(stepTwoGive, "18213 第 2 步发放已解");
@@ -224,7 +224,7 @@ class SimpleItemPlayNativeFamilyGateTest {
 	}
 
 	/**
-	 * P5D 步 2：用道具推进必须过真端相机闸门（{@code step == relayCount}），并写回 {@code relayCount + 1}
+	 * P5D 步 2：用道具推进必须过原版相机闸门（{@code step == relayCount}），并写回 {@code relayCount + 1}
 	 * （与旧编译器 {@code var0 == 0 → var0 = 1} 同形）。
 	 */
 	@Test
@@ -272,7 +272,7 @@ class SimpleItemPlayNativeFamilyGateTest {
 		int playItem = local.playItemId(PLAY_QUEST);
 
 		assertTrue(local.advanceQuestIdsForItem(playItem).contains(PLAY_QUEST),
-			"演出道具必须指回该行（真端 one-item 推进）");
+			"演出道具必须指回该行（原版 one-item 推进）");
 		assertTrue(local.onItemUse(player, playItem), "用物必须一步推进");
 		assertEquals(QuestStatus.REWARD,
 			player.getQuestStateList().getQuestState(PLAY_QUEST).getStatus());
@@ -328,7 +328,7 @@ class SimpleItemPlayNativeFamilyGateTest {
 		NativeTalkFixture.clearPackets(player);
 		assertTrue(local.onDialog(NativeTalkFixture.dialog(player, rewardNpc, PLAY_QUEST, 8)),
 			"奖励窗按钮必须由 native 领奖段服务");
-		// 领奖收尾 = 真端 npc-complete finish=SELECTION_DIALOG：回选择对话页（页 10，questId=0）。
+		// 领奖收尾 = 原版 npc-complete finish=SELECTION_DIALOG：回选择对话页（页 10，questId=0）。
 		NativeTalkFixture.assertOnlyDialogPage(player, QuestDialogPage.SELECT_QUEST.id());
 		assertEquals(1, claims.size());
 		assertEquals(PLAY_QUEST, claims.getFirst()[0]);
@@ -352,8 +352,8 @@ class SimpleItemPlayNativeFamilyGateTest {
 	}
 
 	/**
-	 * 无目标领奖（真端 {@code QuestDialog} 无主键协议；任务窗/实时奖励槽确认包不带 NPC 上下文，
-	 * 引擎以 npcId=0 进入）：按 questId 结算 + 关窗（真端 0x5d8；Playbook 案例 8.3 合同）。
+	 * 无目标领奖（原版 {@code QuestDialog} 无主键协议；任务窗/实时奖励槽确认包不带 NPC 上下文，
+	 * 引擎以 npcId=0 进入）：按 questId 结算 + 关窗（原版 0x5d8；Playbook 案例 8.3 合同）。
 	 * 退役迁移曾丢失该面（13830 实机 2026-10-07）。
 	 * <p>
 	 * The targetless claim: no NPC context, settled by quest id with the close-dialog tail.
@@ -430,10 +430,10 @@ class SimpleItemPlayNativeFamilyGateTest {
 	}
 
 	/**
-	 * P5D 步 3 端到端：激活行（18213 天族 / 28213 魔族）按真端走完整链路——接取入口页 → 页动作 1007
+	 * P5D 步 3 端到端：激活行（18213 天族 / 28213 魔族）按原版走完整链路——接取入口页 → 页动作 1007
 	 * 开问询窗 → 1002 提交（发第 1 步道具 A）→ 中继第 1 步（页 {@code select2}，零发扣）→
 	 * 中继第 2 步（页 {@code select3}，发 B 扣 A）→ 用道具 B（相机闸门：步号 == {@code relayCount}）→
-	 * 交付 NPC 处领奖（页 5 → 领奖收尾回选择对话页 10，真端 npc-complete finish=SELECTION_DIALOG）。
+	 * 交付 NPC 处领奖（页 5 → 领奖收尾回选择对话页 10，原版 npc-complete finish=SELECTION_DIALOG）。
 	 * <p>
 	 * Step-3 end-to-end: an activated relay row runs the whole retail chain — accept entry page, the 1007 ask
 	 * window, the 1002 commit granting step-1 item A, relay step 1 (select2), relay step 2 (select3 with the
@@ -450,7 +450,7 @@ class SimpleItemPlayNativeFamilyGateTest {
 						claims.add(env.getQuestId());
 						return template != null;
 					}));
-			// 真端等级门 minlevel_permitted = 51、种族 pc_light/pc_dark、前置 Q18212/Q28212。
+			// 原版等级门 minlevel_permitted = 51、种族 pc_light/pc_dark、前置 Q18212/Q28212。
 			Race race = questId == 18213 ? Race.ELYOS : Race.ASMODIANS;
 			Player player = NativeTalkFixture.player(race, PlayerClass.WARRIOR, 51);
 			NativeTalkFixture.completePrerequisites(player, questId == 18213 ? 18212 : 28212);
@@ -472,7 +472,7 @@ class SimpleItemPlayNativeFamilyGateTest {
 
 			NativeTalkFixture.clearPackets(player);
 			assertTrue(local.onDialog(NativeTalkFixture.dialog(player, acquireNpc, questId, 1007)),
-				"页动作 1007 必须打开真端问询窗: " + questId);
+				"页动作 1007 必须打开原版问询窗: " + questId);
 			NativeTalkFixture.assertOnlyDialogPage(player, NativeTalkFixture.askWindowPage(questId));
 
 			NativeTalkFixture.clearPackets(player);
@@ -482,9 +482,9 @@ class SimpleItemPlayNativeFamilyGateTest {
 			assertEquals(QuestStatus.START, player.getQuestStateList().getQuestState(questId).getStatus(),
 				"接取后必须为 START: " + questId);
 			assertEquals(List.of("give:" + stepOneItem.itemId() + ":" + stepOneItem.count()),
-				inventory.calls(), "接取提交即发真端 give_item（第 1 步道具）: " + questId);
+				inventory.calls(), "接取提交即发原版 give_item（第 1 步道具）: " + questId);
 
-			// 中继第 1 步（select2_1 页的「结束对话」按钮）：after-commit = 真端 cabb10 关窗
+			// 中继第 1 步（select2_1 页的「结束对话」按钮）：after-commit = 原版 cabb10 关窗
 			// （SetQuestProgress + 0x5d8、**零发页**；2026-10-05 实机「一次点击即关窗」），
 			// 零发扣，步号 = 1；旧「回选择对话页 10」系翻译夸大。
 			NativeTalkFixture.clearPackets(player);
@@ -496,7 +496,7 @@ class SimpleItemPlayNativeFamilyGateTest {
 			assertEquals(List.of("give:" + stepOneItem.itemId() + ":" + stepOneItem.count()),
 				inventory.calls(), "第 1 步无发扣声明: " + questId);
 
-			// 混沌闸门：中继未走完时用道具 B 零副作用（真端行主 thunk 的 step == relayCount 前置）。
+			// 混沌闸门：中继未走完时用道具 B 零副作用（原版行主 thunk 的 step == relayCount 前置）。
 			assertFalse(local.onItemUse(player, stepTwoItem.itemId()),
 				"步号 1 < relayCount 2 ⇒ 用物不得推进: " + questId);
 			assertEquals(QuestStatus.START, player.getQuestStateList().getQuestState(questId).getStatus(),
@@ -513,7 +513,7 @@ class SimpleItemPlayNativeFamilyGateTest {
 			assertEquals(List.of("give:" + stepOneItem.itemId() + ":" + stepOneItem.count(),
 					"give:" + stepTwoItem.itemId() + ":" + stepTwoItem.count(),
 					"remove:" + stepTwoRemove.itemId() + ":" + stepTwoRemove.count()),
-				inventory.calls(), "第 2 步必须按真端顺序发 B 扣 A: " + questId);
+				inventory.calls(), "第 2 步必须按原版顺序发 B 扣 A: " + questId);
 
 			// 用物推进：步号 == relayCount ⇒ 步号 = relayCount + 1 并转 REWARD。
 			assertTrue(local.onItemUse(player, stepTwoItem.itemId()), "步号 == relayCount ⇒ 用物推进: " + questId);
@@ -531,9 +531,9 @@ class SimpleItemPlayNativeFamilyGateTest {
 			NativeTalkFixture.clearPackets(player);
 			assertTrue(local.onDialog(NativeTalkFixture.dialog(player, rewardNpc, questId, 8)),
 				"奖励窗按钮必须由 native 领奖段服务: " + questId);
-			// 领奖收尾 = 真端 npc-complete finish=SELECTION_DIALOG：回选择对话页（页 10，questId=0）。
+			// 领奖收尾 = 原版 npc-complete finish=SELECTION_DIALOG：回选择对话页（页 10，questId=0）。
 			NativeTalkFixture.assertOnlyDialogPage(player, QuestDialogPage.SELECT_QUEST.id());
-			assertEquals(List.of(questId), claims, "领奖必须经真端派生模板结算: " + questId);
+			assertEquals(List.of(questId), claims, "领奖必须经原版派生模板结算: " + questId);
 		}
 	}
 

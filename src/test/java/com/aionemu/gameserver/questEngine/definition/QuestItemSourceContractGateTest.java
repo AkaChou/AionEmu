@@ -22,12 +22,12 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * 任务道具来源契约门禁：收集类事件必须监听本任务自己声明/发放的道具，且跨任务道具引用必须与真端角色一致。
+ * 任务道具来源契约门禁：收集类事件必须监听本任务自己声明/发放的道具，且跨任务道具引用必须与原版角色一致。
  * Quest item source contract gate. A {@code collect-item} event decides when the client progress
  * refresh fires, so it may only watch an item the quest itself declares (metadata items /
  * inventory-items / work-items), drops, grants, or reports. A quest that watches a neighbouring
  * quest's item never refreshes progress and can leave the collection stage stalled.
- * <p>此外锁定 2026-09-17 修复的 20 个任务：7 个"引用邻居任务道具"的任务其交付条件必须使用本任务在真端
+ * <p>此外锁定 2026-09-17 修复的 20 个任务：7 个"引用邻居任务道具"的任务其交付条件必须使用本任务在原版
  * collect_item/check_item 中声明的道具（开发名见 item_template 的 name_desc），另有 7 个 COLLECT_ITEM 交付缺失
  * has-item 的任务必须重新校验并扣除自己的任务道具。</p>
  * It also pins the seven quests repaired on 2026-09-17 whose turn-in condition referenced the
@@ -136,18 +136,18 @@ class QuestItemSourceContractGateTest {
 	@Test
 	void repairedQuestsRequireTheirOwnRetailCollectItems() throws Exception {
 		QuestCatalog catalog = QuestDefinitionDirectoryLoader.compile(getClass().getClassLoader());
-		// 15010 真端 collect/check = quest_15010a 5 + quest_15010b 3（原写成 15011 的 quest_15011a 7）
+		// 15010 原版 collect/check = quest_15010a 5 + quest_15010b 3（原写成 15011 的 quest_15011a 7）
 		assertTurnInItemsOrRetired(catalog, 15010, Map.of(182215664, 5, 182215665, 3));
-		// 15012 真端 collect/check = quest_15012a 5（原写成 15013 的 quest_15013a）
+		// 15012 原版 collect/check = quest_15012a 5（原写成 15013 的 quest_15013a）
 		assertTurnInItemsOrRetired(catalog, 15012, Map.of(182215667, 5));
-		// 15043 真端 collect/check = quest_15043a 7（原写成 15044 的 quest_15044a 5）
+		// 15043 原版 collect/check = quest_15043a 7（原写成 15044 的 quest_15044a 5）
 		assertTurnInItemsOrRetired(catalog, 15043, Map.of(182215677, 7));
-		// 15070 真端 collect/check = quest_15070a 10（原写成 15071 的 quest_15071a 1）
+		// 15070 原版 collect/check = quest_15070a 10（原写成 15071 的 quest_15071a 1）
 		assertTurnInItemsOrRetired(catalog, 15070, Map.of(182215682, 10));
-		// 51021 真端 collect/check = quest_51017a 3（原写成 51018 的 quest_51018a）
+		// 51021 原版 collect/check = quest_51017a 3（原写成 51018 的 quest_51018a）
 		assertTurnInItemsOrRetired(catalog, 51021, Map.of(182215182, 3));
-		// 1932/3547/14121/14201/24121/24152/24242：真端 COLLECT_ITEM 交付缺少 has-item，玩家可零进度领奖、
-		// 掉落的任务道具永不被消耗；交付边（唯一进入 reward 的过渡）补回校验与扣除，数量取真端 collect_item 值
+		// 1932/3547/14121/14201/24121/24152/24242：原版 COLLECT_ITEM 交付缺少 has-item，玩家可零进度领奖、
+		// 掉落的任务道具永不被消耗；交付边（唯一进入 reward 的过渡）补回校验与扣除，数量取原版 collect_item 值
 		assertTurnInItemsOrRetired(catalog, 1932, Map.of(182206008, 1));
 		assertTurnInItemsOrRetired(catalog, 3547, Map.of(182215334, 10));
 		assertTurnInItemsOrRetired(catalog, 14121, Map.of(182215479, 5));
@@ -158,7 +158,7 @@ class QuestItemSourceContractGateTest {
 		// 2232/2239/2289/3013/3088/4542：同一任务由多个 NPC 变体交付，17 条交付边此前完全没有条件
 		// （零进度可领奖）；每个变体的交付边都必须校验并扣除自家任务道具
 		assertTurnInItemsOrRetired(catalog, 2232, Map.of(182203224, 9));
-		// 2239 还有一条本金交付边：真端 quest_work_item1 = quest_2239b（182203227）由 NPC 在行 1 交手，
+		// 2239 还有一条本金交付边：原版 quest_work_item1 = quest_2239b（182203227）由 NPC 在行 1 交手，
 		// 交付边必须校验并扣除它（QE-051 批次 43 的行阶梯）。
 		// 2239 also owns a work-item delivery edge: retail quest_work_item1 = quest_2239b (182203227).
 		assertTurnInItemsOrRetired(catalog, 2239, Map.of(182203228, 3, 182203227, 1));
@@ -166,7 +166,7 @@ class QuestItemSourceContractGateTest {
 		assertTurnInItemsOrRetired(catalog, 3013, Map.of(182208008, 1));
 		assertTurnInItemsOrRetired(catalog, 3088, Map.of(182208064, 1));
 		assertTurnInItemsOrRetired(catalog, 4542, Map.of(182215329, 1));
-		// 28836/28838：真端 SimpleTalk 行 item_check=1，quest.xml 的 collect_item/check_item 都是本任务道具，
+		// 28836/28838：原版 SimpleTalk 行 item_check=1，quest.xml 的 collect_item/check_item 都是本任务道具，
 		// 因此交付边必须校验并扣除「本任务道具 + 收集数量」。旧 XML 的 collect-item 事件形状随 XML 退役。
 		// 28836/28838: the retail row marks item_check=1 and quest.xml declares the quest's own collect item,
 		// so the report edge must require and remove that exact item and count.
@@ -179,7 +179,7 @@ class QuestItemSourceContractGateTest {
 		assertTurnInItemsOrRetired(catalog, 4217, Map.of(182209110, 3));
 		assertTurnInItemsOrRetired(catalog, 28739, Map.of(182215695, 5));
 		assertTurnInItemsOrRetired(catalog, 28740, Map.of(182215696, 8));
-		// 30756/15335/25335/19064：消除收集/制作道具与交付边的错配与漏洞，严格校验本任务真端道具
+		// 30756/15335/25335/19064：消除收集/制作道具与交付边的错配与漏洞，严格校验本任务原版道具
 		assertTurnInItemsOrRetired(catalog, 30756, Map.of(182213266, 3));
 		assertTurnInItemsOrRetired(catalog, 15335, Map.of(182215924, 1));
 		assertTurnInItemsOrRetired(catalog, 25335, Map.of(182215926, 1));
@@ -187,7 +187,7 @@ class QuestItemSourceContractGateTest {
 		assertTurnInItemsOrRetired(catalog, 29064, Map.of(182213239, 1, 186000085, 1));
 		assertTurnInItemsOrRetired(catalog, 80291, Map.of(186000040, 5));
 		assertTurnInItemsOrRetired(catalog, 80295, Map.of(186000040, 5));
-		// 80955/80956：已由真端 DataDriven PVP 行接管（战场击杀 1/5 名敌对玩家），任务道具交付随
+		// 80955/80956：已由原版 DataDriven PVP 行接管（战场击杀 1/5 名敌对玩家），任务道具交付随
 		// 旧 XML 一并退役；PVP 计数网格没有任何 has-item / 移除边，交付面必须为空。
 		// 80955/80956: adopted by the retail DataDriven PVP rows (kill 1/5 enemy players in the
 		// battlefield); the item turn-in retired with the old XML, and the PVP counter grid
@@ -264,8 +264,8 @@ class QuestItemSourceContractGateTest {
 	 * Asserts the turn-in conditions require exactly the given items and removals touch nothing else.
 	 */
 	/**
-	 * 退役行（真端表驱动，无 typed 定义）跳过并要求确属退役（防名单陈旧静默缩水）——其交付门由
-	 * native 车道读取的真端表列承担（lane 门覆盖）；XML 保留行仍逐条断言交付物品。
+	 * 退役行（原版表驱动，无 typed 定义）跳过并要求确属退役（防名单陈旧静默缩水）——其交付门由
+	 * native 车道读取的原版表列承担（lane 门覆盖）；XML 保留行仍逐条断言交付物品。
 	 * Retired rows carry no typed definition: skip but require real retirement (list-rot guard); their
 	 * turn-in gate is owned by the native lane reading the retail columns. XML rows still assert.
 	 */

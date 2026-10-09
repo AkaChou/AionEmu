@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- D1 证据表：真端 Quest-AI 注册面（生成器 p11-quest-ai-lane/emit_quest_ai_registrations.py）——
-     ScriptDLL FUN_180cb5920(name, questId) × 真端 npcs.xml quest_ai_name，名匹配按真端
+<!-- D1 证据表：原版 Quest-AI 注册面（生成器 p11-quest-ai-lane/emit_quest_ai_registrations.py）——
+     ScriptDLL FUN_180cb5920(name, questId) × 原版 npcs.xml quest_ai_name，名匹配按原版
      _wcsicmp 语义大小写不敏感（证据见生成器 docstring）；行覆盖 XML 车道任务；
      门禁 QuestAiDialogBindingGateTest 消费本表。 -->
 <quest_ai_registrations>

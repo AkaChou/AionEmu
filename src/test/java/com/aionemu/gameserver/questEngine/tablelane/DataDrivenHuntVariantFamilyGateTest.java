@@ -24,7 +24,7 @@ import com.aionemu.gameserver.questEngine.model.QuestStatus;
 
 /**
  * DD 击杀路由的变体族合同门（QE-048 回归，2026-10-08 实机 15546/15500/15503/15640/17510 报障）：
- * 真端 DD 表 hunt 名单写「代表名」（base/最低级），世界实刷同族变体——Iluma 只刷
+ * 原版 DD 表 hunt 名单写「代表名」（base/最低级），世界实刷同族变体——Iluma 只刷
  * {@code LF6_T_*} 变体（base 模板 0 刷新）、变身副本（302100000）按玩家等级刷
  * {@code IDTransform_Sado_*_66..75_An} 全族。精确解析只命中代表名 ⇒ 实刷成员击杀零路由、
  * 进度恒 0。修复后 hunt 兴趣面必须覆盖客户端 {@code quest_monster.csv} 合同行（QE-048/QE-125
@@ -40,7 +40,7 @@ class DataDrivenHuntVariantFamilyGateTest {
 	/** 客户端怪物进度合同（QE-048/QE-125：客户端计数权威）。 / The client monster-progress contract. */
 	private static final String CONTRACT_RESOURCE = "/aion/definitions/quest_monster/quest_monster.csv";
 
-	/** 待验任务的 DD hunt 代表名（真端表原样，组内逗号分隔）。 / The DD payload names under test. */
+	/** 待验任务的 DD hunt 代表名（原版表原样，组内逗号分隔）。 / The DD payload names under test. */
 	private static final Map<Integer, List<String>> PAYLOAD_NAMES = Map.of(
 		15546, List.of("LF6_ElementalLightF_A_66_n", "LF6_Daru_A_66_n", "LF6_Popoku_As_A2_67_n",
 			"LF6_WoodTesinon_A2_67_n"),

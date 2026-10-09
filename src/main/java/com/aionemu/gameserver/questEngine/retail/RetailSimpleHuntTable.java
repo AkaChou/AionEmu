@@ -17,7 +17,7 @@ import java.util.Optional;
 import java.util.Set;
 
 /**
- * 真端 SimpleHunt 模板表（Map/XML/Quest_SimpleHunt.xml）只读视图。
+ * 原版 SimpleHunt 模板表（Map/XML/Quest_SimpleHunt.xml）只读视图。
  * <p>
  * 每个任务一行，形如 {@code <id id="1102"><count1>3</count1><monster1>CherubimL_1_n, …</monster1>…}；
  * {@code countN/monsterN} 就是 ScriptDLL64 注册点里的 {@code param_4/param_3} 来源
@@ -26,7 +26,7 @@ import java.util.Set;
  */
 public final class RetailSimpleHuntTable {
 
-	/** 真端表允许的最大计数器槽位（count1..countN）。 / Highest counter slot the retail table uses. */
+	/** 原版表允许的最大计数器槽位（count1..countN）。 / Highest counter slot the retail table uses. */
 	private static final int MAX_COUNTERS = 8;
 
 	private final Map<Integer, Entry> entries;
@@ -49,7 +49,7 @@ public final class RetailSimpleHuntTable {
 	}
 
 	/**
-	 * 解析真端模板表。副本已无 DOCTYPE（2026-10-03 剥离批；schema = 同目录
+	 * 解析原版模板表。副本已无 DOCTYPE（2026-10-03 剥离批；schema = 同目录
 	 * {@code Quest_SimpleHunt.xsd}）；解析器保留内部子集能力、外部 DTD/实体一律拒绝（纵深防御）。
 	 * Parses the retail template table. The repo copy carries no DOCTYPE (2026-10-03 strip batch; schema
 	 * in the sibling {@code Quest_SimpleHunt.xsd}); internal-subset capability kept, external access denied.
@@ -101,7 +101,7 @@ public final class RetailSimpleHuntTable {
 			return null;
 		}
 		String acquiredNpc = text(element, "acquired_npc_name");
-		// talk_npc1 = 真端"先听简报再计数"的中间 NPC（串行族用它合成简报步骤）。 /
+		// talk_npc1 = 原版"先听简报再计数"的中间 NPC（串行族用它合成简报步骤）。 /
 		// talk_npc1 is the retail briefing NPC that must be visited before kill counters open.
 		return new Entry(questId, counters, acquiredNpc, text(element, "reward_npc_name"),
 			text(element, "con_quest"), RetailGrantKind.of(acquiredNpc), text(element, "talk_npc1"));
@@ -136,8 +136,8 @@ public final class RetailSimpleHuntTable {
 	 * @param counters  按槽位升序的计数器（槽位 N → SECTION_(N-1)）
 	 * @param acquiredNpc 接取 NPC 名（spawn/NPC 名，非 id）
 	 * @param rewardNpc 报告 NPC 名
-	 * @param conQuest 真端表声明的后续任务（与 quest.xml 的 finished_quest_condN 互补）
-	 * @param talkNpc 真端 {@code talk_npc1} 简报 NPC 名（可空；串行族据此合成非计数步骤）
+	 * @param conQuest 原版表声明的后续任务（与 quest.xml 的 finished_quest_condN 互补）
+	 * @param talkNpc 原版 {@code talk_npc1} 简报 NPC 名（可空；串行族据此合成非计数步骤）
 	 */
 	public record Entry(int questId, List<Counter> counters, String acquiredNpc, String rewardNpc, String conQuest,
 			RetailGrantKind grantKind, String talkNpc, boolean pvpProgress) {

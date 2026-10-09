@@ -26,10 +26,10 @@ import com.aionemu.gameserver.model.geometry.MultiPolyArea;
 import com.aionemu.gameserver.model.templates.zone.ZoneInfo;
 
 /**
- * 常设门：真端**多胞感官区**（一个区名由多个互不相连的多边形胞组成）必须被 zones XML 正确登记，
+ * 常设门：原版**多胞感官区**（一个区名由多个互不相连的多边形胞组成）必须被 zones XML 正确登记，
  * 且运行时按「进入任一胞即算进入」判定；每胞保留自己的 top/bottom，不得把 A 胞的 XY 与 B 胞的 Z 拼起来。
  * <p>
- * 背景：真端世界文件的同名感官区 NPC 常出现多个胞（`IDEternity_War_ShugoSeller` 6 胞、
+ * 背景：原版世界文件的同名感官区 NPC 常出现多个胞（`IDEternity_War_ShugoSeller` 6 胞、
  * `DF5_SensoryArea_65_Deva_Q15322b` 3 胞）。只注册其中一个胞会让其余胞变成静默死边；把多胞压成
  * 一个全局 Z 区间则会放行错胞的高度。本门锁定「多胞 = 多环 `<points>` 一条 `<zone>`」的登记形与几何语义。
  * <p>
@@ -44,7 +44,7 @@ class MultiCellSensoryZoneRegistrationTest {
 	private static final Path ZONES_QUEST = ZONES_DIR.resolve("zones_quest.xml");
 	private static final Path ZONES_XSD = ZONES_DIR.resolve("zones.xsd");
 
-	/** 真端采样点的顶点平均值（逐胞几何中心，已用射线法复核在多边形内）。 / Vertex-average cell centers. */
+	/** 原版采样点的顶点平均值（逐胞几何中心，已用射线法复核在多边形内）。 / Vertex-average cell centers. */
 	private static final float[][] SHUGOSELLER_CELLS = {
 		{992.990021f, 1015.205872f},
 		{1062.609833f, 956.725647f},
@@ -72,7 +72,7 @@ class MultiCellSensoryZoneRegistrationTest {
 	void multiCellSensoryZoneCountsEveryCellAsInside() throws Exception {
 		Area area = questZones().get("IDETERNITY_WAR_SHUGOSELLER_302350000");
 		MultiPolyArea multi = assertInstanceOf(MultiPolyArea.class, area);
-		assertEquals(6, multi.getCells().size(), "真端 IDEternity_War_ShugoSeller 有 6 胞");
+		assertEquals(6, multi.getCells().size(), "原版 IDEternity_War_ShugoSeller 有 6 胞");
 		for (int cell = 0; cell < SHUGOSELLER_CELLS.length; cell++) {
 			float x = SHUGOSELLER_CELLS[cell][0];
 			float y = SHUGOSELLER_CELLS[cell][1];
@@ -86,7 +86,7 @@ class MultiCellSensoryZoneRegistrationTest {
 	void multiCellSensoryZoneKeepsPerCellZRange() throws Exception {
 		Area area = questZones().get("DF5_SENSORYAREA_65_DEVA_Q15322B_220080000");
 		MultiPolyArea multi = assertInstanceOf(MultiPolyArea.class, area);
-		assertEquals(3, multi.getCells().size(), "真端 DF5_SensoryArea_65_Deva_Q15322b 有 3 胞");
+		assertEquals(3, multi.getCells().size(), "原版 DF5_SensoryArea_65_Deva_Q15322b 有 3 胞");
 
 		float x = Q15322B_CELLS[0][0];
 		float y = Q15322B_CELLS[0][1];
@@ -96,8 +96,8 @@ class MultiCellSensoryZoneRegistrationTest {
 	}
 
 	/**
-	 * 早期用「出生点 + r=10 球体」近似注册的 4 个感官区必须回到真端多边形：区名不变，几何换成
-	 * `<sensory_area>` 环，因此**真端 Z 窗口**（例如 Q30722 = 281.9–331.9）才是判定区间，而不是球体的 ±10。
+	 * 早期用「出生点 + r=10 球体」近似注册的 4 个感官区必须回到原版多边形：区名不变，几何换成
+	 * `<sensory_area>` 环，因此**原版 Z 窗口**（例如 Q30722 = 281.9–331.9）才是判定区间，而不是球体的 ±10。
 	 * <p>
 	 * The four sensory zones approximated earlier as "spawn point + r=10 sphere" must use the retail polygon:
 	 * same zone name, but the geometry is the `<sensory_area>` ring, so the retail Z window (e.g. Q30722 =
@@ -122,7 +122,7 @@ class MultiCellSensoryZoneRegistrationTest {
 			Area area = assertInstanceOf(com.aionemu.gameserver.model.geometry.PolyArea.class, zones.get(name), name);
 			float[] sample = retail[index];
 			assertTrue(area.isInside3D(sample[0], sample[1], sample[2]),
-				name + " 真端多边形（含顶沿附近的 Z）必须算在区内——旧 r=10 球体会漏判");
+				name + " 原版多边形（含顶沿附近的 Z）必须算在区内——旧 r=10 球体会漏判");
 		}
 	}
 

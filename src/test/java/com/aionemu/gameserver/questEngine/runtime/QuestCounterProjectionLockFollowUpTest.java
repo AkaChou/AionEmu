@@ -35,8 +35,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 class QuestCounterProjectionLockFollowUpTest {
 
-	// 49702 已在 P0c-3 退役：真端把它驱动为系统发放 + 逐计数网格节点（a0..a6），
-	// 旧 XML 的“START 自环 + var0 条件计数”合同随之失效；该形状的真端 IR 由
+	// 49702 已在 P0c-3 退役：原版把它驱动为系统发放 + 逐计数网格节点（a0..a6），
+	// 旧 XML 的“START 自环 + var0 条件计数”合同随之失效；该形状的原版 IR 由
 	// RetailSimpleHuntEquivalenceGateTest 的冻结指纹与 RetailSystemGrantDispatchTest 锁定。
 	// Quest 49702 retired in P0c-3: retail drives it as a system grant plus a per-count grid
 	// (a0..a6), so the legacy self-loop counter contract no longer applies; that retail IR is
@@ -161,7 +161,7 @@ class QuestCounterProjectionLockFollowUpTest {
 	}
 
 	private static CompiledQuestDefinition load(int questId) throws Exception {
-		// 退役任务的生产 XML 只在 git 历史里：统一取生产视图（XML 目录 + 真端 overlay）。
+		// 退役任务的生产 XML 只在 git 历史里：统一取生产视图（XML 目录 + 原版 overlay）。
 		return ProductionQuestDefinitions.definition(questId);
 	}
 }

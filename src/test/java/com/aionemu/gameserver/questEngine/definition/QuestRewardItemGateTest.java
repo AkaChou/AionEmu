@@ -31,27 +31,27 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * 固定奖励道具与可选奖励（item/selectable axis）真端合同门禁。
+ * 固定奖励道具与可选奖励（item/selectable axis）原版合同门禁。
  * <p>
- * 以 Aion 5.8 真端 quest.xml 的道具快照
+ * 以 Aion 5.8 原版 quest.xml 的道具快照
  * ({@code /quest/quest-item-selectable-retail-contract.tsv}) 为权威：
  * <ul>
  * <li>固定道具：生产档位 1 容器（平铺 &lt;rewards&gt; 或第一个 &lt;group&gt;）中
- * kind=ITEM 的 (id,amount) 多重集合必须与真端 reward_item1_N 一致；
- * 真端字段缺失（RETAIL_UNSET）= 真端未配置，跳过；</li>
+ * kind=ITEM 的 (id,amount) 多重集合必须与原版 reward_item1_N 一致；
+ * 原版字段缺失（RETAIL_UNSET）= 原版未配置，跳过；</li>
  * <li>可选道具：生产三种等价发放来源的并集——metadata SELECTABLE_ITEM 声明、
  * 显式 SELECTED_QUEST_REWARD 分支的可变 grant-reward ITEM、npc-complete choice
- * 指向的 SELECTABLE_ITEM——必须与真端 selectable_reward_item1_N 集合一致。</li>
+ * 指向的 SELECTABLE_ITEM——必须与原版 selectable_reward_item1_N 集合一致。</li>
  * </ul>
  * 例外（逐条列明，禁止通配豁免）：
  * <ul>
- * <li>16921/26921：真端唯一一项可选（188052438）允许以固定 ITEM 声明/发放表达；</li>
- * <li>2392：分支档位形态——生产三分支发放 (8/4/4 药水 + 2 币) 与真端单组显示
+ * <li>16921/26921：原版唯一一项可选（188052438）允许以固定 ITEM 声明/发放表达；</li>
+ * <li>2392：分支档位形态——生产三分支发放 (8/4/4 药水 + 2 币) 与原版单组显示
  * (8 药水 + 2 币) 的最大档完全一致，已验收形态；</li>
- * <li>2345：双路线任务（reward0/reward1 两组奖励组），真端单组字段无法判定组归属，
+ * <li>2345：双路线任务（reward0/reward1 两组奖励组），原版单组字段无法判定组归属，
  * EVIDENCE_BLOCKED（取证方向：旧 handler 2345 的路线发放代码）。</li>
  * </ul>
- * 真端道具名不可映射的行（956 条）不入基线，整类 EVIDENCE_BLOCKED。
+ * 原版道具名不可映射的行（956 条）不入基线，整类 EVIDENCE_BLOCKED。
  */
 class QuestRewardItemGateTest {
 
@@ -59,22 +59,22 @@ class QuestRewardItemGateTest {
 		"/quest/quest-item-selectable-retail-contract.tsv";
 	private static final String RETAIL_UNSET = "RETAIL_UNSET";
 
-	/** 真端唯一可选 = 固定发放的等价表达。 */
+	/** 原版唯一可选 = 固定发放的等价表达。 */
 	private static final Set<Integer> SINGLE_SELECTABLE_AS_FIXED = Set.of(16921, 26921);
-	/** 分支档位形态（发放集合覆盖真端显示组）。 */
+	/** 分支档位形态（发放集合覆盖原版显示组）。 */
 	private static final Set<Integer> BRANCH_TIER_EQUIVALENT = Set.of(2392);
-	/** 双路线任务，组归属无法从真端单组字段判定。 */
+	/** 双路线任务，组归属无法从原版单组字段判定。 */
 	private static final Set<Integer> DUAL_ROUTE_EVIDENCE_BLOCKED = Set.of(2345);
 
 	/**
-	 * 多档平铺单池形态：1687/2677 真端为三档 selectable（档 1 防具 4 件、
+	 * 多档平铺单池形态：1687/2677 原版为三档 selectable（档 1 防具 4 件、
 	 * 档 2/3 其余装备），生产以单池平铺+全 choice 表达（玩家可选范围一致）。
 	 * 按 QE-026 重建三档 reward-groups 前作为已定性形态保留。
 	 */
 	private static final Set<Integer> MULTI_TIER_FLATTENED = Set.of(1687, 2677);
 
 	/**
-	 * 真端 reward_item_ext_1 以档 1 平铺表达的形态：18606/50029/51029 的延伸
+	 * 原版 reward_item_ext_1 以档 1 平铺表达的形态：18606/50029/51029 的延伸
 	 * 奖励道具在档 1 容器发放（结算结果一致：玩家拿到该道具）。
 	 */
 	private static final Set<Integer> EXT_FLATTENED = Set.of(18606, 50029, 51029);
@@ -136,7 +136,7 @@ class QuestRewardItemGateTest {
 		Set<Integer> withoutAnyDefinition = new TreeSet<>();
 		for (Integer qid : contract.keySet()) {
 			// P3/P4/P5/P7 重锚（计划 §8.9）：已切到原生车道的行（七家族 handler + P7 步 f 起 DataDriven
-			// 1467 行）没有 typed 定义，道具轴直接取自真端 quest.xml 行；其余行仍按生产视图反推。
+			// 1467 行）没有 typed 定义，道具轴直接取自原版 quest.xml 行；其余行仍按生产视图反推。
 			// fail-closed 残余（退役但不可路由，如 SimpleUseItem 的复合交付名行 30720/30723）在两处都
 			// 没有定义，按不可路由登记而不是断言其道具轴。
 			// P3/P4/P5/P7 re-anchor: rows on the native lane (seven family handlers plus, since P7 step f,
@@ -332,7 +332,7 @@ class QuestRewardItemGateTest {
 	}
 
 	/**
-	 * 原生车道的奖赏轴：真端 {@code quest.xml} 行就是唯一事实来源——固定道具取
+	 * 原生车道的奖赏轴：原版 {@code quest.xml} 行就是唯一事实来源——固定道具取
 	 * {@code reward_item1_N}（缺列即 RETAIL_UNSET 语义），可选取 {@code selectable_reward_item1_N}，
 	 * extended 取 {@code reward_gold_ext / reward_item_ext_N / selectable_reward_item_ext_N}；
 	 * 道具符号 → id 走生产物品名索引（与合同快照同一条 name_desc 通道）。合同表是客户端
@@ -400,7 +400,7 @@ class QuestRewardItemGateTest {
 
 	private static RetailItemNameIndex ITEM_INDEX;
 
-	/** 真端物品单元格的物品名（空格前段，允许名称本身含空格时取最后一段为数量）。 /
+	/** 原版物品单元格的物品名（空格前段，允许名称本身含空格时取最后一段为数量）。 /
 	 * The item name of a retail cell (the trailing numeric token is the count). */
 	private static String symbol(String cell) {
 		String trimmed = cell.trim();
@@ -412,7 +412,7 @@ class QuestRewardItemGateTest {
 		return tail.chars().allMatch(Character::isDigit) ? trimmed.substring(0, lastSpace) : trimmed;
 	}
 
-	/** 真端物品单元格的数量（缺省 1）。 / The cell count (1 when absent). */
+	/** 原版物品单元格的数量（缺省 1）。 / The cell count (1 when absent). */
 	private static int symbolCount(String cell) {
 		String trimmed = cell.trim();
 		int lastSpace = trimmed.lastIndexOf(' ');
@@ -424,7 +424,7 @@ class QuestRewardItemGateTest {
 	}
 
 	/**
-	 * 已退役任务的检查路径：定义取生产视图（真端合成），三个来源从 IR 反推——
+	 * 已退役任务的检查路径：定义取生产视图（原版合成），三个来源从 IR 反推——
 	 * 固定道具 = 档位 1 的 ITEM 奖励；可选项 = 领奖确认分支相对固定奖励额外发放的道具；
 	 * extended = 元数据的最后一轮追加奖励。
 	 * Retired quests carry no XML; the item axes are re-derived from the synthesized definition.
@@ -472,7 +472,7 @@ class QuestRewardItemGateTest {
 		return new ProductionItems(fixed, selectable, new TreeSet<>(), extGold, extItems);
 	}
 
-	/** 固定道具多重集合必须与真端一致（真端字段缺失跳过）。 */
+	/** 固定道具多重集合必须与原版一致（原版字段缺失跳过）。 */
 	@Test
 	void fixedItemsMatchTheRetailContract() {
 		List<String> problems = new ArrayList<>();
@@ -502,7 +502,7 @@ class QuestRewardItemGateTest {
 		assertTrue(problems.isEmpty(), () -> "fixed item mismatches: " + problems);
 	}
 
-	/** 可选道具三来源并集必须与真端一致（等价表达与 EVIDENCE_BLOCKED 逐条例外）。 */
+	/** 可选道具三来源并集必须与原版一致（等价表达与 EVIDENCE_BLOCKED 逐条例外）。 */
 	@Test
 	void selectableItemsMatchTheRetailContractWithListedExceptions() {
 		List<String> problems = new ArrayList<>();
@@ -538,9 +538,9 @@ class QuestRewardItemGateTest {
 	}
 
 	/**
-	 * extended-rewards（真端 reward_gold_ext / reward_item_ext_1 /
+	 * extended-rewards（原版 reward_gold_ext / reward_item_ext_1 /
 	 * selectable_reward_item_ext_N，引擎在最后一轮重复完成时追加发放）
-	 * 必须与真端一致；真端无 ext 字段（"-"）的任务不纳入比对。
+	 * 必须与原版一致；原版无 ext 字段（"-"）的任务不纳入比对。
 	 * 2368 的 title_ext=dark_title27 无模板表映射数字 id，TITLE 声明豁免。
 	 */
 	@Test

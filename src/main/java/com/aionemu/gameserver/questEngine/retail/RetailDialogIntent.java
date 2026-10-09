@@ -1,7 +1,7 @@
 package com.aionemu.gameserver.questEngine.retail;
 
 /**
- * 真端任务对话中的非状态迁移意图。
+ * 原版任务对话中的非状态迁移意图。
  * Non-transition dialog intents in retail quest conversations.
  */
 public enum RetailDialogIntent {

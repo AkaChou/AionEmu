@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class JavaHandlerFamilyDefinitionTest {
 	@Test
 	void packagedProductionDirectoryCompilesTheMigratedHandlerOwners() throws Exception {
-		// 生产视图 = XML 目录 + 真端 overlay：部分 Poeta owner 已迁到真端驱动，不再由 XML 目录持有。
+		// 生产视图 = XML 目录 + 原版 overlay：部分 Poeta owner 已迁到原版驱动，不再由 XML 目录持有。
 		// Production view = XML directory plus the retail overlay.
 		QuestCatalog catalog = com.aionemu.gameserver.questEngine.retail.RetailQuestDriver.overlay(
 			QuestDefinitionDirectoryLoader.compile(getClass().getClassLoader()));
@@ -242,7 +242,7 @@ class JavaHandlerFamilyDefinitionTest {
 	void messageForMadelinAndIrreconcilableLoversArePlainReports() throws Exception {
 		CompiledQuestDefinition madelin = definition("1230.xml");
 		List<QuestAction> madelinCompletions = completions(madelin.definition().transitions(), "reward");
-		// 真端合成器对领奖确认按钮发放全段（SELECTED_QUEST_REWARD1..NOREWARD）共 16 条完成路由；
+		// 原版合成器对领奖确认按钮发放全段（SELECTED_QUEST_REWARD1..NOREWARD）共 16 条完成路由；
 		// 退役前 XML 只声明了 choice 1/2 两条，差异已登记 retail-simple-talk-drift.tsv（1230 DIFF:TRANSITION_SET）。
 		// The retail synthesis registers the whole confirm range (16 routes); the narrower XML-era
 		// choice set is a registered divergence (retail-simple-talk-drift.tsv).
@@ -357,7 +357,7 @@ class JavaHandlerFamilyDefinitionTest {
 	}
 
 	/**
-	 * 生产定义：XML 目录 + 真端 overlay（退役任务的 XML 只在 git 历史里）。
+	 * 生产定义：XML 目录 + 原版 overlay（退役任务的 XML 只在 git 历史里）。
 	 * Production definition through the production view; retired XML lives in git history only.
 	 */
 	private CompiledQuestDefinition definition(String file) {

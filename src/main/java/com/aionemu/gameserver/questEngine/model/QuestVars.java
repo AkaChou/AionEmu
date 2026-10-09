@@ -4,7 +4,7 @@ import lombok.NoArgsConstructor;
 
 /**
  * 任务变量集合，把最多 6 个子变量打包为一个 32 位整型值存储：槽 0..4 各 6 bit（bit0..29），
- * 第 5 槽只有 bit30..31（真端只把 var5 用作 1 bit 标志，见 QuestVarsTest）。
+ * 第 5 槽只有 bit30..31（原版只把 var5 用作 1 bit 标志，见 QuestVarsTest）。
  * Quest variable set packing up to six sub-variables into a single 32-bit value: slots 0..4 own bits 0..29
  * and slot 5 keeps only bits 30..31 (retail uses var5 as a 1-bit flag only).
  * @author MrPoke

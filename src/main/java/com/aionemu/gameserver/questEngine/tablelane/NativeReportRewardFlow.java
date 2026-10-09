@@ -16,11 +16,11 @@ import com.aionemu.gameserver.questEngine.retail.RetailQuestMetadataCompiler;
 import com.aionemu.gameserver.services.QuestService;
 
 /**
- * 真端车道的**完成/领奖口**（计划 §6.2 {@code NativeReportRewardFlow} 的完成半边）。
+ * 原版车道的**完成/领奖口**（计划 §6.2 {@code NativeReportRewardFlow} 的完成半边）。
  * <p>
  * 已切换到 native 车道的行不再有 typed XML/IR 模板，因此不能走
  * {@code QuestService.finishQuest(env, reward)}（其首个取数面是 typed 模板，缺模板即不可用，
- * 见 QE-113）。本口用**真端 {@code quest.xml} 行**重建奖励面：
+ * 见 QE-113）。本口用**原版 {@code quest.xml} 行**重建奖励面：
  * <ol>
  *   <li>状态门：仅 {@code REWARD} 态可结算；</li>
  *   <li>奖励面 = {@link RetailQuestDriver#retailMetadataOf(int)}（与生产目录同一条
@@ -32,7 +32,7 @@ import com.aionemu.gameserver.services.QuestService;
  *       客户端同步 + 重复计时）；</li>
  *   <li>fail-closed：缺行、元数据不可用、奖励符号名未解析（{@code reward:*}）一律不发放、不推进。</li>
  * </ol>
- * 奖励窗按钮语义：真端 {@code SELECTED_QUEST_REWARD1..15}(8..22) 是**奖励窗内被选中的选项**。
+ * 奖励窗按钮语义：原版 {@code SELECTED_QUEST_REWARD1..15}(8..22) 是**奖励窗内被选中的选项**。
  * 行只声明一个奖励槽（{@code reward_*1}）时，档位固定为该槽、选项下标由对话动作 id 传递给结算段
  * （结算段按 {@code dialogId - 8} 取可选奖励）；行声明多槽时下标即档位，越界即 fail-closed。
  * 多档行的档位/窗口逐列语义仍属计划 P6 范围，不在本口发明。
@@ -49,7 +49,7 @@ public final class NativeReportRewardFlow {
 	public record Outcome(boolean completed, String code) {
 	}
 
-	/** 真端 {@code quest.xml} 元数据来源（缺行/不可用返回 empty）。 / Retail metadata source. */
+	/** 原版 {@code quest.xml} 元数据来源（缺行/不可用返回 empty）。 / Retail metadata source. */
 	@FunctionalInterface
 	public interface MetadataSource {
 		Optional<RetailQuestMetadataCompiler.Outcome> metadata(int questId);
@@ -62,7 +62,7 @@ public final class NativeReportRewardFlow {
 		boolean complete(QuestEnv env, int rewardTier, QuestTemplate template);
 	}
 
-	/** 未解析奖励符号名前缀（真端列里的名字映射不到 id）。 / Prefix of unresolved reward symbols. */
+	/** 未解析奖励符号名前缀（原版列里的名字映射不到 id）。 / Prefix of unresolved reward symbols. */
 	private static final String REWARD_UNRESOLVED_PREFIX = "reward:";
 
 	private static volatile NativeReportRewardFlow instance;
@@ -70,7 +70,7 @@ public final class NativeReportRewardFlow {
 	private final MetadataSource metadata;
 	private final CompletionSink sink;
 
-	/** 生产实例：真端驱动元数据 + 共用结算体。 / Production instance: retail driver metadata + shared settlement. */
+	/** 生产实例：原版驱动元数据 + 共用结算体。 / Production instance: retail driver metadata + shared settlement. */
 	public static NativeReportRewardFlow instance() {
 		NativeReportRewardFlow local = instance;
 		if (local == null) {
@@ -101,7 +101,7 @@ public final class NativeReportRewardFlow {
 	}
 
 	/**
-	 * 元数据来源与结算体都可注入（只服务包内单测：typed 目录未装载时用真端驱动元数据）。
+	 * 元数据来源与结算体都可注入（只服务包内单测：typed 目录未装载时用原版驱动元数据）。
 	 * Both the metadata source and the settlement sink are injectable (package-private test seam:
 	 * use the retail driver metadata when the typed catalog is not booted).
 	 */
@@ -129,7 +129,7 @@ public final class NativeReportRewardFlow {
 		}
 		String unresolvedRewards = unresolvedRewards(compiled);
 		if (!unresolvedRewards.isEmpty()) {
-			// 真端奖励列里有解析不出的符号名 ⇒ 整单不放行（不发放部分奖励、不推进状态）。
+			// 原版奖励列里有解析不出的符号名 ⇒ 整单不放行（不发放部分奖励、不推进状态）。
 			// Any unresolved retail reward symbol fails the whole claim closed.
 			return new Outcome(false, "NATIVE_REWARD_UNRESOLVED:" + unresolvedRewards);
 		}
@@ -143,7 +143,7 @@ public final class NativeReportRewardFlow {
 		}
 		String buttonProblem = windowButtonProblem(template, player, rewardIndex);
 		if (buttonProblem != null) {
-			// 客户端按钮没有真端行声明面 ⇒ 不发奖、不完成（缺声明 fail-closed）。
+			// 客户端按钮没有原版行声明面 ⇒ 不发奖、不完成（缺声明 fail-closed）。
 			// Undeclared reward-window buttons grant nothing and never complete the row.
 			return new Outcome(false, "NATIVE_REWARD_BUTTON_UNDECLARED:" + buttonProblem);
 		}
@@ -192,14 +192,14 @@ public final class NativeReportRewardFlow {
 	static int rewardTier(QuestTemplate template, int rewardIndex) {
 		int slots = template.getRewards().size();
 		if (slots <= 1) {
-			// 无奖励列的行仍按真端完成门收尾（奖励面为空）。 / Rows without reward columns still complete.
+			// 无奖励列的行仍按原版完成门收尾（奖励面为空）。 / Rows without reward columns still complete.
 			return 0;
 		}
 		return -1;
 	}
 
 	/**
-	 * 奖励窗按钮校验：真端行声明的选项面就是客户端按钮的全部合法下标
+	 * 奖励窗按钮校验：原版行声明的选项面就是客户端按钮的全部合法下标
 	 * （可选奖励表长，或职业奖励表长——职业奖励按玩家职业取表，与结算段同源）。
 	 * Reward-window button check: the option face declared by the retail row is the complete set of
 	 * legal buttons (the selectable list, or the player-class list when the row uses class rewards).
@@ -214,7 +214,7 @@ public final class NativeReportRewardFlow {
 		if (template.isUseSingleClassReward() || template.isUseRepeatedClassReward()) {
 			List<QuestItems> classReward = classReward(template, player);
 			if (classReward == null || classReward.isEmpty()) {
-				// 职业奖励行必须能定位到本职业的真端奖励列，否则不发放也不算完成。
+				// 职业奖励行必须能定位到本职业的原版奖励列，否则不发放也不算完成。
 				// A class-reward row must resolve the player's retail class column, else it fails closed.
 				return "no class reward list for " + playerClass(player);
 			}
@@ -235,7 +235,7 @@ public final class NativeReportRewardFlow {
 	}
 
 	/**
-	 * 职业奖励表（真端 {@code {class}_selectable_reward} 列）。与结算段
+	 * 职业奖励表（原版 {@code {class}_selectable_reward} 列）。与结算段
 	 * {@code QuestService} 的职业分支**同一映射**（只认转职后的职业），只用于按钮下标校验。
 	 * The class-reward list (retail {@code {class}_selectable_reward} column), the exact mapping the
 	 * settlement uses (advanced classes only), consulted here to validate the reward-window button.

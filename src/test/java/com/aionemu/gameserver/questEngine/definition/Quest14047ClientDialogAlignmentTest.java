@@ -21,7 +21,7 @@ import org.w3c.dom.NodeList;
  */
 class Quest14047ClientDialogAlignmentTest {
 	private static final int PEITHO = 802052;
-	/** 副本静态刷的城堡 Boss：真端 ScriptDLL64 把 14047 注册在它身上（pattern D2_FnA 为空，无变身）。
+	/** 副本静态刷的城堡 Boss：原版 ScriptDLL64 把 14047 注册在它身上（pattern D2_FnA 为空，无变身）。
 	 *  The statically spawned castle boss the retail script binds quest 14047 to (empty D2_FnA pattern). */
 	private static final int ICARONIX_BOSS = 233877;
 	/** 214598 的变身产物，只服务任务 3530/4526 的计数链，不是 14047 的击杀目标。
@@ -165,7 +165,7 @@ class Quest14047ClientDialogAlignmentTest {
 		assertEquals(1, bossSpawns.getLength());
 		assertEquals(Integer.toString(ICARONIX_BOSS), ((Element) bossSpawns.item(0)).getAttribute("npc_id"));
 		assertEquals(0, transformFormSpawns.getLength());
-		// 定义不得再监听 214599：那是 214598 变身产物、任务 3530/4526 的目标（2026-10-07 真端收口）。
+		// 定义不得再监听 214599：那是 214598 变身产物、任务 3530/4526 的目标（2026-10-07 原版收口）。
 		// The definition must not listen to 214599 again: it is the 214598 transform product owned by
 		// quests 3530/4526 (retail-aligned on 2026-10-07).
 		assertTrue(definition().transitions().stream().noneMatch(transition ->

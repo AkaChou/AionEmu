@@ -27,13 +27,13 @@ import org.junit.jupiter.api.Test;
 import org.w3c.dom.Document;
 
 /**
- * D1 常设门：XML 车道任务的对话/交付 NPC 绑定 vs 真端 Quest-AI 注册面。
+ * D1 常设门：XML 车道任务的对话/交付 NPC 绑定 vs 原版 Quest-AI 注册面。
  * <p>
  * 证据表 = {@code retail-quest-ai-registrations.xml}（生成器
  * {@code .agents/summary/quest-engine-native/p11-quest-ai-lane/emit_quest_ai_registrations.py}，
- * 度量 + 常量导出 {@code measure_binding_gate.py --emit-constants}）：真端
+ * 度量 + 常量导出 {@code measure_binding_gate.py --emit-constants}）：原版
  * {@code FUN_180cb5920(L"name", questId)} 注册面（ScriptDLL 18787 个调用点 / 7043 个任务）
- * × 真端 {@code npcs.xml quest_ai_name} 展开的 npc id，名匹配按真端 {@code _wcsicmp}
+ * × 原版 {@code npcs.xml quest_ai_name} 展开的 npc id，名匹配按原版 {@code _wcsicmp}
  * 语义**大小写不敏感**（证据：{@code fun_249.cpp:3018} 名→id 表二分用 {@code _wcsicmp}，
  * 调用点 {@code fun_040.cpp:9923} = NPCDB::Load quest_ai_name；ScriptDLL 对话名 map 遍历
  * {@code ScriptDLL64.c:2075978/2076005}）。
@@ -43,12 +43,12 @@ import org.w3c.dom.Document;
  * 每份 XML 的 {@code <dialog npc-id>} / {@code <npc-complete npc-id>} 命中全局 Quest-AI
  * 集的引用，必须落在该任务的注册展开里，例外只有两张显式冻结清单：
  * <ul>
- *   <li>{@link #FROZEN_CROSS_QUEST}：真端注册面按「(注册名, 任务) 对」组织，而**同一 NPC
+ *   <li>{@link #FROZEN_CROSS_QUEST}：原版注册面按「(注册名, 任务) 对」组织，而**同一 NPC
  *       承接多条任务**（例：204700 Thor 注册于 2514/2611/2619/2641/2646/24053，本仓 2633
  *       的对话位也是它；799763 event_Sonaran 注册于 80016/80017，被 80298–80309 事件链引用）
  *       ⇒ 这类跨界引用不是缺陷，逐元素冻结；</li>
- *   <li>{@link #FROZEN_UNREGISTERED_TASKS}：真端**无任何 Quest-AI 注册**（18787 个调用点里
- *       查无此 id）但本仓 XML 带对话引用的任务，等价于「真端不由 Quest-AI NPC 驱动」——
+ *   <li>{@link #FROZEN_UNREGISTERED_TASKS}：原版**无任何 Quest-AI 注册**（18787 个调用点里
+ *       查无此 id）但本仓 XML 带对话引用的任务，等价于「原版不由 Quest-AI NPC 驱动」——
  *       待逐件裁决，冻结不阻塞。</li>
  * </ul>
  * 新增任一跨界引用/未注册任务即红；收缩须同批改常量（本门不做静默放行）。
@@ -79,7 +79,7 @@ class QuestAiDialogBindingGateTest {
 	private static final int DIALOG_HITS_ON_AI_SURFACE = 1402;
 
 	/**
-	 * 跨界冻结（21 任务 / 25 引用）：真端注册面是 (注册名, 任务) 对，同一 Quest-AI NPC 可承接
+	 * 跨界冻结（21 任务 / 25 引用）：原版注册面是 (注册名, 任务) 对，同一 Quest-AI NPC 可承接
 	 * 多条任务，故既有 XML 的对话 NPC 不必然出现在本任务的注册展开里（逐元素冻结）。
 	 * 观测面 21 任务 / 25 引用，逐元素冻结（新增即红，收缩须同批改常量）。
 	 */
@@ -106,7 +106,7 @@ class QuestAiDialogBindingGateTest {
 			Map.entry(80308, Set.of(799763)),
 			Map.entry(80309, Set.of(799763)));
 
-	/** 真端无 Quest-AI 注册但 XML 带对话引用的任务（18 件，逐元素冻结）。 */
+	/** 原版无 Quest-AI 注册但 XML 带对话引用的任务（18 件，逐元素冻结）。 */
 	private static final Set<Integer> FROZEN_UNREGISTERED_TASKS = Set.of(
 			1195, 10032, 10112, 10527, 10530, 17540, 20031, 20035,
 			20112, 20527, 20530, 21030, 27540, 50038, 50040, 50041,
@@ -144,7 +144,7 @@ class QuestAiDialogBindingGateTest {
 		assertTrue(registeredNamesAreSortedUnique(), "registered_names 必须升序去重（生成器形）");
 		assertTrue(registeredIdsAreSortedUnique(), "registered_npc_ids 必须升序去重（生成器形）");
 		assertEquals(Set.of(), namesWithoutResolvedIds(),
-			"这些任务有注册名却解析不出 npc：真端 _wcsicmp 折叠口径下应全解析，须复核 npcs.xml/注册名拼写");
+			"这些任务有注册名却解析不出 npc：原版 _wcsicmp 折叠口径下应全解析，须复核 npcs.xml/注册名拼写");
 	}
 
 	/** ②对话绑定面：命中全局 Quest-AI 集的引用除两张冻结清单外必须落在本任务注册展开内。 */
@@ -158,7 +158,7 @@ class QuestAiDialogBindingGateTest {
 			Set<Integer> onAiSurface = new TreeSet<>(entry.getValue());
 			onAiSurface.retainAll(globalAi);
 			hits += onAiSurface.size();
-			// 「未注册任务」= 真端注册面没有该 id 的任何 (name, questId) 调用 ⇒ 本行为空注册名列。
+			// 「未注册任务」= 原版注册面没有该 id 的任何 (name, questId) 调用 ⇒ 本行为空注册名列。
 			// "Unregistered" means the retail registration surface has no call for this quest id.
 			if (registeredNamesByQuest.getOrDefault(quest, "").isBlank()) {
 				if (!onAiSurface.isEmpty()) {
@@ -175,9 +175,9 @@ class QuestAiDialogBindingGateTest {
 		assertEquals(DIALOG_HITS_ON_AI_SURFACE, hits,
 			"对话绑定面命中全局 Quest-AI 集的引用数漂移：重跑 measure_binding_gate.py 复核");
 		assertEquals(FROZEN_CROSS_QUEST, violations,
-			"跨界对话引用集合漂移（新增即红）：核对真端注册面后同批改 FROZEN_CROSS_QUEST");
+			"跨界对话引用集合漂移（新增即红）：核对原版注册面后同批改 FROZEN_CROSS_QUEST");
 		assertEquals(FROZEN_UNREGISTERED_TASKS, new TreeSet<>(unregistered.keySet()),
-			"未注册但有对话引用的任务集合漂移（新增即红）：核对真端注册面后同批改 FROZEN_UNREGISTERED_TASKS");
+			"未注册但有对话引用的任务集合漂移（新增即红）：核对原版注册面后同批改 FROZEN_UNREGISTERED_TASKS");
 	}
 
 	// ---- 读取面 ---------------------------------------------------------------------------------

@@ -125,7 +125,7 @@ class BlankJournalSlotBoundaryContractTest {
 			.findFirst().orElseThrow(() -> new AssertionError("missing node " + label));
 	}
 
-	/** 生产定义：XML 目录 + 真端 overlay（退役任务不再有 XML，只在 git 历史里）。 */
+	/** 生产定义：XML 目录 + 原版 overlay（退役任务不再有 XML，只在 git 历史里）。 */
 	private static CompiledQuestDefinition definition(int questId) {
 		return ProductionQuestDefinitions.definition(questId);
 	}

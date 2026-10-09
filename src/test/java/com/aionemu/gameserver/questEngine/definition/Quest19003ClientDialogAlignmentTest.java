@@ -18,11 +18,11 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * 锁定任务 19003 的接取/报告/领奖 owner 与简易接取发放（真端 SimpleTalk 车道）。
+ * 锁定任务 19003 的接取/报告/领奖 owner 与简易接取发放（原版 SimpleTalk 车道）。
  * Locks quest 19003's accept/report/reward owners and the simple-accept grant on the retail SimpleTalk lane.
  * <p>
  * 任务已退役（保留清单 owner=RETAIL_TABLE）：旧 typed 转换金标随迁移退场，按计划 §8.9（P3 重锚口径）
- * 改锚真端表行（接取 Bacchus / 交付 Fasimedes、单步、接取发放文档）、quest.xml 奖励与 native 接取面。
+ * 改锚原版表行（接取 Bacchus / 交付 Fasimedes、单步、接取发放文档）、quest.xml 奖励与 native 接取面。
  * <p>
  * The retired typed transition gold standard is re-anchored (plan §8.9) to the retail row (accept Bacchus /
  * hand-in Fasimedes, single step, accept grant), the quest.xml rewards and the native accept face.
@@ -31,7 +31,7 @@ class Quest19003ClientDialogAlignmentTest {
 	private static final int QUEST_ID = 19003;
 	private static final int START_NPC = 203782;
 	private static final int REPORT_NPC = 203700;
-	/** 真端 give_item = ITEM_DOC_QUEST_19003A 1。 / The retail accept grant. */
+	/** 原版 give_item = ITEM_DOC_QUEST_19003A 1。 / The retail accept grant. */
 	private static final int DOC_ITEM = 182206128;
 
 	@Test
@@ -49,13 +49,13 @@ class Quest19003ClientDialogAlignmentTest {
 		assertEquals(0, handler.relayCount(QUEST_ID), "19003 是单步 talk 行");
 		assertEquals(new SimpleTalkHandler.ItemStack(DOC_ITEM, 1), handler.acceptGiveItem(QUEST_ID),
 			"接取发放 19003 文档");
-		assertFalse(handler.requireRow(QUEST_ID).itemCheck(), "真端行不得声明 item_check");
+		assertFalse(handler.requireRow(QUEST_ID).itemCheck(), "原版行不得声明 item_check");
 		assertEquals(List.of(), handler.workItems(QUEST_ID), "无 item_check 行不得带交付门物品");
 
 		QuestMetadata metadata = RetailQuestDriver.ensureLoaded()
 			.retailMetadataOf(QUEST_ID).orElseThrow().metadata();
-		assertEquals(50, metadata.minLevel(), "真端 minlevel_permitted=50");
-		assertEquals(java.util.Set.of("ELYOS"), metadata.permittedRaces(), "真端 pc_light");
+		assertEquals(50, metadata.minLevel(), "原版 minlevel_permitted=50");
+		assertEquals(java.util.Set.of("ELYOS"), metadata.permittedRaces(), "原版 pc_light");
 		assertTrue(metadata.prerequisites().contains(19002)
 				|| metadata.startConditions().contains(new QuestStartCondition("finished", 19002, 0)),
 			"前置 = 完成 19002");
@@ -75,7 +75,7 @@ class Quest19003ClientDialogAlignmentTest {
 		assertNotNull(reportNpc);
 
 		// 未接取：完成前置 19002 后任务行打开客户端声明的入口页（信页 select1=1011，带任务上下文）。
-		// 真端清单与接取面共用 CanAcquireQuest：前置未满足不进接取面，故先落前置状态。
+		// 原版清单与接取面共用 CanAcquireQuest：前置未满足不进接取面，故先落前置状态。
 		NativeTalkFixture.completePrerequisites(player, 19002);
 		NativeTalkFixture.clearPackets(player);
 		assertTrue(handler.onDialog(NativeTalkFixture.dialog(player, acquireNpc, QUEST_ID, 31)));

@@ -30,15 +30,15 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * 可路由行的每条 ItemPlay 步（kind 3）载荷 itemId 必须**可诉诸三源之一**，否则链在演出步死亡
  * （玩家拿不到道具却要"使用"它）。三源口径：
  * <ol>
- * <li>**物品模板**：载荷符号经真端物品模板索引解析（解析成功即模板存在；路由集行解析失败本就
+ * <li>**物品模板**：载荷符号经原版物品模板索引解析（解析成功即模板存在；路由集行解析失败本就
  *     被 NAME_UNRESOLVED 冻结，这里做一致性复查）；</li>
  * <li>**掉落/授予（任务数据面）**：同一行 GIVE_ITEMS 列（列 1，`符号 数量` 对，任意步含接取步 0）
- *     ∪ 真端 quest.xml 掉落列（{@code RetailQuestMetadataCompiler} 同链）；</li>
- * <li>**工作物品采集面**：itemId == 本任务自己的 {@code quest_work_itemN} 声明——真端数据把该物品
+ *     ∪ 原版 quest.xml 掉落列（{@code RetailQuestMetadataCompiler} 同链）；</li>
+ * <li>**工作物品采集面**：itemId == 本任务自己的 {@code quest_work_itemN} 声明——原版数据把该物品
  *     声明为本任务凭证，活运行时由掉落系统供给（{@code QuestService} 对工作物品做已持有去重闸门），
  *     不由任务数据直接发放；</li>
  * </ol>
- * 之外的真实来源逐条登记在 {@link #REGISTERED_EXTERNAL}（附真端证据），并断言登记仍被使用
+ * 之外的真实来源逐条登记在 {@link #REGISTERED_EXTERNAL}（附原版证据），并断言登记仍被使用
  * （数据漂移后登记作废即红）。
  * <p>
  * Gate for the DataDriven rows (rebuilt for the gate retired in step f): every ItemPlay step of a
@@ -51,16 +51,16 @@ class DataDrivenItemPlayGrantGateTest {
 	private static final String DD_TABLE = DataDrivenNativeRuntime.TABLE_RESOURCE;
 
 	/**
-	 * 任务数据之外的真实来源（quest_id → 真端证据）。当前 = 18738/28738 的炸弹
-	 * {@code idraksha_solo_bomb_01a}(164000342)：真端 npcs_npcs.xml 三颗宝箱 NPC 的 items_info
+	 * 任务数据之外的真实来源（quest_id → 原版证据）。当前 = 18738/28738 的炸弹
+	 * {@code idraksha_solo_bomb_01a}(164000342)：原版 npcs_npcs.xml 三颗宝箱 NPC 的 items_info
 	 * 100% common 掉落（IDRaksha_Solo_TreasureBox_A/B/C = 702694/702817/702818，×20/5/10），
 	 * 不走任务掉落列。
 	 * External sources with retail evidence: the 18738/28738 bombs drop from the three treasure-box
 	 * NPCs (items_info, 100% common), outside the quest drop columns.
 	 */
 	private static final Map<Integer, String> REGISTERED_EXTERNAL = Map.of(
-		18738, "idraksha_solo_bomb_01a 由真端宝箱 NPC 702694/702817/702818 items_info 100% common 掉落",
-		28738, "idraksha_solo_bomb_01a 由真端宝箱 NPC 702694/702817/702818 items_info 100% common 掉落");
+		18738, "idraksha_solo_bomb_01a 由原版宝箱 NPC 702694/702817/702818 items_info 100% common 掉落",
+		28738, "idraksha_solo_bomb_01a 由原版宝箱 NPC 702694/702817/702818 items_info 100% common 掉落");
 
 	/** 与运行时同形：载荷尾部 `, N` 计数。 / Mirrors the runtime's trailing-count payload form. */
 	private static final Pattern TRAILING_INT = Pattern.compile("^(.*?)(?:\\s*,\\s*|\\s+)(\\d+)$");

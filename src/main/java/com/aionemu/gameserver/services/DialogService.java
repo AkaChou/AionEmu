@@ -61,7 +61,7 @@ import com.aionemu.gameserver.utils.stats.AbyssRankEnum;
 
 public class DialogService {
     /**
-     * 服务端收尾关窗：真端 {@code 0x5d8} 关窗不仅关客户端窗口，也结束 NPC 的对话态——按客户端
+     * 服务端收尾关窗：原版 {@code 0x5d8} 关窗不仅关客户端窗口，也结束 NPC 的对话态——按客户端
      * {@code CM_CLOSE_DIALOG} 的同一条收尾链补发 {@link AIEventType#DIALOG_FINISH} 并做既有清扫。
      * <p>
      * 不补这一步时，行进中的对话 NPC 会**停在半路永不恢复**：开门时

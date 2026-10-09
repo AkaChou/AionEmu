@@ -13,14 +13,14 @@ import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
- * 未绑定交付对象的奖励窗确认动作恢复段（真端 {@code QuestDialog} 无主键协议；与 typed 车道
+ * 未绑定交付对象的奖励窗确认动作恢复段（原版 {@code QuestDialog} 无主键协议；与 typed 车道
  * {@code QuestRuntimeDispatcher#dispatchRewardWindowAction} 的恢复同裁定）。
  * <p>
  * 奖励窗由全局 UI 打开，客户端可能携带上一个交互对象，因此服务端**不能要求交互对象等于完成路由的
  * 交付 NPC**。本段在 native 八族的严格绑定派发全部未命中后按 questId + action 结算：
  * <ol>
  *   <li>门 = 动作 ∈ {@link QuestDialogAction#isRewardWindowAction} + 状态 {@code REWARD}
- *       （结算体自身继续验真端元数据/档位/按钮声明，任何一门不过零副作用）；</li>
+ *       （结算体自身继续验原版元数据/档位/按钮声明，任何一门不过零副作用）；</li>
  *   <li>结算经共用领奖口 {@link NativeReportRewardFlow}（与各族交付面同一份发放与状态写入）；</li>
  *   <li>收尾 = 选择对话页（页 10，questId=0；与各族交付面领奖收尾同形）。</li>
  * </ol>

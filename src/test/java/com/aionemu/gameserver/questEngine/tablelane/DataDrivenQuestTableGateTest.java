@@ -28,11 +28,11 @@ import com.aionemu.gameserver.questEngine.tablelane.DataDrivenQuestTable.Row;
 import com.aionemu.gameserver.questEngine.tablelane.DataDrivenQuestTable.Step;
 
 /**
- * P7 步 2 门：DD **原生行模型**（{@link DataDrivenQuestTable}）与真端表 / 切换集契约 / 真端列 guard 的一致性。
+ * P7 步 2 门：DD **原生行模型**（{@link DataDrivenQuestTable}）与原版表 / 切换集契约 / 原版列 guard 的一致性。
  * <p>
  * ① 行集与步序冻结（`RetailDataDrivenTable` 旧视图已随 P7 步 f 的旧 IR 车道删除，逐行对拍由
  * 步 b 批次完成并入史）；② 切换集（owner `RETAIL_TABLE` ∧ 不在客户端孤行桶）的类别步数与 P7 步 1
- * 契约冻结一致；③ 附加动作分类必须等于真端 `LoadExtraAction` 按列号的裁定（列 1 发 / 2 扣 / 3 传送 /
+ * 契约冻结一致；③ 附加动作分类必须等于原版 `LoadExtraAction` 按列号的裁定（列 1 发 / 2 扣 / 3 传送 /
  * 4 过场 / 5 生成 / 6 延迟 / 7 与 8 消息 / 9 进副本 / 10 定时器），且 CollectItem/PvP 无附加动作面；
  * ④ 非法类别 / 缺载荷 / 非法列组合必须 fail-closed（稳定码）。
  * <p>
@@ -46,7 +46,7 @@ class DataDrivenQuestTableGateTest {
 	private static final String RETENTION = "/quest/retail-xml-retention.xml";
 	private static final String ABSENT_FIXTURE = "/quest/retail-data-driven-client-absent.tsv";
 
-	/** 真端 DD 活行（注释块不是行）。 / Live retail DD rows. */
+	/** 原版 DD 活行（注释块不是行）。 / Live retail DD rows. */
 	private static final int LIVE_ROWS = 2492;
 	/** P7 切换集（owner `RETAIL_TABLE` ∧ 不在孤行/注释桶）。 / The P7 switch set. */
 	private static final int SWITCH_ROWS = 1467;
@@ -72,10 +72,10 @@ class DataDrivenQuestTableGateTest {
 		}
 	}
 
-	/** ① 真端 DD 活行数冻结（旧视图删除后由本门直接冻结）。 */
+	/** ① 原版 DD 活行数冻结（旧视图删除后由本门直接冻结）。 */
 	@Test
 	void liveRowCountStaysFrozen() {
-		assertEquals(LIVE_ROWS, nativeTable.size(), "真端 DD 活行数冻结");
+		assertEquals(LIVE_ROWS, nativeTable.size(), "原版 DD 活行数冻结");
 		for (int questId : nativeTable.questIds()) {
 			Row row = nativeTable.find(questId).orElseThrow();
 			for (int index = 0; index < row.steps().size(); index++) {
@@ -97,7 +97,7 @@ class DataDrivenQuestTableGateTest {
 		assertEquals(CATEGORY_STEPS, categorySteps, "每类 handler 步数必须与 P7 步 1 冻结一致");
 	}
 
-	/** ③ 附加动作分类 = 真端 `LoadExtraAction` 列裁定；CollectItem/PvP 无附加动作面。 */
+	/** ③ 附加动作分类 = 原版 `LoadExtraAction` 列裁定；CollectItem/PvP 无附加动作面。 */
 	@Test
 	void extraActionsFollowTheRetailGuard() {
 		Map<Integer, ExtraAction> byColumn = new LinkedHashMap<>();
@@ -120,13 +120,13 @@ class DataDrivenQuestTableGateTest {
 						continue;
 					}
 					ExtraAction action = byColumn.get(column.getKey());
-					assertNotNull(action, "非载荷列必须是真端附加动作列: " + questId + " " + column.getKey());
+					assertNotNull(action, "非载荷列必须是原版附加动作列: " + questId + " " + column.getKey());
 					expected.add(action);
 				}
-				assertEquals(expected, step.extraActions(), "附加动作分类必须与真端列裁定一致: " + questId);
+				assertEquals(expected, step.extraActions(), "附加动作分类必须与原版列裁定一致: " + questId);
 				if (step.kind() == Kind.COLLECT_ITEM || step.kind() == Kind.PVP) {
 					assertTrue(step.extraActions().isEmpty(),
-						"CollectItem/PvP 无附加动作面（真端 return 1）: " + questId);
+						"CollectItem/PvP 无附加动作面（原版 return 1）: " + questId);
 				}
 			}
 		}
@@ -158,7 +158,7 @@ class DataDrivenQuestTableGateTest {
 		assertTrue(huntExtra.getMessage().startsWith("DATA_DRIVEN_STEP_COLUMN_ILLEGAL"), huntExtra.getMessage());
 	}
 
-	/** 该列在该类别里是类别载荷（真端 `FUN_180c4b980`）而非附加动作。 / Whether the column is a category payload. */
+	/** 该列在该类别里是类别载荷（原版 `FUN_180c4b980`）而非附加动作。 / Whether the column is a category payload. */
 	private static boolean isPayloadColumn(Kind kind, int column) {
 		return switch (kind) {
 			case COLLECT_ITEM -> column >= 0 && column <= 5;

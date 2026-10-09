@@ -223,7 +223,7 @@ class ReportRowRewardProjectionContractTest {
 	}
 
 	private static CompiledQuestDefinition definition(int questId) {
-		// 行已由真端表驱动（退役），改从生产视图取定义。
+		// 行已由原版表驱动（退役），改从生产视图取定义。
 		// The rows are retail-driven since retirement; load via the production view.
 		return ProductionQuestDefinitions.definition(questId);
 	}

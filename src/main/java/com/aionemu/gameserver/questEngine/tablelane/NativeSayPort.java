@@ -8,10 +8,10 @@ import com.aionemu.gameserver.questEngine.retail.RetailStringIds;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
- * 原生任务车道的播报端口：DD 附加动作 case 7（`Message`，真端执行器 case 7 →
+ * 原生任务车道的播报端口：DD 附加动作 case 7（`Message`，原版执行器 case 7 →
  * `IUserImp::Say` = NC_SAY_CODE 包，说话者 = 玩家 + 字符串表 id）的唯一出口。
  * <p>
- * 2026-10-02 偏差修复（第二批）：翻转登记偏差，落真端 say 气泡面——正文取自同一真端
+ * 2026-10-02 偏差修复（第二批）：翻转登记偏差，落原版 say 气泡面——正文取自同一原版
  * 字符串表入仓行（第 3 列 `body`），经 {@link SM_MESSAGE} `NORMAL`（say）频道广播给玩家
  * 及周身（与玩家普通说话同通道，客户端渲染头顶气泡）；id 无正文的旧行走系统消息兜底
  * （原登记偏差仅在该兜底路径保留，门禁钉正文全覆盖）。

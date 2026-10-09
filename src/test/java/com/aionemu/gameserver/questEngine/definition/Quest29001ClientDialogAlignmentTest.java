@@ -18,11 +18,11 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * 锁定任务 29001 的接取/报告/领奖 owner 与简易接取发放（真端 SimpleTalk 车道）。
+ * 锁定任务 29001 的接取/报告/领奖 owner 与简易接取发放（原版 SimpleTalk 车道）。
  * Locks quest 29001's accept/report/reward owners and the simple-accept grant on the retail SimpleTalk lane.
  * <p>
  * 任务已退役（保留清单 owner=RETAIL_TABLE）：旧 typed 转换金标随迁移退场，按计划 §8.9（P3 重锚口径）
- * 改锚真端表行（接取 Latatusk / 交付 Vidar、单步、接取发放文档）、quest.xml 奖励与 native 接取面。
+ * 改锚原版表行（接取 Latatusk / 交付 Vidar、单步、接取发放文档）、quest.xml 奖励与 native 接取面。
  * <p>
  * The retired typed transition gold standard is re-anchored (plan §8.9) to the retail row (accept Latatusk /
  * hand-in Vidar, single step, accept grant), the quest.xml rewards and the native accept face.
@@ -31,7 +31,7 @@ class Quest29001ClientDialogAlignmentTest {
 	private static final int QUEST_ID = 29001;
 	private static final int START_NPC = 204096;
 	private static final int REPORT_NPC = 204052;
-	/** 真端 give_item = ITEM_DOC_QUEST_29001A 1。 / The retail accept grant. */
+	/** 原版 give_item = ITEM_DOC_QUEST_29001A 1。 / The retail accept grant. */
 	private static final int DOC_ITEM = 182207141;
 
 	@Test
@@ -49,13 +49,13 @@ class Quest29001ClientDialogAlignmentTest {
 		assertEquals(0, handler.relayCount(QUEST_ID), "29001 是单步 talk 行");
 		assertEquals(new SimpleTalkHandler.ItemStack(DOC_ITEM, 1), handler.acceptGiveItem(QUEST_ID),
 			"接取发放 29001 文档");
-		assertFalse(handler.requireRow(QUEST_ID).itemCheck(), "真端行不得声明 item_check");
+		assertFalse(handler.requireRow(QUEST_ID).itemCheck(), "原版行不得声明 item_check");
 		assertEquals(List.of(), handler.workItems(QUEST_ID), "无 item_check 行不得带交付门物品");
 
 		QuestMetadata metadata = RetailQuestDriver.ensureLoaded()
 			.retailMetadataOf(QUEST_ID).orElseThrow().metadata();
-		assertEquals(50, metadata.minLevel(), "真端 minlevel_permitted=50");
-		assertEquals(java.util.Set.of("ASMODIANS"), metadata.permittedRaces(), "真端 pc_dark");
+		assertEquals(50, metadata.minLevel(), "原版 minlevel_permitted=50");
+		assertEquals(java.util.Set.of("ASMODIANS"), metadata.permittedRaces(), "原版 pc_dark");
 		assertTrue(metadata.prerequisites().contains(29000)
 				|| metadata.startConditions().contains(new QuestStartCondition("finished", 29000, 0)),
 			"前置 = 完成 29000");

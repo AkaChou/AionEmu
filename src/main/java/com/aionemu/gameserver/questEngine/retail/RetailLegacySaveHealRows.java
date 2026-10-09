@@ -11,12 +11,12 @@ import org.w3c.dom.Element;
  * 旧存档自愈边登记（{@code quest_legacy_heal_rows.xml}，只读视图）：单步行族 build() 装载时按
  * 登记发射 EnterWorld 自愈边（[REWARD, var0=staleRow] → var0:=rewardRow）。
  * <p>
- * 口径（判例 80290/80294）：客户端任务书单行任务真端投影在行 0（0 基末行），XML 时代存档停在
+ * 口径（判例 80290/80294）：客户端任务书单行任务原版投影在行 0（0 基末行），XML 时代存档停在
  * 行 1（1 基行号），不修复则领奖书页落在不存在的行上。链路径的 weapon 方向
  * （[REWARD, var0=0] → rewardRow）由 {@code buildChain} 的 journalRowRepair 从投影直接派生、
  * 无需登记；本表只收链通道覆盖不到的 armour 方向（staleRow 由逐任务证据登记）。与测试侧
  * {@code retail-legacy-save-normalization.tsv}（采纳时移除的 XML 边登记，门禁要求登记行零
- * EnterWorld 路由）互斥——已编译的自愈边是真端形状的一部分，不入该表。
+ * EnterWorld 路由）互斥——已编译的自愈边是原版形状的一部分，不入该表。
  * <p>
  * Read-only registry of compiled legacy-save heal edges for the single-step build path. The chain
  * path derives its weapon-direction edge from the projection; this table carries the armour-direction

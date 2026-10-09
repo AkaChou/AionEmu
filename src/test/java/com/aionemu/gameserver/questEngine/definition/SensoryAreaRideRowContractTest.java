@@ -18,8 +18,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * 锁定批次 5 的“感应区坐骑行推进”合同（DataDriven 编译形）：15551-15554（天族）与 25551-25554
- * （魔族）由 Aquaris/Springleaf 系 NPC 对话接取（真端 acquire=Talk 轴权威，遗留的双感应区
- * 自动接取按真端优先退役），两段坐骑感应区边（区名经解析表落登记名）推进行号 0→1→领奖行 2，
+ * （魔族）由 Aquaris/Springleaf 系 NPC 对话接取（原版 acquire=Talk 轴权威，遗留的双感应区
+ * 自动接取按原版优先退役），两段坐骑感应区边（区名经解析表落登记名）推进行号 0→1→领奖行 2，
  * 末行 REWARD 投影 + enter-world/重谈双自愈边；天魔镜像同构。
  * <p>Locks the batch-5 sensory-area ride row contract in the DataDriven compiled shape: the
  * quests are accepted through the Aquaris/Springleaf NPC dialog (the retail acquire=Talk axis is
@@ -75,7 +75,7 @@ class SensoryAreaRideRowContractTest {
 	void theAcquireNpcOwnsTheAcceptRoute() throws Exception {
 		for (Contract contract : CONTRACTS) {
 			QuestDefinition definition = definition(contract.questId()).definition();
-			// 真端 acquire=Talk 轴权威： Aquaris 系 NPC 对话接取，感应区不再自动接取。
+			// 原版 acquire=Talk 轴权威： Aquaris 系 NPC 对话接取，感应区不再自动接取。
 			// The retail acquire=Talk axis is authoritative: the Aquaris dialog accepts; the zones
 			// no longer auto-accept.
 			QuestTransition accept = definition.transitions().stream()
@@ -295,7 +295,7 @@ class SensoryAreaRideRowContractTest {
 	}
 
 	private static CompiledQuestDefinition definition(int questId) throws Exception {
-		// 退役任务统一走生产视图（真端 overlay 合成；旧 XML 只在 git 历史里）。
+		// 退役任务统一走生产视图（原版 overlay 合成；旧 XML 只在 git 历史里）。
 		// Retired quests resolve through the production view (retail overlay; the old XML lives in
 		// git history only).
 		return ProductionQuestDefinitions.definition(questId);

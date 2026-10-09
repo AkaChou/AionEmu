@@ -1009,7 +1009,7 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 	}
 
 	private void handleTalkedByUser(Player player) {
-		// 真端直接交互优先于模板 is_dialog 标记，且不下发不存在的默认 HTML 页。
+		// 原版直接交互优先于模板 is_dialog 标记，且不下发不存在的默认 HTML 页。
 		// Retail direct interactions take precedence over the template is_dialog flag and skip absent default HTML.
 		if (!isDirectTalkInteraction(pattern) && !hasGaugeEvent(pattern)) {
 			super.handleDialogStart(player);
@@ -1020,7 +1020,7 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 	/**
 	 * 判断是否为直接交互对话模式，避免向客户端发送不存在的默认 HTML 页。
 	 * Whether this is a direct-interaction talk pattern, so no default HTML page is sent.
-	 * @param pattern 真端 NPC AI 模式 / retail NPC AI pattern
+	 * @param pattern 原版 NPC AI 模式 / retail NPC AI pattern
 	 * @return 是否直接交互 / whether direct interaction
 	 */
 	static boolean isDirectTalkInteraction(Pattern pattern) {
@@ -1059,7 +1059,7 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 	/**
 	 * 判断模式是否没有任何可执行规则。
 	 * Whether the pattern contains no executable rules.
-	 * @param pattern 真端 NPC AI 模式 / retail NPC AI pattern
+	 * @param pattern 原版 NPC AI 模式 / retail NPC AI pattern
 	 * @return 是否无规则 / whether no rules exist
 	 */
 	public static boolean hasNoRules(Pattern pattern) {
@@ -2220,13 +2220,13 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 		var instance = getPosition().getWorldMapInstance();
 		int doorId = integer(action, "id");
 		if (instance.getMapId() == 300190000) {
-			// 真端 1F Boss 门 / Retail 1F boss door.
-			// 真端 2F Boss 门 / Retail 2F boss door.
+			// 原版 1F Boss 门 / Retail 1F boss door.
+			// 原版 2F Boss 门 / Retail 2F boss door.
 			doorId = switch (doorId) {
 				case 1 -> 48;
-				// 真端 1F Boss 门 / Retail 1F boss door.
+				// 原版 1F Boss 门 / Retail 1F boss door.
 				case 2 -> 7;
-				// 真端 2F Boss 门 / Retail 2F boss door.
+				// 原版 2F Boss 门 / Retail 2F boss door.
 				default -> doorId;
 			};
 		}
@@ -2795,16 +2795,16 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 	}
 
 	/**
-	 * 按真端 pattern 的 spawn 动作在实例里补刷目标对象（幂等）。
+	 * 按原版 pattern 的 spawn 动作在实例里补刷目标对象（幂等）。
 	 * Spawns the object declared by a retail pattern spawn action, idempotently.
-	 * <p>供实例脚本在真端 pattern 未接管时驱动同一份真端数据：同一实例内已存在同模板 NPC 时直接跳过，
-	 * 因此 pattern 正常执行时不会产生第二份实体；坐标、朝向与飞行标记全部取自真端动作本身。
+	 * <p>供实例脚本在原版 pattern 未接管时驱动同一份原版数据：同一实例内已存在同模板 NPC 时直接跳过，
+	 * 因此 pattern 正常执行时不会产生第二份实体；坐标、朝向与飞行标记全部取自原版动作本身。
 	 * Used by instance scripts to drive the same retail data when the pattern did not take over: it skips when an NPC of
 	 * the same template already exists in the instance, so a working pattern never produces a second copy. Coordinates,
 	 * heading and the aerial flag all come from the retail action itself.
 	 * @param instance   目标实例 / target instance
 	 * @param ownerNpcId 触发 NPC 的模板 ID / template id of the triggering NPC
-	 * @param event      真端事件名 / retail event name
+	 * @param event      原版事件名 / retail event name
 	 * @param npcNameId  动作中的 {@code npc_nameid} / {@code npc_nameid} used by the action
 	 * @return 刷出的对象；已存在或数据缺失时返回 null / spawned object, or null when it already exists or data is missing
 	 */

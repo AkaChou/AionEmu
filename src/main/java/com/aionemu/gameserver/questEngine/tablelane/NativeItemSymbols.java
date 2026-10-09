@@ -6,10 +6,10 @@ import java.util.Set;
 import com.aionemu.gameserver.questEngine.retail.RetailItemNameIndex;
 
 /**
- * 真端物品符号解析（native 车道的共享规则，P5 起抽出）。
+ * 原版物品符号解析（native 车道的共享规则，P5 起抽出）。
  * <p>
- * 单元 = 「符号 [数量]」；符号按真端两通道约定解析：先按原名查物品 {@code name_desc}，未命中再去
- * {@code ITEM_} 前缀重查（真端表事实，2026-10-01 全量复算：SimpleTalk give/remove 663 个符号全为
+ * 单元 = 「符号 [数量]」；符号按原版两通道约定解析：先按原名查物品 {@code name_desc}，未命中再去
+ * {@code ITEM_} 前缀重查（原版表事实，2026-10-01 全量复算：SimpleTalk give/remove 663 个符号全为
  * {@code ITEM_X} 形式，quest.xml collect/work 列则全为原名形式）。未解符号进调用方的未解集合，
  * 调用方据此 fail-closed。
  * <p>

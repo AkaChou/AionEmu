@@ -8,7 +8,7 @@ import java.util.Objects;
 /**
  * 任务定义 XML 的测试装载入口（仅生产 XML）。
  * <p>
- * 迁移到真端驱动的任务不再保留 XML 副本：历史内容在 git 里可回溯，退役后的生产定义由
+ * 迁移到原版驱动的任务不再保留 XML 副本：历史内容在 git 里可回溯，退役后的生产定义由
  * {@link ProductionQuestDefinitions} 提供。断言"生产仍在用 XML"的测试必须用
  * {@link #productionXmlPresent(int)} 看源树，不能用 classpath（{@code target/classes} 会残留已删除资源）。
  * <p>
@@ -24,7 +24,7 @@ public final class QuestXmlFixtures {
 	}
 
 	/**
-	 * 打开生产 XML；任务已退役（迁移到真端驱动）时失败——此类测试必须改用
+	 * 打开生产 XML；任务已退役（迁移到原版驱动）时失败——此类测试必须改用
 	 * {@link ProductionQuestDefinitions}（历史 XML 在 git 里可回溯，不再进仓）。
 	 * Opens the production XML; retired quests must go through {@link ProductionQuestDefinitions}.
 	 */
@@ -46,7 +46,7 @@ public final class QuestXmlFixtures {
 	 * 按生产资源路径打开定义 XML，缺失时回落到退役冻结副本；路径末段的任务号即索引。
 	 * <p>
 	 * 供仍按 {@code getResourceAsStream("/aion/data/.../quests/<id>.xml")} 形态读取定义的测试使用：
-	 * 任务迁到真端驱动后生产资源消失，读到的内容与冻结副本逐字节相同。
+	 * 任务迁到原版驱动后生产资源消失，读到的内容与冻结副本逐字节相同。
 	 * <p>
 	 * Opens a definition by its production resource path with a retired-fixture fallback.
 	 */

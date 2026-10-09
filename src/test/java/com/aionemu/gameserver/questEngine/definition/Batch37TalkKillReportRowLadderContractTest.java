@@ -27,7 +27,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  *       迁移把 end NPC 的行 0 对话直接写成 started -&gt; reward，reward 投影 0，行 1/2 永远不亮。</li>
  *   <li>3711/4711（Dredgion 舰长，四行）：行 0「和 Mias/Henir 对话」、行 1「搜集德雷得奇安情报」
  *       （730196 术古的 select2 链）、行 2「除掉 DrakanBoss(214823)」、行 3「向 Taranis/Votan 报告」。
- *       legacy 合同是 TALK/REWARD 链：reward 投影 = 真端/legacy 推进值 2（QE-054；行 3 由客户端门槛显示），报告入口是 reward + QUEST_SELECT(31) 到
+ *       legacy 合同是 TALK/REWARD 链：reward 投影 = 原版/legacy 推进值 2（QE-054；行 3 由客户端门槛显示），报告入口是 reward + QUEST_SELECT(31) 到
  *       DEFAULT_SUCCESS(10002)，1009 由 npc-complete 预览打开奖励窗。</li>
  * </ul>
  * 两族都补无 source 的 ENTER_WORLD 自愈边（把旧存档的 packed 行 0/1(/2) 推到领奖行），并禁止
@@ -62,7 +62,7 @@ class Batch37TalkKillReportRowLadderContractTest {
 	@Test
 	void everyJournalRowOwnsAState() throws Exception {
 		for (Kill3Contract contract : KILL3_FAMILY) {
-			/* P0c-6 起三行走真端网格合成器直驱（无 IR）：编译视图断言随退役停用，守卫 = 必须确属
+			/* P0c-6 起三行走原版网格合成器直驱（无 IR）：编译视图断言随退役停用，守卫 = 必须确属
 			 * 退役（防名单陈旧静默缩水）；网格形（接取态/简报零段/计数满段/领奖）口径由 native 车道门承担。 */
 			/* Since P0c-6 the three rows are grid-composed natively (no IR): the compile-view assertions
 			 * retire with the XML; the guard keeps the list honest and the native lane gates own the caliber. */
@@ -83,7 +83,7 @@ class Batch37TalkKillReportRowLadderContractTest {
 	@Test
 	void bountyFamilyAcceptsFromStarterAndReportsToJournalNpc() throws Exception {
 		for (Kill3Contract contract : KILL3_FAMILY) {
-			/* P0c-6：三行走真端网格合成器直驱（无 IR）：本方法原有一整段编译视图断言（简报页/
+			/* P0c-6：三行走原版网格合成器直驱（无 IR）：本方法原有一整段编译视图断言（简报页/
 			 * SETPRO1 清位/击杀计数/报告页/领奖路由）随退役整体停用——守卫 = 必须确属退役
 			 * （4ede058c0 重锚漏网段，2026-10-07 收口）；网格形口径由 native 车道门承担。 */
 			/* Since P0c-6 the three rows are grid-composed natively (no IR): this method's former
@@ -142,7 +142,7 @@ class Batch37TalkKillReportRowLadderContractTest {
 	@Test
 	void staleCollapsedRewardSavesHealToTheRewardRow() throws Exception {
 		for (Kill3Contract contract : KILL3_FAMILY) {
-			/* P0c-6：真端形状没有任务书行号（var0 是击杀计数，行由客户端 SECTION 门控推导），
+			/* P0c-6：原版形状没有任务书行号（var0 是击杀计数，行由客户端 SECTION 门控推导），
 			 * 因此不再有也不该有"把旧存档行 0/1 推到领奖行"的无 source 自愈边（P3 既有裁定）；
 			 * 退役行无 IR，结构上不可能有修复边——守卫 = 必须确属退役（原 definition() 调用随
 			 * 4ede058c0 退役漏网，2026-10-07 收口）。 */
@@ -152,8 +152,8 @@ class Batch37TalkKillReportRowLadderContractTest {
 			assertTrue(RetiredQuestIds.contains(contract.questId()),
 				() -> "quest " + contract.questId() + " is retail-driven and must be a retired row");
 		}
-		/* QE-054：领奖投影 = 真端/legacy 推进值 2（legacy defaultOnKillEvent(214823,2,true) 落盘 2、
-		 * 真端集合 {2}），行 3 由客户端 REWARD 态按 [%N] 门槛显示；批次曾误抬为 3。 */
+		/* QE-054：领奖投影 = 原版/legacy 推进值 2（legacy defaultOnKillEvent(214823,2,true) 落盘 2、
+		 * 原版集合 {2}），行 3 由客户端 REWARD 态按 [%N] 门槛显示；批次曾误抬为 3。 */
 		/* QE-054: the reward projection is the retail/legacy value 2 (legacy kill event persisted 2;
 		 * row 3 is shown by the client's own REWARD gate); the batch once mislifted it to 3. */
 		for (Talk4Contract contract : TALK4_FAMILY) {
@@ -217,13 +217,13 @@ class Batch37TalkKillReportRowLadderContractTest {
 		};
 	}
 
-	/** 真端单槽网格的目标状态：计数 0/1 + 简报标志位。 / Retail single-slot grid state. */
+	/** 原版单槽网格的目标状态：计数 0/1 + 简报标志位。 / Retail single-slot grid state. */
 	private static Map<String, Integer> counters(int kills, boolean briefing) {
 		return Map.of("var0", kills, "var5", briefing ? 1 : 0);
 	}
 
 	/**
-	 * 按 (状态, 投影) 定位真端网格节点标签（网格命名 a0/a1.. 与旧 XML 的阶梯名不同，语义才是契约）。
+	 * 按 (状态, 投影) 定位原版网格节点标签（网格命名 a0/a1.. 与旧 XML 的阶梯名不同，语义才是契约）。
 	 * Semantic (status, projection) node lookup for the retail grid labels.
 	 */
 	private static String nodeLabel(QuestDefinition definition, int questId, QuestStatus status,
@@ -275,7 +275,7 @@ class Batch37TalkKillReportRowLadderContractTest {
 	}
 
 	private static CompiledQuestDefinition definition(int questId) throws Exception {
-		// 退役任务的生产 XML 只在 git 历史里：统一取生产视图（XML 目录 + 真端 overlay）。
+		// 退役任务的生产 XML 只在 git 历史里：统一取生产视图（XML 目录 + 原版 overlay）。
 		// Retired quests live in git history only: use the production view (XML dir + retail overlay).
 		return ProductionQuestDefinitions.definition(questId);
 	}

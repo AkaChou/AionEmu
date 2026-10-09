@@ -145,8 +145,8 @@ public class EventService {
 	void StartOrMaintainQuests(Player player, ListIterator<Integer> questList, Map<Integer, List<EventTemplate>> templateMap, boolean start) {
 		var engine = GameEngineServices.questEngine();
 		var catalog = engine.questCatalog();
-		// 元数据双源：目录缺行时回退真端 quest.xml（事件清单 318 行中 315 行已迁入原生车道，
-		// 真端等价物是 QuestDB 全量表）。缺回退则整个维护门被 null 短路。
+		// 元数据双源：目录缺行时回退原版 quest.xml（事件清单 318 行中 315 行已迁入原生车道，
+		// 原版等价物是 QuestDB 全量表）。缺回退则整个维护门被 null 短路。
 		// Catalog-first with a retail quest.xml fallback for native-lane rows (315 of the 318
 		// event-list rows; the retail equivalent is the full QuestDB table).
 		PlayerQuestStartEligibilityPort eligibility = new PlayerQuestStartEligibilityPort(playerId -> player,
@@ -162,7 +162,7 @@ public class EventService {
 
 			QuestMetadata metadata = catalog.findMetadata(questId).orElse(null);
 			if (metadata == null) {
-				// native 事件行（不在目录中）：回退真端 quest.xml 元数据——真端登录维护按活动清单
+				// native 事件行（不在目录中）：回退原版 quest.xml 元数据——原版登录维护按活动清单
 				// 直接查全量表，不存在「查不到行」的场景（口径同 1157 前置修复）。
 				// Native-lane event rows fall back to the retail quest.xml metadata (the QuestDB
 				// equivalent); the retail maintenance path never misses a listed row.

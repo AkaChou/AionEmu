@@ -32,7 +32,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * 领奖路由写行值）。SimpleTalk 切换批把这批里的 15 行移入 native 车道后 typed 定义退出生产视图，
  * 因此本测试改为双轴：
  * <ul>
- * <li><b>native 行</b>：断言真端表行（接取/交付 NPC、中继数、接取发放、步内发扣、交付门），并把
+ * <li><b>native 行</b>：断言原版表行（接取/交付 NPC、中继数、接取发放、步内发扣、交付门），并把
  * 「旧存档领奖行自愈」锚到 native 的进世界自愈（链形 vars=0 → 中继数；单步 vars=1 → 0）；</li>
  * <li><b>XML 保留行</b>：仍由 IR 车道拥有，逐条保留原来的 journal 行与自愈边断言。</li>
  * </ul>
@@ -42,7 +42,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 class RetailSingleStepRewardRowContractTest {
 
-	/** native 行的真端表事实（发放/回收为空即真端该列未声明）。 / Retail row facts of the native contracts. */
+	/** native 行的原版表事实（发放/回收为空即原版该列未声明）。 / Retail row facts of the native contracts. */
 	private record NativeRow(int questId, int acquireNpc, int rewardNpc, int relayCount,
 			Integer acceptGive, Integer stepGive, Integer stepRemove, List<SimpleTalkHandler.ItemStack> gate) {
 	}
@@ -98,7 +98,7 @@ class RetailSingleStepRewardRowContractTest {
 	}
 
 	/**
-	 * 旧存档领奖行自愈：REWARD 态的异常行值在进世界时被修回真端投影行，且第二次进入零写入。
+	 * 旧存档领奖行自愈：REWARD 态的异常行值在进世界时被修回原版投影行，且第二次进入零写入。
 	 * Enter-world heal of stale reward rows: the native lane repairs the row value and stays idempotent.
 	 */
 	@Test
@@ -115,7 +115,7 @@ class RetailSingleStepRewardRowContractTest {
 			assertTrue(handler.onEnterWorld(player), "quest " + questId + " 旧存档领奖行必须自愈");
 			QuestState healed = player.getQuestStateList().getQuestState(questId);
 			assertEquals(relays, healed.getQuestVars().getQuestVars(),
-				"quest " + questId + " 必须自愈到真端投影行");
+				"quest " + questId + " 必须自愈到原版投影行");
 			assertFalse(handler.onEnterWorld(player), "quest " + questId + " 自愈必须幂等");
 		}
 	}
@@ -232,7 +232,7 @@ class RetailSingleStepRewardRowContractTest {
 	}
 
 	private static CompiledQuestDefinition definition(int questId) throws Exception {
-		// 退役任务的生产 XML 只在 git 历史里：统一取生产视图（XML 目录 + 真端 overlay）。
+		// 退役任务的生产 XML 只在 git 历史里：统一取生产视图（XML 目录 + 原版 overlay）。
 		return ProductionQuestDefinitions.definition(questId);
 	}
 }

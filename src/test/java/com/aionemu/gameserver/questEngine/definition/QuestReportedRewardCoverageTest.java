@@ -149,7 +149,7 @@ class QuestReportedRewardCoverageTest {
 			.toList();
 	}
 
-	// 报告奖励覆盖清单跨真端驱动行：生产视图（真端 overlay 合成）替代原始 XML 目录。
+	// 报告奖励覆盖清单跨原版驱动行：生产视图（原版 overlay 合成）替代原始 XML 目录。
 	// The reported-reward coverage set spans retail-driven rows: the production view (retail
 	// overlay) replaces the raw XML directory.
 	private static QuestCatalog productionCatalog() {

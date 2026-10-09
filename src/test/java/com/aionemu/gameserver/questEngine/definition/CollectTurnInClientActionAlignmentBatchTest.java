@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * 锁定收集交付任务的客户端动作链对齐合同（P0-2 分族 / P0-3 S1 收口）：SimpleCollectItem、SimpleUseItem
- * 与 SimpleTalk 三族交付同形——{@code QUEST_SELECT}(started→reward) 带真端整组 HasItem 门控直翻
+ * 与 SimpleTalk 三族交付同形——{@code QUEST_SELECT}(started→reward) 带原版整组 HasItem 门控直翻
  * REWARD 并下发分档奖励窗；39/20002 检查对、SELECT5 报告页/入口页与 SELECT6 失败页随页链整体退场，
  * 未集齐时零路由（关窗兜底交 DialogService）。接取段走 S1 规范形：{@code QUEST_SELECT} 直发接取窗
  * （页 4）。reward owner 归属仍以 Aion 5.8 客户端与旧 handler 为准。
@@ -133,9 +133,9 @@ class CollectTurnInClientActionAlignmentBatchTest {
 	void dualNpcQuest1351KeepsRewardOwnershipOnTheTurnInNpc() throws Exception {
 		QuestDefinition definition = definition(1351).definition();
 
-		// P0c-27 裁定（真端对、XML 错）：族形 started 态在接取 NPC 上只有 FINISH_DIALOG(1008)
+		// P0c-27 裁定（原版对、XML 错）：族形 started 态在接取 NPC 上只有 FINISH_DIALOG(1008)
 		// 出口，推进后展示任务接取页（SELECT_QUEST=10）；遗留 XML 的 QUEST_SELECT→SELECT1
-		// "任务描述页"是手工形（P0c-19/20 NPC 角色词汇；翻转前 overlay 探针直证真端编译形状）。
+		// "任务描述页"是手工形（P0c-19/20 NPC 角色词汇；翻转前 overlay 探针直证原版编译形状）。
 		// P0c-27 adjudication (retail-right, XML-wrong): the acquire NPC's started state carries
 		// only the FINISH_DIALOG(1008) family exit, which then shows the quest-selection page
 		// (SELECT_QUEST=10); the legacy QUEST_SELECT->SELECT1 description page was hand-made.
@@ -153,9 +153,9 @@ class CollectTurnInClientActionAlignmentBatchTest {
 				&& talk.npcId() == 203965 && "reward".equals(candidate.targetNode())),
 			"203965 must not own reward routes");
 
-		// P0-3 S1：SimpleTalk 接取/交付切真端规范形（页 4 / 分档窗）。
+		// P0-3 S1：SimpleTalk 接取/交付切原版规范形（页 4 / 分档窗）。
 		// 交付 NPC 203983：START 自环的 SELECT5 报告入口页与 39/20002 检查对退场；交付 =
-		// canonicalDelivery——QUEST_SELECT(started→reward) 带真端 collect_item1 整组门
+		// canonicalDelivery——QUEST_SELECT(started→reward) 带原版 collect_item1 整组门
 		// （quest_1351a×10）直翻领奖并下发单档奖励窗 1（单奖励组 → rewardWindowForTier(0)），
 		// 未集齐时零路由（关窗兜底交 DialogService）。
 		// P0-3 S1: the SimpleTalk accept/delivery segments take the retail canonical shape (page 4 /
@@ -176,8 +176,8 @@ class CollectTurnInClientActionAlignmentBatchTest {
 	}
 
 	/**
-	 * RAKSANG 族（QE-108 起由真端 quest_area 驱动）：接取 = 进区域 {@code SystemGrant} 发放（无接取 NPC），
-	 * 交付 = {@code QUEST_SELECT}(started→reward) 带真端整组 HasItem 门控直翻 REWARD 并下发单档奖励窗；
+	 * RAKSANG 族（QE-108 起由原版 quest_area 驱动）：接取 = 进区域 {@code SystemGrant} 发放（无接取 NPC），
+	 * 交付 = {@code QUEST_SELECT}(started→reward) 带原版整组 HasItem 门控直翻 REWARD 并下发单档奖励窗；
 	 * 旧 SELECT1 入口页与 39 检查失败页随页链整体退场。
 	 * The RAKSANG family is area-driven since QE-108: the acquire is the {@code SystemGrant} edge fired on
 	 * area entry (no acquire npc), and the delivery is a gated {@code QUEST_SELECT}(started->reward) that
@@ -303,9 +303,9 @@ class CollectTurnInClientActionAlignmentBatchTest {
 	}
 
 	/**
-	 * S1 规范形交付（P0-3）：{@code QUEST_SELECT}(started→reward) 带真端整组 HasItem 门控直翻 REWARD
+	 * S1 规范形交付（P0-3）：{@code QUEST_SELECT}(started→reward) 带原版整组 HasItem 门控直翻 REWARD
 	 * 并下发单档奖励窗 1；START 自环的报告入口页与 39/20002 检查对、SELECT5/SELECT6 报告页一律不得出现
-	 * （未集齐零路由）。门物品 = 真端 quest.xml 的 collect_item1 整列（单组任务，窗 = 档位 0 即窗 1）。
+	 * （未集齐零路由）。门物品 = 原版 quest.xml 的 collect_item1 整列（单组任务，窗 = 档位 0 即窗 1）。
 	 * The S1 canonical delivery (P0-3): the gated QUEST_SELECT(started->reward) flips REWARD and shows the
 	 * single-tier reward window 1; the START self-loop report entry, the 39/20002 check pair and the
 	 * SELECT5/SELECT6 report pages must all be absent (an incomplete hand-in has no route). The gate is the
@@ -458,7 +458,7 @@ class CollectTurnInClientActionAlignmentBatchTest {
 	}
 
 	private static CompiledQuestDefinition definition(int questId) throws Exception {
-		// 退役任务的生产 XML 只在 git 历史里：统一取生产视图（XML 目录 + 真端 overlay）。
+		// 退役任务的生产 XML 只在 git 历史里：统一取生产视图（XML 目录 + 原版 overlay）。
 		return ProductionQuestDefinitions.definition(questId);
 	}
 }

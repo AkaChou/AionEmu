@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * 真端 SimpleHunt 模板表 + 计数器语义回放（期望值来自 ScriptDLL64 反编译校验；1217 另含一条
+ * 原版 SimpleHunt 模板表 + 计数器语义回放（期望值来自 ScriptDLL64 反编译校验；1217 另含一条
  * 玩家可见口径的本服偏差登记，见该测试注释）。
  * Retail SimpleHunt table and counter semantics replay, with expectations derived from the decompile;
  * quest 1217 additionally pins one documented local deviation (see that test's comment).
@@ -23,7 +23,7 @@ class RetailSimpleHuntTableTest {
 	@Test
 	void loadsTheRetailTemplateTable() throws Exception {
 		RetailSimpleHuntTable table = load();
-		// 真端表 1,865 行；其中 6 行既无 countN 也无 monsterN（开发/占位行），加载器按"无计数器"跳过。
+		// 原版表 1,865 行；其中 6 行既无 countN 也无 monsterN（开发/占位行），加载器按"无计数器"跳过。
 		assertEquals(1859, table.size(), "retail SimpleHunt rows carrying at least one counter slot");
 
 		RetailSimpleHuntTable.Entry quest = table.find(1102).orElseThrow();
@@ -78,9 +78,9 @@ class RetailSimpleHuntTableTest {
 	}
 
 	/**
-	 * 本服偏差登记：1217 固定 7 杀（真端 count1=10），防止真端表重导入时静默改回。
+	 * 本服偏差登记：1217 固定 7 杀（原版 count1=10），防止原版表重导入时静默改回。
 	 * <p>
-	 * 中文（CHS）客户端页 QUEST_Q1217.html 的摘要 `([%2]/7)` 与接取台词「清除掉 7 个」都是 7；真端表、
+	 * 中文（CHS）客户端页 QUEST_Q1217.html 的摘要 `([%2]/7)` 与接取台词「清除掉 7 个」都是 7；原版表、
 	 * 客户端自身 quest_monster 门控（`SECTION_0<10`）与韩文原页都是 10。2026-10-07 实机验收：杀到 7 个
 	 * 即推进到报告步（完成态计数条曾显示 10/7 的客户端侧观感残留）。证据见
 	 * .agents/summary/quest-1217-kill-count/DIAGNOSIS.zh-CN.md。

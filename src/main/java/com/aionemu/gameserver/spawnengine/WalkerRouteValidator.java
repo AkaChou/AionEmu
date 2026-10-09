@@ -12,7 +12,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * 行走路线装载校验：对照真端 {@code WayPointInfo::CalcWayPointZPos} 的装载期检查
+ * 行走路线装载校验：对照原版 {@code WayPointInfo::CalcWayPointZPos} 的装载期检查
  * （相邻点 ≤100m、每点必须落在可行走面、相邻点必须可寻路、闭环末点 &lt;1m 去重）。
  * <p>
  * 惰性 per-(worldId, routeId) 一次：首次在该世界启动某条路线巡逻时触发，结果只记一次。
@@ -31,13 +31,13 @@ import java.util.concurrent.ConcurrentHashMap;
 public final class WalkerRouteValidator {
 
 	/**
-	 * 真端相邻航点距离上限（米）：超过即截断路线。
+	 * 原版相邻航点距离上限（米）：超过即截断路线。
 	 * Retail max distance between adjacent waypoints (m); longer legs truncate the route.
 	 */
 	static final float MAX_LEG_DISTANCE = 100f;
 
 	/**
-	 * 真端闭环收口阈值（米）：末点距首点小于该值时视作闭环重复。
+	 * 原版闭环收口阈值（米）：末点距首点小于该值时视作闭环重复。
 	 * Retail closed-loop margin (m): a last step this close to the first counts as a closed-loop duplicate.
 	 */
 	static final float CLOSED_LOOP_MARGIN = 1f;
@@ -106,7 +106,7 @@ public final class WalkerRouteValidator {
 	}
 
 	/**
-	 * 相邻航点是否超过真端上限（米）。
+	 * 相邻航点是否超过原版上限（米）。
 	 * Whether an adjacent-leg distance exceeds the retail limit (m).
 	 * @param legDistance 相邻点距离（米）/ adjacent distance in meters
 	 * @return 超限返回 true / true when over the limit

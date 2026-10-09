@@ -203,7 +203,7 @@ public class TalocsHollowInstance extends GeneralInstanceHandler
 		Player player = npc.getAggroList().getMostPlayerDamage();
 		switch (npc.getObjectTemplate().getTemplateId()) {
 			case 215457: //Ancient Octanus.
-				// 真端 Elim_Octaside_Door 在死亡事件中切换 1F Rush 条件；实例层兜底覆盖旧刷怪或 AI 未接管的情况。
+				// 原版 Elim_Octaside_Door 在死亡事件中切换 1F Rush 条件；实例层兜底覆盖旧刷怪或 AI 未接管的情况。
 				// Retail Elim_Octaside_Door switches the 1F rush condition on death; the instance fallback also covers legacy spawns or an AI that did not take over.
 				sendMsgByRace(1400659, Race.PC_ALL, 0);
 				RetailConditionSpawnEngine.setVariable(instance, "IDElim_1F_StartRush", 2, 0);
@@ -230,15 +230,15 @@ public class TalocsHollowInstance extends GeneralInstanceHandler
 					ItemService.addItem(player, 170170044, 1); //[Souvenir] Taloc's Komad Statue.
 				}
 				sendMsg("[Congratulation]: you finish <Taloc's Hollow>");
-				// 真端由 Elim_ComadAe.on_killed_by_user 的 spawn 动作刷新卡斯帕的幻影；pattern 未接管时按同一份
-				// 真端数据幂等补刷（先让 pattern 执行，实例内已有同模板 NPC 则跳过，不会产生第二份实体）。
+				// 原版由 Elim_ComadAe.on_killed_by_user 的 spawn 动作刷新卡斯帕的幻影；pattern 未接管时按同一份
+				// 原版数据幂等补刷（先让 pattern 执行，实例内已有同模板 NPC 则跳过，不会产生第二份实体）。
 				// Retail spawns Taloc's mirage from the Elim_ComadAe.on_killed_by_user spawn action; replay that same
 				// retail data as an idempotent fallback when the pattern did not take over (the pattern runs first and an
 				// existing copy in the instance is kept, so no second entity is created).
 				spawnMirageIfPatternMissed(npc.getObjectTemplate().getTemplateId());
             break;
 			case 700739: //Cracked Huge Insect Egg.
-				// 真端 pattern `Elim_WindEventB` 用条件变量在卵的位置升起气流，并开启地面移动碰撞；
+				// 原版 pattern `Elim_WindEventB` 用条件变量在卵的位置升起气流，并开启地面移动碰撞；
 				// 实例层补一条幂等兜底，保证 pattern 未接管时气流视觉与移动碰撞仍然开启。
 				// The retail pattern `Elim_WindEventB` raises the updraft at the egg through a condition
 				// variable and switches on its ground moving collision; this idempotent instance-level
@@ -259,7 +259,7 @@ public class TalocsHollowInstance extends GeneralInstanceHandler
 	}
 
 	/**
-	 * 真端 pattern 未接管时按同一份真端数据补刷卡斯帕的幻影。
+	 * 原版 pattern 未接管时按同一份原版数据补刷卡斯帕的幻影。
 	 * Replays the retail Taloc's mirage spawn when the pattern did not take over.
 	 * <p>延迟一秒执行，让 Celestius 自己的 {@code on_killed_by_user} 动作先跑；实例内已有同模板 NPC 时
 	 * {@link RetailPatternAI2#spawnRetailActionNpc} 直接返回，因此不会与 pattern 产生第二份实体。

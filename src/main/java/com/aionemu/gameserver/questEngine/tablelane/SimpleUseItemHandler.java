@@ -32,24 +32,24 @@ import com.aionemu.gameserver.services.DialogService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
- * 真端 SimpleUseItem 原生任务处理器（计划 §6.2 / §7 P5 切换批）。
+ * 原版 SimpleUseItem 原生任务处理器（计划 §6.2 / §7 P5 切换批）。
  * <p>
- * 完全由真端表 {@link NativeQuestTableLoader#useItemRows()}、真端 {@code quest.xml} 与共用结算口驱动，
+ * 完全由原版表 {@link NativeQuestTableLoader#useItemRows()}、原版 {@code quest.xml} 与共用结算口驱动，
  * 绝不生成 IR 节点、绝不回退退役编译器。逐项证据：
  * <ul>
  *   <li><b>接取</b>：本族**没有** {@code acquired_npc_name} 列 ⇒ 接取 = 使用 {@code use_item_name}
- *       声明的道具（真端 codegen 的无主物品接取形 {@code canonicalItemAcceptFlow}：用物下发接取窗页 4，
+ *       声明的道具（原版 codegen 的无主物品接取形 {@code canonicalItemAcceptFlow}：用物下发接取窗页 4，
  *       接受/拒绝/关窗为无主对话 1002/1003/1008）；</li>
- *   <li><b>中继链</b>：{@code talk_npc1..3} 严格表序推进（真端 cabb10 语义）：任务行打开（31/26/-1）=
+ *   <li><b>中继链</b>：{@code talk_npc1..3} 严格表序推进（原版 cabb10 语义）：任务行打开（31/26/-1）=
  *       **该步页** SELECT2..4（1352/1693/2034），不推进；推进 = SETPRO{K}（{@code 10000 + K - 1}）——
  *       按位置执行 {@code give_itemK}/{@code remove_itemK} 并把步号写 {@code var0 = K}（客户端任务书
- *       步骤轴）后关窗（真端 0x5d8、零发页；实测声明这些列的行**都**声明第 K 个中继 NPC）。
+ *       步骤轴）后关窗（原版 0x5d8、零发页；实测声明这些列的行**都**声明第 K 个中继 NPC）。
  *       2026-10-08 修复（实机 3058）：旧实现对任何动作直接推进且把步号写 bit16..17——客户端步数
  *       65536 匹配不到任何任务步骤（任务书步骤显示为空）；旧存档由 {@link #onEnterWorld} 归一；</li>
  *   <li><b>交付</b>：交付 NPC 处在中继链走完 + {@code item_check} 门通过时翻 REWARD 并下发奖励窗页 5；
- *       否则进行中页 10。{@code item_check} 是族表列（真端 record 的引擎开关）+ 门物品取真端
- *       {@code quest.xml} 的 {@code check_itemK_L} 列（同一行两条真端声明，缺一即 fail-closed）；</li>
- *   <li><b>领奖</b>：{@link NativeReportRewardFlow}（真端 reward 列 → 共用结算体），完成页 1008。</li>
+ *       否则进行中页 10。{@code item_check} 是族表列（原版 record 的引擎开关）+ 门物品取原版
+ *       {@code quest.xml} 的 {@code check_itemK_L} 列（同一行两条原版声明，缺一即 fail-closed）；</li>
+ *   <li><b>领奖</b>：{@link NativeReportRewardFlow}（原版 reward 列 → 共用结算体），完成页 1008。</li>
  * </ul>
  * 缺行/名字多义/物品未解/门声明不可解/未退役的行一律不路由（fail-closed）。
  * <p>
@@ -64,13 +64,13 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
  */
 public final class SimpleUseItemHandler {
 
-	/** 接取问询窗页（真端物品接取形）。 / The item-accept ask window page. */
+	/** 接取问询窗页（原版物品接取形）。 / The item-accept ask window page. */
 	public static final int PAGE_ASK_ACCEPT = QuestDialogPage.SHOW_ASK_QUEST_ACCEPT_WINDOW.id();
 	/** 进行中（未满足交付门）页。 / In-progress page. */
 	public static final int PAGE_IN_PROGRESS = QuestDialogPage.SELECT_QUEST.id();
 	/** 奖励窗页。 / The reward window page. */
 	public static final int PAGE_REWARD_WINDOW = QuestDialogPage.SHOW_SELECT_QUEST_REWARD_WINDOW1.id();
-	/** 中继步页（真端 SELECT2/SELECT3/SELECT4；客户端未声明即不发页）。 / Relay step pages. */
+	/** 中继步页（原版 SELECT2/SELECT3/SELECT4；客户端未声明即不发页）。 / Relay step pages. */
 	private static final int[] RELAY_STEP_PAGES = {1352, 1693, 2034};
 
 	/** 推进动作基址（SETPRO{K} = 10000 + K − 1）。 / The advance action base (SETPRO{K}). */
@@ -99,9 +99,9 @@ public final class SimpleUseItemHandler {
 
 	/** 任务 ID → 接取道具 id。 / Quest id → accept item id. */
 	private final Map<Integer, Integer> useItemByQuestId;
-	/** 接取道具 id → 该道具可开的任务（真端一行一物，同物多行时按 id 序稳定）。 / Item id → quests. */
+	/** 接取道具 id → 该道具可开的任务（原版一行一物，同物多行时按 id 序稳定）。 / Item id → quests. */
 	private final Map<Integer, List<Integer>> acceptQuestIdsByItemId;
-	/** 任务 ID → 交付 NPC 集合（真端逻辑名 + 客户端交付集合展开）。 / Quest id → hand-in npcs. */
+	/** 任务 ID → 交付 NPC 集合（原版逻辑名 + 客户端交付集合展开）。 / Quest id → hand-in npcs. */
 	private final Map<Integer, List<Integer>> rewardNpcsByQuestId;
 	/** 任务 ID → 中继 NPC id（表序）。 / Quest id → relay npc ids in table order. */
 	private final Map<Integer, List<Integer>> relayNpcsByQuestId;
@@ -111,10 +111,10 @@ public final class SimpleUseItemHandler {
 	private final Map<Integer, List<ItemStack>> stepGiveByQuestId;
 	/** 任务 ID → 第 K 步扣除（下标 0..2，null = 无）。 / Quest id → step removals (index 0..2). */
 	private final Map<Integer, List<ItemStack>> stepRemoveByQuestId;
-	/** 任务 ID → item_check 门的工作物品（真端 quest.xml {@code check_itemK_L}）。 / The gate items. */
+	/** 任务 ID → item_check 门的工作物品（原版 quest.xml {@code check_itemK_L}）。 / The gate items. */
 	private final Map<Integer, List<ItemStack>> gateItemsByQuestId;
 	/**
-	 * NPC id → 该 NPC 的真端击杀掉落（quest.xml {@code drop_*} 列编译；同 Talk/Collect 口径，
+	 * NPC id → 该 NPC 的原版击杀掉落（quest.xml {@code drop_*} 列编译；同 Talk/Collect 口径，
 	 * 退役 XML 的 {@code <drops>} 随 catalog 退场后由本车道接手，经 {@code QuestEngine#questDrops} 聚合）。
 	 * <p>
 	 * Retail kill drops per npc, compiled from the quest.xml {@code drop_*} columns (same contract as
@@ -132,10 +132,10 @@ public final class SimpleUseItemHandler {
 	/** 未解析的物品符号（证据面）。 / Unresolved item symbols. */
 	private final Set<String> unresolvedItemSymbols;
 
-	/** 任务 ID → 链式接取窗的下一环（真端交付节点 0x1e 槽的 {@code con_quest}）。 / Quest id → the next quest of the chain window. */
+	/** 任务 ID → 链式接取窗的下一环（原版交付节点 0x1e 槽的 {@code con_quest}）。 / Quest id → the next quest of the chain window. */
 	private final Map<Integer, Integer> conQuestByQuestId;
 
-	/** 生产实例构造（真端表 + 生产背包/结算口）。 / The production wiring. */
+	/** 生产实例构造（原版表 + 生产背包/结算口）。 / The production wiring. */
 	private SimpleUseItemHandler(NativeQuestTableLoader tableLoader, NativeNpcNameResolver nameResolver,
 			RetailItemNameIndex itemIndex, NativeQuestXmlTable questXml, NativeInventoryPort inventory) {
 		this(tableLoader, nameResolver, itemIndex, questXml, inventory, NativeReportRewardFlow.instance());
@@ -179,7 +179,7 @@ public final class SimpleUseItemHandler {
 			owned.add(questId);
 			boolean resolvable = true;
 
-			// 接取道具（真端必填列）：解析失败即不可路由。 / The accept item (required): unresolved ⇒ unroutable.
+			// 接取道具（原版必填列）：解析失败即不可路由。 / The accept item (required): unresolved ⇒ unroutable.
 			ItemStack useItem = parseSymbol(row.useItemName(), questId, unresolvedItems);
 			if (useItem == null) {
 				resolvable = false;
@@ -187,7 +187,7 @@ public final class SimpleUseItemHandler {
 				useItems.put(questId, useItem.itemId());
 			}
 
-			// 交付 NPC：真端逻辑名唯一解析，或客户端交付集合展开；两者皆无 ⇒ fail-closed。
+			// 交付 NPC：原版逻辑名唯一解析，或客户端交付集合展开；两者皆无 ⇒ fail-closed。
 			// Hand-in npcs: a unique retail logical name, else the client-declared hand-in set.
 			List<Integer> rewardIds = rewardNpcIds(tableLoader, nameResolver, questId, row.rewardNpcName(),
 					unresolved);
@@ -197,7 +197,7 @@ public final class SimpleUseItemHandler {
 				rewards.put(questId, rewardIds);
 			}
 
-			// 中继链：逐位解析（表序）；真端名字节点的全部成员都可受理，完全无命中才不可路由。
+			// 中继链：逐位解析（表序）；原版名字节点的全部成员都可受理，完全无命中才不可路由。
 			// Relay chain: position by position; every member of the retail name node is admitted.
 			List<Integer> relayIds = new ArrayList<>(row.talkNpcNames().size());
 			for (int index = 0; index < row.talkNpcNames().size(); index++) {
@@ -233,7 +233,7 @@ public final class SimpleUseItemHandler {
 				stepRemoves.put(questId, stepRemove);
 			}
 
-			// item_check 门：真端族表开关 + 真端 quest.xml {@code check_itemK_L} 门物品，缺一 fail-closed。
+			// item_check 门：原版族表开关 + 原版 quest.xml {@code check_itemK_L} 门物品，缺一 fail-closed。
 			// 实测（2026-10-01 全量复算）：5 个开关行全部声明门物品；另有 4 行仅声明门物品而无开关，
 			// 本车道按引擎开关（record 字段）取数，保持与 SimpleTalk 车道同一闸门口径。
 			// The item_check gate: the family-table switch plus its quest.xml check_item declaration.
@@ -259,7 +259,7 @@ public final class SimpleUseItemHandler {
 				if (useItem != null) {
 					acceptByItem.computeIfAbsent(useItem.itemId(), key -> new ArrayList<>()).add(questId);
 				}
-				// 真端掉落列注册（2026-10-08，与 Talk/Collect 同型缺口）：退役 XML 的 {@code <drops>}
+				// 原版掉落列注册（2026-10-08，与 Talk/Collect 同型缺口）：退役 XML 的 {@code <drops>}
 				// 退出 catalog 后本族击杀掉落断供（行 2435：击杀 MosbearBaby 无 quest_2435a）；
 				// 概率/上限语义原样交 {@code QuestService.isQuestDrop}。
 				// Retail drop-column registration (machine case 2026-10-08, quest 2435): same gap the
@@ -275,7 +275,7 @@ public final class SimpleUseItemHandler {
 				}
 			}
 
-			// 链式接取窗（真端 0x1e 槽）按原文装载：本族的接取面是「用物品」，没有自己的接取 NPC，
+			// 链式接取窗（原版 0x1e 槽）按原文装载：本族的接取面是「用物品」，没有自己的接取 NPC，
 			// 故闭环判据（下一环的接取 NPC = 本行的交付 NPC）由逐行对拍门跨族复算，handler 只暴露证据面。
 			// The chain window (retail slot 0x1e) loads verbatim. This family accepts by using an item and
 			// has no acquire NPC of its own, so the closure invariant (the next quest acquires at this row's
@@ -310,9 +310,9 @@ public final class SimpleUseItemHandler {
 	}
 
 	/**
-	 * 真端 {@code con_quest}（链式接取窗的下一环，交付节点 0x1e 槽）；未声明返回 null。
+	 * 原版 {@code con_quest}（链式接取窗的下一环，交付节点 0x1e 槽）；未声明返回 null。
 	 * <p>
-	 * 真端该列由交付节点 0x1e 槽消费（{@code mgr+0x1a8(player, con_quest)} = 下一环接取窗）。本族接取 =
+	 * 原版该列由交付节点 0x1e 槽消费（{@code mgr+0x1a8(player, con_quest)} = 下一环接取窗）。本族接取 =
 	 * 使用道具、没有接取 NPC 面，故「下一环在本行交付 NPC 上可接取」这条等价不变量由逐行对拍门跨族复算。
 	 * The retail {@code con_quest} column (hand-in slot 0x1e). This family accepts by using an item and has
 	 * no acquire NPC, so the equivalence is recomputed cross-family by the per-row alignment gate.
@@ -345,7 +345,7 @@ public final class SimpleUseItemHandler {
 		}
 	}
 
-	/** 判断是否拥有该任务（注册集 = 真端表全量行）。 / Checks whether the row is in the registration set. */
+	/** 判断是否拥有该任务（注册集 = 原版表全量行）。 / Checks whether the row is in the registration set. */
 	public boolean owns(int questId) {
 		return ownedQuestIds.contains(questId);
 	}
@@ -369,7 +369,7 @@ public final class SimpleUseItemHandler {
 	}
 
 	/**
-	 * 该 NPC 的真端击杀掉落（{@code QuestService.getQuestDrop} 的消费面；经
+	 * 该 NPC 的原版击杀掉落（{@code QuestService.getQuestDrop} 的消费面；经
 	 * {@code QuestEngine#questDrops} 聚合——击杀装配与对象交互共用同一条查询）。
 	 * <p>
 	 * Retail kill drops for the npc, aggregated through {@code QuestEngine#questDrops}.
@@ -398,7 +398,7 @@ public final class SimpleUseItemHandler {
 		return acceptQuestIdsByItemId.getOrDefault(itemId, List.of());
 	}
 
-	/** 交付 NPC 集合（真端逻辑名 + 客户端集合展开）。 / The hand-in npc set. */
+	/** 交付 NPC 集合（原版逻辑名 + 客户端集合展开）。 / The hand-in npc set. */
 	public List<Integer> rewardNpcs(int questId) {
 		return rewardNpcsByQuestId.getOrDefault(questId, List.of());
 	}
@@ -428,7 +428,7 @@ public final class SimpleUseItemHandler {
 	}
 
 	/**
-	 * 启动期把本族全部 NPC 标记注册进任务引擎（真端 codegen 的静态注册表等价物）。
+	 * 启动期把本族全部 NPC 标记注册进任务引擎（原版 codegen 的静态注册表等价物）。
 	 * 物品接取无 NPC 边，故只注册中继与交付 NPC。
 	 * <p>
 	 * Registers the family's npc marks at startup; the item-accept face has no npc edge, so only the
@@ -486,7 +486,7 @@ public final class SimpleUseItemHandler {
 	}
 
 	/**
-	 * 用物接取口（真端 {@code UseItem} 无主事件）：道具命中且该行未接取（可重行的 COMPLETE 态亦开窗）
+	 * 用物接取口（原版 {@code UseItem} 无主事件）：道具命中且该行未接取（可重行的 COMPLETE 态亦开窗）
 	 * 时下发接取窗页 4。进行中/待领奖的行不改状态（消费由道具自身动作决定，引擎不代扣）。
 	 * <p>
 	 * The retail ownerless item-use accept entry: when the item matches a routed row that is not yet in
@@ -534,7 +534,7 @@ public final class SimpleUseItemHandler {
 		int objectId = npc != null ? npc.getObjectId() : 0;
 		int dialogId = env.getDialogId();
 
-		// 无目标领奖（真端 QuestDialog 无主键协议；任务窗/实时奖励槽的确认包不带 NPC 上下文）：
+		// 无目标领奖（原版 QuestDialog 无主键协议；任务窗/实时奖励槽的确认包不带 NPC 上下文）：
 		// 按 questId 结算 + 关窗收尾。owner 门由上面的 routes(questId) 保证。
 		// Targetless reward claim (the ownerless retail QuestDialog protocol used by the quest journal).
 		if (npcId == 0 && NativeTargetlessReward.claim(player, questId, dialogId, rewardFlow)) {
@@ -610,7 +610,7 @@ public final class SimpleUseItemHandler {
 						|| dialogId == 108 || (dialogId >= 110 && dialogId <= 124)) {
 					int rewardIndex = dialogId >= 8 && dialogId <= 22 ? dialogId - 8 : 0;
 					if (rewardFlow.claim(env, rewardIndex).completed()) {
-						// 领奖收尾 = 真端 npc-complete finish=SELECTION_DIALOG（4801/4805）：回选择对话页
+						// 领奖收尾 = 原版 npc-complete finish=SELECTION_DIALOG（4801/4805）：回选择对话页
 						// （页 10，questId=0；9/28 旧引擎基线「状态=5 → 页=10」）。
 						// The claim tail follows the retail npc-complete finish=SELECTION_DIALOG: back to
 						// the selection dialog (page 10, questId=0; the legacy 9/28 log baseline).
@@ -626,7 +626,7 @@ public final class SimpleUseItemHandler {
 	}
 
 	/**
-	 * 无主接取对话（真端物品接取形的 1002/1003/1008；本族无接取 NPC，带 NPC 的对话不属于本面）。
+	 * 无主接取对话（原版物品接取形的 1002/1003/1008；本族无接取 NPC，带 NPC 的对话不属于本面）。
 	 * The ownerless accept dialogs of the retail item-accept shape.
 	 */
 	private boolean onAcceptDialog(Player player, int questId, int npcId, int dialogId) {
@@ -649,12 +649,12 @@ public final class SimpleUseItemHandler {
 	}
 
 	/**
-	 * 中继对话面（与 SimpleTalk/SimpleItemPlay/SimpleCollectItem 同形，真端 cabb10 同轴）：
+	 * 中继对话面（与 SimpleTalk/SimpleItemPlay/SimpleCollectItem 同形，原版 cabb10 同轴）：
 	 * <ul>
 	 *   <li>任务行打开（31/26/-1）= 该步页 SELECT2..4（1352/1693/2034），**不推进**；
 	 *       尚未轮到的步零响应（不跳步）；</li>
 	 *   <li>推进 = SETPRO{K}（{@code 10000 + K - 1}）：步号等于 {@code K - 1} 时执行该步发/扣并把
-	 *       步号写 {@code var0 = K}（客户端任务书步骤轴）后关窗（真端推进 after-commit = 0x5d8、
+	 *       步号写 {@code var0 = K}（客户端任务书步骤轴）后关窗（原版推进 after-commit = 0x5d8、
 	 *       零发页）；重复/乱序重放无匹配转换 ⇒ 关窗兜底；</li>
 	 *   <li>子页动作（SELECT⟨n⟩_…，如 select2_1 = 1353）按客户端契约原样回发（带 questId）。</li>
 	 * </ul>
@@ -680,7 +680,7 @@ public final class SimpleUseItemHandler {
 			return false;
 		}
 		int step = index + 1;
-		// 选择对话续页（SELECT⟨n⟩_… 子页动作 = 页 id）：真端原样回发该页（QE-141 同形）；
+		// 选择对话续页（SELECT⟨n⟩_… 子页动作 = 页 id）：原版原样回发该页（QE-141 同形）；
 		// 契约未声明即零响应（引擎兜底同样零响应）。
 		// A selection sub-page action echoes its declared page back with the quest context (the
 		// QE-141 shape); undeclared pages stay silent.
@@ -698,7 +698,7 @@ public final class SimpleUseItemHandler {
 				give(player, stepGiveItem(questId, step));
 				remove(player, stepRemoveItem(questId, step));
 			}
-			// 推进 after-commit = 关窗（真端 cabb10 同轴：10000/10001/10002 → SetQuestProgress + 0x5d8，
+			// 推进 after-commit = 关窗（原版 cabb10 同轴：10000/10001/10002 → SetQuestProgress + 0x5d8，
 			// 零发页）；重复/乱序重放无匹配转换，同样以关窗兜底（与 SimpleTalk/SimpleItemPlay 同形）。
 			// The advance tail closes the window (retail 0x5d8, no page); a replayed advance gets the
 			// same close as its no-op tail.
@@ -789,7 +789,7 @@ public final class SimpleUseItemHandler {
 		return true;
 	}
 
-	/** 中继步物品页（客户端声明时才下发；真端 SELECT2..4 未声明即不发页）。 / The relay step page when declared. */
+	/** 中继步物品页（客户端声明时才下发；原版 SELECT2..4 未声明即不发页）。 / The relay step page when declared. */
 	private static int pageForStep(int step) {
 		if (step < 1 || step > RELAY_STEP_PAGES.length) {
 			throw new IllegalArgumentException("relay step out of range: " + step);
@@ -798,7 +798,7 @@ public final class SimpleUseItemHandler {
 	}
 
 	/**
-	 * 中继步页 id（真端 SELECT2..4 常量；本族用到的行客户端均已声明，见族门）。
+	 * 中继步页 id（原版 SELECT2..4 常量；本族用到的行客户端均已声明，见族门）。
 	 * The relay step page ids (retail SELECT2..4 protocol constants).
 	 */
 	public static int relayStepPage(int step) {
@@ -824,7 +824,7 @@ public final class SimpleUseItemHandler {
 		return stacks.get(step - 1);
 	}
 
-	/** 真端 {@code max_repeat_count} > 1 ⇒ 可重复（COMPLETE 态可再次开窗）。 / Repeatable per retail max_repeat_count. */
+	/** 原版 {@code max_repeat_count} > 1 ⇒ 可重复（COMPLETE 态可再次开窗）。 / Repeatable per retail max_repeat_count. */
 	private boolean repeatable(int questId) {
 		NativeQuestXmlTable.QuestRow row = questXml.find(questId).orElse(null);
 		Integer maxRepeat = row == null ? null : row.integer("max_repeat_count");
@@ -832,7 +832,7 @@ public final class SimpleUseItemHandler {
 	}
 
 	/**
-	 * 交付 NPC 集合：真端 {@code reward_npc_name} 是逻辑名，静态数据唯一命中即单元素；未命中
+	 * 交付 NPC 集合：原版 {@code reward_npc_name} 是逻辑名，静态数据唯一命中即单元素；未命中
 	 * （复合名如 {@code <地图>_<势力名>}）时按客户端交付集合展开，客户端未声明即 fail-closed。
 	 * <p>
 	 * Hand-in npc set: a unique retail logical name, else the client-declared hand-in set; an
@@ -850,7 +850,7 @@ public final class SimpleUseItemHandler {
 	}
 
 	/**
-	 * item_check 门物品：真端 {@code quest.xml} 的 {@code check_itemK_L} 列（同一真端声明面，
+	 * item_check 门物品：原版 {@code quest.xml} 的 {@code check_itemK_L} 列（同一原版声明面，
 	 * 与族表 {@code item_check} 开关配套）。
 	 * <p>
 	 * The gate items: the retail {@code quest.xml check_itemK_L} columns that pair with the family
@@ -905,13 +905,13 @@ public final class SimpleUseItemHandler {
 		return NativeItemSymbols.parse(symbol, questId, itemIndex, unresolved);
 	}
 
-	/** 真端 {@code quest.xml} 元数据可编译（缺行/未解即不可路由）。 / Retail metadata must compile cleanly. */
+	/** 原版 {@code quest.xml} 元数据可编译（缺行/未解即不可路由）。 / Retail metadata must compile cleanly. */
 	private static boolean metadataClean(int questId) {
 		RetailQuestMetadataCompiler.Outcome meta = metadataOf(questId);
 		return meta != null && meta.clean();
 	}
 
-	/** 真端 {@code quest.xml} 元数据（不可编译/驱动不可用按未解处理，fail-closed）。 / Retail metadata, fail-closed. */
+	/** 原版 {@code quest.xml} 元数据（不可编译/驱动不可用按未解处理，fail-closed）。 / Retail metadata, fail-closed. */
 	private static RetailQuestMetadataCompiler.Outcome metadataOf(int questId) {
 		try {
 			return RetailQuestDriver.ensureLoaded().retailMetadataOf(questId).orElse(null);

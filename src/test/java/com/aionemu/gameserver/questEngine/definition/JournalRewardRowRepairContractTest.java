@@ -24,10 +24,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * stayed on an earlier row; the projection was rewritten to the last row and each quest gained a
  * source-less enter-world recovery edge.
  * <p>
- * P0c-6：其中 5 行（16900–16903 / 24201）已改由真端 SimpleHunt 表驱动，var0 变成**击杀计数**而不是
+ * P0c-6：其中 5 行（16900–16903 / 24201）已改由原版 SimpleHunt 表驱动，var0 变成**击杀计数**而不是
  * 任务书行号——任务书行由客户端 {@code SECTION_n} 门控推导，服务端没有可漂移的行号，
- * 因此真端形状下不存在也不需要 repair 边（P3 既有裁定：修复边是 AionEmu 历史包袱）。
- * 后续 DD 批次把 50126/50127/51126/51127 同批划入真端 DataDriven 猎杀网格（击杀 1 名首领，
+ * 因此原版形状下不存在也不需要 repair 边（P3 既有裁定：修复边是 AionEmu 历史包袱）。
+ * 后续 DD 批次把 50126/50127/51126/51127 同批划入原版 DataDriven 猎杀网格（击杀 1 名首领，
  * var0 = 饱和计数 1），与 P0c-6 同口径：无 repair 边、领奖投影即饱和计数。
  * <p>
  * Since P0c-6 five rows are retail-driven: var0 is a kill counter, the journal row comes from the
@@ -41,7 +41,7 @@ class JournalRewardRowRepairContractTest {
 	}
 
 	/**
-	 * 已由真端表驱动（P0c-6 SimpleHunt + DD 批次 DataDriven 猎杀网格）：不得保留任何无 source 的
+	 * 已由原版表驱动（P0c-6 SimpleHunt + DD 批次 DataDriven 猎杀网格）：不得保留任何无 source 的
 	 * enter-world 修复边。
 	 * Retail-driven since P0c-6 (SimpleHunt) and the DD batch (DataDriven hunt grids): no
 	 * source-less enter-world repair edge may remain.
@@ -49,7 +49,7 @@ class JournalRewardRowRepairContractTest {
 	private static final List<Integer> RETAIL_DRIVEN = List.of(16900, 16901, 16902, 16903, 24201,
 		50126, 50127, 51126, 51127,
 		/* QE-054 批次收口（2026-10-07 全量审计）：以下 5 行原属第三批领奖行修复，任务定义已由
-		 * 真端表车道合成（retention 清单 RETAIL_TABLE 行），无 XML 即无自愈边结构；旧 legacy 取证
+		 * 原版表车道合成（retention 清单 RETAIL_TABLE 行），无 XML 即无自愈边结构；旧 legacy 取证
 		 * 见 .agents/summary/quest-step-axis-fullscan/。领奖投影口径由表车道门承担。
 		 * 遗留问题 A 复核（2026-10-07，.agents/summary/quest-residuals-dabc/A-triage.zh-CN.md）：
 		 * 原生投影 = 表结构中继数/步数（15613=6、25023=3、25606=8、80020=3、80021=3），与退役壳
@@ -64,8 +64,8 @@ class JournalRewardRowRepairContractTest {
 
 	private static final List<Contract> CONTRACTS = List.of(
 		/* QE-054 批次收口（2026-10-07 全量审计移出 40 行）：本批「客户端末行是领奖行 ⇒ 投影抬到末行
-		 * 索引」的判定对「玩法步后进 REWARD」的任务系统性不成立——真端 0x100 状态推进不写轴，客户端
-		 * REWARD 态按 [%N] 行门槛自行显示报告行；正确投影 = 真端/legacy 推进值（与 1361/11006/24021
+		 * 索引」的判定对「玩法步后进 REWARD」的任务系统性不成立——原版 0x100 状态推进不写轴，客户端
+		 * REWARD 态按 [%N] 行门槛自行显示报告行；正确投影 = 原版/legacy 推进值（与 1361/11006/24021
 		 * 同根因）。40 行已回归权威值并反转自愈边，基线由 RewardRowProjectionRegressionTest 锁定；
 		 * 取证与逐任务证据见 .agents/summary/quest-step-axis-fullscan/。
 		 * QE-054 batch close-out (40 rows removed by the 2026-10-07 full audit): the batch rule
@@ -79,7 +79,7 @@ class JournalRewardRowRepairContractTest {
 		new Contract(1218, 1, 0),
 		new Contract(1322, 1, 0),
 		new Contract(1324, 1, 0),
-		/* 1361 移出本批（2026-10-07 实机报障 + 真端/legacy 取证）：领奖态权威值是 legacy/真端的
+		/* 1361 移出本批（2026-10-07 实机报障 + 原版/legacy 取证）：领奖态权威值是 legacy/原版的
 		 * packed step 1（QE-054/QE-045），不是末行索引 2；误抬为 2 会让客户端任务书步骤整块空白。
 		 * 基线由 Quest1361ClientDialogAlignmentTest 锁定（reward 投影 1、自愈边 REWARD/2 -> 1）。
 		 * 1361 left this batch (live report 2026-10-07 + retail/legacy evidence): the authoritative
@@ -125,7 +125,7 @@ class JournalRewardRowRepairContractTest {
 		new Contract(2564, 3, 0),
 		new Contract(2634, 2, 1),
 		new Contract(2663, 1, 0),
-		/* 2664 移出本批（2026-10-08 物件 owner 收口 + legacy/真端取证）：领奖态权威 packed step 是 legacy
+		/* 2664 移出本批（2026-10-08 物件 owner 收口 + legacy/原版取证）：领奖态权威 packed step 是 legacy
 		 * 阶梯计数的落盘值 4（物件五次使用 0..4，第五次 `setStatus(REWARD)`、不写轴），不是末行索引 1；
 		 * 基线由 QuestObjectOwnerTrimContractTest（物件零回页 + owner 唯一 = Dewi）与
 		 * RewardRowProjectionRegressionTest 的 `Row(2664, 1, 4, true)` 锁定（批次值 1 与迁移零值 0 都有回滚边）。
@@ -141,8 +141,8 @@ class JournalRewardRowRepairContractTest {
 		new Contract(2946, 4, 3),
 		new Contract(2954, 1, 0),
 		new Contract(2988, 3, 2),
-		/* 3036 移出本批（2026-10-07 实机报障 + legacy/真端取证）：领奖态权威 packed step 是 legacy 落盘 0
-		 * （`useQuestObject(env, 0, 1, true, false)` 的 reward 分支只置状态、不写 var0；真端 0x100 状态
+		/* 3036 移出本批（2026-10-07 实机报障 + legacy/原版取证）：领奖态权威 packed step 是 legacy 落盘 0
+		 * （`useQuestObject(env, 0, 1, true, false)` 的 reward 分支只置状态、不写 var0；原版 0x100 状态
 		 * 推进同样不写轴），不是末行索引 1；误抬为 1 会让两行任务书步骤整块空白（与 1123/1361/11006 同型）。
 		 * 基线由 Quest3036ClientDialogAlignmentTest 锁定（reward 投影 0、自愈边 REWARD/1 -> 0）。
 		 * 3036 left this batch (live report 2026-10-07 + legacy/retail evidence): the authoritative reward
@@ -165,7 +165,7 @@ class JournalRewardRowRepairContractTest {
 		new Contract(3969, 1, 0),
 		new Contract(3970, 3, 0),
 		new Contract(3973, 3, 0),
-		/* 4004/4012 移出本批（2026-10-08 物件 owner 收口 + legacy/真端取证）：
+		/* 4004/4012 移出本批（2026-10-08 物件 owner 收口 + legacy/原版取证）：
 		 * 4004 同 2664——legacy `useQuestObject(env, var, var+1, false, true)` 计数到 4、
 		 * `useQuestObject(env, 4, 4, true, true)` 只置状态，权威值 = 4（非末行索引 1）；
 		 * 4012——legacy 全程不写 var0（物件只掉落、Virhu 的 1009 分支只置 REWARD），权威值 = 0，
@@ -187,9 +187,9 @@ class JournalRewardRowRepairContractTest {
 		new Contract(4940, 1, 0),
 		new Contract(4941, 1, 0),
 		new Contract(11001, 3, 0),
-		/* 11006 移出本批（2026-10-07 全族审计 + 真端/legacy 取证）：装第二瓶水后的权威 packed step 是
-		 * legacy/真端的 2（useQuestItem(env, item, 2, 2, true, ...) 的 reward 分支不写 nextStep；
-		 * 真端 FUN_180f03f20 在 START/step==2 时以 0x100(0x2afe, 0, 0) 推进），不是末行索引 3；
+		/* 11006 移出本批（2026-10-07 全族审计 + 原版/legacy 取证）：装第二瓶水后的权威 packed step 是
+		 * legacy/原版的 2（useQuestItem(env, item, 2, 2, true, ...) 的 reward 分支不写 nextStep；
+		 * 原版 FUN_180f03f20 在 START/step==2 时以 0x100(0x2afe, 0, 0) 推进），不是末行索引 3；
 		 * 误抬为 3 会让客户端任务书步骤整块空白（与 1361 同型）。基线与反向自愈边由
 		 * Quest11006ClientDialogAlignmentTest 锁定（reward 投影 2、REWARD/3 -> 2）。
 		 * 11006 left this batch (2026-10-07 family audit + retail/legacy evidence): the authoritative
@@ -237,9 +237,9 @@ class JournalRewardRowRepairContractTest {
 		new Contract(21105, 1, 0),
 		new Contract(21296, 1, 0),
 		new Contract(21460, 1, 0),
-		/* 24021 移出本批（2026-10-07 全族审计 + 真端/legacy 取证）：撒 24021c（use-item）后的权威
-		 * packed step 是 legacy/真端的 4（useQuestItem(env, item, 4, 4, true, 88) 的 reward 分支不写
-		 * nextStep；真端选中 10003=SETPRO4 的 FUN_180faea90 显式 SetProgress(0x5dd5, 4)，随后
+		/* 24021 移出本批（2026-10-07 全族审计 + 原版/legacy 取证）：撒 24021c（use-item）后的权威
+		 * packed step 是 legacy/原版的 4（useQuestItem(env, item, 4, 4, true, 88) 的 reward 分支不写
+		 * nextStep；原版选中 10003=SETPRO4 的 FUN_180faea90 显式 SetProgress(0x5dd5, 4)，随后
 		 * FUN_180f00500 以 0x100(0x5dd5, 0, 0) 推进），不是末行索引 5；误抬为 5 会让客户端任务书
 		 * 步骤整块空白（与 1361 同型）。基线与反向自愈边由 Quest24021ClientDialogAlignmentTest 锁定
 		 * （reward 投影 4、REWARD/5 -> 4）。
@@ -318,7 +318,7 @@ class JournalRewardRowRepairContractTest {
 	}
 
 	/**
-	 * 真端驱动的同一批行（2026-10-05 重锚；原 lax overlay 视图随 P7 步 f 退场）：退役行无 IR，
+	 * 原版驱动的同一批行（2026-10-05 重锚；原 lax overlay 视图随 P7 步 f 退场）：退役行无 IR，
 	 * 无 source 的 enter-world 修复边在结构上不可能；守卫 = 每一行必须确属退役行（防名单陈旧
 	 * 静默缩水）。领奖投影口径由 native 车道门承担。
 	 * The same rows under retail driving (re-anchored 2026-10-05): with no IR left a source-less

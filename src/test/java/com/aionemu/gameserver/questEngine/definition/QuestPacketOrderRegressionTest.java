@@ -82,11 +82,11 @@ class QuestPacketOrderRegressionTest {
 		assertFalse(ProductionQuestDefinitions.catalog().findExecutable(24153).isPresent(),
 			"退役后 typed 目录不得再持有 24153");
 		NativeQuestTableLoader.SimpleHuntRow row = NativeQuestTableLoader.instance().require(24153);
-		assertEquals("DF3_NPC_Akigatan", row.acquiredNpcName(), "真端接取 NPC");
-		assertEquals("DF3_NPC_Akigatan", row.rewardNpcName(), "真端交付 NPC");
+		assertEquals("DF3_NPC_Akigatan", row.acquiredNpcName(), "原版接取 NPC");
+		assertEquals("DF3_NPC_Akigatan", row.rewardNpcName(), "原版交付 NPC");
 		assertEquals(204787, handler.rewardNpc(24153), "交付 NPC = DF3_NPC_Akigatan");
 		assertEquals(204784, NativeNpcNameResolver.instance().resolve("Delris").npcIds().getFirst(),
-			"真端 talk_npc1 = Delris");
+			"原版 talk_npc1 = Delris");
 
 		Player player = NativeTalkFixture.player(Race.ASMODIANS, PlayerClass.WARRIOR, 43);
 		NativeTalkFixture.add(player, 24153, QuestStatus.START, 0);
@@ -101,7 +101,7 @@ class QuestPacketOrderRegressionTest {
 		assertEquals(QuestStatus.REWARD, player.getQuestStateList().getQuestState(24153).getStatus(),
 			"末杀满段必须翻领奖态");
 		assertEquals(expectedVars, player.getQuestStateList().getQuestState(24153).getQuestVars().getQuestVars(),
-			"满段网格 = 五格各自计数（真端 6 位/槽打包）");
+			"满段网格 = 五格各自计数（原版 6 位/槽打包）");
 
 		// 不清队列：击杀时的状态包必须先于交付 NPC 报告动作的页面（同一条不变式）。
 		// The kill-time state packets stay in the queue: they must precede the report page.
@@ -201,7 +201,7 @@ class QuestPacketOrderRegressionTest {
 	}
 
 	private static CompiledQuestDefinition compiledDefinition(int questId) throws Exception {
-		// 退役任务的生产 XML 只在 git 历史里：统一取生产视图（XML 目录 + 真端 overlay）。
+		// 退役任务的生产 XML 只在 git 历史里：统一取生产视图（XML 目录 + 原版 overlay）。
 		// Retired quests live in git history only: use the production view (XML dir + retail overlay).
 		return ProductionQuestDefinitions.definition(questId);
 	}

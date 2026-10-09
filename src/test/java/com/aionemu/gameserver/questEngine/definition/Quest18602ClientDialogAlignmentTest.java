@@ -59,7 +59,7 @@ class Quest18602ClientDialogAlignmentTest {
 		assertEquals(List.of(
 			new QuestAction.RemoveItem(RELIC_KEY, 1),
 			new QuestAction.SetVariable("var0", 2)), success.actions());
-		// 真端别名 dir 270° → 压缩 byte heading 90（度/3，0-120）。
+		// 原版别名 dir 270° → 压缩 byte heading 90（度/3，0-120）。
 		// Retail alias dir 270 deg -> compressed byte heading 90 (degrees/3, 0-120).
 		assertTrue(success.afterCommit().contains(new AfterCommitAction.TeleportPlayer(
 			300230000, 687.631104f, 675.972412f, 201.040802f, (byte) 90)));

@@ -16,14 +16,14 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * 锁定任务 1220「秘密配送」的真端 SimpleTalk 行与宝箱交接链：
+ * 锁定任务 1220「秘密配送」的原版 SimpleTalk 行与宝箱交接链：
  * 乌内 Une(203172) 接取并发放宝箱 182200568 → 努蒙 Shugo3(798004) 换箱 182200569 → 玛平恩恩
  * shugo_Lender_LF2_01(205240) 交付领奖。
  * <p>
  * 任务已退役（保留清单 owner=RETAIL_TABLE，SimpleTalk 车道）：旧 typed XML 合同随迁移退场，按计划
- * §8.9（P3 重锚口径）改锚真端表行（give_item 接取发放、give_item1/remove_item1 步 1 换箱、
+ * §8.9（P3 重锚口径）改锚原版表行（give_item 接取发放、give_item1/remove_item1 步 1 换箱、
  * reward_npc_name 交付）+ 客户端声明页（select1/select2/select2_1/select5）。历史缺陷（接取漏发箱使
- * SETPRO1 无物可交、服务层把按钮动作 ID 当页面 ID 回显）的物品轴由真端 give/remove 列承载。
+ * SETPRO1 无物可交、服务层把按钮动作 ID 当页面 ID 回显）的物品轴由原版 give/remove 列承载。
  * <p>
  * The retired typed XML contract is re-anchored (plan §8.9) to the retail SimpleTalk row, the client-declared
  * pages, and the native face behaviour.
@@ -43,9 +43,9 @@ class Quest1220ClientDialogAlignmentTest {
 		assertTrue(handler.routes(QUEST_ID), "SimpleTalk native 车道必须路由 1220");
 		assertFalse(ProductionQuestDefinitions.catalog().findExecutable(QUEST_ID).isPresent(),
 			"退役后 typed 目录不得再持有 1220");
-		assertEquals(START_NPC_ID, handler.acquireNpc(QUEST_ID), "真端 acquired_npc_name = Une");
-		assertEquals(END_NPC_ID, handler.rewardNpc(QUEST_ID), "真端 reward_npc_name = shugo_Lender_LF2_01");
-		assertEquals(1, handler.relayCount(QUEST_ID), "真端 talk_npc1 = 单步中继");
+		assertEquals(START_NPC_ID, handler.acquireNpc(QUEST_ID), "原版 acquired_npc_name = Une");
+		assertEquals(END_NPC_ID, handler.rewardNpc(QUEST_ID), "原版 reward_npc_name = shugo_Lender_LF2_01");
+		assertEquals(1, handler.relayCount(QUEST_ID), "原版 talk_npc1 = 单步中继");
 		assertEquals(new SimpleTalkHandler.ItemStack(BOX_FOR_NUMONERK, 1), handler.acceptGiveItem(QUEST_ID),
 			"接取发放 quest_1220a（宝箱）");
 		assertEquals(new SimpleTalkHandler.ItemStack(BOX_FOR_MAPPINERK, 1), handler.stepGiveItem(QUEST_ID, 1),
@@ -54,7 +54,7 @@ class Quest1220ClientDialogAlignmentTest {
 			"步 1 回收 quest_1220a");
 
 		// 接取面：前置 Q1219 完成 + 17 级过 CanAcquireQuest 轴；31 只发入口页（select1=1011），
-		// 1002 确认建档 + 真端 give_item + 页 1003。
+		// 1002 确认建档 + 原版 give_item + 页 1003。
 		Player player = NativeTalkFixture.player(Race.ELYOS, PlayerClass.WARRIOR, 17);
 		NativeTalkFixture.completePrerequisites(player, 1219);
 		NativeTalkFixture.RecordingInventory inventory = new NativeTalkFixture.RecordingInventory();
@@ -70,9 +70,9 @@ class Quest1220ClientDialogAlignmentTest {
 		assertTrue(itemHandler.onDialog(NativeTalkFixture.dialog(player, START_NPC_ID, QUEST_ID, 1002)), "接取确认");
 		assertEquals(QuestStatus.START, player.getQuestStateList().getQuestState(QUEST_ID).getStatus());
 		NativeTalkFixture.assertOnlyDialogPage(player, SimpleTalkHandler.PAGE_ACCEPTED);
-		assertEquals(List.of("give:" + BOX_FOR_NUMONERK + ":1"), inventory.calls(), "接取发放按真端 give_item 列");
+		assertEquals(List.of("give:" + BOX_FOR_NUMONERK + ":1"), inventory.calls(), "接取发放按原版 give_item 列");
 
-		// 努蒙与玛平恩恩只承接对话，不是接取 NPC（真端 acquired_npc_name 仅 Une）。
+		// 努蒙与玛平恩恩只承接对话，不是接取 NPC（原版 acquired_npc_name 仅 Une）。
 		// Numonerk and Mappinerk only own dialogs, not the acquisition (retail acquired_npc_name is Une only).
 		for (int npcId : List.of(MID_NPC_ID, END_NPC_ID)) {
 			Player fresh = NativeTalkFixture.player(Race.ELYOS, PlayerClass.WARRIOR, 17);
@@ -85,8 +85,8 @@ class Quest1220ClientDialogAlignmentTest {
 
 		QuestMetadata metadata = RetailQuestDriver.ensureLoaded()
 			.retailMetadataOf(QUEST_ID).orElseThrow().metadata();
-		assertEquals(17, metadata.minLevel(), "真端 minlevel_permitted=17");
-		assertEquals(java.util.Set.of("ELYOS"), metadata.permittedRaces(), "真端 pc_light");
+		assertEquals(17, metadata.minLevel(), "原版 minlevel_permitted=17");
+		assertEquals(java.util.Set.of("ELYOS"), metadata.permittedRaces(), "原版 pc_light");
 	}
 
 	@Test
@@ -107,14 +107,14 @@ class Quest1220ClientDialogAlignmentTest {
 			QuestDialogPage.SELECT2_1.id())));
 		NativeTalkFixture.assertOnlyDialogPageWithQuest(player, QuestDialogPage.SELECT2_1.id(), QUEST_ID);
 
-		// 步 1 推进（SETPRO1=10000）：var0=1 + 真端 give_item1/remove_item1（换箱）+ 关窗。
+		// 步 1 推进（SETPRO1=10000）：var0=1 + 原版 give_item1/remove_item1（换箱）+ 关窗。
 		NativeTalkFixture.clearPackets(player);
 		assertTrue(itemHandler.onDialog(NativeTalkFixture.dialog(player, MID_NPC_ID, QUEST_ID, 10000)));
 		assertEquals(1, player.getQuestStateList().getQuestState(QUEST_ID).getQuestVars().getQuestVars(),
 			"步 1 推进必须写 var0=1");
 		NativeTalkFixture.assertCloseDialog(player);
 		assertEquals(List.of("give:" + BOX_FOR_MAPPINERK + ":1", "remove:" + BOX_FOR_NUMONERK + ":1"),
-			inventory.calls(), "步 1 换箱按真端列（发新箱、回收旧箱）");
+			inventory.calls(), "步 1 换箱按原版列（发新箱、回收旧箱）");
 
 		// 交付（玛平恩恩）：中继满后 31 只发报告确认页（select2 已被中继占用 ⇒ 取 select5=2375），
 		// 1009 确认才翻 REWARD + 奖励窗（页 5）。
@@ -134,11 +134,11 @@ class Quest1220ClientDialogAlignmentTest {
 	@Test
 	void treasureBoxesStayRegisteredAsQuestWorkItems() {
 		SimpleTalkHandler handler = SimpleTalkHandler.instance();
-		// 两个宝箱仍登记在真端行：接取发放 quest_1220a、步 1 发 quest_1220b / 收 quest_1220a；
+		// 两个宝箱仍登记在原版行：接取发放 quest_1220a、步 1 发 quest_1220b / 收 quest_1220a；
 		// 本族无 item_check 门列（交付由报告确认动作分叉，不设工作物品门）。
 		// Both boxes stay registered on the retail row (accept gives 1220a; step 1 gives 1220b and
 		// removes 1220a); the row declares no item_check gate.
-		assertEquals(List.of(), handler.workItems(QUEST_ID), "真端行无 item_check 工作物品门");
+		assertEquals(List.of(), handler.workItems(QUEST_ID), "原版行无 item_check 工作物品门");
 		assertEquals(new SimpleTalkHandler.ItemStack(BOX_FOR_NUMONERK, 1), handler.acceptGiveItem(QUEST_ID));
 		assertEquals(new SimpleTalkHandler.ItemStack(BOX_FOR_MAPPINERK, 1), handler.stepGiveItem(QUEST_ID, 1));
 		assertEquals(new SimpleTalkHandler.ItemStack(BOX_FOR_NUMONERK, 1), handler.stepRemoveItem(QUEST_ID, 1));

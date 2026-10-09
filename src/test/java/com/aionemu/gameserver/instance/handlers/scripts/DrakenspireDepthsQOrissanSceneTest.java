@@ -25,7 +25,7 @@ class DrakenspireDepthsQOrissanSceneTest {
 
 	@Test
 	void immortalDeathBacksUpTheQuestKillTarget() throws IOException {
-		// 237230 的死亡事件必须留一条幂等兜底：真端 pattern（on_die / 异常状态分支）或模板 AI 未生成
+		// 237230 的死亡事件必须留一条幂等兜底：原版 pattern（on_die / 异常状态分支）或模板 AI 未生成
 		// 237231 时，任务 15300/25300 会永久停在「消灭盘龙巢穴的奥里萨(0/1)」。
 		// The death of 237230 must leave an idempotent backup: when neither the retail pattern (on_die / abnormal
 		// state) nor the template AI spawns 237231, quests 15300/25300 stall at "Slay the Exhausted Orissan (0/1)".

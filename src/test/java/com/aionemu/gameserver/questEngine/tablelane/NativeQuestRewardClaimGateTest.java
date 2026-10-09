@@ -40,16 +40,16 @@ import com.aionemu.gameserver.services.QuestService;
  * <p>
  * 覆盖三件事：
  * <ol>
- *   <li>奖励面逐列对拍：真端 {@code quest.xml} 的 {@code reward_exp/gold/abyss_point/title/
+ *   <li>奖励面逐列对拍：原版 {@code quest.xml} 的 {@code reward_exp/gold/abyss_point/title/
  *       reward_item1_N/selectable_reward_item1_N/{class}_selectable_reward/*_ext} 列 → native 完成口
  *       解析出的 typed 奖励面；</li>
  *   <li>领奖段门态：三个族（Talk/Hunt/SerialHunt）的 {@code REWARD} 行经奖励窗动作 → {@code COMPLETE}
- *       页，且结算体拿到的模板来自真端行（不再依赖 typed XML/IR 模板）；</li>
+ *       页，且结算体拿到的模板来自原版行（不再依赖 typed XML/IR 模板）；</li>
  *   <li>fail-closed：未声明按钮、未解析奖励符号名、缺元数据、缺 {@code REWARD} 态、结算拒绝
  *       —— 一律不发奖不完成。</li>
  * </ol>
  * 结算体的发放细节（背包/经验/金币/称号/AP/GP/DP）由 {@link QuestService} 的共用结算体承担，本门
- * 只锁定「模板来自真端行 + 门态判定 + 页契约」三面。
+ * 只锁定「模板来自原版行 + 门态判定 + 页契约」三面。
  * <p>
  * Claim-segment gate for the native lane: the reward face is compared column-by-column against the
  * retail row, the three switched families complete through the reward window with a retail-derived
@@ -78,7 +78,7 @@ class NativeQuestRewardClaimGateTest {
 	static void loadRetailFixtures() throws IOException {
 		items = RetailItemNameIndex.loadItemTemplates();
 		if (RetailQuestDriver.current().isEmpty()) {
-			// 真端驱动是 native 完成口的元数据来源（与生产目录同一条装载路径）。
+			// 原版驱动是 native 完成口的元数据来源（与生产目录同一条装载路径）。
 			// The retail driver is the metadata source of the native completion port.
 			RetailQuestDriver.overlay(ImmutableQuestCatalog.fromEntries(List.of()));
 		}
@@ -119,7 +119,7 @@ class NativeQuestRewardClaimGateTest {
 		// 1207：6 个可选奖励，无固定道具。 / 1207: six selectable rewards, no fixed item.
 		QuestRow selectable = row(TALK_SELECTABLE_QUEST);
 		Rewards selectableTier = claimRewards(TALK_SELECTABLE_QUEST, 0);
-		assertTrue(selectableTier.getRewardItem().isEmpty(), "真端行未声明固定道具");
+		assertTrue(selectableTier.getRewardItem().isEmpty(), "原版行未声明固定道具");
 		assertItems(selectable, "selectable_reward_item1_", selectableTier.getSelectableRewardItem());
 
 		// 1124：称号 + 固定道具。 / 1124: title plus a fixed item.
@@ -268,7 +268,7 @@ class NativeQuestRewardClaimGateTest {
 		NativeTalkFixture.clearPackets(player);
 		assertTrue(handler.onDialog(NativeTalkFixture.dialog(player, npcId, TALK_SELECTABLE_QUEST, 9)),
 			"奖励窗按钮必须被领奖段服务");
-		// 领奖收尾 = 真端 npc-complete finish=SELECTION_DIALOG：回选择对话页（页 10，questId=0）。
+		// 领奖收尾 = 原版 npc-complete finish=SELECTION_DIALOG：回选择对话页（页 10，questId=0）。
 		assertEquals(List.of(QuestDialogPage.SELECT_QUEST.id()), NativeTalkFixture.dialogPages(player));
 		assertEquals(1, sink.calls.size());
 		assertEquals(TALK_SELECTABLE_QUEST, sink.calls.getFirst().env().getQuestId());
@@ -302,7 +302,7 @@ class NativeQuestRewardClaimGateTest {
 		NativeTalkFixture.clearPackets(player);
 		assertTrue(handler.onDialog(NativeTalkFixture.dialog(player, npcId, HUNT_SCALAR_QUEST, 8)),
 			"奖励窗按钮必须被领奖段服务");
-		// 领奖收尾 = 真端 npc-complete finish=SELECTION_DIALOG：回选择对话页（页 10，questId=0）。
+		// 领奖收尾 = 原版 npc-complete finish=SELECTION_DIALOG：回选择对话页（页 10，questId=0）。
 		assertEquals(List.of(QuestDialogPage.SELECT_QUEST.id()), NativeTalkFixture.dialogPages(player));
 		assertEquals(1, sink.calls.size());
 		assertRewardFaceFromRetailRow(sink.calls.getFirst().template(), HUNT_SCALAR_QUEST);
@@ -321,7 +321,7 @@ class NativeQuestRewardClaimGateTest {
 		NativeTalkFixture.clearPackets(player);
 		assertTrue(handler.onDialog(NativeTalkFixture.dialog(player, npcId, SERIAL_REWARD_QUEST, 8)),
 			"奖励窗按钮必须被领奖段服务");
-		// 领奖收尾 = 真端 npc-complete finish=SELECTION_DIALOG：回选择对话页（页 10，questId=0）。
+		// 领奖收尾 = 原版 npc-complete finish=SELECTION_DIALOG：回选择对话页（页 10，questId=0）。
 		assertEquals(List.of(QuestDialogPage.SELECT_QUEST.id()), NativeTalkFixture.dialogPages(player));
 		assertEquals(1, sink.calls.size());
 		assertRewardFaceFromRetailRow(sink.calls.getFirst().template(), SERIAL_REWARD_QUEST);
@@ -349,7 +349,7 @@ class NativeQuestRewardClaimGateTest {
 		NativeTalkFixture.clearPackets(player);
 		assertTrue(handler.onDialog(NativeTalkFixture.dialog(player, npcId, TALK_SELECTABLE_QUEST, 23)),
 			"23 = SELECTED_QUEST_NOREWARD 完成确认必须被领奖段服务");
-		// 领奖收尾 = 真端 npc-complete finish=SELECTION_DIALOG：回选择对话页（页 10，questId=0）。
+		// 领奖收尾 = 原版 npc-complete finish=SELECTION_DIALOG：回选择对话页（页 10，questId=0）。
 		assertEquals(List.of(QuestDialogPage.SELECT_QUEST.id()), NativeTalkFixture.dialogPages(player));
 		assertEquals(1, sink.calls.size());
 		assertEquals(23, sink.calls.getFirst().env().getDialogId(), "结算体按 dialogId==23 自行解析发放面");
@@ -374,9 +374,9 @@ class NativeQuestRewardClaimGateTest {
 	}
 
 	/**
-	 * 无目标领奖（真端 {@code QuestDialog} 无主键协议；2026-10-07 实机 13830 任务窗「实时奖励」= 110
+	 * 无目标领奖（原版 {@code QuestDialog} 无主键协议；2026-10-07 实机 13830 任务窗「实时奖励」= 110
 	 * 无响应）：任务窗/实时奖励槽的确认包不带 NPC 上下文（{@code visibleObject == null}，引擎以
-	 * npcId=0 进入），各族按 questId 结算 + 关窗（真端 0x5d8；与 typed 车道 targetless CloseDialog
+	 * npcId=0 进入），各族按 questId 结算 + 关窗（原版 0x5d8；与 typed 车道 targetless CloseDialog
 	 * 及 13830-13834 退役 XML 的 Playbook 案例 8.3 合同一致）。退役迁移曾丢失该面。
 	 * <p>
 	 * The targetless claim on every lane: a quest-journal confirmation carries no NPC context and
@@ -488,7 +488,7 @@ class NativeQuestRewardClaimGateTest {
 	}
 
 	/**
-	 * 已切换行里只有两条真端行声明多档（18706/28706，等级轴 999 = 不可达），可达行全部单档。
+	 * 已切换行里只有两条原版行声明多档（18706/28706，等级轴 999 = 不可达），可达行全部单档。
 	 * 多档行的档位语义属计划 P6，本口对其 fail-closed（见第二条断言），此冻结断言先破。
 	 * Only two switched rows declare multiple reward slots (18706/28706, level-axis 999 = unreachable);
 	 * every reachable row is single-slot and multi-slot rows fail closed.
@@ -510,7 +510,7 @@ class NativeQuestRewardClaimGateTest {
 				reachable.add(questId);
 			}
 		}
-		assertEquals(Set.of(18706, 28706), multiSlot, "真端多档行的完整清单");
+		assertEquals(Set.of(18706, 28706), multiSlot, "原版多档行的完整清单");
 		assertTrue(reachable.isEmpty(), () -> "可达的多档行必须先坐实 P6 档位语义：" + reachable);
 
 		RecordingSink sink = new RecordingSink();
@@ -585,7 +585,7 @@ class NativeQuestRewardClaimGateTest {
 	}
 
 	private static void assertRewardFaceFromRetailRow(QuestTemplate template, int questId) {
-		assertNotNull(template, "native 完成口必须给出真端行模板");
+		assertNotNull(template, "native 完成口必须给出原版行模板");
 		QuestRow row = row(questId);
 		Rewards tier = template.getRewards().getFirst();
 		// 0 与缺列同义（转换约定：0 值标量不进奖励面）。 / Zero and missing are the same (0 emits nothing).
@@ -599,33 +599,33 @@ class NativeQuestRewardClaimGateTest {
 		assertItems(row, "selectable_reward_item1_", tier.getSelectableRewardItem());
 	}
 
-	/** 真端 {@code baseN} 列（{@code name [count]}）↔ 模板道具表逐项对拍。 / Column-to-template item对拍. */
+	/** 原版 {@code baseN} 列（{@code name [count]}）↔ 模板道具表逐项对拍。 / Column-to-template item对拍. */
 	private static void assertItems(QuestRow row, String base, List<QuestItems> granted) {
 		List<String> declared = row.numbered(base);
 		assertEquals(declared.size(), granted.size(), base + " 数量");
 		for (int index = 0; index < declared.size(); index++) {
 			String[] tokens = declared.get(index).trim().split("\\s+");
 			Integer itemId = items.resolve(tokens[0]);
-			assertNotNull(itemId, () -> "真端道具名不可解析: " + tokens[0]);
+			assertNotNull(itemId, () -> "原版道具名不可解析: " + tokens[0]);
 			int count = tokens.length > 1 ? Integer.parseInt(tokens[1]) : 1;
 			assertEquals(itemId, granted.get(index).getItemId(), base + " 第 " + (index + 1) + " 项 id");
 			assertEquals(count, granted.get(index).getCount(), base + " 第 " + (index + 1) + " 项数量");
 		}
 	}
 
-	/** 真端嵌套的职业奖励列（{@code <data><x_selectable_item>…}）↔ 模板职业表对拍。 */
+	/** 原版嵌套的职业奖励列（{@code <data><x_selectable_item>…}）↔ 模板职业表对拍。 */
 	private static void assertClassRewards(int questId, String column, List<QuestItems> granted) {
 		List<String> declared = retailClassItems(questId, column);
 		assertEquals(declared.size(), granted.size(), column + " 数量");
 		for (int index = 0; index < declared.size(); index++) {
 			String[] tokens = declared.get(index).trim().split("\\s+");
 			Integer itemId = items.resolve(tokens[0]);
-			assertNotNull(itemId, () -> "真端道具名不可解析: " + tokens[0]);
+			assertNotNull(itemId, () -> "原版道具名不可解析: " + tokens[0]);
 			assertEquals(itemId, granted.get(index).getItemId(), column + " 第 " + (index + 1) + " 项");
 		}
 	}
 
-	/** 用真端行解析器读嵌套职业奖励列。 / Reads the nested class-reward column through the retail row parser. */
+	/** 用原版行解析器读嵌套职业奖励列。 / Reads the nested class-reward column through the retail row parser. */
 	private static List<String> retailClassItems(int questId, String column) {
 		try (InputStream input = NativeQuestRewardClaimGateTest.class.getResourceAsStream(
 				"/aion/data/static_data/quest/retail/quest.xml")) {

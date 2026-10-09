@@ -22175,15 +22175,15 @@
     <variable name="lichkey1"/>
     <variable name="lichkey2"/>
     <variable name="lichkey3"/>
-    <!-- Macunbello 条件刷（真端 world_N.xml territory 投影，见 .agents/summary/beshmundir-macunbello-conditional-spawn/condition-rows.tsv）。
+    <!-- Macunbello 条件刷（原版 world_N.xml territory 投影，见 .agents/summary/beshmundir-macunbello-conditional-spawn/condition-rows.tsv）。
          debufflich：每个"灵魂"（216206-216213，pattern on_die）或 Lichkey1（216583，on_die）死亡 +1；上限 36（灵魂全灭）。
          bt_page：工程页变量——0 = 普通页（N 套变体，当前实机默认）/ 1 = 困难页（H 套变体）；未来 BT 难度页的接入点（实例创建后 setVariable）。
-         SpecialServer_Cond 故意不声明：无 pattern 写入 → 恒 0（普通服），仅在表达式里保留真端字面。
+         SpecialServer_Cond 故意不声明：无 pattern 写入 → 恒 0（普通服），仅在表达式里保留原版字面。
          Macunbello conditional spawns (retail territory projection): debufflich = soul/Lichkey1 kill counter;
          bt_page = engineering page switch (0 = N set, current live default; 1 = H set for a future difficulty-page entry point). -->
     <variable name="debufflich"/>
     <variable name="bt_page"/>
-    <!-- Ahbana 条件刷（真端 world_N.xml territory 投影）：Warrior Monument（216739，N 页）/ H_Reric（216740，H 页）
+    <!-- Ahbana 条件刷（原版 world_N.xml territory 投影）：Warrior Monument（216739，N 页）/ H_Reric（216740，H 页）
          的 pattern on_die 各写 IDCT_SpecterN_Spawn / IDCT_SpecterH_Spawn +1，阈值 >= 10 时在看守者之枢纽生成
          Ahbana（216239 / 216158）。注：我方当前无 H 页纪念碑（216740）刷点，H 计数器暂无写入方（随 bt_page==1 预留）。
          Ahbana conditional spawns: the monument patterns write the counters and >= 10 spawns the boss;
@@ -22218,7 +22218,7 @@
         </slot>
       </group>
     </condition>
-    <!-- Macunbello 阶段条件刷（真端 territory：触发器 delay 1-2s 必须先于阶段变体 delay 10-11s 落地，
+    <!-- Macunbello 阶段条件刷（原版 territory：触发器 delay 1-2s 必须先于阶段变体 delay 10-11s 落地，
          否则阶段变体会被触发器唤醒时的 6981 广播当场清除）。/ Macunbello stage spawns: the trigger rows (1-2s delay) must
          land before the per-stage variants (10-11s delay), otherwise the freshly spawned variant is wiped by the 6981 broadcast. -->
     <condition id="5010" expression="debufflich &gt;= 12" despawn_at_other="true" group_mode="all" source="idcatacombs/world_N.xml#47855">
@@ -22300,7 +22300,7 @@
         </slot>
       </group>
     </condition>
-    <!-- Ahbana（看守者之枢纽）：阈值 10（砸 10 个纪念碑即出）；z 取我方 geo 实测面高 246.27（真端 z=250 在我方场景会悬空 3.7m）。/ Ahbana: threshold 10; z uses our geo surface height. -->
+    <!-- Ahbana（看守者之枢纽）：阈值 10（砸 10 个纪念碑即出）；z 取我方 geo 实测面高 246.27（原版 z=250 在我方场景会悬空 3.7m）。/ Ahbana: threshold 10; z uses our geo surface height. -->
     <condition id="5021" expression="(IDCT_SpecterN_Spawn &gt;= 10) &amp;&amp; (SpecialServer_Cond == 0) &amp;&amp; (bt_page == 0)" despawn_at_other="false" group_mode="all" source="idcatacombs/world_N.xml#16203">
       <group probability="1000">
         <slot>
@@ -22315,7 +22315,7 @@
         </slot>
       </group>
     </condition>
-    <!-- 走廊雕像阵 10 组（SPG_C_StDrakan_55_Ae_1..10，真端 no_respawn）：真端每组按权重随机生成 1 只——
+    <!-- 走廊雕像阵 10 组（SPG_C_StDrakan_55_Ae_1..10，原版 no_respawn）：原版每组按权重随机生成 1 只——
          真身 Fi(216295) 30% / 真身 Sc(216296) 30% / 假雕像 Fi(216297) 20% / 假雕像 Sc(216298) 20%。
          真身由 pattern IDCT_StDrakanFi/Sc 承担（出生自施无敌 19126，同伴联动或雕像机关消息 7000 解除）；
          假雕像由 IDCT_StDrakanFi_Fake/Sc_Fake 承担（永久无敌站桩装饰）。恒真表达式仅承载"进本随机抽取"语义。
@@ -31161,7 +31161,7 @@
     <variable name="idelim_3f_boss"/>
     <variable name="idelim_3f_heal_plant_giant"/>
     <variable name="specialserver_cond"/>
-    <!-- 真端 1F Rush 条件刷怪 / Retail 1F rush conditional spawns. -->
+    <!-- 原版 1F Rush 条件刷怪 / Retail 1F rush conditional spawns. -->
     <condition id="5001" expression="IDElim_1F_StartRush == 1" despawn_at_other="true" group_mode="all" source="idelim/world_N.xml#10">
       <group probability="1000">
         <slot>
@@ -31193,7 +31193,7 @@
         </slot>
       </group>
     </condition>
-    <!-- 真端 1F 金奎德 Boss 条件 / Retail 1F Kinquid boss condition. -->
+    <!-- 原版 1F 金奎德 Boss 条件 / Retail 1F Kinquid boss condition. -->
     <condition id="5002" expression="IDElim_1F_BossRush == 1" despawn_at_other="true" group_mode="all" source="idelim/world_N.xml#11">
       <group probability="1000">
         <slot>
@@ -31201,7 +31201,7 @@
         </slot>
       </group>
     </condition>
-    <!-- 真端 2F Rescue 条件 / Retail 2F rescue condition. -->
+    <!-- 原版 2F Rescue 条件 / Retail 2F rescue condition. -->
     <condition id="5003" expression="IDElim_2F_Rescue == 1" despawn_at_other="true" group_mode="all" source="idelim/world_N.xml#12">
       <group probability="1000">
         <slot>
@@ -31212,7 +31212,7 @@
         </slot>
       </group>
     </condition>
-    <!-- 真端 Gellmar 随机位置 / Retail Gellmar random location. -->
+    <!-- 原版 Gellmar 随机位置 / Retail Gellmar random location. -->
     <condition id="5004" expression="SpecialServer_Cond == 0" despawn_at_other="true" group_mode="all" source="idelim/world_N.xml#13">
       <group probability="1000">
         <slot>
@@ -31221,7 +31221,7 @@
         </slot>
       </group>
     </condition>
-    <!-- 真端特殊服 Gellmar 分支 / Retail special-server Gellmar branch. -->
+    <!-- 原版特殊服 Gellmar 分支 / Retail special-server Gellmar branch. -->
     <condition id="5005" expression="SpecialServer_Cond == 1" despawn_at_other="true" group_mode="all" source="idelim/world_N.xml#13">
       <group probability="1000">
         <slot>
@@ -31230,7 +31230,7 @@
         </slot>
       </group>
     </condition>
-    <!-- 真端 Queen Mosqua 条件 / Retail Queen Mosqua condition. -->
+    <!-- 原版 Queen Mosqua 条件 / Retail Queen Mosqua condition. -->
     <condition id="5006" expression="SpecialServer_Cond == 0" despawn_at_other="true" group_mode="all" source="idelim/world_N.xml#specialserver-queen">
       <group probability="1000">
         <slot>
@@ -31238,7 +31238,7 @@
         </slot>
       </group>
     </condition>
-    <!-- 真端特殊服 Queen Mosqua 分支 / Retail special-server Queen Mosqua branch. -->
+    <!-- 原版特殊服 Queen Mosqua 分支 / Retail special-server Queen Mosqua branch. -->
     <condition id="5007" expression="SpecialServer_Cond == 1" despawn_at_other="true" group_mode="all" source="idelim/world_N.xml#specialserver-queen">
       <group probability="1000">
         <slot>
@@ -31246,7 +31246,7 @@
         </slot>
       </group>
     </condition>
-    <!-- 真端 Celestius 条件 / Retail Celestius condition. -->
+    <!-- 原版 Celestius 条件 / Retail Celestius condition. -->
     <condition id="5008" expression="SpecialServer_Cond == 0" despawn_at_other="true" group_mode="all" source="idelim/world_N.xml#specialserver-celestius">
       <group probability="1000">
         <slot>
@@ -31254,7 +31254,7 @@
         </slot>
       </group>
     </condition>
-    <!-- 真端特殊服 Celestius 分支 / Retail special-server Celestius branch. -->
+    <!-- 原版特殊服 Celestius 分支 / Retail special-server Celestius branch. -->
     <condition id="5009" expression="SpecialServer_Cond == 1" despawn_at_other="true" group_mode="all" source="idelim/world_N.xml#specialserver-celestius">
       <group probability="1000">
         <slot>

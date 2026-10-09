@@ -28,22 +28,22 @@ import com.aionemu.gameserver.questEngine.retail.RetailLedgerRows;
 /**
  * P7 步 1 门（计划 §10.2「P7 DataDriven」）：DD 行的**原生 handler 契约**逐行冻结。
  * <p>
- * P7 切换集 = 真端 DD 活行 ∧ owner {@code RETAIL_TABLE} = **1467 行**（客户端可渲染 ∧ 玩家可见；
+ * P7 切换集 = 原版 DD 活行 ∧ owner {@code RETAIL_TABLE} = **1467 行**（客户端可渲染 ∧ 玩家可见；
  * 孤行 337 / 注释 18 见 {@code RetailDataDrivenClientPresenceGateTest}）。本门把该集合的
  * **原生实现契约**冻成六条不可静默漂移的不变量，作为 step 2（运行时 + 原子切换 + 删旧）的验收基线：
  * <ol>
- *   <li>接取轴 = 真端 {@code category_acquire_}（去大小写）只出现 6 类：{@code talk/enterarea/none/
- *       leveluplogin/itemplay/enterworld}，逐类计数冻结（真端 5 类 kind 3/4/7/8/10 + DD 的
+ *   <li>接取轴 = 原版 {@code category_acquire_}（去大小写）只出现 6 类：{@code talk/enterarea/none/
+ *       leveluplogin/itemplay/enterworld}，逐类计数冻结（原版 5 类 kind 3/4/7/8/10 + DD 的
  *       {@code EnterArea} 与链式 {@code none}）；</li>
- *   <li>进度轴 = 真端 8 类 progress handler（{@code Hunt/CollectItem/Pvp/Talk/EnterArea/ItemPlay/
+ *   <li>进度轴 = 原版 8 类 progress handler（{@code Hunt/CollectItem/Pvp/Talk/EnterArea/ItemPlay/
  *       EnterWorld/TalkFOBJ}；证据 {@code p7-prereqs/dd-dispatcher-and-handlers.md} §2
  *       FUN_180c46020/46980/46e90/466a0/47bf0/474b0/467b0/478e0）——未知类别 fail-closed；</li>
  *   <li>步列词汇表 = 每类实际出现的 {@code valueN_progress_} 列号与出现次数（即 step 2 必须实现的
  *       动作/效果面清单：0=载荷、1..4=发/扣物品与多 FOBJ、4=过场/影像、5=生成对象、6/7/9/10=其它
  *       效果列）——新增列号或计数漂移即失败；</li>
- *   <li>6 位布局不变量 = 每步子计数 ≤ 4 组、计数 ≤ 63（真端 bit0-5 步号 + 4×6 位组槽），唯一例外
- *       80817（计数 100；裁定「复刻真端算术含第 64 杀回绕」，见 §10.3-#5）；</li>
- *   <li>每行必须声明 {@code reward_npc_name}（领奖面由真端表行驱动）；</li>
+ *   <li>6 位布局不变量 = 每步子计数 ≤ 4 组、计数 ≤ 63（原版 bit0-5 步号 + 4×6 位组槽），唯一例外
+ *       80817（计数 100；裁定「复刻原版算术含第 64 杀回绕」，见 §10.3-#5）；</li>
+ *   <li>每行必须声明 {@code reward_npc_name}（领奖面由原版表行驱动）；</li>
  *   <li>逐行矩阵（id × 接取 × 步序列 × 列词汇 × 领奖名）的规范形摘要冻结，且生产装载器
  *       {@link RetailDataDrivenTable} 的解析结果与之逐行一致（装载器视图 = 契约视图）。</li>
  * </ol>
@@ -61,7 +61,7 @@ class DataDrivenNativeContractGateTest {
 	private static final String RETENTION = "/quest/retail-xml-retention.xml";
 	private static final String ABSENT_FIXTURE = "/quest/retail-data-driven-client-absent.tsv";
 
-	/** 切换集规模（真端 DD 活行 ∧ owner RETAIL_TABLE）。 / The switch set size. */
+	/** 切换集规模（原版 DD 活行 ∧ owner RETAIL_TABLE）。 / The switch set size. */
 	private static final int SWITCH_ROWS = 1467;
 	private static final int CLIENT_ABSENT_LIVE_ROWS = 337;
 	private static final int COMMENTED_OUT_ROWS = 18;
@@ -70,13 +70,13 @@ class DataDrivenNativeContractGateTest {
 	/** 逐行矩阵规范形摘要（工具复算；装载器/表改动即失败）。 / Canonical row-matrix digest. */
 	private static final String CANONICAL_SHA256 =
 		"3d7b762e16b4977b98844fdca414ea287fa3c3c36429373cb8b6b08fa5b7f77d";
-	/** 真端 8 类 progress handler。 / The eight retail progress handlers. */
+	/** 原版 8 类 progress handler。 / The eight retail progress handlers. */
 	private static final Set<String> PROGRESS_CATEGORIES = Set.of(
 		"hunt", "collectitem", "pvp", "talk", "enterarea", "itemplay", "enterworld", "talkfobj");
-	/** 真端接取 kind（kind 3/4/7/8/10）+ DD 的 EnterArea / none。 / Retail acquire kinds. */
+	/** 原版接取 kind（kind 3/4/7/8/10）+ DD 的 EnterArea / none。 / Retail acquire kinds. */
 	private static final Set<String> ACQUIRE_KINDS = Set.of(
 		"talk", "itemplay", "levelup", "enterworld", "leveluplogin", "enterarea", "none");
-	/** 裁定例外：80817 计数 100 > 63（真端自身不可完成，原样复刻）。 / Adjudicated overflow row. */
+	/** 裁定例外：80817 计数 100 > 63（原版自身不可完成，原样复刻）。 / Adjudicated overflow row. */
 	private static final Set<Integer> ADJUDICATED_OVER_SIX_BIT = Set.of(80817);
 	private static final int SIX_BIT_MASK = 0x3F;
 
@@ -100,7 +100,7 @@ class DataDrivenNativeContractGateTest {
 		"talkfobj", Map.of(0, 19, 1, 7, 2, 3, 3, 1, 4, 2, 5, 5, 6, 2, 10, 2));
 
 	/**
-	 * 类别载荷列（真端 `FUN_180c4b980`：按 kind 解析 index=0 的类别数据；CollectItem 另占 1..4 的追加 FOBJ 与 5 的整数，
+	 * 类别载荷列（原版 `FUN_180c4b980`：按 kind 解析 index=0 的类别数据；CollectItem 另占 1..4 的追加 FOBJ 与 5 的整数，
 	 * PvP 另占 1..3 的军衔阈值/上限/等级差）。 / Category payload columns parsed by `FUN_180c4b980`.
 	 */
 	private static final Map<String, Set<Integer>> CATEGORY_PAYLOAD_COLUMNS = Map.of(
@@ -113,8 +113,8 @@ class DataDrivenNativeContractGateTest {
 		"enterworld", Set.of(0),
 		"talkfobj", Set.of(0));
 	/**
-	 * 通用附加动作列（真端 `FUN_180c49610` = `DataDrivenQuestLoader::LoadExtraAction`）：1/2=发扣物品、3=传送、
-	 * 4=过场影像、5=生成 NPC、6=延迟、7/8=消息、9=进副本、10=定时器；真端 guard 只放行 kind 2/3/4/6/7/8/9/10，
+	 * 通用附加动作列（原版 `FUN_180c49610` = `DataDrivenQuestLoader::LoadExtraAction`）：1/2=发扣物品、3=传送、
+	 * 4=过场影像、5=生成 NPC、6=延迟、7/8=消息、9=进副本、10=定时器；原版 guard 只放行 kind 2/3/4/6/7/8/9/10，
 	 * 且 Hunt 只放行 4/5 ⇒ CollectItem(1) 与 PvP(5) **没有**附加动作面。 / Generic extra-action columns.
 	 */
 	private static final Map<String, Set<Integer>> EXTRA_ACTION_COLUMNS = Map.of(
@@ -161,9 +161,9 @@ class DataDrivenNativeContractGateTest {
 	/** ① 切换集与两个排除桶互斥、规模冻结，且每行都声明领奖 NPC。 */
 	@Test
 	void switchSetIsTheClientVisibleRetailBand() {
-		assertEquals(SWITCH_ROWS, switchSet.size(), "P7 切换集规模冻结（真端活行 ∧ owner RETAIL_TABLE）");
+		assertEquals(SWITCH_ROWS, switchSet.size(), "P7 切换集规模冻结（原版活行 ∧ owner RETAIL_TABLE）");
 		assertEquals(CLIENT_ABSENT_LIVE_ROWS, clientAbsent.size(), "客户端三表皆无的孤行规模冻结");
-		assertEquals(COMMENTED_OUT_ROWS, commentedOut.size(), "真端表注释禁用行规模冻结");
+		assertEquals(COMMENTED_OUT_ROWS, commentedOut.size(), "原版表注释禁用行规模冻结");
 		assertTrue(java.util.Collections.disjoint(switchSet, clientAbsent), "切换集不得含孤行");
 		assertTrue(java.util.Collections.disjoint(switchSet, commentedOut), "切换集不得含注释行");
 		for (int questId : switchSet) {
@@ -172,14 +172,14 @@ class DataDrivenNativeContractGateTest {
 		}
 	}
 
-	/** ② 接取轴：真端 kind 6 类（含 EnterArea/none），未知类别 fail-closed。 */
+	/** ② 接取轴：原版 kind 6 类（含 EnterArea/none），未知类别 fail-closed。 */
 	@Test
 	void acquireAxisCoversOnlyRetailKinds() {
 		Map<String, Integer> histogram = new TreeMap<>();
 		for (int questId : switchSet) {
 			String acquire = rows.get(questId).acquire();
 			assertTrue(ACQUIRE_KINDS.contains(acquire),
-				"接取类别必须落在真端 kind 集合内（未知类别 fail-closed）: " + questId + " -> " + acquire);
+				"接取类别必须落在原版 kind 集合内（未知类别 fail-closed）: " + questId + " -> " + acquire);
 			histogram.merge(acquire, 1, Integer::sum);
 		}
 		assertEquals(ACQUIRE_HISTOGRAM, histogram, "接取轴直方图冻结");
@@ -209,7 +209,7 @@ class DataDrivenNativeContractGateTest {
 			List<String> categories = new ArrayList<>();
 			for (Step step : row.steps()) {
 				assertTrue(PROGRESS_CATEGORIES.contains(step.category()),
-					"进度类别必须落在真端 8 类 handler 内（未知类别 fail-closed）: " + questId + " -> " + step.category());
+					"进度类别必须落在原版 8 类 handler 内（未知类别 fail-closed）: " + questId + " -> " + step.category());
 				assertTrue(step.columns().containsKey(0), "步必须声明 value0_progress_ 载荷: " + questId);
 				categorySteps.merge(step.category(), 1, Integer::sum);
 				categories.add(step.category());
@@ -238,8 +238,8 @@ class DataDrivenNativeContractGateTest {
 	}
 
 	/**
-	 * ⑦ 步列语义闭合（真端 `FUN_180c4b980` + `FUN_180c49610`，见 `p7/P7-STEP2-PREREQ-COLUMN-SEMANTICS.zh-CN.md`）：
-	 * 每个观测到的 (类别, 列号) 必须落在「类别载荷」或「该类别真端允许的附加动作」之一；真端非法组合必须零命中，
+	 * ⑦ 步列语义闭合（原版 `FUN_180c4b980` + `FUN_180c49610`，见 `p7/P7-STEP2-PREREQ-COLUMN-SEMANTICS.zh-CN.md`）：
+	 * 每个观测到的 (类别, 列号) 必须落在「类别载荷」或「该类别原版允许的附加动作」之一；原版非法组合必须零命中，
 	 * 未知组合必须零命中（新增列号/新组合一律 fail-closed，禁止静默吞列）。
 	 *
 	 * Every observed (category, column) pair must be either a category payload column or an extra-action column the
@@ -267,14 +267,14 @@ class DataDrivenNativeContractGateTest {
 				"类别 " + entry.getKey() + " 的观测列必须落在裁定面内: " + entry.getValue());
 			assertTrue(entry.getValue().contains(0), "每步必须有载荷列 0: " + entry.getKey());
 		}
-		// 真端 guard：CollectItem(1) 与 PvP(5) 无附加动作面；Hunt 只允许 4/5。
-		assertTrue(!EXTRA_ACTION_COLUMNS.containsKey("collectitem"), "CollectItem 无附加动作面（真端 return 1）");
-		assertTrue(!EXTRA_ACTION_COLUMNS.containsKey("pvp"), "PvP 无附加动作面（真端 return 1）");
+		// 原版 guard：CollectItem(1) 与 PvP(5) 无附加动作面；Hunt 只允许 4/5。
+		assertTrue(!EXTRA_ACTION_COLUMNS.containsKey("collectitem"), "CollectItem 无附加动作面（原版 return 1）");
+		assertTrue(!EXTRA_ACTION_COLUMNS.containsKey("pvp"), "PvP 无附加动作面（原版 return 1）");
 		assertEquals(Set.of(4, 5), EXTRA_ACTION_COLUMNS.get("hunt"), "Hunt 只允许 4/5 落到附加动作");
-		assertEquals(PROGRESS_CATEGORIES, observed.keySet(), "观测类别必须恰为真端 8 类");
+		assertEquals(PROGRESS_CATEGORIES, observed.keySet(), "观测类别必须恰为原版 8 类");
 	}
 
-	/** ⑤ 6 位布局：每步子计数 ≤ 4 组、计数 ≤ 63（80817 = 裁定例外，原样复刻真端回绕）。 */
+	/** ⑤ 6 位布局：每步子计数 ≤ 4 组、计数 ≤ 63（80817 = 裁定例外，原样复刻原版回绕）。 */
 	@Test
 	void everyStepStaysInsideTheSixBitLayout() {
 		Set<Integer> overSixBit = new TreeSet<>();
@@ -282,7 +282,7 @@ class DataDrivenNativeContractGateTest {
 			Row row = rows.get(questId);
 			for (Step step : row.steps()) {
 				int groups = counterGroups(step);
-				assertTrue(groups <= 4, "每步子计数 ≤ 4 组（真端 bit0-5 步号 + 4×6 位组槽）: " + questId
+				assertTrue(groups <= 4, "每步子计数 ≤ 4 组（原版 bit0-5 步号 + 4×6 位组槽）: " + questId
 					+ " -> " + groups);
 				for (Integer target : targets(step)) {
 					if (target == null) {
@@ -296,7 +296,7 @@ class DataDrivenNativeContractGateTest {
 		}
 		assertEquals(ADJUDICATED_OVER_SIX_BIT, overSixBit,
 			"唯一超 6 位计数的行必须仍只有 80817（禁止改成 10 位相机、禁止静默修复）");
-		assertEquals(100, targets(rows.get(80817).steps().get(0)).get(0), "80817 真端计数 = 100（原样保留）");
+		assertEquals(100, targets(rows.get(80817).steps().get(0)).get(0), "80817 原版计数 = 100（原样保留）");
 	}
 
 	/** ⑥ 逐行矩阵摘要冻结（装载器视图对拍已随 P7 步 f 旧视图删除入史）。 */
@@ -320,7 +320,7 @@ class DataDrivenNativeContractGateTest {
 				.append('\n');
 		}
 		assertEquals(CANONICAL_SHA256, sha256(canonical.toString()),
-			"逐行矩阵规范形摘要冻结（真端表 / owner 台账 / 孤行快照任一漂移即失败）");
+			"逐行矩阵规范形摘要冻结（原版表 / owner 台账 / 孤行快照任一漂移即失败）");
 	}
 
 	// ---------------------------------------------------------------- 复算辅助
@@ -374,7 +374,7 @@ class DataDrivenNativeContractGateTest {
 		return hex.toString();
 	}
 
-	/** 真端表原始文本复算（与工具同口径：去 DTD/注释后逐块解析）。 / Raw-table recomputation. */
+	/** 原版表原始文本复算（与工具同口径：去 DTD/注释后逐块解析）。 / Raw-table recomputation. */
 	private static Map<Integer, Row> parseRawTable() throws Exception {
 		String text = new String(resource(DD_TABLE).readAllBytes(), StandardCharsets.UTF_8);
 		Matcher dtd = DTD.matcher(text);
@@ -406,7 +406,7 @@ class DataDrivenNativeContractGateTest {
 			parsed.put(questId, new Row(questId, field(body, "category_acquire_").toLowerCase(java.util.Locale.ROOT),
 				field(body, "reward_npc_name"), List.copyOf(steps)));
 		}
-		assertTrue(parsed.size() > 2400, "真端 DD 表活行数异常: " + parsed.size());
+		assertTrue(parsed.size() > 2400, "原版 DD 表活行数异常: " + parsed.size());
 		return parsed;
 	}
 

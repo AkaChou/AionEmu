@@ -32,18 +32,18 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * SimpleHunt 击杀计数真端合同门禁。
+ * SimpleHunt 击杀计数原版合同门禁。
  * <p>
- * 权威来源：Aion 5.8 真端服务端模板表 {@code Map/XML/Quest_SimpleHunt.xml} 的 {@code countN/monsterN}
+ * 权威来源：Aion 5.8 原版服务端模板表 {@code Map/XML/Quest_SimpleHunt.xml} 的 {@code countN/monsterN}
  * （经 NPC {@code name_desc} 解析为 npc_id），快照由
  * {@code .agents/summary/scriptdll-quest-driver/reconcile_simple_hunt.py --emit-contract} 生成。
  * <p>
  * 每个计数器按快照里的 {@code model} 断言：
  * <ul>
  * <li>{@code COUNTER_GRID}：必须存在宽 6 的 bit-field（offset = 6*(n-1)），其 dimension 的
- * {@code required} 等于真端 {@code countN}，npc-ids 必须覆盖真端怪集合，且不得超出
- * 「真端怪集合 ∪ 客户端 quest_monster.csv 怪集合」（表为服务端口径，CSV 为客户端口径）；</li>
- * <li>{@code KILL_CHAIN}：串行链的击杀节点数必须等于真端 {@code countN}；</li>
+ * {@code required} 等于原版 {@code countN}，npc-ids 必须覆盖原版怪集合，且不得超出
+ * 「原版怪集合 ∪ 客户端 quest_monster.csv 怪集合」（表为服务端口径，CSV 为客户端口径）；</li>
+ * <li>{@code KILL_CHAIN}：串行链的击杀节点数必须等于原版 {@code countN}；</li>
  * <li>其余模型（{@code WIDE_FIELD}/{@code FIELD_NO_KILL_MODEL}/{@code NO_FIELD}/
  * {@code UNRESOLVED_NAME}/{@code MISMATCH}）：锁定「该计数器当前未按计数器建模」，
  * 一旦有人改成 counter-grid，本门禁要求同步更新快照，禁止静默漂移。</li>
@@ -53,10 +53,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class QuestSimpleHuntRetailContractTest {
 
 	private static final String CONTRACT_RESOURCE = "/quest/quest-simple-hunt-retail-contract.tsv";
-	/** 服务端可达目标例外台账（真端口径之外、本服运行期必须接受的击杀目标）。
+	/** 服务端可达目标例外台账（原版口径之外、本服运行期必须接受的击杀目标）。
 	 * Server-side reachable target exceptions: kill targets the runtime must keep accepting. */
 	private static final String SERVER_TARGET_EXCEPTIONS = "/quest/quest-simple-hunt-server-target-exceptions.tsv";
-	/** NPC 模板文件清单（与真端名索引门禁一致）。 / NPC template files matching the other retail gates. */
+	/** NPC 模板文件清单（与原版名索引门禁一致）。 / NPC template files matching the other retail gates. */
 	private static final List<String> NPC_TEMPLATES = List.of(
 		"npc_template_200000_216188.xml", "npc_template_216189_235748.xml", "npc_template_235749_247606.xml",
 		"npc_template_247607_270057.xml", "npc_template_270058_286320.xml", "npc_template_286321_800030.xml",
@@ -101,7 +101,7 @@ class QuestSimpleHuntRetailContractTest {
 				skippedUnported++;
 				continue;
 			}
-			// 已退役任务的 XML 只在 git 历史里：同口径不变量改在生产视图（真端合成定义）上核对。
+			// 已退役任务的 XML 只在 git 历史里：同口径不变量改在生产视图（原版合成定义）上核对。
 			// Retired quests have no XML any more; the same invariants are checked on the
 			// synthesized production definition instead.
 			boolean retired = retiredIds.contains(entry.getKey());
@@ -126,13 +126,13 @@ class QuestSimpleHuntRetailContractTest {
 	}
 
 	/**
-	 * 退役任务的检查路径：定义取生产视图（真端合成），断言与 XML 侧同口径的不变量——
-	 * 槽位字段几何（6 位、offset=6*(n-1)）、可计数上限 = 真端 {@code countN}、覆盖真端全部怪。
+	 * 退役任务的检查路径：定义取生产视图（原版合成），断言与 XML 侧同口径的不变量——
+	 * 槽位字段几何（6 位、offset=6*(n-1)）、可计数上限 = 原版 {@code countN}、覆盖原版全部怪。
 	 * Retired quests carry no XML, so the counter contract is asserted on the synthesized definition.
 	 */
 	private static String checkRetiredRow(int questId, Row row) {
 		if (com.aionemu.gameserver.questEngine.tablelane.SimpleHuntHandler.instance().owns(questId)) {
-			// P1 原生表驱动任务由 SimpleHuntNativeFamilyGateTest 进行全量真端表行门禁核验
+			// P1 原生表驱动任务由 SimpleHuntNativeFamilyGateTest 进行全量原版表行门禁核验
 			return null;
 		}
 		String prefix = "quest " + questId + " counter " + row.counterIndex() + " [" + row.model()
@@ -191,7 +191,7 @@ class QuestSimpleHuntRetailContractTest {
 				// 同一客户端显示名（name_id）的其它 npc_id 属等价类：本服实刷的可能正是它们。
 				// Sibling npc ids sharing the display name belong to the same target equivalence class.
 				Set<Integer> allowed = new HashSet<>(npcIndex.withDisplayNameVariants(declared));
-				// 台账里的本服可达目标：真端表未列，但运行期必须继续接受（见台账 reason/evidence）。
+				// 台账里的本服可达目标：原版表未列，但运行期必须继续接受（见台账 reason/evidence）。
 				allowed.addAll(serverTargetExceptions.getOrDefault(row.questId(), Map.of())
 					.getOrDefault(dimension.getAttribute("field"), Set.of()));
 				List<Integer> missing = row.npcIds().stream().filter(id -> !ids.contains(id)).toList();
@@ -227,7 +227,7 @@ class QuestSimpleHuntRetailContractTest {
 				return null;
 			}
 			case "UNRESOLVED_NAME" -> {
-				// 真端怪名在本仓库 NPC 表中不存在（未移植怪）：只锁形态，不做数值断言
+				// 原版怪名在本仓库 NPC 表中不存在（未移植怪）：只锁形态，不做数值断言
 				return null;
 			}
 			case "FIELD_NO_KILL_MODEL" -> {

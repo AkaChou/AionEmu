@@ -34,8 +34,8 @@ import com.aionemu.gameserver.world.zone.ZoneUpdateService;
  * 事件任务维护面的 native 行恢复门禁：{@code QuestService.startEventQuest} 的 native 分支
  * 与 {@code EventService.StartOrMaintainQuests} 的登录维护联动。
  * <p>
- * 真端事实基线：事件清单（{@code events_config.xml} 的 maintainable）318 行中 315 行为原生车道行
- * （182 SimpleTalk + 16 SimpleHunt + 113 DataDriven），其元数据只存在于真端 {@code quest.xml}
+ * 原版事实基线：事件清单（{@code events_config.xml} 的 maintainable）318 行中 315 行为原生车道行
+ * （182 SimpleTalk + 16 SimpleHunt + 113 DataDriven），其元数据只存在于原版 {@code quest.xml}
  * （QuestsData 与生产目录同为 733 行集合，取不到模板）。「事件任务」语义来自活动清单，不是 quest.xml
  * 的 {@code category1}（客户端 UI 分组；80900-80938 段为 mission/seen_marker/public）。
  * <p>
@@ -81,7 +81,7 @@ class EventQuestNativeMaintenanceTest {
 		Player player = nativePlayer(10);
 
 		assertTrue(QuestService.startEventQuest(env(player, TALK_EVENT_REPEAT_10), QuestStatus.START),
-			"清单内 native 事件行必须建档（QuestsData 无模板 ⇒ 回退真端 quest.xml 元数据）");
+			"清单内 native 事件行必须建档（QuestsData 无模板 ⇒ 回退原版 quest.xml 元数据）");
 
 		QuestState state = player.getQuestStateList().getQuestState(TALK_EVENT_REPEAT_10);
 		assertTrue(state != null, "QuestState 必须被创建");
@@ -115,7 +115,7 @@ class EventQuestNativeMaintenanceTest {
 		Player player = nativePlayer(80);
 
 		assertFalse(QuestService.startEventQuest(env(player, 999999), QuestStatus.START),
-			"目录与真端全量表中都不存在的行 ⇒ fail-closed");
+			"目录与原版全量表中都不存在的行 ⇒ fail-closed");
 		assertNull(player.getQuestStateList().getQuestState(999999));
 	}
 

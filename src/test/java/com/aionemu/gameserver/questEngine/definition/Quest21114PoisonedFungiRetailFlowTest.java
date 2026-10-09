@@ -33,8 +33,8 @@ class Quest21114PoisonedFungiRetailFlowTest {
 		assertEquals(new NodeProjection(QuestStatus.START, Map.of("var0", 2)), node(definition, "s2").projection());
 		assertEquals(new NodeProjection(QuestStatus.START, Map.of("var0", 3)), node(definition, "s3").projection());
 		assertEquals(new NodeProjection(QuestStatus.START, Map.of("var0", 4)), node(definition, "s4").projection());
-		// QE-054：领奖投影 = 真端/legacy 推进值 4——legacy defaultOnKillEvent(216563,4,true) 落盘 4、
-		// 真端集合 {1,3,4} 无 5，客户端 REWARD 态按自身 [%N] 门槛显示报告行（行 5）。
+		// QE-054：领奖投影 = 原版/legacy 推进值 4——legacy defaultOnKillEvent(216563,4,true) 落盘 4、
+		// 原版集合 {1,3,4} 无 5，客户端 REWARD 态按自身 [%N] 门槛显示报告行（行 5）。
 		// QE-054: the reward projection is the retail/legacy progress value 4 — the legacy
 		// defaultOnKillEvent(216563,4,true) persisted 4 and the retail set {1,3,4} has no 5; the
 		// client shows the report row (row 5) through its own gate.
@@ -95,7 +95,7 @@ class Quest21114PoisonedFungiRetailFlowTest {
 		assertEquals(List.of(
 			new QuestAction.GiveItem(182207862, 1),
 			new QuestAction.SetVariable("var0", 2)), giveLiquid.actions());
-		// 真端 FUN_180caf150（通用口）：SETPRO 推进后 0x5d8＝关窗（实机 2026-10-05 两次点击实证）。
+		// 原版 FUN_180caf150（通用口）：SETPRO 推进后 0x5d8＝关窗（实机 2026-10-05 两次点击实证）。
 		assertEquals(List.of(
 			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.PACKET_ONLY),
 			new AfterCommitAction.CloseDialog()), giveLiquid.afterCommit());
@@ -200,7 +200,7 @@ class Quest21114PoisonedFungiRetailFlowTest {
 	}
 
 	private static QuestDefinition load() throws Exception {
-		// 退役任务的生产 XML 只在 git 历史里：统一取生产视图（XML 目录 + 真端 overlay）。
+		// 退役任务的生产 XML 只在 git 历史里：统一取生产视图（XML 目录 + 原版 overlay）。
 		return ProductionQuestDefinitions.definition(21114).definition();
 	}
 }

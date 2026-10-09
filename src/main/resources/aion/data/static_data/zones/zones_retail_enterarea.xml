@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <!--
-	DD EnterArea 原生区注册表：一个 zone 元素 = 一个真端区（名字逐字取自 DD 别名与真端世界文件）。
+	DD EnterArea 原生区注册表：一个 zone 元素 = 一个原版区（名字逐字取自 DD 别名与原版世界文件）。
 	生成工具：.agents/summary/quest-engine-native/p7/tools/enterarea-retail-zone-probe.py（emit-zones 模式）。
-	坐标与 top/bottom 逐字取自 真端根 Map/Worlds/<world>/world{,_M,_N}.xml 的 sensory_area、
+	坐标与 top/bottom 逐字取自 原版根 Map/Worlds/<world>/world{,_M,_N}.xml 的 sensory_area、
 	questscript_area、item_use_area 段；mapid 取自 id-mappings.xml（客户端派生）。禁止手改。
-	R5 活图归一：真端 `_M`（大师服）世界目录的区按本服活图注册（LIVE_WORLD_MAPID：210130000→210050000、
+	R5 活图归一：原版 `_M`（大师服）世界目录的区按本服活图注册（LIVE_WORLD_MAPID：210130000→210050000、
 	220140000→220070000，与 TeleportService2/HotspotTeleportService 的运行时归一同一张映射）；
-	真端把英吉斯温/格国的感官区只写在 `_M` 世界文件里（lf4=0/LF4_M=15、df4=0/DF4_M=13），
-	归一仅换注册宿主 mapid，几何/胞数/摘要逐字不变；台账 normalized_from 列留痕真端宿主。
+	原版把英吉斯温/格国的感官区只写在 `_M` 世界文件里（lf4=0/LF4_M=15、df4=0/DF4_M=13），
+	归一仅换注册宿主 mapid，几何/胞数/摘要逐字不变；台账 normalized_from 列留痕原版宿主。
 -->
 <zones>
 	<zone mapid="400010000" name="AB1_QuestArea_Q13947" area_type="POLYGON" zone_type="SUB">

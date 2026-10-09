@@ -18,10 +18,10 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * QE-054 步号轴收口：锁定领奖行批次误抬的 40 个任务——reward 投影 = 真端/legacy 推进值，
+ * QE-054 步号轴收口：锁定领奖行批次误抬的 40 个任务——reward 投影 = 原版/legacy 推进值，
  * 批次坏档由反转后的无 source enter-world 边回滚；不再随客户端末行索引漂移。
  * <p>
- * 判定依据（同 1361/11006/24021 根因）：真端 {@code 0x100} 状态推进不写轴（进 REWARD 轴保持玩法末值），
+ * 判定依据（同 1361/11006/24021 根因）：原版 {@code 0x100} 状态推进不写轴（进 REWARD 轴保持玩法末值），
  * 客户端 REWARD 态按自身 [{%N}] 行门槛显示报告行；「客户端末行是领奖行 ⇒ 投影抬到末行索引」
  * 对玩法步后进 REWARD 的任务系统性不成立。逐任务取证见
  * {@code .agents/summary/quest-step-axis-fullscan/}。
@@ -58,7 +58,7 @@ class RewardRowProjectionRegressionTest {
 			 * 3711/4711 legacy defaultOnKillEvent(214823,2,true) 落 2（三值自愈边 + 回滚）；
 			 * 11031/11032/11033 legacy useQuestItem(2,3,true) 落 2（原无自愈边，补回滚）；
 			 * 18208/28208/18209/28209 legacy 击杀链后 var0=1 + setStatus(REWARD)（范围边 + 回滚）；
-			 * 28602 legacy defaultOnKillEvent(3,true) 落 3、真端 {1,2,3}。 */
+			 * 28602 legacy defaultOnKillEvent(3,true) 落 3、原版 {1,2,3}。 */
 			/* Second wave (full-scan triage candidates, closed the same day): 3711/4711 kill event
 			 * persisted 2 (triple value edges + rollback); 11031-11033 item use persisted 2 (rollback
 			 * edge added where none existed); the 18208 family left var0=1 before REWARD (range edges
@@ -68,8 +68,8 @@ class RewardRowProjectionRegressionTest {
 			new Row(28208, 2, 1, false), new Row(18209, 2, 1, false), new Row(28209, 2, 1, false),
 			new Row(28602, 4, 3, false),
 			/* 镜像对批次（MirrorPairRewardRowContractTest 第二批领奖行修复）同根因收口：
-			 * 10110/20110 真端 {2,3,5} 无 6；14052/14026/24026 legacy setStatus(REWARD) 不写 var
-			 * 落 4；18602 真端 {1,2,3} 无 4（镜像 28602）。 */
+			 * 10110/20110 原版 {2,3,5} 无 6；14052/14026/24026 legacy setStatus(REWARD) 不写 var
+			 * 落 4；18602 原版 {1,2,3} 无 4（镜像 28602）。 */
 			/* Mirror-pair batch (the second reward-row repair wave), same root cause: 10110/20110
 			 * retail {2,3,5} without 6; 14052/14026/24026 entered REWARD without touching var0
 			 * (kept 4); 18602 retail {1,2,3} without 4 (mirror of 28602). */

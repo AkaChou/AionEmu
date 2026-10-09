@@ -3,7 +3,7 @@
      镜像口径 = 装载器 fail-closed 规则 ∪ 观察形全域钉（证据 + 生成器：
      .agents/summary/quest-engine-native/p0b/）：
      - 行 = <quest_string_id>（key 全表唯一，形 STR_QUEST_SAY_* /
-       STR_CHAT_*；string_id 非负 int）；body = 真端 <body>
+       STR_CHAT_*；string_id 非负 int）；body = 原版 <body>
        原文、可缺（旧格式兼容行——在仓资源 7/7 有正文，schema 按可缺钉以镜像装载器契约）。
      retail-quest-string-ids.xml schema (quest retail table gate, same batch as the 2026-10-03 ledger XML
      conversion). Mirrors the loader fail-closed rules plus observed-universe shape pins (evidence +

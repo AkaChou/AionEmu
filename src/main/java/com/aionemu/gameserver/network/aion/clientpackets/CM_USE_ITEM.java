@@ -106,7 +106,7 @@ public class CM_USE_ITEM extends AionClientPacket {
 		if (item == null) {
 			// 客户端在关闭契约窗口等场景会发来解析不到物品的使用请求；按取消处理并回取消动画，
 			// 客户端才会退出「使用物品」动作状态（对齐 AL-Game 的 item==null → cancelUseItem 分支
-			// 与真端 C_USE_ITEM(objId=0) → User::CancelUseItem 语义）。
+			// 与原版 C_USE_ITEM(objId=0) → User::CancelUseItem 语义）。
 			// The client may send a use request that no longer resolves (e.g. when closing the
 			// contract window); treat it as a cancel and answer with the cancel animation so the
 			// client leaves its "using item" action state (AL-Game's item==null → cancelUseItem
@@ -116,7 +116,7 @@ public class CM_USE_ITEM extends AionClientPacket {
 		}
 		if (MinionService.isMinionContract(item)) {
 			// 守护灵契约书的契约动作由 CM_MINIONS(action=0) 驱动；客户端对同一物品的使用收尾请求
-			// 只回取消动画，不在此重复触发契约（真端该物品是物品动作，客户端以使用请求收尾）。
+			// 只回取消动画，不在此重复触发契约（原版该物品是物品动作，客户端以使用请求收尾）。
 			// The minion contract itself is driven by CM_MINIONS(action=0); an item-use wind-up
 			// request for the same item only gets the cancel animation back so the client's
 			// "using item" action ends, without triggering a duplicate contract (retail models

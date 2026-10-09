@@ -124,7 +124,7 @@ public final class RetailAreaEngine {
 		}
 		for (QuestArea area : entered) {
 			for (int questId : area.questIds()) {
-				// §10.3-#26：按行分流。native 行（七族/DD，typed 目录无载体）走 start port——真端
+				// §10.3-#26：按行分流。native 行（七族/DD，typed 目录无载体）走 start port——原版
 				// `User_AddAreaQuest` → `AddQuest` 前置 `CheckQuestAcquireCondition` 的同形全条件面
 				// （等级/种族/职业/性别/前置）；typed 行维持 `startQuest` 原路；两者皆非的绑定 id
 				// 跳过不猜（ai-areas 与评审面之外的行禁止合成）。原整区 `hasQuestTemplates` 滤网

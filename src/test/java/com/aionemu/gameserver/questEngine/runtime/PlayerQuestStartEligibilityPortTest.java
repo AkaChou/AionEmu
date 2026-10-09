@@ -321,7 +321,7 @@ class PlayerQuestStartEligibilityPortTest {
 		// 的玩家因此被拒绝，而客户端任务列表照常给出该行）。15321 现已退役（保留清单
 		// owner=RETAIL_TABLE，DD 车道，XML 只在 git 历史），其生产接取面走 NativeQuestStartPort
 		// 的原始 quest.xml 轴；本判据以客户端槽位形状的元数据夹具体锁定资格端口的
-		// 「组间或、组内与」语义（15301/15311 槽位即真端 quest.xml 的 acquired_quest_cond1/2）。
+		// 「组间或、组内与」语义（15301/15311 槽位即原版 quest.xml 的 acquired_quest_cond1/2）。
 		// Quest 15321 is retired (DD lane, XML in git history only), so its production acquire face
 		// runs the raw quest.xml axes of NativeQuestStartPort; this judgement locks the eligibility
 		// port's OR-across-groups / AND-within-group semantics with a client-shaped fixture whose
@@ -356,7 +356,7 @@ class PlayerQuestStartEligibilityPortTest {
 	void commaSeparatedSlotEntriesStayInsideOneConjunction() throws Exception {
 		// 客户端 quest.xml:80613 的 finished_quest_cond1 = Q80611,Q80612 属于同一个槽位,
 		// 槽位内的多个条目在零售判定中是 AND,不能拆成备选组。
-		// P0c-8c（2026-09-24）：80613 已由真端文件驱动。真端元数据编译器把"无后缀、且不与其它条件族共存"
+		// P0c-8c（2026-09-24）：80613 已由原版文件驱动。原版元数据编译器把"无后缀、且不与其它条件族共存"
 		// 的 finished 条件编成 prerequisites（集合语义即合取），旧 XML 则编成单个 start-condition 组；
 		// 两种表达等价，断言改为在任一表达下都锁死"两个条目同属一个合取、未被拆成备选"。
 		// Retail-driven since P0c-8c: the conjunction is asserted on whichever equivalent representation
@@ -433,8 +433,8 @@ class PlayerQuestStartEligibilityPortTest {
 	}
 
 	private static QuestMetadata metadata(int questId) throws Exception {
-		// 退役任务的生产 XML 只在 git 历史里：统一取生产视图（XML 目录 + 真端 overlay）。
-		// 已切到 native 车道的行（P1/P2/P3/P4 各家族）不再有 typed 定义 ⇒ 元数据直取真端
+		// 退役任务的生产 XML 只在 git 历史里：统一取生产视图（XML 目录 + 原版 overlay）。
+		// 已切到 native 车道的行（P1/P2/P3/P4 各家族）不再有 typed 定义 ⇒ 元数据直取原版
 		// quest.xml 规范元数据（与 native 领奖口同一条编译器），不再依赖退场的 IR 产物。
 		// Retired rows have no typed XML any more: the production view still serves the rows that keep a
 		// typed definition, while native-lane rows read the retail quest.xml metadata through the same

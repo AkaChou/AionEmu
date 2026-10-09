@@ -9,7 +9,7 @@ import java.util.Map;
 import org.w3c.dom.Element;
 
 /**
- * 真端对话名组表内存规范视图（原 {@code retail-quest-ai-name-groups.tsv} 退役后转为动态测试资源流与规范视图；
+ * 原版对话名组表内存规范视图（原 {@code retail-quest-ai-name-groups.tsv} 退役后转为动态测试资源流与规范视图；
  * 2026-10-03 台账 XML 化批起表体为 {@code retail-quest-ai-name-groups.xml}）。
  * <p>
  * 守备队同组共用 ScriptDLL 对话名，组名解析为全组成员 name_desc 并打标。

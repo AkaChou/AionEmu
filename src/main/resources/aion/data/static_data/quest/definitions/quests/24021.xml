@@ -50,9 +50,9 @@
     <node label="s4" status="START">
       <var name="var0" value="4"/>
     </node>
-    <!-- QE-054：撒 24021c（use-item，区域 DF2_ITEMUSEAREA_Q2032）后沿用 legacy/真端的 packed step 4——
+    <!-- QE-054：撒 24021c（use-item，区域 DF2_ITEMUSEAREA_Q2032）后沿用 legacy/原版的 packed step 4——
          legacy `useQuestItem(env, item, 4, 4, true, 88)` 的 reward 分支不写 nextStep，落盘 4；
-         真端选择 10003（STEP_TO_4）的 FUN_180faea90 显式 `SetProgress(0x5dd5, 4)`，随后道具 handler
+         原版选择 10003（STEP_TO_4）的 FUN_180faea90 显式 `SetProgress(0x5dd5, 4)`，随后道具 handler
          FUN_180f00500 以 `0x100(0x5dd5, 0, 0)` 推进、不带步号。领奖行批次曾按末行索引抬到 5。
          QE-054: after spreading 24021c the packed step stays the legacy/retail 4: the reward branch
          of legacy useQuestItem(4, 4, true, 88) does not write nextStep; retail FUN_180faea90 writes
@@ -65,7 +65,7 @@
   </nodes>
   <transitions>
     <!-- 无 source 自愈边：领奖行批次（7a7d27809）按末行索引把领奖投影抬到 5，并让该边把
-         按 legacy/真端正确落盘的存档从 4 改成 5；现改为反向归一（REWARD/5 → 4）。
+         按 legacy/原版正确落盘的存档从 4 改成 5；现改为反向归一（REWARD/5 → 4）。
          Source-less healing edge: the reward-row batch (7a7d27809) raised the reward projection
          to the last-row index 5 and made this edge rewrite correct legacy/retail saves from 4
          to 5; it is reversed here (REWARD/5 → 4). -->

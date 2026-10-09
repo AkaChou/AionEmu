@@ -19,9 +19,9 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * 真端 DataDriven 纯 Hunt 行的"行阶梯 + 段计数"形状断言。
+ * 原版 DataDriven 纯 Hunt 行的"行阶梯 + 段计数"形状断言。
  * <p>
- * 真端 {@code data_driven_quest.xml} 的 hunt 行以 {@code <data>} 块给出进度行、块内以 {@code "monster 名单 计数;"}
+ * 原版 {@code data_driven_quest.xml} 的 hunt 行以 {@code <data>} 块给出进度行、块内以 {@code "monster 名单 计数;"}
  * 给出该行的并行目标；客户端 {@code quest_monster.csv} 用同一编号投影：
  * {@code Progress(SECTION_0==行号; SECTION_m<该行第 m 个目标计数)}。因此编译结果必须是唯一的行阶梯形：
  * 布局 {@code var0}（行号）+ {@code var1..varN}（当前行的段计数）；行节点只钉行号（段计数保持自由，自环不得
@@ -154,7 +154,7 @@ public final class RetailHuntLadderShape {
 				List<QuestCondition> selfLoopGate = List.of(
 					new QuestCondition.VariableBelow(section, parallel ? required : required - 1));
 				List<QuestCondition> closingGate = new ArrayList<>();
-				// 收口边先钉本段下界（这一杀把它打满），并行行再补"其余段已满"——三段式真端写法。
+				// 收口边先钉本段下界（这一杀把它打满），并行行再补"其余段已满"——三段式原版写法。
 				// The closing edge binds the own segment first (this kill saturates it) and, on a parallel
 				// row, additionally requires every other segment saturated (the retail three-edge canon).
 				closingGate.add(new QuestCondition.VariableAtLeast(section, required - 1));

@@ -13,8 +13,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * 锁定任务 1373 获取温泉水后的交付分支与奖励页面合同。
- * 步号轴遵循真端与 legacy 的权威值：打水后与领奖态都是 packed step 2
- * （真端 FUN_180effb70 SetProgress(0x55d, 2)、legacy setQuestVar(2)）；2026-09-19 批次
+ * 步号轴遵循原版与 legacy 的权威值：打水后与领奖态都是 packed step 2
+ * （原版 FUN_180effb70 SetProgress(0x55d, 2)、legacy setQuestVar(2)）；2026-09-19 批次
  * 按 collect_progress=1 误改为 1 曾使客户端任务书步骤整块空白（2026-10-07 实机报障）。
  * Locks quest 1373's hot-spring-water turn-in branches and reward-page contract.
  * The step axis follows the retail/legacy authoritative values: both the post-draw and reward

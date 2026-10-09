@@ -27,7 +27,7 @@ import com.aionemu.gameserver.skillengine.model.SkillSubType;
 import com.aionemu.gameserver.skillengine.model.SkillTemplate;
 
 /**
- * 固化读取端语义：真端重复异常递减链在 PvP 下的档位（100/90/85/80/0% 与 0/0/200/400/1000）、
+ * 固化读取端语义：原版重复异常递减链在 PvP 下的档位（100/90/85/80/0% 与 0/0/200/400/1000）、
  * 出窗重置、NPC 来源只记不调、NPC 目标/ noresist / STUN 不参与，以及时长百分比的工程防护。
  * Pins the resist-phase semantics: retail tiers under PvP (100/90/85/80/0% and 0/0/200/400/1000),
  * window expiry reset, NPC casters record-only, NPC targets / noresist / STUN excluded, and the

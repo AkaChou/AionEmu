@@ -21,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * html 名称（如 `LF2a_Artifact_Q3036.html`），客户端直接 load fail；在物件上打开的奖励窗/
  * 报告页也会把领奖入口从「任务书领奖行 NPC」挪到物件（owner 不再唯一）。
  * <p>
- * 本批逐件取证（legacy handler @ 7e9f0316c^ + 客户端任务书/按钮契约 + 真端零发页函数）后，
+ * 本批逐件取证（legacy handler @ 7e9f0316c^ + 客户端任务书/按钮契约 + 原版零发页函数）后，
  * 把物件收敛为「零回页推进 / 纯采集掉落」，领奖 owner 唯一 = 任务书领奖行点名的 NPC：
  * <ul>
  *   <li>1582：墓碑物件 700196 零回页推进 var0 0→1；Trou 204560 单步阶梯（SETPRO2）；领奖 = Nerison 204573。</li>
@@ -31,7 +31,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  *   <li>2664：药缸 700324 阶梯计数 0..4（零回页）；领奖 = Dewi 204777；reward 轴 = legacy 落盘 4。</li>
  *   <li>4004：土堆 700340 阶梯计数 0..4（零回页）；领奖 = Randet 205128；reward 轴 = legacy 落盘 4。</li>
  *   <li>4012：FOBJ 700342 纯采集掉落；领奖 = Scarecrow_Virhu 730104；reward 轴 = legacy 落盘 0。</li>
- *   <li>30211/30213/30311：符文宝珠 730275 的对话由 RiftOrbAI2 承担（真端注册面挂 riftorb AI，legacy
+ *   <li>30211/30213/30311：符文宝珠 730275 的对话由 RiftOrbAI2 承担（原版注册面挂 riftorb AI，legacy
  *       注册与对话块整体注释禁用，与姊妹任务 30313 同形）；宝珠的整体 NPC 块（NPC_START/NPC_REPORT/
  *       领取路由/npc-complete）全部移除，领奖 owner 回到任务书领奖行 NPC；reward 轴 = 引擎外写入方
  *       RiftOrbAI2 落盘的领奖行 1（QE-046 基线 external-reward-advance-baseline.tsv 锁定）。

@@ -4,7 +4,7 @@ import java.io.InputStream;
 import java.util.List;
 
 /**
- * 版本化 NPC id 别名表入口，供真端目标名到生产 npc_id 的直连映射使用
+ * 版本化 NPC id 别名表入口，供原版目标名到生产 npc_id 的直连映射使用
  * （2026-10-03 台账 XML 化批起为 {@code retail-npc-name-aliases.xml}）。
  * <p>
  * Versioned direct npc-id aliases for retail target names that cannot be derived from the template

@@ -16,7 +16,7 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.questEngine.tablelane.NativeTalkFixture;
 
 /**
- * 服务端收尾关窗（真端 {@code 0x5d8}）：关客户端窗口的同时必须结束 NPC 的对话态——向已装配 AI 的
+ * 服务端收尾关窗（原版 {@code 0x5d8}）：关客户端窗口的同时必须结束 NPC 的对话态——向已装配 AI 的
  * NPC 补发 {@code DIALOG_FINISH}（与客户端 {@code CM_CLOSE_DIALOG} 同链）。
  * <p>
  * 缺这一步时行进中的对话 NPC **停在半路永不恢复**：开门时 {@code TalkEventHandler.onSimpleTalk}

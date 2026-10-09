@@ -15,7 +15,7 @@ import com.aionemu.gameserver.questEngine.tablelane.SimpleTalkHandler;
  * 验证任务 51009 将客户端标准接取与报告、领奖路由限定在正式 NPC owner。
  * <p>
  * P3 重锚（计划 §8.9）：旧 IR 形状断言（节点名/条件/动作/页链）随 SimpleTalk 切换批退场，
- * 本类改为真端表行锚——接取/交付 NPC、中继步、发扣物品、交付门均取自
+ * 本类改为原版表行锚——接取/交付 NPC、中继步、发扣物品、交付门均取自
  * {@code Quest_SimpleTalk.xml} + {@code quest.xml} 与静态数据（{@code npc_template} /
  * 物品 {@code name_desc}），native 处理器必须逐项一致。
  * <p>
@@ -28,7 +28,7 @@ class Quest51009ClientDialogAlignmentTest {
 	void keepsTheRetailStandardStartReportAndRewardOwnersExclusive() {
 		SimpleTalkHandler handler = SimpleTalkHandler.instance();
 
-		// 真端行 51009：DC1_ChristmasEvent_Santa → DC1_ChristmasEvent_Santa
+		// 原版行 51009：DC1_ChristmasEvent_Santa → DC1_ChristmasEvent_Santa
 		assertTrue(handler.routes(51009), "51009 必须由 native 车道路由");
 		assertEquals(831033, handler.acquireNpc(51009), "接取 NPC");
 		assertEquals(831033, handler.rewardNpc(51009), "交付 NPC");

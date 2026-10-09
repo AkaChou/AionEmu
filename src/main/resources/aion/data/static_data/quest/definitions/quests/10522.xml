@@ -83,7 +83,7 @@
         <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
       </after-commit>
     </transition>
-    <!-- 领奖态轴合同（真端 0x100 状态推进不写轴）：本任务没有玩法内进度步，注入创造力（引擎外写入方
+    <!-- 领奖态轴合同（原版 0x100 状态推进不写轴）：本任务没有玩法内进度步，注入创造力（引擎外写入方
          CM_CREATIVITY_POINTS）只置 REWARD，var0 保持接取值 0。客户端任务书按 0 基行匹配（[%0] 行 = 步 0），
          写入打包步数 1 会让行匹配落空——实机 2026-10-08 报障 REWARD/var0=1 步骤空白，//quest set 10522
          reward 0 后恢复。本边把 2026-09-21 批次 8 错误投影（REWARD/var0=1）落盘的旧档纠正回 0。

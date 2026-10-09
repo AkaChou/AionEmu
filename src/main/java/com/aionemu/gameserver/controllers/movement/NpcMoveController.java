@@ -103,7 +103,7 @@ public class NpcMoveController
     private static final float WALK_GROUND_STREAM_FINAL_MARGIN = 0.75f;
     /** 行走态转身平滑：每个移动 tick 的最大转角（度）——拐角处朝向逐 tick 过渡，避免客户端原地转身动画。 / Max walker heading change per movement tick (degrees); smooths corner turns. */
     private static final float WALK_HEADING_STEP_DEGREES = 12.0f;
-    /** 行走者每步碰撞解算：步高抬升的单步/上限（米）与最大尝试次数（真端 fun_043：默认 1.5、上限 2.0、最多 9 次）。 / Walker per-step collision lift: step/max in meters and attempts (retail fun_043: 1.5 default, 2.0 cap, 9 tries). */
+    /** 行走者每步碰撞解算：步高抬升的单步/上限（米）与最大尝试次数（原版 fun_043：默认 1.5、上限 2.0、最多 9 次）。 / Walker per-step collision lift: step/max in meters and attempts (retail fun_043: 1.5 default, 2.0 cap, 9 tries). */
     static final float WALKER_COLLISION_LIFT_STEP = 1.5f;
     static final float WALKER_COLLISION_LIFT_MAX = 2.0f;
     static final int WALKER_COLLISION_LIFT_ATTEMPTS = 9;
@@ -111,7 +111,7 @@ public class NpcMoveController
     private static final float WALKER_COLLISION_GROUND_PROBE_DROP = 3f;
     /** 编队偏移近似零容差（米）：|shift| 小于该值视为队长站位（与航点重合）。 / Approximate zero formation shift (m): below this the member stands on the route point itself (leader). */
     static final float FORMATION_SHIFT_EPSILON = 0.01f;
-    /** 编队路点暂停停包的截止余量（毫秒）：停包排在「客户端走完最后一条移动包」的估计时刻 + 该余量（覆盖包延迟与一个 AI tick 的调度抖动）。真端以移动包截止驱动停包，本余量是估计口径下的小补量。 / Margin (ms) over the estimated client-walk-finish instant for a formation-waypoint pause stop: the stop is scheduled at the last move packet's deadline plus this margin (packet latency + one AI tick of scheduling jitter). Retail drives the stop off the move-packet deadline; this margin is the small allowance of our estimated variant. */
+    /** 编队路点暂停停包的截止余量（毫秒）：停包排在「客户端走完最后一条移动包」的估计时刻 + 该余量（覆盖包延迟与一个 AI tick 的调度抖动）。原版以移动包截止驱动停包，本余量是估计口径下的小补量。 / Margin (ms) over the estimated client-walk-finish instant for a formation-waypoint pause stop: the stop is scheduled at the last move packet's deadline plus this margin (packet latency + one AI tick of scheduling jitter). Retail drives the stop off the move-packet deadline; this margin is the small allowance of our estimated variant. */
     static final long WALKER_STOP_DEADLINE_MARGIN_MS = 100;
     private static final long WAYPOINT_SKIP_INTERVAL_MS = 250;
     private static final long STUCK_SAMPLE_INTERVAL_MS = 500;
@@ -165,7 +165,7 @@ public class NpcMoveController
     private float offset = 0.1f;
     /**
      * 本段行走是否需要沿 Path（setRouteStep 时按配置模式与 PATH-LoS 判定）。
-     * 行走 NPC（WALK_PATH）沿 Path 推进的真端语义开关：blocked 模式只对被挡段启用，always 全段启用。
+     * 行走 NPC（WALK_PATH）沿 Path 推进的原版语义开关：blocked 模式只对被挡段启用，always 全段启用。
      * Whether the current walk leg needs the Path, decided in setRouteStep from the configured mode and the
      * PATH line-of-sight check. Retail walkers follow the Path connectivity graph between waypoints.
      */
@@ -695,7 +695,7 @@ public class NpcMoveController
     }
 
     /**
-     * 行走者每步碰撞解算的第 i 次抬升量（米）：i × 1.5，上限 2.0（真端 fun_043 的 fVar26 语义）。
+     * 行走者每步碰撞解算的第 i 次抬升量（米）：i × 1.5，上限 2.0（原版 fun_043 的 fVar26 语义）。
      * Per-step collision lift for attempt i (m): i × 1.5 capped at 2.0 (retail fun_043 fVar26 semantics).
      * @param attempt 第几次尝试（从 1 起）/ attempt index (1-based)
      * @return 抬升量（米）/ lift in meters
@@ -705,11 +705,11 @@ public class NpcMoveController
     }
 
     /**
-     * 行走者每步碰撞/步高抬升解算（真端 fun_043 结构）：
+     * 行走者每步碰撞/步高抬升解算（原版 fun_043 结构）：
      * ① 水平通行检测（{@link GeoMap#canPassWalker}：两端抬高 0.5m、跳过首个命中——地形小高差不挡、墙挡）；
      * ② 被挡 → 抬升循环 i=1..9（{@link #walkerLiftOffset}）在更高处重查；通过即向下打地面把移动点放回面上；
      * ③ 9 次仍冲突 → 返回最远可达点（{@link GeoMap#getClosestCollision}，含 0.5m 回退与贴地），
-     * 即障碍前停住、不瞬移（真端「Too many collisions」分支的保守等价物：真端取值路径节点，这里不越障）。
+     * 即障碍前停住、不瞬移（原版「Too many collisions」分支的保守等价物：原版取值路径节点，这里不越障）。
      * 返回点仅在「被挡」时非 null——未被挡/无地图时调用方保持原线性推进点，由逐 tick 贴地接管。
      * Walker per-step collision / step-height lift resolution (retail fun_043 shape): (1) horizontal passability
      * via {@link GeoMap#canPassWalker} (both ends raised 0.5 m, first hit skipped — terrain micro-steps pass,
@@ -1389,7 +1389,7 @@ public class NpcMoveController
         boolean spawnDestination = spawn.getX() == targetDestX && spawn.getY() == targetDestY
                 && spawn.getEffectiveZ() == targetDestZ;
         boolean walkingRoute = owner.getAi2().getSubState() == AISubState.WALK_PATH;
-        // 行走者被挡段的每步碰撞/步高抬升解算（真端 fun_043 结构；独立开关，默认关时零差异）。
+        // 行走者被挡段的每步碰撞/步高抬升解算（原版 fun_043 结构；独立开关，默认关时零差异）。
         // 只对被判「需要沿 Path」的段启用：平地段一次通行检测即返回，成本 O(1)。
         // Per-step collision/lift resolution for blocked walker legs (retail fun_043 shape; behind its own
         // switch). Only enabled on legs judged to need the Path: flat legs cost one passability probe.
@@ -1403,7 +1403,7 @@ public class NpcMoveController
                 newZ = resolvedStep[2];
             }
         }
-        // 行走者沿 Path 推进时同样逐 tick 贴地：真端地面 NPC 每步做碰撞/地表解算，
+        // 行走者沿 Path 推进时同样逐 tick 贴地：原版地面 NPC 每步做碰撞/地表解算，
         // 且贴地是短段重锚不产生反向拉扯的前提（AIM-011）。path != null 的排除只适用于追击/归家。
         // Walkers keep per-tick ground following even while following a Path: retail ground NPCs resolve
         // the surface on every step, and the ground-true stream re-anchoring depends on it (AIM-011).
@@ -1413,7 +1413,7 @@ public class NpcMoveController
                 && !GameWorldServices.pathService().usesSpatialPath(owner)) {
             // 每 tick 采地表并半步插值：600ms 节流会在中间 5 个 tick 让 Z 漂回线性值，
             // 坡面不齐处表现为上下抖动。每 tick 平滑贴地消除锯齿。
-            // 行走态（WALK_PATH）同样贴地：真端地面 NPC 每步做碰撞/地表解算；服务端位置贴地也是
+            // 行走态（WALK_PATH）同样贴地：原版地面 NPC 每步做碰撞/地表解算；服务端位置贴地也是
             // 贴地短段下发的前提（否则短段重锚的起点会把客户端拉回弦线）。
             // Walkers ground-follow too: the retail server resolves collisions and the walkable
             // surface on every movement step for ground NPCs.
@@ -1446,7 +1446,7 @@ public class NpcMoveController
         byte newMask = this.getMoveMask(directionChanged);
         boolean broadcastDestination = shouldBroadcastDestination(destination == Destination.TARGET_OBJECT,
                 pathWaypointTransition, destinationChanged, now, lastMoveBroadcastAt);
-        // 行走贴地短段（真端「持续推进」的近似复刻）：行走态每个移动 tick 补发一个前视点
+        // 行走贴地短段（原版「持续推进」的近似复刻）：行走态每个移动 tick 补发一个前视点
         // （前视 = max(1m, 本 tick 实际位移 × 1.3)，终点 Z 取地表），让客户端始终持有「还没走到」的新目标；
         // 距航点不足收尾余量（0.75m）后停发，最后一段由客户端走向「上一包已给到的航点本身」。
         // 下限 1m 是客户端「接近目标即判定到达」的门槛：低于它会出现停-走-停（2026-10-06 实机 v3
@@ -1501,7 +1501,7 @@ public class NpcMoveController
                 AI2Logger.moveinfo(this.owner, "walkGroundStream from=" + fromX + "," + fromY + "," + fromZ
                         + " to=" + toX + "," + toY + "," + toZ);
             }
-            // 记下客户端走完本包的估计时刻（真端移动包截止语义）：编队路点暂停的停包以此为锚——
+            // 记下客户端走完本包的估计时刻（原版移动包截止语义）：编队路点暂停的停包以此为锚——
             // 暂停瞬间客户端仍在走最后一段时不会被打断，等待超过该时刻仍不恢复才发停。
             // Record the estimated instant the client finishes this packet (retail's move deadline):
             // the formation-waypoint pause stop is anchored to it, so a pause while the client still
@@ -1674,12 +1674,12 @@ public class NpcMoveController
     /**
      * 在编队路点暂停服务端推进：立即保留客户端移动掩码和已发送的路点目标（暂停瞬间客户端多半
      * 还在走最后 ~1m——最后流式目标=航点本身——立刻发停会把它冻在半途、恢复时再被拉一步），
-     * 同时按**移动包截止**排定停包：真端运动控制器在「移动包截止已到且没有排队的下一段移动」时
+     * 同时按**移动包截止**排定停包：原版运动控制器在「移动包截止已到且没有排队的下一段移动」时
      * 广播停包（NpcMotionController::_CommonUpdate）；这里等价地把停包排在「客户端走完最后一条
      * 移动包」的估计时刻 + {@link #WALKER_STOP_DEADLINE_MARGIN_MS}——在该时刻前恢复则停包作废
      * （短暂停旧行为逐字保留），等待超过该时刻才广播停，避免长等待期间客户端一直播放行走动画
      * （实机 2026-10-08：等 −8m 成员 ~5s「原地空踏步」）。从未下发过移动包（截止为 0）时无停可发——
-     * 真端同款护栏（其运动截止为 0 时不发停）。
+     * 原版同款护栏（其运动截止为 0 时不发停）。
      * Pauses server movement at a formation waypoint: keeps the client mask and the already-sent
      * waypoint target immediately (at the pause instant the client is usually still walking the last
      * ~1 m; an immediate stop would freeze it mid-stride and the resume would pull it forward), and
@@ -1811,7 +1811,7 @@ public class NpcMoveController
 
     private boolean usesPath() {
         if (owner != null && owner.getAi2().getSubState() == AISubState.WALK_PATH) {
-            // 行走者按真端语义逐段决定是否沿 Path（mode=off 时与旧行为逐分支等价）。
+            // 行走者按原版语义逐段决定是否沿 Path（mode=off 时与旧行为逐分支等价）。
             // Walkers decide per leg whether to follow the Path (mode=off matches the old behaviour exactly).
             return GeoDataConfig.GEO_PATH_ENABLE
                     && shouldUseWalkerPath(GeoDataConfig.GEO_NPC_WALK_PATH_MODE, walkerLegNeedsPath);

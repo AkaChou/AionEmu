@@ -185,7 +185,7 @@ public class PlayerController extends CreatureController<Player> {
 		if (mapRegion == null) {
 			return;
 		}
-		// 清单来源 = 本图实例的 NPC 任务并集（真端 World::GetAcquirableQuestList 同源），
+		// 清单来源 = 本图实例的 NPC 任务并集（原版 World::GetAcquirableQuestList 同源），
 		// 判定按 owner 分车道（见 QuestService.nearbyQuestFlags）。
 		// The list comes from the map instance's NPC quest union (the retail acquirable list) and the
 		// per-row verdict branches by owner inside QuestService.
@@ -421,7 +421,7 @@ public class PlayerController extends CreatureController<Player> {
 		TeleportService2.playerTransformation(getOwner());
 		TeleportService2.instanceTransformation(getOwner());
 		TeleportService2.archdaevaTransformation(getOwner());
-		// 真端表驱动车道：DD LevelUpLogIn 接取遍历（best-effort，路由集为空 ⇒ 恒 false）。
+		// 原版表驱动车道：DD LevelUpLogIn 接取遍历（best-effort，路由集为空 ⇒ 恒 false）。
 		// DataDriven LevelUpLogIn acquire walk (best-effort; no-op until the switch batch).
 		GameEngineServices.questEngine().onLoggedIn(getOwner());
 		if (getOwner().getPosition().getWorldMapInstance().getParent().isExceptBuff()) {

@@ -1,7 +1,7 @@
 package com.aionemu.gameserver.questEngine.tablelane;
 
 /**
- * 真端家族任务进度相机（计划 §6.2；P0a 证据：fun_731.cpp:5306/5356 与双通道副作用矩阵）。
+ * 原版家族任务进度相机（计划 §6.2；P0a 证据：fun_731.cpp:5306/5356 与双通道副作用矩阵）。
  * <p>
  * 纯函数：三重守卫（status==START、vars 守卫区、槽计数未满）不满足即 {@link Outcome#NO_ACTION}
  * （超杀/未接取零副作用）；满足则 {@code vars += 1<<shift}（一次事件只加一），且仅在
@@ -18,7 +18,7 @@ package com.aionemu.gameserver.questEngine.tablelane;
  */
 public final class ProgressCamera {
 
-	/** 真端任务状态枚举（P0a §4.2 行为证据）。 / Retail quest status codes (P0a §4.2 behavioral evidence). */
+	/** 原版任务状态枚举（P0a §4.2 行为证据）。 / Retail quest status codes (P0a §4.2 behavioral evidence). */
 	public enum Status {
 		/** 无/未接。 / none. */
 		NONE(0),
@@ -37,7 +37,7 @@ public final class ProgressCamera {
 			this.code = code;
 		}
 
-		/** 真端状态码。 / The retail status code. */
+		/** 原版状态码。 / The retail status code. */
 		public int code() {
 			return code;
 		}
@@ -47,9 +47,9 @@ public final class ProgressCamera {
 	public enum Outcome {
 		/** 守卫未过：零副作用。 / A guard failed: no side effect. */
 		NO_ACTION,
-		/** 普通写入（真端 vtable +0xf0）。 / normal write (retail vtable +0xf0). */
+		/** 普通写入（原版 vtable +0xf0）。 / normal write (retail vtable +0xf0). */
 		NORMAL_WRITE,
-		/** 推进写入（真端 vtable +0x100，status 3→4 由 state port 执行）。 / advance write (retail +0x100; the state port performs status 3→4). */
+		/** 推进写入（原版 vtable +0x100，status 3→4 由 state port 执行）。 / advance write (retail +0x100; the state port performs status 3→4). */
 		ADVANCE_WRITE
 	}
 
@@ -69,7 +69,7 @@ public final class ProgressCamera {
 	 * @param slot 槽（1 基）/ slot (1-based)
 	 * @param required 该槽所需计数 / required count for the slot
 	 * @param fullValue 整行满值（各槽满值按位组合）/ full-row value
-	 * @param flag 表行 flag 位（真端 2463 个调用点全为 1）/ table-row flag bit (all 2463 retail call sites pass 1)
+	 * @param flag 表行 flag 位（原版 2463 个调用点全为 1）/ table-row flag bit (all 2463 retail call sites pass 1)
 	 */
 	public static Result advance(Status status, int vars, RawQuestVarsCodec.Width width, int slot, int required,
 			int fullValue, boolean flag) {

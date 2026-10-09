@@ -26,7 +26,7 @@ import com.aionemu.gameserver.questEngine.retail.RetailGrantKind;
 import com.aionemu.gameserver.questEngine.retail.RetailItemNameIndex;
 
 /**
- * SimpleTalk 族级**逐行对齐门**（P3 重锚，计划 §8.9）：以真端表/quest.xml 的**独立重解析**为唯一事实，
+ * SimpleTalk 族级**逐行对齐门**（P3 重锚，计划 §8.9）：以原版表/quest.xml 的**独立重解析**为唯一事实，
  * 逐行对拍 native 映射；不复用 {@link NativeQuestTableLoader} 的 DOM 装载路径，也不保留任何旧 IR 形状
  * （节点名 / 条件 / 动作 / 页链残留）断言。
  * <p>
@@ -44,7 +44,7 @@ class SimpleTalkRowAlignmentGateTest {
 	private static final String TALK_RESOURCE = "aion/data/static_data/quest/retail/Quest_SimpleTalk.xml";
 	private static final String QUEST_XML_RESOURCE = "aion/data/static_data/quest/retail/quest.xml";
 
-	/** 真端表事实（全量复算）。 / Retail-table facts (whole-table recomputation). */
+	/** 原版表事实（全量复算）。 / Retail-table facts (whole-table recomputation). */
 	private static final int ROWS = 3152;
 	private static final int RELAY_ROWS = 468;
 	private static final int TALK_NPC1_ROWS = 468;
@@ -64,14 +64,14 @@ class SimpleTalkRowAlignmentGateTest {
 		"aion/data/static_data/quest/retail/Quest_SimpleUseItem.xml",
 		"aion/data/static_data/quest/retail/Quest_SimpleItemPlay.xml",
 		"aion/data/static_data/quest/retail/Quest_SimpleSerialHunt.xml");
-	/** 链式接取窗目标的分布（真端全表冻结）。 / Distribution of the chain-window targets (frozen). */
+	/** 链式接取窗目标的分布（原版全表冻结）。 / Distribution of the chain-window targets (frozen). */
 	private static final int CHAIN_TARGET_IN_TABLE = 308;
 	private static final int CHAIN_TARGET_SIBLING = 89;
 	private static final int CHAIN_TARGET_NO_ROW = 95;
 	private static final int CHAIN_TARGET_NO_ROW_XML_OWNED = 70;
-	/** 跨族例外：目标由「用物品」接取，真端该行没有接取 NPC 列。 / Cross-family exception: use-item targets. */
+	/** 跨族例外：目标由「用物品」接取，原版该行没有接取 NPC 列。 / Cross-family exception: use-item targets. */
 	private static final Set<Integer> CHAIN_TARGET_USE_ITEM = Set.of(80197, 80201);
-	/** 门通道全缺且真端不可接取的行（`client_level`/`minlevel_permitted`=999）。 / Gate-less, unreachable rows. */
+	/** 门通道全缺且原版不可接取的行（`client_level`/`minlevel_permitted`=999）。 / Gate-less, unreachable rows. */
 	private static final Set<Integer> UNREACHABLE_GATE_ROWS =
 			Set.of(2732, 30509, 41571, 50011, 50012, 51011, 51012);
 
@@ -92,12 +92,12 @@ class SimpleTalkRowAlignmentGateTest {
 		items = RetailItemNameIndex.loadItemTemplates();
 	}
 
-	/** ① 行集与逐行字段：native 映射必须与真端表原文逐行一致（含长尾列）。 */
+	/** ① 行集与逐行字段：native 映射必须与原版表原文逐行一致（含长尾列）。 */
 	@Test
 	void everyRetailRowIsMappedVerbatim() {
-		assertEquals(ROWS, tableRaw.size(), "真端表行数漂移 / retail row count drifted");
+		assertEquals(ROWS, tableRaw.size(), "原版表行数漂移 / retail row count drifted");
 		assertEquals(tableRaw.keySet(), handler.ownedQuestIds(),
-				"注册集必须逐行等于真端表 id 集 / registration set must equal the retail id set");
+				"注册集必须逐行等于原版表 id 集 / registration set must equal the retail id set");
 
 		for (Map.Entry<Integer, Map<String, String>> entry : tableRaw.entrySet()) {
 			int questId = entry.getKey();
@@ -146,7 +146,7 @@ class SimpleTalkRowAlignmentGateTest {
 				"路由集与 XML-only 集不得交叠 / routing set must not intersect the XML-owned set");
 	}
 
-	/** ③ 物品通道：接取发放 / 步内发扣 / 交付门，逐行与真端原文独立复算一致。 */
+	/** ③ 物品通道：接取发放 / 步内发扣 / 交付门，逐行与原版原文独立复算一致。 */
 	@Test
 	void itemChannelsMatchTheRetailTableRecomputation() {
 		int gateRows = 0;
@@ -168,7 +168,7 @@ class SimpleTalkRowAlignmentGateTest {
 			}
 			List<String> declared = declaredGateSymbols(questId);
 			if (declared.isEmpty()) {
-				// 门通道全缺：真端无收集通道 ⇒ 报告门不可达（行方 client_level/minlevel=999）。
+				// 门通道全缺：原版无收集通道 ⇒ 报告门不可达（行方 client_level/minlevel=999）。
 				assertTrue(handler.workItems(questId).isEmpty(), "门缺通道行不得有门物品: " + questId);
 				assertEquals(UNREACHABLE_GATE_ROWS.contains(questId), handler.unresolvedGate(questId),
 						"门缺通道行集漂移（只允许冻结的 7 行）/ gate-less row set drifted: " + questId);
@@ -232,7 +232,7 @@ class SimpleTalkRowAlignmentGateTest {
 		assertEquals(CON_QUEST_ROWS, conQuest);
 		assertEquals(CUTSCENE_ROWS, cutscene);
 
-		// 中继页阶梯与接取/报告页（真端分派器字面量，族级常量）。
+		// 中继页阶梯与接取/报告页（原版分派器字面量，族级常量）。
 		assertEquals(1352, SimpleTalkHandler.pageForStep(1));
 		assertEquals(1693, SimpleTalkHandler.pageForStep(2));
 		assertEquals(2034, SimpleTalkHandler.pageForStep(3));
@@ -253,10 +253,10 @@ class SimpleTalkRowAlignmentGateTest {
 	}
 
 	/**
-	 * 链式接取窗（真端 0x1e 槽）：每行 {@code con_quest} 指出的下一环必须能在本行的交付 NPC 处接取。
+	 * 链式接取窗（原版 0x1e 槽）：每行 {@code con_quest} 指出的下一环必须能在本行的交付 NPC 处接取。
 	 * <p>
 	 * 本车道按 NPC 建接取路由 ⇒「下一环的接取 NPC == 本行交付 NPC」即窗口成立，不需要第二套路由；
-	 * 目标没有真端表行的行由目标自身的 owner（XML 车道，或不在本服宇宙）负责，登记为冻结证据。
+	 * 目标没有原版表行的行由目标自身的 owner（XML 车道，或不在本服宇宙）负责，登记为冻结证据。
 	 * The chain accept window (retail slot 0x1e): the next quest named by {@code con_quest} must be
 	 * acquirable at this row's reward NPC. Targets without a retail row are owned elsewhere and frozen.
 	 */
@@ -299,7 +299,7 @@ class SimpleTalkRowAlignmentGateTest {
 				continue;
 			}
 			if (targetAcquire == null) {
-				// 目标靠「用物品」接取（真端该行没有接取 NPC 列）⇒ 窗口不属于本车道。
+				// 目标靠「用物品」接取（原版该行没有接取 NPC 列）⇒ 窗口不属于本车道。
 				// The target is acquired by using an item, so the window is not this lane's business.
 				useItemTargets.add(next);
 			} else {
@@ -357,7 +357,7 @@ class SimpleTalkRowAlignmentGateTest {
 	}
 
 	/**
-	 * 真端符号 → 物品栈（两通道约定）：表 give/remove 列是 {@code ITEM_X} 形，quest.xml 交付列是原名形
+	 * 原版符号 → 物品栈（两通道约定）：表 give/remove 列是 {@code ITEM_X} 形，quest.xml 交付列是原名形
 	 * （含 {@code item_*} 真名）⇒ 先按原名查，未命中再去 {@code ITEM_} 前缀重查。
 	 */
 	private static SimpleTalkHandler.ItemStack stack(String symbol) {

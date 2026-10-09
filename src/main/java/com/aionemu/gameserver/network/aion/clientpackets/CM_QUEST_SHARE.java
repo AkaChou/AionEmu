@@ -43,8 +43,8 @@ public class CM_QUEST_SHARE extends AionClientPacket {
 		var engine = GameEngineServices.questEngine();
 		var metadata = engine.questCatalog().findMetadata(questId).orElse(null);
 		if (metadata == null) {
-			// 行已迁入原生车道（不在目录中）：分享轴（cannot_share / 重复上限 / 等级）回退真端
-			// quest.xml 元数据——真端等价物是 QuestDB 全量静态表。两处都无行才不可分享（fail-closed）。
+			// 行已迁入原生车道（不在目录中）：分享轴（cannot_share / 重复上限 / 等级）回退原版
+			// quest.xml 元数据——原版等价物是 QuestDB 全量静态表。两处都无行才不可分享（fail-closed）。
 			// Rows on the native lane fall back to the retail quest.xml metadata (the QuestDB
 			// equivalent); only a row absent from both stays unshareable (fail-closed).
 			metadata = engine.nativeMetadata(questId).orElse(null);

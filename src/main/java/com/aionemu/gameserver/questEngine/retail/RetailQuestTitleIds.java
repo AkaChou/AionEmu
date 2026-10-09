@@ -4,11 +4,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * 真端称号符号名（reward_titleN，如 light_title04）→ 称号 id 映射。
+ * 原版称号符号名（reward_titleN，如 light_title04）→ 称号 id 映射。
  * <p>
- * 真端 quest.xml 只写符号名，运行时称号奖励是数字 id；本表来自
+ * 原版 quest.xml 只写符号名，运行时称号奖励是数字 id；本表来自
  * "reward_titleN × 生产 XML TITLE id" 全库投票（无歧义，生成与复核脚本见
- * .agents/summary/scriptdll-quest-driver/）。真端称号表本身未入仓，此为已验证快照。
+ * .agents/summary/scriptdll-quest-driver/）。原版称号表本身未入仓，此为已验证快照。
  * Maps retail title symbol names to runtime title ids (verified unambiguous library-wide).
  */
 public final class RetailQuestTitleIds {

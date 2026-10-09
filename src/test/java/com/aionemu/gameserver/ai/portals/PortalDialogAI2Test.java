@@ -41,7 +41,7 @@ class PortalDialogAI2Test {
 	}
 
 	/**
-	 * 克萝梅德试炼入口的 questId=0「进入恶梦」(SETPRO1=10000) 先经任务引擎（真端 FUN_180f859b0：
+	 * 克萝梅德试炼入口的 questId=0「进入恶梦」(SETPRO1=10000) 先经任务引擎（原版 FUN_180f859b0：
 	 * 18602/28602 步=1 + 进副本），引擎认领时不落传送门、已在副本内不二次传送。
 	 * The questId=0 enter-nightmare action on the trial entrances routes through the quest engine first
 	 * (retail FUN_180f859b0: step:=1 + enter); a claim skips the portal and a player already inside

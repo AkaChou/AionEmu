@@ -22,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * 1112「클리오네 호수의 불청객」的真端车道（native）生产流证明。
+ * 1112「클리오네 호수의 불청객」的原版车道（native）生产流证明。
  * <p>
  * 1112 已退役（保留清单 owner=RETAIL_TABLE，旧 XML 只在 git 历史里）：typed dispatcher 与
  * {@code ProductionQuestDefinitions.definition(1112)} 不再持有它（那是 2026-09-27 迁移前的车道），
@@ -61,8 +61,8 @@ class Quest1112ProductionFlowTest {
 	void retailRowKeepsTheTwoSlotHuntGoalAndTheFeiraHandIn() {
 		NativeQuestTableLoader.SimpleHuntRow row = NativeQuestTableLoader.instance().require(QUEST_ID);
 
-		assertEquals("Feira", row.acquiredNpcName(), "真端 acquired_npc_name");
-		assertEquals("Feira", row.rewardNpcName(), "真端 reward_npc_name");
+		assertEquals("Feira", row.acquiredNpcName(), "原版 acquired_npc_name");
+		assertEquals("Feira", row.rewardNpcName(), "原版 reward_npc_name");
 		assertEquals(2, row.killSlots().size(), "1112 是两槽杀怪行（Brax + lepisma）");
 		assertEquals(5, row.killSlots().get(1).count(), "槽 1 required count");
 		assertEquals(5, row.killSlots().get(2).count(), "槽 2 required count");
@@ -75,11 +75,11 @@ class Quest1112ProductionFlowTest {
 		QuestMetadata metadata = RetailQuestDriver.ensureLoaded()
 			.retailMetadataOf(QUEST_ID).orElseThrow().metadata();
 
-		// 真端 quest.xml：minlevel_permitted=3、race_permitted=pc_light、reward_gold1=1810、
+		// 原版 quest.xml：minlevel_permitted=3、race_permitted=pc_light、reward_gold1=1810、
 		// reward_exp1=1375、reward_item1_1=BANDAGE_01 30（物品模板 169300002）。
 		// Retail quest.xml row: min level 3, light race, 1810 kinah, 1375 exp and 30x BANDAGE_01.
-		assertEquals(3, metadata.minLevel(), "真端 minlevel_permitted");
-		assertEquals(java.util.Set.of("ELYOS"), metadata.permittedRaces(), "真端 pc_light");
+		assertEquals(3, metadata.minLevel(), "原版 minlevel_permitted");
+		assertEquals(java.util.Set.of("ELYOS"), metadata.permittedRaces(), "原版 pc_light");
 		List<QuestReward> rewards = metadata.rewards();
 		assertTrue(rewards.contains(new QuestReward("GOLD", 0, 1810)), () -> rewards.toString());
 		assertTrue(rewards.contains(new QuestReward("EXP", 0, 1375)), () -> rewards.toString());
@@ -91,7 +91,7 @@ class Quest1112ProductionFlowTest {
 		SimpleHuntHandler handler = SimpleHuntHandler.instance();
 		Player player = NativeTalkFixture.player(Race.ELYOS, PlayerClass.WARRIOR, 4);
 		Integer rewardNpc = handler.rewardNpc(QUEST_ID);
-		assertNotNull(rewardNpc, "真端行必须有可解析的交付 NPC");
+		assertNotNull(rewardNpc, "原版行必须有可解析的交付 NPC");
 
 		// START（未打满）：常规未完成提示页 10，两参下发（不带任务上下文）。
 		// START with an unfinished kill goal: the plain in-progress page 10 is a two-parameter dialog.

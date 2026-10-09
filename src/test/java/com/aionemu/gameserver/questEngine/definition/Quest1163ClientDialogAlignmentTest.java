@@ -15,7 +15,7 @@ import com.aionemu.gameserver.questEngine.tablelane.SimpleTalkHandler;
  * 页梯退役重锚：1163 的阶段首屏由客户端 select2 页派生，行内翻页（select2_1）是客户端本地行为
  * <p>
  * P3 重锚（计划 §8.9）：旧 IR 形状断言（节点名/条件/动作/页链）随 SimpleTalk 切换批退场，
- * 本类改为真端表行锚——接取/交付 NPC、中继步、发扣物品、交付门均取自
+ * 本类改为原版表行锚——接取/交付 NPC、中继步、发扣物品、交付门均取自
  * {@code Quest_SimpleTalk.xml} + {@code quest.xml} 与静态数据（{@code npc_template} /
  * 物品 {@code name_desc}），native 处理器必须逐项一致。
  * <p>
@@ -28,7 +28,7 @@ class Quest1163ClientDialogAlignmentTest {
 	void followsTheRetailPotionHandoffAndRewardOwner() {
 		SimpleTalkHandler handler = SimpleTalkHandler.instance();
 
-		// 真端行 1163：Kinesos → Roseino
+		// 原版行 1163：Kinesos → Roseino
 		assertTrue(handler.routes(1163), "1163 必须由 native 车道路由");
 		assertEquals(203096, handler.acquireNpc(1163), "接取 NPC");
 		assertEquals(203155, handler.rewardNpc(1163), "交付 NPC");

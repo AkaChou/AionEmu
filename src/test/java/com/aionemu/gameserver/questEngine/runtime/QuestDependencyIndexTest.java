@@ -46,8 +46,8 @@ class QuestDependencyIndexTest {
 	}
 
 	private static CompiledQuestDefinition compile(int questId) throws Exception {
-		// 退役任务的生产 XML 只在 git 历史里：统一取生产视图（XML 目录 + 真端 overlay）——已退役任务
-		// 由真端表 + quest.xml 元数据合成，前置条件与启动条件仍完整登记。
+		// 退役任务的生产 XML 只在 git 历史里：统一取生产视图（XML 目录 + 原版 overlay）——已退役任务
+		// 由原版表 + quest.xml 元数据合成，前置条件与启动条件仍完整登记。
 		// Production view (XML directory plus the retail overlay): retired quests are synthesized from
 		// the retail tables plus quest.xml metadata, so prerequisites and start conditions still index.
 		return com.aionemu.gameserver.questEngine.definition.ProductionQuestDefinitions.definition(questId);

@@ -49,7 +49,7 @@ public record QuestMetadata(
 	List<QuestRewardGroup> rewardGroups,
 	List<QuestRewardGroup> extendedRewardGroups,
 	List<QuestStartConditionGroup> startConditionGroups,
-	/** 真端 {@code reward_extend_stigma1}：完成任务后扩展烙印槽位。 / Retail {@code reward_extend_stigma1}: completing the quest extends stigma slots. */
+	/** 原版 {@code reward_extend_stigma1}：完成任务后扩展烙印槽位。 / Retail {@code reward_extend_stigma1}: completing the quest extends stigma slots. */
 	boolean extendStigmaSlots) {
 
 	/**

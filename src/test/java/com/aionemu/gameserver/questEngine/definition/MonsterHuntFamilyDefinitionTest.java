@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 /**
  * Full vertical proof for the current MonsterHunt owners 1112 / 1113 / 1120.
  * <p>
- * 三个任务全部由真端网格合成器驱动（XML 已退役）：网格节点标签是 {@code a0..aN}（双槽为 {@code a0b0} 形态），
+ * 三个任务全部由原版网格合成器驱动（XML 已退役）：网格节点标签是 {@code a0..aN}（双槽为 {@code a0b0} 形态），
  * 与旧 XML 的 {@code started}/{@code k1..kN} 不同，因此**绝对定位一律按 (状态, 打包投影) 做**，
  * 不按标签断言；转移自带的端点标签仍可直接查（转移本来就按标签保存端点）。
  * <p>
@@ -26,7 +26,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * because the retail grid labels differ from the legacy XML ones.
  */
 class MonsterHuntFamilyDefinitionTest {
-	/** 真端领奖确认段首尾 = {@code SELECTED_QUEST_REWARD1(8)..SELECTED_QUEST_NOREWARD(23)}。 */
+	/** 原版领奖确认段首尾 = {@code SELECTED_QUEST_REWARD1(8)..SELECTED_QUEST_NOREWARD(23)}。 */
 	/** The retail confirm range first/last dialog ids. */
 	private static final int FIRST_CONFIRM_ID = QuestDialogAction.SELECTED_QUEST_REWARD1.id();
 	private static final int LAST_CONFIRM_ID = QuestDialogAction.SELECTED_QUEST_NOREWARD.id();
@@ -34,7 +34,7 @@ class MonsterHuntFamilyDefinitionTest {
 	@Test
 	void packagedProductionDirectoryCompilesTheThreeHuntOwners() throws Exception {
 		QuestCatalog catalog = ProductionQuestDefinitions.catalog();
-		// 1112 已迁到真端驱动（XML 退役、定义由 overlay 提供）：判据统一落在生产视图。
+		// 1112 已迁到原版驱动（XML 退役、定义由 overlay 提供）：判据统一落在生产视图。
 		// 1112 is retail-driven now; every owner is present in the production view.
 		assertTrue(catalog.find(1112).isPresent());
 		assertTrue(catalog.find(1113).isPresent());
@@ -164,7 +164,7 @@ class MonsterHuntFamilyDefinitionTest {
 			assertEquals(expectedFishing, path.getValue(), "dialogId " + path.getKey());
 		}
 
-		// 奖励池顺序取真端 quest.xml 的 reward group 声明序（真端为形状权威，内容与旧 XML 一致）。
+		// 奖励池顺序取原版 quest.xml 的 reward group 声明序（原版为形状权威，内容与旧 XML 一致）。
 		// The pool order follows the retail reward group declaration; the contents match the legacy XML.
 		assertEquals(List.of(new QuestReward("ITEM", 160003001, 3L),
 			new QuestReward("SELECTABLE_ITEM", 162000048, 1L),
@@ -211,7 +211,7 @@ class MonsterHuntFamilyDefinitionTest {
 		return startVar0s(compiled).max().orElseThrow();
 	}
 
-	/** START 态网格节点的 var0 取值流（真端网格为 0..N 全段）。 / START-node var0 stream. */
+	/** START 态网格节点的 var0 取值流（原版网格为 0..N 全段）。 / START-node var0 stream. */
 	private static IntStream startVar0s(CompiledQuestDefinition compiled) {
 		return compiled.definition().nodes().stream()
 			.filter(node -> node.projection().status() == QuestStatus.START)
@@ -219,7 +219,7 @@ class MonsterHuntFamilyDefinitionTest {
 			.mapToInt(Integer::intValue);
 	}
 
-	/** 真端领奖确认段：dialogId → 动作序列（同一 dialogId 只允许一条）。 / confirm routes keyed by dialog id. */
+	/** 原版领奖确认段：dialogId → 动作序列（同一 dialogId 只允许一条）。 / confirm routes keyed by dialog id. */
 	private static Map<Integer, List<QuestAction>> completionActions(CompiledQuestDefinition compiled) {
 		return compiled.definition().transitions().stream()
 			.filter(t -> t.targetNode().equals("complete"))
@@ -259,7 +259,7 @@ class MonsterHuntFamilyDefinitionTest {
 		return List.copyOf(actions);
 	}
 
-	/** 生产定义：XML 目录 + 真端 overlay（退役任务不再有 XML，只在 git 历史里）。 */
+	/** 生产定义：XML 目录 + 原版 overlay（退役任务不再有 XML，只在 git 历史里）。 */
 	private CompiledQuestDefinition definition(int questId) {
 		return ProductionQuestDefinitions.definition(questId);
 	}

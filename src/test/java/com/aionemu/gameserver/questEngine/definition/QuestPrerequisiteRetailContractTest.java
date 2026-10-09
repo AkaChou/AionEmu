@@ -19,9 +19,9 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * 任务前置（prerequisites / start-condition-groups）真端合同门禁。
+ * 任务前置（prerequisites / start-condition-groups）原版合同门禁。
  * <p>
- * 以 Aion 5.8 真端服务端任务表 quest.xml 的快照
+ * 以 Aion 5.8 原版服务端任务表 quest.xml 的快照
  * ({@code /quest/quest-prerequisite-retail-contract.tsv}) 为权威，逐任务检查
  * {@code finished_quest_condN} 声明的 OR 分支（分支内逗号 = AND）是否被生产目录表达：
  * <ul>
@@ -30,13 +30,13 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * 移植完成后该分支自动转为强制，门禁会立即要求补齐）；</li>
  * <li>未移植单分支任务保持 fail-open，但一旦依赖任务进入目录就必须补上前置。</li>
  * </ul>
- * 基线由 {@code .agents/summary/retail-template-reconciliation/build_prereq_contract_tsv.py} 从真端数据再算。
+ * 基线由 {@code .agents/summary/retail-template-reconciliation/build_prereq_contract_tsv.py} 从原版数据再算。
  */
 class QuestPrerequisiteRetailContractTest {
 
 	private static final String CONTRACT_RESOURCE = "/quest/quest-prerequisite-retail-contract.tsv";
 
-	/** 本批次补前置的任务（真端 finished_quest_cond1），锁定精确取值，禁止回退。
+	/** 本批次补前置的任务（原版 finished_quest_cond1），锁定精确取值，禁止回退。
 	 * P8 重锚：仅保留 XML 保留行的键（其余 22 键随 native 行退出 typed 目录——native 行前置面 =
 	 * 显示元数据/链式接取窗，由 native handler 承担）。
 	 * P8 re-anchor: only XML-retained keys remain (the other 22 keys left the typed catalog with

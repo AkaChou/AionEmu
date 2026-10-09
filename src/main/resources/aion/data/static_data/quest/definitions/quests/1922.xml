@@ -81,7 +81,7 @@
       </after-commit>
     </transition>
     <!-- Fuchsia (203830)：STEP_TO_12 设置 choice=1 并推进 var0 0->4，随后打开任务选择列表。defaultCloseDialog(env, 0, 4)。 -->
-    <!-- 真端取证（ScriptDLL64 FUN_180f6fcd0）：SETPRO12 → 推进 + 0x5d8 关窗（实机 2026-10-05 两次点击实证）；页 10 系翻译夸大，已删。 -->
+    <!-- 原版取证（ScriptDLL64 FUN_180f6fcd0）：SETPRO12 → 推进 + 0x5d8 关窗（实机 2026-10-05 两次点击实证）；页 10 系翻译夸大，已删。 -->
     <transition source="started" target="s4">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="203830" action="SETPRO12"/>

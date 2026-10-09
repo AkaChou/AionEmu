@@ -33,9 +33,9 @@ class MissionItemConsumptionBatchRegressionTest {
 
 	@Test
 	void kaligaWeaponExchangeQuestsConsumeKaligaKey() {
-		/* P0c-13 起卡里佳兑换族整体物理退役（SimpleTalk 真端表驱动，无 IR）：编译视图断言随退役停用
+		/* P0c-13 起卡里佳兑换族整体物理退役（SimpleTalk 原版表驱动，无 IR）：编译视图断言随退役停用
 		 * （退役前口径 = started -> reward 优先级 0 的交付边扣卡里佳钥匙 185000102）——守卫 = 必须确属
-		 * 退役（防名单陈旧静默缩水）；真端表行的钥匙扣除口径由 native 车道门承担。 */
+		 * 退役（防名单陈旧静默缩水）；原版表行的钥匙扣除口径由 native 车道门承担。 */
 		/* Since P0c-13 the whole Kaliga exchange family is physically retired to the SimpleTalk lane
 		 * (no IR): the compile-view assertions retire with the XML (the former caliber removed the key
 		 * 185000102 on the priority-0 started -> reward hand-in); the guard keeps the list honest and
@@ -58,7 +58,7 @@ class MissionItemConsumptionBatchRegressionTest {
 		// 11216: 德拉坎的研究 4份报告交付扣除
 		assertTransitionRemovesItems(11216, "v1", "reward", Set.of(182206827, 182206828, 182206829, 182206830));
 
-		// 3092 & 29064: 已物理退役（SimpleTalk 真端表驱动，无 IR）——编译视图断言随退役停用，守卫 = 必须
+		// 3092 & 29064: 已物理退役（SimpleTalk 原版表驱动，无 IR）——编译视图断言随退役停用，守卫 = 必须
 		// 确属退役（退役前口径：3092 s1 -> reward 扣 182208066、29064 s1 -> reward 扣 182213239）；
 		// 表车道口径由其 native 门承担。
 		// 3092 & 29064: physically retired to the SimpleTalk lane (no IR) — the compile-view assertions
@@ -70,7 +70,7 @@ class MissionItemConsumptionBatchRegressionTest {
 
 		// 15606: 埃斯特拉任务收集物扣除（XML 仍在库，保留编译视图断言）。
 		assertTransitionRemovesItems(15606, "s4", "reward", Set.of(182215997));
-		// 15608 & 15613 & 25601 & 25605: 已物理退役（DataDriven 真端表驱动，无 IR）——编译视图断言随退役
+		// 15608 & 15613 & 25601 & 25605: 已物理退役（DataDriven 原版表驱动，无 IR）——编译视图断言随退役
 		// 停用，守卫 = 必须确属退役（退役前口径：15608 s1 -> s2 扣 182215998、15613 s5 -> reward 扣 182215999、
 		// 25601 s1 -> s2 扣 182216000、25605 s1 -> s2 扣 182216004）；表车道口径由其 native 门承担。
 		// 15608/15613/25601/25605: physically retired to the DataDriven lane (no IR) — the compile-view
@@ -104,7 +104,7 @@ class MissionItemConsumptionBatchRegressionTest {
 
 	@Test
 	void campaignMissionsConsumeRequiredCollectionItems() throws Exception {
-		// 10010 & 20010: 永恒之塔主线 4 项收集物扣除——已物理退役（DataDriven 真端表驱动，无 IR），
+		// 10010 & 20010: 永恒之塔主线 4 项收集物扣除——已物理退役（DataDriven 原版表驱动，无 IR），
 		// 编译视图断言随退役停用，守卫 = 必须确属退役；表车道口径由 native 门承担。
 		// 10010 & 20010: physically retired to the DataDriven lane (no IR); the guard keeps the rows honest.
 		for (int questId : List.of(10010, 20010)) {
@@ -121,7 +121,7 @@ class MissionItemConsumptionBatchRegressionTest {
 		// 14051: 调查物扣除
 		assertTransitionRemovesItems(14051, "s2", "s3", Set.of(182215337, 182215338));
 
-		// 15400 & 25400: 军团援助物资扣除——已物理退役（DataDriven 真端表驱动，无 IR），同前守卫。
+		// 15400 & 25400: 军团援助物资扣除——已物理退役（DataDriven 原版表驱动，无 IR），同前守卫。
 		// 15400 & 25400: physically retired to the DataDriven lane (no IR); the guard keeps the rows honest.
 		for (int questId : List.of(15400, 25400)) {
 			assertTrue(RetiredQuestIds.contains(questId),
@@ -158,7 +158,7 @@ class MissionItemConsumptionBatchRegressionTest {
 		assertTransitionRemovesItems(1922, "reward", "complete", Set.of(182206030));
 		assertTransitionRemovesItems(2947, "s9", "complete", Set.of(182207037));
 
-		// 1362: 旁路交付扣除——已物理退役（SimpleTalk 真端表驱动，无 IR），同前守卫（退役前口径
+		// 1362: 旁路交付扣除——已物理退役（SimpleTalk 原版表驱动，无 IR），同前守卫（退役前口径
 		// started -> reward 扣 182201328/182201329）。1367 仍在库，保留编译视图断言。
 		// 1362: physically retired to the SimpleTalk lane (no IR); the guard keeps the row honest.
 		assertTrue(RetiredQuestIds.contains(1362),
@@ -191,7 +191,7 @@ class MissionItemConsumptionBatchRegressionTest {
 	}
 
 	private static CompiledQuestDefinition load(int questId) throws Exception {
-		// 退役任务的生产 XML 只在 git 历史里：统一取生产视图（XML 目录 + 真端 overlay）。
+		// 退役任务的生产 XML 只在 git 历史里：统一取生产视图（XML 目录 + 原版 overlay）。
 		return ProductionQuestDefinitions.definition(questId);
 	}
 }

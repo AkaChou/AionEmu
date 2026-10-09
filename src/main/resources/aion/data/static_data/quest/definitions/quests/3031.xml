@@ -113,7 +113,7 @@
       </actions>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-        <!-- 真端取证（ScriptDLL64 FUN_180ed93d0/FUN_180ed9410 → FUN_180caa850）：击杀只做位域累加（0xf0）+ 计数通报（0x120），零发页；页 10 系翻译夸大，已删（无对话对象时下发即 load fail）。
+        <!-- 原版取证（ScriptDLL64 FUN_180ed93d0/FUN_180ed9410 → FUN_180caa850）：击杀只做位域累加（0xf0）+ 计数通报（0x120），零发页；页 10 系翻译夸大，已删（无对话对象时下发即 load fail）。
              Retail evidence (ScriptDLL64 FUN_180ed93d0/FUN_180ed9410 → FUN_180caa850): a kill only increments the bit-field (0xf0) and notifies the counter (0x120) with no page; page 10 was translation exaggeration and is removed (sending it without a dialog object fails to load). -->
       </after-commit>
     </transition>
@@ -130,7 +130,7 @@
       </actions>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-        <!-- 真端取证（ScriptDLL64 FUN_180ed93d0/FUN_180ed9410 → FUN_180caa850）：击杀只做位域累加（0xf0）+ 计数通报（0x120），零发页；页 10 系翻译夸大，已删（无对话对象时下发即 load fail）。
+        <!-- 原版取证（ScriptDLL64 FUN_180ed93d0/FUN_180ed9410 → FUN_180caa850）：击杀只做位域累加（0xf0）+ 计数通报（0x120），零发页；页 10 系翻译夸大，已删（无对话对象时下发即 load fail）。
              Retail evidence (ScriptDLL64 FUN_180ed93d0/FUN_180ed9410 → FUN_180caa850): a kill only increments the bit-field (0xf0) and notifies the counter (0x120) with no page; page 10 was translation exaggeration and is removed (sending it without a dialog object fails to load). -->
       </after-commit>
     </transition>
@@ -175,7 +175,7 @@
       </actions>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-        <!-- 真端取证（ScriptDLL64 FUN_180ed93d0/FUN_180ed9410 → FUN_180caa850）：击杀只做位域累加（0xf0）+ 计数通报（0x120），零发页；页 10 系翻译夸大，已删（无对话对象时下发即 load fail）。
+        <!-- 原版取证（ScriptDLL64 FUN_180ed93d0/FUN_180ed9410 → FUN_180caa850）：击杀只做位域累加（0xf0）+ 计数通报（0x120），零发页；页 10 系翻译夸大，已删（无对话对象时下发即 load fail）。
              Retail evidence (ScriptDLL64 FUN_180ed93d0/FUN_180ed9410 → FUN_180caa850): a kill only increments the bit-field (0xf0) and notifies the counter (0x120) with no page; page 10 was translation exaggeration and is removed (sending it without a dialog object fails to load). -->
       </after-commit>
     </transition>
@@ -192,7 +192,7 @@
       </actions>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-        <!-- 真端取证（ScriptDLL64 FUN_180ed93d0/FUN_180ed9410 → FUN_180caa850）：击杀只做位域累加（0xf0）+ 计数通报（0x120），零发页；页 10 系翻译夸大，已删（无对话对象时下发即 load fail）。
+        <!-- 原版取证（ScriptDLL64 FUN_180ed93d0/FUN_180ed9410 → FUN_180caa850）：击杀只做位域累加（0xf0）+ 计数通报（0x120），零发页；页 10 系翻译夸大，已删（无对话对象时下发即 load fail）。
              Retail evidence (ScriptDLL64 FUN_180ed93d0/FUN_180ed9410 → FUN_180caa850): a kill only increments the bit-field (0xf0) and notifies the counter (0x120) with no page; page 10 was translation exaggeration and is removed (sending it without a dialog object fails to load). -->
       </after-commit>
     </transition>

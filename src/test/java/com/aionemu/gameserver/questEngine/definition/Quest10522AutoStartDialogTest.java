@@ -20,7 +20,7 @@ class Quest10522AutoStartDialogTest {
 		QuestDefinition definition = definition().definition();
 		assertNode(definition, "unaccepted", QuestStatus.NONE, Map.of("var0", 0));
 		assertNode(definition, "started", QuestStatus.START, Map.of("var0", 0));
-		// 领奖态投影 = 接取值 0（真端 0x100 状态推进不写轴；写入方不再落盘步数）：客户端任务书按
+		// 领奖态投影 = 接取值 0（原版 0x100 状态推进不写轴；写入方不再落盘步数）：客户端任务书按
 		// 0 基行匹配，REWARD/var0=1 会让行匹配落空、任务书步骤空白（实机 2026-10-08）。
 		// The REWARD projection stays at the acquired 0 (the retail 0x100 status advance never writes
 		// the axis; the writer no longer persists a step): the client journal matches rows zero-based,

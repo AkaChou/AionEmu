@@ -3,9 +3,9 @@
      镜像口径 = 装载器 fail-closed 规则 ∪ 观察形全域钉（证据 + 生成器：
      .agents/summary/quest-engine-native/p11-quest-ai-lane/）：
      - 首元素 <quest_ai_npc_ids> = 全局 Quest-AI NPC id 逗号串（升序、去重，出现在每行 id
-       之前）；冻结真端注册面的观察形，不由本仓推导。
+       之前）；冻结原版注册面的观察形，不由本仓推导。
      - 行 = <quest_ai_registration>（quest_id 全表唯一；registered_names = ScriptDLL
-       L"…" 注册名的原文逗号串，字符集 [A-Za-z0-9_]；registered_npc_ids = 按真端
+       L"…" 注册名的原文逗号串，字符集 [A-Za-z0-9_]；registered_npc_ids = 按原版
        `_wcsicmp` 语义解析出的 npc id 逗号串）。两列都允许空串：空 = 该任务无注册 /
        注册名解析不到任何 npc，语义如此非错误。
      retail-quest-ai-registrations.xml schema (quest retail table gate, D1 batch). Mirrors the loader

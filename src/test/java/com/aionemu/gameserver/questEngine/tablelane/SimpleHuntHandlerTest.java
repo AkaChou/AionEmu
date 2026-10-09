@@ -18,7 +18,7 @@ import com.aionemu.gameserver.questEngine.model.QuestStatus;
 
 /**
  * {@link SimpleHuntHandler} 原生任务处理器单元测试。
- * 验证真端表装载、目标索引映射、相机击杀推进、双通道状态演进与超杀静默规范。
+ * 验证原版表装载、目标索引映射、相机击杀推进、双通道状态演进与超杀静默规范。
  */
 class SimpleHuntHandlerTest {
 

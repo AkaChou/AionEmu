@@ -14,7 +14,7 @@ import com.aionemu.gameserver.questEngine.definition.QuestEvent;
 import com.aionemu.gameserver.questEngine.retail.RetailDialogIntentClassifier;
 
 /**
- * 将 XML owner 与真端 owner 路由到彼此隔离的运行时，同时保留跨 owner 广播语义。
+ * 将 XML owner 与原版 owner 路由到彼此隔离的运行时，同时保留跨 owner 广播语义。
  * Routes XML-owned and retail-owned quests to isolated runtimes while preserving cross-owner broadcasts.
  * <p>
  * 路由规则以 owner 为单位：指定 questId 时只访问唯一拥有该 ID 的子运行时；questId 为 0 时按

@@ -21,7 +21,7 @@ import org.w3c.dom.Element;
 
 import com.aionemu.gameserver.questEngine.retail.RetailLedgerXml;
 /**
- * 真端 NPC 名解析器（计划 §6.2：任务表里的 {@code *_npc_name} 引用的是
+ * 原版 NPC 名解析器（计划 §6.2：任务表里的 {@code *_npc_name} 引用的是
  * {@code npcTemplates} 的 {@code name_desc} 全名，短名 {@code name} 亦有效；P0a
  * owner-identity 修正判例）。索引 = name ∪ name_desc，规范化 trim + 小写，精确唯一解析；
  * 缺失（{@code NATIVE_NAME_UNRESOLVED}）与多义（{@code NATIVE_NAME_AMBIGUOUS}）一律
@@ -64,7 +64,7 @@ public final class NativeNpcNameResolver {
 	private static final String ALIASES_RESOURCE =
 			"aion/data/static_data/quest/retail/retail-npc-name-aliases.xml";
 	/**
-	 * 真端对话名组表（quest_ai_name → 成员 name_desc）：组键的**权威载体**在旧车道组表，
+	 * 原版对话名组表（quest_ai_name → 成员 name_desc）：组键的**权威载体**在旧车道组表，
 	 * 原生车道直读同一张表（组键不进别名台账——台账行会撞旧车道 spawn 通道的互斥闸，
 	 * QE-133 同类事故的第二形态）。
 	 * The retail dialog-name group table: the authoritative carrier for group keys. The native
@@ -82,7 +82,7 @@ public final class NativeNpcNameResolver {
 
 	private static volatile NativeNpcNameResolver instance;
 
-	/** 权威真端名 (name_desc) 索引。 / Authoritative retail name_desc index. */
+	/** 权威原版名 (name_desc) 索引。 / Authoritative retail name_desc index. */
 	private final Map<String, List<Integer>> idsByNameDesc;
 	/** 短名/客户端名 (name) 索引。 / Short name index. */
 	private final Map<String, List<Integer>> idsByName;
@@ -341,7 +341,7 @@ public final class NativeNpcNameResolver {
 		}
 		String normalized = rawName.strip().toLowerCase(Locale.ROOT);
 		if (normalized.isEmpty()) {
-			// 真端存在 name=" " 的占位模板，不得成为索引键。 / Retail ships name=" " placeholders; never keys.
+			// 原版存在 name=" " 的占位模板，不得成为索引键。 / Retail ships name=" " placeholders; never keys.
 			return;
 		}
 		List<Integer> ids = idsByName.get(normalized);
@@ -363,7 +363,7 @@ public final class NativeNpcNameResolver {
 		if (normalized.isEmpty()) {
 			return new Match(Resolution.MISSING, List.of());
 		}
-		// 1. 真端权威：优先按 name_desc 全名（开发英文名，对齐真端 <name> 语义）解析
+		// 1. 原版权威：优先按 name_desc 全名（开发英文名，对齐原版 <name> 语义）解析
 		List<Integer> byDesc = idsByNameDesc.get(normalized);
 		if (byDesc != null && !byDesc.isEmpty()) {
 			return new Match(byDesc.size() == 1 ? Resolution.UNIQUE : Resolution.AMBIGUOUS, byDesc);
@@ -381,12 +381,12 @@ public final class NativeNpcNameResolver {
 	}
 
 	/**
-	 * 成员集解析：接取/交付/中继槽的真端语义。真端 codegen 把任务注册在**名字**节点上
+	 * 成员集解析：接取/交付/中继槽的原版语义。原版 codegen 把任务注册在**名字**节点上
 	 * （{@code FUN_180cb5920(node, npcName, questId)}），运行期由 NPC 自身的对话名匹配，
 	 * 因此同一个名字下的全部模板（同名多模板 NPC、{@code quest_ai_name} 组、别名表多值）都是
 	 * 合法的受理者——「任一成员可接取/交付/中继」，不是歧义；仅完全无命中返回空表（fail-closed）。
 	 * <p>
-	 * 单元格允许逗号分隔多名字（真端表实测 {@code TOWN_SHUGO_GARDENER_1001,1002,1003}）：逐名在
+	 * 单元格允许逗号分隔多名字（原版表实测 {@code TOWN_SHUGO_GARDENER_1001,1002,1003}）：逐名在
 	 * name_desc → name → 别名 → 对话名组 四个通道取首个非空通道，合并去重。
 	 * <p>
 	 * Member-set resolution for accept/hand-in/relay slots: the retail codegen registers a quest on
@@ -413,7 +413,7 @@ public final class NativeNpcNameResolver {
 				}
 			}
 			if (hit == null) {
-				// 真端 NPC_ 前缀归一化（与旧车道 RetailNpcNameIndex 同规）：表写 {@code Gardugu} 而模板
+				// 原版 NPC_ 前缀归一化（与旧车道 RetailNpcNameIndex 同规）：表写 {@code Gardugu} 而模板
 				// 写 {@code NPC_Gardugu}，反向亦然（表写 {@code NPC_Housing_FOBJ_01} 而模板写
 				// {@code Housing_FOBJ_01}）。只做精确前缀变体，不做模糊匹配。
 				// Retail NPC_ prefix normalization (same rule as the old lane): the table may drop or add
@@ -442,7 +442,7 @@ public final class NativeNpcNameResolver {
 	}
 
 	/**
-	 * 解析怪物候选 ID 集合（支持单个唯一 NPC 及真端同名多模板野怪）。
+	 * 解析怪物候选 ID 集合（支持单个唯一 NPC 及原版同名多模板野怪）。
 	 * Resolves candidate NPC ids for monster matching (supports unique NPC and multi-template mobs).
 	 */
 	public List<Integer> resolveMonsterIds(String rawName) {
@@ -474,7 +474,7 @@ public final class NativeNpcNameResolver {
 
 	/**
 	 * 击杀路由的变体族解析（QE-048 击杀合同面）：名单名命中后并入其变体族的全部实存模板
-	 * （base + {@code T_} 变体 + 相邻等级）。真端 DD 表的 hunt 名单写「代表名」（base/最低级），
+	 * （base + {@code T_} 变体 + 相邻等级）。原版 DD 表的 hunt 名单写「代表名」（base/最低级），
 	 * 而世界实刷的是同族变体（Iluma 只刷 {@code LF6_T_Daru_A_66_n/67_n}、变身副本按玩家等级刷
 	 * {@code IDTransform_Sado_*_66..75_An}），精确解析会漏掉全部实刷成员 ⇒ 击杀零路由。
 	 * 与客户端 {@code quest_monster.csv} 合同行（QE-048/QE-125 裁定：客户端计数为权威）同构。

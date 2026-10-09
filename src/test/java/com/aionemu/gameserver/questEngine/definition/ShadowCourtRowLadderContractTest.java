@@ -34,11 +34,11 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * 乱序/回看不产生计划、领奖与完成 owner 唯一（Muninn 203550）、出口物件只在行 5（副本内）
  * 可用并传送回主城，且 24046 不得混入镜像 14046 的道具/影片推进链。
  * <p>
- * QE-054 步号轴收口（2026-10-07 全量审计）：领奖投影 = 真端/legacy 推进值 6——legacy
- * {@code defaultCloseDialog(6,6,true)} 落盘 6、真端 SetProgress 集合 {4,6} 无 7，真端
+ * QE-054 步号轴收口（2026-10-07 全量审计）：领奖投影 = 原版/legacy 推进值 6——legacy
+ * {@code defaultCloseDialog(6,6,true)} 落盘 6、原版 SetProgress 集合 {4,6} 无 7，原版
  * {@code 0x100} 状态推进不写轴，客户端 REWARD 态按自身 [%N] 门槛显示报告行（行 7）；
  * 领奖行批次曾误抬为 7，{@code REWARD + var0==7} 的坏档在进入世界时回滚到 6。
- * 中间阶梯（0..6 连续）与真端 {4,6} 集合的完整对照留待专项（见
+ * 中间阶梯（0..6 连续）与原版 {4,6} 集合的完整对照留待专项（见
  * {@code .agents/summary/quest-step-axis-fullscan/}）。
  * <p>
  * Locks the eight-row journal ladder of 24046 (rows 4 and 5 were collapsed into one step by the
@@ -60,7 +60,7 @@ class ShadowCourtRowLadderContractTest {
 	private static final int KHRUDGELMIR = 204253;
 	private static final int MUNINN = 203550;
 	private static final int EXIT_OBJECT = 700369;
-	/** 领奖投影（真端/legacy 值）与批次坏档值 / reward projection (retail/legacy) and the batch-corrupted value. */
+	/** 领奖投影（原版/legacy 值）与批次坏档值 / reward projection (retail/legacy) and the batch-corrupted value. */
 	private static final int REWARD_ROW = 6;
 	private static final int BATCH_MISLIFTED_ROW = 7;
 
@@ -92,7 +92,7 @@ class ShadowCourtRowLadderContractTest {
 			assertEquals(QuestStatus.REWARD, node(definition, "reward").projection().status(),
 				() -> "quest " + questId + " reward status");
 			/* 行 0..6 各有独立轴状态；报告行（行 7）由客户端 REWARD 态按自身 [%N] 门槛显示
-			 * （QE-054：真端 0x100 不写轴，REWARD 投影保持 6）。 */
+			 * （QE-054：原版 0x100 不写轴，REWARD 投影保持 6）。 */
 			/* Rows 0..6 each own an axis state; the report row (row 7) is shown by the client's
 			 * own REWARD gate since the projection stays on the retail value 6 (QE-054). */
 			assertEquals(Set.of(0, 1, 2, 3, 4, 5, 6), visibleRows(definition),
@@ -168,7 +168,7 @@ class ShadowCourtRowLadderContractTest {
 			QuestMutationPlan plan = plan(compiled, QuestStatus.START, currentRow, world, step, carried);
 			assertNotNull(plan, () -> "row " + currentRow + " must advance through " + step.sourceNode()
 				+ " -> " + step.targetNode());
-			/* 最后一步进 REWARD 时轴保持玩法末值（QE-054：真端 0x100 不写轴）。 */
+			/* 最后一步进 REWARD 时轴保持玩法末值（QE-054：原版 0x100 不写轴）。 */
 			/* The final step keeps the last gameplay value when entering REWARD (QE-054). */
 			int projected = currentRow == ladder.size() - 1 ? REWARD_ROW : currentRow + 1;
 			assertEquals(projected, row(compiled, plan),
@@ -273,7 +273,7 @@ class ShadowCourtRowLadderContractTest {
 			.noneMatch(action -> action instanceof AfterCommitAction.TeleportPlayer teleport
 				&& teleport.worldId() == SHADOW_COURT),
 			"the Elyos twin must not teleport into the Asmodian instance");
-		/* 两侧共用的投影口径：领奖投影 = 真端/legacy 推进值 6（QE-054），且行 0 的接取 NPC 各自独立。 */
+		/* 两侧共用的投影口径：领奖投影 = 原版/legacy 推进值 6（QE-054），且行 0 的接取 NPC 各自独立。 */
 		/* Shared projection contract: the reward projection is the retail/legacy value 6 (QE-054), while the
 		   offer NPC stays per side. */
 		assertEquals(REWARD_ROW, visibleRows(asmodian).stream().max(Integer::compareTo).orElseThrow());

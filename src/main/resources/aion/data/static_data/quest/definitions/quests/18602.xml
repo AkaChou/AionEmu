@@ -183,8 +183,8 @@
         <set-variable field="var0" value="2"/>
       </actions>
       <after-commit>
-        <!-- 落点 = 真端 idcromede_alias_02「宅邸」（Map/Worlds/idcromede/world.xml：687.631104,675.972412,201.040802,dir 270°）。
-             heading 字段是压缩 byte（度/3，0-120）：真端 270° = 90。
+        <!-- 落点 = 原版 idcromede_alias_02「宅邸」（Map/Worlds/idcromede/world.xml：687.631104,675.972412,201.040802,dir 270°）。
+             heading 字段是压缩 byte（度/3，0-120）：原版 270° = 90。
              Landing point = retail idcromede_alias_02 "manor" (world.xml). The heading attribute is a
              compressed byte (degrees/3, 0-120): retail 270 deg = 90. -->
         <teleport-player-current-or-default world-id="300230000" x="687.631104" y="675.972412" z="201.040802" heading="90"/>

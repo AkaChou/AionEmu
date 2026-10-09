@@ -400,7 +400,7 @@ public class MinionService {
 		player.setVar(MinionList.LAST_USED_VAR, minionObjId, true);
 		minionbuff.apply(player, minionCommonData.getMinionId());
 
-		// 跟随移动由客户端本地模拟（真端架构），服务端不再驱动。 / Following is client-simulated (retail architecture); the server does not drive it.
+		// 跟随移动由客户端本地模拟（原版架构），服务端不再驱动。 / Following is client-simulated (retail architecture); the server does not drive it.
 		PacketSendUtility.broadcastPacketAndReceive(player, new SM_MINIONS(5, minionCommonData));
 	}
 

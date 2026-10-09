@@ -67,8 +67,8 @@ class QuestInteractionObjectContractGateTest {
 	}
 
 	/**
-	 * 14120/14150：真端 {@code talk_npc1} 中继步必须在 native 车道上成立——中继链未走完时采集对象零推进，
-	 * 与该中间 NPC 对话推进后对象才生效（真端 {@code collect_progress}=1 的直读语义）。
+	 * 14120/14150：原版 {@code talk_npc1} 中继步必须在 native 车道上成立——中继链未走完时采集对象零推进，
+	 * 与该中间 NPC 对话推进后对象才生效（原版 {@code collect_progress}=1 的直读语义）。
 	 * <p>
 	 * 该步曾因缺失让服务端起不来（typed 时代的 {@code ACTION_ITEM_USE} 掉落步合同）；P4 起两行由
 	 * {@link SimpleCollectItemHandler} 原生直驱，合同改由 native 链路本身承担。
@@ -81,7 +81,7 @@ class QuestInteractionObjectContractGateTest {
 		SimpleCollectItemHandler handler = SimpleCollectItemHandler.instance();
 		for (int questId : TALK_STEP_QUESTS) {
 			List<Integer> relays = handler.relayNpcs(questId);
-			assertFalse(relays.isEmpty(), () -> "quest " + questId + " 必须装载真端 talk_npc1 中继步");
+			assertFalse(relays.isEmpty(), () -> "quest " + questId + " 必须装载原版 talk_npc1 中继步");
 			assertEquals(talkNpcs.get(questId), relays.getFirst(),
 				() -> "quest " + questId + " 的 talk_npc1 必须解析为静态数据 id");
 			assertTrue(handler.routes(questId), () -> "quest " + questId + " 必须由 native 车道路由");
@@ -91,7 +91,7 @@ class QuestInteractionObjectContractGateTest {
 			int objectNpc = handler.collectObjects(questId).getFirst();
 			assertFalse(handler.onObjectUse(player, questId, objectNpc),
 				() -> "quest " + questId + " 中继链未走完时采集对象不得推进");
-			// 任务行打开只下发该步页、不推进；SETPRO1（真端 cabb10）才推进链条。
+			// 任务行打开只下发该步页、不推进；SETPRO1（原版 cabb10）才推进链条。
 			// The row selection only opens the step page; SETPRO1 advances the chain.
 			assertTrue(handler.onDialog(NativeTalkFixture.dialog(player, relays.getFirst(), questId, 26)),
 				() -> "quest " + questId + " 任务行必须下发该步页");

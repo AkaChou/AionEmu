@@ -62,7 +62,7 @@ class Quest80487ProductionFlowTest {
 		// no system-grant entry either.
 		SimpleTalkHandler handler = SimpleTalkHandler.instance();
 		assertTrue(handler.routes(QUEST_ID), "80487 必须由 native 车道路由");
-		assertEquals(RetailGrantKind.NPC, handler.grantKind(QUEST_ID), "真端 acquired_npc_name = event_Nebrith");
+		assertEquals(RetailGrantKind.NPC, handler.grantKind(QUEST_ID), "原版 acquired_npc_name = event_Nebrith");
 		assertFalse(handler.isSystemGranted(QUEST_ID), "NPC 接取行不得有系统发放入口");
 		assertFalse(ProductionQuestDefinitions.catalog().findExecutable(QUEST_ID).isPresent(),
 			"切换后 typed 目录不得再持有 80487（双 owner 即双事实来源）");
@@ -96,7 +96,7 @@ class Quest80487ProductionFlowTest {
 		SimpleTalkHandler handler = SimpleTalkHandler.instance();
 		for (int questId = 80487; questId <= 80538; questId++) {
 			int npcId = questId <= 80512 ? 831031 : 831029;
-			// 真端表行事实：52 行成长任务全部为 NPC 接取单步行（无发放/回收列、无交付门、无升级轴）。
+			// 原版表行事实：52 行成长任务全部为 NPC 接取单步行（无发放/回收列、无交付门、无升级轴）。
 			// Retail row facts: all 52 growth rows are single-step NPC-accept rows with no item columns,
 			// no hand-in gate and no level-up axis.
 			assertTrue(handler.routes(questId), "quest " + questId + " 必须由 native 车道路由");
@@ -112,7 +112,7 @@ class Quest80487ProductionFlowTest {
 	}
 
 	private CompiledQuestDefinition definition(int questId) throws Exception {
-		// 退役任务的生产 XML 只在 git 历史里：统一取生产视图（XML 目录 + 真端 overlay）。
+		// 退役任务的生产 XML 只在 git 历史里：统一取生产视图（XML 目录 + 原版 overlay）。
 		return ProductionQuestDefinitions.definition(questId);
 	}
 

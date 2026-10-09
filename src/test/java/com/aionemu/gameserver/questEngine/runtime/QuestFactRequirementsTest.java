@@ -122,7 +122,7 @@ class QuestFactRequirementsTest {
 	}
 
 	private static CompiledQuestDefinition loadQuest(int questId) {
-		// 前置采集契约行已由真端表驱动（退役），改从生产视图取定义。
+		// 前置采集契约行已由原版表驱动（退役），改从生产视图取定义。
 		// The fact-requirement rows are retail-driven since retirement; load via the production view.
 		return ProductionQuestDefinitions.definition(questId);
 	}

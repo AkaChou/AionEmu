@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * 生产接线门禁（提示词 §4.C）：真端优先 overlay 与完整目录护栏（P7 步 f 后口径）。
+ * 生产接线门禁（提示词 §4.C）：原版优先 overlay 与完整目录护栏（P7 步 f 后口径）。
  * <ul>
  * <li>局部 overlay 关闭开关时返回同一 XML 目录实例；生产入口必须拒绝缺失已退役 XML 的回退；</li>
  * <li>生产全集恒等式：6217 = 生产目录条目 + 原生覆盖（七族 handler owns ∨ DD 运行时 owned——

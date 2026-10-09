@@ -11,8 +11,8 @@ import com.aionemu.gameserver.world.WorldMapInstance;
 /**
  * 原生任务车道的传送端口：DD 附加动作 case 3（`Teleport To`）与 case 9（`Enter Instance`）的唯一出口。
  * <p>
- * case 3 真端执行器 → `IUserImp::Teleport(world, x, y, z+1, heading, 1)`（NP `NpcAIOrderFunc.cpp`），
- * 真端 z 抬 1.0 落地、heading = 度（宿主内部转 6 位朝向）；case 9 真端 = `User::EnterInstance` 按
+ * case 3 原版执行器 → `IUserImp::Teleport(world, x, y, z+1, heading, 1)`（NP `NpcAIOrderFunc.cpp`），
+ * 原版 z 抬 1.0 落地、heading = 度（宿主内部转 6 位朝向）；case 9 原版 = `User::EnterInstance` 按
  * `instance_creation` 落点别名进副本——本服等价面 = **复用已注册实例，否则下一可用实例 + 注册**
  * （与 typed 车道 `teleport-player-next-available-instance` 及旧 handler 的
  * `getNextAvailableInstance + registerPlayerWithInstance` 同语义）。若以无 instanceId 的裸传送进副本，

@@ -19,12 +19,12 @@ import com.aionemu.gameserver.questEngine.tablelane.NativeTalkFixture;
 import com.aionemu.gameserver.questEngine.tablelane.SimpleTalkHandler;
 
 /**
- * 80016/80018 圣诞事件任务（Sock Hop / Sock It To 'Em）：真端表行 = 单步行 NPC 接取 +
+ * 80016/80018 圣诞事件任务（Sock Hop / Sock It To 'Em）：原版表行 = 单步行 NPC 接取 +
  * {@code item_check} 交付门（各 15 件收集物）+ 交付领奖。
  * <p>
- * P3 重锚（计划 §8.9）：本类只断言真端表行、真端 {@code quest.xml} 与客户端页契约可实证的事实。
+ * P3 重锚（计划 §8.9）：本类只断言原版表行、原版 {@code quest.xml} 与客户端页契约可实证的事实。
  * 旧 IR 断言的「onLvlUp 自动接取 / 活动失效弃任 / MOVIE bonus 随机播放」只存在于本地 XML 与旧 handler：
- * 真端 codegen 对这两行注册的是普通 SimpleTalk 槽位
+ * 原版 codegen 对这两行注册的是普通 SimpleTalk 槽位
  * （{@code FUN_180cb5920(&DAT_…,L"event_Sonaran",0x13890)} 注册块 + cab520 接取 thunk + cabb10 对话 thunk，
  * {@code server58/MainServer_ScriptDLL64/ScriptDLL64.c:1462204}、{@code :2341547}、{@code :2379305}），
  * 活动子系表 {@code quest/event_quest.xml} 全域缺失（计划 §10.3-#3）⇒ 那些轴登记为**不可实证假设**，
@@ -39,7 +39,7 @@ class QuestMovieEventDefinitionTest {
 
 	private static final int ELYOS_QUEST = 80016;
 	private static final int ASMODIAN_QUEST = 80018;
-	/** event_Sonaran / event_Mayer（真端 acquired/reward 列 → 静态 npc_template）。 */
+	/** event_Sonaran / event_Mayer（原版 acquired/reward 列 → 静态 npc_template）。 */
 	private static final int ELYOS_NPC = 799763;
 	private static final int ASMODIAN_NPC = 799778;
 	/** quest_80016a / quest_80018a（quest.xml collect_item1 → 静态物品 name_desc）。 */
@@ -55,7 +55,7 @@ class QuestMovieEventDefinitionTest {
 			assertTrue(handler.routes(questId), "quest " + questId + " 必须由 native 车道路由");
 			assertEquals(RetailGrantKind.NPC, handler.grantKind(questId), "NPC 接取行");
 			assertEquals(npcId, handler.acquireNpc(questId), "接取 NPC");
-			assertEquals(npcId, handler.rewardNpc(questId), "交付 NPC（真端同主）");
+			assertEquals(npcId, handler.rewardNpc(questId), "交付 NPC（原版同主）");
 			assertEquals(0, handler.relayCount(questId), "无中继步");
 			assertEquals(List.of(new SimpleTalkHandler.ItemStack(itemId, 15)), handler.workItems(questId),
 				"交付门 = quest.xml collect_item1 ×15");
@@ -106,7 +106,7 @@ class QuestMovieEventDefinitionTest {
 			assertTrue(itemHandler.onDialog(NativeTalkFixture.dialog(player, npcId, questId, 1009)), "交付报告");
 			assertEquals(QuestStatus.REWARD, player.getQuestStateList().getQuestState(questId).getStatus());
 			NativeTalkFixture.assertOnlyDialogPage(player, SimpleTalkHandler.PAGE_REWARD_WINDOW);
-			assertEquals(List.of("remove:" + itemId + ":15"), inventory.calls(), "交付门按真端扣除");
+			assertEquals(List.of("remove:" + itemId + ":15"), inventory.calls(), "交付门按原版扣除");
 		}
 	}
 
@@ -114,29 +114,29 @@ class QuestMovieEventDefinitionTest {
 	void theRetailRowHasNoSystemGrantAxis() {
 		SimpleTalkHandler handler = NativeTalkFixture.handler();
 		for (int questId : new int[] {ELYOS_QUEST, ASMODIAN_QUEST}) {
-			// 真端 codegen 注册的是 NPC 节点（b5920），事件子系默认槽 0x37/0x38 不在 retail codegen 面内。
+			// 原版 codegen 注册的是 NPC 节点（b5920），事件子系默认槽 0x37/0x38 不在 retail codegen 面内。
 			assertFalse(handler.isSystemGranted(questId), "quest " + questId + " 只能由 NPC 接取");
 			assertEquals(0, handler.factionId(questId), "quest " + questId + " 不是阵营日常行");
 			assertNull(handler.conQuest(questId), "quest " + questId + " 无链式接取窗");
 			assertTrue(NativeTalkFixture.clientDeclares(questId, SimpleTalkHandler.PAGE_ASK_ACCEPT),
-				"quest " + questId + " 客户端任务页声明真端接取窗页 4");
+				"quest " + questId + " 客户端任务页声明原版接取窗页 4");
 		}
 	}
 
 	private static void assertEventRow(int questId, String race, int itemId, String dropMonster) {
 		NativeQuestXmlTable.QuestRow row = NativeQuestXmlTable.instance().find(questId).orElseThrow();
-		assertEquals("event", row.text("category1"), "真端类别");
-		assertEquals(10, row.integer("minlevel_permitted"), "真端等级下限");
-		assertEquals(race, row.text("race_permitted"), "真端种族轴");
+		assertEquals("event", row.text("category1"), "原版类别");
+		assertEquals(10, row.integer("minlevel_permitted"), "原版等级下限");
+		assertEquals(race, row.text("race_permitted"), "原版种族轴");
 		assertEquals("1", row.text("max_repeat_count"), "一次性任务");
-		assertEquals("quest_" + questId + "a 15", row.text("collect_item1"), "真端收集物通道");
-		assertEquals("quest_" + questId + "a 15", row.text("check_item1_1"), "真端交付门通道");
-		assertEquals("50000", row.text("reward_exp1"), "真端经验奖励");
-		assertEquals("100000", row.text("reward_gold1"), "真端金币奖励");
-		assertEquals("world_wrap_event_winter_02a 1", row.text("reward_item1_1"), "真端奖励道具 1");
-		assertEquals("world_event_head_winter_01 1", row.text("reward_item1_2"), "真端奖励道具 2");
-		assertEquals(dropMonster, row.text("drop_monster_1"), "真端掉落怪");
-		assertEquals("100", row.text("drop_prob_1"), "真端掉落率");
+		assertEquals("quest_" + questId + "a 15", row.text("collect_item1"), "原版收集物通道");
+		assertEquals("quest_" + questId + "a 15", row.text("check_item1_1"), "原版交付门通道");
+		assertEquals("50000", row.text("reward_exp1"), "原版经验奖励");
+		assertEquals("100000", row.text("reward_gold1"), "原版金币奖励");
+		assertEquals("world_wrap_event_winter_02a 1", row.text("reward_item1_1"), "原版奖励道具 1");
+		assertEquals("world_event_head_winter_01 1", row.text("reward_item1_2"), "原版奖励道具 2");
+		assertEquals(dropMonster, row.text("drop_monster_1"), "原版掉落怪");
+		assertEquals("100", row.text("drop_prob_1"), "原版掉落率");
 		assertEquals(15, collectCount(row), "交付数量");
 		assertEquals(itemId, itemOf(questId), "收集物 id 冻结（静态物品 name_desc）");
 	}

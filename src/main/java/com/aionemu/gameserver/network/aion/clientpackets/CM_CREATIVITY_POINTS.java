@@ -100,7 +100,7 @@ public class CM_CREATIVITY_POINTS extends AionClientPacket {
 	}
 	
 	private void checkQuestCompletion(Player player) {
-		// 真端 0x100 状态推进不写轴：这两个任务没有玩法内进度步，注入创造力后直接置 REWARD，
+		// 原版 0x100 状态推进不写轴：这两个任务没有玩法内进度步，注入创造力后直接置 REWARD，
 		// var0 保持接取值 0。写入打包步数 1 会让客户端任务书按 0 基行匹配落空（镜像任务 10522
 		// 实机 2026-10-08 报障：REWARD/var0=1 步骤空白，//quest set 10522 reward 0 后恢复）。
 		// The retail 0x100 status advance never writes the axis: neither quest has an in-play progress

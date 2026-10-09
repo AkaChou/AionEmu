@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
  * {@link RawQuestVarsCodec} 门测试：6/10 位槽算术 + 守卫位 fail-closed。
  * Gate tests for {@link RawQuestVarsCodec}: 6/10-bit slot arithmetic plus guard-bit fail-closed negatives.
  * <p>
- * 锚点取自 P0a 相机矩阵（真端脚本调用点，camera-params.tsv 带文件:行号证据）：
+ * 锚点取自 P0a 相机矩阵（原版脚本调用点，camera-params.tsv 带文件:行号证据）：
  * 任务 1842（10 位，fullValue 0x450 = 槽1:80 + 槽2:1）、任务 1112 族（6 位，0x145 = 槽1:5 + 槽2:5）。
  */
 class RawQuestVarsCodecTest {

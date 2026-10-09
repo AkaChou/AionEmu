@@ -8,7 +8,7 @@ import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.services.DialogService;
 
 /**
- * 无目标领奖结算段（真端 {@code QuestDialog} 无主键协议）：任务窗/实时奖励槽的确认包不带任何 NPC
+ * 无目标领奖结算段（原版 {@code QuestDialog} 无主键协议）：任务窗/实时奖励槽的确认包不带任何 NPC
  * 上下文（{@code CM_DIALOG_SELECT} 的 targetless 分支，或客户端携带的上一个交互对象已不可解析），
  * 服务端只凭 questId + 动作路由到拥有该行的 native 族并结算——{@link QuestDialogAction#isRewardWindowAction}
  * 的契约注释即此口径（「不能把该对象当作完成 NPC 绑定」）。
@@ -83,7 +83,7 @@ public final class NativeTargetlessReward {
 		if (familyPostClaim != null) {
 			familyPostClaim.run();
 		}
-		// 收尾 = 关窗（真端 0x5d8；与 typed 车道无目标 CloseDialog 及案例 8.3 合同一致）。
+		// 收尾 = 关窗（原版 0x5d8；与 typed 车道无目标 CloseDialog 及案例 8.3 合同一致）。
 		// Tail = close the window (retail 0x5d8; the typed targetless CloseDialog shape).
 		DialogService.closeDialog(player, 0);
 		return true;

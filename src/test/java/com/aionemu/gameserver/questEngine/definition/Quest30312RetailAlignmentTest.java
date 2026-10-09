@@ -15,7 +15,7 @@ import com.aionemu.gameserver.questEngine.tablelane.SimpleTalkHandler;
  * Quest30312RetailAlignmentTest
  * <p>
  * P3 重锚（计划 §8.9）：旧 IR 形状断言（节点名/条件/动作/页链）随 SimpleTalk 切换批退场，
- * 本类改为真端表行锚——接取/交付 NPC、中继步、发扣物品、交付门均取自
+ * 本类改为原版表行锚——接取/交付 NPC、中继步、发扣物品、交付门均取自
  * {@code Quest_SimpleTalk.xml} + {@code quest.xml} 与静态数据（{@code npc_template} /
  * 物品 {@code name_desc}），native 处理器必须逐项一致。
  * <p>
@@ -28,7 +28,7 @@ class Quest30312RetailAlignmentTest {
 	void dropsAndEveryTurnInMatchRetailItemRequirements() {
 		SimpleTalkHandler handler = SimpleTalkHandler.instance();
 
-		// 真端行 30312：Herka → Herka
+		// 原版行 30312：Herka → Herka
 		assertTrue(handler.routes(30312), "30312 必须由 native 车道路由");
 		assertEquals(799322, handler.acquireNpc(30312), "接取 NPC");
 		assertEquals(799322, handler.rewardNpc(30312), "交付 NPC");

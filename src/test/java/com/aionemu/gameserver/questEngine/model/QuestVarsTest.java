@@ -49,7 +49,7 @@ class QuestVarsTest {
 	/**
 	 * 打包值是 32 位整数（SM_QUEST_LIST/SM_QUEST_ACTION 用 writeD 下发、player_quests 存 INT 列），
 	 * 因此槽 0..4 各占 6 bit，第 5 槽只剩 bit30..31 → 只能表示 0..3。
-	 * 真端生产 XML 也只在 var5 上声明 1 bit 标志（全库 6 个任务，max=1），本用例锁定该可表示区间。
+	 * 原版生产 XML 也只在 var5 上声明 1 bit 标志（全库 6 个任务，max=1），本用例锁定该可表示区间。
 	 * The packed value is a 32-bit int (writeD on the wire and an INT column in player_quests), so slots 0..4
 	 * own bits 0..29 and slot 5 keeps only bits 30..31. Production XML only uses var5 as a 1-bit flag.
 	 */
@@ -73,7 +73,7 @@ class QuestVarsTest {
 	}
 
 	/**
-	 * 第 5 槽的高位在 32 位打包里被截断：写入 4（需要 bit32）回读为 0，与真端 32 位包一致。
+	 * 第 5 槽的高位在 32 位打包里被截断：写入 4（需要 bit32）回读为 0，与原版 32 位包一致。
 	 * Slot 5 bits beyond bit31 are truncated by the 32-bit packing, matching the retail 32-bit wire value.
 	 */
 	@Test

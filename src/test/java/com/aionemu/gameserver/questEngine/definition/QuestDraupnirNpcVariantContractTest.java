@@ -41,7 +41,7 @@ class QuestDraupnirNpcVariantContractTest {
 		quest(17001, variant(213780, 236929)),
 		quest(27001, variant(213780, 236929)),
 		quest(4525, variant(213780, 236929)),
-		// 真端 DataDriven 行把 14252/24252 的段 2 目标改为 IDDF3_DrakanFiBossD_50_Ah_SP_2（237263，
+		// 原版 DataDriven 行把 14252/24252 的段 2 目标改为 IDDF3_DrakanFiBossD_50_Ah_SP_2（237263，
 		// 独立 name_id 337916）：213780/236929（name_id 315799）不再是这两条顺序链的击杀目标；段 1 的
 		// 显示名族（315794）仍同时覆盖退役 213775 与实刷 236924，变体对保留。
 		// The retail DataDriven rows switched stage 2 of 14252/24252 to IDDF3_DrakanFiBossD_50_Ah_SP_2
@@ -70,7 +70,7 @@ class QuestDraupnirNpcVariantContractTest {
 	@Test
 	void everyQuestReferenceToARetiredDraupnirNpcAlsoIncludesItsLiveVariant() throws Exception {
 		// 退役任务的 XML 不再进仓：本扫描只覆盖仍由 XML 拥有的生产任务；
-		// 真端驱动任务的 NPC id 由 RetailNpcNameIndex 的同名族闭包给出（见 RetailSimpleHunt* 门禁）。
+		// 原版驱动任务的 NPC id 由 RetailNpcNameIndex 的同名族闭包给出（见 RetailSimpleHunt* 门禁）。
 		// Retired XMLs are gone; retail-driven quests resolve npc ids through the name-family closure.
 		for (Path dir : List.of(QUEST_DATA)) {
 			try (var paths = Files.list(dir)) {
@@ -184,7 +184,7 @@ class QuestDraupnirNpcVariantContractTest {
 	}
 
 	/**
-	 * 生产定义：XML 目录 + 真端 overlay；退役任务由真端驱动提供（旧 XML 只在 git 历史里）。
+	 * 生产定义：XML 目录 + 原版 overlay；退役任务由原版驱动提供（旧 XML 只在 git 历史里）。
 	 * Production definition via the production view; retired quests come from the retail driver.
 	 */
 	private static CompiledQuestDefinition load(int questId) {

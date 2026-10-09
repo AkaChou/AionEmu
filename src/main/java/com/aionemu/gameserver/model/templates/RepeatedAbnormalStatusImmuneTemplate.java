@@ -12,8 +12,8 @@ import lombok.Setter;
 import com.aionemu.gameserver.skillengine.effect.AbnormalState;
 
 /**
- * 真端「重复异常状态递减/免疫」条目，逐位对应
- * &lt;真端根&gt;/Map/XML/repeated_abnormal_status_immune.xml。
+ * 原版「重复异常状态递减/免疫」条目，逐位对应
+ * &lt;原版根&gt;/Map/XML/repeated_abnormal_status_immune.xml。
  * Retail repeated-abnormal decay entry, mirroring
  * &lt;retail root&gt;/Map/XML/repeated_abnormal_status_immune.xml.
  * <p>语义 / Semantics：目标每次被同一状态命中后步数 +1（上限 5）；本次施加落在

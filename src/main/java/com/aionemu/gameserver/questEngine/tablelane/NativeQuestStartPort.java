@@ -17,13 +17,13 @@ import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
- * 真端车道的**接取建档口**（计划 §6.2 的 native 状态端口）：不经过 typed 目录，也不依赖
+ * 原版车道的**接取建档口**（计划 §6.2 的 native 状态端口）：不经过 typed 目录，也不依赖
  * {@code QuestService.startQuest}（后者要求 typed {@code QuestTemplate}，已切换行没有模板）。
  * <p>
- * 开始条件读真端 {@code quest.xml} 轴：等级（{@code minlevel_permitted}/{@code maxlevel_permitted}，
- * 真端 {@code Quest::CanAcquireQuest} 对 {@code level < minlevel} 一律拒绝，故 {@code 999} 是不可达值而非
+ * 开始条件读原版 {@code quest.xml} 轴：等级（{@code minlevel_permitted}/{@code maxlevel_permitted}，
+ * 原版 {@code Quest::CanAcquireQuest} 对 {@code level < minlevel} 一律拒绝，故 {@code 999} 是不可达值而非
  * "无限制"）、种族、职业、性别、重复上限（{@code max_repeat_count}）、已完成前置（{@code finished_quest_condN}，
- * 值形如 {@code Q50010}）。{@code bm_restrict_category} 按真端「类别 + 19」位查玩家账号限制位图
+ * 值形如 {@code Q50010}）。{@code bm_restrict_category} 按原版「类别 + 19」位查玩家账号限制位图
  * （{@code quest_acquire1..4}，见 {@link RestrictionBitmap}），本服无计费来源 ⇒ 位集为空。
  * <p>
  * Native start/state port: retail quest.xml axes only, no typed template; unproven axes fail closed.
@@ -35,7 +35,7 @@ public final class NativeQuestStartPort {
 		STARTED,
 		/** 已在进行/待领奖。 / Already in progress. */
 		ALREADY_RUNNING,
-		/** 真端行不可接取（等级轴不可达）。 / Row unreachable (level axis). */
+		/** 原版行不可接取（等级轴不可达）。 / Row unreachable (level axis). */
 		LEVEL_BLOCKED,
 		RACE_BLOCKED,
 		CLASS_BLOCKED,
@@ -46,39 +46,39 @@ public final class NativeQuestStartPort {
 		PREREQUISITE_MISSING,
 		/** 账号限制位图命中该行的 {@code quest_acquireN} 位。 / Account restriction bitmap hit. */
 		BM_RESTRICT_BLOCKED,
-		/** 缺真端行。 / No retail row. */
+		/** 缺原版行。 / No retail row. */
 		MISSING_ROW
 	}
 
 	/**
-	 * 真端 opcode 127（{@code S_UPDATE_ZONE_QUEST} = AionEmu 的 {@code SM_NEARBY_QUESTS}）单行结论。
+	 * 原版 opcode 127（{@code S_UPDATE_ZONE_QUEST} = AionEmu 的 {@code SM_NEARBY_QUESTS}）单行结论。
 	 * <p>
-	 * 真端 {@code Quest::CanAcquireQuest} 在区域任务清单形态（{@code param_5 = 0}：不短路、不提示）
+	 * 原版 {@code Quest::CanAcquireQuest} 在区域任务清单形态（{@code param_5 = 0}：不短路、不提示）
 	 * 下返回三值：{@code 2} = 全部轴通过；{@code 1} = **仅**等级轴不达且
 	 * {@code minlevel_permitted <= level + 1}；{@code 0} = 其余一切失败（种族/职业/性别/头衔/军衔/
-	 * 重复上限/前置/等级差 &gt; 1/超出等级上限）。真端调用方 {@code User::_UpdateQuestAcquireCondition}
+	 * 重复上限/前置/等级差 &gt; 1/超出等级上限）。原版调用方 {@code User::_UpdateQuestAcquireCondition}
 	 * 把 {@code 2} 写成平条目、{@code 1} 写成 {@code questId | 0x20000} 软标记条目、{@code 0} 丢弃。
 	 * <p>
 	 * The retail zone-quest verdict (opcode 127): {@code 2} = every axis passes, {@code 1} = only the
 	 * level axis is short and {@code minlevel_permitted <= level + 1}, {@code 0} = anything else.
 	 */
 	public enum ZoneVerdict {
-		/** 真端 2：平条目。 / Retail 2: plain entry. */
+		/** 原版 2：平条目。 / Retail 2: plain entry. */
 		ACQUIRABLE,
-		/** 真端 1：{@code questId | 0x20000} 软标记条目。 / Retail 1: the {@code questId | 0x20000} entry. */
+		/** 原版 1：{@code questId | 0x20000} 软标记条目。 / Retail 1: the {@code questId | 0x20000} entry. */
 		LEVEL_SOON,
-		/** 真端 0：不入列表。 / Retail 0: not listed. */
+		/** 原版 0：不入列表。 / Retail 0: not listed. */
 		OMITTED
 	}
 
 	/**
-	 * 账号限制位图端口（真端 {@code quest_acquireN} 等 68 个限制位的玩家侧位集）。
+	 * 账号限制位图端口（原版 {@code quest_acquireN} 等 68 个限制位的玩家侧位集）。
 	 * <p>
-	 * 真端语义（已坐实，见 {@code p3/p3-prereqs/bm-restrict-category-semantics.md}）：
+	 * 原版语义（已坐实，见 {@code p3/p3-prereqs/bm-restrict-category-semantics.md}）：
 	 * {@code bm_restrict_category} 是**类别下标**（服务端存 1 字节，&lt;0 → 0、&gt;8 → 8），
 	 * 判定为「玩家限制位图 = {(类别 + 19)} 时拒绝接取」；下标 20..23 即
 	 * {@code quest_acquire1..4}。本服无计费/账号类型子系统 ⇒ 生产端口为空位集
-	 * （真端全订阅账号的 restrict 列表同样为空），因此类别 1 的行按真端**可接取**。
+	 * （原版全订阅账号的 restrict 列表同样为空），因此类别 1 的行按原版**可接取**。
 	 * <p>
 	 * The account restriction bitmap: the retail check denies acquisition when bit
 	 * {@code category + 19} is set on the player (indices 20..23 are {@code quest_acquire1..4}).
@@ -93,7 +93,7 @@ public final class NativeQuestStartPort {
 		RestrictionBitmap EMPTY = (player, bitIndex) -> false;
 	}
 
-	/** 真端限制位图里 {@code quest_acquire1} 的下标（类别 1 + 19）。 / Retail bit index of quest_acquire1. */
+	/** 原版限制位图里 {@code quest_acquire1} 的下标（类别 1 + 19）。 / Retail bit index of quest_acquire1. */
 	static final int QUEST_ACQUIRE_FIRST_BIT = 20;
 
 	/** 结论 + 证据串。 / Verdict with an evidence detail. */
@@ -135,7 +135,7 @@ public final class NativeQuestStartPort {
 	}
 
 	/**
-	 * NPC 接取（真端 {@code Quest::CanAcquireQuest} 等价判定）→ 建档/复位到 START。
+	 * NPC 接取（原版 {@code Quest::CanAcquireQuest} 等价判定）→ 建档/复位到 START。
 	 * NPC acquisition: the {@code CanAcquireQuest}-equivalent adjudication, then create/reset the row.
 	 */
 	public StartResult start(Player player, int questId) {
@@ -182,7 +182,7 @@ public final class NativeQuestStartPort {
 		return repeat.started() ? commit(player, questId) : repeat;
 	}
 
-	/** 真端 {@code CanAcquireQuest} 等价判定（不发状态、不改存档）。 / Retail acquisition adjudication, no writes. */
+	/** 原版 {@code CanAcquireQuest} 等价判定（不发状态、不改存档）。 / Retail acquisition adjudication, no writes. */
 	public StartResult evaluateNpcAcquire(Player player, int questId) {
 		if (player == null || player.getQuestStateList() == null) {
 			return new StartResult(Outcome.MISSING_ROW, "player unavailable");
@@ -207,9 +207,9 @@ public final class NativeQuestStartPort {
 	}
 
 	/**
-	 * 区域任务清单（真端 opcode 127 / {@code SM_NEARBY_QUESTS}）单行结论。
+	 * 区域任务清单（原版 opcode 127 / {@code SM_NEARBY_QUESTS}）单行结论。
 	 * <p>
-	 * 轴与 {@link #evaluateNpcAcquire(Player, int)} 同源，差别只有真端在清单形态下**不短路**：等级轴
+	 * 轴与 {@link #evaluateNpcAcquire(Player, int)} 同源，差别只有原版在清单形态下**不短路**：等级轴
 	 * 失败时其余轴仍全部判定，因此软结论 {@code 1} 只在「其余轴全通过 + 恰好只差 1 级」出现；任一非
 	 * 等级轴失败（含超出等级上限、重复上限用尽、进行中）都是硬 {@code 0}。
 	 * <p>
@@ -228,7 +228,7 @@ public final class NativeQuestStartPort {
 		}
 		QuestState state = player.getQuestStateList().getQuestState(questId);
 		if (state != null && (state.getStatus() == QuestStatus.START || state.getStatus() == QuestStatus.REWARD)) {
-			// 真端调用方要求 {@code UserQuestData_GetQuestState(id)[0] == 0}（无进行中记录）才入清单。
+			// 原版调用方要求 {@code UserQuestData_GetQuestState(id)[0] == 0}（无进行中记录）才入清单。
 			// The retail caller requires the player's quest-state byte to be zero (nothing in progress).
 			return ZoneVerdict.OMITTED;
 		}
@@ -247,7 +247,7 @@ public final class NativeQuestStartPort {
 		return ZoneVerdict.ACQUIRABLE;
 	}
 
-	/** 等级轴（真端 {@code minlevel_permitted}/{@code maxlevel_permitted}）。 / The level axis. */
+	/** 等级轴（原版 {@code minlevel_permitted}/{@code maxlevel_permitted}）。 / The level axis. */
 	private StartResult levelVerdict(Player player, NativeQuestXmlTable.QuestRow row) {
 		int minLevel = intOr(row, "minlevel_permitted", 0);
 		int maxLevel = intOr(row, "maxlevel_permitted", 0);
@@ -269,8 +269,8 @@ public final class NativeQuestStartPort {
 		String playerClass = player.getCommonData() == null || player.getCommonData().getPlayerClass() == null
 				? null
 				: player.getCommonData().getPlayerClass().name().toLowerCase(Locale.ROOT);
-		// 职业词表与生产元数据同源（真端 token → PlayerClass，基础职业 ≥10 展开进阶线）；
-		// 逐字比较 token 会让 fighter/knight/wizard 这类真端名永远不匹配。
+		// 职业词表与生产元数据同源（原版 token → PlayerClass，基础职业 ≥10 展开进阶线）；
+		// 逐字比较 token 会让 fighter/knight/wizard 这类原版名永远不匹配。
 		// Class tokens share the production metadata mapping; a literal token comparison would never
 		// match retail names such as fighter/knight/wizard.
 		java.util.Set<String> permittedClasses = RetailQuestMetadataCompiler.permittedClassNames(
@@ -283,7 +283,7 @@ public final class NativeQuestStartPort {
 		if (!tokenPermitted(row.text("gender_permitted"), gender)) {
 			return new StartResult(Outcome.GENDER_BLOCKED, "gender " + gender);
 		}
-		// bm_restrict_category：真端按「类别 + 19」位查玩家限制位图（NPCServer Quest::CanAcquireQuest，
+		// bm_restrict_category：原版按「类别 + 19」位查玩家限制位图（NPCServer Quest::CanAcquireQuest，
 		// 见 p3-prereqs/bm-restrict-category-semantics.md）；类别仅 1..4 落在 quest_acquire1..4。
 		// bm_restrict_category is the account-restriction category: the retail check denies when the
 		// player's bitmap has bit (category + 19); only 1..4 land on quest_acquire1..4.
@@ -299,7 +299,7 @@ public final class NativeQuestStartPort {
 		return new StartResult(Outcome.STARTED, "eligibility");
 	}
 
-	/** 重复上限（真端 {@code finishedcount < max_repeat_count}）。 / Repeat budget. */
+	/** 重复上限（原版 {@code finishedcount < max_repeat_count}）。 / Repeat budget. */
 	private StartResult repeatVerdict(QuestState state, NativeQuestXmlTable.QuestRow row) {
 		if (state == null || state.getStatus() != QuestStatus.COMPLETE) {
 			return new StartResult(Outcome.STARTED, "fresh state");
@@ -329,7 +329,7 @@ public final class NativeQuestStartPort {
 						continue;
 					}
 					QuestState prerequisite = player.getQuestStateList().getQuestState(questId);
-					// 带 {@code :n} 后缀（真端奖励分支）的行还要比对该前置的奖励档；
+					// 带 {@code :n} 后缀（原版奖励分支）的行还要比对该前置的奖励档；
 					// 档位解析与生产元数据同源。 / A {@code :n} suffix also pins the prerequisite's
 					// reward slot, parsed through the shared production rule.
 					boolean rewardMatches = token.indexOf(':') < 0
@@ -345,12 +345,12 @@ public final class NativeQuestStartPort {
 	}
 
 	/**
-	 * {@code unfinished_quest_cond1..N}：被引用行必须**未** COMPLETE 才算通过（真端该列的"未进行"语义，
+	 * {@code unfinished_quest_cond1..N}：被引用行必须**未** COMPLETE 才算通过（原版该列的"未进行"语义，
 	 * 与 typed {@code UnfinishedQuest} 同轴：{@code state == null || status != COMPLETE}）。
 	 * <p>
 	 * 只服务 DD 链式接取面（{@code DataDrivenNativeRuntime} 对 {@code acquire=none} 后继行的发放行走）；
 	 * {@link #start(Player, int)} 的判定面刻意不含该轴——其它 native 接取面（Talk/ItemPlay/EnterWorld/
-	 * EnterArea/LevelUp 与七族）口径不变，避免扩大影响面。缺真端行或条件名解析失败一律 fail-closed。
+	 * EnterArea/LevelUp 与七族）口径不变，避免扩大影响面。缺原版行或条件名解析失败一律 fail-closed。
 	 * <p>
 	 * The unfinished-quest axis: every referenced row must NOT be COMPLETE. Scoped to the DD
 	 * chain-acquire face only — {@code start()}'s verdicts deliberately stay unchanged for every other
@@ -385,7 +385,7 @@ public final class NativeQuestStartPort {
 	/**
 	 * {@code finished_quest_condN} 取值 → 前置任务 ID。
 	 * <p>
-	 * 真端该列写的是**目标行的 {@code <name>}**，并可选带 {@code :n} 奖励分支后缀：绝大多数为
+	 * 原版该列写的是**目标行的 {@code <name>}**，并可选带 {@code :n} 奖励分支后缀：绝大多数为
 	 * {@code Q<id>}，574 行（CombineTask 全族）为符号（{@code ws_q5015} = 行 5015），因此除
 	 * {@code Q<digits>} 之外一律回落到 {@link NativeQuestXmlTable#findByName(String)}；两者都
 	 * 解不出才算表数据破损（fail-loud）。
@@ -453,7 +453,7 @@ public final class NativeQuestStartPort {
 	}
 
 	/**
-	 * {@code bm_restrict_category} → 类别下标（与真端同形：缺列/负值 → 0、&gt;8 → 8）。
+	 * {@code bm_restrict_category} → 类别下标（与原版同形：缺列/负值 → 0、&gt;8 → 8）。
 	 * The retail restriction category, clamped exactly like the retail loaders.
 	 */
 	public static int restrictCategory(NativeQuestXmlTable.QuestRow row) {

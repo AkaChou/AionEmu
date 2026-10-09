@@ -21,12 +21,12 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * 验证任务 16802（26802 的天族孪生）的真端 DD 行（DD_AREA_HUNT_GRID）合同。
+ * 验证任务 16802（26802 的天族孪生）的原版 DD 行（DD_AREA_HUNT_GRID）合同。
  * <p>
  * 已退役（保留清单 owner=RETAIL_TABLE，family=DataDriven）：旧「生产视图」IR 节点断言随 P7 步 f 退场，
  * 按计划 §8.9（P3 重锚口径）改锚 DD 运行时公共面：进区域系统发放（acquireZoneInterests，无 NPC 对话
  * 接取面）、击杀网格（段 1 = 8 名 Leibo 图书管理员 ×30 落组 1，段 2 = 6 只 BI Leibo 首领 ×2 落组 2）、
- * 组计数推进（真端 {@code counter<target} 守卫；全部组槽达标收口进 REWARD）。
+ * 组计数推进（原版 {@code counter<target} 守卫；全部组槽达标收口进 REWARD）。
  * <p>
  * Re-anchored (plan §8.9) to the DD runtime faces: the EnterArea acquire category, the two kill-grid group
  * counters (30 librarians + 2 sub-bosses) and the retail counter guard with all-groups closure into REWARD.
@@ -48,18 +48,18 @@ class Quest16802ClientDialogAlignmentTest {
 		assertTrue(runtime.owns(QUEST_ID), "16802 必须由 DD 运行时拥有");
 		assertTrue(runtime.routes(QUEST_ID), "16802 必须由 DD 运行时路由");
 
-		// 接取类别 = 真端表的 EnterArea 行；不得有 NPC 对话接取面（旧 XML 的接取路由随退役入 git 历史）。
+		// 接取类别 = 原版表的 EnterArea 行；不得有 NPC 对话接取面（旧 XML 的接取路由随退役入 git 历史）。
 		// The row is a retail EnterArea row; no NPC talk-acquire face may survive.
 		DataDrivenQuestTable table = DataDrivenQuestTable.load(
 			Quest16802ClientDialogAlignmentTest.class
 				.getResourceAsStream(DataDrivenNativeRuntime.TABLE_RESOURCE));
 		assertEquals("enterarea", table.find(QUEST_ID).orElseThrow().acquireKind(),
-			"16802 的接取类别 = 真端 EnterArea 行");
+			"16802 的接取类别 = 原版 EnterArea 行");
 		assertTrue(runtime.acquireTalkInterests().values().stream()
 				.noneMatch(questIds -> questIds.contains(QUEST_ID)),
 			"进区发放行不得保留 NPC 对话接取面");
 
-		// 击杀网格两组互斥：图书管理员落组 1，首领落组 2（真端 value0 两段计数）。
+		// 击杀网格两组互斥：图书管理员落组 1，首领落组 2（原版 value0 两段计数）。
 		for (int npcId : LIBRARIANS) {
 			assertTrue(hasKillHit(runtime, npcId, 1), "图书管理员 " + npcId + " 必须落段 1 组槽");
 		}
@@ -67,12 +67,12 @@ class Quest16802ClientDialogAlignmentTest {
 			assertTrue(hasKillHit(runtime, npcId, 2), "首领 " + npcId + " 必须落段 2 组槽");
 		}
 
-		// 行 5 交付 NPC = 真端 reward_npc_name（IDEternity_Q_Weatha_E）；其报告面现只对 Talk 接取行
+		// 行 5 交付 NPC = 原版 reward_npc_name（IDEternity_Q_Weatha_E）；其报告面现只对 Talk 接取行
 		// 注册（对象 #2 面），不属本类断言范围——此处只锁行数据事实。
 		// The row-5 delivery NPC is the retail reward_npc_name; its report face is registered for
 		// Talk-acquired rows only and is out of this class's scope.
 		assertEquals("IDEternity_Q_Weatha_E", table.find(QUEST_ID).orElseThrow().rewardNpc(),
-			"行 5 交付 NPC = 真端 reward_npc_name");
+			"行 5 交付 NPC = 原版 reward_npc_name");
 	}
 
 	@Test
@@ -91,7 +91,7 @@ class Quest16802ClientDialogAlignmentTest {
 				"段 2 计数不得被段 1 击杀带动");
 			assertEquals(QuestStatus.START, state.getStatus(), "两段未齐不得进领奖");
 		}
-		// 满组超杀零写（真端 counter<target 守卫）。
+		// 满组超杀零写（原版 counter<target 守卫）。
 		assertFalse(kill(runtime, player, 220309), "已满组槽的超杀必须零写");
 		assertEquals(STAGE_ONE_KILLS, DataDrivenProgress.counter(state.getQuestVars().getQuestVars(), 1),
 			"超杀不得污染组 1 计数");

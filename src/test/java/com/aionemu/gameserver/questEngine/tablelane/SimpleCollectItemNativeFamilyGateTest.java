@@ -26,11 +26,11 @@ import com.aionemu.gameserver.questEngine.tablelane.NativeQuestTableLoader.Simpl
 /**
  * SimpleCollectItem 原生表驱动家族门禁（计划 §6.6 / §7 P4 切换批）。
  * <p>
- * 断言面全部来自真端表行 + {@code quest.xml} 元数据 + 生产静态数据 id，不合成语义：
+ * 断言面全部来自原版表行 + {@code quest.xml} 元数据 + 生产静态数据 id，不合成语义：
  * <ol>
  *   <li>262 行全量装载、双 NPC 结构 100%、9 行不可路由（5 TEST 无采集物 + 4 事件行无采集计数）；</li>
- *   <li>相机行与 {@code collect_item} 计数逐行一致（253 行有计数 − 3 行真端休眠 = 250 行，槽 = 交付列序）；</li>
- *   <li>接取 → 采集对象认领（物品驱动，真端无相机）→ 交付 → 领奖闭环；</li>
+ *   <li>相机行与 {@code collect_item} 计数逐行一致（253 行有计数 − 3 行原版休眠 = 250 行，槽 = 交付列序）；</li>
+ *   <li>接取 → 采集对象认领（物品驱动，原版无相机）→ 交付 → 领奖闭环；</li>
  *   <li>中继链（{@code talk_npc1..3}）门控与乱序零推进；</li>
  *   <li>失败面 fail-closed：未接取不推进、缺物品不放行、越界按钮不结算。</li>
  * </ol>
@@ -42,15 +42,15 @@ import com.aionemu.gameserver.questEngine.tablelane.NativeQuestTableLoader.Simpl
  */
 class SimpleCollectItemNativeFamilyGateTest {
 
-	/** 真端单对象采集任务（1 个化石 / required 1）。 / Retail single-object collect quest. */
+	/** 原版单对象采集任务（1 个化石 / required 1）。 / Retail single-object collect quest. */
 	private static final int SINGLE_OBJECT_QUEST = 1137;
-	/** 真端多计数采集任务（3 个 / Cherubim pouch）。 / Retail multi-count collect quest. */
+	/** 原版多计数采集任务（3 个 / Cherubim pouch）。 / Retail multi-count collect quest. */
 	private static final int MULTI_COUNT_QUEST = 1103;
 	/** 带中继 NPC 的采集任务（talk_npc1）。 / Retail collect quest with a relay npc. */
 	private static final int RELAY_QUEST = 14120;
 	/** 三步中继链的 TEST 行（talk_npc1..3 = Lostes/Gogohas/Gapir）。 / The three-step relay TEST row. */
 	private static final int TRIPLE_RELAY_QUEST = 9620;
-	/** 真端多列采集行（object1/object2 两列 × collect_item1/2 各 5 件）。 / Retail multi-column row. */
+	/** 原版多列采集行（object1/object2 两列 × collect_item1/2 各 5 件）。 / Retail multi-column row. */
 	private static final int MULTI_COLUMN_QUEST = 18501;
 	private static final int MULTI_COLUMN_COUNT = 5;
 
@@ -64,7 +64,7 @@ class SimpleCollectItemNativeFamilyGateTest {
 	private static CameraRegistry cameraRegistry;
 	private static SimpleCollectItemHandler handler;
 
-	/** 真端 minlevel=999 的休眠采集行（元数据 min>max，不派生相机行）。 / Retail dormant rows. */
+	/** 原版 minlevel=999 的休眠采集行（元数据 min>max，不派生相机行）。 / Retail dormant rows. */
 	private static final Set<Integer> DORMANT_LEVEL_ROWS = Set.of(36017, 46017, 47112);
 
 	@BeforeAll
@@ -78,11 +78,11 @@ class SimpleCollectItemNativeFamilyGateTest {
 
 	@Test
 	void loadsAll262RetailRowsWithTheTwoNpcShape() {
-		assertEquals(262, loader.collectSize(), "真端 quest_simplecollectitems 全量行");
+		assertEquals(262, loader.collectSize(), "原版 quest_simplecollectitems 全量行");
 		List<SimpleCollectItemRow> rows = List.copyOf(loader.collectRows());
 		assertTrue(rows.stream().allMatch(row ->
 			!row.acquiredNpcName().isBlank() && !row.rewardNpcName().isBlank()),
-			"双 NPC 结构必须 100%（真端 262/262）");
+			"双 NPC 结构必须 100%（原版 262/262）");
 		assertEquals(257, rows.stream().filter(row -> !row.objects().isEmpty()).count(),
 			"object1..4 覆盖 257 行");
 		assertEquals(5, rows.stream().filter(row -> !row.talkNpcNames().isEmpty()).count(),
@@ -108,21 +108,21 @@ class SimpleCollectItemNativeFamilyGateTest {
 	}
 
 	/**
-	 * 采集族真端无相机（camera-params.tsv 262/262 无调用；2026-10-04 修正），且 native 侧必须
-	 * 从真端 drop 列接手任务掉落（退役 XML 的 {@code <drops>} 已随 catalog 退场）。
+	 * 采集族原版无相机（camera-params.tsv 262/262 无调用；2026-10-04 修正），且 native 侧必须
+	 * 从原版 drop 列接手任务掉落（退役 XML 的 {@code <drops>} 已随 catalog 退场）。
 	 * The collect family has no retail camera, and the native lane must serve the retail drop column.
 	 */
 	@Test
 	void collectFamilyDerivesNoCameraRowsAndServesRetailDrops() {
 		for (SimpleCollectItemRow row : loader.collectRows()) {
 			assertTrue(cameraRegistry.find(row.questId()).isEmpty(),
-				"采集族不得派生相机行（真端 262/262 无相机调用）: " + row.questId());
+				"采集族不得派生相机行（原版 262/262 无相机调用）: " + row.questId());
 		}
-		// 1103：谷物袋子（700105）掉落 quest_1103a（182200201），chance=100（真端 drop_prob_1）。
+		// 1103：谷物袋子（700105）掉落 quest_1103a（182200201），chance=100（原版 drop_prob_1）。
 		var drops = handler.questDropsFor(700105);
 		assertTrue(drops.stream().anyMatch(drop -> drop.questId() == 1103
 			&& drop.itemId() == 182200201 && drop.chance() == 100),
-			"native 必须接手真端掉落列（真机 1103 谷物袋子）");
+			"native 必须接手原版掉落列（真机 1103 谷物袋子）");
 		assertTrue(loader.collectRows().stream().anyMatch(row -> row.questId() == 1137),
 			"1137 仍在采集族装载面");
 	}
@@ -136,7 +136,7 @@ class SimpleCollectItemNativeFamilyGateTest {
 		NativeTalkFixture.RecordingInventory inventory = new NativeTalkFixture.RecordingInventory();
 		SimpleCollectItemHandler local = handlerWith(inventory, NativeReportRewardFlow.instance());
 		int acquireNpc = local.acquireNpc(SINGLE_OBJECT_QUEST);
-		assertNotNull(acquireNpc, "真端行必须有可解析的接取 NPC");
+		assertNotNull(acquireNpc, "原版行必须有可解析的接取 NPC");
 
 		NativeTalkFixture.clearPackets(player);
 		assertTrue(local.onDialog(NativeTalkFixture.dialog(player, acquireNpc, SINGLE_OBJECT_QUEST, 26)),
@@ -152,7 +152,7 @@ class SimpleCollectItemNativeFamilyGateTest {
 		assertEquals(local.acceptGiveItems(SINGLE_OBJECT_QUEST).size(), inventory.calls().size(),
 			"接取侧发放面 = quest_work_item 列（1137 = 1 件）");
 		assertEquals(1011, NativeTalkFixture.clientEntryPage(SINGLE_OBJECT_QUEST),
-			"该行的客户端入口页 = select1(1011) 信页（真端入口页表；页 4 只由 1007 打开）");
+			"该行的客户端入口页 = select1(1011) 信页（原版入口页表；页 4 只由 1007 打开）");
 		assertEquals(4, NativeTalkFixture.askWindowPage(SINGLE_OBJECT_QUEST),
 			"该行客户端声明 ask_quest_accept(4) ⇒ 1007 可打开接取窗");
 		QuestState state = player.getQuestStateList().getQuestState(SINGLE_OBJECT_QUEST);
@@ -161,7 +161,7 @@ class SimpleCollectItemNativeFamilyGateTest {
 	}
 
 	/**
-	 * 可重复行 COMPLETE 重开局（真端 {@code finishedcount < max_repeat_count}）：9620
+	 * 可重复行 COMPLETE 重开局（原版 {@code finishedcount < max_repeat_count}）：9620
 	 * （max_repeat_count=255）完成后点任务行必须重新开放接取面并复位档案；1137（max=1）保持关闭。
 	 * <p>
 	 * Repeatable COMPLETE re-open: 9620 (max_repeat_count=255) must reopen its accept face after
@@ -175,7 +175,7 @@ class SimpleCollectItemNativeFamilyGateTest {
 		QuestState state = NativeTalkFixture.add(player, 9620, QuestStatus.COMPLETE, 0);
 		state.setCompleteCount(1);
 		Integer acquireNpc = local.acquireNpc(9620);
-		assertNotNull(acquireNpc, "真端行必须有可解析的接取 NPC");
+		assertNotNull(acquireNpc, "原版行必须有可解析的接取 NPC");
 
 		NativeTalkFixture.clearPackets(player);
 		assertTrue(local.onDialog(NativeTalkFixture.dialog(player, acquireNpc, 9620, 31)),
@@ -262,7 +262,7 @@ class SimpleCollectItemNativeFamilyGateTest {
 		NativeTalkFixture.assertOnlyDialogPageWithQuest(player, 1353, RELAY_QUEST);
 
 		// SETPRO1（10000）推进：步号写 var0 = 1（旧私编 bit16..17 的 65536 会让客户端任务书步骤空白）、
-		// 关窗（真端 0x5d8）。 / SETPRO1 advances the step into var0 and closes the window.
+		// 关窗（原版 0x5d8）。 / SETPRO1 advances the step into var0 and closes the window.
 		NativeTalkFixture.clearPackets(player);
 		assertTrue(handler.onDialog(NativeTalkFixture.dialog(player, relayNpc, RELAY_QUEST, 10000)),
 			"SETPRO1 必须推进一步");
@@ -299,7 +299,7 @@ class SimpleCollectItemNativeFamilyGateTest {
 		NativeTalkFixture.start(player, TRIPLE_RELAY_QUEST);
 		QuestState state = player.getQuestStateList().getQuestState(TRIPLE_RELAY_QUEST);
 		List<Integer> relays = handler.relayNpcs(TRIPLE_RELAY_QUEST);
-		assertEquals(3, relays.size(), "真端 9620 三个中继 NPC（Lostes/Gogohas/Gapir）");
+		assertEquals(3, relays.size(), "原版 9620 三个中继 NPC（Lostes/Gogohas/Gapir）");
 
 		// 尚未轮到的第二步：任务行打开零响应、乱序推进动作零步进。
 		NativeTalkFixture.clearPackets(player);
@@ -347,7 +347,7 @@ class SimpleCollectItemNativeFamilyGateTest {
 			player.getQuestStateList().getQuestState(SINGLE_OBJECT_QUEST).getStatus(), "未持有 31 零推进");
 		assertTrue(inventory.calls().isEmpty(), "未持有 31 零扣物");
 
-		// 持有交付物即满足真端 check_item 门（无相机门——2026-10-04 起采集为物品驱动）。
+		// 持有交付物即满足原版 check_item 门（无相机门——2026-10-04 起采集为物品驱动）。
 		inventory.hold(handInItem, 1);
 		NativeTalkFixture.clearPackets(player);
 		// 两步报告（裁定 a）：31 只发客户端声明的报告确认页（1137 契约声明 2375=select5）不推进；
@@ -392,7 +392,7 @@ class SimpleCollectItemNativeFamilyGateTest {
 			player.getQuestStateList().getQuestState(SINGLE_OBJECT_QUEST).getStatus(), "失败检查不推进");
 		assertTrue(inventory.calls().isEmpty(), "失败检查不扣物品");
 
-		// 持满：39 与 1009 同义——REWARD + 奖励窗 + 按真端计数扣物。
+		// 持满：39 与 1009 同义——REWARD + 奖励窗 + 按原版计数扣物。
 		inventory.hold(handInItem, 1);
 		NativeTalkFixture.clearPackets(player);
 		assertTrue(local.onDialog(NativeTalkFixture.dialog(player, rewardNpc, SINGLE_OBJECT_QUEST, checkAction)));
@@ -426,7 +426,7 @@ class SimpleCollectItemNativeFamilyGateTest {
 			player.getQuestStateList().getQuestState(SINGLE_OBJECT_QUEST).getStatus(), "失败检查不推进");
 		assertTrue(inventory.calls().isEmpty(), "失败检查不扣物品");
 
-		// 持满：20002 与 1009 同义——REWARD + 奖励窗 + 按真端计数扣物。
+		// 持满：20002 与 1009 同义——REWARD + 奖励窗 + 按原版计数扣物。
 		inventory.hold(handInItem, 1);
 		NativeTalkFixture.clearPackets(player);
 		assertTrue(local.onDialog(NativeTalkFixture.dialog(player, rewardNpc, SINGLE_OBJECT_QUEST, checkAction)));
@@ -437,7 +437,7 @@ class SimpleCollectItemNativeFamilyGateTest {
 	}
 
 	/**
-	 * 多列行（18501 两列 ×5）必须逐列持有：只持一列不得放行交付，两列交付物齐（真端 check_item）才翻 REWARD。
+	 * 多列行（18501 两列 ×5）必须逐列持有：只持一列不得放行交付，两列交付物齐（原版 check_item）才翻 REWARD。
 	 * Multi-column rows need every column's items held: one column never opens the hand-in.
 	 */
 	@Test
@@ -447,9 +447,9 @@ class SimpleCollectItemNativeFamilyGateTest {
 		SimpleCollectItemHandler local = handlerWith(inventory, NativeReportRewardFlow.instance());
 		NativeTalkFixture.start(player, MULTI_COLUMN_QUEST);
 		List<Integer> objects = local.collectObjects(MULTI_COLUMN_QUEST);
-		assertEquals(2, objects.size(), "18501 真端两列对象");
+		assertEquals(2, objects.size(), "18501 原版两列对象");
 		List<Integer> handIns = local.handInItems(MULTI_COLUMN_QUEST);
-		assertEquals(2, handIns.size(), "18501 真端两列交付物");
+		assertEquals(2, handIns.size(), "18501 原版两列交付物");
 		int rewardNpc = local.rewardNpc(MULTI_COLUMN_QUEST);
 
 		// 交互认领（零写）；只持第一列 ⇒ 第二列缺 ⇒ 交付 NPC 处仍是进行中页。
@@ -473,10 +473,10 @@ class SimpleCollectItemNativeFamilyGateTest {
 			player.getQuestStateList().getQuestState(MULTI_COLUMN_QUEST).getStatus());
 		assertEquals(List.of("remove:" + handIns.get(0) + ":" + MULTI_COLUMN_COUNT,
 			"remove:" + handIns.get(1) + ":" + MULTI_COLUMN_COUNT), inventory.calls(),
-			"两列交付物必须各按真端计数扣一份");
+			"两列交付物必须各按原版计数扣一份");
 	}
 
-	/** 交付后领取奖励：走 native 完成口（真端 reward 列 → 共用结算体）。 / Claim through the native settlement port. */
+	/** 交付后领取奖励：走 native 完成口（原版 reward 列 → 共用结算体）。 / Claim through the native settlement port. */
 	@Test
 	void claimCompletesThroughTheRetailDerivedTemplate() {
 		List<ClaimCall> calls = new ArrayList<>();
@@ -493,12 +493,12 @@ class SimpleCollectItemNativeFamilyGateTest {
 		NativeTalkFixture.clearPackets(player);
 		assertTrue(local.onDialog(NativeTalkFixture.dialog(player, rewardNpc, SINGLE_OBJECT_QUEST, 8)),
 			"奖励窗按钮必须由 native 领奖段服务");
-		// 领奖收尾 = 真端 npc-complete finish=SELECTION_DIALOG：回选择对话页（页 10，questId=0）。
+		// 领奖收尾 = 原版 npc-complete finish=SELECTION_DIALOG：回选择对话页（页 10，questId=0）。
 		NativeTalkFixture.assertOnlyDialogPage(player, QuestDialogPage.SELECT_QUEST.id());
 		assertEquals(1, calls.size());
 		assertEquals(SINGLE_OBJECT_QUEST, calls.getFirst().questId());
-		assertEquals(0, calls.getFirst().tier(), "单奖励槽行固定首档（真端 reward_*1）");
-		assertNotNull(calls.getFirst().template(), "结算体必须拿到真端奖励列重建的 typed 模板");
+		assertEquals(0, calls.getFirst().tier(), "单奖励槽行固定首档（原版 reward_*1）");
+		assertNotNull(calls.getFirst().template(), "结算体必须拿到原版奖励列重建的 typed 模板");
 	}
 
 	@Test
@@ -511,7 +511,7 @@ class SimpleCollectItemNativeFamilyGateTest {
 	}
 
 	/**
-	 * 链式接取窗（真端交付节点 0x1e 槽 = {@code mgr+0x1a8(player, con_quest)}）：37 行全部装载，且
+	 * 链式接取窗（原版交付节点 0x1e 槽 = {@code mgr+0x1a8(player, con_quest)}）：37 行全部装载，且
 	 * 本表内的下一环必须在本行的交付 NPC 上可接取（本车道按 NPC 建接取路由 ⇒ 该窗已由下一环自身实现）。
 	 * <p>
 	 * The chain window (retail hand-in slot 0x1e): all 37 rows load and every in-table next quest acquires
@@ -537,14 +537,14 @@ class SimpleCollectItemNativeFamilyGateTest {
 			assertTrue(handler.rewardNpcs(row.questId()).contains(targetAcquire),
 				"链式接取窗未在本行交付 NPC 上闭环: " + row.questId() + "->" + next);
 		}
-		assertEquals(37, declared, "真端 con_quest 覆盖 37 行");
+		assertEquals(37, declared, "原版 con_quest 覆盖 37 行");
 		assertEquals(6, inTable, "本表内链式目标 6 行（其余为跨族/无行，本族对拍门复算）");
 		assertTrue(handler.unresolvedChainQuestIds().isEmpty(),
 			() -> "本族链式接取窗未闭环: " + handler.unresolvedChainQuestIds());
 	}
 
 	/**
-	 * 过场（真端交付节点 0x35 槽 PlayMovie）：动作命中表声明的 {@code cs1_haction} 时下发
+	 * 过场（原版交付节点 0x35 槽 PlayMovie）：动作命中表声明的 {@code cs1_haction} 时下发
 	 * {@code cutsceneid1}，是状态机之外的副作用；未声明的行与触发动作之外的动作都不下发。
 	 * <p>
 	 * The cutscene (retail hand-in slot 0x35 PlayMovie): the declared action triggers the declared movie
@@ -555,9 +555,9 @@ class SimpleCollectItemNativeFamilyGateTest {
 		RecordingMovies movies = new RecordingMovies();
 		SimpleCollectItemHandler local = handlerWith(NativeTalkFixture.RecordingInventory.EMPTY, movies,
 			NativeReportRewardFlow.instance());
-		assertEquals(456, local.cutscene(MULTI_COLUMN_QUEST).movieId(), "18501 真端 cutsceneid1");
+		assertEquals(456, local.cutscene(MULTI_COLUMN_QUEST).movieId(), "18501 原版 cutsceneid1");
 		assertEquals(QuestDialogPage.SELECT1_1.id(), local.cutscene(MULTI_COLUMN_QUEST).triggerAction(),
-			"18501 真端 cs1_haction = select1_1(1012)");
+			"18501 原版 cs1_haction = select1_1(1012)");
 		assertNull(local.cutscene(SINGLE_OBJECT_QUEST), "未声明过场的行不得有过场面");
 
 		Player player = NativeTalkFixture.player();
@@ -571,15 +571,15 @@ class SimpleCollectItemNativeFamilyGateTest {
 		assertTrue(local.onDialog(NativeTalkFixture.dialog(player, rewardNpc, MULTI_COLUMN_QUEST, 26)));
 		assertTrue(movies.played().isEmpty(), "非触发动作不得下发过场");
 
-		// 交付面的动作集（31/26/1009）不含该页动作 ⇒ 该状态不服务、不下发（真端该动作挂在接取页链上）。
+		// 交付面的动作集（31/26/1009）不含该页动作 ⇒ 该状态不服务、不下发（原版该动作挂在接取页链上）。
 		NativeTalkFixture.clearPackets(player);
 		assertFalse(local.onDialog(NativeTalkFixture.dialog(player, rewardNpc, MULTI_COLUMN_QUEST,
-			QuestDialogPage.SELECT1_1.id())), "交付面不服务接取侧页动作（真端该 action 属 select1 页链）");
+			QuestDialogPage.SELECT1_1.id())), "交付面不服务接取侧页动作（原版该 action 属 select1 页链）");
 		assertTrue(movies.played().isEmpty(), "未服务的动作不得下发过场");
 		assertEquals(varsBefore, player.getQuestStateList().getQuestState(MULTI_COLUMN_QUEST)
 			.getQuestVars().getQuestVars(), "任何对话都不得改写任务 vars");
 
-		// 接取页链（1012 = select1_1，客户端契约已声明该页）：动作被服务 ⇒ 下发真端 movie，
+		// 接取页链（1012 = select1_1，客户端契约已声明该页）：动作被服务 ⇒ 下发原版 movie，
 		// 且只是状态机之外的副作用（不建任务档、不推进节点）。
 		Player accepting = NativeTalkFixture.player();
 		movies.clear();
@@ -594,7 +594,7 @@ class SimpleCollectItemNativeFamilyGateTest {
 
 	// ---------------------------------------------------------------- 夹具
 
-	/** 记录式假过场端口（真端 0x35 槽）。 / A recording fake cutscene port (retail slot 0x35). */
+	/** 记录式假过场端口（原版 0x35 槽）。 / A recording fake cutscene port (retail slot 0x35). */
 	private static final class RecordingMovies implements NativeMoviePort {
 		private final List<Integer> played = new ArrayList<>();
 

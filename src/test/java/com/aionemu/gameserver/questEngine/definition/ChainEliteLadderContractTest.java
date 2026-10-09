@@ -25,9 +25,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * 锁定精锐兵族 13918（天族）/ 23918（魔族）的链式 0/1 击杀阶梯。
  * <p>
  * 2026-10-05 重锚：两侧已随 P7 步 f 退役 XML、由 SimpleSerialHunt 原生车道直驱（无 IR），原 IR 判据
- * （SECTION 五槽位域、节点投影、修复边）随车道退场。现断言面 = 真端表行（count_first..fifth 五阶段
+ * （SECTION 五槽位域、节点投影、修复边）随车道退场。现断言面 = 原版表行（count_first..fifth 五阶段
  * 各 1 杀、按序推进）× 原生处理器（owns/acquireNpc/rewardNpc/onKill/onDialog）× CameraRegistry
- * （宽度 SIX 的槽位编码）× 真端 quest.xml 固定奖励列。两处历史漂移仍在原生面锁定：QE-052 的
+ * （宽度 SIX 的槽位编码）× 原版 quest.xml 固定奖励列。两处历史漂移仍在原生面锁定：QE-052 的
  * 「领奖 owner 不得由接取 NPC 兼任」、c44c50bd0 的「第三条固定 ITEM 索引丢失」。
  * <p>
  * Re-anchored 2026-10-05: both sides are retired XML driven natively by SimpleSerialHunt (no IR); the

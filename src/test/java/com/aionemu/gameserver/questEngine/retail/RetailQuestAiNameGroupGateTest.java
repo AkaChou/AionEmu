@@ -21,7 +21,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 /**
- * 常设门：真端对话名组通道（{@code quest_ai_name} 组表）。
+ * 常设门：原版对话名组通道（{@code quest_ai_name} 组表）。
  * <p>
  * 守卫面：①组表本身的数据不变式（成员可解析、同组共享 title_id、组名精确通道不与声明冲突——
  * 精确命中只能为空或与声明集等集，见 {@link #assertExactChannelAgreesWithGroup}）——
@@ -89,7 +89,7 @@ class RetailQuestAiNameGroupGateTest {
 			Set<String> titles = new TreeSet<>();
 			members.forEach(member -> titles.add(titleIds.getOrDefault(member, "?")));
 			assertEquals(1, titles.size(),
-				() -> group + " 成员 title_id 不唯一（真端编制不变式）：" + titles);
+				() -> group + " 成员 title_id 不唯一（原版编制不变式）：" + titles);
 			assertExactChannelAgreesWithGroup(group, ids);
 			assertEquals(ids, index.resolveAllOrQuestAiNameGroup(group),
 				() -> group + " 组通道解析结果与成员集不一致");
@@ -218,7 +218,7 @@ class RetailQuestAiNameGroupGateTest {
 	/**
 	 * 通道一致性：组名的**精确通道**命中要么为空（组名本身不是 spawn 名），要么与声明成员集**等集**。
 	 * <p>
-	 * 等集收敛是合法的：版本化别名表（{@code retail-npc-name-aliases.xml}，2026-09-30「追加真端逻辑名」
+	 * 等集收敛是合法的：版本化别名表（{@code retail-npc-name-aliases.xml}，2026-09-30「追加原版逻辑名」
 	 * 批）先于组表承载了同名事实，P0c-53 组表（客户端声明通道）落地后，{@code gab1_sub_fuen_e} /
 	 * {@code housingmanager_li|da} / {@code npc_event_svs_jabsuroong} / {@code npc_event_devasday_shugo}
 	 * 五条为两表同集重复——加载器对此明确容忍（「等集重复 = 同一事实已由既有条目承载……id 集不一致

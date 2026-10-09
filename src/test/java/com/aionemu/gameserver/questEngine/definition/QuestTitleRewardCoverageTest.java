@@ -27,7 +27,7 @@ class QuestTitleRewardCoverageTest {
 
 	@Test
 	void catalogMatchesEveryKnownServerTitleQuest() throws Exception {
-		// 生产视图 = XML 目录 + 真端驱动 overlay：退役任务由真端表驱动，称号合同照旧生效。
+		// 生产视图 = XML 目录 + 原版驱动 overlay：退役任务由原版表驱动，称号合同照旧生效。
 		// Production view = XML catalog plus the retail-driver overlay.
 		QuestCatalog catalog = questCatalog();
 		TitleRewards actual = catalogTitleRewards(catalog);
@@ -153,7 +153,7 @@ class QuestTitleRewardCoverageTest {
 			putTitles(regular, entry.id(), entry.metadata().rewards());
 			putTitles(extended, entry.id(), entry.metadata().extendedRewards());
 		}
-		// 退役任务的 XML 已删除，但称号奖励合同继续生效：逐行取真端表元数据（与接取/奖励门禁同源；
+		// 退役任务的 XML 已删除，但称号奖励合同继续生效：逐行取原版表元数据（与接取/奖励门禁同源；
 		// overlay 目录不含退役行，若走目录会把退役称号任务整批漏算）。
 		// Retired quests keep their title contract through the retail table itself (same source as the
 		// sibling gates; the overlay catalog does not carry retired rows).
@@ -181,7 +181,7 @@ class QuestTitleRewardCoverageTest {
 		}
 	}
 
-	/** 生产任务目录（XML 目录 + 真端驱动 overlay）。 / Production catalog with the retail overlay. */
+	/** 生产任务目录（XML 目录 + 原版驱动 overlay）。 / Production catalog with the retail overlay. */
 	private static QuestCatalog questCatalog() {
 		return RetailQuestDriver.overlay(
 			QuestDefinitionDirectoryLoader.compile(QuestTitleRewardCoverageTest.class.getClassLoader()));

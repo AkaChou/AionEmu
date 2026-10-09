@@ -14,7 +14,7 @@ import org.junit.jupiter.api.Test;
  * {@code AttackManager#targetTooFar} 对不可移动 NPC 的契约闸门。
  * Contract gate for {@code AttackManager#targetTooFar} and immobile NPCs.
  * <p>背景：卵、固定炮台这类 0 移速但有伤害的 NPC 一旦在这里放弃目标，就会清空仇恨；下一次受击或视野事件会立刻把它
- * 拉回战斗，客户端因此反复播放脱战表现（Taloc's Hollow 的 mosqua egg 就是该症状）。真端数据里没有这个驱动
+ * 拉回战斗，客户端因此反复播放脱战表现（Taloc's Hollow 的 mosqua egg 就是该症状）。原版数据里没有这个驱动
  * （0 移速不会产生寻路失败、{@code max_chase_time=0} 不设追击超时、pattern 在进入战斗时 {@code do_nothing}），
  * 因此该分支必须保持不存在。
  * Background: an immobile but damaging NPC that gives up here clears hate only to be pulled back into combat by the next

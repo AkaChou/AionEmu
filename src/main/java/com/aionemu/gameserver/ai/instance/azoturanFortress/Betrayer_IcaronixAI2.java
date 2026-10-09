@@ -11,9 +11,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Azoturan Fortress 副本 NPC AI：Lehpar Icaronix 的阈值变身（@AIName "betrayer_icaronix"），继承 AggressiveNpcAI2。
- * 真端归属：本 AI 只服务 214598（IDLF3CL_LehparIcaronixQ_45_Ah），其真端 AI pattern ND2_AhC_1
+ * 原版归属：本 AI 只服务 214598（IDLF3CL_LehparIcaronixQ_45_Ah），其原版 AI pattern ND2_AhC_1
  * 在 75%（battle timer）或死亡时生成最终形态 214599（IDLF3CL_TestResultIcaronixQ_45_Ah）并自删；
- * 城堡 Boss 233877 的真端 pattern D2_FnA 为空，不得挂本 AI（否则 75% 自删不产生击杀事件）。
+ * 城堡 Boss 233877 的原版 pattern D2_FnA 为空，不得挂本 AI（否则 75% 自删不产生击杀事件）。
  * Azoturan Fortress instance NPC AI: the Lehpar Icaronix threshold transform (@AIName "betrayer_icaronix").
  * Retail ownership: this AI serves only 214598, whose retail pattern ND2_AhC_1 spawns the final form
  * 214599 at 75% HP (battle timer) or on death and despawns itself; the castle boss 233877 runs the

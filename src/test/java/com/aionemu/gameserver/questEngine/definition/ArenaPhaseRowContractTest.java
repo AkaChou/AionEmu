@@ -25,7 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * 旧 handler（`_18208IllusionOrInfiltration`/`_28208ARiftAdrift` 一类）同样用 var0 0 -&gt; 1、var1 0..4
  * （5 次 217819 击杀）、var2 0 -&gt; 1（精英击杀 218185/218200）并置 REWARD。
  * 迁移把天族侧的击杀路线整条丢掉（只剩“对话即领奖”），魔族侧改成每个击杀一个 var0 阶段（k1..k7），
- * 两边都与客户端声明冲突。本测试锁定两阶段模型、两条击杀路线、领奖投影 = 真端/legacy 推进值 1（QE-054；曾按 QE-051 行号口径误为 2，2026-10-07 已收口；另见 2620/4210
+ * 两边都与客户端声明冲突。本测试锁定两阶段模型、两条击杀路线、领奖投影 = 原版/legacy 推进值 1（QE-054；曾按 QE-051 行号口径误为 2，2026-10-07 已收口；另见 2620/4210
  * 的 QE-051 领奖行合同一致）、旧存档收敛边与天/魔镜像同形。
  * Locks the batch-6 “arena two-phase row advance” contract for 18208/18209 and their Asmodian mirrors
  * 28208/28209: the client journal has three rows (five 217819 kills counted in var1 while var0=0, the single
@@ -49,8 +49,8 @@ class ArenaPhaseRowContractTest {
 			QuestDefinition definition = definition(questId).definition();
 			assertEquals(0, row(definition, "started"), () -> "quest " + questId + " first stage");
 			assertEquals(1, row(definition, "s1"), () -> "quest " + questId + " second stage");
-			/* QE-054：领奖投影 = 真端/legacy 推进值 1（legacy 击杀链后 var0=1 + setStatus(REWARD)、
-			 * 真端集合 {1}、客户端第 3 行门槛 SECTION_0==1）；镜像批次曾误抬为 2。 */
+			/* QE-054：领奖投影 = 原版/legacy 推进值 1（legacy 击杀链后 var0=1 + setStatus(REWARD)、
+			 * 原版集合 {1}、客户端第 3 行门槛 SECTION_0==1）；镜像批次曾误抬为 2。 */
 			/* QE-054: the reward projection is the retail/legacy progress value 1 (the legacy kill
 			 * chain left var0=1 before REWARD; retail set {1}; the client gates row 3 on SECTION_0==1). */
 			assertEquals(1, row(definition, "reward"),
@@ -141,7 +141,7 @@ class ArenaPhaseRowContractTest {
 				.toList();
 			/* 迁移版魔族的 k1..k7（var0=1..7）在新行号模型下不再匹配任何节点，这里锁定五条收敛边：
 			   旧 k2..k4 回第 1 行、旧 k5..k7 进第 2 行、旧 REWARD 的低值/旧权威值 2/高值统一收敛到
-			   权威值 1（QE-054：领奖投影 = 真端/legacy 推进值 1，==2 是领奖行批次带来的坏档）。
+			   权威值 1（QE-054：领奖投影 = 原版/legacy 推进值 1，==2 是领奖行批次带来的坏档）。
 			   同型任务 2620/4210 的 QE-051 契约只有一条 REWARD 收敛边；本任务的旧值域同时覆盖 START 侧。 */
 			/* The migrated Asmodian k1..k7 stages (var0=1..7) match no node under the row model, so five
 			   collapse edges are pinned; the reward wall collapses low values, the batch-era value 2 and

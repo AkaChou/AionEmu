@@ -19,11 +19,11 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * 锁定「击杀打满后仍停在 START，直到报告动作」的两条真端狩猎线：11110 与 1548。
+ * 锁定「击杀打满后仍停在 START，直到报告动作」的两条原版狩猎线：11110 与 1548。
  * Locks the two retail hunt rows whose START step saturates until the report action: 11110 and 1548.
  * <p>
  * 任务已退役（保留清单 owner=RETAIL_TABLE）：旧 XML 的阶梯节点金标随迁移退场，
- * 按计划 §8.9（P3 重锚口径）改锚真端表行 + 相机满值 + quest.xml 前置/奖励事实 + native 对话面。
+ * 按计划 §8.9（P3 重锚口径）改锚原版表行 + 相机满值 + quest.xml 前置/奖励事实 + native 对话面。
  * <p>
  * The retired IR step ladders are re-anchored (plan §8.9) to the retail rows, the camera gates, the
  * quest.xml prerequisite/reward facts and the native faces.
@@ -34,7 +34,7 @@ class Quest11110And1548PostKillReportDialogTest {
 	void retailRowsKeepTheKillGoalAndTheReportOwner() throws Exception {
 		assertRow(11110, "Suleion", 10, List.of("LF4_B8_Nepilim_55_An", "LF4_B8_Nepilim_Tech_55_An"));
 		assertRow(1548, "Senemonea", 5, List.of("LF3_Neutspawner_Q1053"));
-		assertEquals(Integer.valueOf(1549), SimpleHuntHandler.instance().conQuest(1548), "真端 con_quest");
+		assertEquals(Integer.valueOf(1549), SimpleHuntHandler.instance().conQuest(1548), "原版 con_quest");
 
 		for (int questId : List.of(11110, 1548)) {
 			assertTrue(RetiredQuestIds.contains(questId), questId + " 必须在保留清单 owner=RETAIL_TABLE 内");
@@ -52,7 +52,7 @@ class Quest11110And1548PostKillReportDialogTest {
 		List<QuestReward> ambitious = metadata(11110).rewards();
 		assertTrue(ambitious.contains(new QuestReward("GOLD", 0, 6900)), () -> ambitious.toString());
 		assertTrue(ambitious.contains(new QuestReward("EXP", 0, 2814541)), () -> ambitious.toString());
-		assertEquals(10, metadata(11110).repeatPolicy().maxRepeatCount(), "真端 max_repeat_count=10");
+		assertEquals(10, metadata(11110).repeatPolicy().maxRepeatCount(), "原版 max_repeat_count=10");
 
 		List<QuestReward> research = metadata(1548).rewards();
 		assertTrue(research.contains(new QuestReward("EXP", 0, 1496758)), () -> research.toString());
@@ -65,7 +65,7 @@ class Quest11110And1548PostKillReportDialogTest {
 		Player player = NativeTalkFixture.player(Race.ELYOS, PlayerClass.WARRIOR, 53);
 		for (int questId : List.of(11110, 1548)) {
 			Integer reportNpc = handler.rewardNpc(questId);
-			assertNotNull(reportNpc, "真端行必须有可解析的交付 NPC: " + questId);
+			assertNotNull(reportNpc, "原版行必须有可解析的交付 NPC: " + questId);
 
 			NativeTalkFixture.clearPackets(player);
 			NativeTalkFixture.add(player, questId, QuestStatus.START, 0);
@@ -83,8 +83,8 @@ class Quest11110And1548PostKillReportDialogTest {
 		NativeQuestTableLoader.SimpleHuntRow row = NativeQuestTableLoader.instance().require(questId);
 		assertEquals(npcName, row.acquiredNpcName(), questId + " 接取 NPC");
 		assertEquals(npcName, row.rewardNpcName(), questId + " 交付 NPC");
-		assertEquals(count, row.killSlots().get(1).count(), questId + " 真端 count1");
-		assertEquals(monsters, row.killSlots().get(1).monsters(), questId + " 真端 monster1");
+		assertEquals(count, row.killSlots().get(1).count(), questId + " 原版 count1");
+		assertEquals(monsters, row.killSlots().get(1).monsters(), questId + " 原版 monster1");
 
 		CameraRegistry.CameraRow camera = CameraRegistry.instance().require(questId);
 		assertNotNull(camera, questId + " 必须有相机行");

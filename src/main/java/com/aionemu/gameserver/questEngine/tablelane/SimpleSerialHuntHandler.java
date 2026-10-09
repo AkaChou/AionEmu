@@ -24,9 +24,9 @@ import com.aionemu.gameserver.services.DialogService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
- * 真端 SimpleSerialHunt 原生任务处理器（计划 §6.2 / P2 切换批）。
+ * 原版 SimpleSerialHunt 原生任务处理器（计划 §6.2 / P2 切换批）。
  * <p>
- * 完全基于真端表数据 {@link NativeQuestTableLoader} 与相机注册表 {@link CameraRegistry} 驱动，
+ * 完全基于原版表数据 {@link NativeQuestTableLoader} 与相机注册表 {@link CameraRegistry} 驱动，
  * 绝不生成 IR 节点图或通过旧编译器分派。
  * 串行猎杀阶段规则：仅当前激活阶段（首个未满阶段）的击杀才推进（+0xf0），乱序或已满阶段击杀零副作用；
  * 简报规则：声明了 talk_npc 的任务在接取时置简报守卫位 0x40000000（1 << 30），向简报 NPC 对话确认后清零，
@@ -163,7 +163,7 @@ public final class SimpleSerialHuntHandler {
 
 	/**
 	 * 判断该任务是否由 native 车道**路由**（管理集 − XML-only 行）。
-	 * XML 定义仍在的真端表行由 XML 车道 owns，native 只装载不路由（单一 owner 不变量）。
+	 * XML 定义仍在的原版表行由 XML 车道 owns，native 只装载不路由（单一 owner 不变量）。
 	 * Whether the native lane routes this quest (managed set minus XML-owned rows).
 	 */
 	public boolean routes(int questId) {
@@ -339,7 +339,7 @@ public final class SimpleSerialHuntHandler {
 		int dialogId = env.getDialogId();
 		int targetObjectId = target != null ? target.getObjectId() : 0;
 
-		// 无目标领奖（真端 QuestDialog 无主键协议；任务窗/实时奖励槽的确认包不带 NPC 上下文）：
+		// 无目标领奖（原版 QuestDialog 无主键协议；任务窗/实时奖励槽的确认包不带 NPC 上下文）：
 		// 按 questId 结算 + 关窗收尾。owner 门由上面的 managedQuestIds 判定保证。
 		// Targetless reward claim (the ownerless retail QuestDialog protocol used by the quest journal).
 		if (npcId == 0 && NativeTargetlessReward.claim(player, questId, dialogId, rewardFlow)) {
@@ -354,7 +354,7 @@ public final class SimpleSerialHuntHandler {
 		QuestStatus status = state != null ? state.getStatus() : QuestStatus.NONE;
 
 		// 1. 未接取状态：在起始 NPC 处接取；可重复行在 COMPLETE 态同样开放接取面
-		//    （真端 finishedcount < max_repeat_count 时再次可接；与 Talk/ItemPlay/UseItem 同口径）。
+		//    （原版 finishedcount < max_repeat_count 时再次可接；与 Talk/ItemPlay/UseItem 同口径）。
 		// The accept flow at the start NPC; a repeatable row re-opens at COMPLETE (retail
 		// finishedcount < max_repeat_count), same shape as the Talk/ItemPlay/UseItem lanes.
 		boolean fresh = state == null || status == QuestStatus.NONE;
@@ -362,7 +362,7 @@ public final class SimpleSerialHuntHandler {
 			Integer acqNpc = acquireNpcByQuestId.get(questId);
 			if (acqNpc != null && acqNpc == npcId) {
 				if (dialogId == 26 || dialogId == 31) {
-					// 接取入口页 = 真端信页/阶段页（页 4 只能由 1007 打开，见 QuestDialogContract#retailEntryPage）；
+					// 接取入口页 = 原版信页/阶段页（页 4 只能由 1007 打开，见 QuestDialogContract#retailEntryPage）；
 					// 打开（-1）不认领——归引擎开门规则（进行中重放，否则通用页 10 列表，2026-10-05 同 DD 面修复）。
 					// The accept entry page is the retail letter/stage page (page 4 is 1007-only); the open
 					// action (-1) is left to the engine open rule (page-10 list), same fix as the DD face.
@@ -370,7 +370,7 @@ public final class SimpleSerialHuntHandler {
 							QuestDialogContract.loadDefault().retailEntryPage(questId), questId));
 					return true;
 				} else if (dialogId == QuestDialogAction.ASK_QUEST_ACCEPT.id()) {
-					// 真端页动作 1007（ASK_QUEST_ACCEPT → mgr+0x1a0）：打开接取窗页 4；客户端未声明即 fail-closed。
+					// 原版页动作 1007（ASK_QUEST_ACCEPT → mgr+0x1a0）：打开接取窗页 4；客户端未声明即 fail-closed。
 					// Retail page action 1007 (mgr+0x1a0) opens ask window page 4; undeclared pages fail closed.
 					int askWindow = QuestDialogContract.loadDefault().askWindowPage(questId);
 					if (askWindow < 0) {
@@ -380,7 +380,7 @@ public final class SimpleSerialHuntHandler {
 					return true;
 				} else if (dialogId == QuestDialogPage.SELECT1_1.id()
 						|| dialogId == QuestDialogPage.SELECT1_1_1.id()) {
-					// select1 首屏翻页（真端 cab520 原样回发）；客户端未声明该页即 fail-closed。
+					// select1 首屏翻页（原版 cab520 原样回发）；客户端未声明该页即 fail-closed。
 					// select1 page turns (cab520 echoes them); undeclared pages fail closed.
 					if (!QuestDialogContract.loadDefault().hasButtonPage(questId, dialogId)) {
 						return false;
@@ -401,11 +401,11 @@ public final class SimpleSerialHuntHandler {
 							}
 						}
 						if (dialogId == 1002) {
-							// 真端 cab520 0x3ea：check → 页 1003（接取确认页；客户端契约声明该页）。
+							// 原版 cab520 0x3ea：check → 页 1003（接取确认页；客户端契约声明该页）。
 							// Retail cab520 0x3ea: check → page 1003 (the declared accept-confirm page).
 							PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 1003, questId));
 						} else {
-							// 真端 cab520 0x4e20：check → 0x5d8 关窗（simple accept 无确认页；回页会让
+							// 原版 cab520 0x4e20：check → 0x5d8 关窗（simple accept 无确认页；回页会让
 							// 未声明 1003 的任务客户端 load fail——实机 2026-10-05 quest 14110 同类）。
 							// Retail cab520 0x4e20: check → 0x5d8 close (no confirm page; a page reply
 							// load-fails quests that never declared it, live 14110 class).
@@ -417,7 +417,7 @@ public final class SimpleSerialHuntHandler {
 					PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 1004, questId));
 					return true;
 				} else if (dialogId == 20001) {
-					// 真端 cab520 0x4e21：拒绝收尾 = 关窗（与 0x4e20 同族）。
+					// 原版 cab520 0x4e21：拒绝收尾 = 关窗（与 0x4e20 同族）。
 					// Retail cab520 0x4e21: refuse tail closes the dialog (same family as 0x4e20).
 					DialogService.closeDialog(player, targetObjectId);
 					return true;
@@ -433,7 +433,7 @@ public final class SimpleSerialHuntHandler {
 				int vars = state.getQuestVars().getQuestVars();
 				if (!RawQuestVarsCodec.guardClear(vars)) {
 					if (dialogId == QuestDialogAction.QUEST_SELECT.id()) {
-						// 行 0a（真端退役 XML）：任务行 QUEST_SELECT(31) → 展示简报页 select2
+						// 行 0a（原版退役 XML）：任务行 QUEST_SELECT(31) → 展示简报页 select2
 						// （SHOW_QUEST_PAGE SELECT2；带 questId 下发；三个简报行契约均声明 1352）。
 						// 实机 2026-10-08：曾发通用页 10，点击任务无下一步（循环重发页 10）。
 						// Row 0a (retired XML): QUEST_SELECT opens the select2 briefing page (1352,
@@ -447,8 +447,8 @@ public final class SimpleSerialHuntHandler {
 						PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 10));
 						return true;
 					} else if (dialogId == QuestDialogAction.SETPRO1.id()) {
-						// 行 0b（真端退役 XML）：简报页「结束对话」SETPRO1(10000) → 清 var5
-						// （briefed 投影 = var0/var1/var5 全 0）+ 状态同步 + 关窗（真端 close-dialog，
+						// 行 0b（原版退役 XML）：简报页「结束对话」SETPRO1(10000) → 清 var5
+						// （briefed 投影 = var0/var1/var5 全 0）+ 状态同步 + 关窗（原版 close-dialog，
 						// 同 3058 已验收的 SETPRO 口径；不再把动作码 10000 当页号下发）。
 						// Row 0b: end-dialog SETPRO1 clears the briefing flag, syncs state and closes.
 						state.getQuestVars().setVar(0);
@@ -488,7 +488,7 @@ public final class SimpleSerialHuntHandler {
 					// confirm whose grant the settlement resolves via dialogId==23 + extendedRewardIndex.
 					int rewardIndex = (dialogId >= 8 && dialogId <= 22) ? (dialogId - 8) : 0;
 					if (rewardFlow.claim(env, rewardIndex).completed()) {
-						// 领奖收尾 = 真端 npc-complete finish=SELECTION_DIALOG（4801/4805）：回选择对话页
+						// 领奖收尾 = 原版 npc-complete finish=SELECTION_DIALOG（4801/4805）：回选择对话页
 						// （页 10，questId=0；9/28 旧引擎基线「状态=5 → 页=10」）。
 						// The claim tail follows the retail npc-complete finish=SELECTION_DIALOG: back to
 						// the selection dialog (page 10, questId=0; the legacy 9/28 log baseline).
@@ -504,7 +504,7 @@ public final class SimpleSerialHuntHandler {
 		return false;
 	}
 
-	/** 真端 {@code max_repeat_count} > 1 ⇒ 可重复（COMPLETE 态可再次开窗）。 / Repeatable per retail max_repeat_count. */
+	/** 原版 {@code max_repeat_count} > 1 ⇒ 可重复（COMPLETE 态可再次开窗）。 / Repeatable per retail max_repeat_count. */
 	private boolean repeatable(int questId) {
 		NativeQuestXmlTable.QuestRow row = NativeQuestXmlTable.instance().find(questId).orElse(null);
 		Integer maxRepeat = row == null ? null : row.integer("max_repeat_count");

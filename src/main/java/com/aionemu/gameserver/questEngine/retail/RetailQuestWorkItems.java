@@ -7,9 +7,9 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * quest_work_items 通道（P0c-10m）：真端表物品符号（ITEM_...）→ 生产 item_id。
+ * quest_work_items 通道（P0c-10m）：原版表物品符号（ITEM_...）→ 生产 item_id。
  * <p>
- * 直接由官方真端元数据（QuestMetadata）提供，消灭对遗留 XML 的依赖。
+ * 直接由官方原版元数据（QuestMetadata）提供，消灭对遗留 XML 的依赖。
  * The quest_data work-items channel maps retail item symbols to production item ids;
  * now driven directly by canonical QuestMetadata.
  */
@@ -26,7 +26,7 @@ public final class RetailQuestWorkItems {
 		if (items.length == 0) {
 			return null;
 		}
-		// 单符号行：stem 须出现在该任务符号集（由调用方保证与真端表一致）；此处按清单首项回放。
+		// 单符号行：stem 须出现在该任务符号集（由调用方保证与原版表一致）；此处按清单首项回放。
 		return items[0];
 	}
 
