@@ -2,7 +2,7 @@
 
 # AionEmu
 
-### High-performance, Authentic Aion 5.8 Community Server
+### Authentic Aion 5.8 Community Server
 #### Single Maven project • Java 25 • Spring Boot 4.1
 
 [![Java 25](https://img.shields.io/badge/Java-25-ED8B00?logo=openjdk&logoColor=white)](https://openjdk.org/)
@@ -19,29 +19,20 @@
 
 ## 📖 Introduction
 
-**AionEmu** is a modern, modular, and high-performance server emulator for **Aion 5.8**, designed for production stability, maintainability, and authentic game mechanics.
-
-By unifying Login, Game, and Chat services into a single Spring Boot application, AionEmu combines cutting-edge Java 25 capabilities with deep original server/client behavioral parity.
-
-**Core Highlights:**
-- 📜 **Data-Driven Quests** — Replaces fragmented Java handlers with a unified native data-driven runtime (`tablelane`).
-- 🎯 **Authentic Behavior Parity** — Rigorously aligned dialogue ladders, state advancement axes, reward projections, and drop mechanics.
-- 🧠 **Modern AI & Movement** — Terrain-aware navigation, crowd avoidance, and client-side simulated minion following without server lag.
-- ⚔️ **Authentic Combat & CC** — Complete original PvP crowd-control decay chains (paralyze, sleep, fear resistance scaling).
-- 🛠️ **Developer & Ops Friendly** — Externalized runtime (`aion.home`), zero-touch config preservation, and streamlined GM diagnostic toolsets.
+**AionEmu** is a modern, modular, and high-performance server emulator for **Aion 5.8**. By unifying Login, Game, and Chat services into a single Spring Boot application, AionEmu combines cutting-edge Java 25 capabilities with deep original server/client behavioral parity, designed for production stability and clean architecture.
 
 ---
 
 ## ⭐ Core Features
 
-| Feature | Description | Parity & Status |
+| Feature | Description | Status |
 | --- | --- | :---: |
-| 📜 [**Data-Driven Quest Engine**](docs/quest/QUEST_REPAIR_PLAYBOOK.zh-CN.md) | Native table-driven execution engine replacing 1,500+ hardcoded Java files; full coverage of multi-stage dialogue, hunt, collect, and movie sequences. | ✅ Authentic Parity |
+| 📜 **Data-Driven Quest Engine** | Native table-driven execution runtime (`tablelane`) replacing 1,500+ legacy Java files; full coverage of multi-stage dialogue, hunt, collect, and cutscene sequences. | ✅ Authentic Parity |
 | 🧠 **AI & Pathfinding Engine** | Original `.path/.idx` multi-layer A* 3D navigation; optimized aggro, patrol, escort, and obstacle handling. | ✅ Enhanced |
 | 🐾 **Client-Simulated Minions** | Fully authentic minion follow model simulated on the client side, eliminating server pathfinding overhead and spammy teleport broadcasts. | ✅ Client Simulation |
 | ⚔️ **PvP CC Decay Chains** | Port of original abnormal status diminishing returns with dynamic resistance increase and tiered time windows. | ✅ Authentic Parity |
 | 🎁 **Scalable Drops & Economy** | Dynamic drop calculations, level-based reduction, group roll/bid, auto-loot, and corpse lifecycle management. | ✅ Complete |
-| 🛠️ **Operations & GM Tooling** | Batch spawning (`//spawn <id>*<count>`), persistent/non-persistent spawn separation (`//spawn` vs `//spawns`), and automated packaging. | ✅ Ready |
+| 🛠️ **Operations & GM Tooling** | Batch spawning (`//spawn <id>*<count>`), persistent/non-persistent spawn separation (`//spawn` vs `//spawns`), and automated packaging scripts. | ✅ Ready |
 
 ---
 
@@ -49,119 +40,52 @@ By unifying Login, Game, and Chat services into a single Spring Boot application
 
 | Milestone & Direction | Scope & Objectives | Status |
 | --- | --- | :---: |
-| 📜 **Data-Driven Quest Migration** | Full migration of 1,500+ hardcoded Java quest handlers to a unified native table-driven runtime aligned with authentic 5.8. | [x] |
-| 🏰 **Instance Engine & Original Mechanics** | Deep alignment of 5.8 original instance workflows, boss phase AI decoupling, and data-driven instance script orchestration. | [ ] |
-| ⚡ **Go Transformation & Microservices** | Incremental re-architecture with Go: high-concurrency connection gateway, decoupled login/chat standalone services, and low-latency packet routing. | [ ] |
-| 📦 **Static Data Modernization** | Migrating voluminous XML static datasets into streaming, memory-mapped compact JSONL / binary formats to minimize startup footprint. | [ ] |
+| 📜 **Data-Driven Quest Migration** | Full migration of 1,500+ hardcoded Java quest handlers to a unified native table-driven runtime aligned with authentic 5.8. | ✅ Done |
+| 🏰 **Instance Engine & Original Mechanics** | Deep alignment of 5.8 original instance workflows, boss phase AI decoupling, and data-driven instance script orchestration. | 🚧 In Progress |
+| ⚡ **Go Transformation & Microservices** | Incremental re-architecture with Go: high-concurrency connection gateway, decoupled login/chat standalone services, and low-latency packet routing. | 📝 Todo |
+| 📦 **Static Data Modernization** | Migrating voluminous XML static datasets into streaming, memory-mapped compact JSONL / binary formats to minimize startup footprint. | 📝 Todo |
 
 ---
 
 ## ⚡ Quick Start
 
 ### Prerequisites
-
-- **JDK 25** or newer
-- **Maven 3.7** or newer
-- **MySQL 8.0+**
-- **Aion 5.8 Client**
+- **JDK 25+** • **Maven 3.7+** • **MySQL 8.0+** • **Aion 5.8 Client**
 
 ### 1. Database Initialization
-
 Database schemas and initial data scripts are located at:
 - **Login Server**: `src/main/resources/db/mysql/al_server_ls.sql`
 - **Game Server**: `src/main/resources/db/mysql/al_server_gs.sql`
 
-### 2. Build & Deploy
-
+### 2. Build & Run
 ```bash
-# Package server and deploy to local aion/ runtime directory
-./scripts/package.sh
-```
-
-> **Tip**: Use `./scripts/re-package.sh` for subsequent builds to automatically preserve existing configurations under `aion/config/`.
-
-### 3. Start & Monitor
-
-```bash
-# Start background server
-./aion/start-silent.sh
-
-# Follow live log
-tail -f aion/log/aionemu.log
-
-# Graceful shutdown
-./aion/shutdown.sh
-# or immediate stop
-./aion/stop-silent.sh
+./scripts/package.sh         # Build and deploy to aion/ (or ./scripts/re-package.sh to preserve config)
+./aion/start-silent.sh       # Start in background (logs: tail -f aion/log/aionemu.log)
+./aion/shutdown.sh           # Graceful shutdown (or ./aion/stop-silent.sh)
 ```
 
 ---
 
-## 🎮 Client Patch Setup
+## 🎮 Client Patch
 
-The `patch/` directory contains client-side patches and enhancements for the Aion 5.8 client:
-
-- **`bin64/`** — Modified core runtime library (`Game.dll`) for client compatibility.
-- **`L10N/CHS/`** — Localized quest and interface text data (`data.pak`).
-- **`Levels/`** — World and level terrain fixes (`Level.pak`).
-- **`Textures/ui/`** — UI icons and visual texture updates (`ui.pak`).
-
-### How to Install
-
-> ⚠️ **Warning**: Always back up the corresponding files and directories in your Aion 5.8 client folder before applying any patches!
-
-1. Locate your **Aion 5.8 Client** root installation directory.
-2. Back up the original `bin64/`, `L10N/`, `Levels/`, and `Textures/` folders.
-3. Copy all folders inside `patch/` (`bin64`, `L10N`, `Levels`, `Textures`) and paste them directly into your client root directory, overwriting existing files when prompted.
-
----
-
-## 🛠️ Operations & Development
-
-### Common Commands
-
-| Command | Purpose |
-| --- | --- |
-| `./scripts/package.sh` | Clean, compile, package, and deploy fresh runtime to `aion/` |
-| `./scripts/re-package.sh` | Rebuild and deploy while preserving customized `aion/config/` |
-| `AION_HOME=/path/to/dir ./aion/start-silent.sh` | Run using an externalized runtime directory |
-| `./aion/start-silent.sh -c` | Clean transient runtime data while preserving JARs and configs |
-| `mvn test` | Run project test suites |
-
-### Key Project Paths
-
-- **Entry Point**: `src/main/java/com/aionemu/AionBootApplication.java`
-- **Application Config**: `src/main/resources/application.yml`
-- **Game Static Data**: `src/main/resources/aion/data/`
-- **Runtime Deployment**: `aion/` (`aion.home`)
+The `patch/` directory contains companion enhancements for the Aion 5.8 client (`bin64/` runtime, `L10N/` quest texts, `Levels/` terrain, and `Textures/` UI).
+- **Usage**: Please **back up your client's original files first**, then copy and overwrite corresponding folders from `patch/` into your client root installation directory.
 
 ---
 
 ## 💡 Contributing
 
-We welcome community contributions, bug reports, and authentic parity fixes! To contribute:
-
-1. **Fork the Repository**: Create your feature branch (`git checkout -b feature/amazing-feature`).
-2. **Follow Project Guidelines**:
-   - Class and core method documentation must include **bilingual (EN/ZH)** Javadoc.
-   - Adhere to data-driven design — avoid hardcoded exceptions in the engine.
-   - Ensure clean code standards (immutability, Java 25 features, zero swallowing of exceptions).
-3. **Verify & Test**: Run project unit and regression tests (`mvn test`) before submitting.
-4. **Open a Pull Request**: Provide a clear description of your changes, reference any relevant issue, and include test verification evidence.
+Contributions are warmly welcomed!
+1. **Guidelines**: Maintain bilingual (EN/ZH) comments for key interfaces, adhere to data-driven design, and avoid hardcoded exceptions.
+2. **Testing**: Ensure all tests pass before submitting (`mvn test`).
+3. **Pull Request**: Clearly describe your changes, alignment rationale, and test results.
 
 ---
 
-## 🤝 Acknowledgments & Credits
+## 🤝 Acknowledgments & License
 
-- Based on **Aion 5.8 Community Emulator** and earlier community work.
-- Architecture and original protocol insights inspired by [Beyond Aion](https://github.com/beyond-aion/aion-server) (Aion 4.8, GPL-3.0).
-- Special thanks to **Aion-Lightning**, **Encom**, and the open-source Aion emulation community.
-
----
-
-## 📄 License
-
-This project is licensed under the [GNU General Public License v3.0](LICENSE).
+- Based on **Aion 5.8 Community Emulator** and earlier community work; architecture and protocol insights inspired by [Beyond Aion](https://github.com/beyond-aion/aion-server) (GPL-3.0).
+- This project is licensed under the [GNU General Public License v3.0](LICENSE).
 
 <div align="center">
 
