@@ -50,6 +50,8 @@ public class FissureOfOblivionInstance extends GeneralInstanceHandler {
 
         /** kill counters / kill counters */
         private final int[] killCounters = new int[10];
+        /** TypeA..D 是否已召唤(真端每 Type 独立判定)。 / Per-type summon flags (independent per retail Type). */
+        private final boolean[] summonedBossTypes = new boolean[4];
 
     /** 副本是否已销毁 / whether the instance is destroyed */
     private boolean isInstanceDestroyed;
@@ -297,6 +299,23 @@ public class FissureOfOblivionInstance extends GeneralInstanceHandler {
         {245673, 245674, 245675, 245676, 245677, 245678, 245679, 245680, 245681, 245682, 245683, 245684},
         {245685, 245686, 245687, 245688, 245689, 245690, 245691, 245692, 245693, 245694, 245695, 245696}
     };
+
+    // ---- 真端 IDTransform 任务战斗链(2026-10-08 按 58Server/Map 真端数据移植)----
+    // Retail IDTransform task chain, ported from the retail Map data (world.xml + NpcAIPatterns).
+    // Sado 刷怪由第一/二/三房 AI 按房间分批承担(每房 4 只,killCounters 4/8/12 开门),本文件
+    // 不重复刷;这里只补真端缺的「Boss_Base 召唤 TypeA..D」链。真端模板轴:Boss_Base 66 级
+    // 244490、每级 +41,TypeA..D = +1..+4。
+    // Sado waves stay with the existing per-room AIs (4 per room, doors at 4/8/12); this file only
+    // adds the missing retail base-summons chain. Retail axis: Boss_Base 244490 at 66, +41/level,
+    // TypeA..D = +1..+4.
+
+    /** Boss_Base 66 级模板(244490),每级 +41;TypeA..D = +1..+4。 / Retail Boss_Base id axis. */
+    private static final int BOSS_ID_BASE = 244490;
+    /** 真端 on_battle_timer 召唤条件:HP < 80%、每 Type 每轮 30%。 / Retail summon gate: HP<80%, 30% per type. */
+    private static final int RETAIL_BOSS_SUMMON_HP_PERCENT = 80;
+    private static final int RETAIL_BOSS_SUMMON_CHANCE_PERCENT = 30;
+    /** 真端 on_enter_attack_state 的 add_battle_timer delay = 5000ms。 / The retail battle-timer delay. */
+    private static final int RETAIL_BOSS_TIMER_MS = 5000;
 
         /** spawn high main / spawn high main */
         private static final SpawnPoint[] SPAWN_HIGH_MAIN = {
@@ -1019,7 +1038,104 @@ public class FissureOfOblivionInstance extends GeneralInstanceHandler {
 
           int doorMobType = Rnd.get(1, 3);
           spawn(NPC_IDS_DEVA_GUARD[idx][doorMobType], 510.39917f, 458.81943f, 322.0f, (byte)21);
+
+          startBossSummonCycle();
      }
+
+    /**
+     * 按玩家等级启动 Boss_Base 召唤扫描循环。
+     * Sado 由第一/二/三房 AI(IDTransformTransRoom01/02/03AI2)按房间分批刷(每房 4 只,
+     * killCounters 4/8/12 开门)——既有分批结构保持原样,本handler只补真端缺的「Base 召 Type」链。
+     * Starts the Boss_Base summon scan cycle. Sado waves come from the existing per-room AIs
+     * (4 per room, doors open at 4/8/12); this handler only adds the missing retail base-summons.
+     */
+    private void startBossSummonCycle() {
+        scheduleBossSummonCycle();
+    }
+
+    /**
+     * 真端 Boss_Base on_battle_timer 召唤链的副本扫描面。Boss_Base 由第四房 AI
+     * ({@code IDTransformTransRoom04AI2})按玩家等级刷出(244490 轴);本循环每 5s 扫描实例内的
+     * Base 并按真端 on_battle_timer 语义推进:Base 在战斗中且 HP&lt;80% 时,对未召唤的 TypeA..D
+     * 各按 30% 独立判定召唤(位置 = Base 自身,真端 SPAWN_LOCATION_MY_POINT)。Base 本体杀掉
+     * 不计任务数(真端 on_killed_by_user 只置 boss=3),TypeA..D 才是 SECTION_2 的计数目标
+     * (DD 路由已按真端全等级族登记)。已知偏差:真端 Type 带 despawn_at_attack_state
+     * (Base 脱战即消失),本服 Type 存活至死亡或副本清理。
+     * <p>
+     * Instance-scan face of the retail Boss_Base on_battle_timer chain. Boss_Base is spawned by the
+     * fourth-room AI ({@code IDTransformTransRoom04AI2}) per player level; this cycle scans the
+     * instance every 5s and, while a base is in battle below 80% HP, rolls each un-summoned
+     * TypeA..D independently at 30% (spawned at the base's own point, retail MY_POINT). The base
+     * itself never counts; only its summons feed SECTION_2. Known deviation: retail types despawn
+     * when the base leaves battle; here they persist until killed or the instance tears down.
+     */
+    private void scheduleBossSummonCycle() {
+        oblivionTask.add(GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
+            @Override
+            public void run() {
+                if (isInstanceDestroyed) {
+                    return;
+                }
+                for (int levelIdx = 0; levelIdx < 10; levelIdx++) {
+                    List<Npc> bases = getNpcs(BOSS_ID_BASE + levelIdx * 41);
+                    if (bases == null) {
+                        continue;
+                    }
+                    for (Npc base : bases) {
+                        summonMissingBossTypes(base, levelIdx);
+                    }
+                }
+            }
+        }, RETAIL_BOSS_TIMER_MS, RETAIL_BOSS_TIMER_MS));
+    }
+
+    /** 单只 Boss_Base 的召唤/清场同步(真端 on_battle_timer + on_leave_attack_state)。 / One base's sync pass. */
+    private void summonMissingBossTypes(Npc base, int levelIdx) {
+        if (base.getLifeStats().isAlreadyDead()) {
+            // 真端 on_killed_by_user 同样 despawn SPAWN_ID_1:本体死亡,召出物随战清场。
+            // Retail on_killed_by_user also despawns SPAWN_ID_1: summons clear with the base's death.
+            despawnSummonedBossTypes(levelIdx);
+            java.util.Arrays.fill(summonedBossTypes, false);
+            return;
+        }
+        // 真端 on_leave_attack_state:despawn SPAWN_ID_1(召出的 Type 全清)+ 状态复位——
+        // Type 与本体战斗绑定,脱战即消,再进战重新判定;不跨战斗积累。
+        // Retail on_leave_attack_state: despawn SPAWN_ID_1 (all summons) + state reset — types are
+        // battle-bound, never accumulate across fights, and re-roll on the next engagement.
+        if (base.getAggroList().getList().isEmpty()) {
+            despawnSummonedBossTypes(levelIdx);
+            java.util.Arrays.fill(summonedBossTypes, false);
+            return;
+        }
+        if (base.getLifeStats().getHpPercentage() >= RETAIL_BOSS_SUMMON_HP_PERCENT) {
+            return;
+        }
+        for (int type = 1; type <= 4; type++) {
+            if (summonedBossTypes[type - 1]) {
+                continue;
+            }
+            if (Rnd.chance(RETAIL_BOSS_SUMMON_CHANCE_PERCENT)) {
+                summonedBossTypes[type - 1] = true;
+                spawn(BOSS_ID_BASE + levelIdx * 41 + type, base.getX(), base.getY(), base.getZ(),
+                    base.getHeading());
+            }
+        }
+    }
+
+    /** 真端 on_leave_attack_state 的 despawn SPAWN_ID_1 面:清掉该等级 Base 召出且仍存活的 TypeA..D。 */
+    private void despawnSummonedBossTypes(int levelIdx) {
+        for (int type = 1; type <= 4; type++) {
+            List<Npc> summoned = getNpcs(BOSS_ID_BASE + levelIdx * 41 + type);
+            if (summoned == null) {
+                continue;
+            }
+            for (Npc typeNpc : summoned) {
+                if (!typeNpc.getLifeStats().isAlreadyDead()) {
+                    typeNpc.getController().onDelete();
+                }
+            }
+        }
+    }
 
     private void IDTransformEreshWarp(int level) {
         int idx = getLevelIndexByLevel(level);

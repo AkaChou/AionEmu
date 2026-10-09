@@ -977,7 +977,11 @@ public final class DataDrivenNativeRuntime {
 						slots.add(new DataDrivenProgress.Slot(groupNumber, Math.max(1, group.trailing())));
 						Set<Integer> npcIds = new LinkedHashSet<>();
 						for (String name : group.names()) {
-							if (!resolveMonsters(name, nameResolver, npcIds, unresolved)) {
+							// QE-048 击杀合同面：hunt 名单是「代表名」，路由登记必须覆盖变体族全部实存
+							// 模板（base + T_ 变体 + 相邻等级），否则实刷成员的击杀零路由（15546/17510 故障）。
+							// QE-048 kill-contract face: hunt payloads name a representative; the route must
+							// register every existing family member or real spawns route zero kills (15546/17510).
+							if (!resolveMonsterFamilies(name, nameResolver, npcIds, unresolved)) {
 								freeze = FreezeReason.NAME_UNRESOLVED;
 								break;
 							}
@@ -1448,6 +1452,42 @@ public final class DataDrivenNativeRuntime {
 			Set<Integer> split = new LinkedHashSet<>();
 			for (String token : name.trim().split("\\s+")) {
 				List<Integer> part = resolver.resolveMonsterIds(token);
+				if (part.isEmpty()) {
+					unresolved.add(token);
+					return false;
+				}
+				split.addAll(part);
+			}
+			if (!split.isEmpty()) {
+				out.addAll(split);
+				return true;
+			}
+		}
+		unresolved.add(name);
+		return false;
+	}
+
+	/**
+	 * 击杀路由专用的变体族版 {@link #resolveMonsters}(QE-048 击杀合同面):名单是「代表名」,
+	 * 路由必须覆盖同族全部实存模板(Iluma 实刷 {@code T_} 变体、变身副本按等级刷全族);
+	 * 空白分裂回退与失败记录语义与精确版完全一致。
+	 * <p>
+	 * The variant-family twin of {@link #resolveMonsters} for the kill-routing face (QE-048): the
+	 * payload names a representative, and the route must cover every existing family member
+	 * (Iluma spawns the {@code T_} variants; the transform instance spawns the whole level family).
+	 * Whitespace splitting and failure recording mirror the exact variant.
+	 */
+	private static boolean resolveMonsterFamilies(String name, NativeNpcNameResolver resolver, Set<Integer> out,
+			List<String> unresolved) {
+		List<Integer> direct = resolver.resolveMonsterFamilyIds(name);
+		if (!direct.isEmpty()) {
+			out.addAll(direct);
+			return true;
+		}
+		if (name.chars().anyMatch(Character::isWhitespace)) {
+			Set<Integer> split = new LinkedHashSet<>();
+			for (String token : name.trim().split("\\s+")) {
+				List<Integer> part = resolver.resolveMonsterFamilyIds(token);
 				if (part.isEmpty()) {
 					unresolved.add(token);
 					return false;

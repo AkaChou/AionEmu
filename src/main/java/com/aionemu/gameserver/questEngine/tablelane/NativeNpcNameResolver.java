@@ -9,9 +9,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -23,7 +25,8 @@ import com.aionemu.gameserver.questEngine.retail.RetailLedgerXml;
  * {@code npcTemplates} 的 {@code name_desc} 全名，短名 {@code name} 亦有效；P0a
  * owner-identity 修正判例）。索引 = name ∪ name_desc，规范化 trim + 小写，精确唯一解析；
  * 缺失（{@code NATIVE_NAME_UNRESOLVED}）与多义（{@code NATIVE_NAME_AMBIGUOUS}）一律
- * fail-closed——本类不做别名表、模糊匹配或前缀补全（反漂移红线 D.3）。
+ * fail-closed——解析不做模糊匹配或近似换算（反漂移红线 D.3；别名台账、{@code NPC_} 前缀
+ * 精确归一与怪物变体族展开都是**精确形态学**通道，见各方法）。
  * <p>
  * 数据源 = 仓库 NPC 模板分片 {@code aion/data/static_data/npcs/npc_template_*.xml}（与生产
  * {@code XmlDataLoader} 同一分片约定）。已知数据事实：分片间存在重复定义的模板 id（836025），
@@ -89,18 +92,25 @@ public final class NativeNpcNameResolver {
 	private final Map<String, List<Integer>> monsterAliases;
 	/** 对话名组展开（组键 → 成员 id 并集，表内声明序）。 / Dialog-name group expansions. */
 	private final Map<String, List<Integer>> questAiNameGroups;
+	/** 怪物变体族索引（族键 → 成员 id 并集；QE-048 击杀合同面）。 / Monster variant-family index (QE-048 kill face). */
+	private final Map<String, List<Integer>> idsByMonsterFamily;
+	/** 模板 id → 变体族键。 / Template id → its variant-family key. */
+	private final Map<Integer, String> monsterFamilyKeyByNpcId;
 	/** 解析过的模板定义数。 / Number of template definitions parsed. */
 	private final int templateCount;
 
 	private NativeNpcNameResolver(Map<String, List<Integer>> idsByNameDesc,
 			Map<String, List<Integer>> idsByName, Map<String, List<Integer>> idsByAll,
 			Map<String, List<Integer>> monsterAliases, Map<String, List<Integer>> questAiNameGroups,
+			Map<String, List<Integer>> idsByMonsterFamily, Map<Integer, String> monsterFamilyKeyByNpcId,
 			int templateCount) {
 		this.idsByNameDesc = idsByNameDesc;
 		this.idsByName = idsByName;
 		this.idsByAll = idsByAll;
 		this.monsterAliases = monsterAliases;
 		this.questAiNameGroups = questAiNameGroups;
+		this.idsByMonsterFamily = idsByMonsterFamily;
+		this.monsterFamilyKeyByNpcId = monsterFamilyKeyByNpcId;
 		this.templateCount = templateCount;
 	}
 
@@ -147,6 +157,8 @@ public final class NativeNpcNameResolver {
 		Map<String, List<Integer>> idsByNameDesc = new LinkedHashMap<>();
 		Map<String, List<Integer>> idsByName = new LinkedHashMap<>();
 		Map<String, List<Integer>> idsByAll = new LinkedHashMap<>();
+		Map<String, List<Integer>> idsByMonsterFamily = new LinkedHashMap<>();
+		Map<Integer, String> monsterFamilyKeyByNpcId = new LinkedHashMap<>();
 		int templateCount = 0;
 		for (File shard : ordered) {
 			String raw;
@@ -184,6 +196,11 @@ public final class NativeNpcNameResolver {
 				index(idsByNameDesc, nameDesc, id);
 				index(idsByAll, name, id);
 				index(idsByAll, nameDesc, id);
+				// 变体族索引只挂权威 name_desc（QE-048：DD hunt 名单写 base 代表名而世界实刷
+				// T_/等级变体族，击杀路由必须覆盖同族全部实存模板）。
+				// The variant-family index keys on the authoritative name_desc only (QE-048: DD hunt
+				// payloads name the base representative while the world spawns the T_/level variants).
+				indexFamily(idsByMonsterFamily, monsterFamilyKeyByNpcId, nameDesc, id);
 			}
 		}
 		if (idsByAll.isEmpty()) {
@@ -261,7 +278,61 @@ public final class NativeNpcNameResolver {
 		}
 		return new NativeNpcNameResolver(Collections.unmodifiableMap(idsByNameDesc),
 				Collections.unmodifiableMap(idsByName), Collections.unmodifiableMap(idsByAll),
-				Collections.unmodifiableMap(aliases), Collections.unmodifiableMap(groups), templateCount);
+				Collections.unmodifiableMap(aliases), Collections.unmodifiableMap(groups),
+				Collections.unmodifiableMap(idsByMonsterFamily),
+				Collections.unmodifiableMap(monsterFamilyKeyByNpcId), templateCount);
+	}
+
+	/** 变体族索引（族键 → 成员 id，按名去重、保插入序；name_desc 缺失的模板不进族）。 / Family index entry. */
+	private static void indexFamily(Map<String, List<Integer>> idsByMonsterFamily,
+			Map<Integer, String> familyKeyByNpcId, String rawNameDesc, int npcId) {
+		String familyKey = monsterFamilyKey(rawNameDesc);
+		if (familyKey == null) {
+			return;
+		}
+		familyKeyByNpcId.putIfAbsent(npcId, familyKey);
+		index(idsByMonsterFamily, familyKey, npcId);
+	}
+
+	/**
+	 * 怪物变体族键：剥离「末尾等级段（1-2 位数字）+ 紧邻其前的变体 tag 段（1-2 个小写字母）」，
+	 * 再归一中段的任务变体标记段 {@code t}（QE-048：{@code LF6_Daru_A_66_n}、
+	 * {@code LF6_T_Daru_A_66_n}、{@code LF6_T_Daru_A_67_n} 同族）。没有等级尾段的 名字不剥
+	 * （{@code LF6_Aquaris_E} 自族，NPC 名不进怪物变体族）。
+	 * <p>
+	 * The monster variant-family key: strips the trailing level segment (1-2 digits) and the
+	 * adjacent variant tag segment (1-2 lowercase letters right before it), then folds the
+	 * mid-name task-variant marker segment {@code t}. Names without a level tail never strip
+	 * ({@code LF6_Aquaris_E} stays its own family — NPC names are not monster variants).
+	 */
+	static String monsterFamilyKey(String rawNameDesc) {
+		if (rawNameDesc == null) {
+			return null;
+		}
+		String normalized = rawNameDesc.strip().toLowerCase(Locale.ROOT);
+		if (normalized.isEmpty()) {
+			return null;
+		}
+		String[] parts = normalized.split("_", -1);
+		int end = parts.length;
+		// 先判「tag + 等级」组合尾（66_n / 66_An），再退化为纯等级尾（room_66）。
+		// Try the "tag + level" tail first (66_n / 66_An), then fall back to a bare level tail (room_66).
+		if (end > 2 && parts[end - 1].matches("[a-z]{1,2}") && parts[end - 2].matches("\\d{1,2}")) {
+			end -= 2;
+		} else if (end > 1 && parts[end - 1].matches("\\d{1,2}")) {
+			end--;
+		}
+		StringBuilder family = new StringBuilder();
+		for (int i = 0; i < end; i++) {
+			if (i > 0 && "t".equals(parts[i])) {
+				continue;
+			}
+			if (!family.isEmpty()) {
+				family.append('_');
+			}
+			family.append(parts[i]);
+		}
+		return family.isEmpty() ? null : family.toString();
 	}
 
 	private static void index(Map<String, List<Integer>> idsByName, String rawName, int npcId) {
@@ -399,6 +470,55 @@ public final class NativeNpcNameResolver {
 		// expansion is the final fallback.
 		List<Integer> byGroup = questAiNameGroups.get(normalized);
 		return byGroup != null ? byGroup : List.of();
+	}
+
+	/**
+	 * 击杀路由的变体族解析（QE-048 击杀合同面）：名单名命中后并入其变体族的全部实存模板
+	 * （base + {@code T_} 变体 + 相邻等级）。真端 DD 表的 hunt 名单写「代表名」（base/最低级），
+	 * 而世界实刷的是同族变体（Iluma 只刷 {@code LF6_T_Daru_A_66_n/67_n}、变身副本按玩家等级刷
+	 * {@code IDTransform_Sado_*_66..75_An}），精确解析会漏掉全部实刷成员 ⇒ 击杀零路由。
+	 * 与客户端 {@code quest_monster.csv} 合同行（QE-048/QE-125 裁定：客户端计数为权威）同构。
+	 * desc/name/别名三通道命中才扩族；对话名组是显式合同名单，命中后**不**扩族。
+	 * <p>
+	 * Variant-family resolution for the kill-routing face (QE-048): after a hit, merges in every
+	 * existing template of the name's variant family (base + {@code T_} variants + adjacent levels).
+	 * Retail DD hunt payloads name a representative (base/lowest level) while the world spawns the
+	 * variants (Iluma spawns only {@code LF6_T_Daru_A_66_n/67_n}; the transform instance spawns
+	 * {@code IDTransform_Sado_*_66..75_An} by player level), so exact resolution routes zero kills.
+	 * Mirrors the client {@code quest_monster.csv} contract rows (client counts are authoritative).
+	 * Only the desc/name/alias channels expand; dialog-name groups are explicit contracts and stay exact.
+	 */
+	public List<Integer> resolveMonsterFamilyIds(String rawName) {
+		if (rawName == null) {
+			return List.of();
+		}
+		String normalized = rawName.strip().toLowerCase(Locale.ROOT);
+		if (normalized.isEmpty()) {
+			return List.of();
+		}
+		List<Integer> direct = idsByNameDesc.get(normalized);
+		if (direct == null || direct.isEmpty()) {
+			direct = idsByName.get(normalized);
+		}
+		if (direct == null || direct.isEmpty()) {
+			direct = monsterAliases.get(normalized);
+		}
+		if (direct == null || direct.isEmpty()) {
+			List<Integer> byGroup = questAiNameGroups.get(normalized);
+			return byGroup != null ? byGroup : List.of();
+		}
+		Set<Integer> family = new LinkedHashSet<>(direct);
+		for (int id : direct) {
+			String familyKey = monsterFamilyKeyByNpcId.get(id);
+			if (familyKey == null) {
+				continue;
+			}
+			List<Integer> members = idsByMonsterFamily.get(familyKey);
+			if (members != null) {
+				family.addAll(members);
+			}
+		}
+		return List.copyOf(family);
 	}
 
 	/**
