@@ -1,5 +1,0 @@
-# P0c-42 爆炸半径：修复前后缺口集（GAP）差分。缺口 = 活跃 1011 页无任何转换下发
-# verdict	quest_id	pre	post	identity
-# REMOVED = 修复后不再缺口；INTRODUCED 必须为空（本片实测 removed=1 introduced=0）
-REMOVED	1323	GAP	EMITTED	GAP	1323	RETAIL_TABLE	SimpleTalk	1	[1007]	true	false	0	-	CLIENT_PAGE_UNREACHED	31	OK
-# pre_gaps=46 post_gaps=45 removed=1 introduced=0 carriers=4067

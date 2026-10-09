@@ -1,7 +1,0 @@
-quest_id	item	progress	retail_setprogress	slot3_registration	xml_itemplay_targets	xml_reward_row	judgement
-1345	quest_1345a	Progress(1)	1	0	2	2	MISMATCH
-4338	quest_4338b	Progress(5)	2|3|5	4	6	7	MISMATCH
-11006	quest_11006a	Progress(0)	1	1	1|3	3	MISMATCH
-24013	quest_24013a	Progress(2)	1|2	1	3	7	MISMATCH
-24021	quest_24021c	Progress(4)	2|3|4	3	5	5	MISMATCH
-24052	quest_24052a	Progress(1)	0	0	2|3|4	5	MISMATCH

@@ -1,3 +1,0 @@
-# P0c-37 阶梯余量分批裁定（三轴机器推导；自校验对齐 P0c-36 手工裁定）
-# quest_id	K	advance_mode	basis
-1479	2	SETPRO	steps3(talk_npc2=Coeus);cp=0;reward_var0=2(override);started_var0=0;stage1:SELECT2>SELECT2_1>SETPRO1(10000)@SELECT2_1,stage2:SELECT3>SELECT3_1>SETPRO2(10001)@SELECT3_1;owner=RETAIL_TABLE

@@ -1,5 +1,0 @@
-quest tables: ['legion_join_requests', 'limited_quest_counters', 'player_quests']
-retail-owned distinct (quest,vars): 617; rows: 956
-distribution: {'canonical': 916, 'packed_unexpected': 40}
-top unexpected quests: [(13403, 7), (10031, 2), (10502, 2), (10034, 2), (1131, 1), (14120, 1), (1721, 1), (3123, 1), (30514, 1), (10033, 1), (10035, 1), (10111, 1), (10500, 1), (10501, 1), (10503, 1)]
-samples: {13403: [1, 2, 7], 1131: [1], 14120: [1], 1721: [2], 3123: [1], 10031: [7, 10], 10502: [1, 7], 30514: [64], 10034: [3, 8], 10033: [7]}

@@ -1,4 +1,0 @@
-# P5D 步 3 激活批证据（真端表 + 真端 quest.xml + 客户端页契约 + owner 台账；逐行复算）
-quest_id	race	minlevel	prereq	retention_owner	xml_in_repo	catalog_entry	acquire_npc	relay_npc_1	relay_npc_2	reward_npc	talk_count	accept_give	step2_give	step2_remove	use_item	declared_pages	verdict
-18213	pc_light	51	Q18212	RETAIL_TABLE	false	false	Junos	Inggril	Romedon	Romedon	2	ITEM_QUEST_18213A 1	ITEM_QUEST_18213B 1	ITEM_QUEST_18213A 1	ITEM_QUEST_18213B 1	4,1003,1004,1011,1352,1353,1693,1694,2375	NATIVE_READY
-28213	pc_dark	51	Q28212	RETAIL_TABLE	false	false	Shinin	Inggness	Kijan	Kijan	2	ITEM_QUEST_28213A 1	ITEM_QUEST_28213B 1	ITEM_QUEST_28213A 1	ITEM_QUEST_28213B 1	4,1003,1004,1011,1352,1353,1693,1694,2375	NATIVE_READY

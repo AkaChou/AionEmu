@@ -1,6 +1,0 @@
-# QE-111 台账裁定码归一（4 行）：码权威 = 冻结漂移登记 src/test/resources/quest/retail-data-driven-drift.tsv
-# 列：quest_id / axis / before(ledger) / after(ledger=frozen drift) / authority / evidence
-25051	DataDriven	ADJUDICATED:RETAIL_TALK_HUNT_CHAIN_DEFERRED	ADJUDICATED:CURATED_LEGACY_CONTRACT_LOCK	RetailDataDrivenGateTest.CURATED_DEFERRED（curated 覆盖优先）	页梯退役后旧成因消失，该行自 2026-09-30 起登记为 curated 暂缓（drift=REJECTED:CURATED_LEGACY_CONTRACT_LOCK），台账未同步
-80885	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_UNRESOLVED	ADJUDICATED:RETAIL_ITEMPLAY_ACQUIRE_EVENT_DEFERRED	RetailDataDrivenDefinitionCompiler.java:94（event 轴优先于道具解析）	category_acquire_=ItemPlay + value0=quest_80885a + category1=event ⇒ 在事件轴延后；旧码"接取 NPC 解析失败"与数据不符（编译器注释原文：a more accurate code than "acquire npc unresolved"）
-80940	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_UNRESOLVED	ADJUDICATED:RETAIL_ITEMPLAY_ACQUIRE_EVENT_DEFERRED	同上	category_acquire_=ItemPlay + value0=quest_80940a + category1=event
-80961	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_UNRESOLVED	ADJUDICATED:RETAIL_ITEMPLAY_ACQUIRE_EVENT_DEFERRED	同上	category_acquire_=ItemPlay + value0=doc_quest_80961a + category1=event

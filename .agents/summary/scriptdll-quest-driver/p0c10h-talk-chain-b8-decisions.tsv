@@ -1,9 +1,0 @@
-# P0c-10h：B-8 微波（区间动作展开后：4970 等价采纳 + 6 行系统发放合同采纳）
-# quest_id	decision	basis	-	evidence
-4970	ADOPT_RETAIL	P0C10H_EQUIVALENT	-	probe-round20 equivalence after dialog-action range expansion (SELECTED_QUEST_REWARD1..NOREWARD was transcribed as null wildcard)
-35011	ADOPT_RETAIL	SYSTEM_GRANT_CHAIN_P02	-	same adjudication as B-7 (compiled retail shape passes P0c-2 system-grant contract after range expansion)
-35025	ADOPT_RETAIL	SYSTEM_GRANT_CHAIN_P02	-	same adjudication as B-7 (compiled retail shape passes P0c-2 system-grant contract after range expansion)
-35026	ADOPT_RETAIL	SYSTEM_GRANT_CHAIN_P02	-	same adjudication as B-7 (compiled retail shape passes P0c-2 system-grant contract after range expansion)
-45010	ADOPT_RETAIL	SYSTEM_GRANT_CHAIN_P02	-	same adjudication as B-7 (compiled retail shape passes P0c-2 system-grant contract after range expansion)
-45017	ADOPT_RETAIL	SYSTEM_GRANT_CHAIN_P02	-	same adjudication as B-7 (compiled retail shape passes P0c-2 system-grant contract after range expansion)
-45024	ADOPT_RETAIL	SYSTEM_GRANT_CHAIN_P02	-	same adjudication as B-7 (compiled retail shape passes P0c-2 system-grant contract after range expansion)

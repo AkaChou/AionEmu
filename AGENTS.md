@@ -58,36 +58,24 @@
 | [lombok.md](.agents/rules/lombok.md) | `**/*.java` | 优先类级注解、**严禁滥用 `@Data`（严格对照 5 项排查问卷）**、防范方法重载冲突与哈希/集合查找破坏 |
 | [ai-artifacts.md](.agents/rules/ai-artifacts.md) | 全仓库 | 中间产物集中于 `.agents/summary/<topic>/`、任务完成后自动清理、临时 Worktree 规范、诊断转储（JFR/dump）不入仓 |
 | [quest-repair.md](.agents/rules/quest-repair.md) | 任务 XML、引擎、AI 及测试 | **以全部类似任务角度根本解决**、**严禁任务引擎/编译器引入硬编码特例**、Playbook 模式指纹比对、待验收/双 Commit 工作流 |
-| [memory-bank/](.agents/memory-bank/README.md) | 全仓库 | 持久化架构模式、避坑指南、排查路由器、结构化知识检索与维护 |
+| Hindsight MCP | 全仓库 | 持久化架构模式、避坑指南、排查路由器、结构化知识检索与维护（Bank ID: `AionEmu`） |
 
 ---
 
-## 记忆库机制 (Memory Bank)
+## 记忆库机制 (Memory Bank via Hindsight MCP)
 
-代码库的持久化架构模式与调试排查经验统一维护在 [.agents/memory-bank/](.agents/memory-bank/)：
+代码库的持久化架构模式、调试排查经验与历史任务总结已全量迁移并统一托管在 **Hindsight MCP**（Bank ID: `AionEmu`）：
 
-- **操作前必读 (Read Before Action)**：
-  - 诊断缺陷或修改核心系统前，先查阅 [.agents/memory-bank/systemPatterns.md](.agents/memory-bank/systemPatterns.md) 规避已知架构陷阱；
-  - 查阅 [.agents/memory-bank/activeContext.md](.agents/memory-bank/activeContext.md) 了解跨会话的当前重点领域。
-- **机器可读检索入口 (Machine-readable Entrypoint)**：
-  - `.agents/memory-bank/index.jsonl` 是每个 Pattern 一行的派生索引（由 `sync_memory_bank.py` 自动生成，**禁止手改**）。
-  - **检索流程**：先通过工具定位目标 Pattern ID，再按需展开单条正文，**不要整篇读取领域卡片**：
-    ```bash
-    python3 .agents/memory-bank/search_memory_bank.py "<现象或关键词>" --json
-    python3 .agents/memory-bank/search_memory_bank.py --id <PATTERN_ID>
-    ```
+- **操作前检索 (Recall Before Action)**：
+  - 诊断缺陷或修改核心系统前，优先通过 Hindsight MCP `recall` 检索已知架构陷阱、排查模式及历史任务证据；
+  - 查阅重点领域或跨领域不变量时，可通过 query 检索 `mb_active_context` 或 `mb_system_patterns`。
+- **模式检索与定位 (Pattern Retrieval)**：
+  - 所有 222 个架构模式均已按 `pattern_<ID>`（如 `pattern_AIM-001`、`pattern_QE-045`）持久化至 Hindsight；
+  - 支持直接通过症状、根因、修复规则及日志关键字进行语义召回与精确查看。
 - **自动沉淀协议 (Automatic Wrap-up Protocol)**：
-  1. 解决非平凡 Bug、运行时异常或细微架构问题后，先在 `.agents/summary/<topic>/` 留下任务专属证据；
-  2. 仅当结论具有**可复用性**时，才提炼沉淀至 `patterns/`；仅在产生新的**跨领域不变量**时，才更新 `systemPatterns.md`；
-  3. 更新 Pattern 元数据后，依次运行同步与校验工具：
-     ```bash
-     python3 .agents/memory-bank/sync_memory_bank.py
-     python3 -B .agents/memory-bank/verify_memory_bank.py
-     ```
-  4. 当本轮会话实际更新了记忆库内容时，在回复末尾附上 `[Memory Bank Auto-Updated]` 作为回执。
-- **沉淀文档随提交 (Document Co-Commit)**：
-  - 获权提交时，将本次任务留存的总结、记忆库、Playbook 及验收文档，与相关的源码变更一同显式暂存并提交。
-  - 若文档包含无关修改块，仅暂存属于本任务的修改块或保持该文件不提交。
+  1. 解决非平凡 Bug、运行时异常或细微架构问题后，将关键现象、根因链与防错规则提炼为事实；
+  2. 使用 Hindsight MCP 的 `sync_retain` 或 `retain` 接口沉淀至知识库（附带相关标签如 `['pattern', <domain>, <ID>]` 或 `['summary', <topic>]`）；
+  3. 当本轮会话实际更新了记忆库内容时，在回复末尾附上 `[Hindsight Memory Bank Updated]` 作为回执。
 
 ---
 

@@ -1,6 +1,0 @@
-# P0c-43 残留普查：登记表内真端多阶段行中，报告 NPC 错绑或阶梯投影缺失的行（只认客户端背书）
-# 判据 报告侧 NPC 轴 = B NPC_REPORT ≠ 真端 reward_npc_name，或无块且报告侧动作全绑他人；
-#      LADDER_MISSING = 客户端任务书行数 == K+1 且 K>1 而 START 行 var0 投影 < K（QE-051）
-# quest_id	K	retail_reward_npc	reward_id	registry_bound_npcs	ladder_projection	client_rows	flags
-35010	1	Palas	799805	['799805', '799806']	[1]	2	REPORT_SIDE_MIXED:报告侧动作绑['799805', '799806']⊃真端799805
-35011	1	Palas	799805	['799805', '799806']	[1]	2	REPORT_SIDE_MIXED:报告侧动作绑['799805', '799806']⊃真端799805
