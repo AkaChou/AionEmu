@@ -14,7 +14,6 @@ globs: "src/main/resources/aion/data/static_data/quest/definitions/**/*.xml, src
 - `../../docs/quest/repair-playbook/PATTERNS.zh-CN.md`
 - `../../docs/quest/repair-playbook/CASES.zh-CN.md`
 - `../../docs/quest/WRITING_GUIDE.zh-CN.md`
-- `../../.agents/summary/headless-client-extraction/MIGRATION.zh-CN.md`
 
 当 `CASES.zh-CN.md` 将匹配到的案例链接至 `docs/quest/repair-playbook/cases/*.md` 时，在设计修复方案前必须先阅读对应的案例分片文件。
 
@@ -44,7 +43,7 @@ globs: "src/main/resources/aion/data/static_data/quest/definitions/**/*.xml, src
 2. 验收要求满足：XML/IR 契约正确、通过专项测试、且通过生产目录与白名单检查。在针对该任务的编译器测试和生产目录/白名单门禁通过之前，切勿将 XML 改动交付给用户进行客户端重测；若未获构建授权，保持修复状态为 `PENDING` 并列出未执行的命令。
 3. 涉及客户端对话页、NPC 生成、跟随、登录/登出行为或性能的改动，还必须经过相应的客户端或运行时验证。向用户索取缺失的输入，切勿将验收降级为主观推测。
 4. 明确指出当前任务并声明客户端验证或客户端验收已完成的用户消息，是该任务全程可玩（playable）的权威确认，除非用户明确将说明限制在某一分支或步骤。将其视同 `CLIENT_ACCEPTED`；切勿要求用户重复跑线或提供截图。该消息同时也是完成本地提交工作流的明确常规授权，无需等待后续的 "commit" 指令：保留无关的变更文件，提交任务所属的修复（若尚未提交）或复用现有的待验收 commit，记录验收结果，重新运行 Pattern 资格判定，并完成证据/Playbook 提交。已有 Pattern 对应一个修复 commit 加一个针对性验收记录 commit；新 Pattern 对应一个修复 commit 加一个 Playbook/验收记录 commit。该授权不包含 push、服务端生命周期操作或无关改动。在移交验收完成前，已知的编译器/目录检查失败仍必须先行解决。
-5. 按照 `../summary/quest-acceptance/README.zh-CN.md` 中的字段记录已完成的客户端或运行时验证。记录必须指明代码仓库 commit 及相关工作树状态、Aion 5.8 客户端/数据出处、NPC/物体与地图/副本上下文、源状态/动作/页面、预期与实际响应、启动健康度、可用日志/协议/产物哈希、验收状态以及残留风险。触发规则 4 时，引用或忠实总结用户的确认内容，并将无法获取的技术产物标记为 `not captured`；其缺失不影响用户实机游戏验收的有效性。
+5. 记录已完成的客户端或运行时验证时，记录必须指明代码仓库 commit 及相关工作树状态、Aion 5.8 客户端/数据出处、NPC/物体与地图/副本上下文、源状态/动作/页面、预期与实际响应、启动健康度、可用日志/协议/产物哈希、验收状态以及残留风险。触发规则 4 时，引用或忠实总结用户的确认内容，并将无法获取的技术产物标记为 `not captured`；其缺失不影响用户实机游戏验收的有效性。验证经验与结论自动通过 Hindsight MCP 沉淀。
 6. 交付物必须明确区分“实现完成 (implementation complete)”与“验收完成 (acceptance complete)”。若测试、目录或白名单检查、Aion 5.8 客户端验证或实际运行时证据仍未完备，在最终回复中必须主动将工作标记为“待验收 (pending acceptance)”，列出未完成的命令或证据及责任方，切勿仅单方面汇报问题已修复。
 7. 若启动日志中包含 `Can't initialize typed quest engine`、`QuestCompilationException`、`AMBIGUOUS_TRANSITION` 或生产目录编译失败，立即停止客户端层面的诊断，返回 XML 展开与编译器证据排查。智能体绝不可自行启动、停止或重启用户管理的服务端来执行此检查。
 8. Playbook 是修复参考手册，而非验收流水账。按可复用的问题模式去重案例，而非按任务 ID 去重。每个新增或实质性修订的代表性案例必须记录：一个代表性任务、稳定的 Pattern ID、可搜索的现象关键词、IR/所有者指纹、第一检查点、玩家可见现象、根因、修复层级、改动文件、代表性测试、验证命令与结果、复用边界以及 commit。
@@ -56,7 +55,7 @@ globs: "src/main/resources/aion/data/static_data/quest/definitions/**/*.xml, src
 14. 当已验收的修复建立了一个新的代表性案例时，使用连续的两个本地 commit，以便 Playbook 引用稳定的修复 commit 哈希：首先仅提交修复源码/测试，然后使用该修复 commit 哈希更新并提交 Playbook。切勿使用 amend 将 Playbook 合并进记录其哈希的 commit 中。
 15. 若修复在待验收状态下已提前提交，保留其稳定的 commit 哈希，并在最终验收证据齐备后将 Playbook 跟进作为首个 commit。切勿重写待验收期间积累的无关历史。
 16. 无论哪种顺序，案例一旦验收，在 Playbook commit 完成之前，严禁插入无关 commit、执行 push 或发出验收完成移交。即使验收是在后续才获得的，修复与 Playbook commit 也构成一个完整的交付批次。
-17. 修改 Playbook 模式或代表性案例后，运行 `python3 .agents/summary/quest/check_quest_repair_playbook.py`，要求每个索引或详述的代表性 commit 均能解析，并至少包含一个结构化的 Pattern 指纹以及既有的 `TestClass#method` 引用。
+17. 修改 Playbook 模式或代表性案例后，要求每个索引或详述的代表性 commit 均能解析，并至少包含一个结构化的 Pattern 指纹以及既有的 `TestClass#method` 引用。
 18. 由于 `docs/*` 默认被忽略，在提交文档时必须使用显式路径添加每个修改的 Playbook 文档：
 
    ```bash
@@ -65,4 +64,4 @@ globs: "src/main/resources/aion/data/static_data/quest/definitions/**/*.xml, src
    git add -f docs/quest/repair-playbook/CASES.zh-CN.md
    ```
 
-19. 在通过新的可复用结论或引擎级见解完成或验证任务修复后，按照自动沉淀协议（Automatic Wrap-up Protocol）更新 `.agents/memory-bank/patterns/quest-engine.md`；一次性个案沉淀至 `.agents/summary/<topic>/`，无需创建新 Pattern。
+19. 在通过新的可复用结论或引擎级见解完成或验证任务修复后，按照自动沉淀协议（Automatic Wrap-up Protocol）通过 Hindsight MCP（Bank ID: `AionEmu`）自动沉淀模式与事实；一次性个案沉淀至 Hindsight MCP（附带标签如 `['summary', <topic>]`），无需在本地维护总结；若有需持久化落盘的设计或规范文档则存储至 `docs/` 下。

@@ -28,10 +28,10 @@
    - 在未获授权前，保持当前工作状态为 `PENDING`，并在回复中明确记录未执行的命令。
 2. **⛔ 服务端进程生命周期红线**：
    - **严禁自行启动、停止或重启服务端进程**。服务端实时状态未知，其生命周期完全由用户自行管理。
-3. **📁 目录使用与隔离纪律**：
-   - `.agents/summary/` 是存放所有任务总结、排查留痕与沉淀文档的**唯一权威目录**。
-   - **严禁使用、创建或引用 `.agent/` 或 `.agent/summary/`**（注意区分单复数，全库仅认 `.agents/`）。
-   - AI 生成的所有中间产物（包括临时脚本、分析工具、报告等）必须存放在 `.agents/summary/<topic>/` 下；**严禁将临时产物放置于 `scripts/` 或生产源码目录**。
+3. **📁 产物、落盘文档与沉淀纪律**：
+   - **总结与知识沉淀由 Hindsight MCP 统一承载**：任务总结、根因分析、避坑模式与排查经验自动通过 Hindsight MCP（Bank ID: `AionEmu`）持久化沉淀，无需在本地维护总结文档。
+   - **持久化文档落盘归入 `docs/`**：凡是任务计划（Plan）、架构设计、技术规范或长期参考文档需要持久化落盘的，统一规范存储在 `docs/` 目录下（如 `docs/architecture/`、`docs/plans/` 等专用子目录）。
+   - **临时产物瞬时性与生产源码隔离**：AI 生成的临时脚本、分析工具、中间数据等属于瞬时产物，使用完毕后必须立即清理删除，严禁残留；**严禁将临时产物放置于 `scripts/`、`src/` 或生产源码目录**。
 4. **🌿 Worktree 使用纪律 (Worktree Discipline)**：
    - 除非主工作树无法用于必要验证（例如并行任务导致生产目录无法构建），否则**严禁创建 git worktree**。
    - 经允许创建时，必须置于仓库外部的临时路径下，且仅用于单次只读/验证；
@@ -39,7 +39,7 @@
    - 验证完成后必须立即使用 `git worktree remove --force <path>` 后接 `git worktree prune` 彻底清理，绝不可残留 worktree、构建产物（`target/`）或陈旧检出。
 5. **📝 提交与暂存授权 (Commit Authorization)**：
    - 仅在获得用户明确授权后方可执行 `git commit`。
-   - 获权后，显式暂存当前任务生成的总结、记忆库、Playbook 及验收文档，并与相关的源码变更一同提交；
+   - 获权后，显式暂存当前任务生成的 docs 落盘文档、Playbook 及验收材料（知识与总结沉淀走 Hindsight MCP），并与相关的源码变更一同提交；
    - **严禁使用 `git add -A` 或全量暂存**；严禁暂存中间临时产物、被忽略的运行时输出或无关改动。
 
 ---
@@ -56,7 +56,7 @@
 | [backend.md](.agents/rules/backend.md) | `src/main/java/**/*.java` | **JDK 25 语言基线**（优先 record/sealed/模式匹配）、`ScopedValue` 线程边界约束、**严禁随意开启预览特性**、保持既有架构兼容 |
 | [formatting.md](.agents/rules/formatting.md) | `**/*.java`, `**/*.xml` | **Java**：Tab 制表符（宽 4 空格）、K&R 花括号、单行上限 120 字符；<br>**XML**：2 空格缩进、严格保持 Schema 元素与任务流转顺序 |
 | [lombok.md](.agents/rules/lombok.md) | `**/*.java` | 优先类级注解、**严禁滥用 `@Data`（严格对照 5 项排查问卷）**、防范方法重载冲突与哈希/集合查找破坏 |
-| [ai-artifacts.md](.agents/rules/ai-artifacts.md) | 全仓库 | 中间产物集中于 `.agents/summary/<topic>/`、任务完成后自动清理、临时 Worktree 规范、诊断转储（JFR/dump）不入仓 |
+| [ai-artifacts.md](.agents/rules/ai-artifacts.md) | 全仓库 | 总结沉淀至 Hindsight MCP、持久化文档落盘至 `docs/`、临时产物自动清理、临时 Worktree 规范、诊断转储不入仓 |
 | [quest-repair.md](.agents/rules/quest-repair.md) | 任务 XML、引擎、AI 及测试 | **以全部类似任务角度根本解决**、**严禁任务引擎/编译器引入硬编码特例**、Playbook 模式指纹比对、待验收/双 Commit 工作流 |
 | Hindsight MCP | 全仓库 | 持久化架构模式、避坑指南、排查路由器、结构化知识检索与维护（Bank ID: `AionEmu`） |
 
@@ -74,7 +74,7 @@
   - 支持直接通过症状、根因、修复规则及日志关键字进行语义召回与精确查看。
 - **自动沉淀协议 (Automatic Wrap-up Protocol)**：
   1. 解决非平凡 Bug、运行时异常或细微架构问题后，将关键现象、根因链与防错规则提炼为事实；
-  2. 使用 Hindsight MCP 的 `sync_retain` 或 `retain` 接口沉淀至知识库（附带相关标签如 `['pattern', <domain>, <ID>]` 或 `['summary', <topic>]`）；
+  2. 使用 Hindsight MCP 的 `sync_retain` 或 `retain` 接口自动沉淀至知识库（附带相关标签如 `['pattern', <domain>, <ID>]` 或 `['summary', <topic>]`），**无需在本地维护总结文档**；
   3. 当本轮会话实际更新了记忆库内容时，在回复末尾附上 `[Hindsight Memory Bank Updated]` 作为回执。
 
 ---
