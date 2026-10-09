@@ -2,14 +2,14 @@
 alwaysApply: true
 ---
 
-# AI-Generated Intermediate Artifacts / AI 生成中间产物
+# AI 生成中间产物 (AI-Generated Intermediate Artifacts)
 
-1. AI-generated intermediate artifacts that are not part of the product source, including temporary or one-off scripts, audit and conversion tools, generated reports, logs, exports, patch drafts, and scratch data, must be created under `.agents/summary/<topic>/`.
-2. Use a descriptive, stable `<topic>` directory and keep all artifacts for the same task together. Create the topic directory when it does not already exist.
-3. Do not create these artifacts in `../../scripts`, the repository root, `../../src`, `../../docs`, `../../target`, `../../aion`, or another production path. In particular, an AI-generated temporary script must not be placed under `../../scripts`.
-4. Only move a tool to `../../scripts` or another project-owned source directory when the user explicitly asks to promote it to maintained project tooling; otherwise, keep it under the relevant `.agents/summary/<topic>/` directory.
-5. Existing project-owned scripts and historical artifacts do not need to be moved solely because of this rule. Apply the rule to new AI-generated intermediate artifacts unless the task explicitly includes migration.
-6. When the task is complete, automatically remove all AI-generated intermediate files and temporary or one-off scripts created for that task, including the task's `.agents/summary/<topic>/` directory when it is empty. Preserve only final deliverables, files the user explicitly asks to retain, or tools explicitly promoted to maintained project tooling; do not delete pre-existing or unrelated artifacts.
-7. A retained summary artifact must have a stable task-relative name and be referenced by the task record or acceptance document; do not promote raw logs, generated reports, or one-off scripts into `memory-bank/patterns/` without distilling the reusable rule and its evidence.
-8. Temporary git worktrees are intermediate artifacts: create one only when the main working tree cannot run the required verification (for example, a parallel task blocks the production catalog build), keep it under a temporary path outside the repository, and remove it immediately after use with `git worktree remove --force <path>` plus `git worktree prune`. Never leave a worktree, its `target/` build output, or a stale entry in `git worktree list` behind, and never commit from a worktree; ask the user for build authorization before running tests or packaging in it.
-9. Per-run diagnostic outputs — JFR recordings (`*.jfr`), heap/thread dumps, GC logs, exported logs — are temporary artifacts: never commit them, and do not write their concrete file names or paths into code, comments, docs, summaries, or memory-bank evidence. Record the capture parameters (flags/commands) and refer to the artifact generically instead (for example “启动期 JFR 临时采样” or `/tmp/play-N.jfr`-style placeholders). Ensure the file pattern is listed in `../../.gitignore`.
+1. 不属于生产源码的 AI 生成中间产物（包括临时或一次性脚本、审计与转换工具、生成的报告、日志、导出数据、补丁草稿及临时草稿数据），必须创建在 `.agents/summary/<topic>/` 目录下。
+2. 使用具有描述性且稳定的 `<topic>` 目录名，并将同一任务的所有产物统一存放在一起。若主题目录不存在则先创建。
+3. 严禁在 `../../scripts`、仓库根目录、`../../src`、`../../docs`、`../../target`、`../../aion` 或其他生产路径中创建这些产物。尤其是 AI 生成的临时脚本，绝不能放入 `../../scripts`。
+4. 仅在用户明确要求将某个工具提升为项目长期维护的正式工具时，方可将其移动至 `../../scripts` 或其他项目所有的源码目录；否则，一律保留在相关的 `.agents/summary/<topic>/` 目录下。
+5. 项目现有的脚本和历史产物无需仅因本规则而迁移。除非任务明确包含迁移要求，否则本规则仅适用于新生成的 AI 中间产物。
+6. 任务完成后，自动清理为该任务创建的所有 AI 生成中间文件及临时/一次性脚本，并在该任务的 `.agents/summary/<topic>/` 目录为空时将其一并删除。仅保留最终交付物、用户明确要求保留的文件，或已明确提升为项目维护工具的内容；切勿删除预先存在或无关的产物。
+7. 保留的总结产物必须具备稳定的任务相对路径命名，并由任务记录或验收文档引用；严禁在未提炼出可复用规则及其证据前，将原始日志、生成报告或一次性脚本直接提升进 `memory-bank/patterns/`。
+8. 临时 git worktree 属于中间产物：仅在主工作树无法执行必要验证时（例如并行任务导致生产目录构建阻塞）才可创建；务必将其置于仓库外部的临时路径下，并在使用完毕后立即使用 `git worktree remove --force <path>` 及 `git worktree prune` 彻底清理。切勿遗留 worktree、其 `target/` 构建输出或 `git worktree list` 中的陈旧条目，严禁在 worktree 中提交代码；在其中运行测试或打包前必须先征得用户的构建授权。
+9. 每次运行的诊断产物——JFR 记录文件（`*.jfr`）、堆/线程转储（dump）、GC 日志、导出日志等——均属于临时产物：切勿提交它们，亦不可将其具体文件名或路径硬编码写入代码、注释、文档、总结或记忆库（memory-bank）证据中。应记录采集参数（参数标志/执行命令），并使用泛化代称（例如“启动期 JFR 临时采样”或 `/tmp/play-N.jfr` 风格的占位符）。确保相关文件模式已列入 `../../.gitignore`。

@@ -3,43 +3,43 @@ alwaysApply: false
 globs: "**/*.java, **/*.xml"
 ---
 
-# Java and XML Formatting Standards / Java 与 XML 格式化标准
+# Java 与 XML 格式化标准 (Java and XML Formatting Standards)
 
-## Shared File Rules
+## 通用文件规则 (Shared File Rules)
 
-1. Use UTF-8, LF line endings, and one final newline. Do not leave trailing whitespace.
-2. Keep formatting-only changes separate from behavior changes when practical. Do not reformat unrelated files or surrounding code merely because a formatter would change it.
-3. Preserve the file's established encoding, declaration, and generated-file contract. If a file is generated, update its generator and regenerate the output instead of hand-editing the generated file.
-4. Formatting must not change XML text, CDATA, attribute values, element order, Java string literals, protocol numbers, or serialized data.
+1. 使用 UTF-8 编码、LF 换行符，且文件末尾保留一个换行。不得留有行尾多余空白（trailing whitespace）。
+2. 在实际操作中，尽量将纯格式化变更与行为变更分开。切勿仅因为格式化工具会自动修改就随意重新格式化无关文件或周边代码。
+3. 遵循文件既定的编码、声明及生成文件契约。如果文件属于自动生成文件，应更新其生成器并重新生成输出，切勿手动直接编辑生成文件。
+4. 格式化操作绝不可改变 XML 文本内容、CDATA、属性值、元素顺序、Java 字符串字面量、协议数字或序列化数据。
 
-## Java Formatting
+## Java 格式化规范 (Java Formatting)
 
-1. Use tabs for leading indentation with a display width of four spaces. Do not mix leading tabs and spaces.
-2. Use K&R braces: the opening brace stays on the declaration or control statement line, and the closing brace aligns with that declaration.
-3. Use one statement or declaration per line. Keep short fluent calls readable; break long calls at argument or chained-call boundaries and indent continuation lines one additional level.
-4. Keep package and import sections at the top, use explicit imports, and do not add wildcard imports. Preserve the repository's existing import grouping unless the touched file is being intentionally normalized.
-5. Separate class members into readable groups with a blank line. Keep related overloads and lifecycle methods together; do not insert blank lines inside a compact expression or switch branch.
-6. Target a maximum line length of 120 characters for new code. Break at syntactic boundaries when that improves readability, but do not split URLs, protocol literals, regular expressions, SQL, or generated constants solely to meet the limit.
-7. Keep annotations directly above the declaration they annotate. Put `@Override` on every overriding method where applicable.
-8. Apply the bilingual comment and Javadoc requirements from `i18n.md`; formatting rules do not replace documentation requirements.
+1. 行首缩进使用制表符（Tab），显示宽度为 4 个空格。切勿混用行首制表符和空格。
+2. 使用 K&R 风格花括号：左花括号与声明或控制语句保持在同一行，右花括号与该声明对齐。
+3. 每行仅包含一条语句或声明。保持简短的链式调用易读；长调用应在参数或链式调用边界处换行，续行增加一级缩进。
+4. 包声明和 import 语句置于文件顶部，使用显式 import，严禁添加通配符 import（wildcard imports）。除非有意对受影响文件进行规整，否则保持仓库既有的 import 分组顺序。
+5. 类成员之间用空行划分为清晰可读的逻辑组。保持相关的重载方法和生命周期方法集中在一起；切勿在紧凑表达式或 switch 分支内部插入空行。
+6. 新编写的代码单行长度目标上限为 120 个字符。在有助于提高可读性时于句法边界处换行，但切勿仅为了满足行宽限制而拆分 URL、协议字面量、正则表达式、SQL 或生成的常量。
+7. 注解直接置于其修饰的声明上方。在所有适用的重写方法上添加 `@Override`。
+8. 严格遵守 `i18n.md` 中的中英双语注释与 Javadoc 要求；格式化规则不能替代文档要求。
 
-## XML Formatting
+## XML 格式化规范 (XML Formatting)
 
-1. Use two spaces for each indentation level. Do not use tabs for XML indentation.
-2. Use double quotes for attribute values and no whitespace before `/>` in self-closing elements.
-3. Keep the XML declaration at the top when the file has one. Use `encoding="UTF-8"` for hand-maintained XML declarations.
-4. Keep short elements on one line. When an opening tag has many attributes, wrap one attribute per line, indent attributes one level deeper than the element, and keep `>` or `/>` on the final attribute line.
-5. Preserve schema-defined child order and quest transition order. In quest XML, formatting must never reorder `metadata` fields, `event`/`conditions`/`actions`/`after-commit`, nodes, transitions, domain blocks, or reward entries.
-6. Preserve meaningful whitespace in mixed text content, HTML fragments, CDATA, packet payloads, and localized text. Do not run a whole-file XML formatter on those files without a targeted diff review.
-7. Generated, imported, client-derived, and large static XML must follow its owning generator or source format. Do not normalize it by hand to match quest XML style.
-8. For quest XML, use the schema and `../../docs/quest/WRITING_GUIDE.zh-CN.md` as the semantic authority; this file only defines whitespace and layout.
+1. 每级缩进使用 2 个空格。XML 缩进不得使用制表符（Tab）。
+2. 属性值使用双引号，自闭合元素的 `/>` 前不留空格。
+3. 若文件包含 XML 声明，保持其位于最顶部。手动维护的 XML 声明统一使用 `encoding="UTF-8"`。
+4. 简短元素保持在同一行。当起始标签属性较多时，每个属性独占一行，属性比元素深入缩进一级，并将 `>` 或 `/>` 放在最后一个属性所在行的末尾。
+5. 严格保持 Schema 定义的子元素顺序及任务流转顺序。在任务 XML 中，格式化绝不可调整 `metadata` 字段、`event`/`conditions`/`actions`/`after-commit`、节点（node）、状态跳转（transition）、领域块或奖励条目（reward）的先后顺序。
+6. 保留混合文本内容、HTML 片段、CDATA、封包载荷（packet payloads）以及本地化文本中有意义的空白符。在未做针对性 diff 审查前，切勿对这些文件运行全文件 XML 格式化工具。
+7. 生成的、导入的、来源于客户端的以及大型静态 XML 必须遵循其自身生成器或源格式的规范。切勿手动将其规范化为任务 XML 风格。
+8. 对于任务 XML，以 Schema 和 `../../docs/quest/WRITING_GUIDE.zh-CN.md` 作为语义权威标准；本文档仅规范空白符与排版布局。
 
-## Review Checklist
+## 审查检查清单 (Review Checklist)
 
-Before delivery, inspect the focused diff and confirm:
+交付前，请审查针对性的 diff 并确认：
 
-- no mixed indentation or trailing whitespace was introduced;
-- no XML values, ordering, or comments changed unintentionally;
-- generated files were regenerated from their source rather than manually reformatted;
-- Java/XML formatting changes are limited to the requested scope;
-- `git diff --check` passes.
+- 未引入混用的缩进或行尾空白；
+- 未无意修改 XML 取值、元素顺序或注释；
+- 生成文件是通过其数据源重新生成，而非手动重新排版；
+- Java/XML 格式化改动严格限制在要求的任务范围内；
+- `git diff --check` 检查通过。

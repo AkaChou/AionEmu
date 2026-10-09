@@ -1,81 +1,170 @@
 # AGENTS.md
 
-This file provides project-level guidance for AI coding agents working in this repository.
+本文档为在此代码库中工作的 AI 编码智能体（AI Coding Agents）提供项目级开发与协作指引。
 
-> **Detailed rules are split into focused files under `.agents/rules/`.** Read the applicable files from the [Rules Index](#rules-index) for the task at hand.
+> 💡 **详细规则已拆分至 `.agents/rules/` 目录下的专用文件中。** 请根据当前任务从 [规则索引](#rules-index) 中查阅适用的规则文件。
 
-## Global Rules
+---
 
-1. Do NOT run build commands unless explicitly requested by the user. When verification genuinely requires tests or a build, ask the user for authorization first and state the exact command and scope; without authorization keep the work `PENDING` and record the commands that were not executed.
-2. Do NOT start, stop, or restart server processes. Their current state is unknown, and the user manages their lifecycle.
-3. `.agents/summary/` is the canonical directory for all summary files.
-4. Do NOT use, recreate, or reference `.agent/` or `.agent/summary/`. All agent rules, memory bank, and summary directories reside strictly under `.agents/`.
-5. AI-generated intermediate artifacts, including temporary scripts, must be stored in `.agents/summary/<topic>/`; do not place them under `scripts/`.
-6. Worktree discipline (worktree 使用纪律): do not create a git worktree unless the main working tree cannot be used for the required verification (for example, a parallel task makes the production catalog fail to build). Keep any worktree under a temporary path outside the repository, use it only for that verification, never commit from it, and remove it with `git worktree remove --force <path>` followed by `git worktree prune` as soon as the verification finishes. Never leave a worktree, its build output, or a temporary checkout behind.
+## 目录 (Table of Contents)
 
-## Memory Bank
+- [全局规则 (Global Rules)](#全局规则-global-rules)
+- [规则索引 (Rules Index)](#rules-index)
+- [记忆库机制 (Memory Bank)](#记忆库机制-memory-bank)
+- [项目概览与技术栈 (Project Overview & Tech Stack)](#项目概览与技术栈-project-overview--tech-stack)
+- [配置说明与外部数据 (Configuration & External Data)](#配置说明与外部数据-configuration--external-data)
+- [源码结构 (Source Structure)](#源码结构-source-structure)
+- [Maven 模块与打包部署 (Maven Module & Packaging)](#maven-模块与打包部署-maven-module--packaging)
 
-Persistent architecture patterns and debugging insights are maintained in [.agents/memory-bank/](.agents/memory-bank/):
-- **Read before action**: When diagnosing bugs or touching core systems, read [.agents/memory-bank/systemPatterns.md](.agents/memory-bank/systemPatterns.md) first to avoid known pitfalls.
-- **Active focus**: Check [.agents/memory-bank/activeContext.md](.agents/memory-bank/activeContext.md) for current focus areas across sessions.
-- **机器可读检索入口 (Machine-readable entrypoint)**: `.agents/memory-bank/index.jsonl` 是每个 Pattern 一行的派生索引（由 `sync_memory_bank.py` 生成，禁止手改）。先用 `python3 .agents/memory-bank/search_memory_bank.py "<现象或关键词>" --json` 定位 Pattern ID，再用 `--id <PATTERN_ID>` 只展开单条正文，不要整篇读取领域卡片。
-- **Automatic Wrap-up Protocol (自动沉淀协议)**:
-  After resolving a non-trivial bug, runtime anomaly, or subtle architectural issue, first leave task-specific evidence in `.agents/summary/<topic>/`. Only promote a finding to `patterns/` when it is reusable; update [.agents/memory-bank/systemPatterns.md](.agents/memory-bank/systemPatterns.md) only for a new cross-domain invariant. After updating Pattern metadata, run `python3 .agents/memory-bank/sync_memory_bank.py` then `python3 -B .agents/memory-bank/verify_memory_bank.py` (derived-index freshness + structure + 90-day freshness gate); when this turn actually updates memory-bank content, append `[Memory Bank Auto-Updated]` as a receipt at the end of the response.
-- **Document Co-Commit (沉淀文档随提交)**:
-  A commit is still created only after explicit user authorization. Once authorized, automatically review and explicitly stage the retained summary, memory-bank, Playbook, and acceptance documents produced by the current task together with the related source changes. Do not use `git add -A`; do not stage raw intermediate artifacts, ignored runtime outputs, or unrelated dirty files. If a document contains unrelated hunks, stage only the task-owned hunks or leave that file uncommitted.
+---
 
-## Configuration
+## 全局规则 (Global Rules)
 
-- Spring Boot entry configuration: `src/main/resources/application.yml`. The application runs in non-web mode, enables the login, game, and chat services by default, and uses the Netty transport.
-- Runtime configuration: `src/main/resources/aion/config/`, split into login, network, main, chat, administration, schedule, and other domains.
-- Default network ports are defined in `src/main/resources/aion/config/network/network.properties`: login client 2106, game client 7777, chat client 10241, game-to-login internal connection 9014, and game-to-chat internal connection 9021.
-- Login and game database settings are stored in `src/main/resources/aion/config/login/database.properties` and `src/main/resources/aion/config/network/database.properties` respectively.
-- External data roots (真端服务端表 / 客户端安装目录 / 客户端解包产物) are referenced by **name** only (`<真端根>`, `<客户端目录>`, `<客户端解包根>`, `<仓库根>`); never hardcode developer-machine absolute paths or require project-specific environment variables. See [ENVIRONMENT.md](ENVIRONMENT.md).
+以下红线与纪律在所有任务中均具备最高优先级，必须严格遵守：
 
-## Project Overview
+1. **⛔ 构建与测试授权红线**：
+   - **严禁在未经用户明确要求的情况下运行构建命令（如 `mvn compile`、`mvn test`、`mvn package` 等）**。
+   - 当验证流程确实需要运行测试或构建时，必须先向用户请求授权，并明确说明具体的命令、执行范围与原因；
+   - 在未获授权前，保持当前工作状态为 `PENDING`，并在回复中明确记录未执行的命令。
+2. **⛔ 服务端进程生命周期红线**：
+   - **严禁自行启动、停止或重启服务端进程**。服务端实时状态未知，其生命周期完全由用户自行管理。
+3. **📁 目录使用与隔离纪律**：
+   - `.agents/summary/` 是存放所有任务总结、排查留痕与沉淀文档的**唯一权威目录**。
+   - **严禁使用、创建或引用 `.agent/` 或 `.agent/summary/`**（注意区分单复数，全库仅认 `.agents/`）。
+   - AI 生成的所有中间产物（包括临时脚本、分析工具、报告等）必须存放在 `.agents/summary/<topic>/` 下；**严禁将临时产物放置于 `scripts/` 或生产源码目录**。
+4. **🌿 Worktree 使用纪律 (Worktree Discipline)**：
+   - 除非主工作树无法用于必要验证（例如并行任务导致生产目录无法构建），否则**严禁创建 git worktree**。
+   - 经允许创建时，必须置于仓库外部的临时路径下，且仅用于单次只读/验证；
+   - **严禁在 worktree 中提交代码**；
+   - 验证完成后必须立即使用 `git worktree remove --force <path>` 后接 `git worktree prune` 彻底清理，绝不可残留 worktree、构建产物（`target/`）或陈旧检出。
+5. **📝 提交与暂存授权 (Commit Authorization)**：
+   - 仅在获得用户明确授权后方可执行 `git commit`。
+   - 获权后，显式暂存当前任务生成的总结、记忆库、Playbook 及验收文档，并与相关的源码变更一同提交；
+   - **严禁使用 `git add -A` 或全量暂存**；严禁暂存中间临时产物、被忽略的运行时输出或无关改动。
 
-AionEmu is an Aion 5.8 community server. A single Spring Boot application hosts the login, game, and chat services and loads quests, NPCs, maps, geodata, instances, and other static game data.
+---
 
-## Technology Stack
+<a id="rules-index"></a>
+## 规则索引 (Rules Index)
 
-- Java 25, Spring Boot 4.1, Maven
-- Netty, MySQL Connector/J, Quartz, Jakarta XML Binding
-- Lombok, SLF4J/Logback, JUnit Jupiter
+针对特定代码领域和工作流的详细规约已模块化，位于 `.agents/rules/` 目录下：
 
-## Source Structure
+| 规则文件 | 适用范围 | 核心契约与关注点 |
+|---|---|---|
+| [i18n.md](.agents/rules/i18n.md) | 全仓库 | **中英双语注释**（类与核心方法 Javadoc 必须双语同义）、**本地化日志**（必须走 `I18n.get(...)`，双语 properties 键对齐）、术语权威对齐 |
+| [java_general.md](.agents/rules/java_general.md) | `**/*.java` | 串行执行 Java 命令、不可变设计、Java 25 实用特性、及早失败、**严禁吞异常/必须保留 cause**、**强制构造器注入/禁止字段注入** |
+| [backend.md](.agents/rules/backend.md) | `src/main/java/**/*.java` | **JDK 25 语言基线**（优先 record/sealed/模式匹配）、`ScopedValue` 线程边界约束、**严禁随意开启预览特性**、保持既有架构兼容 |
+| [formatting.md](.agents/rules/formatting.md) | `**/*.java`, `**/*.xml` | **Java**：Tab 制表符（宽 4 空格）、K&R 花括号、单行上限 120 字符；<br>**XML**：2 空格缩进、严格保持 Schema 元素与任务流转顺序 |
+| [lombok.md](.agents/rules/lombok.md) | `**/*.java` | 优先类级注解、**严禁滥用 `@Data`（严格对照 5 项排查问卷）**、防范方法重载冲突与哈希/集合查找破坏 |
+| [ai-artifacts.md](.agents/rules/ai-artifacts.md) | 全仓库 | 中间产物集中于 `.agents/summary/<topic>/`、任务完成后自动清理、临时 Worktree 规范、诊断转储（JFR/dump）不入仓 |
+| [quest-repair.md](.agents/rules/quest-repair.md) | 任务 XML、引擎、AI 及测试 | **以全部类似任务角度根本解决**、**严禁任务引擎/编译器引入硬编码特例**、Playbook 模式指纹比对、待验收/双 Commit 工作流 |
+| [memory-bank/](.agents/memory-bank/README.md) | 全仓库 | 持久化架构模式、避坑指南、排查路由器、结构化知识检索与维护 |
 
-- `src/main/java/com/aionemu/boot/` — Spring Boot lifecycle, configuration, internationalization, and transport boundaries
-- `src/main/java/com/aionemu/commons/` — Database, networking, concurrency, and shared infrastructure
-- `src/main/java/com/aionemu/loginserver/` — Login service
-- `src/main/java/com/aionemu/chatserver/` — Chat service
-- `src/main/java/com/aionemu/gameserver/` — Game world, quests, AI, protocol, and business services
-- `src/main/resources/aion/config/` — Runtime configuration
-- `src/main/resources/aion/data/` — Production static data and quest XML
-- `src/main/resources/aion/definitions/` — Compact definitions and generation inputs
-- `src/main/resources/aion/geo/` — Geo, Path, and terrain data
-- `src/test/java/` — Unit tests, production catalog checks, and regression tests
-- `docs/` — Design, quest-repair, and maintenance documentation
-- `scripts/` — Runtime helpers, packaging, data generation, auditing, and maintenance tools
-- `aion/` — Local deployment directory; it is not source code or a long-lived build input
+---
 
-## Maven Module
+## 记忆库机制 (Memory Bank)
 
-- The repository root is the only Maven module: `com.aionemu:aionemu`.
-- The Spring Boot repackaged artifact is `target/AionEmu.jar`.
-- `scripts/package.sh` deploys the JAR, resources, and lifecycle scripts to `aion/` or the directory specified by `AION_HOME`.
-- Run all Maven commands from the repository root.
+代码库的持久化架构模式与调试排查经验统一维护在 [.agents/memory-bank/](.agents/memory-bank/)：
 
-## Rules Index
+- **操作前必读 (Read Before Action)**：
+  - 诊断缺陷或修改核心系统前，先查阅 [.agents/memory-bank/systemPatterns.md](.agents/memory-bank/systemPatterns.md) 规避已知架构陷阱；
+  - 查阅 [.agents/memory-bank/activeContext.md](.agents/memory-bank/activeContext.md) 了解跨会话的当前重点领域。
+- **机器可读检索入口 (Machine-readable Entrypoint)**：
+  - `.agents/memory-bank/index.jsonl` 是每个 Pattern 一行的派生索引（由 `sync_memory_bank.py` 自动生成，**禁止手改**）。
+  - **检索流程**：先通过工具定位目标 Pattern ID，再按需展开单条正文，**不要整篇读取领域卡片**：
+    ```bash
+    python3 .agents/memory-bank/search_memory_bank.py "<现象或关键词>" --json
+    python3 .agents/memory-bank/search_memory_bank.py --id <PATTERN_ID>
+    ```
+- **自动沉淀协议 (Automatic Wrap-up Protocol)**：
+  1. 解决非平凡 Bug、运行时异常或细微架构问题后，先在 `.agents/summary/<topic>/` 留下任务专属证据；
+  2. 仅当结论具有**可复用性**时，才提炼沉淀至 `patterns/`；仅在产生新的**跨领域不变量**时，才更新 `systemPatterns.md`；
+  3. 更新 Pattern 元数据后，依次运行同步与校验工具：
+     ```bash
+     python3 .agents/memory-bank/sync_memory_bank.py
+     python3 -B .agents/memory-bank/verify_memory_bank.py
+     ```
+  4. 当本轮会话实际更新了记忆库内容时，在回复末尾附上 `[Memory Bank Auto-Updated]` 作为回执。
+- **沉淀文档随提交 (Document Co-Commit)**：
+  - 获权提交时，将本次任务留存的总结、记忆库、Playbook 及验收文档，与相关的源码变更一同显式暂存并提交。
+  - 若文档包含无关修改块，仅暂存属于本任务的修改块或保持该文件不提交。
 
-All detailed rules are in `.agents/rules/`:
+---
 
-| File                                             | Scope | Description |
-|--------------------------------------------------|---|---|
-| [i18n.md](.agents/rules/i18n.md)                 | Entire repository | Bilingual comments, localized logging, and terminology rules / 中英双语注释、日志国际化和术语规范 |
-| [java_general.md](.agents/rules/java_general.md) | `**/*.java` | General Java conventions, error handling, dependency injection, and development workflow / Java 通用约定、错误处理、依赖注入和开发流程 |
-| [backend.md](.agents/rules/backend.md)           | `src/main/java/**/*.java` | Backend implementation and JDK 25 language/API conventions / 后端实现与 JDK 25 语言/API 约定 |
-| [formatting.md](.agents/rules/formatting.md)     | `**/*.java`, `**/*.xml` | Java and XML formatting, whitespace, wrapping, and generated-file boundaries / Java 与 XML 格式、空白、换行和生成文件边界 |
-| [lombok.md](.agents/rules/lombok.md)             | `**/*.java` | Lombok boilerplate reduction and generated-behavior boundaries / Lombok 样板代码简化及生成行为边界 |
-| [ai-artifacts.md](.agents/rules/ai-artifacts.md) | Entire repository | AI-generated intermediate artifacts, topic directories, and script placement / AI 生成中间产物、主题目录和脚本存放规则 |
-| [quest-repair.md](.agents/rules/quest-repair.md) | Quest XML, quest engine, quest AI, quest tests, and `docs/quest/` | Quest evidence, repair, acceptance, and playbook-update rules / 任务证据、修复、验收和 Playbook 更新规则 |
-| [memory-bank/](.agents/memory-bank/README.md) | Entire repository | Persistent architecture patterns, gotchas, and troubleshooting router / 持久化架构模式、避坑指南与排查路由器 |
+## 项目概览与技术栈 (Project Overview & Tech Stack)
+
+### 项目概览
+AionEmu 是一个 Aion 5.8 社区服务端项目。采用单体 Spring Boot 应用程序承载登录、游戏和聊天三大核心服务，并统一加载任务系统、NPC、地图、地形（geodata）、副本等静态游戏数据。
+
+### 技术栈基线
+- **核心环境**：Java 25, Spring Boot 4.1, Apache Maven
+- **网络与并发**：Netty, Quartz 调度器
+- **持久化与数据**：MySQL Connector/J, Jakarta XML Binding (JAXB)
+- **代码增强与工具**：Lombok, SLF4J / Logback
+- **测试框架**：JUnit Jupiter (JUnit 5)
+
+---
+
+## 配置说明与外部数据 (Configuration & External Data)
+
+### 核心配置文件
+- **Spring Boot 引导入口**：`src/main/resources/application.yml`（非 Web 模式运行，默认启用 login、game、chat 服务，基于 Netty 传输）。
+- **运行时配置目录**：`src/main/resources/aion/config/`，划分为登录（login）、网络（network）、主服（main）、聊天（chat）、管理（administration）、调度（schedule）等领域。
+- **数据库配置**：
+  - 登录服数据库：`src/main/resources/aion/config/login/database.properties`
+  - 游戏服数据库：`src/main/resources/aion/config/network/database.properties`
+
+### 默认网络端口速查
+定义于 `src/main/resources/aion/config/network/network.properties`：
+
+| 服务与通道 | 默认端口 | 说明 |
+|---|---|---|
+| 登录客户端连接 (Login Client) | `2106` | 外部客户端登录入口 |
+| 游戏客户端连接 (Game Client) | `7777` | 外部客户端游戏主入口 |
+| 聊天客户端连接 (Chat Client) | `10241` | 外部客户端聊天连接 |
+| 游戏服 -> 登录服内部通信 | `9014` | 内部跨进程协同通道 |
+| 游戏服 -> 聊天服内部通信 | `9021` | 内部跨进程协同通道 |
+
+### 外部数据根路径引用规范
+外部数据根（真端服务端表、客户端安装目录、解包资源等）因开发者机器环境而异，在代码、脚本与文档中**一律仅通过逻辑名称指代，严禁硬编码绝对路径或强制环境变量**。详见 [ENVIRONMENT.md](ENVIRONMENT.md)：
+
+| 逻辑名称 | 指向说明 |
+|---|---|
+| `<仓库根>` | 本项目代码仓库根目录 |
+| `<真端根>` | 真端 5.8 服务端根：`Map/XML/Quest_*.xml`、`Map/Worlds/`、反编译源码等 |
+| `<客户端目录>` | Aion 5.8 客户端安装根：`L10N/CHS/Data/data.pak`、`data/Quest/Quest.pak` 等 |
+| `<客户端解包根>` | 客户端解包产物根：`Quest_unpacked/quest.xml`、`data_unpacked/Dialogs/**` 等 |
+
+---
+
+## 源码结构 (Source Structure)
+
+项目采用清晰的领域模块化目录组织：
+
+```text
+src/main/java/com/aionemu/
+├── boot/           # Spring Boot 生命周期、统一配置、国际化基建及传输层边界
+├── commons/        # 数据库持久层、底层网络库、并发工具与共享基础设施
+├── loginserver/    # 账号认证、服务器列表、登录业务服务
+├── chatserver/     # 聊天通道、群组与社交消息服务
+└── gameserver/     # 核心游戏世界、任务引擎、NPC/怪物 AI、网络协议与各子系统业务
+
+src/main/resources/aion/
+├── config/         # 运行时属性配置 (.properties)
+├── data/           # 生产静态数据、NPC 模板、掉落表与任务 XML
+├── definitions/    # 紧凑定义与代码生成模板输入
+└── geo/            # 地形几何、寻路网格（Path）与 Geo 静态数据
+
+src/test/java/      # 单元测试、任务编译器验证、生产目录与白名单审计测试
+docs/               # 系统设计、任务修复 Playbook 与维护参考文档
+scripts/            # 项目级运行时维护脚本、打包工具、数据生成与审计工具
+aion/               # 本地部署/运行目标目录（非源码，不纳入版本控制）
+```
+
+---
+
+## Maven 模块与打包部署 (Maven Module & Packaging)
+
+- **单模块结构**：仓库根目录为唯一的 Maven 模块（`com.aionemu:aionemu`）。所有 Maven 命令均应在仓库根目录下执行。
+- **打包产物**：Spring Boot 打包生成的独立可运行 JAR 为 `target/AionEmu.jar`。
+- **部署脚本**：运行 `scripts/package.sh` 可将编译打包后的 JAR、配置文件及生命周期脚本统一部署至 `aion/` 目录（或由环境变量 `AION_HOME` 指定的目录）。
