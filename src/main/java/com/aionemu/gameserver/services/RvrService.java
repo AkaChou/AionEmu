@@ -38,9 +38,10 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 种族对战（RvR）服务，管理军团走廊、刷怪与倒计时广播。
  * Race vs Race service managing Legion Corridor, spawns, and countdown broadcasts.
+ *
  * @author Rinzler (Encom)
  */
-@Slf4j(topic = "com.aionemu.gameserver.services.SvsService")
+@Slf4j
 public class RvrService {
 	private static volatile ObjectProvider<RvrService> instanceProvider;
 	private RvrSchedule rvrSchedule;
@@ -105,6 +106,7 @@ public class RvrService {
 	/**
 	 * 启动指定 ID 的种族对战活动。
 	 * Starts the Race vs Race event for the given id.
+	 *
 	 * @param id 地点 ID / location id
 	 */
 	public void startRvr(final int id) {
@@ -124,6 +126,7 @@ public class RvrService {
 	/**
 	 * 停止指定 ID 的种族对战活动。
 	 * Stops the Race vs Race event for the given id.
+	 *
 	 * @param id 地点 ID / location id
 	 */
 	public void stopRvr(int id) {
@@ -138,6 +141,7 @@ public class RvrService {
 	/**
 	 * 清理活动启动阶段创建的临时对象。
 	 * Despawns temporary objects created during the event startup sequence.
+	 *
 	 * @param id 地点 ID / location id
 	 */
 	public void clearAdventObjects(int id) {
@@ -152,6 +156,7 @@ public class RvrService {
 	/**
 	 * 清理一组临时对象并释放其引用。
 	 * Despawns one group of temporary objects and releases its references.
+	 *
 	 * @param objects 临时对象集合 / temporary objects
 	 */
 	private void despawnAdventObjects(List<VisibleObject> objects) {
@@ -168,7 +173,8 @@ public class RvrService {
 	/**
 	 * 按状态在地点刷出对应 NPC。
 	 * Spawns NPCs for the location according to the given state.
-	 * @param loc location
+	 *
+	 * @param loc    location
 	 * @param rstate state type
 	 */
 	public void spawn(RvrLocation loc, RvrStateType rstate) {
@@ -183,9 +189,10 @@ public class RvrService {
 		}
 	}
 
-		/**
+	/**
 	 * 广播军团走廊倒计时系统消息。
 	 * Broadcasts Legion Corridor countdown system messages.
+	 *
 	 * @param id 地点 ID / location id
 	 * @return 是否已广播 / whether message was sent
 	 */
@@ -244,9 +251,11 @@ public class RvrService {
 	}
 
 	// 伊卢玛。 / Iluma.
+
 	/**
 	 * 广播 LF6 G1 阶段 1 刷怪系统消息。
 	 * Broadcasts LF6 G1 phase-1 spawn system messages.
+	 *
 	 * @param id 地点 ID / location id
 	 * @return 是否已广播 / whether message was sent
 	 */
@@ -266,6 +275,7 @@ public class RvrService {
 	/**
 	 * 广播 LF6 G1 阶段 2 刷怪系统消息。
 	 * Broadcasts LF6 G1 phase-2 spawn system messages.
+	 *
 	 * @param id 地点 ID / location id
 	 * @return 是否已广播 / whether message was sent
 	 */
@@ -285,6 +295,7 @@ public class RvrService {
 	/**
 	 * 广播 LF6 G1 阶段 3 刷怪系统消息。
 	 * Broadcasts LF6 G1 phase-3 spawn system messages.
+	 *
 	 * @param id 地点 ID / location id
 	 * @return 是否已广播 / whether message was sent
 	 */
@@ -304,6 +315,7 @@ public class RvrService {
 	/**
 	 * 广播 LF6 G1 阶段 4 刷怪系统消息。
 	 * Broadcasts LF6 G1 phase-4 spawn system messages.
+	 *
 	 * @param id 地点 ID / location id
 	 * @return 是否已广播 / whether message was sent
 	 */
@@ -323,6 +335,7 @@ public class RvrService {
 	/**
 	 * 广播 LF6 G1 阶段 5 刷怪系统消息。
 	 * Broadcasts LF6 G1 phase-5 spawn system messages.
+	 *
 	 * @param id 地点 ID / location id
 	 * @return 是否已广播 / whether message was sent
 	 */
@@ -387,6 +400,7 @@ public class RvrService {
 	/**
 	 * 广播 LF6 G2 事件开始系统消息。
 	 * Broadcasts LF6 G2 event-start system messages.
+	 *
 	 * @param id 地点 ID / location id
 	 * @return 是否已广播 / whether message was sent
 	 */
@@ -410,6 +424,7 @@ public class RvrService {
 	/**
 	 * 广播 LF6 侧 RvR 倒计时系统消息。
 	 * Broadcasts LF6-side RvR countdown system messages.
+	 *
 	 * @param id 地点 ID / location id
 	 * @return 是否已广播 / whether message was sent
 	 */
@@ -438,9 +453,11 @@ public class RvrService {
 	}
 
 	// 诺斯珀德。 / Norsvold.
+
 	/**
 	 * 广播 DF6 G1 阶段 1 刷怪系统消息。
 	 * Broadcasts DF6 G1 phase-1 spawn system messages.
+	 *
 	 * @param id 地点 ID / location id
 	 * @return 是否已广播 / whether message was sent
 	 */
@@ -460,6 +477,7 @@ public class RvrService {
 	/**
 	 * 广播 DF6 G1 阶段 2 刷怪系统消息。
 	 * Broadcasts DF6 G1 phase-2 spawn system messages.
+	 *
 	 * @param id 地点 ID / location id
 	 * @return 是否已广播 / whether message was sent
 	 */
@@ -479,6 +497,7 @@ public class RvrService {
 	/**
 	 * 广播 DF6 G1 阶段 3 刷怪系统消息。
 	 * Broadcasts DF6 G1 phase-3 spawn system messages.
+	 *
 	 * @param id 地点 ID / location id
 	 * @return 是否已广播 / whether message was sent
 	 */
@@ -498,6 +517,7 @@ public class RvrService {
 	/**
 	 * 广播 DF6 G1 阶段 4 刷怪系统消息。
 	 * Broadcasts DF6 G1 phase-4 spawn system messages.
+	 *
 	 * @param id 地点 ID / location id
 	 * @return 是否已广播 / whether message was sent
 	 */
@@ -517,6 +537,7 @@ public class RvrService {
 	/**
 	 * 广播 DF6 G1 阶段 5 刷怪系统消息。
 	 * Broadcasts DF6 G1 phase-5 spawn system messages.
+	 *
 	 * @param id 地点 ID / location id
 	 * @return 是否已广播 / whether message was sent
 	 */
@@ -581,6 +602,7 @@ public class RvrService {
 	/**
 	 * 广播 DF6 G2 事件开始系统消息。
 	 * Broadcasts DF6 G2 event-start system messages.
+	 *
 	 * @param id 地点 ID / location id
 	 * @return 是否已广播 / whether message was sent
 	 */
@@ -604,6 +626,7 @@ public class RvrService {
 	/**
 	 * 广播 DF6 侧 RvR 倒计时系统消息。
 	 * Broadcasts DF6-side RvR countdown system messages.
+	 *
 	 * @param id 地点 ID / location id
 	 * @return 是否已广播 / whether message was sent
 	 */
@@ -631,9 +654,10 @@ public class RvrService {
 		};
 	}
 
-		/**
+	/**
 	 * 广播 F6 突袭开始系统消息。
 	 * Broadcasts F6 raid-start system messages.
+	 *
 	 * @param id 地点 ID / location id
 	 * @return 是否已广播 / whether message was sent
 	 */
@@ -669,6 +693,7 @@ public class RvrService {
 	/**
 	 * 广播 F6 突袭 5 分钟倒计时系统消息。
 	 * Broadcasts F6 raid 5-minute countdown system messages.
+	 *
 	 * @param id 地点 ID / location id
 	 * @return 是否已广播 / whether message was sent
 	 */
@@ -704,90 +729,95 @@ public class RvrService {
 	/**
 	 * 刷出 RvR 入侵控制类特效/NPC。
 	 * Spawns RvR advent control effect/NPC.
+	 *
 	 * @param id 地点 ID / location id
 	 * @return 是否已刷出 / whether spawned
 	 */
 	public boolean adventControlSP(int id) {
 		switch (id) {
-		case 5:
-			adventControl.add(SpawnEngine.spawnObject(
+			case 5:
+				adventControl.add(SpawnEngine.spawnObject(
 					SpawnEngine.addNewSingleTimeSpawn(210100000, 702529, 2722.799f, 1424.293f, 227.375f, (byte) 53),
 					1));
-			adventControl.add(SpawnEngine.spawnObject(
+				adventControl.add(SpawnEngine.spawnObject(
 					SpawnEngine.addNewSingleTimeSpawn(220110000, 702529, 2478.824f, 1804.861f, 216.271f, (byte) 56),
 					1));
-			return true;
-		default:
-			return false;
+				return true;
+			default:
+				return false;
 		}
 	}
 
 	/**
 	 * 刷出 RvR 入侵视觉特效。
 	 * Spawns RvR advent visual effect.
+	 *
 	 * @param id 地点 ID / location id
 	 * @return 是否已刷出 / whether spawned
 	 */
 	public boolean adventEffectSP(int id) {
 		switch (id) {
-		case 5:
-			adventEffect.add(SpawnEngine.spawnObject(
+			case 5:
+				adventEffect.add(SpawnEngine.spawnObject(
 					SpawnEngine.addNewSingleTimeSpawn(210100000, 702549, 2722.799f, 1424.293f, 227.375f, (byte) 53),
 					1));
-			adventEffect.add(SpawnEngine.spawnObject(
+				adventEffect.add(SpawnEngine.spawnObject(
 					SpawnEngine.addNewSingleTimeSpawn(220110000, 702549, 2478.824f, 1804.861f, 216.271f, (byte) 56),
 					1));
-			return true;
-		default:
-			return false;
+				return true;
+			default:
+				return false;
 		}
 	}
 
 	/**
 	 * 刷出 RvR 入侵传送门。
 	 * Spawns RvR advent portal.
+	 *
 	 * @param id 地点 ID / location id
 	 * @return 是否已刷出 / whether spawned
 	 */
 	public boolean adventPortalSP(int id) {
 		switch (id) {
-		case 5:
-			adventPortal.add(SpawnEngine.spawnObject(
+			case 5:
+				adventPortal.add(SpawnEngine.spawnObject(
 					SpawnEngine.addNewSingleTimeSpawn(210100000, 702550, 2722.799f, 1424.293f, 227.375f, (byte) 53),
 					1));
-			adventPortal.add(SpawnEngine.spawnObject(
+				adventPortal.add(SpawnEngine.spawnObject(
 					SpawnEngine.addNewSingleTimeSpawn(220110000, 702550, 2478.824f, 1804.861f, 216.271f, (byte) 56),
 					1));
-			return true;
-		default:
-			return false;
+				return true;
+			default:
+				return false;
 		}
 	}
 
 	/**
 	 * 刷出 RvR 入侵引导/指向特效。
 	 * Spawns RvR advent directing effect.
+	 *
 	 * @param id 地点 ID / location id
 	 * @return 是否已刷出 / whether spawned
 	 */
 	public boolean adventDirectingSP(int id) {
 		switch (id) {
-		case 5:
-			adventDirecting.add(SpawnEngine.spawnObject(
+			case 5:
+				adventDirecting.add(SpawnEngine.spawnObject(
 					SpawnEngine.addNewSingleTimeSpawn(210100000, 855231, 2722.799f, 1424.293f, 227.375f, (byte) 53),
 					1));
-			adventDirecting.add(SpawnEngine.spawnObject(
+				adventDirecting.add(SpawnEngine.spawnObject(
 					SpawnEngine.addNewSingleTimeSpawn(220110000, 855231, 2478.824f, 1804.861f, 216.271f, (byte) 56),
 					1));
-			return true;
-		default:
-			return false;
+				return true;
+			default:
+				return false;
 		}
 	}
 
 	/**
 	 * 清除地点已刷出的 NPC。
 	 * Despawns NPCs previously spawned at the location.
+	 *
 	 * @param loc location
 	 */
 	public void despawn(RvrLocation loc) {
@@ -808,6 +838,7 @@ public class RvrService {
 	/**
 	 * 判断指定 RvR 是否进行中。
 	 * Checks whether the RvR with the given id is in progress.
+	 *
 	 * @param id 地点 ID / location id
 	 * @return 是否进行中 / whether in progress
 	 */
@@ -818,6 +849,7 @@ public class RvrService {
 	/**
 	 * 获取进行中的 RvR 实例映射。
 	 * Returns the map of active RvR instances.
+	 *
 	 * @return 活动实例映射 / active instances map
 	 */
 	public Map<Integer, Rvrlf3df3<?>> getActiveRvr() {
@@ -827,6 +859,7 @@ public class RvrService {
 	/**
 	 * 获取活动持续时长（小时）。
 	 * Returns the event duration in hours.
+	 *
 	 * @return 持续小时数 / duration hours
 	 */
 	public int getDuration() {
@@ -836,8 +869,9 @@ public class RvrService {
 	/**
 	 * 按 ID 获取 RvR 地点。
 	 * Returns the RvR location by id.
+	 *
 	 * @param id 地点 ID / location id
-	 * location
+	 *           location
 	 */
 	public RvrLocation getRvrLocation(int id) {
 		return rvr.get(id);
@@ -868,6 +902,7 @@ public class RvrService {
 	/**
 	 * 注入 Spring 的实例提供者。
 	 * Sets the Spring instance provider.
+	 *
 	 * @param instanceProvider 实例提供者 / instance provider
 	 */
 	public static void setInstanceProvider(ObjectProvider<RvrService> instanceProvider) {

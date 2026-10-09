@@ -2,6 +2,7 @@ package com.aionemu.gameserver.services;
 
 
 import com.aionemu.boot.i18n.I18n;
+
 import java.util.List;
 import java.util.Map;
 
@@ -32,13 +33,13 @@ import com.aionemu.gameserver.world.zone.ZoneInstance;
  */
 @Slf4j
 public class TownService {
-    /**
-     * -- SETTER --
-     *  注入 Spring 实例提供者。
-     *  Injects the Spring instance provider.
-     */
-    @Setter
-    private static volatile ObjectProvider<TownService> instanceProvider;
+	/**
+	 * -- SETTER --
+	 * 注入 Spring 实例提供者。
+	 * Injects the Spring instance provider.
+	 */
+	@Setter
+	private static volatile ObjectProvider<TownService> instanceProvider;
 	private final Map<Integer, Town> elyosTowns;
 	private final Map<Integer, Town> asmosTowns;
 
@@ -48,9 +49,10 @@ public class TownService {
 	 * <p>双源静态兜底已退役：缺少 provider 时直接 fail-fast，避免在容器之外静默创建第二套实例。
 	 * The legacy static fallback is retired: a missing provider now fails fast instead of silently
 	 * creating a second instance outside the container.</p>
+	 *
 	 * @return 由 Spring 提供的实例 / the Spring-provided instance
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean /
-	 *         when no provider or bean is available
+	 *                               when no provider or bean is available
 	 */
 	public static final TownService getInstance() {
 		ObjectProvider<TownService> provider = instanceProvider;
@@ -63,7 +65,7 @@ public class TownService {
 		return provided;
 	}
 
-    /**
+	/**
 	 * 从数据库加载城镇；若为空则根据房屋地块初始化并持久化。
 	 * Loads towns from DB; if empty, initializes from housing lands and persists them.
 	 */
@@ -77,9 +79,9 @@ public class TownService {
 						continue;
 					else {
 						Race townRace = DataManager.NPC_DATA.getNpcTemplate(land.getManagerNpcId())
-								.getTribe() == TribeClass.GENERAL ? Race.ELYOS : Race.ASMODIANS;
+							.getTribe() == TribeClass.GENERAL ? Race.ELYOS : Race.ASMODIANS;
 						if ((townRace == Race.ELYOS && !elyosTowns.containsKey(address.getTownId()))
-								|| (townRace == Race.ASMODIANS && !asmosTowns.containsKey(address.getTownId()))) {
+							|| (townRace == Race.ASMODIANS && !asmosTowns.containsKey(address.getTownId()))) {
 							Town town = new Town(address.getTownId(), townRace);
 							if (townRace == Race.ELYOS) {
 								elyosTowns.put(town.getId(), town);
@@ -92,7 +94,7 @@ public class TownService {
 				}
 			}
 		}
-		log.info(I18n.get("log.e7c70a17528c", asmosTowns.size()));
+		log.info(I18n.get("log.e7c70a17528c", elyosTowns.size()));
 		log.info(I18n.get("log.2ede9f09c843", asmosTowns.size()));
 	}
 
@@ -100,6 +102,7 @@ public class TownService {
 	 * 按城镇 ID 查询城镇（先天族后魔族）。
 	 * Looks up a town by id (Elyos first, then Asmodians).
 	 * town id
+	 *
 	 * @return 城镇，可能为 null / town, may be null
 	 */
 	public Town getTownById(int townId) {
@@ -113,6 +116,7 @@ public class TownService {
 	/**
 	 * 获取玩家当前活跃房屋所属城镇 ID。
 	 * Returns the town id of the player's active house.
+	 *
 	 * @param player 玩家 / player
 	 * @return 城镇 ID，无房屋时为 0 / town id, or 0 if no house
 	 */
@@ -128,6 +132,7 @@ public class TownService {
 	/**
 	 * 根据生物位置解析所在城镇 ID（NPC 优先用自身 townId）。
 	 * Resolves town id from a creature's position (NPC uses its own townId first).
+	 *
 	 * @param creature 生物 / creature
 	 * @return 城镇 ID，未命中为 0 / town id, or 0 if none
 	 */
@@ -156,20 +161,21 @@ public class TownService {
 	/**
 	 * 玩家进入世界时，在对应阵营主城下发城镇列表。
 	 * On enter-world, sends the race town list when the player is in the race capital.
+	 *
 	 * @param player 玩家 / player
 	 */
 	public void onEnterWorld(Player player) {
 		switch (player.getRace()) {
-		case ELYOS:
-			if (player.getWorldId() == 700010000)
-				PacketSendUtility.sendPacket(player, new SM_TOWNS_LIST(elyosTowns));
-			break;
-		case ASMODIANS:
-			if (player.getWorldId() == 710010000)
-				PacketSendUtility.sendPacket(player, new SM_TOWNS_LIST(asmosTowns));
-			break;
-		default:
-			break;
+			case ELYOS:
+				if (player.getWorldId() == 700010000)
+					PacketSendUtility.sendPacket(player, new SM_TOWNS_LIST(elyosTowns));
+				break;
+			case ASMODIANS:
+				if (player.getWorldId() == 710010000)
+					PacketSendUtility.sendPacket(player, new SM_TOWNS_LIST(asmosTowns));
+				break;
+			default:
+				break;
 		}
 	}
 }

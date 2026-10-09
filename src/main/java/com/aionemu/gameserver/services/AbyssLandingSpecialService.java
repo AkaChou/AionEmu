@@ -1,6 +1,7 @@
 package com.aionemu.gameserver.services;
 
 import com.aionemu.boot.i18n.I18n;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -32,9 +33,13 @@ import com.aionemu.gameserver.spawnengine.SpawnEngine;
 @Slf4j(topic = "com.aionemu.gameserver.services.AbyssLandingService")
 public class AbyssLandingSpecialService {
 	private static volatile ObjectProvider<AbyssLandingSpecialService> instanceProvider;
-	/** 特殊登陆点 ID → 位置。 / Special landing id → location. */
+	/**
+	 * 特殊登陆点 ID → 位置。 / Special landing id → location.
+	 */
 	private static Map<Integer, LandingSpecialLocation> abyssSpecialLanding;
-	/** 当前活跃的特殊登陆实例。 / Currently active special landing instances. */
+	/**
+	 * 当前活跃的特殊登陆实例。 / Currently active special landing instances.
+	 */
 	private final ConcurrentMap<Integer, SpecialLanding<?>> activeSpecialLanding = new ConcurrentHashMap<>();
 
 	/**
@@ -51,7 +56,7 @@ public class AbyssLandingSpecialService {
 			if (loc.getType() == LandingSpecialStateType.ACTIVE) {
 				spawn(loc, LandingSpecialStateType.ACTIVE);
 			}
-			log.info(I18n.get("log.f1b25999792d", loc.getId(), loc.getType()));
+			log.debug(I18n.get("log.f1b25999792d", loc.getId(), loc.getType()));
 		}
 		log.info(I18n.get("log.73861d844d0c", abyssSpecialLanding.size()));
 	}
@@ -59,6 +64,7 @@ public class AbyssLandingSpecialService {
 	/**
 	 * 启动指定特殊登陆点。
 	 * Starts the special landing for the given id.
+	 *
 	 * @param id 登陆点 ID / landing id
 	 */
 	public void startLanding(final int id) {
@@ -72,6 +78,7 @@ public class AbyssLandingSpecialService {
 	/**
 	 * 停止指定特殊登陆点。
 	 * Stops the special landing for the given id.
+	 *
 	 * @param id 登陆点 ID / landing id
 	 */
 	public void stopLanding(int id) {
@@ -85,8 +92,9 @@ public class AbyssLandingSpecialService {
 	/**
 	 * 按状态刷新特殊登陆点怪物。
 	 * Spawns NPCs for a special landing location by state.
+	 *
 	 * @param loc 登陆点位置 / landing location
-	 * target state
+	 *            target state
 	 */
 	public static void spawn(LandingSpecialLocation loc, LandingSpecialStateType fstate) {
 		if (fstate.equals(LandingSpecialStateType.ACTIVE)) {
@@ -105,6 +113,7 @@ public class AbyssLandingSpecialService {
 	/**
 	 * 将登陆点状态持久化到数据库。
 	 * Persists the landing location state to the database.
+	 *
 	 * @param loc 登陆点位置 / landing location
 	 */
 	public static void onSave(LandingSpecialLocation loc) {
@@ -114,6 +123,7 @@ public class AbyssLandingSpecialService {
 	/**
 	 * 清理并删除特殊登陆点已刷出的 NPC。
 	 * Despawns and clears NPCs for the special landing location.
+	 *
 	 * @param loc 登陆点位置 / landing location
 	 */
 	public static void despawn(LandingSpecialLocation loc) {
@@ -137,6 +147,7 @@ public class AbyssLandingSpecialService {
 	 * <p>双源静态兜底已退役：缺少 provider 时直接 fail-fast，避免在容器之外静默创建第二套实例。
 	 * The legacy static fallback is retired: a missing provider now fails fast instead of silently
 	 * creating a second instance outside the container.</p>
+	 *
 	 * @return 由 Spring 提供的实例 / the Spring-provided instance
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean / when no provider or bean is available
 	 */
@@ -154,6 +165,7 @@ public class AbyssLandingSpecialService {
 	/**
 	 * 注入 Spring ObjectProvider 以覆盖默认单例。
 	 * Injects a Spring ObjectProvider to override the default singleton.
+	 *
 	 * @param instanceProvider provider
 	 */
 	public static void setInstanceProvider(ObjectProvider<AbyssLandingSpecialService> instanceProvider) {
@@ -163,8 +175,9 @@ public class AbyssLandingSpecialService {
 	/**
 	 * 按 ID 获取特殊登陆点位置。
 	 * Returns the special landing location by id.
+	 *
 	 * @param id 登陆点 ID / landing id
-	 * location
+	 *           location
 	 */
 	public LandingSpecialLocation getLandingSpecialLocation(int id) {
 		return abyssSpecialLanding.get(id);

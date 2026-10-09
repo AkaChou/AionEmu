@@ -4,6 +4,7 @@ package com.aionemu.gameserver.services.events;
 import com.aionemu.boot.i18n.I18n;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+
 import java.sql.Timestamp;
 import java.time.ZonedDateTime;
 import java.util.Calendar;
@@ -25,22 +26,23 @@ import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
- * 艾特利亚护照服务，处理登录签到与护照奖励。
+ * 亚特雷亚通行证服务，处理登录印章与通行证奖励。
  * Atreian passport service handling login stamps and passport rewards.
+ *
  * @author Rinzler (Encom)
  */
 
 @Slf4j
 public class AtreianPassportService {
 
-    /**
-     * -- SETTER --
-     *  setInstanceProvider 方法。
-     *  setInstanceProvider method.
-     *  provider
-     */
-    @Setter
-    private static volatile ObjectProvider<AtreianPassportService> instanceProvider;
+	/**
+	 * -- SETTER --
+	 * setInstanceProvider 方法。
+	 * setInstanceProvider method.
+	 * provider
+	 */
+	@Setter
+	private static volatile ObjectProvider<AtreianPassportService> instanceProvider;
 	private final Map<Integer, AtreianPassport> basic = new HashMap<>(1);
 	private final Map<Integer, AtreianPassport> anny = new HashMap<>(1);
 	public Map<Integer, AtreianPassport> data = new HashMap<>(1);
@@ -63,6 +65,7 @@ public class AtreianPassportService {
 	/**
 	 * 玩家登录时同步状态。
 	 * Syncs state when a player logs in.
+	 *
 	 * @param player 玩家 / player
 	 */
 	public void onLogin(Player player) {
@@ -95,13 +98,13 @@ public class AtreianPassportService {
 			Timestamp lastStamp = dao.getLastStamp(accountId, atreianId);
 			if (now2.getTime() - lastStamp.getTime() >= 86400000L) {
 				DAOManager.getDAO(PlayerPassportsDAO.class).updatePassport(accountId, atreianId, stamps, false,
-						lastStamp);
+					lastStamp);
 				PacketSendUtility.sendPacket(player,
-						new SM_ATREIAN_PASSPORT(atreianId, stamps, 1, false, day, month + 1, year));
+					new SM_ATREIAN_PASSPORT(atreianId, stamps, 1, false, day, month + 1, year));
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_NEW_PASSPORT_AVAIBLE);
 			} else {
 				PacketSendUtility.sendPacket(player,
-						new SM_ATREIAN_PASSPORT(atreianId, stamps, 1, true, day, month + 1, year));
+					new SM_ATREIAN_PASSPORT(atreianId, stamps, 1, true, day, month + 1, year));
 			}
 		}
 	}
@@ -124,7 +127,7 @@ public class AtreianPassportService {
 		AtreianPassport loginRewardTemplate = DataManager.ATREIAN_PASSPORT_DATA.getAtreianPassportId(atreianId);
 		ZonedDateTime currentTime = ZonedDateTime.now();
 		if (loginRewardTemplate == null || loginRewardTemplate.getActive() != 1
-				|| currentTime.isBefore(loginRewardTemplate.getPeriodStart()) || currentTime.isAfter(loginRewardTemplate.getPeriodEnd())) {
+			|| currentTime.isBefore(loginRewardTemplate.getPeriodStart()) || currentTime.isAfter(loginRewardTemplate.getPeriodEnd())) {
 			return;
 		}
 		int accountId = player.getPlayerAccount().getId();
@@ -147,9 +150,9 @@ public class AtreianPassportService {
 					// PacketSendUtility.sendPacket(player, new SM_ATREIAN_PASSPORT(atreianId,
 					// OLD
 					PacketSendUtility.sendPacket(player,
-							new SM_ATREIAN_PASSPORT(atreianId, stamps + 1, 1, true, day, month + 1, year));
+						new SM_ATREIAN_PASSPORT(atreianId, stamps + 1, 1, true, day, month + 1, year));
 					DAOManager.getDAO(PlayerPassportsDAO.class).updatePassport(accountId, atreianId, stamps + 1, true,
-							now);
+						now);
 				}
 			}
 		}
@@ -158,20 +161,21 @@ public class AtreianPassportService {
 	/**
 	 * getPassports 方法。
 	 * getPassports method.
+	 *
 	 * @param raw 原始通行证映射 / raw passport data
 	 */
 	public void getPassports(Map<Integer, AtreianPassport> raw) {
 		data.putAll(raw);
 		for (AtreianPassport atp : data.values()) {
 			switch (atp.getAttendType()) {
-			case BASIC:
-				getBasicPassports(atp.getId(), atp);
-				break;
-			case ANNIVERSARY:
-				getAnniversaryPassports(atp.getId(), atp);
-				break;
-			default:
-				break;
+				case BASIC:
+					getBasicPassports(atp.getId(), atp);
+					break;
+				case ANNIVERSARY:
+					getAnniversaryPassports(atp.getId(), atp);
+					break;
+				default:
+					break;
 			}
 		}
 		log.info(I18n.get("log.a141967cbb98", basic.size()));
@@ -181,8 +185,9 @@ public class AtreianPassportService {
 	/**
 	 * getPassports 方法。
 	 * getPassports method.
+	 *
 	 * @param id ID / id
-	 * atp
+	 *           atp
 	 */
 	public void getPassports(int id, AtreianPassport atp) {
 		if (data.containsValue(id)) {
@@ -194,8 +199,9 @@ public class AtreianPassportService {
 	/**
 	 * getBasicPassports 方法。
 	 * getBasicPassports method.
+	 *
 	 * @param id ID / id
-	 * atp
+	 *           atp
 	 */
 	public void getBasicPassports(int id, AtreianPassport atp) {
 		if (basic.containsValue(id)) {
@@ -207,8 +213,9 @@ public class AtreianPassportService {
 	/**
 	 * getAnniversaryPassports 方法。
 	 * getAnniversaryPassports method.
+	 *
 	 * @param id ID / id
-	 * atp
+	 *           atp
 	 */
 	public void getAnniversaryPassports(int id, AtreianPassport atp) {
 		if (anny.containsValue(id)) {
@@ -223,9 +230,10 @@ public class AtreianPassportService {
 	 * <p>双源静态兜底已退役：缺少 provider 时直接 fail-fast，避免在容器之外静默创建第二套实例。
 	 * The legacy static fallback is retired: a missing provider now fails fast instead of silently
 	 * creating a second instance outside the container.</p>
+	 *
 	 * @return 由 Spring 提供的实例 / the Spring-provided instance
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean /
-	 *         when no provider or bean is available
+	 *                               when no provider or bean is available
 	 */
 	public static AtreianPassportService getInstance() {
 		ObjectProvider<AtreianPassportService> provider = instanceProvider;
