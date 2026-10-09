@@ -1,19 +1,14 @@
 package com.aionemu.gameserver.services;
 
-import lombok.extern.slf4j.Slf4j;
-import com.aionemu.gameserver.lifecycle.GameHousingServices;
-
-import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
-
-import com.aionemu.gameserver.lifecycle.GameCraftServices;
-
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
-
 import com.aionemu.gameserver.ai.ActionItemNpcAI2;
 import com.aionemu.gameserver.ai2.AI2;
 import com.aionemu.gameserver.ai2.event.AIEventType;
 import com.aionemu.gameserver.configs.main.CustomConfig;
 import com.aionemu.gameserver.dataholders.DataManager;
+import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
+import com.aionemu.gameserver.lifecycle.GameCraftServices;
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+import com.aionemu.gameserver.lifecycle.GameHousingServices;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.TeleportAnimation;
 import com.aionemu.gameserver.model.gameobjects.Creature;
@@ -53,1227 +48,722 @@ import com.aionemu.gameserver.services.trade.PricesService;
 import com.aionemu.gameserver.skillengine.model.SkillTargetSlot;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.stats.AbyssRankEnum;
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * NPC 对话框服务：根据 dialogId 分发商店、传送、仓库、任务、整容等交互。
  * NPC dialog service: dispatches shop, teleport, warehouse, quest, plastic-surgery and other interactions by dialogId.
  */
 @Slf4j
-
 public class DialogService {
-    /**
-     * 服务端收尾关窗：原版 {@code 0x5d8} 关窗不仅关客户端窗口，也结束 NPC 的对话态——按客户端
-     * {@code CM_CLOSE_DIALOG} 的同一条收尾链补发 {@link AIEventType#DIALOG_FINISH} 并做既有清扫。
-     * <p>
-     * 不补这一步时，行进中的对话 NPC 会**停在半路永不恢复**：开门时
-     * {@code TalkEventHandler.onSimpleTalk} 置 {@code AISubState.TALK} 并把玩家设为目标，移动 tick 随即
-     * 把该子状态判为「已到达」（{@code AbstractAI#isDestinationReached}）并 {@code abortMove()}，
-     * 而恢复巡逻的唯一常规入口就是 {@code DIALOG_FINISH}（2026-10-06 实机 NPC 203111 Spiros）。
-     * 重复触发安全：目标的清除使第二次 {@code onFinishTalk} 自然成为空操作。
-     * <p>
-     * Server-side dialog close also ends the NPC's talk state (retail {@code 0x5d8}): fire
-     * {@code DIALOG_FINISH} exactly like the client {@code CM_CLOSE_DIALOG} tail does, otherwise a
-     * walking dialog NPC stays paused mid-route forever. Firing twice is safe: the second
-     * {@code onFinishTalk} no-ops once the target is cleared.
-     * @param npc 对话 NPC，未知时传 null（只关窗） / the dialog NPC, or null when unknown
-     * @param player 玩家 / player
-     */
-    public static void closeDialog(Npc npc, Player player) {
-        if (npc != null) {
-            // 只通知「已装配 AI」的生物：对话态（AISubState.TALK）本就挂在 AI 上，没有 AI 就没有可结束
-            // 的对话态；同时避免收尾路径以懒建 dummy AI 为副作用（getAi2IfPresent 即为此而设）。
-            // Only notify a creature that already has an AI: the talk substate lives on the AI, and a
-            // teardown path must not lazily attach the dummy AI.
-            AI2 ai = npc.getAi2IfPresent();
-            if (ai != null) {
-                ai.onCreatureEvent(AIEventType.DIALOG_FINISH, player);
-            }
-            onCloseDialog(npc, player);
-        }
-        PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(0, 0));
-    }
 
-    /**
-     * 服务端收尾关窗（按交互目标对象 id 解析 NPC）：解析不到时退化为纯关窗。
-     * Server-side close resolving the NPC from the interaction target object id; an unresolvable id
-     * degrades to a plain window close.
-     * @param player 玩家 / player
-     * @param targetObjectId 交互目标对象 ID，0 表示无 / interaction target object id, 0 for none
-     */
-    public static void closeDialog(Player player, int targetObjectId) {
-        VisibleObject target = targetObjectId > 0 && player.getKnownList() != null
-            ? player.getKnownList().getObject(targetObjectId) : null;
-        closeDialog(target instanceof Npc npc ? npc : null, player);
-    }
+	/**
+	 * 变性手术入场券道具 ID 列表 / Gender switch ticket item IDs.
+	 */
+	private static final int[] GENDER_SWITCH_TICKETS = {
+		169660000, 169660001, 169660002, 169660003, 169660004, 169660005
+	};
 
-    /**
-     * 关闭与 NPC 的对话框；对军团仓库管理员释放占用。
-     * Close the NPC dialog; for legion warehouse keepers, release the warehouse user lock.
-     * @param npc dialog NPC
-     * @param player 玩家 / player
-     */
+	/**
+	 * 整形手术入场券道具 ID 列表 / Plastic surgery ticket item IDs.
+	 */
+	private static final int[] PLASTIC_SURGERY_TICKETS = {
+		169650000, 169650001, 169650002, 169650003, 169650004, 169650005,
+		169650006, 169650007, 169650008, 169650009, 169650010, 169650011,
+		169691000
+	};
 
-    public static void onCloseDialog(Npc npc, Player player) {
-        switch (npc.getObjectTemplate().getTitleId()) {
-            case 350409:
-            case 358046:
-            case 358047:
-            case 358048:
-            case 358049:
-            case 463212:
-                PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(npc.getObjectId(), 0));
-                Legion legion = player.getLegion();
-                if (legion != null) {
-                    LegionWarehouse lwh = player.getLegion().getLegionWarehouse();
-                    if (lwh.getWhUser() == player.getObjectId()) {
-                        lwh.setWhUser(0);
-                    }
-                }
-                break;
-            case 314362: // Stigma Master A.
-            case 314365: // Stigma Master B.
-            case 314366: // Stigma Master C.
-            case 350410: // 烙印之石名人 / Stigma Master.
-            case 469968: // Stigma 5.8
-            case 469977: // Stigma 5.8
-            case 469982: // Stigma 5.8
-            case 469991: // Stigma 5.8
-            case 470033: // Stigma 5.8
-            case 470042: // Stigma 5.8
-            case 470047: // Stigma 5.8
-            case 470056: // Stigma 5.8
-            case 469969: // Trade Broker 5.8
-            case 469976: // Trade Broker 5.8
-            case 469983: // Trade Broker 5.8
-            case 469990: // Trade Broker 5.8
-            case 470034: // Trade Broker 5.8
-            case 470041: // Trade Broker 5.8
-            case 470048: // Trade Broker 5.8
-            case 470055: // Trade Broker 5.8
-            case 350419: // Trade Broker.
-            case 357007: // Arcadian Fortress Stigma Master.
-            case 357019: // Umbral Fortress Stigma Master.
-            case 357031: // Eternum Fortress Stigma Master.
-            case 357043: // Skyclash Fortress Stigma Master.
-            case 358063: // Trade Broker 4.8
-            case 358493: // Stigma Master 4.9
-            case 358523: // Stigma Master 4.9
-            case 370111: // Abyss Master Stigma A.
-            case 370112: // Abyss Master Stigma B.
-            case 370243: // Aethercraft Technician.
-            case 370503: // <Gogorunerk Solution,INC>
-            case 462878: // <Village Alliance>
-            case 466226: // Stigma Researcher.
-                PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(npc.getObjectId(), 0));
-                break;
-        }
-    }
+	/**
+	 * 服务端收尾关窗：原版 {@code 0x5d8} 关窗不仅关客户端窗口，也结束 NPC 的对话态——按客户端
+	 * {@code CM_CLOSE_DIALOG} 的同一条收尾链补发 {@link AIEventType#DIALOG_FINISH} 并做既有清扫。
+	 * <p>
+	 * 不补这一步时，行进中的对话 NPC 会**停在半路永不恢复**：开门时
+	 * {@code TalkEventHandler.onSimpleTalk} 置 {@code AISubState.TALK} 并把玩家设为目标，移动 tick 随即
+	 * 把该子状态判为「已到达」（{@code AbstractAI#isDestinationReached}）并 {@code abortMove()}，
+	 * 而恢复巡逻的唯一常规入口就是 {@code DIALOG_FINISH}（2026-10-06 实机 NPC 203111 Spiros）。
+	 * 重复触发安全：目标的清除使第二次 {@code onFinishTalk} 自然成为空操作。
+	 * <p>
+	 * Server-side dialog close also ends the NPC's talk state (retail {@code 0x5d8}): fire
+	 * {@code DIALOG_FINISH} exactly like the client {@code CM_CLOSE_DIALOG} tail does, otherwise a
+	 * walking dialog NPC stays paused mid-route forever. Firing twice is safe: the second
+	 * {@code onFinishTalk} no-ops once the target is cleared.
+	 *
+	 * @param npc    对话 NPC，未知时传 null（只关窗） / the dialog NPC, or null when unknown
+	 * @param player 玩家 / player
+	 */
+	public static void closeDialog(Npc npc, Player player) {
+		if (npc != null) {
+			AI2 ai = npc.getAi2IfPresent();
+			if (ai != null) {
+				ai.onCreatureEvent(AIEventType.DIALOG_FINISH, player);
+			}
+			onCloseDialog(npc, player);
+		}
+		PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(0, 0));
+	}
 
-    /**
-     * 打开烙印之石窗口（页 1）：开窗前重发进阶烙印槽位数——窗口内的凹槽渲染读取客户端缓存的槽位数，
-     * 而该缓存会被关窗等事件重置，槽位必须是窗口渲染前最后到达的协议事实。
-     * Opens the stigma window (page 1); the advanced stigma slot count is re-announced first because the
-     * window renders its sockets from the client-cached count, which server-side dialog closes reset.
-     * @param player 玩家 / player
-     * @param targetObjectId 对话目标对象 ID / dialog target object id
-     */
-    private static void openStigmaWindow(Player player, int targetObjectId) {
-        StigmaService.refreshStigmaSlots(player);
-        PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 1));
-    }
-    /**
-     * 处理玩家选择的对话框选项（商店、传送、仓库、任务奖励等）。
-     * Handle a player-selected dialog option (shop, teleport, warehouse, quest rewards, etc.).
-     * @param dialogId 对话框选项 ID / dialog option id
-     * 玩家 / player
-     * dialog NPC
-     * @param questId 关联任务 ID，0 表示无 / related quest id, 0 if none
-     * @param extendedRewardIndex 扩展奖励索引 / extended reward index
-     */
+	/**
+	 * 服务端收尾关窗（按交互目标对象 id 解析 NPC）：解析不到时退化为纯关窗。
+	 * Server-side close resolving the NPC from the interaction target object id; an unresolvable id
+	 * degrades to a plain window close.
+	 *
+	 * @param player         玩家 / player
+	 * @param targetObjectId 交互目标对象 ID，0 表示无 / interaction target object id, 0 for none
+	 */
+	public static void closeDialog(Player player, int targetObjectId) {
+		VisibleObject target = targetObjectId > 0 && player.getKnownList() != null
+			? player.getKnownList().getObject(targetObjectId) : null;
+		closeDialog(target instanceof Npc npc ? npc : null, player);
+	}
 
-    public static void onDialogSelect(int dialogId, final Player player, Npc npc, int questId, int extendedRewardIndex) {
-        onDialogSelect(dialogId, player, npc, questId, extendedRewardIndex, true);
-    }
+	/**
+	 * 关闭与 NPC 的对话框；对军团仓库管理员释放占用。
+	 * Close the NPC dialog; for legion warehouse keepers, release the warehouse user lock.
+	 *
+	 * @param npc    对话 NPC / dialog NPC
+	 * @param player 玩家 / player
+	 */
+	public static void onCloseDialog(Npc npc, Player player) {
+		switch (npc.getObjectTemplate().getTitleId()) {
+			case 350409, 358046, 358047, 358048, 358049, 463212 -> {
+				PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(npc.getObjectId(), 0));
+				Legion legion = player.getLegion();
+				if (legion != null) {
+					LegionWarehouse lwh = legion.getLegionWarehouse();
+					if (lwh.getWhUser() == player.getObjectId()) {
+						lwh.setWhUser(0);
+					}
+				}
+			}
+			case 314362, 314365, 314366, 350410, 469968, 469977, 469982, 469991,
+				 470033, 470042, 470047, 470056, 469969, 469976, 469983, 469990,
+				 470034, 470041, 470048, 470055, 350419, 357007, 357019, 357031,
+				 357043, 358063, 358493, 358523, 370111, 370112, 370243, 370503,
+				 462878, 466226 -> PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(npc.getObjectId(), 0));
+			default -> {
+			}
+		}
+	}
 
-    /**
-     * 处理客户端通用选择页上的 NPC 简单对话选项；该入口不再尝试任务路由。
-     * Handles an NPC simple-dialog option from the client's generic selection page without attempting quest routing.
-     * @param dialogId 对话框选项 ID / dialog option id
-     * @param player 玩家 / player
-     * @param npc 对话 NPC / dialog NPC
-     * @param extendedRewardIndex 扩展奖励索引 / extended reward index
-     */
-    public static void onSimpleDialogSelect(int dialogId, final Player player, Npc npc, int extendedRewardIndex) {
-        onDialogSelect(dialogId, player, npc, 0, extendedRewardIndex, false);
-    }
+	/**
+	 * 打开烙印之石窗口（页 1）：开窗前重发进阶烙印槽位数。
+	 * Opens the stigma window (page 1); the advanced stigma slot count is re-announced first.
+	 *
+	 * @param player         玩家 / player
+	 * @param targetObjectId 对话目标对象 ID / dialog target object id
+	 */
+	private static void openStigmaWindow(Player player, int targetObjectId) {
+		StigmaService.refreshStigmaSlots(player);
+		PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 1));
+	}
 
-    private static void onDialogSelect(int dialogId, final Player player, Npc npc, int questId,
-            int extendedRewardIndex, boolean dispatchQuest) {
-        if (dispatchQuest) {
-            QuestEnv env = new QuestEnv(npc, player, questId, dialogId);
-            env.setExtendedRewardIndex(extendedRewardIndex);
-            if (GameEngineServices.questEngine().onDialog(env)) {
-                return;
-            }
-            // 任务动作未被任务引擎处理时，dialogId 是按钮动作 ID 而不是页面 ID。
-            // 回显会把动作当作页面下发，客户端找不到对应 html 页并触发 load fail；
-            // 除通用任务列表动作(31)与 NPC 对话页导航外，必须关闭对话窗口而不是回显动作 ID。
-            // When the quest engine does not handle a quest action, dialogId is a button action id, not a page id.
-            // Echoing it makes the client load an action id as a page and fail with "load fail";
-            // except for the generic quest-list action (31) and NPC dialog-page navigation, close the window.
-            //
-            // 选择对话续页（SELECT⟨n⟩_… 子页动作 = 目标页 id，如 NPC 对话树从 1011 发来的 1012）不是
-            // 任务按钮动作：玩家带着任务上下文点 NPC 对话项时（questId 由客户端附带），按 NPC 对话
-            // 平面照常回显该页（下游 default 以 2 参发送、questId=0），不得关窗（1115 实机
-            // 2026-10-05 08:47：从页 10 点「询问有关钓鱼的事情」被关窗）。
-            // Selection sub-page actions (SELECT⟨n⟩_… = the target page id, e.g. 1012 sent from an NPC
-            // dialog tree) are not quest button actions: echo the page on the NPC dialog plane (the
-            // downstream 2-arg default), never close the window.
-            if (questId != 0 && dialogId != QuestDialogAction.QUEST_SELECT.id()
-                    && !QuestDialogPage.isSelectionSubPage(dialogId)) {
-                player.clearNpcQuestDialogSelection();
-                closeDialog(npc, player);
-                return;
-            }
-        }
-        if (player.getAccessLevel() >= 0 && CustomConfig.ENABLE_SHOW_DIALOG_ID) {
-            PacketSendUtility.sendMessage(player, "<Quest Id>" + questId);
-            PacketSendUtility.sendMessage(player, "<Dialog Id>" + dialogId);
-        }
-        int targetObjectId = npc.getObjectId();
-        int titleId = npc.getObjectTemplate().getTitleId();
-        switch (dialogId) {
-            case 2: {
-                // 购买物品。 / Buy Item's.
-                int level = player.getLevel();
-                TradeListTemplate tradeListTemplate = DataManager.TRADE_LIST_DATA.getTradeListTemplate(npc.getNpcId());
-                if (tradeListTemplate == null) {
-                    PacketSendUtility.sendMessage(player, "Buy <List> is missing !!");
-                    break;
-                }
-                if (player.getInventory().isFull()) {
-                    // 你负重过重，无法交易。 / You cannot trade as you are overburdened with items.
-                    PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_EXCHANGE_TOO_HEAVY_TO_TRADE);
-                    return;
-                }
-                switch (npc.getNpcId()) {
-                    // <钢铁战斗行政官 天族> / <Iron Combat Administration Officer Elyos>
-                    case 203179: // 阿南特里特 / Anontrite.
-                    case 203330: // Laksis.
-                        if (player.getInventory().getItemCountByItemId(186000001) == 0) {
-                            PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 27));
-                            return;
-                        }
-                        break;
-                    // <钢铁战斗行政官 魔族> / <Iron Combat Administration Officer Asmodians>
-                    case 203659: // 拉泰尼 / Lateni.
-                    case 203689: // 罗哈班 / Lohaban.
-                        if (player.getInventory().getItemCountByItemId(186000006) == 0) {
-                            PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 27));
-                            return;
-                        }
-                        break;
-                    // <青铜战斗行政官 天族> / <Bronze Combat Administration Officer Elyos>
-                    case 203931: // 佩兰娜 / Ferenna.
-                    case 798111: // 阿特罗 / Atro.
-                        if (player.getInventory().getItemCountByItemId(186000002) == 0) {
-                            PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 27));
-                            return;
-                        }
-                        break;
-                    // <青铜战斗行政官 魔族> / <Bronze Combat Administration Officer Asmodians>
-                    case 204360: // 诺特 / Nott.
-                    case 204368: // 福尔拉 / Cliessa.
-                    case 204425: // Bevna.
-                    case 204426: // 斯卡塔文 / Skataon.
-                        if (player.getInventory().getItemCountByItemId(186000007) == 0) {
-                            PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 27));
-                            return;
-                        }
-                        break;
-                    // <白银行政官 天族> / <Silver Administration Officer Elyos>
-                    case 203964: // 阿格林斯 / Agrips.
-                    case 204011: // 山迪纳斯 / Sandinas.
-                    case 204515: // 贝拉卡戴 / Belakade.
-                    case 204571: // 罗莫里亚斯 / Lomulias.
-                    case 204637: // 凯亚斯 / Keas.
-                    case 204639: // 塞尔迪 / Serdy.
-                    case 798112: // 梅特亚 / Metea.
-                    case 798113: // 阿诺比 / Anobi.
-                    case 801158: // 卡利亚斯 / Callias.
-                    case 801161: // 多纳尔 / Donar.
-                        if (player.getInventory().getItemCountByItemId(186000003) == 0) {
-                            PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 27));
-                            return;
-                        }
-                        break;
-                    // <白银行政官 魔族> / <Silver Administration Officer Asmodians>
-                    case 204359: // Royaa.
-                    case 204427: // 西凯恩 / Sigen.
-                    case 204781: // 高巴农 / Govanon.
-                    case 204789: // 莱文 / Lewin.
-                    case 801170: // Lamachus.
-                    case 801173: // Kellas.
-                        if (player.getInventory().getItemCountByItemId(186000008) == 0) {
-                            PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 27));
-                            return;
-                        }
-                        break;
-                    // <黄金行政官 天族> / <Gold Administration Officer Elyos>
-                    case 204548: // 埃乌里皮亚 / Euripia.
-                    case 204638: // 拖雷摩斯 / Tolemos.
-                    case 801164: // 阿尔克曼 / Alcman.
-                    case 801167: // 戴昂斯 / Dalla.
-                    case 801182: // 迪农 / Dinon.
-                    case 801185: // 格特仑 / Gudrun.
-                        if (player.getInventory().getItemCountByItemId(186000004) == 0) {
-                            PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 27));
-                            return;
-                        }
-                        break;
-                    // <黄金行政官 魔族> / <Gold Administration Officer Asmodians>
-                    case 204761: // 辛尼亚 / Cinnia.
-                    case 204762: // 克贝蒂纳 / Coventina.
-                    case 204766: // 玛珀努斯 / Maponus.
-                    case 204767: // 阿尔特 / Art.
-                    case 801179: // Nibelr.
-                    case 801196: // Hippias.
-                    case 801199: // Thorkell.
-                        if (player.getInventory().getItemCountByItemId(186000009) == 0) {
-                            PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 27));
-                            return;
-                        }
-                        break;
-                    // <白金行政官 天族> / <Platinum Administration Officer Elyos>
-                    case 798172: // 埃乌诺米亚 / Eunomia.
-                    case 798173: // 埃乌泰尔佩 / Euterpe.
-                    case 798174: // 居内乌斯 / Guneus.
-                    case 798175: // 卡里德斯 / Charites.
-                    case 798195: // 伊皮盖尼亚 / Iphigenia.
-                    case 798196: // 伊力提亚 / Illithyia.
-                    case 798197: // 内奥波特雷斯 / Neoptolemos.
-                    case 798198: // 卡里奥佩 / Calliope.
-                    case 801188: // Cariton.
-                    case 801192: // 李特拉希尔 / Lithrasir.
-                        if (player.getInventory().getItemCountByItemId(186000005) == 0) {
-                            PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 27));
-                            return;
-                        }
-                        break;
-                    // <白金行政官 魔族> / <Platinum Administration Officer Asmodians>
-                    case 205160: // 纳盖尔 / Nagel.
-                    case 205161: // 胡巴特 / Huvat.
-                    case 205162: // 贝伦 / Bern.
-                    case 205163: // 鲁莫特 / Rumolt.
-                    case 205183: // 斯格纳 / Signa.
-                    case 205184: // 普盖尔 / Pogel.
-                    case 205185: // 普鲁杰 / Flazetta.
-                    case 205186: // 普尔塞蒂 / Forseti.
-                    case 801202: // Bupalus.
-                    case 801206: // 莫普里格 / Mofrig.
-                        if (player.getInventory().getItemCountByItemId(186000010) == 0) {
-                            PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 27));
-                            return;
-                        }
-                        break;
-                    // <秘银行政官 天族> / <Mithril Administration Officer Elyos>
-                    case 798914: // 埃杜阿尔多 / Eduardo.
-                    case 798915: // Giuseppe.
-                    case 798916: // 希尔瓦 / Silva.
-                    case 798917: // 阿玛乌里 / Amauri.
-                        if (player.getInventory().getItemCountByItemId(186000018) == 0) {
-                            PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 27));
-                            return;
-                        }
-                        break;
-                    // <秘银行政官 魔族> / <Mithril Administration Officer Asmodians>
-                    case 799213: // 诺尔丁 / Nordin.
-                    case 799214: // 普洛雷斯 / Flores.
-                    case 799215: // 高丁 / Godin.
-                    case 799216: // Assulin.
-                        if (player.getInventory().getItemCountByItemId(186000019) == 0) {
-                            PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 27));
-                            return;
-                        }
-                        break;
-                    // <雪花石膏教团管家 天族> / <Alabaster Order Steward Elyos>
-                    case 805136: // Andun.
-                    case 805137: // Barett.
-                    case 805138: // Carsemion.
-                    case 805139: // Seoron.
-                        if (player.getInventory().getItemCountByItemId(186000100) == 0) {
-                            PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 27));
-                            return;
-                        }
-                        break;
-                    // <战地看守管家 魔族> / <Field Warden Steward Asmodians>
-                    case 805047: // Nielan.
-                    case 805048: // Garpai.
-                    case 805049: // Debuiss.
-                    case 805050: // Lauris.
-                        if (player.getInventory().getItemCountByItemId(186000103) == 0) {
-                            PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 27));
-                            return;
-                        }
-                        break;
-                    // <幸运者教团管家 天族> / <Fortuneers Order Steward Elyos>
-                    case 805140: // Edell.
-                    case 805141: // Pradon.
-                    case 805142: // Gildox.
-                        if (player.getInventory().getItemCountByItemId(186000102) == 0) {
-                            PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 27));
-                            return;
-                        }
-                        break;
-                    // <查里伦克的恶魔管家 魔族> / <Charlirunerk's Daemons Steward Asmodians>
-                    case 805051: // Atarinrinerk.
-                    case 805052: // Moerunerk.
-                    case 805053: // 莫莫灵灵 / Momorinrinerk.
-                    case 805054: // Yokurunerk.
-                        if (player.getInventory().getItemCountByItemId(186000105) == 0) {
-                            PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 27));
-                            return;
-                        }
-                        break;
-                    // <光辉行动管家 天族> / <Radiant Ops Steward Elyos>
-                    case 805144: // Terpander.
-                        if (player.getInventory().getItemCountByItemId(186000101) == 0) {
-                            PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 27));
-                            return;
-                        }
-                        break;
-                    // <血十字军管家 魔族> / <Blood Crusade Steward Asmodians>
-                    case 805055: // Ledmar.
-                        if (player.getInventory().getItemCountByItemId(186000104) == 0) {
-                            PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 27));
-                            return;
-                        }
-                        break;
-                    // <大师钱币学家> / <Master Numismatist>
-                    case 833744: // Cufrunerk.
-                    case 833745: // Irumonerk.
-                    case 833746: // Aimonerk.
-                    case 833747: // Moerunerk.
-                    case 833748: // Ronaminerk.
-                    case 833749: // Grurerk.
-                    case 833750: // Kirarinerk.
-                    case 833751: // Mirunerk.
-                        if (player.getInventory().getItemCountByItemId(186000237) == 0) {
-                            PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 27));
-                            return;
-                        }
-                        break;
-                }
-                // 欧比斯烙印之石/物品商人 / Abyss Stigma/Stuff Seller's
-                switch (npc.getNpcId()) {
-                    case 203708: // 伊奥凯斯特 / Iocaste.
-                    case 203710: // 戴罗斯 / Dairos.
-                        if (level < 25) {
-                            PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 27));
-                            return;
-                        }
-                        break;
-                    case 798505: // 萨比乌斯 / Salvius.
-                    case 798509: // 帕皮尼乌斯 / Papinius.
-                    case 798510: // 艾克希亚 / Ecocia.
-                    case 799224: // 卡米拉 / Camila.
-                    case 802210: // Fujak.
-                    case 805130: // Fibhe.
-                        if (level < 45) {
-                            PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 27));
-                            return;
-                        }
-                        break;
-                    case 798507: // 格拉库斯 / Gracus.
-                    case 798508: // 托罗里泰 / Tororite.
-                        if (level < 50) {
-                            PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 27));
-                            return;
-                        }
-                        break;
-                    case 798506: // 埃尔马伊亚 / Elmaia.
-                        if (level < 55) {
-                            PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 27));
-                            return;
-                        }
-                        break;
-                }
-                int tradeModifier = tradeListTemplate.getSellPriceRate();
-                PacketSendUtility.sendPacket(player, new SM_TRADELIST(player, npc, tradeListTemplate, PricesService.getVendorBuyModifier() * tradeModifier / 100));
-                // 欧比斯军阶。 / Abyss Rank.
-                if (tradeListTemplate.getTradeNpcType() == TradeNpcType.ABYSS) {
-                    // 依欧比斯军阶，购物清单中部分物品可能无法使用或装备。 / You may be unable to use or equip some items in your purchase list depending on your Abyss Rank. Alternatively: your Abyss Rank may decrease. Are you sure you want to buy them ?
-                    PacketSendUtility.sendPacket(player, new SM_QUESTION_WINDOW(SM_QUESTION_WINDOW.STR_MSGBOX_BUY_RANKITEM_WITH_RANKDOWN_CONFIRM, 0, 0));
-                } else {
-                    PacketSendUtility.sendPacket(player, new SM_TRADELIST(player, npc, tradeListTemplate, PricesService.getVendorBuyModifier() * tradeModifier / 100));
-                }
-                break;
-            }
-            case 3: {
-                // 出售物品。 / Sell Item's.
-                int level = player.getLevel();
-                switch (npc.getNpcId()) {
-                    case 798509: // 帕皮尼乌斯 / Papinius.
-                    case 798510: // 艾克希亚 / Ecocia.
-                    case 799224: // 卡米拉 / Camila.
-                        if (level < 45) {
-                            PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 27));
-                            return;
-                        }
-                        break;
-                }
-                PacketSendUtility.sendPacket(player, new SM_SELL_ITEM(targetObjectId, PricesService.getVendorSellModifier(player.getRace())));
-                break;
-            }
-            case 4: {
-                // 烙印之石开启。 / Stigma Open.
-                switch (titleId) {
-                    case 314362: // Stigma Master A.
-                    case 314365: // Stigma Master B.
-                    case 314366: // Stigma Master C.
-                    case 350410: // 烙印之石名人 / Stigma Master.
-                    case 357007: // Arcadian Fortress Stigma Master.
-                    case 357019: // Umbral Fortress Stigma Master.
-                    case 357031: // Eternum Fortress Stigma Master.
-                    case 357043: // Skyclash Fortress Stigma Master.
-                    case 358493: // Redemption Landing 4.9.1
-                    case 358523: // Harbinger's Landing 4.9.1
-                    case 370111: // Abyss Master Stigma A.
-                    case 370112: // Abyss Master Stigma B.
-                    case 370503: // <Gogorunerk Solution,INC>
-                        if (player.getRace() == Race.ELYOS) {
-                            QuestState qs = player.getQuestStateList().getQuestState(1929); // Sliver Of Darkness.
-                            if (qs == null || qs.getStatus() != QuestStatus.COMPLETE) {
-                                PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_HOUSING_CANT_OWN_NOT_COMPLETE_QUEST(1929));
-                                PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 27));
-                            } else {
-                                openStigmaWindow(player, targetObjectId);
-                            }
-                        } else if (player.getRace() == Race.ASMODIANS) {
-                            QuestState qs = player.getQuestStateList().getQuestState(2900); // No Escaping Destiny.
-                            if (qs == null || qs.getStatus() != QuestStatus.COMPLETE) {
-                                PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_HOUSING_CANT_OWN_NOT_COMPLETE_QUEST(2900));
-                                PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 27));
-                            } else {
-                                openStigmaWindow(player, targetObjectId);
-                            }
-                        }
-                        break;
-                }
-                break;
-            }
-            case 5: {
-                // 创建军团。 / Create Legion.
-                PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 2));
-                break;
-            }
-            case 6: {
-                // 解散军团。 / Disband Legion.
-                GameCoreGameplayServices.legionService().requestDisbandLegion(npc, player);
-                break;
-            }
-            case 7: {
-                // 重建军团。 / Recreate Legion.
-                GameCoreGameplayServices.legionService().recreateLegion(npc, player);
-                break;
-            }
-            case 26: {
-                // 仓库。 / Warehouse.
-                int level = player.getLevel();
-                if (level < 10) {
-                    PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_FREE_EXPERIENCE_CHARACTER_CANT_USE_WAREHOUSE("10"));
-                    return;
-                }
-                if (!RestrictionsManager.canUseWarehouse(player)) {
-                    return;
-                }
-                PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 26));
-                WarehouseService.sendWarehouseInfo(player, true);
-                break;
-            }
-            case 31: {
-                // 任务。 / Quest.
-                int pageId = 0;
-                if (questId != 0) {
-                    pageId = 10;
-                    QuestState qs = player.getQuestStateList().getQuestState(questId);
-                    if (qs != null
-                            && (qs.getStatus() == QuestStatus.START || qs.getStatus() == QuestStatus.REWARD)
-                            && npc.getAi2() instanceof ActionItemNpcAI2) {
-                        pageId = 0;
-                    }
-                }
-                PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, pageId));
-                break;
-            }
-            case 33: {
-                // 交易经纪人。 / Trade Broker.
-                int level = player.getLevel();
-                if (level < 10) {
-                    PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_FREE_EXPERIENCE_CHARACTER_CANT_USE_VENDOR("10"));
-                    return;
-                }
-                PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 13));
-                break;
-            }
-            case 35: {
-                // 灵魂治疗。 / Soul Healing.
-                final long expLost = player.getCommonData().getExpRecoverable();
-                if (expLost == 0) {
-                    player.getEffectController().removeAbnormalEffectsByTargetSlot(SkillTargetSlot.SPEC2);
-                    player.getCommonData().setDeathCount(0);
-                }
-                final double factor = (expLost < 1000000 ? 0.25 - (0.00000015 * expLost) : 0.1);
-                final int price = (int) (expLost * factor);
-                RequestResponseHandler responseHandler = new RequestResponseHandler(npc) {
-                    @Override
-                    public void acceptRequest(Creature requester, Player responder) {
-                        if (player.getInventory().getKinah() >= price) {
-                            PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_GET_EXP2(expLost));
-                            PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_SUCCESS_RECOVER_EXPERIENCE);
-                            player.getCommonData().resetRecoverableExp();
-                            player.getInventory().decreaseKinah(price);
-                            player.getEffectController().removeAbnormalEffectsByTargetSlot(SkillTargetSlot.SPEC2);
-                            player.getCommonData().setDeathCount(0);
-                        } else {
-                            PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_NOT_ENOUGH_KINA(price));
-                        }
-                    }
+	/**
+	 * 处理玩家选择的对话框选项（商店、传送、仓库、任务奖励等）。
+	 * Handle a player-selected dialog option (shop, teleport, warehouse, quest rewards, etc.).
+	 *
+	 * @param dialogId            对话框选项 ID / dialog option id
+	 * @param player              玩家 / player
+	 * @param npc                 对话 NPC / dialog NPC
+	 * @param questId             关联任务 ID，0 表示无 / related quest id, 0 if none
+	 * @param extendedRewardIndex 扩展奖励索引 / extended reward index
+	 */
+	public static void onDialogSelect(int dialogId, final Player player, Npc npc, int questId, int extendedRewardIndex) {
+		onDialogSelect(dialogId, player, npc, questId, extendedRewardIndex, true);
+	}
 
-                    @Override
-                    public void denyRequest(Creature requester, Player responder) {
-                    }
-                };
-                if (player.getCommonData().getExpRecoverable() > 0) {
-                    boolean result = player.getResponseRequester().putRequest(SM_QUESTION_WINDOW.STR_ASK_RECOVER_EXPERIENCE, responseHandler);
-                    if (result) {
-                        PacketSendUtility.sendPacket(player, new SM_QUESTION_WINDOW(SM_QUESTION_WINDOW.STR_ASK_RECOVER_EXPERIENCE, 0, 0, String.valueOf(price)));
-                    }
-                } else {
-                    PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_DONOT_HAVE_RECOVER_EXPERIENCE);
-                }
-                break;
-            }
-            case 36: {
-                // 竞技场城市传送者。 / Arena City Teleporter.
-                int level = player.getLevel();
-                switch (npc.getNpcId()) {
-                    case 204089: // 加勒姆 / Garm.
-                        TeleportService2.teleportTo(player, 120010000, 984.000f, 1543.000f, 222.100f, (byte) 0);
-                        break;
-                    case 203764: // 埃佩奥斯 / Epeios.
-                        TeleportService2.teleportTo(player, 110010000, 1462.500f, 1326.100f, 564.100f, (byte) 0);
-                        break;
-                    case 203981: // 梅纳乌斯 / Meneus.
-                        if (player.getRace() == Race.ELYOS) {
-                            QuestState qs = player.getQuestStateList().getQuestState(1346); // Killing For Castor.
-                            if (qs == null || qs.getStatus() != QuestStatus.COMPLETE) {
-                                PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_HOUSING_CANT_OWN_NOT_COMPLETE_QUEST(1346));
-                                PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 27));
-                            } else {
-                                TeleportService2.teleportTo(player, 210020000, 439.300f, 422.200f, 274.300f, (byte) 0);
-                            }
-                        }
-                        break;
-                    case 730048: // Fire Temple Exit.
-                        if (level < 27) {
-                            PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 27));
-                        }
-                        if (player.getRace() == Race.ELYOS) {
-                            TeleportService2.teleportTo(player, 210020000, 1343.200f, 350.900f, 348.600f, (byte) 0);
-                        } else {
-                            TeleportService2.teleportTo(player, 220020000, 1592.100f, 977.200f, 140.700f, (byte) 0);
-                        }
-                        break;
-                    case 730049: // Symbol Of Mau Hero.
-                        if (level < 35) {
-                            PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 27));
-                            PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_CANT_INSTANCE_ENTER_LEVEL);
-                            return;
-                        } else {
-                            TeleportService2.teleportTo(player, 220020000, 2434.500f, 553.600f, 334.600f, (byte) 0);
-                        }
-                        break;
-                    case 730052: // Statue Of Mau Hero [The Hand Behind The IceClaw]
-                        if (level < 30) {
-                            PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 27));
-                            PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_CANT_INSTANCE_ENTER_LEVEL);
-                            return;
-                        } else {
-                            TeleportService2.teleportTo(player, 220020000, 1252.900f, 266.000f, 534.200f, (byte) 0);
-                        }
-                        break;
-                    case 730053: // Statue Of Mau Hero [The Hand Behind The IceClaw]
-                        if (level < 30) {
-                            PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 27));
-                        } else {
-                            TeleportService2.teleportTo(player, 220020000, 1243.500f, 263.900f, 531.300f, (byte) 0);
-                        }
-                        break;
-                }
-            }
-            case 37: {
-                // 竞技场城市传送者。 / Arena City Teleporter.
-                switch (npc.getNpcId()) {
-                    case 204087: // 古纳尔 / Gunnar.
-                        TeleportService2.teleportTo(player, 120010000, 1005.100f, 1528.900f, 222.100f, (byte) 0);
-                        break;
-                    case 203875: // 内皮斯 / Nepis.
-                        TeleportService2.teleportTo(player, 110010000, 1470.300f, 1343.500f, 563.700f, (byte) 0);
-                        break;
-                    case 203982: // 伊裴图斯 / Ipetos.
-                        TeleportService2.teleportTo(player, 210020000, 446.200f, 431.100f, 274.500f, (byte) 0);
-                        break;
-                }
-                break;
-            }
-            case 42: {
-                // 移除魔石。 / Remove Manastone.
-                PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 20));
-                break;
-            }
-            case 43: {
-                // 修改外观。 / Modify Appearance.
-                PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 19));
-                break;
-            }
-            case 44: {
-                // 飞行与传送。 / Flight & Teleport.
-                if (CustomConfig.ENABLE_SIMPLE_2NDCLASS) {
-                    TeleportService2.showMap(player, targetObjectId, npc.getNpcId());
-                } else {
-                    int level = player.getLevel();
-                    switch (npc.getNpcId()) {
-                        case 730040: // Secret Passage Of Indratu Legion [Heiron]
-                            if (level < 45) {
-                                PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 27));
-                                PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_CANT_INSTANCE_ENTER_LEVEL);
-                                return;
-                            } else {
-                                TeleportService2.teleportTo(player, 210040000, 2599.130f, 2182.7583f, 154.74075f, (byte) 27);
-                            }
-                            break;
-                        case 800245: // Naerty [Inggison]
-                        case 804561: // Topos [Levinshor]
-                        case 804562: // Spake [Levinshor]
-                            if (level < 55) {
-                                PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 27));
-                                PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_CANT_INSTANCE_ENTER_LEVEL);
-                            } else {
-                                TeleportService2.showMap(player, targetObjectId, npc.getNpcId());
-                            }
-                            break;
-                        case 805748: // Ortiga [Norsvold]
-                        case 805773: // Mantesia [Iluma]
-                            if (level < 66) {
-                                PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 27));
-                                PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_CANT_INSTANCE_ENTER_LEVEL);
-                            } else {
-                                TeleportService2.showMap(player, targetObjectId, npc.getNpcId());
-                            }
-                            break;
-                        case 805750: // Crouzer [Norsvold]
-                        case 805775: // Tasos [Iluma]
-                            if (level < 66) {
-                                PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 1011));
-                                PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_CANT_INSTANCE_ENTER_LEVEL);
-                            } else {
-                                TeleportService2.showMap(player, targetObjectId, npc.getNpcId());
-                            }
-                            break;
-                        default: {
-                            TeleportService2.showMap(player, targetObjectId, npc.getNpcId());
-                        }
-                    }
-                }
-                break;
-            }
-            case 45:
-            case 46: {
-                // 学习制作。 / Learn Craft.
-                // 改进提取。 / Improve Extraction.
-                int level = player.getLevel();
-                if (level < 10) {
-                    PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_CRAFT_MSG_CAN_WORK_ONLY_DEVA);
-                    return;
-                }
-                GameCraftServices.craftSkillUpdateService().learnSkill(player, npc);
-                break;
-            }
-            case 47: {
-                // 扩展背包。 / Expand Cube.
-                CubeExpandService.expandCube(player, npc);
-                break;
-            }
-            case 48: {
-                // 扩展仓库。 / Expand Warehouse.
-                WarehouseService.expandWarehouse(player, npc);
-                break;
-            }
-            case 53: {
-                // 军团仓库。 / Legion Warehouse.
-                int level = player.getLevel();
-                if (level < 10) {
-                    PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_FREE_EXPERIENCE_CHARACTER_CANT_USE_GUILD_WAREHOUSE("10"));
-                    return;
-                }
-                if (player.getLegion() == null) {
-                    PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_GUILD_LEAVE_I_AM_NOT_BELONG_TO_GUILD);
-                    return;
-                }
-                GameCoreGameplayServices.legionService().openLegionWarehouse(player, npc);
-                break;
-            }
-            case 56: {
-                // 关闭军团仓库。 / Close Legion Warehouse.
-                break;
-            }
-            case 58: {
-                // 工作订单。 / Work Order.
-                PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 28));
-                break;
-            }
-            case 59: {
-                // 硬币奖励。 / Coin's Reward.
-                PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 3));
-                break;
-            }
-            case 61:
-            case 62: {
-                byte changesex = 0;
-                byte check_ticket = 2;
-                if (dialogId == 62) {
-                    // 性别切换。 / Gender Switch.
-                    changesex = 1;
-                    if (player.getInventory().getItemCountByItemId(169660000) > 0 || // Gender Switch Ticket
-                            player.getInventory().getItemCountByItemId(169660001) > 0 || // [Event] Gender Switch Ticket
-                            player.getInventory().getItemCountByItemId(169660002) > 0 || // Gender Switch Ticket (60 min)
-                            player.getInventory().getItemCountByItemId(169660003) > 0 || // [Event] Gender Switch Ticket
-                            player.getInventory().getItemCountByItemId(169660004) > 0 || // [Event] Gender Switch Ticket
-                            player.getInventory().getItemCountByItemId(169660005) > 0) { // Gender Switch Ticket
-                        check_ticket = 1;
-                    }
-                } else {
-                    // 整形手术。 / Plastic Surgery.
-                    if (player.getInventory().getItemCountByItemId(169650000) > 0 || // Plastic Surgery Ticket
-                            player.getInventory().getItemCountByItemId(169650001) > 0 || // [Event] Plastic Surgery Ticket
-                            player.getInventory().getItemCountByItemId(169650002) > 0 || // [Special] Plastic Surgery Ticket
-                            player.getInventory().getItemCountByItemId(169650003) > 0 || // [Special] Plastic Surgery Ticket
-                            player.getInventory().getItemCountByItemId(169650004) > 0 || // Plastic Surgery Ticket (60 mins)
-                            player.getInventory().getItemCountByItemId(169650005) > 0 || // Plastic Surgery Ticket (60 mins)
-                            player.getInventory().getItemCountByItemId(169650006) > 0 || // [Event] Plastic Surgery Ticket
-                            player.getInventory().getItemCountByItemId(169650007) > 0 || // [Event] Plastic Surgery Ticket
-                            player.getInventory().getItemCountByItemId(169650008) > 0 || // Plastic Surgery Ticket
-                            player.getInventory().getItemCountByItemId(169650009) > 0 || // Plastic Surgery Ticket
-                            player.getInventory().getItemCountByItemId(169650010) > 0 || // Plastic Surgery Ticket (60 mins)
-                            player.getInventory().getItemCountByItemId(169650011) > 0 || // [Stamp] Plastic Surgery Ticket
-                            player.getInventory().getItemCountByItemId(169691000) > 0) { // Plastic Surgery Ticket
-                        check_ticket = 1;
-                    }
-                }
-                PacketSendUtility.sendPacket(player, new SM_PLASTIC_SURGERY(player, check_ticket, changesex));
-                player.setEditMode(true);
-                break;
-            }
-            case 66: {
-                // 武器融合。 / Armsfusion.
-                PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 29));
-                break;
-            }
-            case 67: {
-                // 武器破坏。 / Armsbreaking.
-                PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 30));
-                break;
-            }
-            case 68: {
-                // 加入阵营。 / Join Faction.
-                player.getNpcFactions().enterGuild(npc);
-                break;
-            }
-            case 69: {
-                // 离开阵营。 / Leave Faction.
-                player.getNpcFactions().leaveNpcFaction(npc);
-                break;
-            }
-            case 70: {
-                // 回购。 / Repurchase.
-                PacketSendUtility.sendPacket(player, new SM_REPURCHASE(player, npc.getObjectId()));
-                break;
-            }
-            case 71: {
-                // 收养宠物。 / Adopt Pet.
-                PacketSendUtility.sendPacket(player, new SM_PET(6));
-                break;
-            }
-            case 72: {
-                // 交出宠物。 / Surrender Pet.
-                PacketSendUtility.sendPacket(player, new SM_PET(7));
-                break;
-            }
-            case 73: {
-                // 房屋建造。 / Housing Build.
-                PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 32));
-                break;
-            }
-            case 74: {
-                // 房屋拆除。 / Housing Destruct.
-                PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 33));
-                break;
-            }
-            case 75: {
-                // 深度调谐单个物品。 / Deep Conditioning Individual Item.
-                PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 35));
-                break;
-            }
-            case 76: {
-                // 深度调谐全部物品。 / Deep Conditioning All Item.
-                ItemChargeService.startChargingEquippedItems(player, targetObjectId, 1);
-                break;
-            }
-            case 78: {
-                // 资讯模组购买/交换。 / News Mod Buy/Exchange.
-                TradeListTemplate tradeListTemplate = DataManager.TRADE_LIST_DATA.getTradeInListTemplate(npc.getNpcId());
-                if (tradeListTemplate == null) {
-                    PacketSendUtility.sendMessage(player, "Buy <Trade In List> is missing !!");
-                    break;
-                }
-                PacketSendUtility.sendPacket(player, new SM_TRADE_IN_LIST(npc, tradeListTemplate, 100));
-                break;
-            }
-            case 79: {
-                // 放弃制作专家。 / Give Up Craft Expert.
-                GameCraftServices.relinquishCraftStatus();
-                RelinquishCraftStatus.relinquishExpertStatus(player, npc);
-                break;
-            }
-            case 80: {
-                // 放弃制作大师。 / Give Up Craft Master.
-                GameCraftServices.relinquishCraftStatus();
-                RelinquishCraftStatus.relinquishMasterStatus(player, npc);
-                break;
-            }
-            case 84: {
-                // 买卖房屋。 / Sell & Buy House.
-                if ((player.getBuildingOwnerStates() & PlayerHouseOwnerFlags.BIDDING_ALLOWED.getId()) == 0) {
-                    if (player.getRace() == Race.ELYOS) {
-                        PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_HOUSING_CANT_OWN_NOT_COMPLETE_QUEST(18802));
-                    } else {
-                        PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_HOUSING_CANT_OWN_NOT_COMPLETE_QUEST(28802));
-                    }
-                    return;
-                }
-                PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 38));
-                break;
-            }
-            case 92: {
-                // 宠物【伟大助手】 / Pet's [Great Sidekick]
-                PacketSendUtility.sendPacket(player, new SM_PET(16));
-                break;
-            }
-            case 93: {
-                // 宠物【放逐助手】 / Pet's [Bannish Sidekick]
-                PacketSendUtility.sendPacket(player, new SM_PET(17));
-                break;
-            }
-            case 94: {
-                // 增强单个物品。 / Augmenting Individual Item.
-                PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 42));
-                break;
-            }
-            case 95: {
-                // 增强全部物品。 / Augmenting All Item.
-                ItemChargeService.startChargingEquippedItems(player, targetObjectId, 2);
-                break;
-            }
-            case 96: {
-                // 房屋工作室。 / Housing Studio.
-                GameHousingServices.housingService().recreatePlayerStudio(player);
-                break;
-            }
-            case 100: {
-                // 城镇。 / Town.
-                PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 43));
-                break;
-            }
-            case 103: {
-                // 购买列表。 / Purchase List.
-                int level = player.getLevel();
-                TradeListTemplate tradeListTemplate = DataManager.TRADE_LIST_DATA.getPurchaseListTemplate(npc.getNpcId());
-                if (tradeListTemplate == null) {
-                    PacketSendUtility.sendMessage(player, "Buy <Purchase List> is missing !!");
-                    break;
-                }
-                switch (npc.getNpcId()) {
-                    case 805976: // Winifred.
-                    case 806012: // Italus.
-                        if (level < 66) {
-                            PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 27));
-                            return;
-                        }
-                        break;
-                }
-                int tradeModifier = tradeListTemplate.getApBuyPriceRate() / 10; // client waits for 100 or 150 as example
+	/**
+	 * 处理客户端通用选择页上的 NPC 简单对话选项；该入口不再尝试任务路由。
+	 * Handles an NPC simple-dialog option from the client's generic selection page without attempting quest routing.
+	 *
+	 * @param dialogId            对话框选项 ID / dialog option id
+	 * @param player              玩家 / player
+	 * @param npc                 对话 NPC / dialog NPC
+	 * @param extendedRewardIndex 扩展奖励索引 / extended reward index
+	 */
+	public static void onSimpleDialogSelect(int dialogId, final Player player, Npc npc, int extendedRewardIndex) {
+		onDialogSelect(dialogId, player, npc, 0, extendedRewardIndex, false);
+	}
 
-                PacketSendUtility.sendPacket(player, new SM_SELL_ITEM(targetObjectId, tradeModifier, tradeListTemplate));
-                break;
-            }
-            case 104: {
-                // 简单传送。 / Teleport Simple.
-                if (player.getRace() == Race.ELYOS) {
-                    switch (npc.getNpcId()) {
-                        // 成名之路入口管理员 / Walk Of Fame Entrance Manager
-                        case 802437: // Tisiphone
-                            if (player.getAbyssRank().getRank().getId() < AbyssRankEnum.GENERAL.getId()) {
-                                PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 27));
-                                return;
-                            }
-                            TeleportService2.teleportTo(player, 110070000, 503.80746f, 417.2141f, 126.789635f, (byte) 68);
-                            break;
-                        // 军团区域入口管理员 / Legion Area Entry Manager
-                        case 805162: // Cerio
-                            if (player.getLegion() == null) {
-                                PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_GUILD_LEAVE_I_AM_NOT_BELONG_TO_GUILD);
-                                return;
-                            }
-                            TeleportService2.teleportTo(player, 210070000, 1326.1046f, 640.8399f, 584.82385f, (byte) 26);
-                            break;
-                        case 805164: // Storia
-                            if (player.getLegion() == null) {
-                                PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_GUILD_LEAVE_I_AM_NOT_BELONG_TO_GUILD);
-                                return;
-                            }
-                            TeleportService2.teleportTo(player, 210070000, 1378.3633f, 655.79205f, 584.82385f, (byte) 54);
-                            break;
-                        case 805166: // Bersus
-                            if (player.getLegion() == null) {
-                                PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_GUILD_LEAVE_I_AM_NOT_BELONG_TO_GUILD);
-                                return;
-                            }
-                            TeleportService2.teleportTo(player, 210070000, 1228.2413f, 1628.6283f, 470.35565f, (byte) 100);
-                            break;
-                        case 805168: // Sogia
-                            if (player.getLegion() == null) {
-                                PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_GUILD_LEAVE_I_AM_NOT_BELONG_TO_GUILD);
-                                return;
-                            }
-                            TeleportService2.teleportTo(player, 210070000, 1218.8335f, 1576.2424f, 470.35565f, (byte) 14);
-                            break;
-                        case 805170: // Rumon
-                            if (player.getLegion() == null) {
-                                PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_GUILD_LEAVE_I_AM_NOT_BELONG_TO_GUILD);
-                                return;
-                            }
-                            TeleportService2.teleportTo(player, 210070000, 2327.8035f, 1535.8595f, 440.83572f, (byte) 17);
-                            break;
-                        case 805172: // Sanoria
-                            if (player.getLegion() == null) {
-                                PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_GUILD_LEAVE_I_AM_NOT_BELONG_TO_GUILD);
-                                return;
-                            }
-                            TeleportService2.teleportTo(player, 210070000, 2381.8564f, 1549.5217f, 440.83572f, (byte) 51);
-                            break;
-                    }
-                } else {
-                    switch (npc.getNpcId()) {
-                        // 成名之路入口管理员 / Walk Of Fame Entrance Manager
-                        case 802439: // Bulundur.
-                            if (player.getAbyssRank().getRank().getId() < AbyssRankEnum.GENERAL.getId()) {
-                                PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 27));
-                                return;
-                            }
-                            TeleportService2.teleportTo(player, 120080000, 385.92166f, 251.25146f, 93.129425f, (byte) 24);
-                            break;
-                        // 军团区域入口管理员 / Legion Area Entry Manager
-                        case 805174: // Sefwoire
-                            if (player.getLegion() == null) {
-                                PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_GUILD_LEAVE_I_AM_NOT_BELONG_TO_GUILD);
-                                return;
-                            }
-                            TeleportService2.teleportTo(player, 220080000, 1769.7422f, 2596.248f, 301.87747f, (byte) 12);
-                            break;
-                        case 805176: // Portintom
-                            if (player.getLegion() == null) {
-                                PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_GUILD_LEAVE_I_AM_NOT_BELONG_TO_GUILD);
-                                return;
-                            }
-                            TeleportService2.teleportTo(player, 220080000, 1810.1752f, 2559.1487f, 301.87747f, (byte) 25);
-                            break;
-                        case 805178: // Clarok
-                            if (player.getLegion() == null) {
-                                PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_GUILD_LEAVE_I_AM_NOT_BELONG_TO_GUILD);
-                                return;
-                            }
-                            TeleportService2.teleportTo(player, 220080000, 1435.401f, 1742.898f, 332.56546f, (byte) 38);
-                            break;
-                        case 805180: // Hamkarden
-                            if (player.getLegion() == null) {
-                                PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_GUILD_LEAVE_I_AM_NOT_BELONG_TO_GUILD);
-                                return;
-                            }
-                            TeleportService2.teleportTo(player, 220080000, 1466.7686f, 1787.5085f, 332.56546f, (byte) 55);
-                            break;
-                        case 805182: // Edelbourgh
-                            if (player.getLegion() == null) {
-                                PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_GUILD_LEAVE_I_AM_NOT_BELONG_TO_GUILD);
-                                return;
-                            }
-                            TeleportService2.teleportTo(player, 220080000, 768.7018f, 1316.1646f, 254.92737f, (byte) 1);
-                            break;
-                        case 805184: // Orportin
-                            if (player.getLegion() == null) {
-                                PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_GUILD_LEAVE_I_AM_NOT_BELONG_TO_GUILD);
-                                return;
-                            }
-                            TeleportService2.teleportTo(player, 220080000, 803.8293f, 1274.7317f, 254.92737f, (byte) 18);
-                            break;
-                    }
-                }
-                break;
-            }
-            case 106: {
-                // 转移物品外观。 / Move Item Skin.
-                PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 51));
-                break;
-            }
-            case 107: {
-                // 折价升级。 / Trade In Upgrade.
-                break;
-            }
-            case 109: {
-                // 物品升级。 / Item Upgrade.
-                PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 52));
-                break;
-            }
-            case 125: { // 4.8
-                // 烙印之石强化 4.8 / Stigma Enchant 4.8
-                switch (titleId) {
-                    case 314362: // Stigma Master A.
-                    case 314365: // Stigma Master B.
-                    case 314366: // Stigma Master C.
-                    case 350410: // 烙印之石名人 / Stigma Master.
-                    case 357007: // Arcadian Fortress Stigma Master.
-                    case 357019: // Umbral Fortress Stigma Master.
-                    case 357031: // Eternum Fortress Stigma Master.
-                    case 357043: // Skyclash Fortress Stigma Master.
-                    case 358493: // Redemption Landing 4.9.1
-                    case 358523: // Harbinger's Landing 4.9.1
-                    case 370111: // Abyss Master Stigma A.
-                    case 370112: // Abyss Master Stigma B.
-                        if (player.getRace() == Race.ELYOS) {
-                            QuestState qs = player.getQuestStateList().getQuestState(1929); // Sliver Of Darkness.
-                            if (qs == null || qs.getStatus() != QuestStatus.COMPLETE) {
-                                PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_HOUSING_CANT_OWN_NOT_COMPLETE_QUEST(1929));
-                                PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 27));
-                            } else {
-                                PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 53));
-                            }
-                        } else if (player.getRace() == Race.ASMODIANS) {
-                            QuestState qs = player.getQuestStateList().getQuestState(2900); // No Escaping Destiny.
-                            if (qs == null || qs.getStatus() != QuestStatus.COMPLETE) {
-                                PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_HOUSING_CANT_OWN_NOT_COMPLETE_QUEST(2900));
-                                PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 27));
-                            } else {
-                                PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 53));
-                            }
-                        }
-                        break;
-                }
-                break;
-            }
-            case 126: {
-                // 活动进化。 / Event Evolution.
-                PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 55));
-                break;
-            }
-            case 127: {
-                // 任务黄金奖励。 / Quest Gold Reward.
-                break;
-            }
-            case 128: {
-                // 灵魂治疗。神圣灵魂治疗须恢复 MP、FP 与 HP / Soul Healing. Divine Soul Heal must give mp, fp and hp
-                final long expLost = player.getCommonData().getExpRecoverable();
-                if (expLost == 0) {
-                    player.getEffectController().removeAbnormalEffectsByTargetSlot(SkillTargetSlot.SPEC2);
-                    player.getCommonData().setDeathCount(0);
-                }
-                final double factor = (expLost < 1000000 ? 0.25 - (0.00000015 * expLost) : 0.1);
-                final int price = (int) (expLost * factor);
-                RequestResponseHandler responseHandler = new RequestResponseHandler(npc) {
-                    @Override
-                    public void acceptRequest(Creature requester, Player responder) {
-                        if (player.getInventory().getKinah() >= price) {
-                            PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_GET_EXP2(expLost));
-                            PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_SUCCESS_RECOVER_EXPERIENCE);
-                            player.getCommonData().resetRecoverableExp();
+	private static void onDialogSelect(int dialogId, final Player player, Npc npc, int questId,
+									   int extendedRewardIndex, boolean dispatchQuest) {
+		if (dispatchQuest) {
+			QuestEnv env = new QuestEnv(npc, player, questId, dialogId);
+			env.setExtendedRewardIndex(extendedRewardIndex);
+			if (GameEngineServices.questEngine().onDialog(env)) {
+				return;
+			}
+			if (questId != 0 && dialogId != QuestDialogAction.QUEST_SELECT.id()
+				&& !QuestDialogPage.isSelectionSubPage(dialogId)) {
+				player.clearNpcQuestDialogSelection();
+				closeDialog(npc, player);
+				return;
+			}
+		}
+		if (player.getAccessLevel() >= 0 && CustomConfig.ENABLE_SHOW_DIALOG_ID) {
+			PacketSendUtility.sendMessage(player, "<Quest Id>" + questId);
+			PacketSendUtility.sendMessage(player, "<Dialog Id>" + dialogId);
+		}
+		int targetObjectId = npc.getObjectId();
+		int titleId = npc.getObjectTemplate().getTitleId();
+		switch (dialogId) {
+			case 2 -> {
+				// 购买物品。 / Buy Item's.
+				TradeListTemplate tradeListTemplate = DataManager.TRADE_LIST_DATA.getTradeListTemplate(npc.getNpcId());
+				if (tradeListTemplate == null) {
+					PacketSendUtility.sendMessage(player, "Buy <List> is missing !!");
+					break;
+				}
+				if (player.getInventory().isFull()) {
+					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_EXCHANGE_TOO_HEAVY_TO_TRADE);
+					return;
+				}
+				int requiredOfficerItem = getRequiredAdministrationOfficerItem(npc.getNpcId());
+				if (requiredOfficerItem != 0 && player.getInventory().getItemCountByItemId(requiredOfficerItem) == 0) {
+					PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 27));
+					return;
+				}
+				int requiredLevel = getRequiredAbyssTradeLevel(npc.getNpcId());
+				if (requiredLevel > 0 && player.getLevel() < requiredLevel) {
+					PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 27));
+					return;
+				}
+				int tradeModifier = tradeListTemplate.getSellPriceRate();
+				PacketSendUtility.sendPacket(player, new SM_TRADELIST(player, npc, tradeListTemplate, PricesService.getVendorBuyModifier() * tradeModifier / 100));
+				if (tradeListTemplate.getTradeNpcType() == TradeNpcType.ABYSS) {
+					PacketSendUtility.sendPacket(player, new SM_QUESTION_WINDOW(SM_QUESTION_WINDOW.STR_MSGBOX_BUY_RANKITEM_WITH_RANKDOWN_CONFIRM, 0, 0));
+				} else {
+					PacketSendUtility.sendPacket(player, new SM_TRADELIST(player, npc, tradeListTemplate, PricesService.getVendorBuyModifier() * tradeModifier / 100));
+				}
+			}
+			case 3 -> {
+				// 出售物品。 / Sell Item's.
+				int level = player.getLevel();
+				switch (npc.getNpcId()) {
+					case 798509, 798510, 799224 -> {
+						if (level < 45) {
+							PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 27));
+							return;
+						}
+					}
+				}
+				PacketSendUtility.sendPacket(player, new SM_SELL_ITEM(targetObjectId, PricesService.getVendorSellModifier(player.getRace())));
+			}
+			case 4 -> handleStigmaDialog(player, targetObjectId, titleId, false);
+			case 5 -> PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 2));
+			case 6 -> GameCoreGameplayServices.legionService().requestDisbandLegion(npc, player);
+			case 7 -> GameCoreGameplayServices.legionService().recreateLegion(npc, player);
+			case 26 -> {
+				// 仓库。 / Warehouse.
+				if (player.getLevel() < 10) {
+					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_FREE_EXPERIENCE_CHARACTER_CANT_USE_WAREHOUSE("10"));
+					return;
+				}
+				if (!RestrictionsManager.canUseWarehouse(player)) {
+					return;
+				}
+				PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 26));
+				WarehouseService.sendWarehouseInfo(player, true);
+			}
+			case 31 -> {
+				// 任务。 / Quest.
+				int pageId = 0;
+				if (questId != 0) {
+					pageId = 10;
+					QuestState qs = player.getQuestStateList().getQuestState(questId);
+					if (qs != null && (qs.getStatus() == QuestStatus.START || qs.getStatus() == QuestStatus.REWARD)
+						&& npc.getAi2() instanceof ActionItemNpcAI2) {
+						pageId = 0;
+					}
+				}
+				PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, pageId));
+			}
+			case 33 -> {
+				// 交易经纪人。 / Trade Broker.
+				if (player.getLevel() < 10) {
+					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_FREE_EXPERIENCE_CHARACTER_CANT_USE_VENDOR("10"));
+					return;
+				}
+				PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 13));
+			}
+			case 35 -> handleSoulHealing(player, npc, false);
+			case 36 -> {
+				// 竞技场城市传送者。 / Arena City Teleporter.
+				int level = player.getLevel();
+				switch (npc.getNpcId()) {
+					case 204089 ->
+						TeleportService2.teleportTo(player, 120010000, 984.000f, 1543.000f, 222.100f, (byte) 0);
+					case 203764 ->
+						TeleportService2.teleportTo(player, 110010000, 1462.500f, 1326.100f, 564.100f, (byte) 0);
+					case 203981 -> {
+						if (player.getRace() == Race.ELYOS) {
+							QuestState qs = player.getQuestStateList().getQuestState(1346);
+							if (qs == null || qs.getStatus() != QuestStatus.COMPLETE) {
+								PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_HOUSING_CANT_OWN_NOT_COMPLETE_QUEST(1346));
+								PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 27));
+							} else {
+								TeleportService2.teleportTo(player, 210020000, 439.300f, 422.200f, 274.300f, (byte) 0);
+							}
+						}
+					}
+					case 730048 -> {
+						if (level < 27) {
+							PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 27));
+						}
+						if (player.getRace() == Race.ELYOS) {
+							TeleportService2.teleportTo(player, 210020000, 1343.200f, 350.900f, 348.600f, (byte) 0);
+						} else {
+							TeleportService2.teleportTo(player, 220020000, 1592.100f, 977.200f, 140.700f, (byte) 0);
+						}
+					}
+					case 730049 -> {
+						if (level < 35) {
+							PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 27));
+							PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_CANT_INSTANCE_ENTER_LEVEL);
+						} else {
+							TeleportService2.teleportTo(player, 220020000, 2434.500f, 553.600f, 334.600f, (byte) 0);
+						}
+					}
+					case 730052 -> {
+						if (level < 30) {
+							PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 27));
+							PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_CANT_INSTANCE_ENTER_LEVEL);
+						} else {
+							TeleportService2.teleportTo(player, 220020000, 1252.900f, 266.000f, 534.200f, (byte) 0);
+						}
+					}
+					case 730053 -> {
+						if (level < 30) {
+							PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 27));
+						} else {
+							TeleportService2.teleportTo(player, 220020000, 1243.500f, 263.900f, 531.300f, (byte) 0);
+						}
+					}
+				}
+			}
+			case 37 -> {
+				// 竞技场城市传送者。 / Arena City Teleporter.
+				switch (npc.getNpcId()) {
+					case 204087 ->
+						TeleportService2.teleportTo(player, 120010000, 1005.100f, 1528.900f, 222.100f, (byte) 0);
+					case 203875 ->
+						TeleportService2.teleportTo(player, 110010000, 1470.300f, 1343.500f, 563.700f, (byte) 0);
+					case 203982 ->
+						TeleportService2.teleportTo(player, 210020000, 446.200f, 431.100f, 274.500f, (byte) 0);
+				}
+			}
+			case 42 -> PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 20));
+			case 43 -> PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 19));
+			case 44 -> {
+				// 飞行与传送。 / Flight & Teleport.
+				if (CustomConfig.ENABLE_SIMPLE_2NDCLASS) {
+					TeleportService2.showMap(player, targetObjectId, npc.getNpcId());
+				} else {
+					int level = player.getLevel();
+					switch (npc.getNpcId()) {
+						case 730040 -> {
+							if (level < 45) {
+								PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 27));
+								PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_CANT_INSTANCE_ENTER_LEVEL);
+							} else {
+								TeleportService2.teleportTo(player, 210040000, 2599.130f, 2182.7583f, 154.74075f, (byte) 27);
+							}
+						}
+						case 800245, 804561, 804562 -> {
+							if (level < 55) {
+								PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 27));
+								PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_CANT_INSTANCE_ENTER_LEVEL);
+							} else {
+								TeleportService2.showMap(player, targetObjectId, npc.getNpcId());
+							}
+						}
+						case 805748, 805773 -> {
+							if (level < 66) {
+								PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 27));
+								PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_CANT_INSTANCE_ENTER_LEVEL);
+							} else {
+								TeleportService2.showMap(player, targetObjectId, npc.getNpcId());
+							}
+						}
+						case 805750, 805775 -> {
+							if (level < 66) {
+								PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 1011));
+								PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_CANT_INSTANCE_ENTER_LEVEL);
+							} else {
+								TeleportService2.showMap(player, targetObjectId, npc.getNpcId());
+							}
+						}
+						default -> TeleportService2.showMap(player, targetObjectId, npc.getNpcId());
+					}
+				}
+			}
+			case 45, 46 -> {
+				// 学习制作与提取。 / Learn Craft & Extraction.
+				if (player.getLevel() < 10) {
+					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_CRAFT_MSG_CAN_WORK_ONLY_DEVA);
+					return;
+				}
+				GameCraftServices.craftSkillUpdateService().learnSkill(player, npc);
+			}
+			case 47 -> CubeExpandService.expandCube(player, npc);
+			case 48 -> WarehouseService.expandWarehouse(player, npc);
+			case 53 -> {
+				// 军团仓库。 / Legion Warehouse.
+				if (player.getLevel() < 10) {
+					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_FREE_EXPERIENCE_CHARACTER_CANT_USE_GUILD_WAREHOUSE("10"));
+					return;
+				}
+				if (player.getLegion() == null) {
+					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_GUILD_LEAVE_I_AM_NOT_BELONG_TO_GUILD);
+					return;
+				}
+				GameCoreGameplayServices.legionService().openLegionWarehouse(player, npc);
+			}
+			case 56, 107, 127 -> {
+				// 关闭军团仓库(56) / 折价升级(107) / 任务黄金奖励(127)：保持空操作。
+				// Close legion warehouse(56) / trade in upgrade(107) / quest gold reward(127): keep no-op.
+			}
+			case 58 -> PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 28));
+			case 59 -> PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 3));
+			case 61, 62 -> {
+				// 整形与变性手术。 / Plastic surgery & gender switch.
+				byte changesex = (byte) (dialogId == 62 ? 1 : 0);
+				int[] tickets = dialogId == 62 ? GENDER_SWITCH_TICKETS : PLASTIC_SURGERY_TICKETS;
+				byte checkTicket = (byte) (hasAnyItem(player, tickets) ? 1 : 2);
+				PacketSendUtility.sendPacket(player, new SM_PLASTIC_SURGERY(player, checkTicket, changesex));
+				player.setEditMode(true);
+			}
+			case 66 -> PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 29));
+			case 67 -> PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 30));
+			case 68 -> player.getNpcFactions().enterGuild(npc);
+			case 69 -> player.getNpcFactions().leaveNpcFaction(npc);
+			case 70 -> PacketSendUtility.sendPacket(player, new SM_REPURCHASE(player, npc.getObjectId()));
+			case 71 -> PacketSendUtility.sendPacket(player, new SM_PET(6));
+			case 72 -> PacketSendUtility.sendPacket(player, new SM_PET(7));
+			case 73 -> PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 32));
+			case 74 -> PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 33));
+			case 75 -> PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 35));
+			case 76 -> ItemChargeService.startChargingEquippedItems(player, targetObjectId, 1);
+			case 78 -> {
+				// 资讯模组购买/交换。 / News Mod Buy/Exchange.
+				TradeListTemplate tradeListTemplate = DataManager.TRADE_LIST_DATA.getTradeInListTemplate(npc.getNpcId());
+				if (tradeListTemplate == null) {
+					PacketSendUtility.sendMessage(player, "Buy <Trade In List> is missing !!");
+					break;
+				}
+				PacketSendUtility.sendPacket(player, new SM_TRADE_IN_LIST(npc, tradeListTemplate, 100));
+			}
+			case 79 -> {
+				GameCraftServices.relinquishCraftStatus();
+				RelinquishCraftStatus.relinquishExpertStatus(player, npc);
+			}
+			case 80 -> {
+				GameCraftServices.relinquishCraftStatus();
+				RelinquishCraftStatus.relinquishMasterStatus(player, npc);
+			}
+			case 84 -> {
+				// 买卖房屋。 / Sell & Buy House.
+				if ((player.getBuildingOwnerStates() & PlayerHouseOwnerFlags.BIDDING_ALLOWED.getId()) == 0) {
+					int questIdToReport = player.getRace() == Race.ELYOS ? 18802 : 28802;
+					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_HOUSING_CANT_OWN_NOT_COMPLETE_QUEST(questIdToReport));
+					return;
+				}
+				PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 38));
+			}
+			case 92 -> PacketSendUtility.sendPacket(player, new SM_PET(16));
+			case 93 -> PacketSendUtility.sendPacket(player, new SM_PET(17));
+			case 94 -> PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 42));
+			case 95 -> ItemChargeService.startChargingEquippedItems(player, targetObjectId, 2);
+			case 96 -> GameHousingServices.housingService().recreatePlayerStudio(player);
+			case 100 -> PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 43));
+			case 103 -> {
+				// 购买列表。 / Purchase List.
+				TradeListTemplate tradeListTemplate = DataManager.TRADE_LIST_DATA.getPurchaseListTemplate(npc.getNpcId());
+				if (tradeListTemplate == null) {
+					PacketSendUtility.sendMessage(player, "Buy <Purchase List> is missing !!");
+					break;
+				}
+				switch (npc.getNpcId()) {
+					case 805976, 806012 -> {
+						if (player.getLevel() < 66) {
+							PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 27));
+							return;
+						}
+					}
+				}
+				int tradeModifier = tradeListTemplate.getApBuyPriceRate() / 10;
+				PacketSendUtility.sendPacket(player, new SM_SELL_ITEM(targetObjectId, tradeModifier, tradeListTemplate));
+			}
+			case 104 -> handleSimpleTeleport(player, npc, targetObjectId);
+			case 106 -> PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 51));
+			case 109 -> PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 52));
+			case 125 -> handleStigmaDialog(player, targetObjectId, titleId, true);
+			case 126 -> PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 55));
+			case 128 -> handleSoulHealing(player, npc, true);
+			case 10000, 10001, 10002, 10003, 10004, 10005, 10006, 10007, 10008, 10009,
+				 10010, 10011, 10012, 10013, 20006, 20007, 20008, 20009, 20010 -> {
+				if (questId == 0) {
+					TeleporterTemplate template = DataManager.TELEPORTER_DATA.getTeleporterTemplateByNpcId(npc.getNpcId());
+					PortalPath portalPath = DataManager.PORTAL2_DATA.getPortalDialog(npc.getNpcId(), dialogId, player.getRace());
+					if (portalPath != null) {
+						PortalService.port(portalPath, player, targetObjectId);
+					} else if (template != null) {
+						TeleportLocation loc = template.getTeleLocIdData().getTelelocations().getFirst();
+						if (loc != null) {
+							TeleportService2.teleport(template, loc.getLocId(), player, npc,
+								npc.getAi2().getName().equals("general") ? TeleportAnimation.JUMP_ANIMATION : TeleportAnimation.BEAM_ANIMATION);
+						}
+					}
+				} else {
+					PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, dialogId, questId));
+				}
+			}
+			default -> {
+				if (dialogId == 23 && player.getInventory().isFull()) {
+					PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 0));
+				} else {
+					PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, dialogId));
+				}
+			}
+		}
+	}
 
-                            player.getLifeStats().increaseHp(TYPE.HP, player.getLifeStats().getMaxHp() + 1);
-                            player.getLifeStats().increaseMp(TYPE.MP, player.getLifeStats().getMaxMp() + 1);
-                            player.getLifeStats().increaseFp(TYPE.AUTO_HEAL_FP, player.getLifeStats().getMaxFp() + 1);
+	/**
+	 * 检查玩家背包是否拥有指定道具列表中的任意一种。
+	 * Checks whether the player's inventory contains at least one item from the given ID list.
+	 *
+	 * @param player  玩家 / player
+	 * @param itemIds 道具 ID 数组 / item ID array
+	 * @return 拥有至少一种时返回 true / true if player has at least one matching item
+	 */
+	private static boolean hasAnyItem(Player player, int[] itemIds) {
+		for (int itemId : itemIds) {
+			if (player.getInventory().getItemCountByItemId(itemId) > 0) {
+				return true;
+			}
+		}
+		return false;
+	}
 
-                            player.getInventory().decreaseKinah(price);
-                            player.getEffectController().removeAbnormalEffectsByTargetSlot(SkillTargetSlot.SPEC2);
-                            player.getCommonData().setDeathCount(0);
-                        } else {
-                            PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_NOT_ENOUGH_KINA(price));
-                        }
-                    }
+	/**
+	 * 判定称号 ID 是否属于烙印之石大师。
+	 * Checks whether the given title ID belongs to a Stigma Master.
+	 *
+	 * @param titleId   称号 ID / title ID
+	 * @param isEnchant 是否为强化模式 / whether this is enchant mode
+	 * @return 匹配时返回 true / true if matches stigma master title
+	 */
+	private static boolean isStigmaMasterTitle(int titleId, boolean isEnchant) {
+		return switch (titleId) {
+			case 314362, 314365, 314366, 350410, 357007, 357019, 357031, 357043,
+				 358493, 358523, 370111, 370112 -> true;
+			case 370503 -> !isEnchant;
+			default -> false;
+		};
+	}
 
-                    @Override
-                    public void denyRequest(Creature requester, Player responder) {
-                    }
-                };
-                if (player.getCommonData().getExpRecoverable() > 0) {
-                    boolean result = player.getResponseRequester().putRequest(SM_QUESTION_WINDOW.STR_ASK_RECOVER_EXPERIENCE, responseHandler);
-                    if (result) {
-                        PacketSendUtility.sendPacket(player, new SM_QUESTION_WINDOW(SM_QUESTION_WINDOW.STR_ASK_RECOVER_EXPERIENCE, 0, 0, String.valueOf(price)));
-                    }
-                } else {
-                    PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_DONOT_HAVE_RECOVER_EXPERIENCE);
-                }
-                break;
-            }
-            case 10000:
-            case 10001:
-            case 10002:
-            case 10003:
-            case 10004:
-            case 10005:
-            case 10006:
-            case 10007:
-            case 10008:
-            case 10009:
-            case 10010:
-            case 10011:
-            case 10012:
-            case 10013:
-            case 20006:
-            case 20007:
-            case 20008:
-            case 20009:
-            case 20010: {
-                if (questId == 0) {
-                    TeleporterTemplate template = DataManager.TELEPORTER_DATA.getTeleporterTemplateByNpcId(npc.getNpcId());
-                    PortalPath portalPath = DataManager.PORTAL2_DATA.getPortalDialog(npc.getNpcId(), dialogId, player.getRace());
-                    if (portalPath != null) {
-                        PortalService.port(portalPath, player, targetObjectId);
-                    } else if (template != null) {
-                        TeleportLocation loc = template.getTeleLocIdData().getTelelocations().get(0);
-                        if (loc != null) {
-                            TeleportService2.teleport(template, loc.getLocId(), player, npc, npc.getAi2().getName().equals("general") ? TeleportAnimation.JUMP_ANIMATION : TeleportAnimation.BEAM_ANIMATION);
-                        }
-                    }
-                } else {
-                    PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, dialogId, questId));
-                }
-                break;
-            }
-            default: {
-                if (dialogId == 23 && player.getInventory().isFull()) {
-                    PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 0));
-                } else {
-                    PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, dialogId));
-                }
-                break;
-            }
-        }
-    }
+	/**
+	 * 处理烙印之石开启与强化对话。
+	 * Handles stigma opening and enchanting dialog interactions.
+	 *
+	 * @param player         玩家 / player
+	 * @param targetObjectId 对话目标对象 ID / dialog target object ID
+	 * @param titleId        NPC 称号 ID / NPC title ID
+	 * @param isEnchant      是否为强化窗口 / whether this is enchant window
+	 */
+	private static void handleStigmaDialog(Player player, int targetObjectId, int titleId, boolean isEnchant) {
+		if (!isStigmaMasterTitle(titleId, isEnchant)) {
+			return;
+		}
+		int requiredQuestId = switch (player.getRace()) {
+			case ELYOS -> 1929;
+			case ASMODIANS -> 2900;
+			default -> 0;
+		};
+		if (requiredQuestId == 0) {
+			return;
+		}
+		QuestState qs = player.getQuestStateList().getQuestState(requiredQuestId);
+		if (qs == null || qs.getStatus() != QuestStatus.COMPLETE) {
+			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_HOUSING_CANT_OWN_NOT_COMPLETE_QUEST(requiredQuestId));
+			PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 27));
+		} else if (isEnchant) {
+			PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 53));
+		} else {
+			openStigmaWindow(player, targetObjectId);
+		}
+	}
+
+	/**
+	 * 获取各行政官 NPC 所需验证的道具 ID。
+	 * Returns the required item ID for administration officer NPCs.
+	 *
+	 * @param npcId NPC ID
+	 * @return 所需道具 ID，非行政官 NPC 返回 0 / required item ID, or 0 if none
+	 */
+	private static int getRequiredAdministrationOfficerItem(int npcId) {
+		return switch (npcId) {
+			case 203179, 203330 -> 186000001; // 钢铁战斗行政官 天族
+			case 203659, 203689 -> 186000006; // 钢铁战斗行政官 魔族
+			case 203931, 798111 -> 186000002; // 青铜战斗行政官 天族
+			case 204360, 204368, 204425, 204426 -> 186000007; // 青铜战斗行政官 魔族
+			case 203964, 204011, 204515, 204571, 204637, 204639, 798112, 798113, 801158, 801161 ->
+				186000003; // 白银行政官 天族
+			case 204359, 204427, 204781, 204789, 801170, 801173 -> 186000008; // 白银行政官 魔族
+			case 204548, 204638, 801164, 801167, 801182, 801185 -> 186000004; // 黄金行政官 天族
+			case 204761, 204762, 204766, 204767, 801179, 801196, 801199 -> 186000009; // 黄金行政官 魔族
+			case 798172, 798173, 798174, 798175, 798195, 798196, 798197, 798198, 801188, 801192 ->
+				186000005; // 白金行政官 天族
+			case 205160, 205161, 205162, 205163, 205183, 205184, 205185, 205186, 801202, 801206 ->
+				186000010; // 白金行政官 魔族
+			case 798914, 798915, 798916, 798917 -> 186000018; // 秘银行政官 天族
+			case 799213, 799214, 799215, 799216 -> 186000019; // 秘银行政官 魔族
+			case 805136, 805137, 805138, 805139 -> 186000100; // 雪花石膏教团管家 天族
+			case 805047, 805048, 805049, 805050 -> 186000103; // 战地看守管家 魔族
+			case 805140, 805141, 805142 -> 186000102; // 幸运者教团管家 天族
+			case 805051, 805052, 805053, 805054 -> 186000105; // 查里伦克的恶魔管家 魔族
+			case 805144 -> 186000101; // 光辉行动管家 天族
+			case 805055 -> 186000104; // 血十字军管家 魔族
+			case 833744, 833745, 833746, 833747, 833748, 833749, 833750, 833751 -> 186000237; // 大师钱币学家
+			default -> 0;
+		};
+	}
+
+	/**
+	 * 获取欧比斯商人 NPC 所需的最低等级。
+	 * Returns the minimum level required for Abyss trader NPCs.
+	 *
+	 * @param npcId NPC ID
+	 * @return 最低等级限制，无限制时返回 0 / minimum required level, or 0 if none
+	 */
+	private static int getRequiredAbyssTradeLevel(int npcId) {
+		return switch (npcId) {
+			case 203708, 203710 -> 25;
+			case 798505, 798509, 798510, 799224, 802210, 805130 -> 45;
+			case 798507, 798508 -> 50;
+			case 798506 -> 55;
+			default -> 0;
+		};
+	}
+
+	/**
+	 * 处理普通灵魂治疗与神圣灵魂治疗。
+	 * Handles regular and divine soul healing.
+	 *
+	 * @param player   玩家 / player
+	 * @param npc      对话 NPC / dialog NPC
+	 * @param isDivine 是否为神圣灵魂治疗 / whether divine soul healing
+	 */
+	private static void handleSoulHealing(Player player, Npc npc, boolean isDivine) {
+		final long expLost = player.getCommonData().getExpRecoverable();
+		if (expLost == 0) {
+			player.getEffectController().removeAbnormalEffectsByTargetSlot(SkillTargetSlot.SPEC2);
+			player.getCommonData().setDeathCount(0);
+		}
+		final double factor = (expLost < 1000000 ? 0.25 - (0.00000015 * expLost) : 0.1);
+		final int price = (int) (expLost * factor);
+		RequestResponseHandler responseHandler = new RequestResponseHandler(npc) {
+			@Override
+			public void acceptRequest(Creature requester, Player responder) {
+				if (player.getInventory().getKinah() >= price) {
+					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_GET_EXP2(expLost));
+					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_SUCCESS_RECOVER_EXPERIENCE);
+					player.getCommonData().resetRecoverableExp();
+					if (isDivine) {
+						player.getLifeStats().increaseHp(TYPE.HP, player.getLifeStats().getMaxHp() + 1);
+						player.getLifeStats().increaseMp(TYPE.MP, player.getLifeStats().getMaxMp() + 1);
+						player.getLifeStats().increaseFp(TYPE.AUTO_HEAL_FP, player.getLifeStats().getMaxFp() + 1);
+					}
+					player.getInventory().decreaseKinah(price);
+					player.getEffectController().removeAbnormalEffectsByTargetSlot(SkillTargetSlot.SPEC2);
+					player.getCommonData().setDeathCount(0);
+				} else {
+					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_NOT_ENOUGH_KINA(price));
+				}
+			}
+
+			@Override
+			public void denyRequest(Creature requester, Player responder) {
+			}
+		};
+		if (player.getCommonData().getExpRecoverable() > 0) {
+			boolean result = player.getResponseRequester().putRequest(SM_QUESTION_WINDOW.STR_ASK_RECOVER_EXPERIENCE, responseHandler);
+			if (result) {
+				PacketSendUtility.sendPacket(player, new SM_QUESTION_WINDOW(SM_QUESTION_WINDOW.STR_ASK_RECOVER_EXPERIENCE, 0, 0, String.valueOf(price)));
+			}
+		} else {
+			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_DONOT_HAVE_RECOVER_EXPERIENCE);
+		}
+	}
+
+	/**
+	 * 处理简单传送（成名之路与军团领地传送）。
+	 * Handles simple teleportation (Walk of Fame and Legion Area entries).
+	 *
+	 * @param player         玩家 / player
+	 * @param npc            对话 NPC / dialog NPC
+	 * @param targetObjectId 目标对象 ID / target object ID
+	 */
+	private static void handleSimpleTeleport(Player player, Npc npc, int targetObjectId) {
+		if (player.getRace() == Race.ELYOS) {
+			switch (npc.getNpcId()) {
+				case 802437 -> {
+					if (player.getAbyssRank().getRank().getId() < AbyssRankEnum.GENERAL.getId()) {
+						PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 27));
+						return;
+					}
+					TeleportService2.teleportTo(player, 110070000, 503.80746f, 417.2141f, 126.789635f, (byte) 68);
+				}
+				case 805162, 805164, 805166, 805168, 805170, 805172 -> {
+					if (player.getLegion() == null) {
+						PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_GUILD_LEAVE_I_AM_NOT_BELONG_TO_GUILD);
+						return;
+					}
+					switch (npc.getNpcId()) {
+						case 805162 ->
+							TeleportService2.teleportTo(player, 210070000, 1326.1046f, 640.8399f, 584.82385f, (byte) 26);
+						case 805164 ->
+							TeleportService2.teleportTo(player, 210070000, 1378.3633f, 655.79205f, 584.82385f, (byte) 54);
+						case 805166 ->
+							TeleportService2.teleportTo(player, 210070000, 1228.2413f, 1628.6283f, 470.35565f, (byte) 100);
+						case 805168 ->
+							TeleportService2.teleportTo(player, 210070000, 1218.8335f, 1576.2424f, 470.35565f, (byte) 14);
+						case 805170 ->
+							TeleportService2.teleportTo(player, 210070000, 2327.8035f, 1535.8595f, 440.83572f, (byte) 17);
+						case 805172 ->
+							TeleportService2.teleportTo(player, 210070000, 2381.8564f, 1549.5217f, 440.83572f, (byte) 51);
+					}
+				}
+			}
+		} else {
+			switch (npc.getNpcId()) {
+				case 802439 -> {
+					if (player.getAbyssRank().getRank().getId() < AbyssRankEnum.GENERAL.getId()) {
+						PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 27));
+						return;
+					}
+					TeleportService2.teleportTo(player, 120080000, 385.92166f, 251.25146f, 93.129425f, (byte) 24);
+				}
+				case 805174, 805176, 805178, 805180, 805182, 805184 -> {
+					if (player.getLegion() == null) {
+						PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_GUILD_LEAVE_I_AM_NOT_BELONG_TO_GUILD);
+						return;
+					}
+					switch (npc.getNpcId()) {
+						case 805174 ->
+							TeleportService2.teleportTo(player, 220080000, 1769.7422f, 2596.248f, 301.87747f, (byte) 12);
+						case 805176 ->
+							TeleportService2.teleportTo(player, 220080000, 1810.1752f, 2559.1487f, 301.87747f, (byte) 25);
+						case 805178 ->
+							TeleportService2.teleportTo(player, 220080000, 1435.401f, 1742.898f, 332.56546f, (byte) 38);
+						case 805180 ->
+							TeleportService2.teleportTo(player, 220080000, 1466.7686f, 1787.5085f, 332.56546f, (byte) 55);
+						case 805182 ->
+							TeleportService2.teleportTo(player, 220080000, 768.7018f, 1316.1646f, 254.92737f, (byte) 1);
+						case 805184 ->
+							TeleportService2.teleportTo(player, 220080000, 803.8293f, 1274.7317f, 254.92737f, (byte) 18);
+					}
+				}
+			}
+		}
+	}
 }

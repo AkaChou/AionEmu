@@ -29,7 +29,6 @@ import com.aionemu.gameserver.model.gameobjects.player.BindPointPosition;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.gameobjects.state.CreatureState;
 import com.aionemu.gameserver.model.items.storage.Storage;
-import com.aionemu.gameserver.model.templates.item.ItemTemplate;
 import com.aionemu.gameserver.model.templates.portal.InstanceExit;
 import com.aionemu.gameserver.model.templates.portal.PortalLoc;
 import com.aionemu.gameserver.model.templates.portal.PortalPath;
@@ -71,6 +70,7 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.WorldMapType;
 import com.aionemu.gameserver.world.WorldPosition;
+
 /**
  * 传送服务，提供玩家传送、回城、监狱、频道切换、变形同步与跨服 A-Station 等入口。
  * Teleport service providing player travel, bind/prison, channel switch, transform sync and A-Station moves.
@@ -100,7 +100,9 @@ public class TeleportService2 {
 	private static final int ELYOS_KAHRUN_ENTRY_QUEST_ID = 10100;
 	private static final int ASMODIAN_KAHRUN_ENTRY_QUEST_ID = 20100;
 	private static final int KAHRUN_ENTRY_QUEST_STEP = 1;
-	/** 锡兰泰拉峡谷（回廊）世界。 / Silentera Canyon (the corridor) world. */
+	/**
+	 * 锡兰泰拉峡谷（回廊）世界。 / Silentera Canyon (the corridor) world.
+	 */
 	private static final int SILENTERA_CANYON_WORLD_ID = 600010000;
 	// 回廊入口的硬门禁：须完成本族「回廊进军准备」使命（10035/20035）后开放。
 	// Hard gate for the corridor entry: the racial "corridor advance preparation" mission (10035/20035) must be complete.
@@ -122,10 +124,11 @@ public class TeleportService2 {
 	/**
 	 * 按传送员模板将玩家传送到指定地点（含飞行传送与费用校验）。
 	 * Teleports a player via teleporter template to a location (flight travel and fee checks included).
-	 * @param template 传送员模板 / Teleporter template
-	 * @param locId 目标地点 ID / Target location id
-	 * @param player 玩家 / Player
-	 * @param npc 交互 NPC / Interacting NPC
+	 *
+	 * @param template  传送员模板 / Teleporter template
+	 * @param locId     目标地点 ID / Target location id
+	 * @param player    玩家 / Player
+	 * @param npc       交互 NPC / Interacting NPC
 	 * @param animation 传送动画 / Teleport animation
 	 */
 	public static void teleport(TeleporterTemplate template, int locId, Player player, Npc npc, TeleportAnimation animation) {
@@ -172,7 +175,7 @@ public class TeleportService2 {
 		}
 
 		if (isArchDaevaEntryWorld(locationTemplate.getMapId())
-				&& !meetsArchDaevaEntryRequirement(player, locationTemplate.getMapId())) {
+			&& !meetsArchDaevaEntryRequirement(player, locationTemplate.getMapId())) {
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_CANNOT_MOVE_TO_AIRPORT_NEED_FINISH_QUEST);
 			return;
 		}
@@ -198,9 +201,6 @@ public class TeleportService2 {
 			player.unsetState(CreatureState.ACTIVE);
 			player.setFlightTeleportId(location.getTeleportId());
 			PacketSendUtility.broadcastPacket(player, new SM_EMOTION(player, EmotionType.START_FLYTELEPORT, location.getTeleportId(), 0), true);
-			playerTransformation(player);
-			instanceTransformation(player);
-			archdaevaTransformation(player);
 		} else {
 			int instanceId = 1;
 			int mapId = locationTemplate.getMapId();
@@ -208,10 +208,10 @@ public class TeleportService2 {
 				instanceId = player.getInstanceId();
 			}
 			sendLoc(player, mapId, instanceId, locationTemplate.getX(), locationTemplate.getY(), locationTemplate.getZ(), (byte) locationTemplate.getHeading(), animation);
-			playerTransformation(player);
-			instanceTransformation(player);
-			archdaevaTransformation(player);
 		}
+		playerTransformation(player);
+		instanceTransformation(player);
+		archdaevaTransformation(player);
 	}
 
 	static boolean meetsQuestRequirement(QuestState questState, int requiredQuestStep) {
@@ -222,13 +222,14 @@ public class TeleportService2 {
 			return true;
 		}
 		return requiredQuestStep > 0
-				&& (questState.getStatus() == QuestStatus.START || questState.getStatus() == QuestStatus.REWARD)
-				&& questState.getQuestVarById(0) >= requiredQuestStep;
+			&& (questState.getStatus() == QuestStatus.START || questState.getStatus() == QuestStatus.REWARD)
+			&& questState.getQuestVarById(0) >= requiredQuestStep;
 	}
 
 	/**
 	 * 判断目标世界是否为欧比斯入口世界。
 	 * Returns whether the target world is the Abyss entry world.
+	 *
 	 * @param worldId 世界 ID / World id
 	 * @return 是否为欧比斯 / whether it is the Abyss
 	 */
@@ -239,6 +240,7 @@ public class TeleportService2 {
 	/**
 	 * 检查玩家是否已完成本阵营的欧比斯入场任务。
 	 * Checks whether the player completed the racial Abyss entry quest.
+	 *
 	 * @param player 玩家 / Player
 	 * @return 是否允许进入欧比斯 / whether Abyss entry is allowed
 	 */
@@ -250,7 +252,7 @@ public class TeleportService2 {
 	static boolean meetsAbyssEntryRequirement(Race race, QuestState questState) {
 		int questId = getAbyssEntryQuestId(race);
 		return questId != 0 && questState != null && questState.getQuestId() == questId
-				&& meetsQuestRequirement(questState, 0);
+			&& meetsQuestRequirement(questState, 0);
 	}
 
 	static int getAbyssEntryQuestId(Race race) {
@@ -276,6 +278,7 @@ public class TeleportService2 {
 	/**
 	 * 将英吉斯温镜像服世界 ID 归一为实际可玩的英吉斯温世界。
 	 * Normalizes the Inggison mirror-server world id to the live Inggison world.
+	 *
 	 * @param worldId 目标世界 ID / Target world id
 	 * @return 实际可玩世界 ID / Live world id
 	 */
@@ -286,11 +289,11 @@ public class TeleportService2 {
 	public static boolean meetsBalaureaEntryRequirement(Player player, int targetWorldId) {
 		if (isInggisonEntryWorld(targetWorldId)) {
 			return meetsBalaureaEntryRequirement(Race.ELYOS, player.getRace(),
-					player.getQuestStateList().getQuestState(ELYOS_BALAUREA_ENTRY_QUEST_ID));
+				player.getQuestStateList().getQuestState(ELYOS_BALAUREA_ENTRY_QUEST_ID));
 		}
 		if (isGelkmarosEntryWorld(targetWorldId)) {
 			return meetsBalaureaEntryRequirement(Race.ASMODIANS, player.getRace(),
-					player.getQuestStateList().getQuestState(ASMODIAN_BALAUREA_ENTRY_QUEST_ID));
+				player.getQuestStateList().getQuestState(ASMODIAN_BALAUREA_ENTRY_QUEST_ID));
 		}
 		return false;
 	}
@@ -302,7 +305,7 @@ public class TeleportService2 {
 		int questId = getBalaureaEntryQuestId(targetRace);
 		int requiredStep = getBalaureaEntryQuestStep(targetRace);
 		return questId != 0 && questState != null && questState.getQuestId() == questId
-				&& meetsQuestRequirement(questState, requiredStep);
+			&& meetsQuestRequirement(questState, requiredStep);
 	}
 
 	static int getBalaureaEntryQuestId(Race race) {
@@ -324,6 +327,7 @@ public class TeleportService2 {
 	/**
 	 * 判断目标世界是否为哥尔哈。
 	 * Returns whether the target world is Kahrun.
+	 *
 	 * @param worldId 世界 ID / World id
 	 * @return 是否为哥尔哈 / whether it is Kahrun
 	 */
@@ -334,19 +338,20 @@ public class TeleportService2 {
 	/**
 	 * 检查玩家是否已通过本阵营 65 级使命抵达哥尔哈。
 	 * Checks whether the player has reached Kahrun through the racial level-65 mission.
+	 *
 	 * @param player 玩家 / Player
 	 * @return 是否允许前往哥尔哈 / whether Kahrun travel is allowed
 	 */
 	public static boolean meetsKahrunEntryRequirement(Player player) {
 		int questId = getKahrunEntryQuestId(player.getRace());
 		return questId != 0 && meetsQuestRequirement(player.getQuestStateList().getQuestState(questId),
-				KAHRUN_ENTRY_QUEST_STEP);
+			KAHRUN_ENTRY_QUEST_STEP);
 	}
 
 	static boolean meetsKahrunEntryRequirement(Race race, QuestState questState) {
 		int questId = getKahrunEntryQuestId(race);
 		return questId != 0 && questState != null && questState.getQuestId() == questId
-				&& meetsQuestRequirement(questState, KAHRUN_ENTRY_QUEST_STEP);
+			&& meetsQuestRequirement(questState, KAHRUN_ENTRY_QUEST_STEP);
 	}
 
 	static int getKahrunEntryQuestId(Race race) {
@@ -360,6 +365,7 @@ public class TeleportService2 {
 	/**
 	 * 判断目标世界是否为锡兰泰拉峡谷（回廊）。
 	 * Returns whether the target world is Silentera Canyon (the corridor).
+	 *
 	 * @param worldId 世界 ID / World id
 	 * @return 是否为回廊 / whether it is the corridor
 	 */
@@ -370,6 +376,7 @@ public class TeleportService2 {
 	/**
 	 * 回廊入口门禁：须完成本族「回廊进军准备」使命（天族 10035 / 魔族 20035）。
 	 * The corridor entry requirement: the racial "corridor advance preparation" mission must be complete.
+	 *
 	 * @param player 玩家 / Player
 	 * @return 是否允许进入回廊 / whether corridor entry is allowed
 	 */
@@ -381,7 +388,7 @@ public class TeleportService2 {
 	static boolean meetsSilenteraCorridorEntryRequirement(Race race, QuestState questState) {
 		int questId = getSilenteraCorridorEntryQuestId(race);
 		return questId != 0 && questState != null && questState.getQuestId() == questId
-				&& meetsQuestRequirement(questState, 0);
+			&& meetsQuestRequirement(questState, 0);
 	}
 
 	static int getSilenteraCorridorEntryQuestId(Race race) {
@@ -395,6 +402,7 @@ public class TeleportService2 {
 	/**
 	 * 判断目标世界是否为本阵营高阶守护者新大陆（伊鲁玛/诺斯珀德）。
 	 * Returns whether the target world is a racial ArchDaeva continent (Iluma/Norsvold).
+	 *
 	 * @param worldId 目标世界 ID / Target world id
 	 * @return 是否为高阶守护者新大陆 / whether it is an ArchDaeva continent
 	 */
@@ -407,35 +415,37 @@ public class TeleportService2 {
 	 * 本阵营世界必须由该阵营 10520/20520 的传送步骤解锁；敌对阵营沿用裂隙等既有规则。
 	 * Checks whether the player may enter the target ArchDaeva continent. A race's home world requires
 	 * that race's 10520/20520 teleport step; the opposite race keeps its existing rift rules.
-	 * @param player 玩家 / Player
+	 *
+	 * @param player        玩家 / Player
 	 * @param targetWorldId 目标世界 ID / Target world id
 	 * @return 是否允许进入 / whether entry is allowed
 	 */
 	public static boolean meetsArchDaevaEntryRequirement(Player player, int targetWorldId) {
 		int questId = getArchDaevaEntryQuestId(player.getRace(), targetWorldId);
 		return questId == 0 || meetsQuestRequirement(player.getQuestStateList().getQuestState(questId),
-				ARCHDAEVA_ENTRY_QUEST_STEP);
+			ARCHDAEVA_ENTRY_QUEST_STEP);
 	}
 
 	static boolean meetsArchDaevaEntryRequirement(Race race, int targetWorldId, QuestState questState) {
 		int questId = getArchDaevaEntryQuestId(race, targetWorldId);
 		return questId == 0 || (questState != null && questState.getQuestId() == questId
-				&& meetsQuestRequirement(questState, ARCHDAEVA_ENTRY_QUEST_STEP));
+			&& meetsQuestRequirement(questState, ARCHDAEVA_ENTRY_QUEST_STEP));
 	}
 
 	static int getArchDaevaEntryQuestId(Race race, int targetWorldId) {
-        return switch (race) {
-            case ELYOS -> targetWorldId == ELYOS_ILUMA_WORLD_ID ? ELYOS_ARCHDAEVA_ENTRY_QUEST_ID : 0;
-            case ASMODIANS -> targetWorldId == ASMODIAN_NORSVOLD_WORLD_ID ? ASMODIAN_ARCHDAEVA_ENTRY_QUEST_ID : 0;
-            default -> 0;
-        };
+		return switch (race) {
+			case ELYOS -> targetWorldId == ELYOS_ILUMA_WORLD_ID ? ELYOS_ARCHDAEVA_ENTRY_QUEST_ID : 0;
+			case ASMODIANS -> targetWorldId == ASMODIAN_NORSVOLD_WORLD_ID ? ASMODIAN_ARCHDAEVA_ENTRY_QUEST_ID : 0;
+			default -> 0;
+		};
 	}
 
 	/**
 	 * 判断副本的配置出口是否位于欧比斯。
 	 * Returns whether the instance's configured exit leads into the Abyss.
+	 *
 	 * @param worldId 副本世界 ID / Instance world id
-	 * @param race 玩家种族 / Player race
+	 * @param race    玩家种族 / Player race
 	 * @return 是否出口通往欧比斯 / whether the exit leads into the Abyss
 	 */
 	public static boolean isAbyssExitInstance(int worldId, Race race) {
@@ -449,8 +459,9 @@ public class TeleportService2 {
 	/**
 	 * 判断进入该副本是否可能获得通往欧比斯的入口（配置出口或在副本内部传送门）。
 	 * Returns whether entering the instance can grant a route into the Abyss, either by its exit data or an in-instance portal.
+	 *
 	 * @param worldId 副本世界 ID / Instance world id
-	 * @param race 玩家种族 / Player race
+	 * @param race    玩家种族 / Player race
 	 * @return 是否需要欧比斯入场资格 / whether Abyss entry qualification is required
 	 */
 	public static boolean grantsAbyssAccess(int worldId, Race race) {
@@ -506,8 +517,9 @@ public class TeleportService2 {
 	/**
 	 * 将玩家传送到世界坐标位置（同图更新或跨图传送）。
 	 * Teleports a player to a world position (same-map update or cross-map travel).
+	 *
 	 * @param player 玩家 / Player
-	 * @param pos 目标位置 / Target position
+	 * @param pos    目标位置 / Target position
 	 */
 	public static void teleportTo(Player player, WorldPosition pos) {
 		if (player.getWorldId() == pos.getMapId()) {
@@ -564,7 +576,7 @@ public class TeleportService2 {
 			archdaevaTransformation(player);
 			PacketSendUtility.sendPacket(player, new SM_CONQUEROR_PROTECTOR(false, player.getProtectorInfo().getRank()));
 			PacketSendUtility.sendPacket(player, new SM_CONQUEROR_PROTECTOR(false, player.getConquerorInfo().getRank()));
-			if (sgs.isHandledWorld(player.getWorldId()) && (!sgs.isEnemyWorld(player) || sgs.isEnemyWorld(player))) {
+			if (sgs.isHandledWorld(player.getWorldId())) {
 				PacketSendUtility.sendPacket(player, new SM_CONQUEROR_PROTECTOR(sgs.getWorldProtector(player.getWorldId()).values()));
 				PacketSendUtility.sendPacket(player, new SM_CONQUEROR_PROTECTOR(sgs.getWorldConqueror(player.getWorldId()).values()));
 			}
@@ -576,20 +588,12 @@ public class TeleportService2 {
 	}
 
 	/**
-	 * 以死亡状态将玩家传送到指定坐标（不复活）。
-	 * Teleports a dead player to coordinates without reviving.
+	 * 发送重生/生成相关的频道与玩家信息包，并通知军团。
+	 * Sends channel/player spawn packets and notifies legion members.
+	 *
 	 * @param player 玩家 / Player
-	 * @param worldId 世界 ID / World id
-	 * @param instanceId 实例 ID / Instance id
-	 * @param x X 坐标 / X
-	 * @param y Y 坐标 / Y
-	 * @param z Z 坐标 / Z
-	 * @param heading 朝向 / Heading
 	 */
-	public static void teleportDeadTo(Player player, int worldId, int instanceId, float x, float y, float z, byte heading) {
-		player.getController().onLeaveWorld();
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().despawn(player);
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().setPosition(player, worldId, instanceId, x, y, z, heading);
+	private static void sendSpawnPacketsAndNotifyLegion(Player player) {
 		PacketSendUtility.sendPacket(player, new SM_CHANNEL_INFO(player.getPosition()));
 		PacketSendUtility.sendPacket(player, new SM_PLAYER_SPAWN(player));
 		player.setPortAnimation(4);
@@ -600,13 +604,33 @@ public class TeleportService2 {
 	}
 
 	/**
+	 * 以死亡状态将玩家传送到指定坐标（不复活）。
+	 * Teleports a dead player to coordinates without reviving.
+	 *
+	 * @param player     玩家 / Player
+	 * @param worldId    世界 ID / World id
+	 * @param instanceId 实例 ID / Instance id
+	 * @param x          X 坐标 / X
+	 * @param y          Y 坐标 / Y
+	 * @param z          Z 坐标 / Z
+	 * @param heading    朝向 / Heading
+	 */
+	public static void teleportDeadTo(Player player, int worldId, int instanceId, float x, float y, float z, byte heading) {
+		player.getController().onLeaveWorld();
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().despawn(player);
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().setPosition(player, worldId, instanceId, x, y, z, heading);
+		sendSpawnPacketsAndNotifyLegion(player);
+	}
+
+	/**
 	 * 传送到指定世界坐标（使用玩家当前朝向）。
 	 * Teleports to world coordinates (uses player heading).
-	 * @param player 玩家 / Player
+	 *
+	 * @param player  玩家 / Player
 	 * @param worldId 世界 ID / World id
-	 * @param x X 坐标 / X
-	 * @param y Y 坐标 / Y
-	 * @param z Z 坐标 / Z
+	 * @param x       X 坐标 / X
+	 * @param y       Y 坐标 / Y
+	 * @param z       Z 坐标 / Z
 	 * @return 是否发起传送 / Whether teleport was initiated
 	 */
 	public static boolean teleportTo(Player player, int worldId, float x, float y, float z) {
@@ -616,12 +640,13 @@ public class TeleportService2 {
 	/**
 	 * 传送到指定世界坐标与朝向（默认光束动画）。
 	 * Teleports to world coordinates with heading (default beam animation).
-	 * @param player 玩家 / Player
+	 *
+	 * @param player  玩家 / Player
 	 * @param worldId 世界 ID / World id
-	 * @param x X 坐标 / X
-	 * @param y Y 坐标 / Y
-	 * @param z Z 坐标 / Z
-	 * @param h 朝向 / Heading
+	 * @param x       X 坐标 / X
+	 * @param y       Y 坐标 / Y
+	 * @param z       Z 坐标 / Z
+	 * @param h       朝向 / Heading
 	 * @return 是否发起传送 / Whether teleport was initiated
 	 */
 	public static boolean teleportTo(Player player, int worldId, float x, float y, float z, byte h) {
@@ -635,12 +660,13 @@ public class TeleportService2 {
 	/**
 	 * 传送到指定世界坐标与朝向，可指定动画。
 	 * Teleports to world coordinates with heading and animation.
-	 * @param player 玩家 / Player
-	 * @param worldId 世界 ID / World id
-	 * @param x X 坐标 / X
-	 * @param y Y 坐标 / Y
-	 * @param z Z 坐标 / Z
-	 * @param h 朝向 / Heading
+	 *
+	 * @param player    玩家 / Player
+	 * @param worldId   世界 ID / World id
+	 * @param x         X 坐标 / X
+	 * @param y         Y 坐标 / Y
+	 * @param z         Z 坐标 / Z
+	 * @param h         朝向 / Heading
 	 * @param animation 传送动画 / Teleport animation
 	 * @return 是否发起传送 / Whether teleport was initiated
 	 */
@@ -655,13 +681,14 @@ public class TeleportService2 {
 	/**
 	 * 传送到指定世界/实例坐标（默认光束动画）。
 	 * Teleports to world/instance coordinates (default beam animation).
-	 * @param player 玩家 / Player
-	 * @param worldId 世界 ID / World id
+	 *
+	 * @param player     玩家 / Player
+	 * @param worldId    世界 ID / World id
 	 * @param instanceId 实例 ID / Instance id
-	 * @param x X 坐标 / X
-	 * @param y Y 坐标 / Y
-	 * @param z Z 坐标 / Z
-	 * @param h 朝向 / Heading
+	 * @param x          X 坐标 / X
+	 * @param y          Y 坐标 / Y
+	 * @param z          Z 坐标 / Z
+	 * @param h          朝向 / Heading
 	 * @return 是否发起传送 / Whether teleport was initiated
 	 */
 	public static boolean teleportTo(Player player, int worldId, int instanceId, float x, float y, float z, byte h) {
@@ -671,12 +698,13 @@ public class TeleportService2 {
 	/**
 	 * 传送到指定世界/实例坐标（使用玩家朝向与默认动画）。
 	 * Teleports to world/instance coordinates (player heading, default animation).
-	 * @param player 玩家 / Player
-	 * @param worldId 世界 ID / World id
+	 *
+	 * @param player     玩家 / Player
+	 * @param worldId    世界 ID / World id
 	 * @param instanceId 实例 ID / Instance id
-	 * @param x X 坐标 / X
-	 * @param y Y 坐标 / Y
-	 * @param z Z 坐标 / Z
+	 * @param x          X 坐标 / X
+	 * @param y          Y 坐标 / Y
+	 * @param z          Z 坐标 / Z
 	 * @return 是否发起传送 / Whether teleport was initiated
 	 */
 	public static boolean teleportTo(Player player, int worldId, int instanceId, float x, float y, float z) {
@@ -686,14 +714,15 @@ public class TeleportService2 {
 	/**
 	 * 完整传送入口：处理决斗中断、离图与动画/无动画换位。
 	 * Full teleport entry: ends duel, leave-world and animated/no-anim position change.
-	 * @param player 玩家 / Player
-	 * @param worldId 世界 ID / World id
+	 *
+	 * @param player     玩家 / Player
+	 * @param worldId    世界 ID / World id
 	 * @param instanceId 实例 ID / Instance id
-	 * @param x X 坐标 / X
-	 * @param y Y 坐标 / Y
-	 * @param z Z 坐标 / Z
-	 * @param heading 朝向 / Heading
-	 * @param animation 传送动画 / Teleport animation
+	 * @param x          X 坐标 / X
+	 * @param y          Y 坐标 / Y
+	 * @param z          Z 坐标 / Z
+	 * @param heading    朝向 / Heading
+	 * @param animation  传送动画 / Teleport animation
 	 * @return 是否发起传送；死亡中返回 {@code false} / Whether initiated; {@code false} if dead
 	 */
 	public static boolean teleportTo(final Player player, final int worldId, final int instanceId, final float x, final float y, final float z, final byte heading, TeleportAnimation animation) {
@@ -706,7 +735,7 @@ public class TeleportService2 {
 			return false;
 		}
 		if (isArchDaevaEntryWorld(targetWorldId) && !player.isGM()
-				&& !meetsArchDaevaEntryRequirement(player, targetWorldId)) {
+			&& !meetsArchDaevaEntryRequirement(player, targetWorldId)) {
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_CANNOT_MOVE_TO_AIRPORT_NEED_FINISH_QUEST);
 			return false;
 		}
@@ -835,16 +864,17 @@ public class TeleportService2 {
 	/**
 	 * 根据主手武器皮肤解析机器人信息。
 	 * Resolves robot info from the main-hand weapon skin.
+	 *
 	 * @param player 玩家 / Player
 	 * @return 机器人信息 / Robot info
 	 */
 	public static RobotInfo getRobotInfo(Player player) {
-		ItemTemplate template = player.getEquipment().getMainHandWeapon().getItemSkinTemplate();
-		return DataManager.ROBOT_DATA.getRobotInfo(template.getRobotId());
+		return SM_PLAYER_SPAWN.getRobotInfo(player);
 	}
 
 	private static void sendWorldSwitchMessage(Player player, int oldWorld, int newWorld, boolean enteredInstance) {
-		if ((enteredInstance) && (oldWorld != newWorld) && (!WorldMapType.getWorld(newWorld).isPersonal())) {
+		WorldMapType worldMapType = WorldMapType.getWorld(newWorld);
+		if (enteredInstance && oldWorld != newWorld && worldMapType != null && !worldMapType.isPersonal()) {
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_INSTANCE_DUNGEON_OPENED_FOR_SELF(newWorld));
 		}
 
@@ -856,9 +886,10 @@ public class TeleportService2 {
 	/**
 	 * 向玩家打开传送员地图界面。
 	 * Opens the teleporter map UI for the player.
-	 * @param player 玩家 / Player
+	 *
+	 * @param player         玩家 / Player
 	 * @param targetObjectId 目标对象 ID / Target object id
-	 * @param npcId 传送员 NPC ID / Teleporter NPC id
+	 * @param npcId          传送员 NPC ID / Teleporter NPC id
 	 */
 	public static void showMap(Player player, int targetObjectId, int npcId) {
 		if (player.isInFlyingState()) {
@@ -879,6 +910,7 @@ public class TeleportService2 {
 	/**
 	 * 按 NPC ID 获取传送员模板。
 	 * Returns teleporter template by NPC id.
+	 *
 	 * @param npcId NPC ID / NPC id
 	 * @return 传送员模板 / Teleporter template
 	 */
@@ -889,8 +921,9 @@ public class TeleportService2 {
 	/**
 	 * 将玩家传送到 Kisk（复活石）位置。
 	 * Teleports the player to a Kisk location.
+	 *
 	 * @param player 玩家 / Player
-	 * @param kisk Kisk 位置 / Kisk position
+	 * @param kisk   Kisk 位置 / Kisk position
 	 */
 	public static void moveToKiskLocation(Player player, WorldPosition kisk) {
 		int mapId = kisk.getMapId();
@@ -904,6 +937,7 @@ public class TeleportService2 {
 	/**
 	 * 按种族将玩家送入监狱地图。
 	 * Teleports the player into the race prison map.
+	 *
 	 * @param player 玩家 / Player
 	 */
 	public static void teleportToPrison(Player player) {
@@ -917,8 +951,9 @@ public class TeleportService2 {
 	/**
 	 * 将玩家传送到当前世界中指定 NPC 的生成点。
 	 * Teleports the player to the spawn of the given NPC in the current world.
+	 *
 	 * @param player 玩家 / Player
-	 * @param npcId NPC ID / NPC id
+	 * @param npcId  NPC ID / NPC id
 	 */
 	public static void teleportToNpc(Player player, int npcId) {
 		int worldId = player.getWorldId();
@@ -930,19 +965,23 @@ public class TeleportService2 {
 		teleportToNpc(player, searchResult);
 	}
 
-	/** 将 GM 传送到存活 NPC 当前坐标，避免移动 NPC 的静态刷怪点不可达。
-	 * Teleports a GM to the live NPC's current position, since moving NPCs' static spawn spots may be unreachable. */
+	/**
+	 * 将 GM 传送到存活 NPC 当前坐标，避免移动 NPC 的静态刷怪点不可达。
+	 * Teleports a GM to the live NPC's current position, since moving NPCs' static spawn spots may be unreachable.
+	 */
 	public static void teleportToNpc(Player player, Npc npc) {
 		if (player == null || npc == null || !npc.isSpawned()
-				|| (npc.getLifeStats() != null && npc.getLifeStats().isAlreadyDead())) {
+			|| (npc.getLifeStats() != null && npc.getLifeStats().isAlreadyDead())) {
 			return;
 		}
 		teleportTo(player, npc.getWorldId(), npc.getInstanceId(), npc.getX(), npc.getY(), npc.getZ(),
-				npc.getHeading());
+			npc.getHeading());
 	}
 
-	/** 将玩家传送到已解析的 NPC 刷新点，确保地图标记与 GM 传送目标一致。
-	 * Teleports the player to a resolved NPC spawn spot, keeping map markers and GM teleport targets consistent. */
+	/**
+	 * 将玩家传送到已解析的 NPC 刷新点，确保地图标记与 GM 传送目标一致。
+	 * Teleports the player to a resolved NPC spawn spot, keeping map markers and GM teleport targets consistent.
+	 */
 	public static void teleportToNpc(Player player, SpawnSearchResult searchResult) {
 		if (player == null || searchResult == null || searchResult.getSpot() == null) {
 			return;
@@ -967,6 +1006,7 @@ public class TeleportService2 {
 	/**
 	 * 向客户端发送绑定点（回城点）信息。
 	 * Sends bind-point info to the client.
+	 *
 	 * @param player 玩家 / Player
 	 */
 	public static void sendSetBindPoint(Player player) {
@@ -991,7 +1031,8 @@ public class TeleportService2 {
 	/**
 	 * 将玩家送回绑定点；可选是否走完整传送流程。
 	 * Moves the player to bind point; optionally via full teleport.
-	 * @param player 玩家 / Player
+	 *
+	 * @param player      玩家 / Player
 	 * @param useTeleport {@code true} 使用传送路径 / {@code true} to use teleport path
 	 */
 	public static void moveToBindLocation(Player player, boolean useTeleport) {
@@ -1026,9 +1067,10 @@ public class TeleportService2 {
 	/**
 	 * 将玩家传送到副本出口；无配置时回绑定点。
 	 * Teleports the player to instance exit; falls back to bind point.
-	 * @param player 玩家 / Player
+	 *
+	 * @param player  玩家 / Player
 	 * @param worldId 副本世界 ID / Instance world id
-	 * @param race 玩家种族 / Player race
+	 * @param race    玩家种族 / Player race
 	 */
 	public static void moveToInstanceExit(Player player, int worldId, Race race) {
 		player.getController().cancelCurrentSkill();
@@ -1056,28 +1098,30 @@ public class TeleportService2 {
 	/**
 	 * 登出时处理敌对地图（阿斯泰拉/诺斯珀德）的位置修正。
 	 * On logout, corrects position when on the opposite-race map (Iluma/Norsvold).
+	 *
 	 * @param player 玩家 / Player
 	 */
 	public static void onLogOutOppositeMap(Player player) {
 		switch (player.getWorldId()) {
-		case 210100000: // Iluma.
-			if (player.getCommonData().getRace() == Race.ASMODIANS) {
-				TeleportService2.teleportTo(player, 220110000, 1813.9795f, 1982.6705f, 199.1976f, (byte) 52);
-			}
-			break;
-		case 220110000: // Norsvold.
-			if (player.getCommonData().getRace() == Race.ELYOS) {
-				TeleportService2.teleportTo(player, 210100000, 1417.6694f, 1282.3623f, 336.125f, (byte) 8);
-			}
-			break;
+			case 210100000: // Iluma.
+				if (player.getCommonData().getRace() == Race.ASMODIANS) {
+					TeleportService2.teleportTo(player, 220110000, 1813.9795f, 1982.6705f, 199.1976f, (byte) 52);
+				}
+				break;
+			case 220110000: // Norsvold.
+				if (player.getCommonData().getRace() == Race.ELYOS) {
+					TeleportService2.teleportTo(player, 210100000, 1417.6694f, 1282.3623f, 336.125f, (byte) 8);
+				}
+				break;
 		}
 	}
 
 	/**
 	 * 获取副本出口模板。
 	 * Returns instance-exit template.
+	 *
 	 * @param worldId 世界 ID / World id
-	 * @param race 阵营 / Race
+	 * @param race    阵营 / Race
 	 * @return 出口模板 / exit template
 	 */
 	public static InstanceExit getInstanceExit(int worldId, Race race) {
@@ -1087,6 +1131,7 @@ public class TeleportService2 {
 	/**
 	 * 获取副本复活起点模板。
 	 * Returns instance revive start-point template.
+	 *
 	 * @param worldId 世界 ID / World id
 	 * @return 复活起点 / revive start point
 	 */
@@ -1097,9 +1142,10 @@ public class TeleportService2 {
 	/**
 	 * 获取世界复活起点模板。
 	 * Returns world revive start-point template.
+	 *
 	 * @param worldId 世界 ID / World id
-	 * @param race 阵营 / Race
-	 * @param level 等级 / Level
+	 * @param race    阵营 / Race
+	 * @param level   等级 / Level
 	 * @return 复活起点 / revive start point
 	 */
 	public static WorldReviveStartPoints getReviveWorldStartPoints(int worldId, Race race, int level) {
@@ -1109,9 +1155,10 @@ public class TeleportService2 {
 	/**
 	 * 使用传送卷轴按门户名传送到目标世界。
 	 * Uses a portal scroll to teleport by portal name into a world.
-	 * @param player 玩家 / Player
+	 *
+	 * @param player     玩家 / Player
 	 * @param portalName 门户名称 / Portal name
-	 * @param worldId 目标世界 ID / Target world id
+	 * @param worldId    目标世界 ID / Target world id
 	 */
 	public static void useTeleportScroll(Player player, String portalName, int worldId) {
 		PortalScroll template = DataManager.PORTAL2_DATA.getPortalScroll(portalName);
@@ -1158,7 +1205,8 @@ public class TeleportService2 {
 	/**
 	 * 将玩家置于世界复活起点（无完整传送动画）。
 	 * Places the player at the world revive start point (no full teleport anim).
-	 * @param player 玩家 / Player
+	 *
+	 * @param player  玩家 / Player
 	 * @param worldId 世界 ID / World id
 	 */
 	public static void teleportWorldStartPoint(Player player, int worldId) {
@@ -1172,20 +1220,14 @@ public class TeleportService2 {
 			moveToBindLocation(player, false);
 		}
 
-		PacketSendUtility.sendPacket(player, new SM_CHANNEL_INFO(player.getPosition()));
-		PacketSendUtility.sendPacket(player, new SM_PLAYER_SPAWN(player));
-		player.setPortAnimation(4);
-		PacketSendUtility.sendPacket(player, new SM_PLAYER_INFO(player, false));
-
-		if (player.isLegionMember()) {
-			PacketSendUtility.broadcastPacketToLegion(player.getLegion(), new SM_LEGION_UPDATE_MEMBER(player, 0, ""));
-		}
+		sendSpawnPacketsAndNotifyLegion(player);
 	}
 
 	/**
 	 * 将玩家置于副本复活起点。
 	 * Places the player at the instance revive start point.
-	 * @param player 玩家 / Player
+	 *
+	 * @param player  玩家 / Player
 	 * @param worldId 世界 ID / World id
 	 */
 	public static void teleportInstanceStartPoint(Player player, int worldId) {
@@ -1194,25 +1236,19 @@ public class TeleportService2 {
 		InstanceReviveStartPoints revivePoint = getReviveInstanceStartPoints(worldId);
 
 		if (revivePoint != null) {
-			TeleportService2.teleportTo(player, worldId, worldId, revivePoint.getX(), revivePoint.getY(), revivePoint.getY(), (byte) revivePoint.getY());
+			teleportTo(player, worldId, worldId, revivePoint.getX(), revivePoint.getY(), revivePoint.getZ(), revivePoint.getH());
 		} else {
 			moveToBindLocation(player, false);
 		}
 
-		PacketSendUtility.sendPacket(player, new SM_CHANNEL_INFO(player.getPosition()));
-		PacketSendUtility.sendPacket(player, new SM_PLAYER_SPAWN(player));
-		player.setPortAnimation(4);
-		PacketSendUtility.sendPacket(player, new SM_PLAYER_INFO(player, false));
-
-		if (player.isLegionMember()) {
-			PacketSendUtility.broadcastPacketToLegion(player.getLegion(), new SM_LEGION_UPDATE_MEMBER(player, 0, ""));
-		}
+		sendSpawnPacketsAndNotifyLegion(player);
 	}
 
 	/**
 	 * 切换玩家所在频道（同图不同实例线）。
 	 * Changes the player's channel (same map, different instance line).
-	 * @param player 玩家 / Player
+	 *
+	 * @param player  玩家 / Player
 	 * @param channel 频道序号（0 起） / Channel index (0-based)
 	 */
 	public static void changeChannel(Player player, int channel) {
@@ -1229,9 +1265,10 @@ public class TeleportService2 {
 	/**
 	 * 处理 A-Station 跨服进出位置同步。
 	 * Handles A-Station cross-server enter/leave position sync.
-	 * @param player 玩家 / Player
+	 *
+	 * @param player   玩家 / Player
 	 * @param serverId 对方服务器 ID / Peer server id
-	 * @param back {@code true} 返回本服 / {@code true} return to home server
+	 * @param back     {@code true} 返回本服 / {@code true} return to home server
 	 */
 	public static void moveAStation(Player player, int serverId, boolean back) {
 		if (back) {
@@ -1264,6 +1301,7 @@ public class TeleportService2 {
 	/**
 	 * 从数据库加载并同步玩家变形状态到客户端。
 	 * Loads and syncs player transformation state to the client.
+	 *
 	 * @param player 玩家 / Player
 	 */
 	public static void playerTransformation(Player player) {
@@ -1277,6 +1315,7 @@ public class TeleportService2 {
 	 * Archdaeva Transformation 5.1: If a player is under one of the following effects, and uses a
 	 * "Teleport/Fly/Hotspot/Return Scroll" or admin command "goto/movetoplayer/movetonpc",
 	 * the skill panel linked to this effect must not disappear.
+	 *
 	 * @param player 玩家 / Player
 	 */
 	public static void archdaevaTransformation(Player player) {
@@ -1290,45 +1329,10 @@ public class TeleportService2 {
 	 * Instance + Event Transformation: If a player is under one of the following effects, and uses a
 	 * "Teleport/Fly/Hotspot/Return Scroll" or admin command "goto/movetoplayer/movetonpc",
 	 * the skill panel linked to this effect must not disappear.
+	 *
 	 * @param player 玩家 / Player
 	 */
 	public static void instanceTransformation(Player player) {
 		TransformPanelSync.syncInstanceEventPanels(player);
-	}
-
-	/**
-	 * 按种族将玩家传送到主城（无特殊动画）。
-	 * Teleports the player to capital city by race (no special animation).
-	 * @param player 玩家 / Player
-	 */
-	public static void teleportToCapital(Player player) {
-		switch (player.getRace()) {
-		case ELYOS:
-			TeleportService2.teleportTo(player, WorldMapType.SANCTUM.getId(), 1322, 1511, 568);
-			break;
-		case ASMODIANS:
-			TeleportService2.teleportTo(player, WorldMapType.PANDAEMONIUM.getId(), 1679, 1400, 195);
-			break;
-		default:
-			break;
-		}
-	}
-
-	/**
-	 * 按种族将玩家传送到主城（跳跃动画）。
-	 * Teleports the player to capital city by race (jump animation).
-	 * @param player 玩家 / Player
-	 */
-	public static void teleportToCapital2(Player player) {
-		switch (player.getRace()) {
-		case ELYOS:
-			teleportTo(player, WorldMapType.SANCTUM.getId(), 1322, 1511, 568, player.getHeading(), TeleportAnimation.JUMP_ANIMATION);
-			break;
-		case ASMODIANS:
-			teleportTo(player, WorldMapType.PANDAEMONIUM.getId(), 1679, 1400, 195, player.getHeading(), TeleportAnimation.JUMP_ANIMATION);
-			break;
-		default:
-			break;
-		}
 	}
 }
