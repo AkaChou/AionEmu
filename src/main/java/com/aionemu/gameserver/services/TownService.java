@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.services;
 
-
 import com.aionemu.boot.i18n.I18n;
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.dao.TownDAO;
@@ -22,7 +21,6 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.ObjectProvider;
 
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -76,13 +74,10 @@ public class TownService {
 					if (address.getTownId() != 0) {
 						Race townRace = DataManager.NPC_DATA.getNpcTemplate(land.getManagerNpcId())
 							.getTribe() == TribeClass.GENERAL ? Race.ELYOS : Race.ASMODIANS;
-						if ((townRace == Race.ELYOS && !elyosTowns.containsKey(address.getTownId()))
-							|| (townRace == Race.ASMODIANS && !asmosTowns.containsKey(address.getTownId()))) {
+						Map<Integer, Town> raceTowns = townRace == Race.ELYOS ? elyosTowns : asmosTowns;
+						if (!raceTowns.containsKey(address.getTownId())) {
 							Town town = new Town(address.getTownId(), townRace);
-							switch (townRace) {
-								case ELYOS -> elyosTowns.put(town.getId(), town);
-								case ASMODIANS -> asmosTowns.put(town.getId(), town);
-							}
+							raceTowns.put(town.getId(), town);
 							DAOManager.getDAO(TownDAO.class).store(town);
 						}
 					}
@@ -96,16 +91,13 @@ public class TownService {
 	/**
 	 * 按城镇 ID 查询城镇（先天族后魔族）。
 	 * Looks up a town by id (Elyos first, then Asmodians).
-	 * town id
 	 *
+	 * @param townId 城镇 ID / town id
 	 * @return 城镇，可能为 null / town, may be null
 	 */
 	public Town getTownById(int townId) {
-		if (elyosTowns.containsKey(townId)) {
-			return elyosTowns.get(townId);
-		} else {
-			return asmosTowns.get(townId);
-		}
+		Town town = elyosTowns.get(townId);
+		return town != null ? town : asmosTowns.get(townId);
 	}
 
 	/**
@@ -117,11 +109,7 @@ public class TownService {
 	 */
 	public int getTownResidence(Player player) {
 		House house = player.getActiveHouse();
-		if (house == null) {
-			return 0;
-		} else {
-			return house.getAddress().getTownId();
-		}
+		return house != null ? house.getAddress().getTownId() : 0;
 	}
 
 	/**
@@ -132,25 +120,20 @@ public class TownService {
 	 * @return 城镇 ID，未命中为 0 / town id, or 0 if none
 	 */
 	public int getTownIdByPosition(Creature creature) {
-		if (creature instanceof Npc) {
-			if (((Npc) creature).getTownId() != 0) {
-				return ((Npc) creature).getTownId();
-			}
+		if (creature instanceof Npc npc && npc.getTownId() != 0) {
+			return npc.getTownId();
 		}
-		int townId = 0;
 		MapRegion region = creature.getPosition().getMapRegion();
 		if (region == null) {
 			return 0;
-		} else {
-			List<ZoneInstance> zones = region.getZones(creature);
-			for (ZoneInstance zone : zones) {
-				townId = zone.getTownId();
-				if (townId > 0) {
-					break;
-				}
+		}
+		for (ZoneInstance zone : region.getZones(creature)) {
+			int townId = zone.getTownId();
+			if (townId > 0) {
+				return townId;
 			}
 		}
-		return townId;
+		return 0;
 	}
 
 	/**
@@ -161,16 +144,17 @@ public class TownService {
 	 */
 	public void onEnterWorld(Player player) {
 		switch (player.getRace()) {
-			case ELYOS:
-				if (player.getWorldId() == 700010000)
+			case ELYOS -> {
+				if (player.getWorldId() == 700010000) {
 					PacketSendUtility.sendPacket(player, new SM_TOWNS_LIST(elyosTowns));
-				break;
-			case ASMODIANS:
-				if (player.getWorldId() == 710010000)
+				}
+			}
+			case ASMODIANS -> {
+				if (player.getWorldId() == 710010000) {
 					PacketSendUtility.sendPacket(player, new SM_TOWNS_LIST(asmosTowns));
-				break;
-			default:
-				break;
+				}
+			}
+			default -> {}
 		}
 	}
 }
