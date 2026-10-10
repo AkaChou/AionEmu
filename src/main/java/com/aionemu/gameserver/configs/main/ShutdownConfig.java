@@ -1,12 +1,17 @@
 package com.aionemu.gameserver.configs.main;
 
 import com.aionemu.commons.configuration.Property;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.stereotype.Component;
 
 /**
- * 服务器关闭/重启钩子相关配置。
- * Server shutdown/reboot hook related configuration.
+ * 服务器关闭/重启钩子相关配置，支持 Spring Boot ConfigurationProperties 与静态门面访问。
+ * Server shutdown/reboot hook related configuration supporting Spring Boot ConfigurationProperties and static facade access.
+ *
  * @author lord_rex
  */
+@Component
+@ConfigurationProperties(prefix = "gameserver.shutdown")
 public class ShutdownConfig {
 
 	/**
@@ -43,4 +48,44 @@ public class ShutdownConfig {
 	 */
 	@Property(key = "gameserver.shutdown.despnpcs", defaultValue = "false")
 	public static boolean DESPAWN_NPCS;
+
+	public int getMode() {
+		return HOOK_MODE;
+	}
+
+	public void setMode(int mode) {
+		HOOK_MODE = mode;
+	}
+
+	public int getDelay() {
+		return HOOK_DELAY;
+	}
+
+	public void setDelay(int delay) {
+		HOOK_DELAY = delay;
+	}
+
+	public int getInterval() {
+		return ANNOUNCE_INTERVAL;
+	}
+
+	public void setInterval(int interval) {
+		ANNOUNCE_INTERVAL = interval;
+	}
+
+	public boolean isSafereboot() {
+		return SAFE_REBOOT;
+	}
+
+	public void setSafereboot(boolean safereboot) {
+		SAFE_REBOOT = safereboot;
+	}
+
+	public boolean isDespnpcs() {
+		return DESPAWN_NPCS;
+	}
+
+	public void setDespnpcs(boolean despnpcs) {
+		DESPAWN_NPCS = despnpcs;
+	}
 }

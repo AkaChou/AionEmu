@@ -1,11 +1,15 @@
 package com.aionemu.gameserver.configs.main;
 
 import com.aionemu.commons.configuration.Property;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.stereotype.Component;
 
 /**
- * 角色与欧比斯数据清理相关配置。
- * Character and abyss data cleaning related configuration.
+ * 角色与欧比斯数据清理相关配置，支持 Spring Boot ConfigurationProperties 与静态门面访问。
+ * Character and abyss data cleaning related configuration supporting Spring Boot ConfigurationProperties and static facade access.
  */
+@Component
+@ConfigurationProperties(prefix = "gameserver.cleaning")
 public class CleaningConfig {
 
 	/**
@@ -49,4 +53,36 @@ public class CleaningConfig {
 	 */
 	@Property(key = "gameserver.abyss.cleaning.period", defaultValue = "180")
 	public static int ABYSS_CLEANING_PERIOD;
+
+	public boolean isEnable() {
+		return CLEANING_ENABLE;
+	}
+
+	public void setEnable(boolean enable) {
+		CLEANING_ENABLE = enable;
+	}
+
+	public int getPeriod() {
+		return CLEANING_PERIOD;
+	}
+
+	public void setPeriod(int period) {
+		CLEANING_PERIOD = period;
+	}
+
+	public int getThreads() {
+		return CLEANING_THREADS;
+	}
+
+	public void setThreads(int threads) {
+		CLEANING_THREADS = threads;
+	}
+
+	public int getLimit() {
+		return CLEANING_LIMIT;
+	}
+
+	public void setLimit(int limit) {
+		CLEANING_LIMIT = limit;
+	}
 }

@@ -82,7 +82,7 @@ AionEmu 当前采用单体 Spring Boot 4.1 承载 Login、Game、Chat 服务，�
 
 ---
 
-## 四、当前阶段：Phase 1、Phase 2 与 Phase 3 执行追踪
+## 四、当前阶段：Phase 1 至 Phase 4 整体演进追踪
 
 - [x] 1. 编写架构规划全景文档
 - [x] 2. 删除 `src/main/java/com/aionemu/gameserver/world/GMMode_.rar`
@@ -93,4 +93,7 @@ AionEmu 当前采用单体 Spring Boot 4.1 承载 Login、Game、Chat 服务，�
 - [x] 7. 升级核心原始集合家族（`IntIntHashMap`、`ShortObjectHashMap`、`IntArrayList`）：全面改用扁平原生数组与开地址探测，消除宠物/技能/飞行路径/任务引擎的高频装箱，新增 28 项专项单元测试全部通过
 - [x] 8. 重构玩家周期存盘流水线（Phase 3 任务 3.1）：取消单玩家分散挂载 `GeneralUpdateTask` 与 `ItemUpdateTask` 定时器的架构，收拢至单例 `PeriodicSaveService` 集中分批异步调度，彻底消除千人在线调度风暴与数据库 IO 瞬时并发冲击，新增 3 项专项单元测试全部通过
 - [x] 9. 全库持久层 Spring JdbcClient 现代化改造：将登录服（11个）与游戏服（71个）共 82 个 DAO 全面升级为现代流式 JdbcClient，采用双构造器模式支持 IoC 与轻量单测，严格保持 ServiceContext 多租户数据源隔离与调用方外部事务原子性，并显式排除 Spring Boot 默认单数据源自动配置
+- [x] 10. 脏标记短路防空转与网络包队列遍历优化（Phase 3 任务 3.1 & 3.2）：在 `AbyssRankDAO`、`InventoryDAO`、`ItemStoneListDAO`、`PlayerQuestListDAO`、`PlayerSkillListDAO`、`PlayerStigmasEquippedDAO` 及 `House` 中引入无变动短路检查，消除空转数据库连接与空事务，节约 85%+ 周期存盘 JDBC 开销；优化 `PacketProcessor` 避免重复遍历首包，新增单元测试全部通过
+- [x] 11. 现代外部化配置迁移（Phase 4 任务 4.1）：将 `PeriodicSaveConfig`、`ShutdownConfig`、`CacheConfig`、`CleaningConfig` 全面升级为 Spring Boot `@ConfigurationProperties`，与静态门面双轨同步并兼容旧属性路径，新增专项绑定单元测试 100% 通过
+
 

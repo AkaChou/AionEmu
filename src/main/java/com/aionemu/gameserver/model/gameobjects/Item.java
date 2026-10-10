@@ -2,6 +2,7 @@ package com.aionemu.gameserver.model.gameobjects;
 
 import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
+
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -38,6 +39,7 @@ import lombok.Setter;
 /**
  * 物品游戏对象。
  * Item game object.
+ *
  * @author ATracer, Wakizashi, xTz
  */
 @Slf4j
@@ -48,6 +50,7 @@ public class Item extends AionObject implements IExpirable, StatOwner {
 	/**
 	 * 返回随机数量（历史访问器名，保留以兼容既有调用）。
 	 * Returns the random-roll count (legacy accessor name kept for existing callers).
+	 *
 	 * @return 随机数量 / random count
 	 */
 	public int getRandomCount() {
@@ -57,6 +60,7 @@ public class Item extends AionObject implements IExpirable, StatOwner {
 	/**
 	 * 是否强化增幅（历史访问器名，保留以兼容既有调用）。
 	 * Whether the item is amplified (legacy accessor name kept for existing callers).
+	 *
 	 * @return 增幅时为 true / true when amplified
 	 */
 	public boolean isAmplified() {
@@ -66,6 +70,7 @@ public class Item extends AionObject implements IExpirable, StatOwner {
 	/**
 	 * 是否可强化（历史访问器名，保留以兼容既有调用）。
 	 * Whether the item can be enhanced (legacy accessor name kept for existing callers).
+	 *
 	 * @return 可强化时为 true / true when enhanceable
 	 */
 	public boolean isEnhance() {
@@ -93,7 +98,9 @@ public class Item extends AionObject implements IExpirable, StatOwner {
 	 */
 	private final ItemTemplate itemTemplate;
 	private ItemTemplate itemSkinTemplate;
-	/** 返回融合物品模板 / Returns the fusioned item template */
+	/**
+	 * 返回融合物品模板 / Returns the fusioned item template
+	 */
 	private ItemTemplate fusionedItemTemplate;
 	/**
 	 * 返回是否已装备。
@@ -122,14 +129,18 @@ public class Item extends AionObject implements IExpirable, StatOwner {
 	 * Returns the godstone.
 	 */
 	private GodStone godStone;
-	/** 返回伊迪安石 / Returns the idian stone */
+	/**
+	 * 返回伊迪安石 / Returns the idian stone
+	 */
 	private IdianStone idianStone;
 	/**
 	 * 是否已灵魂绑定。
 	 * Whether the item is soul bound.
 	 */
 	private boolean isSoulBound = false;
-	/** 获取物品位置。 / Returns the item location. */
+	/**
+	 * 获取物品位置。 / Returns the item location.
+	 */
 	private int itemLocation;
 	/**
 	 * 返回强化等级。
@@ -137,49 +148,77 @@ public class Item extends AionObject implements IExpirable, StatOwner {
 	 * 强化等级 / the enchantLevel
 	 */
 	private int enchantLevel;
-	/** 设置过期时间。 / Sets the expire time. */
+	/**
+	 * 设置过期时间。 / Sets the expire time.
+	 */
 	private int expireTime = 0;
 	/**
 	 * 返回临时交换时间。
 	 * Returns the temporary exchange time.
 	 */
 	private int temporaryExchangeTime = 0;
-	/** 设置回购价格 / Sets the repurchase price */
+	/**
+	 * 设置回购价格 / Sets the repurchase price
+	 */
 	private long repurchasePrice;
-	/** 返回激活次数 / Returns the activation count */
-	private int activationCount = 0;
-	/** 返回调谐信息 / Returns the conditioning info */
+	/**
+	 * 返回激活次数 / Returns the activation count
+	 */
+	private int activationCount;
+	/**
+	 * 返回调谐信息 / Returns the conditioning info
+	 */
 	private ChargeInfo conditioningInfo;
-	/** 返回加成编号 / Returns the bonus number */
+	/**
+	 * 返回加成编号 / Returns the bonus number
+	 */
 	private int bonusNumber = 0;
 	private List<StatFunction> currentModifiers;
-	/** 返回随机属性 / Returns the random stats */
+	/**
+	 * 返回随机属性 / Returns the random stats
+	 */
 	private RandomStats randomStats;
 	private int rndCount;
 	public static int MAX_BASIC_STONES = 6;
-	/** 设置包装计数 / Sets the wrappable count */
+	/**
+	 * 设置包装计数 / Sets the wrappable count
+	 */
 	private int wrappableCount;
 	/**
 	 * 返回是否已打包。
 	 * Returns whether the item is packed.
 	 */
 	private boolean isPacked = false;
-	/** 返回授权等级 / Returns the authorize */
+	/**
+	 * 返回授权等级 / Returns the authorize
+	 */
 	private int authorize;
-	/** 设置注能 / Sets the amplification */
+	/**
+	 * 设置注能 / Sets the amplification
+	 */
 	private boolean amplification = false;
-	/** 设置注能技能 / Sets the amplification skill */
+	/**
+	 * 设置注能技能 / Sets the amplification skill
+	 */
 	private int amplificationSkill = 0;
 	private int SkinSkill = 0;
 	private boolean luna_reskin = false;
-	/** 返回减免等级 / Returns the reduction level */
+	/**
+	 * 返回减免等级 / Returns the reduction level
+	 */
 	private int ReductionLevel = 0;
-	/** 返回解除封印标记 / Returns the unseal flag */
+	/**
+	 * 返回解除封印标记 / Returns the unseal flag
+	 */
 	private int unSeal = 0;
 	private boolean canEnhance;
-	/** 返回强化技能 ID / Returns the enhance skill id */
+	/**
+	 * 返回强化技能 ID / Returns the enhance skill id
+	 */
 	private int enhanceSkillId;
-	/** 返回强化等级 / Returns the enhance enchant level */
+	/**
+	 * 返回强化等级 / Returns the enhance enchant level
+	 */
 	private int enhanceEnchantLevel;
 
 	public Item(int objId, ItemTemplate itemTemplate) {
@@ -208,11 +247,11 @@ public class Item extends AionObject implements IExpirable, StatOwner {
 	}
 
 	public Item(int objId, int itemId, long itemCount, int itemColor, int colorExpires, String itemCreator,
-			int expireTime, int activationCount, boolean isEquipped, boolean isSoulBound, long equipmentSlot,
-			int itemLocation, int enchant, int enchantBonus, int itemSkin, int fusionedItem, int optionalSocket,
-			int optionalFusionSocket, int charge, int randomBonus, int rndCount, int wrappableCount, boolean isPacked,
-			int authorize, boolean amplification, int amplificationSkill, int SkinSkill, boolean lunaReskin,
-			int reuctionLevel, int unSeal, boolean isEnhance, int enhanceSkillId, int enhanceEnchantLevel) {
+				int expireTime, int activationCount, boolean isEquipped, boolean isSoulBound, long equipmentSlot,
+				int itemLocation, int enchant, int enchantBonus, int itemSkin, int fusionedItem, int optionalSocket,
+				int optionalFusionSocket, int charge, int randomBonus, int rndCount, int wrappableCount, boolean isPacked,
+				int authorize, boolean amplification, int amplificationSkill, int SkinSkill, boolean lunaReskin,
+				int reuctionLevel, int unSeal, boolean isEnhance, int enhanceSkillId, int enhanceEnchantLevel) {
 		super(objId);
 		this.itemTemplate = DataManager.ITEM_DATA.getItemTemplate(itemId);
 		this.itemCount = itemCount;
@@ -245,7 +284,7 @@ public class Item extends AionObject implements IExpirable, StatOwner {
 		}
 		if (fusionedItemTemplate != null) {
 			if (!itemTemplate.isCanFuse() || !itemTemplate.isTwoHandWeapon() || !fusionedItemTemplate.isCanFuse()
-					|| !fusionedItemTemplate.isTwoHandWeapon()) {
+				|| !fusionedItemTemplate.isTwoHandWeapon()) {
 				this.fusionedItemTemplate = null;
 				this.optionalFusionSocket = 0;
 			}
@@ -261,7 +300,7 @@ public class Item extends AionObject implements IExpirable, StatOwner {
 		int setId = itemTemplate.getRandomBonusId();
 		if (setId > 0) {
 			RandomBonusResult bonus = DataManager.ITEM_RANDOM_BONUSES.getRandomModifiers(StatBonusType.INVENTORY,
-					setId);
+				setId);
 			if (bonus != null) {
 				bonusNumber = bonus.templateNumber();
 				randomStats = new RandomStats(itemTemplate.getRandomBonusId(), bonusNumber);
@@ -294,6 +333,7 @@ public class Item extends AionObject implements IExpirable, StatOwner {
 	/**
 	 * 返回物品制作者。
 	 * Returns the item creator.
+	 *
 	 * @return 物品制作者 / item creator
 	 */
 	public String getItemCreator() {
@@ -334,6 +374,7 @@ public class Item extends AionObject implements IExpirable, StatOwner {
 	/**
 	 * 返回物品外观模板。
 	 * Returns the item appearance template.
+	 *
 	 * @return 外观模板 / the itemAppearanceTemplate
 	 */
 	public ItemTemplate getItemSkinTemplate() {
@@ -359,6 +400,7 @@ public class Item extends AionObject implements IExpirable, StatOwner {
 	/**
 	 * 返回物品颜色。
 	 * Returns the item color.
+	 *
 	 * @return 物品颜色 / the itemColor
 	 */
 	public int getItemColor() {
@@ -384,6 +426,7 @@ public class Item extends AionObject implements IExpirable, StatOwner {
 	/**
 	 * 设置物品颜色。
 	 * Sets the item color.
+	 *
 	 * @param itemColor 要设置的物品颜色 / the itemColor to set
 	 */
 	public void setItemColor(int itemColor) {
@@ -403,7 +446,9 @@ public class Item extends AionObject implements IExpirable, StatOwner {
 		setPersistentState(PersistentState.UPDATE_REQUIRED);
 	}
 
-	/** 返回 free count / Returns the free count */
+	/**
+	 * 返回 free count / Returns the free count
+	 */
 	public long getFreeCount() {
 		return itemTemplate.getMaxStackCount() - itemCount;
 	}
@@ -411,6 +456,7 @@ public class Item extends AionObject implements IExpirable, StatOwner {
 	/**
 	 * 设置物品数量。
 	 * Sets the item count.
+	 *
 	 * @param itemCount 要设置的物品数量 / the itemCount to set
 	 */
 	public void setItemCount(long itemCount) {
@@ -441,7 +487,7 @@ public class Item extends AionObject implements IExpirable, StatOwner {
 		if (count <= 0) {
 			return 0;
 		}
-		long removeCount = count >= itemCount ? itemCount : count;
+		long removeCount = Math.min(count, itemCount);
 		this.itemCount -= removeCount;
 		if (itemCount == 0 && !this.itemTemplate.isKinah()) {
 			setPersistentState(PersistentState.DELETED);
@@ -454,6 +500,7 @@ public class Item extends AionObject implements IExpirable, StatOwner {
 	/**
 	 * 设置是否已装备。
 	 * Sets whether the item is equipped.
+	 *
 	 * @param isEquipped 要设置的装备状态 / the isEquipped to set
 	 */
 	public void setEquipped(boolean isEquipped) {
@@ -461,7 +508,9 @@ public class Item extends AionObject implements IExpirable, StatOwner {
 		setPersistentState(PersistentState.UPDATE_REQUIRED);
 	}
 
-	/** 返回 equipment slot integer / Returns the equipment slot integer */
+	/**
+	 * 返回 equipment slot integer / Returns the equipment slot integer
+	 */
 	public int getEquipmentSlotInteger() {
 		return (int) equipmentSlot;
 	}
@@ -469,6 +518,7 @@ public class Item extends AionObject implements IExpirable, StatOwner {
 	/**
 	 * 设置装备槽位。
 	 * Sets the equipment slot.
+	 *
 	 * @param equipmentSlot 要设置的装备槽位 / the equipmentSlot to set
 	 */
 	public void setEquipmentSlot(long equipmentSlot) {
@@ -498,7 +548,9 @@ public class Item extends AionObject implements IExpirable, StatOwner {
 		return fusionStones;
 	}
 
-	/** 返回融合魔石数量 / Returns the fusion stones size */
+	/**
+	 * 返回融合魔石数量 / Returns the fusion stones size
+	 */
 	public int getFusionStonesSize() {
 		if (fusionStones == null) {
 			return 0;
@@ -506,7 +558,9 @@ public class Item extends AionObject implements IExpirable, StatOwner {
 		return fusionStones.size();
 	}
 
-	/** 返回物品魔石数量 / Returns the item stones size */
+	/**
+	 * 返回物品魔石数量 / Returns the item stones size
+	 */
 	public int getItemStonesSize() {
 		if (manaStones == null) {
 			return 0;
@@ -532,24 +586,27 @@ public class Item extends AionObject implements IExpirable, StatOwner {
 	/**
 	 * 检查魔石（不初始化列表）。
 	 * Checks the manastones without initialization.
+	 *
 	 * @return 魔石数量 / manastone count
 	 */
 	public boolean hasManaStones() {
-		return manaStones != null && manaStones.size() > 0;
+		return manaStones != null && !manaStones.isEmpty();
 	}
 
 	/**
 	 * 检查融合魔石（不初始化列表）。
 	 * Checks the fusion stones without initialization.
+	 *
 	 * @return 融合魔石数量 / fusion stone count
 	 */
 	public boolean hasFusionStones() {
-		return fusionStones != null && fusionStones.size() > 0;
+		return fusionStones != null && !fusionStones.isEmpty();
 	}
 
 	/**
 	 * 是否拥有伊迪安石。
 	 * Whether the item has an Idian stone.
+	 *
 	 * @return 是否拥有伊迪安石 / whether Idian stone
 	 */
 	public boolean hasIdianStone() {
@@ -559,6 +616,7 @@ public class Item extends AionObject implements IExpirable, StatOwner {
 	/**
 	 * 是否拥有神石。
 	 * Whether the item has a godstone.
+	 *
 	 * @return 是否拥有神石 / whether godstone
 	 */
 	public boolean hasGodStone() {
@@ -568,6 +626,7 @@ public class Item extends AionObject implements IExpirable, StatOwner {
 	/**
 	 * 检查物品是否安装了指定神石。
 	 * Checks whether the given godstone is installed.
+	 *
 	 * @param itemId 物品 ID / item id
 	 * @return 是否已安装 / whether installed
 	 */
@@ -584,6 +643,7 @@ public class Item extends AionObject implements IExpirable, StatOwner {
 	/**
 	 * 设置强化等级。
 	 * Sets the enchant level.
+	 *
 	 * @param enchantLevel 要设置的强化等级 / the enchantLevel to set
 	 */
 	public void setEnchantLevel(int enchantLevel) {
@@ -596,44 +656,48 @@ public class Item extends AionObject implements IExpirable, StatOwner {
 	 */
 	public void setPersistentState(PersistentState persistentState) {
 		switch (persistentState) {
-		case DELETED:
-			if (this.persistentState == PersistentState.NEW) {
-				this.persistentState = PersistentState.NOACTION;
-			} else {
-				this.persistentState = PersistentState.DELETED;
-			}
-			break;
-		case UPDATE_REQUIRED:
-			if (this.persistentState == PersistentState.NEW) {
+			case DELETED:
+				if (this.persistentState == PersistentState.NEW) {
+					this.persistentState = PersistentState.NOACTION;
+				} else {
+					this.persistentState = PersistentState.DELETED;
+				}
 				break;
-			}
-		default:
-			this.persistentState = persistentState;
+			case UPDATE_REQUIRED:
+				if (this.persistentState == PersistentState.NEW) {
+					break;
+				}
+			default:
+				this.persistentState = persistentState;
 		}
 	}
 
-	/** 设置物品位置。 / Sets the item location. */
+	/**
+	 * 设置物品位置。 / Sets the item location.
+	 */
 	public void setItemLocation(int storageType) {
 		this.itemLocation = storageType;
 		setPersistentState(PersistentState.UPDATE_REQUIRED);
 	}
 
-	/** 获取物品掩码。 / Returns the item mask. */
+	/**
+	 * 获取物品掩码。 / Returns the item mask.
+	 */
 	public int getItemMask() {
 		return itemTemplate.getMask();
 	}
 
-	private boolean isSoulBound(Player player) {
-		return ItemRestrictions.isSoulBoundFor(this, player);
-	}
-
-	/** 设置灵魂绑定 / Sets the soul bound */
+	/**
+	 * 设置灵魂绑定 / Sets the soul bound
+	 */
 	public void setSoulBound(boolean isSoulBound) {
 		this.isSoulBound = isSoulBound;
 		setPersistentState(PersistentState.UPDATE_REQUIRED);
 	}
 
-	/** 获取装备类型。 / Returns the equipment type. */
+	/**
+	 * 获取装备类型。 / Returns the equipment type.
+	 */
 	public EquipType getEquipmentType() {
 		if (itemTemplate.isStigma()) {
 			return EquipType.STIGMA;
@@ -641,42 +705,56 @@ public class Item extends AionObject implements IExpirable, StatOwner {
 		return itemTemplate.getEquipmentType();
 	}
 
-	/** 返回字符串表示。 / Returns string representation. */
+	/**
+	 * 返回字符串表示。 / Returns string representation.
+	 */
 	@Override
 	public String toString() {
 		return "Item [itemId=" + itemTemplate.getTemplateId() + " equipmentSlot=" + equipmentSlot + ", godStone="
-				+ godStone + ", isEquipped=" + isEquipped + ", itemColor=" + itemColor + ", itemCount=" + itemCount
-				+ ", itemLocation=" + itemLocation + ", itemTemplate=" + itemTemplate + ", manaStones=" + manaStones
-				+ ", persistentState=" + persistentState + "]";
+			+ godStone + ", isEquipped=" + isEquipped + ", itemColor=" + itemColor + ", itemCount=" + itemCount
+			+ ", itemLocation=" + itemLocation + ", itemTemplate=" + itemTemplate + ", manaStones=" + manaStones
+			+ ", persistentState=" + persistentState + "]";
 	}
 
-	/** 返回物品 ID / Returns the item id */
+	/**
+	 * 返回物品 ID / Returns the item id
+	 */
 	public int getItemId() {
 		return itemTemplate.getTemplateId();
 	}
 
-	/** 返回名称 ID / Returns the name id */
+	/**
+	 * 返回名称 ID / Returns the name id
+	 */
 	public int getNameId() {
 		return itemTemplate.getNameId();
 	}
 
-	/** 是否为合成物品 / Whether fusioned item */
+	/**
+	 * 是否为合成物品 / Whether fusioned item
+	 */
 	public boolean hasFusionedItem() {
 		return fusionedItemTemplate != null;
 	}
 
-	/** 返回融合物品 ID / Returns the fusioned item id */
+	/**
+	 * 返回融合物品 ID / Returns the fusioned item id
+	 */
 	public int getFusionedItemId() {
 		return fusionedItemTemplate != null ? fusionedItemTemplate.getTemplateId() : 0;
 	}
 
-	/** 设置融合物品 / Sets the fusioned item */
+	/**
+	 * 设置融合物品 / Sets the fusioned item
+	 */
 	public void setFusionedItem(ItemTemplate itemTemplate) {
 		fusionedItemTemplate = itemTemplate;
 		updateChargeInfo(0);
 	}
 
-	/** 返回插槽数 / Returns the sockets */
+	/**
+	 * 返回插槽数 / Returns the sockets
+	 */
 	public int getSockets(boolean isFusionItem) {
 		int numSockets;
 		if (itemTemplate.isWeapon() || itemTemplate.isArmor()) {
@@ -692,10 +770,7 @@ public class Item extends AionObject implements IExpirable, StatOwner {
 				numSockets = getItemTemplate().getManastoneSlots();
 				numSockets += hasOptionalSocket() ? getOptionalSocket() : 0;
 			}
-			if (numSockets < 6) {
-				return numSockets;
-			}
-			return 6;
+			return Math.min(numSockets, 6);
 		}
 		return 0;
 	}
@@ -703,6 +778,7 @@ public class Item extends AionObject implements IExpirable, StatOwner {
 	/**
 	 * 返回叠加会员权限后的有效掩码。
 	 * Returns the effective mask with membership permissions applied.
+	 *
 	 * @param player 玩家 / player
 	 * @return 有效掩码 / the mask
 	 */
@@ -720,6 +796,7 @@ public class Item extends AionObject implements IExpirable, StatOwner {
 	/**
 	 * 是否可存入个人仓库。
 	 * Whether the item is storable in the warehouse.
+	 *
 	 * @param player 玩家 / player
 	 * @return 是否可存入 / whether storable
 	 */
@@ -730,6 +807,7 @@ public class Item extends AionObject implements IExpirable, StatOwner {
 	/**
 	 * 是否可存入账号仓库。
 	 * Whether the item is storable in the account warehouse.
+	 *
 	 * @param player 玩家 / player
 	 * @return 是否可存入 / whether storable
 	 */
@@ -740,6 +818,7 @@ public class Item extends AionObject implements IExpirable, StatOwner {
 	/**
 	 * 是否可存入军团仓库。
 	 * Whether the item is storable in the legion warehouse.
+	 *
 	 * @param player 玩家 / player
 	 * @return 是否可存入 / whether storable
 	 */
@@ -750,6 +829,7 @@ public class Item extends AionObject implements IExpirable, StatOwner {
 	/**
 	 * 是否可交易。
 	 * Whether the item is tradeable.
+	 *
 	 * @param player 玩家 / player
 	 * @return 是否可交易 / whether tradeable
 	 */
@@ -760,6 +840,7 @@ public class Item extends AionObject implements IExpirable, StatOwner {
 	/**
 	 * 是否可改造外观。
 	 * Whether the item is remodelable.
+	 *
 	 * @param player 玩家 / player
 	 * @return 是否可改造 / whether remodelable
 	 */
@@ -770,6 +851,7 @@ public class Item extends AionObject implements IExpirable, StatOwner {
 	/**
 	 * 是否可出售。
 	 * Whether the item is sellable.
+	 *
 	 * @return 是否可出售 / whether sellable
 	 */
 	public boolean isSellable() {
@@ -779,13 +861,16 @@ public class Item extends AionObject implements IExpirable, StatOwner {
 	/**
 	 * 是否可提取欧比斯点数。
 	 * Whether AP can be extracted from the item.
+	 *
 	 * @return 是否可提取 AP / whether AP extract
 	 */
 	public boolean canApExtract() {
 		return ItemRestrictions.canApExtract(this);
 	}
 
-	/** 是否可以伊迪安。 / Whether idian. */
+	/**
+	 * 是否可以伊迪安。 / Whether idian.
+	 */
 	public boolean canIdian() {
 		return ItemRestrictions.canIdian(this);
 	}
@@ -793,6 +878,7 @@ public class Item extends AionObject implements IExpirable, StatOwner {
 	/**
 	 * 是否可以镶嵌神石。
 	 * Whether a godstone can be socketed.
+	 *
 	 * @return 是否可镶嵌 / whether socket godstone
 	 */
 	public boolean canSocketGodstone() {
@@ -802,18 +888,23 @@ public class Item extends AionObject implements IExpirable, StatOwner {
 	/**
 	 * 是否已注能。
 	 * Whether the item is amplified.
+	 *
 	 * @return 是否已注能 / whether amplified
 	 */
 	public boolean canAmplification() {
 		return ItemRestrictions.canAmplification(this);
 	}
 
-	/** 是否为高阶守护者物品 / Whether arch daeva item */
+	/**
+	 * 是否为高阶守护者物品 / Whether arch daeva item
+	 */
 	public boolean isArchDaevaItem() {
 		return ItemRestrictions.isArchDaevaItem(this);
 	}
 
-	/** 返回剩余过期时间 / Returns the expire time remaining */
+	/**
+	 * 返回剩余过期时间 / Returns the expire time remaining
+	 */
 	public int getExpireTimeRemaining() {
 		if (expireTime == 0) {
 			return 0;
@@ -832,7 +923,9 @@ public class Item extends AionObject implements IExpirable, StatOwner {
 		return temporaryExchangeTime - (int) (System.currentTimeMillis() / 1000);
 	}
 
-	/** 到期结束 / Expire end. */
+	/**
+	 * 到期结束 / Expire end.
+	 */
 	@Override
 	public void expireEnd(Player player) {
 		if (player == null) {
@@ -851,23 +944,25 @@ public class Item extends AionObject implements IExpirable, StatOwner {
 			if (storage != null && storage.getItemByObjId(getObjectId()) != null) {
 				storage.decreaseByObjectId(getObjectId(), getItemCount());
 				switch (i) {
-				case CUBE:
-					PacketSendUtility.sendPacket(player,
+					case CUBE:
+						PacketSendUtility.sendPacket(player,
 							new SM_SYSTEM_MESSAGE(1400034, new DescriptionId(getNameId())));
-					break;
-				case ACCOUNT_WAREHOUSE:
-				case REGULAR_WAREHOUSE:
-					PacketSendUtility.sendPacket(player,
+						break;
+					case ACCOUNT_WAREHOUSE:
+					case REGULAR_WAREHOUSE:
+						PacketSendUtility.sendPacket(player,
 							new SM_SYSTEM_MESSAGE(1400406, new DescriptionId(getNameId())));
-					break;
-				default:
-					break;
+						break;
+					default:
+						break;
 				}
 			}
 		}
 	}
 
-	/** 过期消息。 / Expire Message. */
+	/**
+	 * 过期消息。 / Expire Message.
+	 */
 	@Override
 	public void expireMessage(Player player, int time) {
 		if (player != null) {
@@ -875,7 +970,9 @@ public class Item extends AionObject implements IExpirable, StatOwner {
 		}
 	}
 
-	/** 返回充能点 / Returns the charge points. */
+	/**
+	 * 返回充能点 / Returns the charge points.
+	 */
 	public int getChargePoints() {
 		return conditioningInfo != null ? conditioningInfo.getChargePoints() : 0;
 	}
@@ -891,7 +988,9 @@ public class Item extends AionObject implements IExpirable, StatOwner {
 		return getChargePoints() > ChargeInfo.LEVEL1 ? 2 : 1;
 	}
 
-	/** 返回最大充能等级 / Returns the max charge level. */
+	/**
+	 * 返回最大充能等级 / Returns the max charge level.
+	 */
 	public int getChargeLevelMax() {
 		int thisChargeLevel = 0;
 		if (getImprovement() != null) {
@@ -904,12 +1003,16 @@ public class Item extends AionObject implements IExpirable, StatOwner {
 		return Math.max(thisChargeLevel, fusionedChargeLevel);
 	}
 
-	/** 是否立即过期 / Whether expire now */
+	/**
+	 * 是否立即过期 / Whether expire now
+	 */
 	public boolean canExpireNow() {
 		return true;
 	}
 
-	/** 返回强化信息 / Returns the improvement */
+	/**
+	 * 返回强化信息 / Returns the improvement
+	 */
 	public Improvement getImprovement() {
 		if (getItemTemplate().getImprovement() != null) {
 			return getItemTemplate().getImprovement();
@@ -920,12 +1023,16 @@ public class Item extends AionObject implements IExpirable, StatOwner {
 		return null;
 	}
 
-	/** 是否为鉴定物品 / Whether identify item */
+	/**
+	 * 是否为鉴定物品 / Whether identify item
+	 */
 	public boolean isIdentifyItem() {
 		return itemTemplate.isCloth();
 	}
 
-	/** 返回 current modifiers / Returns the current modifiers */
+	/**
+	 * 返回 current modifiers / Returns the current modifiers
+	 */
 	public List<StatFunction> getCurrentModifiers() {
 		if (currentModifiers == null) {
 			currentModifiers = new ArrayList<>();
@@ -933,18 +1040,24 @@ public class Item extends AionObject implements IExpirable, StatOwner {
 		return currentModifiers;
 	}
 
-	/** 设置 current modifiers / Sets the current modifiers */
+	/**
+	 * 设置 current modifiers / Sets the current modifiers
+	 */
 	public void setCurrentModifiers(List<StatFunction> currentModifiers) {
 		getCurrentModifiers().clear();
 		getCurrentModifiers().addAll(currentModifiers);
 	}
 
-	/** 设置随机属性数量 / Sets the random count */
+	/**
+	 * 设置随机属性数量 / Sets the random count
+	 */
 	public void setRandomCount(int rndCount) {
 		this.rndCount = rndCount;
 	}
 
-	/** 设置授权等级 / Sets the authorize */
+	/**
+	 * 设置授权等级 / Sets the authorize
+	 */
 	public void setAuthorize(int paramInt) {
 		authorize = paramInt;
 		setPersistentState(PersistentState.UPDATE_REQUIRED);
@@ -953,6 +1066,7 @@ public class Item extends AionObject implements IExpirable, StatOwner {
 	/**
 	 * 设置是否已打包。
 	 * Sets whether the item is packed.
+	 *
 	 * @param isPacked 要设置的打包状态 / the isPacked to set
 	 */
 	public void setPacked(boolean isPacked) {
@@ -960,17 +1074,23 @@ public class Item extends AionObject implements IExpirable, StatOwner {
 		setPersistentState(PersistentState.UPDATE_REQUIRED);
 	}
 
-	/** 设置物品外观技能。 / Sets the item skin skill. */
+	/**
+	 * 设置物品外观技能。 / Sets the item skin skill.
+	 */
 	public void setItemSkinSkill(int skill) {
 		this.SkinSkill = skill;
 	}
 
-	/** 获取物品外观技能。 / Returns the item skin skill. */
+	/**
+	 * 获取物品外观技能。 / Returns the item skin skill.
+	 */
 	public int getItemSkinSkill() {
 		return SkinSkill;
 	}
 
-	/** 设置 Luna 换肤 / Sets the luna reskin */
+	/**
+	 * 设置 Luna 换肤 / Sets the luna reskin
+	 */
 	public void setLunaReskin(boolean luna_reskin) {
 		this.luna_reskin = luna_reskin;
 	}
@@ -978,13 +1098,16 @@ public class Item extends AionObject implements IExpirable, StatOwner {
 	/**
 	 * 是否为 Luna 换肤。
 	 * Whether the item is a Luna reskin.
+	 *
 	 * @return 是否为 Luna 换肤 / whether luna reskin
 	 */
 	public boolean isLunaReskin() {
 		return luna_reskin;
 	}
 
-	/** 设置减免等级 / Sets the reduction level */
+	/**
+	 * 设置减免等级 / Sets the reduction level
+	 */
 	public void setReductionLevel(int paramInt) {
 		ReductionLevel = paramInt;
 		setPersistentState(PersistentState.UPDATE_REQUIRED);
@@ -993,19 +1116,24 @@ public class Item extends AionObject implements IExpirable, StatOwner {
 	/**
 	 * 是否已封印。
 	 * Whether the item is sealed.
+	 *
 	 * @return 是否已封印 / whether sealed
-	  */
+	 */
 	public boolean isSeal() {
 		return this.unSeal == 1;
 	}
 
-	/** 设置解除封印标记 / Sets the unseal flag */
+	/**
+	 * 设置解除封印标记 / Sets the unseal flag
+	 */
 	public void setUnSeal(int unSeal) {
 		this.unSeal = unSeal;
 		setPersistentState(PersistentState.UPDATE_REQUIRED);
 	}
 
-	/** 设置是否强化 / Sets whether enhanced */
+	/**
+	 * 设置是否强化 / Sets whether enhanced
+	 */
 	public void setIsEnhance(boolean canEnhance) {
 		this.canEnhance = canEnhance;
 	}

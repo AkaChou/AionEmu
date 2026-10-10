@@ -8,13 +8,16 @@ import lombok.Getter;
 /**
  * 自动队伍类型枚举。
  * Auto Group Type enumeration.
+ *
  * @author Rinzler (Encom)
  */
 
 @Getter
 public enum AutoGroupType {
 	// 战舰。 / DREDGION.
-	/** Baranath Dredgion / Baranath Dredgion */
+	/**
+	 * Baranath Dredgion / Baranath Dredgion
+	 */
 	BARANATH_DREDGION(1, 600000, 4) {
 		@Override
 		AutoInstance newAutoInstance() {
@@ -784,37 +787,51 @@ public enum AutoGroupType {
 		template = DataManager.AUTO_GROUP.getTemplateByInstaceMaskId(this.instanceMaskId);
 	}
 
-	/** 返回副本映射 ID / Returns the instance map id */
+	/**
+	 * 返回副本映射 ID / Returns the instance map id
+	 */
 	public int getInstanceMapId() {
 		return template.getInstanceId();
 	}
 
-	/** 返回名称 ID / Returns the name id */
+	/**
+	 * 返回名称 ID / Returns the name id
+	 */
 	public int getNameId() {
 		return template.getNameId();
 	}
 
-	/** 返回标题 ID / Returns the title id */
+	/**
+	 * 返回标题 ID / Returns the title id
+	 */
 	public int getTitleId() {
 		return template.getTitleId();
 	}
 
-	/** 获取最小等级。 / Returns the min level. */
+	/**
+	 * 获取最小等级。 / Returns the min level.
+	 */
 	public int getMinLevel() {
 		return template.getMinLvl();
 	}
 
-	/** 获取最大等级。 / Returns the max level. */
+	/**
+	 * 获取最大等级。 / Returns the max level.
+	 */
 	public int getMaxLevel() {
 		return template.getMaxLvl();
 	}
 
-	/** Whether 登记小队 / Whether register group */
+	/**
+	 * Whether 登记小队 / Whether register group
+	 */
 	public boolean hasRegisterGroup() {
 		return template.hasRegisterGroup();
 	}
 
-	/** Whether 登记 fast / Whether register fast */
+	/**
+	 * Whether 登记 fast / Whether register fast
+	 */
 	public boolean hasRegisterFast() {
 		return template.hasRegisterFast();
 	}
@@ -826,22 +843,30 @@ public enum AutoGroupType {
 		return template.hasSpecialPurpose();
 	}
 
-	/** Whether 登记 new / Whether register new */
+	/**
+	 * Whether 登记 new / Whether register new
+	 */
 	public boolean hasRegisterNew() {
 		return template.hasRegisterNew();
 	}
 
-	/** 包含 NPC ID / contain Npc Id. */
+	/**
+	 * 包含 NPC ID / contain Npc Id.
+	 */
 	public boolean containNpcId(int npcId) {
 		return template.getNpcIds().contains(npcId);
 	}
 
-	/** 返回 npc ids / Returns the npc ids */
+	/**
+	 * 返回 npc ids / Returns the npc ids
+	 */
 	public List<Integer> getNpcIds() {
 		return template.getNpcIds();
 	}
 
-	/** 是否为无畏舰。 / Whether dredgion. */
+	/**
+	 * 是否为无畏舰。 / Whether dredgion.
+	 */
 	public boolean isDredgion() {
 		return switch (this) {
 			case BARANATH_DREDGION, CHANTRA_DREDGION, TERATH_DREDGION -> true;
@@ -853,103 +878,75 @@ public enum AutoGroupType {
 	 * @return 是否为阿休纳塔尔无畏舰 / Whether asyunatar
 	 */
 	public boolean isAsyunatar() {
-		return switch (this) {
-			case ASHUNATAL_DREDGION -> true;
-			default -> false;
-		};
+		return this == ASHUNATAL_DREDGION;
 	}
 
 	/**
 	 * @return 是否为卡玛尔战场 / Whether kamar battlefield
 	 */
 	public boolean isKamar() {
-		return switch (this) {
-			case KAMAR_BATTLEFIELD -> true;
-			default -> false;
-		};
+		return this == KAMAR_BATTLEFIELD;
 	}
 
 	/**
 	 * @return 是否为吞噬奥菲丹桥 / Whether ophidan
 	 */
 	public boolean isOphidan() {
-		return switch (this) {
-			case ENGULFED_OPHIDAN_BRIDGE -> true;
-			default -> false;
-		};
+		return this == ENGULFED_OPHIDAN_BRIDGE;
 	}
 
 	/**
 	 * @return 是否为可疑奥菲丹桥 / Whether suspicious ophidan
 	 */
 	public boolean isSuspiciousOphidan() {
-		return switch (this) {
-			case OPHIDAN_WARPATH -> true;
-			default -> false;
-		};
+		return this == OPHIDAN_WARPATH;
 	}
 
 	/**
 	 * @return 是否为铁壁战线 / Whether bastion
 	 */
 	public boolean isBastion() {
-		return switch (this) {
-			case IRON_WALL_WARFRONT -> true;
-			default -> false;
-		};
+		return this == IRON_WALL_WARFRONT;
 	}
 
 	/**
 	 * @return 是否为 Idgel Dome / Whether idgel dome
 	 */
 	public boolean isIdgelDome() {
-		return switch (this) {
-			case IDGEL_DOME -> true;
-			default -> false;
-		};
+		return this == IDGEL_DOME;
 	}
 
 	/**
 	 * @return 是否为 Idgel Dome 地标 / Whether idgel dome landmark
 	 */
 	public boolean isIdgelDomeLandmark() {
-		return switch (this) {
-			case IDGEL_DOME_LANDMARK -> true;
-			default -> false;
-		};
+		return this == IDGEL_DOME_LANDMARK;
 	}
 
 	/**
 	 * @return 是否为黄金神庙训练所 / Whether hall of tenacity
 	 */
 	public boolean isHallOfTenacity() {
-		return switch (this) {
-			case HALL_OF_TENACITY -> true;
-			default -> false;
-		};
+		return this == HALL_OF_TENACITY;
 	}
 
 	/**
 	 * @return 是否为大竞技场训练营 / Whether grand arena training camp
 	 */
 	public boolean isGrandArenaTrainingCamp() {
-		return switch (this) {
-			case IDTM_LOBBY_P_01 -> true;
-			default -> false;
-		};
+		return this == IDTM_LOBBY_P_01;
 	}
 
 	/**
 	 * @return 是否为 IDRun 类型 / Whether id run
 	 */
 	public boolean isIDRun() {
-		return switch (this) {
-			case IDRUN -> true;
-			default -> false;
-		};
+		return this == IDRUN;
 	}
 
-	/** 按 mask id 返回 agt / Returns the agt by mask id */
+	/**
+	 * 按 mask id 返回 agt / Returns the agt by mask id
+	 */
 	public static AutoGroupType getAGTByMaskId(int instanceMaskId) {
 		for (AutoGroupType autoGroupsType : values()) {
 			if (autoGroupsType.getInstanceMaskId() == instanceMaskId) {
@@ -959,7 +956,9 @@ public enum AutoGroupType {
 		return null;
 	}
 
-	/** 获取自动队伍。 / Returns the auto group. */
+	/**
+	 * 获取自动队伍。 / Returns the auto group.
+	 */
 	public static AutoGroupType getAutoGroup(int level, int npcId) {
 		for (AutoGroupType agt : values()) {
 			if (agt.hasLevelPermit(level) && agt.containNpcId(npcId)) {
@@ -969,7 +968,9 @@ public enum AutoGroupType {
 		return null;
 	}
 
-	/** 按 world 返回 auto group / Returns the auto group by world */
+	/**
+	 * 按 world 返回 auto group / Returns the auto group by world
+	 */
 	public static AutoGroupType getAutoGroupByWorld(int level, int worldId) {
 		for (AutoGroupType agt : values()) {
 			if (agt.getInstanceMapId() == worldId && agt.hasLevelPermit(level)) {
@@ -979,7 +980,9 @@ public enum AutoGroupType {
 		return null;
 	}
 
-	/** 获取自动队伍。 / Returns the auto group. */
+	/**
+	 * 获取自动队伍。 / Returns the auto group.
+	 */
 	public static AutoGroupType getAutoGroup(int npcId) {
 		for (AutoGroupType agt : values()) {
 			if (agt.containNpcId(npcId)) {
@@ -989,21 +992,25 @@ public enum AutoGroupType {
 		return null;
 	}
 
-	/** 是否为单人 PvP 竞技场 / Whether pv p solo arena */
+	/**
+	 * 是否为单人 PvP 竞技场 / Whether pv p solo arena
+	 */
 	public boolean isPvPSoloArena() {
 		return switch (this) {
 			case ARENA_OF_DISCIPLINE_46_60_1, ARENA_OF_DISCIPLINE_46_60_2, ARENA_OF_DISCIPLINE_46_60_3,
-			     ARENA_OF_DISCIPLINE_61_65_1, ARENA_OF_DISCIPLINE_66_83_1 -> true;
+				 ARENA_OF_DISCIPLINE_61_65_1, ARENA_OF_DISCIPLINE_66_83_1 -> true;
 			default -> false;
 		};
 	}
 
-	/** 是否为单人 PvP 修炼场 / Whether training pv p solo arena */
+	/**
+	 * 是否为单人 PvP 修炼场 / Whether training pv p solo arena
+	 */
 	public boolean isTrainingPvPSoloArena() {
 		return switch (this) {
 			case DISCIPLINE_TRAINING_GROUNDS_46_60_1, DISCIPLINE_TRAINING_GROUNDS_46_60_2,
-			     DISCIPLINE_TRAINING_GROUNDS_46_60_3, DISCIPLINE_TRAINING_GROUNDS_61_65_1,
-			     DISCIPLINE_TRAINING_GROUNDS_66_83_1 -> true;
+				 DISCIPLINE_TRAINING_GROUNDS_46_60_3, DISCIPLINE_TRAINING_GROUNDS_61_65_1,
+				 DISCIPLINE_TRAINING_GROUNDS_66_83_1 -> true;
 			default -> false;
 		};
 	}
@@ -1014,7 +1021,7 @@ public enum AutoGroupType {
 	public boolean isPvPFFAArena() {
 		return switch (this) {
 			case ARENA_OF_CHAOS_46_60_1, ARENA_OF_CHAOS_46_60_2, ARENA_OF_CHAOS_46_60_3, ARENA_OF_CHAOS_61_65_1,
-			     ARENA_OF_CHAOS_66_83_1 -> true;
+				 ARENA_OF_CHAOS_66_83_1 -> true;
 			default -> false;
 		};
 	}
@@ -1025,7 +1032,7 @@ public enum AutoGroupType {
 	public boolean isTrainingPvPFFAArena() {
 		return switch (this) {
 			case CHAOS_TRAINING_GROUNDS_46_60_1, CHAOS_TRAINING_GROUNDS_46_60_2, CHAOS_TRAINING_GROUNDS_46_60_3,
-			     CHAOS_TRAINING_GROUNDS_61_65_1, CHAOS_TRAINING_GROUNDS_66_83_1 -> true;
+				 CHAOS_TRAINING_GROUNDS_61_65_1, CHAOS_TRAINING_GROUNDS_66_83_1 -> true;
 			default -> false;
 		};
 	}
@@ -1036,9 +1043,9 @@ public enum AutoGroupType {
 	public boolean isTrainingHarmonyArena() {
 		return switch (this) {
 			case HARMONY_TRAINING_GROUNDS_46_60_1, HARMONY_TRAINING_GROUNDS_46_60_2, HARMONY_TRAINING_GROUNDS_46_60_3,
-			     HARMONY_TRAINING_GROUNDS_61_65_1, HARMONY_TRAINING_GROUNDS_66_83_1, UNITY_TRAINING_GROUNDS_46_60_1,
-			     UNITY_TRAINING_GROUNDS_46_60_2, UNITY_TRAINING_GROUNDS_46_60_3, UNITY_TRAINING_GROUNDS_61_65_1,
-			     UNITY_TRAINING_GROUNDS_66_83_1 -> true;
+				 HARMONY_TRAINING_GROUNDS_61_65_1, HARMONY_TRAINING_GROUNDS_66_83_1, UNITY_TRAINING_GROUNDS_46_60_1,
+				 UNITY_TRAINING_GROUNDS_46_60_2, UNITY_TRAINING_GROUNDS_46_60_3, UNITY_TRAINING_GROUNDS_61_65_1,
+				 UNITY_TRAINING_GROUNDS_66_83_1 -> true;
 			default -> false;
 		};
 	}
@@ -1049,7 +1056,7 @@ public enum AutoGroupType {
 	public boolean isHarmonyArena() {
 		return switch (this) {
 			case ARENA_OF_HARMONY_46_60_1, ARENA_OF_HARMONY_46_60_2, ARENA_OF_HARMONY_46_60_3, ARENA_OF_HARMONY_61_65_1,
-			     ARENA_OF_HARMONY_66_83_1 -> true;
+				 ARENA_OF_HARMONY_66_83_1 -> true;
 			default -> false;
 		};
 	}
@@ -1058,18 +1065,18 @@ public enum AutoGroupType {
 	 * @return 是否为荣耀竞技场 / Whether glory arena
 	 */
 	public boolean isGloryArena() {
-        return switch (this) {
-            case ARENA_OF_GLORY_46_60_1, ARENA_OF_GLORY_61_65_1, ARENA_OF_GLORY_66_83_1 -> true;
-            default -> false;
-        };
-    }
+		return switch (this) {
+			case ARENA_OF_GLORY_46_60_1, ARENA_OF_GLORY_61_65_1, ARENA_OF_GLORY_66_83_1 -> true;
+			default -> false;
+		};
+	}
 
 	/**
 	 * @return 是否为 PvP 竞技场 / Whether pvp arena
 	 */
 	public boolean isPvpArena() {
 		return isHarmonyArena() || isTrainingHarmonyArena() || isTrainingPvPFFAArena() || isPvPFFAArena()
-				|| isTrainingPvPSoloArena() || isPvPSoloArena();
+			|| isTrainingPvPSoloArena() || isPvPSoloArena();
 	}
 
 	/**
@@ -1080,7 +1087,9 @@ public enum AutoGroupType {
 		return level >= getMinLevel() && level <= getMaxLevel();
 	}
 
-	/** 获取自动副本。 / Returns the auto instance. */
+	/**
+	 * 获取自动副本。 / Returns the auto instance.
+	 */
 	public AutoInstance getAutoInstance() {
 		return newAutoInstance();
 	}
