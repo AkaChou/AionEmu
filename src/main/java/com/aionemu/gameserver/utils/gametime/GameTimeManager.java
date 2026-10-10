@@ -76,7 +76,7 @@ public class GameTimeManager {
 	 * @return 保存成功则为 true / True if stored
 	 */
 	public static boolean saveTime() {
-		return DAOManager.getDAO(ServerVariablesDAO.class).store("time", getGameTime().getTime());
+		return safeServerVariablesDao().store("time", getGameTime().getTime());
 	}
 
 	/**
