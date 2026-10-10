@@ -1,18 +1,13 @@
 package com.aionemu.gameserver.services.events.bg;
 
-import com.aionemu.gameserver.lifecycle.GameFeatureServices;
-
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
-import java.util.*;
-import java.util.concurrent.ScheduledFuture;
+import java.util.List;
 
-import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.team2.group.PlayerGroup;
 import com.aionemu.gameserver.services.abyss.AbyssPointsService;
 import com.aionemu.gameserver.services.item.ItemService;
-import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
@@ -21,27 +16,7 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
  *
  * @author Rinzler (Encom)
  */
-public class TwoTeamSmallBg extends Battleground {
-	/**
-	 * 额外回合/超时任务。 / Extra round/timeout task.
-	 */
-	private final ScheduledFuture<?> extraTask = null;
-	/**
-	 * 队伍索引 → 回合胜场。 / Team index → round wins.
-	 */
-	private final Map<Integer, Integer> roundResults = new HashMap<>();
-	/**
-	 * 最大回合数。 / Maximum rounds.
-	 */
-	private int maxRounds = 3;
-	/**
-	 * 已完成回合数。 / Rounds completed.
-	 */
-	private int roundsDone = 0;
-	/**
-	 * 是否已触发结束。 / Whether end already called.
-	 */
-	private boolean endCalled = false;
+public class TwoTeamSmallBg extends TwoTeamRoundBg {
 
 	/**
 	 * 初始化小型双队战场名称、规模、地图与出生点。
@@ -779,16 +754,6 @@ public class TwoTeamSmallBg extends Battleground {
 		map72.addSpawn(new SpawnPosition(497f, 483f, 674f));
 		map72.setKillZ(650f);
 		super.maps.add(map72);
-		// 现场派对音乐厅。 / Live Party Concert Hall.
-		// BattlegroundMap map73 = new BattlegroundMap(600080000);
-		// map73.addSpawn(new SpawnPosition(1543f, 1529f, 565f));
-		// map73.addSpawn(new SpawnPosition(1543f, 1493f, 565f));
-		// map73.addSpawn(new SpawnPosition(1521f, 1492f, 565f));
-		// map73.addSpawn(new SpawnPosition(1521f, 1530f, 565f));
-		// map73.addSpawn(new SpawnPosition(1509f, 1511f, 565f));
-		// map73.addSpawn(new SpawnPosition(1503f, 1541f, 566f));
-		// map73.setKillZ(540f);
-		// super.maps.add(map73);
 	}
 
 	/**
@@ -837,336 +802,125 @@ public class TwoTeamSmallBg extends Battleground {
 	}
 
 	/**
-	 * 处理死亡：检测回合胜负。
-	 * Handles death: detect round winner.
+	 * 锦标赛对局时长（秒）。
+	 * Tournament match length in seconds.
 	 *
-	 * @param player       死亡玩家 / dead player
-	 * @param lastAttacker 最后攻击者 / last attacker
+	 * @return 165 秒 / 165 seconds
 	 */
-	public void onDie(final Player player, Creature lastAttacker) {
-		super.onDieDefault(player, lastAttacker);
-		if (lastAttacker instanceof Player killer && !killer.getObjectId().equals(player.getObjectId())) {
-			if (killer.getPlayerGroup2() != null) {
-				int deadCounter = 0;
-				for (Player pl : player.getPlayerGroup2().getMembers()) {
-					if (pl.getLifeStats().isAlreadyDead() || pl.isAfk()) {
-						deadCounter++;
-					}
-				}
-				if (deadCounter >= player.getPlayerGroup2().size()) {
-					endTwoTeamMatch(false);
-				}
-			}
-		}
+	@Override
+	protected int tournamentMatchLength() {
+		return 165;
 	}
 
+	/**
+	 * 判定回合胜负时把挂机玩家计入“已死亡”。
+	 * AFK players count as dead when detecting the round winner.
+	 */
 	@Override
-	public boolean createTournament(List<List<Player>> teams) {
-		if (!super.createGroups(teams)) {
-			return false;
-		}
-		this.maxRounds = 5;
-		this.description = "Your must defeat the opposing team. There is " + maxRounds
-			+ " rounds. The team with the most won round, win's !!!";
-		this.matchLength = 165;
-		startMatch();
+	protected boolean isAfkCountedAsDead() {
 		return true;
 	}
 
 	/**
-	 * 处理玩家离开小型双队战场。
-	 * Handles a player leaving small two-team BG.
+	 * 按结算排名与等级段发放小型双队奖励。
+	 * Grants small two-team rewards by settlement rank and level band.
 	 *
-	 * @param player   玩家 / player
-	 * @param isLogout 是否登出 / whether logout
-	 * @param isAfk    是否挂机 / whether AFK
+	 * @param pl   玩家 / player
+	 * @param rank 结算排名 / settlement rank
 	 */
-	public void onLeave(Player player, boolean isLogout, boolean isAfk) {
-		super.onLeaveDefault(player, isLogout, isAfk);
-		for (PlayerGroup group : super.getGroups()) {
-			if (group.size() < 1) {
-				endTwoTeamMatch(false);
-				break;
+	@Override
+	protected void rewardPlayer(Player pl, MatchRank rank) {
+		byte level = pl.getLevel();
+		switch (rank) {
+			case DRAW -> {
+				// 若为“平局”则奖励玩家 / Reward Player if "DRAW"
+				if (level >= 10 && level <= 50) {
+					ItemService.addItem(pl, 186000030, 2); // 金牌。 / Gold Medal.
+					ItemService.addItem(pl, 186000031, 2); // 银牌。 / Silver Medal.
+					ItemService.addItem(pl, 166030005, 1); // 淬炼溶液。 / Tempering Solution.
+					ItemService.addItem(pl, 166020000, 1); // 欧米伽强化石。 / Omega Enchantment Stone.
+					ItemService.addItem(pl, 188100335, 50); // 强化石粉末。 / Enchantment Stone Dust.
+					AbyssPointsService.addAp(pl, 500);
+					AbyssPointsService.addGp(pl, 2);
+				}
+				if (level >= 51 && level <= 65) {
+					ItemService.addItem(pl, 186000096, 2); // 白金徽章。 / Platinum Medal.
+					ItemService.addItem(pl, 186000147, 2); // 秘银徽章。 / Mithril Medal.
+					ItemService.addItem(pl, 186000223, 2); // 荣誉秘银徽章。 / Honorable Mithril Medal.
+					ItemService.addItem(pl, 166030005, 1); // 淬炼溶液。 / Tempering Solution.
+					ItemService.addItem(pl, 166020000, 1); // 欧米伽强化石。 / Omega Enchantment Stone.
+					ItemService.addItem(pl, 188100335, 100); // 强化石粉末。 / Enchantment Stone Dust.
+					AbyssPointsService.addAp(pl, 1500);
+					AbyssPointsService.addGp(pl, 5);
+				}
+				if (level >= 66 && level <= 83) {
+					ItemService.addItem(pl, 166030005, 1); // 淬炼溶液。 / Tempering Solution.
+					ItemService.addItem(pl, 166020000, 1); // 欧米伽强化石。 / Omega Enchantment Stone.
+					AbyssPointsService.addAp(pl, 2500);
+					AbyssPointsService.addGp(pl, 15);
+				}
 			}
-		}
-	}
-
-	/**
-	 * 开始新回合：重置并重新布置双方。
-	 * Starts a new round: reset and re-position both teams.
-	 */
-	private void startNewRound() {
-		super.setStartStamp(System.currentTimeMillis());
-		synchronized (super.getGroups()) {
-			for (final PlayerGroup group : super.getGroups()) {
-				for (final Player pl : group.getMembers()) {
-					GameThreadPoolServices.threadPoolManager().schedule(() -> {
-						if (!pl.isAfk()) {
-							preparePlayer(pl, 8000, false);
-							SpawnPosition pos = getSpawnPositions().get(group.getBgIndex());
-							if (pos != null) {
-								TeleportService2.teleportTo(pl, getMapId(), pos.getX(), pos.getY(), pos.getZ());
-							}
-						}
-					}, 5000);
+			case WINNER -> {
+				// 若为“胜者”则奖励玩家 / Reward Player if "WINNER"
+				if (level >= 10 && level <= 50) {
+					ItemService.addItem(pl, 186000030, 5); // 金牌。 / Gold Medal.
+					ItemService.addItem(pl, 186000031, 5); // 银牌。 / Silver Medal.
+					ItemService.addItem(pl, 166030005, 2); // 淬炼溶液。 / Tempering Solution.
+					ItemService.addItem(pl, 166020000, 2); // 欧米伽强化石。 / Omega Enchantment Stone.
+					ItemService.addItem(pl, 188100335, 100); // 强化石粉末。 / Enchantment Stone Dust.
+					ItemService.addItem(pl, 188710113, 1); // 无限制礼包（1 天）。 / No Limits Pack "1 Day"
+					AbyssPointsService.addAp(pl, 1000);
+					AbyssPointsService.addGp(pl, 5);
+				}
+				if (level >= 51 && level <= 65) {
+					ItemService.addItem(pl, 186000096, 5); // 白金徽章。 / Platinum Medal.
+					ItemService.addItem(pl, 186000147, 5); // 秘银徽章。 / Mithril Medal.
+					ItemService.addItem(pl, 186000223, 5); // 荣誉秘银徽章。 / Honorable Mithril Medal.
+					ItemService.addItem(pl, 166030005, 2); // 淬炼溶液。 / Tempering Solution.
+					ItemService.addItem(pl, 166020000, 2); // 欧米伽强化石。 / Omega Enchantment Stone.
+					ItemService.addItem(pl, 188100335, 200); // 强化石粉末。 / Enchantment Stone Dust.
+					ItemService.addItem(pl, 188710113, 1); // 无限制礼包（1 天）。 / No Limits Pack "1 Day"
+					AbyssPointsService.addAp(pl, 3000);
+					AbyssPointsService.addGp(pl, 10);
+				}
+				if (level >= 66 && level <= 83) {
+					ItemService.addItem(pl, 166030005, 1); // 淬炼溶液。 / Tempering Solution.
+					ItemService.addItem(pl, 166020000, 1); // 欧米伽强化石。 / Omega Enchantment Stone.
+					AbyssPointsService.addAp(pl, 5000);
+					AbyssPointsService.addGp(pl, 25);
+				}
+			}
+			case LOSER -> {
+				// 若为“败者”则奖励玩家 / Reward Player if "LOSER"
+				if (level >= 10 && level <= 50) {
+					ItemService.addItem(pl, 186000030, 2); // 金牌。 / Gold Medal.
+					ItemService.addItem(pl, 186000031, 2); // 银牌。 / Silver Medal.
+					ItemService.addItem(pl, 166030005, 1); // 淬炼溶液。 / Tempering Solution.
+					ItemService.addItem(pl, 166020000, 1); // 欧米伽强化石。 / Omega Enchantment Stone.
+					ItemService.addItem(pl, 188100335, 50); // 强化石粉末。 / Enchantment Stone Dust.
+					AbyssPointsService.addAp(pl, 500);
+					AbyssPointsService.addGp(pl, 3);
+				}
+				if (level >= 51 && level <= 65) {
+					ItemService.addItem(pl, 186000096, 2); // 白金徽章。 / Platinum Medal.
+					ItemService.addItem(pl, 186000147, 2); // 秘银徽章。 / Mithril Medal.
+					ItemService.addItem(pl, 186000223, 2); // 荣誉秘银徽章。 / Honorable Mithril Medal.
+					ItemService.addItem(pl, 166030005, 1); // 淬炼溶液。 / Tempering Solution.
+					ItemService.addItem(pl, 166020000, 1); // 欧米伽强化石。 / Omega Enchantment Stone.
+					ItemService.addItem(pl, 188100335, 50); // 强化石粉末。 / Enchantment Stone Dust.
+					AbyssPointsService.addAp(pl, 1500);
+					AbyssPointsService.addGp(pl, 7);
+				}
+				if (level >= 66 && level <= 83) {
+					ItemService.addItem(pl, 186000236, 2); // 血之印记。 / Blood Mark.
+					ItemService.addItem(pl, 186000414, 2); // 血之徽章。 / Blood Medal.
+					ItemService.addItem(pl, 166030005, 1); // 淬炼溶液。 / Tempering Solution.
+					ItemService.addItem(pl, 166020000, 1); // 欧米伽强化石。 / Omega Enchantment Stone.
+					ItemService.addItem(pl, 188100335, 50); // 强化石粉末。 / Enchantment Stone Dust.
+					AbyssPointsService.addAp(pl, 2500);
+					AbyssPointsService.addGp(pl, 15);
 				}
 			}
 		}
-		for (Player pl : super.getSpectators()) {
-			super.createTimer(pl, getMatchLength());
-		}
-		super.setExpireTask(GameThreadPoolServices.threadPoolManager().schedule(() -> endTwoTeamMatch(true), getMatchLength() * 1000L));
-		super.startBackgroundTask();
-		GameThreadPoolServices.threadPoolManager().schedule(() -> {
-			endCalled = false;
-			for (PlayerGroup group : getGroups()) {
-				if (group.size() < 1) {
-					endTwoTeamMatch(false);
-				}
-			}
-		}, 1000);
-	}
-
-	/**
-	 * 为指定小队累计回合胜场。
-	 * Adds a round win for the given group.
-	 *
-	 * @param group 胜方小队 / winning group
-	 */
-	private void addRoundWin(PlayerGroup group) {
-		if (group == null) {
-			return;
-		}
-		roundResults.merge(group.getBgIndex(), 1, Integer::sum);
-	}
-
-	/**
-	 * 判定本回合胜方小队。
-	 * Determines the current round winning group.
-	 *
-	 * @return 回合胜方小队 / winning group
-	 */
-	private PlayerGroup getRoundWinner() {
-		PlayerGroup winner = null;
-		Map<PlayerGroup, Integer> deadCounts = new HashMap<>();
-		for (PlayerGroup group : super.getGroups()) {
-			int deadCounter = 0;
-			for (Player pl : group.getMembers()) {
-				if (pl.getLifeStats().isAlreadyDead() || pl.isAfk()) {
-					deadCounter++;
-				}
-			}
-			deadCounts.put(group, deadCounter);
-		}
-		int winDeadCount = Collections.min(deadCounts.values());
-		int winnerCount = 0;
-		for (Integer deadCount : deadCounts.values()) {
-			if (deadCount == winDeadCount) {
-				winnerCount++;
-			}
-		}
-		if (winnerCount == 1) {
-			for (Map.Entry<PlayerGroup, Integer> entry : deadCounts.entrySet()) {
-				if (entry.getValue() == winDeadCount) {
-					winner = entry.getKey();
-				}
-			}
-		}
-		return winner;
-	}
-
-	/**
-	 * 获取整场胜方小队。
-	 * Returns overall match winning group.
-	 *
-	 * @return 整场胜方小队 / winning group
-	 */
-	private PlayerGroup getWinner() {
-		PlayerGroup winner = null;
-		int drawPoints = 0;
-		for (Map.Entry<Integer, Integer> entry : roundResults.entrySet()) {
-			if (winner == null && entry.getValue() > drawPoints) {
-				winner = super.getGroups().get(entry.getKey());
-			} else if (winner != null && roundResults.get(winner.getBgIndex()) < entry.getValue()) {
-				winner = super.getGroups().get(entry.getKey());
-			} else if (winner != null && Objects.equals(roundResults.get(winner.getBgIndex()), entry.getValue())) {
-				drawPoints = roundResults.get(winner.getBgIndex());
-				winner = null;
-			}
-		}
-		return winner;
-	}
-
-	/**
-	 * 结束双队对局并结算奖励。
-	 * Ends the two-team match and settles rewards.
-	 *
-	 * @param isDraw 是否平局 / whether draw
-	 */
-	private void endTwoTeamMatch(boolean isDraw) {
-		if (endCalled) {
-			return;
-		}
-		endCalled = true;
-		for (PlayerGroup group : super.getGroups()) {
-			for (Player pl : group.getMembers()) {
-				if (!pl.isAfk()) {
-					super.freezeNoEnd(pl);
-				}
-			}
-		}
-		super.onEndFirstDefault();
-		PlayerGroup roundWinner = getRoundWinner();
-		if (roundWinner != null) {
-			isDraw = false;
-		}
-		if (roundsDone < maxRounds) {
-			roundsDone++;
-			if (!isDraw) {
-				addRoundWin(roundWinner);
-			}
-		}
-		if (roundsDone < maxRounds) {
-			if (!isDraw) {
-				if (roundWinner != null) {
-					for (PlayerGroup group : super.getGroups()) {
-						for (Player pl : group.getMembers()) {
-							super.scheduleAnnouncement(pl,
-								GameFeatureServices.ladderService().getNameByIndex(roundWinner.getBgIndex())
-									+ " Win's the round!",
-								0);
-						}
-					}
-					super.specAnnounce(
-						GameFeatureServices.ladderService().getNameByIndex(roundWinner.getBgIndex()) + " Win's the round!");
-					startNewRound();
-					return;
-				}
-			} else {
-				for (PlayerGroup group : super.getGroups()) {
-					for (Player pl : group.getMembers()) {
-						super.scheduleAnnouncement(pl, "Draw!", 0);
-					}
-				}
-				super.specAnnounce("Draw!");
-			}
-		}
-		if (extraTask != null) {
-			extraTask.cancel(true);
-		}
-		PlayerGroup winner = getWinner();
-		if (winner == null) {
-			for (PlayerGroup group : super.getGroups()) {
-				for (Player pl : group.getMembers()) {
-					super.scheduleAnnouncement(pl, "Draw!", 0);
-					byte level = pl.getLevel();
-					// 若为“平局”则奖励玩家 / Reward Player if "DRAW"
-					if (level >= 10 && level <= 50) {
-						ItemService.addItem(pl, 186000030, 2); // 金牌。 / Gold Medal.
-						ItemService.addItem(pl, 186000031, 2); // 银牌。 / Silver Medal.
-						ItemService.addItem(pl, 166030005, 1); // 淬炼溶液。 / Tempering Solution.
-						ItemService.addItem(pl, 166020000, 1); // 欧米伽强化石。 / Omega Enchantment Stone.
-						ItemService.addItem(pl, 188100335, 50); // 强化石粉末。 / Enchantment Stone Dust.
-						AbyssPointsService.addAp(pl, 500);
-						AbyssPointsService.addGp(pl, 2);
-					}
-					if (level >= 51 && level <= 65) {
-						ItemService.addItem(pl, 186000096, 2); // 白金徽章。 / Platinum Medal.
-						ItemService.addItem(pl, 186000147, 2); // 秘银徽章。 / Mithril Medal.
-						ItemService.addItem(pl, 186000223, 2); // 荣誉秘银徽章。 / Honorable Mithril Medal.
-						ItemService.addItem(pl, 166030005, 1); // 淬炼溶液。 / Tempering Solution.
-						ItemService.addItem(pl, 166020000, 1); // 欧米伽强化石。 / Omega Enchantment Stone.
-						ItemService.addItem(pl, 188100335, 100); // 强化石粉末。 / Enchantment Stone Dust.
-						AbyssPointsService.addAp(pl, 1500);
-						AbyssPointsService.addGp(pl, 5);
-					}
-					if (level >= 66 && level <= 83) {
-						ItemService.addItem(pl, 166030005, 1); // 淬炼溶液。 / Tempering Solution.
-						ItemService.addItem(pl, 166020000, 1); // 欧米伽强化石。 / Omega Enchantment Stone.
-						AbyssPointsService.addAp(pl, 2500);
-						AbyssPointsService.addGp(pl, 15);
-
-					}
-				}
-			}
-			super.specAnnounce("Draw!");
-		} else {
-			for (PlayerGroup group : super.getGroups()) {
-				if (Objects.equals(group.getTeamId(), winner.getTeamId())) {
-					for (Player pl : group.getMembers()) {
-						super.playerWinMatch(pl, super.K_VALUE / 2);
-						byte level = pl.getLevel();
-						// 若为“胜者”则奖励玩家 / Reward Player if "WINNER"
-						if (level >= 10 && level <= 50) {
-							ItemService.addItem(pl, 186000030, 5); // 金牌。 / Gold Medal.
-							ItemService.addItem(pl, 186000031, 5); // 银牌。 / Silver Medal.
-							ItemService.addItem(pl, 166030005, 2); // 淬炼溶液。 / Tempering Solution.
-							ItemService.addItem(pl, 166020000, 2); // 欧米伽强化石。 / Omega Enchantment Stone.
-							ItemService.addItem(pl, 188100335, 100); // 强化石粉末。 / Enchantment Stone Dust.
-							ItemService.addItem(pl, 188710113, 1); // 无限制礼包（1 天）。 / No Limits Pack "1 Day"
-							AbyssPointsService.addAp(pl, 1000);
-							AbyssPointsService.addGp(pl, 5);
-						}
-						if (level >= 51 && level <= 65) {
-							ItemService.addItem(pl, 186000096, 5); // 白金徽章。 / Platinum Medal.
-							ItemService.addItem(pl, 186000147, 5); // 秘银徽章。 / Mithril Medal.
-							ItemService.addItem(pl, 186000223, 5); // 荣誉秘银徽章。 / Honorable Mithril Medal.
-							ItemService.addItem(pl, 166030005, 2); // 淬炼溶液。 / Tempering Solution.
-							ItemService.addItem(pl, 166020000, 2); // 欧米伽强化石。 / Omega Enchantment Stone.
-							ItemService.addItem(pl, 188100335, 200); // 强化石粉末。 / Enchantment Stone Dust.
-							ItemService.addItem(pl, 188710113, 1); // 无限制礼包（1 天）。 / No Limits Pack "1 Day"
-							AbyssPointsService.addAp(pl, 3000);
-							AbyssPointsService.addGp(pl, 10);
-						}
-						if (level >= 66 && level <= 83) {
-							ItemService.addItem(pl, 166030005, 1); // 淬炼溶液。 / Tempering Solution.
-							ItemService.addItem(pl, 166020000, 1); // 欧米伽强化石。 / Omega Enchantment Stone.
-							AbyssPointsService.addAp(pl, 5000);
-							AbyssPointsService.addGp(pl, 25);
-						}
-						super.scheduleAnnouncement(pl, "Your team wins the match!", 0);
-						super.scheduleAnnouncement(pl, "You have received rewards!", 3000);
-					}
-				} else {
-					for (Player pl : group.getMembers()) {
-						super.playerLoseMatch(pl, -super.K_VALUE / 4);
-						byte level = pl.getLevel();
-						// 若为“败者”则奖励玩家 / Reward Player if "LOSER"
-						if (level >= 10 && level <= 50) {
-							ItemService.addItem(pl, 186000030, 2); // 金牌。 / Gold Medal.
-							ItemService.addItem(pl, 186000031, 2); // 银牌。 / Silver Medal.
-							ItemService.addItem(pl, 166030005, 1); // 淬炼溶液。 / Tempering Solution.
-							ItemService.addItem(pl, 166020000, 1); // 欧米伽强化石。 / Omega Enchantment Stone.
-							ItemService.addItem(pl, 188100335, 50); // 强化石粉末。 / Enchantment Stone Dust.
-							AbyssPointsService.addAp(pl, 500);
-							AbyssPointsService.addGp(pl, 3);
-						}
-						if (level >= 51 && level <= 65) {
-							ItemService.addItem(pl, 186000096, 2); // 白金徽章。 / Platinum Medal.
-							ItemService.addItem(pl, 186000147, 2); // 秘银徽章。 / Mithril Medal.
-							ItemService.addItem(pl, 186000223, 2); // 荣誉秘银徽章。 / Honorable Mithril Medal.
-							ItemService.addItem(pl, 166030005, 1); // 淬炼溶液。 / Tempering Solution.
-							ItemService.addItem(pl, 166020000, 1); // 欧米伽强化石。 / Omega Enchantment Stone.
-							ItemService.addItem(pl, 188100335, 50); // 强化石粉末。 / Enchantment Stone Dust.
-							AbyssPointsService.addAp(pl, 1500);
-							AbyssPointsService.addGp(pl, 7);
-						}
-						if (level >= 66 && level <= 83) {
-							ItemService.addItem(pl, 186000236, 2); // 血之印记。 / Blood Mark.
-							ItemService.addItem(pl, 186000414, 2); // 血之徽章。 / Blood Medal.
-							ItemService.addItem(pl, 166030005, 1); // 淬炼溶液。 / Tempering Solution.
-							ItemService.addItem(pl, 166020000, 1); // 欧米伽强化石。 / Omega Enchantment Stone.
-							ItemService.addItem(pl, 188100335, 50); // 强化石粉末。 / Enchantment Stone Dust.
-							AbyssPointsService.addAp(pl, 2500);
-							AbyssPointsService.addGp(pl, 15);
-						}
-						super.scheduleAnnouncement(pl, "Your team lost the match!", 0);
-						super.scheduleAnnouncement(pl, "You have received rewards!", 3000);
-					}
-				}
-			}
-			super.specAnnounce(GameFeatureServices.ladderService().getNameByIndex(winner.getBgIndex()) + " Win's the round!");
-		}
-		super.onEndDefault();
 	}
 }
