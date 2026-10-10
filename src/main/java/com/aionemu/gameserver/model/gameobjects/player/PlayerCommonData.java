@@ -359,7 +359,7 @@ public class PlayerCommonData extends VisibleObjectTemplate {
 		return isReadyForReposteEnergy() ? this.reposteMax : 0;
 	}
 
-	public void setExp(long exp, boolean ArchDaeva) {
+	public void setExp(long exp, boolean archDaeva) {
 		int maxLevel = DataManager.PLAYER_EXPERIENCE_TABLE.getMaxLevel();
 		long maxExp = DataManager.PLAYER_EXPERIENCE_TABLE.getStartExpForLevel(maxLevel);
 		if (getPlayerClass() != null && getPlayerClass().isStartingClass()) {
@@ -370,7 +370,7 @@ public class PlayerCommonData extends VisibleObjectTemplate {
 				// 经验。 / EXP.
 				PacketSendUtility.sendPacket(this.getPlayer(), SM_SYSTEM_MESSAGE.STR_MSG_CAN_QUEST_DEVA);
 			}
-		} else if (!this.isArchDaeva() && this.getLevel() < 66) {
+		} else if (!archDaeva && !this.isArchDaeva() && this.getLevel() < 66) {
 			long level66StartExp = DataManager.PLAYER_EXPERIENCE_TABLE.getStartExpForLevel(66);
 			if (Math.max(exp, this.getExp()) >= level66StartExp && isArchDaevaLevelCapped()) {
 				// 未完成高阶守护者入场任务前，经验最多停留在 66 级起始经验前一点。
@@ -588,11 +588,6 @@ public class PlayerCommonData extends VisibleObjectTemplate {
 	/** 设置 passport stamps / Sets the passport stamps */
 	public void setPassportStamps(int stamps) {
 		this.stamps = stamps;
-	}
-
-	/** 添加 to completed passports / Adds to completed passports */
-	public void addToCompletedPassports(AtreianPassport atreianPassport) {
-		completedPassports.addPassport(atreianPassport.getId(), atreianPassport);
 	}
 
 	/** 设置 arch daeva / Sets the arch daeva */

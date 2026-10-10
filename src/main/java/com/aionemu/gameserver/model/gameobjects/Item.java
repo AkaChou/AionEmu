@@ -290,6 +290,7 @@ public class Item extends AionObject implements IExpirable, StatOwner {
 			}
 		}
 		this.ReductionLevel = reuctionLevel;
+		this.unSeal = unSeal;
 		this.canEnhance = isEnhance;
 		this.enhanceSkillId = enhanceSkillId;
 		this.enhanceEnchantLevel = enhanceEnchantLevel;
@@ -787,13 +788,6 @@ public class Item extends AionObject implements IExpirable, StatOwner {
 	}
 
 	/**
-	 * 按对象 ID 与物品 ID 比较两个物品是否相等。 / Compares two items on their object and item ids.
-	 */
-	public boolean isSameItem(Item i) {
-		return this.getObjectId().equals(i.getObjectId()) && this.getItemId() == i.getItemId();
-	}
-
-	/**
 	 * 是否可存入个人仓库。
 	 * Whether the item is storable in the warehouse.
 	 *
@@ -1021,13 +1015,6 @@ public class Item extends AionObject implements IExpirable, StatOwner {
 			return getFusionedItemTemplate().getImprovement();
 		}
 		return null;
-	}
-
-	/**
-	 * 是否为鉴定物品 / Whether identify item
-	 */
-	public boolean isIdentifyItem() {
-		return itemTemplate.isCloth();
 	}
 
 	/**

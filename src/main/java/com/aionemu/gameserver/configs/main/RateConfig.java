@@ -700,7 +700,6 @@ public class RateConfig {
 		public static class TierRateProperties {
 			private final MembershipTier tier;
 			private final GpProperties gp;
-			private final XpProperties xp;
 			private final GroupProperties group;
 			private final QuestProperties quest;
 			private final GatheringProperties gathering;
@@ -714,7 +713,6 @@ public class RateConfig {
 			public TierRateProperties(MembershipTier tier) {
 				this.tier = tier;
 				this.gp = new GpProperties(tier);
-				this.xp = new XpProperties(tier);
 				this.group = new GroupProperties(tier);
 				this.quest = new QuestProperties(tier);
 				this.gathering = new GatheringProperties(tier);
@@ -724,6 +722,22 @@ public class RateConfig {
 				this.pvparena = new PvparenaProperties(tier);
 				this.toll = new TollProperties(tier);
 				this.pet = new PetProperties(tier);
+			}
+
+			public float getXp() {
+				return switch (tier) {
+					case REGULAR -> XP_RATE;
+					case PREMIUM -> PREMIUM_XP_RATE;
+					case VIP -> VIP_XP_RATE;
+				};
+			}
+
+			public void setXp(float xp) {
+				switch (tier) {
+					case REGULAR -> XP_RATE = xp;
+					case PREMIUM -> PREMIUM_XP_RATE = xp;
+					case VIP -> VIP_XP_RATE = xp;
+				}
 			}
 
 			public float getDrop() {
@@ -757,8 +771,6 @@ public class RateConfig {
 					case VIP -> VIP_BOOK_RATE = book;
 				}
 			}
-
-			public void setXp(XpProperties xp) {}
 
 			@Getter
 			public static class GpProperties {
@@ -804,68 +816,6 @@ public class RateConfig {
 							case REGULAR -> GP_PLAYER_GAIN_RATE = gain;
 							case PREMIUM -> PREMIUM_GP_PLAYER_GAIN_RATE = gain;
 							case VIP -> VIP_GP_PLAYER_GAIN_RATE = gain;
-						}
-					}
-				}
-			}
-
-			@Getter
-			public static class XpProperties {
-				private final MembershipTier tier;
-				private final PlayerProperties player;
-
-				public XpProperties(MembershipTier tier) {
-					this.tier = tier;
-					this.player = new PlayerProperties(tier);
-				}
-
-				public static XpProperties valueOf(String value) {
-					try {
-						float val = Float.parseFloat(value);
-						XP_RATE = val;
-						PREMIUM_XP_RATE = val;
-						VIP_XP_RATE = val;
-					} catch (NumberFormatException ignored) {
-					}
-					return new XpProperties(MembershipTier.REGULAR);
-				}
-
-				public float getValue() {
-					return switch (tier) {
-						case REGULAR -> XP_RATE;
-						case PREMIUM -> PREMIUM_XP_RATE;
-						case VIP -> VIP_XP_RATE;
-					};
-				}
-
-				public void setValue(float value) {
-					switch (tier) {
-						case REGULAR -> XP_RATE = value;
-						case PREMIUM -> PREMIUM_XP_RATE = value;
-						case VIP -> VIP_XP_RATE = value;
-					}
-				}
-
-				public static class PlayerProperties {
-					private final MembershipTier tier;
-
-					public PlayerProperties(MembershipTier tier) {
-						this.tier = tier;
-					}
-
-					public float getGain() {
-						return switch (tier) {
-							case REGULAR -> XP_PLAYER_GAIN_RATE;
-							case PREMIUM -> PREMIUM_XP_PLAYER_GAIN_RATE;
-							case VIP -> VIP_XP_PLAYER_GAIN_RATE;
-						};
-					}
-
-					public void setGain(float gain) {
-						switch (tier) {
-							case REGULAR -> XP_PLAYER_GAIN_RATE = gain;
-							case PREMIUM -> PREMIUM_XP_PLAYER_GAIN_RATE = gain;
-							case VIP -> VIP_XP_PLAYER_GAIN_RATE = gain;
 						}
 					}
 				}

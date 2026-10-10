@@ -331,7 +331,6 @@ public class Player extends Creature {
 	private int cp_slot1 = 0, cp_slot2 = 0, cp_slot3 = 0, cp_slot4 = 0, cp_slot5 = 0, cp_slot6 = 0;
 	private boolean enchantBoost;
 	private boolean authorizeBoost;
-	private boolean setMinionSpawned;
 	/** 事件物品每日限购注册表 / Event-item daily purchase-limit registry */
 	private final PlayerItemDailyLimits itemDailyLimits = new PlayerItemDailyLimits();
 	/** 重复异常状态递减链（内存态，不持久化，首次写入才分配）/ Repeated-abnormal decay chain (in-memory only, allocated on first write). */
@@ -398,29 +397,12 @@ public class Player extends Creature {
 	private boolean isInPvEMode;
 	// 这些变量用于自定义 RP 与 GM 系统 / These variables are for the custom RP and GM system
 	private boolean isGmMode = false;
-	private long creationDay;
-
 	public long getCreationDate() {
 		Timestamp creationDate = playerCommonData.getCreationDate();
 		if (creationDate == null) {
 			return 0;
 		}
 		return creationDate.getTime();
-	}
-
-	public void setCreationDataDay(long i) {
-		this.creationDay = i;
-	}
-
-	public long getCreationDataDay() {
-		return creationDay;
-	}
-
-	private Player(PlayerCommonData plCommonData) {
-		super(plCommonData.getPlayerObjId(), new PlayerController(), null, plCommonData, null);
-		this.playerCommonData = plCommonData;
-		this.playerAccount = new Account(0);
-		this.absStatsHolder = new AbsoluteStatOwner(this, 0);
 	}
 
 	public Player(PlayerController controller, PlayerCommonData plCommonData, PlayerAppearance appereance, Account account) {
@@ -447,7 +429,6 @@ public class Player extends Creature {
 		protectorList = new Protector(this);
 		conquerorList = new Conqueror(this);
 		absStatsHolder = new AbsoluteStatOwner(this, 0);
-		this.setMinionSpawned = false;
 	}
 
 	public boolean isInPlayerMode(PlayerMode mode) {
@@ -494,14 +475,6 @@ public class Player extends Creature {
 	 */
 	public Pet getPet() {
 		return toyPet;
-	}
-
-	public void setMinionSpawned(boolean setMinionSpawned) {
-		this.setMinionSpawned = setMinionSpawned;
-	}
-
-	public boolean isMinionSpawned() {
-		return setMinionSpawned;
 	}
 
 	public boolean isNotGatherable() {
@@ -819,10 +792,6 @@ public class Player extends Creature {
 		}
 	}
 
-	public void setIsGathering(boolean isGathering) {
-		this.isGathering = isGathering;
-	}
-
 	/**
 	 * @return the isInPrison
 	 */
@@ -887,7 +856,7 @@ public class Player extends Creature {
 		if (enemy.isInPvEMode() || this.isInPvEMode()) {
 			return false;
 		}
-		if (this.getObjectId() == enemy.getObjectId()) {
+		if (sameObjectId(enemy.getObjectId())) {
 			return false;
 		}
 		if (enemy.getBattleground() != null && this.getBattleground() != null) {
@@ -902,7 +871,7 @@ public class Player extends Creature {
 		if (enemy.isInPkMode() || this.isInPkMode()) {
 			return !this.isInSameTeam(enemy);
 		}
-		if (enemy.isBandit() || this.isBandit()) {
+		if (this.isBandit()) {
 			return true;
 		}
 		return PlayerPvpRules.canPvP(this, enemy) || this.getController().isDueling(enemy);
@@ -933,10 +902,10 @@ public class Player extends Creature {
 		if (creature.isInVisualState(CreatureVisualState.BLINKING)) {
 			return true;
 		}
-		if (((creature instanceof Player)) && (isInSameTeam((Player) creature))) {
+		if (creature instanceof Player player && isInSameTeam(player)) {
 			return true;
 		}
-		if (((creature instanceof Trap)) && (((Trap) creature).getCreator().getObjectId() == getObjectId())) {
+		if (creature instanceof Trap trap && sameObjectId(trap.getCreator().getObjectId())) {
 			return true;
 		}
 		return creature.getVisualState() <= getSeeState();
@@ -1368,20 +1337,14 @@ public class Player extends Creature {
 	 * Stone Use Order determined by highest inventory slot. If player has two types, wrong one might be used.
 	 */
 	public Item getSelfRezStone() {
-		Item item = null;
-		item = getReviveStone(161001001);
-		item = getReviveStone(161001004);
-		item = getReviveStone(161001005);
-		if (item == null) {
-			item = getReviveStone(161000003); // Reviving Elemental Stone.
+		int[] stoneIds = {161001001, 161001004, 161001005, 161000003, 161000004, 161000005};
+		for (int stoneId : stoneIds) {
+			Item item = getReviveStone(stoneId);
+			if (item != null) {
+				return item;
+			}
 		}
-		if (item == null) {
-			item = getReviveStone(161000004); // Tombstone Of Revival.
-		}
-		if (item == null) {
-			item = getReviveStone(161000005); // Reviving Elemental Stone.
-		}
-		return item;
+		return null;
 	}
 
 	/**
@@ -1639,22 +1602,6 @@ public class Player extends Creature {
 		return absStatsHolder;
 	}
 
-	public boolean hasBonus() {
-		return hasBonus;
-	}
-
-	public void setBonus(boolean hasBonus) {
-		this.hasBonus = hasBonus;
-	}
-
-	public boolean hasAbyssBonus() {
-		return hasAbyssBonus;
-	}
-
-	public void setAbyssBonus(boolean hasAbyssBonus) {
-		this.hasAbyssBonus = hasAbyssBonus;
-	}
-
 	public boolean isUseRobot() {
 		return robot;
 	}
@@ -1736,9 +1683,6 @@ public class Player extends Creature {
 
 	public PlayerUpgradeArcade getUpgradeArcade() {
 		return playerCommonData.getUpgradeArcade();
-	}
-
-	public void setPlayerUpgradeArcade(PlayerUpgradeArcade pua) {
 	}
 
 	public void setPlayerLunaShop(PlayerLunaShop pls) {

@@ -146,15 +146,17 @@ public class EnchantsConfig {
 			ENCHANT_STIGMA = stigma;
 		}
 
+		@Getter
 		public static class ItemProperties {
 			public ItemProperties() {}
 
 			public static ItemProperties valueOf(String value) {
+				ItemProperties props = new ItemProperties();
 				try {
 					ENCHANT_ITEM = Float.parseFloat(value);
 				} catch (NumberFormatException ignored) {
 				}
-				return new ItemProperties();
+				return props;
 			}
 
 			public float getValue() {

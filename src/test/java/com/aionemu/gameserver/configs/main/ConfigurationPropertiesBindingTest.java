@@ -289,7 +289,7 @@ class ConfigurationPropertiesBindingTest {
 			StandardEnvironment environment = new StandardEnvironment();
 			environment.getPropertySources().addFirst(new MapPropertySource("test", Map.ofEntries(
 				Map.entry("gameserver.socket.manastone", "75.5"),
-				Map.entry("gameserver.enchant.item", "65.0"),
+				Map.entry("gameserver.enchant.item.value", "65.0"),
 				Map.entry("gameserver.enchant.item.kinah", "50000"),
 				Map.entry("gameserver.enchant.item.broke", "false"),
 				Map.entry("gameserver.enchant.equipment.max.level", "50"),
@@ -315,6 +315,24 @@ class ConfigurationPropertiesBindingTest {
 			assertEquals(55.0f, EnchantsConfig.ENCHANT_STIGMA);
 			assertTrue(EnchantsConfig.CLEAN_STONE);
 			assertEquals(2500, EnchantsConfig.ENCHANT_SPEED);
+		} finally {
+			snapshot.restore();
+		}
+	}
+
+	@Test
+	void bindsEnchantsConfigLegacyScalarItemProperty() {
+		ConfigSnapshot snapshot = ConfigSnapshot.of(EnchantsConfig.class, "ENCHANT_ITEM");
+		try {
+			StandardEnvironment environment = new StandardEnvironment();
+			environment.getPropertySources().addFirst(new MapPropertySource("test", Map.of(
+				"gameserver.enchant.item", "88.5"
+			)));
+
+			EnchantsConfig config = new EnchantsConfig();
+			Binder.get(environment).bind("gameserver", Bindable.ofInstance(config));
+
+			assertEquals(88.5f, EnchantsConfig.ENCHANT_ITEM);
 		} finally {
 			snapshot.restore();
 		}
