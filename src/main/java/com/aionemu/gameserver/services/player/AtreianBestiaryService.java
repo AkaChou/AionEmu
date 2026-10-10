@@ -1,5 +1,6 @@
 package com.aionemu.gameserver.services.player;
 
+import lombok.NonNull;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.ObjectProvider;
@@ -32,6 +33,36 @@ public class AtreianBestiaryService {
      */
     @Setter
     private static volatile ObjectProvider<AtreianBestiaryService> instanceProvider;
+	private final PlayerABDAO playerABDAO;
+
+	/**
+	 * 使用指定的 PlayerABDAO 构造图鉴服务。
+	 * Constructs the bestiary service with the given PlayerABDAO.
+	 *
+	 * @param playerABDAO 图鉴数据访问对象 / bestiary DAO
+	 */
+	public AtreianBestiaryService(@NonNull PlayerABDAO playerABDAO) {
+		this.playerABDAO = playerABDAO;
+	}
+
+	/**
+	 * 构造图鉴服务。
+	 * Constructs the bestiary service.
+	 */
+	public AtreianBestiaryService() {
+		this(safeDao(PlayerABDAO.class, com.aionemu.gameserver.dao.impl.PlayerAtreianBestiaryDAO::new));
+	}
+
+	private static <T extends com.aionemu.commons.database.dao.DAO> T safeDao(Class<T> daoClass,
+			java.util.function.Supplier<T> fallback) {
+		if (DAOManager.isInitialized()) {
+			try {
+				return DAOManager.getDAO(daoClass);
+			} catch (Exception ignored) {
+			}
+		}
+		return fallback.get();
+	}
 
 	/**
 	 * 玩家登录时同步状态。
@@ -55,10 +86,8 @@ public class AtreianBestiaryService {
 		}
 		for (int tmpNpcId : template.getNpcIds()) {
 			if (npcId == tmpNpcId) {
-				int killCount = DAOManager.getDAO(PlayerABDAO.class).getKillCountById(player.getObjectId(),
-						template.getId());
-				byte currentLvl = (byte) DAOManager.getDAO(PlayerABDAO.class).getLevelById(player.getObjectId(),
-						template.getId());
+				int killCount = playerABDAO.getKillCountById(player.getObjectId(), template.getId());
+				byte currentLvl = (byte) playerABDAO.getLevelById(player.getObjectId(), template.getId());
 				killCount++;
 				int claimReward = 0;
 				for (AtreianBestiaryAchievementTemplate at : template.getAtreianBestiaryAchievementTemplate()) {
@@ -87,9 +116,9 @@ public class AtreianBestiaryService {
 		if (template == null) {
 			return;
 		}
-		int killCount = DAOManager.getDAO(PlayerABDAO.class).getKillCountById(player.getObjectId(), id);
-		byte currentLvl = (byte) DAOManager.getDAO(PlayerABDAO.class).getLevelById(player.getObjectId(), id);
-		int isClaimReward = DAOManager.getDAO(PlayerABDAO.class).getClaimRewardById(player.getObjectId(), id);
+		int killCount = playerABDAO.getKillCountById(player.getObjectId(), id);
+		byte currentLvl = (byte) playerABDAO.getLevelById(player.getObjectId(), id);
+		int isClaimReward = playerABDAO.getClaimRewardById(player.getObjectId(), id);
 		currentLvl = (byte) (currentLvl + 1);
 		long exp = 0;
 		for (AtreianBestiaryAchievementTemplate at : template.getAtreianBestiaryAchievementTemplate()) {

@@ -2,6 +2,7 @@ package com.aionemu.gameserver.services.events;
 
 
 import com.aionemu.boot.i18n.I18n;
+import lombok.NonNull;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -44,16 +45,65 @@ public class EventWindowService {
      */
     @Setter
     private static volatile ObjectProvider<EventWindowService> instanceProvider;
-	private final Map<Integer, EventsWindow> allEvents = DataManager.EVENTS_WINDOW.getAllEvents();
+	private final PlayerEventsWindowDAO playerEventsWindowDAO;
+	private volatile Map<Integer, EventsWindow> allEvents;
 	private final ConcurrentMap<Integer, EventsWindow> activeEvents = new ConcurrentHashMap<>();
+
+	/**
+	 * 惰性加载全部活动模板，规避离线环境对静态数据管理器的构造期依赖。
+	 * Lazily loads all event templates, avoiding constructor-time dependence on the static data manager offline.
+	 */
+	private Map<Integer, EventsWindow> allEvents() {
+		Map<Integer, EventsWindow> events = allEvents;
+		if (events == null) {
+			synchronized (this) {
+				events = allEvents;
+				if (events == null) {
+					events = DataManager.EVENTS_WINDOW.getAllEvents();
+					allEvents = events;
+				}
+			}
+		}
+		return events;
+	}
+
+	/**
+	 * 使用指定的 PlayerEventsWindowDAO 构造活动窗口服务。
+	 * Constructs the event window service with the given PlayerEventsWindowDAO.
+	 *
+	 * @param playerEventsWindowDAO 活动窗口数据访问对象 / event window DAO
+	 */
+	public EventWindowService(@NonNull PlayerEventsWindowDAO playerEventsWindowDAO) {
+		this.playerEventsWindowDAO = playerEventsWindowDAO;
+	}
+
+	/**
+	 * 构造活动窗口服务。
+	 * Constructs the event window service.
+	 */
+	public EventWindowService() {
+		this(safeDao(PlayerEventsWindowDAO.class, com.aionemu.gameserver.dao.impl.PlayerEventsWindowDAO::new));
+	}
+
+	private static <T extends com.aionemu.commons.database.dao.DAO> T safeDao(Class<T> daoClass,
+			java.util.function.Supplier<T> fallback) {
+		if (DAOManager.isInitialized()) {
+			try {
+				return DAOManager.getDAO(daoClass);
+			} catch (Exception ignored) {
+			}
+		}
+		return fallback.get();
+	}
 
 	/**
 	 * 初始化所有活动。
 	 * initialize all events
 	 */
 	public void initialize() {
-		if (allEvents.size() != 0) {
-			for (EventsWindow eventsWindow : allEvents.values()) {
+		Map<Integer, EventsWindow> events = allEvents();
+		if (events.size() != 0) {
+			for (EventsWindow eventsWindow : events.values()) {
 				log.info(I18n.get("log.4a260e6153da", eventsWindow.getPeriodStart(), eventsWindow.getPeriodEnd()));
 			}
 		}
@@ -66,7 +116,7 @@ public class EventWindowService {
 	public Map<Integer, EventsWindow> getActiveEvents(Player player) {
 		ZonedDateTime now = ZonedDateTime.now();
 		Map<Integer, EventsWindow> activeEventsForPlayer = new HashMap<>();
-		for (EventsWindow eventsWindow : allEvents.values()) {
+		for (EventsWindow eventsWindow : allEvents().values()) {
 			if (activeEvents.containsKey(eventsWindow.getId())) {
 				continue;
 			}
@@ -91,7 +141,6 @@ public class EventWindowService {
 		Map<Integer, EventsWindow> activeEventsForPlayer = getActiveEvents(player);
 		final Map<Integer, EventsWindow> sendActiveEventsForPlayer = new ConcurrentHashMap<>();
 		final int accountId = player.getPlayerAccount().getId();
-		final PlayerEventsWindowDAO playerEventsWindowDAO = DAOManager.getDAO(PlayerEventsWindowDAO.class);
 		ZonedDateTime now = ZonedDateTime.now();
 
 		for (final EventsWindow eventsWindow : activeEventsForPlayer.values()) {
@@ -139,7 +188,6 @@ public class EventWindowService {
 
 	private void restartTimer(final Player player, final int eventId, final Map<Integer, EventsWindow> sendActiveEventsForPlayer) {
 		final int accountId = player.getPlayerAccount().getId();
-		final PlayerEventsWindowDAO playerEventsWindowDAO = DAOManager.getDAO(PlayerEventsWindowDAO.class);
 		final int recivedCount = playerEventsWindowDAO.getRewardRecivedCount(accountId, eventId);
 		ZonedDateTime now = ZonedDateTime.now();
 
@@ -171,7 +219,6 @@ public class EventWindowService {
 	 */
 	public void onLogout(Player player) {
 		int accountId = player.getPlayerAccount().getId();
-		PlayerEventsWindowDAO playerEventsWindowDAO = DAOManager.getDAO(PlayerEventsWindowDAO.class);
 		Map<Integer, EventsWindow> activeEventsForPlayer = getActiveEvents(player);
 		for (final EventsWindow eventsWindow : activeEventsForPlayer.values()) {
 			if (playerEventsWindowDAO.getEventsWindow(accountId).contains(eventsWindow.getId()) && player.isOnline()) {

@@ -2,6 +2,7 @@ package com.aionemu.gameserver.services.events;
 
 
 import com.aionemu.boot.i18n.I18n;
+import lombok.NonNull;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -38,9 +39,43 @@ public class ShugoSweepService {
      */
 	@Setter
     private static volatile ObjectProvider<ShugoSweepService> instanceProvider;
+	private final PlayerShugoSweepDAO playerShugoSweepDAO;
+	private final PlayerDAO playerDAO;
 
 	/** 当前棋盘 ID / Current board id */
 	private final int boardId = EventsConfig.EVENT_SHUGOSWEEP_BOARD;
+
+	/**
+	 * 使用指定的 DAO 构造术古扫荡服务。
+	 * Constructs the Shugo Sweep service with the given DAOs.
+	 *
+	 * @param playerShugoSweepDAO 扫荡棋盘数据访问对象 / Shugo Sweep DAO
+	 * @param playerDAO 玩家数据访问对象 / player DAO
+	 */
+	public ShugoSweepService(@NonNull PlayerShugoSweepDAO playerShugoSweepDAO, @NonNull PlayerDAO playerDAO) {
+		this.playerShugoSweepDAO = playerShugoSweepDAO;
+		this.playerDAO = playerDAO;
+	}
+
+	/**
+	 * 构造术古扫荡服务。
+	 * Constructs the Shugo Sweep service.
+	 */
+	public ShugoSweepService() {
+		this(safeDao(PlayerShugoSweepDAO.class, com.aionemu.gameserver.dao.impl.PlayerShugoSweepDAO::new),
+			safeDao(PlayerDAO.class, com.aionemu.gameserver.dao.impl.PlayerDAO::new));
+	}
+
+	private static <T extends com.aionemu.commons.database.dao.DAO> T safeDao(Class<T> daoClass,
+			java.util.function.Supplier<T> fallback) {
+		if (DAOManager.isInitialized()) {
+			try {
+				return DAOManager.getDAO(daoClass);
+			} catch (Exception ignored) {
+			}
+		}
+		return fallback.get();
+	}
 
 	/**
 	 * 初始化术古扫荡并注册每周重置 cron。
@@ -49,7 +84,7 @@ public class ShugoSweepService {
 	public void initShugoSweep() {
 		log.info(I18n.get("log.a06db47829be"));
 		String weekly = "0 0 9 ? * WED *";
-		GameCronServices.cronService().schedule(() -> DAOManager.getDAO(PlayerShugoSweepDAO.class).delete(), weekly);
+		GameCronServices.cronService().schedule(() -> playerShugoSweepDAO.delete(), weekly);
 	}
 
 	/**
@@ -58,14 +93,13 @@ public class ShugoSweepService {
 	 * @param player 玩家 / player
 	 */
 	public void onLogin(Player player) {
-		DAOManager.getDAO(PlayerShugoSweepDAO.class).load(player);
+		playerShugoSweepDAO.load(player);
 		if (player.getPlayerShugoSweep() == null) {
 			PlayerSweep ps = new PlayerSweep(0, EventsConfig.EVENT_SHUGOSWEEP_FREEDICE, boardId);
 			ps.setPersistentState(PersistentState.UPDATE_REQUIRED);
 			player.setPlayerShugoSweep(ps);
 			player.getPlayerShugoSweep().setShugoSweepByObjId(player.getObjectId());
-			DAOManager.getDAO(PlayerShugoSweepDAO.class).add(player.getObjectId(), ps.getFreeDice(), ps.getStep(),
-					ps.getBoardId());
+			playerShugoSweepDAO.add(player.getObjectId(), ps.getFreeDice(), ps.getStep(), ps.getBoardId());
 		}
 
 		if (player.getPlayerShugoSweep().getBoardId() != boardId) {
@@ -93,7 +127,7 @@ public class ShugoSweepService {
 		if (sweep == null) {
 			return;
 		}
-		DAOManager.getDAO(PlayerShugoSweepDAO.class).store(player);
+		playerShugoSweepDAO.store(player);
 		sweep.setShugoSweepByObjId(player.getObjectId());
 	}
 
@@ -114,7 +148,7 @@ public class ShugoSweepService {
 			player.getPlayerShugoSweep().setShugoSweepByObjId(player.getObjectId());
 		} else {
 			getCommonData(player).setGoldenDice(goldDice - 1);
-			DAOManager.getDAO(PlayerDAO.class).storePlayer(player);
+			playerDAO.storePlayer(player);
 		}
 
 		PacketSendUtility.sendPacket(player, new SM_SHUGO_SWEEP(boardId, getPlayerSweep(player).getStep(),

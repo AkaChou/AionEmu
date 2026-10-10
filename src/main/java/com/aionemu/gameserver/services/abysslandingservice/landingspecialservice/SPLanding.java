@@ -1,13 +1,11 @@
 package com.aionemu.gameserver.services.abysslandingservice.landingspecialservice;
 
-import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.gameserver.dao.AbyssSpecialLandingDAO;
 import com.aionemu.gameserver.model.landing_special.LandingSpecialLocation;
 import com.aionemu.gameserver.model.landing_special.LandingSpecialStateType;
 
 /**
- * 特殊欧比斯着陆点实现：激活/停用刷怪并持久化。
- * Special abyss-landing implementation: activate/deactivate spawns and persist.
+ * 特殊欧比斯着陆点实现：激活/停用刷怪。
+ * Special abyss-landing implementation: activate/deactivate spawns.
  */
 public class SPLanding extends SpecialLanding<LandingSpecialLocation> {
 
@@ -29,14 +27,6 @@ public class SPLanding extends SpecialLanding<LandingSpecialLocation> {
 			despawn();
 		}
 		spawn(LandingSpecialStateType.ACTIVE);
-	}
-
-	/**
-	 * 将特殊着陆点状态写回数据库。
-	 * Persist special landing location state to the database.
-	 */
-	public void saveLanding() {
-		DAOManager.getDAO(AbyssSpecialLandingDAO.class).updateLocation(getSpecialLandingLocation());
 	}
 
 	/**

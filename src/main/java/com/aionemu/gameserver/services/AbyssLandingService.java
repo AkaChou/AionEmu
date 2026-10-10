@@ -63,11 +63,22 @@ public class AbyssLandingService {
 	}
 
 	/**
-	 * 默认构造器，从 DAOManager 动态解析 AbyssLandingDAO。
-	 * Default constructor resolving AbyssLandingDAO from DAOManager.
+	 * 默认构造器：优先取 DAOManager 中已注册的 DAO，未初始化时回退到独立实现。
+	 * Default constructor: prefers the DAOManager-registered DAO, falling back to the standalone implementation.
 	 */
 	public AbyssLandingService() {
-		this(DAOManager.getDAO(AbyssLandingDAO.class));
+		this(safeDao(AbyssLandingDAO.class, com.aionemu.gameserver.dao.impl.AbyssLandingDAO::new));
+	}
+
+	private static <T extends com.aionemu.commons.database.dao.DAO> T safeDao(Class<T> daoClass,
+			java.util.function.Supplier<T> fallback) {
+		if (DAOManager.isInitialized()) {
+			try {
+				return DAOManager.getDAO(daoClass);
+			} catch (Exception ignored) {
+			}
+		}
+		return fallback.get();
 	}
 
 	/**
@@ -517,7 +528,7 @@ public class AbyssLandingService {
 			GameLocationBootstrapServices.abyssLandingSpecialService().startLanding(id);
 		}
 		lsl.setType(LandingSpecialStateType.ACTIVE);
-		AbyssLandingSpecialService.onSave(lsl);
+		GameLocationBootstrapServices.abyssLandingSpecialService().onSave(lsl);
 	}
 
 	/**
@@ -539,7 +550,7 @@ public class AbyssLandingService {
 			stopLanding(id);
 		}
 		lsl.setType(LandingSpecialStateType.NO_ACTIVE);
-		AbyssLandingSpecialService.onSave(lsl);
+		GameLocationBootstrapServices.abyssLandingSpecialService().onSave(lsl);
 	}
 
 		/**
@@ -614,10 +625,6 @@ public class AbyssLandingService {
 	public void onUpdate() {
 		abyssLandingDAO.updateLocation(getLandingLocation(redemptionLanding().getId()));
 		abyssLandingDAO.updateLocation(getLandingLocation(harbingerLanding().getId()));
-	}
-
-	private AbyssLandingDAO getDAO() {
-		return abyssLandingDAO;
 	}
 
 	/**

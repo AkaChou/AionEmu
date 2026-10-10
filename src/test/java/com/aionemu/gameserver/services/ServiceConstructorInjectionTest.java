@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import java.sql.Timestamp;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -19,6 +20,7 @@ import org.springframework.jdbc.core.simple.JdbcClient;
 
 import com.aionemu.gameserver.dao.AbyssLandingDAO;
 import com.aionemu.gameserver.dao.AbyssRankDAO;
+import com.aionemu.gameserver.dao.AbyssSpecialLandingDAO;
 import com.aionemu.gameserver.dao.AnnouncementsDAO;
 import com.aionemu.gameserver.dao.BaseDAO;
 import com.aionemu.gameserver.dao.BlockListDAO;
@@ -36,13 +38,19 @@ import com.aionemu.gameserver.dao.LimitedQuestDAO;
 import com.aionemu.gameserver.dao.MailDAO;
 import com.aionemu.gameserver.dao.OldNamesDAO;
 import com.aionemu.gameserver.dao.PetitionDAO;
+import com.aionemu.gameserver.dao.PlayerABDAO;
 import com.aionemu.gameserver.dao.PlayerAppearanceDAO;
 import com.aionemu.gameserver.dao.PlayerDAO;
+import com.aionemu.gameserver.dao.PlayerEventsWindowDAO;
+import com.aionemu.gameserver.dao.PlayerLunaShopDAO;
+import com.aionemu.gameserver.dao.PlayerPassportsDAO;
 import com.aionemu.gameserver.dao.PlayerPetsDAO;
 import com.aionemu.gameserver.dao.PlayerPunishmentsDAO;
 import com.aionemu.gameserver.dao.PlayerQuestListDAO;
+import com.aionemu.gameserver.dao.PlayerShugoSweepDAO;
 import com.aionemu.gameserver.dao.PlayerSkillListDAO;
 import com.aionemu.gameserver.dao.PlayerStigmasEquippedDAO;
+import com.aionemu.gameserver.dao.PlayerWardrobeDAO;
 import com.aionemu.gameserver.dao.RewardServiceDAO;
 import com.aionemu.gameserver.dao.ServerVariablesDAO;
 import com.aionemu.gameserver.dao.SiegeDAO;
@@ -58,14 +66,21 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.items.storage.Storage;
 import com.aionemu.gameserver.model.items.storage.StorageType;
 import com.aionemu.gameserver.model.landing.LandingLocation;
+import com.aionemu.gameserver.model.landing_special.LandingSpecialLocation;
+import com.aionemu.gameserver.model.atreian_bestiary.PlayerABList;
 import com.aionemu.gameserver.model.town.Town;
+import com.aionemu.gameserver.services.events.AtreianPassportService;
+import com.aionemu.gameserver.services.events.EventWindowService;
+import com.aionemu.gameserver.services.events.ShugoSweepService;
 import com.aionemu.gameserver.services.mail.MailService;
-import com.aionemu.gameserver.configs.main.PlayerTransferConfig;
+import com.aionemu.gameserver.services.player.AtreianBestiaryService;
 import com.aionemu.gameserver.services.player.GrowthEnergy;
+import com.aionemu.gameserver.services.player.LunaShopService;
 import com.aionemu.gameserver.services.player.PlayerService;
 import com.aionemu.gameserver.services.player.PlayerServiceDaos;
 import com.aionemu.gameserver.services.toypet.PetService;
 import com.aionemu.gameserver.services.transfers.PlayerTransferService;
+import com.aionemu.gameserver.configs.main.PlayerTransferConfig;
 
 /**
  * 核心服务构造器注入与 DAO 解耦单元测试。
@@ -175,6 +190,33 @@ class ServiceConstructorInjectionTest {
 		};
 
 		AbyssLandingService service = new AbyssLandingService(stubAbyssLandingDAO);
+		assertNotNull(service);
+	}
+
+	@Test
+	void abyssLandingSpecialServiceConstructsWithInjectedDao() {
+		AbyssSpecialLandingDAO stubAbyssSpecialLandingDAO = new AbyssSpecialLandingDAO() {
+			@Override
+			public boolean loadLandingSpecialLocations(Map<Integer, LandingSpecialLocation> locations) {
+				return true;
+			}
+
+			@Override
+			public void store(LandingSpecialLocation location) {
+			}
+
+			@Override
+			public boolean updateLandingSpecialLocation(LandingSpecialLocation location) {
+				return true;
+			}
+
+			@Override
+			public boolean supports(String databaseName, int majorVersion, int minorVersion) {
+				return true;
+			}
+		};
+
+		AbyssLandingSpecialService service = new AbyssLandingSpecialService(stubAbyssSpecialLandingDAO);
 		assertNotNull(service);
 	}
 
@@ -486,13 +528,119 @@ class ServiceConstructorInjectionTest {
 	}
 
 	@Test
+	void atreianPassportServiceConstructsWithInjectedDao() {
+		PlayerPassportsDAO stubPassportsDAO = new PlayerPassportsDAO() {
+			@Override
+			public List<Integer> getPassports(int accountId) {
+				return Collections.emptyList();
+			}
+
+			@Override
+			public int getStamps(int accountId, int passportId) {
+				return 0;
+			}
+
+			@Override
+			public Timestamp getLastStamp(int accountId, int passportId) {
+				return new Timestamp(0);
+			}
+
+			@Override
+			public void insertPassport(int accountId, int passportId, int stamps, Timestamp lastStamp) {
+			}
+
+			@Override
+			public void updatePassport(int accountId, int passportId, int stamps, boolean reset, Timestamp lastStamp) {
+			}
+
+			@Override
+			public boolean supports(String databaseName, int majorVersion, int minorVersion) {
+				return true;
+			}
+		};
+
+		AtreianPassportService service = new AtreianPassportService(stubPassportsDAO);
+		assertNotNull(service);
+	}
+
+	@Test
+	void shugoSweepServiceConstructsWithInjectedDaos() {
+		JdbcClient client = createNoAccessJdbcClient();
+		PlayerShugoSweepDAO shugoSweepDAO = new com.aionemu.gameserver.dao.impl.PlayerShugoSweepDAO(client);
+		PlayerDAO playerDAO = new com.aionemu.gameserver.dao.impl.PlayerDAO(client);
+		ShugoSweepService service = new ShugoSweepService(shugoSweepDAO, playerDAO);
+		assertNotNull(service);
+	}
+
+	@Test
+	void eventWindowServiceConstructsWithInjectedDao() {
+		JdbcClient client = createNoAccessJdbcClient();
+		PlayerEventsWindowDAO dao = new com.aionemu.gameserver.dao.impl.PlayerEventsWindowDAO(client);
+		EventWindowService service = new EventWindowService(dao);
+		assertNotNull(service);
+	}
+
+	@Test
+	void lunaShopServiceConstructsWithInjectedDaos() {
+		JdbcClient client = createNoAccessJdbcClient();
+		PlayerLunaShopDAO lunaShopDAO = new com.aionemu.gameserver.dao.impl.PlayerLunaShopDAO(client);
+		PlayerWardrobeDAO wardrobeDAO = new com.aionemu.gameserver.dao.impl.PlayerWardrobeDAO(client);
+		LunaShopService service = new LunaShopService(lunaShopDAO, wardrobeDAO);
+		assertNotNull(service);
+	}
+
+	@Test
+	void atreianBestiaryServiceConstructsWithInjectedDao() {
+		PlayerABDAO stubBestiaryDAO = new PlayerABDAO() {
+			@Override
+			public PlayerABList load(Player player) {
+				return null;
+			}
+
+			@Override
+			public boolean store(int playerObjId, int id, int killCount, int level, int levelUpable) {
+				return true;
+			}
+
+			@Override
+			public boolean delete(int playerObjId, int slot) {
+				return true;
+			}
+
+			@Override
+			public int getKillCountById(int playerObjId, int id) {
+				return 0;
+			}
+
+			@Override
+			public int getLevelById(int playerObjId, int id) {
+				return 0;
+			}
+
+			@Override
+			public int getClaimRewardById(int playerObjId, int id) {
+				return 0;
+			}
+
+			@Override
+			public boolean supports(String databaseName, int majorVersion, int minorVersion) {
+				return true;
+			}
+		};
+
+		AtreianBestiaryService service = new AtreianBestiaryService(stubBestiaryDAO);
+		assertNotNull(service);
+	}
+
+	@Test
 	void legionServiceConstructsWithInjectedDaos() {
 		JdbcClient client = createNoAccessJdbcClient();
 		LegionDAO legionDAO = new com.aionemu.gameserver.dao.impl.LegionDAO(client);
 		LegionMemberDAO legionMemberDAO = new com.aionemu.gameserver.dao.impl.LegionMemberDAO(client);
 		InventoryDAO inventoryDAO = new com.aionemu.gameserver.dao.impl.InventoryDAO(client);
 		ItemStoneListDAO itemStoneListDAO = new com.aionemu.gameserver.dao.impl.ItemStoneListDAO(client);
-		LegionService service = new LegionService(legionDAO, legionMemberDAO, inventoryDAO, itemStoneListDAO);
+		PlayerDAO playerDAO = new com.aionemu.gameserver.dao.impl.PlayerDAO(client);
+		LegionService service = new LegionService(legionDAO, legionMemberDAO, inventoryDAO, itemStoneListDAO, playerDAO);
 		assertNotNull(service);
 	}
 
@@ -563,6 +711,7 @@ class ServiceConstructorInjectionTest {
 		assertNotNull(service);
 		assertSame(playerDAO, service.playerDAO());
 	}
+
 	@Test
 	void petServiceConstructsWithInjectedDao() {
 		JdbcClient client = createNoAccessJdbcClient();
@@ -571,6 +720,7 @@ class ServiceConstructorInjectionTest {
 		assertNotNull(service);
 		assertSame(playerPetsDAO, service.playerPetsDAO());
 	}
+
 	@Test
 	void playerTransferServiceConstructsWithInjectedDaos() {
 		JdbcClient client = createNoAccessJdbcClient();
@@ -591,6 +741,7 @@ class ServiceConstructorInjectionTest {
 		assertThrows(NullPointerException.class, () -> new TownService(null));
 		assertThrows(NullPointerException.class, () -> new AnnouncementService(null));
 		assertThrows(NullPointerException.class, () -> new AbyssLandingService(null));
+		assertThrows(NullPointerException.class, () -> new AbyssLandingSpecialService(null));
 		assertThrows(NullPointerException.class, () -> new ExchangeService(null));
 		assertThrows(NullPointerException.class, () -> new PetitionService(null));
 		assertThrows(NullPointerException.class, () -> new BrokerService(null, null));
@@ -611,6 +762,11 @@ class ServiceConstructorInjectionTest {
 		assertThrows(NullPointerException.class, () -> new HousingBidService(null, null, null));
 		assertThrows(NullPointerException.class, () -> new HousingService(null));
 		assertThrows(NullPointerException.class, () -> new ArmsfusionService(null));
+		assertThrows(NullPointerException.class, () -> new AtreianPassportService(null));
+		assertThrows(NullPointerException.class, () -> new ShugoSweepService(null, null));
+		assertThrows(NullPointerException.class, () -> new EventWindowService(null));
+		assertThrows(NullPointerException.class, () -> new LunaShopService(null, null));
+		assertThrows(NullPointerException.class, () -> new AtreianBestiaryService(null));
 		assertThrows(NullPointerException.class, () -> new LegionService(null, null, null, null, null));
 		assertThrows(NullPointerException.class, () -> new GrowthEnergy(null));
 		assertThrows(NullPointerException.class, () -> new PetService(null));

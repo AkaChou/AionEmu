@@ -1,14 +1,8 @@
 package com.aionemu.gameserver.services.abysslandingservice.landingspecialservice;
 
-import java.util.concurrent.atomic.AtomicBoolean;
-
-import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.gameserver.dao.AbyssSpecialLandingDAO;
 import com.aionemu.gameserver.model.landing_special.LandingSpecialLocation;
 import com.aionemu.gameserver.model.landing_special.LandingSpecialStateType;
 import com.aionemu.gameserver.services.AbyssLandingSpecialService;
-import lombok.Getter;
-import lombok.Setter;
 import lombok.RequiredArgsConstructor;
 
 /**
@@ -16,13 +10,10 @@ import lombok.RequiredArgsConstructor;
  * Abstract special abyss-landing lifecycle base.
  * @param <RL> 特殊着陆点位置类型 / Special landing-location type
  */
-@Getter
-@Setter
 @RequiredArgsConstructor
 public abstract class SpecialLanding<RL extends LandingSpecialLocation> {
 	private boolean started;
 	private final RL spacialLandingLocation;
-	private LandingSpecialStateType type;
 
 	/**
 	 * 停止特殊着陆点（子类实现去刷细节）。
@@ -35,8 +26,6 @@ public abstract class SpecialLanding<RL extends LandingSpecialLocation> {
 	 * Start special-landing spawns.
 	 */
 	protected abstract void startLanding();
-
-	private final AtomicBoolean closed = new AtomicBoolean();
 
 	/**
 	 * 幂等启动：已启动则直接返回。
@@ -83,30 +72,9 @@ public abstract class SpecialLanding<RL extends LandingSpecialLocation> {
 	}
 
 	/**
-	 * @return 是否已关闭 / Whether closed
-	 */
-	public boolean isClosed() {
-		return closed.get();
-	}
-
-	/**
 	 * @return 特殊着陆点位置 / Special landing location
 	 */
 	public RL getSpecialLandingLocation() {
 		return spacialLandingLocation;
-	}
-
-	/**
-	 * @return 特殊着陆点位置 ID / Special landing location id
-	 */
-	public int getSpecialLandingLocationId() {
-		return spacialLandingLocation.getId();
-	}
-
-	/**
-	 * @return 特殊着陆点 DAO / Special landing DAO
-	 */
-	private AbyssSpecialLandingDAO getDAO() {
-		return DAOManager.getDAO(AbyssSpecialLandingDAO.class);
 	}
 }

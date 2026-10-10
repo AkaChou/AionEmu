@@ -1,13 +1,11 @@
 package com.aionemu.gameserver.services.abysslandingservice;
 
-import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.gameserver.dao.AbyssLandingDAO;
 import com.aionemu.gameserver.model.landing.LandingLocation;
 import com.aionemu.gameserver.model.landing.LandingStateType;
 
 /**
- * 标准欧比斯着陆点实现：按等级刷怪/去刷并持久化位置。
- * Standard abyss landing implementation: spawn/despawn by level and persist location.
+ * 标准欧比斯着陆点实现：按等级刷怪/去刷。
+ * Standard abyss landing implementation: spawn/despawn by level.
  */
 public class AbyssLanding extends Landing<LandingLocation> {
 
@@ -58,14 +56,6 @@ public class AbyssLanding extends Landing<LandingLocation> {
 			spawn(LandingStateType.LVL1);
 			break;
 		}
-	}
-
-	/**
-	 * 将着陆点状态写回数据库。
-	 * Persist landing location state to the database.
-	 */
-	public void saveLanding() {
-		DAOManager.getDAO(AbyssLandingDAO.class).updateLocation(getLandingLocation());
 	}
 
 	/**

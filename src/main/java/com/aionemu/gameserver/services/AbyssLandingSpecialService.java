@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.ObjectProvider;
 
@@ -33,6 +34,7 @@ import com.aionemu.gameserver.spawnengine.SpawnEngine;
 @Slf4j(topic = "com.aionemu.gameserver.services.AbyssLandingService")
 public class AbyssLandingSpecialService {
 	private static volatile ObjectProvider<AbyssLandingSpecialService> instanceProvider;
+	private final AbyssSpecialLandingDAO abyssSpecialLandingDAO;
 	/**
 	 * 特殊登陆点 ID → 位置。 / Special landing id → location.
 	 */
@@ -43,12 +45,41 @@ public class AbyssLandingSpecialService {
 	private final ConcurrentMap<Integer, SpecialLanding<?>> activeSpecialLanding = new ConcurrentHashMap<>();
 
 	/**
+	 * 使用指定的 AbyssSpecialLandingDAO 构造特殊登陆点服务。
+	 * Constructs the special landing service with the given AbyssSpecialLandingDAO.
+	 *
+	 * @param abyssSpecialLandingDAO 特殊登陆点数据访问对象 / Special landing DAO
+	 */
+	public AbyssLandingSpecialService(@NonNull AbyssSpecialLandingDAO abyssSpecialLandingDAO) {
+		this.abyssSpecialLandingDAO = abyssSpecialLandingDAO;
+	}
+
+	/**
+	 * 默认构造器：优先取 DAOManager 中已注册的 DAO，未初始化时回退到独立实现。
+	 * Default constructor: prefers the DAOManager-registered DAO, falling back to the standalone implementation.
+	 */
+	public AbyssLandingSpecialService() {
+		this(safeDao(AbyssSpecialLandingDAO.class, com.aionemu.gameserver.dao.impl.AbyssSpecialLandingDAO::new));
+	}
+
+	private static <T extends com.aionemu.commons.database.dao.DAO> T safeDao(Class<T> daoClass,
+			java.util.function.Supplier<T> fallback) {
+		if (DAOManager.isInitialized()) {
+			try {
+				return DAOManager.getDAO(daoClass);
+			} catch (Exception ignored) {
+			}
+		}
+		return fallback.get();
+	}
+
+	/**
 	 * 初始化特殊登陆点：加载模板与数据库状态，并刷新 ACTIVE 位置。
 	 * Initializes special landings: loads templates and DB state, then spawns ACTIVE locations.
 	 */
 	public void initLandingSpecialLocations() {
 		abyssSpecialLanding = DataManager.LANDING_SPECIAL_LOCATION_DATA.getLandingSpecialLocations();
-		DAOManager.getDAO(AbyssSpecialLandingDAO.class).loadLandingSpecialLocations(abyssSpecialLanding);
+		abyssSpecialLandingDAO.loadLandingSpecialLocations(abyssSpecialLanding);
 		for (LandingSpecialLocation loc : getLandingSpecialLocations().values()) {
 			if (loc.getType() == null) {
 				loc.setType(LandingSpecialStateType.NO_ACTIVE);
@@ -116,8 +147,8 @@ public class AbyssLandingSpecialService {
 	 *
 	 * @param loc 登陆点位置 / landing location
 	 */
-	public static void onSave(LandingSpecialLocation loc) {
-		getDAO().updateLocation(loc);
+	public void onSave(LandingSpecialLocation loc) {
+		abyssSpecialLandingDAO.updateLocation(loc);
 	}
 
 	/**
@@ -190,14 +221,5 @@ public class AbyssLandingSpecialService {
 	 */
 	public static Map<Integer, LandingSpecialLocation> getLandingSpecialLocations() {
 		return abyssSpecialLanding;
-	}
-
-	/**
-	 * 获取特殊登陆点 DAO。
-	 * Returns the special landing DAO.
-	 * DAO instance
-	 */
-	public static AbyssSpecialLandingDAO getDAO() {
-		return DAOManager.getDAO(AbyssSpecialLandingDAO.class);
 	}
 }

@@ -2,6 +2,7 @@ package com.aionemu.gameserver.services.events;
 
 
 import com.aionemu.boot.i18n.I18n;
+import lombok.NonNull;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
@@ -43,9 +44,39 @@ public class AtreianPassportService {
 	 */
 	@Setter
 	private static volatile ObjectProvider<AtreianPassportService> instanceProvider;
+	private final PlayerPassportsDAO playerPassportsDAO;
 	private final Map<Integer, AtreianPassport> basic = new HashMap<>(1);
 	private final Map<Integer, AtreianPassport> anny = new HashMap<>(1);
 	public Map<Integer, AtreianPassport> data = new HashMap<>(1);
+
+	/**
+	 * 使用指定的 PlayerPassportsDAO 构造通行证服务。
+	 * Constructs the passport service with the given PlayerPassportsDAO.
+	 *
+	 * @param playerPassportsDAO 通行证数据访问对象 / passport DAO
+	 */
+	public AtreianPassportService(@NonNull PlayerPassportsDAO playerPassportsDAO) {
+		this.playerPassportsDAO = playerPassportsDAO;
+	}
+
+	/**
+	 * 构造通行证服务。
+	 * Constructs the passport service.
+	 */
+	public AtreianPassportService() {
+		this(safeDao(PlayerPassportsDAO.class, com.aionemu.gameserver.dao.impl.PlayerPassportsDAO::new));
+	}
+
+	private static <T extends com.aionemu.commons.database.dao.DAO> T safeDao(Class<T> daoClass,
+			java.util.function.Supplier<T> fallback) {
+		if (DAOManager.isInitialized()) {
+			try {
+				return DAOManager.getDAO(daoClass);
+			} catch (Exception ignored) {
+			}
+		}
+		return fallback.get();
+	}
 
 	/**
 	 * getPlayerPassports 方法。
@@ -55,7 +86,7 @@ public class AtreianPassportService {
 	 */
 	public Map<Integer, AtreianPassport> getPlayerPassports(int accountId) {
 		Map<Integer, AtreianPassport> passports = new HashMap<>();
-		List<Integer> ids = DAOManager.getDAO(PlayerPassportsDAO.class).getPassports(accountId);
+		List<Integer> ids = playerPassportsDAO.getPassports(accountId);
 		for (Integer i : ids) {
 			passports.put(i, data.get(i));
 		}
@@ -74,12 +105,11 @@ public class AtreianPassportService {
 		}
 		int atreianId = 8;
 		int accountId = player.getPlayerAccount().getId();
-		PlayerPassportsDAO dao = DAOManager.getDAO(PlayerPassportsDAO.class);
 		Map<Integer, AtreianPassport> playerPassports = getPlayerPassports(accountId);
 
 		// 若全部印章已领取则添加重置 / Added reset if all Stamps are received
-		if (dao.getStamps(accountId, atreianId) == 28) {
-			dao.updatePassport(accountId, atreianId, 0, true, new Timestamp(System.currentTimeMillis() - 86400000L));
+		if (playerPassportsDAO.getStamps(accountId, atreianId) == 28) {
+			playerPassportsDAO.updatePassport(accountId, atreianId, 0, true, new Timestamp(System.currentTimeMillis() - 86400000L));
 		}
 
 		Calendar cal = Calendar.getInstance();
@@ -90,15 +120,14 @@ public class AtreianPassportService {
 
 		if (!playerPassports.containsKey(atreianId)) {
 			final Timestamp now = new Timestamp(System.currentTimeMillis() - 86400000L);
-			dao.insertPassport(accountId, atreianId, 0, now);
+			playerPassportsDAO.insertPassport(accountId, atreianId, 0, now);
 			PacketSendUtility.sendPacket(player, new SM_ATREIAN_PASSPORT(atreianId, 0, 1, false, day, month + 1, year));
 		} else {
-			int stamps = dao.getStamps(accountId, atreianId);
+			int stamps = playerPassportsDAO.getStamps(accountId, atreianId);
 			Timestamp now2 = new Timestamp(System.currentTimeMillis());
-			Timestamp lastStamp = dao.getLastStamp(accountId, atreianId);
+			Timestamp lastStamp = playerPassportsDAO.getLastStamp(accountId, atreianId);
 			if (now2.getTime() - lastStamp.getTime() >= 86400000L) {
-				DAOManager.getDAO(PlayerPassportsDAO.class).updatePassport(accountId, atreianId, stamps, false,
-					lastStamp);
+				playerPassportsDAO.updatePassport(accountId, atreianId, stamps, false, lastStamp);
 				PacketSendUtility.sendPacket(player,
 					new SM_ATREIAN_PASSPORT(atreianId, stamps, 1, false, day, month + 1, year));
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_NEW_PASSPORT_AVAIBLE);

@@ -1,30 +1,17 @@
 package com.aionemu.gameserver.services.abysslandingservice;
 
-import java.util.concurrent.atomic.AtomicBoolean;
-
-import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.gameserver.dao.AbyssLandingDAO;
 import com.aionemu.gameserver.model.landing.LandingLocation;
 import com.aionemu.gameserver.model.landing.LandingStateType;
 import com.aionemu.gameserver.services.AbyssLandingService;
-import lombok.Getter;
-import lombok.Setter;
 import lombok.RequiredArgsConstructor;
 
 /**
- * 欧比斯着陆点生命周期抽象基类：启动/停止/更新与刷怪钩子。
- * Abstract abyss-landing lifecycle base: start/stop/update and spawn hooks.
+ * 欧比斯着陆点生命周期抽象基类：启动/停止与刷怪钩子。
+ * Abstract abyss-landing lifecycle base: start/stop and spawn hooks.
  * @param <RL> 着陆点位置类型 / Landing-location type
  */
-@Getter
-@Setter
 @RequiredArgsConstructor
 public abstract class Landing<RL extends LandingLocation> {
-	/**
-	 * 当前等级。
-	 * Current level.
-	 */
-	private int level;
 	private boolean started;
 	private final RL landingLocation;
 
@@ -35,19 +22,11 @@ public abstract class Landing<RL extends LandingLocation> {
 	protected abstract void stopLanding();
 
 	/**
-	 * 持久化着陆点状态（子类实现 DAO 写入）。
-	 * Persist landing state (subclass implements DAO write).
-	 */
-	protected abstract void saveLanding();
-
-	/**
 	 * 按等级启动着陆点刷怪。
 	 * Start landing spawns at the given level.
 	 * @param level 着陆等级 / Landing level
 	 */
 	protected abstract void startLanding(int level);
-
-	private final AtomicBoolean closed = new AtomicBoolean();
 
 	/**
 	 * 幂等启动：已启动则直接返回。
@@ -78,14 +57,6 @@ public abstract class Landing<RL extends LandingLocation> {
 	}
 
 	/**
-	 * 触发持久化更新。
-	 * Trigger a persistence update.
-	 */
-	public final void update() {
-		saveLanding();
-	}
-
-	/**
 	 * 按状态类型刷出 NPC。
 	 * Spawn NPCs for the given state type.
 	 * @param type 着陆状态 / Landing state type
@@ -103,26 +74,11 @@ public abstract class Landing<RL extends LandingLocation> {
 	}
 
 	/**
-	 * 着陆点是否已关闭。
-	 * Whether the landing is closed.
-	 * @return 是否已关闭 / closed flag
+	 * 获取着陆点位置。
+	 * Returns the landing location.
+	 * @return 着陆点位置 / Landing location
 	 */
-	public boolean isClosed() {
-		return closed.get();
-	}
-
-	/**
-	 * @return 着陆点位置 ID / Landing location id
-	 */
-	public int getLandingLocationId() {
-		return landingLocation.getId();
-	}
-
-	/**
-	 * 欧比斯着陆点 DAO。
-	 * Landing DAO.
-	 */
-	private AbyssLandingDAO getDAO() {
-		return DAOManager.getDAO(AbyssLandingDAO.class);
+	public RL getLandingLocation() {
+		return landingLocation;
 	}
 }

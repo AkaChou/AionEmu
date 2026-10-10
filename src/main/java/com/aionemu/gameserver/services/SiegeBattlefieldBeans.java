@@ -22,6 +22,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
 import com.aionemu.gameserver.dao.AbyssLandingDAO;
+import com.aionemu.gameserver.dao.AbyssSpecialLandingDAO;
 import com.aionemu.gameserver.dao.BaseDAO;
 import com.aionemu.gameserver.dao.ChallengeTasksDAO;
 import com.aionemu.gameserver.dao.HouseBidsDAO;
@@ -302,7 +303,8 @@ public class SiegeBattlefieldBeans {
 
     @Bean
     @Lazy
-    public AbyssLandingSpecialService abyssLandingSpecialService() {
-        return new AbyssLandingSpecialService();
+    public AbyssLandingSpecialService abyssLandingSpecialService(ObjectProvider<AbyssSpecialLandingDAO> abyssSpecialLandingDaoProvider) {
+        AbyssSpecialLandingDAO dao = abyssSpecialLandingDaoProvider.getIfAvailable();
+        return dao != null ? new AbyssLandingSpecialService(dao) : new AbyssLandingSpecialService();
     }
 }

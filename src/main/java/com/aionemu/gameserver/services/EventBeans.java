@@ -1,9 +1,13 @@
 package com.aionemu.gameserver.services;
 
 import com.aionemu.gameserver.eventEngine.EventScheduler;
-import com.aionemu.gameserver.dao.PlayerDAO;
 import com.aionemu.gameserver.dao.PlayerMinionsDAO;
-import org.springframework.beans.factory.ObjectProvider;
+import com.aionemu.gameserver.dao.PlayerDAO;
+import com.aionemu.gameserver.dao.PlayerEventsWindowDAO;
+import com.aionemu.gameserver.dao.PlayerLunaShopDAO;
+import com.aionemu.gameserver.dao.PlayerPassportsDAO;
+import com.aionemu.gameserver.dao.PlayerShugoSweepDAO;
+import com.aionemu.gameserver.dao.PlayerWardrobeDAO;
 import com.aionemu.gameserver.services.abyss.AbyssRankUpdateService;
 import com.aionemu.gameserver.services.events.AtreianPassportService;
 import com.aionemu.gameserver.services.events.BGService;
@@ -18,6 +22,7 @@ import com.aionemu.gameserver.services.player.PlayerEventService;
 import com.aionemu.gameserver.services.player.PlayerLimitService;
 import com.aionemu.gameserver.services.toypet.MinionService;
 import com.aionemu.gameserver.taskmanager.tasks.PacketBroadcaster;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
@@ -109,8 +114,12 @@ public class EventBeans {
 
     @Bean
     @Lazy
-    public LunaShopService lunaShopService() {
-        return new LunaShopService();
+    public LunaShopService lunaShopService(ObjectProvider<PlayerLunaShopDAO> lunaShopDaoProvider,
+            ObjectProvider<PlayerWardrobeDAO> wardrobeDaoProvider) {
+        PlayerLunaShopDAO lunaShopDao = lunaShopDaoProvider.getIfAvailable();
+        PlayerWardrobeDAO wardrobeDao = wardrobeDaoProvider.getIfAvailable();
+        return lunaShopDao != null && wardrobeDao != null ? new LunaShopService(lunaShopDao, wardrobeDao)
+                : new LunaShopService();
     }
 
     @Bean
@@ -125,20 +134,26 @@ public class EventBeans {
 
     @Bean
     @Lazy
-    public ShugoSweepService shugoSweepService() {
-        return new ShugoSweepService();
+    public ShugoSweepService shugoSweepService(ObjectProvider<PlayerShugoSweepDAO> shugoSweepDaoProvider,
+            ObjectProvider<PlayerDAO> playerDaoProvider) {
+        PlayerShugoSweepDAO shugoSweepDao = shugoSweepDaoProvider.getIfAvailable();
+        PlayerDAO playerDao = playerDaoProvider.getIfAvailable();
+        return shugoSweepDao != null && playerDao != null ? new ShugoSweepService(shugoSweepDao, playerDao)
+                : new ShugoSweepService();
     }
 
     @Bean
     @Lazy
-    public AtreianPassportService atreianPassportService() {
-        return new AtreianPassportService();
+    public AtreianPassportService atreianPassportService(ObjectProvider<PlayerPassportsDAO> passportsDaoProvider) {
+        PlayerPassportsDAO dao = passportsDaoProvider.getIfAvailable();
+        return dao != null ? new AtreianPassportService(dao) : new AtreianPassportService();
     }
 
     @Bean
     @Lazy
-    public EventWindowService eventWindowService() {
-        return new EventWindowService();
+    public EventWindowService eventWindowService(ObjectProvider<PlayerEventsWindowDAO> eventsWindowDaoProvider) {
+        PlayerEventsWindowDAO dao = eventsWindowDaoProvider.getIfAvailable();
+        return dao != null ? new EventWindowService(dao) : new EventWindowService();
     }
 
     @Bean

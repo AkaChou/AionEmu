@@ -32,6 +32,7 @@ import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
+import com.aionemu.gameserver.dao.PlayerABDAO;
 import com.aionemu.gameserver.dao.PlayerCreativityPointsDAO;
 import com.aionemu.gameserver.dao.PlayerPetsDAO;
 import com.aionemu.gameserver.dao.PlayerRecipesDAO;
@@ -65,8 +66,9 @@ public class TaskAndStatBeans {
 
     @Bean
     @Lazy
-    public AtreianBestiaryService atreianBestiaryService() {
-        return new AtreianBestiaryService();
+    public AtreianBestiaryService atreianBestiaryService(ObjectProvider<PlayerABDAO> playerAbDaoProvider) {
+        PlayerABDAO dao = playerAbDaoProvider.getIfAvailable();
+        return dao != null ? new AtreianBestiaryService(dao) : new AtreianBestiaryService();
     }
 
     @Bean
