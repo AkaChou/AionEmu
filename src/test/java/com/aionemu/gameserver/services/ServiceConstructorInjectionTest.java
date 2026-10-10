@@ -86,6 +86,10 @@ import com.aionemu.gameserver.services.player.PlayerService;
 import com.aionemu.gameserver.services.player.PlayerServiceDaos;
 import com.aionemu.gameserver.services.toypet.PetService;
 import com.aionemu.gameserver.services.transfers.PlayerTransferService;
+import com.aionemu.gameserver.services.abyss.AbyssRankCleaningService;
+import com.aionemu.gameserver.services.abyss.AbyssRankingCache;
+import com.aionemu.gameserver.services.abyss.AbyssRankUpdateService;
+import com.aionemu.gameserver.configs.main.CleaningConfig;
 import com.aionemu.gameserver.configs.main.PlayerTransferConfig;
 
 /**
@@ -223,6 +227,40 @@ class ServiceConstructorInjectionTest {
 		};
 
 		AbyssLandingSpecialService service = new AbyssLandingSpecialService(stubAbyssSpecialLandingDAO);
+		assertNotNull(service);
+	}
+
+	@Test
+	void abyssRankUpdateServiceConstructsWithInjectedDaos() {
+		JdbcClient client = createNoAccessJdbcClient();
+		AbyssRankDAO abyssRankDAO = new com.aionemu.gameserver.dao.impl.AbyssRankDAO(client);
+		ServerVariablesDAO serverVariablesDAO = new com.aionemu.gameserver.dao.impl.ServerVariablesDAO(client);
+
+		AbyssRankUpdateService service = new AbyssRankUpdateService(abyssRankDAO, serverVariablesDAO);
+		assertNotNull(service);
+	}
+
+	@Test
+	void abyssRankCleaningServiceConstructsWithInjectedDao() {
+		boolean previousEnable = CleaningConfig.ABYSS_CLEANING_ENABLE;
+		try {
+			CleaningConfig.ABYSS_CLEANING_ENABLE = false;
+			JdbcClient client = createNoAccessJdbcClient();
+			AbyssRankDAO abyssRankDAO = new com.aionemu.gameserver.dao.impl.AbyssRankDAO(client);
+
+			AbyssRankCleaningService service = new AbyssRankCleaningService(abyssRankDAO);
+			assertNotNull(service);
+		} finally {
+			CleaningConfig.ABYSS_CLEANING_ENABLE = previousEnable;
+		}
+	}
+
+	@Test
+	void abyssRankingCacheConstructsWithInjectedDao() {
+		JdbcClient client = createNoAccessJdbcClient();
+		AbyssRankDAO abyssRankDAO = new com.aionemu.gameserver.dao.impl.AbyssRankDAO(client);
+
+		AbyssRankingCache service = new AbyssRankingCache(abyssRankDAO);
 		assertNotNull(service);
 	}
 
@@ -785,6 +823,9 @@ class ServiceConstructorInjectionTest {
 		assertThrows(NullPointerException.class, () -> new AnnouncementService(null));
 		assertThrows(NullPointerException.class, () -> new AbyssLandingService(null));
 		assertThrows(NullPointerException.class, () -> new AbyssLandingSpecialService(null));
+		assertThrows(NullPointerException.class, () -> new AbyssRankUpdateService(null, null));
+		assertThrows(NullPointerException.class, () -> new AbyssRankCleaningService(null));
+		assertThrows(NullPointerException.class, () -> new AbyssRankingCache(null));
 		assertThrows(NullPointerException.class, () -> new ExchangeService(null));
 		assertThrows(NullPointerException.class, () -> new PetitionService(null));
 		assertThrows(NullPointerException.class, () -> new BrokerService(null, null));

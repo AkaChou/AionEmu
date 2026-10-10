@@ -32,6 +32,7 @@ import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
+import com.aionemu.gameserver.dao.AbyssRankDAO;
 import com.aionemu.gameserver.dao.PlayerABDAO;
 import com.aionemu.gameserver.dao.PlayerCreativityPointsDAO;
 import com.aionemu.gameserver.dao.PlayerPetsDAO;
@@ -226,7 +227,8 @@ public class TaskAndStatBeans {
 
     @Bean
     @Lazy
-    public AbyssRankCleaningService abyssRankCleaningService() {
-        return new AbyssRankCleaningService();
+    public AbyssRankCleaningService abyssRankCleaningService(ObjectProvider<AbyssRankDAO> abyssRankDaoProvider) {
+        AbyssRankDAO dao = abyssRankDaoProvider.getIfAvailable();
+        return dao != null ? new AbyssRankCleaningService(dao) : new AbyssRankCleaningService();
     }
 }

@@ -2,6 +2,7 @@ package com.aionemu.gameserver.services.abyss;
 
 
 import com.aionemu.boot.i18n.I18n;
+import lombok.NonNull;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
@@ -47,16 +48,42 @@ public class AbyssRankUpdateService {
      */
     @Setter
     private static volatile ObjectProvider<AbyssRankUpdateService> instanceProvider;
+	private final AbyssRankDAO abyssRankDAO;
+	private final ServerVariablesDAO serverVariablesDAO;
 	private Race rewardRace;
 	private final Runnable updateTask = this::performUpdate;
 	private Future<?> minuteUpdateTask;
 
+	/**
+	 * 使用指定的 DAO 集合构造军阶刷新服务。
+	 * Constructs the rank update service with the given DAOs.
+	 *
+	 * @param abyssRankDAO 欧比斯军阶数据访问对象 / Abyss-rank DAO
+	 * @param serverVariablesDAO 服务器变量数据访问对象 / Server-variables DAO
+	 */
+	public AbyssRankUpdateService(@NonNull AbyssRankDAO abyssRankDAO, @NonNull ServerVariablesDAO serverVariablesDAO) {
+		this.abyssRankDAO = abyssRankDAO;
+		this.serverVariablesDAO = serverVariablesDAO;
+	}
 
 	/**
-	 * 默认构造。
-	 * Default constructor.
+	 * 默认构造器：优先取 DAOManager 中已注册的 DAO，未初始化时回退到独立实现。
+	 * Default constructor: prefers the DAOManager-registered DAOs, falling back to the standalone implementations.
 	 */
 	public AbyssRankUpdateService() {
+		this(safeDao(AbyssRankDAO.class, com.aionemu.gameserver.dao.impl.AbyssRankDAO::new),
+			safeDao(ServerVariablesDAO.class, com.aionemu.gameserver.dao.impl.ServerVariablesDAO::new));
+	}
+
+	private static <T extends com.aionemu.commons.database.dao.DAO> T safeDao(Class<T> daoClass,
+			java.util.function.Supplier<T> fallback) {
+		if (DAOManager.isInitialized()) {
+			try {
+				return DAOManager.getDAO(daoClass);
+			} catch (Exception ignored) {
+			}
+		}
+		return fallback.get();
 	}
 
 	/**
@@ -85,8 +112,7 @@ public class AbyssRankUpdateService {
 	 * Schedule rank refresh on the hourly cron rule.
 	 */
 	public void scheduleUpdateHour() {
-		ServerVariablesDAO dao = DAOManager.getDAO(ServerVariablesDAO.class);
-		int nextTime = dao.load("abyssRankUpdate");
+		int nextTime = serverVariablesDAO.load("abyssRankUpdate");
 		if (nextTime < System.currentTimeMillis() / 1000) {
 			performUpdate();
 		}
@@ -99,8 +125,7 @@ public class AbyssRankUpdateService {
 	 * Schedule rank refresh on a fixed minute interval.
 	 */
 	public void scheduleUpdateMinute() {
-		ServerVariablesDAO dao = DAOManager.getDAO(ServerVariablesDAO.class);
-		int nextTime = dao.load("abyssRankUpdate");
+		int nextTime = serverVariablesDAO.load("abyssRankUpdate");
 		if (nextTime < System.currentTimeMillis() / 1000) {
 			performUpdate();
 		}
@@ -140,7 +165,7 @@ public class AbyssRankUpdateService {
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
 			AbyssPointsService.AbyssRankCheck(player);
 			player.getAbyssRank().doUpdate();
-			DAOManager.getDAO(AbyssRankDAO.class).storeAbyssRank(player);
+			abyssRankDAO.storeAbyssRank(player);
 		});
 		updateLimitedGpRanks();
 		AbyssRankingCacheUpdate();
@@ -245,8 +270,7 @@ public class AbyssRankUpdateService {
 	 * @param activeAfterDays 活跃离线天数上限 / max offline days still considered active
 	 */
 	private void updateAllRanksGpForRace(Race race, int gpLimit, int activeAfterDays) {
-		Map<Integer, Integer> playerGpMap = DAOManager.getDAO(AbyssRankDAO.class).loadPlayersGp(race, gpLimit,
-				activeAfterDays);
+		Map<Integer, Integer> playerGpMap = abyssRankDAO.loadPlayersGp(race, gpLimit, activeAfterDays);
 		List<Entry<Integer, Integer>> playerGpEntries = new ArrayList<>(playerGpMap.entrySet());
 		Collections.sort(playerGpEntries, new PlayerGpComparator<>());
 		selectGpRank(AbyssRankEnum.SUPREME_COMMANDER, playerGpEntries);
@@ -321,7 +345,7 @@ public class AbyssRankUpdateService {
 				AbyssPointsService.checkRankChanged(onlinePlayer, currentRank, newRank);
 			}
 		} else {
-			DAOManager.getDAO(AbyssRankDAO.class).updateAbyssRank(playerId, newRank);
+			abyssRankDAO.updateAbyssRank(playerId, newRank);
 		}
 	}
 
@@ -342,7 +366,7 @@ public class AbyssRankUpdateService {
 				AbyssPointsService.checkRankGpChanged(onlinePlayer, currentRank, newRank);
 			}
 		} else {
-			DAOManager.getDAO(AbyssRankDAO.class).updateAbyssRank(playerId, newRank);
+			abyssRankDAO.updateAbyssRank(playerId, newRank);
 		}
 	}
 

@@ -401,8 +401,9 @@ public class CoreRuntimeServiceBeans {
     }
 
     @Bean
-    public AbyssRankingCache abyssRankingCache() {
-        return new AbyssRankingCache();
+    public AbyssRankingCache abyssRankingCache(ObjectProvider<AbyssRankDAO> abyssRankDaoProvider) {
+        AbyssRankDAO dao = abyssRankDaoProvider.getIfAvailable();
+        return dao != null ? new AbyssRankingCache(dao) : new AbyssRankingCache();
     }
 
     @Bean

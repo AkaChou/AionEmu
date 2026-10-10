@@ -3,6 +3,7 @@ package com.aionemu.gameserver.services.abyss;
 
 import com.aionemu.boot.i18n.I18n;
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
@@ -36,8 +37,38 @@ public class AbyssRankingCache {
 	private static volatile ObjectProvider<AbyssRankingCache> instanceProvider;
     @Getter
     private int lastUpdate;
+	private final AbyssRankDAO abyssRankDAO;
 	private final Map<Race, List<SM_ABYSS_RANKING_PLAYERS>> players = new HashMap<>();
 	private final Map<Race, SM_ABYSS_RANKING_LEGIONS> legions = new HashMap<>();
+
+	/**
+	 * 使用指定的 AbyssRankDAO 构造排行缓存。
+	 * Constructs the ranking cache with the given AbyssRankDAO.
+	 *
+	 * @param abyssRankDAO 欧比斯军阶数据访问对象 / Abyss-rank DAO
+	 */
+	public AbyssRankingCache(@NonNull AbyssRankDAO abyssRankDAO) {
+		this.abyssRankDAO = abyssRankDAO;
+	}
+
+	/**
+	 * 默认构造器：优先取 DAOManager 中已注册的 DAO，未初始化时回退到独立实现。
+	 * Default constructor: prefers the DAOManager-registered DAO, falling back to the standalone implementation.
+	 */
+	public AbyssRankingCache() {
+		this(safeDao(AbyssRankDAO.class, com.aionemu.gameserver.dao.impl.AbyssRankDAO::new));
+	}
+
+	private static <T extends com.aionemu.commons.database.dao.DAO> T safeDao(Class<T> daoClass,
+			java.util.function.Supplier<T> fallback) {
+		if (DAOManager.isInitialized()) {
+			try {
+				return DAOManager.getDAO(daoClass);
+			} catch (Exception ignored) {
+			}
+		}
+		return fallback.get();
+	}
 
 	/**
 	 * 从 DAO 重算排行并刷新玩家/军团缓存，重置在线玩家的排行已更新标志。
@@ -46,7 +77,7 @@ public class AbyssRankingCache {
 	public void reloadRankings() {
 		log.info(I18n.get("log.d227d2ed702b"));
 		this.lastUpdate = (int) (System.currentTimeMillis() / 1000);
-		getDAO().updateRankList();
+		abyssRankDAO.updateRankList();
 		renewPlayerRanking(Race.ASMODIANS);
 		renewPlayerRanking(Race.ELYOS);
 		renewLegionRanking();
@@ -59,8 +90,8 @@ public class AbyssRankingCache {
 	 */
 	private void renewLegionRanking() {
 		Map<Integer, Integer> newLegionRankingCache = new HashMap<>();
-		ArrayList<AbyssRankingResult> elyosRanking = getDAO().getAbyssRankingLegions(Race.ELYOS);
-		ArrayList<AbyssRankingResult> asmoRanking = getDAO().getAbyssRankingLegions(Race.ASMODIANS);
+		ArrayList<AbyssRankingResult> elyosRanking = abyssRankDAO.getAbyssRankingLegions(Race.ELYOS);
+		ArrayList<AbyssRankingResult> asmoRanking = abyssRankDAO.getAbyssRankingLegions(Race.ASMODIANS);
 		legions.clear();
 		legions.put(Race.ASMODIANS, new SM_ABYSS_RANKING_LEGIONS(lastUpdate, asmoRanking, Race.ASMODIANS));
 		legions.put(Race.ELYOS, new SM_ABYSS_RANKING_LEGIONS(lastUpdate, elyosRanking, Race.ELYOS));
@@ -92,7 +123,7 @@ public class AbyssRankingCache {
 	 * @return 分页数据包 / Paged packets
 	 */
 	private List<SM_ABYSS_RANKING_PLAYERS> generatePacketsForRace(Race race) {
-		ArrayList<AbyssRankingResult> list = getDAO().getAbyssRankingPlayers(race);
+		ArrayList<AbyssRankingResult> list = abyssRankDAO.getAbyssRankingPlayers(race);
 		int page = 1;
 		List<SM_ABYSS_RANKING_PLAYERS> playerPackets = new ArrayList<>();
 		for (int i = 0; i < list.size(); i += 44) {
@@ -121,13 +152,6 @@ public class AbyssRankingCache {
 	 */
 	public SM_ABYSS_RANKING_LEGIONS getLegions(Race race) {
 		return legions.get(race);
-	}
-
-    /**
-	 * @return 欧比斯军阶 DAO / Abyss-rank DAO
-	 */
-	private AbyssRankDAO getDAO() {
-		return DAOManager.getDAO(AbyssRankDAO.class);
 	}
 
 	/**

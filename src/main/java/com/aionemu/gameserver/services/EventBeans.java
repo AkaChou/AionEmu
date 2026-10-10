@@ -1,8 +1,10 @@
 package com.aionemu.gameserver.services;
 
 import com.aionemu.gameserver.eventEngine.EventScheduler;
+import com.aionemu.gameserver.dao.AbyssRankDAO;
 import com.aionemu.gameserver.dao.PlayerMinionsDAO;
 import com.aionemu.gameserver.dao.PlayerDAO;
+import com.aionemu.gameserver.dao.ServerVariablesDAO;
 import com.aionemu.gameserver.dao.PlayerEventsWindowDAO;
 import com.aionemu.gameserver.dao.PlayerLunaShopDAO;
 import com.aionemu.gameserver.dao.PlayerPassportsDAO;
@@ -54,8 +56,13 @@ public class EventBeans {
 
     @Bean
     @Lazy
-    public AbyssRankUpdateService abyssRankUpdateService() {
-        return new AbyssRankUpdateService();
+    public AbyssRankUpdateService abyssRankUpdateService(ObjectProvider<AbyssRankDAO> abyssRankDaoProvider,
+            ObjectProvider<ServerVariablesDAO> serverVariablesDaoProvider) {
+        AbyssRankDAO abyssRankDao = abyssRankDaoProvider.getIfAvailable();
+        ServerVariablesDAO serverVariablesDao = serverVariablesDaoProvider.getIfAvailable();
+        return abyssRankDao != null && serverVariablesDao != null
+                ? new AbyssRankUpdateService(abyssRankDao, serverVariablesDao)
+                : new AbyssRankUpdateService();
     }
 
     @Bean

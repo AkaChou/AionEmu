@@ -2,6 +2,7 @@ package com.aionemu.gameserver.services.abyss;
 
 
 import com.aionemu.boot.i18n.I18n;
+import lombok.NonNull;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
@@ -33,19 +34,42 @@ public class AbyssRankCleaningService {
      */
     @Setter
     private static volatile ObjectProvider<AbyssRankCleaningService> instanceProvider;
+	private final AbyssRankDAO abyssRankDAO;
 
 	private final int SECURITY_MINIMUM_PERIOD = 30;
 
 	private long startTime;
 
 	/**
-	 * 构造时若启用清理配置则立即执行一轮。
-	 * Runs one cleaning pass on construction when the cleaning config is enabled.
+	 * 使用指定的 AbyssRankDAO 构造清理服务，启用清理配置时立即执行一轮。
+	 * Constructs the cleaning service with the given AbyssRankDAO; runs one cleaning pass when enabled.
+	 *
+	 * @param abyssRankDAO 欧比斯军阶数据访问对象 / Abyss-rank DAO
 	 */
-	public AbyssRankCleaningService() {
+	public AbyssRankCleaningService(@NonNull AbyssRankDAO abyssRankDAO) {
+		this.abyssRankDAO = abyssRankDAO;
 		if (CleaningConfig.ABYSS_CLEANING_ENABLE) {
 			runCleaning();
 		}
+	}
+
+	/**
+	 * 默认构造器：优先取 DAOManager 中已注册的 DAO，未初始化时回退到独立实现。
+	 * Default constructor: prefers the DAOManager-registered DAO, falling back to the standalone implementation.
+	 */
+	public AbyssRankCleaningService() {
+		this(safeDao(AbyssRankDAO.class, com.aionemu.gameserver.dao.impl.AbyssRankDAO::new));
+	}
+
+	private static <T extends com.aionemu.commons.database.dao.DAO> T safeDao(Class<T> daoClass,
+			java.util.function.Supplier<T> fallback) {
+		if (DAOManager.isInitialized()) {
+			try {
+				return DAOManager.getDAO(daoClass);
+			} catch (Exception ignored) {
+			}
+		}
+		return fallback.get();
 	}
 
 	/**
@@ -70,10 +94,8 @@ public class AbyssRankCleaningService {
 	 * Scan both races' ranked players, remove stale offline ones, and reload cache.
 	 */
 	private void runAbyssRankingCleaning(int periodInDays) {
-		ArrayList<AbyssRankingResult> rankingsElyos = DAOManager.getDAO(AbyssRankDAO.class)
-				.getAbyssRankingPlayers(Race.ELYOS);
-		ArrayList<AbyssRankingResult> rankingsAsmos = DAOManager.getDAO(AbyssRankDAO.class)
-				.getAbyssRankingPlayers(Race.ASMODIANS);
+		ArrayList<AbyssRankingResult> rankingsElyos = abyssRankDAO.getAbyssRankingPlayers(Race.ELYOS);
+		ArrayList<AbyssRankingResult> rankingsAsmos = abyssRankDAO.getAbyssRankingPlayers(Race.ASMODIANS);
 		List<Player> ToArray = new ArrayList<>();
 		long offlineThresholdMs = (long) periodInDays * 24L * 60L * 60L * 1000L;
 		for (AbyssRankingResult result : rankingsElyos) {
@@ -102,7 +124,7 @@ public class AbyssRankCleaningService {
 		}
 
 		if (ToArray.size() > 0) {
-			DAOManager.getDAO(AbyssRankDAO.class).removePlayer(ToArray);
+			abyssRankDAO.removePlayer(ToArray);
 			GameCoreGameplayServices.abyssRankingCache().reloadRankings();
 			log.info(I18n.get("log.3ff8b7b008ed", ToArray.size(), (System.currentTimeMillis() - startTime) / 1000L));
 		} else {
