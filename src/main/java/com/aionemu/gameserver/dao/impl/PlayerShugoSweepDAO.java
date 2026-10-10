@@ -1,34 +1,45 @@
 package com.aionemu.gameserver.dao.impl;
 
+import java.util.Objects;
+
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.simple.JdbcClient;
 
 import com.aionemu.boot.i18n.I18n;
-import lombok.extern.slf4j.Slf4j;
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.gameserver.model.gameobjects.PersistentState;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.gameobjects.player.PlayerSweep;
-import java.sql.*;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 玩家修勾扫荡 DAO 的 MySQL 8 实现。
- * MySQL 8 implementation of PlayerShugoSweepDAO.
+ * MySQL 8 implementation of PlayerShugoSweepDAO using JdbcClient.
  * Created by Wnkrz on 24/10/2017.
  * Updated for MySQL 8 - Fixed connection leaks.
  */
 @Slf4j
 public class PlayerShugoSweepDAO extends com.aionemu.gameserver.dao.PlayerShugoSweepDAO {
 
-
     /** 插入扫荡记录 SQL / Insert sweep record SQL */
     private static final String ADD_QUERY = "INSERT INTO `player_shugo_sweep` (`player_id`, `free_dice`, `sweep_step`, `board_id`) VALUES (?,?,?,?)";
     /** 查询扫荡 SQL / Select sweep SQL */
     private static final String SELECT_QUERY = "SELECT * FROM `player_shugo_sweep` WHERE `player_id`=?";
-    /**
-	 * 删除全部术古清扫记录。 / Delete all Shugo Sweep records.
-	 */
+    /** 删除全部术古清扫记录。 / Delete all Shugo Sweep records. */
     private static final String DELETE_QUERY = "DELETE FROM `player_shugo_sweep`";
     /** 更新扫荡 SQL / Update sweep SQL */
     private static final String UPDATE_QUERY = "UPDATE player_shugo_sweep SET `free_dice`=?, `sweep_step`=?, `board_id`=? WHERE `player_id`=?";
+
+    private final JdbcClient jdbcClient;
+
+    public PlayerShugoSweepDAO() {
+        this(DatabaseFactory.getJdbcClient());
+    }
+
+    public PlayerShugoSweepDAO(JdbcClient jdbcClient) {
+        this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");
+    }
 
     /**
      * 加载玩家修勾扫荡数据。
@@ -37,13 +48,10 @@ public class PlayerShugoSweepDAO extends com.aionemu.gameserver.dao.PlayerShugoS
      */
     @Override
     public void load(Player player) {
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(SELECT_QUERY)) {
-
-            stmt.setInt(1, player.getObjectId());
-
-            try (ResultSet rset = stmt.executeQuery()) {
-                if (rset.next()) {
+        try {
+            jdbcClient.sql(SELECT_QUERY)
+                .param(player.getObjectId())
+                .query((rset, rowNum) -> {
                     int dice = rset.getInt("free_dice");
                     int step = rset.getInt("sweep_step");
                     int boardId = rset.getInt("board_id");
@@ -51,9 +59,10 @@ public class PlayerShugoSweepDAO extends com.aionemu.gameserver.dao.PlayerShugoS
                     PlayerSweep ps = new PlayerSweep(step, dice, boardId);
                     ps.setPersistentState(PersistentState.UPDATED);
                     player.setPlayerShugoSweep(ps);
-                }
-            }
-        } catch (SQLException e) {
+                    return null;
+                })
+                .list();
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.400851d054d8", player.getObjectId()), e);
         }
     }
@@ -69,16 +78,15 @@ public class PlayerShugoSweepDAO extends com.aionemu.gameserver.dao.PlayerShugoS
      */
     @Override
     public boolean add(final int playerId, final int dice, final int step, final int boardId) {
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(ADD_QUERY)) {
-
-            stmt.setInt(1, playerId);
-            stmt.setInt(2, dice);
-            stmt.setInt(3, step);
-            stmt.setInt(4, boardId);
-            stmt.executeUpdate();
+        try {
+            jdbcClient.sql(ADD_QUERY)
+                .param(playerId)
+                .param(dice)
+                .param(step)
+                .param(boardId)
+                .update();
             return true;
-        } catch (SQLException e) {
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.81d2b7934965", playerId), e);
             return false;
         }
@@ -91,12 +99,10 @@ public class PlayerShugoSweepDAO extends com.aionemu.gameserver.dao.PlayerShugoS
      */
     @Override
     public boolean delete() {
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(DELETE_QUERY)) {
-
-            stmt.executeUpdate();
+        try {
+            jdbcClient.sql(DELETE_QUERY).update();
             return true;
-        } catch (SQLException e) {
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.b01e2acd651b"), e);
             return false;
         }
@@ -111,29 +117,21 @@ public class PlayerShugoSweepDAO extends com.aionemu.gameserver.dao.PlayerShugoS
     @Override
     public boolean store(Player player) {
         boolean success = false;
-
-        try (Connection con = DatabaseFactory.getConnection()) {
-            con.setAutoCommit(false);
-
-            PlayerSweep bind = player.getPlayerShugoSweep();
-            if (bind != null) {
-                switch (bind.getPersistentState()) {
-                    case UPDATE_REQUIRED:
-                    case NEW:
-                        success = updatePlayerSweep(con, player);
-                        log.debug("DB updated for player {}", player.getObjectId());
-                        break;
-                    default:
-                        success = true;
-                        break;
-                }
-                if (success) {
-                    bind.setPersistentState(PersistentState.UPDATED);
-                }
+        PlayerSweep bind = player.getPlayerShugoSweep();
+        if (bind != null) {
+            switch (bind.getPersistentState()) {
+                case UPDATE_REQUIRED:
+                case NEW:
+                    success = updatePlayerSweep(player);
+                    log.debug("DB updated for player {}", player.getObjectId());
+                    break;
+                default:
+                    success = true;
+                    break;
             }
-            con.commit();
-        } catch (SQLException e) {
-            log.error(I18n.get("log.3330e011e639", player.getObjectId()), e);
+            if (success) {
+                bind.setPersistentState(PersistentState.UPDATED);
+            }
         }
         return success;
     }
@@ -141,25 +139,24 @@ public class PlayerShugoSweepDAO extends com.aionemu.gameserver.dao.PlayerShugoS
     /**
      * 更新玩家扫荡记录。
      * Updates player sweep record.
-     * @param con 数据库连接 / database connection
      * @param player 玩家 / player
      * @return 是否成功 / whether succeeded
      */
-    private boolean updatePlayerSweep(Connection con, Player player) {
-        try (PreparedStatement stmt = con.prepareStatement(UPDATE_QUERY)) {
-            PlayerSweep lr = player.getPlayerShugoSweep();
-            if (lr == null) {
-                return false;
-            }
+    private boolean updatePlayerSweep(Player player) {
+        PlayerSweep lr = player.getPlayerShugoSweep();
+        if (lr == null) {
+            return false;
+        }
 
-            stmt.setInt(1, lr.getFreeDice());
-            stmt.setInt(2, lr.getStep());
-            stmt.setInt(3, lr.getBoardId());
-            stmt.setInt(4, player.getObjectId());
-
-            stmt.executeUpdate();
+        try {
+            jdbcClient.sql(UPDATE_QUERY)
+                .param(lr.getFreeDice())
+                .param(lr.getStep())
+                .param(lr.getBoardId())
+                .param(player.getObjectId())
+                .update();
             return true;
-        } catch (SQLException e) {
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.ee22970ca710", player.getObjectId()), e);
             return false;
         }
@@ -176,16 +173,15 @@ public class PlayerShugoSweepDAO extends com.aionemu.gameserver.dao.PlayerShugoS
      */
     @Override
     public boolean setShugoSweepByObjId(int obj, final int freeDice, final int step, int boardId) {
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(UPDATE_QUERY)) {
-
-            stmt.setInt(1, freeDice);
-            stmt.setInt(2, step);
-            stmt.setInt(3, boardId);
-            stmt.setInt(4, obj);
-            stmt.executeUpdate();
+        try {
+            jdbcClient.sql(UPDATE_QUERY)
+                .param(freeDice)
+                .param(step)
+                .param(boardId)
+                .param(obj)
+                .update();
             return true;
-        } catch (SQLException e) {
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.88e530b6f3ac", obj), e);
             return false;
         }

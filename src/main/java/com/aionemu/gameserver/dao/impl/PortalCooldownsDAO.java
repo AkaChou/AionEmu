@@ -1,21 +1,22 @@
 package com.aionemu.gameserver.dao.impl;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
+
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.simple.JdbcClient;
 
 import com.aionemu.boot.i18n.I18n;
-import lombok.extern.slf4j.Slf4j;
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.gameobjects.player.PortalCooldownItem;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Map;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 传送门冷却 DAO 的 MySQL 8 实现。
- * MySQL 8 implementation of PortalCooldownsDAO.
+ * MySQL 8 implementation of PortalCooldownsDAO using JdbcClient.
  * Updated for MySQL 8 - Fixed connection leaks.
  */
 @Slf4j
@@ -28,6 +29,16 @@ public class PortalCooldownsDAO extends com.aionemu.gameserver.dao.PortalCooldow
 	/** 查询传送门冷却 SQL / Select portal cooldowns SQL*/
 	private static final String SELECT_QUERY = "SELECT `world_id`, `reuse_time`, `entry_count` FROM `portal_cooldowns` WHERE `player_id`=?";
 
+	private final JdbcClient jdbcClient;
+
+	public PortalCooldownsDAO() {
+		this(DatabaseFactory.getJdbcClient());
+	}
+
+	public PortalCooldownsDAO(JdbcClient jdbcClient) {
+		this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");
+	}
+
 	/**
 	 * 加载玩家传送门冷却。
 	 * Loads portal cooldowns for a player.
@@ -37,24 +48,23 @@ public class PortalCooldownsDAO extends com.aionemu.gameserver.dao.PortalCooldow
 	public void loadPortalCooldowns(final Player player) {
 		Map<Integer, PortalCooldownItem> portalCoolDowns = new HashMap<>();
 
-		try (Connection con = DatabaseFactory.getConnection();
-			 PreparedStatement stmt = con.prepareStatement(SELECT_QUERY)) {
-
-			stmt.setInt(1, player.getObjectId());
-
-			try (ResultSet rset = stmt.executeQuery()) {
-				while (rset.next()) {
-					int worldId = rset.getInt("world_id");
-					long reuseTime = rset.getLong("reuse_time");
-					int entryCount = rset.getInt("entry_count");
-					if (reuseTime > System.currentTimeMillis()) {
+		try {
+			long now = System.currentTimeMillis();
+			jdbcClient.sql(SELECT_QUERY)
+				.param(player.getObjectId())
+				.query((rs, rowNum) -> {
+					int worldId = rs.getInt("world_id");
+					long reuseTime = rs.getLong("reuse_time");
+					int entryCount = rs.getInt("entry_count");
+					if (reuseTime > now) {
 						portalCoolDowns.put(worldId, new PortalCooldownItem(worldId, entryCount, reuseTime));
 					}
-				}
-			}
+					return null;
+				})
+				.list();
 
 			player.getPortalCooldownList().setPortalCoolDowns(portalCoolDowns);
-		} catch (SQLException e) {
+		} catch (DataAccessException e) {
 			log.error(I18n.get("log.bd26489b30c6", player.getObjectId()), e);
 		}
 	}
@@ -73,31 +83,26 @@ public class PortalCooldownsDAO extends com.aionemu.gameserver.dao.PortalCooldow
 			return;
         }
 
-		try (Connection con = DatabaseFactory.getConnection()) {
-			con.setAutoCommit(false);
+		try {
+			long now = System.currentTimeMillis();
+			for (Map.Entry<Integer, PortalCooldownItem> entry : portalCoolDowns.entrySet()) {
+				final int worldId = entry.getKey();
+				final PortalCooldownItem item = entry.getValue();
+				final long reuseTime = item.getCooldown();
+				final int entryCount = item.getEntryCount();
 
-			try (PreparedStatement stmt = con.prepareStatement(INSERT_QUERY)) {
-				for (Map.Entry<Integer, PortalCooldownItem> entry : portalCoolDowns.entrySet()) {
-					final int worldId = entry.getKey();
-					final PortalCooldownItem item = entry.getValue();
-					final long reuseTime = item.getCooldown();
-					final int entryCount = item.getEntryCount();
-
-					if (reuseTime < System.currentTimeMillis()) {
-						continue;
-					}
-
-					stmt.setInt(1, player.getObjectId());
-					stmt.setInt(2, worldId);
-					stmt.setLong(3, reuseTime);
-					stmt.setInt(4, entryCount);
-					stmt.addBatch();
+				if (reuseTime < now) {
+					continue;
 				}
-				stmt.executeBatch();
-			}
 
-			con.commit();
-		} catch (SQLException e) {
+				jdbcClient.sql(INSERT_QUERY)
+					.param(player.getObjectId())
+					.param(worldId)
+					.param(reuseTime)
+					.param(entryCount)
+					.update();
+			}
+		} catch (DataAccessException e) {
 			log.error(I18n.get("log.3f6c79bd16dd", player.getObjectId()), e);
 		}
 	}
@@ -108,12 +113,11 @@ public class PortalCooldownsDAO extends com.aionemu.gameserver.dao.PortalCooldow
 	 * @param player 玩家 / player
 	 */
 	private void deletePortalCooldowns(final Player player) {
-		try (Connection con = DatabaseFactory.getConnection();
-			 PreparedStatement stmt = con.prepareStatement(DELETE_QUERY)) {
-
-			stmt.setInt(1, player.getObjectId());
-			stmt.executeUpdate();
-		} catch (SQLException e) {
+		try {
+			jdbcClient.sql(DELETE_QUERY)
+				.param(player.getObjectId())
+				.update();
+		} catch (DataAccessException e) {
 			log.error(I18n.get("log.4b9e8239bcf5", player.getObjectId()), e);
 		}
 	}

@@ -1,24 +1,30 @@
 package com.aionemu.gameserver.dao.impl;
 
-
-import com.aionemu.boot.i18n.I18n;
-import lombok.extern.slf4j.Slf4j;
-import com.aionemu.commons.database.DatabaseFactory;
-import com.aionemu.gameserver.dataholders.DataManager;
-import com.aionemu.gameserver.model.gameobjects.player.Player;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Predicate;
 
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.simple.JdbcClient;
+
+import com.aionemu.boot.i18n.I18n;
+import com.aionemu.commons.database.DatabaseFactory;
+import com.aionemu.gameserver.dataholders.DataManager;
+import com.aionemu.gameserver.model.gameobjects.player.Player;
+
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * 玩家技能冷却 DAO 的 MySQL 8 实现。
- * MySQL 8 implementation of PlayerCooldownsDAO.
+ * MySQL 8 implementation of PlayerCooldownsDAO using JdbcClient.
  * @author nrg, Updated for MySQL 8
  */
 @Slf4j
 public class PlayerCooldownsDAO extends com.aionemu.gameserver.dao.PlayerCooldownsDAO {
-
 
     /** 插入或更新冷却 / Insert or update cooldown */
     private static final String INSERT_QUERY = "INSERT INTO `player_cooldowns` (`player_id`, `cooldown_id`, `reuse_delay`) " + "VALUES (?, ?, ?) " + "ON DUPLICATE KEY UPDATE `reuse_delay` = VALUES(`reuse_delay`)";
@@ -38,6 +44,16 @@ public class PlayerCooldownsDAO extends com.aionemu.gameserver.dao.PlayerCooldow
     /** 冷却可持久化判定（剩余时间大于 28 秒） / Predicate for persistable cooldowns (remaining > 28s) */
     private static final Predicate<Long> COOLDOWN_PREDICATE = reuseDelay -> reuseDelay != null && reuseDelay - System.currentTimeMillis() > 28000;
 
+    private final JdbcClient jdbcClient;
+
+    public PlayerCooldownsDAO() {
+        this(DatabaseFactory.getJdbcClient());
+    }
+
+    public PlayerCooldownsDAO(JdbcClient jdbcClient) {
+        this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");
+    }
+
     /**
      * 从数据库加载玩家技能冷却并应用到玩家对象。
      * Loads player skill cooldowns from the database and applies them to the player.
@@ -47,23 +63,21 @@ public class PlayerCooldownsDAO extends com.aionemu.gameserver.dao.PlayerCooldow
     public void loadPlayerCooldowns(Player player) {
         Map<Integer, Long> validCooldowns = new ConcurrentHashMap<>();
 
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(SELECT_QUERY)) {
+        try {
+            long currentTime = System.currentTimeMillis();
 
-            stmt.setInt(1, player.getObjectId());
-
-            try (ResultSet rset = stmt.executeQuery()) {
-                long currentTime = System.currentTimeMillis();
-
-                while (rset.next()) {
+            jdbcClient.sql(SELECT_QUERY)
+                .param(player.getObjectId())
+                .query((rset, rowNum) -> {
                     int cooldownId = rset.getInt("cooldown_id");
                     long reuseDelay = rset.getLong("reuse_delay");
 
                     if (reuseDelay > currentTime && DataManager.SKILL_DATA.shouldPersistCooldown(cooldownId)) {
                         validCooldowns.put(cooldownId, reuseDelay);
                     }
-                }
-            }
+                    return null;
+                })
+                .list();
 
             for (Map.Entry<Integer, Long> entry : validCooldowns.entrySet()) {
                 player.setSkillCoolDown(entry.getKey(), entry.getValue());
@@ -71,7 +85,7 @@ public class PlayerCooldownsDAO extends com.aionemu.gameserver.dao.PlayerCooldow
 
             log.debug("Loaded {} cooldowns for player {}", validCooldowns.size(), player.getObjectId());
 
-        } catch (SQLException e) {
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.11da0c8c55d9", player.getObjectId()), e);
         }
     }
@@ -150,17 +164,15 @@ public class PlayerCooldownsDAO extends com.aionemu.gameserver.dao.PlayerCooldow
      * @param player 玩家 / player
      */
     private void deletePlayerCooldowns(Player player) {
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(DELETE_QUERY)) {
-
-            stmt.setInt(1, player.getObjectId());
-            int deleted = stmt.executeUpdate();
+        try {
+            int deleted = jdbcClient.sql(DELETE_QUERY)
+                .param(player.getObjectId())
+                .update();
 
             if (deleted > 0) {
                 log.debug("Deleted {} cooldowns for player {}", deleted, player.getObjectId());
             }
-
-        } catch (SQLException e) {
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.4b0c2a651d40", player.getObjectId()), e);
         }
     }
@@ -171,19 +183,17 @@ public class PlayerCooldownsDAO extends com.aionemu.gameserver.dao.PlayerCooldow
      * @return 删除行数 / deleted row count
      */
     public int deleteExpiredCooldowns() {
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(DELETE_EXPIRED_QUERY)) {
-
-            stmt.setLong(1, System.currentTimeMillis());
-            int deleted = stmt.executeUpdate();
+        try {
+            int deleted = jdbcClient.sql(DELETE_EXPIRED_QUERY)
+                .param(System.currentTimeMillis())
+                .update();
 
             if (deleted > 0) {
                 log.info(I18n.get("log.607cffacb3e9", deleted));
             }
 
             return deleted;
-
-        } catch (SQLException e) {
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.0a6ba1f18c8f"), e);
             return 0;
         }
@@ -192,28 +202,22 @@ public class PlayerCooldownsDAO extends com.aionemu.gameserver.dao.PlayerCooldow
     /**
      * 获取玩家当前仍有效的冷却数量。
      * Returns the count of currently active cooldowns for a player.
-     * player id
      * @param playerId 玩家 ID / player id
      * @return 有效冷却数量 / active cooldown count
      */
     public int getActiveCooldownsCount(int playerId) {
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(COUNT_QUERY)) {
-
-            stmt.setInt(1, playerId);
-            stmt.setLong(2, System.currentTimeMillis());
-
-            try (ResultSet rset = stmt.executeQuery()) {
-                if (rset.next()) {
-                    return rset.getInt(1);
-                }
-            }
-
-        } catch (SQLException e) {
+        try {
+            Integer count = jdbcClient.sql(COUNT_QUERY)
+                .param(playerId)
+                .param(System.currentTimeMillis())
+                .query((rset, rowNum) -> rset.getInt(1))
+                .optional()
+                .orElse(0);
+            return count != null ? count : 0;
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.5eff82579a26", playerId), e);
+            return 0;
         }
-
-        return 0;
     }
 
     /**
@@ -226,16 +230,12 @@ public class PlayerCooldownsDAO extends com.aionemu.gameserver.dao.PlayerCooldow
     public boolean deletePlayerCooldown(int playerId, int cooldownId) {
         String deleteSpecificQuery = "DELETE FROM `player_cooldowns` WHERE `player_id` = ? AND `cooldown_id` = ?";
 
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(deleteSpecificQuery)) {
-
-            stmt.setInt(1, playerId);
-            stmt.setInt(2, cooldownId);
-
-            int deleted = stmt.executeUpdate();
-            return deleted > 0;
-
-        } catch (SQLException e) {
+        try {
+            return jdbcClient.sql(deleteSpecificQuery)
+                .param(playerId)
+                .param(cooldownId)
+                .update() > 0;
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.a6fbc235f8b8", cooldownId, playerId), e);
             return false;
         }
@@ -251,24 +251,18 @@ public class PlayerCooldownsDAO extends com.aionemu.gameserver.dao.PlayerCooldow
     public boolean hasCooldown(int playerId, int cooldownId) {
         String checkQuery = "SELECT COUNT(*) FROM `player_cooldowns` WHERE `player_id` = ? AND `cooldown_id` = ? AND `reuse_delay` > ?";
 
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(checkQuery)) {
-
-            stmt.setInt(1, playerId);
-            stmt.setInt(2, cooldownId);
-            stmt.setLong(3, System.currentTimeMillis());
-
-            try (ResultSet rset = stmt.executeQuery()) {
-                if (rset.next()) {
-                    return rset.getInt(1) > 0;
-                }
-            }
-
-        } catch (SQLException e) {
+        try {
+            return jdbcClient.sql(checkQuery)
+                .param(playerId)
+                .param(cooldownId)
+                .param(System.currentTimeMillis())
+                .query((rset, rowNum) -> rset.getInt(1) > 0)
+                .optional()
+                .orElse(false);
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.5f9103b23516", cooldownId, playerId), e);
+            return false;
         }
-
-        return false;
     }
 
     /**

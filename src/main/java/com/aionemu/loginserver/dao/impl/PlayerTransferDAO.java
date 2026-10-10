@@ -1,39 +1,48 @@
 package com.aionemu.loginserver.dao.impl;
 
-
-import com.aionemu.boot.i18n.I18n;
-import lombok.extern.slf4j.Slf4j;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.simple.JdbcClient;
+
+import com.aionemu.boot.i18n.I18n;
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.loginserver.service.ptransfer.PlayerTransferTask;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * 玩家转服任务 DAO 的 MySQL 8 实现。
- * MySQL 8 PlayerTransferDAO implementation.
+ * MySQL 8 PlayerTransferDAO implementation using JdbcClient.
  * @author Updated for MySQL 8
  */
 @Slf4j
 public class PlayerTransferDAO extends com.aionemu.loginserver.dao.PlayerTransferDAO {
 
+    private static final String SELECT_NEW_QUERY = "SELECT * FROM player_transfers WHERE `status` = ?";
+
+    private final JdbcClient jdbcClient;
+
+    public PlayerTransferDAO() {
+        this(DatabaseFactory.getJdbcClient());
+    }
+
+    public PlayerTransferDAO(JdbcClient jdbcClient) {
+        this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");
+    }
 
     @Override
     public List<PlayerTransferTask> getNew() {
         List<PlayerTransferTask> list = new ArrayList<>();
-        String query = "SELECT * FROM player_transfers WHERE `status` = ?";
-
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement st = con.prepareStatement(query)) {
-
-            st.setInt(1, 0);
-
-            try (ResultSet rs = st.executeQuery()) {
-                while (rs.next()) {
+        try {
+            return jdbcClient.sql(SELECT_NEW_QUERY)
+                .param(0)
+                .query((rs, rowNum) -> {
                     PlayerTransferTask task = new PlayerTransferTask();
                     task.id = rs.getInt("id");
                     task.sourceServerId = (byte) rs.getShort("source_server");
@@ -41,22 +50,26 @@ public class PlayerTransferDAO extends com.aionemu.loginserver.dao.PlayerTransfe
                     task.sourceAccountId = rs.getInt("source_account_id");
                     task.targetAccountId = rs.getInt("target_account_id");
                     task.playerId = rs.getInt("player_id");
-                    list.add(task);
-                }
-            }
-        } catch (SQLException e) {
+                    return task;
+                })
+                .list();
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.ced4ca54368a"), e);
+            return list;
         }
-
-        return list;
     }
 
     @Override
     public boolean update(final PlayerTransferTask task) {
-        try (Connection con = DatabaseFactory.getConnection()) {
-            updateInTransaction(con, task);
-            return true;
-        } catch (SQLException e) {
+        String query = buildUpdateQuery(task);
+        try {
+            int updated = jdbcClient.sql(query)
+                .param(task.status)
+                .param(task.comment)
+                .param(task.id)
+                .update();
+            return updated > 0;
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.84835322c373", task.id), e);
             return false;
         }
@@ -64,8 +77,20 @@ public class PlayerTransferDAO extends com.aionemu.loginserver.dao.PlayerTransfe
 
     @Override
     public void updateInTransaction(Connection con, final PlayerTransferTask task) throws SQLException {
-        StringBuilder query = new StringBuilder("UPDATE player_transfers SET status = ?, comment = ?");
+        String query = buildUpdateQuery(task);
+        try (PreparedStatement st = con.prepareStatement(query)) {
+            st.setByte(1, task.status);
+            st.setString(2, task.comment);
+            st.setInt(3, task.id);
 
+            if (st.executeUpdate() == 0) {
+                throw new SQLException("No player transfer row changed for " + task.id);
+            }
+        }
+    }
+
+    private static String buildUpdateQuery(final PlayerTransferTask task) {
+        StringBuilder query = new StringBuilder("UPDATE player_transfers SET status = ?, comment = ?");
         switch (task.status) {
             case PlayerTransferTask.STATUS_ACTIVE:
                 query.append(", time_performed = NOW()");
@@ -75,19 +100,8 @@ public class PlayerTransferDAO extends com.aionemu.loginserver.dao.PlayerTransfe
                 query.append(", time_done = NOW()");
                 break;
         }
-
         query.append(" WHERE id = ?");
-
-        try (PreparedStatement st = con.prepareStatement(query.toString())) {
-
-            st.setByte(1, task.status);
-            st.setString(2, task.comment);
-            st.setInt(3, task.id);
-
-            if (st.executeUpdate() == 0) {
-                throw new SQLException("No player transfer row changed for " + task.id);
-            }
-        }
+        return query.toString();
     }
 
     @Override

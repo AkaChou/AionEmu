@@ -1,31 +1,43 @@
 package com.aionemu.gameserver.dao.impl;
 
+import java.util.Objects;
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.simple.JdbcClient;
 
 import com.aionemu.boot.i18n.I18n;
-import lombok.extern.slf4j.Slf4j;
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.gameobjects.player.f2p.F2p;
 import com.aionemu.gameserver.model.gameobjects.player.f2p.F2pAccount;
-import java.sql.*;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * F2P 账号 DAO 的 MySQL 8 实现。
- * MySQL 8 implementation of F2pDAO.
+ * MySQL 8 implementation of F2pDAO using JdbcClient.
  * Updated for MySQL 8.
  */
 @Slf4j
 public class F2pDAO extends com.aionemu.gameserver.dao.F2pDAO {
 
-
- /** 插入更新 f2p SQL / Insert or update F2P SQL*/
+    /** 插入更新 f2p SQL / Insert or update F2P SQL*/
     private static final String INSERT_QUERY = "INSERT INTO `f2paccount` (`player_id`, `time`) VALUES (?, ?) " + "ON DUPLICATE KEY UPDATE `time` = VALUES(`time`)";
- /** 查询 f2p SQL / Select F2P SQL*/
+    /** 查询 f2p SQL / Select F2P SQL*/
     private static final String SELECT_QUERY = "SELECT `time` FROM `f2paccount` WHERE `player_id` = ?";
- /** 删除 f2p SQL / Delete F2P SQL*/
+    /** 删除 f2p SQL / Delete F2P SQL*/
     private static final String DELETE_QUERY = "DELETE FROM `f2paccount` WHERE `player_id` = ?";
- /** 更新 f2p SQL / Update F2P SQL*/
+    /** 更新 f2p SQL / Update F2P SQL*/
     private static final String UPDATE_QUERY = "UPDATE `f2paccount` SET `time` = ? WHERE `player_id` = ?";
+
+    private final JdbcClient jdbcClient;
+
+    public F2pDAO() {
+        this(DatabaseFactory.getJdbcClient());
+    }
+
+    public F2pDAO(JdbcClient jdbcClient) {
+        this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");
+    }
 
     /**
      * 加载玩家 F2P 信息。
@@ -36,19 +48,16 @@ public class F2pDAO extends com.aionemu.gameserver.dao.F2pDAO {
     public void loadF2pInfo(Player player) {
         F2p f2p = new F2p(player);
 
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(SELECT_QUERY)) {
-
-            stmt.setInt(1, player.getObjectId());
-
-            try (ResultSet rset = stmt.executeQuery()) {
-                if (rset.next()) {
-                    int time = rset.getInt("time");
-                    f2p.add(new F2pAccount(time), false);
-                }
+        try {
+            Integer time = jdbcClient.sql(SELECT_QUERY)
+                .param(player.getObjectId())
+                .query(Integer.class)
+                .optional()
+                .orElse(null);
+            if (time != null) {
+                f2p.add(new F2pAccount(time), false);
             }
-
-        } catch (SQLException e) {
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.b700281835c0", player.getObjectId()), e);
         }
 
@@ -64,16 +73,13 @@ public class F2pDAO extends com.aionemu.gameserver.dao.F2pDAO {
      */
     @Override
     public boolean storeF2p(int objectId, int time) {
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(INSERT_QUERY)) {
-
-            stmt.setInt(1, objectId);
-            stmt.setInt(2, time);
-
-            int result = stmt.executeUpdate();
+        try {
+            int result = jdbcClient.sql(INSERT_QUERY)
+                .param(objectId)
+                .param(time)
+                .update();
             return result > 0;
-
-        } catch (SQLException e) {
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.2830d63e3475", objectId), e);
             return false;
         }
@@ -88,21 +94,18 @@ public class F2pDAO extends com.aionemu.gameserver.dao.F2pDAO {
      */
     @Override
     public boolean updateF2p(int objectId, int time) {
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(UPDATE_QUERY)) {
-
-            stmt.setInt(1, time);
-            stmt.setInt(2, objectId);
-
-            int updated = stmt.executeUpdate();
+        try {
+            int updated = jdbcClient.sql(UPDATE_QUERY)
+                .param(time)
+                .param(objectId)
+                .update();
 
             if (updated == 0) {
                 return storeF2p(objectId, time);
             }
 
             return true;
-
-        } catch (SQLException e) {
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.4295e27fcc73", objectId), e);
             return false;
         }
@@ -116,15 +119,12 @@ public class F2pDAO extends com.aionemu.gameserver.dao.F2pDAO {
      */
     @Override
     public boolean deleteF2p(int objectId) {
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(DELETE_QUERY)) {
-
-            stmt.setInt(1, objectId);
-
-            int result = stmt.executeUpdate();
+        try {
+            int result = jdbcClient.sql(DELETE_QUERY)
+                .param(objectId)
+                .update();
             return result > 0;
-
-        } catch (SQLException e) {
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.34f50ac7e4cb", objectId), e);
             return false;
         }
@@ -158,22 +158,17 @@ public class F2pDAO extends com.aionemu.gameserver.dao.F2pDAO {
      * @return 剩余时间 / remaining time
      */
     public int getF2pTime(int objectId) {
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(SELECT_QUERY)) {
-
-            stmt.setInt(1, objectId);
-
-            try (ResultSet rset = stmt.executeQuery()) {
-                if (rset.next()) {
-                    return rset.getInt("time");
-                }
-            }
-
-        } catch (SQLException e) {
+        try {
+            Integer time = jdbcClient.sql(SELECT_QUERY)
+                .param(objectId)
+                .query(Integer.class)
+                .optional()
+                .orElse(null);
+            return time != null ? time : 0;
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.efc1390e42c9", objectId), e);
+            return 0;
         }
-
-        return 0;
     }
 
     /**

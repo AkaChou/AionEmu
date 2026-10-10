@@ -1,27 +1,30 @@
 package com.aionemu.gameserver.dao.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.simple.JdbcClient;
 
 import com.aionemu.boot.i18n.I18n;
-import lombok.extern.slf4j.Slf4j;
-import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
-
 import com.aionemu.commons.database.DatabaseFactory;
+import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
 import com.aionemu.gameserver.model.PlayerClass;
 import com.aionemu.gameserver.model.team.legion.LegionMember;
 import com.aionemu.gameserver.model.team.legion.LegionMemberEx;
 import com.aionemu.gameserver.model.team.legion.LegionRank;
-import java.sql.*;
-import java.util.ArrayList;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 军团成员 DAO 的 MySQL 8 实现。
- * MySQL 8 implementation of LegionMemberDAO.
+ * MySQL 8 implementation of LegionMemberDAO using JdbcClient.
  * @author Simple
  * Updated for MySQL 8 - Fixed connection leaks and SQL syntax
  */
 @Slf4j
 public class LegionMemberDAO extends com.aionemu.gameserver.dao.LegionMemberDAO {
-
 
     /** 插入军团成员 / Insert legion member */
     private static final String INSERT_LEGIONMEMBER_QUERY = "INSERT INTO legion_members (`legion_id`, `player_id`, `rank`) VALUES (?, ?, ?)";
@@ -44,26 +47,31 @@ public class LegionMemberDAO extends com.aionemu.gameserver.dao.LegionMemberDAO 
     /** 查询所有已使用的成员 ID / Select all used member player ids */
     private static final String SELECT_USED_IDS_QUERY = "SELECT player_id FROM legion_members";
 
+    private final JdbcClient jdbcClient;
+
+    public LegionMemberDAO() {
+        this(DatabaseFactory.getJdbcClient());
+    }
+
+    public LegionMemberDAO(JdbcClient jdbcClient) {
+        this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");
+    }
+
     /**
      * 判断指定玩家 ID 是否已作为军团成员使用。
      * Checks whether the given player object id is already used as a legion member.
-     * player object id
      * @param playerObjId 玩家对象 ID / player object id
      * @return 是否已使用 / whether used
      */
     @Override
     public boolean isIdUsed(final int playerObjId) {
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement s = con.prepareStatement(CHECK_ID_USED_QUERY)) {
-
-            s.setInt(1, playerObjId);
-            try (ResultSet rs = s.executeQuery()) {
-                if (rs.next()) {
-                    return rs.getInt("cnt") > 0;
-                }
-            }
-            return false;
-        } catch (SQLException e) {
+        try {
+            return jdbcClient.sql(CHECK_ID_USED_QUERY)
+                .param(playerObjId)
+                .query((rs, rowNum) -> rs.getInt("cnt") > 0)
+                .optional()
+                .orElse(false);
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.808625122cbd", playerObjId), e);
             return true;
         }
@@ -72,21 +80,18 @@ public class LegionMemberDAO extends com.aionemu.gameserver.dao.LegionMemberDAO 
     /**
      * 保存新的军团成员记录。
      * Saves a newly created legion member record.
-     * legion member
      * @param legionMember 军团成员 / legion member
      * @return 是否保存成功 / whether saved successfully
      */
     @Override
     public boolean saveNewLegionMember(final LegionMember legionMember) {
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(INSERT_LEGIONMEMBER_QUERY)) {
-
-            stmt.setInt(1, legionMember.getLegion().getLegionId());
-            stmt.setInt(2, legionMember.getObjectId());
-            stmt.setString(3, legionMember.getRank().toString());
-            stmt.executeUpdate();
-            return true;
-        } catch (SQLException e) {
+        try {
+            return jdbcClient.sql(INSERT_LEGIONMEMBER_QUERY)
+                .param(legionMember.getLegion().getLegionId())
+                .param(legionMember.getObjectId())
+                .param(legionMember.getRank().toString())
+                .update() > 0;
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.9e9361f5deaa", legionMember.getObjectId()), e);
             return false;
         }
@@ -100,16 +105,15 @@ public class LegionMemberDAO extends com.aionemu.gameserver.dao.LegionMemberDAO 
      */
     @Override
     public void storeLegionMember(final int playerId, final LegionMember legionMember) {
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(UPDATE_LEGIONMEMBER_QUERY)) {
-
-            stmt.setString(1, legionMember.getNickname());
-            stmt.setString(2, legionMember.getRank().toString()); // rank 已在查询中转义。 / rank is escaped in the query.
-            stmt.setString(3, legionMember.getSelfIntro());
-            stmt.setInt(4, legionMember.getChallengeScore());
-            stmt.setInt(5, playerId);
-            stmt.executeUpdate();
-        } catch (SQLException e) {
+        try {
+            jdbcClient.sql(UPDATE_LEGIONMEMBER_QUERY)
+                .param(legionMember.getNickname())
+                .param(legionMember.getRank().toString())
+                .param(legionMember.getSelfIntro())
+                .param(legionMember.getChallengeScore())
+                .param(playerId)
+                .update();
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.a9693496afec", playerId), e);
         }
     }
@@ -117,7 +121,6 @@ public class LegionMemberDAO extends com.aionemu.gameserver.dao.LegionMemberDAO 
     /**
      * 按玩家对象 ID 加载军团成员。
      * Loads a legion member by player object id.
-     * player object id
      * @param playerObjId 玩家对象 ID / player object id
      * @return 军团成员，不存在则为 null / legion member or null
      */
@@ -127,15 +130,10 @@ public class LegionMemberDAO extends com.aionemu.gameserver.dao.LegionMemberDAO 
             return null;
         }
 
-        LegionMember result = null;
-
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(SELECT_LEGIONMEMBER_QUERY)) {
-
-            stmt.setInt(1, playerObjId);
-
-            try (ResultSet resultSet = stmt.executeQuery()) {
-                if (resultSet.next()) {
+        try {
+            return jdbcClient.sql(SELECT_LEGIONMEMBER_QUERY)
+                .param(playerObjId)
+                .query((resultSet, rowNum) -> {
                     LegionMember legionMember = new LegionMember(playerObjId);
                     int legionId = resultSet.getInt("legion_id");
 
@@ -151,34 +149,28 @@ public class LegionMemberDAO extends com.aionemu.gameserver.dao.LegionMemberDAO 
                     legionMember.setChallengeScore(resultSet.getInt("challenge_score"));
                     legionMember.setLegion(GameCoreGameplayServices.legionService().getLegion(legionId));
 
-                    result = legionMember;
-                }
-            }
-        } catch (SQLException e) {
+                    return legionMember;
+                })
+                .optional()
+                .orElse(null);
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.b98d06a4d45a", playerObjId), e);
+            return null;
         }
-
-        return result;
     }
 
     /**
      * 按玩家对象 ID 加载扩展军团成员信息（含玩家基础数据）。
      * Loads extended legion member info by player object id (includes player base data).
-     * player object id
      * @param playerObjId 玩家对象 ID / player object id
      * @return 扩展军团成员，不存在则为 null / extended legion member or null
      */
     @Override
     public LegionMemberEx loadLegionMemberEx(final int playerObjId) {
-        LegionMemberEx result = null;
-
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(SELECT_LEGIONMEMBEREX_QUERY)) {
-
-            stmt.setInt(1, playerObjId);
-
-            try (ResultSet resultSet = stmt.executeQuery()) {
-                if (resultSet.next()) {
+        try {
+            return jdbcClient.sql(SELECT_LEGIONMEMBEREX_QUERY)
+                .param(playerObjId)
+                .query((resultSet, rowNum) -> {
                     LegionMemberEx legionMemberEx = new LegionMemberEx(playerObjId);
 
                     legionMemberEx.setName(resultSet.getString("players.name"));
@@ -206,34 +198,28 @@ public class LegionMemberDAO extends com.aionemu.gameserver.dao.LegionMemberDAO 
                     legionMemberEx.setSelfIntro(resultSet.getString("legion_members.selfintro"));
                     legionMemberEx.setLegion(GameCoreGameplayServices.legionService().getLegion(legionId));
 
-                    result = legionMemberEx;
-                }
-            }
-        } catch (SQLException e) {
+                    return legionMemberEx;
+                })
+                .optional()
+                .orElse(null);
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.dfcfd04a2c84", playerObjId), e);
+            return null;
         }
-
-        return result;
     }
 
     /**
      * 按玩家名加载扩展军团成员信息。
      * Loads extended legion member info by player name.
-     * player name
      * @param playerName 玩家名 / player name
      * @return 扩展军团成员，不存在则为 null / extended legion member or null
      */
     @Override
     public LegionMemberEx loadLegionMemberEx(final String playerName) {
-        LegionMemberEx result = null;
-
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(SELECT_LEGIONMEMBEREX2_QUERY)) {
-
-            stmt.setString(1, playerName);
-
-            try (ResultSet resultSet = stmt.executeQuery()) {
-                if (resultSet.next()) {
+        try {
+            return jdbcClient.sql(SELECT_LEGIONMEMBEREX2_QUERY)
+                .param(playerName)
+                .query((resultSet, rowNum) -> {
                     LegionMemberEx legionMember = new LegionMemberEx(playerName);
 
                     legionMember.setObjectId(resultSet.getInt("id"));
@@ -261,20 +247,19 @@ public class LegionMemberDAO extends com.aionemu.gameserver.dao.LegionMemberDAO 
                     legionMember.setSelfIntro(resultSet.getString("selfintro"));
                     legionMember.setLegion(GameCoreGameplayServices.legionService().getLegion(legionId));
 
-                    result = legionMember;
-                }
-            }
-        } catch (SQLException e) {
+                    return legionMember;
+                })
+                .optional()
+                .orElse(null);
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.29172f0eb8e2", playerName), e);
+            return null;
         }
-
-        return result;
     }
 
     /**
      * 加载指定军团的全部成员玩家 ID 列表。
      * Loads all member player ids for the given legion.
-     * legion id
      * @param legionId 军团 ID / legion id
      * @return 成员 ID 列表，无成员则为 null / member id list or null
      */
@@ -282,18 +267,12 @@ public class LegionMemberDAO extends com.aionemu.gameserver.dao.LegionMemberDAO 
     public ArrayList<Integer> loadLegionMembers(final int legionId) {
         final ArrayList<Integer> legionMembers = new ArrayList<>();
 
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(SELECT_LEGIONMEMBERS_QUERY)) {
-
-            stmt.setInt(1, legionId);
-
-            try (ResultSet resultSet = stmt.executeQuery()) {
-                while (resultSet.next()) {
-                    int playerObjId = resultSet.getInt("player_id");
-                    legionMembers.add(playerObjId);
-                }
-            }
-        } catch (SQLException e) {
+        try {
+            legionMembers.addAll(jdbcClient.sql(SELECT_LEGIONMEMBERS_QUERY)
+                .param(legionId)
+                .query((resultSet, rowNum) -> resultSet.getInt("player_id"))
+                .list());
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.580dbf1f5523", legionId), e);
         }
 
@@ -307,12 +286,11 @@ public class LegionMemberDAO extends com.aionemu.gameserver.dao.LegionMemberDAO 
      */
     @Override
     public void deleteLegionMember(int playerObjId) {
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement statement = con.prepareStatement(DELETE_LEGIONMEMBER_QUERY)) {
-
-            statement.setInt(1, playerObjId);
-            statement.executeUpdate();
-        } catch (SQLException e) {
+        try {
+            jdbcClient.sql(DELETE_LEGIONMEMBER_QUERY)
+                .param(playerObjId)
+                .update();
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.d5662c3ac841", playerObjId), e);
         }
     }
@@ -333,30 +311,23 @@ public class LegionMemberDAO extends com.aionemu.gameserver.dao.LegionMemberDAO 
     /**
      * 获取所有已使用的军团成员玩家 ID。
      * Returns all used legion member player ids.
-     * 已使用 ID 数组。
-     * used id array.
+     * @return 已使用 ID 数组 / used id array.
      */
     @Override
     public int[] getUsedIDs() {
-        ArrayList<Integer> ids = new ArrayList<>();
+        try {
+            List<Integer> ids = jdbcClient.sql(SELECT_USED_IDS_QUERY)
+                .query((rs, rowNum) -> rs.getInt("player_id"))
+                .list();
 
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement statement = con.prepareStatement(SELECT_USED_IDS_QUERY,
-                ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-             ResultSet rs = statement.executeQuery()) {
-
-            while (rs.next()) {
-                ids.add(rs.getInt("player_id"));
+            int[] result = new int[ids.size()];
+            for (int i = 0; i < ids.size(); i++) {
+                result[i] = ids.get(i);
             }
-        } catch (SQLException e) {
+            return result;
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.fec518ccee9a"), e);
             return new int[0];
         }
-
-        int[] result = new int[ids.size()];
-        for (int i = 0; i < ids.size(); i++) {
-            result[i] = ids.get(i);
-        }
-        return result;
     }
 }

@@ -1,25 +1,32 @@
 package com.aionemu.gameserver.dao.impl;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.simple.JdbcClient;
 
 import com.aionemu.boot.i18n.I18n;
-import lombok.extern.slf4j.Slf4j;
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.gameserver.model.gameobjects.player.MinionCommonData;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.templates.minion.MinionDopingBag;
-import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 玩家随从（Minion）DAO 的 MySQL 8 实现。
- * MySQL 8 implementation of PlayerMinionsDAO.
+ * MySQL 8 implementation of PlayerMinionsDAO using JdbcClient.
  * @author Falke_34
  * Updated for MySQL 8 support
  */
 @Slf4j
 public class PlayerMinionsDAO extends com.aionemu.gameserver.dao.PlayerMinionsDAO {
-
 
     /** 插入玩家随从 / Insert player minion */
     private static final String INSERT_QUERY = "INSERT INTO player_minions (player_id, object_id, minion_id, name, grade, level, growthpoints, birthday, is_locked, buff_bag) VALUES (?, ?, ?, ?, ?, ?, ?, NOW(), 0, '')";
@@ -42,6 +49,16 @@ public class PlayerMinionsDAO extends com.aionemu.gameserver.dao.PlayerMinionsDA
     /** 清理孤儿随从数据 / Clean orphaned minion rows */
     private static final String CLEAN_ORPHANED_QUERY = "DELETE FROM player_minions WHERE player_id NOT IN (SELECT id FROM players)";
 
+    private final JdbcClient jdbcClient;
+
+    public PlayerMinionsDAO() {
+        this(DatabaseFactory.getJdbcClient());
+    }
+
+    public PlayerMinionsDAO(JdbcClient jdbcClient) {
+        this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");
+    }
+
     /**
      * 插入新的玩家随从记录。
      * Inserts a new player minion record.
@@ -49,9 +66,17 @@ public class PlayerMinionsDAO extends com.aionemu.gameserver.dao.PlayerMinionsDA
      */
     @Override
     public boolean insertPlayerMinion(MinionCommonData minionCommonData) {
-        try (Connection con = DatabaseFactory.getConnection()) {
-            return insertMinion(con, minionCommonData);
-        } catch (Exception e) {
+        try {
+            return jdbcClient.sql(INSERT_QUERY)
+                .param(minionCommonData.getMasterObjectId())
+                .param(minionCommonData.getObjectId())
+                .param(minionCommonData.getMinionId())
+                .param(minionCommonData.getName())
+                .param(minionCommonData.getMinionGrade())
+                .param(minionCommonData.getMinionLevel())
+                .param(minionCommonData.getMinionGrowthPoint())
+                .update() == 1;
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.2527877e3b8c", minionCommonData.getMinionId(), minionCommonData.getName()), e);
             return false;
         }
@@ -78,14 +103,12 @@ public class PlayerMinionsDAO extends com.aionemu.gameserver.dao.PlayerMinionsDA
      */
     @Override
     public boolean removePlayerMinion(Player player, int minionObjectId) {
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(DELETE_QUERY)) {
-
-            stmt.setInt(1, player.getObjectId());
-            stmt.setInt(2, minionObjectId);
-            return stmt.executeUpdate() == 1;
-
-        } catch (Exception e) {
+        try {
+            return jdbcClient.sql(DELETE_QUERY)
+                .param(player.getObjectId())
+                .param(minionObjectId)
+                .update() == 1;
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.85f2880b076f", minionObjectId), e);
             return false;
         }
@@ -101,13 +124,10 @@ public class PlayerMinionsDAO extends com.aionemu.gameserver.dao.PlayerMinionsDA
     public List<MinionCommonData> getPlayerMinions(Player player) {
         List<MinionCommonData> minions = new ArrayList<>();
 
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(SELECT_QUERY)) {
-
-            stmt.setInt(1, player.getObjectId());
-
-            try (ResultSet rs = stmt.executeQuery()) {
-                while (rs.next()) {
+        try {
+            minions = jdbcClient.sql(SELECT_QUERY)
+                .param(player.getObjectId())
+                .query((rs, rowNum) -> {
                     MinionCommonData minionCommonData = new MinionCommonData(
                         rs.getInt("object_id"),
                         rs.getInt("minion_id"),
@@ -142,10 +162,10 @@ public class PlayerMinionsDAO extends com.aionemu.gameserver.dao.PlayerMinionsDA
                         }
                     }
 
-                    minions.add(minionCommonData);
-                }
-            }
-        } catch (Exception e) {
+                    return minionCommonData;
+                })
+                .list();
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.6b0198f98c6b", player.getObjectId()), e);
             return null;
         }
@@ -160,15 +180,13 @@ public class PlayerMinionsDAO extends com.aionemu.gameserver.dao.PlayerMinionsDA
      */
     @Override
     public boolean updateMinionName(MinionCommonData minionCommonData) {
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(UPDATE_NAME_QUERY)) {
-
-            stmt.setString(1, minionCommonData.getName());
-            stmt.setInt(2, minionCommonData.getMasterObjectId());
-            stmt.setInt(3, minionCommonData.getObjectId());
-            return stmt.executeUpdate() == 1;
-
-        } catch (Exception e) {
+        try {
+            return jdbcClient.sql(UPDATE_NAME_QUERY)
+                .param(minionCommonData.getName())
+                .param(minionCommonData.getMasterObjectId())
+                .param(minionCommonData.getObjectId())
+                .update() == 1;
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.d5697671e606", minionCommonData.getMinionId()), e);
             return false;
         }
@@ -182,15 +200,13 @@ public class PlayerMinionsDAO extends com.aionemu.gameserver.dao.PlayerMinionsDA
      */
     @Override
     public boolean updatePlayerMinionGrowthPoint(Player player, MinionCommonData minionCommonData) {
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(UPDATE_GROWTH_QUERY)) {
-
-            stmt.setInt(1, minionCommonData.getMinionGrowthPoint());
-            stmt.setInt(2, minionCommonData.getMasterObjectId());
-            stmt.setInt(3, minionCommonData.getObjectId());
-            return stmt.executeUpdate() == 1;
-
-        } catch (Exception e) {
+        try {
+            return jdbcClient.sql(UPDATE_GROWTH_QUERY)
+                .param(minionCommonData.getMinionGrowthPoint())
+                .param(minionCommonData.getMasterObjectId())
+                .param(minionCommonData.getObjectId())
+                .update() == 1;
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.d7a903023f02", minionCommonData.getMinionId()), e);
             return false;
         }
@@ -268,16 +284,14 @@ public class PlayerMinionsDAO extends com.aionemu.gameserver.dao.PlayerMinionsDA
      */
     @Override
     public boolean evolutionMinion(Player player, MinionCommonData minionCommonData) {
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(EVOLUTION_QUERY)) {
-
-            stmt.setInt(1, minionCommonData.getMinionId());
-            stmt.setInt(2, minionCommonData.getMinionLevel());
-            stmt.setInt(3, minionCommonData.getMasterObjectId());
-            stmt.setInt(4, minionCommonData.getObjectId());
-            return stmt.executeUpdate() == 1;
-
-        } catch (Exception e) {
+        try {
+            return jdbcClient.sql(EVOLUTION_QUERY)
+                .param(minionCommonData.getMinionId())
+                .param(minionCommonData.getMinionLevel())
+                .param(minionCommonData.getMasterObjectId())
+                .param(minionCommonData.getObjectId())
+                .update() == 1;
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.188874aa8e51", minionCommonData.getMinionId()), e);
             return false;
         }
@@ -292,15 +306,13 @@ public class PlayerMinionsDAO extends com.aionemu.gameserver.dao.PlayerMinionsDA
      */
     @Override
     public boolean lockMinions(Player player, int minionObjId, int isLocked) {
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(LOCK_QUERY)) {
-
-            stmt.setInt(1, isLocked);
-            stmt.setInt(2, player.getObjectId());
-            stmt.setInt(3, minionObjId);
-            return stmt.executeUpdate() == 1;
-
-        } catch (Exception e) {
+        try {
+            return jdbcClient.sql(LOCK_QUERY)
+                .param(isLocked)
+                .param(player.getObjectId())
+                .param(minionObjId)
+                .update() == 1;
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.65bb4c6328f8", minionObjId), e);
             return false;
         }
@@ -320,9 +332,7 @@ public class PlayerMinionsDAO extends com.aionemu.gameserver.dao.PlayerMinionsDA
             return false;
         }
 
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(UPDATE_DOPING_QUERY)) {
-
+        try {
             StringBuilder itemIds = new StringBuilder();
 
             itemIds.append(bag.getFoodItem() > 0 ? bag.getFoodItem() : "0");
@@ -333,12 +343,12 @@ public class PlayerMinionsDAO extends com.aionemu.gameserver.dao.PlayerMinionsDA
                 itemIds.append(",").append(itemId > 0 ? itemId : "0");
             }
 
-            stmt.setString(1, itemIds.toString());
-            stmt.setInt(2, player.getObjectId());
-            stmt.setInt(3, minionCommonData.getObjectId());
-            return stmt.executeUpdate() == 1;
-
-        } catch (Exception e) {
+            return jdbcClient.sql(UPDATE_DOPING_QUERY)
+                .param(itemIds.toString())
+                .param(player.getObjectId())
+                .param(minionCommonData.getObjectId())
+                .update() == 1;
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.0c8cc68553ee", minionCommonData.getObjectId()), e);
             return false;
         }
@@ -346,18 +356,15 @@ public class PlayerMinionsDAO extends com.aionemu.gameserver.dao.PlayerMinionsDA
 
     @Override
     public int[] getUsedIDs() {
-        List<Integer> ids = new ArrayList<>();
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement("SELECT object_id FROM player_minions");
-             ResultSet rs = stmt.executeQuery()) {
-            while (rs.next()) {
-                ids.add(rs.getInt(1));
-            }
-        } catch (SQLException e) {
+        try {
+            List<Integer> ids = jdbcClient.sql("SELECT object_id FROM player_minions")
+                .query((rs, rowNum) -> rs.getInt(1))
+                .list();
+            return ids.stream().mapToInt(Integer::intValue).toArray();
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.6b0198f98c6b", 0), e);
             return new int[0];
         }
-        return ids.stream().mapToInt(Integer::intValue).toArray();
     }
 
     /**
@@ -367,18 +374,18 @@ public class PlayerMinionsDAO extends com.aionemu.gameserver.dao.PlayerMinionsDA
      */
     @Override
     public void saveBirthday(MinionCommonData minionCommonData) {
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(SELECT_BIRTHDAY_QUERY)) {
+        try {
+            Timestamp birthday = jdbcClient.sql(SELECT_BIRTHDAY_QUERY)
+                .param(minionCommonData.getMasterObjectId())
+                .param(minionCommonData.getObjectId())
+                .query(Timestamp.class)
+                .optional()
+                .orElse(null);
 
-            stmt.setInt(1, minionCommonData.getMasterObjectId());
-            stmt.setInt(2, minionCommonData.getObjectId());
-
-            try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    minionCommonData.setBirthday(rs.getTimestamp("birthday"));
-                }
+            if (birthday != null) {
+                minionCommonData.setBirthday(birthday);
             }
-        } catch (Exception e) {
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.8896cfb9d7f2", minionCommonData.getMasterObjectId()), e);
         }
     }
@@ -389,15 +396,13 @@ public class PlayerMinionsDAO extends com.aionemu.gameserver.dao.PlayerMinionsDA
      * @return 删除行数 / deleted row count
      */
     public int cleanOrphanedMinions() {
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(CLEAN_ORPHANED_QUERY)) {
-
-            int deleted = stmt.executeUpdate();
+        try {
+            int deleted = jdbcClient.sql(CLEAN_ORPHANED_QUERY).update();
             if (deleted > 0) {
                 log.info(I18n.get("log.51adbf82f7b2", deleted));
             }
             return deleted;
-        } catch (Exception e) {
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.55b90eeb49ae"), e);
             return 0;
         }

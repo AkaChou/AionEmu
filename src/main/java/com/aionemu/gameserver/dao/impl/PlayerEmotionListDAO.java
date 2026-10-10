@@ -1,22 +1,28 @@
 package com.aionemu.gameserver.dao.impl;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.util.Objects;
+
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.simple.JdbcClient;
 
 import com.aionemu.boot.i18n.I18n;
-import lombok.extern.slf4j.Slf4j;
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.gameobjects.player.emotion.Emotion;
 import com.aionemu.gameserver.model.gameobjects.player.emotion.EmotionList;
-import java.sql.*;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 玩家表情列表 DAO 的 MySQL 8 实现。
- * MySQL 8 implementation of PlayerEmotionListDAO.
+ * MySQL 8 implementation of PlayerEmotionListDAO using JdbcClient.
  * @author Mr. Poke, Updated for MySQL 8
  */
 @Slf4j
 public class PlayerEmotionListDAO extends com.aionemu.gameserver.dao.PlayerEmotionListDAO {
-
 
     /** 插入或更新玩家表情 / Insert or update a player emotion */
     private static final String INSERT_QUERY = "INSERT INTO `player_emotions` (`player_id`, `emotion`, `remaining`) VALUES (?, ?, ?) " + "ON DUPLICATE KEY UPDATE `remaining` = VALUES(`remaining`)";
@@ -29,6 +35,16 @@ public class PlayerEmotionListDAO extends com.aionemu.gameserver.dao.PlayerEmoti
     /** 删除已过期表情 / Delete expired emotions */
     private static final String DELETE_EXPIRED_QUERY = "DELETE FROM `player_emotions` WHERE `remaining` > 0 AND `remaining` < ?";
 
+    private final JdbcClient jdbcClient;
+
+    public PlayerEmotionListDAO() {
+        this(DatabaseFactory.getJdbcClient());
+    }
+
+    public PlayerEmotionListDAO(JdbcClient jdbcClient) {
+        this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");
+    }
+
     /**
      * 加载玩家表情列表到内存，并跳过已过期表情。
      * Loads the player's emotion list into memory, skipping expired emotions.
@@ -37,30 +53,26 @@ public class PlayerEmotionListDAO extends com.aionemu.gameserver.dao.PlayerEmoti
     @Override
     public void loadEmotions(Player player) {
         EmotionList emotions = new EmotionList(player);
+        long currentTime = System.currentTimeMillis();
 
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(SELECT_QUERY)) {
-
-            stmt.setInt(1, player.getObjectId());
-
-            try (ResultSet rset = stmt.executeQuery()) {
-                long currentTime = System.currentTimeMillis();
-
-                while (rset.next()) {
+        try {
+            jdbcClient.sql(SELECT_QUERY)
+                .param(player.getObjectId())
+                .query((rset, rowNum) -> {
                     int emotionId = rset.getInt("emotion");
                     int remaining = rset.getInt("remaining");
 
                     // 跳过过期表情 / Skip expired emotions
                     if (remaining > 0 && remaining <= currentTime) {
                         deleteEmotion(player.getObjectId(), emotionId);
-                        continue;
+                        return null;
                     }
 
                     emotions.add(emotionId, remaining, false);
-                }
-            }
-
-        } catch (SQLException e) {
+                    return null;
+                })
+                .list();
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.efdea0fd00c0", player.getObjectId()), e);
         }
 
@@ -75,15 +87,13 @@ public class PlayerEmotionListDAO extends com.aionemu.gameserver.dao.PlayerEmoti
      */
     @Override
     public void insertEmotion(Player player, Emotion emotion) {
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(INSERT_QUERY)) {
-
-            stmt.setInt(1, player.getObjectId());
-            stmt.setInt(2, emotion.getId());
-            stmt.setInt(3, emotion.getExpireTime());
-            stmt.executeUpdate();
-
-        } catch (SQLException e) {
+        try {
+            jdbcClient.sql(INSERT_QUERY)
+                .param(player.getObjectId())
+                .param(emotion.getId())
+                .param(emotion.getExpireTime())
+                .update();
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.a9e6401899a7", player.getObjectId()), e);
         }
     }
@@ -96,14 +106,12 @@ public class PlayerEmotionListDAO extends com.aionemu.gameserver.dao.PlayerEmoti
      */
     @Override
     public void deleteEmotion(int playerId, int emotionId) {
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(DELETE_QUERY)) {
-
-            stmt.setInt(1, playerId);
-            stmt.setInt(2, emotionId);
-            stmt.executeUpdate();
-
-        } catch (SQLException e) {
+        try {
+            jdbcClient.sql(DELETE_QUERY)
+                .param(playerId)
+                .param(emotionId)
+                .update();
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.6015c7958d1b", playerId, emotionId), e);
         }
     }
@@ -114,13 +122,11 @@ public class PlayerEmotionListDAO extends com.aionemu.gameserver.dao.PlayerEmoti
      * @param playerId 玩家 ID / player id
      */
     public void deleteAllEmotions(int playerId) {
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(DELETE_ALL_QUERY)) {
-
-            stmt.setInt(1, playerId);
-            stmt.executeUpdate();
-
-        } catch (SQLException e) {
+        try {
+            jdbcClient.sql(DELETE_ALL_QUERY)
+                .param(playerId)
+                .update();
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.c241415a012d", playerId), e);
         }
     }
@@ -130,17 +136,15 @@ public class PlayerEmotionListDAO extends com.aionemu.gameserver.dao.PlayerEmoti
      * Batch-deletes expired emotion records.
      */
     public void deleteExpiredEmotions() {
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(DELETE_EXPIRED_QUERY)) {
-
-            stmt.setLong(1, System.currentTimeMillis());
-            int deleted = stmt.executeUpdate();
+        try {
+            int deleted = jdbcClient.sql(DELETE_EXPIRED_QUERY)
+                .param(System.currentTimeMillis())
+                .update();
 
             if (deleted > 0) {
                 log.info(I18n.get("log.dd96ae8f46f9", deleted));
             }
-
-        } catch (SQLException e) {
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.7659e80a0909"), e);
         }
     }

@@ -1,21 +1,23 @@
 package com.aionemu.gameserver.dao.impl;
 
+import java.util.Objects;
+
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.simple.JdbcClient;
 
 import com.aionemu.boot.i18n.I18n;
-import lombok.extern.slf4j.Slf4j;
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.gameserver.model.gameobjects.PersistentState;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.gameobjects.player.npcFaction.ENpcFactionQuestState;
 import com.aionemu.gameserver.model.gameobjects.player.npcFaction.NpcFaction;
 import com.aionemu.gameserver.model.gameobjects.player.npcFaction.NpcFactions;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 玩家 NPC 阵营 DAO 的 MySQL 8 实现。
- * MySQL 8 implementation of PlayerNpcFactionsDAO.
+ * MySQL 8 implementation of PlayerNpcFactionsDAO using JdbcClient.
  * Updated for MySQL 8 - Fixed connection leaks.
  * @author MrPoke
  */
@@ -29,6 +31,16 @@ public class PlayerNpcFactionsDAO extends com.aionemu.gameserver.dao.PlayerNpcFa
 	/** 更新 NPC 势力 SQL / Update NPC faction SQL*/
 	private static final String UPDATE_QUERY = "UPDATE player_npc_factions SET `active`=?, `time`=?, `state`=?, `quest_id`=? WHERE `player_id`=? AND `faction_id`=?";
 
+	private final JdbcClient jdbcClient;
+
+	public PlayerNpcFactionsDAO() {
+		this(DatabaseFactory.getJdbcClient());
+	}
+
+	public PlayerNpcFactionsDAO(JdbcClient jdbcClient) {
+		this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");
+	}
+
 	/**
 	 * 加载玩家 NPC 阵营数据。
 	 * Loads NPC faction data for a player.
@@ -38,13 +50,10 @@ public class PlayerNpcFactionsDAO extends com.aionemu.gameserver.dao.PlayerNpcFa
 	public void loadNpcFactions(Player player) {
 		NpcFactions factions = new NpcFactions(player);
 
-		try (Connection con = DatabaseFactory.getConnection();
-			 PreparedStatement stmt = con.prepareStatement(SELECT_QUERY)) {
-
-			stmt.setInt(1, player.getObjectId());
-
-			try (ResultSet rset = stmt.executeQuery()) {
-				while (rset.next()) {
+		try {
+			jdbcClient.sql(SELECT_QUERY)
+				.param(player.getObjectId())
+				.query((rset, rowNum) -> {
 					int faction_id = rset.getInt("faction_id");
 					boolean active = rset.getBoolean("active");
 					int time = rset.getInt("time");
@@ -53,11 +62,12 @@ public class PlayerNpcFactionsDAO extends com.aionemu.gameserver.dao.PlayerNpcFa
 					NpcFaction faction = new NpcFaction(faction_id, time, active, state, questId);
 					faction.setPersistentState(PersistentState.UPDATED);
 					factions.addNpcFaction(faction);
-				}
-			}
+					return null;
+				})
+				.list();
 
 			player.setNpcFactions(factions);
-		} catch (Exception e) {
+		} catch (DataAccessException e) {
 			log.error(I18n.get("log.165b89344e7f", player.getObjectId(), " from DB"), e);
 		}
 	}
@@ -91,17 +101,16 @@ public class PlayerNpcFactionsDAO extends com.aionemu.gameserver.dao.PlayerNpcFa
 	 * @param faction 阵营 / faction
 	 */
 	private void insertNpcFaction(int playerObjectId, NpcFaction faction) {
-		try (Connection con = DatabaseFactory.getConnection();
-			 PreparedStatement stmt = con.prepareStatement(INSERT_QUERY)) {
-
-			stmt.setInt(1, playerObjectId);
-			stmt.setInt(2, faction.getId());
-			stmt.setBoolean(3, faction.isActive());
-			stmt.setInt(4, faction.getTime());
-			stmt.setString(5, faction.getState().name());
-			stmt.setInt(6, faction.getQuestId());
-			stmt.executeUpdate();
-		} catch (Exception e) {
+		try {
+			jdbcClient.sql(INSERT_QUERY)
+				.param(playerObjectId)
+				.param(faction.getId())
+				.param(faction.isActive())
+				.param(faction.getTime())
+				.param(faction.getState().name())
+				.param(faction.getQuestId())
+				.update();
+		} catch (DataAccessException e) {
 			log.error(I18n.get("log.e4fe3ce16d8e", playerObjectId, " from DB"), e);
 		}
 	}
@@ -113,17 +122,16 @@ public class PlayerNpcFactionsDAO extends com.aionemu.gameserver.dao.PlayerNpcFa
 	 * @param faction 阵营 / faction
 	 */
 	private void updateNpcFaction(int playerObjectId, NpcFaction faction) {
-		try (Connection con = DatabaseFactory.getConnection();
-			 PreparedStatement stmt = con.prepareStatement(UPDATE_QUERY)) {
-
-			stmt.setBoolean(1, faction.isActive());
-			stmt.setInt(2, faction.getTime());
-			stmt.setString(3, faction.getState().name());
-			stmt.setInt(4, faction.getQuestId());
-			stmt.setInt(5, playerObjectId);
-			stmt.setInt(6, faction.getId());
-			stmt.executeUpdate();
-		} catch (Exception e) {
+		try {
+			jdbcClient.sql(UPDATE_QUERY)
+				.param(faction.isActive())
+				.param(faction.getTime())
+				.param(faction.getState().name())
+				.param(faction.getQuestId())
+				.param(playerObjectId)
+				.param(faction.getId())
+				.update();
+		} catch (DataAccessException e) {
 			log.error(I18n.get("log.494a98a72b0b", playerObjectId, " from DB"), e);
 		}
 	}

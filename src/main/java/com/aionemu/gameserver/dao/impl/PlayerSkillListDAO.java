@@ -1,8 +1,18 @@
 package com.aionemu.gameserver.dao.impl;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Objects;
+
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.simple.JdbcClient;
 
 import com.aionemu.boot.i18n.I18n;
-import lombok.extern.slf4j.Slf4j;
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.commons.utils.GenericValidator;
 import com.aionemu.gameserver.model.gameobjects.PersistentState;
@@ -12,14 +22,12 @@ import com.aionemu.gameserver.model.skill.PlayerSkillList;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.Lists;
-import java.sql.*;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 玩家技能列表 DAO 的 MySQL 8 实现。
- * MySQL 8 implementation of PlayerSkillListDAO.
+ * MySQL 8 implementation of PlayerSkillListDAO using JdbcClient.
  * @author SoulKeeper
  * @author IceReaper, orfeo087, Avol, AEJTester
  * Updated for MySQL 8 support
@@ -55,6 +63,16 @@ public class PlayerSkillListDAO extends com.aionemu.gameserver.dao.PlayerSkillLi
     /** 待删除技能谓词（DELETED 状态） / Predicate for skills to delete (DELETED state) */
     private static final Predicate<PlayerSkillEntry> skillsToDeletePredicate = input -> input != null && PersistentState.DELETED == input.getPersistentState();
 
+    private final JdbcClient jdbcClient;
+
+    public PlayerSkillListDAO() {
+        this(DatabaseFactory.getJdbcClient());
+    }
+
+    public PlayerSkillListDAO(JdbcClient jdbcClient) {
+        this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");
+    }
+
     /**
      * 加载玩家技能列表。
      * Loads the player's skill list.
@@ -65,13 +83,10 @@ public class PlayerSkillListDAO extends com.aionemu.gameserver.dao.PlayerSkillLi
     public PlayerSkillList loadSkillList(int playerId) {
         List<PlayerSkillEntry> skills = new ArrayList<>();
 
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(SELECT_QUERY)) {
-
-            stmt.setInt(1, playerId);
-
-            try (ResultSet rset = stmt.executeQuery()) {
-                while (rset.next()) {
+        try {
+            skills = jdbcClient.sql(SELECT_QUERY)
+                .param(playerId)
+                .query((rset, rowNum) -> {
                     int id = rset.getInt("skill_id");
                     int lv = rset.getInt("skill_level");
                     int skin_id = rset.getInt("skin_id");
@@ -79,10 +94,10 @@ public class PlayerSkillListDAO extends com.aionemu.gameserver.dao.PlayerSkillLi
                     int expireTime = rset.getInt("skin_expire_time");
                     boolean isActivated = rset.getBoolean("skin_activated");
 
-                    skills.add(new PlayerSkillEntry(id, false, false, lv, skin_id, active_date, expireTime, isActivated, PersistentState.UPDATED));
-                }
-            }
-        } catch (Exception e) {
+                    return new PlayerSkillEntry(id, false, false, lv, skin_id, active_date, expireTime, isActivated, PersistentState.UPDATED);
+                })
+                .list();
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.d0d2b39236dc", playerId), e);
         }
 
@@ -149,10 +164,8 @@ public class PlayerSkillListDAO extends com.aionemu.gameserver.dao.PlayerSkillLi
      * @param con 连接 / connection
      * @param player 玩家 / player
      * @param skills 技能条目列表 / list of skill entries
-     * SQL exception
      */
     private void addSkills(Connection con, Player player, List<PlayerSkillEntry> skills) throws SQLException {
-
         Collection<PlayerSkillEntry> skillsToInsert = Collections2.filter(skills, skillsToInsertPredicate);
 
         if (GenericValidator.isBlankOrNull(skillsToInsert)) {
@@ -177,10 +190,8 @@ public class PlayerSkillListDAO extends com.aionemu.gameserver.dao.PlayerSkillLi
      * @param con 连接 / connection
      * @param player 玩家 / player
      * @param skills 技能条目列表 / list of skill entries
-     * SQL exception
      */
     private void updateSkills(Connection con, Player player, List<PlayerSkillEntry> skills) throws SQLException {
-
         Collection<PlayerSkillEntry> skillsToUpdate = Collections2.filter(skills, skillsToUpdatePredicate);
 
         if (GenericValidator.isBlankOrNull(skillsToUpdate)) {
@@ -205,10 +216,8 @@ public class PlayerSkillListDAO extends com.aionemu.gameserver.dao.PlayerSkillLi
      * @param con 连接 / connection
      * @param player 玩家 / player
      * @param skills 技能条目列表 / list of skill entries
-     * SQL exception
      */
     private void updateSkinSkills(Connection con, Player player, List<PlayerSkillEntry> skills) throws SQLException {
-
         Collection<PlayerSkillEntry> skillsToUpdate = Collections2.filter(skills, skillsToUpdatePredicate);
 
         if (GenericValidator.isBlankOrNull(skillsToUpdate)) {
@@ -236,10 +245,8 @@ public class PlayerSkillListDAO extends com.aionemu.gameserver.dao.PlayerSkillLi
      * @param con 连接 / connection
      * @param player 玩家 / player
      * @param skills 技能条目列表 / list of skill entries
-     * SQL exception
      */
     private void deleteSkills(Connection con, Player player, List<PlayerSkillEntry> skills) throws SQLException {
-
         Collection<PlayerSkillEntry> skillsToDelete = Collections2.filter(skills, skillsToDeletePredicate);
 
         if (GenericValidator.isBlankOrNull(skillsToDelete)) {
@@ -268,22 +275,17 @@ public class PlayerSkillListDAO extends com.aionemu.gameserver.dao.PlayerSkillLi
     public Timestamp getSkinSkillActiveDateById(int playerObjId, int skillId) {
         String query = "SELECT `skin_active_date` FROM `player_skills` " + "WHERE `player_id` = ? AND `skill_id` = ?";
 
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement s = con.prepareStatement(query)) {
-
-            s.setInt(1, playerObjId);
-            s.setInt(2, skillId);
-
-            try (ResultSet rs = s.executeQuery()) {
-                if (rs.next()) {
-                    return rs.getTimestamp("skin_active_date");
-                }
-            }
-        } catch (Exception e) {
+        try {
+            return jdbcClient.sql(query)
+                .param(playerObjId)
+                .param(skillId)
+                .query(Timestamp.class)
+                .optional()
+                .orElse(null);
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.32a835694574", playerObjId, skillId), e);
+            return null;
         }
-
-        return null;
     }
 
     /**
@@ -297,22 +299,18 @@ public class PlayerSkillListDAO extends com.aionemu.gameserver.dao.PlayerSkillLi
     public int getSkinExpireTime(int playerObjId, int skillId) {
         String query = "SELECT `skin_expire_time` FROM `player_skills` " + "WHERE `player_id` = ? AND `skill_id` = ?";
 
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement s = con.prepareStatement(query)) {
-
-            s.setInt(1, playerObjId);
-            s.setInt(2, skillId);
-
-            try (ResultSet rs = s.executeQuery()) {
-                if (rs.next()) {
-                    return rs.getInt("skin_expire_time");
-                }
-            }
-        } catch (Exception e) {
+        try {
+            Integer expire = jdbcClient.sql(query)
+                .param(playerObjId)
+                .param(skillId)
+                .query(Integer.class)
+                .optional()
+                .orElse(0);
+            return expire != null ? expire : 0;
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.c08c665f848c", playerObjId, skillId), e);
+            return 0;
         }
-
-        return 0;
     }
 
     /**

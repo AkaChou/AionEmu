@@ -1,20 +1,21 @@
 package com.aionemu.gameserver.dao.impl;
 
-
-import com.aionemu.boot.i18n.I18n;
-import lombok.extern.slf4j.Slf4j;
-import com.aionemu.commons.database.DatabaseFactory;
-import com.aionemu.gameserver.model.gameobjects.player.MacroList;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
+
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.simple.JdbcClient;
+
+import com.aionemu.boot.i18n.I18n;
+import com.aionemu.commons.database.DatabaseFactory;
+import com.aionemu.gameserver.model.gameobjects.player.MacroList;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 玩家宏 DAO 的 MySQL 8 实现。
- * MySQL 8 implementation of PlayerMacrossesDAO.
+ * MySQL 8 implementation of PlayerMacrossesDAO using JdbcClient.
  * Updated for MySQL 8 - Fixed connection leaks.
  * @author Aquanox
  */
@@ -30,6 +31,16 @@ public class PlayerMacrossesDAO extends com.aionemu.gameserver.dao.PlayerMacross
 	/** 查询宏 SQL / Select macros SQL*/
 	private static final String SELECT_QUERY = "SELECT `order`, `macro` FROM `player_macrosses` WHERE `player_id`=?";
 
+	private final JdbcClient jdbcClient;
+
+	public PlayerMacrossesDAO() {
+		this(DatabaseFactory.getJdbcClient());
+	}
+
+	public PlayerMacrossesDAO(JdbcClient jdbcClient) {
+		this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");
+	}
+
 	/**
 	 * 新增玩家宏。
 	 * Adds a player macro.
@@ -39,15 +50,14 @@ public class PlayerMacrossesDAO extends com.aionemu.gameserver.dao.PlayerMacross
 	 */
 	@Override
 	public void addMacro(final int playerId, final int macroPosition, final String macro) {
-		try (Connection con = DatabaseFactory.getConnection();
-			 PreparedStatement stmt = con.prepareStatement(INSERT_QUERY)) {
-
-			log.debug("[DAO: PlayerMacrossesDAO] storing macro " + playerId + " " + macroPosition);
-			stmt.setInt(1, playerId);
-			stmt.setInt(2, macroPosition);
-			stmt.setString(3, macro);
-			stmt.executeUpdate();
-		} catch (SQLException e) {
+		try {
+			log.debug("[DAO: PlayerMacrossesDAO] storing macro {} {}", playerId, macroPosition);
+			jdbcClient.sql(INSERT_QUERY)
+				.param(playerId)
+				.param(macroPosition)
+				.param(macro)
+				.update();
+		} catch (DataAccessException e) {
 			log.error(I18n.get("log.6fb6dc66106b", playerId, macroPosition), e);
 		}
 	}
@@ -61,15 +71,14 @@ public class PlayerMacrossesDAO extends com.aionemu.gameserver.dao.PlayerMacross
 	 */
 	@Override
 	public void updateMacro(final int playerId, final int macroPosition, final String macro) {
-		try (Connection con = DatabaseFactory.getConnection();
-			 PreparedStatement stmt = con.prepareStatement(UPDATE_QUERY)) {
-
-			log.debug("[DAO: PlayerMacrossesDAO] updating macro " + playerId + " " + macroPosition);
-			stmt.setString(1, macro);
-			stmt.setInt(2, playerId);
-			stmt.setInt(3, macroPosition);
-			stmt.executeUpdate();
-		} catch (SQLException e) {
+		try {
+			log.debug("[DAO: PlayerMacrossesDAO] updating macro {} {}", playerId, macroPosition);
+			jdbcClient.sql(UPDATE_QUERY)
+				.param(macro)
+				.param(playerId)
+				.param(macroPosition)
+				.update();
+		} catch (DataAccessException e) {
 			log.error(I18n.get("log.a1520e1b6fea", playerId, macroPosition), e);
 		}
 	}
@@ -82,14 +91,13 @@ public class PlayerMacrossesDAO extends com.aionemu.gameserver.dao.PlayerMacross
 	 */
 	@Override
 	public void deleteMacro(final int playerId, final int macroPosition) {
-		try (Connection con = DatabaseFactory.getConnection();
-			 PreparedStatement stmt = con.prepareStatement(DELETE_QUERY)) {
-
-			log.debug("[DAO: PlayerMacrossesDAO] removing macro " + playerId + " " + macroPosition);
-			stmt.setInt(1, playerId);
-			stmt.setInt(2, macroPosition);
-			stmt.executeUpdate();
-		} catch (SQLException e) {
+		try {
+			log.debug("[DAO: PlayerMacrossesDAO] removing macro {} {}", playerId, macroPosition);
+			jdbcClient.sql(DELETE_QUERY)
+				.param(playerId)
+				.param(macroPosition)
+				.update();
+		} catch (DataAccessException e) {
 			log.error(I18n.get("log.7e1652b6543b", playerId, macroPosition), e);
 		}
 	}
@@ -104,20 +112,18 @@ public class PlayerMacrossesDAO extends com.aionemu.gameserver.dao.PlayerMacross
 	public MacroList restoreMacrosses(final int playerId) {
 		final Map<Integer, String> macrosses = new HashMap<>();
 
-		try (Connection con = DatabaseFactory.getConnection();
-			 PreparedStatement stmt = con.prepareStatement(SELECT_QUERY)) {
-
-			stmt.setInt(1, playerId);
-			log.debug("[DAO: PlayerMacrossesDAO] loading macroses for playerId: " + playerId);
-
-			try (ResultSet rset = stmt.executeQuery()) {
-				while (rset.next()) {
+		try {
+			log.debug("[DAO: PlayerMacrossesDAO] loading macroses for playerId: {}", playerId);
+			jdbcClient.sql(SELECT_QUERY)
+				.param(playerId)
+				.query((rset, rowNum) -> {
 					int order = rset.getInt("order");
 					String text = rset.getString("macro");
 					macrosses.put(order, text);
-				}
-			}
-		} catch (Exception e) {
+					return null;
+				})
+				.list();
+		} catch (DataAccessException e) {
 			log.error(I18n.get("log.11ce99709119", playerId, " from DB"), e);
 		}
 		return new MacroList(macrosses);

@@ -1,27 +1,41 @@
 package com.aionemu.gameserver.dao.impl;
 
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Objects;
+
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.simple.JdbcClient;
 
 import com.aionemu.boot.i18n.I18n;
-import lombok.extern.slf4j.Slf4j;
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.gameserver.model.tasks.TaskFromDB;
-import java.sql.*;
-import java.util.ArrayList;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 数据库定时任务 DAO 的 MySQL 8 实现。
- * MySQL 8 implementation of TaskFromDBDAO.
+ * MySQL 8 implementation of TaskFromDBDAO using JdbcClient.
  * Updated for MySQL 8 - Fixed connection leaks.
  * @author Divinity
  */
 @Slf4j
 public class TaskFromDBDAO extends com.aionemu.gameserver.dao.TaskFromDBDAO {
 
-
 	/** 查询全部任务 SQL / Select all tasks SQL*/
 	private static final String SELECT_ALL_QUERY = "SELECT * FROM tasks ORDER BY id";
 	/** 更新上次激活时间 SQL / Update last activation SQL */
 	private static final String UPDATE_QUERY = "UPDATE tasks SET last_activation = ? WHERE id = ?";
+
+	private final JdbcClient jdbcClient;
+
+	public TaskFromDBDAO() {
+		this(DatabaseFactory.getJdbcClient());
+	}
+
+	public TaskFromDBDAO(JdbcClient jdbcClient) {
+		this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");
+	}
 
 	/**
 	 * 加载全部数据库任务。
@@ -30,14 +44,11 @@ public class TaskFromDBDAO extends com.aionemu.gameserver.dao.TaskFromDBDAO {
 	 */
 	@Override
 	public ArrayList<TaskFromDB> getAllTasks() {
-		final ArrayList<TaskFromDB> result = new ArrayList<>();
+		ArrayList<TaskFromDB> result = new ArrayList<>();
 
-		try (Connection con = DatabaseFactory.getConnection();
-			 PreparedStatement stmt = con.prepareStatement(SELECT_ALL_QUERY);
-			 ResultSet rset = stmt.executeQuery()) {
-
-			while (rset.next()) {
-				result.add(new TaskFromDB(
+		try {
+			result.addAll(jdbcClient.sql(SELECT_ALL_QUERY)
+				.query((rset, rowNum) -> new TaskFromDB(
 					rset.getInt("id"),
 					rset.getString("task"),
 					rset.getString("type"),
@@ -45,9 +56,9 @@ public class TaskFromDBDAO extends com.aionemu.gameserver.dao.TaskFromDBDAO {
 					rset.getString("start_time"),
 					rset.getInt("delay"),
 					rset.getString("param")
-				));
-            }
-		} catch (SQLException e) {
+				))
+				.list());
+		} catch (DataAccessException e) {
 			log.error(I18n.get("log.1261465dcfcf"), e);
 		}
 		return result;
@@ -60,13 +71,12 @@ public class TaskFromDBDAO extends com.aionemu.gameserver.dao.TaskFromDBDAO {
 	 */
 	@Override
 	public void setLastActivation(final int id) {
-		try (Connection con = DatabaseFactory.getConnection();
-			 PreparedStatement stmt = con.prepareStatement(UPDATE_QUERY)) {
-
-			stmt.setTimestamp(1, new Timestamp(System.currentTimeMillis()));
-			stmt.setInt(2, id);
-			stmt.executeUpdate();
-		} catch (SQLException e) {
+		try {
+			jdbcClient.sql(UPDATE_QUERY)
+				.param(new Timestamp(System.currentTimeMillis()))
+				.param(id)
+				.update();
+		} catch (DataAccessException e) {
 			log.error(I18n.get("log.b39cd8a3758d"), e);
 		}
 	}

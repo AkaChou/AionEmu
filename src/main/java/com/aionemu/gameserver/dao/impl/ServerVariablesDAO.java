@@ -1,18 +1,16 @@
 package com.aionemu.gameserver.dao.impl;
 
+import java.util.Objects;
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.simple.JdbcClient;
 
 import com.aionemu.boot.i18n.I18n;
 import com.aionemu.commons.database.DatabaseFactory;
 import lombok.extern.slf4j.Slf4j;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
 /**
  * 服务器变量 DAO 的 MySQL 8 实现。
- * MySQL 8 implementation of ServerVariablesDAO.
+ * MySQL 8 implementation of ServerVariablesDAO using JdbcClient.
  * Updated for MySQL 8 - Fixed connection leaks.
  * @author Ben
  */
@@ -24,25 +22,34 @@ public class ServerVariablesDAO extends com.aionemu.gameserver.dao.ServerVariabl
 	/** Replace/upsert variable SQL / Replace/upsert variable SQL */
 	private static final String REPLACE_QUERY = "REPLACE INTO `server_variables` (`key`,`value`) VALUES (?,?)";
 
+	private final JdbcClient jdbcClient;
+
+	public ServerVariablesDAO() {
+		this(DatabaseFactory.getJdbcClient());
+	}
+
+	public ServerVariablesDAO(JdbcClient jdbcClient) {
+		this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");
+	}
+
 	/**
 	 * 按键加载服务器变量整数值。
 	 * Loads a server variable integer value by key.
-	 * variable key
 	 * @param var 变量键 / variable key
 	 * @return 变量值，不存在则 0 / value, or 0 if missing
 	 */
 	@Override
 	public int load(String var) {
-		try (Connection con = DatabaseFactory.getConnection();
-			 PreparedStatement ps = con.prepareStatement(SELECT_QUERY)) {
-
-			ps.setString(1, var);
-			try (ResultSet rs = ps.executeQuery()) {
-				if (rs.next()) {
-					return Integer.parseInt(rs.getString("value"));
-				}
+		try {
+			String value = jdbcClient.sql(SELECT_QUERY)
+				.param(var)
+				.query(String.class)
+				.optional()
+				.orElse(null);
+			if (value != null) {
+				return Integer.parseInt(value);
 			}
-		} catch (SQLException e) {
+		} catch (DataAccessException e) {
 			log.error(I18n.get("log.dc2937405e21"), e);
 		}
 		return 0;
@@ -57,13 +64,13 @@ public class ServerVariablesDAO extends com.aionemu.gameserver.dao.ServerVariabl
 	 */
 	@Override
 	public boolean store(String var, int time) {
-		try (Connection con = DatabaseFactory.getConnection();
-			 PreparedStatement ps = con.prepareStatement(REPLACE_QUERY)) {
-
-			ps.setString(1, var);
-			ps.setString(2, String.valueOf(time));
-			return ps.executeUpdate() > 0;
-		} catch (SQLException e) {
+		try {
+			int affected = jdbcClient.sql(REPLACE_QUERY)
+				.param(var)
+				.param(String.valueOf(time))
+				.update();
+			return affected > 0;
+		} catch (DataAccessException e) {
 			log.error(I18n.get("log.38420527c181"), e);
 			return false;
 		}

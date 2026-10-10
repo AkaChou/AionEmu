@@ -1,8 +1,17 @@
 package com.aionemu.gameserver.dao.impl;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Objects;
+
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.simple.JdbcClient;
 
 import com.aionemu.boot.i18n.I18n;
-import lombok.extern.slf4j.Slf4j;
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.commons.utils.GenericValidator;
 import com.aionemu.gameserver.model.gameobjects.PersistentState;
@@ -12,18 +21,15 @@ import com.aionemu.gameserver.model.skill.linked_skill.PlayerEquippedStigmaList;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.Lists;
-import java.sql.*;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 玩家已装备灵魂石（Stigma）列表 DAO 的 MySQL 8 实现。
- * MySQL 8 implementation of PlayerStigmasEquippedDAO.
+ * MySQL 8 implementation of PlayerStigmasEquippedDAO using JdbcClient.
  */
 @Slf4j
 public class PlayerStigmasEquippedDAO extends com.aionemu.gameserver.dao.PlayerStigmasEquippedDAO {
-
 
     /** 插入已装备灵魂石 / Insert an equipped stigma */
     private static final String INSERT_QUERY = "INSERT INTO `player_stigmas_equipped` (`player_id`, `item_id`, `item_name`) VALUES (?,?,?)";
@@ -46,10 +52,19 @@ public class PlayerStigmasEquippedDAO extends com.aionemu.gameserver.dao.PlayerS
     /** 需要删除的条目过滤条件 / Predicate for items to delete */
     private static final Predicate<EquippedStigmasEntry> itemsToDeletePredicate = input -> input != null && PersistentState.DELETED == input.getPersistentState();
 
+    private final JdbcClient jdbcClient;
+
+    public PlayerStigmasEquippedDAO() {
+        this(DatabaseFactory.getJdbcClient());
+    }
+
+    public PlayerStigmasEquippedDAO(JdbcClient jdbcClient) {
+        this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");
+    }
+
     /**
      * 加载玩家已装备灵魂石列表。
      * Loads the player's equipped stigma list.
-     * player id
      * @param playerId 玩家 ID / player id
      * @return 已装备灵魂石列表 / equipped stigma list
      */
@@ -57,19 +72,16 @@ public class PlayerStigmasEquippedDAO extends com.aionemu.gameserver.dao.PlayerS
     public PlayerEquippedStigmaList loadItemsList(int playerId) {
         List<EquippedStigmasEntry> items = new ArrayList<>();
 
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(SELECT_QUERY)) {
-
-            stmt.setInt(1, playerId);
-
-            try (ResultSet rset = stmt.executeQuery()) {
-                while (rset.next()) {
+        try {
+            items = jdbcClient.sql(SELECT_QUERY)
+                .param(playerId)
+                .query((rset, rowNum) -> {
                     int id = rset.getInt("item_id");
                     String name = rset.getString("item_name");
-                    items.add(new EquippedStigmasEntry(id, name, PersistentState.UPDATED));
-                }
-            }
-        } catch (SQLException e) {
+                    return new EquippedStigmasEntry(id, name, PersistentState.UPDATED);
+                })
+                .list();
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.484620fa0a55", playerId), e);
         }
         return new PlayerEquippedStigmaList(items);

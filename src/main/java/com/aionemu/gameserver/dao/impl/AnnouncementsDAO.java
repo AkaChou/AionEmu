@@ -1,26 +1,25 @@
 package com.aionemu.gameserver.dao.impl;
 
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
+
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.simple.JdbcClient;
 
 import com.aionemu.boot.i18n.I18n;
-import lombok.extern.slf4j.Slf4j;
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.gameserver.model.Announcement;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.HashSet;
-import java.util.Set;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 公告 DAO 的 MySQL 8 实现。
- * MySQL 8 implementation of AnnouncementsDAO.
- * Updated for MySQL 8 - Fixed connection leaks.
+ * MySQL 8 implementation of AnnouncementsDAO using JdbcClient.
  * @author Divinity
  */
 @Slf4j
 public class AnnouncementsDAO extends com.aionemu.gameserver.dao.AnnouncementsDAO {
-
 
 	/** 查询公告 SQL / Select announcements SQL*/
 	private static final String SELECT_QUERY = "SELECT * FROM announcements ORDER BY id";
@@ -28,6 +27,16 @@ public class AnnouncementsDAO extends com.aionemu.gameserver.dao.AnnouncementsDA
 	private static final String INSERT_QUERY = "INSERT INTO announcements (announce, faction, type, delay) VALUES (?, ?, ?, ?)";
 	/** 删除公告 SQL / Delete announcement SQL*/
 	private static final String DELETE_QUERY = "DELETE FROM announcements WHERE id = ?";
+
+	private final JdbcClient jdbcClient;
+
+	public AnnouncementsDAO() {
+		this(DatabaseFactory.getJdbcClient());
+	}
+
+	public AnnouncementsDAO(JdbcClient jdbcClient) {
+		this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");
+	}
 
 	/**
 	 * 加载全部公告。
@@ -37,21 +46,18 @@ public class AnnouncementsDAO extends com.aionemu.gameserver.dao.AnnouncementsDA
 	@Override
 	public Set<Announcement> getAnnouncements() {
 		final Set<Announcement> result = new HashSet<>();
-
-		try (Connection con = DatabaseFactory.getConnection();
-			 PreparedStatement stmt = con.prepareStatement(SELECT_QUERY);
-			 ResultSet resultSet = stmt.executeQuery()) {
-
-			while (resultSet.next()) {
-				result.add(new Announcement(
-					resultSet.getInt("id"),
-					resultSet.getString("announce"),
-					resultSet.getString("faction"),
-					resultSet.getString("type"),
-					resultSet.getInt("delay")
-				));
-			}
-		} catch (SQLException e) {
+		try {
+			jdbcClient.sql(SELECT_QUERY)
+				.query((rs, rowNum) -> new Announcement(
+					rs.getInt("id"),
+					rs.getString("announce"),
+					rs.getString("faction"),
+					rs.getString("type"),
+					rs.getInt("delay")
+				))
+				.list()
+				.forEach(result::add);
+		} catch (DataAccessException e) {
 			log.error(I18n.get("log.3e42f415d09f"), e);
 		}
 		return result;
@@ -64,15 +70,14 @@ public class AnnouncementsDAO extends com.aionemu.gameserver.dao.AnnouncementsDA
 	 */
 	@Override
 	public void addAnnouncement(final Announcement announce) {
-		try (Connection con = DatabaseFactory.getConnection();
-			 PreparedStatement stmt = con.prepareStatement(INSERT_QUERY)) {
-
-			stmt.setString(1, announce.getAnnounce());
-			stmt.setString(2, announce.getFaction());
-			stmt.setString(3, announce.getType());
-			stmt.setInt(4, announce.getDelay());
-			stmt.executeUpdate();
-		} catch (SQLException e) {
+		try {
+			jdbcClient.sql(INSERT_QUERY)
+				.param(announce.getAnnounce())
+				.param(announce.getFaction())
+				.param(announce.getType())
+				.param(announce.getDelay())
+				.update();
+		} catch (DataAccessException e) {
 			log.error(I18n.get("log.b3b62f944143"), e);
 		}
 	}
@@ -80,18 +85,17 @@ public class AnnouncementsDAO extends com.aionemu.gameserver.dao.AnnouncementsDA
 	/**
 	 * 按 ID 删除公告。
 	 * Deletes an announcement by id.
-	 * announcement id
 	 * @param idAnnounce 公告 ID / announcement id
 	 * @return 是否删除成功 / whether the delete succeeded
 	 */
 	@Override
 	public boolean delAnnouncement(final int idAnnounce) {
-		try (Connection con = DatabaseFactory.getConnection();
-			 PreparedStatement stmt = con.prepareStatement(DELETE_QUERY)) {
-
-			stmt.setInt(1, idAnnounce);
-			return stmt.executeUpdate() > 0;
-		} catch (SQLException e) {
+		try {
+			int affected = jdbcClient.sql(DELETE_QUERY)
+				.param(idAnnounce)
+				.update();
+			return affected > 0;
+		} catch (DataAccessException e) {
 			log.error(I18n.get("log.7f5bab6b7889", idAnnounce), e);
 			return false;
 		}

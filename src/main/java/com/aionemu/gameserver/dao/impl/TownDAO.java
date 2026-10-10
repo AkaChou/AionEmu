@@ -1,19 +1,26 @@
 package com.aionemu.gameserver.dao.impl;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.util.Map;
+import java.util.Objects;
+import java.util.concurrent.ConcurrentHashMap;
+
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.simple.JdbcClient;
 
 import com.aionemu.boot.i18n.I18n;
-import lombok.extern.slf4j.Slf4j;
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.gameobjects.PersistentState;
 import com.aionemu.gameserver.model.town.Town;
-import java.sql.*;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 城镇（阵营城镇等级/积分）DAO 的 MySQL 8 实现。
- * MySQL 8 implementation of TownDAO.
+ * MySQL 8 implementation of TownDAO using JdbcClient.
  * @author ViAl, Updated for MySQL 8
  */
 @Slf4j
@@ -30,6 +37,16 @@ public class TownDAO extends com.aionemu.gameserver.dao.TownDAO {
     /** 插入或更新城镇 / Upsert a town */
     private static final String UPSERT_QUERY = "INSERT INTO `towns` (`id`, `level`, `points`, `race`, `level_up_date`) VALUES (?, ?, ?, ?, ?) " + "ON DUPLICATE KEY UPDATE `level` = VALUES(`level`), `points` = VALUES(`points`), `level_up_date` = VALUES(`level_up_date`)";
 
+    private final JdbcClient jdbcClient;
+
+    public TownDAO() {
+        this(DatabaseFactory.getJdbcClient());
+    }
+
+    public TownDAO(JdbcClient jdbcClient) {
+        this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");
+    }
+
     /**
      * 按阵营加载城镇数据。
      * Loads towns for the given race.
@@ -40,19 +57,13 @@ public class TownDAO extends com.aionemu.gameserver.dao.TownDAO {
     public Map<Integer, Town> load(Race race) {
         Map<Integer, Town> towns = new ConcurrentHashMap<>();
 
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(SELECT_QUERY)) {
-
-            stmt.setString(1, race.toString());
-
-            try (ResultSet rset = stmt.executeQuery()) {
-                while (rset.next()) {
-                    Town town = extractTownFromResultSet(rset);
-                    towns.put(town.getId(), town);
-                }
-            }
-
-        } catch (SQLException e) {
+        try {
+            jdbcClient.sql(SELECT_QUERY)
+                .param(race.toString())
+                .query((rs, rowNum) -> extractTownFromResultSet(rs))
+                .list()
+                .forEach(town -> towns.put(town.getId(), town));
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.da2be87857a1", race), e);
         }
 
@@ -67,16 +78,12 @@ public class TownDAO extends com.aionemu.gameserver.dao.TownDAO {
     public Map<Integer, Town> loadAll() {
         Map<Integer, Town> towns = new ConcurrentHashMap<>();
 
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(SELECT_ALL_QUERY);
-             ResultSet rset = stmt.executeQuery()) {
-
-            while (rset.next()) {
-                Town town = extractTownFromResultSet(rset);
-                towns.put(town.getId(), town);
-            }
-
-        } catch (SQLException e) {
+        try {
+            jdbcClient.sql(SELECT_ALL_QUERY)
+                .query((rs, rowNum) -> extractTownFromResultSet(rs))
+                .list()
+                .forEach(town -> towns.put(town.getId(), town));
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.faf0ffd96bb1"), e);
         }
 
@@ -88,7 +95,7 @@ public class TownDAO extends com.aionemu.gameserver.dao.TownDAO {
      * Extracts a Town from the result set.
      * @param rset 结果集 / result set
      * @return 村庄 / town
-     * SQL exception
+     * @throws SQLException SQL exception
      */
     private Town extractTownFromResultSet(ResultSet rset) throws SQLException {
         int id = rset.getInt("id");
@@ -132,14 +139,17 @@ public class TownDAO extends com.aionemu.gameserver.dao.TownDAO {
      * @param town 村庄 / town
      */
     private void insertTown(Town town) {
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(INSERT_QUERY)) {
-
-            setTownStatementParameters(stmt, town);
-            stmt.executeUpdate();
+        try {
+            Timestamp levelUpDate = resolveLevelUpDate(town.getLevelUpDate());
+            jdbcClient.sql(INSERT_QUERY)
+                .param(town.getId())
+                .param(town.getLevel())
+                .param(town.getPoints())
+                .param(town.getRace().toString())
+                .param(levelUpDate)
+                .update();
             town.setPersistentState(PersistentState.UPDATED);
-
-        } catch (SQLException e) {
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.83ac20817a76", town.getId()), e);
         }
     }
@@ -150,30 +160,21 @@ public class TownDAO extends com.aionemu.gameserver.dao.TownDAO {
      * @param town 村庄 / town
      */
     private void updateTown(Town town) {
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(UPDATE_QUERY)) {
-
-            stmt.setInt(1, town.getLevel());
-            stmt.setInt(2, town.getPoints());
-
-            Timestamp levelUpDate = town.getLevelUpDate();
-            if (levelUpDate == null || levelUpDate.getTime() < 1000000) {
-                stmt.setTimestamp(3, new Timestamp(System.currentTimeMillis()));
-            } else {
-                stmt.setTimestamp(3, levelUpDate);
-            }
-
-            stmt.setInt(4, town.getId());
-
-            int updated = stmt.executeUpdate();
+        try {
+            Timestamp levelUpDate = resolveLevelUpDate(town.getLevelUpDate());
+            int updated = jdbcClient.sql(UPDATE_QUERY)
+                .param(town.getLevel())
+                .param(town.getPoints())
+                .param(levelUpDate)
+                .param(town.getId())
+                .update();
 
             if (updated == 0) {
                 insertTown(town);
             } else {
                 town.setPersistentState(PersistentState.UPDATED);
             }
-
-        } catch (SQLException e) {
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.86ef9ddbc0ca", town.getId()), e);
         }
     }
@@ -184,37 +185,26 @@ public class TownDAO extends com.aionemu.gameserver.dao.TownDAO {
      * @param town 村庄 / town
      */
     public void upsertTown(Town town) {
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(UPSERT_QUERY)) {
-
-            setTownStatementParameters(stmt, town);
-            stmt.executeUpdate();
+        try {
+            Timestamp levelUpDate = resolveLevelUpDate(town.getLevelUpDate());
+            jdbcClient.sql(UPSERT_QUERY)
+                .param(town.getId())
+                .param(town.getLevel())
+                .param(town.getPoints())
+                .param(town.getRace().toString())
+                .param(levelUpDate)
+                .update();
             town.setPersistentState(PersistentState.UPDATED);
-
-        } catch (SQLException e) {
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.2d0c2046cc72", town.getId()), e);
         }
     }
 
-    /**
-     * 为预编译语句填充城镇字段。
-     * Binds town fields to the prepared statement.
-     * @param stmt 预编译语句 / prepared statement
-     * @param town 村庄 / town
-     * SQL exception
-     */
-    private void setTownStatementParameters(PreparedStatement stmt, Town town) throws SQLException {
-        stmt.setInt(1, town.getId());
-        stmt.setInt(2, town.getLevel());
-        stmt.setInt(3, town.getPoints());
-        stmt.setString(4, town.getRace().toString());
-
-        Timestamp levelUpDate = town.getLevelUpDate();
+    private static Timestamp resolveLevelUpDate(Timestamp levelUpDate) {
         if (levelUpDate == null || levelUpDate.getTime() < 1000000) {
-            stmt.setTimestamp(5, new Timestamp(System.currentTimeMillis()));
-        } else {
-            stmt.setTimestamp(5, levelUpDate);
+            return new Timestamp(System.currentTimeMillis());
         }
+        return levelUpDate;
     }
 
     /**
@@ -223,40 +213,22 @@ public class TownDAO extends com.aionemu.gameserver.dao.TownDAO {
      * @param towns 城镇集合 / iterable of towns
      */
     public void storeTowns(Iterable<Town> towns) {
-        try (Connection con = DatabaseFactory.getConnection()) {
-            con.setAutoCommit(false);
-
-            try (PreparedStatement stmt = con.prepareStatement(UPSERT_QUERY)) {
-                int batchCount = 0;
-
-                for (Town town : towns) {
-                    if (town == null) {
-                        continue;
-                    }
-
-                    setTownStatementParameters(stmt, town);
-                    stmt.addBatch();
-                    batchCount++;
-
-                    if (batchCount % 50 == 0) {
-                        stmt.executeBatch();
-                    }
-                }
-
-                if (batchCount % 50 != 0) {
-                    stmt.executeBatch();
-                }
-            }
-
-            con.commit();
-
+        try {
             for (Town town : towns) {
-                if (town != null) {
-                    town.setPersistentState(PersistentState.UPDATED);
+                if (town == null) {
+                    continue;
                 }
+                Timestamp levelUpDate = resolveLevelUpDate(town.getLevelUpDate());
+                jdbcClient.sql(UPSERT_QUERY)
+                    .param(town.getId())
+                    .param(town.getLevel())
+                    .param(town.getPoints())
+                    .param(town.getRace().toString())
+                    .param(levelUpDate)
+                    .update();
+                town.setPersistentState(PersistentState.UPDATED);
             }
-
-        } catch (SQLException e) {
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.e7999a48b385"), e);
         }
     }

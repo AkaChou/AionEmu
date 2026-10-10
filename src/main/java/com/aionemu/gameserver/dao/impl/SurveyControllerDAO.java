@@ -1,30 +1,41 @@
 package com.aionemu.gameserver.dao.impl;
 
-
-import com.aionemu.boot.i18n.I18n;
-import lombok.extern.slf4j.Slf4j;
-import com.aionemu.commons.database.DatabaseFactory;
-import com.aionemu.gameserver.model.templates.survey.SurveyItem;
 import java.util.ArrayList;
 import java.util.List;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
+import java.util.Objects;
+
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.simple.JdbcClient;
+
+import com.aionemu.boot.i18n.I18n;
+import com.aionemu.commons.database.DatabaseFactory;
+import com.aionemu.gameserver.model.templates.survey.SurveyItem;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 问卷控制器 DAO 的 MySQL 8 实现。
- * MySQL 8 implementation of SurveyControllerDAO.
+ * MySQL 8 implementation of SurveyControllerDAO using JdbcClient.
  * Updated for MySQL 8 - Fixed connection leaks.
  * @author KID
  */
 @Slf4j
 public class SurveyControllerDAO extends com.aionemu.gameserver.dao.SurveyControllerDAO {
 
-
 	/** Mark survey as used SQL / Mark survey as used SQL */
 	private static final String UPDATE_QUERY = "UPDATE `surveys` SET `used`=?, used_time=NOW() WHERE `unique_id`=?";
 	/** 查询问卷 SQL / Select surveys SQL */
 	private static final String SELECT_QUERY = "SELECT * FROM `surveys` WHERE `used`=?";
+
+	private final JdbcClient jdbcClient;
+
+	public SurveyControllerDAO() {
+		this(DatabaseFactory.getJdbcClient());
+	}
+
+	public SurveyControllerDAO(JdbcClient jdbcClient) {
+		this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");
+	}
 
 	/**
 	 * 是否支持当前数据库。
@@ -47,24 +58,21 @@ public class SurveyControllerDAO extends com.aionemu.gameserver.dao.SurveyContro
 	@Override
 	public List<SurveyItem> getAllNew() {
 		List<SurveyItem> list = new ArrayList<>();
-
-		try (Connection con = DatabaseFactory.getConnection();
-			 PreparedStatement stmt = con.prepareStatement(SELECT_QUERY)) {
-
-			stmt.setInt(1, 0);
-
-			try (ResultSet rset = stmt.executeQuery()) {
-				while (rset.next()) {
+		try {
+			jdbcClient.sql(SELECT_QUERY)
+				.param(0)
+				.query((rs, rowNum) -> {
 					SurveyItem item = new SurveyItem();
-					item.uniqueId = rset.getInt("unique_id");
-					item.ownerId = rset.getInt("owner_id");
-					item.itemId = rset.getInt("item_id");
-					item.count = rset.getLong("item_count");
-					item.html = rset.getString("html_text");
-					item.radio = rset.getString("html_radio");
-					list.add(item);
-				}
-			}
+					item.uniqueId = rs.getInt("unique_id");
+					item.ownerId = rs.getInt("owner_id");
+					item.itemId = rs.getInt("item_id");
+					item.count = rs.getLong("item_count");
+					item.html = rs.getString("html_text");
+					item.radio = rs.getString("html_radio");
+					return item;
+				})
+				.list()
+				.forEach(list::add);
 		} catch (Exception e) {
 			log.warn(I18n.get("log.05d62bb9dc4d"), e);
 		}
@@ -79,12 +87,12 @@ public class SurveyControllerDAO extends com.aionemu.gameserver.dao.SurveyContro
 	 */
 	@Override
 	public boolean useItem(int id) {
-		try (Connection con = DatabaseFactory.getConnection();
-			 PreparedStatement stmt = con.prepareStatement(UPDATE_QUERY)) {
-
-			stmt.setInt(1, 1);
-			stmt.setInt(2, id);
-			return stmt.executeUpdate() > 0;
+		try {
+			int affected = jdbcClient.sql(UPDATE_QUERY)
+				.param(1)
+				.param(id)
+				.update();
+			return affected > 0;
 		} catch (Exception e) {
 			log.error(I18n.get("log.4f720321ff23"), e);
 			return false;

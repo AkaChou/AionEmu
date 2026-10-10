@@ -1,19 +1,20 @@
 package com.aionemu.gameserver.dao.impl;
 
+import java.util.Objects;
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.simple.JdbcClient;
 
 import com.aionemu.boot.i18n.I18n;
-import lombok.extern.slf4j.Slf4j;
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.gameserver.model.gameobjects.PersistentState;
 import com.aionemu.gameserver.model.gameobjects.player.BindPointPosition;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 玩家绑定点 DAO 的 MySQL 8 实现。
- * MySQL 8 implementation of PlayerBindPointDAO.
+ * MySQL 8 implementation of PlayerBindPointDAO using JdbcClient.
  * Updated for MySQL 8 - Fixed connection leaks.
  * @author evilset
  */
@@ -26,6 +27,16 @@ public class PlayerBindPointDAO extends com.aionemu.gameserver.dao.PlayerBindPoi
 	private static final String SELECT_QUERY = "SELECT `map_id`, `x`, `y`, `z`, `heading` FROM `player_bind_point` WHERE `player_id`=?";
 	/** 更新绑定点 SQL / Update bind point SQL */
 	private static final String UPDATE_QUERY = "UPDATE player_bind_point set `map_id`=?, `x`=?, `y`=?, `z`=?, `heading`=? WHERE `player_id`=?";
+
+	private final JdbcClient jdbcClient;
+
+	public PlayerBindPointDAO() {
+		this(DatabaseFactory.getJdbcClient());
+	}
+
+	public PlayerBindPointDAO(JdbcClient jdbcClient) {
+		this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");
+	}
 
 	/**
 	 * 是否支持当前数据库。
@@ -47,24 +58,22 @@ public class PlayerBindPointDAO extends com.aionemu.gameserver.dao.PlayerBindPoi
 	 */
 	@Override
 	public void loadBindPoint(Player player) {
-		try (Connection con = DatabaseFactory.getConnection();
-			 PreparedStatement stmt = con.prepareStatement(SELECT_QUERY)) {
-
-			stmt.setInt(1, player.getObjectId());
-
-			try (ResultSet rset = stmt.executeQuery()) {
-				if (rset.next()) {
-					int mapId = rset.getInt("map_id");
-					float x = rset.getFloat("x");
-					float y = rset.getFloat("y");
-					float z = rset.getFloat("z");
-					byte heading = rset.getByte("heading");
+		try {
+			jdbcClient.sql(SELECT_QUERY)
+				.param(player.getObjectId())
+				.query((rs, rowNum) -> {
+					int mapId = rs.getInt("map_id");
+					float x = rs.getFloat("x");
+					float y = rs.getFloat("y");
+					float z = rs.getFloat("z");
+					byte heading = rs.getByte("heading");
 					BindPointPosition bind = new BindPointPosition(mapId, x, y, z, heading);
 					bind.setPersistentState(PersistentState.UPDATED);
 					player.setBindPoint(bind);
-				}
-			}
-		} catch (Exception e) {
+					return null;
+				})
+				.list();
+		} catch (DataAccessException e) {
 			log.error(I18n.get("log.43ab488ee287", player.getObjectId(), " from DB"), e);
 		}
 	}
@@ -77,18 +86,18 @@ public class PlayerBindPointDAO extends com.aionemu.gameserver.dao.PlayerBindPoi
 	 */
 	@Override
 	public boolean insertBindPoint(Player player) {
-		try (Connection con = DatabaseFactory.getConnection();
-			 PreparedStatement stmt = con.prepareStatement(INSERT_QUERY)) {
-
+		try {
 			BindPointPosition bpp = player.getBindPoint();
-			stmt.setInt(1, player.getObjectId());
-			stmt.setInt(2, bpp.getMapId());
-			stmt.setFloat(3, bpp.getX());
-			stmt.setFloat(4, bpp.getY());
-			stmt.setFloat(5, bpp.getZ());
-			stmt.setByte(6, bpp.getHeading());
-			return stmt.executeUpdate() > 0;
-		} catch (Exception e) {
+			int affected = jdbcClient.sql(INSERT_QUERY)
+				.param(player.getObjectId())
+				.param(bpp.getMapId())
+				.param(bpp.getX())
+				.param(bpp.getY())
+				.param(bpp.getZ())
+				.param(bpp.getHeading())
+				.update();
+			return affected > 0;
+		} catch (DataAccessException e) {
 			log.error(I18n.get("log.8f29cc17afb0", player.getObjectId(), " from DB"), e);
 			return false;
 		}
@@ -102,18 +111,18 @@ public class PlayerBindPointDAO extends com.aionemu.gameserver.dao.PlayerBindPoi
 	 */
 	@Override
 	public boolean updateBindPoint(Player player) {
-		try (Connection con = DatabaseFactory.getConnection();
-			 PreparedStatement stmt = con.prepareStatement(UPDATE_QUERY)) {
-
+		try {
 			BindPointPosition bpp = player.getBindPoint();
-			stmt.setInt(1, bpp.getMapId());
-			stmt.setFloat(2, bpp.getX());
-			stmt.setFloat(3, bpp.getY());
-			stmt.setFloat(4, bpp.getZ());
-			stmt.setByte(5, bpp.getHeading());
-			stmt.setInt(6, player.getObjectId());
-			return stmt.executeUpdate() > 0;
-		} catch (Exception e) {
+			int affected = jdbcClient.sql(UPDATE_QUERY)
+				.param(bpp.getMapId())
+				.param(bpp.getX())
+				.param(bpp.getY())
+				.param(bpp.getZ())
+				.param(bpp.getHeading())
+				.param(player.getObjectId())
+				.update();
+			return affected > 0;
+		} catch (DataAccessException e) {
 			log.error(I18n.get("log.f96acb94f4a3", player.getObjectId(), " from DB"), e);
 			return false;
 		}

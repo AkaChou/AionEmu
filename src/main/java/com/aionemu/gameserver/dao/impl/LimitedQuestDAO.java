@@ -1,20 +1,37 @@
 package com.aionemu.gameserver.dao.impl;
 
-import com.aionemu.boot.i18n.I18n;
-import com.aionemu.commons.database.DatabaseFactory;
-import lombok.extern.slf4j.Slf4j;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.Objects;
 
-/** MySQL 8 全服共享限量任务名额持久化。 */
+import org.springframework.jdbc.core.simple.JdbcClient;
+
+import com.aionemu.boot.i18n.I18n;
+import com.aionemu.commons.database.DatabaseFactory;
+
+import lombok.extern.slf4j.Slf4j;
+
+/**
+ * MySQL 8 全服共享限量任务名额持久化。
+ * MySQL 8 implementation of LimitedQuestDAO using JdbcClient.
+ */
 @Slf4j
 public class LimitedQuestDAO extends com.aionemu.gameserver.dao.LimitedQuestDAO {
 
 	static final String INITIALIZE_QUERY = "INSERT IGNORE INTO `limited_quest_counters` (`quest_id`, `remaining`) VALUES (?, ?)";
 	static final String ACQUIRE_QUERY = "UPDATE `limited_quest_counters` SET `remaining` = `remaining` - 1 WHERE `quest_id` = ? AND `remaining` > 0";
 	static final String RECOVER_QUERY = "UPDATE `limited_quest_counters` SET `remaining` = LEAST(`remaining` + ?, ?) WHERE `quest_id` = ?";
+
+	private final JdbcClient jdbcClient;
+
+	public LimitedQuestDAO() {
+		this(DatabaseFactory.getJdbcClient());
+	}
+
+	public LimitedQuestDAO(JdbcClient jdbcClient) {
+		this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");
+	}
 
 	@Override
 	public boolean tryAcquire(int questId, int maxCount) {

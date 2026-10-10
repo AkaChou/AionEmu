@@ -1,17 +1,23 @@
 package com.aionemu.gameserver.dao.impl;
 
-import com.aionemu.boot.i18n.I18n;
-import lombok.extern.slf4j.Slf4j;
-import com.aionemu.commons.database.DatabaseFactory;
-import com.aionemu.gameserver.model.gameobjects.player.Player;
-import java.sql.*;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
+
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.simple.JdbcClient;
+
+import com.aionemu.boot.i18n.I18n;
+import com.aionemu.commons.database.DatabaseFactory;
+import com.aionemu.gameserver.model.gameobjects.player.Player;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
- * 天梯排行榜数据访问对象的 MySQL 8 实现，已修复连接泄漏。
- * MySQL 8 implementation of LadderDAO with connection leak fixes.
+ * 天梯排行榜数据访问对象的 MySQL 8 实现。
+ * MySQL 8 implementation of LadderDAO using JdbcClient.
  * @author wanke
  */
 @Slf4j
@@ -26,14 +32,24 @@ public class LadderDAO extends com.aionemu.gameserver.dao.LadderDAO {
     /** 更新玩家上次排名与时间 / Update player last rank and timestamp */
     private static final String UPDATE_LAST_RANK = "UPDATE ladder_player SET last_rank = ?, last_update = ? WHERE player_id = ?";
 
-	/** 查询玩家全部天梯数据 / Select all ladder data for a player */
+    /** 查询玩家全部天梯数据 / Select all ladder data for a player */
     private static final String SELECT_GET_ALL = "SELECT * FROM ladder_player WHERE player_id = ?";
 
-	/** 查询玩家上次更新时间 / Select player last update timestamp */
+    /** 查询玩家上次更新时间 / Select player last update timestamp */
     private static final String SELECT_LAST_UPDATE = "SELECT last_update FROM ladder_player WHERE player_id = ?";
 
     /** 设置玩家上次更新时间 / Update player last update timestamp */
     private static final String UPDATE_LAST_UPDATE = "UPDATE ladder_player SET last_update = ? WHERE player_id = ?";
+
+    private final JdbcClient jdbcClient;
+
+    public LadderDAO() {
+        this(DatabaseFactory.getJdbcClient());
+    }
+
+    public LadderDAO(JdbcClient jdbcClient) {
+        this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");
+    }
 
     /**
      * 增加玩家天梯胜利场次。
@@ -184,27 +200,22 @@ public class LadderDAO extends com.aionemu.gameserver.dao.LadderDAO {
     public void updateRanks() {
         List<PlayerInfo> players = new ArrayList<>();
 
-        // 加载全部玩家 / Load all players
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(SELECT_PLAYER_DATA);
-             ResultSet rset = stmt.executeQuery()) {
-
-            while (rset.next()) {
-                PlayerInfo plInfo = new PlayerInfo(
+        try {
+            jdbcClient.sql(SELECT_PLAYER_DATA)
+                .query((rset, rowNum) -> new PlayerInfo(
                     rset.getInt("player_id"),
                     rset.getInt("rating"),
                     rset.getTimestamp("last_update"),
                     rset.getInt("wins"),
                     rset.getInt("rank")
-                );
-                players.add(plInfo);
-            }
-        } catch (SQLException e) {
+                ))
+                .list()
+                .forEach(players::add);
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.9a75439aa03e"), e);
             return;
         }
 
-        // 排序玩家 / Sort players
         Collections.sort(players, (o1, o2) -> {
             int result = Integer.compare(o2.rating(), o1.rating());
             if (result != 0) return result;
@@ -217,329 +228,165 @@ public class LadderDAO extends com.aionemu.gameserver.dao.LadderDAO {
             return;
         }
 
-        // 更新军阶 / Update ranks
-        try (Connection con = DatabaseFactory.getConnection()) {
-            con.setAutoCommit(false);
+        try {
+            int i = 1;
+            for (PlayerInfo plInfo : players) {
+                int playerId = plInfo.playerId();
+                Timestamp update = plInfo.lastUpdate();
 
-            try (PreparedStatement stmtRank = con.prepareStatement(UPDATE_RANK);
-                 PreparedStatement stmtLast = con.prepareStatement(UPDATE_LAST_RANK)) {
-
-                int i = 1;
-                for (PlayerInfo plInfo : players) {
-                    int playerId = plInfo.playerId();
-                    Timestamp update = plInfo.lastUpdate();
-
-                    if (update == null || update.getTime() == 0 ||
-                        (System.currentTimeMillis() - update.getTime()) > (24 * 60 * 60 * 1000)) {
-                        stmtLast.setInt(1, plInfo.rank());
-                        stmtLast.setTimestamp(2, new Timestamp(System.currentTimeMillis()));
-                        stmtLast.setInt(3, playerId);
-                        stmtLast.addBatch();
-                    }
-
-                    stmtRank.setInt(1, i);
-                    stmtRank.setInt(2, playerId);
-                    stmtRank.addBatch();
-                    i++;
+                if (update == null || update.getTime() == 0 ||
+                    (System.currentTimeMillis() - update.getTime()) > (24 * 60 * 60 * 1000)) {
+                    jdbcClient.sql(UPDATE_LAST_RANK)
+                        .param(plInfo.rank())
+                        .param(new Timestamp(System.currentTimeMillis()))
+                        .param(playerId)
+                        .update();
                 }
 
-                stmtRank.executeBatch();
-                stmtLast.executeBatch();
-                con.commit();
-            } catch (SQLException e) {
-                con.rollback();
-                log.error(I18n.get("log.dbf61ab14760"), e);
+                jdbcClient.sql(UPDATE_RANK)
+                    .param(i)
+                    .param(playerId)
+                    .update();
+                i++;
             }
-        } catch (SQLException e) {
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.7f7d50101121"), e);
         }
     }
 
-    /**
-     * 累加玩家天梯指定列的值；不存在则插入。
-     * Increments a ladder column for the player, inserting a row when missing.
-     * @param player 玩家 / player
-     * @param column 列名 / column name
-     * @param value 要添加的值 / value to add
-     */
     private void addPlayerLadderData(Player player, String column, int value) {
         int playerId = player.getObjectId();
-
         String query = "INSERT INTO ladder_player (player_id, " + column + ") VALUES (?, ?) "
                 + "ON DUPLICATE KEY UPDATE " + column + " = " + column + " + ?";
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(query)) {
-            stmt.setInt(1, playerId);
-            stmt.setInt(2, "rating".equals(column) ? 1000 + value : value);
-            stmt.setInt(3, value);
-            stmt.executeUpdate();
-        } catch (SQLException e) {
+        try {
+            jdbcClient.sql(query)
+                .param(playerId)
+                .param("rating".equals(column) ? 1000 + value : value)
+                .param(value)
+                .update();
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.58ec4d70c9e9", player.getObjectId()), e);
         }
     }
 
-    /**
-     * 设置玩家天梯指定列的值；不存在则插入。
-     * Sets a ladder column for the player, inserting a row when missing.
-     * @param player 玩家 / player
-     * @param column 列名 / column name
-     * @param value 要设置的值 / value to set
-     */
     private void setPlayerLadderData(Player player, String column, int value) {
         int playerId = player.getObjectId();
-
         String query = "INSERT INTO ladder_player (player_id, " + column + ") VALUES (?, ?) "
                 + "ON DUPLICATE KEY UPDATE " + column + " = VALUES(" + column + ")";
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(query)) {
-            stmt.setInt(1, playerId);
-            stmt.setInt(2, value);
-            stmt.executeUpdate();
-        } catch (SQLException e) {
+        try {
+            jdbcClient.sql(query)
+                .param(playerId)
+                .param(value)
+                .update();
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.4ea6502ae269", player.getObjectId()), e);
         }
     }
 
-    /**
-     * 按玩家 ID 设置天梯指定列的值（仅更新）。
-     * Sets a ladder column by player id (update only).
-     * @param playerId 玩家 ID / player id
-     * @param column 列名 / column name
-     * @param value 要设置的值 / value to set
-     */
     public void setPlayerLadderData(Integer playerId, String column, int value) {
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement("UPDATE ladder_player SET " + column + " = ? WHERE player_id = ?")) {
-
-            stmt.setInt(1, value);
-            stmt.setInt(2, playerId);
-            stmt.executeUpdate();
-        } catch (SQLException e) {
+        try {
+            jdbcClient.sql("UPDATE ladder_player SET " + column + " = ? WHERE player_id = ?")
+                .param(value)
+                .param(playerId)
+                .update();
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.181a09080739", playerId), e);
         }
     }
 
-    /**
-     * 读取玩家天梯指定列的整数值。
-     * Reads an integer ladder column for the player.
-     * @param player 玩家 / player
-     * @param column 列名 / column name
-     * @return 列值，不存在则为 0 / column value, or 0 if missing
-     */
     private int getPlayerLadderData(Player player, String column) {
         int playerId = player.getObjectId();
-        int value = 0;
-
         String query = "SELECT " + column + " FROM ladder_player WHERE player_id = ?";
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(query)) {
-
-            stmt.setInt(1, playerId);
-            try (ResultSet rset = stmt.executeQuery()) {
-                if (rset.next()) {
-                    value = rset.getInt(column);
-                }
-            }
-        } catch (SQLException e) {
+        try {
+            Integer val = jdbcClient.sql(query)
+                .param(playerId)
+                .query(Integer.class)
+                .optional()
+                .orElse(0);
+            return val != null ? val : 0;
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.960d9c9f47e1", player.getObjectId()), e);
+            return 0;
         }
-
-        return value;
     }
 
-    /**
-     * 按玩家 ID 读取天梯指定列的整数值。
-     * Reads an integer ladder column by player id.
-     * @param playerId 玩家 ID / player id
-     * @param column 列名 / column name
-     * @return 列值，不存在则为 0 / column value, or 0 if missing
-     */
     public int getPlayerLadderData(Integer playerId, String column) {
-        int value = 0;
-
         String query = "SELECT " + column + " FROM ladder_player WHERE player_id = ?";
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(query)) {
-
-            stmt.setInt(1, playerId);
-            try (ResultSet rset = stmt.executeQuery()) {
-                if (rset.next()) {
-                    value = rset.getInt(column);
-                }
-            }
-        } catch (SQLException e) {
+        try {
+            Integer val = jdbcClient.sql(query)
+                .param(playerId)
+                .query(Integer.class)
+                .optional()
+                .orElse(0);
+            return val != null ? val : 0;
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.29e72ebe993e", playerId), e);
+            return 0;
         }
-
-        return value;
     }
 
-    /**
-     * 获取玩家天梯上次更新时间。
-     * Returns the player's ladder last-update timestamp.
-     * @param player 玩家 / player
-     * @return 上次更新时间，不存在则为 null / last update time, or null if missing
-     */
     public Timestamp getPlayerLadderUpdate(Player player) {
-        int playerId = player.getObjectId();
-        Timestamp value = null;
-
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(SELECT_LAST_UPDATE)) {
-
-            stmt.setInt(1, playerId);
-            try (ResultSet rset = stmt.executeQuery()) {
-                if (rset.next()) {
-                    value = rset.getTimestamp("last_update");
-                }
-            }
-        } catch (SQLException e) {
+        try {
+            return jdbcClient.sql(SELECT_LAST_UPDATE)
+                .param(player.getObjectId())
+                .query(Timestamp.class)
+                .optional()
+                .orElse(null);
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.faf0c73a8eb8", player.getObjectId()), e);
+            return null;
         }
-        return value;
     }
 
-    /**
-     * 设置玩家天梯上次更新时间。
-     * Sets the player's ladder last-update timestamp.
-     * @param player 玩家 / player
-     * @param value 更新时间 / update timestamp
-     */
     public void setPlayerLadderUpdate(Player player, Timestamp value) {
-        int playerId = player.getObjectId();
-
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(UPDATE_LAST_UPDATE)) {
-
-            stmt.setTimestamp(1, value);
-            stmt.setInt(2, playerId);
-            stmt.executeUpdate();
-        } catch (SQLException e) {
+        try {
+            jdbcClient.sql(UPDATE_LAST_UPDATE)
+                .param(value)
+                .param(player.getObjectId())
+                .update();
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.052014ac9f3c", player.getObjectId()), e);
         }
     }
 
-    /**
-     * 按玩家 ID 设置天梯上次更新时间。
-     * Sets the ladder last-update timestamp by player id.
-     * @param playerId 玩家 ID / player id
-     * @param value 更新时间 / update timestamp
-     */
     public void setPlayerLadderUpdate(Integer playerId, Timestamp value) {
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(UPDATE_LAST_UPDATE)) {
-
-            stmt.setTimestamp(1, value);
-            stmt.setInt(2, playerId);
-            stmt.executeUpdate();
-        } catch (SQLException e) {
+        try {
+            jdbcClient.sql(UPDATE_LAST_UPDATE)
+                .param(value)
+                .param(playerId)
+                .update();
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.461b6c4b9a36", playerId), e);
         }
     }
 
-    /**
-     * 加载玩家完整天梯数据；无记录时返回默认值。
-     * Loads full ladder data for the player; returns defaults when missing.
-     * @param player 玩家 / player
-     * @return ladder data
-     */
     public PlayerLadderData getPlayerLadderData(Player player) {
-        int playerId = player.getObjectId();
-        PlayerLadderData data = null;
+        try {
+            PlayerLadderData data = jdbcClient.sql(SELECT_GET_ALL)
+                .param(player.getObjectId())
+                .query((rset, rowNum) -> new PlayerLadderData(
+                    player,
+                    rset.getInt("rating"),
+                    rset.getInt("rank"),
+                    rset.getInt("wins"),
+                    rset.getInt("losses"),
+                    rset.getInt("leaves"),
+                    rset.getTimestamp("last_update")
+                ))
+                .optional()
+                .orElse(null);
 
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(SELECT_GET_ALL)) {
-
-            stmt.setInt(1, playerId);
-            try (ResultSet rset = stmt.executeQuery()) {
-                if (rset.next()) {
-                    data = new PlayerLadderData(
-                        player,
-                        rset.getInt("rating"),
-                        rset.getInt("rank"),
-                        rset.getInt("wins"),
-                        rset.getInt("losses"),
-                        rset.getInt("leaves"),
-                        rset.getTimestamp("last_update")
-                    );
-                }
-            }
-        } catch (SQLException e) {
+            return data != null ? data : new PlayerLadderData(player, 1000, 0, 0, 0, 0, new Timestamp(0));
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.af5e85661cbb", player.getObjectId()), e);
+            return new PlayerLadderData(player, 1000, 0, 0, 0, 0, new Timestamp(0));
         }
-
-        if (data == null) {
-            data = new PlayerLadderData(player, 1000, 0, 0, 0, 0, new Timestamp(0));
-        }
-        return data;
     }
 
-    /**
-     * 是否支持该数据库。
-     * Whether the database is supported.
-     * @param databaseName 数据库名 / database name
-     * @param majorVersion 主版本 / major version
-     * @param minorVersion 次版本 / minor version
-     * @return 是否支持 / whether supported
-     */
     @Override
     public boolean supports(String databaseName, int majorVersion, int minorVersion) {
         return databaseName.toLowerCase().contains("mysql") && majorVersion >= 8;
     }
 
-	/**
-	 * 排名重算用的玩家临时信息。
-	 * Temporary player info used while recalculating ranks.
-	 */
-	private record PlayerInfo(int playerId, int rating, Timestamp lastUpdate, int wins, int rank) {
-		/**
-		 * player id
-		 * rating
-		 * 上次更新时间 / last update time
-		 *                   wins
-		 * 当前名次 / current rank
-		 */
-		private PlayerInfo {
-		}
-
-		/**
-		 * 玩家 ID / player id
-		 */
-		@Override
-		public int playerId() {
-			return playerId;
-		}
-
-		/**
-		 * 评分 / rating
-		 */
-		@Override
-		public int rating() {
-			return rating;
-		}
-
-		/**
-		 * 上次更新时间 / last update time
-		 */
-		@Override
-		public Timestamp lastUpdate() {
-			return lastUpdate;
-		}
-
-		/**
-		 * 胜场 / wins
-		 */
-		@Override
-		public int wins() {
-			return wins;
-		}
-
-		/**
-		 * 当前排名 / current rank
-		 */
-		@Override
-		public int rank() {
-			return rank;
-		}
-	}
+    private record PlayerInfo(int playerId, int rating, Timestamp lastUpdate, int wins, int rank) {}
 }

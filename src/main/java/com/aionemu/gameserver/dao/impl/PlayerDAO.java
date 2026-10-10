@@ -1,8 +1,22 @@
 package com.aionemu.gameserver.dao.impl;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.concurrent.ConcurrentHashMap;
+
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.simple.JdbcClient;
 
 import com.aionemu.boot.i18n.I18n;
-import lombok.extern.slf4j.Slf4j;
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.commons.utils.GenericValidator;
 import com.aionemu.gameserver.configs.main.CacheConfig;
@@ -25,16 +39,11 @@ import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.WorldPosition;
 import com.google.common.collect.Maps;
 
-import java.util.concurrent.ConcurrentHashMap;
-import org.apache.commons.lang3.StringUtils;
-import java.sql.*;
-import java.util.*;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 玩家数据访问对象的 MySQL 8 实现。
- * 已修复连接泄漏：移除所有 DB.insertUpdate() 与 DB.prepareStatement()。
- * MySQL 8 implementation of PlayerDAO.
- * Fixed connection leaks - removed all DB.insertUpdate() and DB.prepareStatement().
+ * MySQL 8 implementation of PlayerDAO using JdbcClient.
  */
 @Slf4j
 public class PlayerDAO extends com.aionemu.gameserver.dao.PlayerDAO {
@@ -50,7 +59,7 @@ public class PlayerDAO extends com.aionemu.gameserver.dao.PlayerDAO {
     /** 按 ID 列表批量查询角色名 / Select player names by ID list */
     private static final String SELECT_PLAYER_NAMES_QUERY = "SELECT id, `name` FROM players WHERE id IN (%s)";
     /** 更新玩家完整数据 / Update full player row */
-    private static final String UPDATE_PLAYER_QUERY = "UPDATE players SET " +  "name = ?, exp = ?, recoverexp = ?, x = ?, y = ?, z = ?, heading = ?, " + "world_id = ?, gender = ?, race = ?, player_class = ?, last_online = ?, " + "quest_expands = ?, npc_expands = ?, advenced_stigma_slot_size = ?, " + "warehouse_size = ?, note = ?, title_id = ?, bonus_title_id = ?, " + "dp = ?, soul_sickness = ?, mailbox_letters = ?, reposte_energy = ?, " + "mentor_flag_time = ?, world_owner = ?, stamps = ?, rewarded_pass = ?, " + "last_stamp = ?, passport_time = ?, is_archdaeva = ?, creativity_point = ?, " + "aura_of_growth = ?, join_legion_id = ?, join_state = ?, berdin_star = ?, " + "abyss_favor = ?, luna_consume = ?, muni_keys = ?, luna_consume_count = ?, " + "wardrobe_slot = ?, frenzy_points = ?, frenzy_count = ?, toc_floor = ?, " + "stone_cp = ?, golden_dice = ?, sweep_reset = ?, minion_skill_points = ?, " + "minion_function_time = ? WHERE id = ?";
+    private static final String UPDATE_PLAYER_QUERY = "UPDATE players SET " + "name = ?, exp = ?, recoverexp = ?, x = ?, y = ?, z = ?, heading = ?, " + "world_id = ?, gender = ?, race = ?, player_class = ?, last_online = ?, " + "quest_expands = ?, npc_expands = ?, advenced_stigma_slot_size = ?, " + "warehouse_size = ?, note = ?, title_id = ?, bonus_title_id = ?, " + "dp = ?, soul_sickness = ?, mailbox_letters = ?, reposte_energy = ?, " + "mentor_flag_time = ?, world_owner = ?, stamps = ?, rewarded_pass = ?, " + "last_stamp = ?, passport_time = ?, is_archdaeva = ?, creativity_point = ?, " + "aura_of_growth = ?, join_legion_id = ?, join_state = ?, berdin_star = ?, " + "abyss_favor = ?, luna_consume = ?, muni_keys = ?, luna_consume_count = ?, " + "wardrobe_slot = ?, frenzy_points = ?, frenzy_count = ?, toc_floor = ?, " + "stone_cp = ?, golden_dice = ?, sweep_reset = ?, minion_skill_points = ?, " + "minion_function_time = ? WHERE id = ?";
 
     /** 插入新角色 / Insert a new player */
     private static final String INSERT_PLAYER_QUERY = "INSERT INTO players " + "(id, `name`, account_id, account_name, x, y, z, heading, " + "world_id, gender, race, player_class, quest_expands, npc_expands, " + "warehouse_size, bonus_title_id, is_archdaeva,wardrobe_slot, " + "online, stamps, rewarded_pass) " + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 2, 0, 0, 1)";
@@ -106,26 +115,36 @@ public class PlayerDAO extends com.aionemu.gameserver.dao.PlayerDAO {
     /** 查询军团申请状态 / Select legion join request state */
     private static final String SELECT_JOIN_STATE_QUERY = "SELECT join_state FROM players WHERE id = ?";
 
+    /** 更新玩家任务奖励列（含 durable 奖励的 exp/aura_of_growth）/ Update player quest-reward columns */
+    private static final String UPDATE_QUEST_CURRENCIES_QUERY = "UPDATE players SET exp = ?, dp = ?, creativity_point = ?, abyss_favor = ?, aura_of_growth = ? WHERE id = ?";
+    /** 在任务事务中持久化高阶守护者晋升 / Persist ArchDaeva promotion in the quest transaction */
+    private static final String PROMOTE_ARCHDAEVA_QUERY = "UPDATE players SET exp = GREATEST(exp, ?), is_archdaeva = TRUE WHERE id = ?";
+
+    private final JdbcClient jdbcClient;
+
+    public PlayerDAO() {
+        this(DatabaseFactory.getJdbcClient());
+    }
+
+    public PlayerDAO(JdbcClient jdbcClient) {
+        this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");
+    }
+
     /**
      * 检查角色名是否已使用。
      * Checks whether a character name is already used.
-     * character name
      * @param name 角色名 / character name
      * @return 若已使用为 true；查询异常时也返回 true / true if used, or on query error
      */
     @Override
     public boolean isNameUsed(final String name) {
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement s = con.prepareStatement(CHECK_NAME_USED_QUERY)) {
-
-            s.setString(1, name);
-            try (ResultSet rs = s.executeQuery()) {
-                if (rs.next()) {
-                    return rs.getInt("cnt") > 0;
-                }
-            }
-            return false;
-        } catch (SQLException e) {
+        try {
+            return jdbcClient.sql(CHECK_NAME_USED_QUERY)
+                .param(name)
+                .query((rs, rowNum) -> rs.getInt("cnt") > 0)
+                .optional()
+                .orElse(false);
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.b38241da2c4e", name), e);
             return true;
         }
@@ -146,16 +165,14 @@ public class PlayerDAO extends com.aionemu.gameserver.dao.PlayerDAO {
         Map<Integer, String> result = Maps.newHashMap();
         String sql = String.format(SELECT_PLAYER_NAMES_QUERY, StringUtils.join(playerObjectIds, ", "));
 
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement s = con.prepareStatement(sql);
-             ResultSet rs = s.executeQuery()) {
-
-            while (rs.next()) {
-                int id = rs.getInt("id");
-                String name = rs.getString("name");
-                result.put(id, name);
-            }
-        } catch (SQLException e) {
+        try {
+            jdbcClient.sql(sql)
+                .query((rs, rowNum) -> {
+                    result.put(rs.getInt("id"), rs.getString("name"));
+                    return null;
+                })
+                .list();
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.25f109fb2408"), e);
         }
 
@@ -169,72 +186,70 @@ public class PlayerDAO extends com.aionemu.gameserver.dao.PlayerDAO {
      */
     @Override
     public void storePlayer(final Player player) {
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(UPDATE_PLAYER_QUERY)) {
-
+        try {
             log.debug("Storing player {} {}", player.getObjectId(), player.getName());
             PlayerCommonData pcd = player.getCommonData();
 
-            stmt.setString(1, player.getName());
-            stmt.setLong(2, pcd.getExp());
-            stmt.setLong(3, pcd.getExpRecoverable());
-            stmt.setFloat(4, player.getX());
-            stmt.setFloat(5, player.getY());
-            stmt.setFloat(6, player.getZ());
-            stmt.setInt(7, player.getHeading());
-            stmt.setInt(8, player.getWorldId());
-            stmt.setString(9, player.getGender().toString());
-            stmt.setString(10, player.getRace().toString());
-            stmt.setString(11, pcd.getPlayerClass().toString());
-            stmt.setTimestamp(12, pcd.getLastOnline());
-            stmt.setInt(13, player.getQuestExpands());
-            stmt.setInt(14, player.getNpcExpands());
-            stmt.setInt(15, pcd.getAdvancedStigmaSlotSize());
-            stmt.setInt(16, player.getWarehouseSize());
-            stmt.setString(17, pcd.getNote());
-            stmt.setInt(18, pcd.getTitleId());
-            stmt.setInt(19, pcd.getBonusTitleId());
-            stmt.setInt(20, pcd.getDp());
-            stmt.setInt(21, pcd.getDeathCount());
-
             Mailbox mailBox = player.getMailbox();
             int mails = mailBox != null ? mailBox.size() : pcd.getMailboxLetters();
-            stmt.setInt(22, mails);
-
-            stmt.setLong(23, pcd.getCurrentReposteEnergy());
-            stmt.setInt(24, pcd.getMentorFlagTime());
-            stmt.setInt(25, player.getPosition().getWorldMapInstance().getOwnerId());
-            stmt.setInt(26, pcd.getPassportStamps());
-            stmt.setInt(27, pcd.getPassportReward());
-            stmt.setTimestamp(28, pcd.getLastStamp());
-            stmt.setInt(29, pcd.getPassportTime());
-            stmt.setBoolean(30, pcd.isArchDaeva());
-            stmt.setInt(31, pcd.getCreativityPoint());
-            stmt.setLong(32, pcd.getAuraOfGrowth());
-            stmt.setInt(33, pcd.getJoinRequestLegionId());
-            stmt.setString(34, pcd.getJoinRequestState().toString());
-            stmt.setLong(35, pcd.getBerdinStar());
-            stmt.setLong(36, pcd.getAbyssFavor());
-            stmt.setInt(37, pcd.getLunaConsumePoint());
-            stmt.setInt(38, pcd.getMuniKeys());
-            stmt.setInt(39, pcd.getLunaConsumeCount());
-            stmt.setInt(40, pcd.getWardrobeSlot());
 
             PlayerUpgradeArcade pua = player.getUpgradeArcade();
-            stmt.setInt(41, pua != null ? pua.getFrenzyPoints() : 0);
-            stmt.setInt(42, pua != null ? pua.getFrenzyCount() : 0);
+            int frenzyPoints = pua != null ? pua.getFrenzyPoints() : 0;
+            int frenzyCount = pua != null ? pua.getFrenzyCount() : 0;
 
-            stmt.setInt(43, pcd.getFloor());
-            stmt.setInt(44, pcd.getStoneCreativityPoint());
-            stmt.setInt(45, pcd.getGoldenDice());
-            stmt.setInt(46, pcd.getResetBoard());
-            stmt.setInt(47, pcd.getMinionSkillPoints());
-            stmt.setTimestamp(48, pcd.getMinionFunctionTime());
-            stmt.setInt(49, player.getObjectId());
+            jdbcClient.sql(UPDATE_PLAYER_QUERY)
+                .param(player.getName())
+                .param(pcd.getExp())
+                .param(pcd.getExpRecoverable())
+                .param(player.getX())
+                .param(player.getY())
+                .param(player.getZ())
+                .param(player.getHeading())
+                .param(player.getWorldId())
+                .param(player.getGender().toString())
+                .param(player.getRace().toString())
+                .param(pcd.getPlayerClass().toString())
+                .param(pcd.getLastOnline())
+                .param(player.getQuestExpands())
+                .param(player.getNpcExpands())
+                .param(pcd.getAdvancedStigmaSlotSize())
+                .param(player.getWarehouseSize())
+                .param(pcd.getNote())
+                .param(pcd.getTitleId())
+                .param(pcd.getBonusTitleId())
+                .param(pcd.getDp())
+                .param(pcd.getDeathCount())
+                .param(mails)
+                .param(pcd.getCurrentReposteEnergy())
+                .param(pcd.getMentorFlagTime())
+                .param(player.getPosition().getWorldMapInstance().getOwnerId())
+                .param(pcd.getPassportStamps())
+                .param(pcd.getPassportReward())
+                .param(pcd.getLastStamp())
+                .param(pcd.getPassportTime())
+                .param(pcd.isArchDaeva())
+                .param(pcd.getCreativityPoint())
+                .param(pcd.getAuraOfGrowth())
+                .param(pcd.getJoinRequestLegionId())
+                .param(pcd.getJoinRequestState().toString())
+                .param(pcd.getBerdinStar())
+                .param(pcd.getAbyssFavor())
+                .param(pcd.getLunaConsumePoint())
+                .param(pcd.getMuniKeys())
+                .param(pcd.getLunaConsumeCount())
+                .param(pcd.getWardrobeSlot())
+                .param(frenzyPoints)
+                .param(frenzyCount)
+                .param(pcd.getFloor())
+                .param(pcd.getStoneCreativityPoint())
+                .param(pcd.getGoldenDice())
+                .param(pcd.getResetBoard())
+                .param(pcd.getMinionSkillPoints())
+                .param(pcd.getMinionFunctionTime())
+                .param(player.getObjectId())
+                .update();
 
-            stmt.executeUpdate();
-
-        } catch (Exception e) {
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.143d7f893e9c", player.getObjectId(), player.getName()), e);
         }
 
@@ -243,12 +258,6 @@ public class PlayerDAO extends com.aionemu.gameserver.dao.PlayerDAO {
             playerCommonDataByName.put(player.getName().toLowerCase(), player.getCommonData());
         }
     }
-
-    /** 更新玩家任务奖励列（含 durable 奖励的 exp/aura_of_growth）/ Update player quest-reward columns */
-    private static final String UPDATE_QUEST_CURRENCIES_QUERY = "UPDATE players SET exp = ?, dp = ?, creativity_point = ?, abyss_favor = ?, aura_of_growth = ? WHERE id = ?";
-	/** 在任务事务中持久化高阶守护者晋升 / Persist ArchDaeva promotion in the quest transaction */
-	private static final String PROMOTE_ARCHDAEVA_QUERY =
-		"UPDATE players SET exp = GREATEST(exp, ?), is_archdaeva = TRUE WHERE id = ?";
 
     @Override
     public void storeInTransaction(Connection con, int playerId, PlayerCommonData pcd) throws SQLException {
@@ -265,16 +274,16 @@ public class PlayerDAO extends com.aionemu.gameserver.dao.PlayerDAO {
         }
     }
 
-	@Override
-	public void promoteArchDaevaInTransaction(Connection connection, int playerId, long minimumExp) throws SQLException {
-		try (PreparedStatement statement = connection.prepareStatement(PROMOTE_ARCHDAEVA_QUERY)) {
-			statement.setLong(1, minimumExp);
-			statement.setInt(2, playerId);
-			if (statement.executeUpdate() != 1) {
-				throw new SQLException("No player row changed for player " + playerId);
-			}
-		}
-	}
+    @Override
+    public void promoteArchDaevaInTransaction(Connection connection, int playerId, long minimumExp) throws SQLException {
+        try (PreparedStatement statement = connection.prepareStatement(PROMOTE_ARCHDAEVA_QUERY)) {
+            statement.setLong(1, minimumExp);
+            statement.setInt(2, playerId);
+            if (statement.executeUpdate() != 1) {
+                throw new SQLException("No player row changed for player " + playerId);
+            }
+        }
+    }
 
     /**
      * 插入新创建的角色记录，并按配置写入缓存。
@@ -286,29 +295,28 @@ public class PlayerDAO extends com.aionemu.gameserver.dao.PlayerDAO {
      */
     @Override
     public boolean saveNewPlayer(final PlayerCommonData pcd, final int accountId, final String accountName) {
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(INSERT_PLAYER_QUERY)) {
-
+        try {
             log.debug("Saving new player: {} {}", pcd.getPlayerObjId(), pcd.getName());
 
-            stmt.setInt(1, pcd.getPlayerObjId());
-            stmt.setString(2, pcd.getName());
-            stmt.setInt(3, accountId);
-            stmt.setString(4, accountName);
-            stmt.setFloat(5, pcd.getPosition().getX());
-            stmt.setFloat(6, pcd.getPosition().getY());
-            stmt.setFloat(7, pcd.getPosition().getZ());
-            stmt.setInt(8, pcd.getPosition().getHeading());
-            stmt.setInt(9, pcd.getPosition().getMapId());
-            stmt.setString(10, pcd.getGender().toString());
-            stmt.setString(11, pcd.getRace().toString());
-            stmt.setString(12, pcd.getPlayerClass().toString());
-            stmt.setInt(13, pcd.getQuestExpands());
-            stmt.setInt(14, pcd.getNpcExpands());
-            stmt.setInt(15, pcd.getWarehouseSize());
-            stmt.setInt(16, pcd.getBonusTitleId());
-            stmt.setBoolean(17, pcd.isArchDaeva());
-            stmt.executeUpdate();
+            jdbcClient.sql(INSERT_PLAYER_QUERY)
+                .param(pcd.getPlayerObjId())
+                .param(pcd.getName())
+                .param(accountId)
+                .param(accountName)
+                .param(pcd.getPosition().getX())
+                .param(pcd.getPosition().getY())
+                .param(pcd.getPosition().getZ())
+                .param(pcd.getPosition().getHeading())
+                .param(pcd.getPosition().getMapId())
+                .param(pcd.getGender().toString())
+                .param(pcd.getRace().toString())
+                .param(pcd.getPlayerClass().toString())
+                .param(pcd.getQuestExpands())
+                .param(pcd.getNpcExpands())
+                .param(pcd.getWarehouseSize())
+                .param(pcd.getBonusTitleId())
+                .param(pcd.isArchDaeva())
+                .update();
 
             if (CacheConfig.CACHE_COMMONDATA) {
                 playerCommonData.put(pcd.getPlayerObjId(), pcd);
@@ -316,7 +324,7 @@ public class PlayerDAO extends com.aionemu.gameserver.dao.PlayerDAO {
             }
 
             return true;
-        } catch (Exception e) {
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.fc97fe191787", pcd.getPlayerObjId(), pcd.getName()), e);
             return false;
         }
@@ -325,7 +333,6 @@ public class PlayerDAO extends com.aionemu.gameserver.dao.PlayerDAO {
     /**
      * 按角色名加载玩家公共数据（优先世界在线与缓存）。
      * Loads player common data by name (world online and cache first).
-     * character name
      * @param name 角色名 / character name
      * @return 公共数据，未找到时为 null / common data, or null if not found
      */
@@ -342,16 +349,13 @@ public class PlayerDAO extends com.aionemu.gameserver.dao.PlayerDAO {
         }
 
         int playerObjId = 0;
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(SELECT_PLAYER_ID_BY_NAME_QUERY)) {
-
-            stmt.setString(1, name);
-            try (ResultSet rset = stmt.executeQuery()) {
-                if (rset.next()) {
-                    playerObjId = rset.getInt("id");
-                }
-            }
-        } catch (Exception e) {
+        try {
+            playerObjId = jdbcClient.sql(SELECT_PLAYER_ID_BY_NAME_QUERY)
+                .param(name)
+                .query((rset, rowNum) -> rset.getInt("id"))
+                .optional()
+                .orElse(0);
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.cbf76d90931d", name), e);
         }
 
@@ -361,7 +365,6 @@ public class PlayerDAO extends com.aionemu.gameserver.dao.PlayerDAO {
     /**
      * 按对象 ID 加载玩家公共数据（优先缓存，必要时回退出生点）。
      * Loads player common data by object ID (cache first; may fall back to spawn).
-     * player object id
      * @param playerObjId 玩家对象 ID / player object id
      * @return 公共数据，未找到时为 null / common data, or null if not found
      */
@@ -375,14 +378,12 @@ public class PlayerDAO extends com.aionemu.gameserver.dao.PlayerDAO {
 
         final PlayerCommonData cd = new PlayerCommonData(playerObjId);
 
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(SELECT_PLAYER_COMMON_DATA_QUERY)) {
-
-            stmt.setInt(1, playerObjId);
+        try {
             log.debug("Loading player from db: {}", playerObjId);
 
-            try (ResultSet resultSet = stmt.executeQuery()) {
-                if (resultSet.next()) {
+            boolean found = jdbcClient.sql(SELECT_PLAYER_COMMON_DATA_QUERY)
+                .param(playerObjId)
+                .query((resultSet, rowNum) -> {
                     cd.setName(resultSet.getString("name"));
 
                     try {
@@ -498,10 +499,15 @@ public class PlayerDAO extends com.aionemu.gameserver.dao.PlayerDAO {
                         playerCommonDataByName.put(cd.getName().toLowerCase(), cd);
                     }
 
-                    return cd;
-                }
+                    return true;
+                })
+                .optional()
+                .orElse(false);
+
+            if (found) {
+                return cd;
             }
-        } catch (Exception e) {
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.ccf8db4780c8", playerObjId), e);
         }
 
@@ -515,11 +521,10 @@ public class PlayerDAO extends com.aionemu.gameserver.dao.PlayerDAO {
      */
     @Override
     public void deletePlayer(int playerId) {
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement statement = con.prepareStatement(DELETE_PLAYER_QUERY)) {
-
-            statement.setInt(1, playerId);
-            statement.executeUpdate();
+        try {
+            jdbcClient.sql(DELETE_PLAYER_QUERY)
+                .param(playerId)
+                .update();
 
             if (CacheConfig.CACHE_COMMONDATA) {
                 PlayerCommonData pcd = playerCommonData.remove(playerId);
@@ -527,7 +532,7 @@ public class PlayerDAO extends com.aionemu.gameserver.dao.PlayerDAO {
                     playerCommonDataByName.remove(pcd.getName().toLowerCase());
                 }
             }
-        } catch (SQLException e) {
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.bb5fb346ba48", playerId), e);
         }
     }
@@ -540,24 +545,15 @@ public class PlayerDAO extends com.aionemu.gameserver.dao.PlayerDAO {
      */
     @Override
     public List<Integer> getPlayerOidsOnAccount(final int accountId) {
-        final List<Integer> result = new ArrayList<>();
-
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(SELECT_PLAYER_OIDS_ON_ACCOUNT_QUERY)) {
-
-            stmt.setInt(1, accountId);
-
-            try (ResultSet resultSet = stmt.executeQuery()) {
-                while (resultSet.next()) {
-                    result.add(resultSet.getInt("id"));
-                }
-            }
-        } catch (Exception e) {
+        try {
+            return jdbcClient.sql(SELECT_PLAYER_OIDS_ON_ACCOUNT_QUERY)
+                .param(accountId)
+                .query((resultSet, rowNum) -> resultSet.getInt("id"))
+                .list();
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.e310f2d2c9cd", accountId), e);
             return null;
         }
-
-        return result;
     }
 
     /**
@@ -567,18 +563,16 @@ public class PlayerDAO extends com.aionemu.gameserver.dao.PlayerDAO {
      */
     @Override
     public void setCreationDeletionTime(final PlayerAccountData acData) {
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(SELECT_CREATION_DELETION_TIME_QUERY)) {
-
-            stmt.setInt(1, acData.getPlayerCommonData().getPlayerObjId());
-
-            try (ResultSet rset = stmt.executeQuery()) {
-                if (rset.next()) {
+        try {
+            jdbcClient.sql(SELECT_CREATION_DELETION_TIME_QUERY)
+                .param(acData.getPlayerCommonData().getPlayerObjId())
+                .query((rset, rowNum) -> {
                     acData.setDeletionDate(rset.getTimestamp("deletion_date"));
                     acData.setCreationDate(rset.getTimestamp("creation_date"));
-                }
-            }
-        } catch (Exception e) {
+                    return null;
+                })
+                .list();
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.8949342fe4a2", acData.getPlayerCommonData().getPlayerObjId()), e);
         }
     }
@@ -591,14 +585,12 @@ public class PlayerDAO extends com.aionemu.gameserver.dao.PlayerDAO {
      */
     @Override
     public void updateDeletionTime(final int objectId, final Timestamp deletionDate) {
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(UPDATE_DELETION_TIME_QUERY)) {
-
-            stmt.setTimestamp(1, deletionDate);
-            stmt.setInt(2, objectId);
-            stmt.executeUpdate();
-
-        } catch (Exception e) {
+        try {
+            jdbcClient.sql(UPDATE_DELETION_TIME_QUERY)
+                .param(deletionDate)
+                .param(objectId)
+                .update();
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.6528985a7d33", objectId), e);
         }
     }
@@ -611,14 +603,12 @@ public class PlayerDAO extends com.aionemu.gameserver.dao.PlayerDAO {
      */
     @Override
     public void storeCreationTime(final int objectId, final Timestamp creationDate) {
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(UPDATE_CREATION_TIME_QUERY)) {
-
-            stmt.setTimestamp(1, creationDate);
-            stmt.setInt(2, objectId);
-            stmt.executeUpdate();
-
-        } catch (Exception e) {
+        try {
+            jdbcClient.sql(UPDATE_CREATION_TIME_QUERY)
+                .param(creationDate)
+                .param(objectId)
+                .update();
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.bf6a6ac028ab", objectId), e);
         }
     }
@@ -631,14 +621,12 @@ public class PlayerDAO extends com.aionemu.gameserver.dao.PlayerDAO {
      */
     @Override
     public void storeLastOnlineTime(final int objectId, final Timestamp lastOnline) {
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(UPDATE_LAST_ONLINE_QUERY)) {
-
-            stmt.setTimestamp(1, lastOnline);
-            stmt.setInt(2, objectId);
-            stmt.executeUpdate();
-
-        } catch (Exception e) {
+        try {
+            jdbcClient.sql(UPDATE_LAST_ONLINE_QUERY)
+                .param(lastOnline)
+                .param(objectId)
+                .update();
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.da8fe6970768", objectId), e);
         }
     }
@@ -650,43 +638,37 @@ public class PlayerDAO extends com.aionemu.gameserver.dao.PlayerDAO {
      */
     @Override
     public int[] getUsedIDs() {
-        List<Integer> ids = new ArrayList<>();
+        try {
+            List<Integer> ids = jdbcClient.sql(SELECT_USED_IDS_QUERY)
+                .query((rs, rowNum) -> rs.getInt("id"))
+                .list();
 
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement statement = con.prepareStatement(SELECT_USED_IDS_QUERY, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-             ResultSet rs = statement.executeQuery()) {
-
-            while (rs.next()) {
-                ids.add(rs.getInt("id"));
+            int[] result = new int[ids.size()];
+            for (int i = 0; i < ids.size(); i++) {
+                result[i] = ids.get(i);
             }
-        } catch (SQLException e) {
+            return result;
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.ce9d363cd21c"), e);
             return new int[0];
         }
-
-        int[] result = new int[ids.size()];
-        for (int i = 0; i < ids.size(); i++) {
-            result[i] = ids.get(i);
-        }
-        return result;
     }
 
     /**
      * 更新单个玩家的在线状态。
      * Updates a single player's online status flag.
      * @param player 玩家 / player
+     * @param online 是否在线 / whether online
      */
     @Override
     public void onlinePlayer(final Player player, final boolean online) {
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(UPDATE_ONLINE_STATUS_QUERY)) {
-
+        try {
             log.debug("Setting online status {} {}", player.getObjectId(), player.getName());
-            stmt.setBoolean(1, online);
-            stmt.setInt(2, player.getObjectId());
-            stmt.executeUpdate();
-
-        } catch (Exception e) {
+            jdbcClient.sql(UPDATE_ONLINE_STATUS_QUERY)
+                .param(online)
+                .param(player.getObjectId())
+                .update();
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.91f6d0189d5c", player.getObjectId()), e);
         }
     }
@@ -698,13 +680,11 @@ public class PlayerDAO extends com.aionemu.gameserver.dao.PlayerDAO {
      */
     @Override
     public void setPlayersOffline(final boolean online) {
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(UPDATE_ALL_ONLINE_QUERY)) {
-
-            stmt.setBoolean(1, online);
-            stmt.executeUpdate();
-
-        } catch (Exception e) {
+        try {
+            jdbcClient.sql(UPDATE_ALL_ONLINE_QUERY)
+                .param(online)
+                .update();
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.d115134bf89a"), e);
         }
     }
@@ -712,101 +692,81 @@ public class PlayerDAO extends com.aionemu.gameserver.dao.PlayerDAO {
     /**
      * 按对象 ID 查询角色名。
      * Looks up a character name by object ID.
-     * player object id
      * @param playerObjId 玩家对象 ID / player object id
      * @return 角色名，未找到时为 null / name, or null if not found
      */
     @Override
     public String getPlayerNameByObjId(final int playerObjId) {
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(SELECT_PLAYER_NAME_BY_OBJ_ID_QUERY)) {
-
-            stmt.setInt(1, playerObjId);
-
-            try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    return rs.getString("name");
-                }
-            }
-        } catch (Exception e) {
+        try {
+            return jdbcClient.sql(SELECT_PLAYER_NAME_BY_OBJ_ID_QUERY)
+                .param(playerObjId)
+                .query(String.class)
+                .optional()
+                .orElse(null);
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.0b502d634f86", playerObjId), e);
+            return null;
         }
-
-        return null;
     }
 
     /**
      * 按对象 ID 查询月神消费点数。
      * Looks up luna consume points by player object ID.
-     * player object id
      * @param playerObjId 玩家对象 ID / player object id
      * @return 月神消费点数，未找到或异常时为 0 / luna consume points, or 0 if missing/error
      */
     @Override
     public int getPlayerLunaConsumeByObjId(final int playerObjId) {
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(SELECT_LUNA_CONSUME_BY_OBJ_ID_QUERY)) {
-
-            stmt.setInt(1, playerObjId);
-
-            try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    return rs.getInt("luna_consume");
-                }
-            }
-        } catch (Exception e) {
+        try {
+            Integer val = jdbcClient.sql(SELECT_LUNA_CONSUME_BY_OBJ_ID_QUERY)
+                .param(playerObjId)
+                .query(Integer.class)
+                .optional()
+                .orElse(0);
+            return val != null ? val : 0;
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.3620223b3e3a", playerObjId), e);
+            return 0;
         }
-
-        return 0;
     }
 
     /**
      * 按角色名查询对象 ID。
      * Looks up a player object ID by character name.
-     * character name
      * @param playerName 角色名 / character name
      * @return 对象 ID，未找到或异常时为 0 / object id, or 0 if missing/error
      */
     @Override
     public int getPlayerIdByName(final String playerName) {
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(SELECT_PLAYER_ID_BY_NAME)) {
-
-            stmt.setString(1, playerName);
-
-            try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    return rs.getInt("id");
-                }
-            }
-        } catch (Exception e) {
+        try {
+            Integer val = jdbcClient.sql(SELECT_PLAYER_ID_BY_NAME)
+                .param(playerName)
+                .query(Integer.class)
+                .optional()
+                .orElse(0);
+            return val != null ? val : 0;
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.f273cc47e33d", playerName), e);
+            return 0;
         }
-
-        return 0;
     }
 
     /**
      * 按角色名查询所属账号 ID。
      * Looks up the account ID for a character name.
-     * character name
      * @param name 角色名 / character name
      * @return 账号 ID，未找到或异常时为 0 / account id, or 0 if missing/error
      */
     @Override
     public int getAccountIdByName(final String name) {
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement s = con.prepareStatement(SELECT_ACCOUNT_ID_BY_NAME_QUERY)) {
-
-            s.setString(1, name);
-            try (ResultSet rs = s.executeQuery()) {
-                if (rs.next()) {
-                    return rs.getInt("account_id");
-                }
-            }
-            return 0;
-        } catch (Exception e) {
+        try {
+            Integer val = jdbcClient.sql(SELECT_ACCOUNT_ID_BY_NAME_QUERY)
+                .param(name)
+                .query(Integer.class)
+                .optional()
+                .orElse(0);
+            return val != null ? val : 0;
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.b4979008052c", name), e);
             return 0;
         }
@@ -819,16 +779,14 @@ public class PlayerDAO extends com.aionemu.gameserver.dao.PlayerDAO {
      */
     @Override
     public void storePlayerName(final PlayerCommonData recipientCommonData) {
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(UPDATE_PLAYER_NAME_QUERY)) {
-
+        try {
             log.debug("Storing playerName {} {}", recipientCommonData.getPlayerObjId(), recipientCommonData.getName());
 
-            stmt.setString(1, recipientCommonData.getName());
-            stmt.setInt(2, recipientCommonData.getPlayerObjId());
-            stmt.executeUpdate();
-
-        } catch (Exception e) {
+            jdbcClient.sql(UPDATE_PLAYER_NAME_QUERY)
+                .param(recipientCommonData.getName())
+                .param(recipientCommonData.getPlayerObjId())
+                .update();
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.ecfd38bef3fc", recipientCommonData.getPlayerObjId(),
                     recipientCommonData.getName()), e);
         }
@@ -842,17 +800,14 @@ public class PlayerDAO extends com.aionemu.gameserver.dao.PlayerDAO {
      */
     @Override
     public int getCharacterCountOnAccount(final int accountId) {
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(SELECT_CHARACTER_COUNT_QUERY)) {
-
-            stmt.setInt(1, accountId);
-            try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    return rs.getInt("cnt");
-                }
-            }
-            return 0;
-        } catch (Exception e) {
+        try {
+            Integer val = jdbcClient.sql(SELECT_CHARACTER_COUNT_QUERY)
+                .param(accountId)
+                .query(Integer.class)
+                .optional()
+                .orElse(0);
+            return val != null ? val : 0;
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.fe988f5216b0", accountId), e);
             return 0;
         }
@@ -866,19 +821,15 @@ public class PlayerDAO extends com.aionemu.gameserver.dao.PlayerDAO {
      */
     @Override
     public int getCharacterCountForRace(Race race) {
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(SELECT_CHARACTER_COUNT_RACE_QUERY)) {
-
-            stmt.setString(1, race.name());
-            stmt.setLong(2, DataManager.PLAYER_EXPERIENCE_TABLE.getStartExpForLevel(GSConfig.RATIO_MIN_REQUIRED_LEVEL));
-
-            try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    return rs.getInt("count");
-                }
-            }
-            return 0;
-        } catch (Exception e) {
+        try {
+            Integer val = jdbcClient.sql(SELECT_CHARACTER_COUNT_RACE_QUERY)
+                .param(race.name())
+                .param(DataManager.PLAYER_EXPERIENCE_TABLE.getStartExpForLevel(GSConfig.RATIO_MIN_REQUIRED_LEVEL))
+                .query(Integer.class)
+                .optional()
+                .orElse(0);
+            return val != null ? val : 0;
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.6a4af16dff6d", race), e);
             return 0;
         }
@@ -891,17 +842,14 @@ public class PlayerDAO extends com.aionemu.gameserver.dao.PlayerDAO {
      */
     @Override
     public int getOnlinePlayerCount() {
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(SELECT_ONLINE_PLAYER_COUNT_QUERY)) {
-
-            stmt.setBoolean(1, true);
-            try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    return rs.getInt("count");
-                }
-            }
-            return 0;
-        } catch (Exception e) {
+        try {
+            Integer val = jdbcClient.sql(SELECT_ONLINE_PLAYER_COUNT_QUERY)
+                .param(true)
+                .query(Integer.class)
+                .optional()
+                .orElse(0);
+            return val != null ? val : 0;
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.7cb1629e7919"), e);
             return 0;
         }
@@ -922,23 +870,15 @@ public class PlayerDAO extends com.aionemu.gameserver.dao.PlayerDAO {
             query.append(" LIMIT ").append(limitation);
         }
 
-        final List<Integer> playersToDelete = new ArrayList<>();
-
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(query.toString())) {
-
-            stmt.setInt(1, daysOfInactivity);
-
-            try (ResultSet rset = stmt.executeQuery()) {
-                while (rset.next()) {
-                    playersToDelete.add(rset.getInt("id"));
-                }
-            }
-        } catch (Exception e) {
+        try {
+            return jdbcClient.sql(query.toString())
+                .param(daysOfInactivity)
+                .query((rset, rowNum) -> rset.getInt("id"))
+                .list();
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.e40ff813df6d"), e);
+            return new ArrayList<>();
         }
-
-        return playersToDelete;
     }
 
     /**
@@ -949,14 +889,12 @@ public class PlayerDAO extends com.aionemu.gameserver.dao.PlayerDAO {
      */
     @Override
     public void setPlayerLastTransferTime(final int playerId, final long time) {
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(UPDATE_LAST_TRANSFER_TIME_QUERY)) {
-
-            stmt.setLong(1, time);
-            stmt.setInt(2, playerId);
-            stmt.executeUpdate();
-
-        } catch (Exception e) {
+        try {
+            jdbcClient.sql(UPDATE_LAST_TRANSFER_TIME_QUERY)
+                .param(time)
+                .param(playerId)
+                .update();
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.557725f5c465", playerId), e);
         }
     }
@@ -969,17 +907,13 @@ public class PlayerDAO extends com.aionemu.gameserver.dao.PlayerDAO {
      */
     @Override
     public Timestamp getCharacterCreationDateId(final int obj) {
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement s = con.prepareStatement(SELECT_CREATION_DATE_QUERY)) {
-
-            s.setInt(1, obj);
-            try (ResultSet rs = s.executeQuery()) {
-                if (rs.next()) {
-                    return rs.getTimestamp("creation_date");
-                }
-            }
-            return null;
-        } catch (Exception e) {
+        try {
+            return jdbcClient.sql(SELECT_CREATION_DATE_QUERY)
+                .param(obj)
+                .query(Timestamp.class)
+                .optional()
+                .orElse(null);
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.5725f16be2cd", obj), e);
             return null;
         }
@@ -993,14 +927,12 @@ public class PlayerDAO extends com.aionemu.gameserver.dao.PlayerDAO {
      */
     @Override
     public void updateLegionJoinRequestState(final int playerId, final LegionJoinRequestState state) {
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(UPDATE_JOIN_STATE_QUERY)) {
-
-            stmt.setString(1, state.name());
-            stmt.setInt(2, playerId);
-            stmt.executeUpdate();
-
-        } catch (Exception e) {
+        try {
+            jdbcClient.sql(UPDATE_JOIN_STATE_QUERY)
+                .param(state.name())
+                .param(playerId)
+                .update();
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.ae369018dad0", playerId), e);
         }
     }
@@ -1012,15 +944,13 @@ public class PlayerDAO extends com.aionemu.gameserver.dao.PlayerDAO {
      */
     @Override
     public void clearJoinRequest(final int playerId) {
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(CLEAR_JOIN_REQUEST_QUERY)) {
-
-            stmt.setInt(1, 0);
-            stmt.setString(2, "NONE");
-            stmt.setInt(3, playerId);
-            stmt.executeUpdate();
-
-        } catch (Exception e) {
+        try {
+            jdbcClient.sql(CLEAR_JOIN_REQUEST_QUERY)
+                .param(0)
+                .param("NONE")
+                .param(playerId)
+                .update();
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.c8dcb65f0a0c", playerId), e);
         }
     }
@@ -1032,13 +962,10 @@ public class PlayerDAO extends com.aionemu.gameserver.dao.PlayerDAO {
      */
     @Override
     public void getJoinRequestState(final Player player) {
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(SELECT_JOIN_STATE_QUERY)) {
-
-            stmt.setInt(1, player.getObjectId());
-
-            try (ResultSet rset = stmt.executeQuery()) {
-                if (rset.next()) {
+        try {
+            jdbcClient.sql(SELECT_JOIN_STATE_QUERY)
+                .param(player.getObjectId())
+                .query((rset, rowNum) -> {
                     try {
                         player.getCommonData().setJoinRequestState(
                             LegionJoinRequestState.valueOf(rset.getString("join_state")));
@@ -1046,9 +973,10 @@ public class PlayerDAO extends com.aionemu.gameserver.dao.PlayerDAO {
                         log.warn(I18n.get("log.2ab35f9897c1", player.getObjectId(), rset.getString("join_state")));
                         player.getCommonData().setJoinRequestState(LegionJoinRequestState.NONE);
                     }
-                }
-            }
-        } catch (Exception e) {
+                    return null;
+                })
+                .list();
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.01aadaeb4af5", player.getObjectId()), e);
         }
     }

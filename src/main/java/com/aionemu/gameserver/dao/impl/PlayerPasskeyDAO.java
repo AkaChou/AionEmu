@@ -1,14 +1,18 @@
 package com.aionemu.gameserver.dao.impl;
 
+import java.util.Objects;
+
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.simple.JdbcClient;
 
 import com.aionemu.boot.i18n.I18n;
-import lombok.extern.slf4j.Slf4j;
 import com.aionemu.commons.database.DatabaseFactory;
-import java.sql.*;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 玩家二级密码 DAO 的 MySQL 8 实现。
- * MySQL 8 implementation of PlayerPasskeyDAO.
+ * MySQL 8 implementation of PlayerPasskeyDAO using JdbcClient.
  * Updated for MySQL 8 - Fixed connection leaks.
  */
 @Slf4j
@@ -25,6 +29,16 @@ public class PlayerPasskeyDAO extends com.aionemu.gameserver.dao.PlayerPasskeyDA
     /** 检查二级密码是否存在 SQL / Check whether passkey exists SQL*/
     private static final String EXIST_CHECK_QUERY = "SELECT COUNT(*) as cnt FROM `player_passkey` WHERE `account_id`=?";
 
+    private final JdbcClient jdbcClient;
+
+    public PlayerPasskeyDAO() {
+        this(DatabaseFactory.getJdbcClient());
+    }
+
+    public PlayerPasskeyDAO(JdbcClient jdbcClient) {
+        this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");
+    }
+
     /**
      * 为账号插入二级密码。
      * Inserts a passkey for an account.
@@ -33,13 +47,12 @@ public class PlayerPasskeyDAO extends com.aionemu.gameserver.dao.PlayerPasskeyDA
      */
     @Override
     public void insertPlayerPasskey(int accountId, String passkey) {
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(INSERT_QUERY)) {
-
-            stmt.setInt(1, accountId);
-            stmt.setString(2, passkey);
-            stmt.executeUpdate();
-        } catch (SQLException e) {
+        try {
+            jdbcClient.sql(INSERT_QUERY)
+                .param(accountId)
+                .param(passkey)
+                .update();
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.cf0e27a382ab", accountId), e);
         }
     }
@@ -54,14 +67,13 @@ public class PlayerPasskeyDAO extends com.aionemu.gameserver.dao.PlayerPasskeyDA
      */
     @Override
     public boolean updatePlayerPasskey(int accountId, String oldPasskey, String newPasskey) {
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(UPDATE_QUERY)) {
-
-            stmt.setString(1, newPasskey);
-            stmt.setInt(2, accountId);
-            stmt.setString(3, oldPasskey);
-            return stmt.executeUpdate() > 0;
-        } catch (SQLException e) {
+        try {
+            return jdbcClient.sql(UPDATE_QUERY)
+                .param(newPasskey)
+                .param(accountId)
+                .param(oldPasskey)
+                .update() > 0;
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.9cef2da6c580", accountId), e);
             return false;
         }
@@ -76,13 +88,12 @@ public class PlayerPasskeyDAO extends com.aionemu.gameserver.dao.PlayerPasskeyDA
      */
     @Override
     public boolean updateForcePlayerPasskey(int accountId, String newPasskey) {
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(UPDATE_FORCE_QUERY)) {
-
-            stmt.setString(1, newPasskey);
-            stmt.setInt(2, accountId);
-            return stmt.executeUpdate() > 0;
-        } catch (SQLException e) {
+        try {
+            return jdbcClient.sql(UPDATE_FORCE_QUERY)
+                .param(newPasskey)
+                .param(accountId)
+                .update() > 0;
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.9cef2da6c580", accountId), e);
             return false;
         }
@@ -97,21 +108,17 @@ public class PlayerPasskeyDAO extends com.aionemu.gameserver.dao.PlayerPasskeyDA
      */
     @Override
     public boolean checkPlayerPasskey(int accountId, String passkey) {
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(CHECK_QUERY)) {
-
-            stmt.setInt(1, accountId);
-            stmt.setString(2, passkey);
-
-            try (ResultSet rset = stmt.executeQuery()) {
-                if (rset.next()) {
-                    return rset.getInt("cnt") == 1;
-                }
-            }
-        } catch (SQLException e) {
+        try {
+            return jdbcClient.sql(CHECK_QUERY)
+                .param(accountId)
+                .param(passkey)
+                .query((rset, rowNum) -> rset.getInt("cnt") == 1)
+                .optional()
+                .orElse(false);
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.c22df4b9c35d", accountId), e);
+            return false;
         }
-        return false;
     }
 
     /**
@@ -122,20 +129,16 @@ public class PlayerPasskeyDAO extends com.aionemu.gameserver.dao.PlayerPasskeyDA
      */
     @Override
     public boolean existCheckPlayerPasskey(int accountId) {
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(EXIST_CHECK_QUERY)) {
-
-            stmt.setInt(1, accountId);
-
-            try (ResultSet rset = stmt.executeQuery()) {
-                if (rset.next()) {
-                    return rset.getInt("cnt") == 1;
-                }
-            }
-        } catch (SQLException e) {
+        try {
+            return jdbcClient.sql(EXIST_CHECK_QUERY)
+                .param(accountId)
+                .query((rset, rowNum) -> rset.getInt("cnt") == 1)
+                .optional()
+                .orElse(false);
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.c22df4b9c35d", accountId), e);
+            return false;
         }
-        return false;
     }
 
     /**

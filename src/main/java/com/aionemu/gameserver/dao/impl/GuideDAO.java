@@ -1,24 +1,27 @@
 package com.aionemu.gameserver.dao.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.simple.JdbcClient;
 
 import com.aionemu.boot.i18n.I18n;
-import lombok.extern.slf4j.Slf4j;
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.guide.Guide;
-import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 引导（Guide）DAO 的 MySQL 8 实现。
- * MySQL 8 implementation of GuideDAO.
+ * MySQL 8 implementation of GuideDAO using JdbcClient.
  * Updated for MySQL 8 - Fixed connection leaks.
  * @author xTz
  */
 @Slf4j
 public class GuideDAO extends com.aionemu.gameserver.dao.GuideDAO {
-
 
 	/** 删除引导 SQL / Delete guide SQL*/
 	private static final String DELETE_QUERY = "DELETE FROM `guides` WHERE `guide_id`=?";
@@ -30,6 +33,16 @@ public class GuideDAO extends com.aionemu.gameserver.dao.GuideDAO {
 	private static final String INSERT_QUERY = "INSERT INTO guides(guide_id, title, player_id) VALUES (?, ?, ?)";
 	/** 查询已用引导 ID SQL / Select used guide ids SQL*/
 	private static final String SELECT_USED_IDS_QUERY = "SELECT guide_id FROM guides";
+
+	private final JdbcClient jdbcClient;
+
+	public GuideDAO() {
+		this(DatabaseFactory.getJdbcClient());
+	}
+
+	public GuideDAO(JdbcClient jdbcClient) {
+		this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");
+	}
 
 	/**
 	 * 是否支持当前数据库。
@@ -52,12 +65,11 @@ public class GuideDAO extends com.aionemu.gameserver.dao.GuideDAO {
 	 */
 	@Override
 	public boolean deleteGuide(int guide_id) {
-		try (Connection con = DatabaseFactory.getConnection();
-			 PreparedStatement stmt = con.prepareStatement(DELETE_QUERY)) {
-
-			stmt.setInt(1, guide_id);
-			return stmt.executeUpdate() > 0;
-		} catch (Exception e) {
+		try {
+			return jdbcClient.sql(DELETE_QUERY)
+				.param(guide_id)
+				.update() > 0;
+		} catch (DataAccessException e) {
 			log.error(I18n.get("log.257617627810", guide_id), e);
 			return false;
 		}
@@ -71,23 +83,17 @@ public class GuideDAO extends com.aionemu.gameserver.dao.GuideDAO {
 	 */
 	@Override
 	public List<Guide> loadGuides(int playerId) {
-		final List<Guide> guides = new ArrayList<>();
-
-		try (Connection con = DatabaseFactory.getConnection();
-			 PreparedStatement stmt = con.prepareStatement(SELECT_QUERY)) {
-
-			stmt.setInt(1, playerId);
-
-			try (ResultSet rset = stmt.executeQuery()) {
-				while (rset.next()) {
-					int guide_id = rset.getInt("guide_id");
-					int player_id = rset.getInt("player_id");
-					String title = rset.getString("title");
-					Guide guide = new Guide(guide_id, player_id, title);
-					guides.add(guide);
-				}
-			}
-		} catch (Exception e) {
+		List<Guide> guides = new ArrayList<>();
+		try {
+			guides = jdbcClient.sql(SELECT_QUERY)
+				.param(playerId)
+				.query((rset, rowNum) -> new Guide(
+					rset.getInt("guide_id"),
+					rset.getInt("player_id"),
+					rset.getString("title")
+				))
+				.list();
+		} catch (DataAccessException e) {
 			log.error(I18n.get("log.040d5371000d", playerId, " from DB"), e);
 		}
 		return guides;
@@ -102,24 +108,21 @@ public class GuideDAO extends com.aionemu.gameserver.dao.GuideDAO {
 	 */
 	@Override
 	public Guide loadGuide(int player_id, int guide_id) {
-		Guide guide = null;
-
-		try (Connection con = DatabaseFactory.getConnection();
-			 PreparedStatement stmt = con.prepareStatement(SELECT_GUIDE_QUERY)) {
-
-			stmt.setInt(1, guide_id);
-			stmt.setInt(2, player_id);
-
-			try (ResultSet rset = stmt.executeQuery()) {
-				while (rset.next()) {
-					String title = rset.getString("title");
-					guide = new Guide(guide_id, player_id, title);
-				}
-			}
-		} catch (Exception e) {
+		try {
+			return jdbcClient.sql(SELECT_GUIDE_QUERY)
+				.param(guide_id)
+				.param(player_id)
+				.query((rset, rowNum) -> new Guide(
+					guide_id,
+					player_id,
+					rset.getString("title")
+				))
+				.optional()
+				.orElse(null);
+		} catch (DataAccessException e) {
 			log.error(I18n.get("log.5857d08149b7", player_id, " from DB"), e);
+			return null;
 		}
-		return guide;
 	}
 
 	/**
@@ -131,14 +134,13 @@ public class GuideDAO extends com.aionemu.gameserver.dao.GuideDAO {
 	 */
 	@Override
 	public void saveGuide(int guide_id, Player player, String title) {
-		try (Connection con = DatabaseFactory.getConnection();
-			 PreparedStatement stmt = con.prepareStatement(INSERT_QUERY)) {
-
-			stmt.setInt(1, guide_id);
-			stmt.setString(2, title);
-			stmt.setInt(3, player.getObjectId());
-			stmt.executeUpdate();
-		} catch (Exception e) {
+		try {
+			jdbcClient.sql(INSERT_QUERY)
+				.param(guide_id)
+				.param(title)
+				.param(player.getObjectId())
+				.update();
+		} catch (DataAccessException e) {
 			log.error(I18n.get("log.9ad0924840e7", player), e);
 		}
 	}
@@ -150,24 +152,18 @@ public class GuideDAO extends com.aionemu.gameserver.dao.GuideDAO {
 	 */
 	@Override
 	public int[] getUsedIDs() {
-		List<Integer> ids = new ArrayList<>();
-
-		try (Connection con = DatabaseFactory.getConnection();
-			 PreparedStatement statement = con.prepareStatement(SELECT_USED_IDS_QUERY, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-			 ResultSet rs = statement.executeQuery()) {
-
-			while (rs.next()) {
-				ids.add(rs.getInt("guide_id"));
+		try {
+			List<Integer> ids = jdbcClient.sql(SELECT_USED_IDS_QUERY)
+				.query((rs, rowNum) -> rs.getInt("guide_id"))
+				.list();
+			int[] result = new int[ids.size()];
+			for (int i = 0; i < ids.size(); i++) {
+				result[i] = ids.get(i);
 			}
-		} catch (SQLException e) {
+			return result;
+		} catch (DataAccessException e) {
 			log.error(I18n.get("log.4c2e4d8e0a12"), e);
 			return new int[0];
 		}
-
-		int[] result = new int[ids.size()];
-		for (int i = 0; i < ids.size(); i++) {
-			result[i] = ids.get(i);
-		}
-		return result;
 	}
 }

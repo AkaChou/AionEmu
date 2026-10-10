@@ -1,8 +1,19 @@
 package com.aionemu.gameserver.dao.impl;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
+
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.simple.JdbcClient;
 
 import com.aionemu.boot.i18n.I18n;
-import lombok.extern.slf4j.Slf4j;
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.dao.ItemStoneListDAO;
@@ -14,20 +25,16 @@ import com.aionemu.gameserver.model.gameobjects.player.Mailbox;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.gameobjects.player.PlayerCommonData;
 import com.aionemu.gameserver.model.items.storage.StorageType;
-import java.sql.*;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
- * 邮件系统 DAO 的 MySQL 8 实现，已修复连接泄漏。
- * MySQL 8 implementation of MailDAO with connection leak fixes.
+ * 邮件系统 DAO 的 MySQL 8 实现。
+ * MySQL 8 implementation of MailDAO using JdbcClient.
  * @author kosyachok
  */
 @Slf4j
 public class MailDAO extends com.aionemu.gameserver.dao.MailDAO {
-
 
     /** 查询玩家邮件（最近 100 封） / Select player mail (latest 100) */
     private static final String SELECT_MAIL_QUERY = "SELECT * FROM mail WHERE mail_recipient_id = ? ORDER BY recieved_time DESC LIMIT 100";
@@ -46,6 +53,16 @@ public class MailDAO extends com.aionemu.gameserver.dao.MailDAO {
     /** 查询已占用的邮件 ID / Select used mail unique ids */
     private static final String SELECT_USED_IDS_QUERY = "SELECT mail_unique_id FROM mail";
 
+    private final JdbcClient jdbcClient;
+
+    public MailDAO() {
+        this(DatabaseFactory.getJdbcClient());
+    }
+
+    public MailDAO(JdbcClient jdbcClient) {
+        this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");
+    }
+
     /**
      * 加载玩家邮箱（含附件物品）。
      * Loads the player's mailbox including attached items.
@@ -59,13 +76,10 @@ public class MailDAO extends com.aionemu.gameserver.dao.MailDAO {
 
         List<Item> mailboxItems = loadMailboxItems(playerId);
 
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(SELECT_MAIL_QUERY)) {
-
-            stmt.setInt(1, playerId);
-
-            try (ResultSet rset = stmt.executeQuery()) {
-                while (rset.next()) {
+        try {
+            jdbcClient.sql(SELECT_MAIL_QUERY)
+                .param(playerId)
+                .query((rset, rowNum) -> {
                     int mailUniqueId = rset.getInt("mail_unique_id");
                     int recipientId = rset.getInt("mail_recipient_id");
                     String senderName = rset.getString("sender_name");
@@ -93,12 +107,12 @@ public class MailDAO extends com.aionemu.gameserver.dao.MailDAO {
                     }
 
                     Letter letter = new Letter(mailUniqueId, recipientId, attachedItem, attachedKinahCount, attachedApCount, mailTitle, mailMessage, senderName, receivedTime, unread == 1, letterType);
-
                     letter.setPersistState(PersistentState.UPDATED);
                     mailbox.putLetterToMailbox(letter);
-                }
-            }
-        } catch (Exception e) {
+                    return null;
+                })
+                .list();
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.e6130c3e4ab9", playerId), e);
         }
 
@@ -108,45 +122,36 @@ public class MailDAO extends com.aionemu.gameserver.dao.MailDAO {
     /**
      * 检查玩家是否有未读邮件。
      * Checks whether the player has unread mail.
-     * player id
      * @param playerId 玩家 ID / player id
      * @return 是否有未读邮件 / whether unread mail exists
      */
     @Override
     public boolean haveUnread(int playerId) {
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(SELECT_UNREAD_QUERY)) {
-
-            stmt.setInt(1, playerId);
-            try (ResultSet rset = stmt.executeQuery()) {
-                if (rset.next()) {
-                    return rset.getInt("has_unread") == 1;
-                }
-            }
-        } catch (Exception e) {
+        try {
+            return jdbcClient.sql(SELECT_UNREAD_QUERY)
+                .param(playerId)
+                .query((rset, rowNum) -> rset.getInt("has_unread") == 1)
+                .optional()
+                .orElse(false);
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.fa6fe5701ebb", playerId), e);
+            return false;
         }
-
-        return false;
     }
 
     /**
      * 加载邮箱附件物品列表。
      * Loads mailbox attachment items for the player.
-     * player id
      * @param playerId 玩家 ID / player id
      * @return 附件物品列表 / list of attachment items
      */
     private List<Item> loadMailboxItems(final int playerId) {
         final List<Item> mailboxItems = new ArrayList<>();
 
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(SELECT_INVENTORY_QUERY)) {
-
-            stmt.setInt(1, playerId);
-
-            try (ResultSet rset = stmt.executeQuery()) {
-                while (rset.next()) {
+        try {
+            mailboxItems.addAll(jdbcClient.sql(SELECT_INVENTORY_QUERY)
+                .param(playerId)
+                .query((rset, rowNum) -> {
                     int itemUniqueId = rset.getInt("item_unique_id");
                     int itemId = rset.getInt("item_id");
                     long itemCount = rset.getLong("item_count");
@@ -181,12 +186,11 @@ public class MailDAO extends com.aionemu.gameserver.dao.MailDAO {
                     int enhanceSkillEnchant = rset.getInt("enhanceSkillEnchant");
 
                     Item item = new Item(itemUniqueId, itemId, itemCount, itemColor, colorExpireTime, itemCreator, expireTime, activationCount, isEquiped == 1, isSoulBound == 1, slot, StorageType.MAILBOX.getId(), enchant, enchantBonus, itemSkin, fusionedItem, optionalSocket, optionalFusionSocket, charge, randomNumber, rndCount, wrappingCount, isPacked == 1, temperingLevel, isTopped == 1, strengthenSkill, skinSkill, isLunaReskin == 1, reductionLevel, unSeal, isEnhance, enhanceSkillId, enhanceSkillEnchant);
-
                     item.setPersistentState(PersistentState.UPDATED);
-                    mailboxItems.add(item);
-                }
-            }
-        } catch (Exception e) {
+                    return item;
+                })
+                .list());
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.08b401a571e4", playerId), e);
         }
 
@@ -232,12 +236,12 @@ public class MailDAO extends com.aionemu.gameserver.dao.MailDAO {
 
     @Override
     public void storeLetterInTransaction(Connection con, Timestamp time, Letter letter) throws SQLException {
-		boolean result = switch (letter.getLetterPersistentState()) {
-			case NEW -> saveLetter(con, time, letter);
-			case UPDATE_REQUIRED -> updateLetter(con, time, letter);
-			default -> true;
-		};
-		if (!result) {
+        boolean result = switch (letter.getLetterPersistentState()) {
+            case NEW -> saveLetter(con, time, letter);
+            case UPDATE_REQUIRED -> updateLetter(con, time, letter);
+            default -> true;
+        };
+        if (!result) {
             throw new SQLException("No mail row changed for letter " + letter.getObjectId());
         }
     }
@@ -245,8 +249,9 @@ public class MailDAO extends com.aionemu.gameserver.dao.MailDAO {
     /**
      * 插入新信件。
      * Inserts a new letter.
-     * @param con 时间戳 / timestamp
-     * @param time 邮件 / letter
+     * @param con 数据库连接 / database connection
+     * @param time 时间戳 / timestamp
+     * @param letter 邮件 / letter
      * @return 是否成功 / whether successful
      */
     private boolean saveLetter(Connection con, final Timestamp time, final Letter letter) throws SQLException {
@@ -256,7 +261,6 @@ public class MailDAO extends com.aionemu.gameserver.dao.MailDAO {
         }
 
         try (PreparedStatement stmt = con.prepareStatement(INSERT_MAIL_QUERY)) {
-
             stmt.setInt(1, letter.getObjectId());
             stmt.setInt(2, letter.getRecipientId());
             stmt.setString(3, letter.getSenderName());
@@ -276,8 +280,9 @@ public class MailDAO extends com.aionemu.gameserver.dao.MailDAO {
     /**
      * 更新已有信件。
      * Updates an existing letter.
-     * @param con 时间戳 / timestamp
-     * @param time 邮件 / letter
+     * @param con 数据库连接 / database connection
+     * @param time 时间戳 / timestamp
+     * @param letter 邮件 / letter
      * @return 是否成功 / whether successful
      */
     private boolean updateLetter(Connection con, final Timestamp time, final Letter letter) throws SQLException {
@@ -287,7 +292,6 @@ public class MailDAO extends com.aionemu.gameserver.dao.MailDAO {
         }
 
         try (PreparedStatement stmt = con.prepareStatement(UPDATE_MAIL_QUERY)) {
-
             stmt.setBoolean(1, letter.isUnread());
             stmt.setInt(2, attachedItemId);
             stmt.setLong(3, letter.getAttachedKinah());
@@ -319,14 +323,12 @@ public class MailDAO extends com.aionemu.gameserver.dao.MailDAO {
      */
     @Override
     public boolean deleteLetter(final int letterId) {
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(DELETE_MAIL_QUERY)) {
-
-            stmt.setInt(1, letterId);
-            stmt.executeUpdate();
+        try {
+            jdbcClient.sql(DELETE_MAIL_QUERY)
+                .param(letterId)
+                .update();
             return true;
-
-        } catch (SQLException e) {
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.65c1132a74c3", letterId), e);
             return false;
         }
@@ -339,14 +341,12 @@ public class MailDAO extends com.aionemu.gameserver.dao.MailDAO {
      */
     @Override
     public void updateOfflineMailCounter(final PlayerCommonData recipientCommonData) {
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(UPDATE_MAIL_COUNTER_QUERY)) {
-
-            stmt.setInt(1, recipientCommonData.getMailboxLetters());
-            stmt.setString(2, recipientCommonData.getName());
-            stmt.executeUpdate();
-
-        } catch (Exception e) {
+        try {
+            jdbcClient.sql(UPDATE_MAIL_COUNTER_QUERY)
+                .param(recipientCommonData.getMailboxLetters())
+                .param(recipientCommonData.getName())
+                .update();
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.a4015981f3b5", recipientCommonData.getName()), e);
         }
     }
@@ -354,30 +354,23 @@ public class MailDAO extends com.aionemu.gameserver.dao.MailDAO {
     /**
      * 返回邮件表中已占用的全部邮件 ID。
      * Returns all used mail unique ids from the mail table.
-     * 已占用 ID 数组；失败时返回空数组。
-     * used id array, or empty array on failure.
+     * @return 已占用 ID 数组；失败时返回空数组 / used id array, or empty array on failure.
      */
     @Override
     public int[] getUsedIDs() {
-        List<Integer> ids = new ArrayList<>();
-
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement statement = con.prepareStatement(SELECT_USED_IDS_QUERY, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-             ResultSet rs = statement.executeQuery()) {
-
-            while (rs.next()) {
-                ids.add(rs.getInt("mail_unique_id"));
+        try {
+            List<Integer> ids = jdbcClient.sql(SELECT_USED_IDS_QUERY)
+                .query((rs, rowNum) -> rs.getInt("mail_unique_id"))
+                .list();
+            int[] result = new int[ids.size()];
+            for (int i = 0; i < ids.size(); i++) {
+                result[i] = ids.get(i);
             }
-        } catch (SQLException e) {
+            return result;
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.39fd601f311d"), e);
             return new int[0];
         }
-
-        int[] result = new int[ids.size()];
-        for (int i = 0; i < ids.size(); i++) {
-            result[i] = ids.get(i);
-        }
-        return result;
     }
 
     /**

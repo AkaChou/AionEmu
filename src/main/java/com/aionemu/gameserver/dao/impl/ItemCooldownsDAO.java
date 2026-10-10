@@ -1,21 +1,25 @@
 package com.aionemu.gameserver.dao.impl;
 
-
-import com.aionemu.boot.i18n.I18n;
-import lombok.extern.slf4j.Slf4j;
-import com.aionemu.commons.database.DatabaseFactory;
-import com.aionemu.gameserver.model.gameobjects.player.Player;
-import com.aionemu.gameserver.model.items.ItemCooldown;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Objects;
+
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.simple.JdbcClient;
+
+import com.aionemu.boot.i18n.I18n;
+import com.aionemu.commons.database.DatabaseFactory;
+import com.aionemu.gameserver.model.gameobjects.player.Player;
+import com.aionemu.gameserver.model.items.ItemCooldown;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 物品冷却 DAO 的 MySQL 8 实现。
- * MySQL 8 implementation of ItemCooldownsDAO.
+ * MySQL 8 implementation of ItemCooldownsDAO using JdbcClient.
  * Updated for MySQL 8 - Fixed connection leaks.
  * @author ATracer
  */
@@ -29,6 +33,16 @@ public class ItemCooldownsDAO extends com.aionemu.gameserver.dao.ItemCooldownsDA
 	/** 查询物品冷却 SQL / Select item cooldowns SQL*/
 	private static final String SELECT_QUERY = "SELECT `delay_id`, `use_delay`, `reuse_time` FROM `item_cooldowns` WHERE `player_id`=?";
 
+	private final JdbcClient jdbcClient;
+
+	public ItemCooldownsDAO() {
+		this(DatabaseFactory.getJdbcClient());
+	}
+
+	public ItemCooldownsDAO(JdbcClient jdbcClient) {
+		this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");
+	}
+
 	/**
 	 * 加载玩家物品冷却。
 	 * Loads item cooldowns for a player.
@@ -36,22 +50,21 @@ public class ItemCooldownsDAO extends com.aionemu.gameserver.dao.ItemCooldownsDA
 	 */
 	@Override
 	public void loadItemCooldowns(final Player player) {
-		try (Connection con = DatabaseFactory.getConnection();
-			 PreparedStatement stmt = con.prepareStatement(SELECT_QUERY)) {
-
-			stmt.setInt(1, player.getObjectId());
-
-			try (ResultSet rset = stmt.executeQuery()) {
-				while (rset.next()) {
+		try {
+			long now = System.currentTimeMillis();
+			jdbcClient.sql(SELECT_QUERY)
+				.param(player.getObjectId())
+				.query((rset, rowNum) -> {
 					int delayId = rset.getInt("delay_id");
 					int useDelay = rset.getInt("use_delay");
 					long reuseTime = rset.getLong("reuse_time");
-					if (reuseTime > System.currentTimeMillis()) {
+					if (reuseTime > now) {
 						player.addItemCoolDown(delayId, reuseTime, useDelay);
 					}
-				}
-			}
-		} catch (SQLException e) {
+					return null;
+				})
+				.list();
+		} catch (DataAccessException e) {
 			log.error(I18n.get("log.a442a442976d", player.getObjectId()), e);
 		}
 		player.getEffectController().broadCastEffects();
@@ -109,12 +122,11 @@ public class ItemCooldownsDAO extends com.aionemu.gameserver.dao.ItemCooldownsDA
 	 * @param player 玩家 / player
 	 */
 	private void deleteItemCooldowns(final Player player) {
-		try (Connection con = DatabaseFactory.getConnection();
-			 PreparedStatement stmt = con.prepareStatement(DELETE_QUERY)) {
-
-			stmt.setInt(1, player.getObjectId());
-			stmt.executeUpdate();
-		} catch (SQLException e) {
+		try {
+			jdbcClient.sql(DELETE_QUERY)
+				.param(player.getObjectId())
+				.update();
+		} catch (DataAccessException e) {
 			log.error(I18n.get("log.8c3c2893f6d3", player.getObjectId()), e);
 		}
 	}

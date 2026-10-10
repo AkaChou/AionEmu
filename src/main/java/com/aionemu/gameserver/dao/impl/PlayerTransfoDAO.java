@@ -1,32 +1,43 @@
 package com.aionemu.gameserver.dao.impl;
 
+import java.util.Objects;
+
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.simple.JdbcClient;
 
 import com.aionemu.boot.i18n.I18n;
-import lombok.extern.slf4j.Slf4j;
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.gameserver.dao.PlayerTransformDAO;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
-import java.sql.*;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 玩家变身 DAO 的 MySQL 8 实现。
- * MySQL 8 implementation of PlayerTransformDAO.
+ * MySQL 8 implementation of PlayerTransformDAO using JdbcClient.
  * Updated for MySQL 8.
  */
 @Slf4j
 public class PlayerTransfoDAO extends PlayerTransformDAO {
 
-
     /** 插入或更新变形 SQL / Insert or update transform SQL */
     private static final String INSERT_QUERY = "INSERT INTO `player_transform` (`player_id`, `panel_id`, `item_id`) VALUES (?, ?, ?) " + "ON DUPLICATE KEY UPDATE `panel_id` = VALUES(`panel_id`), `item_id` = VALUES(`item_id`)";
     /** 查询变形 SQL / Select transform SQL */
     private static final String SELECT_QUERY = "SELECT `panel_id`, `item_id` FROM `player_transform` WHERE `player_id` = ?";
-    /**
-	 * Delete transform SQL
-	 */
+    /** 删除变形 SQL / Delete transform SQL */
     private static final String DELETE_QUERY = "DELETE FROM `player_transform` WHERE `player_id` = ?";
     /** 更新变形 SQL / Update transform SQL */
     private static final String UPDATE_QUERY = "UPDATE `player_transform` SET `panel_id` = ?, `item_id` = ? WHERE `player_id` = ?";
+
+    private final JdbcClient jdbcClient;
+
+    public PlayerTransfoDAO() {
+        this(DatabaseFactory.getJdbcClient());
+    }
+
+    public PlayerTransfoDAO(JdbcClient jdbcClient) {
+        this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");
+    }
 
     /**
      * 加载玩家变身数据。
@@ -35,22 +46,19 @@ public class PlayerTransfoDAO extends PlayerTransformDAO {
      */
     @Override
     public void loadPlTransfo(Player player) {
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(SELECT_QUERY)) {
-
-            stmt.setInt(1, player.getObjectId());
-
-            try (ResultSet rset = stmt.executeQuery()) {
-                if (rset.next()) {
+        try {
+            jdbcClient.sql(SELECT_QUERY)
+                .param(player.getObjectId())
+                .query((rset, rowNum) -> {
                     int panelId = rset.getInt("panel_id");
                     int itemId = rset.getInt("item_id");
 
                     player.getTransformModel().setPanelId(panelId);
                     player.getTransformModel().setItemId(itemId);
-                }
-            }
-
-        } catch (SQLException e) {
+                    return null;
+                })
+                .list();
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.81bdb310b4b8", player.getObjectId()), e);
         }
     }
@@ -65,17 +73,13 @@ public class PlayerTransfoDAO extends PlayerTransformDAO {
      */
     @Override
     public boolean storePlTransfo(int playerId, int panelId, int itemId) {
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(INSERT_QUERY)) {
-
-            stmt.setInt(1, playerId);
-            stmt.setInt(2, panelId);
-            stmt.setInt(3, itemId);
-
-            int result = stmt.executeUpdate();
-            return result > 0;
-
-        } catch (SQLException e) {
+        try {
+            return jdbcClient.sql(INSERT_QUERY)
+                .param(playerId)
+                .param(panelId)
+                .param(itemId)
+                .update() > 0;
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.0ec4dcbf87ba", playerId), e);
             return false;
         }
@@ -89,15 +93,11 @@ public class PlayerTransfoDAO extends PlayerTransformDAO {
      */
     @Override
     public boolean deletePlTransfo(int playerId) {
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(DELETE_QUERY)) {
-
-            stmt.setInt(1, playerId);
-
-            int result = stmt.executeUpdate();
-            return result > 0;
-
-        } catch (SQLException e) {
+        try {
+            return jdbcClient.sql(DELETE_QUERY)
+                .param(playerId)
+                .update() > 0;
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.f096dcaaec6b", playerId), e);
             return false;
         }
@@ -112,22 +112,19 @@ public class PlayerTransfoDAO extends PlayerTransformDAO {
      * @return 是否成功 / whether successful
      */
     public boolean updatePlTransfo(int playerId, int panelId, int itemId) {
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(UPDATE_QUERY)) {
-
-            stmt.setInt(1, panelId);
-            stmt.setInt(2, itemId);
-            stmt.setInt(3, playerId);
-
-            int updated = stmt.executeUpdate();
+        try {
+            int updated = jdbcClient.sql(UPDATE_QUERY)
+                .param(panelId)
+                .param(itemId)
+                .param(playerId)
+                .update();
 
             if (updated == 0) {
                 return storePlTransfo(playerId, panelId, itemId);
             }
 
             return true;
-
-        } catch (SQLException e) {
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.7aefe66a2cfb", playerId), e);
             return false;
         }

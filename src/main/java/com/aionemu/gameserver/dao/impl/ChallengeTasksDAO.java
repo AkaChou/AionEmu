@@ -1,8 +1,15 @@
 package com.aionemu.gameserver.dao.impl;
 
+import java.sql.Timestamp;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Objects;
+
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.simple.JdbcClient;
 
 import com.aionemu.boot.i18n.I18n;
-import lombok.extern.slf4j.Slf4j;
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.challenge.ChallengeQuest;
@@ -10,14 +17,12 @@ import com.aionemu.gameserver.model.challenge.ChallengeTask;
 import com.aionemu.gameserver.model.gameobjects.PersistentState;
 import com.aionemu.gameserver.model.templates.challenge.ChallengeQuestTemplate;
 import com.aionemu.gameserver.model.templates.challenge.ChallengeType;
-import java.util.LinkedHashMap;
-import java.sql.*;
-import java.util.HashMap;
-import java.util.Map;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 挑战任务 DAO 的 MySQL 8 实现。
- * MySQL 8 implementation of ChallengeTasksDAO.
+ * MySQL 8 implementation of ChallengeTasksDAO using JdbcClient.
  * @author ViAl
  */
 @Slf4j
@@ -32,6 +37,16 @@ public class ChallengeTasksDAO extends com.aionemu.gameserver.dao.ChallengeTasks
     /** 更新挑战任务 SQL / Update challenge task SQL*/
     private static final String UPDATE_QUERY = "UPDATE `challenge_tasks` SET `complete_count` = ?, `complete_time` = ? WHERE `task_id` = ? AND `quest_id` = ? AND `owner_id` = ?";
 
+    private final JdbcClient jdbcClient;
+
+    public ChallengeTasksDAO() {
+        this(DatabaseFactory.getJdbcClient());
+    }
+
+    public ChallengeTasksDAO(JdbcClient jdbcClient) {
+        this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");
+    }
+
     /**
      * 按所有者与类型加载挑战任务。
      * Loads challenge tasks by owner and type.
@@ -43,14 +58,11 @@ public class ChallengeTasksDAO extends com.aionemu.gameserver.dao.ChallengeTasks
     public Map<Integer, ChallengeTask> load(int ownerId, ChallengeType type) {
         Map<Integer, ChallengeTask> tasks = new LinkedHashMap<>();
 
-        try (Connection conn = DatabaseFactory.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(SELECT_QUERY)) {
-
-            stmt.setInt(1, ownerId);
-            stmt.setString(2, type.toString());
-
-            try (ResultSet rset = stmt.executeQuery()) {
-                while (rset.next()) {
+        try {
+            jdbcClient.sql(SELECT_QUERY)
+                .param(ownerId)
+                .param(type.toString())
+                .query((rset, rowNum) -> {
                     int taskId = rset.getInt("task_id");
                     int questId = rset.getInt("quest_id");
                     int completeCount = rset.getInt("complete_count");
@@ -68,9 +80,10 @@ public class ChallengeTasksDAO extends com.aionemu.gameserver.dao.ChallengeTasks
                     } else {
                         tasks.get(taskId).getQuests().put(questId, quest);
                     }
-                }
-            }
-        } catch (SQLException e) {
+                    return null;
+                })
+                .list();
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.617c98736ef3"), e);
         }
         return tasks;
@@ -104,19 +117,18 @@ public class ChallengeTasksDAO extends com.aionemu.gameserver.dao.ChallengeTasks
      * @param quest 挑战任务 / challenge quest
      */
     private void insertQuestEntry(ChallengeTask task, ChallengeQuest quest) {
-        try (Connection conn = DatabaseFactory.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(INSERT_QUERY)) {
-
-            stmt.setInt(1, task.getTaskId());
-            stmt.setInt(2, quest.getQuestId());
-            stmt.setInt(3, task.getOwnerId());
-            stmt.setString(4, task.getTemplate().getType().toString());
-            stmt.setInt(5, quest.getCompleteCount());
-            stmt.setTimestamp(6, task.getCompleteTime());
-            stmt.executeUpdate();
+        try {
+            jdbcClient.sql(INSERT_QUERY)
+                .param(task.getTaskId())
+                .param(quest.getQuestId())
+                .param(task.getOwnerId())
+                .param(task.getTemplate().getType().toString())
+                .param(quest.getCompleteCount())
+                .param(task.getCompleteTime())
+                .update();
 
             quest.setPersistentState(PersistentState.UPDATED);
-        } catch (SQLException e) {
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.037d4d23c971"), e);
         }
     }
@@ -128,18 +140,17 @@ public class ChallengeTasksDAO extends com.aionemu.gameserver.dao.ChallengeTasks
      * @param quest 挑战任务 / challenge quest
      */
     private void updateQuestEntry(ChallengeTask task, ChallengeQuest quest) {
-        try (Connection conn = DatabaseFactory.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(UPDATE_QUERY)) {
-
-            stmt.setInt(1, quest.getCompleteCount());
-            stmt.setTimestamp(2, task.getCompleteTime());
-            stmt.setInt(3, task.getTaskId());
-            stmt.setInt(4, quest.getQuestId());
-            stmt.setInt(5, task.getOwnerId());
-            stmt.executeUpdate();
+        try {
+            jdbcClient.sql(UPDATE_QUERY)
+                .param(quest.getCompleteCount())
+                .param(task.getCompleteTime())
+                .param(task.getTaskId())
+                .param(quest.getQuestId())
+                .param(task.getOwnerId())
+                .update();
 
             quest.setPersistentState(PersistentState.UPDATED);
-        } catch (SQLException e) {
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.b3f513aa406e"), e);
         }
     }

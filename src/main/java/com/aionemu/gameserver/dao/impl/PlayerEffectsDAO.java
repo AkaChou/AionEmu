@@ -1,25 +1,31 @@
 package com.aionemu.gameserver.dao.impl;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.function.Predicate;
+
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.simple.JdbcClient;
 
 import com.aionemu.boot.i18n.I18n;
-import lombok.extern.slf4j.Slf4j;
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.gameserver.configs.main.CustomConfig;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.skillengine.model.Effect;
-import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Predicate;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 玩家技能效果（Buff）持久化 DAO 的 MySQL 8 实现。
- * MySQL 8 implementation of PlayerEffectsDAO.
+ * MySQL 8 implementation of PlayerEffectsDAO using JdbcClient.
  * @author ATracer, Updated for MySQL 8
  */
 @Slf4j
 public class PlayerEffectsDAO extends com.aionemu.gameserver.dao.PlayerEffectsDAO {
-
 
     /** 插入或更新玩家效果 / Insert or update a player effect */
     private static final String INSERT_QUERY = "INSERT INTO `player_effects` (`player_id`, `skill_id`, `skill_lvl`, `current_time`, `end_time`) " + "VALUES (?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE " + "`skill_lvl` = VALUES(`skill_lvl`), `current_time` = VALUES(`current_time`), `end_time` = VALUES(`end_time`)";
@@ -34,6 +40,16 @@ public class PlayerEffectsDAO extends com.aionemu.gameserver.dao.PlayerEffectsDA
     private static final Predicate<Effect> INSERTABLE_EFFECTS_PREDICATE = effect -> effect != null
         && !effect.getSkillTemplate().isNoSaveOnLogout() && effect.getRemainingTime() > 28000;
 
+    private final JdbcClient jdbcClient;
+
+    public PlayerEffectsDAO() {
+        this(DatabaseFactory.getJdbcClient());
+    }
+
+    public PlayerEffectsDAO(JdbcClient jdbcClient) {
+        this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");
+    }
+
     /**
      * 加载玩家技能效果到效果控制器。
      * Loads the player's skill effects into the effect controller.
@@ -41,36 +57,33 @@ public class PlayerEffectsDAO extends com.aionemu.gameserver.dao.PlayerEffectsDA
      */
     @Override
     public void loadPlayerEffects(Player player) {
-        List<SavedEffect> savedEffects = new ArrayList<>();
-
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(SELECT_QUERY)) {
-
-            stmt.setInt(1, player.getObjectId());
-
-            try (ResultSet rset = stmt.executeQuery()) {
-                while (rset.next()) {
+        try {
+            List<SavedEffect> savedEffects = jdbcClient.sql(SELECT_QUERY)
+                .param(player.getObjectId())
+                .query((rset, rowNum) -> {
                     int skillId = rset.getInt("skill_id");
                     int skillLvl = rset.getInt("skill_lvl");
                     int remainingTime = rset.getInt("current_time");
                     long endTime = rset.getLong("end_time");
 
                     if (remainingTime > 0) {
-                        savedEffects.add(new SavedEffect(skillId, skillLvl, remainingTime, endTime));
+                        return new SavedEffect(skillId, skillLvl, remainingTime, endTime);
                     }
-                }
-            }
+                    return null;
+                })
+                .list();
 
             for (SavedEffect effect : savedEffects) {
-                player.getEffectController().addSavedEffect(
-                    effect.skillId,
-                    effect.skillLvl,
-                    effect.remainingTime,
-                    effect.endTime
-                );
+                if (effect != null) {
+                    player.getEffectController().addSavedEffect(
+                        effect.skillId,
+                        effect.skillLvl,
+                        effect.remainingTime,
+                        effect.endTime
+                    );
+                }
             }
-
-        } catch (SQLException e) {
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.8532fdc00af7", player.getObjectId()), e);
         }
 
@@ -146,13 +159,11 @@ public class PlayerEffectsDAO extends com.aionemu.gameserver.dao.PlayerEffectsDA
      * @param player 玩家 / player
      */
     private void deletePlayerEffects(Player player) {
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(DELETE_QUERY)) {
-
-            stmt.setInt(1, player.getObjectId());
-            stmt.executeUpdate();
-
-        } catch (SQLException e) {
+        try {
+            jdbcClient.sql(DELETE_QUERY)
+                .param(player.getObjectId())
+                .update();
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.5703018fc477", player.getObjectId()), e);
         }
     }
@@ -162,17 +173,15 @@ public class PlayerEffectsDAO extends com.aionemu.gameserver.dao.PlayerEffectsDA
      * Batch-deletes expired effect records.
      */
     public void deleteExpiredEffects() {
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(DELETE_EXPIRED_QUERY)) {
-
-            stmt.setLong(1, System.currentTimeMillis());
-            int deleted = stmt.executeUpdate();
+        try {
+            int deleted = jdbcClient.sql(DELETE_EXPIRED_QUERY)
+                .param(System.currentTimeMillis())
+                .update();
 
             if (deleted > 0) {
                 log.info(I18n.get("log.4854575cda2a", deleted));
             }
-
-        } catch (SQLException e) {
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.217d09d4548d"), e);
         }
     }
@@ -191,9 +200,9 @@ public class PlayerEffectsDAO extends com.aionemu.gameserver.dao.PlayerEffectsDA
     }
 
     /**
-         * 从数据库加载的效果快照。
-         * Snapshot of an effect loaded from the database.
-         */
-        private record SavedEffect(int skillId, int skillLvl, int remainingTime, long endTime) {
+     * 从数据库加载的效果快照。
+     * Snapshot of an effect loaded from the database.
+     */
+    private record SavedEffect(int skillId, int skillLvl, int remainingTime, long endTime) {
     }
 }

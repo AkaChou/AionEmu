@@ -1,29 +1,39 @@
 package com.aionemu.gameserver.dao.impl;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Types;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Objects;
+
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.simple.JdbcClient;
 
 import com.aionemu.boot.i18n.I18n;
-import lombok.extern.slf4j.Slf4j;
-import com.aionemu.gameserver.lifecycle.GameHousingServices;
-
-import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
-
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.commons.utils.GenericValidator;
-import com.aionemu.gameserver.model.gameobjects.*;
+import com.aionemu.gameserver.lifecycle.GameHousingServices;
+import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
+import com.aionemu.gameserver.model.gameobjects.HouseDecoration;
+import com.aionemu.gameserver.model.gameobjects.HouseObject;
+import com.aionemu.gameserver.model.gameobjects.PersistentState;
+import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.model.house.House;
 import com.aionemu.gameserver.model.house.HouseRegistry;
 import com.aionemu.gameserver.model.templates.housing.HouseType;
 import com.aionemu.gameserver.model.templates.housing.PartType;
 import com.aionemu.gameserver.services.item.HouseObjectFactory;
-import java.sql.*;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 玩家已注册房屋物品数据访问对象的 MySQL 8 实现。
- * MySQL 8 implementation of PlayerRegisteredItemsDAO.
+ * MySQL 8 implementation of PlayerRegisteredItemsDAO using JdbcClient.
  */
 @Slf4j
 public class PlayerRegisteredItemsDAO extends com.aionemu.gameserver.dao.PlayerRegisteredItemsDAO {
@@ -49,35 +59,39 @@ public class PlayerRegisteredItemsDAO extends com.aionemu.gameserver.dao.PlayerR
     /** 查询已占用的唯一 ID / Select used item unique ids */
     public static final String SELECT_USED_IDS_QUERY = "SELECT item_unique_id FROM player_registered_items WHERE item_unique_id <> 0";
 
+    private final JdbcClient jdbcClient;
+
+    public PlayerRegisteredItemsDAO() {
+        this(DatabaseFactory.getJdbcClient());
+    }
+
+    public PlayerRegisteredItemsDAO(JdbcClient jdbcClient) {
+        this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");
+    }
+
     /**
      * 获取已占用的物品唯一 ID 列表，供 ID 工厂回收/分配使用。
      * Returns used item unique ids for ID factory allocation.
-     * 已占用 ID 数组；出错时返回空数组。
-     * used id array, or empty on error.
+     * @return 已占用 ID 数组；出错时返回空数组 / used id array, or empty on error.
      */
     @Override
     public int[] getUsedIDs() {
-        List<Integer> ids = new ArrayList<>();
-        
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(SELECT_USED_IDS_QUERY, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-             ResultSet rs = stmt.executeQuery()) {
-            
-            while (rs.next()) {
-                ids.add(rs.getInt(1));
+        try {
+            List<Integer> ids = jdbcClient.sql(SELECT_USED_IDS_QUERY)
+                .query((rs, rowNum) -> rs.getInt(1))
+                .list();
+
+            int[] result = new int[ids.size()];
+            for (int i = 0; i < ids.size(); i++) {
+                result[i] = ids.get(i);
             }
-        } catch (SQLException e) {
+            return result;
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.0bebcd82021c"), e);
             return new int[0];
         }
-        
-        int[] result = new int[ids.size()];
-        for (int i = 0; i < ids.size(); i++) {
-            result[i] = ids.get(i);
-        }
-        return result;
     }
-    
+
     /**
      * 加载玩家房屋注册物品与装饰部件到房屋注册表。
      * Loads the player's house registered items and decorations into the registry.
@@ -90,37 +104,37 @@ public class PlayerRegisteredItemsDAO extends com.aionemu.gameserver.dao.PlayerR
             int address = GameHousingServices.housingService().getPlayerAddress(playerId);
             house = GameHousingServices.housingService().getHouseByAddress(address);
         }
-        
+
         if (house == null) {
             log.warn(I18n.get("log.17502383de83", playerId));
             return;
         }
-        
+
         HouseRegistry registry = house.getRegistry();
-        
-        try (Connection con = DatabaseFactory.getConnection(); 
+
+        try (Connection con = DatabaseFactory.getConnection();
              PreparedStatement stmt = con.prepareStatement(SELECT_QUERY)) {
-            
+
             stmt.setInt(1, playerId);
-            
+
             try (ResultSet rset = stmt.executeQuery()) {
                 HashMap<PartType, List<HouseDecoration>> usedParts = new HashMap<>();
-                
+
                 while (rset.next()) {
                     String area = rset.getString("area");
                     if ("DECOR".equals(area)) {
                         HouseDecoration dec = createDecoration(rset);
                         registry.putCustomPart(dec);
-                        
+
                         if (dec.isUsed()) {
                             if (house.getHouseType() != HouseType.PALACE && dec.getFloor() > 0) {
                                 dec.setFloor(0);
                             }
-                            
+
                             List<HouseDecoration> usedForType = usedParts.computeIfAbsent(dec.getTemplate().getType(), k -> new ArrayList<>());
                             usedForType.add(dec);
                         }
-                        
+
                         dec.setPersistentState(PersistentState.UPDATED);
                     } else {
                         HouseObject<?> obj = constructObject(registry, house, rset);
@@ -128,7 +142,7 @@ public class PlayerRegisteredItemsDAO extends com.aionemu.gameserver.dao.PlayerR
                         obj.setPersistentState(PersistentState.UPDATED);
                     }
                 }
-                
+
                 for (PartType partType : PartType.values()) {
                     if (usedParts.containsKey(partType)) {
                         for (HouseDecoration usedDeco : usedParts.get(partType)) {
@@ -136,13 +150,13 @@ public class PlayerRegisteredItemsDAO extends com.aionemu.gameserver.dao.PlayerR
                         }
                         continue;
                     }
-                    
+
                     int floorCount = 1;
-                    if (house.getHouseType() == HouseType.PALACE && 
+                    if (house.getHouseType() == HouseType.PALACE &&
                         (partType == PartType.INFLOOR_ANY || partType == PartType.INWALL_ANY)) {
                         floorCount = 6;
                     }
-                    
+
                     for (int i = 0; i < floorCount; i++) {
                         HouseDecoration def = registry.getDefaultPartByType(partType, i);
                         if (def != null) {
@@ -150,19 +164,19 @@ public class PlayerRegisteredItemsDAO extends com.aionemu.gameserver.dao.PlayerR
                         }
                     }
                 }
-                
+
                 registry.setPersistentState(PersistentState.UPDATED);
             }
         } catch (Exception e) {
             log.error(I18n.get("log.98d5b9d41325", playerId), e);
         }
     }
-    
+
     private HouseObject<?> constructObject(final HouseRegistry registry, House house, ResultSet rset) throws SQLException {
         int itemUniqueId = rset.getInt("item_unique_id");
         VisibleObject visObj = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findVisibleObject(itemUniqueId);
         HouseObject<?> obj = null;
-        
+
         if (visObj != null) {
             if (visObj instanceof HouseObject<?>) {
                 obj = (HouseObject<?>) visObj;
@@ -175,7 +189,7 @@ public class PlayerRegisteredItemsDAO extends com.aionemu.gameserver.dao.PlayerR
                 obj = HouseObjectFactory.createNew(house, itemUniqueId, rset.getInt("item_id"));
             }
         }
-        
+
         obj.setOwnerUsedCount(rset.getInt("owner_use_count"));
         obj.setVisitorUsedCount(rset.getInt("visitor_use_count"));
         obj.setX(rset.getFloat("x"));
@@ -184,14 +198,14 @@ public class PlayerRegisteredItemsDAO extends com.aionemu.gameserver.dao.PlayerR
         obj.setHeading((byte) rset.getInt("h"));
         obj.setColor(rset.getInt("color"));
         obj.setColorExpireEnd(rset.getInt("color_expires"));
-        
+
         if (obj.getObjectTemplate().getUseDays() > 0) {
             obj.setExpireTime(rset.getInt("expire_time"));
         }
-        
+
         return obj;
     }
-    
+
     private HouseDecoration createDecoration(ResultSet rset) throws SQLException {
         int itemUniqueId = rset.getInt("item_unique_id");
         int itemId = rset.getInt("item_Id");
@@ -200,7 +214,7 @@ public class PlayerRegisteredItemsDAO extends com.aionemu.gameserver.dao.PlayerR
         decor.setUsed(rset.getInt("owner_use_count") > 0);
         return decor;
     }
-    
+
     /**
      * 按持久化状态批量保存房屋注册表（增删改），事务提交后更新内存状态并释放已删 ID。
      * Persists the house registry by persistent state (insert/update/delete), then updates in-memory state and releases deleted ids.
@@ -212,15 +226,15 @@ public class PlayerRegisteredItemsDAO extends com.aionemu.gameserver.dao.PlayerR
     public boolean store(HouseRegistry registry, int playerId) {
         List<HouseObject<?>> objects = registry.getObjects();
         List<HouseDecoration> decors = registry.getAllParts();
-        
+
         Collection<HouseObject<?>> objectsToAdd = new ArrayList<>();
         Collection<HouseObject<?>> objectsToUpdate = new ArrayList<>();
         Collection<HouseObject<?>> objectsToDelete = new ArrayList<>();
-        
+
         Collection<HouseDecoration> partsToAdd = new ArrayList<>();
         Collection<HouseDecoration> partsToUpdate = new ArrayList<>();
         Collection<HouseDecoration> partsToDelete = new ArrayList<>();
-        
+
         // 过滤对象 / Filter objects
         for (HouseObject<?> obj : objects) {
             if (obj != null) {
@@ -234,7 +248,7 @@ public class PlayerRegisteredItemsDAO extends com.aionemu.gameserver.dao.PlayerR
                 }
             }
         }
-        
+
         // 过滤装饰 / Filter decorations
         for (HouseDecoration dec : decors) {
             if (dec != null) {
@@ -248,7 +262,7 @@ public class PlayerRegisteredItemsDAO extends com.aionemu.gameserver.dao.PlayerR
                 }
             }
         }
-        
+
 		try (Connection con = DatabaseFactory.getConnection()) {
 			con.setAutoCommit(false);
 			try {
@@ -268,7 +282,7 @@ public class PlayerRegisteredItemsDAO extends com.aionemu.gameserver.dao.PlayerR
 			log.error(I18n.get("log.7c25eacf0aac", playerId), e);
 			return false;
         }
-        
+
         // 更新状态 / Update states
         for (HouseObject<?> obj : objects) {
             if (obj != null) {
@@ -279,7 +293,7 @@ public class PlayerRegisteredItemsDAO extends com.aionemu.gameserver.dao.PlayerR
                 }
             }
         }
-        
+
         for (HouseDecoration decor : decors) {
             if (decor != null) {
                 if (decor.getPersistentState() == PersistentState.DELETED) {
@@ -289,7 +303,7 @@ public class PlayerRegisteredItemsDAO extends com.aionemu.gameserver.dao.PlayerR
                 }
             }
         }
-        
+
         // 释放 ID / Release IDs
         if (!objectsToDelete.isEmpty()) {
             for (HouseObject<?> obj : objectsToDelete) {
@@ -298,7 +312,7 @@ public class PlayerRegisteredItemsDAO extends com.aionemu.gameserver.dao.PlayerR
                 }
             }
         }
-        
+
         if (!partsToDelete.isEmpty()) {
             for (HouseDecoration part : partsToDelete) {
                 if (part != null && part.getObjectId() != 0) {
@@ -306,33 +320,33 @@ public class PlayerRegisteredItemsDAO extends com.aionemu.gameserver.dao.PlayerR
                 }
             }
         }
-        
+
         return true;
     }
-    
+
     private boolean storeObjects(Connection con, Collection<HouseObject<?>> objects, int playerId, boolean isNew) throws SQLException {
         if (GenericValidator.isBlankOrNull(objects)) {
             return true;
         }
-        
+
         String query = isNew ? INSERT_QUERY : UPDATE_QUERY;
-        
+
         try (PreparedStatement stmt = con.prepareStatement(query)) {
             for (HouseObject<?> obj : objects) {
                 if (obj == null) continue;
-                
+
                 if (obj.getExpireTime() > 0) {
                     stmt.setInt(1, obj.getExpireTime());
                 } else {
                     stmt.setNull(1, Types.INTEGER);
                 }
-                
+
                 if (obj.getColor() == null) {
                     stmt.setNull(2, Types.INTEGER);
                 } else {
                     stmt.setInt(2, obj.getColor());
                 }
-                
+
                 stmt.setInt(3, obj.getColorExpireEnd());
                 stmt.setInt(4, obj.getOwnerUsedCount());
                 stmt.setInt(5, obj.getVisitorUsedCount());
@@ -340,36 +354,36 @@ public class PlayerRegisteredItemsDAO extends com.aionemu.gameserver.dao.PlayerR
                 stmt.setFloat(7, obj.getY());
                 stmt.setFloat(8, obj.getZ());
                 stmt.setInt(9, obj.getHeading());
-                
+
                 if (obj.getX() > 0 || obj.getY() > 0 || obj.getZ() > 0) {
                     stmt.setString(10, obj.getPlaceArea().toString());
                 } else {
                     stmt.setString(10, "NONE");
                 }
-                
+
                 stmt.setByte(11, (byte) 0);
                 stmt.setInt(12, playerId);
                 stmt.setInt(13, obj.getObjectId());
                 stmt.setInt(14, obj.getObjectTemplate().getTemplateId());
                 stmt.addBatch();
             }
-            
+
             stmt.executeBatch();
             return true;
         }
     }
-    
+
     private boolean storeParts(Connection con, Collection<HouseDecoration> parts, int playerId, boolean isNew) throws SQLException {
         if (GenericValidator.isBlankOrNull(parts)) {
             return true;
         }
-        
+
         String query = isNew ? INSERT_QUERY : UPDATE_QUERY;
-        
+
         try (PreparedStatement stmt = con.prepareStatement(query)) {
             for (HouseDecoration part : parts) {
                 if (part == null) continue;
-                
+
                 stmt.setNull(1, Types.INTEGER);
                 stmt.setNull(2, Types.INTEGER);
                 stmt.setInt(3, 0);
@@ -386,68 +400,66 @@ public class PlayerRegisteredItemsDAO extends com.aionemu.gameserver.dao.PlayerR
                 stmt.setInt(14, part.getTemplate().getId());
                 stmt.addBatch();
             }
-            
+
             stmt.executeBatch();
             return true;
         }
     }
-    
+
     private boolean deleteObjects(Connection con, Collection<HouseObject<?>> objects) throws SQLException {
         if (GenericValidator.isBlankOrNull(objects)) {
             return true;
         }
-        
+
         try (PreparedStatement stmt = con.prepareStatement(DELETE_QUERY)) {
             for (HouseObject<?> obj : objects) {
                 if (obj == null) continue;
                 stmt.setInt(1, obj.getObjectId());
                 stmt.addBatch();
             }
-            
+
             stmt.executeBatch();
             return true;
         }
     }
-    
+
     private boolean deleteParts(Connection con, Collection<HouseDecoration> parts) throws SQLException {
         if (GenericValidator.isBlankOrNull(parts)) {
             return true;
         }
-        
+
         try (PreparedStatement stmt = con.prepareStatement(DELETE_QUERY)) {
             for (HouseDecoration part : parts) {
                 if (part == null) continue;
                 stmt.setInt(1, part.getObjectId());
                 stmt.addBatch();
             }
-            
+
             stmt.executeBatch();
             return true;
         }
     }
-    
+
     /**
      * 删除指定玩家的全部房屋注册物品。
      * Deletes all house registered items for the given player.
-     * player object id
      * @param playerId 玩家对象 ID / player object id
      * @return 是否删除成功 / whether delete succeeded
      */
     @Override
     public boolean deletePlayerItems(int playerId) {
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(CLEAN_PLAYER_QUERY)) {
-            
+        try {
             log.info(I18n.get("log.a62e9090f3a6", playerId));
-            stmt.setInt(1, playerId);
-            stmt.executeUpdate();
+            jdbcClient.sql(CLEAN_PLAYER_QUERY)
+                .param(playerId)
+                .update();
             return true;
-        } catch (Exception e) {
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.65741ede13d8", playerId), e);
             return false;
         }
     }
-    
+
     /**
      * 重置玩家非装饰注册物品的摆放坐标与区域。
      * Resets placement coordinates and area for the player's non-decoration registered items.
@@ -455,17 +467,16 @@ public class PlayerRegisteredItemsDAO extends com.aionemu.gameserver.dao.PlayerR
      */
     @Override
     public void resetRegistry(int playerId) {
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(RESET_QUERY)) {
-            
+        try {
             log.info(I18n.get("log.5c21c4ee04a7", playerId));
-            stmt.setInt(1, playerId);
-            stmt.executeUpdate();
-        } catch (Exception e) {
+            jdbcClient.sql(RESET_QUERY)
+                .param(playerId)
+                .update();
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.7f671b6e18ee", playerId), e);
         }
     }
-    
+
     /**
      * 判断当前数据库是否受本 DAO 支持（MySQL 8）。
      * Checks whether the given database is supported by this DAO (MySQL 8).

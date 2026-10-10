@@ -1,21 +1,23 @@
 package com.aionemu.gameserver.dao.impl;
 
+import java.util.Objects;
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.simple.JdbcClient;
 
 import com.aionemu.boot.i18n.I18n;
-import lombok.extern.slf4j.Slf4j;
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.gameserver.model.gameobjects.player.PlayerScripts;
-import java.sql.*;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 房屋脚本 DAO 的 MySQL 8 实现。
- * MySQL 8 implementation of HouseScriptsDAO.
+ * MySQL 8 implementation of HouseScriptsDAO using JdbcClient.
  * Updated for MySQL 8.
  * @author Rolandas
  */
 @Slf4j
 public class HouseScriptsDAO extends com.aionemu.gameserver.dao.HouseScriptsDAO {
-
 
     /** 合并插入或更新脚本 SQL / Merge insert or update script SQL */
     private static final String MERGE_QUERY = "INSERT INTO `house_scripts` (`house_id`, `index`, `script`) VALUES (?, ?, ?) " + "ON DUPLICATE KEY UPDATE `script` = VALUES(`script`)";
@@ -28,22 +30,31 @@ public class HouseScriptsDAO extends com.aionemu.gameserver.dao.HouseScriptsDAO 
     /** 次数房屋 scriptsSQL / Count house scripts SQL */
     private static final String SELECT_COUNT_QUERY = "SELECT COUNT(*) FROM `house_scripts` WHERE `house_id` = ?";
 
+    private final JdbcClient jdbcClient;
+
+    public HouseScriptsDAO() {
+        this(DatabaseFactory.getJdbcClient());
+    }
+
+    public HouseScriptsDAO(JdbcClient jdbcClient) {
+        this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");
+    }
+
     /**
      * 添加房屋脚本（合并写入）。
      * Adds a house script (merge write).
      * @param houseId 房屋 ID / house id
      * @param position script slot
-     * script XML
+     * @param scriptXML script XML
      */
     @Override
     public void addScript(int houseId, int position, String scriptXML) {
-        updateScript(houseId, position, scriptXML); // 使用合并写入方式。 / Use merge approach.
+        updateScript(houseId, position, scriptXML);
     }
 
     /**
      * 获取房屋全部玩家脚本。
      * Gets all player scripts for a house.
-     * house id
      * @param houseId 房屋 ID / house id
      * @return 玩家脚本集合 / player scripts
      */
@@ -51,20 +62,17 @@ public class HouseScriptsDAO extends com.aionemu.gameserver.dao.HouseScriptsDAO 
     public PlayerScripts getPlayerScripts(int houseId) {
         PlayerScripts scripts = new PlayerScripts(houseId);
 
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(SELECT_QUERY)) {
-
-            stmt.setInt(1, houseId);
-
-            try (ResultSet rset = stmt.executeQuery()) {
-                while (rset.next()) {
-                    int position = rset.getInt("index");
-                    String scriptXML = rset.getString("script");
+        try {
+            jdbcClient.sql(SELECT_QUERY)
+                .param(houseId)
+                .query((rs, rowNum) -> {
+                    int position = rs.getInt("index");
+                    String scriptXML = rs.getString("script");
                     scripts.addScript(position, scriptXML);
-                }
-            }
-
-        } catch (SQLException e) {
+                    return null;
+                })
+                .list();
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.0121b4201018", houseId), e);
         }
 
@@ -76,25 +84,18 @@ public class HouseScriptsDAO extends com.aionemu.gameserver.dao.HouseScriptsDAO 
      * Updates a house script.
      * @param houseId 房屋 ID / house id
      * @param position script slot
-     * script XML
+     * @param scriptXML script XML
      */
     @Override
     public void updateScript(int houseId, int position, String scriptXML) {
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(MERGE_QUERY)) {
-
-            stmt.setInt(1, houseId);
-            stmt.setInt(2, position);
-
-            if (scriptXML == null || scriptXML.isEmpty()) {
-                stmt.setNull(3, Types.LONGVARCHAR);
-            } else {
-                stmt.setString(3, scriptXML);
-            }
-
-            stmt.executeUpdate();
-
-        } catch (SQLException e) {
+        try {
+            String scriptParam = (scriptXML == null || scriptXML.isEmpty()) ? null : scriptXML;
+            jdbcClient.sql(MERGE_QUERY)
+                .param(houseId)
+                .param(position)
+                .param(scriptParam)
+                .update();
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.22094aa47afe", houseId, position), e);
         }
     }
@@ -107,14 +108,12 @@ public class HouseScriptsDAO extends com.aionemu.gameserver.dao.HouseScriptsDAO 
      */
     @Override
     public void deleteScript(int houseId, int position) {
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(DELETE_QUERY)) {
-
-            stmt.setInt(1, houseId);
-            stmt.setInt(2, position);
-            stmt.executeUpdate();
-
-        } catch (SQLException e) {
+        try {
+            jdbcClient.sql(DELETE_QUERY)
+                .param(houseId)
+                .param(position)
+                .update();
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.888a7b0cab84", houseId, position), e);
         }
     }
@@ -125,13 +124,11 @@ public class HouseScriptsDAO extends com.aionemu.gameserver.dao.HouseScriptsDAO 
      * @param houseId 房屋 ID / house id
      */
     public void deleteAllScripts(int houseId) {
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(DELETE_ALL_QUERY)) {
-
-            stmt.setInt(1, houseId);
-            stmt.executeUpdate();
-
-        } catch (SQLException e) {
+        try {
+            jdbcClient.sql(DELETE_ALL_QUERY)
+                .param(houseId)
+                .update();
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.e7dedd0f512c", houseId), e);
         }
     }
@@ -143,22 +140,17 @@ public class HouseScriptsDAO extends com.aionemu.gameserver.dao.HouseScriptsDAO 
      * @return script count
      */
     public int getScriptCount(int houseId) {
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(SELECT_COUNT_QUERY)) {
-
-            stmt.setInt(1, houseId);
-
-            try (ResultSet rset = stmt.executeQuery()) {
-                if (rset.next()) {
-                    return rset.getInt(1);
-                }
-            }
-
-        } catch (SQLException e) {
+        try {
+            Integer count = jdbcClient.sql(SELECT_COUNT_QUERY)
+                .param(houseId)
+                .query(Integer.class)
+                .optional()
+                .orElse(0);
+            return count != null ? count : 0;
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.921bc268cc85", houseId), e);
+            return 0;
         }
-
-        return 0;
     }
 
     /**

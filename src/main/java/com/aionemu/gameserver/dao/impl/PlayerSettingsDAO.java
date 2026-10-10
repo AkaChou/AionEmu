@@ -1,31 +1,44 @@
 package com.aionemu.gameserver.dao.impl;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.util.Objects;
+
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.simple.JdbcClient;
 
 import com.aionemu.boot.i18n.I18n;
-import lombok.extern.slf4j.Slf4j;
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.gameserver.model.gameobjects.PersistentState;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.gameobjects.player.PlayerSettings;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 玩家设置 DAO 的 MySQL 8 实现。
- * MySQL 8 implementation of PlayerSettingsDAO.
+ * MySQL 8 implementation of PlayerSettingsDAO using JdbcClient.
  * Updated for MySQL 8 - Fixed connection leaks.
  * @author ATracer
  */
 @Slf4j
 public class PlayerSettingsDAO extends com.aionemu.gameserver.dao.PlayerSettingsDAO {
 
-
 	/** 查询设置 SQL / Select settings SQL*/
 	private static final String SELECT_QUERY = "SELECT * FROM player_settings WHERE player_id = ?";
 	/** 替换设置 SQL / Replace settings SQL*/
 	private static final String REPLACE_QUERY = "REPLACE INTO player_settings VALUES (?, ?, ?)";
+
+	private final JdbcClient jdbcClient;
+
+	public PlayerSettingsDAO() {
+		this(DatabaseFactory.getJdbcClient());
+	}
+
+	public PlayerSettingsDAO(JdbcClient jdbcClient) {
+		this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");
+	}
 
 	/**
 	 * 加载玩家设置。
@@ -37,13 +50,10 @@ public class PlayerSettingsDAO extends com.aionemu.gameserver.dao.PlayerSettings
 		final int playerId = player.getObjectId();
 		final PlayerSettings playerSettings = new PlayerSettings();
 
-		try (Connection con = DatabaseFactory.getConnection();
-			 PreparedStatement statement = con.prepareStatement(SELECT_QUERY)) {
-
-			statement.setInt(1, playerId);
-
-			try (ResultSet resultSet = statement.executeQuery()) {
-				while (resultSet.next()) {
+		try {
+			jdbcClient.sql(SELECT_QUERY)
+				.param(playerId)
+				.query((resultSet, rowNum) -> {
 					int type = resultSet.getInt("settings_type");
 					switch (type) {
 						case 0:
@@ -62,9 +72,10 @@ public class PlayerSettingsDAO extends com.aionemu.gameserver.dao.PlayerSettings
 							playerSettings.setDeny(resultSet.getInt("settings"));
 							break;
 					}
-				}
-			}
-		} catch (Exception e) {
+					return null;
+				})
+				.list();
+		} catch (DataAccessException e) {
 			log.error(I18n.get("log.6e9496b8330d", playerId, " from DB"), e);
 		}
 

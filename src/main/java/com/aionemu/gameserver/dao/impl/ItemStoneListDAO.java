@@ -1,8 +1,18 @@
 package com.aionemu.gameserver.dao.impl;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
+
+import org.springframework.jdbc.core.simple.JdbcClient;
 
 import com.aionemu.boot.i18n.I18n;
-import lombok.extern.slf4j.Slf4j;
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.commons.utils.GenericValidator;
 import com.aionemu.gameserver.configs.main.EnchantsConfig;
@@ -15,19 +25,15 @@ import com.aionemu.gameserver.model.items.ItemStone.ItemStoneType;
 import com.aionemu.gameserver.model.items.ManaStone;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Sets;
-import java.sql.*;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 物品镶嵌石（Mana/God/Fusion/Idian 等）列表 DAO 的 MySQL 8 实现。
- * MySQL 8 implementation of ItemStoneListDAO.
+ * MySQL 8 implementation of ItemStoneListDAO using JdbcClient.
  */
 @Slf4j
 public class ItemStoneListDAO extends com.aionemu.gameserver.dao.ItemStoneListDAO {
-
 
     /** 插入镶嵌石 / Insert item stone */
     public static final String INSERT_QUERY = "INSERT INTO `item_stones` " + "(`item_unique_id`, `item_id`, `slot`, `category`, `polishNumber`, `polishCharge`, `proc_count`) " + "VALUES (?, ?, ?, ?, ?, ?, ?)";
@@ -52,6 +58,16 @@ public class ItemStoneListDAO extends com.aionemu.gameserver.dao.ItemStoneListDA
     /** 筛选需更新的镶嵌石 / Filter stones to update */
     private static final Predicate<ItemStone> itemStoneUpdatePredicate =
             itemStone -> itemStone != null && PersistentState.UPDATE_REQUIRED == itemStone.getPersistentState();
+
+    private final JdbcClient jdbcClient;
+
+    public ItemStoneListDAO() {
+        this(DatabaseFactory.getJdbcClient());
+    }
+
+    public ItemStoneListDAO(JdbcClient jdbcClient) {
+        this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");
+    }
 
     /**
      * 为武器/防具加载镶嵌石（Mana/God/Fusion/Idian）。
@@ -125,11 +141,6 @@ public class ItemStoneListDAO extends com.aionemu.gameserver.dao.ItemStoneListDA
     /**
      * 保存物品上的全部镶嵌石变更。
      * Saves all item-stone changes for the given items.
-     * <p>幽灵 null 条目（并发脏读/运行时 patch 残留）跳过并告警，绝不让登出存盘因此中断；
-     * 来源容器维度的定位由 {@code PlayerStorageRegistry#getAllItems} 的读边界告警给出。
-     * Phantom null entries (concurrent dirty reads / runtime-patch residue) are skipped and warned
-     * about instead of aborting a logout save; per-source-container attribution comes from the
-     * read-boundary warning in {@code PlayerStorageRegistry#getAllItems}.</p>
      * @param items 物品列表 / item list
      */
     @Override
@@ -265,7 +276,6 @@ public class ItemStoneListDAO extends com.aionemu.gameserver.dao.ItemStoneListDA
      * @param con 数据库连接 / database connection
      * @param itemStones 镶嵌石集合 / stone collection
      * @param ist 镶嵌石类型 / item stone type
-     * SQL exception
      */
     private void addItemStones(Connection con, Collection<? extends ItemStone> itemStones, ItemStoneType ist) throws SQLException {
         if (GenericValidator.isBlankOrNull(itemStones)) {
@@ -280,13 +290,13 @@ public class ItemStoneListDAO extends com.aionemu.gameserver.dao.ItemStoneListDA
                 st.setInt(4, ist.ordinal());
 
                 if (is instanceof IdianStone stone) {
-					st.setInt(5, stone.getPolishNumber());
+                    st.setInt(5, stone.getPolishNumber());
                     st.setInt(6, stone.getPolishCharge());
                 } else {
                     st.setInt(5, 0);
                     st.setInt(6, 0);
                 }
-				st.setInt(7, is instanceof GodStone godStone ? godStone.getActivatedCount() : 0);
+                st.setInt(7, is instanceof GodStone godStone ? godStone.getActivatedCount() : 0);
 
                 st.addBatch();
             }
@@ -304,7 +314,6 @@ public class ItemStoneListDAO extends com.aionemu.gameserver.dao.ItemStoneListDA
      * @param con 数据库连接 / database connection
      * @param itemStones 镶嵌石集合 / stone collection
      * @param ist 镶嵌石类型 / item stone type
-     * SQL exception
      */
     private void updateItemStones(Connection con, Collection<? extends ItemStone> itemStones, ItemStoneType ist) throws SQLException {
         if (GenericValidator.isBlankOrNull(itemStones)) {
@@ -317,16 +326,16 @@ public class ItemStoneListDAO extends com.aionemu.gameserver.dao.ItemStoneListDA
                 st.setInt(2, is.getSlot());
 
                 if (is instanceof IdianStone stone) {
-					st.setInt(3, stone.getPolishNumber());
+                    st.setInt(3, stone.getPolishNumber());
                     st.setInt(4, stone.getPolishCharge());
                 } else {
                     st.setInt(3, 0);
                     st.setInt(4, 0);
                 }
 
-				st.setInt(5, is instanceof GodStone godStone ? godStone.getActivatedCount() : 0);
-				st.setInt(6, is.getItemObjId());
-				st.setInt(7, ist.ordinal());
+                st.setInt(5, is instanceof GodStone godStone ? godStone.getActivatedCount() : 0);
+                st.setInt(6, is.getItemObjId());
+                st.setInt(7, ist.ordinal());
                 st.addBatch();
             }
 
@@ -343,7 +352,6 @@ public class ItemStoneListDAO extends com.aionemu.gameserver.dao.ItemStoneListDA
      * @param con 数据库连接 / database connection
      * @param itemStones 镶嵌石集合 / stone collection
      * @param ist 镶嵌石类型 / item stone type
-     * SQL exception
      */
     private void deleteItemStones(Connection con, Collection<? extends ItemStone> itemStones, ItemStoneType ist) throws SQLException {
         if (GenericValidator.isBlankOrNull(itemStones)) {
@@ -372,10 +380,8 @@ public class ItemStoneListDAO extends com.aionemu.gameserver.dao.ItemStoneListDA
      * @param uid 物品唯一 ID / item unique id
      * @param slot 槽位 / slot
      * @param category 类别 / category
-     * SQL exception
      */
-    private void deleteItemStone(Connection con, int uid, int slot, int category)
-            throws SQLException {
+    private void deleteItemStone(Connection con, int uid, int slot, int category) throws SQLException {
         try (PreparedStatement st = con.prepareStatement(DELETE_QUERY)) {
             st.setInt(1, uid);
             st.setInt(2, slot);

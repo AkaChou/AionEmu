@@ -1,21 +1,23 @@
 package com.aionemu.gameserver.dao.impl;
 
-
-import com.aionemu.boot.i18n.I18n;
-import lombok.extern.slf4j.Slf4j;
-import com.aionemu.commons.database.DatabaseFactory;
-import com.aionemu.gameserver.model.landing.LandingLocation;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.simple.JdbcClient;
+
+import com.aionemu.boot.i18n.I18n;
+import com.aionemu.commons.database.DatabaseFactory;
+import com.aionemu.gameserver.model.landing.LandingLocation;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 欧比斯登陆点 DAO 的 MySQL 8 实现。
- * MySQL 8 implementation of AbyssLandingDAO.
+ * MySQL 8 implementation of AbyssLandingDAO using JdbcClient.
  */
 @Slf4j
 public class AbyssLandingDAO extends com.aionemu.gameserver.dao.AbyssLandingDAO {
@@ -26,6 +28,16 @@ public class AbyssLandingDAO extends com.aionemu.gameserver.dao.AbyssLandingDAO 
     private static final String UPDATE_QUERY = "UPDATE `abyss_landing` SET `level` = ?, `siege` = ?, `commander` = ?, `artefact` = ?, `base` = ?, `monuments` = ?, `quest` = ?, `facility` = ?, `points` = ? WHERE `id` = ?";
     /** 插入登陆地点 SQL / Insert landing location SQL*/
     private static final String INSERT_QUERY = "INSERT INTO `abyss_landing` (`id`, `level`, `siege`, `commander`, `artefact`, `base`, `monuments`, `quest`, `facility`, `level_up_date`, `race`, `points`) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+    private final JdbcClient jdbcClient;
+
+    public AbyssLandingDAO() {
+        this(DatabaseFactory.getJdbcClient());
+    }
+
+    public AbyssLandingDAO(JdbcClient jdbcClient) {
+        this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");
+    }
 
     /**
      * 持久化登陆点（委托更新）。
@@ -48,26 +60,26 @@ public class AbyssLandingDAO extends com.aionemu.gameserver.dao.AbyssLandingDAO 
         boolean success = true;
         List<Integer> loaded = new ArrayList<>();
 
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(SELECT_QUERY);
-             ResultSet resultSet = stmt.executeQuery()) {
-
-            while (resultSet.next()) {
-                int locationId = resultSet.getInt("id");
-                LandingLocation loc = locations.get(locationId);
-                if (loc != null) {
-                    loc.setLevel(resultSet.getInt("level"));
-                    loc.setPoints(resultSet.getInt("points"));
-                    loc.setArtifactPoints(resultSet.getInt("artefact"));
-                    loc.setBasePoints(resultSet.getInt("base"));
-                    loc.setCommanderPoints(resultSet.getInt("commander"));
-                    loc.setQuestPoints(resultSet.getInt("quest"));
-                    loc.setFacilityPoints(resultSet.getInt("facility"));
-                    loc.setSiegePoints(resultSet.getInt("siege"));
-                    loc.setMonumentsPoints(resultSet.getInt("monuments"));
-                    loaded.add(locationId);
-                }
-            }
+        try {
+            jdbcClient.sql(SELECT_QUERY)
+                .query((resultSet, rowNum) -> {
+                    int locationId = resultSet.getInt("id");
+                    LandingLocation loc = locations.get(locationId);
+                    if (loc != null) {
+                        loc.setLevel(resultSet.getInt("level"));
+                        loc.setPoints(resultSet.getInt("points"));
+                        loc.setArtifactPoints(resultSet.getInt("artefact"));
+                        loc.setBasePoints(resultSet.getInt("base"));
+                        loc.setCommanderPoints(resultSet.getInt("commander"));
+                        loc.setQuestPoints(resultSet.getInt("quest"));
+                        loc.setFacilityPoints(resultSet.getInt("facility"));
+                        loc.setSiegePoints(resultSet.getInt("siege"));
+                        loc.setMonumentsPoints(resultSet.getInt("monuments"));
+                        loaded.add(locationId);
+                    }
+                    return null;
+                })
+                .list();
         } catch (Exception e) {
             log.warn(I18n.get("log.c4af5ae55182"), e);
             success = false;
@@ -90,21 +102,20 @@ public class AbyssLandingDAO extends com.aionemu.gameserver.dao.AbyssLandingDAO 
      */
     @Override
     public boolean updateLandingLocation(final LandingLocation locations) {
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(UPDATE_QUERY)) {
-
-            stmt.setInt(1, locations.getLevel());
-            stmt.setInt(2, locations.getSiegePoints());
-            stmt.setInt(3, locations.getCommanderPoints());
-            stmt.setInt(4, locations.getArtifactPoints());
-            stmt.setInt(5, locations.getBasePoints());
-            stmt.setInt(6, locations.getMonumentsPoints());
-            stmt.setInt(7, locations.getQuestPoints());
-            stmt.setInt(8, locations.getFacilityPoints());
-            stmt.setInt(9, locations.getPoints());
-            stmt.setInt(10, locations.getId());
-
-            return stmt.executeUpdate() > 0;
+        try {
+            int affected = jdbcClient.sql(UPDATE_QUERY)
+                .param(locations.getLevel())
+                .param(locations.getSiegePoints())
+                .param(locations.getCommanderPoints())
+                .param(locations.getArtifactPoints())
+                .param(locations.getBasePoints())
+                .param(locations.getMonumentsPoints())
+                .param(locations.getQuestPoints())
+                .param(locations.getFacilityPoints())
+                .param(locations.getPoints())
+                .param(locations.getId())
+                .update();
+            return affected > 0;
         } catch (Exception e) {
             log.error(I18n.get("log.c2e97c849263", locations.getId()), e);
             return false;
@@ -118,23 +129,22 @@ public class AbyssLandingDAO extends com.aionemu.gameserver.dao.AbyssLandingDAO 
      * @return 是否成功 / whether successful
      */
     private boolean insertLandingLocation(final LandingLocation locations) {
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(INSERT_QUERY)) {
-
-            stmt.setInt(1, locations.getId());
-            stmt.setInt(2, locations.getLevel());
-            stmt.setInt(3, locations.getSiegePoints());
-            stmt.setInt(4, locations.getCommanderPoints());
-            stmt.setInt(5, locations.getArtifactPoints());
-            stmt.setInt(6, locations.getBasePoints());
-            stmt.setInt(7, locations.getMonumentsPoints());
-            stmt.setInt(8, locations.getQuestPoints());
-            stmt.setInt(9, locations.getFacilityPoints());
-            stmt.setTimestamp(10, new Timestamp(System.currentTimeMillis()));
-            stmt.setString(11, locations.getTemplate().getRace().toString());
-            stmt.setInt(12, locations.getPoints());
-
-            return stmt.executeUpdate() > 0;
+        try {
+            int affected = jdbcClient.sql(INSERT_QUERY)
+                .param(locations.getId())
+                .param(locations.getLevel())
+                .param(locations.getSiegePoints())
+                .param(locations.getCommanderPoints())
+                .param(locations.getArtifactPoints())
+                .param(locations.getBasePoints())
+                .param(locations.getMonumentsPoints())
+                .param(locations.getQuestPoints())
+                .param(locations.getFacilityPoints())
+                .param(new Timestamp(System.currentTimeMillis()))
+                .param(locations.getTemplate().getRace().toString())
+                .param(locations.getPoints())
+                .update();
+            return affected > 0;
         } catch (Exception e) {
             log.error(I18n.get("log.34ceaeea74ab", locations.getId()), e);
             return false;

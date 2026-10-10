@@ -1,23 +1,26 @@
 package com.aionemu.gameserver.dao.impl;
 
+import java.util.Map;
+import java.util.Objects;
+import java.util.concurrent.ConcurrentHashMap;
+
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.simple.JdbcClient;
 
 import com.aionemu.boot.i18n.I18n;
-import lombok.extern.slf4j.Slf4j;
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.gameserver.model.siege.SiegeLocation;
 import com.aionemu.gameserver.model.siege.SiegeRace;
-import java.sql.*;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 攻城 DAO 的 MySQL 8 实现。
- * MySQL 8 implementation of SiegeDAO.
+ * MySQL 8 implementation of SiegeDAO using JdbcClient.
  * Updated for MySQL 8.
  */
 @Slf4j
 public class SiegeDAO extends com.aionemu.gameserver.dao.SiegeDAO {
-
 
     /** 查询攻城地点 SQL / Select siege locations SQL*/
     private static final String SELECT_QUERY = "SELECT `id`, `race`, `legion_id` FROM `siege_locations` ORDER BY `id`";
@@ -27,6 +30,16 @@ public class SiegeDAO extends com.aionemu.gameserver.dao.SiegeDAO {
     private static final String UPDATE_QUERY = "UPDATE `siege_locations` SET `race` = ?, `legion_id` = ? WHERE `id` = ?";
     /** 按种族查询攻城地点 SQL / Select siege locations by race SQL*/
     private static final String SELECT_BY_RACE_QUERY = "SELECT `id`, `race`, `legion_id` FROM `siege_locations` WHERE `race` = ?";
+
+    private final JdbcClient jdbcClient;
+
+    public SiegeDAO() {
+        this(DatabaseFactory.getJdbcClient());
+    }
+
+    public SiegeDAO(JdbcClient jdbcClient) {
+        this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");
+    }
 
     /**
      * 加载攻城据点数据。
@@ -38,30 +51,29 @@ public class SiegeDAO extends com.aionemu.gameserver.dao.SiegeDAO {
     public boolean loadSiegeLocations(Map<Integer, SiegeLocation> locations) {
         boolean success = true;
 
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(SELECT_QUERY);
-             ResultSet rset = stmt.executeQuery()) {
-
+        try {
             Map<Integer, Boolean> loadedIds = new ConcurrentHashMap<>();
 
-            while (rset.next()) {
-                int id = rset.getInt("id");
-                SiegeLocation loc = locations.get(id);
+            jdbcClient.sql(SELECT_QUERY)
+                .query((rset, rowNum) -> {
+                    int id = rset.getInt("id");
+                    SiegeLocation loc = locations.get(id);
 
-                if (loc != null) {
-                    loc.setRace(SiegeRace.valueOf(rset.getString("race")));
-                    loc.setLegionId(rset.getInt("legion_id"));
-                    loadedIds.put(id, true);
-                }
-            }
+                    if (loc != null) {
+                        loc.setRace(SiegeRace.valueOf(rset.getString("race")));
+                        loc.setLegionId(rset.getInt("legion_id"));
+                        loadedIds.put(id, true);
+                    }
+                    return null;
+                })
+                .list();
 
             for (Map.Entry<Integer, SiegeLocation> entry : locations.entrySet()) {
                 if (!loadedIds.containsKey(entry.getKey())) {
                     insertSiegeLocation(entry.getValue());
                 }
             }
-
-        } catch (SQLException e) {
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.f0edc322efd4"), e);
             success = false;
         }
@@ -77,17 +89,14 @@ public class SiegeDAO extends com.aionemu.gameserver.dao.SiegeDAO {
      */
     @Override
     public boolean updateSiegeLocation(SiegeLocation siegeLocation) {
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(UPDATE_QUERY)) {
-
-            stmt.setString(1, siegeLocation.getRace().toString());
-            stmt.setInt(2, siegeLocation.getLegionId());
-            stmt.setInt(3, siegeLocation.getLocationId());
-
-            int updated = stmt.executeUpdate();
+        try {
+            int updated = jdbcClient.sql(UPDATE_QUERY)
+                .param(siegeLocation.getRace().toString())
+                .param(siegeLocation.getLegionId())
+                .param(siegeLocation.getLocationId())
+                .update();
             return updated > 0;
-
-        } catch (SQLException e) {
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.98dc2b49ab4b", siegeLocation.getLocationId()), e);
             return false;
         }
@@ -100,17 +109,14 @@ public class SiegeDAO extends com.aionemu.gameserver.dao.SiegeDAO {
      * @return 是否成功 / whether succeeded
      */
     private boolean insertSiegeLocation(SiegeLocation siegeLocation) {
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(INSERT_QUERY)) {
-
-            stmt.setInt(1, siegeLocation.getLocationId());
-            stmt.setString(2, siegeLocation.getRace().toString());
-            stmt.setInt(3, siegeLocation.getLegionId());
-
-            int inserted = stmt.executeUpdate();
+        try {
+            int inserted = jdbcClient.sql(INSERT_QUERY)
+                .param(siegeLocation.getLocationId())
+                .param(siegeLocation.getRace().toString())
+                .param(siegeLocation.getLegionId())
+                .update();
             return inserted > 0;
-
-        } catch (SQLException e) {
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.2d6381d9bee1", siegeLocation.getLocationId()), e);
             return false;
         }
@@ -123,29 +129,16 @@ public class SiegeDAO extends com.aionemu.gameserver.dao.SiegeDAO {
      * @return 是否成功 / whether succeeded
      */
     public boolean updateSiegeLocations(Map<Integer, SiegeLocation> locations) {
-        try (Connection con = DatabaseFactory.getConnection()) {
-            con.setAutoCommit(false);
-
-            try (PreparedStatement stmt = con.prepareStatement(UPDATE_QUERY)) {
-                for (SiegeLocation loc : locations.values()) {
-                    stmt.setString(1, loc.getRace().toString());
-                    stmt.setInt(2, loc.getLegionId());
-                    stmt.setInt(3, loc.getLocationId());
-                    stmt.addBatch();
-                }
-
-                int[] results = stmt.executeBatch();
-                con.commit();
-
-                for (int result : results) {
-                    if (result == PreparedStatement.EXECUTE_FAILED) {
-                        return false;
-                    }
-                }
-                return true;
+        try {
+            for (SiegeLocation loc : locations.values()) {
+                jdbcClient.sql(UPDATE_QUERY)
+                    .param(loc.getRace().toString())
+                    .param(loc.getLegionId())
+                    .param(loc.getLocationId())
+                    .update();
             }
-
-        } catch (SQLException e) {
+            return true;
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.16223a055fa8"), e);
             return false;
         }
@@ -160,22 +153,21 @@ public class SiegeDAO extends com.aionemu.gameserver.dao.SiegeDAO {
     public Map<Integer, SiegeLocation> loadSiegeLocationsByRace(SiegeRace race) {
         Map<Integer, SiegeLocation> locations = new ConcurrentHashMap<>();
 
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(SELECT_BY_RACE_QUERY)) {
-
-            stmt.setString(1, race.toString());
-
-            try (ResultSet rset = stmt.executeQuery()) {
-                while (rset.next()) {
+        try {
+            jdbcClient.sql(SELECT_BY_RACE_QUERY)
+                .param(race.toString())
+                .query((rset, rowNum) -> {
                     int id = rset.getInt("id");
                     SiegeLocation loc = locations.get(id);
-                    loc.setRace(SiegeRace.valueOf(rset.getString("race")));
-                    loc.setLegionId(rset.getInt("legion_id"));
-                    locations.put(id, loc);
-                }
-            }
-
-        } catch (SQLException e) {
+                    if (loc != null) {
+                        loc.setRace(SiegeRace.valueOf(rset.getString("race")));
+                        loc.setLegionId(rset.getInt("legion_id"));
+                        locations.put(id, loc);
+                    }
+                    return null;
+                })
+                .list();
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.afdfcca54f61", race), e);
         }
 

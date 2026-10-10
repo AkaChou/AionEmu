@@ -1,25 +1,28 @@
 package com.aionemu.gameserver.dao.impl;
 
-
-import com.aionemu.boot.i18n.I18n;
-import lombok.extern.slf4j.Slf4j;
-import com.aionemu.commons.database.DatabaseFactory;
-import com.aionemu.gameserver.model.gameobjects.player.RecipeList;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashSet;
+import java.util.Objects;
+
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.simple.JdbcClient;
+
+import com.aionemu.boot.i18n.I18n;
+import com.aionemu.commons.database.DatabaseFactory;
+import com.aionemu.gameserver.model.gameobjects.player.RecipeList;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 玩家配方 DAO 的 MySQL 8 实现。
- * MySQL 8 implementation of PlayerRecipesDAO.
+ * MySQL 8 implementation of PlayerRecipesDAO using JdbcClient.
  * Updated for MySQL 8 - Fixed connection leaks.
  * @author lord_rex
  */
 @Slf4j
 public class PlayerRecipesDAO extends com.aionemu.gameserver.dao.PlayerRecipesDAO {
-
 
 	/** 查询配方 SQL / Select recipes SQL*/
 	private static final String SELECT_QUERY = "SELECT `recipe_id` FROM player_recipes WHERE `player_id`=?";
@@ -28,6 +31,16 @@ public class PlayerRecipesDAO extends com.aionemu.gameserver.dao.PlayerRecipesDA
 		+ "ON DUPLICATE KEY UPDATE `recipe_id`=VALUES(`recipe_id`)";
 	/** 删除配方 SQL / Delete recipe SQL*/
 	private static final String DELETE_QUERY = "DELETE FROM player_recipes WHERE `player_id`=? AND `recipe_id`=?";
+
+	private final JdbcClient jdbcClient;
+
+	public PlayerRecipesDAO() {
+		this(DatabaseFactory.getJdbcClient());
+	}
+
+	public PlayerRecipesDAO(JdbcClient jdbcClient) {
+		this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");
+	}
 
 	/**
 	 * 加载玩家配方列表。
@@ -39,17 +52,12 @@ public class PlayerRecipesDAO extends com.aionemu.gameserver.dao.PlayerRecipesDA
 	public RecipeList load(final int playerId) {
 		final HashSet<Integer> recipeList = new HashSet<>();
 
-		try (Connection con = DatabaseFactory.getConnection();
-			 PreparedStatement ps = con.prepareStatement(SELECT_QUERY)) {
-
-			ps.setInt(1, playerId);
-
-			try (ResultSet rs = ps.executeQuery()) {
-				while (rs.next()) {
-					recipeList.add(rs.getInt("recipe_id"));
-				}
-			}
-		} catch (SQLException e) {
+		try {
+			recipeList.addAll(jdbcClient.sql(SELECT_QUERY)
+				.param(playerId)
+				.query((rs, rowNum) -> rs.getInt("recipe_id"))
+				.list());
+		} catch (DataAccessException e) {
 			log.error(I18n.get("log.5a3357334006", playerId), e);
 		}
 		return new RecipeList(recipeList);
@@ -64,10 +72,13 @@ public class PlayerRecipesDAO extends com.aionemu.gameserver.dao.PlayerRecipesDA
 	 */
 	@Override
 	public boolean addRecipe(final int playerId, final int recipeId) {
-		try (Connection con = DatabaseFactory.getConnection()) {
-			addRecipeInTransaction(con, playerId, recipeId);
+		try {
+			jdbcClient.sql(ADD_QUERY)
+				.param(playerId)
+				.param(recipeId)
+				.update();
 			return true;
-		} catch (SQLException e) {
+		} catch (DataAccessException e) {
 			log.error(I18n.get("log.23c5276a9d26", playerId, recipeId), e);
 			return false;
 		}
@@ -82,10 +93,13 @@ public class PlayerRecipesDAO extends com.aionemu.gameserver.dao.PlayerRecipesDA
 	 */
 	@Override
 	public boolean delRecipe(final int playerId, final int recipeId) {
-		try (Connection con = DatabaseFactory.getConnection()) {
-			delRecipeInTransaction(con, playerId, recipeId);
+		try {
+			jdbcClient.sql(DELETE_QUERY)
+				.param(playerId)
+				.param(recipeId)
+				.update();
 			return true;
-		} catch (SQLException e) {
+		} catch (DataAccessException e) {
 			log.error(I18n.get("log.05178d165c29", playerId, recipeId), e);
 			return false;
 		}

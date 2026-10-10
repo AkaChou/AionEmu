@@ -10,12 +10,21 @@ import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.boot.jdbc.autoconfigure.DataSourceAutoConfiguration;
+import org.springframework.boot.jdbc.autoconfigure.DataSourceInitializationAutoConfiguration;
+import org.springframework.boot.jdbc.autoconfigure.DataSourceTransactionManagerAutoConfiguration;
+import org.springframework.boot.jdbc.autoconfigure.JdbcTemplateAutoConfiguration;
 
 /**
  * Aion 统一 Boot 启动入口，以非 Web 模式拉起内嵌游戏/登录/聊天服务。
  * Unified Boot entry that starts the embedded game/login/chat services without a web container.
  */
-@SpringBootApplication
+@SpringBootApplication(exclude = {
+    DataSourceAutoConfiguration.class,
+    DataSourceTransactionManagerAutoConfiguration.class,
+    JdbcTemplateAutoConfiguration.class,
+    DataSourceInitializationAutoConfiguration.class
+})
 @EnableConfigurationProperties({
     AionServicesProperties.class,
     AionGameProperties.class,

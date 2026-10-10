@@ -1,8 +1,17 @@
 package com.aionemu.gameserver.dao.impl;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.sql.Types;
+import java.util.Collection;
+import java.util.Objects;
+
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.simple.JdbcClient;
 
 import com.aionemu.boot.i18n.I18n;
-import lombok.extern.slf4j.Slf4j;
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.commons.utils.GenericValidator;
 import com.aionemu.gameserver.model.gameobjects.PersistentState;
@@ -12,12 +21,12 @@ import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
-import java.sql.*;
-import java.util.Collection;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 玩家任务列表 DAO 的 MySQL 8 实现。
- * MySQL 8 implementation of PlayerQuestListDAO.
+ * MySQL 8 implementation of PlayerQuestListDAO using JdbcClient.
  * @author MrPoke
  */
 @Slf4j
@@ -44,6 +53,16 @@ public class PlayerQuestListDAO extends com.aionemu.gameserver.dao.PlayerQuestLi
 	/** 筛选需删除的任务状态 / Filter quests to delete */
 	private static final Predicate<QuestState> questsToDeletePredicate = input -> input != null && PersistentState.DELETED == input.getPersistentState();
 
+	private final JdbcClient jdbcClient;
+
+	public PlayerQuestListDAO() {
+		this(DatabaseFactory.getJdbcClient());
+	}
+
+	public PlayerQuestListDAO(JdbcClient jdbcClient) {
+		this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");
+	}
+
 	/**
 	 * 从数据库加载玩家的任务状态列表。
 	 * Loads the player's quest state list from the database.
@@ -54,13 +73,10 @@ public class PlayerQuestListDAO extends com.aionemu.gameserver.dao.PlayerQuestLi
 	public QuestStateList load(final Player player) {
 		QuestStateList questStateList = new QuestStateList();
 
-		try (Connection con = DatabaseFactory.getConnection();
-			 PreparedStatement stmt = con.prepareStatement(SELECT_QUERY)) {
-
-			stmt.setInt(1, player.getObjectId());
-
-			try (ResultSet rset = stmt.executeQuery()) {
-				while (rset.next()) {
+		try {
+			jdbcClient.sql(SELECT_QUERY)
+				.param(player.getObjectId())
+				.query((rset, rowNum) -> {
 					int questId = rset.getInt("quest_id");
 					int questVars = rset.getInt("quest_vars");
 					int completeCount = rset.getInt("complete_count");
@@ -73,10 +89,10 @@ public class PlayerQuestListDAO extends com.aionemu.gameserver.dao.PlayerQuestLi
 					QuestState questState = new QuestState(questId, status, questVars, completeCount, nextRepeatTime, reward, completeTime);
 					questState.setPersistentState(PersistentState.UPDATED);
 					questStateList.addQuest(questId, questState);
-				}
-			}
-
-		} catch (SQLException e) {
+					return null;
+				})
+				.list();
+		} catch (DataAccessException e) {
 			log.error(I18n.get("log.1ce22f7418a0", player.getObjectId(), e.getMessage()), e);
 		}
 
@@ -116,7 +132,6 @@ public class PlayerQuestListDAO extends com.aionemu.gameserver.dao.PlayerQuestLi
 		} finally {
 			DatabaseFactory.close(con);
 		}
-
 	}
 
 	@Override
@@ -189,7 +204,6 @@ public class PlayerQuestListDAO extends com.aionemu.gameserver.dao.PlayerQuestLi
 	 * @param ps 预处理语句 / prepared statement
 	 * @param playerId 玩家 ID / player id
 	 * @param qs 任务状态 / quest state
-	 * SQL exception
 	 */
 	private void setInsertParameters(PreparedStatement ps, int playerId, QuestState qs) throws SQLException {
 		ps.setInt(1, playerId);
@@ -250,7 +264,6 @@ public class PlayerQuestListDAO extends com.aionemu.gameserver.dao.PlayerQuestLi
 	 * @param ps 预处理语句 / prepared statement
 	 * @param playerId 玩家 ID / player id
 	 * @param qs 任务状态 / quest state
-	 * SQL exception
 	 */
 	private void setUpdateParameters(PreparedStatement ps, int playerId, QuestState qs) throws SQLException {
 		ps.setString(1, qs.getStatus().toString());

@@ -1,26 +1,26 @@
 package com.aionemu.gameserver.dao.impl;
 
+import java.util.Objects;
+
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.simple.JdbcClient;
 
 import com.aionemu.boot.i18n.I18n;
-import lombok.extern.slf4j.Slf4j;
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.gameserver.model.account.CharacterBanInfo;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.services.PunishmentService.PunishmentType;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 玩家惩罚 DAO 的 MySQL 8 实现。
- * MySQL 8 implementation of PlayerPunishmentsDAO.
+ * MySQL 8 implementation of PlayerPunishmentsDAO using JdbcClient.
  * Updated for MySQL 8 - Fixed connection leaks.
  * @author lord_rex, Cura, nrg
  */
 @Slf4j
 public class PlayerPunishmentsDAO extends com.aionemu.gameserver.dao.PlayerPunishmentsDAO {
-
 
 	/** 查询惩罚 SQL / Select punishment SQL*/
 	private static final String SELECT_QUERY = "SELECT `player_id`, `start_time`, `duration`, `reason` FROM `player_punishments` WHERE `player_id`=? AND `punishment_type`=?";
@@ -31,6 +31,16 @@ public class PlayerPunishmentsDAO extends com.aionemu.gameserver.dao.PlayerPunis
 	/** 删除惩罚 SQL / Delete punishment SQL*/
 	private static final String DELETE_QUERY = "DELETE FROM `player_punishments` WHERE `player_id`=? AND `punishment_type`=?";
 
+	private final JdbcClient jdbcClient;
+
+	public PlayerPunishmentsDAO() {
+		this(DatabaseFactory.getJdbcClient());
+	}
+
+	public PlayerPunishmentsDAO(JdbcClient jdbcClient) {
+		this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");
+	}
+
 	/**
 	 * 加载玩家惩罚数据。
 	 * Loads player punishments.
@@ -39,22 +49,20 @@ public class PlayerPunishmentsDAO extends com.aionemu.gameserver.dao.PlayerPunis
 	 */
 	@Override
 	public void loadPlayerPunishments(final Player player, final PunishmentType punishmentType) {
-		try (Connection con = DatabaseFactory.getConnection();
-			 PreparedStatement ps = con.prepareStatement(SELECT_QUERY)) {
-
-			ps.setInt(1, player.getObjectId());
-			ps.setString(2, punishmentType.toString());
-
-			try (ResultSet rs = ps.executeQuery()) {
-				while (rs.next()) {
+		try {
+			jdbcClient.sql(SELECT_QUERY)
+				.param(player.getObjectId())
+				.param(punishmentType.toString())
+				.query((rs, rowNum) -> {
 					if (punishmentType == PunishmentType.PRISON) {
 						player.setPrisonTimer(rs.getLong("duration") * 1000);
 					} else if (punishmentType == PunishmentType.GATHER) {
 						player.setGatherableTimer(rs.getLong("duration") * 1000);
 					}
-				}
-			}
-		} catch (SQLException e) {
+					return null;
+				})
+				.list();
+		} catch (DataAccessException e) {
 			log.error(I18n.get("log.fa809bd49702", player.getObjectId()), e);
 		}
 	}
@@ -67,18 +75,20 @@ public class PlayerPunishmentsDAO extends com.aionemu.gameserver.dao.PlayerPunis
 	 */
 	@Override
 	public void storePlayerPunishments(final Player player, final PunishmentType punishmentType) {
-		try (Connection con = DatabaseFactory.getConnection();
-			 PreparedStatement ps = con.prepareStatement(UPDATE_QUERY)) {
+		long duration = 0;
+		if (punishmentType == PunishmentType.PRISON) {
+			duration = player.getPrisonTimer() / 1000;
+		} else if (punishmentType == PunishmentType.GATHER) {
+			duration = (player.getGatherableTimer() - (System.currentTimeMillis() - player.getStopGatherable())) / 1000;
+		}
 
-			if (punishmentType == PunishmentType.PRISON) {
-				ps.setLong(1, player.getPrisonTimer() / 1000);
-			} else if (punishmentType == PunishmentType.GATHER) {
-				ps.setLong(1, (player.getGatherableTimer() - (System.currentTimeMillis() - player.getStopGatherable())) / 1000);
-			}
-			ps.setInt(2, player.getObjectId());
-			ps.setString(3, punishmentType.toString());
-			ps.executeUpdate();
-		} catch (SQLException e) {
+		try {
+			jdbcClient.sql(UPDATE_QUERY)
+				.param(duration)
+				.param(player.getObjectId())
+				.param(punishmentType.toString())
+				.update();
+		} catch (DataAccessException e) {
 			log.error(I18n.get("log.4d229d45c53e", player.getObjectId()), e);
 		}
 	}
@@ -93,16 +103,15 @@ public class PlayerPunishmentsDAO extends com.aionemu.gameserver.dao.PlayerPunis
 	 */
 	@Override
 	public void punishPlayer(final int playerId, final PunishmentType punishmentType, final long duration, final String reason) {
-		try (Connection con = DatabaseFactory.getConnection();
-			 PreparedStatement ps = con.prepareStatement(REPLACE_QUERY)) {
-
-			ps.setInt(1, playerId);
-			ps.setString(2, punishmentType.toString());
-			ps.setLong(3, System.currentTimeMillis() / 1000);
-			ps.setLong(4, duration);
-			ps.setString(5, reason);
-			ps.executeUpdate();
-		} catch (SQLException e) {
+		try {
+			jdbcClient.sql(REPLACE_QUERY)
+				.param(playerId)
+				.param(punishmentType.toString())
+				.param(System.currentTimeMillis() / 1000)
+				.param(duration)
+				.param(reason)
+				.update();
+		} catch (DataAccessException e) {
 			log.error(I18n.get("log.5863b35bdb03", playerId), e);
 		}
 	}
@@ -131,13 +140,12 @@ public class PlayerPunishmentsDAO extends com.aionemu.gameserver.dao.PlayerPunis
 	 */
 	@Override
 	public void unpunishPlayer(final int playerId, final PunishmentType punishmentType) {
-		try (Connection con = DatabaseFactory.getConnection();
-			 PreparedStatement ps = con.prepareStatement(DELETE_QUERY)) {
-
-			ps.setInt(1, playerId);
-			ps.setString(2, punishmentType.toString());
-			ps.executeUpdate();
-		} catch (SQLException e) {
+		try {
+			jdbcClient.sql(DELETE_QUERY)
+				.param(playerId)
+				.param(punishmentType.toString())
+				.update();
+		} catch (DataAccessException e) {
 			log.error(I18n.get("log.327e8c487d80", playerId), e);
 		}
 	}
@@ -150,23 +158,22 @@ public class PlayerPunishmentsDAO extends com.aionemu.gameserver.dao.PlayerPunis
 	 */
 	@Override
 	public CharacterBanInfo getCharBanInfo(final int playerId) {
-		final CharacterBanInfo[] charBan = new CharacterBanInfo[1];
-
-		try (Connection con = DatabaseFactory.getConnection();
-			 PreparedStatement ps = con.prepareStatement(SELECT_QUERY)) {
-
-			ps.setInt(1, playerId);
-			ps.setString(2, PunishmentType.CHARBAN.toString());
-
-			try (ResultSet rs = ps.executeQuery()) {
-				while (rs.next()) {
-					charBan[0] = new CharacterBanInfo(playerId, rs.getLong("start_time"), rs.getLong("duration"), rs.getString("reason"));
-				}
-			}
-		} catch (SQLException e) {
+		try {
+			return jdbcClient.sql(SELECT_QUERY)
+				.param(playerId)
+				.param(PunishmentType.CHARBAN.toString())
+				.query((rs, rowNum) -> new CharacterBanInfo(
+					playerId,
+					rs.getLong("start_time"),
+					rs.getLong("duration"),
+					rs.getString("reason")
+				))
+				.optional()
+				.orElse(null);
+		} catch (DataAccessException e) {
 			log.error(I18n.get("log.c1154040f3ec", playerId), e);
+			return null;
 		}
-		return charBan[0];
 	}
 
 	/**

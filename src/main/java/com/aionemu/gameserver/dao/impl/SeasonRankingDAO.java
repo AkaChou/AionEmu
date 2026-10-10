@@ -1,8 +1,12 @@
 package com.aionemu.gameserver.dao.impl;
 
+import java.util.ArrayList;
+import java.util.Objects;
+
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.simple.JdbcClient;
 
 import com.aionemu.boot.i18n.I18n;
-import lombok.extern.slf4j.Slf4j;
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.gameserver.model.PlayerClass;
 import com.aionemu.gameserver.model.Race;
@@ -10,17 +14,13 @@ import com.aionemu.gameserver.model.gameobjects.PersistentState;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.gameobjects.player.ranking.*;
 import com.aionemu.gameserver.model.ranking.SeasonRankingResult;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 赛季竞技排行数据访问对象的 MySQL 8 实现。
  * 覆盖黄金竞技场、挑战之塔、孤独竞技场、6v6 等 competition_ranking 表数据。
- * MySQL 8 implementation of SeasonRankingDAO.
- * Covers Gold Arena, Tower of Challenge, Arena of Tenacity, 6v6 and other competition ranking tables.
+ * MySQL 8 implementation of SeasonRankingDAO using JdbcClient.
  * @author Wnkrz
  */
 @Slf4j
@@ -38,10 +38,19 @@ public class SeasonRankingDAO extends com.aionemu.gameserver.dao.SeasonRankingDA
     /** 更新排行记录 / Update a competition ranking row */
     public static final String UPDATE_QUERY = "UPDATE competition_ranking SET rank = ?, last_rank = ?, points = ?, " + "last_points = ?, high_points = ?, low_points = ?, position_match = ? " + "WHERE player_id = ? AND table_id = ?";
 
+    private final JdbcClient jdbcClient;
+
+    public SeasonRankingDAO() {
+        this(DatabaseFactory.getJdbcClient());
+    }
+
+    public SeasonRankingDAO(JdbcClient jdbcClient) {
+        this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");
+    }
+
     /**
      * 获取指定排行表的前 300 名竞技排行玩家。
      * Loads the top 300 competition ranking players for the given table id.
-     * ranking table id
      * @param tableId 排名表 ID / ranking table id
      * @return 排行结果列表 / ranking result list
      */
@@ -49,13 +58,10 @@ public class SeasonRankingDAO extends com.aionemu.gameserver.dao.SeasonRankingDA
     public ArrayList<SeasonRankingResult> getCompetitionRankingPlayers(int tableId) {
         ArrayList<SeasonRankingResult> results = new ArrayList<>();
 
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(SELECT_PLAYERS_RANKING)) {
-
-            stmt.setInt(1, tableId);
-
-            try (ResultSet resultSet = stmt.executeQuery()) {
-                while (resultSet.next()) {
+        try {
+            jdbcClient.sql(SELECT_PLAYERS_RANKING)
+                .param(tableId)
+                .query((resultSet, rowNum) -> {
                     String name = resultSet.getString("players.name");
                     int rank = resultSet.getInt("competition_ranking.rank");
                     int last_rank = resultSet.getInt("competition_ranking.last_rank");
@@ -68,19 +74,19 @@ public class SeasonRankingDAO extends com.aionemu.gameserver.dao.SeasonRankingDA
                         playerClass = PlayerClass.getPlayerClassByString(playerClassStr);
                     } catch (IllegalArgumentException e) {
                         log.warn(I18n.get("log.9e67b184f360", playerClassStr));
-                        continue;
+                        return null;
                     }
 
                     String raceStr = resultSet.getString("players.race");
                     Race race = Race.getRaceByString(raceStr);
 
                     if (playerClass != null && race != null) {
-                        SeasonRankingResult rsl = new SeasonRankingResult(name, last_rank, rank, points, playerClass, race.getRaceId(), playerId);
-                        results.add(rsl);
+                        results.add(new SeasonRankingResult(name, last_rank, rank, points, playerClass, race.getRaceId(), playerId));
                     }
-                }
-            }
-        } catch (SQLException e) {
+                    return null;
+                })
+                .list();
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.2d8dc2963806", tableId), e);
         }
 
@@ -96,16 +102,11 @@ public class SeasonRankingDAO extends com.aionemu.gameserver.dao.SeasonRankingDA
      */
     @Override
     public GoldArenaRank loadGoldArenaRank(int playerId, int tableId) {
-        GoldArenaRank arenaRank = null;
-
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(SELECT_MY_HISTORY)) {
-
-            stmt.setInt(1, playerId);
-            stmt.setInt(2, tableId);
-
-            try (ResultSet resultSet = stmt.executeQuery()) {
-                if (resultSet.next()) {
+        try {
+            GoldArenaRank arenaRank = jdbcClient.sql(SELECT_MY_HISTORY)
+                .param(playerId)
+                .param(tableId)
+                .query((resultSet, rowNum) -> {
                     int rank = resultSet.getInt("rank");
                     int best_rank = resultSet.getInt("last_rank");
                     int point = resultSet.getInt("points");
@@ -114,18 +115,24 @@ public class SeasonRankingDAO extends com.aionemu.gameserver.dao.SeasonRankingDA
                     int low_point = resultSet.getInt("low_points");
                     int position_match = resultSet.getInt("position_match");
 
-                    arenaRank = new GoldArenaRank(rank, best_rank, point, last_point, high_point, low_point, position_match);
-                    arenaRank.setPersistentState(PersistentState.UPDATED);
-                } else {
-                    arenaRank = new GoldArenaRank(0, 0, 0, 0, 0, 0, 0);
-                    arenaRank.setPersistentState(PersistentState.NEW);
-                }
-            }
-        } catch (SQLException e) {
-            log.error(I18n.get("log.d516d865c7d9", playerId, tableId), e);
-        }
+                    GoldArenaRank r = new GoldArenaRank(rank, best_rank, point, last_point, high_point, low_point, position_match);
+                    r.setPersistentState(PersistentState.UPDATED);
+                    return r;
+                })
+                .optional()
+                .orElse(null);
 
-        return arenaRank;
+            if (arenaRank == null) {
+                arenaRank = new GoldArenaRank(0, 0, 0, 0, 0, 0, 0);
+                arenaRank.setPersistentState(PersistentState.NEW);
+            }
+            return arenaRank;
+        } catch (DataAccessException e) {
+            log.error(I18n.get("log.d516d865c7d9", playerId, tableId), e);
+            GoldArenaRank fallback = new GoldArenaRank(0, 0, 0, 0, 0, 0, 0);
+            fallback.setPersistentState(PersistentState.NEW);
+            return fallback;
+        }
     }
 
     /**
@@ -142,7 +149,6 @@ public class SeasonRankingDAO extends com.aionemu.gameserver.dao.SeasonRankingDA
         }
 
         boolean result = false;
-
         switch (rank.getPersistentState()) {
             case NEW:
                 result = addGoldRank(player.getObjectId(), rank);
@@ -161,44 +167,40 @@ public class SeasonRankingDAO extends com.aionemu.gameserver.dao.SeasonRankingDA
     }
 
     private boolean addGoldRank(final int objectId, final GoldArenaRank rank) {
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(INSERT_QUERY)) {
-
-            stmt.setInt(1, objectId);
-            stmt.setInt(2, 1);
-            stmt.setInt(3, rank.getRank());
-            stmt.setInt(4, rank.getBestRank());
-            stmt.setInt(5, rank.getPoints());
-            stmt.setInt(6, rank.getLastPoints());
-            stmt.setInt(7, rank.getHighPoints());
-            stmt.setInt(8, rank.getLowPoints());
-            stmt.setInt(9, rank.getPossitionMatch());
-            stmt.executeUpdate();
-
-            return true;
-        } catch (SQLException e) {
+        try {
+            int affected = jdbcClient.sql(INSERT_QUERY)
+                .param(objectId)
+                .param(1)
+                .param(rank.getRank())
+                .param(rank.getBestRank())
+                .param(rank.getPoints())
+                .param(rank.getLastPoints())
+                .param(rank.getHighPoints())
+                .param(rank.getLowPoints())
+                .param(rank.getPossitionMatch())
+                .update();
+            return affected > 0;
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.892315d315f0", objectId), e);
             return false;
         }
     }
 
     private boolean updateGoldRank(final int objectId, GoldArenaRank rank) {
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(UPDATE_QUERY)) {
-
-            stmt.setInt(1, rank.getRank());
-            stmt.setInt(2, rank.getBestRank());
-            stmt.setInt(3, rank.getPoints());
-            stmt.setInt(4, rank.getLastPoints());
-            stmt.setInt(5, rank.getHighPoints());
-            stmt.setInt(6, rank.getLowPoints());
-            stmt.setInt(7, rank.getPossitionMatch());
-            stmt.setInt(8, objectId);
-            stmt.setInt(9, 1);
-            stmt.executeUpdate();
-
-            return true;
-        } catch (SQLException e) {
+        try {
+            int affected = jdbcClient.sql(UPDATE_QUERY)
+                .param(rank.getRank())
+                .param(rank.getBestRank())
+                .param(rank.getPoints())
+                .param(rank.getLastPoints())
+                .param(rank.getHighPoints())
+                .param(rank.getLowPoints())
+                .param(rank.getPossitionMatch())
+                .param(objectId)
+                .param(1)
+                .update();
+            return affected > 0;
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.8025a55d13a2", objectId), e);
             return false;
         }
@@ -218,7 +220,6 @@ public class SeasonRankingDAO extends com.aionemu.gameserver.dao.SeasonRankingDA
         }
 
         boolean result = false;
-
         switch (rank.getPersistentState()) {
             case NEW:
                 result = addTowerRank(player.getObjectId(), rank);
@@ -237,44 +238,40 @@ public class SeasonRankingDAO extends com.aionemu.gameserver.dao.SeasonRankingDA
     }
 
     private boolean addTowerRank(final int objectId, final TowerOfChallengeRank rank) {
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(INSERT_QUERY)) {
-
-            stmt.setInt(1, objectId);
-            stmt.setInt(2, 2);
-            stmt.setInt(3, rank.getRank());
-            stmt.setInt(4, rank.getBestRank());
-            stmt.setInt(5, rank.getCurrentTime());
-            stmt.setInt(6, rank.getLastTime());
-            stmt.setInt(7, rank.getBestTime());
-            stmt.setInt(8, rank.getLowRank());
-            stmt.setInt(9, 0);
-            stmt.executeUpdate();
-
-            return true;
-        } catch (SQLException e) {
+        try {
+            int affected = jdbcClient.sql(INSERT_QUERY)
+                .param(objectId)
+                .param(2)
+                .param(rank.getRank())
+                .param(rank.getBestRank())
+                .param(rank.getCurrentTime())
+                .param(rank.getLastTime())
+                .param(rank.getBestTime())
+                .param(rank.getLowRank())
+                .param(0)
+                .update();
+            return affected > 0;
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.33e0d184fd35", objectId), e);
             return false;
         }
     }
 
     private boolean updateTowerRank(final int objectId, TowerOfChallengeRank rank) {
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(UPDATE_QUERY)) {
-
-            stmt.setInt(1, rank.getRank());
-            stmt.setInt(2, rank.getBestRank());
-            stmt.setInt(3, rank.getCurrentTime());
-            stmt.setInt(4, rank.getLastTime());
-            stmt.setInt(5, rank.getBestTime());
-            stmt.setInt(6, rank.getLowRank());
-            stmt.setInt(7, 0);
-            stmt.setInt(8, objectId);
-            stmt.setInt(9, 2);
-            stmt.executeUpdate();
-
-            return true;
-        } catch (SQLException e) {
+        try {
+            int affected = jdbcClient.sql(UPDATE_QUERY)
+                .param(rank.getRank())
+                .param(rank.getBestRank())
+                .param(rank.getCurrentTime())
+                .param(rank.getLastTime())
+                .param(rank.getBestTime())
+                .param(rank.getLowRank())
+                .param(0)
+                .param(objectId)
+                .param(2)
+                .update();
+            return affected > 0;
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.525c0a41a0d5", objectId), e);
             return false;
         }
@@ -294,7 +291,6 @@ public class SeasonRankingDAO extends com.aionemu.gameserver.dao.SeasonRankingDA
         }
 
         boolean result = false;
-
         switch (rank.getPersistentState()) {
             case NEW:
                 result = addTenacityRank(player.getObjectId(), rank);
@@ -313,44 +309,40 @@ public class SeasonRankingDAO extends com.aionemu.gameserver.dao.SeasonRankingDA
     }
 
     private boolean addTenacityRank(final int objectId, final ArenaOfTenacityRank rank) {
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(INSERT_QUERY)) {
-
-            stmt.setInt(1, objectId);
-            stmt.setInt(2, 541);
-            stmt.setInt(3, rank.getRank());
-            stmt.setInt(4, rank.getBestRank());
-            stmt.setInt(5, rank.getPoints());
-            stmt.setInt(6, rank.getLastPoints());
-            stmt.setInt(7, rank.getHighPoints());
-            stmt.setInt(8, rank.getLowPoints());
-            stmt.setInt(9, rank.getPossitionMatch());
-            stmt.executeUpdate();
-
-            return true;
-        } catch (SQLException e) {
+        try {
+            int affected = jdbcClient.sql(INSERT_QUERY)
+                .param(objectId)
+                .param(541)
+                .param(rank.getRank())
+                .param(rank.getBestRank())
+                .param(rank.getPoints())
+                .param(rank.getLastPoints())
+                .param(rank.getHighPoints())
+                .param(rank.getLowPoints())
+                .param(rank.getPossitionMatch())
+                .update();
+            return affected > 0;
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.1833d5239851", objectId), e);
             return false;
         }
     }
 
     private boolean updateTenacityRank(final int objectId, ArenaOfTenacityRank rank) {
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(UPDATE_QUERY)) {
-
-            stmt.setInt(1, rank.getRank());
-            stmt.setInt(2, rank.getBestRank());
-            stmt.setInt(3, rank.getPoints());
-            stmt.setInt(4, rank.getLastPoints());
-            stmt.setInt(5, rank.getHighPoints());
-            stmt.setInt(6, rank.getLowPoints());
-            stmt.setInt(7, rank.getPossitionMatch());
-            stmt.setInt(8, objectId);
-            stmt.setInt(9, 541);
-            stmt.executeUpdate();
-
-            return true;
-        } catch (SQLException e) {
+        try {
+            int affected = jdbcClient.sql(UPDATE_QUERY)
+                .param(rank.getRank())
+                .param(rank.getBestRank())
+                .param(rank.getPoints())
+                .param(rank.getLastPoints())
+                .param(rank.getHighPoints())
+                .param(rank.getLowPoints())
+                .param(rank.getPossitionMatch())
+                .param(objectId)
+                .param(541)
+                .update();
+            return affected > 0;
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.b547e9af94b6", objectId), e);
             return false;
         }
@@ -370,7 +362,6 @@ public class SeasonRankingDAO extends com.aionemu.gameserver.dao.SeasonRankingDA
         }
 
         boolean result = false;
-
         switch (rank.getPersistentState()) {
             case NEW:
                 result = add6v6Rank(player.getObjectId(), rank);
@@ -389,44 +380,40 @@ public class SeasonRankingDAO extends com.aionemu.gameserver.dao.SeasonRankingDA
     }
 
     private boolean add6v6Rank(final int objectId, final Arena6V6Ranking rank) {
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(INSERT_QUERY)) {
-
-            stmt.setInt(1, objectId);
-            stmt.setInt(2, 3);
-            stmt.setInt(3, rank.getRank());
-            stmt.setInt(4, rank.getBestRank());
-            stmt.setInt(5, rank.getPoints());
-            stmt.setInt(6, rank.getLastPoints());
-            stmt.setInt(7, rank.getHighPoints());
-            stmt.setInt(8, rank.getLowPoints());
-            stmt.setInt(9, rank.getPossitionMatch());
-            stmt.executeUpdate();
-
-            return true;
-        } catch (SQLException e) {
+        try {
+            int affected = jdbcClient.sql(INSERT_QUERY)
+                .param(objectId)
+                .param(3)
+                .param(rank.getRank())
+                .param(rank.getBestRank())
+                .param(rank.getPoints())
+                .param(rank.getLastPoints())
+                .param(rank.getHighPoints())
+                .param(rank.getLowPoints())
+                .param(rank.getPossitionMatch())
+                .update();
+            return affected > 0;
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.688e68aa0f83", objectId), e);
             return false;
         }
     }
 
     private boolean update6v6Rank(final int objectId, Arena6V6Ranking rank) {
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(UPDATE_QUERY)) {
-
-            stmt.setInt(1, rank.getRank());
-            stmt.setInt(2, rank.getBestRank());
-            stmt.setInt(3, rank.getPoints());
-            stmt.setInt(4, rank.getLastPoints());
-            stmt.setInt(5, rank.getHighPoints());
-            stmt.setInt(6, rank.getLowPoints());
-            stmt.setInt(7, rank.getPossitionMatch());
-            stmt.setInt(8, objectId);
-            stmt.setInt(9, 3);
-            stmt.executeUpdate();
-
-            return true;
-        } catch (SQLException e) {
+        try {
+            int affected = jdbcClient.sql(UPDATE_QUERY)
+                .param(rank.getRank())
+                .param(rank.getBestRank())
+                .param(rank.getPoints())
+                .param(rank.getLastPoints())
+                .param(rank.getHighPoints())
+                .param(rank.getLowPoints())
+                .param(rank.getPossitionMatch())
+                .param(objectId)
+                .param(3)
+                .update();
+            return affected > 0;
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.2027d7f241eb", objectId), e);
             return false;
         }
@@ -441,16 +428,11 @@ public class SeasonRankingDAO extends com.aionemu.gameserver.dao.SeasonRankingDA
      */
     @Override
     public ArenaOfTenacityRank loadArenaOfTenacityRank(int playerId, int tableId) {
-        ArenaOfTenacityRank ranking = null;
-
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(SELECT_MY_HISTORY)) {
-
-            stmt.setInt(1, playerId);
-            stmt.setInt(2, tableId);
-
-            try (ResultSet resultSet = stmt.executeQuery()) {
-                if (resultSet.next()) {
+        try {
+            ArenaOfTenacityRank ranking = jdbcClient.sql(SELECT_MY_HISTORY)
+                .param(playerId)
+                .param(tableId)
+                .query((resultSet, rowNum) -> {
                     int rank = resultSet.getInt("rank");
                     int best_rank = resultSet.getInt("last_rank");
                     int point = resultSet.getInt("points");
@@ -459,18 +441,24 @@ public class SeasonRankingDAO extends com.aionemu.gameserver.dao.SeasonRankingDA
                     int low_point = resultSet.getInt("low_points");
                     int position_match = resultSet.getInt("position_match");
 
-                    ranking = new ArenaOfTenacityRank(rank, best_rank, point, last_point, high_point, low_point, position_match);
-                    ranking.setPersistentState(PersistentState.UPDATED);
-                } else {
-                    ranking = new ArenaOfTenacityRank(0, 0, 0, 0, 0, 0, 0);
-                    ranking.setPersistentState(PersistentState.NEW);
-                }
-            }
-        } catch (SQLException e) {
-            log.error(I18n.get("log.1c6ce1dd5b7e", playerId, tableId), e);
-        }
+                    ArenaOfTenacityRank r = new ArenaOfTenacityRank(rank, best_rank, point, last_point, high_point, low_point, position_match);
+                    r.setPersistentState(PersistentState.UPDATED);
+                    return r;
+                })
+                .optional()
+                .orElse(null);
 
-        return ranking;
+            if (ranking == null) {
+                ranking = new ArenaOfTenacityRank(0, 0, 0, 0, 0, 0, 0);
+                ranking.setPersistentState(PersistentState.NEW);
+            }
+            return ranking;
+        } catch (DataAccessException e) {
+            log.error(I18n.get("log.1c6ce1dd5b7e", playerId, tableId), e);
+            ArenaOfTenacityRank fallback = new ArenaOfTenacityRank(0, 0, 0, 0, 0, 0, 0);
+            fallback.setPersistentState(PersistentState.NEW);
+            return fallback;
+        }
     }
 
     /**
@@ -482,16 +470,11 @@ public class SeasonRankingDAO extends com.aionemu.gameserver.dao.SeasonRankingDA
      */
     @Override
     public TowerOfChallengeRank loadTowerOfChallengeRank(int playerId, int tableId) {
-        TowerOfChallengeRank ranking = null;
-
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(SELECT_MY_HISTORY)) {
-
-            stmt.setInt(1, playerId);
-            stmt.setInt(2, tableId);
-
-            try (ResultSet resultSet = stmt.executeQuery()) {
-                if (resultSet.next()) {
+        try {
+            TowerOfChallengeRank ranking = jdbcClient.sql(SELECT_MY_HISTORY)
+                .param(playerId)
+                .param(tableId)
+                .query((resultSet, rowNum) -> {
                     int rank = resultSet.getInt("rank");
                     int best_rank = resultSet.getInt("last_rank");
                     int point = resultSet.getInt("points");
@@ -499,18 +482,24 @@ public class SeasonRankingDAO extends com.aionemu.gameserver.dao.SeasonRankingDA
                     int high_point = resultSet.getInt("high_points");
                     int low_point = resultSet.getInt("low_points");
 
-                    ranking = new TowerOfChallengeRank(rank, best_rank, point, last_point, high_point, low_point);
-                    ranking.setPersistentState(PersistentState.UPDATED);
-                } else {
-                    ranking = new TowerOfChallengeRank(0, 0, 0, 0, 0, 0);
-                    ranking.setPersistentState(PersistentState.NEW);
-                }
-            }
-        } catch (SQLException e) {
-            log.error(I18n.get("log.a937504b345f", playerId, tableId), e);
-        }
+                    TowerOfChallengeRank r = new TowerOfChallengeRank(rank, best_rank, point, last_point, high_point, low_point);
+                    r.setPersistentState(PersistentState.UPDATED);
+                    return r;
+                })
+                .optional()
+                .orElse(null);
 
-        return ranking;
+            if (ranking == null) {
+                ranking = new TowerOfChallengeRank(0, 0, 0, 0, 0, 0);
+                ranking.setPersistentState(PersistentState.NEW);
+            }
+            return ranking;
+        } catch (DataAccessException e) {
+            log.error(I18n.get("log.a937504b345f", playerId, tableId), e);
+            TowerOfChallengeRank fallback = new TowerOfChallengeRank(0, 0, 0, 0, 0, 0);
+            fallback.setPersistentState(PersistentState.NEW);
+            return fallback;
+        }
     }
 
     /**
@@ -522,16 +511,11 @@ public class SeasonRankingDAO extends com.aionemu.gameserver.dao.SeasonRankingDA
      */
     @Override
     public Arena6V6Ranking loadArena6v6Rank(int playerId, int tableId) {
-        Arena6V6Ranking ranking = null;
-
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(SELECT_MY_HISTORY)) {
-
-            stmt.setInt(1, playerId);
-            stmt.setInt(2, tableId);
-
-            try (ResultSet resultSet = stmt.executeQuery()) {
-                if (resultSet.next()) {
+        try {
+            Arena6V6Ranking ranking = jdbcClient.sql(SELECT_MY_HISTORY)
+                .param(playerId)
+                .param(tableId)
+                .query((resultSet, rowNum) -> {
                     int rank = resultSet.getInt("rank");
                     int best_rank = resultSet.getInt("last_rank");
                     int point = resultSet.getInt("points");
@@ -540,18 +524,24 @@ public class SeasonRankingDAO extends com.aionemu.gameserver.dao.SeasonRankingDA
                     int low_point = resultSet.getInt("low_points");
                     int position_match = resultSet.getInt("position_match");
 
-                    ranking = new Arena6V6Ranking(rank, best_rank, point, last_point, high_point, low_point, position_match);
-                    ranking.setPersistentState(PersistentState.UPDATED);
-                } else {
-                    ranking = new Arena6V6Ranking(0, 0, 0, 0, 0, 0, 0);
-                    ranking.setPersistentState(PersistentState.NEW);
-                }
-            }
-        } catch (SQLException e) {
-            log.error(I18n.get("log.a8b4326794d1", playerId, tableId), e);
-        }
+                    Arena6V6Ranking r = new Arena6V6Ranking(rank, best_rank, point, last_point, high_point, low_point, position_match);
+                    r.setPersistentState(PersistentState.UPDATED);
+                    return r;
+                })
+                .optional()
+                .orElse(null);
 
-        return ranking;
+            if (ranking == null) {
+                ranking = new Arena6V6Ranking(0, 0, 0, 0, 0, 0, 0);
+                ranking.setPersistentState(PersistentState.NEW);
+            }
+            return ranking;
+        } catch (DataAccessException e) {
+            log.error(I18n.get("log.a8b4326794d1", playerId, tableId), e);
+            Arena6V6Ranking fallback = new Arena6V6Ranking(0, 0, 0, 0, 0, 0, 0);
+            fallback.setPersistentState(PersistentState.NEW);
+            return fallback;
+        }
     }
 
     /**

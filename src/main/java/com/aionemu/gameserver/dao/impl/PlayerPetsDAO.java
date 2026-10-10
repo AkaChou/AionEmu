@@ -1,24 +1,48 @@
 package com.aionemu.gameserver.dao.impl;
 
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.simple.JdbcClient;
 
 import com.aionemu.boot.i18n.I18n;
-import lombok.extern.slf4j.Slf4j;
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.gameserver.model.gameobjects.player.PetCommonData;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.templates.pet.PetDopingBag;
 import com.aionemu.gameserver.services.toypet.PetHungryLevel;
-import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 玩家宠物数据 DAO 的 MySQL 8 实现。
- * MySQL 8 implementation of PlayerPetsDAO.
+ * MySQL 8 implementation of PlayerPetsDAO using JdbcClient.
  * @author M@xx, xTz, Rolandas
  */
 @Slf4j
 public class PlayerPetsDAO extends com.aionemu.gameserver.dao.PlayerPetsDAO {
+
+    private static final String SAVE_FEED_STATUS_QUERY = "UPDATE player_pets SET hungry_level = ?, feed_progress = ?, reuse_time = ? WHERE player_id = ? AND pet_id = ?";
+    private static final String SAVE_DOPING_BAG_QUERY = "UPDATE player_pets SET dopings = ? WHERE player_id = ? AND pet_id = ?";
+    private static final String SET_TIME_QUERY = "UPDATE player_pets SET reuse_time = ? WHERE player_id = ? AND pet_id = ?";
+    private static final String INSERT_QUERY = "INSERT INTO player_pets(player_id, pet_id, decoration, name, despawn_time, expire_time) VALUES(?, ?, ?, ?, ?, ?)";
+    private static final String REMOVE_QUERY = "DELETE FROM player_pets WHERE player_id = ? AND pet_id = ?";
+    private static final String SELECT_QUERY = "SELECT * FROM player_pets WHERE player_id = ?";
+    private static final String UPDATE_NAME_QUERY = "UPDATE player_pets SET name = ? WHERE player_id = ? AND pet_id = ?";
+    private static final String SAVE_MOOD_QUERY = "UPDATE player_pets SET mood_started = ?, counter = ?, mood_cd_started = ?, gift_cd_started = ?, despawn_time = ? WHERE player_id = ? AND pet_id = ?";
+
+    private final JdbcClient jdbcClient;
+
+    public PlayerPetsDAO() {
+        this(DatabaseFactory.getJdbcClient());
+    }
+
+    public PlayerPetsDAO(JdbcClient jdbcClient) {
+        this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");
+    }
 
     /**
      * 保存宠物喂养状态。
@@ -31,17 +55,15 @@ public class PlayerPetsDAO extends com.aionemu.gameserver.dao.PlayerPetsDAO {
      */
     @Override
     public void saveFeedStatus(Player player, int petId, int hungryLevel, int feedProgress, long reuseTime) {
-        String query = "UPDATE player_pets SET hungry_level = ?, feed_progress = ?, reuse_time = ? WHERE player_id = ? AND pet_id = ?";
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(query)) {
-
-            stmt.setInt(1, hungryLevel);
-            stmt.setInt(2, feedProgress);
-            stmt.setLong(3, reuseTime);
-            stmt.setInt(4, player.getObjectId());
-            stmt.setInt(5, petId);
-            stmt.executeUpdate();
-        } catch (SQLException e) {
+        try {
+            jdbcClient.sql(SAVE_FEED_STATUS_QUERY)
+                .param(hungryLevel)
+                .param(feedProgress)
+                .param(reuseTime)
+                .param(player.getObjectId())
+                .param(petId)
+                .update();
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.8faeec608d56", petId), e);
         }
     }
@@ -55,10 +77,7 @@ public class PlayerPetsDAO extends com.aionemu.gameserver.dao.PlayerPetsDAO {
      */
     @Override
     public void saveDopingBag(Player player, int petId, PetDopingBag bag) {
-        String query = "UPDATE player_pets SET dopings = ? WHERE player_id = ? AND pet_id = ?";
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(query)) {
-
+        try {
             StringBuilder itemIds = new StringBuilder();
             itemIds.append(bag.getFoodItem()).append(",").append(bag.getDrinkItem());
 
@@ -66,11 +85,12 @@ public class PlayerPetsDAO extends com.aionemu.gameserver.dao.PlayerPetsDAO {
                 itemIds.append(",").append(itemId);
             }
 
-            stmt.setString(1, itemIds.toString());
-            stmt.setInt(2, player.getObjectId());
-            stmt.setInt(3, petId);
-            stmt.executeUpdate();
-        } catch (SQLException e) {
+            jdbcClient.sql(SAVE_DOPING_BAG_QUERY)
+                .param(itemIds.toString())
+                .param(player.getObjectId())
+                .param(petId)
+                .update();
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.b3af66365ffc", petId), e);
         }
     }
@@ -84,15 +104,13 @@ public class PlayerPetsDAO extends com.aionemu.gameserver.dao.PlayerPetsDAO {
      */
     @Override
     public void setTime(Player player, int petId, long time) {
-        String query = "UPDATE player_pets SET reuse_time = ? WHERE player_id = ? AND pet_id = ?";
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(query)) {
-
-            stmt.setLong(1, time);
-            stmt.setInt(2, player.getObjectId());
-            stmt.setInt(3, petId);
-            stmt.executeUpdate();
-        } catch (SQLException e) {
+        try {
+            jdbcClient.sql(SET_TIME_QUERY)
+                .param(time)
+                .param(player.getObjectId())
+                .param(petId)
+                .update();
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.8faeec608d56", petId), e);
         }
     }
@@ -104,18 +122,16 @@ public class PlayerPetsDAO extends com.aionemu.gameserver.dao.PlayerPetsDAO {
      */
     @Override
     public void insertPlayerPet(PetCommonData petCommonData) {
-        String query = "INSERT INTO player_pets(player_id, pet_id, decoration, name, despawn_time, expire_time) VALUES(?, ?, ?, ?, ?, ?)";
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(query)) {
-
-            stmt.setInt(1, petCommonData.getMasterObjectId());
-            stmt.setInt(2, petCommonData.getPetId());
-            stmt.setInt(3, petCommonData.getDecoration());
-            stmt.setString(4, petCommonData.getName());
-            stmt.setTimestamp(5, petCommonData.getDespawnTime());
-            stmt.setInt(6, petCommonData.getExpireTime());
-            stmt.executeUpdate();
-        } catch (SQLException e) {
+        try {
+            jdbcClient.sql(INSERT_QUERY)
+                .param(petCommonData.getMasterObjectId())
+                .param(petCommonData.getPetId())
+                .param(petCommonData.getDecoration())
+                .param(petCommonData.getName())
+                .param(petCommonData.getDespawnTime())
+                .param(petCommonData.getExpireTime())
+                .update();
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.470c078aecdc", petCommonData.getPetId(), petCommonData.getName()), e);
         }
     }
@@ -128,14 +144,12 @@ public class PlayerPetsDAO extends com.aionemu.gameserver.dao.PlayerPetsDAO {
      */
     @Override
     public void removePlayerPet(Player player, int petId) {
-        String query = "DELETE FROM player_pets WHERE player_id = ? AND pet_id = ?";
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(query)) {
-
-            stmt.setInt(1, player.getObjectId());
-            stmt.setInt(2, petId);
-            stmt.executeUpdate();
-        } catch (SQLException e) {
+        try {
+            jdbcClient.sql(REMOVE_QUERY)
+                .param(player.getObjectId())
+                .param(petId)
+                .update();
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.c0204a470d98", petId), e);
         }
     }
@@ -149,15 +163,11 @@ public class PlayerPetsDAO extends com.aionemu.gameserver.dao.PlayerPetsDAO {
     @Override
     public List<PetCommonData> getPlayerPets(Player player) {
         List<PetCommonData> pets = new ArrayList<>();
-        String query = "SELECT * FROM player_pets WHERE player_id = ?";
 
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(query)) {
-
-            stmt.setInt(1, player.getObjectId());
-
-            try (ResultSet rs = stmt.executeQuery()) {
-                while (rs.next()) {
+        try {
+            pets = jdbcClient.sql(SELECT_QUERY)
+                .param(player.getObjectId())
+                .query((rs, rowNum) -> {
                     PetCommonData petCommonData = new PetCommonData(
                         rs.getInt("pet_id"),
                         player.getObjectId(),
@@ -205,10 +215,10 @@ public class PlayerPetsDAO extends com.aionemu.gameserver.dao.PlayerPetsDAO {
                     }
                     petCommonData.setDespawnTime(ts);
 
-                    pets.add(petCommonData);
-                }
-            }
-        } catch (SQLException e) {
+                    return petCommonData;
+                })
+                .list();
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.2e256611ad4a", player.getObjectId()), e);
         }
         return pets;
@@ -221,15 +231,13 @@ public class PlayerPetsDAO extends com.aionemu.gameserver.dao.PlayerPetsDAO {
      */
     @Override
     public void updatePetName(PetCommonData petCommonData) {
-        String query = "UPDATE player_pets SET name = ? WHERE player_id = ? AND pet_id = ?";
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(query)) {
-
-            stmt.setString(1, petCommonData.getName());
-            stmt.setInt(2, petCommonData.getMasterObjectId());
-            stmt.setInt(3, petCommonData.getPetId());
-            stmt.executeUpdate();
-        } catch (SQLException e) {
+        try {
+            jdbcClient.sql(UPDATE_NAME_QUERY)
+                .param(petCommonData.getName())
+                .param(petCommonData.getMasterObjectId())
+                .param(petCommonData.getPetId())
+                .update();
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.8faeec608d56", petCommonData.getPetId()), e);
         }
     }
@@ -242,20 +250,18 @@ public class PlayerPetsDAO extends com.aionemu.gameserver.dao.PlayerPetsDAO {
      */
     @Override
     public boolean savePetMoodData(PetCommonData petCommonData) {
-        String query = "UPDATE player_pets SET mood_started = ?, counter = ?, mood_cd_started = ?, gift_cd_started = ?, despawn_time = ? WHERE player_id = ? AND pet_id = ?";
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(query)) {
-
-            stmt.setLong(1, petCommonData.getMoodStartTime());
-            stmt.setInt(2, petCommonData.getShuggleCounter());
-            stmt.setLong(3, petCommonData.getMoodCdStarted());
-            stmt.setLong(4, petCommonData.getGiftCdStarted());
-            stmt.setTimestamp(5, petCommonData.getDespawnTime());
-            stmt.setInt(6, petCommonData.getMasterObjectId());
-            stmt.setInt(7, petCommonData.getPetId());
-            stmt.executeUpdate();
+        try {
+            jdbcClient.sql(SAVE_MOOD_QUERY)
+                .param(petCommonData.getMoodStartTime())
+                .param(petCommonData.getShuggleCounter())
+                .param(petCommonData.getMoodCdStarted())
+                .param(petCommonData.getGiftCdStarted())
+                .param(petCommonData.getDespawnTime())
+                .param(petCommonData.getMasterObjectId())
+                .param(petCommonData.getPetId())
+                .update();
             return true;
-        } catch (SQLException e) {
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.44d7671006ae", petCommonData.getPetId()), e);
             return false;
         }

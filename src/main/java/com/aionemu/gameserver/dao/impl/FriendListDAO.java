@@ -1,8 +1,13 @@
 package com.aionemu.gameserver.dao.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.simple.JdbcClient;
 
 import com.aionemu.boot.i18n.I18n;
-import lombok.extern.slf4j.Slf4j;
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.dao.PlayerDAO;
@@ -10,16 +15,12 @@ import com.aionemu.gameserver.model.gameobjects.player.Friend;
 import com.aionemu.gameserver.model.gameobjects.player.FriendList;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.gameobjects.player.PlayerCommonData;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 好友列表 DAO 的 MySQL 8 实现。
- * MySQL 8 implementation of FriendListDAO.
+ * MySQL 8 implementation of FriendListDAO using JdbcClient.
  * @author Ben
  */
 @Slf4j
@@ -34,6 +35,16 @@ public class FriendListDAO extends com.aionemu.gameserver.dao.FriendListDAO {
     /** 设置好友备注 SQL / Set friend note SQL */
     private static final String SET_NOTE = "UPDATE `friends` SET `note` = ? WHERE `player` = ? AND `friend` = ?";
 
+    private final JdbcClient jdbcClient;
+
+    public FriendListDAO() {
+        this(DatabaseFactory.getJdbcClient());
+    }
+
+    public FriendListDAO(JdbcClient jdbcClient) {
+        this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");
+    }
+
     /**
      * 加载玩家好友列表。
      * Loads the player's friend list.
@@ -44,22 +55,19 @@ public class FriendListDAO extends com.aionemu.gameserver.dao.FriendListDAO {
     public FriendList load(final Player player) {
         final List<Friend> friends = new ArrayList<>();
 
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(LOAD_QUERY)) {
-
-            stmt.setInt(1, player.getObjectId());
-
-            try (ResultSet rset = stmt.executeQuery()) {
-                PlayerDAO dao = DAOManager.getDAO(PlayerDAO.class);
-                while (rset.next()) {
-                    int objId = rset.getInt("friend");
+        try {
+            PlayerDAO dao = DAOManager.getDAO(PlayerDAO.class);
+            jdbcClient.sql(LOAD_QUERY)
+                .param(player.getObjectId())
+                .query((rs, rowNum) -> {
+                    int objId = rs.getInt("friend");
                     PlayerCommonData pcd = dao.loadPlayerCommonData(objId);
                     if (pcd != null) {
-                        Friend friend = new Friend(pcd);
-                        friends.add(friend);
+                        friends.add(new Friend(pcd));
                     }
-                }
-            }
+                    return null;
+                })
+                .list();
         } catch (Exception e) {
             log.error(I18n.get("log.76f2514feafb", player.getObjectId(), " from DB"), e);
         }
@@ -75,22 +83,17 @@ public class FriendListDAO extends com.aionemu.gameserver.dao.FriendListDAO {
      */
     @Override
     public boolean addFriends(final Player player, final Player friend) {
-        try (Connection con = DatabaseFactory.getConnection()) {
-            con.setAutoCommit(false);
-
-            try (PreparedStatement ps = con.prepareStatement(ADD_QUERY)) {
-                ps.setInt(1, player.getObjectId());
-                ps.setInt(2, friend.getObjectId());
-                ps.addBatch();
-                ps.setInt(1, friend.getObjectId());
-                ps.setInt(2, player.getObjectId());
-                ps.addBatch();
-                ps.executeBatch();
-            }
-
-            con.commit();
+        try {
+            jdbcClient.sql(ADD_QUERY)
+                .param(player.getObjectId())
+                .param(friend.getObjectId())
+                .update();
+            jdbcClient.sql(ADD_QUERY)
+                .param(friend.getObjectId())
+                .param(player.getObjectId())
+                .update();
             return true;
-        } catch (SQLException e) {
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.3eacec776c80", player.getObjectId(), friend.getObjectId()), e);
             return false;
         }
@@ -105,22 +108,17 @@ public class FriendListDAO extends com.aionemu.gameserver.dao.FriendListDAO {
      */
     @Override
     public boolean delFriends(final int playerOid, final int friendOid) {
-        try (Connection con = DatabaseFactory.getConnection()) {
-            con.setAutoCommit(false);
-
-            try (PreparedStatement ps = con.prepareStatement(DEL_QUERY)) {
-                ps.setInt(1, playerOid);
-                ps.setInt(2, friendOid);
-                ps.addBatch();
-                ps.setInt(1, friendOid);
-                ps.setInt(2, playerOid);
-                ps.addBatch();
-                ps.executeBatch();
-            }
-
-            con.commit();
+        try {
+            jdbcClient.sql(DEL_QUERY)
+                .param(playerOid)
+                .param(friendOid)
+                .update();
+            jdbcClient.sql(DEL_QUERY)
+                .param(friendOid)
+                .param(playerOid)
+                .update();
             return true;
-        } catch (SQLException e) {
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.11aae36500f7", playerOid, friendOid), e);
             return false;
         }
@@ -135,13 +133,12 @@ public class FriendListDAO extends com.aionemu.gameserver.dao.FriendListDAO {
      */
     @Override
     public void setFriendNote(final int playerId, final int friendId, final String note) {
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(SET_NOTE)) {
-
-            stmt.setString(1, note);
-            stmt.setInt(2, playerId);
-            stmt.setInt(3, friendId);
-            stmt.executeUpdate();
+        try {
+            jdbcClient.sql(SET_NOTE)
+                .param(note)
+                .param(playerId)
+                .param(friendId)
+                .update();
         } catch (Exception e) {
             log.error(I18n.get("log.7761eea711e0", playerId, friendId), e);
         }

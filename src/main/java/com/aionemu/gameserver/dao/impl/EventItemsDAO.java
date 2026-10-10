@@ -1,21 +1,21 @@
 package com.aionemu.gameserver.dao.impl;
 
+import java.util.Map;
+import java.util.Objects;
+
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.simple.JdbcClient;
 
 import com.aionemu.boot.i18n.I18n;
-import lombok.extern.slf4j.Slf4j;
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.templates.event.MaxCountOfDay;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.Iterator;
-import java.util.Map;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 活动物品计数 DAO 的 MySQL 8 实现。
- * MySQL 8 implementation of EventItemsDAO.
+ * MySQL 8 implementation of EventItemsDAO using JdbcClient.
  * Created by wanke on 03/03/2017.
  * Updated for MySQL 8 - Fixed connection leaks.
  */
@@ -31,6 +31,16 @@ public class EventItemsDAO extends com.aionemu.gameserver.dao.EventItemsDAO {
     /** 查询活动物品数量 SQL / Select event item counts SQL*/
     private static final String SELECT_QUERY = "SELECT `item_id`, `counts` FROM `event_items` WHERE `player_id`=?";
 
+    private final JdbcClient jdbcClient;
+
+    public EventItemsDAO() {
+        this(DatabaseFactory.getJdbcClient());
+    }
+
+    public EventItemsDAO(JdbcClient jdbcClient) {
+        this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");
+    }
+
     /**
      * 加载玩家活动物品当日上限计数。
      * Loads daily event item max-count data for a player.
@@ -38,19 +48,17 @@ public class EventItemsDAO extends com.aionemu.gameserver.dao.EventItemsDAO {
      */
     @Override
     public void loadItems(final Player player) {
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(SELECT_QUERY)) {
-
-            stmt.setInt(1, player.getObjectId());
-
-            try (ResultSet rset = stmt.executeQuery()) {
-                while (rset.next()) {
+        try {
+            jdbcClient.sql(SELECT_QUERY)
+                .param(player.getObjectId())
+                .query((rset, rowNum) -> {
                     int itemId = rset.getInt("item_id");
                     int counts = rset.getInt("counts");
                     player.addItemMaxCountOfDay(itemId, counts);
-                }
-            }
-        } catch (SQLException e) {
+                    return null;
+                })
+                .list();
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.5aff73432829", player.getObjectId()), e);
         }
     }
@@ -69,28 +77,16 @@ public class EventItemsDAO extends com.aionemu.gameserver.dao.EventItemsDAO {
             return;
         }
 
-        final Iterator<Map.Entry<Integer, MaxCountOfDay>> iterator = itemsm.entrySet().iterator();
-        if (!iterator.hasNext()) {
-            return;
-        }
-
-        try (Connection con = DatabaseFactory.getConnection()) {
-            con.setAutoCommit(false);
-
-            try (PreparedStatement st = con.prepareStatement(INSERT_QUERY)) {
-                while (iterator.hasNext()) {
-                    Map.Entry<Integer, MaxCountOfDay> entry = iterator.next();
-                    st.setInt(1, player.getObjectId());
-                    st.setInt(2, entry.getKey());
-                    st.setInt(3, entry.getValue().getThisCount());
-                    st.addBatch();
-                }
-                st.executeBatch();
+        try {
+            for (Map.Entry<Integer, MaxCountOfDay> entry : itemsm.entrySet()) {
+                jdbcClient.sql(INSERT_QUERY)
+                    .param(player.getObjectId())
+                    .param(entry.getKey())
+                    .param(entry.getValue().getThisCount())
+                    .update();
             }
-
-            con.commit();
             player.clearItemMaxThisCount();
-        } catch (SQLException e) {
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.cdff3db2bd19", player.getObjectId()), e);
         }
     }
@@ -102,12 +98,11 @@ public class EventItemsDAO extends com.aionemu.gameserver.dao.EventItemsDAO {
      */
     @Override
     public void deleteItems(final int itemId) {
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(DELETE_ITEM_QUERY)) {
-
-            stmt.setInt(1, itemId);
-            stmt.executeUpdate();
-        } catch (SQLException e) {
+        try {
+            jdbcClient.sql(DELETE_ITEM_QUERY)
+                .param(itemId)
+                .update();
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.903226c3be37", itemId), e);
         }
     }
@@ -118,12 +113,11 @@ public class EventItemsDAO extends com.aionemu.gameserver.dao.EventItemsDAO {
      * @param player 玩家 / player
      */
     private void deleteItems(final Player player) {
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(DELETE_QUERY)) {
-
-            stmt.setInt(1, player.getObjectId());
-            stmt.executeUpdate();
-        } catch (SQLException e) {
+        try {
+            jdbcClient.sql(DELETE_QUERY)
+                .param(player.getObjectId())
+                .update();
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.bf40ce06a63c", player.getObjectId()), e);
         }
     }

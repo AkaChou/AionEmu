@@ -1,23 +1,43 @@
 package com.aionemu.gameserver.dao.impl;
 
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
+
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.simple.JdbcClient;
 
 import com.aionemu.boot.i18n.I18n;
-import lombok.extern.slf4j.Slf4j;
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.gameserver.model.Petition;
 import com.aionemu.gameserver.model.PetitionStatus;
-import java.sql.*;
-import java.util.HashSet;
-import java.util.Set;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 玩家请愿/客服工单 DAO 的 MySQL 8 实现。
- * MySQL 8 implementation of PetitionDAO.
+ * MySQL 8 implementation of PetitionDAO using JdbcClient.
  * @author zdead
  */
 @Slf4j
 public class PetitionDAO extends com.aionemu.gameserver.dao.PetitionDAO {
 
+    private static final String NEXT_ID_QUERY = "SELECT COALESCE(MAX(id), 0) + 1 as nextid FROM petitions";
+    private static final String SELECT_BY_ID_QUERY = "SELECT * FROM petitions WHERE id = ?";
+    private static final String SELECT_ALL_QUERY = "SELECT * FROM petitions WHERE status IN ('PENDING', 'IN_PROGRESS') ORDER BY id ASC";
+    private static final String DELETE_QUERY = "DELETE FROM petitions WHERE player_id = ? AND status IN ('PENDING', 'IN_PROGRESS')";
+    private static final String INSERT_QUERY = "INSERT INTO petitions (id, player_id, type, title, message, add_data, time, status) VALUES(?,?,?,?,?,?,?,?)";
+    private static final String SET_REPLIED_QUERY = "UPDATE petitions SET status = 'REPLIED' WHERE id = ?";
+
+    private final JdbcClient jdbcClient;
+
+    public PetitionDAO() {
+        this(DatabaseFactory.getJdbcClient());
+    }
+
+    public PetitionDAO(JdbcClient jdbcClient) {
+        this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");
+    }
 
     /**
      * 获取下一个可用的请愿工单 ID。
@@ -26,56 +46,47 @@ public class PetitionDAO extends com.aionemu.gameserver.dao.PetitionDAO {
      */
     @Override
     public synchronized int getNextAvailableId() {
-        String query = "SELECT COALESCE(MAX(id), 0) + 1 as nextid FROM petitions";
-
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(query);
-             ResultSet rset = stmt.executeQuery()) {
-
-            if (rset.next()) {
-                return rset.getInt("nextid");
-            }
-        } catch (SQLException e) {
+        try {
+            Integer nextId = jdbcClient.sql(NEXT_ID_QUERY)
+                .query(Integer.class)
+                .optional()
+                .orElse(0);
+            return nextId != null ? nextId : 0;
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.fb167a91b87e"), e);
+            return 0;
         }
-        return 0;
     }
 
     /**
      * 按 ID 查询请愿工单。
      * Loads a petition by its id.
-     * petition id
      * @param petitionId 申诉 ID / petition id
      * @return 请愿工单，未找到时返回 null / petition, or null if not found
      */
     @Override
     public Petition getPetitionById(int petitionId) {
-        String query = "SELECT * FROM petitions WHERE id = ?";
-
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(query)) {
-
-            stmt.setInt(1, petitionId);
-            try (ResultSet rset = stmt.executeQuery()) {
-                if (!rset.next()) {
-                    return null;
-                }
-
-                PetitionStatus status = getPetitionStatus(rset.getString("status"));
-                return new Petition(
-                    rset.getInt("id"),
-                    rset.getInt("player_id"),
-                    rset.getInt("type"),
-                    rset.getString("title"),
-                    rset.getString("message"),
-                    rset.getString("add_data"),
-                    status.getElementId()
-                );
-            }
-        } catch (SQLException e) {
+        try {
+            return jdbcClient.sql(SELECT_BY_ID_QUERY)
+                .param(petitionId)
+                .query((rs, rowNum) -> {
+                    PetitionStatus status = getPetitionStatus(rs.getString("status"));
+                    return new Petition(
+                        rs.getInt("id"),
+                        rs.getInt("player_id"),
+                        rs.getInt("type"),
+                        rs.getString("title"),
+                        rs.getString("message"),
+                        rs.getString("add_data"),
+                        status.getElementId()
+                    );
+                })
+                .optional()
+                .orElse(null);
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.72ffd18827d7", petitionId), e);
+            return null;
         }
-        return null;
     }
 
     /**
@@ -85,30 +96,25 @@ public class PetitionDAO extends com.aionemu.gameserver.dao.PetitionDAO {
      */
     @Override
     public Set<Petition> getPetitions() {
-        String query = "SELECT * FROM petitions WHERE status IN ('PENDING', 'IN_PROGRESS') ORDER BY id ASC";
         Set<Petition> results = new HashSet<>();
-
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(query);
-             ResultSet rset = stmt.executeQuery()) {
-
-            while (rset.next()) {
-                PetitionStatus status = getPetitionStatus(rset.getString("status"));
-                Petition p = new Petition(
-                    rset.getInt("id"),
-                    rset.getInt("player_id"),
-                    rset.getInt("type"),
-                    rset.getString("title"),
-                    rset.getString("message"),
-                    rset.getString("add_data"),
-                    status.getElementId()
-                );
-                results.add(p);
-            }
-        } catch (SQLException e) {
+        try {
+            jdbcClient.sql(SELECT_ALL_QUERY)
+                .query((rs, rowNum) -> {
+                    PetitionStatus status = getPetitionStatus(rs.getString("status"));
+                    return new Petition(
+                        rs.getInt("id"),
+                        rs.getInt("player_id"),
+                        rs.getInt("type"),
+                        rs.getString("title"),
+                        rs.getString("message"),
+                        rs.getString("add_data"),
+                        status.getElementId()
+                    );
+                })
+                .list()
+                .forEach(results::add);
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.70ecf26917fd"), e);
-            // 表缺失/库未初始化时返回空集，避免启动 NPE。
-            return results;
         }
         return results;
     }
@@ -120,14 +126,11 @@ public class PetitionDAO extends com.aionemu.gameserver.dao.PetitionDAO {
      */
     @Override
     public void deletePetition(int playerObjId) {
-        String query = "DELETE FROM petitions WHERE player_id = ? AND status IN ('PENDING', 'IN_PROGRESS')";
-
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(query)) {
-
-            stmt.setInt(1, playerObjId);
-            stmt.executeUpdate();
-        } catch (SQLException e) {
+        try {
+            jdbcClient.sql(DELETE_QUERY)
+                .param(playerObjId)
+                .update();
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.eb43a2da10f3"), e);
         }
     }
@@ -139,21 +142,18 @@ public class PetitionDAO extends com.aionemu.gameserver.dao.PetitionDAO {
      */
     @Override
     public void insertPetition(Petition petition) {
-        String query = "INSERT INTO petitions (id, player_id, type, title, message, add_data, time, status) VALUES(?,?,?,?,?,?,?,?)";
-
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(query)) {
-
-            stmt.setInt(1, petition.getPetitionId());
-            stmt.setInt(2, petition.getPlayerObjId());
-            stmt.setInt(3, petition.getPetitionType().getElementId());
-            stmt.setString(4, petition.getTitle());
-            stmt.setString(5, petition.getContentText());
-            stmt.setString(6, petition.getAdditionalData());
-            stmt.setLong(7, System.currentTimeMillis() / 1000);
-            stmt.setString(8, petition.getStatus().toString());
-            stmt.executeUpdate();
-        } catch (SQLException e) {
+        try {
+            jdbcClient.sql(INSERT_QUERY)
+                .param(petition.getPetitionId())
+                .param(petition.getPlayerObjId())
+                .param(petition.getPetitionType().getElementId())
+                .param(petition.getTitle())
+                .param(petition.getContentText())
+                .param(petition.getAdditionalData())
+                .param(System.currentTimeMillis() / 1000)
+                .param(petition.getStatus().toString())
+                .update();
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.d40ee1b26acb"), e);
         }
     }
@@ -165,14 +165,11 @@ public class PetitionDAO extends com.aionemu.gameserver.dao.PetitionDAO {
      */
     @Override
     public void setReplied(int petitionId) {
-        String query = "UPDATE petitions SET status = 'REPLIED' WHERE id = ?";
-
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(query)) {
-
-            stmt.setInt(1, petitionId);
-            stmt.executeUpdate();
-        } catch (SQLException e) {
+        try {
+            jdbcClient.sql(SET_REPLIED_QUERY)
+                .param(petitionId)
+                .update();
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.77073357738f"), e);
         }
     }

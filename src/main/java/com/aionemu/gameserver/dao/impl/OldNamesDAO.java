@@ -1,47 +1,53 @@
 package com.aionemu.gameserver.dao.impl;
 
+import java.util.Objects;
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.simple.JdbcClient;
 
 import com.aionemu.boot.i18n.I18n;
-import lombok.extern.slf4j.Slf4j;
 import com.aionemu.commons.database.DatabaseFactory;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 旧角色名 DAO 的 MySQL 8 实现。
- * MySQL 8 implementation of OldNamesDAO.
- * Updated for MySQL 8 - Fixed connection leaks.
+ * MySQL 8 implementation of OldNamesDAO using JdbcClient.
  * @author synchro2
  */
 @Slf4j
 public class OldNamesDAO extends com.aionemu.gameserver.dao.OldNamesDAO {
-
 
 	/** 插入旧名称 SQL / Insert old name SQL*/
 	private static final String INSERT_QUERY = "INSERT INTO `old_names` (`player_id`, `old_name`, `new_name`) VALUES (?,?,?)";
 	/** 检查旧名称是否存在 SQL / Check if old name exists SQL */
 	private static final String CHECK_QUERY = "SELECT count(player_id) as cnt FROM old_names WHERE ? = old_names.old_name";
 
+	private final JdbcClient jdbcClient;
+
+	public OldNamesDAO() {
+		this(DatabaseFactory.getJdbcClient());
+	}
+
+	public OldNamesDAO(JdbcClient jdbcClient) {
+		this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");
+	}
+
 	/**
 	 * 判断名称是否曾被使用过。
 	 * Checks whether the name has been used before.
-	 * character name
 	 * @param name 角色名 / character name
 	 * @return 是否为旧名 / whether it is an old name
 	 */
 	@Override
 	public boolean isOldName(final String name) {
-		try (Connection con = DatabaseFactory.getConnection();
-			 PreparedStatement s = con.prepareStatement(CHECK_QUERY)) {
-
-			s.setString(1, name);
-			try (ResultSet rs = s.executeQuery()) {
-				rs.next();
-				return rs.getInt("cnt") > 0;
-			}
-		} catch (SQLException e) {
+		try {
+			Integer count = jdbcClient.sql(CHECK_QUERY)
+				.param(name)
+				.query(Integer.class)
+				.optional()
+				.orElse(0);
+			return count > 0;
+		} catch (DataAccessException e) {
 			log.error(I18n.get("log.b006f4717fd6", name, ", is used, returning positive result"), e);
 			return true;
 		}
@@ -56,14 +62,13 @@ public class OldNamesDAO extends com.aionemu.gameserver.dao.OldNamesDAO {
 	 */
 	@Override
 	public void insertNames(final int id, final String oldname, final String newname) {
-		try (Connection con = DatabaseFactory.getConnection();
-			 PreparedStatement stmt = con.prepareStatement(INSERT_QUERY)) {
-
-			stmt.setInt(1, id);
-			stmt.setString(2, oldname);
-			stmt.setString(3, newname);
-			stmt.executeUpdate();
-		} catch (SQLException e) {
+		try {
+			jdbcClient.sql(INSERT_QUERY)
+				.param(id)
+				.param(oldname)
+				.param(newname)
+				.update();
+		} catch (DataAccessException e) {
 			log.error(I18n.get("log.0f01a0baefea"), e);
 		}
 	}

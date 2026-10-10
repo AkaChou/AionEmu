@@ -1,18 +1,19 @@
 package com.aionemu.gameserver.dao.impl;
 
+import java.util.Objects;
+
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.simple.JdbcClient;
 
 import com.aionemu.boot.i18n.I18n;
-import lombok.extern.slf4j.Slf4j;
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.gameserver.model.gameobjects.player.PlayerAppearance;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 玩家外观（捏脸/体型）DAO 的 MySQL 8 实现。
- * MySQL 8 implementation of PlayerAppearanceDAO.
+ * MySQL 8 implementation of PlayerAppearanceDAO using JdbcClient.
  */
 @Slf4j
 public class PlayerAppearanceDAO extends com.aionemu.gameserver.dao.PlayerAppearanceDAO {
@@ -22,24 +23,29 @@ public class PlayerAppearanceDAO extends com.aionemu.gameserver.dao.PlayerAppear
     /** 替换写入玩家外观 / Replace-insert player appearance */
     private static final String REPLACE_QUERY = "REPLACE INTO player_appearance (" + "player_id, voice, skin_rgb, hair_rgb, eye_rgb, lip_rgb, face, hair, deco, tattoo, " + "face_contour, expression, pupil_shape, remove_mane, right_eye_rgb, eye_lash_shape, " + "jaw_line, forehead, eye_height, eye_space, eye_width, eye_size, eye_shape, eye_angle, " + "brow_height, brow_angle, brow_shape, nose, nose_bridge, nose_width, nose_tip, " + "cheek, lip_height, mouth_size, lip_size, smile, lip_shape, jaw_height, chin_jut, " + "ear_shape, head_size, neck, neck_length, shoulder_size, torso, chest, waist, hips, " + "arm_thickness, hand_size, leg_thickness, facial_rate, foot_size, arm_length, leg_length, " + "shoulders, face_shape, pupil_size, upper_torso, fore_arm_thickness, hand_span, " + "calf_thickness, height) VALUES (" + "?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, " + "?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, " + "?, ?)";
 
+    private final JdbcClient jdbcClient;
+
+    public PlayerAppearanceDAO() {
+        this(DatabaseFactory.getJdbcClient());
+    }
+
+    public PlayerAppearanceDAO(JdbcClient jdbcClient) {
+        this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");
+    }
+
     /**
      * 加载指定玩家的外观数据。
      * Loads the appearance data for the given player.
-     * player id
      * @param playerId 玩家 ID / player id
      * @return 玩家外观；加载失败返回 null / player appearance, or null on failure
      */
     @Override
     public PlayerAppearance load(final int playerId) {
-        PlayerAppearance pa = new PlayerAppearance();
-
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement statement = con.prepareStatement(SELECT_QUERY)) {
-
-            statement.setInt(1, playerId);
-
-            try (ResultSet resultSet = statement.executeQuery()) {
-                if (resultSet.next()) {
+        try {
+            return jdbcClient.sql(SELECT_QUERY)
+                .param(playerId)
+                .query((resultSet, rowNum) -> {
+                    PlayerAppearance pa = new PlayerAppearance();
                     pa.setVoice(resultSet.getInt("voice"));
                     pa.setSkinRGB(resultSet.getInt("skin_rgb"));
                     pa.setHairRGB(resultSet.getInt("hair_rgb"));
@@ -102,13 +108,14 @@ public class PlayerAppearanceDAO extends com.aionemu.gameserver.dao.PlayerAppear
                     pa.setHandSpan(resultSet.getInt("hand_span"));
                     pa.setCalfThickness(resultSet.getInt("calf_thickness"));
                     pa.setHeight(resultSet.getFloat("height"));
-                }
-            }
-        } catch (SQLException e) {
+                    return pa;
+                })
+                .optional()
+                .orElse(null);
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.5f83ae225558", playerId), e);
             return null;
         }
-        return pa;
     }
 
     /**
@@ -120,80 +127,76 @@ public class PlayerAppearanceDAO extends com.aionemu.gameserver.dao.PlayerAppear
      */
     @Override
     public boolean store(final int id, final PlayerAppearance pa) {
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement ps = con.prepareStatement(REPLACE_QUERY)) {
-
+        try {
             log.debug("[DAO: PlayerAppearanceDAO] storing appearance {}", id);
 
-            int paramIndex = 1;
-            ps.setInt(paramIndex++, id);                    // 1  - player_id
-            ps.setInt(paramIndex++, pa.getVoice());         // 2  - voice
-            ps.setInt(paramIndex++, pa.getSkinRGB());       // 3  - skin_rgb
-            ps.setInt(paramIndex++, pa.getHairRGB());       // 4  - hair_rgb
-            ps.setInt(paramIndex++, pa.getEyeRGB());        // 5  - eye_rgb
-            ps.setInt(paramIndex++, pa.getLipRGB());        // 6  - lip_rgb
-            ps.setInt(paramIndex++, pa.getFace());          // 7  - face
-            ps.setInt(paramIndex++, pa.getHair());          // 8  - hair
-            ps.setInt(paramIndex++, pa.getDeco());          // 9  - deco
-            ps.setInt(paramIndex++, pa.getTattoo());        // 10 - tattoo
-            ps.setInt(paramIndex++, pa.getFaceContour());   // 11 - face_contour
-            ps.setInt(paramIndex++, pa.getExpression());    // 12 - expression
-            ps.setInt(paramIndex++, pa.getPupilShape());    // 13 - pupil_shape
-            ps.setInt(paramIndex++, pa.getRemoveMane());    // 14 - remove_mane
-            ps.setInt(paramIndex++, pa.getRightEyeRGB());   // 15 - right_eye_rgb
-            ps.setInt(paramIndex++, pa.getEyeLashShape());  // 16 - eye_lash_shape
-            ps.setInt(paramIndex++, pa.getJawLine());       // 17 - jaw_line
-            ps.setInt(paramIndex++, pa.getForehead());      // 18 - forehead
-            ps.setInt(paramIndex++, pa.getEyeHeight());     // 19 - eye_height
-            ps.setInt(paramIndex++, pa.getEyeSpace());      // 20 - eye_space
-            ps.setInt(paramIndex++, pa.getEyeWidth());      // 21 - eye_width
-            ps.setInt(paramIndex++, pa.getEyeSize());       // 22 - eye_size
-            ps.setInt(paramIndex++, pa.getEyeShape());      // 23 - eye_shape
-            ps.setInt(paramIndex++, pa.getEyeAngle());      // 24 - eye_angle
-            ps.setInt(paramIndex++, pa.getBrowHeight());    // 25 - brow_height
-            ps.setInt(paramIndex++, pa.getBrowAngle());     // 26 - brow_angle
-            ps.setInt(paramIndex++, pa.getBrowShape());     // 27 - brow_shape
-            ps.setInt(paramIndex++, pa.getNose());          // 28 - nose
-            ps.setInt(paramIndex++, pa.getNoseBridge());    // 29 - nose_bridge
-            ps.setInt(paramIndex++, pa.getNoseWidth());     // 30 - nose_width
-            ps.setInt(paramIndex++, pa.getNoseTip());       // 31 - nose_tip
-            ps.setInt(paramIndex++, pa.getCheek());         // 32 - cheek
-            ps.setInt(paramIndex++, pa.getLipHeight());     // 33 - lip_height
-            ps.setInt(paramIndex++, pa.getMouthSize());     // 34 - mouth_size
-            ps.setInt(paramIndex++, pa.getLipSize());       // 35 - lip_size
-            ps.setInt(paramIndex++, pa.getSmile());         // 36 - smile
-            ps.setInt(paramIndex++, pa.getLipShape());      // 37 - lip_shape
-            ps.setInt(paramIndex++, pa.getJawHeigh());      // 38 - jaw_height
-            ps.setInt(paramIndex++, pa.getChinJut());       // 39 - chin_jut
-            ps.setInt(paramIndex++, pa.getEarShape());      // 40 - ear_shape
-            ps.setInt(paramIndex++, pa.getHeadSize());      // 41 - head_size
-            ps.setInt(paramIndex++, pa.getNeck());          // 42 - neck
-            ps.setInt(paramIndex++, pa.getNeckLength());    // 43 - neck_length
-            ps.setInt(paramIndex++, pa.getShoulderSize());  // 44 - shoulder_size
-            ps.setInt(paramIndex++, pa.getTorso());         // 45 - torso
-            ps.setInt(paramIndex++, pa.getChest());         // 46 - chest
-            ps.setInt(paramIndex++, pa.getWaist());         // 47 - waist
-            ps.setInt(paramIndex++, pa.getHips());          // 48 - hips
-            ps.setInt(paramIndex++, pa.getArmThickness());  // 49 - arm_thickness
-            ps.setInt(paramIndex++, pa.getHandSize());      // 50 - hand_size
-            ps.setInt(paramIndex++, pa.getLegThickness());  // 51 - leg_thickness
-            ps.setInt(paramIndex++, pa.getFacialRate());    // 52 - facial_rate
-            ps.setInt(paramIndex++, pa.getFootSize());      // 53 - foot_size
-            ps.setInt(paramIndex++, pa.getArmLength());     // 54 - arm_length
-            ps.setInt(paramIndex++, pa.getLegLength());     // 55 - leg_length
-            ps.setInt(paramIndex++, pa.getShoulders());     // 56 - shoulders
-            ps.setInt(paramIndex++, pa.getFaceShape());     // 57 - face_shape
-            ps.setInt(paramIndex++, pa.getPupilSize());     // 58 - pupil_size
-            ps.setInt(paramIndex++, pa.getUpperTorso());    // 59 - upper_torso
-            ps.setInt(paramIndex++, pa.getForeArmThickness()); // 60 - fore_arm_thickness
-            ps.setInt(paramIndex++, pa.getHandSpan());      // 61 - hand_span
-            ps.setInt(paramIndex++, pa.getCalfThickness()); // 62 - calf_thickness
-            ps.setFloat(paramIndex, pa.getHeight());        // 63 - height
-
-            ps.executeUpdate();
+            jdbcClient.sql(REPLACE_QUERY)
+                .param(id)
+                .param(pa.getVoice())
+                .param(pa.getSkinRGB())
+                .param(pa.getHairRGB())
+                .param(pa.getEyeRGB())
+                .param(pa.getLipRGB())
+                .param(pa.getFace())
+                .param(pa.getHair())
+                .param(pa.getDeco())
+                .param(pa.getTattoo())
+                .param(pa.getFaceContour())
+                .param(pa.getExpression())
+                .param(pa.getPupilShape())
+                .param(pa.getRemoveMane())
+                .param(pa.getRightEyeRGB())
+                .param(pa.getEyeLashShape())
+                .param(pa.getJawLine())
+                .param(pa.getForehead())
+                .param(pa.getEyeHeight())
+                .param(pa.getEyeSpace())
+                .param(pa.getEyeWidth())
+                .param(pa.getEyeSize())
+                .param(pa.getEyeShape())
+                .param(pa.getEyeAngle())
+                .param(pa.getBrowHeight())
+                .param(pa.getBrowAngle())
+                .param(pa.getBrowShape())
+                .param(pa.getNose())
+                .param(pa.getNoseBridge())
+                .param(pa.getNoseWidth())
+                .param(pa.getNoseTip())
+                .param(pa.getCheek())
+                .param(pa.getLipHeight())
+                .param(pa.getMouthSize())
+                .param(pa.getLipSize())
+                .param(pa.getSmile())
+                .param(pa.getLipShape())
+                .param(pa.getJawHeigh())
+                .param(pa.getChinJut())
+                .param(pa.getEarShape())
+                .param(pa.getHeadSize())
+                .param(pa.getNeck())
+                .param(pa.getNeckLength())
+                .param(pa.getShoulderSize())
+                .param(pa.getTorso())
+                .param(pa.getChest())
+                .param(pa.getWaist())
+                .param(pa.getHips())
+                .param(pa.getArmThickness())
+                .param(pa.getHandSize())
+                .param(pa.getLegThickness())
+                .param(pa.getFacialRate())
+                .param(pa.getFootSize())
+                .param(pa.getArmLength())
+                .param(pa.getLegLength())
+                .param(pa.getShoulders())
+                .param(pa.getFaceShape())
+                .param(pa.getPupilSize())
+                .param(pa.getUpperTorso())
+                .param(pa.getForeArmThickness())
+                .param(pa.getHandSpan())
+                .param(pa.getCalfThickness())
+                .param(pa.getHeight())
+                .update();
             return true;
-
-        } catch (SQLException e) {
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.915757e82ea4", id), e);
             return false;
         }

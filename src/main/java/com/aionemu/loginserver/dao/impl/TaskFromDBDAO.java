@@ -1,23 +1,23 @@
 package com.aionemu.loginserver.dao.impl;
 
+import java.util.ArrayList;
+import java.util.Objects;
+
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.simple.JdbcClient;
 
 import com.aionemu.boot.i18n.I18n;
-import lombok.extern.slf4j.Slf4j;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.loginserver.taskmanager.handler.TaskFromDBHandler;
 import com.aionemu.loginserver.taskmanager.handler.TaskFromDBHandlerHolder;
 import com.aionemu.loginserver.taskmanager.trigger.TaskFromDBTrigger;
 import com.aionemu.loginserver.taskmanager.trigger.TaskFromDBTriggerHolder;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * 数据库定时任务 DAO 的 MySQL 8 实现。
- * MySQL 8 TaskFromDBDAO implementation.
+ * MySQL 8 TaskFromDBDAO implementation using JdbcClient.
  * @author Updated for MySQL 8
  */
 @Slf4j
@@ -26,40 +26,61 @@ public class TaskFromDBDAO extends com.aionemu.loginserver.dao.TaskFromDBDAO {
     /** 查询全部任务 SQL / Select all tasks SQL*/
     private static final String SELECT_ALL_QUERY = "SELECT * FROM tasks ORDER BY id";
 
+    private final JdbcClient jdbcClient;
+
+    public TaskFromDBDAO() {
+        this(DatabaseFactory.getJdbcClient());
+    }
+
+    public TaskFromDBDAO(JdbcClient jdbcClient) {
+        this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");
+    }
+
     @Override
     public ArrayList<TaskFromDBTrigger> getAllTasks() {
         ArrayList<TaskFromDBTrigger> result = new ArrayList<>();
 
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(SELECT_ALL_QUERY);
-             ResultSet rset = stmt.executeQuery()) {
+        try {
+            jdbcClient.sql(SELECT_ALL_QUERY)
+                .query((rs, rowNum) -> {
+                    try {
+                        TaskFromDBTrigger trigger = TaskFromDBTriggerHolder.valueOf(rs.getString("trigger_type"))
+                            .getTriggerClass()
+                            .getDeclaredConstructor()
+                            .newInstance();
 
-            while (rset.next()) {
-                try {
-                    TaskFromDBTrigger trigger = TaskFromDBTriggerHolder.valueOf(rset.getString("trigger_type")).getTriggerClass().getDeclaredConstructor().newInstance();
+                        TaskFromDBHandler handler = TaskFromDBHandlerHolder.valueOf(rs.getString("task_type"))
+                            .getTaskClass()
+                            .getDeclaredConstructor()
+                            .newInstance();
 
-                    TaskFromDBHandler handler = TaskFromDBHandlerHolder.valueOf(rset.getString("task_type")).getTaskClass().getDeclaredConstructor().newInstance();
+                        handler.setTaskId(rs.getInt("id"));
 
-                    handler.setTaskId(rset.getInt("id"));
+                        String execParamsResult = rs.getString("exec_param");
+                        if (execParamsResult != null && !execParamsResult.isEmpty()) {
+                            handler.setParams(execParamsResult.split(" "));
+                        }
 
-                    String execParamsResult = rset.getString("exec_param");
-                    if (execParamsResult != null && !execParamsResult.isEmpty()) {
-                        handler.setParams(execParamsResult.split(" "));
+                        trigger.setHandlerToTrigger(handler);
+
+                        String triggerParamsResult = rs.getString("trigger_param");
+                        if (triggerParamsResult != null && !triggerParamsResult.isEmpty()) {
+                            trigger.setParams(triggerParamsResult.split(" "));
+                        }
+
+                        return trigger;
+                    } catch (Exception ex) {
+                        log.error(I18n.get("log.51b28941ecc3", ex.getMessage()), ex);
+                        return null;
                     }
-
-                    trigger.setHandlerToTrigger(handler);
-
-                    String triggerParamsResult = rset.getString("trigger_param");
-                    if (triggerParamsResult != null && !triggerParamsResult.isEmpty()) {
-                        trigger.setParams(triggerParamsResult.split(" "));
+                })
+                .list()
+                .forEach(trigger -> {
+                    if (trigger != null) {
+                        result.add(trigger);
                     }
-
-                    result.add(trigger);
-                } catch (Exception ex) {
-                    log.error(I18n.get("log.51b28941ecc3", ex.getMessage()), ex);
-                }
-            }
-        } catch (SQLException e) {
+                });
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.098a63ad15f2"), e);
         }
 

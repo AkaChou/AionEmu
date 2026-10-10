@@ -1,17 +1,21 @@
 package com.aionemu.gameserver.dao.impl;
 
+import java.util.Objects;
+
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.simple.JdbcClient;
 
 import com.aionemu.boot.i18n.I18n;
-import lombok.extern.slf4j.Slf4j;
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.gameserver.model.skinskill.SkillSkin;
 import com.aionemu.gameserver.model.skinskill.SkillSkinList;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
-import java.sql.*;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 玩家技能皮肤列表 DAO 的 MySQL 8 实现。
- * MySQL 8 implementation of PlayerSkillSkinListDAO.
+ * MySQL 8 implementation of PlayerSkillSkinListDAO using JdbcClient.
  */
 @Slf4j
 public class PlayerSkillSkinListDAO extends com.aionemu.gameserver.dao.PlayerSkillSkinListDAO {
@@ -25,10 +29,19 @@ public class PlayerSkillSkinListDAO extends com.aionemu.gameserver.dao.PlayerSki
     /** 更新技能皮肤激活状态 SQL / Update skill skin active state SQL */
     private static final String UPDATE_ACTIVE_QUERY = "UPDATE `player_skill_skins` SET `active` = ? WHERE `player_id`=? AND `skin_id`=?";
 
+    private final JdbcClient jdbcClient;
+
+    public PlayerSkillSkinListDAO() {
+        this(DatabaseFactory.getJdbcClient());
+    }
+
+    public PlayerSkillSkinListDAO(JdbcClient jdbcClient) {
+        this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");
+    }
+
     /**
      * 加载玩家技能皮肤列表。
      * Loads the player's skill skin list.
-     * player id
      * @param playerId 玩家 ID / player id
      * @return 技能皮肤列表 / skill skin list
      */
@@ -36,20 +49,18 @@ public class PlayerSkillSkinListDAO extends com.aionemu.gameserver.dao.PlayerSki
     public SkillSkinList loadSkillSkinList(final int playerId) {
         final SkillSkinList tl = new SkillSkinList();
 
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(LOAD_QUERY)) {
-
-            stmt.setInt(1, playerId);
-
-            try (ResultSet rset = stmt.executeQuery()) {
-                while (rset.next()) {
+        try {
+            jdbcClient.sql(LOAD_QUERY)
+                .param(playerId)
+                .query((rset, rowNum) -> {
                     int id = rset.getInt("skin_id");
                     int remaining = rset.getInt("remaining");
                     int active = rset.getInt("active");
                     tl.addEntry(id, remaining, active);
-                }
-            }
-        } catch (SQLException e) {
+                    return null;
+                })
+                .list();
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.7cb3e1e1c2aa", playerId), e);
         }
 
@@ -65,16 +76,15 @@ public class PlayerSkillSkinListDAO extends com.aionemu.gameserver.dao.PlayerSki
      */
     @Override
     public boolean storeSkillSkins(Player player, SkillSkin entry) {
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(INSERT_QUERY)) {
-
-            stmt.setInt(1, player.getObjectId());
-            stmt.setInt(2, entry.getId());
-            stmt.setInt(3, entry.getExpireTime());
-            stmt.setInt(4, entry.getIsActive());
-            stmt.executeUpdate();
+        try {
+            jdbcClient.sql(INSERT_QUERY)
+                .param(player.getObjectId())
+                .param(entry.getId())
+                .param(entry.getExpireTime())
+                .param(entry.getIsActive())
+                .update();
             return true;
-        } catch (SQLException e) {
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.b49a1a09f26e", player.getObjectId()), e);
             return false;
         }
@@ -89,15 +99,13 @@ public class PlayerSkillSkinListDAO extends com.aionemu.gameserver.dao.PlayerSki
      */
     @Override
     public boolean setActive(final int playerObjId, final int skinId) {
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(UPDATE_ACTIVE_QUERY)) {
-
-            stmt.setInt(1, 1); // active = 1
-            stmt.setInt(2, playerObjId);
-            stmt.setInt(3, skinId);
-            int updated = stmt.executeUpdate();
-            return updated > 0;
-        } catch (SQLException e) {
+        try {
+            return jdbcClient.sql(UPDATE_ACTIVE_QUERY)
+                .param(1)
+                .param(playerObjId)
+                .param(skinId)
+                .update() > 0;
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.1c834a3bbe53", playerObjId, skinId), e);
             return false;
         }
@@ -112,15 +120,13 @@ public class PlayerSkillSkinListDAO extends com.aionemu.gameserver.dao.PlayerSki
      */
     @Override
     public boolean setDeactive(final int playerObjId, final int skinId) {
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(UPDATE_ACTIVE_QUERY)) {
-
-            stmt.setInt(1, 0); // active = 0
-            stmt.setInt(2, playerObjId);
-            stmt.setInt(3, skinId);
-            int updated = stmt.executeUpdate();
-            return updated > 0;
-        } catch (SQLException e) {
+        try {
+            return jdbcClient.sql(UPDATE_ACTIVE_QUERY)
+                .param(0)
+                .param(playerObjId)
+                .param(skinId)
+                .update() > 0;
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.467b5e662059", playerObjId, skinId), e);
             return false;
         }
@@ -135,14 +141,12 @@ public class PlayerSkillSkinListDAO extends com.aionemu.gameserver.dao.PlayerSki
      */
     @Override
     public boolean removeSkillSkin(int playerId, int skinId) {
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(DELETE_QUERY)) {
-
-            stmt.setInt(1, playerId);
-            stmt.setInt(2, skinId);
-            int deleted = stmt.executeUpdate();
-            return deleted > 0;
-        } catch (SQLException e) {
+        try {
+            return jdbcClient.sql(DELETE_QUERY)
+                .param(playerId)
+                .param(skinId)
+                .update() > 0;
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.84df7864194f", playerId), e);
             return false;
         }

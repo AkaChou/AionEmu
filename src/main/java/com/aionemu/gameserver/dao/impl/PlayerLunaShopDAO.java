@@ -1,23 +1,26 @@
 package com.aionemu.gameserver.dao.impl;
 
+import java.util.Objects;
+
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.simple.JdbcClient;
 
 import com.aionemu.boot.i18n.I18n;
-import lombok.extern.slf4j.Slf4j;
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.gameserver.model.gameobjects.PersistentState;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.gameobjects.player.PlayerLunaShop;
-import java.sql.*;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 玩家 Luna 商店 DAO 的 MySQL 8 实现。
- * MySQL 8 implementation of PlayerLunaShopDAO.
+ * MySQL 8 implementation of PlayerLunaShopDAO using JdbcClient.
  * Created by wanke on 13/02/2017.
  * Updated for MySQL 8 - Fixed connection leaks.
  */
 @Slf4j
 public class PlayerLunaShopDAO extends com.aionemu.gameserver.dao.PlayerLunaShopDAO {
-
 
     /** 插入露娜商店记录 SQL / Insert Luna shop record SQL */
     private static final String ADD_QUERY = "INSERT INTO `player_luna_shop` (`player_id`, `free_under`, `free_munition`, `free_chest`) VALUES (?,?,?,?)";
@@ -28,6 +31,16 @@ public class PlayerLunaShopDAO extends com.aionemu.gameserver.dao.PlayerLunaShop
     /** 更新露娜商店 SQL / Update Luna shop SQL */
     private static final String UPDATE_QUERY = "UPDATE player_luna_shop SET `free_under`=?, `free_munition`=?, `free_chest`=? WHERE `player_id`=?";
 
+    private final JdbcClient jdbcClient;
+
+    public PlayerLunaShopDAO() {
+        this(DatabaseFactory.getJdbcClient());
+    }
+
+    public PlayerLunaShopDAO(JdbcClient jdbcClient) {
+        this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");
+    }
+
     /**
      * 加载玩家 Luna 商店数据。
      * Loads player Luna shop data.
@@ -35,13 +48,10 @@ public class PlayerLunaShopDAO extends com.aionemu.gameserver.dao.PlayerLunaShop
      */
     @Override
     public void load(Player player) {
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(SELECT_QUERY)) {
-
-            stmt.setInt(1, player.getObjectId());
-
-            try (ResultSet rset = stmt.executeQuery()) {
-                if (rset.next()) {
+        try {
+            jdbcClient.sql(SELECT_QUERY)
+                .param(player.getObjectId())
+                .query((rset, rowNum) -> {
                     boolean under = rset.getBoolean("free_under");
                     boolean factory = rset.getBoolean("free_munition");
                     boolean chest = rset.getBoolean("free_chest");
@@ -49,9 +59,10 @@ public class PlayerLunaShopDAO extends com.aionemu.gameserver.dao.PlayerLunaShop
                     PlayerLunaShop pls = new PlayerLunaShop(under, factory, chest);
                     pls.setPersistentState(PersistentState.UPDATED);
                     player.setPlayerLunaShop(pls);
-                }
-            }
-        } catch (SQLException e) {
+                    return null;
+                })
+                .list();
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.064f9d2d26d3", player.getObjectId()), e);
         }
     }
@@ -67,16 +78,15 @@ public class PlayerLunaShopDAO extends com.aionemu.gameserver.dao.PlayerLunaShop
      */
     @Override
     public boolean add(final int playerId, final boolean freeUnderpath, final boolean freeFactory, final boolean freeChest) {
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(ADD_QUERY)) {
-
-            stmt.setInt(1, playerId);
-            stmt.setBoolean(2, freeUnderpath);
-            stmt.setBoolean(3, freeFactory);
-            stmt.setBoolean(4, freeChest);
-            stmt.executeUpdate();
+        try {
+            jdbcClient.sql(ADD_QUERY)
+                .param(playerId)
+                .param(freeUnderpath)
+                .param(freeFactory)
+                .param(freeChest)
+                .update();
             return true;
-        } catch (SQLException e) {
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.44819cc1f7de", playerId), e);
             return false;
         }
@@ -89,12 +99,10 @@ public class PlayerLunaShopDAO extends com.aionemu.gameserver.dao.PlayerLunaShop
      */
     @Override
     public boolean delete() {
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(DELETE_QUERY)) {
-
-            stmt.executeUpdate();
+        try {
+            jdbcClient.sql(DELETE_QUERY).update();
             return true;
-        } catch (SQLException e) {
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.4cc438cef8a8"), e);
             return false;
         }
@@ -109,29 +117,21 @@ public class PlayerLunaShopDAO extends com.aionemu.gameserver.dao.PlayerLunaShop
     @Override
     public boolean store(Player player) {
         boolean success = false;
-
-        try (Connection con = DatabaseFactory.getConnection()) {
-            con.setAutoCommit(false);
-
-            PlayerLunaShop bind = player.getPlayerLunaShop();
-            if (bind != null) {
-                switch (bind.getPersistentState()) {
-                    case UPDATE_REQUIRED:
-                    case NEW:
-                        success = updateLunaShop(con, player);
-                        log.debug("DB updated for player {}", player.getObjectId());
-                        break;
-                    default:
-                        success = true;
-                        break;
-                }
-                if (success) {
-                    bind.setPersistentState(PersistentState.UPDATED);
-                }
+        PlayerLunaShop bind = player.getPlayerLunaShop();
+        if (bind != null) {
+            switch (bind.getPersistentState()) {
+                case UPDATE_REQUIRED:
+                case NEW:
+                    success = updateLunaShop(player);
+                    log.debug("DB updated for player {}", player.getObjectId());
+                    break;
+                default:
+                    success = true;
+                    break;
             }
-            con.commit();
-        } catch (SQLException e) {
-            log.error(I18n.get("log.3148132d5775", player.getObjectId()), e);
+            if (success) {
+                bind.setPersistentState(PersistentState.UPDATED);
+            }
         }
         return success;
     }
@@ -139,25 +139,24 @@ public class PlayerLunaShopDAO extends com.aionemu.gameserver.dao.PlayerLunaShop
     /**
      * 更新玩家 Luna 商店记录。
      * Updates player Luna shop record.
-     * @param con 数据库连接 / database connection
      * @param player 玩家 / player
      * @return 是否成功 / whether succeeded
      */
-    private boolean updateLunaShop(Connection con, Player player) {
-        try (PreparedStatement stmt = con.prepareStatement(UPDATE_QUERY)) {
-            PlayerLunaShop lr = player.getPlayerLunaShop();
-            if (lr == null) {
-                return false;
-            }
+    private boolean updateLunaShop(Player player) {
+        PlayerLunaShop lr = player.getPlayerLunaShop();
+        if (lr == null) {
+            return false;
+        }
 
-            stmt.setBoolean(1, lr.isFreeUnderpath());
-            stmt.setBoolean(2, lr.isFreeFactory());
-            stmt.setBoolean(3, lr.isFreeChest());
-            stmt.setInt(4, player.getObjectId());
-
-            stmt.executeUpdate();
+        try {
+            jdbcClient.sql(UPDATE_QUERY)
+                .param(lr.isFreeUnderpath())
+                .param(lr.isFreeFactory())
+                .param(lr.isFreeChest())
+                .param(player.getObjectId())
+                .update();
             return true;
-        } catch (SQLException e) {
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.500d6b5a68a9", player.getObjectId()), e);
             return false;
         }
@@ -174,16 +173,15 @@ public class PlayerLunaShopDAO extends com.aionemu.gameserver.dao.PlayerLunaShop
      */
     @Override
     public boolean setLunaShopByObjId(int obj, final boolean freeUnderpath, final boolean freeFactory, final boolean freeChest) {
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(UPDATE_QUERY)) {
-
-            stmt.setBoolean(1, freeUnderpath);
-            stmt.setBoolean(2, freeFactory);
-            stmt.setBoolean(3, freeChest);
-            stmt.setInt(4, obj);
-            stmt.executeUpdate();
+        try {
+            jdbcClient.sql(UPDATE_QUERY)
+                .param(freeUnderpath)
+                .param(freeFactory)
+                .param(freeChest)
+                .param(obj)
+                .update();
             return true;
-        } catch (SQLException e) {
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.a8a27eb03080", obj), e);
             return false;
         }

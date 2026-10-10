@@ -12,6 +12,8 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import javax.sql.DataSource;
+import org.springframework.jdbc.core.simple.JdbcClient;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -98,6 +100,35 @@ public final class DatabaseFactory {
             con.setAutoCommit(true);
         }
         return con;
+    }
+
+    /**
+     * 获取当前服务上下文的数据源
+     * Get the data source for the current service context
+     * @return 当前数据源 / Current DataSource
+     */
+    public static DataSource getDataSource() {
+        return state().dataSource;
+    }
+
+    /**
+     * 获取指定服务上下文的数据源
+     * Get the data source for the specified service context
+     * @param context 服务上下文名称 / Service context name
+     * @return 数据源，若未初始化则为 null / DataSource, or null if uninitialized
+     */
+    public static DataSource getDataSource(String context) {
+        DatabaseState s = states.get(context);
+        return s != null ? s.dataSource : null;
+    }
+
+    /**
+     * 获取基于当前服务上下文数据源的 JdbcClient
+     * Get the JdbcClient based on the current service context DataSource
+     * @return 当前上下文的 JdbcClient / JdbcClient for current context
+     */
+    public static JdbcClient getJdbcClient() {
+        return JdbcClient.create(getDataSource());
     }
 
     /**

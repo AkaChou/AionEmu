@@ -1,22 +1,21 @@
 package com.aionemu.loginserver.dao.impl;
 
+import java.util.Objects;
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.simple.JdbcClient;
 
 import com.aionemu.boot.i18n.I18n;
-import lombok.extern.slf4j.Slf4j;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-
 import com.aionemu.commons.database.DatabaseFactory;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 服务器在线统计 DAO 的 MySQL 8 实现。
- * MySQL 8 SvStatsDAO implementation (server online statistics).
+ * MySQL 8 SvStatsDAO implementation (server online statistics) using JdbcClient.
  * @author Updated for MySQL 8
  */
 @Slf4j
 public class SvStatsDAO extends com.aionemu.loginserver.dao.SvStatsDAO {
-
 
     /** 更新在线服务器统计 SQL / Update online server stats SQL */
     private static final String UPDATE_ONLINE = "UPDATE `svstats` SET status = ?, current = ?, max = ?, last_update = NOW() WHERE server = ?";
@@ -24,22 +23,32 @@ public class SvStatsDAO extends com.aionemu.loginserver.dao.SvStatsDAO {
     private static final String UPDATE_OFFLINE = "UPDATE `svstats` SET status = ?, current = ?, last_update = NOW() WHERE server = ?";
     /** Mark all servers offline SQL / Mark all servers offline SQL */
     private static final String UPDATE_ALL_OFFLINE = "UPDATE `svstats` SET status = ?, current = ?, last_update = NOW()";
+    /** 插入服务器统计 SQL / Insert server stats SQL */
+    private static final String INSERT_STATS = "INSERT INTO svstats (server, status, current, max, last_update) VALUES (?, ?, ?, ?, NOW())";
+
+    private final JdbcClient jdbcClient;
+
+    public SvStatsDAO() {
+        this(DatabaseFactory.getJdbcClient());
+    }
+
+    public SvStatsDAO(JdbcClient jdbcClient) {
+        this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");
+    }
 
     @Override
     public void update_SvStats_Online(int server, int status, int current, int max) {
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(UPDATE_ONLINE)) {
-
-            stmt.setInt(1, status);
-            stmt.setInt(2, current);
-            stmt.setInt(3, max);
-            stmt.setInt(4, server);
-
-            int updated = stmt.executeUpdate();
+        try {
+            int updated = jdbcClient.sql(UPDATE_ONLINE)
+                .param(status)
+                .param(current)
+                .param(max)
+                .param(server)
+                .update();
             if (updated == 0) {
                 insertServerStats(server, status, current, max);
             }
-        } catch (SQLException e) {
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.e8405213aab7", server), e);
         }
     }
@@ -47,54 +56,44 @@ public class SvStatsDAO extends com.aionemu.loginserver.dao.SvStatsDAO {
     /**
      * 插入新的服务器统计行（更新未命中时调用）。
      * Inserts a new server stats row when update hits zero rows.
-     * server id
-     * status
-     * current online
-     * @param max 最大在线 / max online
      */
     private void insertServerStats(int server, int status, int current, int max) {
-        String insertQuery = "INSERT INTO svstats (server, status, current, max, last_update) VALUES (?, ?, ?, ?, NOW())";
-
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(insertQuery)) {
-
-            stmt.setInt(1, server);
-            stmt.setInt(2, status);
-            stmt.setInt(3, current);
-            stmt.setInt(4, max);
-            stmt.executeUpdate();
-        } catch (SQLException e) {
+        try {
+            jdbcClient.sql(INSERT_STATS)
+                .param(server)
+                .param(status)
+                .param(current)
+                .param(max)
+                .update();
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.ccd3f03c62c4", server), e);
         }
     }
 
     @Override
     public void update_SvStats_Offline(int server, int status, int current) {
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(UPDATE_OFFLINE)) {
-
-            stmt.setInt(1, status);
-            stmt.setInt(2, current);
-            stmt.setInt(3, server);
-
-            int updated = stmt.executeUpdate();
+        try {
+            int updated = jdbcClient.sql(UPDATE_OFFLINE)
+                .param(status)
+                .param(current)
+                .param(server)
+                .update();
             if (updated == 0) {
                 insertServerStats(server, status, current, 0);
             }
-        } catch (SQLException e) {
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.edce6e5f9a35", server), e);
         }
     }
 
     @Override
     public void update_SvStats_All_Offline(int status, int current) {
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(UPDATE_ALL_OFFLINE)) {
-
-            stmt.setInt(1, status);
-            stmt.setInt(2, current);
-            stmt.executeUpdate();
-        } catch (SQLException e) {
+        try {
+            jdbcClient.sql(UPDATE_ALL_OFFLINE)
+                .param(status)
+                .param(current)
+                .update();
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.4b7fedeec762"), e);
         }
     }

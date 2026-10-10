@@ -1,34 +1,53 @@
 package com.aionemu.gameserver.dao.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.simple.JdbcClient;
 
 import com.aionemu.boot.i18n.I18n;
-import lombok.extern.slf4j.Slf4j;
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.gameserver.model.dorinerk_wardrobe.PlayerWardrobeEntry;
 import com.aionemu.gameserver.model.dorinerk_wardrobe.PlayerWardrobeList;
 import com.aionemu.gameserver.model.gameobjects.PersistentState;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
-import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 玩家衣柜（时装）DAO 的 MySQL 8 实现。
- * MySQL 8 implementation of PlayerWardrobeDAO.
+ * MySQL 8 implementation of PlayerWardrobeDAO using JdbcClient.
  * @author Ranastic
  */
 @Slf4j
 public class PlayerWardrobeDAO extends com.aionemu.gameserver.dao.PlayerWardrobeDAO {
 
-
     /** 插入或更新衣柜条目 / Insert or update a wardrobe entry */
     private static final String INSERT_OR_UPDATE = "INSERT INTO `player_wardrobe` (`player_id`, `item_id`, `slot`, `reskin_count`) VALUES(?,?,?,?) ON DUPLICATE KEY UPDATE `item_id` = VALUES(`item_id`), `slot` = VALUES(`slot`)";
-
     /** 查询玩家衣柜全部条目 / Select all wardrobe entries for a player */
     private static final String SELECT_QUERY = "SELECT `item_id`,`slot`,`reskin_count` FROM `player_wardrobe` WHERE `player_id`=?";
-
     /** 删除指定衣柜条目 / Delete a specific wardrobe entry */
     private static final String DELETE_QUERY = "DELETE FROM `player_wardrobe` WHERE `player_id`=? AND `item_id`=?";
+    /** 统计衣柜物品数量 / Count wardrobe items */
+    private static final String COUNT_QUERY = "SELECT COUNT(*) AS `size` FROM `player_wardrobe` WHERE `player_id`=?";
+    /** 按槽位查询物品 ID / Select item id by slot */
+    private static final String SELECT_ITEM_BY_SLOT_QUERY = "SELECT `item_id` FROM `player_wardrobe` WHERE `player_id`=? AND `slot`=?";
+    /** 按槽位查询重染次数 / Select reskin count by slot */
+    private static final String SELECT_RESKIN_BY_SLOT_QUERY = "SELECT `reskin_count` FROM `player_wardrobe` WHERE `player_id`=? AND `slot`=?";
+    /** 按槽位更新重染次数 / Update reskin count by slot */
+    private static final String UPDATE_RESKIN_QUERY = "UPDATE player_wardrobe SET `reskin_count`=? WHERE `player_id`=? AND `slot`=?";
+
+    private final JdbcClient jdbcClient;
+
+    public PlayerWardrobeDAO() {
+        this(DatabaseFactory.getJdbcClient());
+    }
+
+    public PlayerWardrobeDAO(JdbcClient jdbcClient) {
+        this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");
+    }
 
     /**
      * 判断当前数据库是否受本 DAO 支持。
@@ -53,20 +72,17 @@ public class PlayerWardrobeDAO extends com.aionemu.gameserver.dao.PlayerWardrobe
     public PlayerWardrobeList load(Player player) {
         List<PlayerWardrobeEntry> w = new ArrayList<>();
 
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(SELECT_QUERY)) {
-
-            stmt.setInt(1, player.getObjectId());
-
-            try (ResultSet rset = stmt.executeQuery()) {
-                while (rset.next()) {
+        try {
+            w = jdbcClient.sql(SELECT_QUERY)
+                .param(player.getObjectId())
+                .query((rset, rowNum) -> {
                     int itemId = rset.getInt("item_id");
                     int slot = rset.getInt("slot");
                     int reskin = rset.getInt("reskin_count");
-                    w.add(new PlayerWardrobeEntry(itemId, slot, reskin, PersistentState.UPDATED));
-                }
-            }
-        } catch (SQLException e) {
+                    return new PlayerWardrobeEntry(itemId, slot, reskin, PersistentState.UPDATED);
+                })
+                .list();
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.0c81ac00324b", player.getObjectId()), e);
         }
         return new PlayerWardrobeList(w);
@@ -83,16 +99,15 @@ public class PlayerWardrobeDAO extends com.aionemu.gameserver.dao.PlayerWardrobe
      */
     @Override
     public boolean store(int objectId, int itemId, int slot, int reskin) {
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(INSERT_OR_UPDATE)) {
-
-            stmt.setInt(1, objectId);
-            stmt.setInt(2, itemId);
-            stmt.setInt(3, slot);
-            stmt.setInt(4, reskin);
-            stmt.executeUpdate();
+        try {
+            jdbcClient.sql(INSERT_OR_UPDATE)
+                .param(objectId)
+                .param(itemId)
+                .param(slot)
+                .param(reskin)
+                .update();
             return true;
-        } catch (SQLException e) {
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.7fed95e25235", objectId), e);
             return false;
         }
@@ -107,14 +122,13 @@ public class PlayerWardrobeDAO extends com.aionemu.gameserver.dao.PlayerWardrobe
      */
     @Override
     public boolean delete(int objectId, int itemId) {
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(DELETE_QUERY)) {
-
-            stmt.setInt(1, objectId);
-            stmt.setInt(2, itemId);
-            stmt.executeUpdate();
+        try {
+            jdbcClient.sql(DELETE_QUERY)
+                .param(objectId)
+                .param(itemId)
+                .update();
             return true;
-        } catch (SQLException e) {
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.06e3e78e5e3b", objectId), e);
             return false;
         }
@@ -128,21 +142,17 @@ public class PlayerWardrobeDAO extends com.aionemu.gameserver.dao.PlayerWardrobe
      */
     @Override
     public int getItemSize(int playerObjId) {
-        String query = "SELECT COUNT(*) AS `size` FROM `player_wardrobe` WHERE `player_id`=?";
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(query)) {
-
-            stmt.setInt(1, playerObjId);
-
-            try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    return rs.getInt("size");
-                }
-            }
-        } catch (SQLException e) {
+        try {
+            Integer size = jdbcClient.sql(COUNT_QUERY)
+                .param(playerObjId)
+                .query((rs, rowNum) -> rs.getInt("size"))
+                .optional()
+                .orElse(0);
+            return size != null ? size : 0;
+        } catch (DataAccessException e) {
             log.debug("Could not get item size for player {}", playerObjId, e);
+            return 0;
         }
-        return 0;
     }
 
     /**
@@ -154,22 +164,18 @@ public class PlayerWardrobeDAO extends com.aionemu.gameserver.dao.PlayerWardrobe
      */
     @Override
     public int getWardrobeItemBySlot(final int obj, int slot) {
-        String query = "SELECT `item_id` FROM `player_wardrobe` WHERE `player_id`=? AND `slot`=?";
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement s = con.prepareStatement(query)) {
-
-            s.setInt(1, obj);
-            s.setInt(2, slot);
-
-            try (ResultSet rs = s.executeQuery()) {
-                if (rs.next()) {
-                    return rs.getInt("item_id");
-                }
-            }
-        } catch (SQLException e) {
+        try {
+            Integer itemId = jdbcClient.sql(SELECT_ITEM_BY_SLOT_QUERY)
+                .param(obj)
+                .param(slot)
+                .query((rs, rowNum) -> rs.getInt("item_id"))
+                .optional()
+                .orElse(0);
+            return itemId != null ? itemId : 0;
+        } catch (DataAccessException e) {
             log.debug("No wardrobe item found for player {}, slot {}", obj, slot);
+            return 0;
         }
-        return 0;
     }
 
     /**
@@ -181,22 +187,18 @@ public class PlayerWardrobeDAO extends com.aionemu.gameserver.dao.PlayerWardrobe
      */
     @Override
     public int getReskinCountBySlot(final int obj, int slot) {
-        String query = "SELECT `reskin_count` FROM `player_wardrobe` WHERE `player_id`=? AND `slot`=?";
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement s = con.prepareStatement(query)) {
-
-            s.setInt(1, obj);
-            s.setInt(2, slot);
-
-            try (ResultSet rs = s.executeQuery()) {
-                if (rs.next()) {
-                    return rs.getInt("reskin_count");
-                }
-            }
-        } catch (SQLException e) {
+        try {
+            Integer reskin = jdbcClient.sql(SELECT_RESKIN_BY_SLOT_QUERY)
+                .param(obj)
+                .param(slot)
+                .query((rs, rowNum) -> rs.getInt("reskin_count"))
+                .optional()
+                .orElse(0);
+            return reskin != null ? reskin : 0;
+        } catch (DataAccessException e) {
             log.debug("No reskin count found for player {}, slot {}", obj, slot);
+            return 0;
         }
-        return 0;
     }
 
     /**
@@ -209,16 +211,14 @@ public class PlayerWardrobeDAO extends com.aionemu.gameserver.dao.PlayerWardrobe
      */
     @Override
     public boolean setReskinCountBySlot(int obj, int slot, int reskin_count) {
-        String query = "UPDATE player_wardrobe SET `reskin_count`=? WHERE `player_id`=? AND `slot`=?";
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(query)) {
-
-            stmt.setInt(1, reskin_count);
-            stmt.setInt(2, obj);
-            stmt.setInt(3, slot);
-            stmt.executeUpdate();
+        try {
+            jdbcClient.sql(UPDATE_RESKIN_QUERY)
+                .param(reskin_count)
+                .param(obj)
+                .param(slot)
+                .update();
             return true;
-        } catch (SQLException e) {
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.5acbf781683c", obj, slot), e);
             return false;
         }

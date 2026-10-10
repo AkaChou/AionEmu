@@ -1,28 +1,28 @@
 package com.aionemu.gameserver.dao.impl;
 
-
-import com.aionemu.boot.i18n.I18n;
-import lombok.extern.slf4j.Slf4j;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.simple.JdbcClient;
+
+import com.aionemu.boot.i18n.I18n;
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.gameserver.model.cp.PlayerCPEntry;
 import com.aionemu.gameserver.model.cp.PlayerCPList;
 import com.aionemu.gameserver.model.gameobjects.PersistentState;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * 玩家创造力点数（CP）DAO 的 MySQL 8 实现。
- * MySQL 8 implementation of PlayerCreativityPointsDAO.
+ * MySQL 8 implementation of PlayerCreativityPointsDAO using JdbcClient.
  * Updated for MySQL 8 - Fixed connection leaks.
  */
 @Slf4j
 public class PlayerCreativityPointsDAO extends com.aionemu.gameserver.dao.PlayerCreativityPointsDAO {
-
 
 	/** 插入或更新创意点 SQL / Insert or update CP SQL*/
 	private static final String INSERT_OR_UPDATE = "INSERT INTO `player_cp` (`player_id`, `slot`, `point`) VALUES(?,?,?) " + "ON DUPLICATE KEY UPDATE `slot` = VALUES(`slot`), `point` = VALUES(`point`)";
@@ -35,29 +35,36 @@ public class PlayerCreativityPointsDAO extends com.aionemu.gameserver.dao.Player
 	/** 查询创意点槽位 SQL / Select CP slot SQL */
 	private static final String SELECT_SLOT_QUERY = "SELECT `slot` FROM `player_cp` WHERE `player_id`=?";
 
+	private final JdbcClient jdbcClient;
+
+	public PlayerCreativityPointsDAO() {
+		this(DatabaseFactory.getJdbcClient());
+	}
+
+	public PlayerCreativityPointsDAO(JdbcClient jdbcClient) {
+		this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");
+	}
+
 	/**
 	 * 加载玩家 CP 列表。
 	 * Loads the player's CP list.
 	 * @param player 玩家 / player
-	 * CP list
+	 * @return CP 列表 / CP list
 	 */
 	@Override
 	public PlayerCPList loadCP(Player player) {
 		List<PlayerCPEntry> cp = new ArrayList<>();
 
-		try (Connection con = DatabaseFactory.getConnection();
-			 PreparedStatement stmt = con.prepareStatement(SELECT_QUERY)) {
-
-			stmt.setInt(1, player.getObjectId());
-
-			try (ResultSet rset = stmt.executeQuery()) {
-				while (rset.next()) {
-					int slot = rset.getInt("slot");
-					int point = rset.getInt("point");
-					cp.add(new PlayerCPEntry(slot, point, PersistentState.UPDATED));
-				}
-			}
-		} catch (Exception e) {
+		try {
+			cp = jdbcClient.sql(SELECT_QUERY)
+				.param(player.getObjectId())
+				.query((rset, rowNum) -> new PlayerCPEntry(
+					rset.getInt("slot"),
+					rset.getInt("point"),
+					PersistentState.UPDATED
+				))
+				.list();
+		} catch (DataAccessException e) {
 			log.error(I18n.get("log.f66364d8a626", player.getObjectId(), " from DB"), e);
 		}
 		return new PlayerCPList(cp);
@@ -73,14 +80,13 @@ public class PlayerCreativityPointsDAO extends com.aionemu.gameserver.dao.Player
 	 */
 	@Override
 	public boolean storeCP(int objectId, int slot, int point) {
-		try (Connection con = DatabaseFactory.getConnection();
-			 PreparedStatement stmt = con.prepareStatement(INSERT_OR_UPDATE)) {
-
-			stmt.setInt(1, objectId);
-			stmt.setInt(2, slot);
-			stmt.setInt(3, point);
-			return stmt.executeUpdate() > 0;
-		} catch (Exception e) {
+		try {
+			return jdbcClient.sql(INSERT_OR_UPDATE)
+				.param(objectId)
+				.param(slot)
+				.param(point)
+				.update() > 0;
+		} catch (DataAccessException e) {
 			log.error(I18n.get("log.ca5c95d176db", objectId, " from DB"), e);
 			return false;
 		}
@@ -95,13 +101,12 @@ public class PlayerCreativityPointsDAO extends com.aionemu.gameserver.dao.Player
 	 */
 	@Override
 	public boolean deleteCP(int objectId, int slot) {
-		try (Connection con = DatabaseFactory.getConnection();
-			 PreparedStatement stmt = con.prepareStatement(DELETE_QUERY)) {
-
-			stmt.setInt(1, objectId);
-			stmt.setInt(2, slot);
-			return stmt.executeUpdate() > 0;
-		} catch (Exception e) {
+		try {
+			return jdbcClient.sql(DELETE_QUERY)
+				.param(objectId)
+				.param(slot)
+				.update() > 0;
+		} catch (DataAccessException e) {
 			log.error(I18n.get("log.55ed70097989", objectId, " from DB"), e);
 			return false;
 		}
@@ -115,20 +120,17 @@ public class PlayerCreativityPointsDAO extends com.aionemu.gameserver.dao.Player
 	 */
 	@Override
 	public int getSlotSize(int playerObjId) {
-		try (Connection con = DatabaseFactory.getConnection();
-			 PreparedStatement stmt = con.prepareStatement(SELECT_COUNT_QUERY)) {
-
-			stmt.setInt(1, playerObjId);
-
-			try (ResultSet rs = stmt.executeQuery()) {
-				if (rs.next()) {
-					return rs.getInt("size");
-				}
-			}
-		} catch (Exception e) {
+		try {
+			Integer size = jdbcClient.sql(SELECT_COUNT_QUERY)
+				.param(playerObjId)
+				.query((rs, rowNum) -> rs.getInt("size"))
+				.optional()
+				.orElse(0);
+			return size != null ? size : 0;
+		} catch (DataAccessException e) {
 			log.error(I18n.get("log.ddd6a72fd9a0", playerObjId), e);
+			return 0;
 		}
-		return 0;
 	}
 
 	/**
@@ -139,20 +141,17 @@ public class PlayerCreativityPointsDAO extends com.aionemu.gameserver.dao.Player
 	 */
 	@Override
 	public int getCPSlotObjId(final int obj) {
-		try (Connection con = DatabaseFactory.getConnection();
-			 PreparedStatement s = con.prepareStatement(SELECT_SLOT_QUERY)) {
-
-			s.setInt(1, obj);
-
-			try (ResultSet rs = s.executeQuery()) {
-				if (rs.next()) {
-					return rs.getInt("slot");
-				}
-			}
-		} catch (Exception e) {
+		try {
+			Integer slot = jdbcClient.sql(SELECT_SLOT_QUERY)
+				.param(obj)
+				.query((rs, rowNum) -> rs.getInt("slot"))
+				.optional()
+				.orElse(0);
+			return slot != null ? slot : 0;
+		} catch (DataAccessException e) {
 			log.error(I18n.get("log.08a2600ad0a0", obj), e);
+			return 0;
 		}
-		return 0;
 	}
 
 	/**

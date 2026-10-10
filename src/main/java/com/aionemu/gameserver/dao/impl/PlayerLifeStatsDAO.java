@@ -1,22 +1,28 @@
 package com.aionemu.gameserver.dao.impl;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.util.Objects;
+
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.simple.JdbcClient;
 
 import com.aionemu.boot.i18n.I18n;
-import lombok.extern.slf4j.Slf4j;
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.stats.container.PlayerLifeStats;
-import java.sql.*;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 玩家生命状态 DAO 的 MySQL 8 实现。
- * MySQL 8 implementation of PlayerLifeStatsDAO.
+ * MySQL 8 implementation of PlayerLifeStatsDAO using JdbcClient.
  * Updated for MySQL 8.
  * @author Mr. Poke
  */
 @Slf4j
 public class PlayerLifeStatsDAO extends com.aionemu.gameserver.dao.PlayerLifeStatsDAO {
-
 
     /** 插入或更新生命状态 SQL / Insert or update life stats SQL */
     private static final String INSERT_QUERY = "INSERT INTO `player_life_stats` (`player_id`, `hp`, `mp`, `fp`) VALUES (?, ?, ?, ?) " + "ON DUPLICATE KEY UPDATE `hp` = VALUES(`hp`), `mp` = VALUES(`mp`), `fp` = VALUES(`fp`)";
@@ -25,6 +31,16 @@ public class PlayerLifeStatsDAO extends com.aionemu.gameserver.dao.PlayerLifeSta
     /** 更新生命状态 SQL / Update life stats SQL */
     private static final String UPDATE_QUERY = "UPDATE `player_life_stats` SET `hp` = ?, `mp` = ?, `fp` = ? WHERE `player_id` = ?";
 
+    private final JdbcClient jdbcClient;
+
+    public PlayerLifeStatsDAO() {
+        this(DatabaseFactory.getJdbcClient());
+    }
+
+    public PlayerLifeStatsDAO(JdbcClient jdbcClient) {
+        this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");
+    }
+
     /**
      * 加载玩家生命状态。
      * Loads player life stats.
@@ -32,23 +48,23 @@ public class PlayerLifeStatsDAO extends com.aionemu.gameserver.dao.PlayerLifeSta
      */
     @Override
     public void loadPlayerLifeStat(Player player) {
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(SELECT_QUERY)) {
-
-            stmt.setInt(1, player.getObjectId());
-
-            try (ResultSet rset = stmt.executeQuery()) {
-                if (rset.next()) {
+        try {
+            boolean found = jdbcClient.sql(SELECT_QUERY)
+                .param(player.getObjectId())
+                .query((rset, rowNum) -> {
                     PlayerLifeStats lifeStats = player.getLifeStats();
                     lifeStats.setCurrentHp(rset.getInt("hp"));
                     lifeStats.setCurrentMp(rset.getInt("mp"));
                     lifeStats.setCurrentFp(rset.getInt("fp"));
-                } else {
-                    insertPlayerLifeStat(player);
-                }
-            }
+                    return true;
+                })
+                .optional()
+                .orElse(false);
 
-        } catch (SQLException e) {
+            if (!found) {
+                insertPlayerLifeStat(player);
+            }
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.df17e20d3575", player.getObjectId()), e);
             insertPlayerLifeStat(player);
         }
@@ -61,19 +77,16 @@ public class PlayerLifeStatsDAO extends com.aionemu.gameserver.dao.PlayerLifeSta
      */
     @Override
     public void insertPlayerLifeStat(Player player) {
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(INSERT_QUERY)) {
-
+        try {
             PlayerLifeStats lifeStats = player.getLifeStats();
 
-            stmt.setInt(1, player.getObjectId());
-            stmt.setInt(2, lifeStats.getCurrentHp());
-            stmt.setInt(3, lifeStats.getCurrentMp());
-            stmt.setInt(4, lifeStats.getCurrentFp());
-
-            stmt.executeUpdate();
-
-        } catch (SQLException e) {
+            jdbcClient.sql(INSERT_QUERY)
+                .param(player.getObjectId())
+                .param(lifeStats.getCurrentHp())
+                .param(lifeStats.getCurrentMp())
+                .param(lifeStats.getCurrentFp())
+                .update();
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.57de73400d87", player.getObjectId()), e);
         }
     }
@@ -94,21 +107,18 @@ public class PlayerLifeStatsDAO extends com.aionemu.gameserver.dao.PlayerLifeSta
         if (mp < 0) mp = 0;
         if (fp < 0) fp = 0;
 
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(UPDATE_QUERY)) {
-
-            stmt.setInt(1, hp);
-            stmt.setInt(2, mp);
-            stmt.setInt(3, fp);
-            stmt.setInt(4, player.getObjectId());
-
-            int updated = stmt.executeUpdate();
+        try {
+            int updated = jdbcClient.sql(UPDATE_QUERY)
+                .param(hp)
+                .param(mp)
+                .param(fp)
+                .param(player.getObjectId())
+                .update();
 
             if (updated == 0) {
                 insertPlayerLifeStat(player);
             }
-
-        } catch (SQLException e) {
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.78b2c8b3d4cc", player.getObjectId()), e);
         }
     }

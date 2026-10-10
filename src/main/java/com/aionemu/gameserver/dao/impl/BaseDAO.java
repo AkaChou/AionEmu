@@ -1,23 +1,26 @@
 package com.aionemu.gameserver.dao.impl;
 
+import java.util.Map;
+import java.util.Objects;
+import java.util.concurrent.ConcurrentHashMap;
+
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.simple.JdbcClient;
 
 import com.aionemu.boot.i18n.I18n;
-import lombok.extern.slf4j.Slf4j;
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.base.BaseLocation;
-import java.sql.*;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 基地位置（Base Location）DAO 的 MySQL 8 实现。
- * MySQL 8 implementation of BaseDAO.
+ * MySQL 8 implementation of BaseDAO using JdbcClient.
  * @author Updated for MySQL 8
  */
 @Slf4j
 public class BaseDAO extends com.aionemu.gameserver.dao.BaseDAO {
-
 
     /** 查询全部基地位置 / Select all base locations */
     private static final String SELECT_QUERY = "SELECT `id`, `race` FROM `base_location` ORDER BY `id`";
@@ -27,6 +30,16 @@ public class BaseDAO extends com.aionemu.gameserver.dao.BaseDAO {
     private static final String INSERT_QUERY = "INSERT INTO `base_location` (`id`, `race`) VALUES (?, ?) ON DUPLICATE KEY UPDATE `race` = VALUES(`race`)";
     /** 按阵营查询基地位置 / Select base locations by race */
     private static final String SELECT_BY_RACE_QUERY = "SELECT `id`, `race` FROM `base_location` WHERE `race` = ?";
+
+    private final JdbcClient jdbcClient;
+
+    public BaseDAO() {
+        this(DatabaseFactory.getJdbcClient());
+    }
+
+    public BaseDAO(JdbcClient jdbcClient) {
+        this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");
+    }
 
     /**
      * 加载基地位置数据到给定映射；缺失记录会自动插入默认 NPC 阵营。
@@ -38,21 +51,20 @@ public class BaseDAO extends com.aionemu.gameserver.dao.BaseDAO {
     public boolean loadBaseLocations(Map<Integer, BaseLocation> locations) {
         boolean success = true;
 
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(SELECT_QUERY);
-             ResultSet rset = stmt.executeQuery()) {
-
+        try {
             Map<Integer, Boolean> loadedIds = new ConcurrentHashMap<>();
 
-            while (rset.next()) {
-                int id = rset.getInt("id");
-                BaseLocation loc = locations.get(id);
-
-                if (loc != null) {
-                    loc.setRace(Race.valueOf(rset.getString("race")));
-                    loadedIds.put(id, true);
-                }
-            }
+            jdbcClient.sql(SELECT_QUERY)
+                .query((rs, rowNum) -> {
+                    int id = rs.getInt("id");
+                    BaseLocation loc = locations.get(id);
+                    if (loc != null) {
+                        loc.setRace(Race.valueOf(rs.getString("race")));
+                        loadedIds.put(id, true);
+                    }
+                    return null;
+                })
+                .list();
 
             for (Map.Entry<Integer, BaseLocation> entry : locations.entrySet()) {
                 if (!loadedIds.containsKey(entry.getKey())) {
@@ -60,7 +72,7 @@ public class BaseDAO extends com.aionemu.gameserver.dao.BaseDAO {
                 }
             }
 
-        } catch (SQLException e) {
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.e6377177b72f"), e);
             success = false;
         }
@@ -76,16 +88,13 @@ public class BaseDAO extends com.aionemu.gameserver.dao.BaseDAO {
      */
     @Override
     public boolean updateBaseLocation(BaseLocation location) {
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(UPDATE_QUERY)) {
-
-            stmt.setString(1, location.getRace().toString());
-            stmt.setInt(2, location.getId());
-
-            int updated = stmt.executeUpdate();
+        try {
+            int updated = jdbcClient.sql(UPDATE_QUERY)
+                .param(location.getRace().toString())
+                .param(location.getId())
+                .update();
             return updated > 0;
-
-        } catch (SQLException e) {
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.00e03bf592f1", location.getId()), e);
             return false;
         }
@@ -98,16 +107,13 @@ public class BaseDAO extends com.aionemu.gameserver.dao.BaseDAO {
      * @return 是否成功 / whether successful
      */
     private boolean insertBaseLocation(BaseLocation location) {
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(INSERT_QUERY)) {
-
-            stmt.setInt(1, location.getId());
-            stmt.setString(2, Race.NPC.toString());
-
-            int inserted = stmt.executeUpdate();
+        try {
+            int inserted = jdbcClient.sql(INSERT_QUERY)
+                .param(location.getId())
+                .param(Race.NPC.toString())
+                .update();
             return inserted > 0;
-
-        } catch (SQLException e) {
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.31d1da1209bd", location.getId()), e);
             return false;
         }
@@ -120,28 +126,15 @@ public class BaseDAO extends com.aionemu.gameserver.dao.BaseDAO {
      * @return 是否成功 / whether successful
      */
     public boolean updateBaseLocations(Map<Integer, BaseLocation> locations) {
-        try (Connection con = DatabaseFactory.getConnection()) {
-            con.setAutoCommit(false);
-
-            try (PreparedStatement stmt = con.prepareStatement(UPDATE_QUERY)) {
-                for (BaseLocation loc : locations.values()) {
-                    stmt.setString(1, loc.getRace().toString());
-                    stmt.setInt(2, loc.getId());
-                    stmt.addBatch();
-                }
-
-                int[] results = stmt.executeBatch();
-                con.commit();
-
-                for (int result : results) {
-                    if (result == PreparedStatement.EXECUTE_FAILED) {
-                        return false;
-                    }
-                }
-                return true;
+        try {
+            for (BaseLocation loc : locations.values()) {
+                jdbcClient.sql(UPDATE_QUERY)
+                    .param(loc.getRace().toString())
+                    .param(loc.getId())
+                    .update();
             }
-
-        } catch (SQLException e) {
+            return true;
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.2d182cfdc4ca"), e);
             return false;
         }
@@ -156,23 +149,20 @@ public class BaseDAO extends com.aionemu.gameserver.dao.BaseDAO {
     public Map<Integer, BaseLocation> loadBaseLocationsByRace(Race race) {
         Map<Integer, BaseLocation> locations = new ConcurrentHashMap<>();
 
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(SELECT_BY_RACE_QUERY)) {
-
-            stmt.setString(1, race.toString());
-
-            try (ResultSet rset = stmt.executeQuery()) {
-                while (rset.next()) {
-                    int id = rset.getInt("id");
+        try {
+            jdbcClient.sql(SELECT_BY_RACE_QUERY)
+                .param(race.toString())
+                .query((rs, rowNum) -> {
+                    int id = rs.getInt("id");
                     BaseLocation loc = locations.get(id);
                     if (loc != null) {
-                        loc.setRace(Race.valueOf(rset.getString("race")));
+                        loc.setRace(Race.valueOf(rs.getString("race")));
                         locations.put(id, loc);
                     }
-                }
-            }
-
-        } catch (SQLException e) {
+                    return null;
+                })
+                .list();
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.f5cd772ab16f", race), e);
         }
 
@@ -185,28 +175,12 @@ public class BaseDAO extends com.aionemu.gameserver.dao.BaseDAO {
      * @return 是否成功 / whether successful
      */
     public boolean resetBaseLocations() {
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(UPDATE_QUERY)) {
-
-            con.setAutoCommit(false);
-
-            try (PreparedStatement selectStmt = con.prepareStatement(SELECT_QUERY);
-                 ResultSet rset = selectStmt.executeQuery()) {
-
-                while (rset.next()) {
-                    int id = rset.getInt("id");
-                    stmt.setString(1, Race.NPC.toString());
-                    stmt.setInt(2, id);
-                    stmt.addBatch();
-                }
-
-                int[] results = stmt.executeBatch();
-                con.commit();
-
-                return true;
-            }
-
-        } catch (SQLException e) {
+        try {
+            jdbcClient.sql("UPDATE `base_location` SET `race` = ?")
+                .param(Race.NPC.toString())
+                .update();
+            return true;
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.7fe78b3d8033"), e);
             return false;
         }

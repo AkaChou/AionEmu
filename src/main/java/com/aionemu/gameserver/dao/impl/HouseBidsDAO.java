@@ -1,17 +1,22 @@
 package com.aionemu.gameserver.dao.impl;
 
+import java.sql.Timestamp;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
+
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.simple.JdbcClient;
 
 import com.aionemu.boot.i18n.I18n;
-import lombok.extern.slf4j.Slf4j;
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.gameserver.model.house.PlayerHouseBid;
-import java.sql.*;
-import java.util.HashSet;
-import java.util.Set;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 房屋竞拍出价 DAO 的 MySQL 8 实现。
- * MySQL 8 implementation of HouseBidsDAO.
+ * MySQL 8 implementation of HouseBidsDAO using JdbcClient.
  * @author Rolandas, Updated for MySQL 8
  */
 @Slf4j
@@ -32,6 +37,16 @@ public class HouseBidsDAO extends com.aionemu.gameserver.dao.HouseBidsDAO {
     /** 查询玩家对指定房屋的出价 / Select a player's bid for a house */
     private static final String SELECT_PLAYER_BID_QUERY = "SELECT `bid`, `bid_time` FROM `house_bids` WHERE `player_id` = ? AND `house_id` = ?";
 
+    private final JdbcClient jdbcClient;
+
+    public HouseBidsDAO() {
+        this(DatabaseFactory.getJdbcClient());
+    }
+
+    public HouseBidsDAO(JdbcClient jdbcClient) {
+        this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");
+    }
+
     /**
      * 加载全部房屋竞拍出价。
      * Loads all house auction bids.
@@ -40,25 +55,20 @@ public class HouseBidsDAO extends com.aionemu.gameserver.dao.HouseBidsDAO {
     @Override
     public Set<PlayerHouseBid> loadBids() {
         Set<PlayerHouseBid> bids = new HashSet<>();
-
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(LOAD_QUERY);
-             ResultSet rset = stmt.executeQuery()) {
-
-            while (rset.next()) {
-                int playerId = rset.getInt("player_id");
-                int houseId = rset.getInt("house_id");
-                long bidOffer = rset.getLong("bid");
-                Timestamp time = rset.getTimestamp("bid_time");
-
-                PlayerHouseBid bid = new PlayerHouseBid(playerId, houseId, bidOffer, time);
-                bids.add(bid);
-            }
-
-        } catch (SQLException e) {
+        try {
+            jdbcClient.sql(LOAD_QUERY)
+                .query((rset, rowNum) -> {
+                    int playerId = rset.getInt("player_id");
+                    int houseId = rset.getInt("house_id");
+                    long bidOffer = rset.getLong("bid");
+                    Timestamp time = rset.getTimestamp("bid_time");
+                    return new PlayerHouseBid(playerId, houseId, bidOffer, time);
+                })
+                .list()
+                .forEach(bids::add);
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.ff14dcd21c64"), e);
         }
-
         return bids;
     }
 
@@ -73,18 +83,15 @@ public class HouseBidsDAO extends com.aionemu.gameserver.dao.HouseBidsDAO {
      */
     @Override
     public boolean addBid(int playerId, int houseId, long bidOffer, Timestamp time) {
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(INSERT_QUERY)) {
-
-            stmt.setInt(1, playerId);
-            stmt.setInt(2, houseId);
-            stmt.setLong(3, bidOffer);
-            stmt.setTimestamp(4, time);
-
-            int result = stmt.executeUpdate();
+        try {
+            int result = jdbcClient.sql(INSERT_QUERY)
+                .param(playerId)
+                .param(houseId)
+                .param(bidOffer)
+                .param(time)
+                .update();
             return result > 0;
-
-        } catch (SQLException e) {
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.f1c5d89c6500", playerId, houseId), e);
             return false;
         }
@@ -100,21 +107,18 @@ public class HouseBidsDAO extends com.aionemu.gameserver.dao.HouseBidsDAO {
      */
     @Override
     public void changeBid(int playerId, int houseId, long newBidOffer, Timestamp time) {
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(UPDATE_QUERY)) {
-
-            stmt.setLong(1, newBidOffer);
-            stmt.setTimestamp(2, time);
-            stmt.setInt(3, playerId);
-            stmt.setInt(4, houseId);
-
-            int updated = stmt.executeUpdate();
+        try {
+            int updated = jdbcClient.sql(UPDATE_QUERY)
+                .param(newBidOffer)
+                .param(time)
+                .param(playerId)
+                .param(houseId)
+                .update();
 
             if (updated == 0) {
                 addBid(playerId, houseId, newBidOffer, time);
             }
-
-        } catch (SQLException e) {
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.68c1f0c325d4", playerId, houseId), e);
         }
     }
@@ -126,13 +130,11 @@ public class HouseBidsDAO extends com.aionemu.gameserver.dao.HouseBidsDAO {
      */
     @Override
     public void deleteHouseBids(int houseId) {
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(DELETE_QUERY)) {
-
-            stmt.setInt(1, houseId);
-            stmt.executeUpdate();
-
-        } catch (SQLException e) {
+        try {
+            jdbcClient.sql(DELETE_QUERY)
+                .param(houseId)
+                .update();
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.913c026c08a6", houseId), e);
         }
     }
@@ -144,14 +146,12 @@ public class HouseBidsDAO extends com.aionemu.gameserver.dao.HouseBidsDAO {
      * @param houseId 房屋 ID / house id
      */
     public void deletePlayerBid(int playerId, int houseId) {
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(DELETE_PLAYER_QUERY)) {
-
-            stmt.setInt(1, playerId);
-            stmt.setInt(2, houseId);
-            stmt.executeUpdate();
-
-        } catch (SQLException e) {
+        try {
+            jdbcClient.sql(DELETE_PLAYER_QUERY)
+                .param(playerId)
+                .param(houseId)
+                .update();
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.d16d4a0faede", playerId, houseId), e);
         }
     }
@@ -159,27 +159,21 @@ public class HouseBidsDAO extends com.aionemu.gameserver.dao.HouseBidsDAO {
     /**
      * 获取指定房屋的最高出价。
      * Returns the highest bid for the given house.
-     * house id
      * @param houseId 房屋 ID / house id
      * @return 最高出价；无记录时为 0 / highest bid, or 0 if none
      */
     public long getHighestBid(int houseId) {
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(SELECT_HIGHEST_BID_QUERY)) {
-
-            stmt.setInt(1, houseId);
-
-            try (ResultSet rset = stmt.executeQuery()) {
-                if (rset.next()) {
-                    return rset.getLong(1);
-                }
-            }
-
-        } catch (SQLException e) {
+        try {
+            Long bid = jdbcClient.sql(SELECT_HIGHEST_BID_QUERY)
+                .param(houseId)
+                .query(Long.class)
+                .optional()
+                .orElse(0L);
+            return bid != null ? bid : 0L;
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.215d2f2d1d7e", houseId), e);
+            return 0L;
         }
-
-        return 0;
     }
 
     /**
@@ -190,25 +184,21 @@ public class HouseBidsDAO extends com.aionemu.gameserver.dao.HouseBidsDAO {
      * @return 出价记录；不存在返回 null / bid record, or null if none
      */
     public PlayerHouseBid getPlayerBid(int playerId, int houseId) {
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(SELECT_PLAYER_BID_QUERY)) {
-
-            stmt.setInt(1, playerId);
-            stmt.setInt(2, houseId);
-
-            try (ResultSet rset = stmt.executeQuery()) {
-                if (rset.next()) {
+        try {
+            return jdbcClient.sql(SELECT_PLAYER_BID_QUERY)
+                .param(playerId)
+                .param(houseId)
+                .query((rset, rowNum) -> {
                     long bid = rset.getLong("bid");
                     Timestamp time = rset.getTimestamp("bid_time");
                     return new PlayerHouseBid(playerId, houseId, bid, time);
-                }
-            }
-
-        } catch (SQLException e) {
+                })
+                .optional()
+                .orElse(null);
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.fe00b8086073", playerId, houseId), e);
+            return null;
         }
-
-        return null;
     }
 
     /**
@@ -221,20 +211,13 @@ public class HouseBidsDAO extends com.aionemu.gameserver.dao.HouseBidsDAO {
             return;
         }
 
-        try (Connection con = DatabaseFactory.getConnection()) {
-            con.setAutoCommit(false);
-
-            try (PreparedStatement stmt = con.prepareStatement(DELETE_QUERY)) {
-                for (int houseId : houseIds) {
-                    stmt.setInt(1, houseId);
-                    stmt.addBatch();
-                }
-                stmt.executeBatch();
+        try {
+            for (int houseId : houseIds) {
+                jdbcClient.sql(DELETE_QUERY)
+                    .param(houseId)
+                    .update();
             }
-
-            con.commit();
-
-        } catch (SQLException e) {
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.13c5e65ca1ad"), e);
         }
     }

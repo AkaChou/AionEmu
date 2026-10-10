@@ -1,35 +1,52 @@
 package com.aionemu.gameserver.dao.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.simple.JdbcClient;
 
 import com.aionemu.boot.i18n.I18n;
-import lombok.extern.slf4j.Slf4j;
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.gameserver.dao.PlayerABDAO;
 import com.aionemu.gameserver.model.atreian_bestiary.PlayerABEntry;
 import com.aionemu.gameserver.model.atreian_bestiary.PlayerABList;
 import com.aionemu.gameserver.model.gameobjects.PersistentState;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
-import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 玩家阿特雷亚图鉴 DAO 的 MySQL 8 实现。
- * MySQL 8 implementation of PlayerABDAO (Atreian Bestiary).
+ * MySQL 8 implementation of PlayerABDAO (Atreian Bestiary) using JdbcClient.
  * @author Ranastic
  */
 @Slf4j
 public class PlayerAtreianBestiaryDAO extends PlayerABDAO {
 
-
     /** 插入或更新图鉴 SQL / Insert or update bestiary SQL*/
     private static final String INSERT_OR_UPDATE = "INSERT INTO `player_atreian_bestiary` (`player_id`, `id`, `kill_count`, `level`, `claim_reward`) VALUES(?,?,?,?,?) ON DUPLICATE KEY UPDATE `id` = VALUES(`id`), `kill_count` = VALUES(`kill_count`), `level` = VALUES(`level`), `claim_reward` = VALUES(`claim_reward`)";
-
     /** 查询图鉴 SQL / Select bestiary SQL*/
     private static final String SELECT_QUERY = "SELECT `id`,`kill_count`,`level`,`claim_reward` FROM `player_atreian_bestiary` WHERE `player_id`=?";
-
     /** 删除图鉴条目 SQL / Delete bestiary entry SQL*/
     private static final String DELETE_QUERY = "DELETE FROM `player_atreian_bestiary` WHERE `player_id`=? AND `id`=?";
+    /** 查询击杀数 SQL / Select kill count SQL */
+    private static final String SELECT_KILL_COUNT_QUERY = "SELECT `kill_count` FROM `player_atreian_bestiary` WHERE `player_id`=? AND `id`=?";
+    /** 查询等级 SQL / Select level SQL */
+    private static final String SELECT_LEVEL_QUERY = "SELECT `level` FROM `player_atreian_bestiary` WHERE `player_id`=? AND `id`=?";
+    /** 查询领奖标记 SQL / Select claim reward SQL */
+    private static final String SELECT_CLAIM_REWARD_QUERY = "SELECT `claim_reward` FROM `player_atreian_bestiary` WHERE `player_id`=? AND `id`=?";
+
+    private final JdbcClient jdbcClient;
+
+    public PlayerAtreianBestiaryDAO() {
+        this(DatabaseFactory.getJdbcClient());
+    }
+
+    public PlayerAtreianBestiaryDAO(JdbcClient jdbcClient) {
+        this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");
+    }
 
     /**
      * 加载玩家图鉴列表。
@@ -41,22 +58,19 @@ public class PlayerAtreianBestiaryDAO extends PlayerABDAO {
     public PlayerABList load(Player player) {
         List<PlayerABEntry> cp = new ArrayList<>();
 
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(SELECT_QUERY)) {
-
-            stmt.setInt(1, player.getObjectId());
-
-            try (ResultSet rset = stmt.executeQuery()) {
-                while (rset.next()) {
+        try {
+            cp = jdbcClient.sql(SELECT_QUERY)
+                .param(player.getObjectId())
+                .query((rset, rowNum) -> {
                     int id = rset.getInt("id");
                     int kill_count = rset.getInt("kill_count");
                     int level = rset.getInt("level");
                     int claimReward = rset.getInt("claim_reward");
 
-                    cp.add(new PlayerABEntry(id, kill_count, level, claimReward, PersistentState.UPDATED));
-                }
-            }
-        } catch (SQLException e) {
+                    return new PlayerABEntry(id, kill_count, level, claimReward, PersistentState.UPDATED);
+                })
+                .list();
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.e26023dd4433", player.getObjectId()), e);
         }
         return new PlayerABList(cp);
@@ -74,17 +88,16 @@ public class PlayerAtreianBestiaryDAO extends PlayerABDAO {
      */
     @Override
     public boolean store(int objectId, int id, int kill_count, int level, int claimReward) {
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(INSERT_OR_UPDATE)) {
-
-            stmt.setInt(1, objectId);
-            stmt.setInt(2, id);
-            stmt.setInt(3, kill_count);
-            stmt.setInt(4, level);
-            stmt.setInt(5, claimReward);
-            stmt.executeUpdate();
+        try {
+            jdbcClient.sql(INSERT_OR_UPDATE)
+                .param(objectId)
+                .param(id)
+                .param(kill_count)
+                .param(level)
+                .param(claimReward)
+                .update();
             return true;
-        } catch (SQLException e) {
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.072ceacb9d9e", objectId), e);
             return false;
         }
@@ -99,14 +112,13 @@ public class PlayerAtreianBestiaryDAO extends PlayerABDAO {
      */
     @Override
     public boolean delete(int playerObjId, int id) {
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(DELETE_QUERY)) {
-
-            stmt.setInt(1, playerObjId);
-            stmt.setInt(2, id);
-            stmt.executeUpdate();
+        try {
+            jdbcClient.sql(DELETE_QUERY)
+                .param(playerObjId)
+                .param(id)
+                .update();
             return true;
-        } catch (SQLException e) {
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.e05ecfff5330", playerObjId), e);
             return false;
         }
@@ -121,22 +133,18 @@ public class PlayerAtreianBestiaryDAO extends PlayerABDAO {
      */
     @Override
     public int getKillCountById(final int playerObjId, final int id) {
-        String query = "SELECT `kill_count` FROM `player_atreian_bestiary` WHERE `player_id`=? AND `id`=?";
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement s = con.prepareStatement(query)) {
-
-            s.setInt(1, playerObjId);
-            s.setInt(2, id);
-
-            try (ResultSet rs = s.executeQuery()) {
-                if (rs.next()) {
-                    return rs.getInt("kill_count");
-                }
-            }
-        } catch (SQLException e) {
+        try {
+            Integer count = jdbcClient.sql(SELECT_KILL_COUNT_QUERY)
+                .param(playerObjId)
+                .param(id)
+                .query((rs, rowNum) -> rs.getInt("kill_count"))
+                .optional()
+                .orElse(0);
+            return count != null ? count : 0;
+        } catch (DataAccessException e) {
             log.debug("No kill count found for player {}, id {}", playerObjId, id);
+            return 0;
         }
-        return 0;
     }
 
     /**
@@ -148,22 +156,18 @@ public class PlayerAtreianBestiaryDAO extends PlayerABDAO {
      */
     @Override
     public int getLevelById(final int playerObjId, final int id) {
-        String query = "SELECT `level` FROM `player_atreian_bestiary` WHERE `player_id`=? AND `id`=?";
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement s = con.prepareStatement(query)) {
-
-            s.setInt(1, playerObjId);
-            s.setInt(2, id);
-
-            try (ResultSet rs = s.executeQuery()) {
-                if (rs.next()) {
-                    return rs.getInt("level");
-                }
-            }
-        } catch (SQLException e) {
+        try {
+            Integer level = jdbcClient.sql(SELECT_LEVEL_QUERY)
+                .param(playerObjId)
+                .param(id)
+                .query((rs, rowNum) -> rs.getInt("level"))
+                .optional()
+                .orElse(0);
+            return level != null ? level : 0;
+        } catch (DataAccessException e) {
             log.debug("No level found for player {}, id {}", playerObjId, id);
+            return 0;
         }
-        return 0;
     }
 
     /**
@@ -175,22 +179,18 @@ public class PlayerAtreianBestiaryDAO extends PlayerABDAO {
      */
     @Override
     public int getClaimRewardById(int playerObjId, int id) {
-        String query = "SELECT `claim_reward` FROM `player_atreian_bestiary` WHERE `player_id`=? AND `id`=?";
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement s = con.prepareStatement(query)) {
-
-            s.setInt(1, playerObjId);
-            s.setInt(2, id);
-
-            try (ResultSet rs = s.executeQuery()) {
-                if (rs.next()) {
-                    return rs.getInt("claim_reward");
-                }
-            }
-        } catch (SQLException e) {
+        try {
+            Integer claim = jdbcClient.sql(SELECT_CLAIM_REWARD_QUERY)
+                .param(playerObjId)
+                .param(id)
+                .query((rs, rowNum) -> rs.getInt("claim_reward"))
+                .optional()
+                .orElse(0);
+            return claim != null ? claim : 0;
+        } catch (DataAccessException e) {
             log.debug("No claim reward found for player {}, id {}", playerObjId, id);
+            return 0;
         }
-        return 0;
     }
 
     /**

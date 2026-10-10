@@ -1,30 +1,43 @@
 package com.aionemu.gameserver.dao.impl;
 
-
-import com.aionemu.boot.i18n.I18n;
-import lombok.extern.slf4j.Slf4j;
-import com.aionemu.commons.database.DatabaseFactory;
-import com.aionemu.gameserver.model.veteranrewards.VeteranRewards;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Set;
 import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
+
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.simple.JdbcClient;
+
+import com.aionemu.boot.i18n.I18n;
+import com.aionemu.commons.database.DatabaseFactory;
+import com.aionemu.gameserver.model.veteranrewards.VeteranRewards;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 老兵奖励 DAO 的 MySQL 8 实现。
- * MySQL 8 implementation of VeteranRewardsDAO.
+ * MySQL 8 implementation of VeteranRewardsDAO using JdbcClient.
  * Updated for MySQL 8 - Fixed connection leaks.
  */
 @Slf4j
 public class VeteranRewardsDAO extends com.aionemu.gameserver.dao.VeteranRewardsDAO {
 
-
 	/** 查询老兵奖励 SQL / Select veteran rewards SQL*/
 	private static final String SELECT_QUERY = "SELECT * FROM veteran_rewards ORDER BY id";
 	/** 删除老兵奖励 SQL / Delete veteran reward SQL*/
 	private static final String DELETE_QUERY = "DELETE FROM veteran_rewards WHERE id = ?";
+
+	private final JdbcClient jdbcClient;
+
+	public VeteranRewardsDAO() {
+		this(DatabaseFactory.getJdbcClient());
+	}
+
+	public VeteranRewardsDAO(JdbcClient jdbcClient) {
+		this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");
+	}
 
 	/**
 	 * 加载全部老兵奖励记录。
@@ -35,23 +48,21 @@ public class VeteranRewardsDAO extends com.aionemu.gameserver.dao.VeteranRewards
 	public Set<VeteranRewards> getVeteranReward() {
 		final Set<VeteranRewards> result = new HashSet<>();
 
-		try (Connection con = DatabaseFactory.getConnection();
-			 PreparedStatement stmt = con.prepareStatement(SELECT_QUERY);
-			 ResultSet rset = stmt.executeQuery()) {
-
-			while (rset.next()) {
-				result.add(new VeteranRewards(
-					rset.getInt("id"),
-					rset.getString("player"),
-					rset.getInt("type"),
-					rset.getInt("item"),
-					rset.getInt("count"),
-					rset.getInt("kinah"),
-					rset.getString("sender"),
-					rset.getString("title"),
-					rset.getString("message")
-				));
-			}
+		try {
+			jdbcClient.sql(SELECT_QUERY)
+				.query((rs, rowNum) -> new VeteranRewards(
+					rs.getInt("id"),
+					rs.getString("player"),
+					rs.getInt("type"),
+					rs.getInt("item"),
+					rs.getInt("count"),
+					rs.getInt("kinah"),
+					rs.getString("sender"),
+					rs.getString("title"),
+					rs.getString("message")
+				))
+				.list()
+				.forEach(result::add);
 		} catch (Exception e) {
 			log.error(I18n.get("log.3324f8b8d45c"), e);
 		}
@@ -65,9 +76,11 @@ public class VeteranRewardsDAO extends com.aionemu.gameserver.dao.VeteranRewards
 	 */
 	@Override
 	public void delVeteranReward(final int id_veteran_reward) {
-		try (Connection con = DatabaseFactory.getConnection()) {
-			deleteInTransaction(con, id_veteran_reward);
-		} catch (SQLException e) {
+		try {
+			jdbcClient.sql(DELETE_QUERY)
+				.param(id_veteran_reward)
+				.update();
+		} catch (DataAccessException e) {
 			log.error(I18n.get("log.b1edbfafc1a6"), e);
 		}
 	}

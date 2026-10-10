@@ -1,19 +1,23 @@
 package com.aionemu.gameserver.dao.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.simple.JdbcClient;
 
 import com.aionemu.boot.i18n.I18n;
-import lombok.extern.slf4j.Slf4j;
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.gameobjects.player.motion.Motion;
 import com.aionemu.gameserver.model.gameobjects.player.motion.MotionList;
-import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 玩家动作（Motion）DAO 的 MySQL 8 实现。
- * MySQL 8 implementation of MotionDAO.
+ * MySQL 8 implementation of MotionDAO using JdbcClient.
  * @author MrPoke
  */
 @Slf4j
@@ -27,6 +31,16 @@ public class MotionDAO extends com.aionemu.gameserver.dao.MotionDAO {
     private static final String DELETE_QUERY = "DELETE FROM `player_motions` WHERE `player_id`=? AND `motion_id`=?";
     /** 更新动作 SQL / Update motion SQL*/
     private static final String UPDATE_QUERY = "UPDATE `player_motions` SET `active`=? WHERE `player_id`=? AND `motion_id`=?";
+
+    private final JdbcClient jdbcClient;
+
+    public MotionDAO() {
+        this(DatabaseFactory.getJdbcClient());
+    }
+
+    public MotionDAO(JdbcClient jdbcClient) {
+        this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");
+    }
 
     /**
      * 是否支持当前数据库。
@@ -69,19 +83,17 @@ public class MotionDAO extends com.aionemu.gameserver.dao.MotionDAO {
     public List<Motion> loadMotions(Integer playerId) {
         List<Motion> motions = new ArrayList<>();
 
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(SELECT_QUERY)) {
-
-            stmt.setInt(1, playerId);
-            try (ResultSet rset = stmt.executeQuery()) {
-                while (rset.next()) {
+        try {
+            motions = jdbcClient.sql(SELECT_QUERY)
+                .param(playerId)
+                .query((rset, rowNum) -> {
                     int motionId = rset.getInt("motion_id");
                     int time = rset.getInt("time");
                     boolean isActive = rset.getBoolean("active");
-                    motions.add(new Motion(motionId, time, isActive));
-                }
-            }
-        } catch (SQLException e) {
+                    return new Motion(motionId, time, isActive);
+                })
+                .list();
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.f1ef66964c92", playerId), e);
         }
         return motions;
@@ -96,16 +108,15 @@ public class MotionDAO extends com.aionemu.gameserver.dao.MotionDAO {
      */
     @Override
     public boolean storeMotion(int objectId, Motion motion) {
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(INSERT_QUERY)) {
-
-            stmt.setInt(1, objectId);
-            stmt.setInt(2, motion.getId());
-            stmt.setBoolean(3, motion.isActive());
-            stmt.setInt(4, motion.getExpireTime());
-            stmt.executeUpdate();
+        try {
+            jdbcClient.sql(INSERT_QUERY)
+                .param(objectId)
+                .param(motion.getId())
+                .param(motion.isActive())
+                .param(motion.getExpireTime())
+                .update();
             return true;
-        } catch (SQLException e) {
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.ee15090dda12", objectId), e);
             return false;
         }
@@ -120,14 +131,13 @@ public class MotionDAO extends com.aionemu.gameserver.dao.MotionDAO {
      */
     @Override
     public boolean deleteMotion(int objectId, int motionId) {
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(DELETE_QUERY)) {
-
-            stmt.setInt(1, objectId);
-            stmt.setInt(2, motionId);
-            stmt.executeUpdate();
+        try {
+            jdbcClient.sql(DELETE_QUERY)
+                .param(objectId)
+                .param(motionId)
+                .update();
             return true;
-        } catch (SQLException e) {
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.1bf60097aea6", objectId), e);
             return false;
         }
@@ -142,15 +152,14 @@ public class MotionDAO extends com.aionemu.gameserver.dao.MotionDAO {
      */
     @Override
     public boolean updateMotion(int objectId, Motion motion) {
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(UPDATE_QUERY)) {
-
-            stmt.setBoolean(1, motion.isActive());
-            stmt.setInt(2, objectId);
-            stmt.setInt(3, motion.getId());
-            stmt.executeUpdate();
+        try {
+            jdbcClient.sql(UPDATE_QUERY)
+                .param(motion.isActive())
+                .param(objectId)
+                .param(motion.getId())
+                .update();
             return true;
-        } catch (SQLException e) {
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.91b2b22576c2", objectId), e);
             return false;
         }

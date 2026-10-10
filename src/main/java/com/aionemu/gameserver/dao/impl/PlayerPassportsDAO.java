@@ -1,27 +1,26 @@
 package com.aionemu.gameserver.dao.impl;
 
-
-import com.aionemu.boot.i18n.I18n;
-import lombok.extern.slf4j.Slf4j;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.simple.JdbcClient;
+
+import com.aionemu.boot.i18n.I18n;
 import com.aionemu.commons.database.DatabaseFactory;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 玩家护照 DAO 的 MySQL 8 实现。
- * MySQL 8 implementation of PlayerPassportsDAO.
+ * MySQL 8 implementation of PlayerPassportsDAO using JdbcClient.
  * Updated for MySQL 8 - Fixed connection leaks.
  * @author Alcapwnd, Lyras, FrozenKiller
  */
 @Slf4j
 public class PlayerPassportsDAO extends com.aionemu.gameserver.dao.PlayerPassportsDAO {
-
 
 	/** 插入通行证 SQL / Insert passport SQL*/
 	private static final String INSERT_QUERY = "INSERT INTO `player_passports` (`account_id`, `passport_id`, `stamps`, `last_stamp`) VALUES (?,?,?,?)";
@@ -34,6 +33,16 @@ public class PlayerPassportsDAO extends com.aionemu.gameserver.dao.PlayerPasspor
 	/** 查询账号通行证 SQL / Select account passports SQL*/
 	private static final String SELECT_PASSPORTS_QUERY = "SELECT passport_id FROM player_passports WHERE account_id = ?";
 
+	private final JdbcClient jdbcClient;
+
+	public PlayerPassportsDAO() {
+		this(DatabaseFactory.getJdbcClient());
+	}
+
+	public PlayerPassportsDAO(JdbcClient jdbcClient) {
+		this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");
+	}
+
 	/**
 	 * 插入护照记录。
 	 * Inserts a passport record.
@@ -44,15 +53,14 @@ public class PlayerPassportsDAO extends com.aionemu.gameserver.dao.PlayerPasspor
 	 */
 	@Override
 	public void insertPassport(final int accountId, final int passportId, final int stamps, final Timestamp last_stamp) {
-		try (Connection con = DatabaseFactory.getConnection();
-			 PreparedStatement stmt = con.prepareStatement(INSERT_QUERY)) {
-
-			stmt.setInt(1, accountId);
-			stmt.setInt(2, passportId);
-			stmt.setInt(3, stamps);
-			stmt.setTimestamp(4, last_stamp);
-			stmt.executeUpdate();
-		} catch (Exception e) {
+		try {
+			jdbcClient.sql(INSERT_QUERY)
+				.param(accountId)
+				.param(passportId)
+				.param(stamps)
+				.param(last_stamp)
+				.update();
+		} catch (DataAccessException e) {
 			log.error(I18n.get("log.06e64ddd17f9", e.getMessage()), e);
 		}
 	}
@@ -68,16 +76,15 @@ public class PlayerPassportsDAO extends com.aionemu.gameserver.dao.PlayerPasspor
 	 */
 	@Override
 	public void updatePassport(final int accountId, final int passportId, final int stamps, final boolean rewarded, final Timestamp last_stamp) {
-		try (Connection con = DatabaseFactory.getConnection();
-			 PreparedStatement stmt = con.prepareStatement(UPDATE_QUERY)) {
-
-			stmt.setInt(1, stamps);
-			stmt.setInt(2, rewarded ? 1 : 0);
-			stmt.setTimestamp(3, last_stamp);
-			stmt.setInt(4, accountId);
-			stmt.setInt(5, passportId);
-			stmt.executeUpdate();
-		} catch (Exception e) {
+		try {
+			jdbcClient.sql(UPDATE_QUERY)
+				.param(stamps)
+				.param(rewarded ? 1 : 0)
+				.param(last_stamp)
+				.param(accountId)
+				.param(passportId)
+				.update();
+		} catch (DataAccessException e) {
 			log.error(I18n.get("log.b7b8fa49af32"), e);
 		}
 	}
@@ -91,21 +98,18 @@ public class PlayerPassportsDAO extends com.aionemu.gameserver.dao.PlayerPasspor
 	 */
 	@Override
 	public int getStamps(final int accountId, final int passportId) {
-		try (Connection con = DatabaseFactory.getConnection();
-			 PreparedStatement s = con.prepareStatement(SELECT_STAMPS_QUERY)) {
-
-			s.setInt(1, accountId);
-			s.setInt(2, passportId);
-
-			try (ResultSet rs = s.executeQuery()) {
-				if (rs.next()) {
-					return rs.getInt("stamps");
-				}
-			}
-		} catch (SQLException e) {
+		try {
+			Integer val = jdbcClient.sql(SELECT_STAMPS_QUERY)
+				.param(accountId)
+				.param(passportId)
+				.query((rs, rowNum) -> rs.getInt("stamps"))
+				.optional()
+				.orElse(0);
+			return val != null ? val : 0;
+		} catch (DataAccessException e) {
 			log.error(I18n.get("log.d8f278a870b7", accountId, passportId), e);
+			return 0;
 		}
-		return 0;
 	}
 
 	/**
@@ -117,18 +121,17 @@ public class PlayerPassportsDAO extends com.aionemu.gameserver.dao.PlayerPasspor
 	 */
 	@Override
 	public Timestamp getLastStamp(final int accountId, final int passportId) {
-		try (Connection con = DatabaseFactory.getConnection();
-			 PreparedStatement s = con.prepareStatement(SELECT_LAST_STAMP_QUERY)) {
-
-			s.setInt(1, accountId);
-			s.setInt(2, passportId);
-
-			try (ResultSet rs = s.executeQuery()) {
-				if (rs.next()) {
-					return rs.getTimestamp("last_stamp");
-				}
+		try {
+			Timestamp stamp = jdbcClient.sql(SELECT_LAST_STAMP_QUERY)
+				.param(accountId)
+				.param(passportId)
+				.query((rs, rowNum) -> rs.getTimestamp("last_stamp"))
+				.optional()
+				.orElse(null);
+			if (stamp != null) {
+				return stamp;
 			}
-		} catch (SQLException e) {
+		} catch (DataAccessException e) {
 			log.error(I18n.get("log.52b96dcdcf0e", accountId), e);
 		}
 		return new Timestamp(System.currentTimeMillis());
@@ -142,19 +145,14 @@ public class PlayerPassportsDAO extends com.aionemu.gameserver.dao.PlayerPasspor
 	 */
 	@Override
 	public List<Integer> getPassports(final int accountId) {
-		final List<Integer> ids = new ArrayList<>();
+		List<Integer> ids = new ArrayList<>();
 
-		try (Connection con = DatabaseFactory.getConnection();
-			 PreparedStatement stmt = con.prepareStatement(SELECT_PASSPORTS_QUERY)) {
-
-			stmt.setInt(1, accountId);
-
-			try (ResultSet resultSet = stmt.executeQuery()) {
-				while (resultSet.next()) {
-					ids.add(resultSet.getInt("passport_id"));
-				}
-			}
-		} catch (SQLException e) {
+		try {
+			ids = jdbcClient.sql(SELECT_PASSPORTS_QUERY)
+				.param(accountId)
+				.query((resultSet, rowNum) -> resultSet.getInt("passport_id"))
+				.list();
+		} catch (DataAccessException e) {
 			log.error(I18n.get("log.add8e8df4ec5", accountId), e);
 		}
 		return ids;

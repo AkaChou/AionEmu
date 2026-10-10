@@ -1,19 +1,21 @@
 package com.aionemu.gameserver.dao.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.simple.JdbcClient;
 
 import com.aionemu.boot.i18n.I18n;
-import lombok.extern.slf4j.Slf4j;
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.gameserver.model.templates.rewards.RewardEntryItem;
-import java.util.ArrayList;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.util.List;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Web 奖励服务 DAO 的 MySQL 8 实现。
- * MySQL 8 implementation of RewardServiceDAO.
+ * MySQL 8 implementation of RewardServiceDAO using JdbcClient.
  * Updated for MySQL 8 - Fixed connection leaks.
  */
 @Slf4j
@@ -25,6 +27,16 @@ public class RewardServiceDAO extends com.aionemu.gameserver.dao.RewardServiceDA
     private static final String UPDATE_QUERY_DOWN = "UPDATE `web_reward` SET `rewarded`=? WHERE `unique`=?";
     /** 查询可用奖励 SQL / Select available rewards SQL*/
     private static final String SELECT_QUERY = "SELECT * FROM `web_reward` WHERE `item_owner`=? AND `rewarded`=?";
+
+    private final JdbcClient jdbcClient;
+
+    public RewardServiceDAO() {
+        this(DatabaseFactory.getJdbcClient());
+    }
+
+    public RewardServiceDAO(JdbcClient jdbcClient) {
+        this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");
+    }
 
     /**
      * 是否支持当前数据库。
@@ -45,12 +57,11 @@ public class RewardServiceDAO extends com.aionemu.gameserver.dao.RewardServiceDA
      * @param unique 唯一奖励 ID / unique reward id
      */
     public void setUpdateDown(int unique) {
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(UPDATE_QUERY_DOWN)) {
-
-            stmt.setInt(1, 0);
-            stmt.setInt(2, unique);
-            stmt.executeUpdate();
+        try {
+            jdbcClient.sql(UPDATE_QUERY_DOWN)
+                .param(0)
+                .param(unique)
+                .update();
         } catch (Exception e) {
             log.error(I18n.get("log.865c33530603", unique), e);
         }
@@ -59,17 +70,16 @@ public class RewardServiceDAO extends com.aionemu.gameserver.dao.RewardServiceDA
     /**
      * 将奖励标记为已领取。
      * Marks a reward as received.
-     * unique reward id
      * @param unique 唯一奖励 ID / unique reward id
      * @return 是否更新成功 / whether update succeeded
      */
     public boolean setUpdate(int unique) {
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(UPDATE_QUERY)) {
-
-            stmt.setInt(1, 1);
-            stmt.setInt(2, unique);
-            return stmt.executeUpdate() > 0;
+        try {
+            int affected = jdbcClient.sql(UPDATE_QUERY)
+                .param(1)
+                .param(unique)
+                .update();
+            return affected > 0;
         } catch (Exception e) {
             log.error(I18n.get("log.248cee6e9874", unique), e);
             return false;
@@ -79,28 +89,24 @@ public class RewardServiceDAO extends com.aionemu.gameserver.dao.RewardServiceDA
     /**
      * 获取玩家尚未领取的 Web 奖励列表。
      * Gets the list of unclaimed web rewards for a player.
-     * player id
      * @param playerId 玩家 ID / player id
      * @return 可用奖励条目 / available reward entries
      */
     @Override
     public List<RewardEntryItem> getAvailable(int playerId) {
         List<RewardEntryItem> list = new ArrayList<>();
-
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(SELECT_QUERY)) {
-
-            stmt.setInt(1, playerId);
-            stmt.setInt(2, 0);
-
-            try (ResultSet rset = stmt.executeQuery()) {
-                while (rset.next()) {
-                    int unique = rset.getInt("unique");
-                    int item_id = rset.getInt("item_id");
-                    long count = rset.getLong("item_count");
-                    list.add(new RewardEntryItem(unique, item_id, count));
-                }
-            }
+        try {
+            jdbcClient.sql(SELECT_QUERY)
+                .param(playerId)
+                .param(0)
+                .query((rs, rowNum) -> {
+                    int unique = rs.getInt("unique");
+                    int item_id = rs.getInt("item_id");
+                    long count = rs.getLong("item_count");
+                    return new RewardEntryItem(unique, item_id, count);
+                })
+                .list()
+                .forEach(list::add);
         } catch (Exception e) {
             log.error(I18n.get("log.5f1e9111257c", playerId), e);
         }
@@ -118,15 +124,13 @@ public class RewardServiceDAO extends com.aionemu.gameserver.dao.RewardServiceDA
             return;
         }
 
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(UPDATE_QUERY)) {
-
+        try {
             for (int uniqid : ids) {
-                stmt.setInt(1, 1);
-                stmt.setInt(2, uniqid);
-                stmt.addBatch();
+                jdbcClient.sql(UPDATE_QUERY)
+                    .param(1)
+                    .param(uniqid)
+                    .update();
             }
-            stmt.executeBatch();
         } catch (Exception e) {
             log.error(I18n.get("log.563cfc162266"), e);
         }

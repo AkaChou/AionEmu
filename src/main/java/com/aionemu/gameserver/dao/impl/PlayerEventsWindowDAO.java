@@ -1,20 +1,25 @@
 package com.aionemu.gameserver.dao.impl;
 
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.simple.JdbcClient;
 
 import com.aionemu.boot.i18n.I18n;
-import lombok.extern.slf4j.Slf4j;
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.gameserver.model.event_window.PlayerEventWindowEntry;
 import com.aionemu.gameserver.model.event_window.PlayerEventWindowList;
 import com.aionemu.gameserver.model.gameobjects.PersistentState;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
-import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 玩家活动窗口进度 DAO 的 MySQL 8 实现。
- * MySQL 8 implementation of PlayerEventsWindowDAO.
+ * MySQL 8 implementation of PlayerEventsWindowDAO using JdbcClient.
  * @author Ghostfur (Aion-Unique)
  * Updated for MySQL 8 - Fixed connection leaks
  */
@@ -42,6 +47,16 @@ public class PlayerEventsWindowDAO extends com.aionemu.gameserver.dao.PlayerEven
     /** 更新奖励次数并重置进度 / Update reward count and reset progress */
     private static final String UPDATE_REWARD_QUERY = "UPDATE player_events_window SET reward_recived_count = ?, elapsed = 0, last_stamp = NOW() WHERE account_id = ? AND event_id = ?";
 
+    private final JdbcClient jdbcClient;
+
+    public PlayerEventsWindowDAO() {
+        this(DatabaseFactory.getJdbcClient());
+    }
+
+    public PlayerEventsWindowDAO(JdbcClient jdbcClient) {
+        this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");
+    }
+
     /**
      * 加载玩家的活动窗口进度列表。
      * Loads the player's event window progress list.
@@ -52,20 +67,18 @@ public class PlayerEventsWindowDAO extends com.aionemu.gameserver.dao.PlayerEven
     public PlayerEventWindowList load(Player player) {
         List<PlayerEventWindowEntry> eventWindow = new ArrayList<>();
 
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(SELECT_QUERY)) {
-
-            stmt.setInt(1, player.getPlayerAccount().getId());
-
-            try (ResultSet rset = stmt.executeQuery()) {
-                while (rset.next()) {
+        try {
+            jdbcClient.sql(SELECT_QUERY)
+                .param(player.getPlayerAccount().getId())
+                .query((rset, rowNum) -> {
                     int id = rset.getInt("event_id");
                     Timestamp lastStamp = rset.getTimestamp("last_stamp");
                     int elapsed = rset.getInt("elapsed");
                     eventWindow.add(new PlayerEventWindowEntry(id, lastStamp, elapsed, PersistentState.UPDATED));
-                }
-            }
-        } catch (SQLException e) {
+                    return null;
+                })
+                .list();
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.934e7f9ba605", player.getObjectId()), e);
         }
         return new PlayerEventWindowList(eventWindow);
@@ -82,16 +95,15 @@ public class PlayerEventsWindowDAO extends com.aionemu.gameserver.dao.PlayerEven
      */
     @Override
     public boolean store(int accountId, int eventId, Timestamp last_stamp, int elapsed) {
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(INSERT_QUERY)) {
-
-            stmt.setInt(1, accountId);
-            stmt.setInt(2, eventId);
-            stmt.setTimestamp(3, last_stamp);
-            stmt.setInt(4, elapsed);
-            stmt.executeUpdate();
+        try {
+            jdbcClient.sql(INSERT_QUERY)
+                .param(accountId)
+                .param(eventId)
+                .param(last_stamp)
+                .param(elapsed)
+                .update();
             return true;
-        } catch (SQLException e) {
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.d5794895e11e", accountId), e);
             return false;
         }
@@ -106,14 +118,13 @@ public class PlayerEventsWindowDAO extends com.aionemu.gameserver.dao.PlayerEven
      */
     @Override
     public void insert(int accountId, int eventId, Timestamp last_stamp) {
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(INSERT_SIMPLE_QUERY)) {
-
-            stmt.setInt(1, accountId);
-            stmt.setInt(2, eventId);
-            stmt.setTimestamp(3, last_stamp);
-            stmt.executeUpdate();
-        } catch (SQLException e) {
+        try {
+            jdbcClient.sql(INSERT_SIMPLE_QUERY)
+                .param(accountId)
+                .param(eventId)
+                .param(last_stamp)
+                .update();
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.57c352a40e1f"), e);
         }
     }
@@ -126,13 +137,12 @@ public class PlayerEventsWindowDAO extends com.aionemu.gameserver.dao.PlayerEven
      */
     @Override
     public void delete(final int accountId, final int eventId) {
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(DELETE_QUERY)) {
-
-            stmt.setInt(1, accountId);
-            stmt.setInt(2, eventId);
-            stmt.executeUpdate();
-        } catch (SQLException e) {
+        try {
+            jdbcClient.sql(DELETE_QUERY)
+                .param(accountId)
+                .param(eventId)
+                .update();
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.10a9343136b2", accountId, eventId), e);
         }
     }
@@ -145,19 +155,14 @@ public class PlayerEventsWindowDAO extends com.aionemu.gameserver.dao.PlayerEven
      */
     @Override
     public List<Integer> getEventsWindow(final int accountId) {
-        final List<Integer> ids = new ArrayList<>();
+        List<Integer> ids = new ArrayList<>();
 
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(SELECT_IDS_QUERY)) {
-
-            stmt.setInt(1, accountId);
-
-            try (ResultSet rs = stmt.executeQuery()) {
-                while (rs.next()) {
-                    ids.add(rs.getInt("event_id"));
-                }
-            }
-        } catch (SQLException e) {
+        try {
+            ids = jdbcClient.sql(SELECT_IDS_QUERY)
+                .param(accountId)
+                .query((rs, rowNum) -> rs.getInt("event_id"))
+                .list();
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.55105d71a66c", accountId), e);
         }
         return ids;
@@ -172,18 +177,17 @@ public class PlayerEventsWindowDAO extends com.aionemu.gameserver.dao.PlayerEven
      */
     @Override
     public Timestamp getLastStamp(int accountId, int eventId) {
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(SELECT_LAST_STAMP_QUERY)) {
-
-            stmt.setInt(1, accountId);
-            stmt.setInt(2, eventId);
-
-            try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    return rs.getTimestamp("last_stamp");
-                }
+        try {
+            Timestamp stamp = jdbcClient.sql(SELECT_LAST_STAMP_QUERY)
+                .param(accountId)
+                .param(eventId)
+                .query(Timestamp.class)
+                .optional()
+                .orElse(null);
+            if (stamp != null) {
+                return stamp;
             }
-        } catch (SQLException e) {
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.14716135e108", accountId, eventId), e);
         }
         return new Timestamp(System.currentTimeMillis());
@@ -198,18 +202,15 @@ public class PlayerEventsWindowDAO extends com.aionemu.gameserver.dao.PlayerEven
      */
     @Override
     public int getElapsed(int accountId, int eventId) {
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(SELECT_ELAPSED_QUERY)) {
-
-            stmt.setInt(1, accountId);
-            stmt.setInt(2, eventId);
-
-            try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    return rs.getInt("elapsed");
-                }
-            }
-        } catch (SQLException e) {
+        try {
+            Integer elapsed = jdbcClient.sql(SELECT_ELAPSED_QUERY)
+                .param(accountId)
+                .param(eventId)
+                .query(Integer.class)
+                .optional()
+                .orElse(0);
+            return elapsed != null ? elapsed : 0;
+        } catch (DataAccessException e) {
             log.debug("No elapsed time found for account {}, event {}", accountId, eventId);
         }
         return 0;
@@ -224,14 +225,13 @@ public class PlayerEventsWindowDAO extends com.aionemu.gameserver.dao.PlayerEven
      */
     @Override
     public void updateElapsed(int accountId, int eventId, int elapsed) {
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(UPDATE_ELAPSED_QUERY)) {
-
-            stmt.setInt(1, elapsed);
-            stmt.setInt(2, accountId);
-            stmt.setInt(3, eventId);
-            stmt.executeUpdate();
-        } catch (SQLException e) {
+        try {
+            jdbcClient.sql(UPDATE_ELAPSED_QUERY)
+                .param(elapsed)
+                .param(accountId)
+                .param(eventId)
+                .update();
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.59f40fb9f03a", accountId, eventId), e);
         }
     }
@@ -245,18 +245,15 @@ public class PlayerEventsWindowDAO extends com.aionemu.gameserver.dao.PlayerEven
      */
     @Override
     public int getRewardRecivedCount(int accountId, int eventId) {
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(SELECT_REWARD_COUNT_QUERY)) {
-
-            stmt.setInt(1, accountId);
-            stmt.setInt(2, eventId);
-
-            try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    return rs.getInt("reward_recived_count ");
-                }
-            }
-        } catch (SQLException e) {
+        try {
+            Integer count = jdbcClient.sql(SELECT_REWARD_COUNT_QUERY)
+                .param(accountId)
+                .param(eventId)
+                .query(Integer.class)
+                .optional()
+                .orElse(0);
+            return count != null ? count : 0;
+        } catch (DataAccessException e) {
             log.debug("No reward count found for account {}, event {}", accountId, eventId);
         }
         return 0;
@@ -271,14 +268,13 @@ public class PlayerEventsWindowDAO extends com.aionemu.gameserver.dao.PlayerEven
      */
     @Override
     public void setRewardRecivedCount(int accountId, int eventId, int rewardReceivedCount) {
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(UPDATE_REWARD_QUERY)) {
-
-            stmt.setInt(1, rewardReceivedCount);
-            stmt.setInt(2, accountId);
-            stmt.setInt(3, eventId);
-            stmt.executeUpdate();
-        } catch (SQLException e) {
+        try {
+            jdbcClient.sql(UPDATE_REWARD_QUERY)
+                .param(rewardReceivedCount)
+                .param(accountId)
+                .param(eventId)
+                .update();
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.90532cef7c99", accountId, eventId), e);
         }
     }

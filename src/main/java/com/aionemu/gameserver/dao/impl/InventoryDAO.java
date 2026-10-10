@@ -1,8 +1,19 @@
 package com.aionemu.gameserver.dao.impl;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Objects;
+
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.simple.JdbcClient;
 
 import com.aionemu.boot.i18n.I18n;
-import lombok.extern.slf4j.Slf4j;
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.commons.utils.GenericValidator;
 import com.aionemu.gameserver.model.gameobjects.Item;
@@ -13,14 +24,12 @@ import com.aionemu.gameserver.model.items.storage.PlayerStorage;
 import com.aionemu.gameserver.model.items.storage.Storage;
 import com.aionemu.gameserver.model.items.storage.StorageType;
 import com.aionemu.gameserver.services.item.ItemService;
-import java.sql.*;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
- * 物品栏/仓库数据访问对象的 MySQL 8 实现，已修复连接泄漏。
- * MySQL 8 implementation of InventoryDAO with connection leak fixes.
+ * 物品栏/仓库数据访问对象的 MySQL 8 实现。
+ * MySQL 8 implementation of InventoryDAO using JdbcClient.
  * @author ATracer
  */
 @Slf4j
@@ -56,6 +65,16 @@ public class InventoryDAO extends com.aionemu.gameserver.dao.InventoryDAO {
     /** 查询已占用的物品唯一 ID / Select used item unique ids */
     public static final String SELECT_USED_IDS_QUERY = "SELECT item_unique_id FROM inventory";
 
+    private final JdbcClient jdbcClient;
+
+    public InventoryDAO() {
+        this(DatabaseFactory.getJdbcClient());
+    }
+
+    public InventoryDAO(JdbcClient jdbcClient) {
+        this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");
+    }
+
     /**
      * 加载指定存储类型的物品栏；账号仓库会先解析为账号 ID。
      * Loads a storage of the given type for a player; account warehouse resolves to account id first.
@@ -75,26 +94,24 @@ public class InventoryDAO extends com.aionemu.gameserver.dao.InventoryDAO {
 
         final int owner = playerId;
 
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(SELECT_QUERY)) {
-
-            stmt.setInt(1, owner);
-            stmt.setInt(2, storage);
-            stmt.setInt(3, equipped);
-
-            try (ResultSet rset = stmt.executeQuery()) {
-                while (rset.next()) {
+        try {
+            jdbcClient.sql(SELECT_QUERY)
+                .param(owner)
+                .param(storage)
+                .param(equipped)
+                .query((rset, rowNum) -> {
                     Item item = constructItem(storage, rset);
                     if (item.getItemTemplate() == null) {
-                        log.error(I18n.get("log.9a2f5be30d7d", playerId, item.getObjectId()));
+                        log.error(I18n.get("log.9a2f5be30d7d", owner, item.getObjectId()));
                     } else {
                         item.setPersistentState(PersistentState.UPDATED);
                         inventory.onLoadHandler(item);
                     }
-                }
-            }
+                    return null;
+                })
+                .list();
         } catch (Exception e) {
-            log.error(I18n.get("log.52f3a07ead8f", playerId), e);
+            log.error(I18n.get("log.52f3a07ead8f", owner), e);
         }
 
         return inventory;
@@ -118,19 +135,14 @@ public class InventoryDAO extends com.aionemu.gameserver.dao.InventoryDAO {
 
         final int owner = playerId;
 
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(SELECT_QUERY2)) {
-
-            stmt.setInt(1, owner);
-            stmt.setInt(2, storageType.getId());
-
-            try (ResultSet rset = stmt.executeQuery()) {
-                while (rset.next()) {
-                    list.add(constructItem(storage, rset));
-                }
-            }
+        try {
+            list.addAll(jdbcClient.sql(SELECT_QUERY2)
+                .param(owner)
+                .param(storageType.getId())
+                .query((rset, rowNum) -> constructItem(storage, rset))
+                .list());
         } catch (Exception e) {
-            log.error(I18n.get("log.96d353298d09", playerId), e);
+            log.error(I18n.get("log.96d353298d09", owner), e);
         }
 
         return list;
@@ -149,20 +161,18 @@ public class InventoryDAO extends com.aionemu.gameserver.dao.InventoryDAO {
         final int storage = 0;
         final int equipped = 1;
 
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(SELECT_QUERY)) {
-
-            stmt.setInt(1, playerId);
-            stmt.setInt(2, storage);
-            stmt.setInt(3, equipped);
-
-            try (ResultSet rset = stmt.executeQuery()) {
-                while (rset.next()) {
+        try {
+            jdbcClient.sql(SELECT_QUERY)
+                .param(playerId)
+                .param(storage)
+                .param(equipped)
+                .query((rset, rowNum) -> {
                     Item item = constructItem(storage, rset);
                     item.setPersistentState(PersistentState.UPDATED);
                     equipment.onLoadHandler(item);
-                }
-            }
+                    return null;
+                })
+                .list();
         } catch (Exception e) {
             log.error(I18n.get("log.ce1e87b43e9b", playerId), e);
         }
@@ -173,7 +183,6 @@ public class InventoryDAO extends com.aionemu.gameserver.dao.InventoryDAO {
     /**
      * 按玩家 ID 加载已装备物品列表。
      * Loads equipped items as a list by player id.
-     * player id
      * @param playerId 玩家 ID / player id
      * @return 已装备物品列表 / equipped item list
      */
@@ -183,19 +192,13 @@ public class InventoryDAO extends com.aionemu.gameserver.dao.InventoryDAO {
         final int storage = 0;
         final int equipped = 1;
 
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(SELECT_QUERY)) {
-
-            stmt.setInt(1, playerId);
-            stmt.setInt(2, storage);
-            stmt.setInt(3, equipped);
-
-            try (ResultSet rset = stmt.executeQuery()) {
-                while (rset.next()) {
-                    Item item = constructItem(storage, rset);
-                    items.add(item);
-                }
-            }
+        try {
+            items.addAll(jdbcClient.sql(SELECT_QUERY)
+                .param(playerId)
+                .param(storage)
+                .param(equipped)
+                .query((rset, rowNum) -> constructItem(storage, rset))
+                .list());
         } catch (Exception e) {
             log.error(I18n.get("log.ce1e87b43e9b", playerId), e);
         }
@@ -241,16 +244,12 @@ public class InventoryDAO extends com.aionemu.gameserver.dao.InventoryDAO {
     }
 
     private int loadPlayerAccountId(final int playerId) {
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(SELECT_ACCOUNT_QUERY)) {
-
-            stmt.setInt(1, playerId);
-            try (ResultSet rset = stmt.executeQuery()) {
-                if (rset.next()) {
-                    return rset.getInt("account_id");
-                }
-            }
-            return 0;
+        try {
+            return jdbcClient.sql(SELECT_ACCOUNT_QUERY)
+                .param(playerId)
+                .query((rset, rowNum) -> rset.getInt("account_id"))
+                .optional()
+                .orElse(0);
         } catch (Exception e) {
             log.error(I18n.get("log.8cf69332a5ea", playerId), e);
             return 0;
@@ -260,21 +259,16 @@ public class InventoryDAO extends com.aionemu.gameserver.dao.InventoryDAO {
     /**
      * 按玩家 ID 加载所属军团 ID。
      * Loads the legion id for the given player.
-     * player id
      * @param playerId 玩家 ID / player id
      * @return 军团 ID；未加入或出错时返回 0 / legion id, or 0 if none/error
      */
     public int loadLegionId(final int playerId) {
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(SELECT_LEGION_QUERY)) {
-
-            stmt.setInt(1, playerId);
-            try (ResultSet rset = stmt.executeQuery()) {
-                if (rset.next()) {
-                    return rset.getInt("legion_id");
-                }
-            }
-            return 0;
+        try {
+            return jdbcClient.sql(SELECT_LEGION_QUERY)
+                .param(playerId)
+                .query((rset, rowNum) -> rset.getInt("legion_id"))
+                .optional()
+                .orElse(0);
         } catch (Exception e) {
             log.error(I18n.get("log.13d51b51a32f", playerId), e);
             return 0;
@@ -572,13 +566,12 @@ public class InventoryDAO extends com.aionemu.gameserver.dao.InventoryDAO {
      */
     @Override
     public boolean deletePlayerItems(final int playerId) {
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(DELETE_CLEAN_QUERY)) {
-
-            stmt.setInt(1, playerId);
-            stmt.executeUpdate();
+        try {
+            jdbcClient.sql(DELETE_CLEAN_QUERY)
+                .param(playerId)
+                .update();
             return true;
-        } catch (Exception e) {
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.6a58c54be58e", playerId), e);
             return false;
         }
@@ -591,12 +584,11 @@ public class InventoryDAO extends com.aionemu.gameserver.dao.InventoryDAO {
      */
     @Override
     public void deleteAccountWH(final int accountId) {
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(DELETE_ACCOUNT_WH)) {
-
-            stmt.setInt(1, accountId);
-            stmt.executeUpdate();
-        } catch (Exception e) {
+        try {
+            jdbcClient.sql(DELETE_ACCOUNT_WH)
+                .param(accountId)
+                .update();
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.aa5fb04d48d6", accountId), e);
         }
     }
@@ -604,31 +596,24 @@ public class InventoryDAO extends com.aionemu.gameserver.dao.InventoryDAO {
     /**
      * 获取已占用的物品唯一 ID 列表，供 ID 工厂使用。
      * Returns used item unique ids for ID factory allocation.
-     * 已占用 ID 数组；出错时返回空数组。
-     * used id array, or empty on error.
+     * @return 已占用 ID 数组；出错时返回空数组 / used id array, or empty on error.
      */
     @Override
     public int[] getUsedIDs() {
-        String query = "SELECT item_unique_id FROM inventory";
-        List<Integer> ids = new ArrayList<>();
+        try {
+            List<Integer> ids = jdbcClient.sql(SELECT_USED_IDS_QUERY)
+                .query((rs, rowNum) -> rs.getInt("item_unique_id"))
+                .list();
 
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(query, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-             ResultSet rs = stmt.executeQuery()) {
-
-            while (rs.next()) {
-                ids.add(rs.getInt("item_unique_id"));
+            int[] result = new int[ids.size()];
+            for (int i = 0; i < ids.size(); i++) {
+                result[i] = ids.get(i);
             }
-        } catch (SQLException e) {
+            return result;
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.fc3775ae3813"), e);
             return new int[0];
         }
-
-        int[] result = new int[ids.size()];
-        for (int i = 0; i < ids.size(); i++) {
-            result[i] = ids.get(i);
-        }
-        return result;
     }
 
     /**

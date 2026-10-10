@@ -1,23 +1,26 @@
 package com.aionemu.gameserver.dao.impl;
 
+import java.util.Map;
+import java.util.Objects;
+import java.util.concurrent.ConcurrentHashMap;
+
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.simple.JdbcClient;
 
 import com.aionemu.boot.i18n.I18n;
-import lombok.extern.slf4j.Slf4j;
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.outpost.OutpostLocation;
-import java.sql.*;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 前哨据点 DAO 的 MySQL 8 实现。
- * MySQL 8 implementation of OutpostDAO.
+ * MySQL 8 implementation of OutpostDAO using JdbcClient.
  * Created by Wnkrz on 27/08/2017. Updated for MySQL 8.
  */
 @Slf4j
 public class OutpostDAO extends com.aionemu.gameserver.dao.OutpostDAO {
-
 
     /** 查询前哨地点 SQL / Select outpost locations SQL */
     private static final String SELECT_QUERY = "SELECT `id`, `race` FROM `outpost_location` ORDER BY `id`";
@@ -25,6 +28,16 @@ public class OutpostDAO extends com.aionemu.gameserver.dao.OutpostDAO {
     private static final String UPDATE_QUERY = "UPDATE `outpost_location` SET `race` = ? WHERE `id` = ?";
     /** 插入或更新前哨地点 SQL / Insert or update outpost location SQL */
     private static final String INSERT_QUERY = "INSERT INTO `outpost_location` (`id`, `race`) VALUES (?, ?) ON DUPLICATE KEY UPDATE `race` = VALUES(`race`)";
+
+    private final JdbcClient jdbcClient;
+
+    public OutpostDAO() {
+        this(DatabaseFactory.getJdbcClient());
+    }
+
+    public OutpostDAO(JdbcClient jdbcClient) {
+        this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");
+    }
 
     /**
      * 加载前哨据点；缺失记录会自动插入。
@@ -36,29 +49,28 @@ public class OutpostDAO extends com.aionemu.gameserver.dao.OutpostDAO {
     public boolean loadOutposLocations(Map<Integer, OutpostLocation> locations) {
         boolean success = true;
 
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(SELECT_QUERY);
-             ResultSet rset = stmt.executeQuery()) {
-
+        try {
             Map<Integer, Boolean> loadedIds = new ConcurrentHashMap<>();
 
-            while (rset.next()) {
-                int id = rset.getInt("id");
-                OutpostLocation loc = locations.get(id);
+            jdbcClient.sql(SELECT_QUERY)
+                .query((rs, rowNum) -> {
+                    int id = rs.getInt("id");
+                    OutpostLocation loc = locations.get(id);
 
-                if (loc != null) {
-                    loc.setRace(Race.valueOf(rset.getString("race")));
-                    loadedIds.put(id, true);
-                }
-            }
+                    if (loc != null) {
+                        loc.setRace(Race.valueOf(rs.getString("race")));
+                        loadedIds.put(id, true);
+                    }
+                    return null;
+                })
+                .list();
 
             for (Map.Entry<Integer, OutpostLocation> entry : locations.entrySet()) {
                 if (!loadedIds.containsKey(entry.getKey())) {
                     insertOutpostLocation(entry.getValue());
                 }
             }
-
-        } catch (SQLException e) {
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.19142084445f"), e);
             success = false;
         }
@@ -74,16 +86,13 @@ public class OutpostDAO extends com.aionemu.gameserver.dao.OutpostDAO {
      */
     @Override
     public boolean updateOutpostLocation(OutpostLocation location) {
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(UPDATE_QUERY)) {
-
-            stmt.setString(1, location.getRace().toString());
-            stmt.setInt(2, location.getId());
-
-            int updated = stmt.executeUpdate();
+        try {
+            int updated = jdbcClient.sql(UPDATE_QUERY)
+                .param(location.getRace().toString())
+                .param(location.getId())
+                .update();
             return updated > 0;
-
-        } catch (SQLException e) {
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.3e416c0dd49f", location.getId()), e);
             return false;
         }
@@ -96,16 +105,13 @@ public class OutpostDAO extends com.aionemu.gameserver.dao.OutpostDAO {
      * @return 是否成功 / whether successful
      */
     private boolean insertOutpostLocation(OutpostLocation location) {
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(INSERT_QUERY)) {
-
-            stmt.setInt(1, location.getId());
-            stmt.setString(2, Race.NPC.toString());
-
-            int inserted = stmt.executeUpdate();
+        try {
+            int inserted = jdbcClient.sql(INSERT_QUERY)
+                .param(location.getId())
+                .param(Race.NPC.toString())
+                .update();
             return inserted > 0;
-
-        } catch (SQLException e) {
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.96d78ac95569", location.getId()), e);
             return false;
         }
@@ -118,28 +124,15 @@ public class OutpostDAO extends com.aionemu.gameserver.dao.OutpostDAO {
      * @return 是否成功 / whether successful
      */
     public boolean updateOutpostLocations(Map<Integer, OutpostLocation> locations) {
-        try (Connection con = DatabaseFactory.getConnection()) {
-            con.setAutoCommit(false);
-
-            try (PreparedStatement stmt = con.prepareStatement(UPDATE_QUERY)) {
-                for (OutpostLocation loc : locations.values()) {
-                    stmt.setString(1, loc.getRace().toString());
-                    stmt.setInt(2, loc.getId());
-                    stmt.addBatch();
-                }
-
-                int[] results = stmt.executeBatch();
-                con.commit();
-
-                for (int result : results) {
-                    if (result == PreparedStatement.EXECUTE_FAILED) {
-                        return false;
-                    }
-                }
-                return true;
+        try {
+            for (OutpostLocation loc : locations.values()) {
+                jdbcClient.sql(UPDATE_QUERY)
+                    .param(loc.getRace().toString())
+                    .param(loc.getId())
+                    .update();
             }
-
-        } catch (SQLException e) {
+            return true;
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.882bb7efcb76"), e);
             return false;
         }

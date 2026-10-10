@@ -1,8 +1,19 @@
 package com.aionemu.gameserver.dao.impl;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.simple.JdbcClient;
 
 import com.aionemu.boot.i18n.I18n;
-import lombok.extern.slf4j.Slf4j;
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.gameserver.configs.main.GSConfig;
 import com.aionemu.gameserver.dataholders.DataManager;
@@ -13,22 +24,15 @@ import com.aionemu.gameserver.model.gameobjects.PersistentState;
 import com.aionemu.gameserver.model.gameobjects.player.AbyssRank;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.utils.stats.AbyssRankEnum;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
- * 欧比斯军阶数据访问对象的 MySQL 8 实现，已修复连接泄漏。
- * MySQL 8 implementation of AbyssRankDAO with connection leak fixes.
+ * 欧比斯军阶数据访问对象的 MySQL 8 实现。
+ * MySQL 8 implementation of AbyssRankDAO using JdbcClient.
  */
 @Slf4j
 public class AbyssRankDAO extends com.aionemu.gameserver.dao.AbyssRankDAO {
-
 
     /** 按玩家 ID 查询欧比斯军阶 / Select abyss rank by player id */
     public static final String SELECT_QUERY = "SELECT daily_ap, daily_gp, weekly_ap, weekly_gp, ap, gp, `rank`, " + "top_ranking, daily_kill, weekly_kill, all_kill, max_rank, last_kill, " + "last_ap, last_gp, last_update FROM abyss_rank WHERE player_id = ?";
@@ -69,6 +73,19 @@ public class AbyssRankDAO extends com.aionemu.gameserver.dao.AbyssRankDAO {
     /** 按贡献点重算军团排行位置 / Recalculate legion rank positions by contribution */
     public static final String UPDATE_LEGION_RANK_LIST = "UPDATE legions SET legions.old_rank_pos = legions.rank_pos, " + "legions.rank_pos = @a:=@a+1 WHERE id IN " + "(SELECT legion_id FROM legion_members, players WHERE legion_members.`rank` = 'BRIGADE_GENERAL' " + "AND players.id = legion_members.player_id AND players.race = ?) " + "ORDER BY legions.contribution_points DESC ";
 
+    /** 删除玩家欧比斯军阶记录 / Delete player abyss rank row */
+    public static final String DELETE_QUERY = "DELETE FROM `abyss_rank` WHERE player_id = ?";
+
+    private final JdbcClient jdbcClient;
+
+    public AbyssRankDAO() {
+        this(DatabaseFactory.getJdbcClient());
+    }
+
+    public AbyssRankDAO(JdbcClient jdbcClient) {
+        this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");
+    }
+
     private static String updatePlayerRankList() {
         return UPDATE_PLAYER_RANK_LIST + (GSConfig.ABYSSRANKING_SMALL_CACHE ? "LIMIT 500" : "");
     }
@@ -77,34 +94,25 @@ public class AbyssRankDAO extends com.aionemu.gameserver.dao.AbyssRankDAO {
         return UPDATE_LEGION_RANK_LIST + (GSConfig.ABYSSRANKING_SMALL_CACHE ? "LIMIT 75" : "");
     }
 
-    /** 删除玩家欧比斯军阶记录 / Delete player abyss rank row */
-    public static final String DELETE_QUERY = "DELETE FROM `abyss_rank` WHERE player_id = ?";
-
     /**
      * 按玩家 ID 加载欧比斯军阶；无记录时创建默认 NEW 状态实例。
      * Loads abyss rank by player id; creates a default NEW instance when missing.
-     * player id
      * @param playerId 玩家 ID / player id
      * @return 欧比斯军阶 / abyss rank
      */
     @Override
     public AbyssRank loadAbyssRank(int playerId) {
-        AbyssRank abyssRank = null;
-
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(SELECT_QUERY)) {
-
-            stmt.setInt(1, playerId);
-
-            try (ResultSet resultSet = stmt.executeQuery()) {
-                if (resultSet.next()) {
+        try {
+            AbyssRank rank = jdbcClient.sql(SELECT_QUERY)
+                .param(playerId)
+                .query((resultSet, rowNum) -> {
                     int daily_ap = resultSet.getInt("daily_ap");
                     int daily_gp = resultSet.getInt("daily_gp");
                     int weekly_ap = resultSet.getInt("weekly_ap");
                     int weekly_gp = resultSet.getInt("weekly_gp");
                     int ap = resultSet.getInt("ap");
                     int gp = resultSet.getInt("gp");
-                    int rank = resultSet.getInt("rank");
+                    int r = resultSet.getInt("rank");
                     int top_ranking = resultSet.getInt("top_ranking");
                     int daily_kill = resultSet.getInt("daily_kill");
                     int weekly_kill = resultSet.getInt("weekly_kill");
@@ -115,19 +123,24 @@ public class AbyssRankDAO extends com.aionemu.gameserver.dao.AbyssRankDAO {
                     int last_gp = resultSet.getInt("last_gp");
                     long last_update = resultSet.getLong("last_update");
 
-                    abyssRank = new AbyssRank(daily_ap, daily_gp, weekly_ap, weekly_gp, ap, gp, rank, top_ranking, daily_kill, weekly_kill, all_kill, max_rank, last_kill, last_ap, last_gp, last_update);
+                    AbyssRank ar = new AbyssRank(daily_ap, daily_gp, weekly_ap, weekly_gp, ap, gp, r, top_ranking, daily_kill, weekly_kill, all_kill, max_rank, last_kill, last_ap, last_gp, last_update);
+                    ar.setPersistentState(PersistentState.UPDATED);
+                    return ar;
+                })
+                .optional()
+                .orElse(null);
 
-                    abyssRank.setPersistentState(PersistentState.UPDATED);
-                } else {
-                    abyssRank = new AbyssRank(0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, System.currentTimeMillis());
-                    abyssRank.setPersistentState(PersistentState.NEW);
-                }
+            if (rank == null) {
+                rank = new AbyssRank(0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, System.currentTimeMillis());
+                rank.setPersistentState(PersistentState.NEW);
             }
-        } catch (SQLException e) {
+            return rank;
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.210ed885e1c7", playerId), e);
+            AbyssRank fallback = new AbyssRank(0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, System.currentTimeMillis());
+            fallback.setPersistentState(PersistentState.NEW);
+            return fallback;
         }
-
-        return abyssRank;
     }
 
     /**
@@ -162,26 +175,18 @@ public class AbyssRankDAO extends com.aionemu.gameserver.dao.AbyssRankDAO {
 
     @Override
     public void storeInTransaction(Connection con, int playerId, AbyssRank rank) throws SQLException {
-		boolean result = switch (rank.getPersistentState()) {
-			case NEW -> addRank(con, playerId, rank);
-			case UPDATE_REQUIRED -> updateRank(con, playerId, rank);
-			default -> true;
-		};
-		if (!result) {
+        boolean result = switch (rank.getPersistentState()) {
+            case NEW -> addRank(con, playerId, rank);
+            case UPDATE_REQUIRED -> updateRank(con, playerId, rank);
+            default -> true;
+        };
+        if (!result) {
             throw new SQLException("No abyss rank row changed for player " + playerId);
         }
     }
 
-    /**
-     * 插入新的欧比斯军阶记录。
-     * Inserts a new abyss rank row.
-     * @param con 玩家对象 ID / player object id
-     * @param rank 欧比斯军阶 / abyss rank
-     * @return 成功时为 true / true on success
-     */
     private boolean addRank(Connection con, final int objectId, final AbyssRank rank) throws SQLException {
         try (PreparedStatement stmt = con.prepareStatement(INSERT_QUERY)) {
-
             stmt.setInt(1, objectId);
             stmt.setInt(2, rank.getDailyAP());
             stmt.setInt(3, rank.getDailyGP());
@@ -203,16 +208,8 @@ public class AbyssRankDAO extends com.aionemu.gameserver.dao.AbyssRankDAO {
         }
     }
 
-    /**
-     * 更新已有欧比斯军阶记录。
-     * Updates an existing abyss rank row.
-     * @param con 玩家对象 ID / player object id
-     * @param rank 欧比斯军阶 / abyss rank
-     * @return 成功时为 true / true on success
-     */
     private boolean updateRank(Connection con, final int objectId, final AbyssRank rank) throws SQLException {
         try (PreparedStatement stmt = con.prepareStatement(UPDATE_QUERY)) {
-
             stmt.setInt(1, rank.getDailyAP());
             stmt.setInt(2, rank.getDailyGP());
             stmt.setInt(3, rank.getWeeklyAP());
@@ -244,13 +241,10 @@ public class AbyssRankDAO extends com.aionemu.gameserver.dao.AbyssRankDAO {
     public ArrayList<AbyssRankingResult> getAbyssRankingPlayers(final Race race) {
         ArrayList<AbyssRankingResult> results = new ArrayList<>();
 
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(SELECT_PLAYERS_RANKING)) {
-
-            stmt.setString(1, race.toString());
-
-            try (ResultSet resultSet = stmt.executeQuery()) {
-                while (resultSet.next()) {
+        try {
+            jdbcClient.sql(SELECT_PLAYERS_RANKING)
+                .param(race.toString())
+                .query((resultSet, rowNum) -> {
                     String name = resultSet.getString("players.name");
                     int playerAbyssRank = resultSet.getInt("abyss_rank.rank");
                     int ap = resultSet.getInt("abyss_rank.ap");
@@ -268,16 +262,16 @@ public class AbyssRankDAO extends com.aionemu.gameserver.dao.AbyssRankDAO {
                         playerClass = PlayerClass.getPlayerClassByString(playerClassStr);
                     } catch (IllegalArgumentException e) {
                         log.warn(I18n.get("log.9e67b184f360", playerClassStr));
-                        continue;
+                        return null;
                     }
 
                     if (playerClass != null) {
-                        AbyssRankingResult rsl = new AbyssRankingResult(name, playerAbyssRank, playerId, ap, gp, playerTitle, playerClass, playerLevel, playerLegion, oldRankPos, rankPos);
-                        results.add(rsl);
+                        results.add(new AbyssRankingResult(name, playerAbyssRank, playerId, ap, gp, playerTitle, playerClass, playerLevel, playerLegion, oldRankPos, rankPos));
                     }
-                }
-            }
-        } catch (SQLException e) {
+                    return null;
+                })
+                .list();
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.727699958569", race), e);
         }
 
@@ -294,13 +288,10 @@ public class AbyssRankDAO extends com.aionemu.gameserver.dao.AbyssRankDAO {
     public ArrayList<AbyssRankingResult> getAbyssRankingLegions(final Race race) {
         final ArrayList<AbyssRankingResult> results = new ArrayList<>();
 
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(SELECT_LEGIONS_RANKING)) {
-
-            stmt.setString(1, race.toString());
-
-            try (ResultSet rs = stmt.executeQuery()) {
-                while (rs.next()) {
+        try {
+            jdbcClient.sql(SELECT_LEGIONS_RANKING)
+                .param(race.toString())
+                .query((rs, rowNum) -> {
                     String name = rs.getString("legions.name");
                     long cp = rs.getLong("legions.contribution_points");
                     int legionId = rs.getInt("legions.id");
@@ -309,11 +300,11 @@ public class AbyssRankDAO extends com.aionemu.gameserver.dao.AbyssRankDAO {
                     int oldRankPos = rs.getInt("old_rank_pos");
                     int rankPos = rs.getInt("rank_pos");
 
-                    AbyssRankingResult rsl = new AbyssRankingResult(cp, name, legionId, legionLevel, legionMembers, oldRankPos, rankPos);
-                    results.add(rsl);
-                }
-            }
-        } catch (SQLException e) {
+                    results.add(new AbyssRankingResult(cp, name, legionId, legionLevel, legionMembers, oldRankPos, rankPos));
+                    return null;
+                })
+                .list();
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.feb137f3fb49", race), e);
         }
 
@@ -327,28 +318,24 @@ public class AbyssRankDAO extends com.aionemu.gameserver.dao.AbyssRankDAO {
      * @return 成员数 / member count
      */
     private int getLegionMembersCount(final int legionId) {
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(SELECT_LEGION_COUNT)) {
-
-            stmt.setInt(1, legionId);
-
-            try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    return rs.getInt("players");
-                }
-            }
-        } catch (SQLException e) {
+        try {
+            Integer count = jdbcClient.sql(SELECT_LEGION_COUNT)
+                .param(legionId)
+                .query(Integer.class)
+                .optional()
+                .orElse(0);
+            return count != null ? count : 0;
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.d75f73bd7260", legionId), e);
+            return 0;
         }
-
-        return 0;
     }
 
     /**
      * 加载指定阵营玩家的 AP 映射；可限制活跃天数。
      * Loads player AP map for the race; optionally filters by offline days.
      * @param race 阵营 / race
-     * lower AP limit
+     * @param lowerApLimit lower AP limit
      * @param maxOfflineDays 最大离线天数，0 表示不过滤 / max offline days, 0 means no filter
      * @return 玩家 ID 到 AP 的映射 / map of player id to AP
      */
@@ -357,24 +344,22 @@ public class AbyssRankDAO extends com.aionemu.gameserver.dao.AbyssRankDAO {
         final Map<Integer, Integer> results = new HashMap<>();
         String query = maxOfflineDays > 0 ? SELECT_AP_PLAYER_ACTIVE_ONLY : SELECT_AP_PLAYER;
 
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(query)) {
-
-            stmt.setString(1, race.toString());
-            stmt.setInt(2, lowerApLimit);
+        try {
+            var spec = jdbcClient.sql(query)
+                .param(race.toString())
+                .param(lowerApLimit);
 
             if (maxOfflineDays > 0) {
-                stmt.setInt(3, maxOfflineDays);
+                spec.param(maxOfflineDays);
             }
 
-            try (ResultSet rs = stmt.executeQuery()) {
-                while (rs.next()) {
-                    int playerId = rs.getInt("player_id");
-                    int ap = rs.getInt("ap");
-                    results.put(playerId, ap);
-                }
-            }
-        } catch (SQLException e) {
+            spec.query((rs, rowNum) -> {
+                int playerId = rs.getInt("player_id");
+                int ap = rs.getInt("ap");
+                results.put(playerId, ap);
+                return null;
+            }).list();
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.9546bd5b2940", race), e);
         }
 
@@ -385,7 +370,7 @@ public class AbyssRankDAO extends com.aionemu.gameserver.dao.AbyssRankDAO {
      * 加载指定阵营玩家的 GP 映射；可限制活跃天数。
      * Loads player GP map for the race; optionally filters by offline days.
      * @param race 阵营 / race
-     * lower GP limit
+     * @param lowerGpLimit lower GP limit
      * @param maxOfflineDays 最大离线天数，0 表示不过滤 / max offline days, 0 means no filter
      * @return 玩家 ID 到 GP 的映射 / map of player id to GP
      */
@@ -394,24 +379,22 @@ public class AbyssRankDAO extends com.aionemu.gameserver.dao.AbyssRankDAO {
         final Map<Integer, Integer> results = new HashMap<>();
         String query = maxOfflineDays > 0 ? SELECT_GP_PLAYER_ACTIVE_ONLY : SELECT_GP_PLAYER;
 
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(query)) {
-
-            stmt.setString(1, race.toString());
-            stmt.setInt(2, lowerGpLimit);
+        try {
+            var spec = jdbcClient.sql(query)
+                .param(race.toString())
+                .param(lowerGpLimit);
 
             if (maxOfflineDays > 0) {
-                stmt.setInt(3, maxOfflineDays);
+                spec.param(maxOfflineDays);
             }
 
-            try (ResultSet rs = stmt.executeQuery()) {
-                while (rs.next()) {
-                    int playerId = rs.getInt("player_id");
-                    int gp = rs.getInt("gp");
-                    results.put(playerId, gp);
-                }
-            }
-        } catch (SQLException e) {
+            spec.query((rs, rowNum) -> {
+                int playerId = rs.getInt("player_id");
+                int gp = rs.getInt("gp");
+                results.put(playerId, gp);
+                return null;
+            }).list();
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.997ae7fa479a", race), e);
         }
 
@@ -426,15 +409,13 @@ public class AbyssRankDAO extends com.aionemu.gameserver.dao.AbyssRankDAO {
      */
     @Override
     public void updateAbyssRank(int playerId, AbyssRankEnum rankEnum) {
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(UPDATE_RANK)) {
-
-            stmt.setInt(1, rankEnum.getId());
-            stmt.setInt(2, rankEnum.getQuota());
-            stmt.setInt(3, playerId);
-            stmt.executeUpdate();
-
-        } catch (SQLException e) {
+        try {
+            jdbcClient.sql(UPDATE_RANK)
+                .param(rankEnum.getId())
+                .param(rankEnum.getQuota())
+                .param(playerId)
+                .update();
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.77672b720fdd", playerId), e);
         }
     }
@@ -445,50 +426,49 @@ public class AbyssRankDAO extends com.aionemu.gameserver.dao.AbyssRankDAO {
      */
     @Override
     public void updateRankList() {
-		try (Connection con = DatabaseFactory.getConnection()) {
-			con.setAutoCommit(false);
-			try {
+        try (Connection con = DatabaseFactory.getConnection()) {
+            con.setAutoCommit(false);
+            try {
+                // 更新天族玩家军阶 / Update Elyos player ranks
+                try (PreparedStatement stmt1 = con.prepareStatement("SET @a:=0");
+                     PreparedStatement stmt2 = con.prepareStatement(updatePlayerRankList())) {
+                    stmt1.execute();
+                    stmt2.setString(1, "ELYOS");
+                    stmt2.executeUpdate();
+                }
 
-				// 更新天族玩家军阶 / Update Elyos player ranks
-				try (PreparedStatement stmt1 = con.prepareStatement("SET @a:=0");
-					 PreparedStatement stmt2 = con.prepareStatement(updatePlayerRankList())) {
-					stmt1.execute();
-					stmt2.setString(1, "ELYOS");
-					stmt2.executeUpdate();
-				}
+                // 更新魔族玩家军阶 / Update Asmodian player ranks
+                try (PreparedStatement stmt1 = con.prepareStatement("SET @a:=0");
+                     PreparedStatement stmt2 = con.prepareStatement(updatePlayerRankList())) {
+                    stmt1.execute();
+                    stmt2.setString(1, "ASMODIANS");
+                    stmt2.executeUpdate();
+                }
 
-				// 更新魔族玩家军阶 / Update Asmodian player ranks
-				try (PreparedStatement stmt1 = con.prepareStatement("SET @a:=0");
-					 PreparedStatement stmt2 = con.prepareStatement(updatePlayerRankList())) {
-					stmt1.execute();
-					stmt2.setString(1, "ASMODIANS");
-					stmt2.executeUpdate();
-				}
+                // 更新天族军团军阶 / Update Elyos legion ranks
+                try (PreparedStatement stmt1 = con.prepareStatement("SET @a:=0");
+                     PreparedStatement stmt2 = con.prepareStatement(updateLegionRankList())) {
+                    stmt1.execute();
+                    stmt2.setString(1, "ELYOS");
+                    stmt2.executeUpdate();
+                }
 
-				// 更新天族军团军阶 / Update Elyos legion ranks
-				try (PreparedStatement stmt1 = con.prepareStatement("SET @a:=0");
-					 PreparedStatement stmt2 = con.prepareStatement(updateLegionRankList())) {
-					stmt1.execute();
-					stmt2.setString(1, "ELYOS");
-					stmt2.executeUpdate();
-				}
+                // 更新魔族军团军阶 / Update Asmodian legion ranks
+                try (PreparedStatement stmt1 = con.prepareStatement("SET @a:=0");
+                     PreparedStatement stmt2 = con.prepareStatement(updateLegionRankList())) {
+                    stmt1.execute();
+                    stmt2.setString(1, "ASMODIANS");
+                    stmt2.executeUpdate();
+                }
 
-				// 更新魔族军团军阶 / Update Asmodian legion ranks
-				try (PreparedStatement stmt1 = con.prepareStatement("SET @a:=0");
-					 PreparedStatement stmt2 = con.prepareStatement(updateLegionRankList())) {
-					stmt1.execute();
-					stmt2.setString(1, "ASMODIANS");
-					stmt2.executeUpdate();
-				}
-
-				con.commit();
-			} catch (SQLException e) {
-				con.rollback();
-				throw e;
-			}
-		} catch (SQLException e) {
-			log.error(I18n.get("log.4c4ea22ad393"), e);
-		}
+                con.commit();
+            } catch (SQLException e) {
+                con.rollback();
+                throw e;
+            }
+        } catch (SQLException e) {
+            log.error(I18n.get("log.4c4ea22ad393"), e);
+        }
     }
 
     /**
@@ -502,24 +482,15 @@ public class AbyssRankDAO extends com.aionemu.gameserver.dao.AbyssRankDAO {
             return;
         }
 
-		try (Connection con = DatabaseFactory.getConnection()) {
-			con.setAutoCommit(false);
-			try {
-				try (PreparedStatement stmt = con.prepareStatement(DELETE_QUERY)) {
-					for (Player player : listP) {
-						stmt.setInt(1, player.getObjectId());
-						stmt.addBatch();
-					}
-					stmt.executeBatch();
-				}
-				con.commit();
-			} catch (SQLException e) {
-				con.rollback();
-				throw e;
-			}
-		} catch (SQLException e) {
-			log.error(I18n.get("log.19fd6d465738"), e);
-		}
+        try {
+            for (Player player : listP) {
+                jdbcClient.sql(DELETE_QUERY)
+                    .param(player.getObjectId())
+                    .update();
+            }
+        } catch (DataAccessException e) {
+            log.error(I18n.get("log.19fd6d465738"), e);
+        }
     }
 
     /**

@@ -1,8 +1,13 @@
 package com.aionemu.gameserver.dao.impl;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
+
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.simple.JdbcClient;
 
 import com.aionemu.boot.i18n.I18n;
-import lombok.extern.slf4j.Slf4j;
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.dao.PlayerDAO;
@@ -10,16 +15,12 @@ import com.aionemu.gameserver.model.gameobjects.player.BlockList;
 import com.aionemu.gameserver.model.gameobjects.player.BlockedPlayer;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.gameobjects.player.PlayerCommonData;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Map;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 玩家屏蔽列表 DAO 的 MySQL 8 实现。
- * MySQL 8 implementation of BlockListDAO.
+ * MySQL 8 implementation of BlockListDAO using JdbcClient.
  * Updated for MySQL 8 - Fixed connection leaks.
  * @author Ben
  */
@@ -35,6 +36,16 @@ public class BlockListDAO extends com.aionemu.gameserver.dao.BlockListDAO {
 	/** 更新屏蔽原因 SQL / Update block reason SQL */
 	private static final String SET_REASON_QUERY = "UPDATE blocks SET reason=? WHERE player=? AND blocked_player=?";
 
+	private final JdbcClient jdbcClient;
+
+	public BlockListDAO() {
+		this(DatabaseFactory.getJdbcClient());
+	}
+
+	public BlockListDAO(JdbcClient jdbcClient) {
+		this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");
+	}
+
 	/**
 	 * 添加被屏蔽玩家。
 	 * Adds a blocked player.
@@ -45,14 +56,14 @@ public class BlockListDAO extends com.aionemu.gameserver.dao.BlockListDAO {
 	 */
 	@Override
 	public boolean addBlockedUser(final int playerObjId, final int objIdToBlock, final String reason) {
-		try (Connection con = DatabaseFactory.getConnection();
-			 PreparedStatement stmt = con.prepareStatement(ADD_QUERY)) {
-
-			stmt.setInt(1, playerObjId);
-			stmt.setInt(2, objIdToBlock);
-			stmt.setString(3, reason);
-			return stmt.executeUpdate() > 0;
-		} catch (SQLException e) {
+		try {
+			int affected = jdbcClient.sql(ADD_QUERY)
+				.param(playerObjId)
+				.param(objIdToBlock)
+				.param(reason)
+				.update();
+			return affected > 0;
+		} catch (DataAccessException e) {
 			log.error(I18n.get("log.5b7ace3c98ed", playerObjId, objIdToBlock), e);
 			return false;
 		}
@@ -67,13 +78,13 @@ public class BlockListDAO extends com.aionemu.gameserver.dao.BlockListDAO {
 	 */
 	@Override
 	public boolean delBlockedUser(final int playerObjId, final int objIdToDelete) {
-		try (Connection con = DatabaseFactory.getConnection();
-			 PreparedStatement stmt = con.prepareStatement(DEL_QUERY)) {
-
-			stmt.setInt(1, playerObjId);
-			stmt.setInt(2, objIdToDelete);
-			return stmt.executeUpdate() > 0;
-		} catch (SQLException e) {
+		try {
+			int affected = jdbcClient.sql(DEL_QUERY)
+				.param(playerObjId)
+				.param(objIdToDelete)
+				.update();
+			return affected > 0;
+		} catch (DataAccessException e) {
 			log.error(I18n.get("log.4721ed6a731b", playerObjId, objIdToDelete), e);
 			return false;
 		}
@@ -89,23 +100,22 @@ public class BlockListDAO extends com.aionemu.gameserver.dao.BlockListDAO {
 	public BlockList load(final Player player) {
 		final Map<Integer, BlockedPlayer> list = new HashMap<>();
 
-		try (Connection con = DatabaseFactory.getConnection();
-			 PreparedStatement stmt = con.prepareStatement(LOAD_QUERY)) {
-
-			stmt.setInt(1, player.getObjectId());
-
-			try (ResultSet rset = stmt.executeQuery()) {
-				PlayerDAO playerDao = DAOManager.getDAO(PlayerDAO.class);
-				while (rset.next()) {
-					int blockedOid = rset.getInt("blocked_player");
+		try {
+			PlayerDAO playerDao = DAOManager.getDAO(PlayerDAO.class);
+			jdbcClient.sql(LOAD_QUERY)
+				.param(player.getObjectId())
+				.query((rs, rowNum) -> {
+					int blockedOid = rs.getInt("blocked_player");
+					String reason = rs.getString("reason");
 					PlayerCommonData pcd = playerDao.loadPlayerCommonData(blockedOid);
 					if (pcd == null) {
 						log.error(I18n.get("log.53686495edb4", player.getName(), blockedOid));
 					} else {
-						list.put(blockedOid, new BlockedPlayer(pcd, rset.getString("reason")));
+						list.put(blockedOid, new BlockedPlayer(pcd, reason));
 					}
-				}
-			}
+					return null;
+				})
+				.list();
 		} catch (Exception e) {
 			log.error(I18n.get("log.54a6187d47e3", player.getObjectId()), e);
 		}
@@ -122,14 +132,14 @@ public class BlockListDAO extends com.aionemu.gameserver.dao.BlockListDAO {
 	 */
 	@Override
 	public boolean setReason(final int playerObjId, final int blockedPlayerObjId, final String reason) {
-		try (Connection con = DatabaseFactory.getConnection();
-			 PreparedStatement stmt = con.prepareStatement(SET_REASON_QUERY)) {
-
-			stmt.setString(1, reason);
-			stmt.setInt(2, playerObjId);
-			stmt.setInt(3, blockedPlayerObjId);
-			return stmt.executeUpdate() > 0;
-		} catch (SQLException e) {
+		try {
+			int affected = jdbcClient.sql(SET_REASON_QUERY)
+				.param(reason)
+				.param(playerObjId)
+				.param(blockedPlayerObjId)
+				.update();
+			return affected > 0;
+		} catch (DataAccessException e) {
 			log.error(I18n.get("log.efb77a6431a9", playerObjId, blockedPlayerObjId), e);
 			return false;
 		}
