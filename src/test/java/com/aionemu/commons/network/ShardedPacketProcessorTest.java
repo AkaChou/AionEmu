@@ -120,31 +120,26 @@ class ShardedPacketProcessorTest {
 		}
 	}
 
-	private static final class MockTransport implements ConnectionTransport {
-		private final String ip;
-
-		private MockTransport(String ip) {
-			this.ip = ip;
-		}
+	private record MockTransport(String ip) implements ConnectionTransport {
 
 		@Override
-		public String getIP() {
-			return ip;
-		}
+			public String getIP() {
+				return ip;
+			}
 
-		@Override
-		public void enableWriteInterest() {
-		}
+			@Override
+			public void enableWriteInterest() {
+			}
 
-		@Override
-		public void close(boolean forced) {
-		}
+			@Override
+			public void close(boolean forced) {
+			}
 
-		@Override
-		public boolean onlyClose() {
-			return true;
+			@Override
+			public boolean onlyClose() {
+				return true;
+			}
 		}
-	}
 
 	private static final class MockClientPacket extends BaseClientPacket<MockConnection> {
 		private final Runnable action;

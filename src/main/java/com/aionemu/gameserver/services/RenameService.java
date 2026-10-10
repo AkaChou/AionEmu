@@ -3,6 +3,7 @@ package com.aionemu.gameserver.services;
 import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
 
 import java.util.Iterator;
+import java.util.Objects;
 
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.configs.main.CustomConfig;
@@ -15,12 +16,52 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.services.player.PlayerService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.audit.AuditLogger;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 
 /**
  * 重命名服务，处理角色与军团的改名（含优惠券消耗与广播）。
  * Rename service that handles character and legion renames (coupon consume and broadcast).
  */
+@RequiredArgsConstructor
 public class RenameService {
+
+	private static volatile RenameService instance;
+	@NonNull
+	private final OldNamesDAO oldNamesDAO;
+	@NonNull
+	private final PlayerDAO playerDAO;
+	@NonNull
+	private final LegionDAO legionDAO;
+
+	public RenameService() {
+		this(safeDao(OldNamesDAO.class, com.aionemu.gameserver.dao.impl.OldNamesDAO::new),
+			 safeDao(PlayerDAO.class, com.aionemu.gameserver.dao.impl.PlayerDAO::new),
+			 safeDao(LegionDAO.class, com.aionemu.gameserver.dao.impl.LegionDAO::new));
+	}
+
+	private static <T extends com.aionemu.commons.database.dao.DAO> T safeDao(Class<T> daoClass, java.util.function.Supplier<T> fallback) {
+		if (DAOManager.isInitialized()) {
+			try {
+				return DAOManager.getDAO(daoClass);
+			} catch (Exception ignored) {
+			}
+		}
+		return fallback.get();
+	}
+
+	public static RenameService getInstance() {
+		RenameService current = instance;
+		if (current == null) {
+			synchronized (RenameService.class) {
+				current = instance;
+				if (current == null) {
+					current = instance = new RenameService();
+				}
+			}
+		}
+		return current;
+	}
 
 	/**
 	 * 使用改名券为玩家更名，并广播给所有在线玩家。
@@ -59,7 +100,7 @@ public class RenameService {
 			return false;
 		}
 		if (!CustomConfig.OLD_NAMES_COUPON_DISABLED) {
-			DAOManager.getDAO(OldNamesDAO.class).insertNames(player.getObjectId(), player.getName(), newName);
+			getInstance().oldNamesDAO.insertNames(player.getObjectId(), player.getName(), newName);
 			player.getCommonData().setName(newName);
 		}
 		Iterator<Player> onlinePlayers = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getPlayersIterator();
@@ -69,7 +110,7 @@ public class RenameService {
 				PacketSendUtility.sendPacket(p, new SM_RENAME(player.getObjectId(), oldName, newName));
 			}
 		}
-		DAOManager.getDAO(PlayerDAO.class).storePlayer(player);
+		getInstance().playerDAO.storePlayer(player);
 		return true;
 	}
 
@@ -93,7 +134,7 @@ public class RenameService {
 			PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1400160));
 			return false;
 		}
-		if (DAOManager.getDAO(LegionDAO.class).isNameUsed(name)) {
+		if (getInstance().legionDAO.isNameUsed(name)) {
 			PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1400156));
 			return false;
 		}

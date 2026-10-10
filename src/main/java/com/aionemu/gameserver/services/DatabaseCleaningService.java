@@ -1,12 +1,14 @@
 package com.aionemu.gameserver.services;
 
 import com.aionemu.boot.i18n.I18n;
+import lombok.NonNull;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -33,7 +35,7 @@ public class DatabaseCleaningService {
     @Setter
     private static volatile ObjectProvider<DatabaseCleaningService> instanceProvider;
 	/** 玩家 DAO / Player DAO */
-	private final PlayerDAO dao = DAOManager.getDAO(PlayerDAO.class);
+	private final PlayerDAO dao;
 
 	/** 安全最小清理周期（天）。 / Security minimum cleaning period in days. */
 	private final int SECURITY_MINIMUM_PERIOD = 30;
@@ -47,13 +49,33 @@ public class DatabaseCleaningService {
 	private long startTime;
 
 	/**
+	 * 使用指定的 PlayerDAO 构造服务；若启用清理则立即执行。
+	 * Constructs the service with given PlayerDAO and runs cleaning when enabled.
+	 * @param dao 玩家数据访问对象 / player DAO
+	 */
+	public DatabaseCleaningService(@NonNull PlayerDAO dao) {
+		this.dao = dao;
+		if (CleaningConfig.CLEANING_ENABLE) {
+			runCleaning();
+		}
+	}
+
+	/**
 	 * 构造服务；若启用清理则立即执行。
 	 * Constructs the service and runs cleaning when enabled.
 	 */
 	public DatabaseCleaningService() {
-		if (CleaningConfig.CLEANING_ENABLE) {
-			runCleaning();
+		this(safeDao(PlayerDAO.class, com.aionemu.gameserver.dao.impl.PlayerDAO::new));
+	}
+
+	private static <T extends com.aionemu.commons.database.dao.DAO> T safeDao(Class<T> daoClass, java.util.function.Supplier<T> fallback) {
+		if (DAOManager.isInitialized()) {
+			try {
+				return DAOManager.getDAO(daoClass);
+			} catch (Exception ignored) {
+			}
 		}
+		return fallback.get();
 	}
 
 	/**

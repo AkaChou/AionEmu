@@ -3,6 +3,7 @@ package com.aionemu.gameserver.services;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.Calendar;
+import java.util.Objects;
 import java.util.concurrent.Future;
 
 import com.aionemu.commons.database.dao.DAOManager;
@@ -16,13 +17,47 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldMapType;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 
 /**
  * 惩罚服务，处理角色封禁、监狱与采集限制（验证码）相关逻辑。
  * Punishment service handling character bans, prison, and gather restrictions (captcha).
  * @author lord_rex, Cura, nrg
  */
+@RequiredArgsConstructor
 public class PunishmentService {
+
+	private static volatile PunishmentService instance;
+	@NonNull
+	private final PlayerPunishmentsDAO playerPunishmentsDAO;
+
+	public PunishmentService() {
+		this(safeDao(PlayerPunishmentsDAO.class, com.aionemu.gameserver.dao.impl.PlayerPunishmentsDAO::new));
+	}
+
+	private static <T extends com.aionemu.commons.database.dao.DAO> T safeDao(Class<T> daoClass, java.util.function.Supplier<T> fallback) {
+		if (DAOManager.isInitialized()) {
+			try {
+				return DAOManager.getDAO(daoClass);
+			} catch (Exception ignored) {
+			}
+		}
+		return fallback.get();
+	}
+
+	public static PunishmentService getInstance() {
+		PunishmentService current = instance;
+		if (current == null) {
+			synchronized (PunishmentService.class) {
+				current = instance;
+				if (current == null) {
+					current = instance = new PunishmentService();
+				}
+			}
+		}
+		return current;
+	}
 
 	/**
 	 * 解除角色封禁。
@@ -30,7 +65,7 @@ public class PunishmentService {
 	 * @param playerId character id
 	 */
 	public static void unbanChar(int playerId) {
-		DAOManager.getDAO(PlayerPunishmentsDAO.class).unpunishPlayer(playerId, PunishmentType.CHARBAN);
+		getInstance().playerPunishmentsDAO.unpunishPlayer(playerId, PunishmentType.CHARBAN);
 	}
 
 	/**
@@ -41,7 +76,7 @@ public class PunishmentService {
 	 * ban reason
 	 */
 	public static void banChar(int playerId, int dayCount, String reason) {
-		DAOManager.getDAO(PlayerPunishmentsDAO.class).punishPlayer(playerId, PunishmentType.CHARBAN,
+		getInstance().playerPunishmentsDAO.punishPlayer(playerId, PunishmentType.CHARBAN,
 				calculateDuration(dayCount), reason);
 
 		// 若玩家在线——踢出 / if player is online - kick him
@@ -92,7 +127,7 @@ public class PunishmentService {
 			}
 			player.setStartPrison(System.currentTimeMillis());
 			TeleportService2.teleportToPrison(player);
-			DAOManager.getDAO(PlayerPunishmentsDAO.class).punishPlayer(player, PunishmentType.PRISON, reason);
+			getInstance().playerPunishmentsDAO.punishPlayer(player, PunishmentType.PRISON, reason);
 		} else {
 			PacketSendUtility.sendMessage(player, "You come out of prison.");
 
@@ -103,7 +138,7 @@ public class PunishmentService {
 
 			TeleportService2.moveToBindLocation(player, true);
 
-			DAOManager.getDAO(PlayerPunishmentsDAO.class).unpunishPlayer(player.getObjectId(), PunishmentType.PRISON);
+			getInstance().playerPunishmentsDAO.unpunishPlayer(player.getObjectId(), PunishmentType.PRISON);
 		}
 	}
 
@@ -190,7 +225,7 @@ public class PunishmentService {
 			player.setGatherableTimer(delay);
 			player.setStopGatherable(System.currentTimeMillis());
 			scheduleGatherableTask(player, delay);
-			DAOManager.getDAO(PlayerPunishmentsDAO.class).punishPlayer(player, PunishmentType.GATHER,
+			getInstance().playerPunishmentsDAO.punishPlayer(player, PunishmentType.GATHER,
 					"Possible gatherbot");
 		} else {
 			PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1400269));
@@ -198,7 +233,7 @@ public class PunishmentService {
 			player.setCaptchaImage(null);
 			player.setGatherableTimer(0);
 			player.setStopGatherable(0);
-			DAOManager.getDAO(PlayerPunishmentsDAO.class).unpunishPlayer(player.getObjectId(), PunishmentType.GATHER);
+			getInstance().playerPunishmentsDAO.unpunishPlayer(player.getObjectId(), PunishmentType.GATHER);
 		}
 	}
 

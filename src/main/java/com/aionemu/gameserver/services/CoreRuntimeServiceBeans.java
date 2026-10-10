@@ -24,11 +24,25 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
 import com.aionemu.gameserver.dao.AbyssRankDAO;
 import com.aionemu.gameserver.dao.AnnouncementsDAO;
+import com.aionemu.gameserver.dao.BlockListDAO;
 import com.aionemu.gameserver.dao.BrokerDAO;
+import com.aionemu.gameserver.dao.FriendListDAO;
+import com.aionemu.gameserver.dao.GuideDAO;
 import com.aionemu.gameserver.dao.InventoryDAO;
+import com.aionemu.gameserver.dao.ItemStoneListDAO;
+import com.aionemu.gameserver.dao.LegionDAO;
+import com.aionemu.gameserver.dao.LegionMemberDAO;
+import com.aionemu.gameserver.dao.LimitedQuestDAO;
 import com.aionemu.gameserver.dao.MailDAO;
+import com.aionemu.gameserver.dao.OldNamesDAO;
 import com.aionemu.gameserver.dao.PetitionDAO;
+import com.aionemu.gameserver.dao.PlayerAppearanceDAO;
 import com.aionemu.gameserver.dao.PlayerDAO;
+import com.aionemu.gameserver.dao.PlayerPunishmentsDAO;
+import com.aionemu.gameserver.dao.PlayerQuestListDAO;
+import com.aionemu.gameserver.dao.PlayerSkillListDAO;
+import com.aionemu.gameserver.dao.PlayerStigmasEquippedDAO;
+import com.aionemu.gameserver.dao.SurveyControllerDAO;
 
 /**
  * CoreRuntimeServiceBeans：从 GameLegacyServiceBridgeConfiguration 拆出的域内 Bean 装配。
@@ -51,7 +65,26 @@ public class CoreRuntimeServiceBeans {
 
     @Bean
     @Lazy
-    public PeriodicSaveService periodicSaveService() {
+    public PeriodicSaveService periodicSaveService(ObjectProvider<AbyssRankDAO> abyssRankDaoProvider,
+                                                   ObjectProvider<PlayerSkillListDAO> playerSkillListDaoProvider,
+                                                   ObjectProvider<PlayerQuestListDAO> playerQuestListDaoProvider,
+                                                   ObjectProvider<PlayerDAO> playerDaoProvider,
+                                                   ObjectProvider<PlayerStigmasEquippedDAO> playerStigmasEquippedDaoProvider,
+                                                   ObjectProvider<InventoryDAO> inventoryDaoProvider,
+                                                   ObjectProvider<ItemStoneListDAO> itemStoneListDaoProvider) {
+        AbyssRankDAO abyssRankDAO = abyssRankDaoProvider.getIfAvailable();
+        PlayerSkillListDAO playerSkillListDAO = playerSkillListDaoProvider.getIfAvailable();
+        PlayerQuestListDAO playerQuestListDAO = playerQuestListDaoProvider.getIfAvailable();
+        PlayerDAO playerDAO = playerDaoProvider.getIfAvailable();
+        PlayerStigmasEquippedDAO playerStigmasEquippedDAO = playerStigmasEquippedDaoProvider.getIfAvailable();
+        InventoryDAO inventoryDAO = inventoryDaoProvider.getIfAvailable();
+        ItemStoneListDAO itemStoneListDAO = itemStoneListDaoProvider.getIfAvailable();
+        if (abyssRankDAO != null && playerSkillListDAO != null && playerQuestListDAO != null
+                && playerDAO != null && playerStigmasEquippedDAO != null
+                && inventoryDAO != null && itemStoneListDAO != null) {
+            return new PeriodicSaveService(abyssRankDAO, playerSkillListDAO, playerQuestListDAO,
+                    playerDAO, playerStigmasEquippedDAO, inventoryDAO, itemStoneListDAO);
+        }
         return new PeriodicSaveService();
     }
 
@@ -185,8 +218,9 @@ public class CoreRuntimeServiceBeans {
 
     @Bean
     @Lazy
-    public SurveyService surveyService() {
-        return new SurveyService();
+    public SurveyService surveyService(ObjectProvider<SurveyControllerDAO> surveyControllerDaoProvider) {
+        SurveyControllerDAO dao = surveyControllerDaoProvider.getIfAvailable();
+        return dao != null ? new SurveyService(dao) : new SurveyService();
     }
 
     @Bean
@@ -284,5 +318,74 @@ public class CoreRuntimeServiceBeans {
     @Lazy
     public DuelService duelService() {
         return new DuelService();
+    }
+
+    @Bean
+    @Lazy
+    public PunishmentService punishmentService(ObjectProvider<PlayerPunishmentsDAO> daoProvider) {
+        PlayerPunishmentsDAO dao = daoProvider.getIfAvailable();
+        return dao != null ? new PunishmentService(dao) : new PunishmentService();
+    }
+
+    @Bean
+    @Lazy
+    public RenameService renameService(ObjectProvider<OldNamesDAO> oldNamesDaoProvider,
+                                       ObjectProvider<PlayerDAO> playerDaoProvider,
+                                       ObjectProvider<LegionDAO> legionDaoProvider) {
+        OldNamesDAO oldNamesDAO = oldNamesDaoProvider.getIfAvailable();
+        PlayerDAO playerDAO = playerDaoProvider.getIfAvailable();
+        LegionDAO legionDAO = legionDaoProvider.getIfAvailable();
+        if (oldNamesDAO != null && playerDAO != null && legionDAO != null) {
+            return new RenameService(oldNamesDAO, playerDAO, legionDAO);
+        }
+        return new RenameService();
+    }
+
+    @Bean
+    @Lazy
+    public HTMLService htmlService(ObjectProvider<GuideDAO> guideDaoProvider) {
+        GuideDAO dao = guideDaoProvider.getIfAvailable();
+        return dao != null ? new HTMLService(dao) : new HTMLService();
+    }
+
+    @Bean
+    @Lazy
+    public AccountService accountService(ObjectProvider<InventoryDAO> inventoryDaoProvider,
+                                         ObjectProvider<PlayerDAO> playerDaoProvider,
+                                         ObjectProvider<PlayerAppearanceDAO> playerAppearanceDaoProvider,
+                                         ObjectProvider<PlayerPunishmentsDAO> playerPunishmentsDaoProvider,
+                                         ObjectProvider<LegionMemberDAO> legionMemberDaoProvider) {
+        InventoryDAO inventoryDAO = inventoryDaoProvider.getIfAvailable();
+        PlayerDAO playerDAO = playerDaoProvider.getIfAvailable();
+        PlayerAppearanceDAO playerAppearanceDAO = playerAppearanceDaoProvider.getIfAvailable();
+        PlayerPunishmentsDAO playerPunishmentsDAO = playerPunishmentsDaoProvider.getIfAvailable();
+        LegionMemberDAO legionMemberDAO = legionMemberDaoProvider.getIfAvailable();
+        if (inventoryDAO != null && playerDAO != null && playerAppearanceDAO != null
+                && playerPunishmentsDAO != null && legionMemberDAO != null) {
+            return new AccountService(inventoryDAO, playerDAO, playerAppearanceDAO,
+                    playerPunishmentsDAO, legionMemberDAO);
+        }
+        return new AccountService();
+    }
+
+    @Bean
+    @Lazy
+    public SocialService socialService(ObjectProvider<BlockListDAO> blockListDaoProvider,
+                                       ObjectProvider<FriendListDAO> friendListDaoProvider,
+                                       ObjectProvider<PlayerDAO> playerDaoProvider) {
+        BlockListDAO blockListDAO = blockListDaoProvider.getIfAvailable();
+        FriendListDAO friendListDAO = friendListDaoProvider.getIfAvailable();
+        PlayerDAO playerDAO = playerDaoProvider.getIfAvailable();
+        if (blockListDAO != null && friendListDAO != null && playerDAO != null) {
+            return new SocialService(blockListDAO, friendListDAO, playerDAO);
+        }
+        return new SocialService();
+    }
+
+    @Bean
+    @Lazy
+    public LimitedQuestService limitedQuestService(ObjectProvider<LimitedQuestDAO> daoProvider) {
+        LimitedQuestDAO dao = daoProvider.getIfAvailable();
+        return dao != null ? new LimitedQuestService(dao) : new LimitedQuestService();
     }
 }

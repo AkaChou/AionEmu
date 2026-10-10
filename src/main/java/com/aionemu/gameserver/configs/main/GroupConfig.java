@@ -1,11 +1,15 @@
 package com.aionemu.gameserver.configs.main;
 
 import com.aionemu.commons.configuration.Property;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.stereotype.Component;
 
 /**
- * 队伍与联盟相关配置。
- * Player group and alliance related configuration.
+ * 队伍与联盟相关配置，支持 Spring Boot ConfigurationProperties 与静态门面访问。
+ * Player group and alliance related configuration supporting Spring Boot ConfigurationProperties and static facade access.
  */
+@Component
+@ConfigurationProperties(prefix = "gameserver")
 public class GroupConfig {
 
 	/**
@@ -42,4 +46,66 @@ public class GroupConfig {
 	 */
 	@Property(key = "gameserver.playeralliance.inviteotherfaction", defaultValue = "false")
 	public static boolean ALLIANCE_INVITEOTHERFACTION;
+
+	private final PlayergroupProperties playergroup = new PlayergroupProperties();
+	private final GroupProperties group = new GroupProperties();
+	private final PlayerallianceProperties playeralliance = new PlayerallianceProperties();
+
+	public PlayergroupProperties getPlayergroup() {
+		return playergroup;
+	}
+
+	public GroupProperties getGroup() {
+		return group;
+	}
+
+	public PlayerallianceProperties getPlayeralliance() {
+		return playeralliance;
+	}
+
+	public static class PlayergroupProperties {
+		public int getRemovetime() {
+			return GROUP_REMOVE_TIME;
+		}
+
+		public void setRemovetime(int removetime) {
+			GROUP_REMOVE_TIME = removetime;
+		}
+
+		public int getMaxdistance() {
+			return GROUP_MAX_DISTANCE;
+		}
+
+		public void setMaxdistance(int maxdistance) {
+			GROUP_MAX_DISTANCE = maxdistance;
+		}
+	}
+
+	public static class GroupProperties {
+		public boolean isInviteotherfaction() {
+			return GROUP_INVITEOTHERFACTION;
+		}
+
+		public void setInviteotherfaction(boolean inviteotherfaction) {
+			GROUP_INVITEOTHERFACTION = inviteotherfaction;
+		}
+	}
+
+	public static class PlayerallianceProperties {
+		public int getRemovetime() {
+			return ALLIANCE_REMOVE_TIME;
+		}
+
+		public void setRemovetime(int removetime) {
+			ALLIANCE_REMOVE_TIME = removetime;
+		}
+
+		public boolean isInviteotherfaction() {
+			return ALLIANCE_INVITEOTHERFACTION;
+		}
+
+		public void setInviteotherfaction(boolean inviteotherfaction) {
+			ALLIANCE_INVITEOTHERFACTION = inviteotherfaction;
+		}
+	}
 }

@@ -1,10 +1,13 @@
 package com.aionemu.gameserver.services;
 
 import com.aionemu.boot.i18n.I18n;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import java.sql.Timestamp;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.GameServer;
@@ -38,7 +41,51 @@ import com.aionemu.gameserver.utils.collections.cachemap.CacheMapFactory;
  * @author Luno
  */
 @Slf4j
+@RequiredArgsConstructor
 public class AccountService {
+
+	private static volatile AccountService instance;
+	@NonNull
+	private final InventoryDAO inventoryDAO;
+	@NonNull
+	private final PlayerDAO playerDAO;
+	@NonNull
+	private final PlayerAppearanceDAO playerAppearanceDAO;
+	@NonNull
+	private final PlayerPunishmentsDAO playerPunishmentsDAO;
+	@NonNull
+	private final LegionMemberDAO legionMemberDAO;
+
+	public AccountService() {
+		this(safeDao(InventoryDAO.class, com.aionemu.gameserver.dao.impl.InventoryDAO::new),
+			 safeDao(PlayerDAO.class, com.aionemu.gameserver.dao.impl.PlayerDAO::new),
+			 safeDao(PlayerAppearanceDAO.class, com.aionemu.gameserver.dao.impl.PlayerAppearanceDAO::new),
+			 safeDao(PlayerPunishmentsDAO.class, com.aionemu.gameserver.dao.impl.PlayerPunishmentsDAO::new),
+			 safeDao(LegionMemberDAO.class, com.aionemu.gameserver.dao.impl.LegionMemberDAO::new));
+	}
+
+	private static <T extends com.aionemu.commons.database.dao.DAO> T safeDao(Class<T> daoClass, java.util.function.Supplier<T> fallback) {
+		if (DAOManager.isInitialized()) {
+			try {
+				return DAOManager.getDAO(daoClass);
+			} catch (Exception ignored) {
+			}
+		}
+		return fallback.get();
+	}
+
+	public static AccountService getInstance() {
+		AccountService current = instance;
+		if (current == null) {
+			synchronized (AccountService.class) {
+				current = instance;
+				if (current == null) {
+					current = instance = new AccountService();
+				}
+			}
+		}
+		return current;
+	}
 
 
 	/** 账号软引用缓存。 / Soft-reference account cache. */
@@ -118,7 +165,7 @@ public class AccountService {
 	 * @param accountId 账号 ID / account id
 	 */
 	private static void removeAccountWH(int accountId) {
-		DAOManager.getDAO(InventoryDAO.class).deleteAccountWH(accountId);
+		getInstance().inventoryDAO.deleteAccountWH(accountId);
 	}
 
 	/**
@@ -130,14 +177,14 @@ public class AccountService {
 	public static Account loadAccount(int accountId) {
 		Account account = new Account(accountId);
 
-		PlayerDAO playerDAO = DAOManager.getDAO(PlayerDAO.class);
-		PlayerAppearanceDAO appereanceDAO = DAOManager.getDAO(PlayerAppearanceDAO.class);
+		PlayerDAO playerDAO = getInstance().playerDAO;
+		PlayerAppearanceDAO appereanceDAO = getInstance().playerAppearanceDAO;
 
 		List<Integer> playerIdList = playerDAO.getPlayerOidsOnAccount(accountId);
 
 		for (int playerId : playerIdList) {
 			PlayerCommonData playerCommonData = playerDAO.loadPlayerCommonData(playerId);
-			CharacterBanInfo cbi = DAOManager.getDAO(PlayerPunishmentsDAO.class).getCharBanInfo(playerId);
+			CharacterBanInfo cbi = getInstance().playerPunishmentsDAO.getCharBanInfo(playerId);
 			if (playerCommonData.isOnline()) {
 				if (com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(playerId) == null) {
 					playerCommonData.setOnline(false);
@@ -146,9 +193,9 @@ public class AccountService {
 			}
 			PlayerAppearance appereance = appereanceDAO.load(playerId);
 
-			LegionMember legionMember = DAOManager.getDAO(LegionMemberDAO.class).loadLegionMember(playerId);
+			LegionMember legionMember = getInstance().legionMemberDAO.loadLegionMember(playerId);
 
-            List<Item> equipment = DAOManager.getDAO(InventoryDAO.class).loadEquipment(playerId);
+			List<Item> equipment = getInstance().inventoryDAO.loadEquipment(playerId);
 
 			PlayerAccountData acData = new PlayerAccountData(playerCommonData, cbi, appereance, equipment,
 					legionMember);
@@ -157,7 +204,7 @@ public class AccountService {
 			account.addPlayerAccountData(acData);
 
 			if (account.getAccountWarehouse() == null) {
-				Storage accWarehouse = DAOManager.getDAO(InventoryDAO.class).loadStorage(playerId,
+				Storage accWarehouse = getInstance().inventoryDAO.loadStorage(playerId,
 						StorageType.ACCOUNT_WAREHOUSE);
 				ItemService.loadItemStones(accWarehouse.getItems());
 				account.setAccountWarehouse(accWarehouse);

@@ -8,6 +8,7 @@ import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.Future;
@@ -44,6 +45,7 @@ public class SurveyService {
      */
     @Setter
     private static volatile ObjectProvider<SurveyService> instanceProvider;
+	private final SurveyControllerDAO surveyControllerDAO;
 	private final ConcurrentMap<Integer, SurveyItem> activeItems;
 	private volatile String htmlTemplate;
 	private Future<?> updateTask;
@@ -64,12 +66,32 @@ public class SurveyService {
 	}
 
 	/**
+	 * 使用指定的 SurveyControllerDAO 构造服务并启动周期刷新任务。
+	 * Constructs the service with given SurveyControllerDAO and starts periodic update task.
+	 * @param surveyControllerDAO 调查数据访问对象 / survey DAO
+	 */
+	public SurveyService(SurveyControllerDAO surveyControllerDAO) {
+		this.surveyControllerDAO = Objects.requireNonNull(surveyControllerDAO, "surveyControllerDAO must not be null");
+		this.activeItems = new ConcurrentHashMap<>();
+		reload();
+	}
+
+	/**
 	 * 构造服务并启动周期刷新任务。
 	 * Constructs the service and starts the periodic update task.
 	 */
 	public SurveyService() {
-		activeItems = new ConcurrentHashMap<>();
-		reload();
+		this(safeDao(SurveyControllerDAO.class, com.aionemu.gameserver.dao.impl.SurveyControllerDAO::new));
+	}
+
+	private static <T extends com.aionemu.commons.database.dao.DAO> T safeDao(Class<T> daoClass, java.util.function.Supplier<T> fallback) {
+		if (DAOManager.isInitialized()) {
+			try {
+				return DAOManager.getDAO(daoClass);
+			} catch (Exception ignored) {
+			}
+		}
+		return fallback.get();
 	}
 
 	/**
@@ -77,12 +99,20 @@ public class SurveyService {
 	 * Reloads the HTML template and refresh interval.
 	 */
 	public synchronized void reload() {
-		htmlTemplate = GameStaticDataServices.htmlCache().getHTML("surveyTemplate.xhtml");
+		try {
+			htmlTemplate = GameStaticDataServices.htmlCache().getHTML("surveyTemplate.xhtml");
+		} catch (Exception e) {
+			log.warn("HTMLCache not available during survey service reload: {}", e.getMessage());
+		}
 		if (updateTask != null) {
 			updateTask.cancel(false);
 		}
-		updateTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new TaskUpdate(), 2000,
-				SecurityConfig.SURVEY_DELAY * 60000L);
+		try {
+			updateTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new TaskUpdate(), 2000,
+					SecurityConfig.SURVEY_DELAY * 60000L);
+		} catch (Exception e) {
+			log.warn("ThreadPoolManager not available during survey service reload: {}", e.getMessage());
+		}
 	}
 
 	/**
@@ -114,7 +144,7 @@ public class SurveyService {
 			log.warn(I18n.get("log.b817769a6b45", player.getName()));
 			return;
 		}
-		if (DAOManager.getDAO(SurveyControllerDAO.class).useItem(item.uniqueId)) {
+		if (this.surveyControllerDAO.useItem(item.uniqueId)) {
 
 			ItemService.addItem(player, item.itemId, item.count);
 			if (item.itemId == ItemId.KINAH.value()) { // You received %num0 Kinah as reward for the survey.
@@ -137,7 +167,7 @@ public class SurveyService {
 	 * Loads new surveys from DB and notifies online owners.
 	 */
 	public void taskUpdate() {
-		List<SurveyItem> newList = DAOManager.getDAO(SurveyControllerDAO.class).getAllNew();
+		List<SurveyItem> newList = this.surveyControllerDAO.getAllNew();
 		if (newList.size() == 0) {
 			return;
 		}

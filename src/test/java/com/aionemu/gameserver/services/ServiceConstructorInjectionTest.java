@@ -19,11 +19,25 @@ import org.springframework.jdbc.core.simple.JdbcClient;
 import com.aionemu.gameserver.dao.AbyssLandingDAO;
 import com.aionemu.gameserver.dao.AbyssRankDAO;
 import com.aionemu.gameserver.dao.AnnouncementsDAO;
+import com.aionemu.gameserver.dao.BlockListDAO;
 import com.aionemu.gameserver.dao.BrokerDAO;
+import com.aionemu.gameserver.dao.FriendListDAO;
+import com.aionemu.gameserver.dao.GuideDAO;
 import com.aionemu.gameserver.dao.InventoryDAO;
+import com.aionemu.gameserver.dao.ItemStoneListDAO;
+import com.aionemu.gameserver.dao.LegionDAO;
+import com.aionemu.gameserver.dao.LegionMemberDAO;
+import com.aionemu.gameserver.dao.LimitedQuestDAO;
 import com.aionemu.gameserver.dao.MailDAO;
+import com.aionemu.gameserver.dao.OldNamesDAO;
 import com.aionemu.gameserver.dao.PetitionDAO;
+import com.aionemu.gameserver.dao.PlayerAppearanceDAO;
 import com.aionemu.gameserver.dao.PlayerDAO;
+import com.aionemu.gameserver.dao.PlayerPunishmentsDAO;
+import com.aionemu.gameserver.dao.PlayerQuestListDAO;
+import com.aionemu.gameserver.dao.PlayerSkillListDAO;
+import com.aionemu.gameserver.dao.PlayerStigmasEquippedDAO;
+import com.aionemu.gameserver.dao.SurveyControllerDAO;
 import com.aionemu.gameserver.dao.TownDAO;
 import com.aionemu.gameserver.model.Announcement;
 import com.aionemu.gameserver.model.Petition;
@@ -305,6 +319,96 @@ class ServiceConstructorInjectionTest {
 		assertNotNull(mailService);
 	}
 
+	@Test
+	void punishmentServiceConstructsWithInjectedDao() {
+		JdbcClient client = createNoAccessJdbcClient();
+		PlayerPunishmentsDAO dao = new com.aionemu.gameserver.dao.impl.PlayerPunishmentsDAO(client);
+		PunishmentService service = new PunishmentService(dao);
+		assertNotNull(service);
+	}
+
+	@Test
+	void renameServiceConstructsWithInjectedDaos() {
+		JdbcClient client = createNoAccessJdbcClient();
+		OldNamesDAO oldNamesDAO = new com.aionemu.gameserver.dao.impl.OldNamesDAO(client);
+		PlayerDAO playerDAO = new com.aionemu.gameserver.dao.impl.PlayerDAO(client);
+		LegionDAO legionDAO = new com.aionemu.gameserver.dao.impl.LegionDAO(client);
+		RenameService service = new RenameService(oldNamesDAO, playerDAO, legionDAO);
+		assertNotNull(service);
+	}
+
+	@Test
+	void surveyServiceConstructsWithInjectedDao() {
+		JdbcClient client = createNoAccessJdbcClient();
+		SurveyControllerDAO dao = new com.aionemu.gameserver.dao.impl.SurveyControllerDAO(client);
+		SurveyService service = new SurveyService(dao);
+		assertNotNull(service);
+	}
+
+	@Test
+	void htmlServiceConstructsWithInjectedDao() {
+		JdbcClient client = createNoAccessJdbcClient();
+		GuideDAO dao = new com.aionemu.gameserver.dao.impl.GuideDAO(client);
+		HTMLService service = new HTMLService(dao);
+		assertNotNull(service);
+	}
+
+	@Test
+	void databaseCleaningServiceConstructsWithInjectedDao() {
+		JdbcClient client = createNoAccessJdbcClient();
+		PlayerDAO dao = new com.aionemu.gameserver.dao.impl.PlayerDAO(client);
+		DatabaseCleaningService service = new DatabaseCleaningService(dao);
+		assertNotNull(service);
+	}
+
+	@Test
+	void accountServiceConstructsWithInjectedDaos() {
+		JdbcClient client = createNoAccessJdbcClient();
+		InventoryDAO inventoryDAO = new com.aionemu.gameserver.dao.impl.InventoryDAO(client);
+		PlayerDAO playerDAO = new com.aionemu.gameserver.dao.impl.PlayerDAO(client);
+		PlayerAppearanceDAO playerAppearanceDAO = new com.aionemu.gameserver.dao.impl.PlayerAppearanceDAO(client);
+		PlayerPunishmentsDAO playerPunishmentsDAO = new com.aionemu.gameserver.dao.impl.PlayerPunishmentsDAO(client);
+		LegionMemberDAO legionMemberDAO = new com.aionemu.gameserver.dao.impl.LegionMemberDAO(client);
+
+		AccountService service = new AccountService(inventoryDAO, playerDAO, playerAppearanceDAO, playerPunishmentsDAO, legionMemberDAO);
+		assertNotNull(service);
+	}
+
+	@Test
+	void socialServiceConstructsWithInjectedDaos() {
+		JdbcClient client = createNoAccessJdbcClient();
+		BlockListDAO blockListDAO = new com.aionemu.gameserver.dao.impl.BlockListDAO(client);
+		FriendListDAO friendListDAO = new com.aionemu.gameserver.dao.impl.FriendListDAO(client);
+		PlayerDAO playerDAO = new com.aionemu.gameserver.dao.impl.PlayerDAO(client);
+
+		SocialService service = new SocialService(blockListDAO, friendListDAO, playerDAO);
+		assertNotNull(service);
+	}
+
+	@Test
+	void limitedQuestServiceConstructsWithInjectedDao() {
+		JdbcClient client = createNoAccessJdbcClient();
+		LimitedQuestDAO dao = new com.aionemu.gameserver.dao.impl.LimitedQuestDAO(client);
+		LimitedQuestService service = new LimitedQuestService(dao);
+		assertNotNull(service);
+	}
+
+	@Test
+	void periodicSaveServiceConstructsWithInjectedDaos() {
+		JdbcClient client = createNoAccessJdbcClient();
+		AbyssRankDAO abyssRankDAO = new com.aionemu.gameserver.dao.impl.AbyssRankDAO(client);
+		PlayerSkillListDAO playerSkillListDAO = new com.aionemu.gameserver.dao.impl.PlayerSkillListDAO(client);
+		PlayerQuestListDAO playerQuestListDAO = new com.aionemu.gameserver.dao.impl.PlayerQuestListDAO(client);
+		PlayerDAO playerDAO = new com.aionemu.gameserver.dao.impl.PlayerDAO(client);
+		PlayerStigmasEquippedDAO playerStigmasEquippedDAO = new com.aionemu.gameserver.dao.impl.PlayerStigmasEquippedDAO(client);
+		InventoryDAO inventoryDAO = new com.aionemu.gameserver.dao.impl.InventoryDAO(client);
+		ItemStoneListDAO itemStoneListDAO = new com.aionemu.gameserver.dao.impl.ItemStoneListDAO(client);
+
+		PeriodicSaveService service = new PeriodicSaveService(abyssRankDAO, playerSkillListDAO, playerQuestListDAO,
+				playerDAO, playerStigmasEquippedDAO, inventoryDAO, itemStoneListDAO);
+		assertNotNull(service);
+	}
+
 	private static JdbcClient createNoAccessJdbcClient() {
 		DataSource noAccessDataSource = (DataSource) java.lang.reflect.Proxy.newProxyInstance(
 			ServiceConstructorInjectionTest.class.getClassLoader(),
@@ -323,5 +427,14 @@ class ServiceConstructorInjectionTest {
 		assertThrows(NullPointerException.class, () -> new PetitionService(null));
 		assertThrows(NullPointerException.class, () -> new BrokerService(null, null));
 		assertThrows(NullPointerException.class, () -> new MailService(null, null, null, null));
+		assertThrows(NullPointerException.class, () -> new PunishmentService(null));
+		assertThrows(NullPointerException.class, () -> new RenameService(null, null, null));
+		assertThrows(NullPointerException.class, () -> new SurveyService(null));
+		assertThrows(NullPointerException.class, () -> new HTMLService(null));
+		assertThrows(NullPointerException.class, () -> new DatabaseCleaningService(null));
+		assertThrows(NullPointerException.class, () -> new AccountService(null, null, null, null, null));
+		assertThrows(NullPointerException.class, () -> new SocialService(null, null, null));
+		assertThrows(NullPointerException.class, () -> new LimitedQuestService(null));
+		assertThrows(NullPointerException.class, () -> new PeriodicSaveService(null, null, null, null, null, null, null));
 	}
 }

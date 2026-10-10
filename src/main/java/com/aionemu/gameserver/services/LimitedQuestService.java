@@ -15,6 +15,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /** 全服共享限量任务名额服务。 / Shared limited quest-slot service across the server. */
 @Slf4j
@@ -22,17 +23,40 @@ public final class LimitedQuestService {
 
 	private static final String DEFINITIONS_FILE = "./definitions/compact/quests/limited-quests.xml";
 
+	private static volatile LimitedQuestService instance;
 	private final LimitedQuestDAO dao;
 	private final Map<Integer, Limit> limits;
 
+	public LimitedQuestService(LimitedQuestDAO dao) {
+		this(dao, loadLimitsSafe());
+	}
+
+	public LimitedQuestService() {
+		this(DAOManager.getDAO(LimitedQuestDAO.class));
+	}
+
 	LimitedQuestService(LimitedQuestDAO dao, Map<Integer, Limit> limits) {
-		this.dao = dao;
+		this.dao = Objects.requireNonNull(dao, "dao must not be null");
 		this.limits = Map.copyOf(limits);
+		instance = this;
+	}
+
+	public static LimitedQuestService getInstance() {
+		LimitedQuestService current = instance;
+		if (current == null) {
+			synchronized (LimitedQuestService.class) {
+				current = instance;
+				if (current == null) {
+					current = instance = Holder.INSTANCE;
+				}
+			}
+		}
+		return current;
 	}
 
 	/** 在任务状态写入前原子占用一个全服名额。 / Atomically occupies one server-wide slot before the quest state is written. */
 	public static boolean tryAcquire(QuestTemplate template) {
-		return Holder.INSTANCE.acquire(template.getId(), template.getMaxCountLimitedQuest());
+		return getInstance().acquire(template.getId(), template.getMaxCountLimitedQuest());
 	}
 
 	/** Whether starting this quest requires the global, transaction-external quota mutation. */
@@ -42,12 +66,12 @@ public final class LimitedQuestService {
 
 	/** Canonical metadata entry point used by typed quest-start eligibility. */
 	public static boolean requiresAcquisitionByMetadata(int questId, int maxCount) {
-		return Holder.INSTANCE.requiresAcquisition(questId, maxCount);
+		return getInstance().requiresAcquisition(questId, maxCount);
 	}
 
 	/** 真实 AI 的 charge_limitedquest：恢复默认数量或直接充满。 */
 	public static boolean charge(int questId, boolean chargeMaxCount) {
-		return Holder.INSTANCE.chargeConfigured(questId, chargeMaxCount);
+		return getInstance().chargeConfigured(questId, chargeMaxCount);
 	}
 
 	boolean acquire(int questId, int templateMax) {
@@ -76,6 +100,18 @@ public final class LimitedQuestService {
 		}
 		int amount = chargeMaxCount ? limit.maxCount() : limit.recoverCount();
 		return dao.recover(questId, amount, limit.maxCount());
+	}
+
+	static Map<Integer, Limit> loadLimitsSafe() {
+		try {
+			File file = Config.definitionFile(DEFINITIONS_FILE);
+			if (file != null && file.exists()) {
+				return loadLimits(file);
+			}
+		} catch (Exception e) {
+			log.warn("Failed to load limited quest definitions safely: {}", e.getMessage());
+		}
+		return Map.of();
 	}
 
 	static Map<Integer, Limit> loadLimits(File file) {

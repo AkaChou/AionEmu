@@ -12,6 +12,7 @@ import org.springframework.boot.context.properties.bind.Binder;
 import org.springframework.core.env.MapPropertySource;
 import org.springframework.core.env.StandardEnvironment;
 
+import com.aionemu.gameserver.configs.administration.AdminConfig;
 import com.aionemu.gameserver.configs.network.NetworkConfig;
 import com.aionemu.testutil.ConfigSnapshot;
 
@@ -205,6 +206,73 @@ class ConfigurationPropertiesBindingTest {
 			assertTrue(NetworkConfig.ENABLE_FLOOD_CONNECTIONS);
 			assertEquals(2000, NetworkConfig.Flood_Tick);
 			assertEquals(25, NetworkConfig.Flood_SWARN);
+		} finally {
+			snapshot.restore();
+		}
+	}
+
+	@Test
+	void bindsGroupConfigProperties() {
+		ConfigSnapshot snapshot = ConfigSnapshot.of(GroupConfig.class,
+			"GROUP_REMOVE_TIME", "GROUP_MAX_DISTANCE", "GROUP_INVITEOTHERFACTION",
+			"ALLIANCE_REMOVE_TIME", "ALLIANCE_INVITEOTHERFACTION");
+		try {
+			StandardEnvironment environment = new StandardEnvironment();
+			environment.getPropertySources().addFirst(new MapPropertySource("test", Map.of(
+				"gameserver.playergroup.removetime", "300",
+				"gameserver.playergroup.maxdistance", "150",
+				"gameserver.group.inviteotherfaction", "true",
+				"gameserver.playeralliance.removetime", "450",
+				"gameserver.playeralliance.inviteotherfaction", "true"
+			)));
+
+			GroupConfig config = new GroupConfig();
+			Binder.get(environment).bind("gameserver", Bindable.ofInstance(config));
+
+			assertEquals(300, GroupConfig.GROUP_REMOVE_TIME);
+			assertEquals(150, GroupConfig.GROUP_MAX_DISTANCE);
+			assertTrue(GroupConfig.GROUP_INVITEOTHERFACTION);
+			assertEquals(450, GroupConfig.ALLIANCE_REMOVE_TIME);
+			assertTrue(GroupConfig.ALLIANCE_INVITEOTHERFACTION);
+		} finally {
+			snapshot.restore();
+		}
+	}
+
+	@Test
+	void bindsAdminConfigProperties() {
+		ConfigSnapshot snapshot = ConfigSnapshot.of(AdminConfig.class,
+			"GM_SPECIAL_SKILLS", "GM_LEVEL", "GM_PANEL", "GM_FLIGHT_FREE",
+			"DOORS_OPEN", "ADMIN_AUTO_RES", "INVISIBLE_GM_CONNECTION",
+			"ADMIN_TAG_ENABLE", "ADMIN_TAG_1", "ANNOUNCE_LEVEL_LIST");
+		try {
+			StandardEnvironment environment = new StandardEnvironment();
+			environment.getPropertySources().addFirst(new MapPropertySource("test", Map.of(
+				"gameserver.administration.gmskills", "4",
+				"gameserver.administration.gmlevel", "2",
+				"gameserver.administration.gmpanel", "1",
+				"gameserver.administration.flight.freefly", "5",
+				"gameserver.administration.doors.opening", "2",
+				"gameserver.administration.auto.res", "1",
+				"gameserver.administration.invis.gm.connection", "true",
+				"gameserver.admin.tag.enable", "false",
+				"gameserver.admin.tag.1", "<Helper> %s",
+				"gameserver.admin.announce.levels", "3,4,5"
+			)));
+
+			AdminConfig config = new AdminConfig();
+			Binder.get(environment).bind("gameserver", Bindable.ofInstance(config));
+
+			assertEquals(4, AdminConfig.GM_SPECIAL_SKILLS);
+			assertEquals(2, AdminConfig.GM_LEVEL);
+			assertEquals(1, AdminConfig.GM_PANEL);
+			assertEquals(5, AdminConfig.GM_FLIGHT_FREE);
+			assertEquals(2, AdminConfig.DOORS_OPEN);
+			assertEquals(1, AdminConfig.ADMIN_AUTO_RES);
+			assertTrue(AdminConfig.INVISIBLE_GM_CONNECTION);
+			assertFalse(AdminConfig.ADMIN_TAG_ENABLE);
+			assertEquals("<Helper> %s", AdminConfig.ADMIN_TAG_1);
+			assertEquals("3,4,5", AdminConfig.ANNOUNCE_LEVEL_LIST);
 		} finally {
 			snapshot.restore();
 		}

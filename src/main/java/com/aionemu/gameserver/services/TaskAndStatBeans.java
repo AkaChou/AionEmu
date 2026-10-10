@@ -28,9 +28,11 @@ import com.aionemu.gameserver.taskmanager.tasks.TeamEffectUpdater;
 import com.aionemu.gameserver.taskmanager.tasks.TeamMoveUpdater;
 import com.aionemu.gameserver.taskmanager.tasks.TemporaryTradeTimeTask;
 import com.aionemu.gameserver.world.zone.ZoneUpdateService;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
+import com.aionemu.gameserver.dao.PlayerDAO;
 
 /**
  * TaskAndStatBeans：从 GameLegacyServiceBridgeConfiguration 拆出的域内 Bean 装配。
@@ -203,8 +205,9 @@ public class TaskAndStatBeans {
 
     @Bean
     @Lazy
-    public DatabaseCleaningService databaseCleaningService() {
-        return new DatabaseCleaningService();
+    public DatabaseCleaningService databaseCleaningService(ObjectProvider<PlayerDAO> playerDaoProvider) {
+        PlayerDAO dao = playerDaoProvider.getIfAvailable();
+        return dao != null ? new DatabaseCleaningService(dao) : new DatabaseCleaningService();
     }
 
     @Bean

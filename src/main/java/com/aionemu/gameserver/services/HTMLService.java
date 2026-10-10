@@ -1,6 +1,8 @@
 package com.aionemu.gameserver.services;
 
 import com.aionemu.boot.i18n.I18n;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
 
@@ -10,6 +12,7 @@ import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.configs.main.LoggingConfig;
@@ -30,7 +33,39 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
  * @author lhw, xTz
  */
 @Slf4j(topic = "ITEM_HTML_LOG")
+@RequiredArgsConstructor
 public class HTMLService {
+
+	private static volatile HTMLService instance;
+	@NonNull
+	private final GuideDAO guideDAO;
+
+	public HTMLService() {
+		this(safeDao(GuideDAO.class, com.aionemu.gameserver.dao.impl.GuideDAO::new));
+	}
+
+	private static <T extends com.aionemu.commons.database.dao.DAO> T safeDao(Class<T> daoClass, java.util.function.Supplier<T> fallback) {
+		if (DAOManager.isInitialized()) {
+			try {
+				return DAOManager.getDAO(daoClass);
+			} catch (Exception ignored) {
+			}
+		}
+		return fallback.get();
+	}
+
+	public static HTMLService getInstance() {
+		HTMLService current = instance;
+		if (current == null) {
+			synchronized (HTMLService.class) {
+				current = instance;
+				if (current == null) {
+					current = instance = new HTMLService();
+				}
+			}
+		}
+		return current;
+	}
 
 
 	/**
@@ -120,7 +155,7 @@ public class HTMLService {
 				}
 				int id = GameWorldBootstrapServices.idFactory().nextId();
 				sendData(player, id, getHTMLTemplate(template));
-				DAOManager.getDAO(GuideDAO.class).saveGuide(id, player, template.getTitle());
+				getInstance().guideDAO.saveGuide(id, player, template.getTitle());
 			}
 		}
 	}
@@ -134,7 +169,7 @@ public class HTMLService {
 		if (player == null)
 			return;
 
-		List<Guide> guides = DAOManager.getDAO(GuideDAO.class).loadGuides(player.getObjectId());
+		List<Guide> guides = getInstance().guideDAO.loadGuides(player.getObjectId());
 
 		for (Guide guide : guides) {
 			GuideTemplate template = DataManager.GUIDE_HTML_DATA.getTemplateByTitle(guide.getTitle());
@@ -164,7 +199,7 @@ public class HTMLService {
 			return;
 		}
 
-		Guide guide = DAOManager.getDAO(GuideDAO.class).loadGuide(player.getObjectId(), messageId);
+		Guide guide = getInstance().guideDAO.loadGuide(player.getObjectId(), messageId);
 
 		if (guide != null) {
 			GuideTemplate template = DataManager.GUIDE_HTML_DATA.getTemplateByTitle(guide.getTitle());
@@ -195,7 +230,7 @@ public class HTMLService {
 					log.info(I18n.get("log.0a8239250ae2", item.getItemId(), item.getCount(), player.getName()));
 				}
 			}
-			DAOManager.getDAO(GuideDAO.class).deleteGuide(guide.getGuideId());
+			getInstance().guideDAO.deleteGuide(guide.getGuideId());
 			items.clear();
 		}
 	}
@@ -227,7 +262,7 @@ public class HTMLService {
 		GuideTemplate template = DataManager.GUIDE_HTML_DATA.getTemplateByTitle(title);
 		if (template != null) {
 			int id = GameWorldBootstrapServices.idFactory().nextId();
-			DAOManager.getDAO(GuideDAO.class).saveGuide(id, player, title);
+			getInstance().guideDAO.saveGuide(id, player, title);
 			sendData(player, id, getHTMLTemplate(template));
 		}
 	}
