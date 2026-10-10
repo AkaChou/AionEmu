@@ -10,7 +10,6 @@ import com.aionemu.gameserver.lifecycle.GameGameplayServices;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -22,23 +21,18 @@ import com.aionemu.gameserver.dao.LadderDAO;
 import com.aionemu.gameserver.model.EmotionType;
 import com.aionemu.gameserver.model.gameobjects.AionObject;
 import com.aionemu.gameserver.model.gameobjects.Creature;
-import com.aionemu.gameserver.model.gameobjects.Gatherable;
 import com.aionemu.gameserver.model.gameobjects.Summon;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.gameobjects.state.CreatureSeeState;
 import com.aionemu.gameserver.model.gameobjects.state.CreatureState;
 import com.aionemu.gameserver.model.gameobjects.state.CreatureVisualState;
 import com.aionemu.gameserver.model.summons.UnsummonType;
-import com.aionemu.gameserver.model.team2.TeamType;
 import com.aionemu.gameserver.model.team2.alliance.PlayerAlliance;
-import com.aionemu.gameserver.model.team2.alliance.PlayerAllianceMember;
 import com.aionemu.gameserver.model.team2.alliance.PlayerAllianceService;
 import com.aionemu.gameserver.model.team2.group.PlayerGroup;
 import com.aionemu.gameserver.model.team2.group.PlayerGroupService;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_ATTACK_STATUS;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_EMOTION;
-import com.aionemu.gameserver.network.aion.serverpackets.SM_MOTION;
-import com.aionemu.gameserver.network.aion.serverpackets.SM_PLAYER_INFO;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_PLAYER_STATE;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_QUEST_ACTION;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SKILL_COOLDOWN;
@@ -48,7 +42,6 @@ import com.aionemu.gameserver.services.instance.InstanceService;
 import com.aionemu.gameserver.services.player.PlayerReviveService;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.skillengine.effect.AbnormalState;
-import com.aionemu.gameserver.skillengine.effect.EffectTemplate;
 import com.aionemu.gameserver.skillengine.model.DispelCategoryType;
 import com.aionemu.gameserver.skillengine.model.SkillTargetSlot;
 import com.aionemu.gameserver.utils.PacketSendUtility;
@@ -265,63 +258,12 @@ public abstract class Battleground {
 	public abstract void onLeave(Player player, boolean isLogout, boolean isAfk);
 
 	/**
-	 * 神器被摧毁时回调（子类可覆盖）。
-	 * Callback when an artifact is destroyed (override in subclasses).
-	 *
-	 * @param teamIndex 队伍索引 / team index
-	 */
-	public void onArtifactDie(int teamIndex) {
-	}
-
-	/**
-	 * 资源被采集时回调（子类可覆盖）。
-	 * Callback when a resource is gathered (override in subclasses).
-	 *
-	 * @param resource  被采集的资源 / the gathered resource
-	 * @param teamIndex 队伍索引 / team index
-	 */
-	public void onResourceGathered(Gatherable resource, int teamIndex) {
-	}
-
-	/**
 	 * 是否限制隐身技能。
 	 * Whether stealth skills are restricted.
 	 *
 	 * @return 若 restricted 则为 true / true if restricted
 	 */
 	public boolean isStealthRestricted() {
-		return false;
-	}
-
-	/**
-	 * 判断效果模板是否允许使用。
-	 * Whether the given effect template is allowed.
-	 *
-	 * @param et 效果模板 / effect template
-	 * @return 若 allowed 则为 true / true if allowed
-	 */
-	public boolean isEffectAllowed(EffectTemplate et) {
-		return true;
-	}
-
-	/**
-	 * 是否限制飞行。
-	 * Whether flight is restricted on the current map.
-	 *
-	 * @return 若 restricted 则为 true / true if restricted
-	 */
-	public boolean isFlightRestricted() {
-		return map != null && map.isRestrictFlight();
-	}
-
-	/**
-	 * 创建锦标赛对局；默认不支持。
-	 * Creates a tournament match; unsupported by default.
-	 *
-	 * @param teams 各队玩家列表 / teams of players
-	 * @return 成功则 true / true on success
-	 */
-	public boolean createTournament(List<List<Player>> teams) {
 		return false;
 	}
 
@@ -340,18 +282,13 @@ public abstract class Battleground {
 	}
 
 	/**
-	 * 判断玩家是否位于本战场可用地图中。
-	 * Whether the player is on one of this battleground maps.
+	 * 创建锦标赛对局；默认不支持。
+	 * Creates a tournament match; unsupported by default.
 	 *
-	 * @param player 玩家 / player
-	 * @return 在战场地图内则 true / true if on a BG map
+	 * @param teams 各队玩家列表 / teams of players
+	 * @return 成功则 true / true on success
 	 */
-	public boolean isInBg(Player player) {
-		for (BattlegroundMap bgMap : maps) {
-			if (bgMap.getMapId() == player.getWorldId()) {
-				return true;
-			}
-		}
+	public boolean createTournament(List<List<Player>> teams) {
 		return false;
 	}
 
@@ -447,45 +384,6 @@ public abstract class Battleground {
 	}
 
 	/**
-	 * 处理联盟队列匹配。
-	 * Handles alliance queue matchmaking.
-	 *
-	 * @param players 排队玩家对象 ID / queued player ids
-	 * @return 成功则 true / true on success
-	 */
-	protected boolean handleQueueAlliance(List<Integer> players) {
-		int allianceSize = getRandomSize(players.size());
-		if (players.size() < allianceSize * getTeamCount()) {
-			return false;
-		}
-		int allianceIndex = 0;
-		while (players.size() >= allianceSize) {
-			List<Player> alliancePlayers = new ArrayList<>();
-			while (alliancePlayers.size() < allianceSize && !players.isEmpty()) {
-				int objId = players.removeFirst();
-				Player pl = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(objId);
-				if (pl != null) {
-					alliancePlayers.add(pl);
-					pl.setBattleground(this);
-					removePlayerFromTeam(pl);
-				}
-			}
-			PlayerAlliance alliance = new PlayerAlliance(new PlayerAllianceMember(alliancePlayers.getFirst()),
-				TeamType.ALLIANCE);
-			for (int i = 1; i < alliancePlayers.size(); i++) {
-				PlayerAllianceService.addPlayerToAlliance(alliance, alliancePlayers.get(i));
-			}
-			alliance.setBgIndex(allianceIndex);
-			addAlliance(alliance);
-			allianceIndex++;
-			if (getAlliances().size() >= getTeamCount()) {
-				break;
-			}
-		}
-		return true;
-	}
-
-	/**
 	 * 为各队创建小队并登记。
 	 * Creates groups for each team and registers them.
 	 *
@@ -522,47 +420,6 @@ public abstract class Battleground {
 			group.setBgIndex(groupIndex);
 			addGroup(group);
 			groupIndex++;
-		}
-		return true;
-	}
-
-	/**
-	 * 为各队创建联盟并登记。
-	 * Creates alliances for each team and registers them.
-	 *
-	 * @param teams 各队玩家 / teams of players
-	 * @return 成功则 true / true on success
-	 */
-	protected boolean createAlliances(List<List<Player>> teams) {
-		if (teams.size() < getTeamCount()) {
-			return false;
-		}
-		int allianceSize = 100;
-		for (List<Player> team : teams) {
-			if (team.size() < allianceSize) {
-				allianceSize = team.size();
-			}
-		}
-		if (allianceSize < 1) {
-			return false;
-		}
-		int allianceIndex = 0;
-		while (getAlliances().size() < getTeamCount()) {
-			List<Player> players = teams.removeFirst();
-			while (players.size() > allianceSize) {
-				players.removeLast();
-			}
-			for (Player pl : players) {
-				pl.setBattleground(this);
-				removePlayerFromTeam(pl);
-			}
-			PlayerAlliance alliance = new PlayerAlliance(new PlayerAllianceMember(players.getFirst()), TeamType.ALLIANCE);
-			for (int i = 1; i < players.size(); i++) {
-				PlayerAllianceService.addPlayerToAlliance(alliance, players.get(i));
-			}
-			alliance.setBgIndex(allianceIndex);
-			addAlliance(alliance);
-			allianceIndex++;
 		}
 		return true;
 	}
@@ -608,18 +465,6 @@ public abstract class Battleground {
 	protected void addGroup(PlayerGroup group) {
 		if (!getGroups().contains(group)) {
 			getGroups().add(group);
-		}
-	}
-
-	/**
-	 * 添加联盟参赛者。
-	 * Adds an alliance participant.
-	 *
-	 * @param alliance 联盟 / alliance
-	 */
-	protected void addAlliance(PlayerAlliance alliance) {
-		if (!getAlliances().contains(alliance)) {
-			getAlliances().add(alliance);
 		}
 	}
 
@@ -785,30 +630,14 @@ public abstract class Battleground {
 	}
 
 	/**
-	 * 延迟向全部观战者公告。
-	 * Schedules an announcement to all spectators.
-	 *
-	 * @param msg   消息 / message
-	 * @param delay 延迟毫秒 / delay ms
-	 */
-	protected void specAnnounce(final String msg, int delay) {
-		GameThreadPoolServices.threadPoolManager().schedule(() -> {
-			for (Player spectator : getSpectators()) {
-				PacketSendUtility.sendSys3Message(spectator, "BG", msg);
-			}
-		}, delay);
-	}
-
-	/**
 	 * 向玩家安排倒计时公告。
 	 * Schedules countdown announcements for the player.
 	 *
 	 * @param player    玩家 / player
-	 * @param length    倒计时秒数 / countdown length
 	 * @param startTime 起始延迟毫秒 / start delay ms
 	 */
-	protected void scheduleCountdown(Player player, int length, int startTime) {
-		for (int i = length; i > 0; i--) {
+	protected void scheduleCountdown(Player player, int startTime) {
+		for (int i = 5; i > 0; i--) {
 			scheduleAnnouncement(player, "The match start in " + i + " seconds!", startTime - i * 1000);
 		}
 	}
@@ -818,14 +647,13 @@ public abstract class Battleground {
 	 * Schedules group disband.
 	 *
 	 * @param group 小队 / group
-	 * @param delay 延迟毫秒 / delay ms
 	 */
-	protected void scheduleGroupDisband(final PlayerGroup group, int delay) {
+	protected void scheduleGroupDisband(final PlayerGroup group) {
 		GameThreadPoolServices.threadPoolManager().schedule(() -> {
 			while (group.size() > 0) {
 				PlayerGroupService.removePlayer((Player) group.getMembers().toArray()[0]);
 			}
-		}, delay);
+		}, 2000);
 	}
 
 	/**
@@ -833,14 +661,13 @@ public abstract class Battleground {
 	 * Schedules alliance disband.
 	 *
 	 * @param alliance 联盟 / alliance
-	 * @param delay    延迟毫秒 / delay ms
 	 */
-	protected void scheduleAllianceDisband(final PlayerAlliance alliance, int delay) {
+	protected void scheduleAllianceDisband(final PlayerAlliance alliance) {
 		GameThreadPoolServices.threadPoolManager().schedule(() -> {
 			while (alliance.size() > 0) {
 				PlayerAllianceService.removePlayer(((Player) alliance.getMembers().toArray()[0]));
 			}
-		}, delay);
+		}, 2000);
 	}
 
 	/**
@@ -874,7 +701,7 @@ public abstract class Battleground {
 		InstanceService.registerPlayerWithInstance(getInstance(), pl);
 		if (time > 0) {
 			freezePlayer(pl, time);
-			scheduleCountdown(pl, 5, time);
+			scheduleCountdown(pl, time);
 		}
 		if (announce) {
 			pl.setTotalKills(0);
@@ -915,31 +742,6 @@ public abstract class Battleground {
 			}
 			delay.clear();
 			PacketSendUtility.sendPacket(player, new SM_SKILL_COOLDOWN(player.getSkillCoolDowns()));
-		}
-	}
-
-	/**
-	 * 重置玩家已知列表与外观包。
-	 * Resets the player known list and appearance packets.
-	 *
-	 * @param player 玩家 / player
-	 * @param delay  延迟毫秒 / delay ms
-	 */
-	protected void resetPlayerKnownlist(final Player player, int delay) {
-		if (delay > 0) {
-			GameThreadPoolServices.threadPoolManager().schedule(() -> {
-				player.clearKnownlist();
-				PacketSendUtility.sendPacket(player, new SM_PLAYER_INFO(player, false));
-				PacketSendUtility.sendPacket(player, new SM_MOTION(player.getMotions().getMotions().values()));
-				player.getEffectController().updatePlayerEffectIcons();
-				player.getKnownList().doUpdate();
-			}, delay);
-		} else {
-			player.clearKnownlist();
-			PacketSendUtility.sendPacket(player, new SM_PLAYER_INFO(player, false));
-			PacketSendUtility.sendPacket(player, new SM_MOTION(player.getMotions().getMotions().values()));
-			player.getEffectController().updatePlayerEffectIcons();
-			player.getKnownList().doUpdate();
 		}
 	}
 
@@ -1000,29 +802,6 @@ public abstract class Battleground {
 			return;
 		}
 		BattlegroundLadder.playerLoseMatch(player, ratingChange);
-	}
-
-	/**
-	 * 按胜负双方批量更新天梯。
-	 * Batch ladder update for winners and losers.
-	 *
-	 * @param winner 胜方玩家集合 / winners
-	 * @param loser  败方玩家集合 / losers
-	 */
-	protected void performLadderUpdate(Collection<Player> winner, Collection<Player> loser) {
-		BattlegroundLadder.performLadderUpdate(winner, loser);
-	}
-
-	/**
-	 * 计算 Elo 评分变化量。
-	 * Calculates the Elo rating change.
-	 *
-	 * @param ratingA 胜方平均评分 / rating A
-	 * @param ratingB 败方平均评分 / rating B
-	 * @return 评分变化量 / delta
-	 */
-	protected int calcRatingChange(int ratingA, int ratingB) {
-		return BattlegroundLadder.calcRatingChange(ratingA, ratingB);
 	}
 
 	/**
@@ -1147,16 +926,6 @@ public abstract class Battleground {
 	}
 
 	/**
-	 * 通用生物死亡入口（默认空实现，子类可覆盖）。
-	 * Generic creature-death entry (no-op by default; override as needed).
-	 *
-	 * @param creature     死亡生物 / dead creature
-	 * @param lastAttacker 最后攻击者 / last attacker
-	 */
-	public void onDie(Creature creature, Creature lastAttacker) {
-	}
-
-	/**
 	 * 默认死亡处理：击杀统计与公告。
 	 * Default death handling: kill stats and announcements.
 	 *
@@ -1256,7 +1025,7 @@ public abstract class Battleground {
 						returnToPreviousLocation(pl);
 					}
 					if (!isTournament() && shouldDisband()) {
-						scheduleGroupDisband(group, 2000);
+						scheduleGroupDisband(group);
 					}
 				}
 			}, 5000);
@@ -1277,7 +1046,7 @@ public abstract class Battleground {
 						}
 					}
 					if (!isTournament() && shouldDisband()) {
-						scheduleAllianceDisband(alliance, 2000);
+						scheduleAllianceDisband(alliance);
 					}
 				}
 			}, 5000);
@@ -1296,29 +1065,6 @@ public abstract class Battleground {
 		}, 15000);
 
 		this.isDone = true;
-	}
-
-	/**
-	 * 观战者加入：隐身传送进场并启动计时。
-	 * Spectator joins: hide, teleport in and start timer.
-	 *
-	 * @param spectator 观战者 / spectator
-	 */
-	public void onSpectatorJoin(Player spectator) {
-		spectator.setBattleground(this);
-		spectator.setSpectating(true);
-		getSpectators().add(spectator);
-		InstanceService.registerPlayerWithInstance(getInstance(), spectator);
-		previousLocations.put(spectator.getObjectId(), spectator.getPosition().clone());
-		SpawnPosition pos = getSpawnPositions().get(Rnd.get(getSpawnPositions().size()));
-		TeleportService2.teleportTo(spectator, getMapId(), getInstanceId(), pos.getX(), pos.getY(), pos.getZ());
-		spectator.getEffectController().setAbnormal(AbnormalState.HIDE.getId());
-		spectator.setVisualState(CreatureVisualState.HIDE3);
-		spectator.setInvul(true);
-		spectator.setSeeState(CreatureSeeState.SEARCH2);
-		PacketSendUtility.broadcastPacket(spectator, new SM_PLAYER_STATE(spectator), true);
-		createTimer(spectator, getSecondsLeft());
-		scheduleAnnouncement(spectator, "You have join " + getName() + " <Spectator> battleground!", 0);
 	}
 
 	/**
@@ -1348,80 +1094,12 @@ public abstract class Battleground {
 	}
 
 	/**
-	 * 重连已离开的参赛者，恢复队伍/位置与天梯扣分。
-	 * Reconnects a leaver, restoring team/position and undoing leave penalty.
-	 *
-	 * @param player 重连玩家 / reconnecting player
-	 */
-	public void reconnectPlayer(Player player) {
-		if (player.getBattleground() != null) {
-			return;
-		}
-		if (player.isAfk()) {
-			player.setAfk(false);
-		}
-		AionObject obj;
-		synchronized (getLeavers()) {
-			obj = getLeavers().remove(player.getObjectId());
-		}
-		String msg = player.getName() + " is back in <Battleground>!";
-		boolean success = false;
-		SpawnPosition pos = null;
-		switch (obj) {
-			case null:
-				success = true;
-				addPlayer(player);
-				int bgIndex = getPlayers().getLast().getBgIndex() + 1;
-				player.setBgIndex(bgIndex);
-				pos = getSpawnPositions().get(Rnd.get(getSpawnPositions().size()));
-				for (Player pl : getPlayers()) {
-					scheduleAnnouncement(pl, msg, 0);
-				}
-				break;
-			case PlayerAlliance alliance:
-				success = true;
-				PlayerAllianceService.onPlayerLogin(player);
-				pos = getSpawnPositions().get(alliance.getBgIndex());
-				for (PlayerAlliance ally : getAlliances()) {
-					for (Player pl : ally.getMembers()) {
-						if (pl == null) {
-							continue;
-						}
-						scheduleAnnouncement(pl, msg, 0);
-					}
-				}
-				break;
-			case PlayerGroup group:
-				success = true;
-				PlayerGroupService.onPlayerLogin(player);
-				pos = getSpawnPositions().get(group.getBgIndex());
-				for (PlayerGroup grp : getGroups()) {
-					for (Player pl : grp.getMembers()) {
-						scheduleAnnouncement(pl, msg, 0);
-					}
-				}
-				break;
-			default:
-				break;
-		}
-		if (success) {
-			player.setBattleground(this);
-			preparePlayer(player, 0, false);
-			performTeleport(player, pos.getX(), pos.getY(), pos.getZ());
-			getLadderDAO().setLeaves(player, getLadderDAO().getLeaves(player) - 1);
-			getLadderDAO().addRating(player, K_VALUE);
-		}
-	}
-
-	/**
 	 * 随机选取地图并创建副本实例。
 	 * Picks a random map and creates a world instance.
-	 *
-	 * @return 实例，失败为 null / instance or null
 	 */
-	protected WorldMapInstance createInstance() {
+	protected void createInstance() {
 		if (maps == null || maps.isEmpty()) {
-			return null;
+			return;
 		}
 		this.map = maps.get(Rnd.get(maps.size()));
 		this.mapId = map.getMapId();
@@ -1431,7 +1109,6 @@ public abstract class Battleground {
 		}
 		setInstance(instance);
 		setStartStamp(System.currentTimeMillis());
-		return instance;
 	}
 
 	/**
@@ -1621,22 +1298,6 @@ public abstract class Battleground {
 			this.z = z;
 		}
 
-		/**
-		 * 使用地图 ID 与 XYZ 构造出生点。
-		 * Creates a spawn position with map id and XYZ.
-		 *
-		 * @param mapId 地图 ID / map id
-		 * @param x     X 坐标 / x
-		 * @param y     Y 坐标 / y
-		 * @param z     Z 坐标 / z
-		 */
-		public SpawnPosition(int mapId, float x, float y, float z) {
-			this.mapId = mapId;
-			this.x = x;
-			this.y = y;
-			this.z = z;
-		}
-
 	}
 
 	/**
@@ -1685,19 +1346,6 @@ public abstract class Battleground {
 		 */
 		@Setter
 		private float killZ = 0f;
-		/**
-		 * 是否禁止飞行。 / Whether flight is restricted.
-		 * -- GETTER --
-		 * 是否限制飞行。
-		 * Whether flight is restricted.
-		 * -- SETTER --
-		 * 设置是否限制飞行。
-		 * Sets flight restriction.
-		 * 若 restricted 则为 true / true if restricted
-		 * 是否限制飞行 / restriction flag
-		 */
-		@Setter
-		private boolean restrictFlight = false;
 
 		/**
 		 * 创建指定地图的配置。
@@ -1720,19 +1368,6 @@ public abstract class Battleground {
 				spawnPoints = new ArrayList<>();
 			}
 			spawnPoints.add(pos);
-		}
-
-		/**
-		 * 添加静态门 ID。
-		 * Adds a static door id.
-		 *
-		 * @param doorId 门 ID / door id
-		 */
-		public void addStaticDoor(Integer doorId) {
-			if (staticDoors == null) {
-				staticDoors = new ArrayList<>();
-			}
-			staticDoors.add(doorId);
 		}
 
 	}

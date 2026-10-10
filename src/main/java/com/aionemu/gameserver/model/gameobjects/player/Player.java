@@ -1602,6 +1602,16 @@ public class Player extends Creature {
 		return absStatsHolder;
 	}
 
+	/**
+	 * 标记玩家处于服务加成（Service Buff）状态；由 ServiceBuff 启停调用。
+	 * Marks the player as under a service buff; toggled by ServiceBuff.
+	 *
+	 * @param hasBonus 是否处于服务加成 / whether the service bonus is active
+	 */
+	public void setBonus(boolean hasBonus) {
+		this.hasBonus = hasBonus;
+	}
+
 	public boolean isUseRobot() {
 		return robot;
 	}
