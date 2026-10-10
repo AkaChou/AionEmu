@@ -23,11 +23,11 @@ import org.slf4j.LoggerFactory;
 
 import lombok.extern.slf4j.Slf4j;
 
-import com.aionemu.commons.database.dao.DAOManager;
+import com.aionemu.gameserver.services.player.PlayerService;
 import com.aionemu.commons.logging.slf4j.LogbackConfiguration;
 import com.aionemu.commons.utils.AionRuntimeMode;
 import com.aionemu.gameserver.configs.main.GSConfig;
-import com.aionemu.gameserver.dao.PlayerDAO;
+
 import com.aionemu.gameserver.model.Race;
 
 import ch.qos.logback.classic.LoggerContext;
@@ -221,8 +221,8 @@ public class GameServer {
 			lock.lock();
 			try {
 				long dbStart = System.currentTimeMillis();
-				ASMOS_COUNT = DAOManager.getDAO(PlayerDAO.class).getCharacterCountForRace(Race.ASMODIANS);
-				ELYOS_COUNT = DAOManager.getDAO(PlayerDAO.class).getCharacterCountForRace(Race.ELYOS);
+				ASMOS_COUNT = PlayerService.daos().playerDAO().getCharacterCountForRace(Race.ASMODIANS);
+				ELYOS_COUNT = PlayerService.daos().playerDAO().getCharacterCountForRace(Race.ELYOS);
 				long dbTime = System.currentTimeMillis() - dbStart;
 				log.debug("Database faction query took {} ms", dbTime);
 				computeRatios();

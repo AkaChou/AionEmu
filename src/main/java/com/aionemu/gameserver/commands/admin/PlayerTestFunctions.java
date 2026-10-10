@@ -1,7 +1,6 @@
 package com.aionemu.gameserver.commands.admin;
 
-import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.gameserver.dao.PlayerWardrobeDAO;
+
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.dorinerk_wardrobe.PlayerWardrobeEntry;
 import com.aionemu.gameserver.model.gameobjects.Creature;
@@ -10,6 +9,7 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_PLAYER_INFO;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_STATS_INFO;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
+import com.aionemu.gameserver.services.player.PlayerService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 import org.apache.commons.lang3.math.NumberUtils;
@@ -103,7 +103,7 @@ public class PlayerTestFunctions extends AdminCommand
 			PacketSendUtility.sendMessage(player, "Set slot" + values1);
 			PacketSendUtility.sendPacket(player, new SM_STATS_INFO(player));
 		} else if (LUNA_RECIPE.equalsIgnoreCase(params[0])) {
-			int size = DAOManager.getDAO(PlayerWardrobeDAO.class).getItemSize(player.getObjectId());
+			int size = PlayerService.daos().playerWardrobeDAO().getItemSize(player.getObjectId());
 			int size2 = player.getWardrobe().size();
 			for (int i=0;i<size2;i++) {
 				for (PlayerWardrobeEntry ce : player.getWardrobe().getAllWardrobe()) {

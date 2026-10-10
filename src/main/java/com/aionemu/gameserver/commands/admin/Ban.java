@@ -1,8 +1,8 @@
 package com.aionemu.gameserver.commands.admin;
 
-import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.gameserver.dao.PlayerDAO;
+
 import com.aionemu.gameserver.model.gameobjects.player.Player;
+import com.aionemu.gameserver.services.player.PlayerService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.Util;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
@@ -48,7 +48,7 @@ public class Ban extends AdminCommand {
 
 		// 其次，尝试从数据库获取离线玩家账号 ID / Second, try to get account ID of offline player from database
 		if (accountId == 0)
-			accountId = DAOManager.getDAO(PlayerDAO.class).getAccountIdByName(name);
+			accountId = PlayerService.daos().playerDAO().getAccountIdByName(name);
 
 		// 第三，失败 / Third, fail
 		if (accountId == 0) {

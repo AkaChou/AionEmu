@@ -57,15 +57,32 @@ public class MailDAO extends com.aionemu.gameserver.dao.MailDAO {
     private static final String SELECT_USED_IDS_QUERY = "SELECT mail_unique_id FROM mail";
 
     private final JdbcClient jdbcClient;
+    private final ItemStoneListDAO itemStoneListDAO;
 
     public MailDAO() {
-        this(DatabaseFactory.getJdbcClient());
+        this(DatabaseFactory.getJdbcClient(), safeItemStoneListDAO());
     }
 
     @Autowired
 
-    public MailDAO(JdbcClient jdbcClient) {
+    public MailDAO(JdbcClient jdbcClient, ItemStoneListDAO itemStoneListDAO) {
         this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");
+        this.itemStoneListDAO = Objects.requireNonNull(itemStoneListDAO, "itemStoneListDAO must not be null");
+    }
+
+    /**
+     * 依赖 DAO 解析兜底：容器未就绪（离线/单测）时退回实现类无参构造。
+     * Dependency-DAO resolution fallback: falls back to the no-arg impl constructor when the container is not ready (offline/unit tests).
+     */
+    private static ItemStoneListDAO safeItemStoneListDAO() {
+        if (DAOManager.isInitialized()) {
+            try {
+                return DAOManager.getDAO(ItemStoneListDAO.class);
+            } catch (Exception e) {
+                // 离线兜底路径，退回实现类无参构造。 / offline fallback, use the no-arg impl constructor
+            }
+        }
+        return new com.aionemu.gameserver.dao.impl.ItemStoneListDAO();
     }
 
     /**
@@ -103,7 +120,7 @@ public class MailDAO extends com.aionemu.gameserver.dao.MailDAO {
                             if (item.getObjectId() == attachedItemId) {
                                 if (item.getItemTemplate().isArmor() ||
                                     item.getItemTemplate().isWeapon()) {
-                                    DAOManager.getDAO(ItemStoneListDAO.class).load(Collections.singletonList(item));
+                                    itemStoneListDAO.load(Collections.singletonList(item));
                                 }
                                 attachedItem = item;
                                 break;

@@ -32,6 +32,7 @@ import com.aionemu.gameserver.dao.PlayerLunaShopDAO;
 import com.aionemu.gameserver.dao.PlayerMacrossesDAO;
 import com.aionemu.gameserver.dao.PlayerMinionsDAO;
 import com.aionemu.gameserver.dao.PlayerNpcFactionsDAO;
+import com.aionemu.gameserver.dao.PlayerPasskeyDAO;
 import com.aionemu.gameserver.dao.PlayerPetsDAO;
 import com.aionemu.gameserver.dao.PlayerPunishmentsDAO;
 import com.aionemu.gameserver.dao.PlayerQuestListDAO;
@@ -43,15 +44,16 @@ import com.aionemu.gameserver.dao.PlayerSkillListDAO;
 import com.aionemu.gameserver.dao.PlayerSkillSkinListDAO;
 import com.aionemu.gameserver.dao.PlayerStigmasEquippedDAO;
 import com.aionemu.gameserver.dao.PlayerTitleListDAO;
+import com.aionemu.gameserver.dao.PlayerTransformDAO;
 import com.aionemu.gameserver.dao.PlayerVarsDAO;
 import com.aionemu.gameserver.dao.PlayerWardrobeDAO;
 import com.aionemu.gameserver.dao.PortalCooldownsDAO;
 
 /**
  * 玩家核心服务的持久层依赖聚合：不可变 record，由 Spring 配置类声明式构造器注入装配，
- * 并对全部 44 个 DAO 依赖执行及早失败判空，彻底取代 {@code DAOManager.getDAO} 静态查表。
+ * 并对全部 46 个 DAO 依赖执行及早失败判空，彻底取代 {@code DAOManager.getDAO} 静态查表。
  * Aggregated persistence dependencies of the core player service: an immutable record wired
- * declaratively via Spring constructor injection, with fail-fast validation of all 44 DAO
+ * declaratively via Spring constructor injection, with fail-fast validation of all 46 DAO
  * dependencies, fully replacing {@code DAOManager.getDAO} static table lookups.
  */
 public record PlayerServiceDaos(
@@ -98,7 +100,9 @@ public record PlayerServiceDaos(
 		PlayerPetsDAO playerPetsDAO,
 		PlayerMinionsDAO playerMinionsDAO,
 		PlayerShugoSweepDAO playerShugoSweepDAO,
-		HouseScriptsDAO houseScriptsDAO) {
+		HouseScriptsDAO houseScriptsDAO,
+		PlayerPasskeyDAO playerPasskeyDAO,
+		PlayerTransformDAO playerTransformDAO) {
 
 	/**
 	 * 紧凑构造器：对全部持久层依赖执行及早失败判空。
@@ -149,5 +153,7 @@ public record PlayerServiceDaos(
 		Objects.requireNonNull(playerMinionsDAO, "playerMinionsDAO must not be null");
 		Objects.requireNonNull(playerShugoSweepDAO, "playerShugoSweepDAO must not be null");
 		Objects.requireNonNull(houseScriptsDAO, "houseScriptsDAO must not be null");
+		Objects.requireNonNull(playerPasskeyDAO, "playerPasskeyDAO must not be null");
+		Objects.requireNonNull(playerTransformDAO, "playerTransformDAO must not be null");
 	}
 }

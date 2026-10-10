@@ -2,9 +2,9 @@ package com.aionemu.loginserver.taskmanager;
 
 
 import com.aionemu.boot.i18n.I18n;
+import com.aionemu.loginserver.service.LoginDaosHolder;
 import lombok.extern.slf4j.Slf4j;
 import java.util.ArrayList;
-import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.loginserver.dao.TaskFromDBDAO;
 import com.aionemu.loginserver.taskmanager.trigger.TaskFromDBTrigger;
 
@@ -50,7 +50,7 @@ public class TaskFromDBManager {
      * @return DAO 实例 / DAO instance
      */
     private static TaskFromDBDAO getDAO() {
-        return DAOManager.getDAO(TaskFromDBDAO.class);
+        return LoginDaosHolder.daos().taskFromDBDAO();
     }
 
     /**

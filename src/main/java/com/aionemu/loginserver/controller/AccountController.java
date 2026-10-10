@@ -4,6 +4,7 @@ import com.aionemu.commons.utils.Base64;
 
 import com.aionemu.boot.i18n.I18n;
 
+import com.aionemu.loginserver.service.LoginDaosHolder;
 import java.sql.Timestamp;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
@@ -13,7 +14,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.commons.utils.NetworkUtils;
 import com.aionemu.loginserver.GameServerInfo;
 import com.aionemu.loginserver.GameServerTable;
@@ -21,7 +21,7 @@ import com.aionemu.loginserver.configs.Config;
 import com.aionemu.loginserver.configs.VipConfig;
 import com.aionemu.loginserver.dao.AccountDAO;
 import com.aionemu.loginserver.dao.AccountTimeDAO;
-import com.aionemu.loginserver.dao.PremiumDAO;
+
 import com.aionemu.loginserver.model.Account;
 import com.aionemu.loginserver.model.ReconnectingAccount;
 import com.aionemu.loginserver.model.Vip;
@@ -98,8 +98,8 @@ public class AccountController {
             acc.setLastServer(gsi.getId());
             getAccountDAO().updateLastServer(acc.getId(), acc.getLastServer());
 
-            long toll = DAOManager.getDAO(PremiumDAO.class).getPoints(acc.getId());
-            long luna = DAOManager.getDAO(PremiumDAO.class).getLuna(acc.getId());
+            long toll = LoginDaosHolder.daos().premiumDAO().getPoints(acc.getId());
+            long luna = LoginDaosHolder.daos().premiumDAO().getLuna(acc.getId());
             Vip vip = new VipService().findByAccountId(acc.getId());
             long now = System.currentTimeMillis() / 1000L;
             boolean vipActive = vip != null && vip.isActive(now);
@@ -330,7 +330,7 @@ public class AccountController {
      * @return AccountDAO 实例 / Account DAO
      */
     private AccountDAO getAccountDAO() {
-        return DAOManager.getDAO(AccountDAO.class);
+        return LoginDaosHolder.daos().accountDAO();
     }
 
     /**
@@ -339,7 +339,7 @@ public class AccountController {
      * @return AccountTimeDAO 实例 / Account time DAO
      */
     private AccountTimeDAO getAccountTimeDAO() {
-        return DAOManager.getDAO(AccountTimeDAO.class);
+        return LoginDaosHolder.daos().accountTimeDAO();
     }
 
     /**

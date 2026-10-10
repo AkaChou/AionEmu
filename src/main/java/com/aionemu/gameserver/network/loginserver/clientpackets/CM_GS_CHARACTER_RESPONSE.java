@@ -1,9 +1,9 @@
 package com.aionemu.gameserver.network.loginserver.clientpackets;
 
-import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.gameserver.dao.PlayerDAO;
+
 import com.aionemu.gameserver.network.loginserver.LsClientPacket;
 import com.aionemu.gameserver.network.loginserver.serverpackets.SM_GS_CHARACTER;
+import com.aionemu.gameserver.services.player.PlayerService;
 
 /**
  * 登录服查询账号角色数量的请求包，游戏服以 SM_GS_CHARACTER 回复。
@@ -38,7 +38,7 @@ public class CM_GS_CHARACTER_RESPONSE extends LsClientPacket {
 	 */
 	@Override
 	public void runImpl() {
-		int characterCount = DAOManager.getDAO(PlayerDAO.class).getCharacterCountOnAccount(accountId);
+		int characterCount = PlayerService.daos().playerDAO().getCharacterCountOnAccount(accountId);
 		sendPacket(new SM_GS_CHARACTER(accountId, characterCount));
 	}
 }

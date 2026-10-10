@@ -111,6 +111,7 @@ public class PlayerService {
 	/**
 	 * 由 Spring 配置类在启动期绑定持久层依赖聚合。
 	 * Binds the persistence dependency aggregate from the Spring configuration at startup.
+	 *
 	 * @param daos 依赖聚合 / dependency aggregate
 	 */
 	public static void bindDaos(PlayerServiceDaos daos) {
@@ -120,6 +121,7 @@ public class PlayerService {
 	/**
 	 * 返回持久层依赖聚合；未绑定（离线/单测环境）时按 safeDao 兜底构建并缓存。
 	 * Returns the persistence dependency aggregate; falls back to safeDao construction when unbound (offline/unit tests).
+	 *
 	 * @return 依赖聚合 / dependency aggregate
 	 */
 	public static PlayerServiceDaos daos() {
@@ -141,54 +143,56 @@ public class PlayerService {
 	 */
 	private static PlayerServiceDaos buildOfflineDaos() {
 		return new PlayerServiceDaos(
-				safeDao(PlayerDAO.class, com.aionemu.gameserver.dao.impl.PlayerDAO::new),
-				safeDao(OldNamesDAO.class, com.aionemu.gameserver.dao.impl.OldNamesDAO::new),
-				safeDao(PlayerAppearanceDAO.class, com.aionemu.gameserver.dao.impl.PlayerAppearanceDAO::new),
-				safeDao(PlayerSkillListDAO.class, com.aionemu.gameserver.dao.impl.PlayerSkillListDAO::new),
-				safeDao(InventoryDAO.class, com.aionemu.gameserver.dao.impl.InventoryDAO::new),
-				safeDao(PlayerStigmasEquippedDAO.class, com.aionemu.gameserver.dao.impl.PlayerStigmasEquippedDAO::new),
-				safeDao(PlayerEquipmentSettingDAO.class, com.aionemu.gameserver.dao.impl.PlayerEquipmentSettingDAO::new),
-				safeDao(PlayerSettingsDAO.class, com.aionemu.gameserver.dao.impl.PlayerSettingsDAO::new),
-				safeDao(PlayerQuestListDAO.class, com.aionemu.gameserver.dao.impl.PlayerQuestListDAO::new),
-				safeDao(AbyssRankDAO.class, com.aionemu.gameserver.dao.impl.AbyssRankDAO::new),
-				safeDao(PlayerPunishmentsDAO.class, com.aionemu.gameserver.dao.impl.PlayerPunishmentsDAO::new),
-				safeDao(HousesDAO.class, com.aionemu.gameserver.dao.impl.HousesDAO::new),
-				safeDao(PlayerRegisteredItemsDAO.class, com.aionemu.gameserver.dao.impl.PlayerRegisteredItemsDAO::new),
-				safeDao(ItemStoneListDAO.class, com.aionemu.gameserver.dao.impl.ItemStoneListDAO::new),
-				safeDao(MailDAO.class, com.aionemu.gameserver.dao.impl.MailDAO::new),
-				safeDao(PortalCooldownsDAO.class, com.aionemu.gameserver.dao.impl.PortalCooldownsDAO::new),
-				safeDao(CraftCooldownsDAO.class, com.aionemu.gameserver.dao.impl.CraftCooldownsDAO::new),
-				safeDao(PlayerNpcFactionsDAO.class, com.aionemu.gameserver.dao.impl.PlayerNpcFactionsDAO::new),
-				safeDao(PlayerLunaShopDAO.class, com.aionemu.gameserver.dao.impl.PlayerLunaShopDAO::new),
-				safeDao(EventItemsDAO.class, com.aionemu.gameserver.dao.impl.EventItemsDAO::new),
-				safeDao(PlayerMacrossesDAO.class, com.aionemu.gameserver.dao.impl.PlayerMacrossesDAO::new),
-				safeDao(FriendListDAO.class, com.aionemu.gameserver.dao.impl.FriendListDAO::new),
-				safeDao(BlockListDAO.class, com.aionemu.gameserver.dao.impl.BlockListDAO::new),
-				safeDao(PlayerTitleListDAO.class, com.aionemu.gameserver.dao.impl.PlayerTitleListDAO::new),
-				safeDao(PlayerCreativityPointsDAO.class, com.aionemu.gameserver.dao.impl.PlayerCreativityPointsDAO::new),
-				safeDao(PlayerEventsWindowDAO.class, com.aionemu.gameserver.dao.impl.PlayerEventsWindowDAO::new),
-				safeDao(PlayerABDAO.class, com.aionemu.gameserver.dao.impl.PlayerAtreianBestiaryDAO::new),
-				safeDao(PlayerWardrobeDAO.class, com.aionemu.gameserver.dao.impl.PlayerWardrobeDAO::new),
-				safeDao(F2pDAO.class, com.aionemu.gameserver.dao.impl.F2pDAO::new),
-				safeDao(MotionDAO.class, com.aionemu.gameserver.dao.impl.MotionDAO::new),
-				safeDao(PlayerVarsDAO.class, com.aionemu.gameserver.dao.impl.PlayerVarsDAO::new),
-				safeDao(PlayerRecipesDAO.class, com.aionemu.gameserver.dao.impl.PlayerRecipesDAO::new),
-				safeDao(PlayerSkillSkinListDAO.class, com.aionemu.gameserver.dao.impl.PlayerSkillSkinListDAO::new),
-				safeDao(PlayerEffectsDAO.class, com.aionemu.gameserver.dao.impl.PlayerEffectsDAO::new),
-				safeDao(PlayerCooldownsDAO.class, com.aionemu.gameserver.dao.impl.PlayerCooldownsDAO::new),
-				safeDao(ItemCooldownsDAO.class, com.aionemu.gameserver.dao.impl.ItemCooldownsDAO::new),
-				safeDao(HouseObjectCooldownsDAO.class, com.aionemu.gameserver.dao.impl.HouseObjectCooldownsDAO::new),
-				safeDao(PlayerBindPointDAO.class, com.aionemu.gameserver.dao.impl.PlayerBindPointDAO::new),
-				safeDao(PlayerLifeStatsDAO.class, com.aionemu.gameserver.dao.impl.PlayerLifeStatsDAO::new),
-				safeDao(PlayerEmotionListDAO.class, com.aionemu.gameserver.dao.impl.PlayerEmotionListDAO::new),
-				safeDao(com.aionemu.gameserver.dao.PlayerPetsDAO.class, com.aionemu.gameserver.dao.impl.PlayerPetsDAO::new),
-				safeDao(com.aionemu.gameserver.dao.PlayerMinionsDAO.class, com.aionemu.gameserver.dao.impl.PlayerMinionsDAO::new),
-				safeDao(com.aionemu.gameserver.dao.PlayerShugoSweepDAO.class, com.aionemu.gameserver.dao.impl.PlayerShugoSweepDAO::new),
-				safeDao(com.aionemu.gameserver.dao.HouseScriptsDAO.class, com.aionemu.gameserver.dao.impl.HouseScriptsDAO::new));
+			safeDao(PlayerDAO.class, com.aionemu.gameserver.dao.impl.PlayerDAO::new),
+			safeDao(OldNamesDAO.class, com.aionemu.gameserver.dao.impl.OldNamesDAO::new),
+			safeDao(PlayerAppearanceDAO.class, com.aionemu.gameserver.dao.impl.PlayerAppearanceDAO::new),
+			safeDao(PlayerSkillListDAO.class, com.aionemu.gameserver.dao.impl.PlayerSkillListDAO::new),
+			safeDao(InventoryDAO.class, com.aionemu.gameserver.dao.impl.InventoryDAO::new),
+			safeDao(PlayerStigmasEquippedDAO.class, com.aionemu.gameserver.dao.impl.PlayerStigmasEquippedDAO::new),
+			safeDao(PlayerEquipmentSettingDAO.class, com.aionemu.gameserver.dao.impl.PlayerEquipmentSettingDAO::new),
+			safeDao(PlayerSettingsDAO.class, com.aionemu.gameserver.dao.impl.PlayerSettingsDAO::new),
+			safeDao(PlayerQuestListDAO.class, com.aionemu.gameserver.dao.impl.PlayerQuestListDAO::new),
+			safeDao(AbyssRankDAO.class, com.aionemu.gameserver.dao.impl.AbyssRankDAO::new),
+			safeDao(PlayerPunishmentsDAO.class, com.aionemu.gameserver.dao.impl.PlayerPunishmentsDAO::new),
+			safeDao(HousesDAO.class, com.aionemu.gameserver.dao.impl.HousesDAO::new),
+			safeDao(PlayerRegisteredItemsDAO.class, com.aionemu.gameserver.dao.impl.PlayerRegisteredItemsDAO::new),
+			safeDao(ItemStoneListDAO.class, com.aionemu.gameserver.dao.impl.ItemStoneListDAO::new),
+			safeDao(MailDAO.class, com.aionemu.gameserver.dao.impl.MailDAO::new),
+			safeDao(PortalCooldownsDAO.class, com.aionemu.gameserver.dao.impl.PortalCooldownsDAO::new),
+			safeDao(CraftCooldownsDAO.class, com.aionemu.gameserver.dao.impl.CraftCooldownsDAO::new),
+			safeDao(PlayerNpcFactionsDAO.class, com.aionemu.gameserver.dao.impl.PlayerNpcFactionsDAO::new),
+			safeDao(PlayerLunaShopDAO.class, com.aionemu.gameserver.dao.impl.PlayerLunaShopDAO::new),
+			safeDao(EventItemsDAO.class, com.aionemu.gameserver.dao.impl.EventItemsDAO::new),
+			safeDao(PlayerMacrossesDAO.class, com.aionemu.gameserver.dao.impl.PlayerMacrossesDAO::new),
+			safeDao(FriendListDAO.class, com.aionemu.gameserver.dao.impl.FriendListDAO::new),
+			safeDao(BlockListDAO.class, com.aionemu.gameserver.dao.impl.BlockListDAO::new),
+			safeDao(PlayerTitleListDAO.class, com.aionemu.gameserver.dao.impl.PlayerTitleListDAO::new),
+			safeDao(PlayerCreativityPointsDAO.class, com.aionemu.gameserver.dao.impl.PlayerCreativityPointsDAO::new),
+			safeDao(PlayerEventsWindowDAO.class, com.aionemu.gameserver.dao.impl.PlayerEventsWindowDAO::new),
+			safeDao(PlayerABDAO.class, com.aionemu.gameserver.dao.impl.PlayerAtreianBestiaryDAO::new),
+			safeDao(PlayerWardrobeDAO.class, com.aionemu.gameserver.dao.impl.PlayerWardrobeDAO::new),
+			safeDao(F2pDAO.class, com.aionemu.gameserver.dao.impl.F2pDAO::new),
+			safeDao(MotionDAO.class, com.aionemu.gameserver.dao.impl.MotionDAO::new),
+			safeDao(PlayerVarsDAO.class, com.aionemu.gameserver.dao.impl.PlayerVarsDAO::new),
+			safeDao(PlayerRecipesDAO.class, com.aionemu.gameserver.dao.impl.PlayerRecipesDAO::new),
+			safeDao(PlayerSkillSkinListDAO.class, com.aionemu.gameserver.dao.impl.PlayerSkillSkinListDAO::new),
+			safeDao(PlayerEffectsDAO.class, com.aionemu.gameserver.dao.impl.PlayerEffectsDAO::new),
+			safeDao(PlayerCooldownsDAO.class, com.aionemu.gameserver.dao.impl.PlayerCooldownsDAO::new),
+			safeDao(ItemCooldownsDAO.class, com.aionemu.gameserver.dao.impl.ItemCooldownsDAO::new),
+			safeDao(HouseObjectCooldownsDAO.class, com.aionemu.gameserver.dao.impl.HouseObjectCooldownsDAO::new),
+			safeDao(PlayerBindPointDAO.class, com.aionemu.gameserver.dao.impl.PlayerBindPointDAO::new),
+			safeDao(PlayerLifeStatsDAO.class, com.aionemu.gameserver.dao.impl.PlayerLifeStatsDAO::new),
+			safeDao(PlayerEmotionListDAO.class, com.aionemu.gameserver.dao.impl.PlayerEmotionListDAO::new),
+			safeDao(com.aionemu.gameserver.dao.PlayerPetsDAO.class, com.aionemu.gameserver.dao.impl.PlayerPetsDAO::new),
+			safeDao(com.aionemu.gameserver.dao.PlayerMinionsDAO.class, com.aionemu.gameserver.dao.impl.PlayerMinionsDAO::new),
+			safeDao(com.aionemu.gameserver.dao.PlayerShugoSweepDAO.class, com.aionemu.gameserver.dao.impl.PlayerShugoSweepDAO::new),
+			safeDao(com.aionemu.gameserver.dao.HouseScriptsDAO.class, com.aionemu.gameserver.dao.impl.HouseScriptsDAO::new),
+			safeDao(com.aionemu.gameserver.dao.PlayerPasskeyDAO.class, com.aionemu.gameserver.dao.impl.PlayerPasskeyDAO::new),
+			safeDao(com.aionemu.gameserver.dao.PlayerTransformDAO.class, com.aionemu.gameserver.dao.impl.PlayerTransfoDAO::new));
 	}
 
 	private static <T extends com.aionemu.commons.database.dao.DAO> T safeDao(Class<T> daoClass,
-			java.util.function.Supplier<T> fallback) {
+																			  java.util.function.Supplier<T> fallback) {
 		if (DAOManager.isInitialized()) {
 			try {
 				return DAOManager.getDAO(daoClass);
@@ -201,6 +205,7 @@ public class PlayerService {
 	/**
 	 * 检查角色名是否未被占用。
 	 * Checks whether the player name is unused.
+	 *
 	 * @param name 角色名 / player name
 	 * @return 是否可用 / whether free
 	 */
@@ -211,6 +216,7 @@ public class PlayerService {
 	/**
 	 * 检查角色名是否与旧名一致。
 	 * Checks whether the name matches the previous one.
+	 *
 	 * @param name 角色名 / player name
 	 * @return 是否一致 / whether equal
 	 */
@@ -221,21 +227,23 @@ public class PlayerService {
 	/**
 	 * 持久化新建角色。
 	 * Persists a newly created player.
-	 * @param player 玩家 / player
+	 *
+	 * @param player      玩家 / player
 	 * @param accountName 账号名 / account name
-	 * @param accountId 账号 ID / account id
+	 * @param accountId   账号 ID / account id
 	 * @return 是否成功 / whether successful
 	 */
 	public static boolean storeNewPlayer(Player player, String accountName, int accountId) {
 		return daos().playerDAO().saveNewPlayer(player.getCommonData(), accountId, accountName)
-				&& daos().playerAppearanceDAO().store(player)
-				&& daos().playerSkillListDAO().storeSkills(player)
-				&& daos().inventoryDAO().store(player);
+			&& daos().playerAppearanceDAO().store(player)
+			&& daos().playerSkillListDAO().storeSkills(player)
+			&& daos().inventoryDAO().store(player);
 	}
 
 	/**
 	 * 持久化角色数据。
 	 * Persists player data.
+	 *
 	 * @param player 玩家 / player
 	 */
 	public static void storePlayer(Player player) {
@@ -252,9 +260,9 @@ public class PlayerService {
 		for (House house : player.getHouses()) {
 			daos().housesDAO().storeHouse(house);
 			if (house.getRegistry() != null
-					&& house.getRegistry().getPersistentState() == PersistentState.UPDATE_REQUIRED) {
+				&& house.getRegistry().getPersistentState() == PersistentState.UPDATE_REQUIRED) {
 				daos().playerRegisteredItemsDAO().store(house.getRegistry(),
-						player.getCommonData().getPlayerObjId());
+					player.getCommonData().getPlayerObjId());
 			}
 		}
 		daos().itemStoneListDAO().save(player);
@@ -269,8 +277,9 @@ public class PlayerService {
 	/**
 	 * 获取玩家对象。
 	 * Gets the player object.
+	 *
 	 * @param playerObjId 角色对象 ID / player object id
-	 * @param account 账号 / account
+	 * @param account     账号 / account
 	 * @return 玩家对象 / player object
 	 */
 	public static Player getPlayer(int playerObjId, Account account) {
@@ -330,7 +339,7 @@ public class PlayerService {
 
 		for (int petBagId = StorageType.PET_BAG_MIN; petBagId <= StorageType.PET_BAG_MAX; petBagId++) {
 			Storage petBag = daos().inventoryDAO().loadStorage(playerObjId,
-					StorageType.getStorageTypeById(petBagId));
+				StorageType.getStorageTypeById(petBagId));
 			ItemService.loadItemStones(petBag.getItems());
 			if (ItemService.ensureSkillEnhance(player, petBag.getItems())) {
 				petBag.setPersistentState(PersistentState.UPDATE_REQUIRED);
@@ -342,7 +351,7 @@ public class PlayerService {
 			StorageType whType = StorageType.getStorageTypeById(houseWhId);
 			if (whType != null) {
 				Storage cabinet = daos().inventoryDAO().loadStorage(playerObjId,
-						StorageType.getStorageTypeById(houseWhId));
+					StorageType.getStorageTypeById(houseWhId));
 				ItemService.loadItemStones(cabinet.getItems());
 				if (ItemService.ensureSkillEnhance(player, cabinet.getItems())) {
 					cabinet.setPersistentState(PersistentState.UPDATE_REQUIRED);
@@ -352,7 +361,7 @@ public class PlayerService {
 		}
 
 		Storage warehouse = daos().inventoryDAO().loadStorage(playerObjId,
-				StorageType.REGULAR_WAREHOUSE);
+			StorageType.REGULAR_WAREHOUSE);
 		ItemService.loadItemStones(warehouse.getItems());
 		if (ItemService.ensureSkillEnhance(player, warehouse.getItems())) {
 			warehouse.setPersistentState(PersistentState.UPDATE_REQUIRED);
@@ -394,23 +403,24 @@ public class PlayerService {
 	/**
 	 * 创建新角色对象。
 	 * Creates a new player object.
+	 *
 	 * @param playerCommonData 玩家公共数据 / player common data
 	 * @param playerAppearance 角色外观 / player appearance
-	 * @param account 账号 / account
+	 * @param account          账号 / account
 	 * @return 新玩家对象 / new player object
 	 */
 	public static Player newPlayer(PlayerCommonData playerCommonData, PlayerAppearance playerAppearance,
-			Account account) {
+								   Account account) {
 		PlayerInitialData playerInitialData = DataManager.PLAYER_INITIAL_DATA;
 		LocationData ld = playerInitialData.getSpawnLocation(playerCommonData.getRace());
 		WorldPosition position = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().createPosition(ld.getMapId(), ld.getX(), ld.getY(), ld.getZ(),
-				ld.getHeading(), 0);
+			ld.getHeading(), 0);
 		playerCommonData.setPosition(position);
 		Player newPlayer = new Player(new PlayerController(), playerCommonData, playerAppearance, account);
 		newPlayer.setSkillList(new PlayerSkillList());
 		SkillLearnService.addNewSkills(newPlayer);
 		PlayerCreationData playerCreationData = playerInitialData
-				.getPlayerCreationData(playerCommonData.getPlayerClass());
+			.getPlayerCreationData(playerCommonData.getPlayerClass());
 		Storage playerInventory = new PlayerStorage(StorageType.CUBE);
 		Storage regularWarehouse = new PlayerStorage(StorageType.REGULAR_WAREHOUSE);
 		Storage accountWarehouse = new PlayerStorage(StorageType.ACCOUNT_WAREHOUSE);
@@ -425,7 +435,7 @@ public class PlayerService {
 				}
 				ItemTemplate itemTemplate = item.getItemTemplate();
 				if ((itemTemplate.isArmor() || itemTemplate.isWeapon())
-						&& !(equipment.isSlotEquipped(itemTemplate.getItemSlot()))) {
+					&& !(equipment.isSlotEquipped(itemTemplate.getItemSlot()))) {
 					item.setEquipped(true);
 					ItemSlot itemSlot = ItemSlot.getSlotFor(itemTemplate.getItemSlot());
 					item.setEquipmentSlot(itemSlot.getSlotIdMask());
@@ -460,6 +470,7 @@ public class PlayerService {
 	/**
 	 * 取消角色删除。
 	 * Cancels the scheduled player deletion.
+	 *
 	 * @param accData 玩家账号数据 / player account data
 	 * @return 是否已取消 / whether canceled
 	 */
@@ -478,6 +489,7 @@ public class PlayerService {
 	/**
 	 * 删除角色。
 	 * Deletes a player character.
+	 *
 	 * @param accData 玩家账号数据 / player account data
 	 */
 	public static void deletePlayer(PlayerAccountData accData) {
@@ -495,6 +507,7 @@ public class PlayerService {
 	/**
 	 * 从数据库删除角色。
 	 * Deletes a player from the database.
+	 *
 	 * @param playerId 角色 ID / player id
 	 */
 	public static void deletePlayerFromDB(int playerId) {
@@ -502,23 +515,9 @@ public class PlayerService {
 		daos().playerDAO().deletePlayer(playerId);
 	}
 
-	/**
-	 * 删除账号下全部角色。
-	 * Deletes all account characters from DB.
-	 * @param accountId 账号 ID / account id
-	 * @return 删除的角色数 / number of deleted characters
-	 */
-	public static int deleteAccountsCharsFromDB(int accountId) {
-		List<Integer> charIds = daos().playerDAO().getPlayerOidsOnAccount(accountId);
-		for (int playerId : charIds) {
-			deletePlayerFromDB(playerId);
-		}
-		return charIds.size();
-	}
-
 	private static void storeDeletionTime(PlayerAccountData accData) {
 		daos().playerDAO().updateDeletionTime(accData.getPlayerCommonData().getPlayerObjId(),
-				accData.getDeletionDate());
+			accData.getDeletionDate());
 	}
 
 	/**
@@ -581,8 +580,9 @@ public class PlayerService {
 	/**
 	 * getPlayerNames 方法。
 	 * getPlayerNames method.
+	 *
 	 * @param playerObjIds 玩家对象 ID 列表 / playerObjIds
-	 * result
+	 *                     result
 	 */
 	public static Map<Integer, String> getPlayerNames(Collection<Integer> playerObjIds) {
 		if (GenericValidator.isBlankOrNull(playerObjIds)) {
@@ -590,12 +590,12 @@ public class PlayerService {
 		}
 		final Map<Integer, String> result = Maps.newHashMap();
 		final Set<Integer> playerObjIdsCopy = Sets.newHashSet(playerObjIds);
-        com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(object -> {
-			 if (playerObjIdsCopy.contains(object.getObjectId())) {
-				 result.put(object.getObjectId(), object.getName());
-				 playerObjIdsCopy.remove(object.getObjectId());
-			 }
-		 });
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(object -> {
+			if (playerObjIdsCopy.contains(object.getObjectId())) {
+				result.put(object.getObjectId(), object.getName());
+				playerObjIdsCopy.remove(object.getObjectId());
+			}
+		});
 		result.putAll(daos().playerDAO().getPlayerNames(playerObjIdsCopy));
 		return result;
 	}

@@ -3,13 +3,13 @@ package com.aionemu.gameserver.ai;
 
 import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
-import com.aionemu.commons.database.dao.DAOManager;
+import com.aionemu.gameserver.services.player.PlayerService;
 import com.aionemu.gameserver.ai2.AI2Actions;
 import com.aionemu.gameserver.ai2.AI2Request;
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.ai2.NpcAI2;
 import com.aionemu.gameserver.configs.main.CustomConfig;
-import com.aionemu.gameserver.dao.PlayerBindPointDAO;
+
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.TribeClass;
@@ -120,7 +120,7 @@ public class ResurrectAI2 extends NpcAI2
 					BindPointPosition bpp = new BindPointPosition(requester.getWorldId(), responder.getX(), responder.getY(), responder.getZ(), responder.getHeading());
 					bpp.setPersistentState(old == null ? PersistentState.NEW : PersistentState.UPDATE_REQUIRED);
 					responder.setBindPoint(bpp);
-					if (DAOManager.getDAO(PlayerBindPointDAO.class).store(responder)) {
+					if (PlayerService.daos().playerBindPointDAO().store(responder)) {
 						responder.getInventory().decreaseKinah(bindPointTemplate.getPrice());
 						TeleportService2.sendSetBindPoint(responder);
 						PacketSendUtility.broadcastPacket(responder, new SM_LEVEL_UPDATE(responder.getObjectId(), 2, responder.getCommonData().getLevel()), true);
@@ -151,7 +151,7 @@ public class ResurrectAI2 extends NpcAI2
 					BindPointPosition bpp = new BindPointPosition(requester.getWorldId(), requester.getX(), requester.getY(), requester.getZ(), requester.getHeading());
 					bpp.setPersistentState(old == null ? PersistentState.NEW : PersistentState.UPDATE_REQUIRED);
 					responder.setBindPoint(bpp);
-					if (DAOManager.getDAO(PlayerBindPointDAO.class).store(responder)) {
+					if (PlayerService.daos().playerBindPointDAO().store(responder)) {
 						responder.getInventory().decreaseKinah(bindPointTemplate.getPrice());
 						TeleportService2.sendSetBindPoint(responder);
 						PacketSendUtility.broadcastPacket(responder, new SM_LEVEL_UPDATE(responder.getObjectId(), 2, responder.getCommonData().getLevel()), true);

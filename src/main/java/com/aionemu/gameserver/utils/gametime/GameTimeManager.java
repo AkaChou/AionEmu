@@ -30,8 +30,22 @@ public class GameTimeManager {
 	private static boolean clockStarted = false;
 
 	static {
-		ServerVariablesDAO dao = DAOManager.getDAO(ServerVariablesDAO.class);
-		instance = new GameTime(dao.load("time"));
+		instance = new GameTime(safeServerVariablesDao().load("time"));
+	}
+
+	/**
+	 * DAO 解析兜底：容器未就绪（离线/单测）时退回实现类无参构造。
+	 * DAO resolution fallback: falls back to the no-arg impl constructor when the container is not ready (offline/unit tests).
+	 */
+	private static ServerVariablesDAO safeServerVariablesDao() {
+		if (DAOManager.isInitialized()) {
+			try {
+				return DAOManager.getDAO(ServerVariablesDAO.class);
+			} catch (Exception e) {
+				log.debug("ServerVariablesDAO bean resolution failed, falling back to the no-arg impl constructor", e);
+			}
+		}
+		return new com.aionemu.gameserver.dao.impl.ServerVariablesDAO();
 	}
 
 	/**

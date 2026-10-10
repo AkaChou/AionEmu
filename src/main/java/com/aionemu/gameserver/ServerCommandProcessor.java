@@ -12,8 +12,8 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.gameserver.dao.PlayerDAO;
+import com.aionemu.gameserver.services.player.PlayerService;
+
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.lifecycle.GameAdminPanelShutdownRequest;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -138,7 +138,7 @@ public class ServerCommandProcessor {
 	 * Online-count query listener.
 	 */
 	ActionListener al_online = e -> {
-		int playerCount = DAOManager.getDAO(PlayerDAO.class).getOnlinePlayerCount();
+		int playerCount = PlayerService.daos().playerDAO().getOnlinePlayerCount();
 		if (playerCount == 1) {
 			log.info(I18n.get("log.b5cec4ab4481", (playerCount)));
 		} else {

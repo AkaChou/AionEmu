@@ -1,10 +1,10 @@
 package com.aionemu.loginserver.controller;
 
+import com.aionemu.loginserver.service.LoginDaosHolder;
 import java.sql.Timestamp;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.loginserver.dao.BannedMacDAO;
 import com.aionemu.loginserver.model.base.BannedMacEntry;
 
@@ -17,7 +17,7 @@ import lombok.Getter;
  */
 public class BannedMacManager {
 
-    private final BannedMacDAO dao = DAOManager.getDAO(BannedMacDAO.class);
+    private final BannedMacDAO dao = LoginDaosHolder.daos().bannedMacDAO();
 
     /**
      * 当前封禁 MAC 映射。

@@ -420,7 +420,8 @@ class ServiceConstructorInjectionTest {
 	void mailServiceConstructsWithInjectedDaos() {
 		JdbcClient client = createNoAccessJdbcClient();
 
-		MailDAO mailDAO = new com.aionemu.gameserver.dao.impl.MailDAO(client);
+		MailDAO mailDAO = new com.aionemu.gameserver.dao.impl.MailDAO(client,
+			new com.aionemu.gameserver.dao.impl.ItemStoneListDAO(client));
 		InventoryDAO inventoryDAO = new com.aionemu.gameserver.dao.impl.InventoryDAO(client);
 		PlayerDAO playerDAO = new com.aionemu.gameserver.dao.impl.PlayerDAO(client);
 		AbyssRankDAO abyssRankDAO = new com.aionemu.gameserver.dao.impl.AbyssRankDAO(client);
@@ -487,9 +488,9 @@ class ServiceConstructorInjectionTest {
 	@Test
 	void socialServiceConstructsWithInjectedDaos() {
 		JdbcClient client = createNoAccessJdbcClient();
-		BlockListDAO blockListDAO = new com.aionemu.gameserver.dao.impl.BlockListDAO(client);
-		FriendListDAO friendListDAO = new com.aionemu.gameserver.dao.impl.FriendListDAO(client);
 		PlayerDAO playerDAO = new com.aionemu.gameserver.dao.impl.PlayerDAO(client);
+		BlockListDAO blockListDAO = new com.aionemu.gameserver.dao.impl.BlockListDAO(client, playerDAO);
+		FriendListDAO friendListDAO = new com.aionemu.gameserver.dao.impl.FriendListDAO(client, playerDAO);
 
 		SocialService service = new SocialService(blockListDAO, friendListDAO, playerDAO);
 		assertNotNull(service);
@@ -715,15 +716,15 @@ class ServiceConstructorInjectionTest {
 			new com.aionemu.gameserver.dao.impl.HousesDAO(client),
 			new com.aionemu.gameserver.dao.impl.PlayerRegisteredItemsDAO(client),
 			new com.aionemu.gameserver.dao.impl.ItemStoneListDAO(client),
-			new com.aionemu.gameserver.dao.impl.MailDAO(client),
+			new com.aionemu.gameserver.dao.impl.MailDAO(client, new com.aionemu.gameserver.dao.impl.ItemStoneListDAO(client)),
 			new com.aionemu.gameserver.dao.impl.PortalCooldownsDAO(client),
 			new com.aionemu.gameserver.dao.impl.CraftCooldownsDAO(client),
 			new com.aionemu.gameserver.dao.impl.PlayerNpcFactionsDAO(client),
 			new com.aionemu.gameserver.dao.impl.PlayerLunaShopDAO(client),
 			new com.aionemu.gameserver.dao.impl.EventItemsDAO(client),
 			new com.aionemu.gameserver.dao.impl.PlayerMacrossesDAO(client),
-			new com.aionemu.gameserver.dao.impl.FriendListDAO(client),
-			new com.aionemu.gameserver.dao.impl.BlockListDAO(client),
+			new com.aionemu.gameserver.dao.impl.FriendListDAO(client, new com.aionemu.gameserver.dao.impl.PlayerDAO(client)),
+			new com.aionemu.gameserver.dao.impl.BlockListDAO(client, new com.aionemu.gameserver.dao.impl.PlayerDAO(client)),
 			new com.aionemu.gameserver.dao.impl.PlayerTitleListDAO(client),
 			new com.aionemu.gameserver.dao.impl.PlayerCreativityPointsDAO(client),
 			new com.aionemu.gameserver.dao.impl.PlayerEventsWindowDAO(client),
@@ -744,7 +745,9 @@ class ServiceConstructorInjectionTest {
 			new com.aionemu.gameserver.dao.impl.PlayerPetsDAO(client),
 			new com.aionemu.gameserver.dao.impl.PlayerMinionsDAO(client),
 			new com.aionemu.gameserver.dao.impl.PlayerShugoSweepDAO(client),
-			new com.aionemu.gameserver.dao.impl.HouseScriptsDAO(client));
+			new com.aionemu.gameserver.dao.impl.HouseScriptsDAO(client),
+			new com.aionemu.gameserver.dao.impl.PlayerPasskeyDAO(client),
+			new com.aionemu.gameserver.dao.impl.PlayerTransfoDAO(client));
 		PlayerService.bindDaos(daos);
 		assertSame(daos, PlayerService.daos());
 		assertNotNull(daos.playerDAO());
@@ -869,7 +872,8 @@ class ServiceConstructorInjectionTest {
 		JdbcClient client = createNoAccessJdbcClient();
 		PlayerDAO playerDAO = new com.aionemu.gameserver.dao.impl.PlayerDAO(client);
 		InventoryDAO inventoryDAO = new com.aionemu.gameserver.dao.impl.InventoryDAO(client);
-		MailDAO mailDAO = new com.aionemu.gameserver.dao.impl.MailDAO(client);
+		MailDAO mailDAO = new com.aionemu.gameserver.dao.impl.MailDAO(client,
+			new com.aionemu.gameserver.dao.impl.ItemStoneListDAO(client));
 		SystemMailService service = new SystemMailService(playerDAO, inventoryDAO, mailDAO);
 		assertNotNull(service);
 	}
@@ -954,6 +958,6 @@ class ServiceConstructorInjectionTest {
 			null, null, null, null, null, null, null, null, null, null,
 			null, null, null, null, null, null, null, null, null, null,
 			null, null, null, null, null, null, null, null, null, null,
-			null, null, null, null));
+			null, null, null, null, null, null));
 	}
 }

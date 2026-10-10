@@ -63,6 +63,15 @@ public class PetitionService {
 	 *
 	 * @param petitionDAO 请愿数据访问对象 / Petition DAO
 	 */
+	/**
+	 * 返回请愿 DAO，供命令域复用同一绑定（单一所有权）。
+	 * Returns the petition DAO so command-domain callers reuse the same binding (single ownership).
+	 * @return 请愿数据访问对象 / Petition DAO
+	 */
+	public PetitionDAO petitionDAO() {
+		return petitionDAO;
+	}
+
 	public PetitionService(@NonNull PetitionDAO petitionDAO) {
 		this.petitionDAO = petitionDAO;
 		log.info(I18n.get("log.f495913b1078"));

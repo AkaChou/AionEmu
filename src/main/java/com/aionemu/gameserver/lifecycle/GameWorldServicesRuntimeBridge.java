@@ -1,8 +1,8 @@
 package com.aionemu.gameserver.lifecycle;
 
-import com.aionemu.commons.database.dao.DAOManager;
+import com.aionemu.gameserver.services.player.PlayerService;
 import com.aionemu.gameserver.GameServer;
-import com.aionemu.gameserver.dao.PlayerDAO;
+
 import com.aionemu.gameserver.services.drop.DropRegistrationService;
 import com.aionemu.gameserver.world.geo.GeoService;
 import com.aionemu.gameserver.world.geo.path.PathService;
@@ -124,6 +124,6 @@ public class GameWorldServicesRuntimeBridge {
      * Mark all players as offline.
      */
     public void markPlayersOffline() {
-        DAOManager.getDAO(PlayerDAO.class).setPlayersOffline(false);
+        PlayerService.daos().playerDAO().setPlayersOffline(false);
     }
 }

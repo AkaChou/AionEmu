@@ -1,12 +1,13 @@
 package com.aionemu.loginserver;
 
+import com.aionemu.loginserver.service.LoginDaosHolder;
 import java.io.IOException;
 
 import com.aionemu.boot.i18n.I18n;
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.loginserver.configs.Config;
 import com.aionemu.loginserver.configs.SvStatsConfig;
-import com.aionemu.loginserver.dao.SvStatsDAO;
+
 import com.aionemu.loginserver.network.gameserver.GsConnection;
 import com.aionemu.loginserver.network.gameserver.serverpackets.SM_PING;
 
@@ -147,7 +148,7 @@ public class PingPongThread implements Runnable {
         if (!SvStatsConfig.SVSTATS_ENABLE || !DAOManager.isInitialized()) {
             return;
         }
-        DAOManager.getDAO(SvStatsDAO.class).update_SvStats_Online(serverId, 1, currentPlayer, currentMax);
+        LoginDaosHolder.daos().svStatsDAO().update_SvStats_Online(serverId, 1, currentPlayer, currentMax);
     }
 
     /**
@@ -159,6 +160,6 @@ public class PingPongThread implements Runnable {
         if (!SvStatsConfig.SVSTATS_ENABLE || !DAOManager.isInitialized()) {
             return;
         }
-        DAOManager.getDAO(SvStatsDAO.class).update_SvStats_Offline(serverId, 0, 0);
+        LoginDaosHolder.daos().svStatsDAO().update_SvStats_Offline(serverId, 0, 0);
     }
 }

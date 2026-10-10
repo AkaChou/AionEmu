@@ -1,11 +1,11 @@
 package com.aionemu.loginserver.controller;
 
 import com.aionemu.boot.i18n.I18n;
+import com.aionemu.loginserver.service.LoginDaosHolder;
 import java.sql.Timestamp;
 import java.util.Iterator;
 import java.util.Set;
 
-import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.commons.utils.NetworkUtils;
 import com.aionemu.loginserver.dao.BannedIpDAO;
 import com.aionemu.loginserver.model.BannedIP;
@@ -156,6 +156,6 @@ public class BannedIpController {
      * @return BannedIpDAO 实例 / Banned IP DAO
      */
     private BannedIpDAO getDAO() {
-        return DAOManager.getDAO(BannedIpDAO.class);
+        return LoginDaosHolder.daos().bannedIpDAO();
     }
 }

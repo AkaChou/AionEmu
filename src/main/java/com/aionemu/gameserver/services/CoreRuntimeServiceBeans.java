@@ -386,7 +386,9 @@ public class CoreRuntimeServiceBeans {
                 daoFrom(beanFactory, PlayerPetsDAO.class),
                 daoFrom(beanFactory, PlayerMinionsDAO.class),
                 daoFrom(beanFactory, PlayerShugoSweepDAO.class),
-                daoFrom(beanFactory, HouseScriptsDAO.class));
+                daoFrom(beanFactory, HouseScriptsDAO.class),
+                daoFrom(beanFactory, PlayerPasskeyDAO.class),
+                daoFrom(beanFactory, PlayerTransformDAO.class));
             PlayerService.bindDaos(daos);
             // 顺带绑定 item 域静态工具类的魔石列表 DAO / also bind the item-domain static utility's DAO
             ItemSocketService.bindItemStoneListDAO(daos.itemStoneListDAO());

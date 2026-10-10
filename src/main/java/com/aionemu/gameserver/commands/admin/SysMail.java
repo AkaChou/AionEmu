@@ -2,8 +2,7 @@ package com.aionemu.gameserver.commands.admin;
 
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
 
-import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.gameserver.dao.PlayerDAO;
+
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.gameobjects.LetterType;
@@ -11,6 +10,7 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.gameobjects.player.PlayerCommonData;
 import com.aionemu.gameserver.model.templates.item.ItemTemplate;
 import com.aionemu.gameserver.services.mail.MailFormatter;
+import com.aionemu.gameserver.services.player.PlayerService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.Util;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
@@ -234,14 +234,14 @@ public class SysMail extends AdminCommand {
 			return null;
 		}
 		else if (recipientType == RecipientType.PLAYER) {
-			PlayerCommonData recipientCommonData = DAOManager.getDAO(PlayerDAO.class).loadPlayerCommonDataByName(recipient);
+			PlayerCommonData recipientCommonData = PlayerService.daos().playerDAO().loadPlayerCommonDataByName(recipient);
 			if (recipientCommonData != null && recipientCommonData.getMailboxLetters() >= 100) {
 				PacketSendUtility.sendMessage(admin, recipient + "Players mail box is full");
 				return null;
 			}
 
 			if (letterType == LetterType.NORMAL) {
-				if (!DAOManager.getDAO(PlayerDAO.class).isNameUsed(recipient)) {
+				if (!PlayerService.daos().playerDAO().isNameUsed(recipient)) {
 					PacketSendUtility.sendMessage(admin, "Could not find a Recipient by that name.");
 					return null;
 				}

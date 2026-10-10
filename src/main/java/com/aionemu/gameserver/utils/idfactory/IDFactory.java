@@ -4,6 +4,8 @@ import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import java.util.BitSet;
 import java.util.Collection;
+import java.util.List;
+import java.util.function.Supplier;
 import java.util.concurrent.locks.ReentrantLock;
 
 import org.springframework.beans.factory.ObjectProvider;
@@ -54,21 +56,53 @@ public class IDFactory {
 	 * 构造并锁定数据库中已使用的 ID。
 	 * Construct and lock IDs already used in the database.
 	 */
-	public IDFactory() {
+	public IDFactory(List<Supplier<int[]>> usedIdSources) {
 		idList = new BitSet();
 		lock = new ReentrantLock();
 		lockIds(0);
 		// 此处应调用所有 IDFactoryAwareDAO 实现以初始化。 / Here should be calls to all IDFactoryAwareDAO implementations to initialize
 		// IDFactory 中使用的值 / used values in IDFactory
-		lockIds(DAOManager.getDAO(PlayerDAO.class).getUsedIDs());
-		lockIds(DAOManager.getDAO(InventoryDAO.class).getUsedIDs());
-		lockIds(DAOManager.getDAO(PlayerRegisteredItemsDAO.class).getUsedIDs());
-		lockIds(DAOManager.getDAO(LegionDAO.class).getUsedIDs());
-		lockIds(DAOManager.getDAO(MailDAO.class).getUsedIDs());
-		lockIds(DAOManager.getDAO(GuideDAO.class).getUsedIDs());
-		lockIds(DAOManager.getDAO(HousesDAO.class).getUsedIDs());
-		lockIds(DAOManager.getDAO(PlayerMinionsDAO.class).getUsedIDs());
+		usedIdSources.forEach(source -> lockIds(source.get()));
 		log.info(I18n.get("log.b00d0337832b", getUsedCount()));
+	}
+
+	/**
+	 * 构造并锁定数据库中已使用的 ID：DAOManager 已初始化时逐项解析 Spring Bean，否则退回实现类无参构造。
+	 * Constructs and locks used IDs: resolves each Spring bean when DAOManager is initialized, else falls back to no-arg impl constructors.
+	 */
+	public IDFactory() {
+		this(defaultUsedIdSources());
+	}
+
+	/**
+	 * 组装默认已用 ID 来源：逐项经 safeDao 解析，容器未就绪（离线/单测）时退回实现类无参构造。
+	 * Assembles default used-ID sources: each resolved via safeDao, falling back to no-arg impl constructors when the container is not ready.
+	 */
+	private static List<Supplier<int[]>> defaultUsedIdSources() {
+		return List.of(
+			() -> safeDao(com.aionemu.gameserver.dao.PlayerDAO.class, com.aionemu.gameserver.dao.impl.PlayerDAO::new).getUsedIDs(),
+			() -> safeDao(com.aionemu.gameserver.dao.InventoryDAO.class, com.aionemu.gameserver.dao.impl.InventoryDAO::new).getUsedIDs(),
+			() -> safeDao(com.aionemu.gameserver.dao.PlayerRegisteredItemsDAO.class, com.aionemu.gameserver.dao.impl.PlayerRegisteredItemsDAO::new).getUsedIDs(),
+			() -> safeDao(com.aionemu.gameserver.dao.LegionDAO.class, com.aionemu.gameserver.dao.impl.LegionDAO::new).getUsedIDs(),
+			() -> safeDao(com.aionemu.gameserver.dao.MailDAO.class, com.aionemu.gameserver.dao.impl.MailDAO::new).getUsedIDs(),
+			() -> safeDao(com.aionemu.gameserver.dao.GuideDAO.class, com.aionemu.gameserver.dao.impl.GuideDAO::new).getUsedIDs(),
+			() -> safeDao(com.aionemu.gameserver.dao.HousesDAO.class, com.aionemu.gameserver.dao.impl.HousesDAO::new).getUsedIDs(),
+			() -> safeDao(com.aionemu.gameserver.dao.PlayerMinionsDAO.class, com.aionemu.gameserver.dao.impl.PlayerMinionsDAO::new).getUsedIDs());
+	}
+
+	/**
+	 * DAO 解析兜底：容器未就绪（离线/单测）时退回实现类无参构造。
+	 * DAO resolution fallback: falls back to the no-arg impl constructor when the container is not ready (offline/unit tests).
+	 */
+	private static <T extends com.aionemu.commons.database.dao.DAO> T safeDao(Class<T> daoClass,
+			java.util.function.Supplier<T> fallback) {
+		if (DAOManager.isInitialized()) {
+			try {
+				return DAOManager.getDAO(daoClass);
+			} catch (Exception ignored) {
+			}
+		}
+		return fallback.get();
 	}
 
 	/**

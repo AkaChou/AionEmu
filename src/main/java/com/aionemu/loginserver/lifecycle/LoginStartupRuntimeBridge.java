@@ -6,10 +6,11 @@ import com.aionemu.commons.utils.AEInfos;
 import com.aionemu.loginserver.GameServerTable;
 import com.aionemu.loginserver.LoginServer;
 import com.aionemu.loginserver.configs.Config;
-import com.aionemu.loginserver.dao.BannedMacDAO;
+
 import com.aionemu.loginserver.dao.impl.LoginDAOClassProvider;
 import com.aionemu.loginserver.network.ncrypt.KeyGen;
 import com.aionemu.loginserver.service.LoginCronServices;
+import com.aionemu.loginserver.service.LoginDaosHolder;
 import com.aionemu.loginserver.service.LoginNetworkServices;
 import com.aionemu.loginserver.service.LoginPremiumServices;
 import com.aionemu.loginserver.service.LoginProtectionServices;
@@ -146,7 +147,7 @@ public class LoginStartupRuntimeBridge {
      * Clean expired MAC-ban records.
      */
     public void cleanExpiredMacBans() {
-        DAOManager.getDAO(BannedMacDAO.class).cleanExpiredBans();
+        LoginDaosHolder.daos().bannedMacDAO().cleanExpiredBans();
     }
 
     /**

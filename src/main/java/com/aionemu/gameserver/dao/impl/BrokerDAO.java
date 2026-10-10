@@ -49,15 +49,32 @@ public class BrokerDAO extends com.aionemu.gameserver.dao.BrokerDAO {
     private static final String PREBUY_CHECK_QUERY = "SELECT 1 FROM broker WHERE `item_pointer` = ? AND `is_sold` = 0 LIMIT 1";
 
     private final JdbcClient jdbcClient;
+    private final ItemStoneListDAO itemStoneListDAO;
 
     public BrokerDAO() {
-        this(DatabaseFactory.getJdbcClient());
+        this(DatabaseFactory.getJdbcClient(), safeItemStoneListDAO());
     }
 
     @Autowired
 
-    public BrokerDAO(JdbcClient jdbcClient) {
+    public BrokerDAO(JdbcClient jdbcClient, ItemStoneListDAO itemStoneListDAO) {
         this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");
+        this.itemStoneListDAO = Objects.requireNonNull(itemStoneListDAO, "itemStoneListDAO must not be null");
+    }
+
+    /**
+     * 依赖 DAO 解析兜底：容器未就绪（离线/单测）时退回实现类无参构造。
+     * Dependency-DAO resolution fallback: falls back to the no-arg impl constructor when the container is not ready (offline/unit tests).
+     */
+    private static ItemStoneListDAO safeItemStoneListDAO() {
+        if (DAOManager.isInitialized()) {
+            try {
+                return DAOManager.getDAO(ItemStoneListDAO.class);
+            } catch (Exception e) {
+                // 离线兜底路径，退回实现类无参构造。 / offline fallback, use the no-arg impl constructor
+            }
+        }
+        return new com.aionemu.gameserver.dao.impl.ItemStoneListDAO();
     }
 
     /**
@@ -71,7 +88,7 @@ public class BrokerDAO extends com.aionemu.gameserver.dao.BrokerDAO {
         final List<Item> items = getBrokerItems();
 
         if (items != null && !items.isEmpty()) {
-            DAOManager.getDAO(ItemStoneListDAO.class).load(items);
+            itemStoneListDAO.load(items);
         }
 
         try {

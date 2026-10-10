@@ -2,9 +2,9 @@ package com.aionemu.loginserver.taskmanager.handler.implementations;
 
 
 import com.aionemu.boot.i18n.I18n;
+import com.aionemu.loginserver.service.LoginDaosHolder;
 import lombok.extern.slf4j.Slf4j;
-import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.loginserver.dao.AccountDAO;
+
 import com.aionemu.loginserver.taskmanager.handler.TaskFromDBHandler;
 
 /**
@@ -40,6 +40,6 @@ public class CleanAccountsHandler extends TaskFromDBHandler {
     public void trigger() {
         daysOfInactivity = Integer.parseInt(params[0]);
         log.info(I18n.get("log.18943e91d563", daysOfInactivity));
-        DAOManager.getDAO(AccountDAO.class).deleteInactiveAccounts(daysOfInactivity);
+        LoginDaosHolder.daos().accountDAO().deleteInactiveAccounts(daysOfInactivity);
     }
 }

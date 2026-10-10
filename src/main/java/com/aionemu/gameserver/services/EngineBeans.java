@@ -1,9 +1,18 @@
 package com.aionemu.gameserver.services;
 
+import java.util.Collection;
+import java.util.List;
+import java.util.function.Function;
+
 import com.aionemu.gameserver.ai2.AI2Engine;
 import com.aionemu.gameserver.configs.main.ThreadConfig;
 import com.aionemu.gameserver.cache.HTMLCache;
+import com.aionemu.gameserver.dao.GuideDAO;
+import com.aionemu.gameserver.dao.HousesDAO;
 import com.aionemu.gameserver.dao.InventoryDAO;
+import com.aionemu.gameserver.dao.LegionDAO;
+import com.aionemu.gameserver.dao.PlayerMinionsDAO;
+import com.aionemu.gameserver.dao.PlayerRegisteredItemsDAO;
 import com.aionemu.gameserver.dao.MailDAO;
 import com.aionemu.gameserver.dao.PlayerDAO;
 import com.aionemu.gameserver.dataholders.DataManager;
@@ -23,6 +32,7 @@ import com.aionemu.gameserver.world.geo.GeoService;
 import com.aionemu.gameserver.world.geo.path.PathService;
 import com.aionemu.gameserver.world.zone.ZoneService;
 import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
@@ -70,10 +80,33 @@ public class EngineBeans {
         return new ChatProcessor();
     }
 
+    /**
+     * 装配 ID 工厂：由容器解析各 IDFactoryAwareDAO 的已用 ID 来源，缺失时保持空来源。
+     * Wires the ID factory: resolves each IDFactoryAwareDAO used-ID source from the container,
+     * keeping an empty source list when absent.
+     */
     @Bean
     @Lazy
-    public IDFactory gameIdFactory() {
-        return new IDFactory();
+    public IDFactory gameIdFactory(ConfigurableBeanFactory beanFactory) {
+        return new IDFactory(List.of(
+            () -> usedIds(beanFactory, PlayerDAO.class, PlayerDAO::getUsedIDs),
+            () -> usedIds(beanFactory, InventoryDAO.class, InventoryDAO::getUsedIDs),
+            () -> usedIds(beanFactory, PlayerRegisteredItemsDAO.class, PlayerRegisteredItemsDAO::getUsedIDs),
+            () -> usedIds(beanFactory, LegionDAO.class, LegionDAO::getUsedIDs),
+            () -> usedIds(beanFactory, MailDAO.class, MailDAO::getUsedIDs),
+            () -> usedIds(beanFactory, GuideDAO.class, GuideDAO::getUsedIDs),
+            () -> usedIds(beanFactory, HousesDAO.class, HousesDAO::getUsedIDs),
+            () -> usedIds(beanFactory, PlayerMinionsDAO.class, PlayerMinionsDAO::getUsedIDs)));
+    }
+
+    /**
+     * 解析单个 DAO 的已用 ID 集合，DAO 缺失（离线/单测上下文）时返回空集合。
+     * Resolves one DAO's used-ID set; returns an empty set when the DAO is absent (offline/unit tests).
+     */
+    private static <T extends com.aionemu.commons.database.dao.DAO> int[] usedIds(
+            ConfigurableBeanFactory beanFactory, Class<T> daoClass, Function<T, int[]> usedIds) {
+        T dao = beanFactory.getBeanProvider(daoClass).getIfAvailable();
+        return dao != null ? usedIds.apply(dao) : new int[0];
     }
 
     @Bean

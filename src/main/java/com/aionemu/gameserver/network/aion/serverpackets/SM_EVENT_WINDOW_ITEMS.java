@@ -2,12 +2,12 @@ package com.aionemu.gameserver.network.aion.serverpackets;
 
 
 import com.aionemu.boot.i18n.I18n;
+import com.aionemu.gameserver.services.player.PlayerService;
 import lombok.extern.slf4j.Slf4j;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.dao.PlayerEventsWindowDAO;
 import com.aionemu.gameserver.model.templates.event.EventsWindow;
 import com.aionemu.gameserver.network.aion.AionConnection;
@@ -34,7 +34,7 @@ public class SM_EVENT_WINDOW_ITEMS extends AionServerPacket {
 	@Override
 	protected void writeImpl(AionConnection aionConnection) {
 		int playerAccountId = aionConnection.getActivePlayer().getPlayerAccount().getId();
-		PlayerEventsWindowDAO playerEventsWindowDAO = DAOManager.getDAO(PlayerEventsWindowDAO.class);
+		PlayerEventsWindowDAO playerEventsWindowDAO = PlayerService.daos().playerEventsWindowDAO();
 		writeC(1); // 请勿修改！！！ / Do not Change !!!
 		writeH(active_events_packet.size());
 		for (EventsWindow eventsWindow : active_events_packet) {

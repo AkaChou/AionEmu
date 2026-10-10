@@ -4,13 +4,13 @@ import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
 
 import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
 
-import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.gameserver.dao.PetitionDAO;
-import com.aionemu.gameserver.dao.PlayerDAO;
+
+
 import com.aionemu.gameserver.model.Petition;
 import com.aionemu.gameserver.model.PetitionType;
 import com.aionemu.gameserver.model.gameobjects.LetterType;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
+import com.aionemu.gameserver.services.player.PlayerService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 
@@ -71,7 +71,7 @@ public class Petitions extends AdminCommand {
 			return;
 		}
 
-		Petition petition = DAOManager.getDAO(PetitionDAO.class).getPetitionById(petitionId);
+		Petition petition = GameRuntimeServices.petitionService().petitionDAO().getPetitionById(petitionId);
 
 		if (petition == null) {
 			PacketSendUtility.sendMessage(admin, "There is no petition with id #" + petitionId);
@@ -86,7 +86,7 @@ public class Petitions extends AdminCommand {
 			isOnline = true;
 		}
 		else {
-			petitionPlayer = DAOManager.getDAO(PlayerDAO.class).getPlayerNameByObjId(petition.getPlayerObjId());
+			petitionPlayer = PlayerService.daos().playerDAO().getPlayerNameByObjId(petition.getPlayerObjId());
 			isOnline = false;
 		}
 

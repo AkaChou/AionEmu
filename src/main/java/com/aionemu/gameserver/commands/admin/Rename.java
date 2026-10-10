@@ -1,9 +1,8 @@
 package com.aionemu.gameserver.commands.admin;
 
-import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.configs.main.CustomConfig;
-import com.aionemu.gameserver.dao.OldNamesDAO;
-import com.aionemu.gameserver.dao.PlayerDAO;
+
+
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.model.gameobjects.player.Friend;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -52,20 +51,20 @@ public class Rename extends AdminCommand {
 			recipient = Util.convertName(params[0]);
 			rename = Util.convertName(params[1]);
 
-			if (!DAOManager.getDAO(PlayerDAO.class).isNameUsed(recipient)) {
+			if (!PlayerService.daos().playerDAO().isNameUsed(recipient)) {
 				PacketSendUtility.sendMessage(admin, "Could not find a Player by that name.");
 				return;
 			}
-			PlayerCommonData recipientCommonData = DAOManager.getDAO(PlayerDAO.class).loadPlayerCommonDataByName(recipient);
+			PlayerCommonData recipientCommonData = PlayerService.daos().playerDAO().loadPlayerCommonDataByName(recipient);
 			player = recipientCommonData.getPlayer();
 
 			if (!check(admin, rename))
 				return;
 
 			if (!CustomConfig.OLD_NAMES_COMMAND_DISABLED)
-				DAOManager.getDAO(OldNamesDAO.class).insertNames(player.getObjectId(), player.getName(), rename);
+				PlayerService.daos().oldNamesDAO().insertNames(player.getObjectId(), player.getName(), rename);
 			recipientCommonData.setName(rename);
-			DAOManager.getDAO(PlayerDAO.class).storePlayerName(recipientCommonData);
+			PlayerService.daos().playerDAO().storePlayerName(recipientCommonData);
 			if (recipientCommonData.isOnline()) {
 				PacketSendUtility.sendPacket(player, new SM_PLAYER_INFO(player, false));
 				PacketSendUtility.sendPacket(player, new SM_MOTION(player.getObjectId(), player.getMotions().getActiveMotions()));
@@ -89,10 +88,10 @@ public class Rename extends AdminCommand {
 					return;
 
 				if (!CustomConfig.OLD_NAMES_COMMAND_DISABLED)
-					DAOManager.getDAO(OldNamesDAO.class).insertNames(player.getObjectId(), player.getName(), rename);
+					PlayerService.daos().oldNamesDAO().insertNames(player.getObjectId(), player.getName(), rename);
 				player.getCommonData().setName(rename);
 				PacketSendUtility.sendPacket(player, new SM_PLAYER_INFO(player, false));
-				DAOManager.getDAO(PlayerDAO.class).storePlayerName(player.getCommonData());
+				PlayerService.daos().playerDAO().storePlayerName(player.getCommonData());
 			}
 			else
 				PacketSendUtility.sendMessage(admin, "The command can be applied only on the player.");

@@ -9,6 +9,7 @@ import com.aionemu.loginserver.taskmanager.TaskFromDBManager;
 import com.aionemu.loginserver.utils.BruteForceProtector;
 import com.aionemu.loginserver.utils.FloodProtector;
 import com.aionemu.loginserver.utils.ThreadPoolManager;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
@@ -21,6 +22,36 @@ import org.springframework.context.annotation.Lazy;
 public class LoginLegacyServiceBridgeConfiguration {
 
     /**
+     * 装配登录服持久层依赖聚合并在启动期绑定至 {@link LoginDaosHolder}；
+     * 任一 DAO 缺失（离线/单测上下文）时降级为 safeDao 离线聚合，保持旧行为等价。
+     * Wires the login-server persistence aggregate and binds it to {@link LoginDaosHolder}
+     * at startup; falls back to the safeDao offline aggregate when any DAO is missing
+     * (offline/unit-test contexts), preserving legacy behavior.
+     */
+    @Bean
+    @Lazy
+    public LoginDaos loginDaos(ConfigurableBeanFactory beanFactory) {
+        try {
+            LoginDaos daos = new LoginDaos(
+                daoFrom(beanFactory, com.aionemu.loginserver.dao.AccountDAO.class),
+                daoFrom(beanFactory, com.aionemu.loginserver.dao.AccountTimeDAO.class),
+                daoFrom(beanFactory, com.aionemu.loginserver.dao.AccountPlayTimeDAO.class),
+                daoFrom(beanFactory, com.aionemu.loginserver.dao.PremiumDAO.class),
+                daoFrom(beanFactory, com.aionemu.loginserver.dao.VipDAO.class),
+                daoFrom(beanFactory, com.aionemu.loginserver.dao.BannedIpDAO.class),
+                daoFrom(beanFactory, com.aionemu.loginserver.dao.BannedMacDAO.class),
+                daoFrom(beanFactory, com.aionemu.loginserver.dao.GameServersDAO.class),
+                daoFrom(beanFactory, com.aionemu.loginserver.dao.PlayerTransferDAO.class),
+                daoFrom(beanFactory, com.aionemu.loginserver.dao.SvStatsDAO.class),
+                daoFrom(beanFactory, com.aionemu.loginserver.dao.TaskFromDBDAO.class));
+            LoginDaosHolder.bindDaos(daos);
+            return daos;
+        } catch (NullPointerException offline) {
+            return LoginDaosHolder.daos();
+        }
+    }
+
+    /**
      * 角色转移服务 Bean。
      * Player transfer service bean.
      * @return 角色转移服务 / player transfer service
@@ -29,6 +60,15 @@ public class LoginLegacyServiceBridgeConfiguration {
     @Lazy
     public PlayerTransferService loginPlayerTransferService() {
         return new PlayerTransferService();
+    }
+
+    /**
+     * 按类型从容器解析 DAO Bean，缺失（离线/单测上下文）时返回 null。
+     * Resolves a DAO bean by type from the container; returns null when absent (offline/unit tests).
+     */
+    private static <T extends com.aionemu.commons.database.dao.DAO> T daoFrom(ConfigurableBeanFactory beanFactory,
+            Class<T> daoClass) {
+        return beanFactory.getBeanProvider(daoClass).getIfAvailable();
     }
 
     /**

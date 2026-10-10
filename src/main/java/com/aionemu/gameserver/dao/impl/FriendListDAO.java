@@ -39,15 +39,32 @@ public class FriendListDAO extends com.aionemu.gameserver.dao.FriendListDAO {
     private static final String SET_NOTE = "UPDATE `friends` SET `note` = ? WHERE `player` = ? AND `friend` = ?";
 
     private final JdbcClient jdbcClient;
+    private final PlayerDAO dao;
 
     public FriendListDAO() {
-        this(DatabaseFactory.getJdbcClient());
+        this(DatabaseFactory.getJdbcClient(), safePlayerDAO());
     }
 
     @Autowired
 
-    public FriendListDAO(JdbcClient jdbcClient) {
+    public FriendListDAO(JdbcClient jdbcClient, PlayerDAO dao) {
         this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");
+        this.dao = Objects.requireNonNull(dao, "dao must not be null");
+    }
+
+    /**
+     * 依赖 DAO 解析兜底：容器未就绪（离线/单测）时退回实现类无参构造。
+     * Dependency-DAO resolution fallback: falls back to the no-arg impl constructor when the container is not ready (offline/unit tests).
+     */
+    private static PlayerDAO safePlayerDAO() {
+        if (DAOManager.isInitialized()) {
+            try {
+                return DAOManager.getDAO(PlayerDAO.class);
+            } catch (Exception e) {
+                // 离线兜底路径，退回实现类无参构造。 / offline fallback, use the no-arg impl constructor
+            }
+        }
+        return new com.aionemu.gameserver.dao.impl.PlayerDAO();
     }
 
     /**
@@ -61,7 +78,7 @@ public class FriendListDAO extends com.aionemu.gameserver.dao.FriendListDAO {
         final List<Friend> friends = new ArrayList<>();
 
         try {
-            PlayerDAO dao = DAOManager.getDAO(PlayerDAO.class);
+            // 直接使用注入的 PlayerDAO。 / use the injected PlayerDAO directly
             jdbcClient.sql(LOAD_QUERY)
                 .param(player.getObjectId())
                 .query((rs, rowNum) -> {

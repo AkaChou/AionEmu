@@ -26,7 +26,6 @@ class PlayerItemDailyLimitsTest {
 	void backingMapStaysNullUntilFirstWrite() {
 		assertNull(limits.getItemMaxCounts());
 		assertEquals(0, limits.getItemMaxCount(187100001));
-		limits.removeItemMaxCount(187100001);
 		limits.clear();
 
 		assertNull(limits.getItemMaxCounts());

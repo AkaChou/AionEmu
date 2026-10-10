@@ -1,5 +1,6 @@
 package com.aionemu.loginserver;
 
+import com.aionemu.loginserver.service.LoginDaosHolder;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.aionemu.boot.i18n.I18n;
@@ -9,7 +10,7 @@ import com.aionemu.commons.network.CommonsNetworkThreadPoolServices;
 import com.aionemu.commons.utils.AionProcessExit;
 import com.aionemu.commons.utils.ExitCode;
 import com.aionemu.loginserver.configs.SvStatsConfig;
-import com.aionemu.loginserver.dao.SvStatsDAO;
+
 import com.aionemu.loginserver.network.NetConnector;
 import com.aionemu.loginserver.service.LoginCronServices;
 import com.aionemu.loginserver.service.LoginThreadPoolServices;
@@ -97,7 +98,7 @@ public class Shutdown extends Thread {
 
         try {
             if (SvStatsConfig.SVSTATS_ENABLE && DAOManager.isInitialized()) {
-                DAOManager.getDAO(SvStatsDAO.class).update_SvStats_All_Offline(0, 0);
+                LoginDaosHolder.daos().svStatsDAO().update_SvStats_All_Offline(0, 0);
             }
         } catch (Throwable t) {
             log.error(I18n.get("log.3c9d0695e9af"), t);

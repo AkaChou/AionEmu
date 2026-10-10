@@ -1,8 +1,8 @@
 package com.aionemu.loginserver.controller;
 
 import com.aionemu.boot.i18n.I18n;
+import com.aionemu.loginserver.service.LoginDaosHolder;
 import lombok.extern.slf4j.Slf4j;
-import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.loginserver.GameServerInfo;
 import com.aionemu.loginserver.GameServerTable;
 import com.aionemu.loginserver.dao.PremiumDAO;
@@ -58,7 +58,7 @@ public class PremiumController {
      * Constructs controller and initializes Premium DAO.
      */
     public PremiumController() {
-        dao = DAOManager.getDAO(PremiumDAO.class);
+        dao = LoginDaosHolder.daos().premiumDAO();
         log.info(I18n.get("log.f446666082da"));
     }
 

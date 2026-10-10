@@ -1,8 +1,7 @@
 package com.aionemu.gameserver.network.aion.clientpackets;
 
-import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.configs.main.SecurityConfig;
-import com.aionemu.gameserver.dao.PlayerPasskeyDAO;
+
 import com.aionemu.gameserver.model.account.CharacterPasskey.ConnectType;
 import com.aionemu.gameserver.model.account.PlayerAccountData;
 import com.aionemu.gameserver.network.aion.AionClientPacket;
@@ -58,7 +57,7 @@ public class CM_DELETE_CHARACTER extends AionClientPacket {
 			if (SecurityConfig.PASSKEY_ENABLE && !client.getAccount().getCharacterPasskey().isPass()) {
 				client.getAccount().getCharacterPasskey().setConnectType(ConnectType.DELETE);
 				client.getAccount().getCharacterPasskey().setObjectId(chaOid);
-				boolean isExistPasskey = DAOManager.getDAO(PlayerPasskeyDAO.class)
+				boolean isExistPasskey = PlayerService.daos().playerPasskeyDAO()
 						.existCheckPlayerPasskey(client.getAccount().getId());
 
 				if (!isExistPasskey) {

@@ -1,8 +1,8 @@
 package com.aionemu.gameserver.commands.admin;
 
-import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.gameserver.dao.PlayerDAO;
+
 import com.aionemu.gameserver.model.gameobjects.player.Player;
+import com.aionemu.gameserver.services.player.PlayerService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.Util;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
@@ -35,7 +35,7 @@ public class UnBan extends AdminCommand {
 
 		// 被封禁玩家须离线，故从数据库取其账号 ID / Banned player must be offline, so get his account ID from database
 		String name = Util.convertName(params[0]);
-		int accountId = DAOManager.getDAO(PlayerDAO.class).getAccountIdByName(name);
+		int accountId = PlayerService.daos().playerDAO().getAccountIdByName(name);
 		if (accountId == 0) {
 			PacketSendUtility.sendMessage(admin, "Player " + name + " was not found!");
 			PacketSendUtility.sendMessage(admin, "Syntax: //unban <player> [account|ip|full]");

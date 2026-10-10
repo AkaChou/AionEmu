@@ -23,31 +23,28 @@ import com.aionemu.gameserver.configs.main.InGameShopConfig;
 import com.aionemu.gameserver.dao.InGameShopDAO;
 import com.aionemu.gameserver.model.gameobjects.LetterType;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
-import com.aionemu.gameserver.model.gameobjects.player.PlayerCommonData;
-import com.aionemu.gameserver.model.templates.mail.MailMessage;
-import com.aionemu.gameserver.network.aion.serverpackets.SM_MAIL_SERVICE;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_TOLL_INFO;
 import com.aionemu.gameserver.network.loginserver.serverpackets.SM_PREMIUM_CONTROL;
 import com.aionemu.gameserver.services.item.ItemService;
-import com.aionemu.gameserver.services.player.PlayerService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import lombok.NonNull;
 
 /**
  * 游戏内商城引擎：加载商品、处理购买请求并与登录服点数同步。
  * In-game shop engine: loads items, handles purchase requests and syncs toll with the login server.
+ *
  * @author KID
  */
 @Slf4j(topic = "INGAMESHOP_LOG")
 public class InGameShopEn {
 
-    /**
-     * -- SETTER --
-     * 设置实例提供者。 / Sets the instance provider.
-     */
-    @Setter
-    private static volatile ObjectProvider<InGameShopEn> instanceProvider;
+	/**
+	 * -- SETTER --
+	 * 设置实例提供者。 / Sets the instance provider.
+	 */
+	@Setter
+	private static volatile ObjectProvider<InGameShopEn> instanceProvider;
 	private volatile Map<Byte, List<IGItem>> items = Collections.emptyMap();
 	private final InGameShopDAO dao;
 	private volatile InGameShopProperty iGProperty;
@@ -63,6 +60,7 @@ public class InGameShopEn {
 	 * 把"未注入"暴露在启动期，而不是潜伏成两套实例。
 	 * The legacy static fallback is retired: without a provider the old code silently created a second instance
 	 * through SingletonHolder, i.e. two live states. It now fails fast so a missing injection surfaces at startup.</p>
+	 *
 	 * @return 由 Spring 提供的实例 / the Spring-provided instance
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean / when no provider or bean is available
 	 */
@@ -80,6 +78,7 @@ public class InGameShopEn {
 	/**
 	 * 使用指定的游戏内商城 DAO 构造引擎。
 	 * Constructs the engine with the given in-game-shop DAO.
+	 *
 	 * @param dao 游戏内商城 DAO / in-game-shop DAO
 	 */
 	public InGameShopEn(@NonNull InGameShopDAO dao) {
@@ -110,12 +109,19 @@ public class InGameShopEn {
 		return new com.aionemu.gameserver.dao.impl.InGameShopDAO();
 	}
 
-	/** 获取商城属性配置。 / Returns the igs property. */
-	public InGameShopProperty getIGSProperty() {
-		return iGProperty;
+	/**
+	 * 返回游戏内商城 DAO，供命令域复用同一绑定（单一所有权）。
+	 * Returns the in-game-shop DAO so command-domain callers reuse the same binding (single ownership).
+	 *
+	 * @return 游戏内商城 DAO / in-game-shop DAO
+	 */
+	public InGameShopDAO inGameShopDAO() {
+		return dao;
 	}
 
-	/** 重新加载。 / Reload. */
+	/**
+	 * 重新加载。 / Reload.
+	 */
 	public synchronized void reload() {
 		if (!InGameShopConfig.ENABLE_IN_GAME_SHOP) {
 			log.info(I18n.get("log.835552c18c7b"));
@@ -128,7 +134,9 @@ public class InGameShopEn {
 		log.info(I18n.get("log.1e48e4bddea9", items.size()));
 	}
 
-	/** 获取商城物品。 / Returns the ig item. */
+	/**
+	 * 获取商城物品。 / Returns the ig item.
+	 */
 	public IGItem getIGItem(int id) {
 		for (byte key : items.keySet()) {
 			for (IGItem item : items.get(key)) {
@@ -140,7 +148,9 @@ public class InGameShopEn {
 		return null;
 	}
 
-	/** 获取物品。 / Returns the items. */
+	/**
+	 * 获取物品。 / Returns the items.
+	 */
 	public Collection<IGItem> getItems(byte category) {
 		if (!items.containsKey(category)) {
 			return Collections.emptyList();
@@ -148,7 +158,9 @@ public class InGameShopEn {
 		return items.get(category);
 	}
 
-	/** 返回 top sales / Returns the top sales */
+	/**
+	 * 返回 top sales / Returns the top sales
+	 */
 	public List<Integer> getTopSales(int subCategory, byte category) {
 		byte max = 6;
 		TreeMap<Integer, Integer> map = new TreeMap<>(Comparator.reverseOrder());
@@ -171,7 +183,9 @@ public class InGameShopEn {
 		return top;
 	}
 
-	/** 返回最大列表 / Returns the max list*/
+	/**
+	 * 返回最大列表 / Returns the max list
+	 */
 	public int getMaxList(byte subCategoryId, byte category) {
 		int id = 0;
 		if (!items.containsKey(category)) {
@@ -188,7 +202,9 @@ public class InGameShopEn {
 		return id;
 	}
 
-	/** 接受请求 / Accept Request */
+	/**
+	 * 接受请求 / Accept Request
+	 */
 	public void acceptRequest(Player player, int itemObjId) {
 		if (player.getInventory().isFull()) {
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_DICE_INVEN_ERROR);
@@ -218,45 +234,9 @@ public class InGameShopEn {
 		}
 	}
 
-	/** 发送请求。 / Send request. */
-	public void sendRequest(Player player, String receiver, String message, int itemObjId) {
-		if (receiver.equalsIgnoreCase(player.getName())) {
-			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_INGAMESHOP_CANNOT_GIVE_TO_ME);
-			return;
-		}
-
-		if (!InGameShopConfig.ALLOW_GIFTS) {
-			PacketSendUtility.sendMessage(player, "Gifts are disabled.");
-			return;
-		}
-
-		if (!PlayerService.daos().playerDAO().isNameUsed(receiver)) {
-			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_INGAMESHOP_NO_USER_TO_GIFT);
-			return;
-		}
-
-		PlayerCommonData recipientCommonData = PlayerService.daos().playerDAO().loadPlayerCommonDataByName(receiver);
-		if (recipientCommonData.getMailboxLetters() >= 100) {
-			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MAIL_MSG_RECIPIENT_MAILBOX_FULL(recipientCommonData.getName()));
-			return;
-		}
-
-		if (!InGameShopConfig.ENABLE_GIFT_OTHER_RACE && !player.isGM()) {
-			if (player.getRace() != recipientCommonData.getRace()) {
-				PacketSendUtility.sendPacket(player, new SM_MAIL_SERVICE(MailMessage.MAIL_IS_ONE_RACE_ONLY));
-				return;
-			}
-		}
-		IGItem item = getIGItem(itemObjId);
-		lastRequestId++;
-		IGRequest request = new IGRequest(lastRequestId, player.getObjectId(), receiver, message, itemObjId);
-		request.accountId = player.getClientConnection().getAccount().getId();
-		if (com.aionemu.gameserver.lifecycle.GameServerNetworkServices.loginServer().sendPacket(new SM_PREMIUM_CONTROL(request, item.getItemPrice()))) {
-			activeRequests.add(request);
-		}
-	}
-
-	/** 添加点数。 / Adds toll. */
+	/**
+	 * 添加点数。 / Adds toll.
+	 */
 	public void addToll(Player player, long cnt) {
 		if (InGameShopConfig.ENABLE_IN_GAME_SHOP) {
 			lastRequestId++;
@@ -270,7 +250,9 @@ public class InGameShopEn {
 		}
 	}
 
-	/** Finish Request / Finish Request */
+	/**
+	 * Finish Request / Finish Request
+	 */
 	public void finishRequest(int requestId, int result, long toll, long luna) {
 		IGRequest foundRequest = null;
 

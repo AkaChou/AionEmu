@@ -5,8 +5,8 @@ import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlType;
 
-import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.gameserver.dao.PlayerTransformDAO;
+import com.aionemu.gameserver.services.player.PlayerService;
+
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.Summon;
@@ -19,6 +19,7 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 变身效果基类：切换模型/面板，并在结束时恢复或叠加其他变身。
  * Base transform effect: switches model/panel and restores or stacks other transforms on end.
+ *
  * @author Sweetkr, kecimis
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -62,8 +63,9 @@ public abstract class TransformEffect extends EffectTemplate {
 	/**
 	 * 结束变身：清除异常状态、恢复模型并广播。
 	 * Ends transform: clears abnormal, restores model and broadcasts.
+	 *
 	 * @param effect 运行中效果 / runtime effect
-	 * @param state 关联异常状态，可为 null / related abnormal state, may be null
+	 * @param state  关联异常状态，可为 null / related abnormal state, may be null
 	 */
 	public void endEffect(Effect effect, AbnormalState state) {
 		final Creature effected = effect.getEffected();
@@ -72,7 +74,7 @@ public abstract class TransformEffect extends EffectTemplate {
 			effected.getEffectController().unsetAbnormal(state.getId());
 		}
 		effected.getTransformModel().removeRestrictions(
-				cantFly, cantUseSkill, cantUseItem, cantAttack, cantJump, cantRecall, cantMove);
+			cantFly, cantUseSkill, cantUseItem, cantAttack, cantJump, cantRecall, cantMove);
 		if (!effected.getTransformModel().isActiveTransform(effect)) {
 			return;
 		}
@@ -85,14 +87,14 @@ public abstract class TransformEffect extends EffectTemplate {
 			}
 			for (EffectTemplate template : candidate.getEffectTemplates()) {
 				if (template instanceof TransformEffect transform
-						&& (nextTemplate == null || transform.transformLevel > nextTemplate.transformLevel)) {
+					&& (nextTemplate == null || transform.transformLevel > nextTemplate.transformLevel)) {
 					nextEffect = candidate;
 					nextTemplate = transform;
 				}
 			}
 		}
 		if (effected instanceof Player) {
-			DAOManager.getDAO(PlayerTransformDAO.class).deletePlTransfo(effected.getObjectId());
+			PlayerService.daos().playerTransformDAO().deletePlTransfo(effected.getObjectId());
 		}
 		if (nextTemplate != null) {
 			nextTemplate.applyTransform(nextEffect);
@@ -104,7 +106,8 @@ public abstract class TransformEffect extends EffectTemplate {
 	/**
 	 * 开始变身：设置异常状态、模型/面板并广播。
 	 * Starts transform: sets abnormal, model/panel and broadcasts.
-	 * @param effect 运行中效果 / runtime effect
+	 *
+	 * @param effect   运行中效果 / runtime effect
 	 * @param effectId 异常状态，可为 null / abnormal state, may be null
 	 */
 	public void startEffect(Effect effect, AbnormalState effectId) {
@@ -116,7 +119,7 @@ public abstract class TransformEffect extends EffectTemplate {
 		}
 
 		effected.getTransformModel().addRestrictions(
-				cantFly, cantUseSkill, cantUseItem, cantAttack, cantJump, cantRecall, cantMove);
+			cantFly, cantUseSkill, cantUseItem, cantAttack, cantJump, cantRecall, cantMove);
 		if (cantFly && effected instanceof Player player) {
 			player.getFlyController().endFly(true);
 		}
@@ -137,8 +140,7 @@ public abstract class TransformEffect extends EffectTemplate {
 		if (effected instanceof Player player) {
 			player.setTransformedModelId(model);
 			player.setTransformedItemId(itemId);
-			player.setTransformedPanelId(panelid);
-			DAOManager.getDAO(PlayerTransformDAO.class).storePlTransfo(effected.getObjectId(), panelid, itemId);
+			PlayerService.daos().playerTransformDAO().storePlTransfo(effected.getObjectId(), panelid, itemId);
 		}
 	}
 
@@ -157,34 +159,6 @@ public abstract class TransformEffect extends EffectTemplate {
 		if (effected instanceof Player player) {
 			player.setTransformedModelId(0);
 			player.setTransformedItemId(0);
-			player.setTransformedPanelId(0);
 		}
-	}
-
-	/**
-	 * 获取变身类型。
-	 * Returns the transform type.
-	 * @return 变身类型 / transform type
-	 */
-	public TransformType getTransformType() {
-		return type;
-	}
-
-	/**
-	 * 获取变身模型 ID。
-	 * Returns the transform model id.
-	 * @return 模型 ID / model id
-	 */
-	public int getTransformId() {
-		return model;
-	}
-
-	/**
-	 * 获取变身面板 ID。
-	 * Returns the transform panel id.
-	 * @return 面板 ID / panel id
-	 */
-	public int getPanelId() {
-		return panelid;
 	}
 }

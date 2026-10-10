@@ -1,12 +1,12 @@
 package com.aionemu.loginserver;
 
+import com.aionemu.loginserver.service.LoginDaosHolder;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
 import com.aionemu.boot.i18n.I18n;
-import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.commons.network.IPRange;
 import com.aionemu.commons.utils.NetworkUtils;
 import com.aionemu.loginserver.dao.GameServersDAO;
@@ -139,7 +139,7 @@ public class GameServerTable {
      * @return DAO 实例 / DAO instance
      */
     private GameServersDAO getDAO() {
-        return DAOManager.getDAO(GameServersDAO.class);
+        return LoginDaosHolder.daos().gameServersDAO();
     }
 
     /**

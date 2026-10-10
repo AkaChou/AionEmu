@@ -1,8 +1,7 @@
 package com.aionemu.gameserver.network.aion.clientpackets;
 
-import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.gameserver.dao.PlayerAppearanceDAO;
-import com.aionemu.gameserver.dao.PlayerDAO;
+
+
 import com.aionemu.gameserver.model.Gender;
 import com.aionemu.gameserver.model.account.Account;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -209,9 +208,9 @@ public class CM_CHARACTER_EDIT extends AionClientPacket {
 				} else if (player.getInventory().getItemCountByItemId(169660005) > 0) { // 性别转换门票 / Gender Switch Ticket
 					player.getInventory().decreaseByItemId(169660005, 1);
 				}
-				DAOManager.getDAO(PlayerDAO.class).storePlayer(player);
+				PlayerService.daos().playerDAO().storePlayer(player);
 			}
-			DAOManager.getDAO(PlayerAppearanceDAO.class).store(player);
+			PlayerService.daos().playerAppearanceDAO().store(player);
 		}
 	}
 }

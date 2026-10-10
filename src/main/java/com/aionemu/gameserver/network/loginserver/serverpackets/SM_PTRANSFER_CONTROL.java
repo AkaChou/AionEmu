@@ -2,6 +2,7 @@ package com.aionemu.gameserver.network.loginserver.serverpackets;
 
 
 import com.aionemu.boot.i18n.I18n;
+import com.aionemu.gameserver.services.player.PlayerService;
 import lombok.extern.slf4j.Slf4j;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -9,8 +10,7 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.gameserver.dao.InventoryDAO;
+
 import com.aionemu.gameserver.model.gameobjects.Item;
 import com.aionemu.gameserver.model.gameobjects.player.MacroList;
 import com.aionemu.gameserver.model.gameobjects.player.PetCommonData;
@@ -197,7 +197,7 @@ public class SM_PTRANSFER_CONTROL extends LsServerPacket {
 			writeC(player.getHeading());
 			writeD(player.getWorldId());
 			// 背包 / inventory
-			List<Item> inv = DAOManager.getDAO(InventoryDAO.class).loadStorageDirect(player.getObjectId(),
+			List<Item> inv = PlayerService.daos().inventoryDAO().loadStorageDirect(player.getObjectId(),
 					StorageType.CUBE);
 			writeD(inv.size());
 			ItemService.loadItemStones(inv);
@@ -240,7 +240,7 @@ public class SM_PTRANSFER_CONTROL extends LsServerPacket {
 				writeD(item.getBonusNumber());
 				writeD(item.getRandomCount());
 			}
-			inv = DAOManager.getDAO(InventoryDAO.class).loadStorageDirect(player.getObjectId(),
+			inv = PlayerService.daos().inventoryDAO().loadStorageDirect(player.getObjectId(),
 					StorageType.REGULAR_WAREHOUSE);
 			ItemService.loadItemStones(inv);
 			writeD(inv.size());

@@ -19,9 +19,24 @@ public final class VipService {
 
     private final VipDAO dao;
 
-    /** 默认构造（解析 DAO）。 / Default constructor (resolves the DAO). */
+    /** 默认构造：DAOManager 已初始化时优先解析 Spring Bean，否则退回实现类无参构造。 / Default constructor: resolves the Spring bean when DAOManager is initialized, else falls back to the no-arg impl constructor. */
     public VipService() {
-        this(DAOManager.getDAO(VipDAO.class));
+        this(safeVipDao());
+    }
+
+    /**
+     * DAO 解析兜底：容器未就绪（离线/单测）时退回实现类无参构造。
+     * DAO resolution fallback: falls back to the no-arg impl constructor when the container is not ready (offline/unit tests).
+     */
+    private static VipDAO safeVipDao() {
+        if (DAOManager.isInitialized()) {
+            try {
+                return DAOManager.getDAO(VipDAO.class);
+            } catch (Exception e) {
+                // 离线兜底路径，退回实现类无参构造。 / offline fallback, use the no-arg impl constructor
+            }
+        }
+        return new com.aionemu.loginserver.dao.impl.VipDAO();
     }
 
     /**

@@ -4,14 +4,14 @@ import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
 
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
 
-import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.gameserver.dao.PlayerDAO;
+
 import com.aionemu.gameserver.dao.SiegeDAO;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.gameobjects.player.PlayerCommonData;
 import com.aionemu.gameserver.model.siege.*;
 import com.aionemu.gameserver.model.team.legion.Legion;
+import com.aionemu.gameserver.services.player.PlayerService;
 import com.aionemu.gameserver.services.siegeservice.Siege;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
@@ -156,7 +156,7 @@ public class SiegeCommand extends AdminCommand {
 			} if (legion != null) {
 				int legionBGeneral = GameCoreGameplayServices.legionService().getLegionBGeneral(legion.getLegionId());
 				if (legionBGeneral != 0) {
-					PlayerCommonData BGeneral = DAOManager.getDAO(PlayerDAO.class).loadPlayerCommonData(legionBGeneral);
+					PlayerCommonData BGeneral = PlayerService.daos().playerDAO().loadPlayerCommonData(legionBGeneral);
 					sr = SiegeRace.getByRace(BGeneral.getRace());
 				}
 			}
@@ -178,7 +178,7 @@ public class SiegeCommand extends AdminCommand {
 			loc.setRace(sr);
 			loc.setLegionId(legion != null ? legion.getLegionId() : 0);
 			GameFeatureServices.siegeService().spawnNpcs(siegeLocationId, sr, SiegeModType.PEACE);
-			DAOManager.getDAO(SiegeDAO.class).updateSiegeLocation(loc);
+			GameFeatureServices.siegeService().getSiegeDAO().updateSiegeLocation(loc);
 			switch (siegeLocationId) {
 				// 希尔西要塞。 / Siel's Western Fortress.
 				case 1131:

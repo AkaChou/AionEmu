@@ -1,11 +1,11 @@
 package com.aionemu.gameserver.network.aion.clientpackets;
 
-import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.gameserver.dao.PlayerEquipmentSettingDAO;
+
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.gameobjects.player.equipmentsetting.EquipmentSetting;
 import com.aionemu.gameserver.network.aion.AionClientPacket;
 import com.aionemu.gameserver.network.aion.AionConnection.State;
+import com.aionemu.gameserver.services.player.PlayerService;
 
 /**
  * 保存装备预设方案的客户端包。
@@ -86,6 +86,6 @@ public class CM_EQUIPMENT_SETTING_SAVE extends AionClientPacket {
 		EquipmentSetting setting = player.getEquipmentSettingList().add(slot, displayType, mHand, sHand, helmet, torso,
 				glove, boots, earringsLeft, earringsRight, ringLeft, ringRight, necklace, shoulder, pants,
 				powershardLeft, powershardRight, wings, waist, mOffHand, sOffHand, plume, bracelet, true);
-		DAOManager.getDAO(PlayerEquipmentSettingDAO.class).insertEquipmentSetting(player, setting);
+		PlayerService.daos().playerEquipmentSettingDAO().insertEquipmentSetting(player, setting);
 	}
 }

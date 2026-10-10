@@ -1,6 +1,7 @@
 package com.aionemu.loginserver.service;
 
 import com.aionemu.boot.i18n.I18n;
+import com.aionemu.loginserver.service.LoginDaosHolder;
 import lombok.extern.slf4j.Slf4j;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -9,7 +10,6 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Future;
 
-import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.loginserver.GameServerInfo;
 import com.aionemu.loginserver.GameServerTable;
@@ -54,7 +54,7 @@ public class PlayerTransferService {
      */
     public PlayerTransferService() {
         veryfyTask = LoginThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> verifyNewTasks(), 10000, 7 * 60000);
-        this.dao = DAOManager.getDAO(PlayerTransferDAO.class);
+        this.dao = LoginDaosHolder.daos().playerTransferDAO();
         log.info(I18n.get("log.78b004f6b3cd"));
     }
 
@@ -267,7 +267,7 @@ public class PlayerTransferService {
 	 * @return 是否成功 / whether the write succeeded
 	 */
 	private boolean persist(PlayerTransferTask task, Account... accounts) {
-		AccountDAO accountDAO = DAOManager.getDAO(AccountDAO.class);
+		AccountDAO accountDAO = LoginDaosHolder.daos().accountDAO();
 		try (Connection con = DatabaseFactory.getConnection()) {
 			con.setAutoCommit(false);
 			try {

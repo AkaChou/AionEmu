@@ -40,15 +40,32 @@ public class BlockListDAO extends com.aionemu.gameserver.dao.BlockListDAO {
 	private static final String SET_REASON_QUERY = "UPDATE blocks SET reason=? WHERE player=? AND blocked_player=?";
 
 	private final JdbcClient jdbcClient;
+    private final PlayerDAO playerDao;
 
 	public BlockListDAO() {
-		this(DatabaseFactory.getJdbcClient());
+	    this(DatabaseFactory.getJdbcClient(), safePlayerDAO());
 	}
 
 	@Autowired
 
-	public BlockListDAO(JdbcClient jdbcClient) {
-		this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");
+	public BlockListDAO(JdbcClient jdbcClient, PlayerDAO playerDao) {
+	    this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");
+	    this.playerDao = Objects.requireNonNull(playerDao, "playerDao must not be null");
+	}
+
+	/**
+	 * 依赖 DAO 解析兜底：容器未就绪（离线/单测）时退回实现类无参构造。
+	 * Dependency-DAO resolution fallback: falls back to the no-arg impl constructor when the container is not ready (offline/unit tests).
+	 */
+	private static PlayerDAO safePlayerDAO() {
+	    if (DAOManager.isInitialized()) {
+	        try {
+	            return DAOManager.getDAO(PlayerDAO.class);
+	        } catch (Exception e) {
+	            // 离线兜底路径，退回实现类无参构造。 / offline fallback, use the no-arg impl constructor
+	        }
+	    }
+	    return new com.aionemu.gameserver.dao.impl.PlayerDAO();
 	}
 
 	/**
@@ -106,7 +123,7 @@ public class BlockListDAO extends com.aionemu.gameserver.dao.BlockListDAO {
 		final Map<Integer, BlockedPlayer> list = new HashMap<>();
 
 		try {
-			PlayerDAO playerDao = DAOManager.getDAO(PlayerDAO.class);
+			// 直接使用注入的 PlayerDAO。 / use the injected PlayerDAO directly
 			jdbcClient.sql(LOAD_QUERY)
 				.param(player.getObjectId())
 				.query((rs, rowNum) -> {

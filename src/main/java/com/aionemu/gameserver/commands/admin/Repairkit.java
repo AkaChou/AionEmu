@@ -1,10 +1,10 @@
 package com.aionemu.gameserver.commands.admin;
 
 import com.aionemu.boot.i18n.I18n;
+import com.aionemu.gameserver.services.player.PlayerService;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.commons.database.DatabaseFactory;
-import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.gameserver.dao.PlayerDAO;
+
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.Util;
@@ -109,7 +109,7 @@ public class Repairkit extends AdminCommand {
         int playerID = 0;
 
         try {
-            playerID = DAOManager.getDAO(PlayerDAO.class).getPlayerIdByName(playerToWipe);
+            playerID = PlayerService.daos().playerDAO().getPlayerIdByName(playerToWipe);
         } catch (Exception e) {
             log.info(I18n.get("log.30d38a7399c3", admin.getName()));
         }
@@ -149,7 +149,7 @@ public class Repairkit extends AdminCommand {
         int playerID = 0;
 
         try {
-            playerID = DAOManager.getDAO(PlayerDAO.class).getPlayerIdByName(playerToRemoveFrom);
+            playerID = PlayerService.daos().playerDAO().getPlayerIdByName(playerToRemoveFrom);
         } catch (Exception e) {
             log.info(I18n.get("log.51323fb6b7d1", admin.getName()));
         }
@@ -221,7 +221,7 @@ public class Repairkit extends AdminCommand {
         int playerID = 0;
 
         try {
-            playerID = DAOManager.getDAO(PlayerDAO.class).getPlayerIdByName(playerToReturn);
+            playerID = PlayerService.daos().playerDAO().getPlayerIdByName(playerToReturn);
         } catch (Exception e) {
             log.info(I18n.get("log.d256e26b97d9", admin.getName()));
         }

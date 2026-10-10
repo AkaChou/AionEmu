@@ -5,10 +5,9 @@ import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 import java.sql.Timestamp;
 import java.util.List;
 
-import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.configs.main.GSConfig;
 import com.aionemu.gameserver.configs.main.MembershipConfig;
-import com.aionemu.gameserver.dao.InventoryDAO;
+
 import com.aionemu.gameserver.model.Gender;
 import com.aionemu.gameserver.model.PlayerClass;
 import com.aionemu.gameserver.model.Race;
@@ -212,7 +211,7 @@ public class CM_CREATE_CHARACTER extends AionClientPacket {
 			client.sendPacket(new SM_CREATE_CHARACTER(null, SM_CREATE_CHARACTER.RESPONSE_DB_ERROR));
 			GameWorldBootstrapServices.idFactory().releaseId(playerCommonData.getPlayerObjId());
 		} else {
-			List<Item> equipment = DAOManager.getDAO(InventoryDAO.class).loadEquipment(player.getObjectId());
+			List<Item> equipment = PlayerService.daos().inventoryDAO().loadEquipment(player.getObjectId());
 			PlayerAccountData accPlData = new PlayerAccountData(playerCommonData, null, playerAppearance, equipment,
 					null);
 			accPlData.setCreationDate(new Timestamp(System.currentTimeMillis()));
