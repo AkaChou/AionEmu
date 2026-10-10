@@ -1,11 +1,18 @@
 package com.aionemu.gameserver.configs.main;
 
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.stereotype.Component;
+
 import com.aionemu.commons.configuration.Property;
 
+import lombok.Getter;
+
 /**
- * 房屋系统相关配置。
- * Housing system related configuration.
+ * 房屋系统相关配置，支持 Spring Boot ConfigurationProperties 与静态门面访问。
+ * Housing system related configuration supporting Spring Boot ConfigurationProperties and static facade access.
  */
+@Component
+@ConfigurationProperties(prefix = "gameserver")
 public class HousingConfig {
 	/**
 	 * 房屋可见距离。
@@ -151,4 +158,262 @@ public class HousingConfig {
 	 */
 	@Property(key = "gameserver.housing.auction.fill.auto.palace", defaultValue = "1")
 	public static int FILL_AUTO_PALACE_COUNT;
+
+	@Getter
+	private final HousingProperties housing = new HousingProperties();
+	@Getter
+	private final HousedoorProperties housedoor = new HousedoorProperties();
+
+	@Getter
+	public static class HousedoorProperties {
+		public boolean isShowid() {
+			return ENABLE_SHOW_HOUSE_DOORID;
+		}
+
+		public void setShowid(boolean showid) {
+			ENABLE_SHOW_HOUSE_DOORID = showid;
+		}
+
+		public int getAccesslevel() {
+			return ENTER_HOUSE_ACCESSLEVEL;
+		}
+
+		public void setAccesslevel(int accesslevel) {
+			ENTER_HOUSE_ACCESSLEVEL = accesslevel;
+		}
+	}
+
+	@Getter
+	public static class HousingProperties {
+		private final VisibilityProperties visibility = new VisibilityProperties();
+		private final AuctionProperties auction = new AuctionProperties();
+		private final PayProperties pay = new PayProperties();
+		private final MaintainProperties maintain = new MaintainProperties();
+		private final ScriptsProperties scripts = new ScriptsProperties();
+
+		public static class VisibilityProperties {
+			public float getDistance() {
+				return VISIBILITY_DISTANCE;
+			}
+
+			public void setDistance(float distance) {
+				VISIBILITY_DISTANCE = distance;
+			}
+		}
+
+		public static class PayProperties {
+			public boolean isEnable() {
+				return ENABLE_HOUSE_PAY;
+			}
+
+			public void setEnable(boolean enable) {
+				ENABLE_HOUSE_PAY = enable;
+			}
+		}
+
+		public static class MaintainProperties {
+			public String getTime() {
+				return HOUSE_MAINTENANCE_TIME;
+			}
+
+			public void setTime(String time) {
+				HOUSE_MAINTENANCE_TIME = time;
+			}
+		}
+
+		public static class ScriptsProperties {
+			public boolean isDebug() {
+				return HOUSE_SCRIPT_DEBUG;
+			}
+
+			public void setDebug(boolean debug) {
+				HOUSE_SCRIPT_DEBUG = debug;
+			}
+		}
+
+		@Getter
+		public static class AuctionProperties {
+			private final DefaultBidProperties defaultBid = new DefaultBidProperties();
+			private final BiddingProperties bidding = new BiddingProperties();
+			private final FillProperties fill = new FillProperties();
+
+			public boolean isEnable() {
+				return ENABLE_HOUSE_AUCTIONS;
+			}
+
+			public void setEnable(boolean enable) {
+				ENABLE_HOUSE_AUCTIONS = enable;
+			}
+
+			public String getTime() {
+				return HOUSE_AUCTION_TIME;
+			}
+
+			public void setTime(String time) {
+				HOUSE_AUCTION_TIME = time;
+			}
+
+			public String getRegisterend() {
+				return HOUSE_REGISTER_END;
+			}
+
+			public void setRegisterend(String registerend) {
+				HOUSE_REGISTER_END = registerend;
+			}
+
+			public float getDefaultRefund() {
+				return BID_REFUND_PERCENT;
+			}
+
+			public void setDefaultRefund(float defaultRefund) {
+				BID_REFUND_PERCENT = defaultRefund;
+			}
+
+			public float getSteplimit() {
+				return HOUSE_AUCTION_BID_LIMIT;
+			}
+
+			public void setSteplimit(float steplimit) {
+				HOUSE_AUCTION_BID_LIMIT = steplimit;
+			}
+
+			public static class DefaultBidProperties {
+				public int getHouse() {
+					return HOUSE_MIN_BID;
+				}
+
+				public void setHouse(int house) {
+					HOUSE_MIN_BID = house;
+				}
+
+				public int getMansion() {
+					return MANSION_MIN_BID;
+				}
+
+				public void setMansion(int mansion) {
+					MANSION_MIN_BID = mansion;
+				}
+
+				public int getEstate() {
+					return ESTATE_MIN_BID;
+				}
+
+				public void setEstate(int estate) {
+					ESTATE_MIN_BID = estate;
+				}
+
+				public int getPalace() {
+					return PALACE_MIN_BID;
+				}
+
+				public void setPalace(int palace) {
+					PALACE_MIN_BID = palace;
+				}
+			}
+
+			@Getter
+			public static class BiddingProperties {
+				private final MinLevelProperties minLevel = new MinLevelProperties();
+
+				public static class MinLevelProperties {
+					public int getHouse() {
+						return HOUSE_MIN_BID_LEVEL;
+					}
+
+					public void setHouse(int house) {
+						HOUSE_MIN_BID_LEVEL = house;
+					}
+
+					public int getMansion() {
+						return MANSION_MIN_BID_LEVEL;
+					}
+
+					public void setMansion(int mansion) {
+						MANSION_MIN_BID_LEVEL = mansion;
+					}
+
+					public int getEstate() {
+						return ESTATE_MIN_BID_LEVEL;
+					}
+
+					public void setEstate(int estate) {
+						ESTATE_MIN_BID_LEVEL = estate;
+					}
+
+					public int getPalace() {
+						return PALACE_MIN_BID_LEVEL;
+					}
+
+					public void setPalace(int palace) {
+						PALACE_MIN_BID_LEVEL = palace;
+					}
+				}
+			}
+
+			@Getter
+			public static class FillProperties {
+				private final AutoProperties auto = new AutoProperties();
+
+				public void setAuto(AutoProperties auto) {
+				}
+
+				@Getter
+				public static class AutoProperties {
+					public AutoProperties() {}
+
+					/**
+					 * 兼容旧版裸标量 gameserver.housing.auction.fill.auto=true 的绑定入口。
+					 * Binding entry for the legacy bare scalar gameserver.housing.auction.fill.auto=true.
+					 */
+					public static AutoProperties valueOf(String value) {
+						try {
+							FILL_HOUSE_BIDS_AUTO = Boolean.parseBoolean(value);
+						} catch (RuntimeException ignored) {
+						}
+						return new AutoProperties();
+					}
+
+					public boolean isValue() {
+						return FILL_HOUSE_BIDS_AUTO;
+					}
+
+					public void setValue(boolean value) {
+						FILL_HOUSE_BIDS_AUTO = value;
+					}
+
+					public int getHouses() {
+						return FILL_AUTO_HOUSES_COUNT;
+					}
+
+					public void setHouses(int houses) {
+						FILL_AUTO_HOUSES_COUNT = houses;
+					}
+
+					public int getMansion() {
+						return FILL_AUTO_MANSION_COUNT;
+					}
+
+					public void setMansion(int mansion) {
+						FILL_AUTO_MANSION_COUNT = mansion;
+					}
+
+					public int getEstate() {
+						return FILL_AUTO_ESTATE_COUNT;
+					}
+
+					public void setEstate(int estate) {
+						FILL_AUTO_ESTATE_COUNT = estate;
+					}
+
+					public int getPalace() {
+						return FILL_AUTO_PALACE_COUNT;
+					}
+
+					public void setPalace(int palace) {
+						FILL_AUTO_PALACE_COUNT = palace;
+					}
+				}
+			}
+		}
+	}
 }

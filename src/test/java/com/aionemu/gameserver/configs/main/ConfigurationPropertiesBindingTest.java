@@ -441,4 +441,205 @@ class ConfigurationPropertiesBindingTest {
 			snapshot.restore();
 		}
 	}
+
+	@Test
+	void bindsHousingConfigProperties() {
+		ConfigSnapshot snapshot = ConfigSnapshot.of(HousingConfig.class,
+			"VISIBILITY_DISTANCE", "ENABLE_SHOW_HOUSE_DOORID", "ENTER_HOUSE_ACCESSLEVEL",
+			"ENABLE_HOUSE_AUCTIONS", "ENABLE_HOUSE_PAY", "HOUSE_AUCTION_TIME",
+			"HOUSE_REGISTER_END", "HOUSE_MAINTENANCE_TIME", "HOUSE_MIN_BID",
+			"MANSION_MIN_BID", "ESTATE_MIN_BID", "PALACE_MIN_BID",
+			"HOUSE_MIN_BID_LEVEL", "MANSION_MIN_BID_LEVEL", "ESTATE_MIN_BID_LEVEL",
+			"PALACE_MIN_BID_LEVEL", "BID_REFUND_PERCENT", "HOUSE_AUCTION_BID_LIMIT",
+			"HOUSE_SCRIPT_DEBUG", "FILL_HOUSE_BIDS_AUTO", "FILL_AUTO_HOUSES_COUNT",
+			"FILL_AUTO_MANSION_COUNT", "FILL_AUTO_ESTATE_COUNT", "FILL_AUTO_PALACE_COUNT");
+		try {
+			StandardEnvironment environment = new StandardEnvironment();
+			environment.getPropertySources().addFirst(new MapPropertySource("test", Map.ofEntries(
+				Map.entry("gameserver.housing.visibility.distance", "250"),
+				Map.entry("gameserver.housedoor.showid", "false"),
+				Map.entry("gameserver.housedoor.accesslevel", "5"),
+				Map.entry("gameserver.housing.auction.enable", "true"),
+				Map.entry("gameserver.housing.pay.enable", "true"),
+				Map.entry("gameserver.housing.auction.time", "0 0 0 ? * MON"),
+				Map.entry("gameserver.housing.auction.registerend", "0 0 12 ? * SUN"),
+				Map.entry("gameserver.housing.maintain.time", "0 0 0 ? * TUE"),
+				Map.entry("gameserver.housing.auction.default_bid.house", "15000000"),
+				Map.entry("gameserver.housing.auction.default_bid.mansion", "120000000"),
+				Map.entry("gameserver.housing.auction.default_bid.estate", "350000000"),
+				Map.entry("gameserver.housing.auction.default_bid.palace", "1100000000"),
+				Map.entry("gameserver.housing.auction.bidding.min_level.house", "25"),
+				Map.entry("gameserver.housing.auction.bidding.min_level.mansion", "35"),
+				Map.entry("gameserver.housing.auction.bidding.min_level.estate", "45"),
+				Map.entry("gameserver.housing.auction.bidding.min_level.palace", "55"),
+				Map.entry("gameserver.housing.auction.default_refund", "0.5f"),
+				Map.entry("gameserver.housing.auction.steplimit", "80"),
+				Map.entry("gameserver.housing.scripts.debug", "true"),
+				Map.entry("gameserver.housing.auction.fill.auto.value", "true"),
+				Map.entry("gameserver.housing.auction.fill.auto.houses", "100"),
+				Map.entry("gameserver.housing.auction.fill.auto.mansion", "50"),
+				Map.entry("gameserver.housing.auction.fill.auto.estate", "20"),
+				Map.entry("gameserver.housing.auction.fill.auto.palace", "5")
+			)));
+
+			HousingConfig config = new HousingConfig();
+			Binder.get(environment).bind("gameserver", Bindable.ofInstance(config));
+
+			assertEquals(250f, HousingConfig.VISIBILITY_DISTANCE);
+			assertFalse(HousingConfig.ENABLE_SHOW_HOUSE_DOORID);
+			assertEquals(5, HousingConfig.ENTER_HOUSE_ACCESSLEVEL);
+			assertTrue(HousingConfig.ENABLE_HOUSE_AUCTIONS);
+			assertTrue(HousingConfig.ENABLE_HOUSE_PAY);
+			assertEquals("0 0 0 ? * MON", HousingConfig.HOUSE_AUCTION_TIME);
+			assertEquals("0 0 12 ? * SUN", HousingConfig.HOUSE_REGISTER_END);
+			assertEquals("0 0 0 ? * TUE", HousingConfig.HOUSE_MAINTENANCE_TIME);
+			assertEquals(15000000, HousingConfig.HOUSE_MIN_BID);
+			assertEquals(120000000, HousingConfig.MANSION_MIN_BID);
+			assertEquals(350000000, HousingConfig.ESTATE_MIN_BID);
+			assertEquals(1100000000, HousingConfig.PALACE_MIN_BID);
+			assertEquals(25, HousingConfig.HOUSE_MIN_BID_LEVEL);
+			assertEquals(35, HousingConfig.MANSION_MIN_BID_LEVEL);
+			assertEquals(45, HousingConfig.ESTATE_MIN_BID_LEVEL);
+			assertEquals(55, HousingConfig.PALACE_MIN_BID_LEVEL);
+			assertEquals(0.5f, HousingConfig.BID_REFUND_PERCENT);
+			assertEquals(80f, HousingConfig.HOUSE_AUCTION_BID_LIMIT);
+			assertTrue(HousingConfig.HOUSE_SCRIPT_DEBUG);
+			assertTrue(HousingConfig.FILL_HOUSE_BIDS_AUTO);
+			assertEquals(100, HousingConfig.FILL_AUTO_HOUSES_COUNT);
+			assertEquals(50, HousingConfig.FILL_AUTO_MANSION_COUNT);
+			assertEquals(20, HousingConfig.FILL_AUTO_ESTATE_COUNT);
+			assertEquals(5, HousingConfig.FILL_AUTO_PALACE_COUNT);
+		} finally {
+			snapshot.restore();
+		}
+	}
+
+	@Test
+	void bindsHousingConfigLegacyScalarFillAutoProperty() {
+		ConfigSnapshot snapshot = ConfigSnapshot.of(HousingConfig.class, "FILL_HOUSE_BIDS_AUTO");
+		try {
+			StandardEnvironment environment = new StandardEnvironment();
+			environment.getPropertySources().addFirst(new MapPropertySource("test", Map.of(
+				"gameserver.housing.auction.fill.auto", "true"
+			)));
+
+			HousingConfig config = new HousingConfig();
+			Binder.get(environment).bind("gameserver", Bindable.ofInstance(config));
+
+			assertTrue(HousingConfig.FILL_HOUSE_BIDS_AUTO);
+		} finally {
+			snapshot.restore();
+		}
+	}
+
+	@Test
+	void bindsSiegeConfigProperties() {
+		ConfigSnapshot snapshot = ConfigSnapshot.of(SiegeConfig.class,
+			"SIEGE_ENABLED", "SIEGE_MEDAL_RATE", "SIEGE_SHIELD_ENABLED",
+			"BALAUR_AUTO_ASSAULT", "BALAUR_ASSAULT_RATE", "SIEGE_AUTO_RACE",
+			"SIEGE_AUTO_LOCID");
+		try {
+			StandardEnvironment environment = new StandardEnvironment();
+			environment.getPropertySources().addFirst(new MapPropertySource("test", Map.of(
+				"gameserver.siege.enable", "false",
+				"gameserver.siege.medal.rate", "2",
+				"gameserver.siege.shield.enable", "false",
+				"gameserver.siege.assault.enable", "true",
+				"gameserver.siege.assault.rate", "2.5",
+				"gameserver.auto.siege.race", "true",
+				"gameserver.auto.siege.id", "1011,1012"
+			)));
+
+			SiegeConfig config = new SiegeConfig();
+			Binder.get(environment).bind("gameserver", Bindable.ofInstance(config));
+
+			assertFalse(SiegeConfig.SIEGE_ENABLED);
+			assertEquals(2, SiegeConfig.SIEGE_MEDAL_RATE);
+			assertFalse(SiegeConfig.SIEGE_SHIELD_ENABLED);
+			assertTrue(SiegeConfig.BALAUR_AUTO_ASSAULT);
+			assertEquals(2.5f, SiegeConfig.BALAUR_ASSAULT_RATE);
+			assertTrue(SiegeConfig.SIEGE_AUTO_RACE);
+			assertEquals("1011,1012", SiegeConfig.SIEGE_AUTO_LOCID);
+		} finally {
+			snapshot.restore();
+		}
+	}
+
+	@Test
+	void bindsDropConfigProperties() {
+		ConfigSnapshot snapshot = ConfigSnapshot.of(DropConfig.class,
+			"DISABLE_DROP_REDUCTION", "ENABLE_UNIQUE_DROP_ANNOUNCE",
+			"DISABLE_DROP_REDUCTION_IN_ZONES", "ENABLE_GLOBAL_DROPS",
+			"KINAH_RATE", "MAX_GLOBAL_DROPS_PER_NPC");
+		try {
+			StandardEnvironment environment = new StandardEnvironment();
+			environment.getPropertySources().addFirst(new MapPropertySource("test", Map.of(
+				"gameserver.drop.reduction.disable", "true",
+				"gameserver.unique.drop.announce.enable", "false",
+				"gameserver.drop.noreduction", "1001,1002",
+				"gameserver.drop.enable.global.drops", "false",
+				"gameserver.drop.kinah.rate", "3.0",
+				"gameserver.drop.max.global.drops.per.npc", "30"
+			)));
+
+			DropConfig config = new DropConfig();
+			Binder.get(environment).bind("gameserver", Bindable.ofInstance(config));
+
+			assertTrue(DropConfig.DISABLE_DROP_REDUCTION);
+			assertFalse(DropConfig.ENABLE_UNIQUE_DROP_ANNOUNCE);
+			assertEquals("1001,1002", DropConfig.DISABLE_DROP_REDUCTION_IN_ZONES);
+			assertFalse(DropConfig.ENABLE_GLOBAL_DROPS);
+			assertEquals(3.0f, DropConfig.KINAH_RATE);
+			assertEquals(30, DropConfig.MAX_GLOBAL_DROPS_PER_NPC);
+		} finally {
+			snapshot.restore();
+		}
+	}
+
+	@Test
+	void bindsCraftConfigProperties() {
+		ConfigSnapshot snapshot = ConfigSnapshot.of(CraftConfig.class,
+			"UNABLE_CRAFT_SKILLS_UNRESTRICTED_LEVELUP", "MAX_EXPERT_CRAFTING_SKILLS",
+			"MAX_MASTER_CRAFTING_SKILLS", "CRAFT_CRIT_RATE", "PREMIUM_CRAFT_CRIT_RATE",
+			"VIP_CRAFT_CRIT_RATE", "CRAFT_COMBO_RATE", "PREMIUM_CRAFT_COMBO_RATE",
+			"VIP_CRAFT_COMBO_RATE", "CRAFT_CHANCE_PURPLE_CRIT", "CRAFT_CHANCE_BLUE_CRIT",
+			"CRAFT_CHANCE_INSTANT", "PROTECTION_GATHER_ENABLE");
+		try {
+			StandardEnvironment environment = new StandardEnvironment();
+			environment.getPropertySources().addFirst(new MapPropertySource("test", Map.ofEntries(
+				Map.entry("gameserver.craft.skills.unrestricted.levelup.enable", "true"),
+				Map.entry("gameserver.craft.max.expert.skills", "4"),
+				Map.entry("gameserver.craft.max.master.skills", "3"),
+				Map.entry("gameserver.craft.critical.rate.regular", "20"),
+				Map.entry("gameserver.craft.critical.rate.premium", "25"),
+				Map.entry("gameserver.craft.critical.rate.vip", "30"),
+				Map.entry("gameserver.craft.combo.rate.regular", "35"),
+				Map.entry("gameserver.craft.combo.rate.premium", "40"),
+				Map.entry("gameserver.craft.combo.rate.vip", "45"),
+				Map.entry("gameserver.craft.chance.purple.crit", "5"),
+				Map.entry("gameserver.craft.chance.blue.crit", "15"),
+				Map.entry("gameserver.craft.chance.instant", "80"),
+				Map.entry("gameserver.protection.gather.enable", "false")
+			)));
+
+			CraftConfig config = new CraftConfig();
+			Binder.get(environment).bind("gameserver", Bindable.ofInstance(config));
+
+			assertTrue(CraftConfig.UNABLE_CRAFT_SKILLS_UNRESTRICTED_LEVELUP);
+			assertEquals(4, CraftConfig.MAX_EXPERT_CRAFTING_SKILLS);
+			assertEquals(3, CraftConfig.MAX_MASTER_CRAFTING_SKILLS);
+			assertEquals(20, CraftConfig.CRAFT_CRIT_RATE);
+			assertEquals(25, CraftConfig.PREMIUM_CRAFT_CRIT_RATE);
+			assertEquals(30, CraftConfig.VIP_CRAFT_CRIT_RATE);
+			assertEquals(35, CraftConfig.CRAFT_COMBO_RATE);
+			assertEquals(40, CraftConfig.PREMIUM_CRAFT_COMBO_RATE);
+			assertEquals(45, CraftConfig.VIP_CRAFT_COMBO_RATE);
+			assertEquals(5, CraftConfig.CRAFT_CHANCE_PURPLE_CRIT);
+			assertEquals(15, CraftConfig.CRAFT_CHANCE_BLUE_CRIT);
+			assertEquals(80, CraftConfig.CRAFT_CHANCE_INSTANT);
+			assertFalse(CraftConfig.PROTECTION_GATHER_ENABLE);
+		} finally {
+			snapshot.restore();
+		}
+	}
 }

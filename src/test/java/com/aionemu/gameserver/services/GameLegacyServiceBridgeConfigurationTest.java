@@ -854,7 +854,7 @@ class GameLegacyServiceBridgeConfigurationTest {
     void createsSpringManagedSiegeScheduleServicesInsteadOfLegacySingletons() {
         try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(GameLegacyServiceBridgeConfiguration.class)) {
             assertNotSame(SiegeService.getInstance(), context.getBean(SiegeService.class));
-            assertNotSame(BaseService.getInstance(), context.getBean(BaseService.class));
+            assertThrows(IllegalStateException.class, BaseService::getInstance);
         }
     }
 

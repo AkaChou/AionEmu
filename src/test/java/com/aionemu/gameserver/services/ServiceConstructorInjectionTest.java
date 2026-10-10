@@ -3,6 +3,7 @@ package com.aionemu.gameserver.services;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.Collections;
@@ -58,6 +59,8 @@ import com.aionemu.gameserver.model.items.storage.StorageType;
 import com.aionemu.gameserver.model.landing.LandingLocation;
 import com.aionemu.gameserver.model.town.Town;
 import com.aionemu.gameserver.services.mail.MailService;
+import com.aionemu.gameserver.services.player.PlayerService;
+import com.aionemu.gameserver.services.player.PlayerServiceDaos;
 
 /**
  * 核心服务构造器注入与 DAO 解耦单元测试。
@@ -477,6 +480,67 @@ class ServiceConstructorInjectionTest {
 		assertNotNull(service);
 	}
 
+	@Test
+	void legionServiceConstructsWithInjectedDaos() {
+		JdbcClient client = createNoAccessJdbcClient();
+		LegionDAO legionDAO = new com.aionemu.gameserver.dao.impl.LegionDAO(client);
+		LegionMemberDAO legionMemberDAO = new com.aionemu.gameserver.dao.impl.LegionMemberDAO(client);
+		InventoryDAO inventoryDAO = new com.aionemu.gameserver.dao.impl.InventoryDAO(client);
+		ItemStoneListDAO itemStoneListDAO = new com.aionemu.gameserver.dao.impl.ItemStoneListDAO(client);
+		LegionService service = new LegionService(legionDAO, legionMemberDAO, inventoryDAO, itemStoneListDAO);
+		assertNotNull(service);
+	}
+
+	@Test
+	void playerServiceDaosConstructWithInjectedImplsAndBind() {
+		JdbcClient client = createNoAccessJdbcClient();
+		PlayerServiceDaos daos = new PlayerServiceDaos(
+			new com.aionemu.gameserver.dao.impl.PlayerDAO(client),
+			new com.aionemu.gameserver.dao.impl.OldNamesDAO(client),
+			new com.aionemu.gameserver.dao.impl.PlayerAppearanceDAO(client),
+			new com.aionemu.gameserver.dao.impl.PlayerSkillListDAO(client),
+			new com.aionemu.gameserver.dao.impl.InventoryDAO(client),
+			new com.aionemu.gameserver.dao.impl.PlayerStigmasEquippedDAO(client),
+			new com.aionemu.gameserver.dao.impl.PlayerEquipmentSettingDAO(client),
+			new com.aionemu.gameserver.dao.impl.PlayerSettingsDAO(client),
+			new com.aionemu.gameserver.dao.impl.PlayerQuestListDAO(client),
+			new com.aionemu.gameserver.dao.impl.AbyssRankDAO(client),
+			new com.aionemu.gameserver.dao.impl.PlayerPunishmentsDAO(client),
+			new com.aionemu.gameserver.dao.impl.HousesDAO(client),
+			new com.aionemu.gameserver.dao.impl.PlayerRegisteredItemsDAO(client),
+			new com.aionemu.gameserver.dao.impl.ItemStoneListDAO(client),
+			new com.aionemu.gameserver.dao.impl.MailDAO(client),
+			new com.aionemu.gameserver.dao.impl.PortalCooldownsDAO(client),
+			new com.aionemu.gameserver.dao.impl.CraftCooldownsDAO(client),
+			new com.aionemu.gameserver.dao.impl.PlayerNpcFactionsDAO(client),
+			new com.aionemu.gameserver.dao.impl.PlayerLunaShopDAO(client),
+			new com.aionemu.gameserver.dao.impl.EventItemsDAO(client),
+			new com.aionemu.gameserver.dao.impl.PlayerMacrossesDAO(client),
+			new com.aionemu.gameserver.dao.impl.FriendListDAO(client),
+			new com.aionemu.gameserver.dao.impl.BlockListDAO(client),
+			new com.aionemu.gameserver.dao.impl.PlayerTitleListDAO(client),
+			new com.aionemu.gameserver.dao.impl.PlayerCreativityPointsDAO(client),
+			new com.aionemu.gameserver.dao.impl.PlayerEventsWindowDAO(client),
+			new com.aionemu.gameserver.dao.impl.PlayerAtreianBestiaryDAO(client),
+			new com.aionemu.gameserver.dao.impl.PlayerWardrobeDAO(client),
+			new com.aionemu.gameserver.dao.impl.F2pDAO(client),
+			new com.aionemu.gameserver.dao.impl.MotionDAO(client),
+			new com.aionemu.gameserver.dao.impl.PlayerVarsDAO(client),
+			new com.aionemu.gameserver.dao.impl.PlayerRecipesDAO(client),
+			new com.aionemu.gameserver.dao.impl.PlayerSkillSkinListDAO(client),
+			new com.aionemu.gameserver.dao.impl.PlayerEffectsDAO(client),
+			new com.aionemu.gameserver.dao.impl.PlayerCooldownsDAO(client),
+			new com.aionemu.gameserver.dao.impl.ItemCooldownsDAO(client),
+			new com.aionemu.gameserver.dao.impl.HouseObjectCooldownsDAO(client),
+			new com.aionemu.gameserver.dao.impl.PlayerBindPointDAO(client),
+			new com.aionemu.gameserver.dao.impl.PlayerLifeStatsDAO(client),
+			new com.aionemu.gameserver.dao.impl.PlayerEmotionListDAO(client));
+		PlayerService.bindDaos(daos);
+		assertSame(daos, PlayerService.daos());
+		assertNotNull(daos.playerDAO());
+		assertNotNull(daos.playerEmotionListDAO());
+	}
+
 	private static JdbcClient createNoAccessJdbcClient() {
 		DataSource noAccessDataSource = (DataSource) java.lang.reflect.Proxy.newProxyInstance(
 			ServiceConstructorInjectionTest.class.getClassLoader(),
@@ -511,5 +575,11 @@ class ServiceConstructorInjectionTest {
 		assertThrows(NullPointerException.class, () -> new HousingBidService(null, null, null));
 		assertThrows(NullPointerException.class, () -> new HousingService(null));
 		assertThrows(NullPointerException.class, () -> new ArmsfusionService(null));
+		assertThrows(NullPointerException.class, () -> new LegionService(null, null, null, null));
+		assertThrows(NullPointerException.class, () -> new PlayerServiceDaos(
+			null, null, null, null, null, null, null, null, null, null,
+			null, null, null, null, null, null, null, null, null, null,
+			null, null, null, null, null, null, null, null, null, null,
+			null, null, null, null, null, null, null, null, null, null));
 	}
 }

@@ -1,11 +1,18 @@
 package com.aionemu.gameserver.configs.main;
 
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.stereotype.Component;
+
 import com.aionemu.commons.configuration.Property;
 
+import lombok.Getter;
+
 /**
- * 要塞攻城系统相关配置。
- * Fortress siege system related configuration.
+ * 要塞攻城系统相关配置，支持 Spring Boot ConfigurationProperties 与静态门面访问。
+ * Fortress siege system related configuration supporting Spring Boot ConfigurationProperties and static facade access.
  */
+@Component
+@ConfigurationProperties(prefix = "gameserver")
 public class SiegeConfig {
 	/**
 	 * 是否启用攻城系统。
@@ -55,4 +62,85 @@ public class SiegeConfig {
 	 */
 	@Property(key = "gameserver.auto.siege.id", defaultValue = "")
 	public static String SIEGE_AUTO_LOCID;
+
+	@Getter
+	private final SiegeProperties siege = new SiegeProperties();
+	@Getter
+	private final AutoProperties auto = new AutoProperties();
+
+	@Getter
+	public static class SiegeProperties {
+		private final MedalProperties medal = new MedalProperties();
+		private final ShieldProperties shield = new ShieldProperties();
+		private final AssaultProperties assault = new AssaultProperties();
+
+		public boolean isEnable() {
+			return SIEGE_ENABLED;
+		}
+
+		public void setEnable(boolean enable) {
+			SIEGE_ENABLED = enable;
+		}
+
+		public static class MedalProperties {
+			public int getRate() {
+				return SIEGE_MEDAL_RATE;
+			}
+
+			public void setRate(int rate) {
+				SIEGE_MEDAL_RATE = rate;
+			}
+		}
+
+		public static class ShieldProperties {
+			public boolean isEnable() {
+				return SIEGE_SHIELD_ENABLED;
+			}
+
+			public void setEnable(boolean enable) {
+				SIEGE_SHIELD_ENABLED = enable;
+			}
+		}
+
+		public static class AssaultProperties {
+			public boolean isEnable() {
+				return BALAUR_AUTO_ASSAULT;
+			}
+
+			public void setEnable(boolean enable) {
+				BALAUR_AUTO_ASSAULT = enable;
+			}
+
+			public float getRate() {
+				return BALAUR_ASSAULT_RATE;
+			}
+
+			public void setRate(float rate) {
+				BALAUR_ASSAULT_RATE = rate;
+			}
+		}
+	}
+
+	@Getter
+	public static class AutoProperties {
+		private final AutoSiegeProperties siege = new AutoSiegeProperties();
+
+		public static class AutoSiegeProperties {
+			public boolean isRace() {
+				return SIEGE_AUTO_RACE;
+			}
+
+			public void setRace(boolean race) {
+				SIEGE_AUTO_RACE = race;
+			}
+
+			public String getId() {
+				return SIEGE_AUTO_LOCID;
+			}
+
+			public void setId(String id) {
+				SIEGE_AUTO_LOCID = id;
+			}
+		}
+	}
 }

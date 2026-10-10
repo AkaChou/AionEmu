@@ -8,6 +8,8 @@ import com.aionemu.gameserver.services.drop.DropService;
 import com.aionemu.gameserver.services.events.BoostEventService;
 import com.aionemu.gameserver.services.events.ThievesGuildService;
 import com.aionemu.gameserver.services.mail.MailService;
+import com.aionemu.gameserver.services.player.PlayerService;
+import com.aionemu.gameserver.services.player.PlayerServiceDaos;
 import com.aionemu.gameserver.services.ranking.SeasonRankingService;
 import com.aionemu.gameserver.services.reward.RewardService;
 import com.aionemu.gameserver.services.rift.RiftManager;
@@ -19,30 +21,58 @@ import com.aionemu.gameserver.services.veteranreward.VeteranRewardsService;
 import com.aionemu.gameserver.taskmanager.TaskManagerFromDB;
 import com.aionemu.gameserver.utils.audit.GMService;
 import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
+import com.aionemu.commons.database.dao.DAO;
 import com.aionemu.gameserver.dao.AbyssRankDAO;
 import com.aionemu.gameserver.dao.AnnouncementsDAO;
 import com.aionemu.gameserver.dao.BlockListDAO;
 import com.aionemu.gameserver.dao.BrokerDAO;
+import com.aionemu.gameserver.dao.CraftCooldownsDAO;
+import com.aionemu.gameserver.dao.EventItemsDAO;
+import com.aionemu.gameserver.dao.F2pDAO;
 import com.aionemu.gameserver.dao.FriendListDAO;
 import com.aionemu.gameserver.dao.GuideDAO;
+import com.aionemu.gameserver.dao.HouseObjectCooldownsDAO;
 import com.aionemu.gameserver.dao.HousesDAO;
 import com.aionemu.gameserver.dao.InventoryDAO;
+import com.aionemu.gameserver.dao.ItemCooldownsDAO;
 import com.aionemu.gameserver.dao.ItemStoneListDAO;
 import com.aionemu.gameserver.dao.LegionDAO;
 import com.aionemu.gameserver.dao.LegionMemberDAO;
 import com.aionemu.gameserver.dao.LimitedQuestDAO;
 import com.aionemu.gameserver.dao.MailDAO;
+import com.aionemu.gameserver.dao.MotionDAO;
 import com.aionemu.gameserver.dao.OldNamesDAO;
 import com.aionemu.gameserver.dao.PetitionDAO;
+import com.aionemu.gameserver.dao.PlayerABDAO;
 import com.aionemu.gameserver.dao.PlayerAppearanceDAO;
+import com.aionemu.gameserver.dao.PlayerBindPointDAO;
+import com.aionemu.gameserver.dao.PlayerCooldownsDAO;
+import com.aionemu.gameserver.dao.PlayerCreativityPointsDAO;
 import com.aionemu.gameserver.dao.PlayerDAO;
+import com.aionemu.gameserver.dao.PlayerEffectsDAO;
+import com.aionemu.gameserver.dao.PlayerEmotionListDAO;
+import com.aionemu.gameserver.dao.PlayerEquipmentSettingDAO;
+import com.aionemu.gameserver.dao.PlayerEventsWindowDAO;
+import com.aionemu.gameserver.dao.PlayerLifeStatsDAO;
+import com.aionemu.gameserver.dao.PlayerLunaShopDAO;
+import com.aionemu.gameserver.dao.PlayerMacrossesDAO;
+import com.aionemu.gameserver.dao.PlayerNpcFactionsDAO;
 import com.aionemu.gameserver.dao.PlayerPunishmentsDAO;
 import com.aionemu.gameserver.dao.PlayerQuestListDAO;
+import com.aionemu.gameserver.dao.PlayerRecipesDAO;
+import com.aionemu.gameserver.dao.PlayerRegisteredItemsDAO;
+import com.aionemu.gameserver.dao.PlayerSettingsDAO;
 import com.aionemu.gameserver.dao.PlayerSkillListDAO;
+import com.aionemu.gameserver.dao.PlayerSkillSkinListDAO;
 import com.aionemu.gameserver.dao.PlayerStigmasEquippedDAO;
+import com.aionemu.gameserver.dao.PlayerTitleListDAO;
+import com.aionemu.gameserver.dao.PlayerVarsDAO;
+import com.aionemu.gameserver.dao.PlayerWardrobeDAO;
+import com.aionemu.gameserver.dao.PortalCooldownsDAO;
 import com.aionemu.gameserver.dao.RewardServiceDAO;
 import com.aionemu.gameserver.dao.SurveyControllerDAO;
 
@@ -247,8 +277,81 @@ public class CoreRuntimeServiceBeans {
 
     @Bean
     @Lazy
-    public LegionService legionService() {
+    public LegionService legionService(ObjectProvider<LegionDAO> legionDaoProvider,
+                                       ObjectProvider<LegionMemberDAO> legionMemberDaoProvider,
+                                       ObjectProvider<InventoryDAO> inventoryDaoProvider,
+                                       ObjectProvider<ItemStoneListDAO> itemStoneListDaoProvider) {
+        LegionDAO legionDAO = legionDaoProvider.getIfAvailable();
+        LegionMemberDAO legionMemberDAO = legionMemberDaoProvider.getIfAvailable();
+        InventoryDAO inventoryDAO = inventoryDaoProvider.getIfAvailable();
+        ItemStoneListDAO itemStoneListDAO = itemStoneListDaoProvider.getIfAvailable();
+        if (legionDAO != null && legionMemberDAO != null && inventoryDAO != null && itemStoneListDAO != null) {
+            return new LegionService(legionDAO, legionMemberDAO, inventoryDAO, itemStoneListDAO);
+        }
         return new LegionService();
+    }
+
+    /**
+     * 装配玩家核心服务的持久层依赖聚合并在启动期绑定至 {@link PlayerService}；
+     * 任一 DAO 缺失（离线/单测上下文）时降级为 safeDao 离线聚合，保持旧行为等价。
+     * Wires the core player service persistence aggregate and binds it to {@link PlayerService}
+     * at startup; falls back to the safeDao offline aggregate when any DAO is missing
+     * (offline/unit-test contexts), preserving legacy behavior.
+     */
+    @Bean
+    @Lazy
+    public PlayerServiceDaos playerServiceDaos(ConfigurableBeanFactory beanFactory) {
+        try {
+            PlayerServiceDaos daos = new PlayerServiceDaos(
+                daoFrom(beanFactory, PlayerDAO.class),
+                daoFrom(beanFactory, OldNamesDAO.class),
+                daoFrom(beanFactory, PlayerAppearanceDAO.class),
+                daoFrom(beanFactory, PlayerSkillListDAO.class),
+                daoFrom(beanFactory, InventoryDAO.class),
+                daoFrom(beanFactory, PlayerStigmasEquippedDAO.class),
+                daoFrom(beanFactory, PlayerEquipmentSettingDAO.class),
+                daoFrom(beanFactory, PlayerSettingsDAO.class),
+                daoFrom(beanFactory, PlayerQuestListDAO.class),
+                daoFrom(beanFactory, AbyssRankDAO.class),
+                daoFrom(beanFactory, PlayerPunishmentsDAO.class),
+                daoFrom(beanFactory, HousesDAO.class),
+                daoFrom(beanFactory, PlayerRegisteredItemsDAO.class),
+                daoFrom(beanFactory, ItemStoneListDAO.class),
+                daoFrom(beanFactory, MailDAO.class),
+                daoFrom(beanFactory, PortalCooldownsDAO.class),
+                daoFrom(beanFactory, CraftCooldownsDAO.class),
+                daoFrom(beanFactory, PlayerNpcFactionsDAO.class),
+                daoFrom(beanFactory, PlayerLunaShopDAO.class),
+                daoFrom(beanFactory, EventItemsDAO.class),
+                daoFrom(beanFactory, PlayerMacrossesDAO.class),
+                daoFrom(beanFactory, FriendListDAO.class),
+                daoFrom(beanFactory, BlockListDAO.class),
+                daoFrom(beanFactory, PlayerTitleListDAO.class),
+                daoFrom(beanFactory, PlayerCreativityPointsDAO.class),
+                daoFrom(beanFactory, PlayerEventsWindowDAO.class),
+                daoFrom(beanFactory, PlayerABDAO.class),
+                daoFrom(beanFactory, PlayerWardrobeDAO.class),
+                daoFrom(beanFactory, F2pDAO.class),
+                daoFrom(beanFactory, MotionDAO.class),
+                daoFrom(beanFactory, PlayerVarsDAO.class),
+                daoFrom(beanFactory, PlayerRecipesDAO.class),
+                daoFrom(beanFactory, PlayerSkillSkinListDAO.class),
+                daoFrom(beanFactory, PlayerEffectsDAO.class),
+                daoFrom(beanFactory, PlayerCooldownsDAO.class),
+                daoFrom(beanFactory, ItemCooldownsDAO.class),
+                daoFrom(beanFactory, HouseObjectCooldownsDAO.class),
+                daoFrom(beanFactory, PlayerBindPointDAO.class),
+                daoFrom(beanFactory, PlayerLifeStatsDAO.class),
+                daoFrom(beanFactory, PlayerEmotionListDAO.class));
+            PlayerService.bindDaos(daos);
+            return daos;
+        } catch (NullPointerException offline) {
+            return PlayerService.daos();
+        }
+    }
+
+    private static <T extends DAO> T daoFrom(ConfigurableBeanFactory beanFactory, Class<T> daoClass) {
+        return beanFactory.getBeanProvider(daoClass).getIfAvailable();
     }
 
     @Bean

@@ -2,6 +2,7 @@ package com.aionemu.gameserver.services;
 
 
 import com.aionemu.boot.i18n.I18n;
+import lombok.NonNull;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
@@ -13,6 +14,7 @@ import java.sql.Timestamp;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.ObjectProvider;
@@ -122,12 +124,80 @@ public class LegionService {
 		return provided;
 	}
 
+	private final LegionDAO legionDAO;
+	private final LegionMemberDAO legionMemberDAO;
+	private final InventoryDAO inventoryDAO;
+	private final ItemStoneListDAO itemStoneListDAO;
+
 	/**
-	 * 构造军团服务并绑定世界引用。
-	 * Constructs the legion service and binds the world reference.
+	 * 使用指定 DAO 依赖构造军团服务。
+	 * Constructs the legion service with given DAO dependencies.
+	 *
+	 * @param legionDAO 军团 DAO / Legion DAO
+	 * @param legionMemberDAO 军团成员 DAO / Legion member DAO
+	 * @param inventoryDAO 道具仓库 DAO / Inventory DAO
+	 * @param itemStoneListDAO 道具魔石 DAO / Item stone list DAO
+	 */
+	public LegionService(@NonNull LegionDAO legionDAO,
+						 @NonNull LegionMemberDAO legionMemberDAO,
+						 @NonNull InventoryDAO inventoryDAO,
+						 @NonNull ItemStoneListDAO itemStoneListDAO) {
+		this(legionDAO, legionMemberDAO, inventoryDAO, itemStoneListDAO, safeWorld());
+	}
+
+	private static World safeWorld() {
+		try {
+			return com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world();
+		} catch (Exception ignored) {
+			return null;
+		}
+	}
+
+	private World getWorld() {
+		return world != null ? world : com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world();
+	}
+
+	/**
+	 * 使用指定 DAO 依赖与世界实例构造军团服务。
+	 * Constructs the legion service with given DAO dependencies and world instance.
+	 *
+	 * @param legionDAO 军团 DAO / Legion DAO
+	 * @param legionMemberDAO 军团成员 DAO / Legion member DAO
+	 * @param inventoryDAO 道具仓库 DAO / Inventory DAO
+	 * @param itemStoneListDAO 道具魔石 DAO / Item stone list DAO
+	 * @param world 世界实例 / World instance
+	 */
+	public LegionService(@NonNull LegionDAO legionDAO,
+						 @NonNull LegionMemberDAO legionMemberDAO,
+						 @NonNull InventoryDAO inventoryDAO,
+						 @NonNull ItemStoneListDAO itemStoneListDAO,
+						 World world) {
+		this.legionDAO = Objects.requireNonNull(legionDAO, "legionDAO must not be null");
+		this.legionMemberDAO = Objects.requireNonNull(legionMemberDAO, "legionMemberDAO must not be null");
+		this.inventoryDAO = Objects.requireNonNull(inventoryDAO, "inventoryDAO must not be null");
+		this.itemStoneListDAO = Objects.requireNonNull(itemStoneListDAO, "itemStoneListDAO must not be null");
+		this.world = world;
+	}
+
+	/**
+	 * 构造军团服务（使用 safeDao 解析依赖）。
+	 * Constructs the legion service with safeDao resolution.
 	 */
 	public LegionService() {
-		this.world = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world();
+		this(safeDao(LegionDAO.class, com.aionemu.gameserver.dao.impl.LegionDAO::new),
+			 safeDao(LegionMemberDAO.class, com.aionemu.gameserver.dao.impl.LegionMemberDAO::new),
+			 safeDao(InventoryDAO.class, com.aionemu.gameserver.dao.impl.InventoryDAO::new),
+			 safeDao(ItemStoneListDAO.class, com.aionemu.gameserver.dao.impl.ItemStoneListDAO::new));
+	}
+
+	private static <T extends com.aionemu.commons.database.dao.DAO> T safeDao(Class<T> daoClass, java.util.function.Supplier<T> fallback) {
+		if (DAOManager.isInitialized()) {
+			try {
+				return DAOManager.getDAO(daoClass);
+			} catch (Exception ignored) {
+			}
+		}
+		return fallback.get();
 	}
 
 
@@ -139,13 +209,12 @@ public class LegionService {
 	 * @param newLegion 是否新军团 / new legion
 	 */
 	private void storeLegion(Legion legion, boolean newLegion) {
-		LegionDAO legionDAO = DAOManager.getDAO(LegionDAO.class);
 		if (newLegion) {
 			addCachedLegion(legion);
-			legionDAO.saveNewLegion(legion);
+			this.legionDAO.saveNewLegion(legion);
 		} else {
-			legionDAO.storeLegion(legion);
-			legionDAO.storeLegionEmblem(legion.getLegionId(), legion.getLegionEmblem());
+			this.legionDAO.storeLegion(legion);
+			this.legionDAO.storeLegionEmblem(legion.getLegionId(), legion.getLegionEmblem());
 		}
 	}
 
@@ -186,7 +255,7 @@ public class LegionService {
 	 */
 	private void deleteLegionFromDB(Legion legion) {
 		this.allCachedLegions.remove(legion);
-		DAOManager.getDAO(LegionDAO.class).deleteLegion(legion.getLegionId());
+		this.legionDAO.deleteLegion(legion.getLegionId());
 	}
 
 
@@ -202,7 +271,7 @@ public class LegionService {
 		if (cached != null) {
 			return cached;
 		}
-		Legion legion = DAOManager.getDAO(LegionDAO.class).loadLegion(legionName);
+		Legion legion = this.legionDAO.loadLegion(legionName);
 		if (legion != null) {
 			loadLegionInfo(legion);
 			addCachedLegion(legion);
@@ -221,7 +290,7 @@ public class LegionService {
 		if (cached != null) {
 			return cached;
 		}
-		Legion legion = DAOManager.getDAO(LegionDAO.class).loadLegion(legionId);
+		Legion legion = this.legionDAO.loadLegion(legionId);
 		if (legion != null) {
 			loadLegionInfo(legion);
 			addCachedLegion(legion);
@@ -239,11 +308,10 @@ public class LegionService {
 			return;
 		}
 		int legionId = legion.getLegionId();
-		LegionDAO legionDAO = DAOManager.getDAO(LegionDAO.class);
-		legion.setLegionMembers(DAOManager.getDAO(LegionMemberDAO.class).loadLegionMembers(legionId));
-		legion.setAnnouncementList(legionDAO.loadAnnouncementList(legionId));
-		legion.setLegionEmblem(legionDAO.loadLegionEmblem(legionId));
-		legion.setLegionWarehouse(legionDAO.loadLegionStorage(legion));
+		legion.setLegionMembers(this.legionMemberDAO.loadLegionMembers(legionId));
+		legion.setAnnouncementList(this.legionDAO.loadAnnouncementList(legionId));
+		legion.setLegionEmblem(this.legionDAO.loadLegionEmblem(legionId));
+		legion.setLegionWarehouse(this.legionDAO.loadLegionStorage(legion));
 
 		if (legionRanking != null) {
 			Integer rank = legionRanking.get(legionId);
@@ -251,7 +319,7 @@ public class LegionService {
 				legion.setLegionRank(rank);
 			}
 		}
-		legionDAO.loadLegionHistory(legion);
+		this.legionDAO.loadLegionHistory(legion);
 	}
 
 	/**
@@ -285,7 +353,7 @@ public class LegionService {
 	public LegionMember getLegionMember(int playerObjId) {
 		LegionMember legionMember = this.allCachedLegionMembers.getMember(playerObjId);
 		if (legionMember == null) {
-			legionMember = DAOManager.getDAO(LegionMemberDAO.class).loadLegionMember(playerObjId);
+			legionMember = this.legionMemberDAO.loadLegionMember(playerObjId);
 			if (legionMember != null) {
 				legionMembers().addCachedLegionMember(legionMember);
 			}
@@ -569,7 +637,7 @@ public class LegionService {
 			int msgId = getRankChangeMessageId(rank);
 			LegionMember legionMember = getLegionMember(memberEx.getObjectId());
 			legionMember.setRank(rank);
-			DAOManager.getDAO(LegionMemberDAO.class).storeLegionMember(legionMember.getObjectId(), legionMember);
+			this.legionMemberDAO.storeLegionMember(legionMember.getObjectId(), legionMember);
 			memberEx.setRank(rank);
 			PacketSendUtility.broadcastPacketToLegion(legion, new SM_LEGION_UPDATE_MEMBER(memberEx, msgId, memberEx.getName()));
 		}
@@ -677,7 +745,7 @@ public class LegionService {
 	private void changeNickname(Player activePlayer, String charName, String newNickname) {
 		Legion legion = activePlayer.getLegion();
 		LegionMember legionMember;
-		Player targetPlayer = world.findPlayer(charName);
+		Player targetPlayer = getWorld().findPlayer(charName);
 		if (targetPlayer != null) {
 			legionMember = targetPlayer.getLegionMember();
 			if (targetPlayer.getLegion() != legion) {
@@ -695,7 +763,7 @@ public class LegionService {
 			PacketSendUtility.broadcastPacketToLegion(legion,
 				new SM_LEGION_UPDATE_NICKNAME(legionMember.getObjectId(), newNickname));
 			if (targetPlayer == null) {
-				DAOManager.getDAO(LegionMemberDAO.class).storeLegionMember(legionMember.getObjectId(), legionMember);
+				this.legionMemberDAO.storeLegionMember(legionMember.getObjectId(), legionMember);
 			}
 		}
 	}
@@ -787,7 +855,7 @@ public class LegionService {
 	public Player getBrigadeGeneral(Legion legion) {
 		for (LegionMemberEx member : legionMembers().loadLegionMemberExList(legion, null)) {
 			if (member.isBrigadeGeneral()) {
-				return world.findPlayer(member.getObjectId());
+				return getWorld().findPlayer(member.getObjectId());
 			}
 		}
 		return null;
@@ -891,10 +959,10 @@ public class LegionService {
 		List<Item> allItems = legion.getLegionWarehouse().getItemsWithKinah();
 		allItems.addAll(legion.getLegionWarehouse().getDeletedItems());
 		try {
-			DAOManager.getDAO(InventoryDAO.class).store(allItems, player.getObjectId(),
+			this.inventoryDAO.store(allItems, player.getObjectId(),
 				player.getPlayerAccount().getId(), legion.getLegionId());
 
-			DAOManager.getDAO(ItemStoneListDAO.class).save(allItems);
+			this.itemStoneListDAO.save(allItems);
 		} catch (Exception ex) {
 			log.error(I18n.get("log.ea0f9e89569d"), ex);
 		}
@@ -1031,7 +1099,7 @@ public class LegionService {
 	 * @param message     公告消息 / message
 	 */
 	private void storeNewAnnouncement(int legionId, Timestamp currentTime, String message) {
-		DAOManager.getDAO(LegionDAO.class).saveNewAnnouncement(legionId, currentTime, message);
+		this.legionDAO.saveNewAnnouncement(legionId, currentTime, message);
 	}
 
 	/**
@@ -1042,7 +1110,7 @@ public class LegionService {
 	 * @param key      时间戳键 / timestamp key
 	 */
 	private void removeAnnouncement(int legionId, Timestamp key) {
-		DAOManager.getDAO(LegionDAO.class).removeAnnouncement(legionId, key);
+		this.legionDAO.removeAnnouncement(legionId, key);
 	}
 
 	void addHistory(Legion legion, String text, LegionHistoryType legionHistoryType) {
@@ -1065,7 +1133,7 @@ public class LegionService {
 			new Timestamp(System.currentTimeMillis()), tabId, description);
 
 		legion.addHistory(legionHistory);
-		DAOManager.getDAO(LegionDAO.class).saveNewLegionHistory(legion.getLegionId(), legionHistory);
+		this.legionDAO.saveNewLegionHistory(legion.getLegionId(), legionHistory);
 
 		PacketSendUtility.broadcastPacketToLegion(legion,
 			new SM_LEGION_TABS(legion.getLegionHistoryByTabId(tabId), tabId));
@@ -1087,7 +1155,7 @@ public class LegionService {
 		Legion legion = activePlayer.getLegion();
 
 		charName = Util.convertName(charName);
-		Player targetPlayer = world.findPlayer(charName);
+		Player targetPlayer = getWorld().findPlayer(charName);
 
 		switch (exOpcode) {
 			case 0x01 -> {
@@ -1243,7 +1311,7 @@ public class LegionService {
 	 * 世界引用，供成员域查找在线玩家 / world reference so the member domain can resolve online players.
 	 */
 	World world() {
-		return world;
+		return getWorld();
 	}
 
 	/**

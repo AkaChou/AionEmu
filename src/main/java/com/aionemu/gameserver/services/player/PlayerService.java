@@ -7,6 +7,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
@@ -103,13 +104,104 @@ public class PlayerService {
 	private static final CacheMap<Integer, Player> playerCache = CacheMapFactory.createSoftCacheMap("Player", "player");
 
 	/**
+	 * Spring 绑定的持久层依赖聚合 / Spring-bound persistence dependency aggregate.
+	 */
+	private static volatile PlayerServiceDaos boundDaos;
+
+	/**
+	 * 由 Spring 配置类在启动期绑定持久层依赖聚合。
+	 * Binds the persistence dependency aggregate from the Spring configuration at startup.
+	 * @param daos 依赖聚合 / dependency aggregate
+	 */
+	public static void bindDaos(PlayerServiceDaos daos) {
+		boundDaos = Objects.requireNonNull(daos, "daos must not be null");
+	}
+
+	/**
+	 * 返回持久层依赖聚合；未绑定（离线/单测环境）时按 safeDao 兜底构建并缓存。
+	 * Returns the persistence dependency aggregate; falls back to safeDao construction when unbound (offline/unit tests).
+	 * @return 依赖聚合 / dependency aggregate
+	 */
+	public static PlayerServiceDaos daos() {
+		PlayerServiceDaos current = boundDaos;
+		if (current == null) {
+			synchronized (PlayerService.class) {
+				current = boundDaos;
+				if (current == null) {
+					boundDaos = current = buildOfflineDaos();
+				}
+			}
+		}
+		return current;
+	}
+
+	/**
+	 * 离线兜底构建依赖聚合：DAOManager 已初始化时优先解析 Spring Bean，否则退回实现类无参构造。
+	 * Builds the aggregate offline: resolves the Spring bean when DAOManager is initialized, else falls back to no-arg impl constructors.
+	 */
+	private static PlayerServiceDaos buildOfflineDaos() {
+		return new PlayerServiceDaos(
+				safeDao(PlayerDAO.class, com.aionemu.gameserver.dao.impl.PlayerDAO::new),
+				safeDao(OldNamesDAO.class, com.aionemu.gameserver.dao.impl.OldNamesDAO::new),
+				safeDao(PlayerAppearanceDAO.class, com.aionemu.gameserver.dao.impl.PlayerAppearanceDAO::new),
+				safeDao(PlayerSkillListDAO.class, com.aionemu.gameserver.dao.impl.PlayerSkillListDAO::new),
+				safeDao(InventoryDAO.class, com.aionemu.gameserver.dao.impl.InventoryDAO::new),
+				safeDao(PlayerStigmasEquippedDAO.class, com.aionemu.gameserver.dao.impl.PlayerStigmasEquippedDAO::new),
+				safeDao(PlayerEquipmentSettingDAO.class, com.aionemu.gameserver.dao.impl.PlayerEquipmentSettingDAO::new),
+				safeDao(PlayerSettingsDAO.class, com.aionemu.gameserver.dao.impl.PlayerSettingsDAO::new),
+				safeDao(PlayerQuestListDAO.class, com.aionemu.gameserver.dao.impl.PlayerQuestListDAO::new),
+				safeDao(AbyssRankDAO.class, com.aionemu.gameserver.dao.impl.AbyssRankDAO::new),
+				safeDao(PlayerPunishmentsDAO.class, com.aionemu.gameserver.dao.impl.PlayerPunishmentsDAO::new),
+				safeDao(HousesDAO.class, com.aionemu.gameserver.dao.impl.HousesDAO::new),
+				safeDao(PlayerRegisteredItemsDAO.class, com.aionemu.gameserver.dao.impl.PlayerRegisteredItemsDAO::new),
+				safeDao(ItemStoneListDAO.class, com.aionemu.gameserver.dao.impl.ItemStoneListDAO::new),
+				safeDao(MailDAO.class, com.aionemu.gameserver.dao.impl.MailDAO::new),
+				safeDao(PortalCooldownsDAO.class, com.aionemu.gameserver.dao.impl.PortalCooldownsDAO::new),
+				safeDao(CraftCooldownsDAO.class, com.aionemu.gameserver.dao.impl.CraftCooldownsDAO::new),
+				safeDao(PlayerNpcFactionsDAO.class, com.aionemu.gameserver.dao.impl.PlayerNpcFactionsDAO::new),
+				safeDao(PlayerLunaShopDAO.class, com.aionemu.gameserver.dao.impl.PlayerLunaShopDAO::new),
+				safeDao(EventItemsDAO.class, com.aionemu.gameserver.dao.impl.EventItemsDAO::new),
+				safeDao(PlayerMacrossesDAO.class, com.aionemu.gameserver.dao.impl.PlayerMacrossesDAO::new),
+				safeDao(FriendListDAO.class, com.aionemu.gameserver.dao.impl.FriendListDAO::new),
+				safeDao(BlockListDAO.class, com.aionemu.gameserver.dao.impl.BlockListDAO::new),
+				safeDao(PlayerTitleListDAO.class, com.aionemu.gameserver.dao.impl.PlayerTitleListDAO::new),
+				safeDao(PlayerCreativityPointsDAO.class, com.aionemu.gameserver.dao.impl.PlayerCreativityPointsDAO::new),
+				safeDao(PlayerEventsWindowDAO.class, com.aionemu.gameserver.dao.impl.PlayerEventsWindowDAO::new),
+				safeDao(PlayerABDAO.class, com.aionemu.gameserver.dao.impl.PlayerAtreianBestiaryDAO::new),
+				safeDao(PlayerWardrobeDAO.class, com.aionemu.gameserver.dao.impl.PlayerWardrobeDAO::new),
+				safeDao(F2pDAO.class, com.aionemu.gameserver.dao.impl.F2pDAO::new),
+				safeDao(MotionDAO.class, com.aionemu.gameserver.dao.impl.MotionDAO::new),
+				safeDao(PlayerVarsDAO.class, com.aionemu.gameserver.dao.impl.PlayerVarsDAO::new),
+				safeDao(PlayerRecipesDAO.class, com.aionemu.gameserver.dao.impl.PlayerRecipesDAO::new),
+				safeDao(PlayerSkillSkinListDAO.class, com.aionemu.gameserver.dao.impl.PlayerSkillSkinListDAO::new),
+				safeDao(PlayerEffectsDAO.class, com.aionemu.gameserver.dao.impl.PlayerEffectsDAO::new),
+				safeDao(PlayerCooldownsDAO.class, com.aionemu.gameserver.dao.impl.PlayerCooldownsDAO::new),
+				safeDao(ItemCooldownsDAO.class, com.aionemu.gameserver.dao.impl.ItemCooldownsDAO::new),
+				safeDao(HouseObjectCooldownsDAO.class, com.aionemu.gameserver.dao.impl.HouseObjectCooldownsDAO::new),
+				safeDao(PlayerBindPointDAO.class, com.aionemu.gameserver.dao.impl.PlayerBindPointDAO::new),
+				safeDao(PlayerLifeStatsDAO.class, com.aionemu.gameserver.dao.impl.PlayerLifeStatsDAO::new),
+				safeDao(PlayerEmotionListDAO.class, com.aionemu.gameserver.dao.impl.PlayerEmotionListDAO::new));
+	}
+
+	private static <T extends com.aionemu.commons.database.dao.DAO> T safeDao(Class<T> daoClass,
+			java.util.function.Supplier<T> fallback) {
+		if (DAOManager.isInitialized()) {
+			try {
+				return DAOManager.getDAO(daoClass);
+			} catch (Exception ignored) {
+			}
+		}
+		return fallback.get();
+	}
+
+	/**
 	 * 检查角色名是否未被占用。
 	 * Checks whether the player name is unused.
 	 * @param name 角色名 / player name
 	 * @return 是否可用 / whether free
 	 */
 	public static boolean isFreeName(String name) {
-		return !DAOManager.getDAO(PlayerDAO.class).isNameUsed(name);
+		return !daos().playerDAO().isNameUsed(name);
 	}
 
 	/**
@@ -119,7 +211,7 @@ public class PlayerService {
 	 * @return 是否一致 / whether equal
 	 */
 	public static boolean isOldName(String name) {
-		return DAOManager.getDAO(OldNamesDAO.class).isOldName(name);
+		return daos().oldNamesDAO().isOldName(name);
 	}
 
 	/**
@@ -131,10 +223,10 @@ public class PlayerService {
 	 * @return 是否成功 / whether successful
 	 */
 	public static boolean storeNewPlayer(Player player, String accountName, int accountId) {
-		return DAOManager.getDAO(PlayerDAO.class).saveNewPlayer(player.getCommonData(), accountId, accountName)
-				&& DAOManager.getDAO(PlayerAppearanceDAO.class).store(player)
-				&& DAOManager.getDAO(PlayerSkillListDAO.class).storeSkills(player)
-				&& DAOManager.getDAO(InventoryDAO.class).store(player);
+		return daos().playerDAO().saveNewPlayer(player.getCommonData(), accountId, accountName)
+				&& daos().playerAppearanceDAO().store(player)
+				&& daos().playerSkillListDAO().storeSkills(player)
+				&& daos().inventoryDAO().store(player);
 	}
 
 	/**
@@ -143,31 +235,31 @@ public class PlayerService {
 	 * @param player 玩家 / player
 	 */
 	public static void storePlayer(Player player) {
-		DAOManager.getDAO(PlayerDAO.class).storePlayer(player);
-		DAOManager.getDAO(PlayerSkillListDAO.class).storeSkills(player);
-		DAOManager.getDAO(PlayerStigmasEquippedDAO.class).storeItems(player);
-		DAOManager.getDAO(PlayerEquipmentSettingDAO.class).store(player);
-		DAOManager.getDAO(PlayerSettingsDAO.class).saveSettings(player);
-		DAOManager.getDAO(PlayerQuestListDAO.class).store(player);
-		DAOManager.getDAO(AbyssRankDAO.class).storeAbyssRank(player);
-		DAOManager.getDAO(PlayerPunishmentsDAO.class).storePlayerPunishments(player, PunishmentType.PRISON);
-		DAOManager.getDAO(PlayerPunishmentsDAO.class).storePlayerPunishments(player, PunishmentType.GATHER);
-		DAOManager.getDAO(InventoryDAO.class).store(player);
+		daos().playerDAO().storePlayer(player);
+		daos().playerSkillListDAO().storeSkills(player);
+		daos().playerStigmasEquippedDAO().storeItems(player);
+		daos().playerEquipmentSettingDAO().store(player);
+		daos().playerSettingsDAO().saveSettings(player);
+		daos().playerQuestListDAO().store(player);
+		daos().abyssRankDAO().storeAbyssRank(player);
+		daos().playerPunishmentsDAO().storePlayerPunishments(player, PunishmentType.PRISON);
+		daos().playerPunishmentsDAO().storePlayerPunishments(player, PunishmentType.GATHER);
+		daos().inventoryDAO().store(player);
 		for (House house : player.getHouses()) {
-			DAOManager.getDAO(HousesDAO.class).storeHouse(house);
+			daos().housesDAO().storeHouse(house);
 			if (house.getRegistry() != null
 					&& house.getRegistry().getPersistentState() == PersistentState.UPDATE_REQUIRED) {
-				DAOManager.getDAO(PlayerRegisteredItemsDAO.class).store(house.getRegistry(),
+				daos().playerRegisteredItemsDAO().store(house.getRegistry(),
 						player.getCommonData().getPlayerObjId());
 			}
 		}
-		DAOManager.getDAO(ItemStoneListDAO.class).save(player);
-		DAOManager.getDAO(MailDAO.class).storeMailbox(player);
-		DAOManager.getDAO(PortalCooldownsDAO.class).storePortalCooldowns(player);
-		DAOManager.getDAO(CraftCooldownsDAO.class).storeCraftCooldowns(player);
-		DAOManager.getDAO(PlayerNpcFactionsDAO.class).storeNpcFactions(player);
-		DAOManager.getDAO(PlayerLunaShopDAO.class).store(player);
-		DAOManager.getDAO(EventItemsDAO.class).loadItems(player);
+		daos().itemStoneListDAO().save(player);
+		daos().mailDAO().storeMailbox(player);
+		daos().portalCooldownsDAO().storePortalCooldowns(player);
+		daos().craftCooldownsDAO().storeCraftCooldowns(player);
+		daos().playerNpcFactionsDAO().storeNpcFactions(player);
+		daos().playerLunaShopDAO().store(player);
+		daos().eventItemsDAO().loadItems(player);
 	}
 
 	/**
@@ -190,26 +282,26 @@ public class PlayerService {
 		if (legionMember != null) {
 			player.setLegionMember(legionMember);
 		}
-		MacroList macroses = DAOManager.getDAO(PlayerMacrossesDAO.class).restoreMacrosses(playerObjId);
+		MacroList macroses = daos().playerMacrossesDAO().restoreMacrosses(playerObjId);
 		player.setMacroList(macroses);
-		player.setSkillList(DAOManager.getDAO(PlayerSkillListDAO.class).loadSkillList(playerObjId));
-		player.setEquipedStigmaList(DAOManager.getDAO(PlayerStigmasEquippedDAO.class).loadItemsList(playerObjId));
+		player.setSkillList(daos().playerSkillListDAO().loadSkillList(playerObjId));
+		player.setEquipedStigmaList(daos().playerStigmasEquippedDAO().loadItemsList(playerObjId));
 		player.setKnownlist(new KnownList(player));
-		player.setFriendList(DAOManager.getDAO(FriendListDAO.class).load(player));
-		player.setBlockList(DAOManager.getDAO(BlockListDAO.class).load(player));
-		player.setTitleList(DAOManager.getDAO(PlayerTitleListDAO.class).loadTitleList(playerObjId));
-		player.setCP(DAOManager.getDAO(PlayerCreativityPointsDAO.class).loadCP(player));
-		player.setEventWindow(DAOManager.getDAO(PlayerEventsWindowDAO.class).load(player));
-		player.setAtreianBestiary(DAOManager.getDAO(PlayerABDAO.class).load(player));
-		player.setWardrobe(DAOManager.getDAO(PlayerWardrobeDAO.class).load(player));
-		DAOManager.getDAO(F2pDAO.class).loadF2pInfo(player);
-		DAOManager.getDAO(PlayerSettingsDAO.class).loadSettings(player);
-		DAOManager.getDAO(PlayerEquipmentSettingDAO.class).loadEquipmentSetting(player);
-		DAOManager.getDAO(AbyssRankDAO.class).loadAbyssRank(player);
-		DAOManager.getDAO(PlayerNpcFactionsDAO.class).loadNpcFactions(player);
-		DAOManager.getDAO(MotionDAO.class).loadMotionList(player);
-		player.setVars(DAOManager.getDAO(PlayerVarsDAO.class).load(player.getObjectId()));
-		Equipment equipment = DAOManager.getDAO(InventoryDAO.class).loadEquipment(player);
+		player.setFriendList(daos().friendListDAO().load(player));
+		player.setBlockList(daos().blockListDAO().load(player));
+		player.setTitleList(daos().playerTitleListDAO().loadTitleList(playerObjId));
+		player.setCP(daos().playerCreativityPointsDAO().loadCP(player));
+		player.setEventWindow(daos().playerEventsWindowDAO().load(player));
+		player.setAtreianBestiary(daos().playerABDAO().load(player));
+		player.setWardrobe(daos().playerWardrobeDAO().load(player));
+		daos().f2pDAO().loadF2pInfo(player);
+		daos().playerSettingsDAO().loadSettings(player);
+		daos().playerEquipmentSettingDAO().loadEquipmentSetting(player);
+		daos().abyssRankDAO().loadAbyssRank(player);
+		daos().playerNpcFactionsDAO().loadNpcFactions(player);
+		daos().motionDAO().loadMotionList(player);
+		player.setVars(daos().playerVarsDAO().load(player.getObjectId()));
+		Equipment equipment = daos().inventoryDAO().loadEquipment(player);
 		ItemService.loadItemStones(equipment.getEquippedItemsWithoutStigma());
 		if (ItemService.ensureSkillEnhance(player, equipment.getEquippedItemsWithoutStigma())) {
 			equipment.setPersistentState(PersistentState.UPDATE_REQUIRED);
@@ -219,13 +311,13 @@ public class PlayerService {
 		player.setEffectController(new PlayerEffectController(player));
 		player.setFlyController(new FlyController(player));
 		PlayerStatFunctions.addPredefinedStatFunctions(player);
-		player.setQuestStateList(DAOManager.getDAO(PlayerQuestListDAO.class).load(player));
-		player.setRecipeList(DAOManager.getDAO(PlayerRecipesDAO.class).load(player.getObjectId()));
-		player.setSkillSkinList(DAOManager.getDAO(PlayerSkillSkinListDAO.class).loadSkillSkinList(playerObjId));
+		player.setQuestStateList(daos().playerQuestListDAO().load(player));
+		player.setRecipeList(daos().playerRecipesDAO().load(player.getObjectId()));
+		player.setSkillSkinList(daos().playerSkillSkinListDAO().loadSkillSkinList(playerObjId));
 
 		Storage accWarehouse = account.getAccountWarehouse();
 		player.setStorage(accWarehouse, StorageType.ACCOUNT_WAREHOUSE);
-		Storage inventory = DAOManager.getDAO(InventoryDAO.class).loadStorage(playerObjId, StorageType.CUBE);
+		Storage inventory = daos().inventoryDAO().loadStorage(playerObjId, StorageType.CUBE);
 		ItemService.loadItemStones(inventory.getItems());
 		if (ItemService.ensureSkillEnhance(player, inventory.getItems())) {
 			inventory.setPersistentState(PersistentState.UPDATE_REQUIRED);
@@ -233,7 +325,7 @@ public class PlayerService {
 		player.setStorage(inventory, StorageType.CUBE);
 
 		for (int petBagId = StorageType.PET_BAG_MIN; petBagId <= StorageType.PET_BAG_MAX; petBagId++) {
-			Storage petBag = DAOManager.getDAO(InventoryDAO.class).loadStorage(playerObjId,
+			Storage petBag = daos().inventoryDAO().loadStorage(playerObjId,
 					StorageType.getStorageTypeById(petBagId));
 			ItemService.loadItemStones(petBag.getItems());
 			if (ItemService.ensureSkillEnhance(player, petBag.getItems())) {
@@ -245,7 +337,7 @@ public class PlayerService {
 		for (int houseWhId = StorageType.HOUSE_WH_MIN; houseWhId <= StorageType.HOUSE_WH_MAX; houseWhId++) {
 			StorageType whType = StorageType.getStorageTypeById(houseWhId);
 			if (whType != null) {
-				Storage cabinet = DAOManager.getDAO(InventoryDAO.class).loadStorage(playerObjId,
+				Storage cabinet = daos().inventoryDAO().loadStorage(playerObjId,
 						StorageType.getStorageTypeById(houseWhId));
 				ItemService.loadItemStones(cabinet.getItems());
 				if (ItemService.ensureSkillEnhance(player, cabinet.getItems())) {
@@ -255,7 +347,7 @@ public class PlayerService {
 			}
 		}
 
-		Storage warehouse = DAOManager.getDAO(InventoryDAO.class).loadStorage(playerObjId,
+		Storage warehouse = daos().inventoryDAO().loadStorage(playerObjId,
 				StorageType.REGULAR_WAREHOUSE);
 		ItemService.loadItemStones(warehouse.getItems());
 		if (ItemService.ensureSkillEnhance(player, warehouse.getItems())) {
@@ -273,22 +365,22 @@ public class PlayerService {
 		}
 		player.setHouseRegistry(houseRegistry);
 		player.getEquipment().onLoadApplyEquipmentStats();
-		DAOManager.getDAO(PlayerPunishmentsDAO.class).loadPlayerPunishments(player, PunishmentType.PRISON);
-		DAOManager.getDAO(PlayerPunishmentsDAO.class).loadPlayerPunishments(player, PunishmentType.GATHER);
+		daos().playerPunishmentsDAO().loadPlayerPunishments(player, PunishmentType.PRISON);
+		daos().playerPunishmentsDAO().loadPlayerPunishments(player, PunishmentType.GATHER);
 		player.getController().updatePassiveStats();
-		DAOManager.getDAO(PlayerEffectsDAO.class).loadPlayerEffects(player);
-		DAOManager.getDAO(PlayerCooldownsDAO.class).loadPlayerCooldowns(player);
-		DAOManager.getDAO(ItemCooldownsDAO.class).loadItemCooldowns(player);
-		DAOManager.getDAO(PortalCooldownsDAO.class).loadPortalCooldowns(player);
-		DAOManager.getDAO(HouseObjectCooldownsDAO.class).loadHouseObjectCooldowns(player);
-		DAOManager.getDAO(PlayerBindPointDAO.class).loadBindPoint(player);
-		DAOManager.getDAO(CraftCooldownsDAO.class).loadCraftCooldowns(player);
-		DAOManager.getDAO(PlayerLunaShopDAO.class).load(player);
+		daos().playerEffectsDAO().loadPlayerEffects(player);
+		daos().playerCooldownsDAO().loadPlayerCooldowns(player);
+		daos().itemCooldownsDAO().loadItemCooldowns(player);
+		daos().portalCooldownsDAO().loadPortalCooldowns(player);
+		daos().houseObjectCooldownsDAO().loadHouseObjectCooldowns(player);
+		daos().playerBindPointDAO().loadBindPoint(player);
+		daos().craftCooldownsDAO().loadCraftCooldowns(player);
+		daos().playerLunaShopDAO().load(player);
 		if (player.getCommonData().getBonusTitleId() > 0) {
 			TitleChangeListener.onBonusTitleChange(player.getGameStats(), player.getCommonData().getBonusTitleId(), true);
 		}
-		DAOManager.getDAO(PlayerLifeStatsDAO.class).loadPlayerLifeStat(player);
-		DAOManager.getDAO(PlayerEmotionListDAO.class).loadEmotions(player);
+		daos().playerLifeStatsDAO().loadPlayerLifeStat(player);
+		daos().playerEmotionListDAO().loadEmotions(player);
 		if (CacheConfig.CACHE_PLAYERS) {
 			playerCache.put(playerObjId, player);
 		}
@@ -402,8 +494,8 @@ public class PlayerService {
 	 * @param playerId 角色 ID / player id
 	 */
 	public static void deletePlayerFromDB(int playerId) {
-		DAOManager.getDAO(InventoryDAO.class).deletePlayerItems(playerId);
-		DAOManager.getDAO(PlayerDAO.class).deletePlayer(playerId);
+		daos().inventoryDAO().deletePlayerItems(playerId);
+		daos().playerDAO().deletePlayer(playerId);
 	}
 
 	/**
@@ -413,7 +505,7 @@ public class PlayerService {
 	 * @return 删除的角色数 / number of deleted characters
 	 */
 	public static int deleteAccountsCharsFromDB(int accountId) {
-		List<Integer> charIds = DAOManager.getDAO(PlayerDAO.class).getPlayerOidsOnAccount(accountId);
+		List<Integer> charIds = daos().playerDAO().getPlayerOidsOnAccount(accountId);
 		for (int playerId : charIds) {
 			deletePlayerFromDB(playerId);
 		}
@@ -421,7 +513,7 @@ public class PlayerService {
 	}
 
 	private static void storeDeletionTime(PlayerAccountData accData) {
-		DAOManager.getDAO(PlayerDAO.class).updateDeletionTime(accData.getPlayerCommonData().getPlayerObjId(),
+		daos().playerDAO().updateDeletionTime(accData.getPlayerCommonData().getPlayerObjId(),
 				accData.getDeletionDate());
 	}
 
@@ -432,7 +524,7 @@ public class PlayerService {
 	 * creationDate
 	 */
 	public static void storeCreationTime(int objectId, Timestamp creationDate) {
-		DAOManager.getDAO(PlayerDAO.class).storeCreationTime(objectId, creationDate);
+		daos().playerDAO().storeCreationTime(objectId, creationDate);
 	}
 
 	/**
@@ -444,9 +536,9 @@ public class PlayerService {
 	 */
 	public static void addMacro(Player player, int macroOrder, String macroXML) {
 		if (player.getMacroList().addMacro(macroOrder, macroXML)) {
-			DAOManager.getDAO(PlayerMacrossesDAO.class).addMacro(player.getObjectId(), macroOrder, macroXML);
+			daos().playerMacrossesDAO().addMacro(player.getObjectId(), macroOrder, macroXML);
 		} else {
-			DAOManager.getDAO(PlayerMacrossesDAO.class).updateMacro(player.getObjectId(), macroOrder, macroXML);
+			daos().playerMacrossesDAO().updateMacro(player.getObjectId(), macroOrder, macroXML);
 		}
 	}
 
@@ -458,7 +550,7 @@ public class PlayerService {
 	 */
 	public static void removeMacro(Player player, int macroOrder) {
 		if (player.getMacroList().removeMacro(macroOrder)) {
-			DAOManager.getDAO(PlayerMacrossesDAO.class).deleteMacro(player.getObjectId(), macroOrder);
+			daos().playerMacrossesDAO().deleteMacro(player.getObjectId(), macroOrder);
 		}
 	}
 
@@ -500,7 +592,7 @@ public class PlayerService {
 				 playerObjIdsCopy.remove(object.getObjectId());
 			 }
 		 });
-		result.putAll(DAOManager.getDAO(PlayerDAO.class).getPlayerNames(playerObjIdsCopy));
+		result.putAll(daos().playerDAO().getPlayerNames(playerObjIdsCopy));
 		return result;
 	}
 }
