@@ -11,16 +11,24 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.sql.DataSource;
+
 import org.junit.jupiter.api.Test;
+import org.springframework.jdbc.core.simple.JdbcClient;
 
 import com.aionemu.gameserver.dao.AbyssLandingDAO;
+import com.aionemu.gameserver.dao.AbyssRankDAO;
 import com.aionemu.gameserver.dao.AnnouncementsDAO;
+import com.aionemu.gameserver.dao.BrokerDAO;
 import com.aionemu.gameserver.dao.InventoryDAO;
+import com.aionemu.gameserver.dao.MailDAO;
 import com.aionemu.gameserver.dao.PetitionDAO;
+import com.aionemu.gameserver.dao.PlayerDAO;
 import com.aionemu.gameserver.dao.TownDAO;
 import com.aionemu.gameserver.model.Announcement;
 import com.aionemu.gameserver.model.Petition;
 import com.aionemu.gameserver.model.Race;
+import com.aionemu.gameserver.model.gameobjects.BrokerItem;
 import com.aionemu.gameserver.model.gameobjects.Item;
 import com.aionemu.gameserver.model.gameobjects.player.Equipment;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -28,6 +36,7 @@ import com.aionemu.gameserver.model.items.storage.Storage;
 import com.aionemu.gameserver.model.items.storage.StorageType;
 import com.aionemu.gameserver.model.landing.LandingLocation;
 import com.aionemu.gameserver.model.town.Town;
+import com.aionemu.gameserver.services.mail.MailService;
 
 /**
  * 核心服务构造器注入与 DAO 解耦单元测试。
@@ -249,11 +258,70 @@ class ServiceConstructorInjectionTest {
 	}
 
 	@Test
+	void brokerServiceConstructsWithInjectedDaos() {
+		BrokerDAO stubBrokerDAO = new BrokerDAO() {
+			@Override
+			public List<BrokerItem> loadBroker() {
+				return Collections.emptyList();
+			}
+
+			@Override
+			public boolean store(BrokerItem brokerItem) {
+				return true;
+			}
+
+			@Override
+			public boolean preBuyCheck(int itemForCheck) {
+				return true;
+			}
+
+			@Override
+			public int[] getUsedIDs() {
+				return new int[0];
+			}
+
+			@Override
+			public boolean supports(String databaseName, int majorVersion, int minorVersion) {
+				return true;
+			}
+		};
+
+		InventoryDAO stubInventoryDAO = new com.aionemu.gameserver.dao.impl.InventoryDAO(createNoAccessJdbcClient());
+
+		BrokerService brokerService = new BrokerService(stubBrokerDAO, stubInventoryDAO);
+		assertNotNull(brokerService);
+	}
+
+	@Test
+	void mailServiceConstructsWithInjectedDaos() {
+		JdbcClient client = createNoAccessJdbcClient();
+
+		MailDAO mailDAO = new com.aionemu.gameserver.dao.impl.MailDAO(client);
+		InventoryDAO inventoryDAO = new com.aionemu.gameserver.dao.impl.InventoryDAO(client);
+		PlayerDAO playerDAO = new com.aionemu.gameserver.dao.impl.PlayerDAO(client);
+		AbyssRankDAO abyssRankDAO = new com.aionemu.gameserver.dao.impl.AbyssRankDAO(client);
+
+		MailService mailService = new MailService(mailDAO, inventoryDAO, playerDAO, abyssRankDAO);
+		assertNotNull(mailService);
+	}
+
+	private static JdbcClient createNoAccessJdbcClient() {
+		DataSource noAccessDataSource = (DataSource) java.lang.reflect.Proxy.newProxyInstance(
+			ServiceConstructorInjectionTest.class.getClassLoader(),
+			new Class<?>[]{DataSource.class},
+			(proxy, method, args) -> null
+		);
+		return JdbcClient.create(noAccessDataSource);
+	}
+
+	@Test
 	void servicesFailFastOnNullDaoInjection() {
 		assertThrows(NullPointerException.class, () -> new TownService(null));
 		assertThrows(NullPointerException.class, () -> new AnnouncementService(null));
 		assertThrows(NullPointerException.class, () -> new AbyssLandingService(null));
 		assertThrows(NullPointerException.class, () -> new ExchangeService(null));
 		assertThrows(NullPointerException.class, () -> new PetitionService(null));
+		assertThrows(NullPointerException.class, () -> new BrokerService(null, null));
+		assertThrows(NullPointerException.class, () -> new MailService(null, null, null, null));
 	}
 }

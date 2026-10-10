@@ -16,6 +16,7 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Calendar;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -63,6 +64,11 @@ public class MailService {
 	private static volatile ObjectProvider<MailService> instanceProvider;
 	private static volatile MailService resolvedInstance;
 
+	private final MailDAO mailDAO;
+	private final InventoryDAO inventoryDAO;
+	private final PlayerDAO playerDAO;
+	private final AbyssRankDAO abyssRankDAO;
+
 	/** 新登录玩家队列（预留）。 / Queue of newly logged-in players (reserved). */
 	protected Queue<Player> newPlayers;
 
@@ -92,11 +98,48 @@ public class MailService {
 	}
 
 	/**
+	 * 使用指定的 DAO 集合构造邮件服务。
+	 * Constructs the mail service with the given DAOs.
+	 *
+	 * @param mailDAO 邮件数据访问对象 / Mail DAO
+	 * @param inventoryDAO 背包物品数据访问对象 / Inventory DAO
+	 * @param playerDAO 玩家数据访问对象 / Player DAO
+	 * @param abyssRankDAO 欧比斯军阶数据访问对象 / Abyss rank DAO
+	 */
+	public MailService(MailDAO mailDAO, InventoryDAO inventoryDAO, PlayerDAO playerDAO, AbyssRankDAO abyssRankDAO) {
+		this.mailDAO = Objects.requireNonNull(mailDAO, "mailDAO must not be null");
+		this.inventoryDAO = Objects.requireNonNull(inventoryDAO, "inventoryDAO must not be null");
+		this.playerDAO = Objects.requireNonNull(playerDAO, "playerDAO must not be null");
+		this.abyssRankDAO = Objects.requireNonNull(abyssRankDAO, "abyssRankDAO must not be null");
+		this.newPlayers = new ConcurrentLinkedQueue<>();
+	}
+
+	/**
 	 * 构造邮件服务并初始化新玩家队列。
 	 * Constructs the mail service and initializes the new-player queue.
 	 */
 	public MailService() {
-		newPlayers = new ConcurrentLinkedQueue<>();
+		this.mailDAO = null;
+		this.inventoryDAO = null;
+		this.playerDAO = null;
+		this.abyssRankDAO = null;
+		this.newPlayers = new ConcurrentLinkedQueue<>();
+	}
+
+	private MailDAO getMailDAO() {
+		return mailDAO != null ? mailDAO : DAOManager.getDAO(MailDAO.class);
+	}
+
+	private InventoryDAO getInventoryDAO() {
+		return inventoryDAO != null ? inventoryDAO : DAOManager.getDAO(InventoryDAO.class);
+	}
+
+	private PlayerDAO getPlayerDAO() {
+		return playerDAO != null ? playerDAO : DAOManager.getDAO(PlayerDAO.class);
+	}
+
+	private AbyssRankDAO getAbyssRankDAO() {
+		return abyssRankDAO != null ? abyssRankDAO : DAOManager.getDAO(AbyssRankDAO.class);
 	}
 
 	/**
@@ -134,8 +177,7 @@ public class MailService {
 		if (message.length() > 1000) {
 			message = message.substring(0, 1000);
 		}
-		PlayerCommonData recipientCommonData = DAOManager.getDAO(PlayerDAO.class)
-				.loadPlayerCommonDataByName(recipientName);
+		PlayerCommonData recipientCommonData = getPlayerDAO().loadPlayerCommonDataByName(recipientName);
 
 		if (recipientCommonData == null) {
 			PacketSendUtility.sendPacket(sender, new SM_MAIL_SERVICE(MailMessage.NO_SUCH_CHARACTER_NAME));
@@ -294,23 +336,23 @@ public class MailService {
 
 	private boolean storeSentMail(Player sender, PlayerCommonData recipientCommonData, Mailbox recipientMailbox,
 			Item attachedItem, Letter letter, Timestamp time) {
-		InventoryDAO inventoryDAO = DAOManager.getDAO(InventoryDAO.class);
-		MailDAO mailDAO = DAOManager.getDAO(MailDAO.class);
 		List<Item> senderItems = sender.getDirtyItemsToUpdate();
 		Integer accountId = sender.getPlayerAccount() == null ? null : sender.getPlayerAccount().getId();
 		Integer legionId = sender.getLegion() == null ? null : sender.getLegion().getLegionId();
 		int mailboxLetters = recipientCommonData.getMailboxLetters() + 1;
 
+		InventoryDAO invDAO = getInventoryDAO();
+		MailDAO mDAO = getMailDAO();
 		try (Connection con = DatabaseFactory.getConnection()) {
 			con.setAutoCommit(false);
 			try {
-				inventoryDAO.storeInTransaction(con, senderItems, sender.getObjectId(), accountId, legionId);
+				invDAO.storeInTransaction(con, senderItems, sender.getObjectId(), accountId, legionId);
 				if (attachedItem != null) {
-					inventoryDAO.storeInTransaction(con, List.of(attachedItem), recipientCommonData.getPlayerObjId(), null, null);
+					invDAO.storeInTransaction(con, List.of(attachedItem), recipientCommonData.getPlayerObjId(), null, null);
 				}
-				mailDAO.storeLetterInTransaction(con, time, letter);
+				mDAO.storeLetterInTransaction(con, time, letter);
 				if (recipientMailbox == null) {
-					mailDAO.updateMailCounterInTransaction(con, recipientCommonData.getName(), mailboxLetters);
+					mDAO.updateMailCounterInTransaction(con, recipientCommonData.getName(), mailboxLetters);
 				}
 				con.commit();
 			} catch (SQLException e) {
@@ -322,10 +364,10 @@ public class MailService {
 			return false;
 		}
 
-		inventoryDAO.markStored(senderItems);
+		invDAO.markStored(senderItems);
 		sender.markDirtyItemContainersStored();
 		if (attachedItem != null) {
-			inventoryDAO.markStored(List.of(attachedItem));
+			invDAO.markStored(List.of(attachedItem));
 		}
 		letter.setPersistState(com.aionemu.gameserver.model.gameobjects.PersistentState.UPDATED);
 		if (recipientMailbox == null) {
@@ -442,16 +484,16 @@ public class MailService {
 	}
 
 	private boolean storeClaimedAttachment(Player player, Letter letter, List<Item> items, AbyssRank abyssRank) {
-		InventoryDAO inventoryDAO = DAOManager.getDAO(InventoryDAO.class);
-		MailDAO mailDAO = DAOManager.getDAO(MailDAO.class);
+		InventoryDAO invDAO = getInventoryDAO();
+		MailDAO mDAO = getMailDAO();
 		try (Connection con = DatabaseFactory.getConnection()) {
 			con.setAutoCommit(false);
 			try {
-				inventoryDAO.storeInTransaction(con, items, player.getObjectId(), null, null);
+				invDAO.storeInTransaction(con, items, player.getObjectId(), null, null);
 				if (abyssRank != null) {
-					DAOManager.getDAO(AbyssRankDAO.class).storeInTransaction(con, player.getObjectId(), abyssRank);
+					getAbyssRankDAO().storeInTransaction(con, player.getObjectId(), abyssRank);
 				}
-				mailDAO.storeLetterInTransaction(con, letter.getTimeStamp(), letter);
+				mDAO.storeLetterInTransaction(con, letter.getTimeStamp(), letter);
 				con.commit();
 			} catch (SQLException e) {
 				con.rollback();
@@ -461,7 +503,7 @@ public class MailService {
 			log.error(I18n.get("log.9b61ee4df55e", player.getObjectId(), letter.getObjectId()), e);
 			return false;
 		}
-		inventoryDAO.markStored(items);
+		invDAO.markStored(items);
 		letter.setPersistState(PersistentState.UPDATED);
 		return true;
 	}
@@ -477,7 +519,7 @@ public class MailService {
 
 		for (int letterId : mailObjId) {
 			mailbox.removeLetter(letterId);
-			DAOManager.getDAO(MailDAO.class).deleteLetter(letterId);
+			getMailDAO().deleteLetter(letterId);
 		}
 		PacketSendUtility.sendPacket(player, new SM_MAIL_SERVICE(mailObjId));
 	}
@@ -607,7 +649,7 @@ public class MailService {
 		 */
 		@Override
 		public void run() {
-			player.setMailbox(DAOManager.getDAO(MailDAO.class).loadPlayerMailbox(player));
+			player.setMailbox(getMailDAO().loadPlayerMailbox(player));
 			PacketSendUtility.sendPacket(player, new SM_MAIL_SERVICE(player.getMailbox()));
 			GameHousingServices.housingBidService().onPlayerLogin(player);
 		}

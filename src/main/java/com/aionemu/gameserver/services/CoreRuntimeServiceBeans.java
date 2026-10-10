@@ -22,9 +22,13 @@ import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
+import com.aionemu.gameserver.dao.AbyssRankDAO;
 import com.aionemu.gameserver.dao.AnnouncementsDAO;
+import com.aionemu.gameserver.dao.BrokerDAO;
 import com.aionemu.gameserver.dao.InventoryDAO;
+import com.aionemu.gameserver.dao.MailDAO;
 import com.aionemu.gameserver.dao.PetitionDAO;
+import com.aionemu.gameserver.dao.PlayerDAO;
 
 /**
  * CoreRuntimeServiceBeans：从 GameLegacyServiceBridgeConfiguration 拆出的域内 Bean 装配。
@@ -84,7 +88,13 @@ public class CoreRuntimeServiceBeans {
 
     @Bean
     @Lazy
-    public BrokerService brokerService() {
+    public BrokerService brokerService(ObjectProvider<BrokerDAO> brokerDaoProvider,
+                                       ObjectProvider<InventoryDAO> inventoryDaoProvider) {
+        BrokerDAO brokerDAO = brokerDaoProvider.getIfAvailable();
+        InventoryDAO inventoryDAO = inventoryDaoProvider.getIfAvailable();
+        if (brokerDAO != null && inventoryDAO != null) {
+            return new BrokerService(brokerDAO, inventoryDAO);
+        }
         return new BrokerService();
     }
 
@@ -234,7 +244,17 @@ public class CoreRuntimeServiceBeans {
     }
 
     @Bean
-    public MailService mailService() {
+    public MailService mailService(ObjectProvider<MailDAO> mailDaoProvider,
+                                   ObjectProvider<InventoryDAO> inventoryDaoProvider,
+                                   ObjectProvider<PlayerDAO> playerDaoProvider,
+                                   ObjectProvider<AbyssRankDAO> abyssRankDaoProvider) {
+        MailDAO mailDAO = mailDaoProvider.getIfAvailable();
+        InventoryDAO inventoryDAO = inventoryDaoProvider.getIfAvailable();
+        PlayerDAO playerDAO = playerDaoProvider.getIfAvailable();
+        AbyssRankDAO abyssRankDAO = abyssRankDaoProvider.getIfAvailable();
+        if (mailDAO != null && inventoryDAO != null && playerDAO != null && abyssRankDAO != null) {
+            return new MailService(mailDAO, inventoryDAO, playerDAO, abyssRankDAO);
+        }
         return new MailService();
     }
 

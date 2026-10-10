@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.Future;
@@ -70,6 +71,8 @@ public class BrokerService {
 	private Future<?> expiredItemsTask;
 	private final ConcurrentMap<Integer, BrokerPlayerCache> playerBrokerCache = new ConcurrentHashMap<>();
 	private static volatile ObjectProvider<BrokerService> instanceProvider;
+	private final BrokerDAO brokerDAO;
+	private final InventoryDAO inventoryDAO;
 
 	/**
 	 * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。
@@ -104,12 +107,25 @@ public class BrokerService {
 	}
 
 	/**
+	 * 使用指定的 BrokerDAO 与 InventoryDAO 构造经纪行服务。
+	 * Constructs the broker service with the given BrokerDAO and InventoryDAO.
+	 *
+	 * @param brokerDAO 经纪行数据访问对象 / Broker DAO
+	 * @param inventoryDAO 物品数据访问对象 / Inventory DAO
+	 */
+	public BrokerService(BrokerDAO brokerDAO, InventoryDAO inventoryDAO) {
+		this.brokerDAO = Objects.requireNonNull(brokerDAO, "brokerDAO must not be null");
+		this.inventoryDAO = Objects.requireNonNull(inventoryDAO, "inventoryDAO must not be null");
+		initBrokerService();
+		scheduleExpiredItemsTask();
+	}
+
+	/**
 	 * 构造经纪行服务并初始化周期任务管理器。
 	 * Construct the broker service and initialize its periodic task manager.
 	 */
 	public BrokerService() {
-		initBrokerService();
-		scheduleExpiredItemsTask();
+		this(DAOManager.getDAO(BrokerDAO.class), DAOManager.getDAO(InventoryDAO.class));
 	}
 
 	/**
@@ -133,7 +149,7 @@ public class BrokerService {
 		int loadedBrokerItemsCount = 0;
 		int loadedSettledItemsCount = 0;
 
-		List<BrokerItem> brokerItems = DAOManager.getDAO(BrokerDAO.class).loadBroker();
+		List<BrokerItem> brokerItems = brokerDAO.loadBroker();
 
 		for (BrokerItem item : brokerItems) {
 			BrokerRace race = item.getItemBrokerRace();
@@ -311,7 +327,7 @@ public class BrokerService {
 			return;
 		}
 		if (SecurityConfig.BROKER_PREBUY_CHECK) {
-			if (!(DAOManager.getDAO(BrokerDAO.class).preBuyCheck(itemUniqueId))) {
+			if (!brokerDAO.preBuyCheck(itemUniqueId)) {
 				PacketSendUtility.sendMessage(player, "Sorry, but this item already sold");
 				return;
 			}
@@ -970,7 +986,6 @@ public class BrokerService {
 	private boolean expireItem(Race race, BrokerItem item) {
 		PersistentState originalState = item.getPersistentState();
 		item.setPersistentState(PersistentState.DELETED);
-		BrokerDAO brokerDAO = DAOManager.getDAO(BrokerDAO.class);
 		if (GameFeatureServices.systemMailService().sendSystemMail("$$VENDOR_RETURN_MAIL", "", "", item.getSeller(),
 			item.getItem(), 0, 0, LetterType.NORMAL, con -> brokerDAO.storeInTransaction(con, item))) {
 			item.setPersistentState(PersistentState.UPDATED);
@@ -1035,12 +1050,33 @@ public class BrokerService {
 	 */
 	public static final class BrokerOpSaveTask implements Runnable {
 
+		private final BrokerDAO brokerDAO;
+		private final InventoryDAO inventoryDAO;
 		private final List<BrokerItem> brokerItems;
 		private final List<InventorySave> inventorySaves;
 
-		private BrokerOpSaveTask(List<BrokerItem> brokerItems, List<InventorySave> inventorySaves) {
+		/**
+		 * 显式注入构造器。
+		 * Constructs a save task with explicit DAO dependencies.
+		 *
+		 * @param brokerDAO 经纪行数据访问对象 / Broker DAO
+		 * @param inventoryDAO 背包物品数据访问对象 / Inventory DAO
+		 * @param brokerItems 待存经纪行物品集合 / broker items to save
+		 * @param inventorySaves 待存背包物品集合 / inventory items to save
+		 */
+		public BrokerOpSaveTask(BrokerDAO brokerDAO, InventoryDAO inventoryDAO, List<BrokerItem> brokerItems, List<InventorySave> inventorySaves) {
+			this.brokerDAO = Objects.requireNonNull(brokerDAO, "brokerDAO must not be null");
+			this.inventoryDAO = Objects.requireNonNull(inventoryDAO, "inventoryDAO must not be null");
 			this.brokerItems = List.copyOf(brokerItems);
 			this.inventorySaves = List.copyOf(inventorySaves);
+		}
+
+		/**
+		 * 兼容回退构造器。
+		 * Legacy constructor resolving DAOs from DAOManager.
+		 */
+		public BrokerOpSaveTask(List<BrokerItem> brokerItems, List<InventorySave> inventorySaves) {
+			this(DAOManager.getDAO(BrokerDAO.class), DAOManager.getDAO(InventoryDAO.class), brokerItems, inventorySaves);
 		}
 
 		/**
@@ -1053,14 +1089,24 @@ public class BrokerService {
 			this(List.of(brokerItem), List.of());
 		}
 
+		/**
+		 * 显式注入单物品构造器。
+		 * Construct a save task for a single broker item with explicit DAOs.
+		 *
+		 * @param brokerDAO 经纪行数据访问对象 / Broker DAO
+		 * @param inventoryDAO 背包物品数据访问对象 / Inventory DAO
+		 * @param brokerItem 经纪行物品 / broker item
+		 */
+		public BrokerOpSaveTask(BrokerDAO brokerDAO, InventoryDAO inventoryDAO, BrokerItem brokerItem) {
+			this(brokerDAO, inventoryDAO, List.of(brokerItem), List.of());
+		}
+
 		@Override
 		public void run() {
 			save();
 		}
 
 		private boolean save() {
-			InventoryDAO inventoryDAO = DAOManager.getDAO(InventoryDAO.class);
-			BrokerDAO brokerDAO = DAOManager.getDAO(BrokerDAO.class);
 			try (Connection con = DatabaseFactory.getConnection()) {
 				con.setAutoCommit(false);
 				try {

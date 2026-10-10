@@ -97,5 +97,6 @@ AionEmu 当前采用单体 Spring Boot 4.1 承载 Login、Game、Chat 服务，�
 - [x] 11. 现代外部化配置迁移（Phase 4 任务 4.1）：将 `PeriodicSaveConfig`、`ShutdownConfig`、`CacheConfig`、`CleaningConfig` 全面升级为 Spring Boot `@ConfigurationProperties`，与静态门面双轨同步并兼容旧属性路径，新增专项绑定单元测试 100% 通过
 - [x] 12. 服务层构造器注入收尾与消除 DAOManager.getDAO（Phase 4 任务 4.2）：将 `TownService`、`AnnouncementService`、`AbyssLandingService`、`ExchangeService`、`PetitionService` 全面改造为双构造器依赖注入模式，在 Spring 配置（`SiegeBattlefieldBeans`、`CoreRuntimeServiceBeans`）中以 `ObjectProvider` 显式装配 DAO，彻底消除硬编码静态查表，新增 6 项专项解耦单元测试全部通过
 - [x] 13. Spring Boot 数据库持久化基础设施与全量 DAO IoC 纳管：建立 `ContextRoutingDataSource` 动态延迟多租户路由，声明 `AionPersistenceConfiguration` 托管 DataSource/JdbcClient/JdbcTransactionManager/TransactionTemplate，全量 82 个 DAO 标注 `@Repository` 并完成 52 个抽象 DAO 类 CGLIB 代理零警告重构，通过 `DAOManagerContextBridge` 打通 Spring Bean 单例解析与离线降级通道，新增专项集成测试全部通过
+- [x] 14. 核心交易与社交服务构造器注入与 DAO 解耦（Phase 4 任务 4.2）：重构 `BrokerService`（依赖 `BrokerDAO`、`InventoryDAO`）与 `MailService`（依赖 `MailDAO`、`InventoryDAO`、`PlayerDAO`、`AbyssRankDAO`），消除静态查表与 Eager Bean 启动期未初始化 DAO 冲突，在 `CoreRuntimeServiceBeans` 中声明式装配，扩充 8 项解耦单元测试全部通过
 
 
