@@ -2,6 +2,7 @@ package com.aionemu.gameserver.services.reward;
 
 
 import com.aionemu.boot.i18n.I18n;
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
 
@@ -58,11 +59,32 @@ public class RewardService {
 	}
 
 	/**
-	 * 初始化 DAO。
-	 * Initialize the DAO.
+	 * 使用指定的奖励 DAO 构造服务。
+	 * Constructs the service with the given reward DAO.
+	 *
+	 * @param dao 奖励数据访问对象 / Reward DAO
+	 */
+	public RewardService(@NonNull RewardServiceDAO dao) {
+		this.dao = dao;
+	}
+
+	/**
+	 * 构造服务：DAOManager 已初始化时优先解析 Spring Bean，否则退回实现类无参构造。
+	 * Constructs the service: resolves the Spring bean when DAOManager is initialized, else falls back to no-arg impl constructors.
 	 */
 	public RewardService() {
-		dao = DAOManager.getDAO(RewardServiceDAO.class);
+		this(safeDao(RewardServiceDAO.class, com.aionemu.gameserver.dao.impl.RewardServiceDAO::new));
+	}
+
+	private static <T extends com.aionemu.commons.database.dao.DAO> T safeDao(Class<T> daoClass,
+			java.util.function.Supplier<T> fallback) {
+		if (DAOManager.isInitialized()) {
+			try {
+				return DAOManager.getDAO(daoClass);
+			} catch (Exception ignored) {
+			}
+		}
+		return fallback.get();
 	}
 
 	/**

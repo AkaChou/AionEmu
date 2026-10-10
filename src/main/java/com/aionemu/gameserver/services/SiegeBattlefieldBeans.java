@@ -29,6 +29,7 @@ import com.aionemu.gameserver.dao.HouseBidsDAO;
 import com.aionemu.gameserver.dao.LegionMemberDAO;
 import com.aionemu.gameserver.dao.OutpostDAO;
 import com.aionemu.gameserver.dao.PlayerDAO;
+import com.aionemu.gameserver.dao.SeasonRankingDAO;
 import com.aionemu.gameserver.dao.ServerVariablesDAO;
 import com.aionemu.gameserver.dao.SiegeDAO;
 import com.aionemu.gameserver.dao.TownDAO;
@@ -173,8 +174,9 @@ public class SiegeBattlefieldBeans {
 
     @Bean
     @Lazy
-    public SeasonRankingUpdateService seasonRankingUpdateService() {
-        return new SeasonRankingUpdateService();
+    public SeasonRankingUpdateService seasonRankingUpdateService(ObjectProvider<SeasonRankingDAO> seasonRankingDaoProvider) {
+        SeasonRankingDAO dao = seasonRankingDaoProvider.getIfAvailable();
+        return dao != null ? new SeasonRankingUpdateService(dao) : new SeasonRankingUpdateService();
     }
 
     @Bean

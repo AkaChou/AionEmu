@@ -1315,4 +1315,15 @@ public class TeleportService2 {
 	public static void instanceTransformation(Player player) {
 		TransformPanelSync.syncInstanceEventPanels(player);
 	}
+
+	/**
+	 * 由 Spring 配置类在启动期绑定玩家变身 DAO（转发给包级 {@link TransformPanelSync}）。
+	 * Binds the player-transform DAO from the Spring configuration at startup
+	 * (delegates to the package-private {@link TransformPanelSync}).
+	 *
+	 * @param dao 玩家变身 DAO / player-transform DAO
+	 */
+	public static void bindPlayerTransformDAO(com.aionemu.gameserver.dao.PlayerTransformDAO dao) {
+		TransformPanelSync.bindPlayerTransformDAO(dao);
+	}
 }

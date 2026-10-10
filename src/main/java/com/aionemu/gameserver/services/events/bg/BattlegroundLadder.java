@@ -2,9 +2,9 @@ package com.aionemu.gameserver.services.events.bg;
 
 import java.util.Collection;
 
-import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.dao.LadderDAO;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
+import com.aionemu.gameserver.services.events.LadderService;
 
 /**
  * 战场天梯评分域：胜/负场与 Elo 评分变化的记录与批量更新。
@@ -20,12 +20,12 @@ final class BattlegroundLadder {
 	static final int K_VALUE = 20;
 
 	/**
-	 * 读取天梯 DAO。
-	 * Resolves the ladder DAO.
+	 * 读取天梯 DAO（经宿主 {@link LadderService} 的静态绑定访问器，单一所有权）。
+	 * Resolves the ladder DAO through the hosting {@link LadderService} static accessor (single ownership).
 	 * @return 天梯 DAO / ladder DAO
 	 */
 	static LadderDAO dao() {
-		return DAOManager.getDAO(LadderDAO.class);
+		return LadderService.ladderDAO();
 	}
 
 	/**

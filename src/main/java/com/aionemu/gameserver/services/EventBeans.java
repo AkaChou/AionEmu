@@ -2,6 +2,7 @@ package com.aionemu.gameserver.services;
 
 import com.aionemu.gameserver.eventEngine.EventScheduler;
 import com.aionemu.gameserver.dao.AbyssRankDAO;
+import com.aionemu.gameserver.dao.LadderDAO;
 import com.aionemu.gameserver.dao.PlayerMinionsDAO;
 import com.aionemu.gameserver.dao.PlayerDAO;
 import com.aionemu.gameserver.dao.ServerVariablesDAO;
@@ -85,8 +86,9 @@ public class EventBeans {
 
     @Bean
     @Lazy
-    public LadderService ladderService() {
-        return new LadderService();
+    public LadderService ladderService(ObjectProvider<LadderDAO> ladderDaoProvider) {
+        LadderDAO dao = ladderDaoProvider.getIfAvailable();
+        return dao != null ? new LadderService(dao) : new LadderService();
     }
 
     @Bean

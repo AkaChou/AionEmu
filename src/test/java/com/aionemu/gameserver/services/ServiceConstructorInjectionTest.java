@@ -32,6 +32,7 @@ import com.aionemu.gameserver.dao.HouseBidsDAO;
 import com.aionemu.gameserver.dao.HousesDAO;
 import com.aionemu.gameserver.dao.InventoryDAO;
 import com.aionemu.gameserver.dao.ItemStoneListDAO;
+import com.aionemu.gameserver.dao.LadderDAO;
 import com.aionemu.gameserver.dao.LegionDAO;
 import com.aionemu.gameserver.dao.LegionMemberDAO;
 import com.aionemu.gameserver.dao.LimitedQuestDAO;
@@ -76,6 +77,7 @@ import com.aionemu.gameserver.model.atreian_bestiary.PlayerABList;
 import com.aionemu.gameserver.model.town.Town;
 import com.aionemu.gameserver.services.events.AtreianPassportService;
 import com.aionemu.gameserver.services.events.EventWindowService;
+import com.aionemu.gameserver.services.events.LadderService;
 import com.aionemu.gameserver.services.events.ShugoSweepService;
 import com.aionemu.gameserver.services.mail.MailService;
 import com.aionemu.gameserver.services.mail.SystemMailService;
@@ -88,6 +90,9 @@ import com.aionemu.gameserver.services.player.PlayerService;
 import com.aionemu.gameserver.services.player.PlayerServiceDaos;
 import com.aionemu.gameserver.services.toypet.PetService;
 import com.aionemu.gameserver.services.ranking.SeasonRankingService;
+import com.aionemu.gameserver.services.ranking.SeasonRankingUpdateService;
+import com.aionemu.gameserver.services.reward.RewardService;
+import com.aionemu.gameserver.services.territory.TerritoryService;
 import com.aionemu.gameserver.services.transfers.PlayerTransferService;
 import com.aionemu.gameserver.services.veteranreward.VeteranRewardsService;
 import com.aionemu.gameserver.services.abyss.AbyssRankCleaningService;
@@ -810,6 +815,38 @@ class ServiceConstructorInjectionTest {
 		assertNotNull(service);
 	}
 
+	@Test
+	void territoryServiceConstructsWithInjectedDao() {
+		JdbcClient client = createNoAccessJdbcClient();
+		LegionDAO legionDAO = new com.aionemu.gameserver.dao.impl.LegionDAO(client);
+		TerritoryService service = new TerritoryService(legionDAO);
+		assertNotNull(service);
+	}
+
+	@Test
+	void rewardServiceConstructsWithInjectedDao() {
+		JdbcClient client = createNoAccessJdbcClient();
+		RewardServiceDAO dao = new com.aionemu.gameserver.dao.impl.RewardServiceDAO(client);
+		RewardService service = new RewardService(dao);
+		assertNotNull(service);
+	}
+
+	@Test
+	void ladderServiceConstructsWithInjectedDao() {
+		JdbcClient client = createNoAccessJdbcClient();
+		LadderDAO ladderDAO = new com.aionemu.gameserver.dao.impl.LadderDAO(client);
+		LadderService service = new LadderService(ladderDAO);
+		assertNotNull(service);
+	}
+
+	@Test
+	void seasonRankingUpdateServiceConstructsWithInjectedDao() {
+		JdbcClient client = createNoAccessJdbcClient();
+		SeasonRankingDAO seasonRankingDAO = new com.aionemu.gameserver.dao.impl.SeasonRankingDAO(client);
+		SeasonRankingUpdateService service = new SeasonRankingUpdateService(seasonRankingDAO);
+		assertNotNull(service);
+	}
+
 	/** 供 cron 依赖服务离线构造使用的最简执行器。 / Minimal runner for offline construction of cron-dependent services. */
 	public static final class TestRunnableRunner extends com.aionemu.commons.services.cron.RunnableRunner {
 		@Override
@@ -904,6 +941,10 @@ class ServiceConstructorInjectionTest {
 		assertThrows(NullPointerException.class, () -> new PlayerTransferService(null, null));
 		assertThrows(NullPointerException.class, () -> new VeteranRewardsService(null, null));
 		assertThrows(NullPointerException.class, () -> new SeasonRankingService(null));
+		assertThrows(NullPointerException.class, () -> new TerritoryService(null));
+		assertThrows(NullPointerException.class, () -> new RewardService(null));
+		assertThrows(NullPointerException.class, () -> new LadderService(null));
+		assertThrows(NullPointerException.class, () -> new SeasonRankingUpdateService(null));
 		assertThrows(NullPointerException.class, () -> new PlayerServiceDaos(
 			null, null, null, null, null, null, null, null, null, null,
 			null, null, null, null, null, null, null, null, null, null,

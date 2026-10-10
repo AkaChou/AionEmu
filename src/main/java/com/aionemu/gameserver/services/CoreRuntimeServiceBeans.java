@@ -74,6 +74,7 @@ import com.aionemu.gameserver.dao.PlayerSkillListDAO;
 import com.aionemu.gameserver.dao.PlayerSkillSkinListDAO;
 import com.aionemu.gameserver.dao.PlayerStigmasEquippedDAO;
 import com.aionemu.gameserver.dao.PlayerTitleListDAO;
+import com.aionemu.gameserver.dao.PlayerTransformDAO;
 import com.aionemu.gameserver.dao.PlayerVarsDAO;
 import com.aionemu.gameserver.dao.PlayerWardrobeDAO;
 import com.aionemu.gameserver.dao.PortalCooldownsDAO;
@@ -132,8 +133,9 @@ public class CoreRuntimeServiceBeans {
 
     @Bean
     @Lazy
-    public TerritoryService territoryService() {
-        return new TerritoryService();
+    public TerritoryService territoryService(ObjectProvider<LegionDAO> legionDaoProvider) {
+        LegionDAO dao = legionDaoProvider.getIfAvailable();
+        return dao != null ? new TerritoryService(dao) : new TerritoryService();
     }
 
     @Bean
@@ -242,8 +244,9 @@ public class CoreRuntimeServiceBeans {
 
     @Bean
     @Lazy
-    public RewardService rewardService() {
-        return new RewardService();
+    public RewardService rewardService(ObjectProvider<RewardServiceDAO> rewardServiceDaoProvider) {
+        RewardServiceDAO dao = rewardServiceDaoProvider.getIfAvailable();
+        return dao != null ? new RewardService(dao) : new RewardService();
     }
 
     @Bean
@@ -369,6 +372,13 @@ public class CoreRuntimeServiceBeans {
             PlayerPasskeyDAO playerPasskeyDAO = daoFrom(beanFactory, PlayerPasskeyDAO.class);
             if (playerPasskeyDAO != null) {
                 PlayerEnterWorldService.bindPlayerPasskeyDAO(playerPasskeyDAO);
+            }
+            // 顺带绑定 teleport 域静态门面的玩家变身 DAO（缺失时保留 safeDao 兜底，不触发整体降级）
+            // also bind the teleport-domain static facade's transform DAO (keep safeDao fallback when absent,
+            // without triggering a full offline fallback)
+            PlayerTransformDAO playerTransformDAO = daoFrom(beanFactory, PlayerTransformDAO.class);
+            if (playerTransformDAO != null) {
+                com.aionemu.gameserver.services.teleport.TeleportService2.bindPlayerTransformDAO(playerTransformDAO);
             }
             return daos;
         } catch (NullPointerException offline) {

@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.ObjectProvider;
 
@@ -26,6 +27,36 @@ public class SeasonRankingUpdateService {
 	private static volatile ObjectProvider<SeasonRankingUpdateService> instanceProvider;
 	private int lastUpdate;
 	private final Map<Integer, List<SM_SEASON_RANKING>> players = new HashMap<>();
+	private final SeasonRankingDAO seasonRankingDAO;
+
+	/**
+	 * 使用指定的赛季排行 DAO 构造服务。
+	 * Constructs the service with the given season ranking DAO.
+	 *
+	 * @param seasonRankingDAO 赛季排行数据访问对象 / season ranking DAO
+	 */
+	public SeasonRankingUpdateService(@NonNull SeasonRankingDAO seasonRankingDAO) {
+		this.seasonRankingDAO = seasonRankingDAO;
+	}
+
+	/**
+	 * 构造服务：DAOManager 已初始化时优先解析 Spring Bean，否则退回实现类无参构造。
+	 * Constructs the service: resolves the Spring bean when DAOManager is initialized, else falls back to no-arg impl constructors.
+	 */
+	public SeasonRankingUpdateService() {
+		this(safeDao(SeasonRankingDAO.class, com.aionemu.gameserver.dao.impl.SeasonRankingDAO::new));
+	}
+
+	private static <T extends com.aionemu.commons.database.dao.DAO> T safeDao(Class<T> daoClass,
+			java.util.function.Supplier<T> fallback) {
+		if (DAOManager.isInitialized()) {
+			try {
+				return DAOManager.getDAO(daoClass);
+			} catch (Exception ignored) {
+			}
+		}
+		return fallback.get();
+	}
 
 	/**
 	 * 服务启动时刷新全部赛季榜单缓存。
@@ -60,7 +91,7 @@ public class SeasonRankingUpdateService {
 	 * @return 排行下发包列表 / Ranking dispatch packets
 	 */
 	private List<SM_SEASON_RANKING> loadRankPacket(int tableid) {
-		ArrayList<SeasonRankingResult> list = getDAO().getCompetitionRankingPlayers(tableid);
+		ArrayList<SeasonRankingResult> list = seasonRankingDAO.getCompetitionRankingPlayers(tableid);
 		List<SM_SEASON_RANKING> playerPackets = new ArrayList<>();
 		for (int i = 0; i < list.size(); i += 94) {
 			if (list.size() > i + 94) {
@@ -82,10 +113,6 @@ public class SeasonRankingUpdateService {
 	 */
 	public List<SM_SEASON_RANKING> getPlayers(int tableId) {
 		return players.get(tableId);
-	}
-
-	private SeasonRankingDAO getDAO() {
-		return DAOManager.getDAO(SeasonRankingDAO.class);
 	}
 
 	/**

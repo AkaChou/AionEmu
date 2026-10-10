@@ -5,10 +5,8 @@ import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
-import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.ai2.AbstractAI;
 import com.aionemu.gameserver.configs.main.CustomConfig;
-import com.aionemu.gameserver.dao.BaseDAO;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.gameobjects.AionObject;
 import com.aionemu.gameserver.model.gameobjects.Creature;
@@ -198,14 +196,5 @@ public class BaseBossDeathListener implements AbstractAI.AiDeathListener {
 		if (race == Race.ELYOS) {
 			GameLocationBootstrapServices.abyssLandingService().updateRedemptionLanding(6000, LandingPointsEnum.BASE, true);
 		}
-	}
-
-	/**
-	 * 获取基地 DAO。
-	 * Returns the base DAO.
-	 * Base DAO
-	 */
-	private BaseDAO getDAO() {
-		return DAOManager.getDAO(BaseDAO.class);
 	}
 }

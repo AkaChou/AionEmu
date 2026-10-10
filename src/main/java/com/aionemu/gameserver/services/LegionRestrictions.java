@@ -2,9 +2,7 @@ package com.aionemu.gameserver.services;
 
 
 import com.aionemu.boot.i18n.I18n;
-import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.configs.main.LegionConfig;
-import com.aionemu.gameserver.dao.LegionDAO;
 import com.aionemu.gameserver.lifecycle.GameHousingServices;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -439,7 +437,7 @@ final class LegionRestrictions {
 	 * @return true if is free, false in other case
 	 */
 	private boolean isFreeName(String name) {
-		return !DAOManager.getDAO(LegionDAO.class).isNameUsed(name);
+		return !service.legionDAO().isNameUsed(name);
 	}
 
 	/**

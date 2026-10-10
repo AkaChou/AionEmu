@@ -1,7 +1,7 @@
 package com.aionemu.gameserver.questEngine.tablelane;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * 原生任务车道的计时端口：DD 附加动作 case 10（`Add Timer`，原版执行器 case 10 →
@@ -44,7 +44,7 @@ public interface NativeTimerPort {
 
 		@Override
 		public void schedule(Player player, int questId, int seconds, int destStep, boolean abandonOnExpiry) {
-			ThreadPoolManager.getInstance().schedule(() -> {
+			GameThreadPoolServices.threadPoolManager().schedule(() -> {
 				// 玩家离线时放弃判定（原版到期回调以在线 User 为前提）。
 				// Skip when the player went offline (the retail expiry callback addresses a live User).
 				if (player == null || !player.isOnline()) {

@@ -48,7 +48,8 @@ class MinionServiceTest {
 	void persistsInitialGrowthPoints() throws Exception {
 		String dao = Files.readString(Path.of("src/main/java/com/aionemu/gameserver/dao/impl/PlayerMinionsDAO.java"));
 
-		assertTrue(dao.contains("stmt.setInt(7, minionCommonData.getMinionGrowthPoint())"));
+		assertTrue(dao.contains("INSERT INTO player_minions (player_id, object_id, minion_id, name, grade, level, growthpoints"));
+		assertTrue(dao.contains(".param(minionCommonData.getMinionGrowthPoint())"));
 	}
 
 	@Test
@@ -266,7 +267,7 @@ class MinionServiceTest {
 				service.indexOf("static long nextMinionFunctionExpiry"));
 
 		assertTrue(activation.contains("STR_FAMILIAR_MSG_FFUNCTION_USE_FAIL_BY_GOLD"));
-		assertTrue(activation.contains("DAOManager.getDAO(PlayerDAO.class).storePlayer(player)"));
+		assertTrue(activation.contains("playerDAO.storePlayer(player)"));
 	}
 
 	@Test

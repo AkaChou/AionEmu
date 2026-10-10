@@ -2,9 +2,7 @@ package com.aionemu.gameserver.services.outpost;
 
 import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
 
-import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.ai2.AbstractAI;
-import com.aionemu.gameserver.dao.OutpostDAO;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.gameobjects.AionObject;
 import com.aionemu.gameserver.model.gameobjects.Creature;
@@ -56,14 +54,5 @@ public class OutpostBossDeathListener implements AbstractAI.AiDeathListener {
 	 */
 	@Override
 	public void onAfterDie(AbstractAI obj) {
-	}
-
-	/**
-	 * 获取前哨 DAO。
-	 * Returns the outpost DAO.
-	 * @return 前哨 DAO / outpost DAO
-	 */
-	private OutpostDAO getDAO() {
-		return DAOManager.getDAO(OutpostDAO.class);
 	}
 }

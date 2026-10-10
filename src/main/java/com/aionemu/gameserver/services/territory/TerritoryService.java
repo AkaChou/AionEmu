@@ -10,6 +10,8 @@ import java.util.Map;
 import java.util.TreeMap;
 import org.springframework.beans.factory.ObjectProvider;
 
+import lombok.NonNull;
+
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.dao.LegionDAO;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -33,6 +35,36 @@ public class TerritoryService {
 	private final Map<Integer, TerritoryBuff> buffs = new HashMap<>();
 	private final TreeMap<Integer, LegionTerritory> territories = new TreeMap<>();
 	private final TreeMap<Integer, TreeMap<Integer, WorldPosition>> teleporters = new TreeMap<>();
+	private final LegionDAO legionDAO;
+
+	/**
+	 * 使用指定的 LegionDAO 构造领地服务。
+	 * Constructs the territory service with the given LegionDAO.
+	 *
+	 * @param legionDAO 军团数据访问对象 / Legion DAO
+	 */
+	public TerritoryService(@NonNull LegionDAO legionDAO) {
+		this.legionDAO = legionDAO;
+	}
+
+	/**
+	 * 构造服务：DAOManager 已初始化时优先解析 Spring Bean，否则退回实现类无参构造。
+	 * Constructs the service: resolves the Spring bean when DAOManager is initialized, else falls back to no-arg impl constructors.
+	 */
+	public TerritoryService() {
+		this(safeDao(LegionDAO.class, com.aionemu.gameserver.dao.impl.LegionDAO::new));
+	}
+
+	private static <T extends com.aionemu.commons.database.dao.DAO> T safeDao(Class<T> daoClass,
+			java.util.function.Supplier<T> fallback) {
+		if (DAOManager.isInitialized()) {
+			try {
+				return DAOManager.getDAO(daoClass);
+			} catch (Exception ignored) {
+			}
+		}
+		return fallback.get();
+	}
 
 	/**
 	 * 初始化全部领地槽位并从数据库加载军团占领状态。
@@ -45,7 +77,7 @@ public class TerritoryService {
 		for (int i = 1; i <= 6; i++) {
 			territories.put(i, new LegionTerritory(i));
 		}
-		for (Integer legionId : DAOManager.getDAO(LegionDAO.class).getLegionIdsWithTerritories()) {
+		for (Integer legionId : legionDAO.getLegionIdsWithTerritories()) {
 			legions.add(ls.getLegion(legionId));
 		}
 		for (Legion legion : legions) {

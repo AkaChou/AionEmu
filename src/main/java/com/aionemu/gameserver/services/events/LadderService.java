@@ -3,6 +3,7 @@ package com.aionemu.gameserver.services.events;
 
 import com.aionemu.boot.i18n.I18n;
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
 
@@ -108,13 +109,68 @@ public class LadderService {
 	private static final int RANK_UPDATE_INTERVAL = 2;
 
 	/**
-	 * 构造服务并启动周期排名刷新。
-	 * Constructs the service and starts periodic rank updates.
+	 * 天梯 DAO。 / Ladder DAO.
 	 */
-	public LadderService() {
+	private final LadderDAO ladderDAO;
+
+	/**
+	 * Spring 绑定的天梯 DAO（供子包战场域静态类复用）。 / Spring-bound ladder DAO reused by battleground-subpackage statics.
+	 */
+	private static volatile LadderDAO boundLadderDAO;
+
+	/**
+	 * 使用指定的天梯 DAO 构造服务并启动周期排名刷新。
+	 * Constructs the service with the given ladder DAO and starts periodic rank updates.
+	 *
+	 * @param ladderDAO 天梯数据访问对象 / ladder DAO
+	 */
+	public LadderService(@NonNull LadderDAO ladderDAO) {
+		this.ladderDAO = ladderDAO;
+		boundLadderDAO = ladderDAO;
 		int intervalMs = RANK_UPDATE_INTERVAL * 60 * 1000;
 		GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(this::UpdateRanks, intervalMs, intervalMs);
 		log.info(I18n.get("log.feb60173643c"));
+	}
+
+	/**
+	 * 返回天梯 DAO；未绑定（离线/单测环境）时按 safeDao 兜底构建并缓存。
+	 * 公开开放，供子包战场域静态类（如 {@code BattlegroundLadder}）复用同一绑定。
+	 * Returns the ladder DAO; falls back to safeDao construction when unbound (offline/unit tests).
+	 * Public so the battleground subpackage statics reuse the same binding.
+	 *
+	 * @return 天梯 DAO / ladder DAO
+	 */
+	public static LadderDAO ladderDAO() {
+		LadderDAO current = boundLadderDAO;
+		if (current == null) {
+			synchronized (LadderService.class) {
+				current = boundLadderDAO;
+				if (current == null) {
+					boundLadderDAO = current = safeDao(LadderDAO.class,
+							com.aionemu.gameserver.dao.impl.LadderDAO::new);
+				}
+			}
+		}
+		return current;
+	}
+
+	/**
+	 * 构造服务：DAOManager 已初始化时优先解析 Spring Bean，否则退回实现类无参构造。
+	 * Constructs the service: resolves the Spring bean when DAOManager is initialized, else falls back to no-arg impl constructors.
+	 */
+	public LadderService() {
+		this(safeDao(LadderDAO.class, com.aionemu.gameserver.dao.impl.LadderDAO::new));
+	}
+
+	private static <T extends com.aionemu.commons.database.dao.DAO> T safeDao(Class<T> daoClass,
+			java.util.function.Supplier<T> fallback) {
+		if (DAOManager.isInitialized()) {
+			try {
+				return DAOManager.getDAO(daoClass);
+			} catch (Exception ignored) {
+			}
+		}
+		return fallback.get();
 	}
 
 	/**
@@ -122,7 +178,7 @@ public class LadderService {
 	 * Refreshes ladder ranks via the DAO.
 	 */
 	public void UpdateRanks() {
-		getLadderDAO().updateRanks();
+		ladderDAO.updateRanks();
 	}
 
 	/**
@@ -1090,15 +1146,6 @@ public class LadderService {
 		} else {
 			PacketSendUtility.sendSys3Message(player, sender, msg);
 		}
-	}
-
-	/**
-	 * 获取天梯 DAO。
-	 * Returns the ladder DAO.
-	 * DAO instance
-	 */
-	private LadderDAO getLadderDAO() {
-		return DAOManager.getDAO(LadderDAO.class);
 	}
 
 	/**
