@@ -31,178 +31,210 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class PlayerStigmasEquippedDAO extends com.aionemu.gameserver.dao.PlayerStigmasEquippedDAO {
 
-    /** 插入已装备灵魂石 / Insert an equipped stigma */
-    private static final String INSERT_QUERY = "INSERT INTO `player_stigmas_equipped` (`player_id`, `item_id`, `item_name`) VALUES (?,?,?)";
+	/**
+	 * 插入已装备灵魂石 / Insert an equipped stigma
+	 */
+	private static final String INSERT_QUERY = "INSERT INTO `player_stigmas_equipped` (`player_id`, `item_id`, `item_name`) VALUES (?,?,?)";
 
-    /** 更新已装备灵魂石 / Update an equipped stigma */
-    private static final String UPDATE_QUERY = "UPDATE `player_stigmas_equipped` SET item_id=?, item_name=? WHERE player_id=? AND item_id=?";
+	/**
+	 * 更新已装备灵魂石 / Update an equipped stigma
+	 */
+	private static final String UPDATE_QUERY = "UPDATE `player_stigmas_equipped` SET item_id=?, item_name=? WHERE player_id=? AND item_id=?";
 
-    /** 删除已装备灵魂石 / Delete an equipped stigma */
-    private static final String DELETE_QUERY = "DELETE FROM `player_stigmas_equipped` WHERE `player_id`=? AND item_id=? AND item_name=?";
+	/**
+	 * 删除已装备灵魂石 / Delete an equipped stigma
+	 */
+	private static final String DELETE_QUERY = "DELETE FROM `player_stigmas_equipped` WHERE `player_id`=? AND item_id=? AND item_name=?";
 
-    /** 查询玩家已装备灵魂石 / Select equipped stigmas for a player */
-    private static final String SELECT_QUERY = "SELECT `item_id`, `item_name` FROM `player_stigmas_equipped` WHERE `player_id`=?";
+	/**
+	 * 查询玩家已装备灵魂石 / Select equipped stigmas for a player
+	 */
+	private static final String SELECT_QUERY = "SELECT `item_id`, `item_name` FROM `player_stigmas_equipped` WHERE `player_id`=?";
 
-    /** 需要插入的条目过滤条件 / Predicate for items to insert */
-    private static final Predicate<EquippedStigmasEntry> itemsToInsertPredicate = input -> input != null && PersistentState.NEW == input.getPersistentState();
+	/**
+	 * 需要插入的条目过滤条件 / Predicate for items to insert
+	 */
+	private static final Predicate<EquippedStigmasEntry> itemsToInsertPredicate = input -> input != null && PersistentState.NEW == input.getPersistentState();
 
-    /** 需要更新的条目过滤条件 / Predicate for items to update */
-    private static final Predicate<EquippedStigmasEntry> itemsToUpdatePredicate = input -> input != null && PersistentState.UPDATE_REQUIRED == input.getPersistentState();
+	/**
+	 * 需要更新的条目过滤条件 / Predicate for items to update
+	 */
+	private static final Predicate<EquippedStigmasEntry> itemsToUpdatePredicate = input -> input != null && PersistentState.UPDATE_REQUIRED == input.getPersistentState();
 
-    /** 需要删除的条目过滤条件 / Predicate for items to delete */
-    private static final Predicate<EquippedStigmasEntry> itemsToDeletePredicate = input -> input != null && PersistentState.DELETED == input.getPersistentState();
+	/**
+	 * 需要删除的条目过滤条件 / Predicate for items to delete
+	 */
+	private static final Predicate<EquippedStigmasEntry> itemsToDeletePredicate = input -> input != null && PersistentState.DELETED == input.getPersistentState();
 
-    private final JdbcClient jdbcClient;
+	private final JdbcClient jdbcClient;
 
-    public PlayerStigmasEquippedDAO() {
-        this(DatabaseFactory.getJdbcClient());
-    }
+	public PlayerStigmasEquippedDAO() {
+		this(DatabaseFactory.getJdbcClient());
+	}
 
-    public PlayerStigmasEquippedDAO(JdbcClient jdbcClient) {
-        this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");
-    }
+	public PlayerStigmasEquippedDAO(JdbcClient jdbcClient) {
+		this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");
+	}
 
-    /**
-     * 加载玩家已装备灵魂石列表。
-     * Loads the player's equipped stigma list.
-     * @param playerId 玩家 ID / player id
-     * @return 已装备灵魂石列表 / equipped stigma list
-     */
-    @Override
-    public PlayerEquippedStigmaList loadItemsList(int playerId) {
-        List<EquippedStigmasEntry> items = new ArrayList<>();
+	/**
+	 * 加载玩家已装备灵魂石列表。
+	 * Loads the player's equipped stigma list.
+	 *
+	 * @param playerId 玩家 ID / player id
+	 * @return 已装备灵魂石列表 / equipped stigma list
+	 */
+	@Override
+	public PlayerEquippedStigmaList loadItemsList(int playerId) {
+		List<EquippedStigmasEntry> items = new ArrayList<>();
 
-        try {
-            items = jdbcClient.sql(SELECT_QUERY)
-                .param(playerId)
-                .query((rset, rowNum) -> {
-                    int id = rset.getInt("item_id");
-                    String name = rset.getString("item_name");
-                    return new EquippedStigmasEntry(id, name, PersistentState.UPDATED);
-                })
-                .list();
-        } catch (DataAccessException e) {
-            log.error(I18n.get("log.484620fa0a55", playerId), e);
-        }
-        return new PlayerEquippedStigmaList(items);
-    }
+		try {
+			items = jdbcClient.sql(SELECT_QUERY)
+				.param(playerId)
+				.query((rset, rowNum) -> {
+					int id = rset.getInt("item_id");
+					String name = rset.getString("item_name");
+					return new EquippedStigmasEntry(id, name, PersistentState.UPDATED);
+				})
+				.list();
+		} catch (DataAccessException e) {
+			log.error(I18n.get("log.484620fa0a55", playerId), e);
+		}
+		return new PlayerEquippedStigmaList(items);
+	}
 
-    /**
-     * 持久化玩家已装备灵魂石（含新增、更新与删除）。
-     * Persists the player's equipped stigmas (insert, update, and delete).
-     * @param player 玩家 / player
-     * @return 是否成功 / whether successful
-     */
-    @Override
-    public boolean storeItems(Player player) {
-        try (Connection con = DatabaseFactory.getConnection()) {
-            con.setAutoCommit(false);
-            try {
-                storeItemsInTransaction(con, player);
-                con.commit();
-            } catch (SQLException e) {
-                con.rollback();
-                throw e;
-            }
-        } catch (SQLException e) {
-            log.error(I18n.get("log.6790b402b724", player.getObjectId()), e);
-            return false;
-        }
-        markStored(player);
-        return true;
-    }
+	/**
+	 * 持久化玩家已装备灵魂石（含新增、更新与删除）。
+	 * Persists the player's equipped stigmas (insert, update, and delete).
+	 *
+	 * @param player 玩家 / player
+	 * @return 是否成功 / whether successful
+	 */
+	@Override
+	public boolean storeItems(Player player) {
+		List<EquippedStigmasEntry> skills = Lists.newArrayList(player.getEquipedStigmaList().getAllItems());
+		skills.addAll(Lists.newArrayList(player.getEquipedStigmaList().getDeletedItems()));
+		boolean hasDirty = false;
+		for (EquippedStigmasEntry skill : skills) {
+			if (skill.getPersistentState() != PersistentState.UPDATED) {
+				hasDirty = true;
+				break;
+			}
+		}
+		if (!hasDirty) {
+			return true;
+		}
+		try (Connection con = DatabaseFactory.getConnection()) {
+			con.setAutoCommit(false);
+			try {
+				storeItemsInTransaction(con, player);
+				con.commit();
+			} catch (SQLException e) {
+				con.rollback();
+				throw e;
+			}
+		} catch (SQLException e) {
+			log.error(I18n.get("log.6790b402b724", player.getObjectId()), e);
+			return false;
+		}
+		markStored(player);
+		return true;
+	}
 
-    @Override
-    public void storeItemsInTransaction(Connection connection, Player player) throws SQLException {
-        List<EquippedStigmasEntry> skills = Lists.newArrayList(player.getEquipedStigmaList().getAllItems());
-        skills.addAll(Lists.newArrayList(player.getEquipedStigmaList().getDeletedItems()));
-        deleteItems(connection, player, skills);
-        addItems(connection, player, skills);
-        updateItems(connection, player, skills);
-    }
+	@Override
+	public void storeItemsInTransaction(Connection connection, Player player) throws SQLException {
+		List<EquippedStigmasEntry> skills = Lists.newArrayList(player.getEquipedStigmaList().getAllItems());
+		skills.addAll(Lists.newArrayList(player.getEquipedStigmaList().getDeletedItems()));
+		deleteItems(connection, player, skills);
+		addItems(connection, player, skills);
+		updateItems(connection, player, skills);
+	}
 
-    /**
-     * 批量插入新增的灵魂石条目。
-     * Batch-inserts newly equipped stigma entries.
-     * @param con 数据库连接 / database connection
-     * @param player 玩家 / player
-     * @param items 条目列表 / entry list
-     */
-    private void addItems(Connection con, Player player, List<EquippedStigmasEntry> items) throws SQLException {
-        Collection<EquippedStigmasEntry> skillsToInsert = Collections2.filter(items, itemsToInsertPredicate);
-        if (GenericValidator.isBlankOrNull(skillsToInsert)) {
-            return;
-        }
+	/**
+	 * 批量插入新增的灵魂石条目。
+	 * Batch-inserts newly equipped stigma entries.
+	 *
+	 * @param con    数据库连接 / database connection
+	 * @param player 玩家 / player
+	 * @param items  条目列表 / entry list
+	 */
+	private void addItems(Connection con, Player player, List<EquippedStigmasEntry> items) throws SQLException {
+		Collection<EquippedStigmasEntry> skillsToInsert = Collections2.filter(items, itemsToInsertPredicate);
+		if (GenericValidator.isBlankOrNull(skillsToInsert)) {
+			return;
+		}
 
-        try (PreparedStatement ps = con.prepareStatement(INSERT_QUERY)) {
-            for (EquippedStigmasEntry skill : skillsToInsert) {
-                ps.setInt(1, player.getObjectId());
-                ps.setInt(2, skill.getItemId());
-                ps.setString(3, skill.getItemName());
-                ps.addBatch();
-            }
-            ps.executeBatch();
-        }
-    }
+		try (PreparedStatement ps = con.prepareStatement(INSERT_QUERY)) {
+			for (EquippedStigmasEntry skill : skillsToInsert) {
+				ps.setInt(1, player.getObjectId());
+				ps.setInt(2, skill.getItemId());
+				ps.setString(3, skill.getItemName());
+				ps.addBatch();
+			}
+			ps.executeBatch();
+		}
+	}
 
-    /**
-     * 批量更新待更新的灵魂石条目。
-     * Batch-updates stigma entries that require update.
-     * @param con 数据库连接 / database connection
-     * @param player 玩家 / player
-     * @param skills 入场列表 / entry list
-     */
-    private void updateItems(Connection con, Player player, List<EquippedStigmasEntry> skills) throws SQLException {
-        Collection<EquippedStigmasEntry> skillsToUpdate = Collections2.filter(skills, itemsToUpdatePredicate);
-        if (GenericValidator.isBlankOrNull(skillsToUpdate)) {
-            return;
-        }
+	/**
+	 * 批量更新待更新的灵魂石条目。
+	 * Batch-updates stigma entries that require update.
+	 *
+	 * @param con    数据库连接 / database connection
+	 * @param player 玩家 / player
+	 * @param skills 入场列表 / entry list
+	 */
+	private void updateItems(Connection con, Player player, List<EquippedStigmasEntry> skills) throws SQLException {
+		Collection<EquippedStigmasEntry> skillsToUpdate = Collections2.filter(skills, itemsToUpdatePredicate);
+		if (GenericValidator.isBlankOrNull(skillsToUpdate)) {
+			return;
+		}
 
-        try (PreparedStatement ps = con.prepareStatement(UPDATE_QUERY)) {
-            for (EquippedStigmasEntry skill : skillsToUpdate) {
-                ps.setInt(1, skill.getItemId());
-                ps.setString(2, skill.getItemName());
-                ps.setInt(3, player.getObjectId());
-                ps.addBatch();
-            }
-            ps.executeBatch();
-        }
-    }
+		try (PreparedStatement ps = con.prepareStatement(UPDATE_QUERY)) {
+			for (EquippedStigmasEntry skill : skillsToUpdate) {
+				ps.setInt(1, skill.getItemId());
+				ps.setString(2, skill.getItemName());
+				ps.setInt(3, player.getObjectId());
+				ps.addBatch();
+			}
+			ps.executeBatch();
+		}
+	}
 
-    /**
-     * 批量删除已标记删除的灵魂石条目。
-     * Batch-deletes stigma entries marked as deleted.
-     * @param con 数据库连接 / database connection
-     * @param player 玩家 / player
-     * @param skills 入场列表 / entry list
-     */
-    private void deleteItems(Connection con, Player player, List<EquippedStigmasEntry> skills) throws SQLException {
-        Collection<EquippedStigmasEntry> skillsToDelete = Collections2.filter(skills, itemsToDeletePredicate);
-        if (GenericValidator.isBlankOrNull(skillsToDelete)) {
-            return;
-        }
+	/**
+	 * 批量删除已标记删除的灵魂石条目。
+	 * Batch-deletes stigma entries marked as deleted.
+	 *
+	 * @param con    数据库连接 / database connection
+	 * @param player 玩家 / player
+	 * @param skills 入场列表 / entry list
+	 */
+	private void deleteItems(Connection con, Player player, List<EquippedStigmasEntry> skills) throws SQLException {
+		Collection<EquippedStigmasEntry> skillsToDelete = Collections2.filter(skills, itemsToDeletePredicate);
+		if (GenericValidator.isBlankOrNull(skillsToDelete)) {
+			return;
+		}
 
-        try (PreparedStatement ps = con.prepareStatement(DELETE_QUERY)) {
-            for (EquippedStigmasEntry skill : skillsToDelete) {
-                ps.setInt(1, player.getObjectId());
-                ps.setInt(2, skill.getItemId());
-                ps.setString(3, skill.getItemName());
-                ps.addBatch();
-            }
-            ps.executeBatch();
-        }
-    }
+		try (PreparedStatement ps = con.prepareStatement(DELETE_QUERY)) {
+			for (EquippedStigmasEntry skill : skillsToDelete) {
+				ps.setInt(1, player.getObjectId());
+				ps.setInt(2, skill.getItemId());
+				ps.setString(3, skill.getItemName());
+				ps.addBatch();
+			}
+			ps.executeBatch();
+		}
+	}
 
-    /**
-     * 判断当前数据库是否受本 DAO 支持。
-     * Checks whether the given database is supported by this DAO.
-     * @param databaseName 数据库名 / database name
-     * @param majorVersion 主版本 / major version
-     * @param minorVersion 次版本 / minor version
-     * @return 是否支持 / whether supported
-     */
-    @Override
-    public boolean supports(String databaseName, int majorVersion, int minorVersion) {
-        return DAOUtils.supports(databaseName, majorVersion, minorVersion);
-    }
+	/**
+	 * 判断当前数据库是否受本 DAO 支持。
+	 * Checks whether the given database is supported by this DAO.
+	 *
+	 * @param databaseName 数据库名 / database name
+	 * @param majorVersion 主版本 / major version
+	 * @param minorVersion 次版本 / minor version
+	 * @return 是否支持 / whether supported
+	 */
+	@Override
+	public boolean supports(String databaseName, int majorVersion, int minorVersion) {
+		return DAOUtils.supports(databaseName, majorVersion, minorVersion);
+	}
 }

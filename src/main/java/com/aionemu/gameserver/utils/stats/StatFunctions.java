@@ -52,6 +52,7 @@ public class StatFunctions {
 	 * Calculate solo XP reward from target
 	 * 玩家 / Player
 	 * Target
+	 *
 	 * @return 单人经验奖励 / Solo XP reward
 	 */
 	public static long calculateSoloExperienceReward(Player player, Creature target) {
@@ -61,8 +62,9 @@ public class StatFunctions {
 	/**
 	 * 计算队伍击杀目标的经验奖励（按范围内最高等级）
 	 * Calculate group XP reward from target using max level in range
+	 *
 	 * @param maxLevelInRange 范围内最高等级 / Max level in range
-	 * Target
+	 *                        Target
 	 * @return 队伍经验奖励 / Group XP reward
 	 */
 	public static long calculateGroupExperienceReward(int maxLevelInRange, Creature target) {
@@ -105,9 +107,10 @@ public class StatFunctions {
 	/**
 	 * 计算 PvP 死亡损失的 AP
 	 * Calculate AP lost on PvP death
+	 *
 	 * @param defeated 被击败玩家 / Defeated player
-	 * Winner
-	 * AP lost
+	 *                 Winner
+	 *                 AP lost
 	 */
 	public static int calculatePvPApLost(Player defeated, Player winner) {
 		return KillRewardFormulas.calculatePvPApLost(defeated, winner);
@@ -116,10 +119,11 @@ public class StatFunctions {
 	/**
 	 * 计算 PvP 击杀获得的 AP
 	 * Calculate AP gained from PvP kill
+	 *
 	 * @param defeated 被击败玩家 / Defeated player
-	 * @param maxRank 击杀方最高军衔 / Winner max rank
+	 * @param maxRank  击杀方最高军衔 / Winner max rank
 	 * @param maxLevel 击杀方最高等级 / Winner max level
-	 * AP gained
+	 *                 AP gained
 	 */
 	public static int calculatePvpApGained(Player defeated, int maxRank, int maxLevel) {
 		return KillRewardFormulas.calculatePvpApGained(defeated, maxRank, maxLevel);
@@ -128,9 +132,10 @@ public class StatFunctions {
 	/**
 	 * 计算 PvP 死亡损失的 GP
 	 * Calculate GP lost on PvP death
+	 *
 	 * @param defeated 被击败玩家 / Defeated player
-	 * Winner
-	 * GP lost
+	 *                 Winner
+	 *                 GP lost
 	 */
 	public static int calculatePvPGpLost(Player defeated, Player winner) {
 		return KillRewardFormulas.calculatePvPGpLost(defeated, winner);
@@ -139,10 +144,11 @@ public class StatFunctions {
 	/**
 	 * 计算 PvP 击杀获得的经验
 	 * Calculate XP gained from PvP kill
+	 *
 	 * @param defeated 被击败玩家 / Defeated player
-	 * @param maxRank 击杀方最高军衔 / Winner max rank
+	 * @param maxRank  击杀方最高军衔 / Winner max rank
 	 * @param maxLevel 击杀方最高等级 / Winner max level
-	 * XP gained
+	 *                 XP gained
 	 */
 	public static int calculatePvpXpGained(Player defeated, int maxRank, int maxLevel) {
 		return KillRewardFormulas.calculatePvpXpGained(defeated, maxRank, maxLevel);
@@ -151,10 +157,11 @@ public class StatFunctions {
 	/**
 	 * 计算 PvP 击杀获得的 DP
 	 * Calculate DP gained from PvP kill
+	 *
 	 * @param defeated 被击败玩家 / Defeated player
-	 * @param maxRank 击杀方最高军衔 / Winner max rank
+	 * @param maxRank  击杀方最高军衔 / Winner max rank
 	 * @param maxLevel 击杀方最高等级 / Winner max level
-	 * DP gained
+	 *                 DP gained
 	 */
 	public static int calculatePvpDpGained(Player defeated, int maxRank, int maxLevel) {
 		return KillRewardFormulas.calculatePvpDpGained(defeated, maxRank, maxLevel);
@@ -164,9 +171,10 @@ public class StatFunctions {
 	 * 按等级差调整 PvP DP 奖励
 	 * Adjust PvP DP reward by level difference
 	 * Base points
+	 *
 	 * @param defeatedLvl 被击败等级 / Defeated level
-	 * @param killerLvl 击杀者等级 / Killer level
-	 * Adjusted DP
+	 * @param killerLvl   击杀者等级 / Killer level
+	 *                    Adjusted DP
 	 */
 	public static int adjustPvpDpGained(int points, int defeatedLvl, int killerLvl) {
 		return KillRewardFormulas.adjustPvpDpGained(points, defeatedLvl, killerLvl);
@@ -176,8 +184,9 @@ public class StatFunctions {
 	 * 按 BOOST_HATE 属性计算仇恨（当前主要用于技能）
 	 * Calculate hate based on BOOST_HATE (currently used mainly from skills)
 	 * Creature
+	 *
 	 * @param value 基础仇恨 / Base hate value
-	 * Final hate
+	 *              Final hate
 	 */
 	public static int calculateHate(Creature creature, int value) {
 		Stat2 stat = new AdditionStat(StatEnum.BOOST_HATE, value, creature, 0.1f);
@@ -190,11 +199,12 @@ public class StatFunctions {
 	 * Attacker
 	 * Skill element
 	 * Attack status
+	 *
 	 * @param calculationTypes 计算类型标记 / Calculation type flags
 	 * @return 攻击结果列表 / Attack result list
 	 */
 	public static List<AttackResult> calculateAttackDamage(Creature attacker, SkillElement element, AttackStatus status,
-			CalculationType... calculationTypes) {
+														   CalculationType... calculationTypes) {
 		List<AttackResult> attackResultList = new ArrayList<>();
 		AttackStatus baseStatus = AttackStatus.getBaseStatus(status);
 		if (baseStatus == AttackStatus.DODGE || baseStatus == AttackStatus.RESIST) {
@@ -225,17 +235,17 @@ public class StatFunctions {
 				Item offHandWeapon = equipment.getOffHandWeapon();
 				WeaponStats mainWeaponStats = mainHandWeapon.getItemTemplate().getWeaponStats();
 				WeaponStats offWeaponStats = offHandWeapon == null || offHandWeapon == mainHandWeapon
-						|| offHandWeapon.getItemTemplate().getArmorType() == ArmorType.SHIELD ? null : offHandWeapon.getItemTemplate().getWeaponStats();
+					|| offHandWeapon.getItemTemplate().getArmorType() == ArmorType.SHIELD ? null : offHandWeapon.getItemTemplate().getWeaponStats();
 				if (mainWeaponStats != null) {
 					float mainHandDamage = mainHandAttack.getExactCurrent();
 					float offHandDamage = offHandAttack == null ? 0 : offHandAttack.getExactCurrent();
 					if (ArrayUtils.contains(calculationTypes, CalculationType.SKILL)) {
-						if (offWeaponStats != null) {
+						if (offWeaponStats != null && offHandAttack != null) {
 							float totalBaseDamage = (offHandAttack.getExactBaseWithoutBaseRate() * player.getGameStats().getSkillEfficiency()
-									+ mainHandAttack.getExactBaseWithoutBaseRate()) * 0.8f;
+								+ mainHandAttack.getExactBaseWithoutBaseRate()) * 0.8f;
 							mainHandDamage = (mainHandAttack.getExactCurrentWithoutFixedBonus() + totalBaseDamage * offHandAttack.getFixedBonusRate()) * 0.8f;
 							offHandDamage = (offHandAttack.getExactCurrentWithoutFixedBonus() + totalBaseDamage * mainHandAttack.getFixedBonusRate()) * 0.8f
-									* player.getGameStats().getSkillEfficiency();
+								* player.getGameStats().getSkillEfficiency();
 						}
 					} else if (offWeaponStats != null && Rnd.get(0, 999) >= player.getGameStats().getMaxDamageChance()) {
 						offHandDamage *= player.getGameStats().getMinDamageRatio();
@@ -250,17 +260,17 @@ public class StatFunctions {
 				}
 			} else {
 				float damage = Rnd.get(16, 20) * (1 + ((player.getGameStats().getPower().getCurrent() - 100) * 0.7f) / 100f)
-						+ mainHandAttack.getExactBonus();
+					+ mainHandAttack.getExactBonus();
 				attackResultList.add(new AttackResult(damage, status, hitType));
 			}
 		} else {
 			if (attacker instanceof Npc npc && npc.getObjectTemplate() != null
-					&& npc.getObjectTemplate().getStatsTemplate() != null
-					&& npc.getObjectTemplate().getStatsTemplate().hasRetailDamageRange()) {
+				&& npc.getObjectTemplate().getStatsTemplate() != null
+				&& npc.getObjectTemplate().getStatsTemplate().hasRetailDamageRange()) {
 				int minDamage = npc.getObjectTemplate().getStatsTemplate().getMinDamage();
 				int maxDamage = npc.getObjectTemplate().getStatsTemplate().getMaxDamage();
 				attackResultList.add(new AttackResult(scaleNpcAttackDamage(rollNpcAttackDamage(minDamage, maxDamage), minDamage,
-						maxDamage, mainHandAttack.getExactCurrent()), status, hitType));
+					maxDamage, mainHandAttack.getExactCurrent()), status, hitType));
 			} else {
 				int val = attacker instanceof Homing ? 100 : Rnd.get(80, 120);
 				attackResultList.add(new AttackResult(mainHandAttack.getExactCurrent() * val / 100f, status, hitType));
@@ -273,7 +283,9 @@ public class StatFunctions {
 		return Rnd.get(Math.min(minDamage, maxDamage), Math.max(minDamage, maxDamage));
 	}
 
-	/** 保留真实随机区间，同时应用 NPC 当前攻击属性修正。 / Preserves the retail roll while applying current attack modifiers. */
+	/**
+	 * 保留真实随机区间，同时应用 NPC 当前攻击属性修正。 / Preserves the retail roll while applying current attack modifiers.
+	 */
 	static float scaleNpcAttackDamage(int rolledDamage, int minDamage, int maxDamage, float currentAttack) {
 		int rangeTotal = minDamage + maxDamage;
 		return rangeTotal == 0 ? rolledDamage : rolledDamage * currentAttack / (rangeTotal * 0.5f);
@@ -285,25 +297,26 @@ public class StatFunctions {
 	 * Speller
 	 * Target
 	 * Base damages
-	 * @param bonus 额外加成 / Bonus damage
-	 * Skill element
+	 *
+	 * @param bonus         额外加成 / Bonus damage
+	 *                      Skill element
 	 * @param useMagicBoost 是否使用魔增 / Whether to use magic boost
-	 * @param useKnowledge 是否使用智力 / Whether to use knowledge
-	 * @param noReduce 是否跳过减伤 / Whether to skip reductions
-	 * PvP damage parameter
+	 * @param useKnowledge  是否使用智力 / Whether to use knowledge
+	 * @param noReduce      是否跳过减伤 / Whether to skip reductions
+	 *                      PvP damage parameter
 	 * @return 魔法技能伤害 / Magical skill damage
 	 */
 	public static int calculateMagicalSkillDamage(Creature speller, Creature target, int baseDamages, int bonus,
-			SkillElement element, boolean useMagicBoost, boolean useKnowledge, boolean noReduce,
-			boolean useMagicalDefense, int pvpDamage) {
+												  SkillElement element, boolean useMagicBoost, boolean useKnowledge, boolean noReduce,
+												  boolean useMagicalDefense, int pvpDamage) {
 		return calculateMagicalSkillDamage(speller, target, baseDamages, bonus, element, useMagicBoost, useKnowledge,
-				noReduce, useMagicalDefense, pvpDamage, true, 1f, 0);
+			noReduce, useMagicalDefense, pvpDamage, true, 1f, 0);
 	}
 
 	public static int calculateMagicalSkillDamage(Creature speller, Creature target, int baseDamages, int bonus,
-			SkillElement element, boolean useMagicBoost, boolean useKnowledge, boolean noReduce,
-			boolean useMagicalDefense, int pvpDamage, boolean randomizeNpcDamage, float skillDamageMultiplier,
-			int flatSkillDamage) {
+												  SkillElement element, boolean useMagicBoost, boolean useKnowledge, boolean noReduce,
+												  boolean useMagicalDefense, int pvpDamage, boolean randomizeNpcDamage, float skillDamageMultiplier,
+												  int flatSkillDamage) {
 		CreatureGameStats<?> sgs = speller.getGameStats();
 		CreatureGameStats<?> tgs = target.getGameStats();
 		float damages = baseDamages;
@@ -333,7 +346,7 @@ public class StatFunctions {
 	}
 
 	public static int calculateMagicalOverTimeSkillDamage(Creature speller, Creature target, int baseDamage,
-			SkillElement element, boolean useMagicBoost, boolean useMagicalDefense) {
+														  SkillElement element, boolean useMagicBoost, boolean useMagicalDefense) {
 		CreatureGameStats<?> sgs = speller.getGameStats();
 		CreatureGameStats<?> tgs = target.getGameStats();
 		float damage = baseDamage;
@@ -352,7 +365,7 @@ public class StatFunctions {
 			elementalDefense = applyElementalDefenseLowerCap(elementalDefense, target instanceof Player, target.getLevel());
 		}
 		return Math.round(Math.max(0, applyMagicalDefenseModifiers(damage, magicalDefense, elementalDefense,
-				getElementalDefenseDenominator(speller, target))));
+			getElementalDefenseDenominator(speller, target))));
 	}
 
 	static int scaleMagicBoostDifference(int magicBoostDifference, float targetStatRatio) {
@@ -375,30 +388,32 @@ public class StatFunctions {
 	}
 
 	public static float applyMagicalDefenseModifiers(Creature attacker, Creature target, float damage,
-			SkillElement element, boolean useMagicalDefense) {
+													 SkillElement element, boolean useMagicalDefense) {
 		float magicalDefense = 0;
 		if (useMagicalDefense) {
 			magicalDefense = target.getGameStats().getMDef().getBonus()
-					+ getMovementModifier(target, StatEnum.MAGICAL_DEFEND, target.getGameStats().getMDef().getBase());
+				+ getMovementModifier(target, StatEnum.MAGICAL_DEFEND, target.getGameStats().getMDef().getBase());
 		}
 		float elementalDefense = 0;
 		if (element != SkillElement.NONE) {
 			elementalDefense = getMovementModifier(target, SkillElement.getResistanceForElement(element),
-					target.getGameStats().getMagicalDefenseFor(element));
+				target.getGameStats().getMagicalDefenseFor(element));
 			elementalDefense /= attacker.getStatRatio();
 			elementalDefense = applyElementalDefenseLowerCap(elementalDefense, target instanceof Player, target.getLevel());
 		}
 		return applyMagicalDefenseModifiers(damage, magicalDefense, elementalDefense,
-				getElementalDefenseDenominator(attacker, target));
+			getElementalDefenseDenominator(attacker, target));
 	}
 
 	static float applyMagicalDefenseModifiers(float damage, float magicalDefense, float elementalDefense,
-			float elementalDefenseDenominator) {
+											  float elementalDefenseDenominator) {
 		damage -= magicalDefense * 0.1f;
 		return damage * (1 - elementalDefense / elementalDefenseDenominator);
 	}
 
-	/** 应用真实物理防御与对象系数。 / Applies retail physical defense and object coefficient. */
+	/**
+	 * 应用真实物理防御与对象系数。 / Applies retail physical defense and object coefficient.
+	 */
 	public static float applyPhysicalDefenseModifiers(float damage, float physicalDefense, float statRatio) {
 		return (damage - physicalDefense * 0.1f) / Math.max(1f, statRatio);
 	}
@@ -407,6 +422,7 @@ public class StatFunctions {
 	 * 应用全局伤害倍率配置
 	 * Apply global damage multiplier from rate config
 	 * Raw damage
+	 *
 	 * @return 缩放后伤害 / Scaled damage
 	 */
 	public static int applyDamageMultiplier(int damage) {
@@ -430,8 +446,9 @@ public class StatFunctions {
 	 * Calculate whether a magical critical hit occurs
 	 * Attacker
 	 * Attacked
+	 *
 	 * @param criticalProb 暴击概率修正 / Critical probability modifier
-	 * Whether critical
+	 *                     Whether critical
 	 */
 	public static boolean calculateMagicalCriticalRate(Creature attacker, Creature attacked, int criticalProb) {
 		return calculateMagicalCriticalRate(attacker, attacked, criticalProb, true);
@@ -442,9 +459,10 @@ public class StatFunctions {
 	 * Calculate whether a magical critical hit occurs (optional mcrit apply)
 	 * Attacker
 	 * Attacked
+	 *
 	 * @param criticalProb 暴击概率修正 / Critical probability modifier
-	 * @param applyMcrit 是否应用魔法暴击 / Whether to apply magical crit
-	 * Whether critical
+	 * @param applyMcrit   是否应用魔法暴击 / Whether to apply magical crit
+	 *                     Whether critical
 	 */
 	public static boolean calculateMagicalCriticalRate(Creature attacker, Creature attacked, int criticalProb, boolean applyMcrit) {
 		if (!applyMcrit) {
@@ -455,14 +473,14 @@ public class StatFunctions {
 		}
 
 		int critical = calculateEffectiveMagicalCritical(attacker.getGameStats().getMCritical().getCurrent(),
-				attacked.getGameStats().getSpellResist().getCurrent(),
-				attacked.getGameStats().getStat(StatEnum.MAGICAL_CRITICAL_REDUCE_RATE, 0).getCurrent(), criticalProb,
-				attacked.isInState(CreatureState.RESTING), attacked.getStatRatio());
+			attacked.getGameStats().getSpellResist().getCurrent(),
+			attacked.getGameStats().getStat(StatEnum.MAGICAL_CRITICAL_REDUCE_RATE, 0).getCurrent(), criticalProb,
+			attacked.isInState(CreatureState.RESTING), attacked.getStatRatio());
 		return Rnd.nextInt(1000) < critical;
 	}
 
 	static int calculateEffectiveMagicalCritical(int critical, int spellResist, int criticalReduceRate, int criticalProb,
-			boolean resting, float defenderStatRatio) {
+												 boolean resting, float defenderStatRatio) {
 		return calculateEffectiveCritical(critical, spellResist, criticalReduceRate, criticalProb, resting, defenderStatRatio);
 	}
 
@@ -474,15 +492,13 @@ public class StatFunctions {
 	 */
 	public static int calculateRatingMultipler(NpcRating npcRating) {
 		// 兼容回退：正式服按 NPC 存 DP，当前模板未暴露。 / Compatibility fallback: retail stores DP per NPC, which current templates do not expose.
-		int multipler = switch (npcRating) {
-			case JUNK -> 1;
+		return switch (npcRating) {
 			case NORMAL -> 2;
 			case ELITE -> 3;
 			case HERO -> 4;
 			case LEGENDARY -> 5;
-			default -> 1;
+			case null, default -> 1;
 		};
-		return multipler;
 	}
 
 	/**
@@ -492,15 +508,13 @@ public class StatFunctions {
 	 * AP multiplier
 	 */
 	public static int ApNpcRating(NpcRating npcRating) {
-		int multipler = switch (npcRating) {
-			case JUNK -> 1;
+		return switch (npcRating) {
 			case NORMAL -> 2;
 			case ELITE -> 4;
 			case HERO -> 5;
 			case LEGENDARY -> 6;
-			default -> 1;
+			case null, default -> 1;
 		};
-		return multipler;
 	}
 
 	/**
@@ -510,11 +524,12 @@ public class StatFunctions {
 	 * Target
 	 * Base damages
 	 * PvP damage parameter
+	 *
 	 * @param useMovement 是否应用移动修正 / Whether to apply movement modifier
 	 * @return 调整后伤害 / Adjusted damage
 	 */
 	public static float adjustDamages(Creature attacker, Creature target, float damages, int pvpDamage,
-			boolean useMovement) {
+									  boolean useMovement) {
 		return adjustDamages(attacker, target, damages, pvpDamage, useMovement, SkillElement.NONE, HitType.PHHIT);
 	}
 
@@ -525,12 +540,13 @@ public class StatFunctions {
 	 * Target
 	 * Base damages
 	 * PvP damage parameter
+	 *
 	 * @param useMovement 是否应用移动修正 / Whether to apply movement modifier
-	 * Skill element
+	 *                    Skill element
 	 * @return 调整后伤害 / Adjusted damage
 	 */
 	public static float adjustDamages(Creature attacker, Creature target, float damages, int pvpDamage,
-			boolean useMovement, SkillElement element) {
+									  boolean useMovement, SkillElement element) {
 		if (element == null) {
 			element = SkillElement.NONE;
 		}
@@ -539,7 +555,7 @@ public class StatFunctions {
 	}
 
 	public static float adjustDamages(Creature attacker, Creature target, float damages, int pvpDamage,
-			boolean useMovement, SkillElement element, HitType hitType) {
+									  boolean useMovement, SkillElement element, HitType hitType) {
 		if (element == null) {
 			element = SkillElement.NONE;
 		}
@@ -550,22 +566,22 @@ public class StatFunctions {
 		if (attacker.isPvpTarget(target)) {
 			boolean magical = hitType == HitType.MAHIT;
 			int pvpAttackBonus = getPvpRatio(attacker, StatEnum.PVP_ATTACK_RATIO,
-					magical ? StatEnum.PVP_ATTACK_RATIO_MAGICAL : StatEnum.PVP_ATTACK_RATIO_PHYSICAL);
+				magical ? StatEnum.PVP_ATTACK_RATIO_MAGICAL : StatEnum.PVP_ATTACK_RATIO_PHYSICAL);
 			int pvpDefenceBonus = getPvpRatio(target, StatEnum.PVP_DEFEND_RATIO,
-					magical ? StatEnum.PVP_DEFEND_RATIO_MAGICAL : StatEnum.PVP_DEFEND_RATIO_PHYSICAL);
+				magical ? StatEnum.PVP_DEFEND_RATIO_MAGICAL : StatEnum.PVP_DEFEND_RATIO_PHYSICAL);
 			damages = applyPvpDamageModifiers(damages, pvpDamage, pvpAttackBonus, pvpDefenceBonus);
 		} else {
 			int pveAttackBonus = attacker.getGameStats().getStat(StatEnum.PVE_ATTACK_RATIO, 0).getCurrent();
 			int pveDefenceBonus = target.getGameStats().getStat(StatEnum.PVE_DEFEND_RATIO, 0).getCurrent();
 			switch (hitType) {
-			case PHHIT:
-				pveAttackBonus += attacker.getGameStats().getStat(StatEnum.PVE_ATTACK_RATIO_PHYSICAL, 0).getCurrent();
-				pveDefenceBonus += target.getGameStats().getStat(StatEnum.PVE_DEFEND_RATIO_PHYSICAL, 0).getCurrent();
-				break;
-			case MAHIT:
-				pveAttackBonus += attacker.getGameStats().getStat(StatEnum.PVE_ATTACK_RATIO_MAGICAL, 0).getCurrent();
-				pveDefenceBonus += target.getGameStats().getStat(StatEnum.PVE_DEFEND_RATIO_MAGICAL, 0).getCurrent();
-				break;
+				case PHHIT:
+					pveAttackBonus += attacker.getGameStats().getStat(StatEnum.PVE_ATTACK_RATIO_PHYSICAL, 0).getCurrent();
+					pveDefenceBonus += target.getGameStats().getStat(StatEnum.PVE_DEFEND_RATIO_PHYSICAL, 0).getCurrent();
+					break;
+				case MAHIT:
+					pveAttackBonus += attacker.getGameStats().getStat(StatEnum.PVE_ATTACK_RATIO_MAGICAL, 0).getCurrent();
+					pveDefenceBonus += target.getGameStats().getStat(StatEnum.PVE_DEFEND_RATIO_MAGICAL, 0).getCurrent();
+					break;
 				default:
 					break;
 			}
@@ -583,7 +599,7 @@ public class StatFunctions {
 	 */
 	public static float applyLimitAttributeBonus(Creature attacker, Creature target, float finalDamage, float baseDamage) {
 		if (finalDamage <= 0 || baseDamage <= 0 || !(attacker instanceof Player) || !(target instanceof Npc npc)
-				|| npc.getObjectTemplate() == null || npc.getObjectTemplate().getStatsTemplate() == null) {
+			|| npc.getObjectTemplate() == null || npc.getObjectTemplate().getStatsTemplate() == null) {
 			return finalDamage;
 		}
 		StatEnum limitAttribute = getPveAttackRatioStat(npc.getRace());
@@ -592,13 +608,13 @@ public class StatFunctions {
 		}
 		int value = attacker.getGameStats().getStat(limitAttribute, 0).getCurrent();
 		return applyLimitAttributeBonus(finalDamage, baseDamage, value,
-				npc.getObjectTemplate().getStatsTemplate().getLimitAttributeReduceValue());
+			npc.getObjectTemplate().getStatsTemplate().getLimitAttributeReduceValue());
 	}
 
 	static float applyLimitAttributeBonus(float finalDamage, float baseDamage, int value, int reduceValue) {
 		int effectiveValue = value - reduceValue;
 		return finalDamage > 0 && baseDamage > 0 && effectiveValue > 0
-				? finalDamage + baseDamage * effectiveValue / 1000f : finalDamage;
+			? finalDamage + baseDamage * effectiveValue / 1000f : finalDamage;
 	}
 
 	static int getPvpRatio(Creature creature, StatEnum generalStat, StatEnum typedStat) {
@@ -607,7 +623,7 @@ public class StatFunctions {
 			return absoluteValue;
 		}
 		return creature.getGameStats().getStat(generalStat, 0).getCurrent()
-				+ creature.getGameStats().getStat(typedStat, 0).getCurrent();
+			+ creature.getGameStats().getStat(typedStat, 0).getCurrent();
 	}
 
 	static float applyPvpDamageModifiers(float damage, int pvpDamage, int attackBonus, int defenceBonus) {
@@ -617,14 +633,14 @@ public class StatFunctions {
 		attackBonus = StatCapUtil.limitValueForPvpOrPveStat(CombatMode.PVP, RatioType.ATTACK, attackBonus);
 		defenceBonus = StatCapUtil.limitValueForPvpOrPveStat(CombatMode.PVP, RatioType.DEFENSE, defenceBonus);
 		float ratio = 1f + (attackBonus - defenceBonus) / 1000f;
-		return damage * 0.42f * Math.max(0.1f, Math.min(1.5f, ratio));
+		return damage * 0.42f * Math.clamp(ratio, 0.1f, 1.5f);
 	}
 
 	static float applyPveDamageModifiers(float damage, int attackBonus, int defenceBonus) {
 		attackBonus = StatCapUtil.limitValueForPvpOrPveStat(CombatMode.PVE, RatioType.ATTACK, attackBonus);
 		defenceBonus = StatCapUtil.limitValueForPvpOrPveStat(CombatMode.PVE, RatioType.DEFENSE, defenceBonus);
 		float ratio = 1f + attackBonus / 1000f - defenceBonus / 1000f;
-		return damage * Math.max(0.1f, Math.min(12f, ratio));
+		return damage * Math.clamp(ratio, 0.1f, 12f);
 	}
 
 	public static float applyPveLevelPenalty(Creature attacker, Creature target, float damage) {
@@ -663,7 +679,7 @@ public class StatFunctions {
 	}
 
 	public static boolean calculatePhysicalDodgeRate(Creature attacker, Creature attacked, int accMod,
-			boolean isMainHand) {
+													 boolean isMainHand) {
 		if (attacker.getObserveController().hasAlwaysHit()) {
 			return false;
 		}
@@ -697,11 +713,11 @@ public class StatFunctions {
 			}
 		}
 		dodge += getMovementModifier(attacked, StatEnum.EVASION, attacked.getGameStats().getEvasion().getBase())
-				- attacked.getGameStats().getEvasion().getBase();
+			- attacked.getGameStats().getEvasion().getBase();
 		int dodgeRate = calculateAvoidanceRate(dodge, accuracy, accMod, attacker.getStatRatio(), 300);
 		if (archDaevaAttacker && attacked instanceof Npc) {
-			dodgeRate = Math.max(0, Math.min(900, dodgeRate + calculateLevelResistModifier(attacker.getLevel(),
-					attacked.getLevel(), true, false)));
+			dodgeRate = Math.clamp(dodgeRate + calculateLevelResistModifier(attacker.getLevel(),
+				attacked.getLevel(), true, false), 0, 900);
 		}
 		return Rnd.nextInt(1000) < dodgeRate;
 	}
@@ -730,7 +746,7 @@ public class StatFunctions {
 	}
 
 	public static boolean calculatePhysicalParryRate(Creature attacker, Creature attacked, int accMod,
-			boolean isMainHand) {
+													 boolean isMainHand) {
 		if (attacker.getObserveController().hasAlwaysHit()) {
 			return false;
 		}
@@ -748,7 +764,7 @@ public class StatFunctions {
 			parry = applyNpcAvoidanceLevelBonus(parry, attacked.getLevel() - attacker.getLevel(), 0.2f);
 		}
 		parry += getMovementModifier(attacked, StatEnum.PARRY, attacked.getGameStats().getParry().getBase())
-				- attacked.getGameStats().getParry().getBase();
+			- attacked.getGameStats().getParry().getBase();
 		return calculatePhysicalEvasion(parry, accuracy, accMod, attacker.getStatRatio(), 400);
 	}
 
@@ -776,7 +792,7 @@ public class StatFunctions {
 	}
 
 	public static boolean calculatePhysicalBlockRate(Creature attacker, Creature attacked, int accMod,
-			boolean isMainHand) {
+													 boolean isMainHand) {
 		if (attacker.getObserveController().hasAlwaysHit()) {
 			return false;
 		}
@@ -793,7 +809,7 @@ public class StatFunctions {
 			block = applyNpcAvoidanceLevelBonus(block, attacked.getLevel() - attacker.getLevel(), 0.2f);
 		}
 		block += getMovementModifier(attacked, StatEnum.BLOCK, attacked.getGameStats().getBlock().getBase())
-				- attacked.getGameStats().getBlock().getBase();
+			- attacked.getGameStats().getBlock().getBase();
 		return calculatePhysicalEvasion(block, accuracy, accMod, attacker.getStatRatio(), 500);
 	}
 
@@ -820,10 +836,11 @@ public class StatFunctions {
 	 * Accuracy modifier
 	 * Attacker stat ratio
 	 * Probability upper cap
+	 *
 	 * @return 是否成功规避 / Whether avoidance succeeds
 	 */
 	public static boolean calculatePhysicalEvasion(float defense, float accuracy, int accMod, float attackerStatRatio,
-			int upperCap) {
+												   int upperCap) {
 		return Rnd.nextInt(1000) < calculateAvoidanceRate(defense, accuracy, accMod, attackerStatRatio, upperCap);
 	}
 
@@ -837,12 +854,13 @@ public class StatFunctions {
 	 * Attacker
 	 * Attacked
 	 * Whether main hand
+	 *
 	 * @param criticalProb 暴击概率修正 / Critical probability modifier
-	 * @param isSkill 是否技能攻击 / Whether skill attack
-	 * Whether critical
+	 * @param isSkill      是否技能攻击 / Whether skill attack
+	 *                     Whether critical
 	 */
 	public static boolean calculatePhysicalCriticalRate(Creature attacker, Creature attacked, boolean isMainHand,
-			int criticalProb, boolean isSkill) {
+														int criticalProb, boolean isSkill) {
 		if (attacker instanceof Servant || attacker instanceof Homing) {
 			return false;
 		}
@@ -853,25 +871,24 @@ public class StatFunctions {
 			critical = attacker.getGameStats().getMainHandPCritical().getCurrent();
 		}
 		AttackerCriticalStatus acStatus = attacker.getObserveController()
-				.checkAttackerCriticalStatus(AttackStatus.CRITICAL, isSkill);
+			.checkAttackerCriticalStatus(AttackStatus.CRITICAL, isSkill);
 		if (acStatus.isResult()) {
 			if (acStatus.isPercent()) {
-				critical *= 1 + acStatus.getValue() / 100f;
+				critical = (int) (critical * (1 + acStatus.getValue() / 100f));
 			} else {
 				return Rnd.nextInt(1000) < acStatus.getValue();
 			}
 		}
 		int criticalRate = calculateEffectiveCritical(critical, attacked.getGameStats().getStrikeResist().getCurrent(),
-				attacked.getGameStats().getStat(StatEnum.PHYSICAL_CRITICAL_REDUCE_RATE, 0).getCurrent(), criticalProb,
-				attacked.isInState(CreatureState.RESTING), attacked.getStatRatio());
+			attacked.getGameStats().getStat(StatEnum.PHYSICAL_CRITICAL_REDUCE_RATE, 0).getCurrent(), criticalProb,
+			attacked.isInState(CreatureState.RESTING), attacked.getStatRatio());
 		return Rnd.nextInt(1000) < criticalRate;
 	}
 
 	static int calculateEffectiveCritical(int critical, int criticalResist, int criticalReduceRate, int criticalProb,
-			boolean resting, float defenderStatRatio) {
+										  boolean resting, float defenderStatRatio) {
 		int adjustedCritical = (int) (critical * criticalProb / 100f) + (resting ? 500 : 0);
-		return Math.max(0, Math.min(500,
-				(int) ((adjustedCritical - criticalResist - criticalReduceRate) / defenderStatRatio)));
+		return Math.clamp((int) ((adjustedCritical - criticalResist - criticalReduceRate) / defenderStatRatio), 0, 500);
 	}
 
 	/**
@@ -880,6 +897,7 @@ public class StatFunctions {
 	 * Attacker
 	 * Attacked
 	 * Accuracy modifier
+	 *
 	 * @return 抗性概率值 / Resist rate value
 	 */
 	public static int calculateMagicalResistRate(Creature attacker, Creature attacked, int accMod) {
@@ -893,6 +911,7 @@ public class StatFunctions {
 	 * Attacked
 	 * Accuracy modifier
 	 * Skill element
+	 *
 	 * @return 抗性概率值 / Resist rate value
 	 */
 	public static int calculateMagicalResistRate(Creature attacker, Creature attacked, int accMod, SkillElement element) {
@@ -903,7 +922,7 @@ public class StatFunctions {
 			return 1000;
 		}
 		if (element != SkillElement.NONE && attacked instanceof Summon summon
-				&& element == summon.getAlwaysResistElement()) {
+			&& element == summon.getAlwaysResistElement()) {
 			return 1000;
 		}
 
@@ -914,20 +933,20 @@ public class StatFunctions {
 			magicalAccuracy += attacker.getGameStats().getStat(StatEnum.PVP_MAGICAL_HIT_ACCURACY, 0).getCurrent();
 		}
 		int resistRate = calculateMagicalResistDifference(magicalResist, magicalAccuracy, accMod,
-				attacked.isInState(CreatureState.RESTING), attacker.getStatRatio());
-		resistRate = Math.max(0, Math.min(500, resistRate));
-		return Math.max(0, Math.min(900, resistRate + calculateLevelResistModifier(attacker.getLevel(),
-				attacked.getLevel(), attacker instanceof Player player && player.isArchDaeva(), isPlayerPvp(attacker, attacked))));
+			attacked.isInState(CreatureState.RESTING), attacker.getStatRatio());
+		resistRate = Math.clamp(resistRate, 0, 500);
+		return Math.clamp(resistRate + calculateLevelResistModifier(attacker.getLevel(),
+			attacked.getLevel(), attacker instanceof Player player && player.isArchDaeva(), isPlayerPvp(attacker, attacked)), 0, 900);
 	}
 
 	static int calculateMagicalResistDifference(int magicalResist, int magicalAccuracy, int accMod, boolean resting,
-			float attackerStatRatio) {
+												float attackerStatRatio) {
 		int difference = magicalResist - magicalAccuracy - accMod;
 		return (int) ((resting ? difference * 0.5f : difference) / attackerStatRatio);
 	}
 
 	static int calculateLevelResistModifier(int attackerLevel, int defenderLevel, boolean attackerArchDaeva,
-			boolean playerPvp) {
+											boolean playerPvp) {
 		if (attackerArchDaeva && playerPvp) {
 			return 0;
 		}
@@ -944,6 +963,7 @@ public class StatFunctions {
 	 * Calculate fall damage; returns whether the player is forced to bind location
 	 * 玩家 / Player
 	 * Fall distance
+	 *
 	 * @param stoped 是否已停止 / Whether stopped
 	 * @return 是否强制回城 / Whether forced to bind location
 	 */
@@ -957,8 +977,7 @@ public class StatFunctions {
 			player.getFlyController().onStopGliding(false);
 			player.getLifeStats().reduceHp(player.getLifeStats().getMaxHp() + 1, player);
 			return true;
-		}
-		else if (distance >= FallDamageConfig.MINIMUM_DISTANCE_DAMAGE) {
+		} else if (distance >= FallDamageConfig.MINIMUM_DISTANCE_DAMAGE) {
 			float dmgPerMeter = player.getLifeStats().getMaxHp() * FallDamageConfig.FALL_DAMAGE_PERCENTAGE / 100f;
 			int damage = (int) (distance * dmgPerMeter);
 			player.getLifeStats().reduceHp(damage, player);
@@ -973,7 +992,8 @@ public class StatFunctions {
 	 * 按移动朝向修正玩家属性（前进减防、侧移加闪避等）
 	 * Modify player stats by movement heading (forward defense cut, side evasion bonus, etc.)
 	 * Creature
-	 * @param stat 属性枚举 / Stat enum
+	 *
+	 * @param stat  属性枚举 / Stat enum
 	 * @param value 原始属性值 / Original stat value
 	 * @return 修正后属性值 / Modified stat value
 	 */
@@ -989,16 +1009,16 @@ public class StatFunctions {
 	}
 
 	static float applyMovementStatModifier(int heading, StatEnum stat, float value) {
-        return switch (stat) {
-            case PHYSICAL_DEFENSE, MAGICAL_DEFEND -> heading == 0 ? value * 0.8f : value;
-            case WATER_RESISTANCE, WIND_RESISTANCE, FIRE_RESISTANCE, EARTH_RESISTANCE, ELEMENTAL_RESISTANCE_DARK,
-                 ELEMENTAL_RESISTANCE_LIGHT -> heading == 0 ? value * 0.5f : value;
-            case EVASION -> heading != 0 && heading != 4 ? value + 300 : value;
-            case PARRY, BLOCK -> heading >= 3 && heading <= 5 ? value + 500 : value;
-            case SPEED -> heading == 2 || heading == 6 ? value * 0.8f
-                    : heading >= 3 && heading <= 5 ? value * 0.6f : value;
-            default -> value;
-        };
+		return switch (stat) {
+			case PHYSICAL_DEFENSE, MAGICAL_DEFEND -> heading == 0 ? value * 0.8f : value;
+			case WATER_RESISTANCE, WIND_RESISTANCE, FIRE_RESISTANCE, EARTH_RESISTANCE, ELEMENTAL_RESISTANCE_DARK,
+				 ELEMENTAL_RESISTANCE_LIGHT -> heading == 0 ? value * 0.5f : value;
+			case EVASION -> heading != 0 && heading != 4 ? value + 300 : value;
+			case PARRY, BLOCK -> heading >= 3 && heading <= 5 ? value + 500 : value;
+			case SPEED -> heading == 2 || heading == 6 ? value * 0.8f
+				: heading >= 3 && heading <= 5 ? value * 0.6f : value;
+			default -> value;
+		};
 	}
 
 	private static float movementDamageBonus(Creature creature, float value) {
@@ -1010,20 +1030,20 @@ public class StatFunctions {
 			return value;
 		}
 		switch (h) {
-		case 7:
-		case 0:
-		case 1:
-			value = value * 1.1f;
-			break;
-		case 6:
-		case 2:
-			value -= value * 0.2f;
-			break;
-		case 5:
-		case 4:
-		case 3:
-			value -= value * 0.2f;
-			break;
+			case 7:
+			case 0:
+			case 1:
+				value = value * 1.1f;
+				break;
+			case 6:
+			case 2:
+				value -= value * 0.2f;
+				break;
+			case 5:
+			case 4:
+			case 3:
+				value -= value * 0.2f;
+				break;
 		}
 		return value;
 	}
