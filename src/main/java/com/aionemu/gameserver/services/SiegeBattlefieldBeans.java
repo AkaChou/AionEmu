@@ -27,6 +27,7 @@ import com.aionemu.gameserver.dao.BaseDAO;
 import com.aionemu.gameserver.dao.ChallengeTasksDAO;
 import com.aionemu.gameserver.dao.HouseBidsDAO;
 import com.aionemu.gameserver.dao.LegionMemberDAO;
+import com.aionemu.gameserver.dao.OutpostDAO;
 import com.aionemu.gameserver.dao.PlayerDAO;
 import com.aionemu.gameserver.dao.ServerVariablesDAO;
 import com.aionemu.gameserver.dao.SiegeDAO;
@@ -144,8 +145,12 @@ public class SiegeBattlefieldBeans {
 
     @Bean
     @Lazy
-    public OutpostService outpostService() {
-        return new OutpostService();
+    public OutpostService outpostService(ObjectProvider<OutpostDAO> outpostDaoProvider,
+            ObjectProvider<SiegeDAO> siegeDaoProvider) {
+        OutpostDAO outpostDao = outpostDaoProvider.getIfAvailable();
+        SiegeDAO siegeDao = siegeDaoProvider.getIfAvailable();
+        return outpostDao != null && siegeDao != null ? new OutpostService(outpostDao, siegeDao)
+                : new OutpostService();
     }
 
     @Bean

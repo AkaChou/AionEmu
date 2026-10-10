@@ -2,6 +2,7 @@ package com.aionemu.gameserver.services.mail;
 
 
 import com.aionemu.boot.i18n.I18n;
+import lombok.NonNull;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
@@ -57,6 +58,10 @@ public class SystemMailService {
 	@Setter
     private static volatile ObjectProvider<SystemMailService> instanceProvider;
 
+	private final PlayerDAO playerDAO;
+	private final InventoryDAO inventoryDAO;
+	private final MailDAO mailDAO;
+
 	/**
 	 * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。
 	 * Returns the instance, which must be supplied by Spring.
@@ -79,11 +84,39 @@ public class SystemMailService {
 	}
 
     /**
-	 * 构造服务并输出初始化日志。
-	 * Constructs the service and writes the init log.
+	 * 使用指定的 DAO 集合构造系统邮件服务。
+	 * Constructs the system mail service with the given DAOs.
+	 *
+	 * @param playerDAO 玩家数据访问对象 / Player DAO
+	 * @param inventoryDAO 背包物品数据访问对象 / Inventory DAO
+	 * @param mailDAO 邮件数据访问对象 / Mail DAO
+	 */
+	public SystemMailService(@NonNull PlayerDAO playerDAO, @NonNull InventoryDAO inventoryDAO, @NonNull MailDAO mailDAO) {
+		this.playerDAO = playerDAO;
+		this.inventoryDAO = inventoryDAO;
+		this.mailDAO = mailDAO;
+		log.info(I18n.get("log.156ce5bf14eb"));
+	}
+
+    /**
+	 * 构造服务：DAOManager 已初始化时优先解析 Spring Bean，否则退回实现类无参构造。
+	 * Constructs the service: resolves the Spring bean when DAOManager is initialized, else falls back to no-arg impl constructors.
 	 */
 	public SystemMailService() {
-		log.info(I18n.get("log.156ce5bf14eb"));
+		this(safeDao(PlayerDAO.class, com.aionemu.gameserver.dao.impl.PlayerDAO::new),
+				safeDao(InventoryDAO.class, com.aionemu.gameserver.dao.impl.InventoryDAO::new),
+				safeDao(MailDAO.class, com.aionemu.gameserver.dao.impl.MailDAO::new));
+	}
+
+	private static <T extends com.aionemu.commons.database.dao.DAO> T safeDao(Class<T> daoClass,
+			java.util.function.Supplier<T> fallback) {
+		if (DAOManager.isInitialized()) {
+			try {
+				return DAOManager.getDAO(daoClass);
+			} catch (Exception ignored) {
+			}
+		}
+		return fallback.get();
 	}
 
 	/**
@@ -136,8 +169,7 @@ public class SystemMailService {
 		if (message.length() > 1000) {
 			message = message.substring(0, 1000);
 		}
-		PlayerCommonData recipientCommonData = DAOManager.getDAO(PlayerDAO.class)
-				.loadPlayerCommonDataByName(recipientName);
+		PlayerCommonData recipientCommonData = playerDAO.loadPlayerCommonDataByName(recipientName);
 		if (recipientCommonData == null) {
 			// log.info(I18n.get("log.2ca8b1e5c461", recipientName));
 			return false;
@@ -232,8 +264,7 @@ public class SystemMailService {
 			attachedItemObjId = attachedItem.getItemId();
 			attachedItemCount = attachedItem.getItemCount();
 		}
-		PlayerCommonData recipientCommonData = DAOManager.getDAO(PlayerDAO.class)
-				.loadPlayerCommonDataByName(recipientName);
+		PlayerCommonData recipientCommonData = playerDAO.loadPlayerCommonDataByName(recipientName);
 		if (recipientCommonData == null) {
 			return false;
 		}
@@ -325,8 +356,6 @@ public class SystemMailService {
 
 	private boolean storeMail(PlayerCommonData recipientCommonData, Player recipient, Mailbox recipientMailbox,
 			Item attachedItem, Letter letter, Timestamp time, TransactionAction transactionAction) {
-		InventoryDAO inventoryDAO = DAOManager.getDAO(InventoryDAO.class);
-		MailDAO mailDAO = DAOManager.getDAO(MailDAO.class);
 		PlayerCommonData counterData = recipientMailbox == null && recipient != null && recipient.getCommonData() != null
 				? recipient.getCommonData() : recipientCommonData;
 		int mailboxLetters = counterData.getMailboxLetters() + 1;

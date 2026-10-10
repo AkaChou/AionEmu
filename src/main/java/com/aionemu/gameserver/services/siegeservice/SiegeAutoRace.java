@@ -7,9 +7,7 @@ import com.aionemu.gameserver.lifecycle.GameFeatureServices;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
-import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.configs.main.SiegeConfig;
-import com.aionemu.gameserver.dao.SiegeDAO;
 import com.aionemu.gameserver.model.DescriptionId;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.siege.SiegeLocation;
@@ -80,7 +78,7 @@ public class SiegeAutoRace {
 			} else if (AsmoAutoSiege(locid)) {
 				GameFeatureServices.siegeService().spawnNpcs(locid, SiegeRace.ASMODIANS, SiegeModType.PEACE);
 			}
-			DAOManager.getDAO(SiegeDAO.class).updateSiegeLocation(loc);
+			GameFeatureServices.siegeService().getSiegeDAO().updateSiegeLocation(loc);
 		}
 		GameFeatureServices.siegeService().broadcastUpdate(loc);
 	}

@@ -1,5 +1,6 @@
 package com.aionemu.gameserver.services.siegeservice;
 
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
 
@@ -13,9 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.aionemu.gameserver.services.abyss.AbyssPointsService;
-import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.configs.main.SiegeConfig;
-import com.aionemu.gameserver.dao.PlayerDAO;
 import com.aionemu.gameserver.dao.SiegeDAO;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -47,13 +46,17 @@ public class FortressSiege extends Siege<FortressLocation> {
 
 	/** 欧比斯点数监听器。 / Abyss points listener. */
 	private final AbyssPointsListener addAPListener = new AbyssPointsListener(this);
+	/** 攻城战数据访问对象（由宿主 SiegeService 注入）。 / Siege DAO injected by the owning SiegeService. */
+	private final SiegeDAO siegeDAO;
 	/**
 	 * 为指定要塞据点创建攻城。
 	 * Creates a siege for the given fortress location.
 	 * @param fortress 要塞据点 / fortress location
+	 * @param siegeDAO 攻城战数据访问对象 / Siege DAO
 	 */
-	public FortressSiege(FortressLocation fortress) {
+	public FortressSiege(FortressLocation fortress, @NonNull SiegeDAO siegeDAO) {
 		super(fortress);
+		this.siegeDAO = siegeDAO;
 	}
 	/**
 	 * 开启要塞攻城：设脆弱/护盾、刷攻城 NPC、初始化首领并处理特殊据点。
@@ -180,7 +183,7 @@ public class FortressSiege extends Siege<FortressLocation> {
 			}
 			giveRewardsToPlayers(getSiegeCounter().getRaceCounter(getSiegeLocation().getRace()));
 		}
-		DAOManager.getDAO(SiegeDAO.class).updateSiegeLocation(getSiegeLocation());
+		siegeDAO.updateSiegeLocation(getSiegeLocation());
 		getSiegeLocation().doOnAllPlayers(player -> {
 			player.unsetInsideZoneType(ZoneType.SIEGE);
 			player.getController().updateZone();
@@ -519,7 +522,7 @@ public class FortressSiege extends Siege<FortressLocation> {
 		SiegeResult resultLegion = isBossKilled() ? SiegeResult.OCCUPY : SiegeResult.DEFENDER;
 		int legionBGeneral = GameCoreGameplayServices.legionService().getLegionBGeneral(getSiegeLocation().getLegionId());
 		if (legionBGeneral != 0) {
-			PlayerCommonData BGeneral = DAOManager.getDAO(PlayerDAO.class).loadPlayerCommonData(legionBGeneral);
+			PlayerCommonData BGeneral = PlayerService.daos().playerDAO().loadPlayerCommonData(legionBGeneral);
 			if (legionRewards != null) {
 				for (SiegeLegionReward medalsType : legionRewards) {
 					MailFormatter.sendAbyssRewardMail(getSiegeLocation(), BGeneral, AbyssSiegeLevel.VETERAN_SOLDIER,
@@ -628,7 +631,7 @@ public class FortressSiege extends Siege<FortressLocation> {
 		for (SiegeReward topGrade : playerRewards) {
 			for (int rewardedPC = 0; i < topPlayersIds.size() && rewardedPC < topGrade.getTop(); ++i) {
 				Integer playerId = topPlayersIds.get(i);
-				PlayerCommonData pcd = DAOManager.getDAO(PlayerDAO.class).loadPlayerCommonData(playerId);
+				PlayerCommonData pcd = PlayerService.daos().playerDAO().loadPlayerCommonData(playerId);
 				++rewardedPC;
 				MailFormatter.sendAbyssRewardMail(getSiegeLocation(), pcd, AbyssSiegeLevel.VETERAN_SOLDIER,
 						resultPlayers, System.currentTimeMillis(), topGrade.getItemId(),

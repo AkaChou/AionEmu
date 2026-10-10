@@ -458,10 +458,10 @@ public class SiegeService {
 
 	protected Siege<?> newSiege(int siegeLocationId) {
 		if (fortresses.containsKey(siegeLocationId)) {
-			return new FortressSiege(fortresses.get(siegeLocationId));
+			return new FortressSiege(fortresses.get(siegeLocationId), siegeDAO);
 		}
 		if (artifacts.containsKey(siegeLocationId)) {
-			return new ArtifactSiege(artifacts.get(siegeLocationId));
+			return new ArtifactSiege(artifacts.get(siegeLocationId), siegeDAO);
 		}
 		throw new SiegeException("Unknown siege handler for siege location: " + siegeLocationId);
 	}

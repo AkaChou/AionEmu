@@ -37,6 +37,7 @@ import com.aionemu.gameserver.dao.LegionMemberDAO;
 import com.aionemu.gameserver.dao.LimitedQuestDAO;
 import com.aionemu.gameserver.dao.MailDAO;
 import com.aionemu.gameserver.dao.OldNamesDAO;
+import com.aionemu.gameserver.dao.OutpostDAO;
 import com.aionemu.gameserver.dao.PetitionDAO;
 import com.aionemu.gameserver.dao.PlayerABDAO;
 import com.aionemu.gameserver.dao.PlayerAppearanceDAO;
@@ -64,6 +65,8 @@ import com.aionemu.gameserver.model.gameobjects.Item;
 import com.aionemu.gameserver.model.gameobjects.player.Equipment;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.items.storage.Storage;
+import com.aionemu.gameserver.model.siege.ArtifactLocation;
+import com.aionemu.gameserver.model.siege.FortressLocation;
 import com.aionemu.gameserver.model.items.storage.StorageType;
 import com.aionemu.gameserver.model.landing.LandingLocation;
 import com.aionemu.gameserver.model.landing_special.LandingSpecialLocation;
@@ -73,6 +76,9 @@ import com.aionemu.gameserver.services.events.AtreianPassportService;
 import com.aionemu.gameserver.services.events.EventWindowService;
 import com.aionemu.gameserver.services.events.ShugoSweepService;
 import com.aionemu.gameserver.services.mail.MailService;
+import com.aionemu.gameserver.services.mail.SystemMailService;
+import com.aionemu.gameserver.services.siegeservice.ArtifactSiege;
+import com.aionemu.gameserver.services.siegeservice.FortressSiege;
 import com.aionemu.gameserver.services.player.AtreianBestiaryService;
 import com.aionemu.gameserver.services.player.GrowthEnergy;
 import com.aionemu.gameserver.services.player.LunaShopService;
@@ -737,6 +743,43 @@ class ServiceConstructorInjectionTest {
 	}
 
 	@Test
+	void systemMailServiceConstructsWithInjectedDaos() {
+		JdbcClient client = createNoAccessJdbcClient();
+		PlayerDAO playerDAO = new com.aionemu.gameserver.dao.impl.PlayerDAO(client);
+		InventoryDAO inventoryDAO = new com.aionemu.gameserver.dao.impl.InventoryDAO(client);
+		MailDAO mailDAO = new com.aionemu.gameserver.dao.impl.MailDAO(client);
+		SystemMailService service = new SystemMailService(playerDAO, inventoryDAO, mailDAO);
+		assertNotNull(service);
+	}
+
+	@Test
+	void outpostServiceConstructsWithInjectedDaos() {
+		JdbcClient client = createNoAccessJdbcClient();
+		OutpostDAO outpostDAO = new com.aionemu.gameserver.dao.impl.OutpostDAO(client);
+		SiegeDAO siegeDAO = new com.aionemu.gameserver.dao.impl.SiegeDAO(client);
+		OutpostService service = new OutpostService(outpostDAO, siegeDAO);
+		assertNotNull(service);
+	}
+
+	@Test
+	void fortressSiegeConstructsWithInjectedDao() {
+		JdbcClient client = createNoAccessJdbcClient();
+		SiegeDAO siegeDAO = new com.aionemu.gameserver.dao.impl.SiegeDAO(client);
+		FortressLocation location = new org.objenesis.ObjenesisStd().newInstance(FortressLocation.class);
+		FortressSiege siege = new FortressSiege(location, siegeDAO);
+		assertNotNull(siege);
+	}
+
+	@Test
+	void artifactSiegeConstructsWithInjectedDao() {
+		JdbcClient client = createNoAccessJdbcClient();
+		SiegeDAO siegeDAO = new com.aionemu.gameserver.dao.impl.SiegeDAO(client);
+		ArtifactLocation location = new org.objenesis.ObjenesisStd().newInstance(ArtifactLocation.class);
+		ArtifactSiege siege = new ArtifactSiege(location, siegeDAO);
+		assertNotNull(siege);
+	}
+
+	@Test
 	void servicesFailFastOnNullDaoInjection() {
 		assertThrows(NullPointerException.class, () -> new TownService(null));
 		assertThrows(NullPointerException.class, () -> new AnnouncementService(null));
@@ -746,6 +789,10 @@ class ServiceConstructorInjectionTest {
 		assertThrows(NullPointerException.class, () -> new PetitionService(null));
 		assertThrows(NullPointerException.class, () -> new BrokerService(null, null));
 		assertThrows(NullPointerException.class, () -> new MailService(null, null, null, null));
+		assertThrows(NullPointerException.class, () -> new SystemMailService(null, null, null));
+		assertThrows(NullPointerException.class, () -> new OutpostService(null, null));
+		assertThrows(NullPointerException.class, () -> new FortressSiege(null, null));
+		assertThrows(NullPointerException.class, () -> new ArtifactSiege(null, null));
 		assertThrows(NullPointerException.class, () -> new PunishmentService(null));
 		assertThrows(NullPointerException.class, () -> new RenameService(null, null, null));
 		assertThrows(NullPointerException.class, () -> new SurveyService(null));

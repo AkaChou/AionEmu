@@ -2,6 +2,7 @@ package com.aionemu.gameserver.services;
 
 
 import com.aionemu.boot.i18n.I18n;
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
 
@@ -40,6 +41,40 @@ public class OutpostService {
 	private final ConcurrentMap<Integer, Outpost<?>> active = new ConcurrentHashMap<>();
 	/** 前哨点位数据。 / Outpost location data. */
 	private Map<Integer, OutpostLocation> outposts;
+	private final OutpostDAO outpostDAO;
+	private final SiegeDAO siegeDAO;
+
+	/**
+	 * 使用指定的 DAO 集合构造前哨服务。
+	 * Constructs the outpost service with the given DAOs.
+	 *
+	 * @param outpostDAO 前哨数据访问对象 / Outpost DAO
+	 * @param siegeDAO 攻城战数据访问对象 / Siege DAO
+	 */
+	public OutpostService(@NonNull OutpostDAO outpostDAO, @NonNull SiegeDAO siegeDAO) {
+		this.outpostDAO = outpostDAO;
+		this.siegeDAO = siegeDAO;
+	}
+
+	/**
+	 * 构造前哨服务：DAOManager 已初始化时优先解析 Spring Bean，否则退回实现类无参构造。
+	 * Constructs the outpost service: resolves the Spring bean when DAOManager is initialized, else falls back to no-arg impl constructors.
+	 */
+	public OutpostService() {
+		this(safeDao(OutpostDAO.class, com.aionemu.gameserver.dao.impl.OutpostDAO::new),
+				safeDao(SiegeDAO.class, com.aionemu.gameserver.dao.impl.SiegeDAO::new));
+	}
+
+	private static <T extends com.aionemu.commons.database.dao.DAO> T safeDao(Class<T> daoClass,
+			java.util.function.Supplier<T> fallback) {
+		if (DAOManager.isInitialized()) {
+			try {
+				return DAOManager.getDAO(daoClass);
+			} catch (Exception ignored) {
+			}
+		}
+		return fallback.get();
+	}
 
 	/**
 	 * 初始化前哨点位数据并加载数据库状态。
@@ -48,7 +83,7 @@ public class OutpostService {
 	public void initOutpostLocations() {
 		log.info(I18n.get("log.e8bd199248a9"));
 		outposts = DataManager.OUTPOST_DATA.getOutpostLocations();
-		DAOManager.getDAO(OutpostDAO.class).loadOutposLocations(outposts);
+		outpostDAO.loadOutposLocations(outposts);
 	}
 
 	/**
@@ -166,7 +201,7 @@ public class OutpostService {
 		outpost.setRace(race);
 		stop(id);
 		broadcastUpdate(outpostLocation);
-		getDAO().updateLocation(outpostLocation);
+		outpostDAO.updateLocation(outpostLocation);
 	}
 
 	/**
@@ -192,7 +227,7 @@ public class OutpostService {
 		loc.setRace(sr);
 		loc.setLegionId(0);
 		GameFeatureServices.siegeService().spawnNpcs(getOutpostLocation(id).getArtifactId(), sr, SiegeModType.SIEGE);
-		DAOManager.getDAO(SiegeDAO.class).updateSiegeLocation(loc);
+		siegeDAO.updateSiegeLocation(loc);
 	}
 
 	/**
@@ -276,14 +311,5 @@ public class OutpostService {
 
 	private static class OutpostServiceHolder {
 		private static final OutpostService INSTANCE = new OutpostService();
-	}
-
-	/**
-	 * 获取前哨 DAO。
-	 * Returns the outpost DAO.
-	 * DAO instance
-	 */
-	private OutpostDAO getDAO() {
-		return DAOManager.getDAO(OutpostDAO.class);
 	}
 }

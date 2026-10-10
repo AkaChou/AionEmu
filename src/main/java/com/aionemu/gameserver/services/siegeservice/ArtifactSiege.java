@@ -2,6 +2,7 @@ package com.aionemu.gameserver.services.siegeservice;
 
 
 import com.aionemu.boot.i18n.I18n;
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
 
@@ -9,7 +10,6 @@ import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
 
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
-import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.dao.SiegeDAO;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -32,13 +32,18 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 @Slf4j
 public class ArtifactSiege extends Siege<ArtifactLocation> {
 
+	/** 攻城战数据访问对象（由宿主 SiegeService 注入）。 / Siege DAO injected by the owning SiegeService. */
+	private final SiegeDAO siegeDAO;
+
 	/**
 	 * 为指定神器据点创建攻城。
 	 * Creates a siege for the given artifact location.
 	 * @param siegeLocation 神器据点 / artifact location
+	 * @param siegeDAO 攻城战数据访问对象 / Siege DAO
 	 */
-	public ArtifactSiege(ArtifactLocation siegeLocation) {
+	public ArtifactSiege(ArtifactLocation siegeLocation, @NonNull SiegeDAO siegeDAO) {
 		super(siegeLocation);
+		this.siegeDAO = siegeDAO;
 	}
 
 	/**
@@ -65,7 +70,7 @@ public class ArtifactSiege extends Siege<ArtifactLocation> {
 			log.error(I18n.get("log.6b626befcbb0", getSiegeLocationId()));
 		}
 		spawnNpcs(getSiegeLocationId(), getSiegeLocation().getRace(), SiegeModType.PEACE);
-		DAOManager.getDAO(SiegeDAO.class).updateLocation(getSiegeLocation());
+		siegeDAO.updateLocation(getSiegeLocation());
 		getSiegeLocation().doOnAllPlayers(player -> {
 			player.unsetInsideZoneType(ZoneType.SIEGE);
 			player.getController().updateZone();

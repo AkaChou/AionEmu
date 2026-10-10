@@ -3,6 +3,9 @@ package com.aionemu.gameserver.services;
 import com.aionemu.gameserver.ai2.AI2Engine;
 import com.aionemu.gameserver.configs.main.ThreadConfig;
 import com.aionemu.gameserver.cache.HTMLCache;
+import com.aionemu.gameserver.dao.InventoryDAO;
+import com.aionemu.gameserver.dao.MailDAO;
+import com.aionemu.gameserver.dao.PlayerDAO;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.dataholders.loadingutils.XmlDataLoader;
 import com.aionemu.gameserver.instance.InstanceEngine;
@@ -19,6 +22,7 @@ import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.geo.GeoService;
 import com.aionemu.gameserver.world.geo.path.PathService;
 import com.aionemu.gameserver.world.zone.ZoneService;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
@@ -158,7 +162,13 @@ public class EngineBeans {
 
     @Bean
     @Lazy
-    public SystemMailService systemMailService() {
-        return new SystemMailService();
+    public SystemMailService systemMailService(ObjectProvider<PlayerDAO> playerDaoProvider,
+            ObjectProvider<InventoryDAO> inventoryDaoProvider, ObjectProvider<MailDAO> mailDaoProvider) {
+        PlayerDAO playerDao = playerDaoProvider.getIfAvailable();
+        InventoryDAO inventoryDao = inventoryDaoProvider.getIfAvailable();
+        MailDAO mailDao = mailDaoProvider.getIfAvailable();
+        return playerDao != null && inventoryDao != null && mailDao != null
+                ? new SystemMailService(playerDao, inventoryDao, mailDao)
+                : new SystemMailService();
     }
 }

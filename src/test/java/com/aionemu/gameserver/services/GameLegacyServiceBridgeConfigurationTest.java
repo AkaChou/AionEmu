@@ -1006,7 +1006,7 @@ class GameLegacyServiceBridgeConfigurationTest {
             for (String path : CONFIGURATION_SOURCES) {
                 String source = Files.readString(Path.of(path));
 
-                if (source.contains("return new " + type.getSimpleName() + "();")) {
+                if (source.contains("new " + type.getSimpleName() + "(")) {
                     return;
                 }
             }
