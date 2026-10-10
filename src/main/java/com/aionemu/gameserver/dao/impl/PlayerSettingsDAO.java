@@ -1,14 +1,17 @@
 package com.aionemu.gameserver.dao.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.BatchPreparedStatementSetter;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.JdbcClient;
+import org.springframework.stereotype.Repository;
 
 import com.aionemu.boot.i18n.I18n;
 import com.aionemu.commons.database.DatabaseFactory;
@@ -34,15 +37,20 @@ public class PlayerSettingsDAO extends com.aionemu.gameserver.dao.PlayerSettings
 	private static final String REPLACE_QUERY = "REPLACE INTO player_settings VALUES (?, ?, ?)";
 
 	private final JdbcClient jdbcClient;
+	private final JdbcTemplate jdbcTemplate;
 
 	public PlayerSettingsDAO() {
-		this(DatabaseFactory.getJdbcClient());
+		this(DatabaseFactory.getJdbcClient(), DatabaseFactory.getJdbcTemplate());
 	}
 
 	@Autowired
+	public PlayerSettingsDAO(JdbcClient jdbcClient, JdbcTemplate jdbcTemplate) {
+		this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");
+		this.jdbcTemplate = Objects.requireNonNull(jdbcTemplate, "jdbcTemplate must not be null");
+	}
 
 	public PlayerSettingsDAO(JdbcClient jdbcClient) {
-		this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");
+		this(jdbcClient, DatabaseFactory.getJdbcTemplate());
 	}
 
 	/**
@@ -108,49 +116,39 @@ public class PlayerSettingsDAO extends com.aionemu.gameserver.dao.PlayerSettings
 		final int display = playerSettings.getDisplay();
 		final int deny = playerSettings.getDeny();
 
-		try (Connection con = DatabaseFactory.getConnection()) {
-			con.setAutoCommit(false);
-			try {
-				try (PreparedStatement stmt = con.prepareStatement(REPLACE_QUERY)) {
-					if (uiSettings != null) {
-						stmt.setInt(1, playerId);
-						stmt.setInt(2, 0);
-						stmt.setBytes(3, uiSettings);
-						stmt.addBatch();
+		final List<Object[]> batchArgs = new ArrayList<>(5);
+		if (uiSettings != null) {
+			batchArgs.add(new Object[] { playerId, 0, uiSettings });
+		}
+		if (shortcuts != null) {
+			batchArgs.add(new Object[] { playerId, 1, shortcuts });
+		}
+		if (houseBuddies != null) {
+			batchArgs.add(new Object[] { playerId, 2, houseBuddies });
+		}
+		batchArgs.add(new Object[] { playerId, -1, display });
+		batchArgs.add(new Object[] { playerId, -2, deny });
+
+		try {
+			jdbcTemplate.batchUpdate(REPLACE_QUERY, new BatchPreparedStatementSetter() {
+				@Override
+				public void setValues(PreparedStatement stmt, int i) throws SQLException {
+					Object[] row = batchArgs.get(i);
+					stmt.setInt(1, (Integer) row[0]);
+					stmt.setInt(2, (Integer) row[1]);
+					if (row[2] instanceof byte[] bytes) {
+						stmt.setBytes(3, bytes);
+					} else {
+						stmt.setInt(3, (Integer) row[2]);
 					}
-
-					if (shortcuts != null) {
-						stmt.setInt(1, playerId);
-						stmt.setInt(2, 1);
-						stmt.setBytes(3, shortcuts);
-						stmt.addBatch();
-					}
-
-					if (houseBuddies != null) {
-						stmt.setInt(1, playerId);
-						stmt.setInt(2, 2);
-						stmt.setBytes(3, houseBuddies);
-						stmt.addBatch();
-					}
-
-					stmt.setInt(1, playerId);
-					stmt.setInt(2, -1);
-					stmt.setInt(3, display);
-					stmt.addBatch();
-
-					stmt.setInt(1, playerId);
-					stmt.setInt(2, -2);
-					stmt.setInt(3, deny);
-					stmt.addBatch();
-
-					stmt.executeBatch();
 				}
-				con.commit();
-			} catch (SQLException e) {
-				con.rollback();
-				throw e;
-			}
-		} catch (SQLException e) {
+
+				@Override
+				public int getBatchSize() {
+					return batchArgs.size();
+				}
+			});
+		} catch (DataAccessException e) {
 			log.error(I18n.get("log.19b35d703bb1", playerId), e);
 			return;
 		}

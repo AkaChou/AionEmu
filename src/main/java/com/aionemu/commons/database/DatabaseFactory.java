@@ -13,7 +13,13 @@ import java.sql.SQLException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import javax.sql.DataSource;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.JdbcClient;
+import org.springframework.jdbc.datasource.TransactionAwareDataSourceProxy;
+import org.springframework.jdbc.support.JdbcTransactionManager;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
+import org.springframework.transaction.support.TransactionTemplate;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -25,7 +31,11 @@ public final class DatabaseFactory {
 
     private static final Map<String, DatabaseState> states = new ConcurrentHashMap<>();
     private static final DataSource CONTEXT_ROUTING_DATA_SOURCE = new ContextRoutingDataSource();
-    private static final JdbcClient CONTEXT_ROUTING_JDBC_CLIENT = JdbcClient.create(CONTEXT_ROUTING_DATA_SOURCE);
+    private static final DataSource TRANSACTION_AWARE_DATA_SOURCE = new TransactionAwareDataSourceProxy(CONTEXT_ROUTING_DATA_SOURCE);
+    private static final JdbcTemplate CONTEXT_ROUTING_JDBC_TEMPLATE = new JdbcTemplate(TRANSACTION_AWARE_DATA_SOURCE);
+    private static final JdbcClient CONTEXT_ROUTING_JDBC_CLIENT = JdbcClient.create(TRANSACTION_AWARE_DATA_SOURCE);
+    private static final PlatformTransactionManager TRANSACTION_MANAGER = new JdbcTransactionManager(CONTEXT_ROUTING_DATA_SOURCE);
+    private static final TransactionTemplate TRANSACTION_TEMPLATE = new TransactionTemplate(TRANSACTION_MANAGER);
 
     private DatabaseFactory() {}
 
@@ -90,12 +100,17 @@ public final class DatabaseFactory {
     }
 
     /**
-     * 从当前上下文连接池获取连接，并确保 autoCommit 为 true
-     * Obtain a connection from the current context pool and ensure autoCommit is true
+     * 从当前上下文连接池获取连接，并确保 autoCommit 为 true。
+     * 若处于 Spring 事务上下文中，则复用当前事务管理的连接。
+     * Obtain a connection from the current context pool and ensure autoCommit is true.
+     * When inside an active Spring transaction, reuses the transaction-managed connection.
      * @return JDBC 连接 / JDBC connection
      * @throws SQLException 获取连接失败时 / When obtaining a connection fails
      */
     public static Connection getConnection() throws SQLException {
+        if (TransactionSynchronizationManager.isSynchronizationActive()) {
+            return TRANSACTION_AWARE_DATA_SOURCE.getConnection();
+        }
         Connection con = state().dataSource.getConnection();
         if (!con.getAutoCommit()) {
             log.error(I18n.get("log.94eef67a6a48"));
@@ -134,12 +149,48 @@ public final class DatabaseFactory {
     }
 
     /**
+     * 获取支持事务感知的全局路由数据源
+     * Get the transaction-aware global routing DataSource
+     * @return 事务感知路由数据源 / Transaction-aware routing DataSource
+     */
+    public static DataSource getTransactionAwareDataSource() {
+        return TRANSACTION_AWARE_DATA_SOURCE;
+    }
+
+    /**
+     * 获取基于当前服务上下文数据源的 JdbcTemplate
+     * Get the JdbcTemplate based on the current service context DataSource
+     * @return 当前上下文的 JdbcTemplate / JdbcTemplate for current context
+     */
+    public static JdbcTemplate getJdbcTemplate() {
+        return CONTEXT_ROUTING_JDBC_TEMPLATE;
+    }
+
+    /**
      * 获取基于当前服务上下文数据源的 JdbcClient
      * Get the JdbcClient based on the current service context DataSource
      * @return 当前上下文的 JdbcClient / JdbcClient for current context
      */
     public static JdbcClient getJdbcClient() {
         return CONTEXT_ROUTING_JDBC_CLIENT;
+    }
+
+    /**
+     * 获取全局事务管理器
+     * Get the global PlatformTransactionManager
+     * @return 平台事务管理器 / PlatformTransactionManager
+     */
+    public static PlatformTransactionManager getTransactionManager() {
+        return TRANSACTION_MANAGER;
+    }
+
+    /**
+     * 获取全局编程式事务模版
+     * Get the global TransactionTemplate
+     * @return 事务模版 / TransactionTemplate
+     */
+    public static TransactionTemplate getTransactionTemplate() {
+        return TRANSACTION_TEMPLATE;
     }
 
     /**

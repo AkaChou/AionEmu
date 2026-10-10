@@ -1,17 +1,15 @@
 package com.aionemu.gameserver.dao.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.simple.JdbcClient;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.support.TransactionTemplate;
 
 import com.aionemu.boot.i18n.I18n;
 import com.aionemu.commons.database.DatabaseFactory;
@@ -53,15 +51,20 @@ public class PlayerMinionsDAO extends com.aionemu.gameserver.dao.PlayerMinionsDA
     private static final String CLEAN_ORPHANED_QUERY = "DELETE FROM player_minions WHERE player_id NOT IN (SELECT id FROM players)";
 
     private final JdbcClient jdbcClient;
+    private final TransactionTemplate transactionTemplate;
 
     public PlayerMinionsDAO() {
-        this(DatabaseFactory.getJdbcClient());
+        this(DatabaseFactory.getJdbcClient(), DatabaseFactory.getTransactionTemplate());
     }
 
     @Autowired
+    public PlayerMinionsDAO(JdbcClient jdbcClient, TransactionTemplate transactionTemplate) {
+        this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");
+        this.transactionTemplate = Objects.requireNonNull(transactionTemplate, "transactionTemplate must not be null");
+    }
 
     public PlayerMinionsDAO(JdbcClient jdbcClient) {
-        this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");
+        this(jdbcClient, DatabaseFactory.getTransactionTemplate());
     }
 
     /**
@@ -84,19 +87,6 @@ public class PlayerMinionsDAO extends com.aionemu.gameserver.dao.PlayerMinionsDA
         } catch (DataAccessException e) {
             log.error(I18n.get("log.2527877e3b8c", minionCommonData.getMinionId(), minionCommonData.getName()), e);
             return false;
-        }
-    }
-
-    private static boolean insertMinion(Connection con, MinionCommonData minionCommonData) throws SQLException {
-        try (PreparedStatement stmt = con.prepareStatement(INSERT_QUERY)) {
-            stmt.setInt(1, minionCommonData.getMasterObjectId());
-            stmt.setInt(2, minionCommonData.getObjectId());
-            stmt.setInt(3, minionCommonData.getMinionId());
-            stmt.setString(4, minionCommonData.getName());
-            stmt.setString(5, minionCommonData.getMinionGrade());
-            stmt.setInt(6, minionCommonData.getMinionLevel());
-            stmt.setInt(7, minionCommonData.getMinionGrowthPoint());
-            return stmt.executeUpdate() == 1;
         }
     }
 
@@ -220,62 +210,69 @@ public class PlayerMinionsDAO extends com.aionemu.gameserver.dao.PlayerMinionsDA
     @Override
     public boolean updateGrowthAndRemoveMaterials(Player player, MinionCommonData minionCommonData,
             List<Integer> materialObjectIds) {
-        try (Connection con = DatabaseFactory.getConnection()) {
-            con.setAutoCommit(false);
-            try {
-                if (!updateGrowth(con, player.getObjectId(), minionCommonData)) {
-                    throw new SQLException("minion growth target was not updated");
+        try {
+            return Boolean.TRUE.equals(transactionTemplate.execute(status -> {
+                int updated = jdbcClient.sql(UPDATE_GROWTH_QUERY)
+                    .param(minionCommonData.getMinionGrowthPoint())
+                    .param(player.getObjectId())
+                    .param(minionCommonData.getObjectId())
+                    .update();
+                if (updated != 1) {
+                    status.setRollbackOnly();
+                    return false;
                 }
-                deleteMaterials(con, player.getObjectId(), materialObjectIds);
-                con.commit();
+                if (materialObjectIds != null) {
+                    for (int materialObjectId : materialObjectIds) {
+                        int deleted = jdbcClient.sql(DELETE_QUERY)
+                            .param(player.getObjectId())
+                            .param(materialObjectId)
+                            .update();
+                        if (deleted != 1) {
+                            status.setRollbackOnly();
+                            return false;
+                        }
+                    }
+                }
                 return true;
-            } catch (SQLException e) {
-                con.rollback();
-                throw e;
-            }
-        } catch (Exception e) {
+            }));
+        } catch (RuntimeException e) {
             log.error(I18n.get("log.d7a903023f02", minionCommonData.getMinionId()), e);
             return false;
         }
     }
 
-    private static boolean updateGrowth(Connection con, int playerId, MinionCommonData minionCommonData) throws SQLException {
-        try (PreparedStatement stmt = con.prepareStatement(UPDATE_GROWTH_QUERY)) {
-            stmt.setInt(1, minionCommonData.getMinionGrowthPoint());
-            stmt.setInt(2, playerId);
-            stmt.setInt(3, minionCommonData.getObjectId());
-            return stmt.executeUpdate() == 1;
-        }
-    }
-
-    private static void deleteMaterials(Connection con, int playerId, List<Integer> materialObjectIds) throws SQLException {
-        try (PreparedStatement stmt = con.prepareStatement(DELETE_QUERY)) {
-            for (int materialObjectId : materialObjectIds) {
-                stmt.setInt(1, playerId);
-                stmt.setInt(2, materialObjectId);
-                if (stmt.executeUpdate() != 1) {
-                    throw new SQLException("minion material was not deleted: " + materialObjectId);
-                }
-            }
-        }
-    }
-
     @Override
     public boolean replacePlayerMinions(MinionCommonData replacement, List<Integer> materialObjectIds) {
-        try (Connection con = DatabaseFactory.getConnection()) {
-            con.setAutoCommit(false);
-            try {
-                if (!insertMinion(con, replacement)) {
-                    throw new SQLException("combined minion was not inserted");
+        try {
+            return Boolean.TRUE.equals(transactionTemplate.execute(status -> {
+                int inserted = jdbcClient.sql(INSERT_QUERY)
+                    .param(replacement.getMasterObjectId())
+                    .param(replacement.getObjectId())
+                    .param(replacement.getMinionId())
+                    .param(replacement.getName())
+                    .param(replacement.getMinionGrade())
+                    .param(replacement.getMinionLevel())
+                    .param(replacement.getMinionGrowthPoint())
+                    .update();
+                if (inserted != 1) {
+                    status.setRollbackOnly();
+                    return false;
                 }
-                deleteMaterials(con, replacement.getMasterObjectId(), materialObjectIds);
-                con.commit();
+                if (materialObjectIds != null) {
+                    for (int materialObjectId : materialObjectIds) {
+                        int deleted = jdbcClient.sql(DELETE_QUERY)
+                            .param(replacement.getMasterObjectId())
+                            .param(materialObjectId)
+                            .update();
+                        if (deleted != 1) {
+                            status.setRollbackOnly();
+                            return false;
+                        }
+                    }
+                }
                 return true;
-            } catch (SQLException e) {
-                con.rollback();
-                throw e;
-            }
-        } catch (Exception e) {
+            }));
+        } catch (RuntimeException e) {
             log.error(I18n.get("log.2527877e3b8c", replacement.getMinionId(), replacement.getName()), e);
             return false;
         }

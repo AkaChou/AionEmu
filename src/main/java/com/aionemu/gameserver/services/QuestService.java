@@ -66,6 +66,7 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_STATS_INFO;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.questEngine.definition.QuestCatalogDrop;
+import com.aionemu.gameserver.questEngine.definition.QuestItemRequirement;
 import com.aionemu.gameserver.questEngine.definition.QuestMetadata;
 import com.aionemu.gameserver.questEngine.definition.QuestTimerPolicy;
 import com.aionemu.gameserver.questEngine.handlers.HandlerResult;
@@ -490,7 +491,7 @@ public final class QuestService {
 		if (((template.isMaster()) && (!CraftSkillUpdateService.canLearnMoreMasterCraftingSkill(player))) || ((template.isExpert()) && (!CraftSkillUpdateService.canLearnMoreExpertCraftingSkill(player)))) {
 			return false;
 		}
-		var metadata = GameEngineServices.questEngine().questCatalog().findMetadata(env.getQuestId()).orElse(null);
+		QuestMetadata metadata = GameEngineServices.questEngine().questCatalog().findMetadata(env.getQuestId()).orElse(null);
 		if (metadata != null && !metadata.prerequisites().isEmpty()) {
 			for (int prereqId : metadata.prerequisites()) {
 				QuestState state = player.getQuestStateList().getQuestState(prereqId);
@@ -549,13 +550,6 @@ public final class QuestService {
 		QuestStateList qsl = player.getQuestStateList();
 		QuestState qs = qsl.getQuestState(id);
 		QuestTemplate template = questsData.getQuestById(env.getQuestId());
-		// 稍后待办 / TO DO LATER
-		/*
-		 * if (template.getTargetType() == QuestTargetType.FORCE ||
-		 * template.getTargetType() == QuestTargetType.UNION) {
-		 * PacketSendUtility.sendPacket(player,
-		 * SM_SYSTEM_MESSAGE.STR_UNION_YOU_ARE_NOT_UNION_MEMBER); return true; }
-		 */
 		if (template.getNpcFactionId() != 0) {
 			NpcFaction faction = player.getNpcFactions().getNpcFactionById(template.getNpcFactionId());
 			if (!faction.isActive() || faction.getQuestId() != env.getQuestId()) {
@@ -620,7 +614,7 @@ public final class QuestService {
 		for (int skillId : skills) {
 			PlayerSkillEntry skill = player.getSkillList().getSkillEntry(skillId);
 			if (skill != null && skill.getSkillLevel() >= template.getCombineSkillPoint()) {
-				if (template.getCategory().equals(QuestCategory.TASK)
+				if (template.getCategory() == QuestCategory.TASK
 					&& skill.getSkillLevel() - 40 > template.getCombineSkillPoint()) {
 					continue;
 				}
@@ -730,28 +724,6 @@ public final class QuestService {
 
 	private static boolean checkQuestListSize(QuestStateList qsl) {
 		return (qsl.getNormalQuestListSize() + 1) <= CustomConfig.BASIC_QUEST_SIZE_LIMIT;
-	}
-
-	/**
-	 * 将任务标记为完成状态（不走完整奖励流程时使用）。
-	 * Marks the quest as complete (used when not running the full reward flow).
-	 *
-	 * @param env 任务环境 / quest environment
-	 *            whether successful
-	 */
-	public boolean completeQuest(QuestEnv env) {
-		Player player = env.getPlayer();
-		int id = env.getQuestId();
-		QuestState qs = player.getQuestStateList().getQuestState(id);
-		if (qs == null || qs.getStatus() != QuestStatus.START) {
-			return false;
-		}
-		qs.setQuestVarById(0, qs.getQuestVarById(0) + 1);
-		qs.setStatus(QuestStatus.REWARD);
-		PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(id, qs.getStatus(), qs.getQuestVars().getQuestVars()));
-		player.getController().updateZone();
-		player.getController().updateNearbyQuests();
-		return true;
 	}
 
 	/**
@@ -1055,7 +1027,7 @@ public final class QuestService {
 		}
 
 		// 检查当前掉落物品是否达到收集上限 / Check if current drop item has reached collection limit
-		for (var collectItem : metadata.itemRequirements()) {
+		for (QuestItemRequirement collectItem : metadata.itemRequirements()) {
 			if (collectItem.itemId() == dropItemId) {
 				// 获取玩家当前收集的数量 / Get current collected amount
 				long count = player.getInventory().getItemCountByItemId(dropItemId);
@@ -1137,18 +1109,6 @@ public final class QuestService {
 		}
 		return null;
 	}
-
-	/*
-	 * public static boolean bountyReward(Player player, int questId) {
-	 * QuestTemplate template = questsData.getQuestById(questId); if (template ==
-	 * null) { return false; } if (!template.isBountyReward()) { return false; }
-	 * QuestState qs = player.getQuestStateList().getQuestState(questId); if (qs ==
-	 * null) { return false; } if (qs.getStatus() == QuestStatus.COMPLETE ||
-	 * qs.getStatus() == QuestStatus.LOCKED) { return false; } QuestEnv env = new
-	 * QuestEnv(player, player, questId, QuestDialogAction.SELECTED_QUEST_AUTO_REWARD.id());
-	 * finishQuest(env); player.getController().updateZone();
-	 * player.getController().updateNearbyQuests(); return true; }
-	 */
 
 	/**
 	 * 以指定策略启动可见的任务计时器。

@@ -14,6 +14,7 @@ import java.util.Objects;
 
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.simple.JdbcClient;
+import org.springframework.transaction.support.TransactionTemplate;
 
 import com.aionemu.boot.i18n.I18n;
 import com.aionemu.commons.database.DatabaseFactory;
@@ -108,15 +109,20 @@ public class AbyssRankDAO extends com.aionemu.gameserver.dao.AbyssRankDAO {
 	public static final String DELETE_QUERY = "DELETE FROM `abyss_rank` WHERE player_id = ?";
 
 	private final JdbcClient jdbcClient;
+	private final TransactionTemplate transactionTemplate;
 
 	public AbyssRankDAO() {
-		this(DatabaseFactory.getJdbcClient());
+		this(DatabaseFactory.getJdbcClient(), DatabaseFactory.getTransactionTemplate());
 	}
 
 	@Autowired
+	public AbyssRankDAO(JdbcClient jdbcClient, TransactionTemplate transactionTemplate) {
+		this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");
+		this.transactionTemplate = Objects.requireNonNull(transactionTemplate, "transactionTemplate must not be null");
+	}
 
 	public AbyssRankDAO(JdbcClient jdbcClient) {
-		this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");
+		this(jdbcClient, DatabaseFactory.getTransactionTemplate());
 	}
 
 	private static String updatePlayerRankList() {
@@ -475,47 +481,45 @@ public class AbyssRankDAO extends com.aionemu.gameserver.dao.AbyssRankDAO {
 	 */
 	@Override
 	public void updateRankList() {
-		try (Connection con = DatabaseFactory.getConnection()) {
-			con.setAutoCommit(false);
-			try {
-				// 更新天族玩家军阶 / Update Elyos player ranks
-				try (PreparedStatement stmt1 = con.prepareStatement("SET @a:=0");
-					 PreparedStatement stmt2 = con.prepareStatement(updatePlayerRankList())) {
-					stmt1.execute();
-					stmt2.setString(1, "ELYOS");
-					stmt2.executeUpdate();
-				}
+		try {
+			transactionTemplate.executeWithoutResult(status -> {
+				try (Connection con = DatabaseFactory.getConnection()) {
+					// 更新天族玩家军阶 / Update Elyos player ranks
+					try (PreparedStatement stmt1 = con.prepareStatement("SET @a:=0");
+						 PreparedStatement stmt2 = con.prepareStatement(updatePlayerRankList())) {
+						stmt1.execute();
+						stmt2.setString(1, "ELYOS");
+						stmt2.executeUpdate();
+					}
 
-				// 更新魔族玩家军阶 / Update Asmodian player ranks
-				try (PreparedStatement stmt1 = con.prepareStatement("SET @a:=0");
-					 PreparedStatement stmt2 = con.prepareStatement(updatePlayerRankList())) {
-					stmt1.execute();
-					stmt2.setString(1, "ASMODIANS");
-					stmt2.executeUpdate();
-				}
+					// 更新魔族玩家军阶 / Update Asmodian player ranks
+					try (PreparedStatement stmt1 = con.prepareStatement("SET @a:=0");
+						 PreparedStatement stmt2 = con.prepareStatement(updatePlayerRankList())) {
+						stmt1.execute();
+						stmt2.setString(1, "ASMODIANS");
+						stmt2.executeUpdate();
+					}
 
-				// 更新天族军团军阶 / Update Elyos legion ranks
-				try (PreparedStatement stmt1 = con.prepareStatement("SET @a:=0");
-					 PreparedStatement stmt2 = con.prepareStatement(updateLegionRankList())) {
-					stmt1.execute();
-					stmt2.setString(1, "ELYOS");
-					stmt2.executeUpdate();
-				}
+					// 更新天族军团军阶 / Update Elyos legion ranks
+					try (PreparedStatement stmt1 = con.prepareStatement("SET @a:=0");
+						 PreparedStatement stmt2 = con.prepareStatement(updateLegionRankList())) {
+						stmt1.execute();
+						stmt2.setString(1, "ELYOS");
+						stmt2.executeUpdate();
+					}
 
-				// 更新魔族军团军阶 / Update Asmodian legion ranks
-				try (PreparedStatement stmt1 = con.prepareStatement("SET @a:=0");
-					 PreparedStatement stmt2 = con.prepareStatement(updateLegionRankList())) {
-					stmt1.execute();
-					stmt2.setString(1, "ASMODIANS");
-					stmt2.executeUpdate();
+					// 更新魔族军团军阶 / Update Asmodian legion ranks
+					try (PreparedStatement stmt1 = con.prepareStatement("SET @a:=0");
+						 PreparedStatement stmt2 = con.prepareStatement(updateLegionRankList())) {
+						stmt1.execute();
+						stmt2.setString(1, "ASMODIANS");
+						stmt2.executeUpdate();
+					}
+				} catch (SQLException e) {
+					throw new DataAccessException("Failed to update abyss rank list", e) {};
 				}
-
-				con.commit();
-			} catch (SQLException e) {
-				con.rollback();
-				throw e;
-			}
-		} catch (SQLException e) {
+			});
+		} catch (RuntimeException e) {
 			log.error(I18n.get("log.4c4ea22ad393"), e);
 		}
 	}

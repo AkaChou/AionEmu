@@ -12,6 +12,7 @@ import org.springframework.boot.context.properties.bind.Binder;
 import org.springframework.core.env.MapPropertySource;
 import org.springframework.core.env.StandardEnvironment;
 
+import com.aionemu.gameserver.configs.network.NetworkConfig;
 import com.aionemu.testutil.ConfigSnapshot;
 
 /**
@@ -118,6 +119,92 @@ class ConfigurationPropertiesBindingTest {
 			assertEquals(90, CleaningConfig.CLEANING_PERIOD);
 			assertEquals(4, CleaningConfig.CLEANING_THREADS);
 			assertEquals(10000, CleaningConfig.CLEANING_LIMIT);
+		} finally {
+			snapshot.restore();
+		}
+	}
+
+	@Test
+	void bindsSecurityConfigProperties() {
+		ConfigSnapshot snapshot = ConfigSnapshot.of(SecurityConfig.class,
+			"SPEEDHACK", "SPEEDHACK_COUNTER", "CAPTCHA_ENABLE", "CAPTCHA_APPEAR_RATE",
+			"PASSKEY_ENABLE", "PASSKEY_WRONG_MAXCOUNT", "SECURITY_ENABLE", "PING_INTERVAL",
+			"BROKER_PREBUY_CHECK", "SURVEY_DELAY");
+		try {
+			StandardEnvironment environment = new StandardEnvironment();
+			environment.getPropertySources().addFirst(new MapPropertySource("test", Map.of(
+				"gameserver.security.antihack.speedhack.enable", "true",
+				"gameserver.security.antihack.speedhack.counter", "3",
+				"gameserver.security.captcha.enable", "true",
+				"gameserver.security.captcha.appear.rate", "15",
+				"gameserver.security.passkey.enable", "true",
+				"gameserver.security.passkey.wrong.maxcount", "8",
+				"gameserver.security.pingcheck.enable", "false",
+				"gameserver.security.pingcheck.interval", "120",
+				"gameserver.security.broker.prebuy", "false",
+				"gameserver.security.survey.delay.minute", "45"
+			)));
+
+			SecurityConfig config = new SecurityConfig();
+			Binder.get(environment).bind("gameserver.security", Bindable.ofInstance(config));
+
+			assertTrue(SecurityConfig.SPEEDHACK);
+			assertEquals(3, SecurityConfig.SPEEDHACK_COUNTER);
+			assertTrue(SecurityConfig.CAPTCHA_ENABLE);
+			assertEquals(15, SecurityConfig.CAPTCHA_APPEAR_RATE);
+			assertTrue(SecurityConfig.PASSKEY_ENABLE);
+			assertEquals(8, SecurityConfig.PASSKEY_WRONG_MAXCOUNT);
+			assertFalse(SecurityConfig.SECURITY_ENABLE);
+			assertEquals(120, SecurityConfig.PING_INTERVAL);
+			assertFalse(SecurityConfig.BROKER_PREBUY_CHECK);
+			assertEquals(45, SecurityConfig.SURVEY_DELAY);
+		} finally {
+			snapshot.restore();
+		}
+	}
+
+	@Test
+	void bindsNetworkConfigProperties() {
+		ConfigSnapshot snapshot = ConfigSnapshot.of(NetworkConfig.class,
+			"PUBLIC_ADDRESS", "GAME_PORT", "GAME_BIND_ADDRESS", "MAX_ONLINE_PLAYERS",
+			"LOGIN_ADDRESS", "GAMESERVER_ID", "LOGIN_PASSWORD", "NIO_READ_WRITE_THREADS",
+			"PACKET_PROCESSOR_MIN_THREADS", "PACKET_PROCESSOR_MAX_THREADS",
+			"ENABLE_FLOOD_CONNECTIONS", "Flood_Tick", "Flood_SWARN");
+		try {
+			StandardEnvironment environment = new StandardEnvironment();
+			environment.getPropertySources().addFirst(new MapPropertySource("test", Map.ofEntries(
+				Map.entry("gameserver.network.address", "192.168.1.100"),
+				Map.entry("gameserver.network.client.port", "8888"),
+				Map.entry("gameserver.network.client.host", "127.0.0.1"),
+				Map.entry("gameserver.network.client.maxplayers", "500"),
+				Map.entry("gameserver.network.login.address", "10.0.0.1:9014"),
+				Map.entry("gameserver.network.login.gsid", "2"),
+				Map.entry("gameserver.network.login.password", "secret123"),
+				Map.entry("gameserver.network.nio.threads", "4"),
+				Map.entry("gameserver.network.packet.processor.threads.min", "8"),
+				Map.entry("gameserver.network.packet.processor.threads.max", "16"),
+				Map.entry("gameserver.network.flood.connections", "true"),
+				Map.entry("gameserver.network.flood.tick", "2000"),
+				Map.entry("gameserver.network.flood.short.warn", "25")
+			)));
+
+			NetworkConfig config = new NetworkConfig();
+			Binder.get(environment).bind("gameserver.network", Bindable.ofInstance(config));
+
+			assertEquals("192.168.1.100", NetworkConfig.PUBLIC_ADDRESS);
+			assertEquals(8888, NetworkConfig.GAME_PORT);
+			assertEquals("127.0.0.1", NetworkConfig.GAME_BIND_ADDRESS);
+			assertEquals(500, NetworkConfig.MAX_ONLINE_PLAYERS);
+			assertEquals(9014, NetworkConfig.LOGIN_ADDRESS.getPort());
+			assertEquals("10.0.0.1", NetworkConfig.LOGIN_ADDRESS.getHostString());
+			assertEquals(2, NetworkConfig.GAMESERVER_ID);
+			assertEquals("secret123", NetworkConfig.LOGIN_PASSWORD);
+			assertEquals(4, NetworkConfig.NIO_READ_WRITE_THREADS);
+			assertEquals(8, NetworkConfig.PACKET_PROCESSOR_MIN_THREADS);
+			assertEquals(16, NetworkConfig.PACKET_PROCESSOR_MAX_THREADS);
+			assertTrue(NetworkConfig.ENABLE_FLOOD_CONNECTIONS);
+			assertEquals(2000, NetworkConfig.Flood_Tick);
+			assertEquals(25, NetworkConfig.Flood_SWARN);
 		} finally {
 			snapshot.restore();
 		}

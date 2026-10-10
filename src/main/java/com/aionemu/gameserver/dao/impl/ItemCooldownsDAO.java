@@ -1,16 +1,18 @@
 package com.aionemu.gameserver.dao.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.Iterator;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.BatchPreparedStatementSetter;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.JdbcClient;
+import org.springframework.stereotype.Repository;
 
 import com.aionemu.boot.i18n.I18n;
 import com.aionemu.commons.database.DatabaseFactory;
@@ -37,15 +39,20 @@ public class ItemCooldownsDAO extends com.aionemu.gameserver.dao.ItemCooldownsDA
 	private static final String SELECT_QUERY = "SELECT `delay_id`, `use_delay`, `reuse_time` FROM `item_cooldowns` WHERE `player_id`=?";
 
 	private final JdbcClient jdbcClient;
+	private final JdbcTemplate jdbcTemplate;
 
 	public ItemCooldownsDAO() {
-		this(DatabaseFactory.getJdbcClient());
+		this(DatabaseFactory.getJdbcClient(), DatabaseFactory.getJdbcTemplate());
 	}
 
 	@Autowired
+	public ItemCooldownsDAO(JdbcClient jdbcClient, JdbcTemplate jdbcTemplate) {
+		this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");
+		this.jdbcTemplate = Objects.requireNonNull(jdbcTemplate, "jdbcTemplate must not be null");
+	}
 
 	public ItemCooldownsDAO(JdbcClient jdbcClient) {
-		this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");
+		this(jdbcClient, DatabaseFactory.getJdbcTemplate());
 	}
 
 	/**
@@ -87,36 +94,39 @@ public class ItemCooldownsDAO extends com.aionemu.gameserver.dao.ItemCooldownsDA
 		Map<Integer, ItemCooldown> itemCoolDowns = player.getItemCoolDowns();
 		if (itemCoolDowns == null || itemCoolDowns.isEmpty()) {
 			return;
-        }
+		}
 
-		final Iterator<Map.Entry<Integer, ItemCooldown>> iterator = itemCoolDowns.entrySet().iterator();
-		if (!iterator.hasNext()) {
+		List<Map.Entry<Integer, ItemCooldown>> validCooldowns = new ArrayList<>();
+		long threshold = System.currentTimeMillis() + 30000;
+		for (Map.Entry<Integer, ItemCooldown> entry : itemCoolDowns.entrySet()) {
+			ItemCooldown cooldown = entry.getValue();
+			if (cooldown != null && cooldown.getReuseTime() > threshold) {
+				validCooldowns.add(entry);
+			}
+		}
+
+		if (validCooldowns.isEmpty()) {
 			return;
 		}
 
-		try (Connection con = DatabaseFactory.getConnection()) {
-			con.setAutoCommit(false);
-
-			try (PreparedStatement st = con.prepareStatement(INSERT_QUERY)) {
-				while (iterator.hasNext()) {
-					Map.Entry<Integer, ItemCooldown> entry = iterator.next();
+		try {
+			jdbcTemplate.batchUpdate(INSERT_QUERY, new BatchPreparedStatementSetter() {
+				@Override
+				public void setValues(PreparedStatement ps, int i) throws SQLException {
+					Map.Entry<Integer, ItemCooldown> entry = validCooldowns.get(i);
 					ItemCooldown cooldown = entry.getValue();
-
-					if (cooldown.getReuseTime() <= System.currentTimeMillis() + 30000) {
-						continue;
-					}
-
-					st.setInt(1, player.getObjectId());
-					st.setInt(2, entry.getKey());
-					st.setInt(3, cooldown.getUseDelay());
-					st.setLong(4, cooldown.getReuseTime());
-					st.addBatch();
+					ps.setInt(1, player.getObjectId());
+					ps.setInt(2, entry.getKey());
+					ps.setInt(3, cooldown.getUseDelay());
+					ps.setLong(4, cooldown.getReuseTime());
 				}
-				st.executeBatch();
-			}
 
-			con.commit();
-		} catch (SQLException e) {
+				@Override
+				public int getBatchSize() {
+					return validCooldowns.size();
+				}
+			});
+		} catch (DataAccessException e) {
 			log.error(I18n.get("log.77f5a5e723bf", player.getObjectId()), e);
 		}
 	}

@@ -34,10 +34,7 @@ import com.aionemu.gameserver.model.summons.UnsummonType;
 import com.aionemu.gameserver.model.team2.group.PlayerFilters.ExcludePlayerFilter;
 import com.aionemu.gameserver.model.team2.group.PlayerGroupService;
 import com.aionemu.gameserver.model.templates.flypath.FlyPathEntry;
-import com.aionemu.gameserver.model.templates.item.ItemTemplate;
 import com.aionemu.gameserver.model.templates.panels.SkillPanel;
-import com.aionemu.gameserver.model.templates.quest.QuestItems;
-import com.aionemu.gameserver.model.templates.robot.RobotInfo;
 import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
 import com.aionemu.gameserver.model.templates.stats.PlayerStatsTemplate;
 import com.aionemu.gameserver.model.templates.zone.ZoneClassName;
@@ -111,7 +108,7 @@ public class PlayerController extends CreatureController<Player> {
 			PacketSendUtility.sendPacket(getOwner(), new SM_NOTIFY_VIP_ICON(player));
 			PacketSendUtility.sendPacket(getOwner(), new SM_MOTION(player.getObjectId(), player.getMotions().getActiveMotions()));
 			if (player.isUseRobot() || player.getRobotId() != 0) {
-				PacketSendUtility.sendPacket(getOwner(), new SM_USE_ROBOT(player, getRobotInfo(player).getRobotId()));
+				PacketSendUtility.sendPacket(getOwner(), new SM_USE_ROBOT(player, SM_PLAYER_SPAWN.getRobotInfo(player).getRobotId()));
 			}
 			if (player.isTransformed()) {
 				TeleportService2.playerTransformation(getOwner());
@@ -123,11 +120,11 @@ public class PlayerController extends CreatureController<Player> {
 			if (player.isInPlayerMode(PlayerMode.RIDE)) {
 				PacketSendUtility.sendPacket(getOwner(), new SM_EMOTION(player, EmotionType.RIDE, 0, player.ride.getNpcId()));
 			} else if (player.getPet() != null) {
-				log.debug("Player " + getOwner().getName() + " sees " + object.getName() + " that has Toypet");
+				log.debug("Player {} sees {} that has Toypet", getOwner().getName(), object.getName());
 				PacketSendUtility.sendPacket(getOwner(), new SM_PET(3, player.getPet()));
 			}
 			if (player.getMinion() != null) {
-				log.debug("Player " + getOwner().getName() + " sees " + object.getName() + " that has minion");
+				log.debug("Player {} sees {} that has minion", getOwner().getName(), object.getName());
 				PacketSendUtility.sendPacket(getOwner(), new SM_MINIONS(5, player.getMinion().getCommonData()));
 			}
 			player.getEffectController().sendEffectIconsTo(getOwner());
@@ -155,11 +152,6 @@ public class PlayerController extends CreatureController<Player> {
 		} else if (object instanceof Minion) {
 			PacketSendUtility.sendPacket(getOwner(), new SM_MINIONS(5, ((Minion) object).getCommonData()));
 		}
-	}
-
-	private RobotInfo getRobotInfo(Player player) {
-		ItemTemplate template = player.getEquipment().getMainHandWeapon().getItemSkinTemplate();
-		return DataManager.ROBOT_DATA.getRobotInfo(template.getRobotId());
 	}
 
 	/**
@@ -214,7 +206,7 @@ public class PlayerController extends CreatureController<Player> {
 		if ((!zone.canRide()) && (player.isInPlayerMode(PlayerMode.RIDE))) {
 			player.unsetPlayerMode(PlayerMode.RIDE);
 		}
-		if (zone.getZoneTemplate().getZoneType().equals(ZoneClassName.FORT) && (player.isInState(CreatureState.FLYING))) {
+		if (zone.getZoneTemplate().getZoneType() == ZoneClassName.FORT && (player.isInState(CreatureState.FLYING))) {
 			switch (player.getWorldId()) {
 				case 400020000: // 贝洛斯 / Belus.
 				case 400040000: // Aspida.
@@ -511,18 +503,15 @@ public class PlayerController extends CreatureController<Player> {
 		player.setRebirthRevive(getOwner().haveSelfRezEffect());
 		showPacket = !player.hasResurrectBase() && showPacket;
 		Creature master = lastAttacker.getMaster();
-		if ((PvPConfig.ENABLE_KILLING_SPREE_SYSTEM) && (getOwner().getRawKillCount() > 0)) {
-			if ((master instanceof Npc)) {
+		if (PvPConfig.ENABLE_KILLING_SPREE_SYSTEM && getOwner().getRawKillCount() > 0) {
+			if (master instanceof Npc) {
 				PvPSpreeService.cancelSpree(player, master, false);
-			}
-			if (((master instanceof Player)) && (master.getRace() != player.getRace())) {
+			} else if (master instanceof Player pMaster && pMaster.getRace() != player.getRace()) {
 				PvPSpreeService.cancelSpree(player, master, true);
 			}
 		}
-		if (EventsConfig.ENABLE_CRAZY) {
-			if (((master instanceof Player)) && (master.getRace() != player.getRace())) {
-				GameEventServices.crazyDaevaService().crazyOnDie(player, master, true);
-			}
+		if (EventsConfig.ENABLE_CRAZY && master instanceof Player pMaster && pMaster.getRace() != player.getRace()) {
+			GameEventServices.crazyDaevaService().crazyOnDie(player, master, true);
 		}
 		AbyssRank ar = player.getAbyssRank();
 		if (AbyssService.isOnPvpMap(player) && ar != null) {
@@ -552,7 +541,7 @@ public class PlayerController extends CreatureController<Player> {
 			GameFeatureServices.banditService().onDie(player, master);
 			return;
 		}
-		if (player.getBattleground() != null && player.getBattleground() instanceof DeathmatchBg || player.getBattleground() != null && player.getBattleground() instanceof SoloSurvivorBg) {
+		if (player.getBattleground() instanceof DeathmatchBg || player.getBattleground() instanceof SoloSurvivorBg) {
 			player.getAggroList().clear();
 			player.getBattleground().onDie(player, master);
 			return;
@@ -645,7 +634,7 @@ public class PlayerController extends CreatureController<Player> {
 	}
 
 	private boolean isInvader(Player player) {
-		if (player.getRace().equals(Race.ASMODIANS)) {
+		if (player.getRace() == Race.ASMODIANS) {
 			return player.getWorldId() == 210060000; // Theobomos.
 		} else {
 			return player.getWorldId() == 220050000; // Brusthonin.
@@ -1029,33 +1018,33 @@ public class PlayerController extends CreatureController<Player> {
 		// 烙印之石 5.1 / Stigma 5.1
 		// 角色将按职业与等级获得“可充能烙印之石”礼包。 / Characters will receive "Chargeable Stigma" bundles based on their class and level.
 		// http://static.ncsoft.com/aion/store/PatchNotes/AION_Patch_Notes_110916.pdf
-		if (level == 20) {
-			ItemService.addItem(player, 188053787, 1); // 烙印之石支援包。 / Stigma Support Bundle.
-			// 额外普通烙印之石槽位现已可用。 / An additional normal Stigma slot is now available.
-			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_STIGMA_OPEN_NORMAL_SLOT);
-		}
-		if (level == 30) {
-			ItemService.addItem(player, 188053787, 2); // 烙印之石支援包。 / Stigma Support Bundle.
-		}
-		if (level == 40) {
-			ItemService.addItem(player, 188053787, 3); // 烙印之石支援包。 / Stigma Support Bundle.
-		}
-		if (level == 45) {
-			ItemService.addItem(player, 188053787, 3); // 烙印之石支援包。 / Stigma Support Bundle.
-			ItemService.addItem(player, 188053785, 1); // Greater Stigma Bundle.
-			// 额外高级烙印之石槽位现已可用。 / An additional Greater Stigma slot is now available.
-			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_STIGMA_OPEN_ENHANCED1_SLOT);
-		}
-		if (level == 50) {
-			ItemService.addItem(player, 188053787, 3); // 烙印之石支援包。 / Stigma Support Bundle.
-			ItemService.addItem(player, 188053785, 2); // Greater Stigma Bundle.
-		}
-		if (level == 55) {
-			ItemService.addItem(player, 188053787, 3); // 烙印之石支援包。 / Stigma Support Bundle.
-			ItemService.addItem(player, 188053785, 2); // Greater Stigma Bundle.
-			ItemService.addItem(player, 188053786, 1); // Major Stigma Bundle.
-			// 额外大型烙印之石槽位现已可用。 / An additional Major Stigma slot is now available.
-			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_STIGMA_OPEN_ENHANCED2_SLOT);
+		switch (level) {
+			case 20 -> {
+				ItemService.addItem(player, 188053787, 1); // 烙印之石支援包。 / Stigma Support Bundle.
+				// 额外普通烙印之石槽位现已可用。 / An additional normal Stigma slot is now available.
+				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_STIGMA_OPEN_NORMAL_SLOT);
+			}
+			case 30 -> ItemService.addItem(player, 188053787, 2);
+			case 40 -> ItemService.addItem(player, 188053787, 3);
+			case 45 -> {
+				ItemService.addItem(player, 188053787, 3);
+				ItemService.addItem(player, 188053785, 1); // Greater Stigma Bundle.
+				// 额外高级烙印之石槽位现已可用。 / An additional Greater Stigma slot is now available.
+				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_STIGMA_OPEN_ENHANCED1_SLOT);
+			}
+			case 50 -> {
+				ItemService.addItem(player, 188053787, 3);
+				ItemService.addItem(player, 188053785, 2);
+			}
+			case 55 -> {
+				ItemService.addItem(player, 188053787, 3);
+				ItemService.addItem(player, 188053785, 2);
+				ItemService.addItem(player, 188053786, 1); // Major Stigma Bundle.
+				// 额外大型烙印之石槽位现已可用。 / An additional Major Stigma slot is now available.
+				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_STIGMA_OPEN_ENHANCED2_SLOT);
+			}
+			default -> {
+			}
 		}
 		// 20/30/40/45/50/55 是烙印槽档位：升级到档位后把重新计算出的槽位数量推给客户端，
 		// 否则客户端要重登才知道新档位已开放。
@@ -1063,13 +1052,7 @@ public class PlayerController extends CreatureController<Player> {
 		// about the newly opened tier without a relogin.
 		StigmaService.refreshStigmaSlots(player);
 		// 精华核心 5.3 / Essence Cores 5.3
-		if (level == 66) {
-			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_CPSTONE_OPEN_SLOT);
-		}
-		if (level == 68) {
-			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_CPSTONE_OPEN_SLOT);
-		}
-		if (level == 70) {
+		if (level == 66 || level == 68 || level == 70) {
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_CPSTONE_OPEN_SLOT);
 		}
 		PacketSendUtility.sendPacket(player, new SM_SKILL_LIST(player, player.getSkillList().getBasicSkills()));
@@ -1188,18 +1171,6 @@ public class PlayerController extends CreatureController<Player> {
 	}
 
 	/**
-	 * 向玩家背包添加物品。
-	 * Adds items to the player inventory.
-	 * item id
-	 * count
-	 *
-	 * @return whether successful / 是否成功 / whether successful。
-	 */
-	public boolean addItems(int itemId, int count) {
-		return ItemService.addQuestItems(getOwner(), Collections.singletonList(new QuestItems(itemId, count)));
-	}
-
-	/**
 	 * 开始姿态技能。
 	 * Starts a stance skill.
 	 * stance skill id
@@ -1254,12 +1225,11 @@ public class PlayerController extends CreatureController<Player> {
 		House house = player.getActiveHouse();
 		if (house != null) {
 			switch (house.getHouseType()) {
-				case MANSION:
-				case ESTATE:
-				case PALACE:
+				case MANSION, ESTATE, PALACE -> {
 					return;
-				default:
-					break;
+				}
+				default -> {
+				}
 			}
 		}
 		if (!player.havePermission(MembershipConfig.DISABLE_SOULSICKNESS)) {
@@ -1282,7 +1252,8 @@ public class PlayerController extends CreatureController<Player> {
 	 * @return 战斗中则为 true / true if in combat / true if the player is actively in combat
 	 */
 	public boolean isInCombat() {
-		return (((System.currentTimeMillis() - lastAttackedMilis) <= 10000) || ((System.currentTimeMillis() - lastAttackMilis) <= 10000));
+		long now = System.currentTimeMillis();
+		return (now - lastAttackedMilis <= 10000) || (now - lastAttackMilis <= 10000);
 	}
 
 	/**

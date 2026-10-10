@@ -2,6 +2,7 @@ package com.aionemu.gameserver.dao.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.support.TransactionTemplate;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -87,15 +88,20 @@ public class LegionDAO extends com.aionemu.gameserver.dao.LegionDAO {
     private static final String SELECT_USED_IDS_QUERY = "SELECT id FROM legions";
 
     private final JdbcClient jdbcClient;
+    private final TransactionTemplate transactionTemplate;
 
     public LegionDAO() {
-        this(DatabaseFactory.getJdbcClient());
+        this(DatabaseFactory.getJdbcClient(), DatabaseFactory.getTransactionTemplate());
     }
 
     @Autowired
+    public LegionDAO(JdbcClient jdbcClient, TransactionTemplate transactionTemplate) {
+        this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");
+        this.transactionTemplate = Objects.requireNonNull(transactionTemplate, "transactionTemplate must not be null");
+    }
 
     public LegionDAO(JdbcClient jdbcClient) {
-        this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");
+        this(jdbcClient, DatabaseFactory.getTransactionTemplate());
     }
 
     /**
@@ -290,24 +296,12 @@ public class LegionDAO extends com.aionemu.gameserver.dao.LegionDAO {
      */
     @Override
     public void deleteLegion(int legionId) {
-        try (Connection con = DatabaseFactory.getConnection()) {
-            con.setAutoCommit(false);
-
-            try (PreparedStatement stmt1 = con.prepareStatement(DELETE_LEGION_QUERY);
-                 PreparedStatement stmt2 = con.prepareStatement(CLEAR_LEGION_SIEGE)) {
-
-                stmt1.setInt(1, legionId);
-                stmt1.executeUpdate();
-
-                stmt2.setInt(1, legionId);
-                stmt2.executeUpdate();
-
-                con.commit();
-            } catch (SQLException e) {
-                con.rollback();
-                throw e;
-            }
-        } catch (SQLException e) {
+        try {
+            transactionTemplate.executeWithoutResult(status -> {
+                jdbcClient.sql(DELETE_LEGION_QUERY).param(legionId).update();
+                jdbcClient.sql(CLEAR_LEGION_SIEGE).param(legionId).update();
+            });
+        } catch (RuntimeException e) {
             log.error(I18n.get("log.9be4d3aa4400", legionId), e);
         }
     }

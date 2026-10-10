@@ -13,6 +13,7 @@ import java.util.Objects;
 
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.simple.JdbcClient;
+import org.springframework.transaction.support.TransactionTemplate;
 
 import com.aionemu.boot.i18n.I18n;
 import com.aionemu.commons.database.DatabaseFactory;
@@ -86,15 +87,20 @@ public class PlayerSkillListDAO extends com.aionemu.gameserver.dao.PlayerSkillLi
 	private static final Predicate<PlayerSkillEntry> skillsToDeletePredicate = input -> input != null && PersistentState.DELETED == input.getPersistentState();
 
 	private final JdbcClient jdbcClient;
+	private final TransactionTemplate transactionTemplate;
 
 	public PlayerSkillListDAO() {
-		this(DatabaseFactory.getJdbcClient());
+		this(DatabaseFactory.getJdbcClient(), DatabaseFactory.getTransactionTemplate());
 	}
 
 	@Autowired
+	public PlayerSkillListDAO(JdbcClient jdbcClient, TransactionTemplate transactionTemplate) {
+		this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");
+		this.transactionTemplate = Objects.requireNonNull(transactionTemplate, "transactionTemplate must not be null");
+	}
 
 	public PlayerSkillListDAO(JdbcClient jdbcClient) {
-		this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");
+		this(jdbcClient, DatabaseFactory.getTransactionTemplate());
 	}
 
 	/**
@@ -172,19 +178,18 @@ public class PlayerSkillListDAO extends com.aionemu.gameserver.dao.PlayerSkillLi
 	 * @param skills 技能条目列表 / list of skill entries
 	 */
 	private boolean store(Player player, List<PlayerSkillEntry> skills) {
-		try (Connection con = DatabaseFactory.getConnection()) {
-			con.setAutoCommit(false);
-			try {
-				deleteSkills(con, player, skills);
-				addSkills(con, player, skills);
-				updateSkills(con, player, skills);
-				updateSkinSkills(con, player, skills);
-				con.commit();
-			} catch (SQLException e) {
-				con.rollback();
-				throw e;
-			}
-		} catch (SQLException e) {
+		try {
+			transactionTemplate.executeWithoutResult(status -> {
+				try (Connection con = DatabaseFactory.getConnection()) {
+					deleteSkills(con, player, skills);
+					addSkills(con, player, skills);
+					updateSkills(con, player, skills);
+					updateSkinSkills(con, player, skills);
+				} catch (SQLException e) {
+					throw new DataAccessException("Failed to store skill list", e) {};
+				}
+			});
+		} catch (RuntimeException e) {
 			log.error(I18n.get("log.6790b402b724", player.getObjectId()), e);
 			return false;
 		}

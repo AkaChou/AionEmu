@@ -14,6 +14,7 @@ import java.util.Objects;
 
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.simple.JdbcClient;
+import org.springframework.transaction.support.TransactionTemplate;
 
 import com.aionemu.boot.i18n.I18n;
 import com.aionemu.commons.database.DatabaseFactory;
@@ -90,15 +91,20 @@ public class InventoryDAO extends com.aionemu.gameserver.dao.InventoryDAO {
 	public static final String SELECT_USED_IDS_QUERY = "SELECT item_unique_id FROM inventory";
 
 	private final JdbcClient jdbcClient;
+	private final TransactionTemplate transactionTemplate;
 
 	public InventoryDAO() {
-		this(DatabaseFactory.getJdbcClient());
+		this(DatabaseFactory.getJdbcClient(), DatabaseFactory.getTransactionTemplate());
 	}
 
 	@Autowired
+	public InventoryDAO(JdbcClient jdbcClient, TransactionTemplate transactionTemplate) {
+		this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");
+		this.transactionTemplate = Objects.requireNonNull(transactionTemplate, "transactionTemplate must not be null");
+	}
 
 	public InventoryDAO(JdbcClient jdbcClient) {
-		this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");
+		this(jdbcClient, DatabaseFactory.getTransactionTemplate());
 	}
 
 	/**
@@ -389,16 +395,15 @@ public class InventoryDAO extends com.aionemu.gameserver.dao.InventoryDAO {
 		if (items == null || items.isEmpty()) {
 			return true;
 		}
-		try (Connection con = DatabaseFactory.getConnection()) {
-			con.setAutoCommit(false);
-			try {
-				storeInTransaction(con, items, playerId, accountId, legionId);
-				con.commit();
-			} catch (SQLException e) {
-				con.rollback();
-				throw e;
-			}
-		} catch (SQLException e) {
+		try {
+			transactionTemplate.executeWithoutResult(status -> {
+				try (Connection con = DatabaseFactory.getConnection()) {
+					storeInTransaction(con, items, playerId, accountId, legionId);
+				} catch (SQLException e) {
+					throw new DataAccessException("Failed to store inventory items", e) {};
+				}
+			});
+		} catch (RuntimeException e) {
 			log.error(I18n.get("log.c240e77dc213", playerId), e);
 			return false;
 		}

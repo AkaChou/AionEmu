@@ -36,6 +36,7 @@ import lombok.RequiredArgsConstructor;
 /**
  * 效果控制器，管理生物身上的 buff/debuff、异常状态与驱散逻辑。
  * Effect controller managing creature buffs/debuffs, abnormal states and dispel logic.
+ *
  * @author ATracer
  */
 @Getter
@@ -60,26 +61,39 @@ public class EffectController {
 	 */
 	private static final Map<String, Effect> EMPTY_EFFECTS = Collections.emptyMap();
 
-	/** 被动效果映射（首次写入时才分配）。 / Passive effect map, allocated on the first write. */
+	/**
+	 * 被动效果映射（首次写入时才分配）。 / Passive effect map, allocated on the first write.
+	 */
 	protected volatile Map<String, Effect> passiveEffectMap = EMPTY_EFFECTS;
-	/** 不显示图标的效果映射（首次写入时才分配）。 / No-show effect map, allocated on the first write. */
+	/**
+	 * 不显示图标的效果映射（首次写入时才分配）。 / No-show effect map, allocated on the first write.
+	 */
 	protected volatile Map<String, Effect> noshowEffects = EMPTY_EFFECTS;
-	/** 异常效果映射（首次写入时才分配）。 / Abnormal effect map, allocated on the first write. */
+	/**
+	 * 异常效果映射（首次写入时才分配）。 / Abnormal effect map, allocated on the first write.
+	 */
 	protected volatile Map<String, Effect> abnormalEffectMap = EMPTY_EFFECTS;
 	private final ArrayDeque<List<Effect>> maintainEffectGroups = new ArrayDeque<>();
 
-	/** 效果映射互斥锁。 / Mutex for effect maps. */
+	/**
+	 * 效果映射互斥锁。 / Mutex for effect maps.
+	 */
 	private final Lock lock = new ReentrantLock();
 
-	/** 当前异常状态位掩码。 / Current abnormal-state bit mask. */
+	/**
+	 * 当前异常状态位掩码。 / Current abnormal-state bit mask.
+	 */
 	protected volatile int abnormals;
 
-	/** 是否处于护盾保护。 / Whether currently under a shield. */
+	/**
+	 * 是否处于护盾保护。 / Whether currently under a shield.
+	 */
 	private boolean isUnderShield = false;
 
 	/**
 	 * 添加效果：处理被动叠层、冲突、开关/吟唱/弓星上限后启动并广播。
 	 * Adds an effect: resolves passive stacks, conflicts, toggle/chant/ranger caps, then starts and broadcasts.
+	 *
 	 * @param nextEffect 待添加的效果 / effect to add
 	 */
 	public boolean addEffect(Effect nextEffect) {
@@ -98,7 +112,7 @@ public class EffectController {
 
 					// 检查技能等级（堆叠等级相同时） / check skill level (when stack level same)
 					if (existingEffect.getSkillStackLvl() == nextEffect.getSkillStackLvl()
-							&& existingEffect.getSkillLevel() > nextEffect.getSkillLevel()) {
+						&& existingEffect.getSkillLevel() > nextEffect.getSkillLevel()) {
 						return false;
 					}
 					existingEffect.endEffect();
@@ -137,14 +151,8 @@ public class EffectController {
 			}
 			// 最多 3 个吟唱效果 / Max 3 Chants Effect
 			if (nextEffect.isToggle()) {
-				int mts = 1;
-				if (nextEffect.getSkillSubType() == SkillSubType.CHANT) {
-					mts = 3;
-				} else if (isAethertechEffect(nextEffect.getSkillId())) {
-					mts = 6;
-				} else {
-					mts = 1;
-				}
+				int mts = nextEffect.getSkillSubType() == SkillSubType.CHANT ? 3
+					: isAethertechEffect(nextEffect.getSkillId()) ? 6 : 1;
 				if (mapToUpdate.size() >= mts) {
 					Iterator<Effect> iter = effectsSnapshot(mapToUpdate).iterator();
 					Effect effect = iter.next();
@@ -207,6 +215,7 @@ public class EffectController {
 	/**
 	 * 判断技能是否为奥德科技类开关效果（4.8）。
 	 * Returns whether the skill is an Aethertech-style toggle effect (4.8).
+	 *
 	 * @param skillId 技能 ID / skill id
 	 * @return true 若为奥德科技效果 / true if Aethertech effect
 	 */
@@ -219,8 +228,8 @@ public class EffectController {
 			// 稳定推进器 / Stability Thrusters
 			// 骑乘挫败 / Mounting Frustration
 			case 2767, 2768, 2769, 2770, 2771, 2772, 2773, 2774, 2775, 2776, 2777, 2778, 2440, 2441, 2442, 2443, 2444,
-			     2445, 2446, 2447, 2448, 2449, 2579, 2580, 2581, 2421, 2422, 2736, 2737, 2738, 2739, 2740, 2838, 2839,
-			     2840, 2841, 2842, 2843, 2844, 2845, 2846, 2847, 2848 -> true;
+				 2445, 2446, 2447, 2448, 2449, 2579, 2580, 2581, 2421, 2422, 2736, 2737, 2738, 2739, 2740, 2838, 2839,
+				 2840, 2841, 2842, 2843, 2844, 2845, 2846, 2847, 2848 -> true;
 			default -> false;
 		};
 	}
@@ -228,11 +237,12 @@ public class EffectController {
 	/**
 	 * 在映射中查找与新效果 conflictId 冲突的已有效果。
 	 * Finds an existing effect in the map that conflicts with the new effect by conflictId.
+	 *
 	 * @param mapToUpdate 待检索的效果映射 / effect map to search
-	 * @param newEffect 新效果 / new effect
+	 * @param newEffect   新效果 / new effect
 	 * @return 冲突效果，无则 null / conflicting effect, or null
 	 */
-	private final Effect findConflictedEffect(Map<String, Effect> mapToUpdate, Effect newEffect) {
+	private Effect findConflictedEffect(Map<String, Effect> mapToUpdate, Effect newEffect) {
 		int conflictId = newEffect.getSkillTemplate().getConflictId();
 		if (conflictId == 0) {
 			return null;
@@ -248,6 +258,7 @@ public class EffectController {
 	/**
 	 * 按效果类型返回对应存储映射（被动 / 开关 / 异常）。
 	 * Returns the storage map for the effect type (passive / toggle / abnormal).
+	 *
 	 * @param effect 效果 / effect
 	 * @return 对应映射 / matching map
 	 */
@@ -265,6 +276,7 @@ public class EffectController {
 	/**
 	 * 取该效果类型对应的可写映射，必要时惰性分配。
 	 * Returns the writable map for the effect type, allocating it on demand.
+	 *
 	 * @param effect 效果 / effect
 	 * @return 可写映射 / writable map
 	 */
@@ -281,6 +293,7 @@ public class EffectController {
 	/**
 	 * 惰性分配被动效果映射。
 	 * Allocates the passive effect map on demand.
+	 *
 	 * @return 被动效果映射 / passive effect map
 	 */
 	private Map<String, Effect> writablePassiveEffectMap() {
@@ -299,6 +312,7 @@ public class EffectController {
 	/**
 	 * 惰性分配不显示效果映射。
 	 * Allocates the no-show effect map on demand.
+	 *
 	 * @return 不显示效果映射 / no-show effect map
 	 */
 	private Map<String, Effect> writableNoshowEffects() {
@@ -320,6 +334,7 @@ public class EffectController {
 	 * Allocates the abnormal effect map on demand. The double-check locks {@code this} — the same monitor as
 	 * {@link #clearEffect(Effect)} — so concurrent creators converge on one instance; otherwise the first
 	 * effect could be stored into a discarded map and lost.
+	 *
 	 * @return 异常效果映射 / abnormal effect map
 	 */
 	protected final Map<String, Effect> writableAbnormalEffects() {
@@ -338,6 +353,7 @@ public class EffectController {
 	/**
 	 * 按 stack 键获取异常效果。
 	 * Returns the abnormal effect for the given stack key.
+	 *
 	 * @param stack 效果 stack 键 / effect stack key
 	 * @return 异常效果或 null / abnormal effect or null
 	 */
@@ -348,13 +364,12 @@ public class EffectController {
 	/**
 	 * 是否存在指定技能 ID 的异常效果。
 	 * Whether an abnormal effect with the given skill id is present.
+	 *
 	 * @param skillId 技能 ID / skill id
 	 * @return 存在则为 true / true if present
 	 */
 	public boolean hasAbnormalEffect(int skillId) {
-		Iterator<Effect> localIterator = effectsSnapshot(abnormalEffectMap).iterator();
-		while (localIterator.hasNext()) {
-			Effect localEffect = localIterator.next();
+		for (Effect localEffect : effectsSnapshot(abnormalEffectMap)) {
 			if (localEffect.getSkillId() == skillId) {
 				return true;
 			}
@@ -365,18 +380,19 @@ public class EffectController {
 	/**
 	 * 在全部效果映射中是否包含指定效果模板 ID。
 	 * Whether any effect map contains the given effect-template id.
+	 *
 	 * @param effectId 效果模板 ID / effect template id
 	 * @return 包含则为 true / true if contained
 	 */
 	public boolean hasEffectById(int effectId) {
-		Collection<Effect> allEffects = new ArrayList<>();
-		allEffects.addAll(effectsSnapshot(abnormalEffectMap));
-		allEffects.addAll(effectsSnapshot(noshowEffects));
-		allEffects.addAll(effectsSnapshot(passiveEffectMap));
-		for (Effect effect : allEffects) {
-			if (effect.containsEffectId(effectId)) {
-				return true;
-			}
+		for (Effect effect : effectsSnapshot(abnormalEffectMap)) {
+			if (effect.containsEffectId(effectId)) return true;
+		}
+		for (Effect effect : effectsSnapshot(noshowEffects)) {
+			if (effect.containsEffectId(effectId)) return true;
+		}
+		for (Effect effect : effectsSnapshot(passiveEffectMap)) {
+			if (effect.containsEffectId(effectId)) return true;
 		}
 		return false;
 	}
@@ -401,6 +417,7 @@ public class EffectController {
 	/**
 	 * 向指定玩家发送当前效果图标（用于新进入视野）。
 	 * Sends current effect icons to the given player (when newly seen).
+	 *
 	 * @param player 目标玩家 / target player
 	 */
 	public synchronized void sendEffectIconsTo(Player player) {
@@ -411,6 +428,7 @@ public class EffectController {
 	/**
 	 * 从对应映射移除已结束的效果并广播。
 	 * Removes an ended effect from its map and broadcasts.
+	 *
 	 * @param effect 要清除的效果 / effect to clear
 	 */
 	public synchronized void clearEffect(Effect effect) {
@@ -429,6 +447,7 @@ public class EffectController {
 	/**
 	 * 按技能 ID 结束并移除全部映射中的效果。
 	 * Ends and removes effects with the given skill id from all maps.
+	 *
 	 * @param skillid 技能 ID / skill id
 	 */
 	public void removeEffect(int skillid) {
@@ -454,6 +473,7 @@ public class EffectController {
 	/**
 	 * 结束带指定技能 ID 且标记为「阻止目标行动」的效果。
 	 * Ends effects with the given skill id that are flagged target-stop.
+	 *
 	 * @param skillId 技能 ID / skill id
 	 */
 	public void removeTargetStoppableEffect(int skillId) {
@@ -467,7 +487,8 @@ public class EffectController {
 	/**
 	 * 登记持续效果组；超过最大目标数时移除最旧的一组。
 	 * Registers maintain-effect groups; evicts the oldest group when over the max target count.
-	 * @param effects 效果组 / effect group
+	 *
+	 * @param effects        效果组 / effect group
 	 * @param maxTargetCount 最大目标数 / max target count
 	 */
 	public synchronized void registerMaintainEffects(List<Effect> effects, int maxTargetCount) {
@@ -525,6 +546,7 @@ public class EffectController {
 	/**
 	 * 计算可被 DispelBuffCounterAtk 驱散的效果数量。
 	 * Counts effects removable by DispelBuffCounterAtk at the given dispel level.
+	 *
 	 * @param dispelLevel 驱散等级 / dispel level
 	 * @return 可驱散数量 / removable count
 	 */
@@ -544,19 +566,19 @@ public class EffectController {
 			// 检查目标槽；目标槽 ≥2 的效果不能 / check for targetslot, effects with target slot higher or equal to 2 cant be
 			// removed (ex. skillId: 11885)
 			if (tragetSlot != SkillTargetSlot.BUFF
-					&& (tragetSlot != SkillTargetSlot.DEBUFF && dispelCat != DispelCategoryType.ALL)
-					|| effect.getTargetSlotLevel() >= 2) {
+				&& (tragetSlot != SkillTargetSlot.DEBUFF && dispelCat != DispelCategoryType.ALL)
+				|| effect.getTargetSlotLevel() >= 2) {
 				continue;
 			}
 			switch (dispelCat) {
-			case ALL:
-			case BUFF: // DispelBuffCounterAtkEffect
-				if (effect.getReqDispelLevel() <= dispelLevel) {
-					number++;
-				}
-				break;
-			default:
-				break;
+				case ALL:
+				case BUFF: // DispelBuffCounterAtkEffect
+					if (effect.getReqDispelLevel() <= dispelLevel) {
+						number++;
+					}
+					break;
+				default:
+					break;
 			}
 		}
 		return number;
@@ -565,14 +587,15 @@ public class EffectController {
 	/**
 	 * 按驱散类别、目标槽与驱散等级移除效果。
 	 * Removes effects by dispel category, target slot and dispel level.
-	 * @param dispelCat 驱散类别 / dispel category
-	 * @param targetSlot 目标槽 / target slot
-	 * @param count 最多移除数量 / max removals
+	 *
+	 * @param dispelCat   驱散类别 / dispel category
+	 * @param targetSlot  目标槽 / target slot
+	 * @param count       最多移除数量 / max removals
 	 * @param dispelLevel 驱散等级 / dispel level
-	 * @param power 驱散强度 / dispel power
+	 * @param power       驱散强度 / dispel power
 	 */
 	public void removeEffectByDispelCat(DispelCategoryType dispelCat, SkillTargetSlot targetSlot, int count,
-			int dispelLevel, int power) {
+										int dispelLevel, int power) {
 		for (Effect effect : effectsSnapshot(abnormalEffectMap)) {
 			if (count == 0) {
 				break;
@@ -591,60 +614,60 @@ public class EffectController {
 			}
 			boolean remove = false;
 			switch (dispelCat) {
-			case ALL:
-				if ((effect.getDispelCategory() == DispelCategoryType.ALL
+				case ALL:
+					if ((effect.getDispelCategory() == DispelCategoryType.ALL
 						|| effect.getDispelCategory() == DispelCategoryType.DEBUFF_MENTAL
 						|| effect.getDispelCategory() == DispelCategoryType.DEBUFF_PHYSICAL)
 						&& effect.getReqDispelLevel() <= dispelLevel) {
-					remove = true;
-				}
-				break;
-			case DEBUFF_MENTAL:
-				if ((effect.getDispelCategory() == DispelCategoryType.ALL
+						remove = true;
+					}
+					break;
+				case DEBUFF_MENTAL:
+					if ((effect.getDispelCategory() == DispelCategoryType.ALL
 						|| effect.getDispelCategory() == DispelCategoryType.DEBUFF_MENTAL)
 						&& effect.getReqDispelLevel() <= dispelLevel) {
-					remove = true;
-				}
-				break;
-			case DEBUFF_PHYSICAL:
-				if ((effect.getDispelCategory() == DispelCategoryType.ALL
+						remove = true;
+					}
+					break;
+				case DEBUFF_PHYSICAL:
+					if ((effect.getDispelCategory() == DispelCategoryType.ALL
 						|| effect.getDispelCategory() == DispelCategoryType.DEBUFF_PHYSICAL)
 						&& effect.getReqDispelLevel() <= dispelLevel) {
-					remove = true;
-				}
-				break;
-			case BUFF:
-				if ((effect.getDispelCategory() == DispelCategoryType.BUFF
+						remove = true;
+					}
+					break;
+				case BUFF:
+					if ((effect.getDispelCategory() == DispelCategoryType.BUFF
 						|| effect.getDispelCategory() == DispelCategoryType.ALL)
 						&& effect.getReqDispelLevel() <= dispelLevel) {
-					remove = true;
-				}
-				break;
-			case STUN:
-				if (effect.getDispelCategory() == DispelCategoryType.STUN) {
-					remove = true;
-				}
-				break;
-			case NPC_BUFF:
-				if (effect.getDispelCategory() == DispelCategoryType.NPC_BUFF
+						remove = true;
+					}
+					break;
+				case STUN:
+					if (effect.getDispelCategory() == DispelCategoryType.STUN) {
+						remove = true;
+					}
+					break;
+				case NPC_BUFF:
+					if (effect.getDispelCategory() == DispelCategoryType.NPC_BUFF
 						&& effect.getReqDispelLevel() <= dispelLevel) {
-					remove = true;
-				}
-				break;
-			case NPC_DEBUFF:
-				if ((effect.getDispelCategory() == DispelCategoryType.NPC_DEBUFF_PHYSICAL
+						remove = true;
+					}
+					break;
+				case NPC_DEBUFF:
+					if ((effect.getDispelCategory() == DispelCategoryType.NPC_DEBUFF_PHYSICAL
 						|| effect.getDispelCategory() == DispelCategoryType.NPC_DEBUFF_MENTAL)
 						&& effect.getReqDispelLevel() <= dispelLevel) {
-					remove = true;
-				}
-				break;
-			case NPC_DEBUFF_PHYSICAL:
-				if (effect.getDispelCategory() == DispelCategoryType.NPC_DEBUFF_PHYSICAL) {
-					remove = true;
-				}
-				break;
-			default:
-				break;
+						remove = true;
+					}
+					break;
+				case NPC_DEBUFF_PHYSICAL:
+					if (effect.getDispelCategory() == DispelCategoryType.NPC_DEBUFF_PHYSICAL) {
+						remove = true;
+					}
+					break;
+				default:
+					break;
 			}
 
 			if (remove) {
@@ -663,9 +686,10 @@ public class EffectController {
 	/**
 	 * 执行 DispelBuffCounterAtk：按数量与等级驱散增益。
 	 * Runs DispelBuffCounterAtk: dispels buffs by count and level.
-	 * @param count 最多驱散数 / max dispels
+	 *
+	 * @param count       最多驱散数 / max dispels
 	 * @param dispelLevel 驱散等级 / dispel level
-	 * @param power 驱散强度 / dispel power
+	 * @param power       驱散强度 / dispel power
 	 */
 	public void dispelBuffCounterAtkEffect(int count, int dispelLevel, int power) {
 		for (Effect effect : effectsSnapshot(abnormalEffectMap)) {
@@ -681,20 +705,20 @@ public class EffectController {
 				continue;
 			}
 			if (tragetSlot != SkillTargetSlot.BUFF
-					&& (tragetSlot != SkillTargetSlot.DEBUFF && dispelCat != DispelCategoryType.ALL)
-					|| effect.getTargetSlotLevel() >= 2) {
+				&& (tragetSlot != SkillTargetSlot.DEBUFF && dispelCat != DispelCategoryType.ALL)
+				|| effect.getTargetSlotLevel() >= 2) {
 				continue;
 			}
 			boolean remove = false;
 			switch (dispelCat) {
-			case ALL:
-			case BUFF:
-				if (effect.getReqDispelLevel() <= dispelLevel) {
-					remove = true;
-				}
-				break;
-			default:
-				break;
+				case ALL:
+				case BUFF:
+					if (effect.getReqDispelLevel() <= dispelLevel) {
+						remove = true;
+					}
+					break;
+				default:
+					break;
 			}
 
 			if (remove) {
@@ -713,6 +737,7 @@ public class EffectController {
 	/**
 	 * 判断超长时长效果是否仍允许被驱散（白名单技能）。
 	 * Whether a long-duration effect is still removable (whitelist skills).
+	 *
 	 * @param effect 效果 / effect
 	 * @return 可驱散则为 true / true if removable
 	 */
@@ -727,6 +752,7 @@ public class EffectController {
 	/**
 	 * 按效果类型结束匹配的异常效果。
 	 * Ends abnormal effects matching the given effect type.
+	 *
 	 * @param effectType 效果类型 / effect type
 	 */
 	public void removeEffectByEffectType(EffectType effectType) {
@@ -750,7 +776,7 @@ public class EffectController {
 		int removed = 0;
 		for (Effect effect : effectsSnapshot(abnormalEffectMap)) {
 			if (!filter.apply(effect)
-					|| dispelLevel < effect.getReqDispelLevel() && dispelLevel < 100) {
+				|| dispelLevel < effect.getReqDispelLevel() && dispelLevel < 100) {
 				continue;
 			}
 			if (removePower(effect, power)) {
@@ -766,8 +792,9 @@ public class EffectController {
 	/**
 	 * 削减效果驱散强度；耗尽则返回 true。
 	 * Reduces the effect's remaining dispel power; returns true when exhausted.
+	 *
 	 * @param effect 效果 / effect
-	 * @param power 驱散强度 / power to apply
+	 * @param power  驱散强度 / power to apply
 	 * @return true 若效果应结束 / true if the effect should end
 	 */
 	private boolean removePower(Effect effect, int power) {
@@ -779,6 +806,7 @@ public class EffectController {
 	/**
 	 * 按技能 ID 移除被动效果。
 	 * Removes passive effects by skill id.
+	 *
 	 * @param skillid 技能 ID / skill id
 	 */
 	public void removePassiveEffect(int skillid) {
@@ -792,6 +820,7 @@ public class EffectController {
 	/**
 	 * 按技能 ID 移除不显示的开关类效果。
 	 * Removes no-show (toggle) effects by skill id.
+	 *
 	 * @param skillid 技能 ID / skill id
 	 */
 	public void removeNoshowEffect(int skillid) {
@@ -805,6 +834,7 @@ public class EffectController {
 	/**
 	 * 按目标槽移除异常效果。
 	 * Removes abnormal effects matching the target slot.
+	 *
 	 * @param targetSlot 目标槽 / target slot
 	 */
 	public void removeAbnormalEffectsByTargetSlot(SkillTargetSlot targetSlot) {
@@ -826,18 +856,19 @@ public class EffectController {
 	/**
 	 * 移除效果；登出时清空全部映射，否则保留部分增益。
 	 * Removes effects; on logout clears all maps, otherwise keeps selected boosts.
+	 *
 	 * @param logout 是否登出清理 / whether this is a logout clear
 	 */
 	public void removeAllEffects(boolean logout) {
 		if (!logout) {
 			for (Map.Entry<String, Effect> entry : effectEntriesSnapshot(abnormalEffectMap)) {
 				if (!entry.getValue().getSkillTemplate().isNoRemoveAtDie() && !entry.getValue().isXpBoost()
-						&& !entry.getValue().isApBoost() && !entry.getValue().isDrBoost()
-						&& !entry.getValue().isBdrBoost() && !entry.getValue().isEnchantBoost()
-						&& !entry.getValue().isIdunDropBoost() && !entry.getValue().isAuthorizeBoost()
-						&& !entry.getValue().isSprintFpReduce() && !entry.getValue().isReturnCoolReduce()
-						&& !entry.getValue().isEnchantOptionBoost() && !entry.getValue().isDeathPenaltyReduce()
-						&& !entry.getValue().isOdellaRecoverIncrease()) {
+					&& !entry.getValue().isApBoost() && !entry.getValue().isDrBoost()
+					&& !entry.getValue().isBdrBoost() && !entry.getValue().isEnchantBoost()
+					&& !entry.getValue().isIdunDropBoost() && !entry.getValue().isAuthorizeBoost()
+					&& !entry.getValue().isSprintFpReduce() && !entry.getValue().isReturnCoolReduce()
+					&& !entry.getValue().isEnchantOptionBoost() && !entry.getValue().isDeathPenaltyReduce()
+					&& !entry.getValue().isOdellaRecoverIncrease()) {
 					entry.getValue().endEffect();
 				}
 			}
@@ -862,6 +893,7 @@ public class EffectController {
 	/**
 	 * 异常映射中是否存在指定技能 ID。
 	 * Whether the abnormal map contains the given skill id.
+	 *
 	 * @param skillId 技能 ID / skill id
 	 * @return 存在则为 true / true if present
 	 */
@@ -877,6 +909,7 @@ public class EffectController {
 	/**
 	 * 不显示效果映射中是否存在指定技能 ID。
 	 * Whether the no-show map contains the given skill id.
+	 *
 	 * @param skillId 技能 ID / skill id
 	 * @return 存在则为 true / true if present
 	 */
@@ -892,6 +925,7 @@ public class EffectController {
 	/**
 	 * 被动映射中是否存在指定技能 ID。
 	 * Whether the passive map contains the given skill id.
+	 *
 	 * @param skillId 技能 ID / skill id
 	 * @return 存在则为 true / true if present
 	 */
@@ -907,6 +941,7 @@ public class EffectController {
 	/**
 	 * 是否处于恐惧异常状态。
 	 * Whether the creature is under a Fear abnormal state.
+	 *
 	 * @return true 若处于恐惧 / true if under fear
 	 */
 	public boolean isUnderFear() {
@@ -916,6 +951,7 @@ public class EffectController {
 	/**
 	 * 是否处于混乱异常状态。
 	 * Whether the creature is under a Confuse abnormal state.
+	 *
 	 * @return true 若处于混乱 / true if confused
 	 */
 	public boolean isConfused() {
@@ -939,13 +975,12 @@ public class EffectController {
 	/**
 	 * 返回异常效果列表副本。
 	 * Returns a copy of the abnormal effects list.
+	 *
 	 * @return 异常效果列表 / abnormal effects
 	 */
 	public List<Effect> getAbnormalEffects() {
 		List<Effect> effects = new ArrayList<>();
-		Iterator<Effect> iterator = iterator();
-		while (iterator.hasNext()) {
-			Effect effect = iterator.next();
+		for (Effect effect : effectsSnapshot(abnormalEffectMap)) {
 			if (effect != null && !effect.isStopped()) {
 				effects.add(effect);
 			}
@@ -956,42 +991,47 @@ public class EffectController {
 	/**
 	 * 返回应作为顶部图标显示的效果（排除 NOSHOW）。
 	 * Returns effects to show as top icons (excludes NOSHOW).
+	 *
 	 * @return 可显示效果集合 / displayable effects
 	 */
 	public Collection<Effect> getAbnormalEffectsToShow() {
-		return Collections2.filter(effectsSnapshot(abnormalEffectMap), effect -> !effect.isStopped() && effect.getSkillTemplate().getTargetSlot() != SkillTargetSlot.NOSHOW);
+		return Collections2.filter(effectsSnapshot(abnormalEffectMap), effect -> effect != null && !effect.isStopped() && effect.getSkillTemplate().getTargetSlot() != SkillTargetSlot.NOSHOW);
 	}
 
 	/**
 	 * 返回当前吟唱类效果。
 	 * Returns current chant effects.
+	 *
 	 * @return 吟唱效果集合 / chant effects
 	 */
 	public Collection<Effect> getChantEffects() {
-		return Collections2.filter(effectsSnapshot(abnormalEffectMap), effect -> effect.isChant());
+		return Collections2.filter(effectsSnapshot(abnormalEffectMap), effect -> effect != null && effect.isChant());
 	}
 
 	/**
 	 * 返回当前弓星增益效果。
 	 * Returns current ranger buff effects.
+	 *
 	 * @return 弓星增益集合 / ranger effects
 	 */
 	public Collection<Effect> getRangerEffects() {
-		return Collections2.filter(effectsSnapshot(abnormalEffectMap), effect -> effect.isRangerBuff());
+		return Collections2.filter(effectsSnapshot(abnormalEffectMap), effect -> effect != null && effect.isRangerBuff());
 	}
 
 	/**
 	 * 返回当前增益效果。
 	 * Returns current buff effects.
+	 *
 	 * @return 增益效果集合 / buff effects
 	 */
 	public Collection<Effect> getBuffEffects() {
-		return Collections2.filter(effectsSnapshot(abnormalEffectMap), effect -> effect.isBuff());
+		return Collections2.filter(effectsSnapshot(abnormalEffectMap), effect -> effect != null && effect.isBuff());
 	}
 
 	/**
 	 * 设置异常状态位掩码并通知观察者。
 	 * Sets abnormal-state bits and notifies observers.
+	 *
 	 * @param mask 异常状态掩码 / abnormal state mask
 	 */
 	public synchronized void setAbnormal(int mask) {
@@ -1002,6 +1042,7 @@ public class EffectController {
 	/**
 	 * 在无其它效果占用时清除异常状态位。
 	 * Clears abnormal-state bits when no other effect still uses them.
+	 *
 	 * @param mask 异常状态掩码 / abnormal state mask
 	 */
 	public synchronized void unsetAbnormal(int mask) {
@@ -1011,6 +1052,7 @@ public class EffectController {
 	/**
 	 * 汇总异常效果映射中的所有异常状态位。
 	 * ORs together the abnormal-state bits of all abnormal effects.
+	 *
 	 * @return 已映射的异常状态掩码 / mapped abnormal bits
 	 */
 	private int getMappedAbnormals() {
@@ -1024,6 +1066,7 @@ public class EffectController {
 	/**
 	 * 检查是否精确处于指定唯一异常状态。
 	 * Checks whether a unique abnormal state is fully set.
+	 *
 	 * @param id 异常状态 / abnormal state
 	 * @return 若 set 则为 true / true if set
 	 */
@@ -1034,6 +1077,7 @@ public class EffectController {
 	/**
 	 * 检查是否匹配复合异常状态（部分位即可）。
 	 * Checks whether a compound abnormal state matches (any subset bits).
+	 *
 	 * @param id 异常状态 / abnormal state
 	 * @return 效果匹配时为 {@code true} / {@code true} if matched
 	 */
@@ -1045,6 +1089,7 @@ public class EffectController {
 	/**
 	 * 返回异常效果快照迭代器。
 	 * Returns an iterator over a snapshot of abnormal effects.
+	 *
 	 * @return 效果迭代器 / effect iterator
 	 */
 	public Iterator<Effect> iterator() {
@@ -1054,6 +1099,7 @@ public class EffectController {
 	/**
 	 * 根据当前效果推断变身类型。
 	 * Infers transform type from current effects.
+	 *
 	 * @return 变身类型 / transform type
 	 */
 	public TransformType getTransformType() {
@@ -1070,6 +1116,7 @@ public class EffectController {
 	/**
 	 * 异常效果映射是否为空。
 	 * Whether the abnormal effect map is empty.
+	 *
 	 * @return 若 empty 则为 true / true if empty
 	 */
 	public boolean isEmpty() {
@@ -1079,30 +1126,26 @@ public class EffectController {
 	/**
 	 * 按 delayId 限制同类效果数量，必要时结束最早者。
 	 * Enforces per-delayId effect caps and ends the earliest when over limit.
+	 *
 	 * @param effect 新效果 / new effect
 	 */
 	public void checkEffectCooldownId(Effect effect) {
 		Collection<Effect> effects = this.getAbnormalEffectsToShow();
 		int delayId = effect.getSkillTemplate().getDelayId();
-		int rDelay = 0;
-		int size = 0;
 		if (delayId == 1) {
 			return;
 		}
-        size = switch (delayId) {
-            case 2005, 2022, 2024, 2026, 2028 -> 2;
-            default -> size;
-        };
-		rDelay = delayId;
+		int size = switch (delayId) {
+			case 2005, 2022, 2024, 2026, 2028 -> 2;
+			default -> 0;
+		};
 
-		if (delayId == rDelay && effects.size() >= size) {
+		if (effects.size() >= size) {
 			int i = 0;
 			Effect toRemove = null;
-			Iterator<Effect> iter2 = effects.iterator();
-			while (iter2.hasNext()) {
-				Effect nextEffect = iter2.next();
-				if (nextEffect.getSkillTemplate().getDelayId() == rDelay
-						&& nextEffect.getTargetSlot() == effect.getTargetSlot()) {
+			for (Effect nextEffect : effects) {
+				if (nextEffect.getSkillTemplate().getDelayId() == delayId
+					&& nextEffect.getTargetSlot() == effect.getTargetSlot()) {
 					i++;
 					if (toRemove == null) {
 						toRemove = nextEffect;
@@ -1118,6 +1161,7 @@ public class EffectController {
 	/**
 	 * 处理 EXTRA 驱散类别的叠层替换。
 	 * Handles EXTRA dispel-category stack replacement.
+	 *
 	 * @param effect 新效果 / new effect
 	 * @return true 若已替换已有效果 / true if an existing effect was replaced
 	 */
@@ -1125,7 +1169,7 @@ public class EffectController {
 		Effect existingEffect = getMapForEffect(effect).get(effect.getStack());
 		if (existingEffect != null) {
 			if (existingEffect.getDispelCategory() == DispelCategoryType.EXTRA
-					&& effect.getDispelCategory() == DispelCategoryType.EXTRA) {
+				&& effect.getDispelCategory() == DispelCategoryType.EXTRA) {
 				existingEffect.endEffect();
 				return true;
 			}
@@ -1136,6 +1180,7 @@ public class EffectController {
 	/**
 	 * 线程安全地复制效果值列表。
 	 * Thread-safely copies effect values into a list.
+	 *
 	 * @param effects 效果映射 / effect map
 	 * @return 快照列表 / snapshot list
 	 */
@@ -1148,6 +1193,7 @@ public class EffectController {
 	/**
 	 * 线程安全地复制效果条目列表。
 	 * Thread-safely copies effect entries into a list.
+	 *
 	 * @param effects 效果映射 / effect map
 	 * @return 条目快照列表 / entry snapshot
 	 */
@@ -1160,6 +1206,7 @@ public class EffectController {
 	/**
 	 * 搜索 effectId 冲突；低 basicLvl 被拒绝，高 basicLvl 顶替。
 	 * Searches effectId conflicts; lower basicLvl is rejected, higher replaces.
+	 *
 	 * @param nextEffect 新效果 / new effect
 	 * @return true 若新效果因冲突被拒绝 / true if new effect is rejected
 	 */
@@ -1169,7 +1216,7 @@ public class EffectController {
 		}
 		for (Effect effect : effectsSnapshot(abnormalEffectMap)) {
 			if (effect.getSkillSubType().equals(nextEffect.getSkillSubType())
-					|| effect.getTargetSlotEnum().equals(nextEffect.getTargetSlotEnum())) {
+				|| effect.getTargetSlotEnum().equals(nextEffect.getTargetSlotEnum())) {
 				for (EffectTemplate et : effect.getEffectTemplates()) {
 					if (et.getEffectid() == 0) {
 						continue;
@@ -1198,14 +1245,15 @@ public class EffectController {
 	/**
 	 * 高优先级 Stigma 效果顶替同槽低优先级效果。
 	 * Higher-priority stigma effects replace lower ones in the same slot.
+	 *
 	 * @param nextEffect 新效果 / new effect
 	 * @return 若低优先级效果被顶替则为 true / true if a lower effect was replaced
 	 */
 	private boolean priorityStigmaEffect(Effect nextEffect) {
 		for (Effect effect : effectsSnapshot(abnormalEffectMap)) {
 			if (effect.getSkillTemplate().getStigmaType().getId() < nextEffect.getSkillTemplate().getStigmaType()
-					.getId() && effect.getTargetSlot() == nextEffect.getTargetSlot()
-					&& effect.getTargetSlotLevel() == nextEffect.getTargetSlotLevel()) {
+				.getId() && effect.getTargetSlot() == nextEffect.getTargetSlot()
+				&& effect.getTargetSlotLevel() == nextEffect.getTargetSlotLevel()) {
 				for (EffectTemplate et : effect.getEffectTemplates()) {
 					if (et.getEffectid() == 0) {
 						continue;
@@ -1228,12 +1276,11 @@ public class EffectController {
 	/**
 	 * 是否存在物理控制类异常效果。
 	 * Whether a physical-state abnormal effect is present.
+	 *
 	 * @return 存在则为 true / true if present
 	 */
 	public boolean hasPhysicalStateEffect() {
-		Iterator<Effect> effectIterator = effectsSnapshot(abnormalEffectMap).iterator();
-		while (effectIterator.hasNext()) {
-			Effect localEffect = effectIterator.next();
+		for (Effect localEffect : effectsSnapshot(abnormalEffectMap)) {
 			if (localEffect.isPhysicalState()) {
 				return true;
 			}

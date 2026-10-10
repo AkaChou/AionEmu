@@ -3,11 +3,15 @@ package com.aionemu.gameserver.configs.network;
 import java.net.InetSocketAddress;
 
 import com.aionemu.commons.configuration.Property;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.stereotype.Component;
 
 /**
- * 游戏服务器网络相关配置。
- * Game server network related configuration.
+ * 游戏服务器网络相关配置，支持 Spring Boot ConfigurationProperties 与静态门面访问。
+ * Game server network related configuration supporting Spring Boot ConfigurationProperties and static facade access.
  */
+@Component
+@ConfigurationProperties(prefix = "gameserver.network")
 public class NetworkConfig {
 
 	/**
@@ -187,4 +191,277 @@ public class NetworkConfig {
 	 */
 	@Property(key = "gameserver.network.flood.long.tick", defaultValue = "60")
 	public static int Flood_LTick;
+
+	private final ClientProperties client = new ClientProperties();
+	private final LoginProperties login = new LoginProperties();
+	private final NioProperties nio = new NioProperties();
+	private final PacketProperties packet = new PacketProperties();
+	private final DisplayProperties display = new DisplayProperties();
+	private final FloodProperties flood = new FloodProperties();
+
+	public String getAddress() {
+		return PUBLIC_ADDRESS;
+	}
+
+	public void setAddress(String address) {
+		PUBLIC_ADDRESS = address;
+	}
+
+	public ClientProperties getClient() {
+		return client;
+	}
+
+	public LoginProperties getLogin() {
+		return login;
+	}
+
+	public NioProperties getNio() {
+		return nio;
+	}
+
+	public PacketProperties getPacket() {
+		return packet;
+	}
+
+	public DisplayProperties getDisplay() {
+		return display;
+	}
+
+	public FloodProperties getFlood() {
+		return flood;
+	}
+
+	public static class ClientProperties {
+		public int getPort() {
+			return GAME_PORT;
+		}
+
+		public void setPort(int port) {
+			GAME_PORT = port;
+		}
+
+		public String getHost() {
+			return GAME_BIND_ADDRESS;
+		}
+
+		public void setHost(String host) {
+			GAME_BIND_ADDRESS = host;
+		}
+
+		public int getMaxplayers() {
+			return MAX_ONLINE_PLAYERS;
+		}
+
+		public void setMaxplayers(int maxplayers) {
+			MAX_ONLINE_PLAYERS = maxplayers;
+		}
+	}
+
+	public static class LoginProperties {
+		public String getAddress() {
+			return LOGIN_ADDRESS != null ? (LOGIN_ADDRESS.getHostString() + ":" + LOGIN_ADDRESS.getPort()) : null;
+		}
+
+		public void setAddress(String address) {
+			LOGIN_ADDRESS = parseSocketAddress(address);
+		}
+
+		public int getGsid() {
+			return GAMESERVER_ID;
+		}
+
+		public void setGsid(int gsid) {
+			GAMESERVER_ID = gsid;
+		}
+
+		public String getPassword() {
+			return LOGIN_PASSWORD;
+		}
+
+		public void setPassword(String password) {
+			LOGIN_PASSWORD = password;
+		}
+	}
+
+	public static class NioProperties {
+		public int getThreads() {
+			return NIO_READ_WRITE_THREADS;
+		}
+
+		public void setThreads(int threads) {
+			NIO_READ_WRITE_THREADS = threads;
+		}
+	}
+
+	public static class PacketProperties {
+		private final ProcessorProperties processor = new ProcessorProperties();
+
+		public ProcessorProperties getProcessor() {
+			return processor;
+		}
+
+		public static class ProcessorProperties {
+			private final ThreadsProperties threads = new ThreadsProperties();
+			private final ThresholdProperties threshold = new ThresholdProperties();
+
+			public ThreadsProperties getThreads() {
+				return threads;
+			}
+
+			public ThresholdProperties getThreshold() {
+				return threshold;
+			}
+
+			public static class ThreadsProperties {
+				public int getMin() {
+					return PACKET_PROCESSOR_MIN_THREADS;
+				}
+
+				public void setMin(int min) {
+					PACKET_PROCESSOR_MIN_THREADS = min;
+				}
+
+				public int getMax() {
+					return PACKET_PROCESSOR_MAX_THREADS;
+				}
+
+				public void setMax(int max) {
+					PACKET_PROCESSOR_MAX_THREADS = max;
+				}
+			}
+
+			public static class ThresholdProperties {
+				public int getKill() {
+					return PACKET_PROCESSOR_THREAD_KILL_THRESHOLD;
+				}
+
+				public void setKill(int kill) {
+					PACKET_PROCESSOR_THREAD_KILL_THRESHOLD = kill;
+				}
+
+				public int getSpawn() {
+					return PACKET_PROCESSOR_THREAD_SPAWN_THRESHOLD;
+				}
+
+				public void setSpawn(int spawn) {
+					PACKET_PROCESSOR_THREAD_SPAWN_THRESHOLD = spawn;
+				}
+			}
+		}
+	}
+
+	public static class DisplayProperties {
+		public boolean isUnknownpackets() {
+			return DISPLAY_UNKNOWNPACKETS;
+		}
+
+		public void setUnknownpackets(boolean unknownpackets) {
+			DISPLAY_UNKNOWNPACKETS = unknownpackets;
+		}
+
+		public boolean isPackets() {
+			return DISPLAY_PACKETS;
+		}
+
+		public void setPackets(boolean packets) {
+			DISPLAY_PACKETS = packets;
+		}
+	}
+
+	public static class FloodProperties {
+		private final ShortProperties shortWindow = new ShortProperties();
+		private final LongProperties longWindow = new LongProperties();
+
+		public boolean isConnections() {
+			return ENABLE_FLOOD_CONNECTIONS;
+		}
+
+		public void setConnections(boolean connections) {
+			ENABLE_FLOOD_CONNECTIONS = connections;
+		}
+
+		public int getTick() {
+			return Flood_Tick;
+		}
+
+		public void setTick(int tick) {
+			Flood_Tick = tick;
+		}
+
+		public ShortProperties getShort() {
+			return shortWindow;
+		}
+
+		public LongProperties getLong() {
+			return longWindow;
+		}
+
+		public static class ShortProperties {
+			public int getWarn() {
+				return Flood_SWARN;
+			}
+
+			public void setWarn(int warn) {
+				Flood_SWARN = warn;
+			}
+
+			public int getReject() {
+				return Flood_SReject;
+			}
+
+			public void setReject(int reject) {
+				Flood_SReject = reject;
+			}
+
+			public int getTick() {
+				return Flood_STick;
+			}
+
+			public void setTick(int tick) {
+				Flood_STick = tick;
+			}
+		}
+
+		public static class LongProperties {
+			public int getWarn() {
+				return Flood_LWARN;
+			}
+
+			public void setWarn(int warn) {
+				Flood_LWARN = warn;
+			}
+
+			public int getReject() {
+				return Flood_LReject;
+			}
+
+			public void setReject(int reject) {
+				Flood_LReject = reject;
+			}
+
+			public int getTick() {
+				return Flood_LTick;
+			}
+
+			public void setTick(int tick) {
+				Flood_LTick = tick;
+			}
+		}
+	}
+
+	private static InetSocketAddress parseSocketAddress(String value) {
+		if (value == null || value.isBlank()) {
+			return null;
+		}
+		String[] parts = value.split(":");
+		if (parts.length != 2) {
+			throw new IllegalArgumentException("Invalid socket address format, expected host:port, got: " + value);
+		}
+		int port = Integer.parseInt(parts[1].trim());
+		String host = parts[0].trim();
+		if ("*".equals(host)) {
+			return new InetSocketAddress(port);
+		}
+		return new InetSocketAddress(host, port);
+	}
 }

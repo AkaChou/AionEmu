@@ -1,17 +1,21 @@
 package com.aionemu.gameserver.dao.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Predicate;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.BatchPreparedStatementSetter;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.JdbcClient;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.support.TransactionTemplate;
 
 import com.aionemu.boot.i18n.I18n;
 import com.aionemu.commons.database.DatabaseFactory;
@@ -48,15 +52,22 @@ public class PlayerCooldownsDAO extends com.aionemu.gameserver.dao.PlayerCooldow
     private static final Predicate<Long> COOLDOWN_PREDICATE = reuseDelay -> reuseDelay != null && reuseDelay - System.currentTimeMillis() > 28000;
 
     private final JdbcClient jdbcClient;
+    private final JdbcTemplate jdbcTemplate;
+    private final TransactionTemplate transactionTemplate;
 
     public PlayerCooldownsDAO() {
-        this(DatabaseFactory.getJdbcClient());
+        this(DatabaseFactory.getJdbcClient(), DatabaseFactory.getJdbcTemplate(), DatabaseFactory.getTransactionTemplate());
     }
 
     @Autowired
+    public PlayerCooldownsDAO(JdbcClient jdbcClient, JdbcTemplate jdbcTemplate, TransactionTemplate transactionTemplate) {
+        this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");
+        this.jdbcTemplate = Objects.requireNonNull(jdbcTemplate, "jdbcTemplate must not be null");
+        this.transactionTemplate = Objects.requireNonNull(transactionTemplate, "transactionTemplate must not be null");
+    }
 
     public PlayerCooldownsDAO(JdbcClient jdbcClient) {
-        this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");
+        this(jdbcClient, DatabaseFactory.getJdbcTemplate(), DatabaseFactory.getTransactionTemplate());
     }
 
     /**
@@ -124,41 +135,30 @@ public class PlayerCooldownsDAO extends com.aionemu.gameserver.dao.PlayerCooldow
             return;
         }
 
-        try (Connection con = DatabaseFactory.getConnection()) {
-            con.setAutoCommit(false);
+        try {
+            transactionTemplate.executeWithoutResult(status -> {
+                jdbcClient.sql(DELETE_QUERY)
+                    .param(player.getObjectId())
+                    .update();
 
-            try (PreparedStatement deleteStmt = con.prepareStatement(DELETE_QUERY)) {
-                deleteStmt.setInt(1, player.getObjectId());
-                deleteStmt.executeUpdate();
-            }
-
-            try (PreparedStatement insertStmt = con.prepareStatement(INSERT_QUERY)) {
-                int batchCount = 0;
-                final int BATCH_SIZE = 100;
-
-                for (Map.Entry<Integer, Long> entry : validCooldowns.entrySet()) {
-                    insertStmt.setInt(1, player.getObjectId());
-                    insertStmt.setInt(2, entry.getKey());
-                    insertStmt.setLong(3, entry.getValue());
-                    insertStmt.addBatch();
-                    batchCount++;
-
-                    if (batchCount % BATCH_SIZE == 0) {
-                        int[] results = insertStmt.executeBatch();
-                        log.debug("Executed batch insert of {} cooldowns for player {}", results.length, player.getObjectId());
+                List<Map.Entry<Integer, Long>> entryList = new ArrayList<>(validCooldowns.entrySet());
+                jdbcTemplate.batchUpdate(INSERT_QUERY, new BatchPreparedStatementSetter() {
+                    @Override
+                    public void setValues(PreparedStatement ps, int i) throws SQLException {
+                        Map.Entry<Integer, Long> entry = entryList.get(i);
+                        ps.setInt(1, player.getObjectId());
+                        ps.setInt(2, entry.getKey());
+                        ps.setLong(3, entry.getValue());
                     }
-                }
 
-                if (batchCount % BATCH_SIZE != 0) {
-                    int[] results = insertStmt.executeBatch();
-                    log.debug("Executed final batch insert of {} cooldowns for player {}", results.length, player.getObjectId());
-                }
-            }
-
-            con.commit();
+                    @Override
+                    public int getBatchSize() {
+                        return entryList.size();
+                    }
+                });
+            });
             log.debug("Stored {} cooldowns for player {}", validCooldowns.size(), player.getObjectId());
-
-        } catch (SQLException e) {
+        } catch (RuntimeException e) {
             log.error(I18n.get("log.5f4dd6d0855d", player.getObjectId()), e);
         }
     }
@@ -280,20 +280,24 @@ public class PlayerCooldownsDAO extends com.aionemu.gameserver.dao.PlayerCooldow
             return;
         }
 
-        try (Connection con = DatabaseFactory.getConnection()) {
-            con.setAutoCommit(false);
+        try {
+            transactionTemplate.executeWithoutResult(status -> {
+                List<Player> players = new ArrayList<>(playersCooldowns.keySet());
+                jdbcTemplate.batchUpdate(DELETE_QUERY, new BatchPreparedStatementSetter() {
+                    @Override
+                    public void setValues(PreparedStatement ps, int i) throws SQLException {
+                        ps.setInt(1, players.get(i).getObjectId());
+                    }
 
-            try (PreparedStatement deleteStmt = con.prepareStatement(DELETE_QUERY)) {
-                for (Player player : playersCooldowns.keySet()) {
-                    deleteStmt.setInt(1, player.getObjectId());
-                    deleteStmt.addBatch();
-                }
-                deleteStmt.executeBatch();
-            }
+                    @Override
+                    public int getBatchSize() {
+                        return players.size();
+                    }
+                });
 
-            try (PreparedStatement insertStmt = con.prepareStatement(INSERT_QUERY)) {
-                int batchCount = 0;
-
+                record CooldownRow(int playerId, int cooldownId, long reuseDelay) {}
+                List<CooldownRow> rows = new ArrayList<>();
+                long currentTime = System.currentTimeMillis();
                 for (Map.Entry<Player, Map<Integer, Long>> playerEntry : playersCooldowns.entrySet()) {
                     Player player = playerEntry.getKey();
                     Map<Integer, Long> cooldowns = playerEntry.getValue();
@@ -302,34 +306,35 @@ public class PlayerCooldownsDAO extends com.aionemu.gameserver.dao.PlayerCooldow
                         continue;
                     }
 
-                    long currentTime = System.currentTimeMillis();
-
                     for (Map.Entry<Integer, Long> cooldownEntry : cooldowns.entrySet()) {
                         Long reuseDelay = cooldownEntry.getValue();
                         if (reuseDelay != null && reuseDelay > currentTime
                             && DataManager.SKILL_DATA.shouldPersistCooldown(cooldownEntry.getKey())) {
-                            insertStmt.setInt(1, player.getObjectId());
-                            insertStmt.setInt(2, cooldownEntry.getKey());
-                            insertStmt.setLong(3, reuseDelay);
-                            insertStmt.addBatch();
-                            batchCount++;
-
-                            if (batchCount % 1000 == 0) {
-                                insertStmt.executeBatch();
-                            }
+                            rows.add(new CooldownRow(player.getObjectId(), cooldownEntry.getKey(), reuseDelay));
                         }
                     }
                 }
 
-                if (batchCount % 1000 != 0) {
-                    insertStmt.executeBatch();
-                }
-            }
+                if (!rows.isEmpty()) {
+                    jdbcTemplate.batchUpdate(INSERT_QUERY, new BatchPreparedStatementSetter() {
+                        @Override
+                        public void setValues(PreparedStatement ps, int i) throws SQLException {
+                            CooldownRow row = rows.get(i);
+                            ps.setInt(1, row.playerId());
+                            ps.setInt(2, row.cooldownId());
+                            ps.setLong(3, row.reuseDelay());
+                        }
 
-            con.commit();
+                        @Override
+                        public int getBatchSize() {
+                            return rows.size();
+                        }
+                    });
+                }
+            });
             log.info(I18n.get("log.8d5799510bef", playersCooldowns.size()));
 
-        } catch (SQLException e) {
+        } catch (RuntimeException e) {
             log.error(I18n.get("log.815f20825b79"), e);
         }
     }

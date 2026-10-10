@@ -1,13 +1,12 @@
 package com.aionemu.gameserver.dao.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.util.Objects;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.simple.JdbcClient;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.support.TransactionTemplate;
 
 import com.aionemu.boot.i18n.I18n;
 import com.aionemu.commons.database.DatabaseFactory;
@@ -27,15 +26,20 @@ public class LimitedQuestDAO extends com.aionemu.gameserver.dao.LimitedQuestDAO 
 	static final String RECOVER_QUERY = "UPDATE `limited_quest_counters` SET `remaining` = LEAST(`remaining` + ?, ?) WHERE `quest_id` = ?";
 
 	private final JdbcClient jdbcClient;
+	private final TransactionTemplate transactionTemplate;
 
 	public LimitedQuestDAO() {
-		this(DatabaseFactory.getJdbcClient());
+		this(DatabaseFactory.getJdbcClient(), DatabaseFactory.getTransactionTemplate());
 	}
 
 	@Autowired
+	public LimitedQuestDAO(JdbcClient jdbcClient, TransactionTemplate transactionTemplate) {
+		this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");
+		this.transactionTemplate = Objects.requireNonNull(transactionTemplate, "transactionTemplate must not be null");
+	}
 
 	public LimitedQuestDAO(JdbcClient jdbcClient) {
-		this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");
+		this(jdbcClient, DatabaseFactory.getTransactionTemplate());
 	}
 
 	@Override
@@ -43,22 +47,15 @@ public class LimitedQuestDAO extends com.aionemu.gameserver.dao.LimitedQuestDAO 
 		if (questId <= 0 || maxCount <= 0) {
 			return false;
 		}
-		try (Connection connection = DatabaseFactory.getConnection()) {
-			connection.setAutoCommit(false);
-			try {
-				initialize(connection, questId, maxCount);
-				int updated;
-				try (PreparedStatement statement = connection.prepareStatement(ACQUIRE_QUERY)) {
-					statement.setInt(1, questId);
-					updated = statement.executeUpdate();
-				}
-				connection.commit();
+		try {
+			return Boolean.TRUE.equals(transactionTemplate.execute(status -> {
+				initialize(questId, maxCount);
+				int updated = jdbcClient.sql(ACQUIRE_QUERY)
+					.param(questId)
+					.update();
 				return updated == 1;
-			} catch (SQLException e) {
-				rollback(connection, e);
-				return false;
-			}
-		} catch (SQLException e) {
+			}));
+		} catch (RuntimeException e) {
 			log.error(I18n.get("log.limited_quest.acquire_failed", questId), e);
 			return false;
 		}
@@ -69,43 +66,27 @@ public class LimitedQuestDAO extends com.aionemu.gameserver.dao.LimitedQuestDAO 
 		if (questId <= 0 || amount <= 0 || maxCount <= 0) {
 			return false;
 		}
-		try (Connection connection = DatabaseFactory.getConnection()) {
-			connection.setAutoCommit(false);
-			try {
-				initialize(connection, questId, maxCount);
-				try (PreparedStatement statement = connection.prepareStatement(RECOVER_QUERY)) {
-					statement.setInt(1, amount);
-					statement.setInt(2, maxCount);
-					statement.setInt(3, questId);
-					statement.executeUpdate();
-				}
-				connection.commit();
+		try {
+			return Boolean.TRUE.equals(transactionTemplate.execute(status -> {
+				initialize(questId, maxCount);
+				jdbcClient.sql(RECOVER_QUERY)
+					.param(amount)
+					.param(maxCount)
+					.param(questId)
+					.update();
 				return true;
-			} catch (SQLException e) {
-				rollback(connection, e);
-				return false;
-			}
-		} catch (SQLException e) {
+			}));
+		} catch (RuntimeException e) {
 			log.error(I18n.get("log.limited_quest.recover_failed", questId), e);
 			return false;
 		}
 	}
 
-	private static void initialize(Connection connection, int questId, int maxCount) throws SQLException {
-		try (PreparedStatement statement = connection.prepareStatement(INITIALIZE_QUERY)) {
-			statement.setInt(1, questId);
-			statement.setInt(2, maxCount);
-			statement.executeUpdate();
-		}
-	}
-
-	private static void rollback(Connection connection, SQLException cause) {
-		try {
-			connection.rollback();
-		} catch (SQLException rollbackError) {
-			cause.addSuppressed(rollbackError);
-		}
-		log.error(I18n.get("log.limited_quest.transaction_failed"), cause);
+	private void initialize(int questId, int maxCount) {
+		jdbcClient.sql(INITIALIZE_QUERY)
+			.param(questId)
+			.param(maxCount)
+			.update();
 	}
 
 	@Override

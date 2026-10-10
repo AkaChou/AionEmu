@@ -1,8 +1,5 @@
 package com.aionemu.gameserver.dao.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -10,8 +7,13 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.Predicate;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.BatchPreparedStatementSetter;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.JdbcClient;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.support.TransactionTemplate;
 
 import com.aionemu.boot.i18n.I18n;
 import com.aionemu.commons.database.DatabaseFactory;
@@ -44,15 +46,22 @@ public class PlayerEffectsDAO extends com.aionemu.gameserver.dao.PlayerEffectsDA
         && !effect.getSkillTemplate().isNoSaveOnLogout() && effect.getRemainingTime() > 28000;
 
     private final JdbcClient jdbcClient;
+    private final JdbcTemplate jdbcTemplate;
+    private final TransactionTemplate transactionTemplate;
 
     public PlayerEffectsDAO() {
-        this(DatabaseFactory.getJdbcClient());
+        this(DatabaseFactory.getJdbcClient(), DatabaseFactory.getJdbcTemplate(), DatabaseFactory.getTransactionTemplate());
     }
 
     @Autowired
+    public PlayerEffectsDAO(JdbcClient jdbcClient, JdbcTemplate jdbcTemplate, TransactionTemplate transactionTemplate) {
+        this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");
+        this.jdbcTemplate = Objects.requireNonNull(jdbcTemplate, "jdbcTemplate must not be null");
+        this.transactionTemplate = Objects.requireNonNull(transactionTemplate, "transactionTemplate must not be null");
+    }
 
     public PlayerEffectsDAO(JdbcClient jdbcClient) {
-        this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");
+        this(jdbcClient, DatabaseFactory.getJdbcTemplate(), DatabaseFactory.getTransactionTemplate());
     }
 
     /**
@@ -115,39 +124,30 @@ public class PlayerEffectsDAO extends com.aionemu.gameserver.dao.PlayerEffectsDA
             return;
         }
 
-        try (Connection con = DatabaseFactory.getConnection()) {
-            con.setAutoCommit(false);
+        try {
+            transactionTemplate.executeWithoutResult(status -> {
+                jdbcClient.sql(DELETE_QUERY)
+                    .param(player.getObjectId())
+                    .update();
 
-            try (PreparedStatement deleteStmt = con.prepareStatement(DELETE_QUERY)) {
-                deleteStmt.setInt(1, player.getObjectId());
-                deleteStmt.executeUpdate();
-            }
-
-            try (PreparedStatement insertStmt = con.prepareStatement(INSERT_QUERY)) {
-                int batchCount = 0;
-
-                for (Effect effect : validEffects) {
-                    insertStmt.setInt(1, player.getObjectId());
-                    insertStmt.setInt(2, effect.getSkillId());
-                    insertStmt.setInt(3, effect.getSkillLevel());
-                    insertStmt.setInt(4, effect.getRemainingTime());
-                    insertStmt.setLong(5, persistedEndTime(effect));
-                    insertStmt.addBatch();
-                    batchCount++;
-
-                    if (batchCount % 50 == 0) {
-                        insertStmt.executeBatch();
+                jdbcTemplate.batchUpdate(INSERT_QUERY, new BatchPreparedStatementSetter() {
+                    @Override
+                    public void setValues(PreparedStatement ps, int i) throws SQLException {
+                        Effect effect = validEffects.get(i);
+                        ps.setInt(1, player.getObjectId());
+                        ps.setInt(2, effect.getSkillId());
+                        ps.setInt(3, effect.getSkillLevel());
+                        ps.setInt(4, effect.getRemainingTime());
+                        ps.setLong(5, persistedEndTime(effect));
                     }
-                }
 
-                if (batchCount % 50 != 0) {
-                    insertStmt.executeBatch();
-                }
-            }
-
-            con.commit();
-
-        } catch (SQLException e) {
+                    @Override
+                    public int getBatchSize() {
+                        return validEffects.size();
+                    }
+                });
+            });
+        } catch (RuntimeException e) {
             log.error(I18n.get("log.db9bf45e33ff", player.getObjectId()), e);
         }
     }

@@ -5,8 +5,8 @@ import javax.sql.DataSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.JdbcClient;
-import org.springframework.jdbc.support.JdbcTransactionManager;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.support.TransactionTemplate;
 
@@ -16,8 +16,8 @@ import com.aionemu.commons.database.DatabaseFactory;
  * Spring Boot 持久化与事务核心配置类。
  * Spring Boot persistence and transaction core configuration.
  * <p>
- * 统一将多租户上下文感知的数据源、流式 {@link JdbcClient} 以及 Spring 事务管理器注入为标准容器 Bean。
- * Exposes the context-aware routing DataSource, fluent JdbcClient, and Spring TransactionManager as standard Spring Beans.
+ * 统一将多租户上下文感知的数据源、流式 {@link JdbcClient}、{@link JdbcTemplate} 以及 Spring 事务管理器注入为标准容器 Bean。
+ * Exposes the context-aware routing DataSource, fluent JdbcClient, JdbcTemplate, and Spring TransactionManager as standard Spring Beans.
  * </p>
  */
 @Configuration
@@ -32,6 +32,18 @@ public class AionPersistenceConfiguration {
     @Primary
     public DataSource dataSource() {
         return DatabaseFactory.getContextRoutingDataSource();
+    }
+
+    /**
+     * 提供全局 JdbcTemplate Bean。
+     * Provides the global JdbcTemplate Bean.
+     * @param dataSource 路由数据源 / Routing DataSource
+     * @return JdbcTemplate 实例 / JdbcTemplate instance
+     */
+    @Bean
+    @Primary
+    public JdbcTemplate jdbcTemplate(DataSource dataSource) {
+        return DatabaseFactory.getJdbcTemplate();
     }
 
     /**
@@ -55,7 +67,7 @@ public class AionPersistenceConfiguration {
     @Bean
     @Primary
     public PlatformTransactionManager transactionManager(DataSource dataSource) {
-        return new JdbcTransactionManager(dataSource);
+        return DatabaseFactory.getTransactionManager();
     }
 
     /**
@@ -66,6 +78,6 @@ public class AionPersistenceConfiguration {
      */
     @Bean
     public TransactionTemplate transactionTemplate(PlatformTransactionManager transactionManager) {
-        return new TransactionTemplate(transactionManager);
+        return DatabaseFactory.getTransactionTemplate();
     }
 }

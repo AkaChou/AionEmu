@@ -25,6 +25,7 @@ import com.aionemu.gameserver.model.gameobjects.Minion;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.Pet;
 import com.aionemu.gameserver.model.gameobjects.Summon;
+import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.model.gameobjects.player.BindPointPosition;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.gameobjects.state.CreatureState;
@@ -134,7 +135,7 @@ public class TeleportService2 {
 	public static void teleport(TeleporterTemplate template, int locId, Player player, Npc npc, TeleportAnimation animation) {
 		TribeClass tribe = npc.getTribe();
 		Race race = player.getRace();
-		if (tribe.equals(TribeClass.FIELD_OBJECT_LIGHT) && race.equals(Race.ASMODIANS) || (tribe.equals(TribeClass.FIELD_OBJECT_DARK) && race.equals(Race.ELYOS))) {
+		if (tribe == TribeClass.FIELD_OBJECT_LIGHT && race == Race.ASMODIANS || tribe == TribeClass.FIELD_OBJECT_DARK && race == Race.ELYOS) {
 			return;
 		}
 
@@ -489,10 +490,10 @@ public class TeleportService2 {
 
 		int delay = TELEPORT_DEFAULT_DELAY;
 
-		if (animation.equals(TeleportAnimation.BEAM_ANIMATION)) {
+		if (animation == TeleportAnimation.BEAM_ANIMATION) {
 			player.setPortAnimation(2);
 			delay = BEAM_DEFAULT_DELAY;
-		} else if (animation.equals(TeleportAnimation.JUMP_ANIMATION)) {
+		} else if (animation == TeleportAnimation.JUMP_ANIMATION) {
 			player.setPortAnimation(11);
 		}
 
@@ -505,9 +506,9 @@ public class TeleportService2 {
 			if (player.getLifeStats().isAlreadyDead() || !player.isSpawned()) {
 				return;
 			}
-			if (animation.equals(TeleportAnimation.BEAM_ANIMATION)) {
+			if (animation == TeleportAnimation.BEAM_ANIMATION) {
 				PacketSendUtility.broadcastPacket(player, new SM_DELETE(player, 2), 50);
-			} else if (animation.equals(TeleportAnimation.JUMP_ANIMATION)) {
+			} else if (animation == TeleportAnimation.JUMP_ANIMATION) {
 				PacketSendUtility.broadcastPacket(player, new SM_DELETE(player, 11), 50);
 			}
 			changePosition(player, targetMapId, instanceId, x, y, z, h, animation);
@@ -897,9 +898,9 @@ public class TeleportService2 {
 			return;
 		}
 
-		Npc object = (Npc) com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findVisibleObject(targetObjectId);
+		VisibleObject visibleObject = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findVisibleObject(targetObjectId);
 
-		if (player.isEnemy(object)) {
+		if (visibleObject instanceof Npc object && player.isEnemy(object)) {
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_CANNOT_MOVE_TO_AIRPORT_WRONG_NPC);
 			return;
 		}
@@ -1103,14 +1104,14 @@ public class TeleportService2 {
 	 */
 	public static void onLogOutOppositeMap(Player player) {
 		switch (player.getWorldId()) {
-			case 210100000: // Iluma.
+			case ELYOS_ILUMA_WORLD_ID:
 				if (player.getCommonData().getRace() == Race.ASMODIANS) {
-					TeleportService2.teleportTo(player, 220110000, 1813.9795f, 1982.6705f, 199.1976f, (byte) 52);
+					TeleportService2.teleportTo(player, ASMODIAN_NORSVOLD_WORLD_ID, 1813.9795f, 1982.6705f, 199.1976f, (byte) 52);
 				}
 				break;
-			case 220110000: // Norsvold.
+			case ASMODIAN_NORSVOLD_WORLD_ID:
 				if (player.getCommonData().getRace() == Race.ELYOS) {
-					TeleportService2.teleportTo(player, 210100000, 1417.6694f, 1282.3623f, 336.125f, (byte) 8);
+					TeleportService2.teleportTo(player, ELYOS_ILUMA_WORLD_ID, 1417.6694f, 1282.3623f, 336.125f, (byte) 8);
 				}
 				break;
 		}

@@ -15,6 +15,7 @@ import java.util.Objects;
 
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.simple.JdbcClient;
+import org.springframework.transaction.support.TransactionTemplate;
 
 import com.aionemu.boot.i18n.I18n;
 import com.aionemu.commons.database.DatabaseFactory;
@@ -63,15 +64,20 @@ public class PlayerRegisteredItemsDAO extends com.aionemu.gameserver.dao.PlayerR
     public static final String SELECT_USED_IDS_QUERY = "SELECT item_unique_id FROM player_registered_items WHERE item_unique_id <> 0";
 
     private final JdbcClient jdbcClient;
+    private final TransactionTemplate transactionTemplate;
 
     public PlayerRegisteredItemsDAO() {
-        this(DatabaseFactory.getJdbcClient());
+        this(DatabaseFactory.getJdbcClient(), DatabaseFactory.getTransactionTemplate());
     }
 
     @Autowired
+    public PlayerRegisteredItemsDAO(JdbcClient jdbcClient, TransactionTemplate transactionTemplate) {
+        this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");
+        this.transactionTemplate = Objects.requireNonNull(transactionTemplate, "transactionTemplate must not be null");
+    }
 
     public PlayerRegisteredItemsDAO(JdbcClient jdbcClient) {
-        this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");
+        this(jdbcClient, DatabaseFactory.getTransactionTemplate());
     }
 
     /**
@@ -268,22 +274,21 @@ public class PlayerRegisteredItemsDAO extends com.aionemu.gameserver.dao.PlayerR
             }
         }
 
-		try (Connection con = DatabaseFactory.getConnection()) {
-			con.setAutoCommit(false);
-			try {
-				deleteObjects(con, objectsToDelete);
-				deleteParts(con, partsToDelete);
-				storeObjects(con, objectsToUpdate, playerId, false);
-				storeParts(con, partsToUpdate, playerId, false);
-				storeObjects(con, objectsToAdd, playerId, true);
-				storeParts(con, partsToAdd, playerId, true);
-				con.commit();
-			} catch (SQLException e) {
-				con.rollback();
-				throw e;
-			}
+		try {
+			transactionTemplate.executeWithoutResult(status -> {
+				try (Connection con = DatabaseFactory.getConnection()) {
+					deleteObjects(con, objectsToDelete);
+					deleteParts(con, partsToDelete);
+					storeObjects(con, objectsToUpdate, playerId, false);
+					storeParts(con, partsToUpdate, playerId, false);
+					storeObjects(con, objectsToAdd, playerId, true);
+					storeParts(con, partsToAdd, playerId, true);
+				} catch (SQLException e) {
+					throw new DataAccessException("Failed to store registered items", e) {};
+				}
+			});
 			registry.setPersistentState(PersistentState.UPDATED);
-		} catch (SQLException e) {
+		} catch (RuntimeException e) {
 			log.error(I18n.get("log.7c25eacf0aac", playerId), e);
 			return false;
         }

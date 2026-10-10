@@ -12,7 +12,9 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.simple.JdbcClient;
+import org.springframework.transaction.support.TransactionTemplate;
 
 import com.aionemu.boot.i18n.I18n;
 import com.aionemu.commons.database.DatabaseFactory;
@@ -77,15 +79,20 @@ public class ItemStoneListDAO extends com.aionemu.gameserver.dao.ItemStoneListDA
 		itemStone -> itemStone != null && PersistentState.UPDATE_REQUIRED == itemStone.getPersistentState();
 
 	private final JdbcClient jdbcClient;
+	private final TransactionTemplate transactionTemplate;
 
 	public ItemStoneListDAO() {
-		this(DatabaseFactory.getJdbcClient());
+		this(DatabaseFactory.getJdbcClient(), DatabaseFactory.getTransactionTemplate());
 	}
 
 	@Autowired
+	public ItemStoneListDAO(JdbcClient jdbcClient, TransactionTemplate transactionTemplate) {
+		this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");
+		this.transactionTemplate = Objects.requireNonNull(transactionTemplate, "transactionTemplate must not be null");
+	}
 
 	public ItemStoneListDAO(JdbcClient jdbcClient) {
-		this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");
+		this(jdbcClient, DatabaseFactory.getTransactionTemplate());
 	}
 
 	/**
@@ -263,35 +270,19 @@ public class ItemStoneListDAO extends com.aionemu.gameserver.dao.ItemStoneListDA
 			return;
 		}
 
-		Connection con = null;
 		try {
-			con = DatabaseFactory.getConnection();
-			con.setAutoCommit(false);
-
-			deleteItemStones(con, stonesToDelete, ist);
-			addItemStones(con, stonesToAdd, ist);
-			updateItemStones(con, stonesToUpdate, ist);
-
-			con.commit();
-		} catch (SQLException e) {
+			transactionTemplate.executeWithoutResult(status -> {
+				try (Connection con = DatabaseFactory.getConnection()) {
+					deleteItemStones(con, stonesToDelete, ist);
+					addItemStones(con, stonesToAdd, ist);
+					updateItemStones(con, stonesToUpdate, ist);
+				} catch (SQLException e) {
+					throw new DataAccessException("Failed to store item stones", e) {};
+				}
+			});
+		} catch (RuntimeException e) {
 			log.error(I18n.get("log.441d0f828363"), e);
-			try {
-				if (con != null) {
-					con.rollback();
-				}
-			} catch (SQLException rollbackEx) {
-				log.error(I18n.get("log.469fdfa81ee5"), rollbackEx);
-			}
 			return;
-		} finally {
-			try {
-				if (con != null) {
-					con.setAutoCommit(true);
-				}
-			} catch (SQLException e) {
-				log.error(I18n.get("log.42b10c59c466"), e);
-			}
-			DatabaseFactory.close(con);
 		}
 
 		for (ItemStone is : stones) {

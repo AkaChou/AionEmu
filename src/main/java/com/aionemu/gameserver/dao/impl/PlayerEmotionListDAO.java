@@ -1,14 +1,17 @@
 package com.aionemu.gameserver.dao.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.BatchPreparedStatementSetter;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.JdbcClient;
+import org.springframework.stereotype.Repository;
 
 import com.aionemu.boot.i18n.I18n;
 import com.aionemu.commons.database.DatabaseFactory;
@@ -39,15 +42,20 @@ public class PlayerEmotionListDAO extends com.aionemu.gameserver.dao.PlayerEmoti
     private static final String DELETE_EXPIRED_QUERY = "DELETE FROM `player_emotions` WHERE `remaining` > 0 AND `remaining` < ?";
 
     private final JdbcClient jdbcClient;
+    private final JdbcTemplate jdbcTemplate;
 
     public PlayerEmotionListDAO() {
-        this(DatabaseFactory.getJdbcClient());
+        this(DatabaseFactory.getJdbcClient(), DatabaseFactory.getJdbcTemplate());
     }
 
     @Autowired
+    public PlayerEmotionListDAO(JdbcClient jdbcClient, JdbcTemplate jdbcTemplate) {
+        this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");
+        this.jdbcTemplate = Objects.requireNonNull(jdbcTemplate, "jdbcTemplate must not be null");
+    }
 
     public PlayerEmotionListDAO(JdbcClient jdbcClient) {
-        this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");
+        this(jdbcClient, DatabaseFactory.getJdbcTemplate());
     }
 
     /**
@@ -161,36 +169,32 @@ public class PlayerEmotionListDAO extends com.aionemu.gameserver.dao.PlayerEmoti
      * @param emotions 表情列表 / emotion list
      */
     public void insertEmotions(Player player, EmotionList emotions) {
-        if (emotions == null || emotions.getEmotions().isEmpty()) {
+        if (emotions == null) {
             return;
         }
 
-        try (Connection con = DatabaseFactory.getConnection()) {
-            con.setAutoCommit(false);
+        Collection<Emotion> emotionCollection = emotions.getEmotions();
+        if (emotionCollection == null || emotionCollection.isEmpty()) {
+            return;
+        }
 
-            try (PreparedStatement stmt = con.prepareStatement(INSERT_QUERY)) {
-                int batchCount = 0;
-
-                for (Emotion emotion : emotions.getEmotions()) {
-                    stmt.setInt(1, player.getObjectId());
-                    stmt.setInt(2, emotion.getId());
-                    stmt.setInt(3, emotion.getExpireTime());
-                    stmt.addBatch();
-                    batchCount++;
-
-                    if (batchCount % 50 == 0) {
-                        stmt.executeBatch();
-                    }
+        List<Emotion> emotionList = List.copyOf(emotionCollection);
+        try {
+            jdbcTemplate.batchUpdate(INSERT_QUERY, new BatchPreparedStatementSetter() {
+                @Override
+                public void setValues(PreparedStatement ps, int i) throws SQLException {
+                    Emotion emotion = emotionList.get(i);
+                    ps.setInt(1, player.getObjectId());
+                    ps.setInt(2, emotion.getId());
+                    ps.setInt(3, emotion.getExpireTime());
                 }
 
-                if (batchCount % 50 != 0) {
-                    stmt.executeBatch();
+                @Override
+                public int getBatchSize() {
+                    return emotionList.size();
                 }
-            }
-
-            con.commit();
-
-        } catch (SQLException e) {
+            });
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.615e4d6f5316", player.getObjectId()), e);
         }
     }

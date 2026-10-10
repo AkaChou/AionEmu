@@ -5,9 +5,13 @@ import org.springframework.stereotype.Repository;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.BatchPreparedStatementSetter;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.JdbcClient;
 
 import com.aionemu.boot.i18n.I18n;
@@ -39,15 +43,20 @@ public class PlayerTitleListDAO extends com.aionemu.gameserver.dao.PlayerTitleLi
     private static final String DELETE_EXPIRED_QUERY = "DELETE FROM `player_titles` WHERE `remaining` > 0 AND `remaining` < ?";
 
     private final JdbcClient jdbcClient;
+    private final JdbcTemplate jdbcTemplate;
 
     public PlayerTitleListDAO() {
-        this(DatabaseFactory.getJdbcClient());
+        this(DatabaseFactory.getJdbcClient(), DatabaseFactory.getJdbcTemplate());
     }
 
     @Autowired
+    public PlayerTitleListDAO(JdbcClient jdbcClient, JdbcTemplate jdbcTemplate) {
+        this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");
+        this.jdbcTemplate = Objects.requireNonNull(jdbcTemplate, "jdbcTemplate must not be null");
+    }
 
     public PlayerTitleListDAO(JdbcClient jdbcClient) {
-        this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");
+        this(jdbcClient, DatabaseFactory.getJdbcTemplate());
     }
 
     /**
@@ -174,33 +183,28 @@ public class PlayerTitleListDAO extends com.aionemu.gameserver.dao.PlayerTitleLi
             return true;
         }
 
-        try (Connection con = DatabaseFactory.getConnection()) {
-            con.setAutoCommit(false);
-
-            try (PreparedStatement stmt = con.prepareStatement(INSERT_QUERY)) {
-                int batchCount = 0;
-
-                for (Title title : titles.getTitles()) {
-                    stmt.setInt(1, player.getObjectId());
-                    stmt.setInt(2, title.getId());
-                    stmt.setInt(3, title.getExpireTime());
-                    stmt.addBatch();
-                    batchCount++;
-
-                    if (batchCount % 50 == 0) {
-                        stmt.executeBatch();
-                    }
-                }
-
-                if (batchCount % 50 != 0) {
-                    stmt.executeBatch();
-                }
-            }
-
-            con.commit();
+        List<Title> titleList = new ArrayList<>(titles.getTitles());
+        if (titleList == null || titleList.isEmpty()) {
             return true;
+        }
 
-        } catch (SQLException e) {
+        try {
+            jdbcTemplate.batchUpdate(INSERT_QUERY, new BatchPreparedStatementSetter() {
+                @Override
+                public void setValues(PreparedStatement ps, int i) throws SQLException {
+                    Title title = titleList.get(i);
+                    ps.setInt(1, player.getObjectId());
+                    ps.setInt(2, title.getId());
+                    ps.setInt(3, title.getExpireTime());
+                }
+
+                @Override
+                public int getBatchSize() {
+                    return titleList.size();
+                }
+            });
+            return true;
+        } catch (DataAccessException e) {
             log.error(I18n.get("log.83d8bd1f33ce", player.getObjectId()), e);
             return false;
         }

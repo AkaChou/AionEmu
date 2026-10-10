@@ -12,6 +12,7 @@ import java.util.Objects;
 
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.simple.JdbcClient;
+import org.springframework.transaction.support.TransactionTemplate;
 
 import com.aionemu.boot.i18n.I18n;
 import com.aionemu.commons.database.DatabaseFactory;
@@ -74,15 +75,20 @@ public class PlayerQuestListDAO extends com.aionemu.gameserver.dao.PlayerQuestLi
 	private static final Predicate<QuestState> questsToDeletePredicate = input -> input != null && PersistentState.DELETED == input.getPersistentState();
 
 	private final JdbcClient jdbcClient;
+	private final TransactionTemplate transactionTemplate;
 
 	public PlayerQuestListDAO() {
-		this(DatabaseFactory.getJdbcClient());
+		this(DatabaseFactory.getJdbcClient(), DatabaseFactory.getTransactionTemplate());
 	}
 
 	@Autowired
+	public PlayerQuestListDAO(JdbcClient jdbcClient, TransactionTemplate transactionTemplate) {
+		this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");
+		this.transactionTemplate = Objects.requireNonNull(transactionTemplate, "transactionTemplate must not be null");
+	}
 
 	public PlayerQuestListDAO(JdbcClient jdbcClient) {
-		this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");
+		this(jdbcClient, DatabaseFactory.getTransactionTemplate());
 	}
 
 	/**
@@ -146,26 +152,19 @@ public class PlayerQuestListDAO extends com.aionemu.gameserver.dao.PlayerQuestLi
 			return;
 		}
 
-		Connection con = null;
 		try {
-			con = DatabaseFactory.getConnection();
-			con.setAutoCommit(false);
-			store(con, player);
-			con.commit();
+			transactionTemplate.executeWithoutResult(status -> {
+				try (Connection con = DatabaseFactory.getConnection()) {
+					store(con, player);
+				} catch (SQLException e) {
+					throw new DataAccessException("Failed to store quest states", e) {};
+				}
+			});
 			for (QuestState qs : qsList) {
 				qs.setPersistentState(PersistentState.UPDATED);
 			}
-		} catch (SQLException e) {
+		} catch (RuntimeException e) {
 			log.error(I18n.get("log.0b87b3157dfe", player.getObjectId()), e);
-			try {
-				if (con != null) {
-					con.rollback();
-				}
-			} catch (SQLException rollbackEx) {
-				log.error(I18n.get("log.cc07b223d6ff", player.getObjectId()), rollbackEx);
-			}
-		} finally {
-			DatabaseFactory.close(con);
 		}
 	}
 

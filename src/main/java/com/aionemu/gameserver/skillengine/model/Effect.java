@@ -790,8 +790,8 @@ public class Effect implements StatOwner {
 	 */
 	public TransformType getTransformType() {
 		for (EffectTemplate et : skillTemplate.getEffects().getEffects()) {
-			if (et instanceof TransformEffect) {
-				return ((TransformEffect) et).getTransformType();
+			if (et instanceof TransformEffect transformEffect) {
+				return transformEffect.getTransformType();
 			}
 		}
 		return TransformType.NONE;
@@ -871,17 +871,9 @@ public class Effect implements StatOwner {
 		if (successEffects.isEmpty()) {
 			skillMoveType = SkillMoveType.RESIST;
 			if (skillTemplate.getMessageType() == SkillType.PHYSICAL) {
-				if (getAttackStatus() == AttackStatus.CRITICAL) {
-					setAttackStatus(AttackStatus.CRITICAL_DODGE);
-				} else {
-					setAttackStatus(AttackStatus.DODGE);
-				}
+				setAttackStatus(getAttackStatus() == AttackStatus.CRITICAL ? AttackStatus.CRITICAL_DODGE : AttackStatus.DODGE);
 			} else {
-				if (getAttackStatus() == AttackStatus.CRITICAL) {
-					setAttackStatus(AttackStatus.CRITICAL_RESIST);
-				} else {
-					setAttackStatus(AttackStatus.RESIST);
-				}
+				setAttackStatus(getAttackStatus() == AttackStatus.CRITICAL ? AttackStatus.CRITICAL_RESIST : AttackStatus.RESIST);
 			}
 		}
 		switch (AttackStatus.getBaseStatus(getAttackStatus())) {
@@ -974,7 +966,7 @@ public class Effect implements StatOwner {
 				duration = skillTemplate.getDuration();
 			}
 			endTime = System.currentTimeMillis() + duration;
-			task = GameThreadPoolServices.threadPoolManager().schedule(() -> endEffect(), duration);
+			task = GameThreadPoolServices.threadPoolManager().schedule(this::endEffect, duration);
 		} catch (RuntimeException | Error failure) {
 			try {
 				endEffect();
@@ -1088,7 +1080,6 @@ public class Effect implements StatOwner {
 			for (Future<?> periodicTask : this.periodicTasks) {
 				if (periodicTask != null) {
 					periodicTask.cancel(false);
-					periodicTask = null;
 				}
 			}
 		}
@@ -1226,17 +1217,12 @@ public class Effect implements StatOwner {
 			if (et.getRandomTime() > 0) {
 				effectDuration -= Rnd.get(et.getRandomTime());
 			}
-			duration = duration > effectDuration ? duration : effectDuration;
+			duration = Math.max(duration, effectDuration);
 		}
 
 		// adjust with BOOST_DURATION
-		switch (skillTemplate.getSubType()) {
-		case BUFF:
+		if (skillTemplate.getSubType() == SkillSubType.BUFF) {
 			duration = effector.getGameStats().getStat(StatEnum.BOOST_DURATION_BUFF, duration).getCurrent();
-			break;
-
-		default:
-			break;
 		}
 
 		// 按 PVP 持续时间调整 / adjust with pvp duration

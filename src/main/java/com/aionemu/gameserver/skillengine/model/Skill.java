@@ -577,9 +577,7 @@ public class Skill {
 			if (clientTime < finalTime) {
 				// 检查无动画作弊 / check for no animation Hacks
 				if (SecurityConfig.NO_ANIMATION) {
-					float clientTme = clientTime;
-					float serverTme = serverTime;
-					float checkTme = clientTme / serverTme;
+					float checkTme = clientTime / serverTime;
 					// 检查数值是否过低 / check if values are too low
 					if (clientTime < 0 || checkTme < SecurityConfig.NO_ANIMATION_VALUE) {
 						if (SecurityConfig.NO_ANIMATION_KICK) {
@@ -663,7 +661,7 @@ public class Skill {
 				break;
 			}
 		} else if (skillMethod == SkillMethod.ITEM && duration > 0) {
-			PacketSendUtility.broadcastPacketAndReceive(effector, new SM_ITEM_USAGE_ANIMATION(effector.getObjectId(), firstTarget.getObjectId(), (this.itemObjectId == 0 ? 0 : this.itemObjectId), itemTemplate.getTemplateId(), this.duration, 0, 0));
+			PacketSendUtility.broadcastPacketAndReceive(effector, new SM_ITEM_USAGE_ANIMATION(effector.getObjectId(), targetObjId, this.itemObjectId, itemTemplate.getTemplateId(), this.duration, 0, 0));
 		}
 	}
 	/**
@@ -1062,21 +1060,21 @@ public class Skill {
 	 * Whether self buff.
 	 */
 	public boolean isSelfBuff() {
-		return (firstTargetAttribute == FirstTargetAttribute.ME && targetRangeAttribute == TargetRangeAttribute.ONLYONE && skillTemplate.getSubType() == SkillSubType.BUFF && !skillTemplate.isDeityAvatar());
+		return firstTargetAttribute == FirstTargetAttribute.ME && targetRangeAttribute == TargetRangeAttribute.ONLYONE && skillTemplate.getSubType() == SkillSubType.BUFF && !skillTemplate.isDeityAvatar();
 	}
 	/**
 	 * 主目标是否自身。
 	 * Whether first target is self.
 	 */
 	public boolean isFirstTargetSelf() {
-		return (firstTargetAttribute == FirstTargetAttribute.ME);
+		return firstTargetAttribute == FirstTargetAttribute.ME;
 	}
 	/**
 	 * 是否地点技能。
 	 * Whether point skill.
 	 */
 	public boolean isPointSkill() {
-		return (this.firstTargetAttribute == FirstTargetAttribute.POINT);
+		return this.firstTargetAttribute == FirstTargetAttribute.POINT;
 	}
 	/**
 	 * 设置目标类型与坐标。

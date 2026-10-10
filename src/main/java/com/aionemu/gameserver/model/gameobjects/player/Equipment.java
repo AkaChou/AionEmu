@@ -10,7 +10,6 @@ import com.aionemu.gameserver.lifecycle.GameCreativityServices;
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Collections;
 import java.util.IdentityHashMap;
@@ -145,8 +144,7 @@ public class Equipment {
 			long itemSlotMask = itemSlotMaskForEquip(item, item.getEquipmentSlot());
 			long itemSlotToEquipMask = itemSlotMask;
 			ItemSlot[] possibleSlots = ItemSlot.getSlotsFor(itemSlotMask);
-			for (int i = 0; i < possibleSlots.length; i++) {
-				ItemSlot possibleSlot = possibleSlots[i];
+			for (ItemSlot possibleSlot : possibleSlots) {
 				long slotId = possibleSlot.getSlotIdMask();
 				if (equipment.get(slotId) == null || markedFreeSlots.contains(slotId)) {
 					if (item.getItemTemplate().isTwoHandWeapon()) {
@@ -521,8 +519,6 @@ public class Equipment {
 	}
 
 	private boolean checkAvailableEquipSkills(int[] requiredSkills) {
-		boolean isSkillPresent = false;
-
 		// 若无需技能——校验为 true / if no skills required - validate as true
 		if (requiredSkills.length == 0) {
 			return true;
@@ -530,11 +526,10 @@ public class Equipment {
 
 		for (int skill : requiredSkills) {
 			if (owner.getSkillList().isSkillPresent(skill)) {
-				isSkillPresent = true;
-				break;
+				return true;
 			}
 		}
-		return isSkillPresent;
+		return false;
 	}
 
 	/**
@@ -687,10 +682,7 @@ public class Equipment {
 	 * @return 全部已装备物品 / all equipped items
 	 */
 	public List<Item> getEquippedItems() {
-		HashSet<Item> equippedItems = new HashSet<>();
-		equippedItems.addAll(equipment.values());
-
-		return Arrays.asList(equippedItems.toArray(new Item[0]));
+		return new ArrayList<>(new HashSet<>(equipment.values()));
 	}
 
 	/**
@@ -699,11 +691,11 @@ public class Equipment {
 	 * @return 已装备物品 ID 列表 / the equipped item ids
 	 */
 	public List<Integer> getEquippedItemIds() {
-		HashSet<Integer> equippedIds = new HashSet<>();
+		Set<Integer> equippedIds = new HashSet<>();
 		for (Item i : equipment.values()) {
 			equippedIds.add(i.getItemId());
 		}
-		return Arrays.asList(equippedIds.toArray(new Integer[0]));
+		return new ArrayList<>(equippedIds);
 	}
 
 	/**
@@ -1014,14 +1006,12 @@ public class Equipment {
 
 	/** 返回 main hand power shard / Returns the main hand power shard */
 	public Item getMainHandPowerShard() {
-		Item mainHandPowerShard = equipment.get(ItemSlot.POWER_SHARD_RIGHT.getSlotIdMask());
-		return mainHandPowerShard;
+		return equipment.get(ItemSlot.POWER_SHARD_RIGHT.getSlotIdMask());
 	}
 
 	/** 返回 off hand power shard / Returns the off hand power shard */
 	public Item getOffHandPowerShard() {
-		Item offHandPowerShard = equipment.get(ItemSlot.POWER_SHARD_LEFT.getSlotIdMask());
-		return offHandPowerShard;
+		return equipment.get(ItemSlot.POWER_SHARD_LEFT.getSlotIdMask());
 	}
 
 	public void usePowerShard(Item powerShardItem, int count) {
@@ -1030,8 +1020,8 @@ public class Equipment {
 		if (powerShardItem.getItemCount() <= 0) {
 			// 搜索下一组相同的力量之石。 / Search for next same power shards stack
 			List<Item> powerShardStacks = owner.getInventory().getItemsByItemId(powerShardItem.getItemTemplate().getTemplateId());
-			if (powerShardStacks.size() != 0) {
-				equipItem(powerShardStacks.get(0).getObjectId(), powerShardItem.getEquipmentSlot());
+			if (!powerShardStacks.isEmpty()) {
+				equipItem(powerShardStacks.getFirst().getObjectId(), powerShardItem.getEquipmentSlot());
 			} else {
 				PacketSendUtility.sendPacket(owner, SM_SYSTEM_MESSAGE.STR_MSG_WEAPON_BOOST_MODE_BURN_OUT);
 				owner.unsetState(CreatureState.POWERSHARD);
@@ -1159,10 +1149,12 @@ public class Equipment {
 	}
 
 	public boolean isWeaponEquipped(WeaponType weaponType) {
-		if (equipment.get(ItemSlot.MAIN_HAND.getSlotIdMask()) != null && equipment.get(ItemSlot.MAIN_HAND.getSlotIdMask()).getItemTemplate().getWeaponType() == weaponType) {
+		Item mainHand = equipment.get(ItemSlot.MAIN_HAND.getSlotIdMask());
+		if (mainHand != null && mainHand.getItemTemplate().getWeaponType() == weaponType) {
 			return true;
 		}
-		return equipment.get(ItemSlot.SUB_HAND.getSlotIdMask()) != null && equipment.get(ItemSlot.SUB_HAND.getSlotIdMask()).getItemTemplate().getWeaponType() == weaponType;
+		Item subHand = equipment.get(ItemSlot.SUB_HAND.getSlotIdMask());
+		return subHand != null && subHand.getItemTemplate().getWeaponType() == weaponType;
 	}
 
 	/**
@@ -1203,7 +1195,7 @@ public class Equipment {
 	 * @return 已装备时为 true / true if equipped
 	 */
 	public boolean isSlotEquipped(long slot) {
-		return !(equipment.get(slot) == null);
+		return equipment.get(slot) != null;
 	}
 
 	/** 返回 special stigma item slot / Returns the special stigma item slot */
@@ -1225,28 +1217,28 @@ public class Equipment {
 		return result;
 	}
 
-	private boolean soulBindItem(final Player player, final Item item, final long slot) {
+	private void soulBindItem(final Player player, final Item item, final long slot) {
 		if (player.getInventory().getItemByObjId(item.getObjectId()) == null || player.isInState(CreatureState.GLIDING)) {
-			return false;
+			return;
 		}
 		if (PlayerActions.isAlreadyDead(player)) {
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_SOUL_BOUND_INVALID_STANCE(2800119));
-			return false;
+			return;
 		} else if (player.isInPlayerMode(PlayerMode.RIDE)) {
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_SOUL_BOUND_INVALID_STANCE(2800114));
-			return false;
+			return;
 		} else if (player.isInState(CreatureState.CHAIR)) {
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_SOUL_BOUND_INVALID_STANCE(2800117));
-			return false;
+			return;
 		} else if (player.isInState(CreatureState.RESTING)) {
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_SOUL_BOUND_INVALID_STANCE(2800115));
-			return false;
+			return;
 		} else if (player.isInState(CreatureState.FLYING)) {
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_SOUL_BOUND_INVALID_STANCE(2800111));
-			return false;
+			return;
 		} else if (player.isInState(CreatureState.WEAPON_EQUIPPED)) {
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_SOUL_BOUND_INVALID_STANCE(2800159));
-			return false;
+			return;
 		}
 		RequestResponseHandler responseHandler = new RequestResponseHandler(player) {
 
@@ -1298,7 +1290,7 @@ public class Equipment {
 		} else {
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_SOUL_BOUND_CLOSE_OTHER_MSG_BOX_AND_RETRY);
 		}
-		return false;
+		return;
 	}
 
 	private boolean verifyRankLimits(Item item) {
