@@ -25,7 +25,6 @@ import com.aionemu.gameserver.model.team2.group.PlayerGroup;
  * Creature aggro list: tracks attacker damage/hate and provides most-hated, most-damage / loot ownership queries.
  * @author ATracer, KKnD
  */
-@SuppressWarnings("rawtypes")
 public class AggroList {
 
 	/** 列表所属单位 / List owner */
@@ -78,14 +77,6 @@ public class AggroList {
 
 	public void removeDamageListener(DamageListener listener) {
 		damageListeners.remove(listener);
-	}
-
-	public void addListener(DamageListener listener) {
-		addDamageListener(listener);
-	}
-
-	public void removeListener(DamageListener listener) {
-		removeDamageListener(listener);
 	}
 
 	/**
@@ -182,14 +173,13 @@ public class AggroList {
 	 * @param creature 仇恨来源 / hate source
 	 * @param hate 仇恨增量 / hate amount
 	 */
-	protected AggroInfo addHateValue(final Creature creature, int hate) {
+	protected void addHateValue(final Creature creature, int hate) {
 		Creature previousMostHated = getMostHated();
 		AggroInfo ai = getAggroInfo(creature);
 		synchronized (ai) {
 			ai.addHate(hate);
 		}
 		afterHateAdded(creature, previousMostHated);
-		return ai;
 	}
 
 	private void afterHateAdded(Creature creature, Creature previousMostHated) {
@@ -350,20 +340,6 @@ public class AggroList {
 			}
 		}
 		return mostHated;
-	}
-
-	/**
-	 * 判断指定生物是否为当前最高仇恨目标。
-	 * Returns whether the given creature is currently the most hated.
-	 * @param creature 待判断生物 / creature to check
-	 * @return 是否最高仇恨 / whether most hated
-	 */
-	public boolean isMostHated(Creature creature) {
-		if (creature == null || creature.getLifeStats().isAlreadyDead()) {
-			return false;
-		}
-		Creature mostHated = getMostHated();
-		return mostHated != null && mostHated.equals(creature);
 	}
 
 	/**

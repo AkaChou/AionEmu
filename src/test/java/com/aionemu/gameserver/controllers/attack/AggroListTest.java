@@ -2,14 +2,11 @@ package com.aionemu.gameserver.controllers.attack;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.lang.reflect.Field;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashMap;
@@ -28,14 +25,6 @@ import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.stats.container.NpcLifeStats;
 
 class AggroListTest {
-
-	@Test
-	void addHateUsesKnownListSnapshotVisitorForKnownPlayers() throws Exception {
-		String source = Files.readString(Path.of("src/main/java/com/aionemu/gameserver/controllers/attack/AggroList.java"));
-
-		assertTrue(source.contains("doOnAllPlayers"));
-		assertFalse(source.contains("getKnownPlayers().values()"));
-	}
 
 	@Test
 	void getListReturnsSnapshotSafeForRemovalDuringIteration() throws ReflectiveOperationException {

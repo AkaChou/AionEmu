@@ -49,17 +49,6 @@ final class QuestTimers {
 	}
 
 	/**
-	 * 启动可见的任务计时器。
-	 * Starts a visible quest timer.
-	 * @param env 任务环境 / quest environment
-	 * @param timeInSeconds 计时秒数 / timer length in seconds
-	 * @return 是否已启动 / whether started
-	 */
-	static boolean questTimerStart(QuestEnv env, int timeInSeconds) {
-		return questTimerStart(env, timeInSeconds, QuestTimerPolicy.visible());
-	}
-
-	/**
 	 * 以指定策略启动可见的任务计时器。
 	 * Starts a visible quest timer with the given policy.
 	 * @param env 任务环境 / quest environment
@@ -76,17 +65,6 @@ final class QuestTimers {
 			PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(env.getQuestId(), timeInSeconds));
 		}
 		return true;
-	}
-
-	/**
-	 * 启动不可见任务计时器（超时回调引擎）。
-	 * Starts an invisible quest timer (engine callback on timeout).
-	 * @param env 任务环境 / quest environment
-	 * @param timeInSeconds 计时秒数 / timer length in seconds
-	 * @return 是否已启动 / whether started
-	 */
-	static boolean invisibleTimerStart(QuestEnv env, int timeInSeconds) {
-		return invisibleTimerStart(env, timeInSeconds, QuestTimerPolicy.invisible());
 	}
 
 	/**
@@ -169,7 +147,10 @@ final class QuestTimers {
 	 * Clears every quest timer.
 	 */
 	static void cleanupAllQuestTimers() {
-		cleanupTimers(key -> true);
+		synchronized (questTimerLock) {
+			questTimers.values().forEach(ManagedQuestTimer::cancel);
+			questTimers.clear();
+		}
 	}
 
 	/**
@@ -256,8 +237,8 @@ final class QuestTimers {
                         break;
                 }
 			}
-			ManagedQuestTimer timer = new ManagedQuestTimer(policy, player.getInstanceId(), visible);
-			Future<?> future = scheduler.schedule(() -> {
+			ManagedQuestTimer timer = new ManagedQuestTimer(player.getInstanceId(), visible);
+			timer.future = scheduler.schedule(() -> {
 				boolean deliver;
 				synchronized (questTimerLock) {
 					deliver = questTimers.remove(key, timer);
@@ -266,7 +247,6 @@ final class QuestTimers {
 					callback.accept(questId);
 				}
 			}, seconds * 1000L);
-			timer.future = future;
 			questTimers.put(key, timer);
 			return TimerStartOutcome.STARTED;
 		}
@@ -350,7 +330,6 @@ final class QuestTimers {
 	 * Managed timer holding the policy, instance, visibility and the cancellable task handle.
 	 */
 	private static final class ManagedQuestTimer {
-		private final QuestTimerPolicy policy;
 		private final int instanceId;
 		private final boolean visible;
 		private volatile Future<?> future;
@@ -358,12 +337,10 @@ final class QuestTimers {
 		/**
 		 * 创建受管计时器。
 		 * Creates a managed timer.
-		 * @param policy 计时器策略 / timer policy
 		 * @param instanceId 副本实例 ID / instance id
 		 * @param visible 是否可见 / whether visible
 		 */
-		private ManagedQuestTimer(QuestTimerPolicy policy, int instanceId, boolean visible) {
-			this.policy = policy;
+		private ManagedQuestTimer(int instanceId, boolean visible) {
 			this.instanceId = instanceId;
 			this.visible = visible;
 		}
