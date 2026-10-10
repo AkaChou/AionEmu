@@ -1,11 +1,18 @@
 package com.aionemu.gameserver.configs.main;
 
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.stereotype.Component;
+
 import com.aionemu.commons.configuration.Property;
 
+import lombok.Getter;
+
 /**
- * 技能冷却、DP 消耗与魔增上限配置。
- * Skill cooldown, DP consumption and magic boost cap configuration.
+ * 技能冷却、DP 消耗与魔增上限配置，支持 Spring Boot ConfigurationProperties 与静态门面访问。
+ * Skill cooldown, DP consumption and magic boost cap configuration supporting Spring Boot ConfigurationProperties and static facade access.
  */
+@Component
+@ConfigurationProperties(prefix = "gameserver")
 public class SkillConfig {
 
 	/**
@@ -28,6 +35,50 @@ public class SkillConfig {
 	 */
 	@Property(key = "gameserver.magicboost.cap", defaultValue = "6500")
 	public static int MAGICBOOST_CAP = 6500;
+
+	@Getter
+	private final SkillProperties skill = new SkillProperties();
+	@Getter
+	private final MagicboostProperties magicboost = new MagicboostProperties();
+
+	@Getter
+	public static class SkillProperties {
+		private final CooldownProperties cooldown = new CooldownProperties();
+		private final DpProperties dp = new DpProperties();
+
+		@Getter
+		public static class CooldownProperties {
+			public double getMultiplier() {
+				return COOLDOWN_MULTIPLIER;
+			}
+
+			public void setMultiplier(double multiplier) {
+				COOLDOWN_MULTIPLIER = multiplier;
+			}
+		}
+
+		@Getter
+		public static class DpProperties {
+			public boolean isConsume() {
+				return CONSUME_DP;
+			}
+
+			public void setConsume(boolean consume) {
+				CONSUME_DP = consume;
+			}
+		}
+	}
+
+	@Getter
+	public static class MagicboostProperties {
+		public int getCap() {
+			return MAGICBOOST_CAP;
+		}
+
+		public void setCap(int cap) {
+			MAGICBOOST_CAP = cap;
+		}
+	}
 
 	/**
 	 * 校验冷却倍率配置的合法性。

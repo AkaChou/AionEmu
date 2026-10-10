@@ -1,12 +1,19 @@
 package com.aionemu.gameserver.configs.main;
 
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.stereotype.Component;
+
 import com.aionemu.commons.configuration.Property;
 
+import lombok.Getter;
+
 /**
- * FFA（自由混战）活动相关配置。
- * Free-for-all (FFA) event related configuration.
+ * FFA（自由混战）活动相关配置，支持 Spring Boot ConfigurationProperties 与静态门面访问。
+ * Free-for-all (FFA) event related configuration supporting Spring Boot ConfigurationProperties and static facade access.
  * @author Rinzler (Encom)
  */
+@Component
+@ConfigurationProperties(prefix = "gameserver")
 public class FFAConfig {
 
 	/**
@@ -88,4 +95,136 @@ public class FFAConfig {
 	 */
 	@Property(key = "gameserver.pvp.mod.ffa.spree10", defaultValue = " <IS NOW A TRUE PVP FIGHTER> !")
 	public static String FFA_SPREE_10;
+
+	@Getter
+	private final PvpProperties pvp = new PvpProperties();
+
+	@Getter
+	public static class PvpProperties {
+		private final ModProperties mod = new ModProperties();
+
+		@Getter
+		public static class ModProperties {
+			private final FfaProperties ffa = new FfaProperties();
+
+			@Getter
+			public static class FfaProperties {
+				private final SpreeProperties spree = new SpreeProperties();
+
+				public boolean isEnabled() {
+					return FFA_ENABLED;
+				}
+
+				public void setEnabled(boolean enabled) {
+					FFA_ENABLED = enabled;
+				}
+
+				public String getSpree1() {
+					return FFA_SPREE_1;
+				}
+
+				public void setSpree1(String spree1) {
+					FFA_SPREE_1 = spree1;
+				}
+
+				public String getSpree2() {
+					return FFA_SPREE_2;
+				}
+
+				public void setSpree2(String spree2) {
+					FFA_SPREE_2 = spree2;
+				}
+
+				public String getSpree3() {
+					return FFA_SPREE_3;
+				}
+
+				public void setSpree3(String spree3) {
+					FFA_SPREE_3 = spree3;
+				}
+
+				public String getSpree4() {
+					return FFA_SPREE_4;
+				}
+
+				public void setSpree4(String spree4) {
+					FFA_SPREE_4 = spree4;
+				}
+
+				public String getSpree5() {
+					return FFA_SPREE_5;
+				}
+
+				public void setSpree5(String spree5) {
+					FFA_SPREE_5 = spree5;
+				}
+
+				public String getSpree6() {
+					return FFA_SPREE_6;
+				}
+
+				public void setSpree6(String spree6) {
+					FFA_SPREE_6 = spree6;
+				}
+
+				public String getSpree7() {
+					return FFA_SPREE_7;
+				}
+
+				public void setSpree7(String spree7) {
+					FFA_SPREE_7 = spree7;
+				}
+
+				public String getSpree8() {
+					return FFA_SPREE_8;
+				}
+
+				public void setSpree8(String spree8) {
+					FFA_SPREE_8 = spree8;
+				}
+
+				public String getSpree9() {
+					return FFA_SPREE_9;
+				}
+
+				public void setSpree9(String spree9) {
+					FFA_SPREE_9 = spree9;
+				}
+
+				public String getSpree10() {
+					return FFA_SPREE_10;
+				}
+
+				public void setSpree10(String spree10) {
+					FFA_SPREE_10 = spree10;
+				}
+
+				@Getter
+				public static class SpreeProperties {
+					private final TollProperties toll = new TollProperties();
+					private final RewardProperties reward = new RewardProperties();
+
+					public static class TollProperties {
+						public int getQuantity() {
+							return FFA_SPREE_REWARD_TOLL_QUANTITY;
+						}
+
+						public void setQuantity(int quantity) {
+							FFA_SPREE_REWARD_TOLL_QUANTITY = quantity;
+						}
+					}
+
+					public static class RewardProperties {
+						public int getItem() {
+							return FFA_SPREE_REWARD_ITEM;
+						}
+
+						public void setItem(int item) {
+							FFA_SPREE_REWARD_ITEM = item;
+						}
+					}
+				}
+			}
+		}
+	}
 }

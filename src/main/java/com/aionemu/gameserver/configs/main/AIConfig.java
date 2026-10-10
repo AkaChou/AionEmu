@@ -1,12 +1,19 @@
 package com.aionemu.gameserver.configs.main;
 
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.stereotype.Component;
+
 import com.aionemu.commons.configuration.Property;
 
+import lombok.Getter;
+
 /**
- * AI 行为相关配置。
- * AI behavior related configuration.
+ * AI 行为相关配置，支持 Spring Boot ConfigurationProperties 与静态门面访问。
+ * AI behavior related configuration supporting Spring Boot ConfigurationProperties and static facade access.
  * @author ATracer
  */
+@Component
+@ConfigurationProperties(prefix = "gameserver")
 public class AIConfig {
 
 	/**
@@ -78,4 +85,146 @@ public class AIConfig {
 	 */
 	@Property(key = "gameserver.npcshouts.enable", defaultValue = "false")
 	public static boolean SHOUTS_ENABLE;
+
+	@Getter
+	private final AiProperties ai = new AiProperties();
+	@Getter
+	private final NpcProperties npc = new NpcProperties();
+	@Getter
+	private final NpcmovementProperties npcmovement = new NpcmovementProperties();
+	@Getter
+	private final NpcshoutsProperties npcshouts = new NpcshoutsProperties();
+
+	@Getter
+	public static class AiProperties {
+		private final MoveProperties move = new MoveProperties();
+		private final EventProperties event = new EventProperties();
+		private final OncreateProperties oncreate = new OncreateProperties();
+		private final AggroProperties aggro = new AggroProperties();
+		private final HomeProperties home = new HomeProperties();
+
+		public static class MoveProperties {
+			public boolean isDebug() {
+				return MOVE_DEBUG;
+			}
+
+			public void setDebug(boolean debug) {
+				MOVE_DEBUG = debug;
+			}
+		}
+
+		public static class EventProperties {
+			public boolean isDebug() {
+				return EVENT_DEBUG;
+			}
+
+			public void setDebug(boolean debug) {
+				EVENT_DEBUG = debug;
+			}
+		}
+
+		public static class OncreateProperties {
+			public boolean isDebug() {
+				return ONCREATE_DEBUG;
+			}
+
+			public void setDebug(boolean debug) {
+				ONCREATE_DEBUG = debug;
+			}
+		}
+
+		@Getter
+		public static class AggroProperties {
+			private final LevelProperties level = new LevelProperties();
+
+			public static class LevelProperties {
+				public int getImmune() {
+					return AGGRO_LEVEL_IMMUNE;
+				}
+
+				public void setImmune(int immune) {
+					AGGRO_LEVEL_IMMUNE = immune;
+				}
+			}
+		}
+
+		public static class HomeProperties {
+			private final ReturnProperties returnProperties = new ReturnProperties();
+
+			public ReturnProperties getReturn() {
+				return returnProperties;
+			}
+
+			@Getter
+			public static class ReturnProperties {
+				private final EnhancedProperties enhanced = new EnhancedProperties();
+
+				public static class EnhancedProperties {
+					public boolean isEnable() {
+						return ENHANCED_HOME_RETURN;
+					}
+
+					public void setEnable(boolean enable) {
+						ENHANCED_HOME_RETURN = enable;
+					}
+				}
+			}
+		}
+	}
+
+	@Getter
+	public static class NpcProperties {
+		private final FearfulBeastProperties fearfulBeast = new FearfulBeastProperties();
+
+		public static class FearfulBeastProperties {
+			public boolean isEnable() {
+				return ENABLE_FEARFUL_BEAST_AI;
+			}
+
+			public void setEnable(boolean enable) {
+				ENABLE_FEARFUL_BEAST_AI = enable;
+			}
+		}
+	}
+
+	@Getter
+	public static class NpcmovementProperties {
+		private final DelayProperties delay = new DelayProperties();
+
+		public boolean isEnable() {
+			return ACTIVE_NPC_MOVEMENT;
+		}
+
+		public void setEnable(boolean enable) {
+			ACTIVE_NPC_MOVEMENT = enable;
+		}
+
+		public static class DelayProperties {
+			public int getMinimum() {
+				return MINIMIMUM_DELAY;
+			}
+
+			public void setMinimum(int minimum) {
+				MINIMIMUM_DELAY = minimum;
+			}
+
+			public int getMaximum() {
+				return MAXIMUM_DELAY;
+			}
+
+			public void setMaximum(int maximum) {
+				MAXIMUM_DELAY = maximum;
+			}
+		}
+	}
+
+	public static class NpcshoutsProperties {
+		public boolean isEnable() {
+			return SHOUTS_ENABLE;
+		}
+
+		public void setEnable(boolean enable) {
+			SHOUTS_ENABLE = enable;
+		}
+	}
 }

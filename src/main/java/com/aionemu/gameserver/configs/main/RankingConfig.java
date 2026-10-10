@@ -1,11 +1,18 @@
 package com.aionemu.gameserver.configs.main;
 
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.stereotype.Component;
+
 import com.aionemu.commons.configuration.Property;
 
+import lombok.Getter;
+
 /**
- * 排行榜更新相关配置。
- * Top ranking update related configuration.
+ * 排行榜更新相关配置，支持 Spring Boot ConfigurationProperties 与静态门面访问。
+ * Top ranking update related configuration supporting Spring Boot ConfigurationProperties and static facade access.
  */
+@Component
+@ConfigurationProperties(prefix = "gameserver")
 public class RankingConfig {
 	/**
 	 * 是否使用自定义排行榜更新设置。
@@ -34,4 +41,59 @@ public class RankingConfig {
 	 */
 	@Property(key = "gameserver.top.ranking.max.offline.days", defaultValue = "0")
 	public static int TOP_RANKING_MAX_OFFLINE_DAYS;
+
+	@Getter
+	private final TopProperties top = new TopProperties();
+
+	@Getter
+	public static class TopProperties {
+		private final RankingProperties ranking = new RankingProperties();
+
+		@Getter
+		public static class RankingProperties {
+			private final UpdateProperties update = new UpdateProperties();
+			private final MaxProperties max = new MaxProperties();
+
+			public static class UpdateProperties {
+				public boolean isSetting() {
+					return TOP_RANKING_UPDATE_SETTING;
+				}
+
+				public void setSetting(boolean setting) {
+					TOP_RANKING_UPDATE_SETTING = setting;
+				}
+
+				public String getHour() {
+					return TOP_RANKING_UPDATE_RULE;
+				}
+
+				public void setHour(String hour) {
+					TOP_RANKING_UPDATE_RULE = hour;
+				}
+
+				public int getMinute() {
+					return TOP_RANKING_UPDATE_RULE2;
+				}
+
+				public void setMinute(int minute) {
+					TOP_RANKING_UPDATE_RULE2 = minute;
+				}
+			}
+
+			@Getter
+			public static class MaxProperties {
+				private final OfflineProperties offline = new OfflineProperties();
+
+				public static class OfflineProperties {
+					public int getDays() {
+						return TOP_RANKING_MAX_OFFLINE_DAYS;
+					}
+
+					public void setDays(int days) {
+						TOP_RANKING_MAX_OFFLINE_DAYS = days;
+					}
+				}
+			}
+		}
+	}
 }

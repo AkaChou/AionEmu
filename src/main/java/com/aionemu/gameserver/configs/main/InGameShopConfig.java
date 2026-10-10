@@ -1,12 +1,19 @@
 package com.aionemu.gameserver.configs.main;
 
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.stereotype.Component;
+
 import com.aionemu.commons.configuration.Property;
 
+import lombok.Getter;
+
 /**
- * 游戏内商城相关配置。
- * In-game shop related configuration.
+ * 游戏内商城相关配置，支持 Spring Boot ConfigurationProperties 与静态门面访问。
+ * In-game shop related configuration supporting Spring Boot ConfigurationProperties and static facade access.
  * @author xTz
  */
+@Component
+@ConfigurationProperties(prefix = "gameserver")
 public class InGameShopConfig {
 
 	/**
@@ -50,4 +57,85 @@ public class InGameShopConfig {
 	 */
 	@Property(key = "gameserver.gameshop.limit.time", defaultValue = "60")
 	public static long GAMESHOP_LIMIT_TIME;
+
+	@Getter
+	private final IngameshopProperties ingameshop = new IngameshopProperties();
+	@Getter
+	private final GameshopProperties gameshop = new GameshopProperties();
+
+	@Getter
+	public static class IngameshopProperties {
+		private final AllowProperties allow = new AllowProperties();
+
+		public boolean isEnable() {
+			return ENABLE_IN_GAME_SHOP;
+		}
+
+		public void setEnable(boolean enable) {
+			ENABLE_IN_GAME_SHOP = enable;
+		}
+
+		public boolean isGift() {
+			return ENABLE_GIFT_OTHER_RACE;
+		}
+
+		public void setGift(boolean gift) {
+			ENABLE_GIFT_OTHER_RACE = gift;
+		}
+
+		public static class AllowProperties {
+			public boolean isGift() {
+				return ALLOW_GIFTS;
+			}
+
+			public void setGift(boolean gift) {
+				ALLOW_GIFTS = gift;
+			}
+		}
+	}
+
+	@Getter
+	public static class GameshopProperties {
+		private final LimitProperties limit = new LimitProperties();
+
+		public byte getCategory() {
+			return GAMESHOP_CATEGORY;
+		}
+
+		public void setCategory(byte category) {
+			GAMESHOP_CATEGORY = category;
+		}
+
+		public static class LimitProperties {
+			public LimitProperties() {}
+
+			/**
+			 * 兼容旧版裸标量 gameserver.gameshop.limit=false 的绑定入口。
+			 * Binding entry for the legacy bare scalar gameserver.gameshop.limit=false.
+			 */
+			public static LimitProperties valueOf(String value) {
+				try {
+					GAMESHOP_LIMIT = Boolean.parseBoolean(value);
+				} catch (RuntimeException ignored) {
+				}
+				return new LimitProperties();
+			}
+
+			public boolean isValue() {
+				return GAMESHOP_LIMIT;
+			}
+
+			public void setValue(boolean value) {
+				GAMESHOP_LIMIT = value;
+			}
+
+			public long getTime() {
+				return GAMESHOP_LIMIT_TIME;
+			}
+
+			public void setTime(long time) {
+				GAMESHOP_LIMIT_TIME = time;
+			}
+		}
+	}
 }

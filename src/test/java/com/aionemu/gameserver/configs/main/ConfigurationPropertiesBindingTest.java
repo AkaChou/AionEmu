@@ -13,6 +13,8 @@ import org.springframework.core.env.MapPropertySource;
 import org.springframework.core.env.StandardEnvironment;
 
 import com.aionemu.gameserver.configs.administration.AdminConfig;
+import com.aionemu.gameserver.configs.administration.DeveloperConfig;
+import com.aionemu.gameserver.configs.administration.PanelConfig;
 import com.aionemu.gameserver.configs.network.NetworkConfig;
 import com.aionemu.testutil.ConfigSnapshot;
 
@@ -642,6 +644,262 @@ class ConfigurationPropertiesBindingTest {
 			snapshot.restore();
 		}
 	}
+
+	@Test
+	void bindsRankingConfigProperties() {
+		ConfigSnapshot snapshot = ConfigSnapshot.of(RankingConfig.class,
+			"TOP_RANKING_UPDATE_SETTING", "TOP_RANKING_UPDATE_RULE", "TOP_RANKING_UPDATE_RULE2",
+			"TOP_RANKING_MAX_OFFLINE_DAYS");
+		try {
+			StandardEnvironment environment = new StandardEnvironment();
+			environment.getPropertySources().addFirst(new MapPropertySource("test", Map.of(
+				"gameserver.top.ranking.update.setting", "false",
+				"gameserver.top.ranking.update.hour", "0 0 */3 ? * *",
+				"gameserver.top.ranking.update.minute", "20",
+				"gameserver.top.ranking.max.offline.days", "7"
+			)));
+
+			RankingConfig config = new RankingConfig();
+			Binder.get(environment).bind("gameserver", Bindable.ofInstance(config));
+
+			assertFalse(RankingConfig.TOP_RANKING_UPDATE_SETTING);
+			assertEquals("0 0 */3 ? * *", RankingConfig.TOP_RANKING_UPDATE_RULE);
+			assertEquals(20, RankingConfig.TOP_RANKING_UPDATE_RULE2);
+			assertEquals(7, RankingConfig.TOP_RANKING_MAX_OFFLINE_DAYS);
+		} finally {
+			snapshot.restore();
+		}
+	}
+
+	@Test
+	void bindsPunishmentConfigProperties() {
+		ConfigSnapshot snapshot = ConfigSnapshot.of(PunishmentConfig.class,
+			"PUNISHMENT_ENABLE", "PUNISHMENT_TYPE", "PUNISHMENT_TIME", "PUNISHMENT_REDUCEAP");
+		try {
+			StandardEnvironment environment = new StandardEnvironment();
+			environment.getPropertySources().addFirst(new MapPropertySource("test", Map.of(
+				"gameserver.punishment.enable", "true",
+				"gameserver.punishment.type", "2",
+				"gameserver.punishment.time", "60",
+				"gameserver.punishment.reduceap", "100"
+			)));
+
+			PunishmentConfig config = new PunishmentConfig();
+			Binder.get(environment).bind("gameserver", Bindable.ofInstance(config));
+
+			assertTrue(PunishmentConfig.PUNISHMENT_ENABLE);
+			assertEquals(2, PunishmentConfig.PUNISHMENT_TYPE);
+			assertEquals(60, PunishmentConfig.PUNISHMENT_TIME);
+			assertEquals(100, PunishmentConfig.PUNISHMENT_REDUCEAP);
+		} finally {
+			snapshot.restore();
+		}
+	}
+
+	@Test
+	void bindsHtmlConfigProperties() {
+		ConfigSnapshot snapshot = ConfigSnapshot.of(HTMLConfig.class,
+			"ENABLE_HTML_WELCOME", "ENABLE_GUIDES", "HTML_ROOT", "HTML_ENCODING");
+		try {
+			StandardEnvironment environment = new StandardEnvironment();
+			environment.getPropertySources().addFirst(new MapPropertySource("test", Map.of(
+				"gameserver.html.welcome.enable", "true",
+				"gameserver.html.guides.enable", "false",
+				"gameserver.html.root", "./data/static_data/HTML2/",
+				"gameserver.html.encoding", "GBK"
+			)));
+
+			HTMLConfig config = new HTMLConfig();
+			Binder.get(environment).bind("gameserver", Bindable.ofInstance(config));
+
+			assertTrue(HTMLConfig.ENABLE_HTML_WELCOME);
+			assertFalse(HTMLConfig.ENABLE_GUIDES);
+			assertEquals("./data/static_data/HTML2/", HTMLConfig.HTML_ROOT);
+			assertEquals("GBK", HTMLConfig.HTML_ENCODING);
+		} finally {
+			snapshot.restore();
+		}
+	}
+
+	@Test
+	void bindsFallDamageConfigProperties() {
+		ConfigSnapshot snapshot = ConfigSnapshot.of(FallDamageConfig.class,
+			"FALL_DAMAGE_PERCENTAGE", "MINIMUM_DISTANCE_DAMAGE", "MAXIMUM_DISTANCE_DAMAGE",
+			"MAXIMUM_DISTANCE_MIDAIR");
+		try {
+			StandardEnvironment environment = new StandardEnvironment();
+			environment.getPropertySources().addFirst(new MapPropertySource("test", Map.of(
+				"gameserver.falldamage.percentage", "2.5",
+				"gameserver.falldamage.distance.minimum", "15",
+				"gameserver.falldamage.distance.maximum", "80",
+				"gameserver.falldamage.distance.midair", "300"
+			)));
+
+			FallDamageConfig config = new FallDamageConfig();
+			Binder.get(environment).bind("gameserver", Bindable.ofInstance(config));
+
+			assertEquals(2.5f, FallDamageConfig.FALL_DAMAGE_PERCENTAGE);
+			assertEquals(15, FallDamageConfig.MINIMUM_DISTANCE_DAMAGE);
+			assertEquals(80, FallDamageConfig.MAXIMUM_DISTANCE_DAMAGE);
+			assertEquals(300, FallDamageConfig.MAXIMUM_DISTANCE_MIDAIR);
+		} finally {
+			snapshot.restore();
+		}
+	}
+
+	@Test
+	void bindsVeteranRewardConfigProperties() {
+		ConfigSnapshot snapshot = ConfigSnapshot.of(VeteranRewardConfig.class,
+			"VETERANREWARDS_ENABLED", "VETERANREWARDS_ENABLED_ERROR_LOG", "VETERANREWARDS_ENABLED_INFO_LOG");
+		try {
+			StandardEnvironment environment = new StandardEnvironment();
+			environment.getPropertySources().addFirst(new MapPropertySource("test", Map.of(
+				"gameserver.veteranreward.enabled", "true",
+				"gameserver.veteranreward.log_error", "false",
+				"gameserver.veteranreward.log_info", "false"
+			)));
+
+			VeteranRewardConfig config = new VeteranRewardConfig();
+			Binder.get(environment).bind("gameserver", Bindable.ofInstance(config));
+
+			assertTrue(VeteranRewardConfig.VETERANREWARDS_ENABLED);
+			assertFalse(VeteranRewardConfig.VETERANREWARDS_ENABLED_ERROR_LOG);
+			assertFalse(VeteranRewardConfig.VETERANREWARDS_ENABLED_INFO_LOG);
+		} finally {
+			snapshot.restore();
+		}
+	}
+
+	@Test
+	void bindsSkillConfigProperties() {
+		ConfigSnapshot snapshot = ConfigSnapshot.of(SkillConfig.class,
+			"COOLDOWN_MULTIPLIER", "CONSUME_DP", "MAGICBOOST_CAP");
+		try {
+			StandardEnvironment environment = new StandardEnvironment();
+			environment.getPropertySources().addFirst(new MapPropertySource("test", Map.of(
+				"gameserver.skill.cooldown.multiplier", "0.5",
+				"gameserver.skill.dp.consume", "false",
+				"gameserver.magicboost.cap", "7000"
+			)));
+
+			SkillConfig config = new SkillConfig();
+			Binder.get(environment).bind("gameserver", Bindable.ofInstance(config));
+
+			assertEquals(0.5d, SkillConfig.COOLDOWN_MULTIPLIER);
+			assertFalse(SkillConfig.CONSUME_DP);
+			assertEquals(7000, SkillConfig.MAGICBOOST_CAP);
+			assertEquals(50, SkillConfig.scaleCooldown(100));
+		} finally {
+			snapshot.restore();
+		}
+	}
+
+	@Test
+	void bindsBrokerConfigProperties() {
+		ConfigSnapshot snapshot = ConfigSnapshot.of(BrokerConfig.class,
+			"CHECK_EXPIRED_ITEMS_INTERVAL", "ANTI_HACK_PUNISHMENT", "ITEMS_EXPIRE_TIME");
+		try {
+			StandardEnvironment environment = new StandardEnvironment();
+			environment.getPropertySources().addFirst(new MapPropertySource("test", Map.of(
+				"gameserver.broker.time.check.expired.items.interval", "120",
+				"gameserver.broker.anti.hack.punishment", "1",
+				"gameserver.broker.items.expire.time", "24"
+			)));
+
+			BrokerConfig config = new BrokerConfig();
+			Binder.get(environment).bind("gameserver", Bindable.ofInstance(config));
+
+			assertEquals(120, BrokerConfig.CHECK_EXPIRED_ITEMS_INTERVAL);
+			assertEquals(1, BrokerConfig.ANTI_HACK_PUNISHMENT);
+			assertEquals(24, BrokerConfig.ITEMS_EXPIRE_TIME);
+		} finally {
+			snapshot.restore();
+		}
+	}
+
+	@Test
+	void bindsAStationConfigProperties() {
+		ConfigSnapshot snapshot = ConfigSnapshot.of(AStationConfig.class,
+			"A_STATION_SERVER_ID", "A_STATION_MAX_LEVEL", "A_STATION_ENABLE");
+		try {
+			StandardEnvironment environment = new StandardEnvironment();
+			environment.getPropertySources().addFirst(new MapPropertySource("test", Map.of(
+				"a.station.server.id", "5",
+				"a.station.max.level", "85",
+				"a.station.enable", "false"
+			)));
+
+			AStationConfig config = new AStationConfig();
+			Binder.get(environment).bind("a", Bindable.ofInstance(config));
+
+			assertEquals(5, AStationConfig.A_STATION_SERVER_ID);
+			assertEquals(85, AStationConfig.A_STATION_MAX_LEVEL);
+			assertFalse(AStationConfig.A_STATION_ENABLE);
+		} finally {
+			snapshot.restore();
+		}
+	}
+
+	@Test
+	void bindsTransportConfigProperties() {
+		ConfigSnapshot snapshot = ConfigSnapshot.of(TransportConfig.class,
+			"HOTSPOT_CAST_TIME_SECONDS", "HOTSPOT_COOLDOWN_SECONDS");
+		try {
+			StandardEnvironment environment = new StandardEnvironment();
+			environment.getPropertySources().addFirst(new MapPropertySource("test", Map.of(
+				"gameserver.transport.hotspot.cast_time_seconds", "3",
+				"gameserver.transport.hotspot.cooldown_seconds", "10"
+			)));
+
+			TransportConfig config = new TransportConfig();
+			Binder.get(environment).bind("gameserver", Bindable.ofInstance(config));
+
+			assertEquals(3, TransportConfig.HOTSPOT_CAST_TIME_SECONDS);
+			assertEquals(10, TransportConfig.HOTSPOT_COOLDOWN_SECONDS);
+		} finally {
+			snapshot.restore();
+		}
+	}
+
+	@Test
+	void bindsArchDaevaConfigProperties() {
+		ConfigSnapshot snapshot = ConfigSnapshot.of(ArchDaevaConfig.class,
+			"CP_LIMIT_MAX", "ITEM_NOT_FOR_HIGHDAEVA_ENABLE");
+		try {
+			StandardEnvironment environment = new StandardEnvironment();
+			environment.getPropertySources().addFirst(new MapPropertySource("test", Map.of(
+				"gameserver.max.cp.limit", "2000",
+				"gameserver.item.not.for.highdaeva.enable", "true"
+			)));
+
+			ArchDaevaConfig config = new ArchDaevaConfig();
+			Binder.get(environment).bind("gameserver", Bindable.ofInstance(config));
+
+			assertEquals(2000, ArchDaevaConfig.CP_LIMIT_MAX);
+			assertTrue(ArchDaevaConfig.ITEM_NOT_FOR_HIGHDAEVA_ENABLE);
+		} finally {
+			snapshot.restore();
+		}
+	}
+
+	@Test
+	void bindsPvPModConfigProperties() {
+		ConfigSnapshot snapshot = ConfigSnapshot.of(PvPModConfig.class, "BG_ENABLED");
+		try {
+			StandardEnvironment environment = new StandardEnvironment();
+			environment.getPropertySources().addFirst(new MapPropertySource("test", Map.of(
+				"gameserver.pvp.mod.bg.enabled", "false"
+			)));
+
+			PvPModConfig config = new PvPModConfig();
+			Binder.get(environment).bind("gameserver", Bindable.ofInstance(config));
+
+			assertFalse(PvPModConfig.BG_ENABLED);
+		} finally {
+			snapshot.restore();
+		}
+	}
+
 	@Test
 	void bindsAutoGroupConfigProperties() {
 		ConfigSnapshot snapshot = ConfigSnapshot.of(AutoGroupConfig.class,
@@ -829,6 +1087,356 @@ class ConfigurationPropertiesBindingTest {
 			assertEquals(241, LegionConfig.LEGION_LEVEL8_MAX_MEMBERS);
 			assertEquals(25, LegionConfig.LWH_LEVEL1_SLOTS);
 			assertEquals(81, LegionConfig.LWH_LEVEL8_SLOTS);
+		} finally {
+			snapshot.restore();
+		}
+	}
+
+	@Test
+	void bindsFfaConfigProperties() {
+		ConfigSnapshot snapshot = ConfigSnapshot.of(FFAConfig.class,
+			"FFA_ENABLED", "FFA_SPREE_REWARD_TOLL_QUANTITY", "FFA_SPREE_REWARD_ITEM",
+			"FFA_SPREE_1", "FFA_SPREE_10");
+		try {
+			StandardEnvironment environment = new StandardEnvironment();
+			environment.getPropertySources().addFirst(new MapPropertySource("test", Map.of(
+				"gameserver.pvp.mod.ffa.enabled", "false",
+				"gameserver.pvp.mod.ffa.spree.toll.quantity", "20",
+				"gameserver.pvp.mod.ffa.spree.reward.item", "166030006",
+				"gameserver.pvp.mod.ffa.spree1", "test spree 1",
+				"gameserver.pvp.mod.ffa.spree10", "test spree 10"
+			)));
+
+			FFAConfig config = new FFAConfig();
+			Binder.get(environment).bind("gameserver", Bindable.ofInstance(config));
+
+			assertFalse(FFAConfig.FFA_ENABLED);
+			assertEquals(20, FFAConfig.FFA_SPREE_REWARD_TOLL_QUANTITY);
+			assertEquals(166030006, FFAConfig.FFA_SPREE_REWARD_ITEM);
+			assertEquals("test spree 1", FFAConfig.FFA_SPREE_1);
+			assertEquals("test spree 10", FFAConfig.FFA_SPREE_10);
+		} finally {
+			snapshot.restore();
+		}
+	}
+
+	@Test
+	void bindsLoggingConfigProperties() {
+		ConfigSnapshot snapshot = ConfigSnapshot.of(LoggingConfig.class,
+			"ENABLE_ADVANCED_LOGGING", "LOG_AUDIT", "LOG_CHAT", "LOG_FACTION",
+			"LOG_GMAUDIT", "LOG_ITEM", "LOG_KILL", "LOG_PL", "LOG_SIEGE",
+			"LOG_HOUSE_AUCTION", "LOG_QUEST_TRACE");
+		try {
+			StandardEnvironment environment = new StandardEnvironment();
+			environment.getPropertySources().addFirst(new MapPropertySource("test", Map.ofEntries(
+				Map.entry("gameserver.enable.advanced.logging", "true"),
+				Map.entry("gameserver.log.audit", "false"),
+				Map.entry("gameserver.log.chat", "false"),
+				Map.entry("gameserver.log.faction", "true"),
+				Map.entry("gameserver.log.gmaudit", "false"),
+				Map.entry("gameserver.log.item", "false"),
+				Map.entry("gameserver.log.kill", "true"),
+				Map.entry("gameserver.log.pl", "true"),
+				Map.entry("gameserver.log.siege", "true"),
+				Map.entry("gameserver.log.auction", "false"),
+				Map.entry("gameserver.log.questtrace", "true")
+			)));
+
+			LoggingConfig config = new LoggingConfig();
+			Binder.get(environment).bind("gameserver", Bindable.ofInstance(config));
+
+			assertTrue(LoggingConfig.ENABLE_ADVANCED_LOGGING);
+			assertFalse(LoggingConfig.LOG_AUDIT);
+			assertFalse(LoggingConfig.LOG_CHAT);
+			assertTrue(LoggingConfig.LOG_FACTION);
+			assertFalse(LoggingConfig.LOG_GMAUDIT);
+			assertFalse(LoggingConfig.LOG_ITEM);
+			assertTrue(LoggingConfig.LOG_KILL);
+			assertTrue(LoggingConfig.LOG_PL);
+			assertTrue(LoggingConfig.LOG_SIEGE);
+			assertFalse(LoggingConfig.LOG_HOUSE_AUCTION);
+			assertTrue(LoggingConfig.LOG_QUEST_TRACE);
+		} finally {
+			snapshot.restore();
+		}
+	}
+
+	@Test
+	void bindsAiConfigProperties() {
+		ConfigSnapshot snapshot = ConfigSnapshot.of(AIConfig.class,
+			"MOVE_DEBUG", "EVENT_DEBUG", "ONCREATE_DEBUG", "AGGRO_LEVEL_IMMUNE",
+			"ENABLE_FEARFUL_BEAST_AI", "ACTIVE_NPC_MOVEMENT", "ENHANCED_HOME_RETURN",
+			"MINIMIMUM_DELAY", "MAXIMUM_DELAY", "SHOUTS_ENABLE");
+		try {
+			StandardEnvironment environment = new StandardEnvironment();
+			environment.getPropertySources().addFirst(new MapPropertySource("test", Map.of(
+				"gameserver.ai.move.debug", "false",
+				"gameserver.ai.event.debug", "true",
+				"gameserver.ai.oncreate.debug", "true",
+				"gameserver.ai.aggro.level.immune", "15",
+				"gameserver.npc.fearful_beast.enable", "false",
+				"gameserver.npcmovement.enable", "false",
+				"gameserver.ai.home.return.enhanced.enable", "false",
+				"gameserver.npcmovement.delay.minimum", "5",
+				"gameserver.npcmovement.delay.maximum", "25",
+				"gameserver.npcshouts.enable", "true"
+			)));
+
+			AIConfig config = new AIConfig();
+			Binder.get(environment).bind("gameserver", Bindable.ofInstance(config));
+
+			assertFalse(AIConfig.MOVE_DEBUG);
+			assertTrue(AIConfig.EVENT_DEBUG);
+			assertTrue(AIConfig.ONCREATE_DEBUG);
+			assertEquals(15, AIConfig.AGGRO_LEVEL_IMMUNE);
+			assertFalse(AIConfig.ENABLE_FEARFUL_BEAST_AI);
+			assertFalse(AIConfig.ACTIVE_NPC_MOVEMENT);
+			assertFalse(AIConfig.ENHANCED_HOME_RETURN);
+			assertEquals(5, AIConfig.MINIMIMUM_DELAY);
+			assertEquals(25, AIConfig.MAXIMUM_DELAY);
+			assertTrue(AIConfig.SHOUTS_ENABLE);
+		} finally {
+			snapshot.restore();
+		}
+	}
+
+	@Test
+	void bindsInstanceConfigProperties() {
+		ConfigSnapshot snapshot = ConfigSnapshot.of(InstanceConfig.class,
+			"COOLDOWN_RATE", "DESTROY_DELAY_SECONDS", "SOLO_DESTROY_DELAY_SECONDS",
+			"SCALING_ENABLE", "SCALING_HP_FLOOR", "SCALING_DMG_FLOOR");
+		try {
+			StandardEnvironment environment = new StandardEnvironment();
+			environment.getPropertySources().addFirst(new MapPropertySource("test", Map.of(
+				"gameserver.instances.cooldown.rate", "2",
+				"gameserver.instances.cooldown.filter", "300010000,300020000",
+				"gameserver.instance.destroy_delay_seconds", "1200",
+				"gameserver.instance.solo.destroy_delay_seconds", "300",
+				"gameserver.instance.scaling.enable", "true",
+				"gameserver.instance.scaling.hp_floor", "0.8",
+				"gameserver.instance.scaling.dmg_floor", "0.7",
+				"gameserver.instance.scaling.excluded_maps", "300030000"
+			)));
+
+			InstanceConfig config = new InstanceConfig();
+			Binder.get(environment).bind("gameserver", Bindable.ofInstance(config));
+
+			assertEquals(2, InstanceConfig.COOLDOWN_RATE);
+			assertEquals(1200, InstanceConfig.DESTROY_DELAY_SECONDS);
+			assertEquals(300, InstanceConfig.SOLO_DESTROY_DELAY_SECONDS);
+			assertTrue(InstanceConfig.SCALING_ENABLE);
+			assertEquals(0.8f, InstanceConfig.SCALING_HP_FLOOR);
+			assertEquals(0.7f, InstanceConfig.SCALING_DMG_FLOOR);
+			assertTrue(InstanceConfig.isCooldownExcluded(300010000));
+			assertTrue(InstanceConfig.isScalingExcluded(300030000));
+		} finally {
+			snapshot.restore();
+		}
+	}
+
+	@Test
+	void bindsInGameShopConfigProperties() {
+		ConfigSnapshot snapshot = ConfigSnapshot.of(InGameShopConfig.class,
+			"ENABLE_IN_GAME_SHOP", "ENABLE_GIFT_OTHER_RACE", "ALLOW_GIFTS",
+			"GAMESHOP_LIMIT", "GAMESHOP_CATEGORY", "GAMESHOP_LIMIT_TIME");
+		try {
+			StandardEnvironment environment = new StandardEnvironment();
+			environment.getPropertySources().addFirst(new MapPropertySource("test", Map.of(
+				"gameserver.ingameshop.enable", "true",
+				"gameserver.ingameshop.gift", "true",
+				"gameserver.ingameshop.allow.gift", "false",
+				"gameserver.gameshop.limit.value", "true",
+				"gameserver.gameshop.category", "1",
+				"gameserver.gameshop.limit.time", "120"
+			)));
+
+			InGameShopConfig config = new InGameShopConfig();
+			Binder.get(environment).bind("gameserver", Bindable.ofInstance(config));
+
+			assertTrue(InGameShopConfig.ENABLE_IN_GAME_SHOP);
+			assertTrue(InGameShopConfig.ENABLE_GIFT_OTHER_RACE);
+			assertFalse(InGameShopConfig.ALLOW_GIFTS);
+			assertTrue(InGameShopConfig.GAMESHOP_LIMIT);
+			assertEquals((byte) 1, InGameShopConfig.GAMESHOP_CATEGORY);
+			assertEquals(120L, InGameShopConfig.GAMESHOP_LIMIT_TIME);
+		} finally {
+			snapshot.restore();
+		}
+	}
+
+	@Test
+	void bindsWorldConfigProperties() {
+		ConfigSnapshot snapshot = ConfigSnapshot.of(WorldConfig.class,
+			"WORLD_REGION_SIZE", "WORLD_ACTIVE_TRACE", "WORLD_EMULATE_A_STATION",
+			"WORLD_MAX_TWINS_USUAL", "WORLD_MAX_TWINS_BEGINNER");
+		try {
+			StandardEnvironment environment = new StandardEnvironment();
+			environment.getPropertySources().addFirst(new MapPropertySource("test", Map.of(
+				"gameserver.world.region.size", "256",
+				"gameserver.world.region.active.trace", "false",
+				"gameserver.world.emulate.a.station", "true",
+				"gameserver.world.max.twincount.usual", "2",
+				"gameserver.world.max.twincount.beginner", "5"
+			)));
+
+			WorldConfig config = new WorldConfig();
+			Binder.get(environment).bind("gameserver", Bindable.ofInstance(config));
+
+			assertEquals(256, WorldConfig.WORLD_REGION_SIZE);
+			assertFalse(WorldConfig.WORLD_ACTIVE_TRACE);
+			assertTrue(WorldConfig.WORLD_EMULATE_A_STATION);
+			assertEquals(2, WorldConfig.WORLD_MAX_TWINS_USUAL);
+			assertEquals(5, WorldConfig.WORLD_MAX_TWINS_BEGINNER);
+		} finally {
+			snapshot.restore();
+		}
+	}
+
+	@Test
+	void bindsPricesConfigProperties() {
+		ConfigSnapshot snapshot = ConfigSnapshot.of(PricesConfig.class,
+			"DEFAULT_PRICES", "DEFAULT_MODIFIER", "DEFAULT_TAXES",
+			"VENDOR_BUY_MODIFIER", "VENDOR_SELL_MODIFIER");
+		try {
+			StandardEnvironment environment = new StandardEnvironment();
+			environment.getPropertySources().addFirst(new MapPropertySource("test", Map.of(
+				"gameserver.prices.default.prices", "120",
+				"gameserver.prices.default.modifier", "110",
+				"gameserver.prices.default.taxes", "105",
+				"gameserver.prices.vendor.buymod", "90",
+				"gameserver.prices.vendor.sellmod", "25"
+			)));
+
+			PricesConfig config = new PricesConfig();
+			Binder.get(environment).bind("gameserver", Bindable.ofInstance(config));
+
+			assertEquals(120, PricesConfig.DEFAULT_PRICES);
+			assertEquals(110, PricesConfig.DEFAULT_MODIFIER);
+			assertEquals(105, PricesConfig.DEFAULT_TAXES);
+			assertEquals(90, PricesConfig.VENDOR_BUY_MODIFIER);
+			assertEquals(25, PricesConfig.VENDOR_SELL_MODIFIER);
+		} finally {
+			snapshot.restore();
+		}
+	}
+
+	@Test
+	void bindsNameConfigProperties() {
+		ConfigSnapshot snapshot = ConfigSnapshot.of(NameConfig.class,
+			"ALLOW_CUSTOM_NAMES", "CHAR_NAME_PATTERN", "NAME_SEQUENCE_FORBIDDEN",
+			"NAME_FORBIDDEN_ENABLE", "NAME_FORBIDDEN_CLIENT");
+		try {
+			StandardEnvironment environment = new StandardEnvironment();
+			environment.getPropertySources().addFirst(new MapPropertySource("test", Map.of(
+				"gameserver.name.allow.custom", "true",
+				"gameserver.name.characterpattern", "[a-zA-Z0-9]{3,20}",
+				"gameserver.name.forbidden.sequences", "admin,gm",
+				"gameserver.name.forbidden.enable.client", "false",
+				"gameserver.name.forbidden.client", "badword"
+			)));
+
+			NameConfig config = new NameConfig();
+			Binder.get(environment).bind("gameserver", Bindable.ofInstance(config));
+
+			assertTrue(NameConfig.ALLOW_CUSTOM_NAMES);
+			assertEquals("[a-zA-Z0-9]{3,20}", NameConfig.CHAR_NAME_PATTERN.pattern());
+			assertEquals("admin,gm", NameConfig.NAME_SEQUENCE_FORBIDDEN);
+			assertFalse(NameConfig.NAME_FORBIDDEN_ENABLE);
+			assertEquals("badword", NameConfig.NAME_FORBIDDEN_CLIENT);
+		} finally {
+			snapshot.restore();
+		}
+	}
+
+	@Test
+	void bindsAbyssLandingConfigProperties() {
+		ConfigSnapshot snapshot = ConfigSnapshot.of(AbyssLandingConfig.class,
+			"ABYSS_LANDING_QUEST_RESET_ENABLED", "ABYSS_LANDING_POINTS_RESET_ENABLED",
+			"ABYSS_LANDING_QUEST_RESET_TIME", "ABYSS_LANDING_POINTS_RESET_TIME",
+			"ABYSS_LANDING_QUEST_RATE");
+		try {
+			StandardEnvironment environment = new StandardEnvironment();
+			environment.getPropertySources().addFirst(new MapPropertySource("test", Map.of(
+				"gameserver.landing.quest.reset.enable", "false",
+				"gameserver.landing.points.reset.enable", "false",
+				"gameserver.landing.quest.reset.time", "0 0 18 ? * FRI *",
+				"gameserver.landing.points.reset.time", "0 0 1 ? * TUE *",
+				"gameserver.landing.quest.rate", "3"
+			)));
+
+			AbyssLandingConfig config = new AbyssLandingConfig();
+			Binder.get(environment).bind("gameserver", Bindable.ofInstance(config));
+
+			assertFalse(AbyssLandingConfig.ABYSS_LANDING_QUEST_RESET_ENABLED);
+			assertFalse(AbyssLandingConfig.ABYSS_LANDING_POINTS_RESET_ENABLED);
+			assertEquals("0 0 18 ? * FRI *", AbyssLandingConfig.ABYSS_LANDING_QUEST_RESET_TIME);
+			assertEquals("0 0 1 ? * TUE *", AbyssLandingConfig.ABYSS_LANDING_POINTS_RESET_TIME);
+			assertEquals(3, AbyssLandingConfig.ABYSS_LANDING_QUEST_RATE);
+		} finally {
+			snapshot.restore();
+		}
+	}
+
+	@Test
+	void bindsPanelConfigProperties() {
+		ConfigSnapshot snapshot = ConfigSnapshot.of(PanelConfig.class,
+			"SKILL_PANEL_LEVEL", "DELQUEST_PANEL_LEVEL", "ENDQUEST_PANEL_LEVEL",
+			"GIVETITLE_PANEL_LEVEL", "STARTQUEST_PANEL_LEVEL");
+		try {
+			StandardEnvironment environment = new StandardEnvironment();
+			environment.getPropertySources().addFirst(new MapPropertySource("test", Map.of(
+				"gameserver.administration.skilpanel", "5",
+				"gameserver.administration.delquestpanel", "4",
+				"gameserver.administration.endquestpanel", "4",
+				"gameserver.administration.givetitlepanel", "5",
+				"gameserver.administration.startquestpanel", "5"
+			)));
+
+			PanelConfig config = new PanelConfig();
+			Binder.get(environment).bind("gameserver", Bindable.ofInstance(config));
+
+			assertEquals(5, PanelConfig.SKILL_PANEL_LEVEL);
+			assertEquals(4, PanelConfig.DELQUEST_PANEL_LEVEL);
+			assertEquals(4, PanelConfig.ENDQUEST_PANEL_LEVEL);
+			assertEquals(5, PanelConfig.GIVETITLE_PANEL_LEVEL);
+			assertEquals(5, PanelConfig.STARTQUEST_PANEL_LEVEL);
+		} finally {
+			snapshot.restore();
+		}
+	}
+
+	@Test
+	void bindsDeveloperConfigProperties() {
+		ConfigSnapshot snapshot = ConfigSnapshot.of(DeveloperConfig.class,
+			"SPAWN_ENABLE", "SPAWN_CHECK", "ITEM_STAT_ID", "SHOW_PACKETS",
+			"SHOW_PACKET_NAMES_INCHAT", "SHOW_PACKET_BYTES_INCHAT", "TOTAL_PACKET_BYTES_INCHAT",
+			"FILTERED_PACKETS_INCHAT", "SHOW_PACKETS_INCHAT_ACCESSLEVEL");
+		try {
+			StandardEnvironment environment = new StandardEnvironment();
+			environment.getPropertySources().addFirst(new MapPropertySource("test", Map.of(
+				"gameserver.developer.spawn.enable", "false",
+				"gameserver.developer.spawn.check", "true",
+				"gameserver.developer.itemstat.id", "123",
+				"gameserver.developer.showpackets.enable", "true",
+				"gameserver.developer.show.packetnames.inchat.enable", "true",
+				"gameserver.developer.show.packetbytes.inchat.enable", "true",
+				"gameserver.developer.show.packetbytes.inchat.total", "500",
+				"gameserver.developer.filter.packets.inchat", "SM_MOVE",
+				"gameserver.developer.show.packets.inchat.accesslevel", "3"
+			)));
+
+			DeveloperConfig config = new DeveloperConfig();
+			Binder.get(environment).bind("gameserver", Bindable.ofInstance(config));
+
+			assertFalse(DeveloperConfig.SPAWN_ENABLE);
+			assertTrue(DeveloperConfig.SPAWN_CHECK);
+			assertEquals(123, DeveloperConfig.ITEM_STAT_ID);
+			assertTrue(DeveloperConfig.SHOW_PACKETS);
+			assertTrue(DeveloperConfig.SHOW_PACKET_NAMES_INCHAT);
+			assertTrue(DeveloperConfig.SHOW_PACKET_BYTES_INCHAT);
+			assertEquals(500, DeveloperConfig.TOTAL_PACKET_BYTES_INCHAT);
+			assertEquals("SM_MOVE", DeveloperConfig.FILTERED_PACKETS_INCHAT);
+			assertEquals(3, DeveloperConfig.SHOW_PACKETS_INCHAT_ACCESSLEVEL);
 		} finally {
 			snapshot.restore();
 		}

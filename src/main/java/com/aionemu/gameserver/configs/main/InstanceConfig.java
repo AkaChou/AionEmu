@@ -5,12 +5,19 @@ import java.util.Collections;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.stereotype.Component;
+
 import com.aionemu.commons.configuration.Property;
 
+import lombok.Getter;
+
 /**
- * 副本冷却、销毁与缩放相关配置。
- * Instance cooldown, destroy delay and scaling related configuration.
+ * 副本冷却、销毁与缩放相关配置，支持 Spring Boot ConfigurationProperties 与静态门面访问。
+ * Instance cooldown, destroy delay and scaling related configuration supporting Spring Boot ConfigurationProperties and static facade access.
  */
+@Component
+@ConfigurationProperties(prefix = "gameserver")
 public class InstanceConfig {
 
 	/**
@@ -81,6 +88,11 @@ public class InstanceConfig {
 	 */
 	private static Set<Integer> scalingExclusions = Collections.emptySet();
 
+	@Getter
+	private final InstancesProperties instances = new InstancesProperties();
+	@Getter
+	private final InstanceProperties instance = new InstanceProperties();
+
 	/**
 	 * 校验配置并刷新排除地图集合。
 	 * Validates config values and refreshes exclusion map sets.
@@ -125,5 +137,88 @@ public class InstanceConfig {
 				.filter(id -> !id.isEmpty() && !id.equals("0"))
 				.map(Integer::valueOf)
 				.collect(Collectors.toUnmodifiableSet());
+	}
+
+	@Getter
+	public static class InstancesProperties {
+		private final CooldownProperties cooldown = new CooldownProperties();
+
+		public static class CooldownProperties {
+			public int getRate() {
+				return COOLDOWN_RATE;
+			}
+
+			public void setRate(int rate) {
+				COOLDOWN_RATE = rate;
+			}
+
+			public String getFilter() {
+				return cooldownExcludedMaps;
+			}
+
+			public void setFilter(String filter) {
+				cooldownExcludedMaps = filter;
+				refresh();
+			}
+		}
+	}
+
+	@Getter
+	public static class InstanceProperties {
+		private final SoloProperties solo = new SoloProperties();
+		private final ScalingProperties scaling = new ScalingProperties();
+
+		public int getDestroyDelaySeconds() {
+			return DESTROY_DELAY_SECONDS;
+		}
+
+		public void setDestroyDelaySeconds(int destroyDelaySeconds) {
+			DESTROY_DELAY_SECONDS = destroyDelaySeconds;
+		}
+
+		public static class SoloProperties {
+			public int getDestroyDelaySeconds() {
+				return SOLO_DESTROY_DELAY_SECONDS;
+			}
+
+			public void setDestroyDelaySeconds(int destroyDelaySeconds) {
+				SOLO_DESTROY_DELAY_SECONDS = destroyDelaySeconds;
+			}
+		}
+
+		public static class ScalingProperties {
+			public boolean isEnable() {
+				return SCALING_ENABLE;
+			}
+
+			public void setEnable(boolean enable) {
+				SCALING_ENABLE = enable;
+			}
+
+			public float getHpFloor() {
+				return SCALING_HP_FLOOR;
+			}
+
+			public void setHpFloor(float hpFloor) {
+				SCALING_HP_FLOOR = hpFloor;
+			}
+
+			public float getDmgFloor() {
+				return SCALING_DMG_FLOOR;
+			}
+
+			public void setDmgFloor(float dmgFloor) {
+				SCALING_DMG_FLOOR = dmgFloor;
+			}
+
+			public String getExcludedMaps() {
+				return scalingExcludedMaps;
+			}
+
+			public void setExcludedMaps(String excludedMaps) {
+				scalingExcludedMaps = excludedMaps;
+				refresh();
+			}
+		}
 	}
 }

@@ -1,11 +1,18 @@
 package com.aionemu.gameserver.configs.administration;
 
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.stereotype.Component;
+
 import com.aionemu.commons.configuration.Property;
 
+import lombok.Getter;
+
 /**
- * 开发调试相关配置（刷怪、道具属性、封包显示等）。
- * Developer debugging configuration (spawns, item stats, packet display, etc.).
+ * 开发调试相关配置（刷怪、道具属性、封包显示等），支持 Spring Boot ConfigurationProperties 与静态门面访问。
+ * Developer debugging configuration (spawns, item stats, packet display, etc.) supporting Spring Boot ConfigurationProperties and static facade access.
  */
+@Component
+@ConfigurationProperties(prefix = "gameserver")
 public class DeveloperConfig {
 
 	/**
@@ -70,4 +77,129 @@ public class DeveloperConfig {
 	 */
 	@Property(key = "gameserver.developer.show.packets.inchat.accesslevel", defaultValue = "6")
 	public static int SHOW_PACKETS_INCHAT_ACCESSLEVEL;
+
+	@Getter
+	private final DeveloperProperties developer = new DeveloperProperties();
+
+	@Getter
+	public static class DeveloperProperties {
+		private final SpawnProperties spawn = new SpawnProperties();
+		private final ItemstatProperties itemstat = new ItemstatProperties();
+		private final ShowpacketsProperties showpackets = new ShowpacketsProperties();
+		private final ShowProperties show = new ShowProperties();
+		private final FilterProperties filter = new FilterProperties();
+
+		public static class SpawnProperties {
+			public boolean isEnable() {
+				return SPAWN_ENABLE;
+			}
+
+			public void setEnable(boolean enable) {
+				SPAWN_ENABLE = enable;
+			}
+
+			public boolean isCheck() {
+				return SPAWN_CHECK;
+			}
+
+			public void setCheck(boolean check) {
+				SPAWN_CHECK = check;
+			}
+		}
+
+		public static class ItemstatProperties {
+			public int getId() {
+				return ITEM_STAT_ID;
+			}
+
+			public void setId(int id) {
+				ITEM_STAT_ID = id;
+			}
+		}
+
+		public static class ShowpacketsProperties {
+			public boolean isEnable() {
+				return SHOW_PACKETS;
+			}
+
+			public void setEnable(boolean enable) {
+				SHOW_PACKETS = enable;
+			}
+		}
+
+		@Getter
+		public static class ShowProperties {
+			private final PacketnamesProperties packetnames = new PacketnamesProperties();
+			private final PacketbytesProperties packetbytes = new PacketbytesProperties();
+			private final PacketsProperties packets = new PacketsProperties();
+
+			@Getter
+			public static class PacketnamesProperties {
+				private final InchatProperties inchat = new InchatProperties();
+
+				public static class InchatProperties {
+					public boolean isEnable() {
+						return SHOW_PACKET_NAMES_INCHAT;
+					}
+
+					public void setEnable(boolean enable) {
+						SHOW_PACKET_NAMES_INCHAT = enable;
+					}
+				}
+			}
+
+			@Getter
+			public static class PacketbytesProperties {
+				private final InchatProperties inchat = new InchatProperties();
+
+				public static class InchatProperties {
+					public boolean isEnable() {
+						return SHOW_PACKET_BYTES_INCHAT;
+					}
+
+					public void setEnable(boolean enable) {
+						SHOW_PACKET_BYTES_INCHAT = enable;
+					}
+
+					public int getTotal() {
+						return TOTAL_PACKET_BYTES_INCHAT;
+					}
+
+					public void setTotal(int total) {
+						TOTAL_PACKET_BYTES_INCHAT = total;
+					}
+				}
+			}
+
+			@Getter
+			public static class PacketsProperties {
+				private final InchatProperties inchat = new InchatProperties();
+
+				public static class InchatProperties {
+					public int getAccesslevel() {
+						return SHOW_PACKETS_INCHAT_ACCESSLEVEL;
+					}
+
+					public void setAccesslevel(int accesslevel) {
+						SHOW_PACKETS_INCHAT_ACCESSLEVEL = accesslevel;
+					}
+				}
+			}
+		}
+
+		@Getter
+		public static class FilterProperties {
+			private final PacketsProperties packets = new PacketsProperties();
+
+			public static class PacketsProperties {
+				public String getInchat() {
+					return FILTERED_PACKETS_INCHAT;
+				}
+
+				public void setInchat(String inchat) {
+					FILTERED_PACKETS_INCHAT = inchat;
+				}
+			}
+		}
+	}
 }
