@@ -86,7 +86,7 @@ public class CM_EQUIPMENT_SETTING_USE extends AionClientPacket {
 
         @Override
         public boolean unEquipItem(int itemObjectId, long slot) {
-            return equipment.unEquipItem(itemObjectId, slot) != null;
+            return equipment.unEquipItem(itemObjectId) != null;
         }
 
         @Override

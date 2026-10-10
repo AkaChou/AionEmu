@@ -926,7 +926,7 @@ public class Item extends AionObject implements IExpirable, StatOwner {
 			return;
 		}
 		if (isEquipped()) {
-			player.getEquipment().unEquipItem(getObjectId(), getEquipmentSlot());
+			player.getEquipment().unEquipItem(getObjectId());
 		}
 
 		for (StorageType i : StorageType.values()) {

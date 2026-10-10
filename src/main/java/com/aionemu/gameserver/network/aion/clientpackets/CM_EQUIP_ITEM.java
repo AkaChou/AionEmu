@@ -60,7 +60,7 @@ public class CM_EQUIP_ITEM extends AionClientPacket {
 			resultItem = equipment.equipItem(itemUniqueId, slotRead);
 			break;
 		case 1:
-			resultItem = equipment.unEquipItem(itemUniqueId, slotRead);
+			resultItem = equipment.unEquipItem(itemUniqueId);
 			break;
 		case 2:
 			if (activePlayer.getController().hasTask(TaskId.ITEM_USE)

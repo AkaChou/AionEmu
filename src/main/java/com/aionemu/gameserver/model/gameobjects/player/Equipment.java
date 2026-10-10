@@ -317,14 +317,14 @@ public class Equipment {
 	 * 收到 CM_EQUIP_ITEM（action=1）时调用。
 	 * Called when CM_EQUIP_ITEM packet arrives with action 1.
 	 */
-	public Item unEquipItem(int itemUniqueId, long slot) {
+	public Item unEquipItem(int itemUniqueId) {
 		return unEquipItem(itemUniqueId, false);
 	}
 
 	/**
 	 * Unequips while deferring stigma-list persistence to the caller-owned transaction.
 	 */
-	public Item unEquipItemInTransaction(int itemUniqueId, long slot) {
+	public Item unEquipItemInTransaction(int itemUniqueId) {
 		return unEquipItem(itemUniqueId, true);
 	}
 
@@ -832,19 +832,6 @@ public class Equipment {
 	}
 
 	/**
-	 * 返回 equipped items estima / Returns the equipped items estima
-	 */
-	public List<Item> getEquippedItemsEstima() {
-		List<Item> equippedItems = new ArrayList<>();
-		for (Item item : equipment.values()) {
-			if (ItemSlot.isEstisma(item.getEquipmentSlot())) {
-				equippedItems.add(item);
-			}
-		}
-		return equippedItems;
-	}
-
-	/**
 	 * @return 已装备的属于指定套装件的部件数 / Number of parts equipped belonging to requested itemset
 	 */
 	public int itemSetPartsEquipped(int itemSetTemplateId) {
@@ -1177,15 +1164,6 @@ public class Equipment {
 		setPersistentState(PersistentState.UPDATE_REQUIRED);
 	}
 
-	public boolean isWeaponEquipped(WeaponType weaponType) {
-		Item mainHand = equipment.get(ItemSlot.MAIN_HAND.getSlotIdMask());
-		if (mainHand != null && mainHand.getItemTemplate().getWeaponType() == weaponType) {
-			return true;
-		}
-		Item subHand = equipment.get(ItemSlot.SUB_HAND.getSlotIdMask());
-		return subHand != null && subHand.getItemTemplate().getWeaponType() == weaponType;
-	}
-
 	/**
 	 * 检查任意槽位组合中是否装备了两把单手武器。
 	 * Check whether two one-handed weapons are equipped in any slot combination.
@@ -1227,13 +1205,6 @@ public class Equipment {
 	 */
 	public boolean isSlotEquipped(long slot) {
 		return equipment.get(slot) != null;
-	}
-
-	/**
-	 * 返回 special stigma item slot / Returns the special stigma item slot
-	 */
-	public Item getSpecialStigmaItemSlot() {
-		return equipment.get(ItemSlot.STIGMA_SPECIAL.getSlotIdMask());
 	}
 
 	/**
@@ -1299,18 +1270,14 @@ public class Equipment {
 					}
 				};
 				player.getObserveController().attach(moveObserver);
-				player.getController().scheduleTask(TaskId.ITEM_USE, new Runnable() {
-					/** 运行 / run. */
-					@Override
-					public void run() {
-						player.getObserveController().removeObserver(moveObserver);
-						PacketSendUtility.broadcastPacket(player, new SM_ITEM_USAGE_ANIMATION(player.getObjectId(), item.getObjectId(), item.getItemId(), 0, 6), true);
-						PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_SOUL_BOUND_ITEM_SUCCEED(item.getNameId()));
-						item.setSoulBound(true);
-						ItemPacketService.updateItemAfterInfoChange(owner, item);
-						equip(slot, item);
-						PacketSendUtility.broadcastPacket(player, new SM_UPDATE_PLAYER_APPEARANCE(player.getObjectId(), getEquippedForApparence()), true);
-					}
+				player.getController().scheduleTask(TaskId.ITEM_USE, () -> {
+					player.getObserveController().removeObserver(moveObserver);
+					PacketSendUtility.broadcastPacket(player, new SM_ITEM_USAGE_ANIMATION(player.getObjectId(), item.getObjectId(), item.getItemId(), 0, 6), true);
+					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_SOUL_BOUND_ITEM_SUCCEED(item.getNameId()));
+					item.setSoulBound(true);
+					ItemPacketService.updateItemAfterInfoChange(owner, item);
+					equip(slot, item);
+					PacketSendUtility.broadcastPacket(player, new SM_UPDATE_PLAYER_APPEARANCE(player.getObjectId(), getEquippedForApparence()), true);
 				}, 5000);
 			}
 
@@ -1346,7 +1313,7 @@ public class Equipment {
 	public void checkRankLimitItems() {
 		for (Item item : getEquippedItems()) {
 			if (isRankInvalid(item)) {
-				if (unEquipItem(item.getObjectId(), item.getEquipmentSlot()) != null) {
+				if (unEquipItem(item.getObjectId()) != null) {
 					PacketSendUtility.sendPacket(owner, SM_SYSTEM_MESSAGE.STR_MSG_UNEQUIP_RANKITEM(item.getNameId()));
 				}
 			}

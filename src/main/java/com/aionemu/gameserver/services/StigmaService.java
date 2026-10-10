@@ -290,12 +290,12 @@ public class StigmaService {
 			if (item.getItemTemplate().isStigma()) {
 				if (!isPossibleEquippedStigma(player, item)) {
 					AuditLogger.info(player, "Possible client hack stigma count big :O");
-					player.getEquipment().unEquipItem(item.getObjectId(), 0);
+					player.getEquipment().unEquipItem(item.getObjectId());
 					continue;
 				}
 				Stigma stigmaInfo = item.getItemTemplate().getStigma();
 				if (stigmaInfo == null) {
-					player.getEquipment().unEquipItem(item.getObjectId(), 0);
+					player.getEquipment().unEquipItem(item.getObjectId());
 					continue;
 				}
 				int needSkill = stigmaInfo.getRequireSkill().size();
@@ -309,13 +309,12 @@ public class StigmaService {
 				}
 				if (needSkill != 0) {
 					AuditLogger.info(player, "Possible client hack advenced stigma skill.");
-					player.getEquipment().unEquipItem(item.getObjectId(), 0);
+					player.getEquipment().unEquipItem(item.getObjectId());
 					continue;
 				}
 				if (!item.getItemTemplate().isClassSpecific(player.getCommonData().getPlayerClass())) {
 					AuditLogger.info(player, "Possible client hack not valid for class.");
-					player.getEquipment().unEquipItem(item.getObjectId(), 0);
-					continue;
+					player.getEquipment().unEquipItem(item.getObjectId());
 				}
 			}
 		}

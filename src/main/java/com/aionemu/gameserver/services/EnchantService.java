@@ -461,7 +461,7 @@ public class EnchantService {
 				&& !EnchantItemRules.isArchdaevaRemodeledDanuar(targetItem) && !EnchantItemRules.isArchdaevaRestructuredDanuar(targetItem)
 				&& !EnchantItemRules.isGrayWolfAccessories(targetItem) && !EnchantItemRules.isEnhancedAncientFallusha(targetItem)) {
 				if (EnchantsConfig.ENABLE_ARCHDAEVA_ITEM_BROKE) {
-					player.getEquipment().unEquipItem(targetItem.getObjectId(), targetItem.getEquipmentSlot());
+					player.getEquipment().unEquipItem(targetItem.getObjectId());
 					if (targetItem.hasGodStone()) {
 						ItemService.addItem(player, targetItem.getGodStone().getItemId(), 1);
 						for (ManaStone manaStone : targetItem.getItemStones()) {

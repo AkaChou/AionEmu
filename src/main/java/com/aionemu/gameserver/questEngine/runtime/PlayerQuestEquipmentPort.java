@@ -76,7 +76,7 @@ public final class PlayerQuestEquipmentPort implements QuestEquipmentPort {
 		try {
 			for (QuestAction.UnequipItem unequip : unequips) {
 				for (Item item : List.copyOf(player.getEquipment().getEquippedItemsByItemId(unequip.itemId()))) {
-					if (player.getEquipment().unEquipItemInTransaction(item.getObjectId(), 0) == null) {
+					if (player.getEquipment().unEquipItemInTransaction(item.getObjectId()) == null) {
 						throw new SQLException("failed to unequip item " + unequip.itemId()
 							+ " for player " + snapshot.playerId());
 					}
