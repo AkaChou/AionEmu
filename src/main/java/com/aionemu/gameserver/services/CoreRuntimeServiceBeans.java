@@ -28,6 +28,7 @@ import com.aionemu.gameserver.dao.BlockListDAO;
 import com.aionemu.gameserver.dao.BrokerDAO;
 import com.aionemu.gameserver.dao.FriendListDAO;
 import com.aionemu.gameserver.dao.GuideDAO;
+import com.aionemu.gameserver.dao.HousesDAO;
 import com.aionemu.gameserver.dao.InventoryDAO;
 import com.aionemu.gameserver.dao.ItemStoneListDAO;
 import com.aionemu.gameserver.dao.LegionDAO;
@@ -213,8 +214,9 @@ public class CoreRuntimeServiceBeans {
 
     @Bean
     @Lazy
-    public HousingService housingService() {
-        return new HousingService();
+    public HousingService housingService(ObjectProvider<HousesDAO> housesDaoProvider) {
+        HousesDAO dao = housesDaoProvider.getIfAvailable();
+        return dao != null ? new HousingService(dao) : new HousingService();
     }
 
     @Bean
@@ -389,5 +391,12 @@ public class CoreRuntimeServiceBeans {
     public LimitedQuestService limitedQuestService(ObjectProvider<LimitedQuestDAO> daoProvider) {
         LimitedQuestDAO dao = daoProvider.getIfAvailable();
         return dao != null ? new LimitedQuestService(dao) : new LimitedQuestService();
+    }
+
+    @Bean
+    @Lazy
+    public ArmsfusionService armsfusionService(ObjectProvider<InventoryDAO> inventoryDaoProvider) {
+        InventoryDAO dao = inventoryDaoProvider.getIfAvailable();
+        return dao != null ? new ArmsfusionService(dao) : new ArmsfusionService();
     }
 }

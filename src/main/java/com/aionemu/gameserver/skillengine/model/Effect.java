@@ -35,7 +35,6 @@ import com.aionemu.gameserver.skillengine.effect.PetOrderUseUltraSkillEffect;
 import com.aionemu.gameserver.skillengine.effect.ProcAtkInstantEffect;
 import com.aionemu.gameserver.skillengine.effect.SanctuaryEffect;
 import com.aionemu.gameserver.skillengine.effect.SummonEffect;
-import com.aionemu.gameserver.skillengine.effect.TransformEffect;
 import com.aionemu.gameserver.skillengine.periodicaction.PeriodicAction;
 import com.aionemu.gameserver.skillengine.periodicaction.PeriodicActions;
 import com.aionemu.gameserver.utils.PacketSendUtility;
@@ -785,19 +784,6 @@ public class Effect implements StatOwner {
 	}
 
 	/**
-	 * 获取变身类型。
-	 * Gets transform type.
-	 */
-	public TransformType getTransformType() {
-		for (EffectTemplate et : skillTemplate.getEffects().getEffects()) {
-			if (et instanceof TransformEffect transformEffect) {
-				return transformEffect.getTransformType();
-			}
-		}
-		return TransformType.NONE;
-	}
-
-	/**
 	 * 设置强制效果标记。
 	 * Sets forced effect flag.
 	 */
@@ -1157,15 +1143,6 @@ public class Effect implements StatOwner {
 	}
 
 	/**
-	 * 获取成功效果列表（兼容原字段访问器）。
-	 * Gets the success effect list (compatibility accessor for the former generated getter).
-	 * @return 成功效果列表 / success effect list
-	 */
-	public List<EffectTemplate> getSuccessEffects() {
-		return successEffects.asList();
-	}
-
-	/**
 	 * 将全部效果标为成功。
 	 * Marks all effects as success.
 	 */
@@ -1272,16 +1249,6 @@ public class Effect implements StatOwner {
 	}
 
 	/**
-	 * 结束全部效果模板。
-	 * Ends all effect templates.
-	 */
-	public void endEffects() {
-		for (EffectTemplate template : successEffects) {
-			template.endEffect(this);
-		}
-	}
-
-	/**
 	 * 是否恐惧效果。
 	 * Whether fear effect.
 	 */
@@ -1334,14 +1301,6 @@ public class Effect implements StatOwner {
 	 */
 	public void setIsPhysicalState(boolean isPhysicalState) {
 		this.isPhysicalState = isPhysicalState;
-	}
-
-	/**
-	 * 设置魔法控制状态标记。
-	 * Sets magical state flag.
-	 */
-	public void setIsMagicalState(boolean isMagicalState) {
-		this.isMagicalState = isMagicalState;
 	}
 
 	/**

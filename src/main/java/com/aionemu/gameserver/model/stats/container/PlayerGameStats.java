@@ -158,8 +158,7 @@ public class PlayerGameStats extends CreatureGameStats<Player> {
 				base += offWeapon.getItemTemplate().getWeaponStats().getAttackSpeed() / 4;
 			}
 		}
-		Stat2 aSpeed = getStat(StatEnum.ATTACK_SPEED, base);
-		return aSpeed;
+		return getStat(StatEnum.ATTACK_SPEED, base);
 	}
 
 	/** 返回 b casting time / Returns the b casting time */
@@ -251,17 +250,14 @@ public class PlayerGameStats extends CreatureGameStats<Player> {
 	/** 返回 p def / Returns the p def */
 	@Override
 	public Stat2 getPDef() {
-		int base = 0;
+		int base = switch (owner.getPlayerClass().getClassId()) {
+			case 14 -> 100; // 枪炮星 / Gunslinger
+			case 13 -> 350; // 机甲星 / Aethertech
+			default -> 0;
+		};
 		Stat2 stats = getStat(StatEnum.PHYSICAL_DEFENSE, base);
 		int HSTR = owner.getGameStats().getStat(StatEnum.HSTR, 0).getCurrent();
 		int phyDefCalculation = Math.round(3440 * HSTR / (135.0F + HSTR));
-		int gunslinger = owner.getPlayerClass().getClassId();
-		int aethertech = owner.getPlayerClass().getClassId();
-		if (gunslinger == 14) {
-			base = 100;
-		} else if (aethertech == 13) {
-			base = 350;
-		}
 		stats.addToBonus(phyDefCalculation);
 		return stats;
 	}
@@ -344,7 +340,7 @@ public class PlayerGameStats extends CreatureGameStats<Player> {
 		Item offHandWeapon = equipment.getOffHandWeapon();
 		if (mainHandWeapon != null) {
 			base = mainHandWeapon.getItemTemplate().getWeaponStats().getAttackRange();
-			if (!mainHandWeapon.getItemTemplate().isTwoHandWeapon() && mainHandWeapon != null && offHandWeapon != null
+			if (!mainHandWeapon.getItemTemplate().isTwoHandWeapon() && offHandWeapon != null
 					&& offHandWeapon.getItemTemplate().getArmorType() != ArmorType.SHIELD) {
 				if (mainHandWeapon.getItemTemplate().getWeaponStats().getAttackRange() != offHandWeapon
 						.getItemTemplate().getWeaponStats().getAttackRange()) {
@@ -373,12 +369,9 @@ public class PlayerGameStats extends CreatureGameStats<Player> {
 							&& offHandWeapon.getItemTemplate().getWeaponType() == WeaponType.MACE_1H) {
 						base = 1500;
 					} else {
-						if (mainHandWeapon != null && offHandWeapon != null
-								&& offHandWeapon.getItemTemplate().getArmorType() != ArmorType.SHIELD) {
-							base = mainHandWeapon.getItemTemplate().getWeaponStats().getAttackRange();
-							log.info(I18n.get("log.69a559ecbbb6", owner.getObjectId(), mainHandWeapon.getItemTemplate().getItemType(),
-									offHandWeapon.getItemTemplate().getItemType()));
-						}
+						base = mainHandWeapon.getItemTemplate().getWeaponStats().getAttackRange();
+						log.info(I18n.get("log.69a559ecbbb6", owner.getObjectId(), mainHandWeapon.getItemTemplate().getItemType(),
+								offHandWeapon.getItemTemplate().getItemType()));
 					}
 				}
 			}
@@ -662,13 +655,12 @@ public class PlayerGameStats extends CreatureGameStats<Player> {
 	/** 返回 off hand m attack / Returns the off hand m attack */
 	@Override
 	public Stat2 getOffHandMAttack(CalculationType... calculationTypes) {
-		float base = 0;
 		Equipment equipment = owner.getEquipment();
 		Item offHandWeapon = equipment.getOffHandWeapon();
 		if (offHandWeapon != null && offHandWeapon != equipment.getMainHandWeapon() && offHandWeapon.getItemTemplate().isWeapon()
 				&& offHandWeapon.getItemTemplate().getArmorType() != ArmorType.SHIELD) {
 			calculationTypes = ArrayUtils.add(calculationTypes, CalculationType.OFF_HAND);
-			base = offHandWeapon.getItemTemplate().getWeaponStats().getMeanDamage();
+			float base = offHandWeapon.getItemTemplate().getWeaponStats().getMeanDamage();
 			if (ArrayUtils.contains(calculationTypes, CalculationType.APPLY_POWER_SHARD_DAMAGE)) {
 				base += getPowerShardDamage(false, ArrayUtils.contains(calculationTypes, CalculationType.REMOVE_POWER_SHARD));
 			}
@@ -734,7 +726,7 @@ public class PlayerGameStats extends CreatureGameStats<Player> {
 		if (owner.isInState(CreatureState.RESTING)) {
 			base *= 8;
 		}
-		base *= getHealth().getCurrent() / 100f;
+		base = (int) (base * (getHealth().getCurrent() / 100f));
 		Stat2 stat = getStat(StatEnum.REGEN_HP, base);
 		int HVIT = owner.getGameStats().getStat(StatEnum.HVIT, 0).getCurrent();
 		int RegenHpCalculation = Math.round(316 * HVIT / (825.0F + HVIT));
@@ -749,7 +741,7 @@ public class PlayerGameStats extends CreatureGameStats<Player> {
 		if (owner.isInState(CreatureState.RESTING)) {
 			base *= 8;
 		}
-		base *= getWill().getCurrent() / 100f;
+		base = (int) (base * (getWill().getCurrent() / 100f));
 		Stat2 stat = getStat(StatEnum.REGEN_MP, base);
 		int HWIL = owner.getGameStats().getStat(StatEnum.HWIL, 0).getCurrent();
 		int RegenMpCalculation = Math.round(158 * HWIL / (825.0F + HWIL));

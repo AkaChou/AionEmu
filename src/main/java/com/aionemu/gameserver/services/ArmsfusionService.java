@@ -12,6 +12,8 @@ import com.aionemu.gameserver.services.item.ItemPacketService;
 import com.aionemu.gameserver.services.item.ItemSocketService;
 import com.aionemu.gameserver.services.trade.PricesService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -19,7 +21,39 @@ import lombok.extern.slf4j.Slf4j;
  * Arms fusion service handling two-handed weapon compound and decompound.
  */
 @Slf4j
+@RequiredArgsConstructor
 public class ArmsfusionService {
+
+	private static volatile ArmsfusionService instance;
+	@NonNull
+	private final InventoryDAO inventoryDAO;
+
+	public ArmsfusionService() {
+		this(safeDao(InventoryDAO.class, com.aionemu.gameserver.dao.impl.InventoryDAO::new));
+	}
+
+	private static <T extends com.aionemu.commons.database.dao.DAO> T safeDao(Class<T> daoClass, java.util.function.Supplier<T> fallback) {
+		if (DAOManager.isInitialized()) {
+			try {
+				return DAOManager.getDAO(daoClass);
+			} catch (Exception ignored) {
+			}
+		}
+		return fallback.get();
+	}
+
+	public static ArmsfusionService getInstance() {
+		ArmsfusionService current = instance;
+		if (current == null) {
+			synchronized (ArmsfusionService.class) {
+				current = instance;
+				if (current == null) {
+					current = instance = new ArmsfusionService();
+				}
+			}
+		}
+		return current;
+	}
 
 	/**
 	 * 将副武器属性融合到主武器上，并消耗副武器与基纳。
@@ -99,7 +133,7 @@ public class ArmsfusionService {
 		}
 		ItemSocketService.copyFusionStones(secondItem, firstItem);
 		firstItem.setPersistentState(PersistentState.UPDATE_REQUIRED);
-		DAOManager.getDAO(InventoryDAO.class).store(firstItem, player);
+		getInstance().inventoryDAO.store(firstItem, player);
 		if (!player.getInventory().decreaseByObjectId(secondItemUniqueId, 1))
 			return;
 		ItemPacketService.updateItemAfterInfoChange(player, firstItem);
@@ -147,7 +181,7 @@ public class ArmsfusionService {
 		}
 		weaponToBreak.setFusionedItem(null);
 		ItemSocketService.removeAllFusionStone(player, weaponToBreak);
-		DAOManager.getDAO(InventoryDAO.class).store(weaponToBreak, player);
+		getInstance().inventoryDAO.store(weaponToBreak, player);
 		ItemPacketService.updateItemAfterInfoChange(player, weaponToBreak);
 		PacketSendUtility.sendPacket(player,
 				SM_SYSTEM_MESSAGE.STR_COMPOUNDED_ITEM_DECOMPOUND_SUCCESS(weaponToBreak.getNameId()));

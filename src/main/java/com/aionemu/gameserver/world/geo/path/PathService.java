@@ -111,9 +111,9 @@ public final class PathService implements DisposableBean {
 
 	static int workerCount(int configured, int cpus) {
 		if (configured > 0) {
-			return Math.max(1, configured);
+			return configured;
 		}
-		return Math.max(1, Math.min(8, Math.max(1, cpus) / 2));
+		return Math.clamp(Math.max(1, cpus) / 2, 1, 8);
 	}
 
 	static int queueCapacity(int configured) {
@@ -381,7 +381,7 @@ public final class PathService implements DisposableBean {
 		// Resolve the world map once per search: getTerrainZ resolves geoData.getMap on every sample, so hoist
 		// it out of the lambda instead of paying a world-id lookup per terrain sample.
 		GeoMap map = GameWorldServices.geoService().getGeoMap(worldId);
-		return (x, y) -> map.getTerrainPathHeight(x, y);
+		return map::getTerrainPathHeight;
 	}
 
 	private boolean canMoveStraight(Creature owner, float x, float y, float z, WaterArea water, boolean spatial) {
@@ -646,10 +646,10 @@ public final class PathService implements DisposableBean {
 				case NO_PATH -> PathResultStatus.NO_PATH;
 				case FOUND -> PathResultStatus.FAILED;
 			};
-			case TimeoutException timeoutException -> PathResultStatus.TIMEOUT;
-			case QueueExpiredException queueExpiredException -> PathResultStatus.QUEUE_EXPIRED;
-			case RejectedExecutionException rejectedExecutionException -> PathResultStatus.REJECTED;
-			case CancellationException cancellationException -> PathResultStatus.CANCELLED;
+			case TimeoutException _ -> PathResultStatus.TIMEOUT;
+			case QueueExpiredException _ -> PathResultStatus.QUEUE_EXPIRED;
+			case RejectedExecutionException _ -> PathResultStatus.REJECTED;
+			case CancellationException _ -> PathResultStatus.CANCELLED;
 			default -> PathResultStatus.FAILED;
 		};
 	}
@@ -792,7 +792,6 @@ public final class PathService implements DisposableBean {
 			case NODE_LIMIT, INTERRUPTED ->
 				throw new IncompletePathSearchException(result.status(), result.processedNodes());
 			case NO_PATH, INVALID_POSITION -> null;
-			default -> throw new IllegalArgumentException();
 		};
 	}
 
@@ -1012,7 +1011,7 @@ public final class PathService implements DisposableBean {
 				return null;
 			}
 		}
-		result.remove(0);
+		result.removeFirst();
 		return result.toArray(float[][]::new);
 	}
 
@@ -1054,7 +1053,7 @@ public final class PathService implements DisposableBean {
 
 	static int waypointSkipIndex(float[] start, float[][] path, int lookahead, SegmentAllowed pathAllowed,
 			SegmentAllowed geoAllowed) {
-		int last = Math.min(Math.max(0, lookahead), path.length - 1);
+		int last = Math.clamp(lookahead, 0, path.length - 1);
 		for (int index = last; index > 0; index--) {
 			if (preservesGroundHeight(start, path, index)
 					&& pathAllowed.test(start, path[index]) && geoAllowed.test(start, path[index])) {
@@ -1092,7 +1091,7 @@ public final class PathService implements DisposableBean {
 			return false;
 		}
 		float amount = ((point[0] - from[0]) * dx + (point[1] - from[1]) * dy) / lengthSquared;
-		amount = Math.max(0, Math.min(1, amount));
+		amount = Math.clamp(amount, 0, 1);
 		float expectedZ = from[2] + (to[2] - from[2]) * amount;
 		return Math.abs(point[2] - expectedZ) <= MAX_GROUND_HEIGHT_DEVIATION;
 	}
@@ -1211,14 +1210,6 @@ public final class PathService implements DisposableBean {
 		private boolean allows(float x, float y, float z, float clearance) {
 			float surface = surfaceZ(x, y);
 			return Float.isFinite(surface) && z <= surface - clearance;
-		}
-
-		private boolean allowsSegment(float startX, float startY, float startZ, float endX, float endY, float endZ,
-				float clearance) {
-			if (volume != null) {
-				return volume.allowsSegment(startX, startY, startZ, endX, endY, endZ, clearance);
-			}
-			return startZ <= globalSurface - clearance && endZ <= globalSurface - clearance;
 		}
 	}
 

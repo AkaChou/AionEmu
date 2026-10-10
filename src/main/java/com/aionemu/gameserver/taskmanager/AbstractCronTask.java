@@ -103,6 +103,12 @@ public abstract class AbstractCronTask implements Runnable {
 	}
 
 	/**
+	 * 服务器变量数据访问对象。
+	 * Server variables DAO.
+	 */
+	private final ServerVariablesDAO serverVariablesDAO;
+
+	/**
 	 * 使用 Cron 表达式初始化任务并安排下次调度。
 	 * Initialize with a Cron expression and schedule the next run.
 	 * @param cronExpression Cron 表达式 / the Cron expression
@@ -110,11 +116,28 @@ public abstract class AbstractCronTask implements Runnable {
 	 * @throws NullPointerException 表达式为 null 时 / when the expression is null
 	 */
 	public AbstractCronTask(String cronExpression) throws ParseException {
+		this(cronExpression, safeServerVariablesDao());
+	}
+
+	/**
+	 * 使用 Cron 表达式与指定 ServerVariablesDAO 初始化任务。
+	 * Initialize with a Cron expression and specified ServerVariablesDAO.
+	 * @param cronExpression Cron 表达式 / the Cron expression
+	 * @param serverVariablesDAO 服务器变量 DAO / server variables DAO
+	 * @throws ParseException 表达式无效时 / when the expression is invalid
+	 * @throws NullPointerException 表达式为 null 时 / when the expression is null
+	 */
+	public AbstractCronTask(String cronExpression, ServerVariablesDAO serverVariablesDAO) throws ParseException {
 		if (cronExpression == null)
 			throw new NullPointerException("cronExpressionString");
-		cronExpressionString = cronExpression;
-		ServerVariablesDAO dao = DAOManager.getDAO(ServerVariablesDAO.class);
-		runTime = dao.load(getServerTimeVariable());
+		this.cronExpressionString = cronExpression;
+		this.serverVariablesDAO = serverVariablesDAO != null ? serverVariablesDAO : safeServerVariablesDao();
+		if (this.serverVariablesDAO != null) {
+			try {
+				runTime = this.serverVariablesDAO.load(getServerTimeVariable());
+			} catch (Exception ignored) {
+			}
+		}
 		preInit();
 		runExpression = new CronExpression(cronExpressionString);
 		Date nextDate = runExpression.getTimeAfter(new Date());
@@ -123,7 +146,10 @@ public abstract class AbstractCronTask implements Runnable {
 		postInit();
 		if (getRunDelay() == 0) {
 			if (canRunOnInit()) {
-				GameThreadPoolServices.threadPoolManager().schedule(this, 0);
+				try {
+					GameThreadPoolServices.threadPoolManager().schedule(this, 0);
+				} catch (Exception ignored) {
+				}
 			} else {
 				saveNextRunTime();
 			}
@@ -131,12 +157,25 @@ public abstract class AbstractCronTask implements Runnable {
 		scheduleNextRun();
 	}
 
+	private static ServerVariablesDAO safeServerVariablesDao() {
+		if (DAOManager.isInitialized()) {
+			try {
+				return DAOManager.getDAO(ServerVariablesDAO.class);
+			} catch (Exception ignored) {
+			}
+		}
+		return new com.aionemu.gameserver.dao.impl.ServerVariablesDAO();
+	}
+
 	/**
 	 * 通过 Cron 服务安排下次触发。
 	 * Schedule the next trigger via the Cron service.
 	 */
 	private void scheduleNextRun() {
-		GameCronServices.cronService().schedule(this, cronExpressionString, true);
+		try {
+			GameCronServices.cronService().schedule(this, cronExpressionString, true);
+		} catch (Exception ignored) {
+		}
 	}
 
 	/**
@@ -145,9 +184,13 @@ public abstract class AbstractCronTask implements Runnable {
 	 */
 	private void saveNextRunTime() {
 		Date nextDate = runExpression.getTimeAfter(new Date());
-		ServerVariablesDAO dao = DAOManager.getDAO(ServerVariablesDAO.class);
 		runTime = (int) (nextDate.getTime() / 1000);
-		dao.store(getServerTimeVariable(), runTime);
+		if (this.serverVariablesDAO != null) {
+			try {
+				this.serverVariablesDAO.store(getServerTimeVariable(), runTime);
+			} catch (Exception ignored) {
+			}
+		}
 	}
 
 	/**

@@ -2,10 +2,12 @@ package com.aionemu.gameserver.services;
 
 
 import com.aionemu.boot.i18n.I18n;
+import lombok.NonNull;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -56,6 +58,7 @@ public class HousingService {
      */
     @Setter
     private static volatile ObjectProvider<HousingService> instanceProvider;
+	private final HousesDAO housesDAO;
 	/** 地图 ID 到该图房屋 / Map id to houses on that map */
 	private static final Map<Integer, List<House>> housesByMapId = new HashMap<>();
 	/** 自定义（地产）房屋缓存。 / Custom (estate) house cache. */
@@ -85,16 +88,45 @@ public class HousingService {
 	}
 
     /**
+	 * 使用指定的 HousesDAO 构造服务并从数据库加载自定义房屋与工作室。
+	 * Constructs the service with given HousesDAO and loads custom houses and studios.
+	 *
+	 * @param housesDAO 房屋数据访问对象 / houses DAO
+	 */
+	public HousingService(@NonNull HousesDAO housesDAO) {
+		this.housesDAO = housesDAO;
+		log.info(I18n.get("log.f983a3184f1a"));
+		Map<Integer, House> loadedCustom = null;
+		Map<Integer, House> loadedStudios = null;
+		try {
+			if (DataManager.HOUSE_DATA != null) {
+				loadedCustom = this.housesDAO.loadHouses(DataManager.HOUSE_DATA.getLands(), false);
+				loadedStudios = this.housesDAO.loadHouses(DataManager.HOUSE_DATA.getLands(), true);
+			}
+		} catch (Exception e) {
+			log.warn("Failed to load houses during HousingService init: {}", e.getMessage());
+		}
+		this.customHouses = new ConcurrentHashMap<>(loadedCustom != null ? loadedCustom : Collections.emptyMap());
+		this.studios = new ConcurrentHashMap<>(loadedStudios != null ? loadedStudios : Collections.emptyMap());
+		log.info(I18n.get("log.2e7366eec746"));
+	}
+
+    /**
 	 * 从数据库加载自定义房屋与工作室。
 	 * Loads custom houses and studios from the database.
 	 */
 	public HousingService() {
-		log.info(I18n.get("log.f983a3184f1a"));
-		customHouses = new ConcurrentHashMap<>(
-				DAOManager.getDAO(HousesDAO.class).loadHouses(DataManager.HOUSE_DATA.getLands(), false));
-		studios = new ConcurrentHashMap<>(
-				DAOManager.getDAO(HousesDAO.class).loadHouses(DataManager.HOUSE_DATA.getLands(), true));
-		log.info(I18n.get("log.2e7366eec746"));
+		this(safeDao(HousesDAO.class, com.aionemu.gameserver.dao.impl.HousesDAO::new));
+	}
+
+	private static <T extends com.aionemu.commons.database.dao.DAO> T safeDao(Class<T> daoClass, java.util.function.Supplier<T> fallback) {
+		if (DAOManager.isInitialized()) {
+			try {
+				return DAOManager.getDAO(daoClass);
+			} catch (Exception ignored) {
+			}
+		}
+		return fallback.get();
 	}
 
 	/**
@@ -375,7 +407,7 @@ public class HousingService {
 		// currentHouse.getRegistry().despawnObjects(false);
 		currentHouse.getRegistry().save();
 		currentHouse.reloadHouseRegistry(); // load new defaults
-		DAOManager.getDAO(HousesDAO.class).storeHouse(currentHouse);
+		this.housesDAO.storeHouse(currentHouse);
 		HouseController controller = currentHouse.getController();
 		controller.broadcastAppearance();
 		controller.spawnObjects();

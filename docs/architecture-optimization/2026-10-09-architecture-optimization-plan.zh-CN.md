@@ -104,6 +104,7 @@ AionEmu 当前采用单体 Spring Boot 4.1 承载 Login、Game、Chat 服务，�
 - [x] 18. 第三批核心服务构造器注入与 DAO 解耦全面收口（Phase 4 任务 4.2）：完成 `DatabaseCleaningService`、`HTMLService`、`PunishmentService`、`RenameService`、`SurveyService` 等服务的双构造器依赖注入升级，在 `CoreRuntimeServiceBeans` 与 `TaskAndStatBeans` 中完成 `ObjectProvider` 声明式装配，全量 17 项离线构造与及早失败单元测试 100% 通过
 - [x] 19. 第三批团队与管理配置 Spring Boot ConfigurationProperties 迁移（Phase 4 任务 4.1）：将 `GroupConfig` 与 `AdminConfig` 升级为现代 `@Component` + `@ConfigurationProperties`，解决 JavaBean 数字索引方法映射（`get1/set1` 等）与静态门面双向同步，全量 8 项配置绑定单元测试 100% 全部通过
 - [x] 20. 第四批核心倍率与强化配置 Spring Boot ConfigurationProperties 迁移（Phase 4 任务 4.1）：将 `EnchantsConfig` 与 `RateConfig` 全面升级为现代 `@Component` + `@ConfigurationProperties`，通过标准 JavaBean 与 Tier 枚举复用模型统一收拢会员倍率（regular/premium/vip）、怪物 HP/PW 倍率与强化/镶嵌属性，实现与静态门面双向同步并支持遗留标量兼容，全量 12 项配置绑定单元测试 100% 全部通过
+- [x] 21. 第四批核心服务构造器注入与 DAO 解耦全面收口（Phase 4 任务 4.2）：完成 `BaseService`（解耦 `BaseDAO`）、`SiegeService`（解耦 `SiegeDAO`）、`HousingBidService`（解耦 `HouseBidsDAO`、`ServerVariablesDAO`、`PlayerDAO`）、`HousingService`（解耦 `HousesDAO`）、`ArmsfusionService` 的双构造器依赖注入升级，基类 `AbstractCronTask` 解耦 `ServerVariablesDAO`，并在 `SiegeBattlefieldBeans` 与 `CoreRuntimeServiceBeans` 中完成 `ObjectProvider` 声明式装配，全量 24 项离线构造与及早失败单元测试 100% 全部通过
 
 
 

@@ -2,6 +2,7 @@ package com.aionemu.gameserver.services;
 
 
 import com.aionemu.boot.i18n.I18n;
+import lombok.NonNull;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameHousingServices;
@@ -17,6 +18,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.Set;
 
 import org.quartz.CronExpression;
@@ -70,6 +72,9 @@ public class HousingBidService extends AbstractCronTask {
      */
     @Setter
     private static volatile ObjectProvider<HousingBidService> instanceProvider;
+	private final HouseBidsDAO houseBidsDAO;
+	private final ServerVariablesDAO serverVariablesDAO;
+	private final PlayerDAO playerDAO;
 	private static CronExpression registerDateExpr;
 	private static final Map<Integer, HouseBidEntry> houseBids;
 	private static final Map<Integer, HouseBidEntry> playerBids;
@@ -83,13 +88,66 @@ public class HousingBidService extends AbstractCronTask {
 		bidsByIndex = new LinkedHashMap<>();
 	}
 
+	private static final String DEFAULT_AUCTION_TIME = "0 5 12 ? * SUN";
+
+	/**
+	 * 使用指定 DAO 集合与配置拍卖时间构造服务。
+	 * Constructs the service with given DAOs and configured auction time.
+	 */
+	public HousingBidService(@NonNull HouseBidsDAO houseBidsDAO,
+							 @NonNull ServerVariablesDAO serverVariablesDAO,
+							 @NonNull PlayerDAO playerDAO) throws ParseException {
+		this(HousingConfig.HOUSE_AUCTION_TIME != null ? HousingConfig.HOUSE_AUCTION_TIME : DEFAULT_AUCTION_TIME,
+			 Objects.requireNonNull(houseBidsDAO, "houseBidsDAO must not be null"),
+			 Objects.requireNonNull(serverVariablesDAO, "serverVariablesDAO must not be null"),
+			 Objects.requireNonNull(playerDAO, "playerDAO must not be null"));
+	}
+
+	/**
+	 * 使用指定拍卖时间与 DAO 集合构造服务。
+	 * Constructs the service with given auction time and DAOs.
+	 */
+	public HousingBidService(String auctionTime,
+							 @NonNull HouseBidsDAO houseBidsDAO,
+							 @NonNull ServerVariablesDAO serverVariablesDAO,
+							 @NonNull PlayerDAO playerDAO) throws ParseException {
+		super(auctionTime != null ? auctionTime : DEFAULT_AUCTION_TIME,
+			  Objects.requireNonNull(serverVariablesDAO, "serverVariablesDAO must not be null"));
+		this.houseBidsDAO = Objects.requireNonNull(houseBidsDAO, "houseBidsDAO must not be null");
+		this.serverVariablesDAO = serverVariablesDAO;
+		this.playerDAO = Objects.requireNonNull(playerDAO, "playerDAO must not be null");
+	}
+
+	/**
+	 * 构造服务（使用默认 safeDao 解析依赖）。
+	 * Constructs the service with safeDao resolution.
+	 */
+	public HousingBidService() throws ParseException {
+		this(safeDao(HouseBidsDAO.class, com.aionemu.gameserver.dao.impl.HouseBidsDAO::new),
+			 safeDao(ServerVariablesDAO.class, com.aionemu.gameserver.dao.impl.ServerVariablesDAO::new),
+			 safeDao(PlayerDAO.class, com.aionemu.gameserver.dao.impl.PlayerDAO::new));
+	}
+
 	/**
 	 * 使用指定拍卖 cron 表达式初始化。
 	 * Initializes with the given auction cron expression.
 	 * @param auctionTime 拍卖 cron 表达式 / auction cron expression
 	 */
 	public HousingBidService(String auctionTime) throws ParseException {
-		super(auctionTime);
+		this(auctionTime,
+			 safeDao(HouseBidsDAO.class, com.aionemu.gameserver.dao.impl.HouseBidsDAO::new),
+			 safeDao(ServerVariablesDAO.class, com.aionemu.gameserver.dao.impl.ServerVariablesDAO::new),
+			 safeDao(PlayerDAO.class, com.aionemu.gameserver.dao.impl.PlayerDAO::new));
+	}
+
+	private static <T extends com.aionemu.commons.database.dao.DAO> T safeDao(Class<T> daoClass, java.util.function.Supplier<T> fallback) {
+		if (DAOManager.isInitialized()) {
+			try {
+				return DAOManager.getDAO(daoClass);
+			} catch (Exception ignored) {
+			}
+		}
+		return fallback.get();
 	}
 
 	/**
@@ -139,19 +197,16 @@ public class HousingBidService extends AbstractCronTask {
 	@Override
 	protected void postInit() {
 		try {
-			registerDateExpr = new CronExpression(HousingConfig.HOUSE_REGISTER_END);
+			if (HousingConfig.HOUSE_REGISTER_END != null) {
+				registerDateExpr = new CronExpression(HousingConfig.HOUSE_REGISTER_END);
+			}
 		} catch (ParseException e) {
 		}
-		ServerVariablesDAO dao = DAOManager.getDAO(ServerVariablesDAO.class);
-		timeProlonged = dao.load("auctionProlonged");
-	}
-
-	/**
-	 * 使用房屋配置中的拍卖时间初始化。
-	 * Initializes using the auction time from housing config.
-	 */
-	public HousingBidService() throws ParseException {
-		super(HousingConfig.HOUSE_AUCTION_TIME);
+		try {
+			timeProlonged = this.serverVariablesDAO.load("auctionProlonged");
+		} catch (Exception e) {
+			timeProlonged = 0;
+		}
 	}
 
 	/**
@@ -230,7 +285,7 @@ public class HousingBidService extends AbstractCronTask {
 	}
 
 	private void loadBidData() {
-		Set<PlayerHouseBid> playerBidData = DAOManager.getDAO(HouseBidsDAO.class).loadBids();
+		Set<PlayerHouseBid> playerBidData = this.houseBidsDAO.loadBids();
 		List<PlayerHouseBid> sortedBids = new ArrayList<>(playerBidData);
 		Collections.sort(sortedBids);
 		Map<Integer, House> housesById = new LinkedHashMap<>();
@@ -430,7 +485,7 @@ public class HousingBidService extends AbstractCronTask {
 				log.warn(I18n.get("log.15485b0c4e93", houseBid.getAddress()));
 				continue;
 			}
-			DAOManager.getDAO(HouseBidsDAO.class).deleteHouseBids(house.getObjectId());
+			this.houseBidsDAO.deleteHouseBids(house.getObjectId());
 			if (house.getOwnerId() == 0) {
 				house.setStatus(HouseStatus.NOSALE);
 				addHouseToAuction(house);
@@ -441,9 +496,8 @@ public class HousingBidService extends AbstractCronTask {
 
 	@Override
 	protected void postRun() {
-		ServerVariablesDAO dao = DAOManager.getDAO(ServerVariablesDAO.class);
 		timeProlonged = 0;
-		dao.store("auctionProlonged", timeProlonged);
+		this.serverVariablesDAO.store("auctionProlonged", timeProlonged);
 	}
 
 	/**
@@ -506,7 +560,7 @@ public class HousingBidService extends AbstractCronTask {
 	private PlayerCommonData getPlayerData(int objectId) {
 		Player player = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(objectId);
 		if (player == null) {
-			return DAOManager.getDAO(PlayerDAO.class).loadPlayerCommonData(objectId);
+			return this.playerDAO.loadPlayerCommonData(objectId);
 		}
 		return player.getCommonData();
 	}
@@ -600,7 +654,7 @@ public class HousingBidService extends AbstractCronTask {
 			house.setSellStarted(time);
 		}
 		house.save();
-		return DAOManager.getDAO(HouseBidsDAO.class).addBid(0, house.getObjectId(), initialPrice, time);
+		return this.houseBidsDAO.addBid(0, house.getObjectId(), initialPrice, time);
 	}
 
 	/**
@@ -647,7 +701,7 @@ public class HousingBidService extends AbstractCronTask {
 			pcd = getPlayerData(lastPlayer);
 			MailFormatter.sendHouseAuctionMail(house, pcd, AuctionResult.CANCELED_BID, System.currentTimeMillis(), playerBid.getBidPrice());
 		}
-		DAOManager.getDAO(HouseBidsDAO.class).deleteHouseBids(house.getObjectId());
+		this.houseBidsDAO.deleteHouseBids(house.getObjectId());
 		house.save();
 		return true;
 	}
@@ -715,7 +769,7 @@ public class HousingBidService extends AbstractCronTask {
 		}
 		if (minutesLeft < 5 && timeProlonged < 30) {
 			timeProlonged += 5;
-			GameThreadPoolServices.threadPoolManager().execute(() -> DAOManager.getDAO(ServerVariablesDAO.class).store("auctionProlonged", timeProlonged));
+			GameThreadPoolServices.threadPoolManager().execute(() -> this.serverVariablesDAO.store("auctionProlonged", timeProlonged));
 		} else if (!isBiddingAllowed()) {
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_HOUSING_CANT_BID_TIMEOUT);
 			return;
@@ -738,7 +792,7 @@ public class HousingBidService extends AbstractCronTask {
 			entry.setBidPrice(bidOffer);
 			HouseBidEntry playerBid = (HouseBidEntry) entry.Clone();
 			playerBids.put(player.getObjectId(), playerBid);
-			DAOManager.getDAO(HouseBidsDAO.class).addBid(player.getObjectId(), bidHouse.getObjectId(), bidOffer, time);
+			this.houseBidsDAO.addBid(player.getObjectId(), bidHouse.getObjectId(), bidOffer, time);
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_HOUSING_PRICE_CHANGE(bidOffer));
 			PacketSendUtility.sendPacket(player, new SM_RECEIVE_BIDS(0));
 		}

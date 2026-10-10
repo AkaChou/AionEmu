@@ -22,9 +22,13 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
 import com.aionemu.gameserver.dao.AbyssLandingDAO;
+import com.aionemu.gameserver.dao.BaseDAO;
 import com.aionemu.gameserver.dao.ChallengeTasksDAO;
+import com.aionemu.gameserver.dao.HouseBidsDAO;
 import com.aionemu.gameserver.dao.LegionMemberDAO;
 import com.aionemu.gameserver.dao.PlayerDAO;
+import com.aionemu.gameserver.dao.ServerVariablesDAO;
+import com.aionemu.gameserver.dao.SiegeDAO;
 import com.aionemu.gameserver.dao.TownDAO;
 
 /**
@@ -36,7 +40,15 @@ public class SiegeBattlefieldBeans {
 
     @Bean
     @Lazy
-    public HousingBidService housingBidService() throws ParseException {
+    public HousingBidService housingBidService(ObjectProvider<HouseBidsDAO> houseBidsDaoProvider,
+                                               ObjectProvider<ServerVariablesDAO> serverVariablesDaoProvider,
+                                               ObjectProvider<PlayerDAO> playerDaoProvider) throws ParseException {
+        HouseBidsDAO houseBidsDAO = houseBidsDaoProvider.getIfAvailable();
+        ServerVariablesDAO serverVariablesDAO = serverVariablesDaoProvider.getIfAvailable();
+        PlayerDAO playerDAO = playerDaoProvider.getIfAvailable();
+        if (houseBidsDAO != null && serverVariablesDAO != null && playerDAO != null) {
+            return new HousingBidService(houseBidsDAO, serverVariablesDAO, playerDAO);
+        }
         return new HousingBidService();
     }
 
@@ -167,14 +179,16 @@ public class SiegeBattlefieldBeans {
 
     @Bean
     @Lazy
-    public SiegeService siegeService() {
-        return new SiegeService();
+    public SiegeService siegeService(ObjectProvider<SiegeDAO> siegeDaoProvider) {
+        SiegeDAO dao = siegeDaoProvider.getIfAvailable();
+        return dao != null ? new SiegeService(dao) : new SiegeService();
     }
 
     @Bean
     @Lazy
-    public BaseService baseService() {
-        return new BaseService();
+    public BaseService baseService(ObjectProvider<BaseDAO> baseDaoProvider) {
+        BaseDAO dao = baseDaoProvider.getIfAvailable();
+        return dao != null ? new BaseService(dao) : new BaseService();
     }
 
     @Bean

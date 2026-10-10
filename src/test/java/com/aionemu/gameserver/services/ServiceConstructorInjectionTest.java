@@ -19,11 +19,14 @@ import org.springframework.jdbc.core.simple.JdbcClient;
 import com.aionemu.gameserver.dao.AbyssLandingDAO;
 import com.aionemu.gameserver.dao.AbyssRankDAO;
 import com.aionemu.gameserver.dao.AnnouncementsDAO;
+import com.aionemu.gameserver.dao.BaseDAO;
 import com.aionemu.gameserver.dao.BlockListDAO;
 import com.aionemu.gameserver.dao.BrokerDAO;
 import com.aionemu.gameserver.dao.ChallengeTasksDAO;
 import com.aionemu.gameserver.dao.FriendListDAO;
 import com.aionemu.gameserver.dao.GuideDAO;
+import com.aionemu.gameserver.dao.HouseBidsDAO;
+import com.aionemu.gameserver.dao.HousesDAO;
 import com.aionemu.gameserver.dao.InventoryDAO;
 import com.aionemu.gameserver.dao.ItemStoneListDAO;
 import com.aionemu.gameserver.dao.LegionDAO;
@@ -39,6 +42,8 @@ import com.aionemu.gameserver.dao.PlayerQuestListDAO;
 import com.aionemu.gameserver.dao.PlayerSkillListDAO;
 import com.aionemu.gameserver.dao.PlayerStigmasEquippedDAO;
 import com.aionemu.gameserver.dao.RewardServiceDAO;
+import com.aionemu.gameserver.dao.ServerVariablesDAO;
+import com.aionemu.gameserver.dao.SiegeDAO;
 import com.aionemu.gameserver.dao.SurveyControllerDAO;
 import com.aionemu.gameserver.dao.TownDAO;
 import com.aionemu.gameserver.model.Announcement;
@@ -430,6 +435,48 @@ class ServiceConstructorInjectionTest {
 		assertNotNull(service);
 	}
 
+	@Test
+	void baseServiceConstructsWithInjectedDao() {
+		JdbcClient client = createNoAccessJdbcClient();
+		BaseDAO dao = new com.aionemu.gameserver.dao.impl.BaseDAO(client);
+		BaseService service = new BaseService(dao);
+		assertNotNull(service);
+	}
+
+	@Test
+	void siegeServiceConstructsWithInjectedDao() {
+		JdbcClient client = createNoAccessJdbcClient();
+		SiegeDAO dao = new com.aionemu.gameserver.dao.impl.SiegeDAO(client);
+		SiegeService service = new SiegeService(dao);
+		assertNotNull(service);
+	}
+
+	@Test
+	void housingBidServiceConstructsWithInjectedDaos() throws Exception {
+		JdbcClient client = createNoAccessJdbcClient();
+		HouseBidsDAO houseBidsDAO = new com.aionemu.gameserver.dao.impl.HouseBidsDAO(client);
+		ServerVariablesDAO serverVariablesDAO = new com.aionemu.gameserver.dao.impl.ServerVariablesDAO(client);
+		PlayerDAO playerDAO = new com.aionemu.gameserver.dao.impl.PlayerDAO(client);
+		HousingBidService service = new HousingBidService(houseBidsDAO, serverVariablesDAO, playerDAO);
+		assertNotNull(service);
+	}
+
+	@Test
+	void housingServiceConstructsWithInjectedDao() {
+		JdbcClient client = createNoAccessJdbcClient();
+		HousesDAO dao = new com.aionemu.gameserver.dao.impl.HousesDAO(client);
+		HousingService service = new HousingService(dao);
+		assertNotNull(service);
+	}
+
+	@Test
+	void armsfusionServiceConstructsWithInjectedDao() {
+		JdbcClient client = createNoAccessJdbcClient();
+		InventoryDAO dao = new com.aionemu.gameserver.dao.impl.InventoryDAO(client);
+		ArmsfusionService service = new ArmsfusionService(dao);
+		assertNotNull(service);
+	}
+
 	private static JdbcClient createNoAccessJdbcClient() {
 		DataSource noAccessDataSource = (DataSource) java.lang.reflect.Proxy.newProxyInstance(
 			ServiceConstructorInjectionTest.class.getClassLoader(),
@@ -459,5 +506,10 @@ class ServiceConstructorInjectionTest {
 		assertThrows(NullPointerException.class, () -> new PeriodicSaveService(null, null, null, null, null, null, null));
 		assertThrows(NullPointerException.class, () -> new WebshopService(null));
 		assertThrows(NullPointerException.class, () -> new ChallengeTaskService(null, null, null, null));
+		assertThrows(NullPointerException.class, () -> new BaseService(null));
+		assertThrows(NullPointerException.class, () -> new SiegeService(null));
+		assertThrows(NullPointerException.class, () -> new HousingBidService(null, null, null));
+		assertThrows(NullPointerException.class, () -> new HousingService(null));
+		assertThrows(NullPointerException.class, () -> new ArmsfusionService(null));
 	}
 }

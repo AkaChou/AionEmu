@@ -1225,27 +1225,6 @@ public class TeleportService2 {
 	}
 
 	/**
-	 * 将玩家置于副本复活起点。
-	 * Places the player at the instance revive start point.
-	 *
-	 * @param player  玩家 / Player
-	 * @param worldId 世界 ID / World id
-	 */
-	public static void teleportInstanceStartPoint(Player player, int worldId) {
-		player.getController().onLeaveWorld();
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().despawn(player);
-		InstanceReviveStartPoints revivePoint = getReviveInstanceStartPoints(worldId);
-
-		if (revivePoint != null) {
-			teleportTo(player, worldId, worldId, revivePoint.getX(), revivePoint.getY(), revivePoint.getZ(), revivePoint.getH());
-		} else {
-			moveToBindLocation(player, false);
-		}
-
-		sendSpawnPacketsAndNotifyLegion(player);
-	}
-
-	/**
 	 * 切换玩家所在频道（同图不同实例线）。
 	 * Changes the player's channel (same map, different instance line).
 	 *

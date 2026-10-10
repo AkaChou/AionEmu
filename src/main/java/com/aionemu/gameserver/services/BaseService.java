@@ -1,6 +1,8 @@
 package com.aionemu.gameserver.services;
 
 import com.aionemu.boot.i18n.I18n;
+import lombok.NonNull;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameCronServices;
 
@@ -27,11 +29,41 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
  */
 @Slf4j
 public class BaseService {
+	@Setter
 	private static volatile ObjectProvider<BaseService> instanceProvider;
+	private final BaseDAO baseDAO;
 	/** 当前活跃据点实例。 / Currently active base instances. */
 	private final ConcurrentMap<Integer, Base<?>> active = new ConcurrentHashMap<>();
 	/** 据点位置映射。 / Base location map. */
 	private Map<Integer, BaseLocation> bases;
+
+	/**
+	 * 使用指定的 BaseDAO 构造据点服务。
+	 * Constructs the base service with the given BaseDAO.
+	 *
+	 * @param baseDAO 据点数据访问对象 / Base DAO
+	 */
+	public BaseService(@NonNull BaseDAO baseDAO) {
+		this.baseDAO = baseDAO;
+	}
+
+	/**
+	 * 构造据点服务。
+	 * Constructs the base service.
+	 */
+	public BaseService() {
+		this(safeDao(BaseDAO.class, com.aionemu.gameserver.dao.impl.BaseDAO::new));
+	}
+
+	private static <T extends com.aionemu.commons.database.dao.DAO> T safeDao(Class<T> daoClass, java.util.function.Supplier<T> fallback) {
+		if (DAOManager.isInitialized()) {
+			try {
+				return DAOManager.getDAO(daoClass);
+			} catch (Exception ignored) {
+			}
+		}
+		return fallback.get();
+	}
 
 	/**
 	 * 初始化据点位置数据并加载数据库状态。
@@ -39,7 +71,7 @@ public class BaseService {
 	 */
 	public void initBaseLocations() {
 		bases = DataManager.BASE_DATA.getBaseLocations();
-		DAOManager.getDAO(BaseDAO.class).loadBaseLocations(bases);
+		this.baseDAO.loadBaseLocations(bases);
 		log.info(I18n.get("log.e322faae29f4", bases.size()));
 	}
 
@@ -236,29 +268,23 @@ public class BaseService {
 	}
 
 	/**
-	 * 获取服务单例，优先走 Spring ObjectProvider。
-	 * Returns the service singleton, preferring Spring ObjectProvider when available.
-	 * service instance
+	 * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。
+	 * Returns the instance, which must be supplied by Spring.
+	 * <p>双源静态兜底已退役：缺少 provider 时直接 fail-fast，避免在容器之外静默创建第二套实例。
+	 * The legacy static fallback is retired: a missing provider now fails fast instead of silently
+	 * creating a second instance outside the container.</p>
+	 * @return 由 Spring 提供的实例 / the Spring-provided instance
+	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean / when no provider or bean is available
 	 */
 	public static BaseService getInstance() {
 		ObjectProvider<BaseService> provider = instanceProvider;
-		if (provider == null) {
-			return BaseServiceHolder.INSTANCE;
+		BaseService provided = provider == null ? null : provider.getIfAvailable();
+		if (provided == null) {
+			throw new IllegalStateException("BaseService 未由 Spring 提供："
+				+ (provider == null ? "instanceProvider 未注入" : "容器中不存在该 Bean")
+				+ "（静态兜底已退役，见 LegacySingletonFallbackAuditTest）");
 		}
-		return provider.getIfAvailable(() -> BaseServiceHolder.INSTANCE);
-	}
-
-	/**
-	 * 注入 Spring ObjectProvider 以覆盖默认单例。
-	 * Injects a Spring ObjectProvider to override the default singleton.
-	 * provider
-	 */
-	public static void setInstanceProvider(ObjectProvider<BaseService> instanceProvider) {
-		BaseService.instanceProvider = instanceProvider;
-	}
-
-	private static class BaseServiceHolder {
-		private static final BaseService INSTANCE = new BaseService();
+		return provided;
 	}
 
 	/**
@@ -267,6 +293,6 @@ public class BaseService {
 	 * DAO instance
 	 */
 	private BaseDAO getDAO() {
-		return DAOManager.getDAO(BaseDAO.class);
+		return this.baseDAO;
 	}
 }

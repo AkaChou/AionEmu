@@ -65,6 +65,8 @@ import com.aionemu.gameserver.world.WorldType;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import lombok.Getter;
+import lombok.NonNull;
+import lombok.Setter;
 
 /**
  * 攻城战服务，管理要塞/神器攻城、刷怪、计划与状态广播。
@@ -76,8 +78,10 @@ import lombok.Getter;
 public class SiegeService {
 
 	private static final String SIEGE_LOCATION_STATUS_BROADCAST_SCHEDULE = "0 0 * ? * *";
+	@Setter
 	private static volatile ObjectProvider<SiegeService> instanceProvider;
 	private static final SiegeService instance = new SiegeService();
+	private final SiegeDAO siegeDAO;
 	private final ConcurrentMap<Integer, Siege<?>> activeSieges = new ConcurrentHashMap<>();
 	private final List<Runnable> scheduledTasks = new ArrayList<>();
 	private SiegeSchedule siegeSchedule;
@@ -96,25 +100,42 @@ public class SiegeService {
 	private Map<Integer, SiegeLocation> locations;
 
 	/**
+	 * 使用指定的 SiegeDAO 构造攻城战服务。
+	 * Constructs the siege service with the given SiegeDAO.
+	 *
+	 * @param siegeDAO 攻城战数据访问对象 / Siege DAO
+	 */
+	public SiegeService(@NonNull SiegeDAO siegeDAO) {
+		this.siegeDAO = siegeDAO;
+	}
+
+	/**
+	 * 构造攻城战服务。
+	 * Constructs the siege service.
+	 */
+	public SiegeService() {
+		this(safeDao(SiegeDAO.class, com.aionemu.gameserver.dao.impl.SiegeDAO::new));
+	}
+
+	private static <T extends com.aionemu.commons.database.dao.DAO> T safeDao(Class<T> daoClass, java.util.function.Supplier<T> fallback) {
+		if (DAOManager.isInitialized()) {
+			try {
+				return DAOManager.getDAO(daoClass);
+			} catch (Exception ignored) {
+			}
+		}
+		return fallback.get();
+	}
+
+	/**
 	 * 获取服务单例（优先 Spring Provider）。
 	 * Returns the service singleton (prefers Spring provider).
 	 * service instance
 	 */
 	public static SiegeService getInstance() {
 		ObjectProvider<SiegeService> provider = instanceProvider;
-		if (provider == null) {
-			return instance;
-		}
-		return provider.getIfAvailable(() -> instance);
-	}
-
-	/**
-	 * 注入 Spring 的实例提供者。
-	 * Sets the Spring instance provider.
-	 * @param instanceProvider 实例提供者 / instance provider
-	 */
-	public static void setInstanceProvider(ObjectProvider<SiegeService> instanceProvider) {
-		SiegeService.instanceProvider = instanceProvider;
+		SiegeService provided = provider == null ? null : provider.getIfAvailable();
+		return provided != null ? provided : instance;
 	}
 
 	/**
@@ -130,7 +151,7 @@ public class SiegeService {
 			artifacts = DataManager.SIEGE_LOCATION_DATA.getArtifacts();
 			fortresses = DataManager.SIEGE_LOCATION_DATA.getFortress();
 			locations = DataManager.SIEGE_LOCATION_DATA.getSiegeLocations();
-			DAOManager.getDAO(SiegeDAO.class).loadSiegeLocations(locations);
+			this.siegeDAO.loadSiegeLocations(locations);
 			log.info(I18n.get("log.536ce47b586f", locations.size()));
 		} else {
 			artifacts = Collections.emptyMap();
