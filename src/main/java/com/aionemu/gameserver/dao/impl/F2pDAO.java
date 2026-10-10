@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.dao.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import java.util.Objects;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.simple.JdbcClient;
@@ -18,6 +20,7 @@ import lombok.extern.slf4j.Slf4j;
  * Updated for MySQL 8.
  */
 @Slf4j
+@Repository
 public class F2pDAO extends com.aionemu.gameserver.dao.F2pDAO {
 
     /** 插入更新 f2p SQL / Insert or update F2P SQL*/
@@ -34,6 +37,8 @@ public class F2pDAO extends com.aionemu.gameserver.dao.F2pDAO {
     public F2pDAO() {
         this(DatabaseFactory.getJdbcClient());
     }
+
+    @Autowired
 
     public F2pDAO(JdbcClient jdbcClient) {
         this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");

@@ -108,7 +108,7 @@ public abstract class PlayerEventsWindowDAO implements DAO {
 	 * Returns the unique class-name identifier of this DAO.
 	 * @return DAO 类名 / DAO class name
 	 */
-	public final String getClassName() {
+	public String getClassName() {
 		return PlayerEventsWindowDAO.class.getName();
 	}
 }

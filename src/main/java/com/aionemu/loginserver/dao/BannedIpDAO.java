@@ -81,7 +81,7 @@ public abstract class BannedIpDAO implements DAO {
      * Fully qualified class name
      */
     @Override
-    public final String getClassName() {
+    public String getClassName() {
         return BannedIpDAO.class.getName();
     }
 }

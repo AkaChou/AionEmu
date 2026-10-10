@@ -25,7 +25,7 @@ public abstract class TaskFromDBDAO implements DAO {
      * Fully qualified class name
      */
     @Override
-    public final String getClassName() {
+    public String getClassName() {
         return TaskFromDBDAO.class.getName();
     }
 }

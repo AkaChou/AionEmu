@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.dao.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -21,6 +23,7 @@ import lombok.extern.slf4j.Slf4j;
  * Updated for MySQL 8 - Fixed connection leaks.
  */
 @Slf4j
+@Repository
 public class AbyssSpecialLandingDAO extends com.aionemu.gameserver.dao.AbyssSpecialLandingDAO {
 
     /** 查询全部特殊登陆点 SQL / Select all special landing locations SQL*/
@@ -35,6 +38,8 @@ public class AbyssSpecialLandingDAO extends com.aionemu.gameserver.dao.AbyssSpec
     public AbyssSpecialLandingDAO() {
         this(DatabaseFactory.getJdbcClient());
     }
+
+    @Autowired
 
     public AbyssSpecialLandingDAO(JdbcClient jdbcClient) {
         this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");

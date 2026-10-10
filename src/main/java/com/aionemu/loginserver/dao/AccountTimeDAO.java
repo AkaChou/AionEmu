@@ -32,7 +32,7 @@ public abstract class AccountTimeDAO implements DAO {
      * Fully qualified class name
      */
     @Override
-    public final String getClassName() {
+    public String getClassName() {
         return AccountTimeDAO.class.getName();
     }
 }

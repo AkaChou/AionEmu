@@ -1,5 +1,7 @@
 package com.aionemu.loginserver.dao.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -21,6 +23,7 @@ import lombok.extern.slf4j.Slf4j;
  * @author Updated for MySQL 8
  */
 @Slf4j
+@Repository("loginTaskFromDBDAO")
 public class TaskFromDBDAO extends com.aionemu.loginserver.dao.TaskFromDBDAO {
 
     /** 查询全部任务 SQL / Select all tasks SQL*/
@@ -31,6 +34,8 @@ public class TaskFromDBDAO extends com.aionemu.loginserver.dao.TaskFromDBDAO {
     public TaskFromDBDAO() {
         this(DatabaseFactory.getJdbcClient());
     }
+
+    @Autowired
 
     public TaskFromDBDAO(JdbcClient jdbcClient) {
         this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");

@@ -16,7 +16,7 @@ public abstract class VipDAO implements DAO {
     public abstract boolean insertIfAbsent(int accountId, int level);
 
     @Override
-    public final String getClassName() {
+    public String getClassName() {
         return VipDAO.class.getName();
     }
 }

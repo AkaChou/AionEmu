@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.dao.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -21,6 +23,7 @@ import lombok.extern.slf4j.Slf4j;
  * @author xTz
  */
 @Slf4j
+@Repository
 public class InGameShopDAO extends com.aionemu.gameserver.dao.InGameShopDAO {
 
     /** 查询商店物品 SQL / Select shop items SQL */
@@ -37,6 +40,8 @@ public class InGameShopDAO extends com.aionemu.gameserver.dao.InGameShopDAO {
     public InGameShopDAO() {
         this(DatabaseFactory.getJdbcClient());
     }
+
+    @Autowired
 
     public InGameShopDAO(JdbcClient jdbcClient) {
         this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");

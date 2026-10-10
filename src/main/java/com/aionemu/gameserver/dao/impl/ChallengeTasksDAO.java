@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.dao.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -26,6 +28,7 @@ import lombok.extern.slf4j.Slf4j;
  * @author ViAl
  */
 @Slf4j
+@Repository
 public class ChallengeTasksDAO extends com.aionemu.gameserver.dao.ChallengeTasksDAO {
 
     /** 查询挑战任务 SQL / Select challenge tasks SQL*/
@@ -42,6 +45,8 @@ public class ChallengeTasksDAO extends com.aionemu.gameserver.dao.ChallengeTasks
     public ChallengeTasksDAO() {
         this(DatabaseFactory.getJdbcClient());
     }
+
+    @Autowired
 
     public ChallengeTasksDAO(JdbcClient jdbcClient) {
         this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");

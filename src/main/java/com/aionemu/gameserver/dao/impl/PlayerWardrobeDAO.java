@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.dao.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -22,6 +24,7 @@ import lombok.extern.slf4j.Slf4j;
  * @author Ranastic
  */
 @Slf4j
+@Repository
 public class PlayerWardrobeDAO extends com.aionemu.gameserver.dao.PlayerWardrobeDAO {
 
     /** 插入或更新衣柜条目 / Insert or update a wardrobe entry */
@@ -44,6 +47,8 @@ public class PlayerWardrobeDAO extends com.aionemu.gameserver.dao.PlayerWardrobe
     public PlayerWardrobeDAO() {
         this(DatabaseFactory.getJdbcClient());
     }
+
+    @Autowired
 
     public PlayerWardrobeDAO(JdbcClient jdbcClient) {
         this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");

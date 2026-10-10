@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.dao.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +22,7 @@ import lombok.extern.slf4j.Slf4j;
  * MySQL 8 implementation of AbyssLandingDAO using JdbcClient.
  */
 @Slf4j
+@Repository
 public class AbyssLandingDAO extends com.aionemu.gameserver.dao.AbyssLandingDAO {
 
     /** 查询全部登陆地点 SQL / Select all landing locations SQL*/
@@ -34,6 +37,8 @@ public class AbyssLandingDAO extends com.aionemu.gameserver.dao.AbyssLandingDAO 
     public AbyssLandingDAO() {
         this(DatabaseFactory.getJdbcClient());
     }
+
+    @Autowired
 
     public AbyssLandingDAO(JdbcClient jdbcClient) {
         this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");

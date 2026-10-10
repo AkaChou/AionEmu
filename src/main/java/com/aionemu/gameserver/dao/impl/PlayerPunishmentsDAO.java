@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.dao.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import java.util.Objects;
 
 import org.springframework.dao.DataAccessException;
@@ -20,6 +22,7 @@ import lombok.extern.slf4j.Slf4j;
  * @author lord_rex, Cura, nrg
  */
 @Slf4j
+@Repository
 public class PlayerPunishmentsDAO extends com.aionemu.gameserver.dao.PlayerPunishmentsDAO {
 
 	/** 查询惩罚 SQL / Select punishment SQL*/
@@ -36,6 +39,8 @@ public class PlayerPunishmentsDAO extends com.aionemu.gameserver.dao.PlayerPunis
 	public PlayerPunishmentsDAO() {
 		this(DatabaseFactory.getJdbcClient());
 	}
+
+	@Autowired
 
 	public PlayerPunishmentsDAO(JdbcClient jdbcClient) {
 		this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");

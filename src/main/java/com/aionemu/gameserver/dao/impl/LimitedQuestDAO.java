@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.dao.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -17,6 +19,7 @@ import lombok.extern.slf4j.Slf4j;
  * MySQL 8 implementation of LimitedQuestDAO using JdbcClient.
  */
 @Slf4j
+@Repository
 public class LimitedQuestDAO extends com.aionemu.gameserver.dao.LimitedQuestDAO {
 
 	static final String INITIALIZE_QUERY = "INSERT IGNORE INTO `limited_quest_counters` (`quest_id`, `remaining`) VALUES (?, ?)";
@@ -28,6 +31,8 @@ public class LimitedQuestDAO extends com.aionemu.gameserver.dao.LimitedQuestDAO 
 	public LimitedQuestDAO() {
 		this(DatabaseFactory.getJdbcClient());
 	}
+
+	@Autowired
 
 	public LimitedQuestDAO(JdbcClient jdbcClient) {
 		this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");

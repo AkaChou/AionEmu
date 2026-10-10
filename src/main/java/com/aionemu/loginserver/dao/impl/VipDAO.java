@@ -1,5 +1,7 @@
 package com.aionemu.loginserver.dao.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import java.util.Objects;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.simple.JdbcClient;
@@ -15,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
  * MySQL 8 account VIP persistence using JdbcClient.
  */
 @Slf4j
+@Repository
 public class VipDAO extends com.aionemu.loginserver.dao.VipDAO {
 
     static final String FIND_QUERY = "SELECT account_id, vip_level, vip_exp, expire_time "
@@ -29,6 +32,8 @@ public class VipDAO extends com.aionemu.loginserver.dao.VipDAO {
     public VipDAO() {
         this(DatabaseFactory.getJdbcClient());
     }
+
+    @Autowired
 
     public VipDAO(JdbcClient jdbcClient) {
         this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");

@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.dao.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import java.util.Objects;
 
 import org.springframework.dao.DataAccessException;
@@ -18,6 +20,7 @@ import lombok.extern.slf4j.Slf4j;
  * Updated for MySQL 8.
  */
 @Slf4j
+@Repository
 public class PlayerTransfoDAO extends PlayerTransformDAO {
 
     /** 插入或更新变形 SQL / Insert or update transform SQL */
@@ -34,6 +37,8 @@ public class PlayerTransfoDAO extends PlayerTransformDAO {
     public PlayerTransfoDAO() {
         this(DatabaseFactory.getJdbcClient());
     }
+
+    @Autowired
 
     public PlayerTransfoDAO(JdbcClient jdbcClient) {
         this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");

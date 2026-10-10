@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.dao.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -22,6 +24,7 @@ import lombok.extern.slf4j.Slf4j;
  * Updated for MySQL 8 - Fixed connection leaks.
  */
 @Slf4j
+@Repository
 public class PlayerCreativityPointsDAO extends com.aionemu.gameserver.dao.PlayerCreativityPointsDAO {
 
 	/** 插入或更新创意点 SQL / Insert or update CP SQL*/
@@ -40,6 +43,8 @@ public class PlayerCreativityPointsDAO extends com.aionemu.gameserver.dao.Player
 	public PlayerCreativityPointsDAO() {
 		this(DatabaseFactory.getJdbcClient());
 	}
+
+	@Autowired
 
 	public PlayerCreativityPointsDAO(JdbcClient jdbcClient) {
 		this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");

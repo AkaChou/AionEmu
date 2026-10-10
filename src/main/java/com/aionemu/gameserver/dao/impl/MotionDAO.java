@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.dao.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -21,6 +23,7 @@ import lombok.extern.slf4j.Slf4j;
  * @author MrPoke
  */
 @Slf4j
+@Repository
 public class MotionDAO extends com.aionemu.gameserver.dao.MotionDAO {
 
     /** 插入动作 SQL / Insert motion SQL*/
@@ -37,6 +40,8 @@ public class MotionDAO extends com.aionemu.gameserver.dao.MotionDAO {
     public MotionDAO() {
         this(DatabaseFactory.getJdbcClient());
     }
+
+    @Autowired
 
     public MotionDAO(JdbcClient jdbcClient) {
         this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");

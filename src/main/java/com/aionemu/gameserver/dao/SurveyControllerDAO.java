@@ -18,7 +18,7 @@ public abstract class SurveyControllerDAO implements DAO {
 	 * @return 完整类名 / fully qualified class name
 	 */
 	@Override
-	public final String getClassName() {
+	public String getClassName() {
 		return SurveyControllerDAO.class.getName();
 	}
 

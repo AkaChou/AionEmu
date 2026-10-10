@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.dao.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import java.util.Objects;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.simple.JdbcClient;
@@ -19,6 +21,7 @@ import lombok.extern.slf4j.Slf4j;
  * @author evilset
  */
 @Slf4j
+@Repository
 public class PlayerBindPointDAO extends com.aionemu.gameserver.dao.PlayerBindPointDAO {
 
 	/** Replace/upsert bind point SQL / Replace/upsert bind point SQL */
@@ -33,6 +36,8 @@ public class PlayerBindPointDAO extends com.aionemu.gameserver.dao.PlayerBindPoi
 	public PlayerBindPointDAO() {
 		this(DatabaseFactory.getJdbcClient());
 	}
+
+	@Autowired
 
 	public PlayerBindPointDAO(JdbcClient jdbcClient) {
 		this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");

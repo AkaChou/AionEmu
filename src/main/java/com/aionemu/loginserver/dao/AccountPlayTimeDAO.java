@@ -23,7 +23,7 @@ public abstract class AccountPlayTimeDAO implements DAO {
      * Returns unique class name for all implementations.
      * Fully qualified class name
      */
-    public final String getClassName() {
+    public String getClassName() {
         return AccountPlayTimeDAO.class.getName();
     }
 }

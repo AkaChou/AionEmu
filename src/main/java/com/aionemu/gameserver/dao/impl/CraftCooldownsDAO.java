@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.dao.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -21,6 +23,7 @@ import lombok.extern.slf4j.Slf4j;
  * @author synchro2
  */
 @Slf4j
+@Repository
 public class CraftCooldownsDAO extends com.aionemu.gameserver.dao.CraftCooldownsDAO {
 
     /** 插入更新制作冷却 SQL / Insert or update craft cooldown SQL*/
@@ -37,6 +40,8 @@ public class CraftCooldownsDAO extends com.aionemu.gameserver.dao.CraftCooldowns
     public CraftCooldownsDAO() {
         this(DatabaseFactory.getJdbcClient());
     }
+
+    @Autowired
 
     public CraftCooldownsDAO(JdbcClient jdbcClient) {
         this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");

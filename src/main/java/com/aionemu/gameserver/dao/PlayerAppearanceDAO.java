@@ -17,7 +17,7 @@ public abstract class PlayerAppearanceDAO implements DAO {
 	 * @return DAO 类名 / DAO class name
 	 */
 	@Override
-	public final String getClassName() {
+	public String getClassName() {
 		return PlayerAppearanceDAO.class.getName();
 	}
 
@@ -35,7 +35,7 @@ public abstract class PlayerAppearanceDAO implements DAO {
 	 * @param player 需要存储外观的玩家 / player whose appearance to store
 	 * @return 若 the SQL query was successful 则为 true / true if the SQL query was successful
 	 */
-	public final boolean store(Player player) {
+	public boolean store(Player player) {
 		return store(player.getObjectId(), player.getPlayerAppearance());
 	}
 

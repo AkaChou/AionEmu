@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.dao.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -33,6 +35,7 @@ import lombok.extern.slf4j.Slf4j;
  * MySQL 8 implementation of ItemStoneListDAO using JdbcClient.
  */
 @Slf4j
+@Repository
 public class ItemStoneListDAO extends com.aionemu.gameserver.dao.ItemStoneListDAO {
 
 	/**
@@ -78,6 +81,8 @@ public class ItemStoneListDAO extends com.aionemu.gameserver.dao.ItemStoneListDA
 	public ItemStoneListDAO() {
 		this(DatabaseFactory.getJdbcClient());
 	}
+
+	@Autowired
 
 	public ItemStoneListDAO(JdbcClient jdbcClient) {
 		this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");

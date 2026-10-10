@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.dao.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import java.util.Objects;
 
 import org.springframework.dao.DataAccessException;
@@ -16,6 +18,7 @@ import lombok.extern.slf4j.Slf4j;
  * Updated for MySQL 8 - Fixed connection leaks.
  */
 @Slf4j
+@Repository
 public class PlayerPasskeyDAO extends com.aionemu.gameserver.dao.PlayerPasskeyDAO {
 
     /** 插入二级密码 SQL / Insert passkey SQL*/
@@ -34,6 +37,8 @@ public class PlayerPasskeyDAO extends com.aionemu.gameserver.dao.PlayerPasskeyDA
     public PlayerPasskeyDAO() {
         this(DatabaseFactory.getJdbcClient());
     }
+
+    @Autowired
 
     public PlayerPasskeyDAO(JdbcClient jdbcClient) {
         this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");

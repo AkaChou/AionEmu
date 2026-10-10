@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.dao.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +26,7 @@ import lombok.extern.slf4j.Slf4j;
  * Updated for MySQL 8 - Fixed connection leaks
  */
 @Slf4j
+@Repository
 public class PlayerEventsWindowDAO extends com.aionemu.gameserver.dao.PlayerEventsWindowDAO {
 
     /** 按账号加载活动窗口 / Select event windows by account */
@@ -52,6 +55,8 @@ public class PlayerEventsWindowDAO extends com.aionemu.gameserver.dao.PlayerEven
     public PlayerEventsWindowDAO() {
         this(DatabaseFactory.getJdbcClient());
     }
+
+    @Autowired
 
     public PlayerEventsWindowDAO(JdbcClient jdbcClient) {
         this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");

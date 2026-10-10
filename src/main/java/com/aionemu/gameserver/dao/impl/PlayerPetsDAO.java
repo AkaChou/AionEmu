@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.dao.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +25,7 @@ import lombok.extern.slf4j.Slf4j;
  * @author M@xx, xTz, Rolandas
  */
 @Slf4j
+@Repository
 public class PlayerPetsDAO extends com.aionemu.gameserver.dao.PlayerPetsDAO {
 
     private static final String SAVE_FEED_STATUS_QUERY = "UPDATE player_pets SET hungry_level = ?, feed_progress = ?, reuse_time = ? WHERE player_id = ? AND pet_id = ?";
@@ -39,6 +42,8 @@ public class PlayerPetsDAO extends com.aionemu.gameserver.dao.PlayerPetsDAO {
     public PlayerPetsDAO() {
         this(DatabaseFactory.getJdbcClient());
     }
+
+    @Autowired
 
     public PlayerPetsDAO(JdbcClient jdbcClient) {
         this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");

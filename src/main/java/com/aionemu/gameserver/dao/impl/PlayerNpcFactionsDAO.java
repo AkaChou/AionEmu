@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.dao.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import java.util.Objects;
 
 import org.springframework.dao.DataAccessException;
@@ -22,6 +24,7 @@ import lombok.extern.slf4j.Slf4j;
  * @author MrPoke
  */
 @Slf4j
+@Repository
 public class PlayerNpcFactionsDAO extends com.aionemu.gameserver.dao.PlayerNpcFactionsDAO {
 
 	/** 查询 NPC 势力 SQL / Select NPC factions SQL*/
@@ -36,6 +39,8 @@ public class PlayerNpcFactionsDAO extends com.aionemu.gameserver.dao.PlayerNpcFa
 	public PlayerNpcFactionsDAO() {
 		this(DatabaseFactory.getJdbcClient());
 	}
+
+	@Autowired
 
 	public PlayerNpcFactionsDAO(JdbcClient jdbcClient) {
 		this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");

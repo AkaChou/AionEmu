@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.dao.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
@@ -20,6 +22,7 @@ import lombok.extern.slf4j.Slf4j;
  * @author Updated for MySQL 8
  */
 @Slf4j
+@Repository
 public class BaseDAO extends com.aionemu.gameserver.dao.BaseDAO {
 
     /** 查询全部基地位置 / Select all base locations */
@@ -36,6 +39,8 @@ public class BaseDAO extends com.aionemu.gameserver.dao.BaseDAO {
     public BaseDAO() {
         this(DatabaseFactory.getJdbcClient());
     }
+
+    @Autowired
 
     public BaseDAO(JdbcClient jdbcClient) {
         this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");

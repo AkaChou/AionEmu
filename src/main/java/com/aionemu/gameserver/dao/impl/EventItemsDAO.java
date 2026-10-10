@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.dao.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import java.util.Map;
 import java.util.Objects;
 
@@ -20,6 +22,7 @@ import lombok.extern.slf4j.Slf4j;
  * Updated for MySQL 8 - Fixed connection leaks.
  */
 @Slf4j
+@Repository
 public class EventItemsDAO extends com.aionemu.gameserver.dao.EventItemsDAO {
 
     /** 插入或更新活动物品数量 SQL / Insert or update event item counts SQL*/
@@ -36,6 +39,8 @@ public class EventItemsDAO extends com.aionemu.gameserver.dao.EventItemsDAO {
     public EventItemsDAO() {
         this(DatabaseFactory.getJdbcClient());
     }
+
+    @Autowired
 
     public EventItemsDAO(JdbcClient jdbcClient) {
         this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");

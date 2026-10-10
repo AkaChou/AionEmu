@@ -39,7 +39,7 @@ public abstract class PlayerTransferDAO implements DAO {
      * Fully qualified class name
      */
     @Override
-    public final String getClassName() {
+    public String getClassName() {
         return PlayerTransferDAO.class.getName();
     }
 }

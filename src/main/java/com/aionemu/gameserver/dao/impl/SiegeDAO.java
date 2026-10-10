@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.dao.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
@@ -20,6 +22,7 @@ import lombok.extern.slf4j.Slf4j;
  * Updated for MySQL 8.
  */
 @Slf4j
+@Repository
 public class SiegeDAO extends com.aionemu.gameserver.dao.SiegeDAO {
 
     /** 查询攻城地点 SQL / Select siege locations SQL*/
@@ -36,6 +39,8 @@ public class SiegeDAO extends com.aionemu.gameserver.dao.SiegeDAO {
     public SiegeDAO() {
         this(DatabaseFactory.getJdbcClient());
     }
+
+    @Autowired
 
     public SiegeDAO(JdbcClient jdbcClient) {
         this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");

@@ -19,7 +19,7 @@ public abstract class HouseBidsDAO implements DAO {
 	 * @return 类名 / class name
 	 */
 	@Override
-	public final String getClassName() {
+	public String getClassName() {
 		return HouseBidsDAO.class.getName();
 	}
 

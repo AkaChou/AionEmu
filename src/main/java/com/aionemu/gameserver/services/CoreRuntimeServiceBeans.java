@@ -18,9 +18,13 @@ import com.aionemu.gameserver.services.transfers.PlayerTransferService;
 import com.aionemu.gameserver.services.veteranreward.VeteranRewardsService;
 import com.aionemu.gameserver.taskmanager.TaskManagerFromDB;
 import com.aionemu.gameserver.utils.audit.GMService;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
+import com.aionemu.gameserver.dao.AnnouncementsDAO;
+import com.aionemu.gameserver.dao.InventoryDAO;
+import com.aionemu.gameserver.dao.PetitionDAO;
 
 /**
  * CoreRuntimeServiceBeans：从 GameLegacyServiceBridgeConfiguration 拆出的域内 Bean 装配。
@@ -61,8 +65,9 @@ public class CoreRuntimeServiceBeans {
 
     @Bean
     @Lazy
-    public AnnouncementService announcementService() {
-        return new AnnouncementService();
+    public AnnouncementService announcementService(ObjectProvider<AnnouncementsDAO> announcementsDaoProvider) {
+        AnnouncementsDAO dao = announcementsDaoProvider.getIfAvailable();
+        return dao != null ? new AnnouncementService(dao) : new AnnouncementService();
     }
 
     @Bean
@@ -91,14 +96,16 @@ public class CoreRuntimeServiceBeans {
 
     @Bean
     @Lazy
-    public ExchangeService exchangeService() {
-        return new ExchangeService();
+    public ExchangeService exchangeService(ObjectProvider<InventoryDAO> inventoryDaoProvider) {
+        InventoryDAO dao = inventoryDaoProvider.getIfAvailable();
+        return dao != null ? new ExchangeService(dao) : new ExchangeService();
     }
 
     @Bean
     @Lazy
-    public PetitionService petitionService() {
-        return new PetitionService();
+    public PetitionService petitionService(ObjectProvider<PetitionDAO> petitionDaoProvider) {
+        PetitionDAO dao = petitionDaoProvider.getIfAvailable();
+        return dao != null ? new PetitionService(dao) : new PetitionService();
     }
 
     @Bean

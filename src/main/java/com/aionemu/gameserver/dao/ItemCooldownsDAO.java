@@ -16,7 +16,7 @@ public abstract class ItemCooldownsDAO implements DAO {
 	 * @return 类名 / class name
 	 */
 	@Override
-	public final String getClassName() {
+	public String getClassName() {
 		return ItemCooldownsDAO.class.getName();
 	}
 

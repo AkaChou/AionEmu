@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.dao.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
@@ -24,6 +26,7 @@ import lombok.extern.slf4j.Slf4j;
  * @author ViAl, Updated for MySQL 8
  */
 @Slf4j
+@Repository
 public class TownDAO extends com.aionemu.gameserver.dao.TownDAO {
 
     /** 按阵营加载城镇 / Select towns by race */
@@ -42,6 +45,8 @@ public class TownDAO extends com.aionemu.gameserver.dao.TownDAO {
     public TownDAO() {
         this(DatabaseFactory.getJdbcClient());
     }
+
+    @Autowired
 
     public TownDAO(JdbcClient jdbcClient) {
         this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");

@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.dao.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import java.util.Objects;
 
 import org.springframework.dao.DataAccessException;
@@ -16,6 +18,7 @@ import lombok.extern.slf4j.Slf4j;
  * MySQL 8 implementation of PlayerAppearanceDAO using JdbcClient.
  */
 @Slf4j
+@Repository
 public class PlayerAppearanceDAO extends com.aionemu.gameserver.dao.PlayerAppearanceDAO {
 
     /** 按玩家 ID 查询外观 / Select appearance by player id */
@@ -28,6 +31,8 @@ public class PlayerAppearanceDAO extends com.aionemu.gameserver.dao.PlayerAppear
     public PlayerAppearanceDAO() {
         this(DatabaseFactory.getJdbcClient());
     }
+
+    @Autowired
 
     public PlayerAppearanceDAO(JdbcClient jdbcClient) {
         this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");

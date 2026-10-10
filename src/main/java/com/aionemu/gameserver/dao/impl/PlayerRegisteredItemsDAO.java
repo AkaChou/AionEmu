@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.dao.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -36,6 +38,7 @@ import lombok.extern.slf4j.Slf4j;
  * MySQL 8 implementation of PlayerRegisteredItemsDAO using JdbcClient.
  */
 @Slf4j
+@Repository
 public class PlayerRegisteredItemsDAO extends com.aionemu.gameserver.dao.PlayerRegisteredItemsDAO {
 
     /** 清理玩家全部注册物品 / Delete all registered items for a player */
@@ -64,6 +67,8 @@ public class PlayerRegisteredItemsDAO extends com.aionemu.gameserver.dao.PlayerR
     public PlayerRegisteredItemsDAO() {
         this(DatabaseFactory.getJdbcClient());
     }
+
+    @Autowired
 
     public PlayerRegisteredItemsDAO(JdbcClient jdbcClient) {
         this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");

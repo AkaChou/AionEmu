@@ -1,5 +1,7 @@
 package com.aionemu.loginserver.dao.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import java.sql.Timestamp;
 import java.util.HashSet;
 import java.util.Objects;
@@ -22,6 +24,7 @@ import lombok.extern.slf4j.Slf4j;
  * MySQL 8 BannedIpDAO implementation using JdbcClient.
  */
 @Slf4j
+@Repository
 public class BannedIpDAO extends com.aionemu.loginserver.dao.BannedIpDAO {
 
     private static final String INSERT_QUERY = "INSERT INTO banned_ip(mask, time_end) VALUES (?, ?)";
@@ -35,6 +38,8 @@ public class BannedIpDAO extends com.aionemu.loginserver.dao.BannedIpDAO {
     public BannedIpDAO() {
         this(DatabaseFactory.getJdbcClient());
     }
+
+    @Autowired
 
     public BannedIpDAO(JdbcClient jdbcClient) {
         this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");

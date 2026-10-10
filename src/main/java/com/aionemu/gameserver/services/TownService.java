@@ -22,6 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.ObjectProvider;
 
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * 城镇服务，加载/初始化阵营城镇并查询玩家所在城镇。
@@ -36,6 +37,7 @@ public class TownService {
 	 */
 	@Setter
 	private static volatile ObjectProvider<TownService> instanceProvider;
+	private final TownDAO townDAO;
 	private final Map<Integer, Town> elyosTowns;
 	private final Map<Integer, Town> asmosTowns;
 
@@ -62,12 +64,15 @@ public class TownService {
 	}
 
 	/**
-	 * 从数据库加载城镇；若为空则根据房屋地块初始化并持久化。
-	 * Loads towns from DB; if empty, initializes from housing lands and persists them.
+	 * 使用指定的 TownDAO 构造城镇服务。
+	 * Constructs the town service with the given TownDAO.
+	 *
+	 * @param townDAO 城镇数据访问对象 / town DAO
 	 */
-	public TownService() {
-		elyosTowns = DAOManager.getDAO(TownDAO.class).load(Race.ELYOS);
-		asmosTowns = DAOManager.getDAO(TownDAO.class).load(Race.ASMODIANS);
+	public TownService(TownDAO townDAO) {
+		this.townDAO = Objects.requireNonNull(townDAO, "townDAO must not be null");
+		this.elyosTowns = this.townDAO.load(Race.ELYOS);
+		this.asmosTowns = this.townDAO.load(Race.ASMODIANS);
 		if (elyosTowns.isEmpty() && asmosTowns.isEmpty()) {
 			for (HousingLand land : DataManager.HOUSE_DATA.getLands()) {
 				for (HouseAddress address : land.getAddresses()) {
@@ -78,7 +83,7 @@ public class TownService {
 						if (!raceTowns.containsKey(address.getTownId())) {
 							Town town = new Town(address.getTownId(), townRace);
 							raceTowns.put(town.getId(), town);
-							DAOManager.getDAO(TownDAO.class).store(town);
+							this.townDAO.store(town);
 						}
 					}
 				}
@@ -86,6 +91,14 @@ public class TownService {
 		}
 		log.info(I18n.get("log.e7c70a17528c", elyosTowns.size()));
 		log.info(I18n.get("log.2ede9f09c843", asmosTowns.size()));
+	}
+
+	/**
+	 * 从数据库加载城镇；若为空则根据房屋地块初始化并持久化。
+	 * Loads towns from DB; if empty, initializes from housing lands and persists them.
+	 */
+	public TownService() {
+		this(DAOManager.getDAO(TownDAO.class));
 	}
 
 	/**

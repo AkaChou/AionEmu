@@ -1,5 +1,7 @@
 package com.aionemu.loginserver.dao.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -18,6 +20,7 @@ import lombok.extern.slf4j.Slf4j;
  * @author Updated for MySQL 8
  */
 @Slf4j(topic = "PREMIUM_CTRL")
+@Repository
 public class PremiumDAO extends com.aionemu.loginserver.dao.PremiumDAO {
 
     private static final String SELECT_TOLL_QUERY = "SELECT toll FROM account_data WHERE id = ?";
@@ -32,6 +35,8 @@ public class PremiumDAO extends com.aionemu.loginserver.dao.PremiumDAO {
     public PremiumDAO() {
         this(DatabaseFactory.getJdbcClient());
     }
+
+    @Autowired
 
     public PremiumDAO(JdbcClient jdbcClient) {
         this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");

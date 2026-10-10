@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.dao.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -29,6 +31,7 @@ import lombok.extern.slf4j.Slf4j;
  * MySQL 8 implementation of PlayerStigmasEquippedDAO using JdbcClient.
  */
 @Slf4j
+@Repository
 public class PlayerStigmasEquippedDAO extends com.aionemu.gameserver.dao.PlayerStigmasEquippedDAO {
 
 	/**
@@ -71,6 +74,8 @@ public class PlayerStigmasEquippedDAO extends com.aionemu.gameserver.dao.PlayerS
 	public PlayerStigmasEquippedDAO() {
 		this(DatabaseFactory.getJdbcClient());
 	}
+
+	@Autowired
 
 	public PlayerStigmasEquippedDAO(JdbcClient jdbcClient) {
 		this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");

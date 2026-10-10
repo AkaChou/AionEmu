@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.dao.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -25,6 +27,7 @@ import lombok.extern.slf4j.Slf4j;
  * @author ATracer, Updated for MySQL 8
  */
 @Slf4j
+@Repository
 public class PlayerEffectsDAO extends com.aionemu.gameserver.dao.PlayerEffectsDAO {
 
     /** 插入或更新玩家效果 / Insert or update a player effect */
@@ -45,6 +48,8 @@ public class PlayerEffectsDAO extends com.aionemu.gameserver.dao.PlayerEffectsDA
     public PlayerEffectsDAO() {
         this(DatabaseFactory.getJdbcClient());
     }
+
+    @Autowired
 
     public PlayerEffectsDAO(JdbcClient jdbcClient) {
         this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");

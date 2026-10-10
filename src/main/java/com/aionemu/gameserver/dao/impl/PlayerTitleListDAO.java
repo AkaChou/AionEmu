@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.dao.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -22,6 +24,7 @@ import lombok.extern.slf4j.Slf4j;
  * @author xavier, Updated for MySQL 8
  */
 @Slf4j
+@Repository
 public class PlayerTitleListDAO extends com.aionemu.gameserver.dao.PlayerTitleListDAO {
 
     /** 加载玩家称号列表 / Load player title list */
@@ -40,6 +43,8 @@ public class PlayerTitleListDAO extends com.aionemu.gameserver.dao.PlayerTitleLi
     public PlayerTitleListDAO() {
         this(DatabaseFactory.getJdbcClient());
     }
+
+    @Autowired
 
     public PlayerTitleListDAO(JdbcClient jdbcClient) {
         this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");

@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.dao.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import java.util.Objects;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.simple.JdbcClient;
@@ -17,6 +19,7 @@ import lombok.extern.slf4j.Slf4j;
  * @author Rolandas
  */
 @Slf4j
+@Repository
 public class HouseScriptsDAO extends com.aionemu.gameserver.dao.HouseScriptsDAO {
 
     /** 合并插入或更新脚本 SQL / Merge insert or update script SQL */
@@ -35,6 +38,8 @@ public class HouseScriptsDAO extends com.aionemu.gameserver.dao.HouseScriptsDAO 
     public HouseScriptsDAO() {
         this(DatabaseFactory.getJdbcClient());
     }
+
+    @Autowired
 
     public HouseScriptsDAO(JdbcClient jdbcClient) {
         this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");

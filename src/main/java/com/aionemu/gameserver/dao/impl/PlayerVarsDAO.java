@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.dao.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -18,6 +20,7 @@ import lombok.extern.slf4j.Slf4j;
  * @author KID
  */
 @Slf4j
+@Repository
 public class PlayerVarsDAO extends com.aionemu.gameserver.dao.PlayerVarsDAO {
 
     /** 查询变量 SQL / Select variables SQL*/
@@ -32,6 +35,8 @@ public class PlayerVarsDAO extends com.aionemu.gameserver.dao.PlayerVarsDAO {
     public PlayerVarsDAO() {
         this(DatabaseFactory.getJdbcClient());
     }
+
+    @Autowired
 
     public PlayerVarsDAO(JdbcClient jdbcClient) {
         this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");

@@ -6,7 +6,7 @@ import com.aionemu.commons.database.dao.DAO;
 public abstract class LimitedQuestDAO implements DAO {
 
 	@Override
-	public final String getClassName() {
+	public String getClassName() {
 		return LimitedQuestDAO.class.getName();
 	}
 

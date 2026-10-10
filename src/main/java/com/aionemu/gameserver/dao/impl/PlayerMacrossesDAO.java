@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.dao.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -20,6 +22,7 @@ import lombok.extern.slf4j.Slf4j;
  * @author Aquanox
  */
 @Slf4j
+@Repository
 public class PlayerMacrossesDAO extends com.aionemu.gameserver.dao.PlayerMacrossesDAO {
 
 	/** 插入宏 SQL / Insert macro SQL*/
@@ -36,6 +39,8 @@ public class PlayerMacrossesDAO extends com.aionemu.gameserver.dao.PlayerMacross
 	public PlayerMacrossesDAO() {
 		this(DatabaseFactory.getJdbcClient());
 	}
+
+	@Autowired
 
 	public PlayerMacrossesDAO(JdbcClient jdbcClient) {
 		this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");

@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.dao.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -22,6 +24,7 @@ import lombok.extern.slf4j.Slf4j;
  * Updated for MySQL 8 - Fixed connection leaks.
  */
 @Slf4j
+@Repository
 public class VeteranRewardsDAO extends com.aionemu.gameserver.dao.VeteranRewardsDAO {
 
 	/** 查询老兵奖励 SQL / Select veteran rewards SQL*/
@@ -34,6 +37,8 @@ public class VeteranRewardsDAO extends com.aionemu.gameserver.dao.VeteranRewards
 	public VeteranRewardsDAO() {
 		this(DatabaseFactory.getJdbcClient());
 	}
+
+	@Autowired
 
 	public VeteranRewardsDAO(JdbcClient jdbcClient) {
 		this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");

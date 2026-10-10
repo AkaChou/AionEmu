@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.dao.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -22,6 +24,7 @@ import lombok.extern.slf4j.Slf4j;
  * @author Mr. Poke
  */
 @Slf4j
+@Repository
 public class PlayerLifeStatsDAO extends com.aionemu.gameserver.dao.PlayerLifeStatsDAO {
 
     /** 插入或更新生命状态 SQL / Insert or update life stats SQL */
@@ -36,6 +39,8 @@ public class PlayerLifeStatsDAO extends com.aionemu.gameserver.dao.PlayerLifeSta
     public PlayerLifeStatsDAO() {
         this(DatabaseFactory.getJdbcClient());
     }
+
+    @Autowired
 
     public PlayerLifeStatsDAO(JdbcClient jdbcClient) {
         this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");

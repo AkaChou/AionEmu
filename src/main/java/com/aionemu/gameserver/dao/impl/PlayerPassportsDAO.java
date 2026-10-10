@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.dao.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +22,7 @@ import lombok.extern.slf4j.Slf4j;
  * @author Alcapwnd, Lyras, FrozenKiller
  */
 @Slf4j
+@Repository
 public class PlayerPassportsDAO extends com.aionemu.gameserver.dao.PlayerPassportsDAO {
 
 	/** 插入通行证 SQL / Insert passport SQL*/
@@ -38,6 +41,8 @@ public class PlayerPassportsDAO extends com.aionemu.gameserver.dao.PlayerPasspor
 	public PlayerPassportsDAO() {
 		this(DatabaseFactory.getJdbcClient());
 	}
+
+	@Autowired
 
 	public PlayerPassportsDAO(JdbcClient jdbcClient) {
 		this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");

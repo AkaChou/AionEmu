@@ -1,5 +1,7 @@
 package com.aionemu.loginserver.dao.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
@@ -18,6 +20,7 @@ import lombok.extern.slf4j.Slf4j;
  * MySQL 8 BannedMacDAO implementation using JdbcClient.
  */
 @Slf4j
+@Repository
 public class BannedMacDAO extends com.aionemu.loginserver.dao.BannedMacDAO {
 
     private static final String SELECT_ALL_QUERY = "SELECT `address`, `time`, `details` FROM `banned_mac`";
@@ -30,6 +33,8 @@ public class BannedMacDAO extends com.aionemu.loginserver.dao.BannedMacDAO {
     public BannedMacDAO() {
         this(DatabaseFactory.getJdbcClient());
     }
+
+    @Autowired
 
     public BannedMacDAO(JdbcClient jdbcClient) {
         this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");

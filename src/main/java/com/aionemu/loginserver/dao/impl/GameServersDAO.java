@@ -1,5 +1,7 @@
 package com.aionemu.loginserver.dao.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -19,6 +21,7 @@ import lombok.extern.slf4j.Slf4j;
  * @author Updated for MySQL 8
  */
 @Slf4j
+@Repository
 public class GameServersDAO extends com.aionemu.loginserver.dao.GameServersDAO {
 
     private static final String SELECT_ALL_QUERY = "SELECT * FROM gameservers ORDER BY id";
@@ -28,6 +31,8 @@ public class GameServersDAO extends com.aionemu.loginserver.dao.GameServersDAO {
     public GameServersDAO() {
         this(DatabaseFactory.getJdbcClient());
     }
+
+    @Autowired
 
     public GameServersDAO(JdbcClient jdbcClient) {
         this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");

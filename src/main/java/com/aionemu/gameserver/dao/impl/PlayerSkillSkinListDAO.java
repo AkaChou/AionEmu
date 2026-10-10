@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.dao.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import java.util.Objects;
 
 import org.springframework.dao.DataAccessException;
@@ -18,6 +20,7 @@ import lombok.extern.slf4j.Slf4j;
  * MySQL 8 implementation of PlayerSkillSkinListDAO using JdbcClient.
  */
 @Slf4j
+@Repository
 public class PlayerSkillSkinListDAO extends com.aionemu.gameserver.dao.PlayerSkillSkinListDAO {
 
     /** 加载技能皮肤列表 SQL / Load skill skin list SQL */
@@ -34,6 +37,8 @@ public class PlayerSkillSkinListDAO extends com.aionemu.gameserver.dao.PlayerSki
     public PlayerSkillSkinListDAO() {
         this(DatabaseFactory.getJdbcClient());
     }
+
+    @Autowired
 
     public PlayerSkillSkinListDAO(JdbcClient jdbcClient) {
         this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");

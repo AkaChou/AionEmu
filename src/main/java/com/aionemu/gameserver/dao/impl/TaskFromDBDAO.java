@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.dao.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Objects;
@@ -20,6 +22,7 @@ import lombok.extern.slf4j.Slf4j;
  * @author Divinity
  */
 @Slf4j
+@Repository("gameTaskFromDBDAO")
 public class TaskFromDBDAO extends com.aionemu.gameserver.dao.TaskFromDBDAO {
 
 	/** 查询全部任务 SQL / Select all tasks SQL*/
@@ -32,6 +35,8 @@ public class TaskFromDBDAO extends com.aionemu.gameserver.dao.TaskFromDBDAO {
 	public TaskFromDBDAO() {
 		this(DatabaseFactory.getJdbcClient());
 	}
+
+	@Autowired
 
 	public TaskFromDBDAO(JdbcClient jdbcClient) {
 		this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");

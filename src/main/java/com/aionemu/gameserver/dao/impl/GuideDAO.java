@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.dao.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -21,6 +23,7 @@ import lombok.extern.slf4j.Slf4j;
  * @author xTz
  */
 @Slf4j
+@Repository
 public class GuideDAO extends com.aionemu.gameserver.dao.GuideDAO {
 
 	/** 删除引导 SQL / Delete guide SQL*/
@@ -39,6 +42,8 @@ public class GuideDAO extends com.aionemu.gameserver.dao.GuideDAO {
 	public GuideDAO() {
 		this(DatabaseFactory.getJdbcClient());
 	}
+
+	@Autowired
 
 	public GuideDAO(JdbcClient jdbcClient) {
 		this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");

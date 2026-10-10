@@ -32,7 +32,7 @@ public abstract class OldNamesDAO implements DAO {
 	 * @return DAO 类名 / DAO class name
 	 */
 	@Override
-	public final String getClassName() {
+	public String getClassName() {
 		return OldNamesDAO.class.getName();
 	}
 }

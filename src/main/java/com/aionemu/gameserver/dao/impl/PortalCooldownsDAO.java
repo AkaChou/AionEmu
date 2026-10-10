@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.dao.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -20,6 +22,7 @@ import lombok.extern.slf4j.Slf4j;
  * Updated for MySQL 8 - Fixed connection leaks.
  */
 @Slf4j
+@Repository
 public class PortalCooldownsDAO extends com.aionemu.gameserver.dao.PortalCooldownsDAO {
 
 	/** 插入或更新传送门冷却 SQL / Insert or update portal cooldown SQL*/
@@ -34,6 +37,8 @@ public class PortalCooldownsDAO extends com.aionemu.gameserver.dao.PortalCooldow
 	public PortalCooldownsDAO() {
 		this(DatabaseFactory.getJdbcClient());
 	}
+
+	@Autowired
 
 	public PortalCooldownsDAO(JdbcClient jdbcClient) {
 		this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");

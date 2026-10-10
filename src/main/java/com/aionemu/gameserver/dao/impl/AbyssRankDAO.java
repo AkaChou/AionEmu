@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.dao.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -32,6 +34,7 @@ import lombok.extern.slf4j.Slf4j;
  * MySQL 8 implementation of AbyssRankDAO using JdbcClient.
  */
 @Slf4j
+@Repository
 public class AbyssRankDAO extends com.aionemu.gameserver.dao.AbyssRankDAO {
 
 	/**
@@ -109,6 +112,8 @@ public class AbyssRankDAO extends com.aionemu.gameserver.dao.AbyssRankDAO {
 	public AbyssRankDAO() {
 		this(DatabaseFactory.getJdbcClient());
 	}
+
+	@Autowired
 
 	public AbyssRankDAO(JdbcClient jdbcClient) {
 		this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");

@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.dao.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -28,6 +30,7 @@ import lombok.extern.slf4j.Slf4j;
  * MySQL 8 implementation of BrokerDAO using JdbcClient. Fixed connection leaks.
  */
 @Slf4j
+@Repository
 public class BrokerDAO extends com.aionemu.gameserver.dao.BrokerDAO {
 
     /** 加载全部交易所条目 / Select all broker entries */
@@ -50,6 +53,8 @@ public class BrokerDAO extends com.aionemu.gameserver.dao.BrokerDAO {
     public BrokerDAO() {
         this(DatabaseFactory.getJdbcClient());
     }
+
+    @Autowired
 
     public BrokerDAO(JdbcClient jdbcClient) {
         this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");

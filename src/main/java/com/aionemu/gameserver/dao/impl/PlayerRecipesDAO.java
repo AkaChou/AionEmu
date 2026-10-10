@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.dao.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -22,6 +24,7 @@ import lombok.extern.slf4j.Slf4j;
  * @author lord_rex
  */
 @Slf4j
+@Repository
 public class PlayerRecipesDAO extends com.aionemu.gameserver.dao.PlayerRecipesDAO {
 
 	/** 查询配方 SQL / Select recipes SQL*/
@@ -37,6 +40,8 @@ public class PlayerRecipesDAO extends com.aionemu.gameserver.dao.PlayerRecipesDA
 	public PlayerRecipesDAO() {
 		this(DatabaseFactory.getJdbcClient());
 	}
+
+	@Autowired
 
 	public PlayerRecipesDAO(JdbcClient jdbcClient) {
 		this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");

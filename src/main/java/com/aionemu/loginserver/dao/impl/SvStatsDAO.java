@@ -1,5 +1,7 @@
 package com.aionemu.loginserver.dao.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import java.util.Objects;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.simple.JdbcClient;
@@ -15,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
  * @author Updated for MySQL 8
  */
 @Slf4j
+@Repository
 public class SvStatsDAO extends com.aionemu.loginserver.dao.SvStatsDAO {
 
     /** 更新在线服务器统计 SQL / Update online server stats SQL */
@@ -31,6 +34,8 @@ public class SvStatsDAO extends com.aionemu.loginserver.dao.SvStatsDAO {
     public SvStatsDAO() {
         this(DatabaseFactory.getJdbcClient());
     }
+
+    @Autowired
 
     public SvStatsDAO(JdbcClient jdbcClient) {
         this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");

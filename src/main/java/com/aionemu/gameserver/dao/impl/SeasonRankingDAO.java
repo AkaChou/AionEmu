@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.dao.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -24,6 +26,7 @@ import lombok.extern.slf4j.Slf4j;
  * @author Wnkrz
  */
 @Slf4j
+@Repository
 public class SeasonRankingDAO extends com.aionemu.gameserver.dao.SeasonRankingDAO {
 
     /** 查询排行榜前 300 名玩家 / Select top 300 competition ranking players */
@@ -43,6 +46,8 @@ public class SeasonRankingDAO extends com.aionemu.gameserver.dao.SeasonRankingDA
     public SeasonRankingDAO() {
         this(DatabaseFactory.getJdbcClient());
     }
+
+    @Autowired
 
     public SeasonRankingDAO(JdbcClient jdbcClient) {
         this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");

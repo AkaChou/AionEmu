@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.dao.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -23,6 +25,7 @@ import lombok.extern.slf4j.Slf4j;
  * @author Ranastic
  */
 @Slf4j
+@Repository
 public class PlayerAtreianBestiaryDAO extends PlayerABDAO {
 
     /** 插入或更新图鉴 SQL / Insert or update bestiary SQL*/
@@ -43,6 +46,8 @@ public class PlayerAtreianBestiaryDAO extends PlayerABDAO {
     public PlayerAtreianBestiaryDAO() {
         this(DatabaseFactory.getJdbcClient());
     }
+
+    @Autowired
 
     public PlayerAtreianBestiaryDAO(JdbcClient jdbcClient) {
         this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");

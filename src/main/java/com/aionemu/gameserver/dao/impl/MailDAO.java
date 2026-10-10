@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.dao.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -34,6 +36,7 @@ import lombok.extern.slf4j.Slf4j;
  * @author kosyachok
  */
 @Slf4j
+@Repository
 public class MailDAO extends com.aionemu.gameserver.dao.MailDAO {
 
     /** 查询玩家邮件（最近 100 封） / Select player mail (latest 100) */
@@ -58,6 +61,8 @@ public class MailDAO extends com.aionemu.gameserver.dao.MailDAO {
     public MailDAO() {
         this(DatabaseFactory.getJdbcClient());
     }
+
+    @Autowired
 
     public MailDAO(JdbcClient jdbcClient) {
         this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");

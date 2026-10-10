@@ -20,7 +20,7 @@ public abstract class PlayerPetsDAO implements DAO {
 	 * @return DAO 类名 / DAO class name
 	 */
 	@Override
-	public final String getClassName() {
+	public String getClassName() {
 		return PlayerPetsDAO.class.getName();
 	}
 

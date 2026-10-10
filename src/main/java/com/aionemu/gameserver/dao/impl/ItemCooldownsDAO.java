@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.dao.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -24,6 +26,7 @@ import lombok.extern.slf4j.Slf4j;
  * @author ATracer
  */
 @Slf4j
+@Repository
 public class ItemCooldownsDAO extends com.aionemu.gameserver.dao.ItemCooldownsDAO {
 
 	/** 插入或更新物品冷却 SQL / Insert or update item cooldown SQL*/
@@ -38,6 +41,8 @@ public class ItemCooldownsDAO extends com.aionemu.gameserver.dao.ItemCooldownsDA
 	public ItemCooldownsDAO() {
 		this(DatabaseFactory.getJdbcClient());
 	}
+
+	@Autowired
 
 	public ItemCooldownsDAO(JdbcClient jdbcClient) {
 		this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");

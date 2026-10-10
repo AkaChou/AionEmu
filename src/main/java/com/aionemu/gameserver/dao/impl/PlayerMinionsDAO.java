@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.dao.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -26,6 +28,7 @@ import lombok.extern.slf4j.Slf4j;
  * Updated for MySQL 8 support
  */
 @Slf4j
+@Repository
 public class PlayerMinionsDAO extends com.aionemu.gameserver.dao.PlayerMinionsDAO {
 
     /** 插入玩家随从 / Insert player minion */
@@ -54,6 +57,8 @@ public class PlayerMinionsDAO extends com.aionemu.gameserver.dao.PlayerMinionsDA
     public PlayerMinionsDAO() {
         this(DatabaseFactory.getJdbcClient());
     }
+
+    @Autowired
 
     public PlayerMinionsDAO(JdbcClient jdbcClient) {
         this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");

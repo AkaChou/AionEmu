@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.dao.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -25,6 +27,7 @@ import lombok.extern.slf4j.Slf4j;
  * @author Ben
  */
 @Slf4j
+@Repository
 public class BlockListDAO extends com.aionemu.gameserver.dao.BlockListDAO {
 
 	/** 加载黑名单 SQL / Load block list SQL */
@@ -41,6 +44,8 @@ public class BlockListDAO extends com.aionemu.gameserver.dao.BlockListDAO {
 	public BlockListDAO() {
 		this(DatabaseFactory.getJdbcClient());
 	}
+
+	@Autowired
 
 	public BlockListDAO(JdbcClient jdbcClient) {
 		this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");

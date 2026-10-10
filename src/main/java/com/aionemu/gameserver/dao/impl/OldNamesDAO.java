@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.dao.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import java.util.Objects;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.simple.JdbcClient;
@@ -15,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
  * @author synchro2
  */
 @Slf4j
+@Repository
 public class OldNamesDAO extends com.aionemu.gameserver.dao.OldNamesDAO {
 
 	/** 插入旧名称 SQL / Insert old name SQL*/
@@ -27,6 +30,8 @@ public class OldNamesDAO extends com.aionemu.gameserver.dao.OldNamesDAO {
 	public OldNamesDAO() {
 		this(DatabaseFactory.getJdbcClient());
 	}
+
+	@Autowired
 
 	public OldNamesDAO(JdbcClient jdbcClient) {
 		this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");

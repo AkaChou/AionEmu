@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.dao.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -34,6 +36,7 @@ import lombok.extern.slf4j.Slf4j;
  * @author ATracer
  */
 @Slf4j
+@Repository
 public class InventoryDAO extends com.aionemu.gameserver.dao.InventoryDAO {
 
 	/**
@@ -91,6 +94,8 @@ public class InventoryDAO extends com.aionemu.gameserver.dao.InventoryDAO {
 	public InventoryDAO() {
 		this(DatabaseFactory.getJdbcClient());
 	}
+
+	@Autowired
 
 	public InventoryDAO(JdbcClient jdbcClient) {
 		this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");

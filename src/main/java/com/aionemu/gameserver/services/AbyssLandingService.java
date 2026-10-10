@@ -8,6 +8,7 @@ import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -47,8 +48,27 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 
 public class AbyssLandingService {
 	private static volatile ObjectProvider<AbyssLandingService> instanceProvider;
+	private final AbyssLandingDAO abyssLandingDAO;
 	private static Map<Integer, LandingLocation> abyssLanding;
 	private final ConcurrentMap<Integer, Landing<?>> activeLanding = new ConcurrentHashMap<>();
+
+	/**
+	 * 使用指定的 AbyssLandingDAO 构造深渊登陆点服务。
+	 * Constructs the abyss landing service with the given AbyssLandingDAO.
+	 *
+	 * @param abyssLandingDAO 深渊登陆点数据访问对象 / Abyss landing DAO
+	 */
+	public AbyssLandingService(AbyssLandingDAO abyssLandingDAO) {
+		this.abyssLandingDAO = Objects.requireNonNull(abyssLandingDAO, "abyssLandingDAO must not be null");
+	}
+
+	/**
+	 * 默认构造器，从 DAOManager 动态解析 AbyssLandingDAO。
+	 * Default constructor resolving AbyssLandingDAO from DAOManager.
+	 */
+	public AbyssLandingService() {
+		this(DAOManager.getDAO(AbyssLandingDAO.class));
+	}
 
 	/**
 	 * 从静态数据与数据库加载登陆点并全部启动。
@@ -56,7 +76,7 @@ public class AbyssLandingService {
 	 */
 	public void initLandingLocations() {
 		abyssLanding = DataManager.LANDING_LOCATION_DATA.getLandingLocations();
-		DAOManager.getDAO(AbyssLandingDAO.class).loadLandingLocations(abyssLanding);
+		abyssLandingDAO.loadLandingLocations(abyssLanding);
 		for (LandingLocation loc : getLandingLocations().values()) {
 			startLanding(loc.getId());
 		}
@@ -592,12 +612,12 @@ public class AbyssLandingService {
 	 * Persist or refresh all landing locations.
 	 */
 	public void onUpdate() {
-		getDAO().updateLocation(getLandingLocation(redemptionLanding().getId()));
-		getDAO().updateLocation(getLandingLocation(harbingerLanding().getId()));
+		abyssLandingDAO.updateLocation(getLandingLocation(redemptionLanding().getId()));
+		abyssLandingDAO.updateLocation(getLandingLocation(harbingerLanding().getId()));
 	}
 
 	private AbyssLandingDAO getDAO() {
-		return DAOManager.getDAO(AbyssLandingDAO.class);
+		return abyssLandingDAO;
 	}
 
 	/**

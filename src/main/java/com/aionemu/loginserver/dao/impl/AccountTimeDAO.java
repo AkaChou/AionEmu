@@ -1,5 +1,7 @@
 package com.aionemu.loginserver.dao.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import java.util.Objects;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.simple.JdbcClient;
@@ -16,6 +18,7 @@ import lombok.extern.slf4j.Slf4j;
  * @author Updated for MySQL 8
  */
 @Slf4j
+@Repository
 public class AccountTimeDAO extends com.aionemu.loginserver.dao.AccountTimeDAO {
 
     private static final String REPLACE_QUERY = "REPLACE INTO account_time (account_id, last_active, expiration_time, "
@@ -28,6 +31,8 @@ public class AccountTimeDAO extends com.aionemu.loginserver.dao.AccountTimeDAO {
     public AccountTimeDAO() {
         this(DatabaseFactory.getJdbcClient());
     }
+
+    @Autowired
 
     public AccountTimeDAO(JdbcClient jdbcClient) {
         this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");

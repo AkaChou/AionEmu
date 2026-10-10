@@ -1,5 +1,7 @@
 package com.aionemu.loginserver.dao.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -23,6 +25,7 @@ import lombok.extern.slf4j.Slf4j;
  * @author Updated for MySQL 8
  */
 @Slf4j
+@Repository
 public class AccountDAO extends com.aionemu.loginserver.dao.AccountDAO {
 
     private static final String SELECT_BY_NAME_QUERY = "SELECT * FROM account_data WHERE `name` = ?";
@@ -48,6 +51,8 @@ public class AccountDAO extends com.aionemu.loginserver.dao.AccountDAO {
     public AccountDAO() {
         this(DatabaseFactory.getJdbcClient());
     }
+
+    @Autowired
 
     public AccountDAO(JdbcClient jdbcClient) {
         this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");

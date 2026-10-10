@@ -1,5 +1,7 @@
 package com.aionemu.loginserver.dao.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -22,6 +24,7 @@ import lombok.extern.slf4j.Slf4j;
  * @author Updated for MySQL 8
  */
 @Slf4j
+@Repository
 public class PlayerTransferDAO extends com.aionemu.loginserver.dao.PlayerTransferDAO {
 
     private static final String SELECT_NEW_QUERY = "SELECT * FROM player_transfers WHERE `status` = ?";
@@ -31,6 +34,8 @@ public class PlayerTransferDAO extends com.aionemu.loginserver.dao.PlayerTransfe
     public PlayerTransferDAO() {
         this(DatabaseFactory.getJdbcClient());
     }
+
+    @Autowired
 
     public PlayerTransferDAO(JdbcClient jdbcClient) {
         this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");

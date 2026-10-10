@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.dao.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import java.util.Objects;
 
 import org.springframework.dao.DataAccessException;
@@ -19,6 +21,7 @@ import lombok.extern.slf4j.Slf4j;
  * @author Dision
  */
 @Slf4j
+@Repository
 public class PlayerThievesDAO extends PlayerThievesListDAO {
 
 	/** 查询盗贼状态 SQL / Select thieves status SQL*/
@@ -33,6 +36,8 @@ public class PlayerThievesDAO extends PlayerThievesListDAO {
 	public PlayerThievesDAO() {
 		this(DatabaseFactory.getJdbcClient());
 	}
+
+	@Autowired
 
 	public PlayerThievesDAO(JdbcClient jdbcClient) {
 		this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");

@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.dao.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -20,6 +22,7 @@ import lombok.extern.slf4j.Slf4j;
  * @author zdead
  */
 @Slf4j
+@Repository
 public class PetitionDAO extends com.aionemu.gameserver.dao.PetitionDAO {
 
     private static final String NEXT_ID_QUERY = "SELECT COALESCE(MAX(id), 0) + 1 as nextid FROM petitions";
@@ -34,6 +37,8 @@ public class PetitionDAO extends com.aionemu.gameserver.dao.PetitionDAO {
     public PetitionDAO() {
         this(DatabaseFactory.getJdbcClient());
     }
+
+    @Autowired
 
     public PetitionDAO(JdbcClient jdbcClient) {
         this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");

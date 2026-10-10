@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.dao.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -19,6 +21,7 @@ import lombok.extern.slf4j.Slf4j;
  * @author Divinity
  */
 @Slf4j
+@Repository
 public class AnnouncementsDAO extends com.aionemu.gameserver.dao.AnnouncementsDAO {
 
 	/** 查询公告 SQL / Select announcements SQL*/
@@ -33,6 +36,8 @@ public class AnnouncementsDAO extends com.aionemu.gameserver.dao.AnnouncementsDA
 	public AnnouncementsDAO() {
 		this(DatabaseFactory.getJdbcClient());
 	}
+
+	@Autowired
 
 	public AnnouncementsDAO(JdbcClient jdbcClient) {
 		this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");

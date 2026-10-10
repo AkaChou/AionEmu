@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.dao.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.sql.Timestamp;
@@ -32,6 +34,7 @@ import lombok.extern.slf4j.Slf4j;
  * Fixed connection leaks.
  */
 @Slf4j
+@Repository
 public class HousesDAO extends com.aionemu.gameserver.dao.HousesDAO {
 
     /** 查询普通房屋 / Select regular houses */
@@ -54,6 +57,8 @@ public class HousesDAO extends com.aionemu.gameserver.dao.HousesDAO {
     public HousesDAO() {
         this(DatabaseFactory.getJdbcClient());
     }
+
+    @Autowired
 
     public HousesDAO(JdbcClient jdbcClient) {
         this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");

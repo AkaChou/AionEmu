@@ -18,7 +18,7 @@ public abstract class PlayerPunishmentsDAO implements DAO {
 	 * @return 完整类名 / fully qualified class name
 	 */
 	@Override
-	public final String getClassName() {
+	public String getClassName() {
 		return PlayerPunishmentsDAO.class.getName();
 	}
 

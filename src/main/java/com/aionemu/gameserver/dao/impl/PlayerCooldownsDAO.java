@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.dao.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -24,6 +26,7 @@ import lombok.extern.slf4j.Slf4j;
  * @author nrg, Updated for MySQL 8
  */
 @Slf4j
+@Repository
 public class PlayerCooldownsDAO extends com.aionemu.gameserver.dao.PlayerCooldownsDAO {
 
     /** 插入或更新冷却 / Insert or update cooldown */
@@ -49,6 +52,8 @@ public class PlayerCooldownsDAO extends com.aionemu.gameserver.dao.PlayerCooldow
     public PlayerCooldownsDAO() {
         this(DatabaseFactory.getJdbcClient());
     }
+
+    @Autowired
 
     public PlayerCooldownsDAO(JdbcClient jdbcClient) {
         this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");

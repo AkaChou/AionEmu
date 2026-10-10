@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.Future;
 
 import org.springframework.beans.factory.ObjectProvider;
@@ -33,17 +34,29 @@ public class AnnouncementService {
 
 	private static volatile ObjectProvider<AnnouncementService> instanceProvider;
 
+	private final AnnouncementsDAO announcementsDAO;
 	/** 已加载的公告集合。 / Loaded announcements. */
 	private Collection<Announcement> announcements;
 	/** 定时广播任务列表。 / Scheduled broadcast task list. */
 	private final List<Future<?>> delays = new ArrayList<>();
 
 	/**
+	 * 使用指定的 AnnouncementsDAO 构造服务并加载公告。
+	 * Constructs the service with the given AnnouncementsDAO and loads announcements.
+	 *
+	 * @param announcementsDAO 系统公告数据访问对象 / Announcements DAO
+	 */
+	public AnnouncementService(AnnouncementsDAO announcementsDAO) {
+		this.announcementsDAO = Objects.requireNonNull(announcementsDAO, "announcementsDAO must not be null");
+		this.load();
+	}
+
+	/**
 	 * 构造服务并加载公告。
 	 * Constructs the service and loads announcements.
 	 */
 	public AnnouncementService() {
-		this.load();
+		this(DAOManager.getDAO(AnnouncementsDAO.class));
 	}
 
 	/**
@@ -172,6 +185,6 @@ public class AnnouncementService {
 	 * DAO instance
 	 */
 	private AnnouncementsDAO getDAO() {
-		return DAOManager.getDAO(AnnouncementsDAO.class);
+		return announcementsDAO;
 	}
 }

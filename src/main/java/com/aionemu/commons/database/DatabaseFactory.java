@@ -24,6 +24,8 @@ import lombok.extern.slf4j.Slf4j;
 public final class DatabaseFactory {
 
     private static final Map<String, DatabaseState> states = new ConcurrentHashMap<>();
+    private static final DataSource CONTEXT_ROUTING_DATA_SOURCE = new ContextRoutingDataSource();
+    private static final JdbcClient CONTEXT_ROUTING_JDBC_CLIENT = JdbcClient.create(CONTEXT_ROUTING_DATA_SOURCE);
 
     private DatabaseFactory() {}
 
@@ -123,12 +125,21 @@ public final class DatabaseFactory {
     }
 
     /**
+     * 获取支持服务上下文动态路由的全局数据源
+     * Get the global DataSource backed by context routing
+     * @return 路由数据源 / Routing DataSource
+     */
+    public static DataSource getContextRoutingDataSource() {
+        return CONTEXT_ROUTING_DATA_SOURCE;
+    }
+
+    /**
      * 获取基于当前服务上下文数据源的 JdbcClient
      * Get the JdbcClient based on the current service context DataSource
      * @return 当前上下文的 JdbcClient / JdbcClient for current context
      */
     public static JdbcClient getJdbcClient() {
-        return JdbcClient.create(getDataSource());
+        return CONTEXT_ROUTING_JDBC_CLIENT;
     }
 
     /**

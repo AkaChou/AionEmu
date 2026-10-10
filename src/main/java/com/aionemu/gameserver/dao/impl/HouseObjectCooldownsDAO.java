@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.dao.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -20,6 +22,7 @@ import lombok.extern.slf4j.Slf4j;
  * @author Rolandas
  */
 @Slf4j
+@Repository
 public class HouseObjectCooldownsDAO extends com.aionemu.gameserver.dao.HouseObjectCooldownsDAO {
 
     /** 插入或更新冷却 SQL / Insert or update cooldown SQL*/
@@ -36,6 +39,8 @@ public class HouseObjectCooldownsDAO extends com.aionemu.gameserver.dao.HouseObj
     public HouseObjectCooldownsDAO() {
         this(DatabaseFactory.getJdbcClient());
     }
+
+    @Autowired
 
     public HouseObjectCooldownsDAO(JdbcClient jdbcClient) {
         this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");

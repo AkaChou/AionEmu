@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.dao.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -21,6 +23,7 @@ import lombok.extern.slf4j.Slf4j;
  * @author wanke
  */
 @Slf4j
+@Repository
 public class LadderDAO extends com.aionemu.gameserver.dao.LadderDAO {
 
     /** 查询有战绩玩家的天梯数据 / Select ladder data for players with records */
@@ -46,6 +49,8 @@ public class LadderDAO extends com.aionemu.gameserver.dao.LadderDAO {
     public LadderDAO() {
         this(DatabaseFactory.getJdbcClient());
     }
+
+    @Autowired
 
     public LadderDAO(JdbcClient jdbcClient) {
         this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");

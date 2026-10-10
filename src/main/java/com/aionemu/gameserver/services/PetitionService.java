@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Objects;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.concurrent.ConcurrentSkipListMap;
@@ -29,6 +30,7 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 public class PetitionService {
 
 	private static volatile ObjectProvider<PetitionService> instanceProvider;
+	private final PetitionDAO petitionDAO;
 
 	private static SortedMap<Integer, Petition> registeredPetitions = new ConcurrentSkipListMap<>();
 
@@ -63,18 +65,29 @@ public class PetitionService {
 	}
 
 	/**
-	 * 从数据库加载已有请愿工单。
-	 * Loads existing petition tickets from the database.
+	 * 使用指定的 PetitionDAO 构造请愿服务。
+	 * Constructs the petition service with the given PetitionDAO.
+	 *
+	 * @param petitionDAO 请愿数据访问对象 / Petition DAO
 	 */
-	public PetitionService() {
+	public PetitionService(PetitionDAO petitionDAO) {
+		this.petitionDAO = Objects.requireNonNull(petitionDAO, "petitionDAO must not be null");
 		log.info(I18n.get("log.f495913b1078"));
-		Set<Petition> petitions = DAOManager.getDAO(PetitionDAO.class).getPetitions();
+		Set<Petition> petitions = this.petitionDAO.getPetitions();
 		if (petitions != null) {
 			for (Petition p : petitions) {
 				registeredPetitions.put(p.getPetitionId(), p);
 			}
 		}
 		log.info(I18n.get("log.2b3ade613951", registeredPetitions.size()));
+	}
+
+	/**
+	 * 从数据库加载已有请愿工单。
+	 * Loads existing petition tickets from the database.
+	 */
+	public PetitionService() {
+		this(DAOManager.getDAO(PetitionDAO.class));
 	}
 
 	/**
@@ -101,7 +114,7 @@ public class PetitionService {
 		for (Petition p : petitions) {
 			registeredPetitions.remove(p.getPetitionId());
 		}
-		DAOManager.getDAO(PetitionDAO.class).deletePetition(playerObjId);
+		petitionDAO.deletePetition(playerObjId);
 		if (playerObjId > 0 && com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(playerObjId) != null) {
 			Player p = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(playerObjId);
 			PacketSendUtility.sendPacket(p, new SM_PETITION());
@@ -116,7 +129,7 @@ public class PetitionService {
 	 */
 	public void setPetitionReplied(int petitionId) {
 		int playerObjId = registeredPetitions.get(petitionId).getPlayerObjId();
-		DAOManager.getDAO(PetitionDAO.class).setReplied(petitionId);
+		petitionDAO.setReplied(petitionId);
 		registeredPetitions.remove(petitionId);
 		rebroadcastPlayerData();
 		if (playerObjId > 0 && com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(playerObjId) != null) {
@@ -137,9 +150,9 @@ public class PetitionService {
 	 */
 	public synchronized Petition registerPetition(Player sender, int typeId, String title, String contentText,
 			String additionalData) {
-		int id = DAOManager.getDAO(PetitionDAO.class).getNextAvailableId();
+		int id = petitionDAO.getNextAvailableId();
 		Petition ptt = new Petition(id, sender.getObjectId(), typeId, title, contentText, additionalData, 0);
-		DAOManager.getDAO(PetitionDAO.class).insertPetition(ptt);
+		petitionDAO.insertPetition(ptt);
 		registeredPetitions.put(ptt.getPetitionId(), ptt);
 		broadcastMessageToGM(sender, ptt.getPetitionId());
 		return ptt;

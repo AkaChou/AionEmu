@@ -231,7 +231,7 @@ public abstract class PlayerDAO implements IDFactoryAwareDAO {
 	 * @return DAO 类名 / DAO class name
 	 */
 	@Override
-	public final String getClassName() {
+	public String getClassName() {
 		return PlayerDAO.class.getName();
 	}
 

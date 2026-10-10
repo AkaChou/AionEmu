@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.dao.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -24,6 +26,7 @@ import lombok.extern.slf4j.Slf4j;
  * Updated for MySQL 8 - Fixed connection leaks and SQL syntax
  */
 @Slf4j
+@Repository
 public class LegionMemberDAO extends com.aionemu.gameserver.dao.LegionMemberDAO {
 
     /** 插入军团成员 / Insert legion member */
@@ -52,6 +55,8 @@ public class LegionMemberDAO extends com.aionemu.gameserver.dao.LegionMemberDAO 
     public LegionMemberDAO() {
         this(DatabaseFactory.getJdbcClient());
     }
+
+    @Autowired
 
     public LegionMemberDAO(JdbcClient jdbcClient) {
         this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");

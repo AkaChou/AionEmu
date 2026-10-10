@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.dao.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -20,6 +22,7 @@ import lombok.extern.slf4j.Slf4j;
  * @author KID
  */
 @Slf4j
+@Repository
 public class SurveyControllerDAO extends com.aionemu.gameserver.dao.SurveyControllerDAO {
 
 	/** Mark survey as used SQL / Mark survey as used SQL */
@@ -32,6 +35,8 @@ public class SurveyControllerDAO extends com.aionemu.gameserver.dao.SurveyContro
 	public SurveyControllerDAO() {
 		this(DatabaseFactory.getJdbcClient());
 	}
+
+	@Autowired
 
 	public SurveyControllerDAO(JdbcClient jdbcClient) {
 		this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");

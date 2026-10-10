@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.dao.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import java.sql.Timestamp;
 import java.util.HashSet;
 import java.util.Objects;
@@ -20,6 +22,7 @@ import lombok.extern.slf4j.Slf4j;
  * @author Rolandas, Updated for MySQL 8
  */
 @Slf4j
+@Repository
 public class HouseBidsDAO extends com.aionemu.gameserver.dao.HouseBidsDAO {
 
     /** 加载全部出价（按房屋与金额排序） / Load all bids ordered by house and bid */
@@ -42,6 +45,8 @@ public class HouseBidsDAO extends com.aionemu.gameserver.dao.HouseBidsDAO {
     public HouseBidsDAO() {
         this(DatabaseFactory.getJdbcClient());
     }
+
+    @Autowired
 
     public HouseBidsDAO(JdbcClient jdbcClient) {
         this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");

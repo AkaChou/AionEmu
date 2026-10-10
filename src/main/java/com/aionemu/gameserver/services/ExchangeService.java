@@ -9,6 +9,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -47,6 +48,7 @@ public class ExchangeService {
 	private final ConcurrentMap<Integer, Exchange> exchanges = new ConcurrentHashMap<>();
 
 	private static volatile ObjectProvider<ExchangeService> instanceProvider;
+	private final InventoryDAO inventoryDAO;
 
 	/**
 	 * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。
@@ -79,10 +81,21 @@ public class ExchangeService {
 	}
 
 	/**
-	 * 默认构造：初始化交易存库周期任务。
-	 * Default constructor: initializes the periodic exchange save task.
+	 * 使用指定的 InventoryDAO 构造交易服务。
+	 * Constructs the exchange service with the given InventoryDAO.
+	 *
+	 * @param inventoryDAO 背包物品数据访问对象 / Inventory DAO
+	 */
+	public ExchangeService(InventoryDAO inventoryDAO) {
+		this.inventoryDAO = Objects.requireNonNull(inventoryDAO, "inventoryDAO must not be null");
+	}
+
+	/**
+	 * 默认构造：从 DAOManager 动态解析 InventoryDAO。
+	 * Default constructor resolving InventoryDAO from DAOManager.
 	 */
 	public ExchangeService() {
+		this(DAOManager.getDAO(InventoryDAO.class));
 	}
 
 	/**
@@ -356,7 +369,7 @@ public class ExchangeService {
 			return;
 		}
 
-		ExchangeOpSaveTask saveTask = new ExchangeOpSaveTask(exchange1.getActiveplayer().getObjectId(),
+		ExchangeOpSaveTask saveTask = new ExchangeOpSaveTask(this.inventoryDAO, exchange1.getActiveplayer().getObjectId(),
 				exchange2.getActiveplayer().getObjectId(), exchange1.getItemsToUpdate(), exchange2.getItemsToUpdate());
 		if (!saveTask.save()) {
 			activeInventory.restore(activePlayer);
@@ -548,22 +561,41 @@ public class ExchangeService {
 	 */
 	public static final class ExchangeOpSaveTask implements Runnable {
 
+		private final InventoryDAO inventoryDAO;
 		private final int player1Id;
 		private final int player2Id;
 		private final List<Item> player1Items;
 		private final List<Item> player2Items;
 
 		/**
-		 * player 1 id
-		 * player 2 id
+		 * 使用指定的 InventoryDAO 构造交易存盘任务。
+		 * Constructs the exchange save task with the given InventoryDAO.
+		 *
+		 * @param inventoryDAO 背包物品数据访问对象 / Inventory DAO
+		 * @param player1Id 玩家1 ID / player 1 id
+		 * @param player2Id 玩家2 ID / player 2 id
 		 * @param player1Items 玩家1 待存物品 / player 1 items to store
 		 * @param player2Items 玩家2 待存物品 / player 2 items to store
 		 */
-		public ExchangeOpSaveTask(int player1Id, int player2Id, List<Item> player1Items, List<Item> player2Items) {
+		public ExchangeOpSaveTask(InventoryDAO inventoryDAO, int player1Id, int player2Id, List<Item> player1Items, List<Item> player2Items) {
+			this.inventoryDAO = Objects.requireNonNull(inventoryDAO, "inventoryDAO must not be null");
 			this.player1Id = player1Id;
 			this.player2Id = player2Id;
 			this.player1Items = player1Items;
 			this.player2Items = player2Items;
+		}
+
+		/**
+		 * 默认构造：从 DAOManager 动态解析 InventoryDAO。
+		 * Default constructor resolving InventoryDAO from DAOManager.
+		 *
+		 * @param player1Id 玩家1 ID / player 1 id
+		 * @param player2Id 玩家2 ID / player 2 id
+		 * @param player1Items 玩家1 待存物品 / player 1 items to store
+		 * @param player2Items 玩家2 待存物品 / player 2 items to store
+		 */
+		public ExchangeOpSaveTask(int player1Id, int player2Id, List<Item> player1Items, List<Item> player2Items) {
+			this(DAOManager.getDAO(InventoryDAO.class), player1Id, player2Id, player1Items, player2Items);
 		}
 
 		@Override
@@ -572,7 +604,6 @@ public class ExchangeService {
 		}
 
 		public boolean save() {
-			InventoryDAO inventoryDAO = DAOManager.getDAO(InventoryDAO.class);
 			try (Connection con = DatabaseFactory.getConnection()) {
 				con.setAutoCommit(false);
 				try {

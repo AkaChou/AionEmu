@@ -86,7 +86,7 @@ public abstract class LegionDAO implements IDFactoryAwareDAO {
 	 * @return 类名 / class name
 	 */
 	@Override
-	public final String getClassName() {
+	public String getClassName() {
 		return LegionDAO.class.getName();
 	}
 

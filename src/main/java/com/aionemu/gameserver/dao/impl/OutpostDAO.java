@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.dao.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
@@ -20,6 +22,7 @@ import lombok.extern.slf4j.Slf4j;
  * Created by Wnkrz on 27/08/2017. Updated for MySQL 8.
  */
 @Slf4j
+@Repository
 public class OutpostDAO extends com.aionemu.gameserver.dao.OutpostDAO {
 
     /** 查询前哨地点 SQL / Select outpost locations SQL */
@@ -34,6 +37,8 @@ public class OutpostDAO extends com.aionemu.gameserver.dao.OutpostDAO {
     public OutpostDAO() {
         this(DatabaseFactory.getJdbcClient());
     }
+
+    @Autowired
 
     public OutpostDAO(JdbcClient jdbcClient) {
         this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");

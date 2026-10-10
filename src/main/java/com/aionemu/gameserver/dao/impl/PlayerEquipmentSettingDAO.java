@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.dao.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import java.util.Objects;
 
 import org.springframework.dao.DataAccessException;
@@ -19,6 +21,7 @@ import lombok.extern.slf4j.Slf4j;
  * MySQL 8 implementation of PlayerEquipmentSettingDAO using JdbcClient.
  */
 @Slf4j
+@Repository
 public class PlayerEquipmentSettingDAO extends com.aionemu.gameserver.dao.PlayerEquipmentSettingDAO {
 
 	/** 插入或更新装备方案 SQL / Insert or update equipment setting SQL*/
@@ -31,6 +34,8 @@ public class PlayerEquipmentSettingDAO extends com.aionemu.gameserver.dao.Player
 	public PlayerEquipmentSettingDAO() {
 		this(DatabaseFactory.getJdbcClient());
 	}
+
+	@Autowired
 
 	public PlayerEquipmentSettingDAO(JdbcClient jdbcClient) {
 		this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");

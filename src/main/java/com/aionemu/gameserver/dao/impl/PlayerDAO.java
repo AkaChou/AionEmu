@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.dao.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -46,6 +48,7 @@ import lombok.extern.slf4j.Slf4j;
  * MySQL 8 implementation of PlayerDAO using JdbcClient.
  */
 @Slf4j
+@Repository
 public class PlayerDAO extends com.aionemu.gameserver.dao.PlayerDAO {
 
     /** 按对象 ID 缓存的玩家公共数据 / Player common data cache by object ID */
@@ -125,6 +128,8 @@ public class PlayerDAO extends com.aionemu.gameserver.dao.PlayerDAO {
     public PlayerDAO() {
         this(DatabaseFactory.getJdbcClient());
     }
+
+    @Autowired
 
     public PlayerDAO(JdbcClient jdbcClient) {
         this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");

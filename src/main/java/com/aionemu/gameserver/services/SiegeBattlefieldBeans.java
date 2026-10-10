@@ -18,9 +18,12 @@ import com.aionemu.gameserver.services.instance.SuspiciousOphidanBridgeService;
 import com.aionemu.gameserver.services.ranking.SeasonRankingUpdateService;
 import com.aionemu.gameserver.spawnengine.ShugoImperialTombSpawnManager;
 import java.text.ParseException;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
+import com.aionemu.gameserver.dao.AbyssLandingDAO;
+import com.aionemu.gameserver.dao.TownDAO;
 
 /**
  * SiegeBattlefieldBeans：从 GameLegacyServiceBridgeConfiguration 拆出的域内 Bean 装配。
@@ -43,8 +46,9 @@ public class SiegeBattlefieldBeans {
 
     @Bean
     @Lazy
-    public TownService townService() {
-        return new TownService();
+    public TownService townService(ObjectProvider<TownDAO> townDaoProvider) {
+        TownDAO dao = townDaoProvider.getIfAvailable();
+        return dao != null ? new TownService(dao) : new TownService();
     }
 
     @Bean
@@ -259,8 +263,9 @@ public class SiegeBattlefieldBeans {
 
     @Bean
     @Lazy
-    public AbyssLandingService abyssLandingService() {
-        return new AbyssLandingService();
+    public AbyssLandingService abyssLandingService(ObjectProvider<AbyssLandingDAO> abyssLandingDaoProvider) {
+        AbyssLandingDAO dao = abyssLandingDaoProvider.getIfAvailable();
+        return dao != null ? new AbyssLandingService(dao) : new AbyssLandingService();
     }
 
     @Bean

@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.dao.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -19,6 +21,7 @@ import lombok.extern.slf4j.Slf4j;
  * Updated for MySQL 8 - Fixed connection leaks.
  */
 @Slf4j
+@Repository
 public class RewardServiceDAO extends com.aionemu.gameserver.dao.RewardServiceDAO {
 
     /** 标记奖励为已领取 SQL / Mark reward as received SQL*/
@@ -33,6 +36,8 @@ public class RewardServiceDAO extends com.aionemu.gameserver.dao.RewardServiceDA
     public RewardServiceDAO() {
         this(DatabaseFactory.getJdbcClient());
     }
+
+    @Autowired
 
     public RewardServiceDAO(JdbcClient jdbcClient) {
         this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");

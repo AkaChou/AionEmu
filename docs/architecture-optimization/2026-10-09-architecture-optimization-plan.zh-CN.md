@@ -95,5 +95,7 @@ AionEmu 当前采用单体 Spring Boot 4.1 承载 Login、Game、Chat 服务，�
 - [x] 9. 全库持久层 Spring JdbcClient 现代化改造：将登录服（11个）与游戏服（71个）共 82 个 DAO 全面升级为现代流式 JdbcClient，采用双构造器模式支持 IoC 与轻量单测，严格保持 ServiceContext 多租户数据源隔离与调用方外部事务原子性，并显式排除 Spring Boot 默认单数据源自动配置
 - [x] 10. 脏标记短路防空转与网络包队列遍历优化（Phase 3 任务 3.1 & 3.2）：在 `AbyssRankDAO`、`InventoryDAO`、`ItemStoneListDAO`、`PlayerQuestListDAO`、`PlayerSkillListDAO`、`PlayerStigmasEquippedDAO` 及 `House` 中引入无变动短路检查，消除空转数据库连接与空事务，节约 85%+ 周期存盘 JDBC 开销；优化 `PacketProcessor` 避免重复遍历首包，新增单元测试全部通过
 - [x] 11. 现代外部化配置迁移（Phase 4 任务 4.1）：将 `PeriodicSaveConfig`、`ShutdownConfig`、`CacheConfig`、`CleaningConfig` 全面升级为 Spring Boot `@ConfigurationProperties`，与静态门面双轨同步并兼容旧属性路径，新增专项绑定单元测试 100% 通过
+- [x] 12. 服务层构造器注入收尾与消除 DAOManager.getDAO（Phase 4 任务 4.2）：将 `TownService`、`AnnouncementService`、`AbyssLandingService`、`ExchangeService`、`PetitionService` 全面改造为双构造器依赖注入模式，在 Spring 配置（`SiegeBattlefieldBeans`、`CoreRuntimeServiceBeans`）中以 `ObjectProvider` 显式装配 DAO，彻底消除硬编码静态查表，新增 6 项专项解耦单元测试全部通过
+- [x] 13. Spring Boot 数据库持久化基础设施与全量 DAO IoC 纳管：建立 `ContextRoutingDataSource` 动态延迟多租户路由，声明 `AionPersistenceConfiguration` 托管 DataSource/JdbcClient/JdbcTransactionManager/TransactionTemplate，全量 82 个 DAO 标注 `@Repository` 并完成 52 个抽象 DAO 类 CGLIB 代理零警告重构，通过 `DAOManagerContextBridge` 打通 Spring Bean 单例解析与离线降级通道，新增专项集成测试全部通过
 
 

@@ -11,6 +11,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.springframework.beans.BeansException;
+import org.springframework.context.ApplicationContext;
+
 import com.aionemu.commons.services.ServiceContext;
 
 /**
@@ -27,11 +30,30 @@ import com.aionemu.commons.services.ServiceContext;
 @Slf4j
 public class DAOManager {
 
+    /**
+     * Spring 容器上下文引用（支持 Spring 容器托管的 DAO 查找）
+     * Spring ApplicationContext reference (supports Spring-managed DAO retrieval)
+     */
+    private static volatile ApplicationContext applicationContext;
 
     /**
- * 已注册的 DAO 集合
-     * Collection of registered DAOs
+     * 设置 Spring 容器上下文引用。
+     * Sets the Spring ApplicationContext reference.
+     * @param context Spring 容器上下文 / Spring ApplicationContext
      */
+    public static void setApplicationContext(ApplicationContext context) {
+        applicationContext = context;
+    }
+
+    /**
+     * 判断 Spring 容器是否已就绪。
+     * Checks whether Spring ApplicationContext is available.
+     * @return true 若已关联 Spring 上下文 / true if Spring context is attached
+     */
+    public static boolean hasSpringContext() {
+        return applicationContext != null;
+    }
+
     private static final Map<String, DaoState> states = new ConcurrentHashMap<>();
 
     /**
@@ -89,6 +111,14 @@ public class DAOManager {
      */
     @SuppressWarnings("unchecked")
     public static <T extends DAO> T getDAO(Class<T> clazz) throws DAONotFoundException {
+        if (applicationContext != null) {
+            try {
+                return applicationContext.getBean(clazz);
+            } catch (BeansException ignored) {
+                // fall through to context-scoped state registry
+            }
+        }
+
         DAO result = state().daoMap.get(clazz.getName());
 
         if (result == null) {
