@@ -8,6 +8,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -19,17 +20,27 @@ import com.aionemu.gameserver.services.teleport.TeleportService2;
 /**
  * 标准双队对抗：多回合小队对战，胜回合最多的队伍获胜。
  * Standard two-team battleground: multi-round group fights; most round wins win.
+ *
  * @author Rinzler (Encom)
  */
 public class TwoTeamBg extends Battleground {
-	/** 队伍索引 → 回合胜场。 / Team index → round wins. */
+	/**
+	 * 队伍索引 → 回合胜场。 / Team index → round wins.
+	 */
 	private final Map<Integer, Integer> roundResults = new HashMap<>();
-	/** 最大回合数。 / Maximum rounds. */
+	/**
+	 * 最大回合数。 / Maximum rounds.
+	 */
 	private int maxRounds = 3;
-	/** 已完成回合数。 / Rounds completed. */
+	/**
+	 * 已完成回合数。 / Rounds completed.
+	 */
 	private int roundsDone = 0;
-	/** 是否已触发结束。 / Whether end already called. */
+	/**
+	 * 是否已触发结束。 / Whether end already called.
+	 */
 	private boolean endCalled = false;
+
 	/**
 	 * 初始化标准双队战场名称、规模与地图出生点。
 	 * Initializes standard two-team name, sizes and map spawn points.
@@ -37,7 +48,7 @@ public class TwoTeamBg extends Battleground {
 	public TwoTeamBg() {
 		super.name = "[Team VS Team]";
 		super.description = "Your must defeat the opposing team. There is " + maxRounds
-				+ " rounds. The team with the most won round, win's !!!";
+			+ " rounds. The team with the most won round, win's !!!";
 		super.minSize = 3;
 		super.maxSize = 6;
 		super.teamCount = 2;
@@ -780,6 +791,7 @@ public class TwoTeamBg extends Battleground {
 	/**
 	 * 从排队列表创建标准双队对局。
 	 * Creates a standard two-team match from the queue.
+	 *
 	 * @param players 排队玩家对象 ID / queued player object ids
 	 */
 	public void createMatch(List<Integer> players) {
@@ -823,12 +835,13 @@ public class TwoTeamBg extends Battleground {
 	/**
 	 * 处理死亡：检测回合胜负。
 	 * Handles death: detect round winner.
-	 * @param player 死亡玩家 / dead player
+	 *
+	 * @param player       死亡玩家 / dead player
 	 * @param lastAttacker 最后攻击者 / last attacker
 	 */
 	public void onDie(final Player player, Creature lastAttacker) {
 		super.onDieDefault(player, lastAttacker);
-		if (lastAttacker instanceof Player killer && lastAttacker.getObjectId() != player.getObjectId()) {
+		if (lastAttacker instanceof Player killer && !killer.getObjectId().equals(player.getObjectId())) {
 			if (killer.getPlayerGroup2() != null) {
 				int deadCounter = 0;
 				for (Player pl : player.getPlayerGroup2().getMembers()) {
@@ -850,7 +863,7 @@ public class TwoTeamBg extends Battleground {
 		}
 		this.maxRounds = 5;
 		this.description = "Your must defeat the opposing team. There is " + maxRounds
-				+ " rounds. The team with the most won round, win's !!!";
+			+ " rounds. The team with the most won round, win's !!!";
 		this.matchLength = 185;
 		startMatch();
 		return true;
@@ -859,9 +872,10 @@ public class TwoTeamBg extends Battleground {
 	/**
 	 * 处理玩家离开标准双队战场。
 	 * Handles a player leaving standard two-team BG.
-	 * @param player 玩家 / player
+	 *
+	 * @param player   玩家 / player
 	 * @param isLogout 是否登出 / whether logout
-	 * @param isAfk 是否挂机 / whether AFK
+	 * @param isAfk    是否挂机 / whether AFK
 	 */
 	public void onLeave(Player player, boolean isLogout, boolean isAfk) {
 		super.onLeaveDefault(player, isLogout, isAfk);
@@ -912,23 +926,20 @@ public class TwoTeamBg extends Battleground {
 	/**
 	 * 为指定小队累计回合胜场。
 	 * Adds a round win for the given group.
+	 *
 	 * @param group 胜方小队 / winning group
 	 */
 	private void addRoundWin(PlayerGroup group) {
 		if (group == null) {
 			return;
 		}
-		Integer result = roundResults.get(group.getBgIndex());
-		if (result != null) {
-			roundResults.put(group.getBgIndex(), result + 1);
-		} else {
-			roundResults.put(group.getBgIndex(), 1);
-		}
+		roundResults.merge(group.getBgIndex(), 1, Integer::sum);
 	}
 
 	/**
 	 * 判定本回合胜方小队。
 	 * Determines the current round winning group.
+	 *
 	 * @return 回合胜方小队 / winning group
 	 */
 	private PlayerGroup getRoundWinner() {
@@ -963,6 +974,7 @@ public class TwoTeamBg extends Battleground {
 	/**
 	 * 获取整场胜方小队。
 	 * Returns overall match winning group.
+	 *
 	 * @return 整场胜方小队 / winning group
 	 */
 	private PlayerGroup getWinner() {
@@ -971,11 +983,9 @@ public class TwoTeamBg extends Battleground {
 		for (Map.Entry<Integer, Integer> entry : roundResults.entrySet()) {
 			if (winner == null && entry.getValue() > drawPoints) {
 				winner = super.getGroups().get(entry.getKey());
-			} else if (winner == null) {
-				continue;
-			} else if (roundResults.get(winner.getBgIndex()) < entry.getValue()) {
+			} else if (winner != null && roundResults.get(winner.getBgIndex()) < entry.getValue()) {
 				winner = super.getGroups().get(entry.getKey());
-			} else if (roundResults.get(winner.getBgIndex()) == entry.getValue()) {
+			} else if (winner != null && Objects.equals(roundResults.get(winner.getBgIndex()), entry.getValue())) {
 				drawPoints = roundResults.get(winner.getBgIndex());
 				winner = null;
 			}
@@ -986,6 +996,7 @@ public class TwoTeamBg extends Battleground {
 	/**
 	 * 结束双队对局并结算奖励。
 	 * Ends the two-team match and settles rewards.
+	 *
 	 * @param isDraw 是否平局 / whether draw
 	 */
 	private void endTwoTeamMatch(boolean isDraw) {
@@ -1017,13 +1028,13 @@ public class TwoTeamBg extends Battleground {
 					for (PlayerGroup group : super.getGroups()) {
 						for (Player pl : group.getMembers()) {
 							super.scheduleAnnouncement(pl,
-									GameFeatureServices.ladderService().getNameByIndex(roundWinner.getBgIndex())
-											+ " Win's the round!",
-									0);
+								GameFeatureServices.ladderService().getNameByIndex(roundWinner.getBgIndex())
+									+ " Win's the round!",
+								0);
 						}
 					}
 					super.specAnnounce(
-							GameFeatureServices.ladderService().getNameByIndex(roundWinner.getBgIndex()) + " Win's the round!");
+						GameFeatureServices.ladderService().getNameByIndex(roundWinner.getBgIndex()) + " Win's the round!");
 					startNewRound();
 					return;
 				}
@@ -1073,7 +1084,7 @@ public class TwoTeamBg extends Battleground {
 			super.specAnnounce("Draw!");
 		} else {
 			for (PlayerGroup group : super.getGroups()) {
-				if (group.getTeamId() == winner.getTeamId()) {
+				if (Objects.equals(group.getTeamId(), winner.getTeamId())) {
 					for (Player pl : group.getMembers()) {
 						super.playerWinMatch(pl, super.K_VALUE / 2);
 						byte level = pl.getLevel();

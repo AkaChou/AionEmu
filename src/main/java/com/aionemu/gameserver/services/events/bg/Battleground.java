@@ -61,6 +61,7 @@ import java.util.Map;
 /**
  * 战场基类，封装匹配、对局生命周期、天梯评分、观战与公共工具逻辑。
  * Base battleground class encapsulating matchmaking, match lifecycle, ladder rating, spectating and shared helpers.
+ *
  * @author Rinzler (Encom)
  */
 @Getter
@@ -70,114 +71,170 @@ public abstract class Battleground {
 	/**
 	 * 设置活动战场标记（历史方法名，保留以兼容既有调用）。
 	 * Marks this battleground as an event match (legacy setter name kept for existing callers).
+	 *
 	 * @param isEvent 是否活动战场 / whether event mode
 	 */
 	public void setIsEvent(boolean isEvent) {
 		this.isEvent = isEvent;
 	}
-	/** 默认传送延迟（毫秒）。 / Default teleport delay in ms. */
+
+	/**
+	 * 默认传送延迟（毫秒）。 / Default teleport delay in ms.
+	 */
 	protected static final int TELEPORT_DEFAULT_DELAY = 0;
-	/** Elo 评分 K 值 / Elo rating K-value. */
+	/**
+	 * Elo 评分 K 值 / Elo rating K-value.
+	 */
 	protected final int K_VALUE = 20;
 
-	/** 战场显示名 → 实现类。 / Display name → implementation class.
+	/**
+	 * 战场显示名 → 实现类。 / Display name → implementation class.
 	 * -- GETTER --
-	 *  获取显示名到实现类的别名表。
-	 *  Returns display-name to implementation-class aliases.
+	 * 获取显示名到实现类的别名表。
+	 * Returns display-name to implementation-class aliases.
 	 */
 	@Getter
-	@SuppressWarnings("serial")
-	protected static final Map<String, Class<?>> aliases = new HashMap<>() {
-		{
-			put("[DeathMatch]", DeathmatchBg.class);
-			put("[1 VS 1]", SoloSurvivorBg.class);
-			put("[Team VS Team]", TwoTeamSmallBg.class);
-		}
-	};
-	/** 战场名称。 / Battleground name. */
+	protected static final Map<String, Class<?>> aliases = Map.of(
+		"[DeathMatch]", DeathmatchBg.class,
+		"[1 VS 1]", SoloSurvivorBg.class,
+		"[Team VS Team]", TwoTeamSmallBg.class
+	);
+	/**
+	 * 战场名称。 / Battleground name.
+	 */
 	protected String name = "";
-	/** 战场描述。 / Battleground description. */
+	/**
+	 * 战场描述。 / Battleground description.
+	 */
 	protected String description = "";
-	/** 单队/单局最小人数。 / Minimum size per team/match. */
+	/**
+	 * 单队/单局最小人数。 / Minimum size per team/match.
+	 */
 	protected int minSize = 0;
-	/** 单队/单局最大人数。 / Maximum size per team/match. */
+	/**
+	 * 单队/单局最大人数。 / Maximum size per team/match.
+	 */
 	protected int maxSize = 0;
-	/** 队伍数量。 / Number of teams. */
+	/**
+	 * 队伍数量。 / Number of teams.
+	 */
 	protected int teamCount = 0;
-	/** 对局时长（秒）。 / Match length in seconds. */
+	/**
+	 * 对局时长（秒）。 / Match length in seconds.
+	 */
 	protected int matchLength = 0;
-	/** 可选战场地图列表。 / Available battleground maps. */
+	/**
+	 * 可选战场地图列表。 / Available battleground maps.
+	 */
 	protected List<BattlegroundMap> maps = new ArrayList<>();
-	/** 当前副本 ID / Current instance id */
+	/**
+	 * 当前副本 ID / Current instance id
+	 */
 	protected int instanceId = -1;
-	/** 战场注册 ID / Registered battleground id. */
+	/**
+	 * 战场注册 ID / Registered battleground id.
+	 */
 	protected Integer bgId = -1;
-	/** 对局开始时间戳。 / Match start timestamp. */
+	/**
+	 * 对局开始时间戳。 / Match start timestamp.
+	 */
 	protected long startStamp = 0;
-	/** 是否锦标赛模式。 / Whether tournament mode.
+	/**
+	 * 是否锦标赛模式。 / Whether tournament mode.
 	 * -- GETTER --
-	 *  是否锦标赛模式。
-	 *  Whether tournament mode.
+	 * 是否锦标赛模式。
+	 * Whether tournament mode.
 	 * 若 tournament 则为 true / true if tournament
 	 */
 	protected boolean isTournament = false;
-	/** 是否活动模式。 / Whether event mode.
+	/**
+	 * 是否活动模式。 / Whether event mode.
 	 * -- GETTER --
-	 *  是否活动模式。
-	 *  Whether event mode.
+	 * 是否活动模式。
+	 * Whether event mode.
 	 * 若 event 则为 true / true if event
 	 */
 	protected boolean isEvent = false;
-	/** 是否 1v1 模式 / Whether 1v1 mode.
+	/**
+	 * 是否 1v1 模式 / Whether 1v1 mode.
 	 * -- GETTER --
-	 *  是否 1v1 模式。
-	 *  Whether 1v1 mode.
+	 * 是否 1v1 模式。
+	 * Whether 1v1 mode.
 	 * 若 1v1 则为 true / true if 1v1
 	 */
 	protected boolean is1v1 = false;
-	/** 当前世界地图实例。 / Current world map instance. */
+	/**
+	 * 当前世界地图实例。 / Current world map instance.
+	 */
 	protected WorldMapInstance instance = null;
-	/** 过期/结束任务。 / Expire/end task. */
+	/**
+	 * 过期/结束任务。 / Expire/end task.
+	 */
 	protected ScheduledFuture<?> expireTask = null;
-	/** 后台周期任务。 / Background periodic task.
+	/**
+	 * 后台周期任务。 / Background periodic task.
 	 * -- GETTER --
-	 *  获取后台周期任务。
-	 *  Returns the background periodic task.
+	 * 获取后台周期任务。
+	 * Returns the background periodic task.
 	 */
 	protected ScheduledFuture<?> backgroundTask = null;
-	/** 后台任务计数。 / Background task counter. */
+	/**
+	 * 后台任务计数。 / Background task counter.
+	 */
 	protected int backgroundCounter = 0;
-	/** 当前选用地图。 / Currently selected map. */
+	/**
+	 * 当前选用地图。 / Currently selected map.
+	 */
 	protected BattlegroundMap map = null;
-	/** 当前映射 ID / Current map id */
+	/**
+	 * 当前映射 ID / Current map id
+	 */
 	protected int mapId = 0;
-	/** 对局是否已结束。 / Whether match is finished. */
+	/**
+	 * 对局是否已结束。 / Whether match is finished.
+	 */
 	protected boolean isDone = false;
-	/** 结束时是否解散队伍。 / Whether to disband teams on end. */
+	/**
+	 * 结束时是否解散队伍。 / Whether to disband teams on end.
+	 */
 	protected boolean shouldDisband = true;
-	/** 是否基于队伍。 / Whether team-based.
+	/**
+	 * 是否基于队伍。 / Whether team-based.
 	 * -- GETTER --
-	 *  是否基于队伍。
-	 *  Whether team-based.
+	 * 是否基于队伍。
+	 * Whether team-based.
 	 * 若 team-based 则为 true / true if team-based
 	 */
 	protected boolean teamBased = false;
-	/** 玩家进场前坐标。 / Player locations before entry. */
+	/**
+	 * 玩家进场前坐标。 / Player locations before entry.
+	 */
 	protected Map<Integer, WorldPosition> previousLocations = new HashMap<>();
-	/** 单人参赛者列表。 / Solo participants. */
+	/**
+	 * 单人参赛者列表。 / Solo participants.
+	 */
 	protected List<Player> _players = new CopyOnWriteArrayList<>();
-	/** 小队参赛者列表。 / Group participants. */
+	/**
+	 * 小队参赛者列表。 / Group participants.
+	 */
 	protected List<PlayerGroup> _groups = new CopyOnWriteArrayList<>();
-	/** 联盟参赛者列表。 / Alliance participants. */
+	/**
+	 * 联盟参赛者列表。 / Alliance participants.
+	 */
 	protected List<PlayerAlliance> _alliances = new CopyOnWriteArrayList<>();
-	/** 观战者列表。 / Spectators. */
+	/**
+	 * 观战者列表。 / Spectators.
+	 */
 	protected List<Player> _spectators = new CopyOnWriteArrayList<>();
-	/** 中途离开者（用于重连）。 / Leavers (for reconnect). */
+	/**
+	 * 中途离开者（用于重连）。 / Leavers (for reconnect).
+	 */
 	protected Map<Integer, AionObject> _leavers = Collections.synchronizedMap(new LinkedHashMap<>());
 
 	/**
 	 * 根据排队玩家创建并准备对局。
 	 * Creates and prepares a match from queued player object ids.
+	 *
 	 * @param players 排队玩家对象 ID 列表 / queued player object ids
 	 */
 	public abstract void createMatch(List<Integer> players);
@@ -191,7 +248,8 @@ public abstract class Battleground {
 	/**
 	 * 处理玩家死亡事件。
 	 * Handles a player death event.
-	 * @param player 死亡玩家 / dead player
+	 *
+	 * @param player       死亡玩家 / dead player
 	 * @param lastAttacker 最后攻击者 / last attacker
 	 */
 	public abstract void onDie(final Player player, Creature lastAttacker);
@@ -199,15 +257,17 @@ public abstract class Battleground {
 	/**
 	 * 处理玩家离开战场。
 	 * Handles a player leaving the battleground.
-	 * @param player 离开的玩家 / leaving player
+	 *
+	 * @param player   离开的玩家 / leaving player
 	 * @param isLogout 是否登出 / whether logout
-	 * @param isAfk 是否挂机 / whether AFK
+	 * @param isAfk    是否挂机 / whether AFK
 	 */
 	public abstract void onLeave(Player player, boolean isLogout, boolean isAfk);
 
 	/**
 	 * 神器被摧毁时回调（子类可覆盖）。
 	 * Callback when an artifact is destroyed (override in subclasses).
+	 *
 	 * @param teamIndex 队伍索引 / team index
 	 */
 	public void onArtifactDie(int teamIndex) {
@@ -216,7 +276,8 @@ public abstract class Battleground {
 	/**
 	 * 资源被采集时回调（子类可覆盖）。
 	 * Callback when a resource is gathered (override in subclasses).
-	 * @param resource 被采集的资源 / the gathered resource
+	 *
+	 * @param resource  被采集的资源 / the gathered resource
 	 * @param teamIndex 队伍索引 / team index
 	 */
 	public void onResourceGathered(Gatherable resource, int teamIndex) {
@@ -225,6 +286,7 @@ public abstract class Battleground {
 	/**
 	 * 是否限制隐身技能。
 	 * Whether stealth skills are restricted.
+	 *
 	 * @return 若 restricted 则为 true / true if restricted
 	 */
 	public boolean isStealthRestricted() {
@@ -234,6 +296,7 @@ public abstract class Battleground {
 	/**
 	 * 判断效果模板是否允许使用。
 	 * Whether the given effect template is allowed.
+	 *
 	 * @param et 效果模板 / effect template
 	 * @return 若 allowed 则为 true / true if allowed
 	 */
@@ -244,6 +307,7 @@ public abstract class Battleground {
 	/**
 	 * 是否限制飞行。
 	 * Whether flight is restricted on the current map.
+	 *
 	 * @return 若 restricted 则为 true / true if restricted
 	 */
 	public boolean isFlightRestricted() {
@@ -253,6 +317,7 @@ public abstract class Battleground {
 	/**
 	 * 创建锦标赛对局；默认不支持。
 	 * Creates a tournament match; unsupported by default.
+	 *
 	 * @param teams 各队玩家列表 / teams of players
 	 * @return 成功则 true / true on success
 	 */
@@ -263,6 +328,7 @@ public abstract class Battleground {
 	/**
 	 * 获取当前地图的出生点列表。
 	 * Returns spawn positions of the current map.
+	 *
 	 * @return 出生点列表 / spawn positions
 	 */
 	public List<SpawnPosition> getSpawnPositions() {
@@ -276,6 +342,7 @@ public abstract class Battleground {
 	/**
 	 * 判断玩家是否位于本战场可用地图中。
 	 * Whether the player is on one of this battleground maps.
+	 *
 	 * @param player 玩家 / player
 	 * @return 在战场地图内则 true / true if on a BG map
 	 */
@@ -291,11 +358,12 @@ public abstract class Battleground {
 	/**
 	 * 按排队人数与模式计算本局抽取规模。
 	 * Computes match draw size from queue size and mode.
+	 *
 	 * @param playerCount 排队人数 / queue size
 	 * @return 本局抽取规模 / draw size
 	 */
 	protected int getRandomSize(int playerCount) {
-		int avgCount = (int) Math.floor(playerCount / getTeamCount());
+		int avgCount = playerCount / getTeamCount();
 		if (isTeamBased()) {
 			return avgCount;
 		} else if (avgCount <= getMaxSize() && avgCount >= getMinSize()) {
@@ -312,6 +380,7 @@ public abstract class Battleground {
 	/**
 	 * 处理单人队列匹配。
 	 * Handles solo queue matchmaking.
+	 *
 	 * @param players 排队玩家对象 ID / queued player ids
 	 * @return 成功则 true / true on success
 	 */
@@ -321,8 +390,8 @@ public abstract class Battleground {
 			return false;
 		}
 		int playerIndex = 0;
-		while (players.size() > 0) {
-			int objId = players.remove(0);
+		while (!players.isEmpty()) {
+			int objId = players.removeFirst();
 			Player pl = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(objId);
 			if (pl == null) {
 				continue;
@@ -330,7 +399,6 @@ public abstract class Battleground {
 			pl.setBgIndex(playerIndex);
 			pl.setBattleground(this);
 			addPlayer(pl);
-			players.remove((Integer) objId);
 			removePlayerFromTeam(pl);
 			playerIndex++;
 			if (getPlayers().size() >= size) {
@@ -343,6 +411,7 @@ public abstract class Battleground {
 	/**
 	 * 处理小队队列匹配。
 	 * Handles group queue matchmaking.
+	 *
 	 * @param players 排队玩家对象 ID / queued player ids
 	 * @return 成功则 true / true on success
 	 */
@@ -354,17 +423,16 @@ public abstract class Battleground {
 		int groupIndex = 0;
 		while (players.size() >= groupSize) {
 			List<Player> groupPlayers = new ArrayList<>();
-			while (groupPlayers.size() < groupSize && players.size() > 0) {
-				int objId = players.remove(0);
+			while (groupPlayers.size() < groupSize && !players.isEmpty()) {
+				int objId = players.removeFirst();
 				Player pl = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(objId);
 				if (pl != null) {
 					removePlayerFromTeam(pl);
 					groupPlayers.add(pl);
 					pl.setBattleground(this);
-					players.remove((Integer) objId);
 				}
 			}
-			PlayerGroup group = PlayerGroupService.createGroup(groupPlayers.get(0));
+			PlayerGroup group = PlayerGroupService.createGroup(groupPlayers.getFirst());
 			for (int i = 1; i < groupPlayers.size(); i++) {
 				PlayerGroupService.addPlayer(group, groupPlayers.get(i));
 			}
@@ -381,6 +449,7 @@ public abstract class Battleground {
 	/**
 	 * 处理联盟队列匹配。
 	 * Handles alliance queue matchmaking.
+	 *
 	 * @param players 排队玩家对象 ID / queued player ids
 	 * @return 成功则 true / true on success
 	 */
@@ -392,8 +461,8 @@ public abstract class Battleground {
 		int allianceIndex = 0;
 		while (players.size() >= allianceSize) {
 			List<Player> alliancePlayers = new ArrayList<>();
-			while (alliancePlayers.size() < allianceSize && players.size() > 0) {
-				int objId = players.remove(0);
+			while (alliancePlayers.size() < allianceSize && !players.isEmpty()) {
+				int objId = players.removeFirst();
 				Player pl = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(objId);
 				if (pl != null) {
 					alliancePlayers.add(pl);
@@ -401,9 +470,9 @@ public abstract class Battleground {
 					removePlayerFromTeam(pl);
 				}
 			}
-			PlayerAlliance alliance = new PlayerAlliance(new PlayerAllianceMember(alliancePlayers.get(0)),
-					TeamType.ALLIANCE);
-			for (int i = 0; i < alliancePlayers.size(); i++) {
+			PlayerAlliance alliance = new PlayerAlliance(new PlayerAllianceMember(alliancePlayers.getFirst()),
+				TeamType.ALLIANCE);
+			for (int i = 1; i < alliancePlayers.size(); i++) {
 				PlayerAllianceService.addPlayerToAlliance(alliance, alliancePlayers.get(i));
 			}
 			alliance.setBgIndex(allianceIndex);
@@ -419,6 +488,7 @@ public abstract class Battleground {
 	/**
 	 * 为各队创建小队并登记。
 	 * Creates groups for each team and registers them.
+	 *
 	 * @param teams 各队玩家 / teams of players
 	 * @return 成功则 true / true on success
 	 */
@@ -437,15 +507,15 @@ public abstract class Battleground {
 		}
 		int groupIndex = 0;
 		while (getGroups().size() < getTeamCount()) {
-			List<Player> players = teams.remove(0);
+			List<Player> players = teams.removeFirst();
 			while (players.size() > groupSize) {
-				players.remove(players.size());
+				players.removeLast();
 			}
 			for (Player pl : players) {
 				pl.setBattleground(this);
 				removePlayerFromTeam(pl);
 			}
-			PlayerGroup group = PlayerGroupService.createGroup(players.get(0));
+			PlayerGroup group = PlayerGroupService.createGroup(players.getFirst());
 			for (int i = 1; i < players.size(); i++) {
 				PlayerGroupService.addPlayer(group, players.get(i));
 			}
@@ -459,6 +529,7 @@ public abstract class Battleground {
 	/**
 	 * 为各队创建联盟并登记。
 	 * Creates alliances for each team and registers them.
+	 *
 	 * @param teams 各队玩家 / teams of players
 	 * @return 成功则 true / true on success
 	 */
@@ -477,16 +548,16 @@ public abstract class Battleground {
 		}
 		int allianceIndex = 0;
 		while (getAlliances().size() < getTeamCount()) {
-			List<Player> players = teams.remove(0);
+			List<Player> players = teams.removeFirst();
 			while (players.size() > allianceSize) {
-				players.remove(players.size());
+				players.removeLast();
 			}
 			for (Player pl : players) {
 				pl.setBattleground(this);
 				removePlayerFromTeam(pl);
 			}
-			PlayerAlliance alliance = new PlayerAlliance(new PlayerAllianceMember(players.get(0)), TeamType.ALLIANCE);
-			for (int i = 0; i < players.size(); i++) {
+			PlayerAlliance alliance = new PlayerAlliance(new PlayerAllianceMember(players.getFirst()), TeamType.ALLIANCE);
+			for (int i = 1; i < players.size(); i++) {
 				PlayerAllianceService.addPlayerToAlliance(alliance, players.get(i));
 			}
 			alliance.setBgIndex(allianceIndex);
@@ -499,6 +570,7 @@ public abstract class Battleground {
 	/**
 	 * 登记单人参赛者列表。
 	 * Registers solo participants.
+	 *
 	 * @param players 各方玩家列表 / sides of players
 	 * @return 成功则 true / true on success
 	 */
@@ -510,7 +582,7 @@ public abstract class Battleground {
 			}
 		}
 		while (playerList.size() > getMaxSize()) {
-			playerList.remove(playerList.size() - 1);
+			playerList.removeLast();
 		}
 		return handleQueueSolo(playerList);
 	}
@@ -518,6 +590,7 @@ public abstract class Battleground {
 	/**
 	 * 添加单人参赛者。
 	 * Adds a solo participant.
+	 *
 	 * @param player 玩家 / player
 	 */
 	protected void addPlayer(Player player) {
@@ -529,6 +602,7 @@ public abstract class Battleground {
 	/**
 	 * 添加小队参赛者。
 	 * Adds a group participant.
+	 *
 	 * @param group 小队 / group
 	 */
 	protected void addGroup(PlayerGroup group) {
@@ -540,6 +614,7 @@ public abstract class Battleground {
 	/**
 	 * 添加联盟参赛者。
 	 * Adds an alliance participant.
+	 *
 	 * @param alliance 联盟 / alliance
 	 */
 	protected void addAlliance(PlayerAlliance alliance) {
@@ -551,6 +626,7 @@ public abstract class Battleground {
 	/**
 	 * 冻结玩家且不自动解冻。
 	 * Freezes the player without auto-unfreeze.
+	 *
 	 * @param player 玩家 / player
 	 */
 	protected void freezeNoEnd(Player player) {
@@ -562,7 +638,8 @@ public abstract class Battleground {
 	/**
 	 * 冻结玩家并在指定时长后解冻。
 	 * Freezes the player and unfreezes after the given duration.
-	 * @param player 玩家 / player
+	 *
+	 * @param player   玩家 / player
 	 * @param duration 时长毫秒 / duration in ms
 	 */
 	protected void freezePlayer(final Player player, int duration) {
@@ -579,6 +656,7 @@ public abstract class Battleground {
 	/**
 	 * 治疗玩家（默认重置 DP）。
 	 * Heals the player (resets DP by default).
+	 *
 	 * @param player 玩家 / player
 	 */
 	protected void healPlayer(Player player) {
@@ -588,7 +666,8 @@ public abstract class Battleground {
 	/**
 	 * 治疗玩家并可选择是否重置 DP。
 	 * Heals the player, optionally resetting DP.
-	 * @param player 玩家 / player
+	 *
+	 * @param player  玩家 / player
 	 * @param resetDp 是否重置 DP / whether to reset DP
 	 */
 	protected void healPlayer(Player player, boolean resetDp) {
@@ -602,10 +681,11 @@ public abstract class Battleground {
 	/**
 	 * 传送玩家到当前副本坐标。
 	 * Teleports the player to coordinates in the current instance.
+	 *
 	 * @param player 玩家 / player
-	 * @param x X 坐标 / x
-	 * @param y Y 坐标 / y
-	 * @param z Z 坐标 / z
+	 * @param x      X 坐标 / x
+	 * @param y      Y 坐标 / y
+	 * @param z      Z 坐标 / z
 	 */
 	protected void performTeleport(Player player, float x, float y, float z) {
 		player.getController().abortCast();
@@ -616,6 +696,7 @@ public abstract class Battleground {
 	/**
 	 * 重置玩家技能与物品冷却。
 	 * Resets player skill and item cooldowns.
+	 *
 	 * @param player 玩家 / player
 	 */
 	protected void performCdReset(Player player) {
@@ -636,6 +717,7 @@ public abstract class Battleground {
 	/**
 	 * 将玩家传回进场前坐标。
 	 * Returns the player to the pre-entry location.
+	 *
 	 * @param player 玩家 / player
 	 */
 	protected void returnToPreviousLocation(Player player) {
@@ -652,16 +734,17 @@ public abstract class Battleground {
 		}
 		previousLocations.remove(player.getObjectId());
 		TeleportService2.teleportTo(player, previousPos.getMapId(), previousPos.getX(), previousPos.getY(),
-				previousPos.getZ() + 1);
+			previousPos.getZ() + 1);
 	}
 
 	/**
 	 * 延迟向玩家发送带发送者的公告。
 	 * Schedules an announcement with sender to the player.
+	 *
 	 * @param player 玩家 / player
 	 * @param sender 发送者名称 / sender name
-	 * @param msg 消息 / message
-	 * @param delay 延迟毫秒 / delay ms
+	 * @param msg    消息 / message
+	 * @param delay  延迟毫秒 / delay ms
 	 */
 	protected void scheduleAnnouncement(final Player player, final String sender, final String msg, int delay) {
 		if (delay > 0) {
@@ -674,9 +757,10 @@ public abstract class Battleground {
 	/**
 	 * 延迟向玩家发送默认发送者公告。
 	 * Schedules a default-sender announcement to the player.
+	 *
 	 * @param player 玩家 / player
-	 * @param msg 消息 / message
-	 * @param delay 延迟毫秒 / delay ms
+	 * @param msg    消息 / message
+	 * @param delay  延迟毫秒 / delay ms
 	 */
 	protected void scheduleAnnouncement(Player player, String msg, int delay) {
 		if (player.getBattleground() instanceof SoloSurvivorBg) {
@@ -691,6 +775,7 @@ public abstract class Battleground {
 	/**
 	 * 向全部观战者即时公告。
 	 * Announces immediately to all spectators.
+	 *
 	 * @param msg 消息 / message
 	 */
 	protected void specAnnounce(String msg) {
@@ -702,7 +787,8 @@ public abstract class Battleground {
 	/**
 	 * 延迟向全部观战者公告。
 	 * Schedules an announcement to all spectators.
-	 * @param msg 消息 / message
+	 *
+	 * @param msg   消息 / message
 	 * @param delay 延迟毫秒 / delay ms
 	 */
 	protected void specAnnounce(final String msg, int delay) {
@@ -716,8 +802,9 @@ public abstract class Battleground {
 	/**
 	 * 向玩家安排倒计时公告。
 	 * Schedules countdown announcements for the player.
-	 * @param player 玩家 / player
-	 * @param length 倒计时秒数 / countdown length
+	 *
+	 * @param player    玩家 / player
+	 * @param length    倒计时秒数 / countdown length
 	 * @param startTime 起始延迟毫秒 / start delay ms
 	 */
 	protected void scheduleCountdown(Player player, int length, int startTime) {
@@ -729,6 +816,7 @@ public abstract class Battleground {
 	/**
 	 * 延迟解散小队。
 	 * Schedules group disband.
+	 *
 	 * @param group 小队 / group
 	 * @param delay 延迟毫秒 / delay ms
 	 */
@@ -743,8 +831,9 @@ public abstract class Battleground {
 	/**
 	 * 延迟解散联盟。
 	 * Schedules alliance disband.
+	 *
 	 * @param alliance 联盟 / alliance
-	 * @param delay 延迟毫秒 / delay ms
+	 * @param delay    延迟毫秒 / delay ms
 	 */
 	protected void scheduleAllianceDisband(final PlayerAlliance alliance, int delay) {
 		GameThreadPoolServices.threadPoolManager().schedule(() -> {
@@ -757,7 +846,8 @@ public abstract class Battleground {
 	/**
 	 * 准备玩家（默认发送公告）。
 	 * Prepares the player (announce by default).
-	 * @param pl 玩家 / player
+	 *
+	 * @param pl   玩家 / player
 	 * @param time 准备时长毫秒 / prepare time ms
 	 */
 	protected void preparePlayer(final Player pl, int time) {
@@ -767,8 +857,9 @@ public abstract class Battleground {
 	/**
 	 * 准备玩家：冻结、治疗、清 CD，可选公告。
 	 * Prepares the player: freeze, heal, clear CDs; optional announce.
-	 * @param pl 玩家 / player
-	 * @param time 准备时长毫秒 / prepare time ms
+	 *
+	 * @param pl       玩家 / player
+	 * @param time     准备时长毫秒 / prepare time ms
 	 * @param announce 是否公告 / whether to announce
 	 */
 	protected void preparePlayer(final Player pl, int time, boolean announce) {
@@ -799,7 +890,7 @@ public abstract class Battleground {
 		} else {
 			pl.getEffectController().removeAbnormalEffectsByTargetSlot(SkillTargetSlot.DEBUFF);
 			pl.getEffectController().removeEffectByDispelCat(DispelCategoryType.ALL, SkillTargetSlot.DEBUFF, 100, 2,
-					100);
+				100);
 			pl.setTarget(null);
 			PacketSendUtility.sendPacket(pl, new SM_TARGET_SELECTED(pl));
 			scheduleAnnouncement(pl, "The match begin's!!!", time);
@@ -810,6 +901,7 @@ public abstract class Battleground {
 	/**
 	 * 清除玩家技能冷却并同步客户端。
 	 * Clears the player skill cooldowns and syncs the client.
+	 *
 	 * @param player 玩家 / player
 	 */
 	public void removecd(Player player) {
@@ -829,8 +921,9 @@ public abstract class Battleground {
 	/**
 	 * 重置玩家已知列表与外观包。
 	 * Resets the player known list and appearance packets.
+	 *
 	 * @param player 玩家 / player
-	 * @param delay 延迟毫秒 / delay ms
+	 * @param delay  延迟毫秒 / delay ms
 	 */
 	protected void resetPlayerKnownlist(final Player player, int delay) {
 		if (delay > 0) {
@@ -853,6 +946,7 @@ public abstract class Battleground {
 	/**
 	 * 计算对局剩余秒数。
 	 * Remaining match seconds.
+	 *
 	 * @return 剩余秒数 / seconds left
 	 */
 	public int getSecondsLeft() {
@@ -862,7 +956,8 @@ public abstract class Battleground {
 	/**
 	 * 向玩家创建任务式倒计时 UI。
 	 * Creates quest-style timer UI for the player.
-	 * @param player 玩家 / player
+	 *
+	 * @param player  玩家 / player
 	 * @param seconds 秒数 / seconds
 	 */
 	protected void createTimer(Player player, int seconds) {
@@ -872,6 +967,7 @@ public abstract class Battleground {
 	/**
 	 * 结束玩家倒计时 UI。
 	 * Ends the player timer UI.
+	 *
 	 * @param player 玩家 / player
 	 */
 	protected void endTimer(Player player) {
@@ -881,6 +977,7 @@ public abstract class Battleground {
 	/**
 	 * 记录玩家胜场与评分变化。
 	 * Records a player win and rating change.
+	 *
 	 * @param player       玩家 / player
 	 * @param ratingChange 评分变化量 / rating delta
 	 */
@@ -894,6 +991,7 @@ public abstract class Battleground {
 	/**
 	 * 记录玩家负场与评分变化。
 	 * Records a player loss and rating change.
+	 *
 	 * @param player       玩家 / player
 	 * @param ratingChange 评分变化量 / rating delta
 	 */
@@ -907,6 +1005,7 @@ public abstract class Battleground {
 	/**
 	 * 按胜负双方批量更新天梯。
 	 * Batch ladder update for winners and losers.
+	 *
 	 * @param winner 胜方玩家集合 / winners
 	 * @param loser  败方玩家集合 / losers
 	 */
@@ -917,6 +1016,7 @@ public abstract class Battleground {
 	/**
 	 * 计算 Elo 评分变化量。
 	 * Calculates the Elo rating change.
+	 *
 	 * @param ratingA 胜方平均评分 / rating A
 	 * @param ratingB 败方平均评分 / rating B
 	 * @return 评分变化量 / delta
@@ -928,6 +1028,7 @@ public abstract class Battleground {
 	/**
 	 * 读取天梯 DAO。
 	 * Resolves the ladder DAO.
+	 *
 	 * @return 天梯 DAO / ladder DAO
 	 */
 	protected static LadderDAO getLadderDAO() {
@@ -937,6 +1038,7 @@ public abstract class Battleground {
 	/**
 	 * 将玩家从当前队伍结构中移除。
 	 * Removes the player from current team structures.
+	 *
 	 * @param player 玩家 / player
 	 */
 	protected void removePlayerFromTeam(Player player) {
@@ -954,74 +1056,49 @@ public abstract class Battleground {
 	 */
 	protected void startBackgroundTask() {
 		setBackgroundTask(GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> {
-			 backgroundCounter++;
-			 zCheck();
-			 if ((backgroundCounter % 5) == 0) {
-				 backgroundCounter = 0;
-			 }
-		 }, 30 * 1000, 1000));
+			backgroundCounter++;
+			zCheck();
+			if ((backgroundCounter % 5) == 0) {
+				backgroundCounter = 0;
+			}
+		}, 30 * 1000, 1000));
 		GameThreadPoolServices.threadPoolManager().schedule(() -> {
-			 if (getBackgroundTask() != null) {
-				 getBackgroundTask().cancel(true);
-			 }
-		 }, 10L * getMatchLength() * 1000);
+			if (getBackgroundTask() != null) {
+				getBackgroundTask().cancel(true);
+			}
+		}, 10L * getMatchLength() * 1000);
 	}
 
 	/**
 	 * 检测玩家是否低于击杀高度并处理坠落死亡。
 	 * Checks whether players fell below kill Z and handles fall deaths.
 	 */
-	protected void zCheck()
-	{
-		if (getGroups().size() > 0)
-		{
-			for (PlayerGroup group : getGroups())
-			{
-				for (Player pl : group.getMembers())
-				{
-					if ((pl == null) || pl.getLifeStats().isAlreadyDead() || (map.getMapId() != pl.getWorldId()) || (pl.getBattleground() == null))
-					{
-						continue;
-					}
-					if (pl.getZ() < map.getKillZ())
-					{
-						pl.getLifeStats().reduceHp(100000, pl);
-						//	new SM_ATTACK_STATUS(pl, SM_ATTACK_STATUS.TYPE.FALL_DAMAGE, 0, -100000));
-					}
+	protected void zCheck() {
+		if (!getGroups().isEmpty()) {
+			for (PlayerGroup group : getGroups()) {
+				for (Player pl : group.getMembers()) {
+					checkKillZ(pl);
 				}
 			}
 		}
-		if (getAlliances().size() > 0)
-		{
-			for (PlayerAlliance alliance : getAlliances())
-			{
-				for (Player pl : alliance.getMembers())
-				{
-					if ((pl == null) || pl.getLifeStats().isAlreadyDead() || (map.getMapId() != pl.getWorldId()) || (pl.getBattleground() == null))
-					{
-						continue;
-					}
-					if (pl.getZ() < map.getKillZ())
-					{
-						pl.getLifeStats().reduceHp(100000, pl);
-						//	new SM_ATTACK_STATUS(pl, SM_ATTACK_STATUS.TYPE.FALL_DAMAGE, 0, -100000));
-					}
+		if (!getAlliances().isEmpty()) {
+			for (PlayerAlliance alliance : getAlliances()) {
+				for (Player pl : alliance.getMembers()) {
+					checkKillZ(pl);
 				}
 			}
 		}
-		if (getPlayers().size() > 0)
-		{
-			for (Player pl : getPlayers())
-			{
-				if ((pl == null) || pl.getLifeStats().isAlreadyDead() || (map.getMapId() != pl.getWorldId()) || (pl.getBattleground() == null))
-				{
-					continue;
-				}
-				if (pl.getZ() < map.getKillZ())
-				{
-					pl.getLifeStats().reduceHp(100000, pl);
-					//	new SM_ATTACK_STATUS(pl, SM_ATTACK_STATUS.TYPE.FALL_DAMAGE, 0, -100000));
-				}
+		if (!getPlayers().isEmpty()) {
+			for (Player pl : getPlayers()) {
+				checkKillZ(pl);
+			}
+		}
+	}
+
+	private void checkKillZ(Player pl) {
+		if (pl != null && !pl.getLifeStats().isAlreadyDead() && map.getMapId() == pl.getWorldId() && pl.getBattleground() != null) {
+			if (pl.getZ() < map.getKillZ()) {
+				pl.getLifeStats().reduceHp(100000, pl);
 			}
 		}
 	}
@@ -1029,9 +1106,10 @@ public abstract class Battleground {
 	/**
 	 * 默认离场处理：登记离开者、惩罚与清理。
 	 * Default leave handling: register leaver, penalize and cleanup.
-	 * @param player 玩家 / player
+	 *
+	 * @param player   玩家 / player
 	 * @param isLogout 是否登出 / whether logout
-	 * @param isAfk 是否挂机 / whether AFK
+	 * @param isAfk    是否挂机 / whether AFK
 	 */
 	protected void onLeaveDefault(Player player, boolean isLogout, boolean isAfk) {
 		if (player.isSpectating()) {
@@ -1054,19 +1132,14 @@ public abstract class Battleground {
 				returnToPreviousLocation(player);
 				scheduleAnnouncement(player, "You are penalized for being absent too long.", 10000);
 			}
-			if (!isAfk) {
-				List<Player> players = getPlayers();
-				synchronized (players) {
-					players.remove(player);
-				}
+			List<Player> players = getPlayers();
+			synchronized (players) {
+				players.remove(player);
 			}
 			player.setBattleground(null);
 			if (!this.isDone && !player.getController().isInShutdownProgress()) {
 				getLadderDAO().addLeave(player);
 				getLadderDAO().addRating(player, -K_VALUE);
-			}
-			if (isLogout || isAfk) {
-				player.setAfk(true);
 			}
 			removePlayerFromTeam(player);
 			endTimer(player);
@@ -1076,7 +1149,8 @@ public abstract class Battleground {
 	/**
 	 * 通用生物死亡入口（默认空实现，子类可覆盖）。
 	 * Generic creature-death entry (no-op by default; override as needed).
-	 * @param creature 死亡生物 / dead creature
+	 *
+	 * @param creature     死亡生物 / dead creature
 	 * @param lastAttacker 最后攻击者 / last attacker
 	 */
 	public void onDie(Creature creature, Creature lastAttacker) {
@@ -1085,7 +1159,8 @@ public abstract class Battleground {
 	/**
 	 * 默认死亡处理：击杀统计与公告。
 	 * Default death handling: kill stats and announcements.
-	 * @param player 死亡玩家 / dead player
+	 *
+	 * @param player       死亡玩家 / dead player
 	 * @param lastAttacker 最后攻击者 / last attacker
 	 */
 	protected void onDieDefault(Player player, Creature lastAttacker) {
@@ -1094,18 +1169,18 @@ public abstract class Battleground {
 			summon.getController().release(UnsummonType.UNSPECIFIED);
 		}
 		PacketSendUtility.broadcastPacket(player,
-				new SM_EMOTION(player, EmotionType.DIE, 0, lastAttacker == null ? 0 : lastAttacker.getObjectId()),
-				true);
+			new SM_EMOTION(player, EmotionType.DIE, 0, lastAttacker == null ? 0 : lastAttacker.getObjectId()),
+			true);
 		PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_DEATH_MESSAGE_ME);
 		player.getMoveController().abortMove();
 		player.setState(CreatureState.DEAD);
 		player.getObserveController().notifyDeathObservers(player);
 		player.getEffectController().removeAbnormalEffectsByTargetSlot(SkillTargetSlot.DEBUFF);
 		player.getEffectController().removeEffectByDispelCat(DispelCategoryType.ALL, SkillTargetSlot.DEBUFF, 100, 3,
-				100);
+			100);
 		player.setTarget(null);
 		PacketSendUtility.sendPacket(player, new SM_TARGET_SELECTED(player));
-		if (lastAttacker instanceof Player killer && lastAttacker.getObjectId() != player.getObjectId()) {
+		if (lastAttacker instanceof Player killer && !killer.getObjectId().equals(player.getObjectId())) {
 			killer.setTotalKills(killer.getTotalKills() + 1);
 			if (killer.getPlayerGroup2() != null) {
 				killer.getPlayerGroup2().setKillCount(killer.getPlayerGroup2().getKillCount() + 1);
@@ -1126,14 +1201,14 @@ public abstract class Battleground {
 		if (getBackgroundTask() != null) {
 			getBackgroundTask().cancel(true);
 		}
-		if (getPlayers().size() > 0) {
+		if (!getPlayers().isEmpty()) {
 			for (Player pl : getPlayers()) {
 				if (!pl.getLifeStats().isAlreadyDead()) {
 					healPlayer(pl, false);
 				}
 			}
 		}
-		if (getGroups().size() > 0) {
+		if (!getGroups().isEmpty()) {
 			for (PlayerGroup group : getGroups()) {
 				for (Player pl : group.getMembers()) {
 					if (!pl.getLifeStats().isAlreadyDead()) {
@@ -1142,13 +1217,10 @@ public abstract class Battleground {
 				}
 			}
 		}
-		if (getAlliances().size() > 0) {
+		if (!getAlliances().isEmpty()) {
 			for (PlayerAlliance alliance : getAlliances()) {
 				for (Player pl : alliance.getMembers()) {
-					if (pl == null) {
-						continue;
-					}
-					if (!pl.getLifeStats().isAlreadyDead()) {
+					if (pl != null && !pl.getLifeStats().isAlreadyDead()) {
 						healPlayer(pl, false);
 					}
 				}
@@ -1162,68 +1234,66 @@ public abstract class Battleground {
 	 */
 	protected void onEndDefault() {
 		GameFeatureServices.ladderService().onBgEnd(this);
-		if (getPlayers().size() > 0) {
+		if (!getPlayers().isEmpty()) {
 			for (Player pl : getPlayers()) {
 				freezePlayer(pl, 7500);
 			}
 			GameThreadPoolServices.threadPoolManager().schedule(() -> {
-				 for (Player pl : getPlayers()) {
-					 returnToPreviousLocation(pl);
-				 }
-			 }, 5000);
+				for (Player pl : getPlayers()) {
+					returnToPreviousLocation(pl);
+				}
+			}, 5000);
 		}
-		if (getGroups().size() > 0) {
+		if (!getGroups().isEmpty()) {
 			for (PlayerGroup group : getGroups()) {
 				for (Player pl : group.getMembers()) {
 					freezePlayer(pl, 7500);
 				}
 			}
 			GameThreadPoolServices.threadPoolManager().schedule(() -> {
-				 for (PlayerGroup group : getGroups()) {
-					 for (Player pl : group.getMembers()) {
-						 returnToPreviousLocation(pl);
-					 }
-					 if (!isTournament() && shouldDisband()) {
-						 scheduleGroupDisband(group, 2000);
-					 }
-				 }
-			 }, 5000);
+				for (PlayerGroup group : getGroups()) {
+					for (Player pl : group.getMembers()) {
+						returnToPreviousLocation(pl);
+					}
+					if (!isTournament() && shouldDisband()) {
+						scheduleGroupDisband(group, 2000);
+					}
+				}
+			}, 5000);
 		}
-		if (getAlliances().size() > 0) {
+		if (!getAlliances().isEmpty()) {
 			for (PlayerAlliance alliance : getAlliances()) {
 				for (Player pl : alliance.getMembers()) {
-					if (pl == null) {
-						continue;
+					if (pl != null) {
+						freezePlayer(pl, 7500);
 					}
-					freezePlayer(pl, 7500);
 				}
 			}
 			GameThreadPoolServices.threadPoolManager().schedule(() -> {
-				 for (PlayerAlliance alliance : getAlliances()) {
-					 for (Player pl : alliance.getMembers()) {
-						 if (pl == null) {
-							 continue;
-						 }
-						 returnToPreviousLocation(pl);
-					 }
-					 if (!isTournament() && shouldDisband()) {
-						 scheduleAllianceDisband(alliance, 2000);
-					 }
-				 }
-			 }, 5000);
+				for (PlayerAlliance alliance : getAlliances()) {
+					for (Player pl : alliance.getMembers()) {
+						if (pl != null) {
+							returnToPreviousLocation(pl);
+						}
+					}
+					if (!isTournament() && shouldDisband()) {
+						scheduleAllianceDisband(alliance, 2000);
+					}
+				}
+			}, 5000);
 		}
 		GameThreadPoolServices.threadPoolManager().schedule(() -> {
-			 List<Player> spectators = new ArrayList<>(getSpectators());
-			 for (Player pl : spectators) {
-				 onSpectatorLeave(pl, true);
-			 }
-			 getSpectators().removeAll(spectators);
-		 }, 5000);
+			List<Player> spectators = new ArrayList<>(getSpectators());
+			for (Player pl : spectators) {
+				onSpectatorLeave(pl, true);
+			}
+			getSpectators().removeAll(spectators);
+		}, 5000);
 		GameThreadPoolServices.threadPoolManager().schedule(() -> {
-			 for (Player pl : getInstance().getPlayersInside()) {
-				 returnToPreviousLocation(pl);
-			 }
-		 }, 15000);
+			for (Player pl : getInstance().getPlayersInside()) {
+				returnToPreviousLocation(pl);
+			}
+		}, 15000);
 
 		this.isDone = true;
 	}
@@ -1231,6 +1301,7 @@ public abstract class Battleground {
 	/**
 	 * 观战者加入：隐身传送进场并启动计时。
 	 * Spectator joins: hide, teleport in and start timer.
+	 *
 	 * @param spectator 观战者 / spectator
 	 */
 	public void onSpectatorJoin(Player spectator) {
@@ -1253,20 +1324,21 @@ public abstract class Battleground {
 	/**
 	 * 观战者离开：还原状态并传回原坐标。
 	 * Spectator leaves: restore state and return to previous location.
-	 * @param spectator 观战者 / spectator
+	 *
+	 * @param spectator   观战者 / spectator
 	 * @param isIterating 是否在批量遍历中（避免并发修改） / whether iterating (avoid CME)
 	 */
 	public void onSpectatorLeave(final Player spectator, boolean isIterating) {
 		endTimer(spectator);
 		returnToPreviousLocation(spectator);
-        GameThreadPoolServices.threadPoolManager().schedule(() -> {
-			 spectator.getEffectController().unsetAbnormal(AbnormalState.HIDE.getId());
-			 spectator.unsetVisualState(CreatureVisualState.HIDE3);
-			 spectator.setInvul(false);
-			 spectator.unsetSeeState(CreatureSeeState.SEARCH2);
-			 spectator.setSpectating(false);
-			 PacketSendUtility.broadcastPacket(spectator, new SM_PLAYER_STATE(spectator), true);
-		 }, TELEPORT_DEFAULT_DELAY);
+		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			spectator.getEffectController().unsetAbnormal(AbnormalState.HIDE.getId());
+			spectator.unsetVisualState(CreatureVisualState.HIDE3);
+			spectator.setInvul(false);
+			spectator.unsetSeeState(CreatureSeeState.SEARCH2);
+			spectator.setSpectating(false);
+			PacketSendUtility.broadcastPacket(spectator, new SM_PLAYER_STATE(spectator), true);
+		}, TELEPORT_DEFAULT_DELAY);
 		if (!isIterating) {
 			List<Player> spectators = getSpectators();
 			synchronized (spectators) {
@@ -1278,6 +1350,7 @@ public abstract class Battleground {
 	/**
 	 * 重连已离开的参赛者，恢复队伍/位置与天梯扣分。
 	 * Reconnects a leaver, restoring team/position and undoing leave penalty.
+	 *
 	 * @param player 重连玩家 / reconnecting player
 	 */
 	public void reconnectPlayer(Player player) {
@@ -1287,50 +1360,50 @@ public abstract class Battleground {
 		if (player.isAfk()) {
 			player.setAfk(false);
 		}
-		AionObject obj = null;
+		AionObject obj;
 		synchronized (getLeavers()) {
 			obj = getLeavers().remove(player.getObjectId());
 		}
 		String msg = player.getName() + " is back in <Battleground>!";
 		boolean success = false;
 		SpawnPosition pos = null;
-        switch (obj) {
-            case null:
-                success = true;
-                addPlayer(player);
-                int bgIndex = getPlayers().get(getPlayers().size() - 1).getBgIndex() + 1;
-                player.setBgIndex(bgIndex);
-                pos = getSpawnPositions().get(Rnd.get(getSpawnPositions().size()));
-                for (Player pl : getPlayers()) {
-                    scheduleAnnouncement(pl, msg, 0);
-                }
-                break;
-            case PlayerAlliance alliance:
-                success = true;
-                PlayerAllianceService.onPlayerLogin(player);
-                pos = getSpawnPositions().get(alliance.getBgIndex());
-                for (PlayerAlliance ally : getAlliances()) {
-                    for (Player pl : ally.getMembers()) {
-                        if (pl == null) {
-                            continue;
-                        }
-                        scheduleAnnouncement(pl, msg, 0);
-                    }
-                }
-                break;
-            case PlayerGroup group:
-                success = true;
-                PlayerGroupService.onPlayerLogin(player);
-                pos = getSpawnPositions().get(group.getBgIndex());
-                for (PlayerGroup grp : getGroups()) {
-                    for (Player pl : grp.getMembers()) {
-                        scheduleAnnouncement(pl, msg, 0);
-                    }
-                }
-                break;
-            default:
-                break;
-        }
+		switch (obj) {
+			case null:
+				success = true;
+				addPlayer(player);
+				int bgIndex = getPlayers().getLast().getBgIndex() + 1;
+				player.setBgIndex(bgIndex);
+				pos = getSpawnPositions().get(Rnd.get(getSpawnPositions().size()));
+				for (Player pl : getPlayers()) {
+					scheduleAnnouncement(pl, msg, 0);
+				}
+				break;
+			case PlayerAlliance alliance:
+				success = true;
+				PlayerAllianceService.onPlayerLogin(player);
+				pos = getSpawnPositions().get(alliance.getBgIndex());
+				for (PlayerAlliance ally : getAlliances()) {
+					for (Player pl : ally.getMembers()) {
+						if (pl == null) {
+							continue;
+						}
+						scheduleAnnouncement(pl, msg, 0);
+					}
+				}
+				break;
+			case PlayerGroup group:
+				success = true;
+				PlayerGroupService.onPlayerLogin(player);
+				pos = getSpawnPositions().get(group.getBgIndex());
+				for (PlayerGroup grp : getGroups()) {
+					for (Player pl : grp.getMembers()) {
+						scheduleAnnouncement(pl, msg, 0);
+					}
+				}
+				break;
+			default:
+				break;
+		}
 		if (success) {
 			player.setBattleground(this);
 			preparePlayer(player, 0, false);
@@ -1343,10 +1416,11 @@ public abstract class Battleground {
 	/**
 	 * 随机选取地图并创建副本实例。
 	 * Picks a random map and creates a world instance.
+	 *
 	 * @return 实例，失败为 null / instance or null
 	 */
 	protected WorldMapInstance createInstance() {
-		if (maps == null || maps.size() == 0) {
+		if (maps == null || maps.isEmpty()) {
 			return null;
 		}
 		this.map = maps.get(Rnd.get(maps.size()));
@@ -1378,6 +1452,7 @@ public abstract class Battleground {
 	/**
 	 * 设置副本实例 ID。
 	 * Sets instance id.
+	 *
 	 * @param instanceId 实例 ID / instance id
 	 */
 	protected void setInstanceId(int instanceId) {
@@ -1387,6 +1462,7 @@ public abstract class Battleground {
 	/**
 	 * 设置对局开始时间戳。
 	 * Sets match start timestamp.
+	 *
 	 * @param startStamp 时间戳 / timestamp
 	 */
 	protected void setStartStamp(long startStamp) {
@@ -1396,6 +1472,7 @@ public abstract class Battleground {
 	/**
 	 * 结束时是否解散队伍。
 	 * Whether teams should be disbanded on end.
+	 *
 	 * @return 若 should disband 则为 true / true if should disband
 	 */
 	public boolean shouldDisband() {
@@ -1405,6 +1482,7 @@ public abstract class Battleground {
 	/**
 	 * 获取单人参赛者列表。
 	 * Returns solo participants.
+	 *
 	 * @return 单人参赛者列表 / players
 	 */
 	protected List<Player> getPlayers() {
@@ -1414,6 +1492,7 @@ public abstract class Battleground {
 	/**
 	 * 获取小队参赛者列表。
 	 * Returns group participants.
+	 *
 	 * @return 小队参赛者列表 / groups
 	 */
 	protected List<PlayerGroup> getGroups() {
@@ -1423,6 +1502,7 @@ public abstract class Battleground {
 	/**
 	 * 获取联盟参赛者列表。
 	 * Returns alliance participants.
+	 *
 	 * @return 联盟参赛者列表 / alliances
 	 */
 	protected List<PlayerAlliance> getAlliances() {
@@ -1432,6 +1512,7 @@ public abstract class Battleground {
 	/**
 	 * 获取观战者列表。
 	 * Returns spectators.
+	 *
 	 * @return 观战者列表 / spectators
 	 */
 	protected List<Player> getSpectators() {
@@ -1441,6 +1522,7 @@ public abstract class Battleground {
 	/**
 	 * 获取中途离开者映射。
 	 * Returns leaver map for reconnect.
+	 *
 	 * @return 离开者映射 / leavers
 	 */
 	public Map<Integer, AionObject> getLeavers() {
@@ -1450,15 +1532,17 @@ public abstract class Battleground {
 	/**
 	 * 是否仍有参赛者。
 	 * Whether any participants remain.
+	 *
 	 * @return 若 has players 则为 true / true if has players
 	 */
 	public boolean hasPlayers() {
-		return (getPlayers().size() > 0 || getGroups().size() > 0 || getAlliances().size() > 0);
+		return (!getPlayers().isEmpty() || !getGroups().isEmpty() || !getAlliances().isEmpty());
 	}
 
 	/**
 	 * 设置过期/结束任务。
 	 * Sets the expire/end task.
+	 *
 	 * @param expireTask 过期/结束任务 / the task
 	 */
 	protected void setExpireTask(ScheduledFuture<?> expireTask) {
@@ -1468,6 +1552,7 @@ public abstract class Battleground {
 	/**
 	 * 获取过期/结束任务。
 	 * Returns the expire/end task.
+	 *
 	 * @return 过期/结束任务 / the task
 	 */
 	protected ScheduledFuture<?> getExpireTask() {
@@ -1481,46 +1566,51 @@ public abstract class Battleground {
 	@Setter
 	@Getter
 	public static class SpawnPosition {
-		/** 地图 ID / Map id
+		/**
+		 * 地图 ID / Map id
 		 * -- GETTER --
-		 *  获取地图 ID。
-		 *  Returns map id.
+		 * 获取地图 ID。
+		 * Returns map id.
 		 * -- SETTER --
-		 *  设置地图 ID。
-		 *  Sets map id.
+		 * 设置地图 ID。
+		 * Sets map id.
 		 */
 		private int mapId = 0;
-		/** X coordinate / X coordinate
+		/**
+		 * X coordinate / X coordinate
 		 * -- GETTER --
-		 *  获取 X 坐标。
-		 *  Returns X.
+		 * 获取 X 坐标。
+		 * Returns X.
 		 * -- SETTER --
-		 *  设置 X 坐标。
-		 *  Sets X.
+		 * 设置 X 坐标。
+		 * Sets X.
 		 */
 		private float x;
-		/** Y coordinate / Y coordinate
+		/**
+		 * Y coordinate / Y coordinate
 		 * -- GETTER --
-		 *  获取 Y 坐标。
-		 *  Returns Y.
+		 * 获取 Y 坐标。
+		 * Returns Y.
 		 * -- SETTER --
-		 *  设置 Y 坐标。
-		 *  Sets Y.
+		 * 设置 Y 坐标。
+		 * Sets Y.
 		 */
 		private float y;
-		/** Z coordinate / Z coordinate
+		/**
+		 * Z coordinate / Z coordinate
 		 * -- GETTER --
-		 *  获取 Z 坐标。
-		 *  Returns Z.
+		 * 获取 Z 坐标。
+		 * Returns Z.
 		 * -- SETTER --
-		 *  设置 Z 坐标。
-		 *  Sets Z.
+		 * 设置 Z 坐标。
+		 * Sets Z.
 		 */
 		private float z;
 
 		/**
 		 * 使用 XYZ 构造出生点。
 		 * Creates a spawn position from XYZ.
+		 *
 		 * @param x X 坐标 / x
 		 * @param y Y 坐标 / y
 		 * @param z Z 坐标 / z
@@ -1534,10 +1624,11 @@ public abstract class Battleground {
 		/**
 		 * 使用地图 ID 与 XYZ 构造出生点。
 		 * Creates a spawn position with map id and XYZ.
+		 *
 		 * @param mapId 地图 ID / map id
-		 * @param x X 坐标 / x
-		 * @param y Y 坐标 / y
-		 * @param z Z 坐标 / z
+		 * @param x     X 坐标 / x
+		 * @param y     Y 坐标 / y
+		 * @param z     Z 坐标 / z
 		 */
 		public SpawnPosition(int mapId, float x, float y, float z) {
 			this.mapId = mapId;
@@ -1554,51 +1645,56 @@ public abstract class Battleground {
 	 */
 	@Getter
 	public static class BattlegroundMap {
-		/** 地图 ID / Map id
+		/**
+		 * 地图 ID / Map id
 		 * -- GETTER --
-		 *  获取地图 ID。
-		 *  Returns map id.
+		 * 获取地图 ID。
+		 * Returns map id.
 		 * -- SETTER --
-		 *  设置地图 ID。
-		 *  Sets map id.
+		 * 设置地图 ID。
+		 * Sets map id.
 		 */
 		@Setter
 		private int mapId = 0;
-		/** 出生点列表。 / Spawn points.
+		/**
+		 * 出生点列表。 / Spawn points.
 		 * -- GETTER --
-		 *  获取出生点列表。
-		 *  Returns spawn points.
+		 * 获取出生点列表。
+		 * Returns spawn points.
 		 * -- SETTER --
-		 *  设置出生点列表。
-		 *  Sets spawn points.
+		 * 设置出生点列表。
+		 * Sets spawn points.
 		 */
 		@Setter
 		private List<SpawnPosition> spawnPoints = null;
-		/** 静态门 ID / Static door ids
+		/**
+		 * 静态门 ID / Static door ids
 		 * -- GETTER --
-		 *  获取静态门 ID 列表。
-		 *  Returns static door ids.
+		 * 获取静态门 ID 列表。
+		 * Returns static door ids.
 		 */
 		private List<Integer> staticDoors = null;
-		/** Kill Z threshold / Kill Z threshold
+		/**
+		 * Kill Z threshold / Kill Z threshold
 		 * -- GETTER --
-		 *  获取坠落击杀高度。
-		 *  Returns kill Z.
+		 * 获取坠落击杀高度。
+		 * Returns kill Z.
 		 * -- SETTER --
-		 *  设置坠落击杀高度。
-		 *  Sets kill Z.
+		 * 设置坠落击杀高度。
+		 * Sets kill Z.
 		 */
 		@Setter
 		private float killZ = 0f;
-		/** 是否禁止飞行。 / Whether flight is restricted.
+		/**
+		 * 是否禁止飞行。 / Whether flight is restricted.
 		 * -- GETTER --
-		 *  是否限制飞行。
-		 *  Whether flight is restricted.
+		 * 是否限制飞行。
+		 * Whether flight is restricted.
 		 * -- SETTER --
-		 *  设置是否限制飞行。
-		 *  Sets flight restriction.
-		 若 restricted 则为 true / true if restricted
-		  * 是否限制飞行 / restriction flag
+		 * 设置是否限制飞行。
+		 * Sets flight restriction.
+		 * 若 restricted 则为 true / true if restricted
+		 * 是否限制飞行 / restriction flag
 		 */
 		@Setter
 		private boolean restrictFlight = false;
@@ -1606,6 +1702,7 @@ public abstract class Battleground {
 		/**
 		 * 创建指定地图的配置。
 		 * Creates map config for the given map id.
+		 *
 		 * @param mapId 地图 ID / map id
 		 */
 		public BattlegroundMap(int mapId) {
@@ -1615,6 +1712,7 @@ public abstract class Battleground {
 		/**
 		 * 添加出生点。
 		 * Adds a spawn position.
+		 *
 		 * @param pos 出生点 / spawn position
 		 */
 		public void addSpawn(SpawnPosition pos) {
@@ -1627,6 +1725,7 @@ public abstract class Battleground {
 		/**
 		 * 添加静态门 ID。
 		 * Adds a static door id.
+		 *
 		 * @param doorId 门 ID / door id
 		 */
 		public void addStaticDoor(Integer doorId) {

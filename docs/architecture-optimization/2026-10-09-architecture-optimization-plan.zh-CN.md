@@ -82,7 +82,7 @@ AionEmu 当前采用单体 Spring Boot 4.1 承载 Login、Game、Chat 服务，�
 
 ---
 
-## 四、当前阶段：Phase 1 执行追踪与 Phase 2 演进
+## 四、当前阶段：Phase 1、Phase 2 与 Phase 3 执行追踪
 
 - [x] 1. 编写架构规划全景文档
 - [x] 2. 删除 `src/main/java/com/aionemu/gameserver/world/GMMode_.rar`
@@ -91,3 +91,5 @@ AionEmu 当前采用单体 Spring Boot 4.1 承载 Login、Game、Chat 服务，�
 - [x] 5. 优化 `AionPacketHandler.java`：引入直接数组寻址，消除高频入站包装箱开销，同时 100% 保持反射访问兼容
 - [x] 6. 重构 `IntObjectHashMap.java`：实现真·原始类型开地址哈希表，消除全库 257 处伪原始集合的装箱与 Entry 分配开销，完整保持 Map 接口兼容并通过 15 项专项单元测试验证
 - [x] 7. 升级核心原始集合家族（`IntIntHashMap`、`ShortObjectHashMap`、`IntArrayList`）：全面改用扁平原生数组与开地址探测，消除宠物/技能/飞行路径/任务引擎的高频装箱，新增 28 项专项单元测试全部通过
+- [x] 8. 重构玩家周期存盘流水线（Phase 3 任务 3.1）：取消单玩家分散挂载 `GeneralUpdateTask` 与 `ItemUpdateTask` 定时器的架构，收拢至单例 `PeriodicSaveService` 集中分批异步调度，彻底消除千人在线调度风暴与数据库 IO 瞬时并发冲击，新增 3 项专项单元测试全部通过
+

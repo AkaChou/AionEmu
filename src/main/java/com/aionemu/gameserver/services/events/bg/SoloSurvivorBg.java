@@ -14,14 +14,21 @@ import com.aionemu.gameserver.services.teleport.TeleportService2;
 /**
  * 1v1/小规模生存战：多回合击杀制，击杀最多者获胜。
  * Solo survivor battleground: multi-round kill race; most kills win.
+ *
  * @author Rinzler (Encom)
  */
 public class SoloSurvivorBg extends Battleground {
-	/** 最大回合数。 / Maximum rounds. */
+	/**
+	 * 最大回合数。 / Maximum rounds.
+	 */
 	private int maxRounds = 3;
-	/** 已完成回合数。 / Rounds completed. */
+	/**
+	 * 已完成回合数。 / Rounds completed.
+	 */
 	private int roundsDone = 0;
-	/** 是否已触发结束。 / Whether end already called. */
+	/**
+	 * 是否已触发结束。 / Whether end already called.
+	 */
 	private boolean endCalled = false;
 
 	/**
@@ -31,7 +38,7 @@ public class SoloSurvivorBg extends Battleground {
 	public SoloSurvivorBg() {
 		super.name = "[1 VS 1]";
 		super.description = "You must kill your opponent to win. You have " + maxRounds
-				+ " round. The player who gets the most kill's, win the match !!!";
+			+ " round. The player who gets the most kill's, win the match !!!";
 		super.minSize = 2;
 		super.maxSize = 4;
 		super.teamCount = 1;
@@ -774,6 +781,7 @@ public class SoloSurvivorBg extends Battleground {
 	/**
 	 * 从排队列表创建生存战对局。
 	 * Creates a solo survivor match from the queue.
+	 *
 	 * @param players 排队玩家对象 ID / queued player object ids
 	 */
 	public void createMatch(List<Integer> players) {
@@ -787,6 +795,7 @@ public class SoloSurvivorBg extends Battleground {
 	/**
 	 * 判断玩家是否在本战场地图内。
 	 * Whether the player is on this battleground map.
+	 *
 	 * @param player 玩家 / player
 	 * @return 若 inside 则为 true / true if inside
 	 */
@@ -818,7 +827,7 @@ public class SoloSurvivorBg extends Battleground {
 				}
 			}
 		}
-		GameThreadPoolServices.threadPoolManager().schedule(() -> openStaticDoors(), 25 * 1000);
+		GameThreadPoolServices.threadPoolManager().schedule(this::openStaticDoors, 25 * 1000);
 		super.setExpireTask(GameThreadPoolServices.threadPoolManager().schedule(() -> endSoloSurvivorMatch(true), getMatchLength() * 1000L));
 		super.startBackgroundTask();
 	}
@@ -831,7 +840,7 @@ public class SoloSurvivorBg extends Battleground {
 		this.maxRounds = 5;
 		this.matchLength = 145;
 		this.description = "You must kill your opponent to win. You have " + maxRounds
-				+ " round. The player who gets the most kill's, win the match !!!";
+			+ " round. The player who gets the most kill's, win the match !!!";
 		startMatch();
 		return true;
 	}
@@ -844,7 +853,8 @@ public class SoloSurvivorBg extends Battleground {
 	/**
 	 * 处理死亡：计分并推进回合。
 	 * Handles death: scores and advances rounds.
-	 * @param player 死亡玩家 / dead player
+	 *
+	 * @param player       死亡玩家 / dead player
 	 * @param lastAttacker 最后攻击者 / last attacker
 	 */
 	public void onDie(final Player player, Creature lastAttacker) {
@@ -852,7 +862,7 @@ public class SoloSurvivorBg extends Battleground {
 			lastAttacker = getPlayers().get(player.getBgIndex() == 0 ? 1 : 0);
 		}
 		super.onDieDefault(player, lastAttacker);
-		if (lastAttacker instanceof Player killer && lastAttacker.getObjectId() != player.getObjectId()) {
+		if (lastAttacker instanceof Player killer && !killer.getObjectId().equals(player.getObjectId())) {
 			for (Player pl : super.getPlayers()) {
 				scheduleAnnouncement(pl, killer.getName() + " has killed " + player.getName(), 0);
 			}
@@ -910,6 +920,7 @@ public class SoloSurvivorBg extends Battleground {
 	/**
 	 * 获取本回合胜者。
 	 * Returns the current round winner.
+	 *
 	 * @return 回合胜者 / winner player
 	 */
 	private Player getRoundWinner() {
@@ -926,6 +937,7 @@ public class SoloSurvivorBg extends Battleground {
 	/**
 	 * 获取整场胜者（击杀最多）。
 	 * Returns overall match winner (most kills).
+	 *
 	 * @return 整场胜者 / winner player
 	 */
 	private Player getWinner() {
@@ -934,11 +946,9 @@ public class SoloSurvivorBg extends Battleground {
 		for (Player pl : super.getPlayers()) {
 			if (winner == null && pl.getTotalKills() > drawPoints) {
 				winner = pl;
-			} else if (winner == null) {
-				continue;
-			} else if (winner.getTotalKills() < pl.getTotalKills()) {
+			} else if (winner != null && winner.getTotalKills() < pl.getTotalKills()) {
 				winner = pl;
-			} else if (winner.getTotalKills() == pl.getTotalKills()) {
+			} else if (winner != null && winner.getTotalKills() == pl.getTotalKills()) {
 				drawPoints = winner.getTotalKills();
 				winner = null;
 			}
@@ -949,6 +959,7 @@ public class SoloSurvivorBg extends Battleground {
 	/**
 	 * 结束生存战并结算奖励。
 	 * Ends the solo survivor match and settles rewards.
+	 *
 	 * @param isDraw 是否平局 / whether draw
 	 */
 	private void endSoloSurvivorMatch(boolean isDraw) {
@@ -1018,7 +1029,7 @@ public class SoloSurvivorBg extends Battleground {
 			super.specAnnounce("The round ended with a draw!");
 		} else {
 			for (Player pl : super.getPlayers()) {
-				if (pl.getObjectId() == winner.getObjectId()) {
+				if (pl.getObjectId().equals(winner.getObjectId())) {
 					super.playerWinMatch(pl, super.K_VALUE / 2);
 					byte level = pl.getLevel();
 					// 若为“胜者”则奖励玩家 / Reward Player if "WINNER"
@@ -1051,7 +1062,7 @@ public class SoloSurvivorBg extends Battleground {
 					}
 					super.scheduleAnnouncement(pl, "You won the match with " + winner.getTotalKills() + " kill's!", 0);
 					super.scheduleAnnouncement(pl, "You have received rewards " + (is1v1() ? "for your efforts!" : "."),
-							3000);
+						3000);
 				} else {
 					super.playerLoseMatch(pl, -super.K_VALUE / 5);
 					byte level = pl.getLevel();
@@ -1082,7 +1093,7 @@ public class SoloSurvivorBg extends Battleground {
 						AbyssPointsService.addGp(pl, 15);
 					}
 					super.scheduleAnnouncement(pl,
-							winner.getName() + " win's the match with " + winner.getTotalKills() + " kill's!", 0);
+						winner.getName() + " win's the match with " + winner.getTotalKills() + " kill's!", 0);
 					super.scheduleAnnouncement(pl, "You have received rewards" + ("."), 3000);
 				}
 			}

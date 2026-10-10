@@ -15,10 +15,14 @@ import lombok.Getter;
 @Getter
 public class SearchInstance {
 	private final long registrationTime = System.currentTimeMillis();
-	/** 返回副本掩码 ID / Returns the instance mask id */
+	/**
+	 * 返回副本掩码 ID / Returns the instance mask id
+	 */
 	private final int instanceMaskId;
 	private final EntryRequestType ert;
-	/** 返回成员数 / Returns the members */
+	/**
+	 * 返回成员数 / Returns the members
+	 */
 	private List<Integer> members;
 
 	public SearchInstance(int instanceMaskId, EntryRequestType ert, Collection<Player> members) {
@@ -32,17 +36,33 @@ public class SearchInstance {
 		}
 	}
 
-	/** 返回剩余时间 / Returns the remaining time */
+	/**
+	 * 返回剩余时间 / Returns the remaining time
+	 */
 	public int getRemainingTime() {
 		return (int) (System.currentTimeMillis() - registrationTime) / 1000 * 256;
 	}
 
-	/** 获取条目请求类型。 / Returns the entry request type. */
+	/**
+	 * 获取条目请求类型。 / Returns the entry request type.
+	 */
 	public EntryRequestType getEntryRequestType() {
 		return ert;
 	}
 
-	/** 是否为无畏舰。 / Whether dredgion. */
+	/**
+	 * 获取关联的自动组队类型。
+	 * Returns the associated auto-group type.
+	 *
+	 * @return 自动组队类型 / auto-group type
+	 */
+	public AutoGroupType getAgt() {
+		return AutoGroupType.getAGTByMaskId(instanceMaskId);
+	}
+
+	/**
+	 * 是否为无畏舰。 / Whether dredgion.
+	 */
 	public boolean isDredgion() {
 		return instanceMaskId == 1 || instanceMaskId == 2 || instanceMaskId == 3;
 	}

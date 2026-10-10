@@ -42,7 +42,6 @@ import com.aionemu.gameserver.configs.main.CustomConfig;
 import com.aionemu.gameserver.configs.main.EventsConfig;
 import com.aionemu.gameserver.configs.main.GSConfig;
 import com.aionemu.gameserver.configs.main.HTMLConfig;
-import com.aionemu.gameserver.configs.main.PeriodicSaveConfig;
 import com.aionemu.gameserver.configs.main.SecurityConfig;
 import com.aionemu.gameserver.dao.PlayerDAO;
 import com.aionemu.gameserver.dao.PlayerPasskeyDAO;
@@ -167,8 +166,9 @@ public final class PlayerEnterWorldService {
 	/**
 	 * 开始进入世界：冷却/封禁/二级密码校验后进图。
 	 * Starts enter-world: re-entry cooldown, ban, and passkey checks, then enters.
+	 *
 	 * @param objectId 角色对象 ID / character object id
-	 * @param client 客户端连接 / client connection
+	 * @param client   客户端连接 / client connection
 	 */
 	public static void startEnterWorld(final int objectId, final AionConnection client) {
 		PlayerAccountData playerAccData = client.getAccount().getPlayerAccountData(objectId);
@@ -413,7 +413,7 @@ public final class PlayerEnterWorldService {
 			if (CustomConfig.ENABLE_RECONNECT_TO_BIND_POINT) {
 				TeleportService2.moveToBindLocation(player, true);
 			}
-            TeleportService2.onLogOutOppositeMap(player);
+			TeleportService2.onLogOutOppositeMap(player);
 			TeleportService2.sendSetBindPoint(player);
 			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().preSpawn(player);
 			GameLocationBootstrapServices.vortexService().validateLoginZone(player);
@@ -515,7 +515,7 @@ public final class PlayerEnterWorldService {
 				serviceBuff.applyEffect(player, 2);
 				// 全垒打能量。 / Homerun Energy.
 				GameEngineServices.skillEngine().applyEffectDirectly(323, player, player, 0);
-                // [活动] 烙印之石保存。 / [Event] Stigma Preservation.
+				// [活动] 烙印之石保存。 / [Event] Stigma Preservation.
 				GameEngineServices.skillEngine().applyEffectDirectly(4714, player, player, 0);
 				// [活动] 饰品升阶 / [Event] Accessory Ascension
 				GameEngineServices.skillEngine().applyEffectDirectly(4843, player, player, 0);
@@ -526,7 +526,7 @@ public final class PlayerEnterWorldService {
 				serviceBuff.applyEffect(player, 220599);
 				// 全垒打能量。 / Homerun Energy.
 				GameEngineServices.skillEngine().applyEffectDirectly(323, player, player, 0);
-                // [活动] 烙印之石保存。 / [Event] Stigma Preservation.
+				// [活动] 烙印之石保存。 / [Event] Stigma Preservation.
 				GameEngineServices.skillEngine().applyEffectDirectly(4714, player, player, 0);
 				// [活动] 饰品升阶 / [Event] Accessory Ascension
 				GameEngineServices.skillEngine().applyEffectDirectly(4843, player, player, 0);
@@ -537,7 +537,7 @@ public final class PlayerEnterWorldService {
 				serviceBuff.applyEffect(player, 230599);
 				// 全垒打能量。 / Homerun Energy.
 				GameEngineServices.skillEngine().applyEffectDirectly(323, player, player, 0);
-                // [活动] 烙印之石保存。 / [Event] Stigma Preservation.
+				// [活动] 烙印之石保存。 / [Event] Stigma Preservation.
 				GameEngineServices.skillEngine().applyEffectDirectly(4714, player, player, 0);
 				// [活动] 饰品升阶 / [Event] Accessory Ascension
 				GameEngineServices.skillEngine().applyEffectDirectly(4843, player, player, 0);
@@ -700,16 +700,18 @@ public final class PlayerEnterWorldService {
 	/**
 	 * 重新调度玩家通用与背包周期落库任务。
 	 * Reschedules player general and inventory periodic save tasks.
+	 *
 	 * @param player 玩家 / player
 	 */
 	public static void reschedulePeriodicSaveTasks(Player player) {
-		player.getController().addTask(TaskId.PLAYER_UPDATE, GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new GeneralUpdateTask(player.getObjectId()), PeriodicSaveConfig.PLAYER_GENERAL * 1000L, PeriodicSaveConfig.PLAYER_GENERAL * 1000L));
-		player.getController().addTask(TaskId.INVENTORY_UPDATE, GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new ItemUpdateTask(player.getObjectId()), PeriodicSaveConfig.PLAYER_ITEMS * 1000L, PeriodicSaveConfig.PLAYER_ITEMS * 1000L));
+		player.getController().cancelTask(TaskId.PLAYER_UPDATE);
+		player.getController().cancelTask(TaskId.INVENTORY_UPDATE);
 	}
 
 	/**
 	 * 光系欧比斯登录广播（4.9）。
 	 * Light-side abyss login broadcast (4.9).
+	 *
 	 * @param player 玩家 / player
 	 */
 	public static void abyssLightLogon(final Player player) {
@@ -724,6 +726,7 @@ public final class PlayerEnterWorldService {
 	/**
 	 * 暗系欧比斯登录广播（4.9）。
 	 * Dark-side abyss login broadcast (4.9).
+	 *
 	 * @param player 玩家 / player
 	 */
 	public static void abyssDarkLogon(final Player player) {
@@ -738,6 +741,7 @@ public final class PlayerEnterWorldService {
 	/**
 	 * 下发背包与装备物品信息。
 	 * Sends inventory and equipment item info.
+	 *
 	 * @param client 客户端连接 / client connection
 	 * @param player 玩家 / player
 	 */
@@ -772,6 +776,7 @@ public final class PlayerEnterWorldService {
 	/**
 	 * 下发宏列表。
 	 * Sends the macro list.
+	 *
 	 * @param client 客户端连接 / client connection
 	 * @param player 玩家 / player
 	 */
@@ -785,6 +790,7 @@ public final class PlayerEnterWorldService {
 	/**
 	 * 标记玩家已登录并记录日志。
 	 * Marks the player as logged in and logs the event.
+	 *
 	 * @param player 玩家 / player
 	 */
 	private static void playerLoggedIn(Player player) {
@@ -805,11 +811,11 @@ public final class PlayerEnterWorldService {
 		byte membership = account.getMembership();
 		if (membership > 0) {
 			String accountType = switch (account.getMembership()) {
-                case 1 -> "PREMIUM";
-                case 2 -> "VIP";
-                default -> "";
-            };
-            client.sendPacket(new SM_MESSAGE(0, null, "Your account is " + accountType, ChatType.YELLOW));
+				case 1 -> "PREMIUM";
+				case 2 -> "VIP";
+				default -> "";
+			};
+			client.sendPacket(new SM_MESSAGE(0, null, "Your account is " + accountType, ChatType.YELLOW));
 		}
 	}
 

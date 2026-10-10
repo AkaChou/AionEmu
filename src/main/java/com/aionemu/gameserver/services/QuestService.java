@@ -48,7 +48,6 @@ import com.aionemu.gameserver.model.team2.alliance.PlayerAlliance;
 import com.aionemu.gameserver.model.team2.common.legacy.LootRuleType;
 import com.aionemu.gameserver.model.team2.group.PlayerGroup;
 import com.aionemu.gameserver.model.templates.QuestTemplate;
-import com.aionemu.gameserver.model.templates.npc.NpcTemplate;
 import com.aionemu.gameserver.model.templates.quest.CollectItem;
 import com.aionemu.gameserver.model.templates.quest.CollectItems;
 import com.aionemu.gameserver.model.templates.quest.InventoryItem;
@@ -81,6 +80,7 @@ import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.stats.AbyssRankEnum;
+
 /**
  * 任务服务，处理任务开始/完成、掉落、计时器与放弃等核心流程。
  * Quest service handling start/finish, drops, timers, abandon, and related core flows.
@@ -88,9 +88,19 @@ import com.aionemu.gameserver.utils.stats.AbyssRankEnum;
 @Slf4j
 public final class QuestService {
 
-	/** 任务静态数据。 / Quest static data. */
+	/**
+	 * 任务静态数据。 / Quest static data.
+	 */
 	static QuestsData questsData = DataManager.QUEST_DATA;
-	/** Supplemental drops declared by the remaining legacy handlers. Canonical catalog drops live in the dispatcher. */
+	/**
+	 * 所有手工制作技能 ID。 / All crafting skill IDs.
+	 */
+	private static final List<Integer> ALL_CRAFT_SKILL_IDS = List.of(
+		30002, 30003, 40001, 40002, 40003, 40004, 40007, 40008, 40010
+	);
+	/**
+	 * Supplemental drops declared by the remaining legacy handlers. Canonical catalog drops live in the dispatcher.
+	 */
 	private static final ConcurrentMap<Integer, List<QuestCatalogDrop>> handlerSideQuestDrops = new ConcurrentHashMap<>();
 
 	/**
@@ -104,8 +114,9 @@ public final class QuestService {
 	/**
 	 * 以默认奖励索引完成任务。
 	 * Finishes the quest with the default reward index.
+	 *
 	 * @param env 任务环境 / quest environment
-	 * whether successful
+	 *            whether successful
 	 */
 	public static boolean finishQuest(QuestEnv env) {
 		return finishQuest(env, 0);
@@ -114,9 +125,10 @@ public final class QuestService {
 	/**
 	 * 完成任务并发放指定奖励。
 	 * Finishes the quest and grants the specified reward.
+	 *
 	 * @param env 任务环境 / quest environment
-	 * reward index
-	 * whether successful
+	 *            reward index
+	 *            whether successful
 	 */
 	public static boolean finishQuest(QuestEnv env, int reward) {
 		QuestTemplate template = questsData == null ? null : questsData.getQuestById(env.getQuestId());
@@ -134,8 +146,9 @@ public final class QuestService {
 	 * 用给定模板完成任务并发放指定奖励（native 完成口的共用结算体）。
 	 * Finishes the quest with the given template and grants the specified reward; this is the shared
 	 * settlement body used by the native completion port as well as the legacy XML lane.
-	 * @param env 任务环境 / quest environment
-	 * @param reward 奖励档位（奖励组下标，已在调用方校验范围）/ reward tier (validated group index)
+	 *
+	 * @param env      任务环境 / quest environment
+	 * @param reward   奖励档位（奖励组下标，已在调用方校验范围）/ reward tier (validated group index)
 	 * @param template 奖励面模板（原版元数据映射或 XML 模板）/ reward template
 	 * @return 是否成功 / whether the settlement succeeded
 	 */
@@ -154,9 +167,9 @@ public final class QuestService {
 		List<QuestItems> questItems = new ArrayList<>();
 		if (!template.getExtendedRewards().isEmpty()) {
 			if (template.getRewardRepeatCount() > 0
-					&& qs.getCompleteCount() == template.getRewardRepeatCount() - 1) {
+				&& qs.getCompleteCount() == template.getRewardRepeatCount() - 1) {
 				questItems.addAll(getRewardItems(env, template, true, reward));
-				extendedRewards = template.getExtendedRewards().get(0);
+				extendedRewards = template.getExtendedRewards().getFirst();
 			}
 		}
 		if (!template.getRewards().isEmpty() || !template.getBonus().isEmpty()) {
@@ -181,142 +194,32 @@ public final class QuestService {
 	private static List<QuestItems> getRewardItems(QuestEnv env, QuestTemplate template, boolean extended, int reward) {
 		Player player = env.getPlayer();
 		int id = env.getQuestId();
-		List<QuestItems> questItems = new ArrayList<>();
-		Rewards rewards;
-		if (extended) {
-			rewards = template.getExtendedRewards().get(0);
-		} else {
-			rewards = template.getRewards().get(reward);
-		}
-		questItems.addAll(rewards.getRewardItem());
+		Rewards rewards = extended ? template.getExtendedRewards().getFirst() : template.getRewards().get(reward);
+		List<QuestItems> questItems = new ArrayList<>(rewards.getRewardItem());
 		int dialogId = env.getDialogId();
-		if (dialogId != 23 && dialogId != 0 && !extended) {
+		if (!extended) {
 			QuestState qs = player.getQuestStateList().getQuestState(id);
 			boolean isLastRepeat = qs.getCompleteCount() == template.getMaxRepeatCount() - 1 && template.getMaxRepeatCount() < 255;
-			if (isLastRepeat && template.isUseSingleClassReward() || template.isUseRepeatedClassReward()) {
-				QuestItems classRewardItem = null;
-				PlayerClass playerClass = player.getCommonData().getPlayerClass();
-				int selRewIndex = dialogId - 8;
-				switch (playerClass) {
-				case ASSASSIN: {
-					classRewardItem = getQuestItemsbyClass(id, template.getAssassinSelectableReward(), selRewIndex);
-					break;
+			boolean useClassReward = (isLastRepeat && template.isUseSingleClassReward()) || template.isUseRepeatedClassReward();
+			if (dialogId != 23 && dialogId != 0) {
+				if (useClassReward) {
+					QuestItems classRewardItem = getClassRewardItem(template, player.getCommonData().getPlayerClass(), dialogId - 8);
+					if (classRewardItem != null) {
+						questItems.add(classRewardItem);
+					}
+				} else {
+					int selIndex = dialogId - 8;
+					if (selIndex >= 0 && selIndex < rewards.getSelectableRewardItem().size()) {
+						questItems.add(rewards.getSelectableRewardItem().get(selIndex));
+					}
 				}
-				case CHANTER: {
-					classRewardItem = getQuestItemsbyClass(id, template.getChanterSelectableReward(), selRewIndex);
-					break;
-				}
-				case CLERIC: {
-					classRewardItem = getQuestItemsbyClass(id, template.getPriestSelectableReward(), selRewIndex);
-					break;
-				}
-				case GLADIATOR: {
-					classRewardItem = getQuestItemsbyClass(id, template.getFighterSelectableReward(), selRewIndex);
-					break;
-				}
-				case RANGER: {
-					classRewardItem = getQuestItemsbyClass(id, template.getRangerSelectableReward(), selRewIndex);
-					break;
-				}
-				case SORCERER: {
-					classRewardItem = getQuestItemsbyClass(id, template.getWizardSelectableReward(), selRewIndex);
-					break;
-				}
-				case SPIRIT_MASTER: {
-					classRewardItem = getQuestItemsbyClass(id, template.getElementalistSelectableReward(), selRewIndex);
-					break;
-				}
-				case TEMPLAR: {
-					classRewardItem = getQuestItemsbyClass(id, template.getKnightSelectableReward(), selRewIndex);
-					break;
-				}
-				case GUNSLINGER: {
-					classRewardItem = getQuestItemsbyClass(id, template.getGunslingerSelectableReward(), selRewIndex);
-					break;
-				}
-				case SONGWEAVER: {
-					classRewardItem = getQuestItemsbyClass(id, template.getSongweaverSelectableReward(), selRewIndex);
-					break;
-				}
-				case AETHERTECH: {
-					classRewardItem = getQuestItemsbyClass(id, template.getAethertechSelectableReward(), selRewIndex);
-					break;
-				}
-				default:
-					break;
-				}
-				if (classRewardItem != null) {
-					questItems.add(classRewardItem);
-				}
-			} else {
-				QuestItems selectebleRewardItem = null;
-				if (dialogId - 8 >= 0 && dialogId - 8 < rewards.getSelectableRewardItem().size()) {
-					selectebleRewardItem = rewards.getSelectableRewardItem().get(dialogId - 8);
-				}
-				if (selectebleRewardItem != null) {
-					questItems.add(selectebleRewardItem);
-				}
-			}
-		} else if (dialogId == 23 && !extended) {
-			QuestState qs = player.getQuestStateList().getQuestState(id);
-			boolean isLastRepeat = qs.getCompleteCount() == template.getMaxRepeatCount() - 1 && template.getMaxRepeatCount() < 255;
-			if (isLastRepeat && template.isUseSingleClassReward() || template.isUseRepeatedClassReward()) {
-				QuestItems classRewardItem = null;
-				PlayerClass playerClass = player.getCommonData().getPlayerClass();
-				int selRewIndex = env.getExtendedRewardIndex() - 8;
-				switch (playerClass) {
-				case ASSASSIN: {
-					classRewardItem = getQuestItemsbyClass(id, template.getAssassinSelectableReward(), selRewIndex);
-					break;
-				}
-				case CHANTER: {
-					classRewardItem = getQuestItemsbyClass(id, template.getChanterSelectableReward(), selRewIndex);
-					break;
-				}
-				case CLERIC: {
-					classRewardItem = getQuestItemsbyClass(id, template.getPriestSelectableReward(), selRewIndex);
-					break;
-				}
-				case GLADIATOR: {
-					classRewardItem = getQuestItemsbyClass(id, template.getFighterSelectableReward(), selRewIndex);
-					break;
-				}
-				case RANGER: {
-					classRewardItem = getQuestItemsbyClass(id, template.getRangerSelectableReward(), selRewIndex);
-					break;
-				}
-				case SORCERER: {
-					classRewardItem = getQuestItemsbyClass(id, template.getWizardSelectableReward(), selRewIndex);
-					break;
-				}
-				case SPIRIT_MASTER: {
-					classRewardItem = getQuestItemsbyClass(id, template.getElementalistSelectableReward(), selRewIndex);
-					break;
-				}
-				case TEMPLAR: {
-					classRewardItem = getQuestItemsbyClass(id, template.getKnightSelectableReward(), selRewIndex);
-					break;
-				}
-				case AETHERTECH: {
-					classRewardItem = getQuestItemsbyClass(id, template.getAethertechSelectableReward(), selRewIndex);
-					break;
-				}
-				case GUNSLINGER: {
-					classRewardItem = getQuestItemsbyClass(id, template.getGunslingerSelectableReward(), selRewIndex);
-					break;
-				}
-				case SONGWEAVER: {
-					classRewardItem = getQuestItemsbyClass(id, template.getSongweaverSelectableReward(), selRewIndex);
-					break;
-				}
-				default:
-					break;
-				}
+			} else if (dialogId == 23 && useClassReward) {
+				QuestItems classRewardItem = getClassRewardItem(template, player.getCommonData().getPlayerClass(), env.getExtendedRewardIndex() - 8);
 				if (classRewardItem != null) {
 					questItems.add(classRewardItem);
 				}
 			}
-		} else if (dialogId == 23 && extended && !rewards.getSelectableRewardItem().isEmpty()) {
+		} else if (dialogId == 23 && !rewards.getSelectableRewardItem().isEmpty()) {
 			QuestItems selectebleRewardItem = null;
 			int index = env.getExtendedRewardIndex();
 			if (index - 8 >= 0 && index - 8 < rewards.getSelectableRewardItem().size()) {
@@ -329,7 +232,7 @@ public final class QuestService {
 			}
 		}
 		if (!template.getBonus().isEmpty()) {
-			QuestBonuses bonus = template.getBonus().get(0);
+			QuestBonuses bonus = template.getBonus().getFirst();
 			// 处理器可在重复时添加额外奖励（活动任务无数据）。 / Handler can add additional bonuses on repeat (for event quests no data)
 			HandlerResult result = GameEngineServices.questEngine().onBonusApplyEvent(env, bonus.getType(), questItems);
 			if (result != HandlerResult.FAILED) {
@@ -342,6 +245,34 @@ public final class QuestService {
 		return questItems;
 	}
 
+	private static QuestItems getClassRewardItem(QuestTemplate template, PlayerClass playerClass, int selRewIndex) {
+		List<QuestItems> classRewards = getClassSelectableRewards(template, playerClass);
+		if (selRewIndex >= 0 && selRewIndex < classRewards.size()) {
+			return classRewards.get(selRewIndex);
+		}
+		return null;
+	}
+
+	private static List<QuestItems> getClassSelectableRewards(QuestTemplate template, PlayerClass playerClass) {
+		if (playerClass == null) {
+			return List.of();
+		}
+		return switch (playerClass) {
+			case ASSASSIN -> template.getAssassinSelectableReward();
+			case CHANTER -> template.getChanterSelectableReward();
+			case CLERIC -> template.getPriestSelectableReward();
+			case GLADIATOR -> template.getFighterSelectableReward();
+			case RANGER -> template.getRangerSelectableReward();
+			case SORCERER -> template.getWizardSelectableReward();
+			case SPIRIT_MASTER -> template.getElementalistSelectableReward();
+			case TEMPLAR -> template.getKnightSelectableReward();
+			case GUNSLINGER -> template.getGunslingerSelectableReward();
+			case SONGWEAVER -> template.getSongweaverSelectableReward();
+			case AETHERTECH -> template.getAethertechSelectableReward();
+			default -> List.of();
+		};
+	}
+
 	private static void giveReward(QuestEnv env, Rewards rewards) {
 		Player player = env.getPlayer();
 		if (rewards.getGold() != null) {
@@ -349,7 +280,6 @@ public final class QuestService {
 			player.getInventory().increaseKinah(amount, ItemUpdateType.INC_KINAH_QUEST);
 		}
 		if (rewards.getExp() != null) {
-			NpcTemplate npcTemplate = DataManager.NPC_DATA.getNpcTemplate(env.getTargetId());
 			player.getCommonData().addExp(rewards.getExp(), RewardType.QUEST);
 		}
 		// 成长光环 / Aura Of Growth
@@ -400,14 +330,11 @@ public final class QuestService {
 		QuestState qs = player.getQuestStateList().getQuestState(id);
 		QuestWorkItems qwi = template.getQuestWorkItems();
 		if (qwi != null) {
-			long count = 0;
 			for (QuestItems qi : qwi.getQuestWorkItem()) {
 				if (qi != null) {
-					count = player.getInventory().getItemCountByItemId(qi.getItemId());
-					if (count > 0) {
-						if (!player.getInventory().decreaseByItemId(qi.getItemId(), count)) {
-							return false;
-						}
+					long count = player.getInventory().getItemCountByItemId(qi.getItemId());
+					if (count > 0 && !player.getInventory().decreaseByItemId(qi.getItemId(), count)) {
+						return false;
 					}
 				}
 			}
@@ -446,13 +373,6 @@ public final class QuestService {
 		}
 	}
 
-	private static QuestItems getQuestItemsbyClass(int id, List<QuestItems> classSelRew, int selRewIndex) {
-		if (selRewIndex >= 0 && selRewIndex < classSelRew.size()) {
-			return classSelRew.get(selRewIndex);
-		}
-		return null;
-	}
-
 	private static Timestamp countNextRepeatTime(Player player, QuestTemplate template) {
 		int questCooltime = template.getQuestCoolTime();
 		ZonedDateTime now = ZonedDateTime.now();
@@ -482,7 +402,7 @@ public final class QuestService {
 			}
 			if (startDay == daysToAdd) {
 				daysToAdd = 7;
-			} else if (daysToAdd == 7 && startDay < 7) {
+			} else if (daysToAdd == 7) {
 				daysToAdd = 7 - repeatDate.getDayOfWeek().getValue() + startDay;
 			}
 			repeatDate = repeatDate.plusDays(daysToAdd);
@@ -494,9 +414,10 @@ public final class QuestService {
 	/**
 	 * 检查任务开始条件。
 	 * Checks quest start conditions.
-	 * @param env 任务环境 / quest environment
+	 *
+	 * @param env  任务环境 / quest environment
 	 * @param warn 是否向玩家提示 / whether to warn the player
-	 * whether conditions are met
+	 *             whether conditions are met
 	 */
 	public static boolean checkStartConditions(QuestEnv env, boolean warn) {
 		return checkStartConditionsImpl(env, warn);
@@ -514,23 +435,23 @@ public final class QuestService {
 			return engine.nativeAcquireAllowed(player, env.getQuestId());
 		}
 		QuestTemplate template = questsData.getQuestById(env.getQuestId());
-        QuestState qs = player.getQuestStateList().getQuestState(env.getQuestId());
-        if (qs != null && qs.getStatus() != QuestStatus.NONE && !qs.canRepeat()) {
-            return false;
-        }
+		QuestState qs = player.getQuestStateList().getQuestState(env.getQuestId());
+		if (qs != null && qs.getStatus() != QuestStatus.NONE && !qs.canRepeat()) {
+			return false;
+		}
 		if (template == null) {
 			return false;
 		}
 		if (!template.isRacePermitted(player.getRace())) {
 			return false;
 		}
-        int levelDiff = template.getMinlevelPermitted() - player.getLevel();
-        if (levelDiff > 0 && template.getMinlevelPermitted() != 999) {
-            if (warn) {
-                  PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_QUEST_ACQUIRE_ERROR_MIN_LEVEL(Integer.toString(template.getMinlevelPermitted())));
-            }
-            return false;
-        }
+		int levelDiff = template.getMinlevelPermitted() - player.getLevel();
+		if (levelDiff > 0 && template.getMinlevelPermitted() != 999) {
+			if (warn) {
+				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_QUEST_ACQUIRE_ERROR_MIN_LEVEL(Integer.toString(template.getMinlevelPermitted())));
+			}
+			return false;
+		}
 		if (template.getMaxlevelPermitted() != 0 && player.getLevel() > template.getMaxlevelPermitted()) {
 			if (warn) {
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_QUEST_ACQUIRE_ERROR_MAX_LEVEL(Integer.toString(template.getMaxlevelPermitted())));
@@ -592,34 +513,8 @@ public final class QuestService {
 		if (warn && !inventoryItemCheck(env, warn)) {
 			return false;
 		}
-		if (template.getCombineSkill() != null) {
-			List<Integer> skills = new ArrayList<>();
-			if (template.getCombineSkill() == -1) {
-				skills.add(30002);
-				skills.add(30003);
-				skills.add(40001);
-				skills.add(40002);
-				skills.add(40003);
-				skills.add(40004);
-				skills.add(40007);
-				skills.add(40008);
-				skills.add(40010);
-			} else {
-				skills.add(template.getCombineSkill());
-			}
-			boolean result = false;
-			for (int skillId : skills) {
-				PlayerSkillEntry skill = player.getSkillList().getSkillEntry(skillId);
-				if (skill != null && skill.getSkillLevel() >= template.getCombineSkillPoint()) {
-					if (template.getCategory().equals(QuestCategory.TASK) && skill.getSkillLevel() - 40 > template.getCombineSkillPoint())
-						continue;
-					result = true;
-					break;
-				}
-			}
-			if (!result) {
-				return false;
-			}
+		if (!checkCombineSkill(player, template)) {
+			return false;
 		}
 		if (warn && template.getNpcFactionId() != 0 && !template.isTimeBased()) {
 			return player.getNpcFactions().canStartQuest(template);
@@ -630,9 +525,10 @@ public final class QuestService {
 	/**
 	 * 以指定状态启动任务，是否警告取决于对话 ID。
 	 * Starts a quest with the given status; warn flag depends on dialog id.
+	 *
 	 * @param env 任务环境 / quest environment
-	 * initial status
-	 * whether successful
+	 *            initial status
+	 *            whether successful
 	 */
 	public static boolean startQuest(QuestEnv env, QuestStatus status) {
 		return startQuest(env, status, env.getDialogId() != 0);
@@ -641,10 +537,11 @@ public final class QuestService {
 	/**
 	 * 以指定状态启动任务。
 	 * Starts a quest with the given status.
-	 * @param env 任务环境 / quest environment
-	 * initial status
+	 *
+	 * @param env  任务环境 / quest environment
+	 *             initial status
 	 * @param warn 是否向玩家提示失败原因 / whether to warn the player on failure
-	 * whether successful
+	 *             whether successful
 	 */
 	public static boolean startQuest(QuestEnv env, QuestStatus status, boolean warn) {
 		Player player = env.getPlayer();
@@ -705,85 +602,41 @@ public final class QuestService {
 	/**
 	 * 以 START 状态启动任务。
 	 * Starts a quest with START status.
+	 *
 	 * @param env 任务环境 / quest environment
-	 * whether successful
+	 *            whether successful
 	 */
 	public static boolean startQuest(QuestEnv env) {
 		return startQuest(env, QuestStatus.START, env.getDialogId() != 0);
 	}
 
-	/**
-	 * 启动主线/剧情任务（Mission）。
-	 * Starts a mission quest.
-	 * @param env 任务环境 / quest environment
-	 * initial status
-	 */
-	public static void startMission(QuestEnv env, QuestStatus status) {
-		Player player = env.getPlayer();
-		int questId = env.getQuestId();
-		if (player.getQuestStateList().getQuestState(questId) != null) {
-			return;
-		} else {
-			player.getQuestStateList().addQuest(questId, new QuestState(questId, status, 0, 0, null, 0, null));
+	private static boolean checkCombineSkill(Player player, QuestTemplate template) {
+		if (template.getCombineSkill() == null) {
+			return true;
 		}
-		PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(questId, status.value(), 0));
-	}
-
-	/**
-	 * 检查主线任务属性/职业等前置条件。
-	 * Checks mission stat/class and related prerequisites.
-	 * @param env 任务环境 / quest environment
-	 * whether conditions are met
-	 */
-	public static boolean checkMissionStatConditions(QuestEnv env) {
-		Player player = env.getPlayer();
-		QuestTemplate template = questsData.getQuestById(env.getQuestId());
-		if (template == null) {
-			return false;
-		}
-		if (!template.isRacePermitted(player.getRace())) {
-			return false;
-		}
-		if (template.getClassPermitted().size() != 0 && !template.getClassPermitted().contains(player.getCommonData().getPlayerClass())) {
-			return false;
-		}
-		if (template.getGenderPermitted() != null && template.getGenderPermitted() != player.getGender()) {
-			return false;
-		}
-		if (template.getCombineSkill() != null) {
-			List<Integer> skills = new ArrayList<>();
-			if (template.getCombineSkill() == -1) {
-				skills.add(30002);
-				skills.add(30003);
-				skills.add(40001);
-				skills.add(40002);
-				skills.add(40003);
-				skills.add(40004);
-				skills.add(40007);
-				skills.add(40008);
-				skills.add(40010);
-			} else {
-				skills.add(template.getCombineSkill());
-			}
-			boolean result = false;
-			for (int skillId : skills) {
-				PlayerSkillEntry skill = player.getSkillList().getSkillEntry(skillId);
-				if (skill != null && skill.getSkillLevel() >= template.getCombineSkillPoint() && skill.getSkillLevel() - 40 <= template.getCombineSkillPoint()) {
-					result = true;
-					break;
+		List<Integer> skills = template.getCombineSkill() == -1
+			? ALL_CRAFT_SKILL_IDS
+			: List.of(template.getCombineSkill());
+		for (int skillId : skills) {
+			PlayerSkillEntry skill = player.getSkillList().getSkillEntry(skillId);
+			if (skill != null && skill.getSkillLevel() >= template.getCombineSkillPoint()) {
+				if (template.getCategory().equals(QuestCategory.TASK)
+					&& skill.getSkillLevel() - 40 > template.getCombineSkillPoint()) {
+					continue;
 				}
+				return true;
 			}
-			return result;
 		}
-		return true;
+		return false;
 	}
 
 	/**
 	 * 启动活动类任务。
 	 * Starts an event-category quest.
+	 *
 	 * @param env 任务环境 / quest environment
-	 * initial status
-	 * whether successful
+	 *            initial status
+	 *            whether successful
 	 */
 	public static boolean startEventQuest(QuestEnv env, QuestStatus questStatus) {
 		int id = env.getQuestId();
@@ -839,12 +692,12 @@ public final class QuestService {
 				return false;
 			}
 			if (!metadata.permittedClasses().isEmpty()
-					&& (player.getCommonData() == null || player.getCommonData().getPlayerClass() == null
-						|| !metadata.permittedClasses().contains(player.getCommonData().getPlayerClass().name()))) {
+				&& (player.getCommonData() == null || player.getCommonData().getPlayerClass() == null
+				|| !metadata.permittedClasses().contains(player.getCommonData().getPlayerClass().name()))) {
 				return false;
 			}
 			if (!metadata.permittedGender().isEmpty()
-					&& (player.getGender() == null || !metadata.permittedGender().equals(player.getGender().name()))) {
+				&& (player.getGender() == null || !metadata.permittedGender().equals(player.getGender().name()))) {
 				return false;
 			}
 		}
@@ -867,6 +720,7 @@ public final class QuestService {
 	/**
 	 * 将旧版活动任务占位状态转换为客户端可用的初始状态。
 	 * Normalizes the legacy event-quest placeholder to a client-visible start state.
+	 *
 	 * @param status 持久化活动任务状态 / persisted event-quest status
 	 * @return 客户端与运行时使用的状态 / status used by the client and runtime
 	 */
@@ -881,8 +735,9 @@ public final class QuestService {
 	/**
 	 * 将任务标记为完成状态（不走完整奖励流程时使用）。
 	 * Marks the quest as complete (used when not running the full reward flow).
+	 *
 	 * @param env 任务环境 / quest environment
-	 * whether successful
+	 *            whether successful
 	 */
 	public boolean completeQuest(QuestEnv env) {
 		Player player = env.getPlayer();
@@ -902,9 +757,10 @@ public final class QuestService {
 	/**
 	 * 检查（并可选移除）任务收集道具是否齐全。
 	 * Checks (and optionally removes) whether quest collect items are complete.
-	 * @param env 任务环境 / quest environment
+	 *
+	 * @param env        任务环境 / quest environment
 	 * @param removeItem 是否扣除道具 / whether to remove items
-	 * whether items are sufficient
+	 *                   whether items are sufficient
 	 */
 	public static boolean collectItemCheck(QuestEnv env, boolean removeItem) {
 		Player player = env.getPlayer();
@@ -934,18 +790,18 @@ public final class QuestService {
 		}
 		for (CollectItem collectItem : collectItems.getCollectItem()) {
 			int itemId = collectItem.getItemId();
-			long count = itemId == ItemId.KINAH.value() ? player.getInventory().getKinah(): player.getInventory().getItemCountByItemId(itemId);
+			long count = itemId == ItemId.KINAH.value() ? player.getInventory().getKinah() : player.getInventory().getItemCountByItemId(itemId);
 			if (collectItem.getCount() > count) {
 				return false;
 			}
 		}
 		if (removeItem) {
 			for (CollectItem collectItem : collectItems.getCollectItem()) {
-					if (collectItem.getItemId() == 182400001) {
-						player.getInventory().decreaseKinah(collectItem.getCount());
-					} else {
-						player.getInventory().decreaseByItemId(collectItem.getItemId(), collectItem.getCount());
-					}
+				if (collectItem.getItemId() == 182400001) {
+					player.getInventory().decreaseKinah(collectItem.getCount());
+				} else {
+					player.getInventory().decreaseByItemId(collectItem.getItemId(), collectItem.getCount());
+				}
 			}
 		}
 		return true;
@@ -954,9 +810,10 @@ public final class QuestService {
 	/**
 	 * 检查背包是否持有任务要求的道具。
 	 * Checks whether the inventory holds required quest items.
-	 * @param env 任务环境 / quest environment
+	 *
+	 * @param env         任务环境 / quest environment
 	 * @param showWarning 是否提示玩家 / whether to show a warning
-	 * whether items are present
+	 *                    whether items are present
 	 */
 	public static boolean inventoryItemCheck(QuestEnv env, boolean showWarning) {
 		Player player = env.getPlayer();
@@ -985,11 +842,12 @@ public final class QuestService {
 	 * 世界 ID / world id
 	 * instance id
 	 * NPC 模板 ID / NPC template id
+	 *
 	 * @param x X 坐标 / X
 	 * @param y Y 坐标 / Y
 	 * @param z Z 坐标 / Z
-	 * 朝向 / heading
-	 * spawned object
+	 *          朝向 / heading
+	 *          spawned object
 	 */
 	public static VisibleObject spawnQuestNpc(int worldId, int instanceId, int templateId, float x, float y, float z, byte heading) {
 		return SpawnEngine.spawnObject(SpawnEngine.addNewSingleTimeSpawn(worldId, templateId, x, y, z, heading), instanceId);
@@ -1001,11 +859,12 @@ public final class QuestService {
 	 * 世界 ID / world id
 	 * instance id
 	 * template id
+	 *
 	 * @param x X 坐标 / X
 	 * @param y Y 坐标 / Y
 	 * @param z Z 坐标 / Z
-	 * 朝向 / heading
-	 * spawned object
+	 *          朝向 / heading
+	 *          spawned object
 	 */
 	public static VisibleObject addNewSpawn(int worldId, int instanceId, int templateId, float x, float y, float z, byte heading) {
 		return SpawnEngine.spawnObject(SpawnEngine.addNewSingleTimeSpawn(worldId, templateId, x, y, z, heading), instanceId);
@@ -1017,14 +876,15 @@ public final class QuestService {
 	 * 世界 ID / world id
 	 * instance id
 	 * template id
-	 * @param x X 坐标 / X
-	 * @param y Y 坐标 / Y
-	 * @param z Z 坐标 / Z
-	 * 朝向 / heading
+	 *
+	 * @param x         X 坐标 / X
+	 * @param y         Y 坐标 / Y
+	 * @param z         Z 坐标 / Z
+	 *                  朝向 / heading
 	 * @param timeInMin 存活分钟数 / lifetime in minutes
 	 */
 	public static void addNewSpawn(int worldId, int instanceId, int templateId, float x, float y, float z, byte heading, int timeInMin) {
-		final Npc npc = (Npc) spawnQuestNpc(worldId, instanceId, templateId, x, y, z, (byte) 0);
+		final Npc npc = (Npc) spawnQuestNpc(worldId, instanceId, templateId, x, y, z, heading);
 		if (!npc.getPosition().isInstanceMap()) {
 			despawnQuestNpc(npc, timeInMin);
 		}
@@ -1042,11 +902,12 @@ public final class QuestService {
 	 * 计算 NPC 对玩家/队伍的任务掉落并写入 dropItems。
 	 * Computes quest drops from an NPC for player/group and appends them to dropItems.
 	 * drop item set
-	 * @param index 起始索引 / start index
-	 * killed NPC
+	 *
+	 * @param index   起始索引 / start index
+	 *                killed NPC
 	 * @param players 参与玩家集合 / participating players
-	 * @param player 主要拾取者 / primary looter
-	 * next index
+	 * @param player  主要拾取者 / primary looter
+	 *                next index
 	 */
 	public static int getQuestDrop(Set<DropItem> dropItems, int index, Npc npc, Collection<Player> players, Player player) {
 		Collection<QuestCatalogDrop> drops = getQuestDrop(npc.getNpcId());
@@ -1059,66 +920,48 @@ public final class QuestService {
 				continue;
 			}
 			if (players != null && player.isInGroup2()) {
-				List<Player> pls = new ArrayList<>();
-				if (drop.dropEachGroupMember()) {
-					for (Player member : players) {
-						if (isQuestDrop(member, drop)) {
-							pls.add(member);
-							dropItems.add(regQuestDropItem(drop, index++, member.getObjectId()));
-						}
-					}
-				} else {
-					for (Player member : players) {
-						if (isQuestDrop(member, drop)) {
-							pls.add(member);
-							break;
-						}
-					}
-				}
-				if (pls.size() > 0) {
-					if (!drop.dropEachGroupMember()) {
-						dropItems.add(regQuestDropItem(drop, index++, 0));
-					}
-					for (Player p : pls) {
-						dropNpc.setAllowedLooter(p);
-						if (player.getPlayerGroup2().getLootGroupRules().getLootRule() != LootRuleType.FREEFORALL) {
-							PacketSendUtility.sendPacket(p, new SM_LOOT_STATUS(npc.getObjectId(), Status.LOOT_ENABLE));
-						}
-					}
-					pls.clear();
-				}
+				index = processTeamQuestDrop(dropItems, index, npc, dropNpc, drop, players,
+					drop.dropEachGroupMember(),
+					player.getPlayerGroup2().getLootGroupRules().getLootRule());
 			} else if (players != null && player.isInAlliance2()) {
-				List<Player> pls = new ArrayList<>();
-				if (drop.dropEachAllianceMember()) {
-					for (Player member : players) {
-						if (isQuestDrop(member, drop)) {
-							pls.add(member);
-							dropItems.add(regQuestDropItem(drop, index++, member.getObjectId()));
-						}
-					}
-				} else {
-					for (Player member : players) {
-						if (isQuestDrop(member, drop)) {
-							pls.add(member);
-							break;
-						}
-					}
-				}
-				if (pls.size() > 0) {
-					if (!drop.dropEachAllianceMember()) {
-						dropItems.add(regQuestDropItem(drop, index++, 0));
-					}
-					for (Player p : pls) {
-						dropNpc.setAllowedLooter(p);
-						if (player.getPlayerAlliance2().getLootGroupRules().getLootRule() != LootRuleType.FREEFORALL) {
-							PacketSendUtility.sendPacket(p, new SM_LOOT_STATUS(npc.getObjectId(), Status.LOOT_ENABLE));
-						}
-					}
-					pls.clear();
-				}
+				index = processTeamQuestDrop(dropItems, index, npc, dropNpc, drop, players,
+					drop.dropEachAllianceMember(),
+					player.getPlayerAlliance2().getLootGroupRules().getLootRule());
 			} else {
 				if (isQuestDrop(player, drop)) {
 					dropItems.add(regQuestDropItem(drop, index++, player.getObjectId()));
+				}
+			}
+		}
+		return index;
+	}
+
+	private static int processTeamQuestDrop(Set<DropItem> dropItems, int index, Npc npc, DropNpc dropNpc,
+											QuestCatalogDrop drop, Collection<Player> players, boolean dropEachMember, LootRuleType lootRule) {
+		List<Player> eligibleMembers = new ArrayList<>();
+		if (dropEachMember) {
+			for (Player member : players) {
+				if (isQuestDrop(member, drop)) {
+					eligibleMembers.add(member);
+					dropItems.add(regQuestDropItem(drop, index++, member.getObjectId()));
+				}
+			}
+		} else {
+			for (Player member : players) {
+				if (isQuestDrop(member, drop)) {
+					eligibleMembers.add(member);
+					break;
+				}
+			}
+		}
+		if (!eligibleMembers.isEmpty()) {
+			if (!dropEachMember) {
+				dropItems.add(regQuestDropItem(drop, index++, 0));
+			}
+			for (Player p : eligibleMembers) {
+				dropNpc.setAllowedLooter(p);
+				if (lootRule != LootRuleType.FREEFORALL) {
+					PacketSendUtility.sendPacket(p, new SM_LOOT_STATUS(npc.getObjectId(), Status.LOOT_ENABLE));
 				}
 			}
 		}
@@ -1137,6 +980,7 @@ public final class QuestService {
 	 * 检查任务物品是否应该掉落
 	 * Check if quest item should drop
 	 * Player object
+	 *
 	 * @param drop 掉落物品信息 / Drop item information
 	 * @return 是否允许掉落 / Whether dropping is allowed
 	 */
@@ -1225,18 +1069,6 @@ public final class QuestService {
 	}
 
 	/**
-	 * 检查玩家等级是否满足任务最低要求。
-	 * Checks whether the player level meets the quest minimum.
-	 * quest id
-	 * player level
-	 * whether met
-	 */
-	public static boolean checkLevelRequirement(int questId, int playerLevel) {
-		QuestMetadata metadata = GameEngineServices.questEngine().questCatalog().findMetadata(questId).orElse(null);
-		return metadata != null && playerLevel >= metadata.minLevel() && playerLevel <= metadata.maxLevel();
-	}
-
-	/**
 	 * 返回玩家相对任务最低等级的差值（不足时为正）。
 	 * Returns the level gap relative to the quest minimum (positive when under-leveled).
 	 * quest id
@@ -1265,10 +1097,11 @@ public final class QuestService {
 	 * <p>
 	 * The retail zone-quest list. Native rows come from the retail verdict; typed rows keep the
 	 * pre-migration rule (level gap ≤ 2 and the typed start conditions pass).
-	 * @param player 玩家 / player
+	 *
+	 * @param player   玩家 / player
 	 * @param questIds 本图实例的任务清单（NPC 任务数据的并集） / the instance's NPC-driven quest ids
 	 * @return 任务 ID → 标记（{@code 0} = 平条目，{@code 1} = 软标记条目），按 ID 升序 /
-	 *         quest id → flag ({@code 0} plain, {@code 1} soft-marked), ascending by id
+	 * quest id → flag ({@code 0} plain, {@code 1} soft-marked), ascending by id
 	 */
 	public static Map<Integer, Integer> nearbyQuestFlags(Player player, Collection<Integer> questIds) {
 		Map<Integer, Integer> flags = new TreeMap<>();
@@ -1287,7 +1120,9 @@ public final class QuestService {
 		return flags;
 	}
 
-	/** 单行提示标记：{@code null} = 不入列表。 / One row's hint flag; {@code null} means "not listed". */
+	/**
+	 * 单行提示标记：{@code null} = 不入列表。 / One row's hint flag; {@code null} means "not listed".
+	 */
 	private static Integer nearbyQuestFlag(Player player, int questId) {
 		if (GameEngineServices.questEngine().isNativeOwner(questId)) {
 			return switch (GameEngineServices.questEngine().nativeZoneVerdict(player, questId)) {
@@ -1316,22 +1151,12 @@ public final class QuestService {
 	 */
 
 	/**
-	 * 启动可见的任务计时器。
-	 * Starts a visible quest timer.
-	 * @param env 任务环境 / quest environment
-	 * @param timeInSeconds 计时秒数 / timer length in seconds
-	 * @return 是否已启动 / whether started
-	 */
-	public static boolean questTimerStart(QuestEnv env, int timeInSeconds) {
-		return QuestTimers.questTimerStart(env, timeInSeconds);
-	}
-
-	/**
 	 * 以指定策略启动可见的任务计时器。
 	 * Starts a visible quest timer with the given policy.
-	 * @param env 任务环境 / quest environment
+	 *
+	 * @param env           任务环境 / quest environment
 	 * @param timeInSeconds 计时秒数 / timer length in seconds
-	 * @param policy 计时器策略 / timer policy
+	 * @param policy        计时器策略 / timer policy
 	 * @return 是否已启动 / whether started
 	 */
 	public static boolean questTimerStart(QuestEnv env, int timeInSeconds, QuestTimerPolicy policy) {
@@ -1339,22 +1164,12 @@ public final class QuestService {
 	}
 
 	/**
-	 * 启动不可见任务计时器（超时回调引擎）。
-	 * Starts an invisible quest timer (engine callback on timeout).
-	 * @param env 任务环境 / quest environment
-	 * @param timeInSeconds 计时秒数 / timer length in seconds
-	 * @return 是否已启动 / whether started
-	 */
-	public static boolean invisibleTimerStart(QuestEnv env, int timeInSeconds) {
-		return QuestTimers.invisibleTimerStart(env, timeInSeconds);
-	}
-
-	/**
 	 * 以指定策略启动不可见任务计时器。
 	 * Starts an invisible quest timer with the given policy.
-	 * @param env 任务环境 / quest environment
+	 *
+	 * @param env           任务环境 / quest environment
 	 * @param timeInSeconds 计时秒数 / timer length in seconds
-	 * @param policy 计时器策略 / timer policy
+	 * @param policy        计时器策略 / timer policy
 	 * @return 是否已启动 / whether started
 	 */
 	public static boolean invisibleTimerStart(QuestEnv env, int timeInSeconds, QuestTimerPolicy policy) {
@@ -1364,6 +1179,7 @@ public final class QuestService {
 	/**
 	 * 结束并取消任务计时器。
 	 * Ends and cancels the quest timer.
+	 *
 	 * @param env 任务环境 / quest environment
 	 * @return 是否已处理 / whether handled
 	 */
@@ -1374,7 +1190,8 @@ public final class QuestService {
 	/**
 	 * 以指定身份结束并取消任务计时器。
 	 * Ends and cancels the quest timer with the given identity.
-	 * @param env 任务环境 / quest environment
+	 *
+	 * @param env      任务环境 / quest environment
 	 * @param identity 计时器身份 / timer identity
 	 * @return 是否已处理 / whether handled
 	 */
@@ -1385,8 +1202,9 @@ public final class QuestService {
 	/**
 	 * 清理指定玩家的指定任务计时器。
 	 * Cleans the timers of one quest for one player.
+	 *
 	 * @param playerId 玩家对象 ID / player object id
-	 * @param questId 任务 ID / quest id
+	 * @param questId  任务 ID / quest id
 	 */
 	public static void cleanupQuestTimers(int playerId, int questId) {
 		QuestTimers.cleanupQuestTimers(playerId, questId);
@@ -1395,6 +1213,7 @@ public final class QuestService {
 	/**
 	 * 清理指定玩家的全部任务计时器。
 	 * Cleans every quest timer of one player.
+	 *
 	 * @param playerId 玩家对象 ID / player object id
 	 */
 	public static void cleanupPlayerQuestTimers(int playerId) {
@@ -1404,6 +1223,7 @@ public final class QuestService {
 	/**
 	 * 清理指定副本的全部任务计时器。
 	 * Cleans every quest timer of one instance.
+	 *
 	 * @param instanceId 副本实例 ID / instance id
 	 */
 	public static void cleanupInstanceQuestTimers(int instanceId) {
@@ -1421,13 +1241,15 @@ public final class QuestService {
 	/**
 	 * 判断某玩家的某任务是否已有计时器在跑。
 	 * Reports whether a player has a running timer for a quest.
+	 *
 	 * @param playerId 玩家对象 ID / player object id
-	 * @param questId 任务 ID / quest id
+	 * @param questId  任务 ID / quest id
 	 * @return 是否有计时器 / whether any timer is registered
 	 */
 	static boolean hasQuestTimers(int playerId, int questId) {
 		return QuestTimers.hasQuestTimers(playerId, questId);
 	}
+
 	/**
 	 * 放弃任务并清理相关状态。
 	 * Abandons a quest and cleans related state.
@@ -1542,10 +1364,11 @@ public final class QuestService {
 	 * 注册 NPC 的任务掉落条目。
 	 * Registers a quest drop entry for an NPC.
 	 * NPC 模板 ID / NPC template id
+	 *
 	 * @param drop 掉落配置 / drop entry
 	 */
 	public static void addHandlerSideQuestDrop(QuestCatalogDrop drop) {
-		handlerSideQuestDrops.compute(drop.npcId(), (npcId, current) -> {
+		handlerSideQuestDrops.compute(drop.npcId(), (_, current) -> {
 			List<QuestCatalogDrop> updated = new ArrayList<>(current == null ? List.of() : current);
 			updated.add(drop);
 			return List.copyOf(updated);

@@ -2,6 +2,11 @@ package com.aionemu.gameserver.controllers;
 
 
 import com.aionemu.boot.i18n.I18n;
+
+import java.sql.Timestamp;
+
+import com.aionemu.gameserver.world.WorldPosition;
+
 import com.aionemu.gameserver.ai.RetailAreaEngine;
 import com.aionemu.gameserver.ai.RetailSensoryAreaEngine;
 import com.aionemu.gameserver.configs.main.*;
@@ -64,6 +69,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.util.*;
 import java.util.concurrent.Future;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -71,6 +77,7 @@ import lombok.Setter;
 /**
  * 玩家控制器，管理视野、区域、战斗、技能、死亡与姿态等玩家行为。
  * Player controller managing sight, zones, combat, skills, death and stance behaviors.
+ *
  * @author -Nemesiss-, ATracer, xavier, Sarynth, RotO, xTz, KID
  */
 @Getter
@@ -93,6 +100,7 @@ public class PlayerController extends CreatureController<Player> {
 	/**
 	 * 玩家看到其他可见对象时同步状态包。
 	 * Syncs state packets when the player sees another visible object.
+	 *
 	 * @param object 进入视野的对象 / the object entering sight
 	 */
 	@Override
@@ -157,7 +165,8 @@ public class PlayerController extends CreatureController<Player> {
 	/**
 	 * 对象离开玩家视野时回调。
 	 * Callback when an object leaves the player's sight.
-	 * @param object 离开视野的对象 / the object leaving sight
+	 *
+	 * @param object       离开视野的对象 / the object leaving sight
 	 * @param isOutOfRange 是否因超出距离离开 / whether the leave is due to being out of range
 	 */
 	@Override
@@ -177,7 +186,7 @@ public class PlayerController extends CreatureController<Player> {
 	 * Updates nearby quest availability hints.
 	 */
 	public void updateNearbyQuests() {
-		var position = getOwner().getPosition();
+		WorldPosition position = getOwner().getPosition();
 		if (position == null) {
 			return;
 		}
@@ -196,6 +205,7 @@ public class PlayerController extends CreatureController<Player> {
 	/**
 	 * 玩家进入区域时触发任务/事件逻辑。
 	 * Triggers quest/event logic when the player enters a zone.
+	 *
 	 * @param zone 进入的区域 / entered zone
 	 */
 	@Override
@@ -206,17 +216,17 @@ public class PlayerController extends CreatureController<Player> {
 		}
 		if (zone.getZoneTemplate().getZoneType().equals(ZoneClassName.FORT) && (player.isInState(CreatureState.FLYING))) {
 			switch (player.getWorldId()) {
-			case 400020000: // 贝洛斯 / Belus.
-			case 400040000: // Aspida.
-			case 400050000: // Atanatos.
-			case 400060000: // Disillon.
-				player.setFlyState(0);
-				player.getFlyController().endFly(true);
-				player.unsetState(CreatureState.FLYING);
-				// 此区域无法飞行。 / You cannot fly in this area.
-				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_FLYING_FORBIDDEN_ZONE);
-				PacketSendUtility.broadcastPacket(player, new SM_EMOTION(player, EmotionType.LAND, 0, 0), true);
-				break;
+				case 400020000: // 贝洛斯 / Belus.
+				case 400040000: // Aspida.
+				case 400050000: // Atanatos.
+				case 400060000: // Disillon.
+					player.setFlyState(0);
+					player.getFlyController().endFly(true);
+					player.unsetState(CreatureState.FLYING);
+					// 此区域无法飞行。 / You cannot fly in this area.
+					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_FLYING_FORBIDDEN_ZONE);
+					PacketSendUtility.broadcastPacket(player, new SM_EMOTION(player, EmotionType.LAND, 0, 0), true);
+					break;
 			}
 		}
 		InstanceService.onEnterZone(player, zone);
@@ -228,120 +238,120 @@ public class PlayerController extends CreatureController<Player> {
 		SpawnTemplate template;
 		if (zone.getAreaTemplate().getZoneName() == ZoneName.get("REIAN_REFUGEE_CAMP_210070000")) {
 			switch (player.getRace()) {
-			// 伦图斯基地 / Rentus Base
-			case ELYOS:
-				template = SpawnEngine.addNewSingleTimeSpawn(210070000, 730399, 1147.6155f, 800.88049f, 563.40173f, (byte) 0);
-				template.setEntityId(885);
-				autoPortals.put(730399, SpawnEngine.spawnObject(template, 1));
-				break;
-			// 被占领的伦图斯基地 / Occupied Rentus Base
-			case ASMODIANS:
-				template = SpawnEngine.addNewSingleTimeSpawn(210070000, 832992, 1147.6155f, 800.88049f, 563.40173f, (byte) 0);
-				template.setEntityId(885);
-				autoPortals.put(832992, SpawnEngine.spawnObject(template, 1));
-				break;
-			default:
-				break;
+				// 伦图斯基地 / Rentus Base
+				case ELYOS:
+					template = SpawnEngine.addNewSingleTimeSpawn(210070000, 730399, 1147.6155f, 800.88049f, 563.40173f, (byte) 0);
+					template.setEntityId(885);
+					autoPortals.put(730399, SpawnEngine.spawnObject(template, 1));
+					break;
+				// 被占领的伦图斯基地 / Occupied Rentus Base
+				case ASMODIANS:
+					template = SpawnEngine.addNewSingleTimeSpawn(210070000, 832992, 1147.6155f, 800.88049f, 563.40173f, (byte) 0);
+					template.setEntityId(885);
+					autoPortals.put(832992, SpawnEngine.spawnObject(template, 1));
+					break;
+				default:
+					break;
 			}
 		} else if (zone.getAreaTemplate().getZoneName() == ZoneName.get("RENTUS_RECOVERY_BASE_220080000")) {
 			switch (player.getRace()) {
-			// 被占领的伦图斯基地 / Occupied Rentus Base
-			case ELYOS:
-				template = SpawnEngine.addNewSingleTimeSpawn(220080000, 832991, 1973.3156f, 2017.3612f, 329.13571f, (byte) 0);
-				template.setEntityId(900);
-				autoPortals.put(832991, SpawnEngine.spawnObject(template, 1));
-				break;
-			// 伦图斯基地 / Rentus Base
-			case ASMODIANS:
-				template = SpawnEngine.addNewSingleTimeSpawn(220080000, 730399, 1973.3156f, 2017.3612f, 329.13571f, (byte) 0);
-				template.setEntityId(900);
-				autoPortals.put(730399, SpawnEngine.spawnObject(template, 1));
-				break;
-			default:
-				break;
+				// 被占领的伦图斯基地 / Occupied Rentus Base
+				case ELYOS:
+					template = SpawnEngine.addNewSingleTimeSpawn(220080000, 832991, 1973.3156f, 2017.3612f, 329.13571f, (byte) 0);
+					template.setEntityId(900);
+					autoPortals.put(832991, SpawnEngine.spawnObject(template, 1));
+					break;
+				// 伦图斯基地 / Rentus Base
+				case ASMODIANS:
+					template = SpawnEngine.addNewSingleTimeSpawn(220080000, 730399, 1973.3156f, 2017.3612f, 329.13571f, (byte) 0);
+					template.setEntityId(900);
+					autoPortals.put(730399, SpawnEngine.spawnObject(template, 1));
+					break;
+				default:
+					break;
 			}
 		} else if (zone.getAreaTemplate().getZoneName() == ZoneName.get("RUINHOLD_SCATTERINGS_210070000")) {
 			switch (player.getRace()) {
-			case ELYOS:
-				// 提亚马特要塞 / Tiamat Stronghold
-				template = SpawnEngine.addNewSingleTimeSpawn(210070000, 832995, 93.335602f, 1474.6055f, 491.90103f, (byte) 0);
-				template.setEntityId(306);
-				autoPortals.put(832995, SpawnEngine.spawnObject(template, 1));
-				// 龙主避难所 / Dragon Lord Refuge
-				template = SpawnEngine.addNewSingleTimeSpawn(210070000, 832998, 103.8532f, 1461.7725f, 494.52884f, (byte) 0);
-				template.setEntityId(865);
-				autoPortals.put(832998, SpawnEngine.spawnObject(template, 1));
-				break;
-			case ASMODIANS:
-				// 【痛苦】龙主避难所 / [Anguished] Dragon Lord Refuge
-				template = SpawnEngine.addNewSingleTimeSpawn(210070000, 832997, 103.8532f, 1461.7725f, 494.52884f, (byte) 0);
-				template.setEntityId(865);
-				autoPortals.put(832997, SpawnEngine.spawnObject(template, 1));
-				break;
-			default:
-				break;
+				case ELYOS:
+					// 提亚马特要塞 / Tiamat Stronghold
+					template = SpawnEngine.addNewSingleTimeSpawn(210070000, 832995, 93.335602f, 1474.6055f, 491.90103f, (byte) 0);
+					template.setEntityId(306);
+					autoPortals.put(832995, SpawnEngine.spawnObject(template, 1));
+					// 龙主避难所 / Dragon Lord Refuge
+					template = SpawnEngine.addNewSingleTimeSpawn(210070000, 832998, 103.8532f, 1461.7725f, 494.52884f, (byte) 0);
+					template.setEntityId(865);
+					autoPortals.put(832998, SpawnEngine.spawnObject(template, 1));
+					break;
+				case ASMODIANS:
+					// 【痛苦】龙主避难所 / [Anguished] Dragon Lord Refuge
+					template = SpawnEngine.addNewSingleTimeSpawn(210070000, 832997, 103.8532f, 1461.7725f, 494.52884f, (byte) 0);
+					template.setEntityId(865);
+					autoPortals.put(832997, SpawnEngine.spawnObject(template, 1));
+					break;
+				default:
+					break;
 			}
 		} else if (zone.getAreaTemplate().getZoneName() == ZoneName.get("DRAGONFALLS_GLARE_220080000")) {
 			switch (player.getRace()) {
-			case ELYOS:
-				// 【痛苦】龙主避难所 / [Anguished] Dragon Lord Refuge
-				template = SpawnEngine.addNewSingleTimeSpawn(220080000, 832997, 2862.9939f, 1679.4772f, 308.87949f, (byte) 0);
-				template.setEntityId(422);
-				autoPortals.put(832997, SpawnEngine.spawnObject(template, 1));
-				break;
-			case ASMODIANS:
-				// 提亚马特要塞 / Tiamat Stronghold
-				template = SpawnEngine.addNewSingleTimeSpawn(220080000, 832996, 2845.8596f, 1659.2727f, 302.67017f, (byte) 0);
-				template.setEntityId(364);
-				autoPortals.put(832996, SpawnEngine.spawnObject(template, 1));
-				// 龙主避难所 / Dragon Lord Refuge
-				template = SpawnEngine.addNewSingleTimeSpawn(220080000, 832998, 2862.9939f, 1679.4772f, 308.87949f, (byte) 0);
-				template.setEntityId(422);
-				autoPortals.put(832998, SpawnEngine.spawnObject(template, 1));
-				break;
-			default:
-				break;
+				case ELYOS:
+					// 【痛苦】龙主避难所 / [Anguished] Dragon Lord Refuge
+					template = SpawnEngine.addNewSingleTimeSpawn(220080000, 832997, 2862.9939f, 1679.4772f, 308.87949f, (byte) 0);
+					template.setEntityId(422);
+					autoPortals.put(832997, SpawnEngine.spawnObject(template, 1));
+					break;
+				case ASMODIANS:
+					// 提亚马特要塞 / Tiamat Stronghold
+					template = SpawnEngine.addNewSingleTimeSpawn(220080000, 832996, 2845.8596f, 1659.2727f, 302.67017f, (byte) 0);
+					template.setEntityId(364);
+					autoPortals.put(832996, SpawnEngine.spawnObject(template, 1));
+					// 龙主避难所 / Dragon Lord Refuge
+					template = SpawnEngine.addNewSingleTimeSpawn(220080000, 832998, 2862.9939f, 1679.4772f, 308.87949f, (byte) 0);
+					template.setEntityId(422);
+					autoPortals.put(832998, SpawnEngine.spawnObject(template, 1));
+					break;
+				default:
+					break;
 			}
 		} else if (zone.getAreaTemplate().getZoneName() == ZoneName.get("DANUAR_SANCTUARY_INSPECTOR_210070000")) {
 			switch (player.getRace()) {
-			// 达努阿尔圣所 / Danuar Sanctuary
-			case ELYOS:
-				template = SpawnEngine.addNewSingleTimeSpawn(210070000, 731570, 2097.4739f, 2276.1729f, 294.90442f, (byte) 0);
-				template.setEntityId(888);
-				autoPortals.put(731570, SpawnEngine.spawnObject(template, 1));
-				break;
-			// 【被占领】达努阿尔圣所 / [Seized] Danuar Sanctuary
-			case ASMODIANS:
-				template = SpawnEngine.addNewSingleTimeSpawn(210070000, 731549, 2097.4739f, 2276.1729f, 294.90442f, (byte) 0);
-				template.setEntityId(888);
-				autoPortals.put(731549, SpawnEngine.spawnObject(template, 1));
-				break;
-			default:
-				break;
+				// 达努阿尔圣所 / Danuar Sanctuary
+				case ELYOS:
+					template = SpawnEngine.addNewSingleTimeSpawn(210070000, 731570, 2097.4739f, 2276.1729f, 294.90442f, (byte) 0);
+					template.setEntityId(888);
+					autoPortals.put(731570, SpawnEngine.spawnObject(template, 1));
+					break;
+				// 【被占领】达努阿尔圣所 / [Seized] Danuar Sanctuary
+				case ASMODIANS:
+					template = SpawnEngine.addNewSingleTimeSpawn(210070000, 731549, 2097.4739f, 2276.1729f, 294.90442f, (byte) 0);
+					template.setEntityId(888);
+					autoPortals.put(731549, SpawnEngine.spawnObject(template, 1));
+					break;
+				default:
+					break;
 			}
 		} else if (zone.getAreaTemplate().getZoneName() == ZoneName.get("DANUAR_SANCTUARY_INVESTIGATION_AREA_220080000")) {
 			switch (player.getRace()) {
-			// 【被占领】达努阿尔圣所 / [Seized] Danuar Sanctuary
-			case ELYOS:
-				template = SpawnEngine.addNewSingleTimeSpawn(220080000, 731549, 1667.7465f, 562.70654f, 258.88382f, (byte) 0);
-				template.setEntityId(407);
-				autoPortals.put(731549, SpawnEngine.spawnObject(template, 1));
-				break;
-			// 达努阿尔圣所 / Danuar Sanctuary
-			case ASMODIANS:
-				template = SpawnEngine.addNewSingleTimeSpawn(220080000, 731570, 1667.7465f, 562.70654f, 258.88382f, (byte) 0);
-				template.setEntityId(407);
-				autoPortals.put(731570, SpawnEngine.spawnObject(template, 1));
-				break;
-			default:
-				break;
+				// 【被占领】达努阿尔圣所 / [Seized] Danuar Sanctuary
+				case ELYOS:
+					template = SpawnEngine.addNewSingleTimeSpawn(220080000, 731549, 1667.7465f, 562.70654f, 258.88382f, (byte) 0);
+					template.setEntityId(407);
+					autoPortals.put(731549, SpawnEngine.spawnObject(template, 1));
+					break;
+				// 达努阿尔圣所 / Danuar Sanctuary
+				case ASMODIANS:
+					template = SpawnEngine.addNewSingleTimeSpawn(220080000, 731570, 1667.7465f, 562.70654f, 258.88382f, (byte) 0);
+					template.setEntityId(407);
+					autoPortals.put(731570, SpawnEngine.spawnObject(template, 1));
+					break;
+				default:
+					break;
 			}
 		}
 		if (player.getAccessLevel() == 0) {
 			if (
-			// 莫尔海姆 / Morheim
-			zone.getAreaTemplate().getZoneName() == ZoneName.get("MORHEIM_SNOW_FIELD_220020000") ||
-			// 贝鲁斯兰 / Beluslan
+				// 莫尔海姆 / Morheim
+				zone.getAreaTemplate().getZoneName() == ZoneName.get("MORHEIM_SNOW_FIELD_220020000") ||
+					// 贝鲁斯兰 / Beluslan
 					zone.getAreaTemplate().getZoneName() == ZoneName.get("KURNGALFBERG_220040000")
 					|| zone.getAreaTemplate().getZoneName() == ZoneName.get("RED_MANE_CAVERN_220040000")
 					|| zone.getAreaTemplate().getZoneName() == ZoneName.get("BELUSLAN_FORTRESS_220040000")
@@ -355,16 +365,12 @@ public class PlayerController extends CreatureController<Player> {
 					|| zone.getAreaTemplate().getZoneName() == ZoneName.get("FATEBOUND_LEGION_OUTPOST_220080000") ||
 					// 诺斯珀德 / Norsvold
 					zone.getAreaTemplate().getZoneName() == ZoneName.get("AZPHEL_SANCTUARY_220110000")) {
-				switch (player.getRace()) {
-				case ELYOS:
+				if (player.getRace() == Race.ELYOS) {
 					TeleportService2.moveToBindLocation(player, true);
-					break;
-				default:
-					break;
 				}
 			} else if (
-			// 埃尔特内 / Eltnen
-			zone.getAreaTemplate().getZoneName() == ZoneName.get("MANDURI_FOREST_210020000")
+				// 埃尔特内 / Eltnen
+				zone.getAreaTemplate().getZoneName() == ZoneName.get("MANDURI_FOREST_210020000")
 					|| zone.getAreaTemplate().getZoneName() == ZoneName.get("GOLDEN_BOUGH_GARRISON_210020000")
 					|| zone.getAreaTemplate().getZoneName() == ZoneName.get("MYSTIC_SPRING_OF_AGAIRON_210020000") ||
 					// 因特尔蒂卡 / Heiron
@@ -384,12 +390,8 @@ public class PlayerController extends CreatureController<Player> {
 					|| zone.getAreaTemplate().getZoneName() == ZoneName.get("AEQUIS_DETACHMENT_POST_210070000") ||
 					// 伊卢玛 / Iluma
 					zone.getAreaTemplate().getZoneName() == ZoneName.get("ARIEL_SANCTUARY_210100000")) {
-				switch (player.getRace()) {
-				case ASMODIANS:
+				if (player.getRace() == Race.ASMODIANS) {
 					TeleportService2.moveToBindLocation(player, true);
-					break;
-				default:
-					break;
 				}
 			}
 		}
@@ -398,6 +400,7 @@ public class PlayerController extends CreatureController<Player> {
 	/**
 	 * 玩家离开区域时回调。
 	 * Callback when the player leaves a zone.
+	 *
 	 * @param zone 离开的区域 / left zone
 	 */
 	@Override
@@ -458,7 +461,7 @@ public class PlayerController extends CreatureController<Player> {
 		int mapId;
 		float x, y, z;
 		byte h;
-		boolean moveToBind = false;
+		boolean moveToBind;
 
 		BindPointPosition bind = getOwner().getBindPoint();
 
@@ -477,7 +480,7 @@ public class PlayerController extends CreatureController<Player> {
 			z = start.getZ();
 			h = start.getHeading();
 		}
-		var lastOnline = getOwner().getCommonData().getLastOnline();
+		Timestamp lastOnline = getOwner().getCommonData().getLastOnline();
 		long secondsOffline = lastOnline == null ? 0 : (System.currentTimeMillis() - lastOnline.getTime()) / 1000;
 		moveToBind = RetailAreaEngine.isNoPark(getOwner(), secondsOffline);
 		if (!moveToBind && secondsOffline > 10 * 60) {
@@ -498,8 +501,9 @@ public class PlayerController extends CreatureController<Player> {
 	/**
 	 * 玩家死亡完整处理（可选是否显示死亡包）。
 	 * Full player death handling (optionally showing the die packet).
+	 *
 	 * @param lastAttacker 最后攻击者 / last attacker
-	 * @param showPacket 是否显示死亡包 / whether to show the die packet
+	 * @param showPacket   是否显示死亡包 / whether to show the die packet
 	 */
 	public void onDie(Creature lastAttacker, boolean showPacket) {
 		Player player = this.getOwner();
@@ -524,7 +528,7 @@ public class PlayerController extends CreatureController<Player> {
 		if (AbyssService.isOnPvpMap(player) && ar != null) {
 			if (ar.getRank().getId() >= 1) {
 				if (!player.isInDuel()) {
-				    AbyssService.rankedKillAnnounce(player);
+					AbyssService.rankedKillAnnounce(player);
 				}
 			}
 		}
@@ -610,6 +614,7 @@ public class PlayerController extends CreatureController<Player> {
 	/**
 	 * 玩家死亡（默认显示死亡包）。
 	 * Player death (shows the die packet by default).
+	 *
 	 * @param lastAttacker 最后攻击者 / last attacker
 	 */
 	@Override
@@ -668,6 +673,7 @@ public class PlayerController extends CreatureController<Player> {
 	/**
 	 * 生成前处理，可选闪烁保护。
 	 * Processing before spawn with optional blink protection.
+	 *
 	 * @param blink 是否启用闪烁保护 / whether blink protection is enabled
 	 */
 	public void onBeforeSpawn(boolean blink) {
@@ -687,6 +693,7 @@ public class PlayerController extends CreatureController<Player> {
 	 * 玩家攻击目标。
 	 * Player attacks a target.
 	 * attack target
+	 *
 	 * @param time 攻击时间参数 / attack timing parameter
 	 */
 	@Override
@@ -725,17 +732,18 @@ public class PlayerController extends CreatureController<Player> {
 	/**
 	 * 玩家受到攻击时的处理。
 	 * Handles the player being attacked.
-	 * @param creature 攻击者 / attacker
-	 * @param skillId 技能 ID / skill id
-	 * @param type 伤害类型 / damage type
-	 * @param damage 伤害值 / damage
+	 *
+	 * @param creature     攻击者 / attacker
+	 * @param skillId      技能 ID / skill id
+	 * @param type         伤害类型 / damage type
+	 * @param damage       伤害值 / damage
 	 * @param notifyAttack 是否通知攻击 / whether to notify attack
-	 * @param log 日志类型 / log type
+	 * @param log          日志类型 / log type
 	 * @param attackStatus 攻击状态 / attack status
 	 */
 	@Override
 	public void onAttack(Creature creature, int skillId, TYPE type, int damage, boolean notifyAttack, LOG log,
-			AttackStatus attackStatus) {
+						 AttackStatus attackStatus) {
 		if (getOwner().getLifeStats().isAlreadyDead())
 			return;
 
@@ -756,9 +764,10 @@ public class PlayerController extends CreatureController<Player> {
 	 * Uses a skill with client coordinates and timing.
 	 * skill id
 	 * target type
-	 * @param x X 坐标 / x coordinate
-	 * @param y Y 坐标 / y coordinate
-	 * @param z Z 坐标 / z coordinate
+	 *
+	 * @param x    X 坐标 / x coordinate
+	 * @param y    Y 坐标 / y coordinate
+	 * @param z    Z 坐标 / z coordinate
 	 * @param time 时间参数 / time parameter
 	 */
 	public void useSkill(int skillId, int targetType, float x, float y, float z, int time) {
@@ -779,13 +788,14 @@ public class PlayerController extends CreatureController<Player> {
 	/**
 	 * 使用技能模板施放技能。
 	 * Casts a skill from a skill template.
-	 * @param template 技能模板 / skill template
-	 * @param targetType 目标类型 / target type
-	 * @param x X 坐标 / x coordinate
-	 * @param y Y 坐标 / y coordinate
-	 * @param z Z 坐标 / z coordinate
+	 *
+	 * @param template      技能模板 / skill template
+	 * @param targetType    目标类型 / target type
+	 * @param x             X 坐标 / x coordinate
+	 * @param y             Y 坐标 / y coordinate
+	 * @param z             Z 坐标 / z coordinate
 	 * @param clientHitTime 客户端命中时间 / client hit time
-	 * @param skillLevel 技能等级 / skill level
+	 * @param skillLevel    技能等级 / skill level
 	 */
 	public void useSkill(SkillTemplate template, int targetType, float x, float y, float z, int clientHitTime, int skillLevel) {
 		Player player = getOwner();
@@ -882,16 +892,16 @@ public class PlayerController extends CreatureController<Player> {
 		}
 		if (expectedSkill.getSkillMethod() == SkillMethod.CAST) {
 			PacketSendUtility.broadcastPacket(player,
-					new SM_SKILL_CANCEL(player, expectedSkill.getSkillTemplate().getSkillId()), true);
+				new SM_SKILL_CANCEL(player, expectedSkill.getSkillTemplate().getSkillId()), true);
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_SKILL_CANCELED);
 		} else if (expectedSkill.getSkillMethod() == SkillMethod.ITEM) {
 			PacketSendUtility.sendPacket(player,
-					SM_SYSTEM_MESSAGE.STR_ITEM_CANCELED(new DescriptionId(expectedSkill.getItemTemplate().getNameId())));
+				SM_SYSTEM_MESSAGE.STR_ITEM_CANCELED(new DescriptionId(expectedSkill.getItemTemplate().getNameId())));
 			player.removeItemCoolDown(expectedSkill.getItemTemplate().getUseLimits().getDelayId());
 			PacketSendUtility.broadcastPacket(player,
-					new SM_ITEM_USAGE_ANIMATION(player.getObjectId(), expectedSkill.getFirstTarget().getObjectId(),
-							expectedSkill.getItemObjectId(), expectedSkill.getItemTemplate().getTemplateId(), 0, 3, 0),
-					true);
+				new SM_ITEM_USAGE_ANIMATION(player.getObjectId(), expectedSkill.getFirstTarget().getObjectId(),
+					expectedSkill.getItemObjectId(), expectedSkill.getItemTemplate().getTemplateId(), 0, 3, 0),
+				true);
 		}
 		return true;
 	}
@@ -938,6 +948,7 @@ public class PlayerController extends CreatureController<Player> {
 	/**
 	 * 获取所有者玩家。
 	 * Gets the owner player.
+	 *
 	 * @return 所有者玩家 / owner player
 	 */
 	@Override
@@ -949,17 +960,14 @@ public class PlayerController extends CreatureController<Player> {
 	 * 恢复玩家属性。
 	 * Restores player stats.
 	 * heal type
+	 *
 	 * @param value 恢复数值 / restore value
 	 */
 	@Override
 	public void onRestore(HealType healType, int value) {
 		super.onRestore(healType, value);
-		switch (healType) {
-		case DP:
+		if (healType == HealType.DP) {
 			getOwner().getCommonData().addDp(value);
-			break;
-		default:
-			break;
 		}
 	}
 
@@ -967,6 +975,7 @@ public class PlayerController extends CreatureController<Player> {
 	 * 是否正在与指定玩家决斗。
 	 * Whether currently dueling the given player.
 	 * opponent player
+	 *
 	 * @return 决斗中则为 true / true if dueling
 	 */
 	public boolean isDueling(Player player) {
@@ -976,17 +985,16 @@ public class PlayerController extends CreatureController<Player> {
 	/**
 	 * 处理对话选项选择。
 	 * Handles dialog option selection.
-	 * @param dialogId 对话 ID / dialog id
-	 * @param player 玩家 / player
-	 * @param questId 任务 ID / quest id
+	 *
+	 * @param dialogId            对话 ID / dialog id
+	 * @param player              玩家 / player
+	 * @param questId             任务 ID / quest id
 	 * @param extendedRewardIndex 扩展奖励索引 / extended reward index
 	 */
 	@Override
 	public void onDialogSelect(int dialogId, Player player, int questId, int extendedRewardIndex) {
-		switch (dialogId) {
-		case 2:
+		if (dialogId == 2) {
 			PacketSendUtility.sendPacket(player, new SM_PRIVATE_STORE(getOwner().getStore(), player));
-			break;
 		}
 	}
 
@@ -1072,7 +1080,7 @@ public class PlayerController extends CreatureController<Player> {
 			GameCoreGameplayServices.legionService().updateMemberInfo(player);
 		}
 
-        if (level == 51) {
+		if (level == 51) {
 			PlayerGroupService.stopMentoring(player);
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_CANT_BE_MENTEE_BY_LEVEL_LIMIT);
 		}
@@ -1112,7 +1120,7 @@ public class PlayerController extends CreatureController<Player> {
 			AttackUtil.cancelCastOn(getOwner());
 			AttackUtil.removeTargetFrom(getOwner());
 			PacketSendUtility.broadcastPacket(getOwner(), new SM_PLAYER_STATE(getOwner()), true);
-			Future<?> task = GameThreadPoolServices.threadPoolManager().schedule(() -> stopProtectionActiveTask(), 60000);
+			Future<?> task = GameThreadPoolServices.threadPoolManager().schedule(this::stopProtectionActiveTask, 60000);
 			addTask(TaskId.PROTECTION_ACTIVE, task);
 		}
 	}
@@ -1184,6 +1192,7 @@ public class PlayerController extends CreatureController<Player> {
 	 * Adds items to the player inventory.
 	 * item id
 	 * count
+	 *
 	 * @return whether successful / 是否成功 / whether successful。
 	 */
 	public boolean addItems(int itemId, int count) {
@@ -1218,6 +1227,7 @@ public class PlayerController extends CreatureController<Player> {
 	/**
 	 * 获取当前姿态技能 ID。
 	 * Gets the current stance skill id.
+	 *
 	 * @return stance skill id / 姿态技能 ID / stance skill id。
 	 */
 	public int getStanceSkillId() {
@@ -1227,6 +1237,7 @@ public class PlayerController extends CreatureController<Player> {
 	/**
 	 * 是否处于姿态中。
 	 * Whether currently under stance.
+	 *
 	 * @return 处于姿态则为 true / true if under stance
 	 */
 	public boolean isUnderStance() {
@@ -1243,12 +1254,12 @@ public class PlayerController extends CreatureController<Player> {
 		House house = player.getActiveHouse();
 		if (house != null) {
 			switch (house.getHouseType()) {
-			case MANSION:
-			case ESTATE:
-			case PALACE:
-				return;
-			default:
-				break;
+				case MANSION:
+				case ESTATE:
+				case PALACE:
+					return;
+				default:
+					break;
 			}
 		}
 		if (!player.havePermission(MembershipConfig.DISABLE_SOULSICKNESS)) {
@@ -1267,6 +1278,7 @@ public class PlayerController extends CreatureController<Player> {
 	/**
 	 * 是否处于战斗状态。
 	 * Whether currently in combat.
+	 *
 	 * @return 战斗中则为 true / true if in combat / true if the player is actively in combat
 	 */
 	public boolean isInCombat() {
@@ -1276,6 +1288,7 @@ public class PlayerController extends CreatureController<Player> {
 	/**
 	 * 是否有无死亡惩罚效果。
 	 * Whether a no-death-penalty effect is active.
+	 *
 	 * @return true if active / 有效则为 true / true if active。
 	 */
 	public boolean isNoDeathPenaltyInEffect() {
@@ -1292,6 +1305,7 @@ public class PlayerController extends CreatureController<Player> {
 	/**
 	 * 是否有无死亡惩罚减免效果。
 	 * Whether a no-death-penalty-reduce effect is active.
+	 *
 	 * @return true if active / 有效则为 true / true if active。
 	 */
 	public boolean isNoDeathPenaltyReduceInEffect() {
@@ -1308,6 +1322,7 @@ public class PlayerController extends CreatureController<Player> {
 	/**
 	 * 是否有死亡惩罚减免效果。
 	 * Whether a death-penalty-reduce effect is active.
+	 *
 	 * @return true if active / 有效则为 true / true if active。
 	 */
 	public boolean isDeathPenaltyReduceInEffect() {
@@ -1324,6 +1339,7 @@ public class PlayerController extends CreatureController<Player> {
 	/**
 	 * 是否有无复活惩罚效果。
 	 * Whether a no-resurrect-penalty effect is active.
+	 *
 	 * @return true if active / 有效则为 true / true if active。
 	 */
 	public boolean isNoResurrectPenaltyInEffect() {
@@ -1340,6 +1356,7 @@ public class PlayerController extends CreatureController<Player> {
 	/**
 	 * 是否有 HiPass 效果。
 	 * Whether a HiPass effect is active.
+	 *
 	 * @return true if active / 有效则为 true / true if active。
 	 */
 	public boolean isHiPassInEffect() {

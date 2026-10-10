@@ -65,6 +65,7 @@ import java.util.List;
 /**
  * 军团服务，负责军团的加载/持久化、成员管理、仓库、徽章与权限。
  * Legion service responsible for loading/storing legions, members, warehouse, emblem and permissions.
+ *
  * @author Simple modified by cura, Source
  */
 @Slf4j
@@ -72,8 +73,8 @@ public class LegionService {
 
 	/**
 	 * -- SETTER --
-	 *  注入 Spring 的 ObjectProvider，用于容器托管的实例解析。
-	 *  Injects the Spring ObjectProvider used for container-managed instance resolution.
+	 * 注入 Spring 的 ObjectProvider，用于容器托管的实例解析。
+	 * Injects the Spring ObjectProvider used for container-managed instance resolution.
 	 * 实例提供者 / Instance provider
 	 */
 	@Setter
@@ -81,11 +82,17 @@ public class LegionService {
 	private final LegionContainer allCachedLegions = new LegionContainer();
 	private final LegionMemberContainer allCachedLegionMembers = new LegionMemberContainer();
 	private final World world;
-	/** 踢出成员的军团动作操作码 / Legion action opcode for kicking a member. */
+	/**
+	 * 踢出成员的军团动作操作码 / Legion action opcode for kicking a member.
+	 */
 	public final static int LEGION_ACTION_KICK = 4;
-	/** 军团最高等级 / Maximum legion level. */
+	/**
+	 * 军团最高等级 / Maximum legion level.
+	 */
 	static final int MAX_LEGION_LEVEL = 8;
-	/** 军团排行缓存 / Legion ranking cache. */
+	/**
+	 * 军团排行缓存 / Legion ranking cache.
+	 */
 	private Map<Integer, Integer> legionRanking;
 	/**
 	 * 惰性构造的判权集合，避免构造期暴露 this。
@@ -99,9 +106,10 @@ public class LegionService {
 	 * <p>双源静态兜底已退役：缺少 provider 时直接 fail-fast，避免在容器之外静默创建第二套实例。
 	 * The legacy static fallback is retired: a missing provider now fails fast instead of silently
 	 * creating a second instance outside the container.</p>
+	 *
 	 * @return 由 Spring 提供的实例 / the Spring-provided instance
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean /
-	 *         when no provider or bean is available
+	 *                               when no provider or bean is available
 	 */
 	public static LegionService getInstance() {
 		ObjectProvider<LegionService> provider = instanceProvider;
@@ -127,6 +135,7 @@ public class LegionService {
 	 * 将军团数据存入数据库。
 	 * Stores legion data into db
 	 * legion
+	 *
 	 * @param newLegion 是否新军团 / new legion
 	 */
 	private void storeLegion(Legion legion, boolean newLegion) {
@@ -149,11 +158,10 @@ public class LegionService {
 	}
 
 
-
-
 	/**
 	 * 仅当军团在缓存中时获取。
 	 * Gets a legion ONLY if he is in the cache
+	 *
 	 * @return 军团，未缓存则为 null / Legion or null if not cached
 	 */
 	private Legion getCachedLegion(int legionId) {
@@ -163,6 +171,7 @@ public class LegionService {
 	/**
 	 * 仅当军团在缓存中时获取。
 	 * Gets a legion ONLY if he is in the cache
+	 *
 	 * @return 军团，未缓存则为 null / Legion or null if not cached
 	 */
 	private Legion getCachedLegion(String legionName) {
@@ -172,6 +181,7 @@ public class LegionService {
 	/**
 	 * 返回已缓存军团的迭代器。
 	 * Returns an iterator over cached legions.
+	 *
 	 * @return 缓存军团迭代器 / Cached legion iterator
 	 */
 	public Iterator<Legion> getCachedLegionIterator() {
@@ -186,7 +196,6 @@ public class LegionService {
 	private void addCachedLegion(Legion legion) {
 		this.allCachedLegions.add(legion);
 	}
-
 
 
 	/**
@@ -204,20 +213,18 @@ public class LegionService {
 	 * 按名称获取军团（先查缓存，未命中则从数据库加载并缓存）。
 	 * Returns the legion by name (cache first, then load from DB and cache).
 	 * Legion name
+	 *
 	 * @return 军团实例；不存在时可能为 null / Legion instance, or null if missing
 	 */
 	public Legion getLegion(String legionName) {
 		if (allCachedLegions.contains(legionName)) {
-			Legion legion = getCachedLegion(legionName);
-			return legion;
+			return getCachedLegion(legionName);
 		}
-
 		Legion legion = DAOManager.getDAO(LegionDAO.class).loadLegion(legionName);
-
-		loadLegionInfo(legion);
-
-		addCachedLegion(legion);
-
+		if (legion != null) {
+			loadLegionInfo(legion);
+			addCachedLegion(legion);
+		}
 		return legion;
 	}
 
@@ -229,16 +236,13 @@ public class LegionService {
 	 */
 	public Legion getLegion(int legionId) {
 		if (allCachedLegions.contains(legionId)) {
-			Legion legion = getCachedLegion(legionId);
-			return legion;
+			return getCachedLegion(legionId);
 		}
-
 		Legion legion = DAOManager.getDAO(LegionDAO.class).loadLegion(legionId);
-
-		loadLegionInfo(legion);
-
-		addCachedLegion(legion);
-
+		if (legion != null) {
+			loadLegionInfo(legion);
+			addCachedLegion(legion);
+		}
 		return legion;
 	}
 
@@ -251,16 +255,17 @@ public class LegionService {
 		if (legion == null) {
 			return;
 		}
-		legion.setLegionMembers(DAOManager.getDAO(LegionMemberDAO.class).loadLegionMembers(legion.getLegionId()));
-
-		legion.setAnnouncementList(DAOManager.getDAO(LegionDAO.class).loadAnnouncementList(legion.getLegionId()));
-
-		legion.setLegionEmblem(DAOManager.getDAO(LegionDAO.class).loadLegionEmblem(legion.getLegionId()));
-
+		int legionId = legion.getLegionId();
+		legion.setLegionMembers(DAOManager.getDAO(LegionMemberDAO.class).loadLegionMembers(legionId));
+		legion.setAnnouncementList(DAOManager.getDAO(LegionDAO.class).loadAnnouncementList(legionId));
+		legion.setLegionEmblem(DAOManager.getDAO(LegionDAO.class).loadLegionEmblem(legionId));
 		legion.setLegionWarehouse(DAOManager.getDAO(LegionDAO.class).loadLegionStorage(legion));
 
-		if (legionRanking.containsKey(legion.getLegionId())) {
-			legion.setLegionRank(legionRanking.get(legion.getLegionId()));
+		if (legionRanking != null) {
+			Integer rank = legionRanking.get(legionId);
+			if (rank != null) {
+				legion.setLegionRank(rank);
+			}
 		}
 		DAOManager.getDAO(LegionDAO.class).loadLegionHistory(legion);
 	}
@@ -269,29 +274,32 @@ public class LegionService {
 	 * 返回指定军团团长（旅长）的玩家 objectId。
 	 * Returns the object id of the brigade general for the given legion.
 	 * Legion id
+	 *
 	 * @return 团长 objectId；未找到时为 0 / Brigade general objectId, or 0 if not found
 	 */
 	public int getLegionBGeneral(int legionId) {
 		Legion legion = getLegion(legionId);
-		int legionBG = 0;
-
+		if (legion == null) {
+			return 0;
+		}
 		for (int memberObjId : legion.getLegionMembers()) {
 			LegionMember legionMember = getLegionMember(memberObjId);
-			if (legionMember.getRank() == LegionRank.BRIGADE_GENERAL) {
-				legionBG = memberObjId;
+			if (legionMember != null && legionMember.getRank() == LegionRank.BRIGADE_GENERAL) {
+				return memberObjId;
 			}
 		}
-		return legionBG;
+		return 0;
 	}
 
 	/**
 	 * 按玩家 objectId 获取军团成员（缓存/数据库），若军团已到期解散则返回 null。
 	 * Returns the legion member by player object id (cache/DB); null if the legion has finished disbanding.
 	 * Player object id
+	 *
 	 * @return 军团成员，或 null / Legion member, or null
 	 */
 	public LegionMember getLegionMember(int playerObjId) {
-		LegionMember legionMember = null;
+		LegionMember legionMember;
 		if (this.allCachedLegionMembers.contains(playerObjId)) {
 			legionMember = this.allCachedLegionMembers.getMember(playerObjId);
 		} else {
@@ -301,10 +309,8 @@ public class LegionService {
 			}
 		}
 
-		if (legionMember != null) {
-			if (checkDisband(legionMember.getLegion())) {
-				return null;
-			}
+		if (legionMember != null && checkDisband(legionMember.getLegion())) {
+			return null;
 		}
 		return legionMember;
 	}
@@ -313,6 +319,7 @@ public class LegionService {
 	 * 检查军团是否处于解散中。
 	 * Method that checks if a legion is disbanding
 	 * legion
+	 *
 	 * @param legion 若 it's time to be deleted 则为 true / true if it's time to be deleted
 	 */
 	private boolean checkDisband(Legion legion) {
@@ -340,7 +347,6 @@ public class LegionService {
 	}
 
 
-
 	/**
 	 * 处理军团解散申请：校验权限后弹出确认框，接受则设置解散倒计时。
 	 * Handles a legion disband request: validates rights, shows confirm dialog, and schedules disband on accept.
@@ -365,10 +371,10 @@ public class LegionService {
 			};
 
 			boolean disbandResult = activePlayer.getResponseRequester()
-					.putRequest(SM_QUESTION_WINDOW.STR_GUILD_DISPERSE_STAYMODE, disbandResponseHandler);
+				.putRequest(SM_QUESTION_WINDOW.STR_GUILD_DISPERSE_STAYMODE, disbandResponseHandler);
 			if (disbandResult) {
 				PacketSendUtility.sendPacket(activePlayer,
-						new SM_QUESTION_WINDOW(SM_QUESTION_WINDOW.STR_GUILD_DISPERSE_STAYMODE, 0, 0));
+					new SM_QUESTION_WINDOW(SM_QUESTION_WINDOW.STR_GUILD_DISPERSE_STAYMODE, 0, 0));
 			}
 		}
 	}
@@ -393,7 +399,7 @@ public class LegionService {
 			legion.addAnnouncementToList(currentTime, "");
 			legionMembers().addLegionMember(legion, activePlayer, LegionRank.BRIGADE_GENERAL);
 			PacketSendUtility.broadcastPacketToLegion(legion,
-					new SM_LEGION_EDIT(0x05, (int) (System.currentTimeMillis() / 1000), ""));
+				new SM_LEGION_EDIT(0x05, (int) (System.currentTimeMillis() / 1000), ""));
 			addHistory(legion, "", LegionHistoryType.CREATE);
 			addHistory(legion, activePlayer.getName(), LegionHistoryType.JOIN);
 
@@ -407,6 +413,7 @@ public class LegionService {
 	 * Directly adds a player to the legion by id (bypasses invite flow).
 	 * Legion id
 	 * Target player
+	 *
 	 * @return 若 joined successfully 则为 true / True if joined successfully
 	 */
 	public boolean directAddPlayer(int legionId, Player player) {
@@ -422,6 +429,7 @@ public class LegionService {
 	 * Directly adds a player to the given legion (bypasses invite) and records join history.
 	 * Target legion
 	 * Target player
+	 *
 	 * @return 若 joined successfully 则为 true / True if joined successfully
 	 */
 	public boolean directAddPlayer(Legion legion, Player player) {
@@ -456,7 +464,7 @@ public class LegionService {
 				public void acceptRequest(Creature requester, Player responder) {
 					if (!targetPlayer.getCommonData().isOnline()) {
 						PacketSendUtility.sendPacket(activePlayer,
-								SM_SYSTEM_MESSAGE.STR_NO_SUCH_USER(targetPlayer.getName()));
+							SM_SYSTEM_MESSAGE.STR_NO_SUCH_USER(targetPlayer.getName()));
 					} else {
 						int playerObjId = targetPlayer.getObjectId();
 						if (legion.addLegionMember(playerObjId)) {
@@ -465,7 +473,7 @@ public class LegionService {
 							addHistory(legion, targetPlayer.getName(), LegionHistoryType.JOIN);
 						} else {
 							PacketSendUtility.sendPacket(activePlayer,
-									SM_SYSTEM_MESSAGE.STR_GUILD_INVITE_CAN_NOT_ADD_MEMBER_ANY_MORE);
+								SM_SYSTEM_MESSAGE.STR_GUILD_INVITE_CAN_NOT_ADD_MEMBER_ANY_MORE);
 							targetPlayer.resetLegionMember();
 						}
 					}
@@ -474,19 +482,19 @@ public class LegionService {
 				@Override
 				public void denyRequest(Creature requester, Player responder) {
 					PacketSendUtility.sendPacket(activePlayer,
-							SM_SYSTEM_MESSAGE.STR_GUILD_INVITE_HE_REJECTED_INVITATION(targetPlayer.getName()));
+						SM_SYSTEM_MESSAGE.STR_GUILD_INVITE_HE_REJECTED_INVITATION(targetPlayer.getName()));
 				}
 			};
 			boolean requested = targetPlayer.getResponseRequester()
-					.putRequest(SM_QUESTION_WINDOW.STR_GUILD_INVITE_I_JOINED_MSGBOX, responseHandler);
+				.putRequest(SM_QUESTION_WINDOW.STR_GUILD_INVITE_I_JOINED_MSGBOX, responseHandler);
 			if (!requested) {
 				PacketSendUtility.sendPacket(activePlayer, SM_SYSTEM_MESSAGE.STR_GUILD_INVITE_OTHER_IS_BUSY);
 			} else {
 				PacketSendUtility.sendPacket(activePlayer,
-						SM_SYSTEM_MESSAGE.STR_GUILD_INVITE_SENT_INVITE_MSG_TO_HIM(targetPlayer.getName()));
+					SM_SYSTEM_MESSAGE.STR_GUILD_INVITE_SENT_INVITE_MSG_TO_HIM(targetPlayer.getName()));
 				PacketSendUtility.sendPacket(targetPlayer,
-						new SM_QUESTION_WINDOW(SM_QUESTION_WINDOW.STR_GUILD_INVITE_I_JOINED_MSGBOX, 0, 0,
-								legion.getLegionName(), legion.getLegionLevel() + "", activePlayer.getName()));
+					new SM_QUESTION_WINDOW(SM_QUESTION_WINDOW.STR_GUILD_INVITE_I_JOINED_MSGBOX, 0, 0,
+						legion.getLegionName(), legion.getLegionLevel() + "", activePlayer.getName()));
 			}
 		}
 	}
@@ -500,7 +508,7 @@ public class LegionService {
 	void displayLegionMessage(Player targetPlayer, Entry<Timestamp, String> currentAnnouncement) {
 		if (currentAnnouncement != null) {
 			PacketSendUtility.sendPacket(targetPlayer, SM_SYSTEM_MESSAGE.STR_GUILD_NOTICE(
-					currentAnnouncement.getValue(), (int) (currentAnnouncement.getKey().getTime() / 1000)));
+				currentAnnouncement.getValue(), (int) (currentAnnouncement.getKey().getTime() / 1000)));
 		}
 	}
 
@@ -518,19 +526,19 @@ public class LegionService {
 				public void acceptRequest(Creature requester, Player responder) {
 					if (!targetPlayer.getCommonData().isOnline()) {
 						PacketSendUtility.sendPacket(activePlayer,
-								SM_SYSTEM_MESSAGE.STR_GUILD_CHANGE_MASTER_NO_SUCH_USER);
+							SM_SYSTEM_MESSAGE.STR_GUILD_CHANGE_MASTER_NO_SUCH_USER);
 					} else {
 						LegionMember legionMember = targetPlayer.getLegionMember();
 						if (legionMember.getRank().getRankId() > LegionRank.BRIGADE_GENERAL.getRankId()) {
 							// 将旅团将军降为百夫长 / Demote Brigade General to Centurion
 							activePlayer.getLegionMember().setRank(LegionRank.CENTURION);
 							PacketSendUtility.broadcastPacketToLegion(legion,
-									new SM_LEGION_UPDATE_MEMBER(activePlayer, 0, ""));
+								new SM_LEGION_UPDATE_MEMBER(activePlayer, 0, ""));
 
 							// 将成员晋升为旅团将军 / Promote member to Brigade General
 							legionMember.setRank(LegionRank.BRIGADE_GENERAL);
 							PacketSendUtility.broadcastPacketToLegion(legion,
-									new SM_LEGION_UPDATE_MEMBER(targetPlayer, 1300273, targetPlayer.getName()));
+								new SM_LEGION_UPDATE_MEMBER(targetPlayer, 1300273, targetPlayer.getName()));
 							PacketSendUtility.broadcastPacketToLegion(legion, new SM_LEGION_EDIT(0x08));
 							addHistory(legion, targetPlayer.getName(), LegionHistoryType.APPOINTED);
 						}
@@ -540,24 +548,24 @@ public class LegionService {
 				@Override
 				public void denyRequest(Creature requester, Player responder) {
 					PacketSendUtility.sendPacket(activePlayer,
-							SM_SYSTEM_MESSAGE.STR_GUILD_CHANGE_MASTER_HE_DECLINE_YOUR_OFFER(targetPlayer.getName()));
+						SM_SYSTEM_MESSAGE.STR_GUILD_CHANGE_MASTER_HE_DECLINE_YOUR_OFFER(targetPlayer.getName()));
 				}
 			};
 
 			boolean requested = targetPlayer.getResponseRequester()
-					.putRequest(SM_QUESTION_WINDOW.STR_GUILD_CHANGE_MASTER_DO_YOU_ACCEPT_OFFER, responseHandler);
+				.putRequest(SM_QUESTION_WINDOW.STR_GUILD_CHANGE_MASTER_DO_YOU_ACCEPT_OFFER, responseHandler);
 			// 若玩家忙碌无法询问 / If the player is busy and could not be asked
 			if (!requested) {
 				PacketSendUtility.sendPacket(activePlayer,
-						SM_SYSTEM_MESSAGE.STR_GUILD_CHANGE_MASTER_SENT_CANT_OFFER_WHEN_HE_IS_QUESTION_ASKED);
+					SM_SYSTEM_MESSAGE.STR_GUILD_CHANGE_MASTER_SENT_CANT_OFFER_WHEN_HE_IS_QUESTION_ASKED);
 			} else {
 				PacketSendUtility.sendPacket(activePlayer,
-						SM_SYSTEM_MESSAGE.STR_GUILD_CHANGE_MASTER_SENT_OFFER_MSG_TO_HIM(targetPlayer.getName()));
+					SM_SYSTEM_MESSAGE.STR_GUILD_CHANGE_MASTER_SENT_OFFER_MSG_TO_HIM(targetPlayer.getName()));
 
 				// 向好友发送询问包 / Send question packet to buddy
 				PacketSendUtility.sendPacket(targetPlayer,
-						new SM_QUESTION_WINDOW(SM_QUESTION_WINDOW.STR_GUILD_CHANGE_MASTER_DO_YOU_ACCEPT_OFFER,
-								activePlayer.getObjectId(), 0, activePlayer.getName()));
+					new SM_QUESTION_WINDOW(SM_QUESTION_WINDOW.STR_GUILD_CHANGE_MASTER_DO_YOU_ACCEPT_OFFER,
+						activePlayer.getObjectId(), 0, activePlayer.getName()));
 			}
 		}
 	}
@@ -576,13 +584,7 @@ public class LegionService {
 		if (restrictions().canAppointRank(activePlayer, LM.getObjectId())) {
 			Legion legion = activePlayer.getLegion();
 			LegionRank rank = LegionRank.values()[rankId];
-			int msgId = switch (rank) {
-				case DEPUTY -> 1400902;
-				case LEGIONARY -> 1300268;
-				case CENTURION -> 1300267;
-				case VOLUNTEER -> 1400903;
-				default -> 0;
-			};
+			int msgId = getRankChangeMessageId(rank);
 			LegionMember legionMember = getLegionMember(LM.getObjectId());
 			legionMember.setRank(rank);
 			DAOManager.getDAO(LegionMemberDAO.class).storeLegionMember(legionMember.getObjectId(), legionMember);
@@ -599,26 +601,30 @@ public class LegionService {
 	private void appointRank(Player activePlayer, Player targetPlayer, int rankId) {
 		if (restrictions().canAppointRank(activePlayer, targetPlayer.getObjectId())) {
 			Legion legion = activePlayer.getLegion();
-			int msgId = 0;
 			LegionRank rank = LegionRank.values()[rankId];
+			int msgId = getRankChangeMessageId(rank);
 			LegionMember legionMember = targetPlayer.getLegionMember();
-            msgId = switch (rank) {
-                case DEPUTY -> 1400902;
-                case LEGIONARY -> 1300268;
-                case CENTURION -> 1300267;
-                case VOLUNTEER -> 1400903;
-                default -> msgId;
-            };
 			legionMember.setRank(rank);
 			PacketSendUtility.broadcastPacketToLegion(legion,
-					new SM_LEGION_UPDATE_MEMBER(targetPlayer, msgId, targetPlayer.getName()));
+				new SM_LEGION_UPDATE_MEMBER(targetPlayer, msgId, targetPlayer.getName()));
 		}
+	}
+
+	private static int getRankChangeMessageId(LegionRank rank) {
+		return switch (rank) {
+			case DEPUTY -> 1400902;
+			case LEGIONARY -> 1300268;
+			case CENTURION -> 1300267;
+			case VOLUNTEER -> 1400903;
+			default -> 0;
+		};
 	}
 
 	/**
 	 * 处理自我介绍变更。
 	 * This method will handle the changement of a self intro
 	 * active player
+	 *
 	 * @param newSelfIntro 新自我介绍 / new self intro
 	 */
 	private void changeSelfIntro(Player activePlayer, String newSelfIntro) {
@@ -626,7 +632,7 @@ public class LegionService {
 			LegionMember legionMember = activePlayer.getLegionMember();
 			legionMember.setSelfIntro(newSelfIntro);
 			PacketSendUtility.broadcastPacketToLegion(legionMember.getLegion(),
-					new SM_LEGION_UPDATE_SELF_INTRO(activePlayer.getObjectId(), newSelfIntro));
+				new SM_LEGION_UPDATE_SELF_INTRO(activePlayer.getObjectId(), newSelfIntro));
 			PacketSendUtility.sendPacket(activePlayer, SM_SYSTEM_MESSAGE.STR_GUILD_WRITE_INTRO_DONE);
 		}
 	}
@@ -635,15 +641,16 @@ public class LegionService {
 	 * 更新军团各职级权限掩码并广播给在线成员。
 	 * Updates rank permission masks for the legion and broadcasts to online members.
 	 * Target legion
-	 * @param deputyPermission 副团长权限 / Deputy permissions
+	 *
+	 * @param deputyPermission    副团长权限 / Deputy permissions
 	 * @param centurionPermission 百夫长权限 / Centurion permissions
-	 * @param legionarPermission 军团兵权限 / Legionary permissions
+	 * @param legionarPermission  军团兵权限 / Legionary permissions
 	 * @param volunteerPermission 志愿兵权限 / Volunteer permissions
 	 */
 	public void changePermissions(Legion legion, short deputyPermission, short centurionPermission,
-			short legionarPermission, short volunteerPermission) {
+								  short legionarPermission, short volunteerPermission) {
 		if (legion.setLegionPermissions(deputyPermission, centurionPermission, legionarPermission,
-				volunteerPermission)) {
+			volunteerPermission)) {
 			PacketSendUtility.broadcastPacketToLegion(legion, new SM_LEGION_EDIT(0x02, legion));
 		}
 	}
@@ -667,6 +674,7 @@ public class LegionService {
 	 * Changes the legion level, notifies online members, and optionally persists.
 	 * Target legion
 	 * New level
+	 *
 	 * @param save 是否立即保存 / Whether to store immediately
 	 */
 	public void changeLevel(Legion legion, int newLevel, boolean save) {
@@ -703,7 +711,7 @@ public class LegionService {
 		if (restrictions().canChangeNickname(legion, legionMember.getObjectId(), newNickname)) {
 			legionMember.setNickname(newNickname);
 			PacketSendUtility.broadcastPacketToLegion(legion,
-					new SM_LEGION_UPDATE_NICKNAME(legionMember.getObjectId(), newNickname));
+				new SM_LEGION_UPDATE_NICKNAME(legionMember.getObjectId(), newNickname));
 			if (targetPlayer == null) {
 				DAOManager.getDAO(LegionMemberDAO.class).storeLegionMember(legionMember.getObjectId(), legionMember);
 			}
@@ -718,9 +726,9 @@ public class LegionService {
 	private void updateAfterDisbandLegion(Legion legion) {
 		for (Player onlineLegionMember : legion.getOnlineLegionMembers()) {
 			PacketSendUtility.broadcastPacket(onlineLegionMember,
-					new SM_LEGION_UPDATE_TITLE(onlineLegionMember.getObjectId(), 0, "", 0), true);
+				new SM_LEGION_UPDATE_TITLE(onlineLegionMember.getObjectId(), 0, "", 0), true);
 			PacketSendUtility.sendPacket(onlineLegionMember,
-					new SM_LEGION_LEAVE_MEMBER(1300302, 0, legion.getLegionName()));
+				new SM_LEGION_LEAVE_MEMBER(1300302, 0, legion.getLegionName()));
 			onlineLegionMember.resetLegionMember();
 		}
 	}
@@ -734,9 +742,9 @@ public class LegionService {
 	private void updateMembersOfDisbandLegion(Legion legion, int unixTime) {
 		for (Player onlineLegionMember : legion.getOnlineLegionMembers()) {
 			PacketSendUtility.sendPacket(onlineLegionMember,
-					new SM_LEGION_UPDATE_MEMBER(onlineLegionMember, 1300303, unixTime + ""));
-			PacketSendUtility.broadcastPacketToLegion(legion, new SM_LEGION_EDIT(0x06, unixTime));
+				new SM_LEGION_UPDATE_MEMBER(onlineLegionMember, 1300303, String.valueOf(unixTime)));
 		}
+		PacketSendUtility.broadcastPacketToLegion(legion, new SM_LEGION_EDIT(0x06, unixTime));
 	}
 
 	/**
@@ -747,15 +755,16 @@ public class LegionService {
 	private void updateMembersOfRecreateLegion(Legion legion) {
 		for (Player onlineLegionMember : legion.getOnlineLegionMembers()) {
 			PacketSendUtility.sendPacket(onlineLegionMember,
-					new SM_LEGION_UPDATE_MEMBER(onlineLegionMember, 1300307, ""));
-			PacketSendUtility.broadcastPacketToLegion(legion, new SM_LEGION_EDIT(0x07));
+				new SM_LEGION_UPDATE_MEMBER(onlineLegionMember, 1300307, ""));
 		}
+		PacketSendUtility.broadcastPacketToLegion(legion, new SM_LEGION_EDIT(0x07));
 	}
 
 	/**
 	 * 保存自定义军团徽章并同步给所有在线成员。
 	 * Stores a custom legion emblem and syncs it to all online members.
 	 * Acting player
+	 *
 	 * @param customEmblem 自定义徽章 / Custom emblem
 	 */
 	public void storeLegionEmblem(Player activePlayer, LegionEmblem customEmblem) {
@@ -769,13 +778,14 @@ public class LegionService {
 	 * Acting player
 	 * Legion id
 	 * Emblem template id
+	 *
 	 * @param color_r 红色分量 / Red component
 	 * @param color_g 绿色分量 / Green component
 	 * @param color_b 蓝色分量 / Blue component
-	 * Emblem type
+	 *                Emblem type
 	 */
 	public void storeLegionEmblem(Player activePlayer, int legionId, int emblemId, int color_r, int color_g,
-			int color_b, LegionEmblemType emblemType) {
+								  int color_b, LegionEmblemType emblemType) {
 		emblems().storeStandardEmblem(activePlayer, legionId, emblemId, color_r, color_g, color_b, emblemType);
 	}
 
@@ -799,16 +809,16 @@ public class LegionService {
 	 * 返回在线的军团旅长玩家对象；离线则为 null。
 	 * Returns the online brigade general player, or null if offline/missing.
 	 * Target legion
+	 *
 	 * @return 在线旅长，或 null / Online brigade general, or null
 	 */
 	public Player getBrigadeGeneral(Legion legion) {
-		Player player = null;
 		for (LegionMemberEx member : legionMembers().loadLegionMemberExList(legion, null)) {
 			if (member.isBrigadeGeneral()) {
-				player = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(member.getObjectId());
+				return world.findPlayer(member.getObjectId());
 			}
 		}
-		return player;
+		return null;
 	}
 
 	/**
@@ -820,16 +830,17 @@ public class LegionService {
 	public void openLegionWarehouse(Player player, Npc npc) {
 		if (restrictions().canOpenWarehouse(player)) {
 			LegionWhUpdate(player);
-			PacketSendUtility.sendPacket(player, new SM_LEGION_EDIT(0x04, player.getLegion()));// 基纳 / kinah
-			int whLvl = player.getLegion().getWarehouseLevel();
-			List<Item> items = player.getLegion().getLegionWarehouse().getItems();
+			Legion legion = player.getLegion();
+			PacketSendUtility.sendPacket(player, new SM_LEGION_EDIT(0x04, legion)); // 基纳 / kinah
+			int whLvl = legion.getWarehouseLevel();
+			List<Item> items = legion.getLegionWarehouse().getItems();
 			int storageId = StorageType.LEGION_WAREHOUSE.getId();
 			boolean isEmpty = items.isEmpty();
 			if (!isEmpty) {
 				ListSplitter<Item> splitter = new ListSplitter<>(items, 10);
 				while (!splitter.isLast()) {
 					PacketSendUtility.sendPacket(player,
-							new SM_WAREHOUSE_INFO(splitter.getNext(), storageId, whLvl, splitter.isFirst(), player));
+						new SM_WAREHOUSE_INFO(splitter.getNext(), storageId, whLvl, splitter.isFirst(), player));
 				}
 			}
 			PacketSendUtility.sendPacket(player, new SM_WAREHOUSE_INFO(null, storageId, whLvl, isEmpty, player));
@@ -861,10 +872,10 @@ public class LegionService {
 			};
 
 			boolean disbandResult = activePlayer.getResponseRequester()
-					.putRequest(SM_QUESTION_WINDOW.STR_GUILD_DISPERSE_STAYMODE_CANCEL, disbandResponseHandler);
+				.putRequest(SM_QUESTION_WINDOW.STR_GUILD_DISPERSE_STAYMODE_CANCEL, disbandResponseHandler);
 			if (disbandResult) {
 				PacketSendUtility.sendPacket(activePlayer,
-						new SM_QUESTION_WINDOW(SM_QUESTION_WINDOW.STR_GUILD_DISPERSE_STAYMODE_CANCEL, 0, 0));
+					new SM_QUESTION_WINDOW(SM_QUESTION_WINDOW.STR_GUILD_DISPERSE_STAYMODE_CANCEL, 0, 0));
 			}
 		}
 	}
@@ -878,15 +889,13 @@ public class LegionService {
 		log.info(I18n.get("log.63db4fabda94"));
 		long startTime = System.currentTimeMillis();
 
-		Iterator<Legion> legionsIterator = allCachedLegions.iterator();
 		int legionsUpdated = 0;
-
 		this.legionRanking = legionRanking;
 
-		while (legionsIterator.hasNext()) {
-			Legion legion = legionsIterator.next();
-			if (legionRanking.containsKey(legion.getLegionId())) {
-				legion.setLegionRank(legionRanking.get(legion.getLegionId()));
+		for (Legion legion : allCachedLegions) {
+			Integer rank = legionRanking.get(legion.getLegionId());
+			if (rank != null) {
+				legion.setLegionRank(rank);
 				PacketSendUtility.broadcastPacketToLegion(legion, new SM_LEGION_EDIT(0x01, legion));
 			}
 			legionsUpdated++;
@@ -898,6 +907,7 @@ public class LegionService {
 	/**
 	 * 将玩家所属军团仓库的物品与魔石持久化到数据库。
 	 * Persists the player legion warehouse items and item stones to the database.
+	 *
 	 * @param player 触发同步的玩家 / Player triggering the warehouse sync
 	 */
 	public void LegionWhUpdate(Player player) {
@@ -910,7 +920,7 @@ public class LegionService {
 		allItems.addAll(legion.getLegionWarehouse().getDeletedItems());
 		try {
 			DAOManager.getDAO(InventoryDAO.class).store(allItems, player.getObjectId(),
-					player.getPlayerAccount().getId(), legion.getLegionId());
+				player.getPlayerAccount().getId(), legion.getLegionId());
 
 			DAOManager.getDAO(ItemStoneListDAO.class).save(allItems);
 		} catch (Exception ex) {
@@ -921,6 +931,7 @@ public class LegionService {
 	/**
 	 * 向军团广播成员信息更新（等级/职业等变化）。
 	 * Broadcasts a member info update (level/class changes, etc.) to the legion.
+	 *
 	 * @param player 发生变化的成员 / Changed member
 	 */
 	public void updateMemberInfo(Player player) {
@@ -932,6 +943,7 @@ public class LegionService {
 	 * Sets legion contribution points (often via admin command) and optionally persists.
 	 * Target legion
 	 * New contribution points
+	 *
 	 * @param save 是否立即保存 / Whether to store immediately
 	 */
 	public void setContributionPoints(Legion legion, long newPoints, boolean save) {
@@ -946,14 +958,15 @@ public class LegionService {
 	 * 开始上传自定义徽章：记录颜色/类型与总字节数并进入上传中状态。
 	 * Starts custom emblem upload: records colors/type and total size, marks uploading.
 	 * Acting player
+	 *
 	 * @param totalSize 徽章数据总大小 / Total emblem data size
-	 * @param color_r 红色分量 / Red component
-	 * @param color_g 绿色分量 / Green component
-	 * @param color_b 蓝色分量 / Blue component
-	 * Emblem type
+	 * @param color_r   红色分量 / Red component
+	 * @param color_g   绿色分量 / Green component
+	 * @param color_b   蓝色分量 / Blue component
+	 *                  Emblem type
 	 */
 	public void uploadEmblemInfo(Player activePlayer, int totalSize, int color_r, int color_g, int color_b,
-			LegionEmblemType emblemType) {
+								 LegionEmblemType emblemType) {
 		emblems().uploadEmblemInfo(activePlayer, totalSize, color_r, color_g, color_b, emblemType);
 	}
 
@@ -961,6 +974,7 @@ public class LegionService {
 	 * 接收自定义徽章分片数据；收齐后扣费并落库生效。
 	 * Receives a chunk of custom emblem data; when complete, charges kinah and persists the emblem.
 	 * Acting player
+	 *
 	 * @param size 本片字节数 / Chunk size
 	 * @param data 本片数据 / Chunk bytes
 	 */
@@ -985,6 +999,7 @@ public class LegionService {
 	 * Renames the legion and refreshes online member titles; optionally persists.
 	 * Target legion
 	 * New name
+	 *
 	 * @param save 是否立即保存 / Whether to store immediately
 	 */
 	public void setLegionName(Legion legion, String newLegionName, boolean save) {
@@ -993,10 +1008,10 @@ public class LegionService {
 
 		for (Player legionMember : legion.getOnlineLegionMembers()) {
 			PacketSendUtility
-					.broadcastPacket(legionMember,
-							new SM_LEGION_UPDATE_TITLE(legionMember.getObjectId(), legion.getLegionId(),
-									legion.getLegionName(), legionMember.getLegionMember().getRank().getRankId()),
-							true);
+				.broadcastPacket(legionMember,
+					new SM_LEGION_UPDATE_TITLE(legionMember.getObjectId(), legion.getLegionId(),
+						legion.getLegionName(), legionMember.getLegionMember().getRank().getRankId()),
+					true);
 		}
 		if (save) {
 			storeLegion(legion);
@@ -1018,17 +1033,18 @@ public class LegionService {
 			legion.addAnnouncementToList(currentTime, announcement);
 			PacketSendUtility.sendPacket(activePlayer, SM_SYSTEM_MESSAGE.STR_GUILD_WRITE_NOTICE_DONE);
 			PacketSendUtility.broadcastPacketToLegion(legion,
-					new SM_LEGION_EDIT(0x05, (int) (System.currentTimeMillis() / 1000), announcement));
+				new SM_LEGION_EDIT(0x05, (int) (System.currentTimeMillis() / 1000), announcement));
 		}
 	}
 
 	/**
-	 * 存储全部军团公告。
-	 * This method stores all legion announcements
-	 * legion
+	 * 存储全部军团公告（保留最近 7 条）。
+	 * This method stores all legion announcements, retaining the 7 most recent.
+	 *
+	 * @param legion 军团 / legion
 	 */
 	void storeLegionAnnouncements(Legion legion) {
-		for (int i = 0; i < (legion.getAnnouncementList().size() - 7); i++) {
+		while (legion.getAnnouncementList().size() > 7) {
 			removeAnnouncement(legion.getLegionId(), legion.getAnnouncementList().firstEntry().getKey());
 			legion.removeFirstEntry();
 		}
@@ -1036,20 +1052,22 @@ public class LegionService {
 
 	/**
 	 * 存储新创建的公告。
-	 * Stores newly created announcement
-	 * legion id
-	 * current time
-	 * message
-	 * @return true if announcement was successful saved.
+	 * Stores newly created announcement.
+	 *
+	 * @param legionId    军团 ID / legion id
+	 * @param currentTime 当前时间 / current time
+	 * @param message     公告消息 / message
 	 */
-	private boolean storeNewAnnouncement(int legionId, Timestamp currentTime, String message) {
-		return DAOManager.getDAO(LegionDAO.class).saveNewAnnouncement(legionId, currentTime, message);
+	private void storeNewAnnouncement(int legionId, Timestamp currentTime, String message) {
+		DAOManager.getDAO(LegionDAO.class).saveNewAnnouncement(legionId, currentTime, message);
 	}
 
 	/**
-	 * 军团服务辅助方法。
-	 * Legion service helper.
-	 * @return true if succeeded
+	 * 移除指定军团的特定时间戳公告。
+	 * Removes the announcement with the given timestamp from the legion.
+	 *
+	 * @param legionId 军团 ID / legion id
+	 * @param key      时间戳键 / timestamp key
 	 */
 	private void removeAnnouncement(int legionId, Timestamp key) {
 		DAOManager.getDAO(LegionDAO.class).removeAnnouncement(legionId, key);
@@ -1063,135 +1081,131 @@ public class LegionService {
 	 * 追加军团历史记录并广播对应页签更新。
 	 * Appends a legion history entry and broadcasts the related tab update.
 	 * Target legion
+	 *
 	 * @param text 历史文本 / History text
-	 * History type
-	 * Tab id
-	 * Extra description
+	 *             History type
+	 *             Tab id
+	 *             Extra description
 	 */
 	public void addHistory(Legion legion, String text, LegionHistoryType legionHistoryType, int tabId,
-			String description) {
+						   String description) {
 		LegionHistory legionHistory = new LegionHistory(legionHistoryType, text,
-				new Timestamp(System.currentTimeMillis()), tabId, description);
+			new Timestamp(System.currentTimeMillis()), tabId, description);
 
 		legion.addHistory(legionHistory);
 		DAOManager.getDAO(LegionDAO.class).saveNewLegionHistory(legion.getLegionId(), legionHistory);
 
 		PacketSendUtility.broadcastPacketToLegion(legion,
-				new SM_LEGION_TABS(legion.getLegionHistoryByTabId(tabId), tabId));
+			new SM_LEGION_TABS(legion.getLegionHistoryByTabId(tabId), tabId));
 	}
-
-
 
 
 	/**
 	 * 处理与角色名相关的军团请求（邀请、踢人、任命旅长/职级、改昵称）。
 	 * Handles character-name based legion requests (invite, kick, appoint ranks, nickname).
-	 * @param exOpcode 扩展操作码 / Extended opcode
-	 * Acting player
-	 * @param charName 目标角色名 / Target character name
+	 *
+	 * @param exOpcode    扩展操作码 / Extended opcode
+	 *                    Acting player
+	 * @param charName    目标角色名 / Target character name
 	 * @param newNickname 新昵称（改昵称时） / New nickname (when renaming)
-	 * @param rank 新职级（任命时） / New rank (when appointing)
+	 * @param rank        新职级（任命时） / New rank (when appointing)
 	 */
 	public void handleCharNameRequest(int exOpcode, Player activePlayer, String charName, String newNickname,
-			int rank) {
+									  int rank) {
 		Legion legion = activePlayer.getLegion();
 
 		charName = Util.convertName(charName);
 		Player targetPlayer = world.findPlayer(charName);
 
 		switch (exOpcode) {
-			case 0x01:
-			if (targetPlayer != null) {
-				if (targetPlayer.getPlayerSettings().isInDeniedStatus(DeniedStatus.GUILD)) {
-					PacketSendUtility.sendPacket(activePlayer,
+			case 0x01 -> {
+				if (targetPlayer != null) {
+					if (targetPlayer.getPlayerSettings().isInDeniedStatus(DeniedStatus.GUILD)) {
+						PacketSendUtility.sendPacket(activePlayer,
 							SM_SYSTEM_MESSAGE.STR_MSG_REJECTED_INVITE_GUILD(charName));
-					return;
+						return;
+					}
+					invitePlayerToLegion(activePlayer, targetPlayer);
+				} else {
+					PacketSendUtility.sendPacket(activePlayer, SM_SYSTEM_MESSAGE.STR_GUILD_INVITE_NO_USER_TO_INVITE);
 				}
-				invitePlayerToLegion(activePlayer, targetPlayer);
-			} else {
-				PacketSendUtility.sendPacket(activePlayer, SM_SYSTEM_MESSAGE.STR_GUILD_INVITE_NO_USER_TO_INVITE);
 			}
-			break;
-			case LEGION_ACTION_KICK:
-			if (restrictions().canKickPlayer(activePlayer, charName)) {
-				if (legionMembers().removeLegionMember(charName, true, activePlayer.getName())) {
-					// 向成员发送数据包？ / send packet to members?
+			case LEGION_ACTION_KICK -> {
+				if (restrictions().canKickPlayer(activePlayer, charName)
+					&& legionMembers().removeLegionMember(charName, true, activePlayer.getName())) {
 					if (targetPlayer != null) {
 						PacketSendUtility.sendPacket(targetPlayer,
-								new SM_LEGION_LEAVE_MEMBER(1300246, 0, legion.getLegionName()));
+							new SM_LEGION_LEAVE_MEMBER(1300246, 0, legion.getLegionName()));
 						targetPlayer.resetLegionMember();
 					}
 				}
+				if (legion.hasBonus()) {
+					PacketSendUtility.sendPacket(activePlayer, new SM_ICON_INFO(1, false));
+				}
 			}
-			if (legion.hasBonus()) {
-				PacketSendUtility.sendPacket(activePlayer, new SM_ICON_INFO(1, false));
+			case 0x05 -> {
+				if (targetPlayer != null) {
+					appointBrigadeGeneral(activePlayer, targetPlayer);
+				} else {
+					PacketSendUtility.sendPacket(activePlayer, SM_SYSTEM_MESSAGE.STR_GUILD_CHANGE_MASTER_NO_SUCH_USER);
+				}
 			}
-			break;
-			case 0x05:
-			if (targetPlayer != null) {
-				appointBrigadeGeneral(activePlayer, targetPlayer);
-			} else {
-				PacketSendUtility.sendPacket(activePlayer, SM_SYSTEM_MESSAGE.STR_GUILD_CHANGE_MASTER_NO_SUCH_USER);
+			case 0x06 -> {
+				if (targetPlayer != null) {
+					appointRank(activePlayer, targetPlayer, rank);
+				} else {
+					appointRank(activePlayer, charName, rank);
+				}
 			}
-			break;
-			case 0x06:
-			if (targetPlayer != null)
-				appointRank(activePlayer, targetPlayer, rank);
-			else
-				appointRank(activePlayer, charName, rank);
-			break;
-			case 0x0F:
-			changeNickname(activePlayer, charName, newNickname);
-			break;
+			case 0x0F -> changeNickname(activePlayer, charName, newNickname);
+			default -> {
+			}
 		}
 	}
 
 	/**
 	 * 处理带文本的军团请求（公告、自我介绍）。
 	 * Handles text-bearing legion requests (announcement, self intro).
+	 *
 	 * @param exOpcode 扩展操作码 / Extended opcode
-	 * Acting player
-	 * @param text 文本内容 / Text payload
+	 *                 Acting player
+	 * @param text     文本内容 / Text payload
 	 */
 	public void handleLegionRequest(int exOpcode, Player activePlayer, String text) {
 		switch (exOpcode) {
-			case 0x09:
-			changeAnnouncement(activePlayer, text);
-			break;
-			case 0x0A:
-			changeSelfIntro(activePlayer, text);
-			break;
+			case 0x09 -> changeAnnouncement(activePlayer, text);
+			case 0x0A -> changeSelfIntro(activePlayer, text);
+			default -> {
+			}
 		}
 	}
 
 	/**
 	 * 处理无文本的军团请求（退团、升级）。
 	 * Handles textless legion requests (leave, level up).
+	 *
 	 * @param exOpcode 扩展操作码 / Extended opcode
-	 * Acting player
+	 *                 Acting player
 	 */
 	public void handleLegionRequest(int exOpcode, Player activePlayer) {
 		switch (exOpcode) {
-			case 0x02:
-			if (restrictions().canLeave(activePlayer)) {
-				if (legionMembers().removeLegionMember(activePlayer.getName(), false, "")) {
+			case 0x02 -> {
+				if (restrictions().canLeave(activePlayer)
+					&& legionMembers().removeLegionMember(activePlayer.getName(), false, "")) {
 					Legion legion = activePlayer.getLegion();
 					PacketSendUtility.sendPacket(activePlayer,
-							new SM_LEGION_LEAVE_MEMBER(1300241, 0, legion.getLegionName()));
+						new SM_LEGION_LEAVE_MEMBER(1300241, 0, legion.getLegionName()));
 					activePlayer.resetLegionMember();
 					if (legion.hasBonus()) {
 						PacketSendUtility.sendPacket(activePlayer, new SM_ICON_INFO(1, false));
 					}
 				}
 			}
-			break;
-            case 0x0E:
-			requestChangeLevel(activePlayer);
-			break;
+			case 0x0E -> requestChangeLevel(activePlayer);
+			default -> {
+			}
 		}
 	}
-
-
 
 
 	/**
@@ -1206,6 +1220,7 @@ public class LegionService {
 	/**
 	 * 惰性获取成员域实现。
 	 * Lazily resolves the member-domain implementation.
+	 *
 	 * @return 成员域 / member domain
 	 */
 	LegionMembers legionMembers() {
@@ -1217,7 +1232,9 @@ public class LegionService {
 		return current;
 	}
 
-	/** 成员域实现，按需构造 / member-domain implementation, built on demand. */
+	/**
+	 * 成员域实现，按需构造 / member-domain implementation, built on demand.
+	 */
 	private LegionMembers legionMembers;
 
 	/**
@@ -1260,17 +1277,23 @@ public class LegionService {
 		legionMembers().onLogout(player);
 	}
 
-	/** 世界引用，供成员域查找在线玩家 / world reference so the member domain can resolve online players. */
+	/**
+	 * 世界引用，供成员域查找在线玩家 / world reference so the member domain can resolve online players.
+	 */
 	World world() {
 		return world;
 	}
 
-	/** 供成员域读写成员缓存 / exposes the member cache to the member domain. */
+	/**
+	 * 供成员域读写成员缓存 / exposes the member cache to the member domain.
+	 */
 	LegionMemberContainer allCachedLegionMembers() {
 		return allCachedLegionMembers;
 	}
 
-	/** 供成员域读取军团缓存 / exposes the legion cache to the member domain. */
+	/**
+	 * 供成员域读取军团缓存 / exposes the legion cache to the member domain.
+	 */
 	LegionContainer allCachedLegions() {
 		return allCachedLegions;
 	}
@@ -1278,6 +1301,7 @@ public class LegionService {
 	/**
 	 * 返回当前全部已缓存军团的快照列表。
 	 * Returns a snapshot list of all currently cached legions.
+	 *
 	 * @return 缓存军团列表 / cached legions
 	 */
 	public List<Legion> getAllCachedLegions() {
@@ -1296,6 +1320,7 @@ public class LegionService {
 	/**
 	 * 惰性获取徽章域实现。
 	 * Lazily resolves the emblem-domain implementation.
+	 *
 	 * @return 徽章域 / emblem domain
 	 */
 	LegionEmblems emblems() {
@@ -1307,22 +1332,26 @@ public class LegionService {
 		return current;
 	}
 
-	/** 徽章域实现，按需构造 / emblem-domain implementation, built on demand. */
+	/**
+	 * 徽章域实现，按需构造 / emblem-domain implementation, built on demand.
+	 */
 	private LegionEmblems legionEmblems;
 
 	/**
 	 * 校验军团名称是否合法（匹配配置的正则）。
 	 * Checks whether a legion name is valid (matches the configured pattern).
+	 *
 	 * @param name 军团名称 / Legion name
 	 * @return 合法返回 true，否则 false / True if valid, false otherwise
 	 */
 	public boolean isValidName(String name) {
-		return restrictions().isValidName(name);
+		return LegionRestrictions.isValidName(name);
 	}
 
 	/**
 	 * 判断玩家是否在军团创建者 NPC 的交谈距离内。
 	 * Checks whether the player is within the legion creator NPC's talk distance.
+	 *
 	 * @param player     玩家 / player
 	 * @param creatorNpc 创建者 NPC / creator NPC
 	 * @return 在范围内为 true / true when in range

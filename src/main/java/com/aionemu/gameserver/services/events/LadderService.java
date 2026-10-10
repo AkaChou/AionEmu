@@ -39,55 +39,81 @@ import java.util.Map;
 /**
  * 天梯 / 战场匹配服务，管理普通与活动队列、战场创建、排名与名称伪装。
  * battleground matchmaking service managing normal and event queues, BG creation, ranks, and name masking.
+ *
  * @author Rinzler (Encom)
  */
 @Slf4j
 public class LadderService {
-	/** Spring 实例提供者 / Spring instance provider */
+	/**
+	 * Spring 实例提供者 / Spring instance provider
+	 */
 	private static volatile ObjectProvider<LadderService> instanceProvider;
-	/** 活动战场排队列表。 / Event battleground queue list. */
+	/**
+	 * 活动战场排队列表。 / Event battleground queue list.
+	 */
 	private final List<AionObject> eventQueueList = Collections.synchronizedList(new ArrayList<>());
-	/** 普通战场排队列表。 / Normal battleground queue list. */
+	/**
+	 * 普通战场排队列表。 / Normal battleground queue list.
+	 */
 	private final List<AionObject> normalQueueList = Collections.synchronizedList(new ArrayList<>());
-	/** 当前 battleground 映射 bgIdbattleground / Active battleground map (bgId → battleground) */
+	/**
+	 * 当前 battleground 映射 bgIdbattleground / Active battleground map (bgId → battleground)
+	 */
 	private final Map<Integer, Battleground> bgMap = Collections.synchronizedMap(new LinkedHashMap<>());
-	/** 普通战场与事件引擎关联映射。 / Map linking normal BGs to event engine instances. */
+	/**
+	 * 普通战场与事件引擎关联映射。 / Map linking normal BGs to event engine instances.
+	 */
 	private final Map<Integer, Event> normalBgMap = Collections.synchronizedMap(new LinkedHashMap<>());
-	/** 当前活动战场模板。 / Current event battleground template. */
+	/**
+	 * 当前活动战场模板。 / Current event battleground template.
+	 */
 	private Battleground eventBg = null;
-	/** 活动报名截止任务。 / Event registration deadline task. */
+	/**
+	 * 活动报名截止任务。 / Event registration deadline task.
+	 */
 	private ScheduledFuture<?> eventTask = null;
-	/** 普通报名截止任务。 / Normal registration deadline task. */
+	/**
+	 * 普通报名截止任务。 / Normal registration deadline task.
+	 */
 	private ScheduledFuture<?> normalTask = null;
-	/** 普通战场是否开放报名。 / Whether normal BG registration is open.
+	/**
+	 * 普通战场是否开放报名。 / Whether normal BG registration is open.
 	 * -- GETTER --
-	 *  返回普通战场是否处于报名中。
-	 *  Returns whether normal battleground registration is open.
+	 * 返回普通战场是否处于报名中。
+	 * Returns whether normal battleground registration is open.
 	 * 是否报名中 / whether ready
 	 */
 	@Getter
 	boolean normalReady = false;
-	/** 活动战场是否开放报名。 / Whether event BG registration is open.
-     * -- GETTER --
-     *  返回活动战场是否处于报名中。
-     *  Returns whether event battleground registration is open.
-     * 是否报名中 / whether ready
-     */
-    @Getter
-    boolean eventReady = false;
-	/** 普通队列是否按队伍匹配。 / Whether normal queue uses team-based matchmaking. */
+	/**
+	 * 活动战场是否开放报名。 / Whether event BG registration is open.
+	 * -- GETTER --
+	 * 返回活动战场是否处于报名中。
+	 * Returns whether event battleground registration is open.
+	 * 是否报名中 / whether ready
+	 */
+	@Getter
+	boolean eventReady = false;
+	/**
+	 * 普通队列是否按队伍匹配。 / Whether normal queue uses team-based matchmaking.
+	 */
 	boolean normalTeamBased = false;
-	/** 活动队列是否按队伍匹配。 / Whether event queue uses team-based matchmaking. */
+	/**
+	 * 活动队列是否按队伍匹配。 / Whether event queue uses team-based matchmaking.
+	 */
 	boolean eventTeamBased = false;
-	/** 排名刷新间隔（分钟）。 / Rank refresh interval in minutes. */
-	private final int rankUpdateInterval = 2;
+	/**
+	 * 排名刷新间隔（分钟）。 / Rank refresh interval in minutes.
+	 */
+	private static final int RANK_UPDATE_INTERVAL = 2;
 
 	/**
 	 * 构造服务并启动周期排名刷新。
 	 * Constructs the service and starts periodic rank updates.
 	 */
 	public LadderService() {
-		GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> UpdateRanks(), rankUpdateInterval * 60 * 1000, rankUpdateInterval * 60 * 1000);
+		int intervalMs = RANK_UPDATE_INTERVAL * 60 * 1000;
+		GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(this::UpdateRanks, intervalMs, intervalMs);
 		log.info(I18n.get("log.feb60173643c"));
 	}
 
@@ -102,6 +128,7 @@ public class LadderService {
 	/**
 	 * 将玩家注册到普通战场队列。
 	 * Registers a player into the normal battleground queue.
+	 *
 	 * @param player 玩家 / player
 	 * @return 是否注册成功 / whether registration succeeded
 	 */
@@ -123,6 +150,7 @@ public class LadderService {
 	/**
 	 * 将玩家注册到活动战场队列。
 	 * Registers a player into the event battleground queue.
+	 *
 	 * @param player 玩家 / player
 	 * @return 是否注册成功 / whether registration succeeded
 	 */
@@ -144,6 +172,7 @@ public class LadderService {
 	/**
 	 * 将玩家从普通战场队列移除。
 	 * Removes a player from the normal battleground queue.
+	 *
 	 * @param player 玩家 / player
 	 */
 	public void unregisterForNormal(Player player) {
@@ -153,6 +182,7 @@ public class LadderService {
 	/**
 	 * 将玩家从活动战场队列移除。
 	 * Removes a player from the event battleground queue.
+	 *
 	 * @param player 玩家 / player
 	 */
 	public void unregisterForEvent(Player player) {
@@ -162,6 +192,7 @@ public class LadderService {
 	/**
 	 * 判断玩家是否已在任一队列中。
 	 * Returns whether the player is already in any queue.
+	 *
 	 * @param player 玩家 / player
 	 * @return 是否在队列中 / whether queued
 	 */
@@ -191,6 +222,7 @@ public class LadderService {
 	 * 将队伍注册到普通战场队列。
 	 * Registers a party into the normal battleground queue.
 	 * party
+	 *
 	 * @return 是否注册成功 / whether registration succeeded
 	 */
 	public boolean registerForNormal(PlayerGroup group) {
@@ -218,6 +250,7 @@ public class LadderService {
 	 * 将队伍注册到活动战场队列。
 	 * Registers a party into the event battleground queue.
 	 * party
+	 *
 	 * @return 是否注册成功 / whether registration succeeded
 	 */
 	public boolean registerForEvent(PlayerGroup group) {
@@ -261,6 +294,7 @@ public class LadderService {
 	 * 判断队伍是否已在任一队列中。
 	 * Returns whether the party is already in any queue.
 	 * party
+	 *
 	 * @return 是否在队列中 / whether queued
 	 */
 	public boolean isInQueue(PlayerGroup group) {
@@ -292,6 +326,7 @@ public class LadderService {
 	/**
 	 * 返回活动队列条目数（玩家或队伍条目）。
 	 * Returns the number of entries in the event queue (players or parties).
+	 *
 	 * @return 队列条目数 / queue entry count
 	 */
 	public int getEventQueueSize() {
@@ -318,15 +353,16 @@ public class LadderService {
 	/**
 	 * 按是否仅队伍模式随机实例化一个战场类型。
 	 * Instantiates a random battleground type based on team-only mode.
+	 *
 	 * @param teamOnly 是否仅队伍模式 / whether team-only
-	 * battleground instance
+	 *                 battleground instance
 	 */
 	private Battleground getRandomBg(boolean teamOnly) {
 		Battleground bg = null;
-		Class<?>[] bgs = new Class<?>[] { TwoTeamBg.class, TwoTeamSmallBg.class };
+		Class<?>[] bgs = new Class<?>[]{TwoTeamBg.class, TwoTeamSmallBg.class};
 		if (!teamOnly) {
-			bgs = new Class<?>[] { SoloSurvivorBg.class, SoloSurvivorBg.class, SoloSurvivorBg.class,
-					SoloSurvivorBg.class, DeathmatchBg.class, TwoTeamSmallBg.class };
+			bgs = new Class<?>[]{SoloSurvivorBg.class, SoloSurvivorBg.class, SoloSurvivorBg.class,
+				SoloSurvivorBg.class, DeathmatchBg.class, TwoTeamSmallBg.class};
 		}
 		try {
 			bg = (Battleground) bgs[Rnd.get(bgs.length)].getDeclaredConstructor().newInstance();
@@ -339,6 +375,7 @@ public class LadderService {
 	/**
 	 * 开启一轮普通战场报名，并在截止后处理匹配。
 	 * Opens one normal battleground registration window and processes matchmaking after the deadline.
+	 *
 	 * @param event 战场事件 / battleground event
 	 * @return 是否成功开启 / whether opened successfully
 	 */
@@ -350,7 +387,7 @@ public class LadderService {
 		normalTeamBased = Rnd.get(3) != 0;
 		normalQueueList.clear();
 		announceAll(
-				"[BG Open] Register with the button located on the right of your skill bar. You have <2 Minutes> to register!!!");
+			"[BG Open] Register with the button located on the right of your skill bar. You have <2 Minutes> to register!!!");
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(pl -> {
 			if (pl.getBattleground() == null && !isInQueue(pl) && !GameFeatureServices.ffaService().isInArena(pl)) {
 				PacketSendUtility.sendPacket(pl, new SM_AUTO_GROUP(301550000, true));
@@ -368,7 +405,8 @@ public class LadderService {
 	/**
 	 * 开启一轮指定类型的活动战场报名。
 	 * Opens one event battleground registration window of the given type.
-	 * @param bg 活动战场模板 / event battleground template
+	 *
+	 * @param bg        活动战场模板 / event battleground template
 	 * @param teamBased 是否按队伍匹配 / whether team-based
 	 * @return 是否成功开启 / whether opened successfully
 	 */
@@ -385,10 +423,10 @@ public class LadderService {
 		eventQueueList.clear();
 		if (eventTeamBased) {
 			announceAll("WARNING!!! " + bg.getName()
-					+ "The event start in 1 minute!!! Register you by using the right button on your skill bars!!!");
+				+ "The event start in 1 minute!!! Register you by using the right button on your skill bars!!!");
 		} else {
 			announceAll("WARNING!!! " + bg.getName()
-					+ "The event start in 30 seconds ! Register you by using the right button on your skill bars!!!");
+				+ "The event start in 30 seconds ! Register you by using the right button on your skill bars!!!");
 		}
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(pl -> {
 			if (pl.getBattleground() == null && !isInQueue(pl)) {
@@ -407,46 +445,43 @@ public class LadderService {
 	/**
 	 * 处理普通队列匹配并创建战场。
 	 * Processes normal-queue matchmaking and creates battlegrounds.
+	 *
 	 * @param event 战场事件 / battleground event
 	 */
 	private void HandleNormalQueue(BattlegroundEvent event) {
 		List<List<Player>> validGroups = new ArrayList<>();
 		List<Integer> validParticipants = new ArrayList<>();
 		for (AionObject ao : queueSnapshot(normalQueueList)) {
-            switch (ao) {
-                case null:
-                    continue;
-                case Player pl:
-                    PacketSendUtility.sendPacket(pl, new SM_AUTO_GROUP(2, 301550000, 0));
-                    if (!pl.isOnline() || pl.getBattleground() != null) {
-                        continue;
-                    }
-                    validGroups.add(List.of(pl));
-                    validParticipants.add(pl.getObjectId());
-                    break;
-                case PlayerGroup group:
-                    boolean add = true;
-                    for (Player pl : group.getMembers()) {
-                        PacketSendUtility.sendPacket(pl, new SM_AUTO_GROUP(2, 301550000, 0));
-                        if (!pl.isOnline() || pl.getBattleground() != null) {
-                            add = false;
-                        }
-                    }
-                    if (add && normalTeamBased) {
-                        validGroups.add(new ArrayList<>() {
-                            {
-                                addAll(group.getMembers());
-                            }
-                        });
-                    }
-                    break;
-                default:
-                    break;
-            }
+			switch (ao) {
+				case null:
+					continue;
+				case Player pl:
+					PacketSendUtility.sendPacket(pl, new SM_AUTO_GROUP(2, 301550000, 0));
+					if (!pl.isOnline() || pl.getBattleground() != null) {
+						continue;
+					}
+					validGroups.add(List.of(pl));
+					validParticipants.add(pl.getObjectId());
+					break;
+				case PlayerGroup group:
+					boolean add = true;
+					for (Player pl : group.getMembers()) {
+						PacketSendUtility.sendPacket(pl, new SM_AUTO_GROUP(2, 301550000, 0));
+						if (!pl.isOnline() || pl.getBattleground() != null) {
+							add = false;
+						}
+					}
+					if (add && normalTeamBased) {
+						validGroups.add(new ArrayList<>(group.getMembers()));
+					}
+					break;
+				default:
+					break;
+			}
 		}
 		if (normalTeamBased) {
 			Collections.shuffle(validGroups);
-			Collections.sort(validGroups, (o1, o2) -> -Integer.valueOf(o1.size()).compareTo(Integer.valueOf(o2.size())));
+			validGroups.sort((o1, o2) -> Integer.compare(o2.size(), o1.size()));
 		} else {
 			Collections.shuffle(validParticipants);
 			SortParticipantList(validParticipants);
@@ -457,61 +492,9 @@ public class LadderService {
 			Battleground bg = getRandomBg(normalTeamBased);
 			bg.setTeamBased(normalTeamBased);
 			if (normalTeamBased) {
-				List<List<Player>> usedGroups = new ArrayList<>();
-				List<List<Player>> groups = new ArrayList<>();
-				List<Integer> participants = new ArrayList<>();
-				if (validGroups.size() < bg.getTeamCount()) {
+				if (!matchTeams(bg, validGroups)) {
 					continue;
 				}
-				for (int i = 0; i < bg.getTeamCount(); i++) {
-					groups.add(new ArrayList<>());
-					for (List<Player> group : validGroups) {
-						if (!usedGroups.contains(group) && group.size() <= bg.getMaxSize()) {
-							groups.set(i, cloneGroup(group));
-							usedGroups.add(group);
-							break;
-						}
-					}
-				}
-				if (groups.get(0).size() < bg.getMinSize()) {
-					for (List<Player> group : validGroups) {
-						if (!usedGroups.contains(group) && group.size() + groups.get(0).size() <= bg.getMaxSize()) {
-							groups.get(0).addAll(group);
-							usedGroups.add(group);
-							if (groups.get(0).size() >= bg.getMinSize()) {
-								break;
-							}
-						}
-					}
-				}
-				if (groups.get(0).size() < bg.getMinSize() || groups.get(0).size() > bg.getMaxSize()) {
-					continue;
-				}
-				boolean satisfied = true;
-				for (int i = 1; i < bg.getTeamCount(); i++) {
-					if (groups.get(i).size() < groups.get(0).size()) {
-						for (List<Player> group : validGroups) {
-							if (!usedGroups.contains(group)
-									&& group.size() + groups.get(i).size() <= groups.get(0).size()) {
-								groups.get(i).addAll(group);
-								usedGroups.add(group);
-							}
-						}
-					}
-					if (groups.get(i).size() < groups.get(0).size()) {
-						satisfied = false;
-					}
-				}
-				if (!satisfied) {
-					continue;
-				}
-				for (List<Player> group : groups) {
-					for (Player pl : group) {
-						participants.add(pl.getObjectId());
-					}
-				}
-				validGroups.removeAll(usedGroups);
-				bg.createMatch(participants);
 			} else {
 				bg.createMatch(validParticipants);
 			}
@@ -533,12 +516,80 @@ public class LadderService {
 		} else {
 			for (Integer objectId : validParticipants) {
 				AionObject ao = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findVisibleObject(objectId);
-				if (ao != null && ao instanceof Player) {
-					scheduleAnnouncement((Player) ao, "No opponents found!!! Please wait for the next registration.",
-							0);
+				if (ao instanceof Player player) {
+					scheduleAnnouncement(player, "No opponents found!!! Please wait for the next registration.",
+						0);
 				}
 			}
 		}
+	}
+
+	/**
+	 * 按战场的队伍数与队伍规模匹配玩家队伍。
+	 * Matches player groups according to battleground team count and size constraints.
+	 *
+	 * @param bg          目标战场 / target battleground
+	 * @param validGroups 候选队伍列表 / candidate groups
+	 * @return 是否成功组建对局 / whether match formation succeeded
+	 */
+	private boolean matchTeams(Battleground bg, List<List<Player>> validGroups) {
+		if (validGroups.size() < bg.getTeamCount()) {
+			return false;
+		}
+		List<List<Player>> usedGroups = new ArrayList<>();
+		List<List<Player>> groups = new ArrayList<>();
+		for (int i = 0; i < bg.getTeamCount(); i++) {
+			groups.add(new ArrayList<>());
+			for (List<Player> group : validGroups) {
+				if (!usedGroups.contains(group) && group.size() <= bg.getMaxSize()) {
+					groups.set(i, cloneGroup(group));
+					usedGroups.add(group);
+					break;
+				}
+			}
+		}
+		if (groups.getFirst().size() < bg.getMinSize()) {
+			for (List<Player> group : validGroups) {
+				if (!usedGroups.contains(group) && group.size() + groups.getFirst().size() <= bg.getMaxSize()) {
+					groups.getFirst().addAll(group);
+					usedGroups.add(group);
+					if (groups.getFirst().size() >= bg.getMinSize()) {
+						break;
+					}
+				}
+			}
+		}
+		if (groups.getFirst().size() < bg.getMinSize() || groups.getFirst().size() > bg.getMaxSize()) {
+			return false;
+		}
+		boolean satisfied = true;
+		for (int i = 1; i < bg.getTeamCount(); i++) {
+			if (groups.get(i).size() < groups.getFirst().size()) {
+				for (List<Player> group : validGroups) {
+					if (!usedGroups.contains(group)
+						&& group.size() + groups.get(i).size() <= groups.getFirst().size()) {
+						groups.get(i).addAll(group);
+						usedGroups.add(group);
+					}
+				}
+			}
+			if (groups.get(i).size() < groups.getFirst().size()) {
+				satisfied = false;
+				break;
+			}
+		}
+		if (!satisfied) {
+			return false;
+		}
+		List<Integer> participants = new ArrayList<>();
+		for (List<Player> group : groups) {
+			for (Player pl : group) {
+				participants.add(pl.getObjectId());
+			}
+		}
+		validGroups.removeAll(usedGroups);
+		bg.createMatch(participants);
+		return true;
 	}
 
 	/**
@@ -549,33 +600,36 @@ public class LadderService {
 		List<List<Player>> validGroups = new ArrayList<>();
 		List<Integer> validParticipants = new ArrayList<>();
 		for (AionObject ao : queueSnapshot(eventQueueList)) {
-			if (ao != null && ao instanceof Player pl) {
-				PacketSendUtility.sendPacket(pl, new SM_AUTO_GROUP(2, 300350000, 0));
-				if (!pl.isOnline() || pl.getBattleground() != null) {
-					continue;
+			switch (ao) {
+				case null -> {
 				}
-				validGroups.add(List.of(pl));
-				validParticipants.add(ao.getObjectId());
-			} else if (ao instanceof PlayerGroup group) {
-				boolean add = true;
-				for (Player pl : group.getMembers()) {
+				case Player pl -> {
 					PacketSendUtility.sendPacket(pl, new SM_AUTO_GROUP(2, 300350000, 0));
 					if (!pl.isOnline() || pl.getBattleground() != null) {
-						add = false;
+						continue;
+					}
+					validGroups.add(List.of(pl));
+					validParticipants.add(pl.getObjectId());
+				}
+				case PlayerGroup group -> {
+					boolean add = true;
+					for (Player pl : group.getMembers()) {
+						PacketSendUtility.sendPacket(pl, new SM_AUTO_GROUP(2, 300350000, 0));
+						if (!pl.isOnline() || pl.getBattleground() != null) {
+							add = false;
+						}
+					}
+					if (add && eventTeamBased) {
+						validGroups.add(new ArrayList<>(group.getMembers()));
 					}
 				}
-				if (add && eventTeamBased) {
-					validGroups.add(new ArrayList<>() {
-						{
-							addAll(group.getMembers());
-						}
-					});
+				default -> {
 				}
 			}
 		}
 		if (eventTeamBased) {
 			Collections.shuffle(validGroups);
-			Collections.sort(validGroups, (o1, o2) -> -Integer.valueOf(o1.size()).compareTo(Integer.valueOf(o2.size())));
+			validGroups.sort((o1, o2) -> Integer.compare(o2.size(), o1.size()));
 		} else {
 			Collections.shuffle(validParticipants);
 			SortParticipantList(validParticipants);
@@ -593,61 +647,9 @@ public class LadderService {
 			bg.setTeamBased(eventTeamBased);
 			bg.setIsEvent(true);
 			if (eventTeamBased) {
-				List<List<Player>> usedGroups = new ArrayList<>();
-				List<List<Player>> groups = new ArrayList<>();
-				List<Integer> participants = new ArrayList<>();
-				if (validGroups.size() < bg.getTeamCount()) {
+				if (!matchTeams(bg, validGroups)) {
 					continue;
 				}
-				for (int i = 0; i < bg.getTeamCount(); i++) {
-					groups.add(new ArrayList<>());
-					for (List<Player> group : validGroups) {
-						if (!usedGroups.contains(group) && group.size() <= bg.getMaxSize()) {
-							groups.set(i, cloneGroup(group));
-							usedGroups.add(group);
-							break;
-						}
-					}
-				}
-				if (groups.get(0).size() < bg.getMinSize()) {
-					for (List<Player> group : validGroups) {
-						if (!usedGroups.contains(group) && group.size() + groups.get(0).size() <= bg.getMaxSize()) {
-							groups.get(0).addAll(group);
-							usedGroups.add(group);
-							if (groups.get(0).size() >= bg.getMinSize()) {
-								break;
-							}
-						}
-					}
-				}
-				if (groups.get(0).size() < bg.getMinSize() || groups.get(0).size() > bg.getMaxSize()) {
-					continue;
-				}
-				boolean satisfied = true;
-				for (int i = 1; i < bg.getTeamCount(); i++) {
-					if (groups.get(i).size() < groups.get(0).size()) {
-						for (List<Player> group : validGroups) {
-							if (!usedGroups.contains(group)
-									&& group.size() + groups.get(i).size() <= groups.get(0).size()) {
-								groups.get(i).addAll(group);
-								usedGroups.add(group);
-							}
-						}
-					}
-					if (groups.get(i).size() < groups.get(0).size()) {
-						satisfied = false;
-					}
-				}
-				if (!satisfied) {
-					continue;
-				}
-				for (List<Player> group : groups) {
-					for (Player pl : group) {
-						participants.add(pl.getObjectId());
-					}
-				}
-				validGroups.removeAll(usedGroups);
-				bg.createMatch(participants);
 			} else {
 				bg.createMatch(validParticipants);
 			}
@@ -664,9 +666,9 @@ public class LadderService {
 		} else {
 			for (Integer objectId : validParticipants) {
 				AionObject ao = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findVisibleObject(objectId);
-				if (ao != null && ao instanceof Player) {
-					scheduleAnnouncement((Player) ao, "\uE05C",
-							"There are no more place!!!, You will more luck next time!", 0);
+				if (ao instanceof Player player) {
+					scheduleAnnouncement(player, "\uE05C",
+						"There are no more place!!!, You will more luck next time!", 0);
 				}
 			}
 		}
@@ -707,6 +709,7 @@ public class LadderService {
 	/**
 	 * 分配下一个可用战场 ID。
 	 * Allocates the next available battleground id.
+	 *
 	 * @return 战场 ID，失败返回 -1 / bg id, or -1 on failure
 	 */
 	private Integer getNextAvailableBgId() {
@@ -721,6 +724,7 @@ public class LadderService {
 	/**
 	 * 战场结束时清理映射并回调事件引擎。
 	 * Cleans mappings when a battleground ends and notifies the event engine.
+	 *
 	 * @param bg 结束的战场 / finished battleground
 	 */
 	public void onBgEnd(Battleground bg) {
@@ -736,6 +740,7 @@ public class LadderService {
 	/**
 	 * 注册并启动一个战场实例。
 	 * Registers and starts a battleground instance.
+	 *
 	 * @param bg 战场 / battleground
 	 * @return 分配的战场 ID / allocated bg id
 	 */
@@ -749,6 +754,7 @@ public class LadderService {
 	/**
 	 * 返回活跃战场的不可变快照。
 	 * Returns an immutable snapshot of active battlegrounds.
+	 *
 	 * @return 战场映射快照 / battleground map snapshot
 	 */
 	public Map<Integer, Battleground> getBattlegrounds() {
@@ -783,6 +789,7 @@ public class LadderService {
 	/**
 	 * 查找玩家可重连的未结束战场。
 	 * Finds an unfinished battleground the player can rejoin.
+	 *
 	 * @param player 玩家 / player
 	 * @return 可重连战场，或 null / rejoinable battleground, or null
 	 */
@@ -801,8 +808,9 @@ public class LadderService {
 	 * 按战场索引与种族返回伪装斗篷模板 ID。
 	 * Returns the disguise cloak template id by BG index and race.
 	 * 玩家 / player
+	 *
 	 * @param bgIndex 战场队伍索引 / battleground team index
-	 * cloak template id
+	 *                cloak template id
 	 */
 	public int getBgCloak(Player player, int bgIndex) {
 		return BattlegroundIdentity.getBgCloak(player, bgIndex);
@@ -849,102 +857,102 @@ public class LadderService {
 	public void handleWindow(Player player, int windowId, int dialogId) {
 		if (isEventReady()) {
 			switch (windowId) {
-			case 100:
-				switch (dialogId) {
-				case 0:
-				case 1:
-					if (registerForEvent(player)) {
-						PacketSendUtility.sendSys3Message(player, "\uE05C", "You are now registered for event!!!");
-					} else {
-						PacketSendUtility.sendSys3Message(player, "\uE05C",
-								"Failed to register!!! If you are in a group, you have already registered.");
+				case 100:
+					switch (dialogId) {
+						case 0:
+						case 1:
+							if (registerForEvent(player)) {
+								PacketSendUtility.sendSys3Message(player, "\uE05C", "You are now registered for event!!!");
+							} else {
+								PacketSendUtility.sendSys3Message(player, "\uE05C",
+									"Failed to register!!! If you are in a group, you have already registered.");
+							}
+							break;
+						case 2:
+							if (eventTeamBased && player.isInGroup2()) {
+								if (player.getPlayerGroup2().getLeaderObject() == player) {
+									if (registerForEvent(player.getPlayerGroup2())) {
+										for (Player pl : player.getPlayerGroup2().getMembers()) {
+											PacketSendUtility.sendSys3Message(pl, "\uE05C",
+												"Your group is now registered for event.");
+										}
+									} else {
+										PacketSendUtility.sendSys3Message(player, "\uE05C", "Failed to register your group!!!");
+									}
+								} else {
+									PacketSendUtility.sendSys3Message(player, "\uE05C",
+										"You must be the leader of your group for registration!!!");
+								}
+							}
+							break;
 					}
 					break;
-				case 2:
-					if (eventTeamBased && player.isInGroup2()) {
-						if (player.getPlayerGroup2().getLeaderObject() == player) {
-							if (registerForEvent(player.getPlayerGroup2())) {
-								for (Player pl : player.getPlayerGroup2().getMembers()) {
-									PacketSendUtility.sendSys3Message(pl, "\uE05C",
-											"Your group is now registered for event.");
-								}
-							} else {
-								PacketSendUtility.sendSys3Message(player, "\uE05C", "Failed to register your group!!!");
-							}
-						} else {
-							PacketSendUtility.sendSys3Message(player, "\uE05C",
-									"You must be the leader of your group for registration!!!");
+				case 101:
+					if (isInQueue(player)) {
+						unregisterFromQueue(player);
+						PacketSendUtility.sendSys3Message(player, "\uE05C",
+							"You must cancel your registration for the event!!!");
+					} else if (player.isInGroup2() && isInQueue(player.getPlayerGroup2())) {
+						unregisterFromQueue(player.getPlayerGroup2());
+						for (Player pl : player.getPlayerGroup2().getMembers()) {
+							PacketSendUtility.sendSys3Message(pl, "\uE05C",
+								"Your group to withdraw its registration for the event!!!");
 						}
 					}
 					break;
-				}
-				break;
-			case 101:
-				if (isInQueue(player)) {
-					unregisterFromQueue(player);
-					PacketSendUtility.sendSys3Message(player, "\uE05C",
-							"You must cancel your registration for the event!!!");
-				} else if (player.isInGroup2() && isInQueue(player.getPlayerGroup2())) {
-					unregisterFromQueue(player.getPlayerGroup2());
-					for (Player pl : player.getPlayerGroup2().getMembers()) {
-						PacketSendUtility.sendSys3Message(pl, "\uE05C",
-								"Your group to withdraw its registration for the event!!!");
-					}
-				}
-				break;
-			case 104:
-				PacketSendUtility.sendPacket(player, new SM_AUTO_GROUP(300350000, eventTeamBased, 903479));
-				break;
+				case 104:
+					PacketSendUtility.sendPacket(player, new SM_AUTO_GROUP(300350000, eventTeamBased, 903479));
+					break;
 			}
 		} else if (isNormalReady()) {
 			switch (windowId) {
-			case 100:
-				switch (dialogId) {
-				case 0:
-				case 1:
-					if (registerForNormal(player)) {
-						PacketSendUtility.sendSys3Message(player, "\uE05C",
-								"You are now registered for the next battlefield!!!");
-					} else {
-						PacketSendUtility.sendSys3Message(player, "\uE05C",
-								"Failed to register!!! If you are in a group, you have already registered.");
+				case 100:
+					switch (dialogId) {
+						case 0:
+						case 1:
+							if (registerForNormal(player)) {
+								PacketSendUtility.sendSys3Message(player, "\uE05C",
+									"You are now registered for the next battlefield!!!");
+							} else {
+								PacketSendUtility.sendSys3Message(player, "\uE05C",
+									"Failed to register!!! If you are in a group, you have already registered.");
+							}
+							break;
+						case 2:
+							if (normalTeamBased && player.isInGroup2()) {
+								if (player.getPlayerGroup2().getLeaderObject() == player) {
+									if (registerForNormal(player.getPlayerGroup2())) {
+										for (Player pl : player.getPlayerGroup2().getMembers()) {
+											PacketSendUtility.sendSys3Message(pl, "\uE05C",
+												"Your group is now registered for battlefield.");
+										}
+									} else {
+										PacketSendUtility.sendSys3Message(player, "\uE05C", "Failed to register your group!!!");
+									}
+								} else {
+									PacketSendUtility.sendSys3Message(player, "\uE05C",
+										"You must be the leader of your group for registration!!!");
+								}
+							}
+							break;
 					}
 					break;
-				case 2:
-					if (normalTeamBased && player.isInGroup2()) {
-						if (player.getPlayerGroup2().getLeaderObject() == player) {
-							if (registerForNormal(player.getPlayerGroup2())) {
-								for (Player pl : player.getPlayerGroup2().getMembers()) {
-									PacketSendUtility.sendSys3Message(pl, "\uE05C",
-											"Your group is now registered for battlefield.");
-								}
-							} else {
-								PacketSendUtility.sendSys3Message(player, "\uE05C", "Failed to register your group!!!");
-							}
-						} else {
-							PacketSendUtility.sendSys3Message(player, "\uE05C",
-									"You must be the leader of your group for registration!!!");
+				case 101:
+					if (isInQueue(player)) {
+						unregisterFromQueue(player);
+						PacketSendUtility.sendSys3Message(player, "\uE05C",
+							"You must cancel your registration for the battlefield!");
+					} else if (player.isInGroup2() && isInQueue(player.getPlayerGroup2())) {
+						unregisterFromQueue(player.getPlayerGroup2());
+						for (Player pl : player.getPlayerGroup2().getMembers()) {
+							PacketSendUtility.sendSys3Message(pl, "\uE05C",
+								"Your group to withdraw its registration for the battlefield!!!");
 						}
 					}
 					break;
-				}
-				break;
-			case 101:
-				if (isInQueue(player)) {
-					unregisterFromQueue(player);
-					PacketSendUtility.sendSys3Message(player, "\uE05C",
-							"You must cancel your registration for the battlefield!");
-				} else if (player.isInGroup2() && isInQueue(player.getPlayerGroup2())) {
-					unregisterFromQueue(player.getPlayerGroup2());
-					for (Player pl : player.getPlayerGroup2().getMembers()) {
-						PacketSendUtility.sendSys3Message(pl, "\uE05C",
-								"Your group to withdraw its registration for the battlefield!!!");
-					}
-				}
-				break;
-			case 104:
-				PacketSendUtility.sendPacket(player, new SM_AUTO_GROUP(301550000, normalTeamBased, 903479));
-				break;
+				case 104:
+					PacketSendUtility.sendPacket(player, new SM_AUTO_GROUP(301550000, normalTeamBased, 903479));
+					break;
 			}
 		}
 	}
@@ -952,6 +960,7 @@ public class LadderService {
 	/**
 	 * 玩家登录时同步普通战场报名 UI 状态。
 	 * Syncs normal battleground registration UI state on player login.
+	 *
 	 * @param player 玩家 / player
 	 */
 	public void onPlayerLogin(Player player) {
@@ -963,6 +972,7 @@ public class LadderService {
 	/**
 	 * 按起始职业交叉排序参与者，尽量均衡职业分布。
 	 * Interleaves participants by starting class to balance class distribution.
+	 *
 	 * @param participants 参与者 objectId 列表 / participant objectId list
 	 */
 	private void SortParticipantList(List<Integer> participants) {
@@ -978,73 +988,69 @@ public class LadderService {
 				continue;
 			}
 			switch (PlayerClass.getStartingClassFor(pl.getPlayerClass())) {
-			case WARRIOR:
-				warrior.add(objectId);
-				break;
-			case SCOUT:
-				scout.add(objectId);
-				break;
-			case MAGE:
-				mage.add(objectId);
-				break;
-			case PRIEST:
-				cleric.add(objectId);
-				break;
-			case TECHNIST:
-				technist.add(objectId);
-				break;
-			case MUSE:
-				muse.add(objectId);
-				break;
+				case WARRIOR:
+					warrior.add(objectId);
+					break;
+				case SCOUT:
+					scout.add(objectId);
+					break;
+				case MAGE:
+					mage.add(objectId);
+					break;
+				case PRIEST:
+					cleric.add(objectId);
+					break;
+				case TECHNIST:
+					technist.add(objectId);
+					break;
+				case MUSE:
+					muse.add(objectId);
+					break;
 			}
 		}
-		participants = new ArrayList<>();
+		List<Integer> sorted = new ArrayList<>(participants.size());
 		while (!warrior.isEmpty() && !scout.isEmpty() && !mage.isEmpty() && !cleric.isEmpty() && !technist.isEmpty()
-				&& !muse.isEmpty()) {
+			&& !muse.isEmpty()) {
 			int total = warrior.size() + scout.size() + mage.size() + cleric.size() + technist.size() + muse.size();
-			float ratioW = (warrior.size() * 100) / total;
-			float ratioS = (scout.size() * 100) / total;
-			float ratioM = (mage.size() * 100) / total;
-			float ratioP = (cleric.size() * 100) / total;
-			float ratioT = (technist.size() * 100) / total;
-			float ratioMu = (muse.size() * 100) / total;
-			if (!warrior.isEmpty()) {
-				participants.add(warrior.remove(0));
-			}
-			if (!scout.isEmpty()) {
-				participants.add(scout.remove(0));
-			}
-			if (!mage.isEmpty()) {
-				participants.add(mage.remove(0));
-			}
-			if (!cleric.isEmpty()) {
-				participants.add(cleric.remove(0));
-			}
-			if (!technist.isEmpty()) {
-				participants.add(technist.remove(0));
-			}
-			if (!muse.isEmpty()) {
-				participants.add(muse.remove(0));
-			}
+			float ratioW = (warrior.size() * 100.0f) / total;
+			float ratioS = (scout.size() * 100.0f) / total;
+			float ratioM = (mage.size() * 100.0f) / total;
+			float ratioP = (cleric.size() * 100.0f) / total;
+			float ratioT = (technist.size() * 100.0f) / total;
+			float ratioMu = (muse.size() * 100.0f) / total;
+			sorted.add(warrior.removeFirst());
+			sorted.add(scout.removeFirst());
+			sorted.add(mage.removeFirst());
+			sorted.add(cleric.removeFirst());
+			sorted.add(technist.removeFirst());
+			sorted.add(muse.removeFirst());
 			if (!warrior.isEmpty() && ratioW > 30) {
-				participants.add(warrior.remove(0));
+				sorted.add(warrior.removeFirst());
 			}
 			if (!scout.isEmpty() && ratioS > 30) {
-				participants.add(scout.remove(0));
+				sorted.add(scout.removeFirst());
 			}
 			if (!mage.isEmpty() && ratioM > 30) {
-				participants.add(mage.remove(0));
+				sorted.add(mage.removeFirst());
 			}
 			if (!cleric.isEmpty() && ratioP > 30) {
-				participants.add(cleric.remove(0));
+				sorted.add(cleric.removeFirst());
 			}
 			if (!technist.isEmpty() && ratioT > 30) {
-				participants.add(technist.remove(0));
+				sorted.add(technist.removeFirst());
 			}
 			if (!muse.isEmpty() && ratioMu > 30) {
-				participants.add(muse.remove(0));
+				sorted.add(muse.removeFirst());
 			}
 		}
+		sorted.addAll(warrior);
+		sorted.addAll(scout);
+		sorted.addAll(mage);
+		sorted.addAll(cleric);
+		sorted.addAll(technist);
+		sorted.addAll(muse);
+		participants.clear();
+		participants.addAll(sorted);
 	}
 
 	/**
@@ -1054,9 +1060,7 @@ public class LadderService {
 	 * clone
 	 */
 	private List<Player> cloneGroup(List<Player> group) {
-		List<Player> clone = new ArrayList<>();
-		clone.addAll(group);
-		return clone;
+		return new ArrayList<>(group);
 	}
 
 	/**
@@ -1064,6 +1068,7 @@ public class LadderService {
 	 * Sends a (optionally delayed) system announcement to a player with the default sender icon.
 	 * 玩家 / player
 	 * message
+	 *
 	 * @param delay 延迟毫秒 / delay in ms
 	 */
 	private void scheduleAnnouncement(final Player player, final String msg, int delay) {
@@ -1074,9 +1079,10 @@ public class LadderService {
 	 * 向玩家发送（可延迟）系统公告。
 	 * Sends a (optionally delayed) system announcement to a player.
 	 * 玩家 / player
+	 *
 	 * @param sender 发送者图标 / sender icon
-	 * message
-	 * @param delay 延迟毫秒 / delay in ms
+	 *               message
+	 * @param delay  延迟毫秒 / delay in ms
 	 */
 	private void scheduleAnnouncement(final Player player, final String sender, final String msg, int delay) {
 		if (delay > 0) {
@@ -1101,11 +1107,12 @@ public class LadderService {
 	 * <p>双源静态兜底已退役：缺少 provider 时直接 fail-fast，避免在容器之外静默创建第二套实例。
 	 * The legacy static fallback is retired: a missing provider now fails fast instead of silently
 	 * creating a second instance outside the container.</p>
+	 *
 	 * @return 由 Spring 提供的实例 / the Spring-provided instance
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean /
-	 *         when no provider or bean is available
+	 *                               when no provider or bean is available
 	 */
-	public static final LadderService getInstance() {
+	public static LadderService getInstance() {
 		ObjectProvider<LadderService> provider = instanceProvider;
 		LadderService provided = provider == null ? null : provider.getIfAvailable();
 		if (provided == null) {
