@@ -18,13 +18,8 @@ import java.util.Map;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import org.apache.commons.lang3.StringUtils;
-import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.configs.main.HousingConfig;
 import com.aionemu.gameserver.controllers.HouseController;
-import com.aionemu.gameserver.dao.HouseScriptsDAO;
-import com.aionemu.gameserver.dao.HousesDAO;
-import com.aionemu.gameserver.dao.PlayerDAO;
-import com.aionemu.gameserver.dao.PlayerRegisteredItemsDAO;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.TribeClass;
@@ -46,6 +41,7 @@ import com.aionemu.gameserver.model.templates.spawns.HouseSpawn;
 import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
 import com.aionemu.gameserver.model.templates.spawns.SpawnType;
 import com.aionemu.gameserver.model.templates.zone.ZoneClassName;
+import com.aionemu.gameserver.services.player.PlayerService;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.spawnengine.VisibleObjectSpawner;
 import com.aionemu.gameserver.world.WorldPosition;
@@ -181,9 +177,9 @@ public class House extends VisibleObject {
 	 * 生成。 / Spawn.
 	 */
 	public synchronized void spawn(int instanceId) {
-		playerScripts = DAOManager.getDAO(HouseScriptsDAO.class).getPlayerScripts(getObjectId());
+		playerScripts = PlayerService.daos().houseScriptsDAO().getPlayerScripts(getObjectId());
 		if (playerObjectId > 0 && status == HouseStatus.ACTIVE || status == HouseStatus.SELL_WAIT) {
-			DAOManager.getDAO(PlayerRegisteredItemsDAO.class).loadRegistry(playerObjectId);
+			PlayerService.daos().playerRegisteredItemsDAO().loadRegistry(playerObjectId);
 		}
 		fixBuildingStates();
 		if (getPosition() == null || !getPosition().isSpawned()) {
@@ -219,7 +215,7 @@ public class House extends VisibleObject {
 		if (playerObjectId != 0) {
 			ArrayList<Integer> players = new ArrayList<>(1);
 			players.add(playerObjectId);
-			Map<Integer, String> playerNames = DAOManager.getDAO(PlayerDAO.class).getPlayerNames(players);
+			Map<Integer, String> playerNames = PlayerService.daos().playerDAO().getPlayerNames(players);
 			if (playerNames.containsKey(playerObjectId)) {
 				masterName = playerNames.get(playerObjectId);
 			} else {
@@ -459,7 +455,7 @@ public class House extends VisibleObject {
 		getRegistry().despawnObjects();
 		if (this.getBuilding().getType() == BuildingType.PERSONAL_INS) {
 			GameHousingServices.housingService().removeStudio(playerObjectId);
-			DAOManager.getDAO(HousesDAO.class).deleteHouse(playerObjectId);
+			PlayerService.daos().housesDAO().deleteHouse(playerObjectId);
 			return true;
 		}
 		houseRegistry = null;
@@ -495,7 +491,7 @@ public class House extends VisibleObject {
 		houseRegistry = null;
 		getRegistry();
 		if (playerObjectId != 0) {
-			DAOManager.getDAO(PlayerRegisteredItemsDAO.class).loadRegistry(playerObjectId);
+			PlayerService.daos().playerRegisteredItemsDAO().loadRegistry(playerObjectId);
 		}
 	}
 
@@ -525,7 +521,7 @@ public class House extends VisibleObject {
 	 */
 	public synchronized void save() {
 		if (getPersistentState() != PersistentState.UPDATED) {
-			DAOManager.getDAO(HousesDAO.class).storeHouse(this);
+			PlayerService.daos().housesDAO().storeHouse(this);
 		}
 		if (houseRegistry != null) {
 			this.houseRegistry.save();

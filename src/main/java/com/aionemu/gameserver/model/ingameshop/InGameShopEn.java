@@ -11,7 +11,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -22,7 +21,6 @@ import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.configs.ingameshop.InGameShopProperty;
 import com.aionemu.gameserver.configs.main.InGameShopConfig;
 import com.aionemu.gameserver.dao.InGameShopDAO;
-import com.aionemu.gameserver.dao.PlayerDAO;
 import com.aionemu.gameserver.model.gameobjects.LetterType;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.gameobjects.player.PlayerCommonData;
@@ -32,7 +30,9 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_TOLL_INFO;
 import com.aionemu.gameserver.network.loginserver.serverpackets.SM_PREMIUM_CONTROL;
 import com.aionemu.gameserver.services.item.ItemService;
+import com.aionemu.gameserver.services.player.PlayerService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import lombok.NonNull;
 
 /**
  * 游戏内商城引擎：加载商品、处理购买请求并与登录服点数同步。
@@ -49,7 +49,7 @@ public class InGameShopEn {
     @Setter
     private static volatile ObjectProvider<InGameShopEn> instanceProvider;
 	private volatile Map<Byte, List<IGItem>> items = Collections.emptyMap();
-	private InGameShopDAO dao;
+	private final InGameShopDAO dao;
 	private volatile InGameShopProperty iGProperty;
 	private int lastRequestId = 0;
 	private final List<IGRequest> activeRequests = new ArrayList<>();
@@ -77,8 +77,37 @@ public class InGameShopEn {
 		return provided;
 	}
 
-    public InGameShopEn() {
+	/**
+	 * 使用指定的游戏内商城 DAO 构造引擎。
+	 * Constructs the engine with the given in-game-shop DAO.
+	 * @param dao 游戏内商城 DAO / in-game-shop DAO
+	 */
+	public InGameShopEn(@NonNull InGameShopDAO dao) {
+		this.dao = dao;
 		reload();
+	}
+
+	/**
+	 * 构造引擎：DAOManager 已初始化时优先解析 Spring Bean，否则退回实现类无参构造。
+	 * Constructs the engine: resolves the Spring bean when DAOManager is initialized, else falls back to the no-arg impl constructor.
+	 */
+	public InGameShopEn() {
+		this(safeDao());
+	}
+
+	/**
+	 * DAO 解析兜底：容器未就绪（离线/单测）时退回实现类无参构造。
+	 * DAO resolution fallback: falls back to the no-arg impl constructor when the container is not ready (offline/unit tests).
+	 */
+	private static InGameShopDAO safeDao() {
+		if (DAOManager.isInitialized()) {
+			try {
+				return DAOManager.getDAO(InGameShopDAO.class);
+			} catch (Exception e) {
+				log.debug("InGameShopDAO bean resolution failed, falling back to the no-arg impl constructor", e);
+			}
+		}
+		return new com.aionemu.gameserver.dao.impl.InGameShopDAO();
 	}
 
 	/** 获取商城属性配置。 / Returns the igs property. */
@@ -93,9 +122,7 @@ public class InGameShopEn {
 			return;
 		}
 		InGameShopProperty reloadedProperty = InGameShopProperty.load();
-		InGameShopDAO reloadedDao = DAOManager.getDAO(InGameShopDAO.class);
-		Map<Byte, List<IGItem>> reloadedItems = reloadedDao.loadInGameShopItems();
-		dao = reloadedDao;
+		Map<Byte, List<IGItem>> reloadedItems = dao.loadInGameShopItems();
 		iGProperty = reloadedProperty;
 		items = reloadedItems;
 		log.info(I18n.get("log.1e48e4bddea9", items.size()));
@@ -124,7 +151,7 @@ public class InGameShopEn {
 	/** 返回 top sales / Returns the top sales */
 	public List<Integer> getTopSales(int subCategory, byte category) {
 		byte max = 6;
-		TreeMap<Integer, Integer> map = new TreeMap<>(new DescFilter());
+		TreeMap<Integer, Integer> map = new TreeMap<>(Comparator.reverseOrder());
 		if (!items.containsKey(category)) {
 			return new ArrayList<>();
 		}
@@ -134,16 +161,13 @@ public class InGameShopEn {
 			}
 		List<Integer> top = new ArrayList<>();
 		byte cnt = 0;
-		for (Iterator<Integer> i = map.values().iterator(); i.hasNext();) {
-			int objId = i.next();
+		for (int objId : map.values()) {
 			if (cnt > max) {
 				break;
 			}
 			top.add(objId);
 			cnt++;
 		}
-
-		map.clear();
 		return top;
 	}
 
@@ -206,12 +230,12 @@ public class InGameShopEn {
 			return;
 		}
 
-		if (!DAOManager.getDAO(PlayerDAO.class).isNameUsed(receiver)) {
+		if (!PlayerService.daos().playerDAO().isNameUsed(receiver)) {
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_INGAMESHOP_NO_USER_TO_GIFT);
 			return;
 		}
 
-		PlayerCommonData recipientCommonData = DAOManager.getDAO(PlayerDAO.class).loadPlayerCommonDataByName(receiver);
+		PlayerCommonData recipientCommonData = PlayerService.daos().playerDAO().loadPlayerCommonDataByName(receiver);
 		if (recipientCommonData.getMailboxLetters() >= 100) {
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MAIL_MSG_RECIPIENT_MAILBOX_FULL(recipientCommonData.getName()));
 			return;
@@ -299,17 +323,6 @@ public class InGameShopEn {
 		}
 
 		activeRequests.remove(foundRequest);
-	}
-
-	class DescFilter implements Comparator<Object> {
-		DescFilter() {
-		}
-		/** 比较 / compare. */
-		public int compare(Object o1, Object o2) {
-			Integer i1 = (Integer) o1;
-			Integer i2 = (Integer) o2;
-			return -i1.compareTo(i2);
-		}
 	}
 
 }

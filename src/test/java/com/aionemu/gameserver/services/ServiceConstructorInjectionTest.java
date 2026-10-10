@@ -740,7 +740,11 @@ class ServiceConstructorInjectionTest {
 			new com.aionemu.gameserver.dao.impl.HouseObjectCooldownsDAO(client),
 			new com.aionemu.gameserver.dao.impl.PlayerBindPointDAO(client),
 			new com.aionemu.gameserver.dao.impl.PlayerLifeStatsDAO(client),
-			new com.aionemu.gameserver.dao.impl.PlayerEmotionListDAO(client));
+			new com.aionemu.gameserver.dao.impl.PlayerEmotionListDAO(client),
+			new com.aionemu.gameserver.dao.impl.PlayerPetsDAO(client),
+			new com.aionemu.gameserver.dao.impl.PlayerMinionsDAO(client),
+			new com.aionemu.gameserver.dao.impl.PlayerShugoSweepDAO(client),
+			new com.aionemu.gameserver.dao.impl.HouseScriptsDAO(client));
 		PlayerService.bindDaos(daos);
 		assertSame(daos, PlayerService.daos());
 		assertNotNull(daos.playerDAO());
@@ -949,6 +953,7 @@ class ServiceConstructorInjectionTest {
 			null, null, null, null, null, null, null, null, null, null,
 			null, null, null, null, null, null, null, null, null, null,
 			null, null, null, null, null, null, null, null, null, null,
-			null, null, null, null, null, null, null, null, null, null));
+			null, null, null, null, null, null, null, null, null, null,
+			null, null, null, null));
 	}
 }

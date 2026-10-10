@@ -18,6 +18,7 @@ import org.springframework.core.env.StandardEnvironment;
 
 import com.aionemu.commons.configuration.ConfigSourceResolverHolder;
 import com.aionemu.commons.configuration.ConfigurableProcessor;
+import com.aionemu.gameserver.configs.main.EnchantsConfig;
 import com.aionemu.gameserver.configs.main.ThreadConfig;
 import com.aionemu.testutil.ConfigSnapshot;
 
@@ -98,6 +99,43 @@ class LegacyConfigOverridePrecedenceTest {
 		try {
 			ConfigurableProcessor.process(ThreadConfig.class, propertiesOf("gameserver.thread.basepoolsize", "5"));
 			assertEquals(5, ThreadConfig.BASE_THREAD_POOL_SIZE);
+		} finally {
+			snapshot.restore();
+		}
+	}
+
+	/**
+	 * 文件键被规范化为 `.value` 子键后，遗留装配必须沿该子键取值，
+	 * 不得让 @Property 的 defaultValue 覆盖 Binder 已绑定的文件值。
+	 * After a file key is normalized into a `.value` sub-key, the legacy assembly must read through
+	 * that sub-key instead of letting the @Property defaultValue overwrite the bound file value.
+	 */
+	@Test
+	void legacyAssemblyReadsNormalizedValueSubKey() throws Exception {
+		Path configDir = tempDir.resolve("config");
+		Files.createDirectories(configDir.resolve("main"));
+		Files.writeString(configDir.resolve("main/enchant.properties"), """
+			gameserver.enchant.item.value=90
+			""");
+
+		StandardEnvironment environment = new StandardEnvironment();
+		environment.getPropertySources().addFirst(new MapPropertySource(
+			"commandLine",
+			Map.of("aion.config.dir", configDir.toString())
+		));
+		new AionLegacyPropertySourceEnvironmentPostProcessor()
+			.postProcessEnvironment(environment, new SpringApplication());
+		new BootConfigSourceResolver(environment).publishEnvironmentResolver();
+
+		ConfigSnapshot snapshot = ConfigSnapshot.of(EnchantsConfig.class, "ENCHANT_ITEM");
+		try {
+			// 生产形态：文件只带 `.value` 规范化键，裸键在 Environment 与遗留 Properties 中均缺失。
+			// Production shape: the file only carries the normalized `.value` key, so the bare key is
+			// missing from both the Environment and the legacy Properties.
+			ConfigurableProcessor.process(EnchantsConfig.class, new java.util.Properties());
+
+			assertEquals(90f, EnchantsConfig.ENCHANT_ITEM,
+				"legacy assembly must read the normalized .value sub-key instead of falling back to the default");
 		} finally {
 			snapshot.restore();
 		}

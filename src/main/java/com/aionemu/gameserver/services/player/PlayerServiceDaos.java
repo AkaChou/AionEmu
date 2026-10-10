@@ -9,6 +9,7 @@ import com.aionemu.gameserver.dao.EventItemsDAO;
 import com.aionemu.gameserver.dao.F2pDAO;
 import com.aionemu.gameserver.dao.FriendListDAO;
 import com.aionemu.gameserver.dao.HouseObjectCooldownsDAO;
+import com.aionemu.gameserver.dao.HouseScriptsDAO;
 import com.aionemu.gameserver.dao.HousesDAO;
 import com.aionemu.gameserver.dao.InventoryDAO;
 import com.aionemu.gameserver.dao.ItemCooldownsDAO;
@@ -29,12 +30,15 @@ import com.aionemu.gameserver.dao.PlayerEventsWindowDAO;
 import com.aionemu.gameserver.dao.PlayerLifeStatsDAO;
 import com.aionemu.gameserver.dao.PlayerLunaShopDAO;
 import com.aionemu.gameserver.dao.PlayerMacrossesDAO;
+import com.aionemu.gameserver.dao.PlayerMinionsDAO;
 import com.aionemu.gameserver.dao.PlayerNpcFactionsDAO;
+import com.aionemu.gameserver.dao.PlayerPetsDAO;
 import com.aionemu.gameserver.dao.PlayerPunishmentsDAO;
 import com.aionemu.gameserver.dao.PlayerQuestListDAO;
 import com.aionemu.gameserver.dao.PlayerRecipesDAO;
 import com.aionemu.gameserver.dao.PlayerRegisteredItemsDAO;
 import com.aionemu.gameserver.dao.PlayerSettingsDAO;
+import com.aionemu.gameserver.dao.PlayerShugoSweepDAO;
 import com.aionemu.gameserver.dao.PlayerSkillListDAO;
 import com.aionemu.gameserver.dao.PlayerSkillSkinListDAO;
 import com.aionemu.gameserver.dao.PlayerStigmasEquippedDAO;
@@ -45,9 +49,9 @@ import com.aionemu.gameserver.dao.PortalCooldownsDAO;
 
 /**
  * 玩家核心服务的持久层依赖聚合：不可变 record，由 Spring 配置类声明式构造器注入装配，
- * 并对全部 40 个 DAO 依赖执行及早失败判空，彻底取代 {@code DAOManager.getDAO} 静态查表。
+ * 并对全部 44 个 DAO 依赖执行及早失败判空，彻底取代 {@code DAOManager.getDAO} 静态查表。
  * Aggregated persistence dependencies of the core player service: an immutable record wired
- * declaratively via Spring constructor injection, with fail-fast validation of all 40 DAO
+ * declaratively via Spring constructor injection, with fail-fast validation of all 44 DAO
  * dependencies, fully replacing {@code DAOManager.getDAO} static table lookups.
  */
 public record PlayerServiceDaos(
@@ -90,7 +94,11 @@ public record PlayerServiceDaos(
 		HouseObjectCooldownsDAO houseObjectCooldownsDAO,
 		PlayerBindPointDAO playerBindPointDAO,
 		PlayerLifeStatsDAO playerLifeStatsDAO,
-		PlayerEmotionListDAO playerEmotionListDAO) {
+		PlayerEmotionListDAO playerEmotionListDAO,
+		PlayerPetsDAO playerPetsDAO,
+		PlayerMinionsDAO playerMinionsDAO,
+		PlayerShugoSweepDAO playerShugoSweepDAO,
+		HouseScriptsDAO houseScriptsDAO) {
 
 	/**
 	 * 紧凑构造器：对全部持久层依赖执行及早失败判空。
@@ -137,5 +145,9 @@ public record PlayerServiceDaos(
 		Objects.requireNonNull(playerBindPointDAO, "playerBindPointDAO must not be null");
 		Objects.requireNonNull(playerLifeStatsDAO, "playerLifeStatsDAO must not be null");
 		Objects.requireNonNull(playerEmotionListDAO, "playerEmotionListDAO must not be null");
+		Objects.requireNonNull(playerPetsDAO, "playerPetsDAO must not be null");
+		Objects.requireNonNull(playerMinionsDAO, "playerMinionsDAO must not be null");
+		Objects.requireNonNull(playerShugoSweepDAO, "playerShugoSweepDAO must not be null");
+		Objects.requireNonNull(houseScriptsDAO, "houseScriptsDAO must not be null");
 	}
 }

@@ -6,10 +6,9 @@ import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.gameserver.dao.PlayerCreativityPointsDAO;
 import com.aionemu.gameserver.model.gameobjects.PersistentState;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
+import com.aionemu.gameserver.services.player.PlayerService;
 
 /**
  * 玩家创造点列表，用于创造点相关逻辑。
@@ -79,7 +78,7 @@ public final class PlayerCPList {
 
 	private synchronized boolean addPoint(Player player, int slot, int point, PersistentState state) {
 		entry.put(slot, new PlayerCPEntry(slot, point, state));
-		DAOManager.getDAO(PlayerCreativityPointsDAO.class).storeCP(player.getObjectId(), slot, point);
+		PlayerService.daos().playerCreativityPointsDAO().storeCP(player.getObjectId(), slot, point);
 		return true;
 	}
 
@@ -89,7 +88,7 @@ public final class PlayerCPList {
 		if (entries != null) {
 			entries.setPersistentState(PersistentState.DELETED);
 			entry.remove(slot);
-			DAOManager.getDAO(PlayerCreativityPointsDAO.class).deleteCP(player.getObjectId(), slot);
+			PlayerService.daos().playerCreativityPointsDAO().deleteCP(player.getObjectId(), slot);
 		}
 		return entry != null;
 	}

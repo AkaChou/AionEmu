@@ -6,13 +6,12 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.gameserver.dao.PlayerSkillSkinListDAO;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.templates.SkillSkinTemplate;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SKILL_ANIMATION;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
+import com.aionemu.gameserver.services.player.PlayerService;
 import com.aionemu.gameserver.skillengine.model.SkillTemplate;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import lombok.Getter;
@@ -65,7 +64,7 @@ public class SkillSkinList {
 				if (time != 0) {
 					GameTaskManagerServices.expireTimerTask().addTask(skillSkin, owner);
 				}
-				DAOManager.getDAO(PlayerSkillSkinListDAO.class).storeSkillSkins(owner, skillSkin);
+				PlayerService.daos().playerSkillSkinListDAO().storeSkillSkins(owner, skillSkin);
 			} else {
 				PacketSendUtility.sendPacket(owner, SM_SYSTEM_MESSAGE.STR_MSG_COSTUME_SKILL_ALREADY_HAS_COSTUME);
 				return false;
@@ -86,13 +85,13 @@ public class SkillSkinList {
 		}
 		skillskins.remove(skinId);
 		PacketSendUtility.sendPacket(owner, new SM_SKILL_ANIMATION(owner));
-		DAOManager.getDAO(PlayerSkillSkinListDAO.class).removeSkillSkin(owner.getObjectId(), skinId);
+		PlayerService.daos().playerSkillSkinListDAO().removeSkillSkin(owner.getObjectId(), skinId);
 	}
 
 	/** 设置 active / Sets the active */
 	public void setActive(int skinId) {
-		DAOManager.getDAO(PlayerSkillSkinListDAO.class).setActive(owner.getObjectId(), skinId);
-		owner.setSkillSkinList(DAOManager.getDAO(PlayerSkillSkinListDAO.class).loadSkillSkinList(owner.getObjectId()));
+		PlayerService.daos().playerSkillSkinListDAO().setActive(owner.getObjectId(), skinId);
+		owner.setSkillSkinList(PlayerService.daos().playerSkillSkinListDAO().loadSkillSkinList(owner.getObjectId()));
 		PacketSendUtility.sendPacket(owner, new SM_SKILL_ANIMATION(owner));
 	}
 
@@ -111,8 +110,8 @@ public class SkillSkinList {
 				}
 			}
 		}
-		DAOManager.getDAO(PlayerSkillSkinListDAO.class).setDeactive(owner.getObjectId(), skinIdToremove);
-		owner.setSkillSkinList(DAOManager.getDAO(PlayerSkillSkinListDAO.class).loadSkillSkinList(owner.getObjectId()));
+		PlayerService.daos().playerSkillSkinListDAO().setDeactive(owner.getObjectId(), skinIdToremove);
+		owner.setSkillSkinList(PlayerService.daos().playerSkillSkinListDAO().loadSkillSkinList(owner.getObjectId()));
 		PacketSendUtility.sendPacket(owner, new SM_SKILL_ANIMATION(owner));
 	}
 

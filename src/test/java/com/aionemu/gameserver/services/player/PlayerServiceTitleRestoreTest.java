@@ -15,7 +15,7 @@ class PlayerServiceTitleRestoreTest {
 		int bonusTitleGuard = source.indexOf("if (player.getCommonData().getBonusTitleId() > 0)");
 		assertTrue(bonusTitleGuard >= 0, "Player loading must still restore stored bonus title stats.");
 
-		int lifeStatsLoad = source.indexOf("DAOManager.getDAO(PlayerLifeStatsDAO.class).loadPlayerLifeStat(player);",
+		int lifeStatsLoad = source.indexOf("daos().playerLifeStatsDAO().loadPlayerLifeStat(player);",
 				bonusTitleGuard);
 		assertTrue(lifeStatsLoad > bonusTitleGuard, "Bonus title restoration must run before life stats are loaded.");
 

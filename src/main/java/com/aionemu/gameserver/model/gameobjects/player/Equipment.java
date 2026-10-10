@@ -18,10 +18,8 @@ import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.controllers.observer.ActionObserver;
 import com.aionemu.gameserver.controllers.observer.ObserverType;
-import com.aionemu.gameserver.dao.InventoryDAO;
 import com.aionemu.gameserver.model.DescriptionId;
 import com.aionemu.gameserver.model.EmotionType;
 import com.aionemu.gameserver.model.Race;
@@ -51,6 +49,7 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_UPDATE_PLAYER_APPEAR
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.services.StigmaService;
 import com.aionemu.gameserver.services.item.ItemPacketService;
+import com.aionemu.gameserver.services.player.PlayerService;
 import com.aionemu.gameserver.services.item.ItemPacketService.ItemUpdateType;
 import com.aionemu.gameserver.skillengine.effect.WeaponDualEffect;
 import com.aionemu.gameserver.utils.PacketSendUtility;
@@ -1074,7 +1073,7 @@ public class Equipment {
 		if (equippedItem.getItemCount() == 0) {
 			equipment.remove(equippedItem.getEquipmentSlot());
 			PacketSendUtility.sendPacket(owner, new SM_DELETE_ITEM(equippedItem.getObjectId()));
-			DAOManager.getDAO(InventoryDAO.class).store(equippedItem, owner);
+			PlayerService.daos().inventoryDAO().store(equippedItem, owner);
 		}
 		ItemPacketService.updateItemAfterInfoChange(owner, equippedItem, ItemUpdateType.STATS_CHANGE);
 		setPersistentState(PersistentState.UPDATE_REQUIRED);

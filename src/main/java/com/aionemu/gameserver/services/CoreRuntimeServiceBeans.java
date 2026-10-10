@@ -3,6 +3,7 @@ package com.aionemu.gameserver.services;
 import com.aionemu.gameserver.lifecycle.GameRuntimeServiceBridge;
 import com.aionemu.gameserver.model.ingameshop.InGameShopEn;
 import com.aionemu.gameserver.model.siege.Influence;
+import com.aionemu.gameserver.model.templates.tasks.TaskFromDBHandler;
 import com.aionemu.gameserver.services.abyss.AbyssRankingCache;
 import com.aionemu.gameserver.services.drop.DropService;
 import com.aionemu.gameserver.services.events.BoostEventService;
@@ -38,7 +39,9 @@ import com.aionemu.gameserver.dao.F2pDAO;
 import com.aionemu.gameserver.dao.FriendListDAO;
 import com.aionemu.gameserver.dao.GuideDAO;
 import com.aionemu.gameserver.dao.HouseObjectCooldownsDAO;
+import com.aionemu.gameserver.dao.HouseScriptsDAO;
 import com.aionemu.gameserver.dao.HousesDAO;
+import com.aionemu.gameserver.dao.InGameShopDAO;
 import com.aionemu.gameserver.dao.InventoryDAO;
 import com.aionemu.gameserver.dao.ItemCooldownsDAO;
 import com.aionemu.gameserver.dao.ItemStoneListDAO;
@@ -62,10 +65,13 @@ import com.aionemu.gameserver.dao.PlayerEventsWindowDAO;
 import com.aionemu.gameserver.dao.PlayerLifeStatsDAO;
 import com.aionemu.gameserver.dao.PlayerLunaShopDAO;
 import com.aionemu.gameserver.dao.PlayerMacrossesDAO;
+import com.aionemu.gameserver.dao.PlayerMinionsDAO;
 import com.aionemu.gameserver.dao.PlayerNpcFactionsDAO;
 import com.aionemu.gameserver.dao.PlayerPasskeyDAO;
+import com.aionemu.gameserver.dao.PlayerPetsDAO;
 import com.aionemu.gameserver.dao.PlayerPunishmentsDAO;
 import com.aionemu.gameserver.dao.PlayerQuestListDAO;
+import com.aionemu.gameserver.dao.PlayerShugoSweepDAO;
 import com.aionemu.gameserver.dao.PlayerThievesListDAO;
 import com.aionemu.gameserver.dao.PlayerRecipesDAO;
 import com.aionemu.gameserver.dao.PlayerRegisteredItemsDAO;
@@ -81,6 +87,7 @@ import com.aionemu.gameserver.dao.PortalCooldownsDAO;
 import com.aionemu.gameserver.dao.RewardServiceDAO;
 import com.aionemu.gameserver.dao.SeasonRankingDAO;
 import com.aionemu.gameserver.dao.SurveyControllerDAO;
+import com.aionemu.gameserver.dao.TaskFromDBDAO;
 import com.aionemu.gameserver.dao.VeteranRewardsDAO;
 
 /**
@@ -219,9 +226,21 @@ public class CoreRuntimeServiceBeans {
         return new BoostEventService();
     }
 
+    /**
+     * 装配数据库任务管理器：注入任务 DAO 并顺带绑定至 {@link TaskFromDBHandler} 静态门面
+     * （反射创建的处理器无法构造注入，缺失时保留 safeDao 兜底，不触发整体降级）。
+     * Wires the DB task manager: injects the task DAO and also binds it to the {@link TaskFromDBHandler}
+     * static facade (reflectively created handlers cannot take constructor injection; keep the safeDao
+     * fallback when absent, without triggering a full offline fallback).
+     */
     @Bean
     @Lazy
-    public TaskManagerFromDB taskManagerFromDB() {
+    public TaskManagerFromDB taskManagerFromDB(ObjectProvider<TaskFromDBDAO> taskFromDBDaoProvider) {
+        TaskFromDBDAO taskFromDBDAO = taskFromDBDaoProvider.getIfAvailable();
+        if (taskFromDBDAO != null) {
+            TaskFromDBHandler.bindTaskFromDBDAO(taskFromDBDAO);
+            return new TaskManagerFromDB(taskFromDBDAO);
+        }
         return new TaskManagerFromDB();
     }
 
@@ -288,8 +307,9 @@ public class CoreRuntimeServiceBeans {
 
     @Bean
     @Lazy
-    public InGameShopEn inGameShopEn() {
-        return new InGameShopEn();
+    public InGameShopEn inGameShopEn(ObjectProvider<InGameShopDAO> inGameShopDaoProvider) {
+        InGameShopDAO inGameShopDAO = inGameShopDaoProvider.getIfAvailable();
+        return inGameShopDAO != null ? new InGameShopEn(inGameShopDAO) : new InGameShopEn();
     }
 
     @Bean
@@ -362,7 +382,11 @@ public class CoreRuntimeServiceBeans {
                 daoFrom(beanFactory, HouseObjectCooldownsDAO.class),
                 daoFrom(beanFactory, PlayerBindPointDAO.class),
                 daoFrom(beanFactory, PlayerLifeStatsDAO.class),
-                daoFrom(beanFactory, PlayerEmotionListDAO.class));
+                daoFrom(beanFactory, PlayerEmotionListDAO.class),
+                daoFrom(beanFactory, PlayerPetsDAO.class),
+                daoFrom(beanFactory, PlayerMinionsDAO.class),
+                daoFrom(beanFactory, PlayerShugoSweepDAO.class),
+                daoFrom(beanFactory, HouseScriptsDAO.class));
             PlayerService.bindDaos(daos);
             // 顺带绑定 item 域静态工具类的魔石列表 DAO / also bind the item-domain static utility's DAO
             ItemSocketService.bindItemStoneListDAO(daos.itemStoneListDAO());

@@ -2,9 +2,8 @@ package com.aionemu.gameserver.model.gameobjects.player.f2p;
 
 import com.aionemu.gameserver.lifecycle.GameTaskManagerServices;
 
-import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.gameserver.dao.F2pDAO;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
+import com.aionemu.gameserver.services.player.PlayerService;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -28,7 +27,7 @@ public class F2p {
 			if (f2pacc.getExpireTime() != 0) {
 				GameTaskManagerServices.expireTimerTask().addTask(f2pacc, owner);
 			}
-			DAOManager.getDAO(F2pDAO.class).storeF2p(owner.getObjectId().intValue(), f2pacc.getExpireTime());
+			PlayerService.daos().f2pDAO().storeF2p(owner.getObjectId(), f2pacc.getExpireTime());
 		}
 	}
 
@@ -40,7 +39,7 @@ public class F2p {
 			if (f2pacc.getExpireTime() != 0) {
 				GameTaskManagerServices.expireTimerTask().addTask(f2pacc, owner);
 			}
-			DAOManager.getDAO(F2pDAO.class).storeF2p(owner.getObjectId().intValue(), f2pacc.getExpireTime());
+			PlayerService.daos().f2pDAO().storeF2p(owner.getObjectId(), f2pacc.getExpireTime());
 		}
 	}
 
@@ -48,7 +47,7 @@ public class F2p {
 	public boolean remove() {
 		if (f2pAccount != null) {
 			f2pAccount.setActive(false);
-			DAOManager.getDAO(F2pDAO.class).deleteF2p(owner.getObjectId().intValue());
+			PlayerService.daos().f2pDAO().deleteF2p(owner.getObjectId());
 			owner.getEquipment().checkRankLimitItems();
 			return true;
 		}

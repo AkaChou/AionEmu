@@ -2,9 +2,8 @@ package com.aionemu.gameserver.model.gameobjects.player;
 
 import lombok.extern.slf4j.Slf4j;
 
-import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.gameserver.dao.PlayerLunaShopDAO;
 import com.aionemu.gameserver.model.gameobjects.PersistentState;
+import com.aionemu.gameserver.services.player.PlayerService;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.NoArgsConstructor;
@@ -35,7 +34,7 @@ public class PlayerLunaShop {
 
 	/** 设置 luna shop by obj id / Sets the luna shop by obj id */
 	public void setLunaShopByObjId(int playerId) {
-		DAOManager.getDAO(PlayerLunaShopDAO.class).setLunaShopByObjId(playerId, isFreeUnderpath(), isFreeFactory(),
+		PlayerService.daos().playerLunaShopDAO().setLunaShopByObjId(playerId, isFreeUnderpath(), isFreeFactory(),
 				isFreeChest());
 	}
 

@@ -2,9 +2,8 @@ package com.aionemu.gameserver.model.gameobjects.player;
 
 import lombok.extern.slf4j.Slf4j;
 
-import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.gameserver.dao.PlayerShugoSweepDAO;
 import com.aionemu.gameserver.model.gameobjects.PersistentState;
+import com.aionemu.gameserver.services.player.PlayerService;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.NoArgsConstructor;
@@ -38,7 +37,7 @@ public class PlayerSweep {
 
 	/** 设置 shugo sweep by obj id / Sets the shugo sweep by obj id */
 	public void setShugoSweepByObjId(int playerId) {
-		DAOManager.getDAO(PlayerShugoSweepDAO.class).setShugoSweepByObjId(playerId, getFreeDice(), getStep(),
+		PlayerService.daos().playerShugoSweepDAO().setShugoSweepByObjId(playerId, getFreeDice(), getStep(),
 				getBoardId());
 	}
 

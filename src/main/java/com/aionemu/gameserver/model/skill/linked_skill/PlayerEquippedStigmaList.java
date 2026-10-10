@@ -9,10 +9,9 @@ import java.util.Map;
 import java.util.IdentityHashMap;
 import java.util.Set;
 
-import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.gameserver.dao.PlayerStigmasEquippedDAO;
 import com.aionemu.gameserver.model.gameobjects.PersistentState;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
+import com.aionemu.gameserver.services.player.PlayerService;
 
 /**
  * 玩家 EquippedStigma 列表，用于技能相关逻辑。
@@ -64,7 +63,7 @@ public final class PlayerEquippedStigmaList {
 
 	private synchronized boolean addItem(Player player, int itemId, String itemName, PersistentState state) {
 		itemList.put(itemId, new EquippedStigmasEntry(itemId, itemName, state));
-		DAOManager.getDAO(PlayerStigmasEquippedDAO.class).storeItems(player);
+		PlayerService.daos().playerStigmasEquippedDAO().storeItems(player);
 		return true;
 	}
 
@@ -72,7 +71,7 @@ public final class PlayerEquippedStigmaList {
 	public boolean remove(Player player, int itemId) {
 		boolean removed = removeInTransaction(itemId);
 		if (player != null) {
-			DAOManager.getDAO(PlayerStigmasEquippedDAO.class).storeItems(player);
+			PlayerService.daos().playerStigmasEquippedDAO().storeItems(player);
 		}
 		return removed;
 	}

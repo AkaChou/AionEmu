@@ -15,15 +15,14 @@ import java.util.List;
 
 import org.springframework.beans.factory.ObjectProvider;
 
-import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.configs.main.HousingConfig;
-import com.aionemu.gameserver.dao.PlayerDAO;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.gameobjects.player.PlayerCommonData;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_HOUSE_ACQUIRE;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_HOUSE_OWNER_INFO;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.services.mail.MailFormatter;
+import com.aionemu.gameserver.services.player.PlayerService;
 import com.aionemu.gameserver.taskmanager.AbstractCronTask;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
@@ -167,7 +166,7 @@ public class MaintenanceTask extends AbstractCronTask {
 			PlayerCommonData pcd = null;
 			Player player = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(house.getOwnerId());
 			if (player == null) {
-				pcd = DAOManager.getDAO(PlayerDAO.class).loadPlayerCommonData(house.getOwnerId());
+				pcd = PlayerService.daos().playerDAO().loadPlayerCommonData(house.getOwnerId());
 			} else {
 				pcd = player.getCommonData();
 			}

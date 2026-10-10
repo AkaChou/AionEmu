@@ -11,7 +11,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.configs.administration.AdminConfig;
 import com.aionemu.gameserver.configs.main.AIConfig;
 import com.aionemu.gameserver.configs.main.MembershipConfig;
@@ -25,7 +24,6 @@ import com.aionemu.gameserver.controllers.effect.PlayerEffectController;
 import com.aionemu.gameserver.controllers.movement.PlayerMoveController;
 import com.aionemu.gameserver.controllers.observer.ActionObserver;
 import com.aionemu.gameserver.controllers.observer.ItemUseObserver;
-import com.aionemu.gameserver.dao.PlayerDAO;
 import com.aionemu.gameserver.dao.PlayerVarsDAO;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.dataholders.RepeatedAbnormalStatusImmuneData;
@@ -107,6 +105,7 @@ import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.services.conquerors.Conqueror;
 import com.aionemu.gameserver.services.events.bg.Battleground;
 import com.aionemu.gameserver.services.events.thievesguildservice.ThievesStatusList;
+import com.aionemu.gameserver.services.player.PlayerService;
 import com.aionemu.gameserver.services.protectors.Protector;
 import com.aionemu.gameserver.skillengine.condition.ChainCondition;
 import com.aionemu.gameserver.skillengine.effect.AbnormalState;
@@ -301,7 +300,7 @@ public class Player extends Creature {
 	public WorldPosition prevPos;
 	public long prevPosUT;
 	public byte prevMoveType;
-	private final PlayerVarsDAO daoVars = DAOManager.getDAO(PlayerVarsDAO.class);
+	private final PlayerVarsDAO daoVars = PlayerService.daos().playerVarsDAO();
 	private Map<String, Object> vars = new LinkedHashMap<>();
 	private boolean robot = false;
 	private int robotId = 0;
@@ -1790,7 +1789,7 @@ public class Player extends Creature {
 	public void clearJoinRequest() {
 		playerCommonData.setJoinRequestLegionId(0);
 		playerCommonData.setJoinRequestState(LegionJoinRequestState.NONE);
-		DAOManager.getDAO(PlayerDAO.class).clearJoinRequest(getObjectId());
+		PlayerService.daos().playerDAO().clearJoinRequest(getObjectId());
 	}
 
 	public void setLunaConsumePoint(int point) {

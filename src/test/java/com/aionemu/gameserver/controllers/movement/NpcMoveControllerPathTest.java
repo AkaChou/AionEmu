@@ -583,9 +583,9 @@ class NpcMoveControllerPathTest {
 
 	@Test
 	void stuckProgressUsesRouteDirectionAndRemainingDistance() {
-		assertTrue(NpcMoveController.hasMeaningfulProgress(0, 0, 0, 0.2f, 0, 0, 10, 0, 0, 10, 2, 500));
-		assertFalse(NpcMoveController.hasMeaningfulProgress(0, 0, 0, 0, 0.2f, 0, 10, 0, 0, 10, 2, 500));
-		assertTrue(NpcMoveController.hasMeaningfulProgress(0, 0, 0, 0, 0, 0.2f, 0, 0, 1, 1, 2, 500));
+		assertTrue(NpcMoveController.hasMeaningfulProgress(0, 0, 0.2f, 0, 0, 10, 0, 0, 10, 2, 500));
+		assertFalse(NpcMoveController.hasMeaningfulProgress(0, 0, 0, 0.2f, 0, 10, 0, 0, 10, 2, 500));
+		assertTrue(NpcMoveController.hasMeaningfulProgress(0, 0, 0, 0, 0.2f, 0, 0, 1, 1, 2, 500));
 	}
 
 	@Test
@@ -675,7 +675,7 @@ class NpcMoveControllerPathTest {
 		assertFalse(NpcMoveController.shouldReactToPathFailure(1_000, false, 11_000));
 		assertTrue(NpcMoveController.shouldReactToPathFailure(1_000, false, 11_001));
 		assertFalse(NpcMoveController.shouldReactToPathFailure(1_000, true, 12_000));
-		long definitive = NpcMoveController.pathFailureStartedAt(0, 6_000, true);
+		long definitive = NpcMoveController.pathFailureStartedAt(0, 6_000);
 		assertFalse(NpcMoveController.shouldReactToPathFailure(definitive, false, 16_000));
 		assertTrue(NpcMoveController.shouldReactToPathFailure(definitive, false, 16_001));
 	}

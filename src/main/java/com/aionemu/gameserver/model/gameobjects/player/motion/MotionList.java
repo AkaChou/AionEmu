@@ -9,10 +9,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.List;
 
-import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.gameserver.dao.MotionDAO;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_MOTION;
+import com.aionemu.gameserver.services.player.PlayerService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import lombok.RequiredArgsConstructor;
 
@@ -60,14 +59,14 @@ public class MotionList {
             Motion old = activeMotions.put(Motion.motionType.get(motion.getId()), motion);
             if (old != null) {
                 old.setActive(false);
-                DAOManager.getDAO(MotionDAO.class).updateMotion(owner.getObjectId(), old);
+                PlayerService.daos().motionDAO().updateMotion(owner.getObjectId(), old);
             }
         }
         if (persist) {
             if (motion.getExpireTime() != 0) {
                 GameTaskManagerServices.expireTimerTask().addTask(motion, owner);
             }
-            DAOManager.getDAO(MotionDAO.class).storeMotion(owner.getObjectId(), motion);
+            PlayerService.daos().motionDAO().storeMotion(owner.getObjectId(), motion);
         }
     }
 
@@ -76,7 +75,7 @@ public class MotionList {
         Motion motion = motions.remove(motionId);
         if (motion != null) {
             PacketSendUtility.sendPacket(owner, new SM_MOTION((short) motionId));
-            DAOManager.getDAO(MotionDAO.class).deleteMotion(owner.getObjectId(), motionId);
+            PlayerService.daos().motionDAO().deleteMotion(owner.getObjectId(), motionId);
             if (motion.isActive()) {
                 activeMotions.remove(Motion.motionType.get(motionId));
                 return true;
@@ -98,17 +97,17 @@ public class MotionList {
             Motion old = activeMotions.put(motionType, motion);
             if (old != null) {
                 old.setActive(false);
-                DAOManager.getDAO(MotionDAO.class).updateMotion(owner.getObjectId(), old);
+                PlayerService.daos().motionDAO().updateMotion(owner.getObjectId(), old);
             }
             motion.setActive(true);
-            DAOManager.getDAO(MotionDAO.class).updateMotion(owner.getObjectId(), motion);
+            PlayerService.daos().motionDAO().updateMotion(owner.getObjectId(), motion);
         } else if (activeMotions != null) {
             Motion old = activeMotions.remove(motionType);
             if (old == null) {
                 return;
             }
             old.setActive(false);
-            DAOManager.getDAO(MotionDAO.class).updateMotion(owner.getObjectId(), old);
+            PlayerService.daos().motionDAO().updateMotion(owner.getObjectId(), old);
         }
         PacketSendUtility.sendPacket(owner, new SM_MOTION((short) motionId, (byte) motionType));
         PacketSendUtility.broadcastPacket(owner, new SM_MOTION(owner.getObjectId(), activeMotions), true);
@@ -132,7 +131,7 @@ public class MotionList {
      * 从数据库加载动作。 / Load motions from database.
      */
     public void loadMotionsFromDatabase() {
-        List<Motion> loadedMotions = DAOManager.getDAO(MotionDAO.class).loadMotions(owner.getObjectId());
+        List<Motion> loadedMotions = PlayerService.daos().motionDAO().loadMotions(owner.getObjectId());
         if (loadedMotions != null) {
             for (Motion motion : loadedMotions) {
                 add(motion, false); // 不重复保存，仅加载 / Not saving again, just loading

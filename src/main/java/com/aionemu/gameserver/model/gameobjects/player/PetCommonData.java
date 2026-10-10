@@ -6,8 +6,6 @@ import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.sql.Timestamp;
 
-import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.gameserver.dao.PlayerPetsDAO;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.IExpirable;
 import com.aionemu.gameserver.model.templates.VisibleObjectTemplate;
@@ -15,6 +13,7 @@ import com.aionemu.gameserver.model.templates.pet.PetDopingBag;
 import com.aionemu.gameserver.model.templates.pet.PetFunctionType;
 import com.aionemu.gameserver.model.templates.pet.PetTemplate;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
+import com.aionemu.gameserver.services.player.PlayerService;
 import com.aionemu.gameserver.services.toypet.PetAdoptionService;
 import com.aionemu.gameserver.services.toypet.PetFeedProgress;
 import com.aionemu.gameserver.services.toypet.PetHungryLevel;
@@ -253,7 +252,7 @@ public class PetCommonData extends VisibleObjectTemplate implements IExpirable {
 	 * Save pet mood data
 	 */
 	public void savePetMoodData() {
-		DAOManager.getDAO(PlayerPetsDAO.class).savePetMoodData(this);
+		PlayerService.daos().playerPetsDAO().savePetMoodData(this);
 	}
 
 	/** 设置 is looting / Sets the is looting */

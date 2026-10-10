@@ -1,12 +1,10 @@
 package com.aionemu.gameserver.model.items;
 
 import com.aionemu.boot.i18n.I18n;
-import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.configs.main.CustomConfig;
 import com.aionemu.gameserver.controllers.observer.ActionObserver;
 import com.aionemu.gameserver.controllers.observer.ObserverType;
-import com.aionemu.gameserver.dao.InventoryDAO;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -21,6 +19,7 @@ import com.aionemu.gameserver.model.templates.item.ItemTemplate;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_INVENTORY_UPDATE_ITEM;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.services.item.ItemPacketService;
+import com.aionemu.gameserver.services.player.PlayerService;
 import com.aionemu.gameserver.skillengine.model.Effect;
 import com.aionemu.gameserver.skillengine.model.Skill;
 import com.aionemu.gameserver.utils.PacketSendUtility;
@@ -167,7 +166,7 @@ public class GodStone extends ItemStone {
 		weapon.setGodStone(null);
 		setPersistentState(PersistentState.DELETED);
 		ItemPacketService.updateItemAfterInfoChange(player, weapon);
-		DAOManager.getDAO(InventoryDAO.class).store(weapon, player);
+		PlayerService.daos().inventoryDAO().store(weapon, player);
 		PacketSendUtility.sendPacket(player, new SM_INVENTORY_UPDATE_ITEM(player, weapon));
 	}
 

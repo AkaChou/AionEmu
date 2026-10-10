@@ -50,6 +50,7 @@ import java.util.Iterator;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.LongAdder;
 
 /**
@@ -180,10 +181,12 @@ public class NpcMoveController
     private float walkerLegPathKeyZ = Float.NaN;
     /**
      * 编队暂停延迟停包的代数：暂停/恢复/重置时递增，使早先排定的停包任务失效。
+     * 用原子计数器保证「游戏线程自增 / 回调线程比较」的读写次序。
      * Generation of the delayed formation-pause stop: bumped on every pause/reset/resume so earlier
-     * scheduled stop tasks become no-ops.
+     * scheduled stop tasks become no-ops. Atomic so the game-thread bump and the callback-thread
+     * comparison are ordered.
      */
-    private volatile long pauseStopGeneration;
+    private final AtomicLong pauseStopGeneration = new AtomicLong();
     /** 最近一条移动包走完的估计时刻（毫秒时间戳；0=从未下发移动包）。 / Estimated instant (ms) the client finishes walking the last issued move packet (0 = none issued yet). */
     volatile long movePacketDeadlineMs;
     /** 当前巡逻路线 / Current walk route */
@@ -484,7 +487,7 @@ public class NpcMoveController
                 || now - lastBroadcastAt >= CHASE_MOVE_BROADCAST_INTERVAL_MS);
     }
 
-    static boolean hasMeaningfulProgress(float sampleX, float sampleY, float sampleZ, float currentX, float currentY,
+    static boolean hasMeaningfulProgress(float sampleX, float sampleY, float currentX, float currentY,
             float currentZ, float waypointX, float waypointY, float waypointZ, float previousRemaining, float speed,
             long sampleMillis) {
         float directionX = waypointX - sampleX;
@@ -623,15 +626,13 @@ public class NpcMoveController
      * remaining polyline to the leg waypoint (m). With a null Path it degenerates to the straight distance.
      * @param fromX 当前位置 X / current X
      * @param fromY 当前位置 Y / current Y
-     * @param fromZ 当前位置 Z / current Z
      * @param path 剩余折线（含下一节点在 [0]）/ remaining polyline, next node at [0]
      * @param waypointX 本段航点 X / leg waypoint X
      * @param waypointY 本段航点 Y / leg waypoint Y
-     * @param waypointZ 本段航点 Z / leg waypoint Z
      * @return 剩余弧长（米）/ remaining arc length (m)
      */
-    static float walkPathRemaining(float fromX, float fromY, float fromZ, float[][] path,
-            float waypointX, float waypointY, float waypointZ) {
+    static float walkPathRemaining(float fromX, float fromY, float[][] path,
+            float waypointX, float waypointY) {
         float remaining = 0;
         float lastX = fromX;
         float lastY = fromY;
@@ -675,7 +676,7 @@ public class NpcMoveController
                 }
                 float segment = (float) Math.hypot(node[0] - lastX, node[1] - lastY);
                 if (segment >= remaining) {
-                    float fraction = segment <= 0 ? 1f : remaining / segment;
+                    float fraction = remaining / segment;
                     return new float[] {lastX + (node[0] - lastX) * fraction, lastY + (node[1] - lastY) * fraction,
                             lastZ + (node[2] - lastZ) * fraction};
                 }
@@ -845,7 +846,7 @@ public class NpcMoveController
      * Start moving toward the next walk-route point.
      */
     public synchronized void moveToNextPoint() {
-        pauseStopGeneration++;
+        pauseStopGeneration.incrementAndGet();
         if (started.compareAndSet(false, true)) {
             if (owner.getAi2().isLogging()) {
                 AI2Logger.moveinfo(owner, "MC: moveToNextPoint started");
@@ -920,8 +921,7 @@ public class NpcMoveController
                     cancelFollow();
                     return;
                 }
-                boolean following = owner != null && owner.getAi2() != null
-                        && owner.getAi2().getState() == AIState.FOLLOWING;
+                boolean following = owner.getAi2() != null && owner.getAi2().getState() == AIState.FOLLOWING;
                 if (following) {
                     if (MathUtil.isIn3dRange(owner, creature, FollowEventHandler.CLOSE_FOLLOW_RANGE)) {
                         clearFollowTrail();
@@ -1363,7 +1363,7 @@ public class NpcMoveController
             if (this.owner.getAi2().getState() == AIState.RETURNING
                     && shouldCompleteHomeReturn(path == null || pathCompleted, isHomeReturnDestinationReached())) {
                 if (this.owner.getAi2().isLogging()) {
-                    AI2Logger.moveinfo(this.owner, "状态\u8fd4\u56de\uff1a\u4e2d\u6b62\u79fb\u52a8");
+                    AI2Logger.moveinfo(this.owner, "状态返回：中止移动");
                 }
                 TargetEventHandler.onTargetReached((NpcAI2) this.owner.getAi2());
             }
@@ -1462,7 +1462,7 @@ public class NpcMoveController
         // swallow the stream and expose sub-1m targets to the client's reach check (AIM-011).
         boolean walkerPathStream = walkingRoute && path != null;
         float walkRemaining = walkerPathStream
-                ? walkPathRemaining(newX, newY, newZ, path, pointX, pointY, pointZ)
+                ? walkPathRemaining(newX, newY, path, pointX, pointY)
                 : (float)MathUtil.getDistance(newX, newY, newZ, targetDestX, targetDestY, targetDestZ);
         float[] streamTarget = shouldStreamWalkGround(walkingRoute, reachedWaypoint, walkRemaining)
                         ? (walkerPathStream
@@ -1531,12 +1531,12 @@ public class NpcMoveController
         if (sampleMillis < STUCK_SAMPLE_INTERVAL_MS) {
             return;
         }
-        if (sampleMillis <= 0 || sampleMillis > STUCK_SAMPLE_MAX_DELAY_MS) {
+        if (sampleMillis > STUCK_SAMPLE_MAX_DELAY_MS) {
             resetStuckShadow();
             beginStuckSample(x, y, z, waypointX, waypointY, waypointZ, remaining, now, effectivePathLength);
             return;
         }
-        boolean progressed = hasMeaningfulProgress(progressX, progressY, progressZ, x, y, z, waypointX, waypointY,
+        boolean progressed = hasMeaningfulProgress(progressX, progressY, x, y, z, waypointX, waypointY,
                 waypointZ, progressRemainingDistance, speed, sampleMillis);
         int previousWindows = noProgressWindows;
         if (progressed) {
@@ -1621,7 +1621,7 @@ public class NpcMoveController
         if (this.owner.isInState(CreatureState.WEAPON_EQUIPPED)) {
             mask = stat.getBonus() < 0 ? MovementMask.NPC_RUN_FAST : MovementMask.NPC_RUN_SLOW;
         } else if (this.owner.isInState(CreatureState.WALKING) || this.owner.isInState(CreatureState.ACTIVE)) {
-            byte by = mask = stat.getBonus() < 0 ? MovementMask.NPC_WALK_FAST : MovementMask.NPC_WALK_SLOW;
+            mask = stat.getBonus() < 0 ? MovementMask.NPC_WALK_FAST : MovementMask.NPC_WALK_SLOW;
         }
         if (this.owner.isFlying()) {
             mask |= MovementMask.GLIDE;
@@ -1649,7 +1649,7 @@ public class NpcMoveController
      * Reset move state, destination points, and follow motor.
      */
     public void resetMove() {
-        pauseStopGeneration++;
+        pauseStopGeneration.incrementAndGet();
         if (owner.getAi2().isLogging()) {
             AI2Logger.moveinfo(owner, "MC perform stop");
         }
@@ -1698,7 +1698,7 @@ public class NpcMoveController
         if (deadline == 0) {
             return;
         }
-        long generation = ++pauseStopGeneration;
+        long generation = pauseStopGeneration.incrementAndGet();
         GameThreadPoolServices.threadPoolManager().schedule(() -> sendPauseStopAtDeadline(generation),
                 pauseStopDelayMs(deadline, System.currentTimeMillis()));
     }
@@ -1739,7 +1739,7 @@ public class NpcMoveController
      * @param generation 排定时的暂停代数 / pause generation captured when scheduled
      */
     private void sendPauseStopAtDeadline(long generation) {
-        if (!shouldSendPauseStop(generation == pauseStopGeneration, started.get(),
+        if (!shouldSendPauseStop(generation == pauseStopGeneration.get(), started.get(),
                 owner.getAi2().getSubState() == AISubState.WALK_WAIT_GROUP) || NpcActions.isAlreadyDead(owner)) {
             return;
         }
@@ -2352,11 +2352,11 @@ public class NpcMoveController
         if (distance <= MOVE_OFFSET) {
             return null;
         }
-        float ratio = Math.min(Math.max(0, step), distance) / distance;
+        float ratio = Math.clamp(step, 0f, distance) / distance;
         return new float[] {x + dx * ratio, y + dy * ratio, z + (targetZ - z) * ratio};
     }
 
-    static long pathFailureStartedAt(long current, long now, boolean definitive) {
+    static long pathFailureStartedAt(long current, long now) {
         return current == 0 ? now : current;
     }
 
@@ -2506,7 +2506,7 @@ public class NpcMoveController
             pathAvoidanceAttempts = 0;
         }
         if (newFailure || firstPathFailureAt == 0 || definitive) {
-            firstPathFailureAt = pathFailureStartedAt(newFailure ? 0 : firstPathFailureAt, now, definitive);
+            firstPathFailureAt = pathFailureStartedAt(newFailure ? 0 : firstPathFailureAt, now);
             pathFailureHandled = false;
         }
         pathRetryAt = now + PATH_RETRY_DELAY_MS;
@@ -2644,20 +2644,6 @@ public class NpcMoveController
     }
 
     /**
-     * 换段时刷新「本段是否需要沿 Path」并按需预取本段 Path：
-     * blocked 模式对「当前位置 → 本段航点」做一次廉价 PATH-LoS（网格 Bresenham），不通才预取；
-     * always 模式无条件预取；off 模式、带非零编队偏移的跟随者、飞行/游泳不预取（保持直线，与旧行为一致）；
-     * 编队队长（shift 0,0）站位与航点重合，按独行语义参与预取。
-     * 预取走异步队列（单 NPC 单在途 + 背压），绝不阻塞移动；Path 到达前本段沿直线先走，
-     * 到达后 moveAlongPath 下一 tick 自然切到沿 Path 推进。
-     * Refreshes whether the current walk leg follows the Path and pre-fetches it when needed: blocked mode
-     * runs one cheap PATH line-of-sight check (grid Bresenham) and fetches only when it fails; always mode
-     * always fetches; off mode, offset formation followers and flying/swimming walkers stay straight. The
-     * formation leader (shift 0,0) stands on the route point itself and is fetched like a solo walker.
-     * The fetch is async (single in-flight request per NPC, queue back-pressure) and never blocks movement;
-     * until it lands the leg walks straight and moveAlongPath switches over on the next tick.
-     */
-    /**
      * 本段的沿 Path 预取（在途请求或已缓存路径）是否仍指向当前航点——moveToNextPoint 保留预取的判据。
      * Whether this leg's Path pre-fetch (in-flight request or cached path) still targets the current
      * waypoint; used by moveToNextPoint to keep it instead of resetting.
@@ -2674,6 +2660,20 @@ public class NpcMoveController
                 walkerLegPathKeyX, walkerLegPathKeyY, walkerLegPathKeyZ);
     }
 
+    /**
+     * 换段时刷新「本段是否需要沿 Path」并按需预取本段 Path：
+     * blocked 模式对「当前位置 → 本段航点」做一次廉价 PATH-LoS（网格 Bresenham），不通才预取；
+     * always 模式无条件预取；off 模式、带非零编队偏移的跟随者、飞行/游泳不预取（保持直线，与旧行为一致）；
+     * 编队队长（shift 0,0）站位与航点重合，按独行语义参与预取。
+     * 预取走异步队列（单 NPC 单在途 + 背压），绝不阻塞移动；Path 到达前本段沿直线先走，
+     * 到达后 moveAlongPath 下一 tick 自然切到沿 Path 推进。
+     * Refreshes whether the current walk leg follows the Path and pre-fetches it when needed: blocked mode
+     * runs one cheap PATH line-of-sight check (grid Bresenham) and fetches only when it fails; always mode
+     * always fetches; off mode, offset formation followers and flying/swimming walkers stay straight. The
+     * formation leader (shift 0,0) stands on the route point itself and is fetched like a solo walker.
+     * The fetch is async (single in-flight request per NPC, queue back-pressure) and never blocks movement;
+     * until it lands the leg walks straight and moveAlongPath switches over on the next tick.
+     */
     private void refreshWalkerLegPath() {
         WalkerGroupShift shift = owner.getWalkerGroupShift();
         boolean follower = isFormationFollower(owner.getWalkerGroup() != null, shift != null,
@@ -2800,7 +2800,7 @@ public class NpcMoveController
             return;
         }
         if (this.lastSteps == null) {
-            this.lastSteps = new LastUsedCache(10);
+            this.lastSteps = new LastUsedCache<>(10);
         }
         Point3D currentStep = new Point3D(this.owner.getX(), this.owner.getY(), this.owner.getZ());
         if (this.owner.getAi2().isLogging()) {
@@ -2810,53 +2810,6 @@ public class NpcMoveController
             this.stepSequenceNr = (byte)(this.stepSequenceNr + 1);
             this.lastSteps.put(this.stepSequenceNr, currentStep);
         }
-    }
-
-    /**
-     * 取回上一个回退步并设为目标；无记录时回退到出生点。
-     * Recall the previous back-step as destination; fall back to spawn when none.
-     * @return 回退点 / Recalled point
-     */
-    public Point3D recallPreviousStep() {
-        Point3D result =  stepSequenceNr == 0 ? null : lastSteps.get(stepSequenceNr--);
-        Point3D point3D;
-        if (this.lastSteps == null) {
-            this.lastSteps = new LastUsedCache(10);
-        }
-        if (this.stepSequenceNr == 0) {
-            point3D = null;
-        } else {
-            byte by = this.stepSequenceNr;
-            this.stepSequenceNr = (byte)(by - 1);
-            point3D = result = this.lastSteps.get(by);
-        }
-        if (result == null) {
-            if (this.owner.getAi2().isLogging()) {
-                AI2Logger.moveinfo(this.owner, "recall back step: spawn point");
-            }
-            this.targetDestX = this.owner.getSpawn().getX();
-            this.targetDestY = this.owner.getSpawn().getY();
-            this.targetDestZ = this.owner.getSpawn().getEffectiveZ();
-            result = new Point3D(this.targetDestX, this.targetDestY, this.targetDestZ);
-        } else {
-            if (this.owner.getAi2().isLogging()) {
-                AI2Logger.moveinfo(this.owner, "recall back step: X=" + result.getX() + " Y=" + result.getY() + " Z=" + result.getZ());
-            }
-            this.targetDestX = result.getX();
-            this.targetDestY = result.getY();
-            this.targetDestZ = result.getZ();
-        }
-        return result;
-    }
-
-    /**
-     * 清空回退步缓存与移动掩码。
-     * Clear the back-step cache and movement mask.
-     */
-    public void clearBackSteps() {
-        this.stepSequenceNr = 0;
-        this.lastSteps = null;
-        this.movementMask = 0;
     }
 
     /**

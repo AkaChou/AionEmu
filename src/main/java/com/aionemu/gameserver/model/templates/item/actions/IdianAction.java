@@ -5,9 +5,7 @@ import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlType;
 
-import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.controllers.observer.ItemUseObserver;
-import com.aionemu.gameserver.dao.ItemStoneListDAO;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.DescriptionId;
 import com.aionemu.gameserver.model.TaskId;
@@ -20,6 +18,7 @@ import com.aionemu.gameserver.model.templates.item.bonuses.StatBonusType;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_INVENTORY_UPDATE_ITEM;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_ITEM_USAGE_ANIMATION;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
+import com.aionemu.gameserver.services.player.PlayerService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import lombok.Getter;
 
@@ -119,7 +118,7 @@ public class IdianAction extends AbstractItemAction {
 					idianStone.onUnEquip(player);
 					targetItem.setIdianStone(null);
 					idianStone.setPersistentState(PersistentState.DELETED);
-					DAOManager.getDAO(ItemStoneListDAO.class).storeIdianStones(idianStone);
+					PlayerService.daos().itemStoneListDAO().storeIdianStones(idianStone);
 				}
 				idianStone = new IdianStone(parentItemId, PersistentState.NEW, targetItem, bonus.templateNumber(),
 						1000000);

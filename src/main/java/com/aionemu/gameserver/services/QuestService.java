@@ -19,8 +19,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.configs.main.CustomConfig;
@@ -99,18 +97,6 @@ public final class QuestService {
 	private static final List<Integer> ALL_CRAFT_SKILL_IDS = List.of(
 		30002, 30003, 40001, 40002, 40003, 40004, 40007, 40008, 40010
 	);
-	/**
-	 * Supplemental drops declared by the remaining legacy handlers. Canonical catalog drops live in the dispatcher.
-	 */
-	private static final ConcurrentMap<Integer, List<QuestCatalogDrop>> handlerSideQuestDrops = new ConcurrentHashMap<>();
-
-	/**
-	 * 清空全部任务掉落缓存。
-	 * Clears all quest-drop cache entries.
-	 */
-	public static void clearQuestDrops() {
-		handlerSideQuestDrops.clear();
-	}
 
 	/**
 	 * 以默认奖励索引完成任务。
@@ -1306,33 +1292,7 @@ public final class QuestService {
 	 * drop collection
 	 */
 	public static Collection<QuestCatalogDrop> getQuestDrop(int npcId) {
-		List<QuestCatalogDrop> catalogDrops = GameEngineServices.questEngine().questDrops(npcId);
-		List<QuestCatalogDrop> handlerDrops = handlerSideQuestDrops.getOrDefault(npcId, List.of());
-		if (catalogDrops.isEmpty()) {
-			return handlerDrops;
-		}
-		if (handlerDrops.isEmpty()) {
-			return catalogDrops;
-		}
-		List<QuestCatalogDrop> combined = new ArrayList<>(catalogDrops.size() + handlerDrops.size());
-		combined.addAll(catalogDrops);
-		combined.addAll(handlerDrops);
-		return List.copyOf(combined);
-	}
-
-	/**
-	 * 注册 NPC 的任务掉落条目。
-	 * Registers a quest drop entry for an NPC.
-	 * NPC 模板 ID / NPC template id
-	 *
-	 * @param drop 掉落配置 / drop entry
-	 */
-	public static void addHandlerSideQuestDrop(QuestCatalogDrop drop) {
-		handlerSideQuestDrops.compute(drop.npcId(), (_, current) -> {
-			List<QuestCatalogDrop> updated = new ArrayList<>(current == null ? List.of() : current);
-			updated.add(drop);
-			return List.copyOf(updated);
-		});
+		return GameEngineServices.questEngine().questDrops(npcId);
 	}
 
 	/**

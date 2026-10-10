@@ -6,8 +6,7 @@ import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.List;
 
-import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.gameserver.dao.PlayerPetsDAO;
+import com.aionemu.gameserver.services.player.PlayerService;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -37,7 +36,7 @@ public class PetList {
 	 * Load pets from the database.
 	 */
 	public void loadPets() {
-		List<PetCommonData> playerPets = DAOManager.getDAO(PlayerPetsDAO.class).getPlayerPets(player);
+		List<PetCommonData> playerPets = PlayerService.daos().playerPetsDAO().getPlayerPets(player);
 		PetCommonData lastUsedPet = null;
 		for (PetCommonData pet : playerPets) {
 			if (pet.getExpireTime() > 0) {
@@ -80,7 +79,7 @@ public class PetList {
 		petCommonData.setName(name);
 		petCommonData.setBirthday(new Timestamp(birthday));
 		petCommonData.setDespawnTime(new Timestamp(System.currentTimeMillis()));
-		DAOManager.getDAO(PlayerPetsDAO.class).insertPlayerPet(petCommonData);
+		PlayerService.daos().playerPetsDAO().insertPlayerPet(petCommonData);
 		pets.put(petId, petCommonData);
 		return petCommonData;
 	}
@@ -92,7 +91,7 @@ public class PetList {
 	public void deletePet(int petId) {
 		if (hasPet(petId)) {
 			pets.remove(petId);
-			DAOManager.getDAO(PlayerPetsDAO.class).removePlayerPet(player, petId);
+			PlayerService.daos().playerPetsDAO().removePlayerPet(player, petId);
 		}
 	}
 }

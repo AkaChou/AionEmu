@@ -3,13 +3,12 @@ package com.aionemu.gameserver.model.gameobjects.player;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.gameserver.dao.PlayerRecipesDAO;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.templates.recipe.RecipeTemplate;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_LEARN_RECIPE;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_RECIPE_DELETE;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
+import com.aionemu.gameserver.services.player.PlayerService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -34,7 +33,7 @@ public class RecipeList {
 	public void addRecipe(Player player, RecipeTemplate recipeTemplate) {
 		int recipeId = recipeTemplate.getId();
 		if (!player.getRecipeList().isRecipePresent(recipeId)) {
-			if (DAOManager.getDAO(PlayerRecipesDAO.class).addRecipe(player.getObjectId(), recipeId)) {
+			if (PlayerService.daos().playerRecipesDAO().addRecipe(player.getObjectId(), recipeId)) {
 				recipeList.add(recipeId);
 				PacketSendUtility.sendPacket(player, new SM_LEARN_RECIPE(recipeId));
 				PacketSendUtility.sendPacket(player,
@@ -45,7 +44,7 @@ public class RecipeList {
 
 	/** 添加配方。 / Adds recipe. */
 	public void addRecipe(int playerId, int recipeId) {
-		if (DAOManager.getDAO(PlayerRecipesDAO.class).addRecipe(playerId, recipeId)) {
+		if (PlayerService.daos().playerRecipesDAO().addRecipe(playerId, recipeId)) {
 			recipeList.add(recipeId);
 		}
 	}
@@ -53,7 +52,7 @@ public class RecipeList {
 	/** 删除配方。 / Deletes recipe. */
 	public void deleteRecipe(Player player, int recipeId) {
 		if (recipeList.contains(recipeId)) {
-			if (DAOManager.getDAO(PlayerRecipesDAO.class).delRecipe(player.getObjectId(), recipeId)) {
+			if (PlayerService.daos().playerRecipesDAO().delRecipe(player.getObjectId(), recipeId)) {
 				recipeList.remove(recipeId);
 				PacketSendUtility.sendPacket(player, new SM_RECIPE_DELETE(recipeId));
 			}

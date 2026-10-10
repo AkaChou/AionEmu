@@ -6,8 +6,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.gameserver.dao.PlayerTitleListDAO;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -15,6 +13,7 @@ import com.aionemu.gameserver.model.stats.listeners.TitleChangeListener;
 import com.aionemu.gameserver.model.templates.TitleTemplate;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_TITLE_INFO;
+import com.aionemu.gameserver.services.player.PlayerService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import lombok.Getter;
 import lombok.Setter;
@@ -81,7 +80,7 @@ public class TitleList {
 				titles.put(titleId, entry);
 				if (time != 0)
 					GameTaskManagerServices.expireTimerTask().addTask(entry, owner);
-				DAOManager.getDAO(PlayerTitleListDAO.class).storeTitles(owner, entry);
+				PlayerService.daos().playerTitleListDAO().storeTitles(owner, entry);
 			} else {
 				PacketSendUtility.sendPacket(owner, SM_SYSTEM_MESSAGE.STR_TOOLTIP_LEARNED_TITLE);
 				return false;
@@ -137,7 +136,7 @@ public class TitleList {
 		}
 		titles.remove(titleId);
 		PacketSendUtility.sendPacket(owner, new SM_TITLE_INFO(owner));
-		DAOManager.getDAO(PlayerTitleListDAO.class).removeTitle(owner.getObjectId(), titleId);
+		PlayerService.daos().playerTitleListDAO().removeTitle(owner.getObjectId(), titleId);
 	}
 
 	/** 大小 / size. */

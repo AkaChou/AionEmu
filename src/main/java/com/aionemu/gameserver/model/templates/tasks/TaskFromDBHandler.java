@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.model.templates.tasks;
 
+import java.util.Objects;
+
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.dao.TaskFromDBDAO;
 import lombok.Setter;
@@ -11,6 +13,11 @@ import lombok.Setter;
  */
 public abstract class TaskFromDBHandler implements Runnable {
 
+	/**
+	 * Spring 绑定的数据库任务 DAO / Spring-bound task-from-DB DAO.
+	 */
+	private static volatile TaskFromDBDAO boundTaskFromDBDAO;
+
 	@Setter
 	protected int id;
 	protected String[] params;
@@ -20,6 +27,41 @@ public abstract class TaskFromDBHandler implements Runnable {
 	 */
 	public void setParam(String[] params) {
 		this.params = params;
+	}
+
+	/**
+	 * 由 Spring 配置类在启动期绑定数据库任务 DAO。
+	 * Binds the task-from-DB DAO from the Spring configuration at startup.
+	 * @param dao 数据库任务 DAO / task-from-DB DAO
+	 */
+	public static void bindTaskFromDBDAO(TaskFromDBDAO dao) {
+		boundTaskFromDBDAO = Objects.requireNonNull(dao, "taskFromDBDAO must not be null");
+	}
+
+	/**
+	 * 返回数据库任务 DAO；未绑定（离线/单测环境）时按 safeDao 兜底构建并缓存。
+	 * Returns the task-from-DB DAO; falls back to safeDao construction when unbound (offline/unit tests).
+	 * @return 数据库任务 DAO / task-from-DB DAO
+	 */
+	private static TaskFromDBDAO taskFromDBDAO() {
+		TaskFromDBDAO current = boundTaskFromDBDAO;
+		if (current == null) {
+			synchronized (TaskFromDBHandler.class) {
+				current = boundTaskFromDBDAO;
+				if (current == null) {
+					if (DAOManager.isInitialized()) {
+						try {
+							boundTaskFromDBDAO = current = DAOManager.getDAO(TaskFromDBDAO.class);
+						} catch (Exception ignored) {
+						}
+					}
+					if (current == null) {
+						boundTaskFromDBDAO = current = new com.aionemu.gameserver.dao.impl.TaskFromDBDAO();
+					}
+				}
+			}
+		}
+		return current;
 	}
 
 	/**
@@ -34,9 +76,9 @@ public abstract class TaskFromDBHandler implements Runnable {
 	public abstract boolean isValid();
 
 	/**
-	 * 返回 TaskFromDBDAO（快捷方法）。 / Retuns {@link com.aionemu.gameserver.dao.TaskFromDBDAO} , just a shortcut.
+	 * 经绑定的数据库任务 DAO 记录本次激活时间。 / Records the last activation via the bound task-from-DB DAO.
 	 */
 	protected void setLastActivation() {
-		DAOManager.getDAO(TaskFromDBDAO.class).setLastActivation(id);
+		taskFromDBDAO().setLastActivation(id);
 	}
 }

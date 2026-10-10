@@ -15,6 +15,7 @@ import com.aionemu.gameserver.model.tasks.TaskFromDB;
 import com.aionemu.gameserver.model.templates.tasks.TaskFromDBHandler;
 import com.aionemu.gameserver.taskmanager.tasks.RestartTask;
 import com.aionemu.gameserver.taskmanager.tasks.ShutdownTask;
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -46,17 +47,41 @@ public class TaskManagerFromDB {
 	private final HashMap<String, TaskFromDBHandler> handlers;
 
 	/**
-	 * 加载 DB 任务、注册内置处理器并安排调度。
-	 * Load DB tasks, register built-in handlers, and schedule them.
+	 * 使用指定的数据库任务 DAO 构造管理器。
+	 * Constructs the manager with the given task-from-DB DAO.
+	 * @param dao 数据库任务 DAO / Task-from-DB DAO
 	 */
-	public TaskManagerFromDB() {
+	public TaskManagerFromDB(@NonNull TaskFromDBDAO dao) {
 		this.handlers = new HashMap<>();
 
-		tasksList = getDAO().getAllTasks();
+		tasksList = dao.getAllTasks();
 		log.info(I18n.get("log.8fed1ca907ff", tasksList.size(), (tasksList.size() > 1 ? "s" : "")));
 
 		registerHandlers();
 		registerTasks();
+	}
+
+	/**
+	 * 构造管理器：DAOManager 已初始化时优先解析 Spring Bean，否则退回实现类无参构造。
+	 * Constructs the manager: resolves the Spring bean when DAOManager is initialized, else falls back to the no-arg impl constructor.
+	 */
+	public TaskManagerFromDB() {
+		this(safeTaskDao());
+	}
+
+	/**
+	 * DAO 解析兜底：容器未就绪（离线/单测）时退回实现类无参构造。
+	 * DAO resolution fallback: falls back to the no-arg impl constructor when the container is not ready (offline/unit tests).
+	 */
+	private static TaskFromDBDAO safeTaskDao() {
+		if (DAOManager.isInitialized()) {
+			try {
+				return DAOManager.getDAO(TaskFromDBDAO.class);
+			} catch (Exception e) {
+				log.debug("TaskFromDBDAO bean resolution failed, falling back to the no-arg impl constructor", e);
+			}
+		}
+		return new com.aionemu.gameserver.dao.impl.TaskFromDBDAO();
 	}
 
 	/**
@@ -97,6 +122,7 @@ public class TaskManagerFromDB {
 					currentTask = tmpClass.getDeclaredConstructor().newInstance();
 				} catch (ReflectiveOperationException e) {
 					log.error(e.getMessage(), e);
+					continue;
 				}
 
 				// 设置任务信息 / Set informations for the task
@@ -143,15 +169,6 @@ public class TaskManagerFromDB {
 	}
 
 	/**
-	 * 获取 {@link TaskFromDBDAO} 快捷方法。
-	 * Shortcut to obtain {@link TaskFromDBDAO}.
-	 * @return DAO 实例 / the DAO instance
-	 */
-	private static TaskFromDBDAO getDAO() {
-		return DAOManager.getDAO(TaskFromDBDAO.class);
-	}
-
-	/**
 	 * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。
 	 * Returns the instance, which must be supplied by Spring.
 	 * <p>双源静态兜底已退役：缺少 provider 时直接 fail-fast，避免在容器之外静默创建第二套实例。
@@ -160,7 +177,7 @@ public class TaskManagerFromDB {
 	 * @return 由 Spring 提供的实例 / the Spring-provided instance
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean / when no provider or bean is available
 	 */
-	public static final TaskManagerFromDB getInstance() {
+	public static TaskManagerFromDB getInstance() {
 		ObjectProvider<TaskManagerFromDB> provider = instanceProvider;
 		TaskManagerFromDB provided = provider == null ? null : provider.getIfAvailable();
 		if (provided == null) {

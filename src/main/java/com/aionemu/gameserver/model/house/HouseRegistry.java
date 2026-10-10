@@ -8,8 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.gameserver.dao.PlayerRegisteredItemsDAO;
+import com.aionemu.gameserver.services.player.PlayerService;
 import com.aionemu.gameserver.model.gameobjects.HouseDecoration;
 import com.aionemu.gameserver.model.gameobjects.HouseObject;
 import com.aionemu.gameserver.model.gameobjects.PersistentState;
@@ -283,7 +282,7 @@ public class HouseRegistry {
 	/** 保存。 / Save. */
 	public void save() {
 		if (persistentState == PersistentState.UPDATE_REQUIRED) {
-			DAOManager.getDAO(PlayerRegisteredItemsDAO.class).store(this, getOwner().getOwnerId());
+			PlayerService.daos().playerRegisteredItemsDAO().store(this, getOwner().getOwnerId());
 		}
 	}
 
@@ -305,7 +304,7 @@ public class HouseRegistry {
 	/** 移除对象 / Despawn objects */
 	public void despawnObjects() {
 		if (getSpawnedObjects().isEmpty()) {
-			DAOManager.getDAO(PlayerRegisteredItemsDAO.class).resetRegistry(owner.getOwnerId());
+			PlayerService.daos().playerRegisteredItemsDAO().resetRegistry(owner.getOwnerId());
 		} else {
 			despawnObjects(true);
 		}

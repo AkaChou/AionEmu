@@ -7,10 +7,9 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.configs.main.MembershipConfig;
-import com.aionemu.gameserver.dao.PlayerEmotionListDAO;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
+import com.aionemu.gameserver.services.player.PlayerService;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_EMOTION_LIST;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import lombok.RequiredArgsConstructor;
@@ -37,7 +36,7 @@ public class EmotionList {
 			if (emotion.getExpireTime() != 0) {
 				GameTaskManagerServices.expireTimerTask().addTask(emotion, owner);
 			}
-			DAOManager.getDAO(PlayerEmotionListDAO.class).insertEmotion(owner, emotion);
+			PlayerService.daos().playerEmotionListDAO().insertEmotion(owner, emotion);
 			PacketSendUtility.sendPacket(owner, new SM_EMOTION_LIST((byte) 1, Collections.singletonList(emotion)));
 		}
 	}
@@ -45,7 +44,7 @@ public class EmotionList {
 	/** 移除。 / Remove. */
 	public void remove(int emotionId) {
 		emotions.remove(emotionId);
-		DAOManager.getDAO(PlayerEmotionListDAO.class).deleteEmotion(owner.getObjectId(), emotionId);
+		PlayerService.daos().playerEmotionListDAO().deleteEmotion(owner.getObjectId(), emotionId);
 		PacketSendUtility.sendPacket(owner, new SM_EMOTION_LIST((byte) 0, getEmotions()));
 	}
 

@@ -180,7 +180,11 @@ public class PlayerService {
 				safeDao(HouseObjectCooldownsDAO.class, com.aionemu.gameserver.dao.impl.HouseObjectCooldownsDAO::new),
 				safeDao(PlayerBindPointDAO.class, com.aionemu.gameserver.dao.impl.PlayerBindPointDAO::new),
 				safeDao(PlayerLifeStatsDAO.class, com.aionemu.gameserver.dao.impl.PlayerLifeStatsDAO::new),
-				safeDao(PlayerEmotionListDAO.class, com.aionemu.gameserver.dao.impl.PlayerEmotionListDAO::new));
+				safeDao(PlayerEmotionListDAO.class, com.aionemu.gameserver.dao.impl.PlayerEmotionListDAO::new),
+				safeDao(com.aionemu.gameserver.dao.PlayerPetsDAO.class, com.aionemu.gameserver.dao.impl.PlayerPetsDAO::new),
+				safeDao(com.aionemu.gameserver.dao.PlayerMinionsDAO.class, com.aionemu.gameserver.dao.impl.PlayerMinionsDAO::new),
+				safeDao(com.aionemu.gameserver.dao.PlayerShugoSweepDAO.class, com.aionemu.gameserver.dao.impl.PlayerShugoSweepDAO::new),
+				safeDao(com.aionemu.gameserver.dao.HouseScriptsDAO.class, com.aionemu.gameserver.dao.impl.HouseScriptsDAO::new));
 	}
 
 	private static <T extends com.aionemu.commons.database.dao.DAO> T safeDao(Class<T> daoClass,

@@ -109,9 +109,9 @@ class NpcMoveControllerWalkStreamTest {
 	@Test
 	void pathStreamRemainingCountsPolylineArcs() {
 		float[][] leg = {{2f, 0f, 0f}, {2f, 3f, 0f}};
-		assertEquals(7f, NpcMoveController.walkPathRemaining(0f, 0f, 0f, leg, 2f, 5f, 0f), 1e-4f,
+		assertEquals(7f, NpcMoveController.walkPathRemaining(0f, 0f, leg, 2f, 5f), 1e-4f,
 				"剩余量 = 当前位置沿折线到航点的总弧长（2 + 3 + 2），供 0.75m 收尾门槛使用");
-		assertEquals(5f, NpcMoveController.walkPathRemaining(0f, 0f, 0f, null, 3f, 4f, 0f), 1e-4f,
+		assertEquals(5f, NpcMoveController.walkPathRemaining(0f, 0f, null, 3f, 4f), 1e-4f,
 				"Path 为 null 时退化为到航点的水平距离（与直线版同语义）");
 	}
 

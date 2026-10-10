@@ -14,10 +14,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
-import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.configs.main.HousingConfig;
-import com.aionemu.gameserver.dao.HouseScriptsDAO;
 import com.aionemu.gameserver.model.house.PlayerScript;
+import com.aionemu.gameserver.services.player.PlayerService;
 
 /**
  * 玩家 Scripts 游戏对象。
@@ -125,9 +124,9 @@ public class PlayerScripts {
 		script.setData(compressedXML, size);
 
 		if (bytes == null) {
-			DAOManager.getDAO(HouseScriptsDAO.class).addScript(houseObjId, position, content);
+			PlayerService.daos().houseScriptsDAO().addScript(houseObjId, position, content);
 		} else {
-			DAOManager.getDAO(HouseScriptsDAO.class).updateScript(houseObjId, position, content);
+			PlayerService.daos().houseScriptsDAO().updateScript(houseObjId, position, content);
 		}
 
 		if (HousingConfig.HOUSE_SCRIPT_DEBUG) {
@@ -148,7 +147,7 @@ public class PlayerScripts {
 			return false;
 		} else {
 			script.setData(null, -1);
-			DAOManager.getDAO(HouseScriptsDAO.class).deleteScript(houseObjId, position);
+			PlayerService.daos().houseScriptsDAO().deleteScript(houseObjId, position);
 		}
 		return true;
 	}

@@ -5,10 +5,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.gameserver.dao.PlayerABDAO;
 import com.aionemu.gameserver.model.gameobjects.PersistentState;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
+import com.aionemu.gameserver.services.player.PlayerService;
 
 /**
  * 玩家 AB 列表，用于艾特里亚图鉴相关逻辑。
@@ -50,7 +49,7 @@ public final class PlayerABList {
 	private synchronized boolean add(Player player, int id, int killCount, int level, int claimReward,
 			PersistentState state) {
 		entry.put(id, new PlayerABEntry(id, killCount, level, claimReward, state));
-		DAOManager.getDAO(PlayerABDAO.class).store(player.getObjectId(), id, killCount, level, claimReward);
+		PlayerService.daos().playerABDAO().store(player.getObjectId(), id, killCount, level, claimReward);
 		return true;
 	}
 
@@ -60,7 +59,7 @@ public final class PlayerABList {
 		if (entries != null) {
 			entries.setPersistentState(PersistentState.DELETED);
 			entry.remove(id);
-			DAOManager.getDAO(PlayerABDAO.class).delete(player.getObjectId(), id);
+			PlayerService.daos().playerABDAO().delete(player.getObjectId(), id);
 		}
 		return entries != null;
 	}
