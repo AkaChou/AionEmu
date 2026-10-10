@@ -79,8 +79,10 @@ public class CM_TUNE extends AionClientPacket {
 		final int itemId = 166200022;
 		final ItemTemplate template = item.getItemTemplate();
 		final int nameId = template.getNameId();
+		// 动画与结算延时 5000ms（对齐真端 User_AddIdentifyItemTimer 的 5000ms 计时）。
+		// Animation and settlement delay is 5000 ms (mirrors the 5000 ms timer in retail User_AddIdentifyItemTimer).
 		PacketSendUtility.broadcastPacket(player,
-				new SM_ITEM_USAGE_ANIMATION(player.getObjectId(), item.getObjectId(), itemId, 3000, 0, 0), true);
+				new SM_ITEM_USAGE_ANIMATION(player.getObjectId(), item.getObjectId(), itemId, 5000, 0, 0), true);
 		final ItemUseObserver observer = new ItemUseObserver() {
 			@Override
 			public void abort() {
@@ -106,15 +108,18 @@ public class CM_TUNE extends AionClientPacket {
 			PacketSendUtility.broadcastPacket(player,
 					new SM_ITEM_USAGE_ANIMATION(player.getObjectId(), itemObjectId, itemId, 0, 1, 1), true);
 			item.setOptionalSocket(Rnd.get(0, item.getItemTemplate().getOptionSlotBonus()));
-			/*
-			 * if (item.getItemTemplate().getMaxEnchantBonus() > 0) {
-			 * item.setEnchantBonus(Rnd.get(0,
-			 * item.getItemTemplate().getMaxEnchantBonus())); }
-			 */
+			// 首次鉴定同样重掷附魔加成（对齐真端 SaveRandomAttr 落盘三值与 4.8 参考实现）。
+			// First identification also rerolls the enchant bonus (mirrors retail SaveRandomAttr
+			// persisting all three values and the 4.8 reference implementation).
+			if (item.getItemTemplate().getMaxEnchantBonus() > 0) {
+				item.setEnchantBonus(Rnd.get(0, item.getItemTemplate().getMaxEnchantBonus()));
+			}
 			item.setRndBonus();
 			item.setPersistentState(PersistentState.UPDATE_REQUIRED);
 			PacketSendUtility.sendPacket(player, new SM_INVENTORY_UPDATE_ITEM(player, item));
 			PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1401626, new DescriptionId(nameId)));
-		}, 3000);
+			// 结算延时 5000ms（对齐真端 User_AddIdentifyItemTimer 的 5000ms 计时）。
+			// Settlement delay is 5000 ms (mirrors the 5000 ms timer in retail User_AddIdentifyItemTimer).
+		}, 5000);
 	}
 }

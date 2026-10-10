@@ -7,11 +7,14 @@ import jakarta.xml.bind.annotation.XmlType;
 
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.controllers.observer.ItemUseObserver;
+import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.DescriptionId;
 import com.aionemu.gameserver.model.TaskId;
 import com.aionemu.gameserver.model.gameobjects.Item;
 import com.aionemu.gameserver.model.gameobjects.PersistentState;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
+import com.aionemu.gameserver.model.items.RandomBonusResult;
+import com.aionemu.gameserver.model.templates.item.bonuses.StatBonusType;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_INVENTORY_UPDATE_ITEM;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_ITEM_USAGE_ANIMATION;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
@@ -83,8 +86,10 @@ public class RetuningAction extends AbstractItemAction {
 		final int parentItemId = parentItem.getItemId();
 		final int parntObjectId = parentItem.getObjectId();
 		final int nameId = parentItem.getNameId();
+		// 动画与结算延时 5000ms（对齐真端 User_AddIdentifyItemTimer 的 5000ms 计时）。
+		// Animation and settlement delay is 5000 ms (mirrors the 5000 ms timer in retail User_AddIdentifyItemTimer).
 		PacketSendUtility.broadcastPacket(player,
-				new SM_ITEM_USAGE_ANIMATION(player.getObjectId(), parentItem.getObjectId(), animationItemId, 3000, 0, 0),
+				new SM_ITEM_USAGE_ANIMATION(player.getObjectId(), parentItem.getObjectId(), animationItemId, 5000, 0, 0),
 				true);
 		final ItemUseObserver observer = new ItemUseObserver() {
 			/** 中止 / abort. */
@@ -110,24 +115,48 @@ public class RetuningAction extends AbstractItemAction {
 				player.getObserveController().removeObserver(observer);
 				PacketSendUtility.broadcastPacket(player,
 						new SM_ITEM_USAGE_ANIMATION(player.getObjectId(), parntObjectId, animationItemId, 0, 1, 1), true);
-				if (!player.getInventory().decreaseByObjectId(parntObjectId, 1)) {
-					return;
-				}
+				// 先校验再消耗，避免状态在动画期间变化时白白损失卷轴（对齐真端 User_IdentifyItem 的校验先于扣减）。
+				// Validate before consuming so a mid-animation state change cannot waste the scroll
+				// (mirrors retail User_IdentifyItem validating ahead of the decrement).
 				int rndCount = targetItem.getRandomCount();
 				if (rndCount >= targetItem.getItemTemplate().getRandomBonusCount() || targetItem.isEquipped()) {
 					return;
 				}
-				targetItem.setRandomStats(null);
-				targetItem.setBonusNumber(0);
-				targetItem.setRandomCount(++rndCount);
-				targetItem.setOptionalSocket(Rnd.get(0, targetItem.getItemTemplate().getOptionSlotBonus()));
-				targetItem.setRndBonus();
+				if (!player.getInventory().decreaseByObjectId(parntObjectId, 1)) {
+					return;
+				}
+				// 鉴定计数立即递增且取消不回滚（对齐真端 OnIdentifyItem 的 0x494 递增）。
+				// The tune count increments immediately and is never rolled back on cancel
+				// (mirrors the 0x494 increment in retail OnIdentifyItem).
+				targetItem.setRandomCount(rndCount + 1);
+				// 计数递增后立即标记持久化（对齐真端 OnIdentifyItem 递增 0x494 后即刻 UpdateDBRandomOption 落库）。
+				// Flag persistence right after the increment (mirrors retail OnIdentifyItem persisting
+				// the 0x494 counter via UpdateDBRandomOption immediately after incrementing).
 				targetItem.setPersistentState(PersistentState.UPDATE_REQUIRED);
+				// 重新鉴定完成提示（对齐真端 0x156327，参数为目标装备名而非卷轴名）。
+				// Reidentify-succeed notice (mirrors retail 0x156327, parameterized by the target item's name).
+				PacketSendUtility.sendPacket(player,
+						new SM_SYSTEM_MESSAGE(1401639, new DescriptionId(targetItem.getNameId())));
+				// 属性值暂存，等待客户端在预览对话框中确认（对齐真端 0x539/0xa7/0x53a 暂存）。
+				// Attribute values are staged until the client confirms in the preview dialog
+				// (mirrors the 0x539/0xa7/0x53a staging in retail).
+				int newBonusNumber = 0;
+				RandomBonusResult bonus = DataManager.ITEM_RANDOM_BONUSES.getRandomModifiers(StatBonusType.INVENTORY,
+						targetItem.getItemTemplate().getRandomBonusId());
+				if (bonus != null) {
+					newBonusNumber = bonus.templateNumber();
+				}
+				targetItem.setPendingReidentify(Rnd.get(0, targetItem.getItemTemplate().getOptionSlotBonus()),
+						Rnd.get(0, targetItem.getItemTemplate().getMaxEnchantBonus()), newBonusNumber);
+				// 预览包（对齐真端 S_REIDENTIFY_PREVIEW / 0x122），携带暂存值供前后对比。
+				// Preview packet (mirrors retail S_REIDENTIFY_PREVIEW / 0x122), carrying the staged values.
 				PacketSendUtility.sendPacket(player,
 						new SM_TUNE_RESULT(player, targetItem, parentItemId));
+				// 真端预览包自带计数字段；本包精简，需补一次物品刷新让客户端更新鉴定次数显示。
+				// Retail's preview packet carries the count itself; this slimmer packet needs an extra
+				// inventory refresh so the client updates the displayed reidentify count.
 				PacketSendUtility.sendPacket(player, new SM_INVENTORY_UPDATE_ITEM(player, targetItem));
-				PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1401639, new DescriptionId(nameId)));
 			}
-		}, 3000);
+		}, 5000);
 	}
 }

@@ -97,6 +97,29 @@ public class ItemInfoBlob extends PacketWriteHelper {
 	}
 
 	/**
+	 * 工厂方法：创建魔石孔位 Blob 条目，并以指定的随机孔位与附魔加成覆盖值渲染（重新鉴定预览用）。
+	 * Factory method creating a mana-socket blob entry rendered with overridden
+	 * optional socket and enchant bonus (for the reidentify preview).
+	 * @param player 所属玩家 / owning player
+	 * @param item 所属物品 / owning item
+	 * @param overrideSocket 覆盖的随机孔位，负值表示使用物品当前值 /
+	 *        overridden optional socket, negative to use the item's current value
+	 * @param overrideEnchantBonus 覆盖的附魔加成，负值表示使用物品当前值 /
+	 *        overridden enchant bonus, negative to use the item's current value
+	 * @return 已绑定的条目 / bound entry
+	 */
+	public static ItemBlobEntry newPreviewManaSocketsEntry(Player player, Item item, int overrideSocket,
+		int overrideEnchantBonus) {
+		ItemBlobEntry ent = ItemBlobType.MANA_SOCKETS.newBlobEntry();
+		ent.setOwner(player, item, null);
+		if (ent instanceof ManaStoneInfoBlobEntry manaStoneEntry) {
+			manaStoneEntry.setOverrideSocket(overrideSocket);
+			manaStoneEntry.setOverrideEnchantBonus(overrideEnchantBonus);
+		}
+		return ent;
+	}
+
+	/**
 	 * 按物品类型与状态组装完整的物品信息 Blob。
 	 * 可装备物品会附加槽位、魔石、调校、羽饰/手环等信息；非装备则可能仅含普通信息或尘晶碎片。
 	 * Assembles a full item-info blob based on item type and runtime state.

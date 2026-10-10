@@ -326,6 +326,114 @@ public class Item extends AionObject implements IExpirable, StatOwner {
 		return getOptionalSocket() == -1;
 	}
 
+	/**
+	 * 重新鉴定预览暂存：随机孔位（对齐真端 item+0x539）。
+	 * Reidentify preview staging: optional socket (mirrors retail item+0x539).
+	 */
+	private int pendingReidentifySocket = -1;
+
+	/**
+	 * 重新鉴定预览暂存：附魔加成（对齐真端 item+0xa7）。
+	 * Reidentify preview staging: enchant bonus (mirrors retail item+0xa7).
+	 */
+	private int pendingReidentifyEnchantBonus = -1;
+
+	/**
+	 * 重新鉴定预览暂存：属性模板编号（对齐真端 item+0x53a）。
+	 * Reidentify preview staging: stat bonus number (mirrors retail item+0x53a).
+	 */
+	private int pendingReidentifyBonus = -1;
+
+	/**
+	 * 写入重新鉴定预览暂存值（对齐真端 OnIdentifyItem 的 0x539/0xa7/0x53a 暂存写入）。
+	 * 鉴定计数不在此列：真端在发起时即递增主计数，且取消不回滚。
+	 * Stores the reidentify preview values (mirrors retail OnIdentifyItem staging of 0x539/0xa7/0x53a).
+	 * The tune count is deliberately excluded: retail increments the primary count at
+	 * initiation and never rolls it back on cancel.
+	 *
+	 * @param socket 新的随机孔位 / new optional socket
+	 * @param enchantBonus 新的附魔加成 / new enchant bonus
+	 * @param bonus 新的属性模板编号 / new stat bonus number
+	 */
+	public void setPendingReidentify(int socket, int enchantBonus, int bonus) {
+		this.pendingReidentifySocket = socket;
+		this.pendingReidentifyEnchantBonus = enchantBonus;
+		this.pendingReidentifyBonus = bonus;
+	}
+
+	/**
+	 * 清空重新鉴定预览暂存值（对齐真端 AnswerReidentify 取消分支）。
+	 * 已消耗的鉴定计数不受影响。
+	 * Clears the reidentify preview values (mirrors retail AnswerReidentify cancel branch).
+	 * The already-consumed tune count is left untouched.
+	 */
+	public void clearPendingReidentify() {
+		this.pendingReidentifySocket = -1;
+		this.pendingReidentifyEnchantBonus = -1;
+		this.pendingReidentifyBonus = -1;
+	}
+
+	/**
+	 * 是否存在待确认的重新鉴定预览。
+	 * Whether a reidentify preview is pending confirmation.
+	 *
+	 * @return 有暂存值则为 true / true when staged values exist
+	 */
+	public boolean hasPendingReidentify() {
+		return pendingReidentifySocket >= 0;
+	}
+
+	/**
+	 * 应用重新鉴定暂存值到主字段（对齐真端 AnswerReidentify 确认分支的 SaveRandomAttr）。
+	 * Applies the staged reidentify values to the primary fields
+	 * (mirrors SaveRandomAttr in retail's AnswerReidentify confirm branch).
+	 */
+	public void applyPendingReidentify() {
+		if (!hasPendingReidentify()) {
+			return;
+		}
+		this.optionalSocket = pendingReidentifySocket;
+		this.enchant_bonus = pendingReidentifyEnchantBonus;
+		this.bonusNumber = pendingReidentifyBonus;
+		if (pendingReidentifyBonus > 0 && itemTemplate.getRandomBonusId() != 0) {
+			randomStats = new RandomStats(itemTemplate.getRandomBonusId(), pendingReidentifyBonus);
+		} else {
+			randomStats = null;
+		}
+		clearPendingReidentify();
+		setPersistentState(PersistentState.UPDATE_REQUIRED);
+	}
+
+	/**
+	 * 返回预览用随机孔位（有待确认暂存值时优先返回暂存值）。
+	 * Returns the optional socket for preview (staged value takes precedence while pending).
+	 *
+	 * @return 随机孔位 / optional socket
+	 */
+	public int getPreviewReidentifySocket() {
+		return hasPendingReidentify() ? pendingReidentifySocket : optionalSocket;
+	}
+
+	/**
+	 * 返回预览用附魔加成（有待确认暂存值时优先返回暂存值）。
+	 * Returns the enchant bonus for preview (staged value takes precedence while pending).
+	 *
+	 * @return 附魔加成 / enchant bonus
+	 */
+	public int getPreviewReidentifyEnchantBonus() {
+		return hasPendingReidentify() ? pendingReidentifyEnchantBonus : enchant_bonus;
+	}
+
+	/**
+	 * 返回预览用属性模板编号（有待确认暂存值时优先返回暂存值）。
+	 * Returns the stat bonus number for preview (staged value takes precedence while pending).
+	 *
+	 * @return 属性模板编号 / stat bonus number
+	 */
+	public int getPreviewReidentifyBonus() {
+		return hasPendingReidentify() ? pendingReidentifyBonus : bonusNumber;
+	}
+
 	@Override
 	public String getName() {
 		return getItemName();

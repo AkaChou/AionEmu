@@ -22,11 +22,45 @@ import com.aionemu.gameserver.network.aion.iteminfo.ItemInfoBlob.ItemBlobType;
 public class ManaStoneInfoBlobEntry extends ItemBlobEntry {
 
 	/**
+	 * 随机孔位覆盖值；负值表示使用物品当前值（重新鉴定预览用）。
+	 * Optional-socket override; negative to use the item's current value (for the reidentify preview).
+	 */
+	private int overrideSocket = -1;
+
+	/**
+	 * 附魔加成覆盖值；负值表示使用物品当前值（重新鉴定预览用）。
+	 * Enchant-bonus override; negative to use the item's current value (for the reidentify preview).
+	 */
+	private int overrideEnchantBonus = -1;
+
+	/**
 	 * 构造魔石孔位 Blob 条目。
 	 * Constructs a mana-socket blob entry.
 	 */
 	ManaStoneInfoBlobEntry() {
 		super(ItemBlobType.MANA_SOCKETS);
+	}
+
+	/**
+	 * 设置随机孔位覆盖值（重新鉴定预览用）。
+	 * Sets the optional-socket override (for the reidentify preview).
+	 *
+	 * @param overrideSocket 覆盖的随机孔位，负值表示使用物品当前值 /
+	 *        overridden optional socket, negative to use the item's current value
+	 */
+	void setOverrideSocket(int overrideSocket) {
+		this.overrideSocket = overrideSocket;
+	}
+
+	/**
+	 * 设置附魔加成覆盖值（重新鉴定预览用）。
+	 * Sets the enchant-bonus override (for the reidentify preview).
+	 *
+	 * @param overrideEnchantBonus 覆盖的附魔加成，负值表示使用物品当前值 /
+	 *        overridden enchant bonus, negative to use the item's current value
+	 */
+	void setOverrideEnchantBonus(int overrideEnchantBonus) {
+		this.overrideEnchantBonus = overrideEnchantBonus;
 	}
 
 	/**
@@ -39,8 +73,8 @@ public class ManaStoneInfoBlobEntry extends ItemBlobEntry {
 		writeC(buf, item.isSoulBound() ? 1 : 0);
 		writeC(buf, item.getEnchantLevel());
 		writeD(buf, item.getItemSkinTemplate().getTemplateId());
-		writeC(buf, item.getOptionalSocket());
-		writeC(buf, item.hasEnchantBonus() ? item.getEnchantBonus() : 0);
+		writeC(buf, overrideSocket >= 0 ? overrideSocket : item.getOptionalSocket());
+		writeC(buf, overrideEnchantBonus >= 0 ? overrideEnchantBonus : (item.hasEnchantBonus() ? item.getEnchantBonus() : 0));
 		writeItemStones(buf);
 		ItemStone god = item.getGodStone();
 		writeD(buf, god == null ? 0 : god.getItemId());

@@ -23056,9 +23056,11 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_MSG_EMERGENCY_ESCAPE = new SM_SYSTEM_MESSAGE(1401663);
 
 	/**
-	 * @param value0 返回结果已应用于 %0。 / The returned results have been applied to %0
+	 * @param value0 目标物品名（以 DescriptionId 携带 nameId，对齐真端以物品名 ID 为参数）。
+	 *        Target item name carried as a DescriptionId (retail passes the item's name id).
+	 * @return 返回结果已应用于 %0。 / The returned results have been applied to %0
 	 */
-	public static SM_SYSTEM_MESSAGE STR_MSG_ITEM_REIDENTIFY_APPLY_YES(String value0) {
+	public static SM_SYSTEM_MESSAGE STR_MSG_ITEM_REIDENTIFY_APPLY_YES(DescriptionId value0) {
 		return new SM_SYSTEM_MESSAGE(1401910, value0);
 	}
 
