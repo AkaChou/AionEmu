@@ -15,7 +15,7 @@
 
 ## 安装与使用方法
 
-> ⚠️ **重要提示**：在覆盖任何补丁前，请务必先备份客户端中的原始同名文件与目录！
+> **重要提示**：在覆盖任何补丁前，请务必先备份客户端中的原始同名文件与目录！
 
 1. 找到您的 **Aion 5.8 客户端** 安装根目录。
 2. 备份客户端中原有的 `bin64/`、`L10N/`、`Levels/`、`Textures/` 等目录。
@@ -38,7 +38,7 @@ Companion Aion 5.8 client patch files and resources provided by this project.
 
 ### Installation & Usage Guide
 
-> ⚠️ **Important Notice**: Before overwriting any patch files, always make sure to back up the original files and directories in your game client!
+> **Important Notice**: Before overwriting any patch files, always make sure to back up the original files and directories in your game client!
 
 1. Locate your **Aion 5.8 Client** root installation directory.
 2. Back up existing directories in your client, such as `bin64/`, `L10N/`, `Levels/`, `Textures/`, etc.

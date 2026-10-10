@@ -17,37 +17,37 @@
 
 ---
 
-## 📖 Introduction
+## Introduction
 
 **AionEmu** is a modern, modular, and high-performance server emulator for **Aion 5.8**. By unifying Login, Game, and Chat services into a single Spring Boot application, AionEmu combines cutting-edge Java 25 capabilities with deep original server/client behavioral parity, designed for production stability and clean architecture.
 
 ---
 
-## ⭐ Core Features
+## Core Features
 
 | Feature | Description | Status |
 | --- | --- | :---: |
-| 📜 **Data-Driven Quest Engine** | Native table-driven execution runtime (`tablelane`) replacing 1,500+ legacy Java files; full coverage of multi-stage dialogue, hunt, collect, and cutscene sequences. | ✅ Authentic Parity |
-| 🧠 **AI & Pathfinding Engine** | Original `.path/.idx` multi-layer A* 3D navigation; optimized aggro, patrol, escort, and obstacle handling. | ✅ Enhanced |
-| 🐾 **Client-Simulated Minions** | Fully authentic minion follow model simulated on the client side, eliminating server pathfinding overhead and spammy teleport broadcasts. | ✅ Client Simulation |
-| ⚔️ **PvP CC Decay Chains** | Port of original abnormal status diminishing returns with dynamic resistance increase and tiered time windows. | ✅ Authentic Parity |
-| 🎁 **Scalable Drops & Economy** | Dynamic drop calculations, level-based reduction, group roll/bid, auto-loot, and corpse lifecycle management. | ✅ Complete |
-| 🛠️ **Operations & GM Tooling** | Batch spawning (`//spawn <id>*<count>`), persistent/non-persistent spawn separation (`//spawn` vs `//spawns`), and automated packaging scripts. | ✅ Ready |
+| **Data-Driven Quest Engine** | Native table-driven execution runtime (`tablelane`) replacing 1,500+ legacy Java files; full coverage of multi-stage dialogue, hunt, collect, and cutscene sequences. | ✅ Authentic Parity |
+| **AI & Pathfinding Engine** | Original `.path/.idx` multi-layer A* 3D navigation; optimized aggro, patrol, escort, and obstacle handling. | ✅ Enhanced |
+| **Client-Simulated Minions** | Fully authentic minion follow model simulated on the client side, eliminating server pathfinding overhead and spammy teleport broadcasts. | ✅ Client Simulation |
+| **PvP CC Decay Chains** | Port of original abnormal status diminishing returns with dynamic resistance increase and tiered time windows. | ✅ Authentic Parity |
+| **Scalable Drops & Economy** | Dynamic drop calculations, level-based reduction, group roll/bid, auto-loot, and corpse lifecycle management. | ✅ Complete |
+| **Operations & GM Tooling** | Batch spawning (`//spawn <id>*<count>`), persistent/non-persistent spawn separation (`//spawn` vs `//spawns`), and automated packaging scripts. | ✅ Ready |
 
 ---
 
-## 🗺️ Roadmap
+## Roadmap
 
 | Milestone & Direction | Scope & Objectives | Status |
 | --- | --- | :---: |
-| 📜 **Data-Driven Quest Migration** | Full migration of 1,500+ hardcoded Java quest handlers to a unified native table-driven runtime aligned with authentic 5.8. | ✅ Done |
-| 🏰 **Instance Engine & Original Mechanics** | Deep alignment of 5.8 original instance workflows, boss phase AI decoupling, and data-driven instance script orchestration. | 🚧 In Progress |
-| ⚡ **Go Transformation & Microservices** | Incremental re-architecture with Go: high-concurrency connection gateway, decoupled login/chat standalone services, and low-latency packet routing. | 📝 Todo |
-| 📦 **Static Data Modernization** | Migrating voluminous XML static datasets into streaming, memory-mapped compact JSONL / binary formats to minimize startup footprint. | 📝 Todo |
+| **Data-Driven Quest Migration** | Full migration of 1,500+ hardcoded Java quest handlers to a unified native table-driven runtime aligned with authentic 5.8. | ✅ Done |
+| **Instance Engine & Original Mechanics** | Deep alignment of 5.8 original instance workflows, boss phase AI decoupling, and data-driven instance script orchestration. | 🚧 In Progress |
+| **Go Transformation & Microservices** | Incremental re-architecture with Go: high-concurrency connection gateway, decoupled login/chat standalone services, and low-latency packet routing. | 📝 Todo |
+| **Static Data Modernization** | Migrating voluminous XML static datasets into streaming, memory-mapped compact JSONL / binary formats to minimize startup footprint. | 📝 Todo |
 
 ---
 
-## ⚡ Quick Start
+## Quick Start
 
 ### Prerequisites
 - **JDK 25+** • **Maven 3.7+** • **MySQL 8.0+** • **Aion 5.8 Client**
@@ -66,14 +66,14 @@ Database schemas and initial data scripts are located at:
 
 ---
 
-## 🎮 Client Patch
+## Client Patch
 
 The `patch/` directory contains companion enhancements for the Aion 5.8 client (`bin64/` runtime, `L10N/` quest texts, `Levels/` terrain, and `Textures/` UI).
 - **Usage**: Please **back up your client's original files first**, then copy and overwrite corresponding folders from `patch/` into your client root installation directory.
 
 ---
 
-## 💡 Contributing
+## Contributing
 
 Contributions are warmly welcomed!
 1. **Guidelines**: Maintain bilingual (EN/ZH) comments for key interfaces, adhere to data-driven design, and avoid hardcoded exceptions.
@@ -82,7 +82,7 @@ Contributions are warmly welcomed!
 
 ---
 
-## 🤝 Acknowledgments & License
+## Acknowledgments & License
 
 - Based on **Aion 5.8 Community Emulator** and earlier community work; architecture and protocol insights inspired by [Beyond Aion](https://github.com/beyond-aion/aion-server) (GPL-3.0).
 - This project is licensed under the [GNU General Public License v3.0](LICENSE).
