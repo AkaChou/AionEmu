@@ -833,4 +833,394 @@ class ConfigurationPropertiesBindingTest {
 			snapshot.restore();
 		}
 	}
+
+	@Test
+	void bindsPvPConfigProperties() {
+		ConfigSnapshot snapshot = ConfigSnapshot.of(PvPConfig.class,
+			"MAX_DAILY_PVP_KILLS", "ENABLE_TOLL_REWARD", "TOLL_CHANCE", "TOLL_QUANTITY",
+			"ENABLE_KILLING_SPREE_SYSTEM", "SPREE_KILL_COUNT", "GENOCIDE_KILL_COUNT",
+			"SPREE_REWARD_COUNT1", "SPREE_REWARD_ITEM1",
+			"ENABLE_GP_REWARD", "ENABLE_GP_LOSE", "ENABLE_GP_FIXED_LOSE", "GP_LOSE",
+			"CHAIN_KILL_TIME_RESTRICTION", "CHAIN_KILL_NUMBER_RESTRICTION", "MAX_AUTHORIZED_LEVEL_DIFF",
+			"ENABLE_MEDAL_REWARDING", "MEDAL_REWARD_CHANCE", "GENOCIDE_SPECIAL_REWARDING", "SPECIAL_REWARD_CHANCE");
+		try {
+			StandardEnvironment environment = new StandardEnvironment();
+			environment.getPropertySources().addFirst(new MapPropertySource("test", Map.ofEntries(
+				Map.entry("gameserver.pvp.maxkills", "7"),
+				Map.entry("gameserver.pvp.toll.rewarding.enable", "true"),
+				Map.entry("gameserver.pvp.toll.reward.chance", "55"),
+				Map.entry("gameserver.pvp.toll.reward.quantity", "6"),
+				Map.entry("gameserver.pvp.killingspree.enable", "true"),
+				Map.entry("gameserver.pvp.raw.killcount.spree", "6"),
+				Map.entry("gameserver.pvp.raw.killcount.genocide", "16"),
+				Map.entry("gameserver.pvp.spree_reward1.count", "11"),
+				Map.entry("gameserver.pvp.spree_reward1.item", "166020001"),
+				Map.entry("gameserver.enable.gp.reward", "true"),
+				Map.entry("gameserver.enable.gp.lose.value", "true"),
+				Map.entry("gameserver.enable.gp.lose.fixed", "true"),
+				Map.entry("gameserver.gp.lose", "150"),
+				Map.entry("gameserver.pvp.chainkill.time.restriction", "5"),
+				Map.entry("gameserver.pvp.chainkill.number.restriction", "35"),
+				Map.entry("gameserver.pvp.max.leveldiff.restriction", "12"),
+				Map.entry("gameserver.pvp.medal.rewarding.enable", "true"),
+				Map.entry("gameserver.pvp.medal.reward.chance", "15"),
+				Map.entry("gameserver.pvp.special_reward.type", "3"),
+				Map.entry("gameserver.pvp.special_reward.chance", "4")
+			)));
+
+			PvPConfig config = new PvPConfig();
+			Binder.get(environment).bind("gameserver", Bindable.ofInstance(config));
+
+			assertEquals(7, PvPConfig.MAX_DAILY_PVP_KILLS);
+			assertTrue(PvPConfig.ENABLE_TOLL_REWARD);
+			assertEquals(55, PvPConfig.TOLL_CHANCE);
+			assertEquals(6, PvPConfig.TOLL_QUANTITY);
+			assertTrue(PvPConfig.ENABLE_KILLING_SPREE_SYSTEM);
+			assertEquals(6, PvPConfig.SPREE_KILL_COUNT);
+			assertEquals(16, PvPConfig.GENOCIDE_KILL_COUNT);
+			assertEquals(11, PvPConfig.SPREE_REWARD_COUNT1);
+			assertEquals(166020001, PvPConfig.SPREE_REWARD_ITEM1);
+			assertTrue(PvPConfig.ENABLE_GP_REWARD);
+			assertTrue(PvPConfig.ENABLE_GP_LOSE);
+			assertTrue(PvPConfig.ENABLE_GP_FIXED_LOSE);
+			assertEquals(150, PvPConfig.GP_LOSE);
+			assertEquals(5, PvPConfig.CHAIN_KILL_TIME_RESTRICTION);
+			assertEquals(35, PvPConfig.CHAIN_KILL_NUMBER_RESTRICTION);
+			assertEquals(12, PvPConfig.MAX_AUTHORIZED_LEVEL_DIFF);
+			assertTrue(PvPConfig.ENABLE_MEDAL_REWARDING);
+			assertEquals(15f, PvPConfig.MEDAL_REWARD_CHANCE);
+			assertEquals(3, PvPConfig.GENOCIDE_SPECIAL_REWARDING);
+			assertEquals(4f, PvPConfig.SPECIAL_REWARD_CHANCE);
+		} finally {
+			snapshot.restore();
+		}
+	}
+
+	@Test
+	void bindsPvPConfigLegacyGpLoseScalar() {
+		ConfigSnapshot snapshot = ConfigSnapshot.of(PvPConfig.class, "ENABLE_GP_LOSE");
+		try {
+			StandardEnvironment environment = new StandardEnvironment();
+			environment.getPropertySources().addFirst(new MapPropertySource("test", Map.of(
+				"gameserver.enable.gp.lose", "true"
+			)));
+
+			PvPConfig config = new PvPConfig();
+			Binder.get(environment).bind("gameserver", Bindable.ofInstance(config));
+
+			assertTrue(PvPConfig.ENABLE_GP_LOSE);
+		} finally {
+			snapshot.restore();
+		}
+	}
+
+	@Test
+	void bindsEventsConfigProperties() {
+		ConfigSnapshot snapshot = ConfigSnapshot.of(EventsConfig.class,
+			"EVENT_ENABLED", "ENABLE_DECOR", "EVENT_GIVE_JUICE", "ENABLE_EVENT_SERVICE",
+			"ENABLE_VIP_TICKETS", "VIP_TICKETS_PERIOD", "ENABLE_AWAKE_EVENT", "SEED_TRANSFORMATION_PERIOD",
+			"IMPERIAL_TOMB_ENABLE", "IMPERIAL_TOMB_TIMER", "IMPERIAL_TOMB_TIMES",
+			"ENABLE_CRAZY", "CRAZY_LOWEST_RND", "CRAZY_TIMES", "CRAZY_ENDTIME",
+			"ENABLE_EVENT_ARCADE", "EVENT_ARCADE_CHANCE",
+			"ENABLE_ABYSS_EVENT", "ABYSS_EVENT_SCHEDULE", "ABYSS_EVENT_REWARDS",
+			"ENABLE_PIG_POPPY_EVENT", "PIG_POPPY_EVENT_SCHEDULE", "PIG_POPPY_EVENT_COUNT_REWARD", "PIG_POPPY_REWARDS",
+			"EVENT_SHUGOSWEEP_BOARD", "EVENT_SHUGOSWEEP_FREEDICE", "EVENT_YOUTUBE_VIDEO");
+		try {
+			StandardEnvironment environment = new StandardEnvironment();
+			environment.getPropertySources().addFirst(new MapPropertySource("test", Map.ofEntries(
+				Map.entry("gameserver.event.enable", "true"),
+				Map.entry("gameserver.enable.decor", "3"),
+				Map.entry("gameserver.events.give.juice", "160009018"),
+				Map.entry("gameserver.event.service.enable", "true"),
+				Map.entry("gameserver.vip.tickets.enable", "true"),
+				Map.entry("gameserver.vip.tickets.time", "90"),
+				Map.entry("gameserver.event.awake.enable", "true"),
+				Map.entry("gameserver.event.seed.transformation.time", "75"),
+				Map.entry("gameserver.shugo.imperial.tomb.enable", "false"),
+				Map.entry("gameserver.shugo.imperial.tomb.timer.from.start.to.end", "15"),
+				Map.entry("gameserver.shugo.imperial.tomb.time.to.start", "0 0 1,13,21,0 ? * *"),
+				Map.entry("gameserver.crazy.daeva.enable", "true"),
+				Map.entry("gameserver.crazy.daeva.lowest.rnd", "12"),
+				Map.entry("gameserver.crazy.daeva.time.to.start", "0 0 1,13,21,0 ? * *"),
+				Map.entry("gameserver.crazy.daeva.endtime", "7"),
+				Map.entry("gameserver.event.arcade.enable", "true"),
+				Map.entry("gameserver.upgrade.arcade.chance", "60"),
+				Map.entry("gameserver.event.abyss.treasure.enable", "true"),
+				Map.entry("gameserver.event.abyss.treasure.time", "0 0 16 ? * SUN"),
+				Map.entry("gameserver.event.abyss.rewards", "125040073"),
+				Map.entry("gameserver.event.pig.poppy.enable", "false"),
+				Map.entry("gameserver.event.pig.poppy.value", "0 0 23 ? * SAT"),
+				Map.entry("gameserver.event.pig.poppy.reward.count", "8"),
+				Map.entry("gameserver.pig.poppy.rewards", "125040074"),
+				Map.entry("gameserver.event.shugoSweep.board", "4"),
+				Map.entry("gameserver.event.shugoSweep.freeDice", "9"),
+				Map.entry("gameserver.event.youtube_video", "https://example.com/embed/x")
+			)));
+
+			EventsConfig config = new EventsConfig();
+			Binder.get(environment).bind("gameserver", Bindable.ofInstance(config));
+
+			assertTrue(EventsConfig.EVENT_ENABLED);
+			assertEquals(3, EventsConfig.ENABLE_DECOR);
+			assertEquals(160009018, EventsConfig.EVENT_GIVE_JUICE);
+			assertTrue(EventsConfig.ENABLE_EVENT_SERVICE);
+			assertTrue(EventsConfig.ENABLE_VIP_TICKETS);
+			assertEquals(90, EventsConfig.VIP_TICKETS_PERIOD);
+			assertTrue(EventsConfig.ENABLE_AWAKE_EVENT);
+			assertEquals(75, EventsConfig.SEED_TRANSFORMATION_PERIOD);
+			assertFalse(EventsConfig.IMPERIAL_TOMB_ENABLE);
+			assertEquals(15L, EventsConfig.IMPERIAL_TOMB_TIMER);
+			assertEquals("0 0 1,13,21,0 ? * *", EventsConfig.IMPERIAL_TOMB_TIMES);
+			assertTrue(EventsConfig.ENABLE_CRAZY);
+			assertEquals(12, EventsConfig.CRAZY_LOWEST_RND);
+			assertEquals("0 0 1,13,21,0 ? * *", EventsConfig.CRAZY_TIMES);
+			assertEquals(7, EventsConfig.CRAZY_ENDTIME);
+			assertTrue(EventsConfig.ENABLE_EVENT_ARCADE);
+			assertEquals(60, EventsConfig.EVENT_ARCADE_CHANCE);
+			assertTrue(EventsConfig.ENABLE_ABYSS_EVENT);
+			assertEquals("0 0 16 ? * SUN", EventsConfig.ABYSS_EVENT_SCHEDULE);
+			assertEquals("125040073", EventsConfig.ABYSS_EVENT_REWARDS);
+			assertFalse(EventsConfig.ENABLE_PIG_POPPY_EVENT);
+			assertEquals("0 0 23 ? * SAT", EventsConfig.PIG_POPPY_EVENT_SCHEDULE);
+			assertEquals(8, EventsConfig.PIG_POPPY_EVENT_COUNT_REWARD);
+			assertEquals("125040074", EventsConfig.PIG_POPPY_REWARDS);
+			assertEquals(4, EventsConfig.EVENT_SHUGOSWEEP_BOARD);
+			assertEquals(9, EventsConfig.EVENT_SHUGOSWEEP_FREEDICE);
+			assertEquals("https://example.com/embed/x", EventsConfig.EVENT_YOUTUBE_VIDEO);
+		} finally {
+			snapshot.restore();
+		}
+	}
+
+	@Test
+	void bindsMembershipConfigProperties() {
+		ConfigSnapshot snapshot = ConfigSnapshot.of(MembershipConfig.class,
+			"INSTANCES_TITLE_REQ", "INSTANCES_RACE_REQ", "INSTANCES_COOLDOWN", "INSTANCES_ITEM_REQ",
+			"STORE_WH_ALL", "STORE_AWH_ALL", "STORE_LWH_ALL", "TRADE_ALL", "DISABLE_SOULBIND",
+			"REMODEL_ALL", "EMOTIONS_ALL", "TITLES_ADDITIONAL_ENABLE", "STIGMA_SLOT_QUEST",
+			"DISABLE_SOULSICKNESS", "STIGMA_AUTOLEARN", "CHARACTER_ADDITIONAL_ENABLE",
+			"ADVANCED_FRIENDLIST_ENABLE", "CHARACTER_ADDITIONAL_COUNT", "ADVANCED_FRIENDLIST_SIZE",
+			"PLAYER_TAG_30", "PLAYER_TAG_34", "PREMIUM_TAG_DISPLAY_ENABLE", "TAG_VIP", "TAG_PREMIUM");
+		try {
+			StandardEnvironment environment = new StandardEnvironment();
+			environment.getPropertySources().addFirst(new MapPropertySource("test", Map.ofEntries(
+				Map.entry("gameserver.instances.title.requirement", "11"),
+				Map.entry("gameserver.instances.race.requirement", "12"),
+				Map.entry("gameserver.instances.cooldown", "13"),
+				Map.entry("gameserver.instances.item.requirement", "14"),
+				Map.entry("gameserver.store.wh.all", "21"),
+				Map.entry("gameserver.store.accountwh.all", "22"),
+				Map.entry("gameserver.store.legionwh.all", "23"),
+				Map.entry("gameserver.trade.all", "24"),
+				Map.entry("gameserver.disable.soulbind", "25"),
+				Map.entry("gameserver.remodel.all", "26"),
+				Map.entry("gameserver.emotions.all", "27"),
+				Map.entry("gameserver.titles.additional.enable", "28"),
+				Map.entry("gameserver.quest.stigma.slot", "29"),
+				Map.entry("gameserver.soulsickness.disable", "30"),
+				Map.entry("gameserver.autolearn.stigma", "31"),
+				Map.entry("gameserver.character.additional.enable", "32"),
+				Map.entry("gameserver.advanced.friendlist.enable", "33"),
+				Map.entry("gameserver.character.additional.count", "9"),
+				Map.entry("gameserver.advanced.friendlist.size", "95"),
+				Map.entry("gameserver.player.tag.30", "TAG30"),
+				Map.entry("gameserver.player.tag.34", "TAG34"),
+				Map.entry("gameserver.membership.tag.display.enable", "false"),
+				Map.entry("gameserver.membership.tag.vip", "V %s"),
+				Map.entry("gameserver.membership.tag.premium", "P %s")
+			)));
+
+			MembershipConfig config = new MembershipConfig();
+			Binder.get(environment).bind("gameserver", Bindable.ofInstance(config));
+
+			assertEquals(11, MembershipConfig.INSTANCES_TITLE_REQ);
+			assertEquals(12, MembershipConfig.INSTANCES_RACE_REQ);
+			assertEquals(13, MembershipConfig.INSTANCES_COOLDOWN);
+			assertEquals(14, MembershipConfig.INSTANCES_ITEM_REQ);
+			assertEquals(21, MembershipConfig.STORE_WH_ALL);
+			assertEquals(22, MembershipConfig.STORE_AWH_ALL);
+			assertEquals(23, MembershipConfig.STORE_LWH_ALL);
+			assertEquals(24, MembershipConfig.TRADE_ALL);
+			assertEquals(25, MembershipConfig.DISABLE_SOULBIND);
+			assertEquals(26, MembershipConfig.REMODEL_ALL);
+			assertEquals(27, MembershipConfig.EMOTIONS_ALL);
+			assertEquals(28, MembershipConfig.TITLES_ADDITIONAL_ENABLE);
+			assertEquals(29, MembershipConfig.STIGMA_SLOT_QUEST);
+			assertEquals(30, MembershipConfig.DISABLE_SOULSICKNESS);
+			assertEquals(31, MembershipConfig.STIGMA_AUTOLEARN);
+			assertEquals(32, MembershipConfig.CHARACTER_ADDITIONAL_ENABLE);
+			assertEquals(33, MembershipConfig.ADVANCED_FRIENDLIST_ENABLE);
+			assertEquals(9, MembershipConfig.CHARACTER_ADDITIONAL_COUNT);
+			assertEquals(95, MembershipConfig.ADVANCED_FRIENDLIST_SIZE);
+			assertEquals("TAG30", MembershipConfig.PLAYER_TAG_30);
+			assertEquals("TAG34", MembershipConfig.PLAYER_TAG_34);
+			assertFalse(MembershipConfig.PREMIUM_TAG_DISPLAY_ENABLE);
+			assertEquals("V %s", MembershipConfig.TAG_VIP);
+			assertEquals("P %s", MembershipConfig.TAG_PREMIUM);
+		} finally {
+			snapshot.restore();
+		}
+	}
+
+	@Test
+	void bindsGeoDataConfigProperties() {
+		ConfigSnapshot snapshot = ConfigSnapshot.of(GeoDataConfig.class,
+			"GEO_ENABLE", "CANSEE_ENABLE", "FEAR_ENABLE", "GEO_NPC_MOVE", "GEO_MATERIALS_ENABLE",
+			"GEO_SHIELDS_ENABLE", "GEO_PATH_ENABLE", "GEO_PATH_DISTANCE_TIERS_ENABLE",
+			"GEO_PATH_RECOVERY_ENABLE", "GEO_PATH_HIERARCHICAL_ENABLE", "GEO_PATH_WAYPOINT_LOOKAHEAD",
+			"GEO_PATH_CACHE_SIZE", "GEO_PATH_MAX_NODES", "GEO_PATH_TIMEOUT_MS", "GEO_PATH_SPATIAL_STEP",
+			"GEO_PATH_WORKERS", "GEO_PATH_QUEUE_CAPACITY", "GEO_NPC_WALK_PATH_MODE",
+			"GEO_NPC_WALK_COLLISION_ENABLE", "GEO_NPC_WALK_ROUTE_VALIDATE",
+			"GEO_NPC_WALK_ROUTE_VALIDATE_SUMMARY_ENABLE");
+		try {
+			StandardEnvironment environment = new StandardEnvironment();
+			environment.getPropertySources().addFirst(new MapPropertySource("test", Map.ofEntries(
+				Map.entry("gameserver.geodata.enable", "true"),
+				Map.entry("gameserver.geodata.cansee.enable", "false"),
+				Map.entry("gameserver.geodata.fear.enable", "false"),
+				Map.entry("gameserver.geo.npc.move", "true"),
+				Map.entry("gameserver.geo.materials.enable", "true"),
+				Map.entry("gameserver.geo.shields.enable", "true"),
+				Map.entry("gameserver.geo.path.enable", "true"),
+				Map.entry("gameserver.geo.path.distance.tiers.enable", "true"),
+				Map.entry("gameserver.geo.path.recovery.enable", "false"),
+				Map.entry("gameserver.geo.path.hierarchical.enable", "true"),
+				Map.entry("gameserver.geo.path.waypoint.lookahead", "5"),
+				Map.entry("gameserver.geo.path.cache.size", "48"),
+				Map.entry("gameserver.geo.path.max.nodes", "60000"),
+				Map.entry("gameserver.geo.path.timeout.ms", "300"),
+				Map.entry("gameserver.geo.path.spatial.step", "3"),
+				Map.entry("gameserver.geo.path.workers", "6"),
+				Map.entry("gameserver.geo.path.queue.capacity", "512"),
+				Map.entry("gameserver.geo.npc.walk.path.mode", "blocked"),
+				Map.entry("gameserver.geo.npc.walk.collision.enable", "true"),
+				Map.entry("gameserver.geo.npc.walk.route.validate.value", "log"),
+				Map.entry("gameserver.geo.npc.walk.route.validate.summary.enable", "true")
+			)));
+
+			GeoDataConfig config = new GeoDataConfig();
+			Binder.get(environment).bind("gameserver", Bindable.ofInstance(config));
+
+			assertTrue(GeoDataConfig.GEO_ENABLE);
+			assertFalse(GeoDataConfig.CANSEE_ENABLE);
+			assertFalse(GeoDataConfig.FEAR_ENABLE);
+			assertTrue(GeoDataConfig.GEO_NPC_MOVE);
+			assertTrue(GeoDataConfig.GEO_MATERIALS_ENABLE);
+			assertTrue(GeoDataConfig.GEO_SHIELDS_ENABLE);
+			assertTrue(GeoDataConfig.GEO_PATH_ENABLE);
+			assertTrue(GeoDataConfig.GEO_PATH_DISTANCE_TIERS_ENABLE);
+			assertFalse(GeoDataConfig.GEO_PATH_RECOVERY_ENABLE);
+			assertTrue(GeoDataConfig.GEO_PATH_HIERARCHICAL_ENABLE);
+			assertEquals(5, GeoDataConfig.GEO_PATH_WAYPOINT_LOOKAHEAD);
+			assertEquals(48, GeoDataConfig.GEO_PATH_CACHE_SIZE);
+			assertEquals(60000, GeoDataConfig.GEO_PATH_MAX_NODES);
+			assertEquals(300, GeoDataConfig.GEO_PATH_TIMEOUT_MS);
+			assertEquals(3f, GeoDataConfig.GEO_PATH_SPATIAL_STEP);
+			assertEquals(6, GeoDataConfig.GEO_PATH_WORKERS);
+			assertEquals(512, GeoDataConfig.GEO_PATH_QUEUE_CAPACITY);
+			assertEquals("blocked", GeoDataConfig.GEO_NPC_WALK_PATH_MODE);
+			assertTrue(GeoDataConfig.GEO_NPC_WALK_COLLISION_ENABLE);
+			assertEquals("log", GeoDataConfig.GEO_NPC_WALK_ROUTE_VALIDATE);
+			assertTrue(GeoDataConfig.GEO_NPC_WALK_ROUTE_VALIDATE_SUMMARY_ENABLE);
+		} finally {
+			snapshot.restore();
+		}
+	}
+
+	@Test
+	void bindsPlayerTransferConfigProperties() {
+		ConfigSnapshot snapshot = ConfigSnapshot.of(PlayerTransferConfig.class,
+			"MAX_KINAH", "BIND_ELYOS", "BIND_ASMO", "ALLOW_EMOTIONS", "ALLOW_MACRO", "ALLOW_INV",
+			"ALLOW_WAREHOUSE", "ALLOW_STIGMA", "BLOCK_SAMENAME", "NAME_PREFIX", "REUSE_HOURS",
+			"REMOVE_SKILL_LIST");
+		try {
+			StandardEnvironment environment = new StandardEnvironment();
+			environment.getPropertySources().addFirst(new MapPropertySource("test", Map.ofEntries(
+				Map.entry("ptransfer.max.kinah", "500000"),
+				Map.entry("ptransfer.bindpoint.elyos", "210010000 1 2 3 4"),
+				Map.entry("ptransfer.bindpoint.asmo", "220010000 5 6 7 8"),
+				Map.entry("ptransfer.allow.emotions", "false"),
+				Map.entry("ptransfer.allow.macro", "false"),
+				Map.entry("ptransfer.allow.inventory", "false"),
+				Map.entry("ptransfer.allow.warehouse", "false"),
+				Map.entry("ptransfer.allow.stigma", "false"),
+				Map.entry("ptransfer.block.samename", "true"),
+				Map.entry("ptransfer.server.name.prefix", "_TST"),
+				Map.entry("ptransfer.retransfer.hours", "24"),
+				Map.entry("ptransfer.remove.skills.list", "1,2,3")
+			)));
+
+			PlayerTransferConfig config = new PlayerTransferConfig();
+			Binder.get(environment).bind("ptransfer", Bindable.ofInstance(config));
+
+			assertEquals(500000L, PlayerTransferConfig.MAX_KINAH);
+			assertEquals("210010000 1 2 3 4", PlayerTransferConfig.BIND_ELYOS);
+			assertEquals("220010000 5 6 7 8", PlayerTransferConfig.BIND_ASMO);
+			assertFalse(PlayerTransferConfig.ALLOW_EMOTIONS);
+			assertFalse(PlayerTransferConfig.ALLOW_MACRO);
+			assertFalse(PlayerTransferConfig.ALLOW_INV);
+			assertFalse(PlayerTransferConfig.ALLOW_WAREHOUSE);
+			assertFalse(PlayerTransferConfig.ALLOW_STIGMA);
+			assertTrue(PlayerTransferConfig.BLOCK_SAMENAME);
+			assertEquals("_TST", PlayerTransferConfig.NAME_PREFIX);
+			assertEquals(24, PlayerTransferConfig.REUSE_HOURS);
+			assertEquals("1,2,3", PlayerTransferConfig.REMOVE_SKILL_LIST);
+		} finally {
+			snapshot.restore();
+		}
+	}
+
+	@Test
+	void bindsGsConfigProperties() {
+		ConfigSnapshot snapshot = ConfigSnapshot.of(GSConfig.class,
+			"SERVER_COUNTRY_CODE", "PLAYER_MAX_LEVEL", "TIME_ZONE_ID", "ENABLE_CHAT_SERVER",
+			"STARTUP_PROGRESS_ENABLE", "STATIC_DATA_PROGRESS_ENTRY_COUNTS_ENABLE",
+			"CHARACTER_CREATION_MODE", "CHARACTER_LIMIT_COUNT", "CHARACTER_DELETE_DELAY_MINUTES",
+			"CHARACTER_FACTION_LIMITATION_MODE", "ENABLE_RATIO_LIMITATION", "RATIO_MIN_REQUIRED_LEVEL",
+			"RATIO_MIN_CHARACTERS_COUNT", "ABYSSRANKING_SMALL_CACHE", "CHARACTER_REENTRY_TIME",
+			"SERVER_YAADMINPANEL_SWITCH_ON");
+		try {
+			StandardEnvironment environment = new StandardEnvironment();
+			environment.getPropertySources().addFirst(new MapPropertySource("test", Map.ofEntries(
+				Map.entry("gameserver.country.code", "5"),
+				Map.entry("gameserver.players.max.level", "85"),
+				Map.entry("gameserver.timezone", "Asia/Shanghai"),
+				Map.entry("gameserver.chatserver.enable", "true"),
+				Map.entry("gameserver.startup.progress.enable", "false"),
+				Map.entry("gameserver.static_data.progress.entry_counts.enable", "true"),
+				Map.entry("gameserver.character.creation.mode", "1"),
+				Map.entry("gameserver.character.limit.count", "10"),
+				Map.entry("gameserver.character.delete.delay.minutes", "15"),
+				Map.entry("gameserver.character.faction.limitation.mode", "2"),
+				Map.entry("gameserver.ratio.limitation.enable", "true"),
+				Map.entry("gameserver.ratio.min.required.level", "12"),
+				Map.entry("gameserver.ratio.min.characters_count", "60"),
+				Map.entry("gameserver.abyssranking.small.cache", "true"),
+				Map.entry("gameserver.character.reentry.time", "30"),
+				Map.entry("gameserver.yaadminpanel.server.enable", "true")
+			)));
+
+			GSConfig config = new GSConfig();
+			Binder.get(environment).bind("gameserver", Bindable.ofInstance(config));
+
+			assertEquals(5, GSConfig.SERVER_COUNTRY_CODE);
+			assertEquals(85, GSConfig.PLAYER_MAX_LEVEL);
+			assertEquals("Asia/Shanghai", GSConfig.TIME_ZONE_ID);
+			assertTrue(GSConfig.ENABLE_CHAT_SERVER);
+			assertFalse(GSConfig.STARTUP_PROGRESS_ENABLE);
+			assertTrue(GSConfig.STATIC_DATA_PROGRESS_ENTRY_COUNTS_ENABLE);
+			assertEquals(1, GSConfig.CHARACTER_CREATION_MODE);
+			assertEquals(10, GSConfig.CHARACTER_LIMIT_COUNT);
+			assertEquals(15, GSConfig.CHARACTER_DELETE_DELAY_MINUTES);
+			assertEquals(2, GSConfig.CHARACTER_FACTION_LIMITATION_MODE);
+			assertTrue(GSConfig.ENABLE_RATIO_LIMITATION);
+			assertEquals(12, GSConfig.RATIO_MIN_REQUIRED_LEVEL);
+			assertEquals(60, GSConfig.RATIO_MIN_CHARACTERS_COUNT);
+			assertTrue(GSConfig.ABYSSRANKING_SMALL_CACHE);
+			assertEquals(30, GSConfig.CHARACTER_REENTRY_TIME);
+			assertTrue(GSConfig.SERVER_YAADMINPANEL_SWITCH_ON);
+		} finally {
+			snapshot.restore();
+		}
+	}
 }

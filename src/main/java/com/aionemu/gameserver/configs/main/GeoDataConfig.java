@@ -1,11 +1,18 @@
 package com.aionemu.gameserver.configs.main;
 
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.stereotype.Component;
+
 import com.aionemu.commons.configuration.Property;
 
+import lombok.Getter;
+
 /**
- * 地理数据与导航寻路相关配置。
- * Geodata and navigation pathfinding related configuration.
+ * 地理数据与导航寻路相关配置，支持 Spring Boot ConfigurationProperties 与静态门面访问。
+ * Geodata and navigation pathfinding related configuration supporting Spring Boot ConfigurationProperties and static facade access.
  */
+@Component
+@ConfigurationProperties(prefix = "gameserver")
 public class GeoDataConfig {
 
 	/**
@@ -147,4 +154,345 @@ public class GeoDataConfig {
 	@Property(key = "gameserver.geo.npc.walk.route.validate.summary.enable", defaultValue = "false")
 	public static boolean GEO_NPC_WALK_ROUTE_VALIDATE_SUMMARY_ENABLE;
 
+	/** 地理数据绑定树 / geodata binding tree. */
+	@Getter
+	private final GeodataProperties geodata = new GeodataProperties();
+	/** 地理域绑定树 / geo domain binding tree. */
+	@Getter
+	private final GeoProperties geo = new GeoProperties();
+
+	/**
+	 * 地理数据节点：绑定 gameserver.geodata.*。
+	 * Geodata node binding gameserver.geodata.*.
+	 */
+	@Getter
+	public static class GeodataProperties {
+		private final CanseeProperties cansee = new CanseeProperties();
+		private final FearProperties fear = new FearProperties();
+
+		public boolean isEnable() {
+			return GEO_ENABLE;
+		}
+
+		public void setEnable(boolean enable) {
+			GEO_ENABLE = enable;
+		}
+	}
+
+	/** 可见性检测节点 / CanSee-check node. */
+	public static class CanseeProperties {
+		public boolean isEnable() {
+			return CANSEE_ENABLE;
+		}
+
+		public void setEnable(boolean enable) {
+			CANSEE_ENABLE = enable;
+		}
+	}
+
+	/** 恐惧技能节点 / Fear-skill node. */
+	public static class FearProperties {
+		public boolean isEnable() {
+			return FEAR_ENABLE;
+		}
+
+		public void setEnable(boolean enable) {
+			FEAR_ENABLE = enable;
+		}
+	}
+
+	/**
+	 * 地理域节点：绑定 gameserver.geo.*。
+	 * Geo domain node binding gameserver.geo.*.
+	 */
+	@Getter
+	public static class GeoProperties {
+		private final MaterialsProperties materials = new MaterialsProperties();
+		private final ShieldsProperties shields = new ShieldsProperties();
+		private final PathProperties path = new PathProperties();
+		private final NpcProperties npc = new NpcProperties();
+	}
+
+	/** 地理材质节点 / Geo-materials node. */
+	public static class MaterialsProperties {
+		public boolean isEnable() {
+			return GEO_MATERIALS_ENABLE;
+		}
+
+		public void setEnable(boolean enable) {
+			GEO_MATERIALS_ENABLE = enable;
+		}
+	}
+
+	/** 地理护盾节点 / Geo-shields node. */
+	public static class ShieldsProperties {
+		public boolean isEnable() {
+			return GEO_SHIELDS_ENABLE;
+		}
+
+		public void setEnable(boolean enable) {
+			GEO_SHIELDS_ENABLE = enable;
+		}
+	}
+
+	/**
+	 * 寻路节点：绑定 gameserver.geo.path.*。
+	 * Pathfinding node binding gameserver.geo.path.*.
+	 */
+	@Getter
+	public static class PathProperties {
+		private final DistanceProperties distance = new DistanceProperties();
+		private final RecoveryProperties recovery = new RecoveryProperties();
+		private final HierarchicalProperties hierarchical = new HierarchicalProperties();
+		private final WaypointProperties waypoint = new WaypointProperties();
+		private final CacheProperties cache = new CacheProperties();
+		private final MaxProperties max = new MaxProperties();
+		private final TimeoutProperties timeout = new TimeoutProperties();
+		private final SpatialProperties spatial = new SpatialProperties();
+		private final QueueProperties queue = new QueueProperties();
+
+		public boolean isEnable() {
+			return GEO_PATH_ENABLE;
+		}
+
+		public void setEnable(boolean enable) {
+			GEO_PATH_ENABLE = enable;
+		}
+
+		public int getWorkers() {
+			return GEO_PATH_WORKERS;
+		}
+
+		public void setWorkers(int workers) {
+			GEO_PATH_WORKERS = workers;
+		}
+	}
+
+	/** 距离分层父节点 / Distance-tier parent node. */
+	@Getter
+	public static class DistanceProperties {
+		private final TiersProperties tiers = new TiersProperties();
+	}
+
+	/** 距离分层节点 / Distance-tier node. */
+	public static class TiersProperties {
+		public boolean isEnable() {
+			return GEO_PATH_DISTANCE_TIERS_ENABLE;
+		}
+
+		public void setEnable(boolean enable) {
+			GEO_PATH_DISTANCE_TIERS_ENABLE = enable;
+		}
+	}
+
+	/** 寻路恢复节点 / Path-recovery node. */
+	public static class RecoveryProperties {
+		public boolean isEnable() {
+			return GEO_PATH_RECOVERY_ENABLE;
+		}
+
+		public void setEnable(boolean enable) {
+			GEO_PATH_RECOVERY_ENABLE = enable;
+		}
+	}
+
+	/** 分层寻路节点 / Hierarchical-path node. */
+	public static class HierarchicalProperties {
+		public boolean isEnable() {
+			return GEO_PATH_HIERARCHICAL_ENABLE;
+		}
+
+		public void setEnable(boolean enable) {
+			GEO_PATH_HIERARCHICAL_ENABLE = enable;
+		}
+	}
+
+	/** 路点父节点 / Waypoint parent node. */
+	@Getter
+	public static class WaypointProperties {
+		public int getLookahead() {
+			return GEO_PATH_WAYPOINT_LOOKAHEAD;
+		}
+
+		public void setLookahead(int lookahead) {
+			GEO_PATH_WAYPOINT_LOOKAHEAD = lookahead;
+		}
+	}
+
+	/** 缓存父节点 / Cache parent node. */
+	@Getter
+	public static class CacheProperties {
+		public int getSize() {
+			return GEO_PATH_CACHE_SIZE;
+		}
+
+		public void setSize(int size) {
+			GEO_PATH_CACHE_SIZE = size;
+		}
+	}
+
+	/** 节点上限父节点 / Max-nodes parent node. */
+	@Getter
+	public static class MaxProperties {
+		public int getNodes() {
+			return GEO_PATH_MAX_NODES;
+		}
+
+		public void setNodes(int nodes) {
+			GEO_PATH_MAX_NODES = nodes;
+		}
+	}
+
+	/** 超时父节点 / Timeout parent node. */
+	@Getter
+	public static class TimeoutProperties {
+		public int getMs() {
+			return GEO_PATH_TIMEOUT_MS;
+		}
+
+		public void setMs(int ms) {
+			GEO_PATH_TIMEOUT_MS = ms;
+		}
+	}
+
+	/** 空间步长父节点 / Spatial-step parent node. */
+	@Getter
+	public static class SpatialProperties {
+		public float getStep() {
+			return GEO_PATH_SPATIAL_STEP;
+		}
+
+		public void setStep(float step) {
+			GEO_PATH_SPATIAL_STEP = step;
+		}
+	}
+
+	/** 队列父节点 / Queue parent node. */
+	@Getter
+	public static class QueueProperties {
+		public int getCapacity() {
+			return GEO_PATH_QUEUE_CAPACITY;
+		}
+
+		public void setCapacity(int capacity) {
+			GEO_PATH_QUEUE_CAPACITY = capacity;
+		}
+	}
+
+	/**
+	 * NPC 节点：绑定 gameserver.geo.npc.*。
+	 * NPC node binding gameserver.geo.npc.*.
+	 */
+	@Getter
+	public static class NpcProperties {
+		private final WalkProperties walk = new WalkProperties();
+
+		public boolean isMove() {
+			return GEO_NPC_MOVE;
+		}
+
+		public void setMove(boolean move) {
+			GEO_NPC_MOVE = move;
+		}
+	}
+
+	/**
+	 * 行走节点：绑定 gameserver.geo.npc.walk.*。
+	 * Walk node binding gameserver.geo.npc.walk.*.
+	 */
+	@Getter
+	public static class WalkProperties {
+		private final WalkPathProperties path = new WalkPathProperties();
+		private final WalkCollisionProperties collision = new WalkCollisionProperties();
+		private final WalkRouteProperties route = new WalkRouteProperties();
+	}
+
+	/**
+	 * 行走路径父节点：对应配置元素 gameserver.geo.npc.walk.path。
+	 * Walk-path parent node matching the gameserver.geo.npc.walk.path element.
+	 */
+	@Getter
+	public static class WalkPathProperties {
+		public String getMode() {
+			return GEO_NPC_WALK_PATH_MODE;
+		}
+
+		public void setMode(String mode) {
+			GEO_NPC_WALK_PATH_MODE = mode;
+		}
+	}
+
+	/**
+	 * 行走碰撞父节点：对应配置元素 gameserver.geo.npc.walk.collision。
+	 * Walk-collision parent node matching the gameserver.geo.npc.walk.collision element.
+	 */
+	@Getter
+	public static class WalkCollisionProperties {
+		public boolean isEnable() {
+			return GEO_NPC_WALK_COLLISION_ENABLE;
+		}
+
+		public void setEnable(boolean enable) {
+			GEO_NPC_WALK_COLLISION_ENABLE = enable;
+		}
+	}
+
+	/**
+	 * 行走路线父节点：对应配置元素 gameserver.geo.npc.walk.route。
+	 * Walk-route parent node matching the gameserver.geo.npc.walk.route element.
+	 */
+	@Getter
+	public static class WalkRouteProperties {
+		private final ValidateProperties validate = new ValidateProperties();
+
+		/** 兼容裸标量 gameserver.geo.npc.walk.route.validate 经 valueOf 转换后的赋值（no-op）。 / No-op setter for the valueOf-converted legacy scalar. */
+		public void setValidate(ValidateProperties validate) {
+		}
+	}
+
+	/**
+	 * 行走路线校验节点：绑定 gameserver.geo.npc.walk.route.validate.*，
+	 * 并兼容旧版裸标量 gameserver.geo.npc.walk.route.validate=off。
+	 * Walk-route validation node binding gameserver.geo.npc.walk.route.validate.*, also accepting the
+	 * legacy bare scalar gameserver.geo.npc.walk.route.validate=off.
+	 */
+	@Getter
+	public static class ValidateProperties {
+		private final SummaryProperties summary = new SummaryProperties();
+
+		/**
+		 * 兼容旧版裸标量 gameserver.geo.npc.walk.route.validate=off 的绑定入口。
+		 * Binding entry for the legacy bare scalar gameserver.geo.npc.walk.route.validate=off.
+		 */
+		public static ValidateProperties valueOf(String value) {
+			try {
+				GEO_NPC_WALK_ROUTE_VALIDATE = value;
+			} catch (RuntimeException ignored) {
+			}
+			return new ValidateProperties();
+		}
+
+		public String getValue() {
+			return GEO_NPC_WALK_ROUTE_VALIDATE;
+		}
+
+		public void setValue(String value) {
+			GEO_NPC_WALK_ROUTE_VALIDATE = value;
+		}
+	}
+
+	/**
+	 * 校验汇总父节点：对应配置元素 gameserver.geo.npc.walk.route.validate.summary。
+	 * Validation-summary parent node matching the gameserver.geo.npc.walk.route.validate.summary element.
+	 */
+	@Getter
+	public static class SummaryProperties {
+		public boolean isEnable() {
+			return GEO_NPC_WALK_ROUTE_VALIDATE_SUMMARY_ENABLE;
+		}
+
+		public void setEnable(boolean enable) {
+			GEO_NPC_WALK_ROUTE_VALIDATE_SUMMARY_ENABLE = enable;
+		}
+	}
 }

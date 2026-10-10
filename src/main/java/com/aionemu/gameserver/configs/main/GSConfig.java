@@ -3,12 +3,19 @@ package com.aionemu.gameserver.configs.main;
 import java.util.Calendar;
 import java.util.Locale;
 
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.stereotype.Component;
+
 import com.aionemu.commons.configuration.Property;
 
+import lombok.Getter;
+
 /**
- * 游戏服务器核心相关配置。
- * Game server core related configuration.
+ * 游戏服务器核心相关配置，支持 Spring Boot ConfigurationProperties 与静态门面访问。
+ * Game server core related configuration supporting Spring Boot ConfigurationProperties and static facade access.
  */
+@Component
+@ConfigurationProperties(prefix = "gameserver")
 public class GSConfig {
 	/**
 	 * 服务器国家代码。99 = 按系统 Locale 自动适配。
@@ -139,4 +146,332 @@ public class GSConfig {
 	 */
 	@Property(key = "gameserver.yaadminpanel.server.enable", defaultValue = "false")
 	public static boolean SERVER_YAADMINPANEL_SWITCH_ON;
+
+	/** 国家码父节点 / country parent node. */
+	@Getter
+	private final CountryProperties country = new CountryProperties();
+	/** 玩家父节点 / players parent node. */
+	@Getter
+	private final PlayersProperties players = new PlayersProperties();
+	/** 聊天服父节点 / chat-server parent node. */
+	@Getter
+	private final ChatserverProperties chatserver = new ChatserverProperties();
+	/** 启动进度父节点 / startup parent node. */
+	@Getter
+	private final StartupProperties startup = new StartupProperties();
+	/** 静态数据父节点 / static-data parent node. */
+	@Getter
+	private final StaticDataProperties staticData = new StaticDataProperties();
+	/** 角色父节点 / character parent node. */
+	@Getter
+	private final CharacterProperties character = new CharacterProperties();
+	/** 比例限制父节点 / ratio parent node. */
+	@Getter
+	private final RatioProperties ratio = new RatioProperties();
+	/** 欧比斯排行父节点 / abyss-ranking parent node. */
+	@Getter
+	private final AbyssrankingProperties abyssranking = new AbyssrankingProperties();
+	/** YA 管理面板父节点 / YA admin panel parent node. */
+	@Getter
+	private final YaadminpanelProperties yaadminpanel = new YaadminpanelProperties();
+
+	public String getTimezone() {
+		return TIME_ZONE_ID;
+	}
+
+	public void setTimezone(String timezone) {
+		TIME_ZONE_ID = timezone;
+	}
+
+	/**
+	 * 国家码节点：绑定 gameserver.country.code。
+	 * Country node binding gameserver.country.code.
+	 */
+	@Getter
+	public static class CountryProperties {
+		public int getCode() {
+			return SERVER_COUNTRY_CODE;
+		}
+
+		public void setCode(int code) {
+			SERVER_COUNTRY_CODE = code;
+		}
+	}
+
+	/**
+	 * 聊天服父节点：对应配置元素 gameserver.chatserver。
+	 * Chat-server parent node matching the gameserver.chatserver element.
+	 */
+	@Getter
+	public static class ChatserverProperties {
+		public boolean isEnable() {
+			return ENABLE_CHAT_SERVER;
+		}
+
+		public void setEnable(boolean enable) {
+			ENABLE_CHAT_SERVER = enable;
+		}
+	}
+
+	/**
+	 * 启动进度父节点：对应配置元素 gameserver.startup。
+	 * Startup parent node matching the gameserver.startup element.
+	 */
+	@Getter
+	public static class StartupProperties {
+		private final StartupProgressProperties progress = new StartupProgressProperties();
+	}
+
+	/**
+	 * 启动进度父节点：对应配置元素 gameserver.startup.progress。
+	 * Startup-progress parent node matching the gameserver.startup.progress element.
+	 */
+	@Getter
+	public static class StartupProgressProperties {
+		public boolean isEnable() {
+			return STARTUP_PROGRESS_ENABLE;
+		}
+
+		public void setEnable(boolean enable) {
+			STARTUP_PROGRESS_ENABLE = enable;
+		}
+	}
+
+	/**
+	 * 静态数据父节点：对应配置元素 gameserver.static_data。
+	 * Static-data parent node matching the gameserver.static_data element.
+	 */
+	@Getter
+	public static class StaticDataProperties {
+		private final StaticDataProgressProperties progress = new StaticDataProgressProperties();
+	}
+
+	/**
+	 * 静态数据进度父节点：对应配置元素 gameserver.static_data.progress。
+	 * Static-data progress parent node matching the gameserver.static_data.progress element.
+	 */
+	@Getter
+	public static class StaticDataProgressProperties {
+		private final EntryCountsProperties entryCounts = new EntryCountsProperties();
+	}
+
+	/**
+	 * 静态数据条目数父节点：对应配置元素 gameserver.static_data.progress.entry_counts。
+	 * Static-data entry-counts parent node matching the gameserver.static_data.progress.entry_counts element.
+	 */
+	@Getter
+	public static class EntryCountsProperties {
+		public boolean isEnable() {
+			return STATIC_DATA_PROGRESS_ENTRY_COUNTS_ENABLE;
+		}
+
+		public void setEnable(boolean enable) {
+			STATIC_DATA_PROGRESS_ENTRY_COUNTS_ENABLE = enable;
+		}
+	}
+
+	/**
+	 * 玩家父节点：对应配置元素 gameserver.players。
+	 * Players parent node matching the gameserver.players element.
+	 */
+	@Getter
+	public static class PlayersProperties {
+		private final MaxProperties max = new MaxProperties();
+	}
+
+	/** 玩家等级上限父节点 / Player max-level parent node. */
+	@Getter
+	public static class MaxProperties {
+		public int getLevel() {
+			return PLAYER_MAX_LEVEL;
+		}
+
+		public void setLevel(int level) {
+			PLAYER_MAX_LEVEL = level;
+		}
+	}
+
+	/**
+	 * 角色节点：绑定 gameserver.character.*。
+	 * Character node binding gameserver.character.*.
+	 */
+	@Getter
+	public static class CharacterProperties {
+		private final CreationProperties creation = new CreationProperties();
+		private final LimitProperties limit = new LimitProperties();
+		private final DeleteProperties delete = new DeleteProperties();
+		private final FactionProperties faction = new FactionProperties();
+		private final ReentryProperties reentry = new ReentryProperties();
+	}
+
+	/** 角色创建父节点 / Character-creation parent node. */
+	@Getter
+	public static class CreationProperties {
+		public int getMode() {
+			return CHARACTER_CREATION_MODE;
+		}
+
+		public void setMode(int mode) {
+			CHARACTER_CREATION_MODE = mode;
+		}
+	}
+
+	/** 角色数量上限父节点 / Character-limit parent node. */
+	@Getter
+	public static class LimitProperties {
+		public int getCount() {
+			return CHARACTER_LIMIT_COUNT;
+		}
+
+		public void setCount(int count) {
+			CHARACTER_LIMIT_COUNT = count;
+		}
+	}
+
+	/** 角色删除父节点 / Character-delete parent node. */
+	@Getter
+	public static class DeleteProperties {
+		private final DeleteDelayProperties delay = new DeleteDelayProperties();
+	}
+
+	/** 角色删除延迟父节点 / Character-delete-delay parent node. */
+	@Getter
+	public static class DeleteDelayProperties {
+		public int getMinutes() {
+			return CHARACTER_DELETE_DELAY_MINUTES;
+		}
+
+		public void setMinutes(int minutes) {
+			CHARACTER_DELETE_DELAY_MINUTES = minutes;
+		}
+	}
+
+	/** 角色阵营父节点 / Character-faction parent node. */
+	@Getter
+	public static class FactionProperties {
+		private final FactionLimitationProperties limitation = new FactionLimitationProperties();
+	}
+
+	/** 角色阵营限制父节点 / Character-faction-limitation parent node. */
+	@Getter
+	public static class FactionLimitationProperties {
+		public int getMode() {
+			return CHARACTER_FACTION_LIMITATION_MODE;
+		}
+
+		public void setMode(int mode) {
+			CHARACTER_FACTION_LIMITATION_MODE = mode;
+		}
+	}
+
+	/** 角色重进父节点 / Character-reentry parent node. */
+	@Getter
+	public static class ReentryProperties {
+		public int getTime() {
+			return CHARACTER_REENTRY_TIME;
+		}
+
+		public void setTime(int time) {
+			CHARACTER_REENTRY_TIME = time;
+		}
+	}
+
+	/**
+	 * 比例限制节点：绑定 gameserver.ratio.*。
+	 * Ratio-limitation node binding gameserver.ratio.*.
+	 */
+	@Getter
+	public static class RatioProperties {
+		private final LimitationProperties limitation = new LimitationProperties();
+		private final MinProperties min = new MinProperties();
+	}
+
+	/**
+	 * 比例限制父节点：对应配置元素 gameserver.ratio.limitation。
+	 * Ratio-limitation parent node matching the gameserver.ratio.limitation element.
+	 */
+	@Getter
+	public static class LimitationProperties {
+		public boolean isEnable() {
+			return ENABLE_RATIO_LIMITATION;
+		}
+
+		public void setEnable(boolean enable) {
+			ENABLE_RATIO_LIMITATION = enable;
+		}
+	}
+
+	/**
+	 * 比例最小值父节点：对应配置元素 gameserver.ratio.min。
+	 * Ratio-minimum parent node matching the gameserver.ratio.min element.
+	 */
+	@Getter
+	public static class MinProperties {
+		private final RequiredProperties required = new RequiredProperties();
+
+		public int getCharactersCount() {
+			return RATIO_MIN_CHARACTERS_COUNT;
+		}
+
+		public void setCharactersCount(int charactersCount) {
+			RATIO_MIN_CHARACTERS_COUNT = charactersCount;
+		}
+	}
+
+	/**
+	 * 比例最低等级父节点：对应配置元素 gameserver.ratio.min.required。
+	 * Ratio-minimum-level parent node matching the gameserver.ratio.min.required element.
+	 */
+	@Getter
+	public static class RequiredProperties {
+		public int getLevel() {
+			return RATIO_MIN_REQUIRED_LEVEL;
+		}
+
+		public void setLevel(int level) {
+			RATIO_MIN_REQUIRED_LEVEL = level;
+		}
+	}
+
+	/**
+	 * 欧比斯排行节点：绑定 gameserver.abyssranking.*。
+	 * Abyss-ranking node binding gameserver.abyssranking.*.
+	 */
+	@Getter
+	public static class AbyssrankingProperties {
+		private final SmallProperties small = new SmallProperties();
+	}
+
+	/** 欧比斯排行缓存父节点 / Abyss-ranking cache parent node. */
+	@Getter
+	public static class SmallProperties {
+		public boolean isCache() {
+			return ABYSSRANKING_SMALL_CACHE;
+		}
+
+		public void setCache(boolean cache) {
+			ABYSSRANKING_SMALL_CACHE = cache;
+		}
+	}
+
+	/**
+	 * YA 管理面板节点：绑定 gameserver.yaadminpanel.*。
+	 * YA admin panel node binding gameserver.yaadminpanel.*.
+	 */
+	@Getter
+	public static class YaadminpanelProperties {
+		private final ServerProperties server = new ServerProperties();
+	}
+
+	/** YA 管理面板服务器父节点 / YA admin panel server parent node. */
+	@Getter
+	public static class ServerProperties {
+		public boolean isEnable() {
+			return SERVER_YAADMINPANEL_SWITCH_ON;
+		}
+
+		public void setEnable(boolean enable) {
+			SERVER_YAADMINPANEL_SWITCH_ON = enable;
+		}
+	}
 }
