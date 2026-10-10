@@ -73,6 +73,15 @@ public class EnchantItemAction extends AbstractItemAction {
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_ITEM_COLOR_ERROR);
 			return false;
 		}
+		// 鉴定门禁：未鉴定的装备不可强化（魔石/神石走各自专用消息）。
+		// Identify gate: an unidentified item cannot be enchanted (manastone/godstone have dedicated messages).
+		if (targetItem.hasRetuning()) {
+			boolean manastone = parentItem.getItemTemplate().isManaStone();
+			PacketSendUtility.sendPacket(player,
+					manastone ? SM_SYSTEM_MESSAGE.STR_MSG_GIVE_ITEM_OPTION_NEED_IDENTIFY
+							: SM_SYSTEM_MESSAGE.STR_MSG_ENCHANT_ITEM_NEED_IDENTIFY);
+			return false;
+		}
 		if (!targetItem.isAmplified() && parentItem.getItemTemplate().isEnchantmentStone() && player.getInventory().getKinah() < EnchantKinah) {
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_NOT_ENOUGH_MONEY);
 			return false;

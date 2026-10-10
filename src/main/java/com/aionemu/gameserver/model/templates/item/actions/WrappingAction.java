@@ -39,6 +39,11 @@ public class WrappingAction extends AbstractItemAction {
 		if (target.equals(UseTarget.ARMOR) && !targetItem.getItemTemplate().isArmor()) {
 			return false;
 		}
+		// 鉴定门禁：未鉴定的装备不可包装。 / Identify gate: an unidentified item cannot be packed.
+		if (targetItem.hasRetuning()) {
+			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_PACK_ITEM_NEED_IDENTIFY);
+			return false;
+		}
 		return targetItem.getWrappableCount() < targetItem.getItemTemplate().getWrappableCount()
 				&& !targetItem.isEquipped();
 	}

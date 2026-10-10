@@ -100,6 +100,11 @@ public class ArmsfusionService {
 			log.info(I18n.get("log.f034ccd4897a", player.getName()));
 			return;
 		}
+		// 鉴定门禁：未鉴定的装备不可复合。 / Identify gate: unidentified items cannot be compounded.
+		if (firstItem.hasRetuning() || secondItem.hasRetuning()) {
+			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_COMPOUND_ERROR_NOT_IDENTIFY);
+			return;
+		}
 		if (!firstItem.getItemTemplate().isTwoHandWeapon()) {
 			PacketSendUtility.sendPacket(player,
 					SM_SYSTEM_MESSAGE.STR_COMPOUND_ERROR_NOT_AVAILABLE(firstItem.getNameId()));

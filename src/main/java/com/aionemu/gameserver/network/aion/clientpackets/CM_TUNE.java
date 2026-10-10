@@ -18,13 +18,13 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
- * 客户端装备鉴定/调谐请求包；支持鉴定卷轴或直接随机开孔。
- * Client packet for item identify/tune; supports retuning scrolls or direct random socketing.
+ * 客户端装备鉴定/重新鉴定请求包；支持重新鉴定卷轴或直接鉴定。
+ * Client packet for item identify/retune; supports retuning scrolls or direct identification.
  * @author Ranastic
  */
 public class CM_TUNE extends AionClientPacket {
 	private int tuningScrollId;
-	private static int itemObjectId;
+	private int itemObjectId;
 
 	/**
 	 * packet opcode

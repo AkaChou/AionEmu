@@ -40,6 +40,13 @@
 | Manastone | 魔石 | `STR_TOOLTIP_ITEM_OPTION` | `client_strings_ui.xml` | 240331 |
 | Godstone | 神石 | `STR_TOOLTIP_ITEM_PROC` | `client_strings_ui.xml` | 240332 |
 | Cube | 背包 | — | 服务端/配置约定（inventory/cube） | — |
+| Identify / Tune | 鉴定 | `STR_MSG_ITEM_IDENTIFY_SUCCEED` | `StringTable_dialog.xml` | 1401626 |
+| Reidentify / Retuning | 重新鉴定 | `STR_ENCHANT_ALL_DIALOG__REIDENTIFY` | `StringTable_dialog.xml` | 913185 |
+| Tuning Scroll | 鉴定咒语书 | `STR_CASH_WEAPON_REIDENTIFY_M_65A` | `client_strings_item2.xml` | 825736 |
+| Conditioning / Charge | 神圣力注入 | `STR_MSG_ITEM_CHARGE_ALL_COMPLETE` | `StringTable_dialog.xml` | 1400892 |
+
+> ⚠️ **易混淆术语**：`tuning`（鉴定/重新鉴定，装备随机属性）与 `conditioning`（神圣力注入，装备强化阶段）是两个完全不同的系统。
+> 二者均**不可**译为「调谐」——该词非官方术语，客户端从未使用。
 
 ### 系统与组织
 

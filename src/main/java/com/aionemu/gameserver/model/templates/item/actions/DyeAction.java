@@ -44,6 +44,11 @@ public class DyeAction extends AbstractItemAction implements HouseDyeAction {
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_ITEM_COLOR_ERROR);
 			return false;
 		}
+		// 鉴定门禁：未鉴定的装备不可染色。 / Identify gate: an unidentified item cannot be dyed.
+		if (targetItem.hasRetuning()) {
+			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_ITEM_COLOR_CHANGE_NEED_IDENTIFY);
+			return false;
+		}
 		return true;
 	}
 

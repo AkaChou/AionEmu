@@ -166,7 +166,7 @@ public class Item extends AionObject implements IExpirable, StatOwner {
 	 */
 	private int activationCount;
 	/**
-	 * 返回调谐信息 / Returns the conditioning info
+	 * 返回神圣力注入信息 / Returns the conditioning info
 	 */
 	private ChargeInfo conditioningInfo;
 	/**
@@ -316,7 +316,7 @@ public class Item extends AionObject implements IExpirable, StatOwner {
 		if (conditioningInfo == null && chargeLevel > 0) {
 			this.conditioningInfo = new ChargeInfo(charge, this);
 		}
-		// 拆解融合物品且第二件有调谐信息时——设为 null。 / when break fusioned item and second item has conditioned info - set to null
+		// 拆解融合物品且第二件有神圣力注入信息时——设为 null。 / when break fusioned item and second item has conditioned info - set to null
 		if (conditioningInfo != null && chargeLevel == 0) {
 			this.conditioningInfo = null;
 		}

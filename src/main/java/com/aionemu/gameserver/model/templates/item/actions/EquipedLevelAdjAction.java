@@ -44,7 +44,7 @@ public class EquipedLevelAdjAction extends AbstractItemAction {
 			return false;
 		}
 		if (targetItem.hasRetuning()) {
-			// 若要用推荐等级降低，须使用调谐。 / You need to use tuning if you want to use the recommended level reduction
+			// 若要用推荐等级降低，须先进行鉴定。 / You need to use tuning if you want to use the recommended level reduction
 			// 函数。 / function.
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_EQUIPLEVEL_ADJ_NEED_IDENTIFY);
 			return false;

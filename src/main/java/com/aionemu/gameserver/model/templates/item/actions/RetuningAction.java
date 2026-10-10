@@ -26,18 +26,53 @@ public class RetuningAction extends AbstractItemAction {
 	UseTarget target;
 
 	/**
-	 * @return 是否允许执行。 / Whether act
-	  */
+	 * 校验重鉴定条件：目标类型、使用等级、品质、可重鉴定次数与装备状态。
+	 * Validates reidentify conditions: target type, required level, quality, remaining tune count and equip state.
+	 *
+	 * @param player 使用卷轴的玩家 / player using the scroll
+	 * @param parentItem 重新鉴定卷轴 / retuning scroll
+	 * @param targetItem 目标装备 / target equipment
+	 * @return 允许执行则为 true / true when the action is allowed
+	 */
 	@Override
 	public boolean canAct(Player player, Item parentItem, Item targetItem) {
+		if (target == null || targetItem == null || parentItem == null) {
+			return false;
+		}
+		// 类型匹配：卷轴用途与目标装备类别不符 / Type match: scroll target does not match the equipment category
 		if (target.equals(UseTarget.WEAPON) && !targetItem.getItemTemplate().isWeapon()) {
+			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_ITEM_REIDENTIFY_WRONG_SELECT(
+					parentItem.getItemName(), targetItem.getItemName()));
 			return false;
 		}
 		if (target.equals(UseTarget.ARMOR) && !targetItem.getItemTemplate().isArmor()) {
+			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_ITEM_REIDENTIFY_WRONG_SELECT(
+					parentItem.getItemName(), targetItem.getItemName()));
 			return false;
 		}
-		return targetItem.getRandomCount() < targetItem.getItemTemplate().getRandomBonusCount()
-				&& !targetItem.isEquipped();
+		// 使用等级：卷轴等级低于目标装备时拒绝 / Required level: reject when the scroll's level is lower than the target's
+		if (parentItem.getItemTemplate().getLevel() < targetItem.getItemTemplate().getLevel()) {
+			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_ITEM_REIDENTIFY_WRONG_LEVEL(
+					parentItem.getItemName(), targetItem.getItemName()));
+			return false;
+		}
+		// 品质：卷轴品质低于目标装备品质时拒绝 / Quality: reject when the scroll's quality is lower than the target's
+		if (parentItem.getItemTemplate().getItemQuality().getQualityId() < targetItem.getItemTemplate().getItemQuality()
+				.getQualityId()) {
+			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_ITEM_REIDENTIFY_WRONG_QUALITY(
+					parentItem.getItemName(), targetItem.getItemName()));
+			return false;
+		}
+		// 可重鉴定次数：已达上限的装备无法再重新鉴定 / Remaining tune count: an item at its limit cannot be retuned
+		if (targetItem.getRandomCount() >= targetItem.getItemTemplate().getRandomBonusCount()) {
+			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_ITEM_REIDENTIFY_CANNOT_REIDENTIFY(
+					targetItem.getItemName()));
+			return false;
+		}
+		if (targetItem.isEquipped()) {
+			return false;
+		}
+		return true;
 	}
 
 	/** 执行 / act. */

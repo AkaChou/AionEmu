@@ -35,6 +35,11 @@ public class TemperingAction extends AbstractItemAction {
 		if (targetItem.getItemTemplate().getMaxAuthorize() == 0) {
 			return false;
 		}
+		// 鉴定门禁：未鉴定的装备不可觉醒。 / Identify gate: an unidentified item cannot be awakened.
+		if (targetItem.hasRetuning()) {
+			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_ITEM_AUTHORIZE_NEED_IDENTIFY);
+			return false;
+		}
 
 		// 若背包满则无法卸下羽饰；提取时背包至少需有空位。 / if you don't check your inventory and fill it, the plume won't be deleted because it's impossible to drop into full inventory To extract, there must be at least one free cell in the cube.
 		if (player.getInventory().isFull()) {

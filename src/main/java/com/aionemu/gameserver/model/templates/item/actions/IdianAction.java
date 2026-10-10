@@ -53,7 +53,7 @@ public class IdianAction extends AbstractItemAction {
 			return false;
 		}
 		if (targetItem.hasRetuning()) {
-			// 镶嵌伊迪安前须先调谐装备。 / You need to tune your equipment before socketing Idian.
+			// 镶嵌伊迪安前须先鉴定装备。 / You need to tune your equipment before socketing Idian.
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_POLISH_NEED_IDENTIFY);
 			return false;
 		}

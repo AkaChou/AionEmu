@@ -21811,14 +21811,14 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * %0 已调谐至上限，无法调谐至 %1 级。 / %0 has been conditioned as much as it can be. You cannot condition it to Level %1
+	 * %0 的神圣力注入已达上限，无法注入至 %1 级。 / %0 has been conditioned as much as it can be. You cannot condition it to Level %1
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_ITEM_CHARGE_FAIL_ALREADY_CHARGED(String value0, String value1) {
 		return new SM_SYSTEM_MESSAGE(1400889, value0, value1);
 	}
 
 	/**
-	 * 所有已装备物品均已调谐，无法继续。 / All equipped items are already conditioned. You cannot condition them further
+	 * 所有已装备物品均已完成神圣力注入，无法继续。 / All equipped items are already conditioned. You cannot condition them further
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_ITEM_CHARGE_ALL_FAIL_ALREADY_CHARGED = new SM_SYSTEM_MESSAGE(1400890);
 
@@ -21841,14 +21841,14 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 所有已装备物品已达调谐上限，无法调谐至 %0 级。 / All equipped items have been conditioned to their maximum level, and cannot be conditioned to level %0
+	 * 所有已装备物品的神圣力注入已达上限，无法注入至 %0 级。 / All equipped items have been conditioned to their maximum level, and cannot be conditioned to level %0
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_ITEM_CHARGE_ALL_FAIL_EQUIPED_ALREADY_CHARGED(String value0) {
 		return new SM_SYSTEM_MESSAGE(1400894, value0);
 	}
 
 	/**
-	 * 已装备物品中没有可调谐的。 / None of the equipped items are conditionable
+	 * 已装备物品中没有可注入神圣力的。 / None of the equipped items are conditionable
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_ITEM_CHARGE_ALL_FAIL_NO_CHARGEABLE_EQUIPMENT = new SM_SYSTEM_MESSAGE(
 			1400895);
@@ -23060,6 +23060,153 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_ITEM_REIDENTIFY_APPLY_YES(String value0) {
 		return new SM_SYSTEM_MESSAGE(1401910, value0);
+	}
+
+	/**
+	 * 重新鉴定：用 %0 无法对 %1 进行重新鉴定（卷轴类型不匹配）。
+	 * Reidentify: %0 cannot be used to reidentify %1 (tuning scroll type mismatch).
+	 *
+	 * @param tuningScrollL10n 卷轴本地化串 / tuning scroll L10n
+	 * @param targetItemL10n 目标物品本地化串 / target item L10n
+	 * @return 系统消息 / system message
+	 */
+	public static SM_SYSTEM_MESSAGE STR_MSG_ITEM_REIDENTIFY_WRONG_SELECT(String tuningScrollL10n,
+		String targetItemL10n) {
+		return new SM_SYSTEM_MESSAGE(1401633, tuningScrollL10n, targetItemL10n);
+	}
+
+	/**
+	 * 重新鉴定：%0 的物品等级比 %1 低，无法进行重新鉴定（品质不足）。
+	 * Reidentify: %0's quality is lower than %1's, reidentification is not possible (insufficient quality).
+	 *
+	 * @param tuningScrollL10n 卷轴本地化串 / tuning scroll L10n
+	 * @param targetItemL10n 目标物品本地化串 / target item L10n
+	 * @return 系统消息 / system message
+	 */
+	public static SM_SYSTEM_MESSAGE STR_MSG_ITEM_REIDENTIFY_WRONG_QUALITY(String tuningScrollL10n,
+		String targetItemL10n) {
+		return new SM_SYSTEM_MESSAGE(1401634, tuningScrollL10n, targetItemL10n);
+	}
+
+	/**
+	 * 重新鉴定：%0 的使用等级比 %1 低，无法进行重新鉴定（等级不足）。
+	 * Reidentify: %0's required level is lower than %1's, reidentification is not possible (insufficient level).
+	 *
+	 * @param tuningScrollL10n 卷轴本地化串 / tuning scroll L10n
+	 * @param targetItemL10n 目标物品本地化串 / target item L10n
+	 * @return 系统消息 / system message
+	 */
+	public static SM_SYSTEM_MESSAGE STR_MSG_ITEM_REIDENTIFY_WRONG_LEVEL(String tuningScrollL10n,
+		String targetItemL10n) {
+		return new SM_SYSTEM_MESSAGE(1401635, tuningScrollL10n, targetItemL10n);
+	}
+
+	/**
+	 * 重新鉴定：%0 是无法重新鉴定的物品。
+	 * Reidentify: %0 cannot be reidentified.
+	 *
+	 * @param itemL10n 物品本地化串 / item L10n
+	 * @return 系统消息 / system message
+	 */
+	public static SM_SYSTEM_MESSAGE STR_MSG_ITEM_REIDENTIFY_CANNOT_REIDENTIFY(String itemL10n) {
+		return new SM_SYSTEM_MESSAGE(1401636, itemL10n);
+	}
+
+	/**
+	 * 重新鉴定：%0 尚未鉴定。
+	 * Reidentify: %0 has not been identified yet.
+	 *
+	 * @param itemL10n 物品本地化串 / item L10n
+	 * @return 系统消息 / system message
+	 */
+	public static SM_SYSTEM_MESSAGE STR_MSG_ITEM_REIDENTIFY_DIDNT_IDENTIFY(String itemL10n) {
+		return new SM_SYSTEM_MESSAGE(1401637, itemL10n);
+	}
+
+	/**
+	 * 重新鉴定：%0 的重新鉴定已取消。
+	 * Reidentify: %0's reidentification has been canceled.
+	 *
+	 * @param itemL10n 物品本地化串 / item L10n
+	 * @return 系统消息 / system message
+	 */
+	public static SM_SYSTEM_MESSAGE STR_MSG_ITEM_REIDENTIFY_CANCELED(String itemL10n) {
+		return new SM_SYSTEM_MESSAGE(1401638, itemL10n);
+	}
+
+	/**
+	 * 重新鉴定：%0 重新鉴定完成。
+	 * Reidentify: %0's reidentification is complete.
+	 *
+	 * @param itemL10n 物品本地化串 / item L10n
+	 * @return 系统消息 / system message
+	 */
+	public static SM_SYSTEM_MESSAGE STR_MSG_ITEM_REIDENTIFY_SUCCEED(String itemL10n) {
+		return new SM_SYSTEM_MESSAGE(1401639, itemL10n);
+	}
+
+	/**
+	 * 鉴定门禁：必须经过鉴定，才能使用强化功能。
+	 * Identify gate: the item must be identified before it can be enchanted.
+	 */
+	public static final SM_SYSTEM_MESSAGE STR_MSG_ENCHANT_ITEM_NEED_IDENTIFY = new SM_SYSTEM_MESSAGE(1401627);
+
+	/**
+	 * 鉴定门禁：必须经过鉴定，才能使用魔石强化功能。
+	 * Identify gate: the item must be identified before manastones can be socketed.
+	 */
+	public static final SM_SYSTEM_MESSAGE STR_MSG_GIVE_ITEM_OPTION_NEED_IDENTIFY = new SM_SYSTEM_MESSAGE(1401628);
+
+	/**
+	 * 鉴定门禁：必须经过鉴定，才能使用神石强化功能。
+	 * Identify gate: the item must be identified before godstones can be socketed.
+	 */
+	public static final SM_SYSTEM_MESSAGE STR_MSG_GIVE_ITEM_PROC_ENCHANTED_NEED_IDENTIFY = new SM_SYSTEM_MESSAGE(1401629);
+
+	/**
+	 * 鉴定门禁：必须经过鉴定，才能使用染色功能。
+	 * Identify gate: the item must be identified before it can be dyed.
+	 */
+	public static final SM_SYSTEM_MESSAGE STR_MSG_ITEM_COLOR_CHANGE_NEED_IDENTIFY = new SM_SYSTEM_MESSAGE(1401630);
+
+	/**
+	 * 鉴定门禁：必须经过鉴定，才能使用外形变更功能。
+	 * Identify gate: the item must be identified before its appearance can be changed.
+	 */
+	public static final SM_SYSTEM_MESSAGE STR_MSG_CHANGE_ITEM_SKIN_NEED_IDENTIFY = new SM_SYSTEM_MESSAGE(1401631);
+
+	/**
+	 * 鉴定门禁：必须经过鉴定，才能使用合成功能。
+	 * Identify gate: the item must be identified before it can be compounded.
+	 */
+	public static final SM_SYSTEM_MESSAGE STR_MSG_COMPOUND_ERROR_NOT_IDENTIFY = new SM_SYSTEM_MESSAGE(1401632);
+
+	/**
+	 * 鉴定门禁：必须经过鉴定，才能使用包装功能。
+	 * Identify gate: the item must be identified before it can be packed.
+	 */
+	public static final SM_SYSTEM_MESSAGE STR_MSG_PACK_ITEM_NEED_IDENTIFY = new SM_SYSTEM_MESSAGE(1402030);
+
+	/**
+	 * 鉴定：%0 鉴定完成。
+	 * Identify: %0 has been identified.
+	 *
+	 * @param itemL10n 物品本地化串 / item L10n
+	 * @return 系统消息 / system message
+	 */
+	public static SM_SYSTEM_MESSAGE STR_MSG_ITEM_IDENTIFY_SUCCEED(String itemL10n) {
+		return new SM_SYSTEM_MESSAGE(1401626, itemL10n);
+	}
+
+	/**
+	 * 鉴定：%0 的鉴定已取消。
+	 * Identify: %0's identification has been canceled.
+	 *
+	 * @param itemL10n 物品本地化串 / item L10n
+	 * @return 系统消息 / system message
+	 */
+	public static SM_SYSTEM_MESSAGE STR_MSG_ITEM_IDENTIFY_CANCELED(String itemL10n) {
+		return new SM_SYSTEM_MESSAGE(1401625, itemL10n);
 	}
 
 	/**

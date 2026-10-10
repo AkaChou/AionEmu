@@ -39,6 +39,11 @@ public class ItemRemodelService {
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_CHANGE_ITEM_SKIN_PC_LEVEL_LIMIT);
 			return;
 		}
+		// 鉴定门禁：未鉴定的装备不可变更外形。 / Identify gate: an unidentified item cannot have its skin changed.
+		if (keepItem.hasRetuning()) {
+			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_CHANGE_ITEM_SKIN_NEED_IDENTIFY);
+			return;
+		}
 		if (player.getInventory().getKinah() < remodelKinah) {
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE
 					.STR_CHANGE_ITEM_SKIN_NOT_ENOUGH_GOLD(new DescriptionId(keepItem.getItemTemplate().getNameId())));

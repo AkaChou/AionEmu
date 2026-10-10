@@ -460,6 +460,11 @@ public class ItemSocketService {
 					SM_SYSTEM_MESSAGE.STR_GIVE_ITEM_PROC_NOT_ADD_PROC(new DescriptionId(weaponItem.getNameId())));
 			return;
 		}
+		// 鉴定门禁：未鉴定的装备不可镶嵌神石。 / Identify gate: an unidentified item cannot receive a godstone.
+		if (weaponItem.hasRetuning()) {
+			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_GIVE_ITEM_PROC_ENCHANTED_NEED_IDENTIFY);
+			return;
+		}
 		final int godStoneItemId = godstone.getItemTemplate().getTemplateId();
 		if (player.getInventory().getKinah() < getPriceByQuality(godstone)) {
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_NOT_ENOUGH_MONEY);
