@@ -38,7 +38,6 @@ import com.aionemu.gameserver.services.events.EventWindowService;
 import com.aionemu.gameserver.services.events.FFAService;
 import com.aionemu.gameserver.services.events.LadderService;
 import com.aionemu.gameserver.services.events.ShugoSweepService;
-import com.aionemu.gameserver.services.events.ThievesGuildService;
 import com.aionemu.gameserver.services.instance.AsyunatarService;
 import com.aionemu.gameserver.services.instance.DredgionService2;
 import com.aionemu.gameserver.services.instance.EngulfedOphidanBridgeService;
@@ -953,10 +952,8 @@ class GameLegacyServiceBridgeConfigurationTest {
     @Test
     void exposesRemainingCoreGameplayServicesAsEagerSpringBeans() {
         try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(GameLegacyServiceBridgeConfiguration.class)) {
-            assertEquals(ThievesGuildService.class, context.getType("thievesGuildService"));
             assertEquals(BalaurAssaultService.class, context.getType("balaurAssaultService"));
             assertEquals(BattlefieldUnionService.class, context.getType("battlefieldUnionService"));
-            assertEager(context.getBeanFactory(), "thievesGuildService");
             assertEager(context.getBeanFactory(), "balaurAssaultService");
             assertEager(context.getBeanFactory(), "battlefieldUnionService");
         }

@@ -83,7 +83,6 @@ public class GameDAOClassProvider implements DAOClassProvider {
 			PlayerSkillListDAO.class,
 			PlayerSkillSkinListDAO.class,
 			PlayerStigmasEquippedDAO.class,
-			PlayerThievesDAO.class,
 			PlayerTitleListDAO.class,
 			PlayerTransfoDAO.class,
 			PlayerVarsDAO.class,

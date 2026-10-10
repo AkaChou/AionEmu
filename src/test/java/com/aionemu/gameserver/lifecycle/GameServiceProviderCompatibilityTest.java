@@ -100,7 +100,6 @@ import com.aionemu.gameserver.services.events.EventWindowService;
 import com.aionemu.gameserver.services.events.FFAService;
 import com.aionemu.gameserver.services.events.LadderService;
 import com.aionemu.gameserver.services.events.ShugoSweepService;
-import com.aionemu.gameserver.services.events.ThievesGuildService;
 import com.aionemu.gameserver.services.instance.AsyunatarService;
 import com.aionemu.gameserver.services.instance.DredgionService2;
 import com.aionemu.gameserver.services.instance.EngulfedOphidanBridgeService;
@@ -267,7 +266,6 @@ class GameServiceProviderCompatibilityTest {
                 "com.aionemu.gameserver.services.events.FFAService",
                 "com.aionemu.gameserver.services.events.LadderService",
                 "com.aionemu.gameserver.services.events.ShugoSweepService",
-                "com.aionemu.gameserver.services.events.ThievesGuildService",
                 "com.aionemu.gameserver.services.instance.AsyunatarService",
                 "com.aionemu.gameserver.services.instance.DredgionService2",
                 "com.aionemu.gameserver.services.instance.EngulfedOphidanBridgeService",
@@ -1199,7 +1197,6 @@ class GameServiceProviderCompatibilityTest {
         AutoGroupService autoGroupService = instance(AutoGroupService.class);
         AbyssRankingCache abyssRankingCache = instance(AbyssRankingCache.class);
         LegionService legionService = instance(LegionService.class);
-        ThievesGuildService thievesGuildService = instance(ThievesGuildService.class);
         BalaurAssaultService balaurAssaultService = instance(BalaurAssaultService.class);
         BattlefieldUnionService battlefieldUnionService = instance(BattlefieldUnionService.class);
         GameCoreGameplayServices coreGameplayServices = new GameCoreGameplayServices(
@@ -1209,7 +1206,6 @@ class GameServiceProviderCompatibilityTest {
                 provider(AutoGroupService.class, autoGroupService),
                 provider(AbyssRankingCache.class, abyssRankingCache),
                 provider(LegionService.class, legionService),
-                provider(ThievesGuildService.class, thievesGuildService),
                 provider(BalaurAssaultService.class, balaurAssaultService),
                 provider(BattlefieldUnionService.class, battlefieldUnionService));
 
@@ -1226,7 +1222,6 @@ class GameServiceProviderCompatibilityTest {
             assertSame(abyssRankingCache, GameCoreGameplayServices.abyssRankingCache());
             assertSame(legionService, LegionService.getInstance());
             assertSame(legionService, GameCoreGameplayServices.legionService());
-            assertSame(thievesGuildService, ThievesGuildService.getInstance());
             assertSame(balaurAssaultService, BalaurAssaultService.getInstance());
             assertSame(balaurAssaultService, GameCoreGameplayServices.balaurAssaultService());
             assertSame(battlefieldUnionService, BattlefieldUnionService.getInstance());
@@ -1241,7 +1236,6 @@ class GameServiceProviderCompatibilityTest {
             assertProviderCleared(AutoGroupService.class);
             assertProviderCleared(AbyssRankingCache.class);
             assertProviderCleared(LegionService.class);
-            assertProviderCleared(ThievesGuildService.class);
             assertProviderCleared(BalaurAssaultService.class);
             assertProviderCleared(BattlefieldUnionService.class);
         } finally {
@@ -1254,7 +1248,6 @@ class GameServiceProviderCompatibilityTest {
             AutoGroupService.setInstanceProvider(null);
             AbyssRankingCache.setInstanceProvider(null);
             LegionService.setInstanceProvider(null);
-            ThievesGuildService.setInstanceProvider(null);
             BalaurAssaultService.setInstanceProvider(null);
             BattlefieldUnionService.setInstanceProvider(null);
         }
@@ -1536,7 +1529,6 @@ class GameServiceProviderCompatibilityTest {
     void remainingSingletonAccessorsUseSpringProvidersBeforeLegacyFallbacks() throws Exception {
         LegionService legionService = instance(LegionService.class);
         WebshopService webshopService = instance(WebshopService.class);
-        ThievesGuildService thievesGuildService = instance(ThievesGuildService.class);
         InGameShopEn inGameShopEn = instance(InGameShopEn.class);
         BalaurAssaultService balaurAssaultService = instance(BalaurAssaultService.class);
         HousingService housingService = instance(HousingService.class);
@@ -1547,7 +1539,6 @@ class GameServiceProviderCompatibilityTest {
         try {
             LegionService.setInstanceProvider(provider(LegionService.class, legionService));
             WebshopService.setInstanceProvider(provider(WebshopService.class, webshopService));
-            ThievesGuildService.setInstanceProvider(provider(ThievesGuildService.class, thievesGuildService));
             InGameShopEn.setInstanceProvider(provider(InGameShopEn.class, inGameShopEn));
             BalaurAssaultService.setInstanceProvider(provider(BalaurAssaultService.class, balaurAssaultService));
             HousingService.setInstanceProvider(provider(HousingService.class, housingService));
@@ -1557,7 +1548,6 @@ class GameServiceProviderCompatibilityTest {
 
             assertSame(legionService, LegionService.getInstance());
             assertSame(webshopService, WebshopService.getInstance());
-            assertSame(thievesGuildService, ThievesGuildService.getInstance());
             assertSame(inGameShopEn, InGameShopEn.getInstance());
             assertSame(inGameShopEn, GameRuntimeServices.inGameShopEn());
             assertSame(balaurAssaultService, BalaurAssaultService.getInstance());
@@ -1569,7 +1559,6 @@ class GameServiceProviderCompatibilityTest {
         } finally {
             LegionService.setInstanceProvider(null);
             WebshopService.setInstanceProvider(null);
-            ThievesGuildService.setInstanceProvider(null);
             InGameShopEn.setInstanceProvider(null);
             BalaurAssaultService.setInstanceProvider(null);
             HousingService.setInstanceProvider(null);

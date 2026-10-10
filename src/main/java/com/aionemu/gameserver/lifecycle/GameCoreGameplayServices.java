@@ -5,7 +5,6 @@ import com.aionemu.gameserver.services.LegionService;
 import com.aionemu.gameserver.services.PvpService;
 import com.aionemu.gameserver.services.abyss.AbyssRankingCache;
 import com.aionemu.gameserver.services.drop.DropService;
-import com.aionemu.gameserver.services.events.ThievesGuildService;
 import com.aionemu.gameserver.services.mail.MailService;
 import com.aionemu.gameserver.services.siegeservice.BalaurAssaultService;
 import com.aionemu.gameserver.services.siegeservice.BattlefieldUnionService;
@@ -86,7 +85,6 @@ public final class GameCoreGameplayServices implements DisposableBean {
      * @param autoGroupServiceProvider 自动组队服务提供者 / Auto-group service provider
      * @param abyssRankingCacheProvider 欧比斯排名缓存提供者 / Abyss ranking cache provider
      * @param legionServiceProvider 军团服务提供者 / Legion service provider
-     * @param thievesGuildServiceProvider 盗贼公会服务提供者 / Thieves guild service provider
      * @param balaurAssaultServiceProvider 龙族袭击服务提供者 / Balaur assault service provider
      * @param battlefieldUnionServiceProvider 战场联盟服务提供者 / Battlefield union service provider
      */
@@ -96,7 +94,6 @@ public final class GameCoreGameplayServices implements DisposableBean {
             ObjectProvider<AutoGroupService> autoGroupServiceProvider,
             ObjectProvider<AbyssRankingCache> abyssRankingCacheProvider,
             ObjectProvider<LegionService> legionServiceProvider,
-            ObjectProvider<ThievesGuildService> thievesGuildServiceProvider,
             ObjectProvider<BalaurAssaultService> balaurAssaultServiceProvider,
             ObjectProvider<BattlefieldUnionService> battlefieldUnionServiceProvider) {
         GameCoreGameplayServices.dropServiceProvider = dropServiceProvider;
@@ -112,7 +109,6 @@ public final class GameCoreGameplayServices implements DisposableBean {
         AbyssRankingCache.setInstanceProvider(abyssRankingCacheProvider);
         GameCoreGameplayServices.legionServiceProvider = legionServiceProvider;
         LegionService.setInstanceProvider(legionServiceProvider);
-        ThievesGuildService.setInstanceProvider(thievesGuildServiceProvider);
         GameCoreGameplayServices.balaurAssaultServiceProvider = balaurAssaultServiceProvider;
         BalaurAssaultService.setInstanceProvider(balaurAssaultServiceProvider);
         GameCoreGameplayServices.battlefieldUnionServiceProvider = battlefieldUnionServiceProvider;
@@ -289,7 +285,6 @@ public final class GameCoreGameplayServices implements DisposableBean {
         AbyssRankingCache.setInstanceProvider(null);
         legionServiceProvider = null;
         LegionService.setInstanceProvider(null);
-        ThievesGuildService.setInstanceProvider(null);
         balaurAssaultServiceProvider = null;
         BalaurAssaultService.setInstanceProvider(null);
         battlefieldUnionServiceProvider = null;

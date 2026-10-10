@@ -7,7 +7,6 @@ import com.aionemu.gameserver.model.templates.tasks.TaskFromDBHandler;
 import com.aionemu.gameserver.services.abyss.AbyssRankingCache;
 import com.aionemu.gameserver.services.drop.DropService;
 import com.aionemu.gameserver.services.events.BoostEventService;
-import com.aionemu.gameserver.services.events.ThievesGuildService;
 import com.aionemu.gameserver.services.mail.MailService;
 import com.aionemu.gameserver.services.player.PlayerEnterWorldService;
 import com.aionemu.gameserver.services.player.PlayerService;
@@ -72,7 +71,6 @@ import com.aionemu.gameserver.dao.PlayerPetsDAO;
 import com.aionemu.gameserver.dao.PlayerPunishmentsDAO;
 import com.aionemu.gameserver.dao.PlayerQuestListDAO;
 import com.aionemu.gameserver.dao.PlayerShugoSweepDAO;
-import com.aionemu.gameserver.dao.PlayerThievesListDAO;
 import com.aionemu.gameserver.dao.PlayerRecipesDAO;
 import com.aionemu.gameserver.dao.PlayerRegisteredItemsDAO;
 import com.aionemu.gameserver.dao.PlayerSettingsDAO;
@@ -424,12 +422,6 @@ public class CoreRuntimeServiceBeans {
     @Bean
     public BattlefieldUnionService battlefieldUnionService() {
         return new BattlefieldUnionService();
-    }
-
-    @Bean
-    public ThievesGuildService thievesGuildService(ObjectProvider<PlayerThievesListDAO> thievesDaoProvider) {
-        PlayerThievesListDAO thievesDAO = thievesDaoProvider.getIfAvailable();
-        return thievesDAO != null ? new ThievesGuildService(thievesDAO) : new ThievesGuildService();
     }
 
     @Bean
