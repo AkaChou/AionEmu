@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.controllers.attack;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.ArrayList;
@@ -17,12 +16,9 @@ import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.gameobjects.AionObject;
 import com.aionemu.gameserver.model.gameobjects.Creature;
-import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.team2.group.PlayerGroup;
-import com.aionemu.gameserver.questEngine.model.QuestEnv;
-import com.aionemu.gameserver.utils.MathUtil;
 
 /**
  * 生物仇恨列表：维护攻击者伤害/仇恨，并提供最高仇恨、最高伤害与掉落归属等查询。
@@ -197,13 +193,6 @@ public class AggroList {
 	}
 
 	private void afterHateAdded(Creature creature, Creature previousMostHated) {
-		if (creature instanceof Player && owner instanceof Npc) {
-			owner.getKnownList().doOnAllPlayers(player -> {
-				if (MathUtil.isIn3dRange(owner, player, 50)) {
-					GameEngineServices.questEngine().onAddAggroList(new QuestEnv(owner, player, 0, 0), creature);
-				}
-			});
-		}
 		notifyMostHatedChanged(previousMostHated);
 		owner.getAi2().onCreatureEvent(AIEventType.ATTACK, creature);
 	}

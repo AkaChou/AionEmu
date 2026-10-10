@@ -29,12 +29,6 @@ public class QuestNpc {
 	private final List<Integer> onTalkEvent;
 	/** 返回攻击事件列表 / Returns the on-attack events. */
 	private final List<Integer> onAttackEvent;
-	/** 返回丢失目标事件列表 / Returns the on-lost-target events */
-	private final List<Integer> onLostTargetEvent;
-	/** 返回到达目标事件列表 / Returns the on-reach-target events */
-	private final List<Integer> onReachTargetEvent;
-	/** 返回入仇恨列表事件列表 / Returns the on-add-aggro-list events */
-	private final List<Integer> onAddAggroListEvent;
 	private final List<Integer> onAtDistanceEvent;
 	/** 返回 NPC ID / Returns the npc id */
 	private final int npcId;
@@ -45,9 +39,6 @@ public class QuestNpc {
 		onKillEvent = new ArrayList<>();
 		onTalkEvent = new ArrayList<>();
 		onAttackEvent = new ArrayList<>();
-		onLostTargetEvent = new ArrayList<>();
-		onReachTargetEvent = new ArrayList<>();
-		onAddAggroListEvent = new ArrayList<>();
 		onAtDistanceEvent = new ArrayList<>();
 	}
 
@@ -89,28 +80,6 @@ public class QuestNpc {
 	public void addOnTalkEvent(int questId) {
 		if (!onTalkEvent.contains(questId)) {
 			onTalkEvent.add(questId);
-			registerCanAct(questId, npcId);
-		}
-	}
-
-	/** 添加到达目标事件 / Adds an on-reach-target event */
-	public void addOnReachTargetEvent(int questId) {
-		if (!onReachTargetEvent.contains(questId)) {
-			onReachTargetEvent.add(questId);
-		}
-	}
-
-	/** 添加丢失目标事件 / Adds an on-lost-target event */
-	public void addOnLostTargetEvent(int questId) {
-		if (!onLostTargetEvent.contains(questId)) {
-			onLostTargetEvent.add(questId);
-		}
-	}
-
-	/** 添加入仇恨列表事件 / Adds an on-add-aggro-list event */
-	public void addOnAddAggroListEvent(int questId) {
-		if (!onAddAggroListEvent.contains(questId)) {
-			onAddAggroListEvent.add(questId);
 			registerCanAct(questId, npcId);
 		}
 	}

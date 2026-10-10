@@ -221,7 +221,7 @@ public final class QuestService {
 		if (!template.getBonus().isEmpty()) {
 			QuestBonuses bonus = template.getBonus().getFirst();
 			// 处理器可在重复时添加额外奖励（活动任务无数据）。 / Handler can add additional bonuses on repeat (for event quests no data)
-			HandlerResult result = GameEngineServices.questEngine().onBonusApplyEvent(env, bonus.getType(), questItems);
+			HandlerResult result = GameEngineServices.questEngine().onBonusApplyEvent(env, bonus.getType());
 			if (result != HandlerResult.FAILED) {
 				QuestItems additional = GameFeatureServices.bonusService().getQuestBonus(player, template);
 				if (additional != null) {
@@ -1127,10 +1127,9 @@ public final class QuestService {
 	 * Ends and cancels the quest timer.
 	 *
 	 * @param env 任务环境 / quest environment
-	 * @return 是否已处理 / whether handled
 	 */
-	public static boolean questTimerEnd(QuestEnv env) {
-		return QuestTimers.questTimerEnd(env);
+	public static void questTimerEnd(QuestEnv env) {
+		QuestTimers.questTimerEnd(env);
 	}
 
 	/**

@@ -27,7 +27,6 @@ import com.aionemu.gameserver.model.instance.instancereward.KamarBattlefieldRewa
 import com.aionemu.gameserver.model.instance.playerreward.InstancePlayerReward;
 import com.aionemu.gameserver.model.instance.playerreward.KamarBattlefieldPlayerReward;
 import com.aionemu.gameserver.network.aion.serverpackets.*;
-import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.services.abyss.AbyssPointsService;
 import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.services.player.PlayerReviveService;
@@ -519,8 +518,6 @@ public class KamarBattlefieldInstance extends GeneralInstanceHandler
             AbyssPointsService.addAp(player, abyssPoint);
             AbyssPointsService.addGp(player, gloryPoint);
             player.getCommonData().addExp(expPoint, RewardType.HUNTING);
-            QuestEnv env = new QuestEnv(null, player, 0, 0);
-            GameEngineServices.questEngine().onKamarReward(env);
         }
         for (Npc npc : instance.getNpcs()) {
 			npc.getController().onDelete();

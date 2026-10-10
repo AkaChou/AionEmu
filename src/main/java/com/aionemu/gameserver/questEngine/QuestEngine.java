@@ -1217,8 +1217,29 @@ public class QuestEngine implements GameEngine {
 				SM_SYSTEM_MESSAGE.STR_QUEST_GIVEUP_WHEN_DELETE_QUEST_ITEM_IMPOSSIBLE(item.getItemName()));
 			return true;
 		}
-		int objectId = item.getObjectId();
-		RequestResponseHandler handler = new RequestResponseHandler(player) {
+		RequestResponseHandler handler = questItemDestroyResponder(player, itemId, item.getObjectId());
+		if (!player.getResponseRequester().putRequest(SM_QUESTION_WINDOW.STR_QUEST_GIVEUP_WHEN_DELETE_QUEST_ITEM,
+			handler)) {
+			// 有在途问询：原版重试提示（1300605）；物品不删。
+			// A pending request blocks the ask: the retail retry message, item kept.
+			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_QUEST_GIVEUP_WHEN_DELETE_QUEST_ITEM_RETRY);
+			return true;
+		}
+		PacketSendUtility.sendPacket(player, new SM_QUESTION_WINDOW(
+			SM_QUESTION_WINDOW.STR_QUEST_GIVEUP_WHEN_DELETE_QUEST_ITEM, 0, 0, new DescriptionId(item.getNameId())));
+		return true;
+	}
+
+	/**
+	 * 构造「销毁任务物品需先放弃任务」确认窗的应答处理器。
+	 * Builds the responder for the quest-item destroy confirmation window.
+	 * @param player 发起销毁的玩家 / the player requesting the destroy
+	 * @param itemId 物品模板 id / the item template id
+	 * @param objectId 物品对象 id / the item object id
+	 * @return 确认/拒绝应答处理器 / the confirmation responder
+	 */
+	private RequestResponseHandler questItemDestroyResponder(Player player, int itemId, int objectId) {
+		return new RequestResponseHandler(player) {
 			@Override
 			public void acceptRequest(Creature requester, Player responder) {
 				Item current = responder.getInventory() == null ? null
@@ -1238,16 +1259,6 @@ public class QuestEngine implements GameEngine {
 					SM_SYSTEM_MESSAGE.STR_QUEST_GIVEUP_WHEN_DELETE_QUEST_ITEM_RETRY);
 			}
 		};
-		if (!player.getResponseRequester().putRequest(SM_QUESTION_WINDOW.STR_QUEST_GIVEUP_WHEN_DELETE_QUEST_ITEM,
-			handler)) {
-			// 有在途问询：原版重试提示（1300605）；物品不删。
-			// A pending request blocks the ask: the retail retry message, item kept.
-			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_QUEST_GIVEUP_WHEN_DELETE_QUEST_ITEM_RETRY);
-			return true;
-		}
-		PacketSendUtility.sendPacket(player, new SM_QUESTION_WINDOW(
-			SM_QUESTION_WINDOW.STR_QUEST_GIVEUP_WHEN_DELETE_QUEST_ITEM, 0, 0, new DescriptionId(item.getNameId())));
-		return true;
 	}
 
 	/**

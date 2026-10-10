@@ -109,10 +109,9 @@ final class QuestTimers {
 	 * 结束并取消任务计时器。
 	 * Ends and cancels the quest timer.
 	 * @param env 任务环境 / quest environment
-	 * @return 是否已处理 / whether handled
 	 */
-	static boolean questTimerEnd(QuestEnv env) {
-		return questTimerEnd(env, QuestTimerPolicy.visible().identity());
+	static void questTimerEnd(QuestEnv env) {
+		questTimerEnd(env, QuestTimerPolicy.visible().identity());
 	}
 
 	/**
