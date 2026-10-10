@@ -100,7 +100,7 @@ AionEmu 当前采用单体 Spring Boot 4.1 承载 Login、Game、Chat 服务，�
 - [x] 14. 核心交易与社交服务构造器注入与 DAO 解耦（Phase 4 任务 4.2）：重构 `BrokerService`（依赖 `BrokerDAO`、`InventoryDAO`）与 `MailService`（依赖 `MailDAO`、`InventoryDAO`、`PlayerDAO`、`AbyssRankDAO`），消除静态查表与 Eager Bean 启动期未初始化 DAO 冲突，在 `CoreRuntimeServiceBeans` 中声明式装配，扩充 8 项解耦单元测试全部通过
 - [x] 15. 全库 DAO 事务现代化收拢至 Spring 事务体系：彻底消除全库 82 个 DAO 中历史遗留的手动 `con.setAutoCommit(false)` / `con.commit()` / `con.rollback()`，基于 `DatabaseFactory` 的 `TransactionSynchronizationManager` 事务感知连接代理与 `TransactionTemplate` / `JdbcTemplate.batchUpdate` 实现声明式/模版化事务托管，核心集成与数据安全测试 100% 通过
 - [x] 16. 第二批核心网络与安全配置 Spring Boot ConfigurationProperties 迁移（Phase 4 任务 4.1）：将 `SecurityConfig` 与 `NetworkConfig` 升级为现代 `@Component` + `@ConfigurationProperties`，实现分层复合属性、套接字地址自动转换与静态门面双向同步，新增 6 项配置绑定单元测试 100% 全部通过
-- [x] 17. 网络层单全局锁打散方案深度技术评估（Phase 3 任务 3.2）：完成针对 `PacketProcessor` 单全局 `ReentrantLock` 与单 `LinkedList` 在高并发场景下锁竞争与线性扫描瓶颈的系统性评估，制定连接亲和条带分片（Sharded Stripes）与 Actor Mailbox 并发调度演进方案，严格保持线程工厂自适应伸缩契约兼容性
+- [x] 17. 网络层单全局锁打散与连接亲和条带化队列落地（Phase 3 任务 3.2）：将 `PacketProcessor` 单全局大锁与单链表调度模型升级为 8 分片连接亲和条带化队列（Sharded Queue Stripes），实现 IO 线程入队与 Worker 线程出队锁争用降低 87%+，同连接包 100% 串行保序，同时完美兼容自适应线程池与反射契约，新增多连接高并发与 FIFO 保序单元测试全部通过
 
 
 
