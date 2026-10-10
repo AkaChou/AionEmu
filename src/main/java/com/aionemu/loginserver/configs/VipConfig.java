@@ -1,14 +1,26 @@
 package com.aionemu.loginserver.configs;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
+import org.springframework.validation.annotation.Validated;
 
 import com.aionemu.commons.configuration.Property;
 
 /**
  * 独立账号 VIP 配置，支持 Spring Boot ConfigurationProperties 与静态门面访问。
- * Independent account VIP configuration supporting Spring Boot ConfigurationProperties and static facade access.
+ * <p>Binder 路径经 {@code @Validated} + JSR-380 约束在绑定期声明式校验；
+ * 遗留装配路径（{@code Config.load()} 直写静态字段）不经 Binder，仍由
+ * {@link #validate()} 及早失败守护。</p>
+ * Independent account VIP configuration supporting Spring Boot ConfigurationProperties and static
+ * facade access. The Binder path is validated declaratively at binding time via {@code @Validated}
+ * plus JSR-380 constraints; the legacy assembly path ({@code Config.load()} writing static fields
+ * directly) bypasses the Binder and stays guarded by {@link #validate()} fail-fast.
  */
+@Validated
 @Component
 @ConfigurationProperties(prefix = "loginserver.vip")
 public class VipConfig {
@@ -21,6 +33,7 @@ public class VipConfig {
     @Property(key = "loginserver.vip.auto-enable.level", defaultValue = "1")
     public static int AUTO_ENABLE_LEVEL;
 
+    @Valid
     private final AutoEnableProperties autoEnable = new AutoEnableProperties();
 
     public AutoEnableProperties getAutoEnable() {
@@ -71,6 +84,13 @@ public class VipConfig {
             AUTO_ENABLE = value;
         }
 
+        /**
+         * 越界绑定在绑定期即被 JSR-380 拒绝（遗留直写路径由 {@link VipConfig#validate()} 守护）。
+         * Out-of-range bindings are rejected declaratively by JSR-380 at binding time (the legacy
+         * direct-write path stays guarded by {@link VipConfig#validate()}).
+         */
+        @Min(1)
+        @Max(6)
         public int getLevel() {
             return AUTO_ENABLE_LEVEL;
         }

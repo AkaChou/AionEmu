@@ -69,6 +69,31 @@ class LoginConfigBindingTest {
     }
 
     /**
+     * VIP 等级越界必须被 JSR-380 约束捕获（Binder 路径的声明式校验；
+     * 遗留路径由 validate() 守护）。
+     * Out-of-range VIP levels must be caught by the JSR-380 constraint (the Binder path's
+     * declarative validation; the legacy path stays guarded by validate()).
+     */
+    @Test
+    void validatorRejectsOutOfRangeVipLevel() {
+        try (org.springframework.validation.beanvalidation.LocalValidatorFactoryBean validator =
+            new org.springframework.validation.beanvalidation.LocalValidatorFactoryBean()) {
+            validator.afterPropertiesSet();
+            com.aionemu.loginserver.configs.VipConfig config = new com.aionemu.loginserver.configs.VipConfig();
+            config.getAutoEnable().setValue(true);
+            config.getAutoEnable().setLevel(9);
+
+            var violations = validator.validate(config);
+            org.junit.jupiter.api.Assertions.assertFalse(violations.isEmpty());
+            org.junit.jupiter.api.Assertions.assertTrue(violations.stream()
+                .anyMatch(violation -> violation.getPropertyPath().toString().contains("level")));
+
+            config.getAutoEnable().setLevel(3);
+            org.junit.jupiter.api.Assertions.assertTrue(validator.validate(config).isEmpty());
+        }
+    }
+
+    /**
      * 遗留装配沿 `.value` 规范化子键取值，不得让 defaultValue 覆盖文件值。
      * The legacy assembly must read the normalized `.value` sub-keys instead of letting
      * defaultValues overwrite the file values.

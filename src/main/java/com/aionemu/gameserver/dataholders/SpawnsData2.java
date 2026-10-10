@@ -65,7 +65,7 @@ import com.aionemu.gameserver.spawnengine.SpawnHandlerType;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldMap;
 
-import com.aionemu.commons.utils.collections.IntObjectHashMap;
+import com.aionemu.commons.utils.collections.FrozenIntObjectTable;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import lombok.Getter;
@@ -88,31 +88,31 @@ public class SpawnsData2 {
 	@XmlElement(name = "spawn_map", type = SpawnMap.class)
 	protected List<SpawnMap> templates;
 
-	private final IntObjectHashMap<Map<Integer, SimpleEntry<SpawnGroup2, Spawn>>> allSpawnMaps = new IntObjectHashMap<>();
-	private final IntObjectHashMap<Map<Integer, List<SpawnGroup2>>> normalSpawnVariants = new IntObjectHashMap<>();
-	private final IntObjectHashMap<List<SpawnGroup2>> siegeSpawnMaps = new IntObjectHashMap<>();
-	private final IntObjectHashMap<List<SpawnGroup2>> baseSpawnMaps = new IntObjectHashMap<>();
-	private final IntObjectHashMap<List<SpawnGroup2>> vortexSpawnMaps = new IntObjectHashMap<>();
-	private final IntObjectHashMap<List<SpawnGroup2>> riftSpawnMaps = new IntObjectHashMap<>();
-	private final IntObjectHashMap<List<SpawnGroup2>> beritraSpawnMaps = new IntObjectHashMap<>();
-	private final IntObjectHashMap<List<SpawnGroup2>> agentSpawnMaps = new IntObjectHashMap<>();
-	private final IntObjectHashMap<List<SpawnGroup2>> anohaSpawnMaps = new IntObjectHashMap<>();
-	private final IntObjectHashMap<List<SpawnGroup2>> rvrSpawnMaps = new IntObjectHashMap<>();
-	private final IntObjectHashMap<List<SpawnGroup2>> svsSpawnMaps = new IntObjectHashMap<>();
-	private final IntObjectHashMap<List<SpawnGroup2>> iuSpawnMaps = new IntObjectHashMap<>();
-	private final IntObjectHashMap<List<SpawnGroup2>> dynamicRiftSpawnMaps = new IntObjectHashMap<>();
-	private final IntObjectHashMap<List<SpawnGroup2>> instanceRiftSpawnMaps = new IntObjectHashMap<>();
-	private final IntObjectHashMap<List<SpawnGroup2>> idianDepthsSpawnMaps = new IntObjectHashMap<>();
-	private final IntObjectHashMap<List<SpawnGroup2>> nightmareCircusSpawnMaps = new IntObjectHashMap<>();
-	private final IntObjectHashMap<List<SpawnGroup2>> legionDominionSpawnMaps = new IntObjectHashMap<>();
-	private final IntObjectHashMap<List<SpawnGroup2>> zorshivDredgionSpawnMaps = new IntObjectHashMap<>();
-	private final IntObjectHashMap<List<SpawnGroup2>> moltenusSpawnMaps = new IntObjectHashMap<>();
-	private final IntObjectHashMap<List<SpawnGroup2>> conquestSpawnMaps = new IntObjectHashMap<>();
-	private final IntObjectHashMap<List<SpawnGroup2>> landingSpawnMaps = new IntObjectHashMap<>();
-	private final IntObjectHashMap<List<SpawnGroup2>> landingSpecialSpawnMaps = new IntObjectHashMap<>();
-	private final IntObjectHashMap<List<SpawnGroup2>> towerOfEternitySpawnMaps = new IntObjectHashMap<>();
-	private final IntObjectHashMap<List<SpawnGroup2>> outpostSpawnMaps = new IntObjectHashMap<>();
-	private final IntObjectHashMap<Spawn> customs = new IntObjectHashMap<>();
+	private final FrozenIntObjectTable<Map<Integer, SimpleEntry<SpawnGroup2, Spawn>>> allSpawnMaps = new FrozenIntObjectTable<>();
+	private final FrozenIntObjectTable<Map<Integer, List<SpawnGroup2>>> normalSpawnVariants = new FrozenIntObjectTable<>();
+	private final FrozenIntObjectTable<List<SpawnGroup2>> siegeSpawnMaps = new FrozenIntObjectTable<>();
+	private final FrozenIntObjectTable<List<SpawnGroup2>> baseSpawnMaps = new FrozenIntObjectTable<>();
+	private final FrozenIntObjectTable<List<SpawnGroup2>> vortexSpawnMaps = new FrozenIntObjectTable<>();
+	private final FrozenIntObjectTable<List<SpawnGroup2>> riftSpawnMaps = new FrozenIntObjectTable<>();
+	private final FrozenIntObjectTable<List<SpawnGroup2>> beritraSpawnMaps = new FrozenIntObjectTable<>();
+	private final FrozenIntObjectTable<List<SpawnGroup2>> agentSpawnMaps = new FrozenIntObjectTable<>();
+	private final FrozenIntObjectTable<List<SpawnGroup2>> anohaSpawnMaps = new FrozenIntObjectTable<>();
+	private final FrozenIntObjectTable<List<SpawnGroup2>> rvrSpawnMaps = new FrozenIntObjectTable<>();
+	private final FrozenIntObjectTable<List<SpawnGroup2>> svsSpawnMaps = new FrozenIntObjectTable<>();
+	private final FrozenIntObjectTable<List<SpawnGroup2>> iuSpawnMaps = new FrozenIntObjectTable<>();
+	private final FrozenIntObjectTable<List<SpawnGroup2>> dynamicRiftSpawnMaps = new FrozenIntObjectTable<>();
+	private final FrozenIntObjectTable<List<SpawnGroup2>> instanceRiftSpawnMaps = new FrozenIntObjectTable<>();
+	private final FrozenIntObjectTable<List<SpawnGroup2>> idianDepthsSpawnMaps = new FrozenIntObjectTable<>();
+	private final FrozenIntObjectTable<List<SpawnGroup2>> nightmareCircusSpawnMaps = new FrozenIntObjectTable<>();
+	private final FrozenIntObjectTable<List<SpawnGroup2>> legionDominionSpawnMaps = new FrozenIntObjectTable<>();
+	private final FrozenIntObjectTable<List<SpawnGroup2>> zorshivDredgionSpawnMaps = new FrozenIntObjectTable<>();
+	private final FrozenIntObjectTable<List<SpawnGroup2>> moltenusSpawnMaps = new FrozenIntObjectTable<>();
+	private final FrozenIntObjectTable<List<SpawnGroup2>> conquestSpawnMaps = new FrozenIntObjectTable<>();
+	private final FrozenIntObjectTable<List<SpawnGroup2>> landingSpawnMaps = new FrozenIntObjectTable<>();
+	private final FrozenIntObjectTable<List<SpawnGroup2>> landingSpecialSpawnMaps = new FrozenIntObjectTable<>();
+	private final FrozenIntObjectTable<List<SpawnGroup2>> towerOfEternitySpawnMaps = new FrozenIntObjectTable<>();
+	private final FrozenIntObjectTable<List<SpawnGroup2>> outpostSpawnMaps = new FrozenIntObjectTable<>();
+	private final FrozenIntObjectTable<Spawn> customs = new FrozenIntObjectTable<>();
 
 	private Map<Integer, SimpleEntry<SpawnGroup2, Spawn>> spawnIndexForWorld(int mapId) {
 		Map<Integer, SimpleEntry<SpawnGroup2, Spawn>> worldSpawns = allSpawnMaps.get(mapId);
@@ -132,7 +132,7 @@ public class SpawnsData2 {
 		return variants;
 	}
 
-	private List<SpawnGroup2> spawnGroupsFor(IntObjectHashMap<List<SpawnGroup2>> spawnMaps, int id) {
+	private List<SpawnGroup2> spawnGroupsFor(FrozenIntObjectTable<List<SpawnGroup2>> spawnMaps, int id) {
 		List<SpawnGroup2> spawnGroups = spawnMaps.get(id);
 		if (spawnGroups == null) {
 			spawnGroups = new ArrayList<>();
@@ -648,7 +648,43 @@ public class SpawnsData2 {
 		data.templates = maps;
 		data.afterUnmarshal(null, null);
 		data.clearTemplates();
+		data.freezeIndexTables();
 		return data;
+	}
+
+	/**
+	 * 冻结全部索引表：加载期写入完成后切换为有序数组二分查询，消除运行期哈希开销；
+	 * 运行期仅允许按键查询与内层结构变更，外层键集不再变化。
+	 * Freezes every index table: after load-time writes complete, query switches to a sorted-array
+	 * binary search; at runtime only key lookups and inner-structure changes are allowed, the outer
+	 * key set never changes again.
+	 */
+	private void freezeIndexTables() {
+		allSpawnMaps.freeze();
+		normalSpawnVariants.freeze();
+		customs.freeze();
+		siegeSpawnMaps.freeze();
+		baseSpawnMaps.freeze();
+		vortexSpawnMaps.freeze();
+		riftSpawnMaps.freeze();
+		beritraSpawnMaps.freeze();
+		agentSpawnMaps.freeze();
+		anohaSpawnMaps.freeze();
+		rvrSpawnMaps.freeze();
+		svsSpawnMaps.freeze();
+		iuSpawnMaps.freeze();
+		dynamicRiftSpawnMaps.freeze();
+		instanceRiftSpawnMaps.freeze();
+		idianDepthsSpawnMaps.freeze();
+		nightmareCircusSpawnMaps.freeze();
+		legionDominionSpawnMaps.freeze();
+		zorshivDredgionSpawnMaps.freeze();
+		moltenusSpawnMaps.freeze();
+		conquestSpawnMaps.freeze();
+		landingSpawnMaps.freeze();
+		landingSpecialSpawnMaps.freeze();
+		towerOfEternitySpawnMaps.freeze();
+		outpostSpawnMaps.freeze();
 	}
 
 	/**
@@ -1019,13 +1055,13 @@ public class SpawnsData2 {
 		}
 		oldGroup.setCustom(true);
 
-		SpawnMap map = null;
+		SpawnMap map;
 		if (data.templates == null) {
 			data.templates = new ArrayList<>();
 			map = new SpawnMap(spawn.getWorldId());
 			data.templates.add(map);
 		} else {
-			map = data.templates.get(0);
+			map = data.templates.getFirst();
 		}
 
 		if (addGroup) {
@@ -1086,6 +1122,15 @@ public class SpawnsData2 {
 	 */
 	public int size() {
 		return allSpawnMaps.size();
+	}
+
+	/**
+	 * 返回是否没有已索引的世界地图。
+	 * Returns whether there is no indexed world map.
+	 * @return 无世界地图时为 true / true if empty
+	 */
+	public boolean isEmpty() {
+		return allSpawnMaps.isEmpty();
 	}
 
 	/**
