@@ -25,6 +25,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.Future;
 
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.ObjectProvider;
 
@@ -38,6 +39,14 @@ import org.springframework.beans.factory.ObjectProvider;
 public class PeriodicSaveService {
 
 	private static volatile ObjectProvider<PeriodicSaveService> instanceProvider;
+
+	private final AbyssRankDAO abyssRankDAO;
+	private final PlayerSkillListDAO playerSkillListDAO;
+	private final PlayerQuestListDAO playerQuestListDAO;
+	private final PlayerDAO playerDAO;
+	private final PlayerStigmasEquippedDAO playerStigmasEquippedDAO;
+	private final InventoryDAO inventoryDAO;
+	private final ItemStoneListDAO itemStoneListDAO;
 
 	private Future<?> legionWhUpdateTask;
 	private Future<?> playerGeneralUpdateTask;
@@ -75,11 +84,45 @@ public class PeriodicSaveService {
 	}
 
 	/**
+	 * 使用指定的 DAO 集合构造并启动全局周期保存任务。
+	 * Constructs the service with given DAOs and starts global periodic save tasks.
+	 */
+	public PeriodicSaveService(@NonNull AbyssRankDAO abyssRankDAO, @NonNull PlayerSkillListDAO playerSkillListDAO,
+							   @NonNull PlayerQuestListDAO playerQuestListDAO, @NonNull PlayerDAO playerDAO,
+							   @NonNull PlayerStigmasEquippedDAO playerStigmasEquippedDAO,
+							   @NonNull InventoryDAO inventoryDAO, @NonNull ItemStoneListDAO itemStoneListDAO) {
+		this.abyssRankDAO = abyssRankDAO;
+		this.playerSkillListDAO = playerSkillListDAO;
+		this.playerQuestListDAO = playerQuestListDAO;
+		this.playerDAO = playerDAO;
+		this.playerStigmasEquippedDAO = playerStigmasEquippedDAO;
+		this.inventoryDAO = inventoryDAO;
+		this.itemStoneListDAO = itemStoneListDAO;
+		rescheduleAllTasks();
+	}
+
+	/**
 	 * 构造并启动全局周期保存任务（军团仓库、玩家常规数据、玩家物品数据）。
 	 * Constructs and starts global periodic save tasks (legion warehouse, player general, player items).
 	 */
 	public PeriodicSaveService() {
-		rescheduleAllTasks();
+		this(safeDao(AbyssRankDAO.class, com.aionemu.gameserver.dao.impl.AbyssRankDAO::new),
+			 safeDao(PlayerSkillListDAO.class, com.aionemu.gameserver.dao.impl.PlayerSkillListDAO::new),
+			 safeDao(PlayerQuestListDAO.class, com.aionemu.gameserver.dao.impl.PlayerQuestListDAO::new),
+			 safeDao(PlayerDAO.class, com.aionemu.gameserver.dao.impl.PlayerDAO::new),
+			 safeDao(PlayerStigmasEquippedDAO.class, com.aionemu.gameserver.dao.impl.PlayerStigmasEquippedDAO::new),
+			 safeDao(InventoryDAO.class, com.aionemu.gameserver.dao.impl.InventoryDAO::new),
+			 safeDao(ItemStoneListDAO.class, com.aionemu.gameserver.dao.impl.ItemStoneListDAO::new));
+	}
+
+	private static <T extends com.aionemu.commons.database.dao.DAO> T safeDao(Class<T> daoClass, java.util.function.Supplier<T> fallback) {
+		if (DAOManager.isInitialized()) {
+			try {
+				return DAOManager.getDAO(daoClass);
+			} catch (Exception ignored) {
+			}
+		}
+		return fallback.get();
 	}
 
 	/**
@@ -158,11 +201,11 @@ public class PeriodicSaveService {
 			return;
 		}
 		try {
-			DAOManager.getDAO(AbyssRankDAO.class).storeAbyssRank(player);
-			DAOManager.getDAO(PlayerSkillListDAO.class).storeSkills(player);
-			DAOManager.getDAO(PlayerQuestListDAO.class).store(player);
-			DAOManager.getDAO(PlayerDAO.class).storePlayer(player);
-			DAOManager.getDAO(PlayerStigmasEquippedDAO.class).storeItems(player);
+			this.abyssRankDAO.storeAbyssRank(player);
+			this.playerSkillListDAO.storeSkills(player);
+			this.playerQuestListDAO.store(player);
+			this.playerDAO.storePlayer(player);
+			this.playerStigmasEquippedDAO.storeItems(player);
 			List<House> houses = player.getHouses();
 			if (houses != null) {
 				for (House house : houses) {
@@ -185,8 +228,8 @@ public class PeriodicSaveService {
 			return;
 		}
 		try {
-			DAOManager.getDAO(InventoryDAO.class).store(player);
-			DAOManager.getDAO(ItemStoneListDAO.class).save(player);
+			this.inventoryDAO.store(player);
+			this.itemStoneListDAO.save(player);
 		} catch (Exception ex) {
 			log.error(I18n.get("log.7850b77ba785", player.getName()), ex);
 		}
@@ -205,8 +248,8 @@ public class PeriodicSaveService {
 				List<Item> allItems = legion.getLegionWarehouse().getItemsWithKinah();
 				allItems.addAll(legion.getLegionWarehouse().getDeletedItems());
 				try {
-					DAOManager.getDAO(InventoryDAO.class).store(allItems, null, null, legion.getLegionId());
-					DAOManager.getDAO(ItemStoneListDAO.class).save(allItems);
+					inventoryDAO.store(allItems, null, null, legion.getLegionId());
+					itemStoneListDAO.save(allItems);
 				} catch (Exception ex) {
 					log.error(I18n.get("log.ea0f9e89569d"), ex);
 				}

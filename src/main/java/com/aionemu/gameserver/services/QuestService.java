@@ -511,7 +511,7 @@ public final class QuestService {
 				return false;
 			}
 		}
-		if (warn && !inventoryItemCheck(env, warn)) {
+		if (warn && !inventoryItemCheck(env, true)) {
 			return false;
 		}
 		if (!checkCombineSkill(player, template)) {

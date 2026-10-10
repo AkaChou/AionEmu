@@ -8,7 +8,6 @@ import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -38,10 +37,10 @@ public class DatabaseCleaningService {
 	private final PlayerDAO dao;
 
 	/** 安全最小清理周期（天）。 / Security minimum cleaning period in days. */
-	private final int SECURITY_MINIMUM_PERIOD = 30;
+	private static final int SECURITY_MINIMUM_PERIOD = 30;
 
 	/** 工作线程监控轮询间隔（毫秒）。 / Worker monitoring poll interval in ms. */
-	private final int WORKER_CHECK_TIME = 10000;
+	private static final int WORKER_CHECK_TIME = 10000;
 
 	/** 清理工作线程列表。 / Cleaning worker list. */
 	private List<Worker> workers;
@@ -65,17 +64,17 @@ public class DatabaseCleaningService {
 	 * Constructs the service and runs cleaning when enabled.
 	 */
 	public DatabaseCleaningService() {
-		this(safeDao(PlayerDAO.class, com.aionemu.gameserver.dao.impl.PlayerDAO::new));
+		this(safePlayerDao());
 	}
 
-	private static <T extends com.aionemu.commons.database.dao.DAO> T safeDao(Class<T> daoClass, java.util.function.Supplier<T> fallback) {
+	private static PlayerDAO safePlayerDao() {
 		if (DAOManager.isInitialized()) {
 			try {
-				return DAOManager.getDAO(daoClass);
+				return DAOManager.getDAO(PlayerDAO.class);
 			} catch (Exception ignored) {
 			}
 		}
-		return fallback.get();
+		return new com.aionemu.gameserver.dao.impl.PlayerDAO();
 	}
 
 	/**
@@ -102,13 +101,16 @@ public class DatabaseCleaningService {
 	 * Blocks while monitoring workers until all finish.
 	 */
 	private void monitoringProcess() {
-		while (!allWorkersReady())
+		while (!allWorkersReady()) {
 			try {
 				Thread.sleep(WORKER_CHECK_TIME);
 				log.info(I18n.get("log.4d9993c27cf4", currentlyDeletedChars(), (System.currentTimeMillis() - startTime) / 1000L));
 			} catch (InterruptedException ex) {
+				Thread.currentThread().interrupt();
 				log.error(I18n.get("log.5460b157e46e"));
+				break;
 			}
+		}
 	}
 
 	/**
@@ -185,11 +187,11 @@ public class DatabaseCleaningService {
 		return provided;
 	}
 
-    /**
+	/**
 	 * 清理工作线程：删除分配的角色 ID。
 	 * Cleaning worker that deletes assigned player ids.
 	 */
-	private class Worker implements Runnable {
+	private static class Worker implements Runnable {
 
 		private final List<Integer> ids = new ArrayList<>();
 		private final AtomicInteger deletedChars = new AtomicInteger();

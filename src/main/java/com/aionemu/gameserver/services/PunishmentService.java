@@ -3,7 +3,6 @@ package com.aionemu.gameserver.services;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.Calendar;
-import java.util.Objects;
 import java.util.concurrent.Future;
 
 import com.aionemu.commons.database.dao.DAOManager;
@@ -33,17 +32,17 @@ public class PunishmentService {
 	private final PlayerPunishmentsDAO playerPunishmentsDAO;
 
 	public PunishmentService() {
-		this(safeDao(PlayerPunishmentsDAO.class, com.aionemu.gameserver.dao.impl.PlayerPunishmentsDAO::new));
+		this(safePlayerPunishmentsDao());
 	}
 
-	private static <T extends com.aionemu.commons.database.dao.DAO> T safeDao(Class<T> daoClass, java.util.function.Supplier<T> fallback) {
+	private static PlayerPunishmentsDAO safePlayerPunishmentsDao() {
 		if (DAOManager.isInitialized()) {
 			try {
-				return DAOManager.getDAO(daoClass);
+				return DAOManager.getDAO(PlayerPunishmentsDAO.class);
 			} catch (Exception ignored) {
 			}
 		}
-		return fallback.get();
+		return new com.aionemu.gameserver.dao.impl.PlayerPunishmentsDAO();
 	}
 
 	public static PunishmentService getInstance() {
@@ -97,7 +96,7 @@ public class PunishmentService {
 			return Integer.MAX_VALUE; // int because client handles this with seconds timestamp in int
 		}
 		Calendar cal = Calendar.getInstance();
-		cal.add(5, dayCount);
+		cal.add(Calendar.DAY_OF_MONTH, dayCount);
 
 		return (cal.getTimeInMillis() - System.currentTimeMillis()) / 1000;
 	}
@@ -113,9 +112,8 @@ public class PunishmentService {
 	public static void setIsInPrison(Player player, boolean state, long delayInMinutes, String reason) {
 		stopPrisonTask(player, false);
 		if (state) {
-			long prisonTimer = player.getPrisonTimer();
 			if (delayInMinutes > 0) {
-				prisonTimer = delayInMinutes * 60000L;
+				long prisonTimer = delayInMinutes * 60000L;
 				schedulePrisonTask(player, prisonTimer);
 				PacketSendUtility.sendMessage(player, "You have been teleported to prison for a time of "
 						+ delayInMinutes

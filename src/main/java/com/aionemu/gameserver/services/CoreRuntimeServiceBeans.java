@@ -42,6 +42,7 @@ import com.aionemu.gameserver.dao.PlayerPunishmentsDAO;
 import com.aionemu.gameserver.dao.PlayerQuestListDAO;
 import com.aionemu.gameserver.dao.PlayerSkillListDAO;
 import com.aionemu.gameserver.dao.PlayerStigmasEquippedDAO;
+import com.aionemu.gameserver.dao.RewardServiceDAO;
 import com.aionemu.gameserver.dao.SurveyControllerDAO;
 
 /**
@@ -231,8 +232,9 @@ public class CoreRuntimeServiceBeans {
 
     @Bean
     @Lazy
-    public WebshopService webshopService() {
-        return new WebshopService();
+    public WebshopService webshopService(ObjectProvider<RewardServiceDAO> rewardServiceDaoProvider) {
+        RewardServiceDAO dao = rewardServiceDaoProvider.getIfAvailable();
+        return dao != null ? new WebshopService(dao) : new WebshopService();
     }
 
     @Bean

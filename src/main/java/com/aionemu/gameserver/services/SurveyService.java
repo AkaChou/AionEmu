@@ -8,11 +8,11 @@ import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.Future;
 
+import lombok.NonNull;
 import lombok.Setter;
 import org.springframework.beans.factory.ObjectProvider;
 
@@ -70,8 +70,8 @@ public class SurveyService {
 	 * Constructs the service with given SurveyControllerDAO and starts periodic update task.
 	 * @param surveyControllerDAO 调查数据访问对象 / survey DAO
 	 */
-	public SurveyService(SurveyControllerDAO surveyControllerDAO) {
-		this.surveyControllerDAO = Objects.requireNonNull(surveyControllerDAO, "surveyControllerDAO must not be null");
+	public SurveyService(@NonNull SurveyControllerDAO surveyControllerDAO) {
+		this.surveyControllerDAO = surveyControllerDAO;
 		this.activeItems = new ConcurrentHashMap<>();
 		reload();
 	}
@@ -81,17 +81,17 @@ public class SurveyService {
 	 * Constructs the service and starts the periodic update task.
 	 */
 	public SurveyService() {
-		this(safeDao(SurveyControllerDAO.class, com.aionemu.gameserver.dao.impl.SurveyControllerDAO::new));
+		this(safeSurveyControllerDao());
 	}
 
-	private static <T extends com.aionemu.commons.database.dao.DAO> T safeDao(Class<T> daoClass, java.util.function.Supplier<T> fallback) {
+	private static SurveyControllerDAO safeSurveyControllerDao() {
 		if (DAOManager.isInitialized()) {
 			try {
-				return DAOManager.getDAO(daoClass);
+				return DAOManager.getDAO(SurveyControllerDAO.class);
 			} catch (Exception ignored) {
 			}
 		}
-		return fallback.get();
+		return new com.aionemu.gameserver.dao.impl.SurveyControllerDAO();
 	}
 
 	/**
@@ -157,7 +157,6 @@ public class SurveyService {
 				PacketSendUtility.sendPacket(player,
 						new SM_SYSTEM_MESSAGE(1300946, item.count, new DescriptionId(template.getNameId())));
 			}
-			template = null;
 			activeItems.remove(survId);
 		}
 	}
@@ -168,7 +167,7 @@ public class SurveyService {
 	 */
 	public void taskUpdate() {
 		List<SurveyItem> newList = this.surveyControllerDAO.getAllNew();
-		if (newList.size() == 0) {
+		if (newList.isEmpty()) {
 			return;
 		}
 		List<Integer> players = new ArrayList<>();
@@ -228,7 +227,7 @@ public class SurveyService {
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean /
 	 *         when no provider or bean is available
 	 */
-	public static final SurveyService getInstance() {
+	public static SurveyService getInstance() {
 		ObjectProvider<SurveyService> provider = instanceProvider;
 		SurveyService provided = provider == null ? null : provider.getIfAvailable();
 		if (provided == null) {

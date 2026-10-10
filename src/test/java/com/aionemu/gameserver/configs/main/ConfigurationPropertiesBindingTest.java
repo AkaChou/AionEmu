@@ -277,4 +277,150 @@ class ConfigurationPropertiesBindingTest {
 			snapshot.restore();
 		}
 	}
+
+	@Test
+	void bindsEnchantsConfigProperties() {
+		ConfigSnapshot snapshot = ConfigSnapshot.of(EnchantsConfig.class,
+			"SOCKET_MANASTONE", "ENCHANT_ITEM", "ENCHANT_ITEM_KINAH",
+			"MAX_EQUIPMENT_ENCHANT_LEVEL", "ENCHANT_PLUME", "ENCHANT_BRACELET",
+			"ENCHANT_ACCESSORY", "ENCHANT_STIGMA", "CLEAN_STONE", "ENCHANT_SPEED",
+			"ENABLE_ARCHDAEVA_ITEM_BROKE");
+		try {
+			StandardEnvironment environment = new StandardEnvironment();
+			environment.getPropertySources().addFirst(new MapPropertySource("test", Map.ofEntries(
+				Map.entry("gameserver.socket.manastone", "75.5"),
+				Map.entry("gameserver.enchant.item", "65.0"),
+				Map.entry("gameserver.enchant.item.kinah", "50000"),
+				Map.entry("gameserver.enchant.item.broke", "false"),
+				Map.entry("gameserver.enchant.equipment.max.level", "50"),
+				Map.entry("gameserver.enchant.plume", "80.0"),
+				Map.entry("gameserver.enchant.bracelet", "70.0"),
+				Map.entry("gameserver.enchant.accessory", "60.0"),
+				Map.entry("gameserver.enchant.stigma", "55.0"),
+				Map.entry("gameserver.manastone.clean", "true"),
+				Map.entry("gameserver.enchant.cast.speed", "2500")
+			)));
+
+			EnchantsConfig config = new EnchantsConfig();
+			Binder.get(environment).bind("gameserver", Bindable.ofInstance(config));
+
+			assertEquals(75.5f, EnchantsConfig.SOCKET_MANASTONE);
+			assertEquals(65.0f, EnchantsConfig.ENCHANT_ITEM);
+			assertEquals(50000, EnchantsConfig.ENCHANT_ITEM_KINAH);
+			assertFalse(EnchantsConfig.ENABLE_ARCHDAEVA_ITEM_BROKE);
+			assertEquals(50, EnchantsConfig.MAX_EQUIPMENT_ENCHANT_LEVEL);
+			assertEquals(80.0f, EnchantsConfig.ENCHANT_PLUME);
+			assertEquals(70.0f, EnchantsConfig.ENCHANT_BRACELET);
+			assertEquals(60.0f, EnchantsConfig.ENCHANT_ACCESSORY);
+			assertEquals(55.0f, EnchantsConfig.ENCHANT_STIGMA);
+			assertTrue(EnchantsConfig.CLEAN_STONE);
+			assertEquals(2500, EnchantsConfig.ENCHANT_SPEED);
+		} finally {
+			snapshot.restore();
+		}
+	}
+
+	@Test
+	void bindsRateConfigProperties() {
+		ConfigSnapshot snapshot = ConfigSnapshot.of(RateConfig.class,
+			"XP_RATE", "PREMIUM_XP_RATE", "VIP_XP_RATE", "DROP_RATE",
+			"PREMIUM_DROP_RATE", "VIP_DROP_RATE", "GP_PLAYER_LOSS_RATE",
+			"PREMIUM_GP_PLAYER_LOSS_RATE", "VIP_GP_PLAYER_LOSS_RATE",
+			"DREDGION_REWARD_RATE", "AURA_OF_GROWTH", "NORMAL_MOBS_RATE_HP",
+			"NORMAL_MOBS_RATE_PW", "DAMAGE_MULTIPLIER");
+		try {
+			StandardEnvironment environment = new StandardEnvironment();
+			environment.getPropertySources().addFirst(new MapPropertySource("test", Map.ofEntries(
+				Map.entry("gameserver.rate.regular.xp", "2.0"),
+				Map.entry("gameserver.rate.premium.xp", "4.0"),
+				Map.entry("gameserver.rate.vip.xp", "6.0"),
+				Map.entry("gameserver.rate.regular.drop", "1.5"),
+				Map.entry("gameserver.rate.premium.drop", "3.0"),
+				Map.entry("gameserver.rate.vip.drop", "4.5"),
+				Map.entry("gameserver.rate.regular.gp.player.loss", "0.8"),
+				Map.entry("gameserver.rate.premium.gp.player.loss", "1.6"),
+				Map.entry("gameserver.rate.vip.gp.player.loss", "2.4"),
+				Map.entry("gameserver.rate.dredgion", "2.5"),
+				Map.entry("gameserver.rate.aura.of.growth.chance", "85"),
+				Map.entry("gameserver.rate.normal.mobs.rate.hp", "1.2"),
+				Map.entry("gameserver.rate.normal.mobs.rate.pw", "1.3"),
+				Map.entry("gameserver.damage.multiplier", "1.8")
+			)));
+
+			RateConfig config = new RateConfig();
+			Binder.get(environment).bind("gameserver", Bindable.ofInstance(config));
+
+			assertEquals(2.0f, RateConfig.XP_RATE);
+			assertEquals(4.0f, RateConfig.PREMIUM_XP_RATE);
+			assertEquals(6.0f, RateConfig.VIP_XP_RATE);
+			assertEquals(1.5f, RateConfig.DROP_RATE);
+			assertEquals(3.0f, RateConfig.PREMIUM_DROP_RATE);
+			assertEquals(4.5f, RateConfig.VIP_DROP_RATE);
+			assertEquals(0.8f, RateConfig.GP_PLAYER_LOSS_RATE);
+			assertEquals(1.6f, RateConfig.PREMIUM_GP_PLAYER_LOSS_RATE);
+			assertEquals(2.4f, RateConfig.VIP_GP_PLAYER_LOSS_RATE);
+			assertEquals(2.5f, RateConfig.DREDGION_REWARD_RATE);
+			assertEquals(85, RateConfig.AURA_OF_GROWTH);
+			assertEquals(1.2f, RateConfig.NORMAL_MOBS_RATE_HP);
+			assertEquals(1.3f, RateConfig.NORMAL_MOBS_RATE_PW);
+			assertEquals(1.8f, RateConfig.DAMAGE_MULTIPLIER);
+		} finally {
+			snapshot.restore();
+		}
+	}
+
+	@Test
+	void bindsCustomConfigProperties() {
+		ConfigSnapshot snapshot = ConfigSnapshot.of(CustomConfig.class,
+			"LOGIN_SERVER_INFO", "ENABLE_PVE_TOLL_REWARD", "TOLL_PVE_CHANCE",
+			"WORLD_CHANNEL_AP_COSTS", "FACTION_FREE_USE", "SPEAKING_BETWEEN_FACTIONS",
+			"DYE_PRICE", "BASE_FLYTIME", "FRIENDLIST_SIZE", "ENABLE_INSTANCES",
+			"KINAH_CAP_VALUE", "LIMITS_ENABLED", "EXPRESS_MAIL_COOLDOWN_SECONDS",
+			"RIFT_DURATION", "GODSTONE_ACTIVATION_RATE", "TAG_PK", "CUBE_SIZE");
+		try {
+			StandardEnvironment environment = new StandardEnvironment();
+			environment.getPropertySources().addFirst(new MapPropertySource("test", Map.ofEntries(
+				Map.entry("gameserver.loginserver.info", "true"),
+				Map.entry("gameserver.pve.toll.rewarding.enable", "true"),
+				Map.entry("gameserver.pve.toll.reward.chance", "75"),
+				Map.entry("gameserver.worldchannel.costs", "30000"),
+				Map.entry("gameserver.faction.free", "false"),
+				Map.entry("gameserver.chat.factions.enable", "true"),
+				Map.entry("gameserver.admin.dye.price", "500000"),
+				Map.entry("gameserver.base.flytime", "120"),
+				Map.entry("gameserver.friendlist.size", "150"),
+				Map.entry("gameserver.instances.enable", "false"),
+				Map.entry("gameserver.kinah.cap.value", "2000000000"),
+				Map.entry("gameserver.limits.enable", "false"),
+				Map.entry("gameserver.express.mail.cooldown_seconds", "30"),
+				Map.entry("gameserver.rift.duration", "3"),
+				Map.entry("gameserver.rates.godstone.activation.rate", "2.0"),
+				Map.entry("gameserver.pk.tag", "[PK] %s"),
+				Map.entry("gameserver.cube.size", "9")
+			)));
+
+			CustomConfig config = new CustomConfig();
+			Binder.get(environment).bind("gameserver", Bindable.ofInstance(config));
+
+			assertTrue(CustomConfig.LOGIN_SERVER_INFO);
+			assertTrue(CustomConfig.ENABLE_PVE_TOLL_REWARD);
+			assertEquals(75, CustomConfig.TOLL_PVE_CHANCE);
+			assertEquals(30000, CustomConfig.WORLD_CHANNEL_AP_COSTS);
+			assertFalse(CustomConfig.FACTION_FREE_USE);
+			assertTrue(CustomConfig.SPEAKING_BETWEEN_FACTIONS);
+			assertEquals(500000, CustomConfig.DYE_PRICE);
+			assertEquals(120, CustomConfig.BASE_FLYTIME);
+			assertEquals(150, CustomConfig.FRIENDLIST_SIZE);
+			assertFalse(CustomConfig.ENABLE_INSTANCES);
+			assertEquals(2000000000L, CustomConfig.KINAH_CAP_VALUE);
+			assertFalse(CustomConfig.LIMITS_ENABLED);
+			assertEquals(30, CustomConfig.EXPRESS_MAIL_COOLDOWN_SECONDS);
+			assertEquals(3, CustomConfig.RIFT_DURATION);
+			assertEquals(2.0f, CustomConfig.GODSTONE_ACTIVATION_RATE);
+			assertEquals("[PK] %s", CustomConfig.TAG_PK);
+			assertEquals(9, CustomConfig.CUBE_SIZE);
+		} finally {
+			snapshot.restore();
+		}
+	}
 }

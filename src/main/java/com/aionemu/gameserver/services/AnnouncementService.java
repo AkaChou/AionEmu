@@ -7,9 +7,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Objects;
 import java.util.concurrent.Future;
 
+import lombok.NonNull;
+import lombok.Setter;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.database.dao.DAOManager;
@@ -32,6 +33,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class AnnouncementService {
 
+	@Setter
 	private static volatile ObjectProvider<AnnouncementService> instanceProvider;
 
 	private final AnnouncementsDAO announcementsDAO;
@@ -46,8 +48,8 @@ public class AnnouncementService {
 	 *
 	 * @param announcementsDAO 系统公告数据访问对象 / Announcements DAO
 	 */
-	public AnnouncementService(AnnouncementsDAO announcementsDAO) {
-		this.announcementsDAO = Objects.requireNonNull(announcementsDAO, "announcementsDAO must not be null");
+	public AnnouncementService(@NonNull AnnouncementsDAO announcementsDAO) {
+		this.announcementsDAO = announcementsDAO;
 		this.load();
 	}
 
@@ -56,7 +58,17 @@ public class AnnouncementService {
 	 * Constructs the service and loads announcements.
 	 */
 	public AnnouncementService() {
-		this(DAOManager.getDAO(AnnouncementsDAO.class));
+		this(safeDao(AnnouncementsDAO.class, com.aionemu.gameserver.dao.impl.AnnouncementsDAO::new));
+	}
+
+	private static <T extends com.aionemu.commons.database.dao.DAO> T safeDao(Class<T> daoClass, java.util.function.Supplier<T> fallback) {
+		if (DAOManager.isInitialized()) {
+			try {
+				return DAOManager.getDAO(daoClass);
+			} catch (Exception ignored) {
+			}
+		}
+		return fallback.get();
 	}
 
 	/**
@@ -80,15 +92,6 @@ public class AnnouncementService {
 	}
 
 	/**
-	 * 注入 Spring ObjectProvider 以覆盖默认单例。
-	 * Injects a Spring ObjectProvider to override the default singleton.
-	 * @param instanceProvider provider
-	 */
-	public static void setInstanceProvider(ObjectProvider<AnnouncementService> instanceProvider) {
-		AnnouncementService.instanceProvider = instanceProvider;
-	}
-
-	/**
 	 * 取消已有定时任务并重新加载公告。
 	 * Cancels existing schedules and reloads announcements.
 	 */
@@ -100,7 +103,9 @@ public class AnnouncementService {
 			}
 		}
 		// 清除全部公告 / Clear all announcements
-		announcements.clear();
+		if (announcements != null) {
+			announcements.clear();
+		}
 
 		// 并重新加载全部公告 / And load again all announcements
 		load();
@@ -111,42 +116,47 @@ public class AnnouncementService {
 	 * Loads announcements from DB and schedules fixed-rate broadcasts.
 	 */
 	private void load() {
-		announcements = new HashSet<>(getDAO().getAnnouncements());
+		Set<Announcement> loaded = getDAO().getAnnouncements();
+		announcements = loaded != null ? new HashSet<>(loaded) : new HashSet<>();
 
-		for (final Announcement announce : announcements) {
-			delays.add(GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> {
-				final Iterator<Player> iter = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getPlayersIterator();
-				while (iter.hasNext()) {
-					Player player = iter.next();
+		try {
+			for (final Announcement announce : announcements) {
+				delays.add(GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> {
+					final Iterator<Player> iter = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getPlayersIterator();
+					while (iter.hasNext()) {
+						Player player = iter.next();
 
-					if (announce.getFaction().equalsIgnoreCase("ALL"))
-						if (announce.getChatType() == ChatType.SHOUT
-								|| announce.getChatType() == ChatType.GROUP_LEADER) {
-							PacketSendUtility.sendPacket(player, new SM_MESSAGE(1, "Announcement",
-									announce.getAnnounce(), announce.getChatType()));
+						if (announce.getFaction().equalsIgnoreCase("ALL"))
+							if (announce.getChatType() == ChatType.SHOUT
+									|| announce.getChatType() == ChatType.GROUP_LEADER) {
+								PacketSendUtility.sendPacket(player, new SM_MESSAGE(1, "Announcement",
+										announce.getAnnounce(), announce.getChatType()));
+							} else {
+								PacketSendUtility.sendPacket(player, new SM_MESSAGE(1, "Announcement",
+										"Announcement: " + announce.getAnnounce(), announce.getChatType()));
+							}
+						else if (announce.getFactionEnum() == player.getRace()) {
+							if (announce.getChatType() == ChatType.SHOUT
+									|| announce.getChatType() == ChatType.GROUP_LEADER) {
+								PacketSendUtility.sendPacket(player,
+										new SM_MESSAGE(1,
+												(announce.getFaction().equalsIgnoreCase("ELYOS") ? "Elyos" : "Asmodian")
+														+ " Announcement",
+												announce.getAnnounce(), announce.getChatType()));
+							}
 						} else {
-							PacketSendUtility.sendPacket(player, new SM_MESSAGE(1, "Announcement",
-									"Announcement: " + announce.getAnnounce(), announce.getChatType()));
+							PacketSendUtility.sendPacket(player, new SM_MESSAGE(1,
+									(announce.getFaction().equalsIgnoreCase("ELYOS") ? "Elyos" : "Asmodian")
+											+ " Announcement",
+									(announce.getFaction().equalsIgnoreCase("ELYOS") ? "Elyos" : "Asmodian")
+											+ " Announcement: " + announce.getAnnounce(),
+									announce.getChatType()));
 						}
-					else if (announce.getFactionEnum() == player.getRace()) {
-						if (announce.getChatType() == ChatType.SHOUT
-								|| announce.getChatType() == ChatType.GROUP_LEADER) {
-							PacketSendUtility.sendPacket(player,
-									new SM_MESSAGE(1,
-											(announce.getFaction().equalsIgnoreCase("ELYOS") ? "Elyos" : "Asmodian")
-													+ " Announcement",
-											announce.getAnnounce(), announce.getChatType()));
-						}
-					} else {
-						PacketSendUtility.sendPacket(player, new SM_MESSAGE(1,
-								(announce.getFaction().equalsIgnoreCase("ELYOS") ? "Elyos" : "Asmodian")
-										+ " Announcement",
-								(announce.getFaction().equalsIgnoreCase("ELYOS") ? "Elyos" : "Asmodian")
-										+ " Announcement: " + announce.getAnnounce(),
-								announce.getChatType()));
 					}
-				}
-			}, announce.getDelay() * 1000L, announce.getDelay() * 1000L));
+				}, announce.getDelay() * 1000L, announce.getDelay() * 1000L));
+			}
+		} catch (Exception e) {
+			log.warn("ThreadPoolManager not available during AnnouncementService load: {}", e.getMessage());
 		}
 		log.info(I18n.get("log.60ed3a14c1fd", announcements.size()));
 	}

@@ -2,12 +2,13 @@ package com.aionemu.gameserver.services;
 
 
 import com.aionemu.boot.i18n.I18n;
+import lombok.NonNull;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.Objects;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.concurrent.ConcurrentSkipListMap;
@@ -29,6 +30,7 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 @Slf4j
 public class PetitionService {
 
+	@Setter
 	private static volatile ObjectProvider<PetitionService> instanceProvider;
 	private final PetitionDAO petitionDAO;
 
@@ -56,28 +58,23 @@ public class PetitionService {
 	}
 
 	/**
-	 * 注入 Spring 实例提供者。
-	 * Injects the Spring instance provider.
-	 * @param instanceProvider 实例提供者 / instance provider
-	 */
-	public static void setInstanceProvider(ObjectProvider<PetitionService> instanceProvider) {
-		PetitionService.instanceProvider = instanceProvider;
-	}
-
-	/**
 	 * 使用指定的 PetitionDAO 构造请愿服务。
 	 * Constructs the petition service with the given PetitionDAO.
 	 *
 	 * @param petitionDAO 请愿数据访问对象 / Petition DAO
 	 */
-	public PetitionService(PetitionDAO petitionDAO) {
-		this.petitionDAO = Objects.requireNonNull(petitionDAO, "petitionDAO must not be null");
+	public PetitionService(@NonNull PetitionDAO petitionDAO) {
+		this.petitionDAO = petitionDAO;
 		log.info(I18n.get("log.f495913b1078"));
-		Set<Petition> petitions = this.petitionDAO.getPetitions();
-		if (petitions != null) {
-			for (Petition p : petitions) {
-				registeredPetitions.put(p.getPetitionId(), p);
+		try {
+			Set<Petition> petitions = this.petitionDAO.getPetitions();
+			if (petitions != null) {
+				for (Petition p : petitions) {
+					registeredPetitions.put(p.getPetitionId(), p);
+				}
 			}
+		} catch (Exception e) {
+			log.warn("Failed to load petitions during service init: {}", e.getMessage());
 		}
 		log.info(I18n.get("log.2b3ade613951", registeredPetitions.size()));
 	}
@@ -87,7 +84,17 @@ public class PetitionService {
 	 * Loads existing petition tickets from the database.
 	 */
 	public PetitionService() {
-		this(DAOManager.getDAO(PetitionDAO.class));
+		this(safeDao(PetitionDAO.class, com.aionemu.gameserver.dao.impl.PetitionDAO::new));
+	}
+
+	private static <T extends com.aionemu.commons.database.dao.DAO> T safeDao(Class<T> daoClass, java.util.function.Supplier<T> fallback) {
+		if (DAOManager.isInitialized()) {
+			try {
+				return DAOManager.getDAO(daoClass);
+			} catch (Exception ignored) {
+			}
+		}
+		return fallback.get();
 	}
 
 	/**

@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 
+import lombok.NonNull;
 import lombok.Setter;
 import org.springframework.beans.factory.ObjectProvider;
 
@@ -51,6 +52,10 @@ public class ChallengeTaskService {
      */
     @Setter
     private static volatile ObjectProvider<ChallengeTaskService> instanceProvider;
+	private final ChallengeTasksDAO challengeTasksDAO;
+	private final TownDAO townDAO;
+	private final LegionMemberDAO legionMemberDAO;
+	private final PlayerDAO playerDAO;
 	/** 城镇 ID → 挑战任务映射。 / Town id → challenge task map. */
 	private final Map<Integer, Map<Integer, ChallengeTask>> cityTasks;
 	/** 军团 ID → 挑战任务映射。 / Legion id → challenge task map. */
@@ -78,13 +83,41 @@ public class ChallengeTaskService {
 	}
 
     /**
+	 * 使用指定的 DAO 集合构造服务并初始化任务缓存。
+	 * Constructs the service with given DAOs and initializes task caches.
+	 */
+	public ChallengeTaskService(@NonNull ChallengeTasksDAO challengeTasksDAO,
+								@NonNull TownDAO townDAO,
+								@NonNull LegionMemberDAO legionMemberDAO,
+								@NonNull PlayerDAO playerDAO) {
+		this.challengeTasksDAO = challengeTasksDAO;
+		this.townDAO = townDAO;
+		this.legionMemberDAO = legionMemberDAO;
+		this.playerDAO = playerDAO;
+		this.cityTasks = new LinkedHashMap<>();
+		this.legionTasks = new LinkedHashMap<>();
+		log.info(I18n.get("log.e300214dba9a"));
+	}
+
+    /**
 	 * 构造服务并初始化任务缓存。
 	 * Constructs the service and initializes task caches.
 	 */
 	public ChallengeTaskService() {
-		cityTasks = new LinkedHashMap<>();
-		legionTasks = new LinkedHashMap<>();
-		log.info(I18n.get("log.e300214dba9a"));
+		this(safeDao(ChallengeTasksDAO.class, com.aionemu.gameserver.dao.impl.ChallengeTasksDAO::new),
+			 safeDao(TownDAO.class, com.aionemu.gameserver.dao.impl.TownDAO::new),
+			 safeDao(LegionMemberDAO.class, com.aionemu.gameserver.dao.impl.LegionMemberDAO::new),
+			 safeDao(PlayerDAO.class, com.aionemu.gameserver.dao.impl.PlayerDAO::new));
+	}
+
+	private static <T extends com.aionemu.commons.database.dao.DAO> T safeDao(Class<T> daoClass, java.util.function.Supplier<T> fallback) {
+		if (DAOManager.isInitialized()) {
+			try {
+				return DAOManager.getDAO(daoClass);
+			} catch (Exception ignored) {
+			}
+		}
+		return fallback.get();
 	}
 
 	/**
@@ -134,7 +167,7 @@ public class ChallengeTaskService {
 		int playerTownId = GameHousingServices.townService().getTownResidence(player);
 		List<ChallengeTask> availableTasks = new ArrayList<>();
 		if (!taskMap.containsKey(ownerId)) {
-			Map<Integer, ChallengeTask> tasks = DAOManager.getDAO(ChallengeTasksDAO.class).load(ownerId, challengeType);
+			Map<Integer, ChallengeTask> tasks = this.challengeTasksDAO.load(ownerId, challengeType);
 			taskMap.put(ownerId, tasks);
 		}
 		for (ChallengeTask ct : taskMap.get(ownerId).values()) {
@@ -154,7 +187,7 @@ public class ChallengeTaskService {
 						if (template.getPrevTask() == null) {
 							ChallengeTask task = new ChallengeTask(ownerId, template);
 							taskMap.get(ownerId).put(task.getTaskId(), task);
-							DAOManager.getDAO(ChallengeTasksDAO.class).storeTask(task);
+							this.challengeTasksDAO.storeTask(task);
 							availableTasks.add(task);
 							continue;
 						} else {
@@ -164,7 +197,7 @@ public class ChallengeTaskService {
 								if (prevTask.isCompleted()) {
 									ChallengeTask task = new ChallengeTask(ownerId, template);
 									taskMap.get(ownerId).put(task.getTaskId(), task);
-									DAOManager.getDAO(ChallengeTasksDAO.class).storeTask(task);
+									this.challengeTasksDAO.storeTask(task);
 									availableTasks.add(task);
 								}
 							}
@@ -220,7 +253,7 @@ public class ChallengeTaskService {
 		if (!task.isCompleted()) {
 			task.updateCompleteTime();
 			quest.increaseCompleteCount();
-			DAOManager.getDAO(ChallengeTasksDAO.class).storeTask(task);
+			this.challengeTasksDAO.storeTask(task);
 			Town town = GameHousingServices.townService().getTownById(townId);
 			if (town != null) {
 				int oldLevel = town.getLevel();
@@ -240,7 +273,7 @@ public class ChallengeTaskService {
 					PacketSendUtility.sendPacket(player,
 							new SM_SYSTEM_MESSAGE(1401520, town.getNameId(), town.getLevel()));
 				}
-				DAOManager.getDAO(TownDAO.class).store(town);
+				this.townDAO.store(town);
 			}
 		}
 	}
@@ -272,7 +305,7 @@ public class ChallengeTaskService {
 		if (!task.isCompleted()) {
 			task.updateCompleteTime();
 			quest.increaseCompleteCount();
-			DAOManager.getDAO(ChallengeTasksDAO.class).storeTask(task);
+			this.challengeTasksDAO.storeTask(task);
 			if (task.isCompleted()) {
 				TreeMap<Integer, List<Integer>> winnersByPoints = new TreeMap<>();
 				for (Integer memberObjId : player.getLegion().getLegionMembers()) {
@@ -286,7 +319,7 @@ public class ChallengeTaskService {
 						member.getLegionMember().setChallengeScore(0);
 						continue;
 					} else {
-						LegionMember legionMember = DAOManager.getDAO(LegionMemberDAO.class)
+						LegionMember legionMember = this.legionMemberDAO
 								.loadLegionMember(memberObjId);
 						int score = legionMember.getChallengeScore();
 						if (score <= 0) {
@@ -297,7 +330,7 @@ public class ChallengeTaskService {
 						}
 						winnersByPoints.get(score).add(legionMember.getObjectId());
 						legionMember.setChallengeScore(0);
-						DAOManager.getDAO(LegionMemberDAO.class).storeLegionMember(memberObjId, legionMember);
+						this.legionMemberDAO.storeLegionMember(memberObjId, legionMember);
 					}
 				}
 				int rewardsAdded = 0, itemId, itemCount;
@@ -308,7 +341,7 @@ public class ChallengeTaskService {
 								rewardsAdded++;
 								itemId = reward.getRewardId();
 								itemCount = reward.getItemCount();
-								String recipientName = DAOManager.getDAO(PlayerDAO.class).loadPlayerCommonData(objectId)
+								String recipientName = this.playerDAO.loadPlayerCommonData(objectId)
 										.getName();
 								GameFeatureServices.systemMailService().sendMail("Legion reward", recipientName, "", "", itemId,
 										itemCount, 0, 0, LetterType.NORMAL);
@@ -336,7 +369,7 @@ public class ChallengeTaskService {
 		if (legionTasks.containsKey(legionId)) {
 			tasks = legionTasks.get(legionId);
 		} else {
-			tasks = DAOManager.getDAO(ChallengeTasksDAO.class).load(legionId, ChallengeType.LEGION);
+			tasks = this.challengeTasksDAO.load(legionId, ChallengeType.LEGION);
 		}
 		for (ChallengeTask task : tasks.values()) {
 			if (task.getTemplate().getMinLevel() == legionLevel && task.isCompleted()) {

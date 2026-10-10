@@ -67,6 +67,7 @@ import com.aionemu.gameserver.utils.audit.AuditLogger;
 /**
  * 运行时技能实例：驱动施法流程、目标选择、效果应用与结束。
  * Runtime skill instance: drives cast flow, targeting, effect application and end.
+ *
  * @author ATracer Modified by Wakzashi
  */
 @Slf4j
@@ -78,6 +79,7 @@ public class Skill {
 	/**
 	 * 设置多段施法标记（历史方法名，保留以兼容既有调用）。
 	 * Sets the multi-cast flag (legacy setter name kept for existing callers).
+	 *
 	 * @param isMultiCast 是否多段施法 / whether multi-cast
 	 */
 	public void setIsMultiCast(boolean isMultiCast) {
@@ -94,8 +96,8 @@ public class Skill {
 	private SkillTemplate skillTemplate;
 	/**
 	 * -- GETTER --
-	 *  是否检查主目标距离。
-	 *  Whether first-target range is checked.
+	 * 是否检查主目标距离。
+	 * Whether first-target range is checked.
 	 */
 	private boolean firstTargetRangeCheck = true;
 	private ItemTemplate itemTemplate;
@@ -112,7 +114,9 @@ public class Skill {
 	private TargetRangeAttribute targetRangeAttribute;
 	private int skillskinId = 0;
 	private int skillskinHitTIme = 0;
-	/** 充能阶段时间缩放的兜底下限，避免速度修正为 0 时阶段窗口塌缩。 / Lower bound for charge-stage time scaling. */
+	/**
+	 * 充能阶段时间缩放的兜底下限，避免速度修正为 0 时阶段窗口塌缩。 / Lower bound for charge-stage time scaling.
+	 */
 	private static final float MIN_CHARGE_SPEED_RATIO = 0.3f;
 	private ChargeSkillTemplate chargeTemplate = null;
 	private float chargeTimeMultiplier = 1;
@@ -142,6 +146,7 @@ public class Skill {
 	private enum CastState {
 		CASTING, CANCELLED, COMPLETING
 	}
+
 	/**
 	 * 构造运行时技能实例。
 	 * Constructs a runtime skill instance.
@@ -157,6 +162,7 @@ public class Skill {
 	public Skill(SkillTemplate skillTemplate, Player effector, Creature firstTarget, int skillLevel) {
 		this(skillTemplate, effector, skillLevel, firstTarget, null);
 	}
+
 	/**
 	 * 构造运行时技能实例。
 	 * Constructs a runtime skill instance.
@@ -182,30 +188,32 @@ public class Skill {
 			skillMethod = SkillMethod.PROVOKED;
 		}
 	}
+
 	/**
 	 * 校验当前是否可使用该技能。
 	 * Validates whether the skill can be used now.
+	 *
 	 * @return 是否可用 / whether usable
 	 */
 	public boolean canUseSkill() {
 		if (skillTemplate.getType() == SkillType.MAGICAL && !skillTemplate.hasEvadeEffect()
-				&& effector.getEffectController().isAbnormalSet(AbnormalState.SILENCE)) {
+			&& effector.getEffectController().isAbnormalSet(AbnormalState.SILENCE)) {
 			return false;
 		}
 		if (skillTemplate.isStanceUsable()
-				&& (!(effector instanceof Player player) || player.getController().getStanceType() != 2)) {
+			&& (!(effector instanceof Player player) || player.getController().getStanceType() != 2)) {
 			return false;
 		}
 		if (skillTemplate.isUltraTransfer()) {
 			if (!(effector instanceof Player source) || !(firstTarget instanceof Player target)
-					|| source.getPlayerClass() != target.getPlayerClass() || target.getCastingSkill() == null
-					|| !target.getCastingSkill().getSkillTemplate().isUltraSkill()) {
+				|| source.getPlayerClass() != target.getPlayerClass() || target.getCastingSkill() == null
+				|| !target.getCastingSkill().getSkillTemplate().isUltraSkill()) {
 				return false;
 			}
 		}
 		Properties properties = skillTemplate.getProperties();
 		if (properties != null && !(preselectedTargets == null
-				? properties.validate(this) : properties.validatePreselectedTargets(this))) {
+			? properties.validate(this) : properties.validatePreselectedTargets(this))) {
 			log.debug("properties failed");
 			return false;
 		}
@@ -257,9 +265,11 @@ public class Skill {
 		}
 		return true;
 	}
+
 	/**
 	 * 使用技能（含动画）。
 	 * Uses the skill (with animation).
+	 *
 	 * @return 是否成功 / whether succeeded
 	 */
 	public boolean useSkill() {
@@ -283,6 +293,7 @@ public class Skill {
 	/**
 	 * 使用技能（无动画）。
 	 * Uses the skill without animation.
+	 *
 	 * @return 是否成功 / whether succeeded
 	 */
 	public boolean useNoAnimationSkill() {
@@ -292,6 +303,7 @@ public class Skill {
 	/**
 	 * 使用技能（跳过属性校验）。
 	 * Uses the skill without property checks.
+	 *
 	 * @return 是否成功 / whether succeeded
 	 */
 	public boolean useWithoutPropSkill() {
@@ -367,8 +379,8 @@ public class Skill {
 
 	private void setCooldowns() {
 		int cooldown = chainCategory == null && skillTemplate.getNonchainedCooldown() > 0
-				? Math.max(1, Math.ceilDiv(skillTemplate.getNonchainedCooldown(), 100))
-				: effector.getSkillCooldown(skillTemplate);
+			? Math.max(1, Math.ceilDiv(skillTemplate.getNonchainedCooldown(), 100))
+			: effector.getSkillCooldown(skillTemplate);
 		if (cooldown != 0) {
 			cooldown = calculateCooldown(cooldown);
 			effector.setSkillCoolDown(skillTemplate.getDelayId(), cooldown * 100L + this.duration + System.currentTimeMillis());
@@ -379,19 +391,8 @@ public class Skill {
 	public int calculateCooldown(int cooldown) {
 		cooldown = SkillCooldownTables.StigmaEnchantCoolDown(this, cooldown);
 		cooldown = skillTemplate.scaleCooldownByAttackDelay(cooldown,
-				effector.getGameStats().getAttackSpeed().getCurrent());
+			effector.getGameStats().getAttackSpeed().getCurrent());
 		return SkillConfig.scaleCooldown(cooldown);
-	}
-
-	/**
-	 * 按烙印强化查表缩减技能冷却。
-	 * Reduces the skill cooldown via the stigma-enchant table.
-	 * @param skill 技能 / skill
-	 * @param cooldown 原始冷却毫秒 / raw cooldown in ms
-	 * @return 缩减后的冷却毫秒 / reduced cooldown in ms
-	 */
-	public int StigmaEnchantCoolDown(Skill skill, int cooldown) {
-		return SkillCooldownTables.StigmaEnchantCoolDown(skill, cooldown);
 	}
 
 	protected void calculateSkillDuration() {
@@ -447,6 +448,7 @@ public class Skill {
 	 * charge skills by the attack-delay ratio, so stage windows must use that same ratio. The previous
 	 * half-weighted blend ({@code 1 - (1 - ratio) * 0.5}) kept the server's windows longer than the client's, so a
 	 * release the client showed as stage three could still be resolved as stage one or two.</p>
+	 *
 	 * @return 缩放系数 / scaling factor
 	 */
 	private float calculateChargeTimeMultiplier() {
@@ -479,40 +481,40 @@ public class Skill {
 
 		// 不检查草药、法力治疗与专注增强 / dont check herb , mana treatment and concentration enhancement
 		switch (this.getSkillId()) { // 4.8
-		case 245: // 绷带治疗 / Bandage Heal
-		case 246: // Herb Treatment I
-		case 247: // Herb Treatment II
-		case 251: // Herb Treatment III
-		case 253: // Herb Treatment IV
-		case 297: // Herb Treatment V
-		case 308: // Herb Treatment VI
-		case 309: // Herb Treatment VII
-		case 310: // Herb Treatment VIII
-		case 311: // Herb Treatment IX
-		case 312: // Herb Treatment X
-		case 313: // Herb Treatment XI
-		case 314: // Herb Treatment XII
-		case 249: // Mana Treatment I
-		case 250: // Mana Treatment II
-		case 252: // Mana Treatment III
-		case 254: // Mana Treatment IV
-		case 298: // Mana Treatment V
-		case 315: // Mana Treatment VI
-		case 316: // Mana Treatment VII
-		case 317: // Mana Treatment VIII
-		case 318: // Mana Treatment IX
-		case 319: // Mana Treatment X
-		case 320: // Mana Treatment XI
-		case 321: // Mana Treatment XII
-		case 3889: // Prayer Of Focus I
-		case 3890: // Prayer Of Focus II
-		case 3891: // Prayer Of Focus III
-		case 3892: // Prayer Of Focus IV
-		case 3893: // Prayer Of Focus V
-		case 3894: // Prayer Of Focus VI
-		case 4783: // [ArchDaeva] Prayer Of Focus 5.1
-		case 11580: // Stigma Prayer Of Focus I
-			return true;
+			case 245: // 绷带治疗 / Bandage Heal
+			case 246: // Herb Treatment I
+			case 247: // Herb Treatment II
+			case 251: // Herb Treatment III
+			case 253: // Herb Treatment IV
+			case 297: // Herb Treatment V
+			case 308: // Herb Treatment VI
+			case 309: // Herb Treatment VII
+			case 310: // Herb Treatment VIII
+			case 311: // Herb Treatment IX
+			case 312: // Herb Treatment X
+			case 313: // Herb Treatment XI
+			case 314: // Herb Treatment XII
+			case 249: // Mana Treatment I
+			case 250: // Mana Treatment II
+			case 252: // Mana Treatment III
+			case 254: // Mana Treatment IV
+			case 298: // Mana Treatment V
+			case 315: // Mana Treatment VI
+			case 316: // Mana Treatment VII
+			case 317: // Mana Treatment VIII
+			case 318: // Mana Treatment IX
+			case 319: // Mana Treatment X
+			case 320: // Mana Treatment XI
+			case 321: // Mana Treatment XII
+			case 3889: // Prayer Of Focus I
+			case 3890: // Prayer Of Focus II
+			case 3891: // Prayer Of Focus III
+			case 3892: // Prayer Of Focus IV
+			case 3893: // Prayer Of Focus V
+			case 3894: // Prayer Of Focus VI
+			case 4783: // [ArchDaeva] Prayer Of Focus 5.1
+			case 11580: // Stigma Prayer Of Focus I
+				return true;
 		}
 
 		if (this.getSkillTemplate().getSubType() == SkillSubType.SUMMONTRAP) {
@@ -640,30 +642,31 @@ public class Skill {
 
 		if (skillMethod == SkillMethod.CAST) {
 			switch (targetType) {
-			case 0: // PlayerObjectId as Target
-			case 4:
-			case 87:
-				PacketSendUtility.broadcastPacketAndReceive(effector, new SM_CASTSPELL(effector.getObjectId(), skillTemplate.getSkillId(), skillLevel, targetType, targetObjId, this.duration, skillskinId));
-				if (effector instanceof Npc && firstTarget instanceof Player) {
-					NpcAI2 ai = (NpcAI2) effector.getAi2();
-					if (ai.poll(AIQuestion.CAN_SHOUT)) {
-						ShoutEventHandler.onCast(ai, firstTarget);
+				case 0: // PlayerObjectId as Target
+				case 4:
+				case 87:
+					PacketSendUtility.broadcastPacketAndReceive(effector, new SM_CASTSPELL(effector.getObjectId(), skillTemplate.getSkillId(), skillLevel, targetType, targetObjId, this.duration, skillskinId));
+					if (effector instanceof Npc && firstTarget instanceof Player) {
+						NpcAI2 ai = (NpcAI2) effector.getAi2();
+						if (ai.poll(AIQuestion.CAN_SHOUT)) {
+							ShoutEventHandler.onCast(ai, firstTarget);
+						}
 					}
-				}
-				break;
+					break;
 
-			case 3: // Target not in sight?
-				PacketSendUtility.broadcastPacketAndReceive(effector, new SM_CASTSPELL(effector.getObjectId(), skillTemplate.getSkillId(), skillLevel, targetType, 0, this.duration, skillskinId));
-				break;
+				case 3: // Target not in sight?
+					PacketSendUtility.broadcastPacketAndReceive(effector, new SM_CASTSPELL(effector.getObjectId(), skillTemplate.getSkillId(), skillLevel, targetType, 0, this.duration, skillskinId));
+					break;
 
-			case 1: // XYZ as Target
-				PacketSendUtility.broadcastPacketAndReceive(effector, new SM_CASTSPELL(effector.getObjectId(), skillTemplate.getSkillId(), skillLevel, targetType, x, y, z, this.duration, skillskinId));
-				break;
+				case 1: // XYZ as Target
+					PacketSendUtility.broadcastPacketAndReceive(effector, new SM_CASTSPELL(effector.getObjectId(), skillTemplate.getSkillId(), skillLevel, targetType, x, y, z, this.duration, skillskinId));
+					break;
 			}
 		} else if (skillMethod == SkillMethod.ITEM && duration > 0) {
 			PacketSendUtility.broadcastPacketAndReceive(effector, new SM_ITEM_USAGE_ANIMATION(effector.getObjectId(), targetObjId, this.itemObjectId, itemTemplate.getTemplateId(), this.duration, 0, 0));
 		}
 	}
+
 	/**
 	 * 取消施法。
 	 * Cancels casting.
@@ -675,6 +678,7 @@ public class Skill {
 	/**
 	 * 原子尝试取得施法取消权。
 	 * Atomically attempts to acquire cancellation ownership for this cast.
+	 *
 	 * @return 是否成功取得取消权 / whether cancellation ownership was acquired
 	 */
 	public boolean tryCancelCast() {
@@ -730,7 +734,7 @@ public class Skill {
 		// 检查目标是否超出技能范围 / Check if target is out of skill range
 		Properties properties = skillTemplate.getProperties();
 		if (properties != null && !(preselectedTargets == null
-				? properties.endCastValidate(this) : properties.validatePreselectedTargets(this))) {
+			? properties.endCastValidate(this) : properties.validatePreselectedTargets(this))) {
 			effector.getController().cancelCurrentSkill(this);
 			return;
 		}
@@ -746,7 +750,7 @@ public class Skill {
 		}
 		synchronized (effector) {
 			if (effector.getCastingSkill() != this
-					|| !castState.compareAndSet(CastState.CASTING, CastState.COMPLETING)) {
+				|| !castState.compareAndSet(CastState.CASTING, CastState.COMPLETING)) {
 				return;
 			}
 		}
@@ -756,7 +760,7 @@ public class Skill {
 			}
 		}
 		if (skillMethod == SkillMethod.CAST && effector instanceof Player
-				&& !GameEventBootstrapServices.minionService().consumeMinionSkillPoints((Player) effector, skillTemplate.getSkillId())) {
+			&& !GameEventBootstrapServices.minionService().consumeMinionSkillPoints((Player) effector, skillTemplate.getSkillId())) {
 			effector.clearCasting(this);
 			return;
 		}
@@ -812,19 +816,19 @@ public class Skill {
 					blockAOESpread = true;
 				}
 
-					if (effect.getAttackStatus() == AttackStatus.RESIST || effect.getAttackStatus() == AttackStatus.DODGE) {
-						resistCount++;
-					}
+				if (effect.getAttackStatus() == AttackStatus.RESIST || effect.getAttackStatus() == AttackStatus.DODGE) {
+					resistCount++;
 				}
+			}
 			if (!effects.isEmpty() && skillTemplate.getHostileType() != HostileType.NONE) {
-					if (skillTemplate.getType() == SkillType.PHYSICAL) {
-						effector.getObserveController().consumeAlwaysHit();
-					} else if (skillTemplate.getType() == SkillType.MAGICAL) {
-						effector.getObserveController().consumeAlwaysNoResist();
-					}
+				if (skillTemplate.getType() == SkillType.PHYSICAL) {
+					effector.getObserveController().consumeAlwaysHit();
+				} else if (skillTemplate.getType() == SkillType.MAGICAL) {
+					effector.getObserveController().consumeAlwaysNoResist();
 				}
+			}
 
-				if (!effectedList.isEmpty()) {
+			if (!effectedList.isEmpty()) {
 				if (resistCount == effectedList.size()) {
 					blockedChain = true;
 					blockedPenaltySkill = true;
@@ -832,9 +836,9 @@ public class Skill {
 			}
 			if (skillTemplate.isMaintain() && skillTemplate.getMaxMaintainCount() > 0) {
 				List<Effect> successfulEffects = effects.stream()
-						.filter(effect -> !effect.getSuccessEffect().isEmpty()).toList();
+					.filter(effect -> !effect.getSuccessEffect().isEmpty()).toList();
 				effector.getEffectController().registerMaintainEffects(successfulEffects,
-						skillTemplate.getMaxMaintainCount());
+					skillTemplate.getMaxMaintainCount());
 			}
 
 			// 点对点技能例外（如冰面） / exception for point point skills(example Ice Sheet)
@@ -891,9 +895,7 @@ public class Skill {
 
 		if (hitTime == 0) {
 			applyEffect(effects);
-		}
-
-		else {
+		} else {
 			GameThreadPoolServices.threadPoolManager().schedule(() -> applyEffect(effects), hitTime);
 		}
 		if (skillMethod == SkillMethod.CAST || skillMethod == SkillMethod.ITEM) {
@@ -908,6 +910,7 @@ public class Skill {
 	/**
 	 * 向受影响对象广播效果并执行惩罚技能。
 	 * Broadcasts effects to affected objects and runs the penalty skill.
+	 *
 	 * @param effects 效果列表 / effect list
 	 */
 	public void applyEffect(List<Effect> effects) {
@@ -938,7 +941,7 @@ public class Skill {
 				observer.getAi2().onSeeSpell(effector, target, skillTemplate.getSkillId(), skillLevel));
 		}
 
-        if (!blockedPenaltySkill) {
+		if (!blockedPenaltySkill) {
 			startPenaltySkill();
 		}
 	}
@@ -951,32 +954,33 @@ public class Skill {
 	/**
 	 * 广播施法结束结果包（按目标类型分发）。
 	 * Broadcasts the cast-end result packet (dispatched by target type).
+	 *
 	 * @param spellStatus 法术状态码 / spell status code
-	 * @param dashStatus 位移状态码 / dash status code
-	 * @param effects 已计算的效果列表 / calculated effects
+	 * @param dashStatus  位移状态码 / dash status code
+	 * @param effects     已计算的效果列表 / calculated effects
 	 */
 	private void sendCastspellEnd(int spellStatus, int dashStatus, List<Effect> effects) {
 		getSkillSkinData();
 		int resultHitTime = serverTime > 0 ? serverTime : hitTime;
 		if (skillMethod == SkillMethod.CAST) {
 			switch (targetType) {
-			case 0: // PlayerObjectId as Target
-				broadcastCastResult(new SM_CASTSPELL_RESULT(this, effects, resultHitTime, chainSuccess, spellStatus,
-					dashStatus, skillskinId));
-				break;
+				case 0: // PlayerObjectId as Target
+					broadcastCastResult(new SM_CASTSPELL_RESULT(this, effects, resultHitTime, chainSuccess, spellStatus,
+						dashStatus, skillskinId));
+					break;
 
-			case 4:
-			case 87:
-				PacketSendUtility.broadcastPacketAndReceive(effector, new SM_CASTSPELL_RESULT(this, effects, resultHitTime, chainSuccess, spellStatus, dashStatus, targetType, skillskinId));
-				break;
+				case 4:
+				case 87:
+					PacketSendUtility.broadcastPacketAndReceive(effector, new SM_CASTSPELL_RESULT(this, effects, resultHitTime, chainSuccess, spellStatus, dashStatus, targetType, skillskinId));
+					break;
 
-			case 3: // Target not in sight?
-				PacketSendUtility.broadcastPacketAndReceive(effector, new SM_CASTSPELL_RESULT(this, effects, resultHitTime, chainSuccess, spellStatus, dashStatus, skillskinId));
-				break;
+				case 3: // Target not in sight?
+					PacketSendUtility.broadcastPacketAndReceive(effector, new SM_CASTSPELL_RESULT(this, effects, resultHitTime, chainSuccess, spellStatus, dashStatus, skillskinId));
+					break;
 
-			case 1: // XYZ as Target
-				PacketSendUtility.broadcastPacketAndReceive(effector, new SM_CASTSPELL_RESULT(this, effects, resultHitTime, chainSuccess, spellStatus, dashStatus, targetType, skillskinId));
-				break;
+				case 1: // XYZ as Target
+					PacketSendUtility.broadcastPacketAndReceive(effector, new SM_CASTSPELL_RESULT(this, effects, resultHitTime, chainSuccess, spellStatus, dashStatus, targetType, skillskinId));
+					break;
 			}
 		} else if (skillMethod == SkillMethod.ITEM) {
 			PacketSendUtility.broadcastPacketAndReceive(effector, new SM_ITEM_USAGE_ANIMATION(effector.getObjectId(), firstTarget.getObjectId(), (this.itemObjectId == 0 ? 0 : this.itemObjectId), itemTemplate.getTemplateId(), 0, 1, 0));
@@ -1001,6 +1005,7 @@ public class Skill {
 	/**
 	 * 调度技能动作/效果（引导类技能）。
 	 * Schedule actions/effects of skill (channeled skills).
+	 *
 	 * @param delay 延迟毫秒 / delay millis
 	 */
 	private void schedule(int delay) {
@@ -1026,6 +1031,7 @@ public class Skill {
 		Conditions skillConditions = skillTemplate.getUseconditions();
 		return skillConditions == null || skillConditions.validate(this);
 	}
+
 	/**
 	 * 获取技能 ID。
 	 * Gets skill id.
@@ -1033,6 +1039,7 @@ public class Skill {
 	public int getSkillId() {
 		return skillTemplate.getSkillId();
 	}
+
 	/**
 	 * 是否被动技能。
 	 * Whether passive skill.
@@ -1048,6 +1055,7 @@ public class Skill {
 	public boolean checkNonTargetAOE() {
 		return (firstTargetAttribute == FirstTargetAttribute.ME && targetRangeAttribute == TargetRangeAttribute.AREA);
 	}
+
 	/**
 	 * 是否目标 AOE。
 	 * Whether target AOE.
@@ -1055,20 +1063,7 @@ public class Skill {
 	public boolean isTargetAOE() {
 		return (firstTargetAttribute == FirstTargetAttribute.TARGET && targetRangeAttribute == TargetRangeAttribute.AREA);
 	}
-	/**
-	 * 是否自身增益。
-	 * Whether self buff.
-	 */
-	public boolean isSelfBuff() {
-		return firstTargetAttribute == FirstTargetAttribute.ME && targetRangeAttribute == TargetRangeAttribute.ONLYONE && skillTemplate.getSubType() == SkillSubType.BUFF && !skillTemplate.isDeityAvatar();
-	}
-	/**
-	 * 主目标是否自身。
-	 * Whether first target is self.
-	 */
-	public boolean isFirstTargetSelf() {
-		return firstTargetAttribute == FirstTargetAttribute.ME;
-	}
+
 	/**
 	 * 是否地点技能。
 	 * Whether point skill.
@@ -1076,9 +1071,11 @@ public class Skill {
 	public boolean isPointSkill() {
 		return this.firstTargetAttribute == FirstTargetAttribute.POINT;
 	}
+
 	/**
 	 * 设置目标类型与坐标。
 	 * Sets target type and coordinates.
+	 *
 	 * @param x X
 	 * @param y Y
 	 * @param z Z
@@ -1089,9 +1086,11 @@ public class Skill {
 		this.y = y;
 		this.z = z;
 	}
+
 	/**
 	 * 设置目标位置与朝向。
 	 * Sets target position and heading.
+	 *
 	 * @param x X
 	 * @param y Y
 	 * @param z Z
@@ -1179,9 +1178,9 @@ public class Skill {
 			// 变身:守护神将 / Transformation: Guardian General III
 			// 变身:守护神将 / Transformation: Guardian General IV
 			case 17, 18, 19, 20, 243, 245, 246, 247, 251, 253, 297, 308, 309, 310, 311, 312, 313, 314, 249, 250, 252,
-			     254, 298, 315, 316, 317, 318, 319, 320, 321, 302, 1337, 1338, 1339, 1416, 1417, 3589, 3775, 4752, 4757,
-			     4762, 4768, 4804, 4805, 4806, 4807, 4808, 4813, 4818, 4824, 11885, 11886, 11887, 11888, 11889, 11890,
-			     11891, 11892, 11893, 11894 -> // 变身:守护神将 / Transformation: Guardian General V
+				 254, 298, 315, 316, 317, 318, 319, 320, 321, 302, 1337, 1338, 1339, 1416, 1417, 3589, 3775, 4752, 4757,
+				 4762, 4768, 4804, 4805, 4806, 4807, 4808, 4813, 4818, 4824, 11885, 11886, 11887, 11888, 11889, 11890,
+				 11891, 11892, 11893, 11894 -> // 变身:守护神将 / Transformation: Guardian General V
 				true;
 			default -> false;
 		};

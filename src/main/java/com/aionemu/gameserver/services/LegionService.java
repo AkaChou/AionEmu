@@ -742,16 +742,6 @@ public class LegionService {
 		PacketSendUtility.broadcastPacketToLegion(legion, new SM_LEGION_EDIT(0x07));
 	}
 
-	/**
-	 * 保存自定义军团徽章并同步给所有在线成员。
-	 * Stores a custom legion emblem and syncs it to all online members.
-	 * Acting player
-	 *
-	 * @param customEmblem 自定义徽章 / Custom emblem
-	 */
-	public void storeLegionEmblem(Player activePlayer, LegionEmblem customEmblem) {
-		emblems().storeCustomEmblem(activePlayer, customEmblem);
-	}
 
 	/**
 	 * 保存预设/标准军团徽章（扣费、写历史、广播更新）。
@@ -1189,16 +1179,6 @@ public class LegionService {
 		}
 	}
 
-
-	/**
-	 * 清空军团与成员缓存容器。
-	 * Clears the legion and legion-member caches.
-	 */
-	public void clearCaches() {
-		allCachedLegions.clear();
-		allCachedLegionMembers.clear();
-	}
-
 	/**
 	 * 惰性获取成员域实现。
 	 * Lazily resolves the member-domain implementation.
@@ -1374,21 +1354,6 @@ public class LegionService {
 		restrictions().setJoinMinLevel(player, minLevel);
 	}
 
-	/**
-	 * 向玩家发送当前入团申请对应的军团信息包。
-	 * Sends the join-request legion info packet to the player.
-	 */
-	public void sendLegionJoinRequestPacket(Player player, int legionId) {
-		restrictions().sendLegionJoinRequestPacket(player, legionId);
-	}
-
-	/**
-	 * 玩家进世界时，按 CommonData 中的申请军团 ID 重发入团申请信息包。
-	 * On enter-world, resends join-request info using the legion id stored in CommonData.
-	 */
-	public void sendLegionJoinRequestPacketonEnterWorld(Player player) {
-		restrictions().sendLegionJoinRequestPacketonEnterWorld(player);
-	}
 
 	/**
 	 * 处理玩家入团申请：申请入队、直接加入或拒绝招募。

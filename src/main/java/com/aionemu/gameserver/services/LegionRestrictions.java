@@ -523,24 +523,6 @@ final class LegionRestrictions {
 		joinRequests().setJoinMinLevel(player, minLevel);
 	}
 
-	/**
-	 * 向玩家发送当前入团申请对应的军团信息包。
-	 * Sends the join-request legion info packet to the player.
-	 * Target player
-	 * @param legionId 军团 ID，<=0 表示清空 / Legion id, <=0 clears
-	 */
-	void sendLegionJoinRequestPacket(Player player, int legionId) {
-		joinRequests().sendLegionJoinRequestPacket(player, legionId);
-	}
-
-	/**
-	 * 玩家进世界时，按 CommonData 中的申请军团 ID 重发入团申请信息包。
-	 * On enter-world, resends join-request info using the legion id stored in CommonData.
-	 * @param player Target player
-	 */
-	void sendLegionJoinRequestPacketonEnterWorld(Player player) {
-		joinRequests().sendLegionJoinRequestPacketonEnterWorld(player);
-	}
 
 	/**
 	 * 处理玩家入团申请：申请入队、直接加入或拒绝招募。

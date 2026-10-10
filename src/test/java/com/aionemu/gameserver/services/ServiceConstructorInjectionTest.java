@@ -21,6 +21,7 @@ import com.aionemu.gameserver.dao.AbyssRankDAO;
 import com.aionemu.gameserver.dao.AnnouncementsDAO;
 import com.aionemu.gameserver.dao.BlockListDAO;
 import com.aionemu.gameserver.dao.BrokerDAO;
+import com.aionemu.gameserver.dao.ChallengeTasksDAO;
 import com.aionemu.gameserver.dao.FriendListDAO;
 import com.aionemu.gameserver.dao.GuideDAO;
 import com.aionemu.gameserver.dao.InventoryDAO;
@@ -37,6 +38,7 @@ import com.aionemu.gameserver.dao.PlayerPunishmentsDAO;
 import com.aionemu.gameserver.dao.PlayerQuestListDAO;
 import com.aionemu.gameserver.dao.PlayerSkillListDAO;
 import com.aionemu.gameserver.dao.PlayerStigmasEquippedDAO;
+import com.aionemu.gameserver.dao.RewardServiceDAO;
 import com.aionemu.gameserver.dao.SurveyControllerDAO;
 import com.aionemu.gameserver.dao.TownDAO;
 import com.aionemu.gameserver.model.Announcement;
@@ -409,6 +411,25 @@ class ServiceConstructorInjectionTest {
 		assertNotNull(service);
 	}
 
+	@Test
+	void webshopServiceConstructsWithInjectedDao() {
+		JdbcClient client = createNoAccessJdbcClient();
+		RewardServiceDAO dao = new com.aionemu.gameserver.dao.impl.RewardServiceDAO(client);
+		WebshopService service = new WebshopService(dao);
+		assertNotNull(service);
+	}
+
+	@Test
+	void challengeTaskServiceConstructsWithInjectedDaos() {
+		JdbcClient client = createNoAccessJdbcClient();
+		ChallengeTasksDAO challengeTasksDAO = new com.aionemu.gameserver.dao.impl.ChallengeTasksDAO(client);
+		TownDAO townDAO = new com.aionemu.gameserver.dao.impl.TownDAO(client);
+		LegionMemberDAO legionMemberDAO = new com.aionemu.gameserver.dao.impl.LegionMemberDAO(client);
+		PlayerDAO playerDAO = new com.aionemu.gameserver.dao.impl.PlayerDAO(client);
+		ChallengeTaskService service = new ChallengeTaskService(challengeTasksDAO, townDAO, legionMemberDAO, playerDAO);
+		assertNotNull(service);
+	}
+
 	private static JdbcClient createNoAccessJdbcClient() {
 		DataSource noAccessDataSource = (DataSource) java.lang.reflect.Proxy.newProxyInstance(
 			ServiceConstructorInjectionTest.class.getClassLoader(),
@@ -436,5 +457,7 @@ class ServiceConstructorInjectionTest {
 		assertThrows(NullPointerException.class, () -> new SocialService(null, null, null));
 		assertThrows(NullPointerException.class, () -> new LimitedQuestService(null));
 		assertThrows(NullPointerException.class, () -> new PeriodicSaveService(null, null, null, null, null, null, null));
+		assertThrows(NullPointerException.class, () -> new WebshopService(null));
+		assertThrows(NullPointerException.class, () -> new ChallengeTaskService(null, null, null, null));
 	}
 }

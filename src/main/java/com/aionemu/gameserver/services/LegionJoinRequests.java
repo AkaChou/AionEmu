@@ -154,23 +154,7 @@ final class LegionJoinRequests {
 	 * Target player
 	 * @param legionId 军团 ID，<=0 表示清空 / Legion id, <=0 clears
 	 */
-	void sendLegionJoinRequestPacket(Player player, int legionId) {
-		if (legionId <= 0) {
-			PacketSendUtility.sendPacket(player, new SM_LEGION_REQUEST_INFO(0, ""));
-		} else {
-			Legion legion = service.getLegion(legionId);
-			PacketSendUtility.sendPacket(player,
-					new SM_LEGION_REQUEST_INFO(legion.getLegionId(), legion.getLegionName()));
-		}
-	}
-
-	/**
-	 * 玩家进世界时，按 CommonData 中的申请军团 ID 重发入团申请信息包。
-	 * On enter-world, resends join-request info using the legion id stored in CommonData.
-	 * Target player
-	 */
-	void sendLegionJoinRequestPacketonEnterWorld(Player player) {
-		int legionId = player.getCommonData().getJoinRequestLegionId();
+	private void sendLegionJoinRequestPacket(Player player, int legionId) {
 		if (legionId <= 0) {
 			PacketSendUtility.sendPacket(player, new SM_LEGION_REQUEST_INFO(0, ""));
 		} else {

@@ -3,6 +3,7 @@ package com.aionemu.gameserver.services;
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
+import lombok.NonNull;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.ObjectProvider;
@@ -31,13 +32,35 @@ public class WebshopService {
      */
     @Setter
     private static volatile ObjectProvider<WebshopService> instanceProvider;
+	private final RewardServiceDAO rewardServiceDAO;
+
+	/**
+	 * 使用指定的 RewardServiceDAO 构造服务并启动定时发放任务。
+	 * Constructs the service with given RewardServiceDAO and starts the periodic delivery task.
+	 *
+	 * @param rewardServiceDAO 商城奖励数据访问对象 / reward service DAO
+	 */
+	public WebshopService(@NonNull RewardServiceDAO rewardServiceDAO) {
+		this.rewardServiceDAO = rewardServiceDAO;
+		this.load();
+	}
 
 	/**
 	 * 构造服务并启动定时发放任务。
 	 * Constructs the service and starts the periodic delivery task.
 	 */
 	public WebshopService() {
-		this.load();
+		this(safeDao(RewardServiceDAO.class, com.aionemu.gameserver.dao.impl.RewardServiceDAO::new));
+	}
+
+	private static <T extends com.aionemu.commons.database.dao.DAO> T safeDao(Class<T> daoClass, java.util.function.Supplier<T> fallback) {
+		if (DAOManager.isInitialized()) {
+			try {
+				return DAOManager.getDAO(daoClass);
+			} catch (Exception ignored) {
+			}
+		}
+		return fallback.get();
 	}
 
 	/**
@@ -65,15 +88,18 @@ public class WebshopService {
 	 * Starts the periodic task that delivers pending shop rewards to online players.
 	 */
 	private void load() {
-		GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(pl -> {
-			RewardServiceDAO rewardDao = DAOManager.getDAO(RewardServiceDAO.class);
-			List<RewardEntryItem> liste = rewardDao.getAvailable(pl.getObjectId());
-			if (!liste.isEmpty()) {
-				for (RewardEntryItem item : liste) {
-					deliverRewardMail(pl.getName(), item, rewardDao, GameFeatureServices.systemMailService());
+		try {
+			GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(pl -> {
+				List<RewardEntryItem> liste = this.rewardServiceDAO.getAvailable(pl.getObjectId());
+				if (!liste.isEmpty()) {
+					for (RewardEntryItem item : liste) {
+						deliverRewardMail(pl.getName(), item, this.rewardServiceDAO, GameFeatureServices.systemMailService());
+					}
 				}
-			}
-		}), 5 * 1000, 5 * 1000);
+			}), 5 * 1000, 5 * 1000);
+		} catch (Exception e) {
+			log.warn("ThreadPoolManager not available during WebshopService load: {}", e.getMessage());
+		}
 	}
 
 	/**

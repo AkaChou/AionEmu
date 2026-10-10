@@ -18,13 +18,11 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_ABNORMAL_EFFECT;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.skillengine.effect.AbnormalState;
 import com.aionemu.gameserver.skillengine.effect.EffectTemplate;
-import com.aionemu.gameserver.skillengine.effect.EffectType;
 import com.aionemu.gameserver.skillengine.model.DispelCategoryType;
 import com.aionemu.gameserver.skillengine.model.Effect;
 import com.aionemu.gameserver.skillengine.model.EffectResult;
 import com.aionemu.gameserver.skillengine.model.SkillSubType;
 import com.aionemu.gameserver.skillengine.model.SkillTargetSlot;
-import com.aionemu.gameserver.skillengine.model.TransformType;
 import com.aionemu.gameserver.taskmanager.tasks.PacketBroadcaster.BroadcastMode;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.google.common.base.Predicate;
@@ -531,19 +529,6 @@ public class EffectController {
 	}
 
 	/**
-	 * 按效果模板 ID 结束异常效果。
-	 * Ends abnormal effects that contain the given effect-template id.
-	 * effect template id
-	 */
-	public void removeEffectByEffectId(int effectId) {
-		for (Effect effect : effectsSnapshot(abnormalEffectMap)) {
-			if (effect.containsEffectId(effectId)) {
-				effect.endEffect();
-			}
-		}
-	}
-
-	/**
 	 * 计算可被 DispelBuffCounterAtk 驱散的效果数量。
 	 * Counts effects removable by DispelBuffCounterAtk at the given dispel level.
 	 *
@@ -557,7 +542,7 @@ public class EffectController {
 			DispelCategoryType dispelCat = effect.getDispelCategory();
 			SkillTargetSlot tragetSlot = effect.getSkillTemplate().getTargetSlot();
 			// 持久效果受保护，除非客户端数据将已知遭遇 Buff 标为可驱散。 / Persistent effects are protected unless the client data marks a known encounter buff as dispellable.
-			if (effect.getDuration() >= 86400000 && !isDispellableLongDurationEffect(effect)) {
+			if (isProtectedLongDurationEffect(effect)) {
 				continue;
 			}
 			if (effect.isSanctuaryEffect()) {
@@ -601,7 +586,7 @@ public class EffectController {
 				break;
 			}
 			// 持久效果受保护，除非客户端数据将已知遭遇 Buff 标为可驱散。 / Persistent effects are protected unless the client data marks a known encounter buff as dispellable.
-			if (effect.getDuration() >= 86400000 && !isDispellableLongDurationEffect(effect)) {
+			if (isProtectedLongDurationEffect(effect)) {
 				continue;
 			}
 			if (effect.isSanctuaryEffect()) {
@@ -698,7 +683,7 @@ public class EffectController {
 			if (count == 0) {
 				break;
 			}
-			if (effect.getDuration() >= 86400000 && !isDispellableLongDurationEffect(effect)) {
+			if (isProtectedLongDurationEffect(effect)) {
 				continue;
 			}
 			if (effect.isSanctuaryEffect()) {
@@ -735,34 +720,20 @@ public class EffectController {
 	}
 
 	/**
-	 * 判断超长时长效果是否仍允许被驱散（白名单技能）。
-	 * Whether a long-duration effect is still removable (whitelist skills).
+	 * 判断超长时长效果是否受保护而不可驱散（即非白名单遭遇 Buff 的超长效果）。
+	 * Whether a long-duration effect is protected from dispel (not a whitelisted encounter buff).
 	 *
 	 * @param effect 效果 / effect
-	 * @return 可驱散则为 true / true if removable
+	 * @return 受保护不可驱散则为 true / true if protected from dispel
 	 */
-	private boolean isDispellableLongDurationEffect(Effect effect) {
-		int skillId = effect.getSkillId();
-		return switch (skillId) {
-			case 20941, 20942, 19370, 19371, 19372, 20530, 20531, 19345, 19346, 21438 -> true;
-			default -> false;
-		};
-	}
-
-	/**
-	 * 按效果类型结束匹配的异常效果。
-	 * Ends abnormal effects matching the given effect type.
-	 *
-	 * @param effectType 效果类型 / effect type
-	 */
-	public void removeEffectByEffectType(EffectType effectType) {
-		for (Effect effect : effectsSnapshot(abnormalEffectMap)) {
-			for (EffectTemplate et : effect.getSuccessEffect()) {
-				if (effectType == et.getEffectType()) {
-					effect.endEffect();
-				}
-			}
+	private boolean isProtectedLongDurationEffect(Effect effect) {
+		if (effect.getDuration() < 86400000) {
+			return false;
 		}
+		return switch (effect.getSkillId()) {
+			case 20941, 20942, 19370, 19371, 19372, 20530, 20531, 19345, 19346, 21438 -> false;
+			default -> true;
+		};
 	}
 
 	/**
@@ -923,22 +894,6 @@ public class EffectController {
 	}
 
 	/**
-	 * 被动映射中是否存在指定技能 ID。
-	 * Whether the passive map contains the given skill id.
-	 *
-	 * @param skillId 技能 ID / skill id
-	 * @return 存在则为 true / true if present
-	 */
-	public boolean isPassivePresentBySkillId(int skillId) {
-		for (Effect effect : effectsSnapshot(passiveEffectMap)) {
-			if (effect.getSkillId() == skillId) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	/**
 	 * 是否处于恐惧异常状态。
 	 * Whether the creature is under a Fear abnormal state.
 	 *
@@ -1019,16 +974,6 @@ public class EffectController {
 	}
 
 	/**
-	 * 返回当前增益效果。
-	 * Returns current buff effects.
-	 *
-	 * @return 增益效果集合 / buff effects
-	 */
-	public Collection<Effect> getBuffEffects() {
-		return Collections2.filter(effectsSnapshot(abnormalEffectMap), effect -> effect != null && effect.isBuff());
-	}
-
-	/**
 	 * 设置异常状态位掩码并通知观察者。
 	 * Sets abnormal-state bits and notifies observers.
 	 *
@@ -1094,23 +1039,6 @@ public class EffectController {
 	 */
 	public Iterator<Effect> iterator() {
 		return effectsSnapshot(abnormalEffectMap).iterator();
-	}
-
-	/**
-	 * 根据当前效果推断变身类型。
-	 * Infers transform type from current effects.
-	 *
-	 * @return 变身类型 / transform type
-	 */
-	public TransformType getTransformType() {
-		for (Effect eff : getAbnormalEffects()) {
-			if (eff.isDeityAvatar()) {
-				return TransformType.AVATAR;
-			} else {
-				return eff.getTransformType();
-			}
-		}
-		return TransformType.NONE;
 	}
 
 	/**

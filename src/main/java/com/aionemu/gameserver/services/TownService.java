@@ -17,12 +17,13 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_TOWNS_LIST;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.MapRegion;
 import com.aionemu.gameserver.world.zone.ZoneInstance;
+import lombok.NonNull;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.ObjectProvider;
 
+import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 /**
  * 城镇服务，加载/初始化阵营城镇并查询玩家所在城镇。
@@ -69,24 +70,39 @@ public class TownService {
 	 *
 	 * @param townDAO 城镇数据访问对象 / town DAO
 	 */
-	public TownService(TownDAO townDAO) {
-		this.townDAO = Objects.requireNonNull(townDAO, "townDAO must not be null");
-		this.elyosTowns = this.townDAO.load(Race.ELYOS);
-		this.asmosTowns = this.townDAO.load(Race.ASMODIANS);
+	public TownService(@NonNull TownDAO townDAO) {
+		this.townDAO = townDAO;
+		Map<Integer, Town> elyos = null;
+		Map<Integer, Town> asmos = null;
+		try {
+			elyos = this.townDAO.load(Race.ELYOS);
+			asmos = this.townDAO.load(Race.ASMODIANS);
+		} catch (Exception e) {
+			log.warn("Failed to load towns from DAO during service init: {}", e.getMessage());
+		}
+		this.elyosTowns = elyos != null ? elyos : new HashMap<>();
+		this.asmosTowns = asmos != null ? asmos : new HashMap<>();
+
 		if (elyosTowns.isEmpty() && asmosTowns.isEmpty()) {
-			for (HousingLand land : DataManager.HOUSE_DATA.getLands()) {
-				for (HouseAddress address : land.getAddresses()) {
-					if (address.getTownId() != 0) {
-						Race townRace = DataManager.NPC_DATA.getNpcTemplate(land.getManagerNpcId())
-							.getTribe() == TribeClass.GENERAL ? Race.ELYOS : Race.ASMODIANS;
-						Map<Integer, Town> raceTowns = townRace == Race.ELYOS ? elyosTowns : asmosTowns;
-						if (!raceTowns.containsKey(address.getTownId())) {
-							Town town = new Town(address.getTownId(), townRace);
-							raceTowns.put(town.getId(), town);
-							this.townDAO.store(town);
+			try {
+				if (DataManager.HOUSE_DATA != null && DataManager.HOUSE_DATA.getLands() != null) {
+					for (HousingLand land : DataManager.HOUSE_DATA.getLands()) {
+						for (HouseAddress address : land.getAddresses()) {
+							if (address.getTownId() != 0) {
+								Race townRace = DataManager.NPC_DATA.getNpcTemplate(land.getManagerNpcId())
+									.getTribe() == TribeClass.GENERAL ? Race.ELYOS : Race.ASMODIANS;
+								Map<Integer, Town> raceTowns = townRace == Race.ELYOS ? elyosTowns : asmosTowns;
+								if (!raceTowns.containsKey(address.getTownId())) {
+									Town town = new Town(address.getTownId(), townRace);
+									raceTowns.put(town.getId(), town);
+									this.townDAO.store(town);
+								}
+							}
 						}
 					}
 				}
+			} catch (Exception e) {
+				log.warn("House data not available during TownService initialization: {}", e.getMessage());
 			}
 		}
 		log.info(I18n.get("log.e7c70a17528c", elyosTowns.size()));
@@ -98,7 +114,17 @@ public class TownService {
 	 * Loads towns from DB; if empty, initializes from housing lands and persists them.
 	 */
 	public TownService() {
-		this(DAOManager.getDAO(TownDAO.class));
+		this(safeDao(TownDAO.class, com.aionemu.gameserver.dao.impl.TownDAO::new));
+	}
+
+	private static <T extends com.aionemu.commons.database.dao.DAO> T safeDao(Class<T> daoClass, java.util.function.Supplier<T> fallback) {
+		if (DAOManager.isInitialized()) {
+			try {
+				return DAOManager.getDAO(daoClass);
+			} catch (Exception ignored) {
+			}
+		}
+		return fallback.get();
 	}
 
 	/**

@@ -2,7 +2,6 @@ package com.aionemu.gameserver.services;
 
 import com.aionemu.gameserver.configs.main.HousingConfig;
 import com.aionemu.gameserver.model.house.MaintenanceTask;
-import com.aionemu.gameserver.services.ProtectorConquerorService;
 import com.aionemu.gameserver.services.abysslandingservice.LandingUpdateService;
 import com.aionemu.gameserver.services.instance.AsyunatarService;
 import com.aionemu.gameserver.services.instance.DredgionService2;
@@ -23,6 +22,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
 import com.aionemu.gameserver.dao.AbyssLandingDAO;
+import com.aionemu.gameserver.dao.ChallengeTasksDAO;
+import com.aionemu.gameserver.dao.LegionMemberDAO;
+import com.aionemu.gameserver.dao.PlayerDAO;
 import com.aionemu.gameserver.dao.TownDAO;
 
 /**
@@ -53,7 +55,17 @@ public class SiegeBattlefieldBeans {
 
     @Bean
     @Lazy
-    public ChallengeTaskService challengeTaskService() {
+    public ChallengeTaskService challengeTaskService(ObjectProvider<ChallengeTasksDAO> challengeTasksDaoProvider,
+                                                     ObjectProvider<TownDAO> townDaoProvider,
+                                                     ObjectProvider<LegionMemberDAO> legionMemberDaoProvider,
+                                                     ObjectProvider<PlayerDAO> playerDaoProvider) {
+        ChallengeTasksDAO challengeTasksDAO = challengeTasksDaoProvider.getIfAvailable();
+        TownDAO townDAO = townDaoProvider.getIfAvailable();
+        LegionMemberDAO legionMemberDAO = legionMemberDaoProvider.getIfAvailable();
+        PlayerDAO playerDAO = playerDaoProvider.getIfAvailable();
+        if (challengeTasksDAO != null && townDAO != null && legionMemberDAO != null && playerDAO != null) {
+            return new ChallengeTaskService(challengeTasksDAO, townDAO, legionMemberDAO, playerDAO);
+        }
         return new ChallengeTaskService();
     }
 

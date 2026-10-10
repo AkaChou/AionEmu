@@ -1,11 +1,19 @@
 package com.aionemu.gameserver.configs.main;
 
 import com.aionemu.commons.configuration.Property;
+import lombok.Getter;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.stereotype.Component;
+
+import java.util.function.Consumer;
 
 /**
- * 经验、掉落与各类奖励倍率相关配置。
- * Experience, drop and various reward rate related configuration.
+ * 经验、掉落与各类奖励倍率相关配置，支持 Spring Boot ConfigurationProperties 与静态门面访问。
+ * Experience, drop and various reward rate related configuration supporting Spring Boot ConfigurationProperties and static facade access.
  */
+@Getter
+@Component
+@ConfigurationProperties(prefix = "gameserver")
 public class RateConfig {
 
 	/**
@@ -575,4 +583,723 @@ public class RateConfig {
 	 */
 	@Property(key = "gameserver.rate.vip.gp.player.gain", defaultValue = "3")
 	public static float VIP_GP_PLAYER_GAIN_RATE;
+
+	private final RateProperties rate = new RateProperties();
+	private final DamageProperties damage = new DamageProperties();
+
+	public enum MembershipTier {
+		REGULAR,
+		PREMIUM,
+		VIP
+	}
+
+	@Getter
+	public static class RateProperties {
+		private final TierRateProperties regular = new TierRateProperties(MembershipTier.REGULAR);
+		private final TierRateProperties premium = new TierRateProperties(MembershipTier.PREMIUM);
+		private final TierRateProperties vip = new TierRateProperties(MembershipTier.VIP);
+
+		private final AuraProperties aura = new AuraProperties();
+		private final MobCategoryProperties normal = new MobCategoryProperties(
+			val -> NORMAL_MOBS_RATE_HP = val, val -> NORMAL_MOBS_RATE_PW = val,
+			() -> NORMAL_MOBS_RATE_HP, () -> NORMAL_MOBS_RATE_PW
+		);
+		private final MobCategoryProperties elite = new MobCategoryProperties(
+			val -> ELITE_MOBS_RATE_HP = val, val -> ELITE_MOBS_RATE_PW = val,
+			() -> ELITE_MOBS_RATE_HP, () -> ELITE_MOBS_RATE_PW
+		);
+		private final MobCategoryProperties hero = new MobCategoryProperties(
+			val -> HERO_MOBS_RATE_HP = val, val -> HERO_MOBS_RATE_PW = val,
+			() -> HERO_MOBS_RATE_HP, () -> HERO_MOBS_RATE_PW
+		);
+		private final MobCategoryProperties legendary = new MobCategoryProperties(
+			val -> LEGENDARY_MOBS_RATE_HP = val, val -> LEGENDARY_MOBS_RATE_PW = val,
+			() -> LEGENDARY_MOBS_RATE_HP, () -> LEGENDARY_MOBS_RATE_PW
+		);
+
+		public float getDredgion() {
+			return DREDGION_REWARD_RATE;
+		}
+
+		public void setDredgion(float dredgion) {
+			DREDGION_REWARD_RATE = dredgion;
+		}
+
+		@Getter
+		public static class AuraProperties {
+			private final OfProperties of = new OfProperties();
+
+			@Getter
+			public static class OfProperties {
+				private final GrowthProperties growth = new GrowthProperties();
+
+				public static class GrowthProperties {
+					public int getChance() {
+						return AURA_OF_GROWTH;
+					}
+
+					public void setChance(int chance) {
+						AURA_OF_GROWTH = chance;
+					}
+				}
+			}
+		}
+
+		@Getter
+		public static class MobCategoryProperties {
+			private final MobsProperties mobs;
+
+			public MobCategoryProperties(Consumer<Float> hpSetter, Consumer<Float> pwSetter,
+										 java.util.function.Supplier<Float> hpGetter, java.util.function.Supplier<Float> pwGetter) {
+				this.mobs = new MobsProperties(hpSetter, pwSetter, hpGetter, pwGetter);
+			}
+
+			@Getter
+			public static class MobsProperties {
+				private final RateSubProperties rate;
+
+				public MobsProperties(Consumer<Float> hpSetter, Consumer<Float> pwSetter,
+									  java.util.function.Supplier<Float> hpGetter, java.util.function.Supplier<Float> pwGetter) {
+					this.rate = new RateSubProperties(hpSetter, pwSetter, hpGetter, pwGetter);
+				}
+
+				public static class RateSubProperties {
+					private final Consumer<Float> hpSetter;
+					private final Consumer<Float> pwSetter;
+					private final java.util.function.Supplier<Float> hpGetter;
+					private final java.util.function.Supplier<Float> pwGetter;
+
+					public RateSubProperties(Consumer<Float> hpSetter, Consumer<Float> pwSetter,
+											 java.util.function.Supplier<Float> hpGetter, java.util.function.Supplier<Float> pwGetter) {
+						this.hpSetter = hpSetter;
+						this.pwSetter = pwSetter;
+						this.hpGetter = hpGetter;
+						this.pwGetter = pwGetter;
+					}
+
+					public float getHp() {
+						return hpGetter.get();
+					}
+
+					public void setHp(float hp) {
+						hpSetter.accept(hp);
+					}
+
+					public float getPw() {
+						return pwGetter.get();
+					}
+
+					public void setPw(float pw) {
+						pwSetter.accept(pw);
+					}
+				}
+			}
+		}
+
+		@Getter
+		public static class TierRateProperties {
+			private final MembershipTier tier;
+			private final GpProperties gp;
+			private final XpProperties xp;
+			private final GroupProperties group;
+			private final QuestProperties quest;
+			private final GatheringProperties gathering;
+			private final CraftingProperties crafting;
+			private final ApProperties ap;
+			private final DpProperties dp;
+			private final PvparenaProperties pvparena;
+			private final TollProperties toll;
+			private final PetProperties pet;
+
+			public TierRateProperties(MembershipTier tier) {
+				this.tier = tier;
+				this.gp = new GpProperties(tier);
+				this.xp = new XpProperties(tier);
+				this.group = new GroupProperties(tier);
+				this.quest = new QuestProperties(tier);
+				this.gathering = new GatheringProperties(tier);
+				this.crafting = new CraftingProperties(tier);
+				this.ap = new ApProperties(tier);
+				this.dp = new DpProperties(tier);
+				this.pvparena = new PvparenaProperties(tier);
+				this.toll = new TollProperties(tier);
+				this.pet = new PetProperties(tier);
+			}
+
+			public float getDrop() {
+				return switch (tier) {
+					case REGULAR -> DROP_RATE;
+					case PREMIUM -> PREMIUM_DROP_RATE;
+					case VIP -> VIP_DROP_RATE;
+				};
+			}
+
+			public void setDrop(float drop) {
+				switch (tier) {
+					case REGULAR -> DROP_RATE = drop;
+					case PREMIUM -> PREMIUM_DROP_RATE = drop;
+					case VIP -> VIP_DROP_RATE = drop;
+				}
+			}
+
+			public float getBook() {
+				return switch (tier) {
+					case REGULAR -> BOOK_RATE;
+					case PREMIUM -> PREMIUM_BOOK_RATE;
+					case VIP -> VIP_BOOK_RATE;
+				};
+			}
+
+			public void setBook(float book) {
+				switch (tier) {
+					case REGULAR -> BOOK_RATE = book;
+					case PREMIUM -> PREMIUM_BOOK_RATE = book;
+					case VIP -> VIP_BOOK_RATE = book;
+				}
+			}
+
+			public void setXp(XpProperties xp) {}
+
+			@Getter
+			public static class GpProperties {
+				private final PlayerProperties player;
+
+				public GpProperties(MembershipTier tier) {
+					this.player = new PlayerProperties(tier);
+				}
+
+				public static class PlayerProperties {
+					private final MembershipTier tier;
+
+					public PlayerProperties(MembershipTier tier) {
+						this.tier = tier;
+					}
+
+					public float getLoss() {
+						return switch (tier) {
+							case REGULAR -> GP_PLAYER_LOSS_RATE;
+							case PREMIUM -> PREMIUM_GP_PLAYER_LOSS_RATE;
+							case VIP -> VIP_GP_PLAYER_LOSS_RATE;
+						};
+					}
+
+					public void setLoss(float loss) {
+						switch (tier) {
+							case REGULAR -> GP_PLAYER_LOSS_RATE = loss;
+							case PREMIUM -> PREMIUM_GP_PLAYER_LOSS_RATE = loss;
+							case VIP -> VIP_GP_PLAYER_LOSS_RATE = loss;
+						}
+					}
+
+					public float getGain() {
+						return switch (tier) {
+							case REGULAR -> GP_PLAYER_GAIN_RATE;
+							case PREMIUM -> PREMIUM_GP_PLAYER_GAIN_RATE;
+							case VIP -> VIP_GP_PLAYER_GAIN_RATE;
+						};
+					}
+
+					public void setGain(float gain) {
+						switch (tier) {
+							case REGULAR -> GP_PLAYER_GAIN_RATE = gain;
+							case PREMIUM -> PREMIUM_GP_PLAYER_GAIN_RATE = gain;
+							case VIP -> VIP_GP_PLAYER_GAIN_RATE = gain;
+						}
+					}
+				}
+			}
+
+			@Getter
+			public static class XpProperties {
+				private final MembershipTier tier;
+				private final PlayerProperties player;
+
+				public XpProperties(MembershipTier tier) {
+					this.tier = tier;
+					this.player = new PlayerProperties(tier);
+				}
+
+				public static XpProperties valueOf(String value) {
+					try {
+						float val = Float.parseFloat(value);
+						XP_RATE = val;
+						PREMIUM_XP_RATE = val;
+						VIP_XP_RATE = val;
+					} catch (NumberFormatException ignored) {
+					}
+					return new XpProperties(MembershipTier.REGULAR);
+				}
+
+				public float getValue() {
+					return switch (tier) {
+						case REGULAR -> XP_RATE;
+						case PREMIUM -> PREMIUM_XP_RATE;
+						case VIP -> VIP_XP_RATE;
+					};
+				}
+
+				public void setValue(float value) {
+					switch (tier) {
+						case REGULAR -> XP_RATE = value;
+						case PREMIUM -> PREMIUM_XP_RATE = value;
+						case VIP -> VIP_XP_RATE = value;
+					}
+				}
+
+				public static class PlayerProperties {
+					private final MembershipTier tier;
+
+					public PlayerProperties(MembershipTier tier) {
+						this.tier = tier;
+					}
+
+					public float getGain() {
+						return switch (tier) {
+							case REGULAR -> XP_PLAYER_GAIN_RATE;
+							case PREMIUM -> PREMIUM_XP_PLAYER_GAIN_RATE;
+							case VIP -> VIP_XP_PLAYER_GAIN_RATE;
+						};
+					}
+
+					public void setGain(float gain) {
+						switch (tier) {
+							case REGULAR -> XP_PLAYER_GAIN_RATE = gain;
+							case PREMIUM -> PREMIUM_XP_PLAYER_GAIN_RATE = gain;
+							case VIP -> VIP_XP_PLAYER_GAIN_RATE = gain;
+						}
+					}
+				}
+			}
+
+			public static class GroupProperties {
+				private final MembershipTier tier;
+
+				public GroupProperties(MembershipTier tier) {
+					this.tier = tier;
+				}
+
+				public float getXp() {
+					return switch (tier) {
+						case REGULAR -> GROUPXP_RATE;
+						case PREMIUM -> PREMIUM_GROUPXP_RATE;
+						case VIP -> VIP_GROUPXP_RATE;
+					};
+				}
+
+				public void setXp(float xp) {
+					switch (tier) {
+						case REGULAR -> GROUPXP_RATE = xp;
+						case PREMIUM -> PREMIUM_GROUPXP_RATE = xp;
+						case VIP -> VIP_GROUPXP_RATE = xp;
+					}
+				}
+			}
+
+			public static class QuestProperties {
+				private final MembershipTier tier;
+
+				public QuestProperties(MembershipTier tier) {
+					this.tier = tier;
+				}
+
+				public float getXp() {
+					return switch (tier) {
+						case REGULAR -> QUEST_XP_RATE;
+						case PREMIUM -> PREMIUM_QUEST_XP_RATE;
+						case VIP -> VIP_QUEST_XP_RATE;
+					};
+				}
+
+				public void setXp(float xp) {
+					switch (tier) {
+						case REGULAR -> QUEST_XP_RATE = xp;
+						case PREMIUM -> PREMIUM_QUEST_XP_RATE = xp;
+						case VIP -> VIP_QUEST_XP_RATE = xp;
+					}
+				}
+
+				public float getKinah() {
+					return switch (tier) {
+						case REGULAR -> QUEST_KINAH_RATE;
+						case PREMIUM -> PREMIUM_QUEST_KINAH_RATE;
+						case VIP -> VIP_QUEST_KINAH_RATE;
+					};
+				}
+
+				public void setKinah(float kinah) {
+					switch (tier) {
+						case REGULAR -> QUEST_KINAH_RATE = kinah;
+						case PREMIUM -> PREMIUM_QUEST_KINAH_RATE = kinah;
+						case VIP -> VIP_QUEST_KINAH_RATE = kinah;
+					}
+				}
+
+				public float getAp() {
+					return switch (tier) {
+						case REGULAR -> QUEST_AP_RATE;
+						case PREMIUM -> PREMIUM_QUEST_AP_RATE;
+						case VIP -> VIP_QUEST_AP_RATE;
+					};
+				}
+
+				public void setAp(float ap) {
+					switch (tier) {
+						case REGULAR -> QUEST_AP_RATE = ap;
+						case PREMIUM -> PREMIUM_QUEST_AP_RATE = ap;
+						case VIP -> VIP_QUEST_AP_RATE = ap;
+					}
+				}
+
+				public float getGp() {
+					return switch (tier) {
+						case REGULAR -> QUEST_GP_RATE;
+						case PREMIUM -> PREMIUM_QUEST_GP_RATE;
+						case VIP -> VIP_QUEST_GP_RATE;
+					};
+				}
+
+				public void setGp(float gp) {
+					switch (tier) {
+						case REGULAR -> QUEST_GP_RATE = gp;
+						case PREMIUM -> PREMIUM_QUEST_GP_RATE = gp;
+						case VIP -> VIP_QUEST_GP_RATE = gp;
+					}
+				}
+
+				public float getAbyss_op() {
+					return switch (tier) {
+						case REGULAR -> QUEST_ABYSS_OP_RATE;
+						case PREMIUM -> PREMIUM_QUEST_ABYSS_OP_RATE;
+						case VIP -> VIP_QUEST_ABYSS_OP_RATE;
+					};
+				}
+
+				public void setAbyss_op(float abyssOp) {
+					switch (tier) {
+						case REGULAR -> QUEST_ABYSS_OP_RATE = abyssOp;
+						case PREMIUM -> PREMIUM_QUEST_ABYSS_OP_RATE = abyssOp;
+						case VIP -> VIP_QUEST_ABYSS_OP_RATE = abyssOp;
+					}
+				}
+
+				public float getExp_boost() {
+					return switch (tier) {
+						case REGULAR -> QUEST_EXP_BOOST_RATE;
+						case PREMIUM -> PREMIUM_QUEST_EXP_BOOST_RATE;
+						case VIP -> VIP_QUEST_EXP_BOOST_RATE;
+					};
+				}
+
+				public void setExp_boost(float expBoost) {
+					switch (tier) {
+						case REGULAR -> QUEST_EXP_BOOST_RATE = expBoost;
+						case PREMIUM -> PREMIUM_QUEST_EXP_BOOST_RATE = expBoost;
+						case VIP -> VIP_QUEST_EXP_BOOST_RATE = expBoost;
+					}
+				}
+			}
+
+			public static class GatheringProperties {
+				private final MembershipTier tier;
+
+				public GatheringProperties(MembershipTier tier) {
+					this.tier = tier;
+				}
+
+				public float getXp() {
+					return switch (tier) {
+						case REGULAR -> GATHERING_XP_RATE;
+						case PREMIUM -> PREMIUM_GATHERING_XP_RATE;
+						case VIP -> VIP_GATHERING_XP_RATE;
+					};
+				}
+
+				public void setXp(float xp) {
+					switch (tier) {
+						case REGULAR -> GATHERING_XP_RATE = xp;
+						case PREMIUM -> PREMIUM_GATHERING_XP_RATE = xp;
+						case VIP -> VIP_GATHERING_XP_RATE = xp;
+					}
+				}
+
+				public int getCount() {
+					return switch (tier) {
+						case REGULAR -> GATHERING_COUNT_RATE;
+						case PREMIUM -> PREMIUM_GATHERING_COUNT_RATE;
+						case VIP -> VIP_GATHERING_COUNT_RATE;
+					};
+				}
+
+				public void setCount(int count) {
+					switch (tier) {
+						case REGULAR -> GATHERING_COUNT_RATE = count;
+						case PREMIUM -> PREMIUM_GATHERING_COUNT_RATE = count;
+						case VIP -> VIP_GATHERING_COUNT_RATE = count;
+					}
+				}
+			}
+
+			public static class CraftingProperties {
+				private final MembershipTier tier;
+
+				public CraftingProperties(MembershipTier tier) {
+					this.tier = tier;
+				}
+
+				public float getXp() {
+					return switch (tier) {
+						case REGULAR -> CRAFTING_XP_RATE;
+						case PREMIUM -> PREMIUM_CRAFTING_XP_RATE;
+						case VIP -> VIP_CRAFTING_XP_RATE;
+					};
+				}
+
+				public void setXp(float xp) {
+					switch (tier) {
+						case REGULAR -> CRAFTING_XP_RATE = xp;
+						case PREMIUM -> PREMIUM_CRAFTING_XP_RATE = xp;
+						case VIP -> VIP_CRAFTING_XP_RATE = xp;
+					}
+				}
+			}
+
+			@Getter
+			public static class ApProperties {
+				private final MembershipTier tier;
+				private final PlayerProperties player;
+
+				public ApProperties(MembershipTier tier) {
+					this.tier = tier;
+					this.player = new PlayerProperties(tier);
+				}
+
+				public float getNpc() {
+					return switch (tier) {
+						case REGULAR -> AP_NPC_RATE;
+						case PREMIUM -> PREMIUM_AP_NPC_RATE;
+						case VIP -> VIP_AP_NPC_RATE;
+					};
+				}
+
+				public void setNpc(float npc) {
+					switch (tier) {
+						case REGULAR -> AP_NPC_RATE = npc;
+						case PREMIUM -> PREMIUM_AP_NPC_RATE = npc;
+						case VIP -> VIP_AP_NPC_RATE = npc;
+					}
+				}
+
+				public static class PlayerProperties {
+					private final MembershipTier tier;
+
+					public PlayerProperties(MembershipTier tier) {
+						this.tier = tier;
+					}
+
+					public float getGain() {
+						return switch (tier) {
+							case REGULAR -> AP_PLAYER_GAIN_RATE;
+							case PREMIUM -> PREMIUM_AP_PLAYER_GAIN_RATE;
+							case VIP -> VIP_AP_PLAYER_GAIN_RATE;
+						};
+					}
+
+					public void setGain(float gain) {
+						switch (tier) {
+							case REGULAR -> AP_PLAYER_GAIN_RATE = gain;
+							case PREMIUM -> PREMIUM_AP_PLAYER_GAIN_RATE = gain;
+							case VIP -> VIP_AP_PLAYER_GAIN_RATE = gain;
+						}
+					}
+
+					public float getLoss() {
+						return switch (tier) {
+							case REGULAR -> AP_PLAYER_LOSS_RATE;
+							case PREMIUM -> PREMIUM_AP_PLAYER_LOSS_RATE;
+							case VIP -> VIP_AP_PLAYER_LOSS_RATE;
+						};
+					}
+
+					public void setLoss(float loss) {
+						switch (tier) {
+							case REGULAR -> AP_PLAYER_LOSS_RATE = loss;
+							case PREMIUM -> PREMIUM_AP_PLAYER_LOSS_RATE = loss;
+							case VIP -> VIP_AP_PLAYER_LOSS_RATE = loss;
+						}
+					}
+				}
+			}
+
+			public static class DpProperties {
+				private final MembershipTier tier;
+
+				public DpProperties(MembershipTier tier) {
+					this.tier = tier;
+				}
+
+				public float getNpc() {
+					return switch (tier) {
+						case REGULAR -> DP_NPC_RATE;
+						case PREMIUM -> PREMIUM_DP_NPC_RATE;
+						case VIP -> VIP_DP_NPC_RATE;
+					};
+				}
+
+				public void setNpc(float npc) {
+					switch (tier) {
+						case REGULAR -> DP_NPC_RATE = npc;
+						case PREMIUM -> PREMIUM_DP_NPC_RATE = npc;
+						case VIP -> VIP_DP_NPC_RATE = npc;
+					}
+				}
+
+				public float getPlayer() {
+					return switch (tier) {
+						case REGULAR -> DP_PLAYER_RATE;
+						case PREMIUM -> PREMIUM_DP_PLAYER_RATE;
+						case VIP -> VIP_DP_PLAYER_RATE;
+					};
+				}
+
+				public void setPlayer(float player) {
+					switch (tier) {
+						case REGULAR -> DP_PLAYER_RATE = player;
+						case PREMIUM -> PREMIUM_DP_PLAYER_RATE = player;
+						case VIP -> VIP_DP_PLAYER_RATE = player;
+					}
+				}
+			}
+
+			public static class PvparenaProperties {
+				private final MembershipTier tier;
+
+				public PvparenaProperties(MembershipTier tier) {
+					this.tier = tier;
+				}
+
+				public float getDiscipline() {
+					return switch (tier) {
+						case REGULAR -> PVP_ARENA_DISCIPLINE_REWARD_RATE;
+						case PREMIUM -> PREMIUM_PVP_ARENA_DISCIPLINE_REWARD_RATE;
+						case VIP -> VIP_PVP_ARENA_DISCIPLINE_REWARD_RATE;
+					};
+				}
+
+				public void setDiscipline(float discipline) {
+					switch (tier) {
+						case REGULAR -> PVP_ARENA_DISCIPLINE_REWARD_RATE = discipline;
+						case PREMIUM -> PREMIUM_PVP_ARENA_DISCIPLINE_REWARD_RATE = discipline;
+						case VIP -> VIP_PVP_ARENA_DISCIPLINE_REWARD_RATE = discipline;
+					}
+				}
+
+				public float getChaos() {
+					return switch (tier) {
+						case REGULAR -> PVP_ARENA_CHAOS_REWARD_RATE;
+						case PREMIUM -> PREMIUM_PVP_ARENA_CHAOS_REWARD_RATE;
+						case VIP -> VIP_PVP_ARENA_CHAOS_REWARD_RATE;
+					};
+				}
+
+				public void setChaos(float chaos) {
+					switch (tier) {
+						case REGULAR -> PVP_ARENA_CHAOS_REWARD_RATE = chaos;
+						case PREMIUM -> PREMIUM_PVP_ARENA_CHAOS_REWARD_RATE = chaos;
+						case VIP -> VIP_PVP_ARENA_CHAOS_REWARD_RATE = chaos;
+					}
+				}
+
+				public float getHarmony() {
+					return switch (tier) {
+						case REGULAR -> PVP_ARENA_HARMONY_REWARD_RATE;
+						case PREMIUM -> PREMIUM_PVP_ARENA_HARMONY_REWARD_RATE;
+						case VIP -> VIP_PVP_ARENA_HARMONY_REWARD_RATE;
+					};
+				}
+
+				public void setHarmony(float harmony) {
+					switch (tier) {
+						case REGULAR -> PVP_ARENA_HARMONY_REWARD_RATE = harmony;
+						case PREMIUM -> PREMIUM_PVP_ARENA_HARMONY_REWARD_RATE = harmony;
+						case VIP -> VIP_PVP_ARENA_HARMONY_REWARD_RATE = harmony;
+					}
+				}
+
+				public float getGlory() {
+					return switch (tier) {
+						case REGULAR -> PVP_ARENA_GLORY_REWARD_RATE;
+						case PREMIUM -> PREMIUM_PVP_ARENA_GLORY_REWARD_RATE;
+						case VIP -> VIP_PVP_ARENA_GLORY_REWARD_RATE;
+					};
+				}
+
+				public void setGlory(float glory) {
+					switch (tier) {
+						case REGULAR -> PVP_ARENA_GLORY_REWARD_RATE = glory;
+						case PREMIUM -> PREMIUM_PVP_ARENA_GLORY_REWARD_RATE = glory;
+						case VIP -> VIP_PVP_ARENA_GLORY_REWARD_RATE = glory;
+					}
+				}
+			}
+
+			@Getter
+			public static class TollProperties {
+				private final MembershipTier tier;
+
+				public TollProperties(MembershipTier tier) {
+					this.tier = tier;
+				}
+
+				public float getReward() {
+					return switch (tier) {
+						case REGULAR -> TOLL_REWARD_RATE;
+						case PREMIUM -> PREMIUM_TOLL_REWARD_RATE;
+						case VIP -> VIP_TOLL_REWARD_RATE;
+					};
+				}
+
+				public void setReward(float reward) {
+					switch (tier) {
+						case REGULAR -> TOLL_REWARD_RATE = reward;
+						case PREMIUM -> PREMIUM_TOLL_REWARD_RATE = reward;
+						case VIP -> VIP_TOLL_REWARD_RATE = reward;
+					}
+				}
+			}
+
+			public static class PetProperties {
+				private final MembershipTier tier;
+
+				public PetProperties(MembershipTier tier) {
+					this.tier = tier;
+				}
+
+				public float getFeeding() {
+					return switch (tier) {
+						case REGULAR -> PET_FEEDING_RATE;
+						case PREMIUM -> PREMIUM_PET_FEEDING_RATE;
+						case VIP -> VIP_PET_FEEDING_RATE;
+					};
+				}
+
+				public void setFeeding(float feeding) {
+					switch (tier) {
+						case REGULAR -> PET_FEEDING_RATE = feeding;
+						case PREMIUM -> PREMIUM_PET_FEEDING_RATE = feeding;
+						case VIP -> VIP_PET_FEEDING_RATE = feeding;
+					}
+				}
+			}
+		}
+	}
+
+	public static class DamageProperties {
+		public float getMultiplier() {
+			return DAMAGE_MULTIPLIER;
+		}
+
+		public void setMultiplier(float multiplier) {
+			DAMAGE_MULTIPLIER = multiplier;
+		}
+	}
 }

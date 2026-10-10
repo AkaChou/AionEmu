@@ -12,7 +12,6 @@ import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.configs.main.LoggingConfig;
@@ -41,17 +40,17 @@ public class HTMLService {
 	private final GuideDAO guideDAO;
 
 	public HTMLService() {
-		this(safeDao(GuideDAO.class, com.aionemu.gameserver.dao.impl.GuideDAO::new));
+		this(safeGuideDao());
 	}
 
-	private static <T extends com.aionemu.commons.database.dao.DAO> T safeDao(Class<T> daoClass, java.util.function.Supplier<T> fallback) {
+	private static GuideDAO safeGuideDao() {
 		if (DAOManager.isInitialized()) {
 			try {
-				return DAOManager.getDAO(daoClass);
+				return DAOManager.getDAO(GuideDAO.class);
 			} catch (Exception ignored) {
 			}
 		}
-		return fallback.get();
+		return new com.aionemu.gameserver.dao.impl.GuideDAO();
 	}
 
 	public static HTMLService getInstance() {
@@ -92,16 +91,6 @@ public class HTMLService {
 	}
 
 	/**
-	 * 向全体在线玩家推送同一份问卷 HTML。
-	 * Pushes the same survey HTML to all online players.
-	 * HTML content
-	 */
-	public static void pushSurvey(final String html) {
-		final int messageId = GameWorldBootstrapServices.idFactory().nextId();
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> sendData(player, messageId, html));
-	}
-
-	/**
 	 * 向指定玩家展示 HTML 页面。
 	 * Shows an HTML page to the given player.
 	 * 玩家 / player
@@ -119,19 +108,14 @@ public class HTMLService {
 	 * HTML content
 	 */
 	public static void sendData(Player player, int messageId, String html) {
-		byte packet_count = (byte) (html.length() / (Short.MAX_VALUE - 8) + 1);
-		if (packet_count < 256) {
-			for (byte i = 0; i < packet_count; i++) {
+		int packetCount = html.length() / (Short.MAX_VALUE - 8) + 1;
+		if (packetCount < 256) {
+			for (int i = 0; i < packetCount; i++) {
 				try {
-					int from = i * (Short.MAX_VALUE - 8), to = (i + 1) * (Short.MAX_VALUE - 8);
-					if (from < 0) {
-						from = 0;
-					}
-					if (to > html.length()) {
-						to = html.length();
-					}
+					int from = i * (Short.MAX_VALUE - 8);
+					int to = Math.min((i + 1) * (Short.MAX_VALUE - 8), html.length());
 					String sub = html.substring(from, to);
-					player.getClientConnection().sendPacket(new SM_QUESTIONNAIRE(messageId, i, packet_count, sub));
+					player.getClientConnection().sendPacket(new SM_QUESTIONNAIRE(messageId, (byte) i, (byte) packetCount, sub));
 				} catch (Exception e) {
 					log.error(I18n.get("log.5db6e71d2d57"), e);
 				}
@@ -215,12 +199,9 @@ public class HTMLService {
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_DICE_INVEN_ERROR);
 				return;
 			}
-			List<SurveyTemplate> templates = null;
-			if (template.getSurveys().size() != template.getRewardCount()) {
-				templates = getSurveyTemplates(template.getSurveys(), items);
-			} else {
-				templates = template.getSurveys();
-			}
+			List<SurveyTemplate> templates = template.getSurveys().size() != template.getRewardCount()
+					? getSurveyTemplates(template.getSurveys(), items)
+					: template.getSurveys();
 			if (templates.isEmpty()) {
 				return;
 			}

@@ -6,6 +6,7 @@ import com.aionemu.gameserver.configs.Config;
 import com.aionemu.gameserver.dao.LimitedQuestDAO;
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
 import com.aionemu.gameserver.model.templates.QuestTemplate;
+import com.aionemu.gameserver.questEngine.definition.QuestMetadata;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.xml.stream.XMLInputFactory;
@@ -59,11 +60,6 @@ public final class LimitedQuestService {
 		return getInstance().acquire(template.getId(), template.getMaxCountLimitedQuest());
 	}
 
-	/** Whether starting this quest requires the global, transaction-external quota mutation. */
-	public static boolean requiresAcquisition(QuestTemplate template) {
-		return requiresAcquisitionByMetadata(template.getId(), template.getMaxCountLimitedQuest());
-	}
-
 	/** Canonical metadata entry point used by typed quest-start eligibility. */
 	public static boolean requiresAcquisitionByMetadata(int questId, int maxCount) {
 		return getInstance().requiresAcquisition(questId, maxCount);
@@ -89,7 +85,7 @@ public final class LimitedQuestService {
 	boolean chargeConfigured(int questId, boolean chargeMaxCount) {
 		Limit limit = limits.get(questId);
 		if (limit == null) {
-			var metadata = GameEngineServices.questEngine().questCatalog().findMetadata(questId).orElse(null);
+			QuestMetadata metadata = GameEngineServices.questEngine().questCatalog().findMetadata(questId).orElse(null);
 			if (metadata != null && metadata.maxCountLimitedQuest() > 1) {
 				limit = new Limit(metadata.maxCountLimitedQuest(), metadata.countRecoverLimitedQuest());
 			}
@@ -105,7 +101,7 @@ public final class LimitedQuestService {
 	static Map<Integer, Limit> loadLimitsSafe() {
 		try {
 			File file = Config.definitionFile(DEFINITIONS_FILE);
-			if (file != null && file.exists()) {
+			if (file.exists()) {
 				return loadLimits(file);
 			}
 		} catch (Exception e) {
