@@ -17,6 +17,7 @@ import com.aionemu.gameserver.network.aion.iteminfo.ItemInfoBlob.ItemBlobType;
  * Blob for mana sockets and enchant-related info.
  * Writes soul-bind, enchant level, skin, optional sockets, mana stones, god stone,
  * dye, Idian, plume bonuses, amplification, skill boost, and Luna reskin data.
+ *
  * @author -Nemesiss-
  */
 public class ManaStoneInfoBlobEntry extends ItemBlobEntry {
@@ -46,7 +47,7 @@ public class ManaStoneInfoBlobEntry extends ItemBlobEntry {
 	 * Sets the optional-socket override (for the reidentify preview).
 	 *
 	 * @param overrideSocket 覆盖的随机孔位，负值表示使用物品当前值 /
-	 *        overridden optional socket, negative to use the item's current value
+	 *                       overridden optional socket, negative to use the item's current value
 	 */
 	void setOverrideSocket(int overrideSocket) {
 		this.overrideSocket = overrideSocket;
@@ -57,7 +58,7 @@ public class ManaStoneInfoBlobEntry extends ItemBlobEntry {
 	 * Sets the enchant-bonus override (for the reidentify preview).
 	 *
 	 * @param overrideEnchantBonus 覆盖的附魔加成，负值表示使用物品当前值 /
-	 *        overridden enchant bonus, negative to use the item's current value
+	 *                             overridden enchant bonus, negative to use the item's current value
 	 */
 	void setOverrideEnchantBonus(int overrideEnchantBonus) {
 		this.overrideEnchantBonus = overrideEnchantBonus;
@@ -81,7 +82,7 @@ public class ManaStoneInfoBlobEntry extends ItemBlobEntry {
 		int itemColor = item.getItemColor();
 		int dyeExpiration = item.getColorTimeLeft();
 		if ((dyeExpiration > 0 && item.getColorExpireTime() > 0 || dyeExpiration == 0 && item.getColorExpireTime() == 0)
-				&& item.getItemTemplate().isItemDyePermitted()) {
+			&& item.getItemTemplate().isItemDyePermitted()) {
 			writeC(buf, itemColor == 0 ? 0 : 1);
 			writeD(buf, itemColor);
 			writeD(buf, 0);
@@ -146,41 +147,41 @@ public class ManaStoneInfoBlobEntry extends ItemBlobEntry {
 			writeD(buf, 42);
 			writeD(buf, item.getAuthorize() * 150);
 			if (item.getItemTemplate().getTemperingTableId() == 10051
-					|| item.getItemTemplate().getTemperingTableId() == 10063
-					|| item.getItemTemplate().getTemperingTableId() == 10107) {
+				|| item.getItemTemplate().getTemperingTableId() == 10063
+				|| item.getItemTemplate().getTemperingTableId() == 10107) {
 				writeD(buf, 30);
 				writeD(buf, item.getAuthorize() * 4);
 				writeD(buf, 0);
 				writeD(buf, 0);
 			} else if (item.getItemTemplate().getTemperingTableId() == 10052
-					|| item.getItemTemplate().getTemperingTableId() == 10064
-					|| item.getItemTemplate().getTemperingTableId() == 10108) {
+				|| item.getItemTemplate().getTemperingTableId() == 10064
+				|| item.getItemTemplate().getTemperingTableId() == 10108) {
 				writeD(buf, 35);
 				writeD(buf, item.getAuthorize() * 20);
 				writeD(buf, 0);
 				writeD(buf, 0);
 			} else if (item.getItemTemplate().getTemperingTableId() == 10056
-					|| item.getItemTemplate().getTemperingTableId() == 10065
-					|| item.getItemTemplate().getTemperingTableId() == 10109) {
+				|| item.getItemTemplate().getTemperingTableId() == 10065
+				|| item.getItemTemplate().getTemperingTableId() == 10109) {
 				writeD(buf, 33);
 				writeD(buf, item.getAuthorize() * 12);
 				writeD(buf, 0);
 				writeD(buf, 0);
 			} else if (item.getItemTemplate().getTemperingTableId() == 10057
-					|| item.getItemTemplate().getTemperingTableId() == 10066
-					|| item.getItemTemplate().getTemperingTableId() == 10110) {
+				|| item.getItemTemplate().getTemperingTableId() == 10066
+				|| item.getItemTemplate().getTemperingTableId() == 10110) {
 				writeD(buf, 36);
 				writeD(buf, item.getAuthorize() * 8);
 				writeD(buf, 0);
 				writeD(buf, 0);
 			} else if (item.getItemTemplate().getTemperingTableId() == 10103
-					|| item.getItemTemplate().getTemperingTableId() == 10105) {
+				|| item.getItemTemplate().getTemperingTableId() == 10105) {
 				writeD(buf, 32);
 				writeD(buf, item.getAuthorize() * 16);
 				writeD(buf, 0);
 				writeD(buf, 0);
 			} else if (item.getItemTemplate().getTemperingTableId() == 10104
-					|| item.getItemTemplate().getTemperingTableId() == 10106) {
+				|| item.getItemTemplate().getTemperingTableId() == 10106) {
 				writeD(buf, 34);
 				writeD(buf, item.getAuthorize() * 8);
 				writeD(buf, 0);
@@ -216,7 +217,7 @@ public class ManaStoneInfoBlobEntry extends ItemBlobEntry {
 				}
 			}
 			if (item.getItemTemplate().getSpecialSlots() > 0) {
-				if (ancientStones.size() > 0) {
+				if (!ancientStones.isEmpty()) {
 					for (ManaStone ancientStone : ancientStones) {
 						if (count == 6) {
 							break;

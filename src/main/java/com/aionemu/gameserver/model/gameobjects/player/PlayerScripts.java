@@ -21,6 +21,7 @@ import com.aionemu.gameserver.services.player.PlayerService;
 /**
  * 玩家 Scripts 游戏对象。
  * Player Scripts game object.
+ *
  * @author Rolandas
  */
 @Slf4j
@@ -37,12 +38,16 @@ public class PlayerScripts {
 		this.houseObjId = houseObjectId;
 	}
 
-	/** 返回 scripts / Returns the scripts */
+	/**
+	 * 返回 scripts / Returns the scripts
+	 */
 	public Map<Integer, PlayerScript> getScripts() {
 		return Collections.unmodifiableMap(scripts);
 	}
 
-	/** 添加 script / Adds script */
+	/**
+	 * 添加 script / Adds script
+	 */
 	public boolean addScript(int position, String scriptXML) {
 		PlayerScript script = scripts.get(position);
 
@@ -67,36 +72,9 @@ public class PlayerScripts {
 		return script == null;
 	}
 
-	/** 返回 uncompressed script / Returns the uncompressed script */
-	public String getUncompressedScript(int position) {
-		if (!scripts.containsKey(position)) {
-			return null;
-		}
-
-		PlayerScript script = scripts.get(position);
-		byte[] bytes = null;
-
-		script.readLock();
-		bytes = script.getCompressedBytes();
-		script.readUnlock();
-
-		if (bytes == null) {
-			return null;
-		}
-
-		if (bytes.length == 0) {
-			return StringUtils.EMPTY;
-		}
-
-		try {
-			return decompress(bytes);
-		} catch (Exception ex) {
-			log.error(I18n.get("log.4c634fc1f594"), ex);
-			return null;
-		}
-	}
-
-	/** 添加 script / Adds script */
+	/**
+	 * 添加 script / Adds script
+	 */
 	public boolean addScript(int position, byte[] compressedXML, int uncompressedSize) {
 		String content = null;
 		int size = -1;
@@ -135,24 +113,9 @@ public class PlayerScripts {
 		return true;
 	}
 
-	/** 移除 script / Removes script */
-	public boolean removeScript(int position) {
-		PlayerScript script = scripts.get(position);
-
-		script.readLock();
-		byte[] bytes = script.getCompressedBytes();
-		script.readUnlock();
-
-		if (bytes == null) {
-			return false;
-		} else {
-			script.setData(null, -1);
-			PlayerService.daos().houseScriptsDAO().deleteScript(houseObjId, position);
-		}
-		return true;
-	}
-
-	/** 返回大小 / Returns the size*/
+	/**
+	 * 返回大小 / Returns the size
+	 */
 	public int getSize() {
 		return 8;
 	}
@@ -160,6 +123,7 @@ public class PlayerScripts {
 	/**
 	 * 将文本以 UTF-16LE 编码后 Deflate 压缩。
 	 * Encode text as UTF-16LE and Deflate-compress it.
+	 *
 	 * @param text 源文本 / source text
 	 * @return 压缩字节 / compressed bytes
 	 * @throws Exception 压缩失败时 / on compress failure
@@ -189,6 +153,7 @@ public class PlayerScripts {
 	/**
 	 * 解压字节数组为 UTF-16LE 字符串。
 	 * Decompress a byte array into a UTF-16LE string.
+	 *
 	 * @param bytes 压缩数据 / compressed bytes
 	 * @return 解压后的文本 / decompressed text
 	 * @throws Exception 解压失败时 / on decompress failure

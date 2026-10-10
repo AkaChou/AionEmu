@@ -20,12 +20,15 @@ import lombok.Setter;
 /**
  * 技能外观列表。
  * Skill Skin List model.
+ *
  * @author Rinzler (Encom)
  */
 public class SkillSkinList {
 
 	private final Map<Integer, SkillSkin> skillskins;
-	/** 返回所有者 / Returns the owner*/
+	/**
+	 * 返回所有者 / Returns the owner
+	 */
 	@Getter
 	@Setter
 	private Player owner;
@@ -35,12 +38,16 @@ public class SkillSkinList {
 		owner = null;
 	}
 
-	/** 是否包含。 / Contains. */
+	/**
+	 * 是否包含。 / Contains.
+	 */
 	public boolean contains(int skinId) {
 		return skillskins.containsKey(skinId);
 	}
 
-	/** 添加条目。 / Adds entry. */
+	/**
+	 * 添加条目。 / Adds entry.
+	 */
 	public void addEntry(int skinId, int remaining, int active) {
 		SkillSkinTemplate sst = DataManager.SKILL_SKIN_DATA.getSkillSkinTemplate(skinId);
 		if (sst == null) {
@@ -49,7 +56,9 @@ public class SkillSkinList {
 		skillskins.put(skinId, new SkillSkin(sst, skinId, remaining, active));
 	}
 
-	/** 添加技能外观。 / Adds skill skin. */
+	/**
+	 * 添加技能外观。 / Adds skill skin.
+	 */
 	public boolean addSkillSkin(int skinId, int time, int expireTime) {
 		SkillSkinTemplate sst = DataManager.SKILL_SKIN_DATA.getSkillSkinTemplate(skinId);
 		if (sst == null) {
@@ -57,8 +66,8 @@ public class SkillSkinList {
 		}
 		if (owner != null) {
 			SkillSkin skillSkin = new SkillSkin(sst, skinId, expireTime, 1); // expireTime = System.currentTimeMillis() / 1000
-																				// + minutes * 60（在 SkillAnimationAction 中计算）
-																				// + minutes * 60 (Calculated in SkillAnimationAction)
+			// + minutes * 60（在 SkillAnimationAction 中计算）
+			// + minutes * 60 (Calculated in SkillAnimationAction)
 			if (!skillskins.containsKey(skinId)) {
 				skillskins.put(skinId, skillSkin);
 				if (time != 0) {
@@ -71,14 +80,16 @@ public class SkillSkinList {
 			}
 			PacketSendUtility.sendPacket(owner, SM_SYSTEM_MESSAGE.STR_MSG_GET_ITEM(sst.getName()));
 			PacketSendUtility.sendPacket(owner, new SM_SKILL_ANIMATION(skinId, time)); // time = templateTime * 60
-																						// （在 SkillAnimationAction 中计算） / (Calculated
-																						// in SkillAnimationAction)
+			// （在 SkillAnimationAction 中计算） / (Calculated
+			// in SkillAnimationAction)
 			return true;
 		}
 		return false;
 	}
 
-	/** 移除技能外观。 / Removes skill skin. */
+	/**
+	 * 移除技能外观。 / Removes skill skin.
+	 */
 	public void removeSkillSkin(int skinId) {
 		if (!skillskins.containsKey(skinId)) {
 			return;
@@ -88,14 +99,18 @@ public class SkillSkinList {
 		PlayerService.daos().playerSkillSkinListDAO().removeSkillSkin(owner.getObjectId(), skinId);
 	}
 
-	/** 设置 active / Sets the active */
+	/**
+	 * 设置 active / Sets the active
+	 */
 	public void setActive(int skinId) {
 		PlayerService.daos().playerSkillSkinListDAO().setActive(owner.getObjectId(), skinId);
 		owner.setSkillSkinList(PlayerService.daos().playerSkillSkinListDAO().loadSkillSkinList(owner.getObjectId()));
 		PacketSendUtility.sendPacket(owner, new SM_SKILL_ANIMATION(owner));
 	}
 
-	/** 设置 deactive / Sets the deactive */
+	/**
+	 * 设置 deactive / Sets the deactive
+	 */
 	public void setDeactive(int skillId) {
 		int skinIdToremove = 0;
 		SkillTemplate skillGroup = DataManager.SKILL_DATA.getSkillTemplate(skillId);
@@ -103,7 +118,7 @@ public class SkillSkinList {
 			for (SkillSkin skillSkin : owner.getSkillSkinList().getSkillSkins()) {
 				if (skillSkin.getTemplate() != null) {
 					if (skillSkin.getTemplate().getSkillGroup().equalsIgnoreCase(skillGroup.getSkillGroup())
-							&& skillSkin.getIsActive() == 1) {
+						&& skillSkin.getIsActive() == 1) {
 						skinIdToremove = skillSkin.getId();
 						break;
 					}
@@ -115,17 +130,19 @@ public class SkillSkinList {
 		PacketSendUtility.sendPacket(owner, new SM_SKILL_ANIMATION(owner));
 	}
 
-	/** 返回皮肤 ID / Returns the skin id */
+	/**
+	 * 返回皮肤 ID / Returns the skin id
+	 */
 	public int getSkinId(int skillId) {
 		int skinId = 0;
-		if (skillId == 0 || getOwner().getSkillSkinList() == null || getOwner() == null) {
+		if (skillId == 0 || getOwner() == null || getOwner().getSkillSkinList() == null) {
 			return 0;
 		}
 		for (SkillSkin skillSkin : getOwner().getSkillSkinList().getSkillSkins()) {
 			if (DataManager.SKILL_DATA.getSkillTemplate(skillId).getSkillGroup() != null) {
 				if (skillSkin.getTemplate().getSkillGroup()
-						.equalsIgnoreCase(DataManager.SKILL_DATA.getSkillTemplate(skillId).getSkillGroup())
-						&& skillSkin.getIsActive() == 1) {
+					.equalsIgnoreCase(DataManager.SKILL_DATA.getSkillTemplate(skillId).getSkillGroup())
+					&& skillSkin.getIsActive() == 1) {
 					skinId = skillSkin.getId();
 				}
 			}
@@ -133,12 +150,16 @@ public class SkillSkinList {
 		return skinId;
 	}
 
-	/** 大小 / size. */
+	/**
+	 * 大小 / size.
+	 */
 	public int size() {
 		return skillskins.size();
 	}
 
-	/** 返回 skill skins / Returns the skill skins */
+	/**
+	 * 返回 skill skins / Returns the skill skins
+	 */
 	public Collection<SkillSkin> getSkillSkins() {
 		return skillskins.values();
 	}

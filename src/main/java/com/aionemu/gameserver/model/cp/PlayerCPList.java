@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.model.cp;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.IdentityHashMap;
 import java.util.List;
@@ -29,19 +28,23 @@ public final class PlayerCPList {
 		}
 	}
 
-	/** 返回全部创意点 / Returns the all cp*/
+	/**
+	 * 返回全部创意点 / Returns the all cp
+	 */
 	public PlayerCPEntry[] getAllCP() {
-		List<PlayerCPEntry> allCp = new ArrayList<>();
-		allCp.addAll(entry.values());
-		return allCp.toArray(new PlayerCPEntry[allCp.size()]);
+		return entry.values().toArray(new PlayerCPEntry[0]);
 	}
 
-	/** 返回基础创意点 / Returns the basic cp */
+	/**
+	 * 返回基础创意点 / Returns the basic cp
+	 */
 	public PlayerCPEntry[] getBasicCP() {
-		return entry.values().toArray(new PlayerCPEntry[entry.size()]);
+		return entry.values().toArray(new PlayerCPEntry[0]);
 	}
 
-	/** Captures the live creativity-point entries for caller-owned transaction rollback. */
+	/**
+	 * Captures the live creativity-point entries for caller-owned transaction rollback.
+	 */
 	public synchronized TransactionSnapshot transactionSnapshot() {
 		return new TransactionSnapshot();
 	}
@@ -57,7 +60,9 @@ public final class PlayerCPList {
 			}
 		}
 
-		/** Restores CP membership and persistence states exactly once. */
+		/**
+		 * Restores CP membership and persistence states exactly once.
+		 */
 		public void restore() {
 			synchronized (PlayerCPList.this) {
 				if (restored) {
@@ -71,18 +76,18 @@ public final class PlayerCPList {
 		}
 	}
 
-	/** 添加点。 / Adds point. */
-	public boolean addPoint(Player player, int slot, int point) {
-		return addPoint(player, slot, point, PersistentState.NEW);
-	}
-
-	private synchronized boolean addPoint(Player player, int slot, int point, PersistentState state) {
-		entry.put(slot, new PlayerCPEntry(slot, point, state));
+	/**
+	 * 添加点。 / Adds point.
+	 */
+	public synchronized boolean addPoint(Player player, int slot, int point) {
+		entry.put(slot, new PlayerCPEntry(slot, point, PersistentState.NEW));
 		PlayerService.daos().playerCreativityPointsDAO().storeCP(player.getObjectId(), slot, point);
 		return true;
 	}
 
-	/** 移除点。 / Removes point. */
+	/**
+	 * 移除点。 / Removes point.
+	 */
 	public synchronized boolean removePoint(Player player, int slot) {
 		PlayerCPEntry entries = entry.get(slot);
 		if (entries != null) {
@@ -90,10 +95,12 @@ public final class PlayerCPList {
 			entry.remove(slot);
 			PlayerService.daos().playerCreativityPointsDAO().deleteCP(player.getObjectId(), slot);
 		}
-		return entry != null;
+		return true;
 	}
 
-	/** 大小 / size. */
+	/**
+	 * 大小 / size.
+	 */
 	public int size() {
 		return entry.size();
 	}

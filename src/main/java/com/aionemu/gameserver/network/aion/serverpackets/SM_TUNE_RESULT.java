@@ -5,7 +5,6 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 import com.aionemu.gameserver.network.aion.iteminfo.ItemInfoBlob;
-import com.aionemu.gameserver.network.aion.iteminfo.ItemInfoBlob.ItemBlobType;
 import lombok.AllArgsConstructor;
 
 /**
@@ -28,7 +27,7 @@ public class SM_TUNE_RESULT extends AionServerPacket {
 		writeD(tuningScrollId);
 		writeC(item.getPreviewReidentifyBonus());
 		ItemInfoBlob.newPreviewManaSocketsEntry(player, item, item.getPreviewReidentifySocket(),
-				item.getPreviewReidentifyEnchantBonus()).writeThisBlob(getBuf());
+			item.getPreviewReidentifyEnchantBonus()).writeThisBlob(getBuf());
 		writeC(0);
 		writeC(0);
 	}

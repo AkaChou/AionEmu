@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.model.atreian_bestiary;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,6 +11,7 @@ import com.aionemu.gameserver.services.player.PlayerService;
 /**
  * 玩家 AB 列表，用于艾特里亚图鉴相关逻辑。
  * Player AB List for atreian bestiary logic.
+ *
  * @author Ranastic
  */
 
@@ -29,31 +29,25 @@ public final class PlayerABList {
 		}
 	}
 
-	/** 返回全部 AB 条目。 / Returns all AB entries. */
+	/**
+	 * 返回全部 AB 条目。 / Returns all AB entries.
+	 */
 	public PlayerABEntry[] getAllAB() {
-		List<PlayerABEntry> allCp = new ArrayList<>();
-		allCp.addAll(entry.values());
-		return allCp.toArray(new PlayerABEntry[allCp.size()]);
+		return entry.values().toArray(new PlayerABEntry[0]);
 	}
 
-	/** 返回基础 AB 条目。 / Returns the basic AB entries. */
-	public PlayerABEntry[] getBasicAB() {
-		return entry.values().toArray(new PlayerABEntry[entry.size()]);
-	}
-
-	/** 添加。 / Add. */
-	public boolean add(Player player, int id, int killCount, int level, int claimReward) {
-		return add(player, id, killCount, level, claimReward, PersistentState.NEW);
-	}
-
-	private synchronized boolean add(Player player, int id, int killCount, int level, int claimReward,
-			PersistentState state) {
-		entry.put(id, new PlayerABEntry(id, killCount, level, claimReward, state));
+	/**
+	 * 添加。 / Add.
+	 */
+	public synchronized boolean add(Player player, int id, int killCount, int level, int claimReward) {
+		entry.put(id, new PlayerABEntry(id, killCount, level, claimReward, PersistentState.NEW));
 		PlayerService.daos().playerABDAO().store(player.getObjectId(), id, killCount, level, claimReward);
 		return true;
 	}
 
-	/** 移除。 / Remove. */
+	/**
+	 * 移除。 / Remove.
+	 */
 	public synchronized boolean remove(Player player, int id) {
 		PlayerABEntry entries = entry.get(id);
 		if (entries != null) {
@@ -64,7 +58,9 @@ public final class PlayerABList {
 		return entries != null;
 	}
 
-	/** 返回条目数。 / Returns the number of entries. */
+	/**
+	 * 返回条目数。 / Returns the number of entries.
+	 */
 	public int size() {
 		return entry.size();
 	}

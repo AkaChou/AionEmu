@@ -1,7 +1,6 @@
 package com.aionemu.gameserver.model.event_window;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,6 +12,7 @@ import com.aionemu.gameserver.services.player.PlayerService;
 /**
  * 玩家活动窗口列表，用于活动窗口相关逻辑。
  * Player Event Window List for event window logic.
+ *
  * @author Ranastic
  */
 public class PlayerEventWindowList {
@@ -25,31 +25,28 @@ public class PlayerEventWindowList {
 		}
 	}
 
-	/** 返回全部 / Returns the all */
+	/**
+	 * 返回全部 / Returns the all
+	 */
 	public PlayerEventWindowEntry[] getAll() {
-		ArrayList<PlayerEventWindowEntry> arrayList = new ArrayList<>(entry.values());
-		return arrayList.toArray(new PlayerEventWindowEntry[arrayList.size()]);
+		return entry.values().toArray(new PlayerEventWindowEntry[0]);
 	}
 
-	/** 返回基础 / Returns the basic */
+	/**
+	 * 返回基础 / Returns the basic
+	 */
 	public PlayerEventWindowEntry[] getBasic() {
-		return entry.values().toArray(new PlayerEventWindowEntry[entry.size()]);
+		return entry.values().toArray(new PlayerEventWindowEntry[0]);
 	}
 
 	/**
 	 * 添加玩家 eventwindow 列表。 / add player event window list
 	 */
-	private synchronized boolean add(Player player, int remaining, Timestamp timestamp, int Time,
-			PersistentState persistentState) {
-		entry.put(remaining, new PlayerEventWindowEntry(remaining, timestamp, Time, persistentState));
+	public synchronized boolean add(Player player, int remaining, Timestamp timestamp, int Time) {
+		entry.put(remaining, new PlayerEventWindowEntry(remaining, timestamp, Time, PersistentState.NEW));
 		PlayerService.daos().playerEventsWindowDAO().store(player.getPlayerAccount().getId(), remaining, timestamp,
-				Time);
+			Time);
 		return true;
-	}
-
-	/** 添加。 / Add. */
-	public boolean add(Player player, int remaining, Timestamp timestamp, int Time) {
-		return add(player, remaining, timestamp, Time, PersistentState.NEW);
 	}
 
 	/**
@@ -62,12 +59,13 @@ public class PlayerEventWindowList {
 			entry.remove(remaining);
 			PlayerService.daos().playerEventsWindowDAO().delete(player.getPlayerAccount().getId(), remaining);
 		}
-		return entry != null;
+		return true;
 	}
 
 	/**
 	 * 玩家活动窗口列表大小。
 	 * Size of the player event window list.
+	 *
 	 * @return 条目数量 / Number of entries
 	 */
 	public int size() {

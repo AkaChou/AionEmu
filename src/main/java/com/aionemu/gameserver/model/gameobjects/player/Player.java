@@ -98,7 +98,6 @@ import com.aionemu.gameserver.model.templates.ride.RideInfo;
 import com.aionemu.gameserver.model.templates.stats.PlayerStatsTemplate;
 import com.aionemu.gameserver.model.templates.windstreams.WindstreamPath;
 import com.aionemu.gameserver.network.aion.AionConnection;
-import com.aionemu.gameserver.network.aion.serverpackets.SM_STATS_INFO;
 import com.aionemu.gameserver.network.loginserver.serverpackets.SM_ACCOUNT_TOLL_INFO;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
@@ -122,6 +121,7 @@ import com.aionemu.gameserver.utils.rates.RegularRates;
 import com.aionemu.gameserver.world.WorldPosition;
 
 import java.util.LinkedHashMap;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -191,7 +191,6 @@ public class Player extends Creature {
 	private EquipmentSettingList equipmentSettingList;
 	private HouseRegistry houseRegistry;
 	private PlayerStatsTemplate playerStatsTemplate;
-	private final AbsoluteStatOwner absStatsHolder;
 	private PlayerSettings playerSettings;
 	private com.aionemu.gameserver.model.team2.group.PlayerGroup playerGroup2;
 	private PlayerAllianceGroup playerAllianceGroup;
@@ -232,12 +231,12 @@ public class Player extends Creature {
 	private boolean isAdminTeleportation = false;
 	private boolean cooldownZero = false;
 	private boolean isUnderInvulnerableWing = false;
-	private boolean isFlying = false;
 	private boolean isWispable = true;
-	private boolean isCommandUsed = false;
 	private int abyssRankListUpdateMask = 0;
 	private BindPointPosition bindPoint;
-	/** 物品使用冷却注册表 / Item-use cooldown registry */
+	/**
+	 * 物品使用冷却注册表 / Item-use cooldown registry
+	 */
 	private final PlayerCooldowns cooldowns = new PlayerCooldowns();
 	private PortalCooldownList portalCooldownList;
 	private CraftCooldownList craftCooldownList;
@@ -280,7 +279,6 @@ public class Player extends Creature {
 	private boolean isMentor;
 	private long lastMsgTime = 0;
 	private int floodMsgCount = 0;
-	private long onlineTime = 0;
 	private int lootingNpcOid;
 	private boolean rebirthRevive;
 	private int subtractedSupplementsCount;
@@ -330,63 +328,94 @@ public class Player extends Creature {
 	private int cp_slot1 = 0, cp_slot2 = 0, cp_slot3 = 0, cp_slot4 = 0, cp_slot5 = 0, cp_slot6 = 0;
 	private boolean enchantBoost;
 	private boolean authorizeBoost;
-	/** 事件物品每日限购注册表 / Event-item daily purchase-limit registry */
+	/**
+	 * 事件物品每日限购注册表 / Event-item daily purchase-limit registry
+	 */
 	private final PlayerItemDailyLimits itemDailyLimits = new PlayerItemDailyLimits();
-	/** 重复异常状态递减链（内存态，不持久化，首次写入才分配）/ Repeated-abnormal decay chain (in-memory only, allocated on first write). */
+	/**
+	 * 重复异常状态递减链（内存态，不持久化，首次写入才分配）/ Repeated-abnormal decay chain (in-memory only, allocated on first write).
+	 */
 	private PlayerRepeatedAbnormalStatus repeatedAbnormalStatus;
 	/**
 	 * 月华骰子游戏。
 	 * Luna Dice Game
 	 */
 	private int LunaDiceGame;
-	/** 返回 luna dice game try / Returns the luna dice game try */
+	/**
+	 * 返回 luna dice game try / Returns the luna dice game try
+	 */
 	private int LunaDiceGameTry = 0;
 	// PvP 系统： / Pvp System:
-	private boolean lawless = false;
 	private boolean bandit = false;
-	/** 设置 battleground / Sets the battleground */
+	/**
+	 * 设置 battleground / Sets the battleground
+	 */
 	private Battleground battleground = null;
-	/** 返回 last action / Returns the last action */
+	/**
+	 * 返回 last action / Returns the last action
+	 */
 	private long lastAction = 0;
-	/** 设置 bg index / Sets the bg index */
+	/**
+	 * 设置 bg index / Sets the bg index
+	 */
 	private int bgIndex = 0;
-	/** 设置 spectating / Sets the spectating */
+	/**
+	 * 设置 spectating / Sets the spectating
+	 */
 	private boolean isSpectating = false;
-	/** 设置 total kills / Sets the total kills */
+	/**
+	 * 设置 total kills / Sets the total kills
+	 */
 	private int totalKills = 0;
 	private int arenaKillStreak = 0;
-	/** 返回 bandit kill streak / Returns the bandit kill streak */
+	/**
+	 * 返回 bandit kill streak / Returns the bandit kill streak
+	 */
 	private int banditKillStreak = 0;
 	private boolean isAfk;
-	/** 是否处于自由混战 / Whether ffa */
+	/**
+	 * 是否处于自由混战 / Whether ffa
+	 */
 	private boolean isFFA = false;
 	private int hallOfTenacityCoupleId = 0;
 	private int hallOfTenacityVSId = 0;
 	private int hallOfTenacityOpponentId = 0;
 
-	/** 是否决斗 / Whether in duel */
+	/**
+	 * 是否决斗 / Whether in duel
+	 */
 	private boolean isInDuel;
 	/**
 	 * 玩家技能动画列表。
 	 * Player Skill Animation List
 	 */
 	private SkillSkinList skillSkinList;
-	/** 是否盗贼 / Whether thieves*/
+	/**
+	 * 是否盗贼 / Whether thieves
+	 */
 	private boolean isThieves = false;
-	/** 是否处于盗贼复仇决斗。 / Whether in a thieves revenge duel. */
+	/**
+	 * 是否处于盗贼复仇决斗。 / Whether in a thieves revenge duel.
+	 */
 	private boolean thievesDuel;
-	/** 设置 thieves / Sets the thieves */
+	/**
+	 * 设置 thieves / Sets the thieves
+	 */
 	private ThievesStatusList thieves;
 	/**
 	 * 活动调用与注册。
 	 * EventCaller + Event Reg
 	 */
 	private int checkpoints;
-	/** 返回数量玩家集合 / Returns the count players */
+	/**
+	 * 返回数量玩家集合 / Returns the count players
+	 */
 	private int countPlayers;
 	private boolean isRegedEvent = false;
 	private boolean isEventStarted = false;
-	/** 返回 queued players / Returns the queued players */
+	/**
+	 * 返回 queued players / Returns the queued players
+	 */
 	public List<Player> QueuedPlayers;
 	/**
 	 * 自定义 PvE 与 PK 系统相关变量。
@@ -396,6 +425,7 @@ public class Player extends Creature {
 	private boolean isInPvEMode;
 	// 这些变量用于自定义 RP 与 GM 系统 / These variables are for the custom RP and GM system
 	private boolean isGmMode = false;
+
 	public long getCreationDate() {
 		Timestamp creationDate = playerCommonData.getCreationDate();
 		if (creationDate == null) {
@@ -427,7 +457,6 @@ public class Player extends Creature {
 		inGameShop = new InGameShop();
 		protectorList = new Protector(this);
 		conquerorList = new Conqueror(this);
-		absStatsHolder = new AbsoluteStatOwner(this, 0);
 	}
 
 	public boolean isInPlayerMode(PlayerMode mode) {
@@ -508,6 +537,7 @@ public class Player extends Creature {
 	/**
 	 * 获取该玩家的 ResponseRequester。
 	 * Gets the ResponseRequester for this player
+	 *
 	 * @return ResponseRequester / response requester
 	 */
 	public ResponseRequester getResponseRequester() {
@@ -547,6 +577,7 @@ public class Player extends Creature {
 	/**
 	 * 返回该玩家的 PlayerController。
 	 * Returns the PlayerController of this Player
+	 *
 	 * @return PlayerController / player controller
 	 */
 	@Override
@@ -573,7 +604,9 @@ public class Player extends Creature {
 		}
 	}
 
-	/** Records a server-issued quest-share offer for this session. */
+	/**
+	 * Records a server-issued quest-share offer for this session.
+	 */
 	public void addPendingQuestShare(int questId) {
 		if (questId <= 0) {
 			throw new IllegalArgumentException("questId must be positive");
@@ -581,12 +614,16 @@ public class Player extends Creature {
 		pendingQuestShares.add(questId);
 	}
 
-	/** Consumes a server-issued quest-share offer exactly once. */
+	/**
+	 * Consumes a server-issued quest-share offer exactly once.
+	 */
 	public boolean consumePendingQuestShare(int questId) {
 		return questId > 0 && pendingQuestShares.remove(questId);
 	}
 
-	/** 记录从 NPC 任务列表点击进入的任务对话授权。 / Records task-dialog authorization from an NPC quest-list click. */
+	/**
+	 * 记录从 NPC 任务列表点击进入的任务对话授权。 / Records task-dialog authorization from an NPC quest-list click.
+	 */
 	public void rememberNpcQuestDialogSelection(int interactionObjectId, int questId) {
 		if (interactionObjectId <= 0 || questId <= 0) {
 			npcQuestDialogSelection = null;
@@ -595,31 +632,41 @@ public class Player extends Creature {
 		npcQuestDialogSelection = new NpcQuestDialogSelection(interactionObjectId, questId);
 	}
 
-	/** 判断任务对话是否由同一 NPC 的任务列表点击授权。 / Checks whether a quest dialog was authorized by the same NPC's quest-list click. */
+	/**
+	 * 判断任务对话是否由同一 NPC 的任务列表点击授权。 / Checks whether a quest dialog was authorized by the same NPC's quest-list click.
+	 */
 	public boolean hasNpcQuestDialogSelection(int interactionObjectId, int questId) {
 		NpcQuestDialogSelection selection = npcQuestDialogSelection;
 		return selection != null && selection.interactionObjectId() == interactionObjectId
 			&& selection.questId() == questId;
 	}
 
-	/** 返回同一 NPC 的任务列表授权任务 ID；没有授权时返回 0。 / Returns the quest id authorized by the same NPC's quest row, or 0 when absent. */
+	/**
+	 * 返回同一 NPC 的任务列表授权任务 ID；没有授权时返回 0。 / Returns the quest id authorized by the same NPC's quest row, or 0 when absent.
+	 */
 	public int getNpcQuestDialogSelectionQuestId(int interactionObjectId) {
 		NpcQuestDialogSelection selection = npcQuestDialogSelection;
 		return selection != null && selection.interactionObjectId() == interactionObjectId ? selection.questId() : 0;
 	}
 
-	/** 返回被该任务授权的对话对象 ID（对话授权属于该任务时）；没有授权时返回 0。 / Returns the dialog-authorization object id when it belongs to the given quest, or 0 when absent. */
+	/**
+	 * 返回被该任务授权的对话对象 ID（对话授权属于该任务时）；没有授权时返回 0。 / Returns the dialog-authorization object id when it belongs to the given quest, or 0 when absent.
+	 */
 	public int getNpcQuestDialogObjectIdForQuest(int questId) {
 		NpcQuestDialogSelection selection = npcQuestDialogSelection;
 		return selection != null && selection.questId() == questId ? selection.interactionObjectId() : 0;
 	}
 
-	/** 清除 NPC 任务对话授权。 / Clears NPC quest-dialog authorization. */
+	/**
+	 * 清除 NPC 任务对话授权。 / Clears NPC quest-dialog authorization.
+	 */
 	public void clearNpcQuestDialogSelection() {
 		npcQuestDialogSelection = null;
 	}
 
-	/** 清除客户端对话选择的重发跟踪。 / Clears client dialog-selection repeat tracking. */
+	/**
+	 * 清除客户端对话选择的重发跟踪。 / Clears client dialog-selection repeat tracking.
+	 */
 	public void clearDialogSelectRepeat() {
 		dialogSelectRepeat = null;
 	}
@@ -704,6 +751,7 @@ public class Player extends Creature {
 	/**
 	 * 检查对象 ID 是否相同。
 	 * Check whether the object ids are equal.
+	 *
 	 * @return 对象 ID 相同返回 true / true if the object id is the same
 	 */
 	public boolean sameObjectId(int objectId) {
@@ -784,11 +832,6 @@ public class Player extends Creature {
 
 	public void setFlyState(int flyState) {
 		this.flyState = flyState;
-		if (flyState == 1) {
-			setFlyingMode(true);
-		} else if (flyState == 0) {
-			setFlyingMode(false);
-		}
 	}
 
 	/**
@@ -937,6 +980,7 @@ public class Player extends Creature {
 	/**
 	 * 用于 {@code SM_NPC_INFO}，判断是否显示仇恨图标。
 	 * Used by {@code SM_NPC_INFO} to decide whether to show the aggro icon.
+	 *
 	 * @param npc 待检查 NPC / NPC to check
 	 * @return 应显示仇恨图标时为 true / true if the aggro icon should be shown
 	 */
@@ -996,47 +1040,43 @@ public class Player extends Creature {
 			return false;
 		}
 		switch (getRace()) {
-		case ELYOS:
-			// 天族之门 / Elyos Gate
-			if (race == Race.PC_LIGHT_CASTLE_DOOR)
-				return false;
-			// 天族将军 / Elyos General
-			if (race == Race.GCHIEF_LIGHT)
-				return false;
-			// 天族传送者 / Elyos Teleporter
-			if (race == Race.TELEPORTER && tribe == TribeClass.GENERAL)
-				return false;
-			// 天族护盾发生器 / Elyos Shield generators
-			if ((race == Race.CONSTRUCT || race == Race.BARRIER) && (tribe == TribeClass.GENERAL || tribe == TribeClass.F4GUARD_LIGHT))
-				return false;
-			break;
-		case ASMODIANS:
-			// 魔族之门 / Asmo Gate
-			if (race == Race.PC_DARK_CASTLE_DOOR)
-				return false;
-			// 魔族将军 / Asmo General
-			if (race == Race.GCHIEF_DARK)
-				return false;
-			// 魔族传送者 / Asmo Teleporter
-			if (race == Race.TELEPORTER && tribe == TribeClass.GENERAL_DARK)
-				return false;
-			// 天族护盾发生器 / Elyos Shield generators
-			if ((race == Race.CONSTRUCT || race == Race.BARRIER) && (tribe == TribeClass.GENERAL_DARK || tribe == TribeClass.F4GUARD_DARK)) {
-				return false;
-			}
-			break;
-		default:
-			break;
+			case ELYOS:
+				// 天族之门 / Elyos Gate
+				if (race == Race.PC_LIGHT_CASTLE_DOOR)
+					return false;
+				// 天族将军 / Elyos General
+				if (race == Race.GCHIEF_LIGHT)
+					return false;
+				// 天族传送者 / Elyos Teleporter
+				if (race == Race.TELEPORTER && tribe == TribeClass.GENERAL)
+					return false;
+				// 天族护盾发生器 / Elyos Shield generators
+				if ((race == Race.CONSTRUCT || race == Race.BARRIER) && (tribe == TribeClass.GENERAL || tribe == TribeClass.F4GUARD_LIGHT))
+					return false;
+				break;
+			case ASMODIANS:
+				// 魔族之门 / Asmo Gate
+				if (race == Race.PC_DARK_CASTLE_DOOR)
+					return false;
+				// 魔族将军 / Asmo General
+				if (race == Race.GCHIEF_DARK)
+					return false;
+				// 魔族传送者 / Asmo Teleporter
+				if (race == Race.TELEPORTER && tribe == TribeClass.GENERAL_DARK)
+					return false;
+				// 天族护盾发生器 / Elyos Shield generators
+				if ((race == Race.CONSTRUCT || race == Race.BARRIER) && (tribe == TribeClass.GENERAL_DARK || tribe == TribeClass.F4GUARD_DARK)) {
+					return false;
+				}
+				break;
+			default:
+				break;
 		}
 		return getRace() != race;
 	}
 
 	public boolean isItemUseDisabled(ItemUseLimits limits) {
 		return cooldowns.isUseDisabled(limits);
-	}
-
-	public long getItemCoolDown(int delayId) {
-		return cooldowns.getCoolDown(delayId);
 	}
 
 	public void addItemCoolDown(int delayId, long time, int useDelay) {
@@ -1050,6 +1090,7 @@ public class Player extends Creature {
 	/**
 	 * 返回原始物品冷却表。
 	 * Returns the backing item cooldown map.
+	 *
 	 * @return 冷却表（live 视图），未创建时为 null / live cooldown map, or null when not created
 	 */
 	public Map<Integer, ItemCooldown> getItemCoolDowns() {
@@ -1291,15 +1332,6 @@ public class Player extends Creature {
 		return (this.abyssRankListUpdateMask & type.value()) == type.value();
 	}
 
-	public void addSalvationPoints(long points) {
-		this.playerCommonData.addSalvationPoints(points);
-		PacketSendUtility.sendPacket(this, new SM_STATS_INFO(this));
-	}
-
-	public long getCurrentSalvationPercent() {
-		return this.playerCommonData.getCurrentSalvationPercent();
-	}
-
 	@Override
 	public byte isPlayer() {
 		if (this.isGM()) {
@@ -1315,20 +1347,6 @@ public class Player extends Creature {
 
 	public boolean isTransformed() {
 		return getTransformModel().isActive();
-	}
-
-	/**
-	 * @param value flying mode flag to set
-	 */
-	public void setFlyingMode(boolean value) {
-		this.isFlying = value;
-	}
-
-	/**
-	 * @return 玩家处于飞行模式下返回 true / true if player is in Flying mode
-	 */
-	public boolean isInFlyingMode() {
-		return this.isFlying;
 	}
 
 	/**
@@ -1445,24 +1463,12 @@ public class Player extends Creature {
 		}
 	}
 
-	public Object getVar(String key) {
-		return this.vars.get(key);
-	}
-
 	public int getVarInt(String key) {
 		Object o = this.vars.get(key);
 		if (o != null) {
 			return Integer.parseInt(o.toString());
 		}
 		return 0;
-	}
-
-	public String getVarStr(String key) {
-		Object o = this.vars.get(key);
-		if (o != null) {
-			return o.toString();
-		}
-		return null;
 	}
 
 	@Override
@@ -1486,21 +1492,6 @@ public class Player extends Creature {
 
 	public int floodMsgCount() {
 		return floodMsgCount;
-	}
-
-	public void setOnlineTime() {
-		onlineTime = System.currentTimeMillis();
-	}
-
-	/*
-	 * return online time in sec
-	 */
-	public long getOnlineTime() {
-		return (System.currentTimeMillis() - onlineTime) / 1000;
-	}
-
-	public boolean isCommandInUse() {
-		return isCommandUsed;
 	}
 
 	public boolean canUseRebirthRevive() {
@@ -1539,6 +1530,7 @@ public class Player extends Creature {
 	/**
 	 * 返回原始房屋缓存，不触发惰性加载（仅同包房屋域使用）。
 	 * Returns the raw house cache without lazy loading (same-package housing domain only).
+	 *
 	 * @return 原始房屋缓存 / raw house cache
 	 */
 	List<House> getHousesOrNull() {
@@ -1563,10 +1555,6 @@ public class Player extends Creature {
 
 	public void setBuildingOwnerState(byte state) {
 		PlayerHouses.setBuildingOwnerState(this, state);
-	}
-
-	public void unsetBuildingOwnerState(byte state) {
-		PlayerHouses.unsetBuildingOwnerState(this, state);
 	}
 
 	public void setBattleReturnCoords(int mapId, float[] coords) {
@@ -1595,10 +1583,6 @@ public class Player extends Creature {
 
 	public void setRawKillCount(int count) {
 		rawKillcount = count;
-	}
-
-	public AbsoluteStatOwner getAbsoluteStats() {
-		return absStatsHolder;
 	}
 
 	/**
@@ -1633,14 +1617,6 @@ public class Player extends Creature {
 
 	public void setTransformedItemId(int id) {
 		transformItemId = id;
-	}
-
-	public int getTransformedPanelId() {
-		return transformPanelId;
-	}
-
-	public void setTransformedPanelId(int id) {
-		transformPanelId = id;
 	}
 
 	public int getRndCrazy() {
@@ -1730,14 +1706,6 @@ public class Player extends Creature {
 		getCommonData().setCPStep(step);
 	}
 
-	public int getStoneCreativityPoint() {
-		return getCommonData().getStoneCreativityPoint();
-	}
-
-	public void setStoneCreativityPoint(int point) {
-		getCommonData().setStoneCreativityPoint(point);
-	}
-
 	public int getCPSlot1() {
 		return cp_slot1;
 	}
@@ -1816,51 +1784,60 @@ public class Player extends Creature {
 		return this.playerCommonData.getLunaConsumeCount();
 	}
 
-	/** 设置月华账号。 / Sets the luna account. */
+	/**
+	 * 设置月华账号。 / Sets the luna account.
+	 */
 	public void setLunaAccount(long luna) {
 		if (luna < 0) {
 			PacketSendUtility.sendMessage(this, "Invalid Luna balance.");
 			return;
 		}
 		if (com.aionemu.gameserver.lifecycle.GameServerNetworkServices.loginServer().sendPacket(new SM_ACCOUNT_TOLL_INFO(
-				this.getClientConnection().getAccount().getToll(), luna, this.getAcountName()))) {
+			this.getClientConnection().getAccount().getToll(), luna, this.getAcountName()))) {
 			this.getClientConnection().getAccount().setLuna(luna);
 		} else {
 			PacketSendUtility.sendMessage(this, "ls communication error.");
 		}
 	}
 
-	/** 获取月华账号。 / Returns the luna account. */
+	/**
+	 * 获取月华账号。 / Returns the luna account.
+	 */
 	public long getLunaAccount() {
 		return this.getClientConnection().getAccount().getLuna();
 	}
 
-	/** 设置衣橱槽位。 / Sets the wardrobe slot. */
+	/**
+	 * 设置衣橱槽位。 / Sets the wardrobe slot.
+	 */
 	public void setWardrobeSlot(int slot) {
 		this.playerCommonData.setWardrobeSlot(slot);
 	}
 
-	/** 获取衣橱槽位。 / Returns the wardrobe slot. */
+	/**
+	 * 获取衣橱槽位。 / Returns the wardrobe slot.
+	 */
 	public int getWardrobeSlot() {
 		return this.playerCommonData.getWardrobeSlot();
 	}
 
-	/** 添加 item max count of day / Adds item max count of day */
+	/**
+	 * 添加 item max count of day / Adds item max count of day
+	 */
 	public void addItemMaxCountOfDay(int itemId, int thisCount) {
 		itemDailyLimits.addItemMaxCount(itemId, thisCount);
 	}
 
-	/** 返回 item max this count / Returns the item max this count */
+	/**
+	 * 返回 item max this count / Returns the item max this count
+	 */
 	public int getItemMaxThisCount(int itemId) {
 		return itemDailyLimits.getItemMaxCount(itemId);
 	}
 
-	/** 移除 item max this count / Removes item max this count */
-	public void removeItemMaxThisCount(int itemId) {
-		itemDailyLimits.removeItemMaxCount(itemId);
-	}
-
-	/** 清除物品本次数上限 / Clear item max this count */
+	/**
+	 * 清除物品本次数上限 / Clear item max this count
+	 */
 	public void clearItemMaxThisCount() {
 		itemDailyLimits.clear();
 	}
@@ -1868,8 +1845,9 @@ public class Player extends Creature {
 	/**
 	 * 读取重复异常状态递减链的有效步数（无记录、从未命中或已出窗口为 0）。
 	 * Returns the effective repeated-abnormal chain step (0 when absent, never hit, or window-expired).
-	 * @param state 异常状态 / abnormal state
-	 * @param now 当前时刻（毫秒）/ current time in millis
+	 *
+	 * @param state        异常状态 / abnormal state
+	 * @param now          当前时刻（毫秒）/ current time in millis
 	 * @param windowMillis 命中窗口（毫秒）/ hit window in millis
 	 * @return 有效步数 0..5 / effective step 0..5
 	 */
@@ -1883,9 +1861,10 @@ public class Player extends Creature {
 	/**
 	 * 记录一次成功施加的重复异常状态命中（步数写入 1..5、刷新命中时刻；首次写入才分配）。
 	 * Records one successful repeated-abnormal hit (step stored in 1..5, timestamp refreshed; allocated on first write).
-	 * @param state 异常状态 / abnormal state
+	 *
+	 * @param state    异常状态 / abnormal state
 	 * @param nextStep 新步数（读取端 step+1 传入）/ desired new step (read step + 1)
-	 * @param now 施加时刻（毫秒）/ application time in millis
+	 * @param now      施加时刻（毫秒）/ application time in millis
 	 */
 	public void recordRepeatedAbnormalHit(AbnormalState state, int nextStep, long now) {
 		int index = repeatedAbnormalIndexOf(state);
@@ -1901,6 +1880,7 @@ public class Player extends Creature {
 	/**
 	 * 返回状态在递减表内的位置；静态表未加载或表外状态（含 STUN）为 -1。
 	 * Returns the state's position in the decay table; -1 when the table is unloaded or the state is untracked.
+	 *
 	 * @param state 异常状态 / abnormal state
 	 * @return 数据表位置或 -1 / table position or -1
 	 */
@@ -1916,13 +1896,16 @@ public class Player extends Creature {
 	/**
 	 * 返回原始物品当日次数表。
 	 * Returns the backing per-day item count map.
+	 *
 	 * @return 当日次数表（live 视图），未创建时为 null / live map, or null when not created
 	 */
 	public Map<Integer, MaxCountOfDay> getItemMaxThisCounts() {
 		return itemDailyLimits.getItemMaxCounts();
 	}
 
-	/** 设置 bandit / Sets the bandit */
+	/**
+	 * 设置 bandit / Sets the bandit
+	 */
 	public void setBandit(boolean bandit) {
 		this.bandit = bandit;
 		if (bandit) {
@@ -1935,125 +1918,140 @@ public class Player extends Creature {
 		}
 	}
 
-	/** 返回 kill streak / Returns the kill streak */
+	/**
+	 * 返回 kill streak / Returns the kill streak
+	 */
 	public int getKillStreak() {
 		return arenaKillStreak;
 	}
 
-	/** 设置 kill streak / Sets the kill streak */
+	/**
+	 * 设置 kill streak / Sets the kill streak
+	 */
 	public void setKillStreak(int killStreak) {
 		arenaKillStreak = killStreak;
 	}
 
-	/** 设置强盗连杀 / setbandit Kill Streak. */
+	/**
+	 * 设置强盗连杀 / setbandit Kill Streak.
+	 */
 	public void setbanditKillStreak(int killStreak) {
 		banditKillStreak = killStreak;
 	}
 
-	/** 设置 last action / Sets the last action */
+	/**
+	 * 设置 last action / Sets the last action
+	 */
 	public void setLastAction() {
 		this.lastAction = System.currentTimeMillis();
 	}
 
-	/** 返回 prev pos / Returns the prev pos */
-	public WorldPosition getPrevPos() {
-		if (getPosition() == null || !getPosition().isSpawned()) {
-			return null;
-		}
-		if (prevPos == null || prevPos.getMapId() != getPosition().getMapId()) {
-			prevPos = new WorldPosition(getPosition().getMapId());
-			prevPos.setXYZH(getPosition().getX(), getPosition().getY(), getPosition().getZ(), getPosition().getHeading());
-		}
-		return prevPos;
-	}
-
-	/** 设置 lawless / Sets the lawless */
-	public void setLawless(boolean lawless) {
-		this.lawless = lawless;
-		if (lawless) {
-			if (isInGroup2()) {
-				PlayerGroupService.removePlayer(this);
-			}
-			if (isInAlliance2()) {
-				PlayerAllianceService.removePlayer(this);
-			}
-		}
-	}
-
-	/** 发送消息。 / Send message. */
+	/**
+	 * 发送消息。 / Send message.
+	 */
 	public void sendMessage(String string) {
 		PacketSendUtility.sendMessage(this, string);
 	}
 
-	/** 设置 floor / Sets the floor */
+	/**
+	 * 设置 floor / Sets the floor
+	 */
 	public void setFloor(int floor) {
 		getCommonData().setFloor(floor);
 	}
 
-	/** 返回 floor / Returns the floor */
+	/**
+	 * 返回 floor / Returns the floor
+	 */
 	public int getFloor() {
 		return getCommonData().getFloor();
 	}
 
-	/** 设置 hot couple id / Sets the hot couple id */
+	/**
+	 * 设置 hot couple id / Sets the hot couple id
+	 */
 	public void setHOTCoupleId(int id) {
 		hallOfTenacityCoupleId = id;
 	}
 
-	/** 返回 hot couple id / Returns the hot couple id */
+	/**
+	 * 返回 hot couple id / Returns the hot couple id
+	 */
 	public int getHOTCoupleId() {
 		return hallOfTenacityCoupleId;
 	}
 
-	/** 设置 hotvs id / Sets the hotvs id */
+	/**
+	 * 设置 hotvs id / Sets the hotvs id
+	 */
 	public void setHOTVSId(int id) {
 		hallOfTenacityVSId = id;
 	}
 
-	/** 返回 hotvs id / Returns the hotvs id */
+	/**
+	 * 返回 hotvs id / Returns the hotvs id
+	 */
 	public int getHOTVSId() {
 		return hallOfTenacityVSId;
 	}
 
-	/** 设置 hot my opponent obj id / Sets the hot my opponent obj id */
+	/**
+	 * 设置 hot my opponent obj id / Sets the hot my opponent obj id
+	 */
 	public void setHOTMyOpponentObjId(int id) {
 		hallOfTenacityOpponentId = id;
 	}
 
-	/** 返回 hot my opponent obj id / Returns the hot my opponent obj id */
+	/**
+	 * 返回 hot my opponent obj id / Returns the hot my opponent obj id
+	 */
 	public int getHOTMyOpponentObjId() {
 		return hallOfTenacityOpponentId;
 	}
 
 	// 竞赛活动部分 / competiton event part
 	private GoldArenaRank arenaGoldrank;
-	/** 获取高塔军阶。 / Returns the tower rank. */
+	/**
+	 * 获取高塔军阶。 / Returns the tower rank.
+	 */
 	private TowerOfChallengeRank towerRank;
 	private Arena6V6Ranking arena6v6Rank;
-	/** 返回 tenacity rank / Returns the tenacity rank */
+	/**
+	 * 返回 tenacity rank / Returns the tenacity rank
+	 */
 	private ArenaOfTenacityRank tenacityRank;
 
-	/** 返回 arena gold rank / Returns the arena gold rank */
+	/**
+	 * 返回 arena gold rank / Returns the arena gold rank
+	 */
 	public GoldArenaRank getArenaGoldRank() {
 		return arenaGoldrank;
 	}
 
-	/** 设置 arena gold rank / Sets the arena gold rank */
+	/**
+	 * 设置 arena gold rank / Sets the arena gold rank
+	 */
 	public void setArenaGoldRank(GoldArenaRank gar) {
 		this.arenaGoldrank = gar;
 	}
 
-	/** 获取6v6排名 / Get 6 v 6 Rank */
+	/**
+	 * 获取6v6排名 / Get 6 v 6 Rank
+	 */
 	public Arena6V6Ranking get6v6Rank() {
 		return arena6v6Rank;
 	}
 
-	/** 设置6v6排名 / Set 6 v 6 Rank */
+	/**
+	 * 设置6v6排名 / Set 6 v 6 Rank
+	 */
 	public void set6v6Rank(Arena6V6Ranking ar) {
 		this.arena6v6Rank = ar;
 	}
 
-	/** 设置 queued players / Sets the queued players */
+	/**
+	 * 设置 queued players / Sets the queued players
+	 */
 	public void setQueuedPlayers(Player player) {
 		if (QueuedPlayers == null) {
 			QueuedPlayers = new ArrayList<>(50);
@@ -2061,7 +2059,9 @@ public class Player extends Creature {
 		QueuedPlayers.add(player);
 	}
 
-	/** 设置 luna dice game / Sets the luna dice game */
+	/**
+	 * 设置 luna dice game / Sets the luna dice game
+	 */
 	public void setLunaDiceGame(int dice, boolean reset) {
 		if (!reset) {
 			if (dice > this.LunaDiceGame) {
@@ -2072,32 +2072,37 @@ public class Player extends Creature {
 		}
 	}
 
-	/** 设置技能外观列表。 / Sets the skill skin list. */
+	/**
+	 * 设置技能外观列表。 / Sets the skill skin list.
+	 */
 	public void setSkillSkinList(SkillSkinList skillSkinList) {
 		this.skillSkinList = skillSkinList;
 		skillSkinList.setOwner(this);
 	}
 
-	/** 设置 is thieves / Sets the is thieves */
+	/**
+	 * 设置 is thieves / Sets the is thieves
+	 */
 	public void setIsThieves(boolean isThieves) {
 		this.isThieves = isThieves;
 	}
 
-	/** 获取守护灵技能点。 / Returns the minion skill points. */
+	/**
+	 * 获取守护灵技能点。 / Returns the minion skill points.
+	 */
 	public int getMinionSkillPoints() {
 		return this.getCommonData().getMinionSkillPoints();
 	}
 
-	/** 设置守护灵技能点。 / Sets the minion skill points. */
+	/**
+	 * 设置守护灵技能点。 / Sets the minion skill points.
+	 */
 	public void setMinionSkillPoints(int minionSkillPoints) {
 		this.getCommonData().setMinionSkillPoints(minionSkillPoints);
 	}
 
-	/** 是否为魔法职业 / Whether magical type class */
-	public boolean isMagicalTypeClass() {
-		return playerCommonData.getPlayerClass() == PlayerClass.MUSE || playerCommonData.getPlayerClass() == PlayerClass.SONGWEAVER || playerCommonData.getPlayerClass() == PlayerClass.CLERIC || playerCommonData.getPlayerClass() == PlayerClass.SORCERER || playerCommonData.getPlayerClass() == PlayerClass.SPIRIT_MASTER || playerCommonData.getPlayerClass() == PlayerClass.AETHERTECH;
-	}
-
-	/** 返回 disassembly item lists / Returns the disassembly item lists */
+	/**
+	 * 返回 disassembly item lists / Returns the disassembly item lists
+	 */
 	private List<DisassembleItem> disassemblyItemLists = new ArrayList<>();
 }

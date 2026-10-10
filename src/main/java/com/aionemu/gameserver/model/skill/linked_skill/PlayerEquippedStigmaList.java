@@ -1,9 +1,7 @@
 package com.aionemu.gameserver.model.skill.linked_skill;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.IdentityHashMap;
@@ -16,6 +14,7 @@ import com.aionemu.gameserver.services.player.PlayerService;
 /**
  * 玩家 EquippedStigma 列表，用于技能相关逻辑。
  * Player Equipped Stigma List for skill logic.
+ *
  * @author Ranastic
  */
 public final class PlayerEquippedStigmaList {
@@ -35,39 +34,32 @@ public final class PlayerEquippedStigmaList {
 		}
 	}
 
-	/** 返回全部物品 / Returns the all items*/
+	/**
+	 * 返回全部物品 / Returns the all items
+	 */
 	public EquippedStigmasEntry[] getAllItems() {
-		List<EquippedStigmasEntry> allItems = new ArrayList<>();
-		allItems.addAll(itemList.values());
-		return allItems.toArray(new EquippedStigmasEntry[allItems.size()]);
+		return itemList.values().toArray(new EquippedStigmasEntry[0]);
 	}
 
-	/** 返回全部物品 ID 列表 / Returns all items as integers */
-	public List<Integer> getAllItemsAsInteger() {
-		HashSet<Integer> equippedIds = new HashSet<>();
-		for (EquippedStigmasEntry i : itemList.values()) {
-			equippedIds.add(i.getItemId());
-		}
-		return Arrays.asList(equippedIds.toArray(new Integer[0]));
-	}
-
-	/** 返回已删除物品 / Returns the deleted items */
+	/**
+	 * 返回已删除物品 / Returns the deleted items
+	 */
 	public EquippedStigmasEntry[] getDeletedItems() {
-		return deletedItems.toArray(new EquippedStigmasEntry[deletedItems.size()]);
+		return deletedItems.toArray(new EquippedStigmasEntry[0]);
 	}
 
-	/** 添加物品。 / Adds item. */
-	public boolean addItem(Player player, int itemId, String itemName) {
-		return addItem(player, itemId, itemName, PersistentState.NEW);
-	}
-
-	private synchronized boolean addItem(Player player, int itemId, String itemName, PersistentState state) {
-		itemList.put(itemId, new EquippedStigmasEntry(itemId, itemName, state));
+	/**
+	 * 添加物品。 / Adds item.
+	 */
+	public synchronized boolean addItem(Player player, int itemId, String itemName) {
+		itemList.put(itemId, new EquippedStigmasEntry(itemId, itemName, PersistentState.NEW));
 		PlayerService.daos().playerStigmasEquippedDAO().storeItems(player);
 		return true;
 	}
 
-	/** 移除。 / Remove. */
+	/**
+	 * 移除。 / Remove.
+	 */
 	public boolean remove(Player player, int itemId) {
 		boolean removed = removeInTransaction(itemId);
 		if (player != null) {
@@ -76,7 +68,9 @@ public final class PlayerEquippedStigmaList {
 		return removed;
 	}
 
-	/** 仅从内存移除一项，由调用方在既有事务中持久化。 / Removes one entry in memory so the caller can persist it on an existing transaction. */
+	/**
+	 * 仅从内存移除一项，由调用方在既有事务中持久化。 / Removes one entry in memory so the caller can persist it on an existing transaction.
+	 */
 	public synchronized boolean removeInTransaction(int itemId) {
 		EquippedStigmasEntry entry = itemList.get(itemId);
 		if (entry != null) {
@@ -87,7 +81,9 @@ public final class PlayerEquippedStigmaList {
 		return entry != null;
 	}
 
-	/** 标记所有变更已在所属 JDBC 事务提交后存储。 / Marks all changes stored after the owning JDBC transaction commits. */
+	/**
+	 * 标记所有变更已在所属 JDBC 事务提交后存储。 / Marks all changes stored after the owning JDBC transaction commits.
+	 */
 	public synchronized void markStored() {
 		for (EquippedStigmasEntry entry : itemList.values()) {
 			entry.setPersistentState(PersistentState.UPDATED);
@@ -97,7 +93,9 @@ public final class PlayerEquippedStigmaList {
 		}
 	}
 
-	/** 捕获列表归属与各条目状态，供调用方持有事务回滚用。 / Captures list ownership and entry states for caller-owned transaction rollback. */
+	/**
+	 * 捕获列表归属与各条目状态，供调用方持有事务回滚用。 / Captures list ownership and entry states for caller-owned transaction rollback.
+	 */
 	public synchronized TransactionSnapshot transactionSnapshot() {
 		return new TransactionSnapshot();
 	}
@@ -132,12 +130,16 @@ public final class PlayerEquippedStigmaList {
 		}
 	}
 
-	/** 是否物品存在 / Whether item present*/
+	/**
+	 * 是否物品存在 / Whether item present
+	 */
 	public boolean isItemPresent(int itemId) {
 		return itemList.containsKey(itemId);
 	}
 
-	/** 大小 / size. */
+	/**
+	 * 大小 / size.
+	 */
 	public int size() {
 		return itemList.size();
 	}

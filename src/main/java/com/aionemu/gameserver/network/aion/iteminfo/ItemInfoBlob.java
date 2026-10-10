@@ -21,22 +21,30 @@ import lombok.Getter;
  * Container for item-info blobs that aggregates {@link ItemBlobEntry} instances
  * and serializes them into the client-readable format.
  * Builds full or partial item detail payloads from the item template and runtime state.
+ *
  * @author -Nemesiss-
  */
 public class ItemInfoBlob extends PacketWriteHelper {
-	/** 所属玩家。 / Owning player. */
+	/**
+	 * 所属玩家。 / Owning player.
+	 */
 	protected final Player player;
-	/** 目标物品。 / Target item. */
+	/**
+	 * 目标物品。 / Target item.
+	 */
 	protected final Item item;
 
-	/** 已添加 blob 条目列表 / List of added blob entries */
+	/**
+	 * 已添加 blob 条目列表 / List of added blob entries
+	 */
 	private final List<ItemBlobEntry> itemBlobEntries = new ArrayList<>();
 
 	/**
 	 * 为指定玩家与物品创建 Blob 容器。
 	 * Creates a blob container for the given player and item.
+	 *
 	 * @param player 所属玩家 / owning player
-	 * @param item 目标物品 / target item
+	 * @param item   目标物品 / target item
 	 */
 	public ItemInfoBlob(Player player, Item item) {
 		this.player = player;
@@ -58,6 +66,7 @@ public class ItemInfoBlob extends PacketWriteHelper {
 	/**
 	 * 按类型创建并添加一个 Blob 条目。
 	 * Creates and adds a blob entry of the given type.
+	 *
 	 * @param type blob 类型 / blob type
 	 */
 	public void addBlobEntry(ItemBlobType type) {
@@ -69,6 +78,7 @@ public class ItemInfoBlob extends PacketWriteHelper {
 	/**
 	 * 添加一条属性加成 Blob 条目。
 	 * Adds a stat-bonus blob entry bound to the given modifier.
+	 *
 	 * @param modifier 属性修正 / stat modifier
 	 */
 	public void addBonusBlobEntry(IStatFunction modifier) {
@@ -82,9 +92,10 @@ public class ItemInfoBlob extends PacketWriteHelper {
 	 * 不支持 {@link ItemBlobType#STAT_BONUSES}（需通过 {@link #addBonusBlobEntry}）。
 	 * Factory method that creates a single blob entry and binds ownership.
 	 * Does not support {@link ItemBlobType#STAT_BONUSES} (use {@link #addBonusBlobEntry}).
-	 * @param type blob 类型 / blob type
+	 *
+	 * @param type   blob 类型 / blob type
 	 * @param player 所属玩家 / owning player
-	 * @param item 所属物品 / owning item
+	 * @param item   所属物品 / owning item
 	 * @return 已绑定的条目 / bound entry
 	 */
 	public static ItemBlobEntry newBlobEntry(ItemBlobType type, Player player, Item item) {
@@ -100,16 +111,17 @@ public class ItemInfoBlob extends PacketWriteHelper {
 	 * 工厂方法：创建魔石孔位 Blob 条目，并以指定的随机孔位与附魔加成覆盖值渲染（重新鉴定预览用）。
 	 * Factory method creating a mana-socket blob entry rendered with overridden
 	 * optional socket and enchant bonus (for the reidentify preview).
-	 * @param player 所属玩家 / owning player
-	 * @param item 所属物品 / owning item
-	 * @param overrideSocket 覆盖的随机孔位，负值表示使用物品当前值 /
-	 *        overridden optional socket, negative to use the item's current value
+	 *
+	 * @param player               所属玩家 / owning player
+	 * @param item                 所属物品 / owning item
+	 * @param overrideSocket       覆盖的随机孔位，负值表示使用物品当前值 /
+	 *                             overridden optional socket, negative to use the item's current value
 	 * @param overrideEnchantBonus 覆盖的附魔加成，负值表示使用物品当前值 /
-	 *        overridden enchant bonus, negative to use the item's current value
+	 *                             overridden enchant bonus, negative to use the item's current value
 	 * @return 已绑定的条目 / bound entry
 	 */
 	public static ItemBlobEntry newPreviewManaSocketsEntry(Player player, Item item, int overrideSocket,
-		int overrideEnchantBonus) {
+														   int overrideEnchantBonus) {
 		ItemBlobEntry ent = ItemBlobType.MANA_SOCKETS.newBlobEntry();
 		ent.setOwner(player, item, null);
 		if (ent instanceof ManaStoneInfoBlobEntry manaStoneEntry) {
@@ -125,8 +137,9 @@ public class ItemInfoBlob extends PacketWriteHelper {
 	 * Assembles a full item-info blob based on item type and runtime state.
 	 * Equipable items get slot, mana-stone, conditioning, plume/bracelet data, etc.;
 	 * non-equipable items may only include general info or a stigma-shard entry.
+	 *
 	 * @param player 所属玩家 / owning player
-	 * @param item 目标物品 / target item
+	 * @param item   目标物品 / target item
 	 * @return 完整 blob / full blob
 	 */
 	public static ItemInfoBlob getFullBlob(Player player, Item item) {
@@ -139,15 +152,15 @@ public class ItemInfoBlob extends PacketWriteHelper {
 			blob.addBlobEntry(ItemBlobType.EQUIPPED_SLOT);
 			if (itemTemplate.getArmorType() != null && itemTemplate.getArmorType() != ArmorType.NO_ARMOR) {
 				switch (itemTemplate.getArmorType()) {
-				case WING:
-					blob.addBlobEntry(ItemBlobType.SLOTS_WING);
-					break;
-				case SHIELD:
-					blob.addBlobEntry(ItemBlobType.SLOTS_SHIELD);
-					break;
-				default:
-					blob.addBlobEntry(ItemBlobType.SLOTS_ARMOR);
-					break;
+					case WING:
+						blob.addBlobEntry(ItemBlobType.SLOTS_WING);
+						break;
+					case SHIELD:
+						blob.addBlobEntry(ItemBlobType.SLOTS_SHIELD);
+						break;
+					default:
+						blob.addBlobEntry(ItemBlobType.SLOTS_ARMOR);
+						break;
 				}
 			} else if (itemTemplate.isWeapon()) {
 				blob.addBlobEntry(ItemBlobType.SLOTS_WEAPON);
@@ -158,7 +171,7 @@ public class ItemInfoBlob extends PacketWriteHelper {
 			if (item.getConditioningInfo() != null) {
 				blob.addBlobEntry(ItemBlobType.CONDITIONING_INFO);
 			}
-			if (blob.getBlobEntries().size() > 0) {
+			if (!blob.getBlobEntries().isEmpty()) {
 				blob.addBlobEntry(ItemBlobType.PREMIUM_OPTION);
 				if (itemTemplate.isCanIdian()) {
 					blob.addBlobEntry(ItemBlobType.IDIAN_INFO);
@@ -189,6 +202,7 @@ public class ItemInfoBlob extends PacketWriteHelper {
 	/**
 	 * 返回当前已添加的 Blob 条目列表。
 	 * Returns the list of currently added blob entries.
+	 *
 	 * @return 条目列表 / entry list
 	 */
 	public List<ItemBlobEntry> getBlobEntries() {
@@ -198,6 +212,7 @@ public class ItemInfoBlob extends PacketWriteHelper {
 	/**
 	 * 计算全部条目的总负载长度（每条目含 1 字节类型 ID）。
 	 * Computes the total payload size of all entries (each entry includes a 1-byte type id).
+	 *
 	 * @return 总字节数 / total size in bytes
 	 */
 	public int size() {
@@ -213,127 +228,163 @@ public class ItemInfoBlob extends PacketWriteHelper {
 	 * Item-info blob type enum mapping client entry ids to concrete entry implementations.
 	 */
 	@Getter
-    public enum ItemBlobType {
-		/** 通用物品信息。 / General item info. */
+	public enum ItemBlobType {
+		/**
+		 * 通用物品信息。 / General item info.
+		 */
 		GENERAL_INFO(0x00) {
 			@Override
 			ItemBlobEntry newBlobEntry() {
 				return new GeneralInfoBlobEntry();
 			}
 		},
-		/** 武器槽位信息。 / Weapon slot info. */
+		/**
+		 * 武器槽位信息。 / Weapon slot info.
+		 */
 		SLOTS_WEAPON(0x01) {
 			@Override
 			ItemBlobEntry newBlobEntry() {
 				return new WeaponInfoBlobEntry();
 			}
 		},
-		/** 防具槽位信息。 / Armor slot info. */
+		/**
+		 * 防具槽位信息。 / Armor slot info.
+		 */
 		SLOTS_ARMOR(0x02) {
 			@Override
 			ItemBlobEntry newBlobEntry() {
 				return new ArmorInfoBlobEntry();
 			}
 		},
-		/** 盾牌槽位信息。 / Shield slot info. */
+		/**
+		 * 盾牌槽位信息。 / Shield slot info.
+		 */
 		SLOTS_SHIELD(0x03) {
 			@Override
 			ItemBlobEntry newBlobEntry() {
 				return new ShieldInfoBlobEntry();
 			}
 		},
-		/** 饰品槽位信息。 / Accessory slot info. */
+		/**
+		 * 饰品槽位信息。 / Accessory slot info.
+		 */
 		SLOTS_ACCESSORY(0x04) {
 			@Override
 			ItemBlobEntry newBlobEntry() {
 				return new AccessoryInfoBlobEntry();
 			}
 		},
-		/** 当前装备槽位。 / Currently equipped slot. */
+		/**
+		 * 当前装备槽位。 / Currently equipped slot.
+		 */
 		EQUIPPED_SLOT(0x06) {
 			@Override
 			ItemBlobEntry newBlobEntry() {
 				return new EquippedSlotBlobEntry();
 			}
 		},
-		/** 尘晶技能信息。 / Stigma skill info. */
+		/**
+		 * 尘晶技能信息。 / Stigma skill info.
+		 */
 		STIGMA_INFO(0x07) {
 			@Override
 			ItemBlobEntry newBlobEntry() {
 				return new StigmaInfoBlobEntry();
 			}
 		},
-		/** 尘晶碎片信息。 / Stigma shard info. */
+		/**
+		 * 尘晶碎片信息。 / Stigma shard info.
+		 */
 		STIGMA_SHARD(0x08) {
 			@Override
 			ItemBlobEntry newBlobEntry() {
 				return new StigmaShardInfoBlobEntry();
 			}
 		},
-		/** 随机选项。 / Random options. */
+		/**
+		 * 随机选项。 / Random options.
+		 */
 		PREMIUM_OPTION(0x10) {
 			@Override
 			ItemBlobEntry newBlobEntry() {
 				return new PremiumOptionInfoBlobEntry();
 			}
 		},
-		/** 艾帝安（抛光）信息。 / Idian (polish) info. */
+		/**
+		 * 艾帝安（抛光）信息。 / Idian (polish) info.
+		 */
 		IDIAN_INFO(0x11) {
 			@Override
 			ItemBlobEntry newBlobEntry() {
 				return new IdianInfoBlobEntry();
 			}
 		},
-		/** 包装/拆封次数信息。 / Wrap/unwrap count info. */
+		/**
+		 * 包装/拆封次数信息。 / Wrap/unwrap count info.
+		 */
 		WRAPP_INFO(0x12) {
 			@Override
 			ItemBlobEntry newBlobEntry() {
 				return new WrappInfoBlobEntry();
 			}
 		},
-		/** 羽饰信息。 / Plume info. */
+		/**
+		 * 羽饰信息。 / Plume info.
+		 */
 		PLUME_INFO(0x13) {
 			@Override
 			ItemBlobEntry newBlobEntry() {
 				return new PlumeInfoBlobEntry();
 			}
 		},
-		/** 手环信息。 / Bracelet info. */
+		/**
+		 * 手环信息。 / Bracelet info.
+		 */
 		BRACELET_INFO(0x14) {
 			@Override
 			ItemBlobEntry newBlobEntry() {
 				return new BraceletInfoBlobEntry();
 			}
 		},
-		/** 属性加成。 / Stat bonuses. */
+		/**
+		 * 属性加成。 / Stat bonuses.
+		 */
 		STAT_BONUSES(0x0A) {
 			@Override
 			ItemBlobEntry newBlobEntry() {
 				return new BonusInfoBlobEntry();
 			}
 		},
-		/** 魔石孔位与附魔等。 / Mana sockets, enchant, etc. */
+		/**
+		 * 魔石孔位与附魔等。 / Mana sockets, enchant, etc.
+		 */
 		MANA_SOCKETS(0x0B) {
 			@Override
 			ItemBlobEntry newBlobEntry() {
 				return new ManaStoneInfoBlobEntry();
 			}
 		},
-		/** 翅膀槽位信息。 / Wing slot info. */
+		/**
+		 * 翅膀槽位信息。 / Wing slot info.
+		 */
 		SLOTS_WING(0x0D) {
 			@Override
 			ItemBlobEntry newBlobEntry() {
 				return new WingInfoBlobEntry();
 			}
 		},
-		/** 合成/融合物品信息。 / Composite/fusioned item info. */
+		/**
+		 * 合成/融合物品信息。 / Composite/fusioned item info.
+		 */
 		COMPOSITE_ITEM(0x0E) {
 			@Override
 			ItemBlobEntry newBlobEntry() {
 				return new CompositeItemBlobEntry();
 			}
 		},
-		/** 调校（充能）信息。 / Conditioning (charge) info. */
+		/**
+		 * 调校（充能）信息。 / Conditioning (charge) info.
+		 */
 		CONDITIONING_INFO(0x0F) {
 			@Override
 			ItemBlobEntry newBlobEntry() {
@@ -341,25 +392,28 @@ public class ItemInfoBlob extends PacketWriteHelper {
 			}
 		};
 
-		/** 客户端入口 ID。 / Client entry id.
-         * -- GETTER --
-         *  返回客户端入口 ID。
-         *  Returns the client entry id.
-         */
+		/**
+		 * 客户端入口 ID。 / Client entry id.
+		 * -- GETTER --
+		 * 返回客户端入口 ID。
+		 * Returns the client entry id.
+		 */
 		private final int entryId;
 
 		/**
 		 * 以客户端入口 ID 构造类型。
 		 * Constructs a type with the given client entry id.
+		 *
 		 * @param entryId 客户端入口 ID / entry id
 		 */
 		ItemBlobType(int entryId) {
 			this.entryId = entryId;
 		}
 
-        /**
+		/**
 		 * 创建对应的 Blob 条目实例。
 		 * Creates a new blob entry instance for this type.
+		 *
 		 * @return 新条目 / new entry
 		 */
 		abstract ItemBlobEntry newBlobEntry();

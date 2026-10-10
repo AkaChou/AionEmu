@@ -24,7 +24,8 @@ final class PlayerItemDailyLimits {
 	/**
 	 * 记录或更新物品当日次数上限。
 	 * Records or updates the per-day count of an item.
-	 * @param itemId 物品 ID / item id
+	 *
+	 * @param itemId    物品 ID / item id
 	 * @param thisCount 当日次数 / per-day count
 	 */
 	void addItemMaxCount(int itemId, int thisCount) {
@@ -41,6 +42,7 @@ final class PlayerItemDailyLimits {
 	/**
 	 * 返回物品当日次数。
 	 * Returns the per-day count of an item.
+	 *
 	 * @param itemId 物品 ID / item id
 	 * @return 当日次数，未记录时为 0 / per-day count, or 0 when absent
 	 */
@@ -49,18 +51,6 @@ final class PlayerItemDailyLimits {
 			return 0;
 		}
 		return maxCountEvent.get(itemId).getThisCount();
-	}
-
-	/**
-	 * 移除物品的当日次数记录。
-	 * Removes the per-day record of an item.
-	 * @param itemId 物品 ID / item id
-	 */
-	void removeItemMaxCount(int itemId) {
-		if (maxCountEvent == null) {
-			return;
-		}
-		maxCountEvent.remove(itemId);
 	}
 
 	/**
@@ -77,6 +67,7 @@ final class PlayerItemDailyLimits {
 	/**
 	 * 返回原始当日次数表。
 	 * Returns the backing per-day count map.
+	 *
 	 * @return 当日次数表（live 视图），未创建时为 null / live map, or null when not created
 	 */
 	Map<Integer, MaxCountOfDay> getItemMaxCounts() {

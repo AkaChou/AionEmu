@@ -111,11 +111,11 @@ public class House extends VisibleObject {
 	private ByteArrayOutputStream signNoticeStream;
 	public static final int NOTICE_LENGTH = 130;
 
-	public House(Building building, HouseAddress address, int instanceId) {
-		this(GameWorldBootstrapServices.idFactory().nextId(), building, address, instanceId);
+	public House(Building building, HouseAddress address) {
+		this(GameWorldBootstrapServices.idFactory().nextId(), building, address);
 	}
 
-	public House(int objectId, Building building, HouseAddress address, int instanceId) {
+	public House(int objectId, Building building, HouseAddress address) {
 		super(objectId, new HouseController(), null, null, null);
 		getController().setOwner(this);
 		this.address = address;
@@ -223,7 +223,7 @@ public class House extends VisibleObject {
 			}
 		}
 		for (HouseSpawn spawn : templates) {
-			SpawnTemplate t = null;
+			SpawnTemplate t;
 			if (spawn.getType() == SpawnType.MANAGER && spawns.get(SpawnType.MANAGER) == null) {
 				t = SpawnEngine.addNewSingleTimeSpawn(getAddress().getMapId(), getLand().getManagerNpcId(),
 					spawn.getX(), spawn.getY(), spawn.getZ(), spawn.getH());
@@ -503,13 +503,6 @@ public class House extends VisibleObject {
 	}
 
 	/**
-	 * 返回 default part / Returns the default part
-	 */
-	public HouseDecoration getDefaultPart(PartType partType, int floor) {
-		return getRegistry().getDefaultPartByType(partType, floor);
-	}
-
-	/**
 	 * 获取房屋类型。 / Returns the house type.
 	 */
 	public HouseType getHouseType() {
@@ -529,17 +522,6 @@ public class House extends VisibleObject {
 	}
 
 	/**
-	 * 判断是否处于指定房屋状态。
-	 * Returns whether the house is in the given owner-info flag state.
-	 *
-	 * @param status 房屋所有者标志 / house owner flags
-	 * @return 是否处于该状态 / whether in the given state
-	 */
-	public boolean isInHousingStatus(PlayerHouseOwnerFlags status) {
-		return (houseOwnerInfoFlags & status.getId()) != 0;
-	}
-
-	/**
 	 * 修复建筑状态 / fix Building States.
 	 */
 	public void fixBuildingStates() {
@@ -548,7 +530,7 @@ public class House extends VisibleObject {
 			houseOwnerInfoFlags |= PlayerHouseOwnerFlags.HAS_OWNER.getId();
 			if (status == HouseStatus.ACTIVE) {
 				houseOwnerInfoFlags |= PlayerHouseOwnerFlags.BIDDING_ALLOWED.getId();
-				houseOwnerInfoFlags &= ~PlayerHouseOwnerFlags.SINGLE_HOUSE.getId();
+				houseOwnerInfoFlags &= (byte) ~PlayerHouseOwnerFlags.SINGLE_HOUSE.getId();
 			}
 		} else if (status == HouseStatus.SELL_WAIT) {
 			houseOwnerInfoFlags = PlayerHouseOwnerFlags.SELLING_HOUSE.getId();

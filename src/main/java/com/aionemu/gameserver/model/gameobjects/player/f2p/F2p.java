@@ -16,10 +16,14 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class F2p {
 	private final Player owner;
-	/** 返回 F2p 账号 / Returns the F2p account */
+	/**
+	 * 返回 F2p 账号 / Returns the F2p account
+	 */
 	private F2pAccount f2pAccount;
 
-	/** 添加。 / Add. */
+	/**
+	 * 添加。 / Add.
+	 */
 	public void add(F2pAccount f2pacc, boolean isNew) {
 		f2pAccount = f2pacc;
 		f2pacc.setActive(true);
@@ -31,7 +35,9 @@ public class F2p {
 		}
 	}
 
-	/** 更新。 / Update. */
+	/**
+	 * 更新。 / Update.
+	 */
 	public void update(F2pAccount f2pacc, boolean isNew) {
 		f2pAccount = f2pacc;
 		f2pacc.setActive(true);
@@ -43,7 +49,9 @@ public class F2p {
 		}
 	}
 
-	/** 移除。 / Remove. */
+	/**
+	 * 移除。 / Remove.
+	 */
 	public boolean remove() {
 		if (f2pAccount != null) {
 			f2pAccount.setActive(false);

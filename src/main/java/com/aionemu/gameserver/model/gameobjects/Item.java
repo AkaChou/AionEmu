@@ -351,9 +351,9 @@ public class Item extends AionObject implements IExpirable, StatOwner {
 	 * The tune count is deliberately excluded: retail increments the primary count at
 	 * initiation and never rolls it back on cancel.
 	 *
-	 * @param socket 新的随机孔位 / new optional socket
+	 * @param socket       新的随机孔位 / new optional socket
 	 * @param enchantBonus 新的附魔加成 / new enchant bonus
-	 * @param bonus 新的属性模板编号 / new stat bonus number
+	 * @param bonus        新的属性模板编号 / new stat bonus number
 	 */
 	public void setPendingReidentify(int socket, int enchantBonus, int bonus) {
 		this.pendingReidentifySocket = socket;
@@ -496,14 +496,6 @@ public class Item extends AionObject implements IExpirable, StatOwner {
 	public void setItemSkinTemplate(ItemTemplate newTemplate) {
 		this.itemSkinTemplate = newTemplate;
 		setPersistentState(PersistentState.UPDATE_REQUIRED);
-	}
-
-	public boolean isSkinnedItem() {
-		return getItemSkinTemplate() != this.itemTemplate;
-	}
-
-	public boolean isCanIdian() {
-		return itemTemplate.isCanIdian();
 	}
 
 	/**
@@ -710,16 +702,6 @@ public class Item extends AionObject implements IExpirable, StatOwner {
 	 */
 	public boolean hasFusionStones() {
 		return fusionStones != null && !fusionStones.isEmpty();
-	}
-
-	/**
-	 * 是否拥有伊迪安石。
-	 * Whether the item has an Idian stone.
-	 *
-	 * @return 是否拥有伊迪安石 / whether Idian stone
-	 */
-	public boolean hasIdianStone() {
-		return idianStone != null;
 	}
 
 	/**

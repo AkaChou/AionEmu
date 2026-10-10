@@ -5,6 +5,7 @@ import com.aionemu.boot.i18n.I18n;
 import lombok.NonNull;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -16,7 +17,9 @@ import java.util.Set;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.database.dao.DAOManager;
+
 import java.util.concurrent.ConcurrentHashMap;
+
 import com.aionemu.gameserver.controllers.HouseController;
 import com.aionemu.gameserver.dao.HousesDAO;
 import com.aionemu.gameserver.dataholders.DataManager;
@@ -51,19 +54,25 @@ import com.aionemu.gameserver.world.WorldPosition;
 @Slf4j
 public class HousingService {
 
-    /**
-     * -- SETTER --
-     *  注入 Spring 的实例提供者。
-     *  Injects the Spring instance provider.
-     */
-    @Setter
-    private static volatile ObjectProvider<HousingService> instanceProvider;
+	/**
+	 * -- SETTER --
+	 * 注入 Spring 的实例提供者。
+	 * Injects the Spring instance provider.
+	 */
+	@Setter
+	private static volatile ObjectProvider<HousingService> instanceProvider;
 	private final HousesDAO housesDAO;
-	/** 地图 ID 到该图房屋 / Map id to houses on that map */
+	/**
+	 * 地图 ID 到该图房屋 / Map id to houses on that map
+	 */
 	private static final Map<Integer, List<House>> housesByMapId = new HashMap<>();
-	/** 自定义（地产）房屋缓存。 / Custom (estate) house cache. */
+	/**
+	 * 自定义（地产）房屋缓存。 / Custom (estate) house cache.
+	 */
 	private final Map<Integer, House> customHouses;
-	/** 工作室缓存（玩家对象 ID → 工作室） / Studio cache (player objectId → studio) */
+	/**
+	 * 工作室缓存（玩家对象 ID → 工作室） / Studio cache (player objectId → studio)
+	 */
 	private final Map<Integer, House> studios;
 
 	/**
@@ -72,9 +81,10 @@ public class HousingService {
 	 * <p>双源静态兜底已退役：缺少 provider 时直接 fail-fast，避免在容器之外静默创建第二套实例。
 	 * The legacy static fallback is retired: a missing provider now fails fast instead of silently
 	 * creating a second instance outside the container.</p>
+	 *
 	 * @return 由 Spring 提供的实例 / the Spring-provided instance
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean /
-	 *         when no provider or bean is available
+	 *                               when no provider or bean is available
 	 */
 	public static HousingService getInstance() {
 		ObjectProvider<HousingService> provider = instanceProvider;
@@ -87,7 +97,7 @@ public class HousingService {
 		return provided;
 	}
 
-    /**
+	/**
 	 * 使用指定的 HousesDAO 构造服务并从数据库加载自定义房屋与工作室。
 	 * Constructs the service with given HousesDAO and loads custom houses and studios.
 	 *
@@ -111,7 +121,7 @@ public class HousingService {
 		log.info(I18n.get("log.2e7366eec746"));
 	}
 
-    /**
+	/**
 	 * 从数据库加载自定义房屋与工作室。
 	 * Loads custom houses and studios from the database.
 	 */
@@ -134,6 +144,7 @@ public class HousingService {
 	 * Spawns houses in the given world/instance; if no land data, tries to spawn a player studio.
 	 * 世界 ID / world id
 	 * instance id
+	 *
 	 * @param registeredId 注册玩家 ID（工作室场景） / registered player id (studio case)
 	 */
 	public void spawnHouses(int worldId, int instanceId, int registeredId) {
@@ -158,7 +169,7 @@ public class HousingService {
 				}
 				if (position == null) {
 					position = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().createPosition(addr.getMapId(), addr.getX(), addr.getY(),
-							addr.getZ(), (byte) 0, instanceId);
+						addr.getZ(), (byte) 0, instanceId);
 					studio.setPosition(position);
 				}
 				if (!position.isSpawned()) {
@@ -185,7 +196,7 @@ public class HousingService {
 				}
 				House customHouse = customHouses.get(address.getId());
 				if (customHouse == null) {
-					customHouse = new House(defaultBuilding, address, instanceId);
+					customHouse = new House(defaultBuilding, address);
 					customHouse.setPersistentState(PersistentState.NEW);
 				}
 				customHouse.spawn(instanceId);
@@ -229,6 +240,7 @@ public class HousingService {
 	 * 获取玩家当前房屋地址 ID（工作室或有效自定义房屋）。
 	 * Returns the player's current house address id (studio or active custom house).
 	 * player id
+	 *
 	 * @return 地址 ID，无则为 0 / address id, or 0
 	 */
 	public int getPlayerAddress(int playerId) {
@@ -242,7 +254,7 @@ public class HousingService {
 				continue;
 			}
 			if (house.getOwnerId() == playerId
-					&& (house.getStatus() == HouseStatus.ACTIVE || house.getStatus() == HouseStatus.SELL_WAIT)) {
+				&& (house.getStatus() == HouseStatus.ACTIVE || house.getStatus() == HouseStatus.SELL_WAIT)) {
 				return house.getAddress().getId();
 			}
 		}
@@ -252,6 +264,7 @@ public class HousingService {
 	/**
 	 * 重置房屋自定义装饰外观。
 	 * Resets custom decorative parts of the house.
+	 *
 	 * @param house 目标房屋 / target house
 	 */
 	public void resetAppearance(House house) {
@@ -268,6 +281,7 @@ public class HousingService {
 	 * 按名称查找自定义房屋。
 	 * Finds a custom house by name.
 	 * house name
+	 *
 	 * @return 房屋，未找到则为 null / house, or null
 	 */
 	public House getHouseByName(String houseName) {
@@ -283,6 +297,7 @@ public class HousingService {
 	 * 按地址 ID 查找自定义房屋。
 	 * Finds a custom house by address id.
 	 * address id
+	 *
 	 * @return 房屋，未找到则为 null / house, or null
 	 */
 	public House getHouseByAddress(int address) {
@@ -298,6 +313,7 @@ public class HousingService {
 	 * 激活玩家已购但处于未激活状态的房屋。
 	 * Activates a house the player bought that is still inactive.
 	 * player id
+	 *
 	 * @return 激活后的房屋，不存在则为 null / activated house, or null
 	 */
 	public House activateBoughtHouse(int playerId) {
@@ -320,6 +336,7 @@ public class HousingService {
 	 * 获取玩家工作室。
 	 * Returns the player's studio house.
 	 * player id
+	 *
 	 * @return 工作室，不存在则为 null / studio, or null
 	 */
 	public House getPlayerStudio(int playerId) {
@@ -346,6 +363,7 @@ public class HousingService {
 	/**
 	 * 为玩家注册（创建）工作室。
 	 * Registers (creates) a studio for the player.
+	 *
 	 * @param player 玩家 / player
 	 */
 	public void registerPlayerStudio(Player player) {
@@ -355,6 +373,7 @@ public class HousingService {
 	/**
 	 * 扣费后重新创建玩家工作室。
 	 * Recreates the player's studio after charging the land fee.
+	 *
 	 * @param player 玩家 / player
 	 */
 	public void recreatePlayerStudio(Player player) {
@@ -371,6 +390,7 @@ public class HousingService {
 	/**
 	 * 创建并激活玩家工作室。
 	 * Creates and activates a player studio.
+	 *
 	 * @param player 玩家 / player
 	 */
 	private void createStudio(Player player) {
@@ -378,7 +398,7 @@ public class HousingService {
 			return;
 		}
 		HousingLand land = DataManager.HOUSE_DATA.getLand(player.getRace() == Race.ELYOS ? 329001 : 339001);
-		House studio = new House(land.getDefaultBuilding(), land.getAddresses().get(0), 0);
+		House studio = new House(land.getDefaultBuilding(), land.getAddresses().get(0));
 		studio.setOwnerId(player.getObjectId());
 		synchronized (studios) {
 			studios.put(player.getObjectId(), studio);
@@ -390,7 +410,7 @@ public class HousingService {
 		studio.setPersistentState(PersistentState.NEW);
 		player.setBuildingOwnerState(PlayerHouseOwnerFlags.HOUSE_OWNER.getId());
 		PacketSendUtility.sendPacket(player,
-				new SM_HOUSE_ACQUIRE(player.getObjectId(), studio.getAddress().getId(), true));
+			new SM_HOUSE_ACQUIRE(player.getObjectId(), studio.getAddress().getId(), true));
 		PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_HOUSING_INS_OWN_SUCCESS);
 		PacketSendUtility.sendPacket(player, new SM_HOUSE_OWNER_INFO(player, studio));
 	}
@@ -399,6 +419,7 @@ public class HousingService {
 	 * 切换房屋建筑模板并刷新外观与物件。
 	 * Switches the house building template and refreshes appearance/objects.
 	 * current house
+	 *
 	 * @param newBuildingId 新建筑模板 ID / new building template id
 	 */
 	public void switchHouseBuilding(House currentHouse, int newBuildingId) {
@@ -416,6 +437,7 @@ public class HousingService {
 	/**
 	 * 汇总所有已按地图登记的自定义房屋。
 	 * Collects all custom houses registered by map.
+	 *
 	 * @return 自定义房屋列表 / custom house list
 	 */
 	public List<House> getCustomHouses() {
@@ -429,6 +451,7 @@ public class HousingService {
 	/**
 	 * 实例销毁时清理工作室生成点并保存。
 	 * Clears studio spawn points and saves when an instance is destroyed.
+	 *
 	 * @param ownerId 所有者玩家 ID / owner player id
 	 */
 	public void onInstanceDestroy(int ownerId) {

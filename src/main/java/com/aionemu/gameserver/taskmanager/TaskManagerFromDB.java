@@ -22,6 +22,7 @@ import lombok.extern.slf4j.Slf4j;
  * 从数据库加载并注册的全局定时任务管理器。
  * Global scheduled-task manager loaded and registered from the database.
  * <p>基于 L2J Emulator Global Tasks System。/ Based on L2J Emulator Global Tasks System.</p>
+ *
  * @author Divinity
  * @author Layane
  */
@@ -49,6 +50,7 @@ public class TaskManagerFromDB {
 	/**
 	 * 使用指定的数据库任务 DAO 构造管理器。
 	 * Constructs the manager with the given task-from-DB DAO.
+	 *
 	 * @param dao 数据库任务 DAO / Task-from-DB DAO
 	 */
 	public TaskManagerFromDB(@NonNull TaskFromDBDAO dao) {
@@ -96,6 +98,7 @@ public class TaskManagerFromDB {
 	/**
 	 * 注册一个任务处理器；若同名已存在则打错误日志。
 	 * Register one task handler; log an error if the name already exists.
+	 *
 	 * @param task 处理器模板 / Handler template
 	 */
 	private void registerNewTask(TaskFromDBHandler task) {
@@ -115,7 +118,7 @@ public class TaskManagerFromDB {
 			// 若任务名存在 / If the task name exist
 			if (handlers.get(task.getName()) != null) {
 				Class<? extends TaskFromDBHandler> tmpClass = handlers.get(task.getName()).getClass();
-				TaskFromDBHandler currentTask = null;
+				TaskFromDBHandler currentTask;
 
 				try {
 					// 创建任务新实例。 / Create new instance of the task
@@ -146,8 +149,9 @@ public class TaskManagerFromDB {
 	/**
 	 * 按每天固定时刻（HH:MM:SS）循环执行任务。
 	 * Run a task every day at a fixed time (HH:MM:SS).
+	 *
 	 * @param handler 处理器实例 / Handler instance
-	 * @param dbTask 数据库任务配置 / DB task configuration
+	 * @param dbTask  数据库任务配置 / DB task configuration
 	 */
 	private void runFixedInTimeTask(TaskFromDBHandler handler, TaskFromDB dbTask) {
 		String[] time = dbTask.getStartTime().split(":");
@@ -174,6 +178,7 @@ public class TaskManagerFromDB {
 	 * <p>双源静态兜底已退役：缺少 provider 时直接 fail-fast，避免在容器之外静默创建第二套实例。
 	 * The legacy static fallback is retired: a missing provider now fails fast instead of silently
 	 * creating a second instance outside the container.</p>
+	 *
 	 * @return 由 Spring 提供的实例 / the Spring-provided instance
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean / when no provider or bean is available
 	 */
@@ -191,6 +196,7 @@ public class TaskManagerFromDB {
 	/**
 	 * 注入 Spring 实例提供者。
 	 * Inject the Spring instance provider.
+	 *
 	 * @param instanceProvider Spring 实例提供者 / the Spring instance provider
 	 */
 	public static void setInstanceProvider(ObjectProvider<TaskManagerFromDB> instanceProvider) {

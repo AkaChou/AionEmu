@@ -151,6 +151,7 @@ public final class PlayerEnterWorldService {
 	/**
 	 * 由 Spring 配置类在启动期绑定二级密码 DAO。
 	 * Binds the character-passkey DAO from the Spring configuration at startup.
+	 *
 	 * @param dao 二级密码 DAO / character-passkey DAO
 	 */
 	public static void bindPlayerPasskeyDAO(PlayerPasskeyDAO dao) {
@@ -160,6 +161,7 @@ public final class PlayerEnterWorldService {
 	/**
 	 * 返回二级密码 DAO；未绑定（离线/单测环境）时按 safeDao 兜底构建并缓存。
 	 * Returns the character-passkey DAO; falls back to safeDao construction when unbound (offline/unit tests).
+	 *
 	 * @return 二级密码 DAO / character-passkey DAO
 	 */
 	private static PlayerPasskeyDAO playerPasskeyDAO() {
@@ -836,7 +838,6 @@ public final class PlayerEnterWorldService {
 		player.getCommonData().setOnline(true);
 		PlayerService.daos().playerDAO().onlinePlayer(player, true);
 		player.onLoggedIn();
-		player.setOnlineTime();
 	}
 
 	/**

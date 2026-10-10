@@ -45,10 +45,6 @@ public class GodStone extends ItemStone {
 	private boolean processingAttack;
 	private boolean breaking;
 
-	public GodStone(int itemObjId, int itemId, PersistentState persistentState) {
-		this(itemObjId, itemId, 0, persistentState);
-	}
-
 	public GodStone(int itemObjId, int itemId, int activatedCount, PersistentState persistentState) {
 		super(itemObjId, itemId, 0, persistentState);
 		this.activatedCount = activatedCount;
@@ -72,8 +68,8 @@ public class GodStone extends ItemStone {
 		int probability = weapon.getItemTemplate().isTwoHandWeapon()
 			? godstoneInfo.getProbability()
 			: weapon.getEquipmentSlot() == ItemSlot.MAIN_HAND.getSlotIdMask()
-				? godstoneInfo.getProbability()
-				: godstoneInfo.getProbabilityleft();
+			? godstoneInfo.getProbability()
+			: godstoneInfo.getProbabilityleft();
 		attackObserver = new ActionObserver(ObserverType.ATTACK) {
 			@Override
 			public void attack(Creature target) {

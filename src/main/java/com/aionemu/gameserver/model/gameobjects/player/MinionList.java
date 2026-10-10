@@ -6,9 +6,7 @@ import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 import java.util.Collection;
 import java.util.List;
 
-import com.aionemu.gameserver.network.aion.serverpackets.SM_MINIONS;
 import com.aionemu.gameserver.services.player.PlayerService;
-import com.aionemu.gameserver.utils.PacketSendUtility;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -29,7 +27,9 @@ public class MinionList {
 		loadMinions();
 	}
 
-	/** Load 守护灵 / Load minions */
+	/**
+	 * Load 守护灵 / Load minions
+	 */
 	public void loadMinions() {
 		List<MinionCommonData> loadedMinions = PlayerService.daos().playerMinionsDAO().getPlayerMinions(player);
 		if (loadedMinions == null) {
@@ -43,31 +43,25 @@ public class MinionList {
 		}
 	}
 
-	/** 返回 minions / Returns the minions */
+	/**
+	 * 返回 minions / Returns the minions
+	 */
 	public Collection<MinionCommonData> getMinions() {
 		return minions.values();
 	}
 
-	/** 更新守护灵列表 / Update minions list */
-	public void updateMinionsList() {
-		List<MinionCommonData> loadedMinions = PlayerService.daos().playerMinionsDAO().getPlayerMinions(player);
-		if (loadedMinions == null) {
-			return;
-		}
-		minions.clear();
-		for (MinionCommonData minionCommonData : loadedMinions) {
-			minions.put(minionCommonData.getObjectId(), minionCommonData);
-		}
-		PacketSendUtility.sendPacket(player, new SM_MINIONS(0, getMinions()));
-	}
-
-	/** 获取守护灵。 / Returns the minion. */
+	/**
+	 * 获取守护灵。 / Returns the minion.
+	 */
 	public MinionCommonData getMinion(int minionObjId) {
 		return minions.get(minionObjId);
 	}
 
 	// 添加成长点 / Add growthPoint
-	/** 添加 new minion / Adds new minion */
+
+	/**
+	 * 添加 new minion / Adds new minion
+	 */
 	public MinionCommonData addNewMinion(Player player, int minionId, String name, String grade, int level, int growthPoint) {
 		MinionCommonData minionCommonData = new MinionCommonData(minionId, player.getObjectId(), name, grade, level, growthPoint);
 		if (!PlayerService.daos().playerMinionsDAO().insertPlayerMinion(minionCommonData)) {
@@ -80,7 +74,7 @@ public class MinionList {
 	}
 
 	public MinionCommonData replaceWithCombinedMinion(int minionId, String name, String grade, int level, int growthPoint,
-			List<Integer> materialObjectIds) {
+													  List<Integer> materialObjectIds) {
 		MinionCommonData replacement = new MinionCommonData(minionId, player.getObjectId(), name, grade, level, growthPoint);
 		if (!PlayerService.daos().playerMinionsDAO().replacePlayerMinions(replacement, materialObjectIds)) {
 			GameWorldBootstrapServices.idFactory().releaseId(replacement.getObjectId());
@@ -94,12 +88,16 @@ public class MinionList {
 		return replacement;
 	}
 
-	/** 是否拥有守护灵。 / Whether minion. */
+	/**
+	 * 是否拥有守护灵。 / Whether minion.
+	 */
 	public boolean hasMinion(int n) {
 		return minions.containsKey(n);
 	}
 
-	/** 删除守护灵。 / Deletes minion. */
+	/**
+	 * 删除守护灵。 / Deletes minion.
+	 */
 	public boolean deleteMinion(int minionObjId) {
 		if (!hasMinion(minionObjId) || !PlayerService.daos().playerMinionsDAO().removePlayerMinion(player, minionObjId)) {
 			return false;
@@ -114,13 +112,10 @@ public class MinionList {
 		}
 	}
 
-	/** 设置 last used / Sets the last used */
+	/**
+	 * 设置 last used / Sets the last used
+	 */
 	public void setLastUsed(int lastUsedObjId) {
 		this.lastUsedObjId = lastUsedObjId;
-	}
-
-	/** 返回上次已用 / Returns the last used*/
-	public int getLastUsed() {
-		return lastUsedObjId;
 	}
 }

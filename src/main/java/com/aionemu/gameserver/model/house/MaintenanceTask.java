@@ -34,29 +34,30 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 
 public class MaintenanceTask extends AbstractCronTask {
 
-    /**
-     * -- SETTER --
-     * 设置实例提供者。 / Sets the instance provider.
-     */
-    @Setter
-    private static volatile ObjectProvider<MaintenanceTask> instanceProvider;
+	/**
+	 * -- SETTER --
+	 * 设置实例提供者。 / Sets the instance provider.
+	 */
+	@Setter
+	private static volatile ObjectProvider<MaintenanceTask> instanceProvider;
 	private static final List<House> maintainedHouses;
 
 	static {
 		maintainedHouses = new ArrayList<>();
 	}
 
-    /**
+	/**
 	 * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。
 	 * Returns the instance, which must be supplied by Spring.
 	 * <p>双源静态兜底已退役：缺少 provider 时直接 fail-fast，避免在容器之外静默创建第二套实例。
 	 * The legacy static fallback is retired: a missing provider now fails fast instead of silently
 	 * creating a second instance outside the container.</p>
+	 *
 	 * @return 由 Spring 提供的实例 / the Spring-provided instance
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean /
-	 *         when no provider or bean is available
+	 *                               when no provider or bean is available
 	 */
-	public static final MaintenanceTask getInstance() {
+	public static MaintenanceTask getInstance() {
 		ObjectProvider<MaintenanceTask> provider = instanceProvider;
 		MaintenanceTask provided = provider == null ? null : provider.getIfAvailable();
 		if (provided == null) {
@@ -65,14 +66,6 @@ public class MaintenanceTask extends AbstractCronTask {
 				+ "（静态兜底已退役，见 LegacySingletonFallbackAuditTest）");
 		}
 		return provided;
-	}
-
-    private static MaintenanceTask createLegacyInstance() {
-		try {
-			return new MaintenanceTask(HousingConfig.HOUSE_MAINTENANCE_TIME);
-		} catch (ParseException pe) {
-			return null;
-		}
 	}
 
 	public MaintenanceTask(String maintainTime) throws ParseException {
@@ -95,13 +88,6 @@ public class MaintenanceTask extends AbstractCronTask {
 
 	protected boolean canRunOnInit() {
 		return false;
-	}
-
-	/**
-	 * @return 是否已到维护时间 / whether maintain time
-	 */
-	public boolean isMaintainTime() {
-		return (getRunTime() - System.currentTimeMillis() / 1000) <= 0;
 	}
 
 	@Override
@@ -161,9 +147,9 @@ public class MaintenanceTask extends AbstractCronTask {
 				continue;
 			}
 			long payTime = house.getNextPay().getTime();
-			long impoundTime = 0;
-			int warnCount = 0;
-			PlayerCommonData pcd = null;
+			long impoundTime;
+			int warnCount;
+			PlayerCommonData pcd;
 			Player player = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(house.getOwnerId());
 			if (player == null) {
 				pcd = PlayerService.daos().playerDAO().loadPlayerCommonData(house.getOwnerId());
