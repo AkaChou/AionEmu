@@ -92,4 +92,5 @@ AionEmu 当前采用单体 Spring Boot 4.1 承载 Login、Game、Chat 服务，�
 - [x] 6. 重构 `IntObjectHashMap.java`：实现真·原始类型开地址哈希表，消除全库 257 处伪原始集合的装箱与 Entry 分配开销，完整保持 Map 接口兼容并通过 15 项专项单元测试验证
 - [x] 7. 升级核心原始集合家族（`IntIntHashMap`、`ShortObjectHashMap`、`IntArrayList`）：全面改用扁平原生数组与开地址探测，消除宠物/技能/飞行路径/任务引擎的高频装箱，新增 28 项专项单元测试全部通过
 - [x] 8. 重构玩家周期存盘流水线（Phase 3 任务 3.1）：取消单玩家分散挂载 `GeneralUpdateTask` 与 `ItemUpdateTask` 定时器的架构，收拢至单例 `PeriodicSaveService` 集中分批异步调度，彻底消除千人在线调度风暴与数据库 IO 瞬时并发冲击，新增 3 项专项单元测试全部通过
+- [x] 9. 全库持久层 Spring JdbcClient 现代化改造：将登录服（11个）与游戏服（71个）共 82 个 DAO 全面升级为现代流式 JdbcClient，采用双构造器模式支持 IoC 与轻量单测，严格保持 ServiceContext 多租户数据源隔离与调用方外部事务原子性，并显式排除 Spring Boot 默认单数据源自动配置
 
