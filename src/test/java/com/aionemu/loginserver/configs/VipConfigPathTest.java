@@ -44,4 +44,28 @@ class VipConfigPathTest {
         assertTrue(VipConfig.AUTO_ENABLE);
         assertEquals(4, VipConfig.AUTO_ENABLE_LEVEL);
     }
+
+    /**
+     * 生产文件形态：父标量键规范化为 `.value` 子键后，遗留装配必须沿该子键取值。
+     * Production file shape: after the scalar parent key is normalized into a `.value` sub-key,
+     * the legacy assembly must read through that sub-key.
+     */
+    @Test
+    void loadsNormalizedValueSubKeyFromMainConfigDirectory() throws Exception {
+        Path configDir = tempDir.resolve("config");
+        Files.createDirectories(configDir.resolve("login"));
+        Files.createDirectories(configDir.resolve("network"));
+        Files.createDirectories(configDir.resolve("main"));
+        Files.writeString(configDir.resolve("network/network.properties"), "");
+        Files.writeString(configDir.resolve("main/vip.properties"), """
+            loginserver.vip.auto-enable.value = true
+            loginserver.vip.auto-enable.level = 4
+            """);
+        System.setProperty("aion.config.dir", configDir.toString());
+
+        Config.load();
+
+        assertTrue(VipConfig.AUTO_ENABLE);
+        assertEquals(4, VipConfig.AUTO_ENABLE_LEVEL);
+    }
 }

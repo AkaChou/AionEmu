@@ -1,28 +1,34 @@
 package com.aionemu.chatserver.configs;
 
 
-import com.aionemu.boot.i18n.I18n;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.file.Path;
 import java.util.Objects;
 import java.util.Properties;
 
-import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.stereotype.Component;
+
+import com.aionemu.boot.i18n.I18n;
 import com.aionemu.commons.configs.CommonsConfig;
 import com.aionemu.commons.configuration.ConfigurableProcessor;
 import com.aionemu.commons.configuration.Property;
+import com.aionemu.commons.configuration.transformers.InetSocketAddressTransformer;
+import com.aionemu.commons.configuration.TransformationException;
 import com.aionemu.commons.utils.PropertiesUtils;
 
 /**
- * 聊天服务器静态配置项与从文件加载的入口。
- * Static chat-server configuration properties and file-loading entry point.
+ * 聊天服务器静态配置项与从文件加载的入口，支持 Spring Boot ConfigurationProperties 与静态门面访问。
+ * Static chat-server configuration properties and file-loading entry point, supporting Spring Boot
+ * ConfigurationProperties and static facade access.
  * @author ATracer
  */
 @Slf4j
-@UtilityClass
+@Component
+@ConfigurationProperties(prefix = "chatserver")
 public class Config {
 
     private static volatile Properties bootOverrides = new Properties();
@@ -104,6 +110,48 @@ public class Config {
     @Property(key = "chatserver.restart.time", defaultValue = "5:00")
     public static String CHATSERVER_RESTART_TIME;
 
+    private final NetworkProperties network = new NetworkProperties();
+    private final LogProperties logProperties = new LogProperties();
+    private final ChatProperties chat = new ChatProperties();
+    private final RestartProperties restart = new RestartProperties();
+
+    public NetworkProperties getNetwork() {
+        return network;
+    }
+
+    /**
+     * no-op：绑定值经嵌套属性直接写入静态字段，防止重复绑定覆盖。
+     * no-op: bound values reach the static fields via the nested properties,
+     * so re-binding must not overwrite them.
+     * @param network 绑定产生的嵌套实例 / nested instance produced by binding
+     */
+    public void setNetwork(NetworkProperties network) {
+    }
+
+    public LogProperties getLog() {
+        return logProperties;
+    }
+
+    /** 同 {@link #setNetwork}。 / See {@link #setNetwork}. */
+    public void setLog(LogProperties logProperties) {
+    }
+
+    public ChatProperties getChat() {
+        return chat;
+    }
+
+    /** 同 {@link #setNetwork}。 / See {@link #setNetwork}. */
+    public void setChat(ChatProperties chat) {
+    }
+
+    public RestartProperties getRestart() {
+        return restart;
+    }
+
+    /** 同 {@link #setNetwork}。 / See {@link #setNetwork}. */
+    public void setRestart(RestartProperties restart) {
+    }
+
     /**
      * 解析统一配置根目录。
      * Resolves the shared configuration root directory.
@@ -162,5 +210,224 @@ public class Config {
         );
         System.arraycopy(serviceProperties, 0, properties, 1, serviceProperties.length);
         return properties;
+    }
+
+    /**
+     * 解析遗留转换器同款语义的 "host:port" 地址串。
+     * Parses an "host:port" string with the same semantics as the legacy transformer.
+     * @param value 地址串 / address string
+     * @return 解析结果 / parsed address
+     */
+    private static InetSocketAddress parseAddress(String value) {
+        try {
+            return InetSocketAddressTransformer.SHARED_INSTANCE.transform(value, null);
+        } catch (TransformationException e) {
+            throw new IllegalArgumentException("Invalid address: " + value, e);
+        }
+    }
+
+    /**
+     * {@code chatserver.network} 绑定节点。
+     * {@code chatserver.network} binding node.
+     */
+    public static class NetworkProperties {
+
+        private final ClientProperties client = new ClientProperties();
+        private final PublicProperties publicAddress = new PublicProperties();
+        private final GameserverProperties gameserver = new GameserverProperties();
+
+        public ClientProperties getClient() {
+            return client;
+        }
+
+        /** no-op，理由同 {@link Config#setNetwork}。 / no-op, see {@link Config#setNetwork}. */
+        public void setClient(ClientProperties client) {
+        }
+
+        /**
+         * 属性名必须为 {@code public}（键 {@code chatserver.network.public.*}），字段名规避关键字。
+         * The property name must be {@code public} (keys {@code chatserver.network.public.*});
+         * only the field name avoids the keyword.
+         */
+        public PublicProperties getPublic() {
+            return publicAddress;
+        }
+
+        /** no-op，理由同 {@link Config#setNetwork}。 / no-op, see {@link Config#setNetwork}. */
+        public void setPublic(PublicProperties publicAddress) {
+        }
+
+        public GameserverProperties getGameserver() {
+            return gameserver;
+        }
+
+        /** no-op，理由同 {@link Config#setNetwork}。 / no-op, see {@link Config#setNetwork}. */
+        public void setGameserver(GameserverProperties gameserver) {
+        }
+
+        /**
+         * {@code chatserver.network.client} 绑定节点。
+         * {@code chatserver.network.client} binding node.
+         */
+        public static class ClientProperties {
+
+            public String getAddress() {
+                return CHAT_ADDRESS.getHostString() + ":" + CHAT_ADDRESS.getPort();
+            }
+
+            public void setAddress(String address) {
+                CHAT_ADDRESS = parseAddress(address);
+            }
+        }
+
+        /**
+         * {@code chatserver.network.public} 绑定节点（向客户端宣告的地址）。
+         * {@code chatserver.network.public} binding node (the address advertised to clients).
+         */
+        public static class PublicProperties {
+
+            public String getAddress() {
+                return PUBLIC_CHAT_ADDRESS.getHostString() + ":" + PUBLIC_CHAT_ADDRESS.getPort();
+            }
+
+            public void setAddress(String address) {
+                PUBLIC_CHAT_ADDRESS = parseAddress(address);
+            }
+        }
+
+        /**
+         * {@code chatserver.network.gameserver} 绑定节点。
+         * {@code chatserver.network.gameserver} binding node.
+         */
+        public static class GameserverProperties {
+
+            public String getAddress() {
+                return GAME_ADDRESS.getHostString() + ":" + GAME_ADDRESS.getPort();
+            }
+
+            public void setAddress(String address) {
+                GAME_ADDRESS = parseAddress(address);
+            }
+
+            public String getPassword() {
+                return GAME_SERVER_PASSWORD;
+            }
+
+            public void setPassword(String password) {
+                GAME_SERVER_PASSWORD = password;
+            }
+        }
+    }
+
+    /**
+     * {@code chatserver.log} 绑定节点。
+     * {@code chatserver.log} binding node.
+     */
+    public static class LogProperties {
+
+        private final ChannelProperties channel = new ChannelProperties();
+
+        public ChannelProperties getChannel() {
+            return channel;
+        }
+
+        /** no-op，理由同 {@link Config#setNetwork}。 / no-op, see {@link Config#setNetwork}. */
+        public void setChannel(ChannelProperties channel) {
+        }
+
+        public boolean isChat() {
+            return LOG_CHAT;
+        }
+
+        public void setChat(boolean chat) {
+            LOG_CHAT = chat;
+        }
+
+        /**
+         * {@code chatserver.log.channel} 绑定节点。
+         * {@code chatserver.log.channel} binding node.
+         */
+        public static class ChannelProperties {
+
+            public boolean isRequest() {
+                return LOG_CHANNEL_REQUEST;
+            }
+
+            public void setRequest(boolean request) {
+                LOG_CHANNEL_REQUEST = request;
+            }
+
+            public boolean isInvalid() {
+                return LOG_CHANNEL_INVALID;
+            }
+
+            public void setInvalid(boolean invalid) {
+                LOG_CHANNEL_INVALID = invalid;
+            }
+        }
+    }
+
+    /**
+     * {@code chatserver.chat} 绑定节点。
+     * {@code chatserver.chat} binding node.
+     */
+    public static class ChatProperties {
+
+        private final MessageProperties message = new MessageProperties();
+
+        public int getLang() {
+            return LANG_CHAT;
+        }
+
+        public void setLang(int lang) {
+            LANG_CHAT = lang;
+        }
+
+        public MessageProperties getMessage() {
+            return message;
+        }
+
+        /** no-op，理由同 {@link Config#setNetwork}。 / no-op, see {@link Config#setNetwork}. */
+        public void setMessage(MessageProperties message) {
+        }
+
+        /**
+         * {@code chatserver.chat.message} 绑定节点（点分子键必须显式嵌套，驼峰属性无法承接两段点分键）。
+         * {@code chatserver.chat.message} binding node (dotted sub-keys require explicit nesting;
+         * a camelCase property cannot absorb a two-segment dotted key).
+         */
+        public static class MessageProperties {
+
+            public int getDelay() {
+                return MESSAGE_DELAY;
+            }
+
+            public void setDelay(int delay) {
+                MESSAGE_DELAY = delay;
+            }
+        }
+    }
+
+    /**
+     * {@code chatserver.restart} 绑定节点。
+     * {@code chatserver.restart} binding node.
+     */
+    public static class RestartProperties {
+
+        public String getFrequency() {
+            return CHATSERVER_RESTART_FREQUENCY;
+        }
+
+        public void setFrequency(String frequency) {
+            CHATSERVER_RESTART_FREQUENCY = frequency;
+        }
+
+        public String getTime() {
+            return CHATSERVER_RESTART_TIME;
+        }
+
+        public void setTime(String time) {
+            CHATSERVER_RESTART_TIME = time;
+        }
     }
 }
