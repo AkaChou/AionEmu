@@ -23,7 +23,7 @@ import org.springframework.stereotype.Component;
  * @author SoulKeeper
  */
 @Slf4j
-@Component
+@Component("loginConfig")
 @ConfigurationProperties(prefix = "loginserver")
 public class Config {
 

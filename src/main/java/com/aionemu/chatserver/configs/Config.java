@@ -27,7 +27,7 @@ import com.aionemu.commons.utils.PropertiesUtils;
  * @author ATracer
  */
 @Slf4j
-@Component
+@Component("chatConfig")
 @ConfigurationProperties(prefix = "chatserver")
 public class Config {
 
