@@ -86,10 +86,10 @@ public class GameServer {
 	}
 
 	/**
-	 * 初始化日志系统，包括备份旧日志文件和配置新的日志记录器
-	 * Initialize the logging system, including backing up old log files and configuring new loggers
+	 * 初始化日志系统，包括备份旧日志文件和配置新的日志记录器。
+	 * Initializes the logging system, including backing up old log files and configuring new loggers.
 	 */
-	private static void initalizeLoggger() {
+	public static void initializeLogger() {
 		if (AionRuntimeMode.isBootEmbedded()) {
 			return;
 		}
@@ -144,14 +144,6 @@ public class GameServer {
 		} catch (JoranException je) {
 			throw new RuntimeException("[LoggerFactory] Failed to configure loggers, shutting down...", je);
 		}
-	}
-
-	/**
-	 * 初始化日志（备份旧日志并配置 Logback）。
-	 * Initializes logging (backs up old logs and configures Logback).
-	 */
-	public static void initializeLogger() {
-		initalizeLoggger();
 	}
 
 	/**
@@ -247,11 +239,7 @@ public class GameServer {
 	 * 执行并清空已注册的启动钩子。
 	 * Runs and clears registered startup hooks.
 	 */
-	public static void runStartupHooks() {
-		onStartup();
-	}
-
-	private synchronized static void onStartup() {
+	public static synchronized void runStartupHooks() {
 		final Set<StartupHook> startupHooks = startUpHooks;
 
 		startUpHooks = null;

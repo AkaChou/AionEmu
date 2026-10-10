@@ -123,7 +123,7 @@ public class EnchantService {
 	 */
 	public static boolean breakItem(Player player, Item targetItem) {
 		Storage inventory = player.getInventory();
-		int kinah = 22600;
+		int kinah = breakKinah();
 		int stone = 188100335; // 强化石粉末。 / Enchantment Stone Dust.
 		if (inventory.getItemByObjId(targetItem.getObjectId()) == null) {
 			return false;
@@ -171,10 +171,9 @@ public class EnchantService {
 	 * 拆解所需基纳。
 	 * Kinah cost for breaking an item.
 	 *
-	 * @param item 目标物品 / item
 	 * @return 所需基纳 / kinah amount
 	 */
-	public static int BreakKinah(Item item) {
+	public static int breakKinah() {
 		return 22600;
 	}
 
@@ -331,11 +330,10 @@ public class EnchantService {
 	 * @param player         玩家 / player
 	 * @param parentItem     强化石 / enchant stone
 	 * @param targetItem     目标物品 / target item
-	 * @param supplementItem 辅助道具 / supplement
 	 * @param currentEnchant 当前强化等级 / current enchant
 	 * @param result         是否成功 / success flag
 	 */
-	public static void enchantItemAct(Player player, Item parentItem, Item targetItem, Item supplementItem, int currentEnchant, boolean result) {
+	public static void enchantItemAct(Player player, Item parentItem, Item targetItem, int currentEnchant, boolean result) {
 		int oldEnchant = currentEnchant;
 		int addLevel = Rnd.get(1, 2);
 		int critLevel = Rnd.get(1, 2);
@@ -635,14 +633,13 @@ public class EnchantService {
 	 * 应用魔力石镶嵌结果。
 	 * Applies the manastone socketing result.
 	 *
-	 * @param player         玩家 / player
-	 * @param parentItem     魔力石 / manastone
-	 * @param targetItem     目标物品 / target item
-	 * @param supplementItem 辅助道具 / supplement
-	 * @param targetWeapon   目标武器槽位标识 / target weapon flag
-	 * @param result         是否成功 / success flag
+	 * @param player       玩家 / player
+	 * @param parentItem   魔力石 / manastone
+	 * @param targetItem   目标物品 / target item
+	 * @param targetWeapon 目标武器槽位标识 / target weapon flag
+	 * @param result       是否成功 / success flag
 	 */
-	public static void socketManastoneAct(Player player, Item parentItem, Item targetItem, Item supplementItem, int targetWeapon, boolean result) {
+	public static void socketManastoneAct(Player player, Item parentItem, Item targetItem, int targetWeapon, boolean result) {
 		player.updateSupplements();
 		int manastoneKinah = 17161;
 		if (player.getInventory().decreaseByObjectId(parentItem.getObjectId(), 1) && result) {

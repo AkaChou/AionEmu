@@ -33,7 +33,9 @@ import lombok.Getter;
 @XmlType(name = "EnchantItemAction")
 public class EnchantItemAction extends AbstractItemAction {
 
-	/** 获取计数。 / Returns the count. */
+	/**
+	 * 获取计数。 / Returns the count.
+	 */
 	@XmlAttribute(name = "count")
 	private int count;
 
@@ -46,13 +48,15 @@ public class EnchantItemAction extends AbstractItemAction {
 	@XmlAttribute(name = "manastone_only")
 	private boolean manastone_only;
 
-	/** 返回概率 / Returns the chance*/
+	/**
+	 * 返回概率 / Returns the chance
+	 */
 	@XmlAttribute(name = "chance")
 	private float chance;
 
 	/**
 	 * @return 是否允许执行。 / Whether act
-	  */
+	 */
 	@Override
 	public boolean canAct(Player player, Item parentItem, Item targetItem) {
 		int EnchantKinah = EnchantService.EnchantKinah(targetItem);
@@ -88,13 +92,17 @@ public class EnchantItemAction extends AbstractItemAction {
 		return (msID == 167 || msID == 166) && (tID < 120 || wID == 187);
 	}
 
-	/** 执行 / act. */
+	/**
+	 * 执行 / act.
+	 */
 	@Override
 	public void act(final Player player, final Item parentItem, final Item targetItem) {
 		act(player, parentItem, targetItem, null, 1);
 	}
 
-	/** 执行 / act. */
+	/**
+	 * 执行 / act.
+	 */
 	public void act(final Player player, final Item parentItem, final Item targetItem, final Item supplementItem, final int targetWeapon) {
 		if ((supplementItem != null) && (!checkSupplementLevel(player, supplementItem.getItemTemplate(), targetItem.getItemTemplate()))) {
 			return;
@@ -136,11 +144,11 @@ public class EnchantItemAction extends AbstractItemAction {
 				player.getObserveController().removeObserver(Enchant);
 				ItemTemplate itemTemplate = parentItem.getItemTemplate();
 				if (itemTemplate.isEnchantmentStone() || itemTemplate.isAmplificationStone()) {
-					EnchantService.enchantItemAct(player, parentItem, targetItem, supplementItem, currentEnchant, isSuccess);
+					EnchantService.enchantItemAct(player, parentItem, targetItem, currentEnchant, isSuccess);
 				} else if (targetItem.getItemTemplate().isCpStones()) {
 					EnchantService.estimaEnchant(player, parentItem, targetItem);
 				} else {
-					EnchantService.socketManastoneAct(player, parentItem, targetItem, supplementItem, targetWeapon, isSuccess);
+					EnchantService.socketManastoneAct(player, parentItem, targetItem, targetWeapon, isSuccess);
 				}
 				PacketSendUtility.broadcastPacketAndReceive(player, new SM_ITEM_USAGE_ANIMATION(player.getObjectId(), parentItem.getObjectId(), parentItem.getItemTemplate().getTemplateId(), 0, isSuccess ? 1 : 2, 384));
 				if (CustomConfig.ENABLE_ENCHANT_ANNOUNCE) {
@@ -178,12 +186,16 @@ public class EnchantItemAction extends AbstractItemAction {
 		return false;
 	}
 
-	/** 获取最大等级。 / Returns the max level. */
+	/**
+	 * 获取最大等级。 / Returns the max level.
+	 */
 	public int getMaxLevel() {
 		return max_level != null ? max_level : 0;
 	}
 
-	/** 获取最小等级。 / Returns the min level. */
+	/**
+	 * 获取最小等级。 / Returns the min level.
+	 */
 	public int getMinLevel() {
 		return min_level != null ? min_level : 0;
 	}

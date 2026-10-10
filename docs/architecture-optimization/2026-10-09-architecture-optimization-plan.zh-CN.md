@@ -89,3 +89,4 @@ AionEmu 当前采用单体 Spring Boot 4.1 承载 Login、Game、Chat 服务，�
 - [x] 3. 重构 `GameServer.java`：删除 25 个静态 `start(...)` 重载并清理冗余 import（依审慎反射原则完整保留 `getRatiosFor`/`getCountFor`）
 - [x] 4. 检查并验证修改影响与编译/代码规范，契约测试 100% 通过
 - [x] 5. 优化 `AionPacketHandler.java`：引入直接数组寻址，消除高频入站包装箱开销，同时 100% 保持反射访问兼容
+- [x] 6. 重构 `IntObjectHashMap.java`：实现真·原始类型开地址哈希表，消除全库 257 处伪原始集合的装箱与 Entry 分配开销，完整保持 Map 接口兼容并通过 15 项专项单元测试验证
