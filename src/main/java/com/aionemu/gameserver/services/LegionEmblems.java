@@ -3,9 +3,7 @@ package com.aionemu.gameserver.services;
 import java.nio.ByteBuffer;
 
 import com.aionemu.boot.i18n.I18n;
-import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.configs.main.LegionConfig;
-import com.aionemu.gameserver.dao.LegionDAO;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.team.legion.Legion;
 import com.aionemu.gameserver.model.team.legion.LegionEmblem;
@@ -134,10 +132,8 @@ final class LegionEmblems {
 				}
 				// 已完成 / Finished
 				legionEmblem.setCustomEmblemData(legionEmblem.getUploadData());
-				DAOManager.getDAO(LegionDAO.class).storeLegionEmblem(activePlayer.getLegion().getLegionId(),
-						legionEmblem);
-				LegionEmblem emblem = DAOManager.getDAO(LegionDAO.class)
-						.loadLegionEmblem(activePlayer.getLegion().getLegionId());
+				legion.legionDAO().storeLegionEmblem(activePlayer.getLegion().getLegionId(), legionEmblem);
+				LegionEmblem emblem = legion.legionDAO().loadLegionEmblem(activePlayer.getLegion().getLegionId());
 				storeCustomEmblem(activePlayer, emblem);
 			}
 		}

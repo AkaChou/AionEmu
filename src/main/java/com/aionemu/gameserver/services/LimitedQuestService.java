@@ -32,8 +32,23 @@ public final class LimitedQuestService {
 		this(dao, loadLimitsSafe());
 	}
 
+	/**
+	 * 构造服务：DAOManager 已初始化时优先解析 Spring Bean，否则退回实现类无参构造。
+	 * Constructs the service: resolves the Spring bean when DAOManager is initialized, else falls back to no-arg impl constructors.
+	 */
 	public LimitedQuestService() {
-		this(DAOManager.getDAO(LimitedQuestDAO.class));
+		this(safeDao(LimitedQuestDAO.class, com.aionemu.gameserver.dao.impl.LimitedQuestDAO::new));
+	}
+
+	private static <T extends com.aionemu.commons.database.dao.DAO> T safeDao(Class<T> daoClass,
+			java.util.function.Supplier<T> fallback) {
+		if (DAOManager.isInitialized()) {
+			try {
+				return DAOManager.getDAO(daoClass);
+			} catch (Exception ignored) {
+			}
+		}
+		return fallback.get();
 	}
 
 	LimitedQuestService(LimitedQuestDAO dao, Map<Integer, Limit> limits) {
@@ -158,7 +173,8 @@ public final class LimitedQuestService {
 			File file = Config.definitionFile(DEFINITIONS_FILE);
 			Map<Integer, Limit> limits = loadLimits(file);
 			log.info(I18n.get("log.limited_quest.loaded", limits.size(), file.getPath()));
-			return new LimitedQuestService(DAOManager.getDAO(LimitedQuestDAO.class), limits);
+			return new LimitedQuestService(safeDao(LimitedQuestDAO.class,
+				com.aionemu.gameserver.dao.impl.LimitedQuestDAO::new), limits);
 		}
 	}
 }

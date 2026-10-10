@@ -78,7 +78,9 @@ import com.aionemu.gameserver.dao.PlayerVarsDAO;
 import com.aionemu.gameserver.dao.PlayerWardrobeDAO;
 import com.aionemu.gameserver.dao.PortalCooldownsDAO;
 import com.aionemu.gameserver.dao.RewardServiceDAO;
+import com.aionemu.gameserver.dao.SeasonRankingDAO;
 import com.aionemu.gameserver.dao.SurveyControllerDAO;
+import com.aionemu.gameserver.dao.VeteranRewardsDAO;
 
 /**
  * CoreRuntimeServiceBeans：从 GameLegacyServiceBridgeConfiguration 拆出的域内 Bean 装配。
@@ -246,8 +248,12 @@ public class CoreRuntimeServiceBeans {
 
     @Bean
     @Lazy
-    public VeteranRewardsService veteranRewardsService() {
-        return new VeteranRewardsService();
+    public VeteranRewardsService veteranRewardsService(ObjectProvider<VeteranRewardsDAO> veteranRewardsDaoProvider,
+                                                       ObjectProvider<PlayerDAO> playerDaoProvider) {
+        VeteranRewardsDAO veteranRewardsDao = veteranRewardsDaoProvider.getIfAvailable();
+        PlayerDAO playerDao = playerDaoProvider.getIfAvailable();
+        return veteranRewardsDao != null && playerDao != null ? new VeteranRewardsService(veteranRewardsDao, playerDao)
+                : new VeteranRewardsService();
     }
 
     @Bean
@@ -434,8 +440,9 @@ public class CoreRuntimeServiceBeans {
 
     @Bean
     @Lazy
-    public SeasonRankingService seasonRankingService() {
-        return new SeasonRankingService();
+    public SeasonRankingService seasonRankingService(ObjectProvider<SeasonRankingDAO> seasonRankingDaoProvider) {
+        SeasonRankingDAO seasonRankingDao = seasonRankingDaoProvider.getIfAvailable();
+        return seasonRankingDao != null ? new SeasonRankingService(seasonRankingDao) : new SeasonRankingService();
     }
 
     @Bean

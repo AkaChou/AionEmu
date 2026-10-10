@@ -121,11 +121,23 @@ public class BrokerService {
 	}
 
 	/**
-	 * 构造经纪行服务并初始化周期任务管理器。
-	 * Construct the broker service and initialize its periodic task manager.
+	 * 构造服务：DAOManager 已初始化时优先解析 Spring Bean，否则退回实现类无参构造。
+	 * Constructs the service: resolves the Spring bean when DAOManager is initialized, else falls back to no-arg impl constructors.
 	 */
 	public BrokerService() {
-		this(DAOManager.getDAO(BrokerDAO.class), DAOManager.getDAO(InventoryDAO.class));
+		this(safeDao(BrokerDAO.class, com.aionemu.gameserver.dao.impl.BrokerDAO::new),
+				safeDao(InventoryDAO.class, com.aionemu.gameserver.dao.impl.InventoryDAO::new));
+	}
+
+	private static <T extends com.aionemu.commons.database.dao.DAO> T safeDao(Class<T> daoClass,
+			java.util.function.Supplier<T> fallback) {
+		if (DAOManager.isInitialized()) {
+			try {
+				return DAOManager.getDAO(daoClass);
+			} catch (Exception ignored) {
+			}
+		}
+		return fallback.get();
 	}
 
 	/**
@@ -1076,7 +1088,9 @@ public class BrokerService {
 		 * Legacy constructor resolving DAOs from DAOManager.
 		 */
 		public BrokerOpSaveTask(List<BrokerItem> brokerItems, List<InventorySave> inventorySaves) {
-			this(DAOManager.getDAO(BrokerDAO.class), DAOManager.getDAO(InventoryDAO.class), brokerItems, inventorySaves);
+			this(safeDao(BrokerDAO.class, com.aionemu.gameserver.dao.impl.BrokerDAO::new),
+				safeDao(InventoryDAO.class, com.aionemu.gameserver.dao.impl.InventoryDAO::new), brokerItems,
+				inventorySaves);
 		}
 
 		/**

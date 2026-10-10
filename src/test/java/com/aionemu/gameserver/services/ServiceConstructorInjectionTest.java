@@ -55,8 +55,10 @@ import com.aionemu.gameserver.dao.PlayerWardrobeDAO;
 import com.aionemu.gameserver.dao.RewardServiceDAO;
 import com.aionemu.gameserver.dao.ServerVariablesDAO;
 import com.aionemu.gameserver.dao.SiegeDAO;
+import com.aionemu.gameserver.dao.SeasonRankingDAO;
 import com.aionemu.gameserver.dao.SurveyControllerDAO;
 import com.aionemu.gameserver.dao.TownDAO;
+import com.aionemu.gameserver.dao.VeteranRewardsDAO;
 import com.aionemu.gameserver.model.Announcement;
 import com.aionemu.gameserver.model.Petition;
 import com.aionemu.gameserver.model.Race;
@@ -85,7 +87,9 @@ import com.aionemu.gameserver.services.player.LunaShopService;
 import com.aionemu.gameserver.services.player.PlayerService;
 import com.aionemu.gameserver.services.player.PlayerServiceDaos;
 import com.aionemu.gameserver.services.toypet.PetService;
+import com.aionemu.gameserver.services.ranking.SeasonRankingService;
 import com.aionemu.gameserver.services.transfers.PlayerTransferService;
+import com.aionemu.gameserver.services.veteranreward.VeteranRewardsService;
 import com.aionemu.gameserver.services.abyss.AbyssRankCleaningService;
 import com.aionemu.gameserver.services.abyss.AbyssRankingCache;
 import com.aionemu.gameserver.services.abyss.AbyssRankUpdateService;
@@ -781,6 +785,45 @@ class ServiceConstructorInjectionTest {
 	}
 
 	@Test
+	void veteranRewardsServiceConstructsWithInjectedDaos() {
+		try (com.aionemu.commons.services.ServiceContext.Scope ignored =
+				com.aionemu.commons.services.ServiceContext.use("veteran-rewards-injection-test-" + System.nanoTime())) {
+			com.aionemu.commons.services.CronService cronService =
+					com.aionemu.commons.services.CronService.initSingleton(TestRunnableRunner.class);
+			try {
+				JdbcClient client = createNoAccessJdbcClient();
+				VeteranRewardsDAO veteranRewardsDAO = new com.aionemu.gameserver.dao.impl.VeteranRewardsDAO(client);
+				PlayerDAO playerDAO = new com.aionemu.gameserver.dao.impl.PlayerDAO(client);
+				VeteranRewardsService service = new VeteranRewardsService(veteranRewardsDAO, playerDAO);
+				assertNotNull(service);
+			} finally {
+				cronService.shutdown();
+			}
+		}
+	}
+
+	@Test
+	void seasonRankingServiceConstructsWithInjectedDao() {
+		JdbcClient client = createNoAccessJdbcClient();
+		SeasonRankingDAO seasonRankingDAO = new com.aionemu.gameserver.dao.impl.SeasonRankingDAO(client);
+		SeasonRankingService service = new SeasonRankingService(seasonRankingDAO);
+		assertNotNull(service);
+	}
+
+	/** 供 cron 依赖服务离线构造使用的最简执行器。 / Minimal runner for offline construction of cron-dependent services. */
+	public static final class TestRunnableRunner extends com.aionemu.commons.services.cron.RunnableRunner {
+		@Override
+		public void executeRunnable(Runnable r) {
+			r.run();
+		}
+
+		@Override
+		public void executeLongRunningRunnable(Runnable r) {
+			r.run();
+		}
+	}
+
+	@Test
 	void systemMailServiceConstructsWithInjectedDaos() {
 		JdbcClient client = createNoAccessJdbcClient();
 		PlayerDAO playerDAO = new com.aionemu.gameserver.dao.impl.PlayerDAO(client);
@@ -859,6 +902,8 @@ class ServiceConstructorInjectionTest {
 		assertThrows(NullPointerException.class, () -> new GrowthEnergy(null));
 		assertThrows(NullPointerException.class, () -> new PetService(null));
 		assertThrows(NullPointerException.class, () -> new PlayerTransferService(null, null));
+		assertThrows(NullPointerException.class, () -> new VeteranRewardsService(null, null));
+		assertThrows(NullPointerException.class, () -> new SeasonRankingService(null));
 		assertThrows(NullPointerException.class, () -> new PlayerServiceDaos(
 			null, null, null, null, null, null, null, null, null, null,
 			null, null, null, null, null, null, null, null, null, null,

@@ -29,8 +29,8 @@ class TransactionSafetyTest {
 	@Test
 	void mailClaimsPersistTheRewardAndClearTheLetterTogether() throws IOException {
 		String source = source("gameserver/services/mail/MailService.java");
-		assertTrue(source.contains("inventoryDAO.storeInTransaction(con, items"));
-		assertTrue(source.contains("mailDAO.storeLetterInTransaction(con, letter.getTimeStamp(), letter)"));
+		assertTrue(source.contains("storeInTransaction(con, items"));
+		assertTrue(source.contains("storeLetterInTransaction(con, letter.getTimeStamp(), letter)"));
 		assertTrue(source.contains("InventorySnapshot.capture(senderInventory)"));
 		assertTrue(source.contains("inventorySnapshot.restore()"));
 		assertTrue(source.contains("con.rollback();"));
@@ -49,7 +49,7 @@ class TransactionSafetyTest {
 	void veteranRewardMailAndQueueRemovalShareTheMailTransaction() throws IOException {
 		String service = source("gameserver/services/veteranreward/VeteranRewardsService.java");
 		String dao = source("gameserver/dao/impl/VeteranRewardsDAO.java");
-		assertTrue(service.contains("getDAO().deleteInTransaction(con, rewardId)"));
+		assertTrue(service.contains("veteranRewardsDAO.deleteInTransaction(con, rewardId)"));
 		assertTrue(dao.contains("void deleteInTransaction(Connection con, int rewardId)"));
 	}
 

@@ -2,6 +2,7 @@ package com.aionemu.gameserver.services.veteranreward;
 
 
 import com.aionemu.boot.i18n.I18n;
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
 
@@ -35,6 +36,9 @@ import java.util.HashSet;
 public class VeteranRewardsService {
 	private static volatile ObjectProvider<VeteranRewardsService> instanceProvider;
 
+	private final VeteranRewardsDAO veteranRewardsDAO;
+	private final PlayerDAO playerDAO;
+
 	/**
 	 * 奖励接收方类型，按种族或指定玩家过滤。
 	 * Recipient filter type selecting by race or a specific player.
@@ -65,11 +69,36 @@ public class VeteranRewardsService {
 	private static final String VETERAN_REWARDS_LOOP_STATUS_BROADCAST_SCHEDULE = "0 * * ? * *";
 
 	/**
-	 * 构造服务并启动定时扫描循环。
-	 * Construct the service and start the periodic scan loop.
+	 * 使用指定的 DAO 集合构造老兵奖励服务并启动定时扫描循环。
+	 * Constructs the veteran-reward service with the given DAOs and starts the periodic scan loop.
+	 *
+	 * @param veteranRewardsDAO 老兵奖励数据访问对象 / Veteran-rewards DAO
+	 * @param playerDAO 玩家数据访问对象 / Player DAO
+	 */
+	public VeteranRewardsService(@NonNull VeteranRewardsDAO veteranRewardsDAO, @NonNull PlayerDAO playerDAO) {
+		this.veteranRewardsDAO = veteranRewardsDAO;
+		this.playerDAO = playerDAO;
+		Init_VeteranRewardStatusLoop();
+	}
+
+	/**
+	 * 构造服务：DAOManager 已初始化时优先解析 Spring Bean，否则退回实现类无参构造。
+	 * Constructs the service: resolves the Spring bean when DAOManager is initialized, else falls back to no-arg impl constructors.
 	 */
 	public VeteranRewardsService() {
-		Init_VeteranRewardStatusLoop();
+		this(safeDao(VeteranRewardsDAO.class, com.aionemu.gameserver.dao.impl.VeteranRewardsDAO::new),
+				safeDao(PlayerDAO.class, com.aionemu.gameserver.dao.impl.PlayerDAO::new));
+	}
+
+	private static <T extends com.aionemu.commons.database.dao.DAO> T safeDao(Class<T> daoClass,
+			java.util.function.Supplier<T> fallback) {
+		if (DAOManager.isInitialized()) {
+			try {
+				return DAOManager.getDAO(daoClass);
+			} catch (Exception ignored) {
+			}
+		}
+		return fallback.get();
 	}
 
 	/**
@@ -92,7 +121,7 @@ public class VeteranRewardsService {
 			veteran_rewards.clear();
 		}
 
-		veteran_rewards = new HashSet<>(getDAO().getVeteranReward());
+		veteran_rewards = new HashSet<>(veteranRewardsDAO.getVeteranReward());
 
 		if (veteran_rewards.size() > 0) {
 			if (VeteranRewardConfig.VETERANREWARDS_ENABLED_INFO_LOG) {
@@ -249,8 +278,7 @@ public class VeteranRewardsService {
 			message = message.substring(0, 1000);
 		}
 
-		PlayerCommonData recipientCommonData = (DAOManager.getDAO(PlayerDAO.class))
-				.loadPlayerCommonDataByName(recipientName);
+		PlayerCommonData recipientCommonData = playerDAO.loadPlayerCommonDataByName(recipientName);
 
 		if (recipientCommonData == null) {
 			if (VeteranRewardConfig.VETERANREWARDS_ENABLED_ERROR_LOG) {
@@ -269,15 +297,11 @@ public class VeteranRewardsService {
 		}
 
 		SystemMailService.TransactionAction transactionAction = rewardId > 1
-				? con -> getDAO().deleteInTransaction(con, rewardId) : null;
+				? con -> veteranRewardsDAO.deleteInTransaction(con, rewardId) : null;
 		boolean delivered = GameFeatureServices.systemMailService().sendMail(sender, recipientName, title, message,
 				attachedItemObjId, attachedItemCount, attachedKinahCount, 0, type, transactionAction);
 
 		return delivered;
-	}
-
-	private VeteranRewardsDAO getDAO() {
-		return DAOManager.getDAO(VeteranRewardsDAO.class);
 	}
 
 	/**

@@ -91,11 +91,22 @@ public class ExchangeService {
 	}
 
 	/**
-	 * 默认构造：从 DAOManager 动态解析 InventoryDAO。
-	 * Default constructor resolving InventoryDAO from DAOManager.
+	 * 构造服务：DAOManager 已初始化时优先解析 Spring Bean，否则退回实现类无参构造。
+	 * Constructs the service: resolves the Spring bean when DAOManager is initialized, else falls back to no-arg impl constructors.
 	 */
 	public ExchangeService() {
-		this(DAOManager.getDAO(InventoryDAO.class));
+		this(safeDao(InventoryDAO.class, com.aionemu.gameserver.dao.impl.InventoryDAO::new));
+	}
+
+	private static <T extends com.aionemu.commons.database.dao.DAO> T safeDao(Class<T> daoClass,
+			java.util.function.Supplier<T> fallback) {
+		if (DAOManager.isInitialized()) {
+			try {
+				return DAOManager.getDAO(daoClass);
+			} catch (Exception ignored) {
+			}
+		}
+		return fallback.get();
 	}
 
 	/**
@@ -595,7 +606,8 @@ public class ExchangeService {
 		 * @param player2Items 玩家2 待存物品 / player 2 items to store
 		 */
 		public ExchangeOpSaveTask(int player1Id, int player2Id, List<Item> player1Items, List<Item> player2Items) {
-			this(DAOManager.getDAO(InventoryDAO.class), player1Id, player2Id, player1Items, player2Items);
+			this(safeDao(InventoryDAO.class, com.aionemu.gameserver.dao.impl.InventoryDAO::new), player1Id, player2Id,
+				player1Items, player2Items);
 		}
 
 		@Override

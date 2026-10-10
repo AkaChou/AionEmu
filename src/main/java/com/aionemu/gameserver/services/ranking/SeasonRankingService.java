@@ -1,5 +1,6 @@
 package com.aionemu.gameserver.services.ranking;
 
+import lombok.NonNull;
 import lombok.Setter;
 import org.springframework.beans.factory.ObjectProvider;
 
@@ -28,6 +29,37 @@ public class SeasonRankingService {
     @Setter
     private static volatile ObjectProvider<SeasonRankingService> instanceProvider;
 
+	private final SeasonRankingDAO seasonRankingDAO;
+
+	/**
+	 * 使用指定的赛季排行 DAO 构造服务。
+	 * Constructs the service with the given season-ranking DAO.
+	 *
+	 * @param seasonRankingDAO 赛季排行数据访问对象 / Season-ranking DAO
+	 */
+	public SeasonRankingService(@NonNull SeasonRankingDAO seasonRankingDAO) {
+		this.seasonRankingDAO = seasonRankingDAO;
+	}
+
+	/**
+	 * 构造服务：DAOManager 已初始化时优先解析 Spring Bean，否则退回实现类无参构造。
+	 * Constructs the service: resolves the Spring bean when DAOManager is initialized, else falls back to no-arg impl constructors.
+	 */
+	public SeasonRankingService() {
+		this(safeDao(SeasonRankingDAO.class, com.aionemu.gameserver.dao.impl.SeasonRankingDAO::new));
+	}
+
+	private static <T extends com.aionemu.commons.database.dao.DAO> T safeDao(Class<T> daoClass,
+			java.util.function.Supplier<T> fallback) {
+		if (DAOManager.isInitialized()) {
+			try {
+				return DAOManager.getDAO(daoClass);
+			} catch (Exception ignored) {
+			}
+		}
+		return fallback.get();
+	}
+
 	/**
 	 * 按表 ID 加载玩家对应赛季排行数据并下发。
 	 * Load and dispatch the player's season ranking data by table ID.
@@ -52,7 +84,7 @@ public class SeasonRankingService {
 	 * @param player 玩家 / Player
 	 */
 	public void loadGoldArenaScore(Player player) {
-		GoldArenaRank rank = getDAO().loadGoldArenaRank(player.getObjectId(),
+		GoldArenaRank rank = seasonRankingDAO.loadGoldArenaRank(player.getObjectId(),
 				SeasonRankingEnum.HALL_OF_TENACITY.getId());
 		player.setArenaGoldRank(rank);
 		PacketSendUtility.sendPacket(player,
@@ -65,7 +97,7 @@ public class SeasonRankingService {
 	 * @param player 玩家 / Player
 	 */
 	public void loadTowerScore(Player player) {
-		TowerOfChallengeRank rank = getDAO().loadTowerOfChallengeRank(player.getObjectId(),
+		TowerOfChallengeRank rank = seasonRankingDAO.loadTowerOfChallengeRank(player.getObjectId(),
 				SeasonRankingEnum.TOWER_OF_CHALLENGE.getId());
 		player.setTowerRank(rank);
 		PacketSendUtility.sendPacket(player,
@@ -78,7 +110,7 @@ public class SeasonRankingService {
 	 * @param player 玩家 / Player
 	 */
 	public void loadArena6v6Score(Player player) {
-		Arena6V6Ranking rank = getDAO().loadArena6v6Rank(player.getObjectId(), SeasonRankingEnum.ARENA_6V6.getId());
+		Arena6V6Ranking rank = seasonRankingDAO.loadArena6v6Rank(player.getObjectId(), SeasonRankingEnum.ARENA_6V6.getId());
 		player.set6v6Rank(rank);
 		PacketSendUtility.sendPacket(player,
 				new SM_MY_HISTORY(SeasonRankingEnum.ARENA_6V6.getId(), player.get6v6Rank()));
@@ -90,7 +122,7 @@ public class SeasonRankingService {
 	 * @param player 玩家 / Player
 	 */
 	public void loadArenaOfTenacityScore(Player player) {
-		ArenaOfTenacityRank rank = getDAO().loadArenaOfTenacityRank(player.getObjectId(),
+		ArenaOfTenacityRank rank = seasonRankingDAO.loadArenaOfTenacityRank(player.getObjectId(),
 				SeasonRankingEnum.ARENA_OF_TENACITY.getId());
 		player.setTenacityRank(rank);
 		PacketSendUtility.sendPacket(player,
@@ -120,11 +152,7 @@ public class SeasonRankingService {
 		// 添加当前时间 / add curren time
 		rank.setCurrentTime(newTime);
 		// 保存到数据库 / save to database
-		DAOManager.getDAO(SeasonRankingDAO.class).storeTowerRank(player);
-	}
-
-	private SeasonRankingDAO getDAO() {
-		return DAOManager.getDAO(SeasonRankingDAO.class);
+		seasonRankingDAO.storeTowerRank(player);
 	}
 
 	/**
