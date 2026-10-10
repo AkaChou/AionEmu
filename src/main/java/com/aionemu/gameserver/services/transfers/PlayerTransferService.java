@@ -9,7 +9,9 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
+import lombok.NonNull;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.database.dao.DAOManager;
@@ -77,17 +79,44 @@ public class PlayerTransferService {
 		PlayerTransferService.instanceProvider = instanceProvider;
 	}
 
+	/** 玩家 DAO / Player DAO */
 	private final PlayerDAO dao;
+	/** 军团成员 DAO / Legion member DAO */
+	private final LegionMemberDAO legionMemberDAO;
 	private final Map<Integer, TransferablePlayer> transfers = new LinkedHashMap<>();
 	private volatile List<Integer> rsList = List.of();
 
 	/**
-	 * 初始化服务并加载需移除的技能列表。
-	 * Initialize the service and load skills that should be removed on transfer.
+	 * 使用指定 DAO 依赖构造玩家跨服转移服务。
+	 * Constructs the player transfer service with given DAO dependencies.
+	 *
+	 * @param playerDAO 玩家 DAO / Player DAO
+	 * @param legionMemberDAO 军团成员 DAO / Legion member DAO
+	 */
+	public PlayerTransferService(@NonNull PlayerDAO playerDAO, @NonNull LegionMemberDAO legionMemberDAO) {
+		this.dao = Objects.requireNonNull(playerDAO, "playerDAO must not be null");
+		this.legionMemberDAO = Objects.requireNonNull(legionMemberDAO, "legionMemberDAO must not be null");
+		reload();
+	}
+
+	/**
+	 * 构造玩家跨服转移服务（使用 safeDao 解析依赖）。
+	 * Constructs the player transfer service with safeDao resolution.
 	 */
 	public PlayerTransferService() {
-		this.dao = DAOManager.getDAO(PlayerDAO.class);
-		reload();
+		this(safeDao(PlayerDAO.class, com.aionemu.gameserver.dao.impl.PlayerDAO::new),
+			 safeDao(LegionMemberDAO.class, com.aionemu.gameserver.dao.impl.LegionMemberDAO::new));
+	}
+
+	private static <T extends com.aionemu.commons.database.dao.DAO> T safeDao(Class<T> daoClass,
+			java.util.function.Supplier<T> fallback) {
+		if (DAOManager.isInitialized()) {
+			try {
+				return DAOManager.getDAO(daoClass);
+			} catch (Exception ignored) {
+			}
+		}
+		return fallback.get();
 	}
 
 	/**
@@ -139,7 +168,7 @@ public class PlayerTransferService {
 	 */
 	public void startTransfer(int accountId, int targetAccountId, int playerId, byte targetServerId, int taskId) {
 		boolean exist = false;
-		for (int id : DAOManager.getDAO(PlayerDAO.class).getPlayerOidsOnAccount(accountId))
+		for (int id : dao.getPlayerOidsOnAccount(accountId))
 			if (id == playerId) {
 				exist = true;
 				break;
@@ -152,7 +181,7 @@ public class PlayerTransferService {
 			return;
 		}
 
-		if (DAOManager.getDAO(LegionMemberDAO.class).isIdUsed(playerId)) {
+		if (legionMemberDAO.isIdUsed(playerId)) {
 			log.warn(I18n.get("log.1cf8692ae407", taskId, playerId));
 			com.aionemu.gameserver.lifecycle.GameServerNetworkServices.loginServer().sendPacket(new SM_PTRANSFER_CONTROL(SM_PTRANSFER_CONTROL.TASK_STOP, taskId,
 					"cannot transfer player with existing legion " + playerId));
@@ -245,7 +274,7 @@ public class PlayerTransferService {
 			com.aionemu.gameserver.lifecycle.GameServerNetworkServices.loginServer().sendPacket(new SM_PTRANSFER_CONTROL(SM_PTRANSFER_CONTROL.ERROR, taskId,
 					"unexpected sql error while creating a clone"));
 		} else {
-			DAOManager.getDAO(PlayerDAO.class).setPlayerLastTransferTime(cha.getObjectId(), System.currentTimeMillis());
+			dao.setPlayerLastTransferTime(cha.getObjectId(), System.currentTimeMillis());
 			com.aionemu.gameserver.lifecycle.GameServerNetworkServices.loginServer().sendPacket(new SM_PTRANSFER_CONTROL(SM_PTRANSFER_CONTROL.OK, taskId));
 			log.info(I18n.get("log.0ced97702710", taskId, name));
 			TransferLog.log.info(I18n.get("log.aa63f248efe4", taskId));

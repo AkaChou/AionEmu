@@ -56,7 +56,7 @@ public class GrowthEnergy {
         com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
 			 player.getCommonData().setAuraOfGrowth(0);
 			 PacketSendUtility.sendPacket(player, new SM_STATS_INFO(player));
-			 DAOManager.getDAO(PlayerDAO.class).storePlayer(player);
+			 playerDAO.storePlayer(player);
 		 });
 	}
 
@@ -81,7 +81,7 @@ public class GrowthEnergy {
 		if (pcd.isReadyForAuraOfGrowth()) {
 			long auraOfGrowthpercent = pcd.getAuraOfGrowthPoints();
 			pcd.addAuraOfGrowth(auraOfGrowthpercent);
-			DAOManager.getDAO(PlayerDAO.class).storePlayer(player);
+			playerDAO.storePlayer(player);
 			sendMessage(player);
 		}
 	}
@@ -148,6 +148,48 @@ public class GrowthEnergy {
 				+ "（静态兜底已退役，见 LegacySingletonFallbackAuditTest）");
 		}
 		return provided;
+	}
+
+	/** 玩家 DAO / Player DAO */
+	private final PlayerDAO playerDAO;
+
+	/**
+	 * 使用指定 DAO 依赖构造成长能量服务。
+	 * Constructs the growth energy service with given DAO dependency.
+	 *
+	 * @param playerDAO 玩家 DAO / Player DAO
+	 */
+	public GrowthEnergy(@lombok.NonNull PlayerDAO playerDAO) {
+		this.playerDAO = java.util.Objects.requireNonNull(playerDAO, "playerDAO must not be null");
+	}
+
+	/**
+	 * 构造成长能量服务（使用 safeDao 解析依赖）。
+	 * Constructs the growth energy service with safeDao resolution.
+	 */
+	public GrowthEnergy() {
+		this(safeDao(PlayerDAO.class, com.aionemu.gameserver.dao.impl.PlayerDAO::new));
+	}
+
+	private static <T extends com.aionemu.commons.database.dao.DAO> T safeDao(Class<T> daoClass,
+			java.util.function.Supplier<T> fallback) {
+		if (DAOManager.isInitialized()) {
+			try {
+				return DAOManager.getDAO(daoClass);
+			} catch (Exception ignored) {
+			}
+		}
+		return fallback.get();
+	}
+
+	/**
+	 * 获取玩家 DAO。
+	 * Returns the player DAO.
+	 *
+	 * @return 玩家 DAO / Player DAO
+	 */
+	public PlayerDAO playerDAO() {
+		return playerDAO;
 	}
 
 }

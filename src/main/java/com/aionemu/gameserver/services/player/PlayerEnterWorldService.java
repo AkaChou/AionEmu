@@ -43,9 +43,7 @@ import com.aionemu.gameserver.configs.main.EventsConfig;
 import com.aionemu.gameserver.configs.main.GSConfig;
 import com.aionemu.gameserver.configs.main.HTMLConfig;
 import com.aionemu.gameserver.configs.main.SecurityConfig;
-import com.aionemu.gameserver.dao.PlayerDAO;
 import com.aionemu.gameserver.dao.PlayerPasskeyDAO;
-import com.aionemu.gameserver.dao.PlayerPunishmentsDAO;
 import com.aionemu.gameserver.model.ChatType;
 import com.aionemu.gameserver.model.EmotionType;
 import com.aionemu.gameserver.model.Race;
@@ -146,6 +144,46 @@ public final class PlayerEnterWorldService {
 	private static final Set<Integer> pendingEnterWorld = ConcurrentHashMap.newKeySet();
 
 	/**
+	 * Spring 绑定的二级密码 DAO / Spring-bound character-passkey DAO.
+	 */
+	private static volatile PlayerPasskeyDAO boundPlayerPasskeyDAO;
+
+	/**
+	 * 由 Spring 配置类在启动期绑定二级密码 DAO。
+	 * Binds the character-passkey DAO from the Spring configuration at startup.
+	 * @param dao 二级密码 DAO / character-passkey DAO
+	 */
+	public static void bindPlayerPasskeyDAO(PlayerPasskeyDAO dao) {
+		boundPlayerPasskeyDAO = java.util.Objects.requireNonNull(dao, "playerPasskeyDAO must not be null");
+	}
+
+	/**
+	 * 返回二级密码 DAO；未绑定（离线/单测环境）时按 safeDao 兜底构建并缓存。
+	 * Returns the character-passkey DAO; falls back to safeDao construction when unbound (offline/unit tests).
+	 * @return 二级密码 DAO / character-passkey DAO
+	 */
+	private static PlayerPasskeyDAO playerPasskeyDAO() {
+		PlayerPasskeyDAO current = boundPlayerPasskeyDAO;
+		if (current == null) {
+			synchronized (PlayerEnterWorldService.class) {
+				current = boundPlayerPasskeyDAO;
+				if (current == null) {
+					if (DAOManager.isInitialized()) {
+						try {
+							boundPlayerPasskeyDAO = current = DAOManager.getDAO(PlayerPasskeyDAO.class);
+						} catch (Exception ignored) {
+						}
+					}
+					if (current == null) {
+						boundPlayerPasskeyDAO = current = new com.aionemu.gameserver.dao.impl.PlayerPasskeyDAO();
+					}
+				}
+			}
+		}
+		return current;
+	}
+
+	/**
 	 * 服务加成缓冲。
 	 * Service buff holder.
 	 */
@@ -185,7 +223,7 @@ public final class PlayerEnterWorldService {
 				client.close(new SM_QUIT_RESPONSE(), false);
 				return;
 			} else {
-				DAOManager.getDAO(PlayerPunishmentsDAO.class).unpunishPlayer(objectId, PunishmentType.CHARBAN);
+				PlayerService.daos().playerPunishmentsDAO().unpunishPlayer(objectId, PunishmentType.CHARBAN);
 			}
 		}
 		if (SecurityConfig.PASSKEY_ENABLE && !client.getAccount().getCharacterPasskey().isPass()) {
@@ -204,7 +242,7 @@ public final class PlayerEnterWorldService {
 	private static void showPasskey(final int objectId, final AionConnection client) {
 		client.getAccount().getCharacterPasskey().setConnectType(ConnectType.ENTER);
 		client.getAccount().getCharacterPasskey().setObjectId(objectId);
-		boolean isExistPasskey = DAOManager.getDAO(PlayerPasskeyDAO.class).existCheckPlayerPasskey(client.getAccount().getId());
+		boolean isExistPasskey = playerPasskeyDAO().existCheckPlayerPasskey(client.getAccount().getId());
 		if (!isExistPasskey) {
 			client.sendPacket(new SM_CHARACTER_SELECT(0));
 		} else {
@@ -427,7 +465,7 @@ public final class PlayerEnterWorldService {
 					client.sendPacket(new SM_LEGION_REQUEST_LIST(player.getLegion().getJoinRequestMap().values()));
 				}
 			} else {
-				DAOManager.getDAO(PlayerDAO.class).getJoinRequestState(player);
+				PlayerService.daos().playerDAO().getJoinRequestState(player);
 				GameCoreGameplayServices.legionService().handleJoinRequestGetAnswer(player);
 			}
 			client.sendPacket(new SM_TITLE_INFO(player));
@@ -796,7 +834,7 @@ public final class PlayerEnterWorldService {
 	private static void playerLoggedIn(Player player) {
 		log.info(I18n.get("log.598f1a3456d5", player.getName(), player.getClientConnection().getAccount().getName()));
 		player.getCommonData().setOnline(true);
-		DAOManager.getDAO(PlayerDAO.class).onlinePlayer(player, true);
+		PlayerService.daos().playerDAO().onlinePlayer(player, true);
 		player.onLoggedIn();
 		player.setOnlineTime();
 	}

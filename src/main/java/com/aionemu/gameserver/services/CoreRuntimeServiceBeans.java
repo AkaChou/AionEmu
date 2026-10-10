@@ -8,6 +8,7 @@ import com.aionemu.gameserver.services.drop.DropService;
 import com.aionemu.gameserver.services.events.BoostEventService;
 import com.aionemu.gameserver.services.events.ThievesGuildService;
 import com.aionemu.gameserver.services.mail.MailService;
+import com.aionemu.gameserver.services.player.PlayerEnterWorldService;
 import com.aionemu.gameserver.services.player.PlayerService;
 import com.aionemu.gameserver.services.player.PlayerServiceDaos;
 import com.aionemu.gameserver.services.item.ItemSocketService;
@@ -62,6 +63,7 @@ import com.aionemu.gameserver.dao.PlayerLifeStatsDAO;
 import com.aionemu.gameserver.dao.PlayerLunaShopDAO;
 import com.aionemu.gameserver.dao.PlayerMacrossesDAO;
 import com.aionemu.gameserver.dao.PlayerNpcFactionsDAO;
+import com.aionemu.gameserver.dao.PlayerPasskeyDAO;
 import com.aionemu.gameserver.dao.PlayerPunishmentsDAO;
 import com.aionemu.gameserver.dao.PlayerQuestListDAO;
 import com.aionemu.gameserver.dao.PlayerThievesListDAO;
@@ -93,8 +95,12 @@ public class CoreRuntimeServiceBeans {
 
     @Bean
     @Lazy
-    public PlayerTransferService gamePlayerTransferService() {
-        return new PlayerTransferService();
+    public PlayerTransferService gamePlayerTransferService(ObjectProvider<PlayerDAO> playerDaoProvider,
+                                                           ObjectProvider<LegionMemberDAO> legionMemberDaoProvider) {
+        PlayerDAO playerDAO = playerDaoProvider.getIfAvailable();
+        LegionMemberDAO legionMemberDAO = legionMemberDaoProvider.getIfAvailable();
+        return playerDAO != null && legionMemberDAO != null ? new PlayerTransferService(playerDAO, legionMemberDAO)
+            : new PlayerTransferService();
     }
 
     @Bean
@@ -351,6 +357,13 @@ public class CoreRuntimeServiceBeans {
             PlayerService.bindDaos(daos);
             // 顺带绑定 item 域静态工具类的魔石列表 DAO / also bind the item-domain static utility's DAO
             ItemSocketService.bindItemStoneListDAO(daos.itemStoneListDAO());
+            // 顺带绑定 player 域静态门面的二级密码 DAO（缺失时保留 safeDao 兜底，不触发整体降级）
+            // also bind the player-domain static facade's passkey DAO (keep safeDao fallback when absent,
+            // without triggering a full offline fallback)
+            PlayerPasskeyDAO playerPasskeyDAO = daoFrom(beanFactory, PlayerPasskeyDAO.class);
+            if (playerPasskeyDAO != null) {
+                PlayerEnterWorldService.bindPlayerPasskeyDAO(playerPasskeyDAO);
+            }
             return daos;
         } catch (NullPointerException offline) {
             return PlayerService.daos();

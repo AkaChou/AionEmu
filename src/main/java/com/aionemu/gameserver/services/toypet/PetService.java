@@ -4,7 +4,9 @@ import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 
+import lombok.NonNull;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.ObjectProvider;
@@ -78,7 +80,46 @@ public class PetService {
 		return provided;
 	}
 
+	/** 玩家宠物 DAO / Player pets DAO */
+	private final PlayerPetsDAO playerPetsDAO;
+
+	/**
+	 * 使用指定 DAO 依赖构造宠物服务。
+	 * Constructs the pet service with given DAO dependency.
+	 *
+	 * @param playerPetsDAO 玩家宠物 DAO / Player pets DAO
+	 */
+	public PetService(@NonNull PlayerPetsDAO playerPetsDAO) {
+		this.playerPetsDAO = Objects.requireNonNull(playerPetsDAO, "playerPetsDAO must not be null");
+	}
+
+	/**
+	 * 构造宠物服务（使用 safeDao 解析依赖）。
+	 * Constructs the pet service with safeDao resolution.
+	 */
 	public PetService() {
+		this(safeDao(PlayerPetsDAO.class, com.aionemu.gameserver.dao.impl.PlayerPetsDAO::new));
+	}
+
+	private static <T extends com.aionemu.commons.database.dao.DAO> T safeDao(Class<T> daoClass,
+			java.util.function.Supplier<T> fallback) {
+		if (DAOManager.isInitialized()) {
+			try {
+				return DAOManager.getDAO(daoClass);
+			} catch (Exception ignored) {
+			}
+		}
+		return fallback.get();
+	}
+
+	/**
+	 * 获取玩家宠物 DAO。
+	 * Returns the player pets DAO.
+	 *
+	 * @return 玩家宠物 DAO / Player pets DAO
+	 */
+	public PlayerPetsDAO playerPetsDAO() {
+		return playerPetsDAO;
 	}
 
 	/**
@@ -91,7 +132,7 @@ public class PetService {
 		Pet pet = player.getPet();
 		if (pet != null) {
 			pet.getCommonData().setName(name);
-			DAOManager.getDAO(PlayerPetsDAO.class).updatePetName(pet.getCommonData());
+			playerPetsDAO.updatePetName(pet.getCommonData());
 			PacketSendUtility.broadcastPacket(player, new SM_PET(10, pet), true);
 		}
 	}
@@ -182,7 +223,7 @@ public class PetService {
 				ItemService.addItem(player, reward.getItem(), 1);
 				commonData.setReFoodTime(flavour.getCooldDown() * 60000L);
 				commonData.setCurentTime(System.currentTimeMillis());
-				DAOManager.getDAO(PlayerPetsDAO.class).setTime(player, pet.getPetId(), System.currentTimeMillis());
+				playerPetsDAO.setTime(player, pet.getPetId(), System.currentTimeMillis());
 				progress.reset();
 			} else if (count > 0) {
 				schedule(pet, player, item, count, action);

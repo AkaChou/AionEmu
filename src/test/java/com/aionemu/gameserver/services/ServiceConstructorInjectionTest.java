@@ -38,6 +38,7 @@ import com.aionemu.gameserver.dao.OldNamesDAO;
 import com.aionemu.gameserver.dao.PetitionDAO;
 import com.aionemu.gameserver.dao.PlayerAppearanceDAO;
 import com.aionemu.gameserver.dao.PlayerDAO;
+import com.aionemu.gameserver.dao.PlayerPetsDAO;
 import com.aionemu.gameserver.dao.PlayerPunishmentsDAO;
 import com.aionemu.gameserver.dao.PlayerQuestListDAO;
 import com.aionemu.gameserver.dao.PlayerSkillListDAO;
@@ -59,8 +60,12 @@ import com.aionemu.gameserver.model.items.storage.StorageType;
 import com.aionemu.gameserver.model.landing.LandingLocation;
 import com.aionemu.gameserver.model.town.Town;
 import com.aionemu.gameserver.services.mail.MailService;
+import com.aionemu.gameserver.configs.main.PlayerTransferConfig;
+import com.aionemu.gameserver.services.player.GrowthEnergy;
 import com.aionemu.gameserver.services.player.PlayerService;
 import com.aionemu.gameserver.services.player.PlayerServiceDaos;
+import com.aionemu.gameserver.services.toypet.PetService;
+import com.aionemu.gameserver.services.transfers.PlayerTransferService;
 
 /**
  * 核心服务构造器注入与 DAO 解耦单元测试。
@@ -551,6 +556,37 @@ class ServiceConstructorInjectionTest {
 	}
 
 	@Test
+	void growthEnergyConstructsWithInjectedDao() {
+		JdbcClient client = createNoAccessJdbcClient();
+		PlayerDAO playerDAO = new com.aionemu.gameserver.dao.impl.PlayerDAO(client);
+		GrowthEnergy service = new GrowthEnergy(playerDAO);
+		assertNotNull(service);
+		assertSame(playerDAO, service.playerDAO());
+	}
+	@Test
+	void petServiceConstructsWithInjectedDao() {
+		JdbcClient client = createNoAccessJdbcClient();
+		PlayerPetsDAO playerPetsDAO = new com.aionemu.gameserver.dao.impl.PlayerPetsDAO(client);
+		PetService service = new PetService(playerPetsDAO);
+		assertNotNull(service);
+		assertSame(playerPetsDAO, service.playerPetsDAO());
+	}
+	@Test
+	void playerTransferServiceConstructsWithInjectedDaos() {
+		JdbcClient client = createNoAccessJdbcClient();
+		PlayerDAO playerDAO = new com.aionemu.gameserver.dao.impl.PlayerDAO(client);
+		LegionMemberDAO legionMemberDAO = new com.aionemu.gameserver.dao.impl.LegionMemberDAO(client);
+		String previousRemoveSkillList = PlayerTransferConfig.REMOVE_SKILL_LIST;
+		try {
+			PlayerTransferConfig.REMOVE_SKILL_LIST = "*";
+			PlayerTransferService service = new PlayerTransferService(playerDAO, legionMemberDAO);
+			assertNotNull(service);
+		} finally {
+			PlayerTransferConfig.REMOVE_SKILL_LIST = previousRemoveSkillList;
+		}
+	}
+
+	@Test
 	void servicesFailFastOnNullDaoInjection() {
 		assertThrows(NullPointerException.class, () -> new TownService(null));
 		assertThrows(NullPointerException.class, () -> new AnnouncementService(null));
@@ -575,7 +611,10 @@ class ServiceConstructorInjectionTest {
 		assertThrows(NullPointerException.class, () -> new HousingBidService(null, null, null));
 		assertThrows(NullPointerException.class, () -> new HousingService(null));
 		assertThrows(NullPointerException.class, () -> new ArmsfusionService(null));
-		assertThrows(NullPointerException.class, () -> new LegionService(null, null, null, null));
+		assertThrows(NullPointerException.class, () -> new LegionService(null, null, null, null, null));
+		assertThrows(NullPointerException.class, () -> new GrowthEnergy(null));
+		assertThrows(NullPointerException.class, () -> new PetService(null));
+		assertThrows(NullPointerException.class, () -> new PlayerTransferService(null, null));
 		assertThrows(NullPointerException.class, () -> new PlayerServiceDaos(
 			null, null, null, null, null, null, null, null, null, null,
 			null, null, null, null, null, null, null, null, null, null,

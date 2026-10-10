@@ -33,6 +33,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
 import com.aionemu.gameserver.dao.PlayerCreativityPointsDAO;
+import com.aionemu.gameserver.dao.PlayerPetsDAO;
 import com.aionemu.gameserver.dao.PlayerRecipesDAO;
 import com.aionemu.gameserver.dao.PlayerDAO;
 
@@ -51,8 +52,9 @@ public class TaskAndStatBeans {
 
     @Bean
     @Lazy
-    public PetService petService() {
-        return new PetService();
+    public PetService petService(ObjectProvider<PlayerPetsDAO> playerPetsDaoProvider) {
+        PlayerPetsDAO dao = playerPetsDaoProvider.getIfAvailable();
+        return dao != null ? new PetService(dao) : new PetService();
     }
 
     @Bean
@@ -75,8 +77,9 @@ public class TaskAndStatBeans {
 
     @Bean
     @Lazy
-    public GrowthEnergy growthEnergy() {
-        return new GrowthEnergy();
+    public GrowthEnergy growthEnergy(ObjectProvider<PlayerDAO> playerDaoProvider) {
+        PlayerDAO dao = playerDaoProvider.getIfAvailable();
+        return dao != null ? new GrowthEnergy(dao) : new GrowthEnergy();
     }
 
     @Bean
