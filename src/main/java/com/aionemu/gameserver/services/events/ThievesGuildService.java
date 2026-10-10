@@ -2,6 +2,7 @@ package com.aionemu.gameserver.services.events;
 
 
 import com.aionemu.boot.i18n.I18n;
+import lombok.NonNull;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
@@ -9,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.sql.Timestamp;
+import java.util.Objects;
 import java.util.concurrent.Future;
 
 import org.springframework.beans.factory.ObjectProvider;
@@ -45,6 +47,38 @@ public class ThievesGuildService {
     @Setter
     private static volatile ObjectProvider<ThievesGuildService> instanceProvider;
 
+	/** 盗贼名单 DAO / player thieves-list DAO */
+	private final PlayerThievesListDAO playerThievesListDAO;
+
+	/**
+	 * 使用指定 DAO 依赖构造盗贼公会服务。
+	 * Constructs the thieves guild service with given DAO dependency.
+	 *
+	 * @param playerThievesListDAO 盗贼名单 DAO / player thieves-list DAO
+	 */
+	public ThievesGuildService(@NonNull PlayerThievesListDAO playerThievesListDAO) {
+		this.playerThievesListDAO = Objects.requireNonNull(playerThievesListDAO, "playerThievesListDAO must not be null");
+	}
+
+	/**
+	 * 构造盗贼公会服务（使用 safeDao 解析依赖）。
+	 * Constructs the thieves guild service with safeDao resolution.
+	 */
+	public ThievesGuildService() {
+		this(safeDao(PlayerThievesListDAO.class, com.aionemu.gameserver.dao.impl.PlayerThievesDAO::new));
+	}
+
+	private static <T extends com.aionemu.commons.database.dao.DAO> T safeDao(Class<T> daoClass,
+			java.util.function.Supplier<T> fallback) {
+		if (DAOManager.isInitialized()) {
+			try {
+				return DAOManager.getDAO(daoClass);
+			} catch (Exception ignored) {
+			}
+		}
+		return fallback.get();
+	}
+
 	/**
 	 * 玩家进入世界时处理。
 	 * Handles player entering the world.
@@ -55,11 +89,11 @@ public class ThievesGuildService {
 			return;
 		}
 		try {
-			ThievesStatusList thieves = DAOManager.getDAO(PlayerThievesListDAO.class).loadThieves(player.getObjectId());
+			ThievesStatusList thieves = playerThievesListDAO.loadThieves(player.getObjectId());
 			if (thieves == null) {
 				thieves = new ThievesStatusList(player.getObjectId(), 0, 0, 0L, 0, "Нет", 0,
 						new Timestamp(System.currentTimeMillis()));
-				DAOManager.getDAO(PlayerThievesListDAO.class).saveNewThieves(thieves);
+				playerThievesListDAO.saveNewThieves(thieves);
 			}
 			player.setThieves(thieves);
 			log.info(I18n.get("log.b578983bb7dd", player.getThieves().getPlayerId()));
@@ -102,7 +136,7 @@ public class ThievesGuildService {
 		if (player.isThievesDuel()) {
 			return;
 		}
-		target.setThieves(DAOManager.getDAO(PlayerThievesListDAO.class).loadThieves(target.getObjectId()));
+		target.setThieves(playerThievesListDAO.loadThieves(target.getObjectId()));
 		ThievesStatusList thieves = target.getThieves();
 		if (thieves.getRevengeName().equals(player.getName()) && !PlayerActions.isAlreadyDead(target)
 				&& MathUtil.isIn3dRange(target, player, 2)) {
@@ -124,8 +158,8 @@ public class ThievesGuildService {
 		if (!CustomConfig.THIEVES_ENABLE) {
 			return;
 		}
-		player.setThieves(DAOManager.getDAO(PlayerThievesListDAO.class).loadThieves(player.getObjectId()));
-		target.setThieves(DAOManager.getDAO(PlayerThievesListDAO.class).loadThieves(target.getObjectId()));
+		player.setThieves(playerThievesListDAO.loadThieves(player.getObjectId()));
+		target.setThieves(playerThievesListDAO.loadThieves(target.getObjectId()));
 		ThievesStatusList thievesPlayer = player.getThieves();
 		ThievesStatusList thievesTarget = target.getThieves();
 		if (thievesPlayer == null || thievesTarget == null) {
@@ -148,8 +182,8 @@ public class ThievesGuildService {
 		thievesTarget.setLastThievesKinah(0L);
 		thievesTarget.setRevengeName("Нет");
 		thievesTarget.setRevengeDate(new Timestamp(System.currentTimeMillis()));
-		DAOManager.getDAO(PlayerThievesListDAO.class).storeThieves(thievesPlayer);
-		DAOManager.getDAO(PlayerThievesListDAO.class).storeThieves(thievesTarget);
+		playerThievesListDAO.storeThieves(thievesPlayer);
+		playerThievesListDAO.storeThieves(thievesTarget);
 		log.info(I18n.get("log.917ee8fb0505", player.getName()));
 	}
 	/**
@@ -191,7 +225,7 @@ public class ThievesGuildService {
 			player.setCaptchaImage(null);
 			player.setIsThieves(false);
 			// 盗贼成功 / Thieves success
-			player.setThieves(DAOManager.getDAO(PlayerThievesListDAO.class).loadThieves(player.getObjectId()));
+			player.setThieves(playerThievesListDAO.loadThieves(player.getObjectId()));
 			ThievesStatusList thieves = player.getThieves();
 			Timestamp nextTime = thieves.getRevengeDate();
 			Timestamp currentTime = new Timestamp(System.currentTimeMillis());
@@ -239,7 +273,7 @@ public class ThievesGuildService {
 				thieves.setLastThievesKinah(kinah);
 				player.getInventory().increaseKinah(kinah);
 				target.getInventory().decreaseKinah(kinah);
-				DAOManager.getDAO(PlayerThievesListDAO.class).storeThieves(thieves);
+				playerThievesListDAO.storeThieves(thieves);
 				thievesMessage(player, "You are robbed " + target.getName(), 0);
 				thievesMessage(player, "Be careful! Revenge can be swift from " + target.getName(), 0);
 				thievesMessage(player, target.getName() + " Has the ability to attack you at any time ", 0);

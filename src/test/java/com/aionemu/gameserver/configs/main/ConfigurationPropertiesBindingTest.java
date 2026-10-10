@@ -642,4 +642,195 @@ class ConfigurationPropertiesBindingTest {
 			snapshot.restore();
 		}
 	}
+	@Test
+	void bindsAutoGroupConfigProperties() {
+		ConfigSnapshot snapshot = ConfigSnapshot.of(AutoGroupConfig.class,
+			"AUTO_GROUP_ENABLED", "DREDGION_TIMER", "DREDGION_ENABLED",
+			"DREDGION_SCHEDULE_MIDDAY", "DREDGION_SCHEDULE_EVENING", "DREDGION_SCHEDULE_MIDNIGHT",
+			"KAMAR_TIMER", "KAMAR_ENABLED", "KAMAR_SCHEDULE_MIDNIGHT",
+			"OPHIDAN_TIMER", "OPHIDAN_ENABLED", "OPHIDAN_SCHEDULE_MIDDAY", "OPHIDAN_SCHEDULE_MIDNIGHT",
+			"OPHIDAN_WARPATH_TIMER", "OPHIDAN_WARPATH_ENABLED", "OPHIDAN_WARPATH_SCHEDULE_MIDNIGHT",
+			"BASTION_TIMER", "BASTION_ENABLED", "BASTION_SCHEDULE_MIDNIGHT",
+			"IDGEL_TIMER", "IDGEL_ENABLED", "IDGEL_SCHEDULE_MIDDAY", "IDGEL_SCHEDULE_MIDNIGHT",
+			"IDGEL_DOME_LANDMARK_TIMER", "IDGEL_DOME_LANDMARK_ENABLED", "IDGEL_DOME_LANDMARK_SCHEDULE_MIDNIGHT",
+			"ASHUNATAL_TIMER", "ASHUNATAL_ENABLED",
+			"ASHUNATAL_SCHEDULE_MIDDAY", "ASHUNATAL_SCHEDULE_EVENING", "ASHUNATAL_SCHEDULE_MIDNIGHT",
+			"HALL_OF_TENACITY_TIMER", "HALL_OF_TENACITY_ENABLED",
+			"HALL_OF_TENACITY_SCHEDULE_MORNING", "HALL_OF_TENACITY_SCHEDULE_EVENING",
+			"GRAND_ARENA_TRAINING_CAMP_TIMER", "GRAND_ARENA_TRAINING_CAMP_ENABLED",
+			"GRAND_ARENA_TRAINING_CAMP_SCHEDULE_EVENING",
+			"IDTM_LOBBY_P02_TIMER", "IDTM_LOBBY_P02_ENABLED", "IDTM_LOBBY_P02_SCHEDULE_EVENING",
+			"IDTM_LOBBY_E01_TIMER", "IDTM_LOBBY_E01_ENABLED", "IDTM_LOBBY_E01_SCHEDULE_EVENING",
+			"IDRUN_TIMER", "IDRUN_ENABLED", "IDRUN_SCHEDULE");
+		try {
+			StandardEnvironment environment = new StandardEnvironment();
+			environment.getPropertySources().addFirst(new MapPropertySource("test", Map.ofEntries(
+				Map.entry("gameserver.autogroup.enable", "false"),
+				Map.entry("gameserver.dredgion.timer", "45"),
+				Map.entry("gameserver.dredgion.enable", "false"),
+				Map.entry("gameserver.dredgion.schedule.midday", "0 30 12 ? * MON *"),
+				Map.entry("gameserver.dredgion.schedule.evening", "0 30 20 ? * MON *"),
+				Map.entry("gameserver.dredgion.schedule.midnight", "0 30 23 ? * MON *"),
+				Map.entry("gameserver.kamar.timer", "90"),
+				Map.entry("gameserver.kamar.enable", "false"),
+				Map.entry("gameserver.kamar.schedule.midnight", "0 30 23 ? * SAT *"),
+				Map.entry("gameserver.ophidan.timer", "70"),
+				Map.entry("gameserver.ophidan.enable", "false"),
+				Map.entry("gameserver.ophidan.schedule.midday", "0 30 12 ? * TUE *"),
+				Map.entry("gameserver.ophidan.schedule.midnight", "0 30 23 ? * TUE *"),
+				Map.entry("gameserver.ophidan.warpath.timer", "80"),
+				Map.entry("gameserver.ophidan.warpath.enable", "false"),
+				Map.entry("gameserver.ophidan.warpath.schedule.midnight", "0 30 23 ? * THU *"),
+				Map.entry("gameserver.bastion.timer", "75"),
+				Map.entry("gameserver.bastion.enable", "false"),
+				Map.entry("gameserver.bastion.schedule.midnight", "0 30 23 ? * FRI *"),
+				Map.entry("gameserver.idgel.dome.timer", "65"),
+				Map.entry("gameserver.idgel.dome.enable", "false"),
+				Map.entry("gameserver.idgel.dome.schedule.midday", "0 30 12 ? * WED *"),
+				Map.entry("gameserver.idgel.dome.schedule.midnight", "0 30 23 ? * WED *"),
+				Map.entry("gameserver.idgel.dome.landmark.timer", "85"),
+				Map.entry("gameserver.idgel.dome.landmark.enable", "false"),
+				Map.entry("gameserver.idgel.dome.landmark.schedule.midnight", "0 30 23 ? * MON *"),
+				Map.entry("gameserver.ashunatal.dredgion.timer", "95"),
+				Map.entry("gameserver.ashunatal.dredgion.enable", "false"),
+				Map.entry("gameserver.ashunatal.schedule.midday", "0 30 12 ? * FRI *"),
+				Map.entry("gameserver.ashunatal.schedule.evening", "0 30 20 ? * FRI *"),
+				Map.entry("gameserver.ashunatal.schedule.midnight", "0 30 23 ? * SUN *"),
+				Map.entry("gameserver.hall.of.tenacity.timer", "300"),
+				Map.entry("gameserver.hall.of.tenacity.enable", "false"),
+				Map.entry("gameserver.hall.of.tenacity.schedule.morning", "0 30 9 ? * SAT *"),
+				Map.entry("gameserver.hall.of.tenacity.schedule.evening", "0 30 18 ? * MON *"),
+				Map.entry("gameserver.grand.arena.training.camp.timer", "320"),
+				Map.entry("gameserver.grand.arena.training.camp.enable", "false"),
+				Map.entry("gameserver.grand.arena.training.camp.schedule.evening", "0 30 18 ? * SAT *"),
+				Map.entry("gameserver.IDTM_Lobby_P02.timer", "340"),
+				Map.entry("gameserver.IDTM_Lobby_P02.enable", "false"),
+				Map.entry("gameserver.IDTM_Lobby_P02.schedule.evening", "0 30 18 ? * SUN *"),
+				Map.entry("gameserver.IDTM_Lobby_E01.timer", "350"),
+				Map.entry("gameserver.IDTM_Lobby_E01.enable", "false"),
+				Map.entry("gameserver.IDTM_Lobby_E01.schedule.evening", "0 45 18 ? * SAT *"),
+				Map.entry("gameserver.IDRun.timer", "55"),
+				Map.entry("gameserver.IDRun.enable", "false"),
+				Map.entry("gameserver.IDRun.schedule", "0 30 0/2 1/1 * ? *")
+			)));
+
+			AutoGroupConfig config = new AutoGroupConfig();
+			Binder.get(environment).bind("gameserver", Bindable.ofInstance(config));
+
+			assertFalse(AutoGroupConfig.AUTO_GROUP_ENABLED);
+			assertEquals(45L, AutoGroupConfig.DREDGION_TIMER);
+			assertFalse(AutoGroupConfig.DREDGION_ENABLED);
+			assertEquals("0 30 12 ? * MON *", AutoGroupConfig.DREDGION_SCHEDULE_MIDDAY);
+			assertEquals("0 30 20 ? * MON *", AutoGroupConfig.DREDGION_SCHEDULE_EVENING);
+			assertEquals("0 30 23 ? * MON *", AutoGroupConfig.DREDGION_SCHEDULE_MIDNIGHT);
+			assertEquals(90L, AutoGroupConfig.KAMAR_TIMER);
+			assertFalse(AutoGroupConfig.KAMAR_ENABLED);
+			assertEquals("0 30 23 ? * SAT *", AutoGroupConfig.KAMAR_SCHEDULE_MIDNIGHT);
+			assertEquals(70L, AutoGroupConfig.OPHIDAN_TIMER);
+			assertFalse(AutoGroupConfig.OPHIDAN_ENABLED);
+			assertEquals("0 30 12 ? * TUE *", AutoGroupConfig.OPHIDAN_SCHEDULE_MIDDAY);
+			assertEquals("0 30 23 ? * TUE *", AutoGroupConfig.OPHIDAN_SCHEDULE_MIDNIGHT);
+			assertEquals(80L, AutoGroupConfig.OPHIDAN_WARPATH_TIMER);
+			assertFalse(AutoGroupConfig.OPHIDAN_WARPATH_ENABLED);
+			assertEquals("0 30 23 ? * THU *", AutoGroupConfig.OPHIDAN_WARPATH_SCHEDULE_MIDNIGHT);
+			assertEquals(75L, AutoGroupConfig.BASTION_TIMER);
+			assertFalse(AutoGroupConfig.BASTION_ENABLED);
+			assertEquals("0 30 23 ? * FRI *", AutoGroupConfig.BASTION_SCHEDULE_MIDNIGHT);
+			assertEquals(65L, AutoGroupConfig.IDGEL_TIMER);
+			assertFalse(AutoGroupConfig.IDGEL_ENABLED);
+			assertEquals("0 30 12 ? * WED *", AutoGroupConfig.IDGEL_SCHEDULE_MIDDAY);
+			assertEquals("0 30 23 ? * WED *", AutoGroupConfig.IDGEL_SCHEDULE_MIDNIGHT);
+			assertEquals(85L, AutoGroupConfig.IDGEL_DOME_LANDMARK_TIMER);
+			assertFalse(AutoGroupConfig.IDGEL_DOME_LANDMARK_ENABLED);
+			assertEquals("0 30 23 ? * MON *", AutoGroupConfig.IDGEL_DOME_LANDMARK_SCHEDULE_MIDNIGHT);
+			assertEquals(95L, AutoGroupConfig.ASHUNATAL_TIMER);
+			assertFalse(AutoGroupConfig.ASHUNATAL_ENABLED);
+			assertEquals("0 30 12 ? * FRI *", AutoGroupConfig.ASHUNATAL_SCHEDULE_MIDDAY);
+			assertEquals("0 30 20 ? * FRI *", AutoGroupConfig.ASHUNATAL_SCHEDULE_EVENING);
+			assertEquals("0 30 23 ? * SUN *", AutoGroupConfig.ASHUNATAL_SCHEDULE_MIDNIGHT);
+			assertEquals(300L, AutoGroupConfig.HALL_OF_TENACITY_TIMER);
+			assertFalse(AutoGroupConfig.HALL_OF_TENACITY_ENABLED);
+			assertEquals("0 30 9 ? * SAT *", AutoGroupConfig.HALL_OF_TENACITY_SCHEDULE_MORNING);
+			assertEquals("0 30 18 ? * MON *", AutoGroupConfig.HALL_OF_TENACITY_SCHEDULE_EVENING);
+			assertEquals(320L, AutoGroupConfig.GRAND_ARENA_TRAINING_CAMP_TIMER);
+			assertFalse(AutoGroupConfig.GRAND_ARENA_TRAINING_CAMP_ENABLED);
+			assertEquals("0 30 18 ? * SAT *", AutoGroupConfig.GRAND_ARENA_TRAINING_CAMP_SCHEDULE_EVENING);
+			assertEquals(340L, AutoGroupConfig.IDTM_LOBBY_P02_TIMER);
+			assertFalse(AutoGroupConfig.IDTM_LOBBY_P02_ENABLED);
+			assertEquals("0 30 18 ? * SUN *", AutoGroupConfig.IDTM_LOBBY_P02_SCHEDULE_EVENING);
+			assertEquals(350L, AutoGroupConfig.IDTM_LOBBY_E01_TIMER);
+			assertFalse(AutoGroupConfig.IDTM_LOBBY_E01_ENABLED);
+			assertEquals("0 45 18 ? * SAT *", AutoGroupConfig.IDTM_LOBBY_E01_SCHEDULE_EVENING);
+			assertEquals(55L, AutoGroupConfig.IDRUN_TIMER);
+			assertFalse(AutoGroupConfig.IDRUN_ENABLED);
+			assertEquals("0 30 0/2 1/1 * ? *", AutoGroupConfig.IDRUN_SCHEDULE);
+		} finally {
+			snapshot.restore();
+		}
+	}
+
+	@Test
+	void bindsLegionConfigProperties() {
+		ConfigSnapshot snapshot = ConfigSnapshot.of(LegionConfig.class,
+			"LEGION_NAME_PATTERN", "SELF_INTRO_PATTERN", "NICKNAME_PATTERN", "ANNOUNCEMENT_PATTERN",
+			"LEGION_DISBAND_TIME", "LEGION_CREATE_REQUIRED_KINAH", "LEGION_EMBLEM_REQUIRED_KINAH",
+			"ENABLE_GUILD_TASK_REQ", "LEGION_INVITEOTHERFACTION", "LEGION_WAREHOUSE",
+			"LEGION_LEVEL1_MAX_MEMBERS", "LEGION_LEVEL2_MAX_MEMBERS", "LEGION_LEVEL8_MAX_MEMBERS",
+			"LEGION_LEVEL2_REQUIRED_KINAH", "LEGION_LEVEL2_REQUIRED_MEMBERS", "LEGION_LEVEL2_REQUIRED_CONTRIBUTION",
+			"LEGION_LEVEL8_REQUIRED_KINAH", "LEGION_LEVEL8_REQUIRED_MEMBERS", "LEGION_LEVEL8_REQUIRED_CONTRIBUTION",
+			"LWH_LEVEL1_SLOTS", "LWH_LEVEL8_SLOTS");
+		try {
+			StandardEnvironment environment = new StandardEnvironment();
+			environment.getPropertySources().addFirst(new MapPropertySource("test", Map.ofEntries(
+				Map.entry("gameserver.legion.pattern", "[a-zA-Z]{2,16}"),
+				Map.entry("gameserver.legion.self.intro.pattern", ".{1,64}"),
+				Map.entry("gameserver.legion.nick.name.pattern", ".{1,20}"),
+				Map.entry("gameserver.legion.announcement.pattern", ".{1,512}"),
+				Map.entry("gameserver.legion.disband.time", "3600"),
+				Map.entry("gameserver.legion.creation.required.kinah", "20000"),
+				Map.entry("gameserver.legion.emblem.required.kinah", "30000"),
+				Map.entry("gameserver.legion.task.requirement.enable", "false"),
+				Map.entry("gameserver.legion.invite.other.faction", "true"),
+				Map.entry("gameserver.legion.warehouse.enable", "false"),
+				Map.entry("gameserver.legion.level1.max.members", "31"),
+				Map.entry("gameserver.legion.level2.required.kinah", "110000"),
+				Map.entry("gameserver.legion.level2.required.members", "11"),
+				Map.entry("gameserver.legion.level2.required.contribution", "1000"),
+				Map.entry("gameserver.legion.level2.max.members", "61"),
+				Map.entry("gameserver.legion.level8.required.kinah", "110000000"),
+				Map.entry("gameserver.legion.level8.required.members", "71"),
+				Map.entry("gameserver.legion.level8.required.contribution", "63500000"),
+				Map.entry("gameserver.legion.level8.max.members", "241"),
+				Map.entry("gameserver.legion.warehouse.level1.slots", "25"),
+				Map.entry("gameserver.legion.warehouse.level8.slots", "81")
+			)));
+
+			LegionConfig config = new LegionConfig();
+			Binder.get(environment).bind("gameserver", Bindable.ofInstance(config));
+
+			assertEquals("[a-zA-Z]{2,16}", LegionConfig.LEGION_NAME_PATTERN.pattern());
+			assertEquals(".{1,64}", LegionConfig.SELF_INTRO_PATTERN.pattern());
+			assertEquals(".{1,20}", LegionConfig.NICKNAME_PATTERN.pattern());
+			assertEquals(".{1,512}", LegionConfig.ANNOUNCEMENT_PATTERN.pattern());
+			assertEquals(3600, LegionConfig.LEGION_DISBAND_TIME);
+			assertEquals(20000, LegionConfig.LEGION_CREATE_REQUIRED_KINAH);
+			assertEquals(30000, LegionConfig.LEGION_EMBLEM_REQUIRED_KINAH);
+			assertFalse(LegionConfig.ENABLE_GUILD_TASK_REQ);
+			assertTrue(LegionConfig.LEGION_INVITEOTHERFACTION);
+			assertFalse(LegionConfig.LEGION_WAREHOUSE);
+			assertEquals(31, LegionConfig.LEGION_LEVEL1_MAX_MEMBERS);
+			assertEquals(110000, LegionConfig.LEGION_LEVEL2_REQUIRED_KINAH);
+			assertEquals(11, LegionConfig.LEGION_LEVEL2_REQUIRED_MEMBERS);
+			assertEquals(1000, LegionConfig.LEGION_LEVEL2_REQUIRED_CONTRIBUTION);
+			assertEquals(61, LegionConfig.LEGION_LEVEL2_MAX_MEMBERS);
+			assertEquals(110000000, LegionConfig.LEGION_LEVEL8_REQUIRED_KINAH);
+			assertEquals(71, LegionConfig.LEGION_LEVEL8_REQUIRED_MEMBERS);
+			assertEquals(63500000, LegionConfig.LEGION_LEVEL8_REQUIRED_CONTRIBUTION);
+			assertEquals(241, LegionConfig.LEGION_LEVEL8_MAX_MEMBERS);
+			assertEquals(25, LegionConfig.LWH_LEVEL1_SLOTS);
+			assertEquals(81, LegionConfig.LWH_LEVEL8_SLOTS);
+		} finally {
+			snapshot.restore();
+		}
+	}
 }

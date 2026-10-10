@@ -32,6 +32,8 @@ import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
+import com.aionemu.gameserver.dao.PlayerCreativityPointsDAO;
+import com.aionemu.gameserver.dao.PlayerRecipesDAO;
 import com.aionemu.gameserver.dao.PlayerDAO;
 
 /**
@@ -103,7 +105,13 @@ public class TaskAndStatBeans {
 
     @Bean
     @Lazy
-    public CreativityEssenceService creativityEssenceService() {
+    public CreativityEssenceService creativityEssenceService(ObjectProvider<PlayerCreativityPointsDAO> cpDaoProvider,
+                                                             ObjectProvider<PlayerDAO> playerDaoProvider) {
+        PlayerCreativityPointsDAO cpDAO = cpDaoProvider.getIfAvailable();
+        PlayerDAO playerDAO = playerDaoProvider.getIfAvailable();
+        if (cpDAO != null && playerDAO != null) {
+            return new CreativityEssenceService(cpDAO, playerDAO);
+        }
         return new CreativityEssenceService();
     }
 
@@ -169,8 +177,9 @@ public class TaskAndStatBeans {
 
     @Bean
     @Lazy
-    public CraftSkillUpdateService craftSkillUpdateService() {
-        return new CraftSkillUpdateService();
+    public CraftSkillUpdateService craftSkillUpdateService(ObjectProvider<PlayerRecipesDAO> recipesDaoProvider) {
+        PlayerRecipesDAO recipesDAO = recipesDaoProvider.getIfAvailable();
+        return recipesDAO != null ? new CraftSkillUpdateService(recipesDAO) : new CraftSkillUpdateService();
     }
 
     @Bean

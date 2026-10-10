@@ -5,6 +5,9 @@ import com.aionemu.gameserver.lifecycle.GameCreativityServices;
 import java.util.ArrayList;
 import java.util.List;
 
+import java.util.Objects;
+
+import lombok.NonNull;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.ObjectProvider;
@@ -42,7 +45,42 @@ public class CreativityEssenceService {
     private static volatile ObjectProvider<CreativityEssenceService> instanceProvider;
 
 	/** 玩家 creativitypointsDAO / Player creativity-points DAO */
-	PlayerCreativityPointsDAO cpDAO = DAOManager.getDAO(PlayerCreativityPointsDAO.class);
+	private final PlayerCreativityPointsDAO cpDAO;
+
+	/** 玩家 DAO / Player DAO */
+	private final PlayerDAO playerDAO;
+
+	/**
+	 * 使用指定 DAO 依赖构造创造力精华服务。
+	 * Constructs the creativity essence service with given DAO dependencies.
+	 *
+	 * @param cpDAO 玩家创造力点 DAO / player creativity-points DAO
+	 * @param playerDAO 玩家 DAO / player DAO
+	 */
+	public CreativityEssenceService(@NonNull PlayerCreativityPointsDAO cpDAO, @NonNull PlayerDAO playerDAO) {
+		this.cpDAO = Objects.requireNonNull(cpDAO, "cpDAO must not be null");
+		this.playerDAO = Objects.requireNonNull(playerDAO, "playerDAO must not be null");
+	}
+
+	/**
+	 * 构造创造力精华服务（使用 safeDao 解析依赖）。
+	 * Constructs the creativity essence service with safeDao resolution.
+	 */
+	public CreativityEssenceService() {
+		this(safeDao(PlayerCreativityPointsDAO.class, com.aionemu.gameserver.dao.impl.PlayerCreativityPointsDAO::new),
+			 safeDao(PlayerDAO.class, com.aionemu.gameserver.dao.impl.PlayerDAO::new));
+	}
+
+	private static <T extends com.aionemu.commons.database.dao.DAO> T safeDao(Class<T> daoClass,
+			java.util.function.Supplier<T> fallback) {
+		if (DAOManager.isInitialized()) {
+			try {
+				return DAOManager.getDAO(daoClass);
+			} catch (Exception ignored) {
+			}
+		}
+		return fallback.get();
+	}
 
 	/** Temporary CP calculation value / Temporary CP calculation value */
 	private int point;
@@ -64,7 +102,7 @@ public class CreativityEssenceService {
 	public void onLogin(Player player) {
 		if (player.isArchDaeva()) {
 			int totalPoint = player.getCreativityPoint();
-			int size = DAOManager.getDAO(PlayerCreativityPointsDAO.class).getSlotSize(player.getObjectId());
+			int size = cpDAO.getSlotSize(player.getObjectId());
 			for (PlayerCPEntry ce : player.getCP().getAllCP()) {
 				if (ce.getSlot() <= 6 && ce.getPoint() >= 255) {
 					player.getCP().addPoint(player, ce.getSlot(), 0);
@@ -98,7 +136,7 @@ public class CreativityEssenceService {
 					point = player.getCreativityPoint() + 1;
 					player.setCreativityPoint(point);
 					int totalPoint = player.getCreativityPoint();
-					int size = DAOManager.getDAO(PlayerCreativityPointsDAO.class).getSlotSize(player.getObjectId());
+					int size = cpDAO.getSlotSize(player.getObjectId());
 					PacketSendUtility.sendPacket(player, new SM_CREATIVITY_POINTS(totalPoint, 2, size, false));
 					PacketSendUtility.sendPacket(player, new SM_STATS_INFO(player));
 					// 你获得了精华。点击角色经验条上的精华图标、SHIFT+U 或开始菜单。 / You have gained Essence. Click the Essence icon displayed on the Character XP meter, SHIFT+U, or select Start Menu.
@@ -112,7 +150,7 @@ public class CreativityEssenceService {
 					point = player.getCreativityPoint() + 1;
 					player.setCreativityPoint(point);
 					int totalPoint = player.getCreativityPoint();
-					int size = DAOManager.getDAO(PlayerCreativityPointsDAO.class).getSlotSize(player.getObjectId());
+					int size = cpDAO.getSlotSize(player.getObjectId());
 					PacketSendUtility.sendPacket(player, new SM_CREATIVITY_POINTS(totalPoint, 3, size, false));
 					PacketSendUtility.sendPacket(player, new SM_STATS_INFO(player));
 					// 你获得了精华。点击角色经验条上的精华图标、SHIFT+U 或开始菜单。 / You have gained Essence. Click the Essence icon displayed on the Character XP meter, SHIFT+U, or select Start Menu.
@@ -126,7 +164,7 @@ public class CreativityEssenceService {
 					point = player.getCreativityPoint() + 1;
 					player.setCreativityPoint(point);
 					int totalPoint = player.getCreativityPoint();
-					int size = DAOManager.getDAO(PlayerCreativityPointsDAO.class).getSlotSize(player.getObjectId());
+					int size = cpDAO.getSlotSize(player.getObjectId());
 					PacketSendUtility.sendPacket(player, new SM_CREATIVITY_POINTS(totalPoint, 4, size, false));
 					PacketSendUtility.sendPacket(player, new SM_STATS_INFO(player));
 					// 你获得了精华。点击角色经验条上的精华图标、SHIFT+U 或开始菜单。 / You have gained Essence. Click the Essence icon displayed on the Character XP meter, SHIFT+U, or select Start Menu.
@@ -140,7 +178,7 @@ public class CreativityEssenceService {
 					point = player.getCreativityPoint() + 1;
 					player.setCreativityPoint(point);
 					int totalPoint = player.getCreativityPoint();
-					int size = DAOManager.getDAO(PlayerCreativityPointsDAO.class).getSlotSize(player.getObjectId());
+					int size = cpDAO.getSlotSize(player.getObjectId());
 					PacketSendUtility.sendPacket(player, new SM_CREATIVITY_POINTS(totalPoint, 5, size, false));
 					PacketSendUtility.sendPacket(player, new SM_STATS_INFO(player));
 					// 你获得了精华。点击角色经验条上的精华图标、SHIFT+U 或开始菜单。 / You have gained Essence. Click the Essence icon displayed on the Character XP meter, SHIFT+U, or select Start Menu.
@@ -154,7 +192,7 @@ public class CreativityEssenceService {
 					point = player.getCreativityPoint() + 1;
 					player.setCreativityPoint(point);
 					int totalPoint = player.getCreativityPoint();
-					int size = DAOManager.getDAO(PlayerCreativityPointsDAO.class).getSlotSize(player.getObjectId());
+					int size = cpDAO.getSlotSize(player.getObjectId());
 					PacketSendUtility.sendPacket(player, new SM_CREATIVITY_POINTS(totalPoint, 6, size, false));
 					PacketSendUtility.sendPacket(player, new SM_STATS_INFO(player));
 					// 你获得了精华。点击角色经验条上的精华图标、SHIFT+U 或开始菜单。 / You have gained Essence. Click the Essence icon displayed on the Character XP meter, SHIFT+U, or select Start Menu.
@@ -222,7 +260,7 @@ public class CreativityEssenceService {
 				point = ArchDaevaConfig.CP_LIMIT_MAX;
 			}
 			player.setCreativityPoint(point);
-			int size = DAOManager.getDAO(PlayerCreativityPointsDAO.class).getSlotSize(player.getObjectId());
+			int size = cpDAO.getSlotSize(player.getObjectId());
 			PacketSendUtility.sendPacket(player, new SM_CREATIVITY_POINTS(point, player.getCPStep()));
 			PacketSendUtility.sendPacket(player, new SM_CREATIVITY_POINTS(player.getCreativityPoint(), player.getCPStep(), size, false));
 			int vesselCount = 0;
@@ -242,7 +280,7 @@ public class CreativityEssenceService {
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_GET_CP(point));
 			// 添加精华以打开分配精华窗口。 / Add Essence to open the Allocate Essence window.Open Allocate Essence.
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_GET_CP_LINK);
-			DAOManager.getDAO(PlayerDAO.class).storePlayer(player);
+			playerDAO.storePlayer(player);
 		}
 	}
 
@@ -552,7 +590,7 @@ public class CreativityEssenceService {
 		currentCp = player.getCreativityPoint();
 		int totalCp = (currentCp + estimaCp);
 		player.setCreativityPoint(totalCp);
-		int size = DAOManager.getDAO(PlayerCreativityPointsDAO.class).getSlotSize(player.getObjectId());
+		int size = cpDAO.getSlotSize(player.getObjectId());
 		PacketSendUtility.sendPacket(player, new SM_CREATIVITY_POINTS(totalCp, player.getCPStep(), size, true));
 		PacketSendUtility.sendPacket(player, new SM_STATS_INFO(player));
 	}
@@ -587,7 +625,7 @@ public class CreativityEssenceService {
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_GIVE_CP_ENCHANT_CANNOT);
 		}
 		player.setCreativityPoint(totalCp);
-		int size = DAOManager.getDAO(PlayerCreativityPointsDAO.class).getSlotSize(player.getObjectId());
+		int size = cpDAO.getSlotSize(player.getObjectId());
 		PacketSendUtility.sendPacket(player, new SM_CREATIVITY_POINTS(totalCp, player.getCPStep(), size, true));
 		PacketSendUtility.sendPacket(player, new SM_STATS_INFO(player));
 	}

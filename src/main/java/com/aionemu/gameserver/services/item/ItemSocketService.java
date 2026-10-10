@@ -5,6 +5,7 @@ import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 import com.aionemu.commons.database.dao.DAOManager;
@@ -31,6 +32,48 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
  */
 @Slf4j
 public class ItemSocketService {
+
+	/**
+	 * Spring 绑定的魔石列表 DAO / Spring-bound item-stone-list DAO.
+	 */
+	private static volatile ItemStoneListDAO boundItemStoneListDAO;
+
+	/**
+	 * 由 Spring 配置类在启动期绑定魔石列表 DAO。
+	 * Binds the item-stone-list DAO from the Spring configuration at startup.
+	 * @param dao 魔石列表 DAO / item stone list DAO
+	 */
+	public static void bindItemStoneListDAO(ItemStoneListDAO dao) {
+		boundItemStoneListDAO = Objects.requireNonNull(dao, "itemStoneListDAO must not be null");
+	}
+
+	/**
+	 * 返回魔石列表 DAO；未绑定（离线/单测环境）时按 safeDao 兜底构建并缓存。
+	 * 包级开放，供同包 item 域静态类（如 {@link ItemService}）复用同一绑定。
+	 * Returns the item-stone-list DAO; falls back to safeDao construction when unbound (offline/unit tests).
+	 * Package-visible so sibling static classes in the item domain reuse the same binding.
+	 * @return 魔石列表 DAO / item stone list DAO
+	 */
+	static ItemStoneListDAO itemStoneListDAO() {
+		ItemStoneListDAO current = boundItemStoneListDAO;
+		if (current == null) {
+			synchronized (ItemSocketService.class) {
+				current = boundItemStoneListDAO;
+				if (current == null) {
+					if (DAOManager.isInitialized()) {
+						try {
+							boundItemStoneListDAO = current = DAOManager.getDAO(ItemStoneListDAO.class);
+						} catch (Exception ignored) {
+						}
+					}
+					if (current == null) {
+						boundItemStoneListDAO = current = new com.aionemu.gameserver.dao.impl.ItemStoneListDAO();
+					}
+				}
+			}
+		}
+		return current;
+	}
 
 	/**
 	 * 为物品自动分配槽位镶嵌魔石。
@@ -223,7 +266,7 @@ public class ItemSocketService {
 		ManaStone stone = new ManaStone(item.getObjectId(), itemId, nextSlot, PersistentState.NEW);
 		manaStones.add(stone);
 		Set<ManaStone> itemStones = item.getFusionStones();
-		DAOManager.getDAO(ItemStoneListDAO.class).storeFusionStones(itemStones);
+		itemStoneListDAO().storeFusionStones(itemStones);
 		return stone;
 	}
 
@@ -278,19 +321,19 @@ public class ItemSocketService {
 
 			if (ms.getSlot() == slotNum) {
 				ms.setPersistentState(PersistentState.DELETED);
-				DAOManager.getDAO(ItemStoneListDAO.class).storeManaStones(Collections.singleton(ms));
+				itemStoneListDAO().storeManaStones(Collections.singleton(ms));
 				itemStones.remove(ms);
 				break;
 			}
 			if (ms.getSlot() > specialSlotCount) {
 				ms.setPersistentState(PersistentState.DELETED);
-				DAOManager.getDAO(ItemStoneListDAO.class).storeManaStones(Collections.singleton(ms));
+				itemStoneListDAO().storeManaStones(Collections.singleton(ms));
 				itemStones.remove(ms);
 				break;
 			}
 			if (ms.getSlot() > slotNum && ms.getSlot() < specialSlotCount) {
 				ms.setPersistentState(PersistentState.DELETED);
-				DAOManager.getDAO(ItemStoneListDAO.class).storeManaStones(Collections.singleton(ms));
+				itemStoneListDAO().storeManaStones(Collections.singleton(ms));
 				itemStones.remove(ms);
 				break;
 			}
@@ -327,19 +370,19 @@ public class ItemSocketService {
 			}
 			if (ms.getSlot() == slotNum) {
 				ms.setPersistentState(PersistentState.DELETED);
-				DAOManager.getDAO(ItemStoneListDAO.class).storeFusionStones(Collections.singleton(ms));
+				itemStoneListDAO().storeFusionStones(Collections.singleton(ms));
 				itemStones.remove(ms);
 				break;
 			}
 			if (ms.getSlot() > specialSlotCount) {
 				ms.setPersistentState(PersistentState.DELETED);
-				DAOManager.getDAO(ItemStoneListDAO.class).storeFusionStones(Collections.singleton(ms));
+				itemStoneListDAO().storeFusionStones(Collections.singleton(ms));
 				itemStones.remove(ms);
 				break;
 			}
 			if (ms.getSlot() > slotNum && ms.getSlot() < specialSlotCount) {
 				ms.setPersistentState(PersistentState.DELETED);
-				DAOManager.getDAO(ItemStoneListDAO.class).storeFusionStones(Collections.singleton(ms));
+				itemStoneListDAO().storeFusionStones(Collections.singleton(ms));
 				itemStones.remove(ms);
 				break;
 			}
@@ -365,7 +408,7 @@ public class ItemSocketService {
 		for (ManaStone ms : itemStones) {
 			ms.setPersistentState(PersistentState.DELETED);
 		}
-		DAOManager.getDAO(ItemStoneListDAO.class).storeManaStones(itemStones);
+		itemStoneListDAO().storeManaStones(itemStones);
 		itemStones.clear();
 		ItemPacketService.updateItemAfterInfoChange(player, item);
 	}
@@ -388,7 +431,7 @@ public class ItemSocketService {
 		for (ManaStone ms : fusionStones) {
 			ms.setPersistentState(PersistentState.DELETED);
 		}
-		DAOManager.getDAO(ItemStoneListDAO.class).storeFusionStones(fusionStones);
+		itemStoneListDAO().storeFusionStones(fusionStones);
 		fusionStones.clear();
 		ItemPacketService.updateItemAfterInfoChange(player, item);
 	}

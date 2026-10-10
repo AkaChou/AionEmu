@@ -7,7 +7,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
+import lombok.NonNull;
 import lombok.Setter;
 import org.springframework.beans.factory.ObjectProvider;
 
@@ -46,12 +48,46 @@ public class CraftSkillUpdateService {
     @Setter
     private static volatile ObjectProvider<CraftSkillUpdateService> instanceProvider;
 
+	/** 玩家配方 DAO / player recipes DAO */
+	private final PlayerRecipesDAO playerRecipesDAO;
+
 	/** NPC → 可学制作技能模板映射 / NPC to craft-learn template mapping */
 	protected static final Map<Integer, CraftLearnTemplate> npcBySkill = new HashMap<>();
 	/** 技能等级 → 升级基纳费用 / Skill level to upgrade kinah cost */
 	private static final Map<Integer, Integer> cost = new HashMap<>();
 	/** 可计为专家/大师名额的制作技能 ID 列表 / Craft skill ids counted for expert/master slots */
 	private static final List<Integer> craftingSkillIds = new ArrayList<>();
+
+	/**
+	 * 构造服务（使用 safeDao 解析依赖）。
+	 * Constructs the service with safeDao resolution.
+	 */
+	public CraftSkillUpdateService() {
+		this(safeDao(PlayerRecipesDAO.class, com.aionemu.gameserver.dao.impl.PlayerRecipesDAO::new));
+	}
+
+	private static <T extends com.aionemu.commons.database.dao.DAO> T safeDao(Class<T> daoClass,
+			java.util.function.Supplier<T> fallback) {
+		if (DAOManager.isInitialized()) {
+			try {
+				return DAOManager.getDAO(daoClass);
+			} catch (Exception ignored) {
+			}
+		}
+		return fallback.get();
+	}
+
+	/**
+	 * 使用指定 DAO 依赖构造服务：初始化魔/天族 NPC 技能映射、升级费用与制作技能 ID 列表。
+	 * Constructs the service with given DAO dependency: initializes Asmodian/Elyos NPC skill maps,
+	 * upgrade costs and craft skill id list.
+	 *
+	 * @param playerRecipesDAO 玩家配方 DAO / player recipes DAO
+	 */
+	public CraftSkillUpdateService(@NonNull PlayerRecipesDAO playerRecipesDAO) {
+		this.playerRecipesDAO = Objects.requireNonNull(playerRecipesDAO, "playerRecipesDAO must not be null");
+		initCraftMappings();
+	}
 
 	/**
 	 * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。
@@ -75,10 +111,10 @@ public class CraftSkillUpdateService {
 	}
 
     /**
-	 * 构造服务：初始化魔/天族 NPC 技能映射、升级费用与制作技能 ID 列表。
-	 * Construct service: initialize Asmodian/Elyos NPC skill maps, upgrade costs and craft skill id list.
+	 * 初始化魔/天族 NPC 技能映射、升级费用与制作技能 ID 列表。
+	 * Initializes Asmodian/Elyos NPC skill maps, upgrade costs and craft skill id list.
 	 */
-	public CraftSkillUpdateService() {
+	private void initCraftMappings() {
 		// 魔族制作。 / CRAFT ASMODIANS.
 		npcBySkill.put(204096, new CraftLearnTemplate(30002, false, "Essencetapping")); // 精华采集：从物体中提取精华获得材料。 / Essencetapping (You can obtain materials through extracting the vitality of objects)
 
@@ -182,31 +218,31 @@ public class CraftSkillUpdateService {
 		Race race = player.getCommonData().getRace();
 		if (player.getLevel() == 10) {
 			RecipeList recipelist = null;
-			recipelist = DAOManager.getDAO(PlayerRecipesDAO.class).load(object);
+			recipelist = playerRecipesDAO.load(object);
 			if (race == Race.ELYOS) {
 				if (!recipelist.isRecipePresent(155000005)) { // 变形方法：铁矿石。 / Morph Method: Iron Ore.
-					DAOManager.getDAO(PlayerRecipesDAO.class).addRecipe(object, 155000005);
+					playerRecipesDAO.addRecipe(object, 155000005);
 					PacketSendUtility.sendPacket(player, new SM_LEARN_RECIPE(155000005));
 				}
 				if (!recipelist.isRecipePresent(155000002)) { // 变形方法：伊尼纳。 / Morph Method: Inina.
-					DAOManager.getDAO(PlayerRecipesDAO.class).addRecipe(object, 155000002);
+					playerRecipesDAO.addRecipe(object, 155000002);
 					PacketSendUtility.sendPacket(player, new SM_LEARN_RECIPE(155000002));
 				}
 				if (!recipelist.isRecipePresent(155000001)) { // 变形方法：阿丽亚。 / Morph Method: Aria.
-					DAOManager.getDAO(PlayerRecipesDAO.class).addRecipe(object, 155000001);
+					playerRecipesDAO.addRecipe(object, 155000001);
 					PacketSendUtility.sendPacket(player, new SM_LEARN_RECIPE(155000001));
 				}
 			} else if (race == Race.ASMODIANS) {
 				if (!recipelist.isRecipePresent(155005005)) { // 变形方法：铁矿石。 / Morph Method: Iron Ore.
-					DAOManager.getDAO(PlayerRecipesDAO.class).addRecipe(object, 155005005);
+					playerRecipesDAO.addRecipe(object, 155005005);
 					PacketSendUtility.sendPacket(player, new SM_LEARN_RECIPE(155005005));
 				}
 				if (!recipelist.isRecipePresent(155005002)) { // 变形方法：柯尼德。 / Morph Method: Conide.
-					DAOManager.getDAO(PlayerRecipesDAO.class).addRecipe(object, 155005002);
+					playerRecipesDAO.addRecipe(object, 155005002);
 					PacketSendUtility.sendPacket(player, new SM_LEARN_RECIPE(155005002));
 				}
 				if (!recipelist.isRecipePresent(155005001)) { // 变形方法：阿兹法。 / Morph Method: Azpha.
-					DAOManager.getDAO(PlayerRecipesDAO.class).addRecipe(object, 155005001);
+					playerRecipesDAO.addRecipe(object, 155005001);
 					PacketSendUtility.sendPacket(player, new SM_LEARN_RECIPE(155005001));
 				}
 			}

@@ -10,6 +10,7 @@ import com.aionemu.gameserver.services.events.ThievesGuildService;
 import com.aionemu.gameserver.services.mail.MailService;
 import com.aionemu.gameserver.services.player.PlayerService;
 import com.aionemu.gameserver.services.player.PlayerServiceDaos;
+import com.aionemu.gameserver.services.item.ItemSocketService;
 import com.aionemu.gameserver.services.ranking.SeasonRankingService;
 import com.aionemu.gameserver.services.reward.RewardService;
 import com.aionemu.gameserver.services.rift.RiftManager;
@@ -63,6 +64,7 @@ import com.aionemu.gameserver.dao.PlayerMacrossesDAO;
 import com.aionemu.gameserver.dao.PlayerNpcFactionsDAO;
 import com.aionemu.gameserver.dao.PlayerPunishmentsDAO;
 import com.aionemu.gameserver.dao.PlayerQuestListDAO;
+import com.aionemu.gameserver.dao.PlayerThievesListDAO;
 import com.aionemu.gameserver.dao.PlayerRecipesDAO;
 import com.aionemu.gameserver.dao.PlayerRegisteredItemsDAO;
 import com.aionemu.gameserver.dao.PlayerSettingsDAO;
@@ -280,13 +282,16 @@ public class CoreRuntimeServiceBeans {
     public LegionService legionService(ObjectProvider<LegionDAO> legionDaoProvider,
                                        ObjectProvider<LegionMemberDAO> legionMemberDaoProvider,
                                        ObjectProvider<InventoryDAO> inventoryDaoProvider,
-                                       ObjectProvider<ItemStoneListDAO> itemStoneListDaoProvider) {
+                                       ObjectProvider<ItemStoneListDAO> itemStoneListDaoProvider,
+                                       ObjectProvider<PlayerDAO> playerDaoProvider) {
         LegionDAO legionDAO = legionDaoProvider.getIfAvailable();
         LegionMemberDAO legionMemberDAO = legionMemberDaoProvider.getIfAvailable();
         InventoryDAO inventoryDAO = inventoryDaoProvider.getIfAvailable();
         ItemStoneListDAO itemStoneListDAO = itemStoneListDaoProvider.getIfAvailable();
-        if (legionDAO != null && legionMemberDAO != null && inventoryDAO != null && itemStoneListDAO != null) {
-            return new LegionService(legionDAO, legionMemberDAO, inventoryDAO, itemStoneListDAO);
+        PlayerDAO playerDAO = playerDaoProvider.getIfAvailable();
+        if (legionDAO != null && legionMemberDAO != null && inventoryDAO != null && itemStoneListDAO != null
+            && playerDAO != null) {
+            return new LegionService(legionDAO, legionMemberDAO, inventoryDAO, itemStoneListDAO, playerDAO);
         }
         return new LegionService();
     }
@@ -344,6 +349,8 @@ public class CoreRuntimeServiceBeans {
                 daoFrom(beanFactory, PlayerLifeStatsDAO.class),
                 daoFrom(beanFactory, PlayerEmotionListDAO.class));
             PlayerService.bindDaos(daos);
+            // 顺带绑定 item 域静态工具类的魔石列表 DAO / also bind the item-domain static utility's DAO
+            ItemSocketService.bindItemStoneListDAO(daos.itemStoneListDAO());
             return daos;
         } catch (NullPointerException offline) {
             return PlayerService.daos();
@@ -365,8 +372,9 @@ public class CoreRuntimeServiceBeans {
     }
 
     @Bean
-    public ThievesGuildService thievesGuildService() {
-        return new ThievesGuildService();
+    public ThievesGuildService thievesGuildService(ObjectProvider<PlayerThievesListDAO> thievesDaoProvider) {
+        PlayerThievesListDAO thievesDAO = thievesDaoProvider.getIfAvailable();
+        return thievesDAO != null ? new ThievesGuildService(thievesDAO) : new ThievesGuildService();
     }
 
     @Bean

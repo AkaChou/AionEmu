@@ -21,7 +21,6 @@ import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.sql.Timestamp;
 
-import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.configs.main.AutoGroupConfig;
 import com.aionemu.gameserver.configs.main.GSConfig;
 import com.aionemu.gameserver.dao.EventItemsDAO;
@@ -98,12 +97,12 @@ public class PlayerLeaveWorldService {
 			player.setPrisonTimer(prisonTimer);
 			log.debug("Update prison timer to " + prisonTimer / 1000 + " seconds !");
 		}
-		DAOManager.getDAO(PlayerEffectsDAO.class).storePlayerEffects(player);
-		DAOManager.getDAO(PlayerCooldownsDAO.class).storePlayerCooldowns(player);
-		DAOManager.getDAO(ItemCooldownsDAO.class).storeItemCooldowns(player);
-		DAOManager.getDAO(HouseObjectCooldownsDAO.class).storeHouseObjectCooldowns(player);
-		DAOManager.getDAO(PlayerLifeStatsDAO.class).updatePlayerLifeStat(player);
-		DAOManager.getDAO(EventItemsDAO.class).storeItems(player);
+		PlayerService.daos().playerEffectsDAO().storePlayerEffects(player);
+		PlayerService.daos().playerCooldownsDAO().storePlayerCooldowns(player);
+		PlayerService.daos().itemCooldownsDAO().storeItemCooldowns(player);
+		PlayerService.daos().houseObjectCooldownsDAO().storeHouseObjectCooldowns(player);
+		PlayerService.daos().playerLifeStatsDAO().updatePlayerLifeStat(player);
+		PlayerService.daos().eventItemsDAO().storeItems(player);
 		// 术古扫荡 / SHUGO SWEEP
 		GameEventBootstrapServices.shugoSweepService().onLogout(player);
 		PlayerGroupService.onPlayerLogout(player);
@@ -149,7 +148,7 @@ public class PlayerLeaveWorldService {
 		player.getCommonData().setOnline(false);
 		player.getCommonData().setLastOnline(new Timestamp(System.currentTimeMillis()));
 		player.setClientConnection(null);
-		DAOManager.getDAO(PlayerDAO.class).onlinePlayer(player, false);
+		PlayerService.daos().playerDAO().onlinePlayer(player, false);
 		if (GSConfig.ENABLE_CHAT_SERVER) {
 			ChatService.onPlayerLogout(player);
 		}

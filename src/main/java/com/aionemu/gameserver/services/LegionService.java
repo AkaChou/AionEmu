@@ -25,6 +25,7 @@ import com.aionemu.gameserver.dao.InventoryDAO;
 import com.aionemu.gameserver.dao.ItemStoneListDAO;
 import com.aionemu.gameserver.dao.LegionDAO;
 import com.aionemu.gameserver.dao.LegionMemberDAO;
+import com.aionemu.gameserver.dao.PlayerDAO;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.Item;
 import com.aionemu.gameserver.model.gameobjects.Npc;
@@ -128,6 +129,7 @@ public class LegionService {
 	private final LegionMemberDAO legionMemberDAO;
 	private final InventoryDAO inventoryDAO;
 	private final ItemStoneListDAO itemStoneListDAO;
+	private final PlayerDAO playerDAO;
 
 	/**
 	 * 使用指定 DAO 依赖构造军团服务。
@@ -137,12 +139,14 @@ public class LegionService {
 	 * @param legionMemberDAO 军团成员 DAO / Legion member DAO
 	 * @param inventoryDAO 道具仓库 DAO / Inventory DAO
 	 * @param itemStoneListDAO 道具魔石 DAO / Item stone list DAO
+	 * @param playerDAO 玩家 DAO / Player DAO
 	 */
 	public LegionService(@NonNull LegionDAO legionDAO,
 						 @NonNull LegionMemberDAO legionMemberDAO,
 						 @NonNull InventoryDAO inventoryDAO,
-						 @NonNull ItemStoneListDAO itemStoneListDAO) {
-		this(legionDAO, legionMemberDAO, inventoryDAO, itemStoneListDAO, safeWorld());
+						 @NonNull ItemStoneListDAO itemStoneListDAO,
+						 @NonNull PlayerDAO playerDAO) {
+		this(legionDAO, legionMemberDAO, inventoryDAO, itemStoneListDAO, playerDAO, safeWorld());
 	}
 
 	private static World safeWorld() {
@@ -165,17 +169,20 @@ public class LegionService {
 	 * @param legionMemberDAO 军团成员 DAO / Legion member DAO
 	 * @param inventoryDAO 道具仓库 DAO / Inventory DAO
 	 * @param itemStoneListDAO 道具魔石 DAO / Item stone list DAO
+	 * @param playerDAO 玩家 DAO / Player DAO
 	 * @param world 世界实例 / World instance
 	 */
 	public LegionService(@NonNull LegionDAO legionDAO,
 						 @NonNull LegionMemberDAO legionMemberDAO,
 						 @NonNull InventoryDAO inventoryDAO,
 						 @NonNull ItemStoneListDAO itemStoneListDAO,
+						 @NonNull PlayerDAO playerDAO,
 						 World world) {
 		this.legionDAO = Objects.requireNonNull(legionDAO, "legionDAO must not be null");
 		this.legionMemberDAO = Objects.requireNonNull(legionMemberDAO, "legionMemberDAO must not be null");
 		this.inventoryDAO = Objects.requireNonNull(inventoryDAO, "inventoryDAO must not be null");
 		this.itemStoneListDAO = Objects.requireNonNull(itemStoneListDAO, "itemStoneListDAO must not be null");
+		this.playerDAO = Objects.requireNonNull(playerDAO, "playerDAO must not be null");
 		this.world = world;
 	}
 
@@ -187,7 +194,29 @@ public class LegionService {
 		this(safeDao(LegionDAO.class, com.aionemu.gameserver.dao.impl.LegionDAO::new),
 			 safeDao(LegionMemberDAO.class, com.aionemu.gameserver.dao.impl.LegionMemberDAO::new),
 			 safeDao(InventoryDAO.class, com.aionemu.gameserver.dao.impl.InventoryDAO::new),
-			 safeDao(ItemStoneListDAO.class, com.aionemu.gameserver.dao.impl.ItemStoneListDAO::new));
+			 safeDao(ItemStoneListDAO.class, com.aionemu.gameserver.dao.impl.ItemStoneListDAO::new),
+			 safeDao(PlayerDAO.class, com.aionemu.gameserver.dao.impl.PlayerDAO::new));
+	}
+
+	/**
+	 * 返回军团 DAO，供伴生域持久化访问 / returns the legion DAO for companion domains.
+	 */
+	LegionDAO legionDAO() {
+		return legionDAO;
+	}
+
+	/**
+	 * 返回军团成员 DAO，供伴生域持久化访问 / returns the member DAO for companion domains.
+	 */
+	LegionMemberDAO legionMemberDAO() {
+		return legionMemberDAO;
+	}
+
+	/**
+	 * 返回玩家 DAO，供伴生域持久化访问 / returns the player DAO for companion domains.
+	 */
+	PlayerDAO playerDAO() {
+		return playerDAO;
 	}
 
 	private static <T extends com.aionemu.commons.database.dao.DAO> T safeDao(Class<T> daoClass, java.util.function.Supplier<T> fallback) {

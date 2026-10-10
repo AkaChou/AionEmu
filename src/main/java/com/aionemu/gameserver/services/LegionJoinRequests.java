@@ -3,9 +3,6 @@ package com.aionemu.gameserver.services;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.gameserver.dao.LegionDAO;
-import com.aionemu.gameserver.dao.PlayerDAO;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.gameobjects.player.PlayerCommonData;
 import com.aionemu.gameserver.model.items.storage.IStorage;
@@ -108,7 +105,7 @@ final class LegionJoinRequests {
 		if (restrictions.canChangeLegionJoinSetting(player)) {
 			legion.setDescription(description);
 			PacketSendUtility.sendPacket(player, new SM_LEGION_EDIT(0x0C, legion));
-			DAOManager.getDAO(LegionDAO.class).updateLegionDescription(legion);
+			service.legionDAO().updateLegionDescription(legion);
 		}
 	}
 
@@ -126,7 +123,7 @@ final class LegionJoinRequests {
 		if (restrictions.canChangeLegionJoinSetting(player)) {
 			legion.setJoinType(joinType);
 			PacketSendUtility.sendPacket(player, new SM_LEGION_EDIT(0x0D, legion));
-			DAOManager.getDAO(LegionDAO.class).updateLegionDescription(legion);
+			service.legionDAO().updateLegionDescription(legion);
 		}
 	}
 
@@ -144,7 +141,7 @@ final class LegionJoinRequests {
 		if (restrictions.canChangeLegionJoinSetting(player)) {
 			legion.setMinJoinLevel(minLevel);
 			PacketSendUtility.sendPacket(player, new SM_LEGION_EDIT(0x0E, legion));
-			DAOManager.getDAO(LegionDAO.class).updateLegionDescription(legion);
+			service.legionDAO().updateLegionDescription(legion);
 		}
 	}
 
@@ -183,7 +180,7 @@ final class LegionJoinRequests {
 			sendLegionJoinRequestPacket(player, legionId);
 			LegionJoinRequest ljr = new LegionJoinRequest(legionId, player, joinRequestMsg);
 			legion.addJoinRequest(ljr);
-			DAOManager.getDAO(LegionDAO.class).storeLegionJoinRequest(ljr);
+			service.legionDAO().storeLegionJoinRequest(ljr);
 			player.getCommonData().setJoinRequestLegionId(legionId);
 			Player brigadeGeneral = service.getBrigadeGeneral(legion);
 			if (brigadeGeneral != null) {
@@ -259,7 +256,7 @@ final class LegionJoinRequests {
 		Player player = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(playerId);
 		if (player == null) {
 			playerOnline = false;
-			DAOManager.getDAO(PlayerDAO.class).updateLegionJoinRequestState(playerId, state);
+			service.playerDAO().updateLegionJoinRequestState(playerId, state);
 			legion.getJoinRequestMap().remove(playerId);
 		}
 		PacketSendUtility.sendPacket(brigadeGeneral, new SM_LEGION_REQUEST(playerId, accept));

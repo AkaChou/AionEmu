@@ -2,6 +2,9 @@ package com.aionemu.gameserver.services.toypet;
 
 
 import com.aionemu.boot.i18n.I18n;
+import java.util.Objects;
+
+import lombok.NonNull;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
@@ -71,8 +74,42 @@ public class MinionService {
 	 */
 	@Setter
 	private static volatile ObjectProvider<MinionService> instanceProvider;
+	private final PlayerMinionsDAO playerMinionsDAO;
+	private final PlayerDAO playerDAO;
 	private MinionBuff minionbuff;
 	private final Set<Integer> minionSkillIds = new HashSet<>();
+
+	/**
+	 * 使用指定 DAO 依赖构造守护灵服务。
+	 * Constructs the minion service with given DAO dependencies.
+	 *
+	 * @param playerMinionsDAO 守护灵 DAO / player minions DAO
+	 * @param playerDAO 玩家 DAO / player DAO
+	 */
+	public MinionService(@NonNull PlayerMinionsDAO playerMinionsDAO, @NonNull PlayerDAO playerDAO) {
+		this.playerMinionsDAO = Objects.requireNonNull(playerMinionsDAO, "playerMinionsDAO must not be null");
+		this.playerDAO = Objects.requireNonNull(playerDAO, "playerDAO must not be null");
+	}
+
+	/**
+	 * 构造守护灵服务（使用 safeDao 解析依赖）。
+	 * Constructs the minion service with safeDao resolution.
+	 */
+	public MinionService() {
+		this(safeDao(PlayerMinionsDAO.class, com.aionemu.gameserver.dao.impl.PlayerMinionsDAO::new),
+			 safeDao(PlayerDAO.class, com.aionemu.gameserver.dao.impl.PlayerDAO::new));
+	}
+
+	private static <T extends com.aionemu.commons.database.dao.DAO> T safeDao(Class<T> daoClass,
+			java.util.function.Supplier<T> fallback) {
+		if (DAOManager.isInitialized()) {
+			try {
+				return DAOManager.getDAO(daoClass);
+			} catch (Exception ignored) {
+			}
+		}
+		return fallback.get();
+	}
 
 	/**
 	 * 初始化守护灵模板缓存与增益对象。
@@ -490,7 +527,7 @@ public class MinionService {
 		}
 		int oldGrowthPoint = playerMinion.getMinionGrowthPoint();
 		playerMinion.setMinionGrowthPoint(Math.min(maxgrowthMax, oldGrowthPoint + growthPoint));
-		if (!DAOManager.getDAO(PlayerMinionsDAO.class).updateGrowthAndRemoveMaterials(player, playerMinion,
+		if (!playerMinionsDAO.updateGrowthAndRemoveMaterials(player, playerMinion,
 			List.copyOf(materialIds))) {
 			playerMinion.setMinionGrowthPoint(oldGrowthPoint);
 			player.getInventory().increaseKinah(growthCost);
@@ -558,7 +595,7 @@ public class MinionService {
 		minion.setMinionId(minion.getMinionId() + 1);
 		minion.setMinionLevel(minion.getMinionLevel() + 1);
 		minion.setMinionGrowthPoint(0);
-		if (!DAOManager.getDAO(PlayerMinionsDAO.class).evolutionMinion(player, minion)) {
+		if (!playerMinionsDAO.evolutionMinion(player, minion)) {
 			minion.setMinionId(oldMinionId);
 			minion.setMinionLevel(oldMinionLevel);
 			minion.setMinionGrowthPoint(oldGrowthPoint);
@@ -622,7 +659,7 @@ public class MinionService {
 		if (minion == null || (lock != 0 && lock != 1)) {
 			return;
 		}
-		if (!DAOManager.getDAO(PlayerMinionsDAO.class).lockMinions(player, minionObjId, lock)) {
+		if (!playerMinionsDAO.lockMinions(player, minionObjId, lock)) {
 			return;
 		}
 		if (lock == 1) {
@@ -649,7 +686,7 @@ public class MinionService {
 		}
 		String oldName = minion.getName();
 		minion.setName(name);
-		if (!DAOManager.getDAO(PlayerMinionsDAO.class).updateMinionName(minion)) {
+		if (!playerMinionsDAO.updateMinionName(minion)) {
 			minion.setName(oldName);
 			return;
 		}
@@ -750,7 +787,7 @@ public class MinionService {
 		}
 		Timestamp expiry = new Timestamp(leftTime);
 		player.getCommonData().setMinionFunctionTime(expiry);
-		DAOManager.getDAO(PlayerDAO.class).storePlayer(player);
+		playerDAO.storePlayer(player);
 		PacketSendUtility.sendPacket(player, new SM_MINIONS(9, activeMinionFunctionExpiry(expiry, now)));
 		PacketSendUtility.sendPacket(player, new SM_MINIONS(12));
 	}
@@ -766,7 +803,7 @@ public class MinionService {
 		long refund = minionFunctionRefund(expiry, System.currentTimeMillis());
 		if (expiry != null) {
 			player.getCommonData().setMinionFunctionTime(null);
-			DAOManager.getDAO(PlayerDAO.class).storePlayer(player);
+			playerDAO.storePlayer(player);
 		}
 		if (player.getMinion() != null) {
 			player.getMinion().getCommonData().setIsLooting(false);
@@ -840,7 +877,7 @@ public class MinionService {
 		for (int a : minion.getCommonData().getDopingBag().getScrollsUsed()) {
 			log.debug("Minion bag scroll. playerId={} minionId={} itemId={}", player.getObjectId(), minionObjectId, a);
 		}
-		if (!DAOManager.getDAO(PlayerMinionsDAO.class).saveDopingBag(player, minion.getCommonData(),
+		if (!playerMinionsDAO.saveDopingBag(player, minion.getCommonData(),
 			minion.getCommonData().getDopingBag())) {
 			minion.getCommonData().getDopingBag().setItem(oldItemId, targetSlot);
 			return;
@@ -863,7 +900,7 @@ public class MinionService {
 		}
 		int oldItemId = minion.getCommonData().getDopingBag().getItem(slot);
 		minion.getCommonData().getDopingBag().setItem(0, slot);
-		if (!DAOManager.getDAO(PlayerMinionsDAO.class).saveDopingBag(player, minion.getCommonData(),
+		if (!playerMinionsDAO.saveDopingBag(player, minion.getCommonData(),
 			minion.getCommonData().getDopingBag())) {
 			minion.getCommonData().getDopingBag().setItem(oldItemId, slot);
 			return;
@@ -972,7 +1009,7 @@ public class MinionService {
 		int destinationItem = commonData.getDopingBag().getItem(destinationSlot);
 		commonData.getDopingBag().setItem(destinationItem, targetSlot);
 		commonData.getDopingBag().setItem(targetItem, destinationSlot);
-		if (!DAOManager.getDAO(PlayerMinionsDAO.class).saveDopingBag(player, commonData, commonData.getDopingBag())) {
+		if (!playerMinionsDAO.saveDopingBag(player, commonData, commonData.getDopingBag())) {
 			commonData.getDopingBag().setItem(targetItem, targetSlot);
 			commonData.getDopingBag().setItem(destinationItem, destinationSlot);
 			return;

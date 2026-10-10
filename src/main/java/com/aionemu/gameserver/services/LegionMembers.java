@@ -6,8 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.aionemu.boot.i18n.I18n;
-import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.gameserver.dao.LegionMemberDAO;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.team.legion.Legion;
 import com.aionemu.gameserver.model.team.legion.LegionEmblem;
@@ -74,9 +72,9 @@ final class LegionMembers {
 	void storeLegionMember(LegionMember legionMember, boolean newMember) {
 		if (newMember) {
 			addCachedLegionMember(legionMember);
-			DAOManager.getDAO(LegionMemberDAO.class).saveNewLegionMember(legionMember);
+			service.legionMemberDAO().saveNewLegionMember(legionMember);
 		} else {
-			DAOManager.getDAO(LegionMemberDAO.class).storeLegionMember(legionMember.getObjectId(), legionMember);
+			service.legionMemberDAO().storeLegionMember(legionMember.getObjectId(), legionMember);
 		}
 	}
 
@@ -135,7 +133,7 @@ final class LegionMembers {
 	 */
 	void deleteLegionMemberFromDB(LegionMemberEx legionMember) {
 		this.allCachedLegionMembers().remove(legionMember);
-		DAOManager.getDAO(LegionMemberDAO.class).deleteLegionMember(legionMember.getObjectId());
+		service.legionMemberDAO().deleteLegionMember(legionMember.getObjectId());
 		Legion legion = legionMember.getLegion();
 		legion.deleteLegionMember(legionMember.getObjectId());
 		service.addHistory(legion, legionMember.getName(), LegionHistoryType.KICK);
@@ -149,7 +147,7 @@ final class LegionMembers {
 		if (this.allCachedLegionMembers().containsEx(playerObjId)) {
 			return this.allCachedLegionMembers().getMemberEx(playerObjId);
 		} else {
-			LegionMemberEx legionMember = DAOManager.getDAO(LegionMemberDAO.class).loadLegionMemberEx(playerObjId);
+			LegionMemberEx legionMember = service.legionMemberDAO().loadLegionMemberEx(playerObjId);
 			addCachedLegionMemberEx(legionMember);
 			return legionMember;
 		}
@@ -163,7 +161,7 @@ final class LegionMembers {
 		if (this.allCachedLegionMembers().containsEx(playerName)) {
 			return this.allCachedLegionMembers().getMemberEx(playerName);
 		} else {
-			LegionMemberEx legionMember = DAOManager.getDAO(LegionMemberDAO.class).loadLegionMemberEx(playerName);
+			LegionMemberEx legionMember = service.legionMemberDAO().loadLegionMemberEx(playerName);
 			addCachedLegionMemberEx(legionMember);
 			return legionMember;
 		}

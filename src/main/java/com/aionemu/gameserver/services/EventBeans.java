@@ -1,6 +1,9 @@
 package com.aionemu.gameserver.services;
 
 import com.aionemu.gameserver.eventEngine.EventScheduler;
+import com.aionemu.gameserver.dao.PlayerDAO;
+import com.aionemu.gameserver.dao.PlayerMinionsDAO;
+import org.springframework.beans.factory.ObjectProvider;
 import com.aionemu.gameserver.services.abyss.AbyssRankUpdateService;
 import com.aionemu.gameserver.services.events.AtreianPassportService;
 import com.aionemu.gameserver.services.events.BGService;
@@ -112,8 +115,12 @@ public class EventBeans {
 
     @Bean
     @Lazy
-    public MinionService minionService() {
-        return new MinionService();
+    public MinionService minionService(ObjectProvider<PlayerMinionsDAO> minionsDaoProvider,
+            ObjectProvider<PlayerDAO> playerDaoProvider) {
+        PlayerMinionsDAO minionsDao = minionsDaoProvider.getIfAvailable();
+        PlayerDAO playerDao = playerDaoProvider.getIfAvailable();
+        return minionsDao != null && playerDao != null ? new MinionService(minionsDao, playerDao)
+                : new MinionService();
     }
 
     @Bean

@@ -12,7 +12,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.configs.main.LoggingConfig;
 import com.aionemu.gameserver.dao.ItemStoneListDAO;
@@ -62,7 +61,7 @@ public class ItemService {
 	 */
 	public static void loadItemStones(Collection<Item> itemList) {
 		if (itemList != null && itemList.size() > 0) {
-			DAOManager.getDAO(ItemStoneListDAO.class).load(itemList);
+			ItemSocketService.itemStoneListDAO().load(itemList);
 		}
 	}
 
