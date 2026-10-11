@@ -25,11 +25,6 @@ public class ManaStone extends ItemStone {
 		}
 	}
 
-	/** 返回 first modifier / Returns the first modifier */
-	public StatFunction getFirstModifier() {
-		return (modifiers != null && modifiers.size() > 0) ? modifiers.get(0) : null;
-	}
-
 	/** 是否基础 / Whether basic */
 	public boolean isBasic() {
 		return !isAncient();

@@ -400,18 +400,6 @@ public class QuestTemplate {
 	}
 
 	 /**
-	  * 获取 countRecoverLimitedQuest 属性值。
-	  * Gets the value of the countRecoverLimitedQuest property
-	  * @return 可能的对象是 {@link Integer } / Possible object is {@link Integer }
-	  */
-	public Integer getCountRecoverLimitedQuest() {
-		if (countRecoverLimitedQuest == null || !(countRecoverLimitedQuest > 1)) {
-			return 1;
-		}
-		return countRecoverLimitedQuest;
-	}
-
-	 /**
 	  * 获取 cannotShare 属性值。
 	  * Gets the value of the cannotShare property
 	  * @return 可能的对象是 {@link Boolean } / Possible object is {@link Boolean }
@@ -421,30 +409,6 @@ public class QuestTemplate {
 			return false;
 		} else {
 			return cannotShare;
-		}
-	}
-
-	 /**
-	  * 获取 cannotGiveup 属性值。
-	  * Gets the value of the cannotGiveup property
-	  * @return 可能的对象是 {@link Boolean } / Possible object is {@link Boolean }
-	  */
-	public boolean isCannotGiveup() {
-		if (cannotGiveup == null) {
-			return false;
-		} else {
-			return cannotGiveup;
-		}
-	}
-
-	/**
-	 * @return 是否为悬赏奖励 / Whether bounty reward
-	 */
-	public boolean isBountyReward() {
-		if (bountyReward == null) {
-			return false;
-		} else {
-			return bountyReward;
 		}
 	}
 
@@ -553,7 +517,7 @@ public class QuestTemplate {
 	 * @return 是否为每日类型 / Whether daily
 	 */
 	public boolean isDaily() {
-		return isTimeBased() && repeatCycle.size() == 1 && repeatCycle.get(0) == QuestRepeatCycle.ALL;
+		return isTimeBased() && repeatCycle.size() == 1 && repeatCycle.getFirst() == QuestRepeatCycle.ALL;
 	}
 
 	/**

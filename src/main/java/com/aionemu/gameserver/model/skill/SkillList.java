@@ -18,7 +18,12 @@ public interface SkillList<T extends Creature> {
 	 */
 	boolean addSkill(T creature, int skillId, int skillLevel);
 
-	boolean addLinkedSkill(T creature, int skillId);
+	/**
+	 * 添加关联技能。 / Add linked skill
+	 * @param creature 生物实体 / Creature
+	 * @param skillId 技能 ID / Skill ID
+	 */
+	void addLinkedSkill(T creature, int skillId);
 
 	/**
 	 * 移除技能列表。 / Remove skill from list
@@ -45,4 +50,13 @@ public interface SkillList<T extends Creature> {
 	 * @return 技能数量 / Number of skills
 	 */
 	int size();
+
+	/**
+	 * 返回是否没有任何技能。
+	 * Returns whether there is no skill at all.
+	 * @return 无技能时为 true / true if empty
+	 */
+	default boolean isEmpty() {
+		return size() == 0;
+	}
 }

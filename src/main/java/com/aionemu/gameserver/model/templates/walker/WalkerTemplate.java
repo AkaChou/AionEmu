@@ -118,8 +118,8 @@ public class WalkerTemplate {
 			routeStepList.get(i).setNextStep(routeStepList.get(i + 1));
 			routeStepList.get(i).setRouteStep(i + 1);
 		}
-		routeStepList.get(routeStepList.size() - 1).setRouteStep(routeStepList.size());
-		routeStepList.get(routeStepList.size() - 1).setNextStep(routeStepList.get(0));
+		routeStepList.getLast().setRouteStep(routeStepList.size());
+		routeStepList.getLast().setNextStep(routeStepList.getFirst());
 
 		if ((pool == 2) && (formation != WalkerGroupType.OFFSET)) {
 			formation = WalkerGroupType.SQUARE;

@@ -4,10 +4,6 @@ import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
-import java.util.Iterator;
-
-import org.apache.commons.lang3.StringUtils;
-
 import com.aionemu.gameserver.ai2.AITemplate;
 import com.aionemu.gameserver.ai2.poll.AIQuestion;
 import com.aionemu.gameserver.controllers.NpcController;
@@ -55,7 +51,6 @@ public class Npc extends Creature {
 
 	/** 设置巡逻队伍。 / Sets the walker group. */
 	private WalkerGroup walkerGroup;
-	private boolean isQuestBusy = false;
 	/** 获取技能列表。 / Returns the skill list. */
 	private final NpcSkillList skillList;
 	/** 设置巡逻队伍偏移 / Sets the walker group shift */
@@ -65,13 +60,13 @@ public class Npc extends Creature {
 	 * 返回主人名称。
 	 * Returns the name of the master.
 	 */
-	private String masterName = StringUtils.EMPTY;
+	private String masterName;
 	/**
 	 * 返回创建此 NPC 的对象的唯一 ID（可能是玩家或房屋）。
 	 * Returns the unique id of the VisibleObject which created this Npc (player or house).
 	 * 创建者唯一 ID / unique id of the creator
 	 */
-	private int creatorId = 0;
+	private int creatorId;
 	private final Creature master;
 	private final String npcPartyId;
 	/** 返回城镇 ID / Returns the town id */
@@ -205,11 +200,6 @@ public class Npc extends Creature {
 		return getObjectTemplate().getAbyssNpcType();
 	}
 
-	/** 返回血条档位 / Returns the hp gauge */
-	public int getHpGauge() {
-		return getObjectTemplate().getHpGaugeLevel();
-	}
-
 	/**
 	 * 是否处于和平状态。
 	 * Whether the NPC is in peace state.
@@ -278,14 +268,6 @@ public class Npc extends Creature {
 	}
 
 	/**
-	 * 判断是否与其敌对。 / Whether hostile to the target.
-	 */
-	@Override
-	public boolean isHostileFrom(Npc npc) {
-		return DataManager.TRIBE_RELATIONS_DATA.isHostileRelation(npc.getTribe(), getTribe());
-	}
-
-	/**
 	 * 判断是否会支援其。 / Whether this NPC supports the target.
 	 */
 	@Override
@@ -293,7 +275,7 @@ public class Npc extends Creature {
 		return DataManager.TRIBE_RELATIONS_DATA.isSupportRelation(npc.getTribe(), getTribe());
 	}
 
-	/** 是否好友 / Whether friend from*/
+	/** 是否好友 / Whether friend from */
 	@Override
 	public boolean isFriendFrom(Npc npc) {
 		return DataManager.TRIBE_RELATIONS_DATA.isFriendlyRelation(npc.getTribe(), getTribe());
@@ -384,16 +366,6 @@ public class Npc extends Creature {
 		int skillSeeState = super.getSeeState();
 		int congenitalSeeState = getObjectTemplate().getRating().getCongenitalSeeState().getId();
 		return Math.max(skillSeeState, congenitalSeeState);
-	}
-
-	/** 返回任务占用状态 / Returns whether the NPC is quest-busy */
-	public boolean getIsQuestBusy() {
-		return isQuestBusy;
-	}
-
-	/** 设置任务占用状态 / Sets whether the NPC is quest-busy */
-	public void setIsQuestBusy(boolean busy) {
-		isQuestBusy = busy;
 	}
 
 	/**
@@ -518,9 +490,7 @@ public class Npc extends Creature {
 					// 【RR】是否应将 lastShoutedSeconds 与广播分开？ / [RR] Should we have lastShoutedSeconds separated from broadcasts (??)
 					PacketSendUtility.sendPacket((Player) target, message);
 				} else {
-					Iterator<Player> iter = thisNpc.getKnownList().getKnownPlayers().values().iterator();
-					while (iter.hasNext()) {
-						Player kObj = iter.next();
+					for (Player kObj : thisNpc.getKnownList().getKnownPlayers().values()) {
 						if (kObj.getLifeStats().isAlreadyDead() || !kObj.isOnline()) {
 							continue;
 						}

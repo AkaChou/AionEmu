@@ -71,7 +71,7 @@ public class HousingLand {
 				return building;
 			}
 		}
-		return buildings.get(0); // 兜底返回第一个建筑 / fallback to the first building
+		return buildings.getFirst(); // 兜底返回第一个建筑 / fallback to the first building
 	}
 
 	/** 返回 sale options / Returns the sale options */
@@ -82,11 +82,6 @@ public class HousingLand {
 	/** 返回 maintenance fee / Returns the maintenance fee */
 	public long getMaintenanceFee() {
 		return fee;
-	}
-
-	/** 返回 capabilities / Returns the capabilities */
-	public BuildingCapabilities getCapabilities() {
-		return caps;
 	}
 
 	/** 返回 nosale sign npc id / Returns the nosale sign npc id */

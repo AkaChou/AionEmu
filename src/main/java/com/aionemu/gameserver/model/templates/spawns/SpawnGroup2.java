@@ -113,7 +113,7 @@ public class SpawnGroup2 extends AbstractLockManager {
 		}
 	}
 
-	public SpawnGroup2(int worldId, Spawn spawn, int id, Race race, int miss) {
+	public SpawnGroup2(int worldId, Spawn spawn, int id, Race race) {
 		this.worldId = worldId;
 		initializing(spawn);
 		for (SpawnSpotTemplate template : spawn.getSpawnSpotTemplates()) {
@@ -398,16 +398,11 @@ public class SpawnGroup2 extends AbstractLockManager {
 
 	/** 返回随机刷新模板 / Returns a random spawn template */
 	public SpawnTemplate getRndTemplate(int instanceId) {
-		final List<SpawnTemplate> allTemplates = spots;
 		List<SpawnTemplate> templates = new ArrayList<>();
 		super.readLock();
 		try {
-			for (SpawnTemplate template : allTemplates) {
-				//if (!isTemplateUsed(instanceId, template)) {
-					templates.add(template);
-				//}
-			}
-			if (templates.size() == 0) {
+			templates.addAll(spots);
+			if (templates.isEmpty()) {
 				log.warn(I18n.get("log.05d6e85f725b", npcId, worldId));
 				return null;
 			}
@@ -423,32 +418,11 @@ public class SpawnGroup2 extends AbstractLockManager {
 	public void setTemplateUse(int instanceId, SpawnTemplate template, boolean isUsed) {
 		super.writeLock();
 		try {
-			HashMap<SpawnTemplate, Boolean> states = poolUsedTemplates.get(instanceId);
-			if (states == null) {
-				states = new HashMap<>();
-				poolUsedTemplates.put(instanceId, states);
-			}
+			HashMap<SpawnTemplate, Boolean> states = poolUsedTemplates.computeIfAbsent(instanceId,
+					_ -> new HashMap<>());
 			states.put(template, isUsed);
 		} finally {
 			super.writeUnlock();
-		}
-	}
-
-	/**
-	 * @return 模板是否已被使用 / whether template used
-	 */
-	public boolean isTemplateUsed(int instanceId, SpawnTemplate template) {
-		super.readLock();
-		try {
-			HashMap<SpawnTemplate, Boolean> states = poolUsedTemplates.get(instanceId);
-			if (states == null)
-				return false;
-			Boolean state = states.get(template);
-			if (state == null)
-				return false;
-			return state;
-		} finally {
-			super.readUnlock();
 		}
 	}
 
@@ -459,9 +433,7 @@ public class SpawnGroup2 extends AbstractLockManager {
 			return;
 		super.writeLock();
 		try {
-			for (SpawnTemplate template : states.keySet()) {
-				states.put(template, false);
-			}
+			states.replaceAll((_, _) -> false);
 		} finally {
 			super.writeUnlock();
 		}

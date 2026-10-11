@@ -47,20 +47,20 @@ import lombok.Getter;
 public class EventTemplate {
 
 
-	@XmlElement(name = "event_drops", required = false)
+	@XmlElement(name = "event_drops")
 	protected EventDrops eventDrops;
 
-	@XmlElement(name = "quests", required = false)
+	@XmlElement(name = "quests")
 	protected EventQuestList quests;
 
-	@XmlElement(name = "spawns", required = false)
+	@XmlElement(name = "spawns")
 	protected SpawnsData2 spawns;
 
-	@XmlElement(name = "inventory_drop", required = false)
+	@XmlElement(name = "inventory_drop")
 	protected List<InventoryDrop> inventoryDrops;
 
 	@XmlList
-	@XmlElement(name = "surveys", required = false)
+	@XmlElement(name = "surveys")
 	protected List<String> surveys;
 
 	/** 获取名称。 / Returns the name. */
@@ -75,7 +75,7 @@ public class EventTemplate {
 	@XmlSchemaType(name = "dateTime")
 	protected XMLGregorianCalendar endDate;
 
-	@XmlAttribute(name = "theme", required = false)
+	@XmlAttribute(name = "theme")
 	private String theme;
 
 	@XmlTransient
@@ -141,7 +141,7 @@ public class EventTemplate {
 		if (isStarted) {
 			return;
 		}
-		if (spawns != null && spawns.size() > 0) {
+		if (spawns != null && !spawns.isEmpty()) {
 			if (spawnedObjects == null) {
 				spawnedObjects = new ArrayList<>();
 			}
@@ -248,10 +248,5 @@ public class EventTemplate {
 			return theme.toLowerCase();
 		}
 		return theme;
-	}
-
-	/** 获取背包掉落。 / Returns the inventory drop. */
-	public InventoryDrop getInventoryDrop() {
-		return inventoryDrops == null || inventoryDrops.isEmpty() ? null : inventoryDrops.get(0);
 	}
 }

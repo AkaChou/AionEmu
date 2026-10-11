@@ -42,11 +42,9 @@ public class ItemStorage {
 
 	/** 获取物品。 / Returns the items. */
 	public List<Item> getItems() {
-		List<Item> temp = new ArrayList<>();
 		synchronized (items) {
-			temp.addAll(items.values());
+			return new ArrayList<>(items.values());
 		}
-		return temp;
 	}
 
 	/** 设置限制。 / Sets the limit. */
@@ -87,53 +85,6 @@ public class ItemStorage {
 	/** 返回按对象 ID 的物品 / Returns the item by obj id */
 	public Item getItemByObjId(int itemObjId) {
 		return this.items.get(itemObjId);
-	}
-
-	/** 按物品 ID 返回槽位 ID / Returns the slot id by item id */
-	public long getSlotIdByItemId(int itemId) {
-		synchronized (items) {
-			for (Item item : this.items.values()) {
-				if (item.getItemTemplate().getTemplateId() == itemId) {
-					return item.getEquipmentSlot();
-				}
-			}
-		}
-		return -1;
-	}
-
-	/** 按槽位 ID 返回物品 / Returns the item by slot id */
-	public Item getItemBySlotId(short slotId) {
-		for (Item item : getCubeItems()) {
-			if (item.getEquipmentSlot() == slotId) {
-				return item;
-			}
-		}
-		return null;
-	}
-
-	/** 按槽位 ID 返回特殊物品 / Returns the special item by slot id */
-	public Item getSpecialItemBySlotId(short slotId) {
-		for (Item item : getSpecialCubeItems()) {
-			if (item.getEquipmentSlot() == slotId) {
-				return item;
-			}
-		}
-		return null;
-	}
-
-	/** 按对象 ID 返回槽位 ID / Returns the slot id by obj id */
-	public long getSlotIdByObjId(int objId) {
-		Item item = this.getItemByObjId(objId);
-		if (item != null) {
-			return item.getEquipmentSlot();
-		} else {
-			return -1;
-		}
-	}
-
-	/** 返回下一个可用槽位 / Returns the next available slot */
-	public long getNextAvailableSlot() {
-		return FIRST_AVAILABLE_SLOT;
 	}
 
 	/** 放入物品。 / Put item. */
@@ -203,5 +154,14 @@ public class ItemStorage {
 	/** 物品数量。 / Size. */
 	public int size() {
 		return this.items.size();
+	}
+
+	/**
+	 * 返回是否没有任何物品。
+	 * Returns whether there is no item at all.
+	 * @return 无物品时为 true / true if empty
+	 */
+	public boolean isEmpty() {
+		return this.items.isEmpty();
 	}
 }

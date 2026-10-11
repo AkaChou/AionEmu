@@ -88,6 +88,16 @@ public class NpcSkillList implements SkillList<Npc> {
 		return skills != null ? skills.size() : 0;
 	}
 
+	/**
+	 * 返回是否没有任何技能。
+	 * Returns whether there is no skill at all.
+	 * @return 无技能时为 true / true if empty
+	 */
+	@Override
+	public boolean isEmpty() {
+		return skills == null || skills.isEmpty();
+	}
+
 	private void initSkills() {
 		if (skills == null) {
 			skills = new ArrayList<>();
@@ -96,7 +106,7 @@ public class NpcSkillList implements SkillList<Npc> {
 
 	/** 返回随机技能 / Returns the random skill */
 	public NpcSkillEntry getRandomSkill() {
-		if (skills == null || skills.size() == 0) {
+		if (skills == null || skills.isEmpty()) {
 			return null;
 		}
 		int count = 0;
@@ -121,12 +131,6 @@ public class NpcSkillList implements SkillList<Npc> {
 		return skills == null || index < 0 || index >= skills.size() ? null : skills.get(index);
 	}
 
-	public void resetUseCounts() {
-		if (skills != null) {
-			skills.stream().filter(java.util.Objects::nonNull).forEach(NpcSkillEntry::resetUseCount);
-		}
-	}
-
 	private SkillEntry getSkill(int skillId) {
 		for (SkillEntry entry : skills) {
 			if (entry != null && entry.getSkillId() == skillId) {
@@ -141,9 +145,7 @@ public class NpcSkillList implements SkillList<Npc> {
 		if (this.skills == null) {
 			return null;
 		}
-		Iterator<NpcSkillEntry> iter = skills.iterator();
-		while (iter.hasNext()) {
-			NpcSkillEntry next = iter.next();
+		for (NpcSkillEntry next : skills) {
 			if (next == null) {
 				continue;
 			}
@@ -157,7 +159,6 @@ public class NpcSkillList implements SkillList<Npc> {
 
 	/** 添加关联技能 / Adds linked skill */
 	@Override
-	public boolean addLinkedSkill(Npc creature, int skillId) {
-		return false;
+	public void addLinkedSkill(Npc creature, int skillId) {
 	}
 }

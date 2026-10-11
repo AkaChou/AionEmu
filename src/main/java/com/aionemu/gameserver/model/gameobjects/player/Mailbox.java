@@ -60,19 +60,15 @@ public class Mailbox {
 			 */
 			@Override
 			public int compare(Letter o1, Letter o2) {
-				if (o1.getTimeStamp().getTime() > o2.getTimeStamp().getTime()) {
-					return 1;
+				int result = Long.compare(o1.getTimeStamp().getTime(), o2.getTimeStamp().getTime());
+				if (result != 0) {
+					return result;
 				}
-				if (o1.getTimeStamp().getTime() < o2.getTimeStamp().getTime()) {
-					return -1;
-				}
-				return o1.getObjectId() > o2.getObjectId() ? 1 : -1;
+				return Integer.compare(o1.getObjectId(), o2.getObjectId());
 			}
 		});
 
-		for (Letter letter : mails.values()) {
-			letters.add(letter);
-		}
+		letters.addAll(mails.values());
 		return letters;
 	}
 
@@ -108,19 +104,7 @@ public class Mailbox {
 		return mails.get(letterObjId);
 	}
 
-	/**
-	 * 检查邮箱是否包含空邮件。
-	 * Check whether the mailbox contains empty letters.
-	 */
-	public boolean haveUnread() {
-		for (Letter letter : mails.values()) {
-			if (letter.isUnread()) {
-				return true;
-			}
-		}
-		return false;
-	}
-
+	
 	/** 返回 unread count / Returns the unread count */
 	public final int getUnreadCount() {
 		int unreadCount = 0;
@@ -171,7 +155,7 @@ public class Mailbox {
 
 	/** 上传预留信件 / upload Reserve Letters. */
 	public void uploadReserveLetters() {
-		if (reserveMail.size() > 0 && haveFreeSlots()) {
+		if (!reserveMail.isEmpty() && haveFreeSlots()) {
 			boolean promoted = false;
 			for (Iterator<Letter> iterator = reserveMail.values().iterator(); iterator.hasNext();) {
 				Letter letter = iterator.next();

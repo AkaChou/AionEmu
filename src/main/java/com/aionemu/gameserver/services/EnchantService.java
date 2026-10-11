@@ -653,7 +653,7 @@ public class EnchantService {
 				? ItemSocketService.addManaStone(targetItem, parentItem.getItemTemplate().getTemplateId())
 				: ItemSocketService.addFusionStone(targetItem, parentItem.getItemTemplate().getTemplateId());
 			if (targetItem.isEquipped()) {
-				ItemEquipmentListener.addStoneStats(targetItem, manaStone, player.getGameStats());
+				ItemEquipmentListener.addStoneStats(manaStone, player.getGameStats());
 				player.getGameStats().updateStatsAndSpeedVisually();
 			}
 		} else {

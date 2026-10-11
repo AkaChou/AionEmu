@@ -80,7 +80,7 @@ public class Legion {
 			 */
 			@Override
 			public int compare(LegionHistory o1, LegionHistory o2) {
-				return o1.getTime().getTime() < o2.getTime().getTime() ? 1 : -1;
+				return Long.compare(o2.getTime().getTime(), o1.getTime().getTime());
 			}
 		});
 	}
@@ -250,7 +250,7 @@ public class Legion {
 	 * @return the currentAnnouncement
 	 */
 	public Entry<Timestamp, String> getCurrentAnnouncement() {
-		if (this.announcementList.size() > 0) {
+		if (!this.announcementList.isEmpty()) {
 			return this.announcementList.lastEntry();
 		}
 		return null;
@@ -280,7 +280,6 @@ public class Legion {
 	 */
 	public int getWarehouseSlots() {
         return switch (getLegionLevel()) {
-            case 1 -> LegionConfig.LWH_LEVEL1_SLOTS;
             case 2 -> LegionConfig.LWH_LEVEL2_SLOTS;
             case 3 -> LegionConfig.LWH_LEVEL3_SLOTS;
             case 4 -> LegionConfig.LWH_LEVEL4_SLOTS;
@@ -408,20 +407,6 @@ public class Legion {
 	/** 获取最小等级。 / Returns the min level. */
 	public int getMinLevel() {
 		return minJoinLevel;
-	}
-
-	/** 按玩家 ID 返回加入申请。 / Returns the join request by player id. */
-	public LegionJoinRequest getJoinRequestByPlayerId(int playerId) {
-		return joinRequestMap.get(playerId);
-	}
-
-	/**
-	 * 删除玩家的加入申请。
-	 * Deletes the join request of a player.
-	 * @param playerId 玩家 ID / player id
-	 */
-	public void deleteJoinRequest(int playerId) {
-		joinRequestMap.remove(playerId);
 	}
 
 	/** 添加加入申请。 / Adds a join request. */

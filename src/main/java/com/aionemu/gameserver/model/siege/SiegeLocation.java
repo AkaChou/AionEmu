@@ -31,7 +31,6 @@ import lombok.NoArgsConstructor;
 @Setter
 @NoArgsConstructor
 public class SiegeLocation implements ZoneHandler {
-	public static final int STATE_INVULNERABLE = 0;
 	public static final int STATE_VULNERABLE = 1;
 
 	/** 获取模板。 / Returns the template. */
@@ -101,7 +100,7 @@ public class SiegeLocation implements ZoneHandler {
 	/** 设置护盾列表 / Sets the shields */
 	public void setShields(List<SiegeShield> shields) {
 		this.shields = shields;
-		log.debug("Attached shields for locId: " + locationId);
+		log.debug("Attached shields for locId: {}", locationId);
 		for (SiegeShield shield : shields) {
 			log.debug(shield.toString());
 		}
@@ -133,17 +132,12 @@ public class SiegeLocation implements ZoneHandler {
 		if (zone.isEmpty()) {
 			return false;
 		}
-		for (int i = 0; i < zone.size(); i++) {
-			if (zone.get(i).isInsideCreature(creature)) {
+		for (SiegeZoneInstance siegeZone : zone) {
+			if (siegeZone.isInsideCreature(creature)) {
 				return true;
 			}
 		}
 		return false;
-	}
-
-	/** 是否处于活动攻城区域 / Whether in active siege zone */
-	public boolean isInActiveSiegeZone(Player player) {
-		return isVulnerable() && isInsideLocation(player);
 	}
 
 	/** 清空位置。 / Clear location. */

@@ -4,14 +4,12 @@ import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Comparator;
 
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.team2.GeneralTeam;
 import com.aionemu.gameserver.model.team2.alliance.PlayerAlliance;
-import com.aionemu.gameserver.model.team2.alliance.PlayerAllianceMember;
 import com.aionemu.gameserver.model.team2.common.legacy.LootGroupRules;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 import com.google.common.base.Predicate;
@@ -105,26 +103,15 @@ public class League extends GeneralTeam<PlayerAlliance, LeagueMember> {
 	/** 返回 sorted members / Returns the sorted members */
 	public Collection<LeagueMember> getSortedMembers() {
 		ArrayList<LeagueMember> newArrayList = Lists.newArrayList(members.values());
-		Collections.sort(newArrayList, MEMBER_COMPARATOR);
+		newArrayList.sort(MEMBER_COMPARATOR);
 		return newArrayList;
-	}
-
-	/** 返回 player member / Returns the player member */
-	public Player getPlayerMember(Integer playerObjId) {
-		for (PlayerAlliance member : getMembers()) {
-			PlayerAllianceMember playerMember = member.getMember(playerObjId);
-			if (playerMember != null) {
-				return playerMember.getObject();
-			}
-		}
-		return null;
 	}
 
 	static class LeagueMemberComparator implements Comparator<LeagueMember> {
 		/** 比较 / compare. */
 		@Override
 		public int compare(LeagueMember o1, LeagueMember o2) {
-			return o1.getLeaguePosition() > o2.getLeaguePosition() ? 1 : -1;
+			return Integer.compare(o1.getLeaguePosition(), o2.getLeaguePosition());
 		}
 	}
 }

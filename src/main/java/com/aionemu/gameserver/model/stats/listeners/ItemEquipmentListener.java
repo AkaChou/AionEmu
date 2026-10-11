@@ -151,16 +151,16 @@ public class ItemEquipmentListener {
 			return;
 		}
 
-		List<StatFunction> allModifiers = null;
+		List<StatFunction> allModifiers;
 		if ((slot & ItemSlot.MAIN_OR_SUB.getSlotIdMask()) != 0) {
-			allModifiers = wrapModifiers(item, modifiers);
+			allModifiers = wrapModifiers(modifiers);
 			if (item.hasFusionedItem()) {
 				// 按规则添加全部加成修正 / add all bonus modifiers according to rules
 				ItemTemplate fusionedItemTemplate = item.getFusionedItemTemplate();
 				WeaponType weaponType = fusionedItemTemplate.getWeaponType();
 				List<StatFunction> fusionedItemModifiers = fusionedItemTemplate.getModifiers();
 				if (fusionedItemModifiers != null) {
-					allModifiers.addAll(wrapModifiers(item, fusionedItemModifiers));
+					allModifiers.addAll(wrapModifiers(fusionedItemModifiers));
 				}
 				// 添加 10% 魔法增强与攻击 / add 10% of Magic Boost and Attack
 				WeaponStats weaponStats = fusionedItemTemplate.getWeaponStats();
@@ -230,7 +230,7 @@ public class ItemEquipmentListener {
 	/**
 	 * 按规则过滤属性：融合属性仅取自一把武器等。 / Filter stats based on the following rules:<br> 1) don't include fusioned stats which will be taken only from 1 weapon <br> 2) wrap stats which are different for MAIN and OFF hands<br> 3) add the rest<br>.
 	 */
-	private static List<StatFunction> wrapModifiers(Item item, List<StatFunction> modifiers) {
+	private static List<StatFunction> wrapModifiers(List<StatFunction> modifiers) {
 		List<StatFunction> allModifiers = new ArrayList<>();
 		for (StatFunction modifier : modifiers) {
 			switch (modifier.getName()) {
@@ -305,12 +305,12 @@ public class ItemEquipmentListener {
 	 * 将所有魔石修正应用于角色。 / All modifiers of stones will be applied to character.
 	 */
 	private static void addStonesStats(Item item, Set<? extends ManaStone> itemStones, CreatureGameStats<?> cgs) {
-		if (itemStones == null || itemStones.size() == 0) {
+		if (itemStones == null || itemStones.isEmpty()) {
 			return;
 		}
         for (ManaStone stone : itemStones) {
             if (stone != null) { // 添加空值检查 / add a null check
-               addStoneStats(item, stone, cgs);
+               addStoneStats(stone, cgs);
             }
         }
 	}
@@ -318,7 +318,7 @@ public class ItemEquipmentListener {
 	/**
 	 * 对已装备物品镶嵌时使用。 / Used when socketing of equipped item.
 	 */
-	public static void addStoneStats(Item item, ManaStone stone, CreatureGameStats<?> cgs) {
+	public static void addStoneStats(ManaStone stone, CreatureGameStats<?> cgs) {
         if (stone == null) {
            return;
         }
@@ -333,7 +333,7 @@ public class ItemEquipmentListener {
 	 * 移除所有魔石修正。 / All modifiers of stones will be removed.
 	 */
 	public static void removeStoneStats(Set<? extends ManaStone> itemStones, CreatureGameStats<?> cgs) {
-		if (itemStones == null || itemStones.size() == 0) {
+		if (itemStones == null || itemStones.isEmpty()) {
 			return;
 		}
 		for (ManaStone stone : itemStones) {
@@ -377,15 +377,5 @@ public class ItemEquipmentListener {
 		if (item.getGodStone() != null) {
 			item.getGodStone().onUnEquip(player);
 		}
-	}
-
-	/** 添加伊迪安加成属性。 / Adds idian bonus stats. */
-	public static void addIdianBonusStats(Item item, List<StatFunction> modifiers, CreatureGameStats<?> cgs) {
-		cgs.addEffect(item, modifiers);
-	}
-
-	/** 移除伊迪安加成属性。 / Removes idian bonus stats. */
-	public static void removeIdianBonusStats(Item item, CreatureGameStats<?> cgs) {
-		cgs.endEffect(item);
 	}
 }

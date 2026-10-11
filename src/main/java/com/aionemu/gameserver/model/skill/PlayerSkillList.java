@@ -206,14 +206,13 @@ public final class PlayerSkillList implements SkillList<Player> {
 
 	/** 添加关联技能 / Adds linked skill */
 	@Override
-	public boolean addLinkedSkill(Player player, int skillId) {
+	public void addLinkedSkill(Player player, int skillId) {
 		player.setLinkedSkill(skillId);
 		SkillTemplate linked = DataManager.SKILL_DATA.getSkillTemplate(skillId);
 		PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_STIGMA_GET_LINKED_SKILL(
 				new DescriptionId(DataManager.SKILL_DATA.getSkillTemplate(linked.getSkillId()).getNameId()), 1));
-		return addSkill(player, skillId, 1, false, true, PersistentState.NOACTION);
+		addSkill(player, skillId, 1, false, true, PersistentState.NOACTION);
 	}
-
 	/** Adds 烙印之石技能 / Adds stigma skill */
 	public boolean addStigmaSkill(Player player, int skillId, int skillLevel) {
 		return addSkill(player, skillId, skillLevel, true, false, PersistentState.NOACTION);

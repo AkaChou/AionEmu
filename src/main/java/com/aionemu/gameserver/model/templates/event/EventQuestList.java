@@ -3,7 +3,6 @@ package com.aionemu.gameserver.model.templates.event;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -46,13 +45,8 @@ public class EventQuestList {
 		Set<String> q = new HashSet<>();
 		Collections.addAll(q, data.split(";"));
 		List<Integer> result = new ArrayList<>();
-
-		if (q.size() > 0) {
-			result = new ArrayList<>();
-			Iterator<String> it = q.iterator();
-			while (it.hasNext()) {
-				result.add(Integer.parseInt(it.next()));
-			}
+		for (String quest : q) {
+			result.add(Integer.parseInt(quest));
 		}
 		return result;
 	}

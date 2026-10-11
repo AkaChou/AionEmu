@@ -39,7 +39,7 @@ public class UseableItemObject extends HouseObject<HousingUseableItem> {
     @Setter
     private volatile boolean mustGiveLastReward = false;
 	private final AtomicReference<Player> usingPlayer = new AtomicReference<>();
-	private UseDataWriter entryWriter = null;
+	private final UseDataWriter entryWriter;
 
 	public UseableItemObject(House owner, int objId, int templateId) {
 		super(owner, objId, templateId);
@@ -132,7 +132,7 @@ public class UseableItemObject extends HouseObject<HousingUseableItem> {
 			int checkType = action.getCheckType();
 			if (checkType == 1) {
 				List<Item> items = player.getEquipment().getEquippedItemsByItemId(requiredItem);
-				if (items.size() == 0) {
+				if (items.isEmpty()) {
 					int descId = DataManager.ITEM_DATA.getItemTemplate(requiredItem).getNameId();
 					warnAndRelease(player, SM_SYSTEM_MESSAGE.STR_MSG_CANT_USE_HOUSE_OBJECT_ITEM_EQUIP(new DescriptionId(descId)));
 					return;
@@ -175,7 +175,7 @@ public class UseableItemObject extends HouseObject<HousingUseableItem> {
 					public void run() {
 						try {
 							PacketSendUtility.sendPacket(player, new SM_USE_OBJECT(player.getObjectId(), getObjectId(), 0, 9));
-							if (action.getRemoveCount() != null && action.getRemoveCount() != 0) {
+							if (requiredItem != null && action.getRemoveCount() != null && action.getRemoveCount() != 0) {
 								player.getInventory().decreaseByItemId(requiredItem, action.getRemoveCount());
 							}
 							UseableItemObject myself = UseableItemObject.this;

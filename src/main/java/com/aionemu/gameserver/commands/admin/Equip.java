@@ -150,7 +150,7 @@ public class Equip extends AdminCommand {
 					int counter = quant <= 0 ? getMaxSlots(targetItem) : quant;
 					while (targetItem.getItemStones().size() < getMaxSlots(targetItem) && counter >= 0) {
 						ManaStone manaStone = ItemSocketService.addManaStone(targetItem, manastone);
-						ItemEquipmentListener.addStoneStats(targetItem, manaStone, player.getGameStats());
+						ItemEquipmentListener.addStoneStats(manaStone, player.getGameStats());
 						counter--;
 					}
 				}

@@ -44,7 +44,7 @@ public class XMLStartCondition {
 
 	/** 检查玩家是否已完成列出的任务。 / Check, if the player has finished listed quests */
 	private boolean checkFinishedQuests(QuestStateList qsl) {
-		if (finished != null && finished.size() > 0) {
+		if (finished != null && !finished.isEmpty()) {
 			for (FinishedQuestCond fqc : finished) {
 				int questId = fqc.getQuestId();
 				Integer reward = fqc.getReward();
@@ -84,7 +84,7 @@ public class XMLStartCondition {
 
 	/** 检查玩家是否未完成列出的任务。 / Check, if the player has not finished listed quests */
 	private boolean checkUnfinishedQuests(QuestStateList qsl) {
-		if (unfinished != null && unfinished.size() > 0) {
+		if (unfinished != null && !unfinished.isEmpty()) {
 			for (Integer questId : unfinished) {
 				QuestState qs = qsl.getQuestState(questId);
 				if (qs != null && qs.getStatus() == QuestStatus.COMPLETE)
@@ -96,7 +96,7 @@ public class XMLStartCondition {
 
 	/** 检查玩家是否未接取列出的任务。 / Check, if the player has not acquired listed quests */
 	private boolean checkNoAcquiredQuests(QuestStateList qsl) {
-		if (noacquired != null && noacquired.size() > 0) {
+		if (noacquired != null && !noacquired.isEmpty()) {
 			for (Integer questId : noacquired) {
 				QuestState qs = qsl.getQuestState(questId);
 				if (qs != null && (qs.getStatus() == QuestStatus.START || qs.getStatus() == QuestStatus.REWARD
@@ -109,7 +109,7 @@ public class XMLStartCondition {
 
 	/** 检查玩家是否已接取列出的任务。 / Check, if the player has acquired listed quests */
 	private boolean checkAcquiredQuests(QuestStateList qsl) {
-		if (acquired != null && acquired.size() > 0) {
+		if (acquired != null && !acquired.isEmpty()) {
 			for (Integer questId : acquired) {
 				QuestState qs = qsl.getQuestState(questId);
 				if (qs == null || qs.getStatus() == QuestStatus.NONE || qs.getStatus() == QuestStatus.LOCKED) {
@@ -123,7 +123,7 @@ public class XMLStartCondition {
 	private boolean checkEquippedItems(Player player, boolean warn) {
 		if (!warn)
 			return true;
-		if (equipped != null && equipped.size() > 0) {
+		if (equipped != null && !equipped.isEmpty()) {
 			for (int itemId : equipped) {
 				if (!player.getEquipment().getEquippedItemIds().contains(itemId)) {
 					int requiredItemNameId = DataManager.ITEM_DATA.getItemTemplate(itemId).getNameId();
@@ -154,12 +154,7 @@ public class XMLStartCondition {
 			return true;
 		}
 		// 在欧比斯入场任务奖励正确前的临时例外任务。 / Temporary exceptions-quests till abyss entry quests work with correct reward
-		return neededReward.intValue() == currentReward || questId == 2947 || questId == 1922;
-	}
-
-	/** 返回已完成任务前置条件 / Returns the finished preconditions */
-	public List<FinishedQuestCond> getFinishedPreconditions() {
-		return finished;
+		return neededReward == currentReward || questId == 2947 || questId == 1922;
 	}
 
 	public XMLStartCondition() {}

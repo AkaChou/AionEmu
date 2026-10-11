@@ -33,7 +33,7 @@ public class Letter extends AionObject {
 	private final Timestamp timeStamp;
 	private PersistentState persistentState;
 	/** 获取信件类型。 / Returns the letter type. */
-	private LetterType letterType;
+	private final LetterType letterType;
 
 	public Letter(int objId, int recipientId, Item attachedItem, long attachedKinahCount, long attachedAPCount,
 			String title, String message, String senderName, Timestamp timeStamp, boolean unread,
@@ -79,12 +79,6 @@ public class Letter extends AionObject {
 	public void setExpress(boolean express) {
 		this.express = express;
 		this.persistentState = PersistentState.UPDATE_REQUIRED;
-	}
-
-	/** 设置信件类型。 / Sets the letter type. */
-	public void setLetterType(LetterType letterType) {
-		this.letterType = letterType;
-		this.express = letterType == LetterType.EXPRESS || letterType == LetterType.BLACKCLOUD;
 	}
 
 	/** 返回信件持久化状态 / Returns the letter persistent state */

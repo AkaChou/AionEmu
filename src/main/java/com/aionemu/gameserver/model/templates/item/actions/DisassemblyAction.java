@@ -100,12 +100,12 @@ public class DisassemblyAction extends AbstractItemAction
 			// 计算概率（isSelect == true 时不计算，直接添加全部物品）。 / calc the chance (isSelect == true - we dont need to calc, we simply add all items here)
 			finalItemCollection = calculateItemchance(player, finalGroupCollection, true);
 			// 清空列表（安全机制） / we clear the List (safety mechanic)
-			if (player.getDisassemblyItemLists().size() > 0)
+			if (!player.getDisassemblyItemLists().isEmpty())
 				player.getDisassemblyItemLists().clear();
 			// 为该玩家设置列表 / we set the List for this Player
 			player.setDisassemblyItemLists(finalItemCollection);
 			// 发送含全部可选物品的 S 包 / we send the S packet with all Selectable Items
-			PacketSendUtility.sendPacket(player, new SM_SELECT_ITEM(finalItemCollection, parentItem.getObjectId().intValue()));
+			PacketSendUtility.sendPacket(player, new SM_SELECT_ITEM(finalItemCollection, parentItem.getObjectId()));
 		} else { // Normal DisassemblyBox
 			// 发送 S_USE_ITEM 使用动画包。 / send the S_USE_ITEM packet
 			PacketSendUtility.broadcastPacketAndReceive(player,
@@ -147,7 +147,7 @@ public class DisassemblyAction extends AbstractItemAction
 					// 检查动作是否有效 / we check if the action is valid
 					boolean isValidAction = checkValidate(player, parentItem);
 					if (isValidAction) {
-						if (finalItemCollection.size() > 0) {
+						if (!finalItemCollection.isEmpty()) {
 							for (DisassembleItem item : finalItemCollection) {
 								ItemService.addItem(player, item.getItemId(), item.getCount());
 							}
@@ -232,7 +232,7 @@ public class DisassemblyAction extends AbstractItemAction
 				List<DisassembleItems> itemList = group.getGroupItems();
 				int currentSum = 0;
 				int rnd;
-				if (itemList.size() == 1 && itemList.get(0).getItemProb() == 10000)
+				if (itemList.size() == 1 && itemList.getFirst().getItemProb() == 10000)
 					rnd = 1;
 				else
 					rnd = Rnd.get(0, 10000);

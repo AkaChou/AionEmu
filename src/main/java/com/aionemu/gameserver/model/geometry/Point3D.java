@@ -13,7 +13,6 @@ import lombok.AllArgsConstructor;
  * Point 3D for geometry logic.
  * @author SoulKeeper
  */
-@SuppressWarnings("serial")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -87,12 +86,18 @@ public class Point3D implements Cloneable, Serializable {
 	}
 
 	/**
-	 * @return 本点的副本 / Clones this point, copy of this point
-	 * @throws CloneNotSupportedException 永不会抛出 / never thrown
+	 * 克隆本点（浅拷贝三个 float 字段，等价于复制构造器）。
+	 * Clones this point (shallow copy of the three float fields, equivalent to the copy constructor).
+	 * @return 本点的副本 / copy of this point
 	 */
 	@Override
-	public Point3D clone() throws CloneNotSupportedException {
-		return new Point3D(this);
+	public Point3D clone() {
+		try {
+			return (Point3D) super.clone();
+		} catch (CloneNotSupportedException e) {
+			// 不可达：Point3D 实现了 Cloneable / Unreachable: Point3D implements Cloneable
+		 throw new AssertionError(e);
+		}
 	}
 
 	/**
@@ -101,11 +106,6 @@ public class Point3D implements Cloneable, Serializable {
 	 */
 	@Override
 	public String toString() {
-		String sb = "Point3D" +
-			"{x=" + x +
-			", y=" + y +
-			", z=" + z +
-			'}';
-		return sb;
+		return "Point3D" + "{x=" + x + ", y=" + y + ", z=" + z + '}';
 	}
 }

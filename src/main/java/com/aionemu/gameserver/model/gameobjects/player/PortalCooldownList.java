@@ -50,14 +50,7 @@ public class PortalCooldownList {
 		return portalCooldowns.get(worldId).getCooldown();
 	}
 
-	/** 获取条目计数。 / Returns the entry count. */
-	public long getEntryCount(int worldId) {
-		if (portalCooldowns == null || !portalCooldowns.containsKey(worldId)) {
-			return 0;
-		}
-		return portalCooldowns.get(worldId).getEntryCount();
-	}
-
+	
 	/** 获取传送门冷却物品。 / Returns the portal cooldown item. */
 	public PortalCooldownItem getPortalCooldownItem(int worldId) {
 		if (portalCooldowns == null || !portalCooldowns.containsKey(worldId)) {
@@ -135,11 +128,7 @@ public class PortalCooldownList {
 		}
 	}
 
-	/** 是否冷却 / Whether cooldowns*/
-	public boolean hasCooldowns() {
-		return portalCooldowns != null && portalCooldowns.size() > 0;
-	}
-
+	
 	/** 大小 / size. */
 	public int size() {
 		return portalCooldowns != null ? portalCooldowns.size() : 0;

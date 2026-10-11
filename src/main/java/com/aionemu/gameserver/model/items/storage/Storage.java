@@ -234,7 +234,7 @@ public abstract class Storage implements IStorage {
 
 	boolean decreaseByItemId(int itemId, long count, Player actor) {
 		List<Item> items = itemStorage.getItemsById(itemId);
-		if (items.size() == 0) {
+		if (items.isEmpty()) {
 			return false;
 		}
 		for (Item item : items) {
@@ -304,7 +304,7 @@ public abstract class Storage implements IStorage {
 	@Override
 	public long getItemCountByItemId(int itemId) {
 		List<Item> temp = this.itemStorage.getItemsById(itemId);
-		if (temp.size() == 0) {
+		if (temp.isEmpty()) {
 			return 0;
 		}
 		long cnt = 0;
@@ -399,7 +399,7 @@ public abstract class Storage implements IStorage {
 		}
 
 		public void restore() {
-			restore(item -> { });
+			restore(_ -> { });
 		}
 
 		public void restore(Consumer<Item> discardedItem) {
@@ -461,6 +461,16 @@ public abstract class Storage implements IStorage {
 	@Override
 	public int size() {
 		return itemStorage.size();
+	}
+
+	/**
+	 * 返回是否没有任何物品。
+	 * Returns whether there is no item at all.
+	 * @return 无物品时为 true / true if empty
+	 */
+	@Override
+	public boolean isEmpty() {
+		return itemStorage.isEmpty();
 	}
 
 	/** 清空。 / Clear. */

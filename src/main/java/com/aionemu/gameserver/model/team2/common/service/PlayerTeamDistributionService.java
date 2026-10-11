@@ -46,7 +46,7 @@ public class PlayerTeamDistributionService {
 		}
 		long expReward;
 		if (filteredStats.players.size() + filteredStats.mentorCount == 1) {
-			expReward = StatFunctions.calculateSoloExperienceReward(filteredStats.players.get(0), owner);
+			expReward = StatFunctions.calculateSoloExperienceReward(filteredStats.players.getFirst(), owner);
 		} else {
 			expReward = StatFunctions.calculateGroupExperienceReward(filteredStats.highestLevel, owner);
 		}
@@ -89,8 +89,8 @@ public class PlayerTeamDistributionService {
 					rewardXp = cape;
 				}
 			}
-			rewardXp *= damagePercent;
-			rewardDp *= damagePercent;
+			rewardXp = (long) (rewardXp * damagePercent);
+			rewardDp = (int) (rewardDp * damagePercent);
 			rewardAp *= damagePercent;
 			// 小队经验奖励（新系统，正式服北美经验） / Reward XP Group (New system, Exp Retail NA)
 			switch (member.getWorldId()) {

@@ -35,9 +35,7 @@ public class BlockList implements Iterable<BlockedPlayer> {
 
 	/** 返回 blocked player / Returns the blocked player */
 	public BlockedPlayer getBlockedPlayer(String name) {
-		Iterator<BlockedPlayer> iterator = blockedList.values().iterator();
-		while (iterator.hasNext()) {
-			BlockedPlayer entry = iterator.next();
+		for (BlockedPlayer entry : blockedList.values()) {
 			if (entry.getName().equalsIgnoreCase(name)) {
 				return entry;
 			}
@@ -45,11 +43,7 @@ public class BlockList implements Iterable<BlockedPlayer> {
 		return null;
 	}
 
-	/** 返回 blocked player / Returns the blocked player */
-	public BlockedPlayer getBlockedPlayer(int playerObjId) {
-		return blockedList.get(playerObjId);
-	}
-
+	
 	/** 是否包含。 / Contains. */
 	public boolean contains(int playerObjectId) {
 		return blockedList.containsKey(playerObjectId);
