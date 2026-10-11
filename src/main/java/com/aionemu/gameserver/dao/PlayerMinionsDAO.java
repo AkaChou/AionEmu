@@ -59,8 +59,7 @@ public abstract class PlayerMinionsDAO implements IDFactoryAwareDAO {
 	 * @param player 玩家 / player
 	 * @param minionCommonData 迷你宠物公共数据 / minion common data
 	 */
-	public abstract boolean updatePlayerMinionGrowthPoint(Player player, MinionCommonData minionCommonData);
-
+	
 	public abstract boolean updateGrowthAndRemoveMaterials(Player player, MinionCommonData minionCommonData,
 			List<Integer> materialObjectIds);
 

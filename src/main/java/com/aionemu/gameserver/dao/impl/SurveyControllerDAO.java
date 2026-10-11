@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.simple.JdbcClient;
 
 import com.aionemu.boot.i18n.I18n;
@@ -66,7 +65,7 @@ public class SurveyControllerDAO extends com.aionemu.gameserver.dao.SurveyContro
 		try {
 			jdbcClient.sql(SELECT_QUERY)
 				.param(0)
-				.query((rs, rowNum) -> {
+				.query((rs, _) -> {
 					SurveyItem item = new SurveyItem();
 					item.uniqueId = rs.getInt("unique_id");
 					item.ownerId = rs.getInt("owner_id");

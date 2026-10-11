@@ -22,7 +22,7 @@ public abstract class InGameShopDAO implements DAO {
 	 * @param param 附加参数 / extra parameter
 	 * @return 是否成功 / whether successful
 	 */
-	public abstract boolean deleteIngameShopItem(int itemId, byte category, byte list, int param);
+	public abstract void deleteIngameShopItem(int itemId, byte category, byte list, int param);
 
 	/**
 	 * 加载全部游戏内商城物品。
@@ -58,7 +58,7 @@ public abstract class InGameShopDAO implements DAO {
 	 * @param current 当前销量 / current sales
 	 * @return 是否成功 / whether successful
 	 */
-	public abstract boolean increaseSales(int object, int current);
+	public abstract void increaseSales(int object, int current);
 
 	/**
 	 * 返回本 DAO 的唯一类名标识。

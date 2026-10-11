@@ -34,7 +34,7 @@ public abstract class FriendListDAO implements DAO {
 	 * @param friend 好友 / friend
 	 * @return 是否成功 / whether successful
 	 */
-	public abstract boolean addFriends(final Player player, final Player friend);
+	public abstract void addFriends(final Player player, final Player friend);
 
 	/**
 	 * 删除好友关系。

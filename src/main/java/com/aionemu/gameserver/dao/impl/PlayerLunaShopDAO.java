@@ -56,7 +56,7 @@ public class PlayerLunaShopDAO extends com.aionemu.gameserver.dao.PlayerLunaShop
         try {
             jdbcClient.sql(SELECT_QUERY)
                 .param(player.getObjectId())
-                .query((rset, rowNum) -> {
+                .query((rset, _) -> {
                     boolean under = rset.getBoolean("free_under");
                     boolean factory = rset.getBoolean("free_munition");
                     boolean chest = rset.getBoolean("free_chest");
@@ -177,7 +177,7 @@ public class PlayerLunaShopDAO extends com.aionemu.gameserver.dao.PlayerLunaShop
      * @return 是否成功 / whether succeeded
      */
     @Override
-    public boolean setLunaShopByObjId(int obj, final boolean freeUnderpath, final boolean freeFactory, final boolean freeChest) {
+    public void setLunaShopByObjId(int obj, final boolean freeUnderpath, final boolean freeFactory, final boolean freeChest) {
         try {
             jdbcClient.sql(UPDATE_QUERY)
                 .param(freeUnderpath)
@@ -185,10 +185,10 @@ public class PlayerLunaShopDAO extends com.aionemu.gameserver.dao.PlayerLunaShop
                 .param(freeChest)
                 .param(obj)
                 .update();
-            return true;
+            return;
         } catch (DataAccessException e) {
             log.error(I18n.get("log.a8a27eb03080", obj), e);
-            return false;
+            return;
         }
     }
 

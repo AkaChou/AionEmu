@@ -45,7 +45,7 @@ public class BannedMacDAO extends com.aionemu.loginserver.dao.BannedMacDAO {
         Map<String, BannedMacEntry> map = new ConcurrentHashMap<>();
         try {
             jdbcClient.sql(SELECT_ALL_QUERY)
-                .query((rs, rowNum) -> {
+                .query((rs, _) -> {
                     String address = rs.getString("address");
                     return new BannedMacEntry(address, rs.getTimestamp("time"), rs.getString("details"));
                 })

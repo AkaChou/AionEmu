@@ -107,10 +107,10 @@ public class PlayerPassportsDAO extends com.aionemu.gameserver.dao.PlayerPasspor
 			Integer val = jdbcClient.sql(SELECT_STAMPS_QUERY)
 				.param(accountId)
 				.param(passportId)
-				.query((rs, rowNum) -> rs.getInt("stamps"))
+				.query((rs, _) -> rs.getInt("stamps"))
 				.optional()
 				.orElse(0);
-			return val != null ? val : 0;
+			return val;
 		} catch (DataAccessException e) {
 			log.error(I18n.get("log.d8f278a870b7", accountId, passportId), e);
 			return 0;
@@ -130,7 +130,7 @@ public class PlayerPassportsDAO extends com.aionemu.gameserver.dao.PlayerPasspor
 			Timestamp stamp = jdbcClient.sql(SELECT_LAST_STAMP_QUERY)
 				.param(accountId)
 				.param(passportId)
-				.query((rs, rowNum) -> rs.getTimestamp("last_stamp"))
+				.query((rs, _) -> rs.getTimestamp("last_stamp"))
 				.optional()
 				.orElse(null);
 			if (stamp != null) {
@@ -155,7 +155,7 @@ public class PlayerPassportsDAO extends com.aionemu.gameserver.dao.PlayerPasspor
 		try {
 			ids = jdbcClient.sql(SELECT_PASSPORTS_QUERY)
 				.param(accountId)
-				.query((resultSet, rowNum) -> resultSet.getInt("passport_id"))
+				.query((resultSet, _) -> resultSet.getInt("passport_id"))
 				.list();
 		} catch (DataAccessException e) {
 			log.error(I18n.get("log.add8e8df4ec5", accountId), e);

@@ -7,7 +7,6 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
-import lombok.NoArgsConstructor;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -116,7 +115,7 @@ public class BannedIpDAO extends com.aionemu.loginserver.dao.BannedIpDAO {
         Set<BannedIP> result = new HashSet<>();
         try {
 			result.addAll(jdbcClient.sql(SELECT_ALL_QUERY)
-				.query((rs, rowNum) -> {
+				.query((rs, _) -> {
 					BannedIP ip = new BannedIP();
 					ip.setId(rs.getInt("id"));
 					ip.setMask(rs.getString("mask"));

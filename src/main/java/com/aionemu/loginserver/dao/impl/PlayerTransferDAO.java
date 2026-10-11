@@ -47,7 +47,7 @@ public class PlayerTransferDAO extends com.aionemu.loginserver.dao.PlayerTransfe
         try {
             return jdbcClient.sql(SELECT_NEW_QUERY)
                 .param(0)
-                .query((rs, rowNum) -> {
+                .query((rs, _) -> {
                     PlayerTransferTask task = new PlayerTransferTask();
                     task.id = rs.getInt("id");
                     task.sourceServerId = (byte) rs.getShort("source_server");

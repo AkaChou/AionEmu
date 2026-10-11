@@ -80,7 +80,7 @@ public abstract class PlayerPetsDAO implements DAO {
 	 * @param petCommonData 宠物公共数据 / pet common data
 	 * @return 若成功则为 true / true if successful
 	 */
-	public abstract boolean savePetMoodData(PetCommonData petCommonData);
+	public abstract void savePetMoodData(PetCommonData petCommonData);
 
 	/**
 	 * 保存宠物增益包。

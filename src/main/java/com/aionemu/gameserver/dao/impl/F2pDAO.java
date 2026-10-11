@@ -54,14 +54,11 @@ public class F2pDAO extends com.aionemu.gameserver.dao.F2pDAO {
         F2p f2p = new F2p(player);
 
         try {
-            Integer time = jdbcClient.sql(SELECT_QUERY)
+            jdbcClient.sql(SELECT_QUERY)
                 .param(player.getObjectId())
                 .query(Integer.class)
                 .optional()
-                .orElse(null);
-            if (time != null) {
-                f2p.add(new F2pAccount(time), false);
-            }
+                .ifPresent(time -> f2p.add(new F2pAccount(time), false));
         } catch (DataAccessException e) {
             log.error(I18n.get("log.b700281835c0", player.getObjectId()), e);
         }
@@ -132,47 +129,6 @@ public class F2pDAO extends com.aionemu.gameserver.dao.F2pDAO {
         } catch (DataAccessException e) {
             log.error(I18n.get("log.34f50ac7e4cb", objectId), e);
             return false;
-        }
-    }
-
-    /**
-     * 保存玩家 F2P 数据。
-     * Saves player F2P data.
-     * @param player 玩家 / player
-     * @return 是否成功 / whether succeeded
-     */
-    public boolean saveF2p(Player player) {
-        F2p f2p = player.getF2p();
-
-        if (f2p == null || f2p.getF2pAccount() == null) {
-            return deleteF2p(player.getObjectId());
-        }
-
-        F2pAccount account = f2p.getF2pAccount();
-        if (account != null) {
-            return updateF2p(player.getObjectId(), account.getRemainingTime());
-        }
-
-        return true;
-    }
-
-    /**
-     * 获取 F2P 剩余时间。
-     * Gets F2P remaining time.
-     * @param objectId 玩家对象 ID / player object id
-     * @return 剩余时间 / remaining time
-     */
-    public int getF2pTime(int objectId) {
-        try {
-            Integer time = jdbcClient.sql(SELECT_QUERY)
-                .param(objectId)
-                .query(Integer.class)
-                .optional()
-                .orElse(null);
-            return time != null ? time : 0;
-        } catch (DataAccessException e) {
-            log.error(I18n.get("log.efc1390e42c9", objectId), e);
-            return 0;
         }
     }
 

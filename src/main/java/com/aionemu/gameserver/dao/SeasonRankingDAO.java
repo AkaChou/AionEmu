@@ -77,15 +77,14 @@ public abstract class SeasonRankingDAO implements DAO {
 	 * @param player 玩家 / player
 	 * @return 是否保存成功 / true if stored
 	 */
-	public abstract boolean storeGoldArenaRank(Player player);
-
+	
 	/**
 	 * 保存玩家挑战之塔排名。
 	 * Stores Tower of Challenge rank for the player.
 	 * @param player 玩家 / player
 	 * @return 是否保存成功 / true if stored
 	 */
-	public abstract boolean storeTowerRank(Player player);
+	public abstract void storeTowerRank(Player player);
 
 	/**
 	 * 保存玩家孤独竞技场排名。
@@ -93,13 +92,11 @@ public abstract class SeasonRankingDAO implements DAO {
 	 * @param player 玩家 / player
 	 * @return 是否保存成功 / true if stored
 	 */
-	public abstract boolean storeTenacityRank(Player player);
-
+	
 	/**
 	 * 保存玩家 6v6 竞技场排名。
 	 * Stores Arena 6v6 rank for the player.
 	 * @param player 玩家 / player
 	 * @return 是否保存成功 / true if stored
 	 */
-	public abstract boolean store6v6Rank(Player player);
-}
+	}

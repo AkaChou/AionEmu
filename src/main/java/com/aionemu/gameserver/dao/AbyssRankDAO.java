@@ -51,7 +51,7 @@ public abstract class AbyssRankDAO implements DAO {
 	 * @param player 玩家 / player
 	 * @return 是否成功 / whether successful
 	 */
-	public abstract boolean storeAbyssRank(Player player);
+	public abstract void storeAbyssRank(Player player);
 
 	public void storeInTransaction(Connection connection, int playerId, AbyssRank rank) throws SQLException {
 		throw new UnsupportedOperationException();
@@ -81,8 +81,7 @@ public abstract class AbyssRankDAO implements DAO {
 	 * @param maxOfflineDays 最大离线天数 / max offline days
 	 * @return 玩家 ID 到 AP 的映射 / map of player ID to AP
 	 */
-	public abstract Map<Integer, Integer> loadPlayersAp(Race race, final int lowerApLimit, final int maxOfflineDays);
-
+	
 	/**
 	 * 加载符合条件的玩家荣耀点数（GP）。
 	 * Loads players' glory points (GP) matching the given criteria.

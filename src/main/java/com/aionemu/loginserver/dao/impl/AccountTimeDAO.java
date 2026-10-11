@@ -62,7 +62,7 @@ public class AccountTimeDAO extends com.aionemu.loginserver.dao.AccountTimeDAO {
         try {
             return jdbcClient.sql(SELECT_QUERY)
                 .param((long) accountId)
-                .query((rs, rowNum) -> {
+                .query((rs, _) -> {
                     AccountTime accountTime = new AccountTime();
                     accountTime.setLastLoginTime(rs.getTimestamp("last_active"));
                     accountTime.setSessionDuration(rs.getLong("session_duration"));

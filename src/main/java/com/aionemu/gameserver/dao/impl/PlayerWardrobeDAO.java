@@ -80,7 +80,7 @@ public class PlayerWardrobeDAO extends com.aionemu.gameserver.dao.PlayerWardrobe
         try {
             w = jdbcClient.sql(SELECT_QUERY)
                 .param(player.getObjectId())
-                .query((rset, rowNum) -> {
+                .query((rset, _) -> {
                     int itemId = rset.getInt("item_id");
                     int slot = rset.getInt("slot");
                     int reskin = rset.getInt("reskin_count");
@@ -150,10 +150,10 @@ public class PlayerWardrobeDAO extends com.aionemu.gameserver.dao.PlayerWardrobe
         try {
             Integer size = jdbcClient.sql(COUNT_QUERY)
                 .param(playerObjId)
-                .query((rs, rowNum) -> rs.getInt("size"))
+                .query((rs, _) -> rs.getInt("size"))
                 .optional()
                 .orElse(0);
-            return size != null ? size : 0;
+            return size;
         } catch (DataAccessException e) {
             log.debug("Could not get item size for player {}", playerObjId, e);
             return 0;
@@ -173,10 +173,10 @@ public class PlayerWardrobeDAO extends com.aionemu.gameserver.dao.PlayerWardrobe
             Integer itemId = jdbcClient.sql(SELECT_ITEM_BY_SLOT_QUERY)
                 .param(obj)
                 .param(slot)
-                .query((rs, rowNum) -> rs.getInt("item_id"))
+                .query((rs, _) -> rs.getInt("item_id"))
                 .optional()
                 .orElse(0);
-            return itemId != null ? itemId : 0;
+            return itemId;
         } catch (DataAccessException e) {
             log.debug("No wardrobe item found for player {}, slot {}", obj, slot);
             return 0;
@@ -196,10 +196,10 @@ public class PlayerWardrobeDAO extends com.aionemu.gameserver.dao.PlayerWardrobe
             Integer reskin = jdbcClient.sql(SELECT_RESKIN_BY_SLOT_QUERY)
                 .param(obj)
                 .param(slot)
-                .query((rs, rowNum) -> rs.getInt("reskin_count"))
+                .query((rs, _) -> rs.getInt("reskin_count"))
                 .optional()
                 .orElse(0);
-            return reskin != null ? reskin : 0;
+            return reskin;
         } catch (DataAccessException e) {
             log.debug("No reskin count found for player {}, slot {}", obj, slot);
             return 0;
@@ -215,17 +215,17 @@ public class PlayerWardrobeDAO extends com.aionemu.gameserver.dao.PlayerWardrobe
      * @return 是否成功 / whether successful
      */
     @Override
-    public boolean setReskinCountBySlot(int obj, int slot, int reskin_count) {
+    public void setReskinCountBySlot(int obj, int slot, int reskin_count) {
         try {
             jdbcClient.sql(UPDATE_RESKIN_QUERY)
                 .param(reskin_count)
                 .param(obj)
                 .param(slot)
                 .update();
-            return true;
+                        ;
         } catch (DataAccessException e) {
             log.error(I18n.get("log.5acbf781683c", obj, slot), e);
-            return false;
+                        ;
         }
     }
 }

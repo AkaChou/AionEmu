@@ -42,7 +42,7 @@ public abstract class PremiumDAO implements DAO {
      * @param luna Luna amount
      * @return 是否更新成功 / True if updated
      */
-    public abstract boolean updateLuna(int accountId, long luna);
+    public abstract void updateLuna(int accountId, long luna);
 
     /**
      * 返回实现唯一类名标识。

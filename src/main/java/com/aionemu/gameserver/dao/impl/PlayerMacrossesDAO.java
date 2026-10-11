@@ -121,7 +121,7 @@ public class PlayerMacrossesDAO extends com.aionemu.gameserver.dao.PlayerMacross
 			log.debug("[DAO: PlayerMacrossesDAO] loading macroses for playerId: {}", playerId);
 			jdbcClient.sql(SELECT_QUERY)
 				.param(playerId)
-				.query((rset, rowNum) -> {
+				.query((rset, _) -> {
 					int order = rset.getInt("order");
 					String text = rset.getString("macro");
 					macrosses.put(order, text);

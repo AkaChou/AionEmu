@@ -69,14 +69,14 @@ public class GuideDAO extends com.aionemu.gameserver.dao.GuideDAO {
 	 * @return 是否成功 / whether successful
 	 */
 	@Override
-	public boolean deleteGuide(int guide_id) {
+	public void deleteGuide(int guide_id) {
 		try {
-			return jdbcClient.sql(DELETE_QUERY)
+						jdbcClient.sql(DELETE_QUERY)
 				.param(guide_id)
-				.update() > 0;
+				.update();
 		} catch (DataAccessException e) {
 			log.error(I18n.get("log.257617627810", guide_id), e);
-			return false;
+						;
 		}
 	}
 
@@ -92,7 +92,7 @@ public class GuideDAO extends com.aionemu.gameserver.dao.GuideDAO {
 		try {
 			guides = jdbcClient.sql(SELECT_QUERY)
 				.param(playerId)
-				.query((rset, rowNum) -> new Guide(
+				.query((rset, _) -> new Guide(
 					rset.getInt("guide_id"),
 					rset.getInt("player_id"),
 					rset.getString("title")
@@ -117,7 +117,7 @@ public class GuideDAO extends com.aionemu.gameserver.dao.GuideDAO {
 			return jdbcClient.sql(SELECT_GUIDE_QUERY)
 				.param(guide_id)
 				.param(player_id)
-				.query((rset, rowNum) -> new Guide(
+				.query((rset, _) -> new Guide(
 					guide_id,
 					player_id,
 					rset.getString("title")
@@ -159,7 +159,7 @@ public class GuideDAO extends com.aionemu.gameserver.dao.GuideDAO {
 	public int[] getUsedIDs() {
 		try {
 			List<Integer> ids = jdbcClient.sql(SELECT_USED_IDS_QUERY)
-				.query((rs, rowNum) -> rs.getInt("guide_id"))
+				.query((rs, _) -> rs.getInt("guide_id"))
 				.list();
 			int[] result = new int[ids.size()];
 			for (int i = 0; i < ids.size(); i++) {

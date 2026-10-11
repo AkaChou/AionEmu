@@ -74,7 +74,7 @@ public class PlayerEffectsDAO extends com.aionemu.gameserver.dao.PlayerEffectsDA
         try {
             List<SavedEffect> savedEffects = jdbcClient.sql(SELECT_QUERY)
                 .param(player.getObjectId())
-                .query((rset, rowNum) -> {
+                .query((rset, _) -> {
                     int skillId = rset.getInt("skill_id");
                     int skillLvl = rset.getInt("skill_lvl");
                     int remainingTime = rset.getInt("current_time");
@@ -125,7 +125,7 @@ public class PlayerEffectsDAO extends com.aionemu.gameserver.dao.PlayerEffectsDA
         }
 
         try {
-            transactionTemplate.executeWithoutResult(status -> {
+            transactionTemplate.executeWithoutResult(_ -> {
                 jdbcClient.sql(DELETE_QUERY)
                     .param(player.getObjectId())
                     .update();
@@ -177,20 +177,7 @@ public class PlayerEffectsDAO extends com.aionemu.gameserver.dao.PlayerEffectsDA
      * 批量清理已过期的效果记录。
      * Batch-deletes expired effect records.
      */
-    public void deleteExpiredEffects() {
-        try {
-            int deleted = jdbcClient.sql(DELETE_EXPIRED_QUERY)
-                .param(System.currentTimeMillis())
-                .update();
-
-            if (deleted > 0) {
-                log.info(I18n.get("log.4854575cda2a", deleted));
-            }
-        } catch (DataAccessException e) {
-            log.error(I18n.get("log.217d09d4548d"), e);
-        }
-    }
-
+    
     /**
      * 判断当前数据库是否受本 DAO 支持。
      * Checks whether the given database is supported by this DAO.

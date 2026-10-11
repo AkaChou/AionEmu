@@ -25,8 +25,7 @@ public abstract class VeteranRewardsDAO implements DAO {
 	 * Deletes a veteran reward by id.
 	 * @param id_veteran_reward 老兵奖励 ID / veteran reward id
 	 */
-	public abstract void delVeteranReward(final int id_veteran_reward);
-
+	
 	public void deleteInTransaction(Connection connection, int rewardId) throws SQLException {
 		throw new UnsupportedOperationException();
 	}

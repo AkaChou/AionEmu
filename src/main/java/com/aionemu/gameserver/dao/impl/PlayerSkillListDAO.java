@@ -117,7 +117,7 @@ public class PlayerSkillListDAO extends com.aionemu.gameserver.dao.PlayerSkillLi
 		try {
 			skills = jdbcClient.sql(SELECT_QUERY)
 				.param(playerId)
-				.query((rset, rowNum) -> {
+				.query((rset, _) -> {
 					int id = rset.getInt("skill_id");
 					int lv = rset.getInt("skill_level");
 					int skin_id = rset.getInt("skin_id");
@@ -179,7 +179,7 @@ public class PlayerSkillListDAO extends com.aionemu.gameserver.dao.PlayerSkillLi
 	 */
 	private boolean store(Player player, List<PlayerSkillEntry> skills) {
 		try {
-			transactionTemplate.executeWithoutResult(status -> {
+			transactionTemplate.executeWithoutResult(_ -> {
 				try (Connection con = DatabaseFactory.getConnection()) {
 					deleteSkills(con, player, skills);
 					addSkills(con, player, skills);
@@ -310,56 +310,9 @@ public class PlayerSkillListDAO extends com.aionemu.gameserver.dao.PlayerSkillLi
 		}
 	}
 
-	/**
-	 * 获取技能皮肤激活日期。
-	 * Returns the skill skin active date.
-	 *
-	 * @param playerObjId 玩家对象 ID / player object id
-	 * @param skillId     技能 ID / skill id
-	 * @return 激活时间戳；无记录返回 null / active timestamp, or null if none
-	 */
-	@Override
-	public Timestamp getSkinSkillActiveDateById(int playerObjId, int skillId) {
-		String query = "SELECT `skin_active_date` FROM `player_skills` " + "WHERE `player_id` = ? AND `skill_id` = ?";
+	
 
-		try {
-			return jdbcClient.sql(query)
-				.param(playerObjId)
-				.param(skillId)
-				.query(Timestamp.class)
-				.optional()
-				.orElse(null);
-		} catch (DataAccessException e) {
-			log.error(I18n.get("log.32a835694574", playerObjId, skillId), e);
-			return null;
-		}
-	}
-
-	/**
-	 * 获取技能皮肤过期时间。
-	 * Returns the skill skin expire time.
-	 *
-	 * @param playerObjId 玩家对象 ID / player object id
-	 * @param skillId     技能 ID / skill id
-	 * @return 过期时间；无记录返回 0 / expire time, or 0 if none
-	 */
-	@Override
-	public int getSkinExpireTime(int playerObjId, int skillId) {
-		String query = "SELECT `skin_expire_time` FROM `player_skills` " + "WHERE `player_id` = ? AND `skill_id` = ?";
-
-		try {
-			Integer expire = jdbcClient.sql(query)
-				.param(playerObjId)
-				.param(skillId)
-				.query(Integer.class)
-				.optional()
-				.orElse(0);
-			return expire != null ? expire : 0;
-		} catch (DataAccessException e) {
-			log.error(I18n.get("log.c08c665f848c", playerObjId, skillId), e);
-			return 0;
-		}
-	}
+	
 
 	/**
 	 * 判断当前数据库是否受本 DAO 支持。

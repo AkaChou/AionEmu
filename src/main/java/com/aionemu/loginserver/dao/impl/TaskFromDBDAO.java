@@ -47,7 +47,7 @@ public class TaskFromDBDAO extends com.aionemu.loginserver.dao.TaskFromDBDAO {
 
         try {
             jdbcClient.sql(SELECT_ALL_QUERY)
-                .query((rs, rowNum) -> {
+                .query((rs, _) -> {
                     try {
                         TaskFromDBTrigger trigger = TaskFromDBTriggerHolder.valueOf(rs.getString("trigger_type"))
                             .getTriggerClass()

@@ -71,7 +71,7 @@ public class PlayerEmotionListDAO extends com.aionemu.gameserver.dao.PlayerEmoti
         try {
             jdbcClient.sql(SELECT_QUERY)
                 .param(player.getObjectId())
-                .query((rset, rowNum) -> {
+                .query((rset, _) -> {
                     int emotionId = rset.getInt("emotion");
                     int remaining = rset.getInt("remaining");
 
@@ -134,71 +134,19 @@ public class PlayerEmotionListDAO extends com.aionemu.gameserver.dao.PlayerEmoti
      * Deletes all emotions of the player.
      * @param playerId 玩家 ID / player id
      */
-    public void deleteAllEmotions(int playerId) {
-        try {
-            jdbcClient.sql(DELETE_ALL_QUERY)
-                .param(playerId)
-                .update();
-        } catch (DataAccessException e) {
-            log.error(I18n.get("log.c241415a012d", playerId), e);
-        }
-    }
-
+    
     /**
      * 批量清理已过期的表情记录。
      * Batch-deletes expired emotion records.
      */
-    public void deleteExpiredEmotions() {
-        try {
-            int deleted = jdbcClient.sql(DELETE_EXPIRED_QUERY)
-                .param(System.currentTimeMillis())
-                .update();
-
-            if (deleted > 0) {
-                log.info(I18n.get("log.dd96ae8f46f9", deleted));
-            }
-        } catch (DataAccessException e) {
-            log.error(I18n.get("log.7659e80a0909"), e);
-        }
-    }
-
+    
     /**
      * 批量插入或更新玩家表情列表。
      * Batch-inserts or updates the player's emotion list.
      * @param player 玩家 / player
      * @param emotions 表情列表 / emotion list
      */
-    public void insertEmotions(Player player, EmotionList emotions) {
-        if (emotions == null) {
-            return;
-        }
-
-        Collection<Emotion> emotionCollection = emotions.getEmotions();
-        if (emotionCollection == null || emotionCollection.isEmpty()) {
-            return;
-        }
-
-        List<Emotion> emotionList = List.copyOf(emotionCollection);
-        try {
-            jdbcTemplate.batchUpdate(INSERT_QUERY, new BatchPreparedStatementSetter() {
-                @Override
-                public void setValues(PreparedStatement ps, int i) throws SQLException {
-                    Emotion emotion = emotionList.get(i);
-                    ps.setInt(1, player.getObjectId());
-                    ps.setInt(2, emotion.getId());
-                    ps.setInt(3, emotion.getExpireTime());
-                }
-
-                @Override
-                public int getBatchSize() {
-                    return emotionList.size();
-                }
-            });
-        } catch (DataAccessException e) {
-            log.error(I18n.get("log.615e4d6f5316", player.getObjectId()), e);
-        }
-    }
-
+    
     /**
      * 判断当前数据库是否受本 DAO 支持。
      * Checks whether the given database is supported by this DAO.

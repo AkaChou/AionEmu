@@ -63,7 +63,7 @@ public class AccountDAO extends com.aionemu.loginserver.dao.AccountDAO {
         try {
             return jdbcClient.sql(SELECT_BY_NAME_QUERY)
                 .param(name)
-                .query((rs, rowNum) -> mapAccount(rs))
+                .query((rs, _) -> mapAccount(rs))
                 .optional()
                 .orElse(null);
         } catch (DataAccessException e) {
@@ -77,7 +77,7 @@ public class AccountDAO extends com.aionemu.loginserver.dao.AccountDAO {
         try {
             return jdbcClient.sql(SELECT_BY_ID_QUERY)
                 .param(id)
-                .query((rs, rowNum) -> mapAccount(rs))
+                .query((rs, _) -> mapAccount(rs))
                 .optional()
                 .orElse(null);
         } catch (DataAccessException e) {
@@ -101,35 +101,6 @@ public class AccountDAO extends com.aionemu.loginserver.dao.AccountDAO {
         account.setReturn(rs.getByte("return_account"));
         account.setReturnEnd(rs.getTimestamp("return_end"));
         return account;
-    }
-
-    @Override
-    public int getAccountId(String name) {
-        try {
-            Integer id = jdbcClient.sql(SELECT_ID_BY_NAME_QUERY)
-                .param(name)
-                .query(Integer.class)
-                .optional()
-                .orElse(null);
-            return id != null ? id : -1;
-        } catch (DataAccessException e) {
-            log.error(I18n.get("log.f78188013087", name), e);
-            return -1;
-        }
-    }
-
-    @Override
-    public int getAccountCount() {
-        try {
-            Integer count = jdbcClient.sql(SELECT_COUNT_QUERY)
-                .query(Integer.class)
-                .optional()
-                .orElse(null);
-            return count != null ? count : 0;
-        } catch (DataAccessException e) {
-            log.error(I18n.get("log.0738ecab6c77"), e);
-            return 0;
-        }
     }
 
     @Override
@@ -207,30 +178,26 @@ public class AccountDAO extends com.aionemu.loginserver.dao.AccountDAO {
     }
 
     @Override
-    public boolean updateLastServer(final int accountId, final byte lastServer) {
+    public void updateLastServer(final int accountId, final byte lastServer) {
         try {
-            int affected = jdbcClient.sql(UPDATE_LAST_SERVER_QUERY)
+            jdbcClient.sql(UPDATE_LAST_SERVER_QUERY)
                 .param(lastServer)
                 .param(accountId)
                 .update();
-            return affected > 0;
         } catch (DataAccessException e) {
             log.error(I18n.get("log.7a357f84a3ac", accountId), e);
-            return false;
         }
     }
 
     @Override
-    public boolean updateLastIp(final int accountId, final String ip) {
+    public void updateLastIp(final int accountId, final String ip) {
         try {
-            int affected = jdbcClient.sql(UPDATE_LAST_IP_QUERY)
+            jdbcClient.sql(UPDATE_LAST_IP_QUERY)
                 .param(ip)
                 .param(accountId)
                 .update();
-            return affected > 0;
         } catch (DataAccessException e) {
             log.error(I18n.get("log.a2c8c099cda2", accountId), e);
-            return false;
         }
     }
 

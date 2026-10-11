@@ -26,7 +26,7 @@ public abstract class LegionMemberDAO implements IDFactoryAwareDAO {
 	 * @param legionMember 军团成员 / legion member
 	 * @return 是否成功 / whether successful
 	 */
-	public abstract boolean saveNewLegionMember(LegionMember legionMember);
+	public abstract void saveNewLegionMember(LegionMember legionMember);
 
 	/**
 	 * 将军团成员存储到数据库。

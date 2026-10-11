@@ -38,5 +38,4 @@ public abstract class EventItemsDAO implements DAO {
 	 * Deletes event item records for the given item template ID.
 	 * @param itemId 物品模板 ID / item template ID
 	 */
-	public abstract void deleteItems(final int itemId);
-}
+	}

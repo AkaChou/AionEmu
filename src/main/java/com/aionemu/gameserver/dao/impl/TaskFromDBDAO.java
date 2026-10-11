@@ -53,7 +53,7 @@ public class TaskFromDBDAO extends com.aionemu.gameserver.dao.TaskFromDBDAO {
 
 		try {
 			result.addAll(jdbcClient.sql(SELECT_ALL_QUERY)
-				.query((rset, rowNum) -> new TaskFromDB(
+				.query((rset, _) -> new TaskFromDB(
 					rset.getInt("id"),
 					rset.getString("task"),
 					rset.getString("type"),

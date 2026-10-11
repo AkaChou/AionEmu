@@ -55,7 +55,7 @@ public class PlayerVarsDAO extends com.aionemu.gameserver.dao.PlayerVarsDAO {
         try {
             jdbcClient.sql(SELECT_QUERY)
                 .param(playerId)
-                .query((rset, rowNum) -> {
+                .query((rset, _) -> {
                     String key = rset.getString("param");
                     String value = rset.getString("value");
                     map.put(key, value);

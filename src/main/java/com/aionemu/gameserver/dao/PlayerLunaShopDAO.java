@@ -62,6 +62,6 @@ public abstract class PlayerLunaShopDAO implements DAO {
 	 * @param freeChest 免费宝箱 / free chest
 	 * @return 若成功则为 true / true if successful
 	 */
-	public abstract boolean setLunaShopByObjId(final int obj, boolean freeUnderpath, boolean freeFactory,
+	public abstract void setLunaShopByObjId(final int obj, boolean freeUnderpath, boolean freeFactory,
 			boolean freeChest);
 }

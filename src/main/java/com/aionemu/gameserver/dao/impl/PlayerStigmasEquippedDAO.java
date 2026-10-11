@@ -101,7 +101,7 @@ public class PlayerStigmasEquippedDAO extends com.aionemu.gameserver.dao.PlayerS
 		try {
 			items = jdbcClient.sql(SELECT_QUERY)
 				.param(playerId)
-				.query((rset, rowNum) -> {
+				.query((rset, _) -> {
 					int id = rset.getInt("item_id");
 					String name = rset.getString("item_name");
 					return new EquippedStigmasEntry(id, name, PersistentState.UPDATED);
@@ -121,7 +121,7 @@ public class PlayerStigmasEquippedDAO extends com.aionemu.gameserver.dao.PlayerS
 	 * @return 是否成功 / whether successful
 	 */
 	@Override
-	public boolean storeItems(Player player) {
+	public void storeItems(Player player) {
 		List<EquippedStigmasEntry> skills = Lists.newArrayList(player.getEquipedStigmaList().getAllItems());
 		skills.addAll(Lists.newArrayList(player.getEquipedStigmaList().getDeletedItems()));
 		boolean hasDirty = false;
@@ -132,10 +132,10 @@ public class PlayerStigmasEquippedDAO extends com.aionemu.gameserver.dao.PlayerS
 			}
 		}
 		if (!hasDirty) {
-			return true;
+						;
 		}
 		try {
-			transactionTemplate.executeWithoutResult(status -> {
+			transactionTemplate.executeWithoutResult(_ -> {
 				try (Connection con = DatabaseFactory.getConnection()) {
 					storeItemsInTransaction(con, player);
 				} catch (SQLException e) {
@@ -144,10 +144,10 @@ public class PlayerStigmasEquippedDAO extends com.aionemu.gameserver.dao.PlayerS
 			});
 		} catch (RuntimeException e) {
 			log.error(I18n.get("log.6790b402b724", player.getObjectId()), e);
-			return false;
+						;
 		}
 		markStored(player);
-		return true;
+				;
 	}
 
 	@Override

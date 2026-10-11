@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.simple.JdbcClient;
 
 import com.aionemu.boot.i18n.I18n;
@@ -104,7 +103,7 @@ public class RewardServiceDAO extends com.aionemu.gameserver.dao.RewardServiceDA
             jdbcClient.sql(SELECT_QUERY)
                 .param(playerId)
                 .param(0)
-                .query((rs, rowNum) -> {
+                .query((rs, _) -> {
                     int unique = rs.getInt("unique");
                     int item_id = rs.getInt("item_id");
                     long count = rs.getLong("item_count");

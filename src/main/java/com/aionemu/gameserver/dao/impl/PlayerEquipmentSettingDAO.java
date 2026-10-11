@@ -52,7 +52,7 @@ public class PlayerEquipmentSettingDAO extends com.aionemu.gameserver.dao.Player
 		try {
 			jdbcClient.sql(SELECT_QUERY)
 				.param(player.getObjectId())
-				.query((rset, rowNum) -> {
+				.query((rset, _) -> {
 					equipmentSettingList.add(rset.getInt("slot"), rset.getString("name"), rset.getInt("display"),
 							rset.getInt("m_hand"), rset.getInt("s_hand"), rset.getInt("helmet"),
 							rset.getInt("torso"), rset.getInt("glove"), rset.getInt("boots"),

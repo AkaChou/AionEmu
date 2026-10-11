@@ -57,7 +57,7 @@ public class PortalCooldownsDAO extends com.aionemu.gameserver.dao.PortalCooldow
 			long now = System.currentTimeMillis();
 			jdbcClient.sql(SELECT_QUERY)
 				.param(player.getObjectId())
-				.query((rs, rowNum) -> {
+				.query((rs, _) -> {
 					int worldId = rs.getInt("world_id");
 					long reuseTime = rs.getLong("reuse_time");
 					int entryCount = rs.getInt("entry_count");

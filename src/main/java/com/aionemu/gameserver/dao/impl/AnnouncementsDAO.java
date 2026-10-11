@@ -53,7 +53,7 @@ public class AnnouncementsDAO extends com.aionemu.gameserver.dao.AnnouncementsDA
 		final Set<Announcement> result = new HashSet<>();
 		try {
 			jdbcClient.sql(SELECT_QUERY)
-				.query((rs, rowNum) -> new Announcement(
+				.query((rs, _) -> new Announcement(
 					rs.getInt("id"),
 					rs.getString("announce"),
 					rs.getString("faction"),

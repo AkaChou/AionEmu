@@ -37,7 +37,7 @@ public abstract class PlayerSkillSkinListDAO implements DAO {
 	 * @param entry 技能皮肤条目 / skill skin entry
 	 * @return 是否保存成功 / true if stored
 	 */
-	public abstract boolean storeSkillSkins(Player player, SkillSkin entry);
+	public abstract void storeSkillSkins(Player player, SkillSkin entry);
 
 	/**
 	 * 移除玩家一条技能皮肤。
@@ -46,7 +46,7 @@ public abstract class PlayerSkillSkinListDAO implements DAO {
 	 * @param skinId 皮肤 ID / skin id
 	 * @return 是否移除成功 / true if removed
 	 */
-	public abstract boolean removeSkillSkin(int playerId, int skinId);
+	public abstract void removeSkillSkin(int playerId, int skinId);
 
 	/**
 	 * 激活玩家指定技能皮肤。
@@ -64,5 +64,5 @@ public abstract class PlayerSkillSkinListDAO implements DAO {
 	 * @param skinId 皮肤 ID / skin id
 	 * @return 是否取消成功 / true if deactivated
 	 */
-	public abstract boolean setDeactive(int playerId, int skinId);
+	public abstract void setDeactive(int playerId, int skinId);
 }

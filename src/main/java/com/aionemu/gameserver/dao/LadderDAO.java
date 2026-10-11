@@ -153,24 +153,21 @@ public abstract class LadderDAO implements DAO {
 	 * @param player 玩家 / player
 	 * @return 胜场 / wins
 	 */
-	public abstract int getWins(Player player);
-
+	
 	/**
 	 * 获取玩家负场数。
 	 * Gets losses for a player.
 	 * @param player 玩家 / player
 	 * @return 败场 / losses
 	 */
-	public abstract int getLosses(Player player);
-
+	
 	/**
 	 * 获取玩家离开次数。
 	 * Gets leaves for a player.
 	 * @param player 玩家 / player
 	 * @return 离场 / leaves
 	 */
-	public abstract int getLeaves(Player player);
-
+	
 	/**
 	 * 获取玩家评分。
 	 * Gets rating for a player.
@@ -185,37 +182,32 @@ public abstract class LadderDAO implements DAO {
 	 * @param player 玩家 / player
 	 * @param wins 胜场 / wins
 	 */
-	public abstract void setWins(Player player, int wins);
-
+	
 	/**
 	 * 设置玩家负场数。
 	 * Sets losses for a player.
 	 * @param player 玩家 / player
 	 * @param losses 败场 / losses
 	 */
-	public abstract void setLosses(Player player, int losses);
-
+	
 	/**
 	 * 设置玩家离开次数。
 	 * Sets leaves for a player.
 	 * @param player 玩家 / player
 	 * @param leaves 离场 / leaves
 	 */
-	public abstract void setLeaves(Player player, int leaves);
-
+	
 	/**
 	 * 设置玩家评分。
 	 * Sets rating for a player.
 	 * @param player 玩家 / player
 	 * @param rating 评分 / rating
 	 */
-	public abstract void setRating(Player player, int rating);
-
+	
 	/**
 	 * 获取玩家的天梯数据。
 	 * Gets ladder data for a player.
 	 * @param player 玩家 / player
 	 * @return 天梯数据 / ladder data
 	 */
-	public abstract PlayerLadderData getPlayerLadderData(Player player);
-}
+	}

@@ -40,8 +40,7 @@ public abstract class PlayerRegisteredItemsDAO implements IDFactoryAwareDAO {
 	 * @param playerId 玩家对象 ID / player object id
 	 * @return 是否删除成功 / true if deleted
 	 */
-	public abstract boolean deletePlayerItems(int playerId);
-
+	
 	/**
 	 * 重置玩家房屋注册表。
 	 * Resets the house registry for the player.

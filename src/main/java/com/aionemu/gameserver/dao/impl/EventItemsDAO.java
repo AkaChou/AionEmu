@@ -56,7 +56,7 @@ public class EventItemsDAO extends com.aionemu.gameserver.dao.EventItemsDAO {
         try {
             jdbcClient.sql(SELECT_QUERY)
                 .param(player.getObjectId())
-                .query((rset, rowNum) -> {
+                .query((rset, _) -> {
                     int itemId = rset.getInt("item_id");
                     int counts = rset.getInt("counts");
                     player.addItemMaxCountOfDay(itemId, counts);
@@ -96,21 +96,7 @@ public class EventItemsDAO extends com.aionemu.gameserver.dao.EventItemsDAO {
         }
     }
 
-    /**
-     * 按物品 ID 删除全部玩家的活动物品记录。
-     * Deletes event item records for all players by item id.
-     * @param itemId 物品 ID / item id
-     */
-    @Override
-    public void deleteItems(final int itemId) {
-        try {
-            jdbcClient.sql(DELETE_ITEM_QUERY)
-                .param(itemId)
-                .update();
-        } catch (DataAccessException e) {
-            log.error(I18n.get("log.903226c3be37", itemId), e);
-        }
-    }
+    
 
     /**
      * 删除指定玩家的全部活动物品记录。

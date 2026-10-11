@@ -57,7 +57,7 @@ public class PlayerSkillSkinListDAO extends com.aionemu.gameserver.dao.PlayerSki
         try {
             jdbcClient.sql(LOAD_QUERY)
                 .param(playerId)
-                .query((rset, rowNum) -> {
+                .query((rset, _) -> {
                     int id = rset.getInt("skin_id");
                     int remaining = rset.getInt("remaining");
                     int active = rset.getInt("active");
@@ -80,7 +80,7 @@ public class PlayerSkillSkinListDAO extends com.aionemu.gameserver.dao.PlayerSki
      * @return 是否成功 / whether successful
      */
     @Override
-    public boolean storeSkillSkins(Player player, SkillSkin entry) {
+    public void storeSkillSkins(Player player, SkillSkin entry) {
         try {
             jdbcClient.sql(INSERT_QUERY)
                 .param(player.getObjectId())
@@ -88,10 +88,10 @@ public class PlayerSkillSkinListDAO extends com.aionemu.gameserver.dao.PlayerSki
                 .param(entry.getExpireTime())
                 .param(entry.getIsActive())
                 .update();
-            return true;
+                        ;
         } catch (DataAccessException e) {
             log.error(I18n.get("log.b49a1a09f26e", player.getObjectId()), e);
-            return false;
+                        ;
         }
     }
 
@@ -124,16 +124,16 @@ public class PlayerSkillSkinListDAO extends com.aionemu.gameserver.dao.PlayerSki
      * @return 是否成功 / whether successful
      */
     @Override
-    public boolean setDeactive(final int playerObjId, final int skinId) {
+    public void setDeactive(final int playerObjId, final int skinId) {
         try {
-            return jdbcClient.sql(UPDATE_ACTIVE_QUERY)
+                        jdbcClient.sql(UPDATE_ACTIVE_QUERY)
                 .param(0)
                 .param(playerObjId)
                 .param(skinId)
-                .update() > 0;
+                .update();
         } catch (DataAccessException e) {
             log.error(I18n.get("log.467b5e662059", playerObjId, skinId), e);
-            return false;
+                        ;
         }
     }
 
@@ -145,15 +145,15 @@ public class PlayerSkillSkinListDAO extends com.aionemu.gameserver.dao.PlayerSki
      * @return 是否成功 / whether successful
      */
     @Override
-    public boolean removeSkillSkin(int playerId, int skinId) {
+    public void removeSkillSkin(int playerId, int skinId) {
         try {
-            return jdbcClient.sql(DELETE_QUERY)
+                        jdbcClient.sql(DELETE_QUERY)
                 .param(playerId)
                 .param(skinId)
-                .update() > 0;
+                .update();
         } catch (DataAccessException e) {
             log.error(I18n.get("log.84df7864194f", playerId), e);
-            return false;
+                        ;
         }
     }
 

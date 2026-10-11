@@ -59,7 +59,7 @@ public class HouseObjectCooldownsDAO extends com.aionemu.gameserver.dao.HouseObj
 
             jdbcClient.sql(SELECT_QUERY)
                 .param(player.getObjectId())
-                .query((rs, rowNum) -> {
+                .query((rs, _) -> {
                     int objectId = rs.getInt("object_id");
                     long reuseTime = rs.getLong("reuse_time");
                     if (reuseTime > now) {
@@ -127,17 +127,4 @@ public class HouseObjectCooldownsDAO extends com.aionemu.gameserver.dao.HouseObj
      * 删除已过期的房屋物件冷却。
      * Deletes expired house object cooldowns.
      */
-    public void deleteExpiredCooldowns() {
-        try {
-            int deleted = jdbcClient.sql(DELETE_EXPIRED_QUERY)
-                .param(System.currentTimeMillis())
-                .update();
-
-            if (deleted > 0) {
-                log.info(I18n.get("log.2cdfa73a3757", deleted));
-            }
-        } catch (DataAccessException e) {
-            log.error(I18n.get("log.7fc2432f11b4"), e);
-        }
     }
-}

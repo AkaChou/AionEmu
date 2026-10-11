@@ -34,7 +34,7 @@ public abstract class PlayerPasskeyDAO implements DAO {
 	 * @param newPasskey 新通行码 / new passkey
 	 * @return 若成功则为 true / true if successful
 	 */
-	public abstract boolean updateForcePlayerPasskey(int accountId, String newPasskey);
+	public abstract void updateForcePlayerPasskey(int accountId, String newPasskey);
 
 	/**
 	 * 校验账号二级密码是否匹配。

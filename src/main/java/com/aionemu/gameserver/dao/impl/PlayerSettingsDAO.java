@@ -66,7 +66,7 @@ public class PlayerSettingsDAO extends com.aionemu.gameserver.dao.PlayerSettings
 		try {
 			jdbcClient.sql(SELECT_QUERY)
 				.param(playerId)
-				.query((resultSet, rowNum) -> {
+				.query((resultSet, _) -> {
 					int type = resultSet.getInt("settings_type");
 					switch (type) {
 						case 0:

@@ -53,8 +53,7 @@ public abstract class PlayerSkillListDAO implements DAO {
 	 * @param skillId 技能 ID / skill id
 	 * @return 激活时间戳 / activation timestamp
 	 */
-	public abstract Timestamp getSkinSkillActiveDateById(final int playerObjId, final int skillId);
-
+	
 	/**
 	 * 查询技能皮肤过期时间（秒）。
 	 * Returns the expire time (seconds) of a skill skin.
@@ -62,5 +61,4 @@ public abstract class PlayerSkillListDAO implements DAO {
 	 * @param skillId 技能 ID / skill id
 	 * @return 过期时间（秒） / expire time in seconds
 	 */
-	public abstract int getSkinExpireTime(final int playerObjId, final int skillId);
-}
+	}

@@ -126,7 +126,7 @@ public class BlockListDAO extends com.aionemu.gameserver.dao.BlockListDAO {
 			// 直接使用注入的 PlayerDAO。 / use the injected PlayerDAO directly
 			jdbcClient.sql(LOAD_QUERY)
 				.param(player.getObjectId())
-				.query((rs, rowNum) -> {
+				.query((rs, _) -> {
 					int blockedOid = rs.getInt("blocked_player");
 					String reason = rs.getString("reason");
 					PlayerCommonData pcd = playerDao.loadPlayerCommonData(blockedOid);

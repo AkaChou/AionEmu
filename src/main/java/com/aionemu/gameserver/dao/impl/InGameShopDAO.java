@@ -58,7 +58,7 @@ public class InGameShopDAO extends com.aionemu.gameserver.dao.InGameShopDAO {
 
         try {
             jdbcClient.sql(SELECT_QUERY)
-                .query((rs, rowNum) -> {
+                .query((rs, _) -> {
                     byte category = rs.getByte("category");
                     byte subCategory = rs.getByte("sub_category");
 
@@ -101,18 +101,17 @@ public class InGameShopDAO extends com.aionemu.gameserver.dao.InGameShopDAO {
      * @return 是否删除成功 / whether deletion succeeded
      */
     @Override
-    public boolean deleteIngameShopItem(int itemId, byte category, byte subCategory, int list) {
+    public void deleteIngameShopItem(int itemId, byte category, byte subCategory, int list) {
         try {
-            int affected = jdbcClient.sql(DELETE_QUERY)
+            jdbcClient.sql(DELETE_QUERY)
                 .param(itemId)
                 .param(category)
                 .param(subCategory)
                 .param(list)
                 .update();
-            return affected > 0;
         } catch (DataAccessException e) {
             log.error(I18n.get("log.ab89a36682b8", itemId), e);
-            return false;
+                        ;
         }
     }
 
@@ -150,16 +149,16 @@ public class InGameShopDAO extends com.aionemu.gameserver.dao.InGameShopDAO {
      * @return 是否成功 / whether succeeded
      */
     @Override
-    public boolean increaseSales(int object, int current) {
+    public void increaseSales(int object, int current) {
         try {
             jdbcClient.sql(UPDATE_SALES_QUERY)
                 .param(current)
                 .param(object)
                 .update();
-            return true;
+                        ;
         } catch (DataAccessException e) {
             log.error(I18n.get("log.2b5a5b8ef0fb", object), e);
-            return false;
+                        ;
         }
     }
 

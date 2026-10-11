@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -87,13 +86,13 @@ public class BrokerDAO extends com.aionemu.gameserver.dao.BrokerDAO {
         final List<BrokerItem> brokerItems = new ArrayList<>();
         final List<Item> items = getBrokerItems();
 
-        if (items != null && !items.isEmpty()) {
+        if (!items.isEmpty()) {
             itemStoneListDAO.load(items);
         }
 
         try {
             jdbcClient.sql(SELECT_BROKER_QUERY)
-                .query((rset, rowNum) -> {
+                .query((rset, _) -> {
                     int itemPointer = rset.getInt("item_pointer");
                     int itemId = rset.getInt("item_id");
                     long itemCount = rset.getLong("item_count");
@@ -143,7 +142,7 @@ public class BrokerDAO extends com.aionemu.gameserver.dao.BrokerDAO {
 
         try {
             jdbcClient.sql(SELECT_INVENTORY_QUERY)
-                .query((rset, rowNum) -> {
+                .query((rset, _) -> {
                     int itemUniqueId = rset.getInt("item_unique_id");
                     int itemId = rset.getInt("item_id");
                     long itemCount = rset.getLong("item_count");
@@ -328,7 +327,7 @@ public class BrokerDAO extends com.aionemu.gameserver.dao.BrokerDAO {
         String query = "SELECT id FROM players";
         try {
             List<Integer> ids = jdbcClient.sql(query)
-                .query((rs, rowNum) -> rs.getInt("id"))
+                .query((rs, _) -> rs.getInt("id"))
                 .list();
 
             int[] result = new int[ids.size()];

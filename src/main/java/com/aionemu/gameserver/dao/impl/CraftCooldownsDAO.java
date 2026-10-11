@@ -60,7 +60,7 @@ public class CraftCooldownsDAO extends com.aionemu.gameserver.dao.CraftCooldowns
             long currentTime = System.currentTimeMillis();
             jdbcClient.sql(SELECT_QUERY)
                 .param(player.getObjectId())
-                .query((rs, rowNum) -> {
+                .query((rs, _) -> {
                     int delayId = rs.getInt("delay_id");
                     long reuseTime = rs.getLong("reuse_time");
                     if (reuseTime > currentTime) {
@@ -139,20 +139,7 @@ public class CraftCooldownsDAO extends com.aionemu.gameserver.dao.CraftCooldowns
      * 删除已过期的制作冷却。
      * Deletes expired craft cooldowns.
      */
-    public void deleteExpiredCraftCooldowns() {
-        try {
-            int deleted = jdbcClient.sql(DELETE_EXPIRED_QUERY)
-                .param(System.currentTimeMillis())
-                .update();
-
-            if (deleted > 0) {
-                log.info(I18n.get("log.ed15fea2671c", deleted));
-            }
-        } catch (DataAccessException e) {
-            log.error(I18n.get("log.234aa73d4c36"), e);
-        }
-    }
-
+    
     /**
      * 是否支持当前数据库。
      * Whether the current database is supported.

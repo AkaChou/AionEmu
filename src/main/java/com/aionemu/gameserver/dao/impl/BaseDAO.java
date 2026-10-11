@@ -53,14 +53,13 @@ public class BaseDAO extends com.aionemu.gameserver.dao.BaseDAO {
      * @return 是否成功 / whether successful
      */
     @Override
-    public boolean loadBaseLocations(Map<Integer, BaseLocation> locations) {
-        boolean success = true;
+    public void loadBaseLocations(Map<Integer, BaseLocation> locations) {
 
         try {
             Map<Integer, Boolean> loadedIds = new ConcurrentHashMap<>();
 
             jdbcClient.sql(SELECT_QUERY)
-                .query((rs, rowNum) -> {
+                .query((rs, _) -> {
                     int id = rs.getInt("id");
                     BaseLocation loc = locations.get(id);
                     if (loc != null) {
@@ -79,10 +78,8 @@ public class BaseDAO extends com.aionemu.gameserver.dao.BaseDAO {
 
         } catch (DataAccessException e) {
             log.error(I18n.get("log.e6377177b72f"), e);
-            success = false;
         }
 
-        return success;
     }
 
     /**
@@ -130,67 +127,20 @@ public class BaseDAO extends com.aionemu.gameserver.dao.BaseDAO {
      * @param locations 基地位置映射 / base location map
      * @return 是否成功 / whether successful
      */
-    public boolean updateBaseLocations(Map<Integer, BaseLocation> locations) {
-        try {
-            for (BaseLocation loc : locations.values()) {
-                jdbcClient.sql(UPDATE_QUERY)
-                    .param(loc.getRace().toString())
-                    .param(loc.getId())
-                    .update();
-            }
-            return true;
-        } catch (DataAccessException e) {
-            log.error(I18n.get("log.2d182cfdc4ca"), e);
-            return false;
-        }
-    }
-
+    
     /**
      * 按阵营加载基地位置。
      * Loads base locations filtered by race.
      * @param race 阵营 / race
      * @return 基地位置映射 / base location map
      */
-    public Map<Integer, BaseLocation> loadBaseLocationsByRace(Race race) {
-        Map<Integer, BaseLocation> locations = new ConcurrentHashMap<>();
-
-        try {
-            jdbcClient.sql(SELECT_BY_RACE_QUERY)
-                .param(race.toString())
-                .query((rs, rowNum) -> {
-                    int id = rs.getInt("id");
-                    BaseLocation loc = locations.get(id);
-                    if (loc != null) {
-                        loc.setRace(Race.valueOf(rs.getString("race")));
-                        locations.put(id, loc);
-                    }
-                    return null;
-                })
-                .list();
-        } catch (DataAccessException e) {
-            log.error(I18n.get("log.f5cd772ab16f", race), e);
-        }
-
-        return locations;
-    }
-
+    
     /**
      * 将全部基地位置重置为 NPC 阵营。
      * Resets all base locations to NPC race ownership.
      * @return 是否成功 / whether successful
      */
-    public boolean resetBaseLocations() {
-        try {
-            jdbcClient.sql("UPDATE `base_location` SET `race` = ?")
-                .param(Race.NPC.toString())
-                .update();
-            return true;
-        } catch (DataAccessException e) {
-            log.error(I18n.get("log.7fe78b3d8033"), e);
-            return false;
-        }
-    }
-
+    
     /**
      * 判断当前数据库是否受本 DAO 支持。
      * Checks whether the given database is supported by this DAO.

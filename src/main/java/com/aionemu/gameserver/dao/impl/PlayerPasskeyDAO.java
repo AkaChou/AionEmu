@@ -92,15 +92,15 @@ public class PlayerPasskeyDAO extends com.aionemu.gameserver.dao.PlayerPasskeyDA
      * @return 是否更新成功 / whether update succeeded
      */
     @Override
-    public boolean updateForcePlayerPasskey(int accountId, String newPasskey) {
+    public void updateForcePlayerPasskey(int accountId, String newPasskey) {
         try {
-            return jdbcClient.sql(UPDATE_FORCE_QUERY)
+                        jdbcClient.sql(UPDATE_FORCE_QUERY)
                 .param(newPasskey)
                 .param(accountId)
-                .update() > 0;
+                .update();
         } catch (DataAccessException e) {
             log.error(I18n.get("log.9cef2da6c580", accountId), e);
-            return false;
+                        ;
         }
     }
 
@@ -117,7 +117,7 @@ public class PlayerPasskeyDAO extends com.aionemu.gameserver.dao.PlayerPasskeyDA
             return jdbcClient.sql(CHECK_QUERY)
                 .param(accountId)
                 .param(passkey)
-                .query((rset, rowNum) -> rset.getInt("cnt") == 1)
+                .query((rset, _) -> rset.getInt("cnt") == 1)
                 .optional()
                 .orElse(false);
         } catch (DataAccessException e) {
@@ -137,7 +137,7 @@ public class PlayerPasskeyDAO extends com.aionemu.gameserver.dao.PlayerPasskeyDA
         try {
             return jdbcClient.sql(EXIST_CHECK_QUERY)
                 .param(accountId)
-                .query((rset, rowNum) -> rset.getInt("cnt") == 1)
+                .query((rset, _) -> rset.getInt("cnt") == 1)
                 .optional()
                 .orElse(false);
         } catch (DataAccessException e) {

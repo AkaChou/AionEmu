@@ -36,7 +36,7 @@ public abstract class PlayerCreativityPointsDAO implements DAO {
 	 * @param paramInt3 点数值 / points value
 	 * @return 若成功则为 true / true if successful
 	 */
-	public abstract boolean storeCP(int paramInt1, int paramInt2, int paramInt3);
+	public abstract void storeCP(int paramInt1, int paramInt2, int paramInt3);
 
 	/**
 	 * 删除指定槽位的创造点数记录。
@@ -45,7 +45,7 @@ public abstract class PlayerCreativityPointsDAO implements DAO {
 	 * @param slot 槽位 / slot
 	 * @return 若成功则为 true / true if successful
 	 */
-	public abstract boolean deleteCP(int playerObjId, int slot);
+	public abstract void deleteCP(int playerObjId, int slot);
 
 	/**
 	 * 获取玩家已用创造点数槽位数。
@@ -61,5 +61,4 @@ public abstract class PlayerCreativityPointsDAO implements DAO {
 	 * @param obj 对象 ID / object id
 	 * @return 槽位对象 ID / slot object id
 	 */
-	public abstract int getCPSlotObjId(int obj);
-}
+	}

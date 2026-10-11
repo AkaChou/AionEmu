@@ -89,7 +89,7 @@ public class PlayerRegisteredItemsDAO extends com.aionemu.gameserver.dao.PlayerR
     public int[] getUsedIDs() {
         try {
             List<Integer> ids = jdbcClient.sql(SELECT_USED_IDS_QUERY)
-                .query((rs, rowNum) -> rs.getInt(1))
+                .query((rs, _) -> rs.getInt(1))
                 .list();
 
             int[] result = new int[ids.size()];
@@ -142,7 +142,7 @@ public class PlayerRegisteredItemsDAO extends com.aionemu.gameserver.dao.PlayerR
                                 dec.setFloor(0);
                             }
 
-                            List<HouseDecoration> usedForType = usedParts.computeIfAbsent(dec.getTemplate().getType(), k -> new ArrayList<>());
+                            List<HouseDecoration> usedForType = usedParts.computeIfAbsent(dec.getTemplate().getType(), _ -> new ArrayList<>());
                             usedForType.add(dec);
                         }
 
@@ -186,7 +186,7 @@ public class PlayerRegisteredItemsDAO extends com.aionemu.gameserver.dao.PlayerR
     private HouseObject<?> constructObject(final HouseRegistry registry, House house, ResultSet rset) throws SQLException {
         int itemUniqueId = rset.getInt("item_unique_id");
         VisibleObject visObj = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findVisibleObject(itemUniqueId);
-        HouseObject<?> obj = null;
+        HouseObject<?> obj ;
 
         if (visObj != null) {
             if (visObj instanceof HouseObject<?>) {
@@ -275,7 +275,7 @@ public class PlayerRegisteredItemsDAO extends com.aionemu.gameserver.dao.PlayerR
         }
 
 		try {
-			transactionTemplate.executeWithoutResult(status -> {
+			transactionTemplate.executeWithoutResult(_ -> {
 				try (Connection con = DatabaseFactory.getConnection()) {
 					deleteObjects(con, objectsToDelete);
 					deleteParts(con, partsToDelete);
@@ -334,9 +334,9 @@ public class PlayerRegisteredItemsDAO extends com.aionemu.gameserver.dao.PlayerR
         return true;
     }
 
-    private boolean storeObjects(Connection con, Collection<HouseObject<?>> objects, int playerId, boolean isNew) throws SQLException {
+    private void storeObjects(Connection con, Collection<HouseObject<?>> objects, int playerId, boolean isNew) throws SQLException {
         if (GenericValidator.isBlankOrNull(objects)) {
-            return true;
+            return;
         }
 
         String query = isNew ? INSERT_QUERY : UPDATE_QUERY;
@@ -379,13 +379,13 @@ public class PlayerRegisteredItemsDAO extends com.aionemu.gameserver.dao.PlayerR
             }
 
             stmt.executeBatch();
-            return true;
+            return;
         }
     }
 
-    private boolean storeParts(Connection con, Collection<HouseDecoration> parts, int playerId, boolean isNew) throws SQLException {
+    private void storeParts(Connection con, Collection<HouseDecoration> parts, int playerId, boolean isNew) throws SQLException {
         if (GenericValidator.isBlankOrNull(parts)) {
-            return true;
+            return;
         }
 
         String query = isNew ? INSERT_QUERY : UPDATE_QUERY;
@@ -412,13 +412,13 @@ public class PlayerRegisteredItemsDAO extends com.aionemu.gameserver.dao.PlayerR
             }
 
             stmt.executeBatch();
-            return true;
+            return;
         }
     }
 
-    private boolean deleteObjects(Connection con, Collection<HouseObject<?>> objects) throws SQLException {
+    private void deleteObjects(Connection con, Collection<HouseObject<?>> objects) throws SQLException {
         if (GenericValidator.isBlankOrNull(objects)) {
-            return true;
+            return;
         }
 
         try (PreparedStatement stmt = con.prepareStatement(DELETE_QUERY)) {
@@ -429,13 +429,13 @@ public class PlayerRegisteredItemsDAO extends com.aionemu.gameserver.dao.PlayerR
             }
 
             stmt.executeBatch();
-            return true;
+            return;
         }
     }
 
-    private boolean deleteParts(Connection con, Collection<HouseDecoration> parts) throws SQLException {
+    private void deleteParts(Connection con, Collection<HouseDecoration> parts) throws SQLException {
         if (GenericValidator.isBlankOrNull(parts)) {
-            return true;
+            return;
         }
 
         try (PreparedStatement stmt = con.prepareStatement(DELETE_QUERY)) {
@@ -446,29 +446,11 @@ public class PlayerRegisteredItemsDAO extends com.aionemu.gameserver.dao.PlayerR
             }
 
             stmt.executeBatch();
-            return true;
+            return;
         }
     }
 
-    /**
-     * 删除指定玩家的全部房屋注册物品。
-     * Deletes all house registered items for the given player.
-     * @param playerId 玩家对象 ID / player object id
-     * @return 是否删除成功 / whether delete succeeded
-     */
-    @Override
-    public boolean deletePlayerItems(int playerId) {
-        try {
-            log.info(I18n.get("log.a62e9090f3a6", playerId));
-            jdbcClient.sql(CLEAN_PLAYER_QUERY)
-                .param(playerId)
-                .update();
-            return true;
-        } catch (DataAccessException e) {
-            log.error(I18n.get("log.65741ede13d8", playerId), e);
-            return false;
-        }
-    }
+    
 
     /**
      * 重置玩家非装饰注册物品的摆放坐标与区域。

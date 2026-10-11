@@ -67,7 +67,7 @@ public class ChallengeTasksDAO extends com.aionemu.gameserver.dao.ChallengeTasks
             jdbcClient.sql(SELECT_QUERY)
                 .param(ownerId)
                 .param(type.toString())
-                .query((rset, rowNum) -> {
+                .query((rset, _) -> {
                     int taskId = rset.getInt("task_id");
                     int questId = rset.getInt("quest_id");
                     int completeCount = rset.getInt("complete_count");

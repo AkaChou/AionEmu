@@ -132,7 +132,7 @@ public class InventoryDAO extends com.aionemu.gameserver.dao.InventoryDAO {
 				.param(owner)
 				.param(storage)
 				.param(equipped)
-				.query((rset, rowNum) -> {
+				.query((rset, _) -> {
 					Item item = constructItem(storage, rset);
 					if (item.getItemTemplate() == null) {
 						log.error(I18n.get("log.9a2f5be30d7d", owner, item.getObjectId()));
@@ -173,7 +173,7 @@ public class InventoryDAO extends com.aionemu.gameserver.dao.InventoryDAO {
 			list.addAll(jdbcClient.sql(SELECT_QUERY2)
 				.param(owner)
 				.param(storageType.getId())
-				.query((rset, rowNum) -> constructItem(storage, rset))
+				.query((rset, _) -> constructItem(storage, rset))
 				.list());
 		} catch (Exception e) {
 			log.error(I18n.get("log.96d353298d09", owner), e);
@@ -201,7 +201,7 @@ public class InventoryDAO extends com.aionemu.gameserver.dao.InventoryDAO {
 				.param(playerId)
 				.param(storage)
 				.param(equipped)
-				.query((rset, rowNum) -> {
+				.query((rset, _) -> {
 					Item item = constructItem(storage, rset);
 					item.setPersistentState(PersistentState.UPDATED);
 					equipment.onLoadHandler(item);
@@ -233,7 +233,7 @@ public class InventoryDAO extends com.aionemu.gameserver.dao.InventoryDAO {
 				.param(playerId)
 				.param(storage)
 				.param(equipped)
-				.query((rset, rowNum) -> constructItem(storage, rset))
+				.query((rset, _) -> constructItem(storage, rset))
 				.list());
 		} catch (Exception e) {
 			log.error(I18n.get("log.ce1e87b43e9b", playerId), e);
@@ -283,7 +283,7 @@ public class InventoryDAO extends com.aionemu.gameserver.dao.InventoryDAO {
 		try {
 			return jdbcClient.sql(SELECT_ACCOUNT_QUERY)
 				.param(playerId)
-				.query((rset, rowNum) -> rset.getInt("account_id"))
+				.query((rset, _) -> rset.getInt("account_id"))
 				.optional()
 				.orElse(0);
 		} catch (Exception e) {
@@ -303,7 +303,7 @@ public class InventoryDAO extends com.aionemu.gameserver.dao.InventoryDAO {
 		try {
 			return jdbcClient.sql(SELECT_LEGION_QUERY)
 				.param(playerId)
-				.query((rset, rowNum) -> rset.getInt("legion_id"))
+				.query((rset, _) -> rset.getInt("legion_id"))
 				.optional()
 				.orElse(0);
 		} catch (Exception e) {
@@ -396,7 +396,7 @@ public class InventoryDAO extends com.aionemu.gameserver.dao.InventoryDAO {
 			return true;
 		}
 		try {
-			transactionTemplate.executeWithoutResult(status -> {
+			transactionTemplate.executeWithoutResult(_ -> {
 				try (Connection con = DatabaseFactory.getConnection()) {
 					storeInTransaction(con, items, playerId, accountId, legionId);
 				} catch (SQLException e) {
@@ -468,11 +468,11 @@ public class InventoryDAO extends com.aionemu.gameserver.dao.InventoryDAO {
 		return playerId != null ? playerId : 0;
 	}
 
-	private boolean insertItems(Connection con, Collection<Item> items, Integer playerId, Integer accountId, Integer legionId)
+	private void insertItems(Connection con, Collection<Item> items, Integer playerId, Integer accountId, Integer legionId)
 		throws SQLException {
 
 		if (GenericValidator.isBlankOrNull(items)) {
-			return true;
+			return;
 		}
 
 		try (PreparedStatement stmt = con.prepareStatement(INSERT_QUERY)) {
@@ -515,17 +515,17 @@ public class InventoryDAO extends com.aionemu.gameserver.dao.InventoryDAO {
 			}
 
 			ensureBatchChanged(stmt.executeBatch(), items.size(), "insert");
-			return true;
+			return;
 		} catch (SQLException e) {
 			log.error(I18n.get("log.f078e8399e22"), e);
 			throw e;
 		}
 	}
 
-	private boolean updateItems(Connection con, Collection<Item> items, Integer playerId, Integer accountId, Integer legionId) throws SQLException {
+	private void updateItems(Connection con, Collection<Item> items, Integer playerId, Integer accountId, Integer legionId) throws SQLException {
 
 		if (GenericValidator.isBlankOrNull(items)) {
-			return true;
+			return;
 		}
 
 		try (PreparedStatement stmt = con.prepareStatement(UPDATE_QUERY)) {
@@ -567,16 +567,16 @@ public class InventoryDAO extends com.aionemu.gameserver.dao.InventoryDAO {
 			}
 
 			ensureBatchChanged(stmt.executeBatch(), items.size(), "update");
-			return true;
+			return;
 		} catch (SQLException e) {
 			log.error(I18n.get("log.ac4bea7b080f"), e);
 			throw e;
 		}
 	}
 
-	private boolean deleteItems(Connection con, Collection<Item> items) throws SQLException {
+	private void deleteItems(Connection con, Collection<Item> items) throws SQLException {
 		if (GenericValidator.isBlankOrNull(items)) {
-			return true;
+			return;
 		}
 
 		try (PreparedStatement stmt = con.prepareStatement(DELETE_QUERY)) {
@@ -586,7 +586,7 @@ public class InventoryDAO extends com.aionemu.gameserver.dao.InventoryDAO {
 			}
 
 			stmt.executeBatch();
-			return true;
+			return;
 		} catch (SQLException e) {
 			log.error(I18n.get("log.8c6bf238353d"), e);
 			throw e;
@@ -652,7 +652,7 @@ public class InventoryDAO extends com.aionemu.gameserver.dao.InventoryDAO {
 	public int[] getUsedIDs() {
 		try {
 			List<Integer> ids = jdbcClient.sql(SELECT_USED_IDS_QUERY)
-				.query((rs, rowNum) -> rs.getInt("item_unique_id"))
+				.query((rs, _) -> rs.getInt("item_unique_id"))
 				.list();
 
 			int[] result = new int[ids.size()];

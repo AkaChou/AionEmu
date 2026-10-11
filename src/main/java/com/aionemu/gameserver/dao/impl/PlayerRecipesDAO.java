@@ -60,7 +60,7 @@ public class PlayerRecipesDAO extends com.aionemu.gameserver.dao.PlayerRecipesDA
 		try {
 			recipeList.addAll(jdbcClient.sql(SELECT_QUERY)
 				.param(playerId)
-				.query((rs, rowNum) -> rs.getInt("recipe_id"))
+				.query((rs, _) -> rs.getInt("recipe_id"))
 				.list());
 		} catch (DataAccessException e) {
 			log.error(I18n.get("log.5a3357334006", playerId), e);

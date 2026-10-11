@@ -66,7 +66,7 @@ public class PlayerAtreianBestiaryDAO extends PlayerABDAO {
         try {
             cp = jdbcClient.sql(SELECT_QUERY)
                 .param(player.getObjectId())
-                .query((rset, rowNum) -> {
+                .query((rset, _) -> {
                     int id = rset.getInt("id");
                     int kill_count = rset.getInt("kill_count");
                     int level = rset.getInt("level");
@@ -142,10 +142,10 @@ public class PlayerAtreianBestiaryDAO extends PlayerABDAO {
             Integer count = jdbcClient.sql(SELECT_KILL_COUNT_QUERY)
                 .param(playerObjId)
                 .param(id)
-                .query((rs, rowNum) -> rs.getInt("kill_count"))
+                .query((rs, _) -> rs.getInt("kill_count"))
                 .optional()
                 .orElse(0);
-            return count != null ? count : 0;
+            return count;
         } catch (DataAccessException e) {
             log.debug("No kill count found for player {}, id {}", playerObjId, id);
             return 0;
@@ -165,10 +165,10 @@ public class PlayerAtreianBestiaryDAO extends PlayerABDAO {
             Integer level = jdbcClient.sql(SELECT_LEVEL_QUERY)
                 .param(playerObjId)
                 .param(id)
-                .query((rs, rowNum) -> rs.getInt("level"))
+                .query((rs, _) -> rs.getInt("level"))
                 .optional()
                 .orElse(0);
-            return level != null ? level : 0;
+            return level;
         } catch (DataAccessException e) {
             log.debug("No level found for player {}, id {}", playerObjId, id);
             return 0;
@@ -188,10 +188,10 @@ public class PlayerAtreianBestiaryDAO extends PlayerABDAO {
             Integer claim = jdbcClient.sql(SELECT_CLAIM_REWARD_QUERY)
                 .param(playerObjId)
                 .param(id)
-                .query((rs, rowNum) -> rs.getInt("claim_reward"))
+                .query((rs, _) -> rs.getInt("claim_reward"))
                 .optional()
                 .orElse(0);
-            return claim != null ? claim : 0;
+            return claim;
         } catch (DataAccessException e) {
             log.debug("No claim reward found for player {}, id {}", playerObjId, id);
             return 0;

@@ -49,7 +49,7 @@ public class PlayerAppearanceDAO extends com.aionemu.gameserver.dao.PlayerAppear
         try {
             return jdbcClient.sql(SELECT_QUERY)
                 .param(playerId)
-                .query((resultSet, rowNum) -> {
+                .query((resultSet, _) -> {
                     PlayerAppearance pa = new PlayerAppearance();
                     pa.setVoice(resultSet.getInt("voice"));
                     pa.setSkinRGB(resultSet.getInt("skin_rgb"));

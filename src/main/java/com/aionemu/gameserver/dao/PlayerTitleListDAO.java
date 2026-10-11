@@ -52,7 +52,7 @@ public abstract class PlayerTitleListDAO implements DAO {
 	 * @param entry 称号条目 / title entry
 	 * @return 是否保存成功 / true if stored
 	 */
-	public abstract boolean storeTitles(Player player, Title entry);
+	public abstract void storeTitles(Player player, Title entry);
 
 	/**
 	 * 移除玩家一条称号。
@@ -61,5 +61,5 @@ public abstract class PlayerTitleListDAO implements DAO {
 	 * @param titleId 称号 ID / title id
 	 * @return 是否移除成功 / true if removed
 	 */
-	public abstract boolean removeTitle(int playerId, int titleId);
+	public abstract void removeTitle(int playerId, int titleId);
 }

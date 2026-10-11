@@ -30,7 +30,7 @@ public abstract class LegionDAO implements IDFactoryAwareDAO {
 	 * @param legion 军团 / legion
 	 * @return 是否成功 / whether successful
 	 */
-	public abstract boolean saveNewLegion(Legion legion);
+	public abstract void saveNewLegion(Legion legion);
 
 	/**
 	 * 存储军团数据。
@@ -78,7 +78,7 @@ public abstract class LegionDAO implements IDFactoryAwareDAO {
 	 * @param message 公告消息 / announcement message
 	 * @return 是否成功 / whether successful
 	 */
-	public abstract boolean saveNewAnnouncement(int legionId, Timestamp currentTime, String message);
+	public abstract void saveNewAnnouncement(int legionId, Timestamp currentTime, String message);
 
 	/**
 	 * 返回本 DAO 的唯一类名标识。
@@ -136,7 +136,7 @@ public abstract class LegionDAO implements IDFactoryAwareDAO {
 	 * @param legionHistory 军团历史 / legion history
 	 * @return 是否成功 / whether successful
 	 */
-	public abstract boolean saveNewLegionHistory(int legionId, LegionHistory legionHistory);
+	public abstract void saveNewLegionHistory(int legionId, LegionHistory legionHistory);
 
 	/**
 	 * 更新军团描述。
@@ -173,8 +173,7 @@ public abstract class LegionDAO implements IDFactoryAwareDAO {
 	 * Deletes a legion join request.
 	 * @param legionJoinRequest 加入申请 / join request
 	 */
-	public abstract void deleteLegionJoinRequest(LegionJoinRequest legionJoinRequest);
-
+	
 	/**
 	 * 获取拥有领地的军团 ID 集合。
 	 * Gets IDs of legions that own territories.

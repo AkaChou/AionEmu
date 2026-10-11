@@ -56,7 +56,7 @@ public class PlayerShugoSweepDAO extends com.aionemu.gameserver.dao.PlayerShugoS
         try {
             jdbcClient.sql(SELECT_QUERY)
                 .param(player.getObjectId())
-                .query((rset, rowNum) -> {
+                .query((rset, _) -> {
                     int dice = rset.getInt("free_dice");
                     int step = rset.getInt("sweep_step");
                     int boardId = rset.getInt("board_id");
@@ -177,7 +177,7 @@ public class PlayerShugoSweepDAO extends com.aionemu.gameserver.dao.PlayerShugoS
      * @return 是否成功 / whether succeeded
      */
     @Override
-    public boolean setShugoSweepByObjId(int obj, final int freeDice, final int step, int boardId) {
+    public void setShugoSweepByObjId(int obj, final int freeDice, final int step, int boardId) {
         try {
             jdbcClient.sql(UPDATE_QUERY)
                 .param(freeDice)
@@ -185,10 +185,10 @@ public class PlayerShugoSweepDAO extends com.aionemu.gameserver.dao.PlayerShugoS
                 .param(boardId)
                 .param(obj)
                 .update();
-            return true;
+            return;
         } catch (DataAccessException e) {
             log.error(I18n.get("log.88e530b6f3ac", obj), e);
-            return false;
+            return;
         }
     }
 

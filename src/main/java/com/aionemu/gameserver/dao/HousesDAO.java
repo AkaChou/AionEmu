@@ -39,8 +39,7 @@ public abstract class HousesDAO implements IDFactoryAwareDAO {
 	 * @param houseObjectId 房屋对象 ID / house object ID
 	 * @return 是否已使用 / whether used
 	 */
-	public abstract boolean isIdUsed(int houseObjectId);
-
+	
 	/**
 	 * 存储房屋。
 	 * Stores a house.

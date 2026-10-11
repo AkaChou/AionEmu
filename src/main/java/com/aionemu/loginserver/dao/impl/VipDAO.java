@@ -44,7 +44,7 @@ public class VipDAO extends com.aionemu.loginserver.dao.VipDAO {
         try {
             return jdbcClient.sql(FIND_QUERY)
                 .param(accountId)
-                .query((rs, rowNum) -> new Vip(
+                .query((rs, _) -> new Vip(
                     rs.getInt("account_id"),
                     rs.getInt("vip_level"),
                     rs.getLong("vip_exp"),

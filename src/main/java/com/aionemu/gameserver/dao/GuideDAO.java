@@ -28,7 +28,7 @@ public abstract class GuideDAO implements IDFactoryAwareDAO {
 	 * @param guide_id 向导 ID / guide ID
 	 * @return 是否成功 / whether successful
 	 */
-	public abstract boolean deleteGuide(int guide_id);
+	public abstract void deleteGuide(int guide_id);
 
 	/**
 	 * 加载玩家的全部引导。

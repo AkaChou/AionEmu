@@ -81,7 +81,7 @@ public class FriendListDAO extends com.aionemu.gameserver.dao.FriendListDAO {
             // 直接使用注入的 PlayerDAO。 / use the injected PlayerDAO directly
             jdbcClient.sql(LOAD_QUERY)
                 .param(player.getObjectId())
-                .query((rs, rowNum) -> {
+                .query((rs, _) -> {
                     int objId = rs.getInt("friend");
                     PlayerCommonData pcd = dao.loadPlayerCommonData(objId);
                     if (pcd != null) {
@@ -104,7 +104,7 @@ public class FriendListDAO extends com.aionemu.gameserver.dao.FriendListDAO {
      * @return 是否成功 / whether successful
      */
     @Override
-    public boolean addFriends(final Player player, final Player friend) {
+    public void addFriends(final Player player, final Player friend) {
         try {
             jdbcClient.sql(ADD_QUERY)
                 .param(player.getObjectId())
@@ -114,10 +114,10 @@ public class FriendListDAO extends com.aionemu.gameserver.dao.FriendListDAO {
                 .param(friend.getObjectId())
                 .param(player.getObjectId())
                 .update();
-            return true;
+                        ;
         } catch (DataAccessException e) {
             log.error(I18n.get("log.3eacec776c80", player.getObjectId(), friend.getObjectId()), e);
-            return false;
+                        ;
         }
     }
 

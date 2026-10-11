@@ -3,11 +3,9 @@ package com.aionemu.gameserver.dao.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.sql.Timestamp;
 import java.sql.Types;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -87,7 +85,7 @@ public class HousesDAO extends com.aionemu.gameserver.dao.HousesDAO {
 	public int[] getUsedIDs() {
 		try {
 			List<Integer> ids = jdbcClient.sql(SELECT_USED_IDS_QUERY)
-				.query((rs, rowNum) -> rs.getInt(1))
+				.query((rs, _) -> rs.getInt(1))
 				.list();
 
 			int[] result = new int[ids.size()];
@@ -115,27 +113,7 @@ public class HousesDAO extends com.aionemu.gameserver.dao.HousesDAO {
 		return DAOUtils.supports(databaseName, majorVersion, minorVersion);
 	}
 
-	/**
-	 * 判断指定房屋对象 ID 是否已使用。
-	 * Checks whether the given house object id is already used.
-	 *
-	 * @param houseObjectId 房屋对象 ID / house object id
-	 * @return 是否已使用 / whether used
-	 */
-	@Override
-	public boolean isIdUsed(int houseObjectId) {
-		try {
-			Integer count = jdbcClient.sql(CHECK_ID_USED_QUERY)
-				.param(houseObjectId)
-				.query(Integer.class)
-				.optional()
-				.orElse(0);
-			return count != null && count > 0;
-		} catch (DataAccessException e) {
-			log.error(I18n.get("log.a9a5e7d0614f", houseObjectId), e);
-			return true;
-		}
-	}
+	
 
 	/**
 	 * 持久化房屋（按状态执行插入或更新）。
@@ -239,7 +217,7 @@ public class HousesDAO extends com.aionemu.gameserver.dao.HousesDAO {
 
 		try {
 			jdbcClient.sql(query)
-				.query((rset, rowNum) -> {
+				.query((rset, _) -> {
 					int houseId = rset.getInt("id");
 					int buildingId = rset.getInt("building_id");
 					int addressId = rset.getInt("address");

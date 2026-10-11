@@ -62,7 +62,7 @@ public class PremiumDAO extends com.aionemu.loginserver.dao.PremiumDAO {
         try {
             List<RewardEntry> list = jdbcClient.sql(SELECT_REWARDS_QUERY)
                 .param(accountId)
-                .query((rs, rowNum) -> new RewardEntry(rs.getInt("uniqId"), rs.getLong("points")))
+                .query((rs, _) -> new RewardEntry(rs.getInt("uniqId"), rs.getLong("points")))
                 .list();
             for (RewardEntry entry : list) {
                 points += entry.points();
@@ -107,12 +107,11 @@ public class PremiumDAO extends com.aionemu.loginserver.dao.PremiumDAO {
     @Override
     public long getLuna(int accountId) {
         try {
-            Long luna = jdbcClient.sql(SELECT_LUNA_QUERY)
+            return jdbcClient.sql(SELECT_LUNA_QUERY)
                 .param(accountId)
                 .query(Long.class)
                 .optional()
-                .orElse(null);
-            return luna != null ? luna : 0L;
+                .orElse(0L);
         } catch (DataAccessException e) {
             log.error(I18n.get("log.d397b8bcef72", accountId), e);
             return 0L;
@@ -120,16 +119,15 @@ public class PremiumDAO extends com.aionemu.loginserver.dao.PremiumDAO {
     }
 
     @Override
-    public boolean updateLuna(int accountId, long luna) {
+    public void updateLuna(int accountId, long luna) {
         try {
-            int affected = jdbcClient.sql(UPDATE_LUNA_QUERY)
+            jdbcClient.sql(UPDATE_LUNA_QUERY)
                 .param(luna)
                 .param(accountId)
                 .update();
-            return affected > 0;
         } catch (DataAccessException e) {
             log.error(I18n.get("log.83d2610955c2", accountId), e);
-            return false;
+            return;
         }
     }
 

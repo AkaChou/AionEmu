@@ -35,7 +35,7 @@ public abstract class MotionDAO implements DAO {
 	 * @param motion 动作 / motion
 	 * @return 若成功则为 true / true if successful
 	 */
-	public abstract boolean storeMotion(int objectId, Motion motion);
+	public abstract void storeMotion(int objectId, Motion motion);
 
 	/**
 	 * 更新已有动作记录。
@@ -44,7 +44,7 @@ public abstract class MotionDAO implements DAO {
 	 * @param motion 动作 / motion
 	 * @return 若成功则为 true / true if successful
 	 */
-	public abstract boolean updateMotion(int objectId, Motion motion);
+	public abstract void updateMotion(int objectId, Motion motion);
 
 	/**
 	 * 删除指定动作。
@@ -53,7 +53,7 @@ public abstract class MotionDAO implements DAO {
 	 * @param motionId 动作 ID / motion id
 	 * @return 若成功则为 true / true if successful
 	 */
-	public abstract boolean deleteMotion(int objectId, int motionId);
+	public abstract void deleteMotion(int objectId, int motionId);
 
 	/**
 	 * 返回本 DAO 的唯一类名标识。

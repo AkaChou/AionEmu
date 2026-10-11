@@ -66,7 +66,7 @@ public class SeasonRankingDAO extends com.aionemu.gameserver.dao.SeasonRankingDA
         try {
             jdbcClient.sql(SELECT_PLAYERS_RANKING)
                 .param(tableId)
-                .query((resultSet, rowNum) -> {
+                .query((resultSet, _) -> {
                     String name = resultSet.getString("players.name");
                     int rank = resultSet.getInt("competition_ranking.rank");
                     int last_rank = resultSet.getInt("competition_ranking.last_rank");
@@ -111,7 +111,7 @@ public class SeasonRankingDAO extends com.aionemu.gameserver.dao.SeasonRankingDA
             GoldArenaRank arenaRank = jdbcClient.sql(SELECT_MY_HISTORY)
                 .param(playerId)
                 .param(tableId)
-                .query((resultSet, rowNum) -> {
+                .query((resultSet, _) -> {
                     int rank = resultSet.getInt("rank");
                     int best_rank = resultSet.getInt("last_rank");
                     int point = resultSet.getInt("points");
@@ -140,36 +140,7 @@ public class SeasonRankingDAO extends com.aionemu.gameserver.dao.SeasonRankingDA
         }
     }
 
-    /**
-     * 按持久化状态保存玩家黄金竞技场排行（table_id = 1）。
-     * Stores the player's Gold Arena rank by persistent state (table_id = 1).
-     * @param player 玩家 / player
-     * @return 是否保存成功；无排行对象时返回 false / whether store succeeded; false if rank is null
-     */
-    @Override
-    public boolean storeGoldArenaRank(Player player) {
-        GoldArenaRank rank = player.getArenaGoldRank();
-        if (rank == null) {
-            return false;
-        }
-
-        boolean result = false;
-        switch (rank.getPersistentState()) {
-            case NEW:
-                result = addGoldRank(player.getObjectId(), rank);
-                break;
-            case UPDATE_REQUIRED:
-                result = updateGoldRank(player.getObjectId(), rank);
-                break;
-            default:
-                return true;
-        }
-
-        if (result) {
-            rank.setPersistentState(PersistentState.UPDATED);
-        }
-        return result;
-    }
+    
 
     private boolean addGoldRank(final int objectId, final GoldArenaRank rank) {
         try {
@@ -218,13 +189,13 @@ public class SeasonRankingDAO extends com.aionemu.gameserver.dao.SeasonRankingDA
      * @return 是否保存成功；无排行对象时返回 false / whether store succeeded; false if rank is null
      */
     @Override
-    public boolean storeTowerRank(Player player) {
+    public void storeTowerRank(Player player) {
         TowerOfChallengeRank rank = player.getTowerRank();
         if (rank == null) {
-            return false;
+            return;
         }
 
-        boolean result = false;
+        boolean result ;
         switch (rank.getPersistentState()) {
             case NEW:
                 result = addTowerRank(player.getObjectId(), rank);
@@ -233,13 +204,12 @@ public class SeasonRankingDAO extends com.aionemu.gameserver.dao.SeasonRankingDA
                 result = updateTowerRank(player.getObjectId(), rank);
                 break;
             default:
-                return true;
+                return;
         }
 
         if (result) {
             rank.setPersistentState(PersistentState.UPDATED);
         }
-        return result;
     }
 
     private boolean addTowerRank(final int objectId, final TowerOfChallengeRank rank) {
@@ -282,36 +252,7 @@ public class SeasonRankingDAO extends com.aionemu.gameserver.dao.SeasonRankingDA
         }
     }
 
-    /**
-     * 按持久化状态保存玩家孤独竞技场排行（table_id = 541）。
-     * Stores the player's Arena of Tenacity rank by persistent state (table_id = 541).
-     * @param player 玩家 / player
-     * @return 是否保存成功；无排行对象时返回 false / whether store succeeded; false if rank is null
-     */
-    @Override
-    public boolean storeTenacityRank(Player player) {
-        ArenaOfTenacityRank rank = player.getTenacityRank();
-        if (rank == null) {
-            return false;
-        }
-
-        boolean result = false;
-        switch (rank.getPersistentState()) {
-            case NEW:
-                result = addTenacityRank(player.getObjectId(), rank);
-                break;
-            case UPDATE_REQUIRED:
-                result = updateTenacityRank(player.getObjectId(), rank);
-                break;
-            default:
-                return true;
-        }
-
-        if (result) {
-            rank.setPersistentState(PersistentState.UPDATED);
-        }
-        return result;
-    }
+    
 
     private boolean addTenacityRank(final int objectId, final ArenaOfTenacityRank rank) {
         try {
@@ -353,36 +294,7 @@ public class SeasonRankingDAO extends com.aionemu.gameserver.dao.SeasonRankingDA
         }
     }
 
-    /**
-     * 按持久化状态保存玩家 6v6 竞技场排行（table_id = 3）。
-     * Stores the player's 6v6 Arena rank by persistent state (table_id = 3).
-     * @param player 玩家 / player
-     * @return 是否保存成功；无排行对象时返回 false / whether store succeeded; false if rank is null
-     */
-    @Override
-    public boolean store6v6Rank(Player player) {
-        Arena6V6Ranking rank = player.get6v6Rank();
-        if (rank == null) {
-            return false;
-        }
-
-        boolean result = false;
-        switch (rank.getPersistentState()) {
-            case NEW:
-                result = add6v6Rank(player.getObjectId(), rank);
-                break;
-            case UPDATE_REQUIRED:
-                result = update6v6Rank(player.getObjectId(), rank);
-                break;
-            default:
-                return true;
-        }
-
-        if (result) {
-            rank.setPersistentState(PersistentState.UPDATED);
-        }
-        return result;
-    }
+    
 
     private boolean add6v6Rank(final int objectId, final Arena6V6Ranking rank) {
         try {
@@ -437,7 +349,7 @@ public class SeasonRankingDAO extends com.aionemu.gameserver.dao.SeasonRankingDA
             ArenaOfTenacityRank ranking = jdbcClient.sql(SELECT_MY_HISTORY)
                 .param(playerId)
                 .param(tableId)
-                .query((resultSet, rowNum) -> {
+                .query((resultSet, _) -> {
                     int rank = resultSet.getInt("rank");
                     int best_rank = resultSet.getInt("last_rank");
                     int point = resultSet.getInt("points");
@@ -479,7 +391,7 @@ public class SeasonRankingDAO extends com.aionemu.gameserver.dao.SeasonRankingDA
             TowerOfChallengeRank ranking = jdbcClient.sql(SELECT_MY_HISTORY)
                 .param(playerId)
                 .param(tableId)
-                .query((resultSet, rowNum) -> {
+                .query((resultSet, _) -> {
                     int rank = resultSet.getInt("rank");
                     int best_rank = resultSet.getInt("last_rank");
                     int point = resultSet.getInt("points");
@@ -520,7 +432,7 @@ public class SeasonRankingDAO extends com.aionemu.gameserver.dao.SeasonRankingDA
             Arena6V6Ranking ranking = jdbcClient.sql(SELECT_MY_HISTORY)
                 .param(playerId)
                 .param(tableId)
-                .query((resultSet, rowNum) -> {
+                .query((resultSet, _) -> {
                     int rank = resultSet.getInt("rank");
                     int best_rank = resultSet.getInt("last_rank");
                     int point = resultSet.getInt("points");

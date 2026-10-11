@@ -70,7 +70,7 @@ public class HouseScriptsDAO extends com.aionemu.gameserver.dao.HouseScriptsDAO 
         try {
             jdbcClient.sql(SELECT_QUERY)
                 .param(houseId)
-                .query((rs, rowNum) -> {
+                .query((rs, _) -> {
                     int position = rs.getInt("index");
                     String scriptXML = rs.getString("script");
                     scripts.addScript(position, scriptXML);
@@ -105,59 +105,21 @@ public class HouseScriptsDAO extends com.aionemu.gameserver.dao.HouseScriptsDAO 
         }
     }
 
-    /**
-     * 删除指定槽位脚本。
-     * Deletes the script at the given slot.
-     * @param houseId 房屋 ID / house id
-     * @param position script slot
-     */
-    @Override
-    public void deleteScript(int houseId, int position) {
-        try {
-            jdbcClient.sql(DELETE_QUERY)
-                .param(houseId)
-                .param(position)
-                .update();
-        } catch (DataAccessException e) {
-            log.error(I18n.get("log.888a7b0cab84", houseId, position), e);
-        }
-    }
+    
 
     /**
      * 删除房屋全部脚本。
      * Deletes all scripts of a house.
      * @param houseId 房屋 ID / house id
      */
-    public void deleteAllScripts(int houseId) {
-        try {
-            jdbcClient.sql(DELETE_ALL_QUERY)
-                .param(houseId)
-                .update();
-        } catch (DataAccessException e) {
-            log.error(I18n.get("log.e7dedd0f512c", houseId), e);
-        }
-    }
-
+    
     /**
      * 获取房屋脚本数量。
      * Gets the script count of a house.
      * @param houseId 房屋 ID / house id
      * @return script count
      */
-    public int getScriptCount(int houseId) {
-        try {
-            Integer count = jdbcClient.sql(SELECT_COUNT_QUERY)
-                .param(houseId)
-                .query(Integer.class)
-                .optional()
-                .orElse(0);
-            return count != null ? count : 0;
-        } catch (DataAccessException e) {
-            log.error(I18n.get("log.921bc268cc85", houseId), e);
-            return 0;
-        }
-    }
-
+    
     /**
      * 是否支持当前数据库。
      * Whether the current database is supported.

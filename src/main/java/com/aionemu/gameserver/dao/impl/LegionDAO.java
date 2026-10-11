@@ -3,7 +3,6 @@ package com.aionemu.gameserver.dao.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.support.TransactionTemplate;
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -115,7 +114,7 @@ public class LegionDAO extends com.aionemu.gameserver.dao.LegionDAO {
         try {
             return jdbcClient.sql(CHECK_NAME_USED_QUERY)
                 .param(name)
-                .query((rs, rowNum) -> rs.getInt("cnt") > 0)
+                .query((rs, _) -> rs.getInt("cnt") > 0)
                 .optional()
                 .orElse(false);
         } catch (DataAccessException e) {
@@ -135,7 +134,7 @@ public class LegionDAO extends com.aionemu.gameserver.dao.LegionDAO {
 
         try {
             legionIds.addAll(jdbcClient.sql(SELECT_LEGION_IDS_WITH_TERRITORIES)
-                .query((rs, rowNum) -> rs.getInt("id"))
+                .query((rs, _) -> rs.getInt("id"))
                 .list());
         } catch (DataAccessException e) {
             log.error(I18n.get("log.3117e02da50f"), e);
@@ -151,16 +150,16 @@ public class LegionDAO extends com.aionemu.gameserver.dao.LegionDAO {
      * @return 是否成功 / whether succeeded
      */
     @Override
-    public boolean saveNewLegion(final Legion legion) {
+    public void saveNewLegion(final Legion legion) {
         try {
             log.debug("Saving new legion: {} {}", legion.getLegionId(), legion.getLegionName());
-            return jdbcClient.sql(INSERT_LEGION_QUERY)
+                        jdbcClient.sql(INSERT_LEGION_QUERY)
                 .param(legion.getLegionId())
                 .param(legion.getLegionName())
-                .update() > 0;
+                .update();
         } catch (DataAccessException e) {
             log.error(I18n.get("log.5560e48eed9e", legion.getLegionId()), e);
-            return false;
+                        ;
         }
     }
 
@@ -216,7 +215,7 @@ public class LegionDAO extends com.aionemu.gameserver.dao.LegionDAO {
         try {
             legion = jdbcClient.sql(SELECT_LEGION_QUERY2)
                 .param(legionName)
-                .query((resultSet, rowNum) -> createLegionFromResultSet(resultSet))
+                .query((resultSet, _) -> createLegionFromResultSet(resultSet))
                 .optional()
                 .orElse(null);
         } catch (DataAccessException e) {
@@ -240,7 +239,7 @@ public class LegionDAO extends com.aionemu.gameserver.dao.LegionDAO {
         try {
             legion = jdbcClient.sql(SELECT_LEGION_QUERY1)
                 .param(legionId)
-                .query((resultSet, rowNum) -> {
+                .query((resultSet, _) -> {
                     Legion l = createLegionFromResultSet(resultSet);
 
                     // 加载加入请求 / Load join requests
@@ -297,7 +296,7 @@ public class LegionDAO extends com.aionemu.gameserver.dao.LegionDAO {
     @Override
     public void deleteLegion(int legionId) {
         try {
-            transactionTemplate.executeWithoutResult(status -> {
+            transactionTemplate.executeWithoutResult(_ -> {
                 jdbcClient.sql(DELETE_LEGION_QUERY).param(legionId).update();
                 jdbcClient.sql(CLEAR_LEGION_SIEGE).param(legionId).update();
             });
@@ -315,7 +314,7 @@ public class LegionDAO extends com.aionemu.gameserver.dao.LegionDAO {
     public int[] getUsedIDs() {
         try {
             List<Integer> ids = jdbcClient.sql(SELECT_USED_IDS_QUERY)
-                .query((rs, rowNum) -> rs.getInt("id"))
+                .query((rs, _) -> rs.getInt("id"))
                 .list();
 
             int[] result = new int[ids.size()];
@@ -342,7 +341,7 @@ public class LegionDAO extends com.aionemu.gameserver.dao.LegionDAO {
         try {
             jdbcClient.sql(SELECT_ANNOUNCEMENTLIST_QUERY)
                 .param(legionId)
-                .query((resultSet, rowNum) -> {
+                .query((resultSet, _) -> {
                     String message = resultSet.getString("announcement");
                     Timestamp date = resultSet.getTimestamp("date");
                     announcementList.put(date, message);
@@ -366,17 +365,17 @@ public class LegionDAO extends com.aionemu.gameserver.dao.LegionDAO {
      * @return 是否成功 / whether succeeded
      */
     @Override
-    public boolean saveNewAnnouncement(final int legionId, final Timestamp currentTime, final String message) {
+    public void saveNewAnnouncement(final int legionId, final Timestamp currentTime, final String message) {
         try {
             log.debug("Saving new announcement for legion: {}", legionId);
-            return jdbcClient.sql(INSERT_ANNOUNCEMENT_QUERY)
+                        jdbcClient.sql(INSERT_ANNOUNCEMENT_QUERY)
                 .param(legionId)
                 .param(message)
                 .param(currentTime)
-                .update() > 0;
+                .update();
         } catch (DataAccessException e) {
             log.error(I18n.get("log.d7d4b79baa01", legionId), e);
-            return false;
+                        ;
         }
     }
 
@@ -427,7 +426,7 @@ public class LegionDAO extends com.aionemu.gameserver.dao.LegionDAO {
         try {
             return jdbcClient.sql(SELECT_EMBLEM_QUERY)
                 .param(legionid)
-                .query((rs, rowNum) -> true)
+                .query((_, _) -> true)
                 .optional()
                 .orElse(false);
         } catch (DataAccessException e) {
@@ -482,7 +481,7 @@ public class LegionDAO extends com.aionemu.gameserver.dao.LegionDAO {
         try {
             found = jdbcClient.sql(SELECT_EMBLEM_QUERY)
                 .param(legionId)
-                .query((resultSet, rowNum) -> {
+                .query((resultSet, _) -> {
                     emblem.setEmblem(
                         resultSet.getInt("emblem_id"),
                         resultSet.getInt("color_r"),
@@ -525,7 +524,7 @@ public class LegionDAO extends com.aionemu.gameserver.dao.LegionDAO {
                 .param(legionId)
                 .param(storage)
                 .param(equipped)
-                .query((rset, rowNum) -> {
+                .query((rset, _) -> {
                     Item item = constructItem(rset, storage);
                     item.setPersistentState(PersistentState.UPDATED);
                     inventory.onLoadHandler(item);
@@ -587,7 +586,7 @@ public class LegionDAO extends com.aionemu.gameserver.dao.LegionDAO {
         try {
             jdbcClient.sql(SELECT_HISTORY_QUERY)
                 .param(legion.getLegionId())
-                .query((resultSet, rowNum) -> {
+                .query((resultSet, _) -> {
                     try {
                         history.add(new LegionHistory(
                             LegionHistoryType.valueOf(resultSet.getString("history_type")),
@@ -615,19 +614,19 @@ public class LegionDAO extends com.aionemu.gameserver.dao.LegionDAO {
      * @return 是否成功 / whether succeeded
      */
     @Override
-    public boolean saveNewLegionHistory(final int legionId, final LegionHistory legionHistory) {
+    public void saveNewLegionHistory(final int legionId, final LegionHistory legionHistory) {
         try {
-            return jdbcClient.sql(INSERT_HISTORY_QUERY)
+                        jdbcClient.sql(INSERT_HISTORY_QUERY)
                 .param(legionId)
                 .param(legionHistory.getTime())
                 .param(legionHistory.getLegionHistoryType().toString())
                 .param(legionHistory.getName())
                 .param(legionHistory.getTabId())
                 .param(legionHistory.getDescription())
-                .update() > 0;
+                .update();
         } catch (DataAccessException e) {
             log.error(I18n.get("log.db8f371bd4f0", legionId), e);
-            return false;
+                        ;
         }
     }
 
@@ -688,7 +687,7 @@ public class LegionDAO extends com.aionemu.gameserver.dao.LegionDAO {
         try {
             requestList.addAll(jdbcClient.sql(SELECT_RECRUIT_LIST_QUERY)
                 .param(legionId)
-                .query((resultSet, rowNum) -> {
+                .query((resultSet, _) -> {
                     LegionJoinRequest ljr = new LegionJoinRequest();
                     ljr.setLegionId(resultSet.getInt("legionId"));
                     ljr.setPlayerId(resultSet.getInt("playerId"));
@@ -726,15 +725,7 @@ public class LegionDAO extends com.aionemu.gameserver.dao.LegionDAO {
         }
     }
 
-    /**
-     * 按申请对象删除加入申请。
-     * Deletes a join request using the request object.
-     * @param ljr 加入申请 / join request
-     */
-    @Override
-    public void deleteLegionJoinRequest(LegionJoinRequest ljr) {
-        deleteLegionJoinRequest(ljr.getLegionId(), ljr.getPlayerId());
-    }
+    
 
     /**
      * 判断当前数据库是否受 MySQL 8 DAO 支持。

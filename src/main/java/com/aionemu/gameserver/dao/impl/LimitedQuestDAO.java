@@ -3,7 +3,6 @@ package com.aionemu.gameserver.dao.impl;
 import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.support.TransactionTemplate;
@@ -48,7 +47,7 @@ public class LimitedQuestDAO extends com.aionemu.gameserver.dao.LimitedQuestDAO 
 			return false;
 		}
 		try {
-			return Boolean.TRUE.equals(transactionTemplate.execute(status -> {
+			return Boolean.TRUE.equals(transactionTemplate.execute(_ -> {
 				initialize(questId, maxCount);
 				int updated = jdbcClient.sql(ACQUIRE_QUERY)
 					.param(questId)
@@ -67,7 +66,7 @@ public class LimitedQuestDAO extends com.aionemu.gameserver.dao.LimitedQuestDAO 
 			return false;
 		}
 		try {
-			return Boolean.TRUE.equals(transactionTemplate.execute(status -> {
+			return Boolean.TRUE.equals(transactionTemplate.execute(_ -> {
 				initialize(questId, maxCount);
 				jdbcClient.sql(RECOVER_QUERY)
 					.param(amount)

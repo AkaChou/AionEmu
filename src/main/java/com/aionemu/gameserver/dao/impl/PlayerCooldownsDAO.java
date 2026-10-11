@@ -84,7 +84,7 @@ public class PlayerCooldownsDAO extends com.aionemu.gameserver.dao.PlayerCooldow
 
             jdbcClient.sql(SELECT_QUERY)
                 .param(player.getObjectId())
-                .query((rset, rowNum) -> {
+                .query((rset, _) -> {
                     int cooldownId = rset.getInt("cooldown_id");
                     long reuseDelay = rset.getLong("reuse_delay");
 
@@ -136,7 +136,7 @@ public class PlayerCooldownsDAO extends com.aionemu.gameserver.dao.PlayerCooldow
         }
 
         try {
-            transactionTemplate.executeWithoutResult(status -> {
+            transactionTemplate.executeWithoutResult(_ -> {
                 jdbcClient.sql(DELETE_QUERY)
                     .param(player.getObjectId())
                     .update();
@@ -187,44 +187,14 @@ public class PlayerCooldownsDAO extends com.aionemu.gameserver.dao.PlayerCooldow
      * Deletes globally expired cooldown records.
      * @return 删除行数 / deleted row count
      */
-    public int deleteExpiredCooldowns() {
-        try {
-            int deleted = jdbcClient.sql(DELETE_EXPIRED_QUERY)
-                .param(System.currentTimeMillis())
-                .update();
-
-            if (deleted > 0) {
-                log.info(I18n.get("log.607cffacb3e9", deleted));
-            }
-
-            return deleted;
-        } catch (DataAccessException e) {
-            log.error(I18n.get("log.0a6ba1f18c8f"), e);
-            return 0;
-        }
-    }
-
+    
     /**
      * 获取玩家当前仍有效的冷却数量。
      * Returns the count of currently active cooldowns for a player.
      * @param playerId 玩家 ID / player id
      * @return 有效冷却数量 / active cooldown count
      */
-    public int getActiveCooldownsCount(int playerId) {
-        try {
-            Integer count = jdbcClient.sql(COUNT_QUERY)
-                .param(playerId)
-                .param(System.currentTimeMillis())
-                .query((rset, rowNum) -> rset.getInt(1))
-                .optional()
-                .orElse(0);
-            return count != null ? count : 0;
-        } catch (DataAccessException e) {
-            log.error(I18n.get("log.5eff82579a26", playerId), e);
-            return 0;
-        }
-    }
-
+    
     /**
      * 删除玩家的指定冷却条目。
      * Deletes a specific cooldown entry for a player.
@@ -232,20 +202,7 @@ public class PlayerCooldownsDAO extends com.aionemu.gameserver.dao.PlayerCooldow
      * @param cooldownId 冷却 ID / cooldown id
      * @return 是否删除成功 / whether deleted
      */
-    public boolean deletePlayerCooldown(int playerId, int cooldownId) {
-        String deleteSpecificQuery = "DELETE FROM `player_cooldowns` WHERE `player_id` = ? AND `cooldown_id` = ?";
-
-        try {
-            return jdbcClient.sql(deleteSpecificQuery)
-                .param(playerId)
-                .param(cooldownId)
-                .update() > 0;
-        } catch (DataAccessException e) {
-            log.error(I18n.get("log.a6fbc235f8b8", cooldownId, playerId), e);
-            return false;
-        }
-    }
-
+    
     /**
      * 判断玩家是否仍持有指定冷却。
      * Checks whether the player still has the specified active cooldown.
@@ -253,92 +210,13 @@ public class PlayerCooldownsDAO extends com.aionemu.gameserver.dao.PlayerCooldow
      * @param cooldownId 冷却 ID / cooldown id
      * @return 是否存在 / whether present
      */
-    public boolean hasCooldown(int playerId, int cooldownId) {
-        String checkQuery = "SELECT COUNT(*) FROM `player_cooldowns` WHERE `player_id` = ? AND `cooldown_id` = ? AND `reuse_delay` > ?";
-
-        try {
-            return jdbcClient.sql(checkQuery)
-                .param(playerId)
-                .param(cooldownId)
-                .param(System.currentTimeMillis())
-                .query((rset, rowNum) -> rset.getInt(1) > 0)
-                .optional()
-                .orElse(false);
-        } catch (DataAccessException e) {
-            log.error(I18n.get("log.5f9103b23516", cooldownId, playerId), e);
-            return false;
-        }
-    }
-
+    
     /**
      * 批量存储多名玩家的冷却数据。
      * Batch-stores cooldowns for multiple players.
      * @param playersCooldowns 玩家到冷却映射 / player-to-cooldown map
      */
-    public void storeMultiplePlayersCooldowns(Map<Player, Map<Integer, Long>> playersCooldowns) {
-        if (playersCooldowns == null || playersCooldowns.isEmpty()) {
-            return;
-        }
-
-        try {
-            transactionTemplate.executeWithoutResult(status -> {
-                List<Player> players = new ArrayList<>(playersCooldowns.keySet());
-                jdbcTemplate.batchUpdate(DELETE_QUERY, new BatchPreparedStatementSetter() {
-                    @Override
-                    public void setValues(PreparedStatement ps, int i) throws SQLException {
-                        ps.setInt(1, players.get(i).getObjectId());
-                    }
-
-                    @Override
-                    public int getBatchSize() {
-                        return players.size();
-                    }
-                });
-
-                record CooldownRow(int playerId, int cooldownId, long reuseDelay) {}
-                List<CooldownRow> rows = new ArrayList<>();
-                long currentTime = System.currentTimeMillis();
-                for (Map.Entry<Player, Map<Integer, Long>> playerEntry : playersCooldowns.entrySet()) {
-                    Player player = playerEntry.getKey();
-                    Map<Integer, Long> cooldowns = playerEntry.getValue();
-
-                    if (cooldowns == null || cooldowns.isEmpty()) {
-                        continue;
-                    }
-
-                    for (Map.Entry<Integer, Long> cooldownEntry : cooldowns.entrySet()) {
-                        Long reuseDelay = cooldownEntry.getValue();
-                        if (reuseDelay != null && reuseDelay > currentTime
-                            && DataManager.SKILL_DATA.shouldPersistCooldown(cooldownEntry.getKey())) {
-                            rows.add(new CooldownRow(player.getObjectId(), cooldownEntry.getKey(), reuseDelay));
-                        }
-                    }
-                }
-
-                if (!rows.isEmpty()) {
-                    jdbcTemplate.batchUpdate(INSERT_QUERY, new BatchPreparedStatementSetter() {
-                        @Override
-                        public void setValues(PreparedStatement ps, int i) throws SQLException {
-                            CooldownRow row = rows.get(i);
-                            ps.setInt(1, row.playerId());
-                            ps.setInt(2, row.cooldownId());
-                            ps.setLong(3, row.reuseDelay());
-                        }
-
-                        @Override
-                        public int getBatchSize() {
-                            return rows.size();
-                        }
-                    });
-                }
-            });
-            log.info(I18n.get("log.8d5799510bef", playersCooldowns.size()));
-
-        } catch (RuntimeException e) {
-            log.error(I18n.get("log.815f20825b79"), e);
-        }
-    }
-
+    
     /**
      * 判断当前数据库是否受本 DAO 支持。
      * Checks whether the given database is supported by this DAO.

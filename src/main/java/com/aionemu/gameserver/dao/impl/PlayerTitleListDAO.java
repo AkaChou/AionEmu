@@ -73,7 +73,7 @@ public class PlayerTitleListDAO extends com.aionemu.gameserver.dao.PlayerTitleLi
         try {
             jdbcClient.sql(LOAD_QUERY)
                 .param(playerId)
-                .query((rset, rowNum) -> {
+                .query((rset, _) -> {
                     int id = rset.getInt("title_id");
                     int remaining = rset.getInt("remaining");
 
@@ -120,16 +120,16 @@ public class PlayerTitleListDAO extends com.aionemu.gameserver.dao.PlayerTitleLi
      * @return 是否成功 / whether successful
      */
     @Override
-    public boolean storeTitles(Player player, Title entry) {
+    public void storeTitles(Player player, Title entry) {
         try {
-            return jdbcClient.sql(INSERT_QUERY)
+                        jdbcClient.sql(INSERT_QUERY)
                 .param(player.getObjectId())
                 .param(entry.getId())
                 .param(entry.getExpireTime())
-                .update() > 0;
+                .update();
         } catch (DataAccessException e) {
             log.error(I18n.get("log.8893f821f5fc", player.getObjectId(), entry.getId()), e);
-            return false;
+                        ;
         }
     }
 
@@ -141,15 +141,15 @@ public class PlayerTitleListDAO extends com.aionemu.gameserver.dao.PlayerTitleLi
      * @return 是否成功 / whether successful
      */
     @Override
-    public boolean removeTitle(int playerId, int titleId) {
+    public void removeTitle(int playerId, int titleId) {
         try {
-            return jdbcClient.sql(DELETE_QUERY)
+                        jdbcClient.sql(DELETE_QUERY)
                 .param(playerId)
                 .param(titleId)
-                .update() > 0;
+                .update();
         } catch (DataAccessException e) {
             log.error(I18n.get("log.4ff4bda7010a", playerId, titleId), e);
-            return false;
+                        ;
         }
     }
 
@@ -159,18 +159,7 @@ public class PlayerTitleListDAO extends com.aionemu.gameserver.dao.PlayerTitleLi
      * @param playerId 玩家 ID / player id
      * @return 是否成功 / whether successful
      */
-    public boolean removeAllTitles(int playerId) {
-        try {
-            jdbcClient.sql(DELETE_ALL_QUERY)
-                .param(playerId)
-                .update();
-            return true;
-        } catch (DataAccessException e) {
-            log.error(I18n.get("log.a782e260641e", playerId), e);
-            return false;
-        }
-    }
-
+    
     /**
      * 批量保存玩家称号列表。
      * Batch-stores the player's title list.
@@ -178,56 +167,12 @@ public class PlayerTitleListDAO extends com.aionemu.gameserver.dao.PlayerTitleLi
      * @param titles 称号列表 / title list
      * @return 是否成功 / whether successful
      */
-    public boolean storeTitles(Player player, TitleList titles) {
-        if (titles == null || titles.size() == 0) {
-            return true;
-        }
-
-        List<Title> titleList = new ArrayList<>(titles.getTitles());
-        if (titleList == null || titleList.isEmpty()) {
-            return true;
-        }
-
-        try {
-            jdbcTemplate.batchUpdate(INSERT_QUERY, new BatchPreparedStatementSetter() {
-                @Override
-                public void setValues(PreparedStatement ps, int i) throws SQLException {
-                    Title title = titleList.get(i);
-                    ps.setInt(1, player.getObjectId());
-                    ps.setInt(2, title.getId());
-                    ps.setInt(3, title.getExpireTime());
-                }
-
-                @Override
-                public int getBatchSize() {
-                    return titleList.size();
-                }
-            });
-            return true;
-        } catch (DataAccessException e) {
-            log.error(I18n.get("log.83d8bd1f33ce", player.getObjectId()), e);
-            return false;
-        }
-    }
-
+    
     /**
      * 批量清理已过期的称号记录。
      * Batch-deletes expired title records.
      */
-    public void deleteExpiredTitles() {
-        try {
-            int deleted = jdbcClient.sql(DELETE_EXPIRED_QUERY)
-                .param(System.currentTimeMillis())
-                .update();
-
-            if (deleted > 0) {
-                log.info(I18n.get("log.3d05ef4ea399", deleted));
-            }
-        } catch (DataAccessException e) {
-            log.error(I18n.get("log.1470750923e1"), e);
-        }
-    }
-
+    
     /**
      * 判断当前数据库是否受本 DAO 支持。
      * Checks whether the given database is supported by this DAO.

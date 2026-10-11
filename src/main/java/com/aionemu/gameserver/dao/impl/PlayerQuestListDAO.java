@@ -105,7 +105,7 @@ public class PlayerQuestListDAO extends com.aionemu.gameserver.dao.PlayerQuestLi
 		try {
 			jdbcClient.sql(SELECT_QUERY)
 				.param(player.getObjectId())
-				.query((rset, rowNum) -> {
+				.query((rset, _) -> {
 					int questId = rset.getInt("quest_id");
 					int questVars = rset.getInt("quest_vars");
 					int completeCount = rset.getInt("complete_count");
@@ -153,7 +153,7 @@ public class PlayerQuestListDAO extends com.aionemu.gameserver.dao.PlayerQuestLi
 		}
 
 		try {
-			transactionTemplate.executeWithoutResult(status -> {
+			transactionTemplate.executeWithoutResult(_ -> {
 				try (Connection con = DatabaseFactory.getConnection()) {
 					store(con, player);
 				} catch (SQLException e) {

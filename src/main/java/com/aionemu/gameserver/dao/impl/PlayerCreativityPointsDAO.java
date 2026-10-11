@@ -63,7 +63,7 @@ public class PlayerCreativityPointsDAO extends com.aionemu.gameserver.dao.Player
 		try {
 			cp = jdbcClient.sql(SELECT_QUERY)
 				.param(player.getObjectId())
-				.query((rset, rowNum) -> new PlayerCPEntry(
+				.query((rset, _) -> new PlayerCPEntry(
 					rset.getInt("slot"),
 					rset.getInt("point"),
 					PersistentState.UPDATED
@@ -84,16 +84,16 @@ public class PlayerCreativityPointsDAO extends com.aionemu.gameserver.dao.Player
 	 * @return 是否成功 / whether successful
 	 */
 	@Override
-	public boolean storeCP(int objectId, int slot, int point) {
+	public void storeCP(int objectId, int slot, int point) {
 		try {
-			return jdbcClient.sql(INSERT_OR_UPDATE)
+						jdbcClient.sql(INSERT_OR_UPDATE)
 				.param(objectId)
 				.param(slot)
 				.param(point)
-				.update() > 0;
+				.update();
 		} catch (DataAccessException e) {
 			log.error(I18n.get("log.ca5c95d176db", objectId, " from DB"), e);
-			return false;
+						;
 		}
 	}
 
@@ -105,15 +105,15 @@ public class PlayerCreativityPointsDAO extends com.aionemu.gameserver.dao.Player
 	 * @return 是否成功 / whether successful
 	 */
 	@Override
-	public boolean deleteCP(int objectId, int slot) {
+	public void deleteCP(int objectId, int slot) {
 		try {
-			return jdbcClient.sql(DELETE_QUERY)
+						jdbcClient.sql(DELETE_QUERY)
 				.param(objectId)
 				.param(slot)
-				.update() > 0;
+				.update();
 		} catch (DataAccessException e) {
 			log.error(I18n.get("log.55ed70097989", objectId, " from DB"), e);
-			return false;
+						;
 		}
 	}
 
@@ -128,36 +128,17 @@ public class PlayerCreativityPointsDAO extends com.aionemu.gameserver.dao.Player
 		try {
 			Integer size = jdbcClient.sql(SELECT_COUNT_QUERY)
 				.param(playerObjId)
-				.query((rs, rowNum) -> rs.getInt("size"))
+				.query((rs, _) -> rs.getInt("size"))
 				.optional()
 				.orElse(0);
-			return size != null ? size : 0;
+			return size;
 		} catch (DataAccessException e) {
 			log.error(I18n.get("log.ddd6a72fd9a0", playerObjId), e);
 			return 0;
 		}
 	}
 
-	/**
-	 * 获取玩家首个 CP 槽位 ID。
-	 * Gets the first CP slot id of a player.
-	 * @param obj 玩家对象 ID / player object id
-	 * @return 槽位 ID / slot id
-	 */
-	@Override
-	public int getCPSlotObjId(final int obj) {
-		try {
-			Integer slot = jdbcClient.sql(SELECT_SLOT_QUERY)
-				.param(obj)
-				.query((rs, rowNum) -> rs.getInt("slot"))
-				.optional()
-				.orElse(0);
-			return slot != null ? slot : 0;
-		} catch (DataAccessException e) {
-			log.error(I18n.get("log.08a2600ad0a0", obj), e);
-			return 0;
-		}
-	}
+	
 
 	/**
 	 * 是否支持当前数据库。

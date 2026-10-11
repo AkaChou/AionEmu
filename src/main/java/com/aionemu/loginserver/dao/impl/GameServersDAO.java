@@ -43,7 +43,7 @@ public class GameServersDAO extends com.aionemu.loginserver.dao.GameServersDAO {
         Map<Byte, GameServerInfo> result = new HashMap<>();
         try {
             jdbcClient.sql(SELECT_ALL_QUERY)
-                .query((rs, rowNum) -> {
+                .query((rs, _) -> {
                     byte id = rs.getByte("id");
                     String ipMask = rs.getString("mask");
                     String password = rs.getString("password");

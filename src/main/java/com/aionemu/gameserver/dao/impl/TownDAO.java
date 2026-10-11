@@ -65,7 +65,7 @@ public class TownDAO extends com.aionemu.gameserver.dao.TownDAO {
         try {
             jdbcClient.sql(SELECT_QUERY)
                 .param(race.toString())
-                .query((rs, rowNum) -> extractTownFromResultSet(rs))
+                .query((rs, _) -> extractTownFromResultSet(rs))
                 .list()
                 .forEach(town -> towns.put(town.getId(), town));
         } catch (DataAccessException e) {
@@ -80,21 +80,7 @@ public class TownDAO extends com.aionemu.gameserver.dao.TownDAO {
      * Loads all towns.
      * @return 城镇 ID 到城镇的映射 / map of town id to town
      */
-    public Map<Integer, Town> loadAll() {
-        Map<Integer, Town> towns = new ConcurrentHashMap<>();
-
-        try {
-            jdbcClient.sql(SELECT_ALL_QUERY)
-                .query((rs, rowNum) -> extractTownFromResultSet(rs))
-                .list()
-                .forEach(town -> towns.put(town.getId(), town));
-        } catch (DataAccessException e) {
-            log.error(I18n.get("log.faf0ffd96bb1"), e);
-        }
-
-        return towns;
-    }
-
+    
     /**
      * 从结果集提取城镇对象。
      * Extracts a Town from the result set.
@@ -189,22 +175,7 @@ public class TownDAO extends com.aionemu.gameserver.dao.TownDAO {
      * Upserts town data.
      * @param town 村庄 / town
      */
-    public void upsertTown(Town town) {
-        try {
-            Timestamp levelUpDate = resolveLevelUpDate(town.getLevelUpDate());
-            jdbcClient.sql(UPSERT_QUERY)
-                .param(town.getId())
-                .param(town.getLevel())
-                .param(town.getPoints())
-                .param(town.getRace().toString())
-                .param(levelUpDate)
-                .update();
-            town.setPersistentState(PersistentState.UPDATED);
-        } catch (DataAccessException e) {
-            log.error(I18n.get("log.2d0c2046cc72", town.getId()), e);
-        }
-    }
-
+    
     private static Timestamp resolveLevelUpDate(Timestamp levelUpDate) {
         if (levelUpDate == null || levelUpDate.getTime() < 1000000) {
             return new Timestamp(System.currentTimeMillis());
@@ -217,27 +188,7 @@ public class TownDAO extends com.aionemu.gameserver.dao.TownDAO {
      * Batch-upserts multiple towns.
      * @param towns 城镇集合 / iterable of towns
      */
-    public void storeTowns(Iterable<Town> towns) {
-        try {
-            for (Town town : towns) {
-                if (town == null) {
-                    continue;
-                }
-                Timestamp levelUpDate = resolveLevelUpDate(town.getLevelUpDate());
-                jdbcClient.sql(UPSERT_QUERY)
-                    .param(town.getId())
-                    .param(town.getLevel())
-                    .param(town.getPoints())
-                    .param(town.getRace().toString())
-                    .param(levelUpDate)
-                    .update();
-                town.setPersistentState(PersistentState.UPDATED);
-            }
-        } catch (DataAccessException e) {
-            log.error(I18n.get("log.e7999a48b385"), e);
-        }
-    }
-
+    
     /**
      * 判断当前数据库是否受本 DAO 支持。
      * Checks whether the given database is supported by this DAO.

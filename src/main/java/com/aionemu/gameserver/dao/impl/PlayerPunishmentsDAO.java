@@ -58,7 +58,7 @@ public class PlayerPunishmentsDAO extends com.aionemu.gameserver.dao.PlayerPunis
 			jdbcClient.sql(SELECT_QUERY)
 				.param(player.getObjectId())
 				.param(punishmentType.toString())
-				.query((rs, rowNum) -> {
+				.query((rs, _) -> {
 					if (punishmentType == PunishmentType.PRISON) {
 						player.setPrisonTimer(rs.getLong("duration") * 1000);
 					} else if (punishmentType == PunishmentType.GATHER) {
@@ -167,7 +167,7 @@ public class PlayerPunishmentsDAO extends com.aionemu.gameserver.dao.PlayerPunis
 			return jdbcClient.sql(SELECT_QUERY)
 				.param(playerId)
 				.param(PunishmentType.CHARBAN.toString())
-				.query((rs, rowNum) -> new CharacterBanInfo(
+				.query((rs, _) -> new CharacterBanInfo(
 					playerId,
 					rs.getLong("start_time"),
 					rs.getLong("duration"),

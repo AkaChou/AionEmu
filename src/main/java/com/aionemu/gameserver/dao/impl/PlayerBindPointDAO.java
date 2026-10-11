@@ -66,7 +66,7 @@ public class PlayerBindPointDAO extends com.aionemu.gameserver.dao.PlayerBindPoi
 		try {
 			jdbcClient.sql(SELECT_QUERY)
 				.param(player.getObjectId())
-				.query((rs, rowNum) -> {
+				.query((rs, _) -> {
 					int mapId = rs.getInt("map_id");
 					float x = rs.getFloat("x");
 					float y = rs.getFloat("y");
@@ -141,7 +141,7 @@ public class PlayerBindPointDAO extends com.aionemu.gameserver.dao.PlayerBindPoi
 	 */
 	@Override
 	public boolean store(final Player player) {
-		boolean insert = false;
+		boolean insert ;
 		BindPointPosition bind = player.getBindPoint();
 
 		switch (bind.getPersistentState()) {

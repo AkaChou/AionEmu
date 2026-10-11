@@ -97,82 +97,19 @@ public class LadderDAO extends com.aionemu.gameserver.dao.LadderDAO {
         addPlayerLadderData(player, "rating", rating);
     }
 
-    /**
-     * 设置玩家天梯胜利场次。
-     * Sets the player's ladder win count.
-     * @param player 玩家 / player
-     * @param wins 胜利场次 / win count
-     */
-    @Override
-    public void setWins(Player player, int wins) {
-        setPlayerLadderData(player, "wins", wins);
-    }
+    
 
-    /**
-     * 设置玩家天梯失败场次。
-     * Sets the player's ladder loss count.
-     * @param player 玩家 / player
-     * @param losses 失败次数 / loss count
-     */
-    @Override
-    public void setLosses(Player player, int losses) {
-        setPlayerLadderData(player, "losses", losses);
-    }
+    
 
-    /**
-     * 设置玩家天梯离开场次。
-     * Sets the player's ladder leave count.
-     * @param player 玩家 / player
-     * @param leaves 离开次数 / leave count
-     */
-    @Override
-    public void setLeaves(Player player, int leaves) {
-        setPlayerLadderData(player, "leaves", leaves);
-    }
+    
 
-    /**
-     * 设置玩家天梯评分。
-     * Sets the player's ladder rating.
-     * @param player 玩家 / player
-     * @param rating 评级值 / rating value
-     */
-    @Override
-    public void setRating(Player player, int rating) {
-        setPlayerLadderData(player, "rating", rating);
-    }
+    
 
-    /**
-     * 获取玩家天梯胜利场次。
-     * Returns the player's ladder win count.
-     * @param player 玩家 / player
-     * @return 胜利次数 / win count
-     */
-    @Override
-    public int getWins(Player player) {
-        return getPlayerLadderData(player, "wins");
-    }
+    
 
-    /**
-     * 获取玩家天梯失败场次。
-     * Returns the player's ladder loss count.
-     * @param player 玩家 / player
-     * @return 失败次数 / loss count
-     */
-    @Override
-    public int getLosses(Player player) {
-        return getPlayerLadderData(player, "losses");
-    }
+    
 
-    /**
-     * 获取玩家天梯离开场次。
-     * Returns the player's ladder leave count.
-     * @param player 玩家 / player
-     * @return 离开次数 / leave count
-     */
-    @Override
-    public int getLeaves(Player player) {
-        return getPlayerLadderData(player, "leaves");
-    }
+    
 
     /**
      * 获取玩家天梯评分；无记录时默认 1000。
@@ -207,7 +144,7 @@ public class LadderDAO extends com.aionemu.gameserver.dao.LadderDAO {
 
         try {
             jdbcClient.sql(SELECT_PLAYER_DATA)
-                .query((rset, rowNum) -> new PlayerInfo(
+                .query((rset, _) -> new PlayerInfo(
                     rset.getInt("player_id"),
                     rset.getInt("rating"),
                     rset.getTimestamp("last_update"),
@@ -274,30 +211,9 @@ public class LadderDAO extends com.aionemu.gameserver.dao.LadderDAO {
         }
     }
 
-    private void setPlayerLadderData(Player player, String column, int value) {
-        int playerId = player.getObjectId();
-        String query = "INSERT INTO ladder_player (player_id, " + column + ") VALUES (?, ?) "
-                + "ON DUPLICATE KEY UPDATE " + column + " = VALUES(" + column + ")";
-        try {
-            jdbcClient.sql(query)
-                .param(playerId)
-                .param(value)
-                .update();
-        } catch (DataAccessException e) {
-            log.error(I18n.get("log.4ea6502ae269", player.getObjectId()), e);
-        }
-    }
+    
 
-    public void setPlayerLadderData(Integer playerId, String column, int value) {
-        try {
-            jdbcClient.sql("UPDATE ladder_player SET " + column + " = ? WHERE player_id = ?")
-                .param(value)
-                .param(playerId)
-                .update();
-        } catch (DataAccessException e) {
-            log.error(I18n.get("log.181a09080739", playerId), e);
-        }
-    }
+    
 
     private int getPlayerLadderData(Player player, String column) {
         int playerId = player.getObjectId();
@@ -308,85 +224,22 @@ public class LadderDAO extends com.aionemu.gameserver.dao.LadderDAO {
                 .query(Integer.class)
                 .optional()
                 .orElse(0);
-            return val != null ? val : 0;
+            return val;
         } catch (DataAccessException e) {
             log.error(I18n.get("log.960d9c9f47e1", player.getObjectId()), e);
             return 0;
         }
     }
 
-    public int getPlayerLadderData(Integer playerId, String column) {
-        String query = "SELECT " + column + " FROM ladder_player WHERE player_id = ?";
-        try {
-            Integer val = jdbcClient.sql(query)
-                .param(playerId)
-                .query(Integer.class)
-                .optional()
-                .orElse(0);
-            return val != null ? val : 0;
-        } catch (DataAccessException e) {
-            log.error(I18n.get("log.29e72ebe993e", playerId), e);
-            return 0;
-        }
-    }
+    
 
-    public Timestamp getPlayerLadderUpdate(Player player) {
-        try {
-            return jdbcClient.sql(SELECT_LAST_UPDATE)
-                .param(player.getObjectId())
-                .query(Timestamp.class)
-                .optional()
-                .orElse(null);
-        } catch (DataAccessException e) {
-            log.error(I18n.get("log.faf0c73a8eb8", player.getObjectId()), e);
-            return null;
-        }
-    }
+    
 
-    public void setPlayerLadderUpdate(Player player, Timestamp value) {
-        try {
-            jdbcClient.sql(UPDATE_LAST_UPDATE)
-                .param(value)
-                .param(player.getObjectId())
-                .update();
-        } catch (DataAccessException e) {
-            log.error(I18n.get("log.052014ac9f3c", player.getObjectId()), e);
-        }
-    }
+    
 
-    public void setPlayerLadderUpdate(Integer playerId, Timestamp value) {
-        try {
-            jdbcClient.sql(UPDATE_LAST_UPDATE)
-                .param(value)
-                .param(playerId)
-                .update();
-        } catch (DataAccessException e) {
-            log.error(I18n.get("log.461b6c4b9a36", playerId), e);
-        }
-    }
+    
 
-    public PlayerLadderData getPlayerLadderData(Player player) {
-        try {
-            PlayerLadderData data = jdbcClient.sql(SELECT_GET_ALL)
-                .param(player.getObjectId())
-                .query((rset, rowNum) -> new PlayerLadderData(
-                    player,
-                    rset.getInt("rating"),
-                    rset.getInt("rank"),
-                    rset.getInt("wins"),
-                    rset.getInt("losses"),
-                    rset.getInt("leaves"),
-                    rset.getTimestamp("last_update")
-                ))
-                .optional()
-                .orElse(null);
-
-            return data != null ? data : new PlayerLadderData(player, 1000, 0, 0, 0, 0, new Timestamp(0));
-        } catch (DataAccessException e) {
-            log.error(I18n.get("log.af5e85661cbb", player.getObjectId()), e);
-            return new PlayerLadderData(player, 1000, 0, 0, 0, 0, new Timestamp(0));
-        }
-    }
+    
 
     @Override
     public boolean supports(String databaseName, int majorVersion, int minorVersion) {

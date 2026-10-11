@@ -51,5 +51,4 @@ public abstract class HouseScriptsDAO implements DAO {
 	 * @param paramInt1 房屋/玩家相关 ID / house or player related ID
 	 * @param paramInt2 脚本索引 / script index
 	 */
-	public abstract void deleteScript(int paramInt1, int paramInt2);
-}
+	}

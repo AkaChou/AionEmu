@@ -64,7 +64,7 @@ public class PlayerLifeStatsDAO extends com.aionemu.gameserver.dao.PlayerLifeSta
         try {
             boolean found = jdbcClient.sql(SELECT_QUERY)
                 .param(player.getObjectId())
-                .query((rset, rowNum) -> {
+                .query((rset, _) -> {
                     PlayerLifeStats lifeStats = player.getLifeStats();
                     lifeStats.setCurrentHp(rset.getInt("hp"));
                     lifeStats.setCurrentMp(rset.getInt("mp"));
@@ -141,48 +141,7 @@ public class PlayerLifeStatsDAO extends com.aionemu.gameserver.dao.PlayerLifeSta
      * Batch updates player life stats.
      * @param players 玩家集合 / players
      */
-    public void updatePlayerLifeStats(Iterable<Player> players) {
-        if (players == null) {
-            return;
-        }
-
-        List<Player> validPlayers = new ArrayList<>();
-        for (Player player : players) {
-            if (player != null && player.isOnline()) {
-                validPlayers.add(player);
-            }
-        }
-
-        if (validPlayers.isEmpty()) {
-            return;
-        }
-
-        try {
-            jdbcTemplate.batchUpdate(UPDATE_QUERY, new BatchPreparedStatementSetter() {
-                @Override
-                public void setValues(PreparedStatement stmt, int i) throws SQLException {
-                    Player player = validPlayers.get(i);
-                    PlayerLifeStats lifeStats = player.getLifeStats();
-                    int hp = Math.max(lifeStats.getCurrentHp(), 0);
-                    int mp = Math.max(lifeStats.getCurrentMp(), 0);
-                    int fp = Math.max(lifeStats.getCurrentFp(), 0);
-
-                    stmt.setInt(1, hp);
-                    stmt.setInt(2, mp);
-                    stmt.setInt(3, fp);
-                    stmt.setInt(4, player.getObjectId());
-                }
-
-                @Override
-                public int getBatchSize() {
-                    return validPlayers.size();
-                }
-            });
-        } catch (DataAccessException e) {
-            log.error(I18n.get("log.29e5d532c9e9"), e);
-        }
-    }
-
+    
     /**
      * 是否支持当前数据库。
      * Whether the current database is supported.

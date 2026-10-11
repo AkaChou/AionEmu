@@ -51,14 +51,13 @@ public class OutpostDAO extends com.aionemu.gameserver.dao.OutpostDAO {
      * @return 是否成功 / whether successful
      */
     @Override
-    public boolean loadOutposLocations(Map<Integer, OutpostLocation> locations) {
-        boolean success = true;
+    public void loadOutposLocations(Map<Integer, OutpostLocation> locations) {
 
         try {
             Map<Integer, Boolean> loadedIds = new ConcurrentHashMap<>();
 
             jdbcClient.sql(SELECT_QUERY)
-                .query((rs, rowNum) -> {
+                .query((rs, _) -> {
                     int id = rs.getInt("id");
                     OutpostLocation loc = locations.get(id);
 
@@ -77,10 +76,8 @@ public class OutpostDAO extends com.aionemu.gameserver.dao.OutpostDAO {
             }
         } catch (DataAccessException e) {
             log.error(I18n.get("log.19142084445f"), e);
-            success = false;
         }
 
-        return success;
     }
 
     /**
@@ -128,21 +125,7 @@ public class OutpostDAO extends com.aionemu.gameserver.dao.OutpostDAO {
      * @param locations 前哨据点映射 / outpost location map
      * @return 是否成功 / whether successful
      */
-    public boolean updateOutpostLocations(Map<Integer, OutpostLocation> locations) {
-        try {
-            for (OutpostLocation loc : locations.values()) {
-                jdbcClient.sql(UPDATE_QUERY)
-                    .param(loc.getRace().toString())
-                    .param(loc.getId())
-                    .update();
-            }
-            return true;
-        } catch (DataAccessException e) {
-            log.error(I18n.get("log.882bb7efcb76"), e);
-            return false;
-        }
-    }
-
+    
     /**
      * 是否支持当前数据库。
      * Whether the current database is supported.

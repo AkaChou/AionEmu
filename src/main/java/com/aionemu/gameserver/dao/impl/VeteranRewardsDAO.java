@@ -55,7 +55,7 @@ public class VeteranRewardsDAO extends com.aionemu.gameserver.dao.VeteranRewards
 
 		try {
 			jdbcClient.sql(SELECT_QUERY)
-				.query((rs, rowNum) -> new VeteranRewards(
+				.query((rs, _) -> new VeteranRewards(
 					rs.getInt("id"),
 					rs.getString("player"),
 					rs.getInt("type"),
@@ -79,17 +79,6 @@ public class VeteranRewardsDAO extends com.aionemu.gameserver.dao.VeteranRewards
 	 * Deletes a veteran reward by id.
 	 * @param id_veteran_reward 奖励 ID / reward id
 	 */
-	@Override
-	public void delVeteranReward(final int id_veteran_reward) {
-		try {
-			jdbcClient.sql(DELETE_QUERY)
-				.param(id_veteran_reward)
-				.update();
-		} catch (DataAccessException e) {
-			log.error(I18n.get("log.b1edbfafc1a6"), e);
-		}
-	}
-
 	@Override
 	public void deleteInTransaction(Connection con, int rewardId) throws SQLException {
 		try (PreparedStatement stmt = con.prepareStatement(DELETE_QUERY)) {

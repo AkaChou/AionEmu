@@ -58,7 +58,7 @@ public class PlayerNpcFactionsDAO extends com.aionemu.gameserver.dao.PlayerNpcFa
 		try {
 			jdbcClient.sql(SELECT_QUERY)
 				.param(player.getObjectId())
-				.query((rset, rowNum) -> {
+				.query((rset, _) -> {
 					int faction_id = rset.getInt("faction_id");
 					boolean active = rset.getBoolean("active");
 					int time = rset.getInt("time");

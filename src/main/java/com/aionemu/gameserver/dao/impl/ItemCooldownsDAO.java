@@ -66,7 +66,7 @@ public class ItemCooldownsDAO extends com.aionemu.gameserver.dao.ItemCooldownsDA
 			long now = System.currentTimeMillis();
 			jdbcClient.sql(SELECT_QUERY)
 				.param(player.getObjectId())
-				.query((rset, rowNum) -> {
+				.query((rset, _) -> {
 					int delayId = rset.getInt("delay_id");
 					int useDelay = rset.getInt("use_delay");
 					long reuseTime = rset.getLong("reuse_time");

@@ -129,8 +129,7 @@ public abstract class PlayerDAO implements IDFactoryAwareDAO {
 	 * @param objectId 对象 ID / object id
 	 * @param lastOnline 最后在线时间 / last online timestamp
 	 */
-	public abstract void storeLastOnlineTime(final int objectId, final Timestamp lastOnline);
-
+	
 	/**
 	 * 设置角色在线状态。
 	 * Sets the player's online flag.
@@ -241,8 +240,7 @@ public abstract class PlayerDAO implements IDFactoryAwareDAO {
 	 * @param obj 对象 ID / object id
 	 * @return 创建时间戳 / creation timestamp
 	 */
-	public abstract Timestamp getCharacterCreationDateId(final int obj);
-
+	
 	/**
 	 * 更新军团加入申请状态。
 	 * Updates the legion join-request state.
@@ -271,5 +269,4 @@ public abstract class PlayerDAO implements IDFactoryAwareDAO {
 	 * @param playerObjId 玩家对象 ID / player object id
 	 * @return 月神消费量 / Luna consume amount
 	 */
-	public abstract int getPlayerLunaConsumeByObjId(final int playerObjId);
-}
+	}

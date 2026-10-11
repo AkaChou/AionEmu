@@ -75,7 +75,7 @@ public class PlayerEventsWindowDAO extends com.aionemu.gameserver.dao.PlayerEven
         try {
             jdbcClient.sql(SELECT_QUERY)
                 .param(player.getPlayerAccount().getId())
-                .query((rset, rowNum) -> {
+                .query((rset, _) -> {
                     int id = rset.getInt("event_id");
                     Timestamp lastStamp = rset.getTimestamp("last_stamp");
                     int elapsed = rset.getInt("elapsed");
@@ -165,7 +165,7 @@ public class PlayerEventsWindowDAO extends com.aionemu.gameserver.dao.PlayerEven
         try {
             ids = jdbcClient.sql(SELECT_IDS_QUERY)
                 .param(accountId)
-                .query((rs, rowNum) -> rs.getInt("event_id"))
+                .query((rs, _) -> rs.getInt("event_id"))
                 .list();
         } catch (DataAccessException e) {
             log.error(I18n.get("log.55105d71a66c", accountId), e);
@@ -214,7 +214,7 @@ public class PlayerEventsWindowDAO extends com.aionemu.gameserver.dao.PlayerEven
                 .query(Integer.class)
                 .optional()
                 .orElse(0);
-            return elapsed != null ? elapsed : 0;
+            return elapsed;
         } catch (DataAccessException e) {
             log.debug("No elapsed time found for account {}, event {}", accountId, eventId);
         }
@@ -257,7 +257,7 @@ public class PlayerEventsWindowDAO extends com.aionemu.gameserver.dao.PlayerEven
                 .query(Integer.class)
                 .optional()
                 .orElse(0);
-            return count != null ? count : 0;
+            return count;
         } catch (DataAccessException e) {
             log.debug("No reward count found for account {}, event {}", accountId, eventId);
         }

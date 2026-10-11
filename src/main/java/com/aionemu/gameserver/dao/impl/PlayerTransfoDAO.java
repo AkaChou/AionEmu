@@ -54,7 +54,7 @@ public class PlayerTransfoDAO extends PlayerTransformDAO {
         try {
             jdbcClient.sql(SELECT_QUERY)
                 .param(player.getObjectId())
-                .query((rset, rowNum) -> {
+                .query((rset, _) -> {
                     int panelId = rset.getInt("panel_id");
                     int itemId = rset.getInt("item_id");
 
@@ -141,17 +141,7 @@ public class PlayerTransfoDAO extends PlayerTransformDAO {
      * @param player 玩家 / player
      * @return 是否成功 / whether successful
      */
-    public boolean savePlTransfo(Player player) {
-        int panelId = player.getTransformModel().getPanelId();
-        int itemId = player.getTransformModel().getItemId();
-
-        if (panelId == 0 && itemId == 0) {
-            return deletePlTransfo(player.getObjectId());
-        }
-
-        return updatePlTransfo(player.getObjectId(), panelId, itemId);
-    }
-
+    
     /**
      * 是否支持当前数据库。
      * Whether the current database is supported.

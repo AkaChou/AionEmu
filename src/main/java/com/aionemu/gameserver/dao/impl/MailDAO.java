@@ -101,7 +101,7 @@ public class MailDAO extends com.aionemu.gameserver.dao.MailDAO {
         try {
             jdbcClient.sql(SELECT_MAIL_QUERY)
                 .param(playerId)
-                .query((rset, rowNum) -> {
+                .query((rset, _) -> {
                     int mailUniqueId = rset.getInt("mail_unique_id");
                     int recipientId = rset.getInt("mail_recipient_id");
                     String senderName = rset.getString("sender_name");
@@ -152,7 +152,7 @@ public class MailDAO extends com.aionemu.gameserver.dao.MailDAO {
         try {
             return jdbcClient.sql(SELECT_UNREAD_QUERY)
                 .param(playerId)
-                .query((rset, rowNum) -> rset.getInt("has_unread") == 1)
+                .query((rset, _) -> rset.getInt("has_unread") == 1)
                 .optional()
                 .orElse(false);
         } catch (DataAccessException e) {
@@ -173,7 +173,7 @@ public class MailDAO extends com.aionemu.gameserver.dao.MailDAO {
         try {
             mailboxItems.addAll(jdbcClient.sql(SELECT_INVENTORY_QUERY)
                 .param(playerId)
-                .query((rset, rowNum) -> {
+                .query((rset, _) -> {
                     int itemUniqueId = rset.getInt("item_unique_id");
                     int itemId = rset.getInt("item_id");
                     long itemCount = rset.getLong("item_count");
@@ -344,15 +344,15 @@ public class MailDAO extends com.aionemu.gameserver.dao.MailDAO {
      * @return 是否成功 / whether successful
      */
     @Override
-    public boolean deleteLetter(final int letterId) {
+    public void deleteLetter(final int letterId) {
         try {
             jdbcClient.sql(DELETE_MAIL_QUERY)
                 .param(letterId)
                 .update();
-            return true;
+            return;
         } catch (DataAccessException e) {
             log.error(I18n.get("log.65c1132a74c3", letterId), e);
-            return false;
+            return;
         }
     }
 
@@ -382,7 +382,7 @@ public class MailDAO extends com.aionemu.gameserver.dao.MailDAO {
     public int[] getUsedIDs() {
         try {
             List<Integer> ids = jdbcClient.sql(SELECT_USED_IDS_QUERY)
-                .query((rs, rowNum) -> rs.getInt("mail_unique_id"))
+                .query((rs, _) -> rs.getInt("mail_unique_id"))
                 .list();
             int[] result = new int[ids.size()];
             for (int i = 0; i < ids.size(); i++) {

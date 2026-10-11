@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.simple.JdbcClient;
 
 import com.aionemu.boot.i18n.I18n;
@@ -61,13 +60,12 @@ public class AbyssLandingDAO extends com.aionemu.gameserver.dao.AbyssLandingDAO 
      * @return 是否成功 / whether successful
      */
     @Override
-    public boolean loadLandingLocations(final Map<Integer, LandingLocation> locations) {
-        boolean success = true;
+    public void loadLandingLocations(final Map<Integer, LandingLocation> locations) {
         List<Integer> loaded = new ArrayList<>();
 
         try {
             jdbcClient.sql(SELECT_QUERY)
-                .query((resultSet, rowNum) -> {
+                .query((resultSet, _) -> {
                     int locationId = resultSet.getInt("id");
                     LandingLocation loc = locations.get(locationId);
                     if (loc != null) {
@@ -87,7 +85,6 @@ public class AbyssLandingDAO extends com.aionemu.gameserver.dao.AbyssLandingDAO 
                 .list();
         } catch (Exception e) {
             log.warn(I18n.get("log.c4af5ae55182"), e);
-            success = false;
         }
 
         for (Map.Entry<Integer, LandingLocation> entry : locations.entrySet()) {
@@ -96,7 +93,6 @@ public class AbyssLandingDAO extends com.aionemu.gameserver.dao.AbyssLandingDAO 
                 insertLandingLocation(sLoc);
             }
         }
-        return success;
     }
 
     /**

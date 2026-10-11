@@ -146,7 +146,7 @@ public class PlayerDAO extends com.aionemu.gameserver.dao.PlayerDAO {
         try {
             return jdbcClient.sql(CHECK_NAME_USED_QUERY)
                 .param(name)
-                .query((rs, rowNum) -> rs.getInt("cnt") > 0)
+                .query((rs, _) -> rs.getInt("cnt") > 0)
                 .optional()
                 .orElse(false);
         } catch (DataAccessException e) {
@@ -172,7 +172,7 @@ public class PlayerDAO extends com.aionemu.gameserver.dao.PlayerDAO {
 
         try {
             jdbcClient.sql(sql)
-                .query((rs, rowNum) -> {
+                .query((rs, _) -> {
                     result.put(rs.getInt("id"), rs.getString("name"));
                     return null;
                 })
@@ -357,7 +357,7 @@ public class PlayerDAO extends com.aionemu.gameserver.dao.PlayerDAO {
         try {
             playerObjId = jdbcClient.sql(SELECT_PLAYER_ID_BY_NAME_QUERY)
                 .param(name)
-                .query((rset, rowNum) -> rset.getInt("id"))
+                .query((rset, _) -> rset.getInt("id"))
                 .optional()
                 .orElse(0);
         } catch (DataAccessException e) {
@@ -388,7 +388,7 @@ public class PlayerDAO extends com.aionemu.gameserver.dao.PlayerDAO {
 
             boolean found = jdbcClient.sql(SELECT_PLAYER_COMMON_DATA_QUERY)
                 .param(playerObjId)
-                .query((resultSet, rowNum) -> {
+                .query((resultSet, _) -> {
                     cd.setName(resultSet.getString("name"));
 
                     try {
@@ -553,7 +553,7 @@ public class PlayerDAO extends com.aionemu.gameserver.dao.PlayerDAO {
         try {
             return jdbcClient.sql(SELECT_PLAYER_OIDS_ON_ACCOUNT_QUERY)
                 .param(accountId)
-                .query((resultSet, rowNum) -> resultSet.getInt("id"))
+                .query((resultSet, _) -> resultSet.getInt("id"))
                 .list();
         } catch (DataAccessException e) {
             log.error(I18n.get("log.e310f2d2c9cd", accountId), e);
@@ -571,7 +571,7 @@ public class PlayerDAO extends com.aionemu.gameserver.dao.PlayerDAO {
         try {
             jdbcClient.sql(SELECT_CREATION_DELETION_TIME_QUERY)
                 .param(acData.getPlayerCommonData().getPlayerObjId())
-                .query((rset, rowNum) -> {
+                .query((rset, _) -> {
                     acData.setDeletionDate(rset.getTimestamp("deletion_date"));
                     acData.setCreationDate(rset.getTimestamp("creation_date"));
                     return null;
@@ -618,23 +618,7 @@ public class PlayerDAO extends com.aionemu.gameserver.dao.PlayerDAO {
         }
     }
 
-    /**
-     * 保存角色的最后在线时间。
-     * Stores a character's last online timestamp.
-     * @param objectId 玩家对象 ID / player object id
-     * @param lastOnline 最后在线时间 / last online timestamp
-     */
-    @Override
-    public void storeLastOnlineTime(final int objectId, final Timestamp lastOnline) {
-        try {
-            jdbcClient.sql(UPDATE_LAST_ONLINE_QUERY)
-                .param(lastOnline)
-                .param(objectId)
-                .update();
-        } catch (DataAccessException e) {
-            log.error(I18n.get("log.da8fe6970768", objectId), e);
-        }
-    }
+    
 
     /**
      * 获取数据库中所有已使用的角色对象 ID。
@@ -645,7 +629,7 @@ public class PlayerDAO extends com.aionemu.gameserver.dao.PlayerDAO {
     public int[] getUsedIDs() {
         try {
             List<Integer> ids = jdbcClient.sql(SELECT_USED_IDS_QUERY)
-                .query((rs, rowNum) -> rs.getInt("id"))
+                .query((rs, _) -> rs.getInt("id"))
                 .list();
 
             int[] result = new int[ids.size()];
@@ -714,26 +698,7 @@ public class PlayerDAO extends com.aionemu.gameserver.dao.PlayerDAO {
         }
     }
 
-    /**
-     * 按对象 ID 查询月神消费点数。
-     * Looks up luna consume points by player object ID.
-     * @param playerObjId 玩家对象 ID / player object id
-     * @return 月神消费点数，未找到或异常时为 0 / luna consume points, or 0 if missing/error
-     */
-    @Override
-    public int getPlayerLunaConsumeByObjId(final int playerObjId) {
-        try {
-            Integer val = jdbcClient.sql(SELECT_LUNA_CONSUME_BY_OBJ_ID_QUERY)
-                .param(playerObjId)
-                .query(Integer.class)
-                .optional()
-                .orElse(0);
-            return val != null ? val : 0;
-        } catch (DataAccessException e) {
-            log.error(I18n.get("log.3620223b3e3a", playerObjId), e);
-            return 0;
-        }
-    }
+    
 
     /**
      * 按角色名查询对象 ID。
@@ -749,7 +714,7 @@ public class PlayerDAO extends com.aionemu.gameserver.dao.PlayerDAO {
                 .query(Integer.class)
                 .optional()
                 .orElse(0);
-            return val != null ? val : 0;
+            return val;
         } catch (DataAccessException e) {
             log.error(I18n.get("log.f273cc47e33d", playerName), e);
             return 0;
@@ -770,7 +735,7 @@ public class PlayerDAO extends com.aionemu.gameserver.dao.PlayerDAO {
                 .query(Integer.class)
                 .optional()
                 .orElse(0);
-            return val != null ? val : 0;
+            return val;
         } catch (DataAccessException e) {
             log.error(I18n.get("log.b4979008052c", name), e);
             return 0;
@@ -811,7 +776,7 @@ public class PlayerDAO extends com.aionemu.gameserver.dao.PlayerDAO {
                 .query(Integer.class)
                 .optional()
                 .orElse(0);
-            return val != null ? val : 0;
+            return val;
         } catch (DataAccessException e) {
             log.error(I18n.get("log.fe988f5216b0", accountId), e);
             return 0;
@@ -833,7 +798,7 @@ public class PlayerDAO extends com.aionemu.gameserver.dao.PlayerDAO {
                 .query(Integer.class)
                 .optional()
                 .orElse(0);
-            return val != null ? val : 0;
+            return val;
         } catch (DataAccessException e) {
             log.error(I18n.get("log.6a4af16dff6d", race), e);
             return 0;
@@ -853,7 +818,7 @@ public class PlayerDAO extends com.aionemu.gameserver.dao.PlayerDAO {
                 .query(Integer.class)
                 .optional()
                 .orElse(0);
-            return val != null ? val : 0;
+            return val;
         } catch (DataAccessException e) {
             log.error(I18n.get("log.7cb1629e7919"), e);
             return 0;
@@ -878,7 +843,7 @@ public class PlayerDAO extends com.aionemu.gameserver.dao.PlayerDAO {
         try {
             return jdbcClient.sql(query.toString())
                 .param(daysOfInactivity)
-                .query((rset, rowNum) -> rset.getInt("id"))
+                .query((rset, _) -> rset.getInt("id"))
                 .list();
         } catch (DataAccessException e) {
             log.error(I18n.get("log.e40ff813df6d"), e);
@@ -904,25 +869,7 @@ public class PlayerDAO extends com.aionemu.gameserver.dao.PlayerDAO {
         }
     }
 
-    /**
-     * 查询角色创建时间。
-     * Loads a character's creation timestamp.
-     * @param obj 玩家对象 ID / player object id
-     * @return 创建时间，未找到或异常时为 null / creation timestamp, or null if missing/error
-     */
-    @Override
-    public Timestamp getCharacterCreationDateId(final int obj) {
-        try {
-            return jdbcClient.sql(SELECT_CREATION_DATE_QUERY)
-                .param(obj)
-                .query(Timestamp.class)
-                .optional()
-                .orElse(null);
-        } catch (DataAccessException e) {
-            log.error(I18n.get("log.5725f16be2cd", obj), e);
-            return null;
-        }
-    }
+    
 
     /**
      * 更新玩家的军团加入申请状态。
@@ -970,7 +917,7 @@ public class PlayerDAO extends com.aionemu.gameserver.dao.PlayerDAO {
         try {
             jdbcClient.sql(SELECT_JOIN_STATE_QUERY)
                 .param(player.getObjectId())
-                .query((rset, rowNum) -> {
+                .query((rset, _) -> {
                     try {
                         player.getCommonData().setJoinRequestState(
                             LegionJoinRequestState.valueOf(rset.getString("join_state")));

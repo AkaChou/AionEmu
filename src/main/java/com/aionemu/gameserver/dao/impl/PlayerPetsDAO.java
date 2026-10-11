@@ -172,7 +172,7 @@ public class PlayerPetsDAO extends com.aionemu.gameserver.dao.PlayerPetsDAO {
         try {
             pets = jdbcClient.sql(SELECT_QUERY)
                 .param(player.getObjectId())
-                .query((rs, rowNum) -> {
+                .query((rs, _) -> {
                     PetCommonData petCommonData = new PetCommonData(
                         rs.getInt("pet_id"),
                         player.getObjectId(),
@@ -254,7 +254,7 @@ public class PlayerPetsDAO extends com.aionemu.gameserver.dao.PlayerPetsDAO {
      * @return 是否成功 / whether successful
      */
     @Override
-    public boolean savePetMoodData(PetCommonData petCommonData) {
+    public void savePetMoodData(PetCommonData petCommonData) {
         try {
             jdbcClient.sql(SAVE_MOOD_QUERY)
                 .param(petCommonData.getMoodStartTime())
@@ -265,10 +265,10 @@ public class PlayerPetsDAO extends com.aionemu.gameserver.dao.PlayerPetsDAO {
                 .param(petCommonData.getMasterObjectId())
                 .param(petCommonData.getPetId())
                 .update();
-            return true;
+            return;
         } catch (DataAccessException e) {
             log.error(I18n.get("log.44d7671006ae", petCommonData.getPetId()), e);
-            return false;
+            return;
         }
     }
 

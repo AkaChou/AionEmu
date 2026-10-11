@@ -16,7 +16,7 @@ public abstract class BaseDAO implements DAO {
 	 * @param locations 目标映射 / target map
 	 * @return 是否成功 / whether successful
 	 */
-	public abstract boolean loadBaseLocations(Map<Integer, BaseLocation> locations);
+	public abstract void loadBaseLocations(Map<Integer, BaseLocation> locations);
 
 	/**
 	 * 更新据点位置。

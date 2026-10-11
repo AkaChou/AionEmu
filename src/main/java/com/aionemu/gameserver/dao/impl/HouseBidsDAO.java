@@ -62,7 +62,7 @@ public class HouseBidsDAO extends com.aionemu.gameserver.dao.HouseBidsDAO {
         Set<PlayerHouseBid> bids = new HashSet<>();
         try {
             jdbcClient.sql(LOAD_QUERY)
-                .query((rset, rowNum) -> {
+                .query((rset, _) -> {
                     int playerId = rset.getInt("player_id");
                     int houseId = rset.getInt("house_id");
                     long bidOffer = rset.getLong("bid");
@@ -174,7 +174,7 @@ public class HouseBidsDAO extends com.aionemu.gameserver.dao.HouseBidsDAO {
                 .query(Long.class)
                 .optional()
                 .orElse(0L);
-            return bid != null ? bid : 0L;
+            return bid;
         } catch (DataAccessException e) {
             log.error(I18n.get("log.215d2f2d1d7e", houseId), e);
             return 0L;
@@ -193,7 +193,7 @@ public class HouseBidsDAO extends com.aionemu.gameserver.dao.HouseBidsDAO {
             return jdbcClient.sql(SELECT_PLAYER_BID_QUERY)
                 .param(playerId)
                 .param(houseId)
-                .query((rset, rowNum) -> {
+                .query((rset, _) -> {
                     long bid = rset.getLong("bid");
                     Timestamp time = rset.getTimestamp("bid_time");
                     return new PlayerHouseBid(playerId, houseId, bid, time);
@@ -211,22 +211,7 @@ public class HouseBidsDAO extends com.aionemu.gameserver.dao.HouseBidsDAO {
      * Batch-deletes bids for multiple houses.
      * @param houseIds 房屋 ID 集合 / set of house ids
      */
-    public void deleteHouseBids(Set<Integer> houseIds) {
-        if (houseIds == null || houseIds.isEmpty()) {
-            return;
-        }
-
-        try {
-            for (int houseId : houseIds) {
-                jdbcClient.sql(DELETE_QUERY)
-                    .param(houseId)
-                    .update();
-            }
-        } catch (DataAccessException e) {
-            log.error(I18n.get("log.13c5e65ca1ad"), e);
-        }
-    }
-
+    
     /**
      * 判断当前数据库是否受本 DAO 支持。
      * Checks whether the given database is supported by this DAO.

@@ -73,7 +73,7 @@ public class LegionMemberDAO extends com.aionemu.gameserver.dao.LegionMemberDAO 
         try {
             return jdbcClient.sql(CHECK_ID_USED_QUERY)
                 .param(playerObjId)
-                .query((rs, rowNum) -> rs.getInt("cnt") > 0)
+                .query((rs, _) -> rs.getInt("cnt") > 0)
                 .optional()
                 .orElse(false);
         } catch (DataAccessException e) {
@@ -89,16 +89,16 @@ public class LegionMemberDAO extends com.aionemu.gameserver.dao.LegionMemberDAO 
      * @return 是否保存成功 / whether saved successfully
      */
     @Override
-    public boolean saveNewLegionMember(final LegionMember legionMember) {
+    public void saveNewLegionMember(final LegionMember legionMember) {
         try {
-            return jdbcClient.sql(INSERT_LEGIONMEMBER_QUERY)
+                        jdbcClient.sql(INSERT_LEGIONMEMBER_QUERY)
                 .param(legionMember.getLegion().getLegionId())
                 .param(legionMember.getObjectId())
                 .param(legionMember.getRank().toString())
-                .update() > 0;
+                .update();
         } catch (DataAccessException e) {
             log.error(I18n.get("log.9e9361f5deaa", legionMember.getObjectId()), e);
-            return false;
+                        ;
         }
     }
 
@@ -138,7 +138,7 @@ public class LegionMemberDAO extends com.aionemu.gameserver.dao.LegionMemberDAO 
         try {
             return jdbcClient.sql(SELECT_LEGIONMEMBER_QUERY)
                 .param(playerObjId)
-                .query((resultSet, rowNum) -> {
+                .query((resultSet, _) -> {
                     LegionMember legionMember = new LegionMember(playerObjId);
                     int legionId = resultSet.getInt("legion_id");
 
@@ -175,7 +175,7 @@ public class LegionMemberDAO extends com.aionemu.gameserver.dao.LegionMemberDAO 
         try {
             return jdbcClient.sql(SELECT_LEGIONMEMBEREX_QUERY)
                 .param(playerObjId)
-                .query((resultSet, rowNum) -> {
+                .query((resultSet, _) -> {
                     LegionMemberEx legionMemberEx = new LegionMemberEx(playerObjId);
 
                     legionMemberEx.setName(resultSet.getString("players.name"));
@@ -224,7 +224,7 @@ public class LegionMemberDAO extends com.aionemu.gameserver.dao.LegionMemberDAO 
         try {
             return jdbcClient.sql(SELECT_LEGIONMEMBEREX2_QUERY)
                 .param(playerName)
-                .query((resultSet, rowNum) -> {
+                .query((resultSet, _) -> {
                     LegionMemberEx legionMember = new LegionMemberEx(playerName);
 
                     legionMember.setObjectId(resultSet.getInt("id"));
@@ -275,7 +275,7 @@ public class LegionMemberDAO extends com.aionemu.gameserver.dao.LegionMemberDAO 
         try {
             legionMembers.addAll(jdbcClient.sql(SELECT_LEGIONMEMBERS_QUERY)
                 .param(legionId)
-                .query((resultSet, rowNum) -> resultSet.getInt("player_id"))
+                .query((resultSet, _) -> resultSet.getInt("player_id"))
                 .list());
         } catch (DataAccessException e) {
             log.error(I18n.get("log.580dbf1f5523", legionId), e);
@@ -322,7 +322,7 @@ public class LegionMemberDAO extends com.aionemu.gameserver.dao.LegionMemberDAO 
     public int[] getUsedIDs() {
         try {
             List<Integer> ids = jdbcClient.sql(SELECT_USED_IDS_QUERY)
-                .query((rs, rowNum) -> rs.getInt("player_id"))
+                .query((rs, _) -> rs.getInt("player_id"))
                 .list();
 
             int[] result = new int[ids.size()];

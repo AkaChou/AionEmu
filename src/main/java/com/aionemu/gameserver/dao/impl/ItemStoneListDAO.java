@@ -271,7 +271,7 @@ public class ItemStoneListDAO extends com.aionemu.gameserver.dao.ItemStoneListDA
 		}
 
 		try {
-			transactionTemplate.executeWithoutResult(status -> {
+			transactionTemplate.executeWithoutResult(_ -> {
 				try (Connection con = DatabaseFactory.getConnection()) {
 					deleteItemStones(con, stonesToDelete, ist);
 					addItemStones(con, stonesToAdd, ist);

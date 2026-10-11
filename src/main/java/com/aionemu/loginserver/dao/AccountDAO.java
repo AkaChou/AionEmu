@@ -35,15 +35,13 @@ public abstract class AccountDAO implements DAO {
      * @param name Account name
      * @return 账号 ID；失败时为 -1 / Id, or -1 on error
      */
-    public abstract int getAccountId(String name);
-
+    
     /**
      * 查询账号总数。
      * Returns account count, or -1 on error.
      * Account count
      */
-    public abstract int getAccountCount();
-
+    
     /**
      * 插入新账号，并将数据库生成的 ID 回写到对象。
      * Inserts a new account and sets the DB-generated id on the object.
@@ -71,7 +69,7 @@ public abstract class AccountDAO implements DAO {
      * @param lastServer 最近访问的服务器 / Last accessed server
      * @return 是否更新成功 / True if updated
      */
-    public abstract boolean updateLastServer(int accountId, byte lastServer);
+    public abstract void updateLastServer(int accountId, byte lastServer);
 
     /**
      * 更新账号最近登录 IP。
@@ -80,7 +78,7 @@ public abstract class AccountDAO implements DAO {
      * @param ip IP 地址 / IP address
      * @return 是否更新成功 / True if updated
      */
-    public abstract boolean updateLastIp(int accountId, String ip);
+    public abstract void updateLastIp(int accountId, String ip);
 
     /**
      * 查询账号最近登录 IP。

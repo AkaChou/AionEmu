@@ -37,7 +37,7 @@ public abstract class PlayerStigmasEquippedDAO implements DAO {
 	 * @param player 玩家 / player
 	 * @return 是否保存成功 / true if stored
 	 */
-	public abstract boolean storeItems(Player player);
+	public abstract void storeItems(Player player);
 
 	/** Persists pending stigma-list changes on a caller-owned transaction. */
 	public abstract void storeItemsInTransaction(Connection connection, Player player) throws SQLException;

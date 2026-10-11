@@ -52,13 +52,12 @@ public class AbyssSpecialLandingDAO extends com.aionemu.gameserver.dao.AbyssSpec
      * @return 是否加载成功 / whether load succeeded
      */
     @Override
-    public boolean loadLandingSpecialLocations(final Map<Integer, LandingSpecialLocation> locations) {
-        boolean success = true;
+    public void loadLandingSpecialLocations(final Map<Integer, LandingSpecialLocation> locations) {
         List<Integer> loaded = new ArrayList<>();
 
         try {
             jdbcClient.sql(SELECT_QUERY)
-                .query((rs, rowNum) -> {
+                .query((rs, _) -> {
                     int id = rs.getInt("id");
                     LandingSpecialLocation loc = locations.get(id);
                     if (loc != null) {
@@ -70,7 +69,6 @@ public class AbyssSpecialLandingDAO extends com.aionemu.gameserver.dao.AbyssSpec
                 .list();
         } catch (DataAccessException e) {
             log.warn(I18n.get("log.5b9d0f9920d3"), e);
-            success = false;
         }
 
         for (Map.Entry<Integer, LandingSpecialLocation> entry : locations.entrySet()) {
@@ -79,7 +77,6 @@ public class AbyssSpecialLandingDAO extends com.aionemu.gameserver.dao.AbyssSpec
                 insertLandingSpecialLocation(sLoc);
             }
         }
-        return success;
     }
 
     /**

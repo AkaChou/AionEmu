@@ -56,7 +56,7 @@ public class PetitionDAO extends com.aionemu.gameserver.dao.PetitionDAO {
                 .query(Integer.class)
                 .optional()
                 .orElse(0);
-            return nextId != null ? nextId : 0;
+            return nextId;
         } catch (DataAccessException e) {
             log.error(I18n.get("log.fb167a91b87e"), e);
             return 0;
@@ -74,7 +74,7 @@ public class PetitionDAO extends com.aionemu.gameserver.dao.PetitionDAO {
         try {
             return jdbcClient.sql(SELECT_BY_ID_QUERY)
                 .param(petitionId)
-                .query((rs, rowNum) -> {
+                .query((rs, _) -> {
                     PetitionStatus status = getPetitionStatus(rs.getString("status"));
                     return new Petition(
                         rs.getInt("id"),
@@ -104,7 +104,7 @@ public class PetitionDAO extends com.aionemu.gameserver.dao.PetitionDAO {
         Set<Petition> results = new HashSet<>();
         try {
             jdbcClient.sql(SELECT_ALL_QUERY)
-                .query((rs, rowNum) -> {
+                .query((rs, _) -> {
                     PetitionStatus status = getPetitionStatus(rs.getString("status"));
                     return new Petition(
                         rs.getInt("id"),
@@ -149,14 +149,14 @@ public class PetitionDAO extends com.aionemu.gameserver.dao.PetitionDAO {
     public void insertPetition(Petition petition) {
         try {
             jdbcClient.sql(INSERT_QUERY)
-                .param(petition.getPetitionId())
-                .param(petition.getPlayerObjId())
+                .param(petition.petitionId())
+                .param(petition.playerObjId())
                 .param(petition.getPetitionType().getElementId())
-                .param(petition.getTitle())
-                .param(petition.getContentText())
-                .param(petition.getAdditionalData())
+                .param(petition.title())
+                .param(petition.contentText())
+                .param(petition.additionalData())
                 .param(System.currentTimeMillis() / 1000)
-                .param(petition.getStatus().toString())
+                .param(petition.status().toString())
                 .update();
         } catch (DataAccessException e) {
             log.error(I18n.get("log.d40ee1b26acb"), e);

@@ -117,12 +117,12 @@ public class PlayerMinionsDAO extends com.aionemu.gameserver.dao.PlayerMinionsDA
      */
     @Override
     public List<MinionCommonData> getPlayerMinions(Player player) {
-        List<MinionCommonData> minions = new ArrayList<>();
+        List<MinionCommonData> minions ;
 
         try {
             minions = jdbcClient.sql(SELECT_QUERY)
                 .param(player.getObjectId())
-                .query((rs, rowNum) -> {
+                .query((rs, _) -> {
                     MinionCommonData minionCommonData = new MinionCommonData(
                         rs.getInt("object_id"),
                         rs.getInt("minion_id"),
@@ -193,20 +193,6 @@ public class PlayerMinionsDAO extends com.aionemu.gameserver.dao.PlayerMinionsDA
      * @param player 玩家 / player
      * @param minionCommonData 随从公共数据 / minion common data
      */
-    @Override
-    public boolean updatePlayerMinionGrowthPoint(Player player, MinionCommonData minionCommonData) {
-        try {
-            return jdbcClient.sql(UPDATE_GROWTH_QUERY)
-                .param(minionCommonData.getMinionGrowthPoint())
-                .param(minionCommonData.getMasterObjectId())
-                .param(minionCommonData.getObjectId())
-                .update() == 1;
-        } catch (DataAccessException e) {
-            log.error(I18n.get("log.d7a903023f02", minionCommonData.getMinionId()), e);
-            return false;
-        }
-    }
-
     @Override
     public boolean updateGrowthAndRemoveMaterials(Player player, MinionCommonData minionCommonData,
             List<Integer> materialObjectIds) {
@@ -360,7 +346,7 @@ public class PlayerMinionsDAO extends com.aionemu.gameserver.dao.PlayerMinionsDA
     public int[] getUsedIDs() {
         try {
             List<Integer> ids = jdbcClient.sql("SELECT object_id FROM player_minions")
-                .query((rs, rowNum) -> rs.getInt(1))
+                .query((rs, _) -> rs.getInt(1))
                 .list();
             return ids.stream().mapToInt(Integer::intValue).toArray();
         } catch (DataAccessException e) {
@@ -397,19 +383,7 @@ public class PlayerMinionsDAO extends com.aionemu.gameserver.dao.PlayerMinionsDA
      * Cleans orphaned minion rows whose owner player no longer exists.
      * @return 删除行数 / deleted row count
      */
-    public int cleanOrphanedMinions() {
-        try {
-            int deleted = jdbcClient.sql(CLEAN_ORPHANED_QUERY).update();
-            if (deleted > 0) {
-                log.info(I18n.get("log.51adbf82f7b2", deleted));
-            }
-            return deleted;
-        } catch (DataAccessException e) {
-            log.error(I18n.get("log.55b90eeb49ae"), e);
-            return 0;
-        }
-    }
-
+    
     /**
      * 判断当前数据库是否受本 DAO 支持。
      * Checks whether the given database is supported by this DAO.

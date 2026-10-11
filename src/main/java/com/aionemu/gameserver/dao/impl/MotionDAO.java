@@ -91,7 +91,7 @@ public class MotionDAO extends com.aionemu.gameserver.dao.MotionDAO {
         try {
             motions = jdbcClient.sql(SELECT_QUERY)
                 .param(playerId)
-                .query((rset, rowNum) -> {
+                .query((rset, _) -> {
                     int motionId = rset.getInt("motion_id");
                     int time = rset.getInt("time");
                     boolean isActive = rset.getBoolean("active");
@@ -112,7 +112,7 @@ public class MotionDAO extends com.aionemu.gameserver.dao.MotionDAO {
      * @return 是否成功 / whether successful
      */
     @Override
-    public boolean storeMotion(int objectId, Motion motion) {
+    public void storeMotion(int objectId, Motion motion) {
         try {
             jdbcClient.sql(INSERT_QUERY)
                 .param(objectId)
@@ -120,10 +120,10 @@ public class MotionDAO extends com.aionemu.gameserver.dao.MotionDAO {
                 .param(motion.isActive())
                 .param(motion.getExpireTime())
                 .update();
-            return true;
+                        ;
         } catch (DataAccessException e) {
             log.error(I18n.get("log.ee15090dda12", objectId), e);
-            return false;
+                        ;
         }
     }
 
@@ -135,16 +135,16 @@ public class MotionDAO extends com.aionemu.gameserver.dao.MotionDAO {
      * @return 是否成功 / whether successful
      */
     @Override
-    public boolean deleteMotion(int objectId, int motionId) {
+    public void deleteMotion(int objectId, int motionId) {
         try {
             jdbcClient.sql(DELETE_QUERY)
                 .param(objectId)
                 .param(motionId)
                 .update();
-            return true;
+                        ;
         } catch (DataAccessException e) {
             log.error(I18n.get("log.1bf60097aea6", objectId), e);
-            return false;
+                        ;
         }
     }
 
@@ -156,17 +156,17 @@ public class MotionDAO extends com.aionemu.gameserver.dao.MotionDAO {
      * @return 是否成功 / whether successful
      */
     @Override
-    public boolean updateMotion(int objectId, Motion motion) {
+    public void updateMotion(int objectId, Motion motion) {
         try {
             jdbcClient.sql(UPDATE_QUERY)
                 .param(motion.isActive())
                 .param(objectId)
                 .param(motion.getId())
                 .update();
-            return true;
+                        ;
         } catch (DataAccessException e) {
             log.error(I18n.get("log.91b2b22576c2", objectId), e);
-            return false;
+                        ;
         }
     }
 }

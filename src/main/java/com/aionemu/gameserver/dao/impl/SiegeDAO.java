@@ -53,14 +53,13 @@ public class SiegeDAO extends com.aionemu.gameserver.dao.SiegeDAO {
      * @return 是否成功 / whether succeeded
      */
     @Override
-    public boolean loadSiegeLocations(Map<Integer, SiegeLocation> locations) {
-        boolean success = true;
+    public void loadSiegeLocations(Map<Integer, SiegeLocation> locations) {
 
         try {
             Map<Integer, Boolean> loadedIds = new ConcurrentHashMap<>();
 
             jdbcClient.sql(SELECT_QUERY)
-                .query((rset, rowNum) -> {
+                .query((rset, _) -> {
                     int id = rset.getInt("id");
                     SiegeLocation loc = locations.get(id);
 
@@ -80,10 +79,8 @@ public class SiegeDAO extends com.aionemu.gameserver.dao.SiegeDAO {
             }
         } catch (DataAccessException e) {
             log.error(I18n.get("log.f0edc322efd4"), e);
-            success = false;
         }
 
-        return success;
     }
 
     /**
@@ -133,52 +130,14 @@ public class SiegeDAO extends com.aionemu.gameserver.dao.SiegeDAO {
      * @param locations 地图位置 / location map
      * @return 是否成功 / whether succeeded
      */
-    public boolean updateSiegeLocations(Map<Integer, SiegeLocation> locations) {
-        try {
-            for (SiegeLocation loc : locations.values()) {
-                jdbcClient.sql(UPDATE_QUERY)
-                    .param(loc.getRace().toString())
-                    .param(loc.getLegionId())
-                    .param(loc.getLocationId())
-                    .update();
-            }
-            return true;
-        } catch (DataAccessException e) {
-            log.error(I18n.get("log.16223a055fa8"), e);
-            return false;
-        }
-    }
-
+    
     /**
      * 按种族加载攻城据点。
      * Loads siege locations by race.
      * @param race 阵营 / race
      * @return 地图位置 / location map
      */
-    public Map<Integer, SiegeLocation> loadSiegeLocationsByRace(SiegeRace race) {
-        Map<Integer, SiegeLocation> locations = new ConcurrentHashMap<>();
-
-        try {
-            jdbcClient.sql(SELECT_BY_RACE_QUERY)
-                .param(race.toString())
-                .query((rset, rowNum) -> {
-                    int id = rset.getInt("id");
-                    SiegeLocation loc = locations.get(id);
-                    if (loc != null) {
-                        loc.setRace(SiegeRace.valueOf(rset.getString("race")));
-                        loc.setLegionId(rset.getInt("legion_id"));
-                        locations.put(id, loc);
-                    }
-                    return null;
-                })
-                .list();
-        } catch (DataAccessException e) {
-            log.error(I18n.get("log.afdfcca54f61", race), e);
-        }
-
-        return locations;
-    }
-
+    
     /**
      * 是否支持当前数据库。
      * Whether the current database is supported.
