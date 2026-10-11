@@ -88,50 +88,50 @@ public class GameMovementLoopGateway {
     }
 
     /**
-     * 解析移动通知任务：优先 Spring 提供者，否则单例。
-     * Resolve the movement-notify task: prefer Spring provider, otherwise singleton.
-     * @return 移动通知任务 / Movement-notify task
+     * 触发移动通知任务解析：优先 Spring 提供者，否则单例。
+     * Trigger movement-notify task resolution: prefer Spring provider, otherwise singleton.
      */
-    private MovementNotifyTask movementNotifyTask() {
+    private void movementNotifyTask() {
         if (movementNotifyTaskProvider == null) {
-            return MovementNotifyTask.getInstance();
+            MovementNotifyTask.getInstance();
+            return;
         }
-        return movementNotifyTaskProvider.getIfAvailable(MovementNotifyTask::getInstance);
+        movementNotifyTaskProvider.getIfAvailable(MovementNotifyTask::getInstance);
     }
 
     /**
-     * 解析移动任务管理器：优先 Spring 提供者，否则单例。
-     * Resolve the move-task manager: prefer Spring provider, otherwise singleton.
-     * @return 移动任务管理器 / Move-task manager
+     * 触发移动任务管理器解析：优先 Spring 提供者，否则单例。
+     * Trigger move-task manager resolution: prefer Spring provider, otherwise singleton.
      */
-    private MoveTaskManager moveTaskManager() {
+    private void moveTaskManager() {
         if (moveTaskManagerProvider == null) {
-            return MoveTaskManager.getInstance();
+            MoveTaskManager.getInstance();
+            return;
         }
-        return moveTaskManagerProvider.getIfAvailable(MoveTaskManager::getInstance);
+        moveTaskManagerProvider.getIfAvailable(MoveTaskManager::getInstance);
     }
 
     /**
-     * 解析玩家移动任务管理器：优先 Spring 提供者，否则单例。
-     * Resolve the player-move-task manager: prefer Spring provider, otherwise singleton.
-     * @return 玩家移动任务管理器 / Player-move-task manager
+     * 触发玩家移动任务管理器解析：优先 Spring 提供者，否则单例。
+     * Trigger player-move-task manager resolution: prefer Spring provider, otherwise singleton.
      */
-    private PlayerMoveTaskManager playerMoveTaskManager() {
+    private void playerMoveTaskManager() {
         if (playerMoveTaskManagerProvider == null) {
-            return PlayerMoveTaskManager.getInstance();
+            PlayerMoveTaskManager.getInstance();
+            return;
         }
-        return playerMoveTaskManagerProvider.getIfAvailable(PlayerMoveTaskManager::getInstance);
+        playerMoveTaskManagerProvider.getIfAvailable(PlayerMoveTaskManager::getInstance);
     }
 
     /**
-     * 解析区域更新服务：优先 Spring 提供者，否则单例。
-     * Resolve the zone-update service: prefer Spring provider, otherwise singleton.
-     * @return 区域更新服务 / Zone-update service
+     * 触发区域更新服务解析：优先 Spring 提供者，否则单例。
+     * Trigger zone-update service resolution: prefer Spring provider, otherwise singleton.
      */
-    private ZoneUpdateService zoneUpdateService() {
+    private void zoneUpdateService() {
         if (zoneUpdateServiceProvider == null) {
-            return ZoneUpdateService.getInstance();
+            ZoneUpdateService.getInstance();
+            return;
         }
-        return zoneUpdateServiceProvider.getIfAvailable(ZoneUpdateService::getInstance);
+        zoneUpdateServiceProvider.getIfAvailable(ZoneUpdateService::getInstance);
     }
 }
