@@ -1,20 +1,11 @@
 package com.aionemu.gameserver.questEngine;
 
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.OptionalInt;
 import java.util.Set;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
-import java.util.concurrent.ScheduledFuture;
 import java.util.function.IntFunction;
 import java.util.function.Supplier;
 
@@ -23,27 +14,16 @@ import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.boot.i18n.I18n;
 import com.aionemu.commons.utils.collections.IntArrayList;
-import com.aionemu.commons.utils.collections.IntObjectHashMap;
 import com.aionemu.gameserver.GameServerError;
 import com.aionemu.gameserver.configs.Config;
-import com.aionemu.gameserver.dataholders.DataManager;
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
-import com.aionemu.gameserver.model.DescriptionId;
 import com.aionemu.gameserver.model.GameEngine;
 import com.aionemu.gameserver.model.TaskId;
-import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.Item;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
-import com.aionemu.gameserver.model.gameobjects.player.RequestResponseHandler;
 import com.aionemu.gameserver.model.templates.quest.QuestNpc;
 import com.aionemu.gameserver.model.templates.rewards.BonusType;
-import com.aionemu.gameserver.network.aion.serverpackets.SM_DIALOG_WINDOW;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_ITEM_USAGE_ANIMATION;
-import com.aionemu.gameserver.network.aion.serverpackets.SM_QUESTION_WINDOW;
-import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
-import com.aionemu.gameserver.questEngine.definition.CompiledQuestDefinition;
-import com.aionemu.gameserver.questEngine.definition.ImmutableQuestCatalog;
 import com.aionemu.gameserver.questEngine.definition.QuestCatalog;
 import com.aionemu.gameserver.questEngine.definition.QuestCatalogDrop;
 import com.aionemu.gameserver.questEngine.definition.QuestDefinitionCatalogManifest;
@@ -51,18 +31,14 @@ import com.aionemu.gameserver.questEngine.retail.RetailQuestDriver;
 import com.aionemu.gameserver.questEngine.retail.RetailQuestMetadataCompiler;
 import com.aionemu.gameserver.questEngine.definition.QuestDialogContract;
 import com.aionemu.gameserver.questEngine.definition.QuestCatalogRegistry;
-import com.aionemu.gameserver.questEngine.definition.QuestDialogAction;
-import com.aionemu.gameserver.questEngine.definition.QuestDialogPage;
 import com.aionemu.gameserver.questEngine.definition.QuestEvent;
 import com.aionemu.gameserver.questEngine.definition.QuestMetadata;
 import com.aionemu.gameserver.questEngine.definition.QuestNpcAttackFacts;
-import com.aionemu.gameserver.questEngine.definition.QuestNode;
 import com.aionemu.gameserver.questEngine.definition.QuestPvpCreditSource;
 import com.aionemu.gameserver.questEngine.handlers.HandlerResult;
 import com.aionemu.gameserver.questEngine.tablelane.HtmlPagesRegistry;
 import com.aionemu.gameserver.questEngine.tablelane.CameraRegistry;
 import com.aionemu.gameserver.questEngine.tablelane.NativeQuestStartPort;
-import com.aionemu.gameserver.questEngine.tablelane.NativeUnpinnedRewardWindow;
 import com.aionemu.gameserver.questEngine.tablelane.DataDrivenNativeRuntime;
 import com.aionemu.gameserver.questEngine.tablelane.SimpleCollectItemHandler;
 import com.aionemu.gameserver.questEngine.tablelane.SimpleCombineTaskHandler;
@@ -75,19 +51,11 @@ import com.aionemu.gameserver.questEngine.model.QuestActionType;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
-import com.aionemu.gameserver.questEngine.runtime.PlayerQuestBroadcastPort;
-import com.aionemu.gameserver.questEngine.runtime.PlayerSerialExecutor;
 import com.aionemu.gameserver.questEngine.runtime.QuestDispatchContract;
-import com.aionemu.gameserver.questEngine.runtime.QuestExecutionCoordinator;
-import com.aionemu.gameserver.questEngine.runtime.QuestInteractionObjectValidator;
-import com.aionemu.gameserver.questEngine.runtime.QuestProductionEventWiring;
 import com.aionemu.gameserver.questEngine.runtime.QuestProductionDispatcher;
 import com.aionemu.gameserver.questEngine.runtime.QuestRuntimeDispatcher;
-import com.aionemu.gameserver.questEngine.runtime.QuestRuntimeRouter;
 import com.aionemu.gameserver.questEngine.runtime.QuestRouteResult;
 import com.aionemu.gameserver.questEngine.runtime.QuestRuntimeComposition;
-import com.aionemu.gameserver.services.QuestService;
-import com.aionemu.gameserver.services.item.ItemPacketService.ItemDeleteType;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.stats.AbyssRankEnum;
 import com.aionemu.gameserver.world.zone.ZoneName;
@@ -109,34 +77,20 @@ public class QuestEngine implements GameEngine {
 	 */
 	@Setter
 	private static volatile ObjectProvider<QuestEngine> instanceProvider;
-	/** NPC 关联任务索引 / NPC-related quest index */
-	private final IntObjectHashMap<QuestNpc> questNpcs = new IntObjectHashMap<>();
-	/** 物品使用关联任务 / Item-use related quests */
-	private final IntObjectHashMap<IntArrayList> questItemRelated = new IntObjectHashMap<>();
-	/** 获得物品关联任务 / Item-obtain related quests */
-	private final IntObjectHashMap<IntArrayList> questItems = new IntObjectHashMap<>();
-	/** 区域任务结束监听列表 / Zone-mission-end listeners */
-	private final IntArrayList questOnEnterZoneMissionEnd = new IntArrayList();
-	/** 死亡监听列表 / Death listeners */
-	private final IntArrayList questOnDie = new IntArrayList();
-	/** 登出监听列表 / Logout listeners */
-	private final IntArrayList questOnLogOut = new IntArrayList();
-	/** 穿过飞行环监听 / Pass-flying-ring listeners */
-	private final Map<String, IntArrayList> questOnPassFlyingRings = new LinkedHashMap<>();
-	/** 动画结束监听 / Movie-end listeners */
-	private final IntObjectHashMap<IntArrayList> questOnMovieEnd = new IntObjectHashMap<>();
-	/** 隐形计时器结束监听 / Invisible-timer-end listeners */
-	private final List<Integer> onInvisibleTimerEnd = new ArrayList<>();
-	/** 装备物品监听 / Equip-item listeners */
-	private final Map<Integer, Set<Integer>> questOnEquipItem = new HashMap<>();
-	/** 每日/周任务提醒定时任务 / Daily/weekly reminder scheduled task */
-	private ScheduledFuture<?> messageSendingTask;
+	/** 任务事件注册表 / Quest event registry */
+	private final QuestEventRegistry registry = new QuestEventRegistry();
+	/** 对话平面路由 / Dialog-plane router */
+	private final QuestDialogRouter dialogRouter;
+	/** 任务物品销毁守卫 / Quest-item destroy guard */
+	private final QuestItemDestroyGuard destroyGuard;
+	/** 生产目录预装载状态机 / Production catalog preload state machine */
+	private final QuestCatalogBoot catalogBoot = new QuestCatalogBoot();
+	/** 每日/周任务提醒广播 / Daily/weekly reminder broadcast */
+	private final QuestDailyReminder dailyReminder = new QuestDailyReminder();
 	/** Fully composed production ports used by typed quest execution. */
 	private final QuestRuntimeComposition runtimeComposition = QuestRuntimeComposition.production();
 	/** Live XML/retail runtime router; each child owns a disjoint catalog. */
 	private volatile QuestRuntimeDispatcher productionDispatcher = QuestProductionDispatcher.disabled();
-	/** Raw catalog compiled in parallel with other startup work; cleared once consumed. */
-	private volatile Future<QuestCatalog> productionCatalogPreload;
 
 	/** Fully validated immutable typed runtime waiting to be published. */
 	public record PreparedProductionDefinitions(QuestCatalogRegistry catalog,
@@ -146,20 +100,14 @@ public class QuestEngine implements GameEngine {
 			java.util.Objects.requireNonNull(dispatcher, "dispatcher");
 		}
 	}
-	/** 可行动作监听 / Can-act listeners */
-	private final IntObjectHashMap<IntArrayList> questCanAct = new IntObjectHashMap<>();
-	/** 跟随到达目标监听 / Reach-target listeners */
-	private final IntArrayList reachTarget = new IntArrayList();
-	/** 跟随丢失目标监听 / Lost-target listeners */
-	private final IntArrayList lostTarget = new IntArrayList();
-	/** 进入风道监听 / Enter-windstream listeners */
-	private final IntArrayList questOnEnterWindStream = new IntArrayList();
 
 	/**
 	 * 创建任务引擎实例。
 	 * Create a quest-engine instance.
 	 */
 	public QuestEngine() {
+		this.dialogRouter = new QuestDialogRouter(this);
+		this.destroyGuard = new QuestItemDestroyGuard(registry);
 	}
 
 	/** 返回指定 owner 是否拥有实际匹配事件的路由。 / Return whether the owner has a route matching the event. */
@@ -172,6 +120,12 @@ public class QuestEngine implements GameEngine {
 
 	QuestRuntimeComposition runtimeComposition() {
 		return runtimeComposition;
+	}
+
+	/** 返回当前已发布的 typed 生产分发器（包内只读视图）。
+	 * Returns the currently published typed production dispatcher (package read-only view). */
+	QuestRuntimeDispatcher productionDispatcher() {
+		return productionDispatcher;
 	}
 
 	/** Returns the immutable catalog snapshot used by the currently published typed dispatcher. */
@@ -239,370 +193,20 @@ public class QuestEngine implements GameEngine {
 	}
 
 	/**
-	 * 分发 NPC 对话事件；questId 为 0 时按 NPC 上注册的谈话任务依次尝试。
-	 * 客户端 NPC 对话选择没有任务上下文时，由 CM_DIALOG_SELECT 先按普通对话分流；
-	 * 这里的 questId==0 派发保留给任务交互物 AI 等仍需要 owner 路由的入口。
-	 * Dispatch an NPC dialog event; when questId is 0, try talk-quests registered on the NPC.
-	 * CM_DIALOG_SELECT routes client NPC selections without quest context to a plain dialog first;
-	 * this questId==0 dispatch remains for interaction-object AI and other callers that still need owner routing.
+	 * 分发 NPC 对话事件；逐字委托对话平面路由（原版表车道先手、DD 对话平面、typed 派发与
+	 * questId==0 兜底重放）。
+	 * Dispatch an NPC dialog event; delegates verbatim to the dialog-plane router (retail table-lane
+	 * first-hand matching, the DD dialog plane, typed dispatch and the questId==0 fallback replay).
 	 * @param env 任务环境 / Quest environment
 	 * @return 是否有处理器接管 / Whether a handler took over
 	 */
 	public boolean onDialog(QuestEnv env) {
-		if (env == null || env.getPlayer() == null) {
-			return false;
-		}
-		Player player = env.getPlayer();
-		try {
-			Npc npc = env.getVisibleObject() instanceof Npc target ? target : null;
-			int requestedOwner = env.getQuestId();
-			int npcId = npc == null ? 0 : npc.getNpcId();
-			QuestRuntimeDispatcher typed = productionDispatcher;
-			// 原版表驱动车道：SimpleHunt 任务直接由原生处理器驱动，不走 IR 节点状态机
-			if (requestedOwner != 0 && SimpleHuntHandler.instance().routes(requestedOwner)) {
-				if (SimpleHuntHandler.instance().onDialog(env)) {
-					return true;
-				}
-			}
-			if (requestedOwner != 0 && SimpleSerialHuntHandler.instance().routes(requestedOwner)) {
-				if (SimpleSerialHuntHandler.instance().onDialog(env)) {
-					return true;
-				}
-			}
-			// 原版表驱动车道：SimpleTalk 任务由原生处理器直驱（cab520 接取 / cabb10 中继与报告）
-			if (requestedOwner != 0 && SimpleTalkHandler.instance().routes(requestedOwner)) {
-				if (SimpleTalkHandler.instance().onDialog(env)) {
-					return true;
-				}
-			}
-			// 原版表驱动车道：SimpleCollectItem 采集对象/交付 NPC 由原生处理器直驱（P4 切换批）
-			if (requestedOwner != 0 && SimpleCollectItemHandler.instance().routes(requestedOwner)) {
-				if (SimpleCollectItemHandler.instance().onDialog(env)) {
-					return true;
-				}
-			}
-			// 原版表驱动车道：SimpleUseItem 用物接取后的无主对话/中继/交付由原生处理器直驱（P5 切换批）
-			if (requestedOwner != 0 && SimpleUseItemHandler.instance().routes(requestedOwner)) {
-				if (SimpleUseItemHandler.instance().onDialog(env)) {
-					return true;
-				}
-			}
-			// 原版表驱动车道：SimpleItemPlay 接取/交付预览/领奖由原生处理器直驱（P5 切换批）
-			if (requestedOwner != 0 && SimpleItemPlayHandler.instance().routes(requestedOwner)) {
-				if (SimpleItemPlayHandler.instance().onDialog(env)) {
-					return true;
-				}
-			}
-			// 原版表驱动车道：CombineTask 接取（发分量 + 学配方）/ 交付（产物门 + 回收分量）/ 领奖由
-			// 原生处理器直驱（P6 切换批）。
-			// The CombineTask lane (accept with component grants and recipe learn, product-gated
-			// hand-in with component recycling, reward-window settlement) is driven natively.
-			if (requestedOwner != 0 && SimpleCombineTaskHandler.instance().routes(requestedOwner)) {
-				if (SimpleCombineTaskHandler.instance().onDialog(env)) {
-					return true;
-				}
-			}
-			// 原版表驱动车道：DataDriven Talk / CollectItem 步的共享对话平面（开页 + 页动作/1009/1008，
-			// `FUN_180c474b0`）与 TalkFOBJ 组计数（本批路由集为空 ⇒ 恒 false）。
-			// DataDriven dialog plane and TalkFOBJ groups: no-op until the atomic switch batch.
-			// 无目标领奖（npcId == 0）也进入 DD 面：原版 QuestDialog 无主键协议由本面按 questId 结算
-			// （存在性/状态/动作门全在 DD 内部；未认领返回 false 继续下方链路）。
-			// Targetless reward claims (npcId == 0) reach the DD face too: the ownerless QuestDialog
-			// protocol is settled by quest id inside the runtime; an unclaimed id falls through.
-			if (DataDrivenNativeRuntime.instance().onDialog(player, npcId, env.getDialogId(),
-				npc != null ? npc.getObjectId() : 0, requestedOwner)) {
-				return true;
-			}
-			// native 车道奖励窗确认动作的按 questId 恢复面（原版 QuestDialog 无主键协议；与 typed 车道
-			// QuestRuntimeDispatcher#dispatchRewardWindowAction 的恢复同裁定）：奖励窗由全局 UI 打开，
-			// 客户端可能携带上一个交互对象，不能要求交互对象等于完成路由的交付 NPC。八族严格绑定全部
-			// 未命中后按 questId + action 结算——传送门类 AI 的开门页轴会在「接取对象 ≠ 交付对象」的行
-			// 的接取对象上开出奖励窗（2026-10-08 实机 19640：洛塔斯 799022 上点奖励窗 → 无人认领 →
-			// 动作 id 被 AI 回显为页 8 → 客户端 load fail）。门 = 奖励窗动作段 + REWARD 态 + native owner；
-			// 结算体继续验原版元数据/档位/按钮声明，任何一门不过零副作用继续既有链路。
-			// Native-lane quest-id recovery for reward-window confirmations (the retail ownerless
-			// QuestDialog protocol; same adjudication as the typed lane's recovery). The reward window is
-			// opened by global UI, so the carried interaction object must not be required to equal the
-			// completion route's delivery NPC. After all eight families miss on strict binding, settle by
-			// quest id + action; every retail gate still runs inside the settlement and any failure keeps
-			// zero side effects (live 2026-10-08, quest 19640: the portal-type AI's open-door page axis
-			// pops the reward window on the acquire npc, the action was unclaimed and echoed back as
-			// page 8, failing the client load).
-			if (requestedOwner != 0 && npc != null && isNativeOwner(requestedOwner)
-					&& NativeUnpinnedRewardWindow.claim(player, requestedOwner, env.getDialogId(),
-						npc.getObjectId())) {
-				return true;
-			}
-			// 原版对话平面的统一兜底：子页动作（SELECT⟨n⟩_…，动作 id 即目标页 id，如 1694 = select3_1）
-			// 在 native 各族与 DD 都未认领时，按客户端契约原样回发该页——**必须携带 questId**（客户端按
-			// 任务 html 渲染该页；零上下文时去 NPC 对话 html 找该页 ⇒ load fail：2026-10-06 实机 13403
-			// 步推进后动作 1694 落三参/两参分叉，两参形态即此症状；9/28 基线与 1001-1007 的三参回发为
-			// 正确形）。与 Talk/ItemPlay 既有子页分支（QE-141）同语义，本兜底统一覆盖 DD 与其余缺该分支
-			// 的族；typed 车道保持原链路。
-			// Universal fallback of the retail dialog plane: a selection sub-page action (the action id is
-			// the target page id, e.g. 1694 = select3_1) echoes the declared page back WITH the quest
-			// context when no lane claimed it (live 13403: after an advance the step guard no longer
-			// matched and the echo dropped the context, so the client looked the page up in the NPC
-			// dialog html and failed to load; the 9/28 baseline sent it with the context). Same semantics
-			// as the existing Talk/ItemPlay sub-page branches (QE-141); the typed lane keeps its own path.
-			if (requestedOwner != 0 && npcId != 0 && !typed.owns(requestedOwner)
-					&& QuestDialogPage.isSelectionSubPage(env.getDialogId())
-					&& QuestDialogContract.loadDefault().hasButtonPage(requestedOwner, env.getDialogId())) {
-				QuestState subPageState = player.getQuestStateList().getQuestState(requestedOwner);
-				if (subPageState != null && (subPageState.getStatus() == QuestStatus.START
-						|| subPageState.getStatus() == QuestStatus.REWARD)) {
-					PacketSendUtility.sendPacket(player,
-						new SM_DIALOG_WINDOW(npc.getObjectId(), env.getDialogId(), requestedOwner));
-					return true;
-				}
-			}
-			if (requestedOwner != 0 && typed.owns(requestedOwner)) {
-				QuestEvent event = npcId == 0
-					? new QuestEvent.QuestDialog(env.getDialogId())
-					: new QuestEvent.TalkToNpc(npcId, env.getDialogId(), npc.getObjectId());
-				var result = typed.dispatch(event, player.getObjectId(), requestedOwner,
-					QuestDispatchContract.EXCLUSIVE);
-				if (result.handled()) {
-					env.setQuestId(requestedOwner);
-					return true;
-				}
-				// 奖励窗口的确认动作（SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD）由全局 UI 发出，
-				// 客户端携带的交互对象可能不是完成路由绑定的报告 NPC；严格绑定未命中时按 questId + action
-				// 恢复 owner 内唯一的 REWARD -> COMPLETE 路由，避免动作 ID 被当作页面 ID 回显而 load fail。
-				// Reward-window confirmations come from global UI and may carry an interaction object that is
-				// not the completion route's report NPC; on a strict miss, recover the owner's unique
-				// REWARD -> COMPLETE route by questId + action instead of echoing the action id as a page id.
-				if (event instanceof QuestEvent.TalkToNpc talk
-						&& QuestDialogAction.isRewardWindowAction(env.getDialogId())
-						&& typed.dispatchRewardWindowAction(talk, player.getObjectId(), requestedOwner)) {
-					env.setQuestId(requestedOwner);
-					log.debug(I18n.get("log.quest_engine.reward_window_unpinned_recovery",
-						player.getName(), npc.getNpcId(), requestedOwner, env.getDialogId()));
-					return true;
-				}
-				// A failed typed owner still owns this exclusive route, but the interaction failed.
-				// Never report it as successful and never replay the retired owner.
-				return false;
-			}
-
-			if (requestedOwner == 0 && npcId != 0) {
-				QuestEvent event = new QuestEvent.TalkToNpc(npcId, env.getDialogId(), npc.getObjectId());
-				// 客户端直接交互采集对象（questId==0 入口）：native 采集族先手匹配（单一 owner 不变量：
-				// 该行已切 native，typed 目录里没有它的路由）。2026-10-03 修复：先手原样 return true
-				// 吞掉交互且不下发任何包（真机 1103：右键谷物袋子零响应）——改为重放进 handler，
-				// 由 START 段 onObjectUse 推进收集并回页。
-				// Direct client interaction with a collect object (questId==0 entry): the native collect
-				// family matches first. Fixed 2026-10-03: the bare return swallowed the interaction with
-				// no packet (live quest 1103); it now replays into the handler so onObjectUse advances.
-				boolean collectObjectClaimed = false;
-				for (SimpleCollectItemHandler.CollectTargetRef ref
-						: SimpleCollectItemHandler.instance().targetsForNpc(npcId)) {
-					if (!SimpleCollectItemHandler.instance().routes(ref.questId())) {
-						continue;
-					}
-					collectObjectClaimed = true;
-					if (onDialog(new QuestEnv(npc, player, ref.questId(), env.getDialogId()))) {
-						env.setQuestId(ref.questId());
-						return true;
-					}
-				}
-				if (collectObjectClaimed) {
-					// 物件交互已被 native 采集族认领（推进成功或原版零副作用：超杀/条件不满足）。
-					// 原版从不在采集物件上开对话窗——不得落到 TalkEventHandler 的通用页 10
-					// （2026-10-04 真机 1103：对谷物袋子开窗即客户端 load fail）。
-					// The interaction is claimed by the native collect family (advance or retail zero
-					// side effect). The retail server never opens a dialog window on a collect object;
-					// falling through to the generic page 10 makes the client fail to load it (live 1103).
-					return true;
-				}
-				// DD 采集物件（CollectItem 步的追加 FOBJ 列对象，2026-10-08 实机 15011 右击 702730）同形先手：
-				// 按候选重放回 DD 面按 questId 认领（认领零状态写零发包；携带 owner 供组队每人一枚的
-				// 掉落过滤）。DD 行无 typed 路由，认领只能由 DD 面自己做——此先手与上面采集族同责。
-				// DD collect objects (CollectItem appended-FOBJ columns): the same first-hand replay so the
-				// claim carries the owner id (used by the group each-member drop filter).
-				boolean dataDrivenObjectClaimed = false;
-				for (int objectQuestId : DataDrivenNativeRuntime.instance().collectObjectQuestIds(npcId)) {
-					dataDrivenObjectClaimed = true;
-					if (onDialog(new QuestEnv(npc, player, objectQuestId, env.getDialogId()))) {
-						env.setQuestId(objectQuestId);
-						return true;
-					}
-				}
-				if (dataDrivenObjectClaimed) {
-					// 物件已被 DD 采集面接管（认领成功或原版零副作用：步不符/未接取）——同采集族口径，
-					// 不得落到通用页 10（物件开窗即客户端 load fail）。
-					// Claimed by the DD collect face (or the retail zero-side-effect shape); a dialog
-					// window aimed at a collect object makes the client fail to load it.
-					return true;
-				}
-				// 右键开门（TalkEventHandler.onTalk → dialogId=-1, questId=0）：玩家在该 NPC 上有进行中/
-				// 可交任务时先进任务对话（原版对话平面 FUN_180c474b0「打开（-1/26）→ 阶段页」），否则
-				// 才落普通页 10。tablelane 车道按 requestedOwner!=0 路由，questId=0 的开门在此逐个
-				// 进行中任务重放（2026-10-03 真机 1102：REWARD 后右键交付 NPC 只剩「结束对话」）。
-				// 重放分两遍：可交付（REWARD）优先于进行中（START）。客户端任务列表不渲染交付行
-				// （2026-10-06 实机 19683 教训：REWARD 落页 10 时交付行不可点）；若单遍按 questId 升序遍历，
-				// NPC 上编号较小的进行中任务会先认领（START → 页 10）并短路循环，遮挡可交付任务的奖励窗
-				// （2026-10-06 实机 14111：NPC 203126 上 1155 先认领，14111 的奖励窗不可达、任务不可交）。
-				// The right-click open door (-1, questId=0): replay the player's in-progress quests on
-				// this npc through the table lanes first (retail dialog plane "open → stage page"),
-				// so a reportable quest opens its dialog instead of the plain page 10. The replay runs
-				// REWARD before START: the client task list never renders a hand-in row (live 19683),
-				// so a live quest claiming the open (START -> page 10) must not shadow a deliverable
-				// one (live 14111: 1155 claimed first and hid 14111's reward window on npc 203126).
-				List<QuestState> openDoorReplay = new ArrayList<>();
-				for (QuestState state : player.getQuestStateList().getAllQuestState()) {
-					if (state.getStatus() == QuestStatus.REWARD) {
-						openDoorReplay.add(state);
-					}
-				}
-				for (QuestState state : player.getQuestStateList().getAllQuestState()) {
-					if (state.getStatus() == QuestStatus.START) {
-						openDoorReplay.add(state);
-					}
-				}
-				for (QuestState state : openDoorReplay) {
-					if (onDialog(new QuestEnv(npc, player, state.getQuestId(), env.getDialogId()))) {
-						return true;
-					}
-				}
-				// 无任务上下文的**物件**打开（-1 = USE_OBJECT / 1001 = QUEST_SELECT）：按物件反查
-				// SimpleTalk 接取行重放——原版物件接取 = USE_OBJECT 自环 → 携带 questId 的接取入口页。
-				// 缺此重放时打开只落 AI 的两参兜底页，客户端无任务上下文渲染不出接取对话
-				// （2026-10-07 实机 18645/730777：点"卡利加的竖琴架"无可接取任务）。仅限物件族：
-				// 普通 NPC 的打开由客户端本地对话框驱动（页 10 任务列表 → 31），保持原行为（QE-093）。
-				// Context-less **object** open (-1 / QUEST_SELECT): replay the object's SimpleTalk acquire
-				// rows (the retail object accept self-loop grants the quest-carrying entry page). Without
-				// it the open only reaches the context-less AI fallback page (live 2026-10-07, quest
-				// 18645 / object 730777). Objects only: a plain npc's open is client-driven (page-10
-				// list → 31) and stays untouched.
-				boolean questObjectOpen = env.getDialogId() == QuestDialogAction.USE_OBJECT.id()
-						|| env.getDialogId() == QuestDialogAction.QUEST_SELECT.id();
-				if (questObjectOpen && (npc.getAi2() instanceof com.aionemu.gameserver.ai.QuestItemNpcAI2
-						|| npc.getAi2() instanceof com.aionemu.gameserver.ai.quests.QuestStartItemNpcAi2)) {
-					for (int acquireQuestId : SimpleTalkHandler.instance().acquireQuestIdsForNpc(npcId)) {
-						if (SimpleTalkHandler.instance().routes(acquireQuestId)
-								&& onDialog(new QuestEnv(npc, player, acquireQuestId, env.getDialogId()))) {
-							env.setQuestId(acquireQuestId);
-							return true;
-						}
-					}
-				}
-				// 参考 legacy 引擎：当调用方确实提供了 questId==0 的任务对话入口（交互物 AI 等）时，
-				// 按 NPC 任务顺序逐个尝试，让第一个真正处理该动作的 owner 胜出。
-				// 客户端 NPC 对话选择没有任务上下文时已在 CM_DIALOG_SELECT 按普通对话处理，不会走到这里。
-				// Legacy-engine parity: when the caller really provides a questId==0 quest-dialog entry
-				// (interaction-object AI and similar), try the NPC's quests in order and let the first
-				// owner that actually handles the action win. Client NPC selections without quest context
-				// are already handled as plain dialogs by CM_DIALOG_SELECT and never reach this path.
-				for (int candidateId : npcDialogDispatchOwners(player, npc, event)) {
-					var result = typed.dispatch(event, player.getObjectId(), candidateId,
-						QuestDispatchContract.EXCLUSIVE);
-					if (result.handled()) {
-						env.setQuestId(candidateId);
-						return true;
-					}
-					if (result.claimed()) {
-						return false;
-					}
-				}
-				// Most quest interaction objects use a pure ACTION_ITEM_USE eligibility route and no
-				// separate TALK transition. Re-run that side-effect-free route at use completion so
-				// QuestItemNpcAI2 receives the actual owner id for group/alliance drop filtering.
-				QuestEvent.CanAct actionObject = new QuestEvent.CanAct(npcId, QuestActionType.ACTION_ITEM_USE.name());
-				if (env.getDialogId() == -1 && npc.getAi2() != null
-						&& "quest_use_item".equals(npc.getAi2().getName()) && typed.hasRoutes(actionObject)) {
-					var actionResult = typed.dispatch(actionObject, player.getObjectId(), 0,
-						QuestDispatchContract.EXCLUSIVE);
-					if (actionResult.handled()) {
-						actionResult.handledOwners().stream().findFirst().ifPresent(env::setQuestId);
-						return true;
-					}
-					if (actionResult.claimed()) {
-						return false;
-					}
-				}
-			}
-
-			if (requestedOwner != 0) {
-				var metadata = questCatalog().findMetadata(requestedOwner).orElse(null);
-				if (metadata != null && "CHALLENGE_TASK".equals(metadata.category())
-						&& player.getAccessLevel() > 0) {
-					PacketSendUtility.sendMessage(player,
-						"You're GM! So system won't apply countNextRepeatTime()");
-					return true;
-				} else if (metadata != null && "CHALLENGE_TASK".equals(metadata.category())
-						&& player.getAccessLevel() == 0) {
-					PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1400855, 9));
-				}
-			}
-		} catch (Exception ex) {
-			log.error(I18n.get("log.dd0b8ceead0c"), ex);
-			return false;
-		}
-		return false;
+		return dialogRouter.onDialog(env);
 	}
 
-	/**
-	 * 返回 questId==0 对话的派发顺序：先客户端可见/进行中/已授权的 owner，再其余匹配 owner。
-	 * Returns the questId==0 dialog dispatch order: client-visible, live, or authorized owners first,
-	 * then every remaining match.
-	 * <p>与 legacy 引擎一致，逐个尝试候选，第一个真正处理该动作的 owner 胜出；未接取的普通任务
-	 * 只是排在可见 owner 之后，仍会被尝试，因此不会出现“点了没反应”。</p>
-	 * <p>Legacy-engine parity: candidates are tried in order and the first owner that actually handles
-	 * the action wins. Unaccepted normal quests are only ordered after the visible owners; they are
-	 * still tried, so a dialog click can never dead-end.</p>
-	 * @param player 玩家 / player
-	 * @param npc 对话 NPC / dialog NPC
-	 * @param event 客户端动作事件 / client action event
-	 * @return 派发顺序 / dispatch order
-	 */
+	/** 返回 questId==0 对话的派发顺序（委托对话路由；包内测试入口签名不变）。 / Returns the questId==0 dialog dispatch order (dialog router; the package-visible test entry is unchanged). */
 	List<Integer> npcDialogDispatchOwners(Player player, Npc npc, QuestEvent event) {
-		QuestRuntimeDispatcher typed = productionDispatcher;
-		List<Integer> preferred = new ArrayList<>();
-		List<Integer> remaining = new ArrayList<>();
-		// 候选来自正式 catalog 并通过事件键过滤，因此不依赖 questNpcs 索引是否已装载。
-		// Candidates come from the production catalog and are filtered by the event key, so this does
-		// not depend on the questNpcs index being installed.
-		for (int candidateId : typed.owners()) {
-			if (!typed.hasMatchingRoutes(event, candidateId)) {
-				continue;
-			}
-			(isClientVisibleNpcDialogOwner(player, npc, candidateId) ? preferred : remaining)
-				.add(candidateId);
-		}
-		preferred.addAll(remaining);
-		return preferred;
-	}
-
-	/**
-	 * 判断 typed owner 在客户端关闭普通任务标记时是否可见/可进入，用于决定派发优先级。
-	 * Determines whether a typed owner is visible/enterable while the normal-quest marker is disabled;
-	 * this decides the dispatch preference only.
-	 * <p>非普通任务类别（IMPORTANT/MISSION 等）客户端始终可见；进行中或已由任务列表行选择的任务
-	 * 同样优先。未接取的普通任务排在它们之后，但依然会被尝试。</p>
-	 * <p>Other categories (IMPORTANT/MISSION and so on) stay visible in the client, and a live or
-	 * row-selected quest is preferred as well. Unaccepted normal quests are only ordered after them and
-	 * are still tried.</p>
-	 * @param player 玩家 / player
-	 * @param npc 对话 NPC / dialog NPC
-	 * @param questId 候选任务 ID / candidate quest id
-	 * @return 是否可见/可进入 / whether the owner stays visible or enterable
-	 */
-	private boolean isClientVisibleNpcDialogOwner(Player player, Npc npc, int questId) {
-		QuestRuntimeDispatcher typed = productionDispatcher;
-		if (!typed.owns(questId)) {
-			return false;
-		}
-		if (player.hasNpcQuestDialogSelection(npc.getObjectId(), questId)) {
-			return true;
-		}
-		QuestMetadata metadata = typed.catalogRegistry().findMetadata(questId).orElse(null);
-		if (metadata != null && !"QUEST".equals(metadata.category())) {
-			return true;
-		}
-		QuestState questState = player.getQuestStateList().getQuestState(questId);
-		return questState != null && (questState.getStatus() == QuestStatus.START
-			|| questState.getStatus() == QuestStatus.REWARD);
+		return dialogRouter.npcDialogDispatchOwners(player, npc, event);
 	}
 
 	/**
@@ -610,14 +214,7 @@ public class QuestEngine implements GameEngine {
 	 * Dispatches an accepted server-issued quest share without inventing an NPC interaction object.
 	 */
 	public void onSharedQuestDialog(QuestEnv env) {
-		if (env == null || env.getPlayer() == null || env.getQuestId() <= 0) {
-			return;
-		}
-		QuestRuntimeDispatcher typed = productionDispatcher;
-		if (!typed.owns(env.getQuestId())) {
-			return;
-		}
-		typed.dispatchSharedQuestAccept(env.getPlayer().getObjectId(), env.getQuestId(), env.getDialogId());
+		dialogRouter.onSharedQuestDialog(env);
 	}
 
 	/**
@@ -794,7 +391,7 @@ public class QuestEngine implements GameEngine {
 		try {
 			QuestRuntimeDispatcher typed = productionDispatcher;
 			Player player = env.getPlayer();
-			if (questOnDie.stream().anyMatch(typed::owns)) {
+			if (registry.questOnDie.stream().anyMatch(typed::owns)) {
 				// 死亡事实由正式 owner 广播消费；同一玩家可同时拥有多个死亡回退任务。
 				// Broadcast the authoritative death fact to every matching typed owner.
 				try {
@@ -903,7 +500,7 @@ public class QuestEngine implements GameEngine {
 			return;
 		}
 		try {
-			IntArrayList lists = getOnPassFlyingRingsQuests(FlyRing);
+			IntArrayList lists = registry.getOnPassFlyingRingsQuests(FlyRing);
 			QuestRuntimeDispatcher typed = productionDispatcher;
 			Player player = env.getPlayer();
 			boolean hasTypedOwner = false;
@@ -1164,7 +761,7 @@ public class QuestEngine implements GameEngine {
 		// 接线在 onItemUseEvent（2026-10-06 实机 13403：发放动作曾在此级联跳过探测器使用步）。
 		// The DD ItemPlay steps are not wired to the obtain face: retail event 5 is item USE,
 		// hooked in onItemUseEvent (live 13403 round 4).
-		List<Integer> questIds = questItems.get(itemId);
+		List<Integer> questIds = registry.questItems.get(itemId);
 		if (questIds != null && questIds.stream().anyMatch(typed::owns)) {
 			// 物品进入玩家背包后先进入正式 typed owner；同一物品可被多个
 			// 任务监听，因此使用广播契约，不因一个 owner 的状态而截断其他 owner。
@@ -1185,115 +782,27 @@ public class QuestEngine implements GameEngine {
 	}
 
 	/**
-	 * 销毁任务物品前的确认与收口（原版 `User_DestroyItem` + 确认回复 `0x249f1` 分支镜像）：
-	 * 物品被玩家进行中的任务引用（原版 = item 模板静态 quest 列表）且全部不可放弃 ⇒ 拒绝并提示
-	 * （1300604 = 原版 0x13d87c）；否则弹确认窗（150001）——确认 ⇒ 依次放弃相关任务
-	 * （`User_DeleteQuest`）后删除物品；拒绝 ⇒ 提示重试（1300605 = 原版 0x13d87d）。
-	 * The retail destroy flow: referencing in-progress quests gate a confirmation window; on confirm
-	 * the quests are stopped (quest giveup) and the item deleted.
-	 *
+	 * 销毁任务物品前的确认与收口（原版 User_DestroyItem 确认流程镜像；逐字委托销毁守卫）。
+	 * Quest-item destroy confirmation flow (the retail User_DestroyItem mirror; delegates verbatim to
+	 * the destroy guard).
 	 * @param player 玩家 / the player
-	 * @param item   待销毁物品 / the item being destroyed
-	 * @return true = 本方法认领销毁（已弹窗或已提示拒绝）；false = 无进行中任务引用，走普通销毁
+	 * @param item 待销毁物品 / the item being destroyed
+	 * @return true = 已认领销毁（弹窗或拒绝提示）；false = 无进行中任务引用，走普通销毁 /
+	 *         true when claimed (window or refusal), false when unreferenced
 	 */
 	public boolean tryQuestItemDestroy(Player player, Item item) {
-		if (player == null || item == null || item.getItemTemplate() == null) {
-			return false;
-		}
-		int itemId = item.getItemTemplate().getTemplateId();
-		List<Integer> referencing = activeQuestsReferencingItem(player, itemId);
-		if (referencing.isEmpty()) {
-			return false;
-		}
-		boolean anyAbandonable = false;
-		for (int questId : referencing) {
-			if (QuestService.canAbandon(player, questId)) {
-				anyAbandonable = true;
-				break;
-			}
-		}
-		if (!anyAbandonable) {
-			PacketSendUtility.sendPacket(player,
-				SM_SYSTEM_MESSAGE.STR_QUEST_GIVEUP_WHEN_DELETE_QUEST_ITEM_IMPOSSIBLE(item.getItemName()));
-			return true;
-		}
-		RequestResponseHandler handler = questItemDestroyResponder(player, itemId, item.getObjectId());
-		if (!player.getResponseRequester().putRequest(SM_QUESTION_WINDOW.STR_QUEST_GIVEUP_WHEN_DELETE_QUEST_ITEM,
-			handler)) {
-			// 有在途问询：原版重试提示（1300605）；物品不删。
-			// A pending request blocks the ask: the retail retry message, item kept.
-			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_QUEST_GIVEUP_WHEN_DELETE_QUEST_ITEM_RETRY);
-			return true;
-		}
-		PacketSendUtility.sendPacket(player, new SM_QUESTION_WINDOW(
-			SM_QUESTION_WINDOW.STR_QUEST_GIVEUP_WHEN_DELETE_QUEST_ITEM, 0, 0, new DescriptionId(item.getNameId())));
-		return true;
+		return destroyGuard.tryQuestItemDestroy(player, item);
 	}
 
 	/**
-	 * 构造「销毁任务物品需先放弃任务」确认窗的应答处理器。
-	 * Builds the responder for the quest-item destroy confirmation window.
-	 * @param player 发起销毁的玩家 / the player requesting the destroy
-	 * @param itemId 物品模板 id / the item template id
-	 * @param objectId 物品对象 id / the item object id
-	 * @return 确认/拒绝应答处理器 / the confirmation responder
-	 */
-	private RequestResponseHandler questItemDestroyResponder(Player player, int itemId, int objectId) {
-		return new RequestResponseHandler(player) {
-			@Override
-			public void acceptRequest(Creature requester, Player responder) {
-				Item current = responder.getInventory() == null ? null
-					: responder.getInventory().getItemByObjId(objectId);
-				if (current == null) {
-					return;
-				}
-				for (int questId : activeQuestsReferencingItem(responder, itemId)) {
-					QuestService.abandonQuest(responder, questId);
-				}
-				responder.getInventory().delete(current, ItemDeleteType.DISCARD);
-			}
-
-			@Override
-			public void denyRequest(Creature requester, Player responder) {
-				PacketSendUtility.sendPacket(responder,
-					SM_SYSTEM_MESSAGE.STR_QUEST_GIVEUP_WHEN_DELETE_QUEST_ITEM_RETRY);
-			}
-		};
-	}
-
-	/**
-	 * 玩家进行中（START/REWARD）且引用该物品的任务：typed 目录索引（{@code questItems}，use-item
-	 * 注册面）∪ DD 原生行引用面（发/扣物品动作 + ItemPlay 载荷 + 接取行动作）。原版等价物 = item
-	 * 模板静态 quest 列表（≤2 条）∩ 进行中状态。
-	 * In-progress quests referencing the item (the typed index ∪ the DD row references).
-	 *
+	 * 玩家进行中且引用该物品的任务（typed 目录索引 ∪ DD 原生行引用面；委托销毁守卫）。
+	 * In-progress quests referencing the item (typed index ∪ DD row references; delegates to the guard).
 	 * @param player 玩家 / the player
 	 * @param itemId 物品模板 id / the item template id
 	 * @return 按发现顺序的任务 id 列表 / the quest ids in discovery order
 	 */
 	public List<Integer> activeQuestsReferencingItem(Player player, int itemId) {
-		if (player == null || player.getQuestStateList() == null || itemId <= 0) {
-			return List.of();
-		}
-		Set<Integer> candidates = new java.util.LinkedHashSet<>();
-		IntArrayList typed = questItems.get(itemId);
-		if (typed != null) {
-			candidates.addAll(typed);
-		}
-		try {
-			candidates.addAll(DataDrivenNativeRuntime.instance().questsReferencingItem(itemId));
-		} catch (RuntimeException ignored) {
-			// DD 面缺席（部分装配/测试）不影响 typed 面判定。
-			// A missing DD face does not block the typed verdict.
-		}
-		List<Integer> active = new ArrayList<>();
-		for (int questId : candidates) {
-			QuestState state = player.getQuestStateList().getQuestState(questId);
-			if (state != null && (state.getStatus() == QuestStatus.START || state.getStatus() == QuestStatus.REWARD)) {
-				active.add(questId);
-			}
-		}
-		return List.copyOf(active);
+		return destroyGuard.activeQuestsReferencingItem(player, itemId);
 	}
 
 	/**
@@ -1661,7 +1170,7 @@ public class QuestEngine implements GameEngine {
 		if (env == null || !(env.getVisibleObject() instanceof Npc npc) || env.getPlayer() == null) {
 			return;
 		}
-		if (!questNpcs.containsKey(npc.getNpcId())) {
+		if (!registry.questNpcs.containsKey(npc.getNpcId())) {
 			return;
 		}
 		QuestNpc questNpc = getQuestNpc(npc.getNpcId());
@@ -1711,213 +1220,80 @@ public class QuestEngine implements GameEngine {
 		}
 	}
 
-	/**
-	 * 注册（或获取）NPC 的任务关联对象。
-	 * Register (or obtain) the quest association for an NPC.
-	 * NPC 模板 ID / NPC template id
-	 * QuestNpc association
-	 */
+	/** 注册（或获取）NPC 的任务关联对象。 / Register (or obtain) the quest association for an NPC. */
 	public QuestNpc registerQuestNpc(int npcId) {
-		if (!questNpcs.containsKey(npcId)) {
-			questNpcs.put(npcId, new QuestNpc(npcId));
-		}
-		return questNpcs.get(npcId);
+		return registry.registerQuestNpc(npcId);
 	}
 
-	/**
-	 * 注册物品使用关联任务。
-	 * Register a quest for item-use events.
-	 * Item id
-	 * Quest id
-	 */
+	/** 注册物品使用关联任务。 / Register a quest for item-use events. */
 	public void registerQuestItem(int itemId, int questId) {
-		if (!questItemRelated.containsKey(itemId)) {
-			IntArrayList itemRelatedQuests = new IntArrayList();
-			itemRelatedQuests.add(questId);
-			questItemRelated.put(itemId, itemRelatedQuests);
-		} else {
-			questItemRelated.get(itemId).add(questId);
-		}
+		registry.registerQuestItem(itemId, questId);
 	}
 
-	/**
-	 * 注册获得物品关联任务。
-	 * Register a quest for item-obtain events.
-	 * Item id
-	 * Quest id
-	 */
+	/** 注册获得物品关联任务。 / Register a quest for item-obtain events. */
 	public void registerGetingItem(int itemId, int questId) {
-		if (!questItems.containsKey(itemId)) {
-			IntArrayList questItemsToReg = new IntArrayList();
-			questItemsToReg.add(questId);
-			questItems.put(itemId, questItemsToReg);
-		} else {
-			questItems.get(itemId).add(questId);
-		}
+		registry.registerGetingItem(itemId, questId);
 	}
 
-	/**
-	 * 注册区域任务结束监听。
-	 * Register a zone-mission-end listener.
-	 * Quest id
-	 */
+	/** 注册区域任务结束监听。 / Register a zone-mission-end listener. */
 	public void registerOnEnterZoneMissionEnd(int questId) {
-		if (!questOnEnterZoneMissionEnd.contains(questId)) {
-			questOnEnterZoneMissionEnd.add(questId);
-		}
+		registry.registerOnEnterZoneMissionEnd(questId);
 	}
 
-	/**
-	 * 注册死亡监听。
-	 * Register a death listener.
-	 * Quest id
-	 */
+	/** 注册死亡监听。 / Register a death listener. */
 	public void registerOnDie(int questId) {
-		if (!questOnDie.contains(questId)) {
-			questOnDie.add(questId);
-		}
+		registry.registerOnDie(questId);
 	}
 
-	/**
-	 * 注册登出监听。
-	 * Register a logout listener.
-	 * Quest id
-	 */
+	/** 注册登出监听。 / Register a logout listener. */
 	public void registerOnLogOut(int questId) {
-		if (!questOnLogOut.contains(questId)) {
-			questOnLogOut.add(questId);
-		}
+		registry.registerOnLogOut(questId);
 	}
 
-	/**
-	 * 注册穿过飞行环监听。
-	 * Register a pass-flying-ring listener.
-	 * @param flyingRing 飞行环标识 / Flying-ring key
-	 * Quest id
-	 */
+	/** 注册穿过飞行环监听。 / Register a pass-flying-ring listener. */
 	public void registerOnPassFlyingRings(String flyingRing, int questId) {
-		if (!questOnPassFlyingRings.containsKey(flyingRing)) {
-			IntArrayList onPassFlyingRingsQuests = new IntArrayList();
-			onPassFlyingRingsQuests.add(questId);
-			questOnPassFlyingRings.put(flyingRing, onPassFlyingRingsQuests);
-		} else {
-			questOnPassFlyingRings.get(flyingRing).add(questId);
-		}
+		registry.registerOnPassFlyingRings(flyingRing, questId);
 	}
 
-	/**
-	 * 注册动画结束监听。
-	 * Register a movie-end listener.
-	 * Movie id
-	 * Quest id
-	 */
+	/** 注册动画结束监听。 / Register a movie-end listener. */
 	public void registerOnMovieEndQuest(int moveId, int questId) {
-		if (!questOnMovieEnd.containsKey(moveId)) {
-			IntArrayList onMovieEndQuests = new IntArrayList();
-			onMovieEndQuests.add(questId);
-			questOnMovieEnd.put(moveId, onMovieEndQuests);
-		} else {
-			questOnMovieEnd.get(moveId).add(questId);
-		}
+		registry.registerOnMovieEndQuest(moveId, questId);
 	}
 
-	/**
-	 * 注册隐形计时器结束监听。
-	 * Register an invisible-timer-end listener.
-	 * Quest id
-	 */
+	/** 注册隐形计时器结束监听。 / Register an invisible-timer-end listener. */
 	public void registerOnInvisibleTimerEnd(int questId) {
-		if (!onInvisibleTimerEnd.contains(questId)) {
-			onInvisibleTimerEnd.add(questId);
-		}
+		registry.registerOnInvisibleTimerEnd(questId);
 	}
 
-	/**
-	 * 注册装备物品监听。
-	 * Register an equip-item listener.
-	 * Item id
-	 * Quest id
-	 */
+	/** 注册装备物品监听。 / Register an equip-item listener. */
 	public void registerOnEquipItem(int itemId, int questId) {
-		if (!questOnEquipItem.containsKey(itemId)) {
-			Set<Integer> questIds = new HashSet<>();
-			questIds.add(questId);
-			questOnEquipItem.put(itemId, questIds);
-		} else {
-			questOnEquipItem.get(itemId).add(questId);
-		}
+		registry.registerOnEquipItem(itemId, questId);
 	}
 
-	/**
-	 * 注册可行动作监听。
-	 * Register a can-act listener for a template.
-	 * Quest id
-	 * Template id
-	 */
+	/** 注册可行动作监听。 / Register a can-act listener for a template. */
 	public void registerCanAct(int questId, int templateId) {
-		if (!questCanAct.containsKey(templateId)) {
-			IntArrayList questSkills = new IntArrayList();
-			questSkills.add(questId);
-			questCanAct.put(templateId, questSkills);
-		} else {
-			questCanAct.get(templateId).add(questId);
-		}
+		registry.registerCanAct(questId, templateId);
 	}
 
-	/**
-	 * 注册进入风道监听。
-	 * Register an enter-windstream listener.
-	 * Quest id
-	 */
+	/** 注册进入风道监听。 / Register an enter-windstream listener. */
 	public void registerOnEnterWindStream(int questId) {
-		if (!questOnEnterWindStream.contains(questId))
-			questOnEnterWindStream.add(questId);
+		registry.registerOnEnterWindStream(questId);
 	}
 
-	/**
-	 * 注册跟随到达目标监听。
-	 * Register a reach-target listener.
-	 * Quest id
-	 */
+	/** 注册跟随到达目标监听。 / Register a reach-target listener. */
 	public void registerAddOnReachTargetEvent(int questId) {
-		if (!reachTarget.contains(questId))
-			reachTarget.add(questId);
+		registry.registerAddOnReachTargetEvent(questId);
 	}
 
-	/**
-	 * 注册跟随丢失目标监听。
-	 * Register a lost-target listener.
-	 * Quest id
-	 */
+	/** 注册跟随丢失目标监听。 / Register a lost-target listener. */
 	public void registerAddOnLostTargetEvent(int questId) {
-		if (!lostTarget.contains(questId))
-			lostTarget.add(questId);
+		registry.registerAddOnLostTargetEvent(questId);
 	}
 
-	/**
-	 * 获取 NPC 的任务关联对象；未注册时返回空壳。
-	 * Return the quest association for an NPC, or an empty shell if unregistered.
-	 * NPC 模板 ID / NPC template id
-	 * QuestNpc association
-	 */
+	/** 获取 NPC 的任务关联对象；未注册时返回空壳。
+	 * Return the quest association for an NPC, or an empty shell if unregistered. */
 	public QuestNpc getQuestNpc(int npcId) {
-		if (questNpcs.containsKey(npcId)) {
-			return questNpcs.get(npcId);
-		}
-		return new QuestNpc(npcId);
-	}
-
-	/**
-	 * 查询穿过飞行环关联任务。
-	 * Look up quests related to passing a flying ring.
-	 * @param flyingRing 飞行环标识 / Flying-ring key
-	 * Quest id list
-	 */
-	private IntArrayList getOnPassFlyingRingsQuests(String flyingRing) {
-		if (questOnPassFlyingRings.containsKey(flyingRing)) {
-			return questOnPassFlyingRings.get(flyingRing);
-		}
-		return new IntArrayList();
+		return registry.getQuestNpc(npcId);
 	}
 
 	/**
@@ -2057,30 +1433,13 @@ public class QuestEngine implements GameEngine {
 	 * 在配置就绪后尽早编译 raw catalog，使其解析时间与静态数据加载重叠。
 	 * Compile the raw catalog as soon as configuration is ready so parsing overlaps static-data loading.
 	 */
-	public synchronized void preloadProductionCatalog() {
+	public void preloadProductionCatalog() {
 		preloadProductionCatalog(this::loadProductionCatalog);
 	}
 
+	/** 委托目录预装载状态机安排后台编译。 / Delegates to the catalog preload state machine. */
 	synchronized void preloadProductionCatalog(Supplier<QuestCatalog> catalogSupplier) {
-		if (productionCatalogPreload != null) {
-			return;
-		}
-		CompletableFuture<QuestCatalog> future = new CompletableFuture<>();
-		productionCatalogPreload = future;
-		// 使用专用守护线程而非 commonPool：预加载与静态数据阶段并行，commonPool 调度是
-		// 启动期静默卡住的疑点之一；独立线程不占静态数据加载池，也不依赖 commonPool。
-		// Uses a dedicated daemon thread instead of the commonPool: the preload overlaps the
-		// static-data phase and commonPool scheduling was a suspect in silent startup stalls;
-		// a dedicated thread neither occupies the static-data pool nor depends on commonPool.
-		Thread preloadThread = new Thread(() -> {
-			try {
-				future.complete(catalogSupplier.get());
-			} catch (Throwable t) {
-				future.completeExceptionally(t);
-			}
-		}, "quest-catalog-preload");
-		preloadThread.setDaemon(true);
-		preloadThread.start();
+		catalogBoot.preload(catalogSupplier);
 	}
 
 	/**
@@ -2088,103 +1447,21 @@ public class QuestEngine implements GameEngine {
 	 * Await the precompiled result; fall back to synchronous compilation when preload was not armed.
 	 */
 	synchronized QuestCatalog awaitProductionCatalogPreload() throws Exception {
-		Future<QuestCatalog> future = productionCatalogPreload;
-		productionCatalogPreload = null;
-		if (future == null) {
-			return loadProductionCatalog();
-		}
-		try {
-			return future.get();
-		} catch (ExecutionException e) {
-			Throwable cause = e.getCause();
-			if (cause instanceof Exception exception) {
-				throw exception;
-			}
-			if (cause instanceof Error error) {
-				throw error;
-			}
-			throw e;
-		}
-	}
-
-	/**
-	 * 生产 NPC AI 查询（启动期固定使用）：{@code DataManager.NPC_DATA} 未就绪时返回 null。
-	 * Production NPC AI lookup; returns null while the runtime {@code DataManager} is not ready.
-	 */
-	private static String productionNpcAi(int templateId) {
-		if (DataManager.NPC_DATA == null) {
-			return null;
-		}
-		var template = DataManager.NPC_DATA.getNpcTemplate(templateId);
-		return template == null ? null : template.getAi();
+		return catalogBoot.awaitPreload(this::loadProductionCatalog);
 	}
 
 	PreparedProductionDefinitions prepareProductionDefinitions(QuestCatalog catalog) {
-		return prepareProductionDefinitions(catalog, QuestEngine::productionNpcAi);
+		return QuestProductionPreparer.prepare(catalog);
 	}
 
 	/**
-	 * 生产准备的可注入重载：NPC AI 索引由调用方给出，其余启动期合同完全一致。
-	 * <p>
-	 * 生产调用固定注入 {@link #productionNpcAi(int)}（{@code DataManager.NPC_DATA}）；启动期门禁注入测试侧
-	 * AI 索引，从而在不起静态数据的情况下跑完整准备路径（交互对象合同 + 事件接线合同 + item-play 索引）。
-	 * Production preparation with an injectable NPC AI index; the gates use it to exercise the whole
-	 * startup path without the runtime {@code DataManager} bootstrap.
+	 * 生产准备的可注入重载（准备器承载完整启动期合同）。
+	 * Injectable production preparation overload (the preparer carries the full startup contract:
+	 * interaction objects, event wiring, item-play index).
 	 */
 	PreparedProductionDefinitions prepareProductionDefinitions(QuestCatalog catalog,
 			IntFunction<String> aiNameByTemplate) {
-		java.util.Objects.requireNonNull(aiNameByTemplate, "aiNameByTemplate");
-		RuntimeCatalogs catalogs = splitRuntimeCatalogs(catalog);
-		QuestRuntimeComposition snapshotComposition = QuestRuntimeComposition.production(catalogs.combined());
-		QuestExecutionCoordinator coordinator = new QuestExecutionCoordinator(new PlayerSerialExecutor());
-		QuestProductionDispatcher xmlDispatcher = QuestProductionDispatcher.production(catalogs.xml(),
-			snapshotComposition, coordinator);
-		QuestProductionDispatcher retailDispatcher = catalogs.retail().entries().isEmpty()
-			? QuestProductionDispatcher.disabled()
-			: QuestProductionDispatcher.production(catalogs.retail(), snapshotComposition, coordinator);
-		QuestRuntimeRouter dispatcher = new QuestRuntimeRouter(catalogs.combined(), xmlDispatcher, retailDispatcher);
-		QuestInteractionObjectValidator.validate(xmlDispatcher, aiNameByTemplate);
-		QuestInteractionObjectValidator.validate(retailDispatcher, aiNameByTemplate);
-		snapshotComposition.installBroadcastPort(new PlayerQuestBroadcastPort(
-			playerId -> com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(playerId),
-			(player, questIds) -> dispatcher.dispatchOwners(new QuestEvent.ZoneMissionEnd(), player.getObjectId(),
-				questIds, QuestDispatchContract.EXCLUSIVE),
-			(player, questIds) -> dispatcher.dispatchOwners(new QuestEvent.EventQuestRefresh(), player.getObjectId(),
-				questIds, QuestDispatchContract.EXCLUSIVE)));
-		for (CompiledQuestDefinition definition : catalogs.combined().executables()) {
-			QuestProductionEventWiring.validateDefinition(definition);
-			if (definition.definition().transitions().stream()
-					.map(com.aionemu.gameserver.questEngine.definition.QuestTransition::event)
-					.filter(QuestEvent.ItemPlay.class::isInstance)
-					.map(QuestEvent.ItemPlay.class::cast)
-					.mapToInt(QuestEvent.ItemPlay::itemId)
-					.distinct()
-					.anyMatch(itemId -> dispatcher.itemPlayAnimationMillis(itemId).isEmpty())) {
-				throw new IllegalStateException("typed item-play event has no indexed route");
-			}
-		}
-		return new PreparedProductionDefinitions(catalogs.combined(), dispatcher);
-	}
-
-	/**
-	 * 将生产目录按原版保留清单拆成 XML 与原版两个互斥子目录。
-	 * Splits the production catalog into disjoint XML and retail child catalogs according to the retail owner manifest.
-	 * <p>
-	 * P7 步 f 起 retail 编译产物为零（七族 + DataDriven 1467 行全部原生直驱），retail 子目录恒空，
-	 * 生产与测试目录都走 combined 单目录兼容形；归属核验仍由
-	 * {@link RetailQuestDriver#overlayProduction(QuestCatalog)} 在装载前完成。
-	 * Since P7 step f the retail compile products are zero (all families and the 1467 DataDriven rows
-	 * are native-driven), so the retail child catalog is always empty and both production and test
-	 * catalogs use the combined form; ownership is still validated by overlayProduction before load.
-	 */
-	private static RuntimeCatalogs splitRuntimeCatalogs(QuestCatalog catalog) {
-		QuestCatalogRegistry combined = catalog instanceof QuestCatalogRegistry existing
-			? existing : new QuestCatalogRegistry(catalog);
-		return new RuntimeCatalogs(combined, combined, new QuestCatalogRegistry(new ImmutableQuestCatalog(List.of())));
-	}
-
-	/** 已校验的组合目录与两个互斥子目录。 / Validated combined catalog and its two disjoint child catalogs. */
-	private record RuntimeCatalogs(QuestCatalogRegistry combined, QuestCatalogRegistry xml, QuestCatalogRegistry retail) {
+		return QuestProductionPreparer.prepare(catalog, aiNameByTemplate);
 	}
 
 	/**
@@ -2199,66 +1476,7 @@ public class QuestEngine implements GameEngine {
 	}
 
 	private void installProductionDefinitions(PreparedProductionDefinitions prepared) {
-		QuestCatalogRegistry catalog = prepared.catalog();
-		QuestRuntimeDispatcher dispatcher = prepared.dispatcher();
-		for (CompiledQuestDefinition definition : catalog.executables()) {
-			for (var transition : definition.definition().transitions()) {
-				if (transition.event() instanceof QuestEvent.TalkToNpc talk) {
-					QuestNpc questNpc = registerQuestNpc(talk.npcId());
-					questNpc.addOnTalkEvent(definition.id());
-					if (transition.sourceNode() != null && definition.definition().nodes().stream()
-							.filter(node -> node.label().equals(transition.sourceNode()))
-							.map(QuestNode::projection)
-							.anyMatch(projection -> projection.status() == QuestStatus.NONE)) {
-						questNpc.addOnQuestStart(definition.id());
-					}
-				} else if (transition.event() instanceof QuestEvent.KillNpc(int npcId1)) {
-					registerQuestNpc(npcId1).addOnKillEvent(definition.id());
-					} else if (transition.event() instanceof QuestEvent.KillNpcSet(Set<Integer> npcIds)) {
-						for (int npcId : npcIds) {
-							registerQuestNpc(npcId).addOnKillEvent(definition.id());
-						}
-				} else if (transition.event() instanceof QuestEvent.AttackNpc attack) {
-					registerQuestNpc(attack.npcId()).addOnAttackEvent(definition.id());
-				} else if (transition.event() instanceof QuestEvent.CanAct canAct) {
-					registerCanAct(definition.id(), canAct.templateId());
-				} else if (transition.event() instanceof QuestEvent.UseItem use) {
-					registerQuestItem(use.itemId(), definition.id());
-				} else if (transition.event() instanceof QuestEvent.GetItem(int id)) {
-					// Keep the obtain-event index in sync with the typed catalog. The
-					// runtime dispatcher remains authoritative; this index only lets
-					// the legacy loop skip typed owners safely.
-					registerGetingItem(id, definition.id());
-				} else if (transition.event() instanceof QuestEvent.CollectItem collect) {
-					// Collection routes share the item-obtain ingress while retaining
-					// their own event type for count matching.
-					registerGetingItem(collect.itemId(), definition.id());
-				} else if (transition.event() instanceof QuestEvent.PassFlyingRing ring) {
-					registerOnPassFlyingRings(ring.ring(), definition.id());
-				} else if (transition.event() instanceof QuestEvent.EnterWindStream) {
-					registerOnEnterWindStream(definition.id());
-				} else if (transition.event() instanceof QuestEvent.AtDistance atDistance) {
-					registerQuestNpc(atDistance.npcId()).addOnAtDistanceEvent(definition.id());
-				} else if (transition.event() instanceof QuestEvent.Die) {
-					registerOnDie(definition.id());
-				} else if (transition.event() instanceof QuestEvent.LogOut) {
-					registerOnLogOut(definition.id());
-				} else if (transition.event() instanceof QuestEvent.NpcReachTarget) {
-					registerAddOnReachTargetEvent(definition.id());
-				} else if (transition.event() instanceof QuestEvent.NpcLostTarget) {
-					registerAddOnLostTargetEvent(definition.id());
-				} else if (transition.event() instanceof QuestEvent.MovieEnd(int movieId)) {
-					registerOnMovieEndQuest(movieId, definition.id());
-				} else if (transition.event() instanceof QuestEvent.ZoneMissionEnd) {
-					registerOnEnterZoneMissionEnd(definition.id());
-				} else if (transition.event() instanceof QuestEvent.InvisibleTimerEnd) {
-					registerOnInvisibleTimerEnd(definition.id());
-				} else if (transition.event() instanceof QuestEvent.EquipItem(int itemId)) {
-					registerOnEquipItem(itemId, definition.id());
-				}
-			}
-		}
-		productionDispatcher = dispatcher;
+		productionDispatcher = QuestProductionInstaller.install(this, prepared);
 	}
 
 	/** Compiles and validates the complete canonical catalog without changing the live dispatcher. */
@@ -2314,43 +1532,7 @@ public class QuestEngine implements GameEngine {
 				progressLatch.countDown();
 			}
 		}
-		addMessageSendingTask();
-	}
-
-	/**
-	 * 安排每日 9:00 的可重复任务提醒广播。
-	 * Schedule the 09:00 daily broadcast for repeatable quest reminders.
-	 */
-	private void addMessageSendingTask() {
-		Calendar sendingDate = Calendar.getInstance();
-		sendingDate.set(Calendar.AM_PM, Calendar.AM);
-		sendingDate.set(Calendar.HOUR, 9);
-		sendingDate.set(Calendar.MINUTE, 0);
-		sendingDate.set(Calendar.SECOND, 0);
-		if (sendingDate.getTime().getTime() < System.currentTimeMillis()) {
-			sendingDate.add(Calendar.HOUR, 24);
-		}
-		messageSendingTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> {
-			SM_SYSTEM_MESSAGE dailyMessage = new SM_SYSTEM_MESSAGE(1400854);
-			SM_SYSTEM_MESSAGE weeklyMessage = new SM_SYSTEM_MESSAGE(1400856);
-			for (Player player : com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getAllPlayers()) {
-				for (QuestState qs : player.getQuestStateList().getAllQuestState()) {
-					var metadata = qs == null ? null : questCatalog().findMetadata(qs.getQuestId()).orElse(null);
-					if (qs != null && metadata != null && qs.canRepeat(metadata)) {
-						if (metadata.repeatPolicy().daily()) {
-							player.getController().updateZone();
-							player.getController().updateNearbyQuests();
-							PacketSendUtility.sendPacket(player, dailyMessage);
-						} else if (metadata.repeatPolicy().weekly()) {
-							player.getController().updateZone();
-							player.getController().updateNearbyQuests();
-							PacketSendUtility.sendPacket(player, weeklyMessage);
-						}
-					}
-				}
-				player.getNpcFactions().sendDailyQuest();
-			}
-		}, sendingDate.getTimeInMillis() - System.currentTimeMillis(), 1000 * 60 * 60 * 24);
+		dailyReminder.schedule(this);
 	}
 
 	/**
@@ -2369,22 +1551,8 @@ public class QuestEngine implements GameEngine {
 	public void clear() {
 		runtimeComposition.cleanupAll();
 		productionDispatcher = QuestProductionDispatcher.disabled();
-		productionCatalogPreload = null;
-		if (messageSendingTask != null) {
-			messageSendingTask.cancel(false);
-			messageSendingTask = null;
-		}
-		questNpcs.clear();
-		questItemRelated.clear();
-		questItems.clear();
-		questOnEnterZoneMissionEnd.clear();
-		questOnDie.clear();
-		questOnLogOut.clear();
-		questOnMovieEnd.clear();
-		questOnPassFlyingRings.clear();
-		onInvisibleTimerEnd.clear();
-		reachTarget.clear();
-		lostTarget.clear();
-		questOnEnterWindStream.clear();
+		catalogBoot.reset();
+		dailyReminder.cancel();
+		registry.clear();
 	}
 }
