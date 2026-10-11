@@ -272,7 +272,7 @@ public class MoveToZh extends AdminCommand {
 				buffer.setLength(0);
 			}
 		}
-		if (buffer.length() > 0) {
+		if (!buffer.isEmpty()) {
 			PacketSendUtility.sendMessage(player, buffer.toString());
 		}
 	}

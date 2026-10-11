@@ -39,7 +39,7 @@ public class AionBootApplication {
      * Enables embedded runtime mode, then starts Spring.
      * @param args 命令行参数 / command-line arguments
      */
-    public static void main(String[] args) {
+    static void main(String[] args) {
         AionRuntimeMode.enableBootEmbeddedMode();
         new SpringApplicationBuilder(AionBootApplication.class)
             .web(WebApplicationType.NONE)

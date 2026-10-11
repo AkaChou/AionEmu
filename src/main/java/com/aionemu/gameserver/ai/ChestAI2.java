@@ -116,13 +116,4 @@ public class ChestAI2 extends ActionItemNpcAI2
 		}
 		return false;
 	}
-
-	/**
-	 * 玩家结束与本 NPC 对话。
-	 * Player finishes dialog with this NPC.
-	 * @param player 玩家 / player
-	 */
-	@Override
-	protected void handleDialogFinish(Player player) {
-	}
 }

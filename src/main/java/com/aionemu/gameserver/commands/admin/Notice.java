@@ -31,9 +31,9 @@ public class Notice extends AdminCommand {
 		String message = "";
 
 		try {
-			for (int i = 0; i < params.length; i++) {
-				message += " " + params[i];
-			}
+            for (String param : params) {
+                message += " " + param;
+            }
 		}
 		catch (NumberFormatException e) {
 			PacketSendUtility.sendMessage(player, "Parameters should be text or number !");

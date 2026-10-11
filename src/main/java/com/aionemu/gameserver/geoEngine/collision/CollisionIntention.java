@@ -97,7 +97,7 @@ public enum CollisionIntention {
 				str += ", ";
 			}
 		}
-		if (str.length() > 0) {
+		if (!str.isEmpty()) {
 			str = str.substring(0, str.length() - 2);
 		}
 		return str;

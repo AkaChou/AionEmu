@@ -269,12 +269,7 @@ public class FFAService {
 						new Float[] { 578f, 206f, 66f }, new Float[] { 537f, 209f, 66f },
 						new Float[] { 524f, 239f, 66f }, new Float[] { 535f, 279f, 66f })));
 		// 特兰西迪姆附楼。 / Transidium Annex.
-		// maps.add(new ArenaMap(400030000, 99, Arrays.asList(new Float[]{481f, 500f,
-		// 674f}, new Float[]{480f, 524f, 674f}, new Float[]{497f, 541f, 674f},
-		// new Float[]{521f, 542f, 674f}, new Float[]{538f, 524f, 674f}, new
-		// Float[]{538f, 500f, 674f}, new Float[]{521f, 483f, 674f}, new Float[]{497f,
-		// 483f, 674f})));
-		pickArenaMap();
+        pickArenaMap();
 		activeInstance = getWorldMap().getMainWorldMapInstance();
 		doors = activeInstance.getDoors();
 		GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> {

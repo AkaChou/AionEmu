@@ -43,9 +43,6 @@ public class RPrison extends AdminCommand {
 				PacketSendUtility.sendMessage(admin, "Player " + playerFromPrison.getName() + " removed from prison.");
 			}
 		}
-		catch (NoSuchElementException nsee) {
-			PacketSendUtility.sendMessage(admin, "Usage: //rprison <player>");
-		}
 		catch (Exception e) {
 			PacketSendUtility.sendMessage(admin, "Usage: //rprison <player>");
 		}

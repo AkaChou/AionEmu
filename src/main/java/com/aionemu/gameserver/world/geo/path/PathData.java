@@ -548,7 +548,7 @@ public final class PathData {
 					return SearchResult.direct(List.of(point(start), point(target)));
 				}
 				float searchRadiusSquared = Math.max(2_500, 2 * distanceSquared);
-				int budget = Math.min(MAX_PROCESSED_NODES, Math.max(1, maxNodes));
+				int budget = Math.clamp(maxNodes, 1, MAX_PROCESSED_NODES);
 				if (hierarchical && usesHierarchicalSearch(start, target)) {
 					BlockPath corridor = findBlockPath(start.sector().block.id(), target.sector().block.id());
 					if (corridor.status() == SearchStatus.INTERRUPTED) {

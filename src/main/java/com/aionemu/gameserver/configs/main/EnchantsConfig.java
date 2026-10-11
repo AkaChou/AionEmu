@@ -111,9 +111,6 @@ public class EnchantsConfig {
 		private final EquipmentProperties equipment = new EquipmentProperties();
 		private final CastProperties cast = new CastProperties();
 
-		public void setItem(ItemProperties item) {
-		}
-
 		public float getPlume() {
 			return ENCHANT_PLUME;
 		}

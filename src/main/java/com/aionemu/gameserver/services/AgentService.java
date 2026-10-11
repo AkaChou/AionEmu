@@ -1,6 +1,6 @@
 package com.aionemu.gameserver.services;
 
-import lombok.AllArgsConstructor;
+import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 
 
 import com.aionemu.boot.i18n.I18n;
@@ -280,7 +280,7 @@ public class AgentService {
 		return activeFights.containsKey(id);
 	}
 
-	
+
 	/**
 	 * 返回代理人战斗持续时长（小时，来自配置）。
 	 * Return agent fight duration in hours (from config).
@@ -335,43 +335,40 @@ public class AgentService {
 		private static final AgentService INSTANCE = new AgentService();
 	}
 
-	/**
-	 * 代理战启动定时任务。
-	 * Start runnable for Agent Fight events.
-	 */
-	@AllArgsConstructor
-	private static class AgentStartRunnable implements Runnable {
-		private final int id;
-
-		/**
-		 * 执行倒计时与启动流程。
-		 * Runs the countdown and start sequence.
-		 */
-		@Override
-		public void run() {
-			// 代理人之战将在 10 分钟后开始。 / The Agent battle will start in 10 minutes.
-			AgentService.getInstance().agentBattleMsg1(id);
-			GameThreadPoolServices.threadPoolManager().schedule(() -> {
-				// 代理人之战将在 5 分钟后开始。 / The Agent battle will start in 5 minutes.
-				AgentService.getInstance().agentBattleMsg2(id);
-			}, 300000);
-			GameThreadPoolServices.threadPoolManager().schedule(() -> {
-				Map<Integer, AgentLocation> locations = AgentService.getInstance().getAgentLocations();
-				for (final AgentLocation loc : locations.values()) {
-					if (loc.getId() == id) {
-						// 总督苏纳亚卡 5.8 / Governor Sunayaka 5.8
-						AgentService.getInstance().governorSunayakaMsg(id);
-						// 狂战士苏纳亚卡 5.8 / Berserker Sunayaka 5.8
-						AgentService.getInstance().berserkerSunayakaMsg(id);
-						// 代理人之战 4.7 / Agent Fight 4.7
-						AgentService.getInstance().startAgentFight(loc.getId());
-					}
-				}
-				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
-					// 一名代理人已生成。 / An Agent has spawned.
-					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF4_Advance_GodElite);
-				});
-			}, 600000);
-		}
-	}
+    /**
+     * 代理战启动定时任务。
+     * Start runnable for Agent Fight events.
+     */
+    private record AgentStartRunnable(int id) implements Runnable {
+        /**
+         * 执行倒计时与启动流程。
+         * Runs the countdown and start sequence.
+         */
+        @Override
+        public void run() {
+            // 代理人之战将在 10 分钟后开始。 / The Agent battle will start in 10 minutes.
+            AgentService.getInstance().agentBattleMsg1(id);
+            GameThreadPoolServices.threadPoolManager().schedule(() -> {
+                // 代理人之战将在 5 分钟后开始。 / The Agent battle will start in 5 minutes.
+                AgentService.getInstance().agentBattleMsg2(id);
+            }, 300000);
+            GameThreadPoolServices.threadPoolManager().schedule(() -> {
+                Map<Integer, AgentLocation> locations = AgentService.getInstance().getAgentLocations();
+                for (final AgentLocation loc : locations.values()) {
+                    if (loc.getId() == id) {
+                        // 总督苏纳亚卡 5.8 / Governor Sunayaka 5.8
+                        AgentService.getInstance().governorSunayakaMsg(id);
+                        // 狂战士苏纳亚卡 5.8 / Berserker Sunayaka 5.8
+                        AgentService.getInstance().berserkerSunayakaMsg(id);
+                        // 代理人之战 4.7 / Agent Fight 4.7
+                        AgentService.getInstance().startAgentFight(loc.getId());
+                    }
+                }
+                GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+                    // 一名代理人已生成。 / An Agent has spawned.
+                    PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF4_Advance_GodElite);
+                });
+            }, 600000);
+        }
+    }
 }

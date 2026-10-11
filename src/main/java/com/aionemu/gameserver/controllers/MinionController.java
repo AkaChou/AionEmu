@@ -26,25 +26,4 @@ import com.aionemu.gameserver.model.gameobjects.VisibleObject;
  * {@code MinionKnownListTest#minionMovementStaysClientAuthored} gate enforces this.</p>
  */
 public class MinionController extends VisibleObjectController<Minion> {
-
-    /**
-     * 小跟班看到其他对象时的回调（当前无逻辑）。
-     * Callback when the minion sees another object (currently no-op).
-     * @param object 进入视野的对象 / the object entering sight
-     */
-    @Override
-    public void see(VisibleObject object) {
-
-    }
-
-    /**
-     * 小跟班不再看到其他对象时的回调（当前无逻辑）。
-     * Callback when the minion no longer sees another object (currently no-op).
-     * @param object 离开视野的对象 / the object leaving sight
-     * @param isOutOfRange 是否因超出距离离开 / whether the leave is due to being out of range
-     */
-    @Override
-    public void notSee(VisibleObject object, boolean isOutOfRange) {
-
-    }
 }

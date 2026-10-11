@@ -1147,9 +1147,7 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 					break;
 					case 2:
 						sp(217555, 1260.0372f, 796.80334f, 358.60562f, (byte) 30, 2000); //Chief Gunner Koakoa.
-/* 						sp(701199, 1273.2186f, 797.2602f, 358.60562f, (byte) 60, 2000); //Rideable Antiaircraft Gun.
-						sp(701199, 1247.782f, 797.38104f, 358.60562f, (byte) 0, 2000); //Rideable Antiaircraft Gun. */
-					break;
+						break;
 				}
 			break;
 			case 217554:

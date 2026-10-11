@@ -1,5 +1,6 @@
 package com.aionemu.gameserver.instance.handlers.scripts;
 
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
@@ -38,6 +39,7 @@ public class HallOfTenacityInstance extends GeneralInstanceHandler {
 	/** 副本时间戳 / instance timestamp */
 	private long instanceTime;
 	/** 副本是否已销毁 / whether the instance is destroyed */
+	@Getter
 	private boolean isInstanceDestroyed = false;
 	/** 副本奖励对象 / instance reward object */
 	protected HallOfTenacityReward instanceReward;
@@ -153,9 +155,7 @@ public class HallOfTenacityInstance extends GeneralInstanceHandler {
 	instanceReward.setInstanceScoreType(InstanceScoreType.START_PROGRESS);
 	instanceReward.setCoupleSlotForBattle32();
 	instanceReward.sendLog("Hall Of Tenacity got "+instance.getPlayersInside().size()+" player(s)");
-	//instanceReward.sendPacket(0, null);
-	//instanceReward.sendPacket(9, null);
-	instance.doOnAllPlayers(new Visitor<>() {
+                    instance.doOnAllPlayers(new Visitor<>() {
 		/**
 		 * 处理 visit。
 		 * Handle visit.
@@ -230,22 +230,11 @@ public class HallOfTenacityInstance extends GeneralInstanceHandler {
     /**
      * 停止副本并结算。
      * Stop the instance and settle.
-     * @param race 阵营 / race
-     */
-
-    protected void stopInstance(Race race) {
+	 */
+    protected void stopInstance() {
         stopInstanceTask();
         //hallOfTenacityReward.setWinner(race);
         instanceReward.setInstanceScoreType(InstanceScoreType.END_PROGRESS);
-        reward();
-    }
-    /**
-     * 处理 reward。
-     * Handle reward.
-     */
-
-    protected void reward() {
-
     }
 
     private void stopInstanceTask() {

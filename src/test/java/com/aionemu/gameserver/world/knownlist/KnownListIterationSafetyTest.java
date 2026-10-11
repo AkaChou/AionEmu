@@ -37,7 +37,7 @@ class KnownListIterationSafetyTest {
 	}
 
 	@Test
-	void effectValuesAreSnapshotBeforeEnhancedForIteration() throws IOException {
+	void effectValuesAreSnapshotBeforeEnhancedForIteration() {
 		Path path = Path.of("src/main/java/com/aionemu/gameserver/controllers/effect/EffectController.java");
 		List<String> offenders = unsafeValueIterations(path, LIVE_EFFECT_VALUES).toList();
 
@@ -45,7 +45,7 @@ class KnownListIterationSafetyTest {
 	}
 
 	@Test
-	void worldMapInstancesAreSnapshotBeforeIteration() throws IOException {
+	void worldMapInstancesAreSnapshotBeforeIteration() {
 		Path path = Path.of("src/main/java/com/aionemu/gameserver/world/WorldMap.java");
 		List<String> offenders = unsafeValueIterations(path, LIVE_WORLD_INSTANCE_VALUES).toList();
 
@@ -53,7 +53,7 @@ class KnownListIterationSafetyTest {
 	}
 
 	@Test
-	void zonePlayersAreSnapshotBeforeEnhancedForIteration() throws IOException {
+	void zonePlayersAreSnapshotBeforeEnhancedForIteration() {
 		List<Path> paths = List.of(
 				Path.of("src/main/java/com/aionemu/gameserver/world/zone/SiegeZoneInstance.java"),
 				Path.of("src/main/java/com/aionemu/gameserver/world/zone/InvasionZoneInstance.java"));
@@ -65,7 +65,7 @@ class KnownListIterationSafetyTest {
 	}
 
 	@Test
-	void siegeLocationValuesAreSnapshotBeforeEnhancedForIteration() throws IOException {
+	void siegeLocationValuesAreSnapshotBeforeEnhancedForIteration() {
 		List<Path> paths = List.of(
 				Path.of("src/main/java/com/aionemu/gameserver/model/siege/SiegeLocation.java"),
 				Path.of("src/main/java/com/aionemu/gameserver/model/siege/FortressLocation.java"),

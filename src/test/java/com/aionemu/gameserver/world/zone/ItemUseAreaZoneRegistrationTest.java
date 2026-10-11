@@ -56,13 +56,13 @@ class ItemUseAreaZoneRegistrationTest {
 		Map<Integer, Map<String, ZoneInfo>> quest = zonesOf("zones_quest.xml");
 		for (int mapId : new int[] {301400000, 301590000}) {
 			ZoneInfo info = zone(quest, mapId, "IDSWEEP_ITEMAREA_SUMMON");
-			assertEquals(ZoneClassName.ITEM_USE, info.getZoneTemplate().getZoneType(), "IDSWEEP_ITEMAREA_SUMMON 区类");
-			assertEquals(1, info.getZoneTemplate().getPoints().size(), "IDSWEEP_ITEMAREA_SUMMON 环数");
-			assertEquals(4, info.getZoneTemplate().getPoints().getFirst().getPoint().size(), "IDSWEEP_ITEMAREA_SUMMON 顶点数");
-			assertEquals(391.304840f, info.getZoneTemplate().getPoints().getFirst().getBottom(), 0.001f);
-			assertEquals(441.304840f, info.getZoneTemplate().getPoints().getFirst().getTop(), 0.001f);
-			assertEquals(526.073364f, info.getZoneTemplate().getPoints().getFirst().getPoint().getFirst().getX(), 0.001f);
-			assertEquals(278.304413f, info.getZoneTemplate().getPoints().getFirst().getPoint().getFirst().getY(), 0.001f);
+			assertEquals(ZoneClassName.ITEM_USE, info.zoneTemplate().getZoneType(), "IDSWEEP_ITEMAREA_SUMMON 区类");
+			assertEquals(1, info.zoneTemplate().getPoints().size(), "IDSWEEP_ITEMAREA_SUMMON 环数");
+			assertEquals(4, info.zoneTemplate().getPoints().getFirst().getPoint().size(), "IDSWEEP_ITEMAREA_SUMMON 顶点数");
+			assertEquals(391.304840f, info.zoneTemplate().getPoints().getFirst().getBottom(), 0.001f);
+			assertEquals(441.304840f, info.zoneTemplate().getPoints().getFirst().getTop(), 0.001f);
+			assertEquals(526.073364f, info.zoneTemplate().getPoints().getFirst().getPoint().getFirst().getX(), 0.001f);
+			assertEquals(278.304413f, info.zoneTemplate().getPoints().getFirst().getPoint().getFirst().getY(), 0.001f);
 		}
 	}
 
@@ -76,11 +76,11 @@ class ItemUseAreaZoneRegistrationTest {
 	private static void assertAturam(String fileName, int mapId, String legacyName) throws Exception {
 		Map<Integer, Map<String, ZoneInfo>> zones = zonesOf(fileName);
 		ZoneInfo info = zone(zones, mapId, "IDSTATION_ITEMUSEAREA_3F");
-		assertEquals(ZoneClassName.ITEM_USE, info.getZoneTemplate().getZoneType(), "IDStation_ItemUseArea_3F 区类");
-		assertEquals(890.0f, info.getZoneTemplate().getPoints().getFirst().getBottom(), 0.001f);
-		assertEquals(940.0f, info.getZoneTemplate().getPoints().getFirst().getTop(), 0.001f);
-		assertEquals(92.283775f, info.getZoneTemplate().getPoints().getFirst().getPoint().getFirst().getX(), 0.001f);
-		assertEquals(619.9553f, info.getZoneTemplate().getPoints().getFirst().getPoint().getFirst().getY(), 0.001f);
+		assertEquals(ZoneClassName.ITEM_USE, info.zoneTemplate().getZoneType(), "IDStation_ItemUseArea_3F 区类");
+		assertEquals(890.0f, info.zoneTemplate().getPoints().getFirst().getBottom(), 0.001f);
+		assertEquals(940.0f, info.zoneTemplate().getPoints().getFirst().getTop(), 0.001f);
+		assertEquals(92.283775f, info.zoneTemplate().getPoints().getFirst().getPoint().getFirst().getX(), 0.001f);
+		assertEquals(619.9553f, info.zoneTemplate().getPoints().getFirst().getPoint().getFirst().getY(), 0.001f);
 		assertNull(zones.get(mapId).get(legacyName), "旧名 " + legacyName + " 不得回归");
 	}
 
@@ -96,12 +96,12 @@ class ItemUseAreaZoneRegistrationTest {
 	private static void assertSphere(Map<Integer, Map<String, ZoneInfo>> zones, int mapId, String name, float x, float y,
 			float z, float r) {
 		ZoneInfo info = zone(zones, mapId, name);
-		assertEquals(ZoneClassName.ITEM_USE, info.getZoneTemplate().getZoneType(), name + " 区类");
-		assertNotNull(info.getZoneTemplate().getSphere(), name + " 应为球体区");
-		assertEquals(x, info.getZoneTemplate().getSphere().getX(), 0.001f, name + " 球心 X");
-		assertEquals(y, info.getZoneTemplate().getSphere().getY(), 0.001f, name + " 球心 Y");
-		assertEquals(z, info.getZoneTemplate().getSphere().getZ(), 0.001f, name + " 球心 Z");
-		assertEquals(r, info.getZoneTemplate().getSphere().getR(), 0.001f, name + " 半径");
+		assertEquals(ZoneClassName.ITEM_USE, info.zoneTemplate().getZoneType(), name + " 区类");
+		assertNotNull(info.zoneTemplate().getSphere(), name + " 应为球体区");
+		assertEquals(x, info.zoneTemplate().getSphere().getX(), 0.001f, name + " 球心 X");
+		assertEquals(y, info.zoneTemplate().getSphere().getY(), 0.001f, name + " 球心 Y");
+		assertEquals(z, info.zoneTemplate().getSphere().getZ(), 0.001f, name + " 球心 Z");
+		assertEquals(r, info.zoneTemplate().getSphere().getR(), 0.001f, name + " 半径");
 	}
 
 	private static ZoneInfo zone(Map<Integer, Map<String, ZoneInfo>> zones, int mapId, String name) {
@@ -120,7 +120,7 @@ class ItemUseAreaZoneRegistrationTest {
 		data.getZones().forEach((mapId, infos) -> {
 			Map<String, ZoneInfo> byName = new HashMap<>();
 			for (ZoneInfo info : infos) {
-				byName.put(info.getZoneTemplate().getName().name(), info);
+				byName.put(info.zoneTemplate().getName().name(), info);
 			}
 			byMap.put(mapId, byName);
 		});

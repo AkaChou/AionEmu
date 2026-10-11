@@ -137,9 +137,7 @@ public class IronWallWarfrontInstance extends GeneralInstanceHandler {
 
         int[] walls = {233564, 233565, 233566, 233567, 233568, 233569};
         for (int wall : walls) {
-            HANDLERS.put(wall, new NpcHandler(2000, (n, p) -> {
-                sendMsgByRaceStatic(1402207, Race.PC_ALL);
-            }));
+            HANDLERS.put(wall, new NpcHandler(2000, (n, p) -> sendMsgByRaceStatic(1402207, Race.PC_ALL)));
         }
 
         int[] supplies = {233510, 233511, 233512, 233530, 233531, 233532};
@@ -147,9 +145,7 @@ public class IronWallWarfrontInstance extends GeneralInstanceHandler {
             HANDLERS.put(s, new NpcHandler(400));
         }
 
-        HANDLERS.put(233544, new NpcHandler(200000, (n, p) -> {
-            RaceKilledCommanderStatic = p.getRace();
-        }));
+        HANDLERS.put(233544, new NpcHandler(200000, (n, p) -> RaceKilledCommanderStatic = p.getRace()));
 
         int[][] baseOfficers = {
             {233518, 1, 831875, 233517, 233528, 831885, 233498, 233497, 233508},

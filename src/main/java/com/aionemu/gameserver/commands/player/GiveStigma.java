@@ -556,10 +556,13 @@ public class GiveStigma extends PlayerCommand {
      * @param msg 失败消息 / failure message
      */
     public void onFail(Player player, String msg){
-        PacketSendUtility.sendMessage(player, " " +
-            "synax : .givestigma add  -- Adds Set of Stigma for you're Class\n    " +
-            ".givestigma clean  -- Cleans the added Stigma's from .givestigma add\n  " +
-            ".givestigma unlock  --  Unlocks the stigma slots (Might Require Relog)\n" +
-            ".givestigma class  -- Pops up the Class Choose Dialog, if you didn't got the Class Choose Dialog");
+        PacketSendUtility.sendMessage(player, """
+			 \
+			synax : .givestigma add  -- Adds Set of Stigma for you're Class
+			    \
+			.givestigma clean  -- Cleans the added Stigma's from .givestigma add
+			  \
+			.givestigma unlock  --  Unlocks the stigma slots (Might Require Relog)
+			.givestigma class  -- Pops up the Class Choose Dialog, if you didn't got the Class Choose Dialog""");
     }
 }

@@ -148,12 +148,6 @@ public class IdgelDomeReward extends InstanceReward<IdgelDomePlayerReward> {
 		return asmodiansPoints.compareTo(elyosPoins) > 0 ? Race.ASMODIANS : Race.ELYOS;
 	}
 
-	/** 清空。 / Clear. */
-	@Override
-	public void clear() {
-		super.clear();
-	}
-
 	/** Reg 玩家 Reward / Reg Player Reward */
 	public void regPlayerReward(Player player) {
 		if (!containPlayer(player.getObjectId())) {

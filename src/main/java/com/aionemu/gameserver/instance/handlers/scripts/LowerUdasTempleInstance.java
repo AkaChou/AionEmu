@@ -107,15 +107,7 @@ public class LowerUdasTempleInstance extends GeneralInstanceHandler
 			case 215795: //Debilkarim The Maker.
 			    chestUdasTempleTask.cancel(true);
 				// 成功逃脱消息（注释掉的调试输出）。 / sendMsg("[SUCCES]: You have finished <Lower Udas Temple>");
-/* 				switch (Rnd.get(1, 2)) {
-		            case 1:
-				        spawn(702658, 575.1232f, 1295.7212f, 187.85898f, (byte) 113); //修道院箱子。 / Abbey Box.
-					break;
-					case 2:
-					    spawn(702659, 575.1232f, 1295.7212f, 187.85898f, (byte) 113); //高级修道院箱子。 / Noble Abbey Box.
-					break;
-				} */
-				instance.doOnAllPlayers(new Visitor<>() {
+                instance.doOnAllPlayers(new Visitor<>() {
 					/**
 					 * 处理 visit。
 					 * Handle visit.

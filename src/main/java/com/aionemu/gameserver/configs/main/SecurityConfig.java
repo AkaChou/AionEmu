@@ -1,6 +1,7 @@
 package com.aionemu.gameserver.configs.main;
 
 import com.aionemu.commons.configuration.Property;
+import lombok.Getter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Component;
  * 安全防护、反外挂与验证相关配置，支持 Spring Boot ConfigurationProperties 与静态门面访问。
  * Security, anti-hack and validation related configuration supporting Spring Boot ConfigurationProperties and static facade access.
  */
+@Getter
 @Component
 @ConfigurationProperties(prefix = "gameserver.security")
 public class SecurityConfig {
@@ -230,71 +232,9 @@ public class SecurityConfig {
 	private final IntegrityProperties integrity = new IntegrityProperties();
 	private final CheckProperties check = new CheckProperties();
 
-	public GmauditProperties getGmaudit() {
-		return gmaudit;
-	}
-
-	public AntihackProperties getAntihack() {
-		return antihack;
-	}
-
-	public NoAnimationProperties getNoanimation() {
-		return noanimation;
-	}
-
-	public void setNoanimation(NoAnimationProperties noanimation) {
-	}
-
-	public CaptchaProperties getCaptcha() {
-		return captcha;
-	}
-
-	public PasskeyProperties getPasskey() {
-		return passkey;
-	}
-
-	public PingcheckProperties getPingcheck() {
-		return pingcheck;
-	}
-
-	public FloodProperties getFlood() {
-		return flood;
-	}
-
-	public PffProperties getPff() {
-		return pff;
-	}
-
-	public MotionProperties getMotion() {
-		return motion;
-	}
-
-	public BrokerSecurityProperties getBroker() {
-		return broker;
-	}
-
-	public ValidationProperties getValidation() {
-		return validation;
-	}
-
-	public SurveyProperties getSurvey() {
-		return survey;
-	}
-
-	public IntegrityProperties getIntegrity() {
-		return integrity;
-	}
-
-	public CheckProperties getCheck() {
-		return check;
-	}
-
+	@Getter
 	public static class GmauditProperties {
 		private final MessageProperties message = new MessageProperties();
-
-		public MessageProperties getMessage() {
-			return message;
-		}
 
 		public static class MessageProperties {
 			public boolean isBroadcast() {
@@ -307,6 +247,7 @@ public class SecurityConfig {
 		}
 	}
 
+	@Getter
 	public static class AntihackProperties {
 		private final SpeedhackProperties speedhack = new SpeedhackProperties();
 		private final AbnormalProperties abnormal = new AbnormalProperties();
@@ -327,20 +268,6 @@ public class SecurityConfig {
 			TELEPORTATION = teleportation;
 		}
 
-		public SpeedhackProperties getSpeedhack() {
-			return speedhack;
-		}
-
-		public void setSpeedhack(SpeedhackProperties speedhack) {
-		}
-
-		public AbnormalProperties getAbnormal() {
-			return abnormal;
-		}
-
-		public void setAbnormal(AbnormalProperties abnormal) {
-		}
-
 		public int getPunish() {
 			return PUNISH;
 		}
@@ -350,7 +277,8 @@ public class SecurityConfig {
 		}
 
 		public static class SpeedhackProperties {
-			public SpeedhackProperties() {}
+			public SpeedhackProperties() {
+			}
 
 			public static SpeedhackProperties valueOf(String value) {
 				SPEEDHACK = Boolean.parseBoolean(value);
@@ -375,7 +303,8 @@ public class SecurityConfig {
 		}
 
 		public static class AbnormalProperties {
-			public AbnormalProperties() {}
+			public AbnormalProperties() {
+			}
 
 			public static AbnormalProperties valueOf(String value) {
 				ABNORMAL = Boolean.parseBoolean(value);
@@ -401,7 +330,8 @@ public class SecurityConfig {
 	}
 
 	public static class NoAnimationProperties {
-		public NoAnimationProperties() {}
+		public NoAnimationProperties() {
+		}
 
 		public static NoAnimationProperties valueOf(String value) {
 			NO_ANIMATION = Boolean.parseBoolean(value);
@@ -433,12 +363,9 @@ public class SecurityConfig {
 		}
 	}
 
+	@Getter
 	public static class MotionProperties {
 		private final TimeProperties time = new TimeProperties();
-
-		public TimeProperties getTime() {
-			return time;
-		}
 
 		public static class TimeProperties {
 			public boolean isEnable() {
@@ -451,6 +378,7 @@ public class SecurityConfig {
 		}
 	}
 
+	@Getter
 	public static class CaptchaProperties {
 		private final AppearProperties appear = new AppearProperties();
 
@@ -462,13 +390,6 @@ public class SecurityConfig {
 			CAPTCHA_ENABLE = enable;
 		}
 
-		public AppearProperties getAppear() {
-			return appear;
-		}
-
-		public void setAppear(AppearProperties appear) {
-		}
-
 		public int getExtractionBanTime() {
 			return CAPTCHA_EXTRACTION_BAN_TIME;
 		}
@@ -478,7 +399,8 @@ public class SecurityConfig {
 		}
 
 		public static class AppearProperties {
-			public AppearProperties() {}
+			public AppearProperties() {
+			}
 
 			public static AppearProperties valueOf(String value) {
 				CAPTCHA_APPEAR = value;
@@ -503,6 +425,7 @@ public class SecurityConfig {
 		}
 	}
 
+	@Getter
 	public static class PasskeyProperties {
 		private final WrongProperties wrong = new WrongProperties();
 
@@ -512,10 +435,6 @@ public class SecurityConfig {
 
 		public void setEnable(boolean enable) {
 			PASSKEY_ENABLE = enable;
-		}
-
-		public WrongProperties getWrong() {
-			return wrong;
 		}
 
 		public static class WrongProperties {
@@ -603,12 +522,9 @@ public class SecurityConfig {
 		}
 	}
 
+	@Getter
 	public static class SurveyProperties {
 		private final DelayProperties delay = new DelayProperties();
-
-		public DelayProperties getDelay() {
-			return delay;
-		}
 
 		public static class DelayProperties {
 			public int getMinute() {
@@ -631,12 +547,9 @@ public class SecurityConfig {
 		}
 	}
 
+	@Getter
 	public static class CheckProperties {
 		private final CreatureProperties creature = new CreatureProperties();
-
-		public CreatureProperties getCreature() {
-			return creature;
-		}
 
 		public static class CreatureProperties {
 			public boolean isStats() {

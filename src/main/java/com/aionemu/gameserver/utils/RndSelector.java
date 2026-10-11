@@ -95,11 +95,11 @@ public class RndSelector<E> {
 		Collections.sort(nodes);
 		int r = Rnd.get(maxWeight);
 		int weight = 0;
-		for (int i = 0; i < nodes.size(); i++) {
-			if ((weight += nodes.get(i).weight) > r) {
-				return nodes.get(i).value;
-			}
-		}
+        for (RndNode<E> node : nodes) {
+            if ((weight += node.weight) > r) {
+                return node.value;
+            }
+        }
 		return null;
 	}
 

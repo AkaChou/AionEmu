@@ -2,6 +2,8 @@ package com.aionemu.gameserver.services;
 
 
 import com.aionemu.boot.i18n.I18n;
+import com.aionemu.commons.database.dao.DAO;
+import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 import lombok.NonNull;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -12,6 +14,7 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.concurrent.ConcurrentSkipListMap;
+import java.util.function.Supplier;
 
 import org.springframework.beans.factory.ObjectProvider;
 
@@ -25,15 +28,14 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 客服请愿（Petition）服务，管理工单注册、回复与排队。
  * Support petition service managing ticket registration, reply, and queueing.
+ *
  * @author zdead
  */
 @Slf4j
-public class PetitionService {
+public record PetitionService(PetitionDAO petitionDAO) {
 
 	@Setter
 	private static volatile ObjectProvider<PetitionService> instanceProvider;
-	private final PetitionDAO petitionDAO;
-
 	private static SortedMap<Integer, Petition> registeredPetitions = new ConcurrentSkipListMap<>();
 
 	/**
@@ -42,9 +44,10 @@ public class PetitionService {
 	 * <p>双源静态兜底已退役：缺少 provider 时直接 fail-fast，避免在容器之外静默创建第二套实例。
 	 * The legacy static fallback is retired: a missing provider now fails fast instead of silently
 	 * creating a second instance outside the container.</p>
+	 *
 	 * @return 由 Spring 提供的实例 / the Spring-provided instance
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean /
-	 *         when no provider or bean is available
+	 *                               when no provider or bean is available
 	 */
 	public static PetitionService getInstance() {
 		ObjectProvider<PetitionService> provider = instanceProvider;
@@ -66,8 +69,10 @@ public class PetitionService {
 	/**
 	 * 返回请愿 DAO，供命令域复用同一绑定（单一所有权）。
 	 * Returns the petition DAO so command-domain callers reuse the same binding (single ownership).
+	 *
 	 * @return 请愿数据访问对象 / Petition DAO
 	 */
+	@Override
 	public PetitionDAO petitionDAO() {
 		return petitionDAO;
 	}
@@ -96,7 +101,7 @@ public class PetitionService {
 		this(safeDao(PetitionDAO.class, com.aionemu.gameserver.dao.impl.PetitionDAO::new));
 	}
 
-	private static <T extends com.aionemu.commons.database.dao.DAO> T safeDao(Class<T> daoClass, java.util.function.Supplier<T> fallback) {
+	private static <T extends DAO> T safeDao(Class<T> daoClass, Supplier<T> fallback) {
 		if (DAOManager.isInitialized()) {
 			try {
 				return DAOManager.getDAO(daoClass);
@@ -118,6 +123,7 @@ public class PetitionService {
 	/**
 	 * 删除指定玩家的全部请愿并通知客户端。
 	 * Deletes all petitions for the given player and notifies the client.
+	 *
 	 * @param playerObjId player object id
 	 */
 	public void deletePetition(int playerObjId) {
@@ -131,8 +137,8 @@ public class PetitionService {
 			registeredPetitions.remove(p.petitionId());
 		}
 		petitionDAO.deletePetition(playerObjId);
-		if (playerObjId > 0 && com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(playerObjId) != null) {
-			Player p = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(playerObjId);
+		if (playerObjId > 0 && GameWorldBootstrapServices.world().findPlayer(playerObjId) != null) {
+			Player p = GameWorldBootstrapServices.world().findPlayer(playerObjId);
 			PacketSendUtility.sendPacket(p, new SM_PETITION());
 		}
 		rebroadcastPlayerData();
@@ -141,6 +147,7 @@ public class PetitionService {
 	/**
 	 * 标记请愿已回复并从队列移除。
 	 * Marks a petition as replied and removes it from the queue.
+	 *
 	 * @param petitionId petition id
 	 */
 	public void setPetitionReplied(int petitionId) {
@@ -148,20 +155,20 @@ public class PetitionService {
 		petitionDAO.setReplied(petitionId);
 		registeredPetitions.remove(petitionId);
 		rebroadcastPlayerData();
-		if (playerObjId > 0 && com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(playerObjId) != null) {
-			Player p = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(playerObjId);
+		if (playerObjId > 0 && GameWorldBootstrapServices.world().findPlayer(playerObjId) != null) {
+			Player p = GameWorldBootstrapServices.world().findPlayer(playerObjId);
 			PacketSendUtility.sendPacket(p, new SM_PETITION());
 		}
 	}
 
-	
+
 	/**
 	 * 向所有仍有请愿的在线玩家重发队列状态。
 	 * Rebroadcasts queue status to all online players with active petitions.
 	 */
 	private void rebroadcastPlayerData() {
 		for (Petition p : registeredPetitions.values()) {
-			Player player = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(p.playerObjId());
+			Player player = GameWorldBootstrapServices.world().findPlayer(p.playerObjId());
 			if (player != null) {
 				PacketSendUtility.sendPacket(player, new SM_PETITION(p));
 			}
@@ -171,16 +178,17 @@ public class PetitionService {
 	/**
 	 * 向在线 GM 广播新请愿通知。
 	 * Broadcasts a new-petition notice to online GMs.
-	 * @param sender sender
+	 *
+	 * @param sender     sender
 	 * @param petitionId petition id
 	 */
 	private void broadcastMessageToGM(Player sender, int petitionId) {
-		Iterator<Player> players = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getPlayersIterator();
+		Iterator<Player> players = GameWorldBootstrapServices.world().getPlayersIterator();
 		while (players.hasNext()) {
 			Player p = players.next();
 			if (p.getAccessLevel() > 0) {
 				PacketSendUtility.sendBrightYellowMessageOnCenter(p,
-						"New Support Petition from: " + sender.getName() + " (#" + petitionId + ")");
+					"New Support Petition from: " + sender.getName() + " (#" + petitionId + ")");
 			}
 		}
 	}
@@ -216,6 +224,7 @@ public class PetitionService {
 	 * 获取玩家当前请愿。
 	 * Returns the player's current petition.
 	 * player object id
+	 *
 	 * @return 请愿，不存在为 null / petition, or null if none
 	 */
 	public Petition getPetition(int playerObjId) {
@@ -227,7 +236,7 @@ public class PetitionService {
 		return null;
 	}
 
-	
+
 	/**
 	 * 计算该玩家前方排队人数。
 	 * Counts how many petitioners are waiting ahead of this player.
@@ -249,6 +258,7 @@ public class PetitionService {
 	 * 估算该玩家的等待时间（分钟相关单位）。
 	 * Estimates wait time for the player (time units related to minutes).
 	 * player object id
+	 *
 	 * @return 估算等待时间 / estimated wait time
 	 */
 	public int calculateWaitTime(int playerObjId) {
@@ -268,6 +278,7 @@ public class PetitionService {
 	/**
 	 * 玩家登录时若有请愿则下发状态包。
 	 * On player login, sends petition status packet if one is registered.
+	 *
 	 * @param player 玩家 / player
 	 */
 	public void onPlayerLogin(Player player) {

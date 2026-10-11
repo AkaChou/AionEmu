@@ -205,10 +205,7 @@ public abstract class BoundingVolume implements Collidable {
 	 */
 	public abstract boolean intersectsBoundingBox(BoundingBox bb);
 
-    // public abstract boolean intersectsOrientedBoundingBox(OrientedBoundingBox
-	// bb);
-
-	/**
+    /**
 	 * 判断点是否严格包含于包围体内。
 	 * Whether the given point is strictly contained inside this volume.
 	 * @param point 待检测点 / point to check

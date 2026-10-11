@@ -30,7 +30,7 @@ public class SM_NPC_ASSEMBLER extends AionServerPacket {
 		writeD(assembledNpc.getAssembledParts().size());
 		for (AssembledNpcPart npc : assembledNpc.getAssembledParts()) {
 			writeD(routeId);
-			writeD(npc.getObject());
+			writeD(npc.object());
 			writeD(npc.getNpcId());
 			writeD(npc.getEntityId());
 			writeQ(timeOnMap);

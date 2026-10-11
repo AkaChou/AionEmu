@@ -117,7 +117,7 @@ class NpcMoveControllerPathTest {
 	}
 
 	@Test
-	void isMovingToTargetReflectsDestinationAndStarted() throws ReflectiveOperationException {
+	void isMovingToTargetReflectsDestinationAndStarted() {
 		Npc owner = new ObjenesisStd().newInstance(Npc.class);
 		NpcMoveController controller = new NpcMoveController(owner);
 		assertFalse(controller.isMovingToTarget());

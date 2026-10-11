@@ -130,7 +130,9 @@ public abstract class GLObject implements Cloneable {
 			obj.updateNeeded = true;
 			return obj;
 		} catch (CloneNotSupportedException ex) {
-			throw new AssertionError();
+			// 理论不可达（实现 Cloneable），保留 cause 以便诊断。
+			// Theoretically unreachable (Cloneable is implemented); keep the cause for diagnostics.
+			throw new AssertionError(ex);
 		}
 	}
 

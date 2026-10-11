@@ -675,7 +675,6 @@ public abstract class AbstractAI implements AI2 {
 			logEvent(event);
 			break;
 		case DIALOG_FINISH:
-			handleDialogFinish((Player) creature);
 			logEvent(event);
 			break;
 		default:

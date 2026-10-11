@@ -1070,23 +1070,20 @@ public class FissureOfOblivionInstance extends GeneralInstanceHandler {
      * when the base leaves battle; here they persist until killed or the instance tears down.
      */
     private void scheduleBossSummonCycle() {
-        oblivionTask.add(GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
-            @Override
-            public void run() {
-                if (isInstanceDestroyed) {
-                    return;
-                }
-                for (int levelIdx = 0; levelIdx < 10; levelIdx++) {
-                    List<Npc> bases = getNpcs(BOSS_ID_BASE + levelIdx * 41);
-                    if (bases == null) {
-                        continue;
-                    }
-                    for (Npc base : bases) {
-                        summonMissingBossTypes(base, levelIdx);
-                    }
-                }
-            }
-        }, RETAIL_BOSS_TIMER_MS, RETAIL_BOSS_TIMER_MS));
+        oblivionTask.add(GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> {
+			if (isInstanceDestroyed) {
+				return;
+			}
+			for (int levelIdx = 0; levelIdx < 10; levelIdx++) {
+				List<Npc> bases = getNpcs(BOSS_ID_BASE + levelIdx * 41);
+				if (bases == null) {
+					continue;
+				}
+				for (Npc base : bases) {
+					summonMissingBossTypes(base, levelIdx);
+				}
+			}
+		}, RETAIL_BOSS_TIMER_MS, RETAIL_BOSS_TIMER_MS));
     }
 
     /** 单只 Boss_Base 的召唤/清场同步(原版 on_battle_timer + on_leave_attack_state)。 / One base's sync pass. */

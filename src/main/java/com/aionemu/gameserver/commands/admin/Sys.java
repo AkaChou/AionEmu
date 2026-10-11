@@ -90,28 +90,24 @@ public class Sys extends AdminCommand {
                     int announceInterval = Integer.parseInt(params[2]);
                     GameShutdownRequest.doShutdown(val, announceInterval, ShutdownMode.SHUTDOWN);
                     PacketSendUtility.sendMessage(player, "Server will shutdown in " + val + " seconds.");
-                } catch (ArrayIndexOutOfBoundsException e) {
-                    PacketSendUtility.sendMessage(player, "Numbers only!");
-                } catch (NumberFormatException e) {
+                } catch (ArrayIndexOutOfBoundsException | NumberFormatException e) {
                     PacketSendUtility.sendMessage(player, "Numbers only!");
                 }
-                break;
+				break;
             case "restart":
                 try {
                     int val = Integer.parseInt(params[1]);
                     int announceInterval = Integer.parseInt(params[2]);
                     GameShutdownRequest.doShutdown(val, announceInterval, ShutdownMode.RESTART);
                     PacketSendUtility.sendMessage(player, "Server will restart in " + val + " seconds.");
-                } catch (ArrayIndexOutOfBoundsException e) {
-                    PacketSendUtility.sendMessage(player, "Numbers only!");
-                } catch (NumberFormatException e) {
+                } catch (ArrayIndexOutOfBoundsException | NumberFormatException e) {
                     PacketSendUtility.sendMessage(player, "Numbers only!");
                 }
-                break;
+				break;
             case "threadpool":
                 List<String> stats = GameThreadPoolServices.threadPoolManager().getStats();
                 for (String stat : stats) {
-                    PacketSendUtility.sendMessage(player, stat.replaceAll("\t", ""));
+                    PacketSendUtility.sendMessage(player, stat.replace("\t", ""));
                 }
                 break;
         }

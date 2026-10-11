@@ -22,15 +22,7 @@ public abstract class VisibleObjectTemplate {
 	 */
 	public abstract int getNameId();
 
-	// /**
-	// * 对象的全局种族。
-	// * Global race of the object.
-	// *
-	// * @return
-	// */
-	// public abstract Race getRace();
-
-	/**
+    /**
 	 * 获取边界半径。
 	 * Get the bound radius.
 	 * @return 边界半径 / Bound radius

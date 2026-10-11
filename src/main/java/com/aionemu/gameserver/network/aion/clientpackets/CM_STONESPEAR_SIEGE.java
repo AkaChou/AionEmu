@@ -27,9 +27,6 @@ public class CM_STONESPEAR_SIEGE extends AionClientPacket {
 
 	@Override
 	protected void runImpl() {
-		Player player = getConnection().getActivePlayer();
-		if (player.getLegion() != null && player.getLegion().getTerritory().getId() > 0) {
-			GameRuntimeServices.territoryService().sendStoneSpearPacket(getConnection().getActivePlayer());
-		}
+
 	}
 }

@@ -29,10 +29,12 @@ public class Neutral extends AdminCommand {
 	 */
 	@Override
 	public void execute(Player admin, String... params) {
-		String help = "Syntax: //neutral < players | npcs | all | cancel >\n"
-			+ "Players - You're neutral to Players of both factions.\n" + "Npcs - You're neutral to all Npcs and Monsters.\n"
-			+ "All - You're neutral to Players of both factions and all Npcs.\n"
-			+ "Cancel - Cancel all. Players and Npcs have default enmity to you.";
+		String help = """
+                Syntax: //neutral < players | npcs | all | cancel >
+                Players - You're neutral to Players of both factions.
+                Npcs - You're neutral to all Npcs and Monsters.
+                All - You're neutral to Players of both factions and all Npcs.
+                Cancel - Cancel all. Players and Npcs have default enmity to you.""";
 
 		if (params.length != 1) {
 			onFail(admin, null);

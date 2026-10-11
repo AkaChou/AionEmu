@@ -147,7 +147,7 @@ class MultiCellSensoryZoneRegistrationTest {
 		Map<String, Area> byName = new HashMap<>();
 		data.getZones().forEach((mapId, infos) -> {
 			for (ZoneInfo info : infos) {
-				byName.put(info.getZoneTemplate().getName().name(), info.getArea());
+				byName.put(info.zoneTemplate().getName().name(), info.area());
 			}
 		});
 		return byName;

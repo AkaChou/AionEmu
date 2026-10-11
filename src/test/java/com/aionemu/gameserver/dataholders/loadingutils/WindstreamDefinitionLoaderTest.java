@@ -26,7 +26,7 @@ class WindstreamDefinitionLoaderTest {
 		assertEquals(27, data.size());
 		assertNotNull(data.getRoute(210050000, 376001));
 		WindstreamRoute questRoute = data.getRoute(210050000, 405001);
-		assertEquals(405, questRoute.getId());
+		assertEquals(405, questRoute.id());
 		assertTrue(questRoute.contains(0, 1407, 366, 590, 45));
 		assertFalse(questRoute.contains(0, 1500, 366, 590, 45));
 		WindstreamRoute kasparOutbound = data.getRoute(210050000, 390001);

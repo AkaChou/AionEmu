@@ -68,6 +68,9 @@ public abstract class CreatureController<T extends Creature> extends VisibleObje
 	private final Map<Integer, Future<?>> tasks = new ConcurrentHashMap<>();
 	/** 地形区域碰撞材质角色 / Terrain zone collision material actor */
 	private volatile TerrainZoneCollisionMaterialActor terrainMaterialActor;
+	/** 简易攻击类型（0=地面攻击，1=空中攻击）。 / Simple attack type (0 = ground, 1 = air). */
+	@Getter
+	private int SimpleAttackType;
 	
 	/**
 	 * 生物开始移动时执行的任务。

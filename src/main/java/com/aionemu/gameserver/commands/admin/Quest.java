@@ -281,7 +281,7 @@ public class Quest extends AdminCommand {
 
         int questId;
         try {
-            questId = Integer.valueOf(params[1]);
+            questId = Integer.parseInt(params[1]);
         }
         catch (NumberFormatException e) {
             PacketSendUtility.sendMessage(admin, "syntax //quest delete <quest id>");
@@ -348,7 +348,7 @@ public class Quest extends AdminCommand {
 
         int questId;
         try {
-            questId = Integer.valueOf(params[1]);
+            questId = Integer.parseInt(params[1]);
         }
         catch (NumberFormatException e) {
             PacketSendUtility.sendMessage(admin, "syntax //quest show <quest id>");

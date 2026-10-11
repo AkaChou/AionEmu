@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 
+import lombok.Getter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
@@ -20,6 +21,7 @@ import com.aionemu.commons.configuration.Property;
  * plus JSR-380 constraints; the legacy assembly path ({@code Config.load()} writing static fields
  * directly) bypasses the Binder and stays guarded by {@link #validate()} fail-fast.
  */
+@Getter
 @Validated
 @Component
 @ConfigurationProperties(prefix = "loginserver.vip")
@@ -36,20 +38,7 @@ public class VipConfig {
     @Valid
     private final AutoEnableProperties autoEnable = new AutoEnableProperties();
 
-    public AutoEnableProperties getAutoEnable() {
-        return autoEnable;
-    }
-
-    /**
-     * no-op：绑定值经 {@code valueOf} 或嵌套属性直接写入静态字段，防止重复绑定覆盖。
-     * no-op: bound values reach the static fields via {@code valueOf} or the nested properties,
-     * so re-binding must not overwrite them.
-     * @param autoEnable 绑定产生的嵌套实例 / nested instance produced by binding
-     */
-    public void setAutoEnable(AutoEnableProperties autoEnable) {
-    }
-
-    /**
+	/**
      * 校验配置值范围（VIP 等级）。
      * Validates configuration value ranges (VIP level).
      */

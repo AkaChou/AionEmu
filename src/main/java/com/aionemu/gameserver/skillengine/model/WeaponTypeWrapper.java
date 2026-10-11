@@ -4,26 +4,19 @@ import com.aionemu.gameserver.lifecycle.GameFeatureServices;
 
 import com.aionemu.gameserver.model.templates.item.WeaponType;
 import com.aionemu.gameserver.services.MotionLoggingService;
-import lombok.Getter;
+import org.jspecify.annotations.NonNull;
 
 /**
  * 武器类型包装：主/副手组合，用于动作时间查表与比较。
  * Weapon type wrapper: main/off-hand pair for motion-time lookup and compare.
+ *
+ * @param mainHand 获取主手武器类型。
+ *                 Gets main-hand weapon type.
+ * @param offHand  获取副手武器类型。
+ *                 Gets off-hand weapon type.
  * @author kecimis
  */
-@Getter
-public class WeaponTypeWrapper implements Comparable<WeaponTypeWrapper> {
-
-	/**
-	 * 获取主手武器类型。
-	 * Gets main-hand weapon type.
-	 */
-	private final WeaponType mainHand;
-	/**
-	 * 获取副手武器类型。
-	 * Gets off-hand weapon type.
-	 */
-	private final WeaponType offHand;
+public record WeaponTypeWrapper(WeaponType mainHand, WeaponType offHand) implements Comparable<WeaponTypeWrapper> {
 
 	/**
 	 * 构造武器类型包装；双手持有时归一为单手剑双持键。
@@ -69,9 +62,9 @@ public class WeaponTypeWrapper implements Comparable<WeaponTypeWrapper> {
 	 * String representation.
 	 */
 	@Override
-	public String toString() {
+	public @NonNull String toString() {
 		return "mainHandType=\"" + (mainHand != null ? mainHand.toString() : "null") + "\"" + " offHandType=\""
-				+ (offHand != null ? offHand.toString() : "null");
+			+ (offHand != null ? offHand.toString() : "null");
 	}
 
 	/**
@@ -91,19 +84,20 @@ public class WeaponTypeWrapper implements Comparable<WeaponTypeWrapper> {
 	/**
 	 * 比较武器包装（用于排序/查表）。
 	 * Compares weapon wrappers (for sort/lookup).
+	 *
 	 * @param o 另一个包装 / other wrapper
 	 */
 	@Override
-	public int compareTo(WeaponTypeWrapper o) {
-		if (mainHand == null || o.getMainHand() == null) {
+	public int compareTo(@NonNull WeaponTypeWrapper o) {
+		if (mainHand == null || o.mainHand() == null) {
 			return 0;
 		} else if (offHand != null) {
 			// 到达此处时 o.getOffHand() 必为 null（前分支已处理双非空） / o.getOffHand() is provably null here
 			return 1;
-		} else if (o.getOffHand() != null) {
+		} else if (o.offHand() != null) {
 			return -1;
 		} else
-			return mainHand.toString().compareTo(o.getMainHand().toString());
+			return mainHand.toString().compareTo(o.mainHand().toString());
 	}
 
 	private MotionLoggingService getOuterType() {

@@ -23,15 +23,6 @@ import com.aionemu.gameserver.model.skill.NpcSkillEntry;
 public class AggressiveNpcAI2 extends GeneralNpcAI2
 {
 
-	/**
-	 * 处理消失事件。
-	 * Handle despawn.
-	 */
-	@Override
-	protected void handleDespawned() {
-		super.handleDespawned();
-	}
-
     /**
      * 处理看见生物事件。
      * Handle seeing a creature.

@@ -131,13 +131,4 @@ public abstract class BuffEffect extends EffectTemplate {
 		}
 		return modifiers;
 	}
-
-	/**
-	 * 周期动作占位（Buff 默认无周期逻辑）。
-	 * Periodic action stub (buffs have no default tick logic).
-	 * @param effect 运行时效果 / runtime effect
-	 */
-	@Override
-	public void onPeriodicAction(Effect effect) {
-	}
 }

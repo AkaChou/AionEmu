@@ -401,7 +401,7 @@ public class MapRegion {
 		return false;
 	}
 
-	
+
 	/**
 	 * 按优先级/类型构建 Zone 分类表。
 	 * Build zone category map by priority/type.
@@ -409,13 +409,12 @@ public class MapRegion {
 	 */
 	private void createZoneMap(ZoneInstance[] zones) {
 		zoneMap = new LinkedHashMap<>();
-		for (int i = 0; i < zones.length; i++) {
-			ZoneInstance zone = zones[i];
-			int category = -1;
-			if (zone.getZoneTemplate().getPriority() != 0) {
-				category = zone.getZoneTemplate().getZoneType().ordinal();
-			}
-			zoneMap.computeIfAbsent(category, _ -> new TreeSet<>()).add(zone);
-		}
+        for (ZoneInstance zone : zones) {
+            int category = -1;
+            if (zone.getZoneTemplate().getPriority() != 0) {
+                category = zone.getZoneTemplate().getZoneType().ordinal();
+            }
+            zoneMap.computeIfAbsent(category, _ -> new TreeSet<>()).add(zone);
+        }
 	}
 }

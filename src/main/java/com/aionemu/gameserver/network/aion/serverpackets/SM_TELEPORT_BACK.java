@@ -10,8 +10,4 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
  */
 public class SM_TELEPORT_BACK extends AionServerPacket {
 
-	@Override
-	protected void writeImpl(AionConnection con) {
-		// 空数据包 / EmptyPacket
-	}
 }

@@ -17,7 +17,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 @AIName("invisible_npc")
 public class InvisibleNpcAI2 extends AggressiveNpcAI2
 {
-	private final boolean canThink = true;
 
 	/**
 	 * 是否允许进入思考逻辑。
@@ -25,7 +24,7 @@ public class InvisibleNpcAI2 extends AggressiveNpcAI2
 	 */
 	@Override
 	public boolean canThink() {
-		return canThink;
+		return true;
 	}
 
 	/**
@@ -270,14 +269,5 @@ public class InvisibleNpcAI2 extends AggressiveNpcAI2
 	}
 	private void brokenMorale() {
 		GameEngineServices.skillEngine().getSkill(getOwner(), 22791, 1, getOwner()).useNoAnimationSkill(); //Broken Morale.
-	}
-
-    /**
-     * 处理死亡事件。
-     * Handle death.
-     */
-	@Override
-    protected void handleDied() {
-        super.handleDied();
 	}
 }

@@ -71,7 +71,7 @@ public class AGameProcessor {
 	 */
 	public ScheduledFuture<?> schedule(Runnable r, long delay) {
 		r = new RunnableTaskWrapper(r);
-		long validated = Math.max(0L, Math.min(Integer.MAX_VALUE, delay));
+		long validated = Math.clamp(delay, 0L, Integer.MAX_VALUE);
 		if (validated < delay) {
 			log.warn(I18n.get("log.fb1d6c13ae41", delay, validated));
 		}
@@ -89,7 +89,7 @@ public class AGameProcessor {
 	 */
 	public ScheduledFuture<?> scheduleAtFixedRate(Runnable r, long delay, long period) {
 		r = new RunnableTaskWrapper(r);
-		long validated = Math.max(0L, Math.min(Integer.MAX_VALUE, delay));
+		long validated = Math.clamp(delay, 0L, Integer.MAX_VALUE);
 		if (validated < delay) {
 			log.warn(I18n.get("log.fb1d6c13ae41", delay, validated));
 		}
@@ -107,7 +107,7 @@ public class AGameProcessor {
 	 */
 	public boolean schedule(Runnable r, long delay, Task out) {
 		r = new RunnableTaskWrapper(r);
-		long validated = Math.max(0L, Math.min(Integer.MAX_VALUE, delay));
+		long validated = Math.clamp(delay, 0L, Integer.MAX_VALUE);
 		if (validated < delay) {
 			log.warn(I18n.get("log.832d28ea08bf", delay, validated));
 			return false;

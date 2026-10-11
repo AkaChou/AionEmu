@@ -347,11 +347,6 @@ public class BoundingBox extends BoundingVolume {
 					new BoundingBox(new Vector3f(0, 0, 0), 0, 0, 0));
 			}
 
-			// case OBB: {
-			// OrientedBoundingBox box = (OrientedBoundingBox) volume;
-			// BoundingBox rVal = (BoundingBox) this.clone(null);
-			// return rVal.mergeOBB(box);
-			// }
 			default -> null;
 		};
 	}
@@ -373,49 +368,9 @@ public class BoundingBox extends BoundingVolume {
 				BoundingBox vBox = (BoundingBox) volume;
 				yield merge(vBox.center, vBox.xExtent, vBox.yExtent, vBox.zExtent, this);
 			}
-			// case OBB: {
-			// return mergeOBB((OrientedBoundingBox) volume);
-			// }
 			default -> null;
 		};
 	}
-
-	// private BoundingBox mergeOBB(OrientedBoundingBox volume) {
-	// if (!volume.correctCorners)
-	// volume.computeCorners();
-	//
-	// TempVars vars = TempVars.get();
-	// Vector3f min = vars.compVect1.set(center.x - xExtent, center.y - yExtent,
-	// center.z - zExtent);
-	// Vector3f max = vars.compVect2.set(center.x + xExtent, center.y + yExtent,
-	// center.z + zExtent);
-	//
-	// for (int i = 1; i < volume.vectorStore.length; i++) {
-	// Vector3f temp = volume.vectorStore[i];
-	// if (temp.x < min.x)
-	// min.x = temp.x;
-	// else if (temp.x > max.x)
-	// max.x = temp.x;
-	//
-	// if (temp.y < min.y)
-	// min.y = temp.y;
-	// else if (temp.y > max.y)
-	// max.y = temp.y;
-	//
-	// if (temp.z < min.z)
-	// min.z = temp.z;
-	// else if (temp.z > max.z)
-	// max.z = temp.z;
-	// }
-	//
-	// center.set(min.addLocal(max));
-	// center.multLocal(0.5f);
-	//
-	// xExtent = max.x - center.x;
-	// yExtent = max.y - center.y;
-	// zExtent = max.z - center.z;
-	// return this;
-	// }
 
 	/**
 	 * 将本包围盒与以中心/半长描述的另一盒子合并，结果写入 rVal。
@@ -542,11 +497,7 @@ public class BoundingBox extends BoundingVolume {
 		} else return !(center.z + zExtent < bb.center.z - bb.zExtent) && !(center.z - zExtent > bb.center.z + bb.zExtent);
 	}
 
-	// public boolean intersectsOrientedBoundingBox(OrientedBoundingBox obb) {
-	// return obb.intersectsBoundingBox(this);
-	// }
-
-	/**
+    /**
 	 * 检测本包围盒是否与射线相交。
 	 * Determines whether this bounding box intersects the given ray.
 	 * @param ray 射线 / ray

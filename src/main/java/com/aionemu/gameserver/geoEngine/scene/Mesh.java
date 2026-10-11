@@ -58,8 +58,6 @@ public class Mesh {
 		Hybrid
 	}
 
-	// private static final int BUFFERS_SIZE = VertexBuffer.Type.BoneIndex.ordinal()
-	// + 1;
 	/**
 	 * 完全包含网格的包围体，默认 AABB。
 	 * Bounding volume that contains the mesh entirely. By default a BoundingBox (AABB).
@@ -67,10 +65,7 @@ public class Mesh {
 	private BoundingVolume meshBound = new BoundingBox();
 	/** 碰撞加速结构（BIH 树）。 / Collision acceleration structure (BIH tree). */
 	private volatile CollisionData collisionTree = null;
-	// private EnumMap<VertexBuffer.Type, VertexBuffer> buffers = new EnumMap<Type,
-	// VertexBuffer>(VertexBuffer.Type.class);
-	// private VertexBuffer[] buffers = new VertexBuffer[BUFFERS_SIZE];
-	/** 按类型序数索引的顶点缓冲映射。 / Vertex buffers keyed by type ordinal.
+    /** 按类型序数索引的顶点缓冲映射。 / Vertex buffers keyed by type ordinal.
 	 * -- GETTER --
 	 *  返回全部顶点缓冲映射。
 	 *  Returns the map of all vertex buffers.

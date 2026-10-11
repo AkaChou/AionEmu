@@ -4,9 +4,6 @@ import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
 import java.util.TreeMap;
 import org.springframework.beans.factory.ObjectProvider;
 
@@ -21,9 +18,7 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_LEGION_INFO;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_STONESPEAR_SIEGE;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_TERRITORY_LIST;
 import com.aionemu.gameserver.services.LegionService;
-import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.world.WorldPosition;
 
 /**
  * 领地服务，管理军团领地占领、增益与传送。
@@ -31,10 +26,7 @@ import com.aionemu.gameserver.world.WorldPosition;
  */
 public class TerritoryService {
 	private static volatile ObjectProvider<TerritoryService> instanceProvider;
-	private TerritoryBuff territoryBuff;
-	private final Map<Integer, TerritoryBuff> buffs = new HashMap<>();
 	private final TreeMap<Integer, LegionTerritory> territories = new TreeMap<>();
-	private final TreeMap<Integer, TreeMap<Integer, WorldPosition>> teleporters = new TreeMap<>();
 	private final LegionDAO legionDAO;
 
 	/**
@@ -73,7 +65,6 @@ public class TerritoryService {
 	public void initTerritory() {
 		LegionService ls = GameCoreGameplayServices.legionService();
 		Collection<Legion> legions = new ArrayList<>();
-		int counter = 0;
 		for (int i = 1; i <= 6; i++) {
 			territories.put(i, new LegionTerritory(i));
 		}
@@ -84,28 +75,6 @@ public class TerritoryService {
 			LegionTerritory territory = legion.getTerritory();
 			territories.remove(territory.getId());
 			territories.put(territory.getId(), territory);
-			counter++;
-		}
-	}
-
-	/**
-	 * 通过领地 NPC 将玩家传送到对应领地坐标。
-	 * Teleports a player via territory NPC to the mapped position.
-	 * @param player 玩家 / Player
-	 * @param npcid 传送 NPC ID / Teleporter NPC id
-	 */
-	public void onTeleport(Player player, int npcid) {
-		if (player.getLegion() == null || player.getLegion().getTerritory().getId() == 0) {
-			return;
-		}
-		int territoryId = player.getLegion().getTerritory().getId();
-		TreeMap<Integer, WorldPosition> teleportMap = teleporters.get(territoryId);
-		WorldPosition pos = null;
-		if (teleportMap.containsKey(npcid)) {
-			pos = teleportMap.get(npcid);
-		}
-		if (pos != null) {
-			TeleportService2.teleportTo(player, pos.getMapId(), pos.getX(), pos.getY(), pos.getZ(), pos.getHeading());
 		}
 	}
 
@@ -116,62 +85,6 @@ public class TerritoryService {
 	 */
 	public void onEnterWorld(Player player) {
 		PacketSendUtility.sendPacket(player, new SM_TERRITORY_LIST(territories.values()));
-	}
-
-	/**
-	 * 发送石矛攻城相关包（当前实现为空）。
-	 * Sends Stonespear siege packet (currently no-op).
-	 * @param player 玩家 / Player
-	 */
-	public void sendStoneSpearPacket(Player player) {
-		// PacketSendUtility.sendPacket(player, new
-		// SM_STONESPEAR_SIEGE(player.getLegion(), 0));
-	}
-
-	/**
-	 * 玩家进入所属领地时施加领地增益。
-	 * Applies territory buff when a player enters owned territory.
-	 * @param player 玩家 / Player
-	 */
-	public void onEnterTerritory(Player player) {
-		if (player.getLegion() == null || player.getLegion().getTerritory().getId() == 0) {
-			return;
-		}
-		territoryBuff = new TerritoryBuff();
-		territoryBuff.applyEffect(player);
-		buffs.put(player.getObjectId(), territoryBuff);
-	}
-
-	/**
-	 * 玩家离开领地时移除增益。
-	 * Removes territory buff when a player leaves.
-	 * @param player 玩家 / Player
-	 */
-	public void onLeaveTerritory(Player player) {
-		if (player.getLegion() == null || player.getLegion().getTerritory().getId() == 0) {
-			return;
-		}
-		if (buffs.containsKey(player.getObjectId())) {
-			buffs.get(player.getObjectId()).endEffect(player);
-			buffs.remove(player.getObjectId());
-		}
-	}
-
-	/**
-	 * 扫描同图敌对种族玩家（入侵者探测）。
-	 * Scans same-map enemy-race players (intruder detection).
-	 * @param player 发起扫描的玩家 / Scanning player
-	 */
-	public void scanForIntruders(Player player) {
-		Collection<Player> players = new ArrayList<>();
-		Iterator<Player> playerIt = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getPlayersIterator();
-		while (playerIt.hasNext()) {
-			Player enemy = playerIt.next();
-			if (player.getWorldId() == enemy.getWorldId() && player.getRace() != enemy.getRace()) {
-				players.add(enemy);
-			}
-		}
-		// PacketSendUtility.sendPacket(player, new SM_SERIAL_KILLER(players, false));
 	}
 
 	/**

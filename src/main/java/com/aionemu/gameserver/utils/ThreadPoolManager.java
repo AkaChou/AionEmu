@@ -90,7 +90,7 @@ public final class ThreadPoolManager {
 		workStealingPool = new ForkJoinPool(Runtime.getRuntime().availableProcessors(), forkJoinThreadFactory,
 				new ThreadUncaughtExceptionHandler(), true);
 		forkJoinThreadFactory.setDefaultPool(workStealingPool);
-		scheduleAtFixedRate(() -> purge(), 1000000, 1000000);
+		scheduleAtFixedRate(this::purge, 1000000, 1000000);
 	}
 
 	static int instantPoolSize(int configuredPoolSize) {
@@ -104,7 +104,7 @@ public final class ThreadPoolManager {
 	 * @return 校验后的延迟 / Validated delay
 	 */
 	private long validate(long delay) {
-		return Math.max(0, Math.min(MAX_DELAY, delay));
+		return Math.clamp(delay, 0, MAX_DELAY);
 	}
 
 	/**

@@ -79,16 +79,7 @@ public class PortalDialogAI2 extends PortalAI2 {
         }
 	}
 
-/* 	private void startLifeTask() {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				AI2Actions.deleteOwner(PortalDialogAI2.this);
-			}
-		}, 120000); //2 Minutes.
-	} */
-
-	@Override
+    @Override
 	public boolean onDialogSelect(Player player, int dialogId, int questId, int extendedRewardIndex) {
 		QuestEnv env = new QuestEnv(getOwner(), player, questId, dialogId);
 		env.setExtendedRewardIndex(extendedRewardIndex);

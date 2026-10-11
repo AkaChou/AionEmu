@@ -67,9 +67,7 @@ public class FortressAssault extends Assault<FortressSiege> {
 		if (!spawned) {
 			return;
 		}
-		if (!captured) {
-			rewardDefendingPlayers();
-		} else {
+		if (captured) {
 			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
 				// 龙族击杀了守护者将军。 / The Balaur have killed the Guardian General.
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_FIELDABYSS_DRAGON_BOSS_KILLED);
@@ -100,7 +98,7 @@ public class FortressAssault extends Assault<FortressSiege> {
 			minAngle += 360;
 		}
 		double minRadian = Math.toRadians(minAngle);
-		float interval = (float) (Math.PI / (amount / 2));
+		float interval = (float) (Math.PI / ((double) amount / 2));
 		float x1;
 		float y1;
 		List<Integer> idList = getSpawnIds();
@@ -111,8 +109,8 @@ public class FortressAssault extends Assault<FortressSiege> {
 				x1 = (float) (Math.cos(minRadian + interval * i) * radius1);
 				y1 = (float) (Math.sin(minRadian + interval * i) * radius1);
 			} else {
-				x1 = (float) (Math.cos(minRadian + interval * (i - amount / 2)) * radius2);
-				y1 = (float) (Math.sin(minRadian + interval * (i - amount / 2)) * radius2);
+				x1 = (float) (Math.cos(minRadian + interval * (i - (double) amount / 2)) * radius2);
+				y1 = (float) (Math.sin(minRadian + interval * (i - (double) amount / 2)) * radius2);
 			}
 			templateId = (i <= commanderCount) ? idList.getFirst() : idList.get(Rnd.get(1, idList.size() - 1));
 			Npc attaker;
@@ -255,12 +253,5 @@ public class FortressAssault extends Assault<FortressSiege> {
 		default:
 			return Spawns;
 		}
-	}
-
-	/**
-	 * 奖励成功防守玩家（当前空实现）。
-	 * Rewards defending players (currently a no-op).
-	 */
-	private void rewardDefendingPlayers() {
 	}
 }

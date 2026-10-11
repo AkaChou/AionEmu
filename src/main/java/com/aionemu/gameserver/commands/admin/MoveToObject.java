@@ -35,7 +35,7 @@ public class MoveToObject extends AdminCommand {
 		int objectId = 0;
 
 		try {
-			objectId = Integer.valueOf(params[0]);
+			objectId = Integer.parseInt(params[0]);
 		}
 		catch (NumberFormatException e) {
 			PacketSendUtility.sendMessage(admin, "Only numbers please!!!");

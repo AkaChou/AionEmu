@@ -5,14 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
 import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Future;
 
@@ -114,7 +107,7 @@ public abstract class WorldMapInstance {
 	private InstanceHandler instanceHandler;
 
 	/** 区域名到区域实例 / zone name → zone instance */
-	private Map<ZoneName, ZoneInstance> zones = new HashMap<>();
+	private Map<ZoneName, ZoneInstance> zones;
 
 	/** 单人所有者对象 ID / solo owner objectId */
 	private Integer soloPlayer;
@@ -177,7 +170,7 @@ public abstract class WorldMapInstance {
 
 	/**
 	 * 创建区域并建立邻接。
-	 * Create a region and wire neighbours.
+	 * Create a region and wire neighbors.
 	 * @param regionId 区域 ID / the region id
 	 * @return 新建的区域 / the newly created region
 	 */
@@ -233,9 +226,6 @@ public abstract class WorldMapInstance {
 				playerStored = true;
 			}
 		} catch (RuntimeException | Error e) {
-			if (playerStored) {
-				worldMapPlayers.remove(object.getObjectId());
-			}
 			removeQuestIds(addedQuestIds);
 			if (objectStored) {
 				removeVisibleObject(object.getObjectId());
@@ -548,7 +538,7 @@ public abstract class WorldMapInstance {
 	 */
 	public List<Integer> getQuestIds() {
 		synchronized (questIds) {
-			return Collections.unmodifiableList(new ArrayList<>(questIds));
+			return List.copyOf(questIds);
 		}
 	}
 
@@ -578,7 +568,7 @@ public abstract class WorldMapInstance {
 	 */
 	public Player getPlayer(Integer object) {
 		for (Player player : worldMapPlayersSnapshot()) {
-			if (object == player.getObjectId()) {
+			if (Objects.equals(object, player.getObjectId())) {
 				return player;
 			}
 		}
@@ -643,7 +633,7 @@ public abstract class WorldMapInstance {
 				log.error(I18n.get("log.2bb533f118b4", regionId, mapId));
 			}
 		}
-		return regionZones.toArray(new ZoneInstance[regionZones.size()]);
+		return regionZones.toArray(new ZoneInstance[0]);
 	}
 
 	/**

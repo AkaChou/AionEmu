@@ -113,11 +113,7 @@ public class SteelRakeCabineInstance extends GeneralInstanceHandler {
 			break;
 			case 219033: //Golden Eye Mantutu.
 				// 成功逃脱提示（原调试输出已注释）。 / Success-escape notice (debug output commented out).
-/* 				spawn(700554, 736.64728f, 493.73834f, 941.4781f, (byte) 45); //Pirate Ship Treasure Box.
-				spawn(700554, 720.41028f, 511.63718f, 939.7604f, (byte) 90); //Pirate Ship Treasure Box.
-		        spawn(700554, 739.51251f, 506.14313f, 941.4781f, (byte) 77); //Pirate Ship Treasure Box.
-				spawn(700554, 721.76172f, 491.83142f, 939.6068f, (byte) 32); //Pirate Ship Treasure Box. */
-				spawn(730766, 734.18994f, 484.61578f, 941.70868f, (byte) 0, 61); //Hidden Passage.
+                spawn(730766, 734.18994f, 484.61578f, 941.70868f, (byte) 0, 61); //Hidden Passage.
 			break;
 		}
 	}

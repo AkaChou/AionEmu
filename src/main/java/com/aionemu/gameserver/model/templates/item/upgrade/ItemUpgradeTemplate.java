@@ -2,7 +2,6 @@ package com.aionemu.gameserver.model.templates.item.upgrade;
 
 import java.util.List;
 
-import jakarta.xml.bind.Unmarshaller;
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
@@ -27,7 +26,4 @@ public class ItemUpgradeTemplate implements StatOwner {
 	/** 返回升级基础物品 ID / Returns the upgrade base item id */
 	@XmlAttribute(name = "upgrade_base_item")
 	private int upgrade_base_item_id;
-
-	void afterUnmarshal(Unmarshaller u, Object parent) {
-	}
 }

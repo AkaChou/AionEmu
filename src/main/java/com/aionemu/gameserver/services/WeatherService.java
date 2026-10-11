@@ -354,7 +354,6 @@ public class WeatherService {
 			PacketSendUtility.sendPacket(player, new SM_WEATHER(weatherEntries));
 		}
 		for (WeatherEntry entry : weatherEntries) {
-			GameFeatureServices.siegeService().onWeatherChanged(entry);
 		}
 	}
 }

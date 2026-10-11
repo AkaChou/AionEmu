@@ -28,8 +28,4 @@ public class FriendPortalAI2 extends NpcAI2
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_HOUSING_TELEPORT_CANT_USE);
 		}
 	}
-	
-	@Override
-	protected void handleDialogFinish(Player player) {
-	}
 }

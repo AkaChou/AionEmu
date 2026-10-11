@@ -767,15 +767,6 @@ public class SoloSurvivorBg extends Battleground {
 		map72.setKillZ(650f);
 		super.maps.add(map72);
 		// 现场派对音乐厅。 / Live Party Concert Hall.
-		// BattlegroundMap map73 = new BattlegroundMap(600080000);
-		// map73.addSpawn(new SpawnPosition(1543f, 1529f, 565f));
-		// map73.addSpawn(new SpawnPosition(1543f, 1493f, 565f));
-		// map73.addSpawn(new SpawnPosition(1521f, 1492f, 565f));
-		// map73.addSpawn(new SpawnPosition(1521f, 1530f, 565f));
-		// map73.addSpawn(new SpawnPosition(1509f, 1511f, 565f));
-		// map73.addSpawn(new SpawnPosition(1503f, 1541f, 566f));
-		// map73.setKillZ(540f);
-		// super.maps.add(map73);
 	}
 
 	/**

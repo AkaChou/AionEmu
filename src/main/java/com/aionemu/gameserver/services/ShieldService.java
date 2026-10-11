@@ -113,7 +113,7 @@ public class ShieldService {
 		return null;
 	}
 
-	
+
 	/**
 	 * 向指定世界注册攻城护盾。
 	 * Registers a siege shield for the given world.
@@ -121,11 +121,7 @@ public class ShieldService {
 	 * @param shield siege shield
 	 */
 	public void registerShield(int worldId, SiegeShield shield) {
-		List<SiegeShield> mapShields = registeredShields.get(worldId);
-		if (mapShields == null) {
-			mapShields = new ArrayList<>();
-			registeredShields.put(worldId, mapShields);
-		}
+		List<SiegeShield> mapShields = registeredShields.computeIfAbsent(worldId, k -> new ArrayList<>());
 		mapShields.add(shield);
 	}
 

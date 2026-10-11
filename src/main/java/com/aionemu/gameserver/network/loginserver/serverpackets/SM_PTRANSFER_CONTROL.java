@@ -286,7 +286,7 @@ public class SM_PTRANSFER_CONTROL extends LsServerPacket {
 			EmotionList emo = player.getEmotions();
 			writeD(emo.getEmotions().size());
 			for (Emotion e : emo.getEmotions()) {
-				writeD(e.getId());
+				writeD(e.id());
 				writeD(e.getRemainingTime());
 			}
 			MotionList motions = player.getMotions();
@@ -341,7 +341,7 @@ public class SM_PTRANSFER_CONTROL extends LsServerPacket {
 			TitleList titles = player.getTitleList();
 			writeD(titles.getTitles().size());
 			for (Title t : titles.getTitles()) {
-				writeD(t.getId());
+				writeD(t.id());
 				writeD(t.getRemainingTime());
 			}
 			PlayerSettings ps = player.getPlayerSettings();

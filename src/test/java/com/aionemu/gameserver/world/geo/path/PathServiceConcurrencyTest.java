@@ -208,7 +208,7 @@ class PathServiceConcurrencyTest {
 	}
 
 	@Test
-	void timesOutAndRecordsSlowRequests() throws Exception {
+	void timesOutAndRecordsSlowRequests() {
 		ConfigSnapshot snapshot = ConfigSnapshot.of(GeoDataConfig.class, "GEO_PATH_TIMEOUT_MS");
 		try {
 			GeoDataConfig.GEO_PATH_TIMEOUT_MS = 10;

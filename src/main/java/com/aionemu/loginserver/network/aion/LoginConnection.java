@@ -287,16 +287,6 @@ public class LoginConnection extends AConnection {
     }
 
     /**
-     * 勿改：hashCode 用于保证连接唯一 ID。
-     * Do not change: hashCode ensures each connection has a unique id.
-     * @return 唯一标识 / unique identifier
-     */
-    @Override
-    public int hashCode() {
-        return super.hashCode();
-    }
-
-    /**
      * 立即关闭连接。
      * Close the connection immediately.
      */

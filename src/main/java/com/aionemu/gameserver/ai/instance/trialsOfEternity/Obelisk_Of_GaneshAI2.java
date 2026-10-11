@@ -1,12 +1,10 @@
 package com.aionemu.gameserver.ai.instance.trialsOfEternity;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
-
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
-
 import com.aionemu.gameserver.ai2.AI2Actions;
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.ai2.NpcAI2;
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 /**
  * Trials Of Eternity 副本 NPC AI：Obelisk Of Ganesh（@AIName "IDEternity_03_Def_Boss_Energy"），继承 NpcAI2。
@@ -14,11 +12,7 @@ import com.aionemu.gameserver.ai2.NpcAI2;
  * @author Encom
  */
 @AIName("IDEternity_03_Def_Boss_Energy")
-public class Obelisk_Of_GaneshAI2 extends NpcAI2
-{
-	@Override
-	public void think() {
-	}
+public class Obelisk_Of_GaneshAI2 extends NpcAI2 {
 
 	@Override
 	protected void handleSpawned() {

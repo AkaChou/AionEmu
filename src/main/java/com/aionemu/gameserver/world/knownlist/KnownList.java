@@ -228,27 +228,26 @@ public class KnownList {
 			return;
 
 		MapRegion[] regions = owner.getActiveRegion().getNeighbours();
-		for (int i = 0; i < regions.length; i++) {
-			MapRegion r = regions[i];
-			for (VisibleObject newObject : r.getObjects().values()) {
-				if (newObject == owner || newObject == null) {
-					continue;
-				}
-				if (!isAwareOf(newObject)) {
-					continue;
-				}
-				Map<Integer, VisibleObject> objects = knownObjects;
-				if (objects != null && objects.containsKey(newObject.getObjectId())) {
-					continue;
-				}
-				if (!checkObjectInRange(newObject) && !newObject.getKnownList().checkReversedObjectInRange(owner)) {
-					continue;
-				}
+        for (MapRegion r : regions) {
+            for (VisibleObject newObject : r.getObjects().values()) {
+                if (newObject == owner || newObject == null) {
+                    continue;
+                }
+                if (!isAwareOf(newObject)) {
+                    continue;
+                }
+                Map<Integer, VisibleObject> objects = knownObjects;
+                if (objects != null && objects.containsKey(newObject.getObjectId())) {
+                    continue;
+                }
+                if (!checkObjectInRange(newObject) && !newObject.getKnownList().checkReversedObjectInRange(owner)) {
+                    continue;
+                }
                 if (add(newObject)) {
-					newObject.getKnownList().add(owner);
-				}
-			}
-		}
+                    newObject.getKnownList().add(owner);
+                }
+            }
+        }
 	}
 
 	/**

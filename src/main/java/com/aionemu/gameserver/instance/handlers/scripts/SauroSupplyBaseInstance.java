@@ -227,27 +227,11 @@ public class SauroSupplyBaseInstance extends GeneralInstanceHandler
 			break;
 
             case 230857: //Guard Captain Ahuradim.
-/* 				switch (Rnd.get(1, 2)) {
-		            case 1:
-				        spawn(702658, 703.3344f, 883.07666f, 411.5939f, (byte) 90); //修道院箱子。 / Abbey Box.
-			        break;
-			        case 2:
-				        spawn(702659, 703.3344f, 883.07666f, 411.5939f, (byte) 90); //高级修道院箱子。 / Noble Abbey Box.
-					break;
-				} */
 				spawn(801967, 708.9197f, 884.59625f, 411.57986f, (byte) 45); //Sauro Supply Base Exit.
 				spawn(802181, 710.25726f, 889.6806f, 411.59103f, (byte) 0); //Sauro Supply Base Opportunity Bundle.
 			break;
 			case 230858: //Brigade General Sheba.
-/* 				switch (Rnd.get(1, 2)) {
-		            case 1:
-				        spawn(702658, 900.2497f, 896.3568f, 411.3568f, (byte) 30); //修道院箱子。 / Abbey Box.
-			        break;
-			        case 2:
-				        spawn(702659, 900.2497f, 896.3568f, 411.3568f, (byte) 30); //高级修道院箱子。 / Noble Abbey Box.
-					break;
-				} */
-				spawn(801967, 905.3781f, 895.2461f, 411.57785f, (byte) 75); //Sauro Supply Base Exit.
+                spawn(801967, 905.3781f, 895.2461f, 411.57785f, (byte) 75); //Sauro Supply Base Exit.
 				spawn(802181, 906.9721f, 889.6604f, 411.59854f, (byte) 0); //Sauro Supply Base Opportunity Bundle.
 			break;
 		}

@@ -32,19 +32,21 @@ public class Repairkit extends AdminCommand {
      */
     public void execute(Player admin, String...params){
         if(params.length == 0){
-            PacketSendUtility.sendMessage(admin, "Syntax\n" +
-                    " //repairkit [operation] [playername] [playerRace | itemID]\n" +
-                    "##### NOTE ####\n" +
-                    "# You will need playerRace to use the 'RETURN' Operation.\n" +
-                    "# You will need itemID to use the 'REMOVE' Operation.\n" +
-                    "# NEVER USE @LINK OF ITEMS.. ONLY ITEM ID!!!!.\n" +
-                    "# PLEASE STRICTLY FOLLOW THESE RULES , BECAUSE IF WRITTEN WRONG, THIS CAN CAUSE ALOT OF DATABASE LOSE!!!!!.\n" +
-                    "# Player Name Also MUST be used as Exactly case sensitive, (example: Extreme is correct , and extreme is wrong... First letter should be capital)" +
-                    "#### NOTE END ####\n " +
-                    "# [operation] : return | remove | terminate | wipe\n" +
-                    "# [playername] : name of the player to initialize the operation\n" +
-                    "# [playerRace | itemID] : race should be given in correct spelling and case ( ELYOS | ASMODIANS ) case Sensitive!! OR use itemID if you want to remove an Item from the Player!!(NO LINKS ALLOWED, ONLY ITEM ID!!)\n" +
-                    "#######################");
+            PacketSendUtility.sendMessage(admin, """
+                    Syntax
+                     //repairkit [operation] [playername] [playerRace | itemID]
+                    ##### NOTE ####
+                    # You will need playerRace to use the 'RETURN' Operation.
+                    # You will need itemID to use the 'REMOVE' Operation.
+                    # NEVER USE @LINK OF ITEMS.. ONLY ITEM ID!!!!.
+                    # PLEASE STRICTLY FOLLOW THESE RULES , BECAUSE IF WRITTEN WRONG, THIS CAN CAUSE ALOT OF DATABASE LOSE!!!!!.
+                    # Player Name Also MUST be used as Exactly case sensitive, (example: Extreme is correct , and extreme is wrong... First letter should be capital)\
+                    #### NOTE END ####
+                     \
+                    # [operation] : return | remove | terminate | wipe
+                    # [playername] : name of the player to initialize the operation
+                    # [playerRace | itemID] : race should be given in correct spelling and case ( ELYOS | ASMODIANS ) case Sensitive!! OR use itemID if you want to remove an Item from the Player!!(NO LINKS ALLOWED, ONLY ITEM ID!!)
+                    #######################""");
             return;
         }
 

@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.services;
 
-import lombok.AllArgsConstructor;
 
 
 import com.aionemu.boot.i18n.I18n;
@@ -188,7 +187,7 @@ public class NightmareCircusService {
 		return activeNightmareCircus.containsKey(id);
 	}
 
-	
+
 	/**
 	 * 获取活动持续时长（小时）。
 	 * Returns the event duration in hours.
@@ -243,27 +242,24 @@ public class NightmareCircusService {
 		private static final NightmareCircusService INSTANCE = new NightmareCircusService();
 	}
 
-	/**
-	 * 梦魇马戏团活动启动定时任务。
-	 * Start runnable for the Nightmare Circus world event.
-	 */
-	@AllArgsConstructor
-	private static class CircusStartRunnable implements Runnable {
-		private final int id;
-
-		/**
-		 * 执行启动流程。
-		 * Runs the start sequence.
-		 */
-		@Override
-		public void run() {
-			Map<Integer, NightmareCircusLocation> locations = NightmareCircusService.getInstance()
-					.getNightmareCircusLocations();
-			for (final NightmareCircusLocation loc : locations.values()) {
-				if (loc.getId() == id) {
-					NightmareCircusService.getInstance().startNightmareCircus(loc.getId());
-				}
-			}
-		}
-	}
+    /**
+     * 梦魇马戏团活动启动定时任务。
+     * Start runnable for the Nightmare Circus world event.
+     */
+    private record CircusStartRunnable(int id) implements Runnable {
+        /**
+         * 执行启动流程。
+         * Runs the start sequence.
+         */
+        @Override
+        public void run() {
+            Map<Integer, NightmareCircusLocation> locations = NightmareCircusService.getInstance()
+                    .getNightmareCircusLocations();
+            for (final NightmareCircusLocation loc : locations.values()) {
+                if (loc.getId() == id) {
+                    NightmareCircusService.getInstance().startNightmareCircus(loc.getId());
+                }
+            }
+        }
+    }
 }

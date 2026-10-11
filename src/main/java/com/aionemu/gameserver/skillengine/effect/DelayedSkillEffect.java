@@ -64,13 +64,4 @@ public class DelayedSkillEffect extends EffectTemplate {
 			}
 		}, effect.getEffectsDuration());
 	}
-
-	/**
-	 * 结束延迟技能效果。
-	 * Ends the delayed skill effect.
-	 * @param effect 运行时效果 / runtime effect
-	 */
-	@Override
-	public void endEffect(Effect effect) {
-	}
 }

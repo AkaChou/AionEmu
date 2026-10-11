@@ -2,6 +2,7 @@ package com.aionemu.gameserver.services.abyss;
 
 
 import com.aionemu.boot.i18n.I18n;
+import com.aionemu.gameserver.model.gameobjects.player.Player;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
@@ -81,7 +82,7 @@ public class AbyssRankingCache {
 		renewPlayerRanking(Race.ASMODIANS);
 		renewPlayerRanking(Race.ELYOS);
 		renewLegionRanking();
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> player.resetAbyssRankListUpdated());
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(Player::resetAbyssRankListUpdated);
 	}
 
 	/**
@@ -96,10 +97,10 @@ public class AbyssRankingCache {
 		legions.put(Race.ASMODIANS, new SM_ABYSS_RANKING_LEGIONS(lastUpdate, asmoRanking, Race.ASMODIANS));
 		legions.put(Race.ELYOS, new SM_ABYSS_RANKING_LEGIONS(lastUpdate, elyosRanking, Race.ELYOS));
 		for (AbyssRankingResult result : elyosRanking) {
-			newLegionRankingCache.put(Integer.valueOf(result.getLegionId()), result.getRankPos());
+			newLegionRankingCache.put(result.getLegionId(), result.getRankPos());
 		}
 		for (AbyssRankingResult result : asmoRanking) {
-			newLegionRankingCache.put(Integer.valueOf(result.getLegionId()), result.getRankPos());
+			newLegionRankingCache.put(result.getLegionId(), result.getRankPos());
 		}
 		GameCoreGameplayServices.legionService().performRankingUpdate(newLegionRankingCache);
 	}

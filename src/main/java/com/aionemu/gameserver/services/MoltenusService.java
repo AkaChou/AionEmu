@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.services;
 
-import lombok.AllArgsConstructor;
 
 
 import com.aionemu.boot.i18n.I18n;
@@ -253,7 +252,7 @@ public class MoltenusService {
 		return activeMoltenus.containsKey(id);
 	}
 
-	
+
 	/**
 	 * 返回配置的持续时长（小时）。
 	 * Returns configured duration in hours.
@@ -312,26 +311,23 @@ public class MoltenusService {
 	 * 熔岩领主（Moltenus）活动启动定时任务。
 	 * Start runnable for the Moltenus world event.
 	 */
-	@AllArgsConstructor
-	private static class MoltenusStartRunnable implements Runnable {
-		private final int id;
-
-		@Override
-		public void run() {
-			// 暴怒的硫磺守护者将在 10 分钟后出现。 / Enraged Sulfur Guardian will appear in 10 minutes.
-			MoltenusService.getInstance().sulfurFortressMsg(id);
-			// 暴怒的西部守护者将在 10 分钟后出现。 / Enraged Western Guardian will appear in 10 minutes.
-			MoltenusService.getInstance().westernFortressMsg(id);
-			// 暴怒的东部守护者将在 10 分钟后出现。 / Enraged Eastern Guardian will appear in 10 minutes.
-			MoltenusService.getInstance().easternFortressMsg(id);
-			GameThreadPoolServices.threadPoolManager().schedule(() -> {
-				Map<Integer, MoltenusLocation> locations = MoltenusService.getInstance().getMoltenusLocations();
-				for (final MoltenusLocation loc : locations.values()) {
-					if (loc.getId() == id) {
-						MoltenusService.getInstance().startMoltenus(loc.getId());
+		private record MoltenusStartRunnable(int id) implements Runnable {
+			@Override
+			public void run() {
+				// 暴怒的硫磺守护者将在 10 分钟后出现。 / Enraged Sulfur Guardian will appear in 10 minutes.
+				MoltenusService.getInstance().sulfurFortressMsg(id);
+				// 暴怒的西部守护者将在 10 分钟后出现。 / Enraged Western Guardian will appear in 10 minutes.
+				MoltenusService.getInstance().westernFortressMsg(id);
+				// 暴怒的东部守护者将在 10 分钟后出现。 / Enraged Eastern Guardian will appear in 10 minutes.
+				MoltenusService.getInstance().easternFortressMsg(id);
+				GameThreadPoolServices.threadPoolManager().schedule(() -> {
+					Map<Integer, MoltenusLocation> locations = MoltenusService.getInstance().getMoltenusLocations();
+					for (final MoltenusLocation loc : locations.values()) {
+						if (loc.getId() == id) {
+							MoltenusService.getInstance().startMoltenus(loc.getId());
+						}
 					}
-				}
-			}, 600000);
+				}, 600000);
+			}
 		}
-	}
 }

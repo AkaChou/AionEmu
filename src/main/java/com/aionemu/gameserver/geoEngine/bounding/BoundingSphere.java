@@ -97,35 +97,6 @@ public class BoundingSphere extends BoundingVolume {
 		averagePoints(vertList);
 	}
 
-	//
-	// /**
-	// * 由三角形集合计算包围体（OBBTree 用）。
-	// * <code>computeFromTris</code> creates a new Bounding Box from a given
-	// * set of triangles. It is used in OBBTree calculations.
-	// *
-	// * @param indices
-	// * @param mesh
-	// * @param start
-	// * @param end
-	// */
-	// public void computeFromTris(int[] indices, Mesh mesh, int start, int end) {
-	// if (end - start <= 0) {
-	// return;
-	// }
-	//
-	// Vector3f[] vertList = new Vector3f[(end - start) * 3];
-	//
-	// int count = 0;
-	// for (int i = start; i < end; i++) {
-	// mesh.getTriangle(indices[i], verts);
-	// vertList[count++] = new Vector3f(verts[0]);
-	// vertList[count++] = new Vector3f(verts[1]);
-	// vertList[count++] = new Vector3f(verts[2]);
-	// }
-	//
-	// averagePoints(vertList);
-	// }
-
 	/**
 	 * 用 Welzl 算法计算点集的最小包围球。
 	 * Calculates a minimum bounding sphere for the set of points via Welzl's algorithm.
@@ -401,12 +372,7 @@ public class BoundingSphere extends BoundingVolume {
 			return merge(radVect.length(), temp_center, rVal);
 		}
 
-		// case OBB: {
-		// OrientedBoundingBox box = (OrientedBoundingBox) volume;
-		// BoundingSphere rVal = (BoundingSphere) this.clone(null);
-		// return rVal.mergeOBB(box);
-		// }
-		default:
+			default:
 			return null;
 		}
 	}
@@ -442,50 +408,10 @@ public class BoundingSphere extends BoundingVolume {
 			return merge(len, temp_center, this);
 		}
 
-		// case OBB: {
-		// return mergeOBB((OrientedBoundingBox) volume);
-		// }
-		default:
+			default:
 			return null;
 		}
 	}
-
-	// /**
-	// * 将此球与给定 OBB 合并。
-	// * Merges this sphere with the given OBB.
-	// *
-	// * @param volume The OBB to merge.
-	// * @return This sphere, after merging.
-	// */
-	// private BoundingSphere mergeOBB(OrientedBoundingBox volume) {
-	// // 从 OBB 计算边点。 / compute edge points from the obb
-	// if (!volume.correctCorners)
-	// volume.computeCorners();
-	// _mergeBuf.rewind();
-	// for (int i = 0; i < 8; i++) {
-	// _mergeBuf.put(volume.vectorStore[i].x);
-	// _mergeBuf.put(volume.vectorStore[i].y);
-	// _mergeBuf.put(volume.vectorStore[i].z);
-	// }
-	//
-	// // 记住旧半径与中心。 / remember old radius and center
-	// float oldRadius = radius;
-	// Vector3f oldCenter = _compVect2.set( center );
-	//
-	// // 由 OBB 点计算新半径与中心。 / compute new radius and center from obb points
-	// computeFromPoints(_mergeBuf);
-	// Vector3f newCenter = _compVect3.set( center );
-	// float newRadius = radius;
-	//
-	// // 恢复旧中心与半径。 / restore old center and radius
-	// center.set( oldCenter );
-	// radius = oldRadius;
-	//
-	// // 合并 OBB 点结果 / merge obb points result
-	// merge( newRadius, newCenter, this );
-	//
-	// return this;
-	// }
 
 	/**
 	 * 将本球与给定半径/中心的球合并，结果写入 rVal。
@@ -618,9 +544,6 @@ public class BoundingSphere extends BoundingVolume {
 	 * @see com.jme.bounding.BoundingVolume#intersectsOrientedBoundingBox(com.jme.
 	 * bounding.OrientedBoundingBox)
 	 */
-	// public boolean intersectsOrientedBoundingBox(OrientedBoundingBox obb) {
-	// return obb.intersectsSphere(this);
-	// }
 
 	/**
 	 * 与射线是否相交（仅布尔结果）。

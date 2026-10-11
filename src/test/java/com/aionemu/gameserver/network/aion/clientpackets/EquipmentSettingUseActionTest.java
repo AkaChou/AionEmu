@@ -381,8 +381,8 @@ class EquipmentSettingUseActionTest {
 		}
 
 		@Override
-		public boolean canSwitchHands() {
-			return switchHandsResult;
+		public boolean isSwitchHandsBlocked() {
+			return !switchHandsResult;
 		}
 
 		@Override

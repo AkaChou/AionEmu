@@ -281,11 +281,6 @@ class MoveTaskManagerTest {
 		}
 
 		@Override
-		public long getRemainigTime() {
-			return 0;
-		}
-
-		@Override
 		public int modifyDamage(int damage) {
 			return damage;
 		}

@@ -284,9 +284,7 @@ public class SteelRakeInstance extends GeneralInstanceHandler {
 			    despawnNpc(npc);
 			break;
 			case 215056: //Warden Tantaka.
-/* 				spawn(215421, 471.095f, 576.663f, 887.46f, (byte) 30); //Treasure Box.
-				spawn(215421, 451.161f, 575.938f, 887.41f, (byte) 30); //Treasure Box. */
-				// 门已打开，现在可进入禁闭室。 / The door is open and you can now access The Brig.
+// 门已打开，现在可进入禁闭室。 / The door is open and you can now access The Brig.
 				sendMsgByRace(1400249, Race.PC_ALL, 2000);
 				spawn(730200, 461.898f, 487.228f, 877.713f, (byte) 0, 30); //The Brig Entrance.
 			break;

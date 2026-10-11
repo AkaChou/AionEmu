@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.services;
 
-import lombok.AllArgsConstructor;
 
 
 import com.aionemu.boot.i18n.I18n;
@@ -173,7 +172,7 @@ public class ConquestService {
 		return activeConquest.containsKey(id);
 	}
 
-	
+
 	/**
 	 * 返回征服/供奉持续时长（小时，来自配置）。
 	 * Return conquest/offering duration in hours (from config).
@@ -237,22 +236,19 @@ public class ConquestService {
 	 * 征服/供奉活动启动定时任务。
 	 * Start runnable for Conquest/Offering events.
 	 */
-	@AllArgsConstructor
-	private static class ConquestStartRunnable implements Runnable {
-		private final int id;
-
-		/**
-		 * 启用对应地点。
-		 * Starts the matching location.
-		 */
-		@Override
-		public void run() {
-			Map<Integer, ConquestLocation> locations = ConquestService.getInstance().getConquestLocations();
-			for (final ConquestLocation loc : locations.values()) {
-				if (loc.getId() == id) {
-					ConquestService.getInstance().startConquest(loc.getId());
+		private record ConquestStartRunnable(int id) implements Runnable {
+			/**
+			 * 启用对应地点。
+			 * Starts the matching location.
+			 */
+			@Override
+			public void run() {
+				Map<Integer, ConquestLocation> locations = ConquestService.getInstance().getConquestLocations();
+				for (final ConquestLocation loc : locations.values()) {
+					if (loc.getId() == id) {
+						ConquestService.getInstance().startConquest(loc.getId());
+					}
 				}
 			}
 		}
-	}
 }

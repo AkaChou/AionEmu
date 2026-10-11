@@ -55,9 +55,11 @@ public class Landing extends AdminCommand
     }
 
     private void showHelp(Player admin) {
-        PacketSendUtility.sendMessage(admin, "[Help: Landing Command]\n"
-        + " Use Ex: //landing level elyos 8.\n"
-        + " Notice: This command uses smart matching. You may abbreviate most commands.\n" );
+        PacketSendUtility.sendMessage(admin, """
+                [Help: Landing Command]
+                 Use Ex: //landing level elyos 8.
+                 Notice: This command uses smart matching. You may abbreviate most commands.
+                """);
     }
 
     private void showHelpLevel(Player admin) {

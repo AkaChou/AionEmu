@@ -2,52 +2,38 @@ package com.aionemu.gameserver.world.zone;
 
 
 import com.aionemu.boot.i18n.I18n;
-import lombok.Setter;
-import lombok.extern.slf4j.Slf4j;
-import com.aionemu.gameserver.lifecycle.GameFeatureServices;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.CountDownLatch;
-
-import org.springframework.beans.factory.ObjectProvider;
-
+import com.aionemu.commons.scripting.CompiledScriptLoader;
 import com.aionemu.commons.scripting.classlistener.AggregatedClassListener;
 import com.aionemu.commons.scripting.classlistener.OnClassLoadUnloadListener;
 import com.aionemu.commons.scripting.classlistener.ScheduledTaskClassListener;
-import com.aionemu.commons.scripting.CompiledScriptLoader;
+import com.aionemu.commons.utils.collections.IntObjectHashMap;
 import com.aionemu.gameserver.GameServerError;
 import com.aionemu.gameserver.configs.main.GeoDataConfig;
 import com.aionemu.gameserver.dataholders.DataManager;
-import com.aionemu.gameserver.dataholders.ZoneData;
 import com.aionemu.gameserver.geoEngine.scene.Spatial;
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
 import com.aionemu.gameserver.model.GameEngine;
 import com.aionemu.gameserver.model.gameobjects.Creature;
-import com.aionemu.gameserver.model.geometry.Area;
-import com.aionemu.gameserver.model.geometry.CylinderArea;
-import com.aionemu.gameserver.model.geometry.PolyArea;
-import com.aionemu.gameserver.model.templates.zone.Points;
-import com.aionemu.gameserver.model.geometry.SemisphereArea;
-import com.aionemu.gameserver.model.geometry.SphereArea;
+import com.aionemu.gameserver.model.geometry.*;
 import com.aionemu.gameserver.model.siege.SiegeLocation;
 import com.aionemu.gameserver.model.siege.SiegeShield;
 import com.aionemu.gameserver.model.templates.materials.MaterialTemplate;
-import com.aionemu.gameserver.model.templates.world.WorldMapTemplate;
 import com.aionemu.gameserver.model.templates.zone.MaterialZoneTemplate;
+import com.aionemu.gameserver.model.templates.zone.Points;
 import com.aionemu.gameserver.model.templates.zone.WorldZoneTemplate;
 import com.aionemu.gameserver.model.templates.zone.ZoneInfo;
-import com.aionemu.gameserver.model.templates.zone.ZoneTemplate;
 import com.aionemu.gameserver.model.vortex.VortexLocation;
 import com.aionemu.gameserver.world.zone.handler.MaterialZoneHandler;
 import com.aionemu.gameserver.world.zone.handler.ZoneHandler;
 import com.aionemu.gameserver.world.zone.handler.ZoneHandlerClassListener;
 import com.aionemu.gameserver.world.zone.handler.ZoneNameAnnotation;
+import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.ObjectProvider;
 
-import com.aionemu.commons.utils.collections.IntObjectHashMap;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CountDownLatch;
 
 /**
  * 区域服务：加载区域脚本、按地图构建区域实例、创建材质碰撞区。
@@ -151,7 +137,7 @@ public final class ZoneService implements GameEngine {
 		}
 	}
 
-	
+
 	/**
 	 * 加载区域脚本处理器。
 	 * Load zone script handlers.
@@ -247,11 +233,7 @@ public final class ZoneService implements GameEngine {
 				break;
 			default:
 				InvasionZoneInstance invasionZone = getIZI(area);
-				if (invasionZone != null) {
-					instance = invasionZone;
-				} else {
-					instance = new ZoneInstance(mapId, area);
-				}
+				instance = Objects.requireNonNullElseGet(invasionZone, () -> new ZoneInstance(mapId, area));
 			}
 			instance.addHandler(getNewZoneHandler(area.zoneTemplate().getName()));
 			zones.put(area.zoneTemplate().getName(), instance);
@@ -388,7 +370,7 @@ public final class ZoneService implements GameEngine {
 		createMaterialZoneTemplate(geometry, worldId, materialId, false);
 	}
 
-	
+
 	/**
 	 * 空实现的通用区域处理器（占位 / 默认处理器）。
 	 * General zone handler with empty implementations (placeholder / default handler).

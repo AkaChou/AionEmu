@@ -1,7 +1,5 @@
 package com.aionemu.gameserver.model.instance.instancereward;
 
-import java.util.List;
-
 import org.apache.commons.lang3.mutable.MutableInt;
 
 import com.aionemu.gameserver.model.Race;
@@ -83,12 +81,6 @@ public class IronWallWarfrontReward extends InstanceReward<IronWallWarfrontPlaye
 		}
 	}
 
-	/** 排序点。 / Sort points. */
-	public List<IronWallWarfrontPlayerReward> sortPoints() {
-		return RewardCollections.sortedByScoreDescending(getInstanceRewards(),
-				IronWallWarfrontPlayerReward::getScorePoints);
-	}
-
 	private void setStartPositions() {
 		Point3D a = new Point3D(282.16364f, 390.80576f, 238.60538f);
 		Point3D e = new Point3D(711.2616f, 630.29364f, 211.9369f);
@@ -148,12 +140,6 @@ public class IronWallWarfrontReward extends InstanceReward<IronWallWarfrontPlaye
 	/** 按 score 返回 winner race / Returns the winner race by score */
 	public Race getWinnerRaceByScore() {
 		return asmodiansPoints.compareTo(elyosPoins) > 0 ? Race.ASMODIANS : Race.ELYOS;
-	}
-
-	/** 清空。 / Clear. */
-	@Override
-	public void clear() {
-		super.clear();
 	}
 
 	/** Reg 玩家 Reward / Reg Player Reward */

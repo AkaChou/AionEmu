@@ -15,7 +15,7 @@ import lombok.AccessLevel;
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class HouseBidEntry implements Cloneable {
+public class HouseBidEntry {
 	/** 返回条目索引 / Returns the entry index*/
 	private int entryIndex;
 	/** 返回 land id / Returns the land id */

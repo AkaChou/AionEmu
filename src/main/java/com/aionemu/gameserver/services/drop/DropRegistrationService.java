@@ -78,7 +78,6 @@ public class DropRegistrationService {
 	 * Constructs and initializes the drop registration service.
 	 */
 	public DropRegistrationService() {
-		init();
 		reload();
 	}
 
@@ -93,14 +92,6 @@ public class DropRegistrationService {
 			}
 		}
 		noReductionMaps = Set.copyOf(maps);
-	}
-
-	/**
-	 * 初始化服务（掉落数据按需由 NpcTemplate 加载）。
-	 * Initializes the service (drops are loaded on demand by NpcTemplate).
-	 */
-	public final void init() {
-		// 掉落按需由 NpcTemplate#getNpcDrop() 加载。 / Drops are loaded on demand by NpcTemplate#getNpcDrop().
 	}
 
 	/**
@@ -165,7 +156,7 @@ public class DropRegistrationService {
 			}
 		}
 		if (DropConfig.ENABLE_GLOBAL_DROPS) {
-			index = registerGlobalDrops(npc, player, winnerObj, droppedItems, index, dropModifiers);
+			registerGlobalDrops(npc, player, winnerObj, droppedItems, index, dropModifiers);
 		}
 		if (npc.getPosition().isInstanceMap()) {
 			npc.getPosition().getWorldMapInstance().getInstanceHandler().onDropRegistered(npc);
@@ -184,8 +175,8 @@ public class DropRegistrationService {
 				npc.getController().onDelete();
 			} else {
 				DropItem[] dropItems = drops.toArray(new DropItem[0]);
-				for (int i = 0; i < dropItems.length; i++) {
-					GameCoreGameplayServices.dropService().requestDropItem(player, npcObjId, dropItems[i].getIndex(), true);
+				for (DropItem dropItem : dropItems) {
+					GameCoreGameplayServices.dropService().requestDropItem(player, npcObjId, dropItem.getIndex(), true);
 				}
 			}
 			PacketSendUtility.sendPacket(player, new SM_PET(false, npcObjId));
@@ -200,9 +191,9 @@ public class DropRegistrationService {
 			if (drops == null || drops.isEmpty()) {
 				npc.getController().onDelete();
 			} else {
-				DropItem[] dropItems = drops.toArray(new DropItem[drops.size()]);
-				for (int i = 0; i < dropItems.length; i++) {
-					GameCoreGameplayServices.dropService().requestDropItem(player, npcObjId, dropItems[i].getIndex(), true);
+				DropItem[] dropItems = drops.toArray(new DropItem[0]);
+				for (DropItem dropItem : dropItems) {
+					GameCoreGameplayServices.dropService().requestDropItem(player, npcObjId, dropItem.getIndex(), true);
 				}
 			}
 			PacketSendUtility.sendPacket(player, new SM_MINIONS(8, 1, npcObjId, false));
@@ -231,11 +222,11 @@ public class DropRegistrationService {
 		return modifiers;
 	}
 
-	int registerGlobalDrops(Npc npc, Player player, int winnerObj, Set<DropItem> droppedItems, int index,
-			DropModifiers dropModifiers) {
+	void registerGlobalDrops(Npc npc, Player player, int winnerObj, Set<DropItem> droppedItems, int index,
+							 DropModifiers dropModifiers) {
 		GlobalDropData globalDrops = DataManager.GLOBAL_DROP_DATA;
 		if (globalDrops == null) {
-			return index;
+			return;
 		}
 		int globalDropCount = 0;
 		boolean kinahRegistered = false;
@@ -274,7 +265,6 @@ public class DropRegistrationService {
 			droppedItems.add(regDropItem(index++, winnerObj, npc.getObjectId(), itemId, count));
 			globalDropCount++;
 		}
-		return index;
 	}
 
 	private boolean matchesGlobalRule(GlobalRule rule, Npc npc, Player player) {

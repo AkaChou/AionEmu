@@ -46,9 +46,7 @@ public class Util {
 		}
 		int rest = counter % 16;
 		if (rest > 0) {
-			for (int i = 0; i < 17 - rest; i++) {
-				result.append("   ");
-			}
+			result.repeat("   ", 17 - rest);
 			toText(data, result, rest);
 		}
 		return result.toString();

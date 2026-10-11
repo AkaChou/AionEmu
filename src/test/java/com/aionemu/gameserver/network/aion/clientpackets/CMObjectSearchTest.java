@@ -148,7 +148,7 @@ class CMObjectSearchTest {
 		assertEquals(206485, searchNpcId);
 		CM_OBJECT_SEARCH.SearchTarget target = CM_OBJECT_SEARCH.resolveQuestSensorTarget(searchNpcId);
 		assertLocation(target, 210100000, 1456.6283f, 1299.3306f, 336.49023f);
-		assertNotEquals(220080000, target.location().getWorldId());
+		assertNotEquals(220080000, target.location().worldId());
 	}
 
 	@Test
@@ -170,7 +170,7 @@ class CMObjectSearchTest {
 	void resolvesSanctuarySensorsToTheirFactionSpecificQuestZones() {
 		CM_OBJECT_SEARCH.SearchTarget elyos = CM_OBJECT_SEARCH.resolveQuestSensorTarget(206485);
 		assertLocation(elyos, 210100000, 1456.6283f, 1299.3306f, 336.49023f);
-		assertNotEquals(220080000, elyos.location().getWorldId());
+		assertNotEquals(220080000, elyos.location().worldId());
 
 		CM_OBJECT_SEARCH.SearchTarget asmodian = CM_OBJECT_SEARCH.resolveQuestSensorTarget(206486);
 		assertLocation(asmodian, 220110000, 1757.3667f, 2008.911f, 196.59653f);
@@ -251,10 +251,10 @@ class CMObjectSearchTest {
 	}
 
 	private static void assertLocation(CM_OBJECT_SEARCH.SearchTarget target, int worldId, float x, float y, float z) {
-		assertEquals(worldId, target.location().getWorldId());
-		assertEquals(x, target.location().getSpot().getX());
-		assertEquals(y, target.location().getSpot().getY());
-		assertEquals(z, target.location().getSpot().getZ());
+		assertEquals(worldId, target.location().worldId());
+		assertEquals(x, target.location().spot().getX());
+		assertEquals(y, target.location().spot().getY());
+		assertEquals(z, target.location().spot().getZ());
 		assertNull(target.npc());
 	}
 

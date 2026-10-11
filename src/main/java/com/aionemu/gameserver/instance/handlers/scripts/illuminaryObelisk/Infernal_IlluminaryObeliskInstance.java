@@ -446,15 +446,7 @@ public class Infernal_IlluminaryObeliskInstance extends GeneralInstanceHandler
 				// 成功逃脱消息（注释掉的调试输出）。 / sendMsg("[SUCCES]: You have finished <[Infernal] Illuminary Obelisk>");
 				spawn(702018, 258.84213f, 251.32626f, 455.12192f, (byte) 105); //Supply Box.
 				spawn(730905, 255.36038f, 254.56577f, 455.12015f, (byte) 105); //[Infernal] Illuminary Obelisk Exit.
-/* 				switch (Rnd.get(1, 2)) {
-		            case 1:
-				        spawn(702658, 252.05019f, 257.85583f, 455.12195f, (byte) 105); //修道院箱子。 / Abbey Box.
-					break;
-					case 2:
-					    spawn(702659, 252.05019f, 257.85583f, 455.12195f, (byte) 105); //高级修道院箱子。 / Noble Abbey Box.
-					break;
-				} */
-			break;
+				break;
 		}
     }
 

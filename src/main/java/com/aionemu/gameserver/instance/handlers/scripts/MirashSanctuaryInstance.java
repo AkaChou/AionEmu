@@ -119,12 +119,7 @@ public class MirashSanctuaryInstance extends GeneralInstanceHandler
 					break;
 				}
 			break;
-			/*
-			case 248382: //IDAbRe_Core_03_A1_Witch_An.
-				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 164000531, 1)); //IDAbRe_Core_03_Move_Item_Skill.
-			break;
-			*/
-			case 248533: //IDAbRe_Core_03_Key_Drakan_High_As_An.
+            case 248533: //IDAbRe_Core_03_Key_Drakan_High_As_An.
 				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000317, 1)); //item_core_03_key_01.
 			break;
 			case 248013: // .

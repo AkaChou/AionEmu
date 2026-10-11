@@ -28,7 +28,6 @@ public class Gate_Guardian_StoneAI2 extends NpcAI2
 				RequestResponseHandler repairStone = new RequestResponseHandler(player) {
 					@Override
 					public void acceptRequest(Creature requester, Player responder) {
-						onActivate(player);
 					}
 					@Override
 					public void denyRequest(Creature requester, Player responder) {
@@ -69,6 +68,4 @@ public class Gate_Guardian_StoneAI2 extends NpcAI2
 		super.handleDialogFinish(player);
 	}
 
-	public void onActivate(Player player) {
-	}
 }

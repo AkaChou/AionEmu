@@ -37,7 +37,7 @@ public class PropertyTransformerFactory {
      * @return 对应的属性转换器实例 / Corresponding property transformer instance
      * @throws TransformationException 无法创建或找到转换器时抛出 / If a transformer cannot be created or found
      */
-    public static PropertyTransformer newTransformer(Class clazzToTransform, Class<? extends PropertyTransformer> tc) throws TransformationException {
+    public static PropertyTransformer<?> newTransformer(Class<?> clazzToTransform, Class<? extends PropertyTransformer> tc) throws TransformationException {
         if (tc == PropertyTransformer.class) {
             tc = null;
         }

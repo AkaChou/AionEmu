@@ -15,7 +15,6 @@ import com.aionemu.gameserver.controllers.attack.AggroList;
 import lombok.AllArgsConstructor;
 import com.aionemu.gameserver.ai2.AbstractAI;
 import com.aionemu.gameserver.configs.main.SiegeConfig;
-import com.aionemu.gameserver.model.DescriptionId;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.gameobjects.siege.SiegeNpc;
@@ -256,16 +255,6 @@ public abstract class Siege<SL extends SiegeLocation> {
 	}
 
 	/**
-	 * 广播攻城更新（带名称 ID）。
-	 * Broadcasts siege update (with name id).
-	 * @param location 攻城据点 / siege location
-	 * @param nameId 名称 ID / name id
-	 */
-	protected void broadcastUpdate(SiegeLocation location, int nameId) {
-		GameFeatureServices.siegeService().broadcastUpdate(location, new DescriptionId(nameId));
-	}
-
-	/**
 	 * 攻城 BOSS 伤害监听器，累计玩家/种族伤害。
 	 * Siege boss damage listener accumulating player/race damage.
 	 */
@@ -283,16 +272,12 @@ public abstract class Siege<SL extends SiegeLocation> {
 	 * 攻城 BOSS 死亡监听器，在击杀后结算攻城。
 	 * Siege boss death listener settling the siege after the boss dies.
 	 */
-	@SuppressWarnings("rawtypes")
 	public static class SiegeBossDeathListener implements AbstractAI.AiDeathListener {
 		private final Siege<?> siege;
 
 		public SiegeBossDeathListener(Siege<?> siege) {
 			this.siege = siege;
 		}
-
-		@Override
-		public void onBeforeDie(AbstractAI obj) {}
 
 		@Override
 		public void onAfterDie(AbstractAI obj) {

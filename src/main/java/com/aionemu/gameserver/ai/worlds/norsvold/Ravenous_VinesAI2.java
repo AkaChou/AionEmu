@@ -1,10 +1,9 @@
 package com.aionemu.gameserver.ai.worlds.norsvold;
 
-import com.aionemu.gameserver.lifecycle.GameFeatureServices;
-
 import com.aionemu.gameserver.ai2.AI2Actions;
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.ai2.NpcAI2;
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.utils.MathUtil;
@@ -22,16 +21,12 @@ public class Ravenous_VinesAI2 extends NpcAI2
 	private final AtomicBoolean startedEvent = new AtomicBoolean(false);
 
 	@Override
-	public void think() {
-	}
-
-	@Override
 	protected void handleCreatureMoved(Creature creature) {
 		if (creature instanceof Player player) {
 			if (MathUtil.getDistance(getOwner(), player) <= 10) {
 				if (startedEvent.compareAndSet(false, true)) {
 					// 谢谢你救了我！ / Thank you for saving me!
-					sendMsg(1501531, getObjectId(), false, 0);
+					GameFeatureServices.npcShoutsService().sendMsg(getPosition().getWorldMapInstance(), 1501531, getObjectId(), false, 0, 0);
 				}
 			}
 		}
@@ -50,7 +45,4 @@ public class Ravenous_VinesAI2 extends NpcAI2
 		return false;
 	}
 
-	private void sendMsg(int msg, int Obj, boolean isShout, int time) {
-		GameFeatureServices.npcShoutsService().sendMsg(getPosition().getWorldMapInstance(), msg, Obj, isShout, 0, time);
-	}
 }

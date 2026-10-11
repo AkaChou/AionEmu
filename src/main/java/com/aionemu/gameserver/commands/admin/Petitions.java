@@ -46,10 +46,10 @@ public class Petitions extends AdminCommand {
 			PacketSendUtility.sendMessage(admin, petitionsArray.length + " unprocessed petitions.");
 			if (petitionsArray.length < 5) {
 				PacketSendUtility.sendMessage(admin, "== " + petitionsArray.length + " first petitions to reply ==");
-				for (int i = 0; i < petitionsArray.length; i++) {
-					PacketSendUtility.sendMessage(admin, petitionsArray[i].petitionId() + " | "
-						+ petitionsArray[i].title());
-				}
+                for (Petition petition : petitionsArray) {
+                    PacketSendUtility.sendMessage(admin, petition.petitionId() + " | "
+                            + petition.title());
+                }
 			}
 			else {
 				PacketSendUtility.sendMessage(admin, "== 5 first petitions to reply ==");

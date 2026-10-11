@@ -1,13 +1,11 @@
 package com.aionemu.gameserver.ai;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
-
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
-
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.ai2.AI2Actions;
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.dataholders.DataManager;
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 import com.aionemu.gameserver.model.ai.Percentage;
 import com.aionemu.gameserver.model.ai.SummonGroup;
 import com.aionemu.gameserver.model.gameobjects.Creature;
@@ -86,11 +84,11 @@ public class SummonerAI2 extends AggressiveNpcAI2
 			case 215241:
 			    anuhartBravery();
 		    break;
-		} switch (getNpcId()) {
-			case 235975:
-			    bellowingRoar();
-		    break;
-		} switch (getNpcId()) {
+		}
+		if (getNpcId() == 235975) {
+			bellowingRoar();
+		}
+		switch (getNpcId()) {
 			case 237111:
 			case 237112:
 			case 237113:
@@ -179,10 +177,7 @@ public class SummonerAI2 extends AggressiveNpcAI2
 				int skill = percent.getSkillId();
 				if (skill != 0) {
 					AI2Actions.useSkill(this, skill);
-				} if (percent.isIndividual()) {
-					handleIndividualSpawnedSummons(percent);
 				} else if (percent.getSummons() != null) {
-					handleBeforeSpawn(percent);
 					for (SummonGroup summonGroup : percent.getSummons()) {
 						final SummonGroup sg = summonGroup;
 						GameThreadPoolServices.threadPoolManager().schedule(() -> spawnHelpers(sg), summonGroup.getSchedule());
@@ -210,7 +205,6 @@ public class SummonerAI2 extends AggressiveNpcAI2
 				VisibleObject npc = SpawnEngine.spawnObject(summon, getPosition().getInstanceId());
 				addHelpersSpawn(npc.getObjectId());
 			}
-			handleSpawnFinished(summonGroup);
 		}
 	}
 
@@ -223,29 +217,5 @@ public class SummonerAI2 extends AggressiveNpcAI2
 
 	protected boolean checkBeforeSpawn() {
 		return true;
-	}
-
-	/**
-	 * 处理生成前事件。
-	 * Handle before-spawn.
-	 * @param percent 血量百分比 / HP percent
-	 */
-	protected void handleBeforeSpawn(Percentage percent) {
-	}
-
-	/**
-	 * 处理召唤物生成完成。
-	 * Handle spawn-finished for summons.
-	 * @param summonGroup 召唤组配置 / summon group config
-	 */
-	protected void handleSpawnFinished(SummonGroup summonGroup) {
-	}
-
-	/**
-	 * 按血量百分比分批生成召唤物。
-	 * Spawn individual summons by HP percent.
-	 * @param percent 血量百分比 / HP percent
-	 */
-	protected void handleIndividualSpawnedSummons(Percentage percent) {
 	}
 }

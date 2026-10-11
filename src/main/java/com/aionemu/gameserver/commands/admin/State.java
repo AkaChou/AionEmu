@@ -80,7 +80,7 @@ public class State extends AdminCommand {
 			}
 			int number;
 			try {
-				number = Integer.valueOf(params[1]);
+				number = Integer.parseInt(params[1]);
 			}
 			catch (NumberFormatException e) {
 				PacketSendUtility.sendMessage(admin, "syntax //state set <bit number>");

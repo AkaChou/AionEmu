@@ -60,9 +60,6 @@ public class Send extends AdminCommand {
 		final String mappingName = params[0];
 		final Player target = getTargetPlayer(admin);
 
-		// log.debug("Mapping: {}", mappingName);
-		// log.debug("Target: {}", target);
-
 		File packetsData = new File(FOLDER, mappingName + ".xml");
 
 		if (!packetsData.exists()) {
@@ -103,11 +100,11 @@ public class Send extends AdminCommand {
 
 				String value = part.getValue();
 
-				if (value.indexOf("${objectId}") != -1)
+				if (value.contains("${objectId}"))
 					value = value.replace("${objectId}", targetObjectId);
-				if (value.indexOf("${senderObjectId}") != -1)
+				if (value.contains("${senderObjectId}"))
 					value = value.replace("${senderObjectId}", senderObjectId);
-				if (value.indexOf("${targetObjectId}") != -1)
+				if (value.contains("${targetObjectId}"))
 					value = value.replace("${targetObjectId}", targetObjectId);
 
 				if (part.getRepeatCount() == 1) // skip loop

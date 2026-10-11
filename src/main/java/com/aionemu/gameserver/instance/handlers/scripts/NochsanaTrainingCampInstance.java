@@ -47,21 +47,6 @@ public class NochsanaTrainingCampInstance extends GeneralInstanceHandler
         }
     }
 
-//	@Override
-//	public void onDie(Npc npc) {
-//		Player player = npc.getAggroList().getMostPlayerDamage();
-//		switch (npc.getObjectTemplate().getTemplateId()) {
-//			case 256689: // 诺克萨纳卫兵。 / Nochsana Guard.
-//				sendMsg("<Nochsana General> appear"); // Появился Лорд Насана
-//				spawn(256693, 331.097f, 269.36f, 384.553f, (byte) 25); // 诺克萨纳将军。 / Nochsana General.
-//			break;
-//			case 256693: // 诺克萨纳将军。 / Nochsana General.
-//			    sendMsg("<Nochsana Abyss Gate> is now open");
-//				spawn(700438, 466.7858f, 706.5129f, 346.2541f, (byte) 0, 14);
-//			break;
-//		}
-//	}
-
 	/**
 	 * 玩家对 NPC 使用物品完成时处理。
 	 * Handle item-use finish on an NPC.

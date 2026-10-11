@@ -15,18 +15,4 @@ public class SanctuaryEffect extends EffectTemplate {
 	public void applyEffect(Effect effect) {
 		effect.addToEffectedController();
 	}
-
-	/**
-	 * 开始时无额外处理。
-	 * No-op on start.
-	 */
-	public void startEffect(Effect effect) {
-	}
-
-	/**
-	 * 结束时无额外处理。
-	 * No-op on end.
-	 */
-	public void endEffect(Effect effect) {
-	}
 }

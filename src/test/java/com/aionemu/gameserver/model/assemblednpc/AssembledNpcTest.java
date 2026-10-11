@@ -17,6 +17,6 @@ class AssembledNpcTest {
         assertEquals(11, npc.getRouteId());
         assertEquals(22, npc.getMapId());
         assertEquals(1, assembledParts.size());
-        assertEquals(7, assembledParts.get(0).getObject());
+        assertEquals(7, assembledParts.get(0).object());
     }
 }

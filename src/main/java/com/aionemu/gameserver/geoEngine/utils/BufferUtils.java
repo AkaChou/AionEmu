@@ -28,10 +28,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public final class BufferUtils {
 
-	// private static final Vector2f _tempVec2 = new Vector2f();
-	// private static final Vector3f _tempVec3 = new Vector3f();
-	// private static final ColorRGBA _tempColor = new ColorRGBA();
-	/** 直接内存缓冲弱引用追踪表。 / Weak-reference tracker for direct memory buffers. */
+    /** 直接内存缓冲弱引用追踪表。 / Weak-reference tracker for direct memory buffers. */
 	private static final Map<Buffer, Object> trackingHash = new ConcurrentHashMap<>(new WeakHashMap<>());
 	/** 追踪表占位引用对象。 / Sentinel reference object stored in the tracking map. */
 	private static final Object ref = new Object();

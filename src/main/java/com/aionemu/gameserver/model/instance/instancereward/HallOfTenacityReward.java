@@ -103,12 +103,6 @@ public class HallOfTenacityReward extends InstanceReward<HallOfTenacityPlayerRew
 		instancePosition.port(player, playerReward.getZone(), playerReward.getPosition());
 	}
 
-	/** 清空。 / Clear. */
-	@Override
-	public void clear() {
-		super.clear();
-	}
-
 	/** Reg 玩家 Reward / Reg Player Reward */
 	public void regPlayerReward(Integer object) {
 		if (!containPlayer(object)) {

@@ -578,10 +578,6 @@ public class PvPConfig {
 	public static class EnableGpProperties {
 		private final LoseProperties lose = new LoseProperties();
 
-		/** 兼容裸标量 gameserver.enable.gp.lose 经 valueOf 转换后的赋值（no-op）。 / No-op setter for the valueOf-converted legacy scalar. */
-		public void setLose(LoseProperties lose) {
-		}
-
 		public boolean isReward() {
 			return ENABLE_GP_REWARD;
 		}

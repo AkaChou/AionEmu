@@ -17,21 +17,17 @@ import com.aionemu.gameserver.utils.MathUtil;
 @AIName("chantrarings")
 public class ChantraRingsAI2 extends NpcAI2
 {
-    @Override
-	public void think() {
-	}
-
 	@Override
     protected void handleCreatureSee(Creature creature) {
-        checkDistance(this, creature);
+        checkDistance(creature);
     }
 
     @Override
     protected void handleCreatureMoved(Creature creature) {
-        checkDistance(this, creature);
+        checkDistance(creature);
     }
 
-    private void checkDistance(NpcAI2 ai, Creature creature) {
+    private void checkDistance(Creature creature) {
 	    int debuff = getOwner().getNpcId() == 283172 ? 20735 : 20734;
         if (creature instanceof Player) {
 	    if (getOwner().getNpcId() == 283172 && MathUtil.isIn3dRangeLimited(getOwner(), creature, 10, 18) ||

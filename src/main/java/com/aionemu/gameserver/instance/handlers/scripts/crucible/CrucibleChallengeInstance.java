@@ -997,32 +997,28 @@ public class CrucibleChallengeInstance extends CrucibleInstance
 			case 217828: //Arminos' Treasure Chest.
 			case 217829: //Arminos' Treasure Chest.
 				int count = 0;
-				switch (rewardCount) {
-					case 0:
-						count = switch (Rnd.get(1, 3)) {
-							case 1 -> 1;
-							case 2 -> 10;
-							case 3 -> 0;
-							default -> count;
-						};
-					break;
-					case 1:
-						count = switch (Rnd.get(1, 3)) {
-							case 1 -> 2;
-							case 2 -> 18;
-							case 3 -> 0;
-							default -> count;
-						};
-					break;
-					case 2:
-                        count = switch (Rnd.get(1, 3)) {
-                            case 1 -> 3;
-                            case 2 -> 26;
-                            case 3 -> 250;
-                            default -> count;
-                        };
-					break;
-				} switch (npcId) {
+				count = switch (rewardCount) {
+					case 0 -> switch (Rnd.get(1, 3)) {
+						case 1 -> 1;
+						case 2 -> 10;
+						case 3 -> 0;
+						default -> count;
+					};
+					case 1 -> switch (Rnd.get(1, 3)) {
+						case 1 -> 2;
+						case 2 -> 18;
+						case 3 -> 0;
+						default -> count;
+					};
+					case 2 -> switch (Rnd.get(1, 3)) {
+						case 1 -> 3;
+						case 2 -> 26;
+						case 3 -> 250;
+						default -> count;
+					};
+					default -> 0;
+				};
+				switch (npcId) {
 					case 217827: //Arminos' Treasure Chest.
 						despawnNpc(getNpc(217828));
 						despawnNpc(getNpc(217829));

@@ -253,30 +253,6 @@ public class HousingConfig {
 				HOUSE_AUCTION_TIME = time;
 			}
 
-			public String getRegisterend() {
-				return HOUSE_REGISTER_END;
-			}
-
-			public void setRegisterend(String registerend) {
-				HOUSE_REGISTER_END = registerend;
-			}
-
-			public float getDefaultRefund() {
-				return BID_REFUND_PERCENT;
-			}
-
-			public void setDefaultRefund(float defaultRefund) {
-				BID_REFUND_PERCENT = defaultRefund;
-			}
-
-			public float getSteplimit() {
-				return HOUSE_AUCTION_BID_LIMIT;
-			}
-
-			public void setSteplimit(float steplimit) {
-				HOUSE_AUCTION_BID_LIMIT = steplimit;
-			}
-
 			public static class DefaultBidProperties {
 				public int getHouse() {
 					return HOUSE_MIN_BID;
@@ -353,9 +329,6 @@ public class HousingConfig {
 			@Getter
 			public static class FillProperties {
 				private final AutoProperties auto = new AutoProperties();
-
-				public void setAuto(AutoProperties auto) {
-				}
 
 				@Getter
 				public static class AutoProperties {

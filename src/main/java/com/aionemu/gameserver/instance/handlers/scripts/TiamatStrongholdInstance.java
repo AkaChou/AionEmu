@@ -266,15 +266,7 @@ public class TiamatStrongholdInstance extends GeneralInstanceHandler {
 				spawn(701501, 1077.1716f, 1058.1995f, 787.685f, (byte) 61);
 		    break;
 		    case 219358: //Brigade General Tahabata.
-/* 			    switch (Rnd.get(1, 2)) {
-		            case 1:
-				        spawn(702658, 678.0355f, 1071.9641f, 497.75186f, (byte) 85); //修道院箱子。 / Abbey Box.
-					break;
-					case 2:
-					    spawn(702659, 678.0355f, 1071.9641f, 497.75186f, (byte) 85); //高级修道院箱子。 / Noble Abbey Box.
-					break;
-				} */
-				// 贵族花园中出现了龙族勋章箱。 / A Balaur Medal Chest appeared in the Noble's Garden.
+// 贵族花园中出现了龙族勋章箱。 / A Balaur Medal Chest appeared in the Noble's Garden.
 				sendMsgByRace(1401614, Race.PC_ALL, 2000);
 				spawn(701541, 677.35785f, 1069.5361f, 499.86716f, (byte) 0);
 				spawn(283178, 644.7906f, 1068.6279f, 506.9512f, (byte) 119); //Tiamat Eye.

@@ -29,14 +29,6 @@ public class PetMoveController extends CreatureMoveController<Pet> {
 	}
 
 	/**
-	 * 向目标点推进（占位空实现）。
-	 * Advance toward the destination (placeholder no-op).
-	 */
-	@Override
-	public void moveToDestination() {
-	}
-
-	/**
 	 * 返回目标 X 坐标。
 	 * Return the target X coordinate.
 	 * @return 目标 X 坐标 / Target X
@@ -92,22 +84,6 @@ public class PetMoveController extends CreatureMoveController<Pet> {
 		this.targetDestY = y;
 		this.targetDestZ = z;
 		this.heading = heading;
-	}
-
-	/**
-	 * 开始向目标点移动（占位空实现）。
-	 * Start moving toward the destination (placeholder no-op).
-	 */
-	@Override
-	public void startMovingToDestination() {
-	}
-
-	/**
-	 * 中止当前移动（占位空实现）。
-	 * Abort the current movement (placeholder no-op).
-	 */
-	@Override
-	public void abortMove() {
 	}
 
 	/**

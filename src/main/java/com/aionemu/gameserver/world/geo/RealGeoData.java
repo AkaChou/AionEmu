@@ -151,7 +151,7 @@ public class RealGeoData implements GeoData {
 		// 避免在既有加载任务里嵌套 ForkJoin 池。
 		// Collision trees only read each mesh's own read-only buffers; distribute them round-robin
 		// across long-running pool slots instead of serializing the whole prebuild on one thread.
-		int partitionCount = Math.min(meshSnapshot.size(), Math.max(2, Runtime.getRuntime().availableProcessors()));
+		int partitionCount = Math.clamp(Runtime.getRuntime().availableProcessors(), 2, meshSnapshot.size());
 		List<List<Mesh>> partitions = partitionRoundRobin(meshSnapshot, partitionCount);
 		for (List<Mesh> partition : partitions) {
 			GameThreadPoolServices.threadPoolManager().submitLongRunning(() -> {

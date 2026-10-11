@@ -122,12 +122,4 @@ public class AuraEffect extends EffectTemplate {
 		}
 	}
 
-	/**
-	 * 结束光环效果。
-	 * Ends the aura effect.
-	 * @param effect 运行时效果 / runtime effect
-	 */
-	@Override
-	public void endEffect(Effect effect) {
-	}
 }

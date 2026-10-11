@@ -132,8 +132,10 @@ public class GatherableController extends VisibleObjectController<Gatherable> {
             default -> null;
         };
         mats = new RndSelector<>();
-		for (Material mat : materials) {
-			mats.add(mat, mat.getRate());
+		if (materials != null) {
+			for (Material mat : materials) {
+				mats.add(mat, mat.getRate());
+			}
 		}
 		synchronized (state) {
 			if (state != GatherState.GATHERING) {
@@ -337,13 +339,4 @@ public class GatherableController extends VisibleObjectController<Gatherable> {
 		this.gatherCount = 0;
 	}
 
-	/**
-	 * 获取所有者可采集物。
-	 * Gets the owner gatherable.
-	 * gatherable
-	 */
-	@Override
-	public Gatherable getOwner() {
-		return super.getOwner();
-	}
 }

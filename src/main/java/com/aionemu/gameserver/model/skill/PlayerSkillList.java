@@ -65,7 +65,7 @@ public final class PlayerSkillList implements SkillList<Player> {
 		return allSkills.toArray(new PlayerSkillEntry[0]);
 	}
 
-	
+
 	/** 返回基础技能 / Returns the basic skills */
 	public PlayerSkillEntry[] getBasicSkills() {
 		return basicSkills.values().toArray(new PlayerSkillEntry[0]);
@@ -140,7 +140,7 @@ public final class PlayerSkillList implements SkillList<Player> {
 		return stigmaSkills.get(skillId);
 	}
 
-	
+
 	/** 添加技能。 / Adds skill. */
 	@Override
 	public boolean addSkill(Player player, int skillId, int skillLevel) {
@@ -158,9 +158,6 @@ public final class PlayerSkillList implements SkillList<Player> {
 
 		boolean isNew = false;
 		if (existingSkill != null) {
-			// if (existingSkill.getSkillLevel() >= skillLevel) {
-			// return false;
-			// }
 			existingSkill.setSkillLvl(skillLevel);
 		} else {
 			if (isStigma) {
@@ -212,9 +209,9 @@ public final class PlayerSkillList implements SkillList<Player> {
 		addSkill(player, skillId, skillLevel, false, false, PersistentState.NOACTION);
 	}
 
-	
-	
-	
+
+
+
 	private synchronized boolean addSkill(Player player, int skillId, int skillLevel, boolean isStigma,
 			boolean isLinked, PersistentState state) {
 		PlayerSkillEntry existingSkill = isStigma ? stigmaSkills.get(skillId) : basicSkills.get(skillId);

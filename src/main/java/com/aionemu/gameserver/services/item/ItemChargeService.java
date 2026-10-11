@@ -209,18 +209,15 @@ public class ItemChargeService {
 		double firstLevel = price1 / 2;
 		double updateLevel = Math.round(firstLevel + (price2 - price1) / 2d);
 		double money = 0;
-		switch (chargeLevel) {
-		case 1:
-			money = firstLevel;
-			break;
-		case 2:
-            money = switch (getNextChargeLevel(item)) {
-                case 1 -> (firstLevel + updateLevel);
-                case 2 -> updateLevel;
-                default -> money;
-            };
-			break;
-		}
+		money = switch (chargeLevel) {
+			case 1 -> firstLevel;
+			case 2 -> switch (getNextChargeLevel(item)) {
+				case 1 -> (firstLevel + updateLevel);
+				case 2 -> updateLevel;
+				default -> money;
+			};
+			default -> 0;
+		};
 		return (long) money;
 	}
 

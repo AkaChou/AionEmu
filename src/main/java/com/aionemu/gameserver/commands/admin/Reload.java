@@ -120,7 +120,7 @@ public class Reload extends AdminCommand {
 				if (data != null) {
 					GameEventServices.eventService().stop();
 					String text = data.getActiveText();
-					if (text == null || text.trim().length() == 0)
+					if (text == null || text.trim().isEmpty())
 						text = "NONE";
 					DataManager.EVENT_DATA.setAllEvents(data.getAllEvents(), data.getActiveText());
 					PacketSendUtility.sendMessage(admin, "Active events: " + text);

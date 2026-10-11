@@ -772,54 +772,51 @@ public class RateConfig {
 				}
 			}
 
-			@Getter
-			public static class GpProperties {
-				private final PlayerProperties player;
+			public record GpProperties(PlayerProperties player) {
+							public GpProperties(MembershipTier tier) {
+								this(new PlayerProperties(tier));
+							}
 
-				public GpProperties(MembershipTier tier) {
-					this.player = new PlayerProperties(tier);
-				}
+							public static class PlayerProperties {
+								private final MembershipTier tier;
 
-				public static class PlayerProperties {
-					private final MembershipTier tier;
+								public PlayerProperties(MembershipTier tier) {
+									this.tier = tier;
+								}
 
-					public PlayerProperties(MembershipTier tier) {
-						this.tier = tier;
-					}
+								public float getLoss() {
+									return switch (tier) {
+										case REGULAR -> GP_PLAYER_LOSS_RATE;
+										case PREMIUM -> PREMIUM_GP_PLAYER_LOSS_RATE;
+										case VIP -> VIP_GP_PLAYER_LOSS_RATE;
+									};
+								}
 
-					public float getLoss() {
-						return switch (tier) {
-							case REGULAR -> GP_PLAYER_LOSS_RATE;
-							case PREMIUM -> PREMIUM_GP_PLAYER_LOSS_RATE;
-							case VIP -> VIP_GP_PLAYER_LOSS_RATE;
-						};
-					}
+								public void setLoss(float loss) {
+									switch (tier) {
+										case REGULAR -> GP_PLAYER_LOSS_RATE = loss;
+										case PREMIUM -> PREMIUM_GP_PLAYER_LOSS_RATE = loss;
+										case VIP -> VIP_GP_PLAYER_LOSS_RATE = loss;
+									}
+								}
 
-					public void setLoss(float loss) {
-						switch (tier) {
-							case REGULAR -> GP_PLAYER_LOSS_RATE = loss;
-							case PREMIUM -> PREMIUM_GP_PLAYER_LOSS_RATE = loss;
-							case VIP -> VIP_GP_PLAYER_LOSS_RATE = loss;
+								public float getGain() {
+									return switch (tier) {
+										case REGULAR -> GP_PLAYER_GAIN_RATE;
+										case PREMIUM -> PREMIUM_GP_PLAYER_GAIN_RATE;
+										case VIP -> VIP_GP_PLAYER_GAIN_RATE;
+									};
+								}
+
+								public void setGain(float gain) {
+									switch (tier) {
+										case REGULAR -> GP_PLAYER_GAIN_RATE = gain;
+										case PREMIUM -> PREMIUM_GP_PLAYER_GAIN_RATE = gain;
+										case VIP -> VIP_GP_PLAYER_GAIN_RATE = gain;
+									}
+								}
+							}
 						}
-					}
-
-					public float getGain() {
-						return switch (tier) {
-							case REGULAR -> GP_PLAYER_GAIN_RATE;
-							case PREMIUM -> PREMIUM_GP_PLAYER_GAIN_RATE;
-							case VIP -> VIP_GP_PLAYER_GAIN_RATE;
-						};
-					}
-
-					public void setGain(float gain) {
-						switch (tier) {
-							case REGULAR -> GP_PLAYER_GAIN_RATE = gain;
-							case PREMIUM -> PREMIUM_GP_PLAYER_GAIN_RATE = gain;
-							case VIP -> VIP_GP_PLAYER_GAIN_RATE = gain;
-						}
-					}
-				}
-			}
 
 			public static class GroupProperties {
 				private final MembershipTier tier;
@@ -1192,30 +1189,24 @@ public class RateConfig {
 				}
 			}
 
-			@Getter
-			public static class TollProperties {
-				private final MembershipTier tier;
+            public record TollProperties(MembershipTier tier) {
 
-				public TollProperties(MembershipTier tier) {
-					this.tier = tier;
-				}
+                public float getReward() {
+                    return switch (tier) {
+                        case REGULAR -> TOLL_REWARD_RATE;
+                        case PREMIUM -> PREMIUM_TOLL_REWARD_RATE;
+                        case VIP -> VIP_TOLL_REWARD_RATE;
+                    };
+                }
 
-				public float getReward() {
-					return switch (tier) {
-						case REGULAR -> TOLL_REWARD_RATE;
-						case PREMIUM -> PREMIUM_TOLL_REWARD_RATE;
-						case VIP -> VIP_TOLL_REWARD_RATE;
-					};
-				}
-
-				public void setReward(float reward) {
-					switch (tier) {
-						case REGULAR -> TOLL_REWARD_RATE = reward;
-						case PREMIUM -> PREMIUM_TOLL_REWARD_RATE = reward;
-						case VIP -> VIP_TOLL_REWARD_RATE = reward;
-					}
-				}
-			}
+                public void setReward(float reward) {
+                    switch (tier) {
+                        case REGULAR -> TOLL_REWARD_RATE = reward;
+                        case PREMIUM -> PREMIUM_TOLL_REWARD_RATE = reward;
+                        case VIP -> VIP_TOLL_REWARD_RATE = reward;
+                    }
+                }
+            }
 
 			public static class PetProperties {
 				private final MembershipTier tier;

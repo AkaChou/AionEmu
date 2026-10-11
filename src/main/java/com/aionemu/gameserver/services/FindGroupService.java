@@ -274,22 +274,19 @@ public class FindGroupService {
 	 */
 	public FindGroup removeFindGroup(final Race race, int action, int playerObjId) {
 		FindGroup findGroup = null;
-		switch (race) {
-		case ELYOS:
-			findGroup = switch (action) {
-				case 0x00 -> elyosRecruitFindGroups.remove(playerObjId);
-				case 0x04 -> elyosApplyFindGroups.remove(playerObjId);
-				default -> findGroup;
-			};
-			break;
-		case ASMODIANS:
-            findGroup = switch (action) {
+        findGroup = switch (race) {
+            case ELYOS -> switch (action) {
+                case 0x00 -> elyosRecruitFindGroups.remove(playerObjId);
+                case 0x04 -> elyosApplyFindGroups.remove(playerObjId);
+                default -> findGroup;
+            };
+            case ASMODIANS -> switch (action) {
                 case 0x00 -> asmodianRecruitFindGroups.remove(playerObjId);
                 case 0x04 -> asmodianApplyFindGroups.remove(playerObjId);
                 default -> findGroup;
             };
-			break;
-		}
+            default -> null;
+        };
 		if (findGroup != null)
 			PacketSendUtility.broadcastFilteredPacket(new SM_FIND_GROUP(action + 1, playerObjId, findGroup.getUnk()),
 				object -> race == object.getRace());

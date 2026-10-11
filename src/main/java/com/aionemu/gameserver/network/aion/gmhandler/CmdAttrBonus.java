@@ -52,10 +52,7 @@ public class CmdAttrBonus extends AbstractGMHandler implements StatOwner {
 		String func = matcher.group(2).toUpperCase();
 		Integer value = Integer.parseInt(matcher.group(3));
 
-//		System.out.println("func: " + func);
-//		System.out.println("value: " + value);
-
-		AttrBonusAction a = AttrBonusAction.valueOf(func);
+        AttrBonusAction a = AttrBonusAction.valueOf(func);
 
 		// 特殊值处理 / special value handling
 		if (a.equals(AttrBonusAction.SPEED) && value >= 1000) {

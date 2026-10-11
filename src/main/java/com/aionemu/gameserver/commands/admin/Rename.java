@@ -38,8 +38,10 @@ public class Rename extends AdminCommand {
 	@Override
 	public void execute(Player admin, String... params) {
 		if (params.length < 1 || params.length > 2) {
-			PacketSendUtility.sendMessage(admin, "No parameters detected.\n" + "Please use //rename <Player name> <rename>\n"
-				+ "or use //rename [target] <rename>");
+			PacketSendUtility.sendMessage(admin, """
+				No parameters detected.
+				Please use //rename <Player name> <rename>
+				or use //rename [target] <rename>""");
 			return;
 		}
 
@@ -124,10 +126,8 @@ public class Rename extends AdminCommand {
 	 * @param player 被改名的玩家 / renamed player
 	 */
 	public void sendPacket(Player admin, Player player, String rename, String recipient) {
-		Iterator<Friend> knownFriends = player.getFriendList().iterator();
 
-		while (knownFriends.hasNext()) {
-			Friend nextObject = knownFriends.next();
+		for (Friend nextObject : player.getFriendList()) {
 			if (nextObject.getPlayer() != null && nextObject.getPlayer().isOnline()) {
 				PacketSendUtility.sendPacket(nextObject.getPlayer(), new SM_PLAYER_INFO(player, false));
 			}
@@ -147,6 +147,9 @@ public class Rename extends AdminCommand {
 	 */
 	@Override
 	public void onFail(Player player, String message) {
-		PacketSendUtility.sendMessage(player, "No parameters detected.\n" + "Please use //rename <Player name> <rename>\n" + "or use //rename [target] <rename>");
+		PacketSendUtility.sendMessage(player, """
+                No parameters detected.
+                Please use //rename <Player name> <rename>
+                or use //rename [target] <rename>""");
 	}
 }

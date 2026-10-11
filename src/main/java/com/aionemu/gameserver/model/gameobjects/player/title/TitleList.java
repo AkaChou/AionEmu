@@ -60,7 +60,7 @@ public class TitleList {
 			return;
 		}
 		PacketSendUtility.sendPacket(owner,
-			SM_SYSTEM_MESSAGE.STR_QUEST_GET_REWARD_TITLE(title.getTemplate().getNameId()));
+			SM_SYSTEM_MESSAGE.STR_QUEST_GET_REWARD_TITLE(title.template().getNameId()));
 		PacketSendUtility.sendPacket(owner, new SM_TITLE_INFO(owner));
 	}
 

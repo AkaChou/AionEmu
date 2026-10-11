@@ -44,7 +44,6 @@ import com.aionemu.gameserver.model.siege.SiegeRace;
 import com.aionemu.gameserver.model.templates.spawns.SpawnGroup2;
 import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
 import com.aionemu.gameserver.model.templates.spawns.siegespawns.SiegeSpawnTemplate;
-import com.aionemu.gameserver.model.templates.world.WeatherEntry;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_ABYSS_ARTIFACT_INFO3;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_FORTRESS_INFO;
@@ -347,7 +346,7 @@ public class SiegeService {
 		return Math.max(result, 0);
 	}
 
-	
+
 	/**
 	 * 按 ID 获取进行中的攻城实例。
 	 * Returns the active siege instance by location id.
@@ -425,7 +424,7 @@ public class SiegeService {
 		return locations.get(locationId);
 	}
 
-	
+
 	protected Siege<?> newSiege(int siegeLocationId) {
 		if (fortresses.containsKey(siegeLocationId)) {
 			return new FortressSiege(fortresses.get(siegeLocationId), siegeDAO);
@@ -502,7 +501,7 @@ public class SiegeService {
 		return false;
 	}
 
-	
+
 	/**
 	 * 广播单个地点的攻城状态更新。
 	 * Broadcasts siege status update for a single location.
@@ -589,15 +588,6 @@ public class SiegeService {
 		PacketSendUtility.sendPacket(player, new SM_ABYSS_ARTIFACT_INFO3(worldArtifacts.values()));
 	}
 
-	/**
-	 * 天气变化时的攻城侧处理钩子。
-	 * Hook for siege-side handling when weather changes.
-	 * @param entry 天气条目 / weather entry
-	 */
-	public void onWeatherChanged(WeatherEntry entry) {
-	}
-
-	
 	/**
 	 * 攻城启动任务，到点触发指定要塞攻城。
 	 * Siege start runnable triggering a fortress siege when due.

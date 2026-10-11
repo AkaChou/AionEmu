@@ -492,8 +492,8 @@ public class ItemSocketService {
 					return;
 				}
 				player.getObserveController().removeObserver(this);
-				PacketSendUtility.sendPacket(player, new SM_ITEM_USAGE_ANIMATION(player.getObjectId().intValue(),
-						weaponItem.getObjectId().intValue(), weaponItem.getItemTemplate().getTemplateId(), 0, 3, 0));
+				PacketSendUtility.sendPacket(player, new SM_ITEM_USAGE_ANIMATION(player.getObjectId(),
+					weaponItem.getObjectId(), weaponItem.getItemTemplate().getTemplateId(), 0, 3, 0));
 				ItemPacketService.updateItemAfterInfoChange(player, weaponItem);
 				PacketSendUtility.sendPacket(player,
 						SM_SYSTEM_MESSAGE.STR_ENCHANT_ITEM_CANCELED(weaponItem.getItemTemplate().getNameId()));
@@ -599,7 +599,7 @@ public class ItemSocketService {
 			return;
 		}
 		PacketSendUtility.broadcastPacket(player,
-				new SM_ITEM_USAGE_ANIMATION(player.getObjectId().intValue(), toolObjectId, toolItemId, 5000, 0, 0),
+				new SM_ITEM_USAGE_ANIMATION(player.getObjectId(), toolObjectId, toolItemId, 5000, 0, 0),
 				true);
 		final ItemUseObserver observer = new ItemUseObserver() {
 			@Override
@@ -610,7 +610,7 @@ public class ItemSocketService {
 				}
 				player.removeItemCoolDown(toolItem.getItemTemplate().getUseLimits().getDelayId());
 				PacketSendUtility.broadcastPacket(player,
-						new SM_ITEM_USAGE_ANIMATION(player.getObjectId().intValue(), toolObjectId, toolItemId, 0, 2, 0),
+						new SM_ITEM_USAGE_ANIMATION(player.getObjectId(), toolObjectId, toolItemId, 0, 2, 0),
 						true);
 				player.getObserveController().removeObserver(this);
 			}
@@ -619,7 +619,7 @@ public class ItemSocketService {
 		player.getController().scheduleTask(TaskId.ITEM_USE, () -> {
 			player.getObserveController().removeObserver(observer);
 			PacketSendUtility.broadcastPacket(player,
-					new SM_ITEM_USAGE_ANIMATION(player.getObjectId().intValue(), toolObjectId, toolItemId, 0, 1, 1),
+					new SM_ITEM_USAGE_ANIMATION(player.getObjectId(), toolObjectId, toolItemId, 0, 1, 1),
 					true);
 			if (!player.getInventory().decreaseByObjectId(toolObjectId, 1))
 				return;

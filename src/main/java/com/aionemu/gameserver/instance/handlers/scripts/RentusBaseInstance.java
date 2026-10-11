@@ -166,15 +166,7 @@ public class RentusBaseInstance extends GeneralInstanceHandler
 			return;
 		} switch (npc.getObjectTemplate().getTemplateId()) {
 			case 217313: //Brigade General Vasharti.
-/* 				switch (Rnd.get(1, 2)) {
-		            case 1:
-				        spawn(702658, 184.69116f, 414.00864f, 260.75488f, (byte) 59); //修道院箱子。 / Abbey Box.
-					break;
-					case 2:
-					    spawn(702659, 184.69116f, 414.00864f, 260.75488f, (byte) 59); //高级修道院箱子。 / Noble Abbey Box.
-					break;
-				} */
-				boostMorale();
+                boostMorale();
 				reianSecureBridge();
 				sendMovie(player, 481);
 				// 成功逃脱消息（注释掉的调试输出）。 / sendMsg("[SUCCES]: You have finished <Rentus Base>");

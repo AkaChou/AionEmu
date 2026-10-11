@@ -1,7 +1,5 @@
 package com.aionemu.gameserver.model.instance.instancereward;
 
-import java.util.List;
-
 import org.apache.commons.lang3.mutable.MutableInt;
 
 import com.aionemu.gameserver.model.Race;
@@ -82,12 +80,6 @@ public class KamarBattlefieldReward extends InstanceReward<KamarBattlefieldPlaye
 		}
 	}
 
-	/** 排序点。 / Sort points. */
-	public List<KamarBattlefieldPlayerReward> sortPoints() {
-		return RewardCollections.sortedByScoreDescending(getInstanceRewards(),
-				KamarBattlefieldPlayerReward::getScorePoints);
-	}
-
 	private void setStartPositions() {
 		Point3D a = new Point3D(1535.671f, 1573.9156f, 612.4217f); // Habrok Boarding Site.
 		Point3D b = new Point3D(1205.2655f, 1350.9125f, 612.91205f); // Griffoen Boarding Site.
@@ -147,12 +139,6 @@ public class KamarBattlefieldReward extends InstanceReward<KamarBattlefieldPlaye
 	/** 按 score 返回 winner race / Returns the winner race by score */
 	public Race getWinnerRaceByScore() {
 		return asmodiansPoints.compareTo(elyosPoins) > 0 ? Race.ASMODIANS : Race.ELYOS;
-	}
-
-	/** 清空。 / Clear. */
-	@Override
-	public void clear() {
-		super.clear();
 	}
 
 	/** Reg 玩家 Reward / Reg Player Reward */

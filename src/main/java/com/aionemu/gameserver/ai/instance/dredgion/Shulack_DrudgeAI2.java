@@ -22,7 +22,6 @@ public class Shulack_DrudgeAI2 extends GeneralNpcAI2
 	@Override
 	protected void handleDialogFinish(Player player) {
 		addItems(player);
-		super.handleDialogFinish(player);
 	}
 
 	@Override

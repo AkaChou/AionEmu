@@ -1,14 +1,9 @@
 package com.aionemu.gameserver.dao.impl;
 
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.util.Collection;
-import java.util.List;
 import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
-import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Repository;
@@ -103,7 +98,7 @@ public class PlayerEmotionListDAO extends com.aionemu.gameserver.dao.PlayerEmoti
         try {
             jdbcClient.sql(INSERT_QUERY)
                 .param(player.getObjectId())
-                .param(emotion.getId())
+                .param(emotion.id())
                 .param(emotion.getExpireTime())
                 .update();
         } catch (DataAccessException e) {
@@ -134,19 +129,19 @@ public class PlayerEmotionListDAO extends com.aionemu.gameserver.dao.PlayerEmoti
      * Deletes all emotions of the player.
      * @param playerId 玩家 ID / player id
      */
-    
+
     /**
      * 批量清理已过期的表情记录。
      * Batch-deletes expired emotion records.
      */
-    
+
     /**
      * 批量插入或更新玩家表情列表。
      * Batch-inserts or updates the player's emotion list.
      * @param player 玩家 / player
      * @param emotions 表情列表 / emotion list
      */
-    
+
     /**
      * 判断当前数据库是否受本 DAO 支持。
      * Checks whether the given database is supported by this DAO.

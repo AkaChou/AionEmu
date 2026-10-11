@@ -153,7 +153,7 @@ public class ItemService {
 			}
 			if (template.isStackable()) {
 				for (Item item : inventory.getItemsByItemId(entry.getKey())) {
-					remainingCount -= Math.min(remainingCount, Math.max(0, maxStackCount - item.getItemCount()));
+					remainingCount -= Math.clamp(maxStackCount - item.getItemCount(), 0, remainingCount);
 					if (remainingCount == 0) {
 						break;
 					}

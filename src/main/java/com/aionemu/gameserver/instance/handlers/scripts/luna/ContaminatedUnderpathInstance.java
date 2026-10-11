@@ -1210,11 +1210,6 @@ public class ContaminatedUnderpathInstance extends GeneralInstanceHandler
 		startPrepareTimer();
 
 		final int lunaDetachement = skillRace == Race.ASMODIANS ? 21346 : 21345;
-		//if (player.getRace().equals(Race.ASMODIANS)) {
-		//	GameEngineServices.skillEngine().applyEffectDirectly(21346, player, player, 0);
-		//} else {
-		//	GameEngineServices.skillEngine().applyEffectDirectly(21345, player, player, 0);
-		//}
 		GameEngineServices.skillEngine().applyEffectDirectly(lunaDetachement, player, player, 3000000);
 		//final int lunaHeal = spawnRace == Race.ASMODIANS ? 703477 : 703477;
 		final int lunaHeal = 834491;

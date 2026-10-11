@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.services;
 
-import lombok.AllArgsConstructor;
 
 
 import com.aionemu.boot.i18n.I18n;
@@ -323,7 +322,7 @@ public class SvsService {
 		return activeSvs.containsKey(id);
 	}
 
-	
+
 	/**
 	 * 获取活动持续时长（小时）。
 	 * Returns the event duration in hours.
@@ -382,30 +381,27 @@ public class SvsService {
 	 * 帕内斯特拉（SVS）活动启动定时任务。
 	 * Start runnable for Panesterra (SVS) events.
 	 */
-	@AllArgsConstructor
-	private static class SvsStartRunnable implements Runnable {
-		private final int id;
-
-		/**
-		 * 执行启动流程。
-		 * Runs the start sequence.
-		 */
-		@Override
-		public void run() {
-			// 清理上一轮遗留的临时对象。 / Despawn temporary objects left by the previous cycle.
-			SvsService.getInstance().clearAdventObjects(id);
-			// 进阶走廊【特兰西迪姆附楼】。 / Advance Corridor [Transidium Annex].
-			SvsService.getInstance().transidiumAnnexMsg(id);
-			GameThreadPoolServices.threadPoolManager().schedule(() -> {
+		private record SvsStartRunnable(int id) implements Runnable {
+			/**
+			 * 执行启动流程。
+			 * Runs the start sequence.
+			 */
+			@Override
+			public void run() {
+				// 清理上一轮遗留的临时对象。 / Despawn temporary objects left by the previous cycle.
+				SvsService.getInstance().clearAdventObjects(id);
 				// 进阶走廊【特兰西迪姆附楼】。 / Advance Corridor [Transidium Annex].
-				SvsService.getInstance().advanceCorridorSP(id);
-			}, 480000);
-			Map<Integer, SvsLocation> locations = SvsService.getInstance().getSvsLocations();
-			for (final SvsLocation loc : locations.values()) {
-				if (loc.getId() == id) {
-					SvsService.getInstance().startSvs(loc.getId());
+				SvsService.getInstance().transidiumAnnexMsg(id);
+				GameThreadPoolServices.threadPoolManager().schedule(() -> {
+					// 进阶走廊【特兰西迪姆附楼】。 / Advance Corridor [Transidium Annex].
+					SvsService.getInstance().advanceCorridorSP(id);
+				}, 480000);
+				Map<Integer, SvsLocation> locations = SvsService.getInstance().getSvsLocations();
+				for (final SvsLocation loc : locations.values()) {
+					if (loc.getId() == id) {
+						SvsService.getInstance().startSvs(loc.getId());
+					}
 				}
 			}
 		}
-	}
 }

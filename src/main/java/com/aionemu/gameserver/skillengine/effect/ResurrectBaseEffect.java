@@ -68,11 +68,4 @@ public class ResurrectBaseEffect extends ResurrectEffect {
 		}
 	}
 
-	/**
-	 * 清理基础复活相关状态。
-	 * Cleans up base-resurrect related state.
-	 */
-	@Override
-	public void endEffect(Effect effect) {
-	}
 }

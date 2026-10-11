@@ -102,9 +102,6 @@ public class StigmaService {
 						.getTemplatesFor(player.getPlayerClass(), i, player.getRace());
 				for (SkillLearnTemplate skillTree : skillTemplates) {
 					if (resultItem.getSkillGroup().equals(skillTree.getSkillGroup())) {
-						// PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1300401, new
-						// DescriptionId(resultItem.getNameId()), skillTree.getSkillLevel() +
-						// resultItem.getEnchantLevel()));
 						player.getSkillList().addStigmaSkill(player, skillTree.getSkillId(),
 								skillTree.getSkillLevel() + resultItem.getEnchantLevel());
 						PacketSendUtility.sendPacket(player,
@@ -159,8 +156,6 @@ public class StigmaService {
 						.getTemplatesFor(player.getPlayerClass(), i, player.getRace());
 				for (SkillLearnTemplate skillTree : skillTemplates) {
 					if (resultItem.getSkillGroup().equals(skillTree.getSkillGroup())) {
-						// PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1300401, new
-						// DescriptionId(resultItem.getNameId()), resultItem.getEnchantLevel()));
 						player.getSkillList().addStigmaSkill(player, skillTree.getSkillId(), skillTree.getSkillLevel());
 						PacketSendUtility.sendPacket(player,
 								new SM_SKILL_LIST(player, player.getSkillList().getStigmaSkills()));
@@ -168,8 +163,6 @@ public class StigmaService {
 					}
 				}
 			}
-			// PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1300403, new
-			// DescriptionId(resultItem.getNameId())));
 			if (storeStigmaListImmediately) {
 				player.getEquipedStigmaList().remove(player, itemId);
 			} else {
@@ -202,7 +195,7 @@ public class StigmaService {
 		}
 	}
 
-	
+
 	/**
 	 * 移除套装加成后，按单件强化等级重建烙印技能。
 	 * After set-bonus removal, rebuilds stigma skills from per-item enchant levels.

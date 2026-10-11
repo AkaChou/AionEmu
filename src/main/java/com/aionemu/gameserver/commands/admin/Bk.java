@@ -2,7 +2,6 @@ package com.aionemu.gameserver.commands.admin;
 
 
 import com.aionemu.boot.i18n.I18n;
-import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 import com.aionemu.commons.database.DB;
@@ -120,8 +119,8 @@ public class Bk extends AdminCommand {
 						tele_bk = selectByName(bookmark_name);
 					} finally {
 						if (tele_bk != null) {
-							TeleportService2.teleportTo(player, tele_bk.getWorld_id(), tele_bk.getX(), tele_bk.getY(), tele_bk.getZ());
-							PacketSendUtility.sendMessage(player, "Teleported to bookmark " + tele_bk.getName() + " location");
+							TeleportService2.teleportTo(player, tele_bk.world_id(), tele_bk.x(), tele_bk.y(), tele_bk.z());
+							PacketSendUtility.sendMessage(player, "Teleported to bookmark " + tele_bk.name() + " location");
 						}
 					}
 				} catch (Exception e) {
@@ -132,9 +131,9 @@ public class Bk extends AdminCommand {
 				updateInfo(player.getObjectId());
 				PacketSendUtility.sendMessage(player, "=====Bookmark list begin=====");
 				for (Bookmark b : bookmarks) {
-					String chatLink = ChatUtil.position(b.getName(), b.getWorld_id(), b.getX(), b.getY(), b.getZ());
-					PacketSendUtility.sendMessage(player, " = " + chatLink + " =  " + WorldMapType.getWorld(b.getWorld_id())
-						+ "  ( " + b.getX() + " ," + b.getY() + " ," + b.getZ() + " )");
+					String chatLink = ChatUtil.position(b.name(), b.world_id(), b.x(), b.y(), b.z());
+					PacketSendUtility.sendMessage(player, " = " + chatLink + " =  " + WorldMapType.getWorld(b.world_id())
+						+ "  ( " + b.x() + " ," + b.y() + " ," + b.z() + " )");
 				}
 				PacketSendUtility.sendMessage(player, "=====Bookmark list end=======");
 				break;
@@ -178,7 +177,7 @@ public class Bk extends AdminCommand {
 	 */
 	public Bookmark selectByName(String bk_name) {
 		for (Bookmark b : bookmarks)
-			if (b.getName().equals(bk_name))
+			if (b.name().equals(bk_name))
 				return b;
 		return null;
 	}
@@ -227,56 +226,37 @@ public class Bk extends AdminCommand {
 /**
  * 书签坐标数据。
  * Bookmark coordinate data.
+ *
+ * @param name     -- GETTER --
+ *                 获取书签名称。
+ *                 Gets the bookmark name.
+ * @param x        -- GETTER --
+ *                 获取 X 坐标。
+ *                 Gets the X coordinate.
+ * @param y        -- GETTER --
+ *                 获取 Y 坐标。
+ *                 Gets the Y coordinate.
+ * @param z        -- GETTER --
+ *                 获取 Z 坐标。
+ *                 Gets the Z coordinate.
+ * @param world_id -- GETTER --
+ *                 获取世界地图 ID。
+ *                 Gets the world map id.
  */
-@Getter
-class Bookmark {
+record Bookmark(String name, float x, float y, float z, int world_id) {
 
     /**
-     * -- GETTER --
-     *  获取书签名称。
-     *  Gets the bookmark name.
+     * 构造书签。
+     * Constructs a bookmark.
+     *
+     * @param x        X 坐标 / X coordinate
+     * @param y        Y 坐标 / Y coordinate
+     * @param z        Z 坐标 / Z coordinate
+     * @param world_id 世界地图 ID / world map id
+     * @param name     书签名称 / bookmark name
      */
-    private final String name;
-    /**
-     * -- GETTER --
-     *  获取 X 坐标。
-     *  Gets the X coordinate.
-     */
-    private final float x;
-    /**
-     * -- GETTER --
-     *  获取 Y 坐标。
-     *  Gets the Y coordinate.
-     */
-    private final float y;
-    /**
-     * -- GETTER --
-     *  获取 Z 坐标。
-     *  Gets the Z coordinate.
-     */
-    private final float z;
-    /**
-     * -- GETTER --
-     *  获取世界地图 ID。
-     *  Gets the world map id.
-     */
-    private final int world_id;
-
-	/**
-	 * 构造书签。
-	 * Constructs a bookmark.
-	 * @param x X 坐标 / X coordinate
-	 * @param y Y 坐标 / Y coordinate
-	 * @param z Z 坐标 / Z coordinate
-	 * @param world_id 世界地图 ID / world map id
-	 * @param name 书签名称 / bookmark name
-	 */
-	public Bookmark(float x, float y, float z, int world_id, String name) {
-		this.x = x;
-		this.y = y;
-		this.z = z;
-		this.world_id = world_id;
-		this.name = name;
-	}
+    public Bookmark(float x, float y, float z, int world_id, String name) {
+        this(name, x, y, z, world_id);
+    }
 
 }

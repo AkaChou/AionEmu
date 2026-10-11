@@ -363,12 +363,11 @@ public class CraftSkillUpdateService {
 	 * @return 是否为制作技能 / Whether it is a craft skill
 	 */
 	public static boolean isCraftingSkill(int skillId) {
-		Iterator<Integer> it = craftingSkillIds.iterator();
-		while (it.hasNext()) {
-			if (it.next() == skillId) {
-				return true;
-			}
-		}
+        for (Integer craftingSkillId : craftingSkillIds) {
+            if (craftingSkillId == skillId) {
+                return true;
+            }
+        }
 		return false;
 	}
 

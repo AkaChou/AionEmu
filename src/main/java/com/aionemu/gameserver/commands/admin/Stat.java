@@ -71,7 +71,7 @@ public class Stat extends AdminCommand {
 	 * @param stat 属性修饰函数 / Stat function
 	 */
 	private String collectDetails(IStatFunction stat) {
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		sb.append(stat.toString() + "\n");
 		if(stat instanceof StatFunctionProxy proxy){
 			sb.append(" -- " + proxy.getProxiedFunction().toString());

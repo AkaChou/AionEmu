@@ -56,138 +56,157 @@ public class PlayerInfo extends AdminCommand
 		+ target.getClientConnection().getAccount().getName() + "\n");
 		if (params.length < 2)
 			return;
-		if (params[1].equals("item")) {
-			StringBuilder strbld = new StringBuilder("-items in inventory:\n");
-			List<Item> items = target.getInventory().getItemsWithKinah();
-			Iterator<Item> it = items.iterator();
-			if (items.isEmpty()) {
-				strbld.append("none\n");
-			} else {
-				while (it.hasNext()) {
-					Item act = it.next();
-					strbld.append("    " + act.getItemCount() + "(s) of " + ChatUtil.item(act.getItemTemplate().getTemplateId()) + "\n");
-				}
-			}
-			items.clear();
-			items = target.getEquipment().getEquippedItems();
-			it = items.iterator();
-			strbld.append("-equipped items:\n");
-			if (items.isEmpty()) {
-				strbld.append("none\n");
-			} else {
-				while (it.hasNext()) {
-					Item act = it.next();
-					strbld.append("    " + act.getItemCount() + "(s) of " + ChatUtil.item(act.getItemTemplate().getTemplateId()) + "\n");
-				}
-			}
-			items.clear();
-			items = target.getWarehouse().getItemsWithKinah();
-			it = items.iterator();
-			strbld.append("-items in warehouse:\n");
-			if (items.isEmpty()) {
-				strbld.append("none\n");
-			} else {
-				while (it.hasNext()) {
-					Item act = it.next();
-					strbld.append("    " + act.getItemCount() + "(s) of " + "[item:" + act.getItemTemplate().getTemplateId() + "]" + "\n");
-				}
-			}
-			showAllLines(admin, strbld.toString());
-		} else if (params[1].equals("group")) {
-			final StringBuilder strbld = new StringBuilder("-group info:\n  Leader: ");
-			PlayerGroup group = target.getPlayerGroup2();
-			if (group == null) {
-				PacketSendUtility.sendMessage(admin, "-group info: no group");
-			} else {
-				strbld.append(group.getLeader().getName() + "\n  Members:\n");
-				group.applyOnMembers(new Predicate<Player>() {
-					@Override
-					public boolean apply(Player player) {
-						strbld.append(" " + player.getName() + "\n");
-						return true;
+		switch (params[1]) {
+			case "item" -> {
+				StringBuilder strbld = new StringBuilder("-items in inventory:\n");
+				List<Item> items = target.getInventory().getItemsWithKinah();
+				Iterator<Item> it = items.iterator();
+				if (items.isEmpty()) {
+					strbld.append("none\n");
+				} else {
+					while (it.hasNext()) {
+						Item act = it.next();
+						strbld.append("    " + act.getItemCount() + "(s) of " + ChatUtil.item(act.getItemTemplate().getTemplateId()) + "\n");
 					}
-				});
-				PacketSendUtility.sendMessage(admin, strbld.toString());
-			}
-		} else if (params[1].equals("skill")) {
-			StringBuilder strbld = new StringBuilder("-list of skills:\n");
-			PlayerSkillEntry[] sle = target.getSkillList().getAllSkills();
-			for (int i = 0; i < sle.length; i++)
-			strbld.append("    level " + sle[i].getSkillLevel() + " of " + sle[i].getSkillName() + "\n");
-			showAllLines(admin, strbld.toString());
-		} else if (params[1].equals("loc")) {
-			String chatLink = ChatUtil.position(target.getName(), target.getPosition());
-			PacketSendUtility.sendMessage(admin, "- " + chatLink + "'s location:\n  mapid: " + target.getWorldId() + "\n  X: " + target.getX() + " Y: "
-			+ target.getY() + "Z: " + target.getZ() + "heading: " + target.getHeading());
-		} else if (params[1].equals("legion")) {
-			StringBuilder strbld = new StringBuilder();
-			Legion legion = target.getLegion();
-			if (legion == null) {
-				PacketSendUtility.sendMessage(admin, "-legion info: no legion");
-			} else {
-				ArrayList<LegionMemberEx> legionmemblist = GameCoreGameplayServices.legionService().loadLegionMemberExList(legion, null);
-				Iterator<LegionMemberEx> it = legionmemblist.iterator();
-				strbld.append("-legion info:\n  name: " + legion.getLegionName() + ", level: " + legion.getLegionLevel() + "\n  members(online):\n");
-				while (it.hasNext()) {
-					LegionMemberEx act = it.next();
-					strbld.append("    " + act.getName() + "(" + ((act.isOnline()) ? "online" : "offline") + ")" + act.getRank().toString() + "\n");
 				}
+				items.clear();
+				items = target.getEquipment().getEquippedItems();
+				it = items.iterator();
+				strbld.append("-equipped items:\n");
+				if (items.isEmpty()) {
+					strbld.append("none\n");
+				} else {
+					while (it.hasNext()) {
+						Item act = it.next();
+						strbld.append("    " + act.getItemCount() + "(s) of " + ChatUtil.item(act.getItemTemplate().getTemplateId()) + "\n");
+					}
+				}
+				items.clear();
+				items = target.getWarehouse().getItemsWithKinah();
+				it = items.iterator();
+				strbld.append("-items in warehouse:\n");
+				if (items.isEmpty()) {
+					strbld.append("none\n");
+				} else {
+					while (it.hasNext()) {
+						Item act = it.next();
+						strbld.append("    " + act.getItemCount() + "(s) of " + "[item:" + act.getItemTemplate().getTemplateId() + "]" + "\n");
+					}
+				}
+				showAllLines(admin, strbld.toString());
 			}
-			showAllLines(admin, strbld.toString());
-		} else if (params[1].equals("ap")) {
-			PacketSendUtility.sendMessage(admin, "AP info about " + target.getName());
-			PacketSendUtility.sendMessage(admin, "Total AP = " + target.getAbyssRank().getAp());
-			PacketSendUtility.sendMessage(admin, "Total Kills = " + target.getAbyssRank().getAllKill());
-			PacketSendUtility.sendMessage(admin, "Today Kills = " + target.getAbyssRank().getDailyKill());
-			PacketSendUtility.sendMessage(admin, "Today AP = " + target.getAbyssRank().getDailyAP());
-		} else if (params[1].equals("gp")) {
-			PacketSendUtility.sendMessage(admin, "GP info about " + target.getName());
-			PacketSendUtility.sendMessage(admin, "Total GP = " + target.getAbyssRank().getGp());
-			PacketSendUtility.sendMessage(admin, "Today GP = " + target.getAbyssRank().getDailyGP());
-		} else if (params[1].equals("chars")) {
-			PacketSendUtility.sendMessage(admin, "Others characters of " + target.getName() + " (" + target.getClientConnection().getAccount().size() + ") :");
-			for (PlayerAccountData d : target.getClientConnection().getAccount()) {
-				if (d != null && d.getPlayerCommonData() != null) {
-					PacketSendUtility.sendMessage(admin, d.getPlayerCommonData().getName());
+			case "group" -> {
+				final StringBuilder strbld = new StringBuilder("-group info:\n  Leader: ");
+				PlayerGroup group = target.getPlayerGroup2();
+				if (group == null) {
+					PacketSendUtility.sendMessage(admin, "-group info: no group");
+				} else {
+					strbld.append(group.getLeader().getName()).append("\n  Members:\n");
+					group.applyOnMembers(player -> {
+						if (player != null) {
+							strbld.append(" ").append(player.getName()).append("\n");
+						}
+						return true;
+					});
+					PacketSendUtility.sendMessage(admin, strbld.toString());
 				}
 			}
-		} else if (params[1].equals("knownlist")) {
-			if (params[2].equals("info")) {
-				PacketSendUtility.sendMessage(admin, "KnownList of " + target.getName());
-				for (VisibleObject obj : target.getKnownList().getKnownObjectsSnapshot()) {
-					PacketSendUtility.sendMessage(admin, obj.getName() + " objectId:" + obj.getObjectId());
+			case "skill" -> {
+				StringBuilder strbld = new StringBuilder("-list of skills:\n");
+				PlayerSkillEntry[] sle = target.getSkillList().getAllSkills();
+				for (PlayerSkillEntry playerSkillEntry : sle)
+					strbld.append("    level " + playerSkillEntry.getSkillLevel() + " of " + playerSkillEntry.getSkillName() + "\n");
+				showAllLines(admin, strbld.toString());
+			}
+			case "loc" -> {
+				String chatLink = ChatUtil.position(target.getName(), target.getPosition());
+				PacketSendUtility.sendMessage(admin, "- " + chatLink + "'s location:\n  mapid: " + target.getWorldId() + "\n  X: " + target.getX() + " Y: "
+					+ target.getY() + "Z: " + target.getZ() + "heading: " + target.getHeading());
+			}
+			case "legion" -> {
+				StringBuilder strbld = new StringBuilder();
+				Legion legion = target.getLegion();
+				if (legion == null) {
+					PacketSendUtility.sendMessage(admin, "-legion info: no legion");
+				} else {
+					ArrayList<LegionMemberEx> legionmemblist = GameCoreGameplayServices.legionService().loadLegionMemberExList(legion, null);
+					Iterator<LegionMemberEx> it = legionmemblist.iterator();
+					strbld.append("-legion info:\n  name: " + legion.getLegionName() + ", level: " + legion.getLegionLevel() + "\n  members(online):\n");
+					while (it.hasNext()) {
+						LegionMemberEx act = it.next();
+						strbld.append("    " + act.getName() + "(" + ((act.isOnline()) ? "online" : "offline") + ")" + act.getRank().toString() + "\n");
+					}
 				}
-			} else if (params[2].equals("add")) {
-				int objId = Integer.parseInt(params[3]);
-				VisibleObject obj = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findVisibleObject(objId);
-				if (obj != null && !target.getKnownList().getKnownObjects().containsKey(objId)) {
-					target.getKnownList().getKnownObjects().put(objId, obj);
-				}
-			} else if (params[2].equals("remove")) {
-				int objId = Integer.parseInt(params[3]);
-				VisibleObject obj = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findVisibleObject(objId);
-				if (obj != null) {
-					target.getKnownList().getKnownObjects().remove(objId);
+				showAllLines(admin, strbld.toString());
+			}
+			case "ap" -> {
+				PacketSendUtility.sendMessage(admin, "AP info about " + target.getName());
+				PacketSendUtility.sendMessage(admin, "Total AP = " + target.getAbyssRank().getAp());
+				PacketSendUtility.sendMessage(admin, "Total Kills = " + target.getAbyssRank().getAllKill());
+				PacketSendUtility.sendMessage(admin, "Today Kills = " + target.getAbyssRank().getDailyKill());
+				PacketSendUtility.sendMessage(admin, "Today AP = " + target.getAbyssRank().getDailyAP());
+			}
+			case "gp" -> {
+				PacketSendUtility.sendMessage(admin, "GP info about " + target.getName());
+				PacketSendUtility.sendMessage(admin, "Total GP = " + target.getAbyssRank().getGp());
+				PacketSendUtility.sendMessage(admin, "Today GP = " + target.getAbyssRank().getDailyGP());
+			}
+			case "chars" -> {
+				PacketSendUtility.sendMessage(admin, "Others characters of " + target.getName() + " (" + target.getClientConnection().getAccount().size() + ") :");
+				for (PlayerAccountData d : target.getClientConnection().getAccount()) {
+					if (d != null && d.getPlayerCommonData() != null) {
+						PacketSendUtility.sendMessage(admin, d.getPlayerCommonData().getName());
+					}
 				}
 			}
-		} else if (params[1].equals("visual")) {
-			if (params[2].equals("info")) {
-				PacketSendUtility.sendMessage(admin, "VisualList of " + target.getName());
-				for (VisibleObject obj : target.getKnownList().getVisibleObjectsSnapshot()) {
-					PacketSendUtility.sendMessage(admin, obj.getName() + " objectId:" + obj.getObjectId());
+			case "knownlist" -> {
+				switch (params[2]) {
+					case "info" -> {
+						PacketSendUtility.sendMessage(admin, "KnownList of " + target.getName());
+						for (VisibleObject obj : target.getKnownList().getKnownObjectsSnapshot()) {
+							PacketSendUtility.sendMessage(admin, obj.getName() + " objectId:" + obj.getObjectId());
+						}
+					}
+					case "add" -> {
+						int objId = Integer.parseInt(params[3]);
+						VisibleObject obj = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findVisibleObject(objId);
+						if (obj != null && !target.getKnownList().getKnownObjects().containsKey(objId)) {
+							target.getKnownList().getKnownObjects().put(objId, obj);
+						}
+					}
+					case "remove" -> {
+						int objId = Integer.parseInt(params[3]);
+						VisibleObject obj = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findVisibleObject(objId);
+						if (obj != null) {
+							target.getKnownList().getKnownObjects().remove(objId);
+						}
+					}
 				}
-			} else if (params[2].equals("see")) {
-				int objId = Integer.parseInt(params[3]);
-				Player player = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(objId);
-				target.getController().see(player);
-			} else if (params[2].equals("notsee")) {
-				int objId = Integer.parseInt(params[3]);
-				Player player = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(objId);
-				target.getController().notSee(player, true);
 			}
-		} else {
-			PacketSendUtility.sendMessage(admin, "bad switch!");
-			PacketSendUtility.sendMessage(admin, "syntax //playerinfo <playername> <loc | item | group | skill | legion | ap | gp | chars | knownlist[info|add|remove] | visual[see|notsee]> ");
+			case "visual" -> {
+				switch (params[2]) {
+					case "info" -> {
+						PacketSendUtility.sendMessage(admin, "VisualList of " + target.getName());
+						for (VisibleObject obj : target.getKnownList().getVisibleObjectsSnapshot()) {
+							PacketSendUtility.sendMessage(admin, obj.getName() + " objectId:" + obj.getObjectId());
+						}
+					}
+					case "see" -> {
+						int objId = Integer.parseInt(params[3]);
+						Player player = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(objId);
+						target.getController().see(player);
+					}
+					case "notsee" -> {
+						int objId = Integer.parseInt(params[3]);
+						Player player = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(objId);
+						target.getController().notSee(player, true);
+					}
+				}
+			}
+			default -> {
+				PacketSendUtility.sendMessage(admin, "bad switch!");
+				PacketSendUtility.sendMessage(admin, "syntax //playerinfo <playername> <loc | item | group | skill | legion | ap | gp | chars | knownlist[info|add|remove] | visual[see|notsee]> ");
+			}
 		}
 	}
 

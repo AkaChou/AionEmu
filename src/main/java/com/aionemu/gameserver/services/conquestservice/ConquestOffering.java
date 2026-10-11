@@ -66,7 +66,7 @@ public abstract class ConquestOffering<CL extends ConquestLocation> {
 	 *  Returns the boss destroy listener.
 	 *  listener
 	 */
-	private final ConquestBossDestroyListener conquestBossDestroyListener = new ConquestBossDestroyListener(this);
+	private final ConquestBossDestroyListener conquestBossDestroyListener = new ConquestBossDestroyListener();
 
 	/**
 	 * 停止活动的具体实现。
@@ -199,16 +199,14 @@ public abstract class ConquestOffering<CL extends ConquestLocation> {
 	 * 征服/供奉 BOSS 死亡监听器（预留钩子）。
 	 * Death listener for Conquest/Offering bosses (reserved hook).
 	 */
-	@SuppressWarnings("rawtypes")
 	public static class ConquestBossDestroyListener implements AbstractAI.AiDeathListener {
-		private final ConquestOffering<?> conquestOffering;
 
-		public ConquestBossDestroyListener(ConquestOffering<?> conquestOffering) {
-			this.conquestOffering = conquestOffering;
+		public ConquestBossDestroyListener() {
 		}
 
 		@Override
 		public void onBeforeDie(AbstractAI obj) {
+			AbstractAI.AiDeathListener.super.onBeforeDie(obj);
 		}
 
 		@Override

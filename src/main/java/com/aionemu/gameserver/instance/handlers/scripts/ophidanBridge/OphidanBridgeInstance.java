@@ -140,7 +140,7 @@ public class OphidanBridgeInstance extends GeneralInstanceHandler
 	 * Handle NPC drop-table registration.
 	 * @param npc 目标 NPC / target NPC
 	 */
-	
+
 	public void onDropRegistered(Npc npc) {
 		Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
 		int npcId = npc.getNpcId();
@@ -194,7 +194,7 @@ public class OphidanBridgeInstance extends GeneralInstanceHandler
 			break;
 		}
 	}
-	
+
 	/**
 	 * 处理死亡事件。
 	 * Handle a death event.
@@ -208,15 +208,7 @@ public class OphidanBridgeInstance extends GeneralInstanceHandler
 			case 235769: // Velkur 奥德施法者 / Velkur Aethercaster.
 			case 235770: // Velkur 奥德祭司 / Velkur Aetherpriest.
 			case 235771: // Velkur 奥德刺客 / Velkur Aetherknife.
-/* 				switch (Rnd.get(1, 2)) {
-		            case 1:
-				        spawn(702658, 349.57327f, 495.25214f, 606.76013f, (byte) 91); //修道院箱子。 / Abbey Box.
-					break;
-					case 2:
-					    spawn(702659, 349.57327f, 495.25214f, 606.76013f, (byte) 91); //高级修道院箱子。 / Noble Abbey Box.
-					break;
-				} */
-				spawn(730868, 350.18478f, 490.73065f, 606.34015f, (byte) 1); // 奥菲丹桥出口 / Ophidan Bridge Exit.
+                spawn(730868, 350.18478f, 490.73065f, 606.34015f, (byte) 1); // 奥菲丹桥出口 / Ophidan Bridge Exit.
 				spawn(802180, 350.39514f, 486.26636f, 606.75397f, (byte) 32); // 奥菲丹桥机会礼包 / Ophidan Bridge Opportunity Bundle.
             break;
 			case 235786: // 钢铁城墙 / Steel Wall.
@@ -224,11 +216,11 @@ public class OphidanBridgeInstance extends GeneralInstanceHandler
 			break;
 		}
 	}
-	
+
 	private void despawnNpc(Npc npc) {
 		if (npc != null) {
 			npc.getController().onDelete();
 		}
 	}
-	
+
 }

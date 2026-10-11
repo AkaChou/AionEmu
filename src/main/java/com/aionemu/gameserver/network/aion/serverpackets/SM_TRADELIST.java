@@ -56,11 +56,11 @@ public class SM_TRADELIST extends AionServerPacket {
 			LimitedTradeNpc limitedTradeNpc = null;
 			if (GameRuntimeServices.limitedItemTradeService().isLimitedTradeNpc(npcId)) {
 				limitedTradeNpc = GameRuntimeServices.limitedItemTradeService().getLimitedTradeNpc(npcId);
-				i = limitedTradeNpc.getLimitedItems().size();
+				i = limitedTradeNpc.limitedItems().size();
 			}
 			writeH(i);
 			if (limitedTradeNpc != null) {
-				for (LimitedItem limitedItem : limitedTradeNpc.getLimitedItems()) {
+				for (LimitedItem limitedItem : limitedTradeNpc.limitedItems()) {
 					writeD(limitedItem.getItemId());
 					writeH(limitedItem.getBuyCount().get(playerObj) == null ? 0
 							: limitedItem.getBuyCount().get(playerObj));

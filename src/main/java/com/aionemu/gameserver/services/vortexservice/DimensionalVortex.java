@@ -222,10 +222,6 @@ public abstract class DimensionalVortex<VL extends VortexLocation> {
 		}
 
 		@Override
-		public void onBeforeDie(AbstractAI obj) {
-		}
-
-		@Override
 		public void onAfterDie(AbstractAI obj) {
 			vortex.setGeneratorDestroyed(true);
 			GameLocationBootstrapServices.vortexService().stopInvasion(vortex.getVortexLocationId());

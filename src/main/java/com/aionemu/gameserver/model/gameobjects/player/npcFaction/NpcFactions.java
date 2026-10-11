@@ -28,6 +28,7 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_QUEST_ACTION;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_TITLE_INFO;
 import com.aionemu.gameserver.questEngine.definition.QuestCatalog;
+import com.aionemu.gameserver.questEngine.definition.QuestCatalogEntry;
 import com.aionemu.gameserver.questEngine.retail.RetailSystemGrantDispatcher;
 import com.aionemu.gameserver.questEngine.runtime.PlayerQuestStartEligibilityPort;
 import com.aionemu.gameserver.questEngine.tablelane.NativeSystemGrantLanes;
@@ -329,7 +330,7 @@ public class NpcFactions {
 			IntPredicate hasOwner, IntPredicate eligible, IntPredicate activeToday) {
 		return new ArrayList<>(catalog.entries().stream()
 			.filter(entry -> entry.metadata().npcFactionId() == npcFactionId)
-			.mapToInt(entry -> entry.id())
+			.mapToInt(QuestCatalogEntry::id)
 			.filter(hasOwner)
 			.filter(eligible)
 			.filter(activeToday)

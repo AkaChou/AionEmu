@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.services;
 
-import lombok.AllArgsConstructor;
 
 
 import com.aionemu.boot.i18n.I18n;
@@ -287,7 +286,7 @@ public class VortexService {
 		return activeInvasions.containsKey(id);
 	}
 
-	
+
 	/**
 	 * 获取活动持续时长（小时）。
 	 * Returns the event duration in hours.
@@ -325,7 +324,7 @@ public class VortexService {
 		}
 	}
 
-	
+
 	/**
 	 * 判断玩家是否位于漩涡区域内。
 	 * Checks whether the player is inside a vortex zone.
@@ -435,26 +434,23 @@ public class VortexService {
 		private static final VortexService INSTANCE = new VortexService();
 	}
 
-	/**
-	 * 次元漩涡入侵启动定时任务。
-	 * Start runnable for dimensional-vortex invasions.
-	 */
-	@AllArgsConstructor
-	private static class VortexStartRunnable implements Runnable {
-		private final int id;
-
-		/**
-		 * 查找匹配地点并启动入侵。
-		 * Finds the matching location and starts the invasion.
-		 */
-		@Override
-		public void run() {
-			Map<Integer, VortexLocation> locations = VortexService.getInstance().getVortexLocations();
-			for (final VortexLocation loc : locations.values()) {
-				if (loc.getId() == id) {
-					VortexService.getInstance().startInvasion(loc.getId());
-				}
-			}
-		}
-	}
+    /**
+     * 次元漩涡入侵启动定时任务。
+     * Start runnable for dimensional-vortex invasions.
+     */
+    private record VortexStartRunnable(int id) implements Runnable {
+        /**
+         * 查找匹配地点并启动入侵。
+         * Finds the matching location and starts the invasion.
+         */
+        @Override
+        public void run() {
+            Map<Integer, VortexLocation> locations = VortexService.getInstance().getVortexLocations();
+            for (final VortexLocation loc : locations.values()) {
+                if (loc.getId() == id) {
+                    VortexService.getInstance().startInvasion(loc.getId());
+                }
+            }
+        }
+    }
 }

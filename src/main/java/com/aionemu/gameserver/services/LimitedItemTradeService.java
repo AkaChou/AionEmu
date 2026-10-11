@@ -56,7 +56,7 @@ public class LimitedItemTradeService {
 			}
 		}
 		for (LimitedTradeNpc limitedTradeNpc : limitedTradeNpcs.values()) {
-			for (final LimitedItem limitedItem : limitedTradeNpc.getLimitedItems()) {
+			for (final LimitedItem limitedItem : limitedTradeNpc.limitedItems()) {
 				GameCronServices.cronService().schedule(limitedItem::setToDefault, limitedItem.getSalesTime());
 			}
 		}
@@ -72,7 +72,7 @@ public class LimitedItemTradeService {
 	 */
 	public LimitedItem getLimitedItem(int itemId, int npcId) {
 		if (limitedTradeNpcs.containsKey(npcId)) {
-			for (LimitedItem limitedItem : limitedTradeNpcs.get(npcId).getLimitedItems()) {
+			for (LimitedItem limitedItem : limitedTradeNpcs.get(npcId).limitedItems()) {
 				if (limitedItem.getItemId() == itemId) {
 					return limitedItem;
 				}

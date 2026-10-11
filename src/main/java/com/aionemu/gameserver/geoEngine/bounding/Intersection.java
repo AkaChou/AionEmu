@@ -40,22 +40,6 @@ public class Intersection {
 
 	// private boolean axisTest(float a, float b, float fa, float fb, Vector3f v0,
 	// Vector3f v1, )
-	// private boolean axisTestX01(float a, float b, float fa, float fb,
-	// Vector3f center, Vector3f ext,
-	// Vector3f v1, Vector3f v2, Vector3f v3){
-	// float p0 = a * v0.y - b * v0.z;
-	// float p2 = a * v2.y - b * v2.z;
-	// if(p0 < p2){
-	// min = p0;
-	// max = p2;
-	// } else {
-	// min = p2;
-	// max = p0;
-	// }
-	// float rad = fa * boxhalfsize.y + fb * boxhalfsize.z;
-	// if(min > rad || max < -rad)
-	// return false;
-	// }
 
 	/**
 	 * 使用分离轴定理判断 AABB 与三角形是否相交。
@@ -232,9 +216,7 @@ public class Intersection {
 		// Bullet 2:
 		// 测试盒子是否与三角形平面相交。 / test if the box intersects the plane of the triangle
 		// 计算三角形平面方程：normal * x + d = 0。 / compute plane equation of triangle: normal * x + d = 0
-		// Vector3f normal = new Vector3f();
-		// e0.cross(e1, normal);
-		Plane p = new Plane();
+        Plane p = new Plane();
 		p.setPlanePoints(v1, v2, v3);
 		return bbox.whichSide(p) != Plane.Side.Negative;
 		//

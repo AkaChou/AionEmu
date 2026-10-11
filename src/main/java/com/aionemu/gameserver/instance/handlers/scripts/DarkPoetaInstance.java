@@ -445,15 +445,7 @@ public class DarkPoetaInstance extends GeneralInstanceHandler
 			break;
 			case 215280: //Tahabata Pyrelord.
 				spawn(857435, 1176.877f, 1230.9423f, 144.3876f, (byte) 19); //Tahabata's Heart.
-/* 				switch (Rnd.get(1, 2)) {
-		            case 1:
-				        spawn(702658, 1180.83f, 1228.874f, 144.45352f, (byte) 23); //修道院箱子。 / Abbey Box.
-					break;
-					case 2:
-					    spawn(702659, 1180.83f, 1228.874f, 144.45352f, (byte) 23); //高级修道院箱子。 / Noble Abbey Box.
-					break;
-				} */
-				spawn(731666, 1179.0000f, 1223.0000f, 146.0000f, (byte) 0, 223);
+                spawn(731666, 1179.0000f, 1223.0000f, 146.0000f, (byte) 0, 223);
 			break;
 			case 215281: //Calindi Flamelord.
 				spawn(857434, 1176.877f, 1230.9423f, 144.3876f, (byte) 19); //Calindi's Heart.

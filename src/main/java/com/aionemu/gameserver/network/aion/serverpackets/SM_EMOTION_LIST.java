@@ -31,7 +31,7 @@ public class SM_EMOTION_LIST extends AionServerPacket {
 		} else {
 			writeH(emotions.size());
 			for (Emotion emotion : emotions) {
-				writeH(emotion.getId());
+				writeH(emotion.id());
 				writeD(emotion.getRemainingTime());
 			}
 		}

@@ -146,7 +146,7 @@ public class SiegeCommand extends AdminCommand {
 		Legion legion = null;
 		if (sr == null) {
 			try {
-				int legionId = Integer.valueOf(params[2]);
+				int legionId = Integer.parseInt(params[2]);
 				legion = GameCoreGameplayServices.legionService().getLegion(legionId);
 			} catch (NumberFormatException e) {
 				String legionName = "";
@@ -257,7 +257,12 @@ public class SiegeCommand extends AdminCommand {
 	}
 
 	protected void showHelp(Player player) {
-		PacketSendUtility.sendMessage(player, "AdminCommand //siegecommand Help\n" + "//siegecommand start|stop <LocationId>\n" + "//siegecommand list locations|sieges\n" + "//siegecommand capture <LocationId> <siegeRaceName|legionName|legionId>\n" + "//siegecommand assault <LocationId> <delaySec>");
+		PacketSendUtility.sendMessage(player, """
+                AdminCommand //siegecommand Help
+                //siegecommand start|stop <LocationId>
+                //siegecommand list locations|sieges
+                //siegecommand capture <LocationId> <siegeRaceName|legionName|legionId>
+                //siegecommand assault <LocationId> <delaySec>""");
 		java.util.Set<Integer> fortressIds = GameFeatureServices.siegeService().getFortresses().keySet();
 		java.util.Set<Integer> artifactIds = GameFeatureServices.siegeService().getStandaloneArtifacts().keySet();
 		PacketSendUtility.sendMessage(player, "Fortress: " + StringUtils.join(fortressIds, ", "));

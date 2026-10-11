@@ -79,27 +79,17 @@ public class AdminService {
 		if (!list.isEmpty()) {
 			list.clear();
 		}
-		BufferedReader br = null;
-		try {
-			br = new BufferedReader(new FileReader(Config.configFile("administration/item.restriction.txt")));
-			String line ;
+		try (BufferedReader br = new BufferedReader(new FileReader(Config.configFile("administration/item.restriction.txt")))) {
+			String line;
 			while ((line = br.readLine()) != null) {
-				if (line.startsWith("#") || line.trim().length() == 0) {
+				if (line.startsWith("#") || line.trim().isEmpty()) {
 					continue;
 				}
-				String pt = line.split("#")[0].replaceAll(" ", "");
+				String pt = line.split("#")[0].replace(" ", "");
 				list.add(Integer.parseInt(pt));
 			}
 		} catch (IOException e) {
 			log.error(I18n.get("log.2dd4f31d928c"), e);
-		} finally {
-			if (br != null) {
-				try {
-					br.close();
-				} catch (IOException e) {
-					log.warn(I18n.get("log.1a564ebb3da2"), e);
-				}
-			}
 		}
 
 		log.info(I18n.get("log.68a0fce84f7f", list.size()));

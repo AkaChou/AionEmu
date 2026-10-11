@@ -37,7 +37,7 @@ class PlayerHousesTest {
 	}
 
 	@Test
-	void resetHousesClearsAndNullsCache() throws Exception {
+	void resetHousesClearsAndNullsCache() {
 		Player player = emptyPlayerWithCachedHouses();
 
 		player.resetHouses();

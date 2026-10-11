@@ -193,7 +193,7 @@ public class FollowMotor extends AMovementMotor {
 								FollowMotor.this._owner.getZ(), FollowMotor.this._owner.getHeading(), (byte) 0));
 				pathfindRevalidationTime = 0L;
 			}
-			FollowMotor.this._processor.schedule(() -> FollowMotor.this.update(), 0L);
+			FollowMotor.this._processor.schedule(FollowMotor.this::update, 0L);
 		}, TARGET_REVALIDATE_TIME);
 		return true;
 	}

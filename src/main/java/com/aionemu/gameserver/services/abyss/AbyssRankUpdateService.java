@@ -179,7 +179,7 @@ public class AbyssRankUpdateService {
 	public void initRewardWeeklyManager() {
 		log.info(I18n.get("log.eacf3461fb47"));
 		String weekly = "0 0 12 ? * MON *";
-		GameCronServices.cronService().schedule(() -> sendRewardWeekly(), weekly);
+		GameCronServices.cronService().schedule(this::sendRewardWeekly, weekly);
 	}
 
 	/**
@@ -312,7 +312,7 @@ public class AbyssRankUpdateService {
 				return;
 			}
 			// 移除玩家并更新其 rankGp / remove player and update its rankGp
-			playerGpEntries.remove(0);
+			playerGpEntries.removeFirst();
 			updateGpRankTo(rank, playerId);
 		}
 	}

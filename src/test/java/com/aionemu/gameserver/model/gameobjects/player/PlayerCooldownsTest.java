@@ -39,7 +39,7 @@ class PlayerCooldownsTest {
 		Map<Integer, ItemCooldown> backing = cooldowns.getItemCoolDowns();
 		assertEquals(1, backing.size());
 		assertSame(backing, cooldowns.getItemCoolDowns());
-		assertEquals(100, backing.get(7).getUseDelay());
+		assertEquals(100, backing.get(7).useDelay());
 	}
 
 	@Test

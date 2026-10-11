@@ -5,12 +5,9 @@ import org.springframework.stereotype.Repository;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 import org.springframework.dao.DataAccessException;
-import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.JdbcClient;
 
@@ -124,11 +121,11 @@ public class PlayerTitleListDAO extends com.aionemu.gameserver.dao.PlayerTitleLi
         try {
                         jdbcClient.sql(INSERT_QUERY)
                 .param(player.getObjectId())
-                .param(entry.getId())
+                .param(entry.id())
                 .param(entry.getExpireTime())
                 .update();
         } catch (DataAccessException e) {
-            log.error(I18n.get("log.8893f821f5fc", player.getObjectId(), entry.getId()), e);
+            log.error(I18n.get("log.8893f821f5fc", player.getObjectId(), entry.id()), e);
                         ;
         }
     }
@@ -159,7 +156,7 @@ public class PlayerTitleListDAO extends com.aionemu.gameserver.dao.PlayerTitleLi
      * @param playerId 玩家 ID / player id
      * @return 是否成功 / whether successful
      */
-    
+
     /**
      * 批量保存玩家称号列表。
      * Batch-stores the player's title list.
@@ -167,12 +164,12 @@ public class PlayerTitleListDAO extends com.aionemu.gameserver.dao.PlayerTitleLi
      * @param titles 称号列表 / title list
      * @return 是否成功 / whether successful
      */
-    
+
     /**
      * 批量清理已过期的称号记录。
      * Batch-deletes expired title records.
      */
-    
+
     /**
      * 判断当前数据库是否受本 DAO 支持。
      * Checks whether the given database is supported by this DAO.

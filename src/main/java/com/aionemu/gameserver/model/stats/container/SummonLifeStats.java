@@ -47,6 +47,11 @@ public class SummonLifeStats extends CreatureLifeStats<Summon> {
 	protected void onIncreaseMp(TYPE type, int value, int skillId, LOG log) {
 	}
 
+	@Override
+	protected void onReduceMp() {
+
+	}
+
 	/**
 	 * 有意保持空实现：攻击路径的伤害广播由 {@code SummonController#onAttack} 独占，
 	 * 而它已经调用过 {@code CreatureLifeStats#reduceHp}；此处再补发会形成双包。
@@ -83,16 +88,6 @@ public class SummonLifeStats extends CreatureLifeStats<Summon> {
 			sendSummonPanelUpdate();
 		}
 		return hpAfter;
-	}
-
-	@Override
-	protected void onReduceMp() {
-	}
-
-	/** 返回所有者 / Returns the owner. */
-	@Override
-	public Summon getOwner() {
-		return super.getOwner();
 	}
 
 	/** 触发恢复任务 / Trigger restore task */

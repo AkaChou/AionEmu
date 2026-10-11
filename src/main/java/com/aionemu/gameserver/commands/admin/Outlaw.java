@@ -33,14 +33,15 @@ public class Outlaw extends AdminCommand {
     public void execute(final Player admin, String...param){
         // 固定对面 / Fixed opposite
         if(param.length == 0){
-            onFail(admin, "== SYNAX ==\n" +
-                    "//Outlaw attackable 0 - changes current target to attackable (do same to turn off/on)\n" +
-                    "//Outlaw neutral 0 - changes current target to neutral (do same to turn off/on)\n" +
-                    "//Outlaw attackable all - changes everyone in the current map to attackable\n" +
-                    "//Outlaw neutral all - changes everyone in the current map to neutral\n" +
-                    "//Outlaw attackable cancel - turns the attackable state off from everyone in map (NO SKULL)\n" +
-                    "//Outlaw neutral cancel - turns the neutral mode off from everyone in map(NO SHIELD)\n" +
-                    "//Outlaw clear - removes both attackable and neutral mode from everyone in map.");
+            onFail(admin, """
+				== SYNAX ==
+				//Outlaw attackable 0 - changes current target to attackable (do same to turn off/on)
+				//Outlaw neutral 0 - changes current target to neutral (do same to turn off/on)
+				//Outlaw attackable all - changes everyone in the current map to attackable
+				//Outlaw neutral all - changes everyone in the current map to neutral
+				//Outlaw attackable cancel - turns the attackable state off from everyone in map (NO SKULL)
+				//Outlaw neutral cancel - turns the neutral mode off from everyone in map(NO SHIELD)
+				//Outlaw clear - removes both attackable and neutral mode from everyone in map.""");
             return;
         }
         VisibleObject visibleObject = admin.getTarget();
@@ -166,14 +167,15 @@ public class Outlaw extends AdminCommand {
      * @param msg 失败消息 / Failure message
      */
     public void onFail(Player admin, String msg){
-        PacketSendUtility.sendMessage(admin, "== SYNAX ==\n" +
-            "//Outlaw attackable 0 - changes current target to attackable (do same to turn off/on)\n" +
-            "//Outlaw neutral 0 - changes current target to neutral (do same to turn off/on)\n" +
-            "//Outlaw attackable all - changes everyone in the current map to attackable\n" +
-            "//Outlaw neutral all - changes everyone in the current map to neutral\n" +
-            "//Outlaw attackable cancel - turns the attackable state off from everyone in map (NO SKULL)\n" +
-            "//Outlaw neutral cancel - turns the neutral mode off from everyone in map(NO SHIELD)\n" +
-            "//Outlaw clear - removes both attackable and neutral mode from everyone in map.");
+        PacketSendUtility.sendMessage(admin, """
+                == SYNAX ==
+                //Outlaw attackable 0 - changes current target to attackable (do same to turn off/on)
+                //Outlaw neutral 0 - changes current target to neutral (do same to turn off/on)
+                //Outlaw attackable all - changes everyone in the current map to attackable
+                //Outlaw neutral all - changes everyone in the current map to neutral
+                //Outlaw attackable cancel - turns the attackable state off from everyone in map (NO SKULL)
+                //Outlaw neutral cancel - turns the neutral mode off from everyone in map(NO SHIELD)
+                //Outlaw clear - removes both attackable and neutral mode from everyone in map.""");
 
     }
 

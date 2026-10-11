@@ -188,11 +188,11 @@ public class ArenaOfTenacityInstance extends GeneralInstanceHandler {
         instanceReward.setInstanceScoreType(InstanceScoreType.END_PROGRESS);
         reward();
     }
+
     /**
      * 处理 reward。
      * Handle reward.
      */
-
     protected void reward() {
 
     }

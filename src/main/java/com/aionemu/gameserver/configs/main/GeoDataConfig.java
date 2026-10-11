@@ -444,10 +444,6 @@ public class GeoDataConfig {
 	@Getter
 	public static class WalkRouteProperties {
 		private final ValidateProperties validate = new ValidateProperties();
-
-		/** 兼容裸标量 gameserver.geo.npc.walk.route.validate 经 valueOf 转换后的赋值（no-op）。 / No-op setter for the valueOf-converted legacy scalar. */
-		public void setValidate(ValidateProperties validate) {
-		}
 	}
 
 	/**

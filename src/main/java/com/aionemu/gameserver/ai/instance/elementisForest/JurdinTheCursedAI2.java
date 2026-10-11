@@ -3,9 +3,7 @@ package com.aionemu.gameserver.ai.instance.elementisForest;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.SummonerAI2;
-import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.ai2.AIName;
-import com.aionemu.gameserver.model.ai.Percentage;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
@@ -53,42 +51,6 @@ public class JurdinTheCursedAI2 extends SummonerAI2 {
 		cancelTask();
 	}
 
-	@Override
-	public void handleIndividualSpawnedSummons(Percentage percent) {
-		int npcId1 = 0;
-		int count1 = 0;
-		int npcId2 = 0;
-		int count2 = 0;
-		switch (percent.getPercent()) {
-			case 80:
-				npcId1 = 282190;
-				count1 = 5;
-				break;
-			case 60:
-				npcId1 = 282194;
-				count1 = 5;
-				npcId2 = 282195;
-				count2 = 3;
-				break;
-			case 40:
-				npcId1 = 282190;
-				count1 = 5;
-				npcId2 = 282193;
-				count2 = 2;
-				break;
-			case 20:
-				npcId1 = 282195;
-				count1 = 3;
-				npcId2 = 282197;
-				count2 = 2;
-				break;
-		}
-		randomSpawnHelpers(npcId1, count1);
-		if (npcId2 != 0 && count2 != 0) {
-			randomSpawnHelpers(npcId2, count2);
-		}
-	}
-
 	private void startTask() {
 
 		task = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> {
@@ -124,25 +86,6 @@ public class JurdinTheCursedAI2 extends SummonerAI2 {
 	private void cancelTask() {
 		if (task != null && !task.isCancelled()) {
 			task.cancel(true);
-		}
-	}
-
-	private void randomSpawnHelpers(int npcId, int count) {
-
-		for (int i = 0; i < count; i++) {
-			float x1 = Rnd.get(20);
-			float y1 = Rnd.get(10);
-			switch (Rnd.get(1, 3)) {
-				case 1:
-					spawn(npcId, 450 + x1, 750 + y1, 131f, (byte) 0);
-					break;
-				case 2:
-					spawn(npcId, 470 + x1, 815 + y1, 131f, (byte) 0);
-					break;
-				case 3:
-					spawn(npcId, 470 + x1, 760 + y1, 131f, (byte) 0);
-					break;
-			}
 		}
 	}
 

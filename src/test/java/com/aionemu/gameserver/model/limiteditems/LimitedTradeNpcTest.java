@@ -15,8 +15,8 @@ class LimitedTradeNpcTest {
         LimitedTradeNpc npc = new LimitedTradeNpc(List.of(first));
         npc.putLimitedItems(List.of(second));
 
-        assertEquals(2, npc.getLimitedItems().size());
-        assertEquals(1001, npc.getLimitedItems().get(0).getItemId());
-        assertEquals(1002, npc.getLimitedItems().get(1).getItemId());
+        assertEquals(2, npc.limitedItems().size());
+        assertEquals(1001, npc.limitedItems().get(0).getItemId());
+        assertEquals(1002, npc.limitedItems().get(1).getItemId());
     }
 }
