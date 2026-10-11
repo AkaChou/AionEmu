@@ -243,7 +243,8 @@ public class SpawnsData2 {
 							} else if (customs.containsKey(spawn.getNpcId())) {
 								continue;
 							}
-							SpawnGroup2 spawnGroup = new SpawnGroup2(mapId, spawn, outpostId, simpleRace.getBaseRace());
+							SpawnGroup2 spawnGroup = new SpawnGroup2(mapId, spawn, outpostId, simpleRace.getBaseRace(),
+								0);
 							worldSpawns.put(spawn.getNpcId(), new SimpleEntry(spawnGroup, spawn));
 							outpostSpawnGroups.add(spawnGroup);
 						}

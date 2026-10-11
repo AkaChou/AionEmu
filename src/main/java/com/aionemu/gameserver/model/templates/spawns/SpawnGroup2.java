@@ -113,7 +113,7 @@ public class SpawnGroup2 extends AbstractLockManager {
 		}
 	}
 
-	public SpawnGroup2(int worldId, Spawn spawn, int id, Race race) {
+	public SpawnGroup2(int worldId, Spawn spawn, int id, Race race, int miss) {
 		this.worldId = worldId;
 		initializing(spawn);
 		for (SpawnSpotTemplate template : spawn.getSpawnSpotTemplates()) {
