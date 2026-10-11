@@ -78,7 +78,7 @@ public class TownService {
 			elyos = this.townDAO.load(Race.ELYOS);
 			asmos = this.townDAO.load(Race.ASMODIANS);
 		} catch (Exception e) {
-			log.warn("Failed to load towns from DAO during service init: {}", e.getMessage());
+			log.warn(I18n.get("log.bb988baa7cb4", e.getMessage()));
 		}
 		this.elyosTowns = elyos != null ? elyos : new HashMap<>();
 		this.asmosTowns = asmos != null ? asmos : new HashMap<>();
@@ -102,7 +102,7 @@ public class TownService {
 					}
 				}
 			} catch (Exception e) {
-				log.warn("House data not available during TownService initialization: {}", e.getMessage());
+				log.warn(I18n.get("log.c43d847b776a", e.getMessage()));
 			}
 		}
 		log.info(I18n.get("log.e7c70a17528c", elyosTowns.size()));
@@ -193,7 +193,8 @@ public class TownService {
 					PacketSendUtility.sendPacket(player, new SM_TOWNS_LIST(asmosTowns));
 				}
 			}
-			default -> {}
+			default -> {
+			}
 		}
 	}
 }

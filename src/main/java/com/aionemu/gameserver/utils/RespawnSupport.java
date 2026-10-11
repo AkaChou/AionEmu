@@ -1,4 +1,4 @@
-package com.aionemu.gameserver.commands.admin;
+package com.aionemu.gameserver.utils;
 
 import java.io.IOException;
 
@@ -8,13 +8,12 @@ import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
-import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
  * NPC 重刷共享工具：删除目标 NPC 后按新位姿重刷并持久化，供 {@code //fixh}/{@code //fixz} 复用。
  * Shared respawn helper: deletes the target NPC, re-spawns it at a new pose and persists it; reused by {@code //fixh} and {@code //fixz}.
  */
-final class RespawnSupport {
+public final class RespawnSupport {
 
 	private RespawnSupport() {
 	}
@@ -23,7 +22,7 @@ final class RespawnSupport {
 	 * 删除目标 NPC 并按新坐标重刷（固定 295 秒重生时间），持久化生成并向管理员回报结果。
 	 * Deletes the target NPC, re-spawns it at the given position (fixed 295s respawn time), persists the spawn and reports the result to the admin.
 	 */
-	static void respawnNpc(Player admin, Npc target, float x, float y, float z, byte heading, String tag) {
+	public static void respawnNpc(Player admin, Npc target, float x, float y, float z, byte heading, String tag) {
 		SpawnTemplate temp = target.getSpawn();
 
 		// 删除生成/NPC / delete spawn,npc
@@ -41,8 +40,7 @@ final class RespawnSupport {
 
 		try {
 			DataManager.SPAWNS_DATA2.saveSpawn(admin, visibleObject, false);
-		}
-		catch (IOException e) {
+		} catch (IOException e) {
 			PacketSendUtility.sendMessage(admin, "Could not save spawn");
 		}
 

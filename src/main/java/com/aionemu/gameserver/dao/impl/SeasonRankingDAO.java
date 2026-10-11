@@ -186,7 +186,6 @@ public class SeasonRankingDAO extends com.aionemu.gameserver.dao.SeasonRankingDA
      * 按持久化状态保存玩家挑战之塔排行（table_id = 2）。
      * Stores the player's Tower of Challenge rank by persistent state (table_id = 2).
      * @param player 玩家 / player
-     * @return 是否保存成功；无排行对象时返回 false / whether store succeeded; false if rank is null
      */
     @Override
     public void storeTowerRank(Player player) {

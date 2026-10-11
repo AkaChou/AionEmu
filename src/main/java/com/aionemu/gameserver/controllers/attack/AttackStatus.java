@@ -5,61 +5,112 @@ package com.aionemu.gameserver.controllers.attack;
  * Attack result status enum covering main/off-hand hit, dodge, parry, block, resist and critical combinations.
  */
 public enum AttackStatus {
-	/** 主手闪避 / Main-hand dodge */
+	/**
+	 * 主手闪避 / Main-hand dodge
+	 */
 	DODGE(0, true, false),
-	/** 副手闪避 / Off-hand dodge */
+	/**
+	 * 副手闪避 / Off-hand dodge
+	 */
 	OFFHAND_DODGE(1, true, false),
-	/** 主手招架 / Main-hand parry */
+	/**
+	 * 主手招架 / Main-hand parry
+	 */
 	PARRY(2, true, false),
-	/** 副手招架 / Off-hand parry */
+	/**
+	 * 副手招架 / Off-hand parry
+	 */
 	OFFHAND_PARRY(3, true, false),
-	/** 主手格挡 / Main-hand block */
+	/**
+	 * 主手格挡 / Main-hand block
+	 */
 	BLOCK(4, true, false),
-	/** 副手格挡 / Off-hand block */
+	/**
+	 * 副手格挡 / Off-hand block
+	 */
 	OFFHAND_BLOCK(5, true, false),
-	/** 主手抵抗 / Main-hand resist */
+	/**
+	 * 主手抵抗 / Main-hand resist
+	 */
 	RESIST(6, true, false),
-	/** 副手抵抗 / Off-hand resist */
+	/**
+	 * 副手抵抗 / Off-hand resist
+	 */
 	OFFHAND_RESIST(7),
-	/** 主手增益状态 / Main-hand BUF */
+	/**
+	 * 主手增益状态 / Main-hand BUF
+	 */
 	BUF(8),
-	/** 副手增益状态 / Off-hand BUF */
+	/**
+	 * 副手增益状态 / Off-hand BUF
+	 */
 	OFFHAND_BUF(9),
-	/** 主手普通命中 / Main-hand normal hit */
+	/**
+	 * 主手普通命中 / Main-hand normal hit
+	 */
 	NORMALHIT(10),
-	/** 副手普通命中 / Off-hand normal hit */
+	/**
+	 * 副手普通命中 / Off-hand normal hit
+	 */
 	OFFHAND_NORMALHIT(11),
-	/** 主手暴击闪避 / Main-hand critical dodge */
+	/**
+	 * 主手暴击闪避 / Main-hand critical dodge
+	 */
 	CRITICAL_DODGE(192, true, true),
-	/** 主手暴击招架 / Main-hand critical parry */
+	/**
+	 * 主手暴击招架 / Main-hand critical parry
+	 */
 	CRITICAL_PARRY(194, true, true),
-	/** 主手暴击格挡 / Main-hand critical block */
+	/**
+	 * 主手暴击格挡 / Main-hand critical block
+	 */
 	CRITICAL_BLOCK(196, true, true),
-	/** 主手暴击抵抗 / Main-hand critical resist */
+	/**
+	 * 主手暴击抵抗 / Main-hand critical resist
+	 */
 	CRITICAL_RESIST(198, false, true),
-	/** 主手暴击 / Main-hand critical */
+	/**
+	 * 主手暴击 / Main-hand critical
+	 */
 	CRITICAL(202, false, true),
-	/** 副手暴击闪避 / Off-hand critical dodge */
+	/**
+	 * 副手暴击闪避 / Off-hand critical dodge
+	 */
 	OFFHAND_CRITICAL_DODGE(209, true, true),
-	/** 副手暴击招架 / Off-hand critical parry */
+	/**
+	 * 副手暴击招架 / Off-hand critical parry
+	 */
 	OFFHAND_CRITICAL_PARRY(211, true, true),
-	/** 副手暴击格挡 / Off-hand critical block */
+	/**
+	 * 副手暴击格挡 / Off-hand critical block
+	 */
 	OFFHAND_CRITICAL_BLOCK(213, true, true),
-	/** 副手暴击抵抗 / Off-hand critical resist */
+	/**
+	 * 副手暴击抵抗 / Off-hand critical resist
+	 */
 	OFFHAND_CRITICAL_RESIST(215, false, true),
-	/** 副手暴击 / Off-hand critical */
+	/**
+	 * 副手暴击 / Off-hand critical
+	 */
 	OFFHAND_CRITICAL(219, false, true);
 
-	/** 状态类型 ID / Status type id */
+	/**
+	 * 状态类型 ID / Status type id
+	 */
 	private final int type;
-	/** 是否属于反击技能类状态 / Whether this is a counter-skill status */
+	/**
+	 * 是否属于反击技能类状态 / Whether this is a counter-skill status
+	 */
 	private final boolean counterSkill;
-	/** 是否为暴击 / Whether this is a critical hit */
+	/**
+	 * 是否为暴击 / Whether this is a critical hit
+	 */
 	private final boolean isCritical;
 
 	/**
 	 * 仅指定类型 ID 的构造（非反击、非暴击）。
 	 * Constructs a status with only a type id (non-counter, non-critical).
+	 *
 	 * @param type 类型 ID / type id
 	 */
 	AttackStatus(int type) {
@@ -69,9 +120,10 @@ public enum AttackStatus {
 	/**
 	 * 完整构造攻击状态。
 	 * Fully constructs an attack status.
-	 * @param type 类型 ID / type id
+	 *
+	 * @param type         类型 ID / type id
 	 * @param counterSkill 是否反击技能状态 / whether counter-skill
-	 * @param isCritical 是否暴击 / whether critical
+	 * @param isCritical   是否暴击 / whether critical
 	 */
 	AttackStatus(int type, boolean counterSkill, boolean isCritical) {
 		this.type = type;
@@ -82,6 +134,7 @@ public enum AttackStatus {
 	/**
 	 * 返回状态类型 ID。
 	 * Returns the status type id.
+	 *
 	 * @return 类型 ID / type id
 	 */
 	public final int getId() {
@@ -91,6 +144,7 @@ public enum AttackStatus {
 	/**
 	 * 是否属于可触发反击技能的防御状态。
 	 * Returns whether this status can trigger a counter skill.
+	 *
 	 * @return 是否反击技能状态 / whether counter-skill
 	 */
 	public final boolean isCounterSkill() {
@@ -100,6 +154,7 @@ public enum AttackStatus {
 	/**
 	 * 是否为暴击类状态。
 	 * Returns whether this status is critical.
+	 *
 	 * @return 是否暴击 / whether critical
 	 */
 	public final boolean isCritical() {
@@ -109,11 +164,12 @@ public enum AttackStatus {
 	/**
 	 * 将主手状态映射为对应的副手状态。
 	 * Maps a main-hand status to its off-hand counterpart.
+	 *
 	 * @param mainHandStatus 主手状态 / main-hand status
 	 * @return 副手状态 / off-hand status
 	 * @throws IllegalArgumentException 无法映射时 / if the status cannot be mapped
 	 */
-	public static final AttackStatus getOffHandStats(AttackStatus mainHandStatus) {
+	public static AttackStatus getOffHandStats(AttackStatus mainHandStatus) {
 		return switch (mainHandStatus) {
 			case DODGE -> OFFHAND_DODGE;
 			case PARRY -> OFFHAND_PARRY;
@@ -133,10 +189,11 @@ public enum AttackStatus {
 	/**
 	 * 将任意变体状态归一为基本防御/命中状态（忽略主副手与暴击）。
 	 * Normalizes any variant status to its base defensive/hit status (ignores hand and critical).
+	 *
 	 * @param status 原始状态 / original status
 	 * @return 基本状态 / base status
 	 */
-	public static final AttackStatus getBaseStatus(AttackStatus status) {
+	public static AttackStatus getBaseStatus(AttackStatus status) {
 		return switch (status) {
 			case DODGE, CRITICAL_DODGE, OFFHAND_DODGE, OFFHAND_CRITICAL_DODGE -> AttackStatus.DODGE;
 			case PARRY, CRITICAL_PARRY, OFFHAND_PARRY, OFFHAND_CRITICAL_PARRY -> AttackStatus.PARRY;
@@ -149,10 +206,11 @@ public enum AttackStatus {
 	/**
 	 * 将基本状态提升为对应的暴击状态。
 	 * Elevates a base status to its critical counterpart.
+	 *
 	 * @param status 原始状态 / original status
 	 * @return 暴击状态 / critical status
 	 */
-	public static final AttackStatus getCriticalStatusFor(AttackStatus status) {
+	public static AttackStatus getCriticalStatusFor(AttackStatus status) {
 		return switch (status) {
 			case DODGE -> AttackStatus.CRITICAL_DODGE;
 			case OFFHAND_DODGE -> AttackStatus.OFFHAND_CRITICAL_DODGE;

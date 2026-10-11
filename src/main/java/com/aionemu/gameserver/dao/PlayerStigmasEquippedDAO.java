@@ -35,7 +35,6 @@ public abstract class PlayerStigmasEquippedDAO implements DAO {
 	 * 保存玩家已装备刺针。
 	 * Stores equipped stigma items for the player.
 	 * @param player 玩家 / player
-	 * @return 是否保存成功 / true if stored
 	 */
 	public abstract void storeItems(Player player);
 

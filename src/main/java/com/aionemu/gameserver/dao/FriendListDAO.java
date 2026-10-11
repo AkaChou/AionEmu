@@ -32,7 +32,6 @@ public abstract class FriendListDAO implements DAO {
 	 * Adds two players as friends.
 	 * @param player 玩家 / player
 	 * @param friend 好友 / friend
-	 * @return 是否成功 / whether successful
 	 */
 	public abstract void addFriends(final Player player, final Player friend);
 

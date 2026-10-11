@@ -80,7 +80,6 @@ public abstract class PlayerWardrobeDAO implements DAO {
 	 * @param playerObjId 玩家对象 ID / player object id
 	 * @param slot 槽位 / slot
 	 * @param reskin_count 重塑次数 / reskin count
-	 * @return 是否更新成功 / true if updated
 	 */
 	public abstract void setReskinCountBySlot(int playerObjId, int slot, int reskin_count);
 }

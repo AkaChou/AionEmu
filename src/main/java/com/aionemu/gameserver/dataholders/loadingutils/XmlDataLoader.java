@@ -58,6 +58,7 @@ import java.util.function.Supplier;
 /**
  * 负责通过 JAXB 逐分区、逐源文件加载静态数据 XML，不生成或读取合并缓存。
  * Loads static-data XML section by section and source file by source file without creating or reading a merged cache.
+ *
  * @author Luno
  */
 @Slf4j
@@ -65,8 +66,8 @@ public class XmlDataLoader {
 
 	/**
 	 * -- SETTER --
-	 *  注入 Spring 侧实例提供者，供容器接管单例解析。
-	 *  Sets the Spring ObjectProvider used to resolve the singleton.
+	 * 注入 Spring 侧实例提供者，供容器接管单例解析。
+	 * Sets the Spring ObjectProvider used to resolve the singleton.
 	 * 实例提供者 / instance provider
 	 */
 	@Setter
@@ -105,7 +106,9 @@ public class XmlDataLoader {
 	private static final String FLY_PATH_DEFINITIONS_FILE = "./definitions/compact/world/fly_path.xml";
 	private static final String WIND_DEFINITIONS_FILE = "./definitions/compact/wind.xml";
 	private static final String ID_DEFINITIONS_FILE = "./definitions/compact/id-mappings.xml";
-	/** NPC 模板源分片目录 / NPC template source-shard directory */
+	/**
+	 * NPC 模板源分片目录 / NPC template source-shard directory
+	 */
 	private static final String NPC_SHARD_DIR = "./data/static_data/npcs";
 	/**
 	 * 自定义物品模板覆盖文件（按 ID 覆盖或新增分片模板，不会被分片器改动） /
@@ -121,11 +124,12 @@ public class XmlDataLoader {
 	 * <p>双源静态兜底已退役：缺少 provider 时直接 fail-fast，避免在容器之外静默创建第二套实例。
 	 * The legacy static fallback is retired: a missing provider now fails fast instead of silently
 	 * creating a second instance outside the container.</p>
+	 *
 	 * @return 由 Spring 提供的实例 / the Spring-provided instance
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean /
-	 *         when no provider or bean is available
+	 *                               when no provider or bean is available
 	 */
-	public static final XmlDataLoader getInstance() {
+	public static XmlDataLoader getInstance() {
 		ObjectProvider<XmlDataLoader> provider = instanceProvider;
 		XmlDataLoader provided = provider == null ? null : provider.getIfAvailable();
 		if (provided == null) {
@@ -170,13 +174,16 @@ public class XmlDataLoader {
 	/**
 	 * 返回静态数据加载专用线程池（DataManager 的物品/技能并行路径同样使用）。
 	 * Returns the dedicated static-data pool (also used by DataManager's parallel item/skill paths).
+	 *
 	 * @return 专用线程池 / dedicated executor
 	 */
 	public static java.util.concurrent.Executor staticDataExecutor() {
 		return STATIC_DATA_POOL;
 	}
 
-	/** 默认构造函数 / default constructor */
+	/**
+	 * 默认构造函数 / default constructor
+	 */
 	public XmlDataLoader() {
 
 	}
@@ -184,6 +191,7 @@ public class XmlDataLoader {
 	/**
 	 * 从 static_data.xml 读取入口并逐分区加载源文件，返回 {@link StaticData}。
 	 * Reads the static_data.xml entry point and loads each section's source files into {@link StaticData}.
+	 *
 	 * @return 包含全部游戏静态数据的对象 / object containing all game static data from XML
 	 */
 	public StaticData loadStaticData() {
@@ -205,8 +213,9 @@ public class XmlDataLoader {
 	 * 汇总。
 	 * Loads static data with timings shared by externally parallel phases; the caller logs the final
 	 * summary after all external futures have completed.
+	 *
 	 * @param skillDataSupplier 技能数据提供器 / skill-data supplier
-	 * @param phaseTimings 线程安全的阶段计时表 / thread-safe phase timing map
+	 * @param phaseTimings      线程安全的阶段计时表 / thread-safe phase timing map
 	 * @return 静态数据 / static data
 	 */
 	public StaticData loadStaticData(Supplier<SkillData> skillDataSupplier, ConcurrentMap<String, Long> phaseTimings) {
@@ -217,6 +226,7 @@ public class XmlDataLoader {
 	/**
 	 * 带进度回调的静态数据加载：解析入口文件后逐分区、逐源文件 JAXB 反序列化。
 	 * Loads static data with a progress reporter by parsing the entry point and unmarshalling each source file separately.
+	 *
 	 * @param progressReporter 进度报告器 / progress reporter
 	 * @return 静态数据 / loaded static data
 	 * @throws IllegalStateException 静态数据无法加载时 / when static data cannot be loaded
@@ -227,7 +237,7 @@ public class XmlDataLoader {
 	}
 
 	private StaticData loadStaticData(StaticDataProgressReporter progressReporter, Supplier<SkillData> skillDataSupplier,
-			ConcurrentMap<String, Long> phaseTimings, boolean logPhaseTimings) {
+									  ConcurrentMap<String, Long> phaseTimings, boolean logPhaseTimings) {
 		if (phaseTimings == null) {
 			throw new IllegalArgumentException("phaseTimings must not be null");
 		}
@@ -332,8 +342,7 @@ public class XmlDataLoader {
 		 * Error("Error while loading static data", e); } catch (JAXBException e) {
 		 * log.error(I18n.get("log.a30b9e9db6fa", e)); throw new
 		 * Error("Error while loading static data", e); }
-		 */
-		catch (Exception e) {
+		 */ catch (Exception e) {
 			definitionFutures.forEach(future -> future.cancel(true));
 			sectionFutures.forEach(future -> future.cancel(true));
 			progressReporter.failed();
@@ -393,7 +402,7 @@ public class XmlDataLoader {
 	}
 
 	private static void addStaticDataImport(File baseDirectory, XMLStreamReader reader, String expectedSection,
-		Map<String, Field> fieldsByXmlName, Map<Field, List<File>> sourcesByField) throws Exception {
+											Map<String, Field> fieldsByXmlName, Map<Field, List<File>> sourcesByField) throws Exception {
 		String importPath = reader.getAttributeValue(null, "file");
 		if (importPath == null || importPath.isBlank()) {
 			throw new Error("Static-data import is missing its file attribute");
@@ -458,8 +467,8 @@ public class XmlDataLoader {
 	}
 
 	private static LoadedStaticDataSection loadStaticDataSection(StaticDataSection section,
-		StaticDataProgressReporter progressReporter, AtomicInteger sectionIndex, int totalSections,
-		ConcurrentMap<String, Long> phaseTimings) {
+																 StaticDataProgressReporter progressReporter, AtomicInteger sectionIndex, int totalSections,
+																 ConcurrentMap<String, Long> phaseTimings) {
 		int currentSection = sectionIndex.incrementAndGet();
 		String sectionName = section.field().getType().getSimpleName();
 		long start = System.nanoTime();
@@ -593,6 +602,7 @@ public class XmlDataLoader {
 	 * 语义。
 	 * Joins a parallel compact-definition load; rethrows the original cause so failures keep the same
 	 * semantics as the former sequential loading.
+	 *
 	 * @param future 并行加载任务 / parallel load task
 	 * @return 加载结果 / loaded result
 	 */
@@ -614,13 +624,14 @@ public class XmlDataLoader {
 	/**
 	 * 在线程池任务内部记录一个静态数据阶段的实际执行耗时。
 	 * Records the actual execution time of one static-data phase inside its pool task.
-	 * @param phaseName 阶段名称 / phase name
-	 * @param supplier 阶段加载任务 / phase loader
+	 *
+	 * @param phaseName    阶段名称 / phase name
+	 * @param supplier     阶段加载任务 / phase loader
 	 * @param phaseTimings 线程安全的阶段计时表 / thread-safe phase timing map
 	 * @return 带计时的 Future / timed future
 	 */
 	private static <T> CompletableFuture<T> timedAsync(String phaseName, Supplier<T> supplier,
-			ConcurrentMap<String, Long> phaseTimings) {
+													   ConcurrentMap<String, Long> phaseTimings) {
 		return CompletableFuture.supplyAsync(() -> {
 			long start = System.nanoTime();
 			try {
@@ -632,8 +643,8 @@ public class XmlDataLoader {
 	}
 
 	static NpcMappingStages startNpcMappingStages(
-			Supplier<RetailAiDefinitionLoader.NpcMappings> mappingsSupplier,
-			ConcurrentMap<String, Long> phaseTimings) {
+		Supplier<RetailAiDefinitionLoader.NpcMappings> mappingsSupplier,
+		ConcurrentMap<String, Long> phaseTimings) {
 		CompletableFuture<RetailAiDefinitionLoader.NpcMappings> source = timedAsync("NpcMappings", mappingsSupplier,
 			phaseTimings);
 		CompletableFuture<NpcPathBehaviorData> pathBehaviors = source.thenApply(mappings -> {
@@ -648,7 +659,7 @@ public class XmlDataLoader {
 	}
 
 	record NpcMappingStages(CompletableFuture<RetailAiDefinitionLoader.NpcMappings> source,
-			CompletableFuture<NpcPathBehaviorData> pathBehaviors) {
+							CompletableFuture<NpcPathBehaviorData> pathBehaviors) {
 	}
 
 	private static long elapsedMillis(long startNanos) {
@@ -658,6 +669,7 @@ public class XmlDataLoader {
 	/**
 	 * 输出已收集的全部静态数据阶段耗时，按耗时从慢到快排序。
 	 * Logs all collected static-data phase timings, sorted from slowest to fastest.
+	 *
 	 * @param phaseTimings 阶段计时表 / phase timing map
 	 */
 	public void logStaticDataPhaseTimings(Map<String, Long> phaseTimings) {
@@ -684,6 +696,7 @@ public class XmlDataLoader {
 	/**
 	 * 加载紧凑技能定义，不向外部计时表发布子阶段。
 	 * Loads compact skill definitions without publishing subphase timings to an external table.
+	 *
 	 * @return 技能数据 / skill data
 	 */
 	public SkillData loadSkillData() {
@@ -693,6 +706,7 @@ public class XmlDataLoader {
 	/**
 	 * 加载紧凑技能定义，并将解析子阶段写入静态数据计时表。
 	 * Loads compact skill definitions and publishes parsing subphases to the static-data timing table.
+	 *
 	 * @param phaseTimings 线程安全的阶段计时表 / thread-safe phase timing map
 	 * @return 技能数据 / skill data
 	 */
@@ -755,6 +769,7 @@ public class XmlDataLoader {
 	 * Loads retail AI data; with {@code npcMappingsSource} the already-submitted merged npc-ai.xml
 	 * scan (producing both NPC mappings and path behaviors) is reused, avoiding a second read of
 	 * the 27MB file.
+	 *
 	 * @param npcMappingsSource 已提交的合并扫描任务，可为 null / submitted merged scan, may be null
 	 * @return 零售 AI 数据 / retail AI data
 	 */
@@ -812,6 +827,7 @@ public class XmlDataLoader {
 	/**
 	 * 直接从源分片并行加载物品模板数据（与主静态数据并行），并应用自定义覆盖文件。
 	 * Loads item template data directly from source shards (parallel to main static data) and applies custom overrides.
+	 *
 	 * @return 物品数据 / item data
 	 */
 	public ItemData loadItemData() {
@@ -821,7 +837,8 @@ public class XmlDataLoader {
 	/**
 	 * 直接从源分片目录并行加载物品数据，再按 ID 应用自定义覆盖或新增。
 	 * Loads item data directly from source shards in parallel, then applies custom overrides or additions by id.
-	 * @param itemShardDir 物品源分片目录 / item source-shard directory
+	 *
+	 * @param itemShardDir       物品源分片目录 / item source-shard directory
 	 * @param customOverrideFile 自定义覆盖文件（可不存在）/ custom override file (may be absent)
 	 */
 	ItemData loadItemData(File itemShardDir, File customOverrideFile) {
@@ -850,6 +867,7 @@ public class XmlDataLoader {
 	/**
 	 * 直接从源分片并行加载 NPC 模板（独立于静态数据入口分区）。
 	 * Loads NPC templates directly from source shards (independent of entry-point sections).
+	 *
 	 * @return NPC 数据 / NPC data
 	 */
 	NpcData loadNpcDataSharded() {
@@ -859,6 +877,7 @@ public class XmlDataLoader {
 	/**
 	 * 直接从源分片目录并行加载 NPC 模板（测试用入口）。
 	 * Loads NPC templates in parallel directly from the given source-shard directory (test entry point).
+	 *
 	 * @param shardDir NPC 模板源分片目录 / NPC template source-shard directory
 	 * @return 合并后的 NPC 数据 / merged NPC data
 	 */
@@ -881,9 +900,10 @@ public class XmlDataLoader {
 	/**
 	 * 枚举已提交的源分片；缺少目录或分片时直接失败，启动期间不会生成任何文件。
 	 * Lists committed source shards; missing directories or shards fail fast and startup never writes files.
-	 * @param shardDir 源分片目录 / source-shard directory
+	 *
+	 * @param shardDir     源分片目录 / source-shard directory
 	 * @param shardPattern 分片文件名模式 / shard filename pattern
-	 * @param type 数据类型 / data type
+	 * @param type         数据类型 / data type
 	 * @return 按文件名声明的首个模板 ID 排序的分片 / shards sorted by the first template id declared by each filename
 	 */
 	private static List<File> listTemplateShards(File shardDir, Pattern shardPattern, String type) {
@@ -932,6 +952,7 @@ public class XmlDataLoader {
 	/**
 	 * 获取（或创建）指定类型的共享 JAXBContext。
 	 * Returns (or creates) the shared JAXBContext for the given type.
+	 *
 	 * @param type 绑定类型 / bound type
 	 * @return 共享上下文 / shared context
 	 */
@@ -948,8 +969,9 @@ public class XmlDataLoader {
 	/**
 	 * 反序列化单个分片文件（字节流直读）。
 	 * Unmarshals one shard file (raw byte stream).
+	 *
 	 * @param shardFile 分片文件 / shard file
-	 * @param type 目标类型 / target type
+	 * @param type      目标类型 / target type
 	 * @return 分片数据 / shard data
 	 */
 	private static <T> T unmarshalShard(File shardFile, Class<T> type) {
@@ -965,13 +987,14 @@ public class XmlDataLoader {
 	/**
 	 * 创建绑定进度监听的 StaticData Unmarshaller。
 	 * Creates a StaticData Unmarshaller wired with progress reporting.
-	 * @param progressReporter 进度报告器 / progress reporter
-	 * @param totalSections 分段总数 / total section count
+	 *
+	 * @param progressReporter   进度报告器 / progress reporter
+	 * @param totalSections      分段总数 / total section count
 	 * @param sectionEntryCounts 各分区条目数 / per-section entry counts
 	 * @return 配置的反序列化器 / configured unmarshaller
 	 */
 	Unmarshaller createStaticDataUnmarshaller(StaticDataProgressReporter progressReporter, int totalSections, Map<String, Integer> sectionEntryCounts)
-			throws Exception {
+		throws Exception {
 		return createStaticDataUnmarshaller(new StaticDataProgressListener(progressReporter, totalSections, sectionEntryCounts));
 	}
 
@@ -1070,6 +1093,7 @@ public class XmlDataLoader {
 	/**
 	 * 返回各分区条目数；按配置选择扫描传入 XML 或使用默认值。
 	 * Returns section entry counts by scanning the supplied XML when enabled, otherwise using defaults.
+	 *
 	 * @param xml 待扫描的 XML / XML to scan
 	 * @return 分区名到条目数映射 / map of section name to entry count
 	 */

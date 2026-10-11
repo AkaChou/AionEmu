@@ -10,6 +10,7 @@ import lombok.Getter;
 /**
  * PvP 击杀奖励、连杀与限制相关配置，支持 Spring Boot ConfigurationProperties 与静态门面访问。
  * PvP kill rewards, killing spree and restriction related configuration supporting Spring Boot ConfigurationProperties and static facade access.
+ *
  * @author Rinzler (Encom)
  */
 @Component
@@ -203,13 +204,19 @@ public class PvPConfig {
 	@Property(key = "gameserver.pvp.special_reward.chance", defaultValue = "2")
 	public static float SPECIAL_REWARD_CHANCE;
 
-	/** PvP 绑定树 / PvP binding tree. */
+	/**
+	 * PvP 绑定树 / PvP binding tree.
+	 */
 	@Getter
 	private final PvpProperties pvp = new PvpProperties();
-	/** 荣耀点开关绑定树 / glory-point switch binding tree. */
+	/**
+	 * 荣耀点开关绑定树 / glory-point switch binding tree.
+	 */
 	@Getter
 	private final EnableProperties enable = new EnableProperties();
-	/** 荣耀点损失值绑定树 / glory-point loss amount binding tree. */
+	/**
+	 * 荣耀点损失值绑定树 / glory-point loss amount binding tree.
+	 */
 	@Getter
 	private final GpAmountProperties gp = new GpAmountProperties();
 
@@ -577,6 +584,12 @@ public class PvPConfig {
 	@Getter
 	public static class EnableGpProperties {
 		private final LoseProperties lose = new LoseProperties();
+
+		/**
+		 * 兼容裸标量 gameserver.enable.gp.lose 经 valueOf 转换后的赋值（no-op）。 / No-op setter for the valueOf-converted legacy scalar.
+		 */
+		public void setLose(LoseProperties lose) {
+		}
 
 		public boolean isReward() {
 			return ENABLE_GP_REWARD;

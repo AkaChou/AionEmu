@@ -17,6 +17,7 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 军团综合操作（创建、邀请、权限、公告等）的客户端包。
  * Client packet for general legion operations (create, invite, rights, announcements, etc.).
+ *
  * @author Simple
  */
 @Slf4j
@@ -41,16 +42,19 @@ public class CM_LEGION extends AionClientPacket {
 	private int minLevel;
 	private int playerId;
 	private int creatorNpcObjectId;
+
 	/**
 	 * 构造该客户端包。
 	 * Constructs this client packet.
 	 * packet opcode
-	 * @param state 连接状态 / connection state
+	 *
+	 * @param state      连接状态 / connection state
 	 * @param restStates 其余合法状态 / additional valid states
 	 */
 	public CM_LEGION(int opcode, State state, State... restStates) {
 		super(opcode, state, restStates);
 	}
+
 	/**
 	 * 按扩展操作码读取军团操作参数。
 	 * Reads legion operation parameters by extended opcode.
@@ -61,82 +65,81 @@ public class CM_LEGION extends AionClientPacket {
 
 		switch (exOpcode) {
 			case 0x00:
-			creatorNpcObjectId = readD();
-			legionName = readS();
-			break;
+				creatorNpcObjectId = readD();
+				legionName = readS();
+				break;
 			case 0x01:
-			readD(); // 空 / empty
-			charName = readS();
-			break;
+				readD(); // 空 / empty
+				charName = readS();
+				break;
 			case 0x02:
-			readD(); // 空 / empty
-			readH(); // 空 / empty
-			break;
+				readD(); // 空 / empty
+				readH(); // 空 / empty
+				break;
 			case 0x04:
-			readD(); // 空 / empty
-			charName = readS();
-			break;
+				readD(); // 空 / empty
+				charName = readS();
+				break;
 			case 0x05:
-			readD();
-			charName = readS();
-			break;
+				readD();
+				charName = readS();
+				break;
 			case 0x06:
-			rank = readD();
-			charName = readS();
-			break;
+				rank = readD();
+				charName = readS();
+				break;
 			case 0x07:
-			readD(); // 空或角色 ID？00 78 19 00 40 / char id? 00 78 19 00 40
-			charName = readS();
-			break;
+				readD(); // 空或角色 ID？00 78 19 00 40 / char id? 00 78 19 00 40
+				charName = readS();
+				break;
 			case 0x08:
-			readD();
-			readH();
-			break;
+				readD();
+				readH();
+				break;
 			case 0x09:
-			readD(); // 空或角色 ID？ / empty or char id?
-			announcement = readS();
-			break;
+				readD(); // 空或角色 ID？ / empty or char id?
+				announcement = readS();
+				break;
 			case 0x0A:
-			readD(); // 空或角色 ID？ / empty char id?
-			newSelfIntro = readS();
-			break;
+				readD(); // 空或角色 ID？ / empty char id?
+				newSelfIntro = readS();
+				break;
 			case 0x0D:
-			deputyPermission = (short) readH();
-			centurionPermission = (short) readH();
-			legionarPermission = (short) readH();
-			volunteerPermission = (short) readH();
-			break;
+				deputyPermission = (short) readH();
+				centurionPermission = (short) readH();
+				legionarPermission = (short) readH();
+				volunteerPermission = (short) readH();
+				break;
 			case 0x0E:
-			readD(); // 空 / empty
-			readH(); // 空 / empty
-			break;
-		case 0x0F:
-			charName = readS();
-			newNickname = readS();
-			break;
+				readD(); // 空 / empty
+				readH(); // 空 / empty
+				break;
+			case 0x0F:
+				charName = readS();
+				newNickname = readS();
+				break;
 			case 0x10:
-			readD();
-			break;
-		case 0x11:
-			joinDescription = readS();
-			break;
-		case 0x12:
-			joinType = readC();
-			break;
-		case 0x13:
-			minLevel = readH();
-			break;
-		case 0x14:
-			playerId = readD();
-			break;
-		case 0x15:
-			playerId = readD();
-			break;
-		default:
-			log.info(I18n.get("log.31ee2653cc50", Integer.toHexString(exOpcode).toUpperCase()));
-			break;
+				readD();
+				break;
+			case 0x11:
+				joinDescription = readS();
+				break;
+			case 0x12:
+				joinType = readC();
+				break;
+			case 0x13:
+				minLevel = readH();
+				break;
+			case 0x14:
+			case 0x15:
+				playerId = readD();
+				break;
+			default:
+				log.info(I18n.get("log.31ee2653cc50", Integer.toHexString(exOpcode).toUpperCase()));
+				break;
 		}
 	}
+
 	/**
 	 * 分发军团创建、邀请、权限、公告等操作。
 	 * Dispatches legion create, invite, rights, announcement, and related ops.
@@ -152,58 +155,58 @@ public class CM_LEGION extends AionClientPacket {
 			} else {
 				switch (exOpcode) {
 					case 0x08:
-					sendPacket(new SM_LEGION_INFO(legion));
-					break;
+						sendPacket(new SM_LEGION_INFO(legion));
+						break;
 					case 0x09:
-					GameCoreGameplayServices.legionService().handleLegionRequest(exOpcode, activePlayer, announcement);
-					break;
+						GameCoreGameplayServices.legionService().handleLegionRequest(exOpcode, activePlayer, announcement);
+						break;
 					case 0x10:
-					break;
+						break;
 					case 0x0A:
-					GameCoreGameplayServices.legionService().handleLegionRequest(exOpcode, activePlayer, newSelfIntro);
-					break;
+						GameCoreGameplayServices.legionService().handleLegionRequest(exOpcode, activePlayer, newSelfIntro);
+						break;
 					case 0x0D:
-					if (activePlayer.getLegionMember().isBrigadeGeneral())
-						GameCoreGameplayServices.legionService().changePermissions(legion, deputyPermission, centurionPermission,
+						if (activePlayer.getLegionMember().isBrigadeGeneral())
+							GameCoreGameplayServices.legionService().changePermissions(legion, deputyPermission, centurionPermission,
 								legionarPermission, volunteerPermission);
-					break;
-				case 0x11:
-					if (activePlayer.getLegionMember().isBrigadeGeneral())
-						GameCoreGameplayServices.legionService().setJoinDescription(activePlayer, joinDescription);
-					break;
-				case 0x12:
-					if (activePlayer.getLegionMember().isBrigadeGeneral())
-						GameCoreGameplayServices.legionService().setJoinType(activePlayer, joinType);
-					break;
-				case 0x13:
-					if (activePlayer.getLegionMember().isBrigadeGeneral())
-						GameCoreGameplayServices.legionService().setJoinMinLevel(activePlayer, minLevel);
-					break;
-				case 0x14:
-					if (activePlayer.getLegionMember().isBrigadeGeneral())
-						GameCoreGameplayServices.legionService().handleJoinRequestGiveAnswer(activePlayer, playerId, true);
-					break;
-				case 0x15:
-					if (activePlayer.getLegionMember().isBrigadeGeneral())
-						GameCoreGameplayServices.legionService().handleJoinRequestGiveAnswer(activePlayer, playerId, false);
-					break;
-                    default:
-					GameCoreGameplayServices.legionService().handleLegionRequest(exOpcode, activePlayer);
-					break;
+						break;
+					case 0x11:
+						if (activePlayer.getLegionMember().isBrigadeGeneral())
+							GameCoreGameplayServices.legionService().setJoinDescription(activePlayer, joinDescription);
+						break;
+					case 0x12:
+						if (activePlayer.getLegionMember().isBrigadeGeneral())
+							GameCoreGameplayServices.legionService().setJoinType(activePlayer, joinType);
+						break;
+					case 0x13:
+						if (activePlayer.getLegionMember().isBrigadeGeneral())
+							GameCoreGameplayServices.legionService().setJoinMinLevel(activePlayer, minLevel);
+						break;
+					case 0x14:
+						if (activePlayer.getLegionMember().isBrigadeGeneral())
+							GameCoreGameplayServices.legionService().handleJoinRequestGiveAnswer(activePlayer, playerId, true);
+						break;
+					case 0x15:
+						if (activePlayer.getLegionMember().isBrigadeGeneral())
+							GameCoreGameplayServices.legionService().handleJoinRequestGiveAnswer(activePlayer, playerId, false);
+						break;
+					default:
+						GameCoreGameplayServices.legionService().handleLegionRequest(exOpcode, activePlayer);
+						break;
 				}
 			}
 		} else {
 			switch (exOpcode) {
-                case 0x00:
-				if (NameRestrictionService.isForbiddenWord(legionName)) {
-					PacketSendUtility.sendMessage(activePlayer,
+				case 0x00:
+					if (NameRestrictionService.isForbiddenWord(legionName)) {
+						PacketSendUtility.sendMessage(activePlayer,
 							"You are trying to use a forbidden name. Choose another one!");
-				} else {
-					VisibleObject creator = activePlayer.getKnownList().getObject(creatorNpcObjectId);
-					GameCoreGameplayServices.legionService().createLegion(activePlayer, legionName,
+					} else {
+						VisibleObject creator = activePlayer.getKnownList().getObject(creatorNpcObjectId);
+						GameCoreGameplayServices.legionService().createLegion(activePlayer, legionName,
 							creator instanceof Npc ? (Npc) creator : null);
-				}
-				break;
+					}
+					break;
 			}
 		}
 	}

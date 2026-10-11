@@ -41,19 +41,33 @@ public class Mesh {
 	 */
 	public enum Mode {
 
-		/** 点列表。 / Point list. */
+		/**
+		 * 点列表。 / Point list.
+		 */
 		Points,
-		/** 线段列表。 / Line segment list. */
+		/**
+		 * 线段列表。 / Line segment list.
+		 */
 		Lines,
-		/** 线环（首尾相连）。 / Closed line loop. */
+		/**
+		 * 线环（首尾相连）。 / Closed line loop.
+		 */
 		LineLoop,
-		/** 连续折线。 / Connected line strip. */
+		/**
+		 * 连续折线。 / Connected line strip.
+		 */
 		LineStrip,
-		/** 独立三角形列表。 / Independent triangle list. */
+		/**
+		 * 独立三角形列表。 / Independent triangle list.
+		 */
 		Triangles,
-		/** 三角形带。 / Triangle strip. */
+		/**
+		 * 三角形带。 / Triangle strip.
+		 */
 		TriangleStrip,
-		/** 三角形扇。 / Triangle fan. */
+		/**
+		 * 三角形扇。 / Triangle fan.
+		 */
 		TriangleFan,
 		Hybrid
 	}
@@ -63,80 +77,95 @@ public class Mesh {
 	 * Bounding volume that contains the mesh entirely. By default a BoundingBox (AABB).
 	 */
 	private BoundingVolume meshBound = new BoundingBox();
-	/** 碰撞加速结构（BIH 树）。 / Collision acceleration structure (BIH tree). */
+	/**
+	 * 碰撞加速结构（BIH 树）。 / Collision acceleration structure (BIH tree).
+	 */
 	private volatile CollisionData collisionTree = null;
-    /** 按类型序数索引的顶点缓冲映射。 / Vertex buffers keyed by type ordinal.
+	/**
+	 * 按类型序数索引的顶点缓冲映射。 / Vertex buffers keyed by type ordinal.
 	 * -- GETTER --
-	 *  返回全部顶点缓冲映射。
-	 *  Returns the map of all vertex buffers.
+	 * 返回全部顶点缓冲映射。
+	 * Returns the map of all vertex buffers.
 	 * 缓冲映射 / buffer map
 	 */
 	@Getter
 	private final IntMap<VertexBuffer> buffers = new IntMap<>();
-	/** 点大小。 / Point size.
+	/**
+	 * 点大小。 / Point size.
 	 * -- GETTER --
-	 *  返回点大小。
-	 *  Returns the point size.
+	 * 返回点大小。
+	 * Returns the point size.
 	 * -- SETTER --
-	 *  设置点大小。
-	 *  Sets the point size.
+	 * 设置点大小。
+	 * Sets the point size.
 	 */
 	@Setter
 	@Getter
 	private float pointSize = 1;
-	/** 线宽。 / Line width.
+	/**
+	 * 线宽。 / Line width.
 	 * -- GETTER --
-	 *  返回线宽。
-	 *  Returns the line width.
+	 * 返回线宽。
+	 * Returns the line width.
 	 * -- SETTER --
-	 *  设置线宽。
-	 *  Sets the line width.
+	 * 设置线宽。
+	 * Sets the line width.
 	 */
 	@Setter
 	@Getter
 	private float lineWidth = 1;
-	/** 顶点数组对象 ID。 / Vertex-array object id. */
+	/**
+	 * 顶点数组对象 ID。 / Vertex-array object id.
+	 */
 	private transient int vertexArrayID = -1;
-	/** 顶点数。 / Vertex count. */
+	/**
+	 * 顶点数。 / Vertex count.
+	 */
 	private int vertCount = -1;
-	/** 图元（元素）数。 / Primitive (element) count. */
+	/**
+	 * 图元（元素）数。 / Primitive (element) count.
+	 */
 	private int elementCount = -1;
-	/** 骨骼动画最大权重数。 / Max bone weights (skeletal animation only).
+	/**
+	 * 骨骼动画最大权重数。 / Max bone weights (skeletal animation only).
 	 * -- GETTER --
-	 *  返回最大骨骼权重数。
-	 *  Returns the max number of bone weights.
+	 * 返回最大骨骼权重数。
+	 * Returns the max number of bone weights.
 	 * -- SETTER --
-	 *  设置最大骨骼权重数。
-	 *  Sets the max number of bone weights.
+	 * 设置最大骨骼权重数。
+	 * Sets the max number of bone weights.
 	 */
 	@Setter
 	@Getter
 	private int maxNumWeights = -1; // only if using skeletal animation
-	/** 混合模式下各段起始索引。 / Mode-start indices for hybrid mode.
+	/**
+	 * 混合模式下各段起始索引。 / Mode-start indices for hybrid mode.
 	 * -- GETTER --
-	 *  返回混合模式起始索引数组。
-	 *  Returns the hybrid mode-start index array.
+	 * 返回混合模式起始索引数组。
+	 * Returns the hybrid mode-start index array.
 	 * -- SETTER --
-	 *  设置混合模式起始索引数组。
-	 *  Sets the hybrid mode-start index array.
+	 * 设置混合模式起始索引数组。
+	 * Sets the hybrid mode-start index array.
 	 */
 	@Setter
 	@Getter
 	private int[] modeStart;
-	/** 当前图元模式，默认三角形。 / Current primitive mode; default Triangles.
+	/**
+	 * 当前图元模式，默认三角形。 / Current primitive mode; default Triangles.
 	 * -- GETTER --
-	 *  返回图元模式。
-	 *  Returns the primitive mode.
+	 * 返回图元模式。
+	 * Returns the primitive mode.
 	 */
 	@Getter
 	private Mode mode = Mode.Triangles;
-	/** 碰撞标志（低 8 位材质，高 8 位意图）。 / Collision flags (low 8 material, high 8 intentions).
+	/**
+	 * 碰撞标志（低 8 位材质，高 8 位意图）。 / Collision flags (low 8 material, high 8 intentions).
 	 * -- GETTER --
-	 *  返回碰撞标志。
-	 *  Returns collision flags.
+	 * 返回碰撞标志。
+	 * Returns collision flags.
 	 * -- SETTER --
-	 *  设置碰撞标志。
-	 *  Sets collision flags.
+	 * 设置碰撞标志。
+	 * Sets collision flags.
 	 */
 	@Setter
 	@Getter
@@ -152,6 +181,7 @@ public class Mesh {
 	/**
 	 * 设置图元模式并刷新计数。
 	 * Sets the primitive mode and refreshes counts.
+	 *
 	 * @param mode 图元模式 / primitive mode
 	 */
 	public void setMode(Mode mode) {
@@ -212,40 +242,40 @@ public class Mesh {
 		setBuffer(allData);
 
 		for (int vert = 0; vert < getVertexCount(); vert++) {
-            for (VertexBuffer vb : vbs) {
-                switch (vb.getFormat()) {
-                    case Float:
-                        FloatBuffer fb = (FloatBuffer) vb.getData();
-                        for (int comp = 0; comp < vb.components; comp++) {
-                            dataBuf.putFloat(fb.get());
-                        }
-                        break;
-                    case Byte:
-                    case UnsignedByte:
-                        ByteBuffer bb = (ByteBuffer) vb.getData();
-                        for (int comp = 0; comp < vb.components; comp++) {
-                            dataBuf.put(bb.get());
-                        }
-                        break;
-                    case Half:
-                    case Short:
-                    case UnsignedShort:
-                        ShortBuffer sb = (ShortBuffer) vb.getData();
-                        for (int comp = 0; comp < vb.components; comp++) {
-                            dataBuf.putShort(sb.get());
-                        }
-                        break;
-                    case Int:
-                    case UnsignedInt:
-                        IntBuffer ib = (IntBuffer) vb.getData();
-                        for (int comp = 0; comp < vb.components; comp++) {
-                            dataBuf.putInt(ib.get());
-                        }
-                        break;
-                    default:
-                        break;
-                }
-            }
+			for (VertexBuffer vb : vbs) {
+				switch (vb.getFormat()) {
+					case Float:
+						FloatBuffer fb = (FloatBuffer) vb.getData();
+						for (int comp = 0; comp < vb.components; comp++) {
+							dataBuf.putFloat(fb.get());
+						}
+						break;
+					case Byte:
+					case UnsignedByte:
+						ByteBuffer bb = (ByteBuffer) vb.getData();
+						for (int comp = 0; comp < vb.components; comp++) {
+							dataBuf.put(bb.get());
+						}
+						break;
+					case Half:
+					case Short:
+					case UnsignedShort:
+						ShortBuffer sb = (ShortBuffer) vb.getData();
+						for (int comp = 0; comp < vb.components; comp++) {
+							dataBuf.putShort(sb.get());
+						}
+						break;
+					case Int:
+					case UnsignedInt:
+						IntBuffer ib = (IntBuffer) vb.getData();
+						for (int comp = 0; comp < vb.components; comp++) {
+							dataBuf.putInt(ib.get());
+						}
+						break;
+					default:
+						break;
+				}
+			}
 		}
 
 		int offset = 0;
@@ -262,6 +292,7 @@ public class Mesh {
 	/**
 	 * 按图元模式将缓冲大小换算为元素个数。
 	 * Converts a buffer size to an element count based on the primitive mode.
+	 *
 	 * @param bufSize 缓冲元素规模 / buffer element size
 	 * @return 图元数 / primitive count
 	 */
@@ -269,9 +300,8 @@ public class Mesh {
 		return switch (mode) {
 			case Triangles -> bufSize / 3;
 			case TriangleFan, TriangleStrip -> bufSize - 2;
-			case Points -> bufSize;
+			case Points, LineLoop -> bufSize;
 			case Lines -> bufSize / 2;
-			case LineLoop -> bufSize;
 			case LineStrip -> bufSize - 1;
 			default -> throw new UnsupportedOperationException();
 		};
@@ -301,6 +331,7 @@ public class Mesh {
 	/**
 	 * 返回指定 LOD 的三角形数（当前实现忽略 lod，等同 {@link #getTriangleCount()}）。
 	 * Returns the triangle count for the given LOD (currently ignores lod; same as {@link #getTriangleCount()}).
+	 *
 	 * @param lod LOD 级别（未使用） / LOD level (unused)
 	 * @return 三角形数 / triangle count
 	 */
@@ -311,6 +342,7 @@ public class Mesh {
 	/**
 	 * 返回三角形（图元）数。
 	 * Returns the triangle (element) count.
+	 *
 	 * @return 图元（元素）数 / element count
 	 */
 	public int getTriangleCount() {
@@ -320,6 +352,7 @@ public class Mesh {
 	/**
 	 * 返回顶点数。
 	 * Returns the vertex count.
+	 *
 	 * @return 顶点数 / vertex count
 	 */
 	public int getVertexCount() {
@@ -329,6 +362,7 @@ public class Mesh {
 	/**
 	 * 手动设置三角形数。
 	 * Manually sets the triangle count.
+	 *
 	 * @param count 三角形数 / triangle count
 	 */
 	public void setTriangleCount(int count) {
@@ -338,6 +372,7 @@ public class Mesh {
 	/**
 	 * 手动设置顶点数。
 	 * Manually sets the vertex count.
+	 *
 	 * @param count 顶点数 / vertex count
 	 */
 	public void setVertexCount(int count) {
@@ -347,10 +382,11 @@ public class Mesh {
 	/**
 	 * 将第 index 个三角形的三个顶点写入 v1/v2/v3（要求 Float 位置 + UnsignedShort 索引）。
 	 * Writes the three vertices of triangle index into v1/v2/v3 (requires Float positions and UnsignedShort indices).
+	 *
 	 * @param index 三角形索引 / triangle index
-	 * @param v1 顶点 1 输出 / vertex 1 out
-	 * @param v2 顶点 2 输出 / vertex 2 out
-	 * @param v3 顶点 3 输出 / vertex 3 out
+	 * @param v1    顶点 1 输出 / vertex 1 out
+	 * @param v2    顶点 2 输出 / vertex 2 out
+	 * @param v3    顶点 3 输出 / vertex 3 out
 	 */
 	public void getTriangle(int index, Vector3f v1, Vector3f v2, Vector3f v3) {
 		VertexBuffer pb = getBuffer(Type.Position);
@@ -379,8 +415,9 @@ public class Mesh {
 	/**
 	 * 将第 index 个三角形写入 {@link Triangle}。
 	 * Writes triangle index into a {@link Triangle}.
+	 *
 	 * @param index 三角形索引 / triangle index
-	 * @param tri 输出三角形 / output triangle
+	 * @param tri   输出三角形 / output triangle
 	 */
 	public void getTriangle(int index, Triangle tri) {
 		getTriangle(index, tri.get1(), tri.get2(), tri.get3());
@@ -390,7 +427,8 @@ public class Mesh {
 	/**
 	 * 将第 index 个三角形的三个顶点索引写入数组（UnsignedShort 索引）。
 	 * Writes the three vertex indices of triangle index into the array (UnsignedShort indices).
-	 * @param index 三角形索引 / triangle index
+	 *
+	 * @param index   三角形索引 / triangle index
 	 * @param indices 长度至少 3 的输出数组 / output array of length ≥ 3
 	 */
 	public void getTriangle(int index, int[] indices) {
@@ -410,6 +448,7 @@ public class Mesh {
 	/**
 	 * 返回顶点数组对象 ID。
 	 * Returns the vertex-array object id.
+	 *
 	 * @return 顶点数组对象 ID / VAO id
 	 */
 	public int getId() {
@@ -419,6 +458,7 @@ public class Mesh {
 	/**
 	 * 设置顶点数组对象 ID（仅可设置一次）。
 	 * Sets the vertex-array object id (only once).
+	 *
 	 * @param id 顶点数组对象 ID / VAO id
 	 */
 	public void setId(int id) {
@@ -450,14 +490,15 @@ public class Mesh {
 	/**
 	 * 使用碰撞树与可碰撞对象检测，结果写入 results。
 	 * Collides via the collision tree and writes hits into results.
-	 * @param other 目标可碰撞对象 / target collidable
+	 *
+	 * @param other       目标可碰撞对象 / target collidable
 	 * @param worldMatrix 世界变换 / world transform
-	 * @param worldBound 世界包围体 / world bound
-	 * @param results 结果收集器 / results collector
+	 * @param worldBound  世界包围体 / world bound
+	 * @param results     结果收集器 / results collector
 	 * @return 碰撞数量 / number of collisions
 	 */
 	public int collideWith(Collidable other, Matrix4f worldMatrix, BoundingVolume worldBound,
-			CollisionResults results) {
+						   CollisionResults results) {
 
 		CollisionData tree = collisionTree;
 		if (tree == null) {
@@ -470,9 +511,10 @@ public class Mesh {
 	/**
 	 * 设置或更新 Float 类型顶点缓冲。
 	 * Sets or updates a Float vertex buffer.
-	 * @param type 缓冲类型 / buffer type
+	 *
+	 * @param type       缓冲类型 / buffer type
 	 * @param components 每顶点分量数 / components per vertex
-	 * @param buf 数据 / data
+	 * @param buf        数据 / data
 	 */
 	public void setBuffer(Type type, int components, FloatBuffer buf) {
 		VertexBuffer vb = buffers.get(type.ordinal());
@@ -494,9 +536,10 @@ public class Mesh {
 	/**
 	 * 以 float 数组设置 Float 缓冲。
 	 * Sets a Float buffer from a float array.
-	 * @param type 缓冲类型 / buffer type
+	 *
+	 * @param type       缓冲类型 / buffer type
 	 * @param components 每顶点分量数 / components per vertex
-	 * @param buf 数据 / data
+	 * @param buf        数据 / data
 	 */
 	public void setBuffer(Type type, int components, float[] buf) {
 		setBuffer(type, components, BufferUtils.createFloatBuffer(buf));
@@ -505,9 +548,10 @@ public class Mesh {
 	/**
 	 * 设置 UnsignedInt 类型缓冲（仅在该类型尚不存在时）。
 	 * Sets an UnsignedInt buffer (only if that type is not already present).
-	 * @param type 缓冲类型 / buffer type
+	 *
+	 * @param type       缓冲类型 / buffer type
 	 * @param components 每顶点分量数 / components per vertex
-	 * @param buf 数据 / data
+	 * @param buf        数据 / data
 	 */
 	public void setBuffer(Type type, int components, IntBuffer buf) {
 		VertexBuffer vb = buffers.get(type.ordinal());
@@ -522,9 +566,10 @@ public class Mesh {
 	/**
 	 * 以 int 数组设置 UnsignedInt 缓冲。
 	 * Sets an UnsignedInt buffer from an int array.
-	 * @param type 缓冲类型 / buffer type
+	 *
+	 * @param type       缓冲类型 / buffer type
 	 * @param components 每顶点分量数 / components per vertex
-	 * @param buf 数据 / data
+	 * @param buf        数据 / data
 	 */
 	public void setBuffer(Type type, int components, int[] buf) {
 		setBuffer(type, components, BufferUtils.createIntBuffer(buf));
@@ -533,9 +578,10 @@ public class Mesh {
 	/**
 	 * 设置 UnsignedShort 类型缓冲（仅在该类型尚不存在时）。
 	 * Sets an UnsignedShort buffer (only if that type is not already present).
-	 * @param type 缓冲类型 / buffer type
+	 *
+	 * @param type       缓冲类型 / buffer type
 	 * @param components 每顶点分量数 / components per vertex
-	 * @param buf 数据 / data
+	 * @param buf        数据 / data
 	 */
 	public void setBuffer(Type type, int components, ShortBuffer buf) {
 		VertexBuffer vb = buffers.get(type.ordinal());
@@ -550,9 +596,10 @@ public class Mesh {
 	/**
 	 * 以 byte 数组设置 UnsignedByte 缓冲。
 	 * Sets an UnsignedByte buffer from a byte array.
-	 * @param type 缓冲类型 / buffer type
+	 *
+	 * @param type       缓冲类型 / buffer type
 	 * @param components 每顶点分量数 / components per vertex
-	 * @param buf 数据 / data
+	 * @param buf        数据 / data
 	 */
 	public void setBuffer(Type type, int components, byte[] buf) {
 		setBuffer(type, components, BufferUtils.createByteBuffer(buf));
@@ -561,9 +608,10 @@ public class Mesh {
 	/**
 	 * 设置 UnsignedByte 类型缓冲（仅在该类型尚不存在时）。
 	 * Sets an UnsignedByte buffer (only if that type is not already present).
-	 * @param type 缓冲类型 / buffer type
+	 *
+	 * @param type       缓冲类型 / buffer type
 	 * @param components 每顶点分量数 / components per vertex
-	 * @param buf 数据 / data
+	 * @param buf        数据 / data
 	 */
 	public void setBuffer(Type type, int components, ByteBuffer buf) {
 		VertexBuffer vb = buffers.get(type.ordinal());
@@ -578,6 +626,7 @@ public class Mesh {
 	/**
 	 * 放入已构造好的 {@link VertexBuffer}（类型不可重复）。
 	 * Puts a prebuilt {@link VertexBuffer} (type must not already be set).
+	 *
 	 * @param vb 顶点缓冲 / vertex buffer
 	 */
 	public void setBuffer(VertexBuffer vb) {
@@ -591,6 +640,7 @@ public class Mesh {
 	/**
 	 * 移除指定类型的缓冲。
 	 * Removes the buffer of the given type.
+	 *
 	 * @param type 缓冲类型 / buffer type
 	 */
 	public void clearBuffer(VertexBuffer.Type type) {
@@ -600,9 +650,10 @@ public class Mesh {
 	/**
 	 * 以 short 数组设置 UnsignedShort 缓冲。
 	 * Sets an UnsignedShort buffer from a short array.
-	 * @param type 缓冲类型 / buffer type
+	 *
+	 * @param type       缓冲类型 / buffer type
 	 * @param components 每顶点分量数 / components per vertex
-	 * @param buf 数据 / data
+	 * @param buf        数据 / data
 	 */
 	public void setBuffer(Type type, int components, short[] buf) {
 		setBuffer(type, components, BufferUtils.createShortBuffer(buf));
@@ -611,6 +662,7 @@ public class Mesh {
 	/**
 	 * 按类型获取顶点缓冲。
 	 * Gets the vertex buffer of the given type.
+	 *
 	 * @param type 缓冲类型 / buffer type
 	 * @return 顶点缓冲，可能为 null / vertex buffer, or null
 	 */
@@ -621,6 +673,7 @@ public class Mesh {
 	/**
 	 * 按类型获取 Float 数据缓冲。
 	 * Gets the Float data buffer of the given type.
+	 *
 	 * @param type 缓冲类型 / buffer type
 	 * @return FloatBuffer，或 null / FloatBuffer, or null
 	 */
@@ -635,6 +688,7 @@ public class Mesh {
 	/**
 	 * 按类型获取 Short 数据缓冲。
 	 * Gets the Short data buffer of the given type.
+	 *
 	 * @param type 缓冲类型 / buffer type
 	 * @return ShortBuffer，或 null / ShortBuffer, or null
 	 */
@@ -649,6 +703,7 @@ public class Mesh {
 	/**
 	 * 返回包装后的索引缓冲抽象（按底层类型选择实现）。
 	 * Returns a typed {@link IndexBuffer} wrapper over the index data.
+	 *
 	 * @return 索引缓冲，或无索引时为 null / index buffer, or null if none
 	 */
 	public IndexBuffer getIndexBuffer() {
@@ -669,6 +724,7 @@ public class Mesh {
 	/**
 	 * 按比例缩放 2D 纹理坐标（仅支持 Float、2 分量）。
 	 * Scales 2D texture coordinates by the given factor (Float format, 2 components only).
+	 *
 	 * @param scaleFactor 缩放因子 / scale factor
 	 */
 	public void scaleTextureCoordinates(Vector2f scaleFactor) {
@@ -715,6 +771,7 @@ public class Mesh {
 	/**
 	 * 返回网格包围体。
 	 * Returns the mesh bounding volume.
+	 *
 	 * @return 包围体 / bounding volume
 	 */
 	public BoundingVolume getBound() {
@@ -724,6 +781,7 @@ public class Mesh {
 	/**
 	 * 设置网格包围体。
 	 * Sets the mesh bounding volume.
+	 *
 	 * @param modelBound 包围体 / bounding volume
 	 */
 	public void setBound(BoundingVolume modelBound) {
@@ -733,6 +791,7 @@ public class Mesh {
 	/**
 	 * 从碰撞标志低 8 位取得材质 ID。
 	 * Returns the material id from the low 8 bits of collision flags.
+	 *
 	 * @return 材质 ID / material id
 	 */
 	public byte getMaterialId() {
@@ -742,6 +801,7 @@ public class Mesh {
 	/**
 	 * 从碰撞标志高 8 位取得碰撞意图掩码。
 	 * Returns the intention mask from the high 8 bits of collision flags.
+	 *
 	 * @return 碰撞意图掩码 / intention mask
 	 */
 	public byte getIntentions() {

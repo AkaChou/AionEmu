@@ -23,13 +23,6 @@ import java.sql.Timestamp;
 
 import com.aionemu.gameserver.configs.main.AutoGroupConfig;
 import com.aionemu.gameserver.configs.main.GSConfig;
-import com.aionemu.gameserver.dao.EventItemsDAO;
-import com.aionemu.gameserver.dao.HouseObjectCooldownsDAO;
-import com.aionemu.gameserver.dao.ItemCooldownsDAO;
-import com.aionemu.gameserver.dao.PlayerCooldownsDAO;
-import com.aionemu.gameserver.dao.PlayerDAO;
-import com.aionemu.gameserver.dao.PlayerEffectsDAO;
-import com.aionemu.gameserver.dao.PlayerLifeStatsDAO;
 import com.aionemu.gameserver.model.account.PlayerAccountData;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.items.storage.StorageType;
@@ -46,6 +39,7 @@ import com.aionemu.gameserver.services.instance.InstanceService;
 import com.aionemu.gameserver.services.summons.SummonsService;
 import com.aionemu.gameserver.services.toypet.PetSpawnService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+
 /**
  * 玩家离线服务，处理延迟下线与资源清理。
  * Player leave-world service handling delayed logout and resource cleanup.
@@ -57,22 +51,24 @@ public class PlayerLeaveWorldService {
 	/**
 	 * 延迟离线。
 	 * Schedules delayed leave-world.
+	 *
 	 * @param player 玩家 / player
-	 * @param delay 延迟毫秒 / delay
+	 * @param delay  延迟毫秒 / delay
 	 */
 	public static final void startLeaveWorldDelay(final Player player, int delay) {
 		player.getController().stopMoving();
-        GameThreadPoolServices.threadPoolManager().schedule(() -> startLeaveWorld(player), delay);
+		GameThreadPoolServices.threadPoolManager().schedule(() -> startLeaveWorld(player), delay);
 	}
 
 	/**
 	 * 开始离线流程。
 	 * Starts leave-world flow.
+	 *
 	 * @param player 玩家 / player
 	 */
 	public static final void startLeaveWorld(Player player) {
 		log.info(I18n.get("log.6e504269f536", player.getName(), (player.getClientConnection() != null ? player.getClientConnection().getAccount().getName()
-						: "Disconnected")));
+			: "Disconnected")));
 		GameRuntimeServices.findGroupService().removeFindGroup(player.getRace(), 0x00, player.getObjectId());
 		GameRuntimeServices.findGroupService().removeFindGroup(player.getRace(), 0x04, player.getObjectId());
 		player.onLoggedOut();
@@ -171,6 +167,7 @@ public class PlayerLeaveWorldService {
 	/**
 	 * 尝试离线。
 	 * Attempts to leave the world.
+	 *
 	 * @param player 玩家 / player
 	 */
 	public static void tryLeaveWorld(Player player) {

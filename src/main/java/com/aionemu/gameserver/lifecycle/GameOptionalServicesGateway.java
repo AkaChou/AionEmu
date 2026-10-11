@@ -112,7 +112,6 @@ public class GameOptionalServicesGateway {
     /**
      * 解析 NPC 喊话服务：优先 Spring，否则经运行时桥回退。
      * Resolve NPC-shouts service: prefer Spring, otherwise fall back via runtime bridge.
-     * @return 服务实例 / Service instance
      */
     private void npcShoutsService() {
         if (npcShoutsServiceProvider == null) {

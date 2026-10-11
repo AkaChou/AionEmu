@@ -62,7 +62,6 @@ public abstract class MailDAO implements IDFactoryAwareDAO {
 	 * 按信件 ID 删除信件。
 	 * Deletes a letter by its ID.
 	 * @param letterId 信件 ID / letter id
-	 * @return 若成功则为 true / true if successful
 	 */
 	public abstract void deleteLetter(int letterId);
 

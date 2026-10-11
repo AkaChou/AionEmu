@@ -39,6 +39,7 @@ public class SummonController extends CreatureController<Summon> {
 	/** 是否曾被攻击。 / Whether the summon has been attacked. */
 	private final boolean isAttacked = false;
 	/** 使用该技能成功后自动解除召唤；-1 表示不自动解除。 / Skill id after which the summon auto-releases; -1 means none. */
+	/** 使用该技能成功后自动解除召唤；-1 表示不自动解除。 / Skill id after which the summon auto-releases; -1 means none. */
 	@Setter
 	private int releaseAfterSkill = -1;
 

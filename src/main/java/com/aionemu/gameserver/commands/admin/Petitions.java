@@ -93,16 +93,26 @@ public class Petitions extends AdminCommand {
 		// 读取申诉 / Read petition
 		if (params.length == 1) {
 			StringBuilder message = new StringBuilder();
-			message.append("== Petition #" + petitionId + " ==\n");
-			message.append("Player: " + petitionPlayer + " (");
+			message.append("== Petition #")
+				.append(petitionId)
+				.append(" ==\n");
+			message.append("Player: ")
+				.append(petitionPlayer)
+				.append(" (");
 			if (isOnline)
 				message.append("Online");
 			else
 				message.append("Offline");
 			message.append(")\n");
-			message.append("Type: " + getHumanizedValue(petition.getPetitionType()) + "\n");
-			message.append("Title: " + petition.title() + "\n");
-			message.append("Text: " + petition.contentText() + "\n");
+			message.append("Type: ")
+				.append(getHumanizedValue(petition.getPetitionType()))
+				.append("\n");
+			message.append("Title: ")
+				.append(petition.title())
+				.append("\n");
+			message.append("Text: ")
+				.append(petition.contentText())
+				.append("\n");
 			message.append("= Additional Data =\n");
 			message.append(getFormattedAdditionalData(petition.getPetitionType(), petition.additionalData()));
 			PacketSendUtility.sendMessage(admin, message.toString());

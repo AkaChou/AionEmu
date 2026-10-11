@@ -149,7 +149,6 @@ public class GameServerNetworkGateway {
     /**
      * 解析 MAC 封禁管理器。
      * Resolve the banned-MAC manager.
-     * @return MAC 封禁管理器 / Banned MAC manager
      */
     private void bannedMacManager() {
         if (bannedMacManagerProvider == null) {

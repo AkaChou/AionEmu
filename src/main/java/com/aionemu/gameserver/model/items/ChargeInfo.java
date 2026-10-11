@@ -41,7 +41,9 @@ public class ChargeInfo extends ActionObserver {
 		}
 	}
 
-	/** 更新充能点 / Update charge points*/
+	/**
+	 * 更新充能点 / Update charge points
+	 */
 	public int updateChargePoints(int addPoints) {
 		int newChargePoints = chargePoints + addPoints;
 		if (newChargePoints > LEVEL2) {
@@ -65,13 +67,17 @@ public class ChargeInfo extends ActionObserver {
 		}
 	}
 
-	/** 受攻击 / attacked. */
+	/**
+	 * 受攻击 / attacked.
+	 */
 	@Override
 	public void attacked(Creature creature) {
 		burn(defendBurn);
 	}
 
-	/** 攻击。 / Attack. */
+	/**
+	 * 攻击。 / Attack.
+	 */
 	@Override
 	public void attack(Creature creature) {
 		burn(attackBurn);

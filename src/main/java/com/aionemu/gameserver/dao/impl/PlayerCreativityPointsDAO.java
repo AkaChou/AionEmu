@@ -2,6 +2,7 @@ package com.aionemu.gameserver.dao.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -27,15 +28,25 @@ import lombok.extern.slf4j.Slf4j;
 @Repository
 public class PlayerCreativityPointsDAO extends com.aionemu.gameserver.dao.PlayerCreativityPointsDAO {
 
-	/** 插入或更新创意点 SQL / Insert or update CP SQL*/
+	/**
+	 * 插入或更新创意点 SQL / Insert or update CP SQL
+	 */
 	private static final String INSERT_OR_UPDATE = "INSERT INTO `player_cp` (`player_id`, `slot`, `point`) VALUES(?,?,?) " + "ON DUPLICATE KEY UPDATE `slot` = VALUES(`slot`), `point` = VALUES(`point`)";
-	/** 查询创意点列表 SQL / Select CP list SQL*/
+	/**
+	 * 查询创意点列表 SQL / Select CP list SQL
+	 */
 	private static final String SELECT_QUERY = "SELECT `slot`,`point` FROM `player_cp` WHERE `player_id`=?";
-	/** 删除创意点 SQL / Delete CP SQL*/
+	/**
+	 * 删除创意点 SQL / Delete CP SQL
+	 */
 	private static final String DELETE_QUERY = "DELETE FROM `player_cp` WHERE `player_id`=? AND `slot`=?";
-	/** 统计创意点槽位 SQL / Count CP slots SQL*/
+	/**
+	 * 统计创意点槽位 SQL / Count CP slots SQL
+	 */
 	private static final String SELECT_COUNT_QUERY = "SELECT COUNT(*) AS `size` FROM `player_cp` WHERE `player_id`=?";
-	/** 查询创意点槽位 SQL / Select CP slot SQL */
+	/**
+	 * 查询创意点槽位 SQL / Select CP slot SQL
+	 */
 	private static final String SELECT_SLOT_QUERY = "SELECT `slot` FROM `player_cp` WHERE `player_id`=?";
 
 	private final JdbcClient jdbcClient;
@@ -53,6 +64,7 @@ public class PlayerCreativityPointsDAO extends com.aionemu.gameserver.dao.Player
 	/**
 	 * 加载玩家 CP 列表。
 	 * Loads the player's CP list.
+	 *
 	 * @param player 玩家 / player
 	 * @return CP 列表 / CP list
 	 */
@@ -78,48 +90,47 @@ public class PlayerCreativityPointsDAO extends com.aionemu.gameserver.dao.Player
 	/**
 	 * 保存玩家 CP。
 	 * Stores a player CP entry.
+	 *
 	 * @param objectId 玩家对象 ID / player object id
-	 * @param slot 槽位 / slot
-	 * @param point 点数 / points
-	 * @return 是否成功 / whether successful
+	 * @param slot     槽位 / slot
+	 * @param point    点数 / points
 	 */
 	@Override
 	public void storeCP(int objectId, int slot, int point) {
 		try {
-						jdbcClient.sql(INSERT_OR_UPDATE)
+			jdbcClient.sql(INSERT_OR_UPDATE)
 				.param(objectId)
 				.param(slot)
 				.param(point)
 				.update();
 		} catch (DataAccessException e) {
 			log.error(I18n.get("log.ca5c95d176db", objectId, " from DB"), e);
-						;
 		}
 	}
 
 	/**
 	 * 删除玩家 CP 槽位。
 	 * Deletes a player CP slot.
+	 *
 	 * @param objectId 玩家对象 ID / player object id
-	 * @param slot 槽位 / slot
-	 * @return 是否成功 / whether successful
+	 * @param slot     槽位 / slot
 	 */
 	@Override
 	public void deleteCP(int objectId, int slot) {
 		try {
-						jdbcClient.sql(DELETE_QUERY)
+			jdbcClient.sql(DELETE_QUERY)
 				.param(objectId)
 				.param(slot)
 				.update();
 		} catch (DataAccessException e) {
 			log.error(I18n.get("log.55ed70097989", objectId, " from DB"), e);
-						;
 		}
 	}
 
 	/**
 	 * 获取玩家 CP 槽位数量。
 	 * Gets the player's CP slot count.
+	 *
 	 * @param playerObjId 玩家对象 ID / player object id
 	 * @return 槽位数量 / slot count
 	 */
@@ -138,11 +149,11 @@ public class PlayerCreativityPointsDAO extends com.aionemu.gameserver.dao.Player
 		}
 	}
 
-	
 
 	/**
 	 * 是否支持当前数据库。
 	 * Whether the current database is supported.
+	 *
 	 * @param databaseName 数据库名 / database name
 	 * @param majorVersion 主版本 / major version
 	 * @param minorVersion 次版本 / minor version

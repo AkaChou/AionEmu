@@ -62,7 +62,8 @@ public class Wc extends AdminCommand {
 
 		for (String s : params)
 			if (i++ != 1 && (check))
-				sbMessage.append(s + " ");
+				sbMessage.append(s)
+					.append(" ");
 
 		String message = sbMessage.toString().trim();
 		int messageLenght = message.length();

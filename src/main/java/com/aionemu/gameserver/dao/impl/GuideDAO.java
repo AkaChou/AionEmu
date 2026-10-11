@@ -2,6 +2,7 @@ package com.aionemu.gameserver.dao.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -20,21 +21,32 @@ import lombok.extern.slf4j.Slf4j;
  * 引导（Guide）DAO 的 MySQL 8 实现。
  * MySQL 8 implementation of GuideDAO using JdbcClient.
  * Updated for MySQL 8 - Fixed connection leaks.
+ *
  * @author xTz
  */
 @Slf4j
 @Repository
 public class GuideDAO extends com.aionemu.gameserver.dao.GuideDAO {
 
-	/** 删除引导 SQL / Delete guide SQL*/
+	/**
+	 * 删除引导 SQL / Delete guide SQL
+	 */
 	private static final String DELETE_QUERY = "DELETE FROM `guides` WHERE `guide_id`=?";
-	/** 查询玩家引导 SQL / Select player guides SQL*/
+	/**
+	 * 查询玩家引导 SQL / Select player guides SQL
+	 */
 	private static final String SELECT_QUERY = "SELECT * FROM `guides` WHERE `player_id`=?";
-	/** 查询单条引导 SQL / Select single guide SQL*/
+	/**
+	 * 查询单条引导 SQL / Select single guide SQL
+	 */
 	private static final String SELECT_GUIDE_QUERY = "SELECT * FROM `guides` WHERE `guide_id`=? AND `player_id`=?";
-	/** 插入引导 SQL / Insert guide SQL*/
+	/**
+	 * 插入引导 SQL / Insert guide SQL
+	 */
 	private static final String INSERT_QUERY = "INSERT INTO guides(guide_id, title, player_id) VALUES (?, ?, ?)";
-	/** 查询已用引导 ID SQL / Select used guide ids SQL*/
+	/**
+	 * 查询已用引导 ID SQL / Select used guide ids SQL
+	 */
 	private static final String SELECT_USED_IDS_QUERY = "SELECT guide_id FROM guides";
 
 	private final JdbcClient jdbcClient;
@@ -52,7 +64,8 @@ public class GuideDAO extends com.aionemu.gameserver.dao.GuideDAO {
 	/**
 	 * 是否支持当前数据库。
 	 * Whether the current database is supported.
-	 * @param database 数据库名 / database name
+	 *
+	 * @param database     数据库名 / database name
 	 * @param majorVersion 主版本 / major version
 	 * @param minorVersion 次版本 / minor version
 	 * @return 是否支持 / whether supported
@@ -65,24 +78,24 @@ public class GuideDAO extends com.aionemu.gameserver.dao.GuideDAO {
 	/**
 	 * 删除引导。
 	 * Deletes a guide.
+	 *
 	 * @param guide_id 指南 ID / guide id
-	 * @return 是否成功 / whether successful
 	 */
 	@Override
 	public void deleteGuide(int guide_id) {
 		try {
-						jdbcClient.sql(DELETE_QUERY)
+			jdbcClient.sql(DELETE_QUERY)
 				.param(guide_id)
 				.update();
 		} catch (DataAccessException e) {
 			log.error(I18n.get("log.257617627810", guide_id), e);
-						;
 		}
 	}
 
 	/**
 	 * 加载玩家全部引导。
 	 * Loads all guides of a player.
+	 *
 	 * @param playerId 玩家 ID / player id
 	 * @return 指南列表 / guide list
 	 */
@@ -107,8 +120,9 @@ public class GuideDAO extends com.aionemu.gameserver.dao.GuideDAO {
 	/**
 	 * 加载单条引导。
 	 * Loads a single guide.
+	 *
 	 * @param player_id 玩家 ID / player id
-	 * @param guide_id 指南 ID / guide id
+	 * @param guide_id  指南 ID / guide id
 	 * @return 指南 / guide
 	 */
 	@Override
@@ -133,9 +147,10 @@ public class GuideDAO extends com.aionemu.gameserver.dao.GuideDAO {
 	/**
 	 * 保存引导。
 	 * Saves a guide.
+	 *
 	 * @param guide_id 指南 ID / guide id
-	 * @param player 玩家 / player
-	 * @param title 称号 / title
+	 * @param player   玩家 / player
+	 * @param title    称号 / title
 	 */
 	@Override
 	public void saveGuide(int guide_id, Player player, String title) {
@@ -153,6 +168,7 @@ public class GuideDAO extends com.aionemu.gameserver.dao.GuideDAO {
 	/**
 	 * 获取已使用的引导 ID 数组。
 	 * Gets the array of used guide ids.
+	 *
 	 * @return 已用 ID 数组 / used id array
 	 */
 	@Override

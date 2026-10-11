@@ -179,46 +179,74 @@ public class MembershipConfig {
 	@Property(key = "gameserver.membership.tag.premium", defaultValue = " %s")
 	public static String TAG_PREMIUM;
 
-	/** 副本门槛绑定树 / instance-threshold binding tree. */
+	/**
+	 * 副本门槛绑定树 / instance-threshold binding tree.
+	 */
 	@Getter
 	private final InstancesProperties instances = new InstancesProperties();
-	/** 仓库绑定树 / warehouse binding tree. */
+	/**
+	 * 仓库绑定树 / warehouse binding tree.
+	 */
 	@Getter
 	private final StoreProperties store = new StoreProperties();
-	/** 交易与限制绑定树 / trade-and-restriction binding tree. */
+	/**
+	 * 交易与限制绑定树 / trade-and-restriction binding tree.
+	 */
 	@Getter
 	private final TradeProperties trade = new TradeProperties();
-	/** 灵魂绑定绑定树 / soulbind binding tree. */
+	/**
+	 * 灵魂绑定绑定树 / soulbind binding tree.
+	 */
 	@Getter
 	private final DisableProperties disable = new DisableProperties();
-	/** 外形改造绑定树 / remodel binding tree. */
+	/**
+	 * 外形改造绑定树 / remodel binding tree.
+	 */
 	@Getter
 	private final RemodelProperties remodel = new RemodelProperties();
-	/** 表情绑定树 / emotion binding tree. */
+	/**
+	 * 表情绑定树 / emotion binding tree.
+	 */
 	@Getter
 	private final EmotionsProperties emotions = new EmotionsProperties();
-	/** 称号绑定树 / title binding tree. */
+	/**
+	 * 称号绑定树 / title binding tree.
+	 */
 	@Getter
 	private final TitlesProperties titles = new TitlesProperties();
-	/** 印记栏位绑定树 / stigma-slot binding tree. */
+	/**
+	 * 印记栏位绑定树 / stigma-slot binding tree.
+	 */
 	@Getter
 	private final QuestProperties quest = new QuestProperties();
-	/** 灵魂病绑定树 / soul-sickness binding tree. */
+	/**
+	 * 灵魂病绑定树 / soul-sickness binding tree.
+	 */
 	@Getter
 	private final SoulsicknessProperties soulsickness = new SoulsicknessProperties();
-	/** 自动学习绑定树 / auto-learn binding tree. */
+	/**
+	 * 自动学习绑定树 / auto-learn binding tree.
+	 */
 	@Getter
 	private final AutolearnProperties autolearn = new AutolearnProperties();
-	/** 角色栏位绑定树 / character-slot binding tree. */
+	/**
+	 * 角色栏位绑定树 / character-slot binding tree.
+	 */
 	@Getter
 	private final CharacterProperties character = new CharacterProperties();
-	/** 好友列表绑定树 / friend-list binding tree. */
+	/**
+	 * 好友列表绑定树 / friend-list binding tree.
+	 */
 	@Getter
 	private final AdvancedProperties advanced = new AdvancedProperties();
-	/** 玩家标签绑定树 / player-tag binding tree. */
+	/**
+	 * 玩家标签绑定树 / player-tag binding tree.
+	 */
 	@Getter
 	private final PlayerProperties player = new PlayerProperties();
-	/** 会员标签绑定树 / membership-tag binding tree. */
+	/**
+	 * 会员标签绑定树 / membership-tag binding tree.
+	 */
 	@Getter
 	private final MembershipProperties membership = new MembershipProperties();
 
@@ -244,7 +272,9 @@ public class MembershipConfig {
 		}
 	}
 
-	/** 副本称号父节点 / Instance-title parent node. */
+	/**
+	 * 副本称号父节点 / Instance-title parent node.
+	 */
 	@Getter
 	public static class TitleProperties {
 		public byte getRequirement() {
@@ -256,9 +286,9 @@ public class MembershipConfig {
 		}
 	}
 
-	/** 副本称号门槛节点 / Instance-title threshold node. */
-
-	/** 副本阵营父节点 / Instance-race parent node. */
+	/**
+	 * 副本阵营父节点 / Instance-race parent node.
+	 */
 	@Getter
 	public static class RaceProperties {
 		public byte getRequirement() {
@@ -270,9 +300,9 @@ public class MembershipConfig {
 		}
 	}
 
-	/** 副本阵营门槛节点 / Instance-race threshold node. */
-
-	/** 副本等级父节点 / Instance-level parent node. */
+	/**
+	 * 副本等级父节点 / Instance-level parent node.
+	 */
 	@Getter
 	public static class LevelProperties {
 		public byte getRequirement() {
@@ -284,9 +314,9 @@ public class MembershipConfig {
 		}
 	}
 
-	/** 副本等级门槛节点 / Instance-level threshold node. */
-
-	/** 副本组队父节点 / Instance-group parent node. */
+	/**
+	 * 副本组队父节点 / Instance-group parent node.
+	 */
 	@Getter
 	public static class GroupProperties {
 		public byte getRequirement() {
@@ -298,9 +328,9 @@ public class MembershipConfig {
 		}
 	}
 
-	/** 副本组队门槛节点 / Instance-group threshold node. */
-
-	/** 副本任务父节点 / Instance-quest parent node. */
+	/**
+	 * 副本任务父节点 / Instance-quest parent node.
+	 */
 	@Getter
 	public static class QuestRequirementProperties {
 		public byte getRequirement() {
@@ -312,9 +342,9 @@ public class MembershipConfig {
 		}
 	}
 
-	/** 副本任务门槛节点 / Instance-quest threshold node. */
-
-	/** 副本物品父节点 / Instance-item parent node. */
+	/**
+	 * 副本物品父节点 / Instance-item parent node.
+	 */
 	@Getter
 	public static class ItemProperties {
 		public byte getRequirement() {
@@ -325,8 +355,6 @@ public class MembershipConfig {
 			INSTANCES_ITEM_REQ = requirement;
 		}
 	}
-
-	/** 副本物品门槛节点 / Instance-item threshold node. */
 
 	/**
 	 * 仓库节点：绑定 gameserver.store.*。
@@ -339,7 +367,9 @@ public class MembershipConfig {
 		private final LegionwhProperties legionwh = new LegionwhProperties();
 	}
 
-	/** 个人仓库节点 / Personal warehouse node. */
+	/**
+	 * 个人仓库节点 / Personal warehouse node.
+	 */
 	@Getter
 	public static class WhProperties {
 		public byte getAll() {
@@ -351,9 +381,9 @@ public class MembershipConfig {
 		}
 	}
 
-	/** 个人仓库全量节点 / Personal warehouse all-slots node. */
-
-	/** 账号仓库节点 / Account warehouse node. */
+	/**
+	 * 账号仓库节点 / Account warehouse node.
+	 */
 	@Getter
 	public static class AccountwhProperties {
 		public byte getAll() {
@@ -365,9 +395,9 @@ public class MembershipConfig {
 		}
 	}
 
-	/** 账号仓库全量节点 / Account warehouse all-slots node. */
-
-	/** 军团仓库节点 / Legion warehouse node. */
+	/**
+	 * 军团仓库节点 / Legion warehouse node.
+	 */
 	@Getter
 	public static class LegionwhProperties {
 		public byte getAll() {
@@ -378,8 +408,6 @@ public class MembershipConfig {
 			STORE_LWH_ALL = all;
 		}
 	}
-
-	/** 军团仓库全量节点 / Legion warehouse all-slots node. */
 
 	/**
 	 * 交易节点：绑定 gameserver.trade.all。

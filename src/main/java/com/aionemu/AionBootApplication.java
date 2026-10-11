@@ -20,29 +20,34 @@ import org.springframework.boot.jdbc.autoconfigure.JdbcTemplateAutoConfiguration
  * Unified Boot entry that starts the embedded game/login/chat services without a web container.
  */
 @SpringBootApplication(exclude = {
-    DataSourceAutoConfiguration.class,
-    DataSourceTransactionManagerAutoConfiguration.class,
-    JdbcTemplateAutoConfiguration.class,
-    DataSourceInitializationAutoConfiguration.class
+	DataSourceAutoConfiguration.class,
+	DataSourceTransactionManagerAutoConfiguration.class,
+	JdbcTemplateAutoConfiguration.class,
+	DataSourceInitializationAutoConfiguration.class
 })
 @EnableConfigurationProperties({
-    AionServicesProperties.class,
-    AionGameProperties.class,
-    LegacyGameProperties.class,
-    LegacyLoginProperties.class,
-    LegacyChatProperties.class
+	AionServicesProperties.class,
+	AionGameProperties.class,
+	LegacyGameProperties.class,
+	LegacyLoginProperties.class,
+	LegacyChatProperties.class
 })
 public class AionBootApplication {
 
-    /**
-     * 启用内嵌运行模式、按需织入回调字节码后启动 Spring 应用。
-     * Enables embedded runtime mode, then starts Spring.
-     * @param args 命令行参数 / command-line arguments
-     */
-    static void main(String[] args) {
-        AionRuntimeMode.enableBootEmbeddedMode();
-        new SpringApplicationBuilder(AionBootApplication.class)
-            .web(WebApplicationType.NONE)
-            .run(args);
-    }
+	/**
+	 * 启用内嵌运行模式、按需织入回调字节码后启动 Spring 应用。
+	 * Enables embedded runtime mode, then starts Spring.
+	 * <p>必须保持 {@code public}：JVM 启动器与 pom 的 mainClass 反射入口，且被
+	 * {@code AionBootApplicationTest} 的反射与源码审计双重钉住，降级为包私有会直接无法启动。
+	 * <p>Must stay {@code public}: the JVM launcher and the pom mainClass both need it, and
+	 * {@code AionBootApplicationTest} pins it via reflection and source audit.
+	 *
+	 * @param args 命令行参数 / command-line arguments
+	 */
+	public static void main(String[] args) {
+		AionRuntimeMode.enableBootEmbeddedMode();
+		new SpringApplicationBuilder(AionBootApplication.class)
+			.web(WebApplicationType.NONE)
+			.run(args);
+	}
 }

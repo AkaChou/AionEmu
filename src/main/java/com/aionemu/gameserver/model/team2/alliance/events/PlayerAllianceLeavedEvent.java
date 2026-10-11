@@ -19,6 +19,7 @@ import com.aionemu.gameserver.world.WorldMapInstance;
 /**
  * 玩家联盟 Leaved 活动，用于团队2相关逻辑。
  * Player Alliance Leaved Event for team 2 logic.
+ *
  * @author ATracer
  */
 public class PlayerAllianceLeavedEvent extends PlayerLeavedEvent<PlayerAllianceMember, PlayerAlliance> {
@@ -28,7 +29,7 @@ public class PlayerAllianceLeavedEvent extends PlayerLeavedEvent<PlayerAllianceM
 	}
 
 	public PlayerAllianceLeavedEvent(PlayerAlliance team, Player player, PlayerLeavedEvent.LeaveReson reason,
-			String banPersonName) {
+									 String banPersonName) {
 		super(team, player, reason, banPersonName);
 	}
 
@@ -36,7 +37,9 @@ public class PlayerAllianceLeavedEvent extends PlayerLeavedEvent<PlayerAllianceM
 		super(alliance, player, reason);
 	}
 
-	/** 处理活动。 / Handle event. */
+	/**
+	 * 处理活动。 / Handle event.
+	 */
 	@Override
 	public void handleEvent() {
 		team.removeMember(leavedPlayer.getObjectId());
@@ -49,22 +52,22 @@ public class PlayerAllianceLeavedEvent extends PlayerLeavedEvent<PlayerAllianceM
 		team.apply(this);
 
 		switch (reason) {
-		case BAN:
-		case LEAVE:
-		case LEAVE_TIMEOUT:
-			if (team.getTeamType().shouldDisband(team.onlineMembers())) {
-				PlayerAllianceService.disband(team);
-			} else if (team.onlineMembers() > 0 && leavedPlayer.equals(team.getLeader().getObject())) {
-				team.onEvent(new ChangeAllianceLeaderEvent(team));
-			}
-			if (reason == LeaveReson.BAN) {
-				PacketSendUtility.sendPacket(leavedPlayer, SM_SYSTEM_MESSAGE.STR_FORCE_BAN_ME(banPersonName));
-			}
+			case BAN:
+			case LEAVE:
+			case LEAVE_TIMEOUT:
+				if (team.getTeamType().shouldDisband(team.onlineMembers())) {
+					PlayerAllianceService.disband(team);
+				} else if (team.onlineMembers() > 0 && leavedPlayer.equals(team.getLeader().getObject())) {
+					team.onEvent(new ChangeAllianceLeaderEvent(team));
+				}
+				if (reason == LeaveReson.BAN) {
+					PacketSendUtility.sendPacket(leavedPlayer, SM_SYSTEM_MESSAGE.STR_FORCE_BAN_ME(banPersonName));
+				}
 
-			break;
-		case DISBAND:
-			PacketSendUtility.sendPacket(leavedPlayer, SM_SYSTEM_MESSAGE.STR_PARTY_ALLIANCE_DISPERSED);
-			break;
+				break;
+			case DISBAND:
+				PacketSendUtility.sendPacket(leavedPlayer, SM_SYSTEM_MESSAGE.STR_PARTY_ALLIANCE_DISPERSED);
+				break;
 		}
 
 		if (leavedPlayer.isInInstance()) {
@@ -83,7 +86,9 @@ public class PlayerAllianceLeavedEvent extends PlayerLeavedEvent<PlayerAllianceM
 		}
 	}
 
-	/** 应用。 / Apply. */
+	/**
+	 * 应用。 / Apply.
+	 */
 	@Override
 	public boolean apply(PlayerAllianceMember member) {
 		Player player = member.getObject();
@@ -92,21 +97,18 @@ public class PlayerAllianceLeavedEvent extends PlayerLeavedEvent<PlayerAllianceM
 		PacketSendUtility.sendPacket(player, new SM_ALLIANCE_INFO(team));
 
 		switch (reason) {
-		case LEAVE_TIMEOUT:
-			PacketSendUtility.sendPacket(player,
+			case LEAVE_TIMEOUT:
+			case LEAVE:
+				PacketSendUtility.sendPacket(player,
 					SM_SYSTEM_MESSAGE.STR_PARTY_ALLIANCE_HE_LEAVED_PARTY(leavedPlayer.getName()));
-			break;
-		case LEAVE:
-			PacketSendUtility.sendPacket(player,
-					SM_SYSTEM_MESSAGE.STR_PARTY_ALLIANCE_HE_LEAVED_PARTY(leavedPlayer.getName()));
-			break;
-		case DISBAND:
-			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_PARTY_ALLIANCE_DISPERSED);
-			break;
-		case BAN:
-			PacketSendUtility.sendPacket(player,
+				break;
+			case DISBAND:
+				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_PARTY_ALLIANCE_DISPERSED);
+				break;
+			case BAN:
+				PacketSendUtility.sendPacket(player,
 					SM_SYSTEM_MESSAGE.STR_FORCE_BAN_HIM(banPersonName, leavedPlayer.getName()));
-			break;
+				break;
 		}
 		return true;
 	}

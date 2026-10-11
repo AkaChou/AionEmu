@@ -95,8 +95,8 @@ public class VertexBuffer extends GLObject implements Cloneable {
 		 */
 		BoneIndex,
 		/**
-		// 第二套纹理坐标。
-		// Texture coordinate #2.
+		 * // 第二套纹理坐标。
+		 * // Texture coordinate #2.
 		 */
 		TexCoord2
 	}
@@ -123,8 +123,8 @@ public class VertexBuffer extends GLObject implements Cloneable {
 		 */
 		Stream,
 		/**
-		// 数据不发送到 GPU，仅 CPU 使用。
-		// Mesh data is not sent to the GPU at all; CPU only.
+		 * // 数据不发送到 GPU，仅 CPU 使用。
+		 * // Mesh data is not sent to the GPU at all; CPU only.
 		 */
 		CpuOnly
 	}
@@ -141,10 +141,11 @@ public class VertexBuffer extends GLObject implements Cloneable {
 		// 整数格式 / Integer formats
 		Byte(1), UnsignedByte(1), Short(2), UnsignedShort(2), Int(4), UnsignedInt(4);
 
-		/** 该格式每个分量的字节数。 / Bytes per component for this format.
+		/**
+		 * 该格式每个分量的字节数。 / Bytes per component for this format.
 		 * -- GETTER --
-		 *  返回该数据类型的字节大小。
-		 *  Returns the size in bytes of this data type.
+		 * 返回该数据类型的字节大小。
+		 * Returns the size in bytes of this data type.
 		 * 分量字节数 / component size in bytes
 		 */
 		private int componentSize = 0;
@@ -155,49 +156,55 @@ public class VertexBuffer extends GLObject implements Cloneable {
 
 	}
 
-	/** 交错缓冲中的字节偏移。 / Byte offset within an interleaved buffer.
+	/**
+	 * 交错缓冲中的字节偏移。 / Byte offset within an interleaved buffer.
 	 * -- GETTER --
-	 *  返回交错偏移。
-	 *  Returns the interleaved offset.
+	 * 返回交错偏移。
+	 * Returns the interleaved offset.
 	 * -- SETTER --
-	 *  设置交错偏移。
-	 *  Sets the interleaved offset.
+	 * 设置交错偏移。
+	 * Sets the interleaved offset.
 	 */
 	@Setter
 	@Getter
 	protected int offset = 0;
-	/** 交错缓冲中的字节步长。 / Byte stride within an interleaved buffer.
+	/**
+	 * 交错缓冲中的字节步长。 / Byte stride within an interleaved buffer.
 	 * -- GETTER --
-	 *  返回交错步长。
-	 *  Returns the interleaved stride.
+	 * 返回交错步长。
+	 * Returns the interleaved stride.
 	 * -- SETTER --
-	 *  设置交错步长。
-	 *  Sets the interleaved stride.
+	 * 设置交错步长。
+	 * Sets the interleaved stride.
 	 */
 	@Setter
 	@Getter
 	protected int stride = 0;
-	/** 每顶点分量数。 / Components per vertex. */
+	/**
+	 * 每顶点分量数。 / Components per vertex.
+	 */
 	protected int components = 0;
 	/**
 	 * 由 components * format.getComponentSize() 推导的每顶点字节数。
 	 * Bytes per vertex derived from components * format.getComponentSize().
 	 */
 	protected transient int componentsLength = 0;
-	/** 底层 NIO 数据。 / Underlying NIO data.
+	/**
+	 * 底层 NIO 数据。 / Underlying NIO data.
 	 * -- GETTER --
-	 *  返回底层数据缓冲。
-	 *  Returns the underlying data buffer.
+	 * 返回底层数据缓冲。
+	 * Returns the underlying data buffer.
 	 */
 	@Getter
 	protected Buffer data = null;
-	/** 映射的字节缓冲（若有）。 / Mapped byte buffer if any.
+	/**
+	 * 映射的字节缓冲（若有）。 / Mapped byte buffer if any.
 	 * -- GETTER --
-	 *  返回映射字节缓冲。
-	 *  Returns the mapped byte buffer.
+	 * 返回映射字节缓冲。
+	 * Returns the mapped byte buffer.
 	 * -- SETTER --
-	 *  设置映射字节缓冲。
-	 *  Sets the mapped byte buffer.
+	 * 设置映射字节缓冲。
+	 * Sets the mapped byte buffer.
 	 */
 	@Setter
 	@Getter
@@ -205,44 +212,52 @@ public class VertexBuffer extends GLObject implements Cloneable {
 	// if (id != -1)
 	// throw new UnsupportedOperationException("Data has already been sent. Cannot
 	// set usage.");
-	/** 用途提示。 / Usage hint.
+	/**
+	 * 用途提示。 / Usage hint.
 	 * -- GETTER --
-	 *  返回用途提示。
-	 *  Returns the usage hint.
+	 * 返回用途提示。
+	 * Returns the usage hint.
 	 * -- SETTER --
-	 *  设置用途提示。
-	 *  Sets the usage hint.
+	 * 设置用途提示。
+	 * Sets the usage hint.
 	 */
 	@Setter
 	@Getter
 	protected Usage usage;
-	/** 属性类型。 / Attribute type. */
+	/**
+	 * 属性类型。 / Attribute type.
+	 */
 	protected Type bufType;
-	/** 数据格式。 / Data format.
+	/**
+	 * 数据格式。 / Data format.
 	 * -- GETTER --
-	 *  返回数据格式。
-	 *  Returns the data format.
+	 * 返回数据格式。
+	 * Returns the data format.
 	 */
 	@Getter
 	protected Format format;
-	/** 是否归一化整数数据。 / Whether integer data is normalized.
+	/**
+	 * 是否归一化整数数据。 / Whether integer data is normalized.
 	 * -- GETTER --
-	 *  是否归一化。
-	 *  Whether data is normalized.
+	 * 是否归一化。
+	 * Whether data is normalized.
 	 * -- SETTER --
-	 *  设置是否归一化。
-	 *  Sets whether data is normalized.
-	 归一化则为 true / true if normalized
+	 * 设置是否归一化。
+	 * Sets whether data is normalized.
+	 * 归一化则为 true / true if normalized
 	 */
 	@Setter
 	@Getter
 	protected boolean normalized = false;
-	/** 数据容量是否已变化。 / Whether data capacity has changed. */
+	/**
+	 * 数据容量是否已变化。 / Whether data capacity has changed.
+	 */
 	protected transient boolean dataSizeChanged = false;
 
 	/**
 	 * 创建空的、未初始化缓冲；须调用 setupData() 初始化。
 	 * Creates an empty, uninitialized buffer. Must call setupData() to initialize.
+	 *
 	 * @param type 属性类型 / attribute type
 	 */
 	public VertexBuffer(Type type) {
@@ -261,6 +276,7 @@ public class VertexBuffer extends GLObject implements Cloneable {
 	/**
 	 * 带已有 ID 的受保护构造，供可销毁浅拷贝使用。
 	 * Protected constructor with an existing id, for destructable shallow clones.
+	 *
 	 * @param id 对象 ID / object id
 	 */
 	protected VertexBuffer(int id) {
@@ -270,6 +286,7 @@ public class VertexBuffer extends GLObject implements Cloneable {
 	/**
 	 * 返回属性类型。
 	 * Returns the attribute type.
+	 *
 	 * @return 属性类型 / buffer type
 	 */
 	public Type getBufferType() {
@@ -279,6 +296,7 @@ public class VertexBuffer extends GLObject implements Cloneable {
 	/**
 	 * 返回每顶点分量数。
 	 * Returns the number of components per vertex.
+	 *
 	 * @return 分量数 / component count
 	 */
 	public int getNumComponents() {
@@ -288,6 +306,7 @@ public class VertexBuffer extends GLObject implements Cloneable {
 	/**
 	 * 返回元素（顶点）个数。
 	 * Returns the number of elements (vertices).
+	 *
 	 * @return 元素（顶点）数 / element count
 	 */
 	public int getNumElements() {
@@ -301,10 +320,11 @@ public class VertexBuffer extends GLObject implements Cloneable {
 	/**
 	 * 初始化缓冲数据（数据已上传后不可再次调用）。
 	 * Initializes buffer data (cannot be called again after data has been sent).
-	 * @param usage 用途提示 / usage
+	 *
+	 * @param usage      用途提示 / usage
 	 * @param components 每顶点分量数 / components per vertex
-	 * @param format 数据格式 / data format
-	 * @param data 数据缓冲 / data buffer
+	 * @param format     数据格式 / data format
+	 * @param data       数据缓冲 / data buffer
 	 */
 	public void setupData(Usage usage, int components, Format format, Buffer data) {
 		if (id != -1) {
@@ -322,6 +342,7 @@ public class VertexBuffer extends GLObject implements Cloneable {
 	/**
 	 * 更新数据缓冲；容量变化时标记 dataSizeChanged。
 	 * Updates the data buffer; marks dataSizeChanged when capacity differs.
+	 *
 	 * @param data 新数据 / new data
 	 */
 	public void updateData(Buffer data) {
@@ -339,6 +360,7 @@ public class VertexBuffer extends GLObject implements Cloneable {
 	/**
 	 * 数据容量是否已变化。
 	 * Whether data capacity has changed.
+	 *
 	 * @return 已变化则为 true / true if capacity changed
 	 */
 	public boolean hasDataSizeChanged() {
@@ -391,46 +413,47 @@ public class VertexBuffer extends GLObject implements Cloneable {
 	/**
 	 * 将数据压缩为仅保留 numElements 个元素。
 	 * Compacts the data to retain only numElements elements.
+	 *
 	 * @param numElements 保留的元素个数 / number of elements to keep
 	 */
 	public void compact(int numElements) {
 		int total = components * numElements;
 		data.clear();
 		switch (format) {
-		case Byte:
-		case UnsignedByte:
-		case Half:
-			ByteBuffer bbuf = (ByteBuffer) data;
-			bbuf.limit(total);
-			ByteBuffer bnewBuf = BufferUtils.createByteBuffer(total);
-			bnewBuf.put(bbuf);
-			data = bnewBuf;
-			break;
-		case Short:
-		case UnsignedShort:
-			ShortBuffer sbuf = (ShortBuffer) data;
-			sbuf.limit(total);
-			ShortBuffer snewBuf = BufferUtils.createShortBuffer(total);
-			snewBuf.put(sbuf);
-			data = snewBuf;
-			break;
-		case Int:
-		case UnsignedInt:
-			IntBuffer ibuf = (IntBuffer) data;
-			ibuf.limit(total);
-			IntBuffer inewBuf = BufferUtils.createIntBuffer(total);
-			inewBuf.put(ibuf);
-			data = inewBuf;
-			break;
-		case Float:
-			FloatBuffer fbuf = (FloatBuffer) data;
-			fbuf.limit(total);
-			FloatBuffer fnewBuf = BufferUtils.createFloatBuffer(total);
-			fnewBuf.put(fbuf);
-			data = fnewBuf;
-			break;
-		default:
-			throw new UnsupportedOperationException("Unrecognized buffer format: " + format);
+			case Byte:
+			case UnsignedByte:
+			case Half:
+				ByteBuffer bbuf = (ByteBuffer) data;
+				bbuf.limit(total);
+				ByteBuffer bnewBuf = BufferUtils.createByteBuffer(total);
+				bnewBuf.put(bbuf);
+				data = bnewBuf;
+				break;
+			case Short:
+			case UnsignedShort:
+				ShortBuffer sbuf = (ShortBuffer) data;
+				sbuf.limit(total);
+				ShortBuffer snewBuf = BufferUtils.createShortBuffer(total);
+				snewBuf.put(sbuf);
+				data = snewBuf;
+				break;
+			case Int:
+			case UnsignedInt:
+				IntBuffer ibuf = (IntBuffer) data;
+				ibuf.limit(total);
+				IntBuffer inewBuf = BufferUtils.createIntBuffer(total);
+				inewBuf.put(ibuf);
+				data = inewBuf;
+				break;
+			case Float:
+				FloatBuffer fbuf = (FloatBuffer) data;
+				fbuf.limit(total);
+				FloatBuffer fnewBuf = BufferUtils.createFloatBuffer(total);
+				fnewBuf.put(fbuf);
+				data = fnewBuf;
+				break;
+			default:
+				throw new UnsupportedOperationException("Unrecognized buffer format: " + format);
 		}
 		data.clear();
 		setUpdateNeeded();
@@ -440,8 +463,9 @@ public class VertexBuffer extends GLObject implements Cloneable {
 	/**
 	 * 将本缓冲第 inIndex 个元素拷贝到 outVb 的 outIndex（格式与分量数须一致）。
 	 * Copies element inIndex from this buffer into outVb at outIndex (format and component count must match).
-	 * @param inIndex 源元素索引 / source element index
-	 * @param outVb 目标缓冲 / destination buffer
+	 *
+	 * @param inIndex  源元素索引 / source element index
+	 * @param outVb    目标缓冲 / destination buffer
 	 * @param outIndex 目标元素索引 / destination element index
 	 */
 	public void copyElement(int inIndex, VertexBuffer outVb, int outIndex) {
@@ -462,40 +486,40 @@ public class VertexBuffer extends GLObject implements Cloneable {
 		outVb.data.clear();
 
 		switch (format) {
-		case Byte:
-		case UnsignedByte:
-		case Half:
-			ByteBuffer bin = (ByteBuffer) data;
-			ByteBuffer bout = (ByteBuffer) outVb.data;
-			bin.position(inPos).limit(inPos + elementSz);
-			bout.position(outPos).limit(outPos + elementSz);
-			bout.put(bin);
-			break;
-		case Short:
-		case UnsignedShort:
-			ShortBuffer sin = (ShortBuffer) data;
-			ShortBuffer sout = (ShortBuffer) outVb.data;
-			sin.position(inPos).limit(inPos + elementSz);
-			sout.position(outPos).limit(outPos + elementSz);
-			sout.put(sin);
-			break;
-		case Int:
-		case UnsignedInt:
-			IntBuffer iin = (IntBuffer) data;
-			IntBuffer iout = (IntBuffer) outVb.data;
-			iin.position(inPos).limit(inPos + elementSz);
-			iout.position(outPos).limit(outPos + elementSz);
-			iout.put(iin);
-			break;
-		case Float:
-			FloatBuffer fin = (FloatBuffer) data;
-			FloatBuffer fout = (FloatBuffer) outVb.data;
-			fin.position(inPos).limit(inPos + elementSz);
-			fout.position(outPos).limit(outPos + elementSz);
-			fout.put(fin);
-			break;
-		default:
-			throw new UnsupportedOperationException("Unrecognized buffer format: " + format);
+			case Byte:
+			case UnsignedByte:
+			case Half:
+				ByteBuffer bin = (ByteBuffer) data;
+				ByteBuffer bout = (ByteBuffer) outVb.data;
+				bin.position(inPos).limit(inPos + elementSz);
+				bout.position(outPos).limit(outPos + elementSz);
+				bout.put(bin);
+				break;
+			case Short:
+			case UnsignedShort:
+				ShortBuffer sin = (ShortBuffer) data;
+				ShortBuffer sout = (ShortBuffer) outVb.data;
+				sin.position(inPos).limit(inPos + elementSz);
+				sout.position(outPos).limit(outPos + elementSz);
+				sout.put(sin);
+				break;
+			case Int:
+			case UnsignedInt:
+				IntBuffer iin = (IntBuffer) data;
+				IntBuffer iout = (IntBuffer) outVb.data;
+				iin.position(inPos).limit(inPos + elementSz);
+				iout.position(outPos).limit(outPos + elementSz);
+				iout.put(iin);
+				break;
+			case Float:
+				FloatBuffer fin = (FloatBuffer) data;
+				FloatBuffer fout = (FloatBuffer) outVb.data;
+				fin.position(inPos).limit(inPos + elementSz);
+				fout.position(outPos).limit(outPos + elementSz);
+				fout.put(fin);
+				break;
+			default:
+				throw new UnsupportedOperationException("Unrecognized buffer format: " + format);
 		}
 
 		data.clear();
@@ -505,12 +529,13 @@ public class VertexBuffer extends GLObject implements Cloneable {
 	/**
 	 * 按格式与分量数创建可容纳 numElements 个元素的 NIO 缓冲。
 	 * Creates an NIO buffer for the given format/components that holds numElements elements.
-	 * @param format 数据格式 / data format
-	 * @param components 每顶点分量数（1–4） / components per vertex (1–4)
+	 *
+	 * @param format      数据格式 / data format
+	 * @param components  每顶点分量数（1–4） / components per vertex (1–4)
 	 * @param numElements 元素个数 / element count
 	 * @return 新建缓冲 / newly created buffer
 	 */
-	public static final Buffer createBuffer(Format format, int components, int numElements) {
+	public static Buffer createBuffer(Format format, int components, int numElements) {
 		if (components < 1 || components > 4) {
 			throw new IllegalArgumentException("Num components must be between 1 and 4");
 		}
@@ -531,6 +556,7 @@ public class VertexBuffer extends GLObject implements Cloneable {
 	/**
 	 * 深拷贝本缓冲（含数据克隆，新 ID）。
 	 * Deep-clones this buffer (data cloned, new id).
+	 *
 	 * @return 克隆实例 / clone instance
 	 */
 	@Override
@@ -547,6 +573,7 @@ public class VertexBuffer extends GLObject implements Cloneable {
 	/**
 	 * 以覆盖类型克隆（数据拷贝，新 ID，未上传）。
 	 * Clones with an overridden type (data copied, new id, not uploaded).
+	 *
 	 * @param overrideType 覆盖的属性类型 / overridden attribute type
 	 * @return 克隆实例 / clone instance
 	 */
@@ -569,6 +596,7 @@ public class VertexBuffer extends GLObject implements Cloneable {
 	/**
 	 * 返回格式/类型/用途与元素数的摘要字符串。
 	 * Returns a summary string of format/type/usage and element count.
+	 *
 	 * @return 描述字符串 / descriptive string
 	 */
 	@Override
@@ -578,7 +606,7 @@ public class VertexBuffer extends GLObject implements Cloneable {
 			dataTxt = ", elements=" + data.capacity();
 		}
 		return getClass().getSimpleName() + "[fmt=" + format.name() + ", type=" + bufType.name() + ", usage="
-				+ usage.name() + dataTxt + "]";
+			+ usage.name() + dataTxt + "]";
 	}
 
 	/**
@@ -595,6 +623,7 @@ public class VertexBuffer extends GLObject implements Cloneable {
 	/**
 	 * 创建仅含 ID 的可销毁浅拷贝。
 	 * Creates a destructable shallow clone holding only the id.
+	 *
 	 * @return 浅拷贝 / shallow clone
 	 */
 	@Override

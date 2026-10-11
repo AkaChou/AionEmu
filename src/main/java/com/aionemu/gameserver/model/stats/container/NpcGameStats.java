@@ -377,7 +377,6 @@ public class NpcGameStats extends CreatureGameStats<Npc> {
 	}
 
 	/**
-	 * @return next possible skill time depending on time
 	 */
 
 	public void renewLastSkillTime() {

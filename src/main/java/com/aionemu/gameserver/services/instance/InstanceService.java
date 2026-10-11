@@ -53,18 +53,34 @@ import com.aionemu.gameserver.world.zone.ZoneInstance;
 /**
  * 副本生命周期服务，负责创建/销毁、注册、进出及空副本回收。
  * Instance lifecycle service — create/destroy, registration, enter/leave and empty-instance recycle.
+ *
  * @author G-Robson26
  */
 @Slf4j
 
 public class InstanceService {
-	/** 待空副本重置的实例集合（弱引用）。 / Instances pending empty-reset (weak refs). */
+	/**
+	 * 待空副本重置的实例集合（弱引用）。 / Instances pending empty-reset (weak refs).
+	 */
 	private static final Set<WorldMapInstance> pendingResets = Collections
-			.synchronizedSet(Collections.newSetFromMap(new WeakHashMap<>()));
+		.synchronizedSet(Collections.newSetFromMap(new WeakHashMap<>()));
+	/**
+	 * 启用怪物仇恨的副本地图 ID 注册表（原由 {@code gameserver.instances.mob.aggro} 配置装载）。
+	 * 零售对齐后成员资格不再参与仇恨判定，但本字段是 {@code PlayerAggroLevelTest} 的反射钉住面，
+	 * 用于锁死「注册表 membership 不得旁路等级免疫」的契约，严禁作为死代码删除。
+	 * <p>
+	 * Registry of instance map IDs with mob aggro (originally loaded from the
+	 * {@code gameserver.instances.mob.aggro} property). After the retail alignment its membership no
+	 * longer takes part in aggro decisions, but it remains the reflection surface pinned by
+	 * {@code PlayerAggroLevelTest} to lock the "membership must not bypass level immunity" contract;
+	 * never remove it as dead code.
+	 */
+	private static final List<Integer> instanceAggro = new ArrayList<>();
 
 	/**
 	 * 创建下一可用副本实例（可指定所有者）。
 	 * Creates the next available instance, optionally owned.
+	 *
 	 * @param worldId 世界地图 ID / world map id
 	 * @param ownerId 所有者对象 ID（个人副本） / owner object id (personal instance)
 	 * @return 新建的世界地图实例 / newly created world map instance
@@ -77,7 +93,7 @@ public class InstanceService {
 		int nextInstanceId = map.getNextInstanceId();
 		log.info(I18n.get("log.a698e49af03a", worldId, nextInstanceId, ownerId));
 		WorldMapInstance worldMapInstance = WorldMapInstanceFactory.createWorldMapInstance(map, nextInstanceId,
-				ownerId);
+			ownerId);
 		map.addInstance(nextInstanceId, worldMapInstance);
 		SpawnEngine.spawnInstance(worldId, worldMapInstance.getInstanceId(), 0, 0, ownerId);
 		GameEngineServices.instanceEngine().onInstanceCreate(worldMapInstance);
@@ -90,6 +106,7 @@ public class InstanceService {
 	/**
 	 * 创建下一可用副本实例（无所有者）。
 	 * Creates the next available instance without an owner.
+	 *
 	 * @param worldId 世界地图 ID / world map id
 	 * @return 新建的世界地图实例 / newly created world map instance
 	 */
@@ -108,6 +125,7 @@ public class InstanceService {
 	 * 1. Personal instances owned by the player (isPersonal true, ownerId matches);
 	 * 2. Instances entered and registered by the player alone (no group/alliance/league, soloPlayerObj matches), including group instances entered solo;
 	 * 3. Instances registered to the player's current group, alliance, or league.</p>
+	 *
 	 * @param player 玩家 / player
 	 * @return 已销毁的副本数量 / number of destroyed instances
 	 */
@@ -146,8 +164,9 @@ public class InstanceService {
 	/**
 	 * 判断实例是否属于指定玩家个人或其当前所在的队伍/联盟。
 	 * Whether the instance belongs to the player personally or to their current group/alliance/league.
+	 *
 	 * @param instance 待检查副本 / instance to inspect
-	 * @param player 玩家 / player
+	 * @param player   玩家 / player
 	 * @return 属于该玩家或其当前队伍则为 true / true if belongs to the player or their current team
 	 */
 	static boolean isPlayerInstance(WorldMapInstance instance, Player player) {
@@ -169,7 +188,7 @@ public class InstanceService {
 		if (player.isInGroup2() && instance.getRegisteredGroup() != null) {
 			PlayerGroup group = player.getPlayerGroup2();
 			if (group.equals(instance.getRegisteredGroup())
-					|| (group.getTeamId() != null && group.getTeamId().equals(instance.getRegisteredGroup().getTeamId()))) {
+				|| (group.getTeamId() != null && group.getTeamId().equals(instance.getRegisteredGroup().getTeamId()))) {
 				return true;
 			}
 		}
@@ -178,7 +197,7 @@ public class InstanceService {
 		if (player.isInAlliance2() && instance.getRegistredAlliance() != null) {
 			PlayerAlliance alliance = player.getPlayerAlliance2();
 			if (alliance.equals(instance.getRegistredAlliance())
-					|| (alliance.getObjectId() != null && alliance.getObjectId().equals(instance.getRegistredAlliance().getObjectId()))) {
+				|| (alliance.getObjectId() != null && alliance.getObjectId().equals(instance.getRegistredAlliance().getObjectId()))) {
 				return true;
 			}
 		}
@@ -196,13 +215,14 @@ public class InstanceService {
 	/**
 	 * 判断实例是否为指定玩家拥有的单人副本（包括个人独立进入的组队副本）。
 	 * Whether the instance is a solo instance owned by the given player (including group instances entered solo).
-	 * @param instance 待检查副本 / instance to inspect
+	 *
+	 * @param instance       待检查副本 / instance to inspect
 	 * @param playerObjectId 玩家对象 ID / player object id
 	 * @return 属于该玩家的单人/独立副本则为 true / true when owned solo/personal instance
 	 */
 	static boolean isPlayerSoloInstance(WorldMapInstance instance, int playerObjectId) {
 		if (instance.getRegisteredGroup() != null || instance.getRegistredAlliance() != null
-				|| instance.getRegistredLeague() != null) {
+			|| instance.getRegistredLeague() != null) {
 			return false;
 		}
 		if (instance.isPersonal()) {
@@ -215,6 +235,7 @@ public class InstanceService {
 	/**
 	 * 销毁副本：踢出玩家、删除对象并通知处理器。
 	 * Destroys an instance: ejects players, deletes objects, notifies the handler.
+	 *
 	 * @param instance 要销毁的副本 / instance to destroy
 	 */
 	public static void destroyInstance(WorldMapInstance instance) {
@@ -261,8 +282,9 @@ public class InstanceService {
 	/**
 	 * 将玩家注册到副本。
 	 * Registers a player with the instance.
+	 *
 	 * @param instance 副本实例 / instance
-	 * 玩家 / player
+	 *                 玩家 / player
 	 */
 	public static void registerPlayerWithInstance(WorldMapInstance instance, Player player) {
 		Integer obj = player.getObjectId();
@@ -273,8 +295,9 @@ public class InstanceService {
 	/**
 	 * 将队伍注册到副本。
 	 * Registers a player group with the instance.
+	 *
 	 * @param instance 副本实例 / instance
-	 * @param group 队伍 / group
+	 * @param group    队伍 / group
 	 */
 	public static void registerGroupWithInstance(WorldMapInstance instance, PlayerGroup group) {
 		instance.registerGroup(group);
@@ -283,8 +306,9 @@ public class InstanceService {
 	/**
 	 * 将联盟注册到副本。
 	 * Registers a player alliance with the instance.
+	 *
 	 * @param instance 副本实例 / instance
-	 * @param group 联盟 / alliance
+	 * @param group    联盟 / alliance
 	 */
 	public static void registerAllianceWithInstance(WorldMapInstance instance, PlayerAlliance group) {
 		instance.registerGroup(group);
@@ -293,8 +317,9 @@ public class InstanceService {
 	/**
 	 * 将军团联赛注册到副本。
 	 * Registers a league with the instance.
+	 *
 	 * @param instance 副本实例 / instance
-	 * @param group 战团 / league
+	 * @param group    战团 / league
 	 */
 	public static void registerLeagueWithInstance(WorldMapInstance instance, League group) {
 		instance.registerGroup(group);
@@ -303,7 +328,8 @@ public class InstanceService {
 	/**
 	 * 按对象 ID 查找已注册的副本。
 	 * Finds a registered instance by object id.
-	 * @param worldId 世界地图 ID / world map id
+	 *
+	 * @param worldId  世界地图 ID / world map id
 	 * @param objectId 注册对象 ID / registered object id
 	 * @return 已注册副本，未找到则为 null / registered instance, or null
 	 */
@@ -321,8 +347,9 @@ public class InstanceService {
 	/**
 	 * 解析玩家在指定地图应进入的实例 ID：玩家已在该地图时优先复用其注册实例，否则分配新实例并注册。
 	 * Resolves the instance id the player should enter on the given map: reuses the player's registered instance when already on that map, otherwise allocates and registers a new one.
+	 *
 	 * @param worldId 世界地图 ID / world map id
-	 * @param player 待传送的玩家 / player being teleported
+	 * @param player  待传送的玩家 / player being teleported
 	 * @return 应进入的实例 ID / the instance id to enter
 	 */
 	public static int resolveInstanceId(int worldId, Player player) {
@@ -340,6 +367,7 @@ public class InstanceService {
 	/**
 	 * 按所有者查找个人副本。
 	 * Finds a personal instance by owner id.
+	 *
 	 * @param worldId 世界地图 ID / world map id
 	 * @param ownerId 所有者 ID / owner id
 	 * @return 个人副本，未找到则为 null / personal instance, or null
@@ -361,7 +389,8 @@ public class InstanceService {
 	/**
 	 * 获取新手副本（若已注册且为新手实例）。
 	 * Returns the beginner instance if registered and beginner-type.
-	 * @param worldId 世界地图 ID / world map id
+	 *
+	 * @param worldId      世界地图 ID / world map id
 	 * @param registeredId 注册 ID / registered id
 	 * @return 新手副本，否则 null / beginner instance, or null
 	 */
@@ -377,6 +406,7 @@ public class InstanceService {
 	 * 解析玩家最近一次副本注册所用的查找 ID。
 	 * Resolves the lookup id last used for the player's instance registration.
 	 * 玩家 / player
+	 *
 	 * @param player 玩家（查找 ID） / player (lookup id)
 	 */
 	private static int getLastRegisteredId(Player player) {
@@ -400,6 +430,7 @@ public class InstanceService {
 	/**
 	 * 判断地图是否为个人实例世界（未知地图按非个人处理）。
 	 * Whether the map is a personal-instance world (unknown maps are treated as non-personal).
+	 *
 	 * @param worldId 世界地图 ID / world map id
 	 * @return 是否为个人实例世界 / whether it is a personal-instance world
 	 */
@@ -411,6 +442,7 @@ public class InstanceService {
 	/**
 	 * 玩家登录时恢复副本位置；无效则传送至出口。
 	 * Restores instance position on login; moves to exit if invalid.
+	 *
 	 * @param player 玩家 / player
 	 */
 	public static void onPlayerLogin(Player player) {
@@ -419,13 +451,13 @@ public class InstanceService {
 		WorldMapInstance beginnerInstance = getBeginnerInstance(worldId, lookupId);
 		if (beginnerInstance != null) {
 			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().setPosition(player, worldId, beginnerInstance.getInstanceId(), player.getX(),
-					player.getY(), player.getZ(), player.getHeading());
+				player.getY(), player.getZ(), player.getHeading());
 		}
 		WorldMapTemplate worldTemplate = DataManager.WORLD_MAPS_DATA.getTemplate(worldId);
 		if (worldTemplate.isInstance()) {
 			boolean isPersonal = isPersonalWorld(player.getWorldId());
 			WorldMapInstance registeredInstance = isPersonal ? getPersonalInstance(worldId, lookupId)
-					: getRegisteredInstance(worldId, lookupId);
+				: getRegisteredInstance(worldId, lookupId);
 			if (isPersonal) {
 				if (registeredInstance == null) {
 					registeredInstance = getNextAvailableInstance(player.getWorldId(), lookupId);
@@ -436,7 +468,7 @@ public class InstanceService {
 			}
 			if (registeredInstance != null) {
 				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().setPosition(player, worldId, registeredInstance.getInstanceId(), player.getX(),
-						player.getY(), player.getZ(), player.getHeading());
+					player.getY(), player.getZ(), player.getHeading());
 				player.getPosition().getWorldMapInstance().getInstanceHandler().onPlayerLogin(player);
 				return;
 			}
@@ -447,6 +479,7 @@ public class InstanceService {
 	/**
 	 * 将玩家传送到当前副本出口点。
 	 * Teleports the player to the instance exit point.
+	 *
 	 * @param player 玩家 / player
 	 */
 	public static void moveToExitPoint(Player player) {
@@ -456,7 +489,8 @@ public class InstanceService {
 	/**
 	 * 判断指定世界与实例 ID 的副本是否仍存在。
 	 * Whether the instance still exists for the given world and instance id.
-	 * @param worldId 世界地图 ID / world map id
+	 *
+	 * @param worldId    世界地图 ID / world map id
 	 * @param instanceId 副本 ID / instance id
 	 * @return 是否存在 / whether it exists
 	 */
@@ -467,6 +501,7 @@ public class InstanceService {
 	/**
 	 * 副本在玩家离开后是否为空，可安排重置。
 	 * Whether the instance is empty and eligible for reset after leave.
+	 *
 	 * @param instance 副本实例 / instance
 	 * @return 是否为空 / whether empty
 	 */
@@ -477,6 +512,7 @@ public class InstanceService {
 	/**
 	 * 若副本为空则安排延迟销毁。
 	 * Schedules delayed destroy when the instance is empty.
+	 *
 	 * @param instance 副本实例 / instance
 	 */
 	private static void scheduleResetIfEmpty(final WorldMapInstance instance) {
@@ -495,6 +531,7 @@ public class InstanceService {
 	/**
 	 * 启动副本空闲检查（创建后即调度重置任务）。
 	 * Starts empty-instance checking by scheduling a reset task.
+	 *
 	 * @param worldMapInstance 副本实例 / instance
 	 */
 	private static void startInstanceChecker(WorldMapInstance worldMapInstance) {
@@ -504,6 +541,7 @@ public class InstanceService {
 	/**
 	 * 玩家进入后取消空副本销毁任务并刷新缩放。
 	 * Cancels empty-destroy task and refreshes scaler when a player is added.
+	 *
 	 * @param instance 副本实例 / instance
 	 */
 	public static void onPlayerAdded(WorldMapInstance instance) {
@@ -538,6 +576,7 @@ public class InstanceService {
 	/**
 	 * 玩家离开后刷新缩放；若无人则调度销毁。
 	 * Refreshes scaler on leave; schedules destroy when no players remain.
+	 *
 	 * @param instance 副本实例 / instance
 	 */
 	public static void onPlayerRemoved(WorldMapInstance instance) {
@@ -552,6 +591,7 @@ public class InstanceService {
 	/**
 	 * 玩家登出时通知副本处理器。
 	 * Notifies the instance handler when a player logs out.
+	 *
 	 * @param player 玩家 / player
 	 */
 	public static void onLogOut(Player player) {
@@ -561,6 +601,7 @@ public class InstanceService {
 	/**
 	 * 玩家进入副本：更新区域/任务、通知处理器并清理非本图归属物品。
 	 * On enter: update zone/quests, notify handler, drop non-owned-world items.
+	 *
 	 * @param player 玩家 / player
 	 */
 	public static void onEnterInstance(Player player) {
@@ -581,6 +622,7 @@ public class InstanceService {
 	/**
 	 * 玩家离开副本：通知处理器、清理本图归属物品并处理自动组队。
 	 * On leave: notify handler, drop owned-world items, handle auto-group.
+	 *
 	 * @param player 玩家 / player
 	 */
 	public static void onLeaveInstance(Player player) {
@@ -600,6 +642,7 @@ public class InstanceService {
 	 * 玩家进入区域时转发至副本处理器。
 	 * Forwards zone enter to the instance handler.
 	 * 玩家 / player
+	 *
 	 * @param zone 区域 / zone
 	 */
 	public static void onEnterZone(Player player, ZoneInstance zone) {
@@ -610,6 +653,7 @@ public class InstanceService {
 	 * 玩家开门时转发至副本处理器。
 	 * Forwards door open to the instance handler.
 	 * 玩家 / player
+	 *
 	 * @param door 门 ID / door id
 	 */
 	public static void onOpenDoor(Player player, int door) {
@@ -620,6 +664,7 @@ public class InstanceService {
 	 * 玩家离开区域时转发至副本处理器。
 	 * Forwards zone leave to the instance handler.
 	 * 玩家 / player
+	 *
 	 * @param zone 区域 / zone
 	 */
 	public static void onLeaveZone(Player player, ZoneInstance zone) {
@@ -630,17 +675,19 @@ public class InstanceService {
 	 * 计算玩家在指定地图的冷却倍率。
 	 * Computes the instance cooldown rate for a player on a map.
 	 * 玩家 / player
+	 *
 	 * @param mapId 地图 ID / map id
 	 * @return 冷却倍率 / cooldown rate
 	 */
 	public static int getInstanceRate(Player player, int mapId) {
 		return player.havePermission(MembershipConfig.INSTANCES_COOLDOWN) && !InstanceConfig.isCooldownExcluded(mapId)
-				? InstanceConfig.COOLDOWN_RATE : 1;
+			? InstanceConfig.COOLDOWN_RATE : 1;
 	}
 
 	/**
 	 * 获取空副本销毁延迟（毫秒）。
 	 * Returns empty-instance destroy delay in milliseconds.
+	 *
 	 * @param soloInstance 是否单人副本 / whether solo instance
 	 * @return 延迟毫秒数 / delay in ms
 	 */
@@ -651,6 +698,7 @@ public class InstanceService {
 	/**
 	 * 获取调度用销毁延迟，至少 1 秒。
 	 * Returns scheduled destroy delay, at least 1 second.
+	 *
 	 * @param soloInstance 是否单人副本 / whether solo instance
 	 * @return 延迟毫秒数 / delay in ms
 	 */
@@ -661,6 +709,7 @@ public class InstanceService {
 	/**
 	 * 按副本类型返回调度销毁延迟。
 	 * Returns scheduled destroy delay for the given instance.
+	 *
 	 * @param instance 副本实例 / instance
 	 * @return 延迟毫秒数 / delay in ms
 	 */
@@ -671,18 +720,20 @@ public class InstanceService {
 	/**
 	 * 判断是否为单人副本（最大人数为 1，或无组队注册的单人登记）。
 	 * Whether the instance is solo (max 1, or solo-registered without groups).
+	 *
 	 * @param instance 副本实例 / instance
 	 * @return 是否单人间 / whether solo
 	 */
 	private static boolean isSoloInstance(WorldMapInstance instance) {
 		int maxPlayers = getMaxPlayers(instance.getMapId());
 		return maxPlayers <= 1 || (instance.getSoloPlayerObj() != null
-				&& instance.getRegisteredGroup() == null && instance.getRegistredAlliance() == null && instance.getRegistredLeague() == null);
+			&& instance.getRegisteredGroup() == null && instance.getRegistredAlliance() == null && instance.getRegistredLeague() == null);
 	}
 
 	/**
 	 * 获取地图允许的最大玩家数（光/暗侧取较大值）。
 	 * Max players allowed on the map (greater of light/dark caps).
+	 *
 	 * @param mapId 地图 ID / map id
 	 * @return 最大人数，无模板则为 0 / max players, or 0 if no template
 	 */
@@ -697,6 +748,7 @@ public class InstanceService {
 	/**
 	 * 将可能为 null 的 Integer 转为 0。
 	 * Converts a nullable Integer to 0 when null.
+	 *
 	 * @param value 值 / value
 	 * @return 非空整数 / non-null int
 	 */
@@ -707,6 +759,7 @@ public class InstanceService {
 	/**
 	 * 创建下一可用战场（BG）副本实例。
 	 * Creates the next available battleground instance.
+	 *
 	 * @param worldId 世界地图 ID / world map id
 	 * @return 新建的世界地图实例 / newly created world map instance
 	 */

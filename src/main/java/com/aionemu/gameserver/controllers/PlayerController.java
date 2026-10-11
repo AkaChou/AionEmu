@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.controllers;
 
-
 import com.aionemu.boot.i18n.I18n;
 
 import java.sql.Timestamp;
@@ -69,7 +68,6 @@ import java.util.concurrent.Future;
 
 import lombok.Getter;
 import lombok.Setter;
-
 
 /**
  * 玩家控制器，管理视野、区域、战斗、技能、死亡与姿态等玩家行为。
@@ -1078,9 +1076,8 @@ public class PlayerController extends CreatureController<Player> {
 	}
 
 	/**
-	 * 玩家升级到达某等级时的广播/处理。
-	 * Broadcasts/handles when a player reaches a level.
-	 * leveling player
+	 * 签名含 {@code final}：被 {@code PlayerControllerLevelUpTest} 源码门钉住，勿删修饰符。
+	 * Signature keeps {@code final}: pinned by the {@code PlayerControllerLevelUpTest} source gate.
 	 */
 	public static final void reachedPlayerLvl(final Player player) {
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(players -> {

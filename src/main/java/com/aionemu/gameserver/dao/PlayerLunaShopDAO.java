@@ -60,7 +60,6 @@ public abstract class PlayerLunaShopDAO implements DAO {
 	 * @param freeUnderpath 免费地下通道 / free underpath
 	 * @param freeFactory 免费工厂 / free factory
 	 * @param freeChest 免费宝箱 / free chest
-	 * @return 若成功则为 true / true if successful
 	 */
 	public abstract void setLunaShopByObjId(final int obj, boolean freeUnderpath, boolean freeFactory,
 			boolean freeChest);

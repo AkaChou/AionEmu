@@ -1,10 +1,10 @@
 package com.aionemu.gameserver.utils.xml;
 
 import java.io.File;
-import java.io.IOException;
 
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.SchemaOutputResolver;
+
 import javax.xml.transform.Result;
 import javax.xml.transform.stream.StreamResult;
 
@@ -19,6 +19,7 @@ public class SchemaGen {
 	/**
 	 * 在指定目录生成 static_data1.xsd。
 	 * Generate static_data1.xsd under the given directory.
+	 *
 	 * @param baseDir 输出目录 / Output directory
 	 * @throws Exception 生成失败时 / On generation failure
 	 */
@@ -31,7 +32,7 @@ public class SchemaGen {
 			 * @param namespaceUri 命名空间 URI / Namespace URI
 			 * @param suggestedFileName 建议文件名 / Suggested file name
 			 * @return 输出 Result / Output Result
-             */
+			 */
 			@Override
 			public Result createOutput(String namespaceUri, String suggestedFileName) {
 				return new StreamResult(new File(baseDir, "static_data1.xsd"));

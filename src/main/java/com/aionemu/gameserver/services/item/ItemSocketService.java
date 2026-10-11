@@ -3,6 +3,7 @@ package com.aionemu.gameserver.services.item;
 
 import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
+
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Objects;
@@ -26,6 +27,7 @@ import com.aionemu.gameserver.model.templates.item.ItemTemplate;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_ITEM_USAGE_ANIMATION;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+
 /**
  * 物品镶嵌服务：魔石/融合石/神石镶嵌与移除，以及超限（amplification）。
  * Item socket service: manastone/fusion-stone/godstone socket and removal, plus amplification.
@@ -41,6 +43,7 @@ public class ItemSocketService {
 	/**
 	 * 由 Spring 配置类在启动期绑定魔石列表 DAO。
 	 * Binds the item-stone-list DAO from the Spring configuration at startup.
+	 *
 	 * @param dao 魔石列表 DAO / item stone list DAO
 	 */
 	public static void bindItemStoneListDAO(ItemStoneListDAO dao) {
@@ -52,6 +55,7 @@ public class ItemSocketService {
 	 * 包级开放，供同包 item 域静态类（如 {@link ItemService}）复用同一绑定。
 	 * Returns the item-stone-list DAO; falls back to safeDao construction when unbound (offline/unit tests).
 	 * Package-visible so sibling static classes in the item domain reuse the same binding.
+	 *
 	 * @return 魔石列表 DAO / item stone list DAO
 	 */
 	static ItemStoneListDAO itemStoneListDAO() {
@@ -78,8 +82,9 @@ public class ItemSocketService {
 	/**
 	 * 为物品自动分配槽位镶嵌魔石。
 	 * Sockets a manastone onto the item using the next free slot.
+	 *
 	 * @param item 目标物品 / target item
-	 * manastone template id
+	 *             manastone template id
 	 * @return 新魔石，失败则为 {@code null} / new manastone, or {@code null} on failure
 	 */
 	public static ManaStone addManaStone(Item item, int itemId) {
@@ -147,9 +152,10 @@ public class ItemSocketService {
 	/**
 	 * 在指定槽位镶嵌魔石。
 	 * Sockets a manastone into a fixed slot.
+	 *
 	 * @param item 目标物品 / target item
-	 * manastone template id
-	 * slot id
+	 *             manastone template id
+	 *             slot id
 	 * @return 新魔石，失败则为 {@code null} / new manastone, or {@code null} on failure
 	 */
 	public static ManaStone addManaStone(Item item, int itemId, int slotId) {
@@ -168,6 +174,7 @@ public class ItemSocketService {
 	/**
 	 * 复制源物品的魔石与融合石到目标物品。
 	 * Copies manastones and fusion stones from source to target.
+	 *
 	 * @param source source item
 	 * @param target target item
 	 */
@@ -175,11 +182,11 @@ public class ItemSocketService {
 		if (source.hasManaStones()) {
 			for (ManaStone manaStone : source.getItemStones()) {
 				target.getItemStones().add(new ManaStone(target.getObjectId(), manaStone.getItemId(),
-						manaStone.getSlot(), PersistentState.NEW));
+					manaStone.getSlot(), PersistentState.NEW));
 			}
 			for (ManaStone manaStone : source.getFusionStones()) {
 				target.getFusionStones().add(new ManaStone(target.getObjectId(), manaStone.getItemId(),
-						manaStone.getSlot(), PersistentState.NEW));
+					manaStone.getSlot(), PersistentState.NEW));
 			}
 		}
 	}
@@ -187,6 +194,7 @@ public class ItemSocketService {
 	/**
 	 * 将源物品魔石复制为目标物品的融合石。
 	 * Copies source manastones onto the target as fusion stones.
+	 *
 	 * @param source source item
 	 * @param target target item
 	 */
@@ -194,7 +202,7 @@ public class ItemSocketService {
 		if (source.hasManaStones()) {
 			for (ManaStone manaStone : source.getItemStones()) {
 				target.getFusionStones().add(new ManaStone(target.getObjectId(), manaStone.getItemId(),
-						manaStone.getSlot(), PersistentState.NEW));
+					manaStone.getSlot(), PersistentState.NEW));
 			}
 		}
 	}
@@ -202,7 +210,8 @@ public class ItemSocketService {
 	/**
 	 * 为融合物品自动分配槽位镶嵌融合石并落库。
 	 * Sockets a fusion stone onto a fused item (next free slot) and persists.
-	 * @param item 目标物品 / target item
+	 *
+	 * @param item   目标物品 / target item
 	 * @param itemId 融合石模板 ID / fusion-stone template id
 	 * @return 新融合石，失败则为 {@code null} / new fusion stone, or {@code null} on failure
 	 */
@@ -273,9 +282,10 @@ public class ItemSocketService {
 	/**
 	 * 在指定槽位镶嵌融合石。
 	 * Sockets a fusion stone into a fixed slot.
-	 * @param item 目标物品 / target item
+	 *
+	 * @param item   目标物品 / target item
 	 * @param itemId 融合石模板 ID / fusion-stone template id
-	 * slot id
+	 *               slot id
 	 * @return 新融合石，失败则为 {@code null} / new fusion stone, or {@code null} on failure
 	 */
 	public static ManaStone addFusionStone(Item item, int itemId, int slotId) {
@@ -294,9 +304,10 @@ public class ItemSocketService {
 	/**
 	 * 移除玩家物品指定槽位的魔石（含已装备）。
 	 * Removes a manastone at the given slot from inventory or equipped item.
-	 * @param player 玩家 / player
+	 *
+	 * @param player    玩家 / player
 	 * @param itemObjId item object id
-	 * @param slotNum slot number
+	 * @param slotNum   slot number
 	 */
 	public static void removeManastone(Player player, int itemObjId, int slotNum) {
 		Storage inventory = player.getInventory();
@@ -344,9 +355,10 @@ public class ItemSocketService {
 	/**
 	 * 移除玩家物品指定槽位的融合石（含已装备）。
 	 * Removes a fusion stone at the given slot from inventory or equipped item.
-	 * @param player 玩家 / player
+	 *
+	 * @param player    玩家 / player
 	 * @param itemObjId item object id
-	 * @param slotNum slot number
+	 * @param slotNum   slot number
 	 */
 	public static void removeFusionstone(Player player, int itemObjId, int slotNum) {
 		Storage inventory = player.getInventory();
@@ -393,8 +405,9 @@ public class ItemSocketService {
 	/**
 	 * 移除物品上全部魔石。
 	 * Removes all manastones from the item.
+	 *
 	 * @param player 玩家 / player
-	 * @param item item
+	 * @param item   item
 	 */
 	public static void removeAllManastone(Player player, Item item) {
 		if (item == null) {
@@ -416,8 +429,9 @@ public class ItemSocketService {
 	/**
 	 * 移除物品上全部融合石。
 	 * Removes all fusion stones from the item.
+	 *
 	 * @param player 玩家 / player
-	 * @param item item
+	 * @param item   item
 	 */
 	public static void removeAllFusionStone(Player player, Item item) {
 		if (item == null) {
@@ -439,16 +453,17 @@ public class ItemSocketService {
 	/**
 	 * 将神石镶嵌到武器（扣基纳、播放使用动画）。
 	 * Sockets a godstone onto a weapon (charges kinah and plays use animation).
-	 * @param player 玩家 / player
+	 *
+	 * @param player   玩家 / player
 	 * @param weaponId weapon object id
-	 * @param stoneId godstone object id
+	 * @param stoneId  godstone object id
 	 */
 	public static void socketGodstone(final Player player, int weaponId, int stoneId) {
 		final Item weaponItem = findGodstoneTarget(player, weaponId);
 		final Item godstone = player.getInventory().getItemByObjId(stoneId);
 		if (weaponItem == null) {
 			PacketSendUtility.sendPacket(player,
-					SM_SYSTEM_MESSAGE.STR_GIVE_ITEM_PROC_CANNOT_GIVE_PROC_TO_EQUIPPED_ITEM);
+				SM_SYSTEM_MESSAGE.STR_GIVE_ITEM_PROC_CANNOT_GIVE_PROC_TO_EQUIPPED_ITEM);
 			return;
 		}
 		if (godstone == null) {
@@ -457,7 +472,7 @@ public class ItemSocketService {
 		}
 		if (!weaponItem.canSocketGodstone()) {
 			PacketSendUtility.sendPacket(player,
-					SM_SYSTEM_MESSAGE.STR_GIVE_ITEM_PROC_NOT_ADD_PROC(new DescriptionId(weaponItem.getNameId())));
+				SM_SYSTEM_MESSAGE.STR_GIVE_ITEM_PROC_NOT_ADD_PROC(new DescriptionId(weaponItem.getNameId())));
 			return;
 		}
 		// 鉴定门禁：未鉴定的装备不可镶嵌神石。 / Identify gate: an unidentified item cannot receive a godstone.
@@ -483,7 +498,7 @@ public class ItemSocketService {
 		player.getInventory().decreaseKinah(getPriceByQuality(godstone));
 		player.getController().cancelUseItem();
 		PacketSendUtility.broadcastPacketAndReceive(player, new SM_ITEM_USAGE_ANIMATION(player.getObjectId(),
-				godstone.getObjectId(), godstone.getItemTemplate().getTemplateId(), 5000, 0, 0));
+			godstone.getObjectId(), godstone.getItemTemplate().getTemplateId(), 5000, 0, 0));
 		final ItemUseObserver Enchant = new ItemUseObserver() {
 			@Override
 			public void abort() {
@@ -496,7 +511,7 @@ public class ItemSocketService {
 					weaponItem.getObjectId(), weaponItem.getItemTemplate().getTemplateId(), 0, 3, 0));
 				ItemPacketService.updateItemAfterInfoChange(player, weaponItem);
 				PacketSendUtility.sendPacket(player,
-						SM_SYSTEM_MESSAGE.STR_ENCHANT_ITEM_CANCELED(weaponItem.getItemTemplate().getNameId()));
+					SM_SYSTEM_MESSAGE.STR_ENCHANT_ITEM_CANCELED(weaponItem.getItemTemplate().getNameId()));
 			}
 		};
 		player.getObserveController().attach(Enchant);
@@ -505,17 +520,18 @@ public class ItemSocketService {
 			player.getObserveController().removeObserver(Enchant);
 			weaponItem.addGodStone(godStoneItemId);
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE
-					.STR_GIVE_ITEM_PROC_ENCHANTED_TARGET_ITEM(new DescriptionId(weaponItem.getNameId())));
+				.STR_GIVE_ITEM_PROC_ENCHANTED_TARGET_ITEM(new DescriptionId(weaponItem.getNameId())));
 			ItemPacketService.updateItemAfterInfoChange(player, weaponItem);
 			PacketSendUtility.broadcastPacketAndReceive(player, new SM_ITEM_USAGE_ANIMATION(player.getObjectId(),
-					godstone.getObjectId(), godstone.getItemTemplate().getTemplateId(), 0, 1, 384));
+				godstone.getObjectId(), godstone.getItemTemplate().getTemplateId(), 0, 1, 384));
 		}, 5000);
 	}
 
 	/**
 	 * 在背包或装备栏中查找神石镶嵌目标武器。
 	 * Finds the godstone target weapon in inventory or equipment.
-	 * @param player 玩家 / player
+	 *
+	 * @param player   玩家 / player
 	 * @param weaponId weapon object id
 	 * @return 武器物品或 {@code null} / weapon item or {@code null}
 	 */
@@ -533,20 +549,20 @@ public class ItemSocketService {
 	private static int getPriceByQuality(Item item) {
 		int price = 0;
 		switch (item.getItemTemplate().getItemQuality()) {
-		case RARE:
-			price = 842;
-			break;
-		case LEGEND:
-			price = 2542;
-			break;
-		case UNIQUE:
-			price = 7627;
-			break;
-		case EPIC:
-			price = 22882;
-			break;
-		default:
-			break;
+			case RARE:
+				price = 842;
+				break;
+			case LEGEND:
+				price = 2542;
+				break;
+			case UNIQUE:
+				price = 7627;
+				break;
+			case EPIC:
+				price = 22882;
+				break;
+			default:
+				break;
 		}
 		return price;
 	}
@@ -555,13 +571,14 @@ public class ItemSocketService {
 	 * 对物品执行超限（amplification）：消耗工具与强化石。
 	 * Amplifies an item by consuming a tool and enchantment stone.
 	 * 玩家 / player
-	 * @param itemId 目标物品对象 ID / target item object id
-	 * tool object id
+	 *
+	 * @param itemId                   目标物品对象 ID / target item object id
+	 *                                 tool object id
 	 * @param enchantmentStoneObjectId 强化石对象 ID / enchantment-stone object id
 	 */
 	@SuppressWarnings("null")
 	public static void amplification(final Player player, int itemId, int toolUniqueId,
-			final int enchantmentStoneObjectId) {
+									 final int enchantmentStoneObjectId) {
 		final Item currentItem = player.getInventory().getItemByObjId(itemId);
 		final Item toolItem = player.getInventory().getItemByObjId(toolUniqueId);
 		final Item enchantStone = player.getInventory().getItemByObjId(enchantmentStoneObjectId);
@@ -569,7 +586,7 @@ public class ItemSocketService {
 		final int toolObjectId = toolItem.getObjectId();
 		if (currentItem == null) {
 			PacketSendUtility.sendPacket(player,
-					SM_SYSTEM_MESSAGE.STR_MSG_EXCEED_NO_TARGET_ITEM(new DescriptionId(currentItem.getNameId())));
+				SM_SYSTEM_MESSAGE.STR_MSG_EXCEED_NO_TARGET_ITEM(new DescriptionId(currentItem.getNameId())));
 			return;
 		}
 		if (currentItem.isEquipped()) {
@@ -582,7 +599,7 @@ public class ItemSocketService {
 		}
 		if (currentItem.isAmplified() && enchantStone.getItemTemplate().isEnchantmentStone()) {
 			PacketSendUtility.sendPacket(player,
-					SM_SYSTEM_MESSAGE.STR_MSG_EXCEED_ENCHANT_CANNOT_02(new DescriptionId(enchantStone.getNameId())));
+				SM_SYSTEM_MESSAGE.STR_MSG_EXCEED_ENCHANT_CANNOT_02(new DescriptionId(enchantStone.getNameId())));
 			return;
 		}
 		if (currentItem != null & currentItem.isAmplified()) {
@@ -595,12 +612,12 @@ public class ItemSocketService {
 		}
 		if (currentItem != null & !currentItem.canAmplification()) {
 			PacketSendUtility.sendPacket(player,
-					SM_SYSTEM_MESSAGE.STR_MSG_EXCEED_CANNOT_01(new DescriptionId(currentItem.getNameId())));
+				SM_SYSTEM_MESSAGE.STR_MSG_EXCEED_CANNOT_01(new DescriptionId(currentItem.getNameId())));
 			return;
 		}
 		PacketSendUtility.broadcastPacket(player,
-				new SM_ITEM_USAGE_ANIMATION(player.getObjectId(), toolObjectId, toolItemId, 5000, 0, 0),
-				true);
+			new SM_ITEM_USAGE_ANIMATION(player.getObjectId(), toolObjectId, toolItemId, 5000, 0, 0),
+			true);
 		final ItemUseObserver observer = new ItemUseObserver() {
 			@Override
 			public void abort() {
@@ -610,8 +627,8 @@ public class ItemSocketService {
 				}
 				player.removeItemCoolDown(toolItem.getItemTemplate().getUseLimits().getDelayId());
 				PacketSendUtility.broadcastPacket(player,
-						new SM_ITEM_USAGE_ANIMATION(player.getObjectId(), toolObjectId, toolItemId, 0, 2, 0),
-						true);
+					new SM_ITEM_USAGE_ANIMATION(player.getObjectId(), toolObjectId, toolItemId, 0, 2, 0),
+					true);
 				player.getObserveController().removeObserver(this);
 			}
 		};
@@ -619,8 +636,8 @@ public class ItemSocketService {
 		player.getController().scheduleTask(TaskId.ITEM_USE, () -> {
 			player.getObserveController().removeObserver(observer);
 			PacketSendUtility.broadcastPacket(player,
-					new SM_ITEM_USAGE_ANIMATION(player.getObjectId(), toolObjectId, toolItemId, 0, 1, 1),
-					true);
+				new SM_ITEM_USAGE_ANIMATION(player.getObjectId(), toolObjectId, toolItemId, 0, 1, 1),
+				true);
 			if (!player.getInventory().decreaseByObjectId(toolObjectId, 1))
 				return;
 			if (!player.getInventory().decreaseByObjectId(enchantmentStoneObjectId, 1))
@@ -630,7 +647,7 @@ public class ItemSocketService {
 			currentItem.setPersistentState(PersistentState.UPDATE_REQUIRED);
 			ItemPacketService.updateItemAfterInfoChange(player, currentItem);
 			PacketSendUtility.sendPacket(player,
-					SM_SYSTEM_MESSAGE.STR_MSG_EXCEED_SUCCEED(new DescriptionId(currentItem.getNameId())));
+				SM_SYSTEM_MESSAGE.STR_MSG_EXCEED_SUCCEED(new DescriptionId(currentItem.getNameId())));
 		}, 5000);
 	}
 }

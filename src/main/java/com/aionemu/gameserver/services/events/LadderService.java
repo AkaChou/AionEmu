@@ -147,7 +147,7 @@ public class LadderService {
 				current = boundLadderDAO;
 				if (current == null) {
 					boundLadderDAO = current = safeDao(LadderDAO.class,
-							com.aionemu.gameserver.dao.impl.LadderDAO::new);
+						com.aionemu.gameserver.dao.impl.LadderDAO::new);
 				}
 			}
 		}
@@ -163,7 +163,7 @@ public class LadderService {
 	}
 
 	private static <T extends com.aionemu.commons.database.dao.DAO> T safeDao(Class<T> daoClass,
-			java.util.function.Supplier<T> fallback) {
+																			  java.util.function.Supplier<T> fallback) {
 		if (DAOManager.isInitialized()) {
 			try {
 				return DAOManager.getDAO(daoClass);

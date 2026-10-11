@@ -1,8 +1,6 @@
 package com.aionemu.gameserver.network.aion.clientpackets;
 
-import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
 
-import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.AionClientPacket;
 import com.aionemu.gameserver.network.aion.AionConnection;
 
@@ -13,7 +11,8 @@ import com.aionemu.gameserver.network.aion.AionConnection;
 public class CM_STONESPEAR_SIEGE extends AionClientPacket {
 	/**
 	 * packet opcode
-	 * @param state 连接状态 / connection state
+	 *
+	 * @param state      连接状态 / connection state
 	 * @param restStates 其余允许状态 / additional allowed states
 	 */
 	public CM_STONESPEAR_SIEGE(int opcode, AionConnection.State state, AionConnection.State... restStates) {

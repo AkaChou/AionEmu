@@ -34,6 +34,7 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 发送 GM 面板指令的客户端包。
  * Client packet that dispatches GM panel commands.
+ *
  * @author Ever', Magenik, Alcapwnd
  */
 public class CM_GM_COMMAND_SEND extends AionClientPacket {
@@ -46,7 +47,8 @@ public class CM_GM_COMMAND_SEND extends AionClientPacket {
 	 * 构造客户端包实例。
 	 * Constructs a new client packet instance.
 	 * packet opcode
-	 * @param state 连接状态 / connection state
+	 *
+	 * @param state      连接状态 / connection state
 	 * @param restStates 其余允许状态 / additional allowed states
 	 */
 	public CM_GM_COMMAND_SEND(int opcode, State state, State... restStates) {
@@ -76,104 +78,102 @@ public class CM_GM_COMMAND_SEND extends AionClientPacket {
 			return;
 		}
 		switch (GmPanelCommands.getValue(cmd)) {
-		case REMOVE_SKILL_DELAY_ALL:
-            PacketSendUtility.sendMessage(admin, "Cooldowns ENABLED");
-			admin.setCoolDownZero(false);
-			break;
-		case ITEMCOOLTIME:
-			admin.setCoolDownZero(true);
-            PacketSendUtility.sendMessage(admin, "Cooldowns DISABLED");
-			new CmdItemCoolTime(admin);
-			break;
-		case SET_DISABLE_ITEMUSE_GAUGE:
-			break;
-		case ATTRBONUS:
-			new CmdAttrBonus(admin, params);
-			break;
-		case TELEPORTTO:
-			new CmdTeleportTo(admin, params);
-			break;
-		case TELEPORT_TO_NAMED:
-			new CmdTeleportToNamed(admin, params);
-			break;
-		case RESURRECT:
-			new CmdResurrect(admin, "");
-			break;
-		case INVISIBLE:
-			new CmdInvisible(admin, "");
-			break;
-		case VISIBLE:
-			new CmdVisible(admin, "");
-			break;
-		case LEVELDOWN:
-			new CmdLevelUpDown(admin, params, LevelUpDownState.DOWN);
-			break;
-		case LEVELUP:
-			QuestState elyos = admin.getQuestStateList().getQuestState(10521);
-			QuestState asmo = admin.getQuestStateList().getQuestState(20521);
-			if (admin.getLevel() >= 83 && admin.getRace() == Race.ELYOS && elyos.getStatus() != QuestStatus.COMPLETE) {
-				PacketSendUtility.sendPacket(admin, new SM_SYSTEM_MESSAGE(1403187, 66));
+			case REMOVE_SKILL_DELAY_ALL:
+				PacketSendUtility.sendMessage(admin, "Cooldowns ENABLED");
+				admin.setCoolDownZero(false);
 				break;
-			} else if (admin.getLevel() >= 83 && admin.getRace() == Race.ASMODIANS
+			case ITEMCOOLTIME:
+				admin.setCoolDownZero(true);
+				PacketSendUtility.sendMessage(admin, "Cooldowns DISABLED");
+				new CmdItemCoolTime(admin);
+				break;
+			case SET_DISABLE_ITEMUSE_GAUGE:
+				break;
+			case ATTRBONUS:
+				new CmdAttrBonus(admin, params);
+				break;
+			case TELEPORTTO:
+				new CmdTeleportTo(admin, params);
+				break;
+			case TELEPORT_TO_NAMED:
+				new CmdTeleportToNamed(admin, params);
+				break;
+			case RESURRECT:
+				new CmdResurrect(admin, "");
+				break;
+			case INVISIBLE:
+				new CmdInvisible(admin, "");
+				break;
+			case VISIBLE:
+				new CmdVisible(admin, "");
+				break;
+			case LEVELDOWN:
+				new CmdLevelUpDown(admin, params, LevelUpDownState.DOWN);
+				break;
+			case LEVELUP:
+				QuestState elyos = admin.getQuestStateList().getQuestState(10521);
+				QuestState asmo = admin.getQuestStateList().getQuestState(20521);
+				if (admin.getLevel() >= 83 && admin.getRace() == Race.ELYOS && elyos.getStatus() != QuestStatus.COMPLETE) {
+					PacketSendUtility.sendPacket(admin, new SM_SYSTEM_MESSAGE(1403187, 66));
+					break;
+				} else if (admin.getLevel() >= 83 && admin.getRace() == Race.ASMODIANS
 					&& asmo.getStatus() != QuestStatus.COMPLETE) {
-				PacketSendUtility.sendPacket(admin, new SM_SYSTEM_MESSAGE(1403187, 66));
+					PacketSendUtility.sendPacket(admin, new SM_SYSTEM_MESSAGE(1403187, 66));
+					break;
+				} else {
+					new CmdLevelUpDown(admin, params, LevelUpDownState.UP);
+					break;
+				}
+			case WISHID:
+				new CmdWishId(admin, params);
 				break;
-			} else {
-				new CmdLevelUpDown(admin, params, LevelUpDownState.UP);
+			case DELETECQUEST:
+				new CmdDeleteQuest(admin, params);
 				break;
-			}
-		case WISHID:
-			new CmdWishId(admin, params);
-			break;
-		case DELETECQUEST:
-			new CmdDeleteQuest(admin, params);
-			break;
-		case GIVETITLE:
-			new CmdGiveTitle(admin, params);
-			break;
-		case DELETE_ITEMS:
-			PacketSendUtility.sendMessage(admin, "Invalid command: " + cmd);
-			break;
-		case CHANGECLASS:
-			new CmdChangeClass(admin, params);
-			break;
-		case CLASSUP:
-			new CmdChangeClass(admin, params);
-			break;
-		case WISH:
-			new CmdWish(admin, params);
-			break;
-		case ADDQUEST:
-			new CmdStartQuest(admin, params);
-			break;
-		case ENDQUEST:
-			new CmdEndQuest(admin, params);
-			break;
-		case ADDSKILL:
-			new CmdAddSkill(admin, params);
-			break;
-		case SET_ENCHANTCOUNT:
-			new CmdSetEnchantCount(admin, params);
-			break;
-		case SETINVENTORYGROWTH:
-			new CmdSetInventoryGrowth(admin, params);
-			break;
-		case SKILLPOINT:
-		case COMBINESKILL:
-			new CmdCombineSkill(admin, params);
-			break;
-        case DELETESKILL:
-		case ENCHANT100:
-        case SEARCH:
-		case BOOKMARK_ADD:
-			PacketSendUtility.sendMessage(admin, "Invalid command: " + cmd);
-			break;
-		case FREEFLY:
-			PacketSendUtility.sendMessage(admin, "Freefly On");
-			break;
-		default:
-			PacketSendUtility.sendMessage(admin, "Invalid command: " + cmd);
-			break;
+			case GIVETITLE:
+				new CmdGiveTitle(admin, params);
+				break;
+			case DELETE_ITEMS:
+				PacketSendUtility.sendMessage(admin, "Invalid command: " + cmd);
+				break;
+			case CHANGECLASS:
+			case CLASSUP:
+				new CmdChangeClass(admin, params);
+				break;
+			case WISH:
+				new CmdWish(admin, params);
+				break;
+			case ADDQUEST:
+				new CmdStartQuest(admin, params);
+				break;
+			case ENDQUEST:
+				new CmdEndQuest(admin, params);
+				break;
+			case ADDSKILL:
+				new CmdAddSkill(admin, params);
+				break;
+			case SET_ENCHANTCOUNT:
+				new CmdSetEnchantCount(admin, params);
+				break;
+			case SETINVENTORYGROWTH:
+				new CmdSetInventoryGrowth(admin, params);
+				break;
+			case SKILLPOINT:
+			case COMBINESKILL:
+				new CmdCombineSkill(admin, params);
+				break;
+			case DELETESKILL:
+			case ENCHANT100:
+			case SEARCH:
+			case BOOKMARK_ADD:
+				PacketSendUtility.sendMessage(admin, "Invalid command: " + cmd);
+				break;
+			case FREEFLY:
+				PacketSendUtility.sendMessage(admin, "Freefly On");
+				break;
+			default:
+				PacketSendUtility.sendMessage(admin, "Invalid command: " + cmd);
+				break;
 		}
 	}
 }

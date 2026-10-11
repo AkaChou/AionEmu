@@ -251,7 +251,6 @@ public class PlayerPetsDAO extends com.aionemu.gameserver.dao.PlayerPetsDAO {
      * 保存宠物心情相关数据。
      * Saves pet mood related data.
      * @param petCommonData 宠物通用数据 / pet common data
-     * @return 是否成功 / whether successful
      */
     @Override
     public void savePetMoodData(PetCommonData petCommonData) {

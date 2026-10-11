@@ -2,6 +2,7 @@ package com.aionemu.gameserver.services.events;
 
 import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
+
 import java.time.ZonedDateTime;
 import java.util.HashMap;
 import java.util.Map;
@@ -18,6 +19,7 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 增益活动服务，按活动配置向玩家下发增益包。
  * Boost event service delivering configured boost packets to players.
+ *
  * @author Rinzler (Encom)
  */
 
@@ -42,6 +44,7 @@ public class BoostEventService implements StatOwner {
 	/**
 	 * 发送数据包。
 	 * Sends a packet.
+	 *
 	 * @param player 玩家 / player
 	 */
 	public void sendPacket(Player player) {
@@ -72,6 +75,7 @@ public class BoostEventService implements StatOwner {
 	/**
 	 * getBoostEvent 方法。
 	 * getBoostEvent method.
+	 *
 	 * @param id ID / id
 	 * @param be 战斗事件 / be
 	 */
@@ -85,6 +89,7 @@ public class BoostEventService implements StatOwner {
 	/**
 	 * getBoostEvent 方法。
 	 * getBoostEvent method.
+	 *
 	 * @param raw BoostEvents
 	 */
 	public void getBoostEvent(Map<Integer, BoostEvents> raw) {
@@ -101,11 +106,12 @@ public class BoostEventService implements StatOwner {
 	 * <p>双源静态兜底已退役：缺少 provider 时直接 fail-fast，避免在容器之外静默创建第二套实例。
 	 * The legacy static fallback is retired: a missing provider now fails fast instead of silently
 	 * creating a second instance outside the container.</p>
+	 *
 	 * @return 由 Spring 提供的实例 / the Spring-provided instance
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean /
-	 *         when no provider or bean is available
+	 *                               when no provider or bean is available
 	 */
-	public static final BoostEventService getInstance() {
+	public static BoostEventService getInstance() {
 		ObjectProvider<BoostEventService> provider = instanceProvider;
 		BoostEventService provided = provider == null ? null : provider.getIfAvailable();
 		if (provided == null) {
@@ -119,6 +125,7 @@ public class BoostEventService implements StatOwner {
 	/**
 	 * setInstanceProvider 方法。
 	 * setInstanceProvider method.
+	 *
 	 * @param instanceProvider 副本提供者 / instanceProvider
 	 */
 	public static void setInstanceProvider(ObjectProvider<BoostEventService> instanceProvider) {

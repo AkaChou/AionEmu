@@ -26,7 +26,6 @@ public abstract class SiegeDAO implements DAO {
 	 * 加载全部攻城地点到给定映射。
 	 * Loads all siege locations into the given map.
 	 * @param locations 攻城地点映射 / siege location map
-	 * @return 是否加载成功 / true if loaded
 	 */
 	public abstract void loadSiegeLocations(Map<Integer, SiegeLocation> locations);
 

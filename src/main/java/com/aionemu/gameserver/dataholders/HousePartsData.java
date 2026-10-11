@@ -12,16 +12,16 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 import jakarta.xml.bind.annotation.XmlTransient;
 import jakarta.xml.bind.annotation.XmlType;
 
-import com.aionemu.gameserver.model.templates.housing.Building;
 import com.aionemu.gameserver.model.templates.housing.HousePart;
 
 /**
  * 房屋部件配置数据容器，按部件 ID 与标签索引房屋部件。
  * House part configuration data holder, indexed by part id and tags.
+ *
  * @author Rolandas
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "", propOrder = { "houseParts" })
+@XmlType(name = "", propOrder = {"houseParts"})
 @XmlRootElement(name = "house_parts")
 public class HousePartsData {
 
@@ -50,6 +50,7 @@ public class HousePartsData {
 	/**
 	 * 按部件 ID 获取房屋部件。
 	 * Returns the house part for the given part id.
+	 *
 	 * @param partId 部件 ID / part id
 	 * @return 房屋部件，不存在则为 null / house part, or null if absent
 	 */
@@ -60,6 +61,7 @@ public class HousePartsData {
 	/**
 	 * 返回房屋部件数量。
 	 * Returns the number of house parts.
+	 *
 	 * @return 房屋部件数量 / Returns the number of house parts.
 	 */
 	public int size() {

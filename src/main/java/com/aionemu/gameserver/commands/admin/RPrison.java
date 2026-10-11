@@ -6,12 +6,12 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.Util;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 
-import java.util.NoSuchElementException;
 
 /**
  * 将在线玩家从监狱释放的管理员命令。
  * Admin command to release an online player from prison.
  * Command: //rprison &lt;player&gt;
+ *
  * @author lord_rex Command: //rprison <player> This command is removing player from prison.
  */
 public class RPrison extends AdminCommand {
@@ -42,8 +42,7 @@ public class RPrison extends AdminCommand {
 				PunishmentService.setIsInPrison(playerFromPrison, false, 0, "");
 				PacketSendUtility.sendMessage(admin, "Player " + playerFromPrison.getName() + " removed from prison.");
 			}
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			PacketSendUtility.sendMessage(admin, "Usage: //rprison <player>");
 		}
 	}

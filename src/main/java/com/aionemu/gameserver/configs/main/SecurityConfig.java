@@ -232,6 +232,17 @@ public class SecurityConfig {
 	private final IntegrityProperties integrity = new IntegrityProperties();
 	private final CheckProperties check = new CheckProperties();
 
+	/**
+	 * Spring 绑定面（JavaBeanBinder 需要可写属性才能下沉到 {@code gameserver.security.noanimation.*}），
+	 * 值经 {@code valueOf}/字段注入，本体刻意 no-op，严禁作为死代码删除。
+	 * <p>
+	 * Spring binding surface (JavaBeanBinder needs a writable property to descend into
+	 * {@code gameserver.security.noanimation.*}); the value arrives via {@code valueOf}/field
+	 * injection, so the body is intentionally a no-op — never remove it as dead code.
+	 */
+	public void setNoanimation(NoAnimationProperties noanimation) {
+	}
+
 	@Getter
 	public static class GmauditProperties {
 		private final MessageProperties message = new MessageProperties();
@@ -274,6 +285,22 @@ public class SecurityConfig {
 
 		public void setPunish(int punish) {
 			PUNISH = punish;
+		}
+
+		/**
+		 * Spring 绑定面（no-op，值经 {@code valueOf}/字段注入），严禁删除——缺失会让
+		 * {@code gameserver.security.antihack.*} 绑定直接抛 BindException。
+		 * <p>
+		 * Spring binding surface (no-op; value arrives via {@code valueOf}/field injection) — must stay,
+		 * otherwise binding {@code gameserver.security.antihack.*} throws BindException.
+		 */
+		public void setSpeedhack(SpeedhackProperties speedhack) {
+		}
+
+		/**
+		 * Spring 绑定面（no-op），语义同 {@link #setSpeedhack(SpeedhackProperties)}。 / Spring binding surface (no-op), same rationale as {@link #setSpeedhack(SpeedhackProperties)}.
+		 */
+		public void setAbnormal(AbnormalProperties abnormal) {
 		}
 
 		public static class SpeedhackProperties {
@@ -381,6 +408,12 @@ public class SecurityConfig {
 	@Getter
 	public static class CaptchaProperties {
 		private final AppearProperties appear = new AppearProperties();
+
+		/**
+		 * Spring 绑定面（no-op），语义同外层 {@code setSpeedhack} 注释。 / Spring binding surface (no-op); see the outer {@code setSpeedhack} note.
+		 */
+		public void setAppear(AppearProperties appear) {
+		}
 
 		public boolean isEnable() {
 			return CAPTCHA_ENABLE;

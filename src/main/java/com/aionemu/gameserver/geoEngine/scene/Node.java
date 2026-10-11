@@ -2,6 +2,7 @@ package com.aionemu.gameserver.geoEngine.scene;
 
 
 import com.aionemu.boot.i18n.I18n;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,6 +23,7 @@ import lombok.NoArgsConstructor;
  * <p>
  * 可挂载任意数量的子节点。
  * A node may have any number of children attached.
+ *
  * @author Mark Powell
  * @author Gregg Patton
  * @author Joshua Slack
@@ -35,12 +37,15 @@ public class Node extends Spatial implements Cloneable {
 	 * This node's children.
 	 */
 	protected ArrayList<Spatial> children = new ArrayList<>(1);
-	/** 碰撞标志。 / Collision flags. */
+	/**
+	 * 碰撞标志。 / Collision flags.
+	 */
 	protected short collisionFlags;
 
 	/**
 	 * 以给定名称构造空子列表节点，碰撞标志默认为 ALL。
 	 * Constructs a node with the given name, empty children, and ALL collision flags.
+	 *
 	 * @param name 场景元素名称，用于标识与比较 / name of the scene element for identification and comparison
 	 */
 	public Node(String name) {
@@ -51,6 +56,7 @@ public class Node extends Spatial implements Cloneable {
 	/**
 	 * 返回维护的子节点数量。
 	 * Returns the number of children this node maintains.
+	 *
 	 * @return 子节点数量 / child count
 	 */
 	public int getQuantity() {
@@ -60,6 +66,7 @@ public class Node extends Spatial implements Cloneable {
 	/**
 	 * 返回本分支下所有几何中的三角形总数。
 	 * Returns the number of triangles contained in all geometry sub-branches of this node.
+	 *
 	 * @return 三角形总数 / triangle count of this branch
 	 */
 	@Override
@@ -76,6 +83,7 @@ public class Node extends Spatial implements Cloneable {
 	/**
 	 * 返回本分支下所有几何中的顶点总数。
 	 * Returns the number of vertices contained in all geometry sub-branches of this node.
+	 *
 	 * @return 顶点总数 / vertex count of this branch
 	 */
 	@Override
@@ -93,6 +101,7 @@ public class Node extends Spatial implements Cloneable {
 	/**
 	 * 挂载子节点；本节点成为其父。若子节点原有父节点则先从其父上拆下。
 	 * Attaches a child; this node becomes its parent. If the child already had a parent it is detached first.
+	 *
 	 * @param child 待挂载子节点 / child to attach
 	 * @return 挂载后的子节点数量 / number of children maintained after attach
 	 * @throws NullPointerException 当子节点为 null 时 / if child is null
@@ -115,6 +124,7 @@ public class Node extends Spatial implements Cloneable {
 	/**
 	 * 在指定索引处挂载子节点；本节点成为其父。若子节点原有父节点则先从其父上拆下。
 	 * Attaches a child at an index; this node becomes its parent. If the child already had a parent it is detached first.
+	 *
 	 * @param child 待挂载子节点 / child to attach
 	 * @param index 插入索引 / insert index
 	 * @return 挂载后的子节点数量 / number of children maintained after attach
@@ -138,6 +148,7 @@ public class Node extends Spatial implements Cloneable {
 	/**
 	 * 从子列表移除给定子节点。
 	 * Removes the given child from this node's list.
+	 *
 	 * @param child 待移除子节点 / child to remove
 	 * @return 子节点原索引；不在列表中则为 -1 / former index, or -1 if not present
 	 */
@@ -159,6 +170,7 @@ public class Node extends Spatial implements Cloneable {
 	/**
 	 * 按名称移除第一个匹配的子节点。
 	 * Removes the first child whose name matches.
+	 *
 	 * @param childName 子节点名称 / child name
 	 * @return 子节点原索引；未找到则为 -1 / former index, or -1 if not found
 	 */
@@ -180,6 +192,7 @@ public class Node extends Spatial implements Cloneable {
 	/**
 	 * 移除指定索引处的子节点并返回该节点。
 	 * Removes the child at the given index and returns it.
+	 *
 	 * @param index 子节点索引 / child index
 	 * @return 被移除的子节点 / removed child
 	 */
@@ -205,6 +218,7 @@ public class Node extends Spatial implements Cloneable {
 	/**
 	 * 返回给定子节点的索引。
 	 * Returns the index of the given child.
+	 *
 	 * @param sp 子节点 / child spatial
 	 * @return 索引；不存在则为 -1 / index, or -1 if absent
 	 */
@@ -215,6 +229,7 @@ public class Node extends Spatial implements Cloneable {
 	/**
 	 * 交换两个索引处的子节点（比先拆后挂更高效，无需额外更新）。
 	 * Swaps children at two indices (more efficient than detach/attach; no extra updates needed).
+	 *
 	 * @param index1 第一个索引 / first index
 	 * @param index2 第二个索引 / second index
 	 */
@@ -229,6 +244,7 @@ public class Node extends Spatial implements Cloneable {
 	/**
 	 * 返回指定索引处的子节点。
 	 * Returns the child at the given index.
+	 *
 	 * @param i 索引 / index
 	 * @return 索引处的子节点 / child at the index
 	 */
@@ -239,6 +255,7 @@ public class Node extends Spatial implements Cloneable {
 	/**
 	 * 按精确名称（区分大小写）查找第一个匹配的子节点，递归进入子 Node。
 	 * Returns the first child with exactly the given name (case sensitive), recursing into child nodes.
+	 *
 	 * @param name 子节点名称；null 时返回 null / child name; null yields null
 	 * @return 找到的子节点，或 null / child if found, or null
 	 */
@@ -264,6 +281,7 @@ public class Node extends Spatial implements Cloneable {
 	/**
 	 * 判断给定 Spatial 是否在本节点子树中。
 	 * Determines whether the provided spatial is contained in this node's children (recursively).
+	 *
 	 * @param spat 待查找的子对象 / child object to look for
 	 * @return 若 contained 则为 true / true if contained
 	 */
@@ -284,6 +302,7 @@ public class Node extends Spatial implements Cloneable {
 	/**
 	 * 返回全部子节点列表。
 	 * Returns all children of this node.
+	 *
 	 * @return 子节点列表 / list of all children
 	 */
 	public List<Spatial> getChildren() {
@@ -293,9 +312,10 @@ public class Node extends Spatial implements Cloneable {
 	/**
 	 * 子几何变更时向上传递给父节点。
 	 * Propagates a child-geometry change to the parent.
+	 *
 	 * @param geometry 相关几何体 / related geometry
-	 * @param index1 索引 1 / index 1
-	 * @param index2 索引 2 / index 2
+	 * @param index1   索引 1 / index 1
+	 * @param index2   索引 2 / index 2
 	 */
 	public void childChange(Geometry geometry, int index1, int index2) {
 		// 仅传递给父级 / just pass to parent
@@ -307,7 +327,8 @@ public class Node extends Spatial implements Cloneable {
 	/**
 	 * 按意图与包围体过滤后，对子节点递归碰撞检测。
 	 * After intention/bound filtering, recursively collides children.
-	 * @param other 目标可碰撞对象 / target collidable
+	 *
+	 * @param other   目标可碰撞对象 / target collidable
 	 * @param results 碰撞结果收集器 / collision results collector
 	 * @return 碰撞总数 / total collisions
 	 */
@@ -351,8 +372,9 @@ public class Node extends Spatial implements Cloneable {
 	 * <p>
 	 * 正则为整串匹配；可用 (?X) 模式。按设计可安全用于 for-each。
 	 * The pattern is a full match; (?X) modes are allowed. Safe for for-each by design.
+	 *
 	 * @param spatialSubclass 必须实现的子类；null 表示任意 / required subclass; null matches all
-	 * @param nameRegex 名称正则；null 表示任意名称 / name regex; null matches all names
+	 * @param nameRegex       名称正则；null 表示任意名称 / name regex; null matches all names
 	 * @return 非 null 列表（可能为空） / non-null, possibly empty list of matches
 	 * @see java.util.regex.Pattern
 	 * @see Spatial#matches(Class, String)
@@ -377,6 +399,7 @@ public class Node extends Spatial implements Cloneable {
 	/**
 	 * 按子类筛选后代的便捷重载。
 	 * Convenience overload filtering descendants by subclass only.
+	 *
 	 * @param spatialSubclass 必须实现的子类 / required subclass
 	 * @return 匹配列表 / matching list
 	 * @see #descendantMatches(Class, String)
@@ -388,6 +411,7 @@ public class Node extends Spatial implements Cloneable {
 	/**
 	 * 按名称正则筛选后代的便捷重载。
 	 * Convenience overload filtering descendants by name regex only.
+	 *
 	 * @param nameRegex 名称正则 / name regex
 	 * @return 匹配列表 / matching list
 	 * @see #descendantMatches(Class, String)
@@ -399,6 +423,7 @@ public class Node extends Spatial implements Cloneable {
 	/**
 	 * 将模型包围体克隆后下发到所有子节点。
 	 * Clones the model bound and assigns it to all children.
+	 *
 	 * @param modelBound 模型包围体；null 表示清空 / model bound; null clears
 	 */
 	@Override
@@ -440,12 +465,14 @@ public class Node extends Spatial implements Cloneable {
 	 * @see
 	 * com.aionemu.gameserver.geoEngine.scene.Spatial#setTransform(Matrix3f, Vector3f, float)
 	 */
+
 	/**
 	 * 将均匀缩放变换下发到所有子节点。
 	 * Propagates a uniform-scale transform to all children.
+	 *
 	 * @param rotation 旋转矩阵 / rotation
-	 * @param loc 平移 / translation
-	 * @param scale 均匀缩放 / uniform scale
+	 * @param loc      平移 / translation
+	 * @param scale    均匀缩放 / uniform scale
 	 */
 	@Override
 	public void setTransform(Matrix3f rotation, Vector3f loc, float scale) {
@@ -459,22 +486,24 @@ public class Node extends Spatial implements Cloneable {
 	/**
 	 * 将非均匀缩放变换下发到所有子节点。
 	 * Propagates a non-uniform-scale transform to all children.
+	 *
 	 * @param rotation 旋转矩阵 / rotation
-	 * @param loc 平移 / translation
-	 * @param scale 各轴缩放 / per-axis scale
+	 * @param loc      平移 / translation
+	 * @param scale    各轴缩放 / per-axis scale
 	 */
 	@Override
 	public void setTransform(Matrix3f rotation, Vector3f loc, Vector3f scale) {
 		if (children != null) {
-            for (Spatial child : children) {
-                child.setTransform(rotation, loc, scale);
-            }
+			for (Spatial child : children) {
+				child.setTransform(rotation, loc, scale);
+			}
 		}
 	}
 
 	/**
 	 * 克隆本节点及其子树（Geometry 共享原 Mesh 引用）。
 	 * Clones this node and its subtree (Geometry shares the original Mesh reference).
+	 *
 	 * @return 克隆节点 / cloned node
 	 */
 	@Override
@@ -495,6 +524,7 @@ public class Node extends Spatial implements Cloneable {
 	/**
 	 * 返回碰撞标志。
 	 * Returns collision flags.
+	 *
 	 * @return 碰撞标志 / collision flags
 	 */
 	@Override
@@ -505,6 +535,7 @@ public class Node extends Spatial implements Cloneable {
 	/**
 	 * 设置碰撞标志。
 	 * Sets collision flags.
+	 *
 	 * @param flags 碰撞标志 / collision flags
 	 */
 	@Override

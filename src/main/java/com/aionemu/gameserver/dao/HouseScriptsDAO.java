@@ -45,10 +45,4 @@ public abstract class HouseScriptsDAO implements DAO {
 	 */
 	public abstract void updateScript(int paramInt1, int paramInt2, String paramString);
 
-	/**
-	 * 删除房屋脚本。
-	 * Deletes a house script.
-	 * @param paramInt1 房屋/玩家相关 ID / house or player related ID
-	 * @param paramInt2 脚本索引 / script index
-	 */
 	}

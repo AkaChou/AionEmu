@@ -12,13 +12,13 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
 
 /**
  * 冷却清除指令；清除目标玩家的技能/物品/房屋物品冷却，或指定副本冷却。
  * Admin command that clears skill/item/house-object cooldowns, or specific instance cooldowns, for the target player.
+ *
  * @author kecimis
  */
 public class RemoveCd extends AdminCommand {
@@ -30,6 +30,7 @@ public class RemoveCd extends AdminCommand {
 	/**
 	 * 执行该管理指令。
 	 * Executes this admin command.
+	 *
 	 * @param admin 执行指令的管理员 / admin executing the command
 	 */
 	@Override
@@ -84,20 +85,19 @@ public class RemoveCd extends AdminCommand {
 					PacketSendUtility.sendMessage(admin, "You have removed cooldowns of player: " + player.getName());
 					PacketSendUtility.sendMessage(player, "Your cooldowns were removed by admin");
 				}
-			}
-			else if (params[0].contains("instance")) {
+			} else if (params[0].contains("instance")) {
 				if (player.getPortalCooldownList() == null || player.getPortalCooldownList().getPortalCoolDowns() == null)
 					return;
 				if (params.length >= 2) {
 					if (params[1].equalsIgnoreCase("all")) {
 						List<Integer> mapIds = new ArrayList<>();
-                        for (Entry<Integer, PortalCooldownItem> mapId : player.getPortalCooldownList().getPortalCoolDowns().entrySet()) {
-                            mapIds.add(mapId.getKey());
-                        }
+						for (Entry<Integer, PortalCooldownItem> mapId : player.getPortalCooldownList().getPortalCoolDowns().entrySet()) {
+							mapIds.add(mapId.getKey());
+						}
 
-                        for (Integer id : mapIds) {
-                            player.getPortalCooldownList().addPortalCooldown(id, 0, 0);
-                        }
+						for (Integer id : mapIds) {
+							player.getPortalCooldownList().addPortalCooldown(id, 0, 0);
+						}
 
 						mapIds.clear();
 						if (player.equals(admin))
@@ -107,13 +107,11 @@ public class RemoveCd extends AdminCommand {
 								.sendMessage(admin, "You have removed instance cooldowns of player: " + player.getName());
 							PacketSendUtility.sendMessage(player, "Your instance cooldowns were removed by admin");
 						}
-					}
-					else {
+					} else {
 						int worldId = 0;
 						try {
 							worldId = Integer.parseInt(params[1]);
-						}
-						catch (NumberFormatException e) {
+						} catch (NumberFormatException e) {
 							PacketSendUtility.sendMessage(admin, "WorldId has to be integer or use \"all\"");
 							return;
 						}
@@ -129,17 +127,14 @@ public class RemoveCd extends AdminCommand {
 								PacketSendUtility.sendMessage(player, "Your instance cooldown worldId: " + worldId
 									+ " was removed by admin");
 							}
-						}
-						else
+						} else
 							PacketSendUtility.sendMessage(admin, "You or your target can enter given instance");
 
 					}
-				}
-				else
+				} else
 					PacketSendUtility.sendMessage(admin, "syntax: //removecd instance <all|worldId>");
 			}
-		}
-		else
+		} else
 			PacketSendUtility.sendMessage(admin, "Only players are allowed as target");
 	}
 }

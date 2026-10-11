@@ -2,6 +2,7 @@ package com.aionemu.gameserver.dao.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -118,7 +119,6 @@ public class PlayerStigmasEquippedDAO extends com.aionemu.gameserver.dao.PlayerS
 	 * Persists the player's equipped stigmas (insert, update, and delete).
 	 *
 	 * @param player 玩家 / player
-	 * @return 是否成功 / whether successful
 	 */
 	@Override
 	public void storeItems(Player player) {
@@ -132,22 +132,20 @@ public class PlayerStigmasEquippedDAO extends com.aionemu.gameserver.dao.PlayerS
 			}
 		}
 		if (!hasDirty) {
-						;
 		}
 		try {
 			transactionTemplate.executeWithoutResult(_ -> {
 				try (Connection con = DatabaseFactory.getConnection()) {
 					storeItemsInTransaction(con, player);
 				} catch (SQLException e) {
-					throw new DataAccessException("Failed to store equipped stigmas", e) {};
+					throw new DataAccessException("Failed to store equipped stigmas", e) {
+					};
 				}
 			});
 		} catch (RuntimeException e) {
 			log.error(I18n.get("log.6790b402b724", player.getObjectId()), e);
-						;
 		}
 		markStored(player);
-				;
 	}
 
 	@Override

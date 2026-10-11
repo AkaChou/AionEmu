@@ -12,6 +12,7 @@ import com.aionemu.gameserver.model.templates.item.ItemTemplate;
 /**
  * 物品工厂，按模板与数量创建物品实例。
  * Item factory creating item instances from templates and counts.
+ *
  * @author ATracer
  */
 
@@ -25,7 +26,7 @@ public class ItemFactory {
 	 * itemId
 	 * result
 	 */
-	public static final Item newItem(int itemId) {
+	public static Item newItem(int itemId) {
 		ItemTemplate itemTemplate = DataManager.ITEM_DATA.getItemTemplate(itemId);
 		if (itemTemplate == null) {
 			log.error(I18n.get("log.c0940ff7ef75", itemId));
@@ -47,7 +48,7 @@ public class ItemFactory {
 		return item;
 	}
 
-	private static final long calculateCount(ItemTemplate itemTemplate, long count) {
+	private static long calculateCount(ItemTemplate itemTemplate, long count) {
 		long maxStackCount = itemTemplate.getMaxStackCount();
 		if (count > maxStackCount && !itemTemplate.isKinah()) {
 			count = maxStackCount;

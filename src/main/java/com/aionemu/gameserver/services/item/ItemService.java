@@ -45,18 +45,22 @@ import com.google.common.collect.Collections2;
 /**
  * 核心物品服务：发放/加载魔石、任务物品、升级拷贝与 ID 回收。
  * Core item service — grant/load manastones, quest items, upgrade copy, and id release.
+ *
  * @author KID
  */
 @Slf4j(topic = "ITEM_LOG")
 public class ItemService {
 
-	/** 默认入包更新谓词（采集类型）。 / Default inventory-add update predicate (collect type). */
+	/**
+	 * 默认入包更新谓词（采集类型）。 / Default inventory-add update predicate (collect type).
+	 */
 	public static final ItemUpdatePredicate DEFAULT_UPDATE_PREDICATE = new ItemUpdatePredicate(ItemAddType.ITEM_COLLECT,
-			ItemUpdateType.INC_ITEM_COLLECT);
+		ItemUpdateType.INC_ITEM_COLLECT);
 
 	/**
 	 * 从数据库批量加载物品镶嵌的魔石/神石。
 	 * Loads manastones/godstones for a collection of items from the database.
+	 *
 	 * @param itemList item collection
 	 */
 	public static void loadItemStones(Collection<Item> itemList) {
@@ -68,8 +72,9 @@ public class ItemService {
 	/**
 	 * 确保玩家物品集合均具备技能强化配置。
 	 * Ensures skill-enhance data is applied to all items for the player.
+	 *
 	 * @param player 玩家 / player
-	 * @param items 物品集合 / items
+	 * @param items  物品集合 / items
 	 * @return 是否有任何物品被修改 / true if any item was changed
 	 */
 	public static boolean ensureSkillEnhance(Player player, Collection<Item> items) {
@@ -86,9 +91,10 @@ public class ItemService {
 	/**
 	 * 向玩家发放指定数量物品（默认更新谓词）。
 	 * Grants items to the player with the default update predicate.
+	 *
 	 * @param player 玩家 / player
 	 * @param itemId item template id
-	 * @param count count
+	 * @param count  count
 	 * @return 未能放入的剩余数量 / remaining count that could not be added
 	 */
 	public static long addItem(Player player, int itemId, long count) {
@@ -120,7 +126,7 @@ public class ItemService {
 	 * Checks whether all requested items can be added to the given storage in full.
 	 */
 	public static boolean canAddItems(Storage inventory, Map<Integer, Long> itemCounts,
-			Map<Integer, ItemTemplate> templates) {
+									  Map<Integer, ItemTemplate> templates) {
 		return canAddItems(inventory, itemCounts, templates, 0, 0);
 	}
 
@@ -129,7 +135,7 @@ public class ItemService {
 	 * Checks capacity after an exchange, including regular/special slots that will be released.
 	 */
 	public static boolean canAddItems(Storage inventory, Map<Integer, Long> itemCounts,
-			Map<Integer, ItemTemplate> templates, int releasedRegularSlots, int releasedSpecialSlots) {
+									  Map<Integer, ItemTemplate> templates, int releasedRegularSlots, int releasedSpecialSlots) {
 		long regularSlots = Math.max(0, releasedRegularSlots) + (long) inventory.getFreeSlots();
 		long specialSlots = Math.max(0, releasedSpecialSlots) + (long) inventory.getSpecialCubeFreeSlots();
 		for (Map.Entry<Integer, Long> entry : itemCounts.entrySet()) {
@@ -200,9 +206,10 @@ public class ItemService {
 	/**
 	 * 向玩家发放指定数量物品，使用自定义更新谓词。
 	 * Grants items to the player with a custom update predicate.
-	 * @param player 玩家 / player
-	 * @param itemId item template id
-	 * @param count count
+	 *
+	 * @param player    玩家 / player
+	 * @param itemId    item template id
+	 * @param count     count
 	 * @param predicate update predicate
 	 * @return 未能放入的剩余数量 / remaining count that could not be added
 	 */
@@ -213,21 +220,23 @@ public class ItemService {
 	/**
 	 * 按源物品全部属性拷贝发放新物品。
 	 * Grants a new item by copying all values from the source item.
-	 * @param player 玩家 / player
+	 *
+	 * @param player     玩家 / player
 	 * @param sourceItem source item
 	 * @return 未能放入的剩余数量 / remaining count that could not be added
 	 */
 	public static long addItem(Player player, Item sourceItem) {
 		return addItem(player, sourceItem.getItemId(), sourceItem.getItemCount(), sourceItem, DEFAULT_UPDATE_PREDICATE,
-				0, false);
+			0, false);
 	}
 
 	/**
 	 * 按源物品属性拷贝发放，并使用自定义更新谓词。
 	 * Grants by copying source-item values with a custom update predicate.
-	 * @param player 玩家 / player
+	 *
+	 * @param player     玩家 / player
 	 * @param sourceItem source item
-	 * @param predicate update predicate
+	 * @param predicate  update predicate
 	 * @return 未能放入的剩余数量 / remaining count that could not be added
 	 */
 	public static long addItem(Player player, Item sourceItem, ItemUpdatePredicate predicate) {
@@ -240,6 +249,7 @@ public class ItemService {
 	 * 玩家 / player
 	 * item template id
 	 * count
+	 *
 	 * @param sourceItem 源物品（可为 null） / source item (nullable)
 	 * @return 未能放入的剩余数量 / remaining count that could not be added
 	 */
@@ -250,24 +260,26 @@ public class ItemService {
 	/**
 	 * 发放物品并设置强化等级。
 	 * Grants items and applies the given enchant level.
-	 * @param player 玩家 / player
-	 * @param itemId item template id
-	 * @param count count
+	 *
+	 * @param player       玩家 / player
+	 * @param itemId       item template id
+	 * @param count        count
 	 * @param enchantLevel 强化等级 / enchant level
-	 * @param predicate update predicate
+	 * @param predicate    update predicate
 	 * @return 未能放入的剩余数量 / remaining count that could not be added
 	 */
 	public static long addItemAndEnchant(Player player, int itemId, long count, int enchantLevel,
-			ItemUpdatePredicate predicate) {
+										 ItemUpdatePredicate predicate) {
 		return addItem(player, itemId, count, null, predicate, enchantLevel, false);
 	}
 
 	/**
 	 * 发放物品并设置强化等级（默认更新谓词）。
 	 * Grants items with enchant level using the default update predicate.
-	 * @param player 玩家 / player
-	 * @param itemId item template id
-	 * @param count count
+	 *
+	 * @param player       玩家 / player
+	 * @param itemId       item template id
+	 * @param count        count
 	 * @param enchantLevel 强化等级 / enchant level
 	 * @return 未能放入的剩余数量 / remaining count that could not be added
 	 */
@@ -282,6 +294,7 @@ public class ItemService {
 	 * item template id
 	 * count
 	 * 强化等级 / enchant level
+	 *
 	 * @param augment 是否满充能 / whether to fully charge
 	 * @return 未能放入的剩余数量 / remaining count that could not be added
 	 */
@@ -295,14 +308,15 @@ public class ItemService {
 	 * 玩家 / player
 	 * item template id
 	 * count
+	 *
 	 * @param sourceItem 源物品（可为 null） / source item (nullable)
-	 * update predicate
-	 * 强化等级 / enchant level
-	 * @param augment 是否满充能 / whether to fully charge
+	 *                   update predicate
+	 *                   强化等级 / enchant level
+	 * @param augment    是否满充能 / whether to fully charge
 	 * @return 未能放入的剩余数量 / remaining count that could not be added
 	 */
 	public static long addItem(Player player, int itemId, long count, Item sourceItem, ItemUpdatePredicate predicate,
-			int enchantLevel, boolean augment) {
+							   int enchantLevel, boolean augment) {
 		ItemTemplate itemTemplate = DataManager.ITEM_DATA.getItemTemplate(itemId);
 		if (count <= 0 || itemTemplate == null) {
 			return 0;
@@ -311,9 +325,9 @@ public class ItemService {
 		Preconditions.checkNotNull(predicate, "Predicate is not supplied");
 		if (LoggingConfig.LOG_ITEM) {
 			log.info(I18n.get("log.4896f907bf6c", (LoggingConfig.ENABLE_ADVANCED_LOGGING
-									? "/Item Name - " + itemTemplate.getTemplateId() + "/" + count + "/"
-											+ itemTemplate.getName()
-									: " - " + itemTemplate.getTemplateId() + "/" + count), player.getName()));
+				? "/Item Name - " + itemTemplate.getTemplateId() + "/" + count + "/"
+				+ itemTemplate.getName()
+				: " - " + itemTemplate.getTemplateId() + "/" + count), player.getName()));
 		}
 		Storage inventory = player.getInventory();
 		if (itemTemplate.isKinah()) {
@@ -336,10 +350,10 @@ public class ItemService {
 	 * Adds non-stackable items into inventory.
 	 */
 	private static long addNonStackableItem(Player player, ItemTemplate itemTemplate, long count, Item sourceItem,
-			ItemUpdatePredicate predicate, int enchantlevel, boolean augment) {
+											ItemUpdatePredicate predicate, int enchantlevel, boolean augment) {
 		Storage inventory = player.getInventory();
 		ItemCustomSetTeamplate itemCustomSet = DataManager.ITEM_CUSTOM_SET_DATA
-				.getCustomTemplate(itemTemplate.getItemCustomSet());
+			.getCustomTemplate(itemTemplate.getItemCustomSet());
 		while (!inventory.isFull(itemTemplate.getExtraInventoryId()) && count > 0) {
 			Item newItem = ItemFactory.newItem(itemTemplate.getTemplateId());
 			if (newItem.getExpireTime() != 0) {
@@ -374,8 +388,9 @@ public class ItemService {
 	 * 确保单件物品具备技能强化（按职业随机技能）。
 	 * Ensures a single item has skill-enhance applied (random skill by class).
 	 * item
+	 *
 	 * @param data 技能强化数据 / skill enhance data
-	 * player class
+	 *             player class
 	 * @return 是否修改了物品 / true if the item was changed
 	 */
 	static boolean ensureSkillEnhance(Item item, ItemSkillEnhanceData data, PlayerClass playerClass) {
@@ -387,7 +402,7 @@ public class ItemService {
 			return false;
 		}
 		if (item.isEnhance() && item.getEnhanceEnchantLevel() != 0
-				&& itemSkillEnhance.getSkillId().contains(item.getEnhanceSkillId())) {
+			&& itemSkillEnhance.getSkillId().contains(item.getEnhanceSkillId())) {
 			return false;
 		}
 		item.setEnhanceSkillId(RndArray.get(itemSkillEnhance.getSkillId()));
@@ -404,6 +419,7 @@ public class ItemService {
 	 * Charges an item to the given level (1 or 2).
 	 * 玩家 / player
 	 * item
+	 *
 	 * @param level 充能等级 / charge level
 	 */
 	public static void chargeItem(Player player, Item item, int level) {
@@ -414,12 +430,12 @@ public class ItemService {
 		int chargeWay = improvement.getChargeWay();
 		int currentCharge = item.getChargePoints();
 		switch (level) {
-		case 1:
-			item.getConditioningInfo().updateChargePoints(ChargeInfo.LEVEL1 - currentCharge);
-			break;
-		case 2:
-			item.getConditioningInfo().updateChargePoints(ChargeInfo.LEVEL2 - currentCharge);
-			break;
+			case 1:
+				item.getConditioningInfo().updateChargePoints(ChargeInfo.LEVEL1 - currentCharge);
+				break;
+			case 2:
+				item.getConditioningInfo().updateChargePoints(ChargeInfo.LEVEL2 - currentCharge);
+				break;
 		}
 		if (item.isEquipped()) {
 			player.getGameStats().updateStatsVisually();
@@ -467,7 +483,7 @@ public class ItemService {
 	 * Adds stackable items into inventory (and equipped shards when applicable).
 	 */
 	private static long addStackableItem(Player player, ItemTemplate itemTemplate, long count,
-			ItemUpdatePredicate predicate) {
+										 ItemUpdatePredicate predicate) {
 		Storage inventory = player.getInventory();
 		Collection<Item> items = inventory.getItemsByItemId(itemTemplate.getTemplateId());
 		for (Item item : items) {
@@ -498,7 +514,8 @@ public class ItemService {
 	/**
 	 * 发放任务物品列表（默认更新谓词）。
 	 * Grants a list of quest items with the default update predicate.
-	 * @param player 玩家 / player
+	 *
+	 * @param player     玩家 / player
 	 * @param questItems 任务物品列表 / quest items
 	 * @return 是否全部发放成功 / true if all items were granted
 	 */
@@ -510,8 +527,9 @@ public class ItemService {
 	 * 发放任务物品列表：先校验背包/特殊格空位，再逐项发放。
 	 * Grants quest items after validating free inventory and special-cube slots.
 	 * 玩家 / player
+	 *
 	 * @param questItems 任务物品列表 / quest items
-	 * update predicate
+	 *                   update predicate
 	 * @return 是否全部发放成功 / true if all items were granted
 	 */
 	public static boolean addQuestItems(Player player, List<QuestItems> questItems, ItemUpdatePredicate predicate) {
@@ -549,6 +567,7 @@ public class ItemService {
 	/**
 	 * 回收单个物品的对象 ID。
 	 * Releases a single item object id back to the id factory.
+	 *
 	 * @param item item
 	 */
 	public static void releaseItemId(Item item) {
@@ -558,6 +577,7 @@ public class ItemService {
 	/**
 	 * 批量回收物品对象 ID。
 	 * Releases object ids for a collection of items.
+	 *
 	 * @param items 物品集合 / items
 	 */
 	public static void releaseItemIds(Collection<Item> items) {
@@ -568,8 +588,9 @@ public class ItemService {
 	/**
 	 * 按玩家对象 ID 向其背包投放 1 件物品。
 	 * Drops one item into the inventory of the player identified by object id.
+	 *
 	 * @param playerObjectId player object id
-	 * @param itemId item template id
+	 * @param itemId         item template id
 	 * @return 是否投放成功 / true if granted successfully
 	 */
 	public static boolean dropItemToInventory(int playerObjectId, int itemId) {
@@ -579,6 +600,7 @@ public class ItemService {
 	/**
 	 * 向在线玩家背包投放 1 件物品。
 	 * Drops one item into an online player's inventory.
+	 *
 	 * @param player 玩家 / player
 	 * @param itemId item template id
 	 * @return 是否投放成功 / true if granted successfully
@@ -590,9 +612,10 @@ public class ItemService {
 	/**
 	 * 向在线玩家背包投放指定数量物品；背包满且无堆叠空间时失败。
 	 * Drops items into an online player's inventory; fails when full with no free stack.
+	 *
 	 * @param player 玩家 / player
 	 * @param itemId item template id
-	 * @param count count
+	 * @param count  count
 	 * @return 是否投放成功 / true if granted successfully
 	 */
 	public static boolean dropItemToInventory(Player player, int itemId, long count) {
@@ -605,7 +628,7 @@ public class ItemService {
 			boolean hasFreeStack = false;
 			for (Item item : items) {
 				if (item.getPersistentState() == PersistentState.DELETED
-						|| item.getItemCount() < item.getItemTemplate().getMaxStackCount()) {
+					|| item.getItemCount() < item.getItemTemplate().getMaxStackCount()) {
 					hasFreeStack = true;
 					break;
 				}
@@ -620,6 +643,7 @@ public class ItemService {
 	/**
 	 * 创建装备升级结果物品，并生成可选孔和随机强化奖励。
 	 * Creates an equipment-upgrade result with optional sockets and a random enchant bonus.
+	 *
 	 * @param itemId 升级结果模板 ID / upgrade-result template id
 	 * @return 新建物品，模板不存在时为 null / new item, or null if template missing
 	 */
@@ -642,6 +666,7 @@ public class ItemService {
 	/**
 	 * 检查随机物品模板 ID 是否存在。
 	 * Checks whether a random item template id exists.
+	 *
 	 * @param randomItemId 随机物品模板 ID / random item template id
 	 * @return 模板是否存在 / true if template exists
 	 */
@@ -655,15 +680,20 @@ public class ItemService {
 	 * Predicate for item-add/update packets, wrapping add type and update type.
 	 */
 	public static class ItemUpdatePredicate {
-		/** 数量更新类型。 / Count update type. */
+		/**
+		 * 数量更新类型。 / Count update type.
+		 */
 		private final ItemUpdateType itemUpdateType;
-		/** 添加来源类型。 / Add-source type. */
+		/**
+		 * 添加来源类型。 / Add-source type.
+		 */
 		private final ItemAddType itemAddType;
 
 		/**
 		 * 使用指定添加/更新类型构造谓词。
 		 * Constructs a predicate with the given add/update types.
-		 * @param itemAddType add type
+		 *
+		 * @param itemAddType    add type
 		 * @param itemUpdateType update type
 		 */
 		public ItemUpdatePredicate(ItemAddType itemAddType, ItemUpdateType itemUpdateType) {
@@ -717,6 +747,7 @@ public class ItemService {
 	 * 将源装备属性迁移到升级后的新物品（魔石/神石/强化/授权等会按规则衰减）。
 	 * Migrates source gear attributes onto an upgraded item (manastones/godstone/enchant/authorize decay by rule).
 	 * source item
+	 *
 	 * @param newItem 升级后物品 / upgraded item
 	 */
 	public static void makeUpgradeItem(Item sourceItem, Item newItem) {
@@ -742,7 +773,7 @@ public class ItemService {
 		}
 		if (sourceItem.isAmplified()) {
 			newItem.setEnchantLevel(sourceItem.getItemTemplate().getMaxEnchantLevel()
-					+ sourceItem.getItemTemplate().getMaxEnchantBonus());
+				+ sourceItem.getItemTemplate().getMaxEnchantBonus());
 			newItem.setAmplification(false);
 		}
 		newItem.setPersistentState(PersistentState.UPDATE_REQUIRED);
@@ -762,9 +793,9 @@ public class ItemService {
 		if (enchant < 0) {
 			enchant = 0;
 		}
-		if (item.getItemTemplate().getMaxAuthorize()!=0)
+		if (item.getItemTemplate().getMaxAuthorize() != 0)
 			item.setAuthorize(enchant);
-		else if (item.getItemTemplate().getMaxEnchantLevel()!=0)
+		else if (item.getItemTemplate().getMaxEnchantLevel() != 0)
 			item.setEnchantLevel(EnchantService.capEquipmentEnchantLevel(enchant));
 		if (item.isEquipped()) {
 			player.getGameStats().updateStatsVisually();
@@ -776,6 +807,7 @@ public class ItemService {
 	 * 判断物品是否可升级（武器/印记/指定槽位防具，且非禁止强化）。
 	 * Returns whether the item is upgradable (weapon/stigma/selected armor slots, not no-enchant).
 	 * item
+	 *
 	 * @return 是否可升级 / true if upgradable
 	 */
 	public static boolean isUpgradable(Item item) {

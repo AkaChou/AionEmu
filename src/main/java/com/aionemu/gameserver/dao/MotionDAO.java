@@ -33,7 +33,6 @@ public abstract class MotionDAO implements DAO {
 	 * Stores a new motion entry.
 	 * @param objectId 玩家对象 ID / player object id
 	 * @param motion 动作 / motion
-	 * @return 若成功则为 true / true if successful
 	 */
 	public abstract void storeMotion(int objectId, Motion motion);
 
@@ -42,7 +41,6 @@ public abstract class MotionDAO implements DAO {
 	 * Updates an existing motion record.
 	 * @param objectId 玩家对象 ID / player object id
 	 * @param motion 动作 / motion
-	 * @return 若成功则为 true / true if successful
 	 */
 	public abstract void updateMotion(int objectId, Motion motion);
 
@@ -51,7 +49,6 @@ public abstract class MotionDAO implements DAO {
 	 * Deletes the given motion.
 	 * @param objectId 玩家对象 ID / player object id
 	 * @param motionId 动作 ID / motion id
-	 * @return 若成功则为 true / true if successful
 	 */
 	public abstract void deleteMotion(int objectId, int motionId);
 

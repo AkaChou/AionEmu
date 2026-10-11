@@ -42,6 +42,7 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 狂暴阿诺哈（Berserk Anoha）世界 Boss 活动服务。
  * Service for the Berserk Anoha world-boss event (spawn, schedule, teleport invites).
+ *
  * @author Rinzler (Encom)
  */
 @Slf4j
@@ -108,6 +109,7 @@ public class AnohaService {
 	/**
 	 * 启动指定地点的狂暴阿诺哈，并在持续时长结束后自动停止。
 	 * Start Berserk Anoha at the given location and auto-stop after the configured duration.
+	 *
 	 * @param id 活动地点 ID / anoha location id
 	 */
 	public void startAnoha(final int id) {
@@ -122,6 +124,7 @@ public class AnohaService {
 	/**
 	 * 停止指定地点的狂暴阿诺哈。
 	 * Stop Berserk Anoha at the given location.
+	 *
 	 * @param id 活动地点 ID / anoha location id
 	 */
 	public void stopAnoha(int id) {
@@ -136,6 +139,7 @@ public class AnohaService {
 	/**
 	 * 清理活动启动阶段创建的临时对象。
 	 * Despawns temporary objects created during the event startup sequence.
+	 *
 	 * @param id 活动地点 ID / event location id
 	 */
 	public void clearAdventObjects(int id) {
@@ -147,6 +151,7 @@ public class AnohaService {
 	/**
 	 * 清理一组临时对象并释放其引用。
 	 * Despawns one group of temporary objects and releases its references.
+	 *
 	 * @param objects 临时对象集合 / temporary objects
 	 */
 	private void despawnAdventObjects(List<VisibleObject> objects) {
@@ -163,8 +168,9 @@ public class AnohaService {
 	/**
 	 * 按状态刷出阿诺哈活动相关 NPC。
 	 * Spawn Anoha-event NPCs for the given location and state.
+	 *
 	 * @param loc 活动地点 / anoha location
-	 * spawn state
+	 *            spawn state
 	 */
 	public void spawn(AnohaLocation loc, AnohaStateType cstate) {
 		List<SpawnGroup2> locSpawns = DataManager.SPAWNS_DATA2.getAnohaSpawnsByLocId(loc.getId());
@@ -181,6 +187,7 @@ public class AnohaService {
 	/**
 	 * 刷出阿诺哈降临剑光特效 NPC。
 	 * Spawn the Anoha advent sword-effect NPC.
+	 *
 	 * @param id 活动地点 ID / anoha location id
 	 * @return 是否已处理该 ID / whether the id was handled
 	 */
@@ -199,6 +206,7 @@ public class AnohaService {
 	/**
 	 * 广播狂暴阿诺哈回归系统消息。
 	 * Broadcast the Berserk Anoha return system message.
+	 *
 	 * @param id 活动地点 ID / anoha location id
 	 * @return 是否已处理该 ID / whether the id was handled
 	 */
@@ -217,6 +225,7 @@ public class AnohaService {
 	/**
 	 * 广播愤怒维尔斯之守护者 5 分钟预告。
 	 * Broadcast the 5-minute Enraged Wealhtheow Guardian warning.
+	 *
 	 * @param id 活动地点 ID / anoha location id
 	 * @return 是否已处理该 ID / whether the id was handled
 	 */
@@ -235,6 +244,7 @@ public class AnohaService {
 	/**
 	 * 广播愤怒维尔斯之守护者 3 分钟预告。
 	 * Broadcast the 3-minute Enraged Wealhtheow Guardian warning.
+	 *
 	 * @param id 活动地点 ID / anoha location id
 	 * @return 是否已处理该 ID / whether the id was handled
 	 */
@@ -253,6 +263,7 @@ public class AnohaService {
 	/**
 	 * 广播愤怒维尔斯之守护者 1 分钟预告。
 	 * Broadcast the 1-minute Enraged Wealhtheow Guardian warning.
+	 *
 	 * @param id 活动地点 ID / anoha location id
 	 * @return 是否已处理该 ID / whether the id was handled
 	 */
@@ -271,32 +282,33 @@ public class AnohaService {
 	/**
 	 * 向玩家发送是否前往挑战狂暴阿诺哈的确认框。
 	 * Send the player a confirm dialog to teleport and fight Berserk Anoha.
+	 *
 	 * @param player target player
 	 */
 	public void sendRequest(final Player player) {
-	    if (player.getLevel() < 75) {
-            return;
-        }
+		if (player.getLevel() < 75) {
+			return;
+		}
 
-        if (player == null || !player.isSpawned()) {
-            return;
-        }
+		if (player == null || !player.isSpawned()) {
+			return;
+		}
 
-        String message = "Berserk Anoha has appeared. Do you want to fight ?";
-        RequestResponseHandler responseHandler = new RequestResponseHandler(player) {
-            @Override
-            public void acceptRequest(Creature requester, Player responder) {
-                if (responder != null && responder.isOnline() && responder.getLevel() <= 75) {
-                    TeleportService2.teleportTo(responder, 600090000, 813.6149f, 503.42126f, 143.75f, (byte) 72);
-                }
-            }
+		String message = "Berserk Anoha has appeared. Do you want to fight ?";
+		RequestResponseHandler responseHandler = new RequestResponseHandler(player) {
+			@Override
+			public void acceptRequest(Creature requester, Player responder) {
+				if (responder != null && responder.isOnline() && responder.getLevel() <= 75) {
+					TeleportService2.teleportTo(responder, 600090000, 813.6149f, 503.42126f, 143.75f, (byte) 72);
+				}
+			}
 
-            @Override
-            public void denyRequest(Creature requester, Player responder) {
-            }
-        };
+			@Override
+			public void denyRequest(Creature requester, Player responder) {
+			}
+		};
 
-        GameThreadPoolServices.threadPoolManager().schedule(() -> {
+		GameThreadPoolServices.threadPoolManager().schedule(() -> {
 			if (player.isOnline() && player.isSpawned() && player.getLevel() <= 75) {
 				boolean requested = player.getResponseRequester().putRequest(902247, responseHandler);
 				if (requested) {
@@ -304,11 +316,12 @@ public class AnohaService {
 				}
 			}
 		}, 10000);
-    }
+	}
 
 	/**
 	 * 清除指定地点已刷出的阿诺哈活动 NPC。
 	 * Despawn Anoha-event NPCs at the given location.
+	 *
 	 * @param loc 活动地点 / anoha location
 	 */
 	public void despawn(AnohaLocation loc) {
@@ -329,6 +342,7 @@ public class AnohaService {
 	/**
 	 * 判断指定地点是否正在进行狂暴阿诺哈。
 	 * Whether Berserk Anoha is in progress at the given location.
+	 *
 	 * @param id 活动地点 ID / anoha location id
 	 * @return 若 in progress 则为 true / true if in progress
 	 */
@@ -336,10 +350,11 @@ public class AnohaService {
 		return activeAnoha.containsKey(id);
 	}
 
-	
+
 	/**
 	 * 返回阿诺哈活动持续时长（小时，来自配置）。
 	 * Return Anoha event duration in hours (from config).
+	 *
 	 * @return 持续小时数 / duration hours
 	 */
 	public int getDuration() {
@@ -349,8 +364,9 @@ public class AnohaService {
 	/**
 	 * 按 ID 获取阿诺哈活动地点。
 	 * Get an Anoha location by id.
+	 *
 	 * @param id 活动地点 ID / anoha location id
-	 * anoha location
+	 *           anoha location
 	 */
 	public AnohaLocation getAnohaLocation(int id) {
 		return anoha.get(id);
@@ -381,6 +397,7 @@ public class AnohaService {
 	/**
 	 * 注入 Spring ObjectProvider，供 getInstance 使用。
 	 * Inject the Spring ObjectProvider used by getInstance().
+	 *
 	 * @param instanceProvider Spring provider
 	 */
 	public static void setInstanceProvider(ObjectProvider<AnohaService> instanceProvider) {

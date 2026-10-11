@@ -341,7 +341,6 @@ public class MailDAO extends com.aionemu.gameserver.dao.MailDAO {
      * 删除指定信件。
      * Deletes the letter with the given id.
      * @param letterId 邮件 ID / letter id
-     * @return 是否成功 / whether successful
      */
     @Override
     public void deleteLetter(final int letterId) {

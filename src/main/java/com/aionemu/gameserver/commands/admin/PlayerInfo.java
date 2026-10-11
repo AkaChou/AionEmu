@@ -14,7 +14,6 @@ import com.aionemu.gameserver.utils.ChatUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.Util;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
-import com.google.common.base.Predicate;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -24,8 +23,7 @@ import java.util.List;
  * 查询在线玩家详细信息（位置、物品、队伍、技能、军团、AP/GP 等）的管理员命令。
  * Admin command to inspect online player details (location, items, group, skills, legion, AP/GP, etc.).
  */
-public class PlayerInfo extends AdminCommand
-{
+public class PlayerInfo extends AdminCommand {
 	/**
 	 * 以别名 {@code playerinfo} 构造命令。
 	 * Construct the command with alias {@code playerinfo}.
@@ -37,6 +35,7 @@ public class PlayerInfo extends AdminCommand
 	/**
 	 * 输出基础信息，并按第二参数切换 item/group/skill/loc/legion/ap/gp/chars/knownlist/visual 等详情。
 	 * Print basic info and switch on the second arg for item/group/skill/loc/legion/ap/gp/chars/knownlist/visual details.
+	 *
 	 * @param params 角色名与详情开关 / Character name and detail switch
 	 */
 	@Override
@@ -51,9 +50,9 @@ public class PlayerInfo extends AdminCommand
 			return;
 		}
 		PacketSendUtility.sendMessage(admin, "\n[Info about " + target.getName() + "]\n-common: lv" + target.getLevel() + "("
-		+ target.getCommonData().getExpShown() + " xp), " + target.getRace() + ", "
-		+ target.getPlayerClass() + "\n-ip: " + target.getClientConnection().getIP() + "\n" + "-account name: "
-		+ target.getClientConnection().getAccount().getName() + "\n");
+			+ target.getCommonData().getExpShown() + " xp), " + target.getRace() + ", "
+			+ target.getPlayerClass() + "\n-ip: " + target.getClientConnection().getIP() + "\n" + "-account name: "
+			+ target.getClientConnection().getAccount().getName() + "\n");
 		if (params.length < 2)
 			return;
 		switch (params[1]) {
@@ -66,7 +65,11 @@ public class PlayerInfo extends AdminCommand
 				} else {
 					while (it.hasNext()) {
 						Item act = it.next();
-						strbld.append("    " + act.getItemCount() + "(s) of " + ChatUtil.item(act.getItemTemplate().getTemplateId()) + "\n");
+						strbld.append("    ")
+							.append(act.getItemCount())
+							.append("(s) of ")
+							.append(ChatUtil.item(act.getItemTemplate().getTemplateId()))
+							.append("\n");
 					}
 				}
 				items.clear();
@@ -78,7 +81,11 @@ public class PlayerInfo extends AdminCommand
 				} else {
 					while (it.hasNext()) {
 						Item act = it.next();
-						strbld.append("    " + act.getItemCount() + "(s) of " + ChatUtil.item(act.getItemTemplate().getTemplateId()) + "\n");
+						strbld.append("    ")
+							.append(act.getItemCount())
+							.append("(s) of ")
+							.append(ChatUtil.item(act.getItemTemplate().getTemplateId()))
+							.append("\n");
 					}
 				}
 				items.clear();
@@ -90,7 +97,13 @@ public class PlayerInfo extends AdminCommand
 				} else {
 					while (it.hasNext()) {
 						Item act = it.next();
-						strbld.append("    " + act.getItemCount() + "(s) of " + "[item:" + act.getItemTemplate().getTemplateId() + "]" + "\n");
+						strbld.append("    ")
+							.append(act.getItemCount())
+							.append("(s) of ")
+							.append("[item:")
+							.append(act.getItemTemplate().getTemplateId())
+							.append("]")
+							.append("\n");
 					}
 				}
 				showAllLines(admin, strbld.toString());
@@ -115,7 +128,11 @@ public class PlayerInfo extends AdminCommand
 				StringBuilder strbld = new StringBuilder("-list of skills:\n");
 				PlayerSkillEntry[] sle = target.getSkillList().getAllSkills();
 				for (PlayerSkillEntry playerSkillEntry : sle)
-					strbld.append("    level " + playerSkillEntry.getSkillLevel() + " of " + playerSkillEntry.getSkillName() + "\n");
+					strbld.append("    level ")
+						.append(playerSkillEntry.getSkillLevel())
+						.append(" of ")
+						.append(playerSkillEntry.getSkillName())
+						.append("\n");
 				showAllLines(admin, strbld.toString());
 			}
 			case "loc" -> {
@@ -131,10 +148,20 @@ public class PlayerInfo extends AdminCommand
 				} else {
 					ArrayList<LegionMemberEx> legionmemblist = GameCoreGameplayServices.legionService().loadLegionMemberExList(legion, null);
 					Iterator<LegionMemberEx> it = legionmemblist.iterator();
-					strbld.append("-legion info:\n  name: " + legion.getLegionName() + ", level: " + legion.getLegionLevel() + "\n  members(online):\n");
+					strbld.append("-legion info:\n  name: ")
+						.append(legion.getLegionName())
+						.append(", level: ")
+						.append(legion.getLegionLevel())
+						.append("\n  members(online):\n");
 					while (it.hasNext()) {
 						LegionMemberEx act = it.next();
-						strbld.append("    " + act.getName() + "(" + ((act.isOnline()) ? "online" : "offline") + ")" + act.getRank().toString() + "\n");
+						strbld.append("    ")
+							.append(act.getName())
+							.append("(")
+							.append(((act.isOnline()) ? "online" : "offline"))
+							.append(")")
+							.append(act.getRank().toString())
+							.append("\n");
 					}
 				}
 				showAllLines(admin, strbld.toString());
@@ -226,7 +253,8 @@ public class PlayerInfo extends AdminCommand
 		int odd = strarray.length - index;
 		StringBuilder strbld = new StringBuilder();
 		for (int i = 0; i < odd; i++, index++)
-		strbld.append(strarray[index] + "\n");
+			strbld.append(strarray[index])
+				.append("\n");
 		PacketSendUtility.sendMessage(admin, strbld.toString());
 	}
 

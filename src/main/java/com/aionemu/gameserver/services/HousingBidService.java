@@ -57,6 +57,7 @@ import com.aionemu.gameserver.world.WorldMapType;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+
 /**
  * 房屋拍卖服务：按 cron 结算拍卖、管理竞拍条目、出价与登录时竞拍结果通知。
  * Housing auction service: settles auctions on cron, manages bid entries, places bids, and notifies results on login.
@@ -65,13 +66,13 @@ import java.util.Map;
 
 public class HousingBidService extends AbstractCronTask {
 
-    /**
-     * -- SETTER --
-     *  注入 Spring 的实例提供者。
-     *  Injects the Spring instance provider.
-     */
-    @Setter
-    private static volatile ObjectProvider<HousingBidService> instanceProvider;
+	/**
+	 * -- SETTER --
+	 * 注入 Spring 的实例提供者。
+	 * Injects the Spring instance provider.
+	 */
+	@Setter
+	private static volatile ObjectProvider<HousingBidService> instanceProvider;
 	private final HouseBidsDAO houseBidsDAO;
 	private final ServerVariablesDAO serverVariablesDAO;
 	private final PlayerDAO playerDAO;
@@ -98,9 +99,9 @@ public class HousingBidService extends AbstractCronTask {
 							 @NonNull ServerVariablesDAO serverVariablesDAO,
 							 @NonNull PlayerDAO playerDAO) throws ParseException {
 		this(HousingConfig.HOUSE_AUCTION_TIME != null ? HousingConfig.HOUSE_AUCTION_TIME : DEFAULT_AUCTION_TIME,
-			 Objects.requireNonNull(houseBidsDAO, "houseBidsDAO must not be null"),
-			 Objects.requireNonNull(serverVariablesDAO, "serverVariablesDAO must not be null"),
-			 Objects.requireNonNull(playerDAO, "playerDAO must not be null"));
+			Objects.requireNonNull(houseBidsDAO, "houseBidsDAO must not be null"),
+			Objects.requireNonNull(serverVariablesDAO, "serverVariablesDAO must not be null"),
+			Objects.requireNonNull(playerDAO, "playerDAO must not be null"));
 	}
 
 	/**
@@ -112,7 +113,7 @@ public class HousingBidService extends AbstractCronTask {
 							 @NonNull ServerVariablesDAO serverVariablesDAO,
 							 @NonNull PlayerDAO playerDAO) throws ParseException {
 		super(auctionTime != null ? auctionTime : DEFAULT_AUCTION_TIME,
-			  Objects.requireNonNull(serverVariablesDAO, "serverVariablesDAO must not be null"));
+			Objects.requireNonNull(serverVariablesDAO, "serverVariablesDAO must not be null"));
 		this.houseBidsDAO = Objects.requireNonNull(houseBidsDAO, "houseBidsDAO must not be null");
 		this.serverVariablesDAO = serverVariablesDAO;
 		this.playerDAO = Objects.requireNonNull(playerDAO, "playerDAO must not be null");
@@ -124,20 +125,21 @@ public class HousingBidService extends AbstractCronTask {
 	 */
 	public HousingBidService() throws ParseException {
 		this(safeDao(HouseBidsDAO.class, com.aionemu.gameserver.dao.impl.HouseBidsDAO::new),
-			 safeDao(ServerVariablesDAO.class, com.aionemu.gameserver.dao.impl.ServerVariablesDAO::new),
-			 safeDao(PlayerDAO.class, com.aionemu.gameserver.dao.impl.PlayerDAO::new));
+			safeDao(ServerVariablesDAO.class, com.aionemu.gameserver.dao.impl.ServerVariablesDAO::new),
+			safeDao(PlayerDAO.class, com.aionemu.gameserver.dao.impl.PlayerDAO::new));
 	}
 
 	/**
 	 * 使用指定拍卖 cron 表达式初始化。
 	 * Initializes with the given auction cron expression.
+	 *
 	 * @param auctionTime 拍卖 cron 表达式 / auction cron expression
 	 */
 	public HousingBidService(String auctionTime) throws ParseException {
 		this(auctionTime,
-			 safeDao(HouseBidsDAO.class, com.aionemu.gameserver.dao.impl.HouseBidsDAO::new),
-			 safeDao(ServerVariablesDAO.class, com.aionemu.gameserver.dao.impl.ServerVariablesDAO::new),
-			 safeDao(PlayerDAO.class, com.aionemu.gameserver.dao.impl.PlayerDAO::new));
+			safeDao(HouseBidsDAO.class, com.aionemu.gameserver.dao.impl.HouseBidsDAO::new),
+			safeDao(ServerVariablesDAO.class, com.aionemu.gameserver.dao.impl.ServerVariablesDAO::new),
+			safeDao(PlayerDAO.class, com.aionemu.gameserver.dao.impl.PlayerDAO::new));
 	}
 
 	private static <T extends com.aionemu.commons.database.dao.DAO> T safeDao(Class<T> daoClass, java.util.function.Supplier<T> fallback) {
@@ -156,9 +158,10 @@ public class HousingBidService extends AbstractCronTask {
 	 * <p>双源静态兜底已退役：缺少 provider 时直接 fail-fast，避免在容器之外静默创建第二套实例。
 	 * The legacy static fallback is retired: a missing provider now fails fast instead of silently
 	 * creating a second instance outside the container.</p>
+	 *
 	 * @return 由 Spring 提供的实例 / the Spring-provided instance
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean /
-	 *         when no provider or bean is available
+	 *                               when no provider or bean is available
 	 */
 	public static HousingBidService getInstance() {
 		ObjectProvider<HousingBidService> provider = instanceProvider;
@@ -239,28 +242,28 @@ public class HousingBidService extends AbstractCronTask {
 	private boolean checkAutoFillingLimits(Race race, HouseType type) {
 		int bidsCount = getBidsCountByType(race, type);
 		switch (type) {
-		case HOUSE:
-			if (bidsCount >= HousingConfig.FILL_AUTO_HOUSES_COUNT) {
-				return false;
-			}
-			break;
-		case MANSION:
-			if (bidsCount >= HousingConfig.FILL_AUTO_MANSION_COUNT) {
-				return false;
-			}
-			break;
-		case ESTATE:
-			if (bidsCount >= HousingConfig.FILL_AUTO_ESTATE_COUNT) {
-				return false;
-			}
-			break;
-		case PALACE:
-			if (bidsCount >= HousingConfig.FILL_AUTO_PALACE_COUNT) {
-				return false;
-			}
-			break;
-		default:
-			break;
+			case HOUSE:
+				if (bidsCount >= HousingConfig.FILL_AUTO_HOUSES_COUNT) {
+					return false;
+				}
+				break;
+			case MANSION:
+				if (bidsCount >= HousingConfig.FILL_AUTO_MANSION_COUNT) {
+					return false;
+				}
+				break;
+			case ESTATE:
+				if (bidsCount >= HousingConfig.FILL_AUTO_ESTATE_COUNT) {
+					return false;
+				}
+				break;
+			case PALACE:
+				if (bidsCount >= HousingConfig.FILL_AUTO_PALACE_COUNT) {
+					return false;
+				}
+				break;
+			default:
+				break;
 		}
 		return true;
 	}
@@ -496,6 +499,7 @@ public class HousingBidService extends AbstractCronTask {
 	/**
 	 * 获取本轮拍卖开始时间戳（毫秒）。
 	 * Returns this auction round start time in milliseconds.
+	 *
 	 * @return 开始时间毫秒 / start time millis
 	 */
 	public long getAuctionStartTime() {
@@ -524,6 +528,7 @@ public class HousingBidService extends AbstractCronTask {
 	/**
 	 * 当前是否允许出价。
 	 * Whether bidding is currently allowed.
+	 *
 	 * @return 是否允许出价 / whether bidding allowed
 	 */
 	public boolean isBiddingAllowed() {
@@ -536,6 +541,7 @@ public class HousingBidService extends AbstractCronTask {
 	/**
 	 * 当前是否允许登记房屋上拍。
 	 * Whether registering houses for auction is currently allowed.
+	 *
 	 * @return 是否允许登记 / whether registering allowed
 	 */
 	public boolean isRegisteringAllowed() {
@@ -557,9 +563,10 @@ public class HousingBidService extends AbstractCronTask {
 	/**
 	 * 完成房屋拍卖成交，处理赢家与房屋所有权。
 	 * Completes a house auction sale for the winner and transfers ownership.
+	 *
 	 * @param winner 赢家公共数据 / winner common data
-	 * obtained house
-	 * auction result
+	 *               obtained house
+	 *               auction result
 	 */
 	public AuctionResult completeHouseSell(PlayerCommonData winner, House obtainedHouse) {
 		House winnerHouse = GameHousingServices.housingService().getPlayerStudio(winner.getPlayerObjId());
@@ -650,8 +657,9 @@ public class HousingBidService extends AbstractCronTask {
 	 * 将房屋从拍卖中移除。
 	 * Removes a house from the auction.
 	 * house
+	 *
 	 * @param noSale 是否流拍处理 / no-sale handling
-	 * whether successful
+	 *               whether successful
 	 */
 	public boolean removeHouseFromAuction(House house, boolean noSale) {
 		if (house.getStatus() != HouseStatus.SELL_WAIT) {
@@ -699,8 +707,9 @@ public class HousingBidService extends AbstractCronTask {
 	 * 玩家对指定拍卖条目出价。
 	 * Places a player bid on the given auction entry.
 	 * bidder
+	 *
 	 * @param entryIndex 拍卖条目索引 / bid entry index
-	 * bid amount
+	 *                   bid amount
 	 */
 	public synchronized void placeBid(Player player, int entryIndex, long bidOffer) {
 		if ((player.getBuildingOwnerStates() & PlayerHouseOwnerFlags.BIDDING_ALLOWED.getId()) == 0) {
@@ -848,6 +857,7 @@ public class HousingBidService extends AbstractCronTask {
 	 * 获取指定种族可见的拍卖条目列表。
 	 * Lists auction entries visible to the given race.
 	 * player race
+	 *
 	 * @return 拍卖条目列表 / bid entry list
 	 */
 	public List<HouseBidEntry> getHouseBidEntries(Race playerRace) {
@@ -879,8 +889,9 @@ public class HousingBidService extends AbstractCronTask {
 	/**
 	 * 按条目索引获取拍卖条目。
 	 * Gets a bid entry by its index.
+	 *
 	 * @param index 条目索引 / entry index
-	 * bid entry
+	 *              bid entry
 	 */
 	public HouseBidEntry getBidByEntryIndex(int index) {
 		synchronized (bidsByIndex) {
@@ -900,28 +911,28 @@ public class HousingBidService extends AbstractCronTask {
 			return saleOptions.getMinLevel();
 		}
 		switch (houseType) {
-		case HOUSE:
-			if (HousingConfig.HOUSE_MIN_BID_LEVEL > 0) {
-				return HousingConfig.HOUSE_MIN_BID_LEVEL;
-			}
-			break;
-		case MANSION:
-			if (HousingConfig.MANSION_MIN_BID_LEVEL > 0) {
-				return HousingConfig.MANSION_MIN_BID_LEVEL;
-			}
-			break;
-		case ESTATE:
-			if (HousingConfig.ESTATE_MIN_BID_LEVEL > 0) {
-				return HousingConfig.ESTATE_MIN_BID_LEVEL;
-			}
-			break;
-		case PALACE:
-			if (HousingConfig.PALACE_MIN_BID_LEVEL > 0) {
-				return HousingConfig.PALACE_MIN_BID_LEVEL;
-			}
-			break;
-		default:
-			break;
+			case HOUSE:
+				if (HousingConfig.HOUSE_MIN_BID_LEVEL > 0) {
+					return HousingConfig.HOUSE_MIN_BID_LEVEL;
+				}
+				break;
+			case MANSION:
+				if (HousingConfig.MANSION_MIN_BID_LEVEL > 0) {
+					return HousingConfig.MANSION_MIN_BID_LEVEL;
+				}
+				break;
+			case ESTATE:
+				if (HousingConfig.ESTATE_MIN_BID_LEVEL > 0) {
+					return HousingConfig.ESTATE_MIN_BID_LEVEL;
+				}
+				break;
+			case PALACE:
+				if (HousingConfig.PALACE_MIN_BID_LEVEL > 0) {
+					return HousingConfig.PALACE_MIN_BID_LEVEL;
+				}
+				break;
+			default:
+				break;
 		}
 		return saleOptions.getMinLevel();
 	}
@@ -932,6 +943,7 @@ public class HousingBidService extends AbstractCronTask {
 	 * 玩家 / player
 	 * map id
 	 * land id
+	 *
 	 * @return 是否可竞拍 / whether can bid
 	 */
 	public static boolean canBidHouse(Player player, int mapId, int landId) {

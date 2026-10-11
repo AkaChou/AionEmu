@@ -118,7 +118,6 @@ public class GameCustomEventsGateway {
     /**
      * 解析 FFA 服务：优先 Spring，否则经运行时桥回退。
      * Resolve FFA service: prefer Spring, otherwise fall back via runtime bridge.
-     * @return 服务实例 / Service instance
      */
     private void ffaService() {
         if (ffaServiceProvider == null) {
@@ -131,7 +130,6 @@ public class GameCustomEventsGateway {
     /**
      * 解析天梯服务。
      * Resolve ladder service.
-     * @return 服务实例 / Service instance
      */
     private void ladderService() {
         if (ladderServiceProvider == null) {
@@ -144,7 +142,6 @@ public class GameCustomEventsGateway {
     /**
      * 解析 BG 服务。
      * Resolve BG service.
-     * @return 服务实例 / Service instance
      */
     private void bgService() {
         if (bgServiceProvider == null) {

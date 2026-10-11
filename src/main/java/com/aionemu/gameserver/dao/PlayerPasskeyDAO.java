@@ -32,7 +32,6 @@ public abstract class PlayerPasskeyDAO implements DAO {
 	 * Force-updates the passkey without verifying the old one.
 	 * @param accountId 账号 ID / account id
 	 * @param newPasskey 新通行码 / new passkey
-	 * @return 若成功则为 true / true if successful
 	 */
 	public abstract void updateForcePlayerPasskey(int accountId, String newPasskey);
 

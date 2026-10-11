@@ -123,8 +123,4 @@ public class HouseObjectCooldownsDAO extends com.aionemu.gameserver.dao.HouseObj
         return DAOUtils.supports(databaseName, majorVersion, minorVersion);
     }
 
-    /**
-     * 删除已过期的房屋物件冷却。
-     * Deletes expired house object cooldowns.
-     */
     }

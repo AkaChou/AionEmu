@@ -31,11 +31,12 @@ public class GMService {
 	 * <p>双源静态兜底已退役：缺少 provider 时直接 fail-fast，避免在容器之外静默创建第二套实例。
 	 * The legacy static fallback is retired: a missing provider now fails fast instead of silently
 	 * creating a second instance outside the container.</p>
+	 *
 	 * @return 由 Spring 提供的实例 / the Spring-provided instance
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean /
-	 *         when no provider or bean is available
+	 *                               when no provider or bean is available
 	 */
-	public static final GMService getInstance() {
+	public static GMService getInstance() {
 		ObjectProvider<GMService> provider = instanceProvider;
 		GMService provided = provider == null ? null : provider.getIfAvailable();
 		if (provided == null) {
@@ -49,6 +50,7 @@ public class GMService {
 	/**
 	 * 设置 Spring 实例提供者。
 	 * Sets the Spring instance provider.
+	 *
 	 * @param instanceProvider 实例提供者 / instance provider
 	 */
 	public static void setInstanceProvider(ObjectProvider<GMService> instanceProvider) {
@@ -60,9 +62,11 @@ public class GMService {
 	 * Online GMs: objectId → player.
 	 */
 	private final Map<Integer, Player> gms = new HashMap<>();
+
 	/**
 	 * 返回当前在线 GM 集合。
 	 * Returns the collection of currently online GMs.
+	 *
 	 * @return 当前在线 GM 集合 / collection of online GMs
 	 */
 	public Collection<Player> getGMs() {
@@ -72,6 +76,7 @@ public class GMService {
 	/**
 	 * 玩家登录：若为 GM 则登记并可全服公告出现。
 	 * Player login: registers GM and may broadcast an appear announce.
+	 *
 	 * @param player 登录玩家 / logging-in player
 	 */
 	public void onPlayerLogin(Player player) {
@@ -102,6 +107,7 @@ public class GMService {
 	/**
 	 * 玩家下线：从在线 GM 列表移除。
 	 * Player logout: removes the player from the online GM map.
+	 *
 	 * @param player 登出玩家 / logging-out player
 	 */
 	public void onPlayerLogedOut(Player player) {
@@ -111,6 +117,7 @@ public class GMService {
 	/**
 	 * GM 恢复可支援状态并通知全服（含会员标签）。
 	 * Marks a GM available for support and notifies all players (with membership tags).
+	 *
 	 * @param player GM 玩家 / GM player
 	 */
 	public void onPlayerAvailable(Player player) {
@@ -126,7 +133,7 @@ public class GMService {
 					case 2 -> sb.replace(0, sb.length(), MembershipConfig.TAG_VIP).toString();
 					default -> adminTag;
 				};
-				}
+			}
 
 			Iterator<Player> iter = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getPlayersIterator();
 			while (iter.hasNext()) {
@@ -138,6 +145,7 @@ public class GMService {
 	/**
 	 * GM 进入不可支援状态并通知全服（含管理标签）。
 	 * Marks a GM unavailable for support and notifies all players (with admin tags).
+	 *
 	 * @param player GM 玩家 / GM player
 	 */
 	public void onPlayerUnavailable(Player player) {
@@ -148,14 +156,14 @@ public class GMService {
 
 		// * = 服务器职员访问等级 / * = Server Staff Access Level
 		if (AdminConfig.ADMIN_TAG_ENABLE && player.isGmMode()) {
-            adminTag = switch (player.getClientConnection().getAccount().getAccessLevel()) {
-                case 1 -> AdminConfig.ADMIN_TAG_1.replace("%s", sb.toString());
-                case 2 -> AdminConfig.ADMIN_TAG_2.replace("%s", sb.toString());
-                case 3 -> AdminConfig.ADMIN_TAG_3.replace("%s", sb.toString());
-                case 4 -> AdminConfig.ADMIN_TAG_4.replace("%s", sb.toString());
-                case 5 -> AdminConfig.ADMIN_TAG_5.replace("%s", sb.toString());
-                default -> adminTag;
-            };
+			adminTag = switch (player.getClientConnection().getAccount().getAccessLevel()) {
+				case 1 -> AdminConfig.ADMIN_TAG_1.replace("%s", sb.toString());
+				case 2 -> AdminConfig.ADMIN_TAG_2.replace("%s", sb.toString());
+				case 3 -> AdminConfig.ADMIN_TAG_3.replace("%s", sb.toString());
+				case 4 -> AdminConfig.ADMIN_TAG_4.replace("%s", sb.toString());
+				case 5 -> AdminConfig.ADMIN_TAG_5.replace("%s", sb.toString());
+				default -> adminTag;
+			};
 		}
 
 		Iterator<Player> iter = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getPlayersIterator();
@@ -167,6 +175,7 @@ public class GMService {
 	/**
 	 * 向所有在线 GM 广播消息。
 	 * Broadcasts a message to all online GMs.
+	 *
 	 * @param message 广播内容 / broadcast content
 	 */
 	public void broadcastMesage(String message) {

@@ -12,37 +12,69 @@ import lombok.AllArgsConstructor;
 @Slf4j
 @AllArgsConstructor
 public final class Matrix4f implements Cloneable {
-	/** 第 0 行 0 列元素。 / Element at row 0, column 0. */
+	/**
+	 * 第 0 行 0 列元素。 / Element at row 0, column 0.
+	 */
 	public float m00;
-	/** 第 0 行 1 列元素。 / Element at row 0, column 1. */
+	/**
+	 * 第 0 行 1 列元素。 / Element at row 0, column 1.
+	 */
 	public float m01;
-	/** 第 0 行 2 列元素。 / Element at row 0, column 2. */
+	/**
+	 * 第 0 行 2 列元素。 / Element at row 0, column 2.
+	 */
 	public float m02;
-	/** 第 0 行 3 列元素。 / Element at row 0, column 3. */
+	/**
+	 * 第 0 行 3 列元素。 / Element at row 0, column 3.
+	 */
 	public float m03;
-	/** 第 1 行 0 列元素。 / Element at row 1, column 0. */
+	/**
+	 * 第 1 行 0 列元素。 / Element at row 1, column 0.
+	 */
 	public float m10;
-	/** 第 1 行 1 列元素。 / Element at row 1, column 1. */
+	/**
+	 * 第 1 行 1 列元素。 / Element at row 1, column 1.
+	 */
 	public float m11;
-	/** 第 1 行 2 列元素。 / Element at row 1, column 2. */
+	/**
+	 * 第 1 行 2 列元素。 / Element at row 1, column 2.
+	 */
 	public float m12;
-	/** 第 1 行 3 列元素。 / Element at row 1, column 3. */
+	/**
+	 * 第 1 行 3 列元素。 / Element at row 1, column 3.
+	 */
 	public float m13;
-	/** 第 2 行 0 列元素。 / Element at row 2, column 0. */
+	/**
+	 * 第 2 行 0 列元素。 / Element at row 2, column 0.
+	 */
 	public float m20;
-	/** 第 2 行 1 列元素。 / Element at row 2, column 1. */
+	/**
+	 * 第 2 行 1 列元素。 / Element at row 2, column 1.
+	 */
 	public float m21;
-	/** 第 2 行 2 列元素。 / Element at row 2, column 2. */
+	/**
+	 * 第 2 行 2 列元素。 / Element at row 2, column 2.
+	 */
 	public float m22;
-	/** 第 2 行 3 列元素。 / Element at row 2, column 3. */
+	/**
+	 * 第 2 行 3 列元素。 / Element at row 2, column 3.
+	 */
 	public float m23;
-	/** 第 3 行 0 列元素。 / Element at row 3, column 0. */
+	/**
+	 * 第 3 行 0 列元素。 / Element at row 3, column 0.
+	 */
 	public float m30;
-	/** 第 3 行 1 列元素。 / Element at row 3, column 1. */
+	/**
+	 * 第 3 行 1 列元素。 / Element at row 3, column 1.
+	 */
 	public float m31;
-	/** 第 3 行 2 列元素。 / Element at row 3, column 2. */
+	/**
+	 * 第 3 行 2 列元素。 / Element at row 3, column 2.
+	 */
 	public float m32;
-	/** 第 3 行 3 列元素。 / Element at row 3, column 3. */
+	/**
+	 * 第 3 行 3 列元素。 / Element at row 3, column 3.
+	 */
 	public float m33;
 
 	/**
@@ -56,6 +88,7 @@ public final class Matrix4f implements Cloneable {
 	/**
 	 * 从另一矩阵拷贝元素；null 时加载单位矩阵。
 	 * Copies elements from another matrix; loads identity if null.
+	 *
 	 * @param matrix 源矩阵 / source matrix
 	 */
 	public void copy(Matrix4f matrix) {
@@ -84,6 +117,7 @@ public final class Matrix4f implements Cloneable {
 	/**
 	 * 将矩阵元素写入 float 数组（行优先）。
 	 * Writes matrix elements into a float array (row-major).
+	 *
 	 * @param matrix 目标数组，长度须为 16 / destination array of length 16
 	 */
 	public void get(float[] matrix) {
@@ -93,7 +127,8 @@ public final class Matrix4f implements Cloneable {
 	/**
 	 * 将矩阵元素写入 float 数组。
 	 * Writes matrix elements into a float array.
-	 * @param matrix 目标数组，长度须为 16 / destination array of length 16
+	 *
+	 * @param matrix   目标数组，长度须为 16 / destination array of length 16
 	 * @param rowMajor true 为行优先，false 为列优先 / true for row-major, false for column-major
 	 */
 	public void get(float[] matrix, boolean rowMajor) {
@@ -140,76 +175,77 @@ public final class Matrix4f implements Cloneable {
 	/**
 	 * 获取指定行列的元素。
 	 * Returns the element at the given row and column.
+	 *
 	 * @param i 行索引（0–3） / row index (0–3)
 	 * @param j 列索引（0–3） / column index (0–3)
 	 * @return 矩阵元素 / matrix element
 	 */
 	public float get(int i, int j) {
 		switch (i) {
-		case 0: {
-			switch (j) {
 			case 0: {
-				return this.m00;
+				switch (j) {
+					case 0: {
+						return this.m00;
+					}
+					case 1: {
+						return this.m01;
+					}
+					case 2: {
+						return this.m02;
+					}
+					case 3: {
+						return this.m03;
+					}
+				}
 			}
 			case 1: {
-				return this.m01;
+				switch (j) {
+					case 0: {
+						return this.m10;
+					}
+					case 1: {
+						return this.m11;
+					}
+					case 2: {
+						return this.m12;
+					}
+					case 3: {
+						return this.m13;
+					}
+				}
 			}
 			case 2: {
-				return this.m02;
+				switch (j) {
+					case 0: {
+						return this.m20;
+					}
+					case 1: {
+						return this.m21;
+					}
+					case 2: {
+						return this.m22;
+					}
+					case 3: {
+						return this.m23;
+					}
+				}
 			}
 			case 3: {
-				return this.m03;
+				switch (j) {
+					case 0: {
+						return this.m30;
+					}
+					case 1: {
+						return this.m31;
+					}
+					case 2: {
+						return this.m32;
+					}
+					case 3: {
+						return this.m33;
+					}
+				}
 			}
-			}
-		}
-		case 1: {
-			switch (j) {
-			case 0: {
-				return this.m10;
-			}
-			case 1: {
-				return this.m11;
-			}
-			case 2: {
-				return this.m12;
-			}
-			case 3: {
-				return this.m13;
-			}
-			}
-		}
-		case 2: {
-			switch (j) {
-			case 0: {
-				return this.m20;
-			}
-			case 1: {
-				return this.m21;
-			}
-			case 2: {
-				return this.m22;
-			}
-			case 3: {
-				return this.m23;
-			}
-			}
-		}
-		case 3: {
-			switch (j) {
-			case 0: {
-				return this.m30;
-			}
-			case 1: {
-				return this.m31;
-			}
-			case 2: {
-				return this.m32;
-			}
-			case 3: {
-				return this.m33;
-			}
-			}
-		}
 		}
 		log.warn(I18n.get("log.6ed00c7cd279"));
 		throw new IllegalArgumentException("Invalid indices into matrix.");
@@ -218,92 +254,93 @@ public final class Matrix4f implements Cloneable {
 	/**
 	 * 设置指定行列的元素。
 	 * Sets the element at the given row and column.
-	 * @param i 行索引（0–3） / row index (0–3)
-	 * @param j 列索引（0–3） / column index (0–3)
+	 *
+	 * @param i     行索引（0–3） / row index (0–3)
+	 * @param j     列索引（0–3） / column index (0–3)
 	 * @param value 新值 / new value
 	 */
 	public void set(int i, int j, float value) {
 		switch (i) {
-		case 0: {
-			switch (j) {
 			case 0: {
-				this.m00 = value;
-				return;
+				switch (j) {
+					case 0: {
+						this.m00 = value;
+						return;
+					}
+					case 1: {
+						this.m01 = value;
+						return;
+					}
+					case 2: {
+						this.m02 = value;
+						return;
+					}
+					case 3: {
+						this.m03 = value;
+						return;
+					}
+				}
 			}
 			case 1: {
-				this.m01 = value;
-				return;
+				switch (j) {
+					case 0: {
+						this.m10 = value;
+						return;
+					}
+					case 1: {
+						this.m11 = value;
+						return;
+					}
+					case 2: {
+						this.m12 = value;
+						return;
+					}
+					case 3: {
+						this.m13 = value;
+						return;
+					}
+				}
 			}
 			case 2: {
-				this.m02 = value;
-				return;
+				switch (j) {
+					case 0: {
+						this.m20 = value;
+						return;
+					}
+					case 1: {
+						this.m21 = value;
+						return;
+					}
+					case 2: {
+						this.m22 = value;
+						return;
+					}
+					case 3: {
+						this.m23 = value;
+						return;
+					}
+				}
 			}
 			case 3: {
-				this.m03 = value;
-				return;
+				switch (j) {
+					case 0: {
+						this.m30 = value;
+						return;
+					}
+					case 1: {
+						this.m31 = value;
+						return;
+					}
+					case 2: {
+						this.m32 = value;
+						return;
+					}
+					case 3: {
+						this.m33 = value;
+						return;
+					}
+				}
 			}
-			}
-		}
-		case 1: {
-			switch (j) {
-			case 0: {
-				this.m10 = value;
-				return;
-			}
-			case 1: {
-				this.m11 = value;
-				return;
-			}
-			case 2: {
-				this.m12 = value;
-				return;
-			}
-			case 3: {
-				this.m13 = value;
-				return;
-			}
-			}
-		}
-		case 2: {
-			switch (j) {
-			case 0: {
-				this.m20 = value;
-				return;
-			}
-			case 1: {
-				this.m21 = value;
-				return;
-			}
-			case 2: {
-				this.m22 = value;
-				return;
-			}
-			case 3: {
-				this.m23 = value;
-				return;
-			}
-			}
-		}
-		case 3: {
-			switch (j) {
-			case 0: {
-				this.m30 = value;
-				return;
-			}
-			case 1: {
-				this.m31 = value;
-				return;
-			}
-			case 2: {
-				this.m32 = value;
-				return;
-			}
-			case 3: {
-				this.m33 = value;
-				return;
-			}
-			}
-		}
 		}
 		log.warn(I18n.get("log.6ed00c7cd279"));
 		throw new IllegalArgumentException("Invalid indices into matrix.");
@@ -312,6 +349,7 @@ public final class Matrix4f implements Cloneable {
 	/**
 	 * 从 4×4 二维数组设置矩阵。
 	 * Sets the matrix from a 4×4 two-dimensional array.
+	 *
 	 * @param matrix 4×4 源数组 / 4×4 source array
 	 */
 	public void set(float[][] matrix) {
@@ -339,6 +377,7 @@ public final class Matrix4f implements Cloneable {
 	/**
 	 * 从另一矩阵设置全部元素，返回自身。
 	 * Sets all elements from another matrix and returns this.
+	 *
 	 * @param matrix 源矩阵 / source matrix
 	 * @return 本矩阵（链式调用） / this matrix
 	 */
@@ -365,6 +404,7 @@ public final class Matrix4f implements Cloneable {
 	/**
 	 * 从 float 数组设置矩阵（行优先）。
 	 * Sets the matrix from a float array (row-major).
+	 *
 	 * @param matrix 长度 16 的元素数组 / element array of length 16
 	 */
 	public void set(float[] matrix) {
@@ -374,7 +414,8 @@ public final class Matrix4f implements Cloneable {
 	/**
 	 * 从 float 数组设置矩阵。
 	 * Sets the matrix from a float array.
-	 * @param matrix 长度 16 的元素数组 / element array of length 16
+	 *
+	 * @param matrix   长度 16 的元素数组 / element array of length 16
 	 * @param rowMajor true 为行优先，false 为列优先 / true for row-major, false for column-major
 	 */
 	public void set(float[] matrix, boolean rowMajor) {
@@ -444,6 +485,7 @@ public final class Matrix4f implements Cloneable {
 	/**
 	 * 原地将矩阵各元素乘以标量。
 	 * Multiplies each matrix element by a scalar in place.
+	 *
 	 * @param scalar 标量 / scalar
 	 */
 	public void multLocal(float scalar) {
@@ -468,6 +510,7 @@ public final class Matrix4f implements Cloneable {
 	/**
 	 * 返回本矩阵乘以标量的新矩阵。
 	 * Returns a new matrix equal to this times a scalar.
+	 *
 	 * @param scalar 标量 / scalar
 	 * @return 新矩阵 / new matrix
 	 */
@@ -481,9 +524,10 @@ public final class Matrix4f implements Cloneable {
 	/**
 	 * 将本矩阵乘以标量的结果写入 store。
 	 * Stores this matrix times a scalar into store.
-	 * @return 标量 / scalar
-	 * @param store 结果存储 / result storage
+	 *
+	 * @param store  结果存储 / result storage
 	 * @param scalar store 自身（链式调用） / store itself
+	 * @return 标量 / scalar
 	 */
 	public Matrix4f mult(float scalar, Matrix4f store) {
 		store.set(this);
@@ -494,6 +538,7 @@ public final class Matrix4f implements Cloneable {
 	/**
 	 * 返回本矩阵右乘另一矩阵的新矩阵。
 	 * Returns a new matrix equal to this times another matrix.
+	 *
 	 * @param in2 右乘矩阵 / right-hand matrix
 	 * @return 乘积矩阵 / product matrix
 	 */
@@ -504,7 +549,8 @@ public final class Matrix4f implements Cloneable {
 	/**
 	 * 将本矩阵右乘另一矩阵的结果写入 store。
 	 * Stores this matrix times another matrix into store.
-	 * @param in2 右乘矩阵 / right-hand matrix
+	 *
+	 * @param in2   右乘矩阵 / right-hand matrix
 	 * @param store 结果存储（null 时分配） / result storage (allocated if null)
 	 * @return store 自身（链式调用） / store itself
 	 */
@@ -550,6 +596,7 @@ public final class Matrix4f implements Cloneable {
 	/**
 	 * 原地右乘另一矩阵。
 	 * Multiplies this matrix by another matrix in place.
+	 *
 	 * @param in2 右乘矩阵 / right-hand matrix
 	 * @return 本矩阵（链式调用） / this matrix
 	 */
@@ -560,6 +607,7 @@ public final class Matrix4f implements Cloneable {
 	/**
 	 * 用本矩阵变换三维向量（含平移），分配新向量。
 	 * Transforms a 3D vector by this matrix (including translation), allocating a new vector.
+	 *
 	 * @param vec 输入向量 / input vector
 	 * @return 变换后的向量 / transformed vector
 	 */
@@ -570,7 +618,8 @@ public final class Matrix4f implements Cloneable {
 	/**
 	 * 用本矩阵变换三维向量（含平移），结果写入 store。
 	 * Transforms a 3D vector by this matrix (including translation) into store.
-	 * @param vec 输入向量 / input vector
+	 *
+	 * @param vec   输入向量 / input vector
 	 * @param store 结果存储（null 时分配） / result storage (allocated if null)
 	 * @return store 自身（链式调用） / store itself
 	 */
@@ -590,7 +639,8 @@ public final class Matrix4f implements Cloneable {
 	/**
 	 * 用本矩阵的 3×3 旋转部分变换法线向量（不含平移）。
 	 * Transforms a normal vector by the 3×3 rotation part (no translation).
-	 * @param vec 输入法线 / input normal
+	 *
+	 * @param vec   输入法线 / input normal
 	 * @param store 结果存储（null 时分配） / result storage (allocated if null)
 	 * @return store 自身（链式调用） / store itself
 	 */
@@ -610,7 +660,8 @@ public final class Matrix4f implements Cloneable {
 	/**
 	 * 用本矩阵做投影变换，三维结果写入 store，返回 w 分量。
 	 * Applies a projective transform; stores XYZ in store and returns the W component.
-	 * @param vec 输入向量 / input vector
+	 *
+	 * @param vec   输入向量 / input vector
 	 * @param store 三维结果存储 / 3D result storage
 	 * @return 齐次 W 分量 / homogeneous W component
 	 */
@@ -627,6 +678,7 @@ public final class Matrix4f implements Cloneable {
 	/**
 	 * 用本矩阵原地变换四维向量。
 	 * Transforms a 4D vector by this matrix in place.
+	 *
 	 * @param vec4f 长度 4 的向量（无效时警告并返回 null） / vector of length 4 (invalid warns and returns null)
 	 * @return 变换后的 vec4f，或 null / transformed vec4f, or null
 	 */
@@ -649,6 +701,7 @@ public final class Matrix4f implements Cloneable {
 	/**
 	 * 返回本矩阵的逆矩阵（新实例）。
 	 * Returns the inverse of this matrix (new instance).
+	 *
 	 * @return 逆矩阵 / inverse matrix
 	 * @throws ArithmeticException 矩阵不可逆 / if the matrix is singular
 	 */
@@ -659,6 +712,7 @@ public final class Matrix4f implements Cloneable {
 	/**
 	 * 将本矩阵的逆写入 store。
 	 * Stores the inverse of this matrix into store.
+	 *
 	 * @param store 结果存储（null 时分配） / result storage (allocated if null)
 	 * @return store 自身（链式调用） / store itself
 	 * @throws ArithmeticException 矩阵不可逆 / if the matrix is singular
@@ -681,13 +735,13 @@ public final class Matrix4f implements Cloneable {
 			store = new Matrix4f();
 		}
 		if (FastMath.abs(fDet = (fA0 = this.m00 * this.m11 - this.m01 * this.m10)
-				* (fB5 = this.m22 * this.m33 - this.m23 * this.m32)
-				- (fA1 = this.m00 * this.m12 - this.m02 * this.m10) * (fB4 = this.m21 * this.m33 - this.m23 * this.m31)
-				+ (fA2 = this.m00 * this.m13 - this.m03 * this.m10) * (fB3 = this.m21 * this.m32 - this.m22 * this.m31)
-				+ (fA3 = this.m01 * this.m12 - this.m02 * this.m11) * (fB2 = this.m20 * this.m33 - this.m23 * this.m30)
-				- (fA4 = this.m01 * this.m13 - this.m03 * this.m11) * (fB1 = this.m20 * this.m32 - this.m22 * this.m30)
-				+ (fA5 = this.m02 * this.m13 - this.m03 * this.m12)
-						* (fB0 = this.m20 * this.m31 - this.m21 * this.m30)) <= 0.0f) {
+			* (fB5 = this.m22 * this.m33 - this.m23 * this.m32)
+			- (fA1 = this.m00 * this.m12 - this.m02 * this.m10) * (fB4 = this.m21 * this.m33 - this.m23 * this.m31)
+			+ (fA2 = this.m00 * this.m13 - this.m03 * this.m10) * (fB3 = this.m21 * this.m32 - this.m22 * this.m31)
+			+ (fA3 = this.m01 * this.m12 - this.m02 * this.m11) * (fB2 = this.m20 * this.m33 - this.m23 * this.m30)
+			- (fA4 = this.m01 * this.m13 - this.m03 * this.m11) * (fB1 = this.m20 * this.m32 - this.m22 * this.m30)
+			+ (fA5 = this.m02 * this.m13 - this.m03 * this.m12)
+			* (fB0 = this.m20 * this.m31 - this.m21 * this.m30)) <= 0.0f) {
 			throw new ArithmeticException("This matrix cannot be inverted");
 		}
 		store.m00 = this.m11 * fB5 - this.m12 * fB4 + this.m13 * fB3;
@@ -714,6 +768,7 @@ public final class Matrix4f implements Cloneable {
 	/**
 	 * 将矩阵全部元素置零。
 	 * Zeros all matrix elements.
+	 *
 	 * @return 本矩阵（链式调用） / this matrix
 	 */
 	public Matrix4f zero() {
@@ -739,6 +794,7 @@ public final class Matrix4f implements Cloneable {
 	/**
 	 * 返回本矩阵与另一矩阵的元素和（新实例）。
 	 * Returns the element-wise sum of this and another matrix (new instance).
+	 *
 	 * @param mat 另一矩阵 / other matrix
 	 * @return 和矩阵 / sum matrix
 	 */
@@ -766,6 +822,7 @@ public final class Matrix4f implements Cloneable {
 	/**
 	 * 原地加上另一矩阵。
 	 * Adds another matrix to this one in place.
+	 *
 	 * @param mat 另一矩阵 / other matrix
 	 */
 	public void addLocal(Matrix4f mat) {
@@ -790,6 +847,7 @@ public final class Matrix4f implements Cloneable {
 	/**
 	 * 提取左上 3×3 旋转矩阵到已有矩阵。
 	 * Extracts the upper-left 3×3 rotation matrix into an existing matrix.
+	 *
 	 * @param mat 目标矩阵 / destination matrix
 	 */
 	public void toRotationMatrix(Matrix3f mat) {
@@ -807,6 +865,7 @@ public final class Matrix4f implements Cloneable {
 	/**
 	 * 用给定 3×3 矩阵设置本矩阵的旋转部分。
 	 * Sets the rotation part of this matrix from a 3×3 matrix.
+	 *
 	 * @param mat 源旋转矩阵 / source rotation matrix
 	 */
 	public void setRotationMatrix(Matrix3f mat) {
@@ -824,6 +883,7 @@ public final class Matrix4f implements Cloneable {
 	/**
 	 * 按向量缩放对角线上的缩放因子。
 	 * Scales the diagonal scale factors by a vector.
+	 *
 	 * @param scale 缩放向量 / scale vector
 	 */
 	public void setScale(Vector3f scale) {
@@ -835,6 +895,7 @@ public final class Matrix4f implements Cloneable {
 	/**
 	 * 从 float 数组设置平移分量。
 	 * Sets the translation component from a float array.
+	 *
 	 * @param translation 长度 3 的平移数组 / translation array of length 3
 	 */
 	public void setTranslation(float[] translation) {
@@ -849,6 +910,7 @@ public final class Matrix4f implements Cloneable {
 	/**
 	 * 从向量设置平移。
 	 * Sets the translation from a vector.
+	 *
 	 * @param translation 平移向量 / translation vector
 	 */
 	public void setTranslation(Vector3f translation) {
@@ -860,6 +922,7 @@ public final class Matrix4f implements Cloneable {
 	/**
 	 * 返回矩阵的可读字符串表示。
 	 * Returns a human-readable string representation of the matrix.
+	 *
 	 * @return 格式化字符串 / formatted string
 	 */
 	public String toString() {
@@ -904,6 +967,7 @@ public final class Matrix4f implements Cloneable {
 	/**
 	 * 计算矩阵哈希码。
 	 * Computes the matrix hash code.
+	 *
 	 * @return 哈希值 / hash value
 	 */
 	public int hashCode() {
@@ -930,6 +994,7 @@ public final class Matrix4f implements Cloneable {
 	/**
 	 * 逐元素比较是否相等。
 	 * Compares equality element-wise.
+	 *
 	 * @param o 比较对象 / object to compare
 	 * @return 全部元素相等则为 true / true if all elements are equal
 	 */
@@ -991,18 +1056,20 @@ public final class Matrix4f implements Cloneable {
 	/**
 	 * 判断是否精确为单位矩阵。
 	 * Tests whether this is exactly the identity matrix.
+	 *
 	 * @return 若为单位矩阵则为 true / true if identity
 	 */
 	public boolean isIdentity() {
 		return this.m00 == 1.0f && this.m01 == 0.0f && this.m02 == 0.0f && this.m03 == 0.0f && this.m10 == 0.0f
-				&& this.m11 == 1.0f && this.m12 == 0.0f && this.m13 == 0.0f && this.m20 == 0.0f && this.m21 == 0.0f
-				&& this.m22 == 1.0f && this.m23 == 0.0f && this.m30 == 0.0f && this.m31 == 0.0f && this.m32 == 0.0f
-				&& this.m33 == 1.0f;
+			&& this.m11 == 1.0f && this.m12 == 0.0f && this.m13 == 0.0f && this.m20 == 0.0f && this.m21 == 0.0f
+			&& this.m22 == 1.0f && this.m23 == 0.0f && this.m30 == 0.0f && this.m31 == 0.0f && this.m32 == 0.0f
+			&& this.m33 == 1.0f;
 	}
 
 	/**
 	 * 按向量对各列分别缩放（列 0×X、列 1×Y、列 2×Z）。
 	 * Scales each column by the corresponding vector component (col0×X, col1×Y, col2×Z).
+	 *
 	 * @param scale 缩放向量 / scale vector
 	 */
 	public void scale(Vector3f scale) {
@@ -1023,6 +1090,7 @@ public final class Matrix4f implements Cloneable {
 	/**
 	 * 按统一标量缩放前三列。
 	 * Scales the first three columns by a uniform scalar.
+	 *
 	 * @param scale 缩放因子 / scale factor
 	 */
 	public void scale(float scale) {
@@ -1043,6 +1111,7 @@ public final class Matrix4f implements Cloneable {
 	/**
 	 * 浅克隆本矩阵。
 	 * Shallow-clones this matrix.
+	 *
 	 * @return 克隆实例 / clone instance
 	 */
 	public Matrix4f clone() {

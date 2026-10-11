@@ -13,12 +13,12 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
  * Client packet that exchanges custom group/alliance member data.
  */
 public class CM_GROUP_DATA_EXCHANGE extends AionClientPacket {
+	private int dataSize;
 
 	private int groupType;
 	private int action;
 	private int unk2;
 	private byte[] data;
-	private int dataSize;
 
 	/**
 	 * 构造客户端包实例。

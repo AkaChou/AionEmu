@@ -12,6 +12,7 @@ import com.aionemu.gameserver.taskmanager.AbstractPeriodicTaskManager;
 /**
  * 玩家移动推进任务：周期性调用移动控制器推进目标点。
  * Player movement advancement task: periodically advances move controllers toward destinations.
+ *
  * @author ATracer
  */
 public class PlayerMoveTaskManager extends AbstractPeriodicTaskManager {
@@ -19,12 +20,12 @@ public class PlayerMoveTaskManager extends AbstractPeriodicTaskManager {
 	/**
 	 * Spring 可选实例提供者。
 	 * Optional Spring instance provider.
-     * -- SETTER --
-     *  注入 Spring 实例提供者。
-     *  Inject the Spring instance provider.
-     */
+	 * -- SETTER --
+	 * 注入 Spring 实例提供者。
+	 * Inject the Spring instance provider.
+	 */
 	@Setter
-    private static volatile ObjectProvider<PlayerMoveTaskManager> instanceProvider;
+	private static volatile ObjectProvider<PlayerMoveTaskManager> instanceProvider;
 
 	/**
 	 * 正在移动的玩家/生物（objectId → 对象）。
@@ -43,6 +44,7 @@ public class PlayerMoveTaskManager extends AbstractPeriodicTaskManager {
 	/**
 	 * 将玩家加入移动跟踪集合。
 	 * Add a player to the moving set.
+	 *
 	 * @param player 玩家或生物 / Player or creature
 	 */
 	public void addPlayer(Creature player) {
@@ -52,6 +54,7 @@ public class PlayerMoveTaskManager extends AbstractPeriodicTaskManager {
 	/**
 	 * 将玩家移出移动跟踪集合。
 	 * Remove a player from the moving set.
+	 *
 	 * @param player 玩家或生物 / Player or creature
 	 */
 	public void removePlayer(Creature player) {
@@ -75,11 +78,12 @@ public class PlayerMoveTaskManager extends AbstractPeriodicTaskManager {
 	 * <p>双源静态兜底已退役：缺少 provider 时直接 fail-fast，避免在容器之外静默创建第二套实例。
 	 * The legacy static fallback is retired: a missing provider now fails fast instead of silently
 	 * creating a second instance outside the container.</p>
+	 *
 	 * @return 由 Spring 提供的实例 / the Spring-provided instance
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean /
-	 *         when no provider or bean is available
+	 *                               when no provider or bean is available
 	 */
-	public static final PlayerMoveTaskManager getInstance() {
+	public static PlayerMoveTaskManager getInstance() {
 		ObjectProvider<PlayerMoveTaskManager> provider = instanceProvider;
 		PlayerMoveTaskManager provided = provider == null ? null : provider.getIfAvailable();
 		if (provided == null) {

@@ -26,7 +26,6 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_LEGION_UPDATE_TITLE;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.collections.ListSplitter;
-import com.aionemu.gameserver.world.container.LegionContainer;
 import com.aionemu.gameserver.world.container.LegionMemberContainer;
 
 /**
@@ -41,28 +40,34 @@ import com.aionemu.gameserver.world.container.LegionMemberContainer;
 @Slf4j
 final class LegionMembers {
 
-	/** 宿主服务，用于军团缓存、历史与公告。 / hosting service for caches, history and announcements. */
+	/**
+	 * 宿主服务，用于军团缓存、历史与公告。 / hosting service for caches, history and announcements.
+	 */
 	private final LegionService service;
 
 	/**
 	 * 绑定宿主军团服务。
 	 * Binds the hosting legion service.
+	 *
 	 * @param service 军团服务 / legion service
 	 */
 	LegionMembers(LegionService service) {
 		this.service = service;
 	}
 
-	/** 军团成员缓存（宿主提供）。 / legion member cache, provided by the hosting service. */
+	/**
+	 * 军团成员缓存（宿主提供）。 / legion member cache, provided by the hosting service.
+	 */
 	private LegionMemberContainer allCachedLegionMembers() {
 		return service.allCachedLegionMembers();
 	}
 
-	
+
 	/**
 	 * 将军团成员数据存入数据库，或保存新成员。
 	 * Stores legion member data into db or saves a new one
 	 * legion member
+	 *
 	 * @param newMember 是否新成员 / new member
 	 */
 	void storeLegionMember(LegionMember legionMember, boolean newMember) {
@@ -77,6 +82,7 @@ final class LegionMembers {
 	/**
 	 * 存储军团成员。
 	 * Stores a legion member
+	 *
 	 * @param legionMember legion member
 	 */
 	void storeLegionMember(LegionMember legionMember) {
@@ -86,6 +92,7 @@ final class LegionMembers {
 	/**
 	 * 将军团成员数据存入数据库。
 	 * Stores legion member data into database
+	 *
 	 * @param player 玩家 / player
 	 */
 	void storeLegionMemberExInCache(Player player) {
@@ -107,6 +114,7 @@ final class LegionMembers {
 	/**
 	 * 将新军团成员加入缓存。
 	 * This method will add a new legion member to the cache
+	 *
 	 * @param legionMember legion member
 	 */
 	void addCachedLegionMember(LegionMember legionMember) {
@@ -116,6 +124,7 @@ final class LegionMembers {
 	/**
 	 * 将新军团成员加入缓存。
 	 * This method will add a new legion member to the cache
+	 *
 	 * @param legionMemberEx 扩展军团成员 / legion member ex
 	 */
 	void addCachedLegionMemberEx(LegionMemberEx legionMemberEx) {
@@ -125,6 +134,7 @@ final class LegionMembers {
 	/**
 	 * 从缓存与数据库移除军团成员。
 	 * This method will remove the legion member from cache and the database
+	 *
 	 * @param legionMember legion member
 	 */
 	void deleteLegionMemberFromDB(LegionMemberEx legionMember) {
@@ -137,6 +147,7 @@ final class LegionMembers {
 
 	/**
 	 * 返回离线军团成员给定 playerId (若该成员存在)。 / Returns the offline legion member with given playerId (if such member exists)
+	 *
 	 * @return LegionMemberEx
 	 */
 	LegionMemberEx getLegionMemberEx(int playerObjId) {
@@ -151,6 +162,7 @@ final class LegionMembers {
 
 	/**
 	 * 返回离线军团成员给定 playerId (若该成员存在)。 / Returns the offline legion member with given playerId (if such member exists)
+	 *
 	 * @return LegionMemberEx
 	 */
 	LegionMemberEx getLegionMemberEx(String playerName) {
@@ -167,6 +179,7 @@ final class LegionMembers {
 	 * 加载军团成员扩展列表（在线优先构造，离线从缓存/DB），可排除指定 objectId。
 	 * Loads extended legion member list (online first, offline from cache/DB); optional objectId exclusion.
 	 * Target legion
+	 *
 	 * @param objExcluded 需排除的玩家 objectId，可为 null / Object id to exclude, or null
 	 * @return 成员扩展列表 / Extended member list
 	 */
@@ -191,6 +204,7 @@ final class LegionMembers {
 	/**
 	 * 以志愿兵军阶将新成员加入军团。
 	 * This method will add a new legion member to a legion with VOLUNTEER rank
+	 *
 	 * @param legion legion
 	 * @param player 玩家 / player
 	 */
@@ -201,9 +215,10 @@ final class LegionMembers {
 	/**
 	 * 以指定军阶将新成员加入军团。
 	 * This method will add a new legion member to a legion with input rank
+	 *
 	 * @param legion legion
 	 * @param player 玩家 / player
-	 * @param rank rank
+	 * @param rank   rank
 	 */
 	void addLegionMember(Legion legion, Player player, LegionRank rank) {
 		player.setLegionMember(new LegionMember(player.getObjectId(), legion, rank));
@@ -222,24 +237,25 @@ final class LegionMembers {
 			isFirst = false;
 		}
 		PacketSendUtility.broadcastPacketToLegion(legion,
-				new SM_LEGION_ADD_MEMBER(player, false, 1300260, player.getName()), player.getObjectId());
+			new SM_LEGION_ADD_MEMBER(player, false, 1300260, player.getName()), player.getObjectId());
 		PacketSendUtility.sendPacket(player, new SM_LEGION_ADD_MEMBER(player, false, 0, ""));
 		LegionEmblem legionEmblem = legion.getLegionEmblem();
 		PacketSendUtility.broadcastPacket(player,
-				new SM_LEGION_UPDATE_EMBLEM(legion.getLegionId(), legionEmblem.getEmblemId(), legionEmblem.getColor_r(),
-						legionEmblem.getColor_g(), legionEmblem.getColor_b(), legionEmblem.getEmblemType()),
-				true);
+			new SM_LEGION_UPDATE_EMBLEM(legion.getLegionId(), legionEmblem.getEmblemId(), legionEmblem.getColor_r(),
+				legionEmblem.getColor_g(), legionEmblem.getColor_b(), legionEmblem.getEmblemType()),
+			true);
 		PacketSendUtility.broadcastPacketToLegion(legion, new SM_LEGION_EDIT(0x08));
 		PacketSendUtility.broadcastPacket(player, new SM_LEGION_UPDATE_TITLE(player.getObjectId(), legion.getLegionId(),
-				legion.getLegionName(), player.getLegionMember().getRank().getRankId()), true);
+			legion.getLegionName(), player.getLegionMember().getRank().getRankId()), true);
 		legion.addBonus();
 	}
 
 	/**
 	 * 移除军团成员。
 	 * This method will remove a legion member
-	 * @param charName 角色名称 / Character name
-	 * @param kick 是否由其他成员踢出 / Whether another member is kicking the character
+	 *
+	 * @param charName   角色名称 / Character name
+	 * @param kick       是否由其他成员踢出 / Whether another member is kicking the character
 	 * @param playerName 操作者名称 / Acting player name
 	 * @return 移除成功时为 {@code true} / {@code true} if removed successfully
 	 */
@@ -257,12 +273,12 @@ final class LegionMembers {
 			PacketSendUtility.broadcastPacket(player, new SM_LEGION_UPDATE_TITLE(player.getObjectId(), 0, "", 2), true);
 		}
 		Legion legion = legionMember.getLegion();
-        if (kick) {
+		if (kick) {
 			PacketSendUtility.broadcastPacketToLegion(legion, new SM_LEGION_LEAVE_MEMBER(1300247,
-					legionMember.getObjectId(), playerName, legionMember.getName()));
+				legionMember.getObjectId(), playerName, legionMember.getName()));
 		} else {
 			PacketSendUtility.broadcastPacketToLegion(legion,
-					new SM_LEGION_LEAVE_MEMBER(900699, legionMember.getObjectId(), charName));
+				new SM_LEGION_LEAVE_MEMBER(900699, legionMember.getObjectId(), charName));
 		}
 		legion.removeBonus();
 		return true;
@@ -271,6 +287,7 @@ final class LegionMembers {
 	/**
 	 * 将玩家自身移出军团（不经 kick 流程），并清理加成图标。
 	 * Removes the player from their legion as a voluntary leave and clears bonus icons.
+	 *
 	 * @param player 目标玩家 / Target player
 	 * @return 移除成功时为 {@code true} / {@code true} if removed
 	 */
@@ -291,14 +308,15 @@ final class LegionMembers {
 	/**
 	 * 玩家登录时同步军团信息：成员列表、公告、解散状态与加成。
 	 * On login, syncs legion info: member list, announcement, disband state and bonuses.
+	 *
 	 * @param activePlayer Logging-in player
 	 */
 	public void onLogin(Player activePlayer) {
 		Legion legion = activePlayer.getLegion();
 		PacketSendUtility.broadcastPacketToLegion(legion, new SM_LEGION_UPDATE_MEMBER(activePlayer, 0, ""),
-				activePlayer.getObjectId());
+			activePlayer.getObjectId());
 		PacketSendUtility.broadcastPacketToLegion(legion,
-				SM_SYSTEM_MESSAGE.STR_MSG_NOTIFY_LOGIN_GUILD(activePlayer.getName()), activePlayer.getObjectId());
+			SM_SYSTEM_MESSAGE.STR_MSG_NOTIFY_LOGIN_GUILD(activePlayer.getName()), activePlayer.getObjectId());
 		PacketSendUtility.broadcastPacketToLegion(legion, new SM_LEGION_ADD_MEMBER(activePlayer, true, 0, ""));
 		PacketSendUtility.sendPacket(activePlayer, new SM_LEGION_INFO(legion));
 		ArrayList<LegionMemberEx> totalMembers = loadLegionMemberExList(legion, null);
@@ -326,6 +344,7 @@ final class LegionMembers {
 	/**
 	 * 玩家下线时释放仓库占用、广播离线并持久化军团/成员数据。
 	 * On logout, releases warehouse lock, broadcasts offline status and persists legion/member data.
+	 *
 	 * @param player Logging-out player
 	 */
 	public void onLogout(Player player) {

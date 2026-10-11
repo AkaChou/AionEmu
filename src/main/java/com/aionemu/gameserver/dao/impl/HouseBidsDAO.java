@@ -230,12 +230,6 @@ public class HouseBidsDAO extends com.aionemu.gameserver.dao.HouseBidsDAO {
 	}
 
 	/**
-	 * 批量删除多套房屋的出价。
-	 * Batch-deletes bids for multiple houses.
-	 * @param houseIds 房屋 ID 集合 / set of house ids
-	 */
-
-	/**
 	 * 判断当前数据库是否受本 DAO 支持。
 	 * Checks whether the given database is supported by this DAO.
 	 *

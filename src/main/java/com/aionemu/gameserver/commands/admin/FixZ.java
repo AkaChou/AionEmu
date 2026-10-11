@@ -4,6 +4,7 @@ import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.RespawnSupport;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 
 /**
@@ -36,8 +37,7 @@ public class FixZ extends AdminCommand {
 				SpawnTemplate temp = target.getSpawn();
 				RespawnSupport.respawnNpc(admin, target, temp.getX(), temp.getY(), admin.getZ(), temp.getHeading(), "FixZ");
 			}
-		}
-		else {
+		} else {
 			PacketSendUtility.sendMessage(admin, "Only in target!");
 		}
 	}

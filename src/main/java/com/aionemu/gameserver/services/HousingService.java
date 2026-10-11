@@ -113,7 +113,7 @@ public class HousingService {
 				loadedStudios = this.housesDAO.loadHouses(DataManager.HOUSE_DATA.getLands(), true);
 			}
 		} catch (Exception e) {
-			log.warn("Failed to load houses during HousingService init: {}", e.getMessage());
+			log.warn(I18n.get("log.2db4e09a188b", e.getMessage()));
 		}
 		this.customHouses = new ConcurrentHashMap<>(loadedCustom != null ? loadedCustom : Collections.emptyMap());
 		this.studios = new ConcurrentHashMap<>(loadedStudios != null ? loadedStudios : Collections.emptyMap());
@@ -255,7 +255,7 @@ public class HousingService {
 		return 0;
 	}
 
-	
+
 	/**
 	 * 按名称查找自定义房屋。
 	 * Finds a custom house by name.
@@ -339,7 +339,7 @@ public class HousingService {
 		}
 	}
 
-	
+
 	/**
 	 * 扣费后重新创建玩家工作室。
 	 * Recreates the player's studio after charging the land fee.

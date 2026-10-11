@@ -16,8 +16,10 @@ import com.aionemu.gameserver.network.aion.AionConnection.State;
  * @author Lyahim, Simple, xTz
  */
 public class CM_DISTRIBUTION_SETTINGS extends AionClientPacket {
+	private int autodistr;
 
 	@SuppressWarnings("unused")
+	private int unk2;
 	private int unk1;
 	private int lootrul;
 	private int misc;
@@ -29,8 +31,6 @@ public class CM_DISTRIBUTION_SETTINGS extends AionClientPacket {
 	private int fabled_item_above;
 	private int ethernal_item_above;
 	@SuppressWarnings("unused")
-	private int unk2;
-	private int autodistr;
 
 	/**
 	 * 构造客户端包实例。

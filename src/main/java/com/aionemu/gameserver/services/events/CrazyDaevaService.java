@@ -24,20 +24,24 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 疯狂大埃服务，管理限时 PvP 活动状态与奖励。
  * Crazy Daeva service managing timed PvP event state and rewards.
+ *
  * @author Rinzler (Encom)
  */
 @Slf4j
 public class CrazyDaevaService {
 
-	/** Spring 实例提供者 / Spring instance provider
-     * -- SETTER --
-     *  注入 Spring ObjectProvider 以覆盖默认单例。
-     *  Injects a Spring ObjectProvider that overrides the default singleton.
-     */
+	/**
+	 * Spring 实例提供者 / Spring instance provider
+	 * -- SETTER --
+	 * 注入 Spring ObjectProvider 以覆盖默认单例。
+	 * Injects a Spring ObjectProvider that overrides the default singleton.
+	 */
 	@Setter
-    private static volatile ObjectProvider<CrazyDaevaService> instanceProvider;
+	private static volatile ObjectProvider<CrazyDaevaService> instanceProvider;
 
-	/** 本轮已选出的疯狂大埃计数。 / Crazy Daeva count selected this round. */
+	/**
+	 * 本轮已选出的疯狂大埃计数。 / Crazy Daeva count selected this round.
+	 */
 	int crazyCount = 0;
 	private final List<Runnable> schedules = new ArrayList<>();
 
@@ -120,6 +124,7 @@ public class CrazyDaevaService {
 	 * 更新疯狂大埃连杀等级。
 	 * Updates the Crazy Daeva spree level.
 	 * winner
+	 *
 	 * @param level 连杀等级 / spree level
 	 */
 	private void updateCrazyLevel(Player winner, int level) {
@@ -153,7 +158,7 @@ public class CrazyDaevaService {
 				final String spreeEnder = isPvPDeath ? killer.getName() : "Killer";
 				AbyssPointsService.addAp((Player) killer, 5000);
 				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> PacketSendUtility.sendYellowMessageOnCenter(player,
-						"Crazier " + victim.getName() + " has slain by " + spreeEnder + "!"));
+					"Crazier " + victim.getName() + " has slain by " + spreeEnder + "!"));
 				log.info(I18n.get("log.fe71cec0426c", victim.getName(), spreeEnder));
 			}
 		}
@@ -200,11 +205,12 @@ public class CrazyDaevaService {
 	 * <p>双源静态兜底已退役：缺少 provider 时直接 fail-fast，避免在容器之外静默创建第二套实例。
 	 * The legacy static fallback is retired: a missing provider now fails fast instead of silently
 	 * creating a second instance outside the container.</p>
+	 *
 	 * @return 由 Spring 提供的实例 / the Spring-provided instance
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean /
-	 *         when no provider or bean is available
+	 *                               when no provider or bean is available
 	 */
-	public static final CrazyDaevaService getInstance() {
+	public static CrazyDaevaService getInstance() {
 		ObjectProvider<CrazyDaevaService> provider = instanceProvider;
 		CrazyDaevaService provided = provider == null ? null : provider.getIfAvailable();
 		if (provided == null) {

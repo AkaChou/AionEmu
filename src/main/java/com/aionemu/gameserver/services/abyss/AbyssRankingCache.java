@@ -31,13 +31,13 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_ABYSS_RANKING_PLAYER
 public class AbyssRankingCache {
 	/**
 	 * -- SETTER --
-	 *  注入 Spring 实例提供者。
-	 *  Inject the Spring instance provider.
+	 * 注入 Spring 实例提供者。
+	 * Inject the Spring instance provider.
 	 */
 	@Setter
 	private static volatile ObjectProvider<AbyssRankingCache> instanceProvider;
-    @Getter
-    private int lastUpdate;
+	@Getter
+	private int lastUpdate;
 	private final AbyssRankDAO abyssRankDAO;
 	private final Map<Race, List<SM_ABYSS_RANKING_PLAYERS>> players = new HashMap<>();
 	private final Map<Race, SM_ABYSS_RANKING_LEGIONS> legions = new HashMap<>();
@@ -61,7 +61,7 @@ public class AbyssRankingCache {
 	}
 
 	private static <T extends com.aionemu.commons.database.dao.DAO> T safeDao(Class<T> daoClass,
-			java.util.function.Supplier<T> fallback) {
+																			  java.util.function.Supplier<T> fallback) {
 		if (DAOManager.isInitialized()) {
 			try {
 				return DAOManager.getDAO(daoClass);
@@ -108,6 +108,7 @@ public class AbyssRankingCache {
 	/**
 	 * 重算指定种族的玩家排行数据包。
 	 * Rebuild player-ranking packets for the given race.
+	 *
 	 * @param race 阵营 / Race
 	 */
 	private void renewPlayerRanking(Race race) {
@@ -120,6 +121,7 @@ public class AbyssRankingCache {
 	/**
 	 * 按每页 44 条切分玩家排行结果为客户端包列表。
 	 * Split player ranking results into client packets of 44 entries per page.
+	 *
 	 * @param race 阵营 / Race
 	 * @return 分页数据包 / Paged packets
 	 */
@@ -132,7 +134,7 @@ public class AbyssRankingCache {
 				playerPackets.add(new SM_ABYSS_RANKING_PLAYERS(lastUpdate, list.subList(i, i + 44), race, page, false));
 			} else {
 				playerPackets
-						.add(new SM_ABYSS_RANKING_PLAYERS(lastUpdate, list.subList(i, list.size()), race, page, true));
+					.add(new SM_ABYSS_RANKING_PLAYERS(lastUpdate, list.subList(i, list.size()), race, page, true));
 			}
 			page++;
 		}
@@ -161,11 +163,12 @@ public class AbyssRankingCache {
 	 * <p>双源静态兜底已退役：缺少 provider 时直接 fail-fast，避免在容器之外静默创建第二套实例。
 	 * The legacy static fallback is retired: a missing provider now fails fast instead of silently
 	 * creating a second instance outside the container.</p>
+	 *
 	 * @return 由 Spring 提供的实例 / the Spring-provided instance
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean /
-	 *         when no provider or bean is available
+	 *                               when no provider or bean is available
 	 */
-	public static final AbyssRankingCache getInstance() {
+	public static AbyssRankingCache getInstance() {
 		ObjectProvider<AbyssRankingCache> provider = instanceProvider;
 		AbyssRankingCache provided = provider == null ? null : provider.getIfAvailable();
 		if (provided == null) {

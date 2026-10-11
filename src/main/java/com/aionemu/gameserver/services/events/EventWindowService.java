@@ -31,20 +31,21 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 活动窗口服务，管理限时活动计时器与登录同步。
  * Event window service managing timed event timers and login sync.
+ *
  * @author Rinzler (Encom)
  */
 
 @Slf4j
 public class EventWindowService {
 
-    /**
-     * -- SETTER --
-     *  setInstanceProvider 方法。
-     *  setInstanceProvider method.
-     *  provider
-     */
-    @Setter
-    private static volatile ObjectProvider<EventWindowService> instanceProvider;
+	/**
+	 * -- SETTER --
+	 * setInstanceProvider 方法。
+	 * setInstanceProvider method.
+	 * provider
+	 */
+	@Setter
+	private static volatile ObjectProvider<EventWindowService> instanceProvider;
 	private final PlayerEventsWindowDAO playerEventsWindowDAO;
 	private volatile Map<Integer, EventsWindow> allEvents;
 	private final ConcurrentMap<Integer, EventsWindow> activeEvents = new ConcurrentHashMap<>();
@@ -86,7 +87,7 @@ public class EventWindowService {
 	}
 
 	private static <T extends com.aionemu.commons.database.dao.DAO> T safeDao(Class<T> daoClass,
-			java.util.function.Supplier<T> fallback) {
+																			  java.util.function.Supplier<T> fallback) {
 		if (DAOManager.isInitialized()) {
 			try {
 				return DAOManager.getDAO(daoClass);
@@ -158,19 +159,19 @@ public class EventWindowService {
 			}
 			log.info(I18n.get("log.e1c6fecfcb1f", eventsWindow.getId(), eventsWindow.getRemainingTime()));
 			GameThreadPoolServices.threadPoolManager().schedule(() -> {
-				 if (player.isOnline()) {
-					 if (recivedCount == eventsWindow.getMaxCountOfDay()) {
-						 sendActiveEventsForPlayer.remove(eventsWindow.getId());
-						 return;
-					 }
-					 playerEventsWindowDAO.setRewardRecivedCount(accountId, eventsWindow.getId(),(recivedCount + 1)); // 同时将 elapsed 置 0 并更新时间戳 / it also sets elapsed to 0 and updates the timestamp
-					 ItemTemplate itemTemplate = DataManager.ITEM_DATA.getItemTemplate(eventsWindow.getItemId());
-					 PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_GET_HCOIN_07(itemTemplate.getNameId()));
-					 ItemService.addItem(player, eventsWindow.getItemId(), eventsWindow.getCount());
-					 restartTimer(player, eventsWindow.getId(), sendActiveEventsForPlayer);
-					 PacketSendUtility.sendPacket(player, new SM_EVENT_WINDOW_ITEMS(sendActiveEventsForPlayer.values()));
-				 }
-			 }, (eventsWindow.getRemainingTime() - elapsed) * 60000L);
+				if (player.isOnline()) {
+					if (recivedCount == eventsWindow.getMaxCountOfDay()) {
+						sendActiveEventsForPlayer.remove(eventsWindow.getId());
+						return;
+					}
+					playerEventsWindowDAO.setRewardRecivedCount(accountId, eventsWindow.getId(), (recivedCount + 1)); // 同时将 elapsed 置 0 并更新时间戳 / it also sets elapsed to 0 and updates the timestamp
+					ItemTemplate itemTemplate = DataManager.ITEM_DATA.getItemTemplate(eventsWindow.getItemId());
+					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_GET_HCOIN_07(itemTemplate.getNameId()));
+					ItemService.addItem(player, eventsWindow.getItemId(), eventsWindow.getCount());
+					restartTimer(player, eventsWindow.getId(), sendActiveEventsForPlayer);
+					PacketSendUtility.sendPacket(player, new SM_EVENT_WINDOW_ITEMS(sendActiveEventsForPlayer.values()));
+				}
+			}, (eventsWindow.getRemainingTime() - elapsed) * 60000L);
 		}
 		PacketSendUtility.sendPacket(player, new SM_EVENT_WINDOW_ITEMS(sendActiveEventsForPlayer.values()));
 		PacketSendUtility.sendPacket(player, new SM_EVENT_WINDOW(1, sendActiveEventsForPlayer.size()));
@@ -196,19 +197,19 @@ public class EventWindowService {
 				continue;
 			}
 			if (eventsWindow.getId() == eventId) {
-                GameThreadPoolServices.threadPoolManager().schedule(() -> {
-					 if (player.isOnline()) {
-						 if (recivedCount == eventsWindow.getMaxCountOfDay()) {
-							 sendActiveEventsForPlayer.remove(eventsWindow.getId());
-							 return;
-						 }
-						 playerEventsWindowDAO.setRewardRecivedCount(accountId, eventsWindow.getId(), (recivedCount + 1));
-						 ItemTemplate itemTemplate = DataManager.ITEM_DATA.getItemTemplate(eventsWindow.getItemId());
-						 PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_GET_HCOIN_07(itemTemplate.getNameId()));
-						 ItemService.addItem(player, eventsWindow.getItemId(), eventsWindow.getCount());
-						 restartTimer(player, eventId, sendActiveEventsForPlayer);
-					 }
-				 }, eventsWindow.getRemainingTime() * 60000L);
+				GameThreadPoolServices.threadPoolManager().schedule(() -> {
+					if (player.isOnline()) {
+						if (recivedCount == eventsWindow.getMaxCountOfDay()) {
+							sendActiveEventsForPlayer.remove(eventsWindow.getId());
+							return;
+						}
+						playerEventsWindowDAO.setRewardRecivedCount(accountId, eventsWindow.getId(), (recivedCount + 1));
+						ItemTemplate itemTemplate = DataManager.ITEM_DATA.getItemTemplate(eventsWindow.getItemId());
+						PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_GET_HCOIN_07(itemTemplate.getNameId()));
+						ItemService.addItem(player, eventsWindow.getItemId(), eventsWindow.getCount());
+						restartTimer(player, eventId, sendActiveEventsForPlayer);
+					}
+				}, eventsWindow.getRemainingTime() * 60000L);
 			}
 		}
 	}
@@ -237,11 +238,12 @@ public class EventWindowService {
 	 * <p>双源静态兜底已退役：缺少 provider 时直接 fail-fast，避免在容器之外静默创建第二套实例。
 	 * The legacy static fallback is retired: a missing provider now fails fast instead of silently
 	 * creating a second instance outside the container.</p>
+	 *
 	 * @return 由 Spring 提供的实例 / the Spring-provided instance
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean /
-	 *         when no provider or bean is available
+	 *                               when no provider or bean is available
 	 */
-	public static final EventWindowService getInstance() {
+	public static EventWindowService getInstance() {
 		ObjectProvider<EventWindowService> provider = instanceProvider;
 		EventWindowService provided = provider == null ? null : provider.getIfAvailable();
 		if (provided == null) {

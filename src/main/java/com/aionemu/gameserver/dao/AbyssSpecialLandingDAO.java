@@ -14,7 +14,6 @@ public abstract class AbyssSpecialLandingDAO implements DAO {
 	 * 加载所有特殊着陆点。
 	 * Loads all special landing locations.
 	 * @param locations 目标映射 / target map
-	 * @return 是否成功 / whether successful
 	 */
 	public abstract void loadLandingSpecialLocations(Map<Integer, LandingSpecialLocation> locations);
 

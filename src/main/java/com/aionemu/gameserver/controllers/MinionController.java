@@ -2,7 +2,6 @@ package com.aionemu.gameserver.controllers;
 
 
 import com.aionemu.gameserver.model.gameobjects.Minion;
-import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 
 /**
  * 小跟班（Minion）控制器：移动完全由客户端本地模拟，服务端零参与（原版架构）。

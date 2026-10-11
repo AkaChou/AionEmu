@@ -174,7 +174,6 @@ public class PlayerLunaShopDAO extends com.aionemu.gameserver.dao.PlayerLunaShop
      * @param freeUnderpath 免费地下通道 / free underpath
      * @param freeFactory free factory
      * @param freeChest free chest
-     * @return 是否成功 / whether succeeded
      */
     @Override
     public void setLunaShopByObjId(int obj, final boolean freeUnderpath, final boolean freeFactory, final boolean freeChest) {

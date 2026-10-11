@@ -15,9 +15,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 import jakarta.xml.bind.annotation.XmlTransient;
 import jakarta.xml.bind.annotation.XmlType;
 
-import com.aionemu.gameserver.model.templates.housing.Building;
 import com.aionemu.gameserver.model.templates.housing.HouseAddress;
-import com.aionemu.gameserver.model.templates.housing.HouseType;
 import com.aionemu.gameserver.model.templates.housing.HousingLand;
 
 /**
@@ -25,7 +23,7 @@ import com.aionemu.gameserver.model.templates.housing.HousingLand;
  * House land configuration data holder, indexed by land id and entry world id.
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "", propOrder = { "lands" })
+@XmlType(name = "", propOrder = {"lands"})
 @XmlRootElement(name = "house_lands")
 public class HouseData {
 
@@ -63,6 +61,7 @@ public class HouseData {
 	/**
 	 * 按世界 ID 获取该入口世界下的全部地块。
 	 * Returns all lands for the given entry world id.
+	 *
 	 * @param worldId 入口世界 ID / entry world id
 	 * @return 地块集合，不存在则为 null / set of lands, or null if absent
 	 */
@@ -73,6 +72,7 @@ public class HouseData {
 	/**
 	 * 按地块 ID 获取地块模板。
 	 * Returns the land template for the given land id.
+	 *
 	 * @param landId 领地 ID / land id
 	 * @return 地块模板，不存在则为 null / land template, or null if absent
 	 */
@@ -83,6 +83,7 @@ public class HouseData {
 	/**
 	 * 返回全部地块集合。
 	 * Returns all land templates.
+	 *
 	 * @return 全部领地模板 / Returns all land templates.
 	 */
 	public Collection<HousingLand> getLands() {
@@ -92,6 +93,7 @@ public class HouseData {
 	/**
 	 * 返回地块数量。
 	 * Returns the number of lands.
+	 *
 	 * @return 领地数量 / Returns the number of lands.
 	 */
 	public int size() {

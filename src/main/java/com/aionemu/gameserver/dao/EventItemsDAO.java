@@ -33,9 +33,4 @@ public abstract class EventItemsDAO implements DAO {
 	 */
 	public abstract void storeItems(Player player);
 
-	/**
-	 * 删除指定模板 ID 的活动物品记录。
-	 * Deletes event item records for the given item template ID.
-	 * @param itemId 物品模板 ID / item template ID
-	 */
 	}

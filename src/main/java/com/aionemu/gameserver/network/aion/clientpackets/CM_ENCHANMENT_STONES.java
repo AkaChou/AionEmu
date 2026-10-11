@@ -31,9 +31,9 @@ public class CM_ENCHANMENT_STONES extends AionClientPacket {
 	private int targetItemUniqueId;
 	private int supplementUniqueId;
 	@SuppressWarnings("unused")
+	private int unk;
 	private ItemCategory actionCategory;
 	@SuppressWarnings("unused")
-	private int unk;
 	private int toppedItemObjId;
 
 	/**

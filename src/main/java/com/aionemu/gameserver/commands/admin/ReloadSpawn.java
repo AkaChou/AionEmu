@@ -43,7 +43,8 @@ public class ReloadSpawn extends AdminCommand
 		else {
 			StringBuilder sbDestination = new StringBuilder();
 			for(String p : params)
-				sbDestination.append(p + " ");
+				sbDestination.append(p)
+					.append(" ");
 
 			destination = sbDestination.toString().trim();
 		// 天族。 / ELYOS.

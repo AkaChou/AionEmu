@@ -48,6 +48,7 @@ import com.aionemu.gameserver.utils.audit.AuditLogger;
 /**
  * 交易服务，处理 NPC 买卖、欧比斯商店与以物易物。
  * Trade service for NPC buy/sell, abyss shop, and trade-in.
+ *
  * @author MATTY (ADev.Team)
  */
 @Slf4j
@@ -55,18 +56,18 @@ import com.aionemu.gameserver.utils.audit.AuditLogger;
 public class TradeService {
 	/**
 	 * -- GETTER --
-	 *  获取交易列表静态数据。
-	 *  Returns trade list static data.
+	 * 获取交易列表静态数据。
+	 * Returns trade list static data.
 	 */
 	@Getter
 	private static final TradeListData tradeListData = DataManager.TRADE_LIST_DATA;
-    /**
-     * -- GETTER --
-     *  获取商品列表静态数据。
-     *  Returns goods list static data.
-     */
-    @Getter
-    private static final GoodsListData goodsListData = DataManager.GOODSLIST_DATA;
+	/**
+	 * -- GETTER --
+	 * 获取商品列表静态数据。
+	 * Returns goods list static data.
+	 */
+	@Getter
+	private static final GoodsListData goodsListData = DataManager.GOODSLIST_DATA;
 
 	/**
 	 * 从普通商店 NPC 购买物品。
@@ -80,7 +81,7 @@ public class TradeService {
 		if (!RestrictionsManager.canTrade(player)) {
 			return false;
 		}
-		int apReward ;
+		int apReward;
 		if (!validateBuyItems(npc, tradeList, player)) {
 			PacketSendUtility.sendMessage(player, "Some items are not allowed to be sold by this npc.");
 			return false;
@@ -113,7 +114,7 @@ public class TradeService {
 				long count = ItemService.addItem(player, tradeItem.getItemTemplate().getTemplateId(), tradeItem.getCount());
 				if (count != 0) {
 					log.warn(I18n.get("log.d629f8029e04", player.getObjectId(), tradeItem.getItemTemplate().getTemplateId(),
-							tradeItem.getCount(), count));
+						tradeItem.getCount(), count));
 					return false;
 				}
 			}
@@ -165,15 +166,15 @@ public class TradeService {
 				long count = ItemService.addItem(player, tradeItem.getItemTemplate().getTemplateId(), tradeItem.getCount());
 				if (count != 0) {
 					log.warn(I18n.get("log.d629f8029e04", player.getObjectId(), tradeItem.getItemTemplate().getTemplateId(),
-							tradeItem.getCount(), count));
+						tradeItem.getCount(), count));
 					return false;
 				}
 				if (tradeItem.getCount() > 1) {
 					PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1300785,
-							new DescriptionId(tradeItem.getItemTemplate().getNameId()), tradeItem.getCount()));
+						new DescriptionId(tradeItem.getItemTemplate().getNameId()), tradeItem.getCount()));
 				} else {
 					PacketSendUtility.sendPacket(player,
-							new SM_SYSTEM_MESSAGE(1300784, new DescriptionId(tradeItem.getItemTemplate().getNameId())));
+						new SM_SYSTEM_MESSAGE(1300784, new DescriptionId(tradeItem.getItemTemplate().getNameId())));
 				}
 			}
 		}
@@ -191,14 +192,16 @@ public class TradeService {
 	public static boolean performBuyFromRewardShop(Npc npc, Player player, TradeList tradeList) {
 		if (!RestrictionsManager.canTrade(player)) {
 			return false;
-		} if (!validateBuyItems(npc, tradeList, player)) {
+		}
+		if (!validateBuyItems(npc, tradeList, player)) {
 			PacketSendUtility.sendMessage(player, "Some items are not allowed to be selled from this npc");
 			return false;
 		}
 		Storage inventory = player.getInventory();
 		if (!tradeList.calculateRewardBuyListPrice(player)) {
 			return false;
-		} if (!hasInventorySpace(inventory, tradeList)) {
+		}
+		if (!hasInventorySpace(inventory, tradeList)) {
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_FULL_INVENTORY);
 			return false;
 		}
@@ -216,7 +219,7 @@ public class TradeService {
 				long count = ItemService.addItem(player, tradeItem.getItemTemplate().getTemplateId(), tradeItem.getCount());
 				if (count != 0) {
 					log.warn(I18n.get("log.d629f8029e04", player.getObjectId(), tradeItem.getItemTemplate().getTemplateId(),
-							tradeItem.getCount(), count));
+						tradeItem.getCount(), count));
 					return false;
 				}
 			}
@@ -244,7 +247,7 @@ public class TradeService {
 	}
 
 	private static Map<LimitedItem, Long> getLimitedItems(LimitedItemTradeService service, int npcId,
-			TradeList tradeList) {
+														  TradeList tradeList) {
 		Map<LimitedItem, Long> limitedItems = new HashMap<>();
 		try {
 			for (TradeItem tradeItem : tradeList.getTradeItems()) {
@@ -292,7 +295,7 @@ public class TradeService {
 
 	private static boolean validateBuyItems(Npc npc, TradeList tradeList, Player player) {
 		TradeListTemplate tradeListTemplate = tradeListData
-				.getTradeListTemplate(npc.getObjectTemplate().getTemplateId());
+			.getTradeListTemplate(npc.getObjectTemplate().getTemplateId());
 		Set<Integer> allowedItems = new HashSet<>();
 		for (TradeTab tradeTab : tradeListTemplate.getTradeTablist()) {
 			GoodsList goodsList = goodsListData.getGoodsListById(tradeTab.getId());
@@ -334,7 +337,7 @@ public class TradeService {
 			}
 			if (!item.isSellable()) {
 				PacketSendUtility.sendPacket(player,
-						new SM_SYSTEM_MESSAGE(1300344, new DescriptionId(item.getNameId())));
+					new SM_SYSTEM_MESSAGE(1300344, new DescriptionId(item.getNameId())));
 				return false;
 			}
 			long sellReward = PricesService.getKinahForSell(item.getItemTemplate().getPrice(), player.getRace());
@@ -366,18 +369,19 @@ public class TradeService {
 	/**
 	 * 执行以物易物（Trade-in）购买。
 	 * Performs a trade-in purchase.
-	 * @param player 玩家 / player
-	 * @param npcObjectId NPC 对象 ID / npc object id
-	 * @param itemId 目标物品 ID / target item id
-	 * @param count 数量 / count
-	 * @param TradeinListCount 换购列表数量 / trade-in list count
+	 *
+	 * @param player               玩家 / player
+	 * @param npcObjectId          NPC 对象 ID / npc object id
+	 * @param itemId               目标物品 ID / target item id
+	 * @param count                数量 / count
+	 * @param TradeinListCount     换购列表数量 / trade-in list count
 	 * @param TradeinItemObjectId1 换购物品对象 ID 1 / trade-in item object id 1
 	 * @param TradeinItemObjectId2 换购物品对象 ID 2 / trade-in item object id 2
 	 * @param TradeinItemObjectId3 换购物品对象 ID 3 / trade-in item object id 3
 	 * @return 是否成功 / whether successful
 	 */
 	public static boolean performBuyFromTradeInTrade(Player player, int npcObjectId, int itemId, int count,
-			int TradeinListCount, int TradeinItemObjectId1, int TradeinItemObjectId2, int TradeinItemObjectId3) {
+													 int TradeinListCount, int TradeinItemObjectId1, int TradeinItemObjectId2, int TradeinItemObjectId3) {
 		if (!RestrictionsManager.canTrade(player)) {
 			return false;
 		}
@@ -386,7 +390,7 @@ public class TradeService {
 		}
 		VisibleObject visibleObject = player.getKnownList().getObject(npcObjectId);
 		if (visibleObject == null || !(visibleObject instanceof Npc)
-				|| MathUtil.getDistance(visibleObject, player) > 10) {
+			|| MathUtil.getDistance(visibleObject, player) > 10) {
 			return false;
 		}
 		int npcId = ((Npc) visibleObject).getNpcId();
@@ -438,7 +442,7 @@ public class TradeService {
 		return true;
 	}
 
-		/**
+	/**
 	 * 向商店出售物品换取 AP。
 	 * Sells items to a shop for AP.
 	 * 玩家 / player
@@ -446,8 +450,7 @@ public class TradeService {
 	 * whether successful
 	 */
 	public static boolean performSellForAPToShop(Player player, TradeList tradeList,
-			TradeListTemplate purchaseTemplate)
-	{
+												 TradeListTemplate purchaseTemplate) {
 		if (!RestrictionsManager.canTrade(player)) {
 			return false;
 		}
@@ -479,8 +482,8 @@ public class TradeService {
 		return true;
 	}
 
-	
-		/**
+
+	/**
 	 * 按模板配置向商店出售物品换取基纳。
 	 * Sells items to a shop for Kinah using trade template pricing.
 	 * 玩家 / player
@@ -488,7 +491,7 @@ public class TradeService {
 	 * whether successful
 	 */
 	public static boolean performSellForKinahToShop(Player player, TradeList tradeList,
-			TradeListTemplate purchaseTemplate) {
+													TradeListTemplate purchaseTemplate) {
 		if (!RestrictionsManager.canTrade(player)) {
 			return false;
 		}
@@ -523,8 +526,9 @@ public class TradeService {
 	/**
 	 * 处理已终止/失效物品退回商店逻辑。
 	 * Handles returning a terminated item to shop logic.
+	 *
 	 * @param player 玩家 / player
-	 * @param objId 物品对象 ID / item object id
+	 * @param objId  物品对象 ID / item object id
 	 */
 	public static void terminatedItemToShop(Player player, int objId) {
 		try {

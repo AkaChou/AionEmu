@@ -41,7 +41,8 @@ public class Say extends AdminCommand {
 		StringBuilder sbMessage = new StringBuilder();
 
 		for (String p : params)
-			sbMessage.append(p + " ");
+			sbMessage.append(p)
+				.append(" ");
 
 		String sMessage = sbMessage.toString().trim();
 

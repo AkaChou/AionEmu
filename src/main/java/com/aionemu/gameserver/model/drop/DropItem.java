@@ -13,6 +13,7 @@ import lombok.Setter;
 /**
  * 掉落物品模型。
  * Drop Item model.
+ *
  * @author ATracer
  */
 @Getter
@@ -28,10 +29,14 @@ public class DropItem {
 	private Player winningPlayer = null;
 	private boolean isItemWonNotCollected = false;
 	private boolean isDistributeItem = false;
-	/** 返回 npc obj / Returns the npc obj */
+	/**
+	 * 返回 npc obj / Returns the npc obj
+	 */
 	private int npcObj;
 
-	/** 返回 optional socket / Returns the optional socket */
+	/**
+	 * 返回 optional socket / Returns the optional socket
+	 */
 	private int optionalSocket = 0;
 
 	public DropItem(Drop dropTemplate) {
@@ -51,7 +56,9 @@ public class DropItem {
 		count = Rnd.get(dropTemplate.getMinAmount(), dropTemplate.getMaxAmount());
 	}
 
-	/** 是否可查看掉落物 / Whether view drop item */
+	/**
+	 * 是否可查看掉落物 / Whether view drop item
+	 */
 	public boolean canViewDropItem(int objectId) {
 		return playerObjIds.isEmpty() || playerObjIds.contains(objectId);
 	}
@@ -102,24 +109,26 @@ public class DropItem {
 	/**
 	 * 是否只有该玩家是可能的拾取者（单人归属的掉落）。
 	 * Whether only this player is a possible looter (solo-owned drops).
+	 *
 	 * @param player 玩家 / player
 	 * @return 是否仅该玩家可拾取 / whether only this player may loot
-	  */
+	 */
 	public boolean isOnlyPossibleLooter(Player player) {
 		return playerObjIds.size() == 1 && playerObjIds.contains(player.getObjectId());
 	}
 
-	/** 返回 loot effect id / Returns the loot effect id */
+	/**
+	 * 返回 loot effect id / Returns the loot effect id
+	 */
 	public int getLootEffectId() {
-        return switch (dropTemplate.getItemId()) {
-            case 166020000, 166020001, 166020002, 166020003 -> 1003;
-            case 168000034, 168000035, 168000073, 168000074, 168000117, 168000118, 168000120, 168000121, 168000161,
-                 168000162, 168000164, 168000165, 168000213, 168000216, 168000223, 168000228, 168000230, 168000233,
-                 168000240, 168000245 -> 1003;
-            case 188053083 -> 1003;
-            case 188053547, 188053548, 188053646, 188053647 -> 1002;
-            case 190100004, 190100052 -> 1003;
-            default -> 0;
-        };
+		return switch (dropTemplate.getItemId()) {
+			case 166020000, 166020001, 166020002, 166020003 -> 1003;
+			case 168000034, 168000035, 168000073, 168000074, 168000117, 168000118, 168000120, 168000121, 168000161,
+				 168000162, 168000164, 168000165, 168000213, 168000216, 168000223, 168000228, 168000230, 168000233,
+				 168000240, 168000245 -> 1003;
+			case 188053083, 190100004, 190100052 -> 1003;
+			case 188053547, 188053548, 188053646, 188053647 -> 1002;
+			default -> 0;
+		};
 	}
 }

@@ -174,7 +174,6 @@ public class PlayerShugoSweepDAO extends com.aionemu.gameserver.dao.PlayerShugoS
      * @param freeDice free dice
      * @param step 扫荡步数 / sweep step
      * @param boardId 公告板 ID / board id
-     * @return 是否成功 / whether succeeded
      */
     @Override
     public void setShugoSweepByObjId(int obj, final int freeDice, final int step, int boardId) {

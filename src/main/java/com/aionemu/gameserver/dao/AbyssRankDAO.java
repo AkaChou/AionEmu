@@ -16,6 +16,7 @@ import com.aionemu.gameserver.utils.stats.AbyssRankEnum;
 /**
  * 欧比斯排名数据访问对象。
  * Abyss rank data access object.
+ *
  * @author ATracer
  */
 public abstract class AbyssRankDAO implements DAO {
@@ -23,6 +24,7 @@ public abstract class AbyssRankDAO implements DAO {
 	/**
 	 * 返回本 DAO 的唯一类名标识。
 	 * Returns the unique class-name identifier for this DAO.
+	 *
 	 * @return 类名 / class name
 	 */
 	@Override
@@ -33,6 +35,7 @@ public abstract class AbyssRankDAO implements DAO {
 	/**
 	 * 加载玩家的欧比斯排名数据。
 	 * Loads abyss rank data for a player.
+	 *
 	 * @param player 玩家 / player
 	 */
 	public abstract void loadAbyssRank(Player player);
@@ -40,6 +43,7 @@ public abstract class AbyssRankDAO implements DAO {
 	/**
 	 * 按玩家 ID 加载欧比斯排名。
 	 * Loads abyss rank by player ID.
+	 *
 	 * @param playerId 玩家 ID / player ID
 	 * @return 欧比斯排名 / abyss rank
 	 */
@@ -48,6 +52,7 @@ public abstract class AbyssRankDAO implements DAO {
 	/**
 	 * 存储玩家的欧比斯排名。
 	 * Stores a player's abyss rank.
+	 *
 	 * @param player 玩家 / player
 	 */
 	public abstract void storeAbyssRank(Player player);
@@ -59,6 +64,7 @@ public abstract class AbyssRankDAO implements DAO {
 	/**
 	 * 获取指定种族的玩家欧比斯排行榜。
 	 * Gets the player abyss ranking list for a race.
+	 *
 	 * @param race 阵营 / race
 	 * @return 排行结果列表 / ranking result list
 	 */
@@ -67,25 +73,18 @@ public abstract class AbyssRankDAO implements DAO {
 	/**
 	 * 获取指定种族的军团欧比斯排行榜。
 	 * Gets the legion abyss ranking list for a race.
+	 *
 	 * @param race 阵营 / race
 	 * @return 排行结果列表 / ranking result list
 	 */
 	public abstract ArrayList<AbyssRankingResult> getAbyssRankingLegions(Race race);
 
 	/**
-	 * 加载符合条件的玩家欧比斯点数（AP）。
-	 * Loads players' abyss points (AP) matching the given criteria.
-	 * @param race 阵营 / race
-	 * @param lowerApLimit 最低 AP 下限 / lower AP limit
-	 * @param maxOfflineDays 最大离线天数 / max offline days
-	 * @return 玩家 ID 到 AP 的映射 / map of player ID to AP
-	 */
-
-	/**
 	 * 加载符合条件的玩家荣耀点数（GP）。
 	 * Loads players' glory points (GP) matching the given criteria.
-	 * @param race 阵营 / race
-	 * @param lowerGpLimit 最低 GP 下限 / lower GP limit
+	 *
+	 * @param race           阵营 / race
+	 * @param lowerGpLimit   最低 GP 下限 / lower GP limit
 	 * @param maxOfflineDays 最大离线天数 / max offline days
 	 * @return 玩家 ID 到 GP 的映射 / map of player ID to GP
 	 */
@@ -94,6 +93,7 @@ public abstract class AbyssRankDAO implements DAO {
 	/**
 	 * 更新玩家的欧比斯等级。
 	 * Updates a player's abyss rank.
+	 *
 	 * @param playerId 玩家 ID / player ID
 	 * @param rankEnum 欧比斯等级枚举 / abyss rank enum
 	 */
@@ -108,6 +108,7 @@ public abstract class AbyssRankDAO implements DAO {
 	/**
 	 * 从欧比斯排名中移除玩家。
 	 * Removes players from the abyss ranking.
+	 *
 	 * @param listP 玩家列表 / player list
 	 */
 	public abstract void removePlayer(List<Player> listP);

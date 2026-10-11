@@ -20,6 +20,7 @@ public abstract class SeasonRankingDAO implements DAO {
 	/**
 	 * 返回实现唯一类名标识。
 	 * Returns unique class name for all implementations.
+	 *
 	 * @return 完整类名 / fully qualified class name
 	 */
 	@Override
@@ -30,6 +31,7 @@ public abstract class SeasonRankingDAO implements DAO {
 	/**
 	 * 查询指定表的竞赛排名玩家列表。
 	 * Returns competition ranking players for the given table.
+	 *
 	 * @param tableId 排行表 ID / ranking table id
 	 * @return 赛季排名结果列表 / season ranking result list
 	 */
@@ -38,8 +40,9 @@ public abstract class SeasonRankingDAO implements DAO {
 	/**
 	 * 加载玩家黄金竞技场排名。
 	 * Loads Gold Arena rank for the player.
+	 *
 	 * @param playerId 玩家对象 ID / player object id
-	 * @param tableId 排行表 ID / ranking table id
+	 * @param tableId  排行表 ID / ranking table id
 	 * @return 黄金竞技场排名 / gold arena rank
 	 */
 	public abstract GoldArenaRank loadGoldArenaRank(int playerId, int tableId);
@@ -47,8 +50,9 @@ public abstract class SeasonRankingDAO implements DAO {
 	/**
 	 * 加载玩家孤独竞技场排名。
 	 * Loads Arena of Tenacity rank for the player.
+	 *
 	 * @param playerId 玩家对象 ID / player object id
-	 * @param tableId 排行表 ID / ranking table id
+	 * @param tableId  排行表 ID / ranking table id
 	 * @return 孤独竞技场排名 / arena of tenacity rank
 	 */
 	public abstract ArenaOfTenacityRank loadArenaOfTenacityRank(int playerId, int tableId);
@@ -56,8 +60,9 @@ public abstract class SeasonRankingDAO implements DAO {
 	/**
 	 * 加载玩家挑战之塔排名。
 	 * Loads Tower of Challenge rank for the player.
+	 *
 	 * @param playerId 玩家对象 ID / player object id
-	 * @param tableId 排行表 ID / ranking table id
+	 * @param tableId  排行表 ID / ranking table id
 	 * @return 挑战之塔排名 / tower of challenge rank
 	 */
 	public abstract TowerOfChallengeRank loadTowerOfChallengeRank(int playerId, int tableId);
@@ -65,38 +70,19 @@ public abstract class SeasonRankingDAO implements DAO {
 	/**
 	 * 加载玩家 6v6 竞技场排名。
 	 * Loads Arena 6v6 rank for the player.
+	 *
 	 * @param playerId 玩家对象 ID / player object id
-	 * @param tableId 排行表 ID / ranking table id
+	 * @param tableId  排行表 ID / ranking table id
 	 * @return 6v6 竞技场排名 / arena 6v6 ranking
 	 */
 	public abstract Arena6V6Ranking loadArena6v6Rank(int playerId, int tableId);
 
 	/**
-	 * 保存玩家黄金竞技场排名。
-	 * Stores Gold Arena rank for the player.
-	 * @param player 玩家 / player
-	 * @return 是否保存成功 / true if stored
-	 */
-	
-	/**
 	 * 保存玩家挑战之塔排名。
 	 * Stores Tower of Challenge rank for the player.
+	 *
 	 * @param player 玩家 / player
-	 * @return 是否保存成功 / true if stored
 	 */
 	public abstract void storeTowerRank(Player player);
 
-	/**
-	 * 保存玩家孤独竞技场排名。
-	 * Stores Arena of Tenacity rank for the player.
-	 * @param player 玩家 / player
-	 * @return 是否保存成功 / true if stored
-	 */
-	
-	/**
-	 * 保存玩家 6v6 竞技场排名。
-	 * Stores Arena 6v6 rank for the player.
-	 * @param player 玩家 / player
-	 * @return 是否保存成功 / true if stored
-	 */
-	}
+}

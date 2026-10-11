@@ -47,7 +47,11 @@ public class NpcSkill extends AdminCommand {
 		List<NpcSkillTemplate> list = DataManager.NPC_SKILL_DATA.getNpcSkillList(target.getNpcId()).getNpcSkills();
 
 		for (NpcSkillTemplate skill : list)
-			strbld.append("    level " + skill.getSkillLevel() + " of " + skill.getSkillid() + ".\n");
+			strbld.append("    level ")
+				.append(skill.getSkillLevel())
+				.append(" of ")
+				.append(skill.getSkillid())
+				.append(".\n");
 		showAllLines(admin, strbld.toString());
 	}
 
@@ -67,7 +71,8 @@ public class NpcSkill extends AdminCommand {
 		int odd = strarray.length - index;
 		StringBuilder strbld = new StringBuilder();
 		for (int i = 0; i < odd; i++, index++)
-			strbld.append(strarray[index] + "\n");
+			strbld.append(strarray[index])
+				.append("\n");
 		PacketSendUtility.sendMessage(admin, strbld.toString());
 	}
 

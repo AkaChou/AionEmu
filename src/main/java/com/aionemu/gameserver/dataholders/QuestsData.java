@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.dataholders;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,10 +11,7 @@ import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import jakarta.xml.bind.annotation.XmlTransient;
 
-import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.templates.QuestTemplate;
-import com.aionemu.gameserver.questEngine.model.QuestEnv;
-import com.aionemu.gameserver.services.QuestService;
 
 import com.aionemu.commons.utils.collections.IntObjectHashMap;
 import lombok.Getter;
@@ -23,6 +19,7 @@ import lombok.Getter;
 /**
  * 任务模板数据容器，按任务 ID 索引，并按 NPC 势力分组。
  * Quest template data holder, indexed by quest id and grouped by NPC faction.
+ *
  * @author MrPoke
  */
 @Getter
@@ -67,6 +64,7 @@ public class QuestsData {
 	/**
 	 * 按任务 ID 获取任务模板。
 	 * Returns the quest template for the given quest id.
+	 *
 	 * @param id 任务 ID / quest id
 	 * @return 任务模板，不存在则为 null / quest template or null
 	 */
@@ -78,6 +76,7 @@ public class QuestsData {
 	/**
 	 * 返回已加载的任务模板数量。
 	 * Returns the number of loaded quest templates.
+	 *
 	 * @return 已加载的任务模板数量 / Returns the number of loaded quest templates.
 	 */
 	public int size() {
@@ -87,6 +86,7 @@ public class QuestsData {
 	/**
 	 * 设置任务模板列表并立即重建索引。
 	 * Sets the quest template list and rebuilds indexes immediately.
+	 *
 	 * @param questsData 任务模板列表 / quest template list
 	 */
 	public void setQuestsData(List<QuestTemplate> questsData) {

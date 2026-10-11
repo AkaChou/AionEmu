@@ -54,12 +54,12 @@ public class VeteranRewardsService {
 		 * Whether allowed
 		 */
 		private boolean isAllowed(Race race) {
-            return switch (this) {
-                case ELYOS -> race == Race.ELYOS;
-                case ASMO -> race == Race.ASMODIANS;
-                case ALL -> race == Race.ELYOS || race == Race.ASMODIANS;
-                default -> false;
-            };
+			return switch (this) {
+				case ELYOS -> race == Race.ELYOS;
+				case ASMO -> race == Race.ASMODIANS;
+				case ALL -> race == Race.ELYOS || race == Race.ASMODIANS;
+				default -> false;
+			};
 		}
 	}
 
@@ -73,7 +73,7 @@ public class VeteranRewardsService {
 	 * Constructs the veteran-reward service with the given DAOs and starts the periodic scan loop.
 	 *
 	 * @param veteranRewardsDAO 老兵奖励数据访问对象 / Veteran-rewards DAO
-	 * @param playerDAO 玩家数据访问对象 / Player DAO
+	 * @param playerDAO         玩家数据访问对象 / Player DAO
 	 */
 	public VeteranRewardsService(@NonNull VeteranRewardsDAO veteranRewardsDAO, @NonNull PlayerDAO playerDAO) {
 		this.veteranRewardsDAO = veteranRewardsDAO;
@@ -87,11 +87,11 @@ public class VeteranRewardsService {
 	 */
 	public VeteranRewardsService() {
 		this(safeDao(VeteranRewardsDAO.class, com.aionemu.gameserver.dao.impl.VeteranRewardsDAO::new),
-				safeDao(PlayerDAO.class, com.aionemu.gameserver.dao.impl.PlayerDAO::new));
+			safeDao(PlayerDAO.class, com.aionemu.gameserver.dao.impl.PlayerDAO::new));
 	}
 
 	private static <T extends com.aionemu.commons.database.dao.DAO> T safeDao(Class<T> daoClass,
-			java.util.function.Supplier<T> fallback) {
+																			  java.util.function.Supplier<T> fallback) {
 		if (DAOManager.isInitialized()) {
 			try {
 				return DAOManager.getDAO(daoClass);
@@ -142,14 +142,15 @@ public class VeteranRewardsService {
 
 		for (final VeteranRewards veteran_reward : veteran_rewards) {
 			VerifyVeteranReward(veteran_reward.getId(), veteran_reward.getPlayer(), veteran_reward.getType(),
-					veteran_reward.getItem(), veteran_reward.getCount(), veteran_reward.getKinah(),
-					veteran_reward.getSender(), veteran_reward.getTitle(), veteran_reward.getMessage());
+				veteran_reward.getItem(), veteran_reward.getCount(), veteran_reward.getKinah(),
+				veteran_reward.getSender(), veteran_reward.getTitle(), veteran_reward.getMessage());
 		}
 	}
 
 	/**
 	 * 校验单条数据库奖励并发送邮件，成功后回收记录。
 	 * Verify a single DB reward, mail it, then recycle the record on success.
+	 *
 	 * @param id      奖励记录 ID / Reward record ID
 	 * @param Player  接收玩家名 / Recipient player name
 	 * @param typeID  邮件类型 / Mail type
@@ -161,7 +162,7 @@ public class VeteranRewardsService {
 	 * @param message 邮件正文 / Mail body
 	 */
 	private void VerifyVeteranReward(int id, String Player, int typeID, int itemID, int countID, int kinahID,
-			String sender, String title, String message) {
+									 String sender, String title, String message) {
 		String recipient = null;
 		recipient = Util.convertName(Player);
 
@@ -191,19 +192,20 @@ public class VeteranRewardsService {
 	/**
 	 * 按接收方类型发放老兵奖励（指定玩家或按种族广播）。
 	 * Deliver a veteran reward filtered by recipient type (specific player or race broadcast).
+	 *
 	 * @param id            奖励记录 ID / Reward record ID
 	 * @param Player        接收玩家名 / Recipient player name
-	 * Mail type
-	 * Item ID
-	 * Item count
-	 * Kinah amount
-	 * Sender
+	 *                      Mail type
+	 *                      Item ID
+	 *                      Item count
+	 *                      Kinah amount
+	 *                      Sender
 	 * @param title         邮件标题 / Mail title
-	 * Mail body
+	 *                      Mail body
 	 * @param recipientType 接收方类型 / Recipient type
 	 */
 	public void VerifyVeteranReward(int id, String Player, int typeID, int itemID, int countID, int kinahID,
-			String sender, String title, String message, RecipientType recipientType) {
+									String sender, String title, String message, RecipientType recipientType) {
 		String recipient = null;
 
 		recipient = Util.convertName(Player);
@@ -244,13 +246,14 @@ public class VeteranRewardsService {
 	 * Recipient name
 	 * Title
 	 * Message body
-	 * @param attachedItemObjId  附件物品模板 ID / Attached item template ID
-	 * Attached item count
-	 * Attached kinah
-	 * @param mailtype           邮件类型编码 / Mail type code
+	 *
+	 * @param attachedItemObjId 附件物品模板 ID / Attached item template ID
+	 *                          Attached item count
+	 *                          Attached kinah
+	 * @param mailtype          邮件类型编码 / Mail type code
 	 */
 	private boolean SendVeteranRewardMail(String sender, String recipientName, String title, String message,
-			int attachedItemObjId, int attachedItemCount, int attachedKinahCount, int mailtype, int rewardId) {
+										  int attachedItemObjId, int attachedItemCount, int attachedKinahCount, int mailtype, int rewardId) {
 		if (attachedItemObjId != 0) {
 			ItemTemplate itemTemplate = DataManager.ITEM_DATA.getItemTemplate(attachedItemObjId);
 			if (itemTemplate == null) {
@@ -297,9 +300,9 @@ public class VeteranRewardsService {
 		}
 
 		SystemMailService.TransactionAction transactionAction = rewardId > 1
-				? con -> veteranRewardsDAO.deleteInTransaction(con, rewardId) : null;
+			? con -> veteranRewardsDAO.deleteInTransaction(con, rewardId) : null;
 		boolean delivered = GameFeatureServices.systemMailService().sendMail(sender, recipientName, title, message,
-				attachedItemObjId, attachedItemCount, attachedKinahCount, 0, type, transactionAction);
+			attachedItemObjId, attachedItemCount, attachedKinahCount, 0, type, transactionAction);
 
 		return delivered;
 	}
@@ -310,6 +313,7 @@ public class VeteranRewardsService {
 	 * <p>双源静态兜底已退役：缺少 provider 时直接 fail-fast，避免在容器之外静默创建第二套实例。
 	 * The legacy static fallback is retired: a missing provider now fails fast instead of silently
 	 * creating a second instance outside the container.</p>
+	 *
 	 * @return 由 Spring 提供的实例 / the Spring-provided instance
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean / when no provider or bean is available
 	 */
@@ -327,6 +331,7 @@ public class VeteranRewardsService {
 	/**
 	 * 注入 Spring 实例提供者。
 	 * Inject the Spring instance provider.
+	 *
 	 * @param instanceProvider 实例提供者 / Instance provider
 	 */
 	public static void setInstanceProvider(ObjectProvider<VeteranRewardsService> instanceProvider) {

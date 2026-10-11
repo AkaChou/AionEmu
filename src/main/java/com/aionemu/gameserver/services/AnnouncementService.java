@@ -23,11 +23,13 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 
 import java.util.HashSet;
 import java.util.Set;
+
 import lombok.extern.slf4j.Slf4j;
 
 /**
  * 自动公告服务，按间隔向在线玩家广播系统公告。
  * Automatic announcement service broadcasting system messages to online players on a schedule.
+ *
  * @author Divinity
  */
 @Slf4j
@@ -37,9 +39,13 @@ public class AnnouncementService {
 	private static volatile ObjectProvider<AnnouncementService> instanceProvider;
 
 	private final AnnouncementsDAO announcementsDAO;
-	/** 已加载的公告集合。 / Loaded announcements. */
+	/**
+	 * 已加载的公告集合。 / Loaded announcements.
+	 */
 	private Collection<Announcement> announcements;
-	/** 定时广播任务列表。 / Scheduled broadcast task list. */
+	/**
+	 * 定时广播任务列表。 / Scheduled broadcast task list.
+	 */
 	private final List<Future<?>> delays = new ArrayList<>();
 
 	/**
@@ -77,6 +83,7 @@ public class AnnouncementService {
 	 * <p>双源静态兜底已退役：缺少 provider 时直接 fail-fast，避免在容器之外静默创建第二套实例。
 	 * The legacy static fallback is retired: a missing provider now fails fast instead of silently
 	 * creating a second instance outside the container.</p>
+	 *
 	 * @return 由 Spring 提供的实例 / the Spring-provided instance
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean / when no provider or bean is available
 	 */
@@ -128,35 +135,35 @@ public class AnnouncementService {
 
 						if (announce.getFaction().equalsIgnoreCase("ALL"))
 							if (announce.getChatType() == ChatType.SHOUT
-									|| announce.getChatType() == ChatType.GROUP_LEADER) {
+								|| announce.getChatType() == ChatType.GROUP_LEADER) {
 								PacketSendUtility.sendPacket(player, new SM_MESSAGE(1, "Announcement",
-										announce.getAnnounce(), announce.getChatType()));
+									announce.getAnnounce(), announce.getChatType()));
 							} else {
 								PacketSendUtility.sendPacket(player, new SM_MESSAGE(1, "Announcement",
-										"Announcement: " + announce.getAnnounce(), announce.getChatType()));
+									"Announcement: " + announce.getAnnounce(), announce.getChatType()));
 							}
 						else if (announce.getFactionEnum() == player.getRace()) {
 							if (announce.getChatType() == ChatType.SHOUT
-									|| announce.getChatType() == ChatType.GROUP_LEADER) {
+								|| announce.getChatType() == ChatType.GROUP_LEADER) {
 								PacketSendUtility.sendPacket(player,
-										new SM_MESSAGE(1,
-												(announce.getFaction().equalsIgnoreCase("ELYOS") ? "Elyos" : "Asmodian")
-														+ " Announcement",
-												announce.getAnnounce(), announce.getChatType()));
+									new SM_MESSAGE(1,
+										(announce.getFaction().equalsIgnoreCase("ELYOS") ? "Elyos" : "Asmodian")
+											+ " Announcement",
+										announce.getAnnounce(), announce.getChatType()));
 							}
 						} else {
 							PacketSendUtility.sendPacket(player, new SM_MESSAGE(1,
-									(announce.getFaction().equalsIgnoreCase("ELYOS") ? "Elyos" : "Asmodian")
-											+ " Announcement",
-									(announce.getFaction().equalsIgnoreCase("ELYOS") ? "Elyos" : "Asmodian")
-											+ " Announcement: " + announce.getAnnounce(),
-									announce.getChatType()));
+								(announce.getFaction().equalsIgnoreCase("ELYOS") ? "Elyos" : "Asmodian")
+									+ " Announcement",
+								(announce.getFaction().equalsIgnoreCase("ELYOS") ? "Elyos" : "Asmodian")
+									+ " Announcement: " + announce.getAnnounce(),
+								announce.getChatType()));
 						}
 					}
 				}, announce.getDelay() * 1000L, announce.getDelay() * 1000L));
 			}
 		} catch (Exception e) {
-			log.warn("ThreadPoolManager not available during AnnouncementService load: {}", e.getMessage());
+			log.warn(I18n.get("log.a736bef37f9e", e.getMessage()));
 		}
 		log.info(I18n.get("log.60ed3a14c1fd", announcements.size()));
 	}
@@ -164,6 +171,7 @@ public class AnnouncementService {
 	/**
 	 * 新增一条公告到数据库。
 	 * Adds an announcement to the database.
+	 *
 	 * @param announce announcement
 	 */
 	public void addAnnouncement(Announcement announce) {
@@ -174,6 +182,7 @@ public class AnnouncementService {
 	 * 按 ID 删除公告。
 	 * Deletes an announcement by id.
 	 * announcement id
+	 *
 	 * @return 删除成功返回 true / true if deleted
 	 */
 	public boolean delAnnouncement(final int idAnnounce) {

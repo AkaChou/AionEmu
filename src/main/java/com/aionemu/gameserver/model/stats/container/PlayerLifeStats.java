@@ -19,6 +19,7 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 玩家的生命值/魔法值/飞行时间属性与恢复逻辑。
  * Player HP/MP/fly-time stats and restore logic.
+ *
  * @author ATracer, sphinx
  */
 public class PlayerLifeStats extends CreatureLifeStats<Player> {
@@ -72,7 +73,9 @@ public class PlayerLifeStats extends CreatureLifeStats<Player> {
 		}
 	}
 
-	/** SynchronizeWith 最大 Stats / Synchronize With Max Stats */
+	/**
+	 * SynchronizeWith 最大 Stats / Synchronize With Max Stats
+	 */
 	@Override
 	public void synchronizeWithMaxStats() {
 		if (isAlreadyDead()) {
@@ -85,7 +88,9 @@ public class PlayerLifeStats extends CreatureLifeStats<Player> {
 		}
 	}
 
-	/** 更新 current stats / Update current stats */
+	/**
+	 * 更新 current stats / Update current stats
+	 */
 	@Override
 	public void updateCurrentStats() {
 		super.updateCurrentStats();
@@ -98,22 +103,30 @@ public class PlayerLifeStats extends CreatureLifeStats<Player> {
 		}
 	}
 
-	/** Sendhppacket 更新 / Send hp packet update */
+	/**
+	 * Sendhppacket 更新 / Send hp packet update
+	 */
 	public void sendHpPacketUpdate() {
 		owner.addPacketBroadcastMask(BroadcastMode.UPDATE_PLAYER_HP_STAT);
 	}
 
-	/** Sendhppacket 更新 impl / Send hp packet update impl */
+	/**
+	 * Sendhppacket 更新 impl / Send hp packet update impl
+	 */
 	public void sendHpPacketUpdateImpl() {
 		PacketSendUtility.sendPacket(owner, new SM_STATUPDATE_HP(currentHp, getMaxHp()));
 	}
 
-	/** Sendmppacket 更新 / Send mp packet update */
+	/**
+	 * Sendmppacket 更新 / Send mp packet update
+	 */
 	public void sendMpPacketUpdate() {
 		owner.addPacketBroadcastMask(BroadcastMode.UPDATE_PLAYER_MP_STAT);
 	}
 
-	/** Sendmppacket 更新 impl / Send mp packet update impl */
+	/**
+	 * Sendmppacket 更新 impl / Send mp packet update impl
+	 */
 	public void sendMpPacketUpdateImpl() {
 		PacketSendUtility.sendPacket(owner, new SM_STATUPDATE_MP(currentMp, getMaxMp()));
 	}
@@ -126,7 +139,9 @@ public class PlayerLifeStats extends CreatureLifeStats<Player> {
 		return this.currentFp;
 	}
 
-	/** 返回最大飞行点 / Returns the max fp*/
+	/**
+	 * 返回最大飞行点 / Returns the max fp
+	 */
 	@Override
 	public int getMaxFp() {
 		return owner.getGameStats().getFlyTime().getCurrent();
@@ -148,7 +163,9 @@ public class PlayerLifeStats extends CreatureLifeStats<Player> {
 		return this.increaseFp(type, value, 0, LOG.REGULAR);
 	}
 
-	/** 增加飞行值。 / Increase fp. */
+	/**
+	 * 增加飞行值。 / Increase fp.
+	 */
 	public int increaseFp(TYPE type, int value, int skillId, LOG log) {
 		fpLock.lock();
 
@@ -174,6 +191,7 @@ public class PlayerLifeStats extends CreatureLifeStats<Player> {
 	/**
 	 * 减少当前 FP，最低降至 0。
 	 * Reduces current FP, clamped at zero.
+	 *
 	 * @param value 要减少的 FP / FP to remove
 	 * @return 剩余 FP / remaining FP
 	 */
@@ -195,7 +213,9 @@ public class PlayerLifeStats extends CreatureLifeStats<Player> {
 		return currentFp;
 	}
 
-	/** 设置 current fp / Sets the current fp */
+	/**
+	 * 设置 current fp / Sets the current fp
+	 */
 	public int setCurrentFp(int value) {
 		fpLock.lock();
 		try {
@@ -225,7 +245,9 @@ public class PlayerLifeStats extends CreatureLifeStats<Player> {
 		owner.addPacketBroadcastMask(BroadcastMode.UPDATE_PLAYER_FLY_TIME);
 	}
 
-	/** Sendfppacket 更新 impl / Send fp packet update impl */
+	/**
+	 * Sendfppacket 更新 impl / Send fp packet update impl
+	 */
 	public void sendFpPacketUpdateImpl() {
 		if (owner == null) {
 			return;
@@ -241,14 +263,18 @@ public class PlayerLifeStats extends CreatureLifeStats<Player> {
 		increaseFp(TYPE.AUTO_HEAL_FP, 1);
 	}
 
-	/** Specialrestore Fp / Specialrestore Fp */
+	/**
+	 * Specialrestore Fp / Specialrestore Fp
+	 */
 	public void specialrestoreFp() {
 		if (owner.getGameStats().getStat(StatEnum.REGEN_FP, 0).getCurrent() != 0) {
 			increaseFp(TYPE.AUTO_HEAL_FP, owner.getGameStats().getStat(StatEnum.REGEN_FP, 0).getCurrent() / 3);
 		}
 	}
 
-	/** Trigger fp restore / Trigger fp restore */
+	/**
+	 * Trigger fp restore / Trigger fp restore
+	 */
 	public void triggerFpRestore() {
 		cancelFpReduce();
 
@@ -262,7 +288,9 @@ public class PlayerLifeStats extends CreatureLifeStats<Player> {
 		}
 	}
 
-	/** 取消 fp restore / Cancel fp restore */
+	/**
+	 * 取消 fp restore / Cancel fp restore
+	 */
 	public void cancelFpRestore() {
 		restoreLock.lock();
 		try {
@@ -275,12 +303,16 @@ public class PlayerLifeStats extends CreatureLifeStats<Player> {
 		}
 	}
 
-	/** Triggerfpreduce 按 cost / Trigger fp reduce by cost */
+	/**
+	 * Triggerfpreduce 按 cost / Trigger fp reduce by cost
+	 */
 	public void triggerFpReduceByCost(Integer costFp) {
 		triggerFpReduce(costFp);
 	}
 
-	/** Trigger fp reduce / Trigger fp reduce */
+	/**
+	 * Trigger fp reduce / Trigger fp reduce
+	 */
 	public void triggerFpReduce() {
 		triggerFpReduce(null);
 	}
@@ -290,7 +322,7 @@ public class PlayerLifeStats extends CreatureLifeStats<Player> {
 		restoreLock.lock();
 		try {
 			if (flyReduceTask == null && !alreadyDead && owner.getAccessLevel() < AdminConfig.GM_FLIGHT_UNLIMITED
-					&& !owner.isUnderNoFPConsum()) {
+				&& !owner.isUnderNoFPConsum()) {
 				this.flyReduceTask = GameGameplayServices.lifeStatsRestoreService().scheduleFpReduceTask(this, costFp);
 			}
 		} finally {
@@ -298,7 +330,9 @@ public class PlayerLifeStats extends CreatureLifeStats<Player> {
 		}
 	}
 
-	/** 取消 fp reduce / Cancel fp reduce */
+	/**
+	 * 取消 fp reduce / Cancel fp reduce
+	 */
 	public void cancelFpReduce() {
 		restoreLock.lock();
 		try {
@@ -318,7 +352,9 @@ public class PlayerLifeStats extends CreatureLifeStats<Player> {
 		return getMaxFp() == currentFp;
 	}
 
-	/** 取消 all tasks / Cancel all tasks */
+	/**
+	 * 取消 all tasks / Cancel all tasks
+	 */
 	@Override
 	public void cancelAllTasks() {
 		super.cancelAllTasks();
@@ -326,7 +362,9 @@ public class PlayerLifeStats extends CreatureLifeStats<Player> {
 		cancelFpRestore();
 	}
 
-	/** Triggerrestore 在 revive / Trigger restore on revive */
+	/**
+	 * Triggerrestore 在 revive / Trigger restore on revive
+	 */
 	public void triggerRestoreOnRevive() {
 		this.triggerRestoreTask();
 		triggerFpRestore();

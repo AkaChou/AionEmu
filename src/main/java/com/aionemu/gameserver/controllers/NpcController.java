@@ -63,9 +63,11 @@ import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.stats.StatFunctions;
 import com.aionemu.gameserver.world.zone.ZoneInstance;
+
 /**
  * NPC 控制器，管理视野、生成/消失、死亡奖励、对话与区域事件。
  * NPC controller managing sight, spawn/despawn, death rewards, dialogs and zone events.
+ *
  * @author ATracer
  */
 @Slf4j
@@ -75,7 +77,8 @@ public class NpcController extends CreatureController<Npc> {
 	/**
 	 * 对象离开 NPC 视野时回调。
 	 * Callback when an object leaves the NPC's sight.
-	 * @param object 离开视野的对象 / the object leaving sight
+	 *
+	 * @param object       离开视野的对象 / the object leaving sight
 	 * @param isOutOfRange 是否因超出距离离开 / whether the leave is due to being out of range
 	 */
 	@Override
@@ -85,7 +88,7 @@ public class NpcController extends CreatureController<Npc> {
 		}
 		super.notSee(object, isOutOfRange);
 		if (object instanceof Creature && (getOwner().getAi2().getSubState() != AISubState.TARGET_LOST
-				|| object != getOwner().getTarget())) {
+			|| object != getOwner().getTarget())) {
 			getOwner().getAggroList().remove((Creature) object);
 		}
 	}
@@ -93,6 +96,7 @@ public class NpcController extends CreatureController<Npc> {
 	/**
 	 * 对象进入 NPC 视野时回调。
 	 * Callback when an object enters the NPC's sight.
+	 *
 	 * @param object 进入视野的对象 / the object entering sight
 	 */
 	@Override
@@ -194,6 +198,7 @@ public class NpcController extends CreatureController<Npc> {
 	/**
 	 * NPC 死亡处理：掉落、奖励与重生调度。
 	 * NPC death handling: drops, rewards and respawn scheduling.
+	 *
 	 * @param lastAttacker 最后攻击者 / last attacker
 	 */
 	@Override
@@ -228,7 +233,7 @@ public class NpcController extends CreatureController<Npc> {
 				addTask(TaskId.DECAY, RespawnService.scheduleDecayTask(owner));
 				if (owner.getSpawn() != null && owner.getSpawn().getStaticId() > 0) {
 					GameWorldServices.geoService().despawnPlaceableObject(owner.getWorldId(), owner.getInstanceId(),
-							owner.getSpawn().getStaticId());
+						owner.getSpawn().getStaticId());
 				}
 			}
 			if (owner.getAi2().poll(AIQuestion.SHOULD_RESPAWN) && !owner.isDeleteDelayed() && !GameFeatureServices.siegeService().isSiegeNpcInActiveSiege(owner)) {
@@ -306,26 +311,26 @@ public class NpcController extends CreatureController<Npc> {
 					long rewardXp = StatFunctions.calculateSoloExperienceReward(player, getOwner());
 					int rewardDp = StatFunctions.calculateSoloDPReward(player, getOwner());
 					float rewardAp = 1;
-					rewardXp *= percentage;
-					rewardDp *= percentage;
+					rewardXp = (int) (rewardXp * percentage);
+					rewardDp = (int) (rewardDp * percentage);
 					rewardAp *= percentage;
 					GameEngineServices.questEngine().onKill(new QuestEnv(getOwner(), player, 0, 0));
 					// 玩家击败“Boss”时全服可见！！！ / When a player defeat a "Boss" all ppls on server see!!!
 					defeatNamedMsg(player);
 					// 单人经验奖励（新系统，正式服北美经验） / Reward XP Solo (New system, Exp Retail NA)
 					switch (player.getWorldId()) {
-					case 301720000: // Mirash Sanctuary.
-					case 302100000: // Fissure Of Oblivion.
-					case 302110000: // [Opportunity] Fissure Of Oblivion.
-					case 302400000: // Crucible Spire.
-					case 210100000: // Iluma.
-					case 220110000: // Norsvold.
-					case 600040000: // Tiamaranta's Eye.
-					case 600090000: // Kaldor.
-					case 600100000: // Levinshor.
-					default:
-						player.getCommonData().addExp(rewardXp, RewardType.HUNTING, this.getOwner().getObjectTemplate().getNameId());
-						break;
+						case 301720000: // Mirash Sanctuary.
+						case 302100000: // Fissure Of Oblivion.
+						case 302110000: // [Opportunity] Fissure Of Oblivion.
+						case 302400000: // Crucible Spire.
+						case 210100000: // Iluma.
+						case 220110000: // Norsvold.
+						case 600040000: // Tiamaranta's Eye.
+						case 600090000: // Kaldor.
+						case 600100000: // Levinshor.
+						default:
+							player.getCommonData().addExp(rewardXp, RewardType.HUNTING, this.getOwner().getObjectTemplate().getNameId());
+							break;
 					}
 					player.getCommonData().addDp(rewardDp);
 					if (getOwner().isRewardAP()) {
@@ -364,6 +369,7 @@ public class NpcController extends CreatureController<Npc> {
 	/**
 	 * 获取所有者 NPC。
 	 * Gets the owner NPC.
+	 *
 	 * @return owner NPC / 所有者 NPC / owner NPC。
 	 */
 	@Override
@@ -389,9 +395,10 @@ public class NpcController extends CreatureController<Npc> {
 	/**
 	 * 处理 NPC 对话选项选择。
 	 * Handles NPC dialog option selection.
-	 * @param dialogId 对话 ID / dialog id
-	 * @param player 玩家 / player
-	 * @param questId 任务 ID / quest id
+	 *
+	 * @param dialogId            对话 ID / dialog id
+	 * @param player              玩家 / player
+	 * @param questId             任务 ID / quest id
 	 * @param extendedRewardIndex 扩展奖励索引 / extended reward index
 	 */
 	@Override
@@ -408,8 +415,9 @@ public class NpcController extends CreatureController<Npc> {
 	/**
 	 * 处理客户端通用选择页上的 NPC 简单对话选项，不进入任务路由。
 	 * Handles an NPC simple-dialog option from the client's generic selection page without entering quest routing.
-	 * @param dialogId 对话框选项 ID / dialog option id
-	 * @param player 玩家 / player
+	 *
+	 * @param dialogId            对话框选项 ID / dialog option id
+	 * @param player              玩家 / player
 	 * @param extendedRewardIndex 扩展奖励索引 / extended reward index
 	 */
 	@Override
@@ -425,17 +433,18 @@ public class NpcController extends CreatureController<Npc> {
 	/**
 	 * NPC 受到攻击时的处理。
 	 * Handles the NPC being attacked.
-	 * @param creature 攻击者 / attacker
-	 * @param skillId 技能 ID / skill id
-	 * @param type 伤害类型 / damage type
-	 * @param damage 伤害值 / damage
+	 *
+	 * @param creature     攻击者 / attacker
+	 * @param skillId      技能 ID / skill id
+	 * @param type         伤害类型 / damage type
+	 * @param damage       伤害值 / damage
 	 * @param notifyAttack 是否通知攻击 / whether to notify attack
-	 * @param log 日志类型 / log type
+	 * @param log          日志类型 / log type
 	 * @param attackStatus 攻击状态 / attack status
 	 */
 	@Override
 	public void onAttack(Creature creature, int skillId, TYPE type, int damage, boolean notifyAttack, LOG log,
-			AttackStatus attackStatus) {
+						 AttackStatus attackStatus) {
 		if (getOwner().getLifeStats().isAlreadyDead()) {
 			return;
 		}
@@ -444,8 +453,7 @@ public class NpcController extends CreatureController<Npc> {
 		// 召唤物应获得自身仇恨 / summon should gain its own aggro
 		if (creature instanceof Summon) {
 			actingCreature = creature;
-		}
-		else {
+		} else {
 			actingCreature = creature.getActingCreature();
 		}
 
@@ -556,6 +564,7 @@ public class NpcController extends CreatureController<Npc> {
 	/**
 	 * 调度 NPC 重生。
 	 * Schedules NPC respawn.
+	 *
 	 * @return respawn task Future / 重生任务 Future / respawn task Future。
 	 */
 	public Future<?> scheduleRespawn() {
@@ -568,6 +577,7 @@ public class NpcController extends CreatureController<Npc> {
 	/**
 	 * 获取与当前目标的攻击距离。
 	 * Gets the attack distance to the current target.
+	 *
 	 * @return attack distance / 攻击距离 / attack distance。
 	 */
 	public final float getAttackDistanceToTarget() {
@@ -579,6 +589,7 @@ public class NpcController extends CreatureController<Npc> {
 	 * Uses a skill at the given level.
 	 * skill id
 	 * skill level
+	 *
 	 * @return whether successful / 是否成功 / whether successful。
 	 */
 	@Override

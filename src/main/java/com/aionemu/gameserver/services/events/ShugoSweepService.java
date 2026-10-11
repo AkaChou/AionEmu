@@ -32,17 +32,20 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 @Slf4j
 public class ShugoSweepService {
 
-	/** Spring 实例提供者 / Spring instance provider
-     * -- SETTER --
-     *  注入 Spring ObjectProvider 以覆盖默认单例。
-     *  Injects a Spring ObjectProvider that overrides the default singleton.
-     */
+	/**
+	 * Spring 实例提供者 / Spring instance provider
+	 * -- SETTER --
+	 * 注入 Spring ObjectProvider 以覆盖默认单例。
+	 * Injects a Spring ObjectProvider that overrides the default singleton.
+	 */
 	@Setter
-    private static volatile ObjectProvider<ShugoSweepService> instanceProvider;
+	private static volatile ObjectProvider<ShugoSweepService> instanceProvider;
 	private final PlayerShugoSweepDAO playerShugoSweepDAO;
 	private final PlayerDAO playerDAO;
 
-	/** 当前棋盘 ID / Current board id */
+	/**
+	 * 当前棋盘 ID / Current board id
+	 */
 	private final int boardId = EventsConfig.EVENT_SHUGOSWEEP_BOARD;
 
 	/**
@@ -50,7 +53,7 @@ public class ShugoSweepService {
 	 * Constructs the Shugo Sweep service with the given DAOs.
 	 *
 	 * @param playerShugoSweepDAO 扫荡棋盘数据访问对象 / Shugo Sweep DAO
-	 * @param playerDAO 玩家数据访问对象 / player DAO
+	 * @param playerDAO           玩家数据访问对象 / player DAO
 	 */
 	public ShugoSweepService(@NonNull PlayerShugoSweepDAO playerShugoSweepDAO, @NonNull PlayerDAO playerDAO) {
 		this.playerShugoSweepDAO = playerShugoSweepDAO;
@@ -67,7 +70,7 @@ public class ShugoSweepService {
 	}
 
 	private static <T extends com.aionemu.commons.database.dao.DAO> T safeDao(Class<T> daoClass,
-			java.util.function.Supplier<T> fallback) {
+																			  java.util.function.Supplier<T> fallback) {
 		if (DAOManager.isInitialized()) {
 			try {
 				return DAOManager.getDAO(daoClass);
@@ -90,6 +93,7 @@ public class ShugoSweepService {
 	/**
 	 * 登录时加载棋盘数据并同步客户端。
 	 * On login, loads board data and syncs the client.
+	 *
 	 * @param player 玩家 / player
 	 */
 	public void onLogin(Player player) {
@@ -109,14 +113,15 @@ public class ShugoSweepService {
 			player.getPlayerShugoSweep().setShugoSweepByObjId(player.getObjectId());
 		}
 		PacketSendUtility.sendPacket(player,
-				new SM_SHUGO_SWEEP(getPlayerSweep(player).getBoardId(), getPlayerSweep(player).getStep(),
-						getPlayerSweep(player).getFreeDice(), getCommonData(player).getGoldenDice(),
-						getCommonData(player).getResetBoard(), 0));
+			new SM_SHUGO_SWEEP(getPlayerSweep(player).getBoardId(), getPlayerSweep(player).getStep(),
+				getPlayerSweep(player).getFreeDice(), getCommonData(player).getGoldenDice(),
+				getCommonData(player).getResetBoard(), 0));
 	}
 
 	/**
 	 * 登出时持久化棋盘进度。
 	 * On logout, persists board progress.
+	 *
 	 * @param player 玩家 / player
 	 */
 	public void onLogout(Player player) {
@@ -134,6 +139,7 @@ public class ShugoSweepService {
 	/**
 	 * 投掷骰子推进棋盘并结算奖励。
 	 * Rolls dice to advance the board and settle rewards.
+	 *
 	 * @param player 玩家 / player
 	 */
 	public void launchDice(final Player player) {
@@ -152,38 +158,38 @@ public class ShugoSweepService {
 		}
 
 		PacketSendUtility.sendPacket(player, new SM_SHUGO_SWEEP(boardId, getPlayerSweep(player).getStep(),
-				getPlayerSweep(player).getFreeDice(), getCommonData(player).getGoldenDice(), 0, 0));
+			getPlayerSweep(player).getFreeDice(), getCommonData(player).getGoldenDice(), 0, 0));
 
 		if (newStep > 30) {
 			log.debug("Shugo sweep move wraps board. playerId={} step={} move={} newStep={}", player.getObjectId(),
-					step, move, newStep);
+				step, move, newStep);
 			getPlayerSweep(player).setStep(newStep);
 			PacketSendUtility.sendPacket(player,
-					new SM_SHUGO_SWEEP(getPlayerSweep(player).getBoardId(), getPlayerSweep(player).getStep(),
-							getPlayerSweep(player).getFreeDice(), getCommonData(player).getGoldenDice(),
-							getCommonData(player).getResetBoard(), move));
+				new SM_SHUGO_SWEEP(getPlayerSweep(player).getBoardId(), getPlayerSweep(player).getStep(),
+					getPlayerSweep(player).getFreeDice(), getCommonData(player).getGoldenDice(),
+					getCommonData(player).getResetBoard(), move));
 			getPlayerSweep(player).setStep(diff);
 			rewardPlayer(player, getPlayerSweep(player).getStep(), diff);
 			player.getPlayerShugoSweep().setShugoSweepByObjId(player.getObjectId());
 		} else if (newStep == 30) {
 			log.debug("Shugo sweep move reaches finish. playerId={} step={} move={} newStep={}", player.getObjectId(),
-					step, move, newStep);
+				step, move, newStep);
 			getPlayerSweep(player).setStep(newStep);
 			PacketSendUtility.sendPacket(player,
-					new SM_SHUGO_SWEEP(getPlayerSweep(player).getBoardId(), getPlayerSweep(player).getStep(),
-							getPlayerSweep(player).getFreeDice(), getCommonData(player).getGoldenDice(),
-							getCommonData(player).getResetBoard(), move));
+				new SM_SHUGO_SWEEP(getPlayerSweep(player).getBoardId(), getPlayerSweep(player).getStep(),
+					getPlayerSweep(player).getFreeDice(), getCommonData(player).getGoldenDice(),
+					getCommonData(player).getResetBoard(), move));
 			rewardPlayer(player, getPlayerSweep(player).getStep(), newStep);
 			player.getPlayerShugoSweep().setShugoSweepByObjId(player.getObjectId());
 		} else {
 			log.debug("Shugo sweep move. playerId={} step={} move={} newStep={}", player.getObjectId(), step, move,
-					newStep);
+				newStep);
 			getPlayerSweep(player).setStep(newStep);
 			player.getPlayerShugoSweep().setShugoSweepByObjId(player.getObjectId());
 			PacketSendUtility.sendPacket(player,
-					new SM_SHUGO_SWEEP(getPlayerSweep(player).getBoardId(), getPlayerSweep(player).getStep(),
-							getPlayerSweep(player).getFreeDice(), getCommonData(player).getGoldenDice(),
-							getCommonData(player).getResetBoard(), move));
+				new SM_SHUGO_SWEEP(getPlayerSweep(player).getBoardId(), getPlayerSweep(player).getStep(),
+					getPlayerSweep(player).getFreeDice(), getCommonData(player).getGoldenDice(),
+					getCommonData(player).getResetBoard(), move));
 			rewardPlayer(player, getPlayerSweep(player).getStep(), move);
 		}
 	}
@@ -191,6 +197,7 @@ public class ShugoSweepService {
 	/**
 	 * 重置玩家棋盘进度。
 	 * Resets the player's board progress.
+	 *
 	 * @param player 玩家 / player
 	 */
 	public void resetBoard(Player player) {
@@ -198,16 +205,17 @@ public class ShugoSweepService {
 		getCommonData(player).setResetBoard(reset - 1);
 		getPlayerSweep(player).setStep(0);
 		PacketSendUtility.sendPacket(player,
-				new SM_SHUGO_SWEEP(getPlayerSweep(player).getBoardId(), 0, getPlayerSweep(player).getFreeDice(),
-						getCommonData(player).getGoldenDice(), getCommonData(player).getResetBoard(), 0));
+			new SM_SHUGO_SWEEP(getPlayerSweep(player).getBoardId(), 0, getPlayerSweep(player).getFreeDice(),
+				getCommonData(player).getGoldenDice(), getCommonData(player).getResetBoard(), 0));
 	}
 
 	/**
 	 * 延迟发放当前格子奖励。
 	 * Delays granting the reward for the current board step.
+	 *
 	 * @param player 玩家 / player
-	 * @param step 当前格子 / current step
-	 * @param move 步数（用于延迟） / move count (used for delay)
+	 * @param step   当前格子 / current step
+	 * @param move   步数（用于延迟） / move count (used for delay)
 	 */
 	private void rewardPlayer(final Player player, final int step, final int move) {
 		GameThreadPoolServices.threadPoolManager().schedule(() -> {
@@ -256,11 +264,12 @@ public class ShugoSweepService {
 	 * <p>双源静态兜底已退役：缺少 provider 时直接 fail-fast，避免在容器之外静默创建第二套实例。
 	 * The legacy static fallback is retired: a missing provider now fails fast instead of silently
 	 * creating a second instance outside the container.</p>
+	 *
 	 * @return 由 Spring 提供的实例 / the Spring-provided instance
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean /
-	 *         when no provider or bean is available
+	 *                               when no provider or bean is available
 	 */
-	public static final ShugoSweepService getInstance() {
+	public static ShugoSweepService getInstance() {
 		ObjectProvider<ShugoSweepService> provider = instanceProvider;
 		ShugoSweepService provided = provider == null ? null : provider.getIfAvailable();
 		if (provided == null) {

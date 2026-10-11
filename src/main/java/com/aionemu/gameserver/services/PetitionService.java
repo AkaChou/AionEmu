@@ -7,6 +7,7 @@ import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 import lombok.NonNull;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -61,12 +62,6 @@ public record PetitionService(PetitionDAO petitionDAO) {
 	}
 
 	/**
-	 * 使用指定的 PetitionDAO 构造请愿服务。
-	 * Constructs the petition service with the given PetitionDAO.
-	 *
-	 * @param petitionDAO 请愿数据访问对象 / Petition DAO
-	 */
-	/**
 	 * 返回请愿 DAO，供命令域复用同一绑定（单一所有权）。
 	 * Returns the petition DAO so command-domain callers reuse the same binding (single ownership).
 	 *
@@ -88,7 +83,7 @@ public record PetitionService(PetitionDAO petitionDAO) {
 				}
 			}
 		} catch (Exception e) {
-			log.warn("Failed to load petitions during service init: {}", e.getMessage());
+			log.warn(I18n.get("log.62e2494fabb4", e.getMessage()));
 		}
 		log.info(I18n.get("log.2b3ade613951", registeredPetitions.size()));
 	}

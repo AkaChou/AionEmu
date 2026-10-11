@@ -13,7 +13,6 @@ import com.aionemu.gameserver.lifecycle.GameCronServices;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -37,17 +36,18 @@ import com.aionemu.gameserver.utils.stats.AbyssRankEnum;
  * 欧比斯军阶定时刷新与周奖励分发服务。
  * Abyss-rank scheduled refresh and weekly reward distribution service.
  * <p><b>WIP：</b> 仅文档化，逻辑未改动。 / <b>WIP:</b> docs only; logic untouched.</p>
+ *
  * @author Rinzler (Encom)
  */
 @Slf4j
 public class AbyssRankUpdateService {
-    /**
-     * -- SETTER --
-     *  注入 Spring 实例提供者。
-     *  Inject the Spring instance provider.
-     */
-    @Setter
-    private static volatile ObjectProvider<AbyssRankUpdateService> instanceProvider;
+	/**
+	 * -- SETTER --
+	 * 注入 Spring 实例提供者。
+	 * Inject the Spring instance provider.
+	 */
+	@Setter
+	private static volatile ObjectProvider<AbyssRankUpdateService> instanceProvider;
 	private final AbyssRankDAO abyssRankDAO;
 	private final ServerVariablesDAO serverVariablesDAO;
 	private Race rewardRace;
@@ -58,7 +58,7 @@ public class AbyssRankUpdateService {
 	 * 使用指定的 DAO 集合构造军阶刷新服务。
 	 * Constructs the rank update service with the given DAOs.
 	 *
-	 * @param abyssRankDAO 欧比斯军阶数据访问对象 / Abyss-rank DAO
+	 * @param abyssRankDAO       欧比斯军阶数据访问对象 / Abyss-rank DAO
 	 * @param serverVariablesDAO 服务器变量数据访问对象 / Server-variables DAO
 	 */
 	public AbyssRankUpdateService(@NonNull AbyssRankDAO abyssRankDAO, @NonNull ServerVariablesDAO serverVariablesDAO) {
@@ -76,7 +76,7 @@ public class AbyssRankUpdateService {
 	}
 
 	private static <T extends com.aionemu.commons.database.dao.DAO> T safeDao(Class<T> daoClass,
-			java.util.function.Supplier<T> fallback) {
+																			  java.util.function.Supplier<T> fallback) {
 		if (DAOManager.isInitialized()) {
 			try {
 				return DAOManager.getDAO(daoClass);
@@ -92,9 +92,10 @@ public class AbyssRankUpdateService {
 	 * <p>双源静态兜底已退役：缺少 provider 时直接 fail-fast，避免在容器之外静默创建第二套实例。
 	 * The legacy static fallback is retired: a missing provider now fails fast instead of silently
 	 * creating a second instance outside the container.</p>
+	 *
 	 * @return 由 Spring 提供的实例 / the Spring-provided instance
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean /
-	 *         when no provider or bean is available
+	 *                               when no provider or bean is available
 	 */
 	public static AbyssRankUpdateService getInstance() {
 		ObjectProvider<AbyssRankUpdateService> provider = instanceProvider;
@@ -107,7 +108,7 @@ public class AbyssRankUpdateService {
 		return provided;
 	}
 
-    /**
+	/**
 	 * 按小时 cron 规则调度军阶刷新。
 	 * Schedule rank refresh on the hourly cron rule.
 	 */
@@ -189,51 +190,51 @@ public class AbyssRankUpdateService {
 	private void sendRewardWeekly() {
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
 			switch (player.getAbyssRank().getRank()) {
-			case SUPREME_COMMANDER:
-				final int reward1 = rewardRace == Race.ASMODIANS ? 10 : 1;
-				GameFeatureServices.systemMailService();
-				SystemMailService.sendTemplateRewardMail(reward1, player.getCommonData());
-				break;
-			case COMMANDER:
-				final int reward2 = rewardRace == Race.ASMODIANS ? 11 : 2;
-				GameFeatureServices.systemMailService();
-				SystemMailService.sendTemplateRewardMail(reward2, player.getCommonData());
-				break;
-			case GREAT_GENERAL:
-				final int reward3 = rewardRace == Race.ASMODIANS ? 12 : 3;
-				GameFeatureServices.systemMailService();
-				SystemMailService.sendTemplateRewardMail(reward3, player.getCommonData());
-				break;
-			case GENERAL:
-				final int reward4 = rewardRace == Race.ASMODIANS ? 13 : 4;
-				GameFeatureServices.systemMailService();
-				SystemMailService.sendTemplateRewardMail(reward4, player.getCommonData());
-				break;
-			case STAR5_OFFICER:
-				final int reward5 = rewardRace == Race.ASMODIANS ? 14 : 5;
-				GameFeatureServices.systemMailService();
-				SystemMailService.sendTemplateRewardMail(reward5, player.getCommonData());
-				break;
-			case STAR4_OFFICER:
-				final int reward6 = rewardRace == Race.ASMODIANS ? 15 : 6;
-				GameFeatureServices.systemMailService();
-				SystemMailService.sendTemplateRewardMail(reward6, player.getCommonData());
-				break;
-			case STAR3_OFFICER:
-				final int reward7 = rewardRace == Race.ASMODIANS ? 16 : 7;
-				GameFeatureServices.systemMailService();
-				SystemMailService.sendTemplateRewardMail(reward7, player.getCommonData());
-				break;
-			case STAR2_OFFICER:
-				final int reward8 = rewardRace == Race.ASMODIANS ? 17 : 8;
-				GameFeatureServices.systemMailService();
-				SystemMailService.sendTemplateRewardMail(reward8, player.getCommonData());
-				break;
-			case STAR1_OFFICER:
-				final int reward9 = rewardRace == Race.ASMODIANS ? 18 : 9;
-				GameFeatureServices.systemMailService();
-				SystemMailService.sendTemplateRewardMail(reward9, player.getCommonData());
-				break;
+				case SUPREME_COMMANDER:
+					final int reward1 = rewardRace == Race.ASMODIANS ? 10 : 1;
+					GameFeatureServices.systemMailService();
+					SystemMailService.sendTemplateRewardMail(reward1, player.getCommonData());
+					break;
+				case COMMANDER:
+					final int reward2 = rewardRace == Race.ASMODIANS ? 11 : 2;
+					GameFeatureServices.systemMailService();
+					SystemMailService.sendTemplateRewardMail(reward2, player.getCommonData());
+					break;
+				case GREAT_GENERAL:
+					final int reward3 = rewardRace == Race.ASMODIANS ? 12 : 3;
+					GameFeatureServices.systemMailService();
+					SystemMailService.sendTemplateRewardMail(reward3, player.getCommonData());
+					break;
+				case GENERAL:
+					final int reward4 = rewardRace == Race.ASMODIANS ? 13 : 4;
+					GameFeatureServices.systemMailService();
+					SystemMailService.sendTemplateRewardMail(reward4, player.getCommonData());
+					break;
+				case STAR5_OFFICER:
+					final int reward5 = rewardRace == Race.ASMODIANS ? 14 : 5;
+					GameFeatureServices.systemMailService();
+					SystemMailService.sendTemplateRewardMail(reward5, player.getCommonData());
+					break;
+				case STAR4_OFFICER:
+					final int reward6 = rewardRace == Race.ASMODIANS ? 15 : 6;
+					GameFeatureServices.systemMailService();
+					SystemMailService.sendTemplateRewardMail(reward6, player.getCommonData());
+					break;
+				case STAR3_OFFICER:
+					final int reward7 = rewardRace == Race.ASMODIANS ? 16 : 7;
+					GameFeatureServices.systemMailService();
+					SystemMailService.sendTemplateRewardMail(reward7, player.getCommonData());
+					break;
+				case STAR2_OFFICER:
+					final int reward8 = rewardRace == Race.ASMODIANS ? 17 : 8;
+					GameFeatureServices.systemMailService();
+					SystemMailService.sendTemplateRewardMail(reward8, player.getCommonData());
+					break;
+				case STAR1_OFFICER:
+					final int reward9 = rewardRace == Race.ASMODIANS ? 18 : 9;
+					GameFeatureServices.systemMailService();
+					SystemMailService.sendTemplateRewardMail(reward9, player.getCommonData());
+					break;
 			}
 		});
 	}
@@ -257,22 +258,23 @@ public class AbyssRankUpdateService {
 	 */
 	private void updateLimitedGpRanks() {
 		updateAllRanksGpForRace(Race.ASMODIANS, AbyssRankEnum.STAR1_OFFICER.getGpRequired(),
-				RankingConfig.TOP_RANKING_MAX_OFFLINE_DAYS);
+			RankingConfig.TOP_RANKING_MAX_OFFLINE_DAYS);
 		updateAllRanksGpForRace(Race.ELYOS, AbyssRankEnum.STAR1_OFFICER.getGpRequired(),
-				RankingConfig.TOP_RANKING_MAX_OFFLINE_DAYS);
+			RankingConfig.TOP_RANKING_MAX_OFFLINE_DAYS);
 	}
 
 	/**
 	 * 按 GP 降序为指定种族分配军官名额。
 	 * Assign officer quotas for a race by descending GP.
-	 * @param race 阵营 / Race
-	 * @param gpLimit 最低 GP 门槛 / minimum GP threshold
+	 *
+	 * @param race            阵营 / Race
+	 * @param gpLimit         最低 GP 门槛 / minimum GP threshold
 	 * @param activeAfterDays 活跃离线天数上限 / max offline days still considered active
 	 */
 	private void updateAllRanksGpForRace(Race race, int gpLimit, int activeAfterDays) {
 		Map<Integer, Integer> playerGpMap = abyssRankDAO.loadPlayersGp(race, gpLimit, activeAfterDays);
 		List<Entry<Integer, Integer>> playerGpEntries = new ArrayList<>(playerGpMap.entrySet());
-		playerGpEntries.sort( new PlayerGpComparator<>());
+		playerGpEntries.sort(new PlayerGpComparator<>());
 		selectGpRank(AbyssRankEnum.SUPREME_COMMANDER, playerGpEntries);
 		selectGpRank(AbyssRankEnum.COMMANDER, playerGpEntries);
 		selectGpRank(AbyssRankEnum.GREAT_GENERAL, playerGpEntries);
@@ -288,13 +290,14 @@ public class AbyssRankUpdateService {
 	/**
 	 * 从 GP 列表头部按名额选取玩家写入军阶。
 	 * Take quota players from the head of the GP list and write their ranks.
-	 * @param rank 目标军阶 / Target rank
+	 *
+	 * @param rank            目标军阶 / Target rank
 	 * @param playerGpEntries 按 GP 排序的条目列表 / ordered GP entries
 	 */
 	private void selectGpRank(AbyssRankEnum rank, List<Entry<Integer, Integer>> playerGpEntries) {
 		int quota = (rank.getId() > 9 && rank.getId() < 18)
-				? rank.getQuota() - AbyssRankEnum.getRankById(rank.getId() + 1).getQuota()
-				: rank.getQuota();
+			? rank.getQuota() - AbyssRankEnum.getRankById(rank.getId() + 1).getQuota()
+			: rank.getQuota();
 		for (int i = 0; i < quota; i++) {
 			if (playerGpEntries.isEmpty()) {
 				return;
@@ -320,6 +323,7 @@ public class AbyssRankUpdateService {
 	/**
 	 * 剩余未占名额玩家回写为最高指挥官（原逻辑保留）。
 	 * Write remaining players to SUPREME_COMMANDER (original logic preserved).
+	 *
 	 * @param playerGpEntries 剩余 GP 条目 / remaining GP entries
 	 */
 	private void updateToNoQuotaGpRank(List<Entry<Integer, Integer>> playerGpEntries) {
@@ -331,7 +335,8 @@ public class AbyssRankUpdateService {
 	/**
 	 * 将 AP 军阶写入在线玩家或离线 DAO。
 	 * Write AP rank to an online player or offline DAO.
-	 * @param newRank 新军阶 / new rank
+	 *
+	 * @param newRank  新军阶 / new rank
 	 * @param playerId 玩家 ID / player id
 	 */
 	protected void updateRankTo(AbyssRankEnum newRank, int playerId) {
@@ -352,7 +357,8 @@ public class AbyssRankUpdateService {
 	/**
 	 * 将 GP 军阶写入在线玩家或离线 DAO。
 	 * Write GP rank to an online player or offline DAO.
-	 * @param newRank 新军阶 / new rank
+	 *
+	 * @param newRank  新军阶 / new rank
 	 * @param playerId 玩家 ID / player id
 	 */
 	protected void updateGpRankTo(AbyssRankEnum newRank, int playerId) {
@@ -373,6 +379,7 @@ public class AbyssRankUpdateService {
 	/**
 	 * 按 GP 降序比较的条目比较器。
 	 * Entry comparator ordering by GP descending.
+	 *
 	 * @param <K> 键类型 / Key type
 	 * @param <V> 可比较值类型 / Comparable value type
 	 */

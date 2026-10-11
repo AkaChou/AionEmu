@@ -16,7 +16,6 @@ public abstract class OutpostDAO implements DAO {
 	 * 加载全部前哨据点位置到给定映射中。
 	 * Loads all outpost locations into the given map.
 	 * @param locations 目标映射 / destination map
-	 * @return 若成功则为 true / true if successful
 	 */
 	public abstract void loadOutposLocations(Map<Integer, OutpostLocation> locations);
 

@@ -18,7 +18,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-/** 全服共享限量任务名额服务。 / Shared limited quest-slot service across the server. */
+/**
+ * 全服共享限量任务名额服务。 / Shared limited quest-slot service across the server.
+ */
 @Slf4j
 public final class LimitedQuestService {
 
@@ -41,7 +43,7 @@ public final class LimitedQuestService {
 	}
 
 	private static <T extends com.aionemu.commons.database.dao.DAO> T safeDao(Class<T> daoClass,
-			java.util.function.Supplier<T> fallback) {
+																			  java.util.function.Supplier<T> fallback) {
 		if (DAOManager.isInitialized()) {
 			try {
 				return DAOManager.getDAO(daoClass);
@@ -70,17 +72,23 @@ public final class LimitedQuestService {
 		return current;
 	}
 
-	/** 在任务状态写入前原子占用一个全服名额。 / Atomically occupies one server-wide slot before the quest state is written. */
+	/**
+	 * 在任务状态写入前原子占用一个全服名额。 / Atomically occupies one server-wide slot before the quest state is written.
+	 */
 	public static boolean tryAcquire(QuestTemplate template) {
 		return getInstance().acquire(template.getId(), template.getMaxCountLimitedQuest());
 	}
 
-	/** Canonical metadata entry point used by typed quest-start eligibility. */
+	/**
+	 * Canonical metadata entry point used by typed quest-start eligibility.
+	 */
 	public static boolean requiresAcquisitionByMetadata(int questId, int maxCount) {
 		return getInstance().requiresAcquisition(questId, maxCount);
 	}
 
-	/** 真实 AI 的 charge_limitedquest：恢复默认数量或直接充满。 */
+	/**
+	 * 真实 AI 的 charge_limitedquest：恢复默认数量或直接充满。
+	 */
 	public static boolean charge(int questId, boolean chargeMaxCount) {
 		return getInstance().chargeConfigured(questId, chargeMaxCount);
 	}
@@ -120,7 +128,7 @@ public final class LimitedQuestService {
 				return loadLimits(file);
 			}
 		} catch (Exception e) {
-			log.warn("Failed to load limited quest definitions safely: {}", e.getMessage());
+			log.warn(I18n.get("log.4dfe90006810", e.getMessage()));
 		}
 		return Map.of();
 	}

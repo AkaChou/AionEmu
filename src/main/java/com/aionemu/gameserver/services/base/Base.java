@@ -34,31 +34,32 @@ import lombok.Setter;
 /**
  * 据点运行时实例，管理占领、首领、袭击与相关广播。
  * Base runtime instance managing ownership, boss, assaults, and broadcasts.
+ *
  * @author Rinzler
  */
 @Getter
 public class Base<BL extends BaseLocation> {
-    /**
-     * -- GETTER --
-     *  获取据点首领 NPC。
-     *  Returns the base boss NPC.
-     *  boss NPC
+	/**
+	 * -- GETTER --
+	 * 获取据点首领 NPC。
+	 * Returns the base boss NPC.
+	 * boss NPC
 	 * -- SETTER --
-	 *  设置据点首领 NPC。
-	 *  Sets the base boss NPC.
-	 *  boss NPC
+	 * 设置据点首领 NPC。
+	 * Sets the base boss NPC.
+	 * boss NPC
 	 */
-    @Setter
-    private Npc boss;
+	@Setter
+	private Npc boss;
 	/**
 	 * -- SETTER --
-	 *  设置据点旗帜 NPC。
-	 *  Sets the base flag NPC.
-	 *  flag NPC
+	 * 设置据点旗帜 NPC。
+	 * Sets the base flag NPC.
+	 * flag NPC
 	 */
 	@Setter
 	private Npc
-            flag;
+		flag;
 	private boolean started;
 	/**
 	 * 获取据点位置模板。
@@ -90,6 +91,7 @@ public class Base<BL extends BaseLocation> {
 	/**
 	 * 以据点位置模板创建运行时实例。
 	 * Creates a runtime instance from a base location template.
+	 *
 	 * @param baseLocation base location
 	 */
 	public Base(BL baseLocation) {
@@ -166,6 +168,7 @@ public class Base<BL extends BaseLocation> {
 	/**
 	 * 按据点 ID 广播袭击/术古相关系统消息。
 	 * Broadcasts assault/Shugo system messages by base id.
+	 *
 	 * @param id 据点 ID / base id
 	 * @return 是否匹配并发送消息 / whether a message was sent
 	 */
@@ -413,168 +416,168 @@ public class Base<BL extends BaseLocation> {
 					if (getBaseLocation().getId() == 53) {
 						if (race == Race.ASMODIANS) {
 							GameLocationBootstrapServices.abyssLandingService().updateRedemptionLanding(6000, LandingPointsEnum.BASE,
-									false);
+								false);
 							GameLocationBootstrapServices.abyssLandingService().updateHarbingerLanding(6000, LandingPointsEnum.BASE,
-									true);
+								true);
 						} else if (race == Race.ELYOS) {
 							GameLocationBootstrapServices.abyssLandingService().updateRedemptionLanding(6000, LandingPointsEnum.BASE,
-									true);
+								true);
 							GameLocationBootstrapServices.abyssLandingService().updateHarbingerLanding(6000, LandingPointsEnum.BASE,
-									false);
+								false);
 						}
 					}
 					// 碎雪前哨。 / Sliversleet Outpost.
 					if (getBaseLocation().getId() == 54) {
 						if (race == Race.ASMODIANS) {
 							GameLocationBootstrapServices.abyssLandingService().updateRedemptionLanding(6000, LandingPointsEnum.BASE,
-									false);
+								false);
 							GameLocationBootstrapServices.abyssLandingService().updateHarbingerLanding(6000, LandingPointsEnum.BASE,
-									true);
+								true);
 						} else if (race == Race.ELYOS) {
 							GameLocationBootstrapServices.abyssLandingService().updateRedemptionLanding(6000, LandingPointsEnum.BASE,
-									true);
+								true);
 							GameLocationBootstrapServices.abyssLandingService().updateHarbingerLanding(6000, LandingPointsEnum.BASE,
-									false);
+								false);
 						}
 					}
 					// 寒锻前哨。 / Coldforge Outpost.
 					if (getBaseLocation().getId() == 55) {
 						if (race == Race.ASMODIANS) {
 							GameLocationBootstrapServices.abyssLandingService().updateRedemptionLanding(6000, LandingPointsEnum.BASE,
-									false);
+								false);
 							GameLocationBootstrapServices.abyssLandingService().updateHarbingerLanding(6000, LandingPointsEnum.BASE,
-									true);
+								true);
 						} else if (race == Race.ELYOS) {
 							GameLocationBootstrapServices.abyssLandingService().updateRedemptionLanding(6000, LandingPointsEnum.BASE,
-									true);
+								true);
 							GameLocationBootstrapServices.abyssLandingService().updateHarbingerLanding(6000, LandingPointsEnum.BASE,
-									false);
+								false);
 						}
 					}
 					// 微光霜前哨。 / Shimmerfrost Outpost.
 					if (getBaseLocation().getId() == 56) {
 						if (race == Race.ASMODIANS) {
 							GameLocationBootstrapServices.abyssLandingService().updateRedemptionLanding(6000, LandingPointsEnum.BASE,
-									false);
+								false);
 							GameLocationBootstrapServices.abyssLandingService().updateHarbingerLanding(6000, LandingPointsEnum.BASE,
-									true);
+								true);
 						} else if (race == Race.ELYOS) {
 							GameLocationBootstrapServices.abyssLandingService().updateRedemptionLanding(6000, LandingPointsEnum.BASE,
-									true);
+								true);
 							GameLocationBootstrapServices.abyssLandingService().updateHarbingerLanding(6000, LandingPointsEnum.BASE,
-									false);
+								false);
 						}
 					}
 					// 冰嚎前哨。 / Icehowl Outpost.
 					if (getBaseLocation().getId() == 57) {
 						if (race == Race.ASMODIANS) {
 							GameLocationBootstrapServices.abyssLandingService().updateRedemptionLanding(6000, LandingPointsEnum.BASE,
-									false);
+								false);
 							GameLocationBootstrapServices.abyssLandingService().updateHarbingerLanding(6000, LandingPointsEnum.BASE,
-									true);
+								true);
 						} else if (race == Race.ELYOS) {
 							GameLocationBootstrapServices.abyssLandingService().updateRedemptionLanding(6000, LandingPointsEnum.BASE,
-									true);
+								true);
 							GameLocationBootstrapServices.abyssLandingService().updateHarbingerLanding(6000, LandingPointsEnum.BASE,
-									false);
+								false);
 						}
 					}
 					// 寒魂前哨。 / Chillhaunt Outpost.
 					if (getBaseLocation().getId() == 58) {
 						if (race == Race.ASMODIANS) {
 							GameLocationBootstrapServices.abyssLandingService().updateRedemptionLanding(6000, LandingPointsEnum.BASE,
-									false);
+								false);
 							GameLocationBootstrapServices.abyssLandingService().updateHarbingerLanding(6000, LandingPointsEnum.BASE,
-									true);
+								true);
 						} else if (race == Race.ELYOS) {
 							GameLocationBootstrapServices.abyssLandingService().updateRedemptionLanding(6000, LandingPointsEnum.BASE,
-									true);
+								true);
 							GameLocationBootstrapServices.abyssLandingService().updateHarbingerLanding(6000, LandingPointsEnum.BASE,
-									false);
+								false);
 						}
 					}
 					// 吞烟前哨。 / Sootguzzle Outpost.
 					if (getBaseLocation().getId() == 59) {
 						if (race == Race.ASMODIANS) {
 							GameLocationBootstrapServices.abyssLandingService().updateRedemptionLanding(6000, LandingPointsEnum.BASE,
-									false);
+								false);
 							GameLocationBootstrapServices.abyssLandingService().updateHarbingerLanding(6000, LandingPointsEnum.BASE,
-									true);
+								true);
 						} else if (race == Race.ELYOS) {
 							GameLocationBootstrapServices.abyssLandingService().updateRedemptionLanding(6000, LandingPointsEnum.BASE,
-									true);
+								true);
 							GameLocationBootstrapServices.abyssLandingService().updateHarbingerLanding(6000, LandingPointsEnum.BASE,
-									false);
+								false);
 						}
 					}
 					// 焰毁前哨。 / Flameruin Outpost.
 					if (getBaseLocation().getId() == 60) {
 						if (race == Race.ASMODIANS) {
 							GameLocationBootstrapServices.abyssLandingService().updateRedemptionLanding(6000, LandingPointsEnum.BASE,
-									false);
+								false);
 							GameLocationBootstrapServices.abyssLandingService().updateHarbingerLanding(6000, LandingPointsEnum.BASE,
-									true);
+								true);
 						} else if (race == Race.ELYOS) {
 							GameLocationBootstrapServices.abyssLandingService().updateRedemptionLanding(6000, LandingPointsEnum.BASE,
-									true);
+								true);
 							GameLocationBootstrapServices.abyssLandingService().updateHarbingerLanding(6000, LandingPointsEnum.BASE,
-									false);
+								false);
 						}
 					}
 					// 炉风前哨。 / Stokebellow Outpost.
 					if (getBaseLocation().getId() == 61) {
 						if (race == Race.ASMODIANS) {
 							GameLocationBootstrapServices.abyssLandingService().updateRedemptionLanding(6000, LandingPointsEnum.BASE,
-									false);
+								false);
 							GameLocationBootstrapServices.abyssLandingService().updateHarbingerLanding(6000, LandingPointsEnum.BASE,
-									true);
+								true);
 						} else if (race == Race.ELYOS) {
 							GameLocationBootstrapServices.abyssLandingService().updateRedemptionLanding(6000, LandingPointsEnum.BASE,
-									true);
+								true);
 							GameLocationBootstrapServices.abyssLandingService().updateHarbingerLanding(6000, LandingPointsEnum.BASE,
-									false);
+								false);
 						}
 					}
 					// 焰架前哨。 / Blazerack Outpost.
 					if (getBaseLocation().getId() == 62) {
 						if (race == Race.ASMODIANS) {
 							GameLocationBootstrapServices.abyssLandingService().updateRedemptionLanding(6000, LandingPointsEnum.BASE,
-									false);
+								false);
 							GameLocationBootstrapServices.abyssLandingService().updateHarbingerLanding(6000, LandingPointsEnum.BASE,
-									true);
+								true);
 						} else if (race == Race.ELYOS) {
 							GameLocationBootstrapServices.abyssLandingService().updateRedemptionLanding(6000, LandingPointsEnum.BASE,
-									true);
+								true);
 							GameLocationBootstrapServices.abyssLandingService().updateHarbingerLanding(6000, LandingPointsEnum.BASE,
-									false);
+								false);
 						}
 					}
 					// 闷燃幽灵前哨。 / Smoldergeist Outpost.
 					if (getBaseLocation().getId() == 63) {
 						if (race == Race.ASMODIANS) {
 							GameLocationBootstrapServices.abyssLandingService().updateRedemptionLanding(6000, LandingPointsEnum.BASE,
-									false);
+								false);
 							GameLocationBootstrapServices.abyssLandingService().updateHarbingerLanding(6000, LandingPointsEnum.BASE,
-									true);
+								true);
 						} else if (race == Race.ELYOS) {
 							GameLocationBootstrapServices.abyssLandingService().updateRedemptionLanding(6000, LandingPointsEnum.BASE,
-									true);
+								true);
 							GameLocationBootstrapServices.abyssLandingService().updateHarbingerLanding(6000, LandingPointsEnum.BASE,
-									false);
+								false);
 						}
 					}
 					// 熔刺前哨。 / Moltenspike Outpost.
 					if (getBaseLocation().getId() == 64) {
 						if (race == Race.ASMODIANS) {
 							GameLocationBootstrapServices.abyssLandingService().updateRedemptionLanding(6000, LandingPointsEnum.BASE,
-									false);
+								false);
 							GameLocationBootstrapServices.abyssLandingService().updateHarbingerLanding(6000, LandingPointsEnum.BASE,
-									true);
+								true);
 						} else if (race == Race.ELYOS) {
 							GameLocationBootstrapServices.abyssLandingService().updateRedemptionLanding(6000, LandingPointsEnum.BASE,
-									true);
+								true);
 							GameLocationBootstrapServices.abyssLandingService().updateHarbingerLanding(6000, LandingPointsEnum.BASE,
-									false);
+								false);
 						}
 					}
 				}
@@ -586,6 +589,7 @@ public class Base<BL extends BaseLocation> {
 	/**
 	 * 按指定阵营刷新袭击单位。
 	 * Spawns assault attackers for the given race.
+	 *
 	 * @param race 袭击阵营 / attacking race
 	 */
 	public void spawnAttackers(Race race) {
@@ -604,7 +608,7 @@ public class Base<BL extends BaseLocation> {
 					final BaseSpawnTemplate template = (BaseSpawnTemplate) spawn;
 					if (template.getBaseRace().equals(race)) {
 						if (template.getHandlerType() != null
-								&& template.getHandlerType().equals(SpawnHandlerType.SLAYER)) {
+							&& template.getHandlerType().equals(SpawnHandlerType.SLAYER)) {
 							Npc npc = (Npc) SpawnEngine.spawnObject(template, 1);
 							getAttackers().add(npc);
 						}
@@ -623,6 +627,7 @@ public class Base<BL extends BaseLocation> {
 	/**
 	 * 是否仍有存活的袭击单位。
 	 * Whether any assault attackers are still alive.
+	 *
 	 * @return 被袭击中为 true / true if under attack
 	 */
 	public boolean isAttacked() {
@@ -669,6 +674,7 @@ public class Base<BL extends BaseLocation> {
 	/**
 	 * 据点是否已结束。
 	 * Whether the base instance is finished.
+	 *
 	 * @return 已结束时为 {@code true} / {@code true} if finished
 	 */
 	public boolean isFinished() {
@@ -696,6 +702,7 @@ public class Base<BL extends BaseLocation> {
 	/**
 	 * 设置当前占领阵营。
 	 * Sets the current owning race.
+	 *
 	 * @param race 占领阵营 / owning race
 	 */
 	public void setRace(Race race) {

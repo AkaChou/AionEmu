@@ -20,9 +20,9 @@ import com.aionemu.gameserver.services.player.PlayerService;
 public class CM_DELETE_CHARACTER extends AionClientPacket {
 
 	/** PlayOk2未使用 / PlayOk2 (unused) */
+	/** PlayOk2未使用 / PlayOk2 (unused) */
 	@SuppressWarnings("unused")
 	private int playOk2;
-	/** 待删除角色的对象 ID / object id of character to delete */
 	private int chaOid;
 
 	/**

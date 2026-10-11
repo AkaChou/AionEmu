@@ -72,14 +72,18 @@ public class Stat extends AdminCommand {
 	 */
 	private String collectDetails(IStatFunction stat) {
 		StringBuilder sb = new StringBuilder();
-		sb.append(stat.toString() + "\n");
+		sb.append(stat.toString())
+			.append("\n");
 		if(stat instanceof StatFunctionProxy proxy){
-			sb.append(" -- " + proxy.getProxiedFunction().toString());
+			sb.append(" -- ")
+				.append(proxy.getProxiedFunction().toString());
 		}
 		StatOwner owner = stat.getOwner();
 		if(owner instanceof Effect effect){
-			sb.append("\n -- skillId: " + effect.getSkillId());
-			sb.append("\n -- skillName: " + effect.getSkillName());
+			sb.append("\n -- skillId: ")
+				.append(effect.getSkillId());
+			sb.append("\n -- skillName: ")
+				.append(effect.getSkillName());
 		}
 		return sb.toString();
 	}

@@ -34,7 +34,6 @@ public abstract class PlayerCreativityPointsDAO implements DAO {
 	 * @param paramInt1 玩家对象 ID / player object id
 	 * @param paramInt2 槽位或条目 ID / slot or entry id
 	 * @param paramInt3 点数值 / points value
-	 * @return 若成功则为 true / true if successful
 	 */
 	public abstract void storeCP(int paramInt1, int paramInt2, int paramInt3);
 
@@ -43,7 +42,6 @@ public abstract class PlayerCreativityPointsDAO implements DAO {
 	 * Deletes a creativity-points entry for the given slot.
 	 * @param playerObjId 玩家对象 ID / player object id
 	 * @param slot 槽位 / slot
-	 * @return 若成功则为 true / true if successful
 	 */
 	public abstract void deleteCP(int playerObjId, int slot);
 
@@ -55,10 +53,4 @@ public abstract class PlayerCreativityPointsDAO implements DAO {
 	 */
 	public abstract int getSlotSize(int playerId);
 
-	/**
-	 * 按对象 ID 获取创造点数槽位对象 ID。
-	 * Returns the creativity-points slot object id for the given object id.
-	 * @param obj 对象 ID / object id
-	 * @return 槽位对象 ID / slot object id
-	 */
 	}

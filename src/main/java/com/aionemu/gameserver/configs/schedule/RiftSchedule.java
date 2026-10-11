@@ -18,6 +18,7 @@ import lombok.Setter;
 /**
  * Rift 裂隙活动时间表配置。
  * Rift event schedule configuration.
+ *
  * @author Rinzler (Encom)
  */
 @Setter
@@ -28,24 +29,31 @@ public class RiftSchedule {
 	/**
 	 * Rift 列表。
 	 * List of rifts.
-     * -- GETTER --
-     *  获取 Rift 列表。
-     *  Returns the rift list.
+	 * -- GETTER --
+	 * 获取 Rift 列表。
+	 * Returns the rift list.
 	 * -- SETTER --
-	 *  设置 Rift 列表。
-	 *  Sets the rift list.
+	 * 设置 Rift 列表。
+	 * Sets the rift list.
 	 */
 	@XmlElement(name = "rift", required = true)
 	private List<Rift> riftsList;
 
 	/**
-	 * 从 XML 加载时间表。
-	 * Loads the schedule from XML.
+	 * 从 XML 加载时间表：外部运行时文件（{@code aion/config/schedule/rift_schedule.xml}）优先，
+	 * 缺失时回退到 classpath 内打包资源，保证全新检出无需部署脚本即可自测；部署环境行为不变（外部文件仍优先）。
+	 * Loads the schedule from XML. The external runtime file ({@code aion/config/schedule/rift_schedule.xml})
+	 * wins; when absent the packaged classpath resource is used so a fresh checkout can self-test without the
+	 * deploy script. Deployed behavior is unchanged (external file still wins).
 	 */
 	public static RiftSchedule load() {
 		RiftSchedule rs;
 		try {
-			String xml = Files.readString(Config.configFile("schedule/rift_schedule.xml").toPath(), StandardCharsets.UTF_8);
+			var external = Config.configFile("schedule/rift_schedule.xml").toPath();
+			String xml = Files.isRegularFile(external)
+				? Files.readString(external, StandardCharsets.UTF_8)
+				: new String(RiftSchedule.class.getResourceAsStream("/aion/config/schedule/rift_schedule.xml")
+				.readAllBytes(), StandardCharsets.UTF_8);
 			rs = JAXBUtil.deserialize(xml, RiftSchedule.class);
 		} catch (Exception e) {
 			throw new RuntimeException("Failed to initialize rifts", e);
@@ -71,8 +79,8 @@ public class RiftSchedule {
 		 * 开启时间列表。
 		 * List of open times.
 		 * -- SETTER --
-		 *  设置开启时间列表。
-		 *  Sets the open times.
+		 * 设置开启时间列表。
+		 * Sets the open times.
 		 */
 		@Setter
 		@XmlElement(name = "openTime", required = true)

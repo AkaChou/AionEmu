@@ -4,6 +4,7 @@ import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.RespawnSupport;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 
 /**
@@ -39,15 +40,13 @@ public class FixH extends AdminCommand {
 				byte heading = admin.getHeading();
 				if (heading > 60) {
 					heading -= 60;
-				}
-				else {
+				} else {
 					heading += 60;
 				}
 
 				RespawnSupport.respawnNpc(admin, target, temp.getX(), temp.getY(), temp.getZ(), heading, "FixH");
 			}
-		}
-		else {
+		} else {
 			PacketSendUtility.sendMessage(admin, "Only in target!");
 		}
 	}

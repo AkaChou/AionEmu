@@ -25,12 +25,18 @@ import lombok.Getter;
 
 @Getter
 public abstract class CreatureLifeStats<T extends Creature> {
-	/** 返回当前生命 / Returns the current hp */
+	/**
+	 * 返回当前生命 / Returns the current hp
+	 */
 	protected int currentHp;
-	/** 返回当前魔法 / Returns the current mp */
+	/**
+	 * 返回当前魔法 / Returns the current mp
+	 */
 	protected int currentMp;
 	protected boolean alreadyDead = false;
-	/** 返回所有者 / Returns the owner*/
+	/**
+	 * 返回所有者 / Returns the owner
+	 */
 	protected T owner;
 	/**
 	 * 单一生命状态互斥量。
@@ -59,17 +65,23 @@ public abstract class CreatureLifeStats<T extends Creature> {
 		this.currentMp = currentMp;
 	}
 
-	/** 返回最大生命 / Returns the max hp*/
+	/**
+	 * 返回最大生命 / Returns the max hp
+	 */
 	public int getMaxHp() {
 		return this.getOwner().getGameStats().getMaxHp().getCurrent();
 	}
 
-	/** 返回最大魔法 / Returns the max mp*/
+	/**
+	 * 返回最大魔法 / Returns the max mp
+	 */
 	public int getMaxMp() {
 		return this.getOwner().getGameStats().getMaxMp().getCurrent();
 	}
 
-	/** Reduce Hp / Reduce Hp */
+	/**
+	 * Reduce Hp / Reduce Hp
+	 */
 	public int reduceHp(int value, Creature attacker) {
 		if (attacker == null) {
 			throw new IllegalArgumentException("attacker");
@@ -111,7 +123,8 @@ public abstract class CreatureLifeStats<T extends Creature> {
 	 * <p>The default behaves exactly like {@link #reduceHp(int, Creature)} and sends no synchronization: the
 	 * player-side notice stays owned by {@link #onReduceHp()} to avoid a double packet, while subclasses may
 	 * override it to synchronize the change to clients.</p>
-	 * @param value 扣除量 / amount to reduce
+	 *
+	 * @param value    扣除量 / amount to reduce
 	 * @param attacker 归因来源 / source of the reduction
 	 * @return 变化后的生命值 / the resulting HP
 	 */
@@ -119,7 +132,9 @@ public abstract class CreatureLifeStats<T extends Creature> {
 		return reduceHp(value, attacker);
 	}
 
-	/** Reduce Mp / Reduce Mp */
+	/**
+	 * Reduce Mp / Reduce Mp
+	 */
 	public int reduceMp(int value) {
 		boolean mpChanged;
 		mpLock.lock();
@@ -150,12 +165,16 @@ public abstract class CreatureLifeStats<T extends Creature> {
 		PacketSendUtility.broadcastPacketAndReceive(owner, new SM_ATTACK_STATUS(owner, owner, type, skillId, value, log));
 	}
 
-	/** 增加生命值。 / Increase hp. */
+	/**
+	 * 增加生命值。 / Increase hp.
+	 */
 	public int increaseHp(TYPE type, int value) {
 		return this.increaseHp(type, value, 0, LOG.REGULAR);
 	}
 
-	/** 增加生命值。 / Increase hp. */
+	/**
+	 * 增加生命值。 / Increase hp.
+	 */
 	public int increaseHp(TYPE type, int value, int skillId, LOG log) {
 		boolean hpIncreased = false;
 		if (this.getOwner().getEffectController().isAbnormalSet(AbnormalState.DISEASE)) {
@@ -184,12 +203,16 @@ public abstract class CreatureLifeStats<T extends Creature> {
 		return currentHp;
 	}
 
-	/** 增加魔法值。 / Increase mp. */
+	/**
+	 * 增加魔法值。 / Increase mp.
+	 */
 	public int increaseMp(TYPE type, int value) {
 		return this.increaseMp(type, value, 0, LOG.REGULAR);
 	}
 
-	/** 增加魔法值。 / Increase mp. */
+	/**
+	 * 增加魔法值。 / Increase mp.
+	 */
 	public int increaseMp(TYPE type, int value, int skillId, LOG log) {
 		boolean mpIncreased = false;
 		mpLock.lock();
@@ -215,17 +238,23 @@ public abstract class CreatureLifeStats<T extends Creature> {
 		return currentMp;
 	}
 
-	/** Restore Hp / Restore Hp */
+	/**
+	 * Restore Hp / Restore Hp
+	 */
 	public final void restoreHp() {
 		increaseHp(TYPE.NATURAL_HP, getOwner().getGameStats().getHpRegenRate().getCurrent());
 	}
 
-	/** Restore Mp / Restore Mp */
+	/**
+	 * Restore Mp / Restore Mp
+	 */
 	public final void restoreMp() {
 		increaseMp(TYPE.NATURAL_MP, getOwner().getGameStats().getMpRegenRate().getCurrent());
 	}
 
-	/** 触发恢复任务 / Trigger restore task */
+	/**
+	 * 触发恢复任务 / Trigger restore task
+	 */
 	public void triggerRestoreTask() {
 		restoreLock.lock();
 		try {
@@ -237,7 +266,9 @@ public abstract class CreatureLifeStats<T extends Creature> {
 		}
 	}
 
-	/** 取消 restore task / Cancel restore task */
+	/**
+	 * 取消 restore task / Cancel restore task
+	 */
 	public void cancelRestoreTask() {
 		restoreLock.lock();
 		try {
@@ -271,7 +302,9 @@ public abstract class CreatureLifeStats<T extends Creature> {
 		return getMaxMp() == currentMp;
 	}
 
-	/** SynchronizeWith 最大 Stats / Synchronize With Max Stats */
+	/**
+	 * SynchronizeWith 最大 Stats / Synchronize With Max Stats
+	 */
 	public void synchronizeWithMaxStats() {
 		int maxHp = getMaxHp();
 		if (currentHp != maxHp) {
@@ -283,7 +316,9 @@ public abstract class CreatureLifeStats<T extends Creature> {
 		}
 	}
 
-	/** 更新 current stats / Update current stats */
+	/**
+	 * 更新 current stats / Update current stats
+	 */
 	public void updateCurrentStats() {
 		int maxHp = getMaxHp();
 		if (maxHp < currentHp) {
@@ -309,7 +344,9 @@ public abstract class CreatureLifeStats<T extends Creature> {
 		}
 	}
 
-	/** 返回 mp percentage / Returns the mp percentage */
+	/**
+	 * 返回 mp percentage / Returns the mp percentage
+	 */
 	public int getMpPercentage() {
 		return (int) (100f * currentMp / getMaxMp());
 	}
@@ -322,27 +359,37 @@ public abstract class CreatureLifeStats<T extends Creature> {
 
 	protected abstract void onReduceHp();
 
-	/** 增加飞行值。 / Increase fp. */
+	/**
+	 * 增加飞行值。 / Increase fp.
+	 */
 	public int increaseFp(TYPE type, int value) {
 		return 0;
 	}
 
-	/** 返回最大飞行点 / Returns the max fp*/
+	/**
+	 * 返回最大飞行点 / Returns the max fp
+	 */
 	public int getMaxFp() {
 		return 0;
 	}
 
-	/** 返回当前飞行点 / Returns the current fp */
+	/**
+	 * 返回当前飞行点 / Returns the current fp
+	 */
 	public int getCurrentFp() {
 		return 0;
 	}
 
-	/** 取消 all tasks / Cancel all tasks */
+	/**
+	 * 取消 all tasks / Cancel all tasks
+	 */
 	public void cancelAllTasks() {
 		cancelRestoreTask();
 	}
 
-	/** 设置 current hp percent / Sets the current hp percent */
+	/**
+	 * 设置 current hp percent / Sets the current hp percent
+	 */
 	public void setCurrentHpPercent(int hpPercent) {
 		hpLock.lock();
 		try {
@@ -356,7 +403,9 @@ public abstract class CreatureLifeStats<T extends Creature> {
 		}
 	}
 
-	/** 设置 current hp / Sets the current hp */
+	/**
+	 * 设置 current hp / Sets the current hp
+	 */
 	public void setCurrentHp(int hp) {
 		boolean hpNotAtMaxValue = false;
 		hpLock.lock();
@@ -386,13 +435,16 @@ public abstract class CreatureLifeStats<T extends Creature> {
 	 * subclasses may override it with a silent rescale. NPCs are that case: the rescale preserves the
 	 * client-visible percentage (the new value is the old value times the new cap over the old cap, so
 	 * dividing by the new cap yields the same percentage), and therefore needs no network synchronization.</p>
+	 *
 	 * @param hp 重算后的生命值 / rescaled HP value
 	 */
 	public void rescaleCurrentHp(int hp) {
 		setCurrentHp(hp);
 	}
 
-	/** 设置 current mp / Sets the current mp */
+	/**
+	 * 设置 current mp / Sets the current mp
+	 */
 	public int setCurrentMp(int value) {
 		mpLock.lock();
 		try {
@@ -408,7 +460,9 @@ public abstract class CreatureLifeStats<T extends Creature> {
 		return currentMp;
 	}
 
-	/** 设置 current mp percent / Sets the current mp percent */
+	/**
+	 * 设置 current mp percent / Sets the current mp percent
+	 */
 	public void setCurrentMpPercent(int mpPercent) {
 		mpLock.lock();
 		try {

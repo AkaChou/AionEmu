@@ -10,7 +10,6 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
-import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.simple.JdbcClient;
 
 import com.aionemu.boot.i18n.I18n;

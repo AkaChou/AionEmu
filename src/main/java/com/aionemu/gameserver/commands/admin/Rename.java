@@ -17,11 +17,11 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.Util;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 
-import java.util.Iterator;
 
 /**
  * 角色改名指令；校验名称后重命名目标或指定玩家，并同步好友与军团。
  * Admin command that renames a targeted or named player after validation, syncing friends and legion.
+ *
  * @author xTz
  */
 public class Rename extends AdminCommand {
@@ -33,6 +33,7 @@ public class Rename extends AdminCommand {
 	/**
 	 * 执行该管理指令。
 	 * Executes this admin command.
+	 *
 	 * @param admin 执行指令的管理员 / admin executing the command
 	 */
 	@Override
@@ -71,8 +72,7 @@ public class Rename extends AdminCommand {
 				PacketSendUtility.sendPacket(player, new SM_PLAYER_INFO(player, false));
 				PacketSendUtility.sendPacket(player, new SM_MOTION(player.getObjectId(), player.getMotions().getActiveMotions()));
 				sendPacket(admin, player, rename, recipient);
-			}
-			else
+			} else
 				PacketSendUtility.sendMessage(admin, "Player " + recipient + " has been renamed to " + rename);
 		}
 		if (params.length == 1) {
@@ -94,8 +94,7 @@ public class Rename extends AdminCommand {
 				player.getCommonData().setName(rename);
 				PacketSendUtility.sendPacket(player, new SM_PLAYER_INFO(player, false));
 				PlayerService.daos().playerDAO().storePlayerName(player.getCommonData());
-			}
-			else
+			} else
 				PacketSendUtility.sendMessage(admin, "The command can be applied only on the player.");
 
 			recipient = target.getName();
@@ -122,7 +121,8 @@ public class Rename extends AdminCommand {
 	/**
 	 * 向好友、军团与双方发送改名后的信息同步包。
 	 * Broadcasts post-rename info packets to friends, legion and both players.
-	 * @param admin 执行改名的管理员 / admin who performed the rename
+	 *
+	 * @param admin  执行改名的管理员 / admin who performed the rename
 	 * @param player 被改名的玩家 / renamed player
 	 */
 	public void sendPacket(Player admin, Player player, String rename, String recipient) {
@@ -143,13 +143,14 @@ public class Rename extends AdminCommand {
 	/**
 	 * 参数错误时输出用法。
 	 * Prints usage when arguments are invalid.
+	 *
 	 * @param player 接收提示的玩家 / player receiving the message
 	 */
 	@Override
 	public void onFail(Player player, String message) {
 		PacketSendUtility.sendMessage(player, """
-                No parameters detected.
-                Please use //rename <Player name> <rename>
-                or use //rename [target] <rename>""");
+			No parameters detected.
+			Please use //rename <Player name> <rename>
+			or use //rename [target] <rename>""");
 	}
 }

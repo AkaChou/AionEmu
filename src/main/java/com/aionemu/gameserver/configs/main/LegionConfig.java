@@ -9,6 +9,7 @@ import com.aionemu.commons.configuration.Property;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import com.aionemu.boot.i18n.I18n;
 
 /**
  * 军团创建、升级、仓库与邀请相关配置，支持 Spring Boot ConfigurationProperties 与静态门面访问。
@@ -302,7 +303,9 @@ public class LegionConfig {
 	@Property(key = "gameserver.legion.warehouse.level8.slots", defaultValue = "80")
 	public static int LWH_LEVEL8_SLOTS;
 
-	/** 军团绑定树 / legion binding tree. */
+	/**
+	 * 军团绑定树 / legion binding tree.
+	 */
 	@Getter
 	private final LegionProperties legion = new LegionProperties();
 
@@ -342,7 +345,7 @@ public class LegionConfig {
 			try {
 				LEGION_NAME_PATTERN = Pattern.compile(pattern);
 			} catch (RuntimeException ex) {
-				log.warn("Invalid gameserver.legion.pattern value: {}", pattern, ex);
+				log.warn(I18n.get("log.a3f757c1aaab", pattern), ex);
 			}
 		}
 
@@ -385,7 +388,7 @@ public class LegionConfig {
 			try {
 				SELF_INTRO_PATTERN = Pattern.compile(pattern);
 			} catch (RuntimeException ex) {
-				log.warn("Invalid gameserver.legion.self.intro.pattern value: {}", pattern, ex);
+				log.warn(I18n.get("log.b12ca770b287", pattern), ex);
 			}
 		}
 	}
@@ -413,7 +416,7 @@ public class LegionConfig {
 			try {
 				NICKNAME_PATTERN = Pattern.compile(pattern);
 			} catch (RuntimeException ex) {
-				log.warn("Invalid gameserver.legion.nick.name.pattern value: {}", pattern, ex);
+				log.warn(I18n.get("log.7a0dd9fc7a75", pattern), ex);
 			}
 		}
 	}
@@ -431,7 +434,7 @@ public class LegionConfig {
 			try {
 				ANNOUNCEMENT_PATTERN = Pattern.compile(pattern);
 			} catch (RuntimeException ex) {
-				log.warn("Invalid gameserver.legion.announcement.pattern value: {}", pattern, ex);
+				log.warn(I18n.get("log.7b3550049281", pattern), ex);
 			}
 		}
 	}

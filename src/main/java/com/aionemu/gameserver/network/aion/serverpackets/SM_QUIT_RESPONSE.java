@@ -14,7 +14,10 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class SM_QUIT_RESPONSE extends AionServerPacket {
 
+	// Lombok @AllArgsConstructor 依赖本字段生成构造器，禁止降级为局部变量（否则与 @NoArgsConstructor 重复）。
+	// Lombok @AllArgsConstructor needs this field for its generated constructor; never demote it to a local.
 	private boolean edit_mode = false;
+
 
 	/**
 	 * {@inheritDoc}

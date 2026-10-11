@@ -38,14 +38,19 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 永恒之塔服务，管理塔地点开关、刷怪与旗帜同步。
  * Tower of Eternity service managing tower open/close, spawns, and flag sync.
+ *
  * @author Wnkrz
  */
 @Slf4j
 
 public class TowerOfEternityService {
-	/** 天族永恒之塔世界（阿斯泰拉 / Iluma）。 / Elyos Tower of Eternity world (Iluma). */
+	/**
+	 * 天族永恒之塔世界（阿斯泰拉 / Iluma）。 / Elyos Tower of Eternity world (Iluma).
+	 */
 	private static final int ELYOS_TOWER_WORLD = 210100000;
-	/** 魔族永恒之塔世界（诺斯珀德 / Norsvold）。 / Asmodian Tower of Eternity world (Norsvold). */
+	/**
+	 * 魔族永恒之塔世界（诺斯珀德 / Norsvold）。 / Asmodian Tower of Eternity world (Norsvold).
+	 */
 	private static final int ASMODIAN_TOWER_WORLD = 220110000;
 
 	private static volatile ObjectProvider<TowerOfEternityService> instanceProvider;
@@ -99,7 +104,8 @@ public class TowerOfEternityService {
 	/**
 	 * 按状态在地点刷出对应 NPC 并广播旗帜更新。
 	 * Spawns NPCs for the location by state and broadcasts flag updates.
-	 * @param loc location
+	 *
+	 * @param loc    location
 	 * @param tstate state type
 	 */
 	public void spawn(TowerOfEternityLocation loc, TowerOfEternityStateType tstate) {
@@ -118,6 +124,7 @@ public class TowerOfEternityService {
 	/**
 	 * 清除地点已刷出的 NPC 并广播旗帜消失。
 	 * Despawns NPCs at the location and broadcasts flag despawn.
+	 *
 	 * @param loc location
 	 */
 	public void despawn(TowerOfEternityLocation loc) {
@@ -140,6 +147,7 @@ public class TowerOfEternityService {
 	 * 在指定世界随机开启一个入口，并在开启前关闭该世界已开放的地点。
 	 * Opens a random entrance of the given world and closes the entrance that is currently open in the
 	 * same world, so a world never exposes more than one tower entrance.
+	 *
 	 * @param worldId 世界 ID / world id
 	 * @return 已开启的地点 ID；无地点数据时为 -1 / opened location id, or -1 when no location exists
 	 */
@@ -167,6 +175,7 @@ public class TowerOfEternityService {
 	/**
 	 * 关闭指定世界当前开放的永恒之塔（若存在）。
 	 * Closes the tower that is currently open in the given world, if any.
+	 *
 	 * @param worldId 世界 ID / world id
 	 */
 	private void closeActiveTowerOfWorld(int worldId) {
@@ -181,6 +190,7 @@ public class TowerOfEternityService {
 	/**
 	 * 启动指定 ID 的永恒之塔活动，并按持续时间挂载关闭计时器。
 	 * Starts the Tower of Eternity event for the given id and arms the duration timer that closes it.
+	 *
 	 * @param id 地点 ID / location id
 	 */
 	public void startTowerOfEternity(final int id) {
@@ -198,12 +208,13 @@ public class TowerOfEternityService {
 		}
 	}
 
-	
+
 	/**
 	 * 仅当指定实例仍注册在该地点时才停止，避免持续时间计时器误停同 ID 的新实例。
 	 * Stops only when the expected instance is still registered for the location, so a duration timer
 	 * cannot close a newer instance that reuses the same location id.
-	 * @param id 地点 ID / location id
+	 *
+	 * @param id       地点 ID / location id
 	 * @param expected 计时器所属的实例 / instance that owns the timer
 	 * @return 是否停止 / whether the instance was stopped
 	 */
@@ -222,8 +233,9 @@ public class TowerOfEternityService {
 	/**
 	 * 判断指定塔是否处于活动状态。
 	 * Checks whether the tower with the given id is active.
+	 *
 	 * @param id 地点 ID / location id
-	 * whether active
+	 *           whether active
 	 */
 	public boolean isActive(int id) {
 		return activeTowerOfEternity.containsKey(id);
@@ -232,8 +244,9 @@ public class TowerOfEternityService {
 	/**
 	 * 获取指定 ID 的活动塔实例。
 	 * Returns the active tower instance for the given id.
+	 *
 	 * @param id 地点 ID / location id
-	 * tower instance
+	 *           tower instance
 	 */
 	public TowerOfEternity<?> getActiveTower(int id) {
 		return activeTowerOfEternity.get(id);
@@ -242,103 +255,103 @@ public class TowerOfEternityService {
 	/**
 	 * 玩家进入永恒之塔相关世界时同步旗帜信息。
 	 * Syncs flag info when a player enters a tower-related world.
+	 *
 	 * @param player 玩家 / player
 	 */
 	public void onEnterTowerWorld(Player player) {
 		if (((player.getWorldId() == 210100000) && (player.getRace() == Race.ELYOS))
-				|| ((player.getWorldId() == 220110000) && (player.getRace() == Race.ELYOS))
-				|| ((player.getWorldId() == 210100000) && (player.getRace() == Race.ASMODIANS))
-				|| ((player.getWorldId() == 220110000) && (player.getRace() == Race.ASMODIANS))) {
+			|| ((player.getWorldId() == 220110000) && (player.getRace() == Race.ELYOS))
+			|| ((player.getWorldId() == 210100000) && (player.getRace() == Race.ASMODIANS))
+			|| ((player.getWorldId() == 220110000) && (player.getRace() == Race.ASMODIANS))) {
 			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(player.getWorldId()).getMainWorldMapInstance()
-					.doOnAllPlayers(player1 -> {
-						for (VisibleObject npc : com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getNpcs()) {
-							if ((npc.getObjectTemplate().getTemplateId() == 833765) && (npc.isSpawned())) {
-								if ((player1.getWorldId() == 210100000) && (player1.getRace() == Race.ELYOS)) {
-									PacketSendUtility.sendPacket(player1, new SM_FLAG_INFO(1, (Npc) npc));
-								}
-							}
-							if ((npc.getObjectTemplate().getTemplateId() == 703146) && (npc.isSpawned())) {
-								if ((player1.getWorldId() == 220110000) && (player1.getRace() == Race.ELYOS)) {
-									PacketSendUtility.sendPacket(player1, new SM_FLAG_INFO(1, (Npc) npc));
-								}
-							}
-							if ((npc.getObjectTemplate().getTemplateId() == 833765) && (npc.isSpawned())) {
-								if ((player1.getWorldId() == 210100000) && (player1.getRace() == Race.ASMODIANS)) {
-									PacketSendUtility.sendPacket(player1, new SM_FLAG_INFO(1, (Npc) npc));
-								}
-							}
-							if ((npc.getObjectTemplate().getTemplateId() == 703146) && (npc.isSpawned())) {
-								if ((player1.getWorldId() == 220110000) && (player1.getRace() == Race.ASMODIANS)) {
-									PacketSendUtility.sendPacket(player1, new SM_FLAG_INFO(1, (Npc) npc));
-								}
+				.doOnAllPlayers(player1 -> {
+					for (VisibleObject npc : com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getNpcs()) {
+						if ((npc.getObjectTemplate().getTemplateId() == 833765) && (npc.isSpawned())) {
+							if ((player1.getWorldId() == 210100000) && (player1.getRace() == Race.ELYOS)) {
+								PacketSendUtility.sendPacket(player1, new SM_FLAG_INFO(1, (Npc) npc));
 							}
 						}
-					});
+						if ((npc.getObjectTemplate().getTemplateId() == 703146) && (npc.isSpawned())) {
+							if ((player1.getWorldId() == 220110000) && (player1.getRace() == Race.ELYOS)) {
+								PacketSendUtility.sendPacket(player1, new SM_FLAG_INFO(1, (Npc) npc));
+							}
+						}
+						if ((npc.getObjectTemplate().getTemplateId() == 833765) && (npc.isSpawned())) {
+							if ((player1.getWorldId() == 210100000) && (player1.getRace() == Race.ASMODIANS)) {
+								PacketSendUtility.sendPacket(player1, new SM_FLAG_INFO(1, (Npc) npc));
+							}
+						}
+						if ((npc.getObjectTemplate().getTemplateId() == 703146) && (npc.isSpawned())) {
+							if ((player1.getWorldId() == 220110000) && (player1.getRace() == Race.ASMODIANS)) {
+								PacketSendUtility.sendPacket(player1, new SM_FLAG_INFO(1, (Npc) npc));
+							}
+						}
+					}
+				});
 		}
 	}
 
 	private void broadcastUpdate(final TowerOfEternityLocation tower) {
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(tower.getWorldId()).getMainWorldMapInstance()
-				.doOnAllPlayers(player -> {
-					for (VisibleObject npc : com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getNpcs()) {
-						if ((npc.getObjectTemplate().getTemplateId() == 833765) && (npc.isSpawned())) {
-							if ((player.getWorldId() == 210100000) && (player.getRace() == Race.ELYOS)) {
-								PacketSendUtility.sendPacket(player, new SM_FLAG_INFO(1, (Npc) npc));
-							}
-						}
-						if ((npc.getObjectTemplate().getTemplateId() == 703146) && (npc.isSpawned())) {
-							if ((player.getWorldId() == 220110000) && (player.getRace() == Race.ELYOS)) {
-								PacketSendUtility.sendPacket(player, new SM_FLAG_INFO(1, (Npc) npc));
-							}
-						}
-						if ((npc.getObjectTemplate().getTemplateId() == 833765) && (npc.isSpawned())) {
-							if ((player.getWorldId() == 210100000) && (player.getRace() == Race.ASMODIANS)) {
-								PacketSendUtility.sendPacket(player, new SM_FLAG_INFO(1, (Npc) npc));
-							}
-						}
-						if ((npc.getObjectTemplate().getTemplateId() == 703146) && (npc.isSpawned())) {
-							if ((player.getWorldId() == 220110000) && (player.getRace() == Race.ASMODIANS)) {
-								PacketSendUtility.sendPacket(player, new SM_FLAG_INFO(1, (Npc) npc));
-							}
+			.doOnAllPlayers(player -> {
+				for (VisibleObject npc : com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getNpcs()) {
+					if ((npc.getObjectTemplate().getTemplateId() == 833765) && (npc.isSpawned())) {
+						if ((player.getWorldId() == 210100000) && (player.getRace() == Race.ELYOS)) {
+							PacketSendUtility.sendPacket(player, new SM_FLAG_INFO(1, (Npc) npc));
 						}
 					}
-				});
+					if ((npc.getObjectTemplate().getTemplateId() == 703146) && (npc.isSpawned())) {
+						if ((player.getWorldId() == 220110000) && (player.getRace() == Race.ELYOS)) {
+							PacketSendUtility.sendPacket(player, new SM_FLAG_INFO(1, (Npc) npc));
+						}
+					}
+					if ((npc.getObjectTemplate().getTemplateId() == 833765) && (npc.isSpawned())) {
+						if ((player.getWorldId() == 210100000) && (player.getRace() == Race.ASMODIANS)) {
+							PacketSendUtility.sendPacket(player, new SM_FLAG_INFO(1, (Npc) npc));
+						}
+					}
+					if ((npc.getObjectTemplate().getTemplateId() == 703146) && (npc.isSpawned())) {
+						if ((player.getWorldId() == 220110000) && (player.getRace() == Race.ASMODIANS)) {
+							PacketSendUtility.sendPacket(player, new SM_FLAG_INFO(1, (Npc) npc));
+						}
+					}
+				}
+			});
 	}
 
 	private void broadcastDespawn(final TowerOfEternityLocation tower) {
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(tower.getWorldId()).getMainWorldMapInstance()
-				.doOnAllPlayers(player -> {
-					for (VisibleObject npc : com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getNpcs()) {
-						if ((npc.getObjectTemplate().getTemplateId() == 833765) && (npc.isSpawned())) {
-							if ((player.getWorldId() == 210100000) && (player.getRace() == Race.ELYOS)) {
-								PacketSendUtility.sendPacket(player, new SM_FLAG_UPDATE((Npc) npc));
-							}
-						}
-						if ((npc.getObjectTemplate().getTemplateId() == 703146) && (npc.isSpawned())) {
-							if ((player.getWorldId() == 220110000) && (player.getRace() == Race.ELYOS)) {
-								PacketSendUtility.sendPacket(player, new SM_FLAG_UPDATE((Npc) npc));
-							}
-						}
-						if ((npc.getObjectTemplate().getTemplateId() == 833765) && (npc.isSpawned())) {
-							if ((player.getWorldId() == 210100000) && (player.getRace() == Race.ASMODIANS)) {
-								PacketSendUtility.sendPacket(player, new SM_FLAG_UPDATE((Npc) npc));
-							}
-						}
-						if ((npc.getObjectTemplate().getTemplateId() == 703146) && (npc.isSpawned())) {
-							if ((player.getWorldId() == 220110000) && (player.getRace() == Race.ASMODIANS)) {
-								PacketSendUtility.sendPacket(player, new SM_FLAG_UPDATE((Npc) npc));
-							}
+			.doOnAllPlayers(player -> {
+				for (VisibleObject npc : com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getNpcs()) {
+					if ((npc.getObjectTemplate().getTemplateId() == 833765) && (npc.isSpawned())) {
+						if ((player.getWorldId() == 210100000) && (player.getRace() == Race.ELYOS)) {
+							PacketSendUtility.sendPacket(player, new SM_FLAG_UPDATE((Npc) npc));
 						}
 					}
-				});
+					if ((npc.getObjectTemplate().getTemplateId() == 703146) && (npc.isSpawned())) {
+						if ((player.getWorldId() == 220110000) && (player.getRace() == Race.ELYOS)) {
+							PacketSendUtility.sendPacket(player, new SM_FLAG_UPDATE((Npc) npc));
+						}
+					}
+					if ((npc.getObjectTemplate().getTemplateId() == 833765) && (npc.isSpawned())) {
+						if ((player.getWorldId() == 210100000) && (player.getRace() == Race.ASMODIANS)) {
+							PacketSendUtility.sendPacket(player, new SM_FLAG_UPDATE((Npc) npc));
+						}
+					}
+					if ((npc.getObjectTemplate().getTemplateId() == 703146) && (npc.isSpawned())) {
+						if ((player.getWorldId() == 220110000) && (player.getRace() == Race.ASMODIANS)) {
+							PacketSendUtility.sendPacket(player, new SM_FLAG_UPDATE((Npc) npc));
+						}
+					}
+				}
+			});
 	}
 
-	
-	
-	
+
 	/**
 	 * 获取活动持续时长（小时）。
 	 * Returns the event duration in hours.
+	 *
 	 * @return 持续小时数 / duration hours
 	 */
 	public int getDuration() {
@@ -348,8 +361,9 @@ public class TowerOfEternityService {
 	/**
 	 * 按 ID 获取永恒之塔地点。
 	 * Returns the tower location by id.
+	 *
 	 * @param id 地点 ID / location id
-	 * location
+	 *           location
 	 */
 	public TowerOfEternityLocation getTowerOfEternityLocation(int id) {
 		return towerOfEternity.get(id);
@@ -380,6 +394,7 @@ public class TowerOfEternityService {
 	/**
 	 * 注入 Spring 的实例提供者。
 	 * Sets the Spring instance provider.
+	 *
 	 * @param instanceProvider 实例提供者 / instance provider
 	 */
 	public static void setInstanceProvider(ObjectProvider<TowerOfEternityService> instanceProvider) {

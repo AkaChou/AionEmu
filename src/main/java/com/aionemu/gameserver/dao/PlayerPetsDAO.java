@@ -78,7 +78,6 @@ public abstract class PlayerPetsDAO implements DAO {
 	 * 保存宠物心情数据。
 	 * Saves pet mood data.
 	 * @param petCommonData 宠物公共数据 / pet common data
-	 * @return 若成功则为 true / true if successful
 	 */
 	public abstract void savePetMoodData(PetCommonData petCommonData);
 

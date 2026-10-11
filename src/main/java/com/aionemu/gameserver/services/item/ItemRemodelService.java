@@ -23,8 +23,9 @@ public class ItemRemodelService {
 	/**
 	 * 幻化物品。
 	 * Remodels an item appearance.
-	 * @param player 玩家 / player
-	 * @param keepItemObjId 保留物品对象 ID / keepItemObjId
+	 *
+	 * @param player           玩家 / player
+	 * @param keepItemObjId    保留物品对象 ID / keepItemObjId
 	 * @param extractItemObjId 提取物品对象 ID / extractItemObjId
 	 */
 	public static void remodelItem(Player player, int keepItemObjId, int extractItemObjId) {
@@ -46,7 +47,7 @@ public class ItemRemodelService {
 		}
 		if (player.getInventory().getKinah() < remodelKinah) {
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE
-					.STR_CHANGE_ITEM_SKIN_NOT_ENOUGH_GOLD(new DescriptionId(keepItem.getItemTemplate().getNameId())));
+				.STR_CHANGE_ITEM_SKIN_NOT_ENOUGH_GOLD(new DescriptionId(keepItem.getItemTemplate().getNameId())));
 			return;
 		}
 		if (extractItem == null) {
@@ -63,24 +64,24 @@ public class ItemRemodelService {
 			}
 			ItemPacketService.updateItemAfterInfoChange(player, keepItem);
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE
-					.STR_CHANGE_ITEM_SKIN_SUCCEED(new DescriptionId(keepItem.getItemTemplate().getNameId())));
+				.STR_CHANGE_ITEM_SKIN_SUCCEED(new DescriptionId(keepItem.getItemTemplate().getNameId())));
 			return;
 		}
 		if ((keepItem.getItemTemplate().getWeaponType() != extractItem.getItemSkinTemplate().getWeaponType())) {
 			PacketSendUtility.sendPacket(player,
-					SM_SYSTEM_MESSAGE.STR_CHANGE_ITEM_SKIN_NOT_COMPATIBLE(
-							new DescriptionId(keepItem.getItemTemplate().getNameId()),
-							new DescriptionId(extractItem.getItemSkinTemplate().getNameId())));
+				SM_SYSTEM_MESSAGE.STR_CHANGE_ITEM_SKIN_NOT_COMPATIBLE(
+					new DescriptionId(keepItem.getItemTemplate().getNameId()),
+					new DescriptionId(extractItem.getItemSkinTemplate().getNameId())));
 			return;
 		}
 		if (!keepItem.isRemodelable(player)) {
 			PacketSendUtility.sendPacket(player,
-					new SM_SYSTEM_MESSAGE(1300478, new DescriptionId(keepItem.getItemTemplate().getNameId())));
+				new SM_SYSTEM_MESSAGE(1300478, new DescriptionId(keepItem.getItemTemplate().getNameId())));
 			return;
 		}
 		if (!extractItem.isRemodelable(player)) {
 			PacketSendUtility.sendPacket(player,
-					new SM_SYSTEM_MESSAGE(1300482, new DescriptionId(keepItem.getItemTemplate().getNameId())));
+				new SM_SYSTEM_MESSAGE(1300482, new DescriptionId(keepItem.getItemTemplate().getNameId())));
 			return;
 		}
 		if (player.getInventory().getKinah() >= remodelKinah) {
@@ -92,13 +93,14 @@ public class ItemRemodelService {
 		keepItem.setItemSkinSkill(extractItem.getItemSkinSkill());
 		ItemPacketService.updateItemAfterInfoChange(player, keepItem);
 		PacketSendUtility.sendPacket(player,
-				new SM_SYSTEM_MESSAGE(1300483, new DescriptionId(keepItem.getItemTemplate().getNameId())));
+			new SM_SYSTEM_MESSAGE(1300483, new DescriptionId(keepItem.getItemTemplate().getNameId())));
 	}
 
 	/**
 	 * 系统幻化物品。
 	 * System-remodels an item.
-	 * @param player 玩家 / player
+	 *
+	 * @param player   玩家 / player
 	 * @param keepItem keepItem
 	 * @param template template
 	 */
@@ -110,9 +112,9 @@ public class ItemRemodelService {
 		keepItem.setItemSkinSkill(template.getSkinSkill());
 		ItemPacketService.updateItemAfterInfoChange(player, keepItem);
 		PacketSendUtility.sendPacket(player,
-				new SM_UPDATE_PLAYER_APPEARANCE(player.getObjectId(), player.getEquipment().getEquippedForApparence()));
+			new SM_UPDATE_PLAYER_APPEARANCE(player.getObjectId(), player.getEquipment().getEquippedForApparence()));
 		PacketSendUtility.sendPacket(player,
-				new SM_SYSTEM_MESSAGE(1300483, new DescriptionId(keepItem.getItemTemplate().getNameId())));
+			new SM_SYSTEM_MESSAGE(1300483, new DescriptionId(keepItem.getItemTemplate().getNameId())));
 		if (keepItem.getItemSkinSkill() > 0) {
 			player.getSkillList().addSkill(player, keepItem.getItemSkinSkill(), 1);
 		}
@@ -137,18 +139,18 @@ public class ItemRemodelService {
 		}
 		for (Item item : equip.getEquippedItemsWithoutStigmaOld()) {
 			if (item.getEquipmentSlot() == ItemSlot.MAIN_OFF_HAND.getSlotIdMask()
-					|| item.getEquipmentSlot() == ItemSlot.SUB_OFF_HAND.getSlotIdMask()) {
+				|| item.getEquipmentSlot() == ItemSlot.SUB_OFF_HAND.getSlotIdMask()) {
 				continue;
 			}
 			if (item.getItemTemplate().isWeapon()) {
 				if (item.getItemTemplate().getWeaponType() == template.getWeaponType()
-						&& item.getItemSkinTemplate().getTemplateId() != itemId) {
+					&& item.getItemSkinTemplate().getTemplateId() != itemId) {
 					viewRemodelItem(player, item, template, duration);
 					return true;
 				}
 			} else if (item.getItemTemplate().isArmor()) {
 				if (item.getItemTemplate().getItemSlot() == template.getItemSlot()
-						&& item.getItemSkinTemplate().getTemplateId() != itemId) {
+					&& item.getItemSkinTemplate().getTemplateId() != itemId) {
 					viewRemodelItem(player, item, template, duration);
 					return true;
 				}
@@ -160,8 +162,9 @@ public class ItemRemodelService {
 	/**
 	 * 预览幻化。
 	 * Views remodel preview.
-	 * @param player 玩家 / player
-	 * @param item item
+	 *
+	 * @param player   玩家 / player
+	 * @param item     item
 	 * @param template template
 	 * @param duration duration
 	 */
@@ -169,17 +172,17 @@ public class ItemRemodelService {
 		final ItemTemplate oldTemplate = item.getItemSkinTemplate();
 		item.setItemSkinTemplate(template);
 		PacketSendUtility.sendPacket(player,
-				new SM_UPDATE_PLAYER_APPEARANCE(player.getObjectId(), player.getEquipment().getEquippedForApparence()));
+			new SM_UPDATE_PLAYER_APPEARANCE(player.getObjectId(), player.getEquipment().getEquippedForApparence()));
 		PacketSendUtility.sendPacket(player,
-				new SM_SYSTEM_MESSAGE(1300483, new DescriptionId(item.getItemTemplate().getNameId())));
+			new SM_SYSTEM_MESSAGE(1300483, new DescriptionId(item.getItemTemplate().getNameId())));
 		PacketSendUtility.broadcastPacket(player, new SM_UPDATE_PLAYER_APPEARANCE(player.getObjectId(),
+			player.getEquipment().getEquippedItemsWithoutStigma()), true);
+		GameThreadPoolServices.threadPoolManager().schedule(() -> item.setItemSkinTemplate(oldTemplate), 50);
+		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			PacketSendUtility.sendPacket(player, new SM_UPDATE_PLAYER_APPEARANCE(player.getObjectId(),
+				player.getEquipment().getEquippedForApparence()));
+			PacketSendUtility.broadcastPacket(player, new SM_UPDATE_PLAYER_APPEARANCE(player.getObjectId(),
 				player.getEquipment().getEquippedItemsWithoutStigma()), true);
-        GameThreadPoolServices.threadPoolManager().schedule(() -> item.setItemSkinTemplate(oldTemplate), 50);
-        GameThreadPoolServices.threadPoolManager().schedule(() -> {
-			 PacketSendUtility.sendPacket(player, new SM_UPDATE_PLAYER_APPEARANCE(player.getObjectId(),
-					 player.getEquipment().getEquippedForApparence()));
-			 PacketSendUtility.broadcastPacket(player, new SM_UPDATE_PLAYER_APPEARANCE(player.getObjectId(),
-					 player.getEquipment().getEquippedItemsWithoutStigma()), true);
-		 }, duration * 1000L);
+		}, duration * 1000L);
 	}
 }

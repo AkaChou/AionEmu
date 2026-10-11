@@ -60,7 +60,6 @@ public abstract class PlayerShugoSweepDAO implements DAO {
 	 * @param freeDice 免费骰子数 / free dice count
 	 * @param step 当前步数 / current step
 	 * @param boardId 排行榜 ID / board id
-	 * @return 是否更新成功 / true if updated
 	 */
 	public abstract void setShugoSweepByObjId(final int obj, int freeDice, int step, int boardId);
 }

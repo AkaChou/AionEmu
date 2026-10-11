@@ -49,14 +49,15 @@ public class SystemMailService {
 		void execute(Connection connection) throws SQLException;
 	}
 
-	/** Spring provider used to override the default singleton / Spring provider used to override the default singleton
-     * -- SETTER --
-     *  注入 Spring ObjectProvider 以覆盖默认单例。
-     *  Injects a Spring ObjectProvider to override the default singleton.
-     *  provider
-     */
+	/**
+	 * Spring provider used to override the default singleton / Spring provider used to override the default singleton
+	 * -- SETTER --
+	 * 注入 Spring ObjectProvider 以覆盖默认单例。
+	 * Injects a Spring ObjectProvider to override the default singleton.
+	 * provider
+	 */
 	@Setter
-    private static volatile ObjectProvider<SystemMailService> instanceProvider;
+	private static volatile ObjectProvider<SystemMailService> instanceProvider;
 
 	private final PlayerDAO playerDAO;
 	private final InventoryDAO inventoryDAO;
@@ -68,11 +69,12 @@ public class SystemMailService {
 	 * <p>双源静态兜底已退役：缺少 provider 时直接 fail-fast，避免在容器之外静默创建第二套实例。
 	 * The legacy static fallback is retired: a missing provider now fails fast instead of silently
 	 * creating a second instance outside the container.</p>
+	 *
 	 * @return 由 Spring 提供的实例 / the Spring-provided instance
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean /
-	 *         when no provider or bean is available
+	 *                               when no provider or bean is available
 	 */
-	public static final SystemMailService getInstance() {
+	public static SystemMailService getInstance() {
 		ObjectProvider<SystemMailService> provider = instanceProvider;
 		SystemMailService provided = provider == null ? null : provider.getIfAvailable();
 		if (provided == null) {
@@ -83,13 +85,13 @@ public class SystemMailService {
 		return provided;
 	}
 
-    /**
+	/**
 	 * 使用指定的 DAO 集合构造系统邮件服务。
 	 * Constructs the system mail service with the given DAOs.
 	 *
-	 * @param playerDAO 玩家数据访问对象 / Player DAO
+	 * @param playerDAO    玩家数据访问对象 / Player DAO
 	 * @param inventoryDAO 背包物品数据访问对象 / Inventory DAO
-	 * @param mailDAO 邮件数据访问对象 / Mail DAO
+	 * @param mailDAO      邮件数据访问对象 / Mail DAO
 	 */
 	public SystemMailService(@NonNull PlayerDAO playerDAO, @NonNull InventoryDAO inventoryDAO, @NonNull MailDAO mailDAO) {
 		this.playerDAO = playerDAO;
@@ -98,18 +100,18 @@ public class SystemMailService {
 		log.info(I18n.get("log.156ce5bf14eb"));
 	}
 
-    /**
+	/**
 	 * 构造服务：DAOManager 已初始化时优先解析 Spring Bean，否则退回实现类无参构造。
 	 * Constructs the service: resolves the Spring bean when DAOManager is initialized, else falls back to no-arg impl constructors.
 	 */
 	public SystemMailService() {
 		this(safeDao(PlayerDAO.class, com.aionemu.gameserver.dao.impl.PlayerDAO::new),
-				safeDao(InventoryDAO.class, com.aionemu.gameserver.dao.impl.InventoryDAO::new),
-				safeDao(MailDAO.class, com.aionemu.gameserver.dao.impl.MailDAO::new));
+			safeDao(InventoryDAO.class, com.aionemu.gameserver.dao.impl.InventoryDAO::new),
+			safeDao(MailDAO.class, com.aionemu.gameserver.dao.impl.MailDAO::new));
 	}
 
 	private static <T extends com.aionemu.commons.database.dao.DAO> T safeDao(Class<T> daoClass,
-			java.util.function.Supplier<T> fallback) {
+																			  java.util.function.Supplier<T> fallback) {
 		if (DAOManager.isInitialized()) {
 			try {
 				return DAOManager.getDAO(daoClass);
@@ -122,26 +124,27 @@ public class SystemMailService {
 	/**
 	 * 发送系统邮件，可附带物品、基纳与欧比斯点数。
 	 * Sends a system mail with optional attached item, kinah, and abyss points.
-	 * @param sender 发件人名称 / sender name
-	 * @param recipientName 收件人名称 / recipient name
-	 * @param title 邮件标题 / mail title
-	 * mail body
-	 * @param attachedItemObjId 附件物品模板 ID / attached item template id
-	 * @param attachedItemCount 附件物品数量 / attached item count
+	 *
+	 * @param sender             发件人名称 / sender name
+	 * @param recipientName      收件人名称 / recipient name
+	 * @param title              邮件标题 / mail title
+	 *                           mail body
+	 * @param attachedItemObjId  附件物品模板 ID / attached item template id
+	 * @param attachedItemCount  附件物品数量 / attached item count
 	 * @param attachedKinahCount 附件基纳数量 / attached kinah count
-	 * @param attachedAPCount 附件欧比斯点数 / attached abyss points
-	 * letter type
+	 * @param attachedAPCount    附件欧比斯点数 / attached abyss points
+	 *                           letter type
 	 * @return 是否发送成功 / whether the mail was sent successfully
 	 */
 	public boolean sendMail(String sender, String recipientName, String title, String message, int attachedItemObjId,
-			long attachedItemCount, long attachedKinahCount, long attachedAPCount, LetterType letterType) {
+							long attachedItemCount, long attachedKinahCount, long attachedAPCount, LetterType letterType) {
 		return sendMail(sender, recipientName, title, message, attachedItemObjId, attachedItemCount,
-				attachedKinahCount, attachedAPCount, letterType, null);
+			attachedKinahCount, attachedAPCount, letterType, null);
 	}
 
 	public boolean sendMail(String sender, String recipientName, String title, String message, int attachedItemObjId,
-			long attachedItemCount, long attachedKinahCount, long attachedAPCount, LetterType letterType,
-			TransactionAction transactionAction) {
+							long attachedItemCount, long attachedKinahCount, long attachedAPCount, LetterType letterType,
+							TransactionAction transactionAction) {
 		if (attachedItemObjId != 0) {
 			ItemTemplate itemTemplate = DataManager.ITEM_DATA.getItemTemplate(attachedItemObjId);
 			if (itemTemplate == null) {
@@ -202,12 +205,12 @@ public class SystemMailService {
 		String finalSender = sender;
 		Timestamp time = new Timestamp(Calendar.getInstance().getTimeInMillis());
 		Letter newLetter = new Letter(GameWorldBootstrapServices.idFactory().nextId(), recipientCommonData.getPlayerObjId(),
-				attachedItem, finalAttachedKinahCount, finalAttachedApCount, title, message, finalSender, time, true,
-				letterType);
+			attachedItem, finalAttachedKinahCount, finalAttachedApCount, title, message, finalSender, time, true,
+			letterType);
 		boolean stored = transactionAction == null
-				? storeMail(recipientCommonData, recipient, recipientMailbox, attachedItem, newLetter, time)
-				: storeMail(recipientCommonData, recipient, recipientMailbox, attachedItem, newLetter, time,
-						transactionAction);
+			? storeMail(recipientCommonData, recipient, recipientMailbox, attachedItem, newLetter, time)
+			: storeMail(recipientCommonData, recipient, recipientMailbox, attachedItem, newLetter, time,
+			transactionAction);
 		if (!stored) {
 			GameWorldBootstrapServices.idFactory().releaseId(newLetter.getObjectId());
 			if (attachedItem != null) {
@@ -222,9 +225,9 @@ public class SystemMailService {
 			recipientMailbox.isMailListUpdateRequired = true;
 			if (recipientMailbox.mailBoxState != 0) {
 				boolean isPostman = (recipientMailbox.mailBoxState
-						& MailboxState.EXPRESS) == MailboxState.EXPRESS;
+					& MailboxState.EXPRESS) == MailboxState.EXPRESS;
 				PacketSendUtility.sendPacket(recipient,
-						new SM_MAIL_SERVICE(recipient, recipientMailbox.getLetters(), isPostman));
+					new SM_MAIL_SERVICE(recipient, recipientMailbox.getLetters(), isPostman));
 			}
 			if (letterType == LetterType.EXPRESS) {
 				// 快递邮件已到达。 / Express mail has arrived.
@@ -237,24 +240,25 @@ public class SystemMailService {
 	/**
 	 * 发送已构造附件物品的系统邮件。
 	 * Sends a system mail using a prebuilt attached item instance.
-	 * @param sender 发件人名称 / sender name
-	 * mail title
-	 * mail body
-	 * @param recipientName 收件人名称 / recipient name
-	 * @param item 附件物品实例 / attached item instance
+	 *
+	 * @param sender             发件人名称 / sender name
+	 *                           mail title
+	 *                           mail body
+	 * @param recipientName      收件人名称 / recipient name
+	 * @param item               附件物品实例 / attached item instance
 	 * @param attachedKinahCount 附件基纳数量 / attached kinah count
-	 * @param attachedApCount 附件欧比斯点数 / attached abyss points
-	 * @param type 信件类型 / letter type
+	 * @param attachedApCount    附件欧比斯点数 / attached abyss points
+	 * @param type               信件类型 / letter type
 	 * @return 是否发送成功 / whether the mail was sent successfully
 	 */
 	public boolean sendSystemMail(String sender, String sysTitle, String sysMessage, String recipientName, Item item,
-			long attachedKinahCount, long attachedApCount, LetterType type) {
+								  long attachedKinahCount, long attachedApCount, LetterType type) {
 		return sendSystemMail(sender, sysTitle, sysMessage, recipientName, item, attachedKinahCount, attachedApCount,
-				type, null);
+			type, null);
 	}
 
 	public boolean sendSystemMail(String sender, String sysTitle, String sysMessage, String recipientName, Item item,
-			long attachedKinahCount, long attachedApCount, LetterType type, TransactionAction transactionAction) {
+								  long attachedKinahCount, long attachedApCount, LetterType type, TransactionAction transactionAction) {
 		String title = sysTitle;
 		String message = sysMessage;
 		Item attachedItem = item;
@@ -291,11 +295,11 @@ public class SystemMailService {
 		}
 		Timestamp time = new Timestamp(System.currentTimeMillis());
 		Letter newLetter = new Letter(GameWorldBootstrapServices.idFactory().nextId(), recipientCommonData.getPlayerObjId(),
-				attachedItem, attachedKinahCount, attachedApCount, title, message, sender, time, true, type);
+			attachedItem, attachedKinahCount, attachedApCount, title, message, sender, time, true, type);
 		boolean stored = transactionAction == null
-				? storeMail(recipientCommonData, onlineRecipient, recipientMailbox, attachedItem, newLetter, time)
-				: storeMail(recipientCommonData, onlineRecipient, recipientMailbox, attachedItem, newLetter, time,
-						transactionAction);
+			? storeMail(recipientCommonData, onlineRecipient, recipientMailbox, attachedItem, newLetter, time)
+			: storeMail(recipientCommonData, onlineRecipient, recipientMailbox, attachedItem, newLetter, time,
+			transactionAction);
 		if (!stored) {
 			GameWorldBootstrapServices.idFactory().releaseId(newLetter.getObjectId());
 			if (attachedItem != null) {
@@ -310,7 +314,7 @@ public class SystemMailService {
 		if (recipientMailbox != null) {
 			recipientMailbox.putLetterToMailbox(newLetter);
 			PacketSendUtility.sendPacket(onlineRecipient,
-					new SM_MAIL_SERVICE(onlineRecipient, recipientMailbox.getLetters()));
+				new SM_MAIL_SERVICE(onlineRecipient, recipientMailbox.getLetters()));
 			PacketSendUtility.sendPacket(onlineRecipient, new SM_MAIL_SERVICE());
 			// 快递邮件已到达。 / Express mail has arrived.
 			if (type == LetterType.EXPRESS || type == LetterType.BLACKCLOUD) {
@@ -333,10 +337,11 @@ public class SystemMailService {
 	/**
 	 * 判断邮箱是否已达上限。
 	 * Checks whether the mailbox has reached the given letter limit.
-	 * @param recipientMailbox 已加载邮箱 / loaded mailbox
+	 *
+	 * @param recipientMailbox    已加载邮箱 / loaded mailbox
 	 * @param recipientCommonData 玩家公共数据 / player common data
-	 * @param limit 信件上限 / letter limit
-	 * whether the mailbox is full
+	 * @param limit               信件上限 / letter limit
+	 *                            whether the mailbox is full
 	 */
 	private boolean isMailboxFull(Mailbox recipientMailbox, PlayerCommonData recipientCommonData, int limit) {
 		return recipientMailbox != null ? recipientMailbox.size() >= limit : recipientCommonData.getMailboxLetters() >= limit;
@@ -345,19 +350,20 @@ public class SystemMailService {
 	/**
 	 * 更新离线玩家邮箱信件计数并写库。
 	 * Updates the offline mailbox letter counter and persists it.
+	 *
 	 * @param recipientCommonData 收件人公共数据 / recipient common data
-	 * @param recipient 在线玩家实例 / online player instance
-	 * @param recipientMailbox 已加载邮箱 / loaded mailbox
+	 * @param recipient           在线玩家实例 / online player instance
+	 * @param recipientMailbox    已加载邮箱 / loaded mailbox
 	 */
 	protected boolean storeMail(PlayerCommonData recipientCommonData, Player recipient, Mailbox recipientMailbox,
-			Item attachedItem, Letter letter, Timestamp time) {
+								Item attachedItem, Letter letter, Timestamp time) {
 		return storeMail(recipientCommonData, recipient, recipientMailbox, attachedItem, letter, time, null);
 	}
 
 	private boolean storeMail(PlayerCommonData recipientCommonData, Player recipient, Mailbox recipientMailbox,
-			Item attachedItem, Letter letter, Timestamp time, TransactionAction transactionAction) {
+							  Item attachedItem, Letter letter, Timestamp time, TransactionAction transactionAction) {
 		PlayerCommonData counterData = recipientMailbox == null && recipient != null && recipient.getCommonData() != null
-				? recipient.getCommonData() : recipientCommonData;
+			? recipient.getCommonData() : recipientCommonData;
 		int mailboxLetters = counterData.getMailboxLetters() + 1;
 		try (Connection con = DatabaseFactory.getConnection()) {
 			con.setAutoCommit(false);
@@ -398,12 +404,13 @@ public class SystemMailService {
 	 * 按奖励模板向玩家发送系统邮件。
 	 * Sends a system mail reward defined by the given template id.
 	 * reward template id
+	 *
 	 * @param playerData 玩家公共数据 / player common data
 	 */
 	public static void sendTemplateRewardMail(final int templateId, final PlayerCommonData playerData) {
 		final MailRewardTemplate reward = DataManager.MAIL_REWARD.getMailReward(templateId);
 		GameFeatureServices.systemMailService().sendMail(reward.getSender(), playerData.getName(), reward.getTitle(),
-				reward.getBody() + "\\n\\n" + reward.getTail(), reward.getItemId(), reward.getItemCount(),
-				reward.getKinahCount(), reward.getApCount(), LetterType.NORMAL);
+			reward.getBody() + "\\n\\n" + reward.getTail(), reward.getItemId(), reward.getItemCount(),
+			reward.getKinahCount(), reward.getApCount(), LetterType.NORMAL);
 	}
 }

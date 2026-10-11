@@ -5,7 +5,6 @@ import org.springframework.stereotype.Repository;
 
 import java.io.InputStream;
 import java.sql.Timestamp;
-import java.sql.Types;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -113,7 +112,6 @@ public class HousesDAO extends com.aionemu.gameserver.dao.HousesDAO {
 		return DAOUtils.supports(databaseName, majorVersion, minorVersion);
 	}
 
-	
 
 	/**
 	 * 持久化房屋（按状态执行插入或更新）。

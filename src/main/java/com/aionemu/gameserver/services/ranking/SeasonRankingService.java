@@ -18,16 +18,17 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 赛季排行榜服务，负责加载玩家各类竞技/挑战积分并同步个人历史包。
  * Season ranking service loading player arena/challenge scores and syncing personal history packets.
+ *
  * @author Wnkrz
  */
 public class SeasonRankingService {
-    /**
-     * -- SETTER --
-     *  注入 Spring 实例提供者。
-     *  Inject the Spring instance provider.
-     */
-    @Setter
-    private static volatile ObjectProvider<SeasonRankingService> instanceProvider;
+	/**
+	 * -- SETTER --
+	 * 注入 Spring 实例提供者。
+	 * Inject the Spring instance provider.
+	 */
+	@Setter
+	private static volatile ObjectProvider<SeasonRankingService> instanceProvider;
 
 	private final SeasonRankingDAO seasonRankingDAO;
 
@@ -50,7 +51,7 @@ public class SeasonRankingService {
 	}
 
 	private static <T extends com.aionemu.commons.database.dao.DAO> T safeDao(Class<T> daoClass,
-			java.util.function.Supplier<T> fallback) {
+																			  java.util.function.Supplier<T> fallback) {
 		if (DAOManager.isInitialized()) {
 			try {
 				return DAOManager.getDAO(daoClass);
@@ -64,6 +65,7 @@ public class SeasonRankingService {
 	 * 按表 ID 加载玩家对应赛季排行数据并下发。
 	 * Load and dispatch the player's season ranking data by table ID.
 	 * 玩家 / Player
+	 *
 	 * @param tableid 排行表 ID / Ranking table ID
 	 */
 	public void loadPacketPlayer(Player player, int tableid) {
@@ -81,58 +83,63 @@ public class SeasonRankingService {
 	/**
 	 * 加载黄金竞技场（坚韧殿堂）积分并下发历史包。
 	 * Load Gold Arena (Hall of Tenacity) score and send history packet.
+	 *
 	 * @param player 玩家 / Player
 	 */
 	public void loadGoldArenaScore(Player player) {
 		GoldArenaRank rank = seasonRankingDAO.loadGoldArenaRank(player.getObjectId(),
-				SeasonRankingEnum.HALL_OF_TENACITY.getId());
+			SeasonRankingEnum.HALL_OF_TENACITY.getId());
 		player.setArenaGoldRank(rank);
 		PacketSendUtility.sendPacket(player,
-				new SM_MY_HISTORY(SeasonRankingEnum.HALL_OF_TENACITY.getId(), player.getArenaGoldRank()));
+			new SM_MY_HISTORY(SeasonRankingEnum.HALL_OF_TENACITY.getId(), player.getArenaGoldRank()));
 	}
 
 	/**
 	 * 加载挑战之塔积分并下发历史包。
 	 * Load Tower of Challenge score and send history packet.
+	 *
 	 * @param player 玩家 / Player
 	 */
 	public void loadTowerScore(Player player) {
 		TowerOfChallengeRank rank = seasonRankingDAO.loadTowerOfChallengeRank(player.getObjectId(),
-				SeasonRankingEnum.TOWER_OF_CHALLENGE.getId());
+			SeasonRankingEnum.TOWER_OF_CHALLENGE.getId());
 		player.setTowerRank(rank);
 		PacketSendUtility.sendPacket(player,
-				new SM_MY_HISTORY(SeasonRankingEnum.TOWER_OF_CHALLENGE.getId(), player.getTowerRank()));
+			new SM_MY_HISTORY(SeasonRankingEnum.TOWER_OF_CHALLENGE.getId(), player.getTowerRank()));
 	}
 
 	/**
 	 * 加载 6v6 竞技场积分并下发历史包。
 	 * Load Arena 6v6 score and send history packet.
+	 *
 	 * @param player 玩家 / Player
 	 */
 	public void loadArena6v6Score(Player player) {
 		Arena6V6Ranking rank = seasonRankingDAO.loadArena6v6Rank(player.getObjectId(), SeasonRankingEnum.ARENA_6V6.getId());
 		player.set6v6Rank(rank);
 		PacketSendUtility.sendPacket(player,
-				new SM_MY_HISTORY(SeasonRankingEnum.ARENA_6V6.getId(), player.get6v6Rank()));
+			new SM_MY_HISTORY(SeasonRankingEnum.ARENA_6V6.getId(), player.get6v6Rank()));
 	}
 
 	/**
 	 * 加载孤独竞技场积分并下发历史包。
 	 * Load Arena of Tenacity score and send history packet.
+	 *
 	 * @param player 玩家 / Player
 	 */
 	public void loadArenaOfTenacityScore(Player player) {
 		ArenaOfTenacityRank rank = seasonRankingDAO.loadArenaOfTenacityRank(player.getObjectId(),
-				SeasonRankingEnum.ARENA_OF_TENACITY.getId());
+			SeasonRankingEnum.ARENA_OF_TENACITY.getId());
 		player.setTenacityRank(rank);
 		PacketSendUtility.sendPacket(player,
-				new SM_MY_HISTORY(SeasonRankingEnum.ARENA_OF_TENACITY.getId(), player.getTenacityRank()));
+			new SM_MY_HISTORY(SeasonRankingEnum.ARENA_OF_TENACITY.getId(), player.getTenacityRank()));
 	}
 
 	/**
 	 * 保存熔炉尖塔（挑战之塔）通关时间并更新最佳/上次/当前记录。
 	 * Save Crusible Spire (Tower of Challenge) clear time and update best/last/current records.
 	 * 玩家 / Player
+	 *
 	 * @param newTime 新通关时间 / New clear time
 	 */
 	public void saveCrusibleSpireTime(Player player, int newTime) {
@@ -161,11 +168,12 @@ public class SeasonRankingService {
 	 * <p>双源静态兜底已退役：缺少 provider 时直接 fail-fast，避免在容器之外静默创建第二套实例。
 	 * The legacy static fallback is retired: a missing provider now fails fast instead of silently
 	 * creating a second instance outside the container.</p>
+	 *
 	 * @return 由 Spring 提供的实例 / the Spring-provided instance
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean /
-	 *         when no provider or bean is available
+	 *                               when no provider or bean is available
 	 */
-	public static final SeasonRankingService getInstance() {
+	public static SeasonRankingService getInstance() {
 		ObjectProvider<SeasonRankingService> provider = instanceProvider;
 		SeasonRankingService provided = provider == null ? null : provider.getIfAvailable();
 		if (provided == null) {

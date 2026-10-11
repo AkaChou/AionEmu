@@ -16,6 +16,8 @@ import com.aionemu.gameserver.services.mail.SystemMailService;
 
 import java.util.List;
 
+import com.aionemu.boot.i18n.I18n;
+
 /**
  * 网页商城服务，定时扫描并发放待领取的商城奖励邮件。
  * Web shop service that periodically scans and delivers pending shop reward mails.
@@ -25,13 +27,13 @@ public class WebshopService {
 	private static final String SHOP_MAIL_SENDER = "Aion Shop";
 	private static final String SHOP_MAIL_TITLE = "Shop Purchase";
 	private static final String SHOP_MAIL_MESSAGE = "Your shop purchase has arrived.";
-    /**
-     * -- SETTER --
-     *  设置 Spring 实例提供者。
-     *  Sets the Spring instance provider.
-     */
-    @Setter
-    private static volatile ObjectProvider<WebshopService> instanceProvider;
+	/**
+	 * -- SETTER --
+	 * 设置 Spring 实例提供者。
+	 * Sets the Spring instance provider.
+	 */
+	@Setter
+	private static volatile ObjectProvider<WebshopService> instanceProvider;
 	private final RewardServiceDAO rewardServiceDAO;
 
 	/**
@@ -69,6 +71,7 @@ public class WebshopService {
 	 * <p>双源静态兜底已退役：缺少 provider 时直接 fail-fast，避免在容器之外静默创建第二套实例。
 	 * The legacy static fallback is retired: a missing provider now fails fast instead of silently
 	 * creating a second instance outside the container.</p>
+	 *
 	 * @return 由 Spring 提供的实例 / the Spring-provided instance
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean / when no provider or bean is available
 	 */
@@ -83,7 +86,7 @@ public class WebshopService {
 		return provided;
 	}
 
-    /**
+	/**
 	 * 启动定时任务，为在线玩家发放待领取商城奖励。
 	 * Starts the periodic task that delivers pending shop rewards to online players.
 	 */
@@ -98,26 +101,27 @@ public class WebshopService {
 				}
 			}), 5 * 1000, 5 * 1000);
 		} catch (Exception e) {
-			log.warn("ThreadPoolManager not available during WebshopService load: {}", e.getMessage());
+			log.warn(I18n.get("log.035caceb1de8", e.getMessage()));
 		}
 	}
 
 	/**
 	 * 将单条奖励以系统邮件发放给玩家；失败时回滚标记。
 	 * Delivers one reward as a system mail; rolls back the claim flag on failure.
+	 *
 	 * @param recipientName 收件人角色名 / recipient character name
-	 * @param item 奖励条目 / reward entry item
-	 * reward DAO
-	 * @param mailService 系统邮件服务 / system mail service
+	 * @param item          奖励条目 / reward entry item
+	 *                      reward DAO
+	 * @param mailService   系统邮件服务 / system mail service
 	 * @return 发放成功返回 true / true if delivered
 	 */
 	static boolean deliverRewardMail(String recipientName, RewardEntryItem item, RewardServiceDAO rewardDao,
-			SystemMailService mailService) {
+									 SystemMailService mailService) {
 		if (!rewardDao.setUpdate(item.unique)) {
 			return false;
 		}
 		boolean delivered = mailService.sendMail(SHOP_MAIL_SENDER, recipientName, SHOP_MAIL_TITLE, SHOP_MAIL_MESSAGE,
-				item.id, item.count, 0, 0, LetterType.EXPRESS);
+			item.id, item.count, 0, 0, LetterType.EXPRESS);
 		if (!delivered) {
 			rewardDao.setUpdateDown(item.unique);
 			return false;

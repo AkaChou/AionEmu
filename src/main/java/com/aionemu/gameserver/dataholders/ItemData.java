@@ -2,9 +2,9 @@ package com.aionemu.gameserver.dataholders;
 
 
 import com.aionemu.boot.i18n.I18n;
+
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -29,6 +29,7 @@ import lombok.Getter;
 /**
  * 物品模板数据容器，持有并索引全部 {@link ItemTemplate}，支持热重载与限制清理。
  * Item template data holder, indexing all {@link ItemTemplate} instances with reload and restriction cleanup support.
+ *
  * @author Luno
  */
 @Getter
@@ -92,7 +93,8 @@ public class ItemData extends ReloadableData {
 	 * Assembles item data from an already merged shard mapping: custom templates override or append by id,
 	 * then all indexes are rebuilt in one pass. Callers may {@code putAll} incrementally as shards complete,
 	 * avoiding the need to hold every shard index at once (peak memory).
-	 * @param merged 已按顺序合并的分片映射 / shard mappings merged in order
+	 *
+	 * @param merged          已按顺序合并的分片映射 / shard mappings merged in order
 	 * @param customOverrides 自定义覆盖模板，可为 null / custom override templates, may be {@code null}
 	 */
 	public void assembleFromMerged(Map<Integer, ItemTemplate> merged, ItemData customOverrides) {
@@ -130,12 +132,12 @@ public class ItemData extends ReloadableData {
 	private void applyCleanup(ItemTemplate item, byte result, int mask) {
 		if (result != -1) {
 			switch (result) {
-			case 1:
-				item.modifyMask(true, mask);
-				break;
-			case 0:
-				item.modifyMask(false, mask);
-				break;
+				case 1:
+					item.modifyMask(true, mask);
+					break;
+				case 0:
+					item.modifyMask(false, mask);
+					break;
 			}
 		}
 	}
@@ -143,6 +145,7 @@ public class ItemData extends ReloadableData {
 	/**
 	 * 按物品 ID 获取物品模板。
 	 * Returns the item template for the given item id.
+	 *
 	 * @param itemId 物品 ID / item id
 	 * @return 物品模板或 null / item template or null
 	 */
@@ -157,6 +160,7 @@ public class ItemData extends ReloadableData {
 	/**
 	 * 返回已加载的物品模板数量。
 	 * Returns the number of loaded item templates.
+	 *
 	 * @return 已加载的物品模板数量 / Returns the number of loaded item templates.
 	 */
 	public int size() {
@@ -166,6 +170,7 @@ public class ItemData extends ReloadableData {
 	/**
 	 * 通过分片并行路径热重载物品模板并通知管理员。
 	 * Hot-reloads item templates via the parallel shard path and notifies the admin.
+	 *
 	 * @param admin 触发重载的管理员 / admin who triggered the reload
 	 */
 	@Override
@@ -178,7 +183,7 @@ public class ItemData extends ReloadableData {
 			log.error(I18n.get("log.b18c257924d5"), e);
 		} finally {
 			PacketSendUtility.sendMessage(admin,
-					"Item templates reload Success! Total loaded: " + DataManager.ITEM_DATA.size());
+				"Item templates reload Success! Total loaded: " + DataManager.ITEM_DATA.size());
 		}
 	}
 
@@ -192,6 +197,7 @@ public class ItemData extends ReloadableData {
 	/**
 	 * 返回内部物品模板哈希表。
 	 * Returns the internal item template hash map.
+	 *
 	 * @return 物品模板映射 / item template map
 	 */
 	public IntObjectHashMap<ItemTemplate> getItemData() {

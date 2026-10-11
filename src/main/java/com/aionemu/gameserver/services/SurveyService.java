@@ -33,18 +33,19 @@ import lombok.extern.slf4j.Slf4j;
 /**
  * 问卷/调查奖励服务，轮询待领调查并向玩家发放奖励。
  * Survey reward service polling pending surveys and granting player rewards.
+ *
  * @author KID
  */
 @Slf4j
 public class SurveyService {
 
-    /**
-     * -- SETTER --
-     *  注入 Spring 的实例提供者。
-     *  Sets the Spring instance provider.
-     */
-    @Setter
-    private static volatile ObjectProvider<SurveyService> instanceProvider;
+	/**
+	 * -- SETTER --
+	 * 注入 Spring 的实例提供者。
+	 * Sets the Spring instance provider.
+	 */
+	@Setter
+	private static volatile ObjectProvider<SurveyService> instanceProvider;
 	private final SurveyControllerDAO surveyControllerDAO;
 	private final ConcurrentMap<Integer, SurveyItem> activeItems;
 	private volatile String htmlTemplate;
@@ -68,6 +69,7 @@ public class SurveyService {
 	/**
 	 * 使用指定的 SurveyControllerDAO 构造服务并启动周期刷新任务。
 	 * Constructs the service with given SurveyControllerDAO and starts periodic update task.
+	 *
 	 * @param surveyControllerDAO 调查数据访问对象 / survey DAO
 	 */
 	public SurveyService(@NonNull SurveyControllerDAO surveyControllerDAO) {
@@ -102,16 +104,16 @@ public class SurveyService {
 		try {
 			htmlTemplate = GameStaticDataServices.htmlCache().getHTML("surveyTemplate.xhtml");
 		} catch (Exception e) {
-			log.warn("HTMLCache not available during survey service reload: {}", e.getMessage());
+			log.warn(I18n.get("log.9eb483d1f40b", e.getMessage()));
 		}
 		if (updateTask != null) {
 			updateTask.cancel(false);
 		}
 		try {
 			updateTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new TaskUpdate(), 2000,
-					SecurityConfig.SURVEY_DELAY * 60000L);
+				SecurityConfig.SURVEY_DELAY * 60000L);
 		} catch (Exception e) {
-			log.warn("ThreadPoolManager not available during survey service reload: {}", e.getMessage());
+			log.warn(I18n.get("log.a6e3f040453a", e.getMessage()));
 		}
 	}
 
@@ -151,11 +153,11 @@ public class SurveyService {
 				PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1300945, item.count));
 			} else if (item.count == 1) { // You received %0 item as reward for the survey.
 				PacketSendUtility.sendPacket(player,
-						new SM_SYSTEM_MESSAGE(1300945, new DescriptionId(template.getNameId())));
+					new SM_SYSTEM_MESSAGE(1300945, new DescriptionId(template.getNameId())));
 			} else {
 				// 你因调查获得了 %num1 个 %0 作为奖励。 / You received %num1 %0 items as reward for the survey.
 				PacketSendUtility.sendPacket(player,
-						new SM_SYSTEM_MESSAGE(1300946, item.count, new DescriptionId(template.getNameId())));
+					new SM_SYSTEM_MESSAGE(1300946, item.count, new DescriptionId(template.getNameId())));
 			}
 			activeItems.remove(survId);
 		}
@@ -191,6 +193,7 @@ public class SurveyService {
 	/**
 	 * 向玩家展示其可用的调查 HTML。
 	 * Shows available survey HTML pages to the player.
+	 *
 	 * @param player 玩家 / player
 	 */
 	public void showAvailable(Player player) {
@@ -223,9 +226,10 @@ public class SurveyService {
 	 * <p>双源静态兜底已退役：缺少 provider 时直接 fail-fast，避免在容器之外静默创建第二套实例。
 	 * The legacy static fallback is retired: a missing provider now fails fast instead of silently
 	 * creating a second instance outside the container.</p>
+	 *
 	 * @return 由 Spring 提供的实例 / the Spring-provided instance
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean /
-	 *         when no provider or bean is available
+	 *                               when no provider or bean is available
 	 */
 	public static SurveyService getInstance() {
 		ObjectProvider<SurveyService> provider = instanceProvider;

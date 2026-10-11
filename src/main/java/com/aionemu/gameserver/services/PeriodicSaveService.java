@@ -107,12 +107,12 @@ public class PeriodicSaveService {
 	 */
 	public PeriodicSaveService() {
 		this(safeDao(AbyssRankDAO.class, com.aionemu.gameserver.dao.impl.AbyssRankDAO::new),
-			 safeDao(PlayerSkillListDAO.class, com.aionemu.gameserver.dao.impl.PlayerSkillListDAO::new),
-			 safeDao(PlayerQuestListDAO.class, com.aionemu.gameserver.dao.impl.PlayerQuestListDAO::new),
-			 safeDao(PlayerDAO.class, com.aionemu.gameserver.dao.impl.PlayerDAO::new),
-			 safeDao(PlayerStigmasEquippedDAO.class, com.aionemu.gameserver.dao.impl.PlayerStigmasEquippedDAO::new),
-			 safeDao(InventoryDAO.class, com.aionemu.gameserver.dao.impl.InventoryDAO::new),
-			 safeDao(ItemStoneListDAO.class, com.aionemu.gameserver.dao.impl.ItemStoneListDAO::new));
+			safeDao(PlayerSkillListDAO.class, com.aionemu.gameserver.dao.impl.PlayerSkillListDAO::new),
+			safeDao(PlayerQuestListDAO.class, com.aionemu.gameserver.dao.impl.PlayerQuestListDAO::new),
+			safeDao(PlayerDAO.class, com.aionemu.gameserver.dao.impl.PlayerDAO::new),
+			safeDao(PlayerStigmasEquippedDAO.class, com.aionemu.gameserver.dao.impl.PlayerStigmasEquippedDAO::new),
+			safeDao(InventoryDAO.class, com.aionemu.gameserver.dao.impl.InventoryDAO::new),
+			safeDao(ItemStoneListDAO.class, com.aionemu.gameserver.dao.impl.ItemStoneListDAO::new));
 	}
 
 	private static <T extends com.aionemu.commons.database.dao.DAO> T safeDao(Class<T> daoClass, java.util.function.Supplier<T> fallback) {
@@ -275,7 +275,7 @@ public class PeriodicSaveService {
 				}
 			}
 			long workTime = System.currentTimeMillis() - startTime;
-			log.info("Player general update: {} ms, players: {}.", workTime, playersUpdated);
+			log.info(I18n.get("log.8e83f631917d", workTime, playersUpdated));
 		}
 	}
 
@@ -294,7 +294,7 @@ public class PeriodicSaveService {
 				}
 			}
 			long workTime = System.currentTimeMillis() - startTime;
-			log.info("Player items update: {} ms, players: {}.", workTime, playersUpdated);
+			log.info(I18n.get("log.b8e76df845b1", workTime, playersUpdated));
 		}
 	}
 
