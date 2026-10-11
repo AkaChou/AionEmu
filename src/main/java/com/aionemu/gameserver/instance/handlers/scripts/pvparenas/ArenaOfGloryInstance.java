@@ -9,15 +9,16 @@ import com.aionemu.gameserver.world.WorldMapInstance;
 /**
  * 荣耀竞技场副本事件处理器。
  * Instance event handler for Arena Of Glory.
+ *
  * @author Encom
  */
 
 @InstanceID(300550000)
-public class ArenaOfGloryInstance extends PvPArenaInstance
-{
+public class ArenaOfGloryInstance extends PvPArenaInstance {
 	/**
 	 * 副本创建时初始化逻辑。
 	 * Initialize logic when the instance is created.
+	 *
 	 * @param instance 世界地图实例 / world-map instance
 	 */
 	@Override
@@ -26,7 +27,7 @@ public class ArenaOfGloryInstance extends PvPArenaInstance
 		deathFine = -200;
 		super.onInstanceCreate(instance);
 	}
-	
+
 	/**
 	 * 处理 reward。
 	 * Handle reward.
@@ -67,34 +68,34 @@ public class ArenaOfGloryInstance extends PvPArenaInstance
 				int scoreAP = (int) (totalScoreAP * scoreRate);
 				int scoreGP = (int) (totalScoreGP * scoreRate);
 				// <欧比斯点数> / <Abyss Points>
-				basicAP *= percent;
+				basicAP = (int) (basicAP * percent);
 				rankingAP *= percent;
 				rankingAP *= playerRate;
 				reward.setBasicAP(basicAP);
 				reward.setRankingAP((int) rankingAP);
 				reward.setScoreAP(scoreAP);
 				// <荣耀点数> / <Glory Points>
-				basicGP *= percent;
+				basicGP = (int) (basicGP * percent);
 				rankingGP *= percent;
 				rankingGP *= playerRate;
-				reward.setBasicGP((int)(basicGP * 0.1));
+				reward.setBasicGP((int) (basicGP * 0.1));
 				reward.setRankingGP((int) (rankingGP * 0.1));
-				reward.setScoreGP((int)(scoreGP * 0.1));
+				reward.setScoreGP((int) (scoreGP * 0.1));
 				switch (rank) {
 					case 0:
 						reward.setGloriousInsignia(1);
 						reward.setMithrilMedal(5);
-					break;
+						break;
 					case 1:
 						reward.setGloriousInsignia(1);
 						reward.setPlatinumMedal(3);
-					break;
+						break;
 					case 2:
 						reward.setPlatinumMedal(3);
-					break;
+						break;
 					case 3:
 						reward.setLifeSerum(1);
-					break;
+						break;
 				}
 			}
 		}

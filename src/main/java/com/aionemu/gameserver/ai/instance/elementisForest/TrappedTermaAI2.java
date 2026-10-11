@@ -21,6 +21,7 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * Elementis Forest 副本 NPC AI：Trapped Terma（@AIName "terma"），继承 NpcAI2。
  * Elementis Forest instance NPC AI: Trapped Terma (@AIName "terma"), extends NpcAI2.
+ *
  * @author Luzien
  */
 @AIName("terma")
@@ -33,14 +34,14 @@ public class TrappedTermaAI2 extends NpcAI2 {
 		super.handleAttack(creature);
 		if (!isMove) {
 			isMove = true;
-	  moveToDead();
+			moveToDead();
 		}
 	}
 
 	@Override
 	protected void handleDied() {
 		super.handleDied();
-		Npc freeTerma = (Npc)spawn(205495, 455.94f, 537.06f, 132.6f,(byte) 0);
+		Npc freeTerma = (Npc) spawn(205495, 455.94f, 537.06f, 132.6f, (byte) 0);
 		spawn(701009, 451.706f, 534.313f, 131.979f, (byte) 0);
 		GameFeatureServices.npcShoutsService().sendMsg(freeTerma, 1500444, freeTerma.getObjectId(), 0, 3000);
 	}
@@ -70,11 +71,9 @@ public class TrappedTermaAI2 extends NpcAI2 {
 
 	@Override
 	protected AIAnswer pollInstance(AIQuestion question) {
-        return switch (question) {
-            case SHOULD_DECAY -> AIAnswers.NEGATIVE;
-            case SHOULD_RESPAWN -> AIAnswers.NEGATIVE;
-            case SHOULD_REWARD -> AIAnswers.NEGATIVE;
-            default -> null;
-        };
+		return switch (question) {
+			case SHOULD_DECAY, SHOULD_RESPAWN, SHOULD_REWARD -> AIAnswers.NEGATIVE;
+			default -> null;
+		};
 	}
 }

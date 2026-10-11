@@ -16,11 +16,11 @@ import java.util.List;
 /**
  * Iluma 区域 NPC AI：Tunes Of Splendor Scout（@AIName "tunes_of_splendor_scout"），继承 NpcAI2。
  * Iluma zone NPC AI: Tunes Of Splendor Scout (@AIName "tunes_of_splendor_scout"), extends NpcAI2.
+ *
  * @author Encom
  */
 @AIName("tunes_of_splendor_scout")
-public class Tunes_Of_Splendor_ScoutAI2 extends NpcAI2
-{
+public class Tunes_Of_Splendor_ScoutAI2 extends NpcAI2 {
 	@Override
 	protected void handleSpawned() {
 		super.handleSpawned();
@@ -36,9 +36,11 @@ public class Tunes_Of_Splendor_ScoutAI2 extends NpcAI2
 	private void startRiftEscapeTask() {
 		GameThreadPoolServices.threadPoolManager().schedule(() -> spawnRiftEscape(701132), 2500);
 	}
+
 	private void startLifeTask() {
 		GameThreadPoolServices.threadPoolManager().schedule(() -> AI2Actions.deleteOwner(Tunes_Of_Splendor_ScoutAI2.this), 10000);
 	}
+
 	private void startRiftEscapeClosed() {
 		GameThreadPoolServices.threadPoolManager().schedule(() -> despawnNpc(701132), 12500);
 	}
@@ -58,7 +60,7 @@ public class Tunes_Of_Splendor_ScoutAI2 extends NpcAI2
 	private void despawnNpc(int npcId) {
 		if (getPosition().getWorldMapInstance().getNpcs(npcId) != null) {
 			List<Npc> npcs = getPosition().getWorldMapInstance().getNpcs(npcId);
-			for (Npc npc: npcs) {
+			for (Npc npc : npcs) {
 				npc.getController().onDelete();
 			}
 		}

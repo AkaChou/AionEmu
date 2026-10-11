@@ -10,16 +10,15 @@ import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 
 import java.util.List;
-import java.util.concurrent.Future;
 
 /**
  * Seized Danuar Sanctuary 副本 NPC AI：Warmage Suyaroka（@AIName "suyaroka"），继承 AggressiveNpcAI2。
  * Seized Danuar Sanctuary instance NPC AI: Warmage Suyaroka (@AIName "suyaroka"), extends AggressiveNpcAI2.
+ *
  * @author Encom
  */
 @AIName("suyaroka")
-public class Warmage_SuyarokaAI2 extends AggressiveNpcAI2
-{
+public class Warmage_SuyarokaAI2 extends AggressiveNpcAI2 {
 	private int stage = 0;
 	private boolean isStart = false;
 
@@ -57,8 +56,8 @@ public class Warmage_SuyarokaAI2 extends AggressiveNpcAI2
 	}
 
 	private void ShebanMysticalTyrhund() {
-	    if (!isAlreadyDead()) {
-		    GameThreadPoolServices.threadPoolManager().schedule(() -> {
+		if (!isAlreadyDead()) {
+			GameThreadPoolServices.threadPoolManager().schedule(() -> {
 				if (!isAlreadyDead()) {
 					spawn(284455, 1051.3069f, 694.83075f, 282.0391f, (byte) 14); // Sheban Mystical Tyrhund 召唤兽。 / Sheban Mystical Tyrhund.
 					spawn(284455, 1062.1957f, 694.9131f, 282.0391f, (byte) 51); // Sheban Mystical Tyrhund 召唤兽。 / Sheban Mystical Tyrhund.
@@ -75,7 +74,7 @@ public class Warmage_SuyarokaAI2 extends AggressiveNpcAI2
 
 	private void despawnNpcs(int npcId) {
 		List<Npc> npcs = getPosition().getWorldMapInstance().getNpcs(npcId);
-		for (Npc npc: npcs) {
+		for (Npc npc : npcs) {
 			if (npc != null) {
 				npc.getController().onDelete();
 			}
@@ -85,7 +84,7 @@ public class Warmage_SuyarokaAI2 extends AggressiveNpcAI2
 	@Override
 	protected void handleBackHome() {
 		super.handleBackHome();
-        despawnNpcs(284455); // Sheban Mystical Tyrhund 召唤兽。 / Sheban Mystical Tyrhund.
+		despawnNpcs(284455); // Sheban Mystical Tyrhund 召唤兽。 / Sheban Mystical Tyrhund.
 		isStart = false;
 		stage = 0;
 	}
@@ -93,7 +92,7 @@ public class Warmage_SuyarokaAI2 extends AggressiveNpcAI2
 	@Override
 	protected void handleDied() {
 		super.handleDied();
-        despawnNpcs(284455); // Sheban Mystical Tyrhund 召唤兽。 / Sheban Mystical Tyrhund.
+		despawnNpcs(284455); // Sheban Mystical Tyrhund 召唤兽。 / Sheban Mystical Tyrhund.
 		isStart = false;
 		stage = 0;
 	}

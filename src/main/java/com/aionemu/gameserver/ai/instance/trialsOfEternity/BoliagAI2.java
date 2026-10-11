@@ -14,11 +14,11 @@ import com.aionemu.gameserver.world.*;
 /**
  * Trials Of Eternity 副本 NPC AI：Boliag（@AIName "IDEternity_03_Dimension_Boss_01"），继承 AggressiveNpcAI2。
  * Trials Of Eternity instance NPC AI: Boliag (@AIName "IDEternity_03_Dimension_Boss_01"), extends AggressiveNpcAI2.
+ *
  * @author Encom
  */
 @AIName("IDEternity_03_Dimension_Boss_01")
-public class BoliagAI2 extends AggressiveNpcAI2
-{
+public class BoliagAI2 extends AggressiveNpcAI2 {
 	private final List<Integer> percents = new ArrayList<>();
 
 	@Override
@@ -38,18 +38,16 @@ public class BoliagAI2 extends AggressiveNpcAI2
 	 * Triggers phase events by HP percentage: spawns portals and adds at 30%, more adds at 20% and 10%.
 	 */
 	private void checkPercentage(int hpPercentage) {
-		for (Integer percent: percents) {
+		for (Integer percent : percents) {
 			if (hpPercentage <= percent) {
 				switch (percent) {
 					case 30:
-					    spawnBossPortal();
-					break;
+						spawnBossPortal();
+						break;
 					case 20:
-					    spawnBossSum();
-					break;
 					case 10:
-					    spawnBossSum();
-					break;
+						spawnBossSum();
+						break;
 				}
 				percents.remove(percent);
 				break;
@@ -71,7 +69,7 @@ public class BoliagAI2 extends AggressiveNpcAI2
 		PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_MSG_IDEternity_03_Dimension_02, 0);
 		spawn(246937, 229.87758f, 1049.37230f, 706.75494f, (byte) 84);
 		spawn(246442, 226.18071f, 1048.9526f, 706.75494f, (byte) 86);
-        spawn(246442, 231.16983f, 1047.3529f, 706.75494f, (byte) 83);
+		spawn(246442, 231.16983f, 1047.3529f, 706.75494f, (byte) 83);
 		//
 		spawn(247024, 207.51686f, 1045.44860f, 706.75494f, (byte) 103);
 		spawn(246442, 211.03645f, 1045.8074f, 706.75494f, (byte) 98);
@@ -79,15 +77,15 @@ public class BoliagAI2 extends AggressiveNpcAI2
 		//
 		spawn(247025, 237.62363f, 1005.49835f, 706.75494f, (byte) 42);
 		spawn(246442, 239.03406f, 1008.0827f, 706.75494f, (byte) 45);
-        spawn(246442, 234.82101f, 1004.9394f, 706.75494f, (byte) 42);
+		spawn(246442, 234.82101f, 1004.9394f, 706.75494f, (byte) 42);
 	}
 
 	private void spawnBossSum() {
-	    spawn(246442, 222.63515f, 1036.9862f, 706.75494f, (byte) 61);
-        spawn(246442, 222.79411f, 1014.1347f, 706.75494f, (byte) 60);
-        spawn(246442, 230.22252f, 1025.4879f, 706.75494f, (byte) 60);
-        spawn(246442, 214.86880f, 1025.4816f, 706.75494f, (byte) 0);
-        spawn(246442, 202.80700f, 1025.3514f, 706.75494f, (byte) 0);
+		spawn(246442, 222.63515f, 1036.9862f, 706.75494f, (byte) 61);
+		spawn(246442, 222.79411f, 1014.1347f, 706.75494f, (byte) 60);
+		spawn(246442, 230.22252f, 1025.4879f, 706.75494f, (byte) 60);
+		spawn(246442, 214.86880f, 1025.4816f, 706.75494f, (byte) 0);
+		spawn(246442, 202.80700f, 1025.3514f, 706.75494f, (byte) 0);
 	}
 
 	@Override
@@ -117,7 +115,7 @@ public class BoliagAI2 extends AggressiveNpcAI2
 	}
 
 	private void deleteNpcs(List<Npc> npcs) {
-		for (Npc npc: npcs) {
+		for (Npc npc : npcs) {
 			if (npc != null) {
 				npc.getController().onDelete();
 			}

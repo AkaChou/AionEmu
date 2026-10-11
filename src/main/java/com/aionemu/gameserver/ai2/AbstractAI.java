@@ -48,9 +48,13 @@ public abstract class AbstractAI implements AI2 {
 	 */
 	private String aiName;
 
-	/** AI 死亡监听器接口 / AI death listener interface */
+	/**
+	 * AI 死亡监听器接口 / AI death listener interface
+	 */
 	public interface AiDeathListener {
-		default void onBeforeDie(AbstractAI obj) {}
+		default void onBeforeDie(AbstractAI obj) {
+		}
+
 		void onAfterDie(AbstractAI obj);
 	}
 
@@ -68,6 +72,7 @@ public abstract class AbstractAI implements AI2 {
 	/**
 	 * 物化 AI 死亡监听器列表：双检 + {@code synchronized (this)}，并发首次注册收敛到同一个列表。
 	 * Materialises the death-listener list with a double-checked {@code synchronized (this)}.
+	 *
 	 * @return 可写列表 / writable list
 	 */
 	private List<AiDeathListener> writableAiDeathListeners() {
@@ -94,9 +99,9 @@ public abstract class AbstractAI implements AI2 {
 	/**
 	 * 获取 AI 所有者生物（NpcAI2 以下可隐藏更具体类型）。
 	 * Returns the AI owner creature (more specific types are hidden below NpcAI2).
-     * -- SETTER --
-     *  绑定所有者生物。
-     *  Binds the owner creature.
+	 * -- SETTER --
+	 * 绑定所有者生物。
+	 * Binds the owner creature.
 	 */
 	private Creature owner;
 	private AIState currentState;
@@ -150,6 +155,7 @@ public abstract class AbstractAI implements AI2 {
 	/**
 	 * 获取当前主状态。
 	 * Returns the current main state.
+	 *
 	 * @return 主状态 / main state
 	 */
 	@Override
@@ -160,6 +166,7 @@ public abstract class AbstractAI implements AI2 {
 	/**
 	 * 判断是否处于指定主状态。
 	 * Returns whether the AI is in the given main state.
+	 *
 	 * @param state 目标状态 / target state
 	 * @return 是否匹配 / whether matching
 	 */
@@ -170,6 +177,7 @@ public abstract class AbstractAI implements AI2 {
 	/**
 	 * 获取当前子状态。
 	 * Returns the current sub-state.
+	 *
 	 * @return 子状态 / sub-state
 	 */
 	@Override
@@ -180,6 +188,7 @@ public abstract class AbstractAI implements AI2 {
 	/**
 	 * 判断是否处于指定子状态。
 	 * Returns whether the AI is in the given sub-state.
+	 *
 	 * @param subState 目标子状态 / target sub-state
 	 * @return 是否匹配 / whether matching
 	 */
@@ -190,6 +199,7 @@ public abstract class AbstractAI implements AI2 {
 	/**
 	 * 获取 AI 名称（优先使用实例设置的 {@link #aiName}，否则取 {@link AIName} 声明的首个主名称，未标注时为 "noname"）。
 	 * Returns the AI name (prefers instance {@link #aiName}, falls back to first name from {@link AIName}, or "noname").
+	 *
 	 * @return AI 名称 / AI name
 	 */
 	@Override
@@ -209,6 +219,7 @@ public abstract class AbstractAI implements AI2 {
 	/**
 	 * 判断当前状态是否允许处理该事件。
 	 * Returns whether the current state allows handling the given event.
+	 *
 	 * @param eventType 事件类型 / event type
 	 * @return 是否可处理 / whether handleable
 	 */
@@ -219,7 +230,8 @@ public abstract class AbstractAI implements AI2 {
 			case CREATED -> StateEvents.CREATED_EVENTS.hasEvent(eventType);
 			default -> switch (eventType) {
 				case DIALOG_START, DIALOG_FINISH -> isNonFightingState();
-				case CREATURE_MOVED -> getName().equals("trap") || currentState != AIState.FIGHT && isNonFightingState();
+				case CREATURE_MOVED ->
+					getName().equals("trap") || currentState != AIState.FIGHT && isNonFightingState();
 				default -> true;
 			};
 		};
@@ -228,6 +240,7 @@ public abstract class AbstractAI implements AI2 {
 	/**
 	 * 判断是否处于非战斗状态（WALKING 或 IDLE）。
 	 * Returns whether the AI is in a non-fighting state (WALKING or IDLE).
+	 *
 	 * @return 是否非战斗 / whether non-fighting
 	 */
 	public boolean isNonFightingState() {
@@ -237,6 +250,7 @@ public abstract class AbstractAI implements AI2 {
 	/**
 	 * 若状态不同则切换主状态。
 	 * Changes the main state if it differs from the current one.
+	 *
 	 * @param newState 新状态 / new state
 	 * @return 是否发生切换 / whether the state changed
 	 */
@@ -257,7 +271,7 @@ public abstract class AbstractAI implements AI2 {
 			}
 		}
 		if (this.currentState == AIState.FIGHT && newState != AIState.FIGHT
-				&& this.currentSubState == AISubState.TARGET_LOST) {
+			&& this.currentSubState == AISubState.TARGET_LOST) {
 			this.currentSubState = AISubState.NONE;
 		}
 		this.currentState = newState;
@@ -267,6 +281,7 @@ public abstract class AbstractAI implements AI2 {
 	/**
 	 * 若子状态不同则切换子状态。
 	 * Changes the sub-state if it differs from the current one.
+	 *
 	 * @param newSubState 新子状态 / new sub-state
 	 * @return 是否发生切换 / whether the sub-state changed
 	 */
@@ -287,6 +302,7 @@ public abstract class AbstractAI implements AI2 {
 	/**
 	 * 接收通用事件并在允许时分发处理。
 	 * Receives a general event and dispatches it when allowed.
+	 *
 	 * @param event 事件类型 / event type
 	 */
 	@Override
@@ -302,7 +318,8 @@ public abstract class AbstractAI implements AI2 {
 	/**
 	 * 接收生物相关事件并在允许时分发处理。
 	 * Receives a creature event and dispatches it when allowed.
-	 * @param event 事件类型 / event type
+	 *
+	 * @param event    事件类型 / event type
 	 * @param creature 相关生物 / related creature
 	 */
 	@Override
@@ -320,7 +337,7 @@ public abstract class AbstractAI implements AI2 {
 	public void onAttacked(Creature attacker, AttackStatus status) {
 		Preconditions.checkNotNull(attacker, "Attacker must not be null");
 		if (canHandleEvent(AIEventType.ATTACK)
-				&& !DataManager.TRIBE_RELATIONS_DATA.isFriendlyRelation(getOwner().getTribe(), attacker.getTribe())) {
+			&& !DataManager.TRIBE_RELATIONS_DATA.isFriendlyRelation(getOwner().getTribe(), attacker.getTribe())) {
 			handleAttack(attacker, status);
 			logEvent(AIEventType.ATTACK);
 		}
@@ -338,8 +355,9 @@ public abstract class AbstractAI implements AI2 {
 	/**
 	 * 接收自定义事件并分发处理。
 	 * Receives a custom event and dispatches it.
+	 *
 	 * @param eventId 事件 ID / event id
-	 * @param args 参数 / arguments
+	 * @param args    参数 / arguments
 	 */
 	@Override
 	public void onCustomEvent(int eventId, Object... args) {
@@ -352,6 +370,7 @@ public abstract class AbstractAI implements AI2 {
 	/**
 	 * 获取所有者对象 ID。
 	 * Returns the owner's object id.
+	 *
 	 * @return 对象 ID / object id
 	 */
 	public int getObjectId() {
@@ -361,6 +380,7 @@ public abstract class AbstractAI implements AI2 {
 	/**
 	 * 获取世界坐标。
 	 * Returns the world position.
+	 *
 	 * @return 世界坐标 / world position
 	 */
 	public WorldPosition getPosition() {
@@ -370,6 +390,7 @@ public abstract class AbstractAI implements AI2 {
 	/**
 	 * 获取当前目标。
 	 * Returns the current target.
+	 *
 	 * @return 目标对象 / target object
 	 */
 	public VisibleObject getTarget() {
@@ -379,15 +400,17 @@ public abstract class AbstractAI implements AI2 {
 	/**
 	 * 判断所有者是否已死亡。
 	 * Returns whether the owner is already dead.
+	 *
 	 * @return 是否已死亡 / whether already dead
 	 */
 	public boolean isAlreadyDead() {
 		return owner.getLifeStats().isAlreadyDead();
 	}
 
-    /**
+	/**
 	 * 尝试获取思考锁（非阻塞）。
 	 * Tries to acquire the think lock (non-blocking).
+	 *
 	 * @return 是否获取成功 / whether acquired
 	 */
 	public final boolean tryLockThink() {
@@ -405,6 +428,7 @@ public abstract class AbstractAI implements AI2 {
 	/**
 	 * 是否开启调试日志。
 	 * Returns whether debug logging is enabled.
+	 *
 	 * @return 是否记录日志 / whether logging
 	 */
 	@Override
@@ -412,108 +436,171 @@ public abstract class AbstractAI implements AI2 {
 		return logging;
 	}
 
-	/** 处理激活 / Handle activate */
+	/**
+	 * 处理激活 / Handle activate
+	 */
 	protected abstract void handleActivate();
 
-	/** 处理停用 / Handle deactivate */
+	/**
+	 * 处理停用 / Handle deactivate
+	 */
 	protected abstract void handleDeactivate();
 
-	/** 处理刷新完成 / Handle spawned */
+	/**
+	 * 处理刷新完成 / Handle spawned
+	 */
 	protected abstract void handleSpawned();
 
-	/** 处理重生 / Handle respawned */
+	/**
+	 * 处理重生 / Handle respawned
+	 */
 	protected abstract void handleRespawned();
 
-	/** 处理消失 / Handle despawned */
+	/**
+	 * 处理消失 / Handle despawned
+	 */
 	protected abstract void handleDespawned();
 
-	/** 处理死亡 / Handle died */
+	/**
+	 * 处理死亡 / Handle died
+	 */
 	protected abstract void handleDied();
 
-	/** 处理被指定生物击杀 / Handle killed by creature */
+	/**
+	 * 处理被指定生物击杀 / Handle killed by creature
+	 */
 	protected abstract void handleKilled(Creature killer);
 
-	/** 处理移动校验 / Handle move validate */
+	/**
+	 * 处理移动校验 / Handle move validate
+	 */
 	protected abstract void handleMoveValidate();
 
-	/** 处理到达路径点 / Handle move arrived */
+	/**
+	 * 处理到达路径点 / Handle move arrived
+	 */
 	protected abstract void handleMoveArrived();
 
-	/** 处理攻击完成 / Handle attack complete */
+	/**
+	 * 处理攻击完成 / Handle attack complete
+	 */
 	protected abstract void handleAttackComplete();
 
-	/** 处理结束攻击 / Handle finish attack */
+	/**
+	 * 处理结束攻击 / Handle finish attack
+	 */
 	protected abstract void handleFinishAttack();
 
-	/** 处理到达目标 / Handle target reached */
+	/**
+	 * 处理到达目标 / Handle target reached
+	 */
 	protected abstract void handleTargetReached();
 
-	/** 处理目标过远 / Handle target too far */
+	/**
+	 * 处理目标过远 / Handle target too far
+	 */
 	protected abstract void handleTargetTooFar();
 
-	/** 处理放弃目标 / Handle target giveup */
+	/**
+	 * 处理放弃目标 / Handle target giveup
+	 */
 	protected abstract void handleTargetGiveup();
 
-	/** 处理不在出生点 / Handle not at home */
+	/**
+	 * 处理不在出生点 / Handle not at home
+	 */
 	protected abstract void handleNotAtHome();
 
-	/** 处理返回出生点 / Handle back home */
+	/**
+	 * 处理返回出生点 / Handle back home
+	 */
 	protected abstract void handleBackHome();
 
-	/** 处理掉落注册完成 / Handle drop registered */
+	/**
+	 * 处理掉落注册完成 / Handle drop registered
+	 */
 	protected abstract void handleDropRegistered();
 
-	/** 处理被攻击 / Handle attack */
+	/**
+	 * 处理被攻击 / Handle attack
+	 */
 	protected abstract void handleAttack(Creature creature);
 
 	protected void handleAttack(Creature creature, AttackStatus status) {
 		handleAttack(creature);
 	}
 
-	/** 处理生物需要支援 / Handle creature needs support */
+	/**
+	 * 处理生物需要支援 / Handle creature needs support
+	 */
 	protected abstract boolean handleCreatureNeedsSupport(Creature creature);
 
-	/** 处理守卫反击攻击者 / Handle guard against attacker */
+	/**
+	 * 处理守卫反击攻击者 / Handle guard against attacker
+	 */
 	protected abstract boolean handleGuardAgainstAttacker(Creature creature);
 
-	/** 处理看见生物 / Handle creature see */
+	/**
+	 * 处理看见生物 / Handle creature see
+	 */
 	protected abstract void handleCreatureSee(Creature creature);
 
-	/** 处理看不见生物 / Handle creature not see */
+	/**
+	 * 处理看不见生物 / Handle creature not see
+	 */
 	protected abstract void handleCreatureNotSee(Creature creature);
 
-	/** 处理生物移动 / Handle creature moved */
+	/**
+	 * 处理生物移动 / Handle creature moved
+	 */
 	protected abstract void handleCreatureMoved(Creature creature);
 
-	/** 处理生物仇恨 / Handle creature aggro */
+	/**
+	 * 处理生物仇恨 / Handle creature aggro
+	 */
 	protected abstract void handleCreatureAggro(Creature creature);
 
-	/** 处理技能成功作用事件 / Handle successfully affected by skill */
+	/**
+	 * 处理技能成功作用事件 / Handle successfully affected by skill
+	 */
 	protected abstract void handleSpelled(Creature caster, int skillId, int skillLevel);
 
-	/** 处理目标变更 / Handle target changed */
+	/**
+	 * 处理目标变更 / Handle target changed
+	 */
 	protected abstract void handleTargetChanged(Creature creature);
 
-	/** 处理开始跟随 / Handle follow me */
+	/**
+	 * 处理开始跟随 / Handle follow me
+	 */
 	protected abstract void handleFollowMe(Creature creature);
 
-	/** 处理停止跟随 / Handle stop follow me */
+	/**
+	 * 处理停止跟随 / Handle stop follow me
+	 */
 	protected abstract void handleStopFollowMe(Creature creature);
 
-	/** 处理对话开始 / Handle dialog start */
+	/**
+	 * 处理对话开始 / Handle dialog start
+	 */
 	protected abstract void handleDialogStart(Player player);
 
-	/** 处理对话结束 / Handle dialog finish */
+	/**
+	 * 处理对话结束 / Handle dialog finish
+	 */
 	protected abstract void handleDialogFinish(Player player);
 
-	/** 处理自定义事件 / Handle custom event */
+	/**
+	 * 处理自定义事件 / Handle custom event
+	 */
 	protected abstract void handleCustomEvent(int eventId, Object... args);
 
 	/**
 	 * 处理模式喊话。
 	 * Handles a pattern shout.
-	 * @param event 喊话事件 / shout event
-	 * @param pattern 模式字符串 / pattern
+	 *
+	 * @param event       喊话事件 / shout event
+	 * @param pattern     模式字符串 / pattern
 	 * @param skillNumber 技能编号 / skill number
 	 * @return 是否已处理 / whether handled
 	 */
@@ -522,6 +609,7 @@ public abstract class AbstractAI implements AI2 {
 	/**
 	 * 分发通用事件到具体处理器（带回调注解）。
 	 * Dispatches a general event to the concrete handler (with callback annotation).
+	 *
 	 * @param event 事件类型 / event type
 	 */
 	protected void handleGeneralEvent(AIEventType event) {
@@ -530,78 +618,79 @@ public abstract class AbstractAI implements AI2 {
 		}
 		logEvent(event);
 		switch (event) {
-		case MOVE_VALIDATE:
-			handleMoveValidate();
-			break;
-		case MOVE_ARRIVED:
-			handleMoveArrived();
-			break;
-		case SPAWNED:
-			handleSpawned();
-			break;
-		case RESPAWNED:
-			handleRespawned();
-			break;
-		case DESPAWNED:
-			handleDespawned();
-			break;
-		case DIED:
-			if (!aiDeathListeners.isEmpty()) {
-				for (AiDeathListener listener : aiDeathListeners) {
-					listener.onBeforeDie(this);
+			case MOVE_VALIDATE:
+				handleMoveValidate();
+				break;
+			case MOVE_ARRIVED:
+				handleMoveArrived();
+				break;
+			case SPAWNED:
+				handleSpawned();
+				break;
+			case RESPAWNED:
+				handleRespawned();
+				break;
+			case DESPAWNED:
+				handleDespawned();
+				break;
+			case DIED:
+				if (!aiDeathListeners.isEmpty()) {
+					for (AiDeathListener listener : aiDeathListeners) {
+						listener.onBeforeDie(this);
+					}
 				}
-			}
-			handleDied();
-			if (!aiDeathListeners.isEmpty()) {
-				for (AiDeathListener listener : aiDeathListeners) {
-					listener.onAfterDie(this);
+				handleDied();
+				if (!aiDeathListeners.isEmpty()) {
+					for (AiDeathListener listener : aiDeathListeners) {
+						listener.onAfterDie(this);
+					}
 				}
-			}
-			break;
-		case ATTACK_COMPLETE:
-			handleAttackComplete();
-			break;
-		case ATTACK_FINISH:
-			handleFinishAttack();
-			break;
-		case TARGET_REACHED:
-			handleTargetReached();
-			break;
-		case TARGET_TOOFAR:
-			handleTargetTooFar();
-			break;
-		case TARGET_GIVEUP:
-			handleTargetGiveup();
-			break;
-		case NOT_AT_HOME:
-			handleNotAtHome();
-			break;
-		case BACK_HOME:
-			handleBackHome();
-			break;
-		case ACTIVATE:
-			handleActivate();
-			break;
-		case DEACTIVATE:
-			handleDeactivate();
-			break;
-		case FREEZE:
-			FreezeEventHandler.onFreeze(this);
-			break;
-		case UNFREEZE:
-			FreezeEventHandler.onUnfreeze(this);
-			break;
-		case DROP_REGISTERED:
-			handleDropRegistered();
-			break;
-		default:
-			break;
+				break;
+			case ATTACK_COMPLETE:
+				handleAttackComplete();
+				break;
+			case ATTACK_FINISH:
+				handleFinishAttack();
+				break;
+			case TARGET_REACHED:
+				handleTargetReached();
+				break;
+			case TARGET_TOOFAR:
+				handleTargetTooFar();
+				break;
+			case TARGET_GIVEUP:
+				handleTargetGiveup();
+				break;
+			case NOT_AT_HOME:
+				handleNotAtHome();
+				break;
+			case BACK_HOME:
+				handleBackHome();
+				break;
+			case ACTIVATE:
+				handleActivate();
+				break;
+			case DEACTIVATE:
+				handleDeactivate();
+				break;
+			case FREEZE:
+				FreezeEventHandler.onFreeze(this);
+				break;
+			case UNFREEZE:
+				FreezeEventHandler.onUnfreeze(this);
+				break;
+			case DROP_REGISTERED:
+				handleDropRegistered();
+				break;
+			default:
+				break;
 		}
 	}
 
 	/**
 	 * 在开启 EVENT_DEBUG 时记录事件。
 	 * Logs the event when EVENT_DEBUG is enabled.
+	 *
 	 * @param event 事件类型 / event type
 	 */
 	protected void logEvent(AIEventType event) {
@@ -620,71 +709,78 @@ public abstract class AbstractAI implements AI2 {
 	/**
 	 * 分发生物相关事件到具体处理器。
 	 * Dispatches a creature event to the concrete handler.
-	 * @param event 事件类型 / event type
+	 *
+	 * @param event    事件类型 / event type
 	 * @param creature 相关生物 / related creature
 	 */
 	void handleCreatureEvent(AIEventType event, Creature creature) {
 		switch (event) {
-		case DIED:
-			handleKilled(creature);
-			break;
-		case ATTACK:
-			if (DataManager.TRIBE_RELATIONS_DATA.isFriendlyRelation(getOwner().getTribe(), creature.getTribe())) {
-				return;
-			}
-			handleAttack(creature);
-			logEvent(event);
-			break;
-		case CREATURE_NEEDS_SUPPORT:
-			if (!handleCreatureNeedsSupport(creature)) {
-				if (creature.getTarget() instanceof Creature targetCreature) {
-					if (!handleCreatureNeedsSupport(targetCreature)
+			case DIED:
+				handleKilled(creature);
+				break;
+			case ATTACK:
+				if (DataManager.TRIBE_RELATIONS_DATA.isFriendlyRelation(getOwner().getTribe(), creature.getTribe())) {
+					return;
+				}
+				handleAttack(creature);
+				logEvent(event);
+				break;
+			case CREATURE_NEEDS_SUPPORT:
+				if (!handleCreatureNeedsSupport(creature)) {
+					if (creature.getTarget() instanceof Creature targetCreature) {
+						if (!handleCreatureNeedsSupport(targetCreature)
 							&& !handleGuardAgainstAttacker(creature)) {
-						handleGuardAgainstAttacker(targetCreature);
+							handleGuardAgainstAttacker(targetCreature);
+						}
 					}
 				}
-			}
-			logEvent(event);
-			break;
-		case CREATURE_SEE:
-			handleCreatureSee(creature);
-			break;
-		case CREATURE_NOT_SEE:
-			handleCreatureNotSee(creature);
-			break;
-		case CREATURE_MOVED:
-			handleCreatureMoved(creature);
-			break;
-		case CREATURE_AGGRO:
-			handleCreatureAggro(creature);
-			logEvent(event);
-			break;
-		case TARGET_CHANGED:
-			handleTargetChanged(creature);
-			break;
-		case FOLLOW_ME:
-			handleFollowMe(creature);
-			logEvent(event);
-			break;
-		case STOP_FOLLOW_ME:
-			handleStopFollowMe(creature);
-			logEvent(event);
-			break;
-		case DIALOG_START:
-			handleDialogStart((Player) creature);
-			logEvent(event);
-			break;
-		case DIALOG_FINISH:
-			logEvent(event);
-			break;
-		default:
-			break;
+				logEvent(event);
+				break;
+			case CREATURE_SEE:
+				handleCreatureSee(creature);
+				break;
+			case CREATURE_NOT_SEE:
+				handleCreatureNotSee(creature);
+				break;
+			case CREATURE_MOVED:
+				handleCreatureMoved(creature);
+				break;
+			case CREATURE_AGGRO:
+				handleCreatureAggro(creature);
+				logEvent(event);
+				break;
+			case TARGET_CHANGED:
+				handleTargetChanged(creature);
+				break;
+			case FOLLOW_ME:
+				handleFollowMe(creature);
+				logEvent(event);
+				break;
+			case STOP_FOLLOW_ME:
+				handleStopFollowMe(creature);
+				logEvent(event);
+				break;
+			case DIALOG_START:
+				handleDialogStart((Player) creature);
+				logEvent(event);
+				break;
+			case DIALOG_FINISH:
+				// 服务端关闭对话（0x5d8 / CM_CLOSE_DIALOG 收尾）必须终结 TALK 子状态，
+				// 缺失会让巡逻对话 NPC 停在半路永不恢复（2026-10-06 NPC 203111/任务 14110 事故）。
+				// Server-side dialog close must end the TALK substate; without this dispatch a
+				// patrolling dialog NPC stalls mid-route forever (2026-10-06 NPC 203111/quest 14110 incident).
+				handleDialogFinish((Player) creature);
+				logEvent(event);
+				break;
+			default:
+				break;
 		}
 	}
 
 	/**
 	 * 投票式查询：先问实例，再处理通用问题。
 	 * Polls a question: instance first, then common questions.
+	 *
 	 * @param question 问题 / question
 	 * @return 是否肯定 / whether positive
 	 */
@@ -705,6 +801,7 @@ public abstract class AbstractAI implements AI2 {
 	/**
 	 * 向具体 AI 实例投票；无特有答案时返回 null。
 	 * Polls the concrete AI instance; returns null when no specific answer.
+	 *
 	 * @param question 问题 / question
 	 * @return 答案或 null / answer or null
 	 */
@@ -715,6 +812,7 @@ public abstract class AbstractAI implements AI2 {
 	/**
 	 * 询问问题，默认否定。
 	 * Asks a question; defaults to negative.
+	 *
 	 * @param question 问题 / question
 	 * @return 答案对象 / answer object
 	 */
@@ -726,6 +824,7 @@ public abstract class AbstractAI implements AI2 {
 	/**
 	 * 按当前状态判断是否已到达目的地。
 	 * Returns whether the destination is reached based on current state.
+	 *
 	 * @return 是否已到达 / whether reached
 	 */
 	protected boolean isDestinationReached() {
@@ -744,6 +843,7 @@ public abstract class AbstractAI implements AI2 {
 	/**
 	 * 昼夜切换时是否允许刷新（仅 DESPAWNED/CREATED）。
 	 * Returns whether spawn on daytime change is allowed (only DESPAWNED/CREATED).
+	 *
 	 * @return 是否允许 / whether allowed
 	 */
 	protected boolean isCanSpawnOnDaytimeChange() {
@@ -753,6 +853,7 @@ public abstract class AbstractAI implements AI2 {
 	/**
 	 * 是否允许喊话。
 	 * Returns whether shouting is allowed.
+	 *
 	 * @return 是否可喊话 / whether may shout
 	 */
 	public abstract boolean isMayShout();
@@ -760,6 +861,7 @@ public abstract class AbstractAI implements AI2 {
 	/**
 	 * 选择攻击意图。
 	 * Chooses the next attack intention.
+	 *
 	 * @return 攻击意图 / attack intention
 	 */
 	public abstract AttackIntention chooseAttackIntention();
@@ -767,6 +869,7 @@ public abstract class AbstractAI implements AI2 {
 	/**
 	 * 处理对话框选择，默认不处理。
 	 * Handles dialog select; not handled by default.
+	 *
 	 * @return 默认 false / always false
 	 */
 	@Override
@@ -777,10 +880,11 @@ public abstract class AbstractAI implements AI2 {
 	/**
 	 * 在与所有者相同世界/实例中刷新对象。
 	 * Spawns an object in the same world/instance as the AI owner.
-	 * @param npcId NPC ID / NPC id
-	 * @param x X 坐标 / x
-	 * @param y Y 坐标 / y
-	 * @param z Z 坐标 / z
+	 *
+	 * @param npcId   NPC ID / NPC id
+	 * @param x       X 坐标 / x
+	 * @param y       Y 坐标 / y
+	 * @param z       Z 坐标 / z
 	 * @param heading 朝向 / heading
 	 * @return 刷新的对象 / spawned object
 	 */
@@ -791,11 +895,12 @@ public abstract class AbstractAI implements AI2 {
 	/**
 	 * 在与所有者相同世界/实例中刷新带 entityId 的对象。
 	 * Spawns an object with entityId in the same world/instance as the AI owner.
-	 * @param npcId NPC ID / NPC id
-	 * @param x X 坐标 / x
-	 * @param y Y 坐标 / y
-	 * @param z Z 坐标 / z
-	 * @param heading 朝向 / heading
+	 *
+	 * @param npcId    NPC ID / NPC id
+	 * @param x        X 坐标 / x
+	 * @param y        Y 坐标 / y
+	 * @param z        Z 坐标 / z
+	 * @param heading  朝向 / heading
 	 * @param entityId 实体 ID / entity id
 	 * @return 刷新的对象 / spawned object
 	 */
@@ -806,18 +911,19 @@ public abstract class AbstractAI implements AI2 {
 	/**
 	 * 按完整参数刷新对象。
 	 * Spawns an object with full parameters.
-	 * @param worldId 世界 ID / world id
-	 * @param npcId NPC ID / NPC id
-	 * @param x X 坐标 / x
-	 * @param y Y 坐标 / y
-	 * @param z Z 坐标 / z
-	 * @param heading 朝向 / heading
-	 * @param entityId 实体 ID / entity id
+	 *
+	 * @param worldId    世界 ID / world id
+	 * @param npcId      NPC ID / NPC id
+	 * @param x          X 坐标 / x
+	 * @param y          Y 坐标 / y
+	 * @param z          Z 坐标 / z
+	 * @param heading    朝向 / heading
+	 * @param entityId   实体 ID / entity id
 	 * @param instanceId 副本实例 ID / instance id
 	 * @return 刷新的对象 / spawned object
 	 */
 	protected VisibleObject spawn(int worldId, int npcId, float x, float y, float z, byte heading, int entityId,
-			int instanceId) {
+								  int instanceId) {
 		SpawnTemplate template = SpawnEngine.addNewSingleTimeSpawn(worldId, npcId, x, y, z, heading);
 		template.setEntityId(entityId);
 		return SpawnEngine.spawnObject(template, instanceId);

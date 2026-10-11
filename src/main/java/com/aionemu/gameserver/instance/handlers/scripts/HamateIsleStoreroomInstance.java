@@ -33,6 +33,7 @@ import java.util.concurrent.Future;
 public class HamateIsleStoreroomInstance extends GeneralInstanceHandler
 {
 		/** 哈马特岛储藏室任务 / hamate isle storeroom task */
+		/** 哈马特岛储藏室任务 / hamate isle storeroom task */
 		private Future<?> hamateIsleStoreroomTask;
 		/** 是否启动计时器 / is start timer */
 		private boolean isStartTimer = false;

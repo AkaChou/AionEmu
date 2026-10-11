@@ -16,11 +16,11 @@ import java.util.List;
 /**
  * Norsvold 区域 NPC AI：Archon Shadow Scout（@AIName "archon_shadow_scout"），继承 NpcAI2。
  * Norsvold zone NPC AI: Archon Shadow Scout (@AIName "archon_shadow_scout"), extends NpcAI2.
+ *
  * @author Encom
  */
 @AIName("archon_shadow_scout")
-public class Archon_Shadow_ScoutAI2 extends NpcAI2
-{
+public class Archon_Shadow_ScoutAI2 extends NpcAI2 {
 	@Override
 	protected void handleSpawned() {
 		super.handleSpawned();
@@ -36,9 +36,11 @@ public class Archon_Shadow_ScoutAI2 extends NpcAI2
 	private void startRiftEscapeTask() {
 		GameThreadPoolServices.threadPoolManager().schedule(() -> spawnRiftEscape(701131), 2500);
 	}
+
 	private void startLifeTask() {
 		GameThreadPoolServices.threadPoolManager().schedule(() -> AI2Actions.deleteOwner(Archon_Shadow_ScoutAI2.this), 10000);
 	}
+
 	private void startRiftEscapeClosed() {
 		GameThreadPoolServices.threadPoolManager().schedule(() -> despawnNpc(701131), 12500);
 	}
@@ -58,7 +60,7 @@ public class Archon_Shadow_ScoutAI2 extends NpcAI2
 	private void despawnNpc(int npcId) {
 		if (getPosition().getWorldMapInstance().getNpcs(npcId) != null) {
 			List<Npc> npcs = getPosition().getWorldMapInstance().getNpcs(npcId);
-			for (Npc npc: npcs) {
+			for (Npc npc : npcs) {
 				npc.getController().onDelete();
 			}
 		}

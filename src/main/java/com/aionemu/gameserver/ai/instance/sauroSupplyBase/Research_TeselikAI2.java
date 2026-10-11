@@ -10,16 +10,15 @@ import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 
 import java.util.List;
-import java.util.concurrent.Future;
 
 /**
  * Sauro Supply Base 副本 NPC AI：Research Teselik（@AIName "research_teselik"），继承 AggressiveNpcAI2。
  * Sauro Supply Base instance NPC AI: Research Teselik (@AIName "research_teselik"), extends AggressiveNpcAI2.
+ *
  * @author Encom
  */
 @AIName("research_teselik")
-public class Research_TeselikAI2 extends AggressiveNpcAI2
-{
+public class Research_TeselikAI2 extends AggressiveNpcAI2 {
 	private int stage = 0;
 	private boolean isStart = false;
 
@@ -36,7 +35,7 @@ public class Research_TeselikAI2 extends AggressiveNpcAI2
 	}
 
 	private void beritraFavor() {
-	    GameEngineServices.skillEngine().getSkill(getOwner(), 21135, 1, getOwner()).useNoAnimationSkill(); // 布里特拉之加护 / Beritra's Favor.
+		GameEngineServices.skillEngine().getSkill(getOwner(), 21135, 1, getOwner()).useNoAnimationSkill(); // 布里特拉之加护 / Beritra's Favor.
 	}
 
 	@Override
@@ -67,8 +66,8 @@ public class Research_TeselikAI2 extends AggressiveNpcAI2
 	}
 
 	private void ShebanMysticalTyrhund() {
-	    if (!isAlreadyDead()) {
-		    GameThreadPoolServices.threadPoolManager().schedule(() -> {
+		if (!isAlreadyDead()) {
+			GameThreadPoolServices.threadPoolManager().schedule(() -> {
 				if (!isAlreadyDead()) {
 					spawn(284455, 482.25043f, 337.24167f, 181.71579f, (byte) 30); // 生成 Sheban Mystical Tyrhund / spawn Sheban Mystical Tyrhund.
 					spawn(284455, 476.00104f, 337.45627f, 181.71579f, (byte) 30); // 生成 Sheban Mystical Tyrhund / spawn Sheban Mystical Tyrhund.
@@ -85,7 +84,7 @@ public class Research_TeselikAI2 extends AggressiveNpcAI2
 
 	private void despawnNpcs(int npcId) {
 		List<Npc> npcs = getPosition().getWorldMapInstance().getNpcs(npcId);
-		for (Npc npc: npcs) {
+		for (Npc npc : npcs) {
 			if (npc != null) {
 				npc.getController().onDelete();
 			}
@@ -95,7 +94,7 @@ public class Research_TeselikAI2 extends AggressiveNpcAI2
 	@Override
 	protected void handleBackHome() {
 		super.handleBackHome();
-        despawnNpcs(284455); // 移除 Sheban Mystical Tyrhund / despawn Sheban Mystical Tyrhund.
+		despawnNpcs(284455); // 移除 Sheban Mystical Tyrhund / despawn Sheban Mystical Tyrhund.
 		isStart = false;
 		stage = 0;
 	}
@@ -103,7 +102,7 @@ public class Research_TeselikAI2 extends AggressiveNpcAI2
 	@Override
 	protected void handleDied() {
 		super.handleDied();
-        despawnNpcs(284455); // 移除 Sheban Mystical Tyrhund / despawn Sheban Mystical Tyrhund.
+		despawnNpcs(284455); // 移除 Sheban Mystical Tyrhund / despawn Sheban Mystical Tyrhund.
 		isStart = false;
 		stage = 0;
 	}

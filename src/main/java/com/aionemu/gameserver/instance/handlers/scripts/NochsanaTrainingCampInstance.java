@@ -55,12 +55,10 @@ public class NochsanaTrainingCampInstance extends GeneralInstanceHandler
 	 */
 	@Override
 	public void handleUseItemFinish(Player player, Npc npc) {
-		switch(npc.getNpcId()) {
-			case 700437: //Nochsana Artifact.
-				//sendMsg("You win effect <Shield Of Compassion>");
-				GameEngineServices.skillEngine().getSkill(npc, 276, 10, player).useNoAnimationSkill();
-			break;
-		}
+ 		if (npc.getNpcId() == 700437) {
+ 			//Nochsana Artifact.
+ 			GameEngineServices.skillEngine().getSkill(npc, 276, 10, player).useNoAnimationSkill();
+ 		}
 	}
 
 	/**

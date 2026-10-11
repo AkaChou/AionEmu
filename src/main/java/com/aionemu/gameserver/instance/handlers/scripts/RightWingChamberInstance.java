@@ -28,6 +28,7 @@ public class RightWingChamberInstance extends GeneralInstanceHandler
 		/** chest rwctask / chest rwctask */
 		private Future<?> chestRWCTask;
 		/** rightwing 任务 / right wing task */
+		/** rightwing 任务 / right wing task */
 		private Future<?> rightWingTask;
 		/** 是否启动计时器 / is start timer */
 		private boolean isStartTimer = false;

@@ -32,6 +32,7 @@ import java.util.concurrent.Future;
 public class CarpusIsleStoreroomInstance extends GeneralInstanceHandler
 {
 		/** carpus 岛储藏室任务 / carpus isle storeroom task */
+		/** carpus 岛储藏室任务 / carpus isle storeroom task */
 		private Future<?> carpusIsleStoreroomTask;
 		/** 是否启动计时器 / is start timer */
 		private boolean isStartTimer = false;

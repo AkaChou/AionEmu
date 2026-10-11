@@ -57,6 +57,7 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
 	/** 副本时间戳 / instance timestamp */
 	private long instanceTime;
 		/** fake book2task / fake book2task */
+		/** fake book2task / fake book2task */
 		private Future<?> fakeBook2Task;
 		/** 副本计时器 / instance timer */
 		private Future<?> instanceTimer;

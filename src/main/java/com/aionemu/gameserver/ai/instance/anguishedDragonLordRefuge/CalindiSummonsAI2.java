@@ -14,11 +14,11 @@ import java.util.concurrent.Future;
 /**
  * Anguished Dragon Lord Refuge 副本 NPC AI：Calindi Summons（@AIName "calindisummon"），继承 AggressiveNpcAI2。
  * Anguished Dragon Lord Refuge instance NPC AI: Calindi Summons (@AIName "calindisummon"), extends AggressiveNpcAI2.
+ *
  * @author Encom
  */
 @AIName("anguished_dragon_lord_refuge_calindisummon")
-public class CalindiSummonsAI2 extends AggressiveNpcAI2
-{
+public class CalindiSummonsAI2 extends AggressiveNpcAI2 {
 	private Future<?> task;
 
 	@Override
@@ -42,11 +42,9 @@ public class CalindiSummonsAI2 extends AggressiveNpcAI2
 
 	@Override
 	protected AIAnswer pollInstance(AIQuestion question) {
-        return switch (question) {
-            case SHOULD_DECAY -> AIAnswers.NEGATIVE;
-            case SHOULD_RESPAWN -> AIAnswers.NEGATIVE;
-            case SHOULD_REWARD -> AIAnswers.NEGATIVE;
-            default -> null;
-        };
+		return switch (question) {
+			case SHOULD_DECAY, SHOULD_RESPAWN, SHOULD_REWARD -> AIAnswers.NEGATIVE;
+			default -> null;
+		};
 	}
 }

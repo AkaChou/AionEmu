@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.ai.instance.empyreanCrucible;
 
-import com.aionemu.gameserver.lifecycle.GameFeatureServices;
 
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
@@ -34,11 +33,11 @@ utilizing potions, DP, and high cooldown skills to make sure you are victorious!
 /**
  * Empyrean Crucible 副本 NPC AI：Vanktrist（@AIName "vanktrist"），继承 AggressiveNpcAI2。
  * Empyrean Crucible instance NPC AI: Vanktrist (@AIName "vanktrist"), extends AggressiveNpcAI2.
+ *
  * @author Encom
  */
 @AIName("vanktrist")
-public class VanktristAI2 extends AggressiveNpcAI2
-{
+public class VanktristAI2 extends AggressiveNpcAI2 {
 	private Future<?> phaseTask;
 	private final AtomicBoolean isAggred = new AtomicBoolean(false);
 	private final AtomicBoolean isStartedEvent = new AtomicBoolean(false);
@@ -55,7 +54,8 @@ public class VanktristAI2 extends AggressiveNpcAI2
 			if (isStartedEvent.compareAndSet(false, true)) {
 				startPhaseTask();
 			}
-		} if (hpPercentage <= 50) {
+		}
+		if (hpPercentage <= 50) {
 			if (isStartedEvent.compareAndSet(false, true)) {
 				startPhaseTask();
 			}
@@ -72,7 +72,7 @@ public class VanktristAI2 extends AggressiveNpcAI2
 				if (!players.isEmpty()) {
 					int size = players.size();
 					if (players.isEmpty()) {
-						for (Player p: players) {
+						for (Player p : players) {
 							spawnWeakenedDimensionalVortex(p);
 						}
 					} else {
@@ -104,7 +104,7 @@ public class VanktristAI2 extends AggressiveNpcAI2
 
 	private List<Player> getLifedPlayers() {
 		List<Player> players = new ArrayList<>();
-		for (Player player: getKnownList().getKnownPlayers().values()) {
+		for (Player player : getKnownList().getKnownPlayers().values()) {
 			if (!PlayerActions.isAlreadyDead(player)) {
 				players.add(player);
 			}
@@ -143,7 +143,7 @@ public class VanktristAI2 extends AggressiveNpcAI2
 	}
 
 	private void deleteNpcs(List<Npc> npcs) {
-		for (Npc npc: npcs) {
+		for (Npc npc : npcs) {
 			if (npc != null) {
 				npc.getController().onDelete();
 			}

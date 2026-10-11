@@ -14,11 +14,11 @@ import com.aionemu.gameserver.world.WorldPosition;
 /**
  * Panesterra 区域 NPC AI：Enraged Guardian General（@AIName "enraged_guardian_general"），继承 AggressiveNpcAI2。
  * Panesterra zone NPC AI: Enraged Guardian General (@AIName "enraged_guardian_general"), extends AggressiveNpcAI2.
+ *
  * @author Encom
  */
 @AIName("enraged_guardian_general")
-public class EnragedGuardianGeneralAI2 extends AggressiveNpcAI2
-{
+public class EnragedGuardianGeneralAI2 extends AggressiveNpcAI2 {
 	@Override
 	protected void handleAttack(Creature creature) {
 		super.handleAttack(creature);
@@ -31,22 +31,22 @@ public class EnragedGuardianGeneralAI2 extends AggressiveNpcAI2
 				killedTheGuardianGeneral();
 				GameThreadPoolServices.threadPoolManager().schedule(() -> spawnTreasureChest(701481), 10000);
 				GameThreadPoolServices.threadPoolManager().schedule(() -> spawn(802219, 1024.12f, 1078.747f, 1530.2688f, (byte) 90), 480000);
-			break;
+				break;
 			case 277425: //Enraged Guardian General.
 				killedTheGuardianGeneral();
 				GameThreadPoolServices.threadPoolManager().schedule(() -> spawnTreasureChest(701481), 10000);
 				GameThreadPoolServices.threadPoolManager().schedule(() -> spawn(802221, 1024.12f, 1078.747f, 1530.2688f, (byte) 90), 480000);
-			break;
+				break;
 			case 277440: //Enraged Guardian General.
 				killedTheGuardianGeneral();
 				GameThreadPoolServices.threadPoolManager().schedule(() -> spawnTreasureChest(701481), 10000);
 				GameThreadPoolServices.threadPoolManager().schedule(() -> spawn(802223, 1024.12f, 1078.747f, 1530.2688f, (byte) 90), 480000);
-			break;
+				break;
 			case 277455: //Enraged Guardian General.
 				killedTheGuardianGeneral();
 				GameThreadPoolServices.threadPoolManager().schedule(() -> spawnTreasureChest(701481), 10000);
 				GameThreadPoolServices.threadPoolManager().schedule(() -> spawn(802225, 1024.12f, 1078.747f, 1530.2688f, (byte) 90), 480000);
-			break;
+				break;
 		}
 		super.handleDied();
 	}
@@ -69,7 +69,7 @@ public class EnragedGuardianGeneralAI2 extends AggressiveNpcAI2
 	}
 
 	private void killedTheGuardianGeneral() {
-        com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
 			// 正在加载进阶走廊护盾……请稍候。 / Loading the Advance Corridor Shield... Please wait.
 			PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_GAB1_SUB_ALARM_01, 0);
 			// 特兰西迪姆附楼入口将在 8 分钟后开启。 / The entrance to the Transidium Annex will open in 8 minutes.
@@ -85,5 +85,5 @@ public class EnragedGuardianGeneralAI2 extends AggressiveNpcAI2
 			// 特兰西迪姆附楼入口已开启。 / The entrance to the Transidium Annex has opened.
 			PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_GAB1_SUB_ALARM_08, 480000);
 		});
-    }
+	}
 }

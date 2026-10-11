@@ -68,6 +68,7 @@ import com.aionemu.gameserver.world.knownlist.Visitor;
  * <p>
  * 当前实现为临时方案，后续可能替换。
  * Current implementation is temporal and may be replaced.
+ *
  * @author Luno
  * @author ATracer
  * @author Source
@@ -78,7 +79,9 @@ import com.aionemu.gameserver.world.knownlist.Visitor;
 @Slf4j
 public class SpawnEngine {
 
-	/** geo 兜底与数据 Z 偏差超过该值（米）时记录 WARN。 / Warn when the geo fallback deviates from the authored Z by more than this many meters. */
+	/**
+	 * geo 兜底与数据 Z 偏差超过该值（米）时记录 WARN。 / Warn when the geo fallback deviates from the authored Z by more than this many meters.
+	 */
 	private static final float GEO_FALLBACK_WARN_DELTA = 10.0f;
 
 	/**
@@ -93,14 +96,17 @@ public class SpawnEngine {
 	 */
 	private static final float AUTHORED_SURFACE_DELTA = 2.0f;
 
-	/** 已告警的 (worldId, npcId) 与上限，避免同一模板在启动期刷屏。 / Warned (worldId, npcId) pairs and their cap, to avoid startup log flooding. */
+	/**
+	 * 已告警的 (worldId, npcId) 与上限，避免同一模板在启动期刷屏。 / Warned (worldId, npcId) pairs and their cap, to avoid startup log flooding.
+	 */
 	private static final Set<Long> GEO_FALLBACK_WARNED = ConcurrentHashMap.newKeySet();
 	private static final int GEO_FALLBACK_WARN_CAP = 2048;
 
 	/**
 	 * 根据刷怪模板创建并刷出 VisibleObject。
 	 * Creates and spawns a VisibleObject from the given spawn template.
-	 * @param spawn 刷怪模板 / spawn template
+	 *
+	 * @param spawn         刷怪模板 / spawn template
 	 * @param instanceIndex 实例索引 / instance index
 	 * @return 已创建并刷出的可见对象 / created and spawned visible object
 	 */
@@ -117,7 +123,8 @@ public class SpawnEngine {
 	/**
 	 * 按模板类型分派到具体刷怪实现。
 	 * Dispatches to a concrete spawner by template type.
-	 * @param spawn 刷怪模板 / spawn template
+	 *
+	 * @param spawn         刷怪模板 / spawn template
 	 * @param instanceIndex 实例索引 / instance index
 	 * @return 刷出的可见对象 / spawned visible object
 	 */
@@ -175,11 +182,12 @@ public class SpawnEngine {
 	/**
 	 * 创建基础刷怪模板（无重生、无主人）。
 	 * Creates a basic spawn template (no respawn, no master).
+	 *
 	 * @param worldId 世界 ID / world id
-	 * @param npcId NPC 模板 ID / npc template id
-	 * @param x X 坐标 / X
-	 * @param y Y 坐标 / Y
-	 * @param z Z 坐标 / Z
+	 * @param npcId   NPC 模板 ID / npc template id
+	 * @param x       X 坐标 / X
+	 * @param y       Y 坐标 / Y
+	 * @param z       Z 坐标 / Z
 	 * @param heading 朝向 / heading
 	 * @return 刷怪模板 / spawn template
 	 */
@@ -190,18 +198,19 @@ public class SpawnEngine {
 	/**
 	 * 创建带创建者与主人名的刷怪模板（如代码侧攻城刷怪）。
 	 * Creates a spawn template with creator and master name (e.g. code-side siege spawns).
-	 * @param worldId 世界 ID / world id
-	 * @param npcId NPC 模板 ID / npc template id
-	 * @param x X 坐标 / X
-	 * @param y Y 坐标 / Y
-	 * @param z Z 坐标 / Z
-	 * @param heading 朝向 / heading
-	 * @param creatorId 创建者 ID / creator id
+	 *
+	 * @param worldId    世界 ID / world id
+	 * @param npcId      NPC 模板 ID / npc template id
+	 * @param x          X 坐标 / X
+	 * @param y          Y 坐标 / Y
+	 * @param z          Z 坐标 / Z
+	 * @param heading    朝向 / heading
+	 * @param creatorId  创建者 ID / creator id
 	 * @param masterName 主人名 / master name
 	 * @return 刷怪模板 / spawn template
 	 */
 	static SpawnTemplate createSpawnTemplate(int worldId, int npcId, float x, float y, float z, byte heading,
-			int creatorId, String masterName) {
+											 int creatorId, String masterName) {
 		SpawnTemplate template = createSpawnTemplate(worldId, npcId, x, y, z, heading);
 		template.setCreatorId(creatorId);
 		template.setMasterName(masterName);
@@ -211,21 +220,22 @@ public class SpawnEngine {
 	/**
 	 * 添加攻城刷怪模板（非 static_data，如 CustomBalaurAssault）。
 	 * Adds a siege spawn template from code rather than static_data (e.g. CustomBalaurAssault).
+	 *
 	 * @param worldId 世界 ID / world id
-	 * @param npcId NPC 模板 ID / npc template id
+	 * @param npcId   NPC 模板 ID / npc template id
 	 * @param siegeId 攻城 ID / siege id
-	 * @param race 攻城种族 / siege race
-	 * @param mod 攻城模式类型 / siege mod type
-	 * @param x X 坐标 / X
-	 * @param y Y 坐标 / Y
-	 * @param z Z 坐标 / Z
+	 * @param race    攻城种族 / siege race
+	 * @param mod     攻城模式类型 / siege mod type
+	 * @param x       X 坐标 / X
+	 * @param y       Y 坐标 / Y
+	 * @param z       Z 坐标 / Z
 	 * @param heading 朝向 / heading
 	 * @return 攻城刷怪模板 / siege spawn template
 	 */
 	public static SiegeSpawnTemplate addNewSiegeSpawn(int worldId, int npcId, int siegeId, SiegeRace race,
-			SiegeModType mod, float x, float y, float z, byte heading) {
+													  SiegeModType mod, float x, float y, float z, byte heading) {
 		SiegeSpawnTemplate spawnTemplate = new SiegeSpawnTemplate(new SpawnGroup2(worldId, npcId), x, y, z, heading, 0,
-				null, 0, 0);
+			null, 0, 0);
 		spawnTemplate.setSiegeId(siegeId);
 		spawnTemplate.setSiegeRace(race);
 		spawnTemplate.setSiegeModType(mod);
@@ -238,17 +248,18 @@ public class SpawnEngine {
 	 * <p>
 	 * 通过本方法创建的刷怪不会被 //save_spawn 持久化。
 	 * Spawns created this way are not saved by //save_spawn.
-	 * @param worldId 世界 ID / world id
-	 * @param npcId NPC 模板 ID / npc template id
-	 * @param x X 坐标 / X
-	 * @param y Y 坐标 / Y
-	 * @param z Z 坐标 / Z
-	 * @param heading 朝向 / heading
+	 *
+	 * @param worldId     世界 ID / world id
+	 * @param npcId       NPC 模板 ID / npc template id
+	 * @param x           X 坐标 / X
+	 * @param y           Y 坐标 / Y
+	 * @param z           Z 坐标 / Z
+	 * @param heading     朝向 / heading
 	 * @param respawnTime 重生时间（秒，0 表示不重生） / respawn time in seconds (0 = no respawn)
 	 * @return 刷怪模板 / spawn template
 	 */
 	public static SpawnTemplate addNewSpawn(int worldId, int npcId, float x, float y, float z, byte heading,
-			int respawnTime) {
+											int respawnTime) {
 		SpawnTemplate spawnTemplate = createSpawnTemplate(worldId, npcId, x, y, z, heading);
 		spawnTemplate.setRespawnTime(respawnTime);
 		return spawnTemplate;
@@ -257,11 +268,12 @@ public class SpawnEngine {
 	/**
 	 * 创建一次性、无重生的刷怪模板。
 	 * Creates a non-permanent spawn template with no respawn.
+	 *
 	 * @param worldId 世界 ID / world id
-	 * @param npcId NPC 模板 ID / npc template id
-	 * @param x X 坐标 / X
-	 * @param y Y 坐标 / Y
-	 * @param z Z 坐标 / Z
+	 * @param npcId   NPC 模板 ID / npc template id
+	 * @param x       X 坐标 / X
+	 * @param y       Y 坐标 / Y
+	 * @param z       Z 坐标 / Z
 	 * @param heading 朝向 / heading
 	 * @return 刷怪模板 / spawn template
 	 */
@@ -272,18 +284,19 @@ public class SpawnEngine {
 	/**
 	 * 创建带创建者与主人名的一次性刷怪模板。
 	 * Creates a single-time spawn template with creator and master name.
-	 * @param worldId 世界 ID / world id
-	 * @param npcId NPC 模板 ID / npc template id
-	 * @param x X 坐标 / X
-	 * @param y Y 坐标 / Y
-	 * @param z Z 坐标 / Z
-	 * @param heading 朝向 / heading
-	 * @param creatorId 创建者 ID / creator id
+	 *
+	 * @param worldId    世界 ID / world id
+	 * @param npcId      NPC 模板 ID / npc template id
+	 * @param x          X 坐标 / X
+	 * @param y          Y 坐标 / Y
+	 * @param z          Z 坐标 / Z
+	 * @param heading    朝向 / heading
+	 * @param creatorId  创建者 ID / creator id
 	 * @param masterName 主人名 / master name
 	 * @return 刷怪模板 / spawn template
 	 */
 	public static SpawnTemplate addNewSingleTimeSpawn(int worldId, int npcId, float x, float y, float z, byte heading,
-			int creatorId, String masterName) {
+													  int creatorId, String masterName) {
 		SpawnTemplate template = addNewSpawn(worldId, npcId, x, y, z, heading, 0);
 		template.setCreatorId(creatorId);
 		template.setMasterName(masterName);
@@ -293,16 +306,17 @@ public class SpawnEngine {
 	/**
 	 * 将可见对象按刷怪模板坐标刷入指定实例。
 	 * Brings a visible object into the world using spawn template coordinates.
+	 *
 	 * @param visibleObject 可见对象 / the visible object
-	 * @param spawn 刷怪模板 / spawn template
+	 * @param spawn         刷怪模板 / spawn template
 	 * @param instanceIndex 实例索引 / instance index
 	 */
 	static void bringIntoWorld(VisibleObject visibleObject, SpawnTemplate spawn, int instanceIndex) {
 		float z = spawn.isResolveZ() ? SpawnSurfaceResolver.resolve(spawn, instanceIndex)
 			: projectedSpawnZ(visibleObject, spawn, npc -> GameWorldServices.pathService()
-				.projectGroundPoint(npc, spawn.getX(), spawn.getY(), spawn.getZ()));
+			.projectGroundPoint(npc, spawn.getX(), spawn.getY(), spawn.getZ()));
 		bringIntoWorld(visibleObject, spawn.getWorldId(), instanceIndex, spawn.getX(), spawn.getY(), z,
-				spawn.getHeading());
+			spawn.getHeading());
 	}
 
 	static float projectedSpawnZ(VisibleObject visibleObject, SpawnTemplate spawn, Function<Npc, float[]> projector) {
@@ -313,7 +327,7 @@ public class SpawnEngine {
 	}
 
 	static float projectedSpawnZ(VisibleObject visibleObject, SpawnTemplate spawn, Function<Npc, float[]> projector,
-			Function<Npc, Float> terrainHeight) {
+								 Function<Npc, Float> terrainHeight) {
 		return projectedSpawnZ(visibleObject, spawn, projector, terrainHeight, npc -> Float.NaN);
 	}
 
@@ -325,18 +339,19 @@ public class SpawnEngine {
 	 * 却有 geo 碰撞面与作者 Z 贴合时，采用的是该碰撞面而不是地形。
 	 * The terrain heightmap excludes prop meshes (rocks, buildings, bridges), so a geo collision
 	 * surface matching the authored Z wins over the terrain fallback.
+	 *
 	 * @param visibleObject 可见对象 / visible object
-	 * @param spawn 刷怪模板 / spawn template
-	 * @param projector PATH 地面投影 / PATH ground projector
+	 * @param spawn         刷怪模板 / spawn template
+	 * @param projector     PATH 地面投影 / PATH ground projector
 	 * @param terrainHeight 地形高度采样 / terrain height sampler
-	 * @param geoGround geo 碰撞面采样 / geo collision surface sampler
+	 * @param geoGround     geo 碰撞面采样 / geo collision surface sampler
 	 * @return 出生 Z / spawn Z
 	 */
 	static float projectedSpawnZ(VisibleObject visibleObject, SpawnTemplate spawn, Function<Npc, float[]> projector,
-			Function<Npc, Float> terrainHeight, Function<Npc, Float> geoGround) {
+								 Function<Npc, Float> terrainHeight, Function<Npc, Float> geoGround) {
 		// 零移速交互物可能使用水面或摆件高度，必须保留静态数据中的 Z。 / Immobile objects may use authored water/prop height.
 		if (!(visibleObject instanceof Npc npc) || spawn.canFly()
-				|| !(npc.getAi2() instanceof NpcAI2 ai) || !ai.isMoveSupported()) {
+			|| !(npc.getAi2() instanceof NpcAI2 ai) || !ai.isMoveSupported()) {
 			return spawn.getZ();
 		}
 		float[] point = projector.apply(npc);
@@ -376,7 +391,7 @@ public class SpawnEngine {
 		float delta = Math.abs(geoZ - authoredZ);
 		long warnKey = ((long) spawn.getWorldId() << 32) | (spawn.getNpcId() & 0xFFFFFFFFL);
 		if (delta > GEO_FALLBACK_WARN_DELTA && GEO_FALLBACK_WARNED.size() < GEO_FALLBACK_WARN_CAP
-				&& GEO_FALLBACK_WARNED.add(warnKey)) {
+			&& GEO_FALLBACK_WARNED.add(warnKey)) {
 			log.warn(I18n.get("log.4e874ec198eb", spawn.getWorldId(), spawn.getNpcId(), npc.getObjectId(),
 				spawn.getX(), spawn.getY(), spawn.getZ(), geoZ, Math.round(delta * 100f) / 100f));
 		}
@@ -387,6 +402,7 @@ public class SpawnEngine {
 	 * 判断是否为作者摆放的非生物对象（NON_ATTACKABLE / UNKNOWN），这类对象不参与 geo 贴地兜底。
 	 * Returns whether the NPC is an authored non-creature object (NON_ATTACKABLE / UNKNOWN), which must keep
 	 * its authored Z instead of being snapped to the geo surface.
+	 *
 	 * @param npc NPC / npc
 	 * @return 保留作者高度时为 true / true when the authored Z must be kept
 	 */
@@ -403,16 +419,17 @@ public class SpawnEngine {
 	 * 将可见对象登记、定位并刷入世界；目标实例已注销（副本销毁竞态）时放弃生成并记警告。
 	 * Stores, positions and spawns a visible object into the world; when the target instance is already
 	 * unregistered (instance-teardown race) the spawn is abandoned with a warning.
+	 *
 	 * @param visibleObject 可见对象 / the visible object
-	 * @param worldId 世界 ID / world id
+	 * @param worldId       世界 ID / world id
 	 * @param instanceIndex 实例索引 / instance index
-	 * @param x X 坐标 / X
-	 * @param y Y 坐标 / Y
-	 * @param z Z 坐标 / Z
-	 * @param h 朝向 / heading
+	 * @param x             X 坐标 / X
+	 * @param y             Y 坐标 / Y
+	 * @param z             Z 坐标 / Z
+	 * @param h             朝向 / heading
 	 */
 	public static void bringIntoWorld(VisibleObject visibleObject, int worldId, int instanceIndex, float x, float y,
-			float z, byte h) {
+									  float z, byte h) {
 		World world = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world();
 		// 目标实例可能已在副本销毁流程中注销：destroyInstance 先 removeWorldMapInstance 再逐个删除场内对象，
 		// 期间 AI 的 despawn 链仍会执行 spawn 动作（AI 路径不在实例处理器的 isInstanceDestroyed 护栏内）；
@@ -423,7 +440,12 @@ public class SpawnEngine {
 		// outside the instance handler's isInstanceDestroyed guard). setPosition would then silently leave
 		// mapRegion null, and spawning would NPE in onBeforeSpawn while leaving an unborn ghost object
 		// registered in World.
-		if (world.getWorldMap(worldId).getWorldMapInstanceById(instanceIndex) == null) {
+		// 地图未注册（如单测的极简 World、启动早期）不构成销毁竞态，必须走原有 spawn 路径；
+		// getWorldMap 对未注册 id 会抛 NPE/越界，故仅当「地图在册而实例已注销」才判定为竞态并放弃。
+		// An unregistered map (minimal test World, early boot) is not a teardown race and must keep the
+		// legacy spawn path; getWorldMap throws on unknown ids, so only "map registered but instance gone"
+		// counts as the teardown race.
+		if (isInstanceGone(world, worldId, instanceIndex)) {
 			VisibleObjectTemplate objectTemplate = visibleObject.getObjectTemplate();
 			int objectTemplateId = objectTemplate == null ? visibleObject.getObjectId() : objectTemplate.getTemplateId();
 			log.warn(I18n.get("log.3e552d08a3b9", objectTemplateId, worldId, instanceIndex));
@@ -435,8 +457,22 @@ public class SpawnEngine {
 	}
 
 	/**
+	 * 仅当地图已在注册表中而目标实例已被注销时为 true；注册表本身不可解析（极简 World/启动早期）时放行为 false。
+	 * True only when the map IS registered but the instance was torn down; fail-open (false) when the map
+	 * registry itself cannot resolve the id (minimal test worlds, early boot).
+	 */
+	private static boolean isInstanceGone(World world, int worldId, int instanceIndex) {
+		try {
+			return world.getWorldMap(worldId).getWorldMapInstanceById(instanceIndex) == null;
+		} catch (RuntimeException mapNotResolvable) {
+			return false;
+		}
+	}
+
+	/**
 	 * 将已有位置的可见对象登记并刷入世界。
 	 * Stores and spawns a visible object that already has a position.
+	 *
 	 * @param visibleObject 可见对象 / the visible object
 	 * @throws IllegalArgumentException 位置为空时 / when position is null
 	 */
@@ -505,6 +541,7 @@ public class SpawnEngine {
 	/**
 	 * 刷出指定世界地图（非副本）的全部刷怪。
 	 * Spawns all objects for the given non-instance world map.
+	 *
 	 * @param worldId 世界 ID / world id
 	 */
 	public static void spawnWorldMap(int worldId) {
@@ -517,6 +554,7 @@ public class SpawnEngine {
 	/**
 	 * 按世界模板刷出所有双子实例。
 	 * Spawns all twin instances defined by the world map template.
+	 *
 	 * @param worldMapTemplate 世界地图模板 / world map template
 	 */
 	private static void spawnBasedOnTemplate(WorldMapTemplate worldMapTemplate) {
@@ -532,8 +570,9 @@ public class SpawnEngine {
 	/**
 	 * 刷出指定世界实例（难度 0）。
 	 * Spawns the given world instance with difficulty 0.
-	 * @param worldId 世界 ID / world id
-	 * @param instanceId 实例 ID / instance id
+	 *
+	 * @param worldId     世界 ID / world id
+	 * @param instanceId  实例 ID / instance id
 	 * @param difficultId 难度 ID / difficulty id
 	 */
 	public static void spawnInstance(int worldId, int instanceId, int difficultId) {
@@ -543,10 +582,11 @@ public class SpawnEngine {
 	/**
 	 * 刷出指定世界实例的门、NPC、静态物与房屋。
 	 * Spawns doors, NPCs, static objects and houses for the world instance.
-	 * @param worldId 世界 ID / world id
-	 * @param instanceId 实例 ID / instance id
+	 *
+	 * @param worldId     世界 ID / world id
+	 * @param instanceId  实例 ID / instance id
 	 * @param difficultId 难度 ID / difficulty id
-	 * @param ownerId 房屋所有者 ID / house owner id
+	 * @param ownerId     房屋所有者 ID / house owner id
 	 */
 	public static void spawnInstance(int worldId, int instanceId, int difficultId, int ownerId) {
 		spawnInstance(worldId, instanceId, difficultId, 0, ownerId);
@@ -555,11 +595,12 @@ public class SpawnEngine {
 	/**
 	 * 刷出指定世界实例，并独立匹配难度与原版出生页。
 	 * Spawns a world instance while matching difficulty and retail spawn page independently.
-	 * @param worldId 世界 ID / world id
-	 * @param instanceId 实例 ID / instance id
+	 *
+	 * @param worldId     世界 ID / world id
+	 * @param instanceId  实例 ID / instance id
 	 * @param difficultId 难度 ID / difficulty id
-	 * @param spawnPage 原版出生页 / retail spawn page
-	 * @param ownerId 房屋所有者 ID / house owner id
+	 * @param spawnPage   原版出生页 / retail spawn page
+	 * @param ownerId     房屋所有者 ID / house owner id
 	 */
 	public static void spawnInstance(int worldId, int instanceId, int difficultId, int spawnPage, int ownerId) {
 		List<SpawnGroup2> worldSpawns = DataManager.SPAWNS_DATA2.getSpawnsByWorldId(worldId);
@@ -609,7 +650,7 @@ public class SpawnEngine {
 	static boolean matchesInstance(SpawnGroup2 spawn, int difficultId, int spawnPage) {
 		boolean matchesDifficulty = spawn.getDifficultId() == 0 || spawn.getDifficultId() == difficultId;
 		boolean matchesPage = !spawn.hasSpawnPage()
-				|| spawnPage >= spawn.getSpawnPage() && spawnPage <= spawn.getSpawnPageEnd();
+			|| spawnPage >= spawn.getSpawnPage() && spawnPage <= spawn.getSpawnPageEnd();
 		return matchesDifficulty && matchesPage;
 	}
 
@@ -651,6 +692,7 @@ public class SpawnEngine {
 	/**
 	 * 校验池大小是否不超过可用模板数。
 	 * Validates that pool size does not exceed available templates.
+	 *
 	 * @param spawn 刷怪组 / the spawn group
 	 * @return 池大小有效则为 true / true if valid
 	 */
@@ -678,21 +720,21 @@ public class SpawnEngine {
 	 * Visitor that tallies NPCs and gatherables.
 	 */
 	@Getter
-    static class StatsCollector implements Visitor<VisibleObject> {
+	static class StatsCollector implements Visitor<VisibleObject> {
 
 		/**
 		 * NPC 计数。
 		 * NPC count.
-         * -- GETTER --
-         *  NPC 数量 / npc count
-         */
+		 * -- GETTER --
+		 * NPC 数量 / npc count
+		 */
 		int npcCount;
 
 		/**
 		 * 采集物计数。
 		 * Gatherable count.
-         * -- GETTER --
-         */
+		 * -- GETTER --
+		 */
 		int gatherableCount;
 
 		@Override
@@ -704,12 +746,13 @@ public class SpawnEngine {
 			}
 		}
 
-    }
+	}
 
 	/**
 	 * 按刷怪组在指定实例中刷出静态物体（原 StaticObjectSpawnManager）。
 	 * Spawns static objects from a spawn group into the given instance (merged from StaticObjectSpawnManager).
-	 * @param spawn 刷怪组 / the spawn group
+	 *
+	 * @param spawn         刷怪组 / the spawn group
 	 * @param instanceIndex 实例索引 / instance index
 	 */
 	private static void spawnStaticObjectTemplate(SpawnGroup2 spawn, int instanceIndex) {
@@ -723,7 +766,7 @@ public class SpawnEngine {
 				SpawnTemplate template = spawn.getRndTemplate(instanceIndex);
 				int objectId = GameWorldBootstrapServices.idFactory().nextId();
 				StaticObject staticObject = new StaticObject(objectId, new StaticObjectController(), template,
-						objectTemplate);
+					objectTemplate);
 				staticObject.setKnownlist(new PlayerAwareKnownList(staticObject));
 				bringStaticObjectIntoWorld(staticObject, template, instanceIndex);
 			}
@@ -731,7 +774,7 @@ public class SpawnEngine {
 			for (SpawnTemplate template : spawn.getSpawnTemplates()) {
 				int objectId = GameWorldBootstrapServices.idFactory().nextId();
 				StaticObject staticObject = new StaticObject(objectId, new StaticObjectController(), template,
-						objectTemplate);
+					objectTemplate);
 				staticObject.setKnownlist(new PlayerAwareKnownList(staticObject));
 				bringStaticObjectIntoWorld(staticObject, template, instanceIndex);
 			}
@@ -746,7 +789,7 @@ public class SpawnEngine {
 		World world = GameWorldBootstrapServices.world();
 		world.storeObject(visibleObject);
 		world.setPosition(visibleObject, spawn.getWorldId(), instanceIndex, spawn.getX(), spawn.getY(), spawn.getZ(),
-				spawn.getHeading());
+			spawn.getHeading());
 		world.spawn(visibleObject);
 	}
 }

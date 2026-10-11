@@ -26,6 +26,7 @@ import java.util.concurrent.Future;
 public class SulfurTreeNestInstance extends GeneralInstanceHandler
 {
 		/** sulfurtreenest 任务 / sulfur tree nest task */
+		/** sulfurtreenest 任务 / sulfur tree nest task */
 		private Future<?> sulfurTreeNestTask;
 		/** 是否启动计时器 / is start timer */
 		private boolean isStartTimer = false;

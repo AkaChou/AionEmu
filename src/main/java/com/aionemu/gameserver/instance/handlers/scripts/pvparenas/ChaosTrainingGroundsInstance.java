@@ -17,15 +17,16 @@ import com.aionemu.gameserver.world.WorldMapInstance;
 /**
  * 混沌训练场副本事件处理器。
  * Instance event handler for Chaos Training Grounds.
+ *
  * @author Encom
  */
 
 @InstanceID(300420000)
-public class ChaosTrainingGroundsInstance extends PvPArenaInstance
-{
+public class ChaosTrainingGroundsInstance extends PvPArenaInstance {
 	/**
 	 * 副本创建时初始化逻辑。
 	 * Initialize logic when the instance is created.
+	 *
 	 * @param instance 世界地图实例 / world-map instance
 	 */
 	@Override
@@ -38,7 +39,8 @@ public class ChaosTrainingGroundsInstance extends PvPArenaInstance
 	/**
 	 * 玩家采集完成时处理。
 	 * Handle player gathering completion.
-	 * @param player 玩家 / player
+	 *
+	 * @param player     玩家 / player
 	 * @param gatherable gatherable
 	 */
 	@Override
@@ -99,21 +101,21 @@ public class ChaosTrainingGroundsInstance extends PvPArenaInstance
 				int scoreAP = (int) (totalScoreAP * scoreRate);
 				int scoreGP = (int) (totalScoreGP * scoreRate);
 				// <欧比斯点数> / <Abyss Points>
-				basicAP *= percent;
+				basicAP = (int) (basicAP * percent);
 				rankingAP *= percent;
 				rankingAP *= playerRate;
 				reward.setBasicAP(basicAP);
 				reward.setRankingAP((int) rankingAP);
 				reward.setScoreAP(scoreAP);
 				// <荣耀点数> / <Glory Points>
-				basicGP *= percent;
+				basicGP = (int) (basicGP * percent);
 				rankingGP *= percent;
 				rankingGP *= playerRate;
-				reward.setBasicGP((int)(basicGP * 0.1));
+				reward.setBasicGP((int) (basicGP * 0.1));
 				reward.setRankingGP((int) (rankingGP * 0.1));
-				reward.setScoreGP((int)(scoreGP * 0.1));
+				reward.setScoreGP((int) (scoreGP * 0.1));
 				int basicCrI = 0;
-				basicCrI *= percent;
+				basicCrI = (int) (basicCrI * percent);
 				float rankingCrI = totalRankingCrucible;
 				if (rank > 0) {
 					rankingCrI = rankingCrI - rankingCrI * generalRate;
@@ -125,7 +127,7 @@ public class ChaosTrainingGroundsInstance extends PvPArenaInstance
 				reward.setRankingCrucible((int) rankingCrI);
 				reward.setScoreCrucible(scoreCrI);
 				int basicCoI = 0;
-				basicCoI *= percent;
+				basicCoI = (int) (basicCoI * percent);
 				float rankingCoI = totalRankingCourage;
 				if (rank > 0) {
 					rankingCoI = rankingCoI - rankingCoI * generalRate;
@@ -138,7 +140,7 @@ public class ChaosTrainingGroundsInstance extends PvPArenaInstance
 				reward.setScoreCourage(scoreCoI);
 				// 5.1「无限试炼徽章」可从新「高阶守护者」竞技场获得。 / 5.1 "Crucible Insignia of Infinity" can be obtained from new "ArchDaeva" Arena
 				int basicCiI = 0;
-				basicCiI *= percent;
+				basicCiI = (int) (basicCiI * percent);
 				float rankingCiI = totalRankingInfinity;
 				if (rank > 0) {
 					rankingCiI = rankingCiI - rankingCiI * generalRate;
@@ -151,7 +153,8 @@ public class ChaosTrainingGroundsInstance extends PvPArenaInstance
 				reward.setScoreInfinity(scoreCiI);
 				if (instanceReward.canRewardOpportunityToken(reward)) {
 					reward.setOpportunity(4);
-				} if (rank < 2) {
+				}
+				if (rank < 2) {
 					reward.setGloryTicket(1);
 				}
 			}
@@ -166,34 +169,34 @@ public class ChaosTrainingGroundsInstance extends PvPArenaInstance
 	@Override
 	protected void spawnRings() {
 		FlyRing f1 = new FlyRing(new FlyRingTemplate("PVP_ARENA_1", mapId,
-		new Point3D(674.66974, 1792.8499, 149.77501),
-		new Point3D(674.66974, 1792.8499, 155.77501),
-		new Point3D(678.83636, 1788.5325, 149.77501), 6), instanceId);
+			new Point3D(674.66974, 1792.8499, 149.77501),
+			new Point3D(674.66974, 1792.8499, 155.77501),
+			new Point3D(678.83636, 1788.5325, 149.77501), 6), instanceId);
 		f1.spawn();
 		FlyRing f2 = new FlyRing(new FlyRingTemplate("PVP_ARENA_2", mapId,
-		new Point3D(688.30615, 1769.7937, 149.88556),
-		new Point3D(688.30615, 1769.7937, 155.88556),
-		new Point3D(689.42096, 1763.8982, 149.88556), 6), instanceId);
+			new Point3D(688.30615, 1769.7937, 149.88556),
+			new Point3D(688.30615, 1769.7937, 155.88556),
+			new Point3D(689.42096, 1763.8982, 149.88556), 6), instanceId);
 		f2.spawn();
 		FlyRing f3 = new FlyRing(new FlyRingTemplate("PVP_ARENA_3", mapId,
-		new Point3D(664.2252, 1761.671, 170.95732),
-		new Point3D(664.2252, 1761.671, 176.95732),
-		new Point3D(669.2843, 1764.8967, 170.95732), 6), instanceId);
+			new Point3D(664.2252, 1761.671, 170.95732),
+			new Point3D(664.2252, 1761.671, 176.95732),
+			new Point3D(669.2843, 1764.8967, 170.95732), 6), instanceId);
 		f3.spawn();
 		FlyRing fv1 = new FlyRing(new FlyRingTemplate("PVP_ARENA_VOID_1", mapId,
-		new Point3D(690.28625, 1753.8561, 192.07726),
-		new Point3D(690.28625, 1753.8561, 198.07726),
-		new Point3D(689.4365, 1747.9165, 192.07726), 6), instanceId);
+			new Point3D(690.28625, 1753.8561, 192.07726),
+			new Point3D(690.28625, 1753.8561, 198.07726),
+			new Point3D(689.4365, 1747.9165, 192.07726), 6), instanceId);
 		fv1.spawn();
 		FlyRing fv2 = new FlyRing(new FlyRingTemplate("PVP_ARENA_VOID_2", mapId,
-		new Point3D(690.1935, 1797.0029, 203.79236),
-		new Point3D(690.1935, 1797.0029, 209.79236),
-		new Point3D(692.8295, 1802.3928, 203.79236), 6), instanceId);
+			new Point3D(690.1935, 1797.0029, 203.79236),
+			new Point3D(690.1935, 1797.0029, 209.79236),
+			new Point3D(692.8295, 1802.3928, 203.79236), 6), instanceId);
 		fv2.spawn();
 		FlyRing fv3 = new FlyRing(new FlyRingTemplate("PVP_ARENA_VOID_3", mapId,
-		new Point3D(659.2784, 1766.0273, 207.25465),
-		new Point3D(659.2784, 1766.0273, 213.25465),
-		new Point3D(665.2619, 1766.4718, 207.25465), 6), instanceId);
+			new Point3D(659.2784, 1766.0273, 207.25465),
+			new Point3D(659.2784, 1766.0273, 213.25465),
+			new Point3D(665.2619, 1766.4718, 207.25465), 6), instanceId);
 		fv3.spawn();
 	}
 
@@ -201,8 +204,9 @@ public class ChaosTrainingGroundsInstance extends PvPArenaInstance
 	 * 玩家通过飞行环时处理。
 	 * Handle a player passing a flying ring.
 	 * 玩家 / player
+	 *
 	 * @param flyingRing 飞行环标识 / flying-ring id
-	 * result
+	 *                   result
 	 */
 	@Override
 	public boolean onPassFlyingRing(Player player, String flyingRing) {
@@ -211,61 +215,61 @@ public class ChaosTrainingGroundsInstance extends PvPArenaInstance
 			return false;
 		}
 		Npc npc;
-        switch (flyingRing) {
-            case "PVP_ARENA_1":
-                npc = getNpc(674.841f, 1793.065f, 150.964f);
-                if (npc != null && npc.isSpawned()) {
-                    npc.getController().scheduleRespawn();
-                    npc.getController().onDelete();
-                    sendSystemMsg(player, npc, 250);
-                    sendPacket();
-                }
-                break;
-            case "PVP_ARENA_2":
-                npc = getNpc(688.410f, 1769.611f, 150.964f);
-                if (npc != null && npc.isSpawned()) {
-                    npc.getController().scheduleRespawn();
-                    npc.getController().onDelete();
-                    playerReward.addPoints(250);
-                    sendSystemMsg(player, npc, 250);
-                    sendPacket();
-                }
-                break;
-            case "PVP_ARENA_3":
-                npc = getNpc(664.160f, 1761.933f, 171.504f);
-                if (npc != null && npc.isSpawned()) {
-                    npc.getController().scheduleRespawn();
-                    npc.getController().onDelete();
-                    playerReward.addPoints(250);
-                    sendSystemMsg(player, npc, 250);
-                    sendPacket();
-                }
-                break;
-            case "PVP_ARENA_VOID_1":
-                npc = getNpc(693.061f, 1752.479f, 186.750f);
-                if (npc != null && npc.isSpawned()) {
-                    useSkill(npc, player, 20059, 1);
-                    npc.getController().scheduleRespawn();
-                    npc.getController().onDelete();
-                }
-                break;
-            case "PVP_ARENA_VOID_2":
-                npc = getNpc(688.061f, 1798.229f, 198.500f);
-                if (npc != null && npc.isSpawned()) {
-                    useSkill(npc, player, 20059, 1);
-                    npc.getController().scheduleRespawn();
-                    npc.getController().onDelete();
-                }
-                break;
-            case "PVP_ARENA_VOID_3":
-                npc = getNpc(659.311f, 1768.979f, 201.500f);
-                if (npc != null && npc.isSpawned()) {
-                    useSkill(npc, player, 20059, 1);
-                    npc.getController().scheduleRespawn();
-                    npc.getController().onDelete();
-                }
-                break;
-        }
+		switch (flyingRing) {
+			case "PVP_ARENA_1":
+				npc = getNpc(674.841f, 1793.065f, 150.964f);
+				if (npc != null && npc.isSpawned()) {
+					npc.getController().scheduleRespawn();
+					npc.getController().onDelete();
+					sendSystemMsg(player, npc, 250);
+					sendPacket();
+				}
+				break;
+			case "PVP_ARENA_2":
+				npc = getNpc(688.410f, 1769.611f, 150.964f);
+				if (npc != null && npc.isSpawned()) {
+					npc.getController().scheduleRespawn();
+					npc.getController().onDelete();
+					playerReward.addPoints(250);
+					sendSystemMsg(player, npc, 250);
+					sendPacket();
+				}
+				break;
+			case "PVP_ARENA_3":
+				npc = getNpc(664.160f, 1761.933f, 171.504f);
+				if (npc != null && npc.isSpawned()) {
+					npc.getController().scheduleRespawn();
+					npc.getController().onDelete();
+					playerReward.addPoints(250);
+					sendSystemMsg(player, npc, 250);
+					sendPacket();
+				}
+				break;
+			case "PVP_ARENA_VOID_1":
+				npc = getNpc(693.061f, 1752.479f, 186.750f);
+				if (npc != null && npc.isSpawned()) {
+					useSkill(npc, player, 20059, 1);
+					npc.getController().scheduleRespawn();
+					npc.getController().onDelete();
+				}
+				break;
+			case "PVP_ARENA_VOID_2":
+				npc = getNpc(688.061f, 1798.229f, 198.500f);
+				if (npc != null && npc.isSpawned()) {
+					useSkill(npc, player, 20059, 1);
+					npc.getController().scheduleRespawn();
+					npc.getController().onDelete();
+				}
+				break;
+			case "PVP_ARENA_VOID_3":
+				npc = getNpc(659.311f, 1768.979f, 201.500f);
+				if (npc != null && npc.isSpawned()) {
+					useSkill(npc, player, 20059, 1);
+					npc.getController().scheduleRespawn();
+					npc.getController().onDelete();
+				}
+				break;
+		}
 		return false;
 	}
 }

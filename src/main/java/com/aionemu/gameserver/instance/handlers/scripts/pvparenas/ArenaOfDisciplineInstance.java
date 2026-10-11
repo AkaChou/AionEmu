@@ -13,15 +13,16 @@ import com.aionemu.gameserver.world.WorldMapInstance;
 /**
  * 孤独竞技场副本事件处理器。
  * Instance event handler for Arena Of Discipline.
+ *
  * @author Encom
  */
 
 @InstanceID(300360000)
-public class ArenaOfDisciplineInstance extends PvPArenaInstance
-{
+public class ArenaOfDisciplineInstance extends PvPArenaInstance {
 	/**
 	 * 副本创建时初始化逻辑。
 	 * Initialize logic when the instance is created.
+	 *
 	 * @param instance 世界地图实例 / world-map instance
 	 */
 	@Override
@@ -30,11 +31,12 @@ public class ArenaOfDisciplineInstance extends PvPArenaInstance
 		deathFine = -100;
 		super.onInstanceCreate(instance);
 	}
-	
+
 	/**
 	 * 玩家采集完成时处理。
 	 * Handle player gathering completion.
-	 * @param player 玩家 / player
+	 *
+	 * @param player     玩家 / player
 	 * @param gatherable gatherable
 	 */
 	@Override
@@ -48,11 +50,12 @@ public class ArenaOfDisciplineInstance extends PvPArenaInstance
 		DescriptionId name = new DescriptionId(nameId * 2 + 1);
 		PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1400237, name, 1250));
 	}
+
 	/**
 	 * 处理 reward。
 	 * Handle reward.
 	 */
-	
+
 	protected void reward() {
 		int totalPoints = instanceReward.getTotalPoints();
 		int size = instanceReward.getInstanceRewards().size();
@@ -84,52 +87,52 @@ public class ArenaOfDisciplineInstance extends PvPArenaInstance
 				int scoreAP = (int) (totalAP * scoreRate);
 				int scoreGP = (int) (totalGP * scoreRate);
 				// <欧比斯点数> / <Abyss Points>
-				basicAP *= percent;
-				rankingAP *= percent;
-				rankingAP *= playerRate;
+				basicAP = (int) (basicAP * percent);
+				rankingAP = (int) (rankingAP * percent);
+				rankingAP = (int) (rankingAP * playerRate);
 				reward.setBasicAP(basicAP);
 				reward.setRankingAP(rankingAP);
 				reward.setScoreAP(scoreAP);
 				// <荣耀点数> / <Glory Points>
-				basicGP *= percent;
-				rankingGP *= percent;
-				rankingGP *= playerRate;
-				reward.setBasicGP((int)(basicGP * 0.1));
+				basicGP = (int) (basicGP * percent);
+				rankingGP = (int) (rankingGP * percent);
+				rankingGP = (int) (rankingGP * playerRate);
+				reward.setBasicGP((int) (basicGP * 0.1));
 				reward.setRankingGP((int) (rankingGP * 0.1));
-				reward.setScoreGP((int)(scoreGP * 0.1));
+				reward.setScoreGP((int) (scoreGP * 0.1));
 				int basicCrI = 0;
-				basicCrI *= percent;
+				basicCrI = (int) (basicCrI * percent);
 				int rankingCrI = 150;
 				if (size > 1) {
 					rankingCrI = rank == 0 ? 500 : 150;
 				}
-				rankingCrI *= percent;
-				rankingCrI *= playerRate;
+				rankingCrI = (int) (rankingCrI * percent);
+				rankingCrI = (int) (rankingCrI * playerRate);
 				int scoreCrI = (int) (totalCrucible * scoreRate);
 				reward.setBasicCrucible(basicCrI);
 				reward.setRankingCrucible(rankingCrI);
 				reward.setScoreCrucible(scoreCrI);
 				int basicCoI = 0;
-				basicCoI *= percent;
+				basicCoI = (int) (basicCoI * percent);
 				int rankingCoI = 23;
 				if (size > 1) {
 					rankingCoI = rank == 0 ? 59 : 23;
 				}
-				rankingCoI *= percent;
-				rankingCoI *= playerRate;
+				rankingCoI = (int) (rankingCoI * percent);
+				rankingCoI = (int) (rankingCoI * playerRate);
 				int scoreCoI = (int) (totalCourage * scoreRate);
 				reward.setBasicCourage(basicCoI);
 				reward.setRankingCourage(rankingCoI);
 				reward.setScoreCourage(scoreCoI);
 				// 5.1「无限试炼徽章」可从新「高阶守护者」竞技场获得。 / 5.1 "Crucible Insignia of Infinity" can be obtained from new "ArchDaeva" Arena
 				int basicCiI = 0;
-				basicCiI *= percent;
+				basicCiI = (int) (basicCiI * percent);
 				int rankingCiI = 23;
 				if (size > 1) {
 					rankingCiI = rank == 0 ? 59 : 23;
 				}
-				rankingCiI *= percent;
-				rankingCiI *= playerRate;
+				rankingCiI = (int) (rankingCiI * percent);
+				rankingCiI = (int) (rankingCiI * playerRate);
 				int scoreCiI = (int) (totalInfinity * scoreRate);
 				reward.setBasicInfinity(basicCiI);
 				reward.setRankingInfinity(rankingCiI);

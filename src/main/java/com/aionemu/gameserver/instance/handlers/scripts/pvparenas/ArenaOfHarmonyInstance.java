@@ -7,15 +7,16 @@ import com.aionemu.gameserver.world.WorldMapInstance;
 /**
  * 合作竞技场副本事件处理器。
  * Instance event handler for Arena Of Harmony.
+ *
  * @author Encom
  */
 
 @InstanceID(300450000)
-public class ArenaOfHarmonyInstance extends HarmonyArenaInstance
-{
+public class ArenaOfHarmonyInstance extends HarmonyArenaInstance {
 	/**
 	 * 副本创建时初始化逻辑。
 	 * Initialize logic when the instance is created.
+	 *
 	 * @param instance 世界地图实例 / world-map instance
 	 */
 	@Override
@@ -24,7 +25,7 @@ public class ArenaOfHarmonyInstance extends HarmonyArenaInstance
 		deathFine = -150;
 		super.onInstanceCreate(instance);
 	}
-	
+
 	/**
 	 * 处理 reward。
 	 * Handle reward.
@@ -43,16 +44,16 @@ public class ArenaOfHarmonyInstance extends HarmonyArenaInstance
 			float scoreRate = ((float) score / (float) totalPoints);
 			int basicAP = 100;
 			int rankingAP = 0;
-			basicAP *= percent;
+			basicAP = (int) (basicAP * percent);
 			int basicGP = 100;
 			int rankingGP = 0;
-			basicGP *= percent;
+			basicGP = (int) (basicGP * percent);
 			int basicCoI = 0;
 			int rankingCoI = 0;
-			basicCoI *= percent;
+			basicCoI = (int) (basicCoI * percent);
 			int basicCiI = 0;
 			int rankingCiI = 0;
-			basicCiI *= percent;
+			basicCiI = (int) (basicCiI * percent);
 			int scoreAP = (int) (totalScoreAP * scoreRate);
 			int scoreGP = (int) (totalScoreGP * scoreRate);
 			switch (rank) {
@@ -62,32 +63,32 @@ public class ArenaOfHarmonyInstance extends HarmonyArenaInstance
 					rankingCoI = 49;
 					rankingCiI = 49;
 					group.setGloryTicket(1);
-				break;
+					break;
 				case 1:
 					rankingAP = 487;
 					rankingGP = 287;
 					rankingCoI = 20;
 					rankingCiI = 20;
-				break;
+					break;
 				case 2:
 					rankingAP = 251;
 					rankingGP = 151;
 					rankingCoI = 1;
 					rankingCiI = 1;
-				break;
+					break;
 			}
-			rankingAP *= percent;
-			rankingGP *= percent;
-			rankingCoI *= percent;
-			rankingCiI *= percent;
+			rankingAP = (int) (rankingAP * percent);
+			rankingGP = (int) (rankingGP * percent);
+			rankingCoI = (int) (rankingCoI * percent);
+			rankingCiI = (int) (rankingCiI * percent);
 			int scoreCoI = (int) (totalScoreCourage * scoreRate);
 			int scoreCiI = (int) (totalScoreInfinity * scoreRate);
 			group.setBasicAP(basicAP);
 			group.setRankingAP(rankingAP);
 			group.setScoreAP(scoreAP);
-			group.setBasicGP((int)(basicGP * 0.1));
+			group.setBasicGP((int) (basicGP * 0.1));
 			group.setRankingGP((int) (rankingGP * 0.1));
-			group.setScoreGP((int)(scoreGP * 0.1));
+			group.setScoreGP((int) (scoreGP * 0.1));
 			group.setBasicCourage(basicCoI);
 			group.setRankingCourage(rankingCoI);
 			group.setScoreCourage(scoreCoI);

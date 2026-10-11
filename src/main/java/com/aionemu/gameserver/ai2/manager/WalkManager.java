@@ -22,7 +22,6 @@ import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.geoEngine.collision.CollisionIntention;
 import com.aionemu.gameserver.geoEngine.math.Vector3f;
 import com.aionemu.gameserver.model.gameobjects.Npc;
-import com.aionemu.gameserver.model.templates.BoundRadius;
 import com.aionemu.gameserver.model.templates.walker.RouteStep;
 import com.aionemu.gameserver.model.templates.walker.WalkerTemplate;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_MOVE;
@@ -33,6 +32,7 @@ import com.aionemu.gameserver.utils.MathUtil;
 /**
  * NPC 行走管理器：路径巡航与随机游荡、到达点切换、卡住/Z 轴校正与停止行走。
  * NPC walk manager: route patrol and random wander, waypoint transitions, stuck/Z correction, and walk stop.
+ *
  * @author ATracer
  */
 public class WalkManager {
@@ -65,6 +65,7 @@ public class WalkManager {
 	 * 开始行走：优先路径巡航，否则尝试随机游荡。
 	 * Starts walking: prefers route patrol, otherwise attempts random wander.
 	 * NPC AI instance
+	 *
 	 * @return 成功进入行走时为 {@code true} / {@code true} if walking started
 	 */
 	public static boolean startWalking(NpcAI2 npcAI) {
@@ -168,8 +169,9 @@ public class WalkManager {
 	 * 是否按个体续走（推进到下一步）：仅限无编队行走者；编队成员一律按编队当前步恢复。
 	 * Whether to resume individually (advance to the next step): ungrouped walkers only; group
 	 * members always resume on the group's current step.
+	 *
 	 * @param inWalkerGroup 是否属于编队 / whether the walker belongs to a group
-	 * @param currentPoint 移动控制器当前路线点下标（0 = 无） / controller's current route point index
+	 * @param currentPoint  移动控制器当前路线点下标（0 = 无） / controller's current route point index
 	 * @return 是否个体续走 / whether to resume individually
 	 */
 	static boolean shouldResumeIndividually(boolean inWalkerGroup, int currentPoint) {
@@ -213,6 +215,7 @@ public class WalkManager {
 	 * 判断 NPC 是否应进入行走（支持移动且有路径或为可攻击 NPC）。
 	 * Returns whether the NPC should walk (move supported and has routes or is attackable).
 	 * NPC AI instance
+	 *
 	 * @param npcAI {@code true} if walking is applicable。
 	 */
 	public static boolean isWalking(NpcAI2 npcAI) {
@@ -223,6 +226,7 @@ public class WalkManager {
 	 * 判断 NPC 是否配置了行走路径。
 	 * Returns whether the NPC has walk routes configured.
 	 * NPC AI instance
+	 *
 	 * @param npcAI {@code true} if walk routes exist。
 	 */
 	public static boolean hasWalkRoutes(NpcAI2 npcAI) {
@@ -250,6 +254,7 @@ public class WalkManager {
 	/**
 	 * 到达路径点/随机点后的处理：切换下一步、等待组或中止交谈移动。
 	 * Handles arrival at a route/random point: next step, wait-group, or abort on talk.
+	 *
 	 * @param npcAI NPC AI 实例 / NPC AI instance
 	 */
 	public static void targetReached(final NpcAI2 npcAI) {
@@ -258,26 +263,26 @@ public class WalkManager {
 
 		if (npcAI.isInState(AIState.WALKING)) {
 			switch (npcAI.getSubState()) {
-			case WALK_PATH:
-				npcAI.getOwner().updateKnownlist();
-				if (npcAI.getOwner().getWalkerGroup() != null) {
-					npcAI.getOwner().getWalkerGroup().targetReached(npcAI);
-				} else {
+				case WALK_PATH:
+					npcAI.getOwner().updateKnownlist();
+					if (npcAI.getOwner().getWalkerGroup() != null) {
+						npcAI.getOwner().getWalkerGroup().targetReached(npcAI);
+					} else {
+						chooseNextRouteStep(npcAI);
+					}
+					break;
+				case WALK_WAIT_GROUP:
+					npcAI.setSubStateIfNot(AISubState.WALK_PATH);
 					chooseNextRouteStep(npcAI);
-				}
-				break;
-			case WALK_WAIT_GROUP:
-				npcAI.setSubStateIfNot(AISubState.WALK_PATH);
-				chooseNextRouteStep(npcAI);
-				break;
-			case WALK_RANDOM:
-				chooseNextRandomPoint(npcAI);
-				break;
-			case TALK:
-				npcAI.getOwner().getMoveController().abortMove();
-				break;
-			default:
-				break;
+					break;
+				case WALK_RANDOM:
+					chooseNextRandomPoint(npcAI);
+					break;
+				case TALK:
+					npcAI.getOwner().getMoveController().abortMove();
+					break;
+				default:
+					break;
 			}
 		}
 	}
@@ -404,6 +409,7 @@ public class WalkManager {
 	/**
 	 * 停止行走：取消挂起任务、清理状态并中止移动。
 	 * Stops walking: cancels pending tasks, cleans state, and aborts movement.
+	 *
 	 * @param npcAI NPC AI 实例 / NPC AI instance
 	 */
 	public static void stopWalking(NpcAI2 npcAI) {
@@ -465,6 +471,7 @@ public class WalkManager {
 	 * 判断移动控制器是否已到达当前点。
 	 * Returns whether the move controller has reached the current point.
 	 * NPC AI instance
+	 *
 	 * @param npcAI {@code true} if arrived。
 	 */
 	public static boolean isArrivedAtPoint(NpcAI2 npcAI) {

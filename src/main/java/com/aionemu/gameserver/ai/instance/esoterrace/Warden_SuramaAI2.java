@@ -19,11 +19,11 @@ import java.util.List;
 /**
  * Esoterrace 副本 NPC AI：Warden Surama（@AIName "wardensurama"），继承 AggressiveNpcAI2。
  * Esoterrace instance NPC AI: Warden Surama (@AIName "wardensurama"), extends AggressiveNpcAI2.
+ *
  * @author Encom
  */
 @AIName("wardensurama")
-public class Warden_SuramaAI2 extends AggressiveNpcAI2
-{
+public class Warden_SuramaAI2 extends AggressiveNpcAI2 {
 	private final List<Integer> percents = new ArrayList<>();
 
 	@Override
@@ -39,34 +39,22 @@ public class Warden_SuramaAI2 extends AggressiveNpcAI2
 	}
 
 	private void checkPercentage(int hpPercentage) {
-		for (Integer percent: percents) {
+		for (Integer percent : percents) {
 			if (hpPercentage <= percent) {
 				switch (percent) {
 					case 90:
-					    sendMsg();
-					    spawnAirWave();
-						startDranaReactor();
-					break;
 					case 70:
-					    sendMsg();
-					    spawnAirWave();
-						startDranaReactor();
-					break;
 					case 50:
-					    sendMsg();
-					    spawnAirWave();
-						startDranaReactor();
-					break;
 					case 30:
-					    sendMsg();
-					    spawnAirWave();
+						sendMsg();
+						spawnAirWave();
 						startDranaReactor();
-					break;
+						break;
 					case 10:
 						sendMsg();
 						spawnAirWave();
 						startDranaReactor();
-					break;
+						break;
 				}
 				percents.remove(percent);
 				break;
@@ -154,7 +142,7 @@ public class Warden_SuramaAI2 extends AggressiveNpcAI2
 	}
 
 	private void deleteNpcs(List<Npc> npcs) {
-		for (Npc npc: npcs) {
+		for (Npc npc : npcs) {
 			if (npc != null) {
 				npc.getController().onDelete();
 			}

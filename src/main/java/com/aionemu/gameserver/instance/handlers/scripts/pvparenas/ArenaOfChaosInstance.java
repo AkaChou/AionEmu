@@ -13,15 +13,16 @@ import com.aionemu.gameserver.world.WorldMapInstance;
 /**
  * 混沌竞技场副本事件处理器。
  * Instance event handler for Arena Of Chaos.
+ *
  * @author Encom
  */
 
 @InstanceID(300350000)
-public class ArenaOfChaosInstance extends PvPArenaInstance
-{
+public class ArenaOfChaosInstance extends PvPArenaInstance {
 	/**
 	 * 副本创建时初始化逻辑。
 	 * Initialize logic when the instance is created.
+	 *
 	 * @param instance 世界地图实例 / world-map instance
 	 */
 	@Override
@@ -30,11 +31,12 @@ public class ArenaOfChaosInstance extends PvPArenaInstance
 		deathFine = -125;
 		super.onInstanceCreate(instance);
 	}
-	
+
 	/**
 	 * 玩家采集完成时处理。
 	 * Handle player gathering completion.
-	 * @param player 玩家 / player
+	 *
+	 * @param player     玩家 / player
 	 * @param gatherable gatherable
 	 */
 	@Override
@@ -48,7 +50,7 @@ public class ArenaOfChaosInstance extends PvPArenaInstance
 		DescriptionId name = new DescriptionId(nameId * 2 + 1);
 		PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1400237, name, 1250));
 	}
-	
+
 	/**
 	 * 处理 reward。
 	 * Handle reward.
@@ -95,21 +97,21 @@ public class ArenaOfChaosInstance extends PvPArenaInstance
 				int scoreAP = (int) (totalScoreAP * scoreRate);
 				int scoreGP = (int) (totalScoreGP * scoreRate);
 				// <欧比斯点数> / <Abyss Points>
-				basicAP *= percent;
+				basicAP = (int) (basicAP * percent);
 				rankingAP *= percent;
 				rankingAP *= playerRate;
 				reward.setBasicAP(basicAP);
 				reward.setRankingAP((int) rankingAP);
 				reward.setScoreAP(scoreAP);
 				// <荣耀点数> / <Glory Points>
-				basicGP *= percent;
+				basicGP = (int) (basicGP * percent);
 				rankingGP *= percent;
 				rankingGP *= playerRate;
-				reward.setBasicGP((int)(basicGP * 0.1));
+				reward.setBasicGP((int) (basicGP * 0.1));
 				reward.setRankingGP((int) (rankingGP * 0.1));
-				reward.setScoreGP((int)(scoreGP * 0.1));
+				reward.setScoreGP((int) (scoreGP * 0.1));
 				int basicCrI = 0;
-				basicCrI *= percent;
+				basicCrI = (int) (basicCrI * percent);
 				float rankingCrI = totalRankingCrucible;
 				if (rank > 0) {
 					rankingCrI = rankingCrI - rankingCrI * generalRate;
@@ -121,7 +123,7 @@ public class ArenaOfChaosInstance extends PvPArenaInstance
 				reward.setRankingCrucible((int) rankingCrI);
 				reward.setScoreCrucible(scoreCrI);
 				int basicCoI = 0;
-				basicCoI *= percent;
+				basicCoI = (int) (basicCoI * percent);
 				float rankingCoI = totalRankingCourage;
 				if (rank > 0) {
 					rankingCoI = rankingCoI - rankingCoI * generalRate;
@@ -134,7 +136,7 @@ public class ArenaOfChaosInstance extends PvPArenaInstance
 				reward.setScoreCourage(scoreCoI);
 				// 5.1「无限试炼徽章」可从新「高阶守护者」竞技场获得。 / 5.1 "Crucible Insignia of Infinity" can be obtained from new "ArchDaeva" Arena
 				int basicCiI = 0;
-				basicCiI *= percent;
+				basicCiI = (int) (basicCiI * percent);
 				float rankingCiI = totalRankingInfinity;
 				if (rank > 0) {
 					rankingCiI = rankingCiI - rankingCiI * generalRate;
@@ -147,7 +149,8 @@ public class ArenaOfChaosInstance extends PvPArenaInstance
 				reward.setScoreInfinity(scoreCiI);
 				if (instanceReward.canRewardOpportunityToken(reward)) {
 					reward.setOpportunity(4);
-				} if (rank < 2) {
+				}
+				if (rank < 2) {
 					reward.setGloryTicket(1);
 				}
 			}

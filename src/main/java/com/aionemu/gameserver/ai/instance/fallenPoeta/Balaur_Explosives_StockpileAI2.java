@@ -18,6 +18,7 @@ public class Balaur_Explosives_StockpileAI2 extends AggressiveNpcAI2
 {
 	// 攻击增益定时任务：周期性对副官阿努哈尔特施放技能。 / Attack boost task: periodically uses a skill on Lieutenant Anuhart.
 	private Future<?> attackBoostTask;
+	// 攻击增益定时任务：周期性对副官阿努哈尔特施放技能。 / Attack boost task: periodically uses a skill on Lieutenant Anuhart.
 
 	@Override
 	public void think() {
