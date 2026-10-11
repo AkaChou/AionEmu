@@ -1,22 +1,12 @@
 package com.aionemu.gameserver.model;
 
-import lombok.Getter;
-
 /**
  * 请愿模型。
  * Petition model.
  * @author zdead
  */
-@Getter
-public class Petition {
-
-	private final int petitionId;
-	private final int playerObjId;
-	private final PetitionType type;
-	private final String title;
-	private final String contentText;
-	private final String additionalData;
-	private final PetitionStatus status;
+public record Petition(int petitionId, int playerObjId, PetitionType type, String title, String contentText,
+                       String additionalData, PetitionStatus status) {
 
 	/**
 	 * 仅含请愿 ID 的构造（其余字段置空/默认）。
@@ -24,13 +14,7 @@ public class Petition {
 	 * @param petitionId 请愿 ID / petition id
 	 */
 	public Petition(int petitionId) {
-		this.petitionId = petitionId;
-		this.playerObjId = 0;
-		this.type = PetitionType.INQUIRY;
-		this.title = "";
-		this.contentText = "";
-		this.additionalData = "";
-		this.status = PetitionStatus.PENDING;
+		this(petitionId, 0, PetitionType.INQUIRY, "", "", "", PetitionStatus.PENDING);
 	}
 
 	/**
@@ -46,51 +30,8 @@ public class Petition {
 	 */
 	public Petition(int petitionId, int playerObjId, int petitionTypeId, String title, String contentText,
 			String additionalData, int petitionStatus) {
-		this.petitionId = petitionId;
-		this.playerObjId = playerObjId;
-		switch (petitionTypeId) {
-		case 256:
-			type = PetitionType.CHARACTER_STUCK;
-			break;
-		case 512:
-			type = PetitionType.CHARACTER_RESTORATION;
-			break;
-		case 768:
-			type = PetitionType.BUG;
-			break;
-		case 1024:
-			type = PetitionType.QUEST;
-			break;
-		case 1280:
-			type = PetitionType.UNACCEPTABLE_BEHAVIOR;
-			break;
-		case 1536:
-			type = PetitionType.SUGGESTION;
-			break;
-		case 65280:
-			type = PetitionType.INQUIRY;
-			break;
-		default:
-			type = PetitionType.INQUIRY;
-			break;
-		}
-		this.title = title;
-		this.contentText = contentText;
-		this.additionalData = additionalData;
-		switch (petitionStatus) {
-		case 0:
-			status = PetitionStatus.PENDING;
-			break;
-		case 1:
-			status = PetitionStatus.IN_PROGRESS;
-			break;
-		case 2:
-			status = PetitionStatus.REPLIED;
-			break;
-		default:
-			status = PetitionStatus.PENDING;
-			break;
-		}
+		this(petitionId, playerObjId, typeOf(petitionTypeId), title, contentText, additionalData,
+			statusOf(petitionStatus));
 	}
 
 	/** 获取请愿类型。 / Returns the petition type. */
@@ -98,4 +39,23 @@ public class Petition {
 		return type;
 	}
 
+	private static PetitionType typeOf(int petitionTypeId) {
+		return switch (petitionTypeId) {
+			case 256 -> PetitionType.CHARACTER_STUCK;
+			case 512 -> PetitionType.CHARACTER_RESTORATION;
+			case 768 -> PetitionType.BUG;
+			case 1024 -> PetitionType.QUEST;
+			case 1280 -> PetitionType.UNACCEPTABLE_BEHAVIOR;
+			case 1536 -> PetitionType.SUGGESTION;
+			default -> PetitionType.INQUIRY;
+		};
+	}
+
+	private static PetitionStatus statusOf(int petitionStatus) {
+		return switch (petitionStatus) {
+			case 1 -> PetitionStatus.IN_PROGRESS;
+			case 2 -> PetitionStatus.REPLIED;
+			default -> PetitionStatus.PENDING;
+		};
+	}
 }

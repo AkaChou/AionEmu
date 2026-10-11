@@ -36,11 +36,11 @@ public class SM_PETITION extends AionServerPacket {
 			writeC(0x01);
 			writeD(100);
 			writeH(GameRuntimeServices.petitionService().getWaitingPlayers(con.getActivePlayer().getObjectId()));
-			writeS(Integer.toString(petition.getPetitionId()));
+			writeS(Integer.toString(petition.petitionId()));
 			writeH(0x00);
 			writeC(50);
 			writeC(49);
-			writeH(GameRuntimeServices.petitionService().calculateWaitTime(petition.getPlayerObjId()));
+			writeH(GameRuntimeServices.petitionService().calculateWaitTime(petition.playerObjId()));
 			writeD(0x00);
 		}
 	}

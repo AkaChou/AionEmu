@@ -79,7 +79,7 @@ public class PetitionService {
 			Set<Petition> petitions = this.petitionDAO.getPetitions();
 			if (petitions != null) {
 				for (Petition p : petitions) {
-					registeredPetitions.put(p.getPetitionId(), p);
+					registeredPetitions.put(p.petitionId(), p);
 				}
 			}
 		} catch (Exception e) {
@@ -123,12 +123,12 @@ public class PetitionService {
 	public void deletePetition(int playerObjId) {
 		Set<Petition> petitions = new HashSet<>();
 		for (Petition p : registeredPetitions.values()) {
-			if (p.getPlayerObjId() == playerObjId) {
+			if (p.playerObjId() == playerObjId) {
 				petitions.add(p);
 			}
 		}
 		for (Petition p : petitions) {
-			registeredPetitions.remove(p.getPetitionId());
+			registeredPetitions.remove(p.petitionId());
 		}
 		petitionDAO.deletePetition(playerObjId);
 		if (playerObjId > 0 && com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(playerObjId) != null) {
@@ -144,7 +144,7 @@ public class PetitionService {
 	 * @param petitionId petition id
 	 */
 	public void setPetitionReplied(int petitionId) {
-		int playerObjId = registeredPetitions.get(petitionId).getPlayerObjId();
+		int playerObjId = registeredPetitions.get(petitionId).playerObjId();
 		petitionDAO.setReplied(petitionId);
 		registeredPetitions.remove(petitionId);
 		rebroadcastPlayerData();
@@ -169,8 +169,8 @@ public class PetitionService {
 		int id = petitionDAO.getNextAvailableId();
 		Petition ptt = new Petition(id, sender.getObjectId(), typeId, title, contentText, additionalData, 0);
 		petitionDAO.insertPetition(ptt);
-		registeredPetitions.put(ptt.getPetitionId(), ptt);
-		broadcastMessageToGM(sender, ptt.getPetitionId());
+		registeredPetitions.put(ptt.petitionId(), ptt);
+		broadcastMessageToGM(sender, ptt.petitionId());
 		return ptt;
 	}
 
@@ -180,7 +180,7 @@ public class PetitionService {
 	 */
 	private void rebroadcastPlayerData() {
 		for (Petition p : registeredPetitions.values()) {
-			Player player = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(p.getPlayerObjId());
+			Player player = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(p.playerObjId());
 			if (player != null) {
 				PacketSendUtility.sendPacket(player, new SM_PETITION(p));
 			}
@@ -223,7 +223,7 @@ public class PetitionService {
 	public boolean hasRegisteredPetition(int playerObjId) {
 		boolean result = false;
 		for (Petition p : registeredPetitions.values()) {
-			if (p.getPlayerObjId() == playerObjId) {
+			if (p.playerObjId() == playerObjId) {
 				result = true;
 				break;
 			}
@@ -239,7 +239,7 @@ public class PetitionService {
 	 */
 	public Petition getPetition(int playerObjId) {
 		for (Petition p : registeredPetitions.values()) {
-			if (p.getPlayerObjId() == playerObjId) {
+			if (p.playerObjId() == playerObjId) {
 				return p;
 			}
 		}
@@ -264,7 +264,7 @@ public class PetitionService {
 	public int getWaitingPlayers(int playerObjId) {
 		int counter = 0;
 		for (Petition p : registeredPetitions.values()) {
-			if (p.getPlayerObjId() == playerObjId) {
+			if (p.playerObjId() == playerObjId) {
 				break;
 			}
 			counter++;
@@ -283,7 +283,7 @@ public class PetitionService {
 		int timeBetweenPetition = 30;
 		int result = timeBetweenPetition;
 		for (Petition p : registeredPetitions.values()) {
-			if (p.getPlayerObjId() == playerObjId) {
+			if (p.playerObjId() == playerObjId) {
 				break;
 			}
 			result += timePerPetition;

@@ -1,40 +1,23 @@
 package com.aionemu.gameserver.model.tasks;
 
 import java.sql.Timestamp;
-import lombok.Getter;
 
 /**
  * 数据库任务配置。
  * Database-backed task configuration.
+ *
  * @author Divinity
  */
-@Getter
-public class TaskFromDB {
-
-	private final int id;
-	private final String name;
-	private final String type;
-	private final Timestamp lastActivation;
-	private final String startTime;
-	private final int delay;
-	private final String[] params;
+public record TaskFromDB(int id, String name, String type, Timestamp lastActivation, String startTime, int delay,
+                         String[] params) {
 
 	/**
-	 * 构造方法。 / Constructor.
+	 * 以空格分隔的单字符串参数构造，param 为 null 时参数表为空。
+	 * Constructs from a single space-separated parameter string; null yields an empty parameter array.
 	 */
 	public TaskFromDB(int id, String name, String type, Timestamp lastActivation, String startTime, int delay,
 			String param) {
-		this.id = id;
-		this.name = name;
-		this.type = type;
-		this.lastActivation = lastActivation;
-		this.startTime = startTime;
-		this.delay = delay;
-
-		if (param != null)
-			this.params = param.split(" ");
-		else
-			this.params = new String[0];
+		this(id, name, type, lastActivation, startTime, delay, param != null ? param.split(" ") : new String[0]);
 	}
 
 }
