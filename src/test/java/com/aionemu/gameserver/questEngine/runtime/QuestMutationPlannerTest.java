@@ -40,7 +40,7 @@ class QuestMutationPlannerTest {
 			Map.of(ITEM_ID, 4));
 
 		assertTrue(QuestMutationPlanner.plan(definition, snapshot,
-			new QuestEvent.TalkToNpc(700001), definition.definition().transitions().get(0)).isPresent());
+			new QuestEvent.TalkToNpc(700001), definition.definition().transitions().getFirst()).isPresent());
 	}
 
 	@Test
@@ -50,7 +50,7 @@ class QuestMutationPlannerTest {
 			null, Map.of(), false, true, 0);
 
 		assertFalse(QuestMutationPlanner.plan(definition, snapshot,
-			new QuestEvent.TalkToNpc(700001), definition.definition().transitions().get(0)).isPresent());
+			new QuestEvent.TalkToNpc(700001), definition.definition().transitions().getFirst()).isPresent());
 	}
 
 	@Test
@@ -63,7 +63,7 @@ class QuestMutationPlannerTest {
 			.compile();
 		QuestSnapshot snapshot = new QuestSnapshot(7, QUEST_ID + 10, QuestStatus.NONE, 0, Map.of())
 			.withStartEligibility(QuestStartEligibility.allowed());
-		var transition = definition.definition().transitions().get(0);
+		var transition = definition.definition().transitions().getFirst();
 
 		assertFalse(QuestMutationPlanner.plan(definition, snapshot,
 			new QuestEvent.QuestDialog(1002), transition).isPresent());
@@ -148,7 +148,7 @@ class QuestMutationPlannerTest {
 		QuestSnapshot present = new QuestSnapshot(7, QUEST_ID + 1, QuestStatus.START, 0, Map.of())
 			.withWorldFacts(new QuestWorldFacts(java.util.Set.of(212814)));
 		QuestSnapshot unknown = new QuestSnapshot(7, QUEST_ID + 1, QuestStatus.START, 0, Map.of());
-		var transition = definition.definition().transitions().get(0);
+		var transition = definition.definition().transitions().getFirst();
 
 		assertTrue(QuestMutationPlanner.plan(definition, absent,
 			new QuestEvent.TalkToNpc(700243), transition).isPresent());
@@ -168,7 +168,7 @@ class QuestMutationPlannerTest {
 			.when(QuestDsl.zoneIs("BERITRAS_WEAPON_220040000"))
 			.goTo("reward")
 			.compile();
-		var transition = definition.definition().transitions().get(0);
+		var transition = definition.definition().transitions().getFirst();
 		QuestSnapshot inside = new QuestSnapshot(7, QUEST_ID + 2, QuestStatus.START, 0, Map.of())
 			.withWorldFacts(new QuestWorldFacts(Set.of(), Set.of("BERITRAS_WEAPON_220040000")));
 		QuestSnapshot outside = new QuestSnapshot(7, QUEST_ID + 2, QuestStatus.START, 0, Map.of())
@@ -235,26 +235,26 @@ class QuestMutationPlannerTest {
 	void abandonQuestLowersQuestWorkItemsToTransactionalRemoveAllActions() {
 		String xml = """
 
-						<quest-definition id="1302" version="1">
-						  <metadata name="abandon" display-name-id="0" min-level="1" max-level="55" category="QUEST">
-						    <work-items><item id="182400003" count="1"/></work-items>
-						  </metadata>
-						  <nodes>
-						    <node label="started" status="START"/>
-						    <node label="unaccepted" status="NONE"/>
-						  </nodes>
-						  <transitions>
-						    <transition source="started" target="unaccepted">
-						      <event><abandon/></event>
-						      <actions><abandon-quest/></actions>
-						    </transition>
-						  </transitions>
-						</quest-definition>
+					<quest-definition id="1302" version="1">
+					  <metadata name="abandon" display-name-id="0" min-level="1" max-level="55" category="QUEST">
+					    <work-items><item id="182400003" count="1"/></work-items>
+					  </metadata>
+					  <nodes>
+					    <node label="started" status="START"/>
+					    <node label="unaccepted" status="NONE"/>
+					  </nodes>
+					  <transitions>
+					    <transition source="started" target="unaccepted">
+					      <event><abandon/></event>
+					      <actions><abandon-quest/></actions>
+					    </transition>
+					  </transitions>
+					</quest-definition>
 
-				""";
+			""";
 		CompiledQuestDefinition definition = QuestDefinitionXmlCompiler.compile(
 			new java.io.ByteArrayInputStream(xml.getBytes(java.nio.charset.StandardCharsets.UTF_8)));
-		var transition = definition.definition().transitions().get(0);
+		var transition = definition.definition().transitions().getFirst();
 		var plan = QuestMutationPlanner.plan(definition,
 			new QuestSnapshot(7, 1302, QuestStatus.START, 0, Map.of(182400003, 2)),
 			new QuestEvent.Abandon(), transition).orElseThrow();
@@ -267,27 +267,27 @@ class QuestMutationPlannerTest {
 	void lowersSelectedMetadataRewardToQuestBaseCurrencyReward() {
 		String xml = """
 
-						<quest-definition id="1303" version="1">
-						  <metadata name="selected" display-name-id="0" min-level="1" max-level="55" category="QUEST">
-						    <rewards><reward kind="AP" id="0" amount="300"/><reward kind="AP" id="0" amount="600"/></rewards>
-						  </metadata>
-						  <nodes><node label="started" status="START"/></nodes>
-						  <transitions><transition source="started" target="started">
-						    <event><dialog type="TALK_TO_NPC" npc-id="700001"/></event>
-						    <actions><grant-selected-reward reward-index="1"/></actions>
-						  </transition></transitions>
-						</quest-definition>
+					<quest-definition id="1303" version="1">
+					  <metadata name="selected" display-name-id="0" min-level="1" max-level="55" category="QUEST">
+					    <rewards><reward kind="AP" id="0" amount="300"/><reward kind="AP" id="0" amount="600"/></rewards>
+					  </metadata>
+					  <nodes><node label="started" status="START"/></nodes>
+					  <transitions><transition source="started" target="started">
+					    <event><dialog type="TALK_TO_NPC" npc-id="700001"/></event>
+					    <actions><grant-selected-reward reward-index="1"/></actions>
+					  </transition></transitions>
+					</quest-definition>
 
-				""";
+			""";
 		CompiledQuestDefinition definition = QuestDefinitionXmlCompiler.compile(
 			new java.io.ByteArrayInputStream(xml.getBytes(java.nio.charset.StandardCharsets.UTF_8)));
-		var transition = definition.definition().transitions().get(0);
+		var transition = definition.definition().transitions().getFirst();
 		var plan = QuestMutationPlanner.plan(definition,
 			new QuestSnapshot(7, 1303, QuestStatus.START, 0, Map.of(), Map.of()),
 			new QuestEvent.TalkToNpc(700001), transition).orElseThrow();
 
 		assertEquals(List.of(new QuestAction.GrantReward("AP", 0, 600,
-			com.aionemu.gameserver.questEngine.definition.QuestRewardAmountMode.QUEST_BASE)),
+				com.aionemu.gameserver.questEngine.definition.QuestRewardAmountMode.QUEST_BASE)),
 			plan.requiredActions());
 	}
 
@@ -295,20 +295,20 @@ class QuestMutationPlannerTest {
 	void extendedTitleIsGrantedAtItsRewardRepeatCountWithoutLimitingFurtherRepeats() {
 		String xml = """
 
-						<quest-definition id="1307" version="1">
-						  <metadata name="repeat-title" display-name-id="0" min-level="1" max-level="55" category="QUEST">
-						    <repeat max-repeat-count="255" reward-repeat-count="5" cooldown-seconds="0" daily="false" weekly="false"/>
-						    <extended-rewards><reward kind="TITLE" id="45" amount="1"/></extended-rewards>
-						  </metadata>
-						  <nodes><node label="reward" status="REWARD"/><node label="complete" status="COMPLETE"/></nodes>
-						  <transitions><transition source="reward" target="complete">
-						    <event><dialog type="TALK_TO_NPC" npc-id="700001"/></event>
-						    <actions><complete-quest reward-index="0"/></actions>
-						    <after-commit><sync-quest-state mode="COMPLETION"/></after-commit>
-						  </transition></transitions>
-						</quest-definition>
+					<quest-definition id="1307" version="1">
+					  <metadata name="repeat-title" display-name-id="0" min-level="1" max-level="55" category="QUEST">
+					    <repeat max-repeat-count="255" reward-repeat-count="5" cooldown-seconds="0" daily="false" weekly="false"/>
+					    <extended-rewards><reward kind="TITLE" id="45" amount="1"/></extended-rewards>
+					  </metadata>
+					  <nodes><node label="reward" status="REWARD"/><node label="complete" status="COMPLETE"/></nodes>
+					  <transitions><transition source="reward" target="complete">
+					    <event><dialog type="TALK_TO_NPC" npc-id="700001"/></event>
+					    <actions><complete-quest reward-index="0"/></actions>
+					    <after-commit><sync-quest-state mode="COMPLETION"/></after-commit>
+					  </transition></transitions>
+					</quest-definition>
 
-				""";
+			""";
 		CompiledQuestDefinition definition = QuestDefinitionXmlCompiler.compile(
 			new java.io.ByteArrayInputStream(xml.getBytes(java.nio.charset.StandardCharsets.UTF_8)));
 		var transition = definition.definition().transitions().getFirst();
@@ -328,21 +328,21 @@ class QuestMutationPlannerTest {
 	void startConditionGroupsAreAndInsideAndOrAcrossGroups() {
 		String xml = """
 
-						<quest-definition id="1306" version="1">
-						  <metadata name="grouped-start" display-name-id="0" min-level="1" max-level="55" category="QUEST">
-						    <start-condition-groups>
-						      <group><condition type="finished" quest-id="9001"/><condition type="acquired" quest-id="9002"/></group>
-						      <group><condition type="finished" quest-id="9003"/></group>
-						    </start-condition-groups>
-						  </metadata>
-						  <nodes><node label="none" status="NONE"/><node label="started" status="START"/></nodes>
-						  <transitions><transition source="none" target="started"><event><dialog type="TALK_TO_NPC" npc-id="700001"/></event></transition></transitions>
-						</quest-definition>
+					<quest-definition id="1306" version="1">
+					  <metadata name="grouped-start" display-name-id="0" min-level="1" max-level="55" category="QUEST">
+					    <start-condition-groups>
+					      <group><condition type="finished" quest-id="9001"/><condition type="acquired" quest-id="9002"/></group>
+					      <group><condition type="finished" quest-id="9003"/></group>
+					    </start-condition-groups>
+					  </metadata>
+					  <nodes><node label="none" status="NONE"/><node label="started" status="START"/></nodes>
+					  <transitions><transition source="none" target="started"><event><dialog type="TALK_TO_NPC" npc-id="700001"/></event></transition></transitions>
+					</quest-definition>
 
-				""";
+			""";
 		CompiledQuestDefinition definition = QuestDefinitionXmlCompiler.compile(
 			new java.io.ByteArrayInputStream(xml.getBytes(java.nio.charset.StandardCharsets.UTF_8)));
-		var transition = definition.definition().transitions().get(0);
+		var transition = definition.definition().transitions().getFirst();
 		QuestEvent event = new QuestEvent.TalkToNpc(700001);
 
 		assertTrue(QuestMutationPlanner.plan(definition,
@@ -364,25 +364,25 @@ class QuestMutationPlannerTest {
 	void equippedMetadataStartConditionUsesCapturedEquipmentFactsAndFailsClosedWhenUnknown() {
 		String xml = """
 
-						<quest-definition id="1308" version="1">
-						  <metadata name="equipped-start" display-name-id="0" min-level="1" max-level="55"
-						      category="QUEST">
-						    <start-condition-groups>
-						      <group><condition type="equipped" quest-id="182400004"/></group>
-						    </start-condition-groups>
-						  </metadata>
-						  <nodes>
-						    <node label="none" status="NONE"/>
-						    <node label="started" status="START"/>
-						  </nodes>
-						  <transitions>
-						    <transition source="none" target="started">
-						      <event><dialog type="TALK_TO_NPC" npc-id="700001"/></event>
-						    </transition>
-						  </transitions>
-						</quest-definition>
+					<quest-definition id="1308" version="1">
+					  <metadata name="equipped-start" display-name-id="0" min-level="1" max-level="55"
+					      category="QUEST">
+					    <start-condition-groups>
+					      <group><condition type="equipped" quest-id="182400004"/></group>
+					    </start-condition-groups>
+					  </metadata>
+					  <nodes>
+					    <node label="none" status="NONE"/>
+					    <node label="started" status="START"/>
+					  </nodes>
+					  <transitions>
+					    <transition source="none" target="started">
+					      <event><dialog type="TALK_TO_NPC" npc-id="700001"/></event>
+					    </transition>
+					  </transitions>
+					</quest-definition>
 
-				""";
+			""";
 		CompiledQuestDefinition definition = QuestDefinitionXmlCompiler.compile(
 			new java.io.ByteArrayInputStream(xml.getBytes(java.nio.charset.StandardCharsets.UTF_8)));
 		var transition = definition.definition().transitions().getFirst();
@@ -413,7 +413,7 @@ class QuestMutationPlannerTest {
 			.withEquipmentFacts(new QuestEquipmentFacts(Map.of(), Map.of(ITEM_ID, 1)));
 
 		assertTrue(QuestMutationPlanner.plan(definition, snapshot,
-			new QuestEvent.TalkToNpc(700001), definition.definition().transitions().get(0)).isEmpty());
+			new QuestEvent.TalkToNpc(700001), definition.definition().transitions().getFirst()).isEmpty());
 	}
 
 	@Test
@@ -429,7 +429,7 @@ class QuestMutationPlannerTest {
 
 		assertTrue(QuestMutationPlanner.plan(definition,
 			new QuestSnapshot(7, 1305, QuestStatus.START, 0, Map.of(ITEM_ID, 1)),
-			new QuestEvent.TalkToNpc(700001), definition.definition().transitions().get(0)).isEmpty());
+			new QuestEvent.TalkToNpc(700001), definition.definition().transitions().getFirst()).isEmpty());
 	}
 
 	// 36539 / 36525 两条阵营生命周期行的 typed 断言已随退役（保留清单 owner=RETAIL_TABLE，XML 只在
@@ -463,7 +463,7 @@ class QuestMutationPlannerTest {
 			.when(new QuestCondition.VariableBelow("var0", 6))
 			.then(QuestDsl.incrementVariable("var0", 1)).goTo("reward")
 			.compile();
-		var transition = definition.definition().transitions().get(0);
+		var transition = definition.definition().transitions().getFirst();
 		QuestSnapshot snapshot = new QuestSnapshot(7, QUEST_ID + 20, QuestStatus.START, 0, Map.of());
 		QuestMutationPlan plan = QuestMutationPlanner.plan(definition, snapshot,
 			new QuestEvent.KillNpc(235824), transition).orElseThrow();
@@ -480,7 +480,7 @@ class QuestMutationPlannerTest {
 			.node("s1", project(QuestStatus.START, vars("var0", 1)))
 			.on(new QuestEvent.TalkToNpc(203851, 10000)).from("started").goTo("s1")
 			.compile();
-		var transition = definition.definition().transitions().get(0);
+		var transition = definition.definition().transitions().getFirst();
 		QuestSnapshot snapshot = new QuestSnapshot(7, QUEST_ID + 21, QuestStatus.START, 0, Map.of());
 		QuestMutationPlan plan = QuestMutationPlanner.plan(definition, snapshot,
 			new QuestEvent.TalkToNpc(203851, 10000), transition).orElseThrow();
@@ -494,27 +494,27 @@ class QuestMutationPlannerTest {
 		// 此 quest 的 work-item 182400005 未在完成转换内显式 remove-item,引擎须自动追加 ALL 清理。
 		String xml = """
 
-						<quest-definition id="1308" version="1">
-						  <metadata name="complete-clean" display-name-id="0" min-level="1" max-level="55" category="QUEST">
-						    <work-items><item id="182400005" count="1"/></work-items>
-						  </metadata>
-						  <nodes>
-						    <node label="reward" status="REWARD"/>
-						    <node label="complete" status="COMPLETE"/>
-						  </nodes>
-						  <transitions>
-						    <transition source="reward" target="complete">
-						      <event><dialog type="TALK_TO_NPC" npc-id="700001"/></event>
-						      <actions><complete-quest reward-index="0"/></actions>
-						      <after-commit><sync-quest-state mode="COMPLETION"/></after-commit>
-						    </transition>
-						  </transitions>
-						</quest-definition>
+					<quest-definition id="1308" version="1">
+					  <metadata name="complete-clean" display-name-id="0" min-level="1" max-level="55" category="QUEST">
+					    <work-items><item id="182400005" count="1"/></work-items>
+					  </metadata>
+					  <nodes>
+					    <node label="reward" status="REWARD"/>
+					    <node label="complete" status="COMPLETE"/>
+					  </nodes>
+					  <transitions>
+					    <transition source="reward" target="complete">
+					      <event><dialog type="TALK_TO_NPC" npc-id="700001"/></event>
+					      <actions><complete-quest reward-index="0"/></actions>
+					      <after-commit><sync-quest-state mode="COMPLETION"/></after-commit>
+					    </transition>
+					  </transitions>
+					</quest-definition>
 
-				""";
+			""";
 		CompiledQuestDefinition definition = QuestDefinitionXmlCompiler.compile(
 			new java.io.ByteArrayInputStream(xml.getBytes(java.nio.charset.StandardCharsets.UTF_8)));
-		var transition = definition.definition().transitions().get(0);
+		var transition = definition.definition().transitions().getFirst();
 
 		var plan = QuestMutationPlanner.plan(definition,
 			new QuestSnapshot(7, 1308, QuestStatus.REWARD, 0, Map.of(182400005, 1)),
@@ -529,30 +529,30 @@ class QuestMutationPlannerTest {
 		// 转换已显式声明 remove-item count="ALL" 的 work-item 不应被引擎重复追加。
 		String xml = """
 
-						<quest-definition id="1309" version="1">
-						  <metadata name="complete-dedup" display-name-id="0" min-level="1" max-level="55" category="QUEST">
-						    <work-items><item id="182400006" count="1"/></work-items>
-						  </metadata>
-						  <nodes>
-						    <node label="reward" status="REWARD"/>
-						    <node label="complete" status="COMPLETE"/>
-						  </nodes>
-						  <transitions>
-						    <transition source="reward" target="complete">
-						      <event><dialog type="TALK_TO_NPC" npc-id="700001"/></event>
-						      <actions>
-						        <remove-item item-id="182400006" count="ALL"/>
-						        <complete-quest reward-index="0"/>
-						      </actions>
-						      <after-commit><sync-quest-state mode="COMPLETION"/></after-commit>
-						    </transition>
-						  </transitions>
-						</quest-definition>
+					<quest-definition id="1309" version="1">
+					  <metadata name="complete-dedup" display-name-id="0" min-level="1" max-level="55" category="QUEST">
+					    <work-items><item id="182400006" count="1"/></work-items>
+					  </metadata>
+					  <nodes>
+					    <node label="reward" status="REWARD"/>
+					    <node label="complete" status="COMPLETE"/>
+					  </nodes>
+					  <transitions>
+					    <transition source="reward" target="complete">
+					      <event><dialog type="TALK_TO_NPC" npc-id="700001"/></event>
+					      <actions>
+					        <remove-item item-id="182400006" count="ALL"/>
+					        <complete-quest reward-index="0"/>
+					      </actions>
+					      <after-commit><sync-quest-state mode="COMPLETION"/></after-commit>
+					    </transition>
+					  </transitions>
+					</quest-definition>
 
-				""";
+			""";
 		CompiledQuestDefinition definition = QuestDefinitionXmlCompiler.compile(
 			new java.io.ByteArrayInputStream(xml.getBytes(java.nio.charset.StandardCharsets.UTF_8)));
-		var transition = definition.definition().transitions().get(0);
+		var transition = definition.definition().transitions().getFirst();
 
 		var plan = QuestMutationPlanner.plan(definition,
 			new QuestSnapshot(7, 1309, QuestStatus.REWARD, 0, Map.of(182400006, 1)),
@@ -569,27 +569,27 @@ class QuestMutationPlannerTest {
 		// RemoveItem(ALL) 对全部堆叠恒可行: 玩家未持有 work-item 时完成不应被阻断。
 		String xml = """
 
-						<quest-definition id="1310" version="1">
-						  <metadata name="complete-empty" display-name-id="0" min-level="1" max-level="55" category="QUEST">
-						    <work-items><item id="182400007" count="1"/></work-items>
-						  </metadata>
-						  <nodes>
-						    <node label="reward" status="REWARD"/>
-						    <node label="complete" status="COMPLETE"/>
-						  </nodes>
-						  <transitions>
-						    <transition source="reward" target="complete">
-						      <event><dialog type="TALK_TO_NPC" npc-id="700001"/></event>
-						      <actions><complete-quest reward-index="0"/></actions>
-						      <after-commit><sync-quest-state mode="COMPLETION"/></after-commit>
-						    </transition>
-						  </transitions>
-						</quest-definition>
+					<quest-definition id="1310" version="1">
+					  <metadata name="complete-empty" display-name-id="0" min-level="1" max-level="55" category="QUEST">
+					    <work-items><item id="182400007" count="1"/></work-items>
+					  </metadata>
+					  <nodes>
+					    <node label="reward" status="REWARD"/>
+					    <node label="complete" status="COMPLETE"/>
+					  </nodes>
+					  <transitions>
+					    <transition source="reward" target="complete">
+					      <event><dialog type="TALK_TO_NPC" npc-id="700001"/></event>
+					      <actions><complete-quest reward-index="0"/></actions>
+					      <after-commit><sync-quest-state mode="COMPLETION"/></after-commit>
+					    </transition>
+					  </transitions>
+					</quest-definition>
 
-				""";
+			""";
 		CompiledQuestDefinition definition = QuestDefinitionXmlCompiler.compile(
 			new java.io.ByteArrayInputStream(xml.getBytes(java.nio.charset.StandardCharsets.UTF_8)));
-		var transition = definition.definition().transitions().get(0);
+		var transition = definition.definition().transitions().getFirst();
 
 		assertTrue(QuestMutationPlanner.plan(definition,
 			new QuestSnapshot(7, 1310, QuestStatus.REWARD, 0, Map.of()),

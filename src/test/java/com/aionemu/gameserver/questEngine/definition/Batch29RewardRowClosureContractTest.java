@@ -6,14 +6,11 @@ import com.aionemu.gameserver.questEngine.runtime.QuestMutationPlanner;
 import com.aionemu.gameserver.questEngine.runtime.QuestSnapshot;
 import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -48,7 +45,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 class Batch29RewardRowClosureContractTest {
 
-	/** 任务 id / 领奖态应落盘的行 / 旧存档可能停留的行（自愈边的匹配值）。 */
+	/**
+	 * 任务 id / 领奖态应落盘的行 / 旧存档可能停留的行（自愈边的匹配值）。
+	 */
 	private record Contract(int questId, int rewardRow, List<Integer> staleRows) {
 	}
 
@@ -83,7 +82,7 @@ class Batch29RewardRowClosureContractTest {
 			for (QuestTransition route : entries) {
 				for (QuestAction action : route.actions()) {
 					if (action instanceof QuestAction.SetVariable(String field, int value)
-							&& "var0".equals(field)) {
+						&& "var0".equals(field)) {
 						assertEquals(contract.rewardRow(), value, () -> "quest " + contract.questId()
 							+ " reward entry " + route.sourceNode() + " writes a stale journal row");
 					}
@@ -120,14 +119,14 @@ class Batch29RewardRowClosureContractTest {
 					.findFirst().orElseThrow(() -> new AssertionError("quest " + contract.questId()
 						+ " has no recovery route for var0=" + staleRow));
 				assertEquals(List.of(
-					new QuestCondition.StatusIs(QuestStatus.REWARD),
-					new QuestCondition.QuestVariableIs("var0", staleRow)), recovery.conditions(),
+						new QuestCondition.StatusIs(QuestStatus.REWARD),
+						new QuestCondition.QuestVariableIs("var0", staleRow)), recovery.conditions(),
 					() -> "quest " + contract.questId() + " recovery conditions for var0=" + staleRow);
 				assertEquals(List.of(new QuestAction.SetVariable("var0", contract.rewardRow())),
 					recovery.actions(),
 					() -> "quest " + contract.questId() + " recovery actions for var0=" + staleRow);
 				assertEquals(List.of(new AfterCommitAction.SyncQuestState(
-					QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH)), recovery.afterCommit(),
+						QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH)), recovery.afterCommit(),
 					() -> "quest " + contract.questId() + " recovery after-commit");
 				assertNull(recovery.priority());
 
@@ -152,7 +151,9 @@ class Batch29RewardRowClosureContractTest {
 		}
 	}
 
-	/** 进入前的行候选：进度字段声明范围内的所有值（含越界旧值，用于规划失败的容忍）。 */
+	/**
+	 * 进入前的行候选：进度字段声明范围内的所有值（含越界旧值，用于规划失败的容忍）。
+	 */
 	private static List<Integer> candidateRows(QuestDefinition definition) {
 		BitField field = definition.progressLayout().field("var0");
 		return java.util.stream.IntStream.rangeClosed(field.minValue(), field.maxValue()).boxed().toList();
@@ -172,7 +173,7 @@ class Batch29RewardRowClosureContractTest {
 	}
 
 	private static List<QuestMutationPlan> plans(CompiledQuestDefinition compiled, QuestStatus status,
-			Map<String, Integer> variables, QuestEvent event) {
+												 Map<String, Integer> variables, QuestEvent event) {
 		QuestSnapshot snapshot = snapshot(compiled, status, variables);
 		return compiled.definition().transitions().stream()
 			.flatMap(route -> QuestMutationPlanner.plan(compiled, snapshot, event, route).stream())
@@ -180,7 +181,7 @@ class Batch29RewardRowClosureContractTest {
 	}
 
 	private static QuestSnapshot snapshot(CompiledQuestDefinition compiled, QuestStatus status,
-			Map<String, Integer> variables) {
+										  Map<String, Integer> variables) {
 		Map<String, Integer> packedVariables = new LinkedHashMap<>(
 			compiled.definition().progressLayout().unpack(0));
 		packedVariables.putAll(variables);

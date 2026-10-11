@@ -157,7 +157,7 @@ class QuestProductionAcceptProtocolRegressionTest {
 	private static final Map<Integer, Integer> NATIVE_PREREQ_SLOTS = Map.of(
 		1913, 0, 1914, 1, 1915, 2, 1916, 3);
 
-	private static List<AcceptRoute> acceptRoutes() throws Exception {
+	private static List<AcceptRoute> acceptRoutes() {
 		List<AcceptRoute> routes = new ArrayList<>();
 		SimpleTalkHandler nativeTalk = NativeTalkFixture.handler();
 		for (int questId : CONFIRMED_QUESTS) {

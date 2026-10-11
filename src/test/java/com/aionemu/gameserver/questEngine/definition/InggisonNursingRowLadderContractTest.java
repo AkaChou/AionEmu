@@ -19,6 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 /**
  * 锁定批次 48：11012（Practical Nursing）因吉森三名患者四行阶梯与领奖 owner 收敛。
@@ -58,7 +59,7 @@ class InggisonNursingRowLadderContractTest {
 			Integer row = node.projection().variables().get("var0");
 			QuestStatus status = node.projection().status();
 			if (row == null || row > REWARD_ROW
-					|| (status != QuestStatus.START && status != QuestStatus.REWARD)) {
+				|| (status != QuestStatus.START && status != QuestStatus.REWARD)) {
 				continue;
 			}
 			rows.add(row);
@@ -204,7 +205,7 @@ class InggisonNursingRowLadderContractTest {
 		assertEquals(expected, talkNpcs,
 			() -> "quest " + QUEST + " talk routes cover only the three patients and Naiting");
 		for (int patient : PATIENTS) {
-			assertTrue(!completionNpcs.contains(patient),
+			assertFalse(completionNpcs.contains(patient),
 				() -> "quest " + QUEST + " patient " + patient + " must not complete the quest");
 		}
 	}
@@ -261,7 +262,7 @@ class InggisonNursingRowLadderContractTest {
 			assertNull(heal.priority(), () -> "quest " + QUEST + " heal priority");
 
 			QuestMutationPlan plan = QuestMutationPlanner.plan(compiled,
-				snapshot(compiled, QuestStatus.REWARD, Map.of("var0", oldRow), Map.of()), heal)
+					snapshot(compiled, QuestStatus.REWARD, Map.of("var0", oldRow), Map.of()), heal)
 				.orElseThrow();
 			assertEquals(QuestStatus.REWARD, plan.nextStatus(),
 				() -> "quest " + QUEST + " healed status");
@@ -287,7 +288,7 @@ class InggisonNursingRowLadderContractTest {
 					+ " reward is entered from row 2 (or the reward row itself) only, found " + source);
 			for (QuestAction action : route.actions()) {
 				if (action instanceof QuestAction.SetVariable(String field, int value)
-						&& "var0".equals(field)) {
+					&& "var0".equals(field)) {
 					assertEquals(REWARD_ROW, value,
 						() -> "quest " + QUEST + " reward route writes a non reward journal row");
 				}
@@ -300,7 +301,7 @@ class InggisonNursingRowLadderContractTest {
 		for (QuestTransition heal : heals) {
 			for (QuestCondition condition : heal.conditions()) {
 				if (condition instanceof QuestCondition.QuestVariableIs(String field, int value)
-						&& "var0".equals(field)) {
+					&& "var0".equals(field)) {
 					rows.add(value);
 				}
 			}
@@ -309,7 +310,7 @@ class InggisonNursingRowLadderContractTest {
 	}
 
 	private static List<QuestMutationPlan> plans(CompiledQuestDefinition compiled, QuestStatus status,
-			Map<String, Integer> variables, Map<Integer, Integer> inventory, QuestEvent event) {
+												 Map<String, Integer> variables, Map<Integer, Integer> inventory, QuestEvent event) {
 		QuestSnapshot snapshot = snapshot(compiled, status, variables, inventory);
 		return compiled.definition().transitions().stream()
 			.flatMap(route -> QuestMutationPlanner.plan(compiled, snapshot, event, route).stream())
@@ -350,7 +351,7 @@ class InggisonNursingRowLadderContractTest {
 	}
 
 	private static QuestSnapshot snapshot(CompiledQuestDefinition definition, QuestStatus status,
-			Map<String, Integer> variables, Map<Integer, Integer> inventory) {
+										  Map<String, Integer> variables, Map<Integer, Integer> inventory) {
 		Map<String, Integer> packedVariables = new LinkedHashMap<>(
 			definition.definition().progressLayout().unpack(0));
 		packedVariables.putAll(variables);
@@ -360,7 +361,7 @@ class InggisonNursingRowLadderContractTest {
 
 	private static CompiledQuestDefinition definition() throws IOException {
 		try (InputStream input = InggisonNursingRowLadderContractTest.class.getResourceAsStream(
-				"/aion/data/static_data/quest/definitions/quests/" + QUEST + ".xml")) {
+			"/aion/data/static_data/quest/definitions/quests/" + QUEST + ".xml")) {
 			assertNotNull(input, () -> "missing quest definition " + QUEST + ".xml");
 			return QuestDefinitionXmlCompiler.compile(input);
 		}

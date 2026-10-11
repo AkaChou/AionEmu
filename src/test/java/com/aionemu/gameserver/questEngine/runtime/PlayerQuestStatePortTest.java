@@ -42,6 +42,7 @@ class PlayerQuestStatePortTest {
 	void clearRetiredServiceProvider() {
 		TestServiceProviders.clear(QuestEngine.class);
 	}
+
 	private static final int PLAYER_ID = 7;
 	private static final int QUEST_ID = 1001;
 
@@ -67,7 +68,7 @@ class PlayerQuestStatePortTest {
 
 		// 暂存投影写入 DB，但不推进 live 状态。 The staged projection is persisted without advancing live state.
 		assertEquals(1, dao.stores.size());
-		QuestState stagedProjection = dao.stores.get(0).get(0);
+		QuestState stagedProjection = dao.stores.getFirst().getFirst();
 		assertEquals(QuestStatus.REWARD, stagedProjection.getStatus());
 		assertEquals(1, stagedProjection.getQuestVars().getQuestVars());
 		assertEquals(PersistentState.UPDATE_REQUIRED, stagedProjection.getPersistentState());
@@ -113,7 +114,7 @@ class PlayerQuestStatePortTest {
 
 		port.apply(connection(), PLAYER_ID, plan(QuestStatus.START, 0));
 
-		QuestState stagedProjection = dao.stores.get(0).get(0);
+		QuestState stagedProjection = dao.stores.getFirst().getFirst();
 		// NEW 保持 NEW,由 DAO 走 INSERT(而非 UPDATE),不产生重复/丢失。
 		assertEquals(PersistentState.NEW, stagedProjection.getPersistentState());
 	}
@@ -128,7 +129,7 @@ class PlayerQuestStatePortTest {
 		port.apply(connection(), PLAYER_ID, plan);
 
 		assertNull(player.getQuestStateList().getQuestState(QUEST_ID));
-		assertEquals(PersistentState.NEW, dao.stores.get(0).get(0).getPersistentState());
+		assertEquals(PersistentState.NEW, dao.stores.getFirst().getFirst().getPersistentState());
 
 		port.publish(PLAYER_ID, plan);
 		QuestState live = player.getQuestStateList().getQuestState(QUEST_ID);
@@ -149,7 +150,7 @@ class PlayerQuestStatePortTest {
 
 		port.apply(connection(), PLAYER_ID, plan);
 
-		QuestState stagedProjection = dao.stores.get(0).get(0);
+		QuestState stagedProjection = dao.stores.getFirst().getFirst();
 		assertEquals(QuestStatus.COMPLETE, stagedProjection.getStatus());
 		assertEquals(0, stagedProjection.getQuestVars().getQuestVars());
 		assertEquals(3, stagedProjection.getCompleteCount());
@@ -226,11 +227,11 @@ class PlayerQuestStatePortTest {
 
 	private static Connection connection() {
 		return (Connection) Proxy.newProxyInstance(Connection.class.getClassLoader(),
-				new Class<?>[]{Connection.class}, (proxy, method, args) -> switch (method.getName()) {
-					case "getAutoCommit" -> false;
-					case "toString" -> "test-connection";
-					default -> defaultValue(method.getReturnType());
-				});
+			new Class<?>[]{Connection.class}, (proxy, method, args) -> switch (method.getName()) {
+				case "getAutoCommit" -> false;
+				case "toString" -> "test-connection";
+				default -> defaultValue(method.getReturnType());
+			});
 	}
 
 	private static Object defaultValue(Class<?> type) {

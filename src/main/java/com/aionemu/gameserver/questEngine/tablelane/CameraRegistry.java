@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import java.util.TreeMap;
 
 /**
@@ -33,13 +32,19 @@ public final class CameraRegistry {
 	 * 单任务相机行规约（数据层输入；fullValue 由数据显式给出，禁止本类自行"修复"）。
 	 * Per-quest camera row spec (data-layer input; fullValue is given explicitly, never auto-"fixed").
 	 */
-	public record RowSpec(int questId, RawQuestVarsCodec.Width width, int fullValue, Map<Integer, Integer> slotRequires) {
+	public record RowSpec(int questId, RawQuestVarsCodec.Width width, int fullValue,
+	                      Map<Integer, Integer> slotRequires) {
 	}
 
-	/** 单任务已验证相机行。 / One validated per-quest camera row. */
-	public record CameraRow(int questId, RawQuestVarsCodec.Width width, int fullValue, Map<Integer, Integer> slotRequires) {
+	/**
+	 * 单任务已验证相机行。 / One validated per-quest camera row.
+	 */
+	public record CameraRow(int questId, RawQuestVarsCodec.Width width, int fullValue,
+	                        Map<Integer, Integer> slotRequires) {
 
-		/** 槽 required（未声明槽返回 0）。 / Required count for a slot (0 when undeclared). */
+		/**
+		 * 槽 required（未声明槽返回 0）。 / Required count for a slot (0 when undeclared).
+		 */
 		public int required(int slot) {
 			return slotRequires.getOrDefault(slot, 0);
 		}
@@ -51,19 +56,21 @@ public final class CameraRegistry {
 		this.rowsByQuestId = rowsByQuestId;
 	}
 
-	/** 从行规约构建并全量校验。 / Builds from row specs, validating every row. */
+	/**
+	 * 从行规约构建并全量校验。 / Builds from row specs, validating every row.
+	 */
 	public static CameraRegistry fromSpecs(Collection<RowSpec> specs) {
 		Map<Integer, CameraRow> rows = new LinkedHashMap<>();
 		for (RowSpec spec : specs) {
 			if (spec.width() == null || spec.slotRequires() == null || spec.slotRequires().isEmpty()) {
 				throw new IllegalStateException("NATIVE_CAMERA_ROW_MISSING: quest " + spec.questId()
-						+ " has no slot requirements");
+					+ " has no slot requirements");
 			}
 			if (rows.containsKey(spec.questId())) {
 				// 原版同一任务只出现一行（零混宽）；重复注册 = 数据矛盾。
 				// Retail has exactly one row per quest (zero width mixing); duplicates are data conflicts.
 				throw new IllegalStateException("NATIVE_CAMERA_WIDTH_MIXED: quest " + spec.questId()
-						+ " registered more than once");
+					+ " registered more than once");
 			}
 			Map<Integer, Integer> slotRequires = new TreeMap<>();
 			int combined = 0;
@@ -72,38 +79,44 @@ public final class CameraRegistry {
 				int required = entry.getValue();
 				if (required <= 0) {
 					throw new IllegalStateException("NATIVE_CAMERA_ROW_MISSING: quest " + spec.questId()
-							+ " slot " + slot + " has non-positive required " + required);
+						+ " slot " + slot + " has non-positive required " + required);
 				}
 				if (required > spec.width().slotMask()) {
 					throw new IllegalStateException("NATIVE_CAMERA_REQUIRED_EXCEEDS_MASK: quest " + spec.questId()
-							+ " slot " + slot + " required " + required + " exceeds "
-							+ spec.width().name() + " mask");
+						+ " slot " + slot + " required " + required + " exceeds "
+						+ spec.width().name() + " mask");
 				}
 				slotRequires.put(slot, required);
 				combined |= required << spec.width().shift(slot);
 			}
 			if (combined != spec.fullValue()) {
 				throw new IllegalStateException("NATIVE_CAMERA_FULL_VALUE_INVALID: quest " + spec.questId()
-						+ " fullValue " + Integer.toHexString(spec.fullValue()) + " != slot combination "
-						+ Integer.toHexString(combined));
+					+ " fullValue " + Integer.toHexString(spec.fullValue()) + " != slot combination "
+					+ Integer.toHexString(combined));
 			}
 			rows.put(spec.questId(), new CameraRow(spec.questId(), spec.width(), spec.fullValue(),
-					Map.copyOf(slotRequires)));
+				Map.copyOf(slotRequires)));
 		}
 		return new CameraRegistry(Map.copyOf(rows));
 	}
 
-	/** 已注册任务数。 / Number of registered quests. */
+	/**
+	 * 已注册任务数。 / Number of registered quests.
+	 */
 	public int size() {
 		return rowsByQuestId.size();
 	}
 
-	/** 按任务查询。 / Looks a row up by quest id. */
+	/**
+	 * 按任务查询。 / Looks a row up by quest id.
+	 */
 	public Optional<CameraRow> find(int questId) {
 		return Optional.ofNullable(rowsByQuestId.get(questId));
 	}
 
-	/** 按任务查询，未注册即 fail-closed。 / Looks a row up; unregistered quests fail closed. */
+	/**
+	 * 按任务查询，未注册即 fail-closed。 / Looks a row up; unregistered quests fail closed.
+	 */
 	public CameraRow require(int questId) {
 		CameraRow row = rowsByQuestId.get(questId);
 		if (row == null) {

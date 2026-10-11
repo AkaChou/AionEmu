@@ -31,7 +31,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 class Quest1346ClientDialogAlignmentTest {
 	private static final int QUEST_ID = 1346;
-	/** 原版行 acquired_npc_name=Trillian / reward_npc_name=Castor。 / Retail row NPC names. */
+	/**
+	 * 原版行 acquired_npc_name=Trillian / reward_npc_name=Castor。 / Retail row NPC names.
+	 */
 	private static final int ACQUIRE_NPC = 203966;
 	private static final int REPORT_NPC = 203965;
 
@@ -54,9 +56,9 @@ class Quest1346ClientDialogAlignmentTest {
 
 		SimpleHuntHandler handler = SimpleHuntHandler.instance();
 		assertEquals(ACQUIRE_NPC,
-			NativeNpcNameResolver.instance().resolve("Trillian").npcIds().get(0), "Trillian 解析");
+			NativeNpcNameResolver.instance().resolve("Trillian").npcIds().getFirst(), "Trillian 解析");
 		assertEquals(REPORT_NPC,
-			NativeNpcNameResolver.instance().resolve("Castor").npcIds().get(0), "Castor 解析");
+			NativeNpcNameResolver.instance().resolve("Castor").npcIds().getFirst(), "Castor 解析");
 		assertEquals(ACQUIRE_NPC, handler.acquireNpc(QUEST_ID));
 		assertEquals(REPORT_NPC, handler.rewardNpc(QUEST_ID));
 
@@ -75,9 +77,9 @@ class Quest1346ClientDialogAlignmentTest {
 		List<QuestReward> rewards = metadata.rewards();
 		// 原版 quest.xml：reward_exp1=476911、reward_item1_1=coin_03 9（186000003）、
 		// reward_item1_2=potion_hp_mp_30a 9（162000048）。
-		assertTrue(rewards.contains(new QuestReward("EXP", 0, 476911)), () -> rewards.toString());
-		assertTrue(rewards.contains(new QuestReward("ITEM", 186000003, 9)), () -> rewards.toString());
-		assertTrue(rewards.contains(new QuestReward("ITEM", 162000048, 9)), () -> rewards.toString());
+		assertTrue(rewards.contains(new QuestReward("EXP", 0, 476911)), rewards::toString);
+		assertTrue(rewards.contains(new QuestReward("ITEM", 186000003, 9)), rewards::toString);
+		assertTrue(rewards.contains(new QuestReward("ITEM", 162000048, 9)), rewards::toString);
 	}
 
 	@Test

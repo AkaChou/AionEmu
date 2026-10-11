@@ -33,7 +33,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-/** CRAFT vertical proofs extracted from real owners 19038, 5000 and 1941. */
+/**
+ * CRAFT vertical proofs extracted from real owners 19038, 5000 and 1941.
+ */
 class CraftRepresentativeQuestDefinitionTest {
 	@Test
 	void failCraft19038ProjectsAllFourExactRollbacks() {
@@ -68,8 +70,8 @@ class CraftRepresentativeQuestDefinitionTest {
 
 		assertEquals(dsl.definition(), xml.definition());
 		assertEquals(List.of(
-			new QuestAction.GrantReward("ITEM", 182290000, 4),
-			new QuestAction.LearnRecipe(155004001, QuestRecipeOwnership.QUEST_OWNED)),
+				new QuestAction.GrantReward("ITEM", 182290000, 4),
+				new QuestAction.LearnRecipe(155004001, QuestRecipeOwnership.QUEST_OWNED)),
 			dsl.definition().transitions().get(0).actions());
 		assertEquals(new QuestEvent.Abandon(), dsl.definition().transitions().get(1).event());
 		assertEquals(List.of(new QuestAction.ForgetRecipe(155004001)),
@@ -118,8 +120,8 @@ class CraftRepresentativeQuestDefinitionTest {
 			.withCraftFacts(new QuestCraftSnapshot(Set.of(), Map.of(40002, 399), 1600, 2, 1));
 		assertEquals(400,
 			((QuestAction.GrantCraftSkill) QuestMutationPlanner.plan(definition, eligible,
-				movieEnd(93), definition.definition().transitions().get(1)).orElseThrow()
-				.requiredActions().get(0)).targetLevel());
+					movieEnd(93), definition.definition().transitions().get(1)).orElseThrow()
+				.requiredActions().getFirst()).targetLevel());
 	}
 
 	@Test
@@ -128,7 +130,7 @@ class CraftRepresentativeQuestDefinitionTest {
 		QuestSnapshot unknown = new QuestSnapshot(7, 5000, QuestStatus.NONE, 0, Map.of());
 
 		assertFalse(QuestMutationPlanner.plan(definition, unknown,
-			talkToNpc(203788, QuestDialogAction.QUEST_ACCEPT_1), definition.definition().transitions().get(0)).isPresent());
+			talkToNpc(203788, QuestDialogAction.QUEST_ACCEPT_1), definition.definition().transitions().getFirst()).isPresent());
 	}
 
 	private static void assertFailCraftRollback(int itemId, int from, int to) {
@@ -141,7 +143,7 @@ class CraftRepresentativeQuestDefinitionTest {
 		QuestSnapshot snapshot = new QuestSnapshot(7, 19038, QuestStatus.START, from, Map.of());
 
 		assertEquals(to, QuestMutationPlanner.plan(definition, snapshot, failCraft(itemId),
-			definition.definition().transitions().get(0)).orElseThrow().nextPackedVariables());
+			definition.definition().transitions().getFirst()).orElseThrow().nextPackedVariables());
 	}
 
 	private static CompiledQuestDefinition definition(int questId) throws Exception {

@@ -24,7 +24,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-/** Real PvP handler facts projected through both canonical definition front ends. */
+/**
+ * Real PvP handler facts projected through both canonical definition front ends.
+ */
 class PvpRepresentativeQuestDefinitionTest {
 	@Test
 	void quest3741UsesMinimumRankAndRejectsLowerRank() {
@@ -37,10 +39,10 @@ class PvpRepresentativeQuestDefinitionTest {
 		QuestSnapshot snapshot = snapshot(3741, QuestStatus.START, facts);
 
 		assertTrue(QuestMutationPlanner.plan(definition, snapshot,
-			new QuestEvent.KillRanked(4, facts), definition.definition().transitions().get(0)).isPresent());
+			new QuestEvent.KillRanked(4, facts), definition.definition().transitions().getFirst()).isPresent());
 		QuestPvpKillFacts lowerFacts = facts(8, 9, 20, 4, 2, 2, 210010000, Set.of());
 		assertFalse(QuestMutationPlanner.plan(definition, snapshot.withPvpFacts(lowerFacts),
-			new QuestEvent.KillRanked(2, lowerFacts), definition.definition().transitions().get(0)).isPresent());
+			new QuestEvent.KillRanked(2, lowerFacts), definition.definition().transitions().getFirst()).isPresent());
 	}
 
 	@Test
@@ -55,7 +57,7 @@ class PvpRepresentativeQuestDefinitionTest {
 			.compile();
 		CompiledQuestDefinition xml = QuestDefinitionXmlCompiler.compile(xml(15204,
 			"<progress><bit-field name=\"var0\" offset=\"0\" width=\"6\" min=\"0\" max=\"63\" persistence=\"PERSISTENT\" scope=\"LOCAL\"/></progress>",
-"<node label=\"start\" status=\"START\"><var name=\"var0\" value=\"4\"/></node><node label=\"reward\" status=\"REWARD\"><var name=\"var0\" value=\"5\"/></node>",
+			"<node label=\"start\" status=\"START\"><var name=\"var0\" value=\"4\"/></node><node label=\"reward\" status=\"REWARD\"><var name=\"var0\" value=\"5\"/></node>",
 			"<event><kill-in-world world-id=\"210070000\"/></event><conditions><status-is status=\"START\"/><variable-is field=\"var0\" value=\"4\"/></conditions>"));
 		assertEquals(dsl.definition(), xml.definition());
 	}
@@ -69,9 +71,9 @@ class PvpRepresentativeQuestDefinitionTest {
 			.when(pvpVictimLevelDelta(-5, 9)).goTo("reward").compile();
 		QuestPvpKillFacts facts = facts(8, 9, 20, 50, 55, 3, 210050000, Set.of());
 		assertTrue(QuestMutationPlanner.plan(definition, snapshot(11362, QuestStatus.START, facts),
-			new QuestEvent.KillInWorld(210050000, facts), definition.definition().transitions().get(0)).isPresent());
+			new QuestEvent.KillInWorld(210050000, facts), definition.definition().transitions().getFirst()).isPresent());
 		assertFalse(QuestMutationPlanner.plan(definition, new QuestSnapshot(8, 11362, QuestStatus.START, 0, Map.of()),
-			new QuestEvent.KillInWorld(210050000), definition.definition().transitions().get(0)).isPresent());
+			new QuestEvent.KillInWorld(210050000), definition.definition().transitions().getFirst()).isPresent());
 	}
 
 	@Test
@@ -84,9 +86,9 @@ class PvpRepresentativeQuestDefinitionTest {
 		QuestPvpKillFacts facts = facts(8, 9, 20, 50, 55, 3, 310010000, Set.of());
 
 		assertTrue(QuestMutationPlanner.plan(definition, snapshot(19690, QuestStatus.START, facts),
-			new QuestEvent.KillInWorld(310010000, facts), definition.definition().transitions().get(0)).isPresent());
+			new QuestEvent.KillInWorld(310010000, facts), definition.definition().transitions().getFirst()).isPresent());
 		assertFalse(QuestMutationPlanner.plan(definition, new QuestSnapshot(9, 19690, QuestStatus.START, 0, Map.of()),
-			new QuestEvent.KillInWorld(310010000), definition.definition().transitions().get(0)).isPresent());
+			new QuestEvent.KillInWorld(310010000), definition.definition().transitions().getFirst()).isPresent());
 	}
 
 	@Test
@@ -100,10 +102,10 @@ class PvpRepresentativeQuestDefinitionTest {
 		QuestPvpKillFacts eligible = facts(8, 9, 20, 50, 55, 3, 400010000,
 			Set.of("SULFUR_FORTRESS_400010000"));
 		assertTrue(QuestMutationPlanner.plan(definition, snapshot(23851, QuestStatus.START, eligible),
-			new QuestEvent.KillInWorld(400010000, eligible), definition.definition().transitions().get(0)).isPresent());
+			new QuestEvent.KillInWorld(400010000, eligible), definition.definition().transitions().getFirst()).isPresent());
 		QuestPvpKillFacts wrongZone = facts(8, 9, 20, 50, 55, 3, 400010000, Set.of("OTHER_ZONE"));
 		assertFalse(QuestMutationPlanner.plan(definition, snapshot(23851, QuestStatus.START, wrongZone),
-			new QuestEvent.KillInWorld(400010000, wrongZone), definition.definition().transitions().get(0)).isPresent());
+			new QuestEvent.KillInWorld(400010000, wrongZone), definition.definition().transitions().getFirst()).isPresent());
 	}
 
 	@Test
@@ -121,8 +123,8 @@ class PvpRepresentativeQuestDefinitionTest {
 
 			""").getBytes(StandardCharsets.UTF_8)));
 		assertEquals(List.of(new QuestCondition.PvpVictimLevelDelta(-5, 9),
-			new QuestCondition.PvpRecipientInZone("SULFUR_FORTRESS_400010000")),
-			definition.definition().transitions().get(0).conditions());
+				new QuestCondition.PvpRecipientInZone("SULFUR_FORTRESS_400010000")),
+			definition.definition().transitions().getFirst().conditions());
 	}
 
 	@Test
@@ -140,7 +142,7 @@ class PvpRepresentativeQuestDefinitionTest {
 	}
 
 	private static QuestPvpKillFacts facts(int killerId, int recipientId, int victimId,
-		int recipientLevel, int victimLevel, int victimRankId, int worldId, Set<String> zones) {
+										   int recipientLevel, int victimLevel, int victimRankId, int worldId, Set<String> zones) {
 		return new QuestPvpKillFacts(killerId, recipientId, victimId, recipientLevel, victimLevel,
 			victimRankId, worldId, QuestPvpCreditSource.SOLO, zones);
 	}

@@ -3,6 +3,7 @@ package com.aionemu.gameserver.model;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -28,6 +29,7 @@ import lombok.Data;
  * The rule lives in {@code .agents/rules/lombok.md}. This test keeps no type allowlist: whenever any
  * source places an @Data type in a map key position or a set element position, that type depends on
  * identity equality and @Data would silently break those containers.</p>
+ *
  * @author refactor-guard
  */
 class EntityIdentitySemanticsTest {
@@ -85,27 +87,27 @@ class EntityIdentitySemanticsTest {
 				dataTypes.add(typeName);
 			}
 		}
-		assertTrue(!dataTypes.isEmpty(), "未扫描到任何 @Data 类，测试可能失效 / no @Data class was scanned");
+		assertFalse(dataTypes.isEmpty(), "未扫描到任何 @Data 类，测试可能失效 / no @Data class was scanned");
 
 		List<String> violations = new ArrayList<>();
 		for (Path source : sources) {
 			String text = Files.readString(source, StandardCharsets.UTF_8);
 			String typeName = declaredTypeName(text);
 			if (typeName != null && dataTypes.contains(typeName)
-					&& RegexHolder.SECRET_FIELD.matcher(text).find()) {
+				&& RegexHolder.SECRET_FIELD.matcher(text).find()) {
 				violations.add(source.getFileName() + " → 敏感字段 / secret field");
 			}
 			for (String dataType : dataTypes) {
 				if (RegexHolder.mapKey(dataType).matcher(text).find()
-						|| RegexHolder.setElement(dataType).matcher(text).find()) {
+					|| RegexHolder.setElement(dataType).matcher(text).find()) {
 					violations.add(source.getFileName() + " → 把 @Data 类型 " + dataType
-							+ " 用作 Map 键 / Set 元素（" + source + "）");
+						+ " 用作 Map 键 / Set 元素（" + source + "）");
 				}
 			}
 		}
 		assertTrue(violations.isEmpty(),
-				"违反 .agents/rules/lombok.md 第 4 条：@Data 类型依赖身份相等，按字段 equals/hashCode "
-						+ "会让 Map/Set 静默失效 / @Data types used with identity semantics: " + violations);
+			"违反 .agents/rules/lombok.md 第 4 条：@Data 类型依赖身份相等，按字段 equals/hashCode "
+				+ "会让 Map/Set 静默失效 / @Data types used with identity semantics: " + violations);
 	}
 
 	/**
@@ -114,7 +116,7 @@ class EntityIdentitySemanticsTest {
 	 */
 	private static List<Path> gameServerSources() throws Exception {
 		Path classesDir = Paths.get(EntityIdentitySemanticsTest.class.getProtectionDomain()
-				.getCodeSource().getLocation().toURI());
+			.getCodeSource().getLocation().toURI());
 		Path sourceRoot = classesDir.getParent().getParent().resolve("src/main/java/com/aionemu/gameserver");
 		assertTrue(Files.isDirectory(sourceRoot), "未找到主源码目录 / source root not found: " + sourceRoot);
 		try (Stream<Path> walk = Files.walk(sourceRoot)) {
@@ -137,16 +139,22 @@ class EntityIdentitySemanticsTest {
 	 */
 	private static final class RegexHolder {
 
-		/** 类级 @Data 注解 / class level @Data annotation */
+		/**
+		 * 类级 @Data 注解 / class level @Data annotation
+		 */
 		private static final Pattern DATA_ANNOTATION = Pattern.compile("(?m)^\\s*@Data\\s*(?:\\(|$)");
 
-		/** 字段级敏感信息 / secret-bearing fields */
+		/**
+		 * 字段级敏感信息 / secret-bearing fields
+		 */
 		private static final Pattern SECRET_FIELD = Pattern.compile(
-				"(?im)^\\s*(?:private|protected|public)\\s+[^;=]*\\b(?:password|passwd|secret|token|credential)\\b");
+			"(?im)^\\s*(?:private|protected|public)\\s+[^;=]*\\b(?:password|passwd|secret|token|credential)\\b");
 
-		/** 公开类型声明 / declared public type */
+		/**
+		 * 公开类型声明 / declared public type
+		 */
 		private static final Pattern TYPE_DECLARATION =
-				Pattern.compile("(?m)^\\s*public\\s+(?:final\\s+|abstract\\s+)?(?:class|enum|record)\\s+(\\w+)");
+			Pattern.compile("(?m)^\\s*public\\s+(?:final\\s+|abstract\\s+)?(?:class|enum|record)\\s+(\\w+)");
 
 		/**
 		 * Map 键位：要求该类型是第一个类型参数（`Map<Item,` 命中，`Map<Integer, Item>` 不命中）。
@@ -154,7 +162,7 @@ class EntityIdentitySemanticsTest {
 		 */
 		private static Pattern mapKey(String type) {
 			return Pattern.compile("\\b(?:Map|HashMap|ConcurrentHashMap|WeakHashMap|IdentityHashMap|"
-					+ "TreeMap|LinkedHashMap)\\s*<\\s*" + Pattern.quote(type) + "\\s*,");
+				+ "TreeMap|LinkedHashMap)\\s*<\\s*" + Pattern.quote(type) + "\\s*,");
 		}
 
 		/**
@@ -163,7 +171,7 @@ class EntityIdentitySemanticsTest {
 		 */
 		private static Pattern setElement(String type) {
 			return Pattern.compile("\\b(?:Set|HashSet|CopyOnWriteArraySet|TreeSet|LinkedHashSet)"
-					+ "\\s*<\\s*" + Pattern.quote(type) + "\\s*>");
+				+ "\\s*<\\s*" + Pattern.quote(type) + "\\s*>");
 		}
 
 		private RegexHolder() {

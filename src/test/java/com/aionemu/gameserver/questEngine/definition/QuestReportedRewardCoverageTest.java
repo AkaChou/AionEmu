@@ -4,7 +4,6 @@ import com.aionemu.gameserver.model.PlayerClass;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import org.junit.jupiter.api.Test;
 
-import java.nio.file.Path;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -83,6 +82,7 @@ class QuestReportedRewardCoverageTest {
 			assertTargetlessCompletionRoutes(compiled, QuestDialogAction.SELECTED_QUEST_AUTO_REWARD1.id(), 11);
 		}
 	}
+
 	/**
 	 * 对话页确认通道（TalkToNpc 报告 NPC 键）：DD 形与遗留形同键注册；classScoped 时按
 	 * AdvancedClassIs 条件计数（无条件交付兜底路由不计入职业梯）。
@@ -91,7 +91,7 @@ class QuestReportedRewardCoverageTest {
 	 * unconditional delivery fallback stays out of the class ladder).
 	 */
 	private static void assertTalkConfirmRoutes(CompiledQuestDefinition compiled, int dialogId,
-			int expectedCount, boolean classScoped) {
+												int expectedCount, boolean classScoped) {
 		List<QuestTransition> routes = compiled.definition().transitions().stream()
 			.filter(transition -> transition.event() instanceof QuestEvent.TalkToNpc talk
 				&& talk.dialogId() != null && talk.dialogId() == dialogId)
@@ -111,14 +111,14 @@ class QuestReportedRewardCoverageTest {
 			assertEquals(1, transition.actions().stream()
 				.filter(QuestAction.CompleteQuest.class::isInstance).count());
 			assertEquals(List.of(new AfterCommitAction.RefreshPlayerStats(),
-				new AfterCommitAction.SyncQuestState(QuestStateSyncMode.COMPLETION),
-				new AfterCommitAction.ShowQuestSelectionDialog(QuestDialogPage.SELECT_QUEST.id())),
+					new AfterCommitAction.SyncQuestState(QuestStateSyncMode.COMPLETION),
+					new AfterCommitAction.ShowQuestSelectionDialog(QuestDialogPage.SELECT_QUEST.id())),
 				transition.afterCommit(), "quest=" + compiled.id() + " action=" + dialogId);
 		}
 	}
 
 	private static void assertTargetlessCompletionRoutes(CompiledQuestDefinition compiled,
-			int dialogId, int expectedCount) {
+														 int dialogId, int expectedCount) {
 		List<QuestTransition> routes = targetlessRoutes(compiled, dialogId);
 		assertEquals(expectedCount, routes.size(), "quest=" + compiled.id() + " action=" + dialogId);
 		Map<String, QuestStatus> statuses = new LinkedHashMap<>();

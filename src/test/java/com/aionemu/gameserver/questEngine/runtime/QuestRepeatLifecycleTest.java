@@ -4,8 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.util.Map;
-import java.util.Set;
 
 import org.junit.jupiter.api.Test;
 import org.objenesis.ObjenesisStd;
@@ -18,13 +16,8 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.gameobjects.player.PlayerCommonData;
 import com.aionemu.gameserver.model.gameobjects.player.QuestStateList;
 import com.aionemu.gameserver.model.templates.npc.NpcTemplate;
-import com.aionemu.gameserver.questEngine.definition.AfterCommitAction;
 import com.aionemu.gameserver.questEngine.definition.CompiledQuestDefinition;
 import com.aionemu.gameserver.questEngine.definition.ProductionQuestDefinitions;
-import com.aionemu.gameserver.questEngine.definition.QuestCondition;
-import com.aionemu.gameserver.questEngine.definition.QuestDialogPage;
-import com.aionemu.gameserver.questEngine.definition.QuestEvent;
-import com.aionemu.gameserver.questEngine.definition.QuestTransition;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
@@ -41,7 +34,9 @@ import com.aionemu.gameserver.questEngine.tablelane.SimpleTalkHandler;
  */
 class QuestRepeatLifecycleTest {
 
-	/** 原版行 1963：acquired/reward = Polyidus(203726)，中继 Phokas(203851)，接取发放并第 1 步回收 182206032。 */
+	/**
+	 * 原版行 1963：acquired/reward = Polyidus(203726)，中继 Phokas(203851)，接取发放并第 1 步回收 182206032。
+	 */
 	private static final int NATIVE_QUEST = 1963;
 	private static final int NATIVE_NPC = 203726;
 	private static final int NATIVE_ITEM = 182206032;
@@ -56,7 +51,7 @@ class QuestRepeatLifecycleTest {
 		Player player = createTestPlayer();
 		Npc polyidus = createMockNpc(NATIVE_NPC);
 		player.getQuestStateList().addQuest(NATIVE_QUEST,
-				new QuestState(NATIVE_QUEST, QuestStatus.COMPLETE, 0x1f, 3, null, 0, null));
+			new QuestState(NATIVE_QUEST, QuestStatus.COMPLETE, 0x1f, 3, null, 0, null));
 
 		// 原版表行事实：接取与交付同 NPC、一个中继步、接取发放且第 1 步回收同一工作物品。
 		assertEquals(NATIVE_NPC, handler.acquireNpc(NATIVE_QUEST));
@@ -67,9 +62,9 @@ class QuestRepeatLifecycleTest {
 
 		// COMPLETE 态（可重复）→ 接取窗照开；确认接取复位到 START 并清空 raw vars。
 		assertTrue(handler.onDialog(new QuestEnv(polyidus, player, NATIVE_QUEST, 31)),
-				"可重复行的 COMPLETE 态必须重开接取窗");
+			"可重复行的 COMPLETE 态必须重开接取窗");
 		assertTrue(handler.onDialog(new QuestEnv(polyidus, player, NATIVE_QUEST, 1002)),
-				"重复接取必须落库到 START");
+			"重复接取必须落库到 START");
 		QuestState state = player.getQuestStateList().getQuestState(NATIVE_QUEST);
 		assertEquals(QuestStatus.START, state.getStatus());
 		assertEquals(0, state.getQuestVars().getQuestVars(), "重复接取必须复位 raw vars");
@@ -79,7 +74,7 @@ class QuestRepeatLifecycleTest {
 		state.setStatus(QuestStatus.COMPLETE);
 		state.setCompleteCount(100);
 		assertFalse(handler.onDialog(new QuestEnv(polyidus, player, NATIVE_QUEST, 1002)),
-				"达到 max_repeat_count 后必须拒绝接取");
+			"达到 max_repeat_count 后必须拒绝接取");
 		assertEquals(QuestStatus.COMPLETE, state.getStatus(), "被拒时不得改写状态");
 	}
 

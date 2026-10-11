@@ -16,7 +16,6 @@ import org.junit.jupiter.api.Test;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.questEngine.definition.QuestDialogContract;
 import com.aionemu.gameserver.questEngine.definition.QuestDialogPage;
-import com.aionemu.gameserver.questEngine.model.QuestEnv;
 
 /**
  * 跨族接取页链门：原版入口页表（信页/阶段页）与页动作 {@code 1007} 的 ask 流。
@@ -37,11 +36,15 @@ class NativeAcceptEntryAskFlowGateTest {
 	private static final String HUNT_RESOURCE = "aion/data/static_data/quest/retail/Quest_SimpleHunt.xml";
 	private static final String TALK_RESOURCE = "aion/data/static_data/quest/retail/Quest_SimpleTalk.xml";
 
-	/** 原版 ask 流挂在过场上的行（hunt 3 + talk 2）：quest → movie。 */
+	/**
+	 * 原版 ask 流挂在过场上的行（hunt 3 + talk 2）：quest → movie。
+	 */
 	private static final Map<Integer, Integer> ASK_CUTSCENE_ROWS = Map.of(
 		3016, 362, 4007, 391, 4014, 393, 3020, 363, 4056, 403);
 
-	/** 客户端未声明页 4 的样例（hunt 1346：只有 select1 阶梯）。 */
+	/**
+	 * 客户端未声明页 4 的样例（hunt 1346：只有 select1 阶梯）。
+	 */
 	private static final int NO_ASK_WINDOW_QUEST = 1346;
 
 	private static final int SELECT_NONE = QuestDialogPage.SELECT_NONE.id();
@@ -79,10 +82,12 @@ class NativeAcceptEntryAskFlowGateTest {
 			}
 		}
 		assertTrue(invented.isEmpty(), () -> "入口页不得落在客户端未声明的页上: " + invented);
-				assertTrue(fallbackRows > 0, "客户端三类页全缺的兜底行必须存在（否则规则退化）: " + fallbackRows);
+		assertTrue(fallbackRows > 0, "客户端三类页全缺的兜底行必须存在（否则规则退化）: " + fallbackRows);
 	}
 
-	/** 具体样本：信页优先与页 4 兜底两条形态各取一行冻结。 */
+	/**
+	 * 具体样本：信页优先与页 4 兜底两条形态各取一行冻结。
+	 */
 	@Test
 	void entryPageSamplesMatchTheRetailRule() {
 		QuestDialogContract contract = QuestDialogContract.loadDefault();
@@ -119,7 +124,9 @@ class NativeAcceptEntryAskFlowGateTest {
 		}
 	}
 
-	/** 未声明页 4 的行：{@code 1007} 不得被服务（无包下发，禁止发明页）。 */
+	/**
+	 * 未声明页 4 的行：{@code 1007} 不得被服务（无包下发，禁止发明页）。
+	 */
 	@Test
 	void askActionFailsClosedWithoutAClientAskWindowPage() {
 		SimpleHuntHandler hunt = SimpleHuntHandler.instance();
@@ -136,7 +143,9 @@ class NativeAcceptEntryAskFlowGateTest {
 
 	// ---------------------------------------------------------------- 事实源
 
-	/** 客户端页契约：quest id → 声明页集合（直接读资源，不复用生产解析路径）。 */
+	/**
+	 * 客户端页契约：quest id → 声明页集合（直接读资源，不复用生产解析路径）。
+	 */
 	private static Map<Integer, List<Integer>> contractPages() throws Exception {
 		Map<Integer, List<Integer>> pages = new LinkedHashMap<>();
 		for (String line : readResource(CONTRACT_RESOURCE).split("\n")) {
@@ -150,7 +159,9 @@ class NativeAcceptEntryAskFlowGateTest {
 		return pages;
 	}
 
-	/** 原版表行的接取 NPC 名（独立重解析）。 / The retail rows' acquire npc names (independent re-parse). */
+	/**
+	 * 原版表行的接取 NPC 名（独立重解析）。 / The retail rows' acquire npc names (independent re-parse).
+	 */
 	private static Map<Integer, String> acquireNpcs() throws Exception {
 		Map<Integer, String> acquires = new LinkedHashMap<>();
 		for (String resource : List.of(HUNT_RESOURCE, TALK_RESOURCE)) {

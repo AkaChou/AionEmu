@@ -3,12 +3,7 @@ package com.aionemu.gameserver.questEngine.definition;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.questEngine.tablelane.SimpleTalkHandler;
 import org.junit.jupiter.api.Test;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
 
-import javax.xml.XMLConstants;
-import javax.xml.parsers.DocumentBuilderFactory;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -124,7 +119,7 @@ class QuestWorkItemMigrationCoverageTest {
 				.toMap(QuestNode::label, node -> node.projection().status(), (left, right) -> left));
 			for (QuestTransition transition : definition.transitions()) {
 				if (statuses.get(transition.targetNode()) != QuestStatus.REWARD
-						|| statuses.get(transition.sourceNode()) == QuestStatus.REWARD) {
+					|| statuses.get(transition.sourceNode()) == QuestStatus.REWARD) {
 					continue;
 				}
 				List<Integer> notHandedIn = entry.getValue().stream()

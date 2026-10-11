@@ -58,7 +58,9 @@ import org.w3c.dom.NodeList;
  */
 public final class NativeQuestTableLoader {
 
-	/** 单槽狩猎目标：required 计数 + 怪物名（原版 13912 形允许空名单）。 / One hunt slot: required count + monster names (the retail 13912 shape allows an empty list). */
+	/**
+	 * 单槽狩猎目标：required 计数 + 怪物名（原版 13912 形允许空名单）。 / One hunt slot: required count + monster names (the retail 13912 shape allows an empty list).
+	 */
 	public record KillSlot(int count, List<String> monsters) {
 	}
 
@@ -70,16 +72,21 @@ public final class NativeQuestTableLoader {
 	 * (slot 0x35, 3 rows) load verbatim.
 	 */
 	public record SimpleHuntRow(int questId, String acquiredNpcName, String rewardNpcName,
-			Map<Integer, KillSlot> killSlots, Integer conQuest, Integer cutsceneId, Integer cutsceneAction) {
+								Map<Integer, KillSlot> killSlots, Integer conQuest, Integer cutsceneId,
+	                            Integer cutsceneAction) {
 	}
 
-	/** 串行阶段规约：阶段号 (1..5) + 所需击杀数 + 目标怪名列表。 / Serial stage: 1-based stage + required count + monster names. */
+	/**
+	 * 串行阶段规约：阶段号 (1..5) + 所需击杀数 + 目标怪名列表。 / Serial stage: 1-based stage + required count + monster names.
+	 */
 	public record SerialStage(int stage, int count, List<String> monsters) {
 	}
 
-	/** SimpleSerialHunt 表行。 / One SimpleSerialHunt table row. */
+	/**
+	 * SimpleSerialHunt 表行。 / One SimpleSerialHunt table row.
+	 */
 	public record SimpleSerialHuntRow(int questId, String devName, String acquiredNpcName,
-			String rewardNpcName, List<String> talkNpcNames, List<SerialStage> stages) {
+									  String rewardNpcName, List<String> talkNpcNames, List<SerialStage> stages) {
 	}
 
 	/**
@@ -98,8 +105,9 @@ public final class NativeQuestTableLoader {
 	 * @param stepRemoveItems {@code remove_item1..3} 原文，**按下标对齐中继步**（null = 该步无扣除）
 	 */
 	public record SimpleTalkRow(int questId, String devName, String acquiredNpcName, String rewardNpcName,
-			List<String> talkNpcNames, Integer conQuest, boolean itemCheck, String acceptGiveItem,
-			List<String> stepGiveItems, List<String> stepRemoveItems, Integer cutsceneId, Integer cutsceneAction) {
+								List<String> talkNpcNames, Integer conQuest, boolean itemCheck, String acceptGiveItem,
+								List<String> stepGiveItems, List<String> stepRemoveItems, Integer cutsceneId,
+	                            Integer cutsceneAction) {
 	}
 
 	/**
@@ -114,9 +122,11 @@ public final class NativeQuestTableLoader {
 	 * columns are loaded as the table's own text.
 	 */
 	public record SimpleCollectItemRow(int questId, String devName, String acquiredNpcName,
-			String rewardNpcName, List<String> objects, List<String> talkNpcNames, Integer conQuest,
-			String acceptGiveItem, String stepGiveItem, String removeItem2, Integer cutsceneId,
-			Integer cutsceneAction, boolean partyDrop) {
+									   String rewardNpcName, List<String> objects, List<String> talkNpcNames,
+	                                   Integer conQuest,
+									   String acceptGiveItem, String stepGiveItem, String removeItem2,
+	                                   Integer cutsceneId,
+									   Integer cutsceneAction, boolean partyDrop) {
 	}
 
 	/**
@@ -131,8 +141,9 @@ public final class NativeQuestTableLoader {
 	 * declares the matching {@code talk_npcN}), so step lists keep their positions.
 	 */
 	public record SimpleUseItemRow(int questId, String devName, String useItemName, String rewardNpcName,
-			List<String> talkNpcNames, Integer conQuest, boolean itemCheck, List<String> stepGiveItems,
-			List<String> stepRemoveItems, Integer cutsceneId, Integer cutsceneAction) {
+								   List<String> talkNpcNames, Integer conQuest, boolean itemCheck,
+	                               List<String> stepGiveItems,
+								   List<String> stepRemoveItems, Integer cutsceneId, Integer cutsceneAction) {
 	}
 
 	/**
@@ -146,9 +157,9 @@ public final class NativeQuestTableLoader {
 	 * the hand-in follow. Step lists keep their positions (same convention as the talk family).
 	 */
 	public record SimpleItemPlayRow(int questId, String devName, String acquiredNpcName, String rewardNpcName,
-			String useItemName, List<String> talkNpcNames, Integer conQuest, boolean itemCheck,
-			String acceptGiveItem, List<String> stepGiveItems, List<String> stepRemoveItems,
-			Integer cutsceneId, Integer cutsceneAction) {
+									String useItemName, List<String> talkNpcNames, Integer conQuest, boolean itemCheck,
+									String acceptGiveItem, List<String> stepGiveItems, List<String> stepRemoveItems,
+									Integer cutsceneId, Integer cutsceneAction) {
 	}
 
 	/**
@@ -162,14 +173,14 @@ public final class NativeQuestTableLoader {
 	 * component. The retail helper allows eight component slots, so components keep their positions.
 	 */
 	public record CombineTaskRow(int questId, String devName, List<String> taskNpcNames, String combineSkill,
-			int skillPoint, String recipeName, String product, List<String> components) {
+								 int skillPoint, String recipeName, String product, List<String> components) {
 	}
 
 	private static final String RESOURCE = "aion/data/static_data/quest/retail/Quest_SimpleHunt.xml";
 	private static final String SERIAL_RESOURCE = "aion/data/static_data/quest/retail/Quest_SimpleSerialHunt.xml";
 	private static final String EXPECTED_SERIAL_ROOT = "quest_simpleserialhunts";
 	private static final String COLLECT_RESOURCE =
-			"aion/data/static_data/quest/retail/Quest_SimpleCollectItem.xml";
+		"aion/data/static_data/quest/retail/Quest_SimpleCollectItem.xml";
 	private static final String EXPECTED_COLLECT_ROOT = "quest_simplecollectitems";
 	private static final String TALK_RESOURCE = "aion/data/static_data/quest/retail/Quest_SimpleTalk.xml";
 	private static final String EXPECTED_TALK_ROOT = "quest_simpletalks";
@@ -179,7 +190,9 @@ public final class NativeQuestTableLoader {
 	private static final String EXPECTED_ITEM_PLAY_ROOT = "quest_simpleitemplays";
 	private static final String COMBINE_RESOURCE = "aion/data/static_data/quest/retail/Quest_CombineTask.xml";
 	private static final String EXPECTED_COMBINE_ROOT = "quest_combinetasks";
-	/** 原版 CombineTask helper 的分量槽位数（{@code lVar4 = 8}）。 / Retail component slot count. */
+	/**
+	 * 原版 CombineTask helper 的分量槽位数（{@code lVar4 = 8}）。 / Retail component slot count.
+	 */
 	private static final int COMBINE_COMPONENT_SLOTS = 8;
 	private static final String EXPECTED_ROOT = "quest_simplehunts";
 	private static final String ROW_TAG = "id";
@@ -198,12 +211,12 @@ public final class NativeQuestTableLoader {
 	private final Map<Integer, CombineTaskRow> combineRowsByQuestId;
 
 	private NativeQuestTableLoader(Map<Integer, SimpleHuntRow> rowsByQuestId,
-			Map<Integer, SimpleSerialHuntRow> serialRowsByQuestId,
-			Map<Integer, SimpleTalkRow> talkRowsByQuestId,
-			Map<Integer, SimpleCollectItemRow> collectRowsByQuestId,
-			Map<Integer, SimpleUseItemRow> useItemRowsByQuestId,
-			Map<Integer, SimpleItemPlayRow> itemPlayRowsByQuestId,
-			Map<Integer, CombineTaskRow> combineRowsByQuestId) {
+								   Map<Integer, SimpleSerialHuntRow> serialRowsByQuestId,
+								   Map<Integer, SimpleTalkRow> talkRowsByQuestId,
+								   Map<Integer, SimpleCollectItemRow> collectRowsByQuestId,
+								   Map<Integer, SimpleUseItemRow> useItemRowsByQuestId,
+								   Map<Integer, SimpleItemPlayRow> itemPlayRowsByQuestId,
+								   Map<Integer, CombineTaskRow> combineRowsByQuestId) {
 		this.rowsByQuestId = rowsByQuestId;
 		this.serialRowsByQuestId = serialRowsByQuestId;
 		this.talkRowsByQuestId = talkRowsByQuestId;
@@ -213,7 +226,9 @@ public final class NativeQuestTableLoader {
 		this.combineRowsByQuestId = combineRowsByQuestId;
 	}
 
-	/** 已装载的表（未装载则先装载）。 / The loaded table; loads it first when absent. */
+	/**
+	 * 已装载的表（未装载则先装载）。 / The loaded table; loads it first when absent.
+	 */
 	public static NativeQuestTableLoader instance() {
 		NativeQuestTableLoader local = instance;
 		if (local == null) {
@@ -228,20 +243,24 @@ public final class NativeQuestTableLoader {
 		return local;
 	}
 
-	/** 启动期强制装载（失败即异常，由调用方决定是否终止启动）。 / Eagerly loads at startup; throws on failure. */
+	/**
+	 * 启动期强制装载（失败即异常，由调用方决定是否终止启动）。 / Eagerly loads at startup; throws on failure.
+	 */
 	public static void ensureLoaded() {
 		instance();
 	}
 
-	/** 从 classpath 装载并解析表。 / Loads and parses the table from the classpath. */
+	/**
+	 * 从 classpath 装载并解析表。 / Loads and parses the table from the classpath.
+	 */
 	static NativeQuestTableLoader load(ClassLoader loader) {
 		try (InputStream input = loader.getResourceAsStream(RESOURCE);
-				InputStream serialInput = loader.getResourceAsStream(SERIAL_RESOURCE);
-				InputStream talkInput = loader.getResourceAsStream(TALK_RESOURCE);
-				InputStream collectInput = loader.getResourceAsStream(COLLECT_RESOURCE);
-				InputStream useItemInput = loader.getResourceAsStream(USE_ITEM_RESOURCE);
-				InputStream itemPlayInput = loader.getResourceAsStream(ITEM_PLAY_RESOURCE);
-				InputStream combineInput = loader.getResourceAsStream(COMBINE_RESOURCE)) {
+			 InputStream serialInput = loader.getResourceAsStream(SERIAL_RESOURCE);
+			 InputStream talkInput = loader.getResourceAsStream(TALK_RESOURCE);
+			 InputStream collectInput = loader.getResourceAsStream(COLLECT_RESOURCE);
+			 InputStream useItemInput = loader.getResourceAsStream(USE_ITEM_RESOURCE);
+			 InputStream itemPlayInput = loader.getResourceAsStream(ITEM_PLAY_RESOURCE);
+			 InputStream combineInput = loader.getResourceAsStream(COMBINE_RESOURCE)) {
 			if (input == null) {
 				throw new IllegalStateException("NATIVE_TABLE_PARSE_FAILED: missing " + RESOURCE);
 			}
@@ -269,84 +288,96 @@ public final class NativeQuestTableLoader {
 		}
 	}
 
-	/** 解析表字节流（包内可见供负例测试）。 / Parses the table stream (package-visible for negative tests). */
+	/**
+	 * 解析表字节流（包内可见供负例测试）。 / Parses the table stream (package-visible for negative tests).
+	 */
 	static NativeQuestTableLoader parse(InputStream input) throws IOException {
 		try (InputStream serialInput = NativeQuestTableLoader.class.getClassLoader()
-				.getResourceAsStream(SERIAL_RESOURCE);
-				InputStream talkInput = NativeQuestTableLoader.class.getClassLoader()
-						.getResourceAsStream(TALK_RESOURCE);
-				InputStream collectInput = NativeQuestTableLoader.class.getClassLoader()
-						.getResourceAsStream(COLLECT_RESOURCE);
-				InputStream useItemInput = NativeQuestTableLoader.class.getClassLoader()
-						.getResourceAsStream(USE_ITEM_RESOURCE);
-				InputStream itemPlayInput = NativeQuestTableLoader.class.getClassLoader()
-						.getResourceAsStream(ITEM_PLAY_RESOURCE);
-				InputStream combineInput = NativeQuestTableLoader.class.getClassLoader()
-						.getResourceAsStream(COMBINE_RESOURCE)) {
+			.getResourceAsStream(SERIAL_RESOURCE);
+			 InputStream talkInput = NativeQuestTableLoader.class.getClassLoader()
+				 .getResourceAsStream(TALK_RESOURCE);
+			 InputStream collectInput = NativeQuestTableLoader.class.getClassLoader()
+				 .getResourceAsStream(COLLECT_RESOURCE);
+			 InputStream useItemInput = NativeQuestTableLoader.class.getClassLoader()
+				 .getResourceAsStream(USE_ITEM_RESOURCE);
+			 InputStream itemPlayInput = NativeQuestTableLoader.class.getClassLoader()
+				 .getResourceAsStream(ITEM_PLAY_RESOURCE);
+			 InputStream combineInput = NativeQuestTableLoader.class.getClassLoader()
+				 .getResourceAsStream(COMBINE_RESOURCE)) {
 			return parse(input, serialInput, talkInput, collectInput, useItemInput, itemPlayInput, combineInput);
 		}
 	}
 
-	/** 解析狩猎 + 串行两表（包内可见供负例测试；Talk 表从 classpath 补足）。 / Parses the hunt and serial tables. */
+	/**
+	 * 解析狩猎 + 串行两表（包内可见供负例测试；Talk 表从 classpath 补足）。 / Parses the hunt and serial tables.
+	 */
 	static NativeQuestTableLoader parse(InputStream input, InputStream serialInput) throws IOException {
 		try (InputStream talkInput = NativeQuestTableLoader.class.getClassLoader()
-				.getResourceAsStream(TALK_RESOURCE);
-				InputStream collectInput = NativeQuestTableLoader.class.getClassLoader()
-						.getResourceAsStream(COLLECT_RESOURCE);
-				InputStream useItemInput = NativeQuestTableLoader.class.getClassLoader()
-						.getResourceAsStream(USE_ITEM_RESOURCE);
-				InputStream itemPlayInput = NativeQuestTableLoader.class.getClassLoader()
-						.getResourceAsStream(ITEM_PLAY_RESOURCE);
-				InputStream combineInput = NativeQuestTableLoader.class.getClassLoader()
-						.getResourceAsStream(COMBINE_RESOURCE)) {
+			.getResourceAsStream(TALK_RESOURCE);
+			 InputStream collectInput = NativeQuestTableLoader.class.getClassLoader()
+				 .getResourceAsStream(COLLECT_RESOURCE);
+			 InputStream useItemInput = NativeQuestTableLoader.class.getClassLoader()
+				 .getResourceAsStream(USE_ITEM_RESOURCE);
+			 InputStream itemPlayInput = NativeQuestTableLoader.class.getClassLoader()
+				 .getResourceAsStream(ITEM_PLAY_RESOURCE);
+			 InputStream combineInput = NativeQuestTableLoader.class.getClassLoader()
+				 .getResourceAsStream(COMBINE_RESOURCE)) {
 			return parse(input, serialInput, talkInput, collectInput, useItemInput, itemPlayInput, combineInput);
 		}
 	}
 
-	/** 解析三张表的字节流（包内可见供负例测试）。 / Parses the three table streams. */
+	/**
+	 * 解析三张表的字节流（包内可见供负例测试）。 / Parses the three table streams.
+	 */
 	static NativeQuestTableLoader parse(InputStream input, InputStream serialInput, InputStream talkInput)
-			throws IOException {
+		throws IOException {
 		try (InputStream combineInput = NativeQuestTableLoader.class.getClassLoader()
-				.getResourceAsStream(COMBINE_RESOURCE)) {
+			.getResourceAsStream(COMBINE_RESOURCE)) {
 			return parse(input, serialInput, talkInput, NativeQuestTableLoader.class.getClassLoader()
 					.getResourceAsStream(COLLECT_RESOURCE), NativeQuestTableLoader.class.getClassLoader()
-							.getResourceAsStream(USE_ITEM_RESOURCE),
-					NativeQuestTableLoader.class.getClassLoader().getResourceAsStream(ITEM_PLAY_RESOURCE),
-					combineInput);
+					.getResourceAsStream(USE_ITEM_RESOURCE),
+				NativeQuestTableLoader.class.getClassLoader().getResourceAsStream(ITEM_PLAY_RESOURCE),
+				combineInput);
 		}
 	}
 
-	/** 解析四张表的字节流（包内可见供负例测试）；P5 两表从 classpath 补足。 /
+	/**
+	 * 解析四张表的字节流（包内可见供负例测试）；P5 两表从 classpath 补足。 /
 	 * Parses the four table streams (package-visible for negative tests); the two P5 tables come from the
-	 * classpath. */
+	 * classpath.
+	 */
 	static NativeQuestTableLoader parse(InputStream input, InputStream serialInput, InputStream talkInput,
-			InputStream collectInput) throws IOException {
+										InputStream collectInput) throws IOException {
 		try (InputStream useItemInput = NativeQuestTableLoader.class.getClassLoader()
-				.getResourceAsStream(USE_ITEM_RESOURCE);
-				InputStream itemPlayInput = NativeQuestTableLoader.class.getClassLoader()
-						.getResourceAsStream(ITEM_PLAY_RESOURCE);
-				InputStream combineInput = NativeQuestTableLoader.class.getClassLoader()
-						.getResourceAsStream(COMBINE_RESOURCE)) {
+			.getResourceAsStream(USE_ITEM_RESOURCE);
+			 InputStream itemPlayInput = NativeQuestTableLoader.class.getClassLoader()
+				 .getResourceAsStream(ITEM_PLAY_RESOURCE);
+			 InputStream combineInput = NativeQuestTableLoader.class.getClassLoader()
+				 .getResourceAsStream(COMBINE_RESOURCE)) {
 			return parse(input, serialInput, talkInput, collectInput, useItemInput, itemPlayInput, combineInput);
 		}
 	}
 
-	/** 解析六张表的字节流（包内可见供负例测试）；CombineTask 表从 classpath 补足。 /
+	/**
+	 * 解析六张表的字节流（包内可见供负例测试）；CombineTask 表从 classpath 补足。 /
 	 * Parses the six table streams (package-visible for negative tests); the CombineTask table comes from
-	 * the classpath. */
+	 * the classpath.
+	 */
 	static NativeQuestTableLoader parse(InputStream input, InputStream serialInput, InputStream talkInput,
-			InputStream collectInput, InputStream useItemInput, InputStream itemPlayInput)
-			throws IOException {
+										InputStream collectInput, InputStream useItemInput, InputStream itemPlayInput)
+		throws IOException {
 		try (InputStream combineInput = NativeQuestTableLoader.class.getClassLoader()
-				.getResourceAsStream(COMBINE_RESOURCE)) {
+			.getResourceAsStream(COMBINE_RESOURCE)) {
 			return parse(input, serialInput, talkInput, collectInput, useItemInput, itemPlayInput, combineInput);
 		}
 	}
 
-	/** 解析七张表的字节流（包内可见供负例测试）。 / Parses the seven table streams. */
+	/**
+	 * 解析七张表的字节流（包内可见供负例测试）。 / Parses the seven table streams.
+	 */
 	static NativeQuestTableLoader parse(InputStream input, InputStream serialInput, InputStream talkInput,
-			InputStream collectInput, InputStream useItemInput, InputStream itemPlayInput,
-			InputStream combineInput) throws IOException {
+										InputStream collectInput, InputStream useItemInput, InputStream itemPlayInput,
+										InputStream combineInput) throws IOException {
 		Document document;
 		DocumentBuilder builder = newDocumentBuilder();
 		try {
@@ -357,7 +388,7 @@ public final class NativeQuestTableLoader {
 		Element root = document.getDocumentElement();
 		if (root == null || !EXPECTED_ROOT.equals(root.getTagName())) {
 			throw new IllegalStateException("NATIVE_TABLE_PARSE_FAILED: expected root <" + EXPECTED_ROOT
-					+ ">, got <" + (root == null ? "(none)" : root.getTagName()) + ">");
+				+ ">, got <" + (root == null ? "(none)" : root.getTagName()) + ">");
 		}
 		Map<Integer, SimpleHuntRow> rows = new LinkedHashMap<>();
 		NodeList children = root.getChildNodes();
@@ -368,12 +399,12 @@ public final class NativeQuestTableLoader {
 			}
 			int questId = rowId(element);
 			SimpleHuntRow row = new SimpleHuntRow(questId,
-					optionalText(element, "acquired_npc_name"),
-					optionalText(element, "reward_npc_name"),
-					parseKillSlots(questId, element),
-					optionalInt(element, "con_quest", questId),
-					optionalInt(element, "cutsceneid1", questId),
-					optionalInt(element, "cs1_haction", questId));
+				optionalText(element, "acquired_npc_name"),
+				optionalText(element, "reward_npc_name"),
+				parseKillSlots(questId, element),
+				optionalInt(element, "con_quest", questId),
+				optionalInt(element, "cutsceneid1", questId),
+				optionalInt(element, "cs1_haction", questId));
 			if (rows.putIfAbsent(questId, row) != null) {
 				throw new IllegalStateException("NATIVE_TABLE_PARSE_FAILED: duplicate quest id " + questId);
 			}
@@ -384,17 +415,17 @@ public final class NativeQuestTableLoader {
 		Map<Integer, SimpleSerialHuntRow> serialRows = serialInput != null ? loadSerial(serialInput, builder) : Map.of();
 		Map<Integer, SimpleTalkRow> talkRows = talkInput != null ? loadTalk(talkInput, builder) : Map.of();
 		Map<Integer, SimpleCollectItemRow> collectRows =
-				collectInput != null ? loadCollect(collectInput, builder) : Map.of();
+			collectInput != null ? loadCollect(collectInput, builder) : Map.of();
 		Map<Integer, SimpleUseItemRow> useItemRows =
-				useItemInput != null ? loadUseItem(useItemInput, builder) : Map.of();
+			useItemInput != null ? loadUseItem(useItemInput, builder) : Map.of();
 		Map<Integer, SimpleItemPlayRow> itemPlayRows =
-				itemPlayInput != null ? loadItemPlay(itemPlayInput, builder) : Map.of();
+			itemPlayInput != null ? loadItemPlay(itemPlayInput, builder) : Map.of();
 		Map<Integer, CombineTaskRow> combineRows =
-				combineInput != null ? loadCombine(combineInput, builder) : Map.of();
+			combineInput != null ? loadCombine(combineInput, builder) : Map.of();
 		return new NativeQuestTableLoader(Collections.unmodifiableMap(rows),
-				Collections.unmodifiableMap(serialRows), Collections.unmodifiableMap(talkRows),
-				Collections.unmodifiableMap(collectRows), Collections.unmodifiableMap(useItemRows),
-				Collections.unmodifiableMap(itemPlayRows), Collections.unmodifiableMap(combineRows));
+			Collections.unmodifiableMap(serialRows), Collections.unmodifiableMap(talkRows),
+			Collections.unmodifiableMap(collectRows), Collections.unmodifiableMap(useItemRows),
+			Collections.unmodifiableMap(itemPlayRows), Collections.unmodifiableMap(combineRows));
 	}
 
 	private static Map<Integer, SimpleTalkRow> loadTalk(InputStream stream, DocumentBuilder builder) {
@@ -407,7 +438,7 @@ public final class NativeQuestTableLoader {
 		Element root = document.getDocumentElement();
 		if (root == null || !EXPECTED_TALK_ROOT.equals(root.getTagName())) {
 			throw new IllegalStateException("NATIVE_TABLE_PARSE_FAILED: expected root <" + EXPECTED_TALK_ROOT
-					+ ">, got <" + (root == null ? "(none)" : root.getTagName()) + ">");
+				+ ">, got <" + (root == null ? "(none)" : root.getTagName()) + ">");
 		}
 		Map<Integer, SimpleTalkRow> rows = new LinkedHashMap<>();
 		NodeList children = root.getChildNodes();
@@ -441,11 +472,11 @@ public final class NativeQuestTableLoader {
 		String reward = optionalText(element, "reward_npc_name");
 		if (acquired == null || acquired.isBlank()) {
 			throw new IllegalStateException(
-					"NATIVE_TABLE_PARSE_FAILED: talk quest " + questId + " has no acquired_npc_name");
+				"NATIVE_TABLE_PARSE_FAILED: talk quest " + questId + " has no acquired_npc_name");
 		}
 		if (reward == null || reward.isBlank()) {
 			throw new IllegalStateException(
-					"NATIVE_TABLE_PARSE_FAILED: talk quest " + questId + " has no reward_npc_name");
+				"NATIVE_TABLE_PARSE_FAILED: talk quest " + questId + " has no reward_npc_name");
 		}
 		List<String> talkNpcs = new ArrayList<>(3);
 		for (int i = 1; i <= 3; i++) {
@@ -474,17 +505,21 @@ public final class NativeQuestTableLoader {
 		Integer cutsceneAction = optionalInt(element, "cs1_haction", questId);
 		boolean itemCheck = "1".equals(optionalText(element, "item_check"));
 		return new SimpleTalkRow(questId, optionalText(element, "dev_name"), acquired.strip(), reward.strip(),
-				Collections.unmodifiableList(talkNpcs), conQuest, itemCheck, acceptGiveItem,
-				Collections.unmodifiableList(stepGiveItems), Collections.unmodifiableList(stepRemoveItems),
-				cutsceneId, cutsceneAction);
+			Collections.unmodifiableList(talkNpcs), conQuest, itemCheck, acceptGiveItem,
+			Collections.unmodifiableList(stepGiveItems), Collections.unmodifiableList(stepRemoveItems),
+			cutsceneId, cutsceneAction);
 	}
 
-	/** 归一元素文本内部空白（源表可跨行）。 / Normalizes inner whitespace (source text may span lines). */
+	/**
+	 * 归一元素文本内部空白（源表可跨行）。 / Normalizes inner whitespace (source text may span lines).
+	 */
 	private static String normalizeValue(String raw) {
 		return String.join(" ", raw.trim().split("\\s+"));
 	}
 
-	/** 可选整数元素：缺省返回 null，非数字 fail-closed。 / Optional int element: null when absent, fail closed when malformed. */
+	/**
+	 * 可选整数元素：缺省返回 null，非数字 fail-closed。 / Optional int element: null when absent, fail closed when malformed.
+	 */
 	private static Integer optionalInt(Element row, String tag, int questId) {
 		String raw = optionalText(row, tag);
 		if (raw == null || raw.isBlank()) {
@@ -494,7 +529,7 @@ public final class NativeQuestTableLoader {
 			return Integer.valueOf(raw.trim());
 		} catch (NumberFormatException e) {
 			throw new IllegalStateException("NATIVE_TABLE_PARSE_FAILED: quest " + questId + " <" + tag
-					+ "> is not a number: " + raw);
+				+ "> is not a number: " + raw);
 		}
 	}
 
@@ -508,7 +543,7 @@ public final class NativeQuestTableLoader {
 		Element root = document.getDocumentElement();
 		if (root == null || !EXPECTED_SERIAL_ROOT.equals(root.getTagName())) {
 			throw new IllegalStateException("NATIVE_TABLE_PARSE_FAILED: expected root <" + EXPECTED_SERIAL_ROOT
-					+ ">, got <" + (root == null ? "(none)" : root.getTagName()) + ">");
+				+ ">, got <" + (root == null ? "(none)" : root.getTagName()) + ">");
 		}
 		Map<Integer, SimpleSerialHuntRow> rows = new LinkedHashMap<>();
 		NodeList children = root.getChildNodes();
@@ -560,7 +595,7 @@ public final class NativeQuestTableLoader {
 			}
 		}
 		return new SimpleSerialHuntRow(questId, devName, acquired, reward,
-				Collections.unmodifiableList(talkNpcs), Collections.unmodifiableList(stages));
+			Collections.unmodifiableList(talkNpcs), Collections.unmodifiableList(stages));
 	}
 
 	/**
@@ -581,7 +616,7 @@ public final class NativeQuestTableLoader {
 		Element root = document.getDocumentElement();
 		if (root == null || !EXPECTED_COLLECT_ROOT.equals(root.getTagName())) {
 			throw new IllegalStateException("NATIVE_TABLE_PARSE_FAILED: expected root <"
-					+ EXPECTED_COLLECT_ROOT + ">, got <" + (root == null ? "(none)" : root.getTagName()) + ">");
+				+ EXPECTED_COLLECT_ROOT + ">, got <" + (root == null ? "(none)" : root.getTagName()) + ">");
 		}
 		Map<Integer, SimpleCollectItemRow> rows = new LinkedHashMap<>();
 		NodeList children = root.getChildNodes();
@@ -594,7 +629,7 @@ public final class NativeQuestTableLoader {
 			SimpleCollectItemRow row = parseCollectRow(questId, element);
 			if (rows.putIfAbsent(questId, row) != null) {
 				throw new IllegalStateException(
-						"NATIVE_TABLE_PARSE_FAILED: duplicate collect quest id " + questId);
+					"NATIVE_TABLE_PARSE_FAILED: duplicate collect quest id " + questId);
 			}
 		}
 		if (rows.isEmpty()) {
@@ -608,11 +643,11 @@ public final class NativeQuestTableLoader {
 		String reward = optionalText(element, "reward_npc_name");
 		if (acquired == null || acquired.isBlank()) {
 			throw new IllegalStateException(
-					"NATIVE_TABLE_PARSE_FAILED: collect quest " + questId + " has no acquired_npc_name");
+				"NATIVE_TABLE_PARSE_FAILED: collect quest " + questId + " has no acquired_npc_name");
 		}
 		if (reward == null || reward.isBlank()) {
 			throw new IllegalStateException(
-					"NATIVE_TABLE_PARSE_FAILED: collect quest " + questId + " has no reward_npc_name");
+				"NATIVE_TABLE_PARSE_FAILED: collect quest " + questId + " has no reward_npc_name");
 		}
 		List<String> objects = new ArrayList<>(4);
 		for (int i = 1; i <= 4; i++) {
@@ -630,14 +665,14 @@ public final class NativeQuestTableLoader {
 		}
 		boolean partyDrop = "1".equals(optionalText(element, "party_drop").strip());
 		return new SimpleCollectItemRow(questId, optionalText(element, "dev_name"), acquired, reward,
-				Collections.unmodifiableList(objects), Collections.unmodifiableList(talkNpcs),
-				optionalInt(element, "con_quest", questId),
-				blankToNull(optionalText(element, "give_item")),
-				blankToNull(optionalText(element, "give_item1")),
-				blankToNull(optionalText(element, "remove_item2")),
-				optionalInt(element, "cutsceneid1", questId),
-				optionalInt(element, "cs1_haction", questId),
-				partyDrop);
+			Collections.unmodifiableList(objects), Collections.unmodifiableList(talkNpcs),
+			optionalInt(element, "con_quest", questId),
+			blankToNull(optionalText(element, "give_item")),
+			blankToNull(optionalText(element, "give_item1")),
+			blankToNull(optionalText(element, "remove_item2")),
+			optionalInt(element, "cutsceneid1", questId),
+			optionalInt(element, "cs1_haction", questId),
+			partyDrop);
 	}
 
 	private static Map<Integer, SimpleUseItemRow> loadUseItem(InputStream stream, DocumentBuilder builder) {
@@ -650,7 +685,7 @@ public final class NativeQuestTableLoader {
 		Element root = document.getDocumentElement();
 		if (root == null || !EXPECTED_USE_ITEM_ROOT.equals(root.getTagName())) {
 			throw new IllegalStateException("NATIVE_TABLE_PARSE_FAILED: expected root <"
-					+ EXPECTED_USE_ITEM_ROOT + ">, got <" + (root == null ? "(none)" : root.getTagName()) + ">");
+				+ EXPECTED_USE_ITEM_ROOT + ">, got <" + (root == null ? "(none)" : root.getTagName()) + ">");
 		}
 		Map<Integer, SimpleUseItemRow> rows = new LinkedHashMap<>();
 		NodeList children = root.getChildNodes();
@@ -663,7 +698,7 @@ public final class NativeQuestTableLoader {
 			SimpleUseItemRow row = parseUseItemRow(questId, element);
 			if (rows.putIfAbsent(questId, row) != null) {
 				throw new IllegalStateException(
-						"NATIVE_TABLE_PARSE_FAILED: duplicate use-item quest id " + questId);
+					"NATIVE_TABLE_PARSE_FAILED: duplicate use-item quest id " + questId);
 			}
 		}
 		if (rows.isEmpty()) {
@@ -684,11 +719,11 @@ public final class NativeQuestTableLoader {
 		String reward = optionalText(element, "reward_npc_name");
 		if (useItem == null || useItem.isBlank()) {
 			throw new IllegalStateException(
-					"NATIVE_TABLE_PARSE_FAILED: use-item quest " + questId + " has no use_item_name");
+				"NATIVE_TABLE_PARSE_FAILED: use-item quest " + questId + " has no use_item_name");
 		}
 		if (reward == null || reward.isBlank()) {
 			throw new IllegalStateException(
-					"NATIVE_TABLE_PARSE_FAILED: use-item quest " + questId + " has no reward_npc_name");
+				"NATIVE_TABLE_PARSE_FAILED: use-item quest " + questId + " has no reward_npc_name");
 		}
 		List<String> talkNpcs = new ArrayList<>(3);
 		List<String> stepGiveItems = new ArrayList<>(3);
@@ -704,11 +739,11 @@ public final class NativeQuestTableLoader {
 			stepRemoveItems.add(removed != null && !removed.isBlank() ? normalizeValue(removed) : null);
 		}
 		return new SimpleUseItemRow(questId, optionalText(element, "dev_name"), normalizeValue(useItem),
-				reward.strip(), Collections.unmodifiableList(talkNpcs),
-				optionalInt(element, "con_quest", questId), "1".equals(optionalText(element, "item_check")),
-				Collections.unmodifiableList(stepGiveItems), Collections.unmodifiableList(stepRemoveItems),
-				optionalInt(element, "cutsceneid1", questId),
-				optionalInt(element, "cs1_haction", questId));
+			reward.strip(), Collections.unmodifiableList(talkNpcs),
+			optionalInt(element, "con_quest", questId), "1".equals(optionalText(element, "item_check")),
+			Collections.unmodifiableList(stepGiveItems), Collections.unmodifiableList(stepRemoveItems),
+			optionalInt(element, "cutsceneid1", questId),
+			optionalInt(element, "cs1_haction", questId));
 	}
 
 	private static Map<Integer, SimpleItemPlayRow> loadItemPlay(InputStream stream, DocumentBuilder builder) {
@@ -721,7 +756,7 @@ public final class NativeQuestTableLoader {
 		Element root = document.getDocumentElement();
 		if (root == null || !EXPECTED_ITEM_PLAY_ROOT.equals(root.getTagName())) {
 			throw new IllegalStateException("NATIVE_TABLE_PARSE_FAILED: expected root <"
-					+ EXPECTED_ITEM_PLAY_ROOT + ">, got <" + (root == null ? "(none)" : root.getTagName()) + ">");
+				+ EXPECTED_ITEM_PLAY_ROOT + ">, got <" + (root == null ? "(none)" : root.getTagName()) + ">");
 		}
 		Map<Integer, SimpleItemPlayRow> rows = new LinkedHashMap<>();
 		NodeList children = root.getChildNodes();
@@ -734,7 +769,7 @@ public final class NativeQuestTableLoader {
 			SimpleItemPlayRow row = parseItemPlayRow(questId, element);
 			if (rows.putIfAbsent(questId, row) != null) {
 				throw new IllegalStateException(
-						"NATIVE_TABLE_PARSE_FAILED: duplicate item-play quest id " + questId);
+					"NATIVE_TABLE_PARSE_FAILED: duplicate item-play quest id " + questId);
 			}
 		}
 		if (rows.isEmpty()) {
@@ -755,11 +790,11 @@ public final class NativeQuestTableLoader {
 		String reward = optionalText(element, "reward_npc_name");
 		if (acquired == null || acquired.isBlank()) {
 			throw new IllegalStateException(
-					"NATIVE_TABLE_PARSE_FAILED: item-play quest " + questId + " has no acquired_npc_name");
+				"NATIVE_TABLE_PARSE_FAILED: item-play quest " + questId + " has no acquired_npc_name");
 		}
 		if (reward == null || reward.isBlank()) {
 			throw new IllegalStateException(
-					"NATIVE_TABLE_PARSE_FAILED: item-play quest " + questId + " has no reward_npc_name");
+				"NATIVE_TABLE_PARSE_FAILED: item-play quest " + questId + " has no reward_npc_name");
 		}
 		String useItem = optionalText(element, "use_item_name");
 		String give = optionalText(element, "give_item");
@@ -778,12 +813,12 @@ public final class NativeQuestTableLoader {
 			stepRemoveItems.add(removed != null && !removed.isBlank() ? normalizeValue(removed) : null);
 		}
 		return new SimpleItemPlayRow(questId, optionalText(element, "dev_name"), acquired.strip(),
-				reward.strip(), useItem != null && !useItem.isBlank() ? normalizeValue(useItem) : null,
-				Collections.unmodifiableList(talkNpcs), optionalInt(element, "con_quest", questId),
-				"1".equals(optionalText(element, "item_check")), acceptGiveItem,
-				Collections.unmodifiableList(stepGiveItems), Collections.unmodifiableList(stepRemoveItems),
-				optionalInt(element, "cutsceneid1", questId),
-				optionalInt(element, "cs1_haction", questId));
+			reward.strip(), useItem != null && !useItem.isBlank() ? normalizeValue(useItem) : null,
+			Collections.unmodifiableList(talkNpcs), optionalInt(element, "con_quest", questId),
+			"1".equals(optionalText(element, "item_check")), acceptGiveItem,
+			Collections.unmodifiableList(stepGiveItems), Collections.unmodifiableList(stepRemoveItems),
+			optionalInt(element, "cutsceneid1", questId),
+			optionalInt(element, "cs1_haction", questId));
 	}
 
 	private static Map<Integer, CombineTaskRow> loadCombine(InputStream stream, DocumentBuilder builder) {
@@ -796,7 +831,7 @@ public final class NativeQuestTableLoader {
 		Element root = document.getDocumentElement();
 		if (root == null || !EXPECTED_COMBINE_ROOT.equals(root.getTagName())) {
 			throw new IllegalStateException("NATIVE_TABLE_PARSE_FAILED: expected root <"
-					+ EXPECTED_COMBINE_ROOT + ">, got <" + (root == null ? "(none)" : root.getTagName()) + ">");
+				+ EXPECTED_COMBINE_ROOT + ">, got <" + (root == null ? "(none)" : root.getTagName()) + ">");
 		}
 		Map<Integer, CombineTaskRow> rows = new LinkedHashMap<>();
 		NodeList children = root.getChildNodes();
@@ -809,7 +844,7 @@ public final class NativeQuestTableLoader {
 			CombineTaskRow row = parseCombineRow(questId, element);
 			if (rows.putIfAbsent(questId, row) != null) {
 				throw new IllegalStateException(
-						"NATIVE_TABLE_PARSE_FAILED: duplicate combine-task quest id " + questId);
+					"NATIVE_TABLE_PARSE_FAILED: duplicate combine-task quest id " + questId);
 			}
 		}
 		if (rows.isEmpty()) {
@@ -830,7 +865,7 @@ public final class NativeQuestTableLoader {
 		String taskNpc = optionalText(element, "task_npc");
 		if (taskNpc == null || taskNpc.isBlank()) {
 			throw new IllegalStateException(
-					"NATIVE_TABLE_PARSE_FAILED: combine-task quest " + questId + " has no task_npc");
+				"NATIVE_TABLE_PARSE_FAILED: combine-task quest " + questId + " has no task_npc");
 		}
 		List<String> npcs = new ArrayList<>(2);
 		for (String name : COMMA.split(taskNpc.strip())) {
@@ -841,27 +876,27 @@ public final class NativeQuestTableLoader {
 		}
 		if (npcs.isEmpty()) {
 			throw new IllegalStateException(
-					"NATIVE_TABLE_PARSE_FAILED: combine-task quest " + questId + " has an empty task_npc list");
+				"NATIVE_TABLE_PARSE_FAILED: combine-task quest " + questId + " has an empty task_npc list");
 		}
 		String skill = optionalText(element, "combineskill");
 		if (skill == null || skill.isBlank()) {
 			throw new IllegalStateException(
-					"NATIVE_TABLE_PARSE_FAILED: combine-task quest " + questId + " has no combineskill");
+				"NATIVE_TABLE_PARSE_FAILED: combine-task quest " + questId + " has no combineskill");
 		}
 		String recipe = optionalText(element, "recipe_name");
 		if (recipe == null || recipe.isBlank()) {
 			throw new IllegalStateException(
-					"NATIVE_TABLE_PARSE_FAILED: combine-task quest " + questId + " has no recipe_name");
+				"NATIVE_TABLE_PARSE_FAILED: combine-task quest " + questId + " has no recipe_name");
 		}
 		String product = optionalText(element, "product");
 		if (product == null || product.isBlank()) {
 			throw new IllegalStateException(
-					"NATIVE_TABLE_PARSE_FAILED: combine-task quest " + questId + " has no product");
+				"NATIVE_TABLE_PARSE_FAILED: combine-task quest " + questId + " has no product");
 		}
 		Integer skillPoint = optionalInt(element, "combine_skillpoint", questId);
 		if (skillPoint != null && skillPoint < 0) {
 			throw new IllegalStateException("NATIVE_TABLE_PARSE_FAILED: combine-task quest " + questId
-					+ " has a negative combine_skillpoint: " + skillPoint);
+				+ " has a negative combine_skillpoint: " + skillPoint);
 		}
 		List<String> components = new ArrayList<>(COMBINE_COMPONENT_SLOTS);
 		for (int i = 1; i <= COMBINE_COMPONENT_SLOTS; i++) {
@@ -869,8 +904,8 @@ public final class NativeQuestTableLoader {
 			components.add(component != null && !component.isBlank() ? normalizeValue(component) : null);
 		}
 		return new CombineTaskRow(questId, optionalText(element, "dev_name"),
-				Collections.unmodifiableList(npcs), skill.strip(), skillPoint == null ? 0 : skillPoint,
-				recipe.strip(), normalizeValue(product), Collections.unmodifiableList(components));
+			Collections.unmodifiableList(npcs), skill.strip(), skillPoint == null ? 0 : skillPoint,
+			recipe.strip(), normalizeValue(product), Collections.unmodifiableList(components));
 	}
 
 	private static String blankToNull(String value) {
@@ -891,7 +926,7 @@ public final class NativeQuestTableLoader {
 				int slot = Integer.parseInt(count.group(1));
 				if (counts.put(slot, requireOwnInt(element)) != null) {
 					throw new IllegalStateException(
-							"NATIVE_TABLE_PARSE_FAILED: quest " + questId + " has duplicate count" + slot);
+						"NATIVE_TABLE_PARSE_FAILED: quest " + questId + " has duplicate count" + slot);
 				}
 				continue;
 			}
@@ -923,25 +958,27 @@ public final class NativeQuestTableLoader {
 				// 有 monster 无 count = 相机 required 缺失，原版不存在此形，fail-closed。
 				// Monster-without-count lacks the camera required; retail has no such shape — fail closed.
 				throw new IllegalStateException(
-						"NATIVE_TABLE_PARSE_FAILED: quest " + questId + " has monster" + slot + " without count"
-								+ slot);
+					"NATIVE_TABLE_PARSE_FAILED: quest " + questId + " has monster" + slot + " without count"
+						+ slot);
 			}
 		}
 		return Collections.unmodifiableSortedMap(new TreeMap<>(killSlots));
 	}
 
-	/** 读元素自身文本为整数（计数元素叶节点）。 / Reads the element's own text as an int (leaf count element). */
+	/**
+	 * 读元素自身文本为整数（计数元素叶节点）。 / Reads the element's own text as an int (leaf count element).
+	 */
 	private static int requireOwnInt(Element valueHolder) {
 		String raw = valueHolder.getTextContent();
 		if (raw == null || raw.isBlank()) {
 			throw new IllegalStateException("NATIVE_TABLE_PARSE_FAILED: <" + valueHolder.getTagName()
-					+ "> has no value");
+				+ "> has no value");
 		}
 		try {
 			return Integer.parseInt(raw.trim());
 		} catch (NumberFormatException e) {
 			throw new IllegalStateException("NATIVE_TABLE_PARSE_FAILED: <" + valueHolder.getTagName()
-					+ "> is not a number: " + raw.trim());
+				+ "> is not a number: " + raw.trim());
 		}
 	}
 
@@ -966,7 +1003,7 @@ public final class NativeQuestTableLoader {
 		String raw = textOf(row, tag);
 		if (raw == null || raw.isBlank()) {
 			throw new IllegalStateException(
-					"NATIVE_TABLE_PARSE_FAILED: <" + ROW_TAG + "> is missing <" + tag + ">");
+				"NATIVE_TABLE_PARSE_FAILED: <" + ROW_TAG + "> is missing <" + tag + ">");
 		}
 		try {
 			return Integer.parseInt(raw.trim());
@@ -985,7 +1022,9 @@ public final class NativeQuestTableLoader {
 		return nodes.getLength() == 0 ? null : nodes.item(0).getTextContent();
 	}
 
-	/** 行 id 在原版表里是行元素自身的 {@code id} 属性（{@code <id id="N">}）。 / The row id is the row element's own {@code id} attribute ({@code <id id="N">}). */
+	/**
+	 * 行 id 在原版表里是行元素自身的 {@code id} 属性（{@code <id id="N">}）。 / The row id is the row element's own {@code id} attribute ({@code <id id="N">}).
+	 */
 	private static int rowId(Element row) {
 		String raw = row.getAttribute("id");
 		if (raw.isBlank()) {
@@ -998,172 +1037,226 @@ public final class NativeQuestTableLoader {
 		}
 	}
 
-	/** SimpleTalk 全量行（只读集合）。 / All SimpleTalk rows. */
+	/**
+	 * SimpleTalk 全量行（只读集合）。 / All SimpleTalk rows.
+	 */
 	public Collection<SimpleTalkRow> talkRows() {
 		return talkRowsByQuestId.values();
 	}
 
-	/** SimpleTalk 行数。 / The number of SimpleTalk rows. */
+	/**
+	 * SimpleTalk 行数。 / The number of SimpleTalk rows.
+	 */
 	public int talkSize() {
 		return talkRowsByQuestId.size();
 	}
 
-	/** 按任务查询 SimpleTalk 行，无行返回 Optional.empty()。 / Looks a SimpleTalk row up. */
+	/**
+	 * 按任务查询 SimpleTalk 行，无行返回 Optional.empty()。 / Looks a SimpleTalk row up.
+	 */
 	public Optional<SimpleTalkRow> findTalk(int questId) {
 		return Optional.ofNullable(talkRowsByQuestId.get(questId));
 	}
 
-	/** 按任务查询 SimpleTalk 行，缺行 fail-closed。 / Looks a SimpleTalk row up; missing rows fail closed. */
+	/**
+	 * 按任务查询 SimpleTalk 行，缺行 fail-closed。 / Looks a SimpleTalk row up; missing rows fail closed.
+	 */
 	public SimpleTalkRow requireTalk(int questId) {
 		SimpleTalkRow row = talkRowsByQuestId.get(questId);
 		if (row == null) {
 			throw new IllegalStateException("NATIVE_TABLE_ROW_MISSING: quest " + questId
-					+ " has no SimpleTalk row");
+				+ " has no SimpleTalk row");
 		}
 		return row;
 	}
 
-	/** SimpleCollectItem 全量行（只读集合）。 / All SimpleCollectItem rows. */
+	/**
+	 * SimpleCollectItem 全量行（只读集合）。 / All SimpleCollectItem rows.
+	 */
 	public Collection<SimpleCollectItemRow> collectRows() {
 		return collectRowsByQuestId.values();
 	}
 
-	/** SimpleCollectItem 行数。 / The number of SimpleCollectItem rows. */
+	/**
+	 * SimpleCollectItem 行数。 / The number of SimpleCollectItem rows.
+	 */
 	public int collectSize() {
 		return collectRowsByQuestId.size();
 	}
 
-	/** 按任务查询采集行，无行返回 Optional.empty()。 / Looks a collect row up. */
+	/**
+	 * 按任务查询采集行，无行返回 Optional.empty()。 / Looks a collect row up.
+	 */
 	public Optional<SimpleCollectItemRow> findCollect(int questId) {
 		return Optional.ofNullable(collectRowsByQuestId.get(questId));
 	}
 
-	/** 按任务查询采集行，缺行 fail-closed。 / Looks a collect row up; missing rows fail closed. */
+	/**
+	 * 按任务查询采集行，缺行 fail-closed。 / Looks a collect row up; missing rows fail closed.
+	 */
 	public SimpleCollectItemRow requireCollect(int questId) {
 		SimpleCollectItemRow row = collectRowsByQuestId.get(questId);
 		if (row == null) {
 			throw new IllegalStateException("NATIVE_TABLE_ROW_MISSING: quest " + questId
-					+ " has no SimpleCollectItem row");
+				+ " has no SimpleCollectItem row");
 		}
 		return row;
 	}
 
-	/** SimpleUseItem 全量行（只读集合）。 / All SimpleUseItem rows. */
+	/**
+	 * SimpleUseItem 全量行（只读集合）。 / All SimpleUseItem rows.
+	 */
 	public Collection<SimpleUseItemRow> useItemRows() {
 		return useItemRowsByQuestId.values();
 	}
 
-	/** SimpleUseItem 行数。 / The number of SimpleUseItem rows. */
+	/**
+	 * SimpleUseItem 行数。 / The number of SimpleUseItem rows.
+	 */
 	public int useItemSize() {
 		return useItemRowsByQuestId.size();
 	}
 
-	/** 按任务查询 SimpleUseItem 行，无行返回 Optional.empty()。 / Looks a SimpleUseItem row up. */
+	/**
+	 * 按任务查询 SimpleUseItem 行，无行返回 Optional.empty()。 / Looks a SimpleUseItem row up.
+	 */
 	public Optional<SimpleUseItemRow> findUseItem(int questId) {
 		return Optional.ofNullable(useItemRowsByQuestId.get(questId));
 	}
 
-	/** 按任务查询 SimpleUseItem 行，缺行 fail-closed。 / Looks a SimpleUseItem row up; missing rows fail closed. */
+	/**
+	 * 按任务查询 SimpleUseItem 行，缺行 fail-closed。 / Looks a SimpleUseItem row up; missing rows fail closed.
+	 */
 	public SimpleUseItemRow requireUseItem(int questId) {
 		SimpleUseItemRow row = useItemRowsByQuestId.get(questId);
 		if (row == null) {
 			throw new IllegalStateException("NATIVE_TABLE_ROW_MISSING: quest " + questId
-					+ " has no SimpleUseItem row");
+				+ " has no SimpleUseItem row");
 		}
 		return row;
 	}
 
-	/** SimpleItemPlay 全量行（只读集合）。 / All SimpleItemPlay rows. */
+	/**
+	 * SimpleItemPlay 全量行（只读集合）。 / All SimpleItemPlay rows.
+	 */
 	public Collection<SimpleItemPlayRow> itemPlayRows() {
 		return itemPlayRowsByQuestId.values();
 	}
 
-	/** SimpleItemPlay 行数。 / The number of SimpleItemPlay rows. */
+	/**
+	 * SimpleItemPlay 行数。 / The number of SimpleItemPlay rows.
+	 */
 	public int itemPlaySize() {
 		return itemPlayRowsByQuestId.size();
 	}
 
-	/** 按任务查询 SimpleItemPlay 行，无行返回 Optional.empty()。 / Looks a SimpleItemPlay row up. */
+	/**
+	 * 按任务查询 SimpleItemPlay 行，无行返回 Optional.empty()。 / Looks a SimpleItemPlay row up.
+	 */
 	public Optional<SimpleItemPlayRow> findItemPlay(int questId) {
 		return Optional.ofNullable(itemPlayRowsByQuestId.get(questId));
 	}
 
-	/** 按任务查询 SimpleItemPlay 行，缺行 fail-closed。 / Looks a SimpleItemPlay row up; missing rows fail closed. */
+	/**
+	 * 按任务查询 SimpleItemPlay 行，缺行 fail-closed。 / Looks a SimpleItemPlay row up; missing rows fail closed.
+	 */
 	public SimpleItemPlayRow requireItemPlay(int questId) {
 		SimpleItemPlayRow row = itemPlayRowsByQuestId.get(questId);
 		if (row == null) {
 			throw new IllegalStateException("NATIVE_TABLE_ROW_MISSING: quest " + questId
-					+ " has no SimpleItemPlay row");
+				+ " has no SimpleItemPlay row");
 		}
 		return row;
 	}
 
-	/** CombineTask 全量行（只读集合）。 / All CombineTask rows. */
+	/**
+	 * CombineTask 全量行（只读集合）。 / All CombineTask rows.
+	 */
 	public Collection<CombineTaskRow> combineRows() {
 		return combineRowsByQuestId.values();
 	}
 
-	/** CombineTask 行数。 / The number of CombineTask rows. */
+	/**
+	 * CombineTask 行数。 / The number of CombineTask rows.
+	 */
 	public int combineSize() {
 		return combineRowsByQuestId.size();
 	}
 
-	/** 按任务查询 CombineTask 行，无行返回 Optional.empty()。 / Looks a CombineTask row up. */
+	/**
+	 * 按任务查询 CombineTask 行，无行返回 Optional.empty()。 / Looks a CombineTask row up.
+	 */
 	public Optional<CombineTaskRow> findCombine(int questId) {
 		return Optional.ofNullable(combineRowsByQuestId.get(questId));
 	}
 
-	/** 按任务查询 CombineTask 行，缺行 fail-closed。 / Looks a CombineTask row up; missing rows fail closed. */
+	/**
+	 * 按任务查询 CombineTask 行，缺行 fail-closed。 / Looks a CombineTask row up; missing rows fail closed.
+	 */
 	public CombineTaskRow requireCombine(int questId) {
 		CombineTaskRow row = combineRowsByQuestId.get(questId);
 		if (row == null) {
 			throw new IllegalStateException("NATIVE_TABLE_ROW_MISSING: quest " + questId
-					+ " has no CombineTask row");
+				+ " has no CombineTask row");
 		}
 		return row;
 	}
 
-	/** 表行数。 / The number of table rows. */
+	/**
+	 * 表行数。 / The number of table rows.
+	 */
 	public int size() {
 		return rowsByQuestId.size();
 	}
 
-	/** 全部表行（questId 升序由底层 LinkedHashMap 装载序决定）。 / All rows (in load order). */
+	/**
+	 * 全部表行（questId 升序由底层 LinkedHashMap 装载序决定）。 / All rows (in load order).
+	 */
 	public List<SimpleHuntRow> rows() {
 		return List.copyOf(rowsByQuestId.values());
 	}
 
-	/** 按任务查询。 / Looks a row up by quest id. */
+	/**
+	 * 按任务查询。 / Looks a row up by quest id.
+	 */
 	public Optional<SimpleHuntRow> find(int questId) {
 		return Optional.ofNullable(rowsByQuestId.get(questId));
 	}
 
-	/** 按任务查询，缺行 fail-closed。 / Looks a row up; missing rows fail closed. */
+	/**
+	 * 按任务查询，缺行 fail-closed。 / Looks a row up; missing rows fail closed.
+	 */
 	public SimpleHuntRow require(int questId) {
 		SimpleHuntRow row = rowsByQuestId.get(questId);
 		if (row == null) {
 			throw new IllegalStateException("NATIVE_TABLE_ROW_MISSING: quest " + questId
-					+ " has no SimpleHunt row");
+				+ " has no SimpleHunt row");
 		}
 		return row;
 	}
 
-	/** 串行任务全量行（只读集合）。 / All serial hunt rows. */
+	/**
+	 * 串行任务全量行（只读集合）。 / All serial hunt rows.
+	 */
 	public Collection<SimpleSerialHuntRow> serialHuntRows() {
 		return serialRowsByQuestId.values();
 	}
 
-	/** 按任务查询串行行，无行返回 Optional.empty()。 / Looks a serial row up. */
+	/**
+	 * 按任务查询串行行，无行返回 Optional.empty()。 / Looks a serial row up.
+	 */
 	public Optional<SimpleSerialHuntRow> findSerial(int questId) {
 		return Optional.ofNullable(serialRowsByQuestId.get(questId));
 	}
 
-	/** 按任务查询串行行，缺行 fail-closed。 / Looks a serial row up; missing rows fail closed. */
+	/**
+	 * 按任务查询串行行，缺行 fail-closed。 / Looks a serial row up; missing rows fail closed.
+	 */
 	public SimpleSerialHuntRow requireSerial(int questId) {
 		SimpleSerialHuntRow row = serialRowsByQuestId.get(questId);
 		if (row == null) {
 			throw new IllegalStateException("NATIVE_TABLE_ROW_MISSING: serial quest " + questId
-					+ " has no SimpleSerialHunt row");
+				+ " has no SimpleSerialHunt row");
 		}
 		return row;
 	}
@@ -1176,7 +1269,7 @@ public final class NativeQuestTableLoader {
 	public CameraRegistry.RowSpec cameraSpec(SimpleHuntRow row) {
 		if (row.killSlots().isEmpty()) {
 			throw new IllegalStateException(
-					"NATIVE_CAMERA_ROW_MISSING: quest " + row.questId() + " has no kill counts");
+				"NATIVE_CAMERA_ROW_MISSING: quest " + row.questId() + " has no kill counts");
 		}
 		RawQuestVarsCodec.Width width = widthOf(row);
 		Map<Integer, Integer> slotRequires = new TreeMap<>();
@@ -1197,7 +1290,7 @@ public final class NativeQuestTableLoader {
 	public CameraRegistry.RowSpec cameraSpec(SimpleSerialHuntRow row) {
 		if (row.stages().isEmpty()) {
 			throw new IllegalStateException(
-					"NATIVE_CAMERA_ROW_MISSING: serial quest " + row.questId() + " has no stages");
+				"NATIVE_CAMERA_ROW_MISSING: serial quest " + row.questId() + " has no stages");
 		}
 		RawQuestVarsCodec.Width width = RawQuestVarsCodec.Width.SIX;
 		Map<Integer, Integer> slotRequires = new TreeMap<>();
@@ -1210,12 +1303,6 @@ public final class NativeQuestTableLoader {
 		}
 		return new CameraRegistry.RowSpec(row.questId(), width, fullValue, slotRequires);
 	}
-
-	/**
-	 * 采集行 → 相机行规约已退役（2026-10-04）：采集族原版无相机（camera-params.tsv 262/262 无调用），
-	 * 采集为物品驱动；原 {@code cameraSpec(int, Map)} 重载随 P4 相机设计一并撤销。
-	 * The collect-row camera spec is retired (2026-10-04): the family has no retail camera call.
-	 */
 
 	/**
 	 * 宽度规则：任一 count 超 6 位掩码 ⇒ 10 位，否则 6 位（对拍 1812 任务零失败）。

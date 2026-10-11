@@ -43,7 +43,9 @@ class SimpleHuntNativeFamilyGateTest {
 	private static NativeQuestTableLoader loader;
 	private static CameraRegistry cameraRegistry;
 
-	/** 原版表行仍带 XML 定义的行（`retail-xml-retention.xml` = XML_RETENTION，SimpleHunt 3 行）。 */
+	/**
+	 * 原版表行仍带 XML 定义的行（`retail-xml-retention.xml` = XML_RETENTION，SimpleHunt 3 行）。
+	 */
 	private static final Set<Integer> XML_RETAINED_ROWS = Set.of(14112, 14123, 16961);
 
 	@BeforeAll
@@ -63,7 +65,7 @@ class SimpleHuntNativeFamilyGateTest {
 		// 单一 owner 不变量：注册集 = 路由集 + XML_RETENTION 行（表行仍带 XML 定义者交给 XML 车道）。
 		// Single-owner invariant: registration set = routing set + XML_RETENTION rows.
 		assertEquals(owned.size(), handler.routedQuestIds().size() + XML_RETAINED_ROWS.size(),
-				"注册集与路由集差值必须恰为 XML 保留行 / routing set must be the registration set minus XML rows");
+			"注册集与路由集差值必须恰为 XML 保留行 / routing set must be the registration set minus XML rows");
 		for (int questId : XML_RETAINED_ROWS) {
 			assertTrue(handler.owns(questId), "XML 保留行仍须在注册集内（装载面）: " + questId);
 			assertFalse(handler.routes(questId), "XML 保留行不得由 native 路由: " + questId);
@@ -105,8 +107,8 @@ class SimpleHuntNativeFamilyGateTest {
 		qsl.addQuest(2354, qs);
 
 		NativeQuestTableLoader.SimpleHuntRow row = loader.require(2354);
-		int slot1NpcId = NativeNpcNameResolver.instance().resolveMonsterIds(row.killSlots().get(1).monsters().get(0)).get(0);
-		int slot2NpcId = NativeNpcNameResolver.instance().resolveMonsterIds(row.killSlots().get(2).monsters().get(0)).get(0);
+		int slot1NpcId = NativeNpcNameResolver.instance().resolveMonsterIds(row.killSlots().get(1).monsters().getFirst()).getFirst();
+		int slot2NpcId = NativeNpcNameResolver.instance().resolveMonsterIds(row.killSlots().get(2).monsters().getFirst()).getFirst();
 
 		// 槽 1 击杀 6 次，逐次加一，处于普通写入通道
 		for (int i = 1; i <= 6; i++) {
@@ -147,8 +149,8 @@ class SimpleHuntNativeFamilyGateTest {
 		QuestStateList qsl = player.getQuestStateList();
 
 		NativeQuestTableLoader.SimpleHuntRow row = loader.require(2354);
-		int acqNpcId = NativeNpcNameResolver.instance().resolve(row.acquiredNpcName()).npcIds().get(0);
-		int rewNpcId = NativeNpcNameResolver.instance().resolve(row.rewardNpcName()).npcIds().get(0);
+		int acqNpcId = NativeNpcNameResolver.instance().resolve(row.acquiredNpcName()).npcIds().getFirst();
+		int rewNpcId = NativeNpcNameResolver.instance().resolve(row.rewardNpcName()).npcIds().getFirst();
 
 		Npc acqNpc = createMockNpc(acqNpcId);
 		Npc rewNpc = createMockNpc(rewNpcId);
@@ -290,7 +292,9 @@ class SimpleHuntNativeFamilyGateTest {
 		assertTrue(movies.played().isEmpty(), "非触发动作不得下发过场");
 	}
 
-	/** 记录式假过场端口（原版 0x35 槽）。 / A recording fake cutscene port (retail slot 0x35). */
+	/**
+	 * 记录式假过场端口（原版 0x35 槽）。 / A recording fake cutscene port (retail slot 0x35).
+	 */
 	private static final class RecordingMovies implements NativeMoviePort {
 		private final List<Integer> played = new ArrayList<>();
 

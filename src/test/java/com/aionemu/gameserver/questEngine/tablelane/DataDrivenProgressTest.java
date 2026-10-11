@@ -2,6 +2,7 @@ package com.aionemu.gameserver.questEngine.tablelane;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import java.util.List;
 
@@ -109,7 +110,7 @@ class DataDrivenProgressTest {
 			vars = result.newVars();
 			assertTrue(DataDrivenProgress.counter(vars, 1) < 100, "组 1 计数永不达 100（6 位回绕）");
 		}
-		assertTrue(!closed, "80817 在原版算术下不可完成（禁止改成 10 位相机或显式禁用）");
+		assertFalse(closed, "80817 在原版算术下不可完成（禁止改成 10 位相机或显式禁用）");
 		assertTrue(DataDrivenProgress.counter(vars, 2) > 0, "饱和进位污染下一组槽（原版原样行为）");
 		assertEquals(0, DataDrivenProgress.step(vars), "步号永不推进");
 	}

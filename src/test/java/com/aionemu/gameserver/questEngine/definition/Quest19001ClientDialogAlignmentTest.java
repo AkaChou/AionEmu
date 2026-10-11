@@ -31,7 +31,9 @@ class Quest19001ClientDialogAlignmentTest {
 	private static final int QUEST_ID = 19001;
 	private static final int START_NPC = 203780;
 	private static final int REPORT_NPC = 203700;
-	/** 原版 give_item = ITEM_DOC_QUEST_19001A 1。 / The retail accept grant. */
+	/**
+	 * 原版 give_item = ITEM_DOC_QUEST_19001A 1。 / The retail accept grant.
+	 */
 	private static final int DOC_ITEM = 182206127;
 
 	@Test
@@ -42,8 +44,8 @@ class Quest19001ClientDialogAlignmentTest {
 			"退役后 typed 目录不得再持有 19001");
 
 		SimpleTalkHandler handler = SimpleTalkHandler.instance();
-		assertEquals(START_NPC, NativeNpcNameResolver.instance().resolve("Demeter").npcIds().get(0));
-		assertEquals(REPORT_NPC, NativeNpcNameResolver.instance().resolve("Fasimedes").npcIds().get(0));
+		assertEquals(START_NPC, NativeNpcNameResolver.instance().resolve("Demeter").npcIds().getFirst());
+		assertEquals(REPORT_NPC, NativeNpcNameResolver.instance().resolve("Fasimedes").npcIds().getFirst());
 		assertEquals(START_NPC, handler.acquireNpc(QUEST_ID), "接取 owner = Demeter");
 		assertEquals(REPORT_NPC, handler.rewardNpc(QUEST_ID), "报告 owner = Fasimedes");
 		assertEquals(0, handler.relayCount(QUEST_ID), "19001 是单步 talk 行");
@@ -60,7 +62,7 @@ class Quest19001ClientDialogAlignmentTest {
 				|| metadata.startConditions().contains(new QuestStartCondition("finished", 19000, 0)),
 			"前置 = 完成 19000");
 		List<QuestReward> rewards = metadata.rewards();
-		assertTrue(rewards.contains(new QuestReward("EXP", 0, 1347585)), () -> rewards.toString());
+		assertTrue(rewards.contains(new QuestReward("EXP", 0, 1347585)), rewards::toString);
 		assertEquals(List.of(1L, 30L), rewards.stream().filter(r -> r.kind().equals("ITEM"))
 			.map(QuestReward::amount).sorted().toList(), "两件奖励物品（1 + 30）");
 	}

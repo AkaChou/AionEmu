@@ -41,7 +41,7 @@ class QuestRuntimeInfrastructureTest {
 		ImmutableQuestCatalog catalog = new ImmutableQuestCatalog(List.of(definition));
 		QuestEvent event = talkToNpc(700001);
 		QuestEventIndex index = new QuestEventIndex(catalog);
-		QuestEventIndex.Route route = index.routesFor(event).get(0);
+		QuestEventIndex.Route route = index.routesFor(event).getFirst();
 		QuestSnapshot snapshot = new QuestSnapshot(7, 1001, QuestStatus.START, 0, Map.of(182400001, 5));
 
 		var plan = QuestMutationPlanner.plan(definition, snapshot, event, route.transition());
@@ -50,7 +50,7 @@ class QuestRuntimeInfrastructureTest {
 		assertEquals(1, plan.orElseThrow().nextPackedVariables());
 		assertTrue(QuestMutationPlanner.plan(definition, snapshot, new QuestEvent.KillNpc(1), route.transition()).isEmpty());
 		assertTrue(QuestMutationPlanner.plan(definition,
-				new QuestSnapshot(7, 1001, QuestStatus.START, 0, Map.of()), event, route.transition()).isEmpty());
+			new QuestSnapshot(7, 1001, QuestStatus.START, 0, Map.of()), event, route.transition()).isEmpty());
 	}
 
 	@Test
@@ -60,7 +60,7 @@ class QuestRuntimeInfrastructureTest {
 			.node("start", project(QuestStatus.START, vars("step", 0)))
 			.node("reward", project(QuestStatus.REWARD, vars("step", 1)))
 			.on(talkToNpc(700001)).from("start").goTo("reward").compile();
-		var transition = definition.definition().transitions().get(0);
+		var transition = definition.definition().transitions().getFirst();
 
 		assertTrue(QuestMutationPlanner.plan(definition,
 			new QuestSnapshot(7, 1001, QuestStatus.START, 0, Map.of()), transition).isPresent());
@@ -175,7 +175,7 @@ class QuestRuntimeInfrastructureTest {
 			.on(new QuestEvent.AttackNpc(211043)).from("started")
 			.when(QuestDsl.npcHpBelowPercent(211043, 50)).goTo("reward")
 			.compile();
-		var transition = definition.definition().transitions().get(0);
+		var transition = definition.definition().transitions().getFirst();
 		QuestSnapshot snapshot = new QuestSnapshot(7, 1567, QuestStatus.START, 0, Map.of());
 
 		var below = new QuestEvent.AttackNpc(211043,
@@ -197,12 +197,12 @@ class QuestRuntimeInfrastructureTest {
 			.node("started", project(QuestStatus.START, vars("var0", 0)))
 			.node("reward", project(QuestStatus.REWARD, vars("var0", 1)))
 			.on(talkToNpc(211043)).from("started")
-				.then(new com.aionemu.gameserver.questEngine.definition.QuestAction.DecreaseCurrency(
-					QuestRewardKind.GOLD, 60))
-				.then(new com.aionemu.gameserver.questEngine.definition.QuestAction.DecreaseCurrency(
-					QuestRewardKind.KINAH, 60))
-				.goTo("reward").compile();
-		var transition = definition.definition().transitions().get(0);
+			.then(new com.aionemu.gameserver.questEngine.definition.QuestAction.DecreaseCurrency(
+				QuestRewardKind.GOLD, 60))
+			.then(new com.aionemu.gameserver.questEngine.definition.QuestAction.DecreaseCurrency(
+				QuestRewardKind.KINAH, 60))
+			.goTo("reward").compile();
+		var transition = definition.definition().transitions().getFirst();
 
 		QuestSnapshot enough = new QuestSnapshot(7, 1568, QuestStatus.START, 0, Map.of(),
 			Map.of(QuestRewardKind.GOLD, 120L));
@@ -262,7 +262,8 @@ class QuestRuntimeInfrastructureTest {
 		builder.on(new QuestEvent.KillInWorld(0)).from("start").goTo("start");
 		CompiledQuestDefinition definition = builder.compile();
 		QuestEventRouter router = new QuestEventRouter(new QuestEventIndex(
-			new ImmutableQuestCatalog(List.of(definition))), ignored -> { }, new QuestRuntimeMetricsCollector());
+			new ImmutableQuestCatalog(List.of(definition))), ignored -> {
+		}, new QuestRuntimeMetricsCollector());
 		AtomicInteger calls = new AtomicInteger();
 
 		QuestEventRouter.DispatchResult result = router.dispatch(new QuestEvent.KillInWorld(210010000),
@@ -305,11 +306,11 @@ class QuestRuntimeInfrastructureTest {
 		});
 
 		assertEquals(List.of(1001, 1002), result.owners().stream().map(QuestEventRouter.OwnerResult::questId).toList());
-		assertEquals(QuestRouteResult.FAILED, result.owners().get(0).result());
+		assertEquals(QuestRouteResult.FAILED, result.owners().getFirst().result());
 		assertTrue(result.consumed());
 		assertEquals(1, audits.size());
-		assertEquals(1001, audits.get(0).questId());
-		assertEquals(QuestDispatchContract.BROADCAST, audits.get(0).contract());
+		assertEquals(1001, audits.getFirst().questId());
+		assertEquals(QuestDispatchContract.BROADCAST, audits.getFirst().contract());
 		assertEquals(1, metrics.snapshot().outcomeCount(QuestRouteResult.FAILED));
 		assertEquals(1, metrics.snapshot().outcomeCount(QuestRouteResult.HANDLED));
 	}
@@ -318,7 +319,8 @@ class QuestRuntimeInfrastructureTest {
 	void claimedOwnersAreTrackedIndependently() {
 		QuestEventRouter router = new QuestEventRouter(new QuestEventIndex(
 			new ImmutableQuestCatalog(List.of(definition(1001), definition(1002)))),
-			ignored -> { }, new QuestRuntimeMetricsCollector());
+			ignored -> {
+			}, new QuestRuntimeMetricsCollector());
 
 		QuestEventRouter.DispatchResult result = router.dispatch(talkToNpc(700001),
 			QuestDispatchContract.BROADCAST, route -> route.questId() == 1001
@@ -332,8 +334,9 @@ class QuestRuntimeInfrastructureTest {
 	void firstNonUnknownPreservesCallerContract() {
 		QuestEvent event = talkToNpc(700001);
 		QuestEventRouter router = new QuestEventRouter(new QuestEventIndex(
-				new ImmutableQuestCatalog(List.of(definition(1001), definition(1002)))),
-				ignored -> { }, new QuestRuntimeMetricsCollector());
+			new ImmutableQuestCatalog(List.of(definition(1001), definition(1002)))),
+			ignored -> {
+			}, new QuestRuntimeMetricsCollector());
 		AtomicInteger calls = new AtomicInteger();
 		QuestEventRouter.DispatchResult result = router.dispatch(event, QuestDispatchContract.FIRST_NON_UNKNOWN, route -> {
 			calls.incrementAndGet();
@@ -347,8 +350,9 @@ class QuestRuntimeInfrastructureTest {
 	void exclusiveContinuesOnUnmatchedAndStopsOnFirstConclusion() {
 		QuestEvent event = talkToNpc(700001);
 		QuestEventRouter router = new QuestEventRouter(new QuestEventIndex(
-				new ImmutableQuestCatalog(List.of(definition(1001), definition(1002), definition(1003)))),
-				ignored -> { }, new QuestRuntimeMetricsCollector());
+			new ImmutableQuestCatalog(List.of(definition(1001), definition(1002), definition(1003)))),
+			ignored -> {
+			}, new QuestRuntimeMetricsCollector());
 		List<Integer> called = new ArrayList<>();
 		QuestEventRouter.DispatchResult result = router.dispatch(event, QuestDispatchContract.EXCLUSIVE, route -> {
 			called.add(route.questId());
@@ -357,7 +361,7 @@ class QuestRuntimeInfrastructureTest {
 
 		assertEquals(List.of(1001, 1002), called);
 		assertEquals(List.of(1001, 1002), result.owners().stream()
-				.map(QuestEventRouter.OwnerResult::questId).toList());
+			.map(QuestEventRouter.OwnerResult::questId).toList());
 		assertTrue(result.consumed());
 	}
 
@@ -365,28 +369,29 @@ class QuestRuntimeInfrastructureTest {
 	void broadcastStopsAdditionalTransitionsForOneOwnerButContinuesOtherOwners() {
 		var builder = QuestDsl.quest(1001);
 		builder.progress(bitField("step", 0, 6, PersistenceMode.PERSISTENT))
-				.node("start", project(QuestStatus.START, vars("step", 0)))
-				.node("reward", project(QuestStatus.REWARD, vars("step", 1)))
-				.node("complete", project(QuestStatus.COMPLETE, vars("step", 2)));
+			.node("start", project(QuestStatus.START, vars("step", 0)))
+			.node("reward", project(QuestStatus.REWARD, vars("step", 1)))
+			.node("complete", project(QuestStatus.COMPLETE, vars("step", 2)));
 		builder.on(talkToNpc(700001)).from("start").when(statusIs(QuestStatus.START))
-				.then(setVariable("step", 1)).goTo("reward");
+			.then(setVariable("step", 1)).goTo("reward");
 		builder.on(talkToNpc(700001)).from("reward").when(statusIs(QuestStatus.REWARD))
 			.then(setVariable("step", 2)).then(completeQuest(0)).goTo("complete")
 			.afterCommit(syncQuestState(QuestStateSyncMode.COMPLETION));
 		CompiledQuestDefinition firstOwner = builder.compile();
 
 		QuestEventRouter router = new QuestEventRouter(new QuestEventIndex(new ImmutableQuestCatalog(
-				List.of(firstOwner, definition(1002)))), ignored -> { }, new QuestRuntimeMetricsCollector());
+			List.of(firstOwner, definition(1002)))), ignored -> {
+		}, new QuestRuntimeMetricsCollector());
 		List<Integer> called = new ArrayList<>();
 		QuestEventRouter.DispatchResult result = router.dispatch(talkToNpc(700001), QuestDispatchContract.BROADCAST,
-				route -> {
-					called.add(route.questId());
-					return route.questId() == 1001 ? QuestRouteResult.HANDLED : QuestRouteResult.NOT_HANDLED;
-				});
+			route -> {
+				called.add(route.questId());
+				return route.questId() == 1001 ? QuestRouteResult.HANDLED : QuestRouteResult.NOT_HANDLED;
+			});
 
 		assertEquals(List.of(1001, 1002), called);
 		assertEquals(List.of(1001, 1002), result.owners().stream()
-				.map(QuestEventRouter.OwnerResult::questId).toList());
+			.map(QuestEventRouter.OwnerResult::questId).toList());
 	}
 
 	@Test
@@ -394,8 +399,10 @@ class QuestRuntimeInfrastructureTest {
 		QuestEvent event = talkToNpc(700001);
 		QuestRuntimeMetricsCollector metrics = new QuestRuntimeMetricsCollector();
 		QuestEventRouter router = new QuestEventRouter(new QuestEventIndex(
-				new ImmutableQuestCatalog(List.of(definition(1001), definition(1002)))),
-			ignored -> { throw new IllegalStateException("audit unavailable"); }, metrics);
+			new ImmutableQuestCatalog(List.of(definition(1001), definition(1002)))),
+			ignored -> {
+				throw new IllegalStateException("audit unavailable");
+			}, metrics);
 		QuestEventRouter.DispatchResult result = router.dispatch(event, QuestDispatchContract.BROADCAST, route -> {
 			if (route.questId() == 1001) {
 				throw new IllegalStateException("owner failed");
@@ -481,10 +488,10 @@ class QuestRuntimeInfrastructureTest {
 
 	private static CompiledQuestDefinition definition(int id) {
 		return quest(id)
-				.progress(bitField("var1", 0, 6, PersistenceMode.PERSISTENT))
-				.node("start", project(QuestStatus.START, vars("var1", 0)))
-				.node("reward", project(QuestStatus.REWARD, vars("var1", 1)))
-				.on(talkToNpc(700001)).when(statusIs(QuestStatus.START)).when(hasItem(182400001, 5))
-				.then(removeItem(182400001, 5)).then(setVariable("var1", 1)).goTo("reward").compile();
+			.progress(bitField("var1", 0, 6, PersistenceMode.PERSISTENT))
+			.node("start", project(QuestStatus.START, vars("var1", 0)))
+			.node("reward", project(QuestStatus.REWARD, vars("var1", 1)))
+			.on(talkToNpc(700001)).when(statusIs(QuestStatus.START)).when(hasItem(182400001, 5))
+			.then(removeItem(182400001, 5)).then(setVariable("var1", 1)).goTo("reward").compile();
 	}
 }

@@ -36,7 +36,6 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class Quest80487ProductionFlowTest {
@@ -107,7 +106,7 @@ class Quest80487ProductionFlowTest {
 		}
 	}
 
-	private CompiledQuestDefinition definition() throws Exception {
+	private CompiledQuestDefinition definition() {
 		return definition(QUEST_ID);
 	}
 
@@ -117,13 +116,16 @@ class Quest80487ProductionFlowTest {
 	}
 
 	private static QuestProductionDispatcher dispatcher(CompiledQuestDefinition definition, Player player,
-			List<QuestAuditEvent> auditEvents) {
+														List<QuestAuditEvent> auditEvents) {
 		int questId = definition.definition().id();
 		PlayerQuestStatePort statePort = new PlayerQuestStatePort(playerId -> player, new RecordingDao());
 		QuestMetadata metadata = definition.definition().metadata();
 		PlayerQuestStateSyncPort stateSync = new PlayerQuestStateSyncPort(playerId -> player,
 			id -> id == questId ? metadata : null, ignored -> null,
-			ignored -> { }, ignored -> { }, ignored -> { });
+			ignored -> {
+			}, ignored -> {
+		}, ignored -> {
+		});
 		TypedQuestAfterCommitPort afterCommit = new TypedQuestAfterCommitPort(
 			new PlayerQuestDialogPort(playerId -> player), null, null, null, null, null,
 			stateSync, null, null, null);
@@ -185,7 +187,7 @@ class Quest80487ProductionFlowTest {
 	}
 
 	private static void setField(Class<?> declaringClass, Object target, String name, Object value)
-			throws Exception {
+		throws Exception {
 		Field field = declaringClass.getDeclaredField(name);
 		field.setAccessible(true);
 		field.set(target, value);
@@ -217,7 +219,7 @@ class Quest80487ProductionFlowTest {
 
 		@Override
 		public QuestTransactionParticipant apply(Connection connection, QuestSnapshot snapshot,
-				List<QuestAction> actions) {
+												 List<QuestAction> actions) {
 			return QuestTransactionParticipant.none();
 		}
 	}

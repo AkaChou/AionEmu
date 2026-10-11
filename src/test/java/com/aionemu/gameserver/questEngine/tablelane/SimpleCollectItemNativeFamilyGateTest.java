@@ -16,7 +16,6 @@ import org.junit.jupiter.api.Test;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.questEngine.definition.QuestDialogAction;
 import com.aionemu.gameserver.questEngine.definition.QuestDialogPage;
-import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.questEngine.retail.RetailQuestDriver;
@@ -42,21 +41,35 @@ import com.aionemu.gameserver.questEngine.tablelane.NativeQuestTableLoader.Simpl
  */
 class SimpleCollectItemNativeFamilyGateTest {
 
-	/** 原版单对象采集任务（1 个化石 / required 1）。 / Retail single-object collect quest. */
+	/**
+	 * 原版单对象采集任务（1 个化石 / required 1）。 / Retail single-object collect quest.
+	 */
 	private static final int SINGLE_OBJECT_QUEST = 1137;
-	/** 原版多计数采集任务（3 个 / Cherubim pouch）。 / Retail multi-count collect quest. */
+	/**
+	 * 原版多计数采集任务（3 个 / Cherubim pouch）。 / Retail multi-count collect quest.
+	 */
 	private static final int MULTI_COUNT_QUEST = 1103;
-	/** 带中继 NPC 的采集任务（talk_npc1）。 / Retail collect quest with a relay npc. */
+	/**
+	 * 带中继 NPC 的采集任务（talk_npc1）。 / Retail collect quest with a relay npc.
+	 */
 	private static final int RELAY_QUEST = 14120;
-	/** 三步中继链的 TEST 行（talk_npc1..3 = Lostes/Gogohas/Gapir）。 / The three-step relay TEST row. */
+	/**
+	 * 三步中继链的 TEST 行（talk_npc1..3 = Lostes/Gogohas/Gapir）。 / The three-step relay TEST row.
+	 */
 	private static final int TRIPLE_RELAY_QUEST = 9620;
-	/** 原版多列采集行（object1/object2 两列 × collect_item1/2 各 5 件）。 / Retail multi-column row. */
+	/**
+	 * 原版多列采集行（object1/object2 两列 × collect_item1/2 各 5 件）。 / Retail multi-column row.
+	 */
 	private static final int MULTI_COLUMN_QUEST = 18501;
 	private static final int MULTI_COLUMN_COUNT = 5;
 
-	/** 无采集物的 TEST 行（只声明 reward_check）。 / The TEST rows without collect objects. */
+	/**
+	 * 无采集物的 TEST 行（只声明 reward_check）。 / The TEST rows without collect objects.
+	 */
 	private static final Set<Integer> TEST_ROWS = Set.of(9649, 9650, 9654, 9655, 9656);
-	/** 无采集计数的 9 行（TEST 5 + 事件行 4）。 / The nine rows without a collect count. */
+	/**
+	 * 无采集计数的 9 行（TEST 5 + 事件行 4）。 / The nine rows without a collect count.
+	 */
 	private static final Set<Integer> NO_COLLECT_COUNT_ROWS =
 		Set.of(9649, 9650, 9654, 9655, 9656, 50017, 50018, 51017, 51018);
 
@@ -64,7 +77,9 @@ class SimpleCollectItemNativeFamilyGateTest {
 	private static CameraRegistry cameraRegistry;
 	private static SimpleCollectItemHandler handler;
 
-	/** 原版 minlevel=999 的休眠采集行（元数据 min>max，不派生相机行）。 / Retail dormant rows. */
+	/**
+	 * 原版 minlevel=999 的休眠采集行（元数据 min>max，不派生相机行）。 / Retail dormant rows.
+	 */
 	private static final Set<Integer> DORMANT_LEVEL_ROWS = Set.of(36017, 46017, 47112);
 
 	@BeforeAll
@@ -81,7 +96,7 @@ class SimpleCollectItemNativeFamilyGateTest {
 		assertEquals(262, loader.collectSize(), "原版 quest_simplecollectitems 全量行");
 		List<SimpleCollectItemRow> rows = List.copyOf(loader.collectRows());
 		assertTrue(rows.stream().allMatch(row ->
-			!row.acquiredNpcName().isBlank() && !row.rewardNpcName().isBlank()),
+				!row.acquiredNpcName().isBlank() && !row.rewardNpcName().isBlank()),
 			"双 NPC 结构必须 100%（原版 262/262）");
 		assertEquals(257, rows.stream().filter(row -> !row.objects().isEmpty()).count(),
 			"object1..4 覆盖 257 行");
@@ -121,7 +136,7 @@ class SimpleCollectItemNativeFamilyGateTest {
 		// 1103：谷物袋子（700105）掉落 quest_1103a（182200201），chance=100（原版 drop_prob_1）。
 		var drops = handler.questDropsFor(700105);
 		assertTrue(drops.stream().anyMatch(drop -> drop.questId() == 1103
-			&& drop.itemId() == 182200201 && drop.chance() == 100),
+				&& drop.itemId() == 182200201 && drop.chance() == 100),
 			"native 必须接手原版掉落列（真机 1103 谷物袋子）");
 		assertTrue(loader.collectRows().stream().anyMatch(row -> row.questId() == 1137),
 			"1137 仍在采集族装载面");
@@ -453,8 +468,8 @@ class SimpleCollectItemNativeFamilyGateTest {
 		int rewardNpc = local.rewardNpc(MULTI_COLUMN_QUEST);
 
 		// 交互认领（零写）；只持第一列 ⇒ 第二列缺 ⇒ 交付 NPC 处仍是进行中页。
-		assertTrue(local.onObjectUse(player, MULTI_COLUMN_QUEST, objects.get(0)));
-		inventory.hold(handIns.get(0), MULTI_COLUMN_COUNT);
+		assertTrue(local.onObjectUse(player, MULTI_COLUMN_QUEST, objects.getFirst()));
+		inventory.hold(handIns.getFirst(), MULTI_COLUMN_COUNT);
 		NativeTalkFixture.clearPackets(player);
 		assertTrue(local.onDialog(NativeTalkFixture.dialog(player, rewardNpc, MULTI_COLUMN_QUEST, 26)));
 		NativeTalkFixture.assertOnlyDialogPage(player, SimpleCollectItemHandler.PAGE_IN_PROGRESS);
@@ -472,11 +487,13 @@ class SimpleCollectItemNativeFamilyGateTest {
 		assertEquals(QuestStatus.REWARD,
 			player.getQuestStateList().getQuestState(MULTI_COLUMN_QUEST).getStatus());
 		assertEquals(List.of("remove:" + handIns.get(0) + ":" + MULTI_COLUMN_COUNT,
-			"remove:" + handIns.get(1) + ":" + MULTI_COLUMN_COUNT), inventory.calls(),
+				"remove:" + handIns.get(1) + ":" + MULTI_COLUMN_COUNT), inventory.calls(),
 			"两列交付物必须各按原版计数扣一份");
 	}
 
-	/** 交付后领取奖励：走 native 完成口（原版 reward 列 → 共用结算体）。 / Claim through the native settlement port. */
+	/**
+	 * 交付后领取奖励：走 native 完成口（原版 reward 列 → 共用结算体）。 / Claim through the native settlement port.
+	 */
 	@Test
 	void claimCompletesThroughTheRetailDerivedTemplate() {
 		List<ClaimCall> calls = new ArrayList<>();
@@ -594,7 +611,9 @@ class SimpleCollectItemNativeFamilyGateTest {
 
 	// ---------------------------------------------------------------- 夹具
 
-	/** 记录式假过场端口（原版 0x35 槽）。 / A recording fake cutscene port (retail slot 0x35). */
+	/**
+	 * 记录式假过场端口（原版 0x35 槽）。 / A recording fake cutscene port (retail slot 0x35).
+	 */
 	private static final class RecordingMovies implements NativeMoviePort {
 		private final List<Integer> played = new ArrayList<>();
 
@@ -624,12 +643,12 @@ class SimpleCollectItemNativeFamilyGateTest {
 	}
 
 	private static SimpleCollectItemHandler handlerWith(NativeInventoryPort inventory,
-			NativeReportRewardFlow rewardFlow) {
+														NativeReportRewardFlow rewardFlow) {
 		return handlerWith(inventory, NativeMoviePort.live(), rewardFlow);
 	}
 
 	private static SimpleCollectItemHandler handlerWith(NativeInventoryPort inventory, NativeMoviePort moviePort,
-			NativeReportRewardFlow rewardFlow) {
+														NativeReportRewardFlow rewardFlow) {
 		return new SimpleCollectItemHandler(NativeQuestTableLoader.instance(),
 			NativeNpcNameResolver.instance(), HtmlPagesRegistry.instance(), inventory, moviePort, rewardFlow,
 			NativeQuestOwnerResolver.instance().xmlOnlyIds(), new java.util.TreeSet<>());

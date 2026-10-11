@@ -81,7 +81,7 @@ class MirrorRewardProjectionLagContractTest {
 	private static final List<Integer> LOCKED_MIRROR_SIBLINGS = List.of(16837, 16986, 16988);
 
 	@Test
-	void laggingShardsProjectTheAlignedMirrorRewardRow() throws Exception {
+	void laggingShardsProjectTheAlignedMirrorRewardRow() {
 		for (Contract contract : CONTRACTS) {
 			if (RETAIL_DRIVEN_RETAIL.contains(contract.questId())) {
 				continue;  // 原版驱动的分片不再承担镜像行锁（见 RETAIL_DRIVEN_RETAIL 注释）。
@@ -101,7 +101,7 @@ class MirrorRewardProjectionLagContractTest {
 	}
 
 	@Test
-	void staleRewardRowsAreHealedOnEnterWorld() throws Exception {
+	void staleRewardRowsAreHealedOnEnterWorld() {
 		for (Contract contract : CONTRACTS) {
 			if (RETAIL_DRIVEN_RETAIL.contains(contract.questId())) {
 				continue;  // 原版驱动的分片不得保留修复边（由 retailDrivenShardsProjectTheirSaturatedCounters 锁定）。
@@ -150,7 +150,7 @@ class MirrorRewardProjectionLagContractTest {
 	}
 
 	@Test
-	void lockedMirrorSiblingsKeepTheirPackedStep() throws Exception {
+	void lockedMirrorSiblingsKeepTheirPackedStep() {
 		/* P5-1：16837/16986/16988 已由原版击杀网格驱动（var0 = 击杀计数），领奖投影 = 饱和计数
 		   （1/1/5），与 QuestPrematureRewardRouteExclusionTest 的 grid 合同 reward 字段一致锁定；
 		   旧的 {var0:0} 行号锁随双变量形一并退役。
@@ -166,7 +166,7 @@ class MirrorRewardProjectionLagContractTest {
 	}
 
 	@Test
-	void bothShardsKeepTheSameRewardJournalRowPerPair() throws Exception {
+	void bothShardsKeepTheSameRewardJournalRowPerPair() {
 		/* 只比较任务书行号（var0）：镜像两侧可以有不同的计数槽（例如 27160 另有 var1=10）。 */
 		/* Compare the journal row only: mirrors may carry different counter slots (e.g. 27160 has var1=10). */
 		for (Contract contract : CONTRACTS) {
@@ -199,7 +199,7 @@ class MirrorRewardProjectionLagContractTest {
 	 * The retail-driven side projects its saturated counters and carries no repair edge.
 	 */
 	@Test
-	void retailDrivenShardsProjectTheirSaturatedCounters() throws Exception {
+	void retailDrivenShardsProjectTheirSaturatedCounters() {
 		for (int questId : RETAIL_DRIVEN_RETAIL) {
 			QuestDefinition definition = definition(questId).definition();
 			assertTrue(enterWorldRecoveries(definition).isEmpty(),

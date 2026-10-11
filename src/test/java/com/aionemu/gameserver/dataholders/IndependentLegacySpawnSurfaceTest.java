@@ -84,7 +84,7 @@ class IndependentLegacySpawnSurfaceTest {
 			List<Element> spawns = spawns(document, expected.npcId());
 			assertEquals(1, spawns.size(), expected.npcId() + " must have exactly one spawn block");
 
-			Set<String> actual = spots(spawns.get(0));
+			Set<String> actual = spots(spawns.getFirst());
 			assertEquals(expected.spots(), actual, expected.npcId() + " must keep only the retail surface");
 		}
 	}
@@ -122,5 +122,6 @@ class IndependentLegacySpawnSurfaceTest {
 		}
 	}
 
-	private record ExpectedSpawn(String file, int npcId, Set<String> spots) {}
+	private record ExpectedSpawn(String file, int npcId, Set<String> spots) {
+	}
 }

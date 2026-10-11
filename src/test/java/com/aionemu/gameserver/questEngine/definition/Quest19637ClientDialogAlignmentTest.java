@@ -44,7 +44,7 @@ class Quest19637ClientDialogAlignmentTest {
 		DataDrivenNativeRuntime runtime = DataDrivenNativeRuntime.instance();
 		assertTrue(runtime.owns(QUEST_ID), "19637 必须由 DD 运行时拥有");
 		assertTrue(runtime.routes(QUEST_ID), "19637 必须由 DD 运行时路由");
-		assertEquals(CAINUS_NPC_ID, NativeNpcNameResolver.instance().resolve("Cainus").npcIds().get(0));
+		assertEquals(CAINUS_NPC_ID, NativeNpcNameResolver.instance().resolve("Cainus").npcIds().getFirst());
 
 		// 行数据：Talk 接取（acquireParam = Cainus）、交付 = 同一 NPC、con_quest 19638 装载列。
 		DataDrivenQuestTable table = DataDrivenQuestTable.load(
@@ -123,7 +123,9 @@ class Quest19637ClientDialogAlignmentTest {
 		return runtime.onKill(player, npc);
 	}
 
-	/** 反射放置坐标（距离门测试面；生产经 WorldPosition 正常初始化）。 / Reflective placement for the distance gate. */
+	/**
+	 * 反射放置坐标（距离门测试面；生产经 WorldPosition 正常初始化）。 / Reflective placement for the distance gate.
+	 */
 	private static void place(VisibleObject object, float x, float y, float z) {
 		WorldPosition position = new WorldPosition(110010000);
 		position.setXYZH(x, y, z, (byte) 0);

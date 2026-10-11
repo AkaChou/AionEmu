@@ -33,7 +33,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 class Quest2841RetailAlignmentTest {
 	private static final int QUEST_ID = 2841;
-	/** 原版行 reward_npc_name=Herz。 / Retail row report NPC. */
+	/**
+	 * 原版行 reward_npc_name=Herz。 / Retail row report NPC.
+	 */
 	private static final int REPORT_NPC = 278003;
 
 	@Test
@@ -74,8 +76,8 @@ class Quest2841RetailAlignmentTest {
 		assertEquals(255, metadata.repeatPolicy().maxRepeatCount(), "原版 max_repeat_count=255（可重复）");
 		List<QuestReward> rewards = metadata.rewards();
 		// 原版 quest.xml：reward_exp1=2068277、reward_abyss_point1=700。
-		assertTrue(rewards.contains(new QuestReward("EXP", 0, 2068277)), () -> rewards.toString());
-		assertTrue(rewards.contains(new QuestReward("AP", 0, 700)), () -> rewards.toString());
+		assertTrue(rewards.contains(new QuestReward("EXP", 0, 2068277)), rewards::toString);
+		assertTrue(rewards.contains(new QuestReward("AP", 0, 700)), rewards::toString);
 	}
 
 	@Test

@@ -26,7 +26,7 @@ class DropRegistrationServiceTest {
 	void bracketsAutomaticLootWithStartAndStopPackets() throws Exception {
 		String source = Files.readString(Path.of("src/main/java/com/aionemu/gameserver/services/drop/DropRegistrationService.java"));
 		String autoLoot = source.substring(source.indexOf("if (player.getMinion() != null"),
-				source.indexOf("public DropModifiers createDropModifiers"));
+			source.indexOf("public DropModifiers createDropModifiers"));
 
 		int start = autoLoot.indexOf("new SM_MINIONS(8, 1, npcObjId, true)");
 		int stop = autoLoot.indexOf("new SM_MINIONS(8, 1, npcObjId, false)");
@@ -56,8 +56,8 @@ class DropRegistrationServiceTest {
 	@Test
 	void globalDropsDoNotExcludeChestsLowLevelOrAbyssNpcsAndReplaceExistingKinah() throws Exception {
 		String source = Files.readString(Path.of("src/main/java/com/aionemu/gameserver/services/drop/DropRegistrationService.java"));
-		String globalDrops = source.substring(source.indexOf("int registerGlobalDrops"),
-				source.indexOf("private Player initDropNpc"));
+		String globalDrops = source.substring(source.indexOf("registerGlobalDrops(Npc npc"),
+			source.indexOf("private Player initDropNpc"));
 
 		assertFalse(globalDrops.contains("getAi2()"));
 		assertFalse(globalDrops.contains("getAbyssNpcType()"));
@@ -70,7 +70,7 @@ class DropRegistrationServiceTest {
 	void legacySoloAndTeamKinahDeliveryPathsAreRemoved() throws Exception {
 		String soloRewards = Files.readString(Path.of("src/main/java/com/aionemu/gameserver/controllers/NpcController.java"));
 		String teamRewards = Files.readString(
-				Path.of("src/main/java/com/aionemu/gameserver/model/team2/common/service/PlayerTeamDistributionService.java"));
+			Path.of("src/main/java/com/aionemu/gameserver/model/team2/common/service/PlayerTeamDistributionService.java"));
 		String customConfig = Files.readString(Path.of("src/main/java/com/aionemu/gameserver/configs/main/CustomConfig.java"));
 
 		assertFalse(soloRewards.contains("AUTO_KINAH_ENABLED"));

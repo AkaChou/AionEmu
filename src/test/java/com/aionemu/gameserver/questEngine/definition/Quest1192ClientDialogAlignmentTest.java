@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
@@ -34,13 +33,13 @@ class Quest1192ClientDialogAlignmentTest {
 		assertEquals(203098, handler.rewardNpc(1192), "交付 NPC");
 		assertEquals(2, handler.relayCount(1192), "中继步数");
 		assertTrue(handler.relaysForNpc(203701).stream().anyMatch(relay -> relay.questId() == 1192 && relay.step() == 1),
-				"中继 1 必须挂在该 NPC 上: Lavirintos");
+			"中继 1 必须挂在该 NPC 上: Lavirintos");
 		assertTrue(handler.relaysForNpc(203833).stream().anyMatch(relay -> relay.questId() == 1192 && relay.step() == 2),
-				"中继 2 必须挂在该 NPC 上: Xenophon");
+			"中继 2 必须挂在该 NPC 上: Xenophon");
 		assertEquals(new SimpleTalkHandler.ItemStack(182200556, 1),
-				handler.acceptGiveItem(1192), "接取侧发放");
+			handler.acceptGiveItem(1192), "接取侧发放");
 		assertEquals(new SimpleTalkHandler.ItemStack(182200556, 1),
-				handler.stepRemoveItem(1192, 1), "第 1 步扣除");
+			handler.stepRemoveItem(1192, 1), "第 1 步扣除");
 		assertTrue(handler.workItems(1192).isEmpty(), "该行未声明 item_check：无交付门");
 		assertFalse(handler.unresolvedGate(1192), "无门行不得 fail-closed");
 		assertNull(handler.cutscene(1192), "该行无过场");

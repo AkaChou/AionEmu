@@ -31,7 +31,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 class Quest1347ClientDialogAlignmentTest {
 	private static final int QUEST_ID = 1347;
-	/** 原版行 acquired_npc_name=Castor / reward_npc_name=Trillian。 / Retail row NPC names. */
+	/**
+	 * 原版行 acquired_npc_name=Castor / reward_npc_name=Trillian。 / Retail row NPC names.
+	 */
 	private static final int START_NPC = 203965;
 	private static final int REPORT_NPC = 203966;
 
@@ -55,9 +57,9 @@ class Quest1347ClientDialogAlignmentTest {
 
 		SimpleHuntHandler handler = SimpleHuntHandler.instance();
 		assertEquals(START_NPC,
-			NativeNpcNameResolver.instance().resolve("Castor").npcIds().get(0), "Castor 解析");
+			NativeNpcNameResolver.instance().resolve("Castor").npcIds().getFirst(), "Castor 解析");
 		assertEquals(REPORT_NPC,
-			NativeNpcNameResolver.instance().resolve("Trillian").npcIds().get(0), "Trillian 解析");
+			NativeNpcNameResolver.instance().resolve("Trillian").npcIds().getFirst(), "Trillian 解析");
 		assertEquals(START_NPC, handler.acquireNpc(QUEST_ID));
 		assertEquals(REPORT_NPC, handler.rewardNpc(QUEST_ID));
 		assertEquals(Integer.valueOf(1348), handler.conQuest(QUEST_ID), "链式接取窗 = 1348");
@@ -76,8 +78,8 @@ class Quest1347ClientDialogAlignmentTest {
 		assertEquals(java.util.Set.of("ELYOS"), metadata.permittedRaces(), "原版 pc_light");
 		List<QuestReward> rewards = metadata.rewards();
 		// 原版 quest.xml：reward_exp1=340413、reward_item1_1=coin_03 1（186000003）。
-		assertTrue(rewards.contains(new QuestReward("EXP", 0, 340413)), () -> rewards.toString());
-		assertTrue(rewards.contains(new QuestReward("ITEM", 186000003, 1)), () -> rewards.toString());
+		assertTrue(rewards.contains(new QuestReward("EXP", 0, 340413)), rewards::toString);
+		assertTrue(rewards.contains(new QuestReward("ITEM", 186000003, 1)), rewards::toString);
 	}
 
 	@Test

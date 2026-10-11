@@ -245,7 +245,7 @@ class RetailQuestAiNameGroupGateTest {
 		return base + GROUPS.indexOf(group) % 4 * 3;
 	}
 
-	private static List<InputStream> openAll(String dir, List<String> files) throws Exception {
+	private static List<InputStream> openAll(String dir, List<String> files) {
 		List<InputStream> inputs = new ArrayList<>();
 		for (String file : files) {
 			inputs.add(open(dir + file));

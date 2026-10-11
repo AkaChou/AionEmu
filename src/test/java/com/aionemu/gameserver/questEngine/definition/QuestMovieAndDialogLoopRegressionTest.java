@@ -4,7 +4,6 @@ import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayInputStream;
-import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -26,7 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class QuestMovieAndDialogLoopRegressionTest {
 
 	@Test
-	void quest14047OnlyPlaysMovieOnActualKillStage() throws Exception {
+	void quest14047OnlyPlaysMovieOnActualKillStage() {
 		QuestDefinition def14047 = definition(14047).definition();
 		// 非目标击杀阶段禁止错配城堡 Boss 233877 循环播放电影 422
 		for (String invalidNode : List.of("started", "s1", "s2", "s3", "s4", "s6")) {
@@ -47,7 +46,7 @@ class QuestMovieAndDialogLoopRegressionTest {
 	}
 
 	@Test
-	void quest14112AdvancesToArmedOnSetpro1() throws Exception {
+	void quest14112AdvancesToArmedOnSetpro1() {
 		QuestDefinition def = definition(14112).definition();
 		QuestTransition talk = def.transitions().stream()
 			.filter(t -> "started".equals(t.sourceNode()) && "armed".equals(t.targetNode())
@@ -59,7 +58,7 @@ class QuestMovieAndDialogLoopRegressionTest {
 	}
 
 	@Test
-	void quest28301GrantsDeviceAndAdvancesToReward() throws Exception {
+	void quest28301GrantsDeviceAndAdvancesToReward() {
 		QuestDefinition def = definition(28301).definition();
 		// 批次 52：拾取页（select2/select2_1）与 SETPRO2 只属于 H-Core（730374），装置交给
 		// Hariken（799530）领奖；三个 NPC 都能发装置的旧迁移形态已收敛，与天族 18301 同形。
@@ -77,7 +76,7 @@ class QuestMovieAndDialogLoopRegressionTest {
 			.toList();
 		assertFalse(completions.isEmpty());
 		assertTrue(completions.stream().allMatch(
-			t -> t.event() instanceof QuestEvent.TalkToNpc ttn && ttn.npcId() == 799530),
+				t -> t.event() instanceof QuestEvent.TalkToNpc ttn && ttn.npcId() == 799530),
 			() -> "28301 completes on Hariken only");
 		assertEquals(0, def.transitions().stream()
 			.filter(t -> "reward".equals(t.targetNode()) && t.event() instanceof QuestEvent.TalkToNpc ttn
@@ -95,7 +94,7 @@ class QuestMovieAndDialogLoopRegressionTest {
 	}
 
 	@Test
-	void quest50010SingleLineAcceptsAndAdvancesToV2() throws Exception {
+	void quest50010SingleLineAcceptsAndAdvancesToV2() {
 		QuestDefinition def = definition(50010).definition();
 		QuestTransition singleLine = def.transitions().stream()
 			.filter(t -> "unaccepted".equals(t.sourceNode()) && "v2".equals(t.targetNode())
@@ -106,7 +105,7 @@ class QuestMovieAndDialogLoopRegressionTest {
 	}
 
 	@Test
-	void quest1423AdvancesToRewardOnSetpro1() throws Exception {
+	void quest1423AdvancesToRewardOnSetpro1() {
 		QuestDefinition def = definition(1423).definition();
 		QuestTransition report = def.transitions().stream()
 			.filter(t -> "started".equals(t.sourceNode()) && "reward".equals(t.targetNode())
@@ -277,7 +276,7 @@ class QuestMovieAndDialogLoopRegressionTest {
 	}
 
 	@Test
-	void quest2230StopsWagerCountdownOnHandIn() throws Exception {
+	void quest2230StopsWagerCountdownOnHandIn() {
 		QuestDefinition def = definition(2230).definition();
 		QuestTransition handIn = def.transitions().stream()
 			.filter(t -> "started".equals(t.sourceNode()) && "reward".equals(t.targetNode())
@@ -285,8 +284,8 @@ class QuestMovieAndDialogLoopRegressionTest {
 				&& Integer.valueOf(QuestDialogAction.CHECK_USER_HAS_QUEST_ITEM.id()).equals(talk.dialogId()))
 			.findFirst().orElseThrow();
 		assertTrue(handIn.afterCommit().stream().anyMatch(after ->
-			after instanceof AfterCommitAction.CancelQuestTimer cancel
-				&& QuestTimerPolicy.VISIBLE_TIMER_ID.equals(cancel.identity().timerId())),
+				after instanceof AfterCommitAction.CancelQuestTimer cancel
+					&& QuestTimerPolicy.VISIBLE_TIMER_ID.equals(cancel.identity().timerId())),
 			"Quest 2230 must stop the 1800s visible wager timer once the fangs are handed in");
 	}
 
@@ -303,7 +302,7 @@ class QuestMovieAndDialogLoopRegressionTest {
 	}
 
 	@Test
-	void synthesisedAndDeclaredPreviewUseTheTableDrivenTierPage() throws Exception {
+	void synthesisedAndDeclaredPreviewUseTheTableDrivenTierPage() {
 		// 未显式声明预览时由编译器合成：第 5 档必须是客户端页面 45，而不是线性推算出的 9。
 		// Synthesised previews must use the tier table: tier 5 is client page 45, never 5 + 4 = 9.
 		assertRewardPreviewPages(compileTierFixture(4, false).definition(), 45);
@@ -321,7 +320,7 @@ class QuestMovieAndDialogLoopRegressionTest {
 		java.util.List<String> violations = new java.util.ArrayList<>();
 		int previewedBlocks = 0;
 		try (var files = Files.newDirectoryStream(
-				Path.of("src/main/resources/aion/data/static_data/quest/definitions/quests"), "*.xml")) {
+			Path.of("src/main/resources/aion/data/static_data/quest/definitions/quests"), "*.xml")) {
 			for (Path file : files) {
 				var document = builder.parse(file.toFile());
 				org.w3c.dom.NodeList blocks = document.getElementsByTagName("npc-complete");
@@ -352,10 +351,10 @@ class QuestMovieAndDialogLoopRegressionTest {
 							&& transition.event() instanceof QuestEvent.TalkToNpc talk
 							&& talk.npcId() == npcId
 							&& (Integer.valueOf(-1).equals(talk.dialogId())
-								|| Integer.valueOf(QuestDialogAction.SELECT_QUEST_REWARD.id()).equals(talk.dialogId()))
+							|| Integer.valueOf(QuestDialogAction.SELECT_QUEST_REWARD.id()).equals(talk.dialogId()))
 							&& transition.afterCommit().stream().anyMatch(after ->
-								after instanceof AfterCommitAction.ShowQuestDialog page
-									&& page.dialogId() == expectedPage));
+							after instanceof AfterCommitAction.ShowQuestDialog page
+								&& page.dialogId() == expectedPage));
 					if (!routed) {
 						violations.add("Quest " + questId + " npc-complete(source=" + source + ", npc=" + npcId
 							+ ") tier " + tier + " preview must open page " + expectedPage);
@@ -386,7 +385,7 @@ class QuestMovieAndDialogLoopRegressionTest {
 				if (transition.targetNode() != null) {
 					for (AfterCommitAction after : transition.afterCommit()) {
 						if (after instanceof AfterCommitAction.ShowQuestDialog page
-								&& rewardTierOf(page.dialogId()) >= 0) {
+							&& rewardTierOf(page.dialogId()) >= 0) {
 							entryPages.computeIfAbsent(transition.targetNode(), ignored -> new java.util.TreeSet<>())
 								.add(page.dialogId());
 						}
@@ -455,7 +454,7 @@ class QuestMovieAndDialogLoopRegressionTest {
 		List<QuestTransition> previews = definition.transitions().stream()
 			.filter(transition -> transition.event() instanceof QuestEvent.TalkToNpc talk
 				&& (Integer.valueOf(-1).equals(talk.dialogId())
-					|| Integer.valueOf(QuestDialogAction.SELECT_QUEST_REWARD.id()).equals(talk.dialogId())))
+				|| Integer.valueOf(QuestDialogAction.SELECT_QUEST_REWARD.id()).equals(talk.dialogId())))
 			.toList();
 		assertFalse(previews.isEmpty(), "expected a reward preview route");
 		for (QuestTransition preview : previews) {
@@ -518,11 +517,11 @@ class QuestMovieAndDialogLoopRegressionTest {
 	}
 
 	@Test
-	void quest50023TiersUseTheirOwnClientRewardWindow() throws Exception {
+	void quest50023TiersUseTheirOwnClientRewardWindow() {
 		QuestDefinition def = definition(50023).definition();
 		assertEquals(2, def.metadata().rewardGroups().size(), "Quest 50023 must declare 2 reward groups");
-		assertEquals(188051780, def.metadata().rewardGroups().get(0).rewards().get(0).id());
-		assertEquals(188051782, def.metadata().rewardGroups().get(1).rewards().get(0).id());
+		assertEquals(188051780, def.metadata().rewardGroups().getFirst().rewards().getFirst().id());
+		assertEquals(188051782, def.metadata().rewardGroups().get(1).rewards().getFirst().id());
 
 		// 档位 1（1 个线索）展示 select_quest_reward1；档位 2（3 个线索）展示 select_quest_reward2。
 		// Tier 1 (1 clue) opens select_quest_reward1; tier 2 (3 clues) opens select_quest_reward2.
@@ -531,15 +530,15 @@ class QuestMovieAndDialogLoopRegressionTest {
 	}
 
 	private static void assertRewardWindow(QuestDefinition definition, QuestDialogAction action, int clueCount,
-			QuestDialogPage expectedPage) {
+										   QuestDialogPage expectedPage) {
 		QuestTransition tier = definition.transitions().stream()
 			.filter(candidate -> candidate.event() instanceof QuestEvent.TalkToNpc talk
 				&& Integer.valueOf(action.id()).equals(talk.dialogId())
 				&& candidate.conditions().stream().anyMatch(condition ->
-					condition instanceof QuestCondition.HasItem hasItem && hasItem.count() == clueCount))
+				condition instanceof QuestCondition.HasItem hasItem && hasItem.count() == clueCount))
 			.findFirst().orElseThrow(() -> new AssertionError("missing tier route for action " + action));
 		assertTrue(tier.afterCommit().stream().anyMatch(after ->
-			after instanceof AfterCommitAction.ShowQuestDialog page && page.dialogId() == expectedPage.id()),
+				after instanceof AfterCommitAction.ShowQuestDialog page && page.dialogId() == expectedPage.id()),
 			"tier route for " + action + " must open " + expectedPage);
 	}
 

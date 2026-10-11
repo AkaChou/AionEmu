@@ -207,7 +207,7 @@ class QuestAiDialogBindingGateTest {
 		}
 	}
 
-	private static Set<Integer> scanXmlLaneIds() throws Exception {
+	private static Set<Integer> scanXmlLaneIds() {
 		Set<Integer> ids = new TreeSet<>();
 		for (File file : xmlLaneFiles()) {
 			Matcher matcher = XML_ID_FILE.matcher(file.getName());

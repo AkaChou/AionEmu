@@ -9,6 +9,7 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 /**
  * Locks the mirrored data-driven report-to-many quests 18805 and 28805.
@@ -20,7 +21,7 @@ class ReportToManyMirrorQuestFamilyTest {
 		new Case(28805, "ASMODIANS", 830154, 830521, 730525));
 
 	@Test
-	void mirroredReportToManyChainsKeepTheirStageOwners() throws Exception {
+	void mirroredReportToManyChainsKeepTheirStageOwners() {
 		for (Case contract : CASES) {
 			QuestDefinition definition = definition(contract.questId());
 			assertEquals(List.of(contract.race()), definition.metadata().permittedRaces().stream().toList());
@@ -82,7 +83,7 @@ class ReportToManyMirrorQuestFamilyTest {
 			.filter(candidate -> "complete".equals(candidate.targetNode()))
 			.filter(candidate -> candidate.event() instanceof QuestEvent.TalkToNpc)
 			.toList();
-		assertTrue(!completions.isEmpty());
+		assertFalse(completions.isEmpty());
 		assertTrue(completions.stream()
 			.map(QuestTransition::event)
 			.map(QuestEvent.TalkToNpc.class::cast)
@@ -93,13 +94,13 @@ class ReportToManyMirrorQuestFamilyTest {
 	}
 
 	private static void assertPage(QuestDefinition definition, String source, int npcId,
-			QuestDialogAction action, QuestDialogPage page) {
+								   QuestDialogAction action, QuestDialogPage page) {
 		assertPageTransition(definition, source, source, npcId, action, List.of(), page);
 	}
 
 	private static void assertPageTransition(QuestDefinition definition, String source,
-			String target, int npcId, QuestDialogAction action, List<QuestCondition> conditions,
-			QuestDialogPage page) {
+											 String target, int npcId, QuestDialogAction action, List<QuestCondition> conditions,
+											 QuestDialogPage page) {
 		QuestTransition transition = talk(definition, source, npcId, action, conditions);
 		assertEquals(target, transition.targetNode());
 		assertEquals(List.of(), transition.actions());
@@ -108,8 +109,8 @@ class ReportToManyMirrorQuestFamilyTest {
 	}
 
 	private static void assertTalk(QuestDefinition definition, String source, String target,
-			int npcId, QuestDialogAction action, List<QuestCondition> conditions,
-			List<QuestAction> actions, List<AfterCommitAction> afterCommit) {
+								   int npcId, QuestDialogAction action, List<QuestCondition> conditions,
+								   List<QuestAction> actions, List<AfterCommitAction> afterCommit) {
 		QuestTransition transition = talk(definition, source, npcId, action, conditions);
 		assertEquals(target, transition.targetNode());
 		assertEquals(conditions, transition.conditions());
@@ -118,7 +119,7 @@ class ReportToManyMirrorQuestFamilyTest {
 	}
 
 	private static QuestTransition talk(QuestDefinition definition, String source, int npcId,
-			QuestDialogAction action, List<QuestCondition> conditions) {
+										QuestDialogAction action, List<QuestCondition> conditions) {
 		QuestEvent.TalkToNpc event = new QuestEvent.TalkToNpc(npcId, action.id());
 		return definition.transitions().stream()
 			// 生产定义带无 source 的 enter-world 自愈边，按 source 过滤时必须容忍 null。
@@ -136,7 +137,7 @@ class ReportToManyMirrorQuestFamilyTest {
 	}
 
 	private static void assertNode(QuestDefinition definition, String label, QuestStatus status,
-			int var0) {
+								   int var0) {
 		QuestNode node = definition.nodes().stream()
 			.filter(candidate -> candidate.label().equals(label))
 			.findFirst()

@@ -2,6 +2,7 @@ package com.aionemu.gameserver.questEngine.runtime;
 
 import com.aionemu.gameserver.questEngine.definition.ProductionQuestDefinitions;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -11,10 +12,10 @@ import java.util.List;
 import java.util.Set;
 
 import org.junit.jupiter.api.Test;
-import java.io.InputStream;
+
 import java.util.Objects;
+
 import com.aionemu.gameserver.questEngine.definition.CompiledQuestDefinition;
-import com.aionemu.gameserver.questEngine.definition.QuestDefinitionXmlCompiler;
 
 import com.aionemu.gameserver.questEngine.definition.QuestAction;
 import com.aionemu.gameserver.questEngine.definition.QuestCondition;
@@ -36,7 +37,9 @@ class QuestFactRequirementsTest {
 
 	private static final int QUEST_ID = 14010;
 
-	/** 无任何读取者时不得采集任何可选事实族。 / No reader means no optional family. */
+	/**
+	 * 无任何读取者时不得采集任何可选事实族。 / No reader means no optional family.
+	 */
 	@Test
 	void plainTransitionRequiresNoOptionalFacts() {
 		QuestFactRequirements requirements = requirements(List.of(), List.of());
@@ -50,7 +53,9 @@ class QuestFactRequirementsTest {
 		assertTrue(requirements.eventActivityQuestIds().isEmpty());
 	}
 
-	/** 任务 ID 集合只由四个完成/进行中条件触发。 / Quest-id sets are triggered only by the four completion/progress conditions. */
+	/**
+	 * 任务 ID 集合只由四个完成/进行中条件触发。 / Quest-id sets are triggered only by the four completion/progress conditions.
+	 */
 	@Test
 	void questIdSetConditionsRequireQuestIdFacts() {
 		assertTrue(requirements(List.of(new QuestCondition.QuestsFinished(Set.of(14010))), List.of()).questIdSets());
@@ -59,7 +64,9 @@ class QuestFactRequirementsTest {
 		assertTrue(requirements(List.of(new QuestCondition.NoAcquiredQuest(Set.of(14010))), List.of()).questIdSets());
 	}
 
-	/** 背包事实由物品条件与增删物品动作触发；完成任务/放弃任务也要采（工作物品清理会读数量）。 */
+	/**
+	 * 背包事实由物品条件与增删物品动作触发；完成任务/放弃任务也要采（工作物品清理会读数量）。
+	 */
 	@Test
 	void inventoryFactsFollowItemReadersIncludingWorkItemCleanup() {
 		assertTrue(requirements(List.of(new QuestCondition.HasItem(182200201, 1, true)), List.of()).inventory());
@@ -69,7 +76,9 @@ class QuestFactRequirementsTest {
 		assertTrue(requirements(List.of(), List.of(new QuestAction.AbandonQuest())).inventory());
 	}
 
-	/** 装备事实由套装/装备条件与卸下动作触发。 / Equipment facts follow set/item conditions and unequip actions. */
+	/**
+	 * 装备事实由套装/装备条件与卸下动作触发。 / Equipment facts follow set/item conditions and unequip actions.
+	 */
 	@Test
 	void equipmentFactsFollowEquipmentReaders() {
 		assertTrue(requirements(List.of(new QuestCondition.EquipmentSetEquipped(Set.of(6), 2, true)), List.of())
@@ -78,7 +87,9 @@ class QuestFactRequirementsTest {
 		assertTrue(requirements(List.of(), List.of(new QuestAction.UnequipItem(100000001, 0))).equipment());
 	}
 
-	/** 制作事实由两个制作条件触发（制作动作只写技能/配方，不读快照）。 / Craft facts follow the two craft conditions. */
+	/**
+	 * 制作事实由两个制作条件触发（制作动作只写技能/配方，不读快照）。 / Craft facts follow the two craft conditions.
+	 */
 	@Test
 	void craftFactsFollowCraftConditionsOnly() {
 		assertTrue(requirements(List.of(new QuestCondition.RecipeKnown(155001001, true)), List.of()).craft());
@@ -86,7 +97,9 @@ class QuestFactRequirementsTest {
 		assertFalse(requirements(List.of(), List.of(new QuestAction.GrantCraftSkill(40001, 400, true))).craft());
 	}
 
-	/** 开始资格与事件服务事实沿用旧门控语义，自引用 questId==0 解析为当前任务。 */
+	/**
+	 * 开始资格与事件服务事实沿用旧门控语义，自引用 questId==0 解析为当前任务。
+	 */
 	@Test
 	void startEligibilityAndEventActivityFollowLegacyGates() {
 		QuestFactRequirements requirements = requirements(
@@ -98,7 +111,9 @@ class QuestFactRequirementsTest {
 		assertEquals(Set.of(QUEST_ID, 80029), requirements.eventActivityQuestIds());
 	}
 
-	/** 兼容入口（旧三参数重载）必须保守全采，否则旧调用方会读到未捕获事实。 */
+	/**
+	 * 兼容入口（旧三参数重载）必须保守全采，否则旧调用方会读到未捕获事实。
+	 */
 	@Test
 	void conservativeEntryPointCapturesEveryOptionalFamily() {
 		QuestFactRequirements requirements = QuestFactRequirements.conservative(true, Set.of(80029), true);
@@ -112,7 +127,9 @@ class QuestFactRequirementsTest {
 		assertEquals(Set.of(80029), requirements.eventActivityQuestIds());
 	}
 
-	/** 事实需求不可变且拒绝 null。 / Requirements are immutable and reject nulls. */
+	/**
+	 * 事实需求不可变且拒绝 null。 / Requirements are immutable and reject nulls.
+	 */
 	@Test
 	void requirementsAreImmutableAndNonNull() {
 		QuestFactRequirements requirements = QuestFactRequirements.conservative(false, Set.of(80029), false);
@@ -133,7 +150,9 @@ class QuestFactRequirementsTest {
 			.findFirst().orElseThrow();
 	}
 
-	/** 接取路由：unaccepted 出发、目标为 START 投影节点（网格零段或 started）。 */
+	/**
+	 * 接取路由：unaccepted 出发、目标为 START 投影节点（网格零段或 started）。
+	 */
 	private static QuestTransition findAcquire(CompiledQuestDefinition compiled) {
 		return compiled.definition().transitions().stream()
 			.filter(t -> "unaccepted".equals(t.sourceNode()) && t.targetNode() != null

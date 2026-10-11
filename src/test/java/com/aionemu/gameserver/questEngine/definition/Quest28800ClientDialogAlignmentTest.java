@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
@@ -33,7 +32,7 @@ class Quest28800ClientDialogAlignmentTest {
 		assertEquals(798458, handler.acquireNpc(18800), "接取 NPC");
 		assertEquals(830365, handler.rewardNpc(18800), "交付 NPC");
 		assertFalse(handler.acquireNpc(18800).equals(handler.rewardNpc(18800)),
-				"接取与交付 owner 分离");
+			"接取与交付 owner 分离");
 		assertEquals(0, handler.relayCount(18800), "中继步数");
 		assertNull(handler.acceptGiveItem(18800), "接取侧无发放");
 		assertTrue(handler.workItems(18800).isEmpty(), "该行未声明 item_check：无交付门");
@@ -45,7 +44,7 @@ class Quest28800ClientDialogAlignmentTest {
 		assertEquals(830001, handler.acquireNpc(18801), "接取 NPC");
 		assertEquals(830005, handler.rewardNpc(18801), "交付 NPC");
 		assertFalse(handler.acquireNpc(18801).equals(handler.rewardNpc(18801)),
-				"接取与交付 owner 分离");
+			"接取与交付 owner 分离");
 		assertEquals(0, handler.relayCount(18801), "中继步数");
 		assertNull(handler.acceptGiveItem(18801), "接取侧无发放");
 		assertTrue(handler.workItems(18801).isEmpty(), "该行未声明 item_check：无交付门");
@@ -57,7 +56,7 @@ class Quest28800ClientDialogAlignmentTest {
 		assertEquals(798459, handler.acquireNpc(28800), "接取 NPC");
 		assertEquals(830532, handler.rewardNpc(28800), "交付 NPC");
 		assertFalse(handler.acquireNpc(28800).equals(handler.rewardNpc(28800)),
-				"接取与交付 owner 分离");
+			"接取与交付 owner 分离");
 		assertEquals(0, handler.relayCount(28800), "中继步数");
 		assertNull(handler.acceptGiveItem(28800), "接取侧无发放");
 		assertTrue(handler.workItems(28800).isEmpty(), "该行未声明 item_check：无交付门");
@@ -69,7 +68,7 @@ class Quest28800ClientDialogAlignmentTest {
 		assertEquals(830085, handler.acquireNpc(28801), "接取 NPC");
 		assertEquals(830102, handler.rewardNpc(28801), "交付 NPC");
 		assertFalse(handler.acquireNpc(28801).equals(handler.rewardNpc(28801)),
-				"接取与交付 owner 分离");
+			"接取与交付 owner 分离");
 		assertEquals(0, handler.relayCount(28801), "中继步数");
 		assertNull(handler.acceptGiveItem(28801), "接取侧无发放");
 		assertTrue(handler.workItems(28801).isEmpty(), "该行未声明 item_check：无交付门");

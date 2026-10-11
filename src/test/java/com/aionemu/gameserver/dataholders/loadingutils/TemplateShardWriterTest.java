@@ -14,6 +14,7 @@ import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
@@ -53,7 +54,7 @@ class TemplateShardWriterTest {
 		long largestShard = shards.stream().mapToLong(File::length).max().orElseThrow();
 		assertTrue(largestShard < smallestShard * 2,
 			"source shards should be balanced by XML size, not capped by template count");
-		String firstShard = Files.readString(shards.get(0).toPath(), StandardCharsets.UTF_8);
+		String firstShard = Files.readString(shards.getFirst().toPath(), StandardCharsets.UTF_8);
 		assertTrue(firstShard.startsWith("<?xml"));
 		assertTrue(firstShard.contains("<npc_templates>"));
 		String secondShard = Files.readString(shards.get(1).toPath(), StandardCharsets.UTF_8);

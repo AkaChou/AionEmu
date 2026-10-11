@@ -10,7 +10,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
@@ -35,7 +34,9 @@ import com.aionemu.gameserver.questEngine.tablelane.NativeQuestTableLoader.Simpl
 class NativeQuestTableLoaderTest {
 
 	private static final int EXPECTED_ROWS = 1863;
-	/** 原版休眠零计数行（相机行必须拒绝派生）。 / Retail-dormant zero-count rows (camera derivation must refuse). */
+	/**
+	 * 原版休眠零计数行（相机行必须拒绝派生）。 / Retail-dormant zero-count rows (camera derivation must refuse).
+	 */
 	private static final Set<Integer> ZERO_COUNT_ROWS = Set.of(11013, 11014, 11208, 11209);
 
 	@Test
@@ -66,9 +67,9 @@ class NativeQuestTableLoaderTest {
 		// P0a 相机锚：2354 = 6 位 {槽1:6, 槽2:4}。 / P0a camera anchor: 2354 = 6-bit {slot1:6, slot2:4}.
 		NativeQuestTableLoader.SimpleHuntRow row2354 = loader.require(2354);
 		assertEquals(Map.of(1, 6, 2, 4), row2354.killSlots().entrySet().stream()
-				.collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue().count())));
+			.collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue().count())));
 		assertTrue(!row2354.acquiredNpcName().isBlank());
-		assertTrue(!row2354.rewardNpcName().isBlank());
+		assertFalse(row2354.rewardNpcName().isBlank());
 		// P1B 残余轴：链式接取窗（0x1e 槽）与过场（0x35 槽）列按原文装载。
 		// P1B residual axes: the chain-window (slot 0x1e) and cutscene (slot 0x35) columns load verbatim.
 		assertNull(row2354.conQuest());
@@ -80,9 +81,9 @@ class NativeQuestTableLoaderTest {
 		assertEquals(362, row3016.cutsceneId());
 		assertEquals(1007, row3016.cutsceneAction());
 		assertEquals(132, loader.rows().stream().filter(row -> row.conQuest() != null).count(),
-				"原版 SimpleHunt con_quest 覆盖 132 行");
+			"原版 SimpleHunt con_quest 覆盖 132 行");
 		assertEquals(3, loader.rows().stream().filter(row -> row.cutsceneId() != null).count(),
-				"原版 SimpleHunt cutsceneid1 覆盖 3 行（3016/4007/4014）");
+			"原版 SimpleHunt cutsceneid1 覆盖 3 行（3016/4007/4014）");
 		// 13912 形：槽 1 有怪，槽 3 有计数无怪（原版自身无事件源，行为永不满足）。 / The 13912 shape:
 		// slot 1 has monsters; slot 3 has a count and no monsters (retail wires no event source either).
 		NativeQuestTableLoader.SimpleHuntRow row13912 = loader.require(13912);
@@ -127,7 +128,7 @@ class NativeQuestTableLoaderTest {
 		assertEquals(ZERO_COUNT_ROWS, zeroCount);
 		for (int questId : ZERO_COUNT_ROWS) {
 			IllegalStateException rejected = assertThrows(IllegalStateException.class,
-					() -> loader.cameraSpec(loader.require(questId)));
+				() -> loader.cameraSpec(loader.require(questId)));
 			assertTrue(rejected.getMessage().startsWith("NATIVE_CAMERA_ROW_MISSING"), rejected.getMessage());
 		}
 	}
@@ -136,9 +137,9 @@ class NativeQuestTableLoaderTest {
 	void wholeTableRegistersIntoTheCameraRegistry() {
 		NativeQuestTableLoader loader = NativeQuestTableLoader.instance();
 		List<CameraRegistry.RowSpec> specs = loader.rows().stream()
-				.filter(row -> !row.killSlots().isEmpty())
-				.map(loader::cameraSpec)
-				.toList();
+			.filter(row -> !row.killSlots().isEmpty())
+			.map(loader::cameraSpec)
+			.toList();
 		CameraRegistry registry = CameraRegistry.fromSpecs(specs);
 		// 1859 = 1863 - 4 零计数休眠行；全表零拒绝（无混宽/无超掩码/无 fullValue 矛盾）。
 		// 「1859 之中哪些行接入运行时」由切换批按脚本接线集决定（对拍证据：1812 接线 / 47+4 休眠，
@@ -162,7 +163,7 @@ class NativeQuestTableLoaderTest {
 		assertEquals(3152, loader.talkSize());
 		List<SimpleTalkRow> rows = List.copyOf(loader.talkRows());
 		assertTrue(rows.stream().allMatch(row ->
-			!row.acquiredNpcName().isBlank() && !row.rewardNpcName().isBlank()),
+				!row.acquiredNpcName().isBlank() && !row.rewardNpcName().isBlank()),
 			"原版 3152/3152 行都带接取与交付 NPC / every retail row carries both NPCs");
 		assertEquals(468, rows.stream().filter(row -> !row.talkNpcNames().isEmpty()).count(),
 			"talk_npc1..3 中继链行数 / relay-chain rows");
@@ -172,7 +173,9 @@ class NativeQuestTableLoaderTest {
 			"con_quest 行数 / chain-acquire rows");
 	}
 
-	/** 长尾列按原文装载并按原版分槽：give_item = 接取侧，give_itemK/remove_itemK = 第 K 步。 */
+	/**
+	 * 长尾列按原文装载并按原版分槽：give_item = 接取侧，give_itemK/remove_itemK = 第 K 步。
+	 */
 	@Test
 	void talkRowsKeepRetailTextForLongTailColumns() {
 		NativeQuestTableLoader loader = NativeQuestTableLoader.instance();
@@ -204,7 +207,9 @@ class NativeQuestTableLoaderTest {
 		assertEquals(1009, cutscene.cutsceneAction());
 	}
 
-	/** 双 NPC 缺一即 fail-closed（原版不存在此形）。 / A missing NPC fails closed: retail has no such shape. */
+	/**
+	 * 双 NPC 缺一即 fail-closed（原版不存在此形）。 / A missing NPC fails closed: retail has no such shape.
+	 */
 	@Test
 	void talkRowsFailClosedWhenAnNpcIsMissing() {
 		IllegalStateException missingReward = assertThrows(IllegalStateException.class,
@@ -245,7 +250,7 @@ class NativeQuestTableLoaderTest {
 	void negativeCasesFailClosed() {
 		// 重复任务 id。 / Duplicate quest id.
 		IllegalStateException duplicate = assertThrows(IllegalStateException.class, () -> NativeQuestTableLoader
-				.parse(new ByteArrayInputStream("""
+			.parse(new ByteArrayInputStream("""
 				<?xml version="1.0" encoding="UTF-8"?>
 				<quest_simplehunts>
 					<id id="9001"><acquired_npc_name>a</acquired_npc_name><reward_npc_name>a</reward_npc_name>
@@ -257,7 +262,7 @@ class NativeQuestTableLoaderTest {
 		assertTrue(duplicate.getMessage().startsWith("NATIVE_TABLE_PARSE_FAILED"), duplicate.getMessage());
 		// 有 monster 无 count：原版不存在此形。 / Monster without count: no such retail shape.
 		IllegalStateException missingCount = assertThrows(IllegalStateException.class,
-				() -> NativeQuestTableLoader.parse(new ByteArrayInputStream("""
+			() -> NativeQuestTableLoader.parse(new ByteArrayInputStream("""
 				<?xml version="1.0" encoding="UTF-8"?>
 				<quest_simplehunts>
 					<id id="9002"><acquired_npc_name>a</acquired_npc_name><reward_npc_name>a</reward_npc_name>
@@ -265,10 +270,10 @@ class NativeQuestTableLoaderTest {
 				</quest_simplehunts>
 				""".getBytes(StandardCharsets.UTF_8))));
 		assertTrue(missingCount.getMessage().startsWith("NATIVE_TABLE_PARSE_FAILED"),
-				missingCount.getMessage());
+			missingCount.getMessage());
 		// count 非数字。 / Non-numeric count.
 		IllegalStateException garbage = assertThrows(IllegalStateException.class,
-				() -> NativeQuestTableLoader.parse(new ByteArrayInputStream("""
+			() -> NativeQuestTableLoader.parse(new ByteArrayInputStream("""
 				<?xml version="1.0" encoding="UTF-8"?>
 				<quest_simplehunts>
 					<id id="9003"><acquired_npc_name>a</acquired_npc_name><reward_npc_name>a</reward_npc_name>
@@ -278,8 +283,10 @@ class NativeQuestTableLoaderTest {
 		assertTrue(garbage.getMessage().startsWith("NATIVE_TABLE_PARSE_FAILED"), garbage.getMessage());
 	}
 
-	/** P5：SimpleUseItem 160 行 + SimpleItemPlay 43 行装载，长尾列按原文（含第 K 步位置保留）。 /
-	 * P5: the use-item (160) and item-play (43) tables load with their long-tail columns verbatim. */
+	/**
+	 * P5：SimpleUseItem 160 行 + SimpleItemPlay 43 行装载，长尾列按原文（含第 K 步位置保留）。 /
+	 * P5: the use-item (160) and item-play (43) tables load with their long-tail columns verbatim.
+	 */
 	@Test
 	void loadsFullUseItemAndItemPlayTables() {
 		NativeQuestTableLoader loader = NativeQuestTableLoader.instance();
@@ -307,9 +314,11 @@ class NativeQuestTableLoaderTest {
 		assertEquals(Arrays.asList(null, null), play.stepGiveItems());
 	}
 
-	/** P6：CombineTask 574 行装载，接取 NPC 对/技能/技能点/配方/产物/分量按原文（分量位置保留）。 /
+	/**
+	 * P6：CombineTask 574 行装载，接取 NPC 对/技能/技能点/配方/产物/分量按原文（分量位置保留）。 /
 	 * P6: the 574 CombineTask rows load verbatim (accept npc pair, skill, skill point, recipe, product,
-	 * components with their retail positions kept). */
+	 * components with their retail positions kept).
+	 */
 	@Test
 	void loadsFullCombineTaskTable() {
 		NativeQuestTableLoader loader = NativeQuestTableLoader.instance();
@@ -334,7 +343,7 @@ class NativeQuestTableLoaderTest {
 		assertEquals(152, loader.combineRows().stream()
 			.filter(candidate -> candidate.components().get(1) != null).count(), "give_component2 152 行");
 		assertTrue(loader.combineRows().stream()
-			.allMatch(candidate -> candidate.components().subList(2, 8).stream().allMatch(java.util.Objects::isNull)),
+				.allMatch(candidate -> candidate.components().subList(2, 8).stream().allMatch(java.util.Objects::isNull)),
 			"原版数据只有 1/2 两个分量槽");
 	}
 }

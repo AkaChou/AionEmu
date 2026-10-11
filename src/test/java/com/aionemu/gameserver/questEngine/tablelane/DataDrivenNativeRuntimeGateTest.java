@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
@@ -78,7 +77,9 @@ class DataDrivenNativeRuntimeGateTest {
 	private static final Path ZONES_DIR = Path.of("src/main/resources/aion/data/static_data/zones");
 	private static final Pattern ZONE_NAME = Pattern.compile("<zone\\b[^>]*\\bname=\"([^\"]+)\"");
 
-	/** 切换集规模（原版活行 ∧ owner RETAIL_TABLE）。 / Switch-set size frozen by the P7 contract batch. */
+	/**
+	 * 切换集规模（原版活行 ∧ owner RETAIL_TABLE）。 / Switch-set size frozen by the P7 contract batch.
+	 */
 	private static final int SWITCH_ROWS = 1467;
 
 	private static DataDrivenQuestTable table;
@@ -131,7 +132,9 @@ class DataDrivenNativeRuntimeGateTest {
 			NativeReportRewardFlow.withSink(claims), ChainAcquireEdges.instance());
 	}
 
-	/** 记录式领奖结算体（交付报告面接线断言用）。 / A recording claim sink for the delivery face. */
+	/**
+	 * 记录式领奖结算体（交付报告面接线断言用）。 / A recording claim sink for the delivery face.
+	 */
 	private static final class RecordingClaims implements NativeReportRewardFlow.CompletionSink {
 		private int calls;
 
@@ -256,7 +259,9 @@ class DataDrivenNativeRuntimeGateTest {
 		}
 	}
 
-	/** ② 逐行裁定闭合：切换集 = 可路由 ∪ 冻结（互斥，无第三桶）。 / Closed routed/frozen split. */
+	/**
+	 * ② 逐行裁定闭合：切换集 = 可路由 ∪ 冻结（互斥，无第三桶）。 / Closed routed/frozen split.
+	 */
 	@Test
 	void routedAndFrozenPartitionTheSwitchSet() {
 		assertEquals(SWITCH_ROWS, switchSet.size(), "切换集规模冻结");
@@ -270,7 +275,9 @@ class DataDrivenNativeRuntimeGateTest {
 		assertTrue(java.util.Collections.disjoint(routed, frozen), "两桶互斥");
 	}
 
-	/** ③ 兴趣面逐元素复算：每个已路由步在对应兴趣面上恰好有键。 / Interest closure per kind. */
+	/**
+	 * ③ 兴趣面逐元素复算：每个已路由步在对应兴趣面上恰好有键。 / Interest closure per kind.
+	 */
 	@Test
 	void everyRoutedStepYieldsItsInterestKey() {
 		int hunt = 0;
@@ -304,7 +311,7 @@ class DataDrivenNativeRuntimeGateTest {
 					case ITEM_PLAY -> {
 						itemPlay++;
 						assertTrue(runtime.itemPlayInterests().values().stream()
-							.anyMatch(hits -> contains(hits, expected)),
+								.anyMatch(hits -> contains(hits, expected)),
 							"ItemPlay 步必须落物品使用兴趣（原版 kind 3 = 事件 5 = User__UseItem）：" + questId + "#" + step.index());
 					}
 					case TALK_FOBJ -> {
@@ -336,7 +343,7 @@ class DataDrivenNativeRuntimeGateTest {
 	}
 
 	private static boolean contains(List<DataDrivenNativeRuntime.StepHit> hits,
-			DataDrivenNativeRuntime.StepHit expected) {
+									DataDrivenNativeRuntime.StepHit expected) {
 		for (DataDrivenNativeRuntime.StepHit hit : hits) {
 			if (hit.questId() == expected.questId() && hit.stepIndex() == expected.stepIndex()) {
 				return true;
@@ -345,7 +352,9 @@ class DataDrivenNativeRuntimeGateTest {
 		return false;
 	}
 
-	/** ④ Hunt：组计数按原版守卫自增；达标收口。 / Hunt group counters and closure. */
+	/**
+	 * ④ Hunt：组计数按原版守卫自增；达标收口。 / Hunt group counters and closure.
+	 */
 	@Test
 	void huntKillAdvancesGroupCounter() {
 		int questId = firstRouted(Kind.HUNT, 0);
@@ -383,7 +392,7 @@ class DataDrivenNativeRuntimeGateTest {
 		far.getQuestStateList().getQuestState(questId).getQuestVars().setVar(stepIndex);
 		assertFalse(runtime.onKillAt(far, npcId, 51f, 0f, 0f), "50m 外距离门必须拒绝进度");
 		assertEquals(stepIndex, DataDrivenProgress
-			.step(far.getQuestStateList().getQuestState(questId).getQuestVars().getQuestVars()),
+				.step(far.getQuestStateList().getQuestState(questId).getQuestVars().getQuestVars()),
 			"距离门外不得写 vars");
 		// 边界：恰好 2500（50m）= 通过（原版是严格大于才拒绝）；z 轴参与平方和。
 		// Boundary: exactly 2500 (50 m) passes (retail rejects only strictly greater); z enters the sum.
@@ -392,7 +401,9 @@ class DataDrivenNativeRuntimeGateTest {
 			"三维平方和超界必须拒绝");
 	}
 
-	/** ⑤ EnterArea / EnterWorld：直接步进（原版写目标步）。 / Direct advance kinds. */
+	/**
+	 * ⑤ EnterArea / EnterWorld：直接步进（原版写目标步）。 / Direct advance kinds.
+	 */
 	@Test
 	void directAdvanceKindsMoveTheStepNumber() {
 		assertDirectAdvance(Kind.ENTER_AREA, (player, questId, stepIndex, step) -> {
@@ -583,7 +594,9 @@ class DataDrivenNativeRuntimeGateTest {
 			|| state.getStatus() == QuestStatus.REWARD, "组 1 计数或收口");
 	}
 
-	/** ⑥ TalkFOBJ：组计数二值（0→1），超杀零动作。 / TalkFOBJ binary groups. */
+	/**
+	 * ⑥ TalkFOBJ：组计数二值（0→1），超杀零动作。 / TalkFOBJ binary groups.
+	 */
 	@Test
 	void talkFobjGroupsAreBinary() {
 		int questId = firstRouted(Kind.TALK_FOBJ, 0);
@@ -597,7 +610,9 @@ class DataDrivenNativeRuntimeGateTest {
 		assertFalse(again, "二值组槽已置 1 ⇒ 超杀零动作（原版 uVar15 == 0 守卫）");
 	}
 
-	/** ⑦ PvP：军衔区间 + 等级差闸门（原版 `FUN_180c46980`）。 / PvP gates. */
+	/**
+	 * ⑦ PvP：军衔区间 + 等级差闸门（原版 `FUN_180c46980`）。 / PvP gates.
+	 */
 	@Test
 	void pvpGatesFollowTheRetailComparisons() {
 		int questId = firstRoutedPvpWithGate();
@@ -657,7 +672,7 @@ class DataDrivenNativeRuntimeGateTest {
 		setLevel(killer, 60);
 		assertFalse(runtime.onKillRanked(killer, victim, rank), "50m 外 PvP 进度必须零动作");
 		assertEquals(step.index(), DataDrivenProgress
-			.step(killer.getQuestStateList().getQuestState(questId).getQuestVars().getQuestVars()),
+				.step(killer.getQuestStateList().getQuestState(questId).getQuestVars().getQuestVars()),
 			"距离门外不得写 vars");
 		// 界内回到既有闸门链（同图同闸门参数 ⇒ 推进）。 / Inside, the existing gate chain resumes.
 		place(victim, 49f, 0f, 0f);
@@ -877,7 +892,9 @@ class DataDrivenNativeRuntimeGateTest {
 		assertFalse(empty.onEnterWorld(NativeTalkFixture.player(), 210050000), "空路由视图进世界恒零动作");
 	}
 
-	/** ⑧ 冻结面：冻结行不得进任何兴趣面，原因闭合（e2 后 = ZONE_ABSENT + ACTION_UNFACED）。 */
+	/**
+	 * ⑧ 冻结面：冻结行不得进任何兴趣面，原因闭合（e2 后 = ZONE_ABSENT + ACTION_UNFACED）。
+	 */
 	@Test
 	void frozenRowsAreNeverRouted() {
 		assertFalse(runtime.frozenQuestIds().isEmpty(), "步 e2 后仍须有冻结行");
@@ -899,12 +916,16 @@ class DataDrivenNativeRuntimeGateTest {
 
 	// ------------------------------------------------------------------ 链式接取面（acquire=none）
 
-	/** 已注册链式后继冻结集（资源 34 行 − 6 XML_RETENTION − 1 冻结 = 27）。 / The frozen registered successor set. */
+	/**
+	 * 已注册链式后继冻结集（资源 34 行 − 6 XML_RETENTION − 1 冻结 = 27）。 / The frozen registered successor set.
+	 */
 	private static final Set<Integer> CHAIN_ACQUIRE_SUCCESSORS = Set.of(
 		10011, 10033, 10034, 10035, 10111, 10113, 10501, 10502, 10503, 10504, 10505, 10506, 10507, 10526,
 		20011, 20033, 20034, 20111, 20113, 20501, 20502, 20503, 20504, 20505, 20506, 20507, 20526);
 
-	/** 退役证据面 5 行的精确前序表（10032/20035 为 XML 行、20032 冻结 ⇒ 不在注册面）。 */
+	/**
+	 * 退役证据面 5 行的精确前序表（10032/20035 为 XML 行、20032 冻结 ⇒ 不在注册面）。
+	 */
 	private static final Map<Integer, List<Integer>> RETIRED_EVIDENCE_PREDECESSORS = Map.of(
 		10033, List.of(10032),
 		10034, List.of(10033),
@@ -912,7 +933,9 @@ class DataDrivenNativeRuntimeGateTest {
 		20033, List.of(20032),
 		20034, List.of(20033));
 
-	/** ⑫ 注册面：owned ∧ routed ∧ acquire=none ∧ 非冻结，冻结 27 行。 */
+	/**
+	 * ⑫ 注册面：owned ∧ routed ∧ acquire=none ∧ 非冻结，冻结 27 行。
+	 */
 	@Test
 	void chainAcquireRegistersOnlyOwnedRoutedNoneAcquiredUnfrozenSuccessors() {
 		assertEquals(CHAIN_ACQUIRE_SUCCESSORS, runtime.chainAcquireSuccessors(), "链式接取面 = 证据集 ∩ 本车道");
@@ -962,7 +985,9 @@ class DataDrivenNativeRuntimeGateTest {
 		assertEquals(27, mirrored, "注册面逐行对拍全覆盖");
 	}
 
-	/** 取出 quest.xml 中某 id 的整段行文本。 / The raw quest.xml row block for one id. */
+	/**
+	 * 取出 quest.xml 中某 id 的整段行文本。 / The raw quest.xml row block for one id.
+	 */
 	private static String questBlock(String questXml, int questId) {
 		Matcher matcher = Pattern.compile("<quest>(.*?)</quest>", Pattern.DOTALL).matcher(questXml);
 		while (matcher.find()) {
@@ -1075,7 +1100,9 @@ class DataDrivenNativeRuntimeGateTest {
 			"生产单例注册面含 10033");
 	}
 
-	/** DD 表 ∩ drop 列的 XML_RETENTION 行（目录供源；native 不得注册——单一 owner）。 */
+	/**
+	 * DD 表 ∩ drop 列的 XML_RETENTION 行（目录供源；native 不得注册——单一 owner）。
+	 */
 	private static final Set<Integer> XML_RETAINED_DROP_ROWS = Set.of(
 		10032, 10112, 10527, 10530, 15606, 17540, 20031, 20112, 20527, 20530, 25050, 25082, 27540);
 
@@ -1151,7 +1178,7 @@ class DataDrivenNativeRuntimeGateTest {
 		assertEquals(Integer.valueOf(182215627), itemId, "quest_10034a = 182215627（Jagged Sword）");
 		List<QuestCatalogDrop> drops = runtime.questDropsFor(216494);
 		assertTrue(drops.stream().anyMatch(drop -> drop.questId() == 10034 && drop.itemId() == itemId
-			&& drop.chance() == 100 && drop.collectingStep() == 3 && drop.dropEachGroupMember()),
+				&& drop.chance() == 100 && drop.collectingStep() == 3 && drop.dropEachGroupMember()),
 			"216494 必须携带 10034 的原版击杀掉落（100% / each-member / step 3）");
 		// 端到端：引擎聚合面（目录为空时由 native 源独立供源）。
 		assertTrue(new QuestEngine().questDrops(216494).stream().anyMatch(drop -> drop.questId() == 10034),
@@ -1174,7 +1201,7 @@ class DataDrivenNativeRuntimeGateTest {
 		Integer itemId = RetailItemNameIndex.loadItemTemplates().resolve("quest_15011a");
 		assertNotNull(itemId, "原版物品符号必须解析: quest_15011a");
 		assertTrue(runtime.questDropsFor(702730).stream().anyMatch(drop -> drop.questId() == 15011
-			&& drop.itemId() == itemId && drop.chance() == 100 && drop.collectingStep() == 0),
+				&& drop.itemId() == itemId && drop.chance() == 100 && drop.collectingStep() == 0),
 			"702730（Star Coral）必须携带 15011 的原版掉落（点击交互 → 掉落列表路径）");
 	}
 
@@ -1200,9 +1227,9 @@ class DataDrivenNativeRuntimeGateTest {
 			Row row = table.find(questId).orElseThrow();
 			boolean carriesFobj = row.steps().stream().anyMatch(step -> step.kind() == Kind.COLLECT_ITEM
 				&& Stream.of(1, 2, 3, 4).anyMatch(column -> {
-					String raw = step.column(column);
-					return raw != null && !raw.isBlank();
-				}));
+				String raw = step.column(column);
+				return raw != null && !raw.isBlank();
+			}));
 			if (!carriesFobj) {
 				continue;
 			}
@@ -1277,12 +1304,16 @@ class DataDrivenNativeRuntimeGateTest {
 			"XML_RETENTION 物件不得由 DD 供源: " + npcId));
 	}
 
-	/** 原版行块是否声明掉落列（与 {@code NativeQuestXmlTable#hasRetailDropColumns} 同口径）。 */
+	/**
+	 * 原版行块是否声明掉落列（与 {@code NativeQuestXmlTable#hasRetailDropColumns} 同口径）。
+	 */
 	private static boolean dropColumns(String block) {
 		return block != null && (block.contains("<drop_item_1>") || block.contains("<drop_monster_1>"));
 	}
 
-	/** 单遍解析原版 quest.xml 为 id → 行块（⑱ 全量对拍用；逐 id 重扫会 O(n²) 卡住）。 */
+	/**
+	 * 单遍解析原版 quest.xml 为 id → 行块（⑱ 全量对拍用；逐 id 重扫会 O(n²) 卡住）。
+	 */
 	private static Map<Integer, String> questRowBlocks(String questXml) {
 		Map<Integer, String> blocks = new java.util.HashMap<>();
 		Matcher matcher = Pattern.compile("<quest>(.*?)</quest>", Pattern.DOTALL).matcher(questXml);
@@ -1295,7 +1326,6 @@ class DataDrivenNativeRuntimeGateTest {
 		}
 		return blocks;
 	}
-
 
 	/**
 	 * ⑨ 切换集分桶与逐类步数冻结（原版契约面）：`P7 步 1` 的逐类步数、以及本批
@@ -1316,12 +1346,12 @@ class DataDrivenNativeRuntimeGateTest {
 		}
 		// P7 步 1 冻结的逐类步数（本批独立复算必须逐值一致）。
 		assertEquals(Map.of(Kind.HUNT, 827, Kind.COLLECT_ITEM, 348, Kind.PVP, 207, Kind.TALK, 403,
-			Kind.ENTER_AREA, 153, Kind.ITEM_PLAY, 42, Kind.ENTER_WORLD, 34, Kind.TALK_FOBJ, 19), switchSteps,
+				Kind.ENTER_AREA, 153, Kind.ITEM_PLAY, 42, Kind.ENTER_WORLD, 34, Kind.TALK_FOBJ, 19), switchSteps,
 			"切换集逐类步数 = P7 步 1 契约");
 		// 已路由步数；2026-10-03 偏差修复第九批 col9 EnterInstance 落面后随 10034/20034 解冻重冻
 		// （离线镜像逐值一致，见 `.agents/summary/quest-engine-native/p7/tools/dd-planrow-e2-mirror.py`）。
 		assertEquals(Map.of(Kind.HUNT, 820, Kind.COLLECT_ITEM, 345, Kind.PVP, 207, Kind.TALK, 395,
-			Kind.ENTER_AREA, 137, Kind.ITEM_PLAY, 40, Kind.ENTER_WORLD, 32, Kind.TALK_FOBJ, 18), routedSteps,
+				Kind.ENTER_AREA, 137, Kind.ITEM_PLAY, 40, Kind.ENTER_WORLD, 32, Kind.TALK_FOBJ, 18), routedSteps,
 			"已路由行的逐类步数冻结（col9 EnterInstance 落面后）");
 		assertEquals(1457, runtime.routedQuestIds().size(), "可路由行冻结（EnterInstance 落面：1457 = 1467 − 10）");
 		assertEquals(10, runtime.frozenQuestIds().size(), "冻结行冻结（两桶，见离线镜像）");
@@ -1349,9 +1379,9 @@ class DataDrivenNativeRuntimeGateTest {
 		assertEquals(20, runtime.acquireZoneInterests().values().stream().flatMap(List::stream).distinct().count(),
 			"接取 enterarea 去重任务数（步 f kind-6）");
 		assertEquals(Set.of("LF6_SensoryArea_Q15551_AtoB", "LF6_SensoryArea_Q15552_AtoD",
-			"LF6_SensoryArea_Q15553_AtoF", "LF6_SensoryArea_Q15554_AtoH", "LF6_SensoryArea_Q15601a_Dynamic_Env",
-			"LF6_SensoryArea_Q15602a_Dynamic_Env", "LF6_SensoryArea_Q15604a_Dynamic_Env",
-			"LF6_SensoryArea_Q15605a_Named", "LF6_SensoryArea_Q15608a_Dynamic_Env"), runtime.unresolvedNames(),
+				"LF6_SensoryArea_Q15553_AtoF", "LF6_SensoryArea_Q15554_AtoH", "LF6_SensoryArea_Q15601a_Dynamic_Env",
+				"LF6_SensoryArea_Q15602a_Dynamic_Env", "LF6_SensoryArea_Q15604a_Dynamic_Env",
+				"LF6_SensoryArea_Q15605a_Named", "LF6_SensoryArea_Q15608a_Dynamic_Env"), runtime.unresolvedNames(),
 			"未解析名字集 = 原版缺席进区别名（NativeEnterAreaPort.RETAIL_ABSENT_ALIASES 的切换集子集，§10.3-#23）");
 	}
 
@@ -1848,7 +1878,7 @@ class DataDrivenNativeRuntimeGateTest {
 		for (Map.Entry<String, List<Integer>> entry : runtime.acquireZoneInterests().entrySet()) {
 			for (int candidate : entry.getValue()) {
 				for (Race race : List.of(Race.ELYOS, Race.ASMODIANS)) {
-					for (int level : new int[] {10, 20, 30, 40, 50, 60, 66}) {
+					for (int level : new int[]{10, 20, 30, 40, 50, 60, 66}) {
 						Player probe = NativeTalkFixture.player(race, PlayerClass.WARRIOR, level);
 						if (runtime.onEnterZone(probe, entry.getKey().toLowerCase(java.util.Locale.ROOT))
 							&& probe.getQuestStateList().getQuestState(candidate) != null) {
@@ -1895,7 +1925,7 @@ class DataDrivenNativeRuntimeGateTest {
 		assertTrue(player.getQuestStateList().getQuestState(questId) != null, "接取成档");
 		Row row = table.find(questId).orElseThrow();
 		List<String> expected = new ArrayList<>();
-		for (int column : new int[] {1, 2}) {
+		for (int column : new int[]{1, 2}) {
 			String text = row.acceptColumns().get(column);
 			if (text == null || text.isBlank()) {
 				continue;
@@ -1940,7 +1970,9 @@ class DataDrivenNativeRuntimeGateTest {
 		assertTrue(engine.activeQuestsReferencingItem(player, detectorId).isEmpty(), "完成后不再计入");
 	}
 
-	/** 接取探针命中组合（行 + 接取 NPC + 可接取玩家参数）。 / A probed accept fixture. */
+	/**
+	 * 接取探针命中组合（行 + 接取 NPC + 可接取玩家参数）。 / A probed accept fixture.
+	 */
 	private record AcceptFixture(int questId, int npcId, Race race, int level) {
 	}
 
@@ -1971,7 +2003,7 @@ class DataDrivenNativeRuntimeGateTest {
 				continue;
 			}
 			for (Race race : List.of(Race.ELYOS, Race.ASMODIANS)) {
-				for (int level : new int[] {20, 40, 55, 66}) {
+				for (int level : new int[]{20, 40, 55, 66}) {
 					Player probe = NativeTalkFixture.player(race, PlayerClass.WARRIOR, level);
 					if (runtime.onDialog(probe, npcId, 1002, 1, 0)
 						&& probe.getQuestStateList().getQuestState(questId) != null) {
@@ -1983,22 +2015,26 @@ class DataDrivenNativeRuntimeGateTest {
 		return null;
 	}
 
-	/** 接取面探测回调：key 触发 + candidate 任务成档才认。 / Probe: key fires and the quest commits. */
+	/**
+	 * 接取面探测回调：key 触发 + candidate 任务成档才认。 / Probe: key fires and the quest commits.
+	 */
 	private interface AcquireProbe {
 		boolean fire(Player player, int key, int candidate);
 	}
 
-	/** 在接取兴趣面里找首个「key 触发 + 任务成档」的组合（fail-closed 探测）。 */
+	/**
+	 * 在接取兴趣面里找首个「key 触发 + 任务成档」的组合（fail-closed 探测）。
+	 */
 	private static int[] firstAcquirable(Map<Integer, List<Integer>> interests, AcquireProbe probe) {
 		for (Map.Entry<Integer, List<Integer>> entry : interests.entrySet()) {
 			for (int candidate : entry.getValue()) {
 				Player player = NativeTalkFixture.player();
 				if (probe.fire(player, entry.getKey(), candidate)) {
-					return new int[] {entry.getKey(), candidate};
+					return new int[]{entry.getKey(), candidate};
 				}
 			}
 		}
-		return new int[] {-1, -1};
+		return new int[]{-1, -1};
 	}
 
 	/**
@@ -2033,17 +2069,19 @@ class DataDrivenNativeRuntimeGateTest {
 			&& teleports.calls().isEmpty(), "CollectItem 推进边零渲染");
 	}
 
-	/** 从表列原文复算期望调用并断言一次推进的物品通道轨迹（kind 4/9 = 完成步动作）。 */
+	/**
+	 * 从表列原文复算期望调用并断言一次推进的物品通道轨迹（kind 4/9 = 完成步动作）。
+	 */
 	private void assertAdvanceItemCalls(Map<Integer, List<DataDrivenNativeRuntime.StepHit>> interests,
-			int[] fixture, int dialogId) {
+										int[] fixture, int dialogId) {
 		assertAdvanceItemCalls(interests, fixture[0], fixture[1], dialogId);
 	}
 
 	private void assertAdvanceItemCalls(Map<Integer, List<DataDrivenNativeRuntime.StepHit>> interests, int questId,
-			int stepIndex, int dialogId) {
+										int stepIndex, int dialogId) {
 		Step step = table.find(questId).orElseThrow().steps().get(stepIndex);
 		List<String> expected = new ArrayList<>();
-		for (int column : new int[] {1, 2}) {
+		for (int column : new int[]{1, 2}) {
 			String text = step.column(column);
 			if (text == null || text.isBlank()) {
 				continue;
@@ -2103,17 +2141,23 @@ class DataDrivenNativeRuntimeGateTest {
 		}
 	}
 
-	/** 记录式假过场端口。 / A recording fake movie port. */
+	/**
+	 * 记录式假过场端口。 / A recording fake movie port.
+	 */
 	private static final class RecordingMovies implements NativeMoviePort {
 
 		private final List<String> calls = new ArrayList<>();
 
-		/** 清零调用记录。 / Clears the call log. */
+		/**
+		 * 清零调用记录。 / Clears the call log.
+		 */
 		void clear() {
 			calls.clear();
 		}
 
-		/** 调用记录（{@code play:id} / {@code movie:id}）。 / The call log. */
+		/**
+		 * 调用记录（{@code play:id} / {@code movie:id}）。 / The call log.
+		 */
 		List<String> calls() {
 			return List.copyOf(calls);
 		}
@@ -2129,17 +2173,23 @@ class DataDrivenNativeRuntimeGateTest {
 		}
 	}
 
-	/** 记录式假传送端口。 / A recording fake teleport port. */
+	/**
+	 * 记录式假传送端口。 / A recording fake teleport port.
+	 */
 	private static final class RecordingTeleports implements NativeTeleportPort {
 
 		private final List<String> calls = new ArrayList<>();
 
-		/** 清零调用记录。 / Clears the call log. */
+		/**
+		 * 清零调用记录。 / Clears the call log.
+		 */
 		void clear() {
 			calls.clear();
 		}
 
-		/** 调用记录。 / The call log. */
+		/**
+		 * 调用记录。 / The call log.
+		 */
 		List<String> calls() {
 			return List.copyOf(calls);
 		}
@@ -2155,39 +2205,51 @@ class DataDrivenNativeRuntimeGateTest {
 		}
 	}
 
-	/** 记录式假刷怪端口。 / A recording fake spawn port. */
+	/**
+	 * 记录式假刷怪端口。 / A recording fake spawn port.
+	 */
 	private static final class RecordingSpawns implements NativeSpawnPort {
 
 		private final List<String> calls = new ArrayList<>();
 
-		/** 清零调用记录。 / Clears the call log. */
+		/**
+		 * 清零调用记录。 / Clears the call log.
+		 */
 		void clear() {
 			calls.clear();
 		}
 
-		/** 调用记录（{@code spawn:npcId:count:rel|abs:life}）。 / The call log. */
+		/**
+		 * 调用记录（{@code spawn:npcId:count:rel|abs:life}）。 / The call log.
+		 */
 		List<String> calls() {
 			return List.copyOf(calls);
 		}
 
 		@Override
 		public void spawn(Player player, int npcId, int count, boolean relative, float x, float y, float z,
-				int headingDegrees, int lifeSeconds) {
+						  int headingDegrees, int lifeSeconds) {
 			calls.add("spawn:" + npcId + ":" + count + ":" + (relative ? "rel" : "abs") + ":" + lifeSeconds);
 		}
 	}
 
-	/** 记录式假播报端口。 / A recording fake say port. */
+	/**
+	 * 记录式假播报端口。 / A recording fake say port.
+	 */
 	private static final class RecordingSays implements NativeSayPort {
 
 		private final List<String> calls = new ArrayList<>();
 
-		/** 清零调用记录。 / Clears the call log. */
+		/**
+		 * 清零调用记录。 / Clears the call log.
+		 */
 		void clear() {
 			calls.clear();
 		}
 
-		/** 调用记录（{@code say:id}）。 / The call log. */
+		/**
+		 * 调用记录（{@code say:id}）。 / The call log.
+		 */
 		List<String> calls() {
 			return List.copyOf(calls);
 		}
@@ -2198,7 +2260,6 @@ class DataDrivenNativeRuntimeGateTest {
 		}
 	}
 
-	/** 记录式假计时端口。 / A recording fake timer port. */
 	/**
 	 * ①c 任务计时面（col10 落面，2026-10-02）：到期判定镜像原版 `FUN_180c46d80`——进行中 ∧
 	 * `0 < 当前步 < 目标步` 才动作（旗标 0 直写步号 / 旗标 1 弃任），范围外与非进行中零操作；
@@ -2248,18 +2309,26 @@ class DataDrivenNativeRuntimeGateTest {
 			"未路由（col9 冻结）行 ⇒ 零操作");
 	}
 
-	/** 记录式假计时端口。 / A recording fake timer port. */
+	/**
+	 * 记录式假计时端口。 / A recording fake timer port.
+	 */
 	private static final class RecordingTimers implements NativeTimerPort {
 
-		/** 武装记录（{@code questId:秒:目标步:旗标}）。 / Armed timers ({@code questId:sec:dest:flag}). */
+		/**
+		 * 武装记录（{@code questId:秒:目标步:旗标}）。 / Armed timers ({@code questId:sec:dest:flag}).
+		 */
 		private final List<String> calls = new ArrayList<>();
 
-		/** 清零调用记录。 / Clears the call log. */
+		/**
+		 * 清零调用记录。 / Clears the call log.
+		 */
 		void clear() {
 			calls.clear();
 		}
 
-		/** 武装记录。 / The arm log. */
+		/**
+		 * 武装记录。 / The arm log.
+		 */
 		List<String> calls() {
 			return List.copyOf(calls);
 		}
@@ -2286,13 +2355,15 @@ class DataDrivenNativeRuntimeGateTest {
 		throw new IllegalStateException("no routed " + kind + " fixture");
 	}
 
-	/** 首个「末步 = Talk 且已路由」的行（报告通道夹具）。 / First routed row whose last step is Talk. */
+	/**
+	 * 首个「末步 = Talk 且已路由」的行（报告通道夹具）。 / First routed row whose last step is Talk.
+	 */
 	private static int firstRoutedTalkOnLastStep() {
 		for (int questId : new TreeSet<>(runtime.routedQuestIds())) {
 			List<Step> steps = table.find(questId).orElseThrow().steps();
 			if (!steps.isEmpty() && steps.getLast().kind() == Kind.TALK
 				&& runtime.talkInterests().values().stream().anyMatch(hits -> hits.stream().anyMatch(
-					hit -> hit.questId() == questId && hit.stepIndex() == steps.getLast().index()))) {
+				hit -> hit.questId() == questId && hit.stepIndex() == steps.getLast().index()))) {
 				return questId;
 			}
 		}
@@ -2309,7 +2380,9 @@ class DataDrivenNativeRuntimeGateTest {
 		throw new IllegalStateException("no routed pvp fixture");
 	}
 
-	/** 首个「已路由 + 指定 kind + 指定附加动作列非空」的步（{questId, stepIndex}）。 */
+	/**
+	 * 首个「已路由 + 指定 kind + 指定附加动作列非空」的步（{questId, stepIndex}）。
+	 */
 	private static int[] firstRoutedStepWithExtra(Kind kind, int column) {
 		for (int questId : new TreeSet<>(runtime.routedQuestIds())) {
 			for (Step step : table.find(questId).orElseThrow().steps()) {
@@ -2318,7 +2391,7 @@ class DataDrivenNativeRuntimeGateTest {
 				}
 				String text = step.column(column);
 				if (text != null && !text.isBlank()) {
-					return new int[] {questId, step.index()};
+					return new int[]{questId, step.index()};
 				}
 			}
 		}
@@ -2339,7 +2412,7 @@ class DataDrivenNativeRuntimeGateTest {
 	}
 
 	private static int keyOf(Map<Integer, List<DataDrivenNativeRuntime.StepHit>> interests, int questId,
-			int stepIndex) {
+							 int stepIndex) {
 		for (Map.Entry<Integer, List<DataDrivenNativeRuntime.StepHit>> entry : interests.entrySet()) {
 			for (DataDrivenNativeRuntime.StepHit hit : entry.getValue()) {
 				if (hit.questId() == questId && hit.stepIndex() == stepIndex) {
@@ -2350,7 +2423,9 @@ class DataDrivenNativeRuntimeGateTest {
 		throw new IllegalStateException("no interest key for " + questId + "#" + stepIndex);
 	}
 
-	/** 该行当前持久步号（raw vars 低 6 位）。 / The row's persistent step number (raw vars bits 0-5). */
+	/**
+	 * 该行当前持久步号（raw vars 低 6 位）。 / The row's persistent step number (raw vars bits 0-5).
+	 */
 	private static int stepOf(Player player, int questId) {
 		return DataDrivenProgress
 			.step(player.getQuestStateList().getQuestState(questId).getQuestVars().getQuestVars());
@@ -2367,7 +2442,9 @@ class DataDrivenNativeRuntimeGateTest {
 		}
 	}
 
-	/** 反射放置坐标（距离门测试面；生产经 WorldPosition 正常初始化）。 / Reflective placement for the gate tests. */
+	/**
+	 * 反射放置坐标（距离门测试面；生产经 WorldPosition 正常初始化）。 / Reflective placement for the gate tests.
+	 */
 	private static void place(Player player, float x, float y, float z) {
 		WorldPosition position = new WorldPosition(110010000);
 		position.setXYZH(x, y, z, (byte) 0);

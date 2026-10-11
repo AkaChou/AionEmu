@@ -3,6 +3,7 @@ package com.aionemu.gameserver.questEngine.tablelane;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -61,22 +62,34 @@ class DataDrivenNativeContractGateTest {
 	private static final String RETENTION = "/quest/retail-xml-retention.xml";
 	private static final String ABSENT_FIXTURE = "/quest/retail-data-driven-client-absent.tsv";
 
-	/** 切换集规模（原版 DD 活行 ∧ owner RETAIL_TABLE）。 / The switch set size. */
+	/**
+	 * 切换集规模（原版 DD 活行 ∧ owner RETAIL_TABLE）。 / The switch set size.
+	 */
 	private static final int SWITCH_ROWS = 1467;
 	private static final int CLIENT_ABSENT_LIVE_ROWS = 337;
 	private static final int COMMENTED_OUT_ROWS = 18;
-	/** 进度形去重数（有序步序列；漂移即新形，必须显式裁定）。 / Distinct ordered step shapes. */
+	/**
+	 * 进度形去重数（有序步序列；漂移即新形，必须显式裁定）。 / Distinct ordered step shapes.
+	 */
 	private static final int DISTINCT_SHAPES = 94;
-	/** 逐行矩阵规范形摘要（工具复算；装载器/表改动即失败）。 / Canonical row-matrix digest. */
+	/**
+	 * 逐行矩阵规范形摘要（工具复算；装载器/表改动即失败）。 / Canonical row-matrix digest.
+	 */
 	private static final String CANONICAL_SHA256 =
 		"3d7b762e16b4977b98844fdca414ea287fa3c3c36429373cb8b6b08fa5b7f77d";
-	/** 原版 8 类 progress handler。 / The eight retail progress handlers. */
+	/**
+	 * 原版 8 类 progress handler。 / The eight retail progress handlers.
+	 */
 	private static final Set<String> PROGRESS_CATEGORIES = Set.of(
 		"hunt", "collectitem", "pvp", "talk", "enterarea", "itemplay", "enterworld", "talkfobj");
-	/** 原版接取 kind（kind 3/4/7/8/10）+ DD 的 EnterArea / none。 / Retail acquire kinds. */
+	/**
+	 * 原版接取 kind（kind 3/4/7/8/10）+ DD 的 EnterArea / none。 / Retail acquire kinds.
+	 */
 	private static final Set<String> ACQUIRE_KINDS = Set.of(
 		"talk", "itemplay", "levelup", "enterworld", "leveluplogin", "enterarea", "none");
-	/** 裁定例外：80817 计数 100 > 63（原版自身不可完成，原样复刻）。 / Adjudicated overflow row. */
+	/**
+	 * 裁定例外：80817 计数 100 > 63（原版自身不可完成，原样复刻）。 / Adjudicated overflow row.
+	 */
 	private static final Set<Integer> ADJUDICATED_OVER_SIX_BIT = Set.of(80817);
 	private static final int SIX_BIT_MASK = 0x3F;
 
@@ -137,7 +150,9 @@ class DataDrivenNativeContractGateTest {
 	private static Set<Integer> clientAbsent;
 	private static Set<Integer> commentedOut;
 
-	/** 逐行原生契约：接取类别 + 步序列（类别、列词汇）。 / One row's native contract. */
+	/**
+	 * 逐行原生契约：接取类别 + 步序列（类别、列词汇）。 / One row's native contract.
+	 */
 	private record Row(int questId, String acquire, String rewardNpc, List<Step> steps) {
 	}
 
@@ -158,7 +173,9 @@ class DataDrivenNativeContractGateTest {
 		}
 	}
 
-	/** ① 切换集与两个排除桶互斥、规模冻结，且每行都声明领奖 NPC。 */
+	/**
+	 * ① 切换集与两个排除桶互斥、规模冻结，且每行都声明领奖 NPC。
+	 */
 	@Test
 	void switchSetIsTheClientVisibleRetailBand() {
 		assertEquals(SWITCH_ROWS, switchSet.size(), "P7 切换集规模冻结（原版活行 ∧ owner RETAIL_TABLE）");
@@ -172,7 +189,9 @@ class DataDrivenNativeContractGateTest {
 		}
 	}
 
-	/** ② 接取轴：原版 kind 6 类（含 EnterArea/none），未知类别 fail-closed。 */
+	/**
+	 * ② 接取轴：原版 kind 6 类（含 EnterArea/none），未知类别 fail-closed。
+	 */
 	@Test
 	void acquireAxisCoversOnlyRetailKinds() {
 		Map<String, Integer> histogram = new TreeMap<>();
@@ -186,7 +205,9 @@ class DataDrivenNativeContractGateTest {
 		assertEquals(SWITCH_ROWS, histogram.values().stream().mapToInt(Integer::intValue).sum(), "直方图必须覆盖全切换集");
 	}
 
-	/** ③ 进度轴：8 类 handler 词汇闭合，步数分布与去重形数冻结。 */
+	/**
+	 * ③ 进度轴：8 类 handler 词汇闭合，步数分布与去重形数冻结。
+	 */
 	@Test
 	void progressVocabularyIsTheRetailEightHandlers() {
 		Map<Integer, Integer> stepsPerRow = new TreeMap<>();
@@ -222,7 +243,9 @@ class DataDrivenNativeContractGateTest {
 		assertEquals(DISTINCT_SHAPES, shapes.size(), "有序步序列去重数冻结（新形必须显式裁定）");
 	}
 
-	/** ④ 步列词汇表：每类实际使用的 valueN 列号与次数冻结 = step 2 的动作/效果实现清单。 */
+	/**
+	 * ④ 步列词汇表：每类实际使用的 valueN 列号与次数冻结 = step 2 的动作/效果实现清单。
+	 */
 	@Test
 	void stepColumnsStayInsideTheFrozenActionSurface() {
 		Map<String, Map<Integer, Integer>> histogram = new TreeMap<>();
@@ -241,7 +264,7 @@ class DataDrivenNativeContractGateTest {
 	 * ⑦ 步列语义闭合（原版 `FUN_180c4b980` + `FUN_180c49610`，见 `p7/P7-STEP2-PREREQ-COLUMN-SEMANTICS.zh-CN.md`）：
 	 * 每个观测到的 (类别, 列号) 必须落在「类别载荷」或「该类别原版允许的附加动作」之一；原版非法组合必须零命中，
 	 * 未知组合必须零命中（新增列号/新组合一律 fail-closed，禁止静默吞列）。
-	 *
+	 * <p>
 	 * Every observed (category, column) pair must be either a category payload column or an extra-action column the
 	 * retail loader admits for that category; illegal or unknown combinations must stay at zero hits.
 	 */
@@ -268,13 +291,15 @@ class DataDrivenNativeContractGateTest {
 			assertTrue(entry.getValue().contains(0), "每步必须有载荷列 0: " + entry.getKey());
 		}
 		// 原版 guard：CollectItem(1) 与 PvP(5) 无附加动作面；Hunt 只允许 4/5。
-		assertTrue(!EXTRA_ACTION_COLUMNS.containsKey("collectitem"), "CollectItem 无附加动作面（原版 return 1）");
-		assertTrue(!EXTRA_ACTION_COLUMNS.containsKey("pvp"), "PvP 无附加动作面（原版 return 1）");
+		assertFalse(EXTRA_ACTION_COLUMNS.containsKey("collectitem"), "CollectItem 无附加动作面（原版 return 1）");
+		assertFalse(EXTRA_ACTION_COLUMNS.containsKey("pvp"), "PvP 无附加动作面（原版 return 1）");
 		assertEquals(Set.of(4, 5), EXTRA_ACTION_COLUMNS.get("hunt"), "Hunt 只允许 4/5 落到附加动作");
 		assertEquals(PROGRESS_CATEGORIES, observed.keySet(), "观测类别必须恰为原版 8 类");
 	}
 
-	/** ⑤ 6 位布局：每步子计数 ≤ 4 组、计数 ≤ 63（80817 = 裁定例外，原样复刻原版回绕）。 */
+	/**
+	 * ⑤ 6 位布局：每步子计数 ≤ 4 组、计数 ≤ 63（80817 = 裁定例外，原样复刻原版回绕）。
+	 */
 	@Test
 	void everyStepStaysInsideTheSixBitLayout() {
 		Set<Integer> overSixBit = new TreeSet<>();
@@ -296,10 +321,12 @@ class DataDrivenNativeContractGateTest {
 		}
 		assertEquals(ADJUDICATED_OVER_SIX_BIT, overSixBit,
 			"唯一超 6 位计数的行必须仍只有 80817（禁止改成 10 位相机、禁止静默修复）");
-		assertEquals(100, targets(rows.get(80817).steps().get(0)).get(0), "80817 原版计数 = 100（原样保留）");
+		assertEquals(100, targets(rows.get(80817).steps().getFirst()).getFirst(), "80817 原版计数 = 100（原样保留）");
 	}
 
-	/** ⑥ 逐行矩阵摘要冻结（装载器视图对拍已随 P7 步 f 旧视图删除入史）。 */
+	/**
+	 * ⑥ 逐行矩阵摘要冻结（装载器视图对拍已随 P7 步 f 旧视图删除入史）。
+	 */
 	@Test
 	void theRowMatrixMatchesTheFrozenDigest() throws Exception {
 		StringBuilder canonical = new StringBuilder();
@@ -325,7 +352,9 @@ class DataDrivenNativeContractGateTest {
 
 	// ---------------------------------------------------------------- 复算辅助
 
-	/** 每步子计数组数（hunt/collectitem/pvp = 分号段数，其余 = 1）。 / Counter groups declared by a step. */
+	/**
+	 * 每步子计数组数（hunt/collectitem/pvp = 分号段数，其余 = 1）。 / Counter groups declared by a step.
+	 */
 	private static int counterGroups(Step step) {
 		if (!Set.of("hunt", "collectitem", "pvp").contains(step.category())) {
 			return 1;
@@ -333,7 +362,9 @@ class DataDrivenNativeContractGateTest {
 		return Math.max(1, segments(step).size());
 	}
 
-	/** 每步目标计数（hunt/collectitem 取段尾数字，pvp 取段值）。 / Target counts of a step. */
+	/**
+	 * 每步目标计数（hunt/collectitem 取段尾数字，pvp 取段值）。 / Target counts of a step.
+	 */
 	private static List<Integer> targets(Step step) {
 		if (!Set.of("hunt", "collectitem", "pvp").contains(step.category())) {
 			return List.of(1);
@@ -374,7 +405,9 @@ class DataDrivenNativeContractGateTest {
 		return hex.toString();
 	}
 
-	/** 原版表原始文本复算（与工具同口径：去 DTD/注释后逐块解析）。 / Raw-table recomputation. */
+	/**
+	 * 原版表原始文本复算（与工具同口径：去 DTD/注释后逐块解析）。 / Raw-table recomputation.
+	 */
 	private static Map<Integer, Row> parseRawTable() throws Exception {
 		String text = new String(resource(DD_TABLE).readAllBytes(), StandardCharsets.UTF_8);
 		Matcher dtd = DTD.matcher(text);
@@ -418,7 +451,7 @@ class DataDrivenNativeContractGateTest {
 	private static Set<Integer> fixtureBucket(String bucketName) throws Exception {
 		Set<Integer> bucket = new TreeSet<>();
 		try (BufferedReader reader = new BufferedReader(
-				new InputStreamReader(resource(ABSENT_FIXTURE), StandardCharsets.UTF_8))) {
+			new InputStreamReader(resource(ABSENT_FIXTURE), StandardCharsets.UTF_8))) {
 			String line;
 			while ((line = reader.readLine()) != null) {
 				if (line.isBlank() || line.startsWith("#")) {

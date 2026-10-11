@@ -30,7 +30,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 class Quest1376ClientDialogAlignmentTest {
 	private static final int QUEST_ID = 1376;
-	/** 原版行 acquired_npc_name=Beramones / reward_npc_name=Agrips。 / Retail row NPC names. */
+	/**
+	 * 原版行 acquired_npc_name=Beramones / reward_npc_name=Agrips。 / Retail row NPC names.
+	 */
 	private static final int START_NPC = 203947;
 	private static final int REPORT_NPC = 203964;
 
@@ -53,9 +55,9 @@ class Quest1376ClientDialogAlignmentTest {
 
 		SimpleHuntHandler handler = SimpleHuntHandler.instance();
 		assertEquals(START_NPC,
-			NativeNpcNameResolver.instance().resolve("Beramones").npcIds().get(0), "Beramones 解析");
+			NativeNpcNameResolver.instance().resolve("Beramones").npcIds().getFirst(), "Beramones 解析");
 		assertEquals(REPORT_NPC,
-			NativeNpcNameResolver.instance().resolve("Agrips").npcIds().get(0), "Agrips 解析");
+			NativeNpcNameResolver.instance().resolve("Agrips").npcIds().getFirst(), "Agrips 解析");
 		assertEquals(START_NPC, handler.acquireNpc(QUEST_ID));
 		assertEquals(REPORT_NPC, handler.rewardNpc(QUEST_ID));
 		assertEquals(Integer.valueOf(1377), handler.conQuest(QUEST_ID), "链式接取窗 = 1377");
@@ -72,9 +74,9 @@ class Quest1376ClientDialogAlignmentTest {
 		assertEquals(java.util.Set.of("ELYOS"), metadata.permittedRaces(), "原版 pc_light");
 		List<QuestReward> rewards = metadata.rewards();
 		// 原版 quest.xml：reward_gold1=33860、reward_exp1=1244918、reward_item1_1=coin_03 2（186000003）。
-		assertTrue(rewards.contains(new QuestReward("GOLD", 0, 33860)), () -> rewards.toString());
-		assertTrue(rewards.contains(new QuestReward("EXP", 0, 1244918)), () -> rewards.toString());
-		assertTrue(rewards.contains(new QuestReward("ITEM", 186000003, 2)), () -> rewards.toString());
+		assertTrue(rewards.contains(new QuestReward("GOLD", 0, 33860)), rewards::toString);
+		assertTrue(rewards.contains(new QuestReward("EXP", 0, 1244918)), rewards::toString);
+		assertTrue(rewards.contains(new QuestReward("ITEM", 186000003, 2)), rewards::toString);
 	}
 
 	@Test

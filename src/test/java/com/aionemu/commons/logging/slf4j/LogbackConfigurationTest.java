@@ -14,9 +14,11 @@ import com.aionemu.commons.logging.slf4j.filters.ExactLevelFilter;
 import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.core.Appender;
 import ch.qos.logback.core.spi.FilterReply;
+
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -75,9 +77,9 @@ class LogbackConfigurationTest {
 			assertDoesNotThrow(() -> LogbackConfiguration.configure(context));
 			assertEquals(Level.INFO, context.getLogger(org.slf4j.Logger.ROOT_LOGGER_NAME).getLevel());
 			assertLevelFilter(context.getLogger(org.slf4j.Logger.ROOT_LOGGER_NAME).getAppender("out_error"), Level.ERROR,
-					Level.WARN);
+				Level.WARN);
 			assertLevelFilter(context.getLogger(org.slf4j.Logger.ROOT_LOGGER_NAME).getAppender("out_warn"), Level.WARN,
-					Level.ERROR);
+				Level.ERROR);
 			Logger questLogger = context.getLogger("quest");
 			assertTrue(questLogger.isAdditive());
 			assertNotNull(questLogger.getAppender("app_quest"));
@@ -87,7 +89,7 @@ class LogbackConfigurationTest {
 	}
 
 	private void assertLevelFilter(Appender<ILoggingEvent> appender, Level acceptedLevel, Level deniedLevel) {
-		ExactLevelFilter filter = (ExactLevelFilter) appender.getCopyOfAttachedFiltersList().get(0);
+		ExactLevelFilter filter = (ExactLevelFilter) appender.getCopyOfAttachedFiltersList().getFirst();
 
 		assertEquals(FilterReply.ACCEPT, filter.decide(loggingEvent(acceptedLevel)));
 		assertEquals(FilterReply.DENY, filter.decide(loggingEvent(deniedLevel)));

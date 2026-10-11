@@ -14,11 +14,9 @@ import com.aionemu.gameserver.questEngine.runtime.QuestMutationPlanner;
 import com.aionemu.gameserver.questEngine.runtime.QuestSnapshot;
 import org.junit.jupiter.api.Test;
 
-import java.io.InputStream;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -59,11 +57,6 @@ class QuestMultistepChainContractTest {
 	private record Chain(int questId, int rows, List<Step> steps, int rewardNpc, QuestDialogPage rewardPage) {
 	}
 
-	/**
-	 * 逐任务的三方核对结果（客户端 quest_summary 行 → 客户端对话链 → retail 步骤），
-	 * 由 .agents/summary/quest-multistep-contract-batch 的 dump_chain_evidence.py 导出。
-	 * Per-quest three-way evidence (client quest_summary rows, client dialog chains, retail steps).
-	 */
 	/**
 	 * 已随 P3 SimpleTalk 切换批移出 IR 的原版行（10 个）：接取/交付 owner 与中继 NPC 取自原版表，
 	 * 步页取自客户端对话链；证据见 .agents/summary/quest-engine-native/p3/step5-anchor-evidence.tsv。
@@ -171,7 +164,7 @@ class QuestMultistepChainContractTest {
 	}
 
 	@Test
-	void everyJournalRowOwnsItsOwnProgressState() throws Exception {
+	void everyJournalRowOwnsItsOwnProgressState() {
 		for (Chain chain : CHAINS) {
 			QuestDefinition definition = definition(chain.questId());
 
@@ -194,7 +187,7 @@ class QuestMultistepChainContractTest {
 	}
 
 	@Test
-	void everyStepAdvancesItsOwnStateThroughItsOwnSetproAction() throws Exception {
+	void everyStepAdvancesItsOwnStateThroughItsOwnSetproAction() {
 		for (Chain chain : CHAINS) {
 			QuestDefinition definition = definition(chain.questId());
 			for (int index = 0; index < chain.steps().size(); index++) {
@@ -221,7 +214,7 @@ class QuestMultistepChainContractTest {
 	}
 
 	@Test
-	void setproActionsStayOnePerStepInsteadOfAllSharingSetproOne() throws Exception {
+	void setproActionsStayOnePerStepInsteadOfAllSharingSetproOne() {
 		for (Chain chain : CHAINS) {
 			QuestDefinition definition = definition(chain.questId());
 			List<String> actual = definition.transitions().stream()
@@ -242,7 +235,7 @@ class QuestMultistepChainContractTest {
 	}
 
 	@Test
-	void onlyTheRewardRowNpcOwnsRewardRowRoutesAndCompletion() throws Exception {
+	void onlyTheRewardRowNpcOwnsRewardRowRoutesAndCompletion() {
 		for (Chain chain : CHAINS) {
 			QuestDefinition definition = definition(chain.questId());
 			String rewardRow = startLabel(definition, chain.rows() - 1);
@@ -263,7 +256,7 @@ class QuestMultistepChainContractTest {
 			assertTrue(definition.transitions().stream().anyMatch(transition ->
 					rewardRow.equals(transition.sourceNode()) && reward.equals(transition.targetNode())
 						&& new QuestEvent.TalkToNpc(chain.rewardNpc(),
-							QuestDialogAction.SELECT_QUEST_REWARD.id()).equals(transition.event())),
+						QuestDialogAction.SELECT_QUEST_REWARD.id()).equals(transition.event())),
 				"quest " + chain.questId() + " 缺少领奖行进入 REWARD 的 SELECT_QUEST_REWARD 路由");
 
 			String complete = completeLabel(definition);
@@ -317,8 +310,10 @@ class QuestMultistepChainContractTest {
 		}
 	}
 
-	/** 原版行 → native 处理器：owner / 中继树 / 步页 / 交付门逐行对拍。 /
-	 * Retail rows against the native handler: owners, relay trees, step pages and gates. */
+	/**
+	 * 原版行 → native 处理器：owner / 中继树 / 步页 / 交付门逐行对拍。 /
+	 * Retail rows against the native handler: owners, relay trees, step pages and gates.
+	 */
 	@Test
 	void retailTalkChainsFollowTheRetailRows() {
 		SimpleTalkHandler handler = NativeTalkFixture.handler();
@@ -348,14 +343,16 @@ class QuestMultistepChainContractTest {
 			int expectedEntry = NativeTalkFixture.clientDeclares(questId, QuestDialogPage.SELECT_NONE.id())
 				? QuestDialogPage.SELECT_NONE.id()
 				: NativeTalkFixture.clientDeclares(questId, QuestDialogPage.SELECT1.id())
-					? QuestDialogPage.SELECT1.id() : QuestDialogPage.SHOW_ASK_QUEST_ACCEPT_WINDOW.id();
+				? QuestDialogPage.SELECT1.id() : QuestDialogPage.SHOW_ASK_QUEST_ACCEPT_WINDOW.id();
 			assertEquals(expectedEntry, NativeTalkFixture.clientEntryPage(questId),
 				questId + " 接取入口页（原版信页偏好序）");
 		}
 	}
 
-	/** 原版 give_item / give_itemN / remove_itemN → native 物品通道（含分档与回收）。 /
-	 * Retail give_item / give_itemN / remove_itemN against the native item channels. */
+	/**
+	 * 原版 give_item / give_itemN / remove_itemN → native 物品通道（含分档与回收）。 /
+	 * Retail give_item / give_itemN / remove_itemN against the native item channels.
+	 */
 	@Test
 	void retailTalkChainsCarryTheirItemChannels() {
 		SimpleTalkHandler handler = NativeTalkFixture.handler();
@@ -458,7 +455,7 @@ class QuestMultistepChainContractTest {
 
 		// 重复第 1 步：vars 已推进，零副作用、关窗兜底（原版无匹配转换）。
 		NativeTalkFixture.clearPackets(player);
-		assertTrue(itemHandler.onDialog(NativeTalkFixture.dialog(player, chain.steps().get(0).npcId(),
+		assertTrue(itemHandler.onDialog(NativeTalkFixture.dialog(player, chain.steps().getFirst().npcId(),
 			chain.questId(), 10000)), "重复步不得被拒（客户端仍等关窗）");
 		assertEquals(2, state.getQuestVars().getQuestVars(), "重复步不得推进");
 		NativeTalkFixture.assertCloseDialog(player);
@@ -506,7 +503,7 @@ class QuestMultistepChainContractTest {
 	}
 
 	private static QuestTransition talk(QuestDefinition definition, String source, String target, int npcId,
-			int action) {
+										int action) {
 		return definition.transitions().stream()
 			.filter(candidate -> source.equals(candidate.sourceNode()) && target.equals(candidate.targetNode())
 				&& new QuestEvent.TalkToNpc(npcId, action).equals(candidate.event()))
@@ -525,7 +522,7 @@ class QuestMultistepChainContractTest {
 	}
 
 	private static QuestSnapshot snapshot(CompiledQuestDefinition definition, QuestStatus status,
-			Map<String, Integer> variables) {
+										  Map<String, Integer> variables) {
 		return new QuestSnapshot(7, definition.id(), status,
 			definition.definition().progressLayout().pack(variables),
 			workItems(definition), Map.of(),

@@ -6,7 +6,6 @@ import com.aionemu.gameserver.questEngine.runtime.QuestMutationPlanner;
 import com.aionemu.gameserver.questEngine.runtime.QuestSnapshot;
 import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -38,12 +37,16 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 class ArchivesRewardStepLadderContractTest {
 
-	/** 客户端任务书末行的索引（= 领奖态 packed step）。 */
+	/**
+	 * 客户端任务书末行的索引（= 领奖态 packed step）。
+	 */
 	private static final int REWARD_ROW = 2;
 
-	/** 任务 / 接取 NPC / 行 1 NPC / 领奖 NPC / 塔感应区 / 知识书库区 / 影片 / 旧投影行（登记用，原版链统一为 var0=0 修复）。 */
+	/**
+	 * 任务 / 接取 NPC / 行 1 NPC / 领奖 NPC / 塔感应区 / 知识书库区 / 影片 / 旧投影行（登记用，原版链统一为 var0=0 修复）。
+	 */
 	private record Contract(int questId, int starterNpc, int handoffNpc, int rewardNpc,
-			String towerZone, String archivesZone, int movieId, int staleRow) {
+							String towerZone, String archivesZone, int movieId, int staleRow) {
 	}
 
 	private static final List<Contract> CONTRACTS = List.of(
@@ -53,7 +56,7 @@ class ArchivesRewardStepLadderContractTest {
 			"DF_TOWER_SENSORY_AREA_Q26800_220120000", "IDETERNITY_01_Q16800_301540000", 932, 3));
 
 	@Test
-	void rewardStepEqualsTheLegacyPersistedStepAndTheLastJournalRow() throws Exception {
+	void rewardStepEqualsTheLegacyPersistedStepAndTheLastJournalRow() {
 		for (Contract contract : CONTRACTS) {
 			QuestDefinition definition = definition(contract.questId()).definition();
 			assertEquals(new NodeProjection(QuestStatus.REWARD, Map.of("var0", REWARD_ROW)),
@@ -72,7 +75,7 @@ class ArchivesRewardStepLadderContractTest {
 	}
 
 	@Test
-	void ladderAdvancesOnlyOnTheLegacyEvents() throws Exception {
+	void ladderAdvancesOnlyOnTheLegacyEvents() {
 		for (Contract contract : CONTRACTS) {
 			CompiledQuestDefinition compiled = definition(contract.questId());
 			QuestDefinition definition = compiled.definition();
@@ -101,8 +104,8 @@ class ArchivesRewardStepLadderContractTest {
 				() -> "quest " + contract.questId() + " sentry handover");
 			assertEquals(List.of(new QuestAction.SetVariable("var0", 2)), handoff.actions());
 			assertEquals(List.of(
-				new AfterCommitAction.SyncQuestState(QuestStateSyncMode.PACKET_ONLY),
-				new AfterCommitAction.ShowQuestSelectionDialog(QuestDialogPage.SELECT_QUEST.id())),
+					new AfterCommitAction.SyncQuestState(QuestStateSyncMode.PACKET_ONLY),
+					new AfterCommitAction.ShowQuestSelectionDialog(QuestDialogPage.SELECT_QUEST.id())),
 				handoff.afterCommit());
 
 			QuestTransition archivesArrival = transition(definition, "s2", "reward",
@@ -127,7 +130,7 @@ class ArchivesRewardStepLadderContractTest {
 	}
 
 	@Test
-	void noRouteSkipsJournalRowsIntoReward() throws Exception {
+	void noRouteSkipsJournalRowsIntoReward() {
 		for (Contract contract : CONTRACTS) {
 			QuestDefinition definition = definition(contract.questId()).definition();
 			List<QuestTransition> entries = definition.transitions().stream()
@@ -139,11 +142,11 @@ class ArchivesRewardStepLadderContractTest {
 				() -> "quest " + contract.questId() + " reward entries must come from the handoff stage");
 			// 领奖态自身只保留领奖页/交付协议路由，任何进入领奖的路线都不得写过期的行号。
 			for (QuestTransition route : definition.transitions().stream()
-					.filter(candidate -> "reward".equals(candidate.targetNode()))
-					.toList()) {
+				.filter(candidate -> "reward".equals(candidate.targetNode()))
+				.toList()) {
 				for (QuestAction action : route.actions()) {
 					if (action instanceof QuestAction.SetVariable(String field, int value)
-							&& "var0".equals(field)) {
+						&& "var0".equals(field)) {
 						assertEquals(REWARD_ROW, value, () -> "quest " + contract.questId()
 							+ " reward entry writes a stale journal row");
 					}
@@ -161,7 +164,7 @@ class ArchivesRewardStepLadderContractTest {
 	}
 
 	@Test
-	void staleRewardStepIsRepairedOnEnterWorld() throws Exception {
+	void staleRewardStepIsRepairedOnEnterWorld() {
 		for (Contract contract : CONTRACTS) {
 			CompiledQuestDefinition compiled = definition(contract.questId());
 			QuestTransition recovery = recoveryRoute(compiled.definition());
@@ -172,13 +175,13 @@ class ArchivesRewardStepLadderContractTest {
 			// retired with the old projections (old-generation saves are no longer repaired per side;
 			// recorded in the ledger).
 			assertEquals(List.of(
-				new QuestCondition.StatusIs(QuestStatus.REWARD),
-				new QuestCondition.QuestVariableIs("var0", 0)), recovery.conditions(),
+					new QuestCondition.StatusIs(QuestStatus.REWARD),
+					new QuestCondition.QuestVariableIs("var0", 0)), recovery.conditions(),
 				() -> "quest " + contract.questId() + " recovery conditions");
 			assertEquals(List.of(new QuestAction.SetVariable("var0", REWARD_ROW)), recovery.actions(),
 				() -> "quest " + contract.questId() + " recovery actions");
 			assertEquals(List.of(new AfterCommitAction.SyncQuestState(
-				QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH)), recovery.afterCommit(),
+					QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH)), recovery.afterCommit(),
 				() -> "quest " + contract.questId() + " recovery after-commit");
 			assertNull(recovery.priority());
 
@@ -192,7 +195,7 @@ class ArchivesRewardStepLadderContractTest {
 	}
 
 	@Test
-	void liveRewardStepIsNotReplayed() throws Exception {
+	void liveRewardStepIsNotReplayed() {
 		for (Contract contract : CONTRACTS) {
 			CompiledQuestDefinition compiled = definition(contract.questId());
 			assertTrue(plans(compiled, QuestStatus.REWARD, Map.of("var0", REWARD_ROW),
@@ -203,7 +206,7 @@ class ArchivesRewardStepLadderContractTest {
 	}
 
 	@Test
-	void rewardOwnerStaysOnTheAgentNamedByTheJournalRow() throws Exception {
+	void rewardOwnerStaysOnTheAgentNamedByTheJournalRow() {
 		for (Contract contract : CONTRACTS) {
 			QuestDefinition definition = definition(contract.questId()).definition();
 			// 原版把领奖分支同时铺成 TalkToNpc（带 owner）与 QuestDialog（无 owner，npcId=-1 哨兵）两种
@@ -240,7 +243,7 @@ class ArchivesRewardStepLadderContractTest {
 	}
 
 	@Test
-	void bothSidesShareTheSameJournalLadderShape() throws Exception {
+	void bothSidesShareTheSameJournalLadderShape() {
 		QuestDefinition elyos = definition(16800).definition();
 		QuestDefinition asmodians = definition(26800).definition();
 		assertEquals(elyos.nodes(), asmodians.nodes(),
@@ -251,7 +254,9 @@ class ArchivesRewardStepLadderContractTest {
 			"the Elyos/Asmodian Archives rewards must expose the same stage graph");
 	}
 
-	/** 三段推进的条件/动作形状（zone 名与 NPC/影片 id 之外的合同字段）。 */
+	/**
+	 * 三段推进的条件/动作形状（zone 名与 NPC/影片 id 之外的合同字段）。
+	 */
 	private static List<String> ladderShape(QuestDefinition definition, Contract contract) {
 		List<QuestTransition> ladder = List.of(
 			transition(definition, "started", "s1", new QuestEvent.EnterZone(contract.towerZone())),
@@ -275,11 +280,11 @@ class ArchivesRewardStepLadderContractTest {
 	}
 
 	private static void assertAdvance(CompiledQuestDefinition compiled, QuestStatus fromStatus,
-			int fromRow, QuestTransition route, QuestStatus toStatus, int toRow) {
+									  int fromRow, QuestTransition route, QuestStatus toStatus, int toRow) {
 		QuestMutationPlan plan = QuestMutationPlanner.plan(compiled,
 			snapshot(compiled, fromStatus, Map.of("var0", fromRow)), route).orElseThrow(() ->
-				new AssertionError("quest " + compiled.id() + " route " + route.sourceNode() + " -> "
-					+ route.targetNode() + " must be plannable from " + fromStatus + "/var0=" + fromRow));
+			new AssertionError("quest " + compiled.id() + " route " + route.sourceNode() + " -> "
+				+ route.targetNode() + " must be plannable from " + fromStatus + "/var0=" + fromRow));
 		assertEquals(toStatus, plan.nextStatus(), () -> "quest " + compiled.id() + " next status");
 		assertEquals(toRow, unpack(compiled, plan).get("var0"), () -> "quest " + compiled.id() + " next row");
 	}
@@ -322,7 +327,7 @@ class ArchivesRewardStepLadderContractTest {
 	}
 
 	private static QuestTransition transition(QuestDefinition definition, String source, String target,
-			QuestEvent event) {
+											  QuestEvent event) {
 		List<QuestTransition> routes = definition.transitions().stream()
 			.filter(candidate -> source.equals(candidate.sourceNode()))
 			.filter(candidate -> target.equals(candidate.targetNode()))
@@ -334,7 +339,7 @@ class ArchivesRewardStepLadderContractTest {
 	}
 
 	private static List<QuestMutationPlan> plans(CompiledQuestDefinition compiled, QuestStatus status,
-			Map<String, Integer> variables, QuestEvent event) {
+												 Map<String, Integer> variables, QuestEvent event) {
 		QuestSnapshot snapshot = snapshot(compiled, status, variables);
 		return compiled.definition().transitions().stream()
 			.flatMap(route -> QuestMutationPlanner.plan(compiled, snapshot, event, route).stream())
@@ -342,7 +347,7 @@ class ArchivesRewardStepLadderContractTest {
 	}
 
 	private static QuestSnapshot snapshot(CompiledQuestDefinition compiled, QuestStatus status,
-			Map<String, Integer> variables) {
+										  Map<String, Integer> variables) {
 		Map<String, Integer> packedVariables = new LinkedHashMap<>(
 			compiled.definition().progressLayout().unpack(0));
 		packedVariables.putAll(variables);
@@ -354,7 +359,9 @@ class ArchivesRewardStepLadderContractTest {
 		return compiled.definition().progressLayout().unpack(plan.nextPackedVariables());
 	}
 
-	/** 节点投影（引擎按它匹配源行——显式 var0 条件在原版形里由投影承担）。 / Node projection. */
+	/**
+	 * 节点投影（引擎按它匹配源行——显式 var0 条件在原版形里由投影承担）。 / Node projection.
+	 */
 	private static Map<String, Integer> nodeVariables(QuestDefinition definition, String label) {
 		return definition.nodes().stream()
 			.filter(node -> label.equals(node.label()))

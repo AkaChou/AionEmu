@@ -16,7 +16,6 @@ import com.aionemu.gameserver.questEngine.tablelane.NativeTalkFixture;
 import com.aionemu.gameserver.questEngine.tablelane.SimpleHuntHandler;
 import org.junit.jupiter.api.Test;
 
-import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -126,7 +125,7 @@ class QuestPacketOrderRegressionTest {
 	}
 
 	private static void assertItemRewardRoute(QuestDialogAction action, int itemId, String target, int variable,
-			QuestDialogPage page) throws Exception {
+											  QuestDialogPage page) throws Exception {
 		assertRouteContract(2392, "started", projection(QuestStatus.START, 0), target,
 			projection(QuestStatus.REWARD, variable), 798085, action, 0,
 			List.of(new QuestCondition.HasItem(itemId, 1)), List.of(new QuestAction.RemoveItem(itemId, 1)),
@@ -135,7 +134,7 @@ class QuestPacketOrderRegressionTest {
 	}
 
 	private static void assertProtocolPacketOrder(int questId, String source, int dialogId,
-			Integer priority) throws Exception {
+												  Integer priority) throws Exception {
 		CompiledQuestDefinition definition = compiledDefinition(questId);
 		QuestTransition transition = definition.definition().transitions().stream()
 			.filter(candidate -> source.equals(candidate.sourceNode()))
@@ -166,9 +165,9 @@ class QuestPacketOrderRegressionTest {
 	}
 
 	private static void assertRouteContract(int questId, String source, NodeProjection sourceProjection,
-			String target, NodeProjection targetProjection, int npcId, QuestDialogAction action, Integer priority,
-			List<QuestCondition> conditions, List<QuestAction> actions, List<AfterCommitAction> afterCommit)
-			throws Exception {
+											String target, NodeProjection targetProjection, int npcId, QuestDialogAction action, Integer priority,
+											List<QuestCondition> conditions, List<QuestAction> actions, List<AfterCommitAction> afterCommit)
+		throws Exception {
 		QuestDefinition definition = definition(questId);
 		QuestTransition transition = definition.transitions().stream()
 			.filter(candidate -> source.equals(candidate.sourceNode()))
@@ -196,7 +195,7 @@ class QuestPacketOrderRegressionTest {
 		return new NodeProjection(status, Map.of("var0", var0));
 	}
 
-	private static QuestDefinition definition(int questId) throws Exception {
+	private static QuestDefinition definition(int questId) {
 		return compiledDefinition(questId).definition();
 	}
 

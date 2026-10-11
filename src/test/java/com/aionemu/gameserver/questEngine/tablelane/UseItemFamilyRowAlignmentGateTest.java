@@ -1,7 +1,6 @@
 package com.aionemu.gameserver.questEngine.tablelane;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.InputStream;
@@ -47,7 +46,9 @@ class UseItemFamilyRowAlignmentGateTest {
 		"aion/data/static_data/quest/retail/Quest_SimpleItemPlay.xml";
 	private static final String QUEST_XML_RESOURCE = "aion/data/static_data/quest/retail/quest.xml";
 
-	/** 原版表事实（全量复算）。 / Retail-table facts (whole-table recomputation). */
+	/**
+	 * 原版表事实（全量复算）。 / Retail-table facts (whole-table recomputation).
+	 */
 	private static final int USE_ITEM_ROWS = 160;
 	private static final int USE_ITEM_TALK1 = 54;
 	private static final int USE_ITEM_TALK2 = 26;
@@ -67,12 +68,17 @@ class UseItemFamilyRowAlignmentGateTest {
 	private static final int ITEM_PLAY_GIVE = 34;
 	private static final int ITEM_PLAY_USE_ITEM = 41;
 	private static final int ITEM_PLAY_CUTSCENE = 2;
-	/** 路由集冻结（与处理器一致；判据在本类内独立复算）。 / Frozen routing sets. */
+	/**
+	 * 路由集冻结（与处理器一致；判据在本类内独立复算）。 / Frozen routing sets.
+	 */
 	private static final int USE_ITEM_ROUTED = 102;
-	/** P5D 步 3 激活 18213/28213 后的路由集规模（6 直交 + 2 中继）。 / Routed rows after step-3 activation. */
+	/**
+	 * P5D 步 3 激活 18213/28213 后的路由集规模（6 直交 + 2 中继）。 / Routed rows after step-3 activation.
+	 */
 	private static final int ITEM_PLAY_ROUTED = 8;
-	/** quest.xml {@code check_item} 声明行（退役面 11 行，其中 2 行为 fail-closed 残余）。 / check_item rows. */
-	/** 其他 retail 族表（跨族 {@code con_quest} 目标的接取 NPC 来源）。 / Sibling retail family tables. */
+	/**
+	 * 其他 retail 族表（跨族 {@code con_quest} 目标的接取 NPC 来源）。 / Sibling retail family tables.
+	 */
 	private static final List<String> SIBLING_RESOURCES = List.of(
 		"aion/data/static_data/quest/retail/Quest_SimpleHunt.xml",
 		"aion/data/static_data/quest/retail/Quest_SimpleTalk.xml",
@@ -81,7 +87,9 @@ class UseItemFamilyRowAlignmentGateTest {
 		"aion/data/static_data/quest/retail/Quest_SimpleSerialHunt.xml",
 		"aion/data/static_data/quest/retail/Quest_SimpleUseItem.xml",
 		"aion/data/static_data/quest/retail/Quest_SimpleItemPlay.xml");
-	/** 链式接取窗目标分布（原版全表冻结）：UseItem 0/30/2、ItemPlay 2/7/0。 / Chain-target distribution. */
+	/**
+	 * 链式接取窗目标分布（原版全表冻结）：UseItem 0/30/2、ItemPlay 2/7/0。 / Chain-target distribution.
+	 */
 	private static final int USE_ITEM_CHAIN_IN_TABLE = 0;
 	private static final int USE_ITEM_CHAIN_SIBLING = 30;
 	private static final int USE_ITEM_CHAIN_NO_ROW = 2;
@@ -108,7 +116,9 @@ class UseItemFamilyRowAlignmentGateTest {
 		questXmlRaw = parseQuestXml(readResource(QUEST_XML_RESOURCE));
 	}
 
-	/** ① 行集与逐行字段：native 装载必须与原版表原文逐行一致（含长尾列）。 */
+	/**
+	 * ① 行集与逐行字段：native 装载必须与原版表原文逐行一致（含长尾列）。
+	 */
 	@Test
 	void everyUseItemRowIsMappedVerbatim() {
 		assertEquals(USE_ITEM_ROWS, useItemRaw.size(), "原版表行数漂移");
@@ -159,8 +169,8 @@ class UseItemFamilyRowAlignmentGateTest {
 	}
 
 	private void assertChainFace(Map<Integer, Map<String, String>> source,
-			Map<Integer, Map<String, String>> siblings, java.util.function.IntFunction<Integer> conQuest,
-			int expectedInTable, int expectedSibling, int expectedNoRow, String family) {
+								 Map<Integer, Map<String, String>> siblings, java.util.function.IntFunction<Integer> conQuest,
+								 int expectedInTable, int expectedSibling, int expectedNoRow, String family) {
 		int inTable = 0;
 		int inSibling = 0;
 		int noRow = 0;
@@ -223,7 +233,9 @@ class UseItemFamilyRowAlignmentGateTest {
 		}
 	}
 
-	/** ② 家族填充率冻结（任何一行增删列即红灯）。 / Frozen column coverage over both tables. */
+	/**
+	 * ② 家族填充率冻结（任何一行增删列即红灯）。 / Frozen column coverage over both tables.
+	 */
 	@Test
 	void familyCountsAreFrozen() {
 		assertEquals(USE_ITEM_TALK1, countDeclared(useItemRaw, "talk_npc", 1));
@@ -245,7 +257,9 @@ class UseItemFamilyRowAlignmentGateTest {
 		assertEquals(ITEM_PLAY_CUTSCENE, countDeclared(itemPlayRaw, "cutsceneid1", 0));
 	}
 
-	/** ③ 第 K 步发/扣列必须与第 K 个中继 NPC 同步声明（原版 codegen 槽语义前提）。 */
+	/**
+	 * ③ 第 K 步发/扣列必须与第 K 个中继 NPC 同步声明（原版 codegen 槽语义前提）。
+	 */
 	@Test
 	void stepScopedItemColumnsPairWithTheSameIndexRelayNpc() {
 		for (Map<String, String> raw : useItemRaw.values()) {
@@ -280,16 +294,16 @@ class UseItemFamilyRowAlignmentGateTest {
 			boolean resolvable = itemResolves(raw.get("use_item_name"), items)
 				&& faceResolves(raw.get("reward_npc_name"), npcs, handin, questId)
 				&& declaredSteps(raw, "talk_npc").stream()
-					.allMatch(step -> unique(value(raw, "talk_npc" + step), npcs))
+				.allMatch(step -> unique(value(raw, "talk_npc" + step), npcs))
 				&& declaredSteps(raw, "give_item").stream()
-					.allMatch(step -> itemResolves(value(raw, "give_item" + step), items))
+				.allMatch(step -> itemResolves(value(raw, "give_item" + step), items))
 				&& declaredSteps(raw, "remove_item").stream()
-					.allMatch(step -> itemResolves(value(raw, "remove_item" + step), items));
+				.allMatch(step -> itemResolves(value(raw, "remove_item" + step), items));
 			if ("1".equals(value(raw, "item_check"))) {
 				resolvable = resolvable && !checkItems(questId).isEmpty();
 			}
 			if (resolvable && RetiredQuestIds.contains(questId) && !xmlOnly.contains(questId)
-					&& metadataClean(driver, questId)) {
+				&& metadataClean(driver, questId)) {
 				expectedUseItem.add(questId);
 			}
 		}
@@ -310,17 +324,17 @@ class UseItemFamilyRowAlignmentGateTest {
 				&& (value(raw, "use_item_name") == null || itemResolves(value(raw, "use_item_name"), items))
 				&& (value(raw, "give_item") == null || itemResolves(value(raw, "give_item"), items))
 				&& declaredSteps(raw, "talk_npc").stream()
-					.allMatch(step -> unique(value(raw, "talk_npc" + step), npcs))
+				.allMatch(step -> unique(value(raw, "talk_npc" + step), npcs))
 				&& declaredSteps(raw, "give_item").stream()
-					.allMatch(step -> itemResolves(value(raw, "give_item" + step), items))
+				.allMatch(step -> itemResolves(value(raw, "give_item" + step), items))
 				&& declaredSteps(raw, "remove_item").stream()
-					.allMatch(step -> itemResolves(value(raw, "remove_item" + step), items));
+				.allMatch(step -> itemResolves(value(raw, "remove_item" + step), items));
 			// 过场（{@code cs1_haction} 触发列本表不存在）与交付门（{@code item_check}）声明行 fail-closed。
 			if (value(raw, "cutsceneid1") != null || "1".equals(value(raw, "item_check"))) {
 				resolvable = false;
 			}
 			if (resolvable && RetiredQuestIds.contains(questId) && !xmlOnly.contains(questId)
-					&& metadataClean(driver, questId)) {
+				&& metadataClean(driver, questId)) {
 				expectedItemPlay.add(questId);
 			}
 		}
@@ -385,11 +399,13 @@ class UseItemFamilyRowAlignmentGateTest {
 	}
 
 	private static boolean faceResolves(String name, NativeNpcNameResolver npcs,
-			RetailClientHandinNpcSets handin, int questId) {
+										RetailClientHandinNpcSets handin, int questId) {
 		return unique(name, npcs) || !handin.npcIds(questId).isEmpty();
 	}
 
-	/** 单元 = 「符号 [数量]」；两通道解析（先原名，未命中再去 {@code ITEM_} 前缀）。 / The two-channel rule. */
+	/**
+	 * 单元 = 「符号 [数量]」；两通道解析（先原名，未命中再去 {@code ITEM_} 前缀）。 / The two-channel rule.
+	 */
 	private static boolean itemResolves(String cell, RetailItemNameIndex items) {
 		return cell != null && !cell.isBlank() && resolve(cell, items) != null;
 	}
@@ -403,14 +419,16 @@ class UseItemFamilyRowAlignmentGateTest {
 		return itemId;
 	}
 
-	/** 该行原版 {@code check_itemK_L} 声明（按槽序）。 / The row's retail check_itemK_L cells. */
+	/**
+	 * 该行原版 {@code check_itemK_L} 声明（按槽序）。 / The row's retail check_itemK_L cells.
+	 */
 	private static List<String> checkItems(int questId) {
 		Map<Integer, String> bySlot = new TreeMap<>();
 		for (Map.Entry<String, List<String>> field
-				: questXmlRaw.getOrDefault(questId, Map.of()).entrySet()) {
+			: questXmlRaw.getOrDefault(questId, Map.of()).entrySet()) {
 			Matcher matcher = Pattern.compile("check_item(\\d+)_(\\d+)").matcher(field.getKey());
 			if (!matcher.matches() || field.getValue().isEmpty()
-					|| field.getValue().getFirst().isBlank()) {
+				|| field.getValue().getFirst().isBlank()) {
 				continue;
 			}
 			bySlot.putIfAbsent(Integer.parseInt(matcher.group(1)), field.getValue().getFirst());
@@ -418,7 +436,9 @@ class UseItemFamilyRowAlignmentGateTest {
 		return List.copyOf(bySlot.values());
 	}
 
-	/** 已声明内容的列号（升序）。 / The declared column indices, ascending. */
+	/**
+	 * 已声明内容的列号（升序）。 / The declared column indices, ascending.
+	 */
 	private static List<Integer> declaredSteps(Map<String, String> raw, String prefix) {
 		List<Integer> steps = new ArrayList<>();
 		for (int step = 1; step <= 4; step++) {
@@ -461,7 +481,9 @@ class UseItemFamilyRowAlignmentGateTest {
 		return java.util.Collections.unmodifiableList(out);
 	}
 
-	/** 紧凑声明序（装载器的中继链形状：只保留已声明的名字，按列号升序）。 / The loader's dense relay shape. */
+	/**
+	 * 紧凑声明序（装载器的中继链形状：只保留已声明的名字，按列号升序）。 / The loader's dense relay shape.
+	 */
 	private static List<String> declaredNames(Map<String, String> raw, String prefix) {
 		TreeMap<Integer, String> ordered = new TreeMap<>();
 		for (Map.Entry<String, String> entry : raw.entrySet()) {

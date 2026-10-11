@@ -15,7 +15,6 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -32,7 +31,9 @@ class Quest2953RetailFlowAlignmentTest {
 	private static final int QUEST_ID = 2953;
 	private static final int START_AND_REWARD_NPC = 204191;
 	private static final int DELIVERY_NPC = 204071;
-	/** 原版 give_item / remove_item1 = ITEM_QUEST_2953A 1。 / The retail supply-request item. */
+	/**
+	 * 原版 give_item / remove_item1 = ITEM_QUEST_2953A 1。 / The retail supply-request item.
+	 */
 	private static final int SUPPLY_REQUEST = 182207039;
 
 	@Test
@@ -46,8 +47,8 @@ class Quest2953RetailFlowAlignmentTest {
 		assertEquals("Doman", handler.requireRow(QUEST_ID).acquiredNpcName(), "接取 owner 名");
 		assertEquals(List.of("Veldina"), handler.requireRow(QUEST_ID).talkNpcNames(), "原版中继链");
 		assertEquals("Doman", handler.requireRow(QUEST_ID).rewardNpcName(), "交付 owner 名");
-		assertEquals(START_AND_REWARD_NPC, NativeNpcNameResolver.instance().resolve("Doman").npcIds().get(0));
-		assertEquals(DELIVERY_NPC, NativeNpcNameResolver.instance().resolve("Veldina").npcIds().get(0));
+		assertEquals(START_AND_REWARD_NPC, NativeNpcNameResolver.instance().resolve("Doman").npcIds().getFirst());
+		assertEquals(DELIVERY_NPC, NativeNpcNameResolver.instance().resolve("Veldina").npcIds().getFirst());
 		assertEquals(START_AND_REWARD_NPC, handler.acquireNpc(QUEST_ID), "接取 owner = Doman");
 		assertEquals(START_AND_REWARD_NPC, handler.rewardNpc(QUEST_ID), "交付 owner = Doman");
 		assertEquals(1, handler.relayCount(QUEST_ID), "2953 是单步中继行");
@@ -66,7 +67,7 @@ class Quest2953RetailFlowAlignmentTest {
 		assertEquals(100, metadata.repeatPolicy().maxRepeatCount(), "原版 max_repeat_count=100 ⇒ 可重复");
 		List<QuestReward> rewards = metadata.rewards();
 		assertTrue(rewards.contains(new QuestReward("EXP", 0, 150)), () -> rewards.toString());
-		assertTrue(rewards.contains(new QuestReward("GOLD", 0, 500)), () -> rewards.toString());
+		assertTrue(rewards.contains(new QuestReward("GOLD", 0, 500)), rewards::toString);
 	}
 
 	@Test

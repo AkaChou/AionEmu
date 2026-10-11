@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -105,7 +106,9 @@ class RetailOpenWorldSpawnDataTest {
 		assertEquals(164, boundRoutes.size());
 	}
 
-	/** 海意隆 D9 亡灵农场的 12 个共用点：白天骷髅、夜间亡灵。 / Heiron D9 undead farm: 12 shared spots, day-night swap. */
+	/**
+	 * 海意隆 D9 亡灵农场的 12 个共用点：白天骷髅、夜间亡灵。 / Heiron D9 undead farm: 12 shared spots, day-night swap.
+	 */
 	private static final Map<Integer, Set<Integer>> HEIRON_UNDEAD_FARM_PAIRS = Map.of(
 		211977, Set.of(211979, 211981),
 		211978, Set.of(211980, 211982));
@@ -161,8 +164,8 @@ class RetailOpenWorldSpawnDataTest {
 			// 同一 npc_id 的第二个 <spawn> 块只有带 initial_delay/spawn_page 才会作为变体一起加载。
 			// A second <spawn> block of the same npc_id is indexed as a variant only when it carries
 			// initial_delay / spawn_page.
-			assertFalse("".equals(dayVariant.getAttribute("initial_delay")), "npc " + dayId + " 需要 initial_delay");
-			assertFalse("0".equals(dayVariant.getAttribute("initial_delay")), "npc " + dayId + " initial_delay 不能为 0");
+			assertNotEquals("", dayVariant.getAttribute("initial_delay"), "npc " + dayId + " 需要 initial_delay");
+			assertNotEquals("0", dayVariant.getAttribute("initial_delay"), "npc " + dayId + " initial_delay 不能为 0");
 
 			Set<String> swappedSpots = spotKeys(dayVariant);
 			Set<String> nightTwinSpots = new HashSet<>();
@@ -180,10 +183,12 @@ class RetailOpenWorldSpawnDataTest {
 		List<Element> blocks = blocksByNpc.get(npcId);
 		assertNotNull(blocks, "npc " + npcId);
 		assertEquals(1, blocks.size(), "npc " + npcId);
-		return blocks.get(0);
+		return blocks.getFirst();
 	}
 
-	/** 只取块级 <temporary_spawn>（spot 级窗口挂在 <spot> 之下，不算）。 / block level only. */
+	/**
+	 * 只取块级 <temporary_spawn>（spot 级窗口挂在 <spot> 之下，不算）。 / block level only.
+	 */
 	private static Element blockWindow(Element spawn) {
 		var windows = spawn.getElementsByTagName("temporary_spawn");
 		for (int i = 0; i < windows.getLength(); i++) {
@@ -207,7 +212,7 @@ class RetailOpenWorldSpawnDataTest {
 	}
 
 	private static void assertTemporarySpawn(String fileName, int npcId, double x, double y, double z)
-			throws Exception {
+		throws Exception {
 		var document = DocumentBuilderFactory.newInstance().newDocumentBuilder()
 			.parse(NPCS.resolve(fileName).toFile());
 		var spawns = document.getElementsByTagName("spawn");

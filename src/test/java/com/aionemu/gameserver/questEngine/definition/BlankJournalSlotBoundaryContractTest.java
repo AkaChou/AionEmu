@@ -56,7 +56,7 @@ class BlankJournalSlotBoundaryContractTest {
 	}
 
 	@Test
-	void prologueQuestsKeepTheirIntroMovieAndEnterZoneTriggers() throws Exception {
+	void prologueQuestsKeepTheirIntroMovieAndEnterZoneTriggers() {
 		assertPrologue(ELYOS_PROLOGUE, "AKARIOS_PLAINS_210010000", 1);
 		assertPrologue(ASMODIAN_PROLOGUE, "ALDELLE_BASIN_220010000", 2);
 	}

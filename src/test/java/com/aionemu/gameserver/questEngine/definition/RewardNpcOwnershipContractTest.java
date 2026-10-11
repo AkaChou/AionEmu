@@ -68,7 +68,7 @@ class RewardNpcOwnershipContractTest {
 		30613, 800327);
 
 	@Test
-	void rewardCompletionBelongsToTheClientJournalNpc() throws Exception {
+	void rewardCompletionBelongsToTheClientJournalNpc() {
 		for (Ownership ownership : OWNERSHIPS) {
 			QuestDefinition definition = definition(ownership.questId());
 			Set<Integer> owners = rewardOwners(definition);
@@ -86,7 +86,7 @@ class RewardNpcOwnershipContractTest {
 	}
 
 	@Test
-	void talkRoutesOnlyAddressTheOwnershipNpcSet() throws Exception {
+	void talkRoutesOnlyAddressTheOwnershipNpcSet() {
 		for (Ownership ownership : OWNERSHIPS) {
 			QuestDefinition definition = definition(ownership.questId());
 			assertEquals(ownership.talkNpcIds(), talkNpcIds(definition),
@@ -95,7 +95,7 @@ class RewardNpcOwnershipContractTest {
 	}
 
 	@Test
-	void dreadgionRepeatsFollowTheClientNamingConvention() throws Exception {
+	void dreadgionRepeatsFollowTheClientNamingConvention() {
 		for (Map.Entry<Integer, Integer> sibling : DREADGION_FAMILY.entrySet()) {
 			Set<Integer> owners = rewardOwners(definition(sibling.getKey()));
 			assertTrue(owners.contains(sibling.getValue()),
@@ -110,7 +110,7 @@ class RewardNpcOwnershipContractTest {
 	}
 
 	@Test
-	void staleRewardRowsAreRepairedOnEnterWorld() throws Exception {
+	void staleRewardRowsAreRepairedOnEnterWorld() {
 		for (int staleRow : List.of(0, 2)) {
 			assertRecovery(19064, staleRow);
 			assertRecovery(29064, staleRow);

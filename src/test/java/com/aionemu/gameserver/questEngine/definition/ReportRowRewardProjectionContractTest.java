@@ -6,7 +6,6 @@ import com.aionemu.gameserver.questEngine.runtime.QuestMutationPlanner;
 import com.aionemu.gameserver.questEngine.runtime.QuestSnapshot;
 import org.junit.jupiter.api.Test;
 
-import java.io.InputStream;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -61,7 +60,9 @@ class ReportRowRewardProjectionContractTest {
 		new Contract(18036, 1, List.of(0)),
 		new Contract(28036, 1, List.of(0)));
 
-	/** C 组：交出物品后必须落到 s1(var0=1)，报告与领奖路线都以 s1 为 source。 */
+	/**
+	 * C 组：交出物品后必须落到 s1(var0=1)，报告与领奖路线都以 s1 为 source。
+	 */
 	private record StartNodeContract(int questId, int acceptNpcId, int reportNpcId) {
 	}
 
@@ -110,7 +111,7 @@ class ReportRowRewardProjectionContractTest {
 				assertEquals(List.of(new QuestAction.SetVariable("var0", contract.rewardRow())),
 					recovery.actions(), () -> "quest " + contract.questId() + " recovery actions");
 				assertEquals(List.of(new AfterCommitAction.SyncQuestState(
-					QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH)), recovery.afterCommit(),
+						QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH)), recovery.afterCommit(),
 					() -> "quest " + contract.questId() + " recovery after-commit");
 				assertNull(recovery.priority());
 
@@ -134,7 +135,7 @@ class ReportRowRewardProjectionContractTest {
 			for (QuestTransition route : rewardRoutes) {
 				for (QuestAction action : route.actions()) {
 					if (action instanceof QuestAction.SetVariable(String field, int value)
-							&& "var0".equals(field)) {
+						&& "var0".equals(field)) {
 						assertEquals(contract.rewardRow(), value,
 							() -> "quest " + contract.questId() + " reward route from "
 								+ route.sourceNode() + " writes a stale journal row");
@@ -198,7 +199,7 @@ class ReportRowRewardProjectionContractTest {
 	}
 
 	private static QuestTransition route(QuestDefinition definition, String source, String target,
-			QuestEvent event) {
+										 QuestEvent event) {
 		List<QuestTransition> matches = definition.transitions().stream()
 			.filter(candidate -> source.equals(candidate.sourceNode()))
 			.filter(candidate -> target.equals(candidate.targetNode()))
@@ -213,7 +214,7 @@ class ReportRowRewardProjectionContractTest {
 	}
 
 	private static QuestSnapshot snapshot(CompiledQuestDefinition definition, QuestStatus status,
-			Map<String, Integer> variables, Map<Integer, Integer> inventory) {
+										  Map<String, Integer> variables, Map<Integer, Integer> inventory) {
 		Map<String, Integer> packedVariables = new LinkedHashMap<>(
 			definition.definition().progressLayout().unpack(0));
 		packedVariables.putAll(variables);

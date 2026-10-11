@@ -50,13 +50,13 @@ class Quest11110And1548PostKillReportDialogTest {
 		assertPrerequisite(1548, 1547);
 
 		List<QuestReward> ambitious = metadata(11110).rewards();
-		assertTrue(ambitious.contains(new QuestReward("GOLD", 0, 6900)), () -> ambitious.toString());
-		assertTrue(ambitious.contains(new QuestReward("EXP", 0, 2814541)), () -> ambitious.toString());
+		assertTrue(ambitious.contains(new QuestReward("GOLD", 0, 6900)), ambitious::toString);
+		assertTrue(ambitious.contains(new QuestReward("EXP", 0, 2814541)), ambitious::toString);
 		assertEquals(10, metadata(11110).repeatPolicy().maxRepeatCount(), "原版 max_repeat_count=10");
 
 		List<QuestReward> research = metadata(1548).rewards();
-		assertTrue(research.contains(new QuestReward("EXP", 0, 1496758)), () -> research.toString());
-		assertTrue(research.contains(new QuestReward("ITEM", 186000004, 3)), () -> research.toString());
+		assertTrue(research.contains(new QuestReward("EXP", 0, 1496758)), research::toString);
+		assertTrue(research.contains(new QuestReward("ITEM", 186000004, 3)), research::toString);
 	}
 
 	@Test

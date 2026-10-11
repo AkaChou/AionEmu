@@ -2,6 +2,7 @@ package com.aionemu.gameserver.commands;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -31,12 +32,16 @@ import org.junit.jupiter.api.Test;
  */
 class CommandAliasRegistryTest {
 
-	/** 反射扫描的命令包根目录。 / Command package roots scanned reflectively. */
+	/**
+	 * 反射扫描的命令包根目录。 / Command package roots scanned reflectively.
+	 */
 	private static final List<Path> COMMAND_PACKAGES = List.of(
 		Path.of("src/main/java/com/aionemu/gameserver/commands/admin"),
 		Path.of("src/main/java/com/aionemu/gameserver/commands/player"));
 
-	/** 访问等级配置，键即命令别名。 / Access-level config whose keys are the command aliases. */
+	/**
+	 * 访问等级配置，键即命令别名。 / Access-level config whose keys are the command aliases.
+	 */
 	private static final Path ACCESS_LEVEL_CONFIG = Path.of(
 		"src/main/resources/aion/config/administration/commands.properties");
 
@@ -47,9 +52,13 @@ class CommandAliasRegistryTest {
 	 */
 	private static final Pattern DECLARED_ALIAS_DECLARATION = Pattern.compile(
 		"super\\(\\s*((?:\"[^\"]*\"\\s*,?\\s*)+)\\)");
-	/** {@code super(...)} 参数列表中的单个字符串字面量。 / Single string literal inside a {@code super(...)} list. */
+	/**
+	 * {@code super(...)} 参数列表中的单个字符串字面量。 / Single string literal inside a {@code super(...)} list.
+	 */
 	private static final Pattern ALIAS_LITERAL = Pattern.compile("\"([^\"]*)\"");
-	/** 配置行 {@code alias = level}，别名允许中文。 / Config line {@code alias = level}; alias may be non-ASCII. */
+	/**
+	 * 配置行 {@code alias = level}，别名允许中文。 / Config line {@code alias = level}; alias may be non-ASCII.
+	 */
 	private static final Pattern CONFIGURED_ALIAS = Pattern.compile("^\\s*([^\\s=#]+)\\s*=");
 
 	/**
@@ -110,6 +119,7 @@ class CommandAliasRegistryTest {
 	/**
 	 * 收集命令类声明的别名。
 	 * Collects aliases declared by command classes.
+	 *
 	 * @return 别名到源文件的映射 / Alias-to-source map
 	 * @throws IOException 读取命令源文件失败时 / When a command source cannot be read
 	 */
@@ -121,7 +131,7 @@ class CommandAliasRegistryTest {
 				Matcher literal = ALIAS_LITERAL.matcher(declaration.group(1));
 				while (literal.find()) {
 					Path previous = aliases.put(literal.group(1), source);
-					assertTrue(previous == null,
+					assertNull(previous,
 						"duplicate command alias " + literal.group(1) + " declared by " + previous + " and " + source);
 				}
 			}
@@ -132,6 +142,7 @@ class CommandAliasRegistryTest {
 	/**
 	 * 读取访问等级配置里的别名集合。
 	 * Reads the configured alias set from the access-level config.
+	 *
 	 * @return 配置别名集合 / Configured alias set
 	 * @throws IOException 读取配置失败时 / When the config cannot be read
 	 */
@@ -152,6 +163,7 @@ class CommandAliasRegistryTest {
 	/**
 	 * 列出两个命令包下的全部源文件。
 	 * Lists all command sources under both command packages.
+	 *
 	 * @return 源文件列表 / Source file list
 	 * @throws IOException 遍历命令包失败时 / When the command packages cannot be walked
 	 */

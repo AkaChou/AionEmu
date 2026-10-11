@@ -6,7 +6,6 @@ import com.aionemu.gameserver.questEngine.runtime.QuestMutationPlanner;
 import com.aionemu.gameserver.questEngine.runtime.QuestSnapshot;
 import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -37,7 +36,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 class DurableDaevanionWeaponRewardRowContractTest {
 
-	/** 领奖行 NPC（唯一 completion owner）、领奖行号、旧存档行号。 */
+	/**
+	 * 领奖行 NPC（唯一 completion owner）、领奖行号、旧存档行号。
+	 */
 	private record Contract(int questId, int ownerNpc, int rewardRow, int staleRow) {
 	}
 
@@ -65,7 +66,7 @@ class DurableDaevanionWeaponRewardRowContractTest {
 	private static final Map<Integer, Integer> LEGACY_STEP_BASELINE = Map.of(15300, 13, 25300, 13);
 
 	@Test
-	void weaponVariantsProjectTheSecondJournalRow() throws Exception {
+	void weaponVariantsProjectTheSecondJournalRow() {
 		for (Contract contract : WEAPON_VARIANTS) {
 			QuestDefinition definition = definition(contract.questId()).definition();
 			assertEquals(Map.of("var0", 1), node(definition, "reward").projection().variables(),
@@ -78,7 +79,7 @@ class DurableDaevanionWeaponRewardRowContractTest {
 	}
 
 	@Test
-	void armourVariantsStayOnTheSingleJournalRow() throws Exception {
+	void armourVariantsStayOnTheSingleJournalRow() {
 		for (Contract contract : ARMOUR_VARIANTS) {
 			QuestDefinition definition = definition(contract.questId()).definition();
 			assertEquals(Map.of("var0", 0), node(definition, "reward").projection().variables(),
@@ -94,7 +95,7 @@ class DurableDaevanionWeaponRewardRowContractTest {
 	}
 
 	@Test
-	void rewardCompletionOwnerIsTheSingleFamilyNpc() throws Exception {
+	void rewardCompletionOwnerIsTheSingleFamilyNpc() {
 		for (Map.Entry<Integer, Integer> entry : FAMILY_OWNER.entrySet()) {
 			int questId = entry.getKey();
 			assertEquals(Set.of(entry.getValue()), rewardOwners(definition(questId).definition()),
@@ -107,7 +108,7 @@ class DurableDaevanionWeaponRewardRowContractTest {
 	}
 
 	@Test
-	void familySiblingsShareTheirOwnerAndRowShape() throws Exception {
+	void familySiblingsShareTheirOwnerAndRowShape() {
 		/* 护甲/武器变体共用同一个事件 NPC（831384 或 831387），只是任务书行数不同。 */
 		/* Siblings share the event NPC and differ only in journal row count. */
 		for (Map.Entry<Integer, Integer> entry : FAMILY_OWNER.entrySet()) {
@@ -123,7 +124,7 @@ class DurableDaevanionWeaponRewardRowContractTest {
 	}
 
 	@Test
-	void staleRewardRowsAreHealedOnEnterWorld() throws Exception {
+	void staleRewardRowsAreHealedOnEnterWorld() {
 		for (Contract contract : allContracts()) {
 			CompiledQuestDefinition compiled = definition(contract.questId());
 			List<QuestTransition> matches = enterWorldRecoveries(compiled.definition()).stream()
@@ -132,7 +133,7 @@ class DurableDaevanionWeaponRewardRowContractTest {
 					new QuestCondition.QuestVariableIs("var0", contract.staleRow()))))
 				.toList();
 			assertEquals(1, matches.size(), () -> "quest " + contract.questId() + " heal route for stale row "
-					+ contract.staleRow());
+				+ contract.staleRow());
 			QuestTransition heal = matches.getFirst();
 			assertEquals(List.of(new QuestAction.SetVariable("var0", contract.rewardRow())), heal.actions(),
 				() -> "quest " + contract.questId() + " heal actions");
@@ -161,7 +162,7 @@ class DurableDaevanionWeaponRewardRowContractTest {
 			for (QuestTransition route : rewardRoutes) {
 				for (QuestAction action : route.actions()) {
 					if (action instanceof QuestAction.SetVariable(String field, int value)
-							&& "var0".equals(field)) {
+						&& "var0".equals(field)) {
 						assertEquals(contract.rewardRow(), value, () -> "quest " + contract.questId()
 							+ " reward route writes a non reward journal row");
 					}
@@ -171,7 +172,7 @@ class DurableDaevanionWeaponRewardRowContractTest {
 	}
 
 	@Test
-	void legacyNextStepBaselineQuestsKeepTheirPackedStep() throws Exception {
+	void legacyNextStepBaselineQuestsKeepTheirPackedStep() {
 		/* 15300/25300 的 legacy 是 changeQuestStep(13, 14, true)，但客户端验收值是进入前的 packed step 13
 		   （Quest15300And25300RewardProjectionTest 锁定）；这两个任务是本族扫描里唯一必须保留旧 step 的成员，
 		   没有客户端观测不得按“末行 14”改。 */
@@ -196,7 +197,7 @@ class DurableDaevanionWeaponRewardRowContractTest {
 		Set<Integer> owners = new LinkedHashSet<>();
 		for (QuestTransition transition : definition.transitions()) {
 			if ("reward".equals(transition.sourceNode()) && "complete".equals(transition.targetNode())
-					&& transition.event() instanceof QuestEvent.TalkToNpc talk) {
+				&& transition.event() instanceof QuestEvent.TalkToNpc talk) {
 				owners.add(talk.npcId());
 			}
 		}
@@ -211,7 +212,9 @@ class DurableDaevanionWeaponRewardRowContractTest {
 			.toList();
 	}
 
-	/** reward→complete 路由的 NPC 集合（完成 owner）。 / NPCs of the completion routes. */
+	/**
+	 * reward→complete 路由的 NPC 集合（完成 owner）。 / NPCs of the completion routes.
+	 */
 	private static Set<Integer> completionOwners(QuestDefinition definition) {
 		Set<Integer> owners = new LinkedHashSet<>();
 		for (QuestTransition transition : definition.transitions()) {

@@ -29,7 +29,7 @@ class Quest1926And2938ClientDialogAlignmentTest {
 	}
 
 	private static void assertContract(int questId, int prerequisiteId, int firstNpcId, int secondNpcId,
-			int workItemId, int experience) throws Exception {
+			int workItemId, int experience) {
 		QuestDefinition definition = definition(questId).definition();
 		assertEquals(Set.of(prerequisiteId), definition.metadata().prerequisites());
 		assertEquals(List.of(new QuestItemRequirement(workItemId, 1)),

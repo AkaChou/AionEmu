@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
@@ -33,12 +32,12 @@ class QuestMinionTutorialRetailAlignmentTest {
 		assertEquals(203558, handler.acquireNpc(2266), "接取 NPC");
 		assertEquals(203654, handler.rewardNpc(2266), "交付 NPC");
 		assertFalse(handler.acquireNpc(2266).equals(handler.rewardNpc(2266)),
-				"接取与交付 owner 分离");
+			"接取与交付 owner 分离");
 		assertEquals(1, handler.relayCount(2266), "中继步数");
 		assertTrue(handler.relaysForNpc(203655).stream().anyMatch(relay -> relay.questId() == 2266 && relay.step() == 1),
-				"中继 1 必须挂在该 NPC 上: Neifenmer");
+			"中继 1 必须挂在该 NPC 上: Neifenmer");
 		assertEquals(new SimpleTalkHandler.ItemStack(182203244, 1),
-				handler.acceptGiveItem(2266), "接取侧发放");
+			handler.acceptGiveItem(2266), "接取侧发放");
 		assertTrue(handler.workItems(2266).isEmpty(), "该行未声明 item_check：无交付门");
 		assertFalse(handler.unresolvedGate(2266), "无门行不得 fail-closed");
 		assertNull(handler.cutscene(2266), "该行无过场");
@@ -48,12 +47,12 @@ class QuestMinionTutorialRetailAlignmentTest {
 		assertEquals(798144, handler.acquireNpc(3085), "接取 NPC");
 		assertEquals(798132, handler.rewardNpc(3085), "交付 NPC");
 		assertFalse(handler.acquireNpc(3085).equals(handler.rewardNpc(3085)),
-				"接取与交付 owner 分离");
+			"接取与交付 owner 分离");
 		assertEquals(1, handler.relayCount(3085), "中继步数");
 		assertTrue(handler.relaysForNpc(203830).stream().anyMatch(relay -> relay.questId() == 3085 && relay.step() == 1),
-				"中继 1 必须挂在该 NPC 上: Vatonia");
+			"中继 1 必须挂在该 NPC 上: Vatonia");
 		assertEquals(new SimpleTalkHandler.ItemStack(182208048, 1),
-				handler.acceptGiveItem(3085), "接取侧发放");
+			handler.acceptGiveItem(3085), "接取侧发放");
 		assertTrue(handler.workItems(3085).isEmpty(), "该行未声明 item_check：无交付门");
 		assertFalse(handler.unresolvedGate(3085), "无门行不得 fail-closed");
 		assertNull(handler.cutscene(3085), "该行无过场");
@@ -69,7 +68,7 @@ class QuestMinionTutorialRetailAlignmentTest {
 		assertEquals(730534, handler.rewardNpc(28808), "交付 NPC（Housing_FOBJ_01 对象模板）");
 		assertEquals(0, handler.relayCount(28808), "中继步数");
 		assertEquals(new SimpleTalkHandler.ItemStack(182213216, 1),
-				handler.acceptGiveItem(28808), "接取侧发放");
+			handler.acceptGiveItem(28808), "接取侧发放");
 		assertTrue(handler.workItems(28808).isEmpty(), "该行未声明 item_check：无交付门");
 		assertFalse(handler.unresolvedGate(28808), "无门行不得 fail-closed");
 		assertNull(handler.cutscene(28808), "该行无过场");

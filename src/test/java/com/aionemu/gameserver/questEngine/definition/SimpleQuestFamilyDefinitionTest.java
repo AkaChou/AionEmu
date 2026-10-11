@@ -24,7 +24,9 @@ import static com.aionemu.gameserver.questEngine.definition.QuestDsl.vars;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-/** Vertical compiler fixtures for the remaining true-server Simple* families. */
+/**
+ * Vertical compiler fixtures for the remaining true-server Simple* families.
+ */
 class SimpleQuestFamilyDefinitionTest {
 	@Test
 	void simpleSerialHunt9622XmlAndDslMatchTheFirstOrderedTarget() throws Exception {
@@ -52,7 +54,7 @@ class SimpleQuestFamilyDefinitionTest {
 		var plan = QuestMutationPlanner.plan(definition,
 			new QuestSnapshot(7, 1107, QuestStatus.NONE, 0, Map.of())
 				.withStartEligibility(QuestStartEligibility.allowed()),
-			useItem(182200501), definition.definition().transitions().get(0));
+			useItem(182200501), definition.definition().transitions().getFirst());
 		assertTrue(plan.isPresent());
 		assertEquals(QuestStatus.START, plan.orElseThrow().nextStatus());
 	}
@@ -68,7 +70,7 @@ class SimpleQuestFamilyDefinitionTest {
 	}
 
 	private static CompiledQuestDefinition assertEquivalent(String resource, CompiledQuestDefinition fromDsl)
-			throws Exception {
+		throws Exception {
 		CompiledQuestDefinition fromXml;
 		try (InputStream input = SimpleQuestFamilyDefinitionTest.class.getResourceAsStream(
 			"/quest-definition-fixtures/" + resource)) {

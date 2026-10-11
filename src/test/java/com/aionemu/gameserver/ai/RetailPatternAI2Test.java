@@ -65,6 +65,7 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+
 import java.util.Collections;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
@@ -112,9 +113,9 @@ class RetailPatternAI2Test {
 		// keep returning that one instance.
 		RetailPatternAI2 untouched = new RetailPatternAI2();
 		RetailPatternAI2 other = new RetailPatternAI2();
-		String[][] accessors = { { "timers", "writableTimers" }, { "spawned", "writableSpawned" },
-			{ "selfManagedSpawns", "writableSelfManagedSpawns" }, { "flags", "writableFlags" },
-			{ "intVars", "writableIntVars" } };
+		String[][] accessors = {{"timers", "writableTimers"}, {"spawned", "writableSpawned"},
+			{"selfManagedSpawns", "writableSelfManagedSpawns"}, {"flags", "writableFlags"},
+			{"intVars", "writableIntVars"}};
 		for (String[] pair : accessors) {
 			assertSame(fieldValue(untouched, pair[0]), fieldValue(other, pair[0]), pair[0] + " 未写入前应共享同一占位符");
 			assertNotSame(fieldValue(untouched, pair[0]), writable(untouched, pair[1]), pair[0] + " 首次写入应物化");
@@ -129,8 +130,8 @@ class RetailPatternAI2Test {
 		// 同一实例，否则先写入的登记（定时器、刷怪、标记位、整型变量）会落进被丢弃的容器而永久丢失。
 		// Those five containers are reached concurrently by pool tasks and AI event threads, so the first
 		// materialisation must converge on one instance or the first entries land in a discarded container.
-		String[] accessors = { "writableTimers", "writableSpawned", "writableSelfManagedSpawns", "writableFlags",
-			"writableIntVars" };
+		String[] accessors = {"writableTimers", "writableSpawned", "writableSelfManagedSpawns", "writableFlags",
+			"writableIntVars"};
 		for (String accessor : accessors) {
 			RetailPatternAI2 ai = new RetailPatternAI2();
 			int threads = 8;
@@ -145,7 +146,7 @@ class RetailPatternAI2Test {
 					}));
 				}
 				start.countDown();
-				Object first = results.get(0).get(30, TimeUnit.SECONDS);
+				Object first = results.getFirst().get(30, TimeUnit.SECONDS);
 				for (Future<Object> result : results) {
 					assertSame(first, result.get(30, TimeUnit.SECONDS), accessor + " 的并发首次物化必须收敛到同一实例");
 				}
@@ -310,9 +311,9 @@ class RetailPatternAI2Test {
 			DataManager.RETAIL_AI_DATA = loader.loadRetailAiData();
 
 			ObjenesisStd objenesis = new ObjenesisStd();
-			for (int npcId : new int[] { 216206, 216207, 216208, 216209, 216210, 216211, 216212, 216213,
-					216583, 216584, 216585, 216245, 216736, 216737, 216738, 216739, 216239, 216158, 281696,
-					216295, 216296, 216297, 216298 }) {
+			for (int npcId : new int[]{216206, 216207, 216208, 216209, 216210, 216211, 216212, 216213,
+				216583, 216584, 216585, 216245, 216736, 216737, 216738, 216739, 216239, 216158, 281696,
+				216295, 216296, 216297, 216298}) {
 				Pattern pattern = DataManager.RETAIL_AI_DATA.getPattern(npcId);
 				assertNotNull(pattern, "missing pattern: " + npcId);
 				SkillNpc owner = objenesis.newInstance(SkillNpc.class);
@@ -354,8 +355,8 @@ class RetailPatternAI2Test {
 				Pattern pattern = DataManager.RETAIL_AI_DATA.getPattern(npcId);
 				assertNotNull(pattern, "missing lever pattern: " + npcId);
 				assertTrue(pattern.event("on_die").stream()
-					.flatMap(rule -> rule.actions().stream())
-					.anyMatch(action -> action.type().equals("broadcast_message")),
+						.flatMap(rule -> rule.actions().stream())
+						.anyMatch(action -> action.type().equals("broadcast_message")),
 					"lever must keep its death broadcast: " + npcId);
 
 				SkillNpc owner = objenesis.newInstance(SkillNpc.class);
@@ -712,8 +713,8 @@ class RetailPatternAI2Test {
 			List.of(new Rule(1, "PLANNED", List.of(), List.of(selfMessage)))))));
 		assertFalse(RetailPatternAI2.supports(new Pattern("unsupported_target_message", Map.of("on_battle_timer",
 			List.of(new Rule(1, "PLANNED", List.of(), List.of(new Operation("send_message", Map.of(
-					"target", "OBJI_CUR_TARGET", "message_type", "1003", "param1", "0", "param2", "0",
-					"param_obj", "OBJI_SELF")))))))));
+				"target", "OBJI_CUR_TARGET", "message_type", "1003", "param1", "0", "param2", "0",
+				"param_obj", "OBJI_SELF")))))))));
 
 		Rule messageEnemy = new Rule(1, "DIRECT",
 			List.of(new Operation("is_enemy", Map.of("who", "OBJI_MESSAGE_PARAM"))),
@@ -2173,12 +2174,35 @@ class RetailPatternAI2Test {
 			super(skillId, skillLevel);
 		}
 
-		@Override public boolean isReady(int hpPercentage, long fightingTimeInMSec) { return true; }
-		@Override public boolean chanceReady() { return true; }
-		@Override public boolean hpReady(int hpPercentage) { return true; }
-		@Override public boolean timeReady(long fightingTimeInMSec) { return true; }
-		@Override public boolean hasCooldown() { return false; }
-		@Override public boolean UseInSpawned() { return true; }
+		@Override
+		public boolean isReady(int hpPercentage, long fightingTimeInMSec) {
+			return true;
+		}
+
+		@Override
+		public boolean chanceReady() {
+			return true;
+		}
+
+		@Override
+		public boolean hpReady(int hpPercentage) {
+			return true;
+		}
+
+		@Override
+		public boolean timeReady(long fightingTimeInMSec) {
+			return true;
+		}
+
+		@Override
+		public boolean hasCooldown() {
+			return false;
+		}
+
+		@Override
+		public boolean UseInSpawned() {
+			return true;
+		}
 	}
 
 	private static final class RecordingVisibleObject extends VisibleObject {
@@ -2187,8 +2211,15 @@ class RetailPatternAI2Test {
 			super(1, controller, null, null, null);
 		}
 
-		@Override public boolean isSpawned() { return true; }
-		@Override public String getName() { return "terminal-cleanup"; }
+		@Override
+		public boolean isSpawned() {
+			return true;
+		}
+
+		@Override
+		public String getName() {
+			return "terminal-cleanup";
+		}
 	}
 
 	private static final class RecordingVisibleObjectController extends VisibleObjectController<RecordingVisibleObject> {
@@ -2248,7 +2279,7 @@ class RetailPatternAI2Test {
 	}
 
 	private static void setField(Class<?> type, Object target, String name, Object value)
-			throws ReflectiveOperationException {
+		throws ReflectiveOperationException {
 		Field field = type.getDeclaredField(name);
 		field.setAccessible(true);
 		field.set(target, value);
@@ -2259,12 +2290,12 @@ class RetailPatternAI2Test {
 	}
 
 	private static void invokeEvent(RetailPatternAI2 ai, String event, Creature target)
-			throws ReflectiveOperationException {
+		throws ReflectiveOperationException {
 		invokeEvent(ai, event, null, target);
 	}
 
 	private static void invokeEvent(RetailPatternAI2 ai, String event, String timer, Creature target)
-			throws ReflectiveOperationException {
+		throws ReflectiveOperationException {
 		Method method = RetailPatternAI2.class.getDeclaredMethod("runEvent", String.class, String.class, Creature.class);
 		method.setAccessible(true);
 		method.invoke(ai, event, timer, target);
@@ -2297,7 +2328,7 @@ class RetailPatternAI2Test {
 	}
 
 	private static String consumePendingCutsceneTeleport(RetailPatternAI2 ai, int playerObjectId, int cutsceneId)
-			throws ReflectiveOperationException {
+		throws ReflectiveOperationException {
 		Method method = RetailPatternAI2.class.getDeclaredMethod("consumePendingCutsceneTeleport", int.class, int.class);
 		method.setAccessible(true);
 		return (String) method.invoke(ai, playerObjectId, cutsceneId);

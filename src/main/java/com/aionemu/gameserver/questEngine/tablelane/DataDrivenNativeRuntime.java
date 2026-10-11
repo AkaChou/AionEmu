@@ -79,7 +79,9 @@ import com.aionemu.gameserver.utils.stats.AbyssRankEnum;
  */
 public final class DataDrivenNativeRuntime {
 
-	/** 原版 DD 表资源路径。 / The retail DD table resource. */
+	/**
+	 * 原版 DD 表资源路径。 / The retail DD table resource.
+	 */
 	public static final String TABLE_RESOURCE = "/aion/data/static_data/quest/retail/data_driven_quest.xml";
 
 	/**
@@ -99,7 +101,9 @@ public final class DataDrivenNativeRuntime {
 	 */
 	static final float RETAIL_KILL_DISTANCE_SQ = 2500.0f;
 
-	/** 组标题后的尾整数（空格或逗号分隔）；名字内部的 `_N` 不算计数。 / Trailing count after a space or comma. */
+	/**
+	 * 组标题后的尾整数（空格或逗号分隔）；名字内部的 `_N` 不算计数。 / Trailing count after a space or comma.
+	 */
 	private static final Pattern TRAILING_INT = Pattern.compile("^(.*?)(?:\\s*,\\s*|\\s+)(\\d+)$");
 
 	/**
@@ -109,37 +113,67 @@ public final class DataDrivenNativeRuntime {
 	private static final int[] STAGE_PAGES = {1011, 1352, 1693, 2034, 2375, 2716, 3057, 3398, 3739, 4080, 6500,
 		6841, 7182, 7523, 7864};
 
-	/** 奖励窗页（原版报告通道打开的选择窗；与家族车道同页）。 / The reward-window page. */
+	/**
+	 * 奖励窗页（原版报告通道打开的选择窗；与家族车道同页）。 / The reward-window page.
+	 */
 	private static final int PAGE_REWARD_WINDOW = 5;
-	/** 完成页（原版 `mgr+0x5d8` 完成通道；与家族车道同页）。 / The completion page. */
+	/**
+	 * 完成页（原版 `mgr+0x5d8` 完成通道；与家族车道同页）。 / The completion page.
+	 */
 	private static final int PAGE_COMPLETE = 1008;
-	/** 领奖收尾页（原版 npc-complete finish=SELECTION_DIALOG）：回选择对话（页 10，questId=0）。 /
-	 * The claim tail page (retail npc-complete finish=SELECTION_DIALOG): the selection dialog. */
+	/**
+	 * 领奖收尾页（原版 npc-complete finish=SELECTION_DIALOG）：回选择对话（页 10，questId=0）。 /
+	 * The claim tail page (retail npc-complete finish=SELECTION_DIALOG): the selection dialog.
+	 */
 	private static final int PAGE_SELECTION_DIALOG = 10;
-	/** 接取入口问询页（原版 `FUN_180c47220` 打开态字面量 `0x129a`）。 / The accept-entry ask page (retail 0x129a). */
+	/**
+	 * 接取入口问询页（原版 `FUN_180c47220` 打开态字面量 `0x129a`）。 / The accept-entry ask page (retail 0x129a).
+	 */
 	private static final int PAGE_ACCEPT_ENTRY = 4762;
-	/** 进行中页（原版对象 #2 面 `FUN_180c473e0` 打开态字面量 `0x2712`；与共享对话平面空步集页同值）。
-	 * / The in-progress page (retail object-#2 open page 0x2712). */
+	/**
+	 * 进行中页（原版对象 #2 面 `FUN_180c473e0` 打开态字面量 `0x2712`；与共享对话平面空步集页同值）。
+	 * / The in-progress page (retail object-#2 open page 0x2712).
+	 */
 	private static final int PAGE_IN_PROGRESS = 10002;
-	/** 接取确认页（原版 1002 成功后下发）。 / The accepted page (sent after retail 1002). */
+	/**
+	 * 接取确认页（原版 1002 成功后下发）。 / The accepted page (sent after retail 1002).
+	 */
 	private static final int PAGE_ACCEPTED = 1003;
-	/** 拒绝确认页（原版 1003 下发）。 / The confirm-refuse page (sent after retail 1003). */
+	/**
+	 * 拒绝确认页（原版 1003 下发）。 / The confirm-refuse page (sent after retail 1003).
+	 */
 	private static final int PAGE_REFUSE = 1004;
-	/** 报告动作（原版 `0x3f1`）。 / The report action. */
+	/**
+	 * 报告动作（原版 `0x3f1`）。 / The report action.
+	 */
 	private static final int ACTION_REPORT = 1009;
-	/** 完成动作（原版 `0x3f0`）。 / The complete action. */
+	/**
+	 * 完成动作（原版 `0x3f0`）。 / The complete action.
+	 */
 	private static final int ACTION_COMPLETE = 1008;
-	/** 步进 + 完成动作（原版 `0x280f`）。 / The advance-and-complete action. */
+	/**
+	 * 步进 + 完成动作（原版 `0x280f`）。 / The advance-and-complete action.
+	 */
 	private static final int ACTION_ADVANCE_COMPLETE = 10255;
-	/** 接取动作（原版 0x3ea）。 / The accept action. */
+	/**
+	 * 接取动作（原版 0x3ea）。 / The accept action.
+	 */
 	private static final int ACTION_ACCEPT = 1002;
-	/** 接取确认动作（原版 0x3eb）。 / The accepted-ack action. */
+	/**
+	 * 接取确认动作（原版 0x3eb）。 / The accepted-ack action.
+	 */
 	private static final int ACTION_ACCEPTED = 1003;
-	/** 问询动作（原版 0x3ef → mgr+0x1a0 接取窗）。 / The ask action (retail mgr+0x1a0). */
+	/**
+	 * 问询动作（原版 0x3ef → mgr+0x1a0 接取窗）。 / The ask action (retail mgr+0x1a0).
+	 */
 	private static final int ACTION_ASK = 1007;
-	/** 建档动作（原版 20000）。 / The book-entry accept action. */
+	/**
+	 * 建档动作（原版 20000）。 / The book-entry accept action.
+	 */
 	private static final int ACTION_BOOK = 20000;
-	/** 拒绝动作（原版 20001）。 / The refuse action. */
+	/**
+	 * 拒绝动作（原版 20001）。 / The refuse action.
+	 */
 	private static final int ACTION_REFUSE = 20001;
 	/**
 	 * 奖励窗无选择确认动作（原版 SELECTED_QUEST_NOREWARD；选项段只有 REWARD1..15 = 8..22）。
@@ -147,37 +181,57 @@ public final class DataDrivenNativeRuntime {
 	 */
 	private static final int ACTION_NO_REWARD = 23;
 
-	/** 一次事件命中的步引用：任务 + 步号 + 组槽（直接步进类为 0）。 / One event hit: quest, step, group. */
+	/**
+	 * 一次事件命中的步引用：任务 + 步号 + 组槽（直接步进类为 0）。 / One event hit: quest, step, group.
+	 */
 	public record StepHit(int questId, int stepIndex, int group) {
 	}
 
-	/** 不可原生路由的冻结原因。 / Why a switch-set row is not natively routable yet. */
+	/**
+	 * 不可原生路由的冻结原因。 / Why a switch-set row is not natively routable yet.
+	 */
 	public enum FreezeReason {
-		/** 名字解析不到唯一 NPC / 怪物 / 物品 / 字符串键。 / A payload name or string key did not resolve. */
+		/**
+		 * 名字解析不到唯一 NPC / 怪物 / 物品 / 字符串键。 / A payload name or string key did not resolve.
+		 */
 		NAME_UNRESOLVED,
-		/** 进区别名在原版世界文件里没有定义（{@code NativeEnterAreaPort.RETAIL_ABSENT_ALIASES}）。 / Retail-absent zone alias. */
+		/**
+		 * 进区别名在原版世界文件里没有定义（{@code NativeEnterAreaPort.RETAIL_ABSENT_ALIASES}）。 / Retail-absent zone alias.
+		 */
 		ZONE_ABSENT,
-		/** 进区别名未登记成区。 / Zone alias not registered. */
+		/**
+		 * 进区别名未登记成区。 / Zone alias not registered.
+		 */
 		ZONE_UNRESOLVED,
-		/** 载荷语法不合法（空组 / 非整数世界 id / 非整数计数）。 / Malformed payload. */
+		/**
+		 * 载荷语法不合法（空组 / 非整数世界 id / 非整数计数）。 / Malformed payload.
+		 */
 		PAYLOAD_INVALID,
-		/** 步携带仍未落面的附加动作（第九批后仅剩：原版世界文件本就缺落点别名的 ENTER_INSTANCE 行
+		/**
+		 * 步携带仍未落面的附加动作（第九批后仅剩：原版世界文件本就缺落点别名的 ENTER_INSTANCE 行
 		 * 〔20032，creation 2〕；col8 Message8 = `Npc::Die` 零 routed 人口不计）。A step carries an
 		 * extra action still unfaced (after batch 9: only the Enter Instance row whose landing alias
-		 * is intrinsically absent from the retail world files). */
+		 * is intrinsically absent from the retail world files).
+		 */
 		ACTION_UNFACED
 	}
 
-	/** 原版 PvP 闸门（`PvP Target Min Rank` / `Max Rank` / `Level Gap`；0 = 该轴无闸门）。 / PvP gate. */
+	/**
+	 * 原版 PvP 闸门（`PvP Target Min Rank` / `Max Rank` / `Level Gap`；0 = 该轴无闸门）。 / PvP gate.
+	 */
 	private record PvpGate(int minRank, int maxRank, int levelGap) {
 	}
 
-	/** 一步的原生执行计划。 / The native execution plan of one step. */
+	/**
+	 * 一步的原生执行计划。 / The native execution plan of one step.
+	 */
 	private record StepPlan(Kind kind, boolean counter, List<DataDrivenProgress.Slot> slots, PvpGate gate,
-			boolean lastStep) {
+							boolean lastStep) {
 	}
 
-	/** 挑战任务接取哨兵（原版 DD 表字面；P0c-58 四源裁定 = 接取 NPC 即交付 NPC 本人）。 */
+	/**
+	 * 挑战任务接取哨兵（原版 DD 表字面；P0c-58 四源裁定 = 接取 NPC 即交付 NPC 本人）。
+	 */
 	private static final String CHALLENGE_TASK_SENTINEL = "_challengetask_";
 
 	/**
@@ -185,7 +239,7 @@ public final class DataDrivenNativeRuntime {
 	 * The per-row acquire plan; {@code null} = the acquire parameter name did not resolve (fail closed).
 	 */
 	private static AcquirePlan acquirePlan(Row row, NativeNpcNameResolver nameResolver,
-			RetailItemNameIndex itemIndex, Set<String> unresolved) {
+										   RetailItemNameIndex itemIndex, Set<String> unresolved) {
 		String kind = row.acquireKind() == null ? "" : row.acquireKind().trim();
 		return switch (kind) {
 			case "talk" -> {
@@ -246,40 +300,64 @@ public final class DataDrivenNativeRuntime {
 		};
 	}
 
-	/** 一个载荷组：名字列表 + 尾整数（Hunt = 计数，TalkFOBJ = 动作类型）。 / One payload group. */
+	/**
+	 * 一个载荷组：名字列表 + 尾整数（Hunt = 计数，TalkFOBJ = 动作类型）。 / One payload group.
+	 */
 	private record PayloadGroup(List<String> names, int trailing) {
 	}
 
-	/** 步 e2 已落面的附加动作类型（原版执行器 case 1/2/3/4/5/7）。 / The extra-action types faced in step e2. */
+	/**
+	 * 步 e2 已落面的附加动作类型（原版执行器 case 1/2/3/4/5/7）。 / The extra-action types faced in step e2.
+	 */
 	private enum ActionType {
-		/** case 1：发物品（`Give/Remove Items` 发半边）。 / Give items (executor case 1). */
+		/**
+		 * case 1：发物品（`Give/Remove Items` 发半边）。 / Give items (executor case 1).
+		 */
 		GIVE_ITEMS,
-		/** case 2：扣物品。 / Remove items (executor case 2). */
+		/**
+		 * case 2：扣物品。 / Remove items (executor case 2).
+		 */
 		REMOVE_ITEMS,
-		/** case 4：过场/电影（`Cutscene|Cutscene2|Movie|Movie2 N`）。 / Cutscene or movie (executor case 4). */
+		/**
+		 * case 4：过场/电影（`Cutscene|Cutscene2|Movie|Movie2 N`）。 / Cutscene or movie (executor case 4).
+		 */
 		CUTSCENE,
-		/** case 3：传送（`世界 x y z heading`，原版 z+1 落地）。 / Teleport (executor case 3). */
+		/**
+		 * case 3：传送（`世界 x y z heading`，原版 z+1 落地）。 / Teleport (executor case 3).
+		 */
 		TELEPORT,
-		/** case 5：刷怪（`Absolute|Relative 名, 数量, 时间[, x y z heading]`）。 / Spawn npcs (executor case 5). */
+		/**
+		 * case 5：刷怪（`Absolute|Relative 名, 数量, 时间[, x y z heading]`）。 / Spawn npcs (executor case 5).
+		 */
 		SPAWN,
-		/** case 7：播报（`STR_*` 键 → 字符串表 id）。 / Say (executor case 7, string-table id). */
+		/**
+		 * case 7：播报（`STR_*` 键 → 字符串表 id）。 / Say (executor case 7, string-table id).
+		 */
 		SAY,
-		/** case 10：任务计时（`秒, 目标步, 旗标`，旗标 0=到期推进 / 1=到期弃任）。
-		 * Quest timer (executor case 10: `seconds, destStep, flag`; flag 0 = advance / 1 = abandon). */
+		/**
+		 * case 10：任务计时（`秒, 目标步, 旗标`，旗标 0=到期推进 / 1=到期弃任）。
+		 * Quest timer (executor case 10: `seconds, destStep, flag`; flag 0 = advance / 1 = abandon).
+		 */
 		TIMER,
-		/** case 9：进副本（`creationId, worldId, leaveProgress[, 成员名…]`；落点 =
+		/**
+		 * case 9：进副本（`creationId, worldId, leaveProgress[, 成员名…]`；落点 =
 		 * `NativeInstanceEntryPort` 原版别名坐标；movieId 槽 = creationId、count 槽 = leaveProgress）。
 		 * Enter instance (executor case 9; landing point from the retail alias table; movieId slot =
-		 * creationId, count slot = leaveProgress). */
+		 * creationId, count slot = leaveProgress).
+		 */
 		ENTER_INSTANCE
 	}
 
-	/** 一个已解析的附加动作（未用字段 = -1/0）。 / One resolved extra action (unused fields = -1/0). */
+	/**
+	 * 一个已解析的附加动作（未用字段 = -1/0）。 / One resolved extra action (unused fields = -1/0).
+	 */
 	private record ActionPlan(ActionType type, int itemId, int count, int movieId, boolean movieToken, int worldId,
-			float x, float y, float z, int heading, boolean relative, int stringId) {
+							  float x, float y, float z, int heading, boolean relative, int stringId) {
 	}
 
-	/** 一次发放（回滚补发的物品条目；门禁断言面）。 / One grant (an item to restore on rollback; gate face). */
+	/**
+	 * 一次发放（回滚补发的物品条目；门禁断言面）。 / One grant (an item to restore on rollback; gate face).
+	 */
 	record ItemGrant(int itemId, int count) {
 	}
 
@@ -309,16 +387,9 @@ public final class DataDrivenNativeRuntime {
 	 * for the current data.
 	 */
 	record LeaveRollback(int questId, int enterStep, int worldId, int leaveProgress,
-			List<ItemGrant> restoreItems) {
+						 List<ItemGrant> restoreItems) {
 	}
 
-	/**
-	 * 接取计划（原版 LoadBasicInfo 注册面：Talk=0x640 对话面 / ItemPlay=事件 5 / EnterWorld=事件 0x12 /
-	 * LevelUpLogIn=vec0+vec3 等级等值；EnterArea=e1 缺面（区几何未导入，接取缺席镜像原版注册树未填）；
-	 * none/其余 = 无接取注册）。
-	 * The per-row acquire plan (retail LoadBasicInfo registration face). EnterArea is unfaced in e1
-	 * (zone geometry not imported); none/other kinds have no acquire registration.
-	 */
 	/**
 	 * 接取计划（原版 6 类接取 kind 的解析产物）。
 	 * <p>
@@ -331,7 +402,7 @@ public final class DataDrivenNativeRuntime {
 	 * — mirrored by keying the interest on the alias text.
 	 */
 	private record AcquirePlan(int kind, int level, int worldId, int itemId, List<Integer> npcIds,
-			String zoneAlias) {
+							   String zoneAlias) {
 
 		static final AcquirePlan NONE = new AcquirePlan(0, 0, 0, 0, List.of(), "");
 	}
@@ -346,7 +417,9 @@ public final class DataDrivenNativeRuntime {
 	private final Map<String, List<StepHit>> zonesByName;
 	private final Map<Integer, List<StepHit>> worldsByWorldId;
 	private final Map<Integer, List<Integer>> pvpStepsByQuestId;
-	/** 接取兴趣面：Talk 对话 NPC → 任务。 / Acquire interest: talk npc → quests. */
+	/**
+	 * 接取兴趣面：Talk 对话 NPC → 任务。 / Acquire interest: talk npc → quests.
+	 */
 	private final Map<Integer, List<Integer>> acquireTalksByNpcId;
 	/**
 	 * 交付报告面：零步 Talk 行（DD_TALK_SIMPLE，无 progress 步）的交付 NPC → 任务。原版所有行恒注册
@@ -356,15 +429,25 @@ public final class DataDrivenNativeRuntime {
 	 * Delivery-report face: reward npc → zero-step Talk rows (the retail reward object #2).
 	 */
 	private final Map<Integer, List<Integer>> reportTalksByNpcId;
-	/** 接取兴趣面：物品使用（kind 3，原版事件 5 双角色）→ 任务。 / Acquire interest: item use → quests. */
+	/**
+	 * 接取兴趣面：物品使用（kind 3，原版事件 5 双角色）→ 任务。 / Acquire interest: item use → quests.
+	 */
 	private final Map<Integer, List<Integer>> acquireItemsByItemId;
-	/** 接取兴趣面：进世界（kind 7，原版事件 0x12 双角色）→ 任务。 / Acquire interest: enter-world → quests. */
+	/**
+	 * 接取兴趣面：进世界（kind 7，原版事件 0x12 双角色）→ 任务。 / Acquire interest: enter-world → quests.
+	 */
 	private final Map<Integer, List<Integer>> acquireWorldsByWorldId;
-	/** 接取兴趣面：等级等值（kind 8/10）→ 任务。 / Acquire interest: exact level → quests. */
+	/**
+	 * 接取兴趣面：等级等值（kind 8/10）→ 任务。 / Acquire interest: exact level → quests.
+	 */
 	private final Map<Integer, List<Integer>> acquireLevelsByLevel;
-	/** 接取兴趣面：进区别名（kind 6，原版接取侧名字哈希树）→ 任务。 / Acquire interest: zone alias (kind 6). */
+	/**
+	 * 接取兴趣面：进区别名（kind 6，原版接取侧名字哈希树）→ 任务。 / Acquire interest: zone alias (kind 6).
+	 */
 	private final Map<String, List<Integer>> acquireZonesByName;
-	/** 已落面附加动作（quest → 逐步 ActionPlan，与步序对齐）。 / Faced extra actions per quest and step. */
+	/**
+	 * 已落面附加动作（quest → 逐步 ActionPlan，与步序对齐）。 / Faced extra actions per quest and step.
+	 */
 	private final Map<Integer, List<List<ActionPlan>>> actionsByQuestId;
 	/**
 	 * 接取行附加动作（`value1..10_acquire_` → 原版 `QuestProgressExtraInfo` 对象）：接取收尾
@@ -374,29 +457,43 @@ public final class DataDrivenNativeRuntime {
 	 * and the dual-role acquires execute THIS table — never progress step 0's actions.
 	 */
 	private final Map<Integer, List<ActionPlan>> acceptActionsByQuestId;
-	/** 物品 → 引用该物品的路由行（发/扣/用物载荷）：销毁任务物品的「停止相关任务」判定面。 */
+	/**
+	 * 物品 → 引用该物品的路由行（发/扣/用物载荷）：销毁任务物品的「停止相关任务」判定面。
+	 */
 	private final Map<Integer, List<Integer>> questRefsByItemId;
-	/** 接取计划（quest → plan，kind 过滤与接取面用）。 / Acquire plans by quest. */
+	/**
+	 * 接取计划（quest → plan，kind 过滤与接取面用）。 / Acquire plans by quest.
+	 */
 	private final Map<Integer, AcquirePlan> acquireByQuestId;
 	private final Set<Integer> ownedQuestIds;
 	private final Set<Integer> routedQuestIds;
 	private final Map<Integer, FreezeReason> frozenQuestIds;
 	private final Set<String> unresolvedNames;
 	private final NativeInventoryPort inventoryPort;
-	/** 原版物品名索引（交付门符号「quest_80875a 7」类解析）。 / The retail item-name index (gate symbols). */
+	/**
+	 * 原版物品名索引（交付门符号「quest_80875a 7」类解析）。 / The retail item-name index (gate symbols).
+	 */
 	private final RetailItemNameIndex itemIndex;
-	/** 交付门计划（quest → quest.xml collect_item/quest_work_item，懒装载缓存）。 / Lazy gate plans. */
+	/**
+	 * 交付门计划（quest → quest.xml collect_item/quest_work_item，懒装载缓存）。 / Lazy gate plans.
+	 */
 	private final Map<Integer, GatePlan> gatePlanByQuestId = new ConcurrentHashMap<>();
 	private final NativeMoviePort moviePort;
 	private final NativeTeleportPort teleportPort;
 	private final NativeSpawnPort spawnPort;
 	private final NativeSayPort sayPort;
 	private final NativeTimerPort timerPort;
-	/** 领奖口（交付报告面的奖励窗结算；生产 = {@link NativeReportRewardFlow#instance()}）。 / The claim flow. */
+	/**
+	 * 领奖口（交付报告面的奖励窗结算；生产 = {@link NativeReportRewardFlow#instance()}）。 / The claim flow.
+	 */
 	private final NativeReportRewardFlow rewardFlow;
-	/** 链式接取边（`acquire=none` 后继；已过滤到 owned ∧ routed ∧ 非冻结，资源序 = 后继升序）。 */
+	/**
+	 * 链式接取边（`acquire=none` 后继；已过滤到 owned ∧ routed ∧ 非冻结，资源序 = 后继升序）。
+	 */
 	private final List<ChainAcquireEdges.Edge> chainAcquireEdges;
-	/** 前序 → 该前序完成时定向走查的链边。 / Predecessor → edges walked when it completes. */
+	/**
+	 * 前序 → 该前序完成时定向走查的链边。 / Predecessor → edges walked when it completes.
+	 */
 	private final Map<Integer, List<ChainAcquireEdges.Edge>> chainAcquireByPredecessor;
 	/**
 	 * NPC id → 该 NPC 的原版任务掉落（quest.xml {@code drop_*} 列编译；退役 XML 的 {@code <drops>}
@@ -427,28 +524,30 @@ public final class DataDrivenNativeRuntime {
 	 */
 	private final List<LeaveRollback> instanceLeaveRollbacks;
 
-	/** 任务追踪日志出口（链式发放拒绝面；与 {@code NativeQuestStartPort} 同一 logger）。 */
+	/**
+	 * 任务追踪日志出口（链式发放拒绝面；与 {@code NativeQuestStartPort} 同一 logger）。
+	 */
 	private static final Logger QUEST_TRACE_LOG = LoggerFactory.getLogger("quest");
 
 	private DataDrivenNativeRuntime(Map<Integer, List<StepPlan>> plansByQuestId,
-			Map<Integer, List<StepHit>> killsByNpcId, Map<Integer, List<StepHit>> talksByNpcId,
-			Map<Integer, List<StepHit>> fobjsByNpcId, Map<Integer, List<StepHit>> itemPlaysByItemId,
-			Map<String, List<StepHit>> zonesByName, Map<Integer, List<StepHit>> worldsByWorldId,
-			Map<Integer, List<Integer>> pvpStepsByQuestId, Map<Integer, List<Integer>> acquireTalksByNpcId,
-			Map<Integer, List<Integer>> reportTalksByNpcId,
-			Map<Integer, List<Integer>> acquireItemsByItemId, Map<Integer, List<Integer>> acquireWorldsByWorldId,
-			Map<Integer, List<Integer>> acquireLevelsByLevel, Map<String, List<Integer>> acquireZonesByName,
-			Map<Integer, List<List<ActionPlan>>> actionsByQuestId, Map<Integer, List<ActionPlan>> acceptActionsByQuestId,
-			Map<Integer, List<Integer>> questRefsByItemId,
-			Map<Integer, AcquirePlan> acquireByQuestId, Set<Integer> ownedQuestIds,
-			Set<Integer> routedQuestIds, Map<Integer, FreezeReason> frozenQuestIds, Set<String> unresolvedNames,
-			NativeInventoryPort inventoryPort, NativeMoviePort moviePort, NativeTeleportPort teleportPort,
-			NativeSpawnPort spawnPort, NativeSayPort sayPort, NativeTimerPort timerPort,
-			NativeReportRewardFlow rewardFlow, RetailItemNameIndex itemIndex,
-			List<ChainAcquireEdges.Edge> chainAcquireEdges,
-			Map<Integer, List<ChainAcquireEdges.Edge>> chainAcquireByPredecessor,
-			Map<Integer, List<QuestCatalogDrop>> dropsByNpcId, List<LeaveRollback> instanceLeaveRollbacks,
-			Map<Integer, List<StepHit>> collectObjectsByNpcId) {
+									Map<Integer, List<StepHit>> killsByNpcId, Map<Integer, List<StepHit>> talksByNpcId,
+									Map<Integer, List<StepHit>> fobjsByNpcId, Map<Integer, List<StepHit>> itemPlaysByItemId,
+									Map<String, List<StepHit>> zonesByName, Map<Integer, List<StepHit>> worldsByWorldId,
+									Map<Integer, List<Integer>> pvpStepsByQuestId, Map<Integer, List<Integer>> acquireTalksByNpcId,
+									Map<Integer, List<Integer>> reportTalksByNpcId,
+									Map<Integer, List<Integer>> acquireItemsByItemId, Map<Integer, List<Integer>> acquireWorldsByWorldId,
+									Map<Integer, List<Integer>> acquireLevelsByLevel, Map<String, List<Integer>> acquireZonesByName,
+									Map<Integer, List<List<ActionPlan>>> actionsByQuestId, Map<Integer, List<ActionPlan>> acceptActionsByQuestId,
+									Map<Integer, List<Integer>> questRefsByItemId,
+									Map<Integer, AcquirePlan> acquireByQuestId, Set<Integer> ownedQuestIds,
+									Set<Integer> routedQuestIds, Map<Integer, FreezeReason> frozenQuestIds, Set<String> unresolvedNames,
+									NativeInventoryPort inventoryPort, NativeMoviePort moviePort, NativeTeleportPort teleportPort,
+									NativeSpawnPort spawnPort, NativeSayPort sayPort, NativeTimerPort timerPort,
+									NativeReportRewardFlow rewardFlow, RetailItemNameIndex itemIndex,
+									List<ChainAcquireEdges.Edge> chainAcquireEdges,
+									Map<Integer, List<ChainAcquireEdges.Edge>> chainAcquireByPredecessor,
+									Map<Integer, List<QuestCatalogDrop>> dropsByNpcId, List<LeaveRollback> instanceLeaveRollbacks,
+									Map<Integer, List<StepHit>> collectObjectsByNpcId) {
 		this.plansByQuestId = plansByQuestId;
 		this.killsByNpcId = killsByNpcId;
 		this.talksByNpcId = talksByNpcId;
@@ -510,7 +609,9 @@ public final class DataDrivenNativeRuntime {
 		return local;
 	}
 
-	/** retention 台账资源（owner/family 列 = 切换集权威来源）。 / The retention ledger (switch-set source). */
+	/**
+	 * retention 台账资源（owner/family 列 = 切换集权威来源）。 / The retention ledger (switch-set source).
+	 */
 	private static final String RETENTION_RESOURCE = "/aion/data/static_data/quest/retail/retail-xml-retention.xml";
 
 	private static DataDrivenNativeRuntime loadProduction() {
@@ -549,7 +650,7 @@ public final class DataDrivenNativeRuntime {
 			Set<Integer> ids = new java.util.TreeSet<>();
 			for (Element row : RetailLedgerXml.rows(RetailLedgerXml.parse(input), "quest")) {
 				if ("RETAIL_TABLE".equals(RetailLedgerXml.text(row, "owner"))
-						&& "DataDriven".equals(RetailLedgerXml.text(row, "family"))) {
+					&& "DataDriven".equals(RetailLedgerXml.text(row, "family"))) {
 					ids.add(Integer.parseInt(RetailLedgerXml.text(row, "quest_id")));
 				}
 			}
@@ -573,7 +674,7 @@ public final class DataDrivenNativeRuntime {
 		Set<String> names = new java.util.TreeSet<>(String.CASE_INSENSITIVE_ORDER);
 		if (com.aionemu.gameserver.dataholders.DataManager.ZONE_DATA != null) {
 			for (java.util.List<com.aionemu.gameserver.model.templates.zone.ZoneInfo> infos : com.aionemu.gameserver.dataholders.DataManager.ZONE_DATA
-					.getZones().values()) {
+				.getZones().values()) {
 				for (com.aionemu.gameserver.model.templates.zone.ZoneInfo info : infos) {
 					names.add(info.zoneTemplate().getName().name());
 				}
@@ -607,25 +708,25 @@ public final class DataDrivenNativeRuntime {
 	 * 按路由集建立原生运行时视图。
 	 * Builds the native runtime view for one routing set.
 	 *
-	 * @param table          原版 DD 原生行模型 / the native DD row model
-	 * @param routedQuestIds 本车道接管的 quest id（P7 步 f 的切换集）/ the quest ids this lane owns
-	 * @param nameResolver   原版名字解析器（路由集非空时必需）/ retail name resolver (required when routing)
-	 * @param enterAreaPort  原版同名区端口（路由集非空时必需）/ retail same-name zone port (required when routing)
-	 * @param itemIndex      原版物品名索引（路由集非空时必需；ItemPlay 载荷解析）/ retail item-name index
-	 *                       (required when routing; resolves ItemPlay payloads)
-	 * @param inventoryPort  发扣物品端口（路由集非空时必需；步 e1 动作面）/ inventory port (required when
-	 *                       routing; the e1 give/remove action face)
-	 * @param moviePort      过场端口（路由集非空时必需；步 e1 CUTSCENE 动作面）/ movie port (required when
-	 *                       routing; the e1 cutscene action face)
-	 * @param chainAcquireTable  链式接取边表（`acquire=none` 后继的自动发放面；生产 =
-	 *                       {@link ChainAcquireEdges#instance()}）/ the chain-acquire edge table (the
-	 *                       auto-grant face of acquire=none successors; production = instance())
+	 * @param table             原版 DD 原生行模型 / the native DD row model
+	 * @param routedQuestIds    本车道接管的 quest id（P7 步 f 的切换集）/ the quest ids this lane owns
+	 * @param nameResolver      原版名字解析器（路由集非空时必需）/ retail name resolver (required when routing)
+	 * @param enterAreaPort     原版同名区端口（路由集非空时必需）/ retail same-name zone port (required when routing)
+	 * @param itemIndex         原版物品名索引（路由集非空时必需；ItemPlay 载荷解析）/ retail item-name index
+	 *                          (required when routing; resolves ItemPlay payloads)
+	 * @param inventoryPort     发扣物品端口（路由集非空时必需；步 e1 动作面）/ inventory port (required when
+	 *                          routing; the e1 give/remove action face)
+	 * @param moviePort         过场端口（路由集非空时必需；步 e1 CUTSCENE 动作面）/ movie port (required when
+	 *                          routing; the e1 cutscene action face)
+	 * @param chainAcquireTable 链式接取边表（`acquire=none` 后继的自动发放面；生产 =
+	 *                          {@link ChainAcquireEdges#instance()}）/ the chain-acquire edge table (the
+	 *                          auto-grant face of acquire=none successors; production = instance())
 	 */
 	public static DataDrivenNativeRuntime create(DataDrivenQuestTable table, Set<Integer> routedQuestIds,
-			NativeNpcNameResolver nameResolver, NativeEnterAreaPort enterAreaPort, RetailItemNameIndex itemIndex,
-			NativeInventoryPort inventoryPort, NativeMoviePort moviePort, NativeTeleportPort teleportPort,
-			NativeSpawnPort spawnPort, NativeSayPort sayPort, NativeTimerPort timerPort,
-			NativeReportRewardFlow rewardFlow, ChainAcquireEdges chainAcquireTable) {
+												 NativeNpcNameResolver nameResolver, NativeEnterAreaPort enterAreaPort, RetailItemNameIndex itemIndex,
+												 NativeInventoryPort inventoryPort, NativeMoviePort moviePort, NativeTeleportPort teleportPort,
+												 NativeSpawnPort spawnPort, NativeSayPort sayPort, NativeTimerPort timerPort,
+												 NativeReportRewardFlow rewardFlow, ChainAcquireEdges chainAcquireTable) {
 		if (table == null) {
 			throw new IllegalArgumentException("DATA_DRIVEN_TABLE_MISSING");
 		}
@@ -769,7 +870,7 @@ public final class DataDrivenNativeRuntime {
 			for (ChainAcquireEdges.Edge edge : chainAcquireTable.all().values()) {
 				Row successorRow = table.find(edge.successor()).orElse(null);
 				if (successorRow == null || !owned.contains(edge.successor()) || !routed.contains(edge.successor())
-						|| frozen.containsKey(edge.successor()) || !"none".equals(successorRow.acquireKind())) {
+					|| frozen.containsKey(edge.successor()) || !"none".equals(successorRow.acquireKind())) {
 					continue;
 				}
 				chainEdges.add(edge);
@@ -838,7 +939,9 @@ public final class DataDrivenNativeRuntime {
 		}
 	}
 
-	/** 原版 quest.xml 元数据（不可编译/驱动不可用按未解处理，fail-closed）。 / Retail metadata, fail-closed. */
+	/**
+	 * 原版 quest.xml 元数据（不可编译/驱动不可用按未解处理，fail-closed）。 / Retail metadata, fail-closed.
+	 */
 	private static RetailQuestMetadataCompiler.Outcome retailDropMetadata(int questId) {
 		try {
 			return RetailQuestDriver.ensureLoaded().retailMetadataOf(questId).orElse(null);
@@ -855,7 +958,7 @@ public final class DataDrivenNativeRuntime {
 	 * Registers the CollectItem appended-FOBJ objects; unresolvable names fail closed per entry.
 	 */
 	private static void registerCollectObjects(DataDrivenQuestTable table, Set<Integer> routed,
-			NativeNpcNameResolver nameResolver, Map<Integer, List<StepHit>> sink) {
+											   NativeNpcNameResolver nameResolver, Map<Integer, List<StepHit>> sink) {
 		for (int questId : routed) {
 			DataDrivenQuestTable.Row row = table.find(questId).orElse(null);
 			if (row == null) {
@@ -892,7 +995,7 @@ public final class DataDrivenNativeRuntime {
 	 * rollback).
 	 */
 	private static void collectInstanceLeaveRollbacks(int questId, List<List<ActionPlan>> perStep,
-			List<LeaveRollback> sink) {
+													  List<LeaveRollback> sink) {
 		for (int stepIndex = 0; stepIndex < perStep.size(); stepIndex++) {
 			ActionPlan entry = null;
 			List<ItemGrant> removals = new ArrayList<>();
@@ -910,10 +1013,12 @@ public final class DataDrivenNativeRuntime {
 		}
 	}
 
-	/** 汇总物品引用（发/扣动作 + ItemPlay 载荷）到「物品 → 路由行」集合。 / Collects the item-reference sets. */
+	/**
+	 * 汇总物品引用（发/扣动作 + ItemPlay 载荷）到「物品 → 路由行」集合。 / Collects the item-reference sets.
+	 */
 	private static void autoRegisterItemRefs(Map<Integer, Set<Integer>> questRefSets,
-			Map<Integer, List<List<ActionPlan>>> actionPlans, Map<Integer, List<ActionPlan>> acceptActionPlans,
-			Map<Integer, List<StepHit>> itemPlays) {
+											 Map<Integer, List<List<ActionPlan>>> actionPlans, Map<Integer, List<ActionPlan>> acceptActionPlans,
+											 Map<Integer, List<StepHit>> itemPlays) {
 		actionPlans.forEach((refQuestId, perStep) -> {
 			for (List<ActionPlan> stepActions : perStep) {
 				for (ActionPlan action : stepActions) {
@@ -934,13 +1039,18 @@ public final class DataDrivenNativeRuntime {
 			hit -> questRefSets.computeIfAbsent(refItemId, key -> new LinkedHashSet<>()).add(hit.questId())));
 	}
 
-	/** 一行计划的中转结构（构建期）。 / Mutable per-row plan during construction. */
+	/**
+	 * 一行计划的中转结构（构建期）。 / Mutable per-row plan during construction.
+	 */
 	private record RowPlan(List<StepPlan> steps, List<NpcHit> kills, List<NpcHit> talks, List<NpcHit> fobjs,
-			List<NpcHit> itemPlays, List<KeyHit> zones, List<NpcHit> worlds, List<Integer> pvpSteps,
-			List<List<ActionPlan>> facedActions, FreezeReason freezeReason, List<String> unresolvedNames) {
+						   List<NpcHit> itemPlays, List<KeyHit> zones, List<NpcHit> worlds, List<Integer> pvpSteps,
+						   List<List<ActionPlan>> facedActions, FreezeReason freezeReason,
+	                       List<String> unresolvedNames) {
 	}
 
-	/** NPC 键命中（击杀/对话/FOBJ/世界按 int 键，进区按字符串键）。 / An interest hit bound to a key. */
+	/**
+	 * NPC 键命中（击杀/对话/FOBJ/世界按 int 键，进区按字符串键）。 / An interest hit bound to a key.
+	 */
 	private record NpcHit(int npcKey, StepHit hit) {
 	}
 
@@ -948,7 +1058,7 @@ public final class DataDrivenNativeRuntime {
 	}
 
 	private static RowPlan planRow(int questId, Row row, NativeNpcNameResolver nameResolver,
-			NativeEnterAreaPort enterAreaPort, RetailItemNameIndex itemIndex) {
+								   NativeEnterAreaPort enterAreaPort, RetailItemNameIndex itemIndex) {
 		List<StepPlan> steps = new ArrayList<>();
 		List<NpcHit> kills = new ArrayList<>();
 		List<NpcHit> talks = new ArrayList<>();
@@ -1147,7 +1257,7 @@ public final class DataDrivenNativeRuntime {
 	 * yields NAME_UNRESOLVED, success yields {@code null}.
 	 */
 	private static FreezeReason scanFacedActions(Step step, NativeNpcNameResolver nameResolver,
-			RetailItemNameIndex itemIndex, List<List<ActionPlan>> facedActions, List<String> unresolved) {
+												 RetailItemNameIndex itemIndex, List<List<ActionPlan>> facedActions, List<String> unresolved) {
 		List<ActionPlan> plans = new ArrayList<>();
 		for (DataDrivenQuestTable.ExtraAction action : step.extraActions()) {
 			int columnIndex = actualColumnOf(step, action);
@@ -1383,7 +1493,7 @@ public final class DataDrivenNativeRuntime {
 	 * the level acquire kinds (8/10) use the full 1..10 column set, matching the retail guard.
 	 */
 	private static FreezeReason scanAcceptActions(Row row, NativeNpcNameResolver nameResolver,
-			RetailItemNameIndex itemIndex, List<List<ActionPlan>> sink, List<String> unresolved) {
+												  RetailItemNameIndex itemIndex, List<List<ActionPlan>> sink, List<String> unresolved) {
 		Kind kind = Kind.of(row.acquireKind()).orElse(Kind.TALK);
 		return scanFacedActions(new Step(0, kind, row.acceptColumns()), nameResolver, itemIndex, sink, unresolved);
 	}
@@ -1405,7 +1515,9 @@ public final class DataDrivenNativeRuntime {
 		};
 	}
 
-	/** MESSAGE 动作的实际列号（列 7 优先；仅声明列 8 时取 8）。 / The actual column of a MESSAGE action. */
+	/**
+	 * MESSAGE 动作的实际列号（列 7 优先；仅声明列 8 时取 8）。 / The actual column of a MESSAGE action.
+	 */
 	private static int actualColumnOf(Step step, DataDrivenQuestTable.ExtraAction action) {
 		if (action == DataDrivenQuestTable.ExtraAction.MESSAGE && step.column(action.column()) == null) {
 			return 8;
@@ -1442,7 +1554,7 @@ public final class DataDrivenNativeRuntime {
 	 * Resolves one monster name; a whitespace-joined name list falls back to per-token resolution.
 	 */
 	private static boolean resolveMonsters(String name, NativeNpcNameResolver resolver, Set<Integer> out,
-			List<String> unresolved) {
+										   List<String> unresolved) {
 		List<Integer> direct = resolver.resolveMonsterIds(name);
 		if (!direct.isEmpty()) {
 			out.addAll(direct);
@@ -1478,7 +1590,7 @@ public final class DataDrivenNativeRuntime {
 	 * Whitespace splitting and failure recording mirror the exact variant.
 	 */
 	private static boolean resolveMonsterFamilies(String name, NativeNpcNameResolver resolver, Set<Integer> out,
-			List<String> unresolved) {
+												  List<String> unresolved) {
 		List<Integer> direct = resolver.resolveMonsterFamilyIds(name);
 		if (!direct.isEmpty()) {
 			out.addAll(direct);
@@ -1503,7 +1615,9 @@ public final class DataDrivenNativeRuntime {
 		return false;
 	}
 
-	/** 解析 `A, B, C 3; D 1;` 形的载荷组（组内名字逗号分隔，尾整数空格或逗号分隔）。 */
+	/**
+	 * 解析 `A, B, C 3; D 1;` 形的载荷组（组内名字逗号分隔，尾整数空格或逗号分隔）。
+	 */
 	private static List<PayloadGroup> parseGroups(String payload) {
 		List<PayloadGroup> groups = new ArrayList<>();
 		if (payload == null || payload.isBlank()) {
@@ -1580,7 +1694,7 @@ public final class DataDrivenNativeRuntime {
 	 */
 	boolean onKillAt(Player player, int npcId, float x, float y, float z) {
 		if (player == null || !withinRetailKillDistance(player.getX() - x, player.getY() - y,
-				player.getZ() - z)) {
+			player.getZ() - z)) {
 			return false;
 		}
 		return dispatch(player, killsByNpcId.get(npcId));
@@ -1637,7 +1751,7 @@ public final class DataDrivenNativeRuntime {
 		// 按 questId（requestedOwner）结算 + 关窗收尾。owner 门 = routedQuestIds。
 		// Targetless reward claim (the ownerless retail QuestDialog protocol used by the quest journal).
 		if (npcId == 0 && requestedOwner != 0 && routedQuestIds.contains(requestedOwner)
-				&& NativeTargetlessReward.claim(player, requestedOwner, dialogId, rewardFlow)) {
+			&& NativeTargetlessReward.claim(player, requestedOwner, dialogId, rewardFlow)) {
 			return true;
 		}
 		// 采集物件使用认领（CollectItem 步的追加 FOBJ 列对象；2026-10-08 实机 15011 右击 702730）。
@@ -1831,7 +1945,7 @@ public final class DataDrivenNativeRuntime {
 	 * in-progress/REWARD dialogs, otherwise the generic page-10 list.
 	 */
 	private boolean dispatchAcquireDialog(Player player, List<Integer> questIds, int dialogId, int objectId,
-			int requestedOwner) {
+										  int requestedOwner) {
 		if (player == null || questIds == null || questIds.isEmpty()) {
 			return false;
 		}
@@ -2007,7 +2121,9 @@ public final class DataDrivenNativeRuntime {
 		runActionList(player, questId, acceptActionsByQuestId.getOrDefault(questId, List.of()));
 	}
 
-	/** 执行一个已落面动作表（步表与接取表共用）。 / Runs one faced-action list (step or accept table). */
+	/**
+	 * 执行一个已落面动作表（步表与接取表共用）。 / Runs one faced-action list (step or accept table).
+	 */
 	private void runActionList(Player player, int questId, List<ActionPlan> actions) {
 		if (inventoryPort == null || moviePort == null) {
 			// 端口缺席（空路由视图/极端装配）整表早退——注意：这会连 case 9 进副本一并吞掉（登记为
@@ -2048,7 +2164,9 @@ public final class DataDrivenNativeRuntime {
 		}
 	}
 
-	/** 刷怪存活秒（原版刷怪单 time 参数；0 = 不定时回收）。 / The spawn lifetime seconds (0 = no despawn). */
+	/**
+	 * 刷怪存活秒（原版刷怪单 time 参数；0 = 不定时回收）。 / The spawn lifetime seconds (0 = no despawn).
+	 */
 	private static int lifeSeconds(ActionPlan action) {
 		// ActionPlan 未用字段回收：SPAWN 的 movieId 槽存 time（见 scanFacedActions）。
 		// SPAWN reuses the movieId slot for the time parameter (see scanFacedActions).
@@ -2228,7 +2346,9 @@ public final class DataDrivenNativeRuntime {
 		return walkChainAcquires(player, edges, true);
 	}
 
-	/** 全表重走（升级/登入/完成通知路径）：达标即补发，未达标静默零动作。 / The full re-walk; silent when not yet eligible. */
+	/**
+	 * 全表重走（升级/登入/完成通知路径）：达标即补发，未达标静默零动作。 / The full re-walk; silent when not yet eligible.
+	 */
 	private boolean recheckChainAcquires(Player player) {
 		return !chainAcquireEdges.isEmpty() && walkChainAcquires(player, chainAcquireEdges, false);
 	}
@@ -2249,7 +2369,7 @@ public final class DataDrivenNativeRuntime {
 		boolean granted = false;
 		for (ChainAcquireEdges.Edge edge : edges) {
 			if (!predecessorsComplete(player, edge.predecessors())
-					|| !NativeQuestStartPort.instance().unfinishedConditionsPass(player, edge.successor())) {
+				|| !NativeQuestStartPort.instance().unfinishedConditionsPass(player, edge.successor())) {
 				continue;
 			}
 			NativeQuestStartPort.StartResult verdict =
@@ -2266,7 +2386,9 @@ public final class DataDrivenNativeRuntime {
 		return granted;
 	}
 
-	/** 全部前序已完成（跨车道只认状态面：10033←10032 的 10032 是 XML 行）。 / All predecessors COMPLETE (cross-lane, status only). */
+	/**
+	 * 全部前序已完成（跨车道只认状态面：10033←10032 的 10032 是 XML 行）。 / All predecessors COMPLETE (cross-lane, status only).
+	 */
 	private static boolean predecessorsComplete(Player player, List<Integer> predecessors) {
 		for (int predecessor : predecessors) {
 			QuestState state = player.getQuestStateList().getQuestState(predecessor);
@@ -2301,7 +2423,7 @@ public final class DataDrivenNativeRuntime {
 		// The retail PvP handler shares the Hunt distance preamble: beyond 50 m squared the progress
 		// is a no-op (def+0x70 is uniformly 0 ⇒ case 0 always; retail measures against the dead object).
 		if (!withinRetailKillDistance(killer.getX() - victim.getX(), killer.getY() - victim.getY(),
-				killer.getZ() - victim.getZ())) {
+			killer.getZ() - victim.getZ())) {
 			return false;
 		}
 		boolean handled = false;
@@ -2433,7 +2555,7 @@ public final class DataDrivenNativeRuntime {
 	 * The shared retail dialog plane: only the hit matching the quest's current step is served.
 	 */
 	private boolean dispatchDialog(Player player, List<StepHit> hits, int dialogId, int objectId,
-			int requestedOwner) {
+								   int requestedOwner) {
 		if (player == null || hits == null || hits.isEmpty()) {
 			return false;
 		}
@@ -2460,7 +2582,7 @@ public final class DataDrivenNativeRuntime {
 			boolean advanceAction = dialogId >= 10000 && dialogId < 10000 + STAGE_PAGES.length;
 			boolean advanceComplete = dialogId == ACTION_ADVANCE_COMPLETE;
 			if (!advanceAction && !advanceComplete && (!DataDrivenProgress.guardClear(vars)
-					|| DataDrivenProgress.step(vars) != hit.stepIndex())) {
+				|| DataDrivenProgress.step(vars) != hit.stepIndex())) {
 				continue;
 			}
 			StepPlan plan = plansByQuestId.get(hit.questId()).get(hit.stepIndex());
@@ -2561,7 +2683,9 @@ public final class DataDrivenNativeRuntime {
 		return false;
 	}
 
-	/** 阶段页（原版 `select1..15` 页表；步 ≥15 不发页）。 / The retail stage page for one step. */
+	/**
+	 * 阶段页（原版 `select1..15` 页表；步 ≥15 不发页）。 / The retail stage page for one step.
+	 */
 	private static void sendStagePage(Player player, int objectId, int questId, int stepIndex) {
 		int page = stagePage(stepIndex);
 		if (page > 0) {
@@ -2573,13 +2697,17 @@ public final class DataDrivenNativeRuntime {
 		return stepIndex >= 0 && stepIndex < STAGE_PAGES.length ? STAGE_PAGES[stepIndex] : -1;
 	}
 
-	/** 阶段页表（门禁复算用）。 / The stage-page table (for gate recomputation). */
+	/**
+	 * 阶段页表（门禁复算用）。 / The stage-page table (for gate recomputation).
+	 */
 	static int stagePageForGate(int stepIndex) {
 		return stagePage(stepIndex);
 	}
 
-	/** 报告/检查动作（1009/39/20002）的尾页：末步 = 待领奖 + 奖励窗页 5，否则新当前步的阶段页。
-	 * / The report/check tail page (1009/39/20002). */
+	/**
+	 * 报告/检查动作（1009/39/20002）的尾页：末步 = 待领奖 + 奖励窗页 5，否则新当前步的阶段页。
+	 * / The report/check tail page (1009/39/20002).
+	 */
 	private void sendPostAdvancePage(Player player, int objectId, QuestState state, StepPlan plan) {
 		if (state.getStatus() == QuestStatus.REWARD) {
 			PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(objectId, PAGE_REWARD_WINDOW,
@@ -2613,11 +2741,15 @@ public final class DataDrivenNativeRuntime {
 
 	// ------------------------------------------------------------------ 交付门（39 检查按钮）
 
-	/** 交付门物品（item_id + 数量）。 / One gate item stack. */
+	/**
+	 * 交付门物品（item_id + 数量）。 / One gate item stack.
+	 */
 	private record GateItem(int itemId, int count) {
 	}
 
-	/** 交付门计划：物品清单 + 符号全解析标志（未全解析 = fail-closed，永不报 ok）。 */
+	/**
+	 * 交付门计划：物品清单 + 符号全解析标志（未全解析 = fail-closed，永不报 ok）。
+	 */
 	private record GatePlan(List<GateItem> items, boolean resolvable) {
 	}
 
@@ -2676,7 +2808,9 @@ public final class DataDrivenNativeRuntime {
 		return itemId == null ? null : new GateItem(itemId, count);
 	}
 
-	/** 门物品持有检查（缺一即 false）。 / The gate hold check; a single shortfall fails it. */
+	/**
+	 * 门物品持有检查（缺一即 false）。 / The gate hold check; a single shortfall fails it.
+	 */
 	private boolean holdsGate(Player player, List<GateItem> items) {
 		for (GateItem item : items) {
 			if (inventoryPort.count(player, item.itemId()) < item.count()) {
@@ -2764,33 +2898,45 @@ public final class DataDrivenNativeRuntime {
 
 	// ------------------------------------------------------------------ 视图
 
-	/** DD 表里且被路由集覆盖的行。 / Table rows covered by the routing set. */
+	/**
+	 * DD 表里且被路由集覆盖的行。 / Table rows covered by the routing set.
+	 */
 	public Set<Integer> ownedQuestIds() {
 		return ownedQuestIds;
 	}
 
-	/** 真正可原生路由的行（未冻结）。 / Rows that are natively routable (not frozen). */
+	/**
+	 * 真正可原生路由的行（未冻结）。 / Rows that are natively routable (not frozen).
+	 */
 	public Set<Integer> routedQuestIds() {
 		return routedQuestIds;
 	}
 
-	/** 被冻结的行 → 原因。 / Frozen rows by reason. */
+	/**
+	 * 被冻结的行 → 原因。 / Frozen rows by reason.
+	 */
 	public Map<Integer, FreezeReason> frozenQuestIds() {
 		return frozenQuestIds;
 	}
 
-	/** 链式接取面：已注册的全部后继（owned ∧ routed ∧ acquire=none ∧ 非冻结）。 / Registered chain-acquire successors. */
+	/**
+	 * 链式接取面：已注册的全部后继（owned ∧ routed ∧ acquire=none ∧ 非冻结）。 / Registered chain-acquire successors.
+	 */
 	public Set<Integer> chainAcquireSuccessors() {
 		return chainAcquireEdges.stream().map(ChainAcquireEdges.Edge::successor)
 			.collect(java.util.stream.Collectors.toUnmodifiableSet());
 	}
 
-	/** 链式接取面：已注册的发放边（门禁逐条对拍用）。 / The registered chain edges (per-row gate face). */
+	/**
+	 * 链式接取面：已注册的发放边（门禁逐条对拍用）。 / The registered chain edges (per-row gate face).
+	 */
 	public List<ChainAcquireEdges.Edge> chainAcquireEdges() {
 		return chainAcquireEdges;
 	}
 
-	/** 链式接取面：前序 → 该前序完成时定向走查的边。 / Predecessor → edges walked on completion. */
+	/**
+	 * 链式接取面：前序 → 该前序完成时定向走查的边。 / Predecessor → edges walked on completion.
+	 */
 	public Map<Integer, List<ChainAcquireEdges.Edge>> chainAcquireByPredecessor() {
 		return chainAcquireByPredecessor;
 	}
@@ -2806,7 +2952,9 @@ public final class DataDrivenNativeRuntime {
 		return dropsByNpcId.getOrDefault(npcId, List.of());
 	}
 
-	/** 掉落注册面（npcId → 条目；门禁的复算与负例对拍面）。 / The registered drop face, for the gate. */
+	/**
+	 * 掉落注册面（npcId → 条目；门禁的复算与负例对拍面）。 / The registered drop face, for the gate.
+	 */
 	public Map<Integer, List<QuestCatalogDrop>> dropInterests() {
 		return dropsByNpcId;
 	}
@@ -2836,14 +2984,18 @@ public final class DataDrivenNativeRuntime {
 		return false;
 	}
 
-	/** 是否为采集物件（交互失败应答分型用；对齐采集族 {@code isCollectObject}）。 /
-	 * Whether the npc is a collect object (consulted by the failed-interaction reply shape). */
+	/**
+	 * 是否为采集物件（交互失败应答分型用；对齐采集族 {@code isCollectObject}）。 /
+	 * Whether the npc is a collect object (consulted by the failed-interaction reply shape).
+	 */
 	public boolean isCollectObject(int npcId) {
 		return collectObjectsByNpcId.containsKey(npcId);
 	}
 
-	/** 物件挂载的采集任务 id（去重、稳定序；引擎先手重放用）。 /
-	 * The quest ids riding the object (deduplicated, stable order; the engine first-hand replay). */
+	/**
+	 * 物件挂载的采集任务 id（去重、稳定序；引擎先手重放用）。 /
+	 * The quest ids riding the object (deduplicated, stable order; the engine first-hand replay).
+	 */
 	public List<Integer> collectObjectQuestIds(int npcId) {
 		List<StepHit> hits = collectObjectsByNpcId.get(npcId);
 		if (hits == null || hits.isEmpty()) {
@@ -2858,24 +3010,32 @@ public final class DataDrivenNativeRuntime {
 		return questIds;
 	}
 
-	/** 采集物件兴趣面（门禁独立重算对拍用）。 / The collect-object interest face (gate recomputation). */
+	/**
+	 * 采集物件兴趣面（门禁独立重算对拍用）。 / The collect-object interest face (gate recomputation).
+	 */
 	public Map<Integer, List<StepHit>> collectObjectInterests() {
 		return collectObjectsByNpcId;
 	}
 
-	/** 离场恢复表（case 9 行 → 进入步/副本世界/leaveProgress/补发物品；门禁对拍面）。 /
+	/**
+	 * 离场恢复表（case 9 行 → 进入步/副本世界/leaveProgress/补发物品；门禁对拍面）。 /
 	 * The leave-recovery table (case-9 rows → enter step / instance world / leaveProgress /
-	 * restore items; the gate face). */
+	 * restore items; the gate face).
+	 */
 	public List<LeaveRollback> instanceLeaveRollbacks() {
 		return instanceLeaveRollbacks;
 	}
 
-	/** 解析不到的名字（冻结行的证据面）。 / Names that failed to resolve. */
+	/**
+	 * 解析不到的名字（冻结行的证据面）。 / Names that failed to resolve.
+	 */
 	public Set<String> unresolvedNames() {
 		return unresolvedNames;
 	}
 
-	/** 该行当前步的原生计划（非路由行返回空）。 / The native plan of one step. */
+	/**
+	 * 该行当前步的原生计划（非路由行返回空）。 / The native plan of one step.
+	 */
 	public Optional<StepPlan> plan(int questId, int stepIndex) {
 		List<StepPlan> steps = plansByQuestId.get(questId);
 		if (steps == null || stepIndex < 0 || stepIndex >= steps.size()) {
@@ -2884,32 +3044,44 @@ public final class DataDrivenNativeRuntime {
 		return Optional.of(steps.get(stepIndex));
 	}
 
-	/** 该行是否被本运行时接管。 / Whether the row is owned by this runtime. */
+	/**
+	 * 该行是否被本运行时接管。 / Whether the row is owned by this runtime.
+	 */
 	public boolean owns(int questId) {
 		return ownedQuestIds.contains(questId);
 	}
 
-	/** 该行是否可原生路由。 / Whether the row is natively routable. */
+	/**
+	 * 该行是否可原生路由。 / Whether the row is natively routable.
+	 */
 	public boolean routes(int questId) {
 		return routedQuestIds.contains(questId);
 	}
 
-	/** 击杀兴趣面（npcId → 步引用），供门禁复算。 / Kill interests for gate recomputation. */
+	/**
+	 * 击杀兴趣面（npcId → 步引用），供门禁复算。 / Kill interests for gate recomputation.
+	 */
 	public Map<Integer, List<StepHit>> killInterests() {
 		return killsByNpcId;
 	}
 
-	/** 对话兴趣面（npcId → 步引用）。 / Talk interests. */
+	/**
+	 * 对话兴趣面（npcId → 步引用）。 / Talk interests.
+	 */
 	public Map<Integer, List<StepHit>> talkInterests() {
 		return talksByNpcId;
 	}
 
-	/** FOBJ 兴趣面（npcId → 步引用）。 / FOBJ interests. */
+	/**
+	 * FOBJ 兴趣面（npcId → 步引用）。 / FOBJ interests.
+	 */
 	public Map<Integer, List<StepHit>> fobjInterests() {
 		return fobjsByNpcId;
 	}
 
-	/** 物品使用兴趣面（itemId → 步引用）。 / Item-use interests. */
+	/**
+	 * 物品使用兴趣面（itemId → 步引用）。 / Item-use interests.
+	 */
 	public Map<Integer, List<StepHit>> itemPlayInterests() {
 		return itemPlaysByItemId;
 	}
@@ -2924,47 +3096,65 @@ public final class DataDrivenNativeRuntime {
 		return questRefsByItemId.getOrDefault(itemId, List.of());
 	}
 
-	/** 进区兴趣面（区名大写 → 步引用）。 / Enter-zone interests. */
+	/**
+	 * 进区兴趣面（区名大写 → 步引用）。 / Enter-zone interests.
+	 */
 	public Map<String, List<StepHit>> zoneInterests() {
 		return zonesByName;
 	}
 
-	/** 进世界兴趣面（worldId → 步引用）。 / Enter-world interests. */
+	/**
+	 * 进世界兴趣面（worldId → 步引用）。 / Enter-world interests.
+	 */
 	public Map<Integer, List<StepHit>> worldInterests() {
 		return worldsByWorldId;
 	}
 
-	/** PvP 行 → 步号。 / PvP rows by step index. */
+	/**
+	 * PvP 行 → 步号。 / PvP rows by step index.
+	 */
 	public Map<Integer, List<Integer>> pvpSteps() {
 		return pvpStepsByQuestId;
 	}
 
-	/** 接取对话兴趣面（npcId → 任务）。 / Acquire talk interests (npc → quests). */
+	/**
+	 * 接取对话兴趣面（npcId → 任务）。 / Acquire talk interests (npc → quests).
+	 */
 	public Map<Integer, List<Integer>> acquireTalkInterests() {
 		return acquireTalksByNpcId;
 	}
 
-	/** 交付对象兴趣面（reward NPC → Talk 行）。 / Delivery-object interests (reward npc → Talk rows). */
+	/**
+	 * 交付对象兴趣面（reward NPC → Talk 行）。 / Delivery-object interests (reward npc → Talk rows).
+	 */
 	public Map<Integer, List<Integer>> reportTalkInterests() {
 		return reportTalksByNpcId;
 	}
 
-	/** 接取物品兴趣面（itemId → 任务）。 / Acquire item interests (item → quests). */
+	/**
+	 * 接取物品兴趣面（itemId → 任务）。 / Acquire item interests (item → quests).
+	 */
 	public Map<Integer, List<Integer>> acquireItemInterests() {
 		return acquireItemsByItemId;
 	}
 
-	/** 接取进世界兴趣面（worldId → 任务）。 / Acquire enter-world interests (world → quests). */
+	/**
+	 * 接取进世界兴趣面（worldId → 任务）。 / Acquire enter-world interests (world → quests).
+	 */
 	public Map<Integer, List<Integer>> acquireWorldInterests() {
 		return acquireWorldsByWorldId;
 	}
 
-	/** 接取等级兴趣面（level → 任务）。 / Acquire level interests (level → quests). */
+	/**
+	 * 接取等级兴趣面（level → 任务）。 / Acquire level interests (level → quests).
+	 */
 	public Map<Integer, List<Integer>> acquireLevelInterests() {
 		return acquireLevelsByLevel;
 	}
 
-	/** 接取进区兴趣面（区别名大写 → 任务）。 / Acquire zone interests (alias upper → quests). */
+	/**
+	 * 接取进区兴趣面（区别名大写 → 任务）。 / Acquire zone interests (alias upper → quests).
+	 */
 	public Map<String, List<Integer>> acquireZoneInterests() {
 		return acquireZonesByName;
 	}

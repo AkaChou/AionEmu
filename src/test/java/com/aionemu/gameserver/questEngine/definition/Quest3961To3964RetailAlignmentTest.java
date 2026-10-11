@@ -33,7 +33,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class Quest3961To3964RetailAlignmentTest {
 	private static final int FLORA = 798384;
 	private static final int ERDOS = 203740;
-	/** 原版金币符号 gold = 182400001。 / The retail gold (kinah) item. */
+	/**
+	 * 原版金币符号 gold = 182400001。 / The retail gold (kinah) item.
+	 */
 	private static final int GOLD = 182400001;
 	private static final List<Spec> SPECS = List.of(
 		new Spec(3961, 35, 182206108, 169621001, List.of(new WorkItem(GOLD, 40000))),
@@ -57,8 +59,8 @@ class Quest3961To3964RetailAlignmentTest {
 			assertEquals("Flora", handler.requireRow(spec.questId()).acquiredNpcName(), "接取 owner 名");
 			assertEquals(List.of("erdos"), handler.requireRow(spec.questId()).talkNpcNames(), "中继链");
 			assertEquals("Flora", handler.requireRow(spec.questId()).rewardNpcName(), "交付 owner 名");
-			assertEquals(FLORA, NativeNpcNameResolver.instance().resolve("Flora").npcIds().get(0));
-			assertEquals(ERDOS, NativeNpcNameResolver.instance().resolve("erdos").npcIds().get(0));
+			assertEquals(FLORA, NativeNpcNameResolver.instance().resolve("Flora").npcIds().getFirst());
+			assertEquals(ERDOS, NativeNpcNameResolver.instance().resolve("erdos").npcIds().getFirst());
 			assertEquals(FLORA, handler.acquireNpc(spec.questId()), "接取 owner = Flora");
 			assertEquals(FLORA, handler.rewardNpc(spec.questId()), "交付 owner = Flora");
 			assertEquals(1, handler.relayCount(spec.questId()), "单步中继行");
@@ -70,7 +72,7 @@ class Quest3961To3964RetailAlignmentTest {
 				handler.stepRemoveItem(spec.questId(), 1), "步 1 扣除灵符");
 			assertTrue(handler.requireRow(spec.questId()).itemCheck(), "原版行声明 item_check 整组门");
 			assertEquals(spec.workItems().stream()
-				.map(item -> new SimpleTalkHandler.ItemStack(item.itemId(), item.count())).toList(),
+					.map(item -> new SimpleTalkHandler.ItemStack(item.itemId(), item.count())).toList(),
 				handler.workItems(spec.questId()), "整组检查物（顺序 = check_item1_K）");
 
 			QuestMetadata metadata = RetailQuestDriver.ensureLoaded()
@@ -141,11 +143,15 @@ class Quest3961To3964RetailAlignmentTest {
 		}
 	}
 
-	/** 一条原版行的锚点事实。 / The anchor facts of one retail row. */
+	/**
+	 * 一条原版行的锚点事实。 / The anchor facts of one retail row.
+	 */
 	private record Spec(int questId, int minLevel, int acceptItem, int xpBoostItem, List<WorkItem> workItems) {
 	}
 
-	/** 原版 check_item 组员。 / One check_item member. */
+	/**
+	 * 原版 check_item 组员。 / One check_item member.
+	 */
 	private record WorkItem(int itemId, int count) {
 	}
 }

@@ -9,7 +9,6 @@ import com.aionemu.gameserver.questEngine.runtime.QuestStartEligibility;
 import com.aionemu.gameserver.questEngine.runtime.QuestSnapshot;
 import org.junit.jupiter.api.Test;
 
-import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -19,20 +18,22 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-/** Regression coverage for the migrated owners repaired in this batch. */
+/**
+ * Regression coverage for the migrated owners repaired in this batch.
+ */
 class MigratedQuestRepairDefinitionTest {
 
 	@Test
 	void relicRewardFamiliesConsumeTheCorrectRelicAndSelectMetadataAp() {
 		Map<Integer, long[]> expected = Map.of(
-			11279, new long[] {300, 600, 900, 1200},
-			11280, new long[] {600, 1200, 1800, 2400},
-			11281, new long[] {800, 1600, 2400, 3200},
-			11282, new long[] {1600, 3200, 4800, 6400},
-			11283, new long[] {3000, 6000, 9000, 12000},
-			11284, new long[] {6000, 12000, 18000, 24000},
-			11285, new long[] {8000, 16000, 24000, 32000},
-			11286, new long[] {16000, 32000, 48000, 64000});
+			11279, new long[]{300, 600, 900, 1200},
+			11280, new long[]{600, 1200, 1800, 2400},
+			11281, new long[]{800, 1600, 2400, 3200},
+			11282, new long[]{1600, 3200, 4800, 6400},
+			11283, new long[]{3000, 6000, 9000, 12000},
+			11284, new long[]{6000, 12000, 18000, 24000},
+			11285, new long[]{8000, 16000, 24000, 32000},
+			11286, new long[]{16000, 32000, 48000, 64000});
 		for (Map.Entry<Integer, long[]> entry : expected.entrySet()) {
 			CompiledQuestDefinition definition = load(entry.getKey());
 			assertEquals(4, definition.definition().metadata().rewards().size());
@@ -169,7 +170,7 @@ class MigratedQuestRepairDefinitionTest {
 		assertEquals(1102006, definition.definition().metadata().displayNameId());
 		assertEquals(9, definition.definition().metadata().minLevel());
 		assertEquals(Set.of("ELYOS"), definition.definition().metadata().permittedRaces());
-		assertEquals(73200, definition.definition().metadata().rewards().get(0).amount());
+		assertEquals(73200, definition.definition().metadata().rewards().getFirst().amount());
 		assertEquals(7, definition.definition().progressLayout().field("var0").width());
 
 		List<QuestTransition> classChoices = definition.definition().transitions().stream()
@@ -204,7 +205,7 @@ class MigratedQuestRepairDefinitionTest {
 			.filter(transition -> transition.event() instanceof QuestEvent.Die
 				&& transition.targetNode().equals("s3")
 				&& transition.afterCommit().contains(new AfterCommitAction.SendSystemMessage(
-					QuestSystemMessage.QUEST_FAILED)))
+				QuestSystemMessage.QUEST_FAILED)))
 			.count();
 		assertEquals(6, failureRoutes);
 
@@ -214,7 +215,7 @@ class MigratedQuestRepairDefinitionTest {
 			.toList();
 		assertEquals(16, completion.size());
 		assertTrue(completion.stream().allMatch(transition -> transition.actions().contains(
-				new QuestAction.GrantReward("EXP", 0, 73200, QuestRewardAmountMode.QUEST_BASE))));
+			new QuestAction.GrantReward("EXP", 0, 73200, QuestRewardAmountMode.QUEST_BASE))));
 	}
 
 	@Test
@@ -225,12 +226,12 @@ class MigratedQuestRepairDefinitionTest {
 		assertEquals(30, metadata.minLevel());
 		assertEquals(Set.of("ELYOS"), metadata.permittedRaces());
 		assertTrue(metadata.startConditions().contains(new QuestStartCondition("finished", 1989, 0)));
-		assertEquals(150, metadata.itemRequirements().get(0).count());
-		assertEquals(874200, metadata.rewards().get(0).amount());
+		assertEquals(150, metadata.itemRequirements().getFirst().count());
+		assertEquals(874200, metadata.rewards().getFirst().amount());
 		assertEquals(Map.ofEntries(Map.entry("FIGHTER", 5), Map.entry("KNIGHT", 4),
-			Map.entry("RANGER", 3), Map.entry("ASSASSIN", 3), Map.entry("WIZARD", 2),
-			Map.entry("ELEMENTALIST", 2), Map.entry("PRIEST", 3), Map.entry("CHANTER", 3),
-			Map.entry("GUNSLINGER", 2), Map.entry("SONGWEAVER", 1), Map.entry("AETHERTECH", 1)),
+				Map.entry("RANGER", 3), Map.entry("ASSASSIN", 3), Map.entry("WIZARD", 2),
+				Map.entry("ELEMENTALIST", 2), Map.entry("PRIEST", 3), Map.entry("CHANTER", 3),
+				Map.entry("GUNSLINGER", 2), Map.entry("SONGWEAVER", 1), Map.entry("AETHERTECH", 1)),
 			metadata.classRewards().entrySet().stream()
 				.collect(java.util.stream.Collectors.toMap(Map.Entry::getKey, entry -> entry.getValue().size())));
 
@@ -248,7 +249,7 @@ class MigratedQuestRepairDefinitionTest {
 		QuestTransition equippedRoute = definition.definition().transitions().stream()
 			.filter(transition -> transition.event().equals(startDialog)
 				&& transition.conditions().contains(new QuestCondition.EquipmentSetEquipped(
-					Set.of(9, 8, 7, 6, 378), 5, true)))
+				Set.of(9, 8, 7, 6, 378), 5, true)))
 			.findFirst().orElseThrow();
 		QuestSnapshot equipped = new QuestSnapshot(7, 1990, QuestStatus.NONE, 0, Map.of())
 			.withEquipmentFacts(new QuestEquipmentFacts(Map.of(9, 5)));
@@ -292,11 +293,11 @@ class MigratedQuestRepairDefinitionTest {
 		assertEquals(Set.of("ASMODIANS"), metadata.permittedRaces());
 		assertEquals(1, metadata.repeatPolicy().maxRepeatCount());
 		assertTrue(metadata.startConditions().contains(new QuestStartCondition("finished", 2989, 0)));
-		assertEquals(150, metadata.itemRequirements().get(0).count());
-		assertEquals(874200, metadata.rewards().get(0).amount());
+		assertEquals(150, metadata.itemRequirements().getFirst().count());
+		assertEquals(874200, metadata.rewards().getFirst().amount());
 		assertEquals(32, metadata.drops().size());
-		assertEquals(101800570, metadata.classRewards().get("GUNSLINGER").get(0).id());
-		assertEquals(102000593, metadata.classRewards().get("SONGWEAVER").get(0).id());
+		assertEquals(101800570, metadata.classRewards().get("GUNSLINGER").getFirst().id());
+		assertEquals(102000593, metadata.classRewards().get("SONGWEAVER").getFirst().id());
 
 		List<QuestTransition> classCompletions = definition.definition().transitions().stream()
 			.filter(transition -> Objects.equals(transition.sourceNode(), "reward")
@@ -309,7 +310,7 @@ class MigratedQuestRepairDefinitionTest {
 		QuestTransition equippedRoute = definition.definition().transitions().stream()
 			.filter(transition -> transition.event().equals(startDialog)
 				&& transition.conditions().contains(new QuestCondition.EquipmentSetEquipped(
-					Set.of(9, 8, 7, 6, 378), 5, true)))
+				Set.of(9, 8, 7, 6, 378), 5, true)))
 			.findFirst().orElseThrow();
 		QuestSnapshot equipped = new QuestSnapshot(7, 2990, QuestStatus.NONE, 0, Map.of())
 			.withEquipmentFacts(new QuestEquipmentFacts(Map.of(9, 5)));
@@ -418,7 +419,7 @@ class MigratedQuestRepairDefinitionTest {
 				&& transition.actions().contains(new QuestAction.UnequipItem(140000003, 1))
 				&& transition.actions().contains(new QuestAction.UnequipItem(140000004, 1))
 				&& transition.afterCommit().contains(new AfterCommitAction.SendSystemMessage(
-					QuestSystemMessage.QUEST_FAILED)))
+				QuestSystemMessage.QUEST_FAILED)))
 			.count();
 		assertEquals(5, failedDeathRoutes);
 
@@ -434,7 +435,7 @@ class MigratedQuestRepairDefinitionTest {
 	}
 
 	private static void assertGroupQuest(int questId, int itemId, int itemCount, int dropNpcId, int rewardNpcId,
-		Set<Integer> selectableItems) {
+										 Set<Integer> selectableItems) {
 		CompiledQuestDefinition definition = load(questId);
 		if (itemId > 0) {
 			assertEquals(itemCount, definition.definition().metadata().itemRequirements().stream()
@@ -463,7 +464,7 @@ class MigratedQuestRepairDefinitionTest {
 			.filter(transition -> Objects.equals(transition.sourceNode(), "reward")
 				&& transition.targetNode().equals("complete")
 				&& transition.event() instanceof QuestEvent.TalkToNpc talk
-					&& talk.npcId() == rewardNpcId)
+				&& talk.npcId() == rewardNpcId)
 			.toList();
 		assertEquals(9, completionRoutes.size());
 		assertEquals(Set.of(8, 9, 10, 11, 12, 13, 14, 15, 16), completionRoutes.stream()
@@ -473,8 +474,8 @@ class MigratedQuestRepairDefinitionTest {
 			transition.actions().stream().anyMatch(action -> action.equals(
 				new QuestAction.GrantReward("ITEM", 188055318, 1)))
 				&& transition.actions().stream().anyMatch(action -> action instanceof QuestAction.GrantReward reward
-					&& reward.rewardKind() == QuestRewardKind.ITEM
-					&& selectableItems.contains(reward.id()))));
+				&& reward.rewardKind() == QuestRewardKind.ITEM
+				&& selectableItems.contains(reward.id()))));
 	}
 
 	private static CompiledQuestDefinition load(int questId) {

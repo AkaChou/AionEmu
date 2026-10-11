@@ -97,7 +97,7 @@ class Quest23830To23834TargetlessRewardTest {
 			}
 			Map<String, Integer> actualLadder = new LinkedHashMap<>();
 			metadata.classRewards().forEach((className, rewards) ->
-				actualLadder.put(className, rewards.get(0).id()));
+				actualLadder.put(className, rewards.getFirst().id()));
 			assertEquals(expectedLadder, actualLadder, spec.questId() + " 职业奖励梯");
 		}
 	}
@@ -105,7 +105,7 @@ class Quest23830To23834TargetlessRewardTest {
 	@Test
 	void documentPlayStepAndTheDeliveryFaceBoundaryFollowTheRetailRow() throws Exception {
 		DataDrivenNativeRuntime runtime = DataDrivenNativeRuntime.instance();
-		Spec spec = SPECS.get(0);
+		Spec spec = SPECS.getFirst();
 
 		// 行数据：单步 ItemPlay（发放文档 = 进度载荷）；ItemPlay 可达性门由
 		// DataDrivenItemPlayGrantGateTest 承担。
@@ -114,7 +114,7 @@ class Quest23830To23834TargetlessRewardTest {
 				.getResourceAsStream(DataDrivenNativeRuntime.TABLE_RESOURCE));
 		DataDrivenQuestTable.Row row = table.find(spec.questId()).orElseThrow();
 		assertEquals(1, row.steps().size(), spec.questId() + " 单步进度行");
-		assertEquals(DataDrivenQuestTable.Kind.ITEM_PLAY, row.steps().get(0).kind(),
+		assertEquals(DataDrivenQuestTable.Kind.ITEM_PLAY, row.steps().getFirst().kind(),
 			spec.questId() + " 进度类别 = 原版 ItemPlay");
 
 		// 交付面（原版**所有行**恒建对象 #2 `reward_npc_name`，槽 +0x238 = `FUN_180c473e0`，
@@ -127,7 +127,9 @@ class Quest23830To23834TargetlessRewardTest {
 			spec.questId() + " 必须注册在交付 NPC（Aud " + REWARD_NPC_ID + "）的交付面");
 	}
 
-	/** 一条原版行的锚点事实。 / The anchor facts of one retail row. */
+	/**
+	 * 一条原版行的锚点事实。 / The anchor facts of one retail row.
+	 */
 	private record Spec(int questId, int level, int documentItem, int exp, List<Integer> classRewardIds) {
 	}
 }

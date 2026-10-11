@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
@@ -33,7 +32,7 @@ class Quest18802ClientDialogAlignmentTest {
 		assertEquals(830001, handler.acquireNpc(18801), "接取 NPC");
 		assertEquals(830005, handler.rewardNpc(18801), "交付 NPC");
 		assertFalse(handler.acquireNpc(18801).equals(handler.rewardNpc(18801)),
-				"接取与交付 owner 分离");
+			"接取与交付 owner 分离");
 		assertEquals(0, handler.relayCount(18801), "中继步数");
 		assertNull(handler.acceptGiveItem(18801), "接取侧无发放");
 		assertTrue(handler.workItems(18801).isEmpty(), "该行未声明 item_check：无交付门");
@@ -45,7 +44,7 @@ class Quest18802ClientDialogAlignmentTest {
 		assertEquals(830005, handler.acquireNpc(18802), "接取 NPC");
 		assertEquals(830069, handler.rewardNpc(18802), "交付 NPC");
 		assertFalse(handler.acquireNpc(18802).equals(handler.rewardNpc(18802)),
-				"接取与交付 owner 分离");
+			"接取与交付 owner 分离");
 		assertEquals(0, handler.relayCount(18802), "中继步数");
 		assertNull(handler.acceptGiveItem(18802), "接取侧无发放");
 		assertTrue(handler.workItems(18802).isEmpty(), "该行未声明 item_check：无交付门");

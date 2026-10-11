@@ -30,10 +30,14 @@ import java.util.List;
  */
 class SimpleTalkRelayDoneStepFallthroughTest {
 
-	/** 13700「게르하를 향하여」：单步中继，中继 NPC = 交付 NPC = LDF4_Advance_Elger_E。 */
+	/**
+	 * 13700「게르하를 향하여」：单步中继，中继 NPC = 交付 NPC = LDF4_Advance_Elger_E。
+	 */
 	private static final int QUEST_13700 = 13700;
 
-	/** 13800「새로운 땅의 발견」：两步中继，末位中继 NPC = 交付 NPC = LDF5_Fortress_Alphion_E。 */
+	/**
+	 * 13800「새로운 땅의 발견」：两步中继，末位中继 NPC = 交付 NPC = LDF5_Fortress_Alphion_E。
+	 */
 	private static final int QUEST_13800 = 13800;
 
 	@Test
@@ -41,7 +45,7 @@ class SimpleTalkRelayDoneStepFallthroughTest {
 		SimpleTalkHandler handler = SimpleTalkHandler.instance();
 		assertTrue(handler.routes(QUEST_13700), "13700 必须由 native SimpleTalk 车道路由");
 		assertEquals(1, handler.relayCount(QUEST_13700), "原版 talk_npc1 单步中继");
-		int elger = NativeNpcNameResolver.instance().resolveMembers("LDF4_Advance_Elger_E").get(0);
+		int elger = NativeNpcNameResolver.instance().resolveMembers("LDF4_Advance_Elger_E").getFirst();
 		assertTrue(handler.rewardNpcs(QUEST_13700).contains(elger),
 			"交付节点与中继节点同名（死循环前提）");
 
@@ -83,8 +87,8 @@ class SimpleTalkRelayDoneStepFallthroughTest {
 		SimpleTalkHandler handler = NativeTalkFixture.handler(NativeTalkFixture.RecordingInventory.EMPTY);
 		assertTrue(handler.routes(QUEST_13800), "13800 必须由 native SimpleTalk 车道路由");
 		assertEquals(2, handler.relayCount(QUEST_13800), "原版 talk_npc1..2 两步中继");
-		int teleport = NativeNpcNameResolver.instance().resolveMembers("LF5_OP1_ZoneTeleport_L").get(0);
-		int alphion = NativeNpcNameResolver.instance().resolveMembers("LDF5_Fortress_Alphion_E").get(0);
+		int teleport = NativeNpcNameResolver.instance().resolveMembers("LF5_OP1_ZoneTeleport_L").getFirst();
+		int alphion = NativeNpcNameResolver.instance().resolveMembers("LDF5_Fortress_Alphion_E").getFirst();
 		assertTrue(handler.rewardNpcs(QUEST_13800).contains(alphion),
 			"交付节点与末位中继节点同名（死循环前提）");
 		assertFalse(handler.rewardNpcs(QUEST_13800).contains(teleport),

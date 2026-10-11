@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.questEngine.definition;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -30,14 +29,17 @@ public final class QuestXmlFixtures {
 	 * Opens the production XML; retired quests must go through {@link ProductionQuestDefinitions}.
 	 */
 	public static InputStream open(int questId) {
-		try (InputStream production = QuestXmlFixtures.class.getResourceAsStream(String.format(PRODUCTION_RESOURCE, questId))) {
-			return Objects.requireNonNull(production, "quest " + questId + " no longer has a production XML (retail-driven); use ProductionQuestDefinitions");
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
+		// 刻意不用 try-with-resources：流必须保持打开交由调用方解析后自行关闭。
+		// Deliberately no try-with-resources: the stream must stay open for the caller to parse and close it.
+		InputStream production = QuestXmlFixtures.class
+			.getResourceAsStream(String.format(PRODUCTION_RESOURCE, questId));
+		return Objects.requireNonNull(production, "quest " + questId
+			+ " no longer has a production XML (retail-driven); use ProductionQuestDefinitions");
 	}
 
-	/** 编译定义 XML。 / Compiles the definition XML. */
+	/**
+	 * 编译定义 XML。 / Compiles the definition XML.
+	 */
 	public static CompiledQuestDefinition compile(int questId) throws Exception {
 		try (InputStream input = open(questId)) {
 			return QuestDefinitionXmlCompiler.compile(input);
@@ -45,7 +47,9 @@ public final class QuestXmlFixtures {
 	}
 
 
-	/** 生产源树里是否仍有该任务的 XML（退役判据）。 / Whether the production source tree still holds the XML. */
+	/**
+	 * 生产源树里是否仍有该任务的 XML（退役判据）。 / Whether the production source tree still holds the XML.
+	 */
 	public static boolean productionXmlPresent(int questId) {
 		return Files.exists(PRODUCTION_DIR.resolve(questId + ".xml"));
 	}

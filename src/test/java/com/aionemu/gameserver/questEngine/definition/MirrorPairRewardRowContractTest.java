@@ -164,7 +164,7 @@ class MirrorPairRewardRowContractTest {
 	);
 
 	@Test
-	void rewardRowEqualsTheClientJournalLastRow() throws Exception {
+	void rewardRowEqualsTheClientJournalLastRow() {
 		for (Contract contract : CONTRACTS) {
 			if (retiredOnly(contract.questId())) {
 				continue;
@@ -175,7 +175,7 @@ class MirrorPairRewardRowContractTest {
 	}
 
 	@Test
-	void mirrorPairsAgreeOnTheRewardRow() throws Exception {
+	void mirrorPairsAgreeOnTheRewardRow() {
 		for (Contract contract : CONTRACTS) {
 			if (contract.questId() >= 20000) {
 				continue;
@@ -190,7 +190,7 @@ class MirrorPairRewardRowContractTest {
 	}
 
 	@Test
-	void persistedRewardRowsAreRepairedOnEnterWorld() throws Exception {
+	void persistedRewardRowsAreRepairedOnEnterWorld() {
 		for (Contract contract : CONTRACTS) {
 			if (retiredOnly(contract.questId())) {
 				continue;

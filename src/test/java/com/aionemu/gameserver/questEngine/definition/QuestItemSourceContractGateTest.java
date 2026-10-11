@@ -75,8 +75,8 @@ class QuestItemSourceContractGateTest {
 			Map<String, Set<Integer>> gatedItems = new LinkedHashMap<>();
 			for (QuestTransition transition : definition.transitions()) {
 				if (!(transition.event() instanceof QuestEvent.TalkToNpc talk) || talk.dialogId() == null
-						|| talk.dialogId() != QuestDialogAction.SELECT_QUEST_REWARD.id()
-						|| rewardNodes.contains(transition.sourceNode())) {
+					|| talk.dialogId() != QuestDialogAction.SELECT_QUEST_REWARD.id()
+					|| rewardNodes.contains(transition.sourceNode())) {
 					continue;
 				}
 				Set<Integer> gated = gatedItems.computeIfAbsent(
@@ -89,7 +89,7 @@ class QuestItemSourceContractGateTest {
 			}
 			for (Map.Entry<String, Set<Integer>> branch : gatedItems.entrySet()) {
 				if (!branch.getValue().containsAll(collectItems)
-						&& !knownGaps.contains(definition.id() + "\t" + branch.getKey())) {
+					&& !knownGaps.contains(definition.id() + "\t" + branch.getKey())) {
 					violations.add("quest " + definition.id() + " branch " + branch.getKey()
 						+ " reaches the reward node without verifying " + collectItems);
 				}
@@ -99,14 +99,14 @@ class QuestItemSourceContractGateTest {
 			() -> "every reward-entry branch must verify the quest's own collected items: " + violations);
 	}
 
-    /**
+	/**
 	 * 既有无条件交付分支清单（逐条评审前不做全库豁免）。
 	 * Recorded pre-existing ungated hand-in branches; reviewed one by one, never a quest-wide wildcard.
 	 */
 	private static Set<String> loadKnownHandInGaps() throws Exception {
 		Set<String> known = new LinkedHashSet<>();
 		try (InputStream input = QuestItemSourceContractGateTest.class
-				.getResourceAsStream("/quest/quest-item-handin-baseline.tsv")) {
+			.getResourceAsStream("/quest/quest-item-handin-baseline.tsv")) {
 			assertNotNull(input, "missing /quest/quest-item-handin-baseline.tsv");
 			try (BufferedReader reader = new BufferedReader(
 				new InputStreamReader(input, StandardCharsets.UTF_8))) {
@@ -259,10 +259,6 @@ class QuestItemSourceContractGateTest {
 		}
 	}
 
-	/**
-	 * 断言交付条件只要求给定道具，且移除动作不触碰其它道具。
-	 * Asserts the turn-in conditions require exactly the given items and removals touch nothing else.
-	 */
 	/**
 	 * 退役行（原版表驱动，无 typed 定义）跳过并要求确属退役（防名单陈旧静默缩水）——其交付门由
 	 * native 车道读取的原版表列承担（lane 门覆盖）；XML 保留行仍逐条断言交付物品。

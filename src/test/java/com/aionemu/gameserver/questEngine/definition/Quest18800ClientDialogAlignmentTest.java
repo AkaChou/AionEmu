@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
@@ -33,7 +32,7 @@ class Quest18800ClientDialogAlignmentTest {
 		assertEquals(798458, handler.acquireNpc(18800), "接取 NPC");
 		assertEquals(830365, handler.rewardNpc(18800), "交付 NPC");
 		assertFalse(handler.acquireNpc(18800).equals(handler.rewardNpc(18800)),
-				"接取与交付 owner 分离");
+			"接取与交付 owner 分离");
 		assertEquals(0, handler.relayCount(18800), "中继步数");
 		assertNull(handler.acceptGiveItem(18800), "接取侧无发放");
 		assertTrue(handler.workItems(18800).isEmpty(), "该行未声明 item_check：无交付门");

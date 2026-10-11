@@ -18,7 +18,7 @@ class NpcFactionQuestMutationPlannerTest {
 	void schedulesFactionStartAndCompletionForNonTimeBasedQuest() {
 		CompiledQuestDefinition definition = compile(false);
 
-		var start = definition.definition().transitions().get(0);
+		var start = definition.definition().transitions().getFirst();
 		var startPlan = QuestMutationPlanner.plan(definition,
 			new QuestSnapshot(7, 9001, QuestStatus.NONE, 0, Map.of())
 				.withStartEligibility(QuestStartEligibility.allowed()),
@@ -40,7 +40,7 @@ class NpcFactionQuestMutationPlannerTest {
 	void startsFactionLifecycleForDailyQuestOnAccept() {
 		// 真实依据:阵营任务 daily 标志不可靠,接取即启动生命周期,不再按 timeBased 取消。
 		CompiledQuestDefinition definition = compile(true);
-		var start = definition.definition().transitions().get(0);
+		var start = definition.definition().transitions().getFirst();
 
 		var plan = QuestMutationPlanner.plan(definition,
 			new QuestSnapshot(7, 9001, QuestStatus.NONE, 0, Map.of())
@@ -55,34 +55,34 @@ class NpcFactionQuestMutationPlannerTest {
 		String repeat = timeBased ? "<repeat max-repeat-count=\"255\" cooldown-seconds=\"0\" daily=\"true\" weekly=\"false\" cycles=\"ALL\"/>" : "";
 		String xml = """
 
-						<quest-definition id="9001" version="1">
-						  <metadata name="faction" display-name-id="0" min-level="1" max-level="55" category="FACTION" npc-faction-id="4">
-						    %s
-						    <rewards><reward kind="EXP" id="0" amount="1"/></rewards>
-						  </metadata>
-						  <nodes>
-						    <node label="unaccepted" status="NONE"/>
-						    <node label="started" status="START"/>
-						    <node label="reward" status="REWARD"/>
-						    <node label="complete" status="COMPLETE"/>
-						  </nodes>
-						  <transitions>
-						    <transition source="unaccepted" target="started">
-						      <event><dialog type="TALK_TO_NPC" npc-id="700001" action="QUEST_ACCEPT_1"/></event>
-						      <conditions><start-eligible/></conditions>
-						    </transition>
-						    <transition source="started" target="reward">
-						      <event><dialog type="TALK_TO_NPC" npc-id="700001" action="FINISH_DIALOG"/></event>
-						    </transition>
-						    <transition source="reward" target="complete">
-						      <event><dialog type="TALK_TO_NPC" npc-id="700001" action="SELECTED_QUEST_REWARD1"/></event>
-						      <actions><complete-quest reward-index="0"/></actions>
-						      <after-commit><sync-quest-state mode="COMPLETION"/></after-commit>
-						    </transition>
-						  </transitions>
-						</quest-definition>
+					<quest-definition id="9001" version="1">
+					  <metadata name="faction" display-name-id="0" min-level="1" max-level="55" category="FACTION" npc-faction-id="4">
+					    %s
+					    <rewards><reward kind="EXP" id="0" amount="1"/></rewards>
+					  </metadata>
+					  <nodes>
+					    <node label="unaccepted" status="NONE"/>
+					    <node label="started" status="START"/>
+					    <node label="reward" status="REWARD"/>
+					    <node label="complete" status="COMPLETE"/>
+					  </nodes>
+					  <transitions>
+					    <transition source="unaccepted" target="started">
+					      <event><dialog type="TALK_TO_NPC" npc-id="700001" action="QUEST_ACCEPT_1"/></event>
+					      <conditions><start-eligible/></conditions>
+					    </transition>
+					    <transition source="started" target="reward">
+					      <event><dialog type="TALK_TO_NPC" npc-id="700001" action="FINISH_DIALOG"/></event>
+					    </transition>
+					    <transition source="reward" target="complete">
+					      <event><dialog type="TALK_TO_NPC" npc-id="700001" action="SELECTED_QUEST_REWARD1"/></event>
+					      <actions><complete-quest reward-index="0"/></actions>
+					      <after-commit><sync-quest-state mode="COMPLETION"/></after-commit>
+					    </transition>
+					  </transitions>
+					</quest-definition>
 
-				""".formatted(repeat);
+			""".formatted(repeat);
 		return QuestDefinitionXmlCompiler.compile(
 			new ByteArrayInputStream(xml.getBytes(StandardCharsets.UTF_8)));
 	}

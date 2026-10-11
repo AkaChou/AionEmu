@@ -43,13 +43,13 @@ class QuestStartEligibilityContractTest {
 				"<status-is status=\"NONE\"/><world-is world-id=\"110010000\"/>");
 
 		for (String xml : List.of(missing, explicit)) {
-			QuestTransition start = compile(xml).definition().transitions().get(0);
+			QuestTransition start = compile(xml).definition().transitions().getFirst();
 			assertEquals(List.of(new QuestCondition.WorldIs(110010000, true),
 				new QuestCondition.StartEligible()), start.conditions());
 		}
-		QuestTransition wildcardStart = compile(statusBound).definition().transitions().get(0);
+		QuestTransition wildcardStart = compile(statusBound).definition().transitions().getFirst();
 		assertEquals(List.of(new QuestCondition.StatusIs(QuestStatus.NONE),
-			new QuestCondition.WorldIs(110010000, true), new QuestCondition.StartEligible()),
+				new QuestCondition.WorldIs(110010000, true), new QuestCondition.StartEligible()),
 			wildcardStart.conditions());
 	}
 
@@ -98,7 +98,7 @@ class QuestStartEligibilityContractTest {
 
 		List<QuestTransition> transitions = compile(xml).definition().transitions();
 		for (int action : List.of(QuestDialogAction.QUEST_SELECT.id(), QuestDialogAction.SELECT1_1.id(),
-				QuestDialogAction.QUEST_REFUSE_SIMPLE.id())) {
+			QuestDialogAction.QUEST_REFUSE_SIMPLE.id())) {
 			QuestTransition repeated = transitions.stream()
 				.filter(transition -> "complete".equals(transition.sourceNode())
 					&& "complete".equals(transition.targetNode()))
@@ -167,12 +167,12 @@ class QuestStartEligibilityContractTest {
 			for (QuestTransition transition : definition.definition().transitions()) {
 				boolean startsFromNone = transition.sourceNode() == null
 					? transition.conditions().stream().anyMatch(condition ->
-						condition instanceof QuestCondition.StatusIs(QuestStatus status1) && status1 == QuestStatus.NONE)
+					condition instanceof QuestCondition.StatusIs(QuestStatus status1) && status1 == QuestStatus.NONE)
 					: statuses.get(transition.sourceNode()) == QuestStatus.NONE;
 				QuestStatus targetStatus = statuses.get(transition.targetNode());
 				if (startsFromNone && targetStatus != null && targetStatus != QuestStatus.NONE
-						&& transition.conditions().stream()
-							.noneMatch(QuestCondition.StartEligible.class::isInstance)) {
+					&& transition.conditions().stream()
+					.noneMatch(QuestCondition.StartEligible.class::isInstance)) {
 					violations.add(definition.id() + ":" + transition.event().type());
 				}
 			}

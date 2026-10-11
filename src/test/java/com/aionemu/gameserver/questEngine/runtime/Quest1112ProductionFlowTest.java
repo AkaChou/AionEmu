@@ -81,9 +81,9 @@ class Quest1112ProductionFlowTest {
 		assertEquals(3, metadata.minLevel(), "原版 minlevel_permitted");
 		assertEquals(java.util.Set.of("ELYOS"), metadata.permittedRaces(), "原版 pc_light");
 		List<QuestReward> rewards = metadata.rewards();
-		assertTrue(rewards.contains(new QuestReward("GOLD", 0, 1810)), () -> rewards.toString());
-		assertTrue(rewards.contains(new QuestReward("EXP", 0, 1375)), () -> rewards.toString());
-		assertTrue(rewards.contains(new QuestReward("ITEM", 169300002, 30)), () -> rewards.toString());
+		assertTrue(rewards.contains(new QuestReward("GOLD", 0, 1810)), rewards::toString);
+		assertTrue(rewards.contains(new QuestReward("EXP", 0, 1375)), rewards::toString);
+		assertTrue(rewards.contains(new QuestReward("ITEM", 169300002, 30)), rewards::toString);
 	}
 
 	@Test

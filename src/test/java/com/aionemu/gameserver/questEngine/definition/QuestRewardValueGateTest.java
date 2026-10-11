@@ -45,7 +45,9 @@ class QuestRewardValueGateTest {
 
 	private static final String RETAIL_UNSET = "RETAIL_UNSET";
 
-	/** AP 服务端 4 倍版本倍率族（生产 = 原版精确 × 4）。 */
+	/**
+	 * AP 服务端 4 倍版本倍率族（生产 = 原版精确 × 4）。
+	 */
 	private static final Set<Integer> AP_SERVER_QUADRUPLE = Set.of(
 		11279, 11280, 11281, 11282, 11283, 11284, 11285, 11286,
 		21281, 21282, 21283, 21284, 21285, 21286, 21287, 21288,
@@ -110,19 +112,23 @@ class QuestRewardValueGateTest {
 		return new BufferedReader(new InputStreamReader(input, StandardCharsets.UTF_8));
 	}
 
-	/** 档位 1 数值：平铺 <rewards>，多档任务取第一个 <group>。 */
+	/**
+	 * 档位 1 数值：平铺 <rewards>，多档任务取第一个 <group>。
+	 */
 	private static Map<String, Long> tierOneValues(QuestMetadata metadata) {
 		Map<String, Long> values = new HashMap<>();
 		List<QuestRewardGroup> groups = metadata.rewardGroups();
 		List<QuestReward> rewards = groups.isEmpty() ? metadata.rewards()
-			: groups.get(0).rewards();
+			: groups.getFirst().rewards();
 		for (QuestReward reward : rewards) {
 			values.putIfAbsent(reward.kind(), reward.amount());
 		}
 		return values;
 	}
 
-	/** 档位 1 的 EXP/GOLD/AP/GP 必须与原版一致（缺失字段与 4 倍 AP 族除外）。 */
+	/**
+	 * 档位 1 的 EXP/GOLD/AP/GP 必须与原版一致（缺失字段与 4 倍 AP 族除外）。
+	 */
 	@Test
 	void tierOneNumericRewardsMatchTheRetailContract() {
 		List<String> problems = new ArrayList<>();
@@ -150,7 +156,7 @@ class QuestRewardValueGateTest {
 	}
 
 	private static void check(int qid, Map<String, Long> values, Long retailValue,
-			String kind, boolean allowQuadruple, List<String> problems) {
+							  String kind, boolean allowQuadruple, List<String> problems) {
 		if (retailValue == null) {
 			return;
 		}

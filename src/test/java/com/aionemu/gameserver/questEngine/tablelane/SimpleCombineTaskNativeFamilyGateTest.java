@@ -17,8 +17,6 @@ import java.util.Set;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import com.aionemu.gameserver.model.Race;
-import com.aionemu.gameserver.model.PlayerClass;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.questEngine.definition.QuestDialogPage;
@@ -53,9 +51,13 @@ import com.aionemu.gameserver.questEngine.tablelane.NativeQuestTableLoader.Combi
  */
 class SimpleCombineTaskNativeFamilyGateTest {
 
-	/** 代表行（原版 5000 = weaponsmith / r_ws_q5000；天族接取 NPC Anteros）。 / The representative row. */
+	/**
+	 * 代表行（原版 5000 = weaponsmith / r_ws_q5000；天族接取 NPC Anteros）。 / The representative row.
+	 */
 	private static final int COMBINE_QUEST = 5000;
-	/** 原版 Quest_CombineTask.xml 行数。 / The frozen retail row count. */
+	/**
+	 * 原版 Quest_CombineTask.xml 行数。 / The frozen retail row count.
+	 */
 	private static final int FROZEN_ROWS = 574;
 
 	private static NativeQuestTableLoader loader;
@@ -76,7 +78,7 @@ class SimpleCombineTaskNativeFamilyGateTest {
 		assertTrue(rows.stream().allMatch(row -> row.taskNpcNames().size() == 2),
 			"task_npc 必须 100% 两名（天/魔各一）");
 		assertTrue(rows.stream().allMatch(row -> !row.combineSkill().isBlank() && !row.recipeName().isBlank()
-				&& !row.product().isBlank()), "combineskill / recipe_name / product 必须 100%");
+			&& !row.product().isBlank()), "combineskill / recipe_name / product 必须 100%");
 		assertEquals(FROZEN_ROWS, rows.stream().filter(row -> declared(row.components(), 1)).count(),
 			"give_component1 覆盖 574 行");
 		assertEquals(152, rows.stream().filter(row -> declared(row.components(), 2)).count(),
@@ -100,13 +102,15 @@ class SimpleCombineTaskNativeFamilyGateTest {
 		}
 	}
 
-	/** 逐行对拍：handler 的每张面都必须逐元素等于原版表行。 / Per-row element-wise alignment. */
+	/**
+	 * 逐行对拍：handler 的每张面都必须逐元素等于原版表行。 / Per-row element-wise alignment.
+	 */
 	@Test
 	void handlerSurfacesFollowTheRetailRow() throws IOException {
 		RetailItemNameIndex items = RetailItemNameIndex.loadItemTemplates();
 		RetailRecipeIndex recipes;
 		try (java.io.InputStream input = getClass().getResourceAsStream(
-				"/aion/data/static_data/recipe/recipe_templates.xml")) {
+			"/aion/data/static_data/recipe/recipe_templates.xml")) {
 			assertNotNull(input, "missing recipe_templates.xml");
 			recipes = RetailRecipeIndex.build(List.of(input));
 		}
@@ -129,7 +133,7 @@ class SimpleCombineTaskNativeFamilyGateTest {
 			}
 			ItemStack product = handler.product(questId);
 			if (product == null || product.itemId() != symbol(row.product(), items)
-					|| product.count() != cellCount(row.product())) {
+				|| product.count() != cellCount(row.product())) {
 				problems.add(questId + " 产物漂移：" + row.product() + " -> " + product);
 			}
 			List<ItemStack> expectedComponents = new ArrayList<>();
@@ -144,7 +148,7 @@ class SimpleCombineTaskNativeFamilyGateTest {
 			}
 			Integer expectedRecipe = product == null ? null
 				: recipes.resolveUnique(
-					RetailQuestMetadataCompiler.combineSkillId(row.combineSkill()), product.itemId()).orElse(null);
+				RetailQuestMetadataCompiler.combineSkillId(row.combineSkill()), product.itemId()).orElse(null);
 			if (expectedRecipe == null || !expectedRecipe.equals(handler.recipeId(questId))) {
 				problems.add(questId + " 配方漂移：" + expectedRecipe + " -> " + handler.recipeId(questId));
 			}
@@ -264,7 +268,7 @@ class SimpleCombineTaskNativeFamilyGateTest {
 		SimpleCombineTaskHandler local = handler(inventory, recipes,
 			NativeReportRewardFlow.forTest(SimpleCombineTaskNativeFamilyGateTest::metadata,
 				(env, tier, template) -> {
-					claims.add(new int[] {env.getQuestId(), tier});
+					claims.add(new int[]{env.getQuestId(), tier});
 					return template != null;
 				}));
 		Player player = NativeTalkFixture.player();
@@ -309,7 +313,7 @@ class SimpleCombineTaskNativeFamilyGateTest {
 		SimpleCombineTaskHandler local = handler(inventory, recipes,
 			NativeReportRewardFlow.forTest(SimpleCombineTaskNativeFamilyGateTest::metadata,
 				(env, tier, template) -> {
-					claims.add(new int[] {env.getQuestId(), tier});
+					claims.add(new int[]{env.getQuestId(), tier});
 					return template != null;
 				}));
 		Player player = NativeTalkFixture.player();
@@ -345,7 +349,7 @@ class SimpleCombineTaskNativeFamilyGateTest {
 		SimpleCombineTaskHandler local = handler(inventory, recipes,
 			NativeReportRewardFlow.forTest(SimpleCombineTaskNativeFamilyGateTest::metadata,
 				(env, tier, template) -> {
-					claims.add(new int[] {env.getQuestId(), tier});
+					claims.add(new int[]{env.getQuestId(), tier});
 					return template != null;
 				}));
 		Player player = NativeTalkFixture.player();
@@ -432,7 +436,7 @@ class SimpleCombineTaskNativeFamilyGateTest {
 	}
 
 	private static SimpleCombineTaskHandler handler(NativeInventoryPort inventory, NativeRecipePort recipes,
-			NativeReportRewardFlow rewardFlow) {
+													NativeReportRewardFlow rewardFlow) {
 		try {
 			return new SimpleCombineTaskHandler(NativeQuestTableLoader.instance(),
 				NativeNpcNameResolver.instance(), RetailItemNameIndex.loadItemTemplates(), recipeIndex(),
@@ -444,7 +448,7 @@ class SimpleCombineTaskNativeFamilyGateTest {
 
 	private static RetailRecipeIndex recipeIndex() throws IOException {
 		try (java.io.InputStream input = SimpleCombineTaskNativeFamilyGateTest.class.getClassLoader()
-				.getResourceAsStream("aion/data/static_data/recipe/recipe_templates.xml")) {
+			.getResourceAsStream("aion/data/static_data/recipe/recipe_templates.xml")) {
 			if (input == null) {
 				throw new IllegalStateException("missing recipe_templates.xml");
 			}
@@ -452,7 +456,9 @@ class SimpleCombineTaskNativeFamilyGateTest {
 		}
 	}
 
-	/** 记录式假配方端口。 / A recording fake recipe port. */
+	/**
+	 * 记录式假配方端口。 / A recording fake recipe port.
+	 */
 	private static final class RecordingRecipes implements NativeRecipePort {
 		private final Set<Integer> known = new LinkedHashSet<>();
 		private final List<String> calls = new ArrayList<>();
@@ -485,7 +491,9 @@ class SimpleCombineTaskNativeFamilyGateTest {
 		return cells.size() >= step && cells.get(step - 1) != null && !cells.get(step - 1).isBlank();
 	}
 
-	/** 单元 = 「符号 [数量]」；符号走两通道（原名 → {@code ITEM_} 前缀）。 / The retail two-channel symbol rule. */
+	/**
+	 * 单元 = 「符号 [数量]」；符号走两通道（原名 → {@code ITEM_} 前缀）。 / The retail two-channel symbol rule.
+	 */
 	private static Integer symbol(String cell, RetailItemNameIndex items) {
 		String name = cell.trim().split("\\s+")[0].toLowerCase(java.util.Locale.ROOT);
 		Integer direct = items.resolve(name);

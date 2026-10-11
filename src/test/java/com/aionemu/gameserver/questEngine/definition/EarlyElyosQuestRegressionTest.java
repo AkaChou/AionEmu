@@ -3,12 +3,7 @@ package com.aionemu.gameserver.questEngine.definition;
 import com.aionemu.gameserver.model.PlayerClass;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
-import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
-import com.aionemu.gameserver.questEngine.runtime.QuestMutationPlan;
-import com.aionemu.gameserver.questEngine.runtime.QuestMutationPlanner;
-import com.aionemu.gameserver.questEngine.runtime.QuestSnapshot;
-import com.aionemu.gameserver.questEngine.runtime.QuestStartEligibility;
 import com.aionemu.gameserver.questEngine.tablelane.NativeQuestStartPort;
 import com.aionemu.gameserver.questEngine.tablelane.NativeQuestXmlTable;
 import com.aionemu.gameserver.questEngine.tablelane.NativeTalkFixture;
@@ -18,7 +13,6 @@ import com.aionemu.gameserver.questEngine.tablelane.SimpleUseItemHandler;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -457,8 +451,10 @@ class EarlyElyosQuestRegressionTest {
 		}
 	}
 
-	/** 1647（볼빅 동상）仍在 IR 车道：物件门 + 装备门，交付不需工作物品。 /
-	 * 1647 stays on the IR lane: object gate plus equipped-item gates. */
+	/**
+	 * 1647（볼빅 동상）仍在 IR 车道：物件门 + 装备门，交付不需工作物品。 /
+	 * 1647 stays on the IR lane: object gate plus equipped-item gates.
+	 */
 	@Test
 	void bollvigStatueRestoresItsLegacyGates() {
 		CompiledQuestDefinition bollvig = load(1647);
@@ -584,7 +580,7 @@ class EarlyElyosQuestRegressionTest {
 	}
 
 	private static QuestTransition route(CompiledQuestDefinition definition, String source, String target,
-			QuestEvent event) {
+										 QuestEvent event) {
 		return definition.definition().transitions().stream()
 			.filter(route -> Objects.equals(route.sourceNode(), source) && route.targetNode().equals(target)
 				&& route.event().equals(event))
@@ -602,11 +598,13 @@ class EarlyElyosQuestRegressionTest {
 		assertFalse(definition.definition().transitions().stream().anyMatch(transition ->
 			Objects.equals(transition.sourceNode(), "unaccepted")
 				&& ((transition.event() instanceof QuestEvent.TalkToNpc talk && talk.npcId() == npcId)
-					|| (transition.event() instanceof QuestEvent.CanAct canAct
-						&& canAct.templateId() == npcId))));
+				|| (transition.event() instanceof QuestEvent.CanAct canAct
+				&& canAct.templateId() == npcId))));
 	}
 
-	/** 交付窗页（与 RetailSimpleCollectItemDefinitionCompiler.deliveryWindowPage 同口径：档位查表，零奖励组回落窗 1）。 */
+	/**
+	 * 交付窗页（与 RetailSimpleCollectItemDefinitionCompiler.deliveryWindowPage 同口径：档位查表，零奖励组回落窗 1）。
+	 */
 	private static int deliveryWindowPage(QuestMetadata metadata) {
 		return metadata.rewardGroups().isEmpty()
 			? QuestDialogPage.SHOW_SELECT_QUEST_REWARD_WINDOW1.id()
@@ -617,6 +615,7 @@ class EarlyElyosQuestRegressionTest {
 		// 退役任务的生产 XML 只在 git 历史里：统一取生产视图（XML 目录 + 原版 overlay）。
 		return ProductionQuestDefinitions.definition(questId);
 	}
+
 	@Test
 	void insomniaMedicineAcceptanceOpensAskAcceptWindowNotRefusePage() {
 		CompiledQuestDefinition definition = load(1111);

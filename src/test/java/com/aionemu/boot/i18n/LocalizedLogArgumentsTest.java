@@ -17,6 +17,7 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 import org.junit.jupiter.api.Test;
 
 /**
@@ -63,7 +64,7 @@ class LocalizedLogArgumentsTest {
 					continue;
 				}
 				List<String> arguments = splitTopLevel(code.substring(open + 1, end - 1));
-				Matcher literal = STRING_LITERAL.matcher(arguments.get(0).trim());
+				Matcher literal = STRING_LITERAL.matcher(arguments.getFirst().trim());
 				if (!literal.matches()) {
 					continue;
 				}

@@ -8,7 +8,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
@@ -51,22 +50,32 @@ class ItemPlayFamilyRowInventoryGateTest {
 		"/aion/data/static_data/quest/retail/retail-xml-retention.xml";
 	private static final String FAMILY = "SimpleItemPlay";
 
-	/** 原版表全量行数（原版 {@code quest_simpleitemplays}）。 / Retail table row count. */
+	/**
+	 * 原版表全量行数（原版 {@code quest_simpleitemplays}）。 / Retail table row count.
+	 */
 	private static final int TABLE_ROWS = 43;
-	/** 原版表的 43 个 id。 / The 43 retail table ids. */
+	/**
+	 * 原版表的 43 个 id。 / The 43 retail table ids.
+	 */
 	private static final Set<Integer> TABLE_IDS = Set.of(
 		9623, 19048, 29048, 41267, 41514, 41540, 41300, 41577, 41593, 18828, 28828, 12066, 22066, 50013,
 		50014, 51013, 51014, 80255, 80256, 18014, 28014, 39713, 49713, 12525, 12562, 22525, 22562, 13054,
 		13064, 23054, 23064, 23562, 13400, 13401, 23400, 23401, 13704, 13708, 23704, 23708, 50048, 18213,
 		28213);
-	/** 无 owner 条目、无 XML ⇒ 不在本服生产的行数。 / Rows absent from production. */
+	/**
+	 * 无 owner 条目、无 XML ⇒ 不在本服生产的行数。 / Rows absent from production.
+	 */
 	private static final int ABSENT_ROWS = 28;
 
-	/** 已退役并路由的 8 行（P5D 步 3 激活 18213/28213 后）。 / The eight retired, routed rows. */
+	/**
+	 * 已退役并路由的 8 行（P5D 步 3 激活 18213/28213 后）。 / The eight retired, routed rows.
+	 */
 	private static final Set<Integer> ROUTED_ROWS =
 		Set.of(13704, 13708, 19048, 23704, 23708, 29048, 18213, 28213);
 
-	/** XML 保留的 7 行及其裁定理由（原版清单逐字）。 / The seven XML-retention rows and their reasons. */
+	/**
+	 * XML 保留的 7 行及其裁定理由（原版清单逐字）。 / The seven XML-retention rows and their reasons.
+	 */
 	private static final Map<Integer, String> ADJUDICATED_ROWS = Map.of(
 		50048, "ADJUDICATED:RETAIL_TALK_CHAIN",
 		18828, "ADJUDICATED:RETAIL_CON_QUEST",
@@ -76,10 +85,14 @@ class ItemPlayFamilyRowInventoryGateTest {
 		80255, "ADJUDICATED:RETAIL_ADVANCE_UNEXPRESSED",
 		80256, "ADJUDICATED:RETAIL_ADVANCE_UNEXPRESSED");
 
-	/** 原版槽形态偏离本族不变量的 4 行（P5D 逐行复算）。 / Rows deviating from the retail slot shape. */
+	/**
+	 * 原版槽形态偏离本族不变量的 4 行（P5D 逐行复算）。 / Rows deviating from the retail slot shape.
+	 */
 	private static final Set<Integer> SHAPE_DEVIATING_ROWS = Set.of(80255, 80256, 39713, 49713);
 
-	/** 原版槽形态已成立、仍留 XML 的 3 行（名字轴无解 ⇒ fail-closed）。 / Remaining shape-ready XML rows. */
+	/**
+	 * 原版槽形态已成立、仍留 XML 的 3 行（名字轴无解 ⇒ fail-closed）。 / Remaining shape-ready XML rows.
+	 */
 	private static final Set<Integer> SHAPE_READY_ADJUDICATED = Set.of(18828, 28828, 50048);
 
 	/**
@@ -91,7 +104,9 @@ class ItemPlayFamilyRowInventoryGateTest {
 		41267, 41514, 41540, 41300, 41577, 41593, 12066, 22066, 50013, 50014, 51013, 51014, 18014, 28014,
 		12525, 12562, 22525, 22562, 13054, 13064, 23054, 23064, 23562, 13400, 13401, 23400, 23401);
 
-	/** 可接取形的 16 行（{@code minlevel_permitted != 999}）。 / The sixteen acquirable rows. */
+	/**
+	 * 可接取形的 16 行（{@code minlevel_permitted != 999}）。 / The sixteen acquirable rows.
+	 */
 	private static final Set<Integer> LIVE_ROWS = Set.of(
 		9623, 19048, 29048, 18213, 28213, 18828, 28828, 80255, 80256, 39713, 49713, 13704, 13708, 23704,
 		23708, 50048);
@@ -263,7 +278,9 @@ class ItemPlayFamilyRowInventoryGateTest {
 		}
 	}
 
-	/** 原版 {@code quest.xml} 本族 43 行的 {@code minlevel_permitted}（独立重解析）。 */
+	/**
+	 * 原版 {@code quest.xml} 本族 43 行的 {@code minlevel_permitted}（独立重解析）。
+	 */
 	private static Map<Integer, Integer> minLevels() throws Exception {
 		String text = readResource("/aion/data/static_data/quest/retail/quest.xml");
 		Map<Integer, Integer> result = new TreeMap<>();
@@ -285,7 +302,9 @@ class ItemPlayFamilyRowInventoryGateTest {
 		return result;
 	}
 
-	/** 读类路径资源为文本。 / Reads one classpath resource as text. */
+	/**
+	 * 读类路径资源为文本。 / Reads one classpath resource as text.
+	 */
 	private static String readResource(String path) throws Exception {
 		try (InputStream input = ItemPlayFamilyRowInventoryGateTest.class.getResourceAsStream(path)) {
 			if (input == null) {
@@ -295,14 +314,16 @@ class ItemPlayFamilyRowInventoryGateTest {
 		}
 	}
 
-	/** 原版清单：quest id → [owner, family, reason]（非本族行不载入）。 / The retention manifest. */
+	/**
+	 * 原版清单：quest id → [owner, family, reason]（非本族行不载入）。 / The retention manifest.
+	 */
 	private static Map<Integer, String[]> manifest() throws Exception {
 		Map<Integer, String[]> result = new LinkedHashMap<>();
 		for (Element row : RetailLedgerRows.rows(RETENTION_RESOURCE, "quest")) {
 			String family = RetailLedgerRows.cell(row, "family");
 			if (FAMILY.equals(family)) {
 				result.put(Integer.parseInt(RetailLedgerRows.cell(row, "quest_id")),
-					new String[] {RetailLedgerRows.cell(row, "owner"), family,
+					new String[]{RetailLedgerRows.cell(row, "owner"), family,
 						RetailLedgerRows.cell(row, "reason")});
 			}
 		}

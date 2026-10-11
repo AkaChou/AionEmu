@@ -6,7 +6,6 @@ import com.aionemu.gameserver.questEngine.definition.QuestAction;
 import com.aionemu.gameserver.questEngine.definition.QuestDefinition;
 import com.aionemu.gameserver.questEngine.definition.QuestDialogAction;
 import com.aionemu.gameserver.questEngine.definition.QuestEvent;
-import com.aionemu.gameserver.questEngine.definition.QuestReward;
 import com.aionemu.gameserver.questEngine.definition.QuestStateSyncMode;
 import com.aionemu.gameserver.questEngine.definition.QuestTransition;
 import com.aionemu.gameserver.questEngine.tablelane.SimpleCollectItemHandler;
@@ -17,7 +16,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.stream.Stream;
 
@@ -91,9 +89,9 @@ class RetailRewardWindowRouteTest {
 	@TestFactory
 	Stream<DynamicTest> nativeFamiliesRouteEveryClientDeclaredHandInNpc() {
 		return List.of(
-			new FamilyCase("SimpleCollectItem", 35021, 2, Set.of(799800, 799801)),
-			new FamilyCase("SimpleHunt", 35023, 2, Set.of(799800, 799801)),
-			new FamilyCase("SimpleTalk", 35045, 2, Set.of(799800, 799801)))
+				new FamilyCase("SimpleCollectItem", 35021, 2, Set.of(799800, 799801)),
+				new FamilyCase("SimpleHunt", 35023, 2, Set.of(799800, 799801)),
+				new FamilyCase("SimpleTalk", 35045, 2, Set.of(799800, 799801)))
 			.stream().map(row -> DynamicTest.dynamicTest(row.family() + " " + row.questId(), () -> {
 				assertTrue(nativeLaneOwns(row.family(), row.questId()),
 					() -> row.family() + " " + row.questId() + " must be routed by the native lane");
@@ -122,7 +120,7 @@ class RetailRewardWindowRouteTest {
 	}
 
 	private static void assertRoutes(List<QuestTransition> transitions, int dialogId, int npcCount,
-			Set<Integer> knownNpcs) {
+									 Set<Integer> knownNpcs) {
 		List<QuestTransition> global = transitions.stream()
 			.filter(route -> route.event().equals(new QuestEvent.QuestDialog(dialogId)))
 			.filter(route -> "reward".equals(route.sourceNode()) && "complete".equals(route.targetNode()))

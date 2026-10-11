@@ -1,7 +1,6 @@
 package com.aionemu.gameserver.questEngine.tablelane;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.InputStream;
@@ -47,13 +46,17 @@ class CombineTaskRowAlignmentGateTest {
 	private static final String COMBINE_TABLE = "aion/data/static_data/quest/retail/Quest_CombineTask.xml";
 	private static final String RECIPE_TEMPLATES = "/aion/data/static_data/recipe/recipe_templates.xml";
 
-	/** 原版表事实（全量复算）。 / Retail-table facts (whole-table recomputation). */
+	/**
+	 * 原版表事实（全量复算）。 / Retail-table facts (whole-table recomputation).
+	 */
 	private static final int ROWS = 574;
 	private static final int TASK_NPCS = 574;
 	private static final int COMPONENT_SLOTS = 574;
 	private static final int SECOND_COMPONENT = 152;
 	private static final int ROUTED = 574;
-	/** 原版 helper 允许的分量槽位数（{@code lVar4 = 8}）。 / The retail component slot count. */
+	/**
+	 * 原版 helper 允许的分量槽位数（{@code lVar4 = 8}）。 / The retail component slot count.
+	 */
 	private static final int RETAIL_COMPONENT_SLOTS = 8;
 
 	private static final Pattern ROW = Pattern.compile("<id id=\"(\\d+)\">(.*?)</id>", Pattern.DOTALL);
@@ -67,7 +70,9 @@ class CombineTaskRowAlignmentGateTest {
 		combineRaw = parseTable(readResource(COMBINE_TABLE));
 	}
 
-	/** ① 行集与逐行字段：native 装载必须与原版表原文逐行一致（含位置保留的分量槽）。 */
+	/**
+	 * ① 行集与逐行字段：native 装载必须与原版表原文逐行一致（含位置保留的分量槽）。
+	 */
 	@Test
 	void everyCombineRowIsMappedVerbatim() {
 		assertEquals(ROWS, combineRaw.size(), "原版表行数漂移");
@@ -89,7 +94,9 @@ class CombineTaskRowAlignmentGateTest {
 		}
 	}
 
-	/** ② 家族填充率冻结（任何一行增删列即红灯）。 / Frozen column coverage. */
+	/**
+	 * ② 家族填充率冻结（任何一行增删列即红灯）。 / Frozen column coverage.
+	 */
 	@Test
 	void combineFamilyCountsAreFrozen() {
 		assertEquals(TASK_NPCS, countDeclared(combineRaw, "task_npc", 0), "task_npc 覆盖");
@@ -105,7 +112,9 @@ class CombineTaskRowAlignmentGateTest {
 			"recipe_name 覆盖 574 行");
 	}
 
-	/** ③ 路由判据独立复算 ⇒ 必须与处理器路由集逐元素相等。 / Independently recomputed routing verdict. */
+	/**
+	 * ③ 路由判据独立复算 ⇒ 必须与处理器路由集逐元素相等。 / Independently recomputed routing verdict.
+	 */
 	@Test
 	void routingVerdictMatchesTheHandlerElementByElement() throws Exception {
 		RetailItemNameIndex items = RetailItemNameIndex.loadItemTemplates();
@@ -129,11 +138,11 @@ class CombineTaskRowAlignmentGateTest {
 			boolean productOk = productId != null;
 			boolean componentsOk = !declaredSlots(raw, "give_component").isEmpty()
 				&& declaredSlots(raw, "give_component").stream()
-					.allMatch(slot -> resolve(value(raw, "give_component" + slot), items) != null);
+				.allMatch(slot -> resolve(value(raw, "give_component" + slot), items) != null);
 			boolean recipeOk = skillId != null && productOk
 				&& recipes.resolveUnique(skillId, productId).isPresent();
 			if (npcsOk && recipeOk && componentsOk && RetiredQuestIds.contains(questId)
-					&& !xmlOnly.contains(questId) && metadataClean(driver, questId)) {
+				&& !xmlOnly.contains(questId) && metadataClean(driver, questId)) {
 				expected.add(questId);
 			}
 		}
@@ -181,7 +190,9 @@ class CombineTaskRowAlignmentGateTest {
 			&& npcs.resolve(name).resolution() == NativeNpcNameResolver.Resolution.UNIQUE;
 	}
 
-	/** 单元 = 「符号 [数量]」；两通道解析（先原名，未命中再去 {@code ITEM_} 前缀）。 / The two-channel rule. */
+	/**
+	 * 单元 = 「符号 [数量]」；两通道解析（先原名，未命中再去 {@code ITEM_} 前缀）。 / The two-channel rule.
+	 */
 	private static Integer resolve(String cell, RetailItemNameIndex items) {
 		if (cell == null || cell.isBlank()) {
 			return null;
@@ -194,7 +205,9 @@ class CombineTaskRowAlignmentGateTest {
 		return itemId;
 	}
 
-	/** 原版 {@code task_npc}（逗号分隔，按列序去空）。 / The comma-separated retail npc list. */
+	/**
+	 * 原版 {@code task_npc}（逗号分隔，按列序去空）。 / The comma-separated retail npc list.
+	 */
 	private static List<String> declaredNames(Map<String, String> raw, String key) {
 		String text = value(raw, key);
 		if (text == null) {
@@ -212,7 +225,9 @@ class CombineTaskRowAlignmentGateTest {
 		return List.copyOf(names);
 	}
 
-	/** 已声明内容的槽号（升序）。 / The declared slot indices, ascending. */
+	/**
+	 * 已声明内容的槽号（升序）。 / The declared slot indices, ascending.
+	 */
 	private static List<Integer> declaredSlots(Map<String, String> raw, String prefix) {
 		List<Integer> slots = new ArrayList<>();
 		for (int slot = 1; slot <= RETAIL_COMPONENT_SLOTS; slot++) {

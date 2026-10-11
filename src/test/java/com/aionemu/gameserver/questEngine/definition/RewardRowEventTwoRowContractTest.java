@@ -14,7 +14,6 @@ import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -150,7 +149,7 @@ class RewardRowEventTwoRowContractTest {
 			for (QuestTransition route : rewardRoutes) {
 				for (QuestAction action : route.actions()) {
 					if (action instanceof QuestAction.SetVariable(String field, int value)
-							&& "var0".equals(field)) {
+						&& "var0".equals(field)) {
 						assertEquals(REWARD_ROW, value, () -> "quest " + contract.questId()
 							+ " reward route writes a non reward journal row");
 					}
@@ -213,12 +212,12 @@ class RewardRowEventTwoRowContractTest {
 
 	private static void assertLegacyKillStep(int questId, QuestTransition killRoute) {
 		List<QuestAction.SetVariable> stepWrites = killRoute.actions().stream()
-				.filter(QuestAction.SetVariable.class::isInstance)
-				.map(QuestAction.SetVariable.class::cast)
-				.filter(action -> "var0".equals(action.field()))
-				.toList();
-			assertEquals(List.of(new QuestAction.SetVariable("var0", REWARD_ROW)), stepWrites,
-				() -> "quest " + questId + " must keep the legacy setQuestVarById(0, 1) step");
+			.filter(QuestAction.SetVariable.class::isInstance)
+			.map(QuestAction.SetVariable.class::cast)
+			.filter(action -> "var0".equals(action.field()))
+			.toList();
+		assertEquals(List.of(new QuestAction.SetVariable("var0", REWARD_ROW)), stepWrites,
+			() -> "quest " + questId + " must keep the legacy setQuestVarById(0, 1) step");
 		assertTrue(killRoute.conditions().contains(new QuestCondition.QuestVariableIs("var0", STALE_ROW)),
 			() -> "quest " + questId + " kill route must be gated on the pre-reward row");
 	}
@@ -232,7 +231,7 @@ class RewardRowEventTwoRowContractTest {
 		Set<Integer> owners = new LinkedHashSet<>();
 		for (QuestTransition transition : definition.transitions()) {
 			if ("reward".equals(transition.sourceNode()) && "complete".equals(transition.targetNode())
-					&& transition.event() instanceof QuestEvent.TalkToNpc talk) {
+				&& transition.event() instanceof QuestEvent.TalkToNpc talk) {
 				owners.add(talk.npcId());
 			}
 		}
@@ -260,7 +259,7 @@ class RewardRowEventTwoRowContractTest {
 			true, true, 0, 0, 100000000, 1, 0f, 0f, 0f, (byte) 0);
 	}
 
-	private static CompiledQuestDefinition definition(int questId) throws Exception {
+	private static CompiledQuestDefinition definition(int questId) {
 		// 退役任务的生产 XML 只在 git 历史里：统一取生产视图（XML 目录 + 原版 overlay）。
 		// Retired quests live in git history only: use the production view (XML dir + retail overlay).
 		return ProductionQuestDefinitions.definition(questId);

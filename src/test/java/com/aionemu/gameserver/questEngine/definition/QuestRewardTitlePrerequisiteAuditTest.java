@@ -52,7 +52,7 @@ class QuestRewardTitlePrerequisiteAuditTest {
 	}
 
 	@Test
-	void rewardTitlesDoNotBecomeStartPrerequisites() throws Exception {
+	void rewardTitlesDoNotBecomeStartPrerequisites() {
 		for (Map.Entry<Integer, Integer> entry : REWARD_TITLE_QUESTS.entrySet()) {
 			int questId = entry.getKey();
 			int titleId = entry.getValue();

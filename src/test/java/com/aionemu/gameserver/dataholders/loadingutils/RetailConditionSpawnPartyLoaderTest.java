@@ -39,7 +39,7 @@ class RetailConditionSpawnPartyLoaderTest {
 		RetailAiData data = RetailAiDefinitionLoader.load(patterns.toFile(), mappings.toFile(), strings.toFile(),
 			areas.toFile(), conditions.toFile());
 
-		var choice = data.getConditionSpawns(123).get(0).groups().get(0).slots().get(0).get(0);
+		var choice = data.getConditionSpawns(123).getFirst().groups().getFirst().slots().getFirst().getFirst();
 		assertEquals(10000, choice.probability());
 		assertEquals("test:g1:s1:p1", choice.partyId());
 		assertEquals(java.util.List.of(1, 2), choice.members().stream().map(RetailAiData.ConditionSpawnNpc::id).toList());

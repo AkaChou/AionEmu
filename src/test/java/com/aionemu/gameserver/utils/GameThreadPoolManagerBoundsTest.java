@@ -41,7 +41,10 @@ class GameThreadPoolManagerBoundsTest {
 		String source = Files.readString(Path.of("src/main/java/com/aionemu/gameserver/utils/ThreadPoolManager.java"));
 
 		assertFalse(source.contains("new Thread(new Runnable()"));
-		assertTrue(source.contains("scheduleAtFixedRate(new Runnable()"));
+		// purge 必须经 ScheduledExecutorService 周期调度（lambda/方法引用/匿名类皆可），不得裸包 Thread。
+		// purge must be periodic-scheduled via ScheduledExecutorService (lambda, method ref or anonymous
+		// class all fine), never wrapped in a raw Thread.
+		assertTrue(source.contains("scheduleAtFixedRate("));
 	}
 
 	/**

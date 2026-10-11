@@ -52,18 +52,18 @@ class Quest19004RetailAlignmentTest {
 			new SimpleTalkHandler.RelayStep(QUEST_ID, 1, JUCLEAS_NPC)), "步 1 = Jucleas");
 		assertTrue(handler.relaysForNpc(LAVIRINTOS_NPC).contains(
 			new SimpleTalkHandler.RelayStep(QUEST_ID, 2, LAVIRINTOS_NPC)), "步 2 = Lavirintos");
-		assertEquals(PERIKLES_NPC, NativeNpcNameResolver.instance().resolve("Perikles").npcIds().get(0));
-		assertEquals(JUCLEAS_NPC, NativeNpcNameResolver.instance().resolve("Jucleas").npcIds().get(0));
-		assertEquals(LAVIRINTOS_NPC, NativeNpcNameResolver.instance().resolve("Lavirintos").npcIds().get(0));
-		assertEquals(HILARUS_NPC, NativeNpcNameResolver.instance().resolve("Hilarus").npcIds().get(0));
+		assertEquals(PERIKLES_NPC, NativeNpcNameResolver.instance().resolve("Perikles").npcIds().getFirst());
+		assertEquals(JUCLEAS_NPC, NativeNpcNameResolver.instance().resolve("Jucleas").npcIds().getFirst());
+		assertEquals(LAVIRINTOS_NPC, NativeNpcNameResolver.instance().resolve("Lavirintos").npcIds().getFirst());
+		assertEquals(HILARUS_NPC, NativeNpcNameResolver.instance().resolve("Hilarus").npcIds().getFirst());
 
 		QuestMetadata metadata = RetailQuestDriver.ensureLoaded()
 			.retailMetadataOf(QUEST_ID).orElseThrow().metadata();
 		assertEquals(29, metadata.minLevel(), "原版 minlevel_permitted=29");
 		assertEquals(java.util.Set.of("ELYOS"), metadata.permittedRaces(), "原版 pc_light");
 		List<QuestReward> rewards = metadata.rewards();
-		assertTrue(rewards.contains(new QuestReward("GOLD", 0, 9830)), () -> rewards.toString());
-		assertTrue(rewards.contains(new QuestReward("EXP", 0, 37405)), () -> rewards.toString());
+		assertTrue(rewards.contains(new QuestReward("GOLD", 0, 9830)), rewards::toString);
+		assertTrue(rewards.contains(new QuestReward("EXP", 0, 37405)), rewards::toString);
 	}
 
 	@Test

@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -128,8 +129,8 @@ class RetailDataDrivenClientPresenceGateTest {
 		overlap.retainAll(frozenAbsent);
 		assertTrue(overlap.isEmpty(), "P7 切换集不得包含客户端不可渲染的孤行: " + overlap);
 		for (int questId : frozenAbsent) {
-			assertFalse("RETAIL_TABLE".equals(owners.get(questId)), "孤行不得转 RETAIL_TABLE: " + questId);
-			assertFalse("XML_RETENTION".equals(owners.get(questId)), "孤行不得进 XML 保留: " + questId);
+			assertNotEquals("RETAIL_TABLE", owners.get(questId), "孤行不得转 RETAIL_TABLE: " + questId);
+			assertNotEquals("XML_RETENTION", owners.get(questId), "孤行不得进 XML 保留: " + questId);
 		}
 		Set<Integer> deadOverlap = new TreeSet<>(retired);
 		deadOverlap.retainAll(commentedOut);

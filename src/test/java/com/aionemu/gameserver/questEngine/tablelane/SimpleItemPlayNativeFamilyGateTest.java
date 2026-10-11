@@ -18,7 +18,6 @@ import org.junit.jupiter.api.Test;
 import com.aionemu.gameserver.model.PlayerClass;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
-import com.aionemu.gameserver.model.templates.QuestTemplate;
 import com.aionemu.gameserver.questEngine.definition.QuestDialogAction;
 import com.aionemu.gameserver.questEngine.definition.QuestDialogPage;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
@@ -47,13 +46,21 @@ import com.aionemu.gameserver.questEngine.tablelane.NativeQuestTableLoader.Simpl
  */
 class SimpleItemPlayNativeFamilyGateTest {
 
-	/** 原版接取 = 交付 NPC 的演出任务（19048：Andreas 发 doc 道具 → 用后回交）。 / Retail item-play row. */
+	/**
+	 * 原版接取 = 交付 NPC 的演出任务（19048：Andreas 发 doc 道具 → 用后回交）。 / Retail item-play row.
+	 */
 	private static final int PLAY_QUEST = 19048;
-	/** P5D 步 3 激活的两行（18213 天族 / 28213 魔族，各两步中继）。 / Step-3 activated relay rows. */
+	/**
+	 * P5D 步 3 激活的两行（18213 天族 / 28213 魔族，各两步中继）。 / Step-3 activated relay rows.
+	 */
 	private static final Set<Integer> ACTIVATED_RELAY_ROWS = Set.of(18213, 28213);
-	/** 直交形行（原版无 {@code talk_npcK}，接取即发演出道具）。 / The direct hand-in rows. */
+	/**
+	 * 直交形行（原版无 {@code talk_npcK}，接取即发演出道具）。 / The direct hand-in rows.
+	 */
 	private static final Set<Integer> DIRECT_ROWS = Set.of(13704, 13708, 19048, 23704, 23708, 29048);
-	/** 本批路由集（原版退役 8 行）。 / The eight routed rows. */
+	/**
+	 * 本批路由集（原版退役 8 行）。 / The eight routed rows.
+	 */
 	private static final Set<Integer> ROUTED_ROWS = Set.of(
 		13704, 13708, 19048, 23704, 23708, 29048, 18213, 28213);
 
@@ -73,7 +80,7 @@ class SimpleItemPlayNativeFamilyGateTest {
 		assertEquals(43, loader.itemPlaySize(), "原版 quest_simpleitemplays 全量行");
 		List<SimpleItemPlayRow> rows = List.copyOf(loader.itemPlayRows());
 		assertTrue(rows.stream().allMatch(row ->
-			!row.acquiredNpcName().isBlank() && !row.rewardNpcName().isBlank()),
+				!row.acquiredNpcName().isBlank() && !row.rewardNpcName().isBlank()),
 			"acquired_npc_name/reward_npc_name 必须 100%（原版 43/43）");
 		assertEquals(41, rows.stream().filter(row -> row.useItemName() != null).count(), "use_item_name 覆盖 41 行");
 		assertEquals(34, rows.stream().filter(row -> row.acceptGiveItem() != null).count(), "give_item 覆盖 34 行");
@@ -205,9 +212,9 @@ class SimpleItemPlayNativeFamilyGateTest {
 		assertEquals(1, relays.get(0).step(), "第 1 步");
 		assertEquals(2, relays.get(1).step(), "第 2 步");
 		assertTrue(handler.relaysForNpc(relays.get(0).npcId()).stream()
-				.anyMatch(relay -> relay.questId() == 18213 && relay.step() == 1), "第 1 步绑定该 NPC");
+			.anyMatch(relay -> relay.questId() == 18213 && relay.step() == 1), "第 1 步绑定该 NPC");
 		assertTrue(handler.relaysForNpc(relays.get(1).npcId()).stream()
-				.anyMatch(relay -> relay.questId() == 18213 && relay.step() == 2), "第 2 步绑定该 NPC");
+			.anyMatch(relay -> relay.questId() == 18213 && relay.step() == 2), "第 2 步绑定该 NPC");
 
 		// 第 K 步发/扣（18213 原版 give_item2/remove_item2；第 1 步无声明）。
 		ItemStack stepTwoGive = handler.stepGiveItem(18213, 2);
@@ -249,7 +256,9 @@ class SimpleItemPlayNativeFamilyGateTest {
 		assertEquals(1, advanced.getQuestVars().getQuestVars(), "推进后步号 = relayCount + 1");
 	}
 
-	/** P5D 步 2：REWARD 态而步号仍为 0 的旧存档（P5 车道未写步号）在进入世界时自愈到 relayCount + 1。 */
+	/**
+	 * P5D 步 2：REWARD 态而步号仍为 0 的旧存档（P5 车道未写步号）在进入世界时自愈到 relayCount + 1。
+	 */
 	@Test
 	void rewardSavesWithStepZeroAreHealedOnEnterWorld() {
 		SimpleItemPlayHandler local = handlerWith(NativeTalkFixture.RecordingInventory.EMPTY,
@@ -318,7 +327,7 @@ class SimpleItemPlayNativeFamilyGateTest {
 		SimpleItemPlayHandler local = handlerWith(NativeTalkFixture.RecordingInventory.EMPTY,
 			NativeReportRewardFlow.forTest(SimpleItemPlayNativeFamilyGateTest::metadata,
 				(env, tier, template) -> {
-					claims.add(new int[] {env.getQuestId(), tier});
+					claims.add(new int[]{env.getQuestId(), tier});
 					return template != null;
 				}));
 		Player player = NativeTalkFixture.player();
@@ -364,7 +373,7 @@ class SimpleItemPlayNativeFamilyGateTest {
 		SimpleItemPlayHandler local = handlerWith(NativeTalkFixture.RecordingInventory.EMPTY,
 			NativeReportRewardFlow.forTest(SimpleItemPlayNativeFamilyGateTest::metadata,
 				(env, tier, template) -> {
-					claims.add(new int[] {env.getQuestId(), tier});
+					claims.add(new int[]{env.getQuestId(), tier});
 					return template != null;
 				}));
 		Player player = NativeTalkFixture.player();
@@ -405,7 +414,7 @@ class SimpleItemPlayNativeFamilyGateTest {
 
 		// vars=0/step=1：31 → 该步页（18213 契约声明 select2 = 1352），不触碰物品通道。
 		NativeTalkFixture.clearPackets(player);
-		assertTrue(local.onDialog(NativeTalkFixture.dialog(player, relays.get(0).npcId(), 18213, 31)));
+		assertTrue(local.onDialog(NativeTalkFixture.dialog(player, relays.getFirst().npcId(), 18213, 31)));
 		NativeTalkFixture.assertOnlyDialogPage(player, SimpleItemPlayHandler.pageForStep(1));
 		assertTrue(inventory.calls().isEmpty(), "打开对话页不得触碰物品通道");
 
@@ -416,7 +425,7 @@ class SimpleItemPlayNativeFamilyGateTest {
 
 		// 子页动作 SELECT2_1(1353)（18213 契约声明）：原样回发。
 		NativeTalkFixture.clearPackets(player);
-		assertTrue(local.onDialog(NativeTalkFixture.dialog(player, relays.get(0).npcId(), 18213,
+		assertTrue(local.onDialog(NativeTalkFixture.dialog(player, relays.getFirst().npcId(), 18213,
 			QuestDialogPage.SELECT2_1.id())));
 		NativeTalkFixture.assertOnlyDialogPage(player, QuestDialogPage.SELECT2_1.id());
 
@@ -488,7 +497,7 @@ class SimpleItemPlayNativeFamilyGateTest {
 			// （SetQuestProgress + 0x5d8、**零发页**；2026-10-05 实机「一次点击即关窗」），
 			// 零发扣，步号 = 1；旧「回选择对话页 10」系翻译夸大。
 			NativeTalkFixture.clearPackets(player);
-			assertTrue(local.onDialog(NativeTalkFixture.dialog(player, relays.get(0).npcId(), questId, 10000)),
+			assertTrue(local.onDialog(NativeTalkFixture.dialog(player, relays.getFirst().npcId(), questId, 10000)),
 				"第 1 步动作 10000 必须被中继节点服务: " + questId);
 			NativeTalkFixture.assertCloseDialog(player);
 			assertEquals(1, player.getQuestStateList().getQuestState(questId).getQuestVars().getQuestVars(),
@@ -573,7 +582,7 @@ class SimpleItemPlayNativeFamilyGateTest {
 	}
 
 	private static SimpleItemPlayHandler handlerWith(NativeInventoryPort inventory,
-			NativeReportRewardFlow rewardFlow) {
+													 NativeReportRewardFlow rewardFlow) {
 		try {
 			return new SimpleItemPlayHandler(NativeQuestTableLoader.instance(), NativeNpcNameResolver.instance(),
 				RetailItemNameIndex.loadItemTemplates(), inventory, rewardFlow);

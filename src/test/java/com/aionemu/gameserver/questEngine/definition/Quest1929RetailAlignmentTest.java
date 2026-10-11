@@ -15,7 +15,9 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-/** Retail-anchored structural and typed-runtime coverage for quest 1929. */
+/**
+ * Retail-anchored structural and typed-runtime coverage for quest 1929.
+ */
 class Quest1929RetailAlignmentTest {
 	private static final Path XML = Path.of(
 		"src/main/resources/aion/data/static_data/quest/definitions/quests/1929.xml");
@@ -45,7 +47,7 @@ class Quest1929RetailAlignmentTest {
 			Map.entry("GUNSLINGER", 140001257), Map.entry("SONGWEAVER", 140001288),
 			Map.entry("AETHERTECH", 140001272));
 		for (Map.Entry<String, Integer> entry : expected.entrySet()) {
-			assertEquals(entry.getValue(), metadata.classRewards().get(entry.getKey()).get(0).id());
+			assertEquals(entry.getValue(), metadata.classRewards().get(entry.getKey()).getFirst().id());
 		}
 	}
 

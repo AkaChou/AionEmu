@@ -5,12 +5,8 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.StringReader;
-import java.nio.file.Path;
 import java.util.List;
 
-import javax.xml.XMLConstants;
-import javax.xml.transform.stream.StreamSource;
-import javax.xml.validation.SchemaFactory;
 
 import jakarta.xml.bind.JAXBContext;
 

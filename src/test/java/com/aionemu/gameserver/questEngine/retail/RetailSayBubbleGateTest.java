@@ -8,7 +8,6 @@ import java.util.regex.Pattern;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Say 气泡面钉子门（2026-10-02 偏差修复第二批）：DD 附加动作 case 7 的字符串键集冻结 +
@@ -24,13 +23,17 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 class RetailSayBubbleGateTest {
 
-	/** DD 附加动作 case 7 实际引用的键集（原版表行载荷，逐字冻结）。 / Keys referenced by DD case-7 rows. */
+	/**
+	 * DD 附加动作 case 7 实际引用的键集（原版表行载荷，逐字冻结）。 / Keys referenced by DD case-7 rows.
+	 */
 	private static final Set<String> FROZEN_KEYS = Set.of(
 		"STR_QUEST_SAY_LF4_04", "STR_QUEST_SAY_LF4_05", "STR_QUEST_SAY_LF4_06",
 		"STR_QUEST_SAY_LF4_21", "STR_QUEST_SAY_AB1_005", "STR_QUEST_SAY_LF5_001",
 		"STR_CHAT_DF5_Quest_Gossip_41");
 
-	/** 未解码实体形态（&hellip; 等）。 / Undecoded entity shape. */
+	/**
+	 * 未解码实体形态（&hellip; 等）。 / Undecoded entity shape.
+	 */
 	private static final Pattern RAW_ENTITY = Pattern.compile("&[a-zA-Z]+;|&#\\d+;");
 
 	@Test

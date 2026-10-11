@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.questEngine.definition;
 
-import com.aionemu.gameserver.questEngine.model.QuestStatus;
 
 import org.junit.jupiter.api.Test;
 
@@ -8,11 +7,12 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-/** Verdict for the no-handler shard-3 quests 29634 / 30208 / 30565 / 30760. */
+/**
+ * Verdict for the no-handler shard-3 quests 29634 / 30208 / 30565 / 30760.
+ */
 class QuestNoHandlerShard3DefinitionTest {
 
 	@Test
@@ -95,7 +95,7 @@ class QuestNoHandlerShard3DefinitionTest {
 	}
 
 	private static boolean hasDialog(CompiledQuestDefinition compiled, int npcId, int dialogId,
-		String source, String target) {
+									 String source, String target) {
 		return compiled.definition().transitions().stream()
 			.anyMatch(t -> t.event().equals(new QuestEvent.TalkToNpc(npcId, dialogId))
 				&& t.sourceNode().equals(source) && t.targetNode().equals(target));

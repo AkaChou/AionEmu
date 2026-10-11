@@ -92,10 +92,10 @@ class QuestProductionStartupGateTest {
 		// interests, and the chain-acquire face. An empty any channel means the grant face collapsed.
 		assertFalse(com.aionemu.gameserver.questEngine.tablelane.NativeSystemGrantLanes.lanes().isEmpty(),
 			"原生系统发放聚合面不得为空（NativeSystemGrantLanes）");
-		assertTrue(!com.aionemu.gameserver.questEngine.tablelane.DataDrivenNativeRuntime.instance()
+		assertFalse(com.aionemu.gameserver.questEngine.tablelane.DataDrivenNativeRuntime.instance()
 				.acquireLevelInterests().isEmpty(),
 			"DD 运行时接取型发放（leveluplogin 等级键）不得为空");
-		assertTrue(!com.aionemu.gameserver.questEngine.tablelane.DataDrivenNativeRuntime.instance()
+		assertFalse(com.aionemu.gameserver.questEngine.tablelane.DataDrivenNativeRuntime.instance()
 				.acquireWorldInterests().isEmpty(),
 			"DD 运行时接取型发放（enterworld 世界键）不得为空");
 		assertFalse(com.aionemu.gameserver.questEngine.tablelane.DataDrivenNativeRuntime.instance()

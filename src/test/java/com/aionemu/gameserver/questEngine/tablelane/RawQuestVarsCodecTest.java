@@ -3,6 +3,7 @@ package com.aionemu.gameserver.questEngine.tablelane;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import org.junit.jupiter.api.Test;
 
@@ -45,29 +46,29 @@ class RawQuestVarsCodecTest {
 	@Test
 	void rejectsOutOfRangeSlots() {
 		assertThrows(IllegalArgumentException.class,
-				() -> RawQuestVarsCodec.slotValue(RawQuestVarsCodec.Width.SIX, 0, 0));
+			() -> RawQuestVarsCodec.slotValue(RawQuestVarsCodec.Width.SIX, 0, 0));
 		assertThrows(IllegalArgumentException.class,
-				() -> RawQuestVarsCodec.slotValue(RawQuestVarsCodec.Width.SIX, 0, 6));
+			() -> RawQuestVarsCodec.slotValue(RawQuestVarsCodec.Width.SIX, 0, 6));
 		assertThrows(IllegalArgumentException.class,
-				() -> RawQuestVarsCodec.slotValue(RawQuestVarsCodec.Width.TEN, 0, 4));
+			() -> RawQuestVarsCodec.slotValue(RawQuestVarsCodec.Width.TEN, 0, 4));
 	}
 
 	@Test
 	void rejectsGuardedAndNegativeVars() {
 		assertThrows(IllegalArgumentException.class,
-				() -> RawQuestVarsCodec.slotValue(RawQuestVarsCodec.Width.SIX, 0x40000000, 1));
+			() -> RawQuestVarsCodec.slotValue(RawQuestVarsCodec.Width.SIX, 0x40000000, 1));
 		assertThrows(IllegalArgumentException.class,
-				() -> RawQuestVarsCodec.withSlotValue(RawQuestVarsCodec.Width.SIX, -1, 1, 1));
+			() -> RawQuestVarsCodec.withSlotValue(RawQuestVarsCodec.Width.SIX, -1, 1, 1));
 		assertTrue(RawQuestVarsCodec.guardClear(0));
 		assertTrue(RawQuestVarsCodec.guardClear(0x3fffffff));
-		assertTrue(!RawQuestVarsCodec.guardClear(0x40000000));
+		assertFalse(RawQuestVarsCodec.guardClear(0x40000000));
 	}
 
 	@Test
 	void rejectsValuesOverSlotMask() {
 		assertThrows(IllegalArgumentException.class,
-				() -> RawQuestVarsCodec.withSlotValue(RawQuestVarsCodec.Width.SIX, 0, 1, 64));
+			() -> RawQuestVarsCodec.withSlotValue(RawQuestVarsCodec.Width.SIX, 0, 1, 64));
 		assertThrows(IllegalArgumentException.class,
-				() -> RawQuestVarsCodec.withSlotValue(RawQuestVarsCodec.Width.TEN, 0, 1, 1024));
+			() -> RawQuestVarsCodec.withSlotValue(RawQuestVarsCodec.Width.TEN, 0, 1, 1024));
 	}
 }

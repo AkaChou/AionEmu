@@ -21,6 +21,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 /**
  * 锁定 28932（[인던/파티] 함선 지휘관 처치，可重复）的原版 DD 行（Talk + 单杀网格）与领奖行。
@@ -62,7 +63,7 @@ class Quest28932RewardRowContractTest {
 
 		// 单杀网格：德拉克忍者落组 1（原版 value0_progress_ 单行 1 杀）。
 		List<Integer> ninjas = NativeNpcNameResolver.instance().resolveMonsterIds(DRAKAN_NINJA);
-		assertTrue(!ninjas.isEmpty(), "德拉克忍者名必须可解析");
+		assertFalse(ninjas.isEmpty(), "德拉克忍者名必须可解析");
 		for (int mobId : ninjas) {
 			assertTrue(hasKillHit(runtime, mobId, 1), "忍者 " + mobId + " 必须落组 1 组槽");
 		}
@@ -73,10 +74,10 @@ class Quest28932RewardRowContractTest {
 		assertEquals(java.util.Set.of("ASMODIANS"), metadata.permittedRaces(), "原版 pc_dark");
 		assertEquals(255, metadata.repeatPolicy().maxRepeatCount(), "原版 max_repeat_count=255 ⇒ 可重复");
 		List<QuestReward> rewards = metadata.rewards();
-		assertTrue(rewards.contains(new QuestReward("EXP", 0, 7911702)), () -> rewards.toString());
-		assertTrue(rewards.contains(new QuestReward("ITEM", 188056947, 1)), () -> rewards.toString());
-		assertTrue(rewards.contains(new QuestReward("ITEM", 188056970, 1)), () -> rewards.toString());
-		assertTrue(rewards.contains(new QuestReward("ITEM", 166100011, 50)), () -> rewards.toString());
+		assertTrue(rewards.contains(new QuestReward("EXP", 0, 7911702)), rewards::toString);
+		assertTrue(rewards.contains(new QuestReward("ITEM", 188056947, 1)), rewards::toString);
+		assertTrue(rewards.contains(new QuestReward("ITEM", 188056970, 1)), rewards::toString);
+		assertTrue(rewards.contains(new QuestReward("ITEM", 166100011, 50)), rewards::toString);
 		assertTrue(rewards.contains(new QuestReward("ITEM", 152012753, 1)), () -> rewards.toString());
 	}
 
@@ -99,7 +100,7 @@ class Quest28932RewardRowContractTest {
 		NativeTalkFixture.assertCloseDialog(player);
 
 		// 单杀网格：一杀即饱和 ⇒ 收口进 REWARD（清槽）。
-		int ninjaId = NativeNpcNameResolver.instance().resolveMonsterIds(DRAKAN_NINJA).get(0);
+		int ninjaId = NativeNpcNameResolver.instance().resolveMonsterIds(DRAKAN_NINJA).getFirst();
 		assertTrue(kill(runtime, player, ninjaId), "单杀必须计数并收口");
 		assertEquals(QuestStatus.REWARD, state.getStatus(), "组槽达标 ⇒ 收口进领奖");
 		assertEquals(0, DataDrivenProgress.counter(state.getQuestVars().getQuestVars(), 1), "收口清槽");
@@ -116,7 +117,9 @@ class Quest28932RewardRowContractTest {
 		return runtime.onKill(player, npc);
 	}
 
-	/** 反射放置坐标（距离门测试面；生产经 WorldPosition 正常初始化）。 / Reflective placement for the distance gate. */
+	/**
+	 * 反射放置坐标（距离门测试面；生产经 WorldPosition 正常初始化）。 / Reflective placement for the distance gate.
+	 */
 	private static void place(VisibleObject object, float x, float y, float z) {
 		WorldPosition position = new WorldPosition(110010000);
 		position.setXYZH(x, y, z, (byte) 0);

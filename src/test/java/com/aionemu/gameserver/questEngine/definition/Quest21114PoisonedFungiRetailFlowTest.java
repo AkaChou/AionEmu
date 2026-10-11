@@ -23,7 +23,7 @@ class Quest21114PoisonedFungiRetailFlowTest {
 	private static final int FUNGIE_PATCH_ID = 700729;
 
 	@Test
-	void preservesTheLegacyHandlerStateMachineAndNpcRoles() throws Exception {
+	void preservesTheLegacyHandlerStateMachineAndNpcRoles() {
 		QuestDefinition definition = load();
 
 		assertEquals(new NodeProjection(QuestStatus.NONE, Map.of("var0", 0)),
@@ -64,7 +64,7 @@ class Quest21114PoisonedFungiRetailFlowTest {
 	}
 
 	@Test
-	void collectsMaterialsAndGivesTheSporeLiquidInClientPageOrder() throws Exception {
+	void collectsMaterialsAndGivesTheSporeLiquidInClientPageOrder() {
 		QuestDefinition definition = load();
 		assertPage(definition, "s0", QUEST_NPC_ID, QuestDialogAction.QUEST_SELECT, QuestDialogPage.SELECT1);
 
@@ -102,7 +102,7 @@ class Quest21114PoisonedFungiRetailFlowTest {
 	}
 
 	@Test
-	void usesTheAuthoritativeFungiePatchBeforeUnlockingTheTargetKill() throws Exception {
+	void usesTheAuthoritativeFungiePatchBeforeUnlockingTheTargetKill() {
 		QuestDefinition definition = load();
 
 		QuestTransition eligibility = definition.transitions().stream()
@@ -144,7 +144,7 @@ class Quest21114PoisonedFungiRetailFlowTest {
 	}
 
 	@Test
-	void reportsAndCompletesOnlyAtTheQuestNpc() throws Exception {
+	void reportsAndCompletesOnlyAtTheQuestNpc() {
 		QuestDefinition definition = load();
 		assertPage(definition, "reward", QUEST_NPC_ID, QuestDialogAction.USE_OBJECT,
 			QuestDialogPage.DEFAULT_SUCCESS);

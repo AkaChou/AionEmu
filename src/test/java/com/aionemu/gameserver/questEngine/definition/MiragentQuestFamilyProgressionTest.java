@@ -37,7 +37,7 @@ class MiragentQuestFamilyProgressionTest {
 		3940, "s5");
 
 	@Test
-	void familyDefinitionsKeepExplicitProgressNodesAndFinalRoutes() throws Exception {
+	void familyDefinitionsKeepExplicitProgressNodesAndFinalRoutes() {
 		for (Map.Entry<Integer, List<String>> entry : EXPECTED_PROGRESS_NODES.entrySet()) {
 			int questId = entry.getKey();
 			CompiledQuestDefinition definition = load(questId);
@@ -63,7 +63,7 @@ class MiragentQuestFamilyProgressionTest {
 	}
 
 	@Test
-	void noQuestUsesSetproToSkipFromAnIntermediateStageIntoReward() throws Exception {
+	void noQuestUsesSetproToSkipFromAnIntermediateStageIntoReward() {
 		for (int questId : EXPECTED_PROGRESS_NODES.keySet()) {
 			CompiledQuestDefinition definition = load(questId);
 			String rewardNode = EXPECTED_PROGRESS_NODES.get(questId).getLast();

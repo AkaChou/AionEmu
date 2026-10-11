@@ -25,7 +25,7 @@ class ServiceInternalCollectionImplementationTest {
 		assertEquals(Map.class, EventService.class.getDeclaredField("eventsForMaintainQuest").getType());
 
 		Method method = EventService.class.getDeclaredMethod("StartOrMaintainQuests", playerClass(), ListIteratorClass(),
-				Map.class, boolean.class);
+			Map.class, boolean.class);
 		assertEquals(Map.class, method.getParameterTypes()[2]);
 	}
 
@@ -40,7 +40,7 @@ class ServiceInternalCollectionImplementationTest {
 	@Test
 	void playerEnterWorldPendingSetUsesConcurrentKeySetWithoutExplicitLock() throws Exception {
 		String source = Files
-				.readString(Path.of("src/main/java/com/aionemu/gameserver/services/player/PlayerEnterWorldService.java"));
+			.readString(Path.of("src/main/java/com/aionemu/gameserver/services/player/PlayerEnterWorldService.java"));
 
 		assertTrue(source.contains("ConcurrentHashMap.newKeySet()"));
 		assertFalse(source.contains("synchronized (pendingEnterWorld)"));
@@ -49,17 +49,20 @@ class ServiceInternalCollectionImplementationTest {
 	@Test
 	void limitedItemTradeServiceUsesCompactHashMapIndexWithoutDoubleLookup() throws Exception {
 		String source = Files
-				.readString(Path.of("src/main/java/com/aionemu/gameserver/services/LimitedItemTradeService.java"));
+			.readString(Path.of("src/main/java/com/aionemu/gameserver/services/LimitedItemTradeService.java"));
 
-		assertTrue(source.contains("new HashMap<Integer, LimitedTradeNpc>()"));
-		assertFalse(source.contains("new LinkedHashMap<Integer, LimitedTradeNpc>()"));
+		// HashMap 具体类型仍钉死（Diamond 与显式泛型见证两种写法都接受）。
+		assertTrue(source.contains("new HashMap<") && source.contains("new HashMap<Integer, LimitedTradeNpc>()")
+			|| source.contains("new HashMap<>()"));
+		assertFalse(source.contains("new LinkedHashMap"));
+		assertFalse(source.contains("new LinkedHashMap"));
 		assertFalse(source.contains("if (!limitedTradeNpcs.containsKey(npcId))"));
 	}
 
 	@Test
 	void dropRegistrationUsesHashSetForNoReductionMapLookups() throws Exception {
 		String source = Files
-				.readString(Path.of("src/main/java/com/aionemu/gameserver/services/drop/DropRegistrationService.java"));
+			.readString(Path.of("src/main/java/com/aionemu/gameserver/services/drop/DropRegistrationService.java"));
 
 		assertTrue(source.contains("private volatile Set<Integer> noReductionMaps = Set.of();"));
 		assertTrue(source.contains("Set<Integer> maps = new HashSet<>();"));

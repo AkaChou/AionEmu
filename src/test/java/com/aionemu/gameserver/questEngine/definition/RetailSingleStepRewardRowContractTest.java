@@ -121,7 +121,7 @@ class RetailSingleStepRewardRowContractTest {
 	}
 
 	@Test
-	void xmlRetainedRowsKeepTheirJournalRowAndRecoveryContract() throws Exception {
+	void xmlRetainedRowsKeepTheirJournalRowAndRecoveryContract() {
 		for (Contract contract : XML_CONTRACTS) {
 			CompiledQuestDefinition compiled = definition(contract.questId());
 			QuestDefinition definition = compiled.definition();
@@ -151,7 +151,7 @@ class RetailSingleStepRewardRowContractTest {
 	}
 
 	@Test
-	void xmlRetainedRewardRoutesNeverWriteAStaleJournalRow() throws Exception {
+	void xmlRetainedRewardRoutesNeverWriteAStaleJournalRow() {
 		for (Contract contract : XML_CONTRACTS) {
 			QuestDefinition definition = definition(contract.questId()).definition();
 			List<QuestTransition> rewardRoutes = definition.transitions().stream()

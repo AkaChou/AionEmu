@@ -6,8 +6,6 @@ import com.aionemu.gameserver.questEngine.runtime.QuestMutationPlanner;
 import com.aionemu.gameserver.questEngine.runtime.QuestSnapshot;
 import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -16,7 +14,6 @@ import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 /**
@@ -143,7 +140,7 @@ class RewardRowTwoRowTalkFamilyContractTest {
 			for (QuestTransition route : rewardRoutes) {
 				for (QuestAction action : route.actions()) {
 					if (action instanceof QuestAction.SetVariable(String field, int value)
-							&& "var0".equals(field)) {
+						&& "var0".equals(field)) {
 						assertEquals(REWARD_ROW, value, () -> "quest " + contract.questId()
 							+ " reward route writes a non reward journal row");
 					}
@@ -170,7 +167,7 @@ class RewardRowTwoRowTalkFamilyContractTest {
 		Set<Integer> owners = new LinkedHashSet<>();
 		for (QuestTransition transition : definition.transitions()) {
 			if ("reward".equals(transition.sourceNode()) && "complete".equals(transition.targetNode())
-					&& transition.event() instanceof QuestEvent.TalkToNpc talk) {
+				&& transition.event() instanceof QuestEvent.TalkToNpc talk) {
 				owners.add(talk.npcId());
 			}
 		}

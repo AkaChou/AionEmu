@@ -188,16 +188,16 @@ class NpcDropDataTest {
 	@Test
 	void npcDropSchemaAcceptsAionServerSelectionAttributes() throws Exception {
 		var schema = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI)
-				.newSchema(Path.of("src/main/resources/aion/definitions/schemas/npc_drops.xsd").toFile());
+			.newSchema(Path.of("src/main/resources/aion/definitions/schemas/npc_drops.xsd").toFile());
 
 		schema.newValidator().validate(new StreamSource(new StringReader("""
-				<npc_drops>
-				<npc_drop npc_id="100">
-					<drop_group max_items="2" level_based_chance_reduction="true" drop_group_adjustment="250"/>
-					<common_drop_group name="COMMON_A" common_drop_adjustment="250"/>
-				</npc_drop>
-				</npc_drops>
-				""")));
+			<npc_drops>
+			<npc_drop npc_id="100">
+				<drop_group max_items="2" level_based_chance_reduction="true" drop_group_adjustment="250"/>
+				<common_drop_group name="COMMON_A" common_drop_adjustment="250"/>
+			</npc_drop>
+			</npc_drops>
+			""")));
 	}
 
 	@Test
@@ -209,15 +209,15 @@ class NpcDropDataTest {
 		for (int level = 5; level <= 65; level += 5) {
 			String groupName = "MATTER_OPTION_%02dA".formatted(level);
 			double dropCount = (double) xpath.evaluate(
-					"count(/common_drop_groups/group[@name='" + groupName + "']/drop)", document, XPathConstants.NUMBER);
+				"count(/common_drop_groups/group[@name='" + groupName + "']/drop)", document, XPathConstants.NUMBER);
 			assertEquals(0d, dropCount, groupName);
 		}
 		assertEquals(1d, (double) xpath.evaluate(
-				"count(/common_drop_groups/group[@name='IDCROMEDE_MATTER_OPTION_R_40A']/drop)", document,
-				XPathConstants.NUMBER));
+			"count(/common_drop_groups/group[@name='IDCROMEDE_MATTER_OPTION_R_40A']/drop)", document,
+			XPathConstants.NUMBER));
 		assertEquals(1d, (double) xpath.evaluate(
-				"count(/common_drop_groups/group[@name='IDNOVICE_BOX_MATTER_OPTION_A_20A']/drop)", document,
-				XPathConstants.NUMBER));
+			"count(/common_drop_groups/group[@name='IDNOVICE_BOX_MATTER_OPTION_A_20A']/drop)", document,
+			XPathConstants.NUMBER));
 	}
 
 	@Test
@@ -288,7 +288,7 @@ class NpcDropDataTest {
 		NpcDrop drop = data.getDrop(100);
 
 		assertEquals(List.of(111, 222, 333, 444), itemIds(drop));
-		Drop replacement = drop.getDropGroup().get(0).getDrop().get(1);
+		Drop replacement = drop.getDropGroup().getFirst().getDrop().get(1);
 		assertEquals(9, replacement.getMinAmount());
 		assertEquals(90, replacement.getChance());
 	}

@@ -96,7 +96,7 @@ class PlayerQuestRewardPortTest {
 	}
 
 	@Test
-	void preflightFailsOnUnsupportedDurableKind() throws Exception {
+	void preflightFailsOnUnsupportedDurableKind() {
 		PlayerQuestRewardPort port = port(playerId -> null, new RecordingInventoryDao(),
 			new RecordingPlayerDao(), (p, items) -> true);
 
@@ -106,7 +106,7 @@ class PlayerQuestRewardPortTest {
 	}
 
 	@Test
-	void preflightFailsOnItemRewardWithoutPositiveId() throws Exception {
+	void preflightFailsOnItemRewardWithoutPositiveId() {
 		PlayerQuestRewardPort port = port(playerId -> null, new RecordingInventoryDao(),
 			new RecordingPlayerDao(), (p, items) -> true);
 
@@ -126,9 +126,10 @@ class PlayerQuestRewardPortTest {
 	}
 
 	@Test
-	void preflightFailsOnUnknownRandomRewardPool() throws Exception {
+	void preflightFailsOnUnknownRandomRewardPool() {
 		PlayerQuestRewardPort port = new PlayerQuestRewardPort(playerId -> null,
-			new RecordingInventoryDao(), new RecordingPlayerDao(), (p, items) -> true, item -> { },
+			new RecordingInventoryDao(), new RecordingPlayerDao(), (p, items) -> true, item -> {
+		},
 			new RecordingTitleListDao(), poolId -> false, poolId -> new QuestItems(ITEM_A, 1));
 
 		SQLException thrown = assertThrows(SQLException.class,
@@ -138,7 +139,7 @@ class PlayerQuestRewardPortTest {
 	}
 
 	@Test
-	void preflightRejectsMultipleDrawsFromOneRandomRewardEntry() throws Exception {
+	void preflightRejectsMultipleDrawsFromOneRandomRewardEntry() {
 		PlayerQuestRewardPort port = port(playerId -> null, new RecordingInventoryDao(),
 			new RecordingPlayerDao(), (p, items) -> true);
 
@@ -149,7 +150,7 @@ class PlayerQuestRewardPortTest {
 	}
 
 	@Test
-	void preflightFailsOnTitleWithoutPositiveId() throws Exception {
+	void preflightFailsOnTitleWithoutPositiveId() {
 		PlayerQuestRewardPort port = port(playerId -> null, new RecordingInventoryDao(),
 			new RecordingPlayerDao(), (p, items) -> true);
 
@@ -171,7 +172,7 @@ class PlayerQuestRewardPortTest {
 
 		assertTrue(player.getTitleList().contains(TITLE_ID));
 		assertEquals(1, titleListDao.calls.size());
-		assertSame(connection, titleListDao.calls.get(0));
+		assertSame(connection, titleListDao.calls.getFirst());
 		assertEquals(TITLE_ID, titleListDao.lastTitleId);
 	}
 
@@ -243,7 +244,7 @@ class PlayerQuestRewardPortTest {
 	}
 
 	@Test
-	void applyFailsWhenPlayerIsUnavailableBeforeAnyDaoWrite() throws Exception {
+	void applyFailsWhenPlayerIsUnavailableBeforeAnyDaoWrite() {
 		RecordingInventoryDao inventoryDao = new RecordingInventoryDao();
 		RecordingPlayerDao playerDao = new RecordingPlayerDao();
 		RecordingItemAdder adder = new RecordingItemAdder(true);
@@ -270,12 +271,12 @@ class PlayerQuestRewardPortTest {
 
 		// itemAdder 收到正确奖励清单
 		assertEquals(1, adder.calls.size());
-		assertEquals(ITEM_A, adder.calls.get(0).get(0).getItemId());
-		assertEquals(2, adder.calls.get(0).get(0).getCount());
+		assertEquals(ITEM_A, adder.calls.getFirst().getFirst().getItemId());
+		assertEquals(2, adder.calls.getFirst().getFirst().getCount());
 		// 通过调用方 Connection 持久化 dirty items,与任务状态同事务
 		assertEquals(1, inventoryDao.transactions.size());
-		assertSame(connection, inventoryDao.transactions.get(0).connection);
-		assertTrue(inventoryDao.transactions.get(0).items.stream()
+		assertSame(connection, inventoryDao.transactions.getFirst().connection);
+		assertTrue(inventoryDao.transactions.getFirst().items.stream()
 			.anyMatch(item -> item.getItemTemplate().getTemplateId() == ITEM_A));
 		assertEquals(PersistentState.UPDATE_REQUIRED, player.getInventory().getPersistentState());
 		participant.afterCommit();
@@ -289,11 +290,12 @@ class PlayerQuestRewardPortTest {
 		RecordingItemAdder adder = new RecordingItemAdder(true);
 		AtomicInteger draws = new AtomicInteger();
 		PlayerQuestRewardPort port = new PlayerQuestRewardPort(playerId -> player,
-			new RecordingInventoryDao(), new RecordingPlayerDao(), adder, item -> { },
+			new RecordingInventoryDao(), new RecordingPlayerDao(), adder, item -> {
+		},
 			new RecordingTitleListDao(), poolId -> poolId == 18505, poolId -> {
-				draws.incrementAndGet();
-				return new QuestItems(182005205, 1);
-			});
+			draws.incrementAndGet();
+			return new QuestItems(182005205, 1);
+		});
 
 		List<QuestAction.GrantReward> rewards = List.of(reward("RANDOM", 18505, 1));
 		port.preflight(connection(), snapshot(), rewards);
@@ -301,8 +303,8 @@ class PlayerQuestRewardPortTest {
 
 		assertEquals(1, draws.get());
 		assertEquals(1, adder.calls.size());
-		assertEquals(182005205, adder.calls.get(0).get(0).getItemId());
-		assertEquals(1, adder.calls.get(0).get(0).getCount());
+		assertEquals(182005205, adder.calls.getFirst().getFirst().getItemId());
+		assertEquals(1, adder.calls.getFirst().getFirst().getCount());
 	}
 
 	@Test
@@ -311,10 +313,11 @@ class PlayerQuestRewardPortTest {
 		Player player = emptyPlayer();
 		RecordingTitleListDao titleListDao = new RecordingTitleListDao();
 		PlayerQuestRewardPort port = new PlayerQuestRewardPort(playerId -> player,
-			new RecordingInventoryDao(), new RecordingPlayerDao(), (p, items) -> true, item -> { },
+			new RecordingInventoryDao(), new RecordingPlayerDao(), (p, items) -> true, item -> {
+		},
 			titleListDao, poolId -> true, poolId -> {
-				throw new IllegalStateException("invalid random pool result");
-			});
+			throw new IllegalStateException("invalid random pool result");
+		});
 
 		SQLException thrown = assertThrows(SQLException.class, () -> port.apply(connection(), snapshot(),
 			List.of(reward("TITLE", TITLE_ID, 1), reward("RANDOM", 18505, 1))));
@@ -362,15 +365,16 @@ class PlayerQuestRewardPortTest {
 		AddingItemAdder adder = new AddingItemAdder();
 		RecordingInventoryDao inventoryDao = new RecordingInventoryDao();
 		PlayerQuestRewardPort port = new PlayerQuestRewardPort(playerId -> player, inventoryDao,
-			new RecordingPlayerDao(), adder, item -> { }, new RecordingTitleListDao(),
+			new RecordingPlayerDao(), adder, item -> {
+		}, new RecordingTitleListDao(),
 			poolId -> true, poolId -> new QuestItems(182005205, 1));
 
 		QuestTransactionParticipant participant = port.apply(
 			connection(), snapshot(), List.of(reward("RANDOM", 18505, 1)));
 
 		assertEquals(1, adder.calls.size());
-		assertEquals(182005205, adder.calls.get(0).get(0).getItemId());
-		assertEquals(1, adder.calls.get(0).get(0).getCount());
+		assertEquals(182005205, adder.calls.getFirst().getFirst().getItemId());
+		assertEquals(1, adder.calls.getFirst().getFirst().getCount());
 		participant.afterCommit();
 	}
 
@@ -398,7 +402,7 @@ class PlayerQuestRewardPortTest {
 
 		assertEquals(0, player.getCommonData().getExp());
 		assertEquals(1, playerDao.calls.size());
-		assertSame(connection, playerDao.calls.get(0));
+		assertSame(connection, playerDao.calls.getFirst());
 		assertEquals(PLAYER_ID, playerDao.lastPlayerId);
 		assertSame(player.getCommonData(), playerDao.lastPcd);
 	}
@@ -423,7 +427,7 @@ class PlayerQuestRewardPortTest {
 
 		assertEquals(5000, player.getCommonData().getAuraOfGrowth());
 		assertEquals(1, playerDao.calls.size());
-		assertSame(connection, playerDao.calls.get(0));
+		assertSame(connection, playerDao.calls.getFirst());
 		assertEquals(PLAYER_ID, playerDao.lastPlayerId);
 	}
 
@@ -450,14 +454,15 @@ class PlayerQuestRewardPortTest {
 	private static int savedPlayerMaxLevel;
 
 	private static PlayerQuestRewardPort port(QuestPlayerPort players, InventoryDAO inventoryDao,
-			PlayerDAO playerDao, BiFunction<Player, List<QuestItems>, Boolean> itemAdder) {
+											  PlayerDAO playerDao, BiFunction<Player, List<QuestItems>, Boolean> itemAdder) {
 		return port(players, inventoryDao, playerDao, itemAdder, new RecordingTitleListDao());
 	}
 
 	private static PlayerQuestRewardPort port(QuestPlayerPort players, InventoryDAO inventoryDao,
-			PlayerDAO playerDao, BiFunction<Player, List<QuestItems>, Boolean> itemAdder,
-			RecordingTitleListDao titleListDao) {
-		return new PlayerQuestRewardPort(players, inventoryDao, playerDao, itemAdder, item -> { }, titleListDao,
+											  PlayerDAO playerDao, BiFunction<Player, List<QuestItems>, Boolean> itemAdder,
+											  RecordingTitleListDao titleListDao) {
+		return new PlayerQuestRewardPort(players, inventoryDao, playerDao, itemAdder, item -> {
+		}, titleListDao,
 			poolId -> true, poolId -> new QuestItems(poolId, 1));
 	}
 
@@ -528,7 +533,9 @@ class PlayerQuestRewardPortTest {
 		return item;
 	}
 
-	/** 记录 itemAdder 收到的清单;result 控制 apply 返回值。 */
+	/**
+	 * 记录 itemAdder 收到的清单;result 控制 apply 返回值。
+	 */
 	private static final class RecordingItemAdder implements BiFunction<Player, List<QuestItems>, Boolean> {
 		private final List<List<QuestItems>> calls = new ArrayList<>();
 		private final boolean result;
@@ -544,14 +551,16 @@ class PlayerQuestRewardPortTest {
 		}
 	}
 
-	/** itemAdder 把奖励物品直接写入 CUBE itemStorage 并标记 dirty,模拟真实发奖副作用。 */
+	/**
+	 * itemAdder 把奖励物品直接写入 CUBE itemStorage 并标记 dirty,模拟真实发奖副作用。
+	 */
 	private static final class AddingItemAdder implements BiFunction<Player, List<QuestItems>, Boolean> {
 		private final List<List<QuestItems>> calls = new ArrayList<>();
 
 		@Override
 		public Boolean apply(Player player, List<QuestItems> items) {
 			calls.add(items);
-			QuestItems qi = items.get(0);
+			QuestItems qi = items.getFirst();
 			try {
 				PlayerStorage storage = (PlayerStorage) player.getInventory();
 				Item item = item(qi.getItemId(), qi.getCount());
@@ -667,14 +676,14 @@ class PlayerQuestRewardPortTest {
 	}
 
 	private static final class RecordingInventoryDao extends InventoryDAO {
-        private record Transaction(Connection connection, List<Item> items) {
-        }
+		private record Transaction(Connection connection, List<Item> items) {
+		}
 
 		private final List<Transaction> transactions = new ArrayList<>();
 
 		@Override
 		public void storeInTransaction(Connection connection, List<Item> items, Integer playerId, Integer accountId,
-				Integer legionId) {
+									   Integer legionId) {
 			transactions.add(new Transaction(connection, items));
 		}
 
@@ -865,7 +874,7 @@ class PlayerQuestRewardPortTest {
 
 		@Override
 		public void updateLegionJoinRequestState(int playerId,
-				com.aionemu.gameserver.model.team.legion.LegionJoinRequestState state) {
+												 com.aionemu.gameserver.model.team.legion.LegionJoinRequestState state) {
 			throw new AssertionError("unexpected updateLegionJoinRequestState");
 		}
 

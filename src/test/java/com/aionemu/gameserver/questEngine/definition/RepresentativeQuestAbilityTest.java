@@ -30,9 +30,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * 断言 after-commit action 精确忠实投影。运行时来源的值 (如玩家坐标) 用示例值
  * 演示并标注, 不作为静态事实伪造。
  * 代表任务:
- *   2533  Beritras Curse        → 定时器   (questTimerStart 300 / questTimerEnd)
- *   2333  A Ribbit Out Of Water → 刷怪+AI  (spawn 204416 + startWalking + FOLLOW_ME)
- *   24154 Better Than Last Time → 影片+传送 (playQuestMovie 249/250, MovieEnd→teleport)
+ * 2533  Beritras Curse        → 定时器   (questTimerStart 300 / questTimerEnd)
+ * 2333  A Ribbit Out Of Water → 刷怪+AI  (spawn 204416 + startWalking + FOLLOW_ME)
+ * 24154 Better Than Last Time → 影片+传送 (playQuestMovie 249/250, MovieEnd→teleport)
  */
 class RepresentativeQuestAbilityTest {
 	@Test
@@ -45,7 +45,7 @@ class RepresentativeQuestAbilityTest {
 			.compile();
 
 		assertEquals(List.of(new AfterCommitAction.StartQuestTimer(300)),
-			def.definition().transitions().get(0).afterCommit());
+			def.definition().transitions().getFirst().afterCommit());
 	}
 
 	@Test
@@ -58,7 +58,7 @@ class RepresentativeQuestAbilityTest {
 			.compile();
 
 		assertEquals(List.of(new AfterCommitAction.CancelQuestTimer()),
-			def.definition().transitions().get(0).afterCommit());
+			def.definition().transitions().getFirst().afterCommit());
 	}
 
 	@Test
@@ -77,12 +77,12 @@ class RepresentativeQuestAbilityTest {
 			.compile();
 
 		assertEquals(List.of(
-			new AfterCommitAction.SpawnNpc("escort", 204416, new QuestSpawnLocation.PlayerPosition((byte) 8)),
-			new AfterCommitAction.StartWalking("escort"),
-			new AfterCommitAction.StartFollow("escort"),
-			new AfterCommitAction.BroadcastNpcEmotion("escort", QuestNpcEmotion.START_EMOTE2),
-			new AfterCommitAction.WatchFollowZone("escort", "DF2_ITEMUSEAREA_Q2333")),
-			def.definition().transitions().get(0).afterCommit());
+				new AfterCommitAction.SpawnNpc("escort", 204416, new QuestSpawnLocation.PlayerPosition((byte) 8)),
+				new AfterCommitAction.StartWalking("escort"),
+				new AfterCommitAction.StartFollow("escort"),
+				new AfterCommitAction.BroadcastNpcEmotion("escort", QuestNpcEmotion.START_EMOTE2),
+				new AfterCommitAction.WatchFollowZone("escort", "DF2_ITEMUSEAREA_Q2333")),
+			def.definition().transitions().getFirst().afterCommit());
 	}
 
 	@Test
@@ -103,7 +103,7 @@ class RepresentativeQuestAbilityTest {
 		assertEquals(List.of(new AfterCommitAction.PlayMovie(250)),
 			movieDef.definition().transitions().get(0).afterCommit());
 		assertEquals(List.of(
-			new AfterCommitAction.TeleportPlayer(220040000, 2452f, 2471f, 673f, (byte) 28)),
+				new AfterCommitAction.TeleportPlayer(220040000, 2452f, 2471f, 673f, (byte) 28)),
 			movieDef.definition().transitions().get(1).afterCommit());
 
 		// 接取时播放 249。
@@ -117,6 +117,6 @@ class RepresentativeQuestAbilityTest {
 			.compile();
 
 		assertEquals(List.of(new AfterCommitAction.PlayMovie(249)),
-			acceptDef.definition().transitions().get(0).afterCommit());
+			acceptDef.definition().transitions().getFirst().afterCommit());
 	}
 }

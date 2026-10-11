@@ -20,7 +20,7 @@ class LegacyTemplateMirrorRouteRegressionTest {
 	}
 
 	@Test
-	void itemCollectingMirrorsUseTheClientOwnedReportAndTurnInProtocol() throws Exception {
+	void itemCollectingMirrorsUseTheClientOwnedReportAndTurnInProtocol() {
 		// 2237 仍是 XML_RETENTION 成员（原版 SimpleCollectItem 行的交付 NPC 三方不一致：
 		// retail-xml-retention.xml：SEMANTIC_GAP:REPORT_NPC_DIVERGENCE），不进原版编译集合
 		// （RetailQuestDriver.java:413-440：只有 RETAIL_TABLE 行进 retailOwned*，XML_RETENTION 只记
@@ -85,7 +85,7 @@ class LegacyTemplateMirrorRouteRegressionTest {
 	}
 
 	@Test
-	void eventShardStartsUseTheClientOwnedSelectNonePage() throws Exception {
+	void eventShardStartsUseTheClientOwnedSelectNonePage() {
 		for (int questId : List.of(50031, 50038, 50040, 50041)) {
 			QuestDefinition definition = compile(questId);
 			QuestTransition start = definition.transitions().stream()
@@ -100,7 +100,7 @@ class LegacyTemplateMirrorRouteRegressionTest {
 
 
 	@Test
-	void uniqueClientGraphCandidatesUseOwnedAcceptAndReportPages() throws Exception {
+	void uniqueClientGraphCandidatesUseOwnedAcceptAndReportPages() {
 		for (int questId : List.of(50089, 50090)) {
 			QuestDefinition definition = compile(questId);
 			for (int npcId : List.of(835680, 835681)) {
@@ -155,7 +155,7 @@ class LegacyTemplateMirrorRouteRegressionTest {
 	}
 
 	@Test
-	void quest2920RewardChoicesUseTheHandlerProvenRewardWindows() throws Exception {
+	void quest2920RewardChoicesUseTheHandlerProvenRewardWindows() {
 		QuestDefinition definition = compile(2920);
 		for (int[] choice : List.of(new int[] {10010, 5, 1}, new int[] {10011, 6, 2})) {
 			List<QuestTransition> routes = talkRoutes(definition, "started", 204141, choice[0]);
@@ -172,7 +172,7 @@ class LegacyTemplateMirrorRouteRegressionTest {
 	}
 
 	@Test
-	void handlerProvenFollowUpDialogsUseTheirPageTargetState() throws Exception {
+	void handlerProvenFollowUpDialogsUseTheirPageTargetState() {
 		for (DialogRoute expected : List.of(
 			new DialogRoute(1345, "reward", 204006, 10000, "reward",
 				List.of(new AfterCommitAction.CloseDialog())),
@@ -310,7 +310,7 @@ class LegacyTemplateMirrorRouteRegressionTest {
 	}
 
 	@Test
-	void handlerProvenItemChoicesRetainTheirItemChecksAndRemovalActions() throws Exception {
+	void handlerProvenItemChoicesRetainTheirItemChecksAndRemovalActions() {
 		QuestDefinition definition = compile(1535);
 		for (int[] choice : List.of(
 			new int[] {10000, 182201818, 5},
@@ -326,7 +326,7 @@ class LegacyTemplateMirrorRouteRegressionTest {
 	}
 
 	@Test
-	void quest24154UsesTheExistingV1ItemPresentationRoute() throws Exception {
+	void quest24154UsesTheExistingV1ItemPresentationRoute() {
 		QuestDefinition definition = compile(24154);
 		assertTrue(talkRoutes(definition, "started", 204809, 31).isEmpty());
 		assertTrue(talkRoutes(definition, "started", 204809, 1353).isEmpty());

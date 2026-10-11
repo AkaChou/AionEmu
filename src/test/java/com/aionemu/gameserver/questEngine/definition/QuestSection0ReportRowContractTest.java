@@ -11,7 +11,6 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -19,7 +18,6 @@ import java.util.Map;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -32,9 +30,14 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 class QuestSection0ReportRowContractTest {
 	private static final String CONTRACT_RESOURCE = "/quest/quest-section0-report-row-contract.tsv";
-	/** 合同快照规模：低于该值说明基线被误删或 sweep 漏了任务。 / Guard against silent baseline shrink. */
+	/**
+	 * 合同快照规模：低于该值说明基线被误删或 sweep 漏了任务。 / Guard against silent baseline shrink.
+	 */
 	private static final int EXPECTED_CONTRACT_ROWS = 269;
-	/** 至少需要这么多任务可以从全新 START 快照直接模拟到 REWARD（其余需要前置对话/物品）。 */
+
+	/**
+	 * 至少需要这么多任务可以从全新 START 快照直接模拟到 REWARD（其余需要前置对话/物品）。
+	 */
 
 	@Test
 	void contractSnapshotKeepsItsCoverage() throws Exception {
@@ -85,10 +88,10 @@ class QuestSection0ReportRowContractTest {
 			QuestMutationPlan chosen = null;
 			for (QuestEvent event : events) {
 				for (QuestTransition transition : compiled.transitionsFor(event.type()).stream()
-						.filter(candidate -> QuestEvent.matches(candidate.event(), event))
-						.sorted(Comparator.comparingInt(candidate -> candidate.priority() == null
-							? Integer.MAX_VALUE : candidate.priority()))
-						.toList()) {
+					.filter(candidate -> QuestEvent.matches(candidate.event(), event))
+					.sorted(Comparator.comparingInt(candidate -> candidate.priority() == null
+						? Integer.MAX_VALUE : candidate.priority()))
+					.toList()) {
 					Optional<QuestMutationPlan> plan = QuestMutationPlanner.plan(compiled, snapshot, event, transition);
 					if (plan.isPresent()) {
 						chosen = plan.orElseThrow();
@@ -119,17 +122,19 @@ class QuestSection0ReportRowContractTest {
 		return Optional.empty();
 	}
 
-	/** 在当前节点尝试 QUEST_SELECT → SELECT_QUEST_REWARD 的报告对话；不可达返回空。 */
+	/**
+	 * 在当前节点尝试 QUEST_SELECT → SELECT_QUEST_REWARD 的报告对话；不可达返回空。
+	 */
 	private static QuestMutationPlan planReportDialog(CompiledQuestDefinition compiled,
-			QuestDefinition definition, Map<String, Integer> variables, QuestStatus status) {
+													  QuestDefinition definition, Map<String, Integer> variables, QuestStatus status) {
 		QuestSnapshot snapshot = new QuestSnapshot(1, definition.id(), status,
 			definition.progressLayout().pack(variables), Map.of());
 		// 先试 1009 上交，再试 QUEST_SELECT 重谈——否则自环会吞掉推进机会。
-		for (int dialogId : new int[] {QuestDialogAction.SELECT_QUEST_REWARD.id(),
-				QuestDialogAction.QUEST_SELECT.id()}) {
+		for (int dialogId : new int[]{QuestDialogAction.SELECT_QUEST_REWARD.id(),
+			QuestDialogAction.QUEST_SELECT.id()}) {
 			for (QuestTransition transition : definition.transitions()) {
 				if (!(transition.event() instanceof QuestEvent.TalkToNpc talk)
-						|| !Integer.valueOf(dialogId).equals(talk.dialogId())) {
+					|| !Integer.valueOf(dialogId).equals(talk.dialogId())) {
 					// 交互物自环 TalkToNpc 无 dialog id，跳过（拆箱比较会对 null NPE）。
 					// Interaction self edges carry no dialog id; skip them (unboxing NPEs on null).
 					continue;
@@ -144,7 +149,9 @@ class QuestSection0ReportRowContractTest {
 		return null;
 	}
 
-	/** 原版驱动形判据：击杀边不带行号钉扎动作（网格边无动作；采集行无击杀边）。 */
+	/**
+	 * 原版驱动形判据：击杀边不带行号钉扎动作（网格边无动作；采集行无击杀边）。
+	 */
 	private static boolean isRetailDrivenShape(QuestDefinition definition) {
 		List<QuestTransition> kills = definition.transitions().stream()
 			.filter(transition -> isKillEvent(transition.event()))
@@ -192,13 +199,13 @@ class QuestSection0ReportRowContractTest {
 		QuestTransition report = definition.transitions().stream()
 			.filter(t -> fullVar0 != null && t.event() instanceof QuestEvent.TalkToNpc talk
 				&& (talk.dialogId() == QuestDialogAction.QUEST_SELECT.id()
-					|| talk.dialogId() == QuestDialogAction.SELECT_QUEST_REWARD.id())
+				|| talk.dialogId() == QuestDialogAction.SELECT_QUEST_REWARD.id())
 				&& "reward".equals(t.targetNode())
 				&& definition.nodes().stream()
-					.filter(n -> n.label().equals(t.sourceNode()))
-					.findFirst()
-					.map(n -> n.projection().variables().equals(reward.projection().variables()))
-					.orElse(false))
+				.filter(n -> n.label().equals(t.sourceNode()))
+				.findFirst()
+				.map(n -> n.projection().variables().equals(reward.projection().variables()))
+				.orElse(false))
 			.findFirst().orElse(null);
 		if (report == null) {
 			return;  // 报告路由形状由各家族门禁锁定；此处只守可模拟的闭包。
@@ -228,7 +235,7 @@ class QuestSection0ReportRowContractTest {
 						continue;
 					}
 					contract.put(Integer.parseInt(columns[0].trim()),
-						new int[] {Integer.parseInt(columns[1].trim()), Integer.parseInt(columns[2].trim())});
+						new int[]{Integer.parseInt(columns[1].trim()), Integer.parseInt(columns[2].trim())});
 				}
 			}
 		}

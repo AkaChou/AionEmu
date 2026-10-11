@@ -36,7 +36,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 class ChainEliteLadderContractTest {
 
-	/** 任务 / 镜像 / 接取 NPC / 行 5 NPC / 五只精锐兵。 */
+	/**
+	 * 任务 / 镜像 / 接取 NPC / 行 5 NPC / 五只精锐兵。
+	 */
 	private record Contract(int questId, int mirrorId, int offerNpc, int reportNpc, List<Integer> kills) {
 	}
 
@@ -144,7 +146,7 @@ class ChainEliteLadderContractTest {
 			assertEquals(QuestStatus.REWARD, state.getStatus(),
 				() -> "quest " + contract.questId() + " fifth kill must close the ladder");
 			int rewardVars = state.getQuestVars().getQuestVars();
-			assertFalse(handler.onKill(player, contract.kills().get(0)),
+			assertFalse(handler.onKill(player, contract.kills().getFirst()),
 				() -> "quest " + contract.questId() + " kill in REWARD must not count");
 			assertEquals(rewardVars, state.getQuestVars().getQuestVars(),
 				() -> "quest " + contract.questId() + " kill in REWARD must not write state");
@@ -171,10 +173,10 @@ class ChainEliteLadderContractTest {
 			Player player = NativeTalkFixture.player();
 			NativeTalkFixture.add(player, contract.questId(), QuestStatus.REWARD, 0);
 			assertTrue(handler.onDialog(NativeTalkFixture.dialog(player, contract.reportNpc(),
-				contract.questId(), 31)),
+					contract.questId(), 31)),
 				() -> "quest " + contract.questId() + " claim window must answer on the row-5 npc");
 			assertFalse(handler.onDialog(NativeTalkFixture.dialog(player, contract.offerNpc(),
-				contract.questId(), 31)),
+					contract.questId(), 31)),
 				() -> "quest " + contract.questId() + " offer npc must not answer the claim window");
 		}
 	}
@@ -216,7 +218,7 @@ class ChainEliteLadderContractTest {
 			Player player = NativeTalkFixture.player();
 			QuestState stale = NativeTalkFixture.start(player, contract.questId());
 			stale.getQuestVars().setVar(5);
-			assertFalse(handler.onKill(player, contract.kills().get(0)),
+			assertFalse(handler.onKill(player, contract.kills().getFirst()),
 				() -> "quest " + contract.questId() + " legacy save must not be rewritten");
 			assertEquals(5, stale.getQuestVars().getQuestVars(),
 				() -> "quest " + contract.questId() + " legacy save must stay untouched");
@@ -234,10 +236,10 @@ class ChainEliteLadderContractTest {
 			/* 正规领奖态（五槽全 1）：领奖窗必须仍被行 5 NPC 打开。 */
 			/* The legitimate saturated reward state must still open the reward window. */
 			assertTrue(handler.onDialog(NativeTalkFixture.dialog(player, contract.reportNpc(),
-				contract.questId(), 31)),
+					contract.questId(), 31)),
 				() -> "quest " + contract.questId() + " must open the reward window from REWARD");
 			int rewardVars = state.getQuestVars().getQuestVars();
-			assertFalse(handler.onKill(player, contract.kills().get(0)),
+			assertFalse(handler.onKill(player, contract.kills().getFirst()),
 				() -> "quest " + contract.questId() + " must not count in REWARD");
 			assertEquals(rewardVars, state.getQuestVars().getQuestVars(),
 				() -> "quest " + contract.questId() + " must not rewrite the reward projection");
@@ -246,7 +248,7 @@ class ChainEliteLadderContractTest {
 			/* The stale reward projection is not healed either: the native lane has no heal channel. */
 			QuestState stale = NativeTalkFixture.add(player, contract.questId(), QuestStatus.REWARD, 0);
 			stale.getQuestVars().setVar(5);
-			assertFalse(handler.onKill(player, contract.kills().get(0)),
+			assertFalse(handler.onKill(player, contract.kills().getFirst()),
 				() -> "quest " + contract.questId() + " must not heal the legacy reward projection");
 			assertEquals(5, stale.getQuestVars().getQuestVars(),
 				() -> "quest " + contract.questId() + " legacy reward projection must stay untouched");

@@ -26,8 +26,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * because the retail grid labels differ from the legacy XML ones.
  */
 class MonsterHuntFamilyDefinitionTest {
-	/** 原版领奖确认段首尾 = {@code SELECTED_QUEST_REWARD1(8)..SELECTED_QUEST_NOREWARD(23)}。 */
-	/** The retail confirm range first/last dialog ids. */
+	/**
+	 * The retail confirm range first/last dialog ids.
+	 */
 	private static final int FIRST_CONFIRM_ID = QuestDialogAction.SELECTED_QUEST_REWARD1.id();
 	private static final int LAST_CONFIRM_ID = QuestDialogAction.SELECTED_QUEST_NOREWARD.id();
 
@@ -167,8 +168,8 @@ class MonsterHuntFamilyDefinitionTest {
 		// 奖励池顺序取原版 quest.xml 的 reward group 声明序（原版为形状权威，内容与旧 XML 一致）。
 		// The pool order follows the retail reward group declaration; the contents match the legacy XML.
 		assertEquals(List.of(new QuestReward("ITEM", 160003001, 3L),
-			new QuestReward("SELECTABLE_ITEM", 162000048, 1L),
-			new QuestReward("SELECTABLE_ITEM", 169000003, 150L)),
+				new QuestReward("SELECTABLE_ITEM", 162000048, 1L),
+				new QuestReward("SELECTABLE_ITEM", 169000003, 150L)),
 			mushroom.definition().metadata().rewards().stream()
 				.filter(r -> !r.kind().equals("EXP")).toList());
 	}
@@ -189,13 +190,17 @@ class MonsterHuntFamilyDefinitionTest {
 			.map(e -> ((QuestEvent.KillNpc) e).npcId()).collect(Collectors.toSet());
 	}
 
-	/** 转移端点按标签查（转移本来就按标签保存端点）。 / Transition endpoints are stored by label. */
+	/**
+	 * 转移端点按标签查（转移本来就按标签保存端点）。 / Transition endpoints are stored by label.
+	 */
 	private static Map<String, Integer> varsOf(CompiledQuestDefinition compiled, String label) {
 		return compiled.definition().nodes().stream().filter(n -> n.label().equals(label))
 			.findFirst().orElseThrow().projection().variables();
 	}
 
-	/** REWARD 态领奖节点的投影（应当唯一）。 / Projection of the unique REWARD node. */
+	/**
+	 * REWARD 态领奖节点的投影（应当唯一）。 / Projection of the unique REWARD node.
+	 */
 	private static Map<String, Integer> rewardVars(CompiledQuestDefinition compiled) {
 		List<QuestNode> rewards = compiled.definition().nodes().stream()
 			.filter(node -> node.projection().status() == QuestStatus.REWARD).toList();
@@ -211,7 +216,9 @@ class MonsterHuntFamilyDefinitionTest {
 		return startVar0s(compiled).max().orElseThrow();
 	}
 
-	/** START 态网格节点的 var0 取值流（原版网格为 0..N 全段）。 / START-node var0 stream. */
+	/**
+	 * START 态网格节点的 var0 取值流（原版网格为 0..N 全段）。 / START-node var0 stream.
+	 */
 	private static IntStream startVar0s(CompiledQuestDefinition compiled) {
 		return compiled.definition().nodes().stream()
 			.filter(node -> node.projection().status() == QuestStatus.START)
@@ -219,7 +226,9 @@ class MonsterHuntFamilyDefinitionTest {
 			.mapToInt(Integer::intValue);
 	}
 
-	/** 原版领奖确认段：dialogId → 动作序列（同一 dialogId 只允许一条）。 / confirm routes keyed by dialog id. */
+	/**
+	 * 原版领奖确认段：dialogId → 动作序列（同一 dialogId 只允许一条）。 / confirm routes keyed by dialog id.
+	 */
 	private static Map<Integer, List<QuestAction>> completionActions(CompiledQuestDefinition compiled) {
 		return compiled.definition().transitions().stream()
 			.filter(t -> t.targetNode().equals("complete"))
@@ -228,7 +237,9 @@ class MonsterHuntFamilyDefinitionTest {
 				QuestTransition::actions));
 	}
 
-	/** 确认段全区间（含 NOREWARD 收尾位）。 / The whole confirm range including the NOREWARD slot. */
+	/**
+	 * 确认段全区间（含 NOREWARD 收尾位）。 / The whole confirm range including the NOREWARD slot.
+	 */
 	private static Set<Integer> confirmRange() {
 		return IntStream.rangeClosed(FIRST_CONFIRM_ID, LAST_CONFIRM_ID).boxed().collect(Collectors.toSet());
 	}
@@ -251,7 +262,9 @@ class MonsterHuntFamilyDefinitionTest {
 		return ids;
 	}
 
-	/** 固定奖励 + 可选项（可空）+ CompleteQuest 收尾。 / Fixed rewards, optional selectable, completion. */
+	/**
+	 * 固定奖励 + 可选项（可空）+ CompleteQuest 收尾。 / Fixed rewards, optional selectable, completion.
+	 */
 	private static List<QuestAction> confirm(List<QuestAction> fixed, QuestAction... selectables) {
 		List<QuestAction> actions = new ArrayList<>(fixed);
 		actions.addAll(List.of(selectables));
@@ -259,7 +272,9 @@ class MonsterHuntFamilyDefinitionTest {
 		return List.copyOf(actions);
 	}
 
-	/** 生产定义：XML 目录 + 原版 overlay（退役任务不再有 XML，只在 git 历史里）。 */
+	/**
+	 * 生产定义：XML 目录 + 原版 overlay（退役任务不再有 XML，只在 git 历史里）。
+	 */
 	private CompiledQuestDefinition definition(int questId) {
 		return ProductionQuestDefinitions.definition(questId);
 	}

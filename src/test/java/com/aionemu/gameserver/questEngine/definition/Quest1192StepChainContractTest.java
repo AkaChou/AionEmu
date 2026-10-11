@@ -14,7 +14,6 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -35,7 +34,9 @@ class Quest1192StepChainContractTest {
 	private static final int SPATALOS = 203098;
 	private static final int LAVIRINTOS = 203701;
 	private static final int XENOPHON = 203833;
-	/** 原版 give_item / remove_item1 = ITEM_DOC_QUEST_1192A 1。 / The retail letter item. */
+	/**
+	 * 原版 give_item / remove_item1 = ITEM_DOC_QUEST_1192A 1。 / The retail letter item.
+	 */
 	private static final int REINFORCEMENT_REQUEST = 182200556;
 
 	@Test
@@ -50,9 +51,9 @@ class Quest1192StepChainContractTest {
 		assertEquals(List.of("Lavirintos", "Xenophon"), handler.requireRow(QUEST_ID).talkNpcNames(),
 			"原版中继链（talk_npc1 → talk_npc2）");
 		assertEquals("Spatalos", handler.requireRow(QUEST_ID).rewardNpcName(), "交付 owner 名");
-		assertEquals(SPATALOS, NativeNpcNameResolver.instance().resolve("Spatalos").npcIds().get(0));
-		assertEquals(LAVIRINTOS, NativeNpcNameResolver.instance().resolve("Lavirintos").npcIds().get(0));
-		assertEquals(XENOPHON, NativeNpcNameResolver.instance().resolve("Xenophon").npcIds().get(0));
+		assertEquals(SPATALOS, NativeNpcNameResolver.instance().resolve("Spatalos").npcIds().getFirst());
+		assertEquals(LAVIRINTOS, NativeNpcNameResolver.instance().resolve("Lavirintos").npcIds().getFirst());
+		assertEquals(XENOPHON, NativeNpcNameResolver.instance().resolve("Xenophon").npcIds().getFirst());
 		assertEquals(SPATALOS, handler.acquireNpc(QUEST_ID), "接取 owner = Spatalos");
 		assertEquals(SPATALOS, handler.rewardNpc(QUEST_ID), "交付 owner = Spatalos");
 		assertEquals(2, handler.relayCount(QUEST_ID), "1192 是两步中继行");
@@ -73,7 +74,7 @@ class Quest1192StepChainContractTest {
 		assertEquals(java.util.Set.of("ELYOS"), metadata.permittedRaces(), "原版 pc_light");
 		List<QuestReward> rewards = metadata.rewards();
 		assertTrue(rewards.contains(new QuestReward("EXP", 0, 73200)), () -> rewards.toString());
-		assertTrue(rewards.contains(new QuestReward("ITEM", 188051196, 1)), () -> rewards.toString());
+		assertTrue(rewards.contains(new QuestReward("ITEM", 188051196, 1)), rewards::toString);
 	}
 
 	@Test

@@ -1,6 +1,7 @@
 package com.aionemu.gameserver.commands.admin;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -27,13 +28,19 @@ import org.junit.jupiter.api.Test;
  */
 class ChineseTeleportNamesTest {
 
-	/** 运行期使用的中文地点表（与 {@link MoveToZh} 读取的是同一相对路径）。 */
+	/**
+	 * 运行期使用的中文地点表（与 {@link MoveToZh} 读取的是同一相对路径）。
+	 */
 	private static final Path NAME_TABLE = Path.of("src/main/resources/aion/config", MoveToZh.NAME_TABLE_PATH);
 
-	/** teleport_location.xml 静态数据。 */
+	/**
+	 * teleport_location.xml 静态数据。
+	 */
 	private static final Path TELELOC = Path.of("src/main/resources/aion/data/static_data/teleport_location.xml");
 
-	/** 每个 {@code teleloc_template} 标签。 */
+	/**
+	 * 每个 {@code teleloc_template} 标签。
+	 */
 	private static final Pattern TELELOC_TAG = Pattern.compile("<teleloc_template\\b[^>]*>");
 
 	/**
@@ -52,7 +59,7 @@ class ChineseTeleportNamesTest {
 			int locId = Integer.parseInt(columns[0]);
 			assertTrue(telelocations.containsKey(locId),
 				"loc_id " + locId + " no longer exists in teleport_location.xml: " + row);
-			assertTrue(!columns[1].trim().isEmpty(), "row without a Chinese name: " + row);
+			assertFalse(columns[1].trim().isEmpty(), "row without a Chinese name: " + row);
 		}
 		assertTrue(rows.size() > 200, "unexpectedly small Chinese location table: " + rows.size());
 	}
@@ -73,8 +80,9 @@ class ChineseTeleportNamesTest {
 	/**
 	 * 校验单个中文名锚点。
 	 * Verifies one Chinese-name anchor.
-	 * @param name 中文名 / Chinese name
-	 * @param worldId 期望的世界 ID / Expected world id
+	 *
+	 * @param name          中文名 / Chinese name
+	 * @param worldId       期望的世界 ID / Expected world id
 	 * @param telelocations loc_id → mapid / loc id to world id
 	 * @throws IOException 读取地点表失败时 / When the table cannot be read
 	 */
@@ -86,7 +94,7 @@ class ChineseTeleportNamesTest {
 				matchedWorlds.add(telelocations.get(Integer.parseInt(columns[0])));
 			}
 		}
-		assertTrue(!matchedWorlds.isEmpty(), "anchor name missing from the Chinese location table: " + name);
+		assertFalse(matchedWorlds.isEmpty(), "anchor name missing from the Chinese location table: " + name);
 		assertTrue(matchedWorlds.contains(worldId),
 			"anchor " + name + " no longer maps to world " + worldId + ": " + matchedWorlds);
 	}
@@ -94,6 +102,7 @@ class ChineseTeleportNamesTest {
 	/**
 	 * 读取中文地点表的数据行（跳过注释与空行）。
 	 * Reads the data rows of the Chinese location table (comments and blank lines skipped).
+	 *
 	 * @return 数据行 / Data rows
 	 * @throws IOException 读取失败时 / When the table cannot be read
 	 */
@@ -111,6 +120,7 @@ class ChineseTeleportNamesTest {
 	/**
 	 * 解析 teleport_location.xml 的 loc_id → mapid 索引。
 	 * Parses the loc_id to mapid index of teleport_location.xml.
+	 *
 	 * @return loc_id → mapid / loc id to world id
 	 * @throws IOException 读取失败时 / When the file cannot be read
 	 */
@@ -126,7 +136,8 @@ class ChineseTeleportNamesTest {
 	/**
 	 * 读取标签属性值。
 	 * Reads one attribute value of a tag.
-	 * @param tag 标签文本 / Tag text
+	 *
+	 * @param tag  标签文本 / Tag text
 	 * @param name 属性名 / Attribute name
 	 * @return 属性值 / Attribute value
 	 */

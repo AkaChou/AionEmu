@@ -31,9 +31,9 @@ class Quest2008RetailAlignmentTest {
 		assertEquals(1103108, metadata.displayNameId());
 		assertEquals(9, metadata.minLevel());
 		assertEquals(Set.of("ASMODIANS"), metadata.permittedRaces());
-		assertEquals(73200, metadata.rewards().get(0).amount());
+		assertEquals(73200, metadata.rewards().getFirst().amount());
 
-		for (int itemId : new int[] {182203009, 182203010, 182203011}) {
+		for (int itemId : new int[]{182203009, 182203010, 182203011}) {
 			assertTrue(definition.definition().transitions().stream().anyMatch(transition ->
 				transition.actions().contains(new QuestAction.GiveItem(itemId, 1))
 					&& transition.conditions().contains(new QuestCondition.HasItem(itemId, 1, false))));
@@ -60,7 +60,7 @@ class Quest2008RetailAlignmentTest {
 		assertTrue(transitions.stream().anyMatch(transition ->
 			transition.event() instanceof QuestEvent.InvisibleTimerEnd
 				&& transition.afterCommit().stream().anyMatch(action -> action instanceof AfterCommitAction.SpawnNpc spawn
-					&& spawn.templateId() == 205040)));
+				&& spawn.templateId() == 205040)));
 		assertEquals(4, transitions.stream().filter(transition -> transition.event() instanceof QuestEvent.KillNpc(
 			int npcId
 		)
@@ -69,7 +69,7 @@ class Quest2008RetailAlignmentTest {
 			transition.event() instanceof QuestEvent.MovieEnd(int movieId) && movieId == 152
 				&& transition.targetNode().equals("s6")
 				&& transition.afterCommit().stream().anyMatch(action -> action instanceof AfterCommitAction.SpawnNpc spawn
-					&& spawn.templateId() == 203550)));
+				&& spawn.templateId() == 203550)));
 
 		long classChoices = transitions.stream()
 			.filter(transition -> transition.sourceNode().equals("s6")
@@ -160,9 +160,9 @@ class Quest2008RetailAlignmentTest {
 			assertEquals(List.of(), classChange.actions());
 			assertNull(classChange.priority());
 			assertEquals(List.of(
-				new AfterCommitAction.SetPlayerClass(entry.getKey()),
-				new AfterCommitAction.TeleportPlayer(220010000, 386.03476f, 1893.9309f, 327.62283f, (byte) 59),
-				new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH)),
+					new AfterCommitAction.SetPlayerClass(entry.getKey()),
+					new AfterCommitAction.TeleportPlayer(220010000, 386.03476f, 1893.9309f, 327.62283f, (byte) 59),
+					new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH)),
 				classChange.afterCommit());
 		}
 	}
@@ -172,18 +172,18 @@ class Quest2008RetailAlignmentTest {
 		CompiledQuestDefinition definition = load();
 		var transitions = definition.definition().transitions();
 		assertEquals(4, transitions.stream().filter(transition -> transition.event() instanceof QuestEvent.Die
-			&& transition.targetNode().equals("s4")
-			&& transition.afterCommit().stream().anyMatch(action -> action instanceof AfterCommitAction.SendSystemMessage))
+				&& transition.targetNode().equals("s4")
+				&& transition.afterCommit().stream().anyMatch(action -> action instanceof AfterCommitAction.SendSystemMessage))
 			.count());
 		assertEquals(7, transitions.stream().filter(transition -> transition.event() instanceof QuestEvent.EnterWorld
-			&& transition.targetNode().equals("s4")
-			&& transition.afterCommit().stream().anyMatch(action -> action instanceof AfterCommitAction.SendSystemMessage))
+				&& transition.targetNode().equals("s4")
+				&& transition.afterCommit().stream().anyMatch(action -> action instanceof AfterCommitAction.SendSystemMessage))
 			.count());
 		assertEquals(7, transitions.stream().filter(transition -> transition.event() instanceof QuestEvent.EnterWorld
 			&& transition.afterCommit().stream().anyMatch(action -> action instanceof AfterCommitAction.Morph(
 			int ascensionId
 		)
-				&& ascensionId == 1)).count());
+			&& ascensionId == 1)).count());
 
 		QuestTransition completion = transitions.stream()
 			.filter(transition -> transition.sourceNode().equals("reward")
@@ -205,7 +205,7 @@ class Quest2008RetailAlignmentTest {
 	}
 
 	private static QuestTransition route(List<QuestTransition> transitions, String source, String target,
-			QuestDialogAction action, QuestCondition condition) {
+										 QuestDialogAction action, QuestCondition condition) {
 		return transitions.stream()
 			.filter(transition -> transition.sourceNode().equals(source)
 				&& transition.targetNode().equals(target)

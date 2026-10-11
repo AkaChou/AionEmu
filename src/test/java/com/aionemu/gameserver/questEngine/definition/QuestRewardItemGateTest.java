@@ -59,11 +59,17 @@ class QuestRewardItemGateTest {
 		"/quest/quest-item-selectable-retail-contract.tsv";
 	private static final String RETAIL_UNSET = "RETAIL_UNSET";
 
-	/** 原版唯一可选 = 固定发放的等价表达。 */
+	/**
+	 * 原版唯一可选 = 固定发放的等价表达。
+	 */
 	private static final Set<Integer> SINGLE_SELECTABLE_AS_FIXED = Set.of(16921, 26921);
-	/** 分支档位形态（发放集合覆盖原版显示组）。 */
+	/**
+	 * 分支档位形态（发放集合覆盖原版显示组）。
+	 */
 	private static final Set<Integer> BRANCH_TIER_EQUIVALENT = Set.of(2392);
-	/** 双路线任务，组归属无法从原版单组字段判定。 */
+	/**
+	 * 双路线任务，组归属无法从原版单组字段判定。
+	 */
 	private static final Set<Integer> DUAL_ROUTE_EVIDENCE_BLOCKED = Set.of(2345);
 
 	/**
@@ -83,12 +89,14 @@ class QuestRewardItemGateTest {
 	private static Map<Integer, ProductionItems> production;
 
 	record RetailItems(boolean fixedUnset, List<String> fixed, Set<Integer> selectable,
-		Long extGold, List<String> extItems) {
+					   Long extGold, List<String> extItems) {
 	}
 
-	/** 生产档位 1 容器声明 + 三种可选来源 + extended（最后一轮追加）声明。 */
+	/**
+	 * 生产档位 1 容器声明 + 三种可选来源 + extended（最后一轮追加）声明。
+	 */
 	record ProductionItems(List<String> fixed, Set<Integer> selectable,
-		Set<Integer> branchGranted, Long extGold, List<String> extItems) {
+						   Set<Integer> branchGranted, Long extGold, List<String> extItems) {
 	}
 
 	@BeforeAll
@@ -146,7 +154,7 @@ class QuestRewardItemGateTest {
 			if (nativeOwned(qid)) {
 				production.put(qid, parseNativeRowItems(qid));
 			} else if (RetiredQuestIds.contains(qid)
-					&& ProductionQuestDefinitions.catalog().findExecutable(qid).isEmpty()) {
+				&& ProductionQuestDefinitions.catalog().findExecutable(qid).isEmpty()) {
 				withoutAnyDefinition.add(qid);
 			} else {
 				production.put(qid, RetiredQuestIds.contains(qid) ? parseRetailProduction(qid) : parseProduction(qid));
@@ -166,7 +174,9 @@ class QuestRewardItemGateTest {
 		return null;
 	}
 
-	/** DOM 无 nextElementSibling 时的直接兄弟元素遍历。 */
+	/**
+	 * DOM 无 nextElementSibling 时的直接兄弟元素遍历。
+	 */
 	private static Element getNextElement(Element current) {
 		var next = current.getNextSibling();
 		while (next != null && next.getNodeType() != org.w3c.dom.Node.ELEMENT_NODE) {
@@ -181,7 +191,9 @@ class QuestRewardItemGateTest {
 		return new BufferedReader(new InputStreamReader(input, StandardCharsets.UTF_8));
 	}
 
-	/** 档位 1 容器声明 + 显式分支 + npc-complete choice 三来源解析。 */
+	/**
+	 * 档位 1 容器声明 + 显式分支 + npc-complete choice 三来源解析。
+	 */
 	private static ProductionItems parseProduction(int questId) throws Exception {
 		Element root = QuestRetailStartMetadataGateTest.parseQuestXml(questId)
 			.getDocumentElement();
@@ -208,7 +220,7 @@ class QuestRewardItemGateTest {
 		// reward 标签不属于档位 1 容器
 		if (tierOne != null) {
 			for (Element child = firstElementChild(tierOne); child != null;
-					child = getNextElement(child)) {
+				 child = getNextElement(child)) {
 				if ("reward".equals(child.getTagName())) {
 					flatRewards.add(child);
 				}
@@ -300,7 +312,7 @@ class QuestRewardItemGateTest {
 		if (extContainers.getLength() > 0) {
 			Element extContainer = (Element) extContainers.item(0);
 			for (Element child = firstElementChild(extContainer); child != null;
-					child = getNextElement(child)) {
+				 child = getNextElement(child)) {
 				if ("reward".equals(child.getTagName())) {
 					String kind = child.getAttribute("kind");
 					if ("GOLD".equals(kind)) {
@@ -317,9 +329,11 @@ class QuestRewardItemGateTest {
 			extGold, extItems);
 	}
 
-	/** 已切到原生车道的行（七家族 handler + P7 步 f 起 DataDriven 运行时路由行）。 /
+	/**
+	 * 已切到原生车道的行（七家族 handler + P7 步 f 起 DataDriven 运行时路由行）。 /
 	 * Rows already switched to the native lane (seven family handlers plus, since P7 step f, the
-	 * routed DataDriven rows). */
+	 * routed DataDriven rows).
+	 */
 	private static boolean nativeOwned(int questId) {
 		return SimpleTalkHandler.instance().routes(questId)
 			|| SimpleHuntHandler.instance().routes(questId)
@@ -390,7 +404,9 @@ class QuestRewardItemGateTest {
 		return new ProductionItems(fixed, selectable, new TreeSet<>(), extGold, extItems);
 	}
 
-	/** 生产物品名索引（惰性缓存：合同 3992 行共享一份）。 / The production item-name index, cached. */
+	/**
+	 * 生产物品名索引（惰性缓存：合同 3992 行共享一份）。 / The production item-name index, cached.
+	 */
 	private static synchronized RetailItemNameIndex itemIndex() throws Exception {
 		if (ITEM_INDEX == null) {
 			ITEM_INDEX = RetailItemNameIndex.loadItemTemplates();
@@ -400,8 +416,10 @@ class QuestRewardItemGateTest {
 
 	private static RetailItemNameIndex ITEM_INDEX;
 
-	/** 原版物品单元格的物品名（空格前段，允许名称本身含空格时取最后一段为数量）。 /
-	 * The item name of a retail cell (the trailing numeric token is the count). */
+	/**
+	 * 原版物品单元格的物品名（空格前段，允许名称本身含空格时取最后一段为数量）。 /
+	 * The item name of a retail cell (the trailing numeric token is the count).
+	 */
 	private static String symbol(String cell) {
 		String trimmed = cell.trim();
 		int lastSpace = trimmed.lastIndexOf(' ');
@@ -412,7 +430,9 @@ class QuestRewardItemGateTest {
 		return tail.chars().allMatch(Character::isDigit) ? trimmed.substring(0, lastSpace) : trimmed;
 	}
 
-	/** 原版物品单元格的数量（缺省 1）。 / The cell count (1 when absent). */
+	/**
+	 * 原版物品单元格的数量（缺省 1）。 / The cell count (1 when absent).
+	 */
 	private static int symbolCount(String cell) {
 		String trimmed = cell.trim();
 		int lastSpace = trimmed.lastIndexOf(' ');
@@ -433,7 +453,7 @@ class QuestRewardItemGateTest {
 		CompiledQuestDefinition compiled = ProductionQuestDefinitions.definition(questId);
 		QuestMetadata metadata = compiled.definition().metadata();
 		List<QuestReward> group = metadata.rewardGroups().isEmpty() ? List.of()
-			: metadata.rewardGroups().get(0).rewards();
+			: metadata.rewardGroups().getFirst().rewards();
 		List<String> fixed = new ArrayList<>();
 		for (QuestReward reward : group) {
 			if ("ITEM".equals(reward.kind())) {
@@ -472,7 +492,9 @@ class QuestRewardItemGateTest {
 		return new ProductionItems(fixed, selectable, new TreeSet<>(), extGold, extItems);
 	}
 
-	/** 固定道具多重集合必须与原版一致（原版字段缺失跳过）。 */
+	/**
+	 * 固定道具多重集合必须与原版一致（原版字段缺失跳过）。
+	 */
 	@Test
 	void fixedItemsMatchTheRetailContract() {
 		List<String> problems = new ArrayList<>();
@@ -502,7 +524,9 @@ class QuestRewardItemGateTest {
 		assertTrue(problems.isEmpty(), () -> "fixed item mismatches: " + problems);
 	}
 
-	/** 可选道具三来源并集必须与原版一致（等价表达与 EVIDENCE_BLOCKED 逐条例外）。 */
+	/**
+	 * 可选道具三来源并集必须与原版一致（等价表达与 EVIDENCE_BLOCKED 逐条例外）。
+	 */
 	@Test
 	void selectableItemsMatchTheRetailContractWithListedExceptions() {
 		List<String> problems = new ArrayList<>();
@@ -548,7 +572,7 @@ class QuestRewardItemGateTest {
 		List<String> problems = new ArrayList<>();
 		for (Map.Entry<Integer, RetailItems> entry : contract.entrySet()) {
 			if (entry.getValue().extGold() == null && entry.getValue().extItems().isEmpty()
-					|| !production.containsKey(entry.getKey())) {
+				|| !production.containsKey(entry.getKey())) {
 				continue;
 			}
 			int qid = entry.getKey();
@@ -562,7 +586,7 @@ class QuestRewardItemGateTest {
 			Long actualGold = actual.extGold();
 			Long retailGold = entry.getValue().extGold();
 			if (!(actualGold == null ? retailGold == null
-					: actualGold.equals(retailGold))) {
+				: actualGold.equals(retailGold))) {
 				problems.add("quest " + qid + " extended gold=" + actualGold
 					+ " but retail=" + retailGold);
 			}

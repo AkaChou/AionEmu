@@ -28,7 +28,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class QuestRefactorRepairRegressionTest {
 
 	@Test
-	void namusContinuationKeepsStateAndReturnsTheActualClientPage() throws Exception {
+	void namusContinuationKeepsStateAndReturnsTheActualClientPage() {
 		var compiled = load(1917);
 		var state = snapshot(compiled, Map.of("var0", 0), Map.of());
 		var plan = onlyPlan(compiled, state, new QuestEvent.TalkToNpc(203075, 1354));

@@ -42,8 +42,11 @@ class RealGeoDataConcurrencyTest {
 	@Test
 	void worldMapLoadingDoesNotMutateGeoMapRegistryFromWorkerThreads() throws IOException {
 		String source = Files.readString(Path.of("src/main/java/com/aionemu/gameserver/world/geo/RealGeoData.java"));
-		int workerStart = source.indexOf("public Void call() throws Exception");
-		int workerEnd = source.indexOf("return null;", workerStart);
+		// 锚定并发 worker 任务体（匿名 Callable 与 lambda 两种形态都兼容），断言其不直接改注册表。
+		// Anchor the concurrent worker task body (anonymous Callable or lambda form) and assert it never
+		// mutates the registry directly.
+		int workerStart = source.indexOf("tasks.add(");
+		int workerEnd = source.indexOf("});", workerStart);
 
 		assertTrue(workerStart >= 0 && workerEnd > workerStart);
 		assertFalse(source.substring(workerStart, workerEnd).contains("geoMaps.put"));
@@ -52,7 +55,7 @@ class RealGeoDataConcurrencyTest {
 	@Test
 	void roundRobinPartitionCoversEveryMeshExactlyOnce() {
 		List<List<String>> partitions = RealGeoData.partitionRoundRobin(
-				List.of("a", "b", "c", "d", "e", "f", "g"), 3);
+			List.of("a", "b", "c", "d", "e", "f", "g"), 3);
 
 		assertEquals(3, partitions.size());
 		assertEquals(List.of("a", "d", "g"), partitions.get(0));
@@ -60,7 +63,7 @@ class RealGeoDataConcurrencyTest {
 		assertEquals(List.of("c", "f"), partitions.get(2));
 		assertEquals(7, partitions.stream().mapToInt(List::size).sum());
 		assertEquals(List.of("a", "b", "c", "d", "e", "f", "g"),
-				partitions.stream().flatMap(List::stream).sorted().toList());
+			partitions.stream().flatMap(List::stream).sorted().toList());
 	}
 
 	@Test

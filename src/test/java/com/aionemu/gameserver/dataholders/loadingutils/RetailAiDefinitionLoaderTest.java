@@ -92,8 +92,8 @@ class RetailAiDefinitionLoaderTest {
 		assertNotNull(pattern);
 		assertEquals("IDTiamat_Tahabata", pattern.name());
 		assertEquals(7, pattern.event("on_battle_timer").get(0).priority());
-		assertEquals("60", pattern.event("on_battle_timer").get(1).conditions().get(0).value("percent"));
-		assertEquals("SKILLI_INDEX_4", pattern.event("on_battle_timer").get(1).actions().get(0).value("skill"));
+		assertEquals("60", pattern.event("on_battle_timer").get(1).conditions().getFirst().value("percent"));
+		assertEquals("SKILLI_INDEX_4", pattern.event("on_battle_timer").get(1).actions().getFirst().value("skill"));
 		var retailNpc = data.getNpc(219358);
 		assertEquals(75, retailNpc.modelScalePercent());
 		assertEquals(10, retailNpc.talkDelay());
@@ -229,15 +229,15 @@ class RetailAiDefinitionLoaderTest {
 		assertEquals(10, btStatues.size());
 		assertTrue(btStatues.stream().allMatch(condition -> condition.expression().contains("1 >= 1")));
 		var statueChoices = btStatues.stream().filter(condition -> condition.id() == 5023).findFirst().orElseThrow()
-			.groups().get(0).slots().get(0);
+			.groups().getFirst().slots().getFirst();
 		assertEquals(4, statueChoices.size());
 		assertEquals(10000, statueChoices.stream().mapToInt(RetailAiData.ConditionSpawnChoice::probability).sum());
-		assertEquals(216295, statueChoices.get(0).members().get(0).id());
-		assertEquals(1187.38147f, statueChoices.get(0).members().get(0).x());
-		assertEquals(509.407745f, statueChoices.get(0).members().get(0).y());
-		assertEquals(0, statueChoices.get(0).members().get(0).heading());
-		assertEquals(216298, statueChoices.get(3).members().get(0).id());
-		assertEquals(1, statueChoices.get(3).members().get(0).initialDelay());
+		assertEquals(216295, statueChoices.getFirst().members().getFirst().id());
+		assertEquals(1187.38147f, statueChoices.getFirst().members().getFirst().x());
+		assertEquals(509.407745f, statueChoices.getFirst().members().getFirst().y());
+		assertEquals(0, statueChoices.getFirst().members().getFirst().heading());
+		assertEquals(216298, statueChoices.get(3).members().getFirst().id());
+		assertEquals(1, statueChoices.get(3).members().getFirst().initialDelay());
 		assertTrue(data.getConditionSpawns(302340000).stream()
 			.flatMap(condition -> condition.groups().stream())
 			.flatMap(group -> group.slots().stream())
@@ -259,7 +259,7 @@ class RetailAiDefinitionLoaderTest {
 			+ data.getGroupControllers(220050000).stream().filter(controller -> controller.exitWorldId() > 0).count()
 			+ data.getGroupControllers(210040000).stream().filter(controller -> controller.exitWorldId() > 0).count()
 			+ data.getGroupControllers(220040000).stream().filter(controller -> controller.exitWorldId() > 0).count());
-		for (int worldId : new int[] { 210040000, 210060000, 210100000, 220040000, 220050000, 220110000 }) {
+		for (int worldId : new int[]{210040000, 210060000, 210100000, 220040000, 220050000, 220110000}) {
 			data.getGroupControllers(worldId).stream().filter(controller -> controller.exitWorldId() > 0).forEach(controller ->
 				assertNotNull(data.findLocationAlias(controller.exitWorldId(), controller.exitAlias()), controller.name()));
 		}
@@ -283,7 +283,7 @@ class RetailAiDefinitionLoaderTest {
 		assertEquals(279, data.dynamicAreaCount());
 		assertEquals(12654, java.util.stream.StreamSupport.stream(data.patterns().spliterator(), false)
 			.filter(RetailPatternAI2::supports).count());
-		for (int npcId : new int[] { 251812, 251813, 251814, 257300, 257305, 257310, 855729 }) {
+		for (int npcId : new int[]{251812, 251813, 251814, 257300, 257305, 257310, 855729}) {
 			assertTrue(RetailPatternAI2.supports(data.getPattern(npcId)), data.getPattern(npcId).name());
 		}
 		var unsupportedGauge = java.util.stream.StreamSupport.stream(data.patterns().spliterator(), false)
@@ -293,17 +293,17 @@ class RetailAiDefinitionLoaderTest {
 		var bossLocation = data.findLocationAlias(302400000, "Location_Boss");
 		assertNotNull(bossLocation);
 		assertEquals(1, bossLocation.size());
-		assertEquals(206.430801f, bossLocation.get(0).x());
-		assertEquals(249.652161f, bossLocation.get(0).y());
-		assertEquals(976.699585f, bossLocation.get(0).z());
-		assertEquals(0, bossLocation.get(0).direction());
+		assertEquals(206.430801f, bossLocation.getFirst().x());
+		assertEquals(249.652161f, bossLocation.getFirst().y());
+		assertEquals(976.699585f, bossLocation.getFirst().z());
+		assertEquals(0, bossLocation.getFirst().direction());
 		assertNull(data.findLocationAlias(302400000, "Missing_Alias"));
 		var lightHeroesEnd = data.findLocationAlias(310160000, "IDAb1_Heroes_L_Airport_End");
 		assertNotNull(lightHeroesEnd);
-		assertEquals(81.177345f, lightHeroesEnd.get(0).x());
+		assertEquals(81.177345f, lightHeroesEnd.getFirst().x());
 		var darkHeroesEnd = data.findLocationAlias(320160000, "IDAb1_Heroes_L_Airport_End");
 		assertNotNull(darkHeroesEnd);
-		assertEquals(94.626068f, darkHeroesEnd.get(0).x());
+		assertEquals(94.626068f, darkHeroesEnd.getFirst().x());
 		assertTrue(RetailPatternAI2.supports(data.getPattern(806731)));
 		assertTrue(RetailPatternAI2.supports(data.getPattern(806732)));
 		assertEquals("SKILLCTG_HEAL", data.getSkillCategory(245));
@@ -328,7 +328,7 @@ class RetailAiDefinitionLoaderTest {
 		assertEquals(1, data.getNpc(835026).talkDelay());
 		assertNotNull(data.getPattern(219358));
 		assertEquals("MiBGuard_ChiefC", data.getPattern(256693).name());
-		assertEquals("95", data.getPattern(219358).event("on_battle_timer").get(0).conditions().get(0).value("percent"));
+		assertEquals("95", data.getPattern(219358).event("on_battle_timer").getFirst().conditions().getFirst().value("percent"));
 		assertTrue(data.findArea(310110000, "IDLF2a_Lab_SZ_SkillAlarm").isInside3D(500, 500, 100));
 		assertTrue(data.findSkillAreas(301550000, 103).stream()
 			.anyMatch(area -> area.isInside3D(640, 1278, 823)));
@@ -362,9 +362,9 @@ class RetailAiDefinitionLoaderTest {
 		// 且 debufflich 已声明（运行时门禁解锁），保持 retail_pattern 执行而非回落模板 AI。
 		// The BT soul/Lichkey1/stage-variant/trigger patterns are structurally supported, and with
 		// debufflich declared the runtime gate unlocks, keeping them on retail_pattern execution.
-		for (int npcId : new int[] { 216206, 216207, 216208, 216209, 216210, 216211, 216212, 216213, 216583,
-				216245, 216164, 216733, 216734, 216735, 216736, 216737, 216738, 281696, 281759, 281760,
-				216239, 216158, 216739, 216740 }) {
+		for (int npcId : new int[]{216206, 216207, 216208, 216209, 216210, 216211, 216212, 216213, 216583,
+			216245, 216164, 216733, 216734, 216735, 216736, 216737, 216738, 281696, 281759, 281760,
+			216239, 216158, 216739, 216740}) {
 			assertTrue(RetailPatternAI2.supports(data.getPattern(npcId)), data.getPattern(npcId).name());
 		}
 	}
@@ -381,12 +381,12 @@ class RetailAiDefinitionLoaderTest {
 		assertNotNull(data.getWalkerTemplate("retail:300190000:idelim_path_1f_sheluk_keynm_52_ae_1"));
 		var rudra = data.getWalkerTemplate("retail:300170000:npcpathpath_rudrawindc1");
 		assertNotNull(rudra);
-		assertEquals(557.167297f, rudra.getRouteSteps().get(0).getX());
-		assertEquals(1358.827271f, rudra.getRouteSteps().get(0).getY());
+		assertEquals(557.167297f, rudra.getRouteSteps().getFirst().getX());
+		assertEquals(1358.827271f, rudra.getRouteSteps().getFirst().getY());
 		var altgardPatrol = data.getWalkerTemplate("retail:220030000:df1a_12_mobpath_gfp_lycanfigs_19");
 		assertNotNull(altgardPatrol);
-		assertEquals(2442.02686f, altgardPatrol.getRouteSteps().get(0).getX());
-		assertEquals(20000, altgardPatrol.getRouteSteps().get(0).getRestTime());
+		assertEquals(2442.02686f, altgardPatrol.getRouteSteps().getFirst().getX());
+		assertEquals(20000, altgardPatrol.getRouteSteps().getFirst().getRestTime());
 		assertNotNull(data.getWalkerTemplate("retail:220020000:df2_e4_lycanwizardmboss_pet_7"));
 		assertNull(data.getWalkerTemplate("retail:210050000:e3_cheru3_1"));
 	}
@@ -416,8 +416,8 @@ class RetailAiDefinitionLoaderTest {
 	}
 
 	private static RetailAiData.ConditionSpawnNpc firstConditionNpc(List<RetailAiData.ConditionSpawn> conditions,
-			int id) {
+																	int id) {
 		return conditions.stream().filter(condition -> condition.id() == id).findFirst().orElseThrow()
-			.groups().get(0).slots().get(0).get(0).members().get(0);
+			.groups().getFirst().slots().getFirst().getFirst().members().getFirst();
 	}
 }

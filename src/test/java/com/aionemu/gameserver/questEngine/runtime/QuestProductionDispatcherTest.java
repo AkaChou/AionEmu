@@ -74,9 +74,9 @@ class QuestProductionDispatcherTest {
 
 		assertFalse(result.consumed());
 		assertTrue(result.claimed(), "FAILED is conclusive and must block legacy fallback");
-		assertEquals(QuestRouteResult.FAILED, result.owners().get(0).result());
+		assertEquals(QuestRouteResult.FAILED, result.owners().getFirst().result());
 		assertEquals(1, audits.size());
-		QuestAuditEvent audit = audits.get(0);
+		QuestAuditEvent audit = audits.getFirst();
 		assertEquals("started", audit.sourceNode());
 		assertEquals("reward", audit.targetNode());
 		assertEquals(203057, audit.npcId());
@@ -203,11 +203,13 @@ class QuestProductionDispatcherTest {
 			new ImmutableQuestCatalog(List.of(definition)), new QuestExecutionCoordinator(new PlayerSerialExecutor()),
 			(connection, playerId, questId, event) -> {
 				throw new AssertionError("snapshot must not run");
-			}, noOpActions(), noOpState(), (action, snapshot, plan) -> { },
+			}, noOpActions(), noOpState(), (action, snapshot, plan) -> {
+		},
 			() -> {
 				connections.incrementAndGet();
 				return connection(new ArrayList<>());
-			}, ignored -> { }, new QuestRuntimeMetricsCollector());
+			}, ignored -> {
+		}, new QuestRuntimeMetricsCollector());
 
 		QuestEventRouter.DispatchResult result = dispatcher.dispatch(
 			new QuestEvent.TalkToNpc(203049, 31), 7, 1101, QuestDispatchContract.EXCLUSIVE);
@@ -225,11 +227,13 @@ class QuestProductionDispatcherTest {
 			new ImmutableQuestCatalog(List.of(definition)), new QuestExecutionCoordinator(new PlayerSerialExecutor()),
 			(connection, playerId, questId, event) ->
 				new QuestSnapshot(playerId, questId, QuestStatus.NONE, 0, Map.of()),
-			noOpActions(), noOpState(), (action, snapshot, plan) -> { },
+			noOpActions(), noOpState(), (action, snapshot, plan) -> {
+		},
 			() -> {
 				connections.incrementAndGet();
 				return connection(new ArrayList<>());
-			}, ignored -> { }, new QuestRuntimeMetricsCollector());
+			}, ignored -> {
+		}, new QuestRuntimeMetricsCollector());
 
 		QuestEventRouter.DispatchResult result = dispatcher.dispatch(
 			new QuestEvent.TalkToNpc(203057, 1009), 7, 1101, QuestDispatchContract.EXCLUSIVE);
@@ -254,15 +258,16 @@ class QuestProductionDispatcherTest {
 			(connection, playerId, questId, event) ->
 				new QuestSnapshot(playerId, questId, QuestStatus.START, 0, Map.of()),
 			noOpActions(), noOpState(), (action, snapshot, plan) -> {
-				if (action instanceof com.aionemu.gameserver.questEngine.definition.AfterCommitAction.ShowQuestDialog(
-					int dialogId
-				)) {
-					pages.add(dialogId);
-				}
-			}, () -> {
-				connections.incrementAndGet();
-				return connection(new ArrayList<>());
-			}, ignored -> { }, new QuestRuntimeMetricsCollector());
+			if (action instanceof com.aionemu.gameserver.questEngine.definition.AfterCommitAction.ShowQuestDialog(
+				int dialogId
+			)) {
+				pages.add(dialogId);
+			}
+		}, () -> {
+			connections.incrementAndGet();
+			return connection(new ArrayList<>());
+		}, ignored -> {
+		}, new QuestRuntimeMetricsCollector());
 
 		QuestEventRouter.DispatchResult result = dispatcher.dispatch(
 			new QuestEvent.TalkToNpc(203057, 31), 7, 1103, QuestDispatchContract.EXCLUSIVE);
@@ -417,7 +422,7 @@ class QuestProductionDispatcherTest {
 
 		assertFalse(result.consumed());
 		assertTrue(result.claimed());
-		assertEquals(QuestRouteResult.BLOCKED, result.owners().get(0).result());
+		assertEquals(QuestRouteResult.BLOCKED, result.owners().getFirst().result());
 	}
 
 	@Test
@@ -491,15 +496,16 @@ class QuestProductionDispatcherTest {
 	}
 
 	private static QuestProductionDispatcher dispatcher(List<CompiledQuestDefinition> definitions,
-			List<String> calls, QuestEventPort eventPort) {
+														List<String> calls, QuestEventPort eventPort) {
 		return dispatcher(definitions, calls, eventPort, new ArrayList<>());
 	}
 
 	private static QuestProductionDispatcher dispatcher(List<CompiledQuestDefinition> definitions,
-			List<String> calls, QuestEventPort eventPort, List<QuestAuditEvent> audits) {
+														List<String> calls, QuestEventPort eventPort, List<QuestAuditEvent> audits) {
 		return new QuestProductionDispatcher(new ImmutableQuestCatalog(definitions),
 			new QuestExecutionCoordinator(new PlayerSerialExecutor()), eventPort, recordingActions(calls),
-			recordingState(calls), (action, snapshot, plan) -> { }, () -> connection(calls),
+			recordingState(calls), (action, snapshot, plan) -> {
+		}, () -> connection(calls),
 			audits::add, new QuestRuntimeMetricsCollector());
 	}
 
@@ -539,7 +545,7 @@ class QuestProductionDispatcherTest {
 
 			@Override
 			public QuestTransactionParticipant apply(Connection connection, QuestSnapshot snapshot,
-					List<QuestAction> actions) {
+													 List<QuestAction> actions) {
 				calls.add("apply");
 				return QuestTransactionParticipant.none();
 			}
@@ -554,7 +560,7 @@ class QuestProductionDispatcherTest {
 
 			@Override
 			public QuestTransactionParticipant apply(Connection connection, QuestSnapshot snapshot,
-					List<QuestAction> actions) {
+													 List<QuestAction> actions) {
 				return QuestTransactionParticipant.none();
 			}
 		};
@@ -590,10 +596,22 @@ class QuestProductionDispatcherTest {
 		return (Connection) Proxy.newProxyInstance(Connection.class.getClassLoader(), new Class<?>[]{Connection.class},
 			(proxy, method, args) -> switch (method.getName()) {
 				case "getAutoCommit" -> true;
-				case "setAutoCommit" -> { calls.add("setAutoCommit:" + args[0]); yield null; }
-				case "commit" -> { calls.add("commit"); yield null; }
-				case "rollback" -> { calls.add("rollback"); yield null; }
-				case "close" -> { calls.add("close"); yield null; }
+				case "setAutoCommit" -> {
+					calls.add("setAutoCommit:" + args[0]);
+					yield null;
+				}
+				case "commit" -> {
+					calls.add("commit");
+					yield null;
+				}
+				case "rollback" -> {
+					calls.add("rollback");
+					yield null;
+				}
+				case "close" -> {
+					calls.add("close");
+					yield null;
+				}
 				default -> method.getReturnType() == boolean.class ? false : null;
 			});
 	}

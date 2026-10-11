@@ -58,7 +58,7 @@ class ClassicTalkChainQuestFamilyTest {
 				&& teleport.x() == 535.46f
 				&& teleport.y() == 2555.62f));
 		assertEquals(List.of(
-			drink.afterCommit().get(0),
+			drink.afterCommit().getFirst(),
 			new AfterCommitAction.SyncQuestState(
 				QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
 			new AfterCommitAction.CloseDialog()), drink.afterCommit());
@@ -158,9 +158,9 @@ class ClassicTalkChainQuestFamilyTest {
 			.anyMatch(QuestAction.GrantReward.class::isInstance));
 		assertTrue(completion.actions().contains(new QuestAction.CompleteQuest(0)));
 		assertEquals(List.of(
-			new AfterCommitAction.RefreshPlayerStats(),
-			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.COMPLETION),
-			new AfterCommitAction.ShowQuestSelectionDialog(QuestDialogPage.SELECT_QUEST.id())),
+				new AfterCommitAction.RefreshPlayerStats(),
+				new AfterCommitAction.SyncQuestState(QuestStateSyncMode.COMPLETION),
+				new AfterCommitAction.ShowQuestSelectionDialog(QuestDialogPage.SELECT_QUEST.id())),
 			completion.afterCommit());
 	}
 
@@ -178,7 +178,7 @@ class ClassicTalkChainQuestFamilyTest {
 	}
 
 	private static void assertTimerExpiryDespawns(QuestDefinition definition, String source,
-			String slot) {
+												  String slot) {
 		QuestTransition expiry = definition.transitions().stream()
 			.filter(candidate -> candidate.sourceNode().equals(source))
 			.filter(candidate -> candidate.event() instanceof QuestEvent.InvisibleTimerEnd)
@@ -188,14 +188,14 @@ class ClassicTalkChainQuestFamilyTest {
 	}
 
 	private static void assertPage(QuestDefinition definition, String source, int npcId,
-			QuestDialogAction action, QuestDialogPage page) {
+								   QuestDialogAction action, QuestDialogPage page) {
 		assertTalk(definition, source, source, npcId, action, List.of(), List.of(),
 			List.of(new AfterCommitAction.ShowQuestDialog(page.id())));
 	}
 
 	private static void assertTalk(QuestDefinition definition, String source, String target,
-			int npcId, QuestDialogAction action, List<QuestCondition> conditions,
-			List<QuestAction> actions, List<AfterCommitAction> afterCommit) {
+								   int npcId, QuestDialogAction action, List<QuestCondition> conditions,
+								   List<QuestAction> actions, List<AfterCommitAction> afterCommit) {
 		QuestTransition transition = talk(definition, source, npcId, action, conditions);
 		assertEquals(target, transition.targetNode());
 		assertEquals(conditions, transition.conditions());
@@ -204,7 +204,7 @@ class ClassicTalkChainQuestFamilyTest {
 	}
 
 	private static QuestTransition talk(QuestDefinition definition, String source, int npcId,
-			QuestDialogAction action, List<QuestCondition> conditions) {
+										QuestDialogAction action, List<QuestCondition> conditions) {
 		QuestEvent.TalkToNpc event = new QuestEvent.TalkToNpc(npcId, action.id());
 		return definition.transitions().stream()
 			.filter(candidate -> candidate.sourceNode().equals(source))
@@ -216,7 +216,7 @@ class ClassicTalkChainQuestFamilyTest {
 	}
 
 	private static void assertNode(QuestDefinition definition, String label,
-			QuestStatus status, int var0) {
+								   QuestStatus status, int var0) {
 		QuestNode node = definition.nodes().stream()
 			.filter(candidate -> candidate.label().equals(label))
 			.findFirst()
@@ -227,7 +227,7 @@ class ClassicTalkChainQuestFamilyTest {
 
 	private static QuestDefinition definition(int questId) throws Exception {
 		try (InputStream input = ClassicTalkChainQuestFamilyTest.class.getResourceAsStream(
-				"/aion/data/static_data/quest/definitions/quests/" + questId + ".xml")) {
+			"/aion/data/static_data/quest/definitions/quests/" + questId + ".xml")) {
 			if (input == null) {
 				throw new IllegalStateException("missing quest definition " + questId + ".xml");
 			}

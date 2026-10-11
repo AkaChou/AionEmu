@@ -12,6 +12,7 @@ import java.util.Set;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 /**
  * 锁定批次 43：食人花解毒剂族 2239 的三行状态阶梯。
@@ -123,7 +124,7 @@ class Batch43MalodorAntidoteRowContractTest {
 			.filter(route -> "reward".equals(route.sourceNode()) && "complete".equals(route.targetNode()))
 			.toList();
 		assertTrue(completions.stream().allMatch(route -> route.event() instanceof QuestEvent.TalkToNpc talk
-				&& talk.npcId() == GILUNGK), "quest 2239 completion must stay on Gilungk");
+			&& talk.npcId() == GILUNGK), "quest 2239 completion must stay on Gilungk");
 		assertTrue(completions.stream().flatMap(route -> route.actions().stream())
 				.anyMatch(new QuestAction.CompleteQuest(0)::equals),
 			"quest 2239 must complete at reward index 0");
@@ -133,7 +134,7 @@ class Batch43MalodorAntidoteRowContractTest {
 				&& talk.dialogId() != null && talk.dialogId() == QuestDialogAction.SELECT_QUEST_REWARD.id())
 			.anyMatch(route -> route.event() instanceof QuestEvent.TalkToNpc talk
 				&& talk.npcId() == VOVETIRN);
-		assertTrue(!strayReward, "quest 2239 must not keep a reward window on Vovetirn");
+		assertFalse(strayReward, "quest 2239 must not keep a reward window on Vovetirn");
 	}
 
 	@Test
@@ -160,7 +161,7 @@ class Batch43MalodorAntidoteRowContractTest {
 	}
 
 	private static void assertPageRoute(QuestDefinition definition, int npcId, String source,
-		QuestDialogAction action, QuestDialogPage page) {
+										QuestDialogAction action, QuestDialogPage page) {
 		List<QuestTransition> routes = dialogRoutes(definition, source, npcId, action);
 		assertEquals(1, routes.size(),
 			() -> "route " + source + " + npc " + npcId + " + " + action + " must be unique");
@@ -170,7 +171,7 @@ class Batch43MalodorAntidoteRowContractTest {
 	}
 
 	private static List<QuestTransition> dialogRoutes(QuestDefinition definition, String source,
-		int npcId, QuestDialogAction action) {
+													  int npcId, QuestDialogAction action) {
 		return definition.transitions().stream()
 			.filter(route -> source.equals(route.sourceNode()))
 			.filter(route -> route.event() instanceof QuestEvent.TalkToNpc talk

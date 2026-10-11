@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
@@ -33,12 +32,12 @@ class Quest23902ClientDialogAlignmentTest {
 		assertEquals(804719, handler.acquireNpc(23900), "接取 NPC");
 		assertEquals(798718, handler.rewardNpc(23900), "交付 NPC");
 		assertFalse(handler.acquireNpc(23900).equals(handler.rewardNpc(23900)),
-				"接取与交付 owner 分离");
+			"接取与交付 owner 分离");
 		assertEquals(2, handler.relayCount(23900), "中继步数");
 		assertTrue(handler.relaysForNpc(799225).stream().anyMatch(relay -> relay.questId() == 23900 && relay.step() == 1),
-				"中继 1 必须挂在该 NPC 上: Hler");
+			"中继 1 必须挂在该 NPC 上: Hler");
 		assertTrue(handler.relaysForNpc(204182).stream().anyMatch(relay -> relay.questId() == 23900 && relay.step() == 2),
-				"中继 2 必须挂在该 NPC 上: Heimdall");
+			"中继 2 必须挂在该 NPC 上: Heimdall");
 		assertNull(handler.acceptGiveItem(23900), "接取侧无发放");
 		assertTrue(handler.workItems(23900).isEmpty(), "该行未声明 item_check：无交付门");
 		assertFalse(handler.unresolvedGate(23900), "无门行不得 fail-closed");
@@ -49,7 +48,7 @@ class Quest23902ClientDialogAlignmentTest {
 		assertEquals(798718, handler.acquireNpc(23902), "接取 NPC");
 		assertEquals(799225, handler.rewardNpc(23902), "交付 NPC");
 		assertFalse(handler.acquireNpc(23902).equals(handler.rewardNpc(23902)),
-				"接取与交付 owner 分离");
+			"接取与交付 owner 分离");
 		assertEquals(0, handler.relayCount(23902), "中继步数");
 		assertNull(handler.acceptGiveItem(23902), "接取侧无发放");
 		assertTrue(handler.workItems(23902).isEmpty(), "该行未声明 item_check：无交付门");

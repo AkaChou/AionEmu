@@ -279,7 +279,7 @@ class JournalRewardRowRepairContractTest {
 	);
 
 	@Test
-	void rewardRowEqualsTheClientJournalLastRow() throws Exception {
+	void rewardRowEqualsTheClientJournalLastRow() {
 		for (Contract contract : CONTRACTS) {
 			if (retiredOnly(contract.questId())) {
 				continue;
@@ -290,7 +290,7 @@ class JournalRewardRowRepairContractTest {
 	}
 
 	@Test
-	void persistedRewardRowsAreRepairedOnEnterWorld() throws Exception {
+	void persistedRewardRowsAreRepairedOnEnterWorld() {
 		for (Contract contract : CONTRACTS) {
 			if (retiredOnly(contract.questId())) {
 				continue;

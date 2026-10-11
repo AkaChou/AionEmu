@@ -40,17 +40,21 @@ class QuestServiceManagedTimerTest {
 		QuestTimerPolicy fail = policy("policy", QuestTimerPolicy.OverwritePolicy.FAIL_IF_RUNNING);
 
 		assertEquals(QuestTimers.TimerStartOutcome.STARTED,
-			start(player, 1001, replace, scheduler, ignored -> { }));
-		RecordingFuture original = scheduler.futures.get(0);
+			start(player, 1001, replace, scheduler, ignored -> {
+			}));
+		RecordingFuture original = scheduler.futures.getFirst();
 		assertEquals(QuestTimers.TimerStartOutcome.KEPT_EXISTING,
-			start(player, 1001, keep, scheduler, ignored -> { }));
+			start(player, 1001, keep, scheduler, ignored -> {
+			}));
 		assertEquals(1, scheduler.tasks.size());
 		assertFalse(original.cancelled);
 		assertThrows(IllegalStateException.class,
-			() -> start(player, 1001, fail, scheduler, ignored -> { }));
+			() -> start(player, 1001, fail, scheduler, ignored -> {
+			}));
 
 		assertEquals(QuestTimers.TimerStartOutcome.STARTED,
-			start(player, 1001, replace, scheduler, ignored -> { }));
+			start(player, 1001, replace, scheduler, ignored -> {
+			}));
 		assertTrue(original.cancelled);
 		assertEquals(2, scheduler.tasks.size());
 	}
@@ -60,11 +64,12 @@ class QuestServiceManagedTimerTest {
 		Player player = player(PLAYER_ONE, 3);
 		RecordingScheduler scheduler = new RecordingScheduler();
 		QuestTimerPolicy policy = policy("hidden-cutscene", QuestTimerPolicy.OverwritePolicy.REPLACE);
-		start(player, 1002, policy, scheduler, ignored -> { });
+		start(player, 1002, policy, scheduler, ignored -> {
+		});
 
 		assertTrue(QuestService.hasQuestTimers(PLAYER_ONE, 1002));
 		assertTrue(QuestService.questTimerEnd(new QuestEnv(null, player, 1002, 0), policy.identity()));
-		assertTrue(scheduler.futures.get(0).cancelled);
+		assertTrue(scheduler.futures.getFirst().cancelled);
 		assertFalse(QuestService.hasQuestTimers(PLAYER_ONE, 1002));
 	}
 
@@ -79,8 +84,8 @@ class QuestServiceManagedTimerTest {
 			deliveries.incrementAndGet();
 		});
 
-		scheduler.tasks.get(0).run();
-		scheduler.tasks.get(0).run();
+		scheduler.tasks.getFirst().run();
+		scheduler.tasks.getFirst().run();
 
 		assertEquals(1, deliveries.get());
 		assertEquals(24154, deliveredQuestId.get());
@@ -92,9 +97,12 @@ class QuestServiceManagedTimerTest {
 		Player playerOne = player(PLAYER_ONE, 3);
 		Player playerTwo = player(PLAYER_TWO, 4);
 		RecordingScheduler scheduler = new RecordingScheduler();
-		start(playerOne, 1001, policy("one", QuestTimerPolicy.OverwritePolicy.REPLACE), scheduler, ignored -> { });
-		start(playerOne, 1002, policy("two", QuestTimerPolicy.OverwritePolicy.REPLACE), scheduler, ignored -> { });
-		start(playerTwo, 1001, policy("three", QuestTimerPolicy.OverwritePolicy.REPLACE), scheduler, ignored -> { });
+		start(playerOne, 1001, policy("one", QuestTimerPolicy.OverwritePolicy.REPLACE), scheduler, ignored -> {
+		});
+		start(playerOne, 1002, policy("two", QuestTimerPolicy.OverwritePolicy.REPLACE), scheduler, ignored -> {
+		});
+		start(playerTwo, 1001, policy("three", QuestTimerPolicy.OverwritePolicy.REPLACE), scheduler, ignored -> {
+		});
 
 		QuestService.cleanupQuestTimers(PLAYER_ONE, 1001);
 		assertTrue(scheduler.futures.get(0).cancelled);
@@ -114,8 +122,10 @@ class QuestServiceManagedTimerTest {
 		Player playerOne = player(PLAYER_ONE, 3);
 		Player playerTwo = player(PLAYER_TWO, 4);
 		RecordingScheduler scheduler = new RecordingScheduler();
-		start(playerOne, 1001, policy("one", QuestTimerPolicy.OverwritePolicy.REPLACE), scheduler, ignored -> { });
-		start(playerTwo, 1002, policy("two", QuestTimerPolicy.OverwritePolicy.REPLACE), scheduler, ignored -> { });
+		start(playerOne, 1001, policy("one", QuestTimerPolicy.OverwritePolicy.REPLACE), scheduler, ignored -> {
+		});
+		start(playerTwo, 1002, policy("two", QuestTimerPolicy.OverwritePolicy.REPLACE), scheduler, ignored -> {
+		});
 
 		QuestService.cleanupAllQuestTimers();
 
@@ -126,7 +136,7 @@ class QuestServiceManagedTimerTest {
 	}
 
 	private static QuestTimers.TimerStartOutcome start(Player player, int questId, QuestTimerPolicy policy,
-			RecordingScheduler scheduler, java.util.function.IntConsumer callback) {
+													   RecordingScheduler scheduler, java.util.function.IntConsumer callback) {
 		return QuestTimers.startManagedTimer(player, questId, 30, policy, false, callback, scheduler);
 	}
 

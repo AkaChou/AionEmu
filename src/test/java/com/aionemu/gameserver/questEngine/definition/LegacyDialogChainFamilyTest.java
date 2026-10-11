@@ -10,6 +10,7 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 /**
  * Locks the retail data-driven and legacy-handler dialog chains for quests 1463, 1901, and 2916.
@@ -183,7 +184,7 @@ class LegacyDialogChainFamilyTest {
 	}
 
 	private static void assertStartContract(QuestDefinition definition, int npcId,
-			String targetNode) {
+											String targetNode) {
 		assertPageTransition(definition, "unaccepted", "unaccepted", npcId,
 			QuestDialogAction.QUEST_SELECT, List.of(), QuestDialogPage.SELECT1);
 		assertPageTransition(definition, "unaccepted", "unaccepted", npcId,
@@ -197,14 +198,14 @@ class LegacyDialogChainFamilyTest {
 	}
 
 	private static void assertAdvance(QuestDefinition definition, String source, String target,
-			int npcId, QuestDialogAction action, List<QuestAction> actions) {
+									  int npcId, QuestDialogAction action, List<QuestAction> actions) {
 		assertTalk(definition, source, target, npcId, action, List.of(), actions,
 			List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.PACKET_ONLY),
 				new AfterCommitAction.CloseDialog()));
 	}
 
 	private static void assertRewardContract(QuestDefinition definition, String source,
-			int npcId, QuestDialogPage firstPage) {
+											 int npcId, QuestDialogPage firstPage) {
 		QuestTransition first = talk(definition, source, npcId, QuestDialogAction.QUEST_SELECT,
 			List.of());
 		assertEquals(source, first.targetNode());
@@ -226,7 +227,7 @@ class LegacyDialogChainFamilyTest {
 			.filter(candidate -> "complete".equals(candidate.targetNode()))
 			.filter(candidate -> candidate.event() instanceof QuestEvent.TalkToNpc)
 			.toList();
-		assertTrue(!completions.isEmpty());
+		assertFalse(completions.isEmpty());
 		assertTrue(completions.stream()
 			.map(QuestTransition::event)
 			.map(QuestEvent.TalkToNpc.class::cast)
@@ -234,13 +235,13 @@ class LegacyDialogChainFamilyTest {
 	}
 
 	private static void assertPage(QuestDefinition definition, String source, int npcId,
-			QuestDialogAction action, QuestDialogPage page) {
+								   QuestDialogAction action, QuestDialogPage page) {
 		assertPageTransition(definition, source, source, npcId, action, List.of(), page);
 	}
 
 	private static void assertPageTransition(QuestDefinition definition, String source,
-			String target, int npcId, QuestDialogAction action, List<QuestCondition> conditions,
-			QuestDialogPage page) {
+											 String target, int npcId, QuestDialogAction action, List<QuestCondition> conditions,
+											 QuestDialogPage page) {
 		QuestTransition transition = talk(definition, source, npcId, action, conditions);
 		assertEquals(target, transition.targetNode());
 		assertEquals(List.of(), transition.actions());
@@ -249,8 +250,8 @@ class LegacyDialogChainFamilyTest {
 	}
 
 	private static void assertTalk(QuestDefinition definition, String source, String target,
-			int npcId, QuestDialogAction action, List<QuestCondition> conditions,
-			List<QuestAction> actions, List<AfterCommitAction> afterCommit) {
+								   int npcId, QuestDialogAction action, List<QuestCondition> conditions,
+								   List<QuestAction> actions, List<AfterCommitAction> afterCommit) {
 		QuestTransition transition = talk(definition, source, npcId, action, conditions);
 		assertEquals(target, transition.targetNode());
 		assertEquals(conditions, transition.conditions());
@@ -259,7 +260,7 @@ class LegacyDialogChainFamilyTest {
 	}
 
 	private static QuestTransition talk(QuestDefinition definition, String source, int npcId,
-			QuestDialogAction action, List<QuestCondition> conditions) {
+										QuestDialogAction action, List<QuestCondition> conditions) {
 		QuestEvent.TalkToNpc event = new QuestEvent.TalkToNpc(npcId, action.id());
 		return definition.transitions().stream()
 			.filter(candidate -> candidate.sourceNode().equals(source))
@@ -275,7 +276,7 @@ class LegacyDialogChainFamilyTest {
 	}
 
 	private static void assertNode(QuestDefinition definition, String label, QuestStatus status,
-			int var0) {
+								   int var0) {
 		QuestNode node = definition.nodes().stream()
 			.filter(candidate -> candidate.label().equals(label))
 			.findFirst()
@@ -286,7 +287,7 @@ class LegacyDialogChainFamilyTest {
 
 	private static QuestDefinition definition(int questId) throws Exception {
 		try (InputStream input = LegacyDialogChainFamilyTest.class.getResourceAsStream(
-				"/aion/data/static_data/quest/definitions/quests/" + questId + ".xml")) {
+			"/aion/data/static_data/quest/definitions/quests/" + questId + ".xml")) {
 			if (input == null) {
 				throw new IllegalStateException("missing quest definition " + questId + ".xml");
 			}

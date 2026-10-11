@@ -20,7 +20,6 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Proxy;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -86,8 +85,8 @@ class PlayerQuestCraftPortTest {
 		assertEquals(400, skillsDao.stored.getFirst().value());
 		participant.afterCommit();
 		assertEquals(1, publisher.calls.size());
-		assertEquals(Set.of(RECIPE, AUTO_RECIPE), publisher.calls.get(0).learned());
-		assertEquals(Map.of(SKILL, 400), publisher.calls.get(0).skills());
+		assertEquals(Set.of(RECIPE, AUTO_RECIPE), publisher.calls.getFirst().learned());
+		assertEquals(Map.of(SKILL, 400), publisher.calls.getFirst().skills());
 	}
 
 	@Test
@@ -131,12 +130,12 @@ class PlayerQuestCraftPortTest {
 		assertSame(connection, skillsDao.stored.getFirst().connection());
 		assertEquals(SKILL, skillsDao.stored.getFirst().id());
 		assertEquals(450, skillsDao.stored.getFirst().value());
-		assertEquals(Set.of(RECIPE), publisher.calls.get(0).forgotten());
-		assertTrue(publisher.calls.get(0).learned().isEmpty());
+		assertEquals(Set.of(RECIPE), publisher.calls.getFirst().forgotten());
+		assertTrue(publisher.calls.getFirst().learned().isEmpty());
 	}
 
 	private static PlayerQuestCraftPort port(Player player, RecordingRecipesDao recipesDao,
-			RecordingSkillsDao skillsDao, RecordingPublisher publisher, boolean eligible) {
+											 RecordingSkillsDao skillsDao, RecordingPublisher publisher, boolean eligible) {
 		return new PlayerQuestCraftPort(playerId -> player, recipesDao, skillsDao,
 			recipeId -> new PlayerQuestCraftPort.RecipeSpec(recipeId, Race.ELYOS, SKILL, 1),
 			(p, skillId, level) -> Set.of(AUTO_RECIPE),
@@ -164,7 +163,7 @@ class PlayerQuestCraftPortTest {
 
 	private static Connection connection() {
 		return (Connection) Proxy.newProxyInstance(PlayerQuestCraftPortTest.class.getClassLoader(),
-			new Class<?>[] { Connection.class }, (proxy, method, args) -> {
+			new Class<?>[]{Connection.class}, (proxy, method, args) -> {
 				if (method.getName().equals("isWrapperFor")) return false;
 				if (method.getName().equals("unwrap")) return null;
 				Class<?> type = method.getReturnType();
@@ -192,7 +191,7 @@ class PlayerQuestCraftPortTest {
 
 		@Override
 		public void publish(Player player, Set<Integer> learnedRecipes, Set<Integer> forgottenRecipes,
-				Map<Integer, Integer> grantedSkills) {
+							Map<Integer, Integer> grantedSkills) {
 			calls.add(new PublishCall(Set.copyOf(learnedRecipes), Set.copyOf(forgottenRecipes),
 				Map.copyOf(grantedSkills)));
 		}
@@ -202,26 +201,58 @@ class PlayerQuestCraftPortTest {
 		private final List<Call> added = new ArrayList<>();
 		private final List<Call> deleted = new ArrayList<>();
 
-		@Override public RecipeList load(int playerId) { return new RecipeList(); }
-		@Override public boolean addRecipe(int playerId, int recipeId) { return true; }
-		@Override public boolean delRecipe(int playerId, int recipeId) { return true; }
-		@Override public void addRecipeInTransaction(Connection connection, int playerId, int recipeId) {
+		@Override
+		public RecipeList load(int playerId) {
+			return new RecipeList();
+		}
+
+		@Override
+		public boolean addRecipe(int playerId, int recipeId) {
+			return true;
+		}
+
+		@Override
+		public boolean delRecipe(int playerId, int recipeId) {
+			return true;
+		}
+
+		@Override
+		public void addRecipeInTransaction(Connection connection, int playerId, int recipeId) {
 			added.add(new Call(connection, recipeId, 0));
 		}
-		@Override public void delRecipeInTransaction(Connection connection, int playerId, int recipeId) {
+
+		@Override
+		public void delRecipeInTransaction(Connection connection, int playerId, int recipeId) {
 			deleted.add(new Call(connection, recipeId, 0));
 		}
-		@Override public boolean supports(String databaseName, int majorVersion, int minorVersion) { return true; }
+
+		@Override
+		public boolean supports(String databaseName, int majorVersion, int minorVersion) {
+			return true;
+		}
 	}
 
 	private static final class RecordingSkillsDao extends PlayerSkillListDAO {
 		private final List<Call> stored = new ArrayList<>();
 
-		@Override public PlayerSkillList loadSkillList(int playerId) { return new PlayerSkillList(); }
-		@Override public boolean storeSkills(Player player) { return true; }
-		@Override public void storeSkillInTransaction(Connection connection, int playerId, int skillId, int targetLevel) {
+		@Override
+		public PlayerSkillList loadSkillList(int playerId) {
+			return new PlayerSkillList();
+		}
+
+		@Override
+		public boolean storeSkills(Player player) {
+			return true;
+		}
+
+		@Override
+		public void storeSkillInTransaction(Connection connection, int playerId, int skillId, int targetLevel) {
 			stored.add(new Call(connection, skillId, targetLevel));
 		}
-		@Override public boolean supports(String databaseName, int majorVersion, int minorVersion) { return true; }
+
+		@Override
+		public boolean supports(String databaseName, int majorVersion, int minorVersion) {
+			return true;
+		}
 	}
 }

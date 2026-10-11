@@ -5,10 +5,12 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 
 import com.aionemu.gameserver.model.EventType;
 import com.aionemu.gameserver.model.templates.event.EventTemplate;
+
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
 import org.junit.jupiter.api.Test;
 import org.objenesis.ObjenesisStd;
 
@@ -28,7 +30,7 @@ class EventServiceTest {
 		activeEvents.clear();
 
 		assertEquals(1, snapshot.size());
-		assertSame(event, snapshot.get(0));
+		assertSame(event, snapshot.getFirst());
 	}
 
 	@Test

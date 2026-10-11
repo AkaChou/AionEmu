@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
@@ -33,12 +32,12 @@ class Quest1163ClientDialogAlignmentTest {
 		assertEquals(203096, handler.acquireNpc(1163), "接取 NPC");
 		assertEquals(203155, handler.rewardNpc(1163), "交付 NPC");
 		assertFalse(handler.acquireNpc(1163).equals(handler.rewardNpc(1163)),
-				"接取与交付 owner 分离");
+			"接取与交付 owner 分离");
 		assertEquals(1, handler.relayCount(1163), "中继步数");
 		assertTrue(handler.relaysForNpc(203151).stream().anyMatch(relay -> relay.questId() == 1163 && relay.step() == 1),
-				"中继 1 必须挂在该 NPC 上: Illos");
+			"中继 1 必须挂在该 NPC 上: Illos");
 		assertEquals(new SimpleTalkHandler.ItemStack(182200564, 1),
-				handler.acceptGiveItem(1163), "接取侧发放");
+			handler.acceptGiveItem(1163), "接取侧发放");
 		assertTrue(handler.workItems(1163).isEmpty(), "该行未声明 item_check：无交付门");
 		assertFalse(handler.unresolvedGate(1163), "无门行不得 fail-closed");
 		assertNull(handler.cutscene(1163), "该行无过场");

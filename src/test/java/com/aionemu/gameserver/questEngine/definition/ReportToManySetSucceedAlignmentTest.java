@@ -2,8 +2,6 @@ package com.aionemu.gameserver.questEngine.definition;
 
 import org.junit.jupiter.api.Test;
 
-import java.io.InputStream;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 
@@ -31,7 +29,7 @@ class ReportToManySetSucceedAlignmentTest {
 	}
 
 	@Test
-	void flattenedReportToManyQuestsUseOrderedNpcSteps() throws Exception {
+	void flattenedReportToManyQuestsUseOrderedNpcSteps() {
 		for (OrderedQuest quest : List.of(
 			new OrderedQuest(1876, 278501, 278501, List.of(
 				new Step(278502, 1352), new Step(278503, 1352))),
@@ -68,8 +66,8 @@ class ReportToManySetSucceedAlignmentTest {
 			assertEquals("reward", progress.targetNode(), "quest " + quest.id() + " final target");
 			assertTrue(progress.actions().isEmpty(), "quest " + quest.id() + " final actions");
 			assertEquals(List.of(
-				new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
-				new AfterCommitAction.ShowQuestSelectionDialog(10)), progress.afterCommit(),
+					new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
+					new AfterCommitAction.ShowQuestSelectionDialog(10)), progress.afterCommit(),
 				"quest " + quest.id() + " final protocol");
 			assertTrue(dialogNpcs(definition, "reward", 31).isEmpty(),
 				"quest " + quest.id() + " must not insert a report page after reaching REWARD");
@@ -107,15 +105,15 @@ class ReportToManySetSucceedAlignmentTest {
 			if (last) {
 				assertTrue(progress.actions().isEmpty(), "quest " + quest.id() + " final actions");
 				assertEquals(List.of(
-					new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
-					new AfterCommitAction.ShowQuestSelectionDialog(10)), progress.afterCommit(),
+						new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
+						new AfterCommitAction.ShowQuestSelectionDialog(10)), progress.afterCommit(),
 					"quest " + quest.id() + " final protocol");
 			} else {
 				assertEquals(List.of(new QuestAction.SetVariable("var0", index + 1)), progress.actions(),
 					"quest " + quest.id() + " step " + index + " variable");
 				assertEquals(List.of(
-					new AfterCommitAction.SyncQuestState(QuestStateSyncMode.PACKET_ONLY),
-					new AfterCommitAction.ShowQuestSelectionDialog(10)), progress.afterCommit(),
+						new AfterCommitAction.SyncQuestState(QuestStateSyncMode.PACKET_ONLY),
+						new AfterCommitAction.ShowQuestSelectionDialog(10)), progress.afterCommit(),
 					"quest " + quest.id() + " step " + index + " protocol");
 			}
 		}
@@ -128,7 +126,7 @@ class ReportToManySetSucceedAlignmentTest {
 	}
 
 	private static QuestTransition route(QuestDefinition definition, String source, int npcId, int dialogId,
-			Integer priority) {
+										 Integer priority) {
 		List<QuestTransition> routes = definition.transitions().stream()
 			.filter(transition -> source.equals(transition.sourceNode()))
 			.filter(transition -> priority == null || priority.equals(transition.priority()))

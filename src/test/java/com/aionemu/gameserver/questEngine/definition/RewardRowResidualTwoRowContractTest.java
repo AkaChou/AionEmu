@@ -6,7 +6,6 @@ import com.aionemu.gameserver.questEngine.runtime.QuestMutationPlanner;
 import com.aionemu.gameserver.questEngine.runtime.QuestSnapshot;
 import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -54,7 +53,7 @@ class RewardRowResidualTwoRowContractTest {
 	private static final List<Integer> PERNOS_ROW_SIBLINGS = List.of(1006, 1122, 1124, 30507);
 
 	@Test
-	void rewardRowIsTheSecondClientRow() throws Exception {
+	void rewardRowIsTheSecondClientRow() {
 		for (Contract contract : CONTRACTS) {
 			QuestDefinition definition = definition(contract.questId()).definition();
 			assertEquals(Map.of("var0", REWARD_ROW), node(definition, "reward").projection().variables(),
@@ -67,7 +66,7 @@ class RewardRowResidualTwoRowContractTest {
 	}
 
 	@Test
-	void rewardOwnerIsTheSecondRowNpc() throws Exception {
+	void rewardOwnerIsTheSecondRowNpc() {
 		/* 本批只收口行投影：行 1 NPC 必须是领奖 owner 之一，此时 2484 另有烽火对象 700267 与接取 NPC
 		   204407 的备用完成路径；批次 16 已按 legacy 归属把 owner 收敛到行 1 NPC（见
 		   RewardOwnerTrimContractTest 的唯一性断言）。 */
@@ -83,7 +82,7 @@ class RewardRowResidualTwoRowContractTest {
 	}
 
 	@Test
-	void rewardEntryRoutesKeepTheirRegisteredOwners() throws Exception {
+	void rewardEntryRoutesKeepTheirRegisteredOwners() {
 		/* 1123：批次 47 已按用户真机判定改判——本任务客户端脚本是 ProgressAll + sensoryArea，
 		   任务说明行 = 客户端自身进度 + 服务端 SECTION_0，因此领奖态必须保持 legacy 的 REWARD/var0=0
 		   （抬到 1 会让任务说明整块空白，见 Batch47ClientScriptedRewardRowContractTest）。
@@ -108,7 +107,7 @@ class RewardRowResidualTwoRowContractTest {
 		Set<Integer> reportNpcs = new LinkedHashSet<>();
 		for (QuestTransition transition : definition(2484).definition().transitions()) {
 			if ("started".equals(transition.sourceNode()) && "reward".equals(transition.targetNode())
-					&& transition.event() instanceof QuestEvent.TalkToNpc talk) {
+				&& transition.event() instanceof QuestEvent.TalkToNpc talk) {
 				reportNpcs.add(talk.npcId());
 			}
 		}
@@ -116,7 +115,7 @@ class RewardRowResidualTwoRowContractTest {
 	}
 
 	@Test
-	void staleRewardRowsAreHealedOnEnterWorld() throws Exception {
+	void staleRewardRowsAreHealedOnEnterWorld() {
 		for (Contract contract : CONTRACTS) {
 			CompiledQuestDefinition compiled = definition(contract.questId());
 			List<QuestTransition> matches = enterWorldRecoveries(compiled.definition()).stream()
@@ -154,7 +153,7 @@ class RewardRowResidualTwoRowContractTest {
 			for (QuestTransition route : rewardRoutes) {
 				for (QuestAction action : route.actions()) {
 					if (action instanceof QuestAction.SetVariable(String field, int value)
-							&& "var0".equals(field)) {
+						&& "var0".equals(field)) {
 						assertEquals(REWARD_ROW, value, () -> "quest " + contract.questId()
 							+ " reward route writes a non reward journal row");
 					}
@@ -164,7 +163,7 @@ class RewardRowResidualTwoRowContractTest {
 	}
 
 	@Test
-	void pernosRowKeyResolvesThroughTheMigratedFamily() throws Exception {
+	void pernosRowKeyResolvesThroughTheMigratedFamily() {
 		/* STR_DIC_LA12 不在客户端 NPC 名表里，只能靠“末行命名 + completion owner”交叉解键。 */
 		/* STR_DIC_LA12 is absent from the client NPC name table; the key is resolved by matching the
 		   journal row naming against the completion owner across the family. */
@@ -186,7 +185,7 @@ class RewardRowResidualTwoRowContractTest {
 		Set<Integer> owners = new LinkedHashSet<>();
 		for (QuestTransition transition : definition.transitions()) {
 			if ("reward".equals(transition.sourceNode()) && "complete".equals(transition.targetNode())
-					&& transition.event() instanceof QuestEvent.TalkToNpc talk) {
+				&& transition.event() instanceof QuestEvent.TalkToNpc talk) {
 				owners.add(talk.npcId());
 			}
 		}
@@ -214,7 +213,9 @@ class RewardRowResidualTwoRowContractTest {
 			true, true, 0, 0, 100000000, 1, 0f, 0f, 0f, (byte) 0);
 	}
 
-	/** reward→complete 路由的 NPC 集合（完成 owner）。 / NPCs of the completion routes. */
+	/**
+	 * reward→complete 路由的 NPC 集合（完成 owner）。 / NPCs of the completion routes.
+	 */
 	private static Set<Integer> completionOwners(QuestDefinition definition) {
 		Set<Integer> owners = new LinkedHashSet<>();
 		for (QuestTransition transition : definition.transitions()) {

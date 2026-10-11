@@ -46,7 +46,9 @@ import com.aionemu.gameserver.questEngine.retail.RetailItemNameIndex;
 class SimpleTalkNativeFamilyGateTest {
 
 	private static final int EXPECTED_ROWS = 3152;
-	/** XML_RETENTION 行数（`retail-xml-retention.xml` 中 SimpleTalk 家族的行数）。 / XML-retained SimpleTalk rows. */
+	/**
+	 * XML_RETENTION 行数（`retail-xml-retention.xml` 中 SimpleTalk 家族的行数）。 / XML-retained SimpleTalk rows.
+	 */
 	private static final int XML_RETAINED_ROWS = 18;
 	/**
 	 * 未解析的 NPC 名数量（P9 语义层收口后冻结）：3 个系统发放哨兵 + 1 个原版缺名
@@ -55,21 +57,31 @@ class SimpleTalkNativeFamilyGateTest {
 	 * single remaining retail data gap ({@code LDF5A_Munition_Vritra}).
 	 */
 	private static final int FROZEN_UNRESOLVED = 4;
-	/** 接取列未解析行数（= 三个哨兵的行数 98+75+8）。 / Rows whose acquire name stays unresolved. */
+	/**
+	 * 接取列未解析行数（= 三个哨兵的行数 98+75+8）。 / Rows whose acquire name stays unresolved.
+	 */
 	private static final int FROZEN_UNRESOLVED_ACQUIRE_ROWS = 181;
-	/** 交付列未解析行数（P9 收口后交付面全部可解析）。 / Rows whose reward name stays unresolved. */
+	/**
+	 * 交付列未解析行数（P9 收口后交付面全部可解析）。 / Rows whose reward name stays unresolved.
+	 */
 	private static final int FROZEN_UNRESOLVED_REWARD_ROWS = 0;
-	/** 系统发放哨兵的行数（接取列）。 / Row counts of the system-grant sentinels on the acquire column. */
+	/**
+	 * 系统发放哨兵的行数（接取列）。 / Row counts of the system-grant sentinels on the acquire column.
+	 */
 	private static final Map<String, Integer> FROZEN_SENTINEL_ROWS = Map.of(
-			"_faction_", 98, "_challengetask_", 75, "_area_", 8);
+		"_faction_", 98, "_challengetask_", 75, "_area_", 8);
 	/**
 	 * 接取可解析但交付不可解析的行数（原版表交付列落在 DATA_GAP 名上，属静态数据缺口而非分派缺陷）。
 	 * Rows with a resolvable acquire NPC but a gapped reward NPC: a static-data gap on the retail reward column.
 	 */
 	private static final int FROZEN_ACQUIRE_OK_REWARD_GAP_ROWS = 0;
-	/** 三段中继 + 三个发物 + item_check 的原版行。 / A three-relay retail row. */
+	/**
+	 * 三段中继 + 三个发物 + item_check 的原版行。 / A three-relay retail row.
+	 */
 	private static final int CHAINED_QUEST = 41536;
-	/** 单中继步 + 接取发放 + 步内发放/扣除的原版行（与 cab520/cabb10 立即数对拍）。 / Retail row 1131. */
+	/**
+	 * 单中继步 + 接取发放 + 步内发放/扣除的原版行（与 cab520/cabb10 立即数对拍）。 / Retail row 1131.
+	 */
 	private static final int ITEM_QUEST = 1131;
 	/**
 	 * 检查型报告行的代表行（routed ∩ 39 用户：select5 按钮 = 39、契约声明失败页 select6=2716）。
@@ -77,18 +89,16 @@ class SimpleTalkNativeFamilyGateTest {
 	 */
 	private static final int CHECK_BUTTON_QUEST = 1211;
 	/**
-	 * 未解析物品面冻结（`p3/simple-talk-unresolved-items.tsv`）：11 个交付门缺口 + 3 个部分缺口符号。
-	 * Frozen unresolved item face (evidence snapshot in `p3/simple-talk-unresolved-items.tsv`).
-	 */
-	/**
 	 * item_check 行里「门通道全缺」的行 = 原版不可接取行（quest.xml {@code client_level}/{@code minlevel_permitted}=999）。
 	 * 原版 {@code Quest::CanAcquireQuest} 对 {@code level < minlevel} 一律拒绝，故这些行的报告门在原版不可达；
 	 * native 侧按 fail-closed 处理（不可观测），并逐行冻结以察觉数据漂移。
 	 * The item_check rows with no gate channel at all: unreachable in the true server.
 	 */
 	private static final Set<Integer> UNREACHABLE_GATE_ROWS =
-			Set.of(2732, 30509, 41571, 50011, 50012, 51011, 51012);
-	/** item_check 且交付门成立的行数（原版表/quest.xml 全量复算）。 / Rows whose hand-in gate resolves. */
+		Set.of(2732, 30509, 41571, 50011, 50012, 51011, 51012);
+	/**
+	 * item_check 且交付门成立的行数（原版表/quest.xml 全量复算）。 / Rows whose hand-in gate resolves.
+	 */
 	private static final int GATE_ROWS = 1981;
 
 	private static SimpleTalkHandler handler;
@@ -100,7 +110,7 @@ class SimpleTalkNativeFamilyGateTest {
 		handler = SimpleTalkHandler.instance();
 		inventory = new FakeInventoryPort();
 		itemHandler = new SimpleTalkHandler(NativeQuestTableLoader.instance(), NativeNpcNameResolver.instance(),
-				RetailItemNameIndex.loadItemTemplates(), NativeQuestXmlTable.instance(), inventory);
+			RetailItemNameIndex.loadItemTemplates(), NativeQuestXmlTable.instance(), inventory);
 	}
 
 	@Test
@@ -109,11 +119,11 @@ class SimpleTalkNativeFamilyGateTest {
 		// 单一 owner：注册集 3152 = 路由集 3134 + XML_RETENTION 18（表行仍带 XML 定义者交给 XML 车道）。
 		// Single owner: registration set = routing set + the 18 XML_RETENTION rows.
 		assertEquals(EXPECTED_ROWS - XML_RETAINED_ROWS, handler.routedQuestIds().size(),
-				() -> "路由集必须 = 注册集 − XML 保留行，实际=" + handler.routedQuestIds().size());
+			() -> "路由集必须 = 注册集 − XML 保留行，实际=" + handler.routedQuestIds().size());
 		assertEquals(FROZEN_UNRESOLVED, handler.unresolvedNames().size(),
-				() -> "未解析名集合漂移，实际=" + handler.unresolvedNames());
+			() -> "未解析名集合漂移，实际=" + handler.unresolvedNames());
 		assertTrue(handler.unresolvedNames().containsAll(List.of("_area_", "_faction_", "_challengetask_")),
-				"系统发放哨兵必须在未解析面内 / system-grant sentinels must be present");
+			"系统发放哨兵必须在未解析面内 / system-grant sentinels must be present");
 
 		// 未解析面按行冻结：接取 207 行 / 交付 86 行，且哨兵行数逐名对拍（表侧实测）。
 		Map<String, Integer> acquireRows = new TreeMap<>();
@@ -134,18 +144,18 @@ class SimpleTalkNativeFamilyGateTest {
 			}
 		}
 		assertEquals(FROZEN_UNRESOLVED_ACQUIRE_ROWS, EXPECTED_ROWS - acquireResolved,
-				"接取列未解析行数漂移 / unresolved acquire rows drifted");
+			"接取列未解析行数漂移 / unresolved acquire rows drifted");
 		assertEquals(FROZEN_UNRESOLVED_REWARD_ROWS, EXPECTED_ROWS - rewardResolved,
-				"交付列未解析行数漂移 / unresolved reward rows drifted");
+			"交付列未解析行数漂移 / unresolved reward rows drifted");
 		for (Map.Entry<String, Integer> sentinel : FROZEN_SENTINEL_ROWS.entrySet()) {
 			assertEquals(sentinel.getValue(), acquireRows.get(sentinel.getKey()),
-					"哨兵行数漂移 / sentinel row count drifted: " + sentinel.getKey());
+				"哨兵行数漂移 / sentinel row count drifted: " + sentinel.getKey());
 		}
 		long gappedReward = handler.ownedQuestIds().stream()
-				.filter(qid -> handler.acquireNpc(qid) != null && handler.rewardNpc(qid) == null)
-				.count();
+			.filter(qid -> handler.acquireNpc(qid) != null && handler.rewardNpc(qid) == null)
+			.count();
 		assertEquals(FROZEN_ACQUIRE_OK_REWARD_GAP_ROWS, gappedReward,
-				"接取可解析但交付缺口的行数漂移 / rows with acquire ok but reward gapped drifted, actual=" + gappedReward);
+			"接取可解析但交付缺口的行数漂移 / rows with acquire ok but reward gapped drifted, actual=" + gappedReward);
 	}
 
 	@Test
@@ -194,7 +204,7 @@ class SimpleTalkNativeFamilyGateTest {
 		// 不可达行（等级 999 + 前置 Q41535 未完成）：31 不得进接取面（与清单三值同源）。
 		Player ineligible = createTestPlayer();
 		assertFalse(handler.onDialog(new QuestEnv(createMockNpc(handler.acquireNpc(CHAINED_QUEST)),
-				ineligible, CHAINED_QUEST, 31)), "等级轴不可达/前置未完成不得进接取面");
+			ineligible, CHAINED_QUEST, 31)), "等级轴不可达/前置未完成不得进接取面");
 	}
 
 	/**
@@ -220,7 +230,9 @@ class SimpleTalkNativeFamilyGateTest {
 			QuestDialogAction.USE_OBJECT.id())));
 	}
 
-	/** 接取落库：原版条件轴（等级/种族/职业/性别/重复）通过后由 native 状态端口建档到 START。 */
+	/**
+	 * 接取落库：原版条件轴（等级/种族/职业/性别/重复）通过后由 native 状态端口建档到 START。
+	 */
 	@Test
 	void acceptCommitCreatesTheRetailRow() {
 		Player player = createTestPlayer();
@@ -240,7 +252,7 @@ class SimpleTalkNativeFamilyGateTest {
 		state.setStatus(QuestStatus.COMPLETE);
 		state.setCompleteCount(1);
 		assertFalse(itemHandler.onDialog(new QuestEnv(acquire, player, ITEM_QUEST, 1002)),
-				"不可重复行完成后必须拒绝接取");
+			"不可重复行完成后必须拒绝接取");
 		assertEquals(QuestStatus.COMPLETE, state.getStatus(), "被拒时不得改写状态");
 	}
 
@@ -261,25 +273,25 @@ class SimpleTalkNativeFamilyGateTest {
 		Player viaConfirm = NativeTalkFixture.player();
 		inventory.clear();
 		assertTrue(itemHandler.onDialog(new QuestEnv(acquire, viaConfirm, ITEM_QUEST, 1002)),
-				"1002 接取必须落库");
+			"1002 接取必须落库");
 		NativeTalkFixture.assertOnlyDialogPage(viaConfirm, 1003);
 		assertEquals(List.of("give:" + acceptGive.itemId() + ":" + acceptGive.count()), inventory.calls,
-				"1002 须按 cab520 0x3ea 分支发放 give_item");
+			"1002 须按 cab520 0x3ea 分支发放 give_item");
 
 		// 20000（原版 0x4e20）：建档 + 发物 + 关窗页 0（契约无 1003 的任务收到页即 load fail）。
 		Player viaSimple = NativeTalkFixture.player();
 		inventory.clear();
 		assertTrue(itemHandler.onDialog(new QuestEnv(acquire, viaSimple, ITEM_QUEST, 20000)),
-				"20000 simple accept 必须落库");
+			"20000 simple accept 必须落库");
 		NativeTalkFixture.assertOnlyDialogPage(viaSimple, 0);
 		assertEquals(List.of("give:" + acceptGive.itemId() + ":" + acceptGive.count()), inventory.calls,
-				"20000 须按 cab520 0x4e20 分支发放 give_item");
+			"20000 须按 cab520 0x4e20 分支发放 give_item");
 
 		// 20001（原版 0x4e21）：拒绝收尾 = 关窗页 0（不回 1004 页）。
 		Player refuser = NativeTalkFixture.player();
 		NativeTalkFixture.clearPackets(refuser);
 		assertTrue(itemHandler.onDialog(new QuestEnv(acquire, refuser, ITEM_QUEST, 20001)),
-				"20001 = 拒绝收尾 = 关窗");
+			"20001 = 拒绝收尾 = 关窗");
 		NativeTalkFixture.assertOnlyDialogPage(refuser, 0);
 	}
 
@@ -349,7 +361,7 @@ class SimpleTalkNativeFamilyGateTest {
 		// 尚未轮到的步：零响应、零下发、零推进。
 		NativeTalkFixture.clearPackets(player);
 		assertFalse(itemHandler.onDialog(new QuestEnv(second, player, questId, 31)),
-				"未轮到的中继步不得服务 / an unreached relay step must not be served");
+			"未轮到的中继步不得服务 / an unreached relay step must not be served");
 		assertTrue(NativeTalkFixture.dialogPages(player).isEmpty(), "未轮到的步必须零下发");
 		assertEquals(0, state.getQuestVars().getQuestVars());
 
@@ -387,7 +399,7 @@ class SimpleTalkNativeFamilyGateTest {
 		Player player = NativeTalkFixture.player();
 		int questId = ITEM_QUEST;
 		player.getQuestStateList().addQuest(questId,
-				new QuestState(questId, QuestStatus.START, 0, 0, null, 0, null));
+			new QuestState(questId, QuestStatus.START, 0, 0, null, 0, null));
 		Npc relay = createMockNpc(resolve(itemHandler.requireRow(questId).talkNpcNames().getFirst()));
 
 		NativeTalkFixture.clearPackets(player);
@@ -398,21 +410,23 @@ class SimpleTalkNativeFamilyGateTest {
 		Player other = NativeTalkFixture.player();
 		int gapped = CHAINED_QUEST;
 		other.getQuestStateList().addQuest(gapped,
-				new QuestState(gapped, QuestStatus.START, 0, 0, null, 0, null));
-		Npc gappedRelay = createMockNpc(resolve(itemHandler.requireRow(gapped).talkNpcNames().get(0)));
+			new QuestState(gapped, QuestStatus.START, 0, 0, null, 0, null));
+		Npc gappedRelay = createMockNpc(resolve(itemHandler.requireRow(gapped).talkNpcNames().getFirst()));
 		NativeTalkFixture.clearPackets(other);
 		assertFalse(itemHandler.onDialog(new QuestEnv(gappedRelay, other, gapped, QuestDialogPage.SELECT2_1.id())),
-				"契约未声明的子页动作必须 fail-closed");
+			"契约未声明的子页动作必须 fail-closed");
 		assertTrue(NativeTalkFixture.dialogPages(other).isEmpty());
 	}
 
-	/** 物品面：原版 cab520/cabb10 的物品通道与 item_check 交付门（含冻结缺口）。 */
+	/**
+	 * 物品面：原版 cab520/cabb10 的物品通道与 item_check 交付门（含冻结缺口）。
+	 */
 	@Test
 	void itemFaceFollowsTheRetailChannels() {
 		// 原版符号面 100% 可解（2026-10-01 全量复算：SimpleTalk 表 give/remove 列 663 个符号全为
 		// ITEM_X 形；quest.xml collect/work 列 3394 个符号全为原名形，其中含 item_* 真名）→ 白名单归零。
 		assertTrue(handler.unresolvedItemSymbols().isEmpty(),
-				() -> "物品符号必须 100% 可解，实际未解=" + handler.unresolvedItemSymbols());
+			() -> "物品符号必须 100% 可解，实际未解=" + handler.unresolvedItemSymbols());
 
 		// 1131 ↔ cab520 立即数 182200506（接取发放）与 cabb10 立即数 182200507/182200506（步内发/扣）。
 		assertEquals(new SimpleTalkHandler.ItemStack(182200506, 1), handler.acceptGiveItem(ITEM_QUEST));
@@ -423,22 +437,24 @@ class SimpleTalkNativeFamilyGateTest {
 		// 41536 的交付门 = quest.xml collect_item1..3。
 		assertEquals(List.of(new SimpleTalkHandler.ItemStack(182212534, 1),
 				new SimpleTalkHandler.ItemStack(182212535, 1), new SimpleTalkHandler.ItemStack(182212536, 1)),
-				handler.workItems(CHAINED_QUEST));
+			handler.workItems(CHAINED_QUEST));
 
 		// 1988 个 item_check 行：1981 行交付门成立，7 行门通道全缺（原版不可接取行，见下条门禁）。
 		assertEquals(GATE_ROWS,
-				handler.ownedQuestIds().stream().filter(id -> !handler.workItems(id).isEmpty()).count());
+			handler.ownedQuestIds().stream().filter(id -> !handler.workItems(id).isEmpty()).count());
 		// 新解出的两个原版通道样本：16921 = collect_item1（item_idunderrune_quest_01 20）；
 		// 80669 = collect_item1..3（第三项 item_exp_extraction_65a 为带前缀的真名）。
 		assertEquals(List.of(new SimpleTalkHandler.ItemStack(186000256, 20)),
-				itemHandler.workItems(16921));
+			itemHandler.workItems(16921));
 		// 80669：collect_item1..3 = medal_07 1050 / junk_world_event_s4_quest_01a 1 / item_exp_extraction_65a 1。
 		assertEquals(List.of(new SimpleTalkHandler.ItemStack(186000469, 1050),
 				new SimpleTalkHandler.ItemStack(182007165, 1), new SimpleTalkHandler.ItemStack(169405376, 1)),
-				itemHandler.workItems(80669));
+			itemHandler.workItems(80669));
 	}
 
-	/** 门通道全缺的行 = 原版不可接取行；fail-closed 处理，且必须逐行冻结。 */
+	/**
+	 * 门通道全缺的行 = 原版不可接取行；fail-closed 处理，且必须逐行冻结。
+	 */
 	@Test
 	void gateLessRowsAreTheRetailUnreachableSet() {
 		Set<Integer> gateLess = new java.util.TreeSet<>();
@@ -451,11 +467,13 @@ class SimpleTalkNativeFamilyGateTest {
 		for (int questId : gateLess) {
 			var row = NativeQuestXmlTable.instance().find(questId).orElseThrow();
 			assertTrue("999".equals(row.text("client_level")) || "999".equals(row.text("minlevel_permitted")),
-					"门缺通道行必须原版不可接取（client_level/minlevel=999）: " + questId);
+				"门缺通道行必须原版不可接取（client_level/minlevel=999）: " + questId);
 		}
 	}
 
-	/** 中继步按原版顺序发放/扣除物品；交付门未持有则不放行。 */
+	/**
+	 * 中继步按原版顺序发放/扣除物品；交付门未持有则不放行。
+	 */
 	@Test
 	void stepItemsAndHandInGateFollowTheRetailOrder() {
 		int questId = ITEM_QUEST;
@@ -467,7 +485,7 @@ class SimpleTalkNativeFamilyGateTest {
 		inventory.calls.clear();
 		assertTrue(itemHandler.onDialog(new QuestEnv(relay, player, questId, 10000)));
 		assertEquals(List.of("give:182200507:1", "remove:182200506:1"), inventory.calls,
-				"步进发放/扣除非原版顺序 / step item order deviates from retail");
+			"步进发放/扣除非原版顺序 / step item order deviates from retail");
 
 		// 41536：中继全满但未持有交付门物品 → 不放行（页 10，状态仍 START）。
 		int gated = CHAINED_QUEST;
@@ -630,7 +648,9 @@ class SimpleTalkNativeFamilyGateTest {
 		}
 	}
 
-	/** 记录式假背包端口（族门用）。 / Recording fake inventory port for the family gate. */
+	/**
+	 * 记录式假背包端口（族门用）。 / Recording fake inventory port for the family gate.
+	 */
 	private static final class FakeInventoryPort implements NativeInventoryPort {
 		private final Map<Integer, Long> held = new LinkedHashMap<>();
 		private final List<String> calls = new ArrayList<>();
@@ -666,7 +686,7 @@ class SimpleTalkNativeFamilyGateTest {
 	private static int resolve(String npcName) {
 		NativeNpcNameResolver.Match match = NativeNpcNameResolver.instance().resolve(npcName);
 		assertEquals(NativeNpcNameResolver.Resolution.UNIQUE, match.resolution(), "NPC 名必须唯一解析: " + npcName);
-		return match.npcIds().get(0);
+		return match.npcIds().getFirst();
 	}
 
 	private static Player createTestPlayer() {
@@ -676,7 +696,7 @@ class SimpleTalkNativeFamilyGateTest {
 		pcd.setGender(Gender.MALE);
 		// setPlayerClass/setLevel 需要经验表就绪（单测无服务栈）⇒ 直接写字段；等级取原版 1131 的 minlevel 之上。
 		setField(pcd, PlayerCommonData.class, "playerClass",
-				com.aionemu.gameserver.model.PlayerClass.WARRIOR);
+			com.aionemu.gameserver.model.PlayerClass.WARRIOR);
 		setField(pcd, PlayerCommonData.class, "level", 20);
 		setField(player, Player.class, "playerCommonData", pcd);
 		player.setQuestStateList(new QuestStateList());
@@ -706,7 +726,7 @@ class SimpleTalkNativeFamilyGateTest {
 			templateId.set(template, npcId);
 
 			var objectTemplate = com.aionemu.gameserver.model.gameobjects.VisibleObject.class
-					.getDeclaredField("objectTemplate");
+				.getDeclaredField("objectTemplate");
 			objectTemplate.setAccessible(true);
 			objectTemplate.set(npc, template);
 		} catch (Exception e) {

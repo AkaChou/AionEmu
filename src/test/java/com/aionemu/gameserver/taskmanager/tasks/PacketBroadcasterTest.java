@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.taskmanager.tasks;
 
-import com.aionemu.gameserver.taskmanager.tasks.PacketBroadcaster;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.AfterEach;
 import com.aionemu.gameserver.lifecycle.TestServiceProviders;
@@ -77,7 +76,8 @@ class PacketBroadcasterTest {
 	private static final class TestCreature extends Creature {
 
 		private TestCreature() {
-			super(1, new CreatureController<>() {}, null, new TestVisibleObjectTemplate(), new WorldPosition(1));
+			super(1, new CreatureController<>() {
+			}, null, new TestVisibleObjectTemplate(), new WorldPosition(1));
 		}
 
 		@Override

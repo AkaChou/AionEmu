@@ -51,7 +51,7 @@ class SensoryAreaRideRowContractTest {
 			"DF6_SENSORY_AREA_Q25554_A_TO_H_220110000", "DF6_SENSORY_AREA_Q25554_H_TO_A_220110000"));
 
 	@Test
-	void everyJournalRowHasItsOwnStateAndFieldRoom() throws Exception {
+	void everyJournalRowHasItsOwnStateAndFieldRoom() {
 		for (Contract contract : CONTRACTS) {
 			QuestDefinition definition = definition(contract.questId()).definition();
 			assertEquals(0, row(definition, "started"),
@@ -72,7 +72,7 @@ class SensoryAreaRideRowContractTest {
 	}
 
 	@Test
-	void theAcquireNpcOwnsTheAcceptRoute() throws Exception {
+	void theAcquireNpcOwnsTheAcceptRoute() {
 		for (Contract contract : CONTRACTS) {
 			QuestDefinition definition = definition(contract.questId()).definition();
 			// 原版 acquire=Talk 轴权威： Aquaris 系 NPC 对话接取，感应区不再自动接取。
@@ -96,7 +96,7 @@ class SensoryAreaRideRowContractTest {
 	}
 
 	@Test
-	void sensorRowsAdvanceTheJournalRow() throws Exception {
+	void sensorRowsAdvanceTheJournalRow() {
 		for (Contract contract : CONTRACTS) {
 			QuestDefinition definition = definition(contract.questId()).definition();
 			// DD EA 边：无条件、SetVariable 推进、PACKET_ONLY 同步（区名经解析表落登记名）。
@@ -125,7 +125,7 @@ class SensoryAreaRideRowContractTest {
 	}
 
 	@Test
-	void theTwoRidesAdvanceAndThenCommitTheRewardRow() throws Exception {
+	void theTwoRidesAdvanceAndThenCommitTheRewardRow() {
 		for (Contract contract : CONTRACTS) {
 			CompiledQuestDefinition compiled = definition(contract.questId());
 			QuestTransition firstRide = route(compiled.definition(), "started", "s1",
@@ -151,7 +151,7 @@ class SensoryAreaRideRowContractTest {
 	}
 
 	@Test
-	void persistedRewardRowsAreRepairedOnEnterWorld() throws Exception {
+	void persistedRewardRowsAreRepairedOnEnterWorld() {
 		for (Contract contract : CONTRACTS) {
 			CompiledQuestDefinition compiled = definition(contract.questId());
 			// DD 期刊行自愈：REWARD 且 var0<2 的存档在进世界或重谈时回到领奖行 2。
@@ -203,7 +203,7 @@ class SensoryAreaRideRowContractTest {
 	}
 
 	@Test
-	void rewardNpcRoutesStayBoundToTheRewardWindow() throws Exception {
+	void rewardNpcRoutesStayBoundToTheRewardWindow() {
 		for (Contract contract : CONTRACTS) {
 			QuestDefinition definition = definition(contract.questId()).definition();
 			// 领奖态 QUEST_SELECT 重谈开奖励窗（DD 标准形；坐骑末段直达领奖后由 1009/确认完成）。
@@ -222,7 +222,7 @@ class SensoryAreaRideRowContractTest {
 	}
 
 	@Test
-	void mirrorPairsShareTheSameRowModel() throws Exception {
+	void mirrorPairsShareTheSameRowModel() {
 		for (Contract contract : CONTRACTS) {
 			if (contract.questId() >= 20000) {
 				continue;

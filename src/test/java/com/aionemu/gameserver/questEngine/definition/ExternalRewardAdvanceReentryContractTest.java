@@ -157,7 +157,7 @@ class ExternalRewardAdvanceReentryContractTest {
 	}
 
 	@Test
-	void representativeQuest10522KeepsTheClientVisibleRewardChain() throws Exception {
+	void representativeQuest10522KeepsTheClientVisibleRewardChain() {
 		QuestDefinition definition = definition(10522).definition();
 
 		// 客户端 quest_q10522.html 的 select_success(10002) 只有 HACTION_SELECT_QUEST_REWARD(1009)，

@@ -80,7 +80,7 @@ class SequentialItemCheckQuestFamilyTest {
 			action instanceof AfterCommitAction.SpawnNpc spawn
 				&& spawn.templateId() == 700417));
 		assertEquals(List.of(
-			douse.afterCommit().get(0),
+			douse.afterCommit().getFirst(),
 			new AfterCommitAction.SyncQuestState(
 				QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
 			new AfterCommitAction.CloseDialog()), douse.afterCommit());
@@ -142,10 +142,10 @@ class SequentialItemCheckQuestFamilyTest {
 	}
 
 	private static void assertChain(QuestDefinition definition, String source, String target,
-			int npcId, QuestDialogPage firstPage, QuestDialogAction pageAction,
-			QuestDialogPage secondPage,
-			QuestDialogAction advanceAction, List<QuestAction> actions,
-			List<QuestCondition> firstConditions) {
+									int npcId, QuestDialogPage firstPage, QuestDialogAction pageAction,
+									QuestDialogPage secondPage,
+									QuestDialogAction advanceAction, List<QuestAction> actions,
+									List<QuestCondition> firstConditions) {
 		assertTalk(definition, source, source, npcId,
 			QuestDialogAction.QUEST_SELECT, firstConditions, List.of(),
 			List.of(new AfterCommitAction.ShowQuestDialog(firstPage.id())));
@@ -159,7 +159,7 @@ class SequentialItemCheckQuestFamilyTest {
 	}
 
 	private static void assertCompletion(QuestDefinition definition, String source, int npcId,
-			QuestDialogPage rewardPage, int rewardGroup, int expectedGrantCount) {
+										 QuestDialogPage rewardPage, int rewardGroup, int expectedGrantCount) {
 		assertPage(definition, source, npcId,
 			QuestDialogAction.SELECT_QUEST_REWARD, rewardPage);
 		QuestTransition completion = talk(definition, source, npcId,
@@ -170,28 +170,28 @@ class SequentialItemCheckQuestFamilyTest {
 			.filter(QuestAction.GrantReward.class::isInstance)
 			.count());
 		assertEquals(List.of(
-			new AfterCommitAction.RefreshPlayerStats(),
-			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.COMPLETION),
-			new AfterCommitAction.ShowQuestSelectionDialog(QuestDialogPage.SELECT_QUEST.id())),
+				new AfterCommitAction.RefreshPlayerStats(),
+				new AfterCommitAction.SyncQuestState(QuestStateSyncMode.COMPLETION),
+				new AfterCommitAction.ShowQuestSelectionDialog(QuestDialogPage.SELECT_QUEST.id())),
 			completion.afterCommit());
 	}
 
 	private static void assertPage(QuestDefinition definition, String source, int npcId,
-			QuestDialogAction action, QuestDialogPage page) {
+								   QuestDialogAction action, QuestDialogPage page) {
 		assertTalk(definition, source, source, npcId, action, List.of(), List.of(),
 			List.of(new AfterCommitAction.ShowQuestDialog(page.id())), null);
 	}
 
 	private static void assertTalk(QuestDefinition definition, String source, String target,
-			int npcId, QuestDialogAction action, List<QuestCondition> conditions,
-			List<QuestAction> actions, List<AfterCommitAction> afterCommit) {
+								   int npcId, QuestDialogAction action, List<QuestCondition> conditions,
+								   List<QuestAction> actions, List<AfterCommitAction> afterCommit) {
 		assertTalk(definition, source, target, npcId, action, conditions, actions, afterCommit,
 			null);
 	}
 
 	private static void assertTalk(QuestDefinition definition, String source, String target,
-			int npcId, QuestDialogAction action, List<QuestCondition> conditions,
-			List<QuestAction> actions, List<AfterCommitAction> afterCommit, Integer priority) {
+								   int npcId, QuestDialogAction action, List<QuestCondition> conditions,
+								   List<QuestAction> actions, List<AfterCommitAction> afterCommit, Integer priority) {
 		QuestTransition transition = talk(definition, source, npcId, action, conditions);
 		assertEquals(target, transition.targetNode());
 		assertEquals(conditions, transition.conditions());
@@ -203,7 +203,7 @@ class SequentialItemCheckQuestFamilyTest {
 	}
 
 	private static QuestTransition talk(QuestDefinition definition, String source, int npcId,
-			QuestDialogAction action, List<QuestCondition> conditions) {
+										QuestDialogAction action, List<QuestCondition> conditions) {
 		QuestEvent.TalkToNpc event = new QuestEvent.TalkToNpc(npcId, action.id());
 		return definition.transitions().stream()
 			.filter(candidate -> Objects.equals(candidate.sourceNode(), source))
@@ -215,7 +215,7 @@ class SequentialItemCheckQuestFamilyTest {
 	}
 
 	private static void assertNode(QuestDefinition definition, String label,
-			QuestStatus status, int var0) {
+								   QuestStatus status, int var0) {
 		QuestNode node = definition.nodes().stream()
 			.filter(candidate -> candidate.label().equals(label))
 			.findFirst()
@@ -226,7 +226,7 @@ class SequentialItemCheckQuestFamilyTest {
 
 	private static QuestDefinition definition(int questId) throws Exception {
 		try (InputStream input = SequentialItemCheckQuestFamilyTest.class.getResourceAsStream(
-				"/aion/data/static_data/quest/definitions/quests/" + questId + ".xml")) {
+			"/aion/data/static_data/quest/definitions/quests/" + questId + ".xml")) {
 			if (input == null) {
 				throw new IllegalStateException("missing quest definition " + questId + ".xml");
 			}

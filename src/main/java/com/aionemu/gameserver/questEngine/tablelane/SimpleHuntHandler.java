@@ -38,15 +38,21 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
  */
 public final class SimpleHuntHandler implements NativeSystemGrantLane {
 
-	/** 狩猎目标槽位引用：任务 ID + 槽位 (1..5)。 / Hunt target reference: quest id + slot. */
+	/**
+	 * 狩猎目标槽位引用：任务 ID + 槽位 (1..5)。 / Hunt target reference: quest id + slot.
+	 */
 	public record HuntTargetRef(int questId, int slot) {
 	}
 
-	/** 过场引用：movie id + 触发动作 id（{@code cs1_haction}；-1 = 表未声明触发）。 */
+	/**
+	 * 过场引用：movie id + 触发动作 id（{@code cs1_haction}；-1 = 表未声明触发）。
+	 */
 	public record Cutscene(int movieId, int triggerAction) {
 	}
 
-	/** 获取拥有的任务数量。 / Returns managed quest count. */
+	/**
+	 * 获取拥有的任务数量。 / Returns managed quest count.
+	 */
 	public int ownedQuestCount() {
 		return ownedQuestIds.size();
 	}
@@ -57,46 +63,68 @@ public final class SimpleHuntHandler implements NativeSystemGrantLane {
 	private final CameraRegistry cameraRegistry;
 	private final NativeNpcNameResolver nameResolver;
 	private final HtmlPagesRegistry pagesRegistry;
-	/** 过场出口（原版交付节点 0x35 槽 PlayMovie）。 / The cutscene exit (retail hand-in slot 0x35). */
+	/**
+	 * 过场出口（原版交付节点 0x35 槽 PlayMovie）。 / The cutscene exit (retail hand-in slot 0x35).
+	 */
 	private final NativeMoviePort moviePort;
 
-	/** NPC ID → 监听该怪物的任务槽位集合。 / NPC ID → listening quest slots. */
+	/**
+	 * NPC ID → 监听该怪物的任务槽位集合。 / NPC ID → listening quest slots.
+	 */
 	private final Map<Integer, List<HuntTargetRef>> targetsByNpcId;
-	/** 任务 ID → 接取 NPC ID。 / Quest ID → acquire NPC ID. */
-	/** 接取 NPC 成员集（任一成员可接取）。 / Acquire NPC member set. */
+	/**
+	 * 接取 NPC 成员集（任一成员可接取）。 / Acquire NPC member set.
+	 */
 	private final Map<Integer, List<Integer>> acquireNpcIdsByQuestId;
-	/** 任务 ID → 交付 NPC ID。 / Quest ID → reward NPC ID. */
-	/** 交付 NPC 成员集（任一成员可交付）。 / Reward NPC member set. */
+	/**
+	 * 交付 NPC 成员集（任一成员可交付）。 / Reward NPC member set.
+	 */
 	private final Map<Integer, List<Integer>> rewardNpcIdsByQuestId;
-	/** 本处理器拥有的原版任务 ID 集合。 / Managed retail quest IDs. */
+	/**
+	 * 本处理器拥有的原版任务 ID 集合。 / Managed retail quest IDs.
+	 */
 	private final Set<Integer> ownedQuestIds;
-	/** 路由集 = 注册集 − XML-only 行（单一 owner 不变量）。 / Routing set = registration set minus XML-owned rows. */
+	/**
+	 * 路由集 = 注册集 − XML-only 行（单一 owner 不变量）。 / Routing set = registration set minus XML-owned rows.
+	 */
 	private final Set<Integer> routedQuestIds;
 
-	/** 任务 ID → 链式接取窗的下一环（原版交付节点 0x1e 槽的 {@code con_quest}）。 / Quest id → the next quest of the chain window. */
+	/**
+	 * 任务 ID → 链式接取窗的下一环（原版交付节点 0x1e 槽的 {@code con_quest}）。 / Quest id → the next quest of the chain window.
+	 */
 	private final Map<Integer, Integer> conQuestByQuestId;
-	/** 链式接取窗未闭环的行（fail-closed 证据面）。 / Rows whose chain window is not realized. */
+	/**
+	 * 链式接取窗未闭环的行（fail-closed 证据面）。 / Rows whose chain window is not realized.
+	 */
 	private final Set<Integer> unresolvedChainQuestIds;
-	/** 任务 ID → 过场引用（表 {@code cutsceneid1}/{@code cs1_haction}）。 / Quest id → cutscene reference. */
+	/**
+	 * 任务 ID → 过场引用（表 {@code cutsceneid1}/{@code cs1_haction}）。 / Quest id → cutscene reference.
+	 */
 	private final Map<Integer, Cutscene> cutsceneByQuestId;
 
-	/** 完成/领奖口（计划 §6.2 NativeReportRewardFlow 完成半边）。 / The native completion/reward port. */
+	/**
+	 * 完成/领奖口（计划 §6.2 NativeReportRewardFlow 完成半边）。 / The native completion/reward port.
+	 */
 	private final NativeReportRewardFlow rewardFlow;
 
-	/** 任务 ID → 接取名类别（原版哨兵 = 系统发放）。 / Quest id → acquire-name category. */
+	/**
+	 * 任务 ID → 接取名类别（原版哨兵 = 系统发放）。 / Quest id → acquire-name category.
+	 */
 	private final Map<Integer, RetailGrantKind> grantKindByQuestId;
-	/** 任务 ID → 原版势力 id（quest.xml {@code npcfaction_name}）。 / Quest id → retail faction id. */
+	/**
+	 * 任务 ID → 原版势力 id（quest.xml {@code npcfaction_name}）。 / Quest id → retail faction id.
+	 */
 	private final Map<Integer, Integer> factionIdByQuestId;
 
 	private SimpleHuntHandler(NativeQuestTableLoader tableLoader, CameraRegistry cameraRegistry,
-			NativeNpcNameResolver nameResolver, HtmlPagesRegistry pagesRegistry, Set<Integer> xmlOnlyIds) {
+							  NativeNpcNameResolver nameResolver, HtmlPagesRegistry pagesRegistry, Set<Integer> xmlOnlyIds) {
 		this(tableLoader, cameraRegistry, nameResolver, pagesRegistry, xmlOnlyIds,
-				NativeMoviePort.live(), NativeReportRewardFlow.instance());
+			NativeMoviePort.live(), NativeReportRewardFlow.instance());
 	}
 
 	SimpleHuntHandler(NativeQuestTableLoader tableLoader, CameraRegistry cameraRegistry,
-			NativeNpcNameResolver nameResolver, HtmlPagesRegistry pagesRegistry, Set<Integer> xmlOnlyIds,
-			NativeMoviePort moviePort, NativeReportRewardFlow rewardFlow) {
+					  NativeNpcNameResolver nameResolver, HtmlPagesRegistry pagesRegistry, Set<Integer> xmlOnlyIds,
+					  NativeMoviePort moviePort, NativeReportRewardFlow rewardFlow) {
 		this.tableLoader = tableLoader;
 		this.cameraRegistry = cameraRegistry;
 		this.nameResolver = nameResolver;
@@ -128,7 +156,7 @@ public final class SimpleHuntHandler implements NativeSystemGrantLane {
 			// the system grant; the retail host path is family-agnostic, §10.3-#25 adjudication).
 			grantKinds.put(qid, RetailGrantKind.of(row.acquiredNpcName()));
 			int factionId = NativeNpcFactionNames.idOf(
-					NativeQuestXmlTable.instance().find(qid).map(meta -> meta.text("npcfaction_name")).orElse(""));
+				NativeQuestXmlTable.instance().find(qid).map(meta -> meta.text("npcfaction_name")).orElse(""));
 			if (factionId != 0) {
 				factions.put(qid, factionId);
 			}
@@ -154,7 +182,7 @@ public final class SimpleHuntHandler implements NativeSystemGrantLane {
 					List<Integer> candidateNpcIds = nameResolver.resolveMonsterIds(monsterName);
 					for (int npcId : candidateNpcIds) {
 						targets.computeIfAbsent(npcId, k -> new ArrayList<>())
-								.add(new HuntTargetRef(qid, slot));
+							.add(new HuntTargetRef(qid, slot));
 					}
 				}
 			}
@@ -167,7 +195,7 @@ public final class SimpleHuntHandler implements NativeSystemGrantLane {
 			}
 			if (row.cutsceneId() != null) {
 				cutscenes.put(qid, new Cutscene(row.cutsceneId(),
-						row.cutsceneAction() == null ? -1 : row.cutsceneAction()));
+					row.cutsceneAction() == null ? -1 : row.cutsceneAction()));
 			}
 		}
 
@@ -183,7 +211,7 @@ public final class SimpleHuntHandler implements NativeSystemGrantLane {
 			List<Integer> targetAcquires = acquires.get(next);
 			List<Integer> sourceRewards = rewards.get(questId);
 			if (routed.contains(next) && targetAcquires != null
-					&& (sourceRewards == null || Collections.disjoint(targetAcquires, sourceRewards))) {
+				&& (sourceRewards == null || Collections.disjoint(targetAcquires, sourceRewards))) {
 				unresolvedChain.add(questId);
 			}
 		}
@@ -207,10 +235,10 @@ public final class SimpleHuntHandler implements NativeSystemGrantLane {
 				local = instance;
 				if (local == null) {
 					local = new SimpleHuntHandler(NativeQuestTableLoader.instance(),
-							CameraRegistry.instance(),
-							NativeNpcNameResolver.instance(),
-							HtmlPagesRegistry.instance(),
-							NativeQuestOwnerResolver.instance().xmlOnlyIds());
+						CameraRegistry.instance(),
+						NativeNpcNameResolver.instance(),
+						HtmlPagesRegistry.instance(),
+						NativeQuestOwnerResolver.instance().xmlOnlyIds());
 					instance = local;
 				}
 			}
@@ -218,7 +246,9 @@ public final class SimpleHuntHandler implements NativeSystemGrantLane {
 		return local;
 	}
 
-	/** 判断是否拥有该任务。 / Checks if this handler manages the quest. */
+	/**
+	 * 判断是否拥有该任务。 / Checks if this handler manages the quest.
+	 */
 	public boolean owns(int questId) {
 		return ownedQuestIds.contains(questId);
 	}
@@ -233,34 +263,46 @@ public final class SimpleHuntHandler implements NativeSystemGrantLane {
 		return routedQuestIds.contains(questId);
 	}
 
-	/** 路由集（不变量：与 XML-only 集交集为空）。 / The routing set (disjoint from the XML-owned set). */
+	/**
+	 * 路由集（不变量：与 XML-only 集交集为空）。 / The routing set (disjoint from the XML-owned set).
+	 */
 	public Set<Integer> routedQuestIds() {
 		return routedQuestIds;
 	}
 
-	/** 获取拥有的任务 ID 集合。 / Returns managed quest IDs. */
+	/**
+	 * 获取拥有的任务 ID 集合。 / Returns managed quest IDs.
+	 */
 	public Set<Integer> ownedQuestIds() {
 		return ownedQuestIds;
 	}
 
-	/** 获取任务起始 NPC ID（成员集首项；未解析为 null）。 / Returns the acquire NPC ID for the quest. */
+	/**
+	 * 获取任务起始 NPC ID（成员集首项；未解析为 null）。 / Returns the acquire NPC ID for the quest.
+	 */
 	public Integer acquireNpc(int questId) {
 		List<Integer> members = acquireNpcIdsByQuestId.get(questId);
 		return members == null || members.isEmpty() ? null : members.getFirst();
 	}
 
-	/** 接取 NPC 成员集（空表 = 未解析）。 / The acquire NPC member set. */
+	/**
+	 * 接取 NPC 成员集（空表 = 未解析）。 / The acquire NPC member set.
+	 */
 	public List<Integer> acquireNpcs(int questId) {
 		return acquireNpcIdsByQuestId.getOrDefault(questId, List.of());
 	}
 
-	/** 获取任务交付 NPC ID（成员集首项；未解析为 null）。 / Returns the reward NPC ID for the quest. */
+	/**
+	 * 获取任务交付 NPC ID（成员集首项；未解析为 null）。 / Returns the reward NPC ID for the quest.
+	 */
 	public Integer rewardNpc(int questId) {
 		List<Integer> members = rewardNpcIdsByQuestId.get(questId);
 		return members == null || members.isEmpty() ? null : members.getFirst();
 	}
 
-	/** 交付 NPC 成员集（空表 = 未解析）。 / The reward NPC member set. */
+	/**
+	 * 交付 NPC 成员集（空表 = 未解析）。 / The reward NPC member set.
+	 */
 	public List<Integer> rewardNpcs(int questId) {
 		return rewardNpcIdsByQuestId.getOrDefault(questId, List.of());
 	}
@@ -277,12 +319,16 @@ public final class SimpleHuntHandler implements NativeSystemGrantLane {
 		return conQuestByQuestId.get(questId);
 	}
 
-	/** 链式接取窗未闭环的行（fail-closed 证据面）。 / Rows whose chain window is not realized. */
+	/**
+	 * 链式接取窗未闭环的行（fail-closed 证据面）。 / Rows whose chain window is not realized.
+	 */
 	public Set<Integer> unresolvedChainQuestIds() {
 		return unresolvedChainQuestIds;
 	}
 
-	/** 过场引用（表未声明返回 null）。 / The cutscene reference (null when the row declares none). */
+	/**
+	 * 过场引用（表未声明返回 null）。 / The cutscene reference (null when the row declares none).
+	 */
 	public Cutscene cutscene(int questId) {
 		return cutsceneByQuestId.get(questId);
 	}
@@ -307,20 +353,24 @@ public final class SimpleHuntHandler implements NativeSystemGrantLane {
 		return routes(questId) && kind != RetailGrantKind.NPC && kind.grantable();
 	}
 
-	/** 原版势力 id（quest.xml {@code npcfaction_name}；无则 0）。 / The retail faction id, or 0. */
+	/**
+	 * 原版势力 id（quest.xml {@code npcfaction_name}；无则 0）。 / The retail faction id, or 0.
+	 */
 	@Override
 	public int factionId(int questId) {
 		return factionIdByQuestId.getOrDefault(questId, 0);
 	}
 
-	/** 指定势力当前可轮换的已路由任务 id（哨兵 = FACTION 行）。 / Faction-rotation candidates. */
+	/**
+	 * 指定势力当前可轮换的已路由任务 id（哨兵 = FACTION 行）。 / Faction-rotation candidates.
+	 */
 	@Override
 	public Set<Integer> factionRotationCandidates(int factionId) {
 		Set<Integer> candidates = new TreeSet<>();
 		for (Map.Entry<Integer, Integer> entry : factionIdByQuestId.entrySet()) {
 			int questId = entry.getKey();
 			if (entry.getValue() == factionId && routes(questId)
-					&& grantKind(questId) == RetailGrantKind.FACTION) {
+				&& grantKind(questId) == RetailGrantKind.FACTION) {
 				candidates.add(questId);
 			}
 		}
@@ -345,11 +395,13 @@ public final class SimpleHuntHandler implements NativeSystemGrantLane {
 		return NativeQuestStartPort.instance().grant(player, questId).started();
 	}
 
-	/** 阵营日常轮换资格（原版 quest.xml 轴直读，判据抽到 NativeFactionRotation 共用）。 / Rotation eligibility. */
+	/**
+	 * 阵营日常轮换资格（原版 quest.xml 轴直读，判据抽到 NativeFactionRotation 共用）。 / Rotation eligibility.
+	 */
 	@Override
 	public boolean factionRotationEligible(Player player, int questId, int factionId) {
 		return NativeFactionRotation.eligible(player, questId, factionId, isSystemGranted(questId),
-				NativeFactionRotation.factionKind(grantKind(questId)), factionId(questId));
+			NativeFactionRotation.factionKind(grantKind(questId)), factionId(questId));
 	}
 
 	/**
@@ -445,7 +497,7 @@ public final class SimpleHuntHandler implements NativeSystemGrantLane {
 
 			// 相机推进一步：三守卫检查 + 槽位加 1 + 满值推进检测
 			ProgressCamera.Result result = ProgressCamera.advance(
-					ProgressCamera.Status.START, currentVars, row, ref.slot(), true);
+				ProgressCamera.Status.START, currentVars, row, ref.slot(), true);
 
 			if (result.outcome() == ProgressCamera.Outcome.NO_ACTION) {
 				// 超杀或未达守卫条件：原版规范零动作
@@ -460,7 +512,7 @@ public final class SimpleHuntHandler implements NativeSystemGrantLane {
 
 			qs.setPersistentState(PersistentState.UPDATE_REQUIRED);
 			PacketSendUtility.sendPacket(player,
-					new SM_QUEST_ACTION(ref.questId(), qs.getStatus(), qs.getQuestVars().getQuestVars()));
+				new SM_QUEST_ACTION(ref.questId(), qs.getStatus(), qs.getQuestVars().getQuestVars()));
 			handled = true;
 		}
 
@@ -532,7 +584,7 @@ public final class SimpleHuntHandler implements NativeSystemGrantLane {
 					// 接取入口页 = 原版信页/阶段页（页 4 只能由 1007 打开，见 QuestDialogContract#retailEntryPage）。
 					// The accept entry page is the retail letter/stage page (page 4 is 1007-only).
 					PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId,
-							QuestDialogContract.loadDefault().retailEntryPage(questId), questId));
+						QuestDialogContract.loadDefault().retailEntryPage(questId), questId));
 					return true;
 				} else if (dialogId == QuestDialogAction.ASK_QUEST_ACCEPT.id()) {
 					// 原版页动作 1007（ASK_QUEST_ACCEPT → mgr+0x1a0）：打开接取窗页 4；客户端未声明即 fail-closed。
@@ -544,7 +596,7 @@ public final class SimpleHuntHandler implements NativeSystemGrantLane {
 					PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, askWindow, questId));
 					return true;
 				} else if (dialogId == QuestDialogPage.SELECT1_1.id()
-						|| dialogId == QuestDialogPage.SELECT1_1_1.id()) {
+					|| dialogId == QuestDialogPage.SELECT1_1_1.id()) {
 					// select1 首屏翻页（原版 cab520 原样回发）；客户端未声明该页即 fail-closed。
 					// select1 page turns (cab520 echoes them); undeclared pages fail closed.
 					if (!QuestDialogContract.loadDefault().hasButtonPage(questId, dialogId)) {
@@ -604,8 +656,8 @@ public final class SimpleHuntHandler implements NativeSystemGrantLane {
 					PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 5, questId));
 					return true;
 				} else if ((dialogId >= 8 && dialogId <= 22)
-						|| dialogId == QuestDialogAction.SELECTED_QUEST_NOREWARD.id()
-						|| dialogId == 108 || (dialogId >= 110 && dialogId <= 124)) {
+					|| dialogId == QuestDialogAction.SELECTED_QUEST_NOREWARD.id()
+					|| dialogId == 108 || (dialogId >= 110 && dialogId <= 124)) {
 					// 选项段只有 SELECTED_QUEST_REWARD1..15（8..22）；23 = NOREWARD 无选择确认，
 					// 不占选项下标——发放由结算体按 dialogId==23 + extendedRewardIndex 决定。
 					// Only SELECTED_QUEST_REWARD1..15 (8..22) index options; 23 is the no-selection
@@ -636,7 +688,9 @@ public final class SimpleHuntHandler implements NativeSystemGrantLane {
 		return false;
 	}
 
-	/** 原版 {@code max_repeat_count} > 1 ⇒ 可重复（COMPLETE 态可再次开窗）。 / Repeatable per retail max_repeat_count. */
+	/**
+	 * 原版 {@code max_repeat_count} > 1 ⇒ 可重复（COMPLETE 态可再次开窗）。 / Repeatable per retail max_repeat_count.
+	 */
 	private boolean repeatable(int questId) {
 		NativeQuestXmlTable.QuestRow row = NativeQuestXmlTable.instance().find(questId).orElse(null);
 		Integer maxRepeat = row == null ? null : row.integer("max_repeat_count");

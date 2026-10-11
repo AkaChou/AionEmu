@@ -20,7 +20,6 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class QuestDraupnirNpcVariantContractTest {
@@ -152,7 +151,7 @@ class QuestDraupnirNpcVariantContractTest {
 	}
 
 	private static void assertEquivalentKillPlans(CompiledQuestDefinition definition,
-			QuestTransition baseRoute, QuestTransition variantRoute, NpcVariant variant) {
+												  QuestTransition baseRoute, QuestTransition variantRoute, NpcVariant variant) {
 		QuestMutationPlan basePlan = plan(definition, baseRoute, variant.baseNpcId());
 		QuestMutationPlan variantPlan = plan(definition, variantRoute, variant.liveNpcId());
 		assertEquals(basePlan.nextStatus(), variantPlan.nextStatus(), () -> "status mismatch for quest "
@@ -167,7 +166,7 @@ class QuestDraupnirNpcVariantContractTest {
 	}
 
 	private static QuestMutationPlan plan(CompiledQuestDefinition definition,
-			QuestTransition transition, int npcId) {
+										  QuestTransition transition, int npcId) {
 		QuestNode source = node(definition, transition.sourceNode());
 		QuestSnapshot snapshot = new QuestSnapshot(1, definition.id(), source.projection().status(),
 			definition.definition().progressLayout().pack(source.projection().variables()), Map.of());

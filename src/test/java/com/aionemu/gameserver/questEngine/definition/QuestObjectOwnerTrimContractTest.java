@@ -13,6 +13,7 @@ import java.util.Set;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 /**
  * 物件 owner 同型批次（2026-10-08，QE-052 机型变体；代表先例 3036）：
@@ -51,7 +52,7 @@ class QuestObjectOwnerTrimContractTest {
 	 * authoritative reward-axis value.
 	 */
 	private record TrimCase(int questId, Set<Integer> objects, Set<Integer> completionOwners,
-			int rewardVar0) {
+							int rewardVar0) {
 	}
 
 	private static final List<TrimCase> CASES = List.of(
@@ -66,18 +67,20 @@ class QuestObjectOwnerTrimContractTest {
 		new TrimCase(30213, Set.of(730275), Set.of(798926, 798941), 0),
 		new TrimCase(30311, Set.of(730275), Set.of(799322), 0));
 
-	/** 物件不得成为领奖 owner：reward→complete 的路由集合必须与物件不相交。 */
+	/**
+	 * 物件不得成为领奖 owner：reward→complete 的路由集合必须与物件不相交。
+	 */
 	@Test
 	void objectsAreNeverCompletionOwners() throws Exception {
 		for (TrimCase trim : CASES) {
 			QuestDefinition definition = definition(trim.questId()).definition();
 			for (QuestTransition transition : definition.transitions()) {
 				if (!"reward".equals(transition.sourceNode())
-						|| !"complete".equals(transition.targetNode())
-						|| !(transition.event() instanceof QuestEvent.TalkToNpc talk)) {
+					|| !"complete".equals(transition.targetNode())
+					|| !(transition.event() instanceof QuestEvent.TalkToNpc talk)) {
 					continue;
 				}
-				assertTrue(!trim.objects().contains(talk.npcId()),
+				assertFalse(trim.objects().contains(talk.npcId()),
 					() -> "quest " + trim.questId() + " object " + talk.npcId()
 						+ " must not own completion (SELECT_QUEST tail page 10 resolves the object's own"
 						+ " html name, which does not exist -> client load fail)");
@@ -85,14 +88,16 @@ class QuestObjectOwnerTrimContractTest {
 		}
 	}
 
-	/** 物件零回页：以物件为目标的任何迁移都不得带发页 after-commit（含收尾页 10 与奖励窗）。 */
+	/**
+	 * 物件零回页：以物件为目标的任何迁移都不得带发页 after-commit（含收尾页 10 与奖励窗）。
+	 */
 	@Test
 	void objectsAreNeverPageTargets() throws Exception {
 		for (TrimCase trim : CASES) {
 			QuestDefinition definition = definition(trim.questId()).definition();
 			for (QuestTransition transition : definition.transitions()) {
 				if (!(transition.event() instanceof QuestEvent.TalkToNpc talk)
-						|| !trim.objects().contains(talk.npcId())) {
+					|| !trim.objects().contains(talk.npcId())) {
 					continue;
 				}
 				for (AfterCommitAction afterCommit : transition.afterCommit()) {
@@ -107,7 +112,9 @@ class QuestObjectOwnerTrimContractTest {
 		}
 	}
 
-	/** 领奖 owner 唯一 = 任务书领奖行 NPC，且收尾页 10 落在该 NPC 自己的 html 上。 */
+	/**
+	 * 领奖 owner 唯一 = 任务书领奖行 NPC，且收尾页 10 落在该 NPC 自己的 html 上。
+	 */
 	@Test
 	void completionOwnersAreTheJournalRewardRowNpc() throws Exception {
 		for (TrimCase trim : CASES) {
@@ -115,15 +122,15 @@ class QuestObjectOwnerTrimContractTest {
 			Set<Integer> owners = new LinkedHashSet<>();
 			for (QuestTransition transition : definition.transitions()) {
 				if (!"reward".equals(transition.sourceNode())
-						|| !"complete".equals(transition.targetNode())
-						|| !(transition.event() instanceof QuestEvent.TalkToNpc talk)) {
+					|| !"complete".equals(transition.targetNode())
+					|| !(transition.event() instanceof QuestEvent.TalkToNpc talk)) {
 					continue;
 				}
 				owners.add(talk.npcId());
 				assertEquals(List.of(
-					new AfterCommitAction.RefreshPlayerStats(),
-					new AfterCommitAction.SyncQuestState(QuestStateSyncMode.COMPLETION),
-					new AfterCommitAction.ShowQuestSelectionDialog(QuestDialogPage.SELECT_QUEST.id())),
+						new AfterCommitAction.RefreshPlayerStats(),
+						new AfterCommitAction.SyncQuestState(QuestStateSyncMode.COMPLETION),
+						new AfterCommitAction.ShowQuestSelectionDialog(QuestDialogPage.SELECT_QUEST.id())),
 					transition.afterCommit(),
 					() -> "quest " + trim.questId() + " completion tail must be the selection page");
 			}
@@ -132,7 +139,9 @@ class QuestObjectOwnerTrimContractTest {
 		}
 	}
 
-	/** 领奖态步号轴 = 落盘值（QE-054 legacy 值；QE-046 引擎外写入方值与基线 TSV 对齐，不按行号机械抬升）。 */
+	/**
+	 * 领奖态步号轴 = 落盘值（QE-054 legacy 值；QE-046 引擎外写入方值与基线 TSV 对齐，不按行号机械抬升）。
+	 */
 	@Test
 	void rewardProjectionMatchesTheLegacyPersistedValue() throws Exception {
 		for (TrimCase trim : CASES) {
@@ -145,7 +154,9 @@ class QuestObjectOwnerTrimContractTest {
 		}
 	}
 
-	/** 物件推进边存在且零回页：每个物件的 USE_OBJECT 迁移至少一条（纯采集掉落 / AI 接管对话的任务无路由）。 */
+	/**
+	 * 物件推进边存在且零回页：每个物件的 USE_OBJECT 迁移至少一条（纯采集掉落 / AI 接管对话的任务无路由）。
+	 */
 	@Test
 	void objectRoutesAreOutgoingTalkRoutesOnly() throws Exception {
 		// 纯采集掉落（无推进边）与对话整体由 AI 接管（riftorb AI）的任务：XML 里不得留物件路由。
@@ -163,7 +174,7 @@ class QuestObjectOwnerTrimContractTest {
 						+ ": the object keeps no XML dialog routes (collection drop / AI-owned dialog)");
 				continue;
 			}
-			assertTrue(!objectRoutes.isEmpty(),
+			assertFalse(objectRoutes.isEmpty(),
 				() -> "quest " + trim.questId() + " keeps the object advance route");
 			for (QuestTransition route : objectRoutes) {
 				QuestEvent.TalkToNpc talk = (QuestEvent.TalkToNpc) route.event();

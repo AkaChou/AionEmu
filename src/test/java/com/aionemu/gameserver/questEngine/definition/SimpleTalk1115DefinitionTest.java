@@ -23,7 +23,9 @@ import static com.aionemu.gameserver.questEngine.definition.QuestDsl.vars;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-/** Vertical fixture for the true-server SimpleTalk entry 1115. */
+/**
+ * Vertical fixture for the true-server SimpleTalk entry 1115.
+ */
 class SimpleTalk1115DefinitionTest {
 	@Test
 	void trueServerSimpleTalkXmlAndDslCompileToTheSameDefinition() throws Exception {
@@ -46,7 +48,7 @@ class SimpleTalk1115DefinitionTest {
 		var acquisition = QuestMutationPlanner.plan(definition,
 			new QuestSnapshot(7, 1115, QuestStatus.NONE, 0, Map.of())
 				.withStartEligibility(QuestStartEligibility.allowed()),
-			talkToNpc(203075), definition.definition().transitions().get(0));
+			talkToNpc(203075), definition.definition().transitions().getFirst());
 		assertTrue(acquisition.isPresent());
 		assertEquals(QuestStatus.START, acquisition.orElseThrow().nextStatus());
 		assertEquals(0, acquisition.orElseThrow().nextPackedVariables());

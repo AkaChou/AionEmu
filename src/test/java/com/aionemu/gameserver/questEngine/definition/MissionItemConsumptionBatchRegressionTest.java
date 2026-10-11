@@ -172,7 +172,7 @@ class MissionItemConsumptionBatchRegressionTest {
 	}
 
 	private static void assertTransitionRemovesItems(int questId, String source, String target,
-			Set<Integer> expectedRemovedItemIds) throws Exception {
+			Set<Integer> expectedRemovedItemIds) {
 		QuestDefinition definition = load(questId).definition();
 		List<QuestTransition> transitions = definition.transitions().stream()
 			.filter(t -> source.equals(t.sourceNode()) && target.equals(t.targetNode()))

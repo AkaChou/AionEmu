@@ -17,6 +17,7 @@ import java.util.TreeSet;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 /**
  * 原版 DataDriven 纯 Hunt 行的"行阶梯 + 段计数"形状断言。
@@ -74,7 +75,9 @@ public final class RetailHuntLadderShape {
 		assertWalk(compiled, rows, segmentTargets);
 	}
 
-	/** 布局 = {@code var0} + {@code var1..varMax}，各 6 位且按段序连续偏移。 / Layout contract. */
+	/**
+	 * 布局 = {@code var0} + {@code var1..varMax}，各 6 位且按段序连续偏移。 / Layout contract.
+	 */
 	private static void assertLayout(QuestDefinition definition, int maxSegments) {
 		List<BitField> fields = definition.progressLayout().fields();
 		assertEquals(1 + maxSegments, fields.size(),
@@ -87,7 +90,9 @@ public final class RetailHuntLadderShape {
 		}
 	}
 
-	/** 节点 = 未接 / 行 0..n-1 / 领奖行 / 完成，行节点只钉行号。 / Node contract. */
+	/**
+	 * 节点 = 未接 / 行 0..n-1 / 领奖行 / 完成，行节点只钉行号。 / Node contract.
+	 */
 	private static void assertNodes(QuestDefinition definition, List<List<Integer>> rows) {
 		int rowCount = rows.size();
 		List<String> expected = new ArrayList<>();
@@ -123,7 +128,7 @@ public final class RetailHuntLadderShape {
 	}
 
 	private static void assertNode(QuestDefinition definition, String label, QuestStatus status,
-			Map<String, Integer> variables) {
+								   Map<String, Integer> variables) {
 		QuestNode node = definition.nodes().stream()
 			.filter(candidate -> label.equals(candidate.label()))
 			.findFirst().orElse(null);
@@ -178,18 +183,18 @@ public final class RetailHuntLadderShape {
 				Set<Integer> closingTargets = new LinkedHashSet<>();
 				for (QuestTransition transition : definition.transitions()) {
 					if (!(transition.event() instanceof QuestEvent.KillNpc killNpc)
-							|| !source.equals(transition.sourceNode())) {
+						|| !source.equals(transition.sourceNode())) {
 						continue;
 					}
 					final String slot = section;
 					if (source.equals(transition.targetNode()) && Integer.valueOf(1).equals(transition.priority())
-							&& selfLoopGate.equals(transition.conditions())) {
+						&& selfLoopGate.equals(transition.conditions())) {
 						assertEquals(List.of(new QuestAction.IncrementVariable(slot, 1)), transition.actions(),
 							() -> "self-loop must only increment " + slot + ": " + transition);
 						assertTrue(selfLoopTargets.add(killNpc.npcId()),
 							() -> "duplicate self-loop for " + killNpc.npcId() + " in " + source);
 					} else if (target.equals(transition.targetNode()) && Integer.valueOf(0).equals(transition.priority())
-							&& closingGate.equals(transition.conditions())) {
+						&& closingGate.equals(transition.conditions())) {
 						assertEquals(closingActions, transition.actions(),
 							() -> "row-closing edge must advance the row and clear its counters: " + transition);
 						assertTrue(closingTargets.add(killNpc.npcId()),
@@ -198,7 +203,7 @@ public final class RetailHuntLadderShape {
 				}
 				assertEquals(selfLoopTargets, closingTargets,
 					() -> source + " segment " + segmentIndex + " must pair each target with both edges");
-				assertTrue(!selfLoopTargets.isEmpty(),
+				assertFalse(selfLoopTargets.isEmpty(),
 					() -> source + " segment " + segmentIndex + " owns no kill target");
 				assertTrue(targets.values().stream().noneMatch(previous ->
 						!java.util.Collections.disjoint(previous, selfLoopTargets)),
@@ -220,9 +225,11 @@ public final class RetailHuntLadderShape {
 		return targets;
 	}
 
-	/** 逐段饱和走完阶梯：段计数自由累加、行号只在收口时推进、末行落在领奖行。 / Saturation walk. */
+	/**
+	 * 逐段饱和走完阶梯：段计数自由累加、行号只在收口时推进、末行落在领奖行。 / Saturation walk.
+	 */
 	private static void assertWalk(CompiledQuestDefinition compiled, List<List<Integer>> rows,
-			Map<String, Set<Integer>> segmentTargets) {
+								   Map<String, Set<Integer>> segmentTargets) {
 		QuestDefinition definition = compiled.definition();
 		Map<String, Integer> variables = new LinkedHashMap<>();
 		for (BitField field : definition.progressLayout().fields()) {

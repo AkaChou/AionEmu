@@ -28,7 +28,7 @@ class QuestMovieRandomDispatchTest {
 		port.execute(new AfterCommitAction.PlayMovieRandom(List.of(103, 104)), snapshot(), plan());
 
 		assertEquals(1, movies.size(), "exactly one movie must play");
-		assertTrue(movies.get(0) == 103 || movies.get(0) == 104, "played movie must be one of the variants");
+		assertTrue(movies.getFirst() == 103 || movies.getFirst() == 104, "played movie must be one of the variants");
 	}
 
 	@Test

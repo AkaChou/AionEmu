@@ -11,6 +11,7 @@ import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 /**
  * Locks the mirrored Elyos/Asmodian sage dialog contracts for quests 1988 and 2988.
@@ -72,10 +73,10 @@ class DaevanionSageDialogFamilyTest {
 			assertEquals("reward", turnIn.targetNode());
 			assertEquals(List.of(new QuestAction.RemoveItem(186000039, 1)), turnIn.actions());
 			assertEquals(List.of(
-				new AfterCommitAction.SyncQuestState(
-					QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
-				new AfterCommitAction.ShowQuestDialog(
-					QuestDialogPage.SHOW_SELECT_QUEST_REWARD_WINDOW1.id())),
+					new AfterCommitAction.SyncQuestState(
+						QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
+					new AfterCommitAction.ShowQuestDialog(
+						QuestDialogPage.SHOW_SELECT_QUEST_REWARD_WINDOW1.id())),
 				turnIn.afterCommit());
 
 			QuestTransition reopen = talk(definition, "reward", contract.finalNpc(),
@@ -88,7 +89,7 @@ class DaevanionSageDialogFamilyTest {
 	}
 
 	private static void assertStartContract(QuestDefinition definition, int npcId,
-			String targetNode) {
+											String targetNode) {
 		assertPageTransition(definition, "unaccepted", "unaccepted", npcId,
 			QuestDialogAction.QUEST_SELECT, List.of(), QuestDialogPage.SELECT1);
 		assertPageTransition(definition, "unaccepted", "unaccepted", npcId,
@@ -102,7 +103,7 @@ class DaevanionSageDialogFamilyTest {
 	}
 
 	private static void assertAdvance(QuestDefinition definition, String source, String target,
-			int npcId, QuestDialogAction action, int var0) {
+									  int npcId, QuestDialogAction action, int var0) {
 		assertTalk(definition, source, target, npcId, action, List.of(),
 			List.of(new QuestAction.SetVariable("var0", var0)),
 			List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.PACKET_ONLY),
@@ -114,7 +115,7 @@ class DaevanionSageDialogFamilyTest {
 			.filter(candidate -> "complete".equals(candidate.targetNode()))
 			.filter(candidate -> candidate.event() instanceof QuestEvent.TalkToNpc)
 			.toList();
-		assertTrue(!completions.isEmpty());
+		assertFalse(completions.isEmpty());
 		assertTrue(completions.stream()
 			.map(QuestTransition::event)
 			.map(QuestEvent.TalkToNpc.class::cast)
@@ -125,13 +126,13 @@ class DaevanionSageDialogFamilyTest {
 	}
 
 	private static void assertPage(QuestDefinition definition, String source, int npcId,
-			QuestDialogAction action, QuestDialogPage page) {
+								   QuestDialogAction action, QuestDialogPage page) {
 		assertPageTransition(definition, source, source, npcId, action, List.of(), page);
 	}
 
 	private static void assertPageTransition(QuestDefinition definition, String source,
-			String target, int npcId, QuestDialogAction action, List<QuestCondition> conditions,
-			QuestDialogPage page) {
+											 String target, int npcId, QuestDialogAction action, List<QuestCondition> conditions,
+											 QuestDialogPage page) {
 		QuestTransition transition = talk(definition, source, npcId, action, conditions);
 		assertEquals(target, transition.targetNode());
 		assertEquals(List.of(), transition.actions());
@@ -140,8 +141,8 @@ class DaevanionSageDialogFamilyTest {
 	}
 
 	private static void assertTalk(QuestDefinition definition, String source, String target,
-			int npcId, QuestDialogAction action, List<QuestCondition> conditions,
-			List<QuestAction> actions, List<AfterCommitAction> afterCommit) {
+								   int npcId, QuestDialogAction action, List<QuestCondition> conditions,
+								   List<QuestAction> actions, List<AfterCommitAction> afterCommit) {
 		QuestTransition transition = talk(definition, source, npcId, action, conditions);
 		assertEquals(target, transition.targetNode());
 		assertEquals(conditions, transition.conditions());
@@ -150,7 +151,7 @@ class DaevanionSageDialogFamilyTest {
 	}
 
 	private static QuestTransition talk(QuestDefinition definition, String source, int npcId,
-			QuestDialogAction action, List<QuestCondition> conditions) {
+										QuestDialogAction action, List<QuestCondition> conditions) {
 		QuestEvent.TalkToNpc event = new QuestEvent.TalkToNpc(npcId, action.id());
 		return definition.transitions().stream()
 			.filter(candidate -> Objects.equals(candidate.sourceNode(), source))
@@ -166,7 +167,7 @@ class DaevanionSageDialogFamilyTest {
 	}
 
 	private static void assertNode(QuestDefinition definition, String label, QuestStatus status,
-			int var0) {
+								   int var0) {
 		QuestNode node = definition.nodes().stream()
 			.filter(candidate -> candidate.label().equals(label))
 			.findFirst()
@@ -177,7 +178,7 @@ class DaevanionSageDialogFamilyTest {
 
 	private static QuestDefinition definition(int questId) throws Exception {
 		try (InputStream input = DaevanionSageDialogFamilyTest.class.getResourceAsStream(
-				"/aion/data/static_data/quest/definitions/quests/" + questId + ".xml")) {
+			"/aion/data/static_data/quest/definitions/quests/" + questId + ".xml")) {
 			if (input == null) {
 				throw new IllegalStateException("missing quest definition " + questId + ".xml");
 			}
@@ -186,6 +187,6 @@ class DaevanionSageDialogFamilyTest {
 	}
 
 	private record Case(int questId, String race, int startNpc, int firstNpc, int secondNpc,
-			int finalNpc, boolean secondHasExtraPage) {
+						int finalNpc, boolean secondHasExtraPage) {
 	}
 }

@@ -62,7 +62,7 @@ class SilenteraSpawnedDialogFamilyTest {
 					&& npc.slot().equals(contract.slot())
 					&& npc.templateId() == contract.spawnedNpc()));
 			assertEquals(List.of(
-				spawn.afterCommit().get(0),
+				spawn.afterCommit().getFirst(),
 				new AfterCommitAction.SyncQuestState(QuestStateSyncMode.PACKET_ONLY),
 				new AfterCommitAction.CloseDialog()), spawn.afterCommit());
 
@@ -112,7 +112,7 @@ class SilenteraSpawnedDialogFamilyTest {
 	}
 
 	private static void assertPage(QuestDefinition definition, String source, int npcId,
-			QuestDialogAction action, QuestDialogPage page) {
+								   QuestDialogAction action, QuestDialogPage page) {
 		QuestTransition transition = talk(definition, source, npcId, action, List.of());
 		assertEquals(source, transition.targetNode());
 		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(page.id())),
@@ -120,8 +120,8 @@ class SilenteraSpawnedDialogFamilyTest {
 	}
 
 	private static void assertTalk(QuestDefinition definition, String source, String target,
-			int npcId, QuestDialogAction action, List<QuestCondition> conditions,
-			List<QuestAction> actions, List<AfterCommitAction> afterCommit) {
+								   int npcId, QuestDialogAction action, List<QuestCondition> conditions,
+								   List<QuestAction> actions, List<AfterCommitAction> afterCommit) {
 		QuestTransition transition = talk(definition, source, npcId, action, conditions);
 		assertEquals(target, transition.targetNode());
 		assertEquals(conditions, transition.conditions());
@@ -130,7 +130,7 @@ class SilenteraSpawnedDialogFamilyTest {
 	}
 
 	private static QuestTransition talk(QuestDefinition definition, String source, int npcId,
-			QuestDialogAction action, List<QuestCondition> conditions) {
+										QuestDialogAction action, List<QuestCondition> conditions) {
 		QuestEvent.TalkToNpc event = new QuestEvent.TalkToNpc(npcId, action.id());
 		return definition.transitions().stream()
 			.filter(candidate -> candidate.sourceNode().equals(source))
@@ -142,7 +142,7 @@ class SilenteraSpawnedDialogFamilyTest {
 	}
 
 	private static void assertNode(QuestDefinition definition, String label, QuestStatus status,
-			int var0) {
+								   int var0) {
 		QuestNode node = definition.nodes().stream()
 			.filter(candidate -> candidate.label().equals(label))
 			.findFirst()
@@ -153,7 +153,7 @@ class SilenteraSpawnedDialogFamilyTest {
 
 	private static QuestDefinition definition(int questId) throws Exception {
 		try (InputStream input = SilenteraSpawnedDialogFamilyTest.class.getResourceAsStream(
-				"/aion/data/static_data/quest/definitions/quests/" + questId + ".xml")) {
+			"/aion/data/static_data/quest/definitions/quests/" + questId + ".xml")) {
 			if (input == null) {
 				throw new IllegalStateException("missing quest definition " + questId + ".xml");
 			}
@@ -162,8 +162,8 @@ class SilenteraSpawnedDialogFamilyTest {
 	}
 
 	private record Case(int questId, int startNpc, int rewardNpc, int objectNpc,
-			int spawnedNpc, String slot, List<QuestItemRequirement> workItems, long gold,
-			int rewardMode, List<Integer> choices) {
+						int spawnedNpc, String slot, List<QuestItemRequirement> workItems, long gold,
+						int rewardMode, List<Integer> choices) {
 		private int workItem() {
 			return workItems.getFirst().itemId();
 		}

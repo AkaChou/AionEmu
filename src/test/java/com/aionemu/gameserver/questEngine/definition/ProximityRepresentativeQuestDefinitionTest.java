@@ -21,7 +21,9 @@ import static com.aionemu.gameserver.questEngine.definition.QuestDsl.vars;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-/** Real proximity handler facts projected through both canonical definition front ends. */
+/**
+ * Real proximity handler facts projected through both canonical definition front ends.
+ */
 class ProximityRepresentativeQuestDefinitionTest {
 	private static final int NPC = 806700;
 
@@ -33,7 +35,7 @@ class ProximityRepresentativeQuestDefinitionTest {
 		var plan = QuestMutationPlanner.plan(definition,
 			new QuestSnapshot(7, 29600, QuestStatus.NONE, 0, Map.of())
 				.withStartEligibility(QuestStartEligibility.allowed()), event,
-			definition.definition().transitions().get(0));
+			definition.definition().transitions().getFirst());
 
 		assertTrue(plan.isPresent());
 		assertEquals(QuestStatus.START, plan.orElseThrow().nextStatus());

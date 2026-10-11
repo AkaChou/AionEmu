@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class Quest50019RetailAlignmentTest {
 	@Test
-	void preservesRetailMetadataItemsPrerequisiteAndNpcRoute() throws Exception {
+	void preservesRetailMetadataItemsPrerequisiteAndNpcRoute() {
 		QuestDefinition definition = load();
 		QuestMetadata metadata = definition.metadata();
 

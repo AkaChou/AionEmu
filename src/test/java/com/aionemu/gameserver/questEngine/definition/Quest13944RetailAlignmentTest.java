@@ -46,7 +46,7 @@ class Quest13944RetailAlignmentTest {
 		DataDrivenNativeRuntime runtime = DataDrivenNativeRuntime.instance();
 		assertTrue(runtime.owns(QUEST_ID), "13944 必须由 DD 运行时拥有");
 		assertTrue(runtime.routes(QUEST_ID), "13944 必须由 DD 运行时路由");
-		assertEquals(DIAN_NPC_ID, NativeNpcNameResolver.instance().resolve("Ab1_Dian_E").npcIds().get(0));
+		assertEquals(DIAN_NPC_ID, NativeNpcNameResolver.instance().resolve("Ab1_Dian_E").npcIds().getFirst());
 
 		DataDrivenQuestTable table = DataDrivenQuestTable.load(
 			Quest13944RetailAlignmentTest.class
@@ -74,8 +74,8 @@ class Quest13944RetailAlignmentTest {
 		assertEquals(66, metadata.minLevel(), "原版 minlevel_permitted=66");
 		assertEquals(java.util.Set.of("ELYOS"), metadata.permittedRaces(), "原版 pc_light");
 		List<QuestReward> rewards = metadata.rewards();
-		assertTrue(rewards.contains(new QuestReward("EXP", 0, 93626245)), () -> rewards.toString());
-		assertTrue(rewards.contains(new QuestReward("ITEM", 188058110, 1)), () -> rewards.toString());
+		assertTrue(rewards.contains(new QuestReward("EXP", 0, 93626245)), rewards::toString);
+		assertTrue(rewards.contains(new QuestReward("ITEM", 188058110, 1)), rewards::toString);
 	}
 
 	@Test
@@ -98,8 +98,8 @@ class Quest13944RetailAlignmentTest {
 		NativeTalkFixture.assertCloseDialog(player);
 
 		// 网格推进：两变体共 3 杀；前 2 杀保持 START，第 3 杀组槽达标 ⇒ 收口进 REWARD（清槽）。
-		int outsideId = NativeNpcNameResolver.instance().resolveMonsterIds(OUTSIDE_SCOUT).get(0);
-		int insideId = NativeNpcNameResolver.instance().resolveMonsterIds(INSIDE_SCOUT).get(0);
+		int outsideId = NativeNpcNameResolver.instance().resolveMonsterIds(OUTSIDE_SCOUT).getFirst();
+		int insideId = NativeNpcNameResolver.instance().resolveMonsterIds(INSIDE_SCOUT).getFirst();
 		assertTrue(kill(runtime, player, outsideId), "第 1 杀必须计数");
 		assertEquals(1, DataDrivenProgress.counter(state.getQuestVars().getQuestVars(), 1));
 		assertEquals(QuestStatus.START, state.getStatus(), "未满 3 杀不得进领奖");
@@ -121,7 +121,9 @@ class Quest13944RetailAlignmentTest {
 		return runtime.onKill(player, npc);
 	}
 
-	/** 反射放置坐标（距离门测试面；生产经 WorldPosition 正常初始化）。 / Reflective placement for the distance gate. */
+	/**
+	 * 反射放置坐标（距离门测试面；生产经 WorldPosition 正常初始化）。 / Reflective placement for the distance gate.
+	 */
 	private static void place(VisibleObject object, float x, float y, float z) {
 		WorldPosition position = new WorldPosition(110010000);
 		position.setXYZH(x, y, z, (byte) 0);

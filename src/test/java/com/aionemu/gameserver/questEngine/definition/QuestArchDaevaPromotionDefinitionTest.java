@@ -24,7 +24,7 @@ class QuestArchDaevaPromotionDefinitionTest {
 		assertPromotionContract(20520, 806080);
 	}
 
-	private void assertPromotionContract(int questId, int npcId) throws Exception {
+	private void assertPromotionContract(int questId, int npcId) {
 		QuestDefinition definition = load(questId).definition();
 		List<QuestTransition> completions = definition.transitions().stream()
 			.filter(transition -> "reward".equals(transition.sourceNode()))

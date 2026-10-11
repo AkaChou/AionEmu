@@ -195,8 +195,9 @@ class QuestEngineNpcDialogDispatchTest {
 		return engine;
 	}
 
-	/** 生产视图目录（XML 目录 + 原版 overlay）；退役任务的旧 XML 只在 git 历史里。 */
-	/** 原版 quest.xml 的 category1（大写；缺省 QUEST）。 / Retail quest.xml category1 (upper case; default QUEST). */
+	/**
+	 * 原版 quest.xml 的 category1（大写；缺省 QUEST）。 / Retail quest.xml category1 (upper case; default QUEST).
+	 */
 	private static String categoryOf(int questId) {
 		return com.aionemu.gameserver.questEngine.tablelane.NativeQuestXmlTable.instance().find(questId)
 			.map(row -> row.text("category1"))
@@ -229,7 +230,7 @@ class QuestEngineNpcDialogDispatchTest {
 	}
 
 	private static CompiledQuestDefinition talkOwner(int questId, int npcId, String category,
-			QuestStatus status, int actionId) {
+													 QuestStatus status, int actionId) {
 		return quest(questId)
 			.metadata(QuestMetadata.minimal("quest-" + questId, 0, category))
 			.progress(bitField("var0", 0, 6, PersistenceMode.PERSISTENT))
@@ -277,7 +278,7 @@ class QuestEngineNpcDialogDispatchTest {
 	}
 
 	private static void setField(Class<?> declaringClass, Object target, String name, Object value)
-			throws Exception {
+		throws Exception {
 		Field field = declaringClass.getDeclaredField(name);
 		field.setAccessible(true);
 		field.set(target, value);

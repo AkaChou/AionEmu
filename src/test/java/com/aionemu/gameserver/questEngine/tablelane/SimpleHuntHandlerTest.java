@@ -57,8 +57,8 @@ class SimpleHuntHandlerTest {
 
 		// 获取任务 2354 槽 1 对应怪物的 NPC ID（通过 NativeQuestTableLoader 与 NativeNpcNameResolver）
 		NativeQuestTableLoader.SimpleHuntRow row = NativeQuestTableLoader.instance().require(2354);
-		String slot1Monster = row.killSlots().get(1).monsters().get(0);
-		int slot1NpcId = NativeNpcNameResolver.instance().resolveMonsterIds(slot1Monster).get(0);
+		String slot1Monster = row.killSlots().get(1).monsters().getFirst();
+		int slot1NpcId = NativeNpcNameResolver.instance().resolveMonsterIds(slot1Monster).getFirst();
 
 		// 1. 击杀 1 次槽 1 怪物：普通写入通道，vars 从 0 增加到 1，状态保持 START
 		boolean killed1 = handler.onKill(player, slot1NpcId);
@@ -79,8 +79,8 @@ class SimpleHuntHandlerTest {
 		assertEquals(6, qs.getQuestVars().getQuestVars());
 
 		// 4. 击杀槽 2 怪物推进到满值
-		String slot2Monster = row.killSlots().get(2).monsters().get(0);
-		int slot2NpcId = NativeNpcNameResolver.instance().resolveMonsterIds(slot2Monster).get(0);
+		String slot2Monster = row.killSlots().get(2).monsters().getFirst();
+		int slot2NpcId = NativeNpcNameResolver.instance().resolveMonsterIds(slot2Monster).getFirst();
 
 		// 击杀槽 2 前 3 次
 		for (int i = 0; i < 3; i++) {

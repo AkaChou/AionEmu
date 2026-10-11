@@ -23,7 +23,7 @@ class NpcSkillDefinitionLoaderTest {
 		assertEquals(59058, data.size());
 		var skills = data.getNpcSkillList(211157).getNpcSkills();
 		assertEquals(2, skills.size());
-		assertEquals(16526, skills.get(0).getSkillid());
+		assertEquals(16526, skills.getFirst().getSkillid());
 		assertEquals(30, skills.get(0).getSkillLevel());
 		assertEquals(100, skills.get(0).getProbability());
 		assertEquals(16716, skills.get(1).getSkillid());
@@ -43,7 +43,7 @@ class NpcSkillDefinitionLoaderTest {
 
 		assertEquals(2, data.size());
 		assertEquals(1, data.getNpcSkillList(100).getNpcSkills().size());
-		assertEquals(0, data.getNpcSkillList(100).getNpcSkills().get(0).getSkillid());
+		assertEquals(0, data.getNpcSkillList(100).getNpcSkills().getFirst().getSkillid());
 	}
 
 	@Test
@@ -71,7 +71,7 @@ class NpcSkillDefinitionLoaderTest {
 			</group></groups><assignments><assign group="G" npc_ids="100"/></assignments></npc_skill_data>
 			""");
 
-		var skill = NpcSkillDefinitionLoader.load(file.toFile()).getNpcSkillList(100).getNpcSkills().get(0);
+		var skill = NpcSkillDefinitionLoader.load(file.toFile()).getNpcSkillList(100).getNpcSkills().getFirst();
 
 		assertEquals(700, skill.getRawRate());
 		assertEquals(15000, skill.getCooldown());

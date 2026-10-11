@@ -74,8 +74,8 @@ class DataholderLookupIndexTest {
 			</item_skill_enhances>
 			""");
 
-		assertEquals(4037, data.getSkillEnhance(100, PlayerClass.CLERIC).getSkillId().get(0));
-		assertEquals(784, data.getSkillEnhance(200, PlayerClass.RANGER).getSkillId().get(0));
+		assertEquals(4037, data.getSkillEnhance(100, PlayerClass.CLERIC).getSkillId().getFirst());
+		assertEquals(784, data.getSkillEnhance(200, PlayerClass.RANGER).getSkillId().getFirst());
 		assertNull(data.getSkillEnhance(100, PlayerClass.RANGER));
 	}
 

@@ -8,11 +8,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.nio.file.Path;
 import java.util.List;
 
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.xpath.XPathFactory;
 
 import org.junit.jupiter.api.Test;
-import org.w3c.dom.Document;
 
 import com.aionemu.gameserver.dataholders.Portal2Data;
 import com.aionemu.gameserver.model.Race;
@@ -30,12 +27,12 @@ import jakarta.xml.bind.JAXBContext;
 class AbyssTeleporterQuestRequirementTest {
 
 	private static final Path PORTAL_TEMPLATES = Path.of(
-			"src/main/resources/aion/data/static_data/portals/portal_template2.xml");
+		"src/main/resources/aion/data/static_data/portals/portal_template2.xml");
 
 	@Test
 	void capitalGatesRequireTheRacialAbyssEntryQuest() throws Exception {
 		Portal2Data data = (Portal2Data) JAXBContext.newInstance(Portal2Data.class)
-				.createUnmarshaller().unmarshal(PORTAL_TEMPLATES.toFile());
+			.createUnmarshaller().unmarshal(PORTAL_TEMPLATES.toFile());
 
 		assertGate(data, 730059, 4000102, Race.ELYOS, 1044);
 		assertGate(data, 730060, 4000103, Race.ELYOS, 1044);
@@ -81,11 +78,11 @@ class AbyssTeleporterQuestRequirementTest {
 
 	private static void assertChainLink(int questId, int prerequisiteQuestId) {
 		com.aionemu.gameserver.questEngine.definition.QuestMetadata metadata =
-				com.aionemu.gameserver.questEngine.definition.ProductionQuestDefinitions.catalog().findMetadata(questId)
-						.orElseThrow(() -> new AssertionError("missing quest metadata for " + questId));
+			com.aionemu.gameserver.questEngine.definition.ProductionQuestDefinitions.catalog().findMetadata(questId)
+				.orElseThrow(() -> new AssertionError("missing quest metadata for " + questId));
 		boolean hasPrereq = metadata.prerequisites().contains(prerequisiteQuestId)
-				|| metadata.startConditions().stream()
-						.anyMatch(sc -> "FINISHED".equalsIgnoreCase(sc.type()) && sc.questId() == prerequisiteQuestId);
+			|| metadata.startConditions().stream()
+			.anyMatch(sc -> "FINISHED".equalsIgnoreCase(sc.type()) && sc.questId() == prerequisiteQuestId);
 		assertTrue(hasPrereq, "quest " + questId + " should require quest " + prerequisiteQuestId);
 	}
 }
