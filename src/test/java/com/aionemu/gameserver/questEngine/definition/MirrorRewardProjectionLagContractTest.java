@@ -22,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * 完整的 0..N-1 行状态（只是 reward 节点仍停在行 0），因此修复 = 投影 → 镜像值 + `REWARD/var0=0 -> 镜像值`
  * 自愈边；14201 另有 legacy `changeQuestStep(2->2)` 独立确认领奖态保持 packed step 2。
  * <p>
- * 同族但锁定、本批不改：16837/16986/16988 被 {@link QuestPrematureRewardRouteExclusionTest} 断言
+ * 同族但锁定、本批不改：16837/16986/16988 被 {@code QuestPrematureRewardRouteExclusionTest} 断言
  * “完成报告后 packed var0 保持 0”（RewardCase.reward = {var0: 0}），属既有基线，需客户端观测才能重定。
  * <p>
  * <p>
@@ -227,7 +227,7 @@ class MirrorRewardProjectionLagContractTest {
 			true, true, 0, 0, 100000000, 1, 0f, 0f, 0f, (byte) 0);
 	}
 
-	private static CompiledQuestDefinition definition(int questId) throws Exception {
+	private static CompiledQuestDefinition definition(int questId) {
 		// 退役任务的生产 XML 只在 git 历史里：统一取生产视图（XML 目录 + 原版 overlay）。
 		// Retired quests live in git history only: use the production view (XML dir + retail overlay).
 		return ProductionQuestDefinitions.definition(questId);

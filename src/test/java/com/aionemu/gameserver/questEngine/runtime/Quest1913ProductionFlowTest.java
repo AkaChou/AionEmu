@@ -76,8 +76,8 @@ class Quest1913ProductionFlowTest {
 		assertTrue(metadata.permittedClasses().contains("GLADIATOR")
 				&& metadata.permittedClasses().contains("TEMPLAR"), "原版 class_permitted=fighter knight");
 		List<QuestReward> rewards = metadata.rewards();
-		assertTrue(rewards.contains(new QuestReward("EXP", 0, 14046)), () -> rewards.toString());
-		assertTrue(rewards.contains(new QuestReward("ITEM", 160001273, 5)), () -> rewards.toString());
+		assertTrue(rewards.contains(new QuestReward("EXP", 0, 14046)), rewards::toString);
+		assertTrue(rewards.contains(new QuestReward("ITEM", 160001273, 5)), rewards::toString);
 	}
 
 	@Test

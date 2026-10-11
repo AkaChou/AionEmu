@@ -68,8 +68,8 @@ class Quest1470ClientDialogAlignmentTest {
 		List<QuestReward> rewards = metadata.rewards();
 		// 原版 quest.xml：reward_exp1=1244918、reward_item1_1=coin_03 40（186000003）、
 		// 六个 selectable_reward_item1_N 手套、reward_title1=light_title18。
-		assertTrue(rewards.contains(new QuestReward("EXP", 0, 1244918)), () -> rewards.toString());
-		assertTrue(rewards.contains(new QuestReward("ITEM", 186000003, 40)), () -> rewards.toString());
+		assertTrue(rewards.contains(new QuestReward("EXP", 0, 1244918)), rewards::toString);
+		assertTrue(rewards.contains(new QuestReward("ITEM", 186000003, 40)), rewards::toString);
 		assertEquals(6, rewards.stream().filter(reward -> reward.kind().equals("SELECTABLE_ITEM")).count(),
 			"六个可选手套槽");
 		assertEquals(1, rewards.stream().filter(reward -> reward.kind().equals("TITLE")).count(),

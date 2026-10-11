@@ -3,7 +3,6 @@ package com.aionemu.gameserver.questEngine.runtime;
 import com.aionemu.gameserver.questEngine.definition.CompiledQuestDefinition;
 import com.aionemu.gameserver.questEngine.definition.ImmutableQuestCatalog;
 import com.aionemu.gameserver.questEngine.definition.PersistenceMode;
-import com.aionemu.gameserver.questEngine.definition.QuestDefinitionXmlCompiler;
 import com.aionemu.gameserver.questEngine.definition.QuestDsl;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import org.junit.jupiter.api.Test;
@@ -45,7 +44,7 @@ class QuestDependencyIndexTest {
 		assertEquals(List.of(), index.dependentsOf(1200));
 	}
 
-	private static CompiledQuestDefinition compile(int questId) throws Exception {
+	private static CompiledQuestDefinition compile(int questId) {
 		// 退役任务的生产 XML 只在 git 历史里：统一取生产视图（XML 目录 + 原版 overlay）——已退役任务
 		// 由原版表 + quest.xml 元数据合成，前置条件与启动条件仍完整登记。
 		// Production view (XML directory plus the retail overlay): retired quests are synthesized from

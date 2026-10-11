@@ -72,8 +72,8 @@ class Quest1913ClientDialogAlignmentTest {
 		assertTrue(metadata.startConditions().contains(new QuestStartCondition("finished", 1007, 0))
 				|| metadata.prerequisites().contains(1007), "前置 = 完成 1007（奖励分支 1）");
 		List<QuestReward> rewards = metadata.rewards();
-		assertTrue(rewards.contains(new QuestReward("EXP", 0, 14046)), () -> rewards.toString());
-		assertTrue(rewards.contains(new QuestReward("ITEM", FOOD_ITEM, 5)), () -> rewards.toString());
+		assertTrue(rewards.contains(new QuestReward("EXP", 0, 14046)), rewards::toString);
+		assertTrue(rewards.contains(new QuestReward("ITEM", FOOD_ITEM, 5)), rewards::toString);
 	}
 
 	@Test
