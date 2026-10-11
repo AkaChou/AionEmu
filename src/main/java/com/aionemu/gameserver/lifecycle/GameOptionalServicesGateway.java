@@ -114,11 +114,12 @@ public class GameOptionalServicesGateway {
      * Resolve NPC-shouts service: prefer Spring, otherwise fall back via runtime bridge.
      * @return 服务实例 / Service instance
      */
-    private NpcShoutsService npcShoutsService() {
+    private void npcShoutsService() {
         if (npcShoutsServiceProvider == null) {
-            return runtimeBridge().npcShoutsService();
+            runtimeBridge().npcShoutsService();
+    	return;
         }
-        return npcShoutsServiceProvider.getIfAvailable(() -> runtimeBridge().npcShoutsService());
+        npcShoutsServiceProvider.getIfAvailable(() -> runtimeBridge().npcShoutsService());
     }
 
     /**

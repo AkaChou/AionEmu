@@ -151,11 +151,12 @@ public class GameServerNetworkGateway {
      * Resolve the banned-MAC manager.
      * @return MAC 封禁管理器 / Banned MAC manager
      */
-    private BannedMacManager bannedMacManager() {
+    private void bannedMacManager() {
         if (bannedMacManagerProvider == null) {
-            return runtimeBridge().bannedMacManager();
+            runtimeBridge().bannedMacManager();
+    	return;
         }
-        return bannedMacManagerProvider.getIfAvailable(() -> runtimeBridge().bannedMacManager());
+        bannedMacManagerProvider.getIfAvailable(() -> runtimeBridge().bannedMacManager());
     }
 
     /**

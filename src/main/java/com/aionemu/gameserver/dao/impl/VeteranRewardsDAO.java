@@ -2,6 +2,7 @@ package com.aionemu.gameserver.dao.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -27,9 +28,13 @@ import lombok.extern.slf4j.Slf4j;
 @Repository
 public class VeteranRewardsDAO extends com.aionemu.gameserver.dao.VeteranRewardsDAO {
 
-	/** 查询老兵奖励 SQL / Select veteran rewards SQL*/
+	/**
+	 * 查询老兵奖励 SQL / Select veteran rewards SQL
+	 */
 	private static final String SELECT_QUERY = "SELECT * FROM veteran_rewards ORDER BY id";
-	/** 删除老兵奖励 SQL / Delete veteran reward SQL*/
+	/**
+	 * 删除老兵奖励 SQL / Delete veteran reward SQL
+	 */
 	private static final String DELETE_QUERY = "DELETE FROM veteran_rewards WHERE id = ?";
 
 	private final JdbcClient jdbcClient;
@@ -47,6 +52,7 @@ public class VeteranRewardsDAO extends com.aionemu.gameserver.dao.VeteranRewards
 	/**
 	 * 加载全部老兵奖励记录。
 	 * Loads all veteran reward records.
+	 *
 	 * @return 奖励集 / reward set
 	 */
 	@Override
@@ -54,7 +60,7 @@ public class VeteranRewardsDAO extends com.aionemu.gameserver.dao.VeteranRewards
 		final Set<VeteranRewards> result = new HashSet<>();
 
 		try {
-			jdbcClient.sql(SELECT_QUERY)
+			result.addAll(jdbcClient.sql(SELECT_QUERY)
 				.query((rs, _) -> new VeteranRewards(
 					rs.getInt("id"),
 					rs.getString("player"),
@@ -67,7 +73,7 @@ public class VeteranRewardsDAO extends com.aionemu.gameserver.dao.VeteranRewards
 					rs.getString("message")
 				))
 				.list()
-				.forEach(result::add);
+			);
 		} catch (Exception e) {
 			log.error(I18n.get("log.3324f8b8d45c"), e);
 		}
@@ -77,6 +83,7 @@ public class VeteranRewardsDAO extends com.aionemu.gameserver.dao.VeteranRewards
 	/**
 	 * 按 ID 删除老兵奖励。
 	 * Deletes a veteran reward by id.
+	 *
 	 * @param id_veteran_reward 奖励 ID / reward id
 	 */
 	@Override
@@ -92,6 +99,7 @@ public class VeteranRewardsDAO extends com.aionemu.gameserver.dao.VeteranRewards
 	/**
 	 * 是否支持当前数据库。
 	 * Whether the current database is supported.
+	 *
 	 * @param databaseName 数据库名 / database name
 	 * @param majorVersion 主版本 / major version
 	 * @param minorVersion 次版本 / minor version

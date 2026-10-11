@@ -62,13 +62,13 @@ public class GameWorldActivationGateway {
     /**
      * 解析掉落注册服务：优先 Spring，否则运行时桥。
      * Resolve drop-registration service: prefer Spring, otherwise runtime bridge.
-     * @return DropRegistrationService 实例 / DropRegistrationService instance
      */
-    private DropRegistrationService dropRegistrationService() {
+    private void dropRegistrationService() {
         if (dropRegistrationServiceProvider == null) {
-            return runtimeBridge().dropRegistrationService();
+            runtimeBridge().dropRegistrationService();
+    	return;
         }
-        return dropRegistrationServiceProvider.getIfAvailable(() -> runtimeBridge().dropRegistrationService());
+        dropRegistrationServiceProvider.getIfAvailable(() -> runtimeBridge().dropRegistrationService());
     }
 
     /**

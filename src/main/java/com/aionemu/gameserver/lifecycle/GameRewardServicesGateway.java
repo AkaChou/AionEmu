@@ -81,11 +81,12 @@ public class GameRewardServicesGateway {
      * Resolve reward service: prefer Spring, otherwise fall back via runtime bridge.
      * @return 服务实例 / Service instance
      */
-    private RewardService rewardService() {
+    private void rewardService() {
         if (rewardServiceProvider == null) {
-            return runtimeBridge().rewardService();
+            runtimeBridge().rewardService();
+    	return;
         }
-        return rewardServiceProvider.getIfAvailable(() -> runtimeBridge().rewardService());
+        rewardServiceProvider.getIfAvailable(() -> runtimeBridge().rewardService());
     }
 
     /**
@@ -93,11 +94,12 @@ public class GameRewardServicesGateway {
      * Resolve veteran-rewards service: prefer Spring, otherwise fall back via runtime bridge.
      * @return 服务实例 / Service instance
      */
-    private VeteranRewardsService veteranRewardsService() {
+    private void veteranRewardsService() {
         if (veteranRewardsServiceProvider == null) {
-            return runtimeBridge().veteranRewardsService();
+            runtimeBridge().veteranRewardsService();
+    	return;
         }
-        return veteranRewardsServiceProvider.getIfAvailable(() -> runtimeBridge().veteranRewardsService());
+        veteranRewardsServiceProvider.getIfAvailable(() -> runtimeBridge().veteranRewardsService());
     }
 
     /**

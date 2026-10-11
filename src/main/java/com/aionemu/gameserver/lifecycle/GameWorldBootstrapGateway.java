@@ -206,13 +206,13 @@ public class GameWorldBootstrapGateway {
     /**
      * 解析 IDFactory：优先 Spring，否则运行时桥。
      * Resolve IDFactory: prefer Spring, otherwise runtime bridge.
-     * @return IDFactory 实例 / IDFactory instance
      */
-    private IDFactory idFactory() {
+    private void idFactory() {
         if (idFactoryProvider == null) {
-            return runtimeBridge().idFactory();
+            runtimeBridge().idFactory();
+    	return;
         }
-        return idFactoryProvider.getIfAvailable(() -> runtimeBridge().idFactory());
+        idFactoryProvider.getIfAvailable(() -> runtimeBridge().idFactory());
     }
 
     /**
@@ -230,37 +230,37 @@ public class GameWorldBootstrapGateway {
     /**
      * 解析 HotspotTeleportService：优先 Spring，否则运行时桥。
      * Resolve HotspotTeleportService: prefer Spring, otherwise runtime bridge.
-     * @return HotspotTeleportService 实例 / HotspotTeleportService instance
      */
-    private HotspotTeleportService hotspotTeleportService() {
+    private void hotspotTeleportService() {
         if (hotspotTeleportServiceProvider == null) {
-            return runtimeBridge().hotspotTeleportService();
+            runtimeBridge().hotspotTeleportService();
+    	return;
         }
-        return hotspotTeleportServiceProvider.getIfAvailable(() -> runtimeBridge().hotspotTeleportService());
+        hotspotTeleportServiceProvider.getIfAvailable(() -> runtimeBridge().hotspotTeleportService());
     }
 
     /**
      * 解析 RoadService：优先 Spring，否则运行时桥。
      * Resolve RoadService: prefer Spring, otherwise runtime bridge.
-     * @return RoadService 实例 / RoadService instance
      */
-    private RoadService roadService() {
+    private void roadService() {
         if (roadServiceProvider == null) {
-            return runtimeBridge().roadService();
+            runtimeBridge().roadService();
+    	return;
         }
-        return roadServiceProvider.getIfAvailable(() -> runtimeBridge().roadService());
+        roadServiceProvider.getIfAvailable(() -> runtimeBridge().roadService());
     }
 
     /**
      * 解析 World：优先 Spring，否则运行时桥。
      * Resolve World: prefer Spring, otherwise runtime bridge.
-     * @return World 实例 / World instance
      */
-    private World world() {
+    private void world() {
         if (worldProvider == null) {
-            return runtimeBridge().world();
+            runtimeBridge().world();
+    	return;
         }
-        return worldProvider.getIfAvailable(() -> runtimeBridge().world());
+        worldProvider.getIfAvailable(() -> runtimeBridge().world());
     }
 
     /**

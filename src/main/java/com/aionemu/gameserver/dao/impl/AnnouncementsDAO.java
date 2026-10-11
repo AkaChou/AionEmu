@@ -2,6 +2,7 @@ package com.aionemu.gameserver.dao.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -18,17 +19,24 @@ import lombok.extern.slf4j.Slf4j;
 /**
  * 公告 DAO 的 MySQL 8 实现。
  * MySQL 8 implementation of AnnouncementsDAO using JdbcClient.
+ *
  * @author Divinity
  */
 @Slf4j
 @Repository
 public class AnnouncementsDAO extends com.aionemu.gameserver.dao.AnnouncementsDAO {
 
-	/** 查询公告 SQL / Select announcements SQL*/
+	/**
+	 * 查询公告 SQL / Select announcements SQL
+	 */
 	private static final String SELECT_QUERY = "SELECT * FROM announcements ORDER BY id";
-	/** 插入公告 SQL / Insert announcement SQL*/
+	/**
+	 * 插入公告 SQL / Insert announcement SQL
+	 */
 	private static final String INSERT_QUERY = "INSERT INTO announcements (announce, faction, type, delay) VALUES (?, ?, ?, ?)";
-	/** 删除公告 SQL / Delete announcement SQL*/
+	/**
+	 * 删除公告 SQL / Delete announcement SQL
+	 */
 	private static final String DELETE_QUERY = "DELETE FROM announcements WHERE id = ?";
 
 	private final JdbcClient jdbcClient;
@@ -46,13 +54,14 @@ public class AnnouncementsDAO extends com.aionemu.gameserver.dao.AnnouncementsDA
 	/**
 	 * 加载全部公告。
 	 * Loads all announcements.
+	 *
 	 * @return 公告集合 / announcement set
 	 */
 	@Override
 	public Set<Announcement> getAnnouncements() {
 		final Set<Announcement> result = new HashSet<>();
 		try {
-			jdbcClient.sql(SELECT_QUERY)
+			result.addAll(jdbcClient.sql(SELECT_QUERY)
 				.query((rs, _) -> new Announcement(
 					rs.getInt("id"),
 					rs.getString("announce"),
@@ -61,7 +70,7 @@ public class AnnouncementsDAO extends com.aionemu.gameserver.dao.AnnouncementsDA
 					rs.getInt("delay")
 				))
 				.list()
-				.forEach(result::add);
+			);
 		} catch (DataAccessException e) {
 			log.error(I18n.get("log.3e42f415d09f"), e);
 		}
@@ -71,6 +80,7 @@ public class AnnouncementsDAO extends com.aionemu.gameserver.dao.AnnouncementsDA
 	/**
 	 * 添加公告。
 	 * Adds an announcement.
+	 *
 	 * @param announce 公告对象 / announcement object
 	 */
 	@Override
@@ -90,6 +100,7 @@ public class AnnouncementsDAO extends com.aionemu.gameserver.dao.AnnouncementsDA
 	/**
 	 * 按 ID 删除公告。
 	 * Deletes an announcement by id.
+	 *
 	 * @param idAnnounce 公告 ID / announcement id
 	 * @return 是否删除成功 / whether the delete succeeded
 	 */
@@ -109,7 +120,8 @@ public class AnnouncementsDAO extends com.aionemu.gameserver.dao.AnnouncementsDA
 	/**
 	 * 是否支持当前数据库。
 	 * Whether the current database is supported.
-	 * @param database 数据库名 / database name
+	 *
+	 * @param database     数据库名 / database name
 	 * @param majorVersion 主版本 / major version
 	 * @param minorVersion 次版本 / minor version
 	 * @return 是否支持 / whether supported

@@ -234,13 +234,13 @@ public class LoginStartupGateway {
     /**
      * 解析玩家转移服务：优先 Spring 提供者，否则回退到运行时桥接。
      * Resolve player-transfer service: prefer Spring provider, else fall back to the runtime bridge.
-     * @return 玩家转移服务 / player-transfer service
      */
-    private PlayerTransferService playerTransferService() {
+    private void playerTransferService() {
         if (playerTransferServiceProvider == null) {
-            return runtimeBridge().playerTransferService();
+            runtimeBridge().playerTransferService();
+    	return;
         }
-        return playerTransferServiceProvider.getIfAvailable(() -> runtimeBridge().playerTransferService());
+        playerTransferServiceProvider.getIfAvailable(() -> runtimeBridge().playerTransferService());
     }
 
     /**
