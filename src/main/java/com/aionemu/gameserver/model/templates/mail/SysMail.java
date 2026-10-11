@@ -39,12 +39,8 @@ public class SysMail {
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		for (MailTemplate template : templates) {
 			String caseName = template.getName().toLowerCase();
-			List<MailTemplate> sysTemplates = mailCaseTemplates.get(caseName);
-			if (sysTemplates == null) {
-				sysTemplates = new ArrayList<>();
-				mailCaseTemplates.put(caseName, sysTemplates);
-			}
-			sysTemplates.add(template);
+            List<MailTemplate> sysTemplates = mailCaseTemplates.computeIfAbsent(caseName, _ -> new ArrayList<>());
+            sysTemplates.add(template);
 		}
 		templates.clear();
 		templates = null;

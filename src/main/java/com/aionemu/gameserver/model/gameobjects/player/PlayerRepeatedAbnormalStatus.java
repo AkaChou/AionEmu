@@ -58,7 +58,7 @@ final class PlayerRepeatedAbnormalStatus {
 			return;
 		}
 		ensureCapacity(index);
-		steps[index] = (byte) Math.min(MAX_STEP, Math.max(1, nextStep));
+		steps[index] = (byte) Math.clamp(nextStep, 1, MAX_STEP);
 		lastHitTimes[index] = now;
 	}
 

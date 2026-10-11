@@ -1,7 +1,6 @@
 package com.aionemu.commons.database;
 
 import java.sql.CallableStatement;
-import java.sql.SQLException;
 
 /**
  * 存储过程参数设置接口
@@ -16,7 +15,6 @@ public interface CallReadStH extends ReadStH {
      * 设置存储过程的参数
      * Set parameters for the stored procedure
  * @param stmt 可调用的 SQL 语句对象 / The CallableStatement object
-     * @throws SQLException 设置参数时发生 SQL 错误 / If a SQL error occurs while setting parameters
      */
-    void setParams(CallableStatement stmt) throws SQLException;
+    void setParams(CallableStatement stmt);
 }

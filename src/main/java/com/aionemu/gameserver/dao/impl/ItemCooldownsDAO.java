@@ -117,7 +117,7 @@ public class ItemCooldownsDAO extends com.aionemu.gameserver.dao.ItemCooldownsDA
 					ItemCooldown cooldown = entry.getValue();
 					ps.setInt(1, player.getObjectId());
 					ps.setInt(2, entry.getKey());
-					ps.setInt(3, cooldown.getUseDelay());
+					ps.setInt(3, cooldown.useDelay());
 					ps.setLong(4, cooldown.getReuseTime());
 				}
 

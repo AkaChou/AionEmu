@@ -1,9 +1,7 @@
 package com.aionemu.chatserver.network.aion.clientpackets;
 
 
-import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
-import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 
 import com.aionemu.chatserver.common.netty.PacketReader;
@@ -70,10 +68,6 @@ public class CM_PLAYER_AUTH extends AbstractClientPacket {
      */
     @Override
     protected void runImpl() {
-        try {
-            chatService.registerPlayerConnection(playerId, token, identifier, clientChannelHandler, realName);
-        } catch (UnsupportedEncodingException e) {
-            log.error(I18n.get("log.fccabf8023e0", playerId), e);
-        }
+        chatService.registerPlayerConnection(playerId, token, identifier, clientChannelHandler, realName);
     }
 }

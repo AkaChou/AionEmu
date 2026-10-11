@@ -91,6 +91,15 @@ public interface IStorage {
 
 	int size();
 
+	/**
+	 * 返回是否没有任何物品。
+	 * Returns whether there is no item at all.
+	 * @return 无物品时为 true / true if empty
+	 */
+	default boolean isEmpty() {
+		return size() == 0;
+	}
+
 	PersistentState getPersistentState();
 
 	void setPersistentState(PersistentState persistentState);

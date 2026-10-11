@@ -3,6 +3,7 @@ package com.aionemu.gameserver.configs;
 
 import com.aionemu.boot.i18n.I18n;
 import java.io.File;
+import java.io.IOException;
 import java.util.Objects;
 import java.util.Properties;
 
@@ -83,10 +84,10 @@ public class Config {
 	 * Boot-time property overrides.
 	 */
 	private static volatile Properties bootOverrides = new Properties();
+
 	/**
 	 * 配置目录路径。
 	 * Config directory path.
-	 * @return 配置目录路径 / config directory path
 	 */
 	private static String configDir() {
 		return Objects.requireNonNull(System.getProperty("aion.config.dir"), "aion.config.dir is not configured");
@@ -98,10 +99,6 @@ public class Config {
 			copy.putAll(properties);
 		}
 		bootOverrides = copy;
-	}
-
-	public static String bootOverride(String key) {
-		return bootOverrides.getProperty(key);
 	}
 
 	public static File configFile(String relativePath) {
@@ -121,7 +118,7 @@ public class Config {
 		if (definitionsDir == null) {
 			String dataDir = System.getProperty("aion.game.data.dir");
 			File parent = dataDir == null ? null : new File(dataDir).getParentFile();
-			definitionsDir = new File(parent == null ? new File(".") : parent, "definitions").getPath();
+		definitionsDir = new File(parent == null ? new File(".") : parent, "definitions").getPath();
 		}
 		String normalized = relativePath.replace('\\', '/');
 		if (normalized.startsWith("./definitions/")) {
@@ -168,79 +165,89 @@ public class Config {
 	}
 
 	/**
+	 * 读取 mygs 覆盖并加载 administration/main/network 属性，逐类处理全部配置。
+	 * Reads mygs overrides, loads administration/main/network properties and processes every config class.
+	 * @throws IOException 配置目录读取失败 / when a config directory cannot be read
+	 */
+	private static void processAllConfigClasses() throws IOException {
+		Properties myProps = null;
+		try {
+			log.info(I18n.get("log.5685ceb915cb"));
+			myProps = PropertiesUtils.load(configDir() + "/mygs.properties");
+		} catch (Exception e) {
+			log.info(I18n.get("log.c453f21e95f6"));
+		}
+		String administration = configDir() + "/administration";
+		Properties[] adminProps = PropertiesUtils.loadAllFromDirectory(administration);
+		overrideRuntimeProperties(adminProps, myProps);
+		ConfigurableProcessor.process(AdminConfig.class, adminProps);
+		ConfigurableProcessor.process(DeveloperConfig.class, adminProps);
+		ConfigurableProcessor.process(PanelConfig.class, adminProps);
+		String main = configDir() + "/main";
+		Properties[] mainProps = PropertiesUtils.loadAllFromDirectory(main);
+		overrideRuntimeProperties(mainProps, myProps);
+		ConfigurableProcessor.process(AIConfig.class, mainProps);
+		ConfigurableProcessor.process(BrokerConfig.class, mainProps);
+		ConfigurableProcessor.process(CommonsConfig.class, mainProps);
+		ConfigurableProcessor.process(CacheConfig.class, mainProps);
+		ConfigurableProcessor.process(CleaningConfig.class, mainProps);
+		ConfigurableProcessor.process(CraftConfig.class, mainProps);
+		ConfigurableProcessor.process(CustomConfig.class, mainProps);
+		ConfigurableProcessor.process(DropConfig.class, mainProps);
+		DropConfig.refresh();
+		ConfigurableProcessor.process(EnchantsConfig.class, mainProps);
+		ConfigurableProcessor.process(EventsConfig.class, mainProps);
+		ConfigurableProcessor.process(FallDamageConfig.class, mainProps);
+		ConfigurableProcessor.process(AStationConfig.class, mainProps);
+		ConfigurableProcessor.process(GSConfig.class, mainProps);
+		ConfigurableProcessor.process(GeoDataConfig.class, mainProps);
+		ConfigurableProcessor.process(GroupConfig.class, mainProps);
+		ConfigurableProcessor.process(HousingConfig.class, mainProps);
+		ConfigurableProcessor.process(TransportConfig.class, mainProps);
+		TransportConfig.refresh();
+		ConfigurableProcessor.process(HTMLConfig.class, mainProps);
+		ConfigurableProcessor.process(InGameShopConfig.class, mainProps);
+		ConfigurableProcessor.process(InstanceConfig.class, mainProps);
+		InstanceConfig.refresh();
+		ConfigurableProcessor.process(AbyssLandingConfig.class, mainProps);
+		ConfigurableProcessor.process(LegionConfig.class, mainProps);
+		ConfigurableProcessor.process(LoggingConfig.class, mainProps);
+		ConfigurableProcessor.process(MembershipConfig.class, mainProps);
+		ConfigurableProcessor.process(NameConfig.class, mainProps);
+		ConfigurableProcessor.process(PeriodicSaveConfig.class, mainProps);
+		ConfigurableProcessor.process(PlayerTransferConfig.class, mainProps);
+		ConfigurableProcessor.process(PricesConfig.class, mainProps);
+		ConfigurableProcessor.process(PunishmentConfig.class, mainProps);
+		ConfigurableProcessor.process(PvPConfig.class, mainProps);
+		ConfigurableProcessor.process(RankingConfig.class, mainProps);
+		ConfigurableProcessor.process(RateConfig.class, mainProps);
+		ConfigurableProcessor.process(SecurityConfig.class, mainProps);
+		ConfigurableProcessor.process(ShutdownConfig.class, mainProps);
+		ConfigurableProcessor.process(ShutdownConfig.class, mainProps);
+		ConfigurableProcessor.process(SiegeConfig.class, mainProps);
+		ConfigurableProcessor.process(SkillConfig.class, mainProps);
+		SkillConfig.refresh();
+		ConfigurableProcessor.process(ThreadConfig.class, mainProps);
+		ConfigurableProcessor.process(WorldConfig.class, mainProps);
+		ConfigurableProcessor.process(AutoGroupConfig.class, mainProps);
+		ConfigurableProcessor.process(PvPModConfig.class, mainProps);
+		ConfigurableProcessor.process(FFAConfig.class, mainProps);
+		ConfigurableProcessor.process(ArchDaevaConfig.class, mainProps);
+		ConfigurableProcessor.process(VeteranRewardConfig.class, mainProps);
+		String network = configDir() + "/network";
+		Properties[] networkProps = PropertiesUtils.loadAllFromDirectory(network);
+		overrideRuntimeProperties(networkProps, myProps);
+		ConfigurableProcessor.process(DatabaseConfig.class, networkProps);
+		ConfigurableProcessor.process(NetworkConfig.class, networkProps);
+	}
+
+	/**
 	 * 加载全部游戏服配置。
 	 * Loads all gameserver configuration.
 	 */
 	public static void load() {
 		try {
-			Properties myProps = null;
-			try {
-				log.info(I18n.get("log.5685ceb915cb"));
-				myProps = PropertiesUtils.load(configDir() + "/mygs.properties");
-			} catch (Exception e) {
-				log.info(I18n.get("log.c453f21e95f6"));
-			}
-			String administration = configDir() + "/administration";
-			Properties[] adminProps = PropertiesUtils.loadAllFromDirectory(administration);
-			overrideRuntimeProperties(adminProps, myProps);
-			ConfigurableProcessor.process(AdminConfig.class, adminProps);
-			ConfigurableProcessor.process(DeveloperConfig.class, adminProps);
-			ConfigurableProcessor.process(PanelConfig.class, adminProps);
-			String main = configDir() + "/main";
-			Properties[] mainProps = PropertiesUtils.loadAllFromDirectory(main);
-			overrideRuntimeProperties(mainProps, myProps);
-			ConfigurableProcessor.process(AIConfig.class, mainProps);
-			ConfigurableProcessor.process(BrokerConfig.class, mainProps);
-			ConfigurableProcessor.process(CommonsConfig.class, mainProps);
-			ConfigurableProcessor.process(CacheConfig.class, mainProps);
-			ConfigurableProcessor.process(CleaningConfig.class, mainProps);
-			ConfigurableProcessor.process(CraftConfig.class, mainProps);
-			ConfigurableProcessor.process(CustomConfig.class, mainProps);
-			ConfigurableProcessor.process(DropConfig.class, mainProps);
-			DropConfig.refresh();
-			ConfigurableProcessor.process(EnchantsConfig.class, mainProps);
-			ConfigurableProcessor.process(EventsConfig.class, mainProps);
-			ConfigurableProcessor.process(FallDamageConfig.class, mainProps);
-			ConfigurableProcessor.process(AStationConfig.class, mainProps);
-			ConfigurableProcessor.process(GSConfig.class, mainProps);
-			ConfigurableProcessor.process(GeoDataConfig.class, mainProps);
-			ConfigurableProcessor.process(GroupConfig.class, mainProps);
-			ConfigurableProcessor.process(HousingConfig.class, mainProps);
-			ConfigurableProcessor.process(TransportConfig.class, mainProps);
-			TransportConfig.refresh();
-			ConfigurableProcessor.process(HTMLConfig.class, mainProps);
-			ConfigurableProcessor.process(InGameShopConfig.class, mainProps);
-			ConfigurableProcessor.process(InstanceConfig.class, mainProps);
-			InstanceConfig.refresh();
-			ConfigurableProcessor.process(AbyssLandingConfig.class, mainProps);
-			ConfigurableProcessor.process(LegionConfig.class, mainProps);
-			ConfigurableProcessor.process(LoggingConfig.class, mainProps);
-			ConfigurableProcessor.process(MembershipConfig.class, mainProps);
-			ConfigurableProcessor.process(NameConfig.class, mainProps);
-			ConfigurableProcessor.process(PeriodicSaveConfig.class, mainProps);
-			ConfigurableProcessor.process(PlayerTransferConfig.class, mainProps);
-			ConfigurableProcessor.process(PricesConfig.class, mainProps);
-			ConfigurableProcessor.process(PunishmentConfig.class, mainProps);
-			ConfigurableProcessor.process(PvPConfig.class, mainProps);
-			ConfigurableProcessor.process(RankingConfig.class, mainProps);
-			ConfigurableProcessor.process(RateConfig.class, mainProps);
-			ConfigurableProcessor.process(SecurityConfig.class, mainProps);
-			ConfigurableProcessor.process(ShutdownConfig.class, mainProps);
-			ConfigurableProcessor.process(SiegeConfig.class, mainProps);
-			ConfigurableProcessor.process(SkillConfig.class, mainProps);
-			SkillConfig.refresh();
-			ConfigurableProcessor.process(ThreadConfig.class, mainProps);
-			ConfigurableProcessor.process(WorldConfig.class, mainProps);
-			ConfigurableProcessor.process(AutoGroupConfig.class, mainProps);
-			ConfigurableProcessor.process(PvPModConfig.class, mainProps);
-			ConfigurableProcessor.process(FFAConfig.class, mainProps);
-			ConfigurableProcessor.process(ArchDaevaConfig.class, mainProps);
-			ConfigurableProcessor.process(VeteranRewardConfig.class, mainProps);
-			String network = configDir() + "/network";
-			Properties[] networkProps = PropertiesUtils.loadAllFromDirectory(network);
-			overrideRuntimeProperties(networkProps, myProps);
-			ConfigurableProcessor.process(DatabaseConfig.class, networkProps);
-			ConfigurableProcessor.process(NetworkConfig.class, networkProps);
+			processAllConfigClasses();
 		} catch (Exception e) {
 			log.error(I18n.get("log.07e02900f548"), e);
 			throw new Error("Can't load gameserver configuration: ", e);
@@ -249,87 +256,36 @@ public class Config {
 	}
 
 	/**
-	 * 重新加载配置并刷新依赖调度。
-	 * Reloads configuration and refreshes dependent schedules.
+	 * reload 可回滚的运行时设置快照。
+	 * Rollback-able runtime settings snapshot for reload.
 	 */
-	public static void reload() {
-		int worldRegionSize = WorldConfig.WORLD_REGION_SIZE;
-		int baseThreadPoolSize = ThreadConfig.BASE_THREAD_POOL_SIZE;
-		int extraThreadsPerCore = ThreadConfig.EXTRA_THREAD_PER_CORE;
-		int threadPoolSize = ThreadConfig.THREAD_POOL_SIZE;
-		boolean useThreadPriorities = ThreadConfig.USE_PRIORITIES;
-		boolean geoEnabled = GeoDataConfig.GEO_ENABLE;
-		boolean pathEnabled = GeoDataConfig.GEO_PATH_ENABLE;
-		String houseAuctionTime = HousingConfig.HOUSE_AUCTION_TIME;
-		String houseRegisterEnd = HousingConfig.HOUSE_REGISTER_END;
-		String houseMaintenanceTime = HousingConfig.HOUSE_MAINTENANCE_TIME;
-		try {
-			Properties myProps = null;
-			try {
-				log.info(I18n.get("log.5685ceb915cb"));
-				myProps = PropertiesUtils.load(configDir() + "/mygs.properties");
-			} catch (Exception e) {
-				log.info(I18n.get("log.c453f21e95f6"));
-			}
-			String administration = configDir() + "/administration";
-			Properties[] adminProps = PropertiesUtils.loadAllFromDirectory(administration);
-			overrideRuntimeProperties(adminProps, myProps);
-			ConfigurableProcessor.process(AdminConfig.class, adminProps);
-			ConfigurableProcessor.process(DeveloperConfig.class, adminProps);
-			ConfigurableProcessor.process(PanelConfig.class, adminProps);
-			String main = configDir() + "/main";
-			Properties[] mainProps = PropertiesUtils.loadAllFromDirectory(main);
-			overrideRuntimeProperties(mainProps, myProps);
-			ConfigurableProcessor.process(AIConfig.class, mainProps);
-			ConfigurableProcessor.process(BrokerConfig.class, mainProps);
-			ConfigurableProcessor.process(CommonsConfig.class, mainProps);
-			ConfigurableProcessor.process(CacheConfig.class, mainProps);
-			ConfigurableProcessor.process(CleaningConfig.class, mainProps);
-			ConfigurableProcessor.process(CraftConfig.class, mainProps);
-			ConfigurableProcessor.process(CustomConfig.class, mainProps);
-			ConfigurableProcessor.process(DropConfig.class, mainProps);
-			DropConfig.refresh();
-			ConfigurableProcessor.process(EnchantsConfig.class, mainProps);
-			ConfigurableProcessor.process(EventsConfig.class, mainProps);
-			ConfigurableProcessor.process(FallDamageConfig.class, mainProps);
-			ConfigurableProcessor.process(AStationConfig.class, mainProps);
-			ConfigurableProcessor.process(GSConfig.class, mainProps);
-			ConfigurableProcessor.process(GeoDataConfig.class, mainProps);
-			ConfigurableProcessor.process(GroupConfig.class, mainProps);
-			ConfigurableProcessor.process(HousingConfig.class, mainProps);
-			ConfigurableProcessor.process(TransportConfig.class, mainProps);
-			TransportConfig.refresh();
-			ConfigurableProcessor.process(HTMLConfig.class, mainProps);
-			ConfigurableProcessor.process(InGameShopConfig.class, mainProps);
-			ConfigurableProcessor.process(InstanceConfig.class, mainProps);
-			InstanceConfig.refresh();
-			InstanceScaler.reload();
-			InstanceService.reloadDestroyTasks();
-			InstanceService.load();
-			ConfigurableProcessor.process(AbyssLandingConfig.class, mainProps);
-			ConfigurableProcessor.process(LegionConfig.class, mainProps);
-			ConfigurableProcessor.process(LoggingConfig.class, mainProps);
-			ConfigurableProcessor.process(MembershipConfig.class, mainProps);
-			ConfigurableProcessor.process(NameConfig.class, mainProps);
-			ConfigurableProcessor.process(PeriodicSaveConfig.class, mainProps);
-			ConfigurableProcessor.process(PlayerTransferConfig.class, mainProps);
-			ConfigurableProcessor.process(PricesConfig.class, mainProps);
-			ConfigurableProcessor.process(PunishmentConfig.class, mainProps);
-			ConfigurableProcessor.process(PvPConfig.class, mainProps);
-			ConfigurableProcessor.process(RankingConfig.class, mainProps);
-			ConfigurableProcessor.process(RateConfig.class, mainProps);
-			ConfigurableProcessor.process(SecurityConfig.class, mainProps);
-			ConfigurableProcessor.process(ShutdownConfig.class, mainProps);
-			ConfigurableProcessor.process(SiegeConfig.class, mainProps);
-			ConfigurableProcessor.process(SkillConfig.class, mainProps);
-			SkillConfig.refresh();
-			ConfigurableProcessor.process(ThreadConfig.class, mainProps);
-			ConfigurableProcessor.process(WorldConfig.class, mainProps);
-			ConfigurableProcessor.process(AutoGroupConfig.class, mainProps);
-			ConfigurableProcessor.process(PvPModConfig.class, mainProps);
-			ConfigurableProcessor.process(FFAConfig.class, mainProps);
-			ConfigurableProcessor.process(ArchDaevaConfig.class, mainProps);
-			ConfigurableProcessor.process(VeteranRewardConfig.class, mainProps);
+	private record RuntimeSettingsSnapshot(
+		int worldRegionSize,
+		int baseThreadPoolSize,
+		int extraThreadsPerCore,
+		int threadPoolSize,
+		boolean useThreadPriorities,
+		boolean geoEnabled,
+		boolean pathEnabled,
+		String houseAuctionTime,
+		String houseRegisterEnd,
+		String houseMaintenanceTime) {
+
+		/**
+		 * 捕获当前运行时设置。
+		 * Captures the current runtime settings.
+		 */
+		static RuntimeSettingsSnapshot capture() {
+			return new RuntimeSettingsSnapshot(WorldConfig.WORLD_REGION_SIZE, ThreadConfig.BASE_THREAD_POOL_SIZE, ThreadConfig.EXTRA_THREAD_PER_CORE, ThreadConfig.THREAD_POOL_SIZE,
+				ThreadConfig.USE_PRIORITIES, GeoDataConfig.GEO_ENABLE, GeoDataConfig.GEO_PATH_ENABLE, HousingConfig.HOUSE_AUCTION_TIME, HousingConfig.HOUSE_REGISTER_END,
+				HousingConfig.HOUSE_MAINTENANCE_TIME);
+		}
+
+		/**
+		 * 恢复快照中的运行时设置。
+		 * Restores the runtime settings from the snapshot.
+		 */
+		void restore() {
 			WorldConfig.WORLD_REGION_SIZE = worldRegionSize;
 			ThreadConfig.BASE_THREAD_POOL_SIZE = baseThreadPoolSize;
 			ThreadConfig.EXTRA_THREAD_PER_CORE = extraThreadsPerCore;
@@ -340,6 +296,20 @@ public class Config {
 			HousingConfig.HOUSE_AUCTION_TIME = houseAuctionTime;
 			HousingConfig.HOUSE_REGISTER_END = houseRegisterEnd;
 			HousingConfig.HOUSE_MAINTENANCE_TIME = houseMaintenanceTime;
+		}
+	}
+
+	/**
+	 * 重新加载配置并刷新依赖调度。
+	 * Reloads configuration and refreshes dependent schedules.
+	 */
+	public static void reload() {
+		RuntimeSettingsSnapshot snapshot = RuntimeSettingsSnapshot.capture();
+		try {
+			processAllConfigClasses();
+			InstanceScaler.reload();
+			InstanceService.reloadDestroyTasks();
+			snapshot.restore();
 			GameServerNetworkServices.packetFloodFilter().reload();
 			GameRuntimeServices.periodicSaveService().reload();
 			GameRuntimeServices.brokerService().reload();
@@ -370,16 +340,7 @@ public class Config {
 			GameLocationBootstrapServices.zorshivDredgionService().reloadSchedule();
 			log.warn(I18n.get("log.b5283679a940"));
 		} catch (Exception e) {
-			WorldConfig.WORLD_REGION_SIZE = worldRegionSize;
-			ThreadConfig.BASE_THREAD_POOL_SIZE = baseThreadPoolSize;
-			ThreadConfig.EXTRA_THREAD_PER_CORE = extraThreadsPerCore;
-			ThreadConfig.THREAD_POOL_SIZE = threadPoolSize;
-			ThreadConfig.USE_PRIORITIES = useThreadPriorities;
-			GeoDataConfig.GEO_ENABLE = geoEnabled;
-			GeoDataConfig.GEO_PATH_ENABLE = pathEnabled;
-			HousingConfig.HOUSE_AUCTION_TIME = houseAuctionTime;
-			HousingConfig.HOUSE_REGISTER_END = houseRegisterEnd;
-			HousingConfig.HOUSE_MAINTENANCE_TIME = houseMaintenanceTime;
+			snapshot.restore();
 			log.error(I18n.get("log.4566dc07cb76"), e);
 			throw new Error("Can't reload configuration: ", e);
 		}

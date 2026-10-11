@@ -50,7 +50,7 @@ class EventScheduleWrapper implements Runnable {
 			}
 		}
 		if (!check()) {
-			Runnable runnable = () -> check();
+			Runnable runnable = this::check;
 			last_future = GameThreadPoolServices.threadPoolManager().schedule(runnable, RECHECK_DELAY * 60 * 1000);
 		}
 	}

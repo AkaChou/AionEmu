@@ -24,11 +24,11 @@ public class PlayerTransferTask {
     /** 备注/错误说明 / comment or error description */
     public String comment;
     /** 等待执行 / waiting to run */
-    public final static byte STATUS_WAIT = 0;
+    public static final byte STATUS_WAIT = 0;
     /** 执行中 / active */
-    public final static byte STATUS_ACTIVE = 1;
+    public static final byte STATUS_ACTIVE = 1;
     /** 已完成 / done */
-    public final static byte STATUS_DONE = 2;
+    public static final byte STATUS_DONE = 2;
     /** 失败 / error */
-    public final static byte STATUS_ERROR = 3;
+    public static final byte STATUS_ERROR = 3;
 }

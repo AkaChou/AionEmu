@@ -62,42 +62,28 @@ public final class PlayerSkillList implements SkillList<Player> {
 		allSkills.addAll(basicSkills.values());
 		allSkills.addAll(stigmaSkills.values());
 		allSkills.addAll(linkedSkills.values());
-		return allSkills.toArray(new PlayerSkillEntry[allSkills.size()]);
+		return allSkills.toArray(new PlayerSkillEntry[0]);
 	}
 
-	/** 返回全部技能 ID 列表 / Returns all skill IDs */
-	public List<Integer> getAllSkills2() {
-		HashSet<Integer> allSkills = new HashSet<>();
-		for (PlayerSkillEntry i : basicSkills.values()) {
-			allSkills.add(i.getSkillId());
-		}
-		for (PlayerSkillEntry i : stigmaSkills.values()) {
-			allSkills.add(i.getSkillId());
-		}
-		for (PlayerSkillEntry i : linkedSkills.values()) {
-			allSkills.add(i.getSkillId());
-		}
-		return Arrays.asList(allSkills.toArray(new Integer[0]));
-	}
-
+	
 	/** 返回基础技能 / Returns the basic skills */
 	public PlayerSkillEntry[] getBasicSkills() {
-		return basicSkills.values().toArray(new PlayerSkillEntry[basicSkills.size()]);
+		return basicSkills.values().toArray(new PlayerSkillEntry[0]);
 	}
 
 	/** 返回 stigma skills / Returns the stigma skills */
 	public PlayerSkillEntry[] getStigmaSkills() {
-		return stigmaSkills.values().toArray(new PlayerSkillEntry[stigmaSkills.size()]);
+		return stigmaSkills.values().toArray(new PlayerSkillEntry[0]);
 	}
 
 	/** 返回 linked skills / Returns the linked skills */
 	public PlayerSkillEntry[] getLinkedSkills() {
-		return linkedSkills.values().toArray(new PlayerSkillEntry[linkedSkills.size()]);
+		return linkedSkills.values().toArray(new PlayerSkillEntry[0]);
 	}
 
 	/** 返回 deleted skills / Returns the deleted skills */
 	public PlayerSkillEntry[] getDeletedSkills() {
-		return deletedSkills.toArray(new PlayerSkillEntry[deletedSkills.size()]);
+		return deletedSkills.toArray(new PlayerSkillEntry[0]);
 	}
 
 	/** 捕获事务性装备变更所触及的全部可变技能投影。 / Captures all mutable skill projections touched by transactional equipment changes. */
@@ -154,11 +140,7 @@ public final class PlayerSkillList implements SkillList<Player> {
 		return stigmaSkills.get(skillId);
 	}
 
-	/** 返回 linked skill entry / Returns the linked skill entry */
-	public PlayerSkillEntry getLinkedSkillEntry(int skillId) {
-		return linkedSkills.get(skillId);
-	}
-
+	
 	/** 添加技能。 / Adds skill. */
 	@Override
 	public boolean addSkill(Player player, int skillId, int skillLevel) {
@@ -166,8 +148,8 @@ public final class PlayerSkillList implements SkillList<Player> {
 	}
 
 	/** 添加 GM 技能 / Adds gm skill */
-	public boolean addGMSkill(Player player, int skillId, int skillLevel) {
-		return addSkillAct(player, skillId, skillLevel, true, false, PersistentState.NOACTION, true);
+	public void addGMSkill(Player player, int skillId, int skillLevel) {
+		addSkillAct(player, skillId, skillLevel, true, false, PersistentState.NOACTION, true);
 	}
 
 	private synchronized boolean addSkillAct(Player player, int skillId, int skillLevel, boolean isStigma,
@@ -214,8 +196,8 @@ public final class PlayerSkillList implements SkillList<Player> {
 		addSkill(player, skillId, 1, false, true, PersistentState.NOACTION);
 	}
 	/** Adds 烙印之石技能 / Adds stigma skill */
-	public boolean addStigmaSkill(Player player, int skillId, int skillLevel) {
-		return addSkill(player, skillId, skillLevel, true, false, PersistentState.NOACTION);
+	public void addStigmaSkill(Player player, int skillId, int skillLevel) {
+		addSkill(player, skillId, skillLevel, true, false, PersistentState.NOACTION);
 	}
 
 	/**
@@ -226,42 +208,13 @@ public final class PlayerSkillList implements SkillList<Player> {
 	 * @param skillLevel 技能等级 / Skill level
 	 * @return 是否成功 / Whether successful
 	 */
-	public boolean addAbyssSkill(Player player, int skillId, int skillLevel) {
-		return addSkill(player, skillId, skillLevel, false, false, PersistentState.NOACTION);
+	public void addAbyssSkill(Player player, int skillId, int skillLevel) {
+		addSkill(player, skillId, skillLevel, false, false, PersistentState.NOACTION);
 	}
 
-	/** 添加关联烙印之石技能 / Adds linked stigma skill */
-	public void addLinkedStigmaSkill(Player player, int skillId, int skillLvl) {
-		PlayerSkillEntry skill = new PlayerSkillEntry(skillId, false, true, skillLvl, 0, null, 0, false,
-				PersistentState.NOACTION);
-		this.stigmaSkills.put(skillId, skill);
-		PacketSendUtility.sendPacket(player, new SM_SKILL_LIST(player, skill));
-		PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_STIGMA_GET_LINKED_SKILL(
-				new DescriptionId(DataManager.SKILL_DATA.getSkillTemplate(skill.getSkillId()).getNameId()), skillLvl));
-	}
-
-	/** Adds 烙印之石技能 / Adds stigma skill */
-	public void addStigmaSkill(Player player, List<StigmaSkill> skills, boolean equipedByNpc) {
-		for (StigmaSkill sSkill : skills) {
-			PlayerSkillEntry skill = new PlayerSkillEntry(sSkill.getSkillId(), true, false, sSkill.getSkillLvl(), 0,
-					null, 0, false, PersistentState.NOACTION);
-			this.stigmaSkills.put(sSkill.getSkillId(), skill);
-			if (equipedByNpc) {
-				PacketSendUtility.sendPacket(player, new SM_SKILL_LIST(skill, 1300401, false));
-			}
-		}
-	}
-
-	/** Adds 烙印之石技能 / Adds stigma skill */
-	public void addStigmaSkill(Player player, int skillId, int skillLevel, boolean withMsg, boolean equipedByNpc) {
-		PlayerSkillEntry skill = new PlayerSkillEntry(skillId, true, false, skillLevel, 0, null, 0, false,
-				PersistentState.NOACTION);
-		this.stigmaSkills.put(skillId, skill);
-		if (equipedByNpc) {
-			PacketSendUtility.sendPacket(player, new SM_SKILL_LIST(skill, withMsg ? 1300401 : 0, false));
-		}
-	}
-
+	
+	
+	
 	private synchronized boolean addSkill(Player player, int skillId, int skillLevel, boolean isStigma,
 			boolean isLinked, PersistentState state) {
 		PlayerSkillEntry existingSkill = isStigma ? stigmaSkills.get(skillId) : basicSkills.get(skillId);

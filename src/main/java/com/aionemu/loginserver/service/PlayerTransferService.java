@@ -1,7 +1,6 @@
 package com.aionemu.loginserver.service;
 
 import com.aionemu.boot.i18n.I18n;
-import com.aionemu.loginserver.service.LoginDaosHolder;
 import lombok.extern.slf4j.Slf4j;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -53,7 +52,7 @@ public class PlayerTransferService {
      * Construct the service: start the periodic verify task and resolve the DAO.
      */
     public PlayerTransferService() {
-        veryfyTask = LoginThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> verifyNewTasks(), 10000, 7 * 60000);
+        veryfyTask = LoginThreadPoolServices.threadPoolManager().scheduleAtFixedRate(this::verifyNewTasks, 10000, 7 * 60000);
         this.dao = LoginDaosHolder.daos().playerTransferDAO();
         log.info(I18n.get("log.78b004f6b3cd"));
     }

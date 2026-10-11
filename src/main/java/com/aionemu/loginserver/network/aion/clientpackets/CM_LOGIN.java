@@ -87,7 +87,7 @@ public class CM_LOGIN extends AionClientPacket {
                 client.setState(State.AUTHED_LOGIN);
                 client.setSessionKey(new SessionKey(client.getAccount()));
                 client.sendPacket(new SM_LOGIN_OK(client.getSessionKey()));
-                log.debug(user + " got authed state");
+                log.debug("{} got authed state", user);
                 break;
             case INVALID_PASSWORD:
                 if (Config.ENABLE_BRUTEFORCE_PROTECTION) {
@@ -95,19 +95,19 @@ public class CM_LOGIN extends AionClientPacket {
                     if (LoginProtectionServices.bruteForceProtector().addFailedConnect(ip)) {
                         Timestamp newTime = new Timestamp(System.currentTimeMillis() + Config.WRONG_LOGIN_BAN_TIME * 60000L);
                         LoginProtectionServices.bannedIpService().banIp(ip, newTime);
-                        log.debug(user + " on " + ip + " banned for " + Config.WRONG_LOGIN_BAN_TIME + " min. bruteforce");
+                        log.debug("{} on {} banned for {} min. bruteforce", user, ip, Config.WRONG_LOGIN_BAN_TIME);
                         client.close(new SM_LOGIN_FAIL(AionAuthResponse.BAN_IP), false);
                     } else {
-                        log.debug(user + " got invalid password attemp state");
+                        log.debug("{} got invalid password attemp state", user);
                         client.sendPacket(new SM_LOGIN_FAIL(response));
                     }
                 } else {
-                    log.debug(user + " got invalid password attemp state");
+                    log.debug("{} got invalid password attemp state", user);
                     client.sendPacket(new SM_LOGIN_FAIL(response));
                 }
                 break;
             default:
-                log.debug(user + " got unknown (" + response + ") attemp state");
+                log.debug("{} got unknown ({}) attemp state", user, response);
                 client.close(new SM_LOGIN_FAIL(response), false);
                 break;
         }

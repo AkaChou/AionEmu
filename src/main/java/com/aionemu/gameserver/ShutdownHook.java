@@ -239,7 +239,7 @@ public class ShutdownHook extends Thread {
 						PlayerLeaveWorldService.startLeaveWorld(player);
 					}
 				} catch (Exception e) {
-					log.error(I18n.get("shutdown.disconnect_player_error", player != null ? player.getName() : "unknown"), e);
+					log.error(I18n.get("shutdown.disconnect_player_error", player.getName()), e);
 				}
 
 				if (System.currentTimeMillis() - startTime > maxWaitTime) {

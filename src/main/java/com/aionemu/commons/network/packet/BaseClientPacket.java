@@ -3,6 +3,8 @@ package com.aionemu.commons.network.packet;
 import com.aionemu.boot.i18n.I18n;
 import com.aionemu.commons.network.AConnection;
 import java.nio.ByteBuffer;
+
+import com.aionemu.commons.utils.PrintUtils;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -168,20 +170,6 @@ public abstract class BaseClientPacket<T extends AConnection> extends BasePacket
     }
 
     /**
-     * 读取双精度浮点数。
-     * Read double-precision float.
-     * @return 双精度值，失败返回 0 / Double value, 0 on failure
-     */
-    protected final double readDF() {
-        try {
-            return this.buf.getDouble();
-        } catch (Exception var2) {
-            log.error(I18n.get("log.e76069d83a06", this));
-            return 0.0D;
-        }
-    }
-
-    /**
      * 读取单精度浮点数。
      * Read single-precision float.
      * @return 单精度值，失败返回 0 / Float value, 0 on failure
@@ -254,13 +242,7 @@ public abstract class BaseClientPacket<T extends AConnection> extends BasePacket
      * @return 字节数组 / Byte array
      */
     protected final byte[] readB(String string) {
-        String finalString = string.replaceAll("\\s+", "");
-        byte[] bytes = new byte[finalString.length() / 2];
-
-        for (int i = 0; i < bytes.length; ++i) {
-            bytes[i] = (byte) Integer.parseInt(finalString.substring(2 * i, 2 * i + 2), 16);
-        }
-
+		byte[] bytes = PrintUtils.hex2bytes(string);
         try {
             this.buf.get(bytes);
         } catch (Exception var5) {

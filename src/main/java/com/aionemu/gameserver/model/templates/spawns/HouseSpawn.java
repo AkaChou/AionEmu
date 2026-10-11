@@ -46,6 +46,6 @@ public class HouseSpawn {
 		if (h == null) {
 			return 0;
 		}
-		return h.byteValue();
+		return h;
 	}
 }

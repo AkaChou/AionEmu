@@ -43,25 +43,6 @@ public class Stigma {
 		return list;
 	}
 
-	/** 返回技能 ID 列表（仅 ID）/ Returns the skill ids only */
-	public List<Integer> getSkillIdOnly() {
-		List<Integer> ids = new ArrayList<>();
-		List<String> skill = this.skill;
-		if (skill.size() != 1) {
-			String[] tempArray = new String[0];
-			for (String parts : skill) {
-				tempArray = parts.split(":");
-				ids.add(Integer.parseInt(tempArray[1]));
-			}
-			return ids;
-		}
-		for (String st : this.skill) {
-			String[] array = st.split(":");
-			ids.add(Integer.parseInt(array[1]));
-		}
-		return ids;
-	}
-
 	/** 返回所需技能 / Returns the require skill */
 	public List<RequireSkill> getRequireSkill() {
 		if (requireSkill == null) {
@@ -70,23 +51,12 @@ public class Stigma {
 		return this.requireSkill;
 	}
 
-	@Getter
-    public static class StigmaSkill {
-        /**
-         * -- GETTER --
-         * 返回技能 ID / Returns the skill id
-         */
-        private final int skillId;
-        /**
-         * -- GETTER --
-         * 返回技能等级 / Returns the skill lvl
-         */
-        private final int skillLvl;
-
-		public StigmaSkill(int skillLvl, int skillId) {
-			this.skillId = skillId;
-			this.skillLvl = skillLvl;
-		}
-
-    }
+	/**
+	 * @param skillId  -- GETTER --
+	 *                 返回技能 ID / Returns the skill id
+	 * @param skillLvl -- GETTER --
+	 *                 返回技能等级 / Returns the skill lvl
+	 */
+	public record StigmaSkill(int skillLvl, int skillId) {
+	}
 }

@@ -10,7 +10,6 @@ import java.awt.TextField;
 import java.awt.event.ActionListener;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.NoSuchElementException;
 
 import com.aionemu.gameserver.services.player.PlayerService;
 
@@ -131,13 +130,13 @@ public class ServerCommandProcessor {
 	 * 关服按钮监听。
 	 * Shutdown button listener.
 	 */
-	ActionListener al_shutdown = e -> GameAdminPanelShutdownRequest.shutdown();
+	ActionListener al_shutdown = _ -> GameAdminPanelShutdownRequest.shutdown();
 
 	/**
 	 * 在线人数查询监听。
 	 * Online-count query listener.
 	 */
-	ActionListener al_online = e -> {
+	ActionListener al_online = _ -> {
 		int playerCount = PlayerService.daos().playerDAO().getOnlinePlayerCount();
 		if (playerCount == 1) {
 			log.info(I18n.get("log.b5cec4ab4481", (playerCount)));
@@ -151,7 +150,7 @@ public class ServerCommandProcessor {
 	 * 列出在线玩家监听。
 	 * List-online-players listener.
 	 */
-	ActionListener al_who = e -> {
+	ActionListener al_who = _ -> {
 		Collection<Player> players = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getAllPlayers();
 		if (players.isEmpty()) {
 			log.info(I18n.get("log.b09026e40703"));
@@ -166,7 +165,7 @@ public class ServerCommandProcessor {
 	 * 给指定玩家发放物品监听。
 	 * Grant-item-to-player listener.
 	 */
-	ActionListener al_add = e -> {
+	ActionListener al_add = _ -> {
 		int itemId = Integer.parseInt(itemID.getText());
 		long itemCount = 1;
 
@@ -196,7 +195,7 @@ public class ServerCommandProcessor {
 	 * 踢出玩家（或全部非 GM）监听。
 	 * Kick player (or all non-GMs) listener.
 	 */
-	ActionListener al_kick = e -> {
+	ActionListener al_kick = _ -> {
 		if (playerNameFieled.getText() != null && "All".equalsIgnoreCase(playerNameFieled.getText())) {
 			for (final Player player : com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getAllPlayers()) {
 				if (!player.isGM()) {
@@ -219,7 +218,7 @@ public class ServerCommandProcessor {
 	 * 全服公告监听。
 	 * Server-wide announce listener.
 	 */
-	ActionListener al_announce = e -> {
+	ActionListener al_announce = _ -> {
 		if (!"Announce message".equals(messageAnnounce.getText())) {
 			Iterator<Player> iter = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getPlayersIterator();
 
@@ -233,7 +232,7 @@ public class ServerCommandProcessor {
 	 * 送入监狱监听。
 	 * Send-to-prison listener.
 	 */
-	ActionListener al_sendPrison = e -> {
+	ActionListener al_sendPrison = _ -> {
 		if (playerNameFieled.getText() != null) {
 			try {
 				Player playerToPrison = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(playerNameFieled.getText());
@@ -244,7 +243,7 @@ public class ServerCommandProcessor {
 					PunishmentService.setIsInPrison(playerToPrison, true, delay, reason);
 					log.info(I18n.get("log.8c0b8cb89af5", playerToPrison.getName(), delay, reason));
 				}
-			} catch (Exception eo) {
+			} catch (Exception _) {
 
 			}
 		}
@@ -254,7 +253,7 @@ public class ServerCommandProcessor {
 	 * 从监狱救出监听。
 	 * Rescue-from-prison listener.
 	 */
-	ActionListener al_rescuePrison = e -> {
+	ActionListener al_rescuePrison = _ -> {
 		if (playerNameFieled.getText() != null) {
 			try {
 				Player playerFromPrison = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(playerNameFieled.getText());
@@ -263,8 +262,7 @@ public class ServerCommandProcessor {
 					PunishmentService.setIsInPrison(playerFromPrison, false, 0, "");
 					log.info(I18n.get("log.dd4fb905c8ca", playerFromPrison.getName()));
 				}
-			} catch (NoSuchElementException nsee) {
-			} catch (Exception ee) {
+			} catch (Exception _) {
 			}
 		}
 	};

@@ -38,7 +38,7 @@ public class ResponseRequester {
 		RequestResponseHandler handler = map.get(messageId);
 		if (handler != null) {
 			map.remove(messageId);
-			log.debug("RequestResponseHandler triggered for response code " + messageId + " from " + player.getName());
+			log.debug("RequestResponseHandler triggered for response code {} from {}", messageId, player.getName());
 			handler.handle(player, response);
 			return true;
 		}

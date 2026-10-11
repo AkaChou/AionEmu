@@ -28,7 +28,7 @@ class DuplicateStatFunction extends StatFunction {
 			if (functions1 != null) {
 				List<StatFunction> f1 = getFunctions(functions1, stat, mainWeapon);
 				if (!f1.isEmpty()) {
-					func1 = f1.get(0);
+					func1 = f1.getFirst();
 					functions.addAll(f1);
 				}
 			}
@@ -38,7 +38,7 @@ class DuplicateStatFunction extends StatFunction {
 				if (functions2 != null) {
 					List<StatFunction> f2 = getFunctions(functions2, stat, mainWeapon);
 					if (!f2.isEmpty()) {
-						func2 = f2.get(0);
+						func2 = f2.getFirst();
 						functions.addAll(f2);
 					}
 				}
@@ -69,7 +69,7 @@ class DuplicateStatFunction extends StatFunction {
 	}
 
 	private StatFunction selectMaxValue(List<StatFunction> functions) {
-		StatFunction max = functions.get(0);
+		StatFunction max = functions.getFirst();
 		for (StatFunction function : functions) {
 			if (function.getValue() > max.getValue()) {
 				max = function;

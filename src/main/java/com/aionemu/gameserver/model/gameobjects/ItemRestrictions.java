@@ -36,17 +36,14 @@ final class ItemRestrictions {
 	}
 
 	/**
-	 * 对该玩家而言物品是否视为已灵魂绑定（指定会员权限可跳过绑定）。
-	 * Whether the item counts as soul bound for the given player (a membership permission can skip binding).
+	 * 对该玩家而言物品是否视为未灵魂绑定（指定会员权限可跳过绑定）。
+	 * Whether the item counts as not soul bound for the given player (a membership permission can skip binding).
 	 * @param item 物品 / item
 	 * @param player 玩家 / player
-	 * @return 对该玩家是否已绑定 / whether soul bound for the player
+	 * @return 对该玩家是否未绑定 / whether not soul bound for the player
 	 */
-	static boolean isSoulBoundFor(Item item, Player player) {
-		if (player.havePermission(MembershipConfig.DISABLE_SOULBIND)) {
-			return false;
-		}
-		return item.isSoulBound();
+	static boolean isSoulUnboundFor(Item item, Player player) {
+		return player.havePermission(MembershipConfig.DISABLE_SOULBIND) || !item.isSoulBound();
 	}
 
 	/**
@@ -57,7 +54,7 @@ final class ItemRestrictions {
 	 * @return 是否可存入 / whether storable
 	 */
 	static boolean isStorableInWarehouse(Item item, Player player) {
-		return hasMaskBit(effectiveMask(item, player), ItemMask.STORABLE_IN_WH) && !isSoulBoundFor(item, player);
+		return hasMaskBit(effectiveMask(item, player), ItemMask.STORABLE_IN_WH) && isSoulUnboundFor(item, player);
 	}
 
 	/**
@@ -68,7 +65,7 @@ final class ItemRestrictions {
 	 * @return 是否可存入 / whether storable
 	 */
 	static boolean isStorableInAccWarehouse(Item item, Player player) {
-		return hasMaskBit(effectiveMask(item, player), ItemMask.STORABLE_IN_AWH) && !isSoulBoundFor(item, player);
+		return hasMaskBit(effectiveMask(item, player), ItemMask.STORABLE_IN_AWH) && isSoulUnboundFor(item, player);
 	}
 
 	/**
@@ -79,7 +76,7 @@ final class ItemRestrictions {
 	 * @return 是否可存入 / whether storable
 	 */
 	static boolean isStorableInLegWarehouse(Item item, Player player) {
-		return hasMaskBit(effectiveMask(item, player), ItemMask.STORABLE_IN_LWH) && !isSoulBoundFor(item, player);
+		return hasMaskBit(effectiveMask(item, player), ItemMask.STORABLE_IN_LWH) && isSoulUnboundFor(item, player);
 	}
 
 	/**
@@ -90,7 +87,7 @@ final class ItemRestrictions {
 	 * @return 是否可交易 / whether tradeable
 	 */
 	static boolean isTradeable(Item item, Player player) {
-		return hasMaskBit(effectiveMask(item, player), ItemMask.TRADEABLE) && !isSoulBoundFor(item, player);
+		return hasMaskBit(effectiveMask(item, player), ItemMask.TRADEABLE) && isSoulUnboundFor(item, player);
 	}
 
 	/**

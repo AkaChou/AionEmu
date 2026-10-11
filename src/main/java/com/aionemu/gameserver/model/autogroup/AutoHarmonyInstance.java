@@ -87,14 +87,14 @@ public class AutoHarmonyInstance extends AutoInstance {
 		if (group != null) {
 			List<Player> _players = getPlayerFromGroup(group);
 			_players.remove(player);
-			if (_players.size() == 1 && !_players.get(0).isInGroup2()) {
-				PlayerGroup newGroup = PlayerGroupService.createGroup(_players.get(0), player, TeamType.AUTO_GROUP);
+			if (_players.size() == 1 && !_players.getFirst().isInGroup2()) {
+				PlayerGroup newGroup = PlayerGroupService.createGroup(_players.getFirst(), player, TeamType.AUTO_GROUP);
 				int groupId = newGroup.getObjectId();
 				if (!instance.isRegistered(groupId)) {
 					instance.register(groupId);
 				}
-			} else if (!_players.isEmpty() && _players.get(0).isInGroup2()) {
-				PlayerGroupService.addPlayer(_players.get(0).getPlayerGroup2(), player);
+			} else if (!_players.isEmpty() && _players.getFirst().isInGroup2()) {
+				PlayerGroupService.addPlayer(_players.getFirst().getPlayerGroup2(), player);
 			}
 			if (!instance.isRegistered(object)) {
 				instance.register(object);
@@ -155,8 +155,8 @@ public class AutoHarmonyInstance extends AutoInstance {
 	}
 
 	private AGQuestion canAddGroup(List<AGPlayer> group, Player player, SearchInstance searchInstance) {
-		if (group.size() > 0) {
-			if (!group.get(0).getRace().equals(player.getRace())) {
+		if (!group.isEmpty()) {
+			if (!group.getFirst().getRace().equals(player.getRace())) {
 				return AGQuestion.FAILED;
 			}
 		}

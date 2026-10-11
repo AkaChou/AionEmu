@@ -49,7 +49,6 @@ public abstract class AbyssRankDAO implements DAO {
 	 * 存储玩家的欧比斯排名。
 	 * Stores a player's abyss rank.
 	 * @param player 玩家 / player
-	 * @return 是否成功 / whether successful
 	 */
 	public abstract void storeAbyssRank(Player player);
 
@@ -81,7 +80,7 @@ public abstract class AbyssRankDAO implements DAO {
 	 * @param maxOfflineDays 最大离线天数 / max offline days
 	 * @return 玩家 ID 到 AP 的映射 / map of player ID to AP
 	 */
-	
+
 	/**
 	 * 加载符合条件的玩家荣耀点数（GP）。
 	 * Loads players' glory points (GP) matching the given criteria.

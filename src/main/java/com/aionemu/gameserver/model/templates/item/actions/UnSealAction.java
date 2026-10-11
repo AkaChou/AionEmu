@@ -52,8 +52,8 @@ public class UnSealAction extends AbstractItemAction {
 					return;
 				}
 				player.getObserveController().removeObserver(this);
-				PacketSendUtility.sendPacket(player, new SM_ITEM_USAGE_ANIMATION(player.getObjectId().intValue(),
-						parentItem.getObjectId().intValue(), parentItem.getItemTemplate().getTemplateId(), 0, 3, 0));
+				PacketSendUtility.sendPacket(player, new SM_ITEM_USAGE_ANIMATION(player.getObjectId(),
+					parentItem.getObjectId(), parentItem.getItemTemplate().getTemplateId(), 0, 3, 0));
 				ItemPacketService.updateItemAfterInfoChange(player, targetItem);
 				if (getAction() == 0) {
 					PacketSendUtility.sendPacket(player,
@@ -71,8 +71,8 @@ public class UnSealAction extends AbstractItemAction {
 			public void run() {
 				if (player.getInventory().decreaseByItemId(parentItem.getItemId(), 1)) {
 					PacketSendUtility.broadcastPacketAndReceive(player,
-							new SM_ITEM_USAGE_ANIMATION(player.getObjectId().intValue(),
-									player.getObjectId().intValue(), parentItem.getObjectId().intValue(),
+							new SM_ITEM_USAGE_ANIMATION(player.getObjectId(),
+								player.getObjectId(), parentItem.getObjectId(),
 									parentItem.getItemId(), 0, 1, 0));
 					if (getAction() == 0) {
 						targetItem.setUnSeal(0);

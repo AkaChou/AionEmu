@@ -9,8 +9,6 @@ import java.sql.Timestamp;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -348,7 +346,7 @@ public class AccountController {
      * @param accountId 账号 ID / Account id
      */
     public synchronized void loadGSCharactersCount(int accountId) {
-        GsConnection gsc = null;
+        GsConnection gsc;
         Map<Integer, Integer> accountCharacterCount = new ConcurrentHashMap<>();
         accountsGSCharacterCounts.put(accountId, accountCharacterCount);
 
@@ -403,7 +401,7 @@ public class AccountController {
      */
     public Map<Integer, Integer> getGSCharacterCountsFor(int accountId) {
         Map<Integer, Integer> characterCount = accountsGSCharacterCounts.get(accountId);
-        return characterCount == null ? null : Collections.unmodifiableMap(new HashMap<>(characterCount));
+        return characterCount == null ? null : Map.copyOf(characterCount);
     }
 
     /**
@@ -415,7 +413,7 @@ public class AccountController {
      */
     public synchronized void addGSCharacterCountFor(int accountId, int gsid, int characterCount) {
         accountsGSCharacterCounts
-            .computeIfAbsent(accountId, id -> new ConcurrentHashMap<>())
+            .computeIfAbsent(accountId, _ -> new ConcurrentHashMap<>())
             .put(gsid, characterCount);
     }
 

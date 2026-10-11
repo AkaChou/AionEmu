@@ -26,7 +26,7 @@ public class PingPongThread implements Runnable {
      * 线程是否继续运行。
      * Whether the thread should keep running.
      */
-    public volatile boolean uptime = true;
+    public volatile boolean uptime;
     private final SM_PING ping;
     private byte requests = 0;
     private int serverPID = -1;
@@ -102,7 +102,7 @@ public class PingPongThread implements Runnable {
             }
             connection.close(false);
             if (killProcess && serverPID != -1) {
-                if (System.getProperty("os.name").toLowerCase().indexOf("windows") != -1) {
+                if (System.getProperty("os.name").toLowerCase().contains("windows")) {
                     try {
                         new ProcessBuilder("taskkill", "/pid", String.valueOf(serverPID), "/f").start();
                     } catch (IOException e) {

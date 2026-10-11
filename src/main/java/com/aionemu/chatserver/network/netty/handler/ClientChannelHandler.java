@@ -109,7 +109,7 @@ public class ClientChannelHandler {
             clientPacket.run();
         }
         if (clientPacket != null && log.isDebugEnabled()) {
-            log.debug("Received packet: " + clientPacket);
+            log.debug("Received packet: {}", clientPacket);
         }
     }
 
@@ -130,7 +130,7 @@ public class ClientChannelHandler {
         writer.setH(0, writer.readableBytes());
         nettyChannel.writeAndFlush(output);
         if (log.isDebugEnabled()) {
-            log.debug("Sent packet: " + packet);
+            log.debug("Sent packet: {}", packet);
         }
     }
 

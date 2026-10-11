@@ -6,11 +6,8 @@ import com.aionemu.gameserver.model.IExpirable;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.house.House;
 import com.aionemu.gameserver.model.templates.housing.AbstractHouseObject;
-import com.aionemu.gameserver.model.templates.housing.HouseType;
 import com.aionemu.gameserver.model.templates.housing.HousingCategory;
-import com.aionemu.gameserver.model.templates.housing.LimitType;
 import com.aionemu.gameserver.model.templates.housing.PlaceArea;
-import com.aionemu.gameserver.model.templates.housing.PlaceLocation;
 import com.aionemu.gameserver.model.templates.housing.PlaceableHouseObject;
 import com.aionemu.gameserver.model.templates.item.ItemQuality;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
@@ -18,6 +15,8 @@ import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.PlayerAwareKnownList;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.Objects;
 
 /**
  * 房屋对象。
@@ -106,10 +105,7 @@ public abstract class HouseObject<T extends PlaceableHouseObject> extends Visibl
 			return -1;
 		}
 		int diff = expireEnd - (int) (System.currentTimeMillis() / 1000);
-		if (diff < 0) {
-			return 0;
-		}
-		return diff;
+		return Math.max(diff, 0);
 	}
 
 	/** 过期消息。 / Expire Message. */
@@ -207,34 +203,14 @@ public abstract class HouseObject<T extends PlaceableHouseObject> extends Visibl
 		setHeading((byte) Math.ceil(rotation / 3f));
 	}
 
-	/** 返回放置位置 / Returns the place location */
-	public PlaceLocation getPlaceLocation() {
-		return ((PlaceableHouseObject) objectTemplate).getLocation();
-	}
-
 	/** 返回放置区域 / Returns the place area */
 	public PlaceArea getPlaceArea() {
 		return ((PlaceableHouseObject) objectTemplate).getArea();
 	}
 
-	/** 返回放置数量上限 / Returns the placement limit */
-	public int getPlacementLimit(boolean trial) {
-		LimitType limitType = ((PlaceableHouseObject) objectTemplate).getPlacementLimit();
-		HouseType size = HouseType.fromValue(ownerHouse.getBuilding().getSize());
-		if (trial) {
-			return limitType.getTrialObjectPlaceLimit(size);
-		}
-		return limitType.getObjectPlaceLimit(size);
-	}
-
 	/** 返回品质 / Returns the quality */
 	public ItemQuality getQuality() {
 		return ((AbstractHouseObject) objectTemplate).getQuality();
-	}
-
-	/** 返回对话距离 / Returns the talking distance */
-	public float getTalkingDistance() {
-		return ((AbstractHouseObject) objectTemplate).getTalkingDistance();
 	}
 
 	/** 获取分类。 / Returns the category. */
@@ -328,7 +304,7 @@ public abstract class HouseObject<T extends PlaceableHouseObject> extends Visibl
 
 	/** 设置颜色 / Sets the color */
 	public void setColor(Integer color) {
-		if (color != this.color) {
+		if (!Objects.equals(color, this.color)) {
 			this.color = color;
 			setPersistentState(PersistentState.UPDATE_REQUIRED);
 		}

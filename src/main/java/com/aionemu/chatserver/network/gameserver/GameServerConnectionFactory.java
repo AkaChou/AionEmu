@@ -1,6 +1,5 @@
 package com.aionemu.chatserver.network.gameserver;
 
-import java.io.IOException;
 
 import com.aionemu.commons.network.AConnection;
 import com.aionemu.commons.network.ConnectionTransport;
@@ -18,10 +17,9 @@ public class GameServerConnectionFactory implements NettyConnectionFactory {
      * Creates a game-server connection for the given transport.
      * @param transport 底层连接传输 / underlying connection transport
      * @return 新建的连接实例 / newly created connection
-     * @throws IOException 连接创建失败时抛出 / thrown when connection creation fails
      */
     @Override
-    public AConnection create(ConnectionTransport transport) throws IOException {
+    public AConnection create(ConnectionTransport transport) {
         return new GsConnection(transport);
     }
 }

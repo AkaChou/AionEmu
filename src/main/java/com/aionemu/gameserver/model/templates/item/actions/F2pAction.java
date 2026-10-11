@@ -47,16 +47,16 @@ public class F2pAction extends AbstractItemAction {
 	/** 执行 / act. */
 	public void act(final Player player, final Item parentItem, Item targetItem) {
 		player.getController().cancelUseItem();
-		PacketSendUtility.sendPacket(player, new SM_ITEM_USAGE_ANIMATION(player.getObjectId().intValue(),
-				parentItem.getObjectId().intValue(), parentItem.getItemTemplate().getTemplateId(), 1000, 0, 0));
+		PacketSendUtility.sendPacket(player, new SM_ITEM_USAGE_ANIMATION(player.getObjectId(),
+			parentItem.getObjectId(), parentItem.getItemTemplate().getTemplateId(), 1000, 0, 0));
 		player.getController().scheduleTask(TaskId.ITEM_USE, new Runnable() {
 			/** 运行 / run. */
 			@Override
 			public void run() {
-				boolean succ = player.getInventory().decreaseByObjectId(parentItem.getObjectId().intValue(), 1);
+				boolean succ = player.getInventory().decreaseByObjectId(parentItem.getObjectId(), 1);
 				PacketSendUtility.broadcastPacketAndReceive(player,
-						new SM_ITEM_USAGE_ANIMATION(player.getObjectId().intValue(),
-								parentItem.getObjectId().intValue(), parentItem.getItemId(), 0, 1, 0));
+						new SM_ITEM_USAGE_ANIMATION(player.getObjectId(),
+                                parentItem.getObjectId(), parentItem.getItemId(), 0, 1, 0));
 				if (succ) {
 					PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1300423,
 						new DescriptionId(parentItem.getItemTemplate().getNameId())));

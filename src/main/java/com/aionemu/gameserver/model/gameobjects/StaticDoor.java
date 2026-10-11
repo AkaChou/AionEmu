@@ -54,7 +54,7 @@ public class StaticDoor extends StaticObject {
 	 */
 	public void setOpen(boolean open) {
 		EmotionType emotion;
-		int packetState = 0; // 不重要，与内部状态类似 / not important, similar to internal state
+		int packetState; // 不重要，与内部状态类似 / not important, similar to internal state
 		if (open) {
 			emotion = EmotionType.OPEN_DOOR;
 			states.remove(StaticDoorState.CLICKABLE);
@@ -71,14 +71,6 @@ public class StaticDoor extends StaticObject {
 		GameWorldServices.geoService().setDoorState(getWorldId(), getInstanceId(), getSpawn().getStaticId(), open);
 		// int stateFlags = StaticDoorState.getFlags(states);
 		PacketSendUtility.broadcastPacket(this, new SM_EMOTION(this.getSpawn().getStaticId(), emotion, packetState));
-	}
-
-	/** 更换状态 / Change state. */
-	public void changeState(boolean open, int state) {
-		state = state & 0xF;
-		StaticDoorState.setStates(state, states);
-		EmotionType emotion = open ? emotion = EmotionType.OPEN_DOOR : EmotionType.CLOSE_DOOR;
-		PacketSendUtility.broadcastPacket(this, new SM_EMOTION(this.getSpawn().getStaticId(), emotion, state));
 	}
 
 	/** 获取对象模板。 / Returns the object template. */

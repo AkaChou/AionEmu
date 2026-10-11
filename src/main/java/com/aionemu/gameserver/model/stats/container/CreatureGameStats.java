@@ -1,7 +1,6 @@
 package com.aionemu.gameserver.model.stats.container;
 
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
@@ -69,7 +68,7 @@ public abstract class CreatureGameStats<T extends Creature> {
 	/** 属性表读写锁（与表一起在首次写入时分配）。 / Stats map lock, allocated with the map on the first write. */
 	private volatile ReentrantReadWriteLock lock;
 	private int attackCounter = 0;
-	protected T owner = null;
+	protected T owner;
 	private Stat2 cachedHPStat;
 	private Stat2 cachedMPStat;
 
@@ -100,17 +99,7 @@ public abstract class CreatureGameStats<T extends Creature> {
 		}
 	}
 
-	/**
-	 * @param attackCounter the atcount to set
-	 */
-	protected void setAttackCounter(int attackCounter) {
-		if (attackCounter <= 0) {
-			this.attackCounter = 1;
-		} else {
-			this.attackCounter = attackCounter;
-		}
-	}
-
+	
 	/** Increase attack counter / Increase attack counter */
 	public void increaseAttackCounter() {
 		if (attackCounter == ATTACK_MAX_COUNTER) {
@@ -160,12 +149,7 @@ public abstract class CreatureGameStats<T extends Creature> {
 			try {
 				for (Entry<StatEnum, TreeSet<IStatFunction>> e : current.entrySet()) {
 					TreeSet<IStatFunction> value = e.getValue();
-					for (Iterator<IStatFunction> iter = value.iterator(); iter.hasNext();) {
-						IStatFunction ownedMod = iter.next();
-						if (ownedMod.getOwner() != null && ownedMod.getOwner().equals(statOwner)) {
-							iter.remove();
-						}
-					}
+                    value.removeIf(ownedMod -> ownedMod.getOwner() != null && ownedMod.getOwner().equals(statOwner));
 				}
 			} finally {
 				statsLock.writeLock().unlock();
@@ -174,18 +158,12 @@ public abstract class CreatureGameStats<T extends Creature> {
 		onStatsChange();
 	}
 
-	/** 返回 positive stat / Returns the positive stat */
-	public int getPositiveStat(StatEnum statEnum, int base) {
-		Stat2 stat = getStat(statEnum, base);
-		int value = stat.getCurrent();
-		return value > 0 ? value : 0;
-	}
-
+	
 	/** 返回 positive reverse stat / Returns the positive reverse stat */
 	public int getPositiveReverseStat(StatEnum statEnum, int base) {
 		Stat2 stat = getReverseStat(statEnum, base);
 		int value = stat.getCurrent();
-		return value > 0 ? value : 0;
+		return Math.max(value, 0);
 	}
 
 	/** 获取属性。 / Returns the stat. */
@@ -217,12 +195,7 @@ public abstract class CreatureGameStats<T extends Creature> {
 		return getStat(statEnum, stat);
 	}
 
-	/** 返回 reverse stat / Returns the reverse stat */
-	public Stat2 getReverseStat(StatEnum statEnum, int base, float bonusRate) {
-		Stat2 stat = new ReverseStat(statEnum, base, owner, bonusRate);
-		return getStat(statEnum, stat);
-	}
-
+	
 	/** 获取属性。 / Returns the stat. */
 	public Stat2 getStat(StatEnum statEnum, Stat2 stat, CalculationType... calculationTypes) {
 		Map<StatEnum, TreeSet<IStatFunction>> current = stats;

@@ -174,12 +174,6 @@ public class CustomConfig {
 	@Property(key = "gameserver.instances.enable", defaultValue = "true")
 	public static boolean ENABLE_INSTANCES;
 	/**
-	 * 启用怪物仇恨的副本地图 ID 列表。
-	 * Instance map IDs with mob aggro enabled.
-	 */
-	@Property(key = "gameserver.instances.mob.aggro", defaultValue = "300030000,300040000,300050000,300060000,300070000,300080000,300090000,300100000,300110000,300120000,300130000,300140000,300150000,300160000,300170000,300190000,300200000,300210000,300220000,300230000,300240000,300250000,300270000,300280000,300300000,300310000,300320000,300380000,300440000,300460000,300470000,300510000,300520000,300530000,300540000,300560000,300580000,300590000,300600000,300700000,300800000,300900000,301010000,301020000,301030000,301040000,301050000,301110000,301120000,301130000,301140000,301170000,301180000,301190000,301210000,310050000,310080000,310090000,310100000,310110000,320050000,320080000,320090000,320100000,320110000,320120000,320130000,320150000")
-	public static String INSTANCES_MOB_AGGRO;
-	/**
 	 * 是否启用基纳上限。
 	 * Whether kinah cap is enabled.
 	 */
@@ -1105,7 +1099,6 @@ public class CustomConfig {
 
 	@Getter
 	public static class InstancesProperties {
-		private final MobProperties mob = new MobProperties();
 
 		public boolean isEnable() {
 			return ENABLE_INSTANCES;
@@ -1113,16 +1106,6 @@ public class CustomConfig {
 
 		public void setEnable(boolean enable) {
 			ENABLE_INSTANCES = enable;
-		}
-
-		public static class MobProperties {
-			public String getAggro() {
-				return INSTANCES_MOB_AGGRO;
-			}
-
-			public void setAggro(String aggro) {
-				INSTANCES_MOB_AGGRO = aggro;
-			}
 		}
 	}
 

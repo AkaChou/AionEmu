@@ -42,11 +42,11 @@ public final class WindstreamDefinitionLoader {
 			documents.putAll(documents(parse(windFile)));
 			Map<String, List<Integer>> worldIds = worldIds(parse(idMappingsFile));
 			// AionEmu still exposes these two pre-5.8 IDs for the same client levels.
-			worldIds.computeIfAbsent("tiamat_down", key -> new ArrayList<>()).add(600040000);
-			worldIds.computeIfAbsent("ldf5a", key -> new ArrayList<>()).add(600050000);
+			worldIds.computeIfAbsent("tiamat_down", _ -> new ArrayList<>()).add(600040000);
+			worldIds.computeIfAbsent("ldf5a", _ -> new ArrayList<>()).add(600050000);
 			// LF4_M 客户端路线同时供实际可玩的英吉斯温世界使用。
 			// LF4_M client routes also serve the live Inggison world.
-			worldIds.computeIfAbsent("lf4_m", key -> new ArrayList<>()).add(210050000);
+			worldIds.computeIfAbsent("lf4_m", _ -> new ArrayList<>()).add(210050000);
 
 			Map<Integer, List<WindstreamRoute>> routesByMap = new LinkedHashMap<>();
 			Element flyPaths = requiredDocument(documents, "fly_path.xml");
@@ -68,7 +68,7 @@ public final class WindstreamDefinitionLoader {
 				verifyEndpoints(groupId, group, sourcePoints);
 				List<Point3D> points = samplePoints(sourcePoints);
 				for (int mapId : mapIds) {
-					routesByMap.computeIfAbsent(mapId, key -> new ArrayList<>())
+					routesByMap.computeIfAbsent(mapId, _ -> new ArrayList<>())
 						.add(new WindstreamRoute(mapId, groupId, durationMillis, points));
 				}
 			}
@@ -79,8 +79,8 @@ public final class WindstreamDefinitionLoader {
 				List<Location2D> locations = new ArrayList<>();
 				for (WindstreamRoute route : entry.getValue()) {
 					// The Iluma/Norsvold invasion paths are enabled by their existing NPC AIs.
-					int state = route.getId() == 301 || route.getId() == 302 ? 0 : 1;
-					locations.add(new Location2D(route.getId(), state, FlyPathType.ONE_WAY));
+					int state = route.id() == 301 || route.id() == 302 ? 0 : 1;
+					locations.add(new Location2D(route.id(), state, FlyPathType.ONE_WAY));
 					routes.add(route);
 				}
 				templates.add(new WindstreamTemplate(entry.getKey(), locations));
@@ -121,7 +121,7 @@ public final class WindstreamDefinitionLoader {
 		for (Element data : descendants(worldIds, "data")) {
 			String name = text(data);
 			if (!name.isEmpty()) {
-				result.computeIfAbsent(normalize(name), key -> new ArrayList<>()).add(Integer.parseInt(data.getAttribute("id")));
+				result.computeIfAbsent(normalize(name), _ -> new ArrayList<>()).add(Integer.parseInt(data.getAttribute("id")));
 			}
 		}
 		return result;

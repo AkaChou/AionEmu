@@ -54,13 +54,13 @@ public final class ThreadPoolManager {
         longRunningPool.setRejectedExecutionHandler(new AionRejectedExecutionHandler());
         longRunningPool.prestartAllCoreThreads();
 
-        scheduleAtFixedRate(() -> purge(), 150000, 150000);
+        scheduleAtFixedRate(this::purge, 150000, 150000);
 
         log.info(I18n.get("log.17977a3c1da1", scheduledPool.getPoolSize(), instantPool.getPoolSize(), longRunningPool.getPoolSize()));
     }
 
     private long validate(long delay) {
-        return Math.max(0, Math.min(MAX_DELAY, delay));
+        return Math.clamp(delay, 0, MAX_DELAY);
     }
 
     private int longRunningPoolSize() {

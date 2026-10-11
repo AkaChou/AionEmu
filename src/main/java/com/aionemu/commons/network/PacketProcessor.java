@@ -68,7 +68,6 @@ public class PacketProcessor<T extends AConnection> {
 	 * 连接亲和分片条带数组。
 	 * Connection-affinity striped queue array.
 	 */
-	@SuppressWarnings("unchecked")
 	private final QueueStripe<T>[] stripes;
 
 	/**

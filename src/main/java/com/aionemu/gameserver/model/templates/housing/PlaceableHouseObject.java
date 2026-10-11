@@ -42,7 +42,7 @@ public abstract class PlaceableHouseObject extends AbstractHouseObject {
 	 /**
 	  * 获取 useDays 属性值。
 	  * Gets the value of the useDays property
-	  * @return null if not restricted
+	  * @return useDays null if not restricted
 	  */
 	public int getUseDays() {
 		if (useDays == null) {

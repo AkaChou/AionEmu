@@ -36,15 +36,15 @@ public abstract class AutoInstance extends AbstractLockManager implements AutoIn
 		if (i < count) {
 			return false;
 		}
-		Collections.sort(items, new Comparator<>() {
-			/**
-			 * 比较 / compare.
-			 */
-			@Override
-			public int compare(Item o1, Item o2) {
-				return Long.compare(o1.getExpireTime(), o2.getExpireTime());
-			}
-		});
+		items.sort(new Comparator<>() {
+            /**
+             * 比较 / compare.
+             */
+            @Override
+            public int compare(Item o1, Item o2) {
+                return Long.compare(o1.getExpireTime(), o2.getExpireTime());
+            }
+        });
 		for (Item item : items) {
 			long l = player.getInventory().decreaseItemCount(item, count);
 			if (l == 0) {

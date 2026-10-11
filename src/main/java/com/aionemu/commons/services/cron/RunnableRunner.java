@@ -3,7 +3,6 @@ package com.aionemu.commons.services.cron;
 import org.quartz.Job;
 import org.quartz.JobDataMap;
 import org.quartz.JobExecutionContext;
-import org.quartz.JobExecutionException;
 
 /**
  * 任务执行器抽象类，用于处理定时任务的执行
@@ -18,7 +17,7 @@ import org.quartz.JobExecutionException;
  *    Provides abstract methods for subclasses to implement specific execution logic
  */
 public abstract class RunnableRunner implements Job {
-    
+
     /** 任务实例的 JobDataMap 键名 / JobDataMap key for runnable instance */
     public static final String KEY_RUNNABLE_OBJECT = "cronservice.scheduled.runnable.instance";
 
@@ -26,19 +25,17 @@ public abstract class RunnableRunner implements Job {
     public static final String KEY_PROPERTY_IS_LONGRUNNING_TASK = "cronservice.scheduled.runnable.islognrunning";
 
     /** Cron 表达式的 JobDataMap 键名 / JobDataMap key for cron expression */
-    public static final String KEY_CRON_EXPRESSION = "cronservice.scheduled.runnable.cronexpression";
 
     /**
      * 执行定时任务
      * Execute scheduled task
      * @param context 任务执行上下文 / task execution context
-     * @throws JobExecutionException 任务执行异常 / task execution exception
-     */
-    public void execute(JobExecutionContext context) throws JobExecutionException {
+	 */
+    public void execute(JobExecutionContext context) {
         JobDataMap jdm = context.getJobDetail().getJobDataMap();
         Runnable r = (Runnable)jdm.get(KEY_RUNNABLE_OBJECT);
         boolean longRunning = jdm.getBoolean(KEY_PROPERTY_IS_LONGRUNNING_TASK);
-        
+
         if (longRunning) {
             this.executeLongRunningRunnable(r);
         } else {

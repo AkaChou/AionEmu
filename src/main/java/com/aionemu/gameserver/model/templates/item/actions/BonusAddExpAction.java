@@ -34,9 +34,6 @@ public class BonusAddExpAction extends AbstractItemAction {
 	@XmlAttribute()
 	protected boolean isPercent = true;
 
-	public BonusAddExpAction(Integer rate) {
-		this.rate = rate;
-	}
 
 	/**
 	 * 是否可以执行动作。
@@ -59,13 +56,13 @@ public class BonusAddExpAction extends AbstractItemAction {
 	public void act(final Player player, final Item parentItem, final Item targetItem) {
 		long exp = player.getCommonData().getExpNeed();
 		long expPercent = Math.round((exp * rate) / 100f);
-		if (player.getInventory().decreaseByObjectId(parentItem.getObjectId().intValue(), 1)) {
+		if (player.getInventory().decreaseByObjectId(parentItem.getObjectId(), 1)) {
 			player.getCommonData().addExp(expPercent, null);
 			player.getObserveController().notifyItemuseObservers(parentItem);
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_GET_EXP2(expPercent));
 			ItemTemplate itemTemplate = parentItem.getItemTemplate();
 			PacketSendUtility.broadcastPacket(player,
-					new SM_ITEM_USAGE_ANIMATION(player.getObjectId().intValue(), parentItem.getObjectId().intValue(),
+					new SM_ITEM_USAGE_ANIMATION(player.getObjectId(), parentItem.getObjectId(),
 							itemTemplate.getTemplateId()),
 					true);
 		}

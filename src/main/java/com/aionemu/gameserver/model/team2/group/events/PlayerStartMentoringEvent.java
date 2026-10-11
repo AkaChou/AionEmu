@@ -27,7 +27,7 @@ public class PlayerStartMentoringEvent extends AlwaysTrueTeamEvent implements Pr
 	/** 处理事件。 / Handle event. */
 	@Override
 	public void handleEvent() {
-		if (group.filterMembers(new MentorSuiteFilter(player)).size() == 0) {
+		if (group.filterMembers(new MentorSuiteFilter(player)).isEmpty()) {
 			AuditLogger.info(player, "Send fake start mentoring packet");
 			return;
 		}

@@ -198,7 +198,7 @@ public class BrokerItem implements Comparable<BrokerItem> {
 	/** 比较。 / Compares to another instance. */
 	@Override
 	public int compareTo(BrokerItem o) {
-		return itemUniqueId > o.getItemUniqueId() ? 1 : -1;
+		return Integer.compare(itemUniqueId, o.getItemUniqueId());
 	}
 
 	static Comparator<BrokerItem> NAME_SORT_ASC = new Comparator<>() {
@@ -236,10 +236,7 @@ public class BrokerItem implements Comparable<BrokerItem> {
 			if (o1 == null || o2 == null) {
 				return comparePossiblyNull(o1, o2);
 			}
-			if (o1.getPrice() == o2.getPrice()) {
-				return 0;
-			}
-			return o1.getPrice() > o2.getPrice() ? 1 : -1;
+			return Long.compare(o1.getPrice(), o2.getPrice());
 		}
 	};
 
@@ -252,10 +249,7 @@ public class BrokerItem implements Comparable<BrokerItem> {
 			if (o1 == null || o2 == null) {
 				return comparePossiblyNull(o1, o2);
 			}
-			if (o1.getPrice() == o2.getPrice()) {
-				return 0;
-			}
-			return o1.getPrice() > o2.getPrice() ? -1 : 1;
+			return -Long.compare(o1.getPrice(), o2.getPrice());
 		}
 	};
 
@@ -268,10 +262,7 @@ public class BrokerItem implements Comparable<BrokerItem> {
 			if (o1 == null || o2 == null) {
 				return comparePossiblyNull(o1, o2);
 			}
-			if (o1.getPiecePrice() == o2.getPiecePrice()) {
-				return 0;
-			}
-			return o1.getPiecePrice() > o2.getPiecePrice() ? 1 : -1;
+			return Long.compare(o1.getPiecePrice(), o2.getPiecePrice());
 		}
 	};
 
@@ -284,10 +275,7 @@ public class BrokerItem implements Comparable<BrokerItem> {
 			if (o1 == null || o2 == null) {
 				return comparePossiblyNull(o1, o2);
 			}
-			if (o1.getPiecePrice() == o2.getPiecePrice()) {
-				return 0;
-			}
-			return o1.getPiecePrice() > o2.getPiecePrice() ? -1 : 1;
+			return -Long.compare(o1.getPiecePrice(), o2.getPiecePrice());
 		}
 	};
 
@@ -300,10 +288,7 @@ public class BrokerItem implements Comparable<BrokerItem> {
 			if (o1 == null || o2 == null) {
 				return comparePossiblyNull(o1, o2);
 			}
-			if (o1.getItemLevel() == o2.getItemLevel()) {
-				return 0;
-			}
-			return o1.getItemLevel() > o2.getItemLevel() ? 1 : -1;
+			return Integer.compare(o1.getItemLevel(), o2.getItemLevel());
 		}
 	};
 
@@ -316,10 +301,7 @@ public class BrokerItem implements Comparable<BrokerItem> {
             if (o1 == null || o2 == null) {
                 return comparePossiblyNull(o1, o2);
             }
-            if (o1.getItemLevel() == o2.getItemLevel()) {
-                return 0;
-            }
-            return o1.getItemLevel() > o2.getItemLevel() ? -1 : 1;
+            return -Integer.compare(o1.getItemLevel(), o2.getItemLevel());
         }
     };
 

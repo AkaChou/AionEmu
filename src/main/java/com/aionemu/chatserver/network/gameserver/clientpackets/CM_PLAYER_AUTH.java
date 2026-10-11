@@ -1,6 +1,5 @@
 package com.aionemu.chatserver.network.gameserver.clientpackets;
 
-import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
 import java.security.NoSuchAlgorithmException;
 
@@ -70,8 +69,6 @@ public class CM_PLAYER_AUTH extends GsClientPacket {
         try {
             chatClient = ChatCoreServices.chatService().registerPlayer(playerId, playerLogin, nick);
         } catch (NoSuchAlgorithmException e) {
-            log.error(I18n.get("log.ce4b198eb93c", e.getMessage()));
-        } catch (UnsupportedEncodingException e) {
             log.error(I18n.get("log.ce4b198eb93c", e.getMessage()));
         }
 

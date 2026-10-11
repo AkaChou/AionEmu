@@ -57,7 +57,6 @@ public class AbyssLandingDAO extends com.aionemu.gameserver.dao.AbyssLandingDAO 
      * 加载全部登陆点；缺失记录会自动插入。
      * Loads all landing locations; missing rows are inserted automatically.
      * @param locations 登陆点映射 / landing location map
-     * @return 是否成功 / whether successful
      */
     @Override
     public void loadLandingLocations(final Map<Integer, LandingLocation> locations) {
@@ -99,7 +98,6 @@ public class AbyssLandingDAO extends com.aionemu.gameserver.dao.AbyssLandingDAO 
      * 更新登陆点。
      * Updates a landing location.
      * @param locations 登陆点位置 / landing location
-     * @return 是否成功 / whether successful
      */
     @Override
     public boolean updateLandingLocation(final LandingLocation locations) {
@@ -127,11 +125,10 @@ public class AbyssLandingDAO extends com.aionemu.gameserver.dao.AbyssLandingDAO 
      * 插入登陆点。
      * Inserts a landing location.
      * @param locations 登陆点位置 / landing location
-     * @return 是否成功 / whether successful
      */
-    private boolean insertLandingLocation(final LandingLocation locations) {
+    private void insertLandingLocation(final LandingLocation locations) {
         try {
-            int affected = jdbcClient.sql(INSERT_QUERY)
+            jdbcClient.sql(INSERT_QUERY)
                 .param(locations.getId())
                 .param(locations.getLevel())
                 .param(locations.getSiegePoints())
@@ -145,10 +142,8 @@ public class AbyssLandingDAO extends com.aionemu.gameserver.dao.AbyssLandingDAO 
                 .param(locations.getTemplate().getRace().toString())
                 .param(locations.getPoints())
                 .update();
-            return affected > 0;
         } catch (Exception e) {
             log.error(I18n.get("log.34ceaeea74ab", locations.getId()), e);
-            return false;
         }
     }
 

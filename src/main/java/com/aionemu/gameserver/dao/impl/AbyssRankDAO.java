@@ -63,16 +63,6 @@ public class AbyssRankDAO extends com.aionemu.gameserver.dao.AbyssRankDAO {
 	public static final String SELECT_LEGIONS_RANKING = "SELECT legions.id, legions.name, legions.contribution_points, " + "legions.level as lvl, legions.old_rank_pos, legions.rank_pos " + "FROM legions, legion_members, players WHERE players.race = ? " + "AND legion_members.`rank` = 'BRIGADE_GENERAL' AND legion_members.player_id = players.id " + "AND legion_members.legion_id = legions.id AND legions.contribution_points > 0 " + "GROUP BY id ORDER BY legions.contribution_points DESC LIMIT 50";
 
 	/**
-	 * 按阵营查询玩家 AP / Select player AP by race
-	 */
-	public static final String SELECT_AP_PLAYER = "SELECT player_id, ap FROM abyss_rank, players WHERE " + "abyss_rank.player_id = players.id AND players.race = ? AND ap > ? " + "ORDER BY ap DESC";
-
-	/**
-	 * 按阵营查询活跃玩家 AP / Select active player AP by race
-	 */
-	public static final String SELECT_AP_PLAYER_ACTIVE_ONLY = "SELECT player_id, ap FROM abyss_rank, players WHERE " + "abyss_rank.player_id = players.id AND players.race = ? AND ap > ? " + "AND UNIX_TIMESTAMP(CURDATE()) - UNIX_TIMESTAMP(players.last_online) <= ? * 24 * 60 * 60 " + "ORDER BY ap DESC";
-
-	/**
 	 * 按阵营查询玩家 GP / Select player GP by race
 	 */
 	public static final String SELECT_GP_PLAYER = "SELECT player_id, gp FROM abyss_rank, players WHERE " + "abyss_rank.player_id = players.id AND players.race = ? AND gp > ? " + "ORDER BY gp DESC";
@@ -199,25 +189,15 @@ public class AbyssRankDAO extends com.aionemu.gameserver.dao.AbyssRankDAO {
 	 * Stores the player's abyss rank according to its persistent state.
 	 *
 	 * @param player 玩家 / player
-	 * @return 保存成功则为 true / true if stored successfully
 	 */
 	@Override
 	public void storeAbyssRank(Player player) {
 		AbyssRank rank = player.getAbyssRank();
-		if (rank == null) {
-						;
-		}
-		PersistentState state = rank.getPersistentState();
-		if (state != PersistentState.NEW && state != PersistentState.UPDATE_REQUIRED) {
-						;
-		}
 		try (Connection con = DatabaseFactory.getConnection()) {
 			storeInTransaction(con, player.getObjectId(), rank);
 			rank.setPersistentState(PersistentState.UPDATED);
-						;
 		} catch (SQLException e) {
 			log.error(I18n.get("log.418d26f689fd", player.getObjectId()), e);
-						;
 		}
 	}
 
@@ -370,19 +350,18 @@ public class AbyssRankDAO extends com.aionemu.gameserver.dao.AbyssRankDAO {
 	 */
 	private int getLegionMembersCount(final int legionId) {
 		try {
-			Integer count = jdbcClient.sql(SELECT_LEGION_COUNT)
+			return jdbcClient.sql(SELECT_LEGION_COUNT)
 				.param(legionId)
 				.query(Integer.class)
 				.optional()
 				.orElse(0);
-			return count;
 		} catch (DataAccessException e) {
 			log.error(I18n.get("log.d75f73bd7260", legionId), e);
 			return 0;
 		}
 	}
 
-	
+
 
 	/**
 	 * 加载指定阵营玩家的 GP 映射；可限制活跃天数。

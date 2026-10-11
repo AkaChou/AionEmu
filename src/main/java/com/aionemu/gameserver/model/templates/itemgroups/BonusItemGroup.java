@@ -33,7 +33,7 @@ public abstract class BonusItemGroup {
 		if (chance == null) {
 			return 0.0f;
 		}
-		return chance.floatValue();
+		return chance;
 	}
 
 	/** 获取奖励。 / Returns the rewards. */

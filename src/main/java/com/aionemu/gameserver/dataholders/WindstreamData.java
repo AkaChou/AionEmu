@@ -40,12 +40,12 @@ public class WindstreamData {
 		indexTemplates();
 		routesByMap = new IntObjectHashMap<>();
 		for (WindstreamRoute route : routes) {
-			IntObjectHashMap<WindstreamRoute> mapRoutes = routesByMap.get(route.getMapId());
+			IntObjectHashMap<WindstreamRoute> mapRoutes = routesByMap.get(route.mapId());
 			if (mapRoutes == null) {
 				mapRoutes = new IntObjectHashMap<>();
-				routesByMap.put(route.getMapId(), mapRoutes);
+				routesByMap.put(route.mapId(), mapRoutes);
 			}
-			mapRoutes.put(route.getId(), route);
+			mapRoutes.put(route.id(), route);
 		}
 	}
 

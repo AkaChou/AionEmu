@@ -100,7 +100,7 @@ public class SummonedObject<T extends VisibleObject> extends Npc {
 	@Override
 	public Race getRace() {
 		if (creator instanceof Creature) {
-			return creator != null ? ((Creature) creator).getRace() : Race.NONE;
+			return ((Creature) creator).getRace();
 		}
 		return super.getRace();
 	}

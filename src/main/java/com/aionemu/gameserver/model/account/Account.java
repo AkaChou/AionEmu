@@ -2,7 +2,6 @@ package com.aionemu.gameserver.model.account;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -137,9 +136,8 @@ public class Account implements Iterable<PlayerAccountData> {
 	 * Sorts the accounts on last online
 	 */
 	public ArrayList<PlayerAccountData> getSortedAccountsList() {
-		ArrayList<PlayerAccountData> list = new ArrayList<>();
-		list.addAll(players.values());
-		Collections.sort(list, new Comparator<>() {
+		ArrayList<PlayerAccountData> list = new ArrayList<>(players.values());
+		list.sort(new Comparator<>() {
 
 			/**
 			 * 比较 / compare.

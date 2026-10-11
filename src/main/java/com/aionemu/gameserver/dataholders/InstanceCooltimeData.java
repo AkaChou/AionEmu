@@ -119,22 +119,22 @@ public class InstanceCooltimeData {
 				instanceCoolTime = getUpdateHours(days, hour);
 
 			} else if (clt.getCoolTimeType().isRelative()) {
-				switch (worldId) {
-				case 300480000: // Sealed Danuar Mysticarium.
-				case 300560000: // Shugo Imperial Tomb.
-				case 301160000: // Nightmare Circus.
-				case 301200000: // The Nightmare Circus.
-				case 301320000: // Lucky Ophidan Bridge.
-				case 301330000: // Lucky Danuar Reliquary.
-				case 301400000: // The Shugo Emperor's Vault.
-				case 301590000: // Emperor Trillirunerk's Safe.
-				case 302350000: // Windy Gorge 5.5
-				case 302370000: // 5.6
-				case 302420000: // 5.6
-					// 注意：原版有两种计算，为兼容性保留两者。 / Note: The original had both calculations, keeping both for compatibility
-					instanceCoolTime = System.currentTimeMillis() + ((long) clt.getEntCoolTime() * 60 * 1000);
-					break;
-				}
+				instanceCoolTime = switch (worldId) { // Sealed Danuar Mysticarium.
+					// Shugo Imperial Tomb.
+					// Nightmare Circus.
+					// The Nightmare Circus.
+					// Lucky Ophidan Bridge.
+					// Lucky Danuar Reliquary.
+					// The Shugo Emperor's Vault.
+					// Emperor Trillirunerk's Safe.
+					// Windy Gorge 5.5
+					// 5.6
+					case 300480000, 300560000, 301160000, 301200000, 301320000, 301330000, 301400000, 301590000,
+					     302350000, 302370000, 302420000 -> // 5.6
+						// 注意：原版有两种计算，为兼容性保留两者。 / Note: The original had both calculations, keeping both for compatibility
+						System.currentTimeMillis() + ((long) clt.getEntCoolTime() * 60 * 1000);
+					default -> instanceCoolTime;
+				};
 			}
 		}
 		if (instanceCooldownRate != 1) {

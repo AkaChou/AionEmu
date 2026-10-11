@@ -45,5 +45,14 @@ public interface Team<M, TM extends TeamMember<M>> {
 
 	int size();
 
+	/**
+	 * 返回队伍是否没有任何成员。
+	 * Returns whether the team has no members at all.
+	 * @return 无成员时为 true / true if empty
+	 */
+	default boolean isEmpty() {
+		return size() == 0;
+	}
+
 	boolean isFull();
 }

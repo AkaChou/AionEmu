@@ -123,16 +123,7 @@ public class VortexLocation implements ZoneHandler {
 		return kisks;
 	}
 
-	/**
-	 * 该对象 ID 是否已通过裂隙并处于入侵者名单中。
-	 * Whether the object id is a passed invader of the vortex.
-	 * @param objId 对象 ID / object id
-	 * @return 是入侵者则为 true / true if invader
-	 */
-	public boolean isInvaderInside(int objId) {
-		return isActive() && getVortexController().getPassedPlayers().containsKey(objId);
-	}
-
+	
 	/**
 	 * 玩家是否处于激活的漩涡区域内。
 	 * Whether the player is inside the active vortex.
@@ -159,11 +150,11 @@ public class VortexLocation implements ZoneHandler {
 		if (zones.isEmpty()) {
 			return false;
 		}
-		for (int i = 0; i < zones.size(); i++) {
-			if (zones.get(i).isInsideCreature(creature)) {
-				return true;
-			}
-		}
+        for (InvasionZoneInstance zone : zones) {
+            if (zone.isInsideCreature(creature)) {
+                return true;
+            }
+        }
 		return false;
 	}
 

@@ -83,7 +83,7 @@ public class TemperingAction extends AbstractItemAction {
 					return;
 				}
 				player.getObserveController().removeObserver(this);
-				PacketSendUtility.sendPacket(player, new SM_ITEM_USAGE_ANIMATION(player.getObjectId().intValue(), parentItem.getObjectId().intValue(), parentItem.getItemTemplate().getTemplateId(), 0, 3, 0));
+				PacketSendUtility.sendPacket(player, new SM_ITEM_USAGE_ANIMATION(player.getObjectId(), parentItem.getObjectId(), parentItem.getItemTemplate().getTemplateId(), 0, 3, 0));
 				ItemPacketService.updateItemAfterInfoChange(player, targetItem);
 				// 你已取消 %0 的淬炼。 / You have canceled the tempering of %0.
                 PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_ITEM_AUTHORIZE_CANCEL(targetItem.getNameId()));

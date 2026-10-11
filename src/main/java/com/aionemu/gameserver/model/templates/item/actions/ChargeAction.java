@@ -30,7 +30,7 @@ public class ChargeAction extends AbstractItemAction {
 	public boolean canAct(Player player, Item parentItem, Item targetItem) {
 		Collection<Item> conditioningItems = ItemChargeService.filterItemsToCondition(player, null,
 				parentItem.getImprovement().getChargeWay());
-		return conditioningItems.size() > 0;
+		return !conditioningItems.isEmpty();
 	}
 
 	/** 执行 / act. */

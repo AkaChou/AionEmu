@@ -7,7 +7,6 @@ import java.io.PrintStream;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.EnumSet;
 import java.util.HashMap;
@@ -43,8 +42,8 @@ public class RunnableStatsManager {
         private final String className;
         private final MethodStat runnableStat;
 
-        private String[] methodNames = new String[0];
-        private MethodStat[] methodStats = new MethodStat[0];
+        private String[] methodNames;
+        private MethodStat[] methodStats;
 
         private ClassStat(Class<?> clazz) {
             className = clazz.getName().replace("com.aionemu.gameserver.", "");
@@ -269,10 +268,10 @@ public class RunnableStatsManager {
 					return result;
 				}
 
-				return switch (SortBy.this) {
-					case METHOD -> NAME.comparator.compare(o1, o2);
-					default -> 0;
-				};
+				if (SortBy.this == SortBy.METHOD) {
+					return NAME.comparator.compare(o1, o2);
+				}
+				return 0;
 			}
 		};
 
@@ -286,7 +285,6 @@ public class RunnableStatsManager {
 		        case METHOD -> stat.methodName;
 		        case MIN -> stat.min;
 		        case MAX -> stat.max;
-		        default -> throw new InternalError();
 			};
         }
 
@@ -419,10 +417,9 @@ public class RunnableStatsManager {
         sb.append(sortBy.xmlAttributeName);
         sb.append("=");
 
-        if (sortBy != SortBy.NAME && sortBy != SortBy.METHOD) {
-            for (int i = value.length(); i < fillTo; i++) {
-                sb.append(" ");
-            }
+		int max = Math.max(0, fillTo - value.length());
+	    if (sortBy != SortBy.NAME && sortBy != SortBy.METHOD) {
+			sb.repeat(" ", max);
         }
 
         sb.append("\"");
@@ -430,9 +427,7 @@ public class RunnableStatsManager {
         sb.append("\" ");
 
         if (sortBy == SortBy.NAME || sortBy == SortBy.METHOD) {
-            for (int i = value.length(); i < fillTo; i++) {
-                sb.append(" ");
-            }
+			sb.repeat(" ", max);
         }
     }
 }

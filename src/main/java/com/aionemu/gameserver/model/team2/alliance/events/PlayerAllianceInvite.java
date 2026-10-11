@@ -1,7 +1,6 @@
 package com.aionemu.gameserver.model.team2.alliance.events;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import com.aionemu.gameserver.model.gameobjects.Creature;
@@ -61,23 +60,21 @@ public class PlayerAllianceInvite extends RequestResponseHandler {
 		}
 	}
 
-	private final void collectPlayersToAdd(List<Player> playersToAdd, PlayerAlliance alliance) {
+	private void collectPlayersToAdd(List<Player> playersToAdd, PlayerAlliance alliance) {
 		if (inviter.isInGroup2()) {
 			Preconditions.checkState(alliance == null, "If inviter is in group - alliance should be null");
 			PlayerGroup group = inviter.getPlayerGroup2();
 			playersToAdd.addAll(group.filterMembers(new ExcludePlayerFilter(inviter)));
-			Iterator<Player> pIter = group.getMembers().iterator();
-			while (pIter.hasNext()) {
-				PlayerGroupService.removePlayer(pIter.next());
+			for (Player player : group.getMembers()) {
+				PlayerGroupService.removePlayer(player);
 			}
 		}
 		if (invited.isInGroup2()) {
 			PlayerGroup group = invited.getPlayerGroup2();
 			playersToAdd.addAll(group.getMembers());
-			Iterator<Player> pIter = group.getMembers().iterator();
-			while (pIter.hasNext()) {
-				PlayerGroupService.removePlayer(pIter.next());
-			}
+            for (Player player : group.getMembers()) {
+                PlayerGroupService.removePlayer(player);
+            }
 		} else {
 			playersToAdd.add(invited);
 		}

@@ -76,14 +76,14 @@ public class AutoGeneralInstance extends AutoInstance {
 	public void onEnterInstance(Player player) {
 		super.onEnterInstance(player);
 		List<Player> playersByRace = instance.getPlayersInside();
-		if (playersByRace.size() == 1 && !playersByRace.get(0).isInGroup2()) {
-			PlayerGroup newGroup = PlayerGroupService.createGroup(playersByRace.get(0), player, TeamType.AUTO_GROUP);
+		if (playersByRace.size() == 1 && !playersByRace.getFirst().isInGroup2()) {
+			PlayerGroup newGroup = PlayerGroupService.createGroup(playersByRace.getFirst(), player, TeamType.AUTO_GROUP);
 			int groupId = newGroup.getObjectId();
 			if (!instance.isRegistered(groupId)) {
 				instance.register(groupId);
 			}
-		} else if (!playersByRace.isEmpty() && playersByRace.get(0).isInGroup2()) {
-			PlayerGroupService.addPlayer(playersByRace.get(0).getPlayerGroup2(), player);
+		} else if (!playersByRace.isEmpty() && playersByRace.getFirst().isInGroup2()) {
+			PlayerGroupService.addPlayer(playersByRace.getFirst().getPlayerGroup2(), player);
 		}
 		Integer object = player.getObjectId();
 		if (!instance.isRegistered(object)) {

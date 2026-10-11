@@ -120,7 +120,7 @@ public class EnchantItemAction extends AbstractItemAction {
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_NOT_ENOUGH_MONEY);
 			return;
 		}
-		int enchantCast = 0;
+		int enchantCast;
 		if (player.getGameStats().getStat(StatEnum.ENCHANT_BOOST, 0).getCurrent() != 0) {
 			enchantCast = EnchantsConfig.ENCHANT_SPEED / 2 - (EnchantsConfig.ENCHANT_SPEED * player.getGameStats().getStat(StatEnum.ENCHANT_BOOST, 0).getCurrent() / 100);
 		} else {
@@ -138,7 +138,7 @@ public class EnchantItemAction extends AbstractItemAction {
 					return;
 				}
 				player.getObserveController().removeObserver(this);
-				PacketSendUtility.sendPacket(player, new SM_ITEM_USAGE_ANIMATION(player.getObjectId().intValue(), targetItem.getObjectId().intValue(), targetItem.getItemTemplate().getTemplateId(), 0, 3, 0));
+				PacketSendUtility.sendPacket(player, new SM_ITEM_USAGE_ANIMATION(player.getObjectId(), targetItem.getObjectId(), targetItem.getItemTemplate().getTemplateId(), 0, 3, 0));
 				ItemPacketService.updateItemAfterInfoChange(player, targetItem);
 				// 你已取消 %0 的强化。 / You have cancelled the enchanting of %0.
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_ENCHANT_ITEM_CANCELED(targetItem.getItemTemplate().getNameId()));

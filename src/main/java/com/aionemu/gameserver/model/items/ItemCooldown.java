@@ -1,31 +1,22 @@
 package com.aionemu.gameserver.model.items;
 
-import lombok.Getter;
-import lombok.AllArgsConstructor;
 
 /**
  * 物品冷却模型。
  * Item Cooldown model.
+ *
+ * @param time     下次可再次使用的时间。
+ *                 Time of next reuse.
+ * @param useDelay 使用延迟（毫秒）。
+ *                 Use delay in ms.
  * @author ATracer
  */
-@Getter
-@AllArgsConstructor
-public class ItemCooldown {
-
-	/**
-	 * 下次可再次使用的时间。
-	 * Time of next reuse.
-	 */
-	private final long time;
-	/**
-	 * 使用延迟（毫秒）。
-	 * Use delay in ms.
-	 */
-	private final int useDelay;
+public record ItemCooldown(long time, int useDelay) {
 
 	/**
 	 * 获取下次可再次使用的时间。
 	 * Returns the time of next reuse.
+	 *
 	 * @return 下次可再次使用的时间 / time of next reuse
 	 */
 	public long getReuseTime() {

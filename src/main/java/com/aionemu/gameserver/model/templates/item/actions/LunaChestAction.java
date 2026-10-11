@@ -51,7 +51,7 @@ public class LunaChestAction extends AbstractItemAction {
 					PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1300423, new DescriptionId(parentItem.getItemTemplate().getNameId())));
 					player.setLunaAccount(player.getLunaAccount() + lunaReward);
 					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_GETLUNA(player.getName(), lunaReward));
-					PacketSendUtility.sendPacket(player, new SM_LUNA_SHOP_LIST(0, player.getLunaAccount()));
+					PacketSendUtility.sendPacket(player, new SM_LUNA_SHOP_LIST(0));
 				}
 			}
 		}, 1000);

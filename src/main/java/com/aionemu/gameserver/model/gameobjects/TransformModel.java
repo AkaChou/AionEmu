@@ -66,10 +66,7 @@ public class TransformModel {
 
 	/** 返回物品 ID / Returns the item id */
 	public int getItemId() {
-		if (ItemId > 0) {
-			return ItemId;
-		}
-		return 0;
+		return Math.max(ItemId, 0);
 	}
 
 	/** 获取类型。 / Returns the type. */

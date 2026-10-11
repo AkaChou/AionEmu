@@ -1,6 +1,5 @@
 package com.aionemu.commons.utils.xml;
 
-import java.io.IOException;
 import java.io.StringWriter;
 import jakarta.xml.bind.SchemaOutputResolver;
 import javax.xml.transform.Result;
@@ -23,7 +22,7 @@ public class StringSchemaOutputResolver extends SchemaOutputResolver {
      * On I/O failure
      */
     @Override
-    public Result createOutput(String namespaceUri, String suggestedFileName) throws IOException {
+    public Result createOutput(String namespaceUri, String suggestedFileName) {
         this.sw = new StringWriter();
         StreamResult sr = new StreamResult();
         sr.setSystemId(String.valueOf(System.currentTimeMillis()));

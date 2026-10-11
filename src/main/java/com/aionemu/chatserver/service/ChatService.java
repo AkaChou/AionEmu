@@ -2,7 +2,6 @@ package com.aionemu.chatserver.service;
 
 
 import com.aionemu.boot.i18n.I18n;
-import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -67,9 +66,8 @@ public class ChatService {
      * @param nick 角色昵称 / nickname
      * @return 聊天客户端对象 / chat client
      * @throws NoSuchAlgorithmException 摘要算法不可用 / digest algorithm unavailable
-     * @throws UnsupportedEncodingException 字符编码不支持 / encoding unsupported
-     */
-    public ChatClient registerPlayer(int playerId, String playerLogin, String nick) throws NoSuchAlgorithmException, UnsupportedEncodingException {
+	 */
+    public ChatClient registerPlayer(int playerId, String playerLogin, String nick) throws NoSuchAlgorithmException {
         MessageDigest md = MessageDigest.getInstance("SHA-256");
         md.reset();
         md.update(playerLogin.getBytes(StandardCharsets.UTF_8), 0, playerLogin.length());
@@ -108,9 +106,8 @@ public class ChatService {
      * @param identifier 标识字节 / identifier bytes
      * @param channelHandler 通道处理器 / channel handler
      * @param realName 真实角色名 / real character name
-     * @throws UnsupportedEncodingException 字符编码不支持 / encoding unsupported
      */
-    public void registerPlayerConnection(int playerId, byte[] token, byte[] identifier, ClientChannelHandler channelHandler, String realName) throws UnsupportedEncodingException {
+    public void registerPlayerConnection(int playerId, byte[] token, byte[] identifier, ClientChannelHandler channelHandler, String realName) {
         ChatClient chatClient = players.get(playerId);
         if (chatClient != null) {
             byte[] regToken = chatClient.getToken();

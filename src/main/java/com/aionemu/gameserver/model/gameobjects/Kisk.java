@@ -129,7 +129,7 @@ public class Kisk extends SummonedObject<Player> {
 	public int getRemainingLifetime() {
 		long timeElapsed = (System.currentTimeMillis() / 1000) - kiskSpawnTime;
 		int timeRemaining = (int) (KISK_LIFETIME_IN_SEC - timeElapsed);
-		return (timeRemaining > 0 ? timeRemaining : 0);
+		return Math.max(timeRemaining, 0);
 	}
 
 	/** 是否可绑定。 / Whether bindable. */
@@ -145,8 +145,6 @@ public class Kisk extends SummonedObject<Player> {
 				if (ownerLegion == null || !ownerLegion.isMember(player.getObjectId()))
 					return false;
 				break;
-			case 3:
-				return false;
 			case 4:
 				if (!player.isInTeam() || !player.getCurrentGroup().hasMember(getCreatorId()))
 					return false;

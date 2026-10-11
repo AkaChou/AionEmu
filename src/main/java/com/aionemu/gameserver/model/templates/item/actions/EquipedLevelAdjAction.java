@@ -71,8 +71,8 @@ public class EquipedLevelAdjAction extends AbstractItemAction {
 					return;
 				}
 				player.getObserveController().removeObserver(this);
-				PacketSendUtility.sendPacket(player, new SM_ITEM_USAGE_ANIMATION(player.getObjectId().intValue(),
-						parentItem.getObjectId().intValue(), parentItem.getItemTemplate().getTemplateId(), 0, 3, 0));
+				PacketSendUtility.sendPacket(player, new SM_ITEM_USAGE_ANIMATION(player.getObjectId(),
+					parentItem.getObjectId(), parentItem.getItemTemplate().getTemplateId(), 0, 3, 0));
 				ItemPacketService.updateItemAfterInfoChange(player, targetItem);
 				// %0 推荐等级的降低已取消。 / The reduction of %0‘s recommended level was canceled.
 				PacketSendUtility.sendPacket(player,

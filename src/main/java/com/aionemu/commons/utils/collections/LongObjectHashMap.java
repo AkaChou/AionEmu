@@ -226,6 +226,6 @@ public final class LongObjectHashMap<V> {
      */
     private static int spread(long key) {
         long hash = key * 0x9E3779B97F4A7C15L;
-        return (int) (hash ^ (hash >>> 32));
+        return Long.hashCode(hash);
     }
 }

@@ -88,7 +88,7 @@ public class SpawnSpotTemplate {
 
 	@XmlAttribute(name = "alternate_id")
 	private String alternateIdValues;
-	
+
 	@XmlAttribute(name = "select_prob")
 	private String selectprobValues;
 
@@ -122,7 +122,7 @@ public class SpawnSpotTemplate {
 	/** 返回模型 / Returns the model */
 	@XmlElement(name = "model")
 	private SpawnModel model;
-	private static final Integer ZERO = Integer.valueOf(0);
+	private static final Integer ZERO = 0;
 
 	void beforeMarshal(Marshaller marshaller) {
 		if (ZERO.equals(entityId)) {
@@ -359,14 +359,7 @@ public class SpawnSpotTemplate {
 		return estate;
 	}
 
-	/** 返回 f 状态 / Returns the f state */
-	public int getFState() {
-		if (fstate == null) {
-			return 0;
-		}
-		return fstate;
-	}
-
+	
 	/** 返回 i 状态 / Returns the i state */
 	public int getIState() {
 		if (istate == null) {
@@ -446,12 +439,12 @@ public class SpawnSpotTemplate {
 		}
 		return opstate;
 	}
-	
+
 	/** 返回备用 ID / Returns the alternate ids */
 	public String getAlternateIds() {
 		return alternateIdValues;
 	}
-	
+
 	/** 返回选择概率 / Returns the select probs */
 	public String getSelectProbs() {
 		return selectprobValues;

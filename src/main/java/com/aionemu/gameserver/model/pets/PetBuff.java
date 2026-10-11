@@ -31,7 +31,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 public class PetBuff implements StatOwner {
 	private final List<IStatFunction> functions = new ArrayList<>();
 	private final PetBonusAttr petBonusAttr;
-	private long startTime;
 	private ScheduledFuture<?> task = null;
 
 	public PetBuff(int buffId) {
@@ -46,7 +45,6 @@ public class PetBuff implements StatOwner {
 		if (time != 0) {
 			task = GameThreadPoolServices.threadPoolManager().schedule(new PetBuffTask(player), time);
 		}
-		startTime = System.currentTimeMillis();
 		for (PetPenaltyAttr petPenaltyAttr : petBonusAttr.getPenaltyAttr()) {
 			StatEnum stat = petPenaltyAttr.getStat();
 			int statToModified = player.getGameStats().getStat(stat, 0).getBase();
@@ -60,10 +58,8 @@ public class PetBuff implements StatOwner {
 		PacketSendUtility.sendPacket(player, new SM_PET(true, 0, 0));// start cheering
 	}
 
-	private void loopEffect(Player player, int time) {
-		if (time != 0) {
-			task = GameThreadPoolServices.threadPoolManager().schedule(new PetBuffTask(player), time);
-		}
+	private void loopEffect(Player player) {
+		task = GameThreadPoolServices.threadPoolManager().schedule(new PetBuffTask(player), 300000);
 		PacketSendUtility.sendPacket(player, new SM_PET(true, 0, 0));// start cheering
 	}
 
@@ -78,11 +74,6 @@ public class PetBuff implements StatOwner {
 		PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_BUFF_PET_USE_STOP_MESSAGE);
 		PacketSendUtility.sendPacket(player, new SM_PET(false, 0, 0));// stop cheering
 		PacketSendUtility.sendPacket(player, new SM_STATS_INFO(player));
-	}
-
-	/** 返回剩余 buff 时间 / Returns the buff remaining time */
-	public int getBuffRemaningTime() {
-		return (int) ((System.currentTimeMillis() - startTime) / 1000);
 	}
 
 	/**
@@ -106,7 +97,7 @@ public class PetBuff implements StatOwner {
 
 			if (task != null && player.getInventory().getItemCountByItemId(182007162) >= petBuff.getFoodCount()) {
 				player.getInventory().decreaseByItemId(182007162, petBuff.getFoodCount());
-				loopEffect(player, 300000);
+				loopEffect(player);
 			} else {
 				endEffect(player);
 			}

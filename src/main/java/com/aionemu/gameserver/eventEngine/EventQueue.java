@@ -43,15 +43,7 @@ public class EventQueue<E extends DelayedEvent> extends AbstractQueue<E> impleme
 	public EventQueue() {
 	}
 
-	/**
-	 * 以给定集合初始化。
-	 * Initializes from a collection.
-	 * @param c 初始元素 / initial elements
-	 */
-	public EventQueue(Collection<? extends E> c) {
-		this.addAll(c);
-	}
-
+	
 	/**
 	 * 添加元素（等同 {@link #offer(DelayedEvent)}）。
 	 * Adds an element (same as {@link #offer(DelayedEvent)}).
@@ -119,7 +111,7 @@ public class EventQueue<E extends DelayedEvent> extends AbstractQueue<E> impleme
 			} else {
 				E x = q.poll();
 				assert x != null;
-				if (q.size() != 0) {
+				if (!q.isEmpty()) {
 					available.signalAll();
 				}
 				return x;
@@ -151,7 +143,7 @@ public class EventQueue<E extends DelayedEvent> extends AbstractQueue<E> impleme
 					} else {
 						E x = q.poll();
 						assert x != null;
-						if (q.size() != 0) {
+						if (!q.isEmpty()) {
 							available.signalAll();
 						}
 						return x;
@@ -198,7 +190,7 @@ public class EventQueue<E extends DelayedEvent> extends AbstractQueue<E> impleme
 					} else {
 						E x = q.poll();
 						assert x != null;
-						if (q.size() != 0) {
+						if (!q.isEmpty()) {
 							available.signalAll();
 						}
 						return x;

@@ -87,22 +87,22 @@ public class DropLists {
 				Element npcdrops = document.createElement("npc_drop");
 				npcdrops.setAttribute("npc_id", String.valueOf(npc.getTemplateId()));
 				List<DropGroup> listgroup = npcDrop.getDropGroup();
-				for (int i = 0; i < listgroup.size(); i++) {
+				for (DropGroup dropGroup : listgroup) {
 					Element dropGroups = document.createElement("drop_group");
-					DropGroup gr = listgroup.get(i);
+					DropGroup gr = dropGroup;
 					dropGroups.setAttribute("name", gr.getGroupName());
 					if (gr.getMaxItems() != 1) {
 						dropGroups.setAttribute("max_items", String.valueOf(gr.getMaxItems()));
 					}
 					dropGroups.setAttribute("level_based_chance_reduction",
-							String.valueOf(gr.isUseLevelBasedChanceReduction()));
+						String.valueOf(gr.isUseLevelBasedChanceReduction()));
 					if (gr.getRace() != Race.PC_ALL) {
 						dropGroups.setAttribute("race", String.valueOf(gr.getRace()));
 					}
 					List<Drop> droplist = gr.getDrop();
-					for (int d = 0; d < droplist.size(); d++) {
+					for (Drop value : droplist) {
 						Element drop = document.createElement("drop");
-						Drop dr = droplist.get(d);
+						Drop dr = value;
 						if (dr.isNoReduction()) {
 							drop.setAttribute("no_reduce", "true");
 						}

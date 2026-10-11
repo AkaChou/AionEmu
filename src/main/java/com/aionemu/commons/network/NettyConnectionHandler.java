@@ -6,12 +6,13 @@ import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
-import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.concurrent.Executor;
 import java.util.concurrent.atomic.AtomicBoolean;
+
+import io.netty.util.concurrent.EventExecutor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.RequiredArgsConstructor;
 import lombok.AccessLevel;
@@ -55,10 +56,9 @@ public class NettyConnectionHandler extends ChannelInboundHandlerAdapter impleme
      * 通道激活时创建业务连接并初始化。
      * Create business connection and initialize on channel active.
      * @param context 通道上下文 / Channel context
-     * @throws IOException 连接创建失败 / Connection creation failure
-     */
+	 */
     @Override
-    public void channelActive(ChannelHandlerContext context) throws IOException {
+    public void channelActive(ChannelHandlerContext context) {
         this.context = context;
         try (ServiceContext.Scope ignored = ServiceContext.use(serviceContext)) {
             this.connection = connectionFactory.create(this);
@@ -178,8 +178,10 @@ public class NettyConnectionHandler extends ChannelInboundHandlerAdapter impleme
     @Override
     public void enableWriteInterest() {
         if (context != null) {
-            context.executor().execute(this::flushWrites);
-        }
+			try (EventExecutor executor = context.executor()) {
+				executor.execute(this::flushWrites);
+			}
+		}
     }
 
     /**

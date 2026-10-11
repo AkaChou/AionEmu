@@ -7,7 +7,6 @@ import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.chathandlers.PlayerCommand;
 import com.aionemu.gameserver.world.WorldMap;
-import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.WorldMapType;
 
 import java.util.Calendar;
@@ -87,22 +86,10 @@ public class cmd_pvp extends PlayerCommand {
     private static void goTo(final Player player, int worldId, float x, float y, float z) {
         WorldMap destinationMap = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(worldId);
         if (destinationMap.isInstanceType()) {
-            TeleportService2.teleportTo(player, worldId, getInstanceId(worldId, player), x, y, z);
+            TeleportService2.teleportTo(player, worldId, InstanceService.resolveInstanceId(worldId, player), x, y, z);
         } else {
             TeleportService2.teleportTo(player, worldId, x, y, z);
         }
-    }
-
-    private static int getInstanceId(int worldId, Player player) {
-        if (player.getWorldId() == worldId) {
-            WorldMapInstance registeredInstance = InstanceService.getRegisteredInstance(worldId, player.getObjectId());
-            if (registeredInstance != null) {
-                return registeredInstance.getInstanceId();
-            }
-        }
-        WorldMapInstance newInstance = InstanceService.getNextAvailableInstance(worldId);
-        InstanceService.registerPlayerWithInstance(newInstance, player);
-        return newInstance.getInstanceId();
     }
 
     private void givePvPWelcomeMsg(Player player, String PvPMap){
@@ -117,18 +104,6 @@ public class cmd_pvp extends PlayerCommand {
             }
         }else if(PvPMap.equalsIgnoreCase("wedPvP")){
             if(player.getWorldId() == 220040000){
-                return;
-            }
-        }else if(PvPMap.equalsIgnoreCase("monPvP")){
-            if(player.getWorldId() == 210040000){
-                return;
-            }
-        }else if(PvPMap.equalsIgnoreCase("tuePvP")) {
-            if (player.getWorldId() == 220040000) {
-                return;
-            }
-	    }else if(PvPMap.equalsIgnoreCase("wedPvP")) {
-            if (player.getWorldId() == 210040000) {
                 return;
             }
         }

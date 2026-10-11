@@ -211,7 +211,7 @@ public class HallOfTenacityReward extends InstanceReward<HallOfTenacityPlayerRew
 
 		// 随机玩家成对槽位 / do random player couple slot
 		Random rand = new Random();
-		while (totalCoupleSlots.size() > 0) {
+		while (!totalCoupleSlots.isEmpty()) {
 			int index = rand.nextInt(totalCoupleSlots.size());
 			containRandomPlayerCoupleSlots.add(totalCoupleSlots.remove(index));
 		}

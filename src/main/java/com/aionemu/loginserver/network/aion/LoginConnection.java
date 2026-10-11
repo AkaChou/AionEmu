@@ -33,7 +33,7 @@ public class LoginConnection extends AConnection {
      * 执行客户端包的包处理器。
      * Packet processor for client packets.
      */
-    private final static PacketProcessor<LoginConnection> processor = new PacketProcessor<>(1, 8, 50, 3);
+    private static final PacketProcessor<LoginConnection> processor = new PacketProcessor<>(1, 8, 50, 3);
     /**
      * 待发送服务端包队列。
      * Outgoing server-packet queue.
@@ -227,7 +227,7 @@ public class LoginConnection extends AConnection {
             return;
         }
 
-        log.debug("sending packet: " + bp);
+        log.debug("sending packet: {}", bp);
         sendMsgQueue.addLast(bp);
         enableWriteInterest();
     }

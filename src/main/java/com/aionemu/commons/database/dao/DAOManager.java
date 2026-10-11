@@ -2,6 +2,7 @@ package com.aionemu.commons.database.dao;
 
 
 import com.aionemu.boot.i18n.I18n;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import static com.aionemu.commons.database.DatabaseFactory.getDatabaseMajorVersion;
 import static com.aionemu.commons.database.DatabaseFactory.getDatabaseMinorVersion;
@@ -33,26 +34,13 @@ public class DAOManager {
     /**
      * Spring 容器上下文引用（支持 Spring 容器托管的 DAO 查找）
      * Spring ApplicationContext reference (supports Spring-managed DAO retrieval)
-     */
+	 * -- SETTER --
+	 *  设置 Spring 容器上下文引用。
+	 *  Sets the Spring ApplicationContext reference.
+	 *
+	 */
+    @Setter
     private static volatile ApplicationContext applicationContext;
-
-    /**
-     * 设置 Spring 容器上下文引用。
-     * Sets the Spring ApplicationContext reference.
-     * @param context Spring 容器上下文 / Spring ApplicationContext
-     */
-    public static void setApplicationContext(ApplicationContext context) {
-        applicationContext = context;
-    }
-
-    /**
-     * 判断 Spring 容器是否已就绪。
-     * Checks whether Spring ApplicationContext is available.
-     * @return true 若已关联 Spring 上下文 / true if Spring context is attached
-     */
-    public static boolean hasSpringContext() {
-        return applicationContext != null;
-    }
 
     private static final Map<String, DaoState> states = new ConcurrentHashMap<>();
 
@@ -157,7 +145,7 @@ public class DAOManager {
         }
 
         if (log.isDebugEnabled()) {
-            log.debug("DAO " + dao.getClassName() + " was successfully registered.");
+            log.debug("DAO {} was successfully registered.", dao.getClassName());
         }
     }
 
@@ -174,7 +162,7 @@ public class DAOManager {
                     state.daoMap.remove(dao.getClassName());
 
                     if (log.isDebugEnabled()) {
-                        log.debug("DAO " + dao.getClassName() + " was successfully unregistered.");
+                        log.debug("DAO {} was successfully unregistered.", dao.getClassName());
                     }
 
                     break;

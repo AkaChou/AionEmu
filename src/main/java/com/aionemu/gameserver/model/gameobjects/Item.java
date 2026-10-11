@@ -297,7 +297,7 @@ public class Item extends AionObject implements IExpirable, StatOwner {
 		updateChargeInfo(charge);
 	}
 
-	public final boolean setRndBonus() {
+	public final void setRndBonus() {
 		int setId = itemTemplate.getRandomBonusId();
 		if (setId > 0) {
 			RandomBonusResult bonus = DataManager.ITEM_RANDOM_BONUSES.getRandomModifiers(StatBonusType.INVENTORY,
@@ -305,10 +305,8 @@ public class Item extends AionObject implements IExpirable, StatOwner {
 			if (bonus != null) {
 				bonusNumber = bonus.templateNumber();
 				randomStats = new RandomStats(itemTemplate.getRandomBonusId(), bonusNumber);
-				return true;
 			}
 		}
-		return false;
 	}
 
 	private void updateChargeInfo(int charge) {
@@ -676,10 +674,7 @@ public class Item extends AionObject implements IExpirable, StatOwner {
 			 */
 			@Override
 			public int compare(ManaStone o1, ManaStone o2) {
-				if (o1.getSlot() == o2.getSlot()) {
-					return 0;
-				}
-				return o1.getSlot() > o2.getSlot() ? 1 : -1;
+				return Integer.compare(o1.getSlot(), o2.getSlot());
 			}
 		});
 	}
@@ -719,10 +714,9 @@ public class Item extends AionObject implements IExpirable, StatOwner {
 	 * Checks whether the given godstone is installed.
 	 *
 	 * @param itemId 物品 ID / item id
-	 * @return 是否已安装 / whether installed
 	 */
-	public GodStone addGodStone(int itemId) {
-		return addGodStone(itemId, 0);
+	public void addGodStone(int itemId) {
+		addGodStone(itemId, 0);
 	}
 
 	public GodStone addGodStone(int itemId, int activatedCount) {

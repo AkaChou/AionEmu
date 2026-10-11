@@ -39,7 +39,7 @@ public class cmd_gmlist extends PlayerCommand {
 			}
 		});
 
-        if (admins.size() > 0) {
+        if (!admins.isEmpty()) {
             PacketSendUtility.sendMessage(player, "====================");
             if (admins.size() == 1) {
                 PacketSendUtility.sendMessage(player, "There's one team member online:");

@@ -106,7 +106,7 @@ public class RepeatedAbnormalStatusImmuneTemplate {
 	}
 
 	private int clampStep(int step) {
-		return Math.min(Math.max(step, 1), resistValues.length) - 1;
+		return Math.clamp(step, 1, resistValues.length) - 1;
 	}
 
 	private int[] parseTierValues(String raw, String fieldName) {

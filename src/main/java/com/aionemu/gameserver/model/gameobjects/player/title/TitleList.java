@@ -144,6 +144,15 @@ public class TitleList {
 		return titles.size();
 	}
 
+	/**
+	 * 返回是否没有任何称号。
+	 * Returns whether there is no title at all.
+	 * @return 无称号时为 true / true if empty
+	 */
+	public boolean isEmpty() {
+		return titles.isEmpty();
+	}
+
 	/** 返回 titles / Returns the titles */
 	public Collection<Title> getTitles() {
 		return titles.values();

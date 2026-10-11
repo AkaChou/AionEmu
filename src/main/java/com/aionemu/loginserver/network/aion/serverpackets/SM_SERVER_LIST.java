@@ -23,7 +23,7 @@ public class SM_SERVER_LIST extends AionServerPacket {
     @Override
     protected void writeImpl(LoginConnection con) {
         Collection<GameServerInfo> servers = GameServerTable.getGameServers();
-        Map<Integer, Integer> charactersCountOnServer = null;
+        Map<Integer, Integer> charactersCountOnServer;
 
         int accountId = con.getAccount().getId();
         //int accessLevel = con.getAccount().getAccessLevel();
@@ -54,11 +54,7 @@ public class SM_SERVER_LIST extends AionServerPacket {
         writeC(0x01);
 
         for (int i = 1; i <= maxId; i++) {
-            if (charactersCountOnServer.containsKey(i)) {
-                writeC(charactersCountOnServer.get(i));
-            } else {
-                writeC(0);
-            }
+            writeC(charactersCountOnServer.getOrDefault(i, 0));
         }
     }
 }

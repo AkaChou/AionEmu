@@ -22,13 +22,13 @@ import lombok.experimental.UtilityClass;
  */
 @UtilityClass
 public class Base64 {
-	
+
 	// Base64字符表 Base64 character table
 	private static final char[] CA = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/".toCharArray();
-	
+
 	// 反向查找表 Reverse lookup table
 	private static final int[] IA = new int[256];
-	
+
 	static {
 		// 初始化反向查找表 Initialize reverse lookup table
 		Arrays.fill(IA, -1);
@@ -37,7 +37,7 @@ public class Base64 {
 		}
 		IA['='] = 0;
 	}
-	
+
 	/**
 	 * 将原始字节数组编码为 BASE64 字符数组
 	 * Encodes a raw byte array into a BASE64 char[] representation in accordance with RFC 2045.
@@ -54,24 +54,24 @@ public class Base64 {
 		if (sLen == 0) {
 			return new char[0];
 		}
-		
+
 		// 计算结果数组长度 Calculate result array length
 		int eLen = (sLen / 3) * 3;
 		int cCnt = ((sLen - 1) / 3 + 1) << 2;
 		int dLen = cCnt + (lineSep ? (cCnt - 1) / 76 << 1 : 0);
 		char[] dArr = new char[dLen];
-		
+
 		// 编码24位数据块 Encode even 24-bits
 		for (int s = 0, d = 0, cc = 0; s < eLen;) {
 			// 将三个字节复制到 int 的低24位 Copy next three bytes into lower 24 bits of int
 			int i = (sArr[s++] & 0xff) << 16 | (sArr[s++] & 0xff) << 8 | (sArr[s++] & 0xff);
-			
+
 			// 将 int 编码为四个字符 Encode the int into four chars
 			dArr[d++] = CA[(i >>> 18) & 0x3f];
 			dArr[d++] = CA[(i >>> 12) & 0x3f];
 			dArr[d++] = CA[(i >>> 6) & 0x3f];
 			dArr[d++] = CA[i & 0x3f];
-			
+
 			// 添加可选的换行符 Add optional line separator
 			if (lineSep && ++cc == 19 && d < dLen - 2) {
 				dArr[d++] = '\r';
@@ -79,13 +79,13 @@ public class Base64 {
 				cc = 0;
 			}
 		}
-		
+
 		// 处理剩余字节 Pad and encode last bits if source isn't even 24 bits
 		int left = sLen - eLen;
 		if (left > 0) {
 			// 准备最后的 int Prepare the last int
 			int i = ((sArr[eLen] & 0xff) << 10) | (left == 2 ? ((sArr[sLen - 1] & 0xff) << 2) : 0);
-			
+
 			// 设置最后四个字符 Set last four chars
 			dArr[dLen - 4] = CA[i >> 12];
 			dArr[dLen - 3] = CA[(i >>> 6) & 0x3f];
@@ -94,7 +94,7 @@ public class Base64 {
 		}
 		return dArr;
 	}
-	
+
 	/**
 	 * 解码 BASE64 编码的字符数组，忽略所有非法字符，可以处理包含或不包含换行符的数组
 	 * Decodes a BASE64 encoded char array. All illegal characters will be ignored and can handle both arrays with and without line separators.
@@ -110,7 +110,7 @@ public class Base64 {
 		if (sLen == 0) {
 			return new byte[0];
 		}
-		
+
 		// 统计非法字符（含 \r、\n）以确定返回数组大小。 / Count illegal characters (including '\r', '\n') to know what size the returned array will be
 		int sepCnt = 0; // 分隔符数量 Number of separator characters
 		for (int i = 0; i < sLen; i++) {
@@ -118,13 +118,13 @@ public class Base64 {
 				sepCnt++;
 			}
 		}
-		
+
 		// 检查合法字符（包括'='）是否能被4整除，符合 RFC 2045规范
 		// 检查合法字符（含 =）是否按 RFC 2045 可被 4 整除。 / Check if legal chars (including '=') are evenly divisible by 4 as specified in RFC 2045
 		if ((sLen - sepCnt) % 4 != 0) {
 			return null;
 		}
-		
+
 		// 统计结尾'='的数量 Count '=' at end
 		int pad = 0;
 		for (int i = sLen; i > 1 && IA[sArr[--i]] <= 0;) {
@@ -132,13 +132,13 @@ public class Base64 {
 				pad++;
 			}
 		}
-		
+
 		// 计算解码后的字节长度 Calculate decoded byte length
 		int len = ((sLen - sepCnt) * 6 >> 3) - pad;
-		
+
 		// 预分配字节数组 Preallocate byte[] of exact length
 		byte[] dArr = new byte[len];
-		
+
 		// 解码过程 Decoding process
 		for (int s = 0, d = 0; d < len;) {
 			// 将四个有效字符组装成一个 int Assemble three bytes into an int from four "valid" characters
@@ -151,7 +151,7 @@ public class Base64 {
 					j--; // 跳过非法字符 Skip illegal character
 				}
 			}
-			
+
 			// 添加字节 Add the bytes
 			dArr[d++] = (byte) (i >> 16);
 			if (d < len) {
@@ -161,13 +161,13 @@ public class Base64 {
 				}
 			}
 		}
-		
+
 		return dArr;
 	}
-	
+
 	/**
 	 * 快速解码 BASE64 编码的字符数组，该方法比{@link #decode(char[])}快约两倍
-	 * Decodes a BASE64 encoded char array that is known to be reasonably well formatted. 
+	 * Decodes a BASE64 encoded char array that is known to be reasonably well formatted.
 	 * The method is about twice as fast as {@link #decode(char[])}.
 	 * 前提条件 Preconditions:
 	 * + 数组每行长度必须为76个字符或没有行分隔符（单行）
@@ -189,7 +189,7 @@ public class Base64 {
 		if (sLen == 0) {
 			return new byte[0];
 		}
-		
+
 		// 起始和结束索引 Start and end index after trimming
 		int sIx = 0, eIx = sLen - 1;
 
@@ -205,16 +205,16 @@ public class Base64 {
 
 		// 获取填充字符'='的数量 Get the padding count (=) (0, 1 or 2)
 		int pad = sArr[eIx] == '=' ? (sArr[eIx - 1] == '=' ? 2 : 1) : 0;
-		
+
 		// 有效内容长度 Content count including possible separators
 		int cCnt = eIx - sIx + 1;
-		
+
 		// 分隔符数量 Separator count
 		int sepCnt = sLen > 76 ? (sArr[76] == '\r' ? cCnt / 78 : 0) << 1 : 0;
 
 		// 解码后的字节长度 The number of decoded bytes
 		int len = ((cCnt - sepCnt) * 6 >> 3) - pad;
-		
+
 		// 预分配字节数组 Preallocate byte[] of exact length
 		byte[] dArr = new byte[len];
 
@@ -222,9 +222,9 @@ public class Base64 {
 		int d = 0;
 		for (int cc = 0, eLen = (len / 3) * 3; d < eLen;) {
 			// 将四个有效字符组装成一个 int Assemble three bytes into an int from four "valid" characters
-			int i = IA[sArr[sIx++]] << 18 
-				| IA[sArr[sIx++]] << 12 
-				| IA[sArr[sIx++]] << 6 
+			int i = IA[sArr[sIx++]] << 18
+				| IA[sArr[sIx++]] << 12
+				| IA[sArr[sIx++]] << 6
 				| IA[sArr[sIx++]];
 
 			// 添加字节 Add the bytes
@@ -253,7 +253,7 @@ public class Base64 {
 
 		return dArr;
 	}
-	
+
 	/**
 	 * 将原始字节数组编码为 BASE64 字节数组
 	 * Encodes a raw byte array into a BASE64 byte[] representation in accordance with RFC 2045.
@@ -270,24 +270,24 @@ public class Base64 {
 		if (sLen == 0) {
 			return new byte[0];
 		}
-		
+
 		// 计算结果数组长度 Calculate result array length
 		int eLen = (sLen / 3) * 3; // 完整的24位数据块数量 Full 24-bit chunks
 		int cCnt = ((sLen - 1) / 3 + 1) << 2; // Base64字符数量 Base64 character count
 		int dLen = cCnt + (lineSep ? (cCnt - 1) / 76 << 1 : 0); // 包含换行符的总长度 Total length including line separators
 		byte[] dArr = new byte[dLen]; // 预分配结果数组 Preallocate result array
-		
+
 		// 编码24位数据块 Encode even 24-bits
 		for (int s = 0, d = 0, cc = 0; s < eLen;) {
 			// 将三个字节复制到 int 的低24位 Copy next three bytes into lower 24 bits of int
 			int i = (sArr[s++] & 0xff) << 16 | (sArr[s++] & 0xff) << 8 | (sArr[s++] & 0xff);
-			
+
 			// 将 int 编码为四个 Base64 字符 Encode the int into four Base64 chars
 			dArr[d++] = (byte) CA[(i >>> 18) & 0x3f];
 			dArr[d++] = (byte) CA[(i >>> 12) & 0x3f];
 			dArr[d++] = (byte) CA[(i >>> 6) & 0x3f];
 			dArr[d++] = (byte) CA[i & 0x3f];
-			
+
 			// 添加可选的换行符 Add optional line separator
 			if (lineSep && ++cc == 19 && d < dLen - 2) {
 				dArr[d++] = '\r';
@@ -295,13 +295,13 @@ public class Base64 {
 				cc = 0;
 			}
 		}
-		
+
 		// 处理剩余字节 Pad and encode last bits if source isn't an even 24 bits
 		int left = sLen - eLen; // 剩余字节数（0-2）/ remaining byte count (0-2)
 		if (left > 0) {
 			// 准备最后的 int Prepare the last int
 			int i = ((sArr[eLen] & 0xff) << 10) | (left == 2 ? ((sArr[sLen - 1] & 0xff) << 2) : 0);
-			
+
 			// 设置最后四个字符 Set last four chars
 			dArr[dLen - 4] = (byte) CA[i >> 12];
 			dArr[dLen - 3] = (byte) CA[(i >>> 6) & 0x3f];
@@ -310,7 +310,7 @@ public class Base64 {
 		}
 		return dArr;
 	}
-	
+
 	/**
 	 * 解码 BASE64 编码的字节数组，忽略所有非法字符，可以处理包含或不包含换行符的数组
 	 * Decodes a BASE64 encoded byte array. All illegal characters will be ignored and can handle both arrays with and without line separators.
@@ -322,21 +322,21 @@ public class Base64 {
 	public static byte[] decode(byte[] sArr) {
 		// 检查特殊情况 Check special case
 		int sLen = sArr.length;
-		
+
 		// 统计非法字符（含 \r、\n）以确定返回数组大小。 / Count illegal characters (including '\r', '\n') to know what size the returned array will be
 		int sepCnt = 0; // 分隔符数量 Number of separator characters
-		for (int i = 0; i < sLen; i++) {
-			if (IA[sArr[i] & 0xff] < 0) {
+		for (byte b : sArr) {
+			if (IA[b & 0xff] < 0) {
 				sepCnt++;
 			}
 		}
-		
+
 		// 检查合法字符（包括'='）是否能被4整除，符合 RFC 2045规范
 		// 检查合法字符（含 =）是否按 RFC 2045 可被 4 整除。 / Check if legal chars (including '=') are evenly divisible by 4 as specified in RFC 2045
 		if ((sLen - sepCnt) % 4 != 0) {
 			return null;
 		}
-		
+
 		// 统计结尾'='的数量 Count '=' at end
 		int pad = 0;
 		for (int i = sLen; i > 1 && IA[sArr[--i] & 0xff] <= 0;) {
@@ -344,13 +344,13 @@ public class Base64 {
 				pad++;
 			}
 		}
-		
+
 		// 计算解码后的字节长度 Calculate decoded byte length
 		int len = ((sLen - sepCnt) * 6 >> 3) - pad;
-		
+
 		// 预分配字节数组 Preallocate byte[] of exact length
 		byte[] dArr = new byte[len];
-		
+
 		// 解码过程 Decoding process
 		for (int s = 0, d = 0; d < len;) {
 			// 将四个有效字符组装成一个 int Assemble three bytes into an int from four "valid" characters
@@ -363,7 +363,7 @@ public class Base64 {
 					j--; // 跳过非法字符 Skip illegal character
 				}
 			}
-			
+
 			// 添加字节 Add the bytes
 			dArr[d++] = (byte) (i >> 16);
 			if (d < len) {
@@ -373,13 +373,13 @@ public class Base64 {
 				}
 			}
 		}
-		
+
 		return dArr;
 	}
-	
+
 	/**
 	 * 快速解码 BASE64 编码的字节数组，该方法比{@link #decode(byte[])}快约两倍
-	 * Decodes a BASE64 encoded byte array that is known to be reasonably well formatted. 
+	 * Decodes a BASE64 encoded byte array that is known to be reasonably well formatted.
 	 * The method is about twice as fast as {@link #decode(byte[])}.
 	 * 前提条件 Preconditions:
 	 * + 数组每行长度必须为76个字符或没有行分隔符（单行）
@@ -401,7 +401,7 @@ public class Base64 {
 		if (sLen == 0) {
 			return new byte[0];
 		}
-		
+
 		// 起始和结束索引 Start and end index after trimming
 		int sIx = 0, eIx = sLen - 1;
 
@@ -417,16 +417,16 @@ public class Base64 {
 
 		// 获取填充字符'='的数量 Get the padding count (=) (0, 1 or 2)
 		int pad = sArr[eIx] == '=' ? (sArr[eIx - 1] == '=' ? 2 : 1) : 0;
-		
+
 		// 有效内容长度 Content count including possible separators
 		int cCnt = eIx - sIx + 1;
-		
+
 		// 分隔符数量 Separator count
 		int sepCnt = sLen > 76 ? (sArr[76] == '\r' ? cCnt / 78 : 0) << 1 : 0;
 
 		// 解码后的字节长度 The number of decoded bytes
 		int len = ((cCnt - sepCnt) * 6 >> 3) - pad;
-		
+
 		// 预分配字节数组 Preallocate byte[] of exact length
 		byte[] dArr = new byte[len];
 
@@ -434,9 +434,9 @@ public class Base64 {
 		int d = 0;
 		for (int cc = 0, eLen = (len / 3) * 3; d < eLen;) {
 			// 将四个有效字符组装成一个 int Assemble three bytes into an int from four "valid" characters
-			int i = IA[sArr[sIx++]] << 18 
-				| IA[sArr[sIx++]] << 12 
-				| IA[sArr[sIx++]] << 6 
+			int i = IA[sArr[sIx++]] << 18
+				| IA[sArr[sIx++]] << 12
+				| IA[sArr[sIx++]] << 6
 				| IA[sArr[sIx++]];
 
 			// 添加字节 Add the bytes
@@ -465,7 +465,7 @@ public class Base64 {
 
 		return dArr;
 	}
-	
+
 	/**
 	 * 将原始字节数组编码为 BASE64 字符串
 	 * Encodes a raw byte array into a BASE64 String representation in accordance with RFC 2045.
@@ -482,17 +482,17 @@ public class Base64 {
 		// StringBuffer/Builder would be slower.
 		return new String(encodeToChar(sArr, lineSep));
 	}
-	
+
 	/**
 	 * 解码 BASE64 编码的字符串，忽略所有非法字符，可以处理包含或不包含换行符的字符串
 	 * Decodes a BASE64 encoded String. All illegal characters will be ignored and can handle both strings with and without line separators.
 	 * 注意：调用 decode(str.toCharArray())可能快约2倍，但会创建临时数组。此版本使用 str.charAt(i)遍历字符串
-	 * Note! It can be up to about 2x the speed to call decode(str.toCharArray()) instead. That will create a temporary array though. 
+	 * Note! It can be up to about 2x the speed to call decode(str.toCharArray()) instead. That will create a temporary array though.
 	 * This version will use str.charAt(i) to iterate the string.
 	 * @param str 源字符串，如果为 null 或长度为0将返回空数组
 	 *            The source string. null or length 0 will return an empty array.
 	 * @return 解码后的字节数组，可能长度为0。如果合法字符（包括'='）不能被4整除，则返回 null（即肯定已损坏）
-	 *         The decoded array of bytes. May be of length 0. Will be null if the legal characters (including '=') isn't divideable by 4. 
+	 *         The decoded array of bytes. May be of length 0. Will be null if the legal characters (including '=') isn't divideable by 4.
 	 *         (I.e. definitely corrupted).
 	 */
 	public static byte[] decode(String str) {
@@ -501,7 +501,7 @@ public class Base64 {
 		if (sLen == 0) {
 			return new byte[0];
 		}
-		
+
 		// 统计非法字符（含 \r、\n）以确定返回数组大小。 / Count illegal characters (including '\r', '\n') to know what size the returned array will be
 		int sepCnt = 0; // 分隔符数量 Number of separator characters
 		for (int i = 0; i < sLen; i++) {
@@ -509,13 +509,13 @@ public class Base64 {
 				sepCnt++;
 			}
 		}
-		
+
 		// 检查合法字符（包括'='）是否能被4整除，符合 RFC 2045规范
 		// 检查合法字符（含 =）是否按 RFC 2045 可被 4 整除。 / Check if legal chars (including '=') are evenly divisible by 4 as specified in RFC 2045
 		if ((sLen - sepCnt) % 4 != 0) {
 			return null;
 		}
-		
+
 		// 统计结尾'='的数量 Count '=' at end
 		int pad = 0;
 		for (int i = sLen; i > 1 && IA[str.charAt(--i)] <= 0;) {
@@ -523,13 +523,13 @@ public class Base64 {
 				pad++;
 			}
 		}
-		
+
 		// 计算解码后的字节长度 Calculate decoded byte length
 		int len = ((sLen - sepCnt) * 6 >> 3) - pad;
-		
+
 		// 预分配字节数组 Preallocate byte[] of exact length
 		byte[] dArr = new byte[len];
-		
+
 		// 解码过程 Decoding process
 		for (int s = 0, d = 0; d < len;) {
 			// 将四个有效字符组装成一个 int Assemble three bytes into an int from four "valid" characters
@@ -542,7 +542,7 @@ public class Base64 {
 					j--; // 跳过非法字符 Skip illegal character
 				}
 			}
-			
+
 			// 添加字节 Add the bytes
 			dArr[d++] = (byte) (i >> 16);
 			if (d < len) {
@@ -552,13 +552,13 @@ public class Base64 {
 				}
 			}
 		}
-		
+
 		return dArr;
 	}
-	
+
 	/**
 	 * 快速解码 BASE64 编码的字符串，该方法比{@link #decode(String)}快约两倍
-	 * Decodes a BASE64 encoded string that is known to be reasonably well formatted. 
+	 * Decodes a BASE64 encoded string that is known to be reasonably well formatted.
 	 * The method is about twice as fast as {@link #decode(String)}.
 	 * 前提条件 Preconditions:
 	 * + 数组每行长度必须为76个字符或没有行分隔符（单行）
@@ -596,16 +596,16 @@ public class Base64 {
 
 		// 获取填充字符'='的数量 Get the padding count (=) (0, 1 or 2)
 		int pad = s.charAt(eIx) == '=' ? (s.charAt(eIx - 1) == '=' ? 2 : 1) : 0;
-		
+
 		// 有效内容长度 Content count including possible separators
 		int cCnt = eIx - sIx + 1;
-		
+
 		// 分隔符数量 Separator count
 		int sepCnt = sLen > 76 ? (s.charAt(76) == '\r' ? cCnt / 78 : 0) << 1 : 0;
 
 		// 解码后的字节长度 The number of decoded bytes
 		int len = ((cCnt - sepCnt) * 6 >> 3) - pad;
-		
+
 		// 预分配字节数组 Preallocate byte[] of exact length
 		byte[] dArr = new byte[len];
 
@@ -613,9 +613,9 @@ public class Base64 {
 		int d = 0;
 		for (int cc = 0, eLen = (len / 3) * 3; d < eLen;) {
 			// 将四个有效字符组装成一个 int Assemble three bytes into an int from four "valid" characters
-			int i = IA[s.charAt(sIx++)] << 18 
-				| IA[s.charAt(sIx++)] << 12 
-				| IA[s.charAt(sIx++)] << 6 
+			int i = IA[s.charAt(sIx++)] << 18
+				| IA[s.charAt(sIx++)] << 12
+				| IA[s.charAt(sIx++)] << 6
 				| IA[s.charAt(sIx++)];
 
 			// 添加字节 Add the bytes

@@ -45,10 +45,6 @@ public class FindGroup {
 	public int getClassId() {
 		if (object instanceof Player) {
 			return ((Player) (object)).getPlayerClass().getClassId();
-		} else if (object instanceof PlayerAlliance) {
-			((PlayerAlliance) (object)).getLeaderObject().getCommonData().getPlayerClass();
-		} else if (object instanceof PlayerGroup) {
-			((PlayerGroup) object).getLeaderObject().getPlayerClass();
 		}
 		return 0;
 	}

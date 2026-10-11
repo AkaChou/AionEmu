@@ -54,8 +54,8 @@ public class PurifierExpAction extends AbstractItemAction {
 	/** 执行 / act. */
 	@Override
 	public void act(final Player player, final Item parentItem, Item targetItem) {
-		PacketSendUtility.sendPacket(player, new SM_ITEM_USAGE_ANIMATION(player.getObjectId().intValue(),
-				parentItem.getObjectId().intValue(), parentItem.getItemTemplate().getTemplateId(), 3000, 0, 0));
+		PacketSendUtility.sendPacket(player, new SM_ITEM_USAGE_ANIMATION(player.getObjectId(),
+			parentItem.getObjectId(), parentItem.getItemTemplate().getTemplateId(), 3000, 0, 0));
 		player.getController().cancelTask(TaskId.ITEM_USE);
 		final ItemUseObserver observer = new ItemUseObserver() {
 			/** 中止 / abort. */
@@ -66,8 +66,8 @@ public class PurifierExpAction extends AbstractItemAction {
 				}
 				PacketSendUtility.sendPacket(player,
 						SM_SYSTEM_MESSAGE.STR_DECOMPOSE_ITEM_CANCELED(parentItem.getNameId()));
-				PacketSendUtility.sendPacket(player, new SM_ITEM_USAGE_ANIMATION(player.getObjectId().intValue(),
-						parentItem.getObjectId().intValue(), parentItem.getItemTemplate().getTemplateId(), 0, 2, 0));
+				PacketSendUtility.sendPacket(player, new SM_ITEM_USAGE_ANIMATION(player.getObjectId(),
+					parentItem.getObjectId(), parentItem.getItemTemplate().getTemplateId(), 0, 2, 0));
 				player.getObserveController().removeObserver(this);
 			}
 		};
@@ -76,7 +76,7 @@ public class PurifierExpAction extends AbstractItemAction {
 			/** 运行 / run. */
 			public void run() {
 				player.getObserveController().removeObserver(observer);
-				int expExtraction = 0;
+				int expExtraction;
 				if (isPercent) {
 					expExtraction = (int) (player.getCommonData().getExpNeed() / 100) * extractionCost;
 				} else {
@@ -85,8 +85,8 @@ public class PurifierExpAction extends AbstractItemAction {
 				player.getCommonData().setExp(player.getCommonData().getExp() - expExtraction, false);
 				ItemService.addItem(player, extractionReward, 1);
 				player.getInventory().decreaseByItemId(parentItem.getItemId(), 1);
-				PacketSendUtility.sendPacket(player, new SM_ITEM_USAGE_ANIMATION(player.getObjectId().intValue(),
-						parentItem.getObjectId().intValue(), parentItem.getItemTemplate().getTemplateId(), 0, 1, 0));
+				PacketSendUtility.sendPacket(player, new SM_ITEM_USAGE_ANIMATION(player.getObjectId(),
+                        parentItem.getObjectId(), parentItem.getItemTemplate().getTemplateId(), 0, 1, 0));
 			}
 		}, 3000);
 		PacketSendUtility.sendPacket(player,

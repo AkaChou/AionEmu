@@ -7,6 +7,7 @@ import java.nio.file.Path;
 import java.util.Objects;
 import java.util.Properties;
 
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -110,16 +111,15 @@ public class Config {
     @Property(key = "chatserver.restart.time", defaultValue = "5:00")
     public static String CHATSERVER_RESTART_TIME;
 
+    @Getter
     private final NetworkProperties network = new NetworkProperties();
     private final LogProperties logProperties = new LogProperties();
+    @Getter
     private final ChatProperties chat = new ChatProperties();
+    @Getter
     private final RestartProperties restart = new RestartProperties();
 
-    public NetworkProperties getNetwork() {
-        return network;
-    }
-
-    /**
+	/**
      * no-op：绑定值经嵌套属性直接写入静态字段，防止重复绑定覆盖。
      * no-op: bound values reach the static fields via the nested properties,
      * so re-binding must not overwrite them.
@@ -136,19 +136,11 @@ public class Config {
     public void setLog(LogProperties logProperties) {
     }
 
-    public ChatProperties getChat() {
-        return chat;
-    }
-
-    /** 同 {@link #setNetwork}。 / See {@link #setNetwork}. */
+	/** 同 {@link #setNetwork}。 / See {@link #setNetwork}. */
     public void setChat(ChatProperties chat) {
     }
 
-    public RestartProperties getRestart() {
-        return restart;
-    }
-
-    /** 同 {@link #setNetwork}。 / See {@link #setNetwork}. */
+	/** 同 {@link #setNetwork}。 / See {@link #setNetwork}. */
     public void setRestart(RestartProperties restart) {
     }
 
@@ -232,15 +224,13 @@ public class Config {
      */
     public static class NetworkProperties {
 
+        @Getter
         private final ClientProperties client = new ClientProperties();
         private final PublicProperties publicAddress = new PublicProperties();
+        @Getter
         private final GameserverProperties gameserver = new GameserverProperties();
 
-        public ClientProperties getClient() {
-            return client;
-        }
-
-        /** no-op，理由同 {@link Config#setNetwork}。 / no-op, see {@link Config#setNetwork}. */
+		/** no-op，理由同 {@link Config#setNetwork}。 / no-op, see {@link Config#setNetwork}. */
         public void setClient(ClientProperties client) {
         }
 
@@ -257,11 +247,7 @@ public class Config {
         public void setPublic(PublicProperties publicAddress) {
         }
 
-        public GameserverProperties getGameserver() {
-            return gameserver;
-        }
-
-        /** no-op，理由同 {@link Config#setNetwork}。 / no-op, see {@link Config#setNetwork}. */
+		/** no-op，理由同 {@link Config#setNetwork}。 / no-op, see {@link Config#setNetwork}. */
         public void setGameserver(GameserverProperties gameserver) {
         }
 
@@ -323,15 +309,12 @@ public class Config {
      * {@code chatserver.log} 绑定节点。
      * {@code chatserver.log} binding node.
      */
+    @Getter
     public static class LogProperties {
 
         private final ChannelProperties channel = new ChannelProperties();
 
-        public ChannelProperties getChannel() {
-            return channel;
-        }
-
-        /** no-op，理由同 {@link Config#setNetwork}。 / no-op, see {@link Config#setNetwork}. */
+		/** no-op，理由同 {@link Config#setNetwork}。 / no-op, see {@link Config#setNetwork}. */
         public void setChannel(ChannelProperties channel) {
         }
 
@@ -371,6 +354,7 @@ public class Config {
      * {@code chatserver.chat} 绑定节点。
      * {@code chatserver.chat} binding node.
      */
+    @Getter
     public static class ChatProperties {
 
         private final MessageProperties message = new MessageProperties();
@@ -383,11 +367,7 @@ public class Config {
             LANG_CHAT = lang;
         }
 
-        public MessageProperties getMessage() {
-            return message;
-        }
-
-        /** no-op，理由同 {@link Config#setNetwork}。 / no-op, see {@link Config#setNetwork}. */
+		/** no-op，理由同 {@link Config#setNetwork}。 / no-op, see {@link Config#setNetwork}. */
         public void setMessage(MessageProperties message) {
         }
 

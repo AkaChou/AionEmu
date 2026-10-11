@@ -62,7 +62,7 @@ public class ConfigurableProcessor {
 		processFields(clazz, obj, props);
 		if (obj == null) {
 			for (Class<?> itf : clazz.getInterfaces()) {
-				process(itf, obj, props);
+				process(itf, null, props);
 			}
 		}
 

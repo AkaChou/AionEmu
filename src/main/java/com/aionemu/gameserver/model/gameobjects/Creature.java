@@ -225,14 +225,12 @@ private final AggroList aggroList;
 	 * Clears the cast only when it is still the expected instance, preventing concurrent completion from overwriting a later
 	 * cast.
 	 * @param expected 预期的施法实例 / expected cast instance
-	 * @return 是否已清除 / whether the cast was cleared
 	 */
-	public synchronized boolean clearCasting(Skill expected) {
+	public synchronized void clearCasting(Skill expected) {
 		if (castingSkill != expected) {
-			return false;
+			return;
 		}
 		castingSkill = null;
-		return true;
 	}
 
 	/**
@@ -252,24 +250,6 @@ private final AggroList aggroList;
 	/** 清除被攻击次数 / Clears the attacked count. */
 	public void clearAttackedCount() {
 		attackedCount = 0;
-	}
-
-	/**
-	 * 是否正在使用物品。
-	 * Whether the creature is using an item.
-	 * @return 是否正在使用物品 / whether using an item
-	 */
-	public boolean isUsingItem() {
-		return usingItem != null;
-	}
-
-	/**
-	 * 获取正在使用的物品 ID。
-	 * Gets the id of the item being used.
-	 * @return 物品 ID / item id
-	 */
-	public int getUsingItemId() {
-		return usingItem != null ? usingItem.getItemTemplate().getTemplateId() : 0;
 	}
 
 	/**
@@ -299,12 +279,12 @@ private final AggroList aggroList;
 		if (this instanceof Player) {
 			ratio = Math.max(ratio, getPlayerStatRatio(getLevel()));
 		}
-		return Math.max(1000, Math.min(65000, ratio)) / 1000f;
+		return Math.clamp(ratio, 1000, 65000) / 1000f;
 	}
 
 	/** 设置 stat ratio（真实范围为 1000~65000）。 / Sets the retail stat ratio. */
 	public void setStatRatio(int statRatio) {
-		this.statRatio = Math.max(1000, Math.min(65000, statRatio));
+		this.statRatio = Math.clamp(statRatio, 1000, 65000);
 	}
 
 	/** 5.8 pc_stat_ratio.xml 的等级曲线。 / Retail pc_stat_ratio.xml level curve. */
@@ -383,18 +363,6 @@ private final AggroList aggroList;
 	}
 
 	/**
-	 * 是否处于指定感知状态。
-	 * Whether in the given see state.
-	 * @param seeState 感知状态 / see state
-	 * @return 是否处于该状态 / whether in that state
-	  */
-	public boolean isInSeeState(CreatureSeeState seeState) {
-		int isSeeState = this.seeState & seeState.getId();
-
-		return isSeeState == seeState.getId();
-	}
-
-	/**
 	 * 设置变身模型。
 	 * Sets the transform model.
 	 * @param model 要设置的变身模型 / the transformedModel to set
@@ -420,7 +388,7 @@ private volatile byte packetBroadcastMask;
 
 		// 调试 / Debug
 		if (log.isDebugEnabled()) {
-			log.debug("PacketBroadcaster: Packet " + mode.name() + " added to player " + this.getName());
+			log.debug("PacketBroadcaster: Packet {} added to player {}", mode.name(), this.getName());
 		}
 	}
 
@@ -429,11 +397,11 @@ private volatile byte packetBroadcastMask;
 	 * This is removing the broadcast from the player.
 	 */
 	public final synchronized void removePacketBroadcastMask(BroadcastMode mode) {
-		packetBroadcastMask &= ~mode.mask();
+		packetBroadcastMask &= (byte) ~mode.mask();
 
 		// 调试 / Debug
 		if (log.isDebugEnabled()) {
-			log.debug("PacketBroadcaster: Packet " + mode.name() + " removed from player " + this.getName()); // fix
+			log.debug("PacketBroadcaster: Packet {} removed from player {}", mode.name(), this.getName()); // fix
 		}
 	}
 
@@ -513,16 +481,6 @@ private volatile byte packetBroadcastMask;
 	}
 
 	/**
-	 * 判断 NPC 是否为敌对目标。
-	 * Whether the NPC is an enemy.
-	 * @param npc NPC / NPC
-	 * @return 是否敌对 / whether enemy
-	 */
-	public boolean isHostileFrom(Npc npc) {
-		return false;
-	}
-
-	/**
 	 * 判断 NPC 是否会支援本生物。
 	 * Whether the NPC supports this creature.
 	 * @param npc NPC / NPC
@@ -532,6 +490,7 @@ private volatile byte packetBroadcastMask;
 		return false;
 	}
 
+	/** 是否好友 / Whether friend from */
 	public boolean isFriendFrom(Npc npc) {
 		return false;
 	}
@@ -549,11 +508,6 @@ private volatile byte packetBroadcastMask;
 			return false;
 		}
 		return creature.getVisualState() <= getSeeState();
-	}
-
-	/** 是否可看见对象 / Whether see object */
-	public boolean isSeeObject(VisibleObject object) {
-		return getKnownList().getVisibleObjects().containsKey(object.getObjectId());
 	}
 
 	/** 是否可看见玩家 / Whether see player */
@@ -639,21 +593,6 @@ private volatile byte packetBroadcastMask;
 		return cooldowns.getSkillCoolDowns();
 	}
 
-	/** 替换原始技能冷却表。/ Replaces the backing skill-cooldown map. */
-	public void setSkillCoolDowns(Map<Integer, Long> skillCoolDowns) {
-		cooldowns.setSkillCoolDowns(skillCoolDowns);
-	}
-
-	/** 返回原始整组冷却基准表，未创建时为 null。/ Backing base-time map, or null when not created. */
-	public Map<Integer, Long> getSkillCoolDownsBase() {
-		return cooldowns.getSkillCoolDownsBase();
-	}
-
-	/** 替换原始整组冷却基准表。/ Replaces the backing base-time map. */
-	public void setSkillCoolDownsBase(Map<Integer, Long> skillCoolDownsBase) {
-		cooldowns.setSkillCoolDownsBase(skillCoolDownsBase);
-	}
-
 	/**
 	 * 返回管理员中立值。
 	 * Returns the admin neutral value.
@@ -726,28 +665,6 @@ private volatile byte packetBroadcastMask;
 	/** 是否玩家。 / Whether player. */
 	public byte isPlayer() {
 		return 0;
-	}
-
-	/** 是否为物理职业 / Whether physical class. */
-	public boolean isPhysClass(Creature creature) {
-		if (creature instanceof Player) {
-			return switch (((Player) creature).getPlayerClass()) {
-				case GLADIATOR, TEMPLAR, ASSASSIN, RANGER, CLERIC, CHANTER -> true;
-				default -> false;
-			};
-		}
-		return false;
-	}
-
-	/** 是否为魔法职业 / Whether magic class. */
-	public boolean isMagicClass(Creature creature) {
-		if (creature instanceof Player) {
-            return switch (((Player) creature).getPlayerClass()) {
-                case SORCERER, SPIRIT_MASTER, AETHERTECH, GUNSLINGER, SONGWEAVER -> true;
-                default -> false;
-            };
-		}
-		return false;
 	}
 
 	/**

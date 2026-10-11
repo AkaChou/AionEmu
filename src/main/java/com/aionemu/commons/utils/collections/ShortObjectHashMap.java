@@ -475,7 +475,6 @@ public class ShortObjectHashMap<V> extends AbstractMap<Short, V> implements Clon
 		}
 	}
 
-	@SuppressWarnings("unchecked")
 	private void resize() {
 		short[] oldKeys = keys;
 		Object[] oldValues = values;

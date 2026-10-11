@@ -2,7 +2,6 @@ package com.aionemu.gameserver.model.instance.instancereward;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.function.ToIntFunction;
@@ -20,7 +19,7 @@ import lombok.AccessLevel;
 final class RewardCollections {
 	static <T> List<T> sortedByScoreDescending(Collection<T> rewards, final ToIntFunction<T> scoreFunction) {
 		List<T> sorted = new ArrayList<>(rewards);
-		Collections.sort(sorted, new Comparator<>() {
+		sorted.sort(new Comparator<>() {
             /**
              * 比较 / compare.
              */

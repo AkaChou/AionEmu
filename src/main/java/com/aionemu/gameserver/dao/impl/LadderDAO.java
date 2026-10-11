@@ -5,7 +5,6 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -43,20 +42,8 @@ public class LadderDAO extends com.aionemu.gameserver.dao.LadderDAO {
 	 */
 	private static final String UPDATE_LAST_RANK = "UPDATE ladder_player SET last_rank = ?, last_update = ? WHERE player_id = ?";
 
-	/**
-	 * 查询玩家全部天梯数据 / Select all ladder data for a player
-	 */
-	private static final String SELECT_GET_ALL = "SELECT * FROM ladder_player WHERE player_id = ?";
 
-	/**
-	 * 查询玩家上次更新时间 / Select player last update timestamp
-	 */
-	private static final String SELECT_LAST_UPDATE = "SELECT last_update FROM ladder_player WHERE player_id = ?";
 
-	/**
-	 * 设置玩家上次更新时间 / Update player last update timestamp
-	 */
-	private static final String UPDATE_LAST_UPDATE = "UPDATE ladder_player SET last_update = ? WHERE player_id = ?";
 
 	private final JdbcClient jdbcClient;
 
@@ -165,13 +152,13 @@ public class LadderDAO extends com.aionemu.gameserver.dao.LadderDAO {
 			return;
 		}
 
-		Collections.sort(players, (o1, o2) -> {
-			int result = Integer.compare(o2.rating(), o1.rating());
-			if (result != 0) return result;
-			result = Integer.compare(o2.wins(), o1.wins());
-			if (result != 0) return result;
-			return Integer.compare(o1.playerId(), o2.playerId());
-		});
+		players.sort((o1, o2) -> {
+            int result = Integer.compare(o2.rating(), o1.rating());
+            if (result != 0) return result;
+            result = Integer.compare(o2.wins(), o1.wins());
+            if (result != 0) return result;
+            return Integer.compare(o1.playerId(), o2.playerId());
+        });
 
 		if (players.isEmpty()) {
 			return;

@@ -141,31 +141,4 @@ final class CreatureCooldowns {
 	Map<Integer, Long> getSkillCoolDowns() {
 		return skillCoolDowns;
 	}
-
-	/**
-	 * 替换原始冷却表。
-	 * Replaces the backing cooldown map.
-	 * @param skillCoolDowns 新冷却表 / new cooldown map
-	 */
-	void setSkillCoolDowns(Map<Integer, Long> skillCoolDowns) {
-		this.skillCoolDowns = skillCoolDowns;
-	}
-
-	/**
-	 * 返回原始整组冷却基准表。
-	 * Returns the backing base-time map.
-	 * @return 基准表，未创建时为 null / base-time map, or null when not created
-	 */
-	Map<Integer, Long> getSkillCoolDownsBase() {
-		return skillCoolDownsBase;
-	}
-
-	/**
-	 * 替换原始整组冷却基准表。
-	 * Replaces the backing base-time map.
-	 * @param skillCoolDownsBase 新基准表 / new base-time map
-	 */
-	void setSkillCoolDownsBase(Map<Integer, Long> skillCoolDownsBase) {
-		this.skillCoolDownsBase = skillCoolDownsBase;
-	}
 }

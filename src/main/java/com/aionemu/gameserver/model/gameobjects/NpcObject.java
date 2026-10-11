@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.model.gameobjects;
 
-import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.house.House;
 import com.aionemu.gameserver.model.templates.housing.HousingNpc;
 import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
@@ -17,11 +16,6 @@ public class NpcObject extends HouseObject<HousingNpc> {
 
 	public NpcObject(House owner, int objId, int templateId) {
 		super(owner, objId, templateId);
-	}
-
-	/** 使用时 / On use. */
-	@Override
-	public void onUse(Player player) {
 	}
 
 	/** 生成。 / Spawn. */
