@@ -95,6 +95,37 @@ class SpawnsData2IndexTest {
 	}
 
 	@Test
+	void mergeUnionsIndexTablesAcrossSources() throws Exception {
+		SpawnsData2 first = unmarshal("""
+			<spawns>
+				<spawn_map map_id="100">
+					<spawn npc_id="101"/>
+				</spawn_map>
+			</spawns>
+			""");
+		SpawnsData2 second = unmarshal("""
+			<spawns>
+				<spawn_map map_id="200">
+					<spawn npc_id="202"/>
+				</spawn_map>
+				<spawn_map map_id="300">
+					<vortex_spawn id="1">
+						<state_type state="PEACE">
+							<spawn npc_id="303"/>
+						</state_type>
+					</vortex_spawn>
+				</spawn_map>
+			</spawns>
+			""");
+
+		first.merge(second);
+
+		assertEquals(101, first.getSpawnsByWorldId(100).getFirst().getNpcId());
+		assertEquals(202, first.getSpawnsByWorldId(200).getFirst().getNpcId());
+		assertEquals(303, first.getVortexSpawnsByLocId(1).getFirst().getNpcId());
+	}
+
+	@Test
 	void loadsGeneratedSpawnMetadataThroughSchema() throws Exception {
 		Path spawnDirectory = Path.of("src/main/resources/aion/data/static_data/spawns");
 		var schema = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI)

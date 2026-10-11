@@ -73,6 +73,11 @@ import lombok.Getter;
 /**
  * 刷怪数据容器：按地图与活动类型索引 {@link SpawnGroup2}，并支持管理员运行时保存。
  * Spawn data holder that indexes {@link SpawnGroup2} by map and event type, with admin runtime save support.
+ * <p>索引表在运行期仍会新增外层键（//spawn 保存自定义刷怪写 customs、事件注入刷怪地图写世界键），
+ * 因此一律保持构建模式、不得冻结，否则 //reload_spawn 之后的保存与事件会抛 IllegalStateException。
+ * The index tables still receive new outer keys at runtime (custom spawn saves via //spawn write
+ * {@code customs}, event-injected spawn maps write world keys), so they always stay in build mode and
+ * must not be frozen, or saves and events after //reload_spawn would throw IllegalStateException.</p>
  */
 @Getter
 @XmlRootElement(name = "spawns")
@@ -147,10 +152,46 @@ public class SpawnsData2 {
 	 * @param u Unmarshaller
 	 * @param parent 父对象 / parent object
 	 */
-	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public void afterUnmarshal(Unmarshaller u, Object parent) {
-		if (templates != null) {
-			for (SpawnMap spawnMap : templates) {
+		indexTemplates(templates);
+	}
+
+	/**
+	 * 合并另一份刷怪数据：把对方的原始模板并入本实例并增量建立索引。
+	 * Merges another spawn data instance: folds its raw templates into this instance and
+	 * incrementally indexes them.
+	 * <p>静态数据加载器逐个源文件反序列化后按字段反射合并同一分区，而
+	 * {@link FrozenIntObjectTable} 不是 {@link Map}，反射合并会静默跳过全部索引表；
+	 * 因此多源合并必须走本显式方法，否则除首个源文件外的刷怪索引（含漩涡、裂隙等地点刷怪）都会丢失。
+	 * The static-data loader unmarshals each source file separately and then merges a section field by
+	 * field, but a {@link FrozenIntObjectTable} is not a {@link Map}, so the reflective merge would
+	 * silently skip every index table; multi-source merging must therefore go through this explicit
+	 * method, or every spawn index beyond the first source file (including vortex/rift location
+	 * spawns) is lost.</p>
+	 * @param other 另一份刷怪数据 / other spawn data
+	 */
+	public void merge(SpawnsData2 other) {
+		if (other == null || other == this || other.templates == null) {
+			return;
+		}
+		indexTemplates(other.templates);
+		if (templates == null) {
+			templates = new ArrayList<>(other.templates);
+		} else {
+			templates.addAll(other.templates);
+		}
+	}
+
+	/**
+	 * 将给定刷怪地图列表索引到运行时映射；批内自定义刷怪覆盖同名普通刷怪。
+	 * Indexes the given spawn-map list into the runtime maps; custom spawns in the batch override
+	 * normal spawns of the same npc.
+	 * @param spawnMaps 待索引的刷怪地图列表，可为 null / spawn maps to index, may be null
+	 */
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	private void indexTemplates(List<SpawnMap> spawnMaps) {
+		if (spawnMaps != null) {
+			for (SpawnMap spawnMap : spawnMaps) {
 				int mapId = spawnMap.getMapId();
 				Map<Integer, SimpleEntry<SpawnGroup2, Spawn>> worldSpawns = spawnIndexForWorld(mapId);
 				Map<Integer, List<SpawnGroup2>> normalSpawns = normalSpawnVariantsForWorld(mapId);
@@ -648,26 +689,7 @@ public class SpawnsData2 {
 		data.templates = maps;
 		data.afterUnmarshal(null, null);
 		data.clearTemplates();
-		data.freezeIndexTables();
 		return data;
-	}
-
-	/**
-	 * 冻结全部索引表：加载期写入完成后切换为有序数组二分查询，消除运行期哈希开销；
-	 * 运行期仅允许按键查询与内层结构变更，外层键集不再变化。
-	 * Freezes every index table: after load-time writes complete, query switches to a sorted-array
-	 * binary search; at runtime only key lookups and inner-structure changes are allowed, the outer
-	 * key set never changes again.
-	 */
-	private void freezeIndexTables() {
-		for (FrozenIntObjectTable<?> index : List.of(allSpawnMaps, normalSpawnVariants, customs, siegeSpawnMaps,
-			baseSpawnMaps, vortexSpawnMaps, riftSpawnMaps, beritraSpawnMaps, agentSpawnMaps, anohaSpawnMaps,
-			rvrSpawnMaps, svsSpawnMaps, iuSpawnMaps, dynamicRiftSpawnMaps, instanceRiftSpawnMaps,
-			idianDepthsSpawnMaps, nightmareCircusSpawnMaps, legionDominionSpawnMaps, zorshivDredgionSpawnMaps,
-			moltenusSpawnMaps, conquestSpawnMaps, landingSpawnMaps, landingSpecialSpawnMaps,
-			towerOfEternitySpawnMaps, outpostSpawnMaps)) {
-			index.freeze();
-		}
 	}
 
 	/**
