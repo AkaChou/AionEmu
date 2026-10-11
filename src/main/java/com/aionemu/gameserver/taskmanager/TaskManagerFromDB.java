@@ -116,8 +116,8 @@ public class TaskManagerFromDB {
 		// 用于所有来自 DB 的任务 / For all tasks from DB
 		for (TaskFromDB task : tasksList) {
 			// 若任务名存在 / If the task name exist
-			if (handlers.get(task.getName()) != null) {
-				Class<? extends TaskFromDBHandler> tmpClass = handlers.get(task.getName()).getClass();
+			if (handlers.get(task.name()) != null) {
+				Class<? extends TaskFromDBHandler> tmpClass = handlers.get(task.name()).getClass();
 				TaskFromDBHandler currentTask;
 
 				try {
@@ -129,20 +129,20 @@ public class TaskManagerFromDB {
 				}
 
 				// 设置任务信息 / Set informations for the task
-				currentTask.setId(task.getId());
-				currentTask.setParam(task.getParams());
+				currentTask.setId(task.id());
+				currentTask.setParam(task.params());
 
 				if (!currentTask.isValid()) {
-					log.error(I18n.get("log.290fb6fb05a9", task.getId()));
+					log.error(I18n.get("log.290fb6fb05a9", task.id()));
 					continue;
 				}
 
-				if (task.getType().equals("FIXED_IN_TIME")) {
+				if (task.type().equals("FIXED_IN_TIME")) {
 					runFixedInTimeTask(currentTask, task);
 				} else
-					log.error(I18n.get("log.a722bb89732c", task.getType()));
+					log.error(I18n.get("log.a722bb89732c", task.type()));
 			} else
-				log.error(I18n.get("log.a61c4a8afc0f", task.getName()));
+				log.error(I18n.get("log.a61c4a8afc0f", task.name()));
 		}
 	}
 
@@ -154,7 +154,7 @@ public class TaskManagerFromDB {
 	 * @param dbTask  数据库任务配置 / DB task configuration
 	 */
 	private void runFixedInTimeTask(TaskFromDBHandler handler, TaskFromDB dbTask) {
-		String[] time = dbTask.getStartTime().split(":");
+		String[] time = dbTask.startTime().split(":");
 		int hour = Integer.parseInt(time[0]);
 		int minute = Integer.parseInt(time[1]);
 		int second = Integer.parseInt(time[2]);

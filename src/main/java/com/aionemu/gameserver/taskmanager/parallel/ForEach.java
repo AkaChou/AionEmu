@@ -2,6 +2,8 @@ package com.aionemu.gameserver.taskmanager.parallel;
 
 import java.util.Collection;
 
+import java.io.Serial;
+
 import java.util.concurrent.CountedCompleter;
 import java.util.concurrent.ForkJoinTask;
 import com.google.common.base.Predicate;
@@ -17,6 +19,7 @@ public final class ForEach<E> extends CountedCompleter<E> {
 	 * 序列化版本。
 	 * Serialization version.
 	 */
+	@Serial
 	private static final long serialVersionUID = 7902148320917998146L;
 
 	/**
@@ -38,7 +41,7 @@ public final class ForEach<E> extends CountedCompleter<E> {
 	 * @return ForkJoin 任务；空则为 null / ForkJoin task, or null if empty
 	 */
 	public static <E> ForkJoinTask<E> forEach(Collection<E> list, Predicate<E> operation) {
-		if (list.size() > 0) {
+		if (!list.isEmpty()) {
 			@SuppressWarnings("unchecked")
 			E[] objects = list.toArray((E[]) new Object[list.size()]);
 			CountedCompleter<E> completer = new ForEach<>(null, operation, 0, objects.length, objects);

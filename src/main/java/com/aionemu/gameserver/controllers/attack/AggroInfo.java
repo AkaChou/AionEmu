@@ -89,7 +89,7 @@ public class AggroInfo {
 		for (int hate : volatileHate.values()) {
 			total += hate;
 		}
-		this.hate = (int) Math.max(0, Math.min(Integer.MAX_VALUE, this.hate - total));
+		this.hate = Math.clamp(this.hate - total, 0, Integer.MAX_VALUE);
 		volatileHate.clear();
 	}
 

@@ -44,13 +44,13 @@ public class AttackShieldObserver extends AttackCalcObserver {
 	/** 护盾类型（0 转治疗/1 反射/2 吸收/8 保护） / Shield type (0 convert-heal/1 reflect/2 absorb/8 protect) */
 	private final int shieldType;
 	/** 触发概率 / Trigger probability */
-	private int probability = 100;
+	private int probability;
 	/** 反射最小半径 / Reflect min radius */
-	private int minradius = 0;
+	private int minradius;
 	/** 反射最大半径 / Reflect max radius */
-	private int maxradius = 100;
+	private int maxradius;
 	/** 转治疗类型 / Convert-heal type */
-	private HealType healType = null;
+	private HealType healType;
 	/** 保护者承伤比例/数值 / Protector damage share percent/value */
 	private final int effectorDamage;
 	/** 吸收时消耗 MP 百分比 / MP cost percent on absorb */
@@ -223,7 +223,7 @@ public class AttackShieldObserver extends AttackCalcObserver {
 					int damageProtected = calculateProtectedDamage(attackResult.getDamage(), hit, hitPercent);
 					int effectorDamage = calculateProtectorDamage(damageProtected, this.effectorDamage);
 					int finalDamage = attackResult.getDamage() - damageProtected;
-					attackResult.setDamage((finalDamage <= 0 ? 0 : finalDamage));
+					attackResult.setDamage(Math.max(finalDamage, 0));
 					attackResult.setShieldType(shieldType);
 					attackResult.setProtectedSkillId(effect.getSkillId());
 					attackResult.setProtectedDamage(effectorDamage);
@@ -275,7 +275,7 @@ public class AttackShieldObserver extends AttackCalcObserver {
 	}
 
 	static int calculateConversionBase(int damage, int absorbedDamage) {
-		return Math.min(absorbedDamage, Math.max(0, damage - 1));
+		return Math.clamp(damage - 1, 0, absorbedDamage);
 	}
 
 	static int calculateProtectedDamage(int damage, int protectedValue, boolean percent) {

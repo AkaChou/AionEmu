@@ -273,7 +273,7 @@ public class MathUtil {
 	 * @param obj2Y 目标 Y / Target Y
 	 * @return 角度（度） / Angle in degrees
 	 */
-	public final static float calculateAngleFrom(float obj1X, float obj1Y, float obj2X, float obj2Y) {
+	public static float calculateAngleFrom(float obj1X, float obj1Y, float obj2X, float obj2Y) {
 		float angleTarget = (float) Math.toDegrees(Math.atan2(obj2Y - obj1Y, obj2X - obj1X));
 		if (angleTarget < 0) {
 			angleTarget = 360 + angleTarget;
@@ -298,7 +298,7 @@ public class MathUtil {
 	 * @param clientHeading 客户端朝向 / Client heading
 	 * @return 度 / Degrees
 	 */
-	public final static float convertHeadingToDegree(byte clientHeading) {
+	public static float convertHeadingToDegree(byte clientHeading) {
 		float degree = clientHeading * 3;
 		return degree;
 	}
@@ -312,7 +312,7 @@ public class MathUtil {
 	 * @param obj2 终点对象 / Target object
 	 * @return Estimated heading (0–120) / Estimated heading (0–120)
 	 */
-	public final static byte estimateHeadingFrom(VisibleObject obj1, VisibleObject obj2) {
+	public static byte estimateHeadingFrom(VisibleObject obj1, VisibleObject obj2) {
 		return (byte) (diamondAngle(obj2.getX() - obj1.getX(), obj2.getY() - obj1.getY()) * 30F);
 	}
 
@@ -325,7 +325,7 @@ public class MathUtil {
 	 * @param deltaY Y 增量 / Y delta
 	 * @return Estimated heading (0–120) / Estimated heading (0–120)
 	 */
-	public final static byte estimateHeadingFrom(float deltaX, float deltaY) {
+	public static byte estimateHeadingFrom(float deltaX, float deltaY) {
 		return (byte) (diamondAngle(deltaX, deltaY) * 30F);
 	}
 
@@ -338,7 +338,7 @@ public class MathUtil {
 	 * @param y Y 坐标差值 / Y delta
 	 * @return 角度值 (0–3 范围) / Angle value in range 0–3
 	 */
-	public final static float diamondAngle(float x, float y) {
+	public static float diamondAngle(float x, float y) {
 		if (y >= 0) {
 			if (y == 0 && x == 0) return 0;
 			return (x >= 0 ? y / (x + y) : 1 - x / (-x + y));
@@ -352,7 +352,7 @@ public class MathUtil {
 	 * @param angle 角度（度） / Angle in degrees
 	 * @return 朝向值 / Heading value
 	 */
-	public final static byte convertDegreeToHeading(float angle) {
+	public static byte convertDegreeToHeading(float angle) {
 		return (byte) (angle / 3);
 	}
 
@@ -366,7 +366,7 @@ public class MathUtil {
 	 * @param offset 额外偏移 / Extra offset
 	 * @return 若 near 则为 true / True if near
 	 */
-	public final static boolean isNearCoordinates(VisibleObject obj, float x, float y, float z, float offset) {
+	public static boolean isNearCoordinates(VisibleObject obj, float x, float y, float z, float offset) {
 		return getDistance(obj.getX(), obj.getY(), obj.getZ(), x, y, z) < offset + NpcMoveController.MOVE_CHECK_OFFSET;
 	}
 
@@ -378,7 +378,7 @@ public class MathUtil {
 	 * @param offset 额外偏移 / Extra offset
 	 * @return 若 near 则为 true / True if near
 	 */
-	public final static boolean isNearCoordinates(VisibleObject obj, VisibleObject obj2, int offset) {
+	public static boolean isNearCoordinates(VisibleObject obj, VisibleObject obj2, int offset) {
 		return getDistance(obj.getX(), obj.getY(), obj.getZ(), obj2.getX(), obj2.getY(), obj2.getZ()) < offset
 				+ NpcMoveController.MOVE_CHECK_OFFSET;
 	}
@@ -391,7 +391,7 @@ public class MathUtil {
 	 * @param range 攻击范围 / Attack range
 	 * @return 在攻击范围内返回 true / True if in attack range
 	 */
-	public final static boolean isInAttackRange(Creature object1, Creature object2, float range) {
+	public static boolean isInAttackRange(Creature object1, Creature object2, float range) {
 		if (object1 == null || object2 == null) {
 			return false;
 		}
@@ -421,7 +421,7 @@ public class MathUtil {
 	 * @param isFront true 为前方，false 为后方 / true front, false rear
 	 * @return 在圆柱内返回 true / True if inside the cylinder
 	 */
-	public final static boolean isInsideAttackCylinder(VisibleObject obj1, VisibleObject obj2, int length, int radius,
+	public static boolean isInsideAttackCylinder(VisibleObject obj1, VisibleObject obj2, int length, int radius,
 			boolean isFront) {
 		double radian = Math.toRadians(convertHeadingToDegree(obj1.getHeading()));
 		int direction = isFront ? 0 : 1;
@@ -446,7 +446,7 @@ public class MathUtil {
 	 * @param Radius 半径 / Radius
 	 * @return 采样点 / Sampled point
 	 */
-	public final static Point get2DPointInsideCircle(float CenterX, float CenterY, int Radius) {
+	public static Point get2DPointInsideCircle(float CenterX, float CenterY, int Radius) {
 		double X = Math.random() * 2 - 1;
 		double YMin = -Math.sqrt(1 - X * X);
 		double YMax = Math.sqrt(1 - X * X);
@@ -465,7 +465,7 @@ public class MathUtil {
 	 * @param angleInDegrees 角度（度） / Angle in degrees
 	 * @return 圆周上的点 / Point on circumference
 	 */
-	public final static Point get2DPointOnCircleCircumference(float CenterX, float CenterY, int Radius,
+	public static Point get2DPointOnCircleCircumference(float CenterX, float CenterY, int Radius,
 			float angleInDegrees) {
 		float finalX = (float) (Radius * Math.cos(angleInDegrees * Math.PI / 180F)) + CenterX;
 		float finalY = (float) (Radius * Math.sin(angleInDegrees * Math.PI / 180F)) + CenterY;
@@ -480,7 +480,7 @@ public class MathUtil {
 	 * @param Radius 半径 / Radius
 	 * @return 圆周上的点 / Point on circumference
 	 */
-	public final static Point get2DPointOnCircleCircumference(Point CenterPoint, Point EndPoint, int Radius) {
+	public static Point get2DPointOnCircleCircumference(Point CenterPoint, Point EndPoint, int Radius) {
 		double AngleinXAxis = getAngle(CenterPoint, EndPoint);
 		float finalX = (float) (Radius * Math.cos(AngleinXAxis * Math.PI / 180F)) + CenterPoint.x;
 		float finalY = (float) (Radius * Math.sin(AngleinXAxis * Math.PI / 180F)) + CenterPoint.y;
@@ -494,7 +494,7 @@ public class MathUtil {
 	 * @param P2 终点 / Target
 	 * @return 角度（度） / Angle in degrees
 	 */
-	public final static double getAngle(Point P1, Point P2) {
+	public static double getAngle(Point P1, Point P2) {
 		float dx = P2.x - P1.x;
 		float dy = P2.y - P1.y;
 		double angle = Math.atan2(dx, dy) * 180 / Math.PI;
@@ -509,7 +509,7 @@ public class MathUtil {
 	 * @param GivenPoint Reference point / Reference point
 	 * @return 圆周上最近点 / Closest point on circumference
 	 */
-	public final static Point get2DPointInsideCircleClosestTo(Point Center, int Radius, Point GivenPoint) {
+	public static Point get2DPointInsideCircleClosestTo(Point Center, int Radius, Point GivenPoint) {
 		double vX = GivenPoint.x - Center.x;
 		double vY = GivenPoint.y - Center.y;
 		double magV = Math.sqrt(vX * vX + vY * vY);
@@ -526,7 +526,7 @@ public class MathUtil {
 	 * @param Radius2 内半径 / Inner radius
 	 * @return 采样点 / Sampled point
 	 */
-	public final static Point get2DPointInsideAnnulus(Point Center, int Radius1, int Radius2) {
+	public static Point get2DPointInsideAnnulus(Point Center, int Radius1, int Radius2) {
 		double theta = 360 * Math.random();
 		double dist = Math.sqrt(Math.random() * (Radius1 * Radius1 - Radius2 * Radius2) + Radius2 * Radius2);
 		double X = dist * Math.cos(theta) + Center.x;

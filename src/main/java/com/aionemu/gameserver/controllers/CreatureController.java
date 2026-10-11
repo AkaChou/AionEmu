@@ -68,35 +68,7 @@ public abstract class CreatureController<T extends Creature> extends VisibleObje
 	private final Map<Integer, Future<?>> tasks = new ConcurrentHashMap<>();
 	/** 地形区域碰撞材质角色 / Terrain zone collision material actor */
 	private volatile TerrainZoneCollisionMaterialActor terrainMaterialActor;
-	/** 治疗技能增益倍率。 / Healing skill boost multiplier. */
-	private float healingSkillBoost = 1.0f;
-	/** 简易攻击类型。 / Simple attack type.
-     * -- GETTER --
-     *  获取简易攻击类型。
-     *  Gets the simple attack type.
-	 * -- SETTER --
-	 *  设置简易攻击类型。
-	 *  Sets the simple attack type.
-	 *  attack type
-     */
-	@Setter
-	@Getter
-    private int SimpleAttackType;
-
-	/**
-	 * 当对象离开视野时回调。
-	 * Callback when an object leaves sight.
-	 * @param object 离开视野的对象 / the object leaving sight
-	 * @param isOutOfRange 是否因超出距离离开 / whether the leave is due to being out of range
-	 */
-	@Override
-	public void notSee(VisibleObject object, boolean isOutOfRange) {
-		super.notSee(object, isOutOfRange);
-		if (object == getOwner().getTarget() && getOwner().getAi2().getSubState() != AISubState.TARGET_LOST) {
-			getOwner().setTarget(null);
-		}
-	}
-
+	
 	/**
 	 * 生物开始移动时执行的任务。
 	 * Perform tasks when the creature starts moving.
@@ -257,7 +229,7 @@ public abstract class CreatureController<T extends Creature> extends VisibleObje
 				if (attacker instanceof Player) {
 					ShoutEventHandler.onHelp((NpcAI2) ai, attacker);
 				} else {
-					ShoutEventHandler.onEnemyAttack((NpcAI2) ai, attacker);
+					ShoutEventHandler.onEnemyAttack((NpcAI2) ai);
 				}
 			}
 		} else if (getOwner() instanceof Player && attacker instanceof Npc) {
@@ -324,14 +296,7 @@ public abstract class CreatureController<T extends Creature> extends VisibleObje
 		}
 	}
 
-	/**
-	 * 处理掉落。
-	 * Handles drops.
-	 * @param player 获得掉落的玩家 / player receiving drops
-	 */
-	public void doDrop(Player player) {
-	}
-
+	
 	/**
 	 * 处理击杀奖励。
 	 * Handles kill rewards.
@@ -719,24 +684,8 @@ public abstract class CreatureController<T extends Creature> extends VisibleObje
 		}
 	}
 
-	/**
-	 * 获取治疗技能增益倍率。
-	 * Gets the healing skills boost multiplier.
-	 * @return boost multiplier / 增益倍率 / boost multiplier。
-	 */
-	public float getHealingSkillsBoost() {
-		return healingSkillBoost;
-	}
-
-	/**
-	 * 设置治疗技能增益倍率。
-	 * Sets the healing skills boost multiplier.
-	 * @param value 增益倍率 / boost multiplier
-	 */
-	public void setHealingSkillsBoost(float value) {
-		this.healingSkillBoost = value;
-	}
-
+	
+	
 	/**
 	 * 生成后回调。
 	 * Callback after spawn.

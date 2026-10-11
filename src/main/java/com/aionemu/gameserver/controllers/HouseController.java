@@ -142,7 +142,7 @@ public class HouseController extends VisibleObjectController<House> {
 	public void kickVisitors(Player kicker, boolean kickFriends, boolean onSettingsChange) {
 		List<ZoneInfo> zoneInfo = DataManager.ZONE_DATA.getZones().get(getOwner().getWorldId());
 		for (ZoneInfo info : zoneInfo) {
-			if (info.getZoneTemplate().getName().name().equals(getOwner().getName())) {
+			if (info.zoneTemplate().getName().name().equals(getOwner().getName())) {
 				for (Integer objId : this.observed.keySet()) {
 					if (objId == getOwner().getOwnerId()) {
 						continue;
@@ -152,7 +152,7 @@ public class HouseController extends VisibleObjectController<House> {
 					}
 					Player visitor = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(objId);
 					if (visitor != null) {
-						if (visitor.isInsideZone(info.getZoneTemplate().getName())) {
+						if (visitor.isInsideZone(info.zoneTemplate().getName())) {
 							moveOutside(visitor, onSettingsChange);
 						}
 					}

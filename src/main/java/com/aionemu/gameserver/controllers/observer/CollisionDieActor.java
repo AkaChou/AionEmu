@@ -29,7 +29,7 @@ public class CollisionDieActor extends AbstractCollisionObserver implements IAct
 
 	@Override
 	public void onMoved(CollisionResults collisionResults) {
-		if (isEnabled && collisionResults.size() != 0) {
+		if (isEnabled && !collisionResults.isEmpty()) {
 			act();
 		}
 	}

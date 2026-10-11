@@ -66,8 +66,8 @@ public class Node extends Spatial implements Cloneable {
 	public int getTriangleCount() {
 		int count = 0;
 		if (children != null) {
-			for (int i = 0; i < children.size(); i++) {
-				count += children.get(i).getTriangleCount();
+			for (Spatial child : children) {
+				count += child.getTriangleCount();
 			}
 		}
 		return count;
@@ -82,8 +82,8 @@ public class Node extends Spatial implements Cloneable {
 	public int getVertexCount() {
 		int count = 0;
 		if (children != null) {
-			for (int i = 0; i < children.size(); i++) {
-				count += children.get(i).getVertexCount();
+			for (Spatial child : children) {
+				count += child.getVertexCount();
 			}
 		}
 
@@ -324,8 +324,7 @@ public class Node extends Spatial implements Cloneable {
 		}
 
 		int total = 0;
-		for (int i = 0; i < children.size(); i++) {
-			Spatial child = children.get(i);
+		for (Spatial child : children) {
 			if (child instanceof Geometry) {
 
 				// 未使用的 materialId 未设置材质碰撞意图 / not used materialIds do not have collision intention for materials set
@@ -334,7 +333,7 @@ public class Node extends Spatial implements Cloneable {
 					continue;
 				}
 				if ((results.getIntentions() & CollisionIntention.MATERIAL.getId()) != 0
-						&& child.getMaterialId() <= 0) {
+					&& child.getMaterialId() <= 0) {
 					continue;
 				}
 			}
@@ -364,8 +363,7 @@ public class Node extends Spatial implements Cloneable {
 		if (getQuantity() < 1) {
 			return newList;
 		}
-		for (int i = 0; i < children.size(); i++) {
-			Spatial child = children.get(i);
+		for (Spatial child : children) {
 			if (child.matches(spatialSubclass, nameRegex)) {
 				newList.add((T) child);
 			}
@@ -406,8 +404,8 @@ public class Node extends Spatial implements Cloneable {
 	@Override
 	public void setModelBound(BoundingVolume modelBound) {
 		if (children != null) {
-			for (int i = 0, max = children.size(); i < max; i++) {
-				children.get(i).setModelBound(modelBound != null ? modelBound.clone(null) : null);
+			for (Spatial child : children) {
+				child.setModelBound(modelBound != null ? modelBound.clone(null) : null);
 			}
 		}
 	}
@@ -420,8 +418,7 @@ public class Node extends Spatial implements Cloneable {
 	public void updateModelBound() {
 		BoundingVolume resultBound = null;
 		if (children != null) {
-			for (int i = 0, max = children.size(); i < max; i++) {
-				Spatial child = children.get(i);
+			for (Spatial child : children) {
 				child.updateModelBound();
 				if (resultBound != null) {
 					// 合并当前世界边界与子世界边界 / merge current world bound with child world bound
@@ -453,8 +450,8 @@ public class Node extends Spatial implements Cloneable {
 	@Override
 	public void setTransform(Matrix3f rotation, Vector3f loc, float scale) {
 		if (children != null) {
-			for (int i = 0; i < children.size(); i++) {
-				children.get(i).setTransform(rotation, loc, scale);
+			for (Spatial child : children) {
+				child.setTransform(rotation, loc, scale);
 			}
 		}
 	}
@@ -469,9 +466,9 @@ public class Node extends Spatial implements Cloneable {
 	@Override
 	public void setTransform(Matrix3f rotation, Vector3f loc, Vector3f scale) {
 		if (children != null) {
-			for (int i = 0; i < children.size(); i++) {
-				children.get(i).setTransform(rotation, loc, scale);
-			}
+            for (Spatial child : children) {
+                child.setTransform(rotation, loc, scale);
+            }
 		}
 	}
 

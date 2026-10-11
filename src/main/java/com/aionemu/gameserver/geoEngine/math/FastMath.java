@@ -381,13 +381,7 @@ public final class FastMath {
 	 * @return 1、0 或 -1 / 1, 0 or -1
 	 */
 	public static int sign(int iValue) {
-		if (iValue > 0) {
-			return 1;
-		}
-		if (iValue < 0) {
-			return -1;
-		}
-		return 0;
+		return Integer.compare(iValue, 0);
 	}
 
 	/**

@@ -172,8 +172,8 @@ public final class BIHNode {
 		Triangle t = new Triangle();
 		int cols = 0;
 
-		stackloop: while (stack.size() > 0) {
-			BIHNode node = stack.remove(stack.size() - 1).node;
+		stackloop: while (!stack.isEmpty()) {
+			BIHNode node = stack.removeLast().node;
 
 			while (node.axis != 3) {
 				int a = node.axis;
@@ -238,9 +238,9 @@ public final class BIHNode {
 		List<BIHStackData> stack = new ArrayList<>();
 		stack.clear();
 		stack.add(new BIHStackData(this, 0, 0));
-		while (stack.size() > 0) {
+		while (!stack.isEmpty()) {
 
-			BIHStackData data = stack.remove(stack.size() - 1);
+			BIHStackData data = stack.removeLast();
 			BIHNode node = data.node;
 
 			while (node.axis != 3) { // while node is not a leaf

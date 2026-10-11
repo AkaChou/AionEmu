@@ -7,7 +7,6 @@ import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.TreeSet;
 import java.util.concurrent.ConcurrentHashMap;
@@ -149,9 +148,7 @@ public class MapRegion {
 			if (object instanceof Player) {
 				checkActiveness(playerCount.incrementAndGet() > 0);
 			} else if (DeveloperConfig.SPAWN_CHECK) {
-				Iterator<TreeSet<ZoneInstance>> zoneIter = zoneMap.values().iterator();
-				while (zoneIter.hasNext()) {
-					TreeSet<ZoneInstance> zones = zoneIter.next();
+				for (TreeSet<ZoneInstance> zones : zoneMap.values()) {
 					for (ZoneInstance zone : zones) {
 						if (!zone.isInsideCordinate(object.getX(), object.getY(), object.getZ())) {
 							continue;
@@ -235,7 +232,7 @@ public class MapRegion {
 	 * 向带 AI2 的生物发送 ACTIVATE 事件。
 	 * Send ACTIVATE event to creatures with AI2.
 	 */
-	private final void activateObjects() {
+	private void activateObjects() {
 		for (VisibleObject visObject : objects.values()) {
 			if (visObject instanceof Creature creature) {
 				creature.getAi2().onGeneralEvent(AIEventType.ACTIVATE);
@@ -286,8 +283,7 @@ public class MapRegion {
 	 * @return 有活跃邻接返回 true / true if a neighbour is active with players
 	 */
 	boolean isNeighboursActive() {
-		for (int i = 0; i < neighbours.length; i++) {
-			MapRegion r = neighbours[i];
+		for (MapRegion r : neighbours) {
 			if (r != null && r.regionActive.get() && r.playerCount.get() > 0) {
 				return true;
 			}
@@ -405,29 +401,7 @@ public class MapRegion {
 		return false;
 	}
 
-	/**
-	 * 物品使用 Zone 校验（按 xml 名前缀匹配，因实例名不唯一）。
-	 * Item-use zone check (prefix-matches xml names because instance names are not unique).
-	 * @param zoneName Zone 名称 / the zone name
-	 * @param creature 生物 / the creature
-	 * @return 若 inside 则为 true / true if inside
-	 */
-	public boolean isInsideItemUseZone(ZoneName zoneName, Creature creature) {
-		for (Entry<Integer, TreeSet<ZoneInstance>> e : zoneMap.entrySet()) {
-			TreeSet<ZoneInstance> zones = e.getValue();
-			for (ZoneInstance zone : zones) {
-				if (!zone.getZoneTemplate().getXmlName().startsWith(zoneName.toString())) {
-					continue;
-				}
-				if (!zone.isInsideCreature(creature)) {
-					continue;
-				}
-				return true;
-			}
-		}
-		return false;
-	}
-
+	
 	/**
 	 * 按优先级/类型构建 Zone 分类表。
 	 * Build zone category map by priority/type.
@@ -441,12 +415,7 @@ public class MapRegion {
 			if (zone.getZoneTemplate().getPriority() != 0) {
 				category = zone.getZoneTemplate().getZoneType().ordinal();
 			}
-			TreeSet<ZoneInstance> zoneCategory = zoneMap.get(category);
-			if (zoneCategory == null) {
-				zoneCategory = new TreeSet<>();
-				zoneMap.put(category, zoneCategory);
-			}
-			zoneCategory.add(zone);
+			zoneMap.computeIfAbsent(category, _ -> new TreeSet<>()).add(zone);
 		}
 	}
 }

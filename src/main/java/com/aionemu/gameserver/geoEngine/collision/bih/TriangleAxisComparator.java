@@ -45,12 +45,6 @@ public class TriangleAxisComparator implements Comparator<BIHTriangle> {
 			assert false;
 			return 0;
 		}
-		if (v1 > v2) {
-			return 1;
-		} else if (v1 < v2) {
-			return -1;
-		} else {
-			return 0;
-		}
+        return Float.compare(v1, v2);
 	}
 }

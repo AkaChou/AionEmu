@@ -8,7 +8,6 @@ import com.aionemu.gameserver.lifecycle.GameFeatureServices;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -152,16 +151,7 @@ public final class ZoneService implements GameEngine {
 		}
 	}
 
-	/**
-	 * 将处理器类直接绑定到指定区域名称。
-	 * Bind a handler class directly to the given zone name.
-	 * @param zoneName 区域名称 / the zone name
-	 * @param handler 处理器类 / the handler class
-	 */
-	public void addZoneHandlerClass(ZoneName zoneName, Class<? extends ZoneHandler> handler) {
-		handlers.put(zoneName, handler);
-	}
-
+	
 	/**
 	 * 加载区域脚本处理器。
 	 * Load zone script handlers.
@@ -225,15 +215,15 @@ public final class ZoneService implements GameEngine {
 		GameFeatureServices.shieldService().load(mapId);
 
 		for (ZoneInfo area : areas) {
-			ZoneInstance instance = null;
-			switch (area.getZoneTemplate().getZoneType()) {
+			ZoneInstance instance;
+			switch (area.zoneTemplate().getZoneType()) {
 			case FLY:
 				instance = new FlyZoneInstance(mapId, area);
 				break;
 			case FORT:
 				instance = new SiegeZoneInstance(mapId, area);
 				SiegeLocation siege = DataManager.SIEGE_LOCATION_DATA.getSiegeLocations()
-						.get(area.getZoneTemplate().getSiegeId().get(0));
+						.get(area.zoneTemplate().getSiegeId().getFirst());
 				if (siege != null) {
 					siege.addZone((SiegeZoneInstance) instance);
 					if (GeoDataConfig.GEO_SHIELDS_ENABLE) {
@@ -243,10 +233,10 @@ public final class ZoneService implements GameEngine {
 				break;
 			case ARTIFACT:
 				instance = new SiegeZoneInstance(mapId, area);
-				for (int artifactId : area.getZoneTemplate().getSiegeId()) {
+				for (int artifactId : area.zoneTemplate().getSiegeId()) {
 					SiegeLocation artifact = DataManager.SIEGE_LOCATION_DATA.getArtifacts().get(artifactId);
 					if (artifact == null) {
-						log.warn(I18n.get("log.58679a0b704d", area.getZoneTemplate().getName().name()));
+						log.warn(I18n.get("log.58679a0b704d", area.zoneTemplate().getName().name()));
 					} else {
 						artifact.addZone((SiegeZoneInstance) instance);
 					}
@@ -263,8 +253,8 @@ public final class ZoneService implements GameEngine {
 					instance = new ZoneInstance(mapId, area);
 				}
 			}
-			instance.addHandler(getNewZoneHandler(area.getZoneTemplate().getName()));
-			zones.put(area.getZoneTemplate().getName(), instance);
+			instance.addHandler(getNewZoneHandler(area.zoneTemplate().getName()));
+			zones.put(area.zoneTemplate().getName(), instance);
 		}
 		return zones;
 	}
@@ -276,17 +266,17 @@ public final class ZoneService implements GameEngine {
 	 * @return 入侵区域实例，或 null / invasion zone instance, or null
 	 */
 	private InvasionZoneInstance getIZI(ZoneInfo area) {
-		if (area.getZoneTemplate().getName().name().equals("WAILING_CLIFFS_220050000")
-				|| area.getZoneTemplate().getName().name().equals("BALTASAR_CEMETERY_220050000")
-				|| area.getZoneTemplate().getName().name().equals("THE_LEGEND_SHRINE_220050000")
-				|| area.getZoneTemplate().getName().name().equals("SUDORVILLE_220050000")
-				|| area.getZoneTemplate().getName().name().equals("BALTASAR_HILL_VILLAGE_220050000")
-				|| area.getZoneTemplate().getName().name().equals("BRUSTHONIN_MITHRIL_MINE_220050000")) {
+		if (area.zoneTemplate().getName().name().equals("WAILING_CLIFFS_220050000")
+				|| area.zoneTemplate().getName().name().equals("BALTASAR_CEMETERY_220050000")
+				|| area.zoneTemplate().getName().name().equals("THE_LEGEND_SHRINE_220050000")
+				|| area.zoneTemplate().getName().name().equals("SUDORVILLE_220050000")
+				|| area.zoneTemplate().getName().name().equals("BALTASAR_HILL_VILLAGE_220050000")
+				|| area.zoneTemplate().getName().name().equals("BRUSTHONIN_MITHRIL_MINE_220050000")) {
 			return validateZone(area);
-		} else if (area.getZoneTemplate().getName().name().equals("JAMANOK_INN_210060000")
-				|| area.getZoneTemplate().getName().name().equals("THE_STALKING_GROUNDS_210060000")
-				|| area.getZoneTemplate().getName().name().equals("BLACK_ROCK_HOT_SPRING_210060000")
-				|| area.getZoneTemplate().getName().name().equals("FREGIONS_FLAME_210060000")) {
+		} else if (area.zoneTemplate().getName().name().equals("JAMANOK_INN_210060000")
+				|| area.zoneTemplate().getName().name().equals("THE_STALKING_GROUNDS_210060000")
+				|| area.zoneTemplate().getName().name().equals("BLACK_ROCK_HOT_SPRING_210060000")
+				|| area.zoneTemplate().getName().name().equals("FREGIONS_FLAME_210060000")) {
 			return validateZone(area);
 		}
 		return null;
@@ -299,7 +289,7 @@ public final class ZoneService implements GameEngine {
 	 * @return 入侵区域实例，或 null / invasion zone instance, or null
 	 */
 	private InvasionZoneInstance validateZone(ZoneInfo area) {
-		int mapId = area.getZoneTemplate().getMapid();
+		int mapId = area.zoneTemplate().getMapid();
 		VortexLocation vortex = DataManager.VORTEX_DATA.getVortexLocation(mapId);
 		if (vortex != null) {
 			InvasionZoneInstance instance = new InvasionZoneInstance(mapId, area);
@@ -318,7 +308,7 @@ public final class ZoneService implements GameEngine {
 	 * @param failOnMissing 缺失时是否严格失败 / whether to fail strictly when missing
 	 */
 	public void createMaterialZoneTemplate(Spatial geometry, int worldId, int materialId, boolean failOnMissing) {
-		ZoneName zoneName = null;
+		ZoneName zoneName;
 		if (failOnMissing) {
 			zoneName = ZoneName.get(geometry.getName() + "_" + worldId);
 		} else {
@@ -355,7 +345,7 @@ public final class ZoneService implements GameEngine {
 		}
 		ZoneInfo zoneInfo = null;
 		for (ZoneInfo area : areas) {
-			if (area.getZoneTemplate().getName().equals(zoneName)) {
+			if (area.zoneTemplate().getName().equals(zoneName)) {
 				zoneInfo = area;
 				break;
 			}
@@ -398,30 +388,7 @@ public final class ZoneService implements GameEngine {
 		createMaterialZoneTemplate(geometry, worldId, materialId, false);
 	}
 
-	/**
-	 * 将可碰撞材质区域模板排序后写回 ZoneData。
-	 * Sort collidable material zone templates and persist them via ZoneData.
-	 */
-	public void saveMaterialZones() {
-		List<ZoneTemplate> templates = new ArrayList<>();
-		for (WorldMapTemplate map : DataManager.WORLD_MAPS_DATA) {
-			Collection<ZoneInfo> areas = this.zoneByMapIdMap.get(map.getMapId());
-			if (areas == null) {
-				continue;
-			}
-			for (ZoneInfo zone : areas) {
-				if (collidableHandlers.containsKey(zone.getArea().getZoneName())) {
-					templates.add(zone.getZoneTemplate());
-				}
-			}
-		}
-		Collections.sort(templates, (o1, o2) -> o1.getMapid() - o2.getMapid());
-
-		ZoneData zoneData = new ZoneData();
-		zoneData.zoneList = templates;
-		zoneData.saveData();
-	}
-
+	
 	/**
 	 * 空实现的通用区域处理器（占位 / 默认处理器）。
 	 * General zone handler with empty implementations (placeholder / default handler).

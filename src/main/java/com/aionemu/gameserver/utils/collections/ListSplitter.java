@@ -51,7 +51,7 @@ public class ListSplitter<T> {
 	 */
 	@SuppressWarnings("unchecked")
 	public ListSplitter(Collection<T> collection, int splitCount) {
-		if (collection != null && collection.size() > 0) {
+		if (collection != null && !collection.isEmpty()) {
 			this.splitCount = splitCount;
 			length = collection.size();
 			this.objects = collection.toArray((T[]) new Object[length]);
@@ -59,17 +59,7 @@ public class ListSplitter<T> {
 		}
 	}
 
-	/**
-	 * 使用新的切分大小并取下一块。
-	 * Use a new split size and return the next chunk.
-	 * @param splitCount 新的每块大小 / New chunk size
-	 * @return 下一块列表 / Next chunk as list
-	 */
-	public List<T> getNext(int splitCount) {
-		this.splitCount = splitCount;
-		return getNext();
-	}
-
+	
 	/**
 	 * 取下一块元素。
 	 * Return the next chunk of elements.

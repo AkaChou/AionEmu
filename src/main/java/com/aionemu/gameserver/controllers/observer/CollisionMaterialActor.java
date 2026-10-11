@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicReference;
 
-import com.aionemu.gameserver.controllers.observer.AbstractCollisionObserver.CheckType;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.geoEngine.collision.CollisionIntention;
 import com.aionemu.gameserver.geoEngine.collision.CollisionResults;
@@ -76,8 +75,8 @@ public class CollisionMaterialActor extends AbstractCollisionObserver implements
 	 */
 	public static boolean actsOnZoneEnter(Spatial geometry) {
 		String name = geometry.getName();
-		return name.indexOf("FIRE_BOX") != -1 || name.indexOf("FIRE_SEMISPHERE") != -1 || name.indexOf("FIREPOT") != -1
-				|| name.indexOf("FIRE_CYLINDER") != -1 || name.indexOf("FIRE_CONE") != -1
+		return name.contains("FIRE_BOX") || name.contains("FIRE_SEMISPHERE") || name.contains("FIREPOT")
+				|| name.contains("FIRE_CYLINDER") || name.contains("FIRE_CONE")
 				|| name.startsWith("BU_H_CENTERHALL");
 	}
 
@@ -119,7 +118,7 @@ public class CollisionMaterialActor extends AbstractCollisionObserver implements
 			}
 		}
 
-		boolean dependsOnWeather = geometry.getName().indexOf("WEATHER") != -1;
+		boolean dependsOnWeather = geometry.getName().contains("WEATHER");
 		if (dependsOnWeather && weatherCode > 0) {
 			return Collections.emptyList();
 		}
@@ -137,7 +136,7 @@ public class CollisionMaterialActor extends AbstractCollisionObserver implements
 
 	@Override
 	public void onMoved(CollisionResults collisionResults) {
-		if (collisionResults.size() == 0) {
+		if (collisionResults.isEmpty()) {
 			if (stopWhenNotTouching) {
 				abort();
 			}

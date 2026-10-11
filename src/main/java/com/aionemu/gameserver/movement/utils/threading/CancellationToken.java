@@ -33,9 +33,8 @@ public class CancellationToken {
 	/**
 	 * 请求取消：仅首次生效，并依次执行已注册回调。
 	 * Request cancellation: takes effect only once and runs registered callbacks in order.
-	 * @throws InterruptedException 回调被中断时 / if a callback is interrupted
 	 */
-	public void cancel() throws InterruptedException {
+	public void cancel() {
 		if (this._isCancelled.compareAndSet(false, true)) {
 			Runnable run;
 			while ((run = this._cancelActions.poll()) != null) {
@@ -48,9 +47,8 @@ public class CancellationToken {
 	 * 注册取消回调；若令牌已取消则立即执行该回调。
 	 * Register a cancel callback; run it immediately if the token is already cancelled.
 	 * @param runnable 取消回调 / the cancellation callback
-	 * @throws InterruptedException 立即执行回调被中断时 / if the immediate callback is interrupted
-	 */
-	public void addAction(Runnable runnable) throws InterruptedException {
+     */
+	public void addAction(Runnable runnable) {
 		if (!this._isCancelled.get()) {
 			this._cancelActions.add(runnable);
 			if (this._isCancelled.get() && this._cancelActions.remove(runnable)) {

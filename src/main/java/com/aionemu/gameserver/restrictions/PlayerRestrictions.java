@@ -61,7 +61,7 @@ public class PlayerRestrictions extends AbstractRestrictions {
 								&& !((Creature) target).isInState(CreatureState.FLOATING_CORPSE)))) {
 			return false;
 		}
-		if (!skill.getSkillTemplate().hasEvadeEffect()) {
+		if (skill.getSkillTemplate().lacksEvadeEffect()) {
 			if (player.getEffectController().isAbnormalState(AbnormalState.CANT_ATTACK_STATE)) {
 				return false;
 			}
@@ -73,7 +73,8 @@ public class PlayerRestrictions extends AbstractRestrictions {
 			if (((Creature) target).getTransformModel().isRecallDisabled()) {
 				return false;
 			}
-			if (player.getController().isInCombat() || ((Player) target).getController().isInCombat()) {
+			if (target instanceof Player targetPlayer && (player.getController().isInCombat()
+					|| targetPlayer.getController().isInCombat())) {
 				PacketSendUtility.sendPacket(player,
 						SM_SYSTEM_MESSAGE.STR_MSG_Recall_CANNOT_ACCEPT_EFFECT(target.getName()));
 				return false;
@@ -96,15 +97,15 @@ public class PlayerRestrictions extends AbstractRestrictions {
 	 * @param target 目标，可能为 null / target, may be null
 	 * @return 允许时为 true / true when allowed
 	 */
-	private boolean checkFly(Player player, VisibleObject target) {
-		if ((player.isUsingFlyTeleport()) || (player.isInPlayerMode(PlayerMode.WINDSTREAM))) {
+	private boolean flyRestricted(Player player, VisibleObject target) {
+		if (player.isUsingFlyTeleport() || player.isInPlayerMode(PlayerMode.WINDSTREAM)) {
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_SKILL_RESTRICTION_NO_FLY);
-			return false;
+			return true;
 		}
-		if ((target != null) && ((target instanceof Player playerTarget))) {
-			return (!playerTarget.isUsingFlyTeleport()) && (!playerTarget.isInPlayerMode(PlayerMode.WINDSTREAM));
+		if (target instanceof Player playerTarget) {
+			return playerTarget.isUsingFlyTeleport() || playerTarget.isInPlayerMode(PlayerMode.WINDSTREAM);
 		}
-		return true;
+		return false;
 	}
 
 	/**
@@ -127,7 +128,7 @@ public class PlayerRestrictions extends AbstractRestrictions {
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_SKILL_CAN_NOT_CAST_IN_SHAPECHANGE);
 			return false;
 		}
-		if (!checkFly(player, target)) {
+		if (flyRestricted(player, target)) {
 			return false;
 		}
 		if (player.isCasting()) {
@@ -144,12 +145,12 @@ public class PlayerRestrictions extends AbstractRestrictions {
 		}
 		if ((player.getEffectController().isAbnormalState(AbnormalState.CANT_ATTACK_STATE)
 				|| player.isInState(CreatureState.RESTING) || player.isInState(CreatureState.PRIVATE_SHOP))
-				&& !template.hasEvadeEffect()) {
+				&& template.lacksEvadeEffect()) {
 			return false;
 		}
 		if ((template.getType() == SkillType.MAGICAL)
 				&& (player.getEffectController().isAbnormalSet(AbnormalState.SILENCE))
-				&& (!template.hasEvadeEffect())) {
+				&& (template.lacksEvadeEffect())) {
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_SKILL_CANT_CAST_MAGIC_SKILL_WHILE_SILENCED);
 			return false;
 		}
@@ -207,7 +208,7 @@ public class PlayerRestrictions extends AbstractRestrictions {
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_PARTY_CANT_INVITE_WHEN_DEAD);
 			return false;
 		} else if (player.isInGroup2() && target.isInGroup2()
-				&& player.getPlayerGroup2().getTeamId() == target.getPlayerGroup2().getTeamId()) {
+				&& player.getPlayerGroup2().getTeamId().equals(target.getPlayerGroup2().getTeamId())) {
 			PacketSendUtility.sendPacket(player,
 					SM_SYSTEM_MESSAGE.STR_PARTY_HE_IS_ALREADY_MEMBER_OF_OUR_PARTY(target.getName()));
 		} else if (target.isInGroup2()) {
@@ -353,10 +354,6 @@ public class PlayerRestrictions extends AbstractRestrictions {
 						SM_SYSTEM_MESSAGE.STR_UNION_INVITE_HIM(target.getName(), targetGroup.getLeader().getName()));
 				return false;
 			}
-			if (alliance != null && (targetGroup.size() + alliance.size() >= 48)) {
-				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_FORCE_INVITE_FAILED_NOT_ENOUGH_SLOT);
-				return false;
-			}
 		}
 		return true;
 	}
@@ -376,7 +373,7 @@ public class PlayerRestrictions extends AbstractRestrictions {
 		if (player.getTransformModel().isAttackDisabled()) {
 			return false;
 		}
-		if (!checkFly(player, target)) {
+		if (flyRestricted(player, target)) {
 			return false;
 		}
 		if (!(target instanceof Creature creature)) {
@@ -407,7 +404,7 @@ public class PlayerRestrictions extends AbstractRestrictions {
 	@Override
 	public boolean canUseWarehouse(Player player) {
 		int level = player.getLevel();
-		if (player == null || !player.isOnline()) {
+		if (!player.isOnline()) {
 			return false;
 		}
 		if (player.isTrading()) {
@@ -431,8 +428,7 @@ public class PlayerRestrictions extends AbstractRestrictions {
 	 */
 	@Override
 	public boolean canTrade(Player player) {
-		int level = player.getLevel();
-		if (player == null || !player.isOnline()) {
+		if (!player.isOnline()) {
 			return false;
 		}
 		if (player.isTrading()) {

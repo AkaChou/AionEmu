@@ -69,9 +69,9 @@ public final class BufferUtils {
 			return null;
 		}
 		FloatBuffer buff = createFloatBuffer(3 * data.length);
-		for (int x = 0; x < data.length; x++) {
-			if (data[x] != null) {
-				buff.put(data[x].x).put(data[x].y).put(data[x].z);
+		for (Vector3f datum : data) {
+			if (datum != null) {
+				buff.put(datum.x).put(datum.y).put(datum.z);
 			} else {
 				buff.put(0).put(0).put(0);
 			}
@@ -264,13 +264,13 @@ public final class BufferUtils {
 			return null;
 		}
 		FloatBuffer buff = createFloatBuffer(2 * data.length);
-		for (int x = 0; x < data.length; x++) {
-			if (data[x] != null) {
-				buff.put(data[x].x).put(data[x].y);
-			} else {
-				buff.put(0).put(0);
-			}
-		}
+        for (Vector2f datum : data) {
+            if (datum != null) {
+                buff.put(datum.x).put(datum.y);
+            } else {
+                buff.put(0).put(0);
+            }
+        }
 		buff.flip();
 		return buff;
 	}

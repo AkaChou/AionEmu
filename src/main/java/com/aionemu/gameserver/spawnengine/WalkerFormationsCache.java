@@ -27,11 +27,7 @@ class WalkerFormationsCache {
 	 * @return 实例巡逻编队 / instance walker formations
 	 */
 	protected static InstanceWalkerFormations getInstanceFormations(int worldId, int instanceId) {
-		WorldWalkerFormations wwf = formations.get(worldId);
-		if (wwf == null) {
-			wwf = new WorldWalkerFormations();
-			formations.put(worldId, wwf);
-		}
+		WorldWalkerFormations wwf = formations.computeIfAbsent(worldId, _ -> new WorldWalkerFormations());
 		return wwf.getInstanceFormations(instanceId);
 	}
 

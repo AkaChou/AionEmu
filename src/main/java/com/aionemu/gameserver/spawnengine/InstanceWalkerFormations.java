@@ -61,12 +61,8 @@ public class InstanceWalkerFormations {
 	 */
 	protected synchronized boolean cacheWalkerCandidate(ClusteredNpc npcWalker) {
 		String walkerId = npcWalker.getWalkTemplate().getRouteId();
-		List<ClusteredNpc> candidateList = groupedSpawnObjects.get(walkerId);
-		if (candidateList == null) {
-			candidateList = new ArrayList<>();
-			groupedSpawnObjects.put(walkerId, candidateList);
-		}
-		return candidateList.add(npcWalker);
+        List<ClusteredNpc> candidateList = groupedSpawnObjects.computeIfAbsent(walkerId, _ -> new ArrayList<>());
+        return candidateList.add(npcWalker);
 	}
 
 	/**
@@ -89,7 +85,7 @@ public class InstanceWalkerFormations {
 					snpc.spawn(snpc.getNpc().getSpawn().getZ());
 				}
 			} else {
-				WalkerTemplate template = candidates.get(0).getWalkTemplate();
+				WalkerTemplate template = candidates.getFirst().getWalkTemplate();
 				int formationSize = template.getFormationSize();
 				List<ClusteredNpc> formationMembers = (formationSize >= 2 && npcs.size() > formationSize)
 						? new ArrayList<>(npcs.subList(0, formationSize))
@@ -125,7 +121,7 @@ public class InstanceWalkerFormations {
 		if (candidates.isEmpty()) {
 			return new ArrayList<>();
 		}
-		int formationSize = candidates.get(0).getWalkTemplate().getFormationSize();
+		int formationSize = candidates.getFirst().getWalkTemplate().getFormationSize();
 		if (formationSize >= 2 && candidates.size() == formationSize) {
 			List<List<ClusteredNpc>> completeFormation = new ArrayList<>();
 			completeFormation.add(new ArrayList<>(candidates));
@@ -153,7 +149,7 @@ public class InstanceWalkerFormations {
 	 */
 	private static List<ClusteredNpc> findPositionGroup(List<List<ClusteredNpc>> grouped, ClusteredNpc candidate) {
 		for (List<ClusteredNpc> group : grouped) {
-			ClusteredNpc anchor = group.get(0);
+			ClusteredNpc anchor = group.getFirst();
 			float deltaX = candidate.getX() - anchor.getX();
 			float deltaY = candidate.getY() - anchor.getY();
 			if (deltaX * deltaX + deltaY * deltaY <= POSITION_GROUP_DISTANCE * POSITION_GROUP_DISTANCE) {

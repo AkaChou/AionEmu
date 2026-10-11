@@ -592,9 +592,8 @@ public final class Vector2f implements Cloneable {
 	 * Reads components from an external input.
 	 * @param in 输入流 / Input stream
 	 * @throws IOException I/O 错误 / I/O error
-	 * @throws ClassNotFoundException 类未找到 / Class not found
-	 */
-	public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
+     */
+	public void readExternal(ObjectInput in) throws IOException {
 		this.x = in.readFloat();
 		this.y = in.readFloat();
 	}

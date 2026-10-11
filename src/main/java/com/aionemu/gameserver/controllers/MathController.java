@@ -88,7 +88,7 @@ public class MathController extends VisibleObjectController<MathObject> {
 	 * @param delay 延迟毫秒数 / delay in milliseconds
 	 */
 	public void onDelete(int delay) {
-		GameThreadPoolServices.threadPoolManager().schedule(() -> MathController.this.delete(), delay);
+		GameThreadPoolServices.threadPoolManager().schedule(MathController.this::delete, delay);
 	}
 
 	/**

@@ -22,33 +22,33 @@ public class CAPTCHAUtil {
 	 * 默认验证码字符长度。
 	 * Default CAPTCHA word length.
 	 */
-	private final static int DEFAULT_WORD_LENGTH = 6;
+	private static final int DEFAULT_WORD_LENGTH = 6;
 	/**
 	 * 可用字符集。
 	 * Available character set.
 	 */
-	private final static String WORD = "ABCDEFGHIJKLMNOPQRSTUVWXYZ123456789";
+	private static final String WORD = "ABCDEFGHIJKLMNOPQRSTUVWXYZ123456789";
 
 	/**
 	 * 图片宽度。
 	 * Image width.
 	 */
-	private final static int IMAGE_WIDTH = 160;
+	private static final int IMAGE_WIDTH = 160;
 	/**
 	 * 图片高度。
 	 * Image height.
 	 */
-	private final static int IMAGE_HEIGHT = 80;
+	private static final int IMAGE_HEIGHT = 80;
 	/**
 	 * 文字字号。
 	 * Text font size.
 	 */
-	private final static int TEXT_SIZE = 25;
+	private static final int TEXT_SIZE = 25;
 	/**
 	 * 字体族名称。
 	 * Font family name.
 	 */
-	private final static String FONT_FAMILY_NAME = "Verdana";
+	private static final String FONT_FAMILY_NAME = "Verdana";
 
 	/**
 	 * 根据文本生成 CAPTCHA 的 DXT1 字节缓冲。
@@ -57,7 +57,7 @@ public class CAPTCHAUtil {
 	 * @return DXT1 缓冲 / DXT1 buffer
 	 */
 	public static ByteBuffer createCAPTCHA(String word) {
-		ByteBuffer byteBuffer = null;
+		ByteBuffer byteBuffer;
 		BufferedImage bImg = createImage(word);
 
 		byteBuffer = DDSConverter.convertToDxt1NoTransparency(bImg);
@@ -72,7 +72,7 @@ public class CAPTCHAUtil {
 	 * @return 位图；失败时为 null / image, or null on failure
 	 */
 	private static BufferedImage createImage(String word) {
-		BufferedImage bImg = null;
+		BufferedImage bImg;
 
 		try {
 			// 创建图像 / image creation
@@ -124,7 +124,7 @@ public class CAPTCHAUtil {
 	 * @return 随机验证码词 / random word
 	 */
 	private static String randomWord(int wordLength) {
-		StringBuffer word = new StringBuffer();
+		StringBuilder word = new StringBuilder();
 
 		for (int i = 0; i < wordLength; i++) {
 			int index = Math.abs((int) (Math.random() * WORD.length()));

@@ -124,6 +124,15 @@ public class CollisionResults implements Iterable<CollisionResult> {
 	}
 
 	/**
+	 * 返回是否没有任何命中。
+	 * Returns whether there is no hit at all.
+	 * @return 无命中时为 true / true if empty
+	 */
+	public boolean isEmpty() {
+		return results.isEmpty();
+	}
+
+	/**
 	 * 返回最近的命中；无结果时返回 {@code null}。
 	 * Returns the closest hit, or {@code null} if empty.
 	 * @return 最近命中 / closest hit
@@ -138,7 +147,7 @@ public class CollisionResults implements Iterable<CollisionResult> {
 			sorted = true;
 		}
 
-		return results.get(0);
+		return results.getFirst();
 	}
 
 	/**
@@ -195,7 +204,7 @@ public class CollisionResults implements Iterable<CollisionResult> {
 		for (CollisionResult result : results) {
 			sb.append(result).append(", ");
 		}
-		if (results.size() > 0) {
+		if (!results.isEmpty()) {
 			sb.setLength(sb.length() - 2);
 		}
 

@@ -83,7 +83,7 @@ public abstract class ChatCommand {
 	 * Alias
 	 */
 	public final String getAlias() {
-		return aliases.get(0);
+		return aliases.getFirst();
 	}
 
 	/**

@@ -85,12 +85,7 @@ public class ExpireTimerTask extends AbstractPeriodicTaskManager {
 	public void removePlayer(Player player) {
 		writeLock();
 		try {
-			for (Iterator<Map.Entry<IExpirable, Player>> i = expirables.entrySet().iterator(); i.hasNext();) {
-				Map.Entry<IExpirable, Player> entry = i.next();
-				if (entry.getValue() == player) {
-					i.remove();
-				}
-			}
+            expirables.entrySet().removeIf(entry -> entry.getValue() == player);
 		} finally {
 			writeUnlock();
 		}

@@ -4,7 +4,6 @@ import jakarta.xml.bind.SchemaOutputResolver;
 import javax.xml.transform.Result;
 import javax.xml.transform.stream.StreamResult;
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 
 /**
  * 将 JAXB 生成的 Schema 写入内存字节流的输出解析器。
@@ -25,10 +24,9 @@ public class StringSchemaOutputResolver extends SchemaOutputResolver {
 	 * @param namespaceUri 命名空间 URI / Namespace URI
 	 * @param suggestedFileName 建议文件名（设为 systemId） / Suggested file name (used as systemId)
 	 * @return 输出 Result / Output Result
-	 * @throws IOException 发生 I/O 错误时 / On I/O error
-	 */
+     */
 	@Override
-	public Result createOutput(String namespaceUri, String suggestedFileName) throws IOException {
+	public Result createOutput(String namespaceUri, String suggestedFileName) {
 		StreamResult result = new StreamResult(baos);
 		result.setSystemId(suggestedFileName);
 		return result;

@@ -201,8 +201,7 @@ public class Mesh {
 		vbs.remove(getBuffer(Type.Index));
 
 		int stride = 0; // 即每顶点字节数 / aka bytes per vertex
-		for (int i = 0; i < vbs.size(); i++) {
-			VertexBuffer vb = vbs.get(i);
+		for (VertexBuffer vb : vbs) {
 			// if (vb.getFormat() != Format.Float){
 			// throw new UnsupportedOperationException("Cannot interleave vertex buffer.\n"
 			// +
@@ -218,41 +217,40 @@ public class Mesh {
 		setBuffer(allData);
 
 		for (int vert = 0; vert < getVertexCount(); vert++) {
-			for (int i = 0; i < vbs.size(); i++) {
-				VertexBuffer vb = vbs.get(i);
-				switch (vb.getFormat()) {
-				case Float:
-					FloatBuffer fb = (FloatBuffer) vb.getData();
-					for (int comp = 0; comp < vb.components; comp++) {
-						dataBuf.putFloat(fb.get());
-					}
-					break;
-				case Byte:
-				case UnsignedByte:
-					ByteBuffer bb = (ByteBuffer) vb.getData();
-					for (int comp = 0; comp < vb.components; comp++) {
-						dataBuf.put(bb.get());
-					}
-					break;
-				case Half:
-				case Short:
-				case UnsignedShort:
-					ShortBuffer sb = (ShortBuffer) vb.getData();
-					for (int comp = 0; comp < vb.components; comp++) {
-						dataBuf.putShort(sb.get());
-					}
-					break;
-				case Int:
-				case UnsignedInt:
-					IntBuffer ib = (IntBuffer) vb.getData();
-					for (int comp = 0; comp < vb.components; comp++) {
-						dataBuf.putInt(ib.get());
-					}
-					break;
-				default:
-					break;
-				}
-			}
+            for (VertexBuffer vb : vbs) {
+                switch (vb.getFormat()) {
+                    case Float:
+                        FloatBuffer fb = (FloatBuffer) vb.getData();
+                        for (int comp = 0; comp < vb.components; comp++) {
+                            dataBuf.putFloat(fb.get());
+                        }
+                        break;
+                    case Byte:
+                    case UnsignedByte:
+                        ByteBuffer bb = (ByteBuffer) vb.getData();
+                        for (int comp = 0; comp < vb.components; comp++) {
+                            dataBuf.put(bb.get());
+                        }
+                        break;
+                    case Half:
+                    case Short:
+                    case UnsignedShort:
+                        ShortBuffer sb = (ShortBuffer) vb.getData();
+                        for (int comp = 0; comp < vb.components; comp++) {
+                            dataBuf.putShort(sb.get());
+                        }
+                        break;
+                    case Int:
+                    case UnsignedInt:
+                        IntBuffer ib = (IntBuffer) vb.getData();
+                        for (int comp = 0; comp < vb.components; comp++) {
+                            dataBuf.putInt(ib.get());
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            }
 		}
 
 		int offset = 0;

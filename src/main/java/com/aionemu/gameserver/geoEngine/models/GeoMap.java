@@ -114,7 +114,7 @@ public class GeoMap extends Node {
 		r.setLimit(limit);
 		CollisionResults results = new CollisionResults(CollisionIntention.DEFAULT_COLLISIONS.getId(), true, instanceId);
 		int collisions = this.collideWith(r, results);
-		return results.size() == 0 && collisions == 0;
+		return results.isEmpty() && collisions == 0;
 	}
 
 	/**
@@ -145,7 +145,7 @@ public class GeoMap extends Node {
 		r.setLimit(limit);
 		CollisionResults results = new CollisionResults(CollisionIntention.DEFAULT_COLLISIONS.getId(), false, instanceId);
 		int collisions = this.collideWith(r, results);
-		return results.size() == 0 && collisions == 0;
+		return results.isEmpty() && collisions == 0;
 	}
 
 	/**
@@ -759,7 +759,7 @@ public class GeoMap extends Node {
 		CollisionResults results = new CollisionResults(
 				CollisionIntention.CANT_SEE_COLLISIONS.getId(), true, instanceId, ignoreProperties);
 		int collisions = this.collideWith(r, results);
-		return (results.size() == 0 && collisions == 0);
+		return (results.isEmpty() && collisions == 0);
 	}
 
 	/**
@@ -796,13 +796,7 @@ public class GeoMap extends Node {
 	@Override
 	public void updateModelBound() {
 		if (getChildren() != null) {
-			Iterator<Spatial> i = getChildren().iterator();
-			while (i.hasNext()) {
-				Spatial s = i.next();
-				if (s instanceof Node && ((Node) s).getChildren().isEmpty()) {
-					i.remove();
-				}
-			}
+			getChildren().removeIf(s -> s instanceof Node && ((Node) s).getChildren().isEmpty());
 		}
 		super.updateModelBound();
 	}

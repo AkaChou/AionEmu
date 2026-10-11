@@ -31,10 +31,9 @@ public class SchemaGen {
 			 * @param namespaceUri 命名空间 URI / Namespace URI
 			 * @param suggestedFileName 建议文件名 / Suggested file name
 			 * @return 输出 Result / Output Result
-			 * @throws IOException 发生 I/O 错误时 / On I/O error
-			 */
+             */
 			@Override
-			public Result createOutput(String namespaceUri, String suggestedFileName) throws IOException {
+			public Result createOutput(String namespaceUri, String suggestedFileName) {
 				return new StreamResult(new File(baseDir, "static_data1.xsd"));
 			}
 		}

@@ -174,7 +174,7 @@ public class ObserveController {
 		List<ActionObserver> tempOnceused = Collections.emptyList();
 		lock.lock();
 		try {
-			if (onceUsedObservers.size() > 0) {
+			if (!onceUsedObservers.isEmpty()) {
 				tempOnceused = new ArrayList<>();
 				Iterator<ActionObserver> iterator = onceUsedObservers.iterator();
 				while (iterator.hasNext()) {
@@ -197,7 +197,7 @@ public class ObserveController {
 			observer.onRemoved();
 		}
 
-		if (observers.size() > 0) {
+		if (!observers.isEmpty()) {
 			for (ActionObserver observer : observers) {
 				if (observer.getObserverType().matchesObserver(type)) {
 					notifyAction(type, observer, object);
@@ -276,15 +276,7 @@ public class ObserveController {
 		notifyObservers(ObserverType.MOVE);
 	}
 
-	/**
-	 * 通知攻击观察者。
-	 * Notifies attack observers.
-	 * @param creature 被攻击目标 / the attacked creature
-	 */
-	public void notifyAttackObservers(Creature creature) {
-		notifyAttackObservers(creature, 0);
-	}
-
+	
 	/**
 	 * 通知攻击观察者并携带造成攻击的技能 ID。
 	 * Notifies attack observers with the skill id that caused the attack.
@@ -399,7 +391,7 @@ public class ObserveController {
 	 * @return 任一观察者匹配则为 true / true if any observer matches
 	 */
 	public boolean checkAttackStatus(AttackStatus status) {
-		if (attackCalcObservers.size() > 0) {
+		if (!attackCalcObservers.isEmpty()) {
 			for (AttackCalcObserver observer : attackCalcObservers) {
 				if (observer.checkStatus(status)) {
 					return true;
@@ -416,7 +408,7 @@ public class ObserveController {
 	 * @return 任一观察者匹配则为 true / true if any observer matches
 	 */
 	public boolean checkAttackerStatus(AttackStatus status) {
-		if (attackCalcObservers.size() > 0) {
+		if (!attackCalcObservers.isEmpty()) {
 			for (AttackCalcObserver observer : attackCalcObservers) {
 				if (observer.checkAttackerStatus(status)) {
 					return true;
@@ -470,7 +462,7 @@ public class ObserveController {
 	 * @return 暴击状态结果 / critical status result
 	 */
 	public AttackerCriticalStatus checkAttackerCriticalStatus(AttackStatus status, boolean isSkill) {
-		if (attackCalcObservers.size() > 0) {
+		if (!attackCalcObservers.isEmpty()) {
 			for (AttackCalcObserver observer : attackCalcObservers) {
 				AttackerCriticalStatus acStatus = observer.checkAttackerCriticalStatus(status, isSkill);
 				if (acStatus.isResult()) {
@@ -489,7 +481,7 @@ public class ObserveController {
 	 * @param attacker 攻击者 / attacker
 	 */
 	public void checkShieldStatus(List<AttackResult> attackList, Effect effect, Creature attacker) {
-		if (attackCalcObservers.size() > 0) {
+		if (!attackCalcObservers.isEmpty()) {
 			attackCalcObservers.stream()
 					.sorted(Comparator.comparingInt(observer -> observer instanceof AttackShieldObserver shield
 							? shield.getShieldPriority() : Integer.MAX_VALUE))
@@ -505,7 +497,7 @@ public class ObserveController {
 	 */
 	public float getBasePhysicalDamageMultiplier(boolean isSkill) {
 		float multiplier = 1;
-		if (attackCalcObservers.size() > 0) {
+		if (!attackCalcObservers.isEmpty()) {
 			for (AttackCalcObserver observer : attackCalcObservers) {
 				multiplier *= observer.getBasePhysicalDamageMultiplier(isSkill);
 			}
@@ -520,7 +512,7 @@ public class ObserveController {
 	 */
 	public float getBaseMagicalDamageMultiplier() {
 		float multiplier = 1;
-		if (attackCalcObservers.size() > 0) {
+		if (!attackCalcObservers.isEmpty()) {
 			for (AttackCalcObserver observer : attackCalcObservers) {
 				multiplier *= observer.getBaseMagicalDamageMultiplier();
 			}

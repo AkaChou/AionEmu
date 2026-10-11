@@ -50,7 +50,7 @@ public class ZoneInstance implements Comparable<ZoneInstance> {
 	 * @return 区域面积模板 / the area template
 	 */
 	public Area getAreaTemplate() {
-		return template.getArea();
+		return template.area();
 	}
 
 	/**
@@ -59,7 +59,7 @@ public class ZoneInstance implements Comparable<ZoneInstance> {
 	 * @return 区域数据模板 / the zone template
 	 */
 	public ZoneTemplate getZoneTemplate() {
-		return template.getZoneTemplate();
+		return template.zoneTemplate();
 	}
 
 	/**
@@ -70,7 +70,7 @@ public class ZoneInstance implements Comparable<ZoneInstance> {
 	 */
 	public boolean revalidate(Creature creature) {
 		return (mapId == creature.getWorldId()
-				&& template.getArea().isInside3D(creature.getX(), creature.getY(), creature.getZ()));
+				&& template.area().isInside3D(creature.getX(), creature.getY(), creature.getZ()));
 	}
 
 	/**
@@ -87,8 +87,8 @@ public class ZoneInstance implements Comparable<ZoneInstance> {
 		if (creature instanceof Player) {
 			creature.getController().onEnterZone(this);
 		}
-		for (int i = 0; i < handlers.size(); i++) {
-			handlers.get(i).onEnterZone(creature, this);
+		for (ZoneHandler handler : handlers) {
+			handler.onEnterZone(creature, this);
 		}
 		return true;
 	}
@@ -105,8 +105,8 @@ public class ZoneInstance implements Comparable<ZoneInstance> {
 		}
 		creatures.remove(creature.getObjectId());
 		creature.getController().onLeaveZone(this);
-		for (int i = 0; i < handlers.size(); i++) {
-			handlers.get(i).onLeaveZone(creature, this);
+		for (ZoneHandler handler : handlers) {
+			handler.onLeaveZone(creature, this);
 		}
 		return true;
 	}
@@ -122,8 +122,7 @@ public class ZoneInstance implements Comparable<ZoneInstance> {
 		if (!creatures.containsKey(target.getObjectId())) {
 			return false;
 		}
-		for (int i = 0; i < handlers.size(); i++) {
-			ZoneHandler handler = handlers.get(i);
+		for (ZoneHandler handler : handlers) {
 			if (handler instanceof AdvencedZoneHandler) {
 				if (((AdvencedZoneHandler) handler).onDie(attacker, target, this)) {
 					return true;
@@ -152,7 +151,7 @@ public class ZoneInstance implements Comparable<ZoneInstance> {
 	 * @return 是否在几何内 / whether inside
 	 */
 	public boolean isInsideCordinate(float x, float y, float z) {
-		return template.getArea().isInside3D(x, y, z);
+		return template.area().isInside3D(x, y, z);
 	}
 
 	/**
@@ -165,7 +164,7 @@ public class ZoneInstance implements Comparable<ZoneInstance> {
 	public int compareTo(ZoneInstance o) {
 		int result = getZoneTemplate().getPriority() - o.getZoneTemplate().getPriority();
 		if (result == 0) {
-			return template.getZoneTemplate().getName().id() - o.template.getZoneTemplate().getName().id();
+			return template.zoneTemplate().getName().id() - o.template.zoneTemplate().getName().id();
 		}
 		return result;
 	}
@@ -185,11 +184,11 @@ public class ZoneInstance implements Comparable<ZoneInstance> {
 	 * @return 是否可飞行 / whether fly is allowed
 	 */
 	public boolean canFly() {
-		if (template.getZoneTemplate().getFlags() == -1 || template.getZoneTemplate().getFlags() == 0
+		if (template.zoneTemplate().getFlags() == -1 || template.zoneTemplate().getFlags() == 0
 				|| com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(mapId).hasOverridenOption(ZoneAttributes.FLY)) {
 			return com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(mapId).isPossibleFly();
 		}
-		return (template.getZoneTemplate().getFlags() & ZoneAttributes.FLY.getId()) != 0;
+		return (template.zoneTemplate().getFlags() & ZoneAttributes.FLY.getId()) != 0;
 	}
 
 	/**
@@ -198,11 +197,11 @@ public class ZoneInstance implements Comparable<ZoneInstance> {
 	 * @return 是否可滑翔 / whether glide is allowed
 	 */
 	public boolean canGlide() {
-		if (template.getZoneTemplate().getFlags() == -1 || template.getZoneTemplate().getFlags() == 0
+		if (template.zoneTemplate().getFlags() == -1 || template.zoneTemplate().getFlags() == 0
 				|| com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(mapId).hasOverridenOption(ZoneAttributes.GLIDE)) {
 			return com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(mapId).canGlide();
 		}
-		return (template.getZoneTemplate().getFlags() & ZoneAttributes.GLIDE.getId()) != 0;
+		return (template.zoneTemplate().getFlags() & ZoneAttributes.GLIDE.getId()) != 0;
 	}
 
 	/**
@@ -211,11 +210,11 @@ public class ZoneInstance implements Comparable<ZoneInstance> {
 	 * @return 是否可放绑定点 / whether kisk placement is allowed
 	 */
 	public boolean canPutKisk() {
-		if (template.getZoneTemplate().getFlags() == -1 || template.getZoneTemplate().getFlags() == 0
+		if (template.zoneTemplate().getFlags() == -1 || template.zoneTemplate().getFlags() == 0
 				|| com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(mapId).hasOverridenOption(ZoneAttributes.BIND)) {
 			return com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(mapId).canPutKisk();
 		}
-		return (template.getZoneTemplate().getFlags() & ZoneAttributes.BIND.getId()) != 0;
+		return (template.zoneTemplate().getFlags() & ZoneAttributes.BIND.getId()) != 0;
 	}
 
 	/**
@@ -224,11 +223,11 @@ public class ZoneInstance implements Comparable<ZoneInstance> {
 	 * @return 是否可召回 / whether recall is allowed
 	 */
 	public boolean canRecall() {
-		if (template.getZoneTemplate().getFlags() == -1 || template.getZoneTemplate().getFlags() == 0
+		if (template.zoneTemplate().getFlags() == -1 || template.zoneTemplate().getFlags() == 0
 				|| com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(mapId).hasOverridenOption(ZoneAttributes.RECALL)) {
 			return com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(mapId).canRecall();
 		}
-		return (template.getZoneTemplate().getFlags() & ZoneAttributes.RECALL.getId()) != 0;
+		return (template.zoneTemplate().getFlags() & ZoneAttributes.RECALL.getId()) != 0;
 	}
 
 	/**
@@ -237,11 +236,11 @@ public class ZoneInstance implements Comparable<ZoneInstance> {
 	 * @return 是否可坐骑 / whether ride is allowed
 	 */
 	public boolean canRide() {
-		if (template.getZoneTemplate().getFlags() == -1 || template.getZoneTemplate().getFlags() == 0
+		if (template.zoneTemplate().getFlags() == -1 || template.zoneTemplate().getFlags() == 0
 				|| com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(mapId).hasOverridenOption(ZoneAttributes.RIDE)) {
 			return com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(mapId).canRide();
 		}
-		return (template.getZoneTemplate().getFlags() & ZoneAttributes.RIDE.getId()) != 0;
+		return (template.zoneTemplate().getFlags() & ZoneAttributes.RIDE.getId()) != 0;
 	}
 
 	/**
@@ -250,11 +249,11 @@ public class ZoneInstance implements Comparable<ZoneInstance> {
 	 * @return 是否可飞行坐骑 / whether fly-ride is allowed
 	 */
 	public boolean canFlyRide() {
-		if (template.getZoneTemplate().getFlags() == -1 || template.getZoneTemplate().getFlags() == 0
+		if (template.zoneTemplate().getFlags() == -1 || template.zoneTemplate().getFlags() == 0
 				|| com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(mapId).hasOverridenOption(ZoneAttributes.FLY_RIDE)) {
 			return com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(mapId).canFlyRide();
 		}
-		return (template.getZoneTemplate().getFlags() & ZoneAttributes.FLY_RIDE.getId()) != 0;
+		return (template.zoneTemplate().getFlags() & ZoneAttributes.FLY_RIDE.getId()) != 0;
 	}
 
 	/**
@@ -263,10 +262,10 @@ public class ZoneInstance implements Comparable<ZoneInstance> {
 	 * @return 是否允许 PvP / whether PvP is allowed
 	 */
 	public boolean isPvpAllowed() {
-		if (template.getZoneTemplate().getZoneType() != ZoneClassName.PVP) {
+		if (template.zoneTemplate().getZoneType() != ZoneClassName.PVP) {
 			return com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(mapId).isPvpAllowed();
 		}
-		return (template.getZoneTemplate().getFlags() & ZoneAttributes.PVP_ENABLED.getId()) != 0;
+		return (template.zoneTemplate().getFlags() & ZoneAttributes.PVP_ENABLED.getId()) != 0;
 	}
 
 	/**
@@ -275,11 +274,11 @@ public class ZoneInstance implements Comparable<ZoneInstance> {
 	 * @return 是否允许同族决斗 / whether same-race duels are allowed
 	 */
 	public boolean isSameRaceDuelsAllowed() {
-		if (template.getZoneTemplate().getZoneType() != ZoneClassName.DUEL || template.getZoneTemplate().getFlags() == 0
+		if (template.zoneTemplate().getZoneType() != ZoneClassName.DUEL || template.zoneTemplate().getFlags() == 0
 				|| com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(mapId).hasOverridenOption(ZoneAttributes.DUEL_SAME_RACE_ENABLED)) {
 			return com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(mapId).isSameRaceDuelsAllowed();
 		}
-		return (template.getZoneTemplate().getFlags() & ZoneAttributes.DUEL_SAME_RACE_ENABLED.getId()) != 0;
+		return (template.zoneTemplate().getFlags() & ZoneAttributes.DUEL_SAME_RACE_ENABLED.getId()) != 0;
 	}
 
 	/**
@@ -288,11 +287,11 @@ public class ZoneInstance implements Comparable<ZoneInstance> {
 	 * @return 是否允许异族决斗 / whether other-race duels are allowed
 	 */
 	public boolean isOtherRaceDuelsAllowed() {
-		if (template.getZoneTemplate().getZoneType() != ZoneClassName.DUEL || template.getZoneTemplate().getFlags() == 0
+		if (template.zoneTemplate().getZoneType() != ZoneClassName.DUEL || template.zoneTemplate().getFlags() == 0
 				|| com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(mapId).hasOverridenOption(ZoneAttributes.DUEL_OTHER_RACE_ENABLED)) {
 			return com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(mapId).isOtherRaceDuelsAllowed();
 		}
-		return (template.getZoneTemplate().getFlags() & ZoneAttributes.DUEL_OTHER_RACE_ENABLED.getId()) != 0;
+		return (template.zoneTemplate().getFlags() & ZoneAttributes.DUEL_OTHER_RACE_ENABLED.getId()) != 0;
 	}
 
 	/**
@@ -301,6 +300,6 @@ public class ZoneInstance implements Comparable<ZoneInstance> {
 	 * @return 城镇 ID / the town id
 	 */
 	public int getTownId() {
-		return template.getZoneTemplate().getTownId();
+		return template.zoneTemplate().getTownId();
 	}
 }

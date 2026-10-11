@@ -96,7 +96,7 @@ public final class WalkerRouteValidator {
 				legsNeedingPath++;
 			}
 		}
-		float closure = distance(route.get(route.size() - 1), route.get(0));
+		float closure = distance(route.getLast(), route.getFirst());
 		if (closedLoopDuplicate(closure)) {
 			log.info(I18n.get("log.walker.route.closed_loop", routeId, closure));
 		}

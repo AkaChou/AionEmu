@@ -2677,7 +2677,7 @@ public class NpcMoveController
     private void refreshWalkerLegPath() {
         WalkerGroupShift shift = owner.getWalkerGroupShift();
         boolean follower = isFormationFollower(owner.getWalkerGroup() != null, shift != null,
-                shift == null ? 0f : shift.getSagittalShift(), shift == null ? 0f : shift.getCoronalShift());
+                shift == null ? 0f : shift.sagittalShift(), shift == null ? 0f : shift.coronalShift());
         if (!walkerPathEligible(GeoDataConfig.GEO_PATH_ENABLE, follower, owner.isFlying(),
                 GameWorldServices.pathService().usesSpatialPath(owner))) {
             this.walkerLegNeedsPath = false;

@@ -43,7 +43,7 @@ public class KillList {
 		int killCount = 0;
 
 		for (Iterator<Long> i = killTimes.iterator(); i.hasNext();) {
-			if (now - i.next().longValue() > PvPConfig.CHAIN_KILL_TIME_RESTRICTION) {
+			if (now - i.next() > PvPConfig.CHAIN_KILL_TIME_RESTRICTION) {
 				i.remove();
 			} else {
 				killCount++;
@@ -58,11 +58,7 @@ public class KillList {
 	 * @param victimId 受害者对象 ID / victim object id
 	 */
 	public void addKillFor(int victimId) {
-		List<Long> killTimes = killList.get(victimId);
-		if (killTimes == null) {
-			killTimes = new ArrayList<>();
-			killList.put(victimId, killTimes);
-		}
+		List<Long> killTimes = killList.computeIfAbsent(victimId, _ -> new ArrayList<>());
 
 		killTimes.add(System.currentTimeMillis());
 	}

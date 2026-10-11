@@ -45,12 +45,6 @@ public class CollisionResult implements Comparable<CollisionResult> {
 	 */
 	@Override
 	public int compareTo(CollisionResult other) {
-		if (distance < other.distance) {
-			return -1;
-		} else if (distance > other.distance) {
-			return 1;
-		} else {
-			return 0;
-		}
+		return Float.compare(distance, other.distance);
 	}
 }
