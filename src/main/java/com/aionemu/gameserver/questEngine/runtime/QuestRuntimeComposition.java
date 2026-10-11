@@ -1,18 +1,12 @@
 package com.aionemu.gameserver.questEngine.runtime;
 
-import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.gameserver.dao.AbyssRankDAO;
-import com.aionemu.gameserver.dao.InventoryDAO;
-import com.aionemu.gameserver.dao.PlayerDAO;
-import com.aionemu.gameserver.dao.PlayerQuestListDAO;
-import com.aionemu.gameserver.dao.PlayerRecipesDAO;
-import com.aionemu.gameserver.dao.PlayerSkillListDAO;
-import com.aionemu.gameserver.dao.PlayerTitleListDAO;
 import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 import com.aionemu.gameserver.questEngine.definition.QuestAction;
 import com.aionemu.gameserver.questEngine.definition.QuestCatalog;
 import com.aionemu.gameserver.questEngine.definition.QuestMetadata;
 import com.aionemu.gameserver.services.item.ItemService;
+import com.aionemu.gameserver.services.player.PlayerService;
+import com.aionemu.gameserver.services.player.PlayerServiceDaos;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -174,19 +168,18 @@ public final class QuestRuntimeComposition {
 			}
 			synchronized (this) {
 				if (delegate == null) {
-					InventoryDAO inventoryDao = DAOManager.getDAO(InventoryDAO.class);
-					PlayerDAO playerDao = DAOManager.getDAO(PlayerDAO.class);
+					PlayerServiceDaos daos = PlayerService.daos();
 					delegate = new CompositeQuestActionPort(
-						new PlayerQuestInventoryPort(players, inventoryDao),
-						new PlayerQuestCurrencyPort(players, inventoryDao,
-							DAOManager.getDAO(AbyssRankDAO.class), playerDao),
-						new PlayerQuestRewardPort(players, inventoryDao, playerDao, ItemService::addQuestItems,
-							DAOManager.getDAO(PlayerTitleListDAO.class)),
-						new PlayerQuestCraftPort(players, DAOManager.getDAO(PlayerRecipesDAO.class),
-							DAOManager.getDAO(PlayerSkillListDAO.class)),
-						new PlayerQuestEquipmentPort(players, inventoryDao,
-							DAOManager.getDAO(com.aionemu.gameserver.dao.PlayerStigmasEquippedDAO.class)),
-						new PlayerQuestProgressionPort(players, playerDao));
+						new PlayerQuestInventoryPort(players, daos.inventoryDAO()),
+						new PlayerQuestCurrencyPort(players, daos.inventoryDAO(),
+							daos.abyssRankDAO(), daos.playerDAO()),
+						new PlayerQuestRewardPort(players, daos.inventoryDAO(), daos.playerDAO(),
+							ItemService::addQuestItems, daos.playerTitleListDAO()),
+						new PlayerQuestCraftPort(players, daos.playerRecipesDAO(),
+							daos.playerSkillListDAO()),
+						new PlayerQuestEquipmentPort(players, daos.inventoryDAO(),
+							daos.playerStigmasEquippedDAO()),
+						new PlayerQuestProgressionPort(players, daos.playerDAO()));
 				}
 				return delegate;
 			}
@@ -225,7 +218,7 @@ public final class QuestRuntimeComposition {
 			}
 			synchronized (this) {
 				if (delegate == null) {
-					delegate = new PlayerQuestStatePort(players, DAOManager.getDAO(PlayerQuestListDAO.class), metadata);
+					delegate = new PlayerQuestStatePort(players, PlayerService.daos().playerQuestListDAO(), metadata);
 				}
 				return delegate;
 			}
