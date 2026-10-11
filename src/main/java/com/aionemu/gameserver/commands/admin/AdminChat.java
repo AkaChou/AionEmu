@@ -40,7 +40,7 @@ public class AdminChat extends AdminCommand {
 		StringBuilder sbMessage = new StringBuilder("[Admin] " + admin.getName() + " : ");
 
 		for(String p : params)
-			sbMessage.append(p + " ");
+			sbMessage.append(p).append(" ");
 		String message = sbMessage.toString().trim();
 		for(Player a : com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getAllPlayers()) {
 			if(a.isGM())

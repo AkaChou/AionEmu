@@ -32,14 +32,16 @@ public class DelSkill extends AdminCommand {
 	@Override
 	public void execute(Player admin, String... params) {
 		if (params.length < 1 || params.length > 2) {
-			PacketSendUtility.sendMessage(admin, "No parameters detected.\n"
-				+ "Please use //delskill <Player name> <all | skillId>\n" + "or use //delskill [target] <all | skillId>");
+			PacketSendUtility.sendMessage(admin, """
+				No parameters detected.
+				Please use //delskill <Player name> <all | skillId>
+				or use //delskill [target] <all | skillId>""");
 			return;
 		}
 
 		Player player;
 		PlayerSkillList playerSkillList = null;
-		String recipient = null;
+		String recipient;
 		recipient = Util.convertName(params[0]);
 		int skillId = 0;
 		if (params.length == 2) {
@@ -60,7 +62,7 @@ public class DelSkill extends AdminCommand {
 					return;
 				}
 
-				if (!check(admin, player, skillId))
+				if (removalBlocked(admin, player, skillId))
 					return;
 			}
 			apply(admin, player, skillId, playerSkillList);
@@ -87,11 +89,10 @@ public class DelSkill extends AdminCommand {
 						return;
 					}
 
-					if (!check(admin, player, skillId))
+					if (removalBlocked(admin, player, skillId))
 						return;
 				}
-				if (target instanceof Player)
-					apply(admin, player, skillId, playerSkillList);
+				apply(admin, player, skillId, playerSkillList);
 			}
 			else
 				PacketSendUtility.sendMessage(admin, "This command can only be used on a player !");
@@ -99,20 +100,20 @@ public class DelSkill extends AdminCommand {
 	}
 
 	/**
-	 * 校验技能是否存在且非烙印技能。
-	 * Validates that the skill exists and is not a stigma skill.
-	 * @return 可删除则为 true / true if removable
+	 * 校验技能是否不可删除（不存在或为烙印技能）。
+	 * Validates whether the skill cannot be removed (missing or a stigma skill).
+	 * @return 不可删除则为 true / true if removal is blocked
 	 */
-	private static boolean check(Player admin, Player player, int skillId) {
+	private static boolean removalBlocked(Player admin, Player player, int skillId) {
 		if (skillId != 0 && !player.getSkillList().isSkillPresent(skillId)) {
 			PacketSendUtility.sendMessage(admin, "Player dont have this skill.");
-			return false;
+			return true;
 		}
 		if (player.getSkillList().getSkillEntry(skillId).isStigma()) {
 			PacketSendUtility.sendMessage(admin, "You can't remove stigma skill.");
-			return false;
+			return true;
 		}
-		return true;
+		return false;
 	}
 
 	/**
@@ -144,6 +145,9 @@ public class DelSkill extends AdminCommand {
 	 */
 	@Override
 	public void onFail(Player player, String message) {
-		PacketSendUtility.sendMessage(player, "No parameters detected.\n" + "Please use //delskill <Player name> <all | skillId>\n" + "or use //delskill [target] <all | skillId>");
+		PacketSendUtility.sendMessage(player, """
+			No parameters detected.
+			Please use //delskill <Player name> <all | skillId>
+			or use //delskill [target] <all | skillId>""");
 	}
 }

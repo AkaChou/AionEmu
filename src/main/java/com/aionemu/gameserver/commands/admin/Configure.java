@@ -66,7 +66,7 @@ public class Configure extends AdminCommand
 	 */
 	@Override
 	public void execute(Player player, String... params) {
-		String command = "";
+		String command;
 		if (params.length == 3) {
 			command = params[0];
 			if (!"show".equalsIgnoreCase(command)) {
@@ -86,6 +86,10 @@ public class Configure extends AdminCommand
 		Class<?> classToMofify = commands.get(params[1].toLowerCase());
 		if (command.equalsIgnoreCase("show")) {
 			String fieldName = params[2];
+			if (classToMofify == null) {
+				PacketSendUtility.sendMessage(player, "Error! Wrong property or value.");
+				return;
+			}
 			Field someField;
 			try {
 				someField = classToMofify.getDeclaredField(fieldName.toUpperCase());

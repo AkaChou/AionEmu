@@ -50,9 +50,9 @@ public class AddTitle extends AdminCommand
 			} if (target == null) {
 				target = player;
 			}
-		} if (titleId < 378) {
-			titleId = target.getRace().getRaceId() * 377 + titleId;
-		} if (!target.getTitleList().addTitle(titleId, false, 0)) {
+		}
+		titleId = target.getRace().getRaceId() * 377 + titleId;
+		if (!target.getTitleList().addTitle(titleId, false, 0)) {
 			PacketSendUtility.sendMessage(player, "you can't add title #" + titleId + " to " + (target.equals(player) ? "yourself" : target.getName()));
 		} else {
 			if (target.equals(player)) {

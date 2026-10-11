@@ -124,7 +124,7 @@ public class Assault extends AdminCommand {
                         return;
                     }
                 }
-                if (idList.size() == 0)
+                if (idList.isEmpty())
                     return;
                 break;
         }
@@ -142,7 +142,7 @@ public class Assault extends AdminCommand {
 		int worldId = target.getWorldId();
 
 		int templateId;
-		SpawnTemplate spawn = null;
+		SpawnTemplate spawn;
 
 		float interval = (float) (Math.PI * 2.0f / amount);
 		float x1;
@@ -158,18 +158,12 @@ public class Assault extends AdminCommand {
 			y1 = (float)(Math.sin( interval * i ) * radius);
 			spawn = SpawnEngine.addNewSpawn(worldId, templateId, x + x1 , y + y1, z, heading, 0);
 
-			if(spawn == null) {
-				PacketSendUtility.sendMessage(admin, "There is no npc: " + templateId);
-				return;
-			}
-			else {
-				visibleObject = SpawnEngine.spawnObject(spawn, 1);
+			visibleObject = SpawnEngine.spawnObject(spawn, 1);
 
-				if(despawnTime > 0)
-					despawnList.add(visibleObject);
+			if(despawnTime > 0)
+				despawnList.add(visibleObject);
 
-				spawnCount++;
-			}
+			spawnCount++;
 		}
 
 		if( despawnTime > 0 ) {

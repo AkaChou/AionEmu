@@ -54,7 +54,7 @@ public class Reskin extends AdminCommand {
 		}
 
 		List<Item> items = target.getInventory().getItemsByItemId(oldItemId);
-		if(items.size() == 0) {
+		if(items.isEmpty()) {
 			PacketSendUtility.sendMessage(admin, "You don't have this item in your inventory.");
 			return;
 		}

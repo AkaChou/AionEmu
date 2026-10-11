@@ -69,10 +69,8 @@ public class RemoveCd extends AdminCommand {
 				// sweep stays and the item remains greyed out and unusable.
 				PacketSendUtility.sendPacket(player, SM_ITEM_COOLDOWN.load(player.getItemCoolDowns()));
 
-				if (player.getHouseRegistry() != null && player.getHouseObjectCooldownList().getHouseObjectCooldowns().size() > 0) {
-					Iterator<HouseObject<?>> iter = player.getHouseRegistry().getObjects().iterator();
-					while (iter.hasNext()) {
-						HouseObject<?> obj = iter.next();
+				if (player.getHouseRegistry() != null && !player.getHouseObjectCooldownList().getHouseObjectCooldowns().isEmpty()) {
+					for (HouseObject<?> obj : player.getHouseRegistry().getObjects()) {
 						if (obj instanceof UseableItemObject) {
 							if (!player.getHouseObjectCooldownList().isCanUseObject(obj.getObjectId()))
 								player.getHouseObjectCooldownList().addHouseObjectCooldown(obj.getObjectId(), 0);

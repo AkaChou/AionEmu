@@ -32,32 +32,31 @@ public class AnnounceFaction extends AdminCommand {
 			PacketSendUtility.sendMessage(player, "Syntax: //announcefaction <ely | asmo> <message>");
 		}
 		else {
+			StringBuilder message = new StringBuilder();
 			Iterator<Player> iter = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getPlayersIterator();
-			String message = null;
 
 			if (params[0].equals("ely"))
-				message = "Elyos : ";
+				message.append("Elyos : ");
 			else
-				message = "Asmodians : ";
+				message.append("Asmodians : ");
 
 			// 带空格添加 / Add with space
 			for (int i = 1; i < params.length - 1; i++)
-				message += params[i] + " ";
+				message.append(params[i]).append(' ');
 
 			// 添加最后一项，末尾不加空格 / Add the last without the end space
-			message += params[params.length - 1];
+			message.append(params[params.length - 1]);
 
-			Player target = null;
 
 			while (iter.hasNext()) {
-				target = iter.next();
+				Player target = iter.next();
 
 				if (target.getAccessLevel() > getLevel() || target.getRace() == Race.ELYOS
 					&& params[0].equals("ely"))
-					PacketSendUtility.sendBrightYellowMessageOnCenter(target, message);
+					PacketSendUtility.sendBrightYellowMessageOnCenter(target, message.toString());
 				else if (target.getAccessLevel() > getLevel()
 					|| target.getCommonData().getRace() == Race.ASMODIANS && params[0].equals("asmo"))
-					PacketSendUtility.sendBrightYellowMessageOnCenter(target, message);
+					PacketSendUtility.sendBrightYellowMessageOnCenter(target, message.toString());
 			}
 		}
 	}

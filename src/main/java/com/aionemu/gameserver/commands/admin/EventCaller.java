@@ -36,12 +36,13 @@ public class EventCaller extends AdminCommand {
 	 */
 	public void execute(Player player, String... params) {
 		if (params.length == 0) {
-			onFail(player, "--Syntax--" +
-				"\n//eventcaller show - shows registered players." +
-				"\n//eventcaller start - starts the event to calling to players." +
-				"\n//eventcaller start (number of players want) - if u want a limit write the number there. or just leave it blank for no limit" +
-				"\n//eventcaller stop - stops/ends the registeration queue and ports the registered players to you." +
-				"\n//eventcaller cancel - cancels an on-going registration , without porting the players.");
+			onFail(player, """
+				--Syntax--
+				//eventcaller show - shows registered players.
+				//eventcaller start - starts the event to calling to players.
+				//eventcaller start (number of players want) - if u want a limit write the number there. or just leave it blank for no limit
+				//eventcaller stop - stops/ends the registeration queue and ports the registered players to you.
+				//eventcaller cancel - cancels an on-going registration , without porting the players.""");
 			return;
 		}
 
@@ -115,7 +116,6 @@ public class EventCaller extends AdminCommand {
 					"Total Players : " + count + "\n" +
 					"=========================");
 				// 重置全部配置 / reseting all configs
-				count = 0;
 				player.setCountPlayers(0);
 				break;
 			}

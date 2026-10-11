@@ -68,7 +68,11 @@ public class Heal extends AdminCommand
 	 */
 	@Override
 	public void onFail(Player player, String message) {
-		String syntax = "//heal : Full HP and MP\n" + "//heal dp : Full DP, must be used on a player !\n" + "//heal fpr : Full FP, must be used on a player\n" + "//heal repose : Full repose energy, must be used on a player";
+		String syntax = """
+			//heal : Full HP and MP
+			//heal dp : Full DP, must be used on a player !
+			//heal fpr : Full FP, must be used on a player
+			//heal repose : Full repose energy, must be used on a player""";
 		PacketSendUtility.sendMessage(player, syntax);
 	}
 }

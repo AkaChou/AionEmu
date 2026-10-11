@@ -38,9 +38,11 @@ public class BaseCommand extends AdminCommand
 		if (params.length == 0) {
 			showHelp(player);
 			return;
-		} if (COMMAND_LIST.equalsIgnoreCase(params[0])) {
+		}
+		if (COMMAND_LIST.equalsIgnoreCase(params[0])) {
 			handleList(player, params);
-		} else if (COMMAND_CAPTURE.equals(params[0])) {
+		}
+		else if (COMMAND_CAPTURE.equals(params[0])) {
 			capture(player, params);
 		}
 	}
@@ -66,7 +68,8 @@ public class BaseCommand extends AdminCommand
 		if (params.length != 1) {
 			showHelp(player);
 			return;
-		} for (BaseLocation base : GameFeatureServices.baseService().getBaseLocations().values()) {
+		}
+		for (BaseLocation base : GameFeatureServices.baseService().getBaseLocations().values()) {
 			PacketSendUtility.sendMessage(player, "Base:" + base.getId() + " belongs to " + base.getRace());
 		}
 	}
@@ -85,11 +88,11 @@ public class BaseCommand extends AdminCommand
 		if (!isValidBaseLocationId(player, baseId)) {
 			return;
 		}
-		Race race = null;
+		Race race;
 		try {
 			race = Race.valueOf(params[2].toUpperCase());
-		} catch (IllegalArgumentException e) {
-		} if (race == null) {
+		}
+		catch (IllegalArgumentException e) {
 			PacketSendUtility.sendMessage(player, params[2] + " is not valid race");
 			showHelp(player);
 			return;
@@ -105,6 +108,9 @@ public class BaseCommand extends AdminCommand
 	 * Sends {@code //base} usage help to the admin.
 	 */
 	protected void showHelp(Player player) {
-		PacketSendUtility.sendMessage(player, "AdminCommand //base Help\n" + "//base list\n" + "//base capture <Id> <Race (ELYOS, ASMODIANS, NPC)>");
+		PacketSendUtility.sendMessage(player, """
+			AdminCommand //base Help
+			//base list
+			//base capture <Id> <Race (ELYOS, ASMODIANS, NPC)>""");
 	}
 }

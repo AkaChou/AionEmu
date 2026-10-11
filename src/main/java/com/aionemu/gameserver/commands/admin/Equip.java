@@ -63,7 +63,7 @@ public class Equip extends AdminCommand {
 				}
 				return;
 			}
-			Player player = null;
+			Player player;
 			player = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(Util.convertName(params[i]));
 			if (player == null) {
 				VisibleObject target = admin.getTarget();
@@ -448,7 +448,6 @@ public class Equip extends AdminCommand {
             case UNIQUE -> 4;
             case EPIC -> 5;
             case MYTHIC -> 6;
-            default -> 0;
         };
         if (item.getItemTemplate().getItemType() == ItemType.DRACONIC)
 			slots += 1;
@@ -458,42 +457,49 @@ public class Equip extends AdminCommand {
 	}
 
 	private void showHelp(Player admin) {
-		PacketSendUtility.sendMessage(admin, "[Help: Equip Command]\n"
-		+ "  Use //equip help <socket|enchant|tempering|godstone> for more details on the command.\n"
-		+ "  Notice: This command uses smart matching. You may abbreviate most commands.\n"
-		+ "  For example: (//equip so 167000226 5) will match to (//equip socket 167000226 5)");
+		PacketSendUtility.sendMessage(admin, """
+			[Help: Equip Command]
+			  Use //equip help <socket|enchant|tempering|godstone> for more details on the command.
+			  Notice: This command uses smart matching. You may abbreviate most commands.
+			  For example: (//equip so 167000226 5) will match to (//equip socket 167000226 5)""");
 	}
 
 	private void showHelpEnchant(Player admin) {
-		PacketSendUtility.sendMessage(admin, "Syntax:  //equip [playerName] enchant [EnchantLevel = 0]\n"
-		+ "  This command Enchants all items equipped up to 25.\n"
-		+ "  Notice: You can ommit parameters between [], especially playerName.\n"
-		+ "  Target: Named player, then targeted player, only then self.\n" + "  Default Value: EnchantLevel is 0.");
+		PacketSendUtility.sendMessage(admin, """
+			Syntax:  //equip [playerName] enchant [EnchantLevel = 0]
+			  This command Enchants all items equipped up to 25.
+			  Notice: You can ommit parameters between [], especially playerName.
+			  Target: Named player, then targeted player, only then self.
+			  Default Value: EnchantLevel is 0.""");
 	}
 
 	private void showHelpTempering(Player admin) {
-		PacketSendUtility.sendMessage(admin, "Syntax:  //equip [playerName] tempering [TemperanceLevel = 0]\n"
-		+ "  This command Tempering all items equipped up to 200.\n"
-		+ "  Notice: You can ommit parameters between [], especially playerName.\n"
-		+ "  Target: Named player, then targeted player, only then self.\n" + "  Default Value: TemperanceLevel is 0.");
+		PacketSendUtility.sendMessage(admin, """
+			Syntax:  //equip [playerName] tempering [TemperanceLevel = 0]
+			  This command Tempering all items equipped up to 200.
+			  Notice: You can ommit parameters between [], especially playerName.
+			  Target: Named player, then targeted player, only then self.
+			  Default Value: TemperanceLevel is 0.""");
 	}
 
 	private void showHelpSocket(Player admin) {
-		PacketSendUtility.sendMessage(admin, "Syntax:  //equip [playerName] socket [ManastoneID = 167000226] [Quantity = 0]\n"
-		+ "  This command Sockets all free slots on equipped items, with the given manastone id.\n"
-		+ "  Use ManastoneID = 0 to remove all Manastones. Quantity = 0 means to fill all free slots.\n"
-		+ "  Notice: You can ommit parameters between [], especially playerName.\n"
-		+ "  Target: Named player, then targeted player, only then self.\n"
-		+ "  Default Value: ManastoneID is 167000226, Quantity is 0 meaning fill all slots.");
+		PacketSendUtility.sendMessage(admin, """
+			Syntax:  //equip [playerName] socket [ManastoneID = 167000226] [Quantity = 0]
+			  This command Sockets all free slots on equipped items, with the given manastone id.
+			  Use ManastoneID = 0 to remove all Manastones. Quantity = 0 means to fill all free slots.
+			  Notice: You can ommit parameters between [], especially playerName.
+			  Target: Named player, then targeted player, only then self.
+			  Default Value: ManastoneID is 167000226, Quantity is 0 meaning fill all slots.""");
 	}
 
 	private void showHelpGodstone(Player admin) {
-		PacketSendUtility.sendMessage(admin, "Syntax:  //equip [playerName] godstone [rate = 100|GodStoneID]\n"
-		+ "  This command changes the godstone activation rate to the given number(0-100).\n"
-		+ "  Give a GodStone ItemID and it will be socketed on you Main Hand Weapon.\n"
-		+ "  Notice: You can ommit parameters between [], especially playerName.\n"
-		+ "  Target: Named player, then targeted player, only then self.\n"
-		+ "  Default Value: Rate is 100 witch is the default action .");
+		PacketSendUtility.sendMessage(admin, """
+			Syntax:  //equip [playerName] godstone [rate = 100|GodStoneID]
+			  This command changes the godstone activation rate to the given number(0-100).
+			  Give a GodStone ItemID and it will be socketed on you Main Hand Weapon.
+			  Notice: You can ommit parameters between [], especially playerName.
+			  Target: Named player, then targeted player, only then self.
+			  Default Value: Rate is 100 witch is the default action .""");
 	}
 
 	/**

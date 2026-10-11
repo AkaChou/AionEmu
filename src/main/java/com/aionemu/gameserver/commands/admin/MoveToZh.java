@@ -381,7 +381,7 @@ public class MoveToZh extends AdminCommand {
 				return template;
 			}
 		}
-		return templates.get(0);
+		return templates.getFirst();
 	}
 
 	/**

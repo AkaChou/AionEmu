@@ -36,9 +36,9 @@ public class AddSet extends AdminCommand {
 			return;
 		}
 
-		int itemSetId = 0;
-		Player receiver = null;
 
+		int itemSetId;
+		Player receiver;
 		try {
 			itemSetId = Integer.parseInt(params[0]);
 			receiver = player;

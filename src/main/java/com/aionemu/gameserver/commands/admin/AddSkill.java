@@ -34,9 +34,9 @@ public class AddSkill extends AdminCommand {
 
 		VisibleObject target = player.getTarget();
 
-		int skillId = 0;
-		int skillLevel = 0;
 
+		int skillId;
+		int skillLevel;
 		try {
 			skillId = Integer.parseInt(params[0]);
 			skillLevel = Integer.parseInt(params[1]);

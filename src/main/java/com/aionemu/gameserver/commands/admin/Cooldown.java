@@ -1,11 +1,8 @@
 package com.aionemu.gameserver.commands.admin;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map.Entry;
+import java.util.Set;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
-import com.aionemu.gameserver.model.items.ItemCooldown;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_ITEM_COOLDOWN;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SKILL_COOLDOWN;
 import com.aionemu.gameserver.utils.PacketSendUtility;
@@ -57,28 +54,18 @@ public class Cooldown extends AdminCommand {
      * Resets all skill and item cooldowns.
      */
     private void resetAllCooldowns(Player player) {
-        List<Integer> delayIds = new ArrayList<>();
-
         if (player.getSkillCoolDowns() != null && !player.getSkillCoolDowns().isEmpty()) {
             long currentTime = System.currentTimeMillis();
-            for (Entry<Integer, Long> en : player.getSkillCoolDowns().entrySet()) {
-                delayIds.add(en.getKey());
-            }
-            for (Integer delayId : delayIds) {
+            for (Integer delayId : Set.copyOf(player.getSkillCoolDowns().keySet())) {
                 player.setSkillCoolDown(delayId, currentTime);
             }
-            delayIds.clear();
             PacketSendUtility.sendPacket(player, new SM_SKILL_COOLDOWN(player.getSkillCoolDowns()));
         }
 
         if (player.getItemCoolDowns() != null && !player.getItemCoolDowns().isEmpty()) {
-            for (Entry<Integer, ItemCooldown> en : player.getItemCoolDowns().entrySet()) {
-                delayIds.add(en.getKey());
-            }
-            for (Integer delayId : delayIds) {
+            for (Integer delayId : Set.copyOf(player.getItemCoolDowns().keySet())) {
                 player.addItemCoolDown(delayId, 0, 0);
             }
-            delayIds.clear();
         }
         // 物品冷却的计时器由客户端持有，本包是唯一能改写它的手段：表为空时也必须整表下发，
         // 否则客户端本地预测的冷却扫描会残留，道具一直置灰并被客户端拦住无法使用。

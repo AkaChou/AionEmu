@@ -146,9 +146,7 @@ public class PlayerInfo extends AdminCommand
 			PacketSendUtility.sendMessage(admin, "Today GP = " + target.getAbyssRank().getDailyGP());
 		} else if (params[1].equals("chars")) {
 			PacketSendUtility.sendMessage(admin, "Others characters of " + target.getName() + " (" + target.getClientConnection().getAccount().size() + ") :");
-			Iterator<PlayerAccountData> data = target.getClientConnection().getAccount().iterator();
-			while (data.hasNext()) {
-				PlayerAccountData d = data.next();
+			for (PlayerAccountData d : target.getClientConnection().getAccount()) {
 				if (d != null && d.getPlayerCommonData() != null) {
 					PacketSendUtility.sendMessage(admin, d.getPlayerCommonData().getName());
 				}

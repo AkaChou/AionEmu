@@ -53,16 +53,16 @@ public class BanMac extends AdminCommand {
             }
             else {  //no address defined
                 VisibleObject target = player.getTarget();
-                if (target != null && target instanceof Player targetpl) {
-			if (target.getObjectId() == player.getObjectId()) {
-				onFail(player, "Omg, disselect yourself please.");
-				return;
-			}
+                if (target instanceof Player targetpl) {
+                    if (target.getObjectId() == player.getObjectId()) {
+                        onFail(player, "Omg, disselect yourself please.");
+                        return;
+                    }
 
-					address = targetpl.getClientConnection().getMacAddress();
-			targetName = targetpl.getName();
-            targetpl.getClientConnection().closeNow();
-            }
+                    address = targetpl.getClientConnection().getMacAddress();
+                    targetName = targetpl.getName();
+                    targetpl.getClientConnection().closeNow();
+                }
                 else {
                     onFail(player, "You should select a player or give me any mac address");
                     return;
@@ -77,9 +77,9 @@ public class BanMac extends AdminCommand {
 	 */
 	@Override
 	public void onFail(Player player, String message) {
-        if (!message.equals(""))
-            PacketSendUtility.sendMessage(player, message);
-            PacketSendUtility.sendMessage(player, "Syntax: //banmac [time in minutes] <mac>");
-            PacketSendUtility.sendMessage(player, "Note: 0 minutes will cause permanent ban");
+		if (!message.isEmpty())
+			PacketSendUtility.sendMessage(player, message);
+		PacketSendUtility.sendMessage(player, "Syntax: //banmac [time in minutes] <mac>");
+		PacketSendUtility.sendMessage(player, "Note: 0 minutes will cause permanent ban");
 	}
 }

@@ -253,7 +253,7 @@ public class Add extends AdminCommand {
      */
     @Override
     public void execute(Player player, String... params) {
-        if ((params.length < 0) || (params.length < 1)) {
+        if (params.length < 1) {
             onFail(player, null);
             return;
         }
@@ -262,10 +262,6 @@ public class Add extends AdminCommand {
         Player receiver;
 
         if (params[0].equals("check")){
-            if(params.length == 0){
-                onFail(player, "");
-                return;
-            }
             try{
                 try{
                     itemId = Integer.parseInt(params[1]);
@@ -276,21 +272,12 @@ public class Add extends AdminCommand {
                 PacketSendUtility.sendMessage(player, "You need to give the ItemID.");
                 return;
             }
-            if (isRestrictedItem(itemId)){
-            	PacketSendUtility.sendMessage(player, "Item ( [item:"+ itemId + "] ) is a blocked item!!");
-                return;
-            }else{
-            	PacketSendUtility.sendMessage(player, "Item ( [item:"+ itemId + "] ) is available to add!!");
-                return;
-            }
+            PacketSendUtility.sendMessage(player, "Item ( [item:" + itemId + "] ) " + (isRestrictedItem(itemId) ? "is a blocked item!!" : "is available to add!!"));
+            return;
 
         }
 
         if (params[0].equalsIgnoreCase("kinah")){
-            if(params.length == 0){
-                PacketSendUtility.sendMessage(player, " syntax : //add kinah 12312312");
-                return;
-            }
             try{
                 long count = Long.parseLong(params[1]);
 
@@ -331,10 +318,6 @@ public class Add extends AdminCommand {
         }
 
         if (params[0].equals("giveid")){
-            if(params.length == 0){
-                PacketSendUtility.sendMessage(player, "syntax : //add giveid @LinkItem");
-                return;
-            }
             try{
                 try{
                     itemId = Integer.parseInt(params[1]);
@@ -448,7 +431,7 @@ public class Add extends AdminCommand {
         if (county != null){
             if(player != receiver){
                 if(player.getAccessLevel() > 1){
-                    long count = ItemService.addItem(receiver, itemId, itemCount);
+                    ItemService.addItem(receiver, itemId, itemCount);
                     PacketSendUtility.sendMessage(player, "You successfully gave " + itemCount + " x [item:"+ itemId + "] to " + receiver.getName() + ".");
                     PacketSendUtility.sendMessage(receiver, "You successfully received " + itemCount + " x [item:"+ itemId + "] from " + player.getName() + ".");
                 }else{
@@ -456,13 +439,13 @@ public class Add extends AdminCommand {
                 }
             }else{
             	if(player.getAccessLevel() > 1){
-                    long count = ItemService.addItem(receiver, itemId, itemCount);
+                    ItemService.addItem(receiver, itemId, itemCount);
                     PacketSendUtility.sendMessage(player, "You successfully received " + itemCount + " x [item:"+ itemId + "]");
                 }else{
                 	if (isRestrictedItem(itemId)){
                 		PacketSendUtility.sendMessage(player, "This items is blocked items, you can't add using command, contact Game Master for Info!");
 					}else{
-                		long count = ItemService.addItem(receiver, itemId, itemCount);
+                		ItemService.addItem(receiver, itemId, itemCount);
                         PacketSendUtility.sendMessage(player, "You successfully received " + itemCount + " x [item:"+ itemId + "]");
                 }
                 }
@@ -537,6 +520,11 @@ public class Add extends AdminCommand {
         PacketSendUtility.sendMessage(player, "syntax //add <player> <item Id | link> <quantity>");
         PacketSendUtility.sendMessage(player, "syntax //add <item Id | link> <quantity>");
         PacketSendUtility.sendMessage(player, "syntax //add <item Id | link>");
-        PacketSendUtility.sendMessage(player, "===== CUSTOM ADDED FEATURES =====\n" + "syntax //add check <item id | link>\n" + "synax //add giveid <@Link>\n" + "syntax //add kinah <ammount>\n" + "syntax //add money <ammount> (default: 10000000)");
+        PacketSendUtility.sendMessage(player, """
+            ===== CUSTOM ADDED FEATURES =====
+            syntax //add check <item id | link>
+            synax //add giveid <@Link>
+            syntax //add kinah <ammount>
+            syntax //add money <ammount> (default: 10000000)""");
     }
 }

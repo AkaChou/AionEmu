@@ -47,15 +47,15 @@ public class Petitions extends AdminCommand {
 			if (petitionsArray.length < 5) {
 				PacketSendUtility.sendMessage(admin, "== " + petitionsArray.length + " first petitions to reply ==");
 				for (int i = 0; i < petitionsArray.length; i++) {
-					PacketSendUtility.sendMessage(admin, petitionsArray[i].getPetitionId() + " | "
-						+ petitionsArray[i].getTitle());
+					PacketSendUtility.sendMessage(admin, petitionsArray[i].petitionId() + " | "
+						+ petitionsArray[i].title());
 				}
 			}
 			else {
 				PacketSendUtility.sendMessage(admin, "== 5 first petitions to reply ==");
 				for (int i = 0; i < 5; i++) {
-					PacketSendUtility.sendMessage(admin, petitionsArray[i].getPetitionId() + " | "
-						+ petitionsArray[i].getTitle());
+					PacketSendUtility.sendMessage(admin, petitionsArray[i].petitionId() + " | "
+						+ petitionsArray[i].title());
 				}
 			}
 			return;
@@ -81,12 +81,12 @@ public class Petitions extends AdminCommand {
 		String petitionPlayer = "";
 		boolean isOnline;
 
-		if (com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(petition.getPlayerObjId()) != null) {
-			petitionPlayer = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(petition.getPlayerObjId()).getName();
+		if (com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(petition.playerObjId()) != null) {
+			petitionPlayer = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(petition.playerObjId()).getName();
 			isOnline = true;
 		}
 		else {
-			petitionPlayer = PlayerService.daos().playerDAO().getPlayerNameByObjId(petition.getPlayerObjId());
+			petitionPlayer = PlayerService.daos().playerDAO().getPlayerNameByObjId(petition.playerObjId());
 			isOnline = false;
 		}
 
@@ -101,15 +101,15 @@ public class Petitions extends AdminCommand {
 				message.append("Offline");
 			message.append(")\n");
 			message.append("Type: " + getHumanizedValue(petition.getPetitionType()) + "\n");
-			message.append("Title: " + petition.getTitle() + "\n");
-			message.append("Text: " + petition.getContentText() + "\n");
+			message.append("Title: " + petition.title() + "\n");
+			message.append("Text: " + petition.contentText() + "\n");
 			message.append("= Additional Data =\n");
-			message.append(getFormattedAdditionalData(petition.getPetitionType(), petition.getAdditionalData()));
+			message.append(getFormattedAdditionalData(petition.getPetitionType(), petition.additionalData()));
 			PacketSendUtility.sendMessage(admin, message.toString());
 		}
 		// 删除 / Delete
 		else if (params.length == 2 && params[1].equals("delete")) {
-			GameRuntimeServices.petitionService().deletePetition(petition.getPlayerObjId());
+			GameRuntimeServices.petitionService().deletePetition(petition.playerObjId());
 			PacketSendUtility.sendMessage(admin, "Petition #" + petitionId + " deleted.");
 		}
 		// 回复 / Reply
@@ -123,7 +123,7 @@ public class Petitions extends AdminCommand {
 				return;
 			}
 
-			GameCoreGameplayServices.mailService().sendMail(admin, petitionPlayer, "GM-Re:" + petition.getTitle(), replyMessage, 0, 0, 0, 0,
+			GameCoreGameplayServices.mailService().sendMail(admin, petitionPlayer, "GM-Re:" + petition.title(), replyMessage, 0, 0, 0, 0,
 				LetterType.NORMAL);
 			GameRuntimeServices.petitionService().setPetitionReplied(petitionId);
 

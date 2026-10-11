@@ -65,9 +65,8 @@ public class Ban extends AdminCommand {
 				type = 1;
 			else if (("ip").startsWith(stype))
 				type = 2;
-			else if (("full").startsWith(stype))
-				type = 3;
-			else {
+			else if (!("full").startsWith(stype)) {
+				// full 命中时保持默认 type=3 / a "full" match keeps the default type=3
 				PacketSendUtility.sendMessage(admin, "Syntax: //ban <player> [account|ip|full] [time in minutes]");
 				return;
 			}

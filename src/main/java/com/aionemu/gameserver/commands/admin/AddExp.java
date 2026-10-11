@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.commands.admin;
 
-import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
@@ -32,17 +31,18 @@ public class AddExp extends AdminCommand {
 			return;
 		}
 
-		Player target = null;
-		VisibleObject creature = player.getTarget();
-
-		if (player.getTarget() instanceof Player) {
-			target = (Player) creature;
+		Player target;
+		if (player.getTarget() instanceof Player targetPlayer) {
+			target = targetPlayer;
+		}
+		else {
+			PacketSendUtility.sendMessage(player, "You should select a player first!");
+			return;
 		}
 
-		String paramValue = params[0];
 		long exp;
 		try {
-			exp = Long.parseLong(paramValue);
+			exp = Long.parseLong(params[0]);
 		}
 		catch (NumberFormatException e) {
 			PacketSendUtility.sendMessage(player, "<exp> must be an Integer");

@@ -33,11 +33,11 @@ public class Channel extends AdminCommand {
 		try {
 			someField = classToMofify.getDeclaredField("FACTION_CMD_CHANNEL");
 			if (params[0].equalsIgnoreCase("on") && !CustomConfig.FACTION_CMD_CHANNEL) {
-				someField.set(null, Boolean.valueOf(true));
+				someField.set(null, true);
 				PacketSendUtility.sendMessage(player, "The command .faction is ON.");
 			}
 			else if (params[0].equalsIgnoreCase("off") && CustomConfig.FACTION_CMD_CHANNEL) {
-				someField.set(null, Boolean.valueOf(false));
+				someField.set(null, false);
 				PacketSendUtility.sendMessage(player, "The command .faction is OFF.");
 			}
 		}

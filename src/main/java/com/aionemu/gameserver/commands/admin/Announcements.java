@@ -58,17 +58,17 @@ public class Announcements extends AdminCommand {
                     delay = 900;
                 }
 
-                String message = "";
+                StringBuilder message = new StringBuilder();
 
                 // 带空格添加 / Add with space
                 for (int i = 4; i < params.length - 1; i++)
-                    message += params[i] + " ";
+                    message.append(params[i]).append(' ');
 
                 // 添加最后一项，末尾不加空格 / Add the last without the end space
-                message += params[params.length - 1];
+                message.append(params[params.length - 1]);
 
                 // 创建公告 / Create the announce
-                Announcement announce = new Announcement(message, params[1], params[2], delay);
+                Announcement announce = new Announcement(message.toString(), params[1], params[2], delay);
 
                 // 在数据库中添加公告 / Add the announce in the database
                 announceService.addAnnouncement(announce);

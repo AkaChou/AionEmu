@@ -34,24 +34,20 @@ public class AddCube extends AdminCommand {
 			return;
 		}
 
-		Player receiver = null;
-
-		receiver = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(Util.convertName(params[0]));
+		Player receiver = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(Util.convertName(params[0]));
 
 		if (receiver == null) {
 			PacketSendUtility.sendMessage(admin, "The player "+ Util.convertName(params[0]) +" is not online.");
 			return;
 		}
 
-		if (receiver != null) {
-			if (receiver.getNpcExpands() < 9) {
-				CubeExpandService.expand(receiver, true);
-				PacketSendUtility.sendMessage(admin, "9 cube slots successfully added to player "+receiver.getName()+"!");
-				PacketSendUtility.sendMessage(receiver, "Admin "+admin.getName()+" gave you a cube expansion!");
-			}
-			else {
-				PacketSendUtility.sendMessage(admin, "Cube expansion cannot be added to "+receiver.getName()+"!\nReason: player cube already fully expanded.");
-			}
+		if (receiver.getNpcExpands() < 9) {
+			CubeExpandService.expand(receiver, true);
+			PacketSendUtility.sendMessage(admin, "9 cube slots successfully added to player "+receiver.getName()+"!");
+			PacketSendUtility.sendMessage(receiver, "Admin "+admin.getName()+" gave you a cube expansion!");
+		}
+		else {
+			PacketSendUtility.sendMessage(admin, "Cube expansion cannot be added to "+receiver.getName()+"!\nReason: player cube already fully expanded.");
 		}
 	}
 

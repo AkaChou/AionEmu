@@ -60,8 +60,8 @@ public class Send extends AdminCommand {
 		final String mappingName = params[0];
 		final Player target = getTargetPlayer(admin);
 
-		// log.debug("Mapping: " + mappingName);
-		// log.debug("Target: " + target);
+		// log.debug("Mapping: {}", mappingName);
+		// log.debug("Target: {}", target);
 
 		File packetsData = new File(FOLDER, mappingName + ".xml");
 
@@ -94,7 +94,7 @@ public class Send extends AdminCommand {
 
 		long delay = 0;
 		for (final Packet packetTemplate : packets) {
-			// log.debug("Processing: " + packetTemplate);
+			// log.debug("Processing: {}", packetTemplate);
 
 			final SM_CUSTOM_PACKET packet = new SM_CUSTOM_PACKET(packetTemplate.getOpcode());
 
@@ -123,7 +123,7 @@ public class Send extends AdminCommand {
 			delay += packetTemplate.getDelay();
 
 			GameThreadPoolServices.threadPoolManager().schedule(() -> {
-				// log.debug("Sending: " + packetTemplate);
+				// log.debug("Sending: {}", packetTemplate);
 				PacketSendUtility.sendPacket(target, packet);
 			}, delay);
 

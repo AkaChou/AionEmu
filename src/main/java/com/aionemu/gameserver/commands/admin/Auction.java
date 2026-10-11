@@ -77,7 +77,7 @@ public class Auction extends AdminCommand {
 					}
 				}
 
-				if (housesToRemove.size() == 0) {
+				if (housesToRemove.isEmpty()) {
 					PacketSendUtility.sendMessage(admin, "Nothing to remove!");
 					return;
 				}
@@ -112,13 +112,10 @@ public class Auction extends AdminCommand {
 					return;
 				}
 
-				HouseType houseType = null;
+				HouseType houseType;
 				try {
 					houseType = HouseType.fromValue(params[2].toUpperCase());
 				} catch (Exception e) {
-				}
-
-				if (houseType == null) {
 					PacketSendUtility.sendMessage(admin, "No such house type!");
 					return;
 				}
@@ -143,18 +140,8 @@ public class Auction extends AdminCommand {
 					if (house.getOwnerId() != 0 || house.getHouseType() != houseType) {
 						continue;
 					}
-					if (house.getStatus() == HouseStatus.INACTIVE) {
+					if (!isAvailableForAuction(house)) {
 						continue;
-					}
-					if (house.getStatus() == HouseStatus.SELL_WAIT) {
-						// 检查竞价条目是否存在 / check to see if the bid entry exists
-						HouseBidEntry entry = GameHousingServices.housingBidService().getHouseBid(house.getObjectId());
-						if (entry == null) {
-							// 重置状态 / reset status
-							house.setStatus(HouseStatus.ACTIVE);
-						} else {
-							continue;
-						}
 					}
 					float x = house.getX();
 					float y = house.getY();
@@ -200,18 +187,15 @@ public class Auction extends AdminCommand {
 						return;
 				}
 
-				HouseType houseType = null;
+				HouseType houseType;
 				try {
 					houseType = HouseType.fromValue(params[2].toUpperCase());
 				} catch (Exception e) {
-				}
-
-				if (houseType == null) {
 					PacketSendUtility.sendMessage(admin, "No such house type!");
 					return;
 				}
 
-				int count = 0;
+				int count;
 				try {
 					count = Integer.parseInt(params[3]);
 					if (count <= 0) {
@@ -248,24 +232,14 @@ public class Auction extends AdminCommand {
 							if (mapId != 700010000 && mapId != 210040000) {
 								continue;
 							}
-						} else if (race.equals(Race.ASMODIANS)) {
+						} else {
 							if (mapId != 710010000 && mapId != 220040000) {
 								continue;
 							}
 						}
 					}
-					if (house.getStatus() == HouseStatus.INACTIVE) {
+					if (!isAvailableForAuction(house)) {
 						continue;
-					}
-					if (house.getStatus() == HouseStatus.SELL_WAIT) {
-						// 检查竞价条目是否存在 / check to see if the bid entry exists
-						HouseBidEntry entry = GameHousingServices.housingBidService().getHouseBid(house.getObjectId());
-						if (entry == null) {
-							// 重置状态 / reset status
-							house.setStatus(HouseStatus.ACTIVE);
-						} else {
-							continue;
-						}
 					}
 
 					long price = bidPrice > 0 ? bidPrice : house.getDefaultAuctionPrice();
@@ -290,17 +264,40 @@ public class Auction extends AdminCommand {
 	}
 
 	/**
+	 * 校验房屋当前的拍卖资格状态：停用房屋不可用，SELL_WAIT 且已有竞价的房屋不可用，无竞价则重置为激活。
+	 * Validates the house's current auction eligibility: inactive houses are unusable, SELL_WAIT houses with an existing bid are unusable, otherwise the status is reset to active.
+	 * @return 状态允许上架则为 true / true if the status allows listing
+	 */
+	private static boolean isAvailableForAuction(House house) {
+		if (house.getStatus() == HouseStatus.INACTIVE) {
+			return false;
+		}
+		if (house.getStatus() == HouseStatus.SELL_WAIT) {
+			// 检查竞价条目是否存在 / check to see if the bid entry exists
+			HouseBidEntry entry = GameHousingServices.housingBidService().getHouseBid(house.getObjectId());
+			if (entry == null) {
+				// 重置状态 / reset status
+				house.setStatus(HouseStatus.ACTIVE);
+			} else {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	/**
 	 * 参数错误时输出 {@code //auction} 用法。
 	 * Prints {@code //auction} usage on invalid arguments.
 	 */
 	@Override
 	public void onFail(Player player, String message) {
-		PacketSendUtility.sendMessage(player, "syntax:\n"
-			+ " //auction add <zone_name> <house_type> [initial_bid]\n"
-			+ " //auction remove <HOUSE_id|zone_name> [nosale]\n"
-			+ " //auction addrandom <race> <house_type> <count> [initial_bid]\n"
-			+ " //zone_name = from zones xml files\n"
-			+ " //house_type = house, mansion, estate, palace\n"
-			+ " //initial_bid = initial bid price (if omitted, default is used)");
+		PacketSendUtility.sendMessage(player, """
+			syntax:
+			 //auction add <zone_name> <house_type> [initial_bid]
+			 //auction remove <HOUSE_id|zone_name> [nosale]
+			 //auction addrandom <race> <house_type> <count> [initial_bid]
+			 //zone_name = from zones xml files
+			 //house_type = house, mansion, estate, palace
+			 //initial_bid = initial bid price (if omitted, default is used)""");
 	}
 }

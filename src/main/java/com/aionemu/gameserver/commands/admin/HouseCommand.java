@@ -2,7 +2,6 @@ package com.aionemu.gameserver.commands.admin;
 
 import com.aionemu.gameserver.lifecycle.GameHousingServices;
 
-import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.gameobjects.player.PlayerHouseOwnerFlags;
 import com.aionemu.gameserver.model.house.House;
@@ -71,14 +70,15 @@ public class HouseCommand extends AdminCommand
 	}
 
 	private void ChangeHouseOwner(Player admin, String houseName, boolean acquire) {
-		Player target = null;
-		VisibleObject creature = admin.getTarget();
-		if (admin.getTarget() instanceof Player) {
-			target = (Player) creature;
-		} if (target == null) {
+		Player target;
+		if (admin.getTarget() instanceof Player targetPlayer) {
+			target = targetPlayer;
+		}
+		else {
 			PacketSendUtility.sendMessage(admin, "You should select a target first!");
 			return;
-		} if (acquire) {
+		}
+		if (acquire) {
 			if (target.getHouses().size() == 2) {
 				PacketSendUtility.sendMessage(admin, "Player can not own more than 2 houses!");
 				return;
@@ -87,8 +87,9 @@ public class HouseCommand extends AdminCommand
 			if (house == null) {
 				PacketSendUtility.sendMessage(admin, "No such house!");
 				return;
-			} if (target.getHouses().size() == 1) {
-				House current = target.getHouses().get(0);
+			}
+			if (target.getHouses().size() == 1) {
+				House current = target.getHouses().getFirst();
 				current.revokeOwner();
 				if (current.getBuilding().getType() == BuildingType.PERSONAL_INS) {
 					target.getHouses().remove(current);
@@ -115,7 +116,7 @@ public class HouseCommand extends AdminCommand
 			PacketSendUtility.sendPacket(target, new SM_HOUSE_OWNER_INFO(target, house));
 			PacketSendUtility.sendPacket(target, new SM_HOUSE_ACQUIRE(target.getObjectId(), house.getAddress().getId(), true));
 		} else {
-			if (target.getHouses().size() == 0) {
+			if (target.getHouses().isEmpty()) {
 				PacketSendUtility.sendMessage(admin, "Nothing to revoke!");
 				return;
 			}
@@ -129,14 +130,15 @@ public class HouseCommand extends AdminCommand
 					house.setSellStarted(null);
 					house.save();
 				}
-			} if (revokedHouse == null) {
+			}
+			if (revokedHouse == null) {
 				PacketSendUtility.sendMessage(admin, "Target doesn't own this house!");
 				return;
 			}
 			target.getHouses().remove(revokedHouse);
 			House oldHouse = null;
-			if (target.getHouses().size() != 0) {
-				oldHouse = target.getHouses().get(0);
+			if (!target.getHouses().isEmpty()) {
+				oldHouse = target.getHouses().getFirst();
 			} else {
 				target.setBuildingOwnerState(PlayerHouseOwnerFlags.BUY_STUDIO_ALLOWED.getId());
 			}

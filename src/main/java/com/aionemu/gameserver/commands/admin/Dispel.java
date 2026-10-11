@@ -26,7 +26,7 @@ public class Dispel extends AdminCommand {
 	 */
 	@Override
 	public void execute(Player admin, String... params) {
-		Player target = null;
+		Player target;
 		VisibleObject creature = admin.getTarget();
 
 		if (creature == null) {

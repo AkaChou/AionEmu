@@ -54,7 +54,7 @@ public class BanChar extends AdminCommand {
 			return;
 		}
 
-		int dayCount = -1;
+		int dayCount;
 		try {
 			dayCount = Integer.parseInt(params[1]);
 		}
@@ -70,13 +70,13 @@ public class BanChar extends AdminCommand {
 			return;
 		}
 
-		String reason = Util.convertName(params[2]);
-		for(int itr = 3; itr < params.length; itr++)
-			reason += " "+params[itr];
+		StringBuilder reason = new StringBuilder(Util.convertName(params[2]));
+		for (int itr = 3; itr < params.length; itr++)
+			reason.append(' ').append(params[itr]);
 
 		PacketSendUtility.sendMessage(admin, "Char " + playerName + " is now banned for the next "+dayCount+" days!");
 
-		PunishmentService.banChar(playerId, dayCount, reason);
+		PunishmentService.banChar(playerId, dayCount, reason.toString());
 	}
 
 	/**

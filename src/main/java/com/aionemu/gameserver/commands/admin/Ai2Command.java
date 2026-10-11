@@ -15,8 +15,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.Iterator;
-
 /**
  * 管理员 AI2 调试命令：开关日志、查看/设置目标 NPC 的 AI 状态与事件。
  * Admin AI2 debug command: toggles logs and inspects/sets target NPC AI state and events.
@@ -68,7 +66,7 @@ public class Ai2Command extends AdminCommand {
 
         VisibleObject target = player.getTarget();
 
-		if (target == null || !(target instanceof Npc npc)) {
+		if (!(target instanceof Npc npc)) {
 			PacketSendUtility.sendMessage(player, "Select target first (Npc only)");
 			return;
 		}
@@ -86,9 +84,8 @@ public class Ai2Command extends AdminCommand {
 				return;
 			case "print":
 				AIEventLog eventLog = ((AbstractAI) npc.getAi2()).getEventLog();
-				Iterator<AIEventType> iterator = eventLog.iterator();
-				while (iterator.hasNext()) {
-					PacketSendUtility.sendMessage(player, "EVENT: " + iterator.next().name());
+				for (AIEventType logEvent : eventLog) {
+					PacketSendUtility.sendMessage(player, "EVENT: " + logEvent.name());
 				}
 				return;
 		}
@@ -96,8 +93,7 @@ public class Ai2Command extends AdminCommand {
 		String param1 = params[1];
 		switch (param0) {
 			case "set": {
-				String aiName = param1;
-				GameEngineServices.ai2Engine().setupAI(aiName, npc);
+				GameEngineServices.ai2Engine().setupAI(param1, npc);
 				// 新装配的 AI 实例停留在 CREATED，只有 SPAWNED 事件会把它推进 IDLE；缺少这一步会让该 NPC
 				// 收不到 ATTACK / CREATURE_SEE 等事件，变成完全木桩（与 RetailDirectPortalEngine 的做法保持一致）。
 				// A freshly attached AI stays in CREATED until the SPAWNED event moves it to IDLE; without it the NPC
@@ -107,17 +103,13 @@ public class Ai2Command extends AdminCommand {
 			}
 			case "event": {
 				AIEventType eventType = AIEventType.valueOf(param1.toUpperCase());
-				if (eventType != null) {
-					npc.getAi2().onGeneralEvent(eventType);
-				}
+				npc.getAi2().onGeneralEvent(eventType);
 				break;
 			}
 			case "event2": {
 				AIEventType eventType = AIEventType.valueOf(param1.toUpperCase());
-				Creature creature = (Creature) com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findVisibleObject(Integer.valueOf(params[2]));
-				if (eventType != null) {
-					npc.getAi2().onCreatureEvent(eventType, creature);
-				}
+				Creature creature = (Creature) com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findVisibleObject(Integer.parseInt(params[2]));
+				npc.getAi2().onCreatureEvent(eventType, creature);
 				break;
 			}
 			case "state": {

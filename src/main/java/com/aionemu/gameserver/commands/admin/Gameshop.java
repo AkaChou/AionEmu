@@ -43,7 +43,7 @@ public class Gameshop extends AdminCommand {
 		int list;
 		byte category, subCategory, itemType, gift;
 		long count, price, toll;
-		Player player = null;
+		Player player;
 		String titleDescription;
 		if ("delete".startsWith(params[0])) {
 			try {
@@ -82,12 +82,12 @@ public class Gameshop extends AdminCommand {
 				return;
 			}
 
-			String description = "";
+			StringBuilder descriptionBuilder = new StringBuilder();
 
 			for (int i = 10; i < params.length; i++) {
-				description += Util.convertName(params[i]) + " ";
+				descriptionBuilder.append(Util.convertName(params[i])).append(' ');
 			}
-			description = description.trim();
+			String description = descriptionBuilder.toString().trim();
 
 			if (list < 1) {
 				PacketSendUtility.sendMessage(admin, "<list> : minium is 1.");
@@ -139,11 +139,11 @@ public class Gameshop extends AdminCommand {
 				PacketSendUtility.sendMessage(admin, "<itemId, count, price, itemType, gift, description> value must be int, long, long, byte, byte, string, Object... .");
 				return;
 			}
-			String description = "";
+			StringBuilder descriptionBuilder = new StringBuilder();
 			for (int i = 7; i < params.length; i++) {
-				description += Util.convertName(params[i]) + " ";
+				descriptionBuilder.append(Util.convertName(params[i])).append(' ');
 			}
-			description = description.trim();
+			String description = descriptionBuilder.toString().trim();
 
 			ItemTemplate itemTemplate = DataManager.ITEM_DATA.getItemTemplate(itemId);
 
@@ -176,13 +176,7 @@ public class Gameshop extends AdminCommand {
 					return;
 				}
 
-				if (com.aionemu.gameserver.lifecycle.GameServerNetworkServices.loginServer().sendPacket(new SM_ACCOUNT_TOLL_INFO(toll, 0, player.getAcountName()))) {
-					player.getClientConnection().getAccount().setToll(toll);
-					PacketSendUtility.sendPacket(player, new SM_TOLL_INFO(toll));
-					PacketSendUtility.sendMessage(admin, "Tolls setted to " + toll + ".");
-				}
-				else
-					PacketSendUtility.sendMessage(admin, "ls communication error.");
+				setTollViaLoginServer(admin, player, toll);
 			}
 			if (params.length == 2) {
 				try {
@@ -204,17 +198,13 @@ public class Gameshop extends AdminCommand {
 					return;
 				}
 
-				if (target instanceof Player) {
-					player = (Player) target;
+				if (!(target instanceof Player targetPlayer)) {
+					PacketSendUtility.sendMessage(admin, "You should select a player!");
+					return;
 				}
+				player = targetPlayer;
 
-				if (com.aionemu.gameserver.lifecycle.GameServerNetworkServices.loginServer().sendPacket(new SM_ACCOUNT_TOLL_INFO(toll, 0, player.getAcountName()))) {
-					player.getClientConnection().getAccount().setToll(toll);
-					PacketSendUtility.sendPacket(player, new SM_TOLL_INFO(toll));
-					PacketSendUtility.sendMessage(admin, "Tolls setted to " + toll + ".");
-				}
-				else
-					PacketSendUtility.sendMessage(admin, "ls communication error.");
+				setTollViaLoginServer(admin, player, toll);
 			}
 		}
 		else if ("addtoll".startsWith(params[0])) {
@@ -258,9 +248,11 @@ public class Gameshop extends AdminCommand {
 					return;
 				}
 
-				if (target instanceof Player) {
-					player = (Player) target;
+				if (!(target instanceof Player targetPlayer)) {
+					PacketSendUtility.sendMessage(admin, "You should select a player!");
+					return;
 				}
+				player = targetPlayer;
 
 				PacketSendUtility.sendMessage(admin, "You added " + toll + " tolls to Player: " + player.getName());
 				GameRuntimeServices.inGameShopEn().addToll(player, toll);
@@ -273,16 +265,34 @@ public class Gameshop extends AdminCommand {
 	}
 
 	/**
+	 * 通过登录服设置玩家商城货币并同步客户端显示。
+	 * Sets the player's in-game-shop toll via the login server and syncs the client display.
+	 */
+	private static void setTollViaLoginServer(Player admin, Player player, long toll) {
+		if (com.aionemu.gameserver.lifecycle.GameServerNetworkServices.loginServer().sendPacket(new SM_ACCOUNT_TOLL_INFO(toll, 0, player.getAcountName()))) {
+			player.getClientConnection().getAccount().setToll(toll);
+			PacketSendUtility.sendPacket(player, new SM_TOLL_INFO(toll));
+			PacketSendUtility.sendMessage(admin, "Tolls setted to " + toll + ".");
+		}
+		else {
+			PacketSendUtility.sendMessage(admin, "ls communication error.");
+		}
+	}
+
+	/**
 	 * 参数错误时显示命令语法。
 	 * Show command syntax on invalid arguments.
 	 * @param player 接收提示的玩家 / Player receiving the hint
 	 */
 	@Override
 	public void onFail(Player player, String message) {
-		PacketSendUtility.sendMessage(player, "No parameters detected please use:\n"
-			+ "//gameshop add <itemId> <count> <price> <category> <subCategory> <itemType> <gift> <list> <title description|empty> <item description|null>\n"
-			+ "//gameshop delete <itemId> <category> <subCategory> <list>\n"
-			+ "//gameshop addranking <itemId> <count> <price> <itemType> <gift> <title description|empty> <item description|null>\n" + "//gameshop deleteranking <itemId>\n"
-			+ "//gameshop settoll <target|player> <toll>\n" + "//gameshop addtoll <target|player> <toll>");
+		PacketSendUtility.sendMessage(player, """
+			No parameters detected please use:
+			//gameshop add <itemId> <count> <price> <category> <subCategory> <itemType> <gift> <list> <title description|empty> <item description|null>
+			//gameshop delete <itemId> <category> <subCategory> <list>
+			//gameshop addranking <itemId> <count> <price> <itemType> <gift> <title description|empty> <item description|null>
+			//gameshop deleteranking <itemId>
+			//gameshop settoll <target|player> <toll>
+			//gameshop addtoll <target|player> <toll>""");
 	}
 }

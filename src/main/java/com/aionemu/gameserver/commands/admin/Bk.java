@@ -107,7 +107,7 @@ public class Bk extends AdminCommand {
 			case "tele":
 				try {
 
-					if (params[1].equals("") || params[1] == null) {
+					if (params[1].isEmpty()) {
 						PacketSendUtility.sendMessage(player, "syntax //bk <add|del|tele> <bookmark name>");
 						return;
 					}

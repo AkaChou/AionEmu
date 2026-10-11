@@ -27,13 +27,13 @@ public class Announce extends AdminCommand {
 	 */
 	@Override
 	public void execute(Player player, String... params) {
-		String message;
+		StringBuilder message = new StringBuilder();
 
 		if (("anonymous").startsWith(params[0].toLowerCase())) {
-			message = "Announce: ";
+			message.append("Announce: ");
 		}
 		else if (("name").startsWith(params[0].toLowerCase())) {
-			message = player.getName() + ": ";
+			message.append(player.getName()).append(": ");
 		}
 		else {
 			PacketSendUtility.sendMessage(player, "Syntax: //announce <anonymous|name> <message>");
@@ -42,15 +42,15 @@ public class Announce extends AdminCommand {
 
 		// 带空格添加 / Add with space
 		for (int i = 1; i < params.length - 1; i++)
-			message += params[i] + " ";
+			message.append(params[i]).append(' ');
 
 		// 添加最后一项，末尾不加空格 / Add the last without the end space
-		message += params[params.length - 1];
+		message.append(params[params.length - 1]);
 
 		Iterator<Player> iter = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getPlayersIterator();
 
 		while (iter.hasNext()) {
-			PacketSendUtility.sendBrightYellowMessageOnCenter(iter.next(), message);
+			PacketSendUtility.sendBrightYellowMessageOnCenter(iter.next(), message.toString());
 		}
 	}
 
