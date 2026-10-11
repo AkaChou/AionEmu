@@ -27,7 +27,7 @@ public class TargetStatusProperty {
 	 * @param properties 目标筛选属性 / target filter properties
 	 * @return 目标数不为 1 时 false；否则是否匹配任一状态 / false if not exactly one target; else whether any status matches
 	 */
-	public static final boolean set(final Skill skill, Properties properties) {
+	public static boolean set(final Skill skill, Properties properties) {
 		if (skill.getEffectedList().size() != 1) {
 			return false;
 		}

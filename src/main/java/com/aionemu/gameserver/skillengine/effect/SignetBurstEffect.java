@@ -83,7 +83,7 @@ public class SignetBurstEffect extends DamageEffect {
 	static int getBurstDamagePercent(int signetType, int level) {
 		int typeIndex = signetType >= 1 && signetType <= BURST_DAMAGE_PERCENT.length ? signetType - 1 : 0;
 		int[] percentages = BURST_DAMAGE_PERCENT[typeIndex];
-		return percentages[Math.min(Math.max(0, level), percentages.length - 1)];
+		return percentages[Math.clamp(level, 0, percentages.length - 1)];
 	}
 
 	static int scaleBurstDamage(int damage, int percent) {

@@ -20,12 +20,11 @@ public class MaxCountProperty {
 	 * @param properties 目标筛选属性 / target filter properties
 	 * @return 始终 true（首要目标缺失时为 false） / true, or false if first target is missing for AREA
 	 */
-	public static final boolean set(final Skill skill, Properties properties) {
+	public static boolean set(final Skill skill, Properties properties) {
 		TargetRangeAttribute value = properties.getTargetType();
 		int maxcount = properties.getTargetMaxCount();
 
-		switch (value) {
-		case AREA:
+		if (value == TargetRangeAttribute.AREA) {
 			final Creature firstTarget = skill.getFirstTarget();
 			if (firstTarget == null) {
 				return false;
@@ -34,8 +33,6 @@ public class MaxCountProperty {
 				skill.getEffectedList().sort(Comparator.comparingDouble(creature -> MathUtil.getDistance(firstTarget, creature)));
 				skill.getEffectedList().subList(maxcount, skill.getEffectedList().size()).clear();
 			}
-		default:
-			break;
 		}
 		return true;
 	}

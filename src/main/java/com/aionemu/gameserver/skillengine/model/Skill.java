@@ -196,7 +196,7 @@ public class Skill {
 	 * @return 是否可用 / whether usable
 	 */
 	public boolean canUseSkill() {
-		if (skillTemplate.getType() == SkillType.MAGICAL && !skillTemplate.hasEvadeEffect()
+		if (skillTemplate.getType() == SkillType.MAGICAL && skillTemplate.lacksEvadeEffect()
 			&& effector.getEffectController().isAbnormalSet(AbnormalState.SILENCE)) {
 			return false;
 		}

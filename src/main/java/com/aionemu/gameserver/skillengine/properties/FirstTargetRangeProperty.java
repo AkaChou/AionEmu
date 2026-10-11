@@ -48,7 +48,7 @@ public class FirstTargetRangeProperty {
 			firstTargetRange += properties.getRevisionDistance();
 		}
 
-		if (firstTarget.getObjectId() == effector.getObjectId()) {
+		if (firstTarget.getObjectId().equals(effector.getObjectId())) {
 			return true;
 		}
 

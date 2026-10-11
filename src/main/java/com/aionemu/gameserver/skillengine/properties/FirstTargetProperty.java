@@ -22,7 +22,7 @@ public class FirstTargetProperty {
 	 * @param properties 目标筛选属性 / target filter properties
 	 * @return 设置是否成功 / true if first target was set successfully
 	 */
-	public static final boolean set(Skill skill, Properties properties) {
+	public static boolean set(Skill skill, Properties properties) {
 		FirstTargetAttribute value = properties.getFirstTarget();
 		skill.setFirstTargetAttribute(value);
 		switch (value) {

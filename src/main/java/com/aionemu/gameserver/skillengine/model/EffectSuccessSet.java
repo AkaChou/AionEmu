@@ -6,7 +6,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import com.aionemu.gameserver.skillengine.effect.EffectTemplate;
-import com.aionemu.gameserver.skillengine.effect.FearEffect;
 
 /**
  * 运行时效果的成功模板集合。
@@ -79,15 +78,6 @@ final class EffectSuccessSet implements Iterable<EffectTemplate> {
 	}
 
 	/**
-	 * 返回原始列表视图。
-	 * Returns the backing list view.
-	 * @return 列表视图 / list view
-	 */
-	List<EffectTemplate> asList() {
-		return effects;
-	}
-
-	/**
 	 * 返回原始集合视图。
 	 * Returns the backing collection view.
 	 * @return 集合视图 / collection view
@@ -120,20 +110,6 @@ final class EffectSuccessSet implements Iterable<EffectTemplate> {
 	boolean containsEffectId(int effectId) {
 		for (EffectTemplate effect : effects) {
 			if (effect.getEffectid() == effectId) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	/**
-	 * 是否包含恐惧效果。
-	 * Whether the set contains a fear effect.
-	 * @return 包含则为 true / true if present
-	 */
-	boolean containsFearEffect() {
-		for (EffectTemplate effect : effects) {
-			if (effect instanceof FearEffect) {
 				return true;
 			}
 		}

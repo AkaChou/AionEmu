@@ -5,7 +5,6 @@ import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlType;
 
-import com.aionemu.gameserver.controllers.SummonController;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SUMMON_USESKILL;
@@ -56,10 +55,7 @@ public class PetOrderUseUltraSkillEffect extends EffectTemplate {
 
 		// 若技能需要则处理自动释放 / Handle automatic release if skill expects so
 		if (release) {
-			SummonController controller = effector.getSummon().getController();
-			if ((controller instanceof SummonController)) {
-				effector.getSummon().getController().setReleaseAfterSkill(petUseSkillId);
-			}
+			effector.getSummon().getController().setReleaseAfterSkill(petUseSkillId);
 		}
 		PacketSendUtility.sendPacket(effector, new SM_SUMMON_USESKILL(effectorId, petUseSkillId, 1, targetId));
 	}

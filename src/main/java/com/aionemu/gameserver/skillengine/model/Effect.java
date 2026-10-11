@@ -510,22 +510,6 @@ public class Effect implements StatOwner {
 	}
 
 	/**
-	 * 获取技能组例外。
-	 * Gets skill-set exception.
-	 */
-	public int getSkillSetException() {
-		return skillTemplate.getSkillSetException();
-	}
-
-	/**
-	 * 获取技能组最大共存。
-	 * Gets skill-set max occurrence.
-	 */
-	public int getSkillSetMaxOccur() {
-		return skillTemplate.getSkillSetMaxOccur();
-	}
-
-	/**
 	 * 获取堆叠键。
 	 * Gets stack key.
 	 */
@@ -1246,14 +1230,6 @@ public class Effect implements StatOwner {
 	 */
 	public void setSubEffectAborted(boolean value) {
 		this.subEffectAbortedBySubConditions = value;
-	}
-
-	/**
-	 * 是否恐惧效果。
-	 * Whether fear effect.
-	 */
-	public boolean isFearEffect() {
-		return successEffects.containsFearEffect();
 	}
 
 	/**

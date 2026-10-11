@@ -30,7 +30,7 @@ public class ProcVPHealInstantEffect extends EffectTemplate {
 			long cap = pcd.getMaxReposteEnergy() * value2 / 100;
 			if (pcd.getCurrentReposteEnergy() < cap) {
 				int valueWithDelta = value + delta * effect.getSkillLevel();
-				long addEnergy = 0;
+				long addEnergy;
 				if (percent) {
 					addEnergy = (int) (pcd.getMaxReposteEnergy() * valueWithDelta * 0.001);
 				} else {

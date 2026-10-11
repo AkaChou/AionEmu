@@ -1,7 +1,5 @@
 package com.aionemu.gameserver.skillengine.model;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -39,22 +37,6 @@ public class ChainSkills {
 	}
 
 	/**
-	 * 获取指定类别最近连击使用时间。
-	 * Gets last chain use time for a category.
-	 * @param category 连锁类别 / chain category
-	 * @return 毫秒时间戳，无则 0 / epoch millis, or 0 if none
-	 */
-	public long getLastChainUseTime(String category) {
-		if (this.multiSkills.get(category) != null) {
-			return this.multiSkills.get(category).getUseTime();
-		} else if (chainSkill.getCategory().equals(category)) {
-			return this.chainSkill.getUseTime();
-		} else {
-			return 0;
-		}
-	}
-
-	/**
 	 * 判断类别在给定时间窗内是否仍处于连击有效期。
 	 * Whether the category is still within the chain time window.
 	 * @param category 连锁类别 / chain category
@@ -80,28 +62,13 @@ public class ChainSkills {
 	public void addChainSkill(String category, boolean multiCast) {
 		if (multiCast) {
 			if (this.multiSkills.get(category) != null) {
-				if (multiCast) {
-					this.multiSkills.get(category).increaseChainCount();
-				}
+				this.multiSkills.get(category).increaseChainCount();
 				this.multiSkills.get(category).setUseTime(System.currentTimeMillis());
 			} else {
-				this.multiSkills.put(category,
-						new ChainSkill(category, (multiCast ? 1 : 0), System.currentTimeMillis()));
+				this.multiSkills.put(category, new ChainSkill(category, 1, System.currentTimeMillis()));
 			}
 		} else {
 			chainSkill.updateChainSkill(category);
 		}
-	}
-
-	/**
-	 * 获取全部连锁状态（含单次与多次）。
-	 * Gets all chain states (single and multi).
-	 * @return 连锁技能集合 / chain skill collection
-	 */
-	public Collection<ChainSkill> getChainSkills() {
-		Collection<ChainSkill> collection = new ArrayList<>();
-		collection.add(this.chainSkill);
-		collection.addAll(this.multiSkills.values());
-		return collection;
 	}
 }

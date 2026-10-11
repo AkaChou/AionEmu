@@ -28,7 +28,6 @@ public class BackDashEffect extends DamageEffect {
 	@XmlAttribute(name = "distance")
 	private float distance;
 
-	private final float direction = 1;
 
 	/**
 	 * 应用伤害并更新施法者坐标。
@@ -57,8 +56,8 @@ public class BackDashEffect extends DamageEffect {
 		effect.setDashStatus(DashStatus.BACKDASH);
 		final Player effector = (Player) effect.getEffector();
 		double radian = Math.toRadians(MathUtil.convertHeadingToDegree(effector.getHeading()));
-		float x1 = (float) (Math.cos(Math.PI * direction + radian) * distance);
-		float y1 = (float) (Math.sin(Math.PI * direction + radian) * distance);
+		float x1 = (float) (Math.cos(Math.PI + radian) * distance);
+		float y1 = (float) (Math.sin(Math.PI + radian) * distance);
 		byte intentions = (byte) (CollisionIntention.PHYSICAL.getId() | CollisionIntention.DOOR.getId());
 		Vector3f closestCollision = GameWorldServices.geoService().getClosestCollision(effector, effector.getX() + x1,
 				effector.getY() + y1, effector.getZ(), false, intentions);

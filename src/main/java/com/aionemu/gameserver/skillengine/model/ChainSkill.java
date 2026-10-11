@@ -20,7 +20,7 @@ public class ChainSkill {
 	 * 获取连击计数。
 	 * Gets chain count.
 	 */
-	private int chainCount = 0;
+	private int chainCount;
 	/**
 	 * 获取最近使用时间。
 	 * Gets last use timestamp.

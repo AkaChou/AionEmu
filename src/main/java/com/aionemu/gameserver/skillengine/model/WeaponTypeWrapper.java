@@ -18,12 +18,12 @@ public class WeaponTypeWrapper implements Comparable<WeaponTypeWrapper> {
 	 * 获取主手武器类型。
 	 * Gets main-hand weapon type.
 	 */
-	private WeaponType mainHand = null;
+	private final WeaponType mainHand;
 	/**
 	 * 获取副手武器类型。
 	 * Gets off-hand weapon type.
 	 */
-	private WeaponType offHand = null;
+	private final WeaponType offHand;
 
 	/**
 	 * 构造武器类型包装；双手持有时归一为单手剑双持键。
@@ -97,11 +97,10 @@ public class WeaponTypeWrapper implements Comparable<WeaponTypeWrapper> {
 	public int compareTo(WeaponTypeWrapper o) {
 		if (mainHand == null || o.getMainHand() == null) {
 			return 0;
-		} else if (offHand != null && o.getOffHand() != null) {
-			return 0;
-		} else if (offHand != null && o.getOffHand() == null) {
+		} else if (offHand != null) {
+			// 到达此处时 o.getOffHand() 必为 null（前分支已处理双非空） / o.getOffHand() is provably null here
 			return 1;
-		} else if (offHand == null && o.getOffHand() != null) {
+		} else if (o.getOffHand() != null) {
 			return -1;
 		} else
 			return mainHand.toString().compareTo(o.getMainHand().toString());

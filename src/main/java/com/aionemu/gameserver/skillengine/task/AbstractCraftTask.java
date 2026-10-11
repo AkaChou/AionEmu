@@ -13,6 +13,15 @@ import lombok.Getter;
 public abstract class AbstractCraftTask extends AbstractInteractionTask {
 
 	/**
+	 * 交互结束：清理玩家制作任务引用。
+	 * Interaction finish: clears the player's craft task reference.
+	 */
+	@Override
+	protected void onInteractionFinish() {
+		requestor.setCraftingTask(null);
+	}
+
+	/**
 	 * 成功进度上限。
 	 * Maximum success progress value.
 	 */

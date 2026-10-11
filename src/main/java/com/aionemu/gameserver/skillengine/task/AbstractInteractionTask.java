@@ -78,7 +78,7 @@ public abstract class AbstractInteractionTask {
 	public void start() {
 		onInteractionStart();
 		task = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> {
-			if (!validateParticipants()) {
+			if (participantsMissing()) {
 				stop(true);
 			}
 			boolean stopTask = onInteraction();
@@ -113,20 +113,11 @@ public abstract class AbstractInteractionTask {
 	}
 
 	/**
-	 * 判断任务是否仍在进行。
-	 * Returns whether the task is still in progress.
-	 * @return 是否进行中 / true if running
+	 * 校验参与者是否无效。
+	 * Validates that interaction participants are invalid.
+	 * @return 若 requestor is null 则为 true / true if requestor is null
 	 */
-	public boolean isInProgress() {
-		return task != null && !task.isCancelled();
-	}
-
-	/**
-	 * 校验参与者是否有效。
-	 * Validates that interaction participants are still valid.
-	 * @return 若 requestor is non-null 则为 true / true if requestor is non-null
-	 */
-	public boolean validateParticipants() {
-		return requestor != null;
+	public boolean participantsMissing() {
+		return requestor == null;
 	}
 }

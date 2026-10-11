@@ -48,7 +48,7 @@ public class WeaponDualEffect extends BuffEffect {
 		for (IStatFunction modifier : modifiers) {
 			masteryModifiers.add(new StatDualWeaponMasteryFunction(effect, modifier));
 		}
-		if (masteryModifiers.size() > 0) {
+		if (!masteryModifiers.isEmpty()) {
 			effect.getEffected().getGameStats().addEffect(effect, masteryModifiers);
 		}
 	}

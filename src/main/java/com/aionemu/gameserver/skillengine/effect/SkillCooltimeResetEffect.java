@@ -74,7 +74,7 @@ public class SkillCooltimeResetEffect extends EffectTemplate {
 	}
 
 	static long calculateRemaining(long remaining, long original, int amount, boolean percent) {
-		long reductionAmount = percent ? original * Math.min(100, Math.max(0, amount)) / 100 : Math.max(0, amount);
+		long reductionAmount = percent ? original * Math.clamp(amount, 0, 100) / 100 : Math.max(0, amount);
 		return Math.max(0, remaining - reductionAmount);
 	}
 }

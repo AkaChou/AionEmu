@@ -73,7 +73,7 @@ public abstract class BuffEffect extends EffectTemplate {
 
 		List<IStatFunction> modifiers = getModifiers(effect);
 
-		if (modifiers.size() > 0) {
+		if (!modifiers.isEmpty()) {
 			cgs.addEffect(effect, modifiers);
 		}
 

@@ -31,7 +31,7 @@ public class TargetRangeProperty {
 	 * @param properties 目标筛选属性 / target filter properties
 	 * @return 收集是否成功 / true if targets were collected successfully
 	 */
-	public static final boolean set(final Skill skill, Properties properties) {
+	public static boolean set(final Skill skill, Properties properties) {
 
 		TargetRangeAttribute value = properties.getTargetType();
 		int distance = properties.getEffectiveRange() > 0 ? properties.getEffectiveRange()

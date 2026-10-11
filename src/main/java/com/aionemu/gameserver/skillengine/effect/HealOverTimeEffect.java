@@ -34,7 +34,7 @@ public abstract class HealOverTimeEffect extends AbstractOverTimeEffect {
 		}
 		int valueWithDelta = value + delta * effect.getSkillLevel();
 		int maxCurValue = getMaxStatValue(effect);
-		int possibleHealValue = 0;
+		int possibleHealValue;
 		if (percent) {
 			possibleHealValue = maxCurValue * valueWithDelta / 100;
 		} else {
@@ -42,10 +42,9 @@ public abstract class HealOverTimeEffect extends AbstractOverTimeEffect {
 		}
 		int finalHeal = possibleHealValue;
 		if (healType == HealType.HP) {
-			int baseHeal = possibleHealValue;
 			if (effect.getItemTemplate() == null && effect.getSkillTemplate().isHealBoostApplied()) {
 				int boostHealAdd = effector.getGameStats().getStat(StatEnum.HEAL_BOOST, 0).getCurrent();
-				int boostHeal = (effector.getGameStats().getStat(StatEnum.HEAL_BOOST, baseHeal).getCurrent()
+				int boostHeal = (effector.getGameStats().getStat(StatEnum.HEAL_BOOST, possibleHealValue).getCurrent()
 						- boostHealAdd);
 				if (boostHealAdd > 0) {
 					boostHeal += boostHeal * boostHealAdd / 1000;
@@ -73,8 +72,7 @@ public abstract class HealOverTimeEffect extends AbstractOverTimeEffect {
 		int currentValue = getCurrentStatValue(effect);
 		int maxCurValue = getMaxStatValue(effect);
 		int possibleHealValue = effect.getReservedInt(position);
-		int healValue = maxCurValue - currentValue < possibleHealValue ? (maxCurValue - currentValue)
-				: possibleHealValue;
+		int healValue = Math.min(possibleHealValue, maxCurValue - currentValue);
 		if (healValue <= 0) {
 			return;
 		}

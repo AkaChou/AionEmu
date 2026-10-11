@@ -76,7 +76,6 @@ public abstract class DamageEffect extends EffectTemplate {
 				+ effect.getEffector().getObserveController().getSkillAccuracyModifier(accuracyType);
 		int criticalProbability = getCriticalProbability(skillLvl);
 		int critAddDmg = getCriticalAdditionalDamage(skillLvl);
-		Object effector = effect.getEffector().getController().getOwner();
 		switch (damageType) {
 		case PHYSICAL:
 			boolean cannotMiss = false;

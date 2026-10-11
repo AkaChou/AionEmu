@@ -139,10 +139,6 @@ public class ProvokerEffect extends ShieldEffect {
 		return condrace;
 	}
 
-	public int getMinRadius() {
-		return minradius;
-	}
-
 	public int getRadius() {
 		return radius;
 	}

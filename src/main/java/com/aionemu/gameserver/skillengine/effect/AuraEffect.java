@@ -70,18 +70,13 @@ public class AuraEffect extends EffectTemplate {
 			for (Player player : onlinePlayers) {
 				if (MathUtil.isIn3dRange(effector, player, actualRange)) {
 					if (!GameGameplayServices.duelService().isDueling(player.getObjectId()) && player != effector) {
-						applyAuraTo(player, effect);
+						applyAuraTo(player);
 					}
-					if (GameGameplayServices.duelService().isDueling(effector.getObjectId())
-							&& GameGameplayServices.duelService().isDueling(player.getObjectId())) {
-						applyAuraTo(effector, effect);
-					} else {
-						applyAuraTo(effector, effect);
-					}
+					applyAuraTo(effector);
 				}
 			}
 		} else {
-			applyAuraTo(effector, effect);
+			applyAuraTo(effector);
 		}
 		PacketSendUtility.broadcastPacket(effector, new SM_MANTRA_EFFECT(effector, skillId), true);
 	}
@@ -90,9 +85,8 @@ public class AuraEffect extends EffectTemplate {
 	 * 对指定玩家施加光环关联技能。
 	 * Applies the aura-linked skill to the given player.
 	 * @param effected 目标玩家 / target player
-	 * @param effect 运行时效果 / runtime effect
 	 */
-	private void applyAuraTo(Player effected, Effect effect) {
+	private void applyAuraTo(Player effected) {
 		SkillTemplate template = DataManager.SKILL_DATA.getSkillTemplate(skillId);
 		Effect e = new Effect(effected, effected, template, template.getLvl(), 0);
 		e.initialize();

@@ -49,31 +49,6 @@ public class MotionTime {
 	protected String name;
 
 	/**
-	 * 按种族与性别获取时间表。
-	 * Gets times by race and gender.
-	 * 阵营 / race
-	 * @return 时间表，未知则 null / times or null
-	 */
-	public Times getTimes(Race race, Gender gender) {
-
-		switch (race) {
-		case ASMODIANS:
-			if (gender == Gender.MALE) {
-				return this.getAm();
-			} else {
-				return this.getAf();
-			}
-		case ELYOS:
-			if (gender == Gender.MALE) {
-				return this.getEm();
-			} else {
-				return this.getEf();
-			}
-		}
-		return null;
-	}
-
-	/**
 	 * 按种族、性别与武器获取动作时间。
 	 * Gets motion time for race, gender and weapon.
 	 * 阵营 / race

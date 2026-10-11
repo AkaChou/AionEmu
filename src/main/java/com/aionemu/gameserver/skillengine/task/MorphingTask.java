@@ -18,17 +18,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 public class MorphingTask extends CraftingTask {
 
 	/**
-	 * 构造单次变形任务。
-	 * Creates a single morphing task.
-	 * @param requestor 发起变形的玩家 / requesting player
-	 * @param responder 响应目标 / responder
-	 * @param recipeTemplates 配方模板 / recipe template
-	 */
-	public MorphingTask(Player requestor, StaticObject responder, RecipeTemplate recipeTemplates) {
-		this(requestor, responder, recipeTemplates, 1);
-	}
-
-	/**
 	 * 构造可批量变形的任务。
 	 * Creates a morphing task with optional multi-craft count.
 	 * @param requestor 发起变形的玩家 / requesting player
@@ -50,7 +39,7 @@ public class MorphingTask extends CraftingTask {
 	public void start() {
 		onInteractionStart();
 		task = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> {
-			if (!validateParticipants()) {
+			if (participantsMissing()) {
 				stop(true);
 			}
 			boolean stopTask = onInteraction();
@@ -111,15 +100,6 @@ public class MorphingTask extends CraftingTask {
 				new SM_CRAFT_ANIMATION(requestor.getObjectId(), 0, recipeTemplate.getSkillid(), 0), true);
 		PacketSendUtility.broadcastPacket(requestor,
 				new SM_CRAFT_ANIMATION(requestor.getObjectId(), 0, recipeTemplate.getSkillid(), 1), true);
-	}
-
-	/**
-	 * 交互结束：清理玩家制作任务引用。
-	 * Interaction finish: clears the player's craft task reference.
-	 */
-	@Override
-	protected void onInteractionFinish() {
-		requestor.setCraftingTask(null);
 	}
 
 	/**

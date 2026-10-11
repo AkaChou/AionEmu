@@ -33,7 +33,7 @@ public class ShieldMasteryEffect extends BuffEffect {
 			masteryModifiers
 					.add(new StatShieldMasteryFunction(modifier.getName(), modifier.getValue(), modifier.isBonus()));
 		}
-		if (masteryModifiers.size() > 0) {
+		if (!masteryModifiers.isEmpty()) {
 			effect.getEffected().getGameStats().addEffect(effect, masteryModifiers);
 		}
 	}

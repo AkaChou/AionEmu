@@ -6,13 +6,11 @@ import jakarta.xml.bind.annotation.XmlType;
 
 import com.aionemu.gameserver.controllers.observer.ActionObserver;
 import com.aionemu.gameserver.controllers.observer.ObserverType;
-import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.Item;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.templates.item.EquipType;
-import com.aionemu.gameserver.model.templates.item.ItemTemplate;
-import com.aionemu.gameserver.model.templates.robot.RobotInfo;
+import com.aionemu.gameserver.network.aion.serverpackets.SM_PLAYER_SPAWN;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_USE_ROBOT;
 import com.aionemu.gameserver.skillengine.model.Effect;
 import com.aionemu.gameserver.utils.PacketSendUtility;
@@ -38,8 +36,8 @@ public class RideRobotEffect extends EffectTemplate {
 		Player player = (Player) effected;
 		player.setUseRobot(true);
 		PacketSendUtility.broadcastPacketAndReceive(player,
-				new SM_USE_ROBOT(player, getRobotInfo(player).getRobotId()));
-		player.setRobotId(getRobotInfo(player).getRobotId());
+				new SM_USE_ROBOT(player, SM_PLAYER_SPAWN.getRobotInfo(player).getRobotId()));
+		player.setRobotId(SM_PLAYER_SPAWN.getRobotInfo(player).getRobotId());
 		ActionObserver observer = new ActionObserver(ObserverType.UNEQUIP) {
 			@Override
 			public void unequip(Item item, Player owner) {
@@ -71,16 +69,5 @@ public class RideRobotEffect extends EffectTemplate {
 		if (observer != null) {
 			effect.getEffected().getObserveController().removeObserver(observer);
 		}
-	}
-
-	/**
-	 * 根据主手武器皮肤模板解析机甲信息。
-	 * Resolves robot info from the main-hand weapon skin template.
-	 * @param player 玩家 / player
-	 * @return 机甲信息 / robot info
-	 */
-	public RobotInfo getRobotInfo(Player player) {
-		ItemTemplate template = player.getEquipment().getMainHandWeapon().getItemSkinTemplate();
-		return DataManager.ROBOT_DATA.getRobotInfo(template.getRobotId());
 	}
 }

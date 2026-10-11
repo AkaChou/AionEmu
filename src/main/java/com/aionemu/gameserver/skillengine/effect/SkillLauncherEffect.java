@@ -64,11 +64,4 @@ public class SkillLauncherEffect extends EffectTemplate {
 		launched.applyEffect();
 	}
 
-	/**
-	 * 返回要发射的技能 ID。
-	 * Returns the skill id to launch.
-	 */
-	public int getLaunchSkillId() {
-		return skillId;
-	}
 }

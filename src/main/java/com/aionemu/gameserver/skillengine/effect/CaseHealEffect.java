@@ -88,7 +88,7 @@ public class CaseHealEffect extends AbstractHealEffect {
 				int valueWithDelta = value + delta * effect.getSkillLevel();
 				int currentValue = getCurrentStatValue(effect);
 				int maxValue = getMaxStatValue(effect);
-				int possibleHealValue = 0;
+				int possibleHealValue;
 
 				if (currentValue <= maxValue * condValue / 100) {
 					if (percent)
@@ -102,7 +102,7 @@ public class CaseHealEffect extends AbstractHealEffect {
 								.getStat(StatEnum.HEAL_SKILL_BOOST, possibleHealValue).getCurrent();
 					}
 
-					finalHeal = maxValue - currentValue < finalHeal ? maxValue - currentValue : finalHeal;
+					finalHeal = Math.min(finalHeal, maxValue - currentValue);
 
 					if ((type == HealType.HP)
 							&& (effect.getEffected().getEffectController().isAbnormalSet(AbnormalState.DISEASE))) {

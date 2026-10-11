@@ -41,7 +41,7 @@ public class ArmorMasteryEffect extends BuffEffect {
 		for (IStatFunction modifier : modifiers) {
 			masteryModifiers.add(new StatArmorMasteryFunction(effect, armorType, modifier));
 		}
-		if (masteryModifiers.size() > 0) {
+		if (!masteryModifiers.isEmpty()) {
 			effect.getEffected().getGameStats().addEffect(effect, masteryModifiers);
 		}
 	}

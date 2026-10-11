@@ -81,7 +81,7 @@ public class StaggerEffect extends EffectTemplate {
 		double radian = Math.toRadians(MathUtil.convertHeadingToDegree(effector.getHeading()));
 		float x1 = (float) (Math.cos(radian) * 3);
 		float y1 = (float) (Math.sin(radian) * 3);
-		float z = effected.getZ();
+		float z;
 		byte intentions = (byte) (CollisionIntention.PHYSICAL.getId() | CollisionIntention.DOOR.getId());
 		Vector3f closestCollision = GameWorldServices.geoService().getClosestCollision(effected, effected.getX() + x1,
 				effected.getY() + y1, effected.getZ(), true, intentions);

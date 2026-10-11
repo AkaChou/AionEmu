@@ -76,19 +76,6 @@ public class CraftingTask extends AbstractCraftTask {
 	private int remainingCrafts;
 
 	/**
-	 * 构造单次制作任务。
-	 * Creates a single-craft task.
-	 * @param requestor 发起制作的玩家 / requesting player
-	 * @param responder 制作台等静态对象 / craft station static object
-	 * @param recipeTemplate 配方模板 / recipe template
-	 * @param skillLvlDiff 技能等级差 / skill level difference
-	 * @param bonus 制作加成 / craft bonus
-	 */
-	public CraftingTask(Player requestor, StaticObject responder, RecipeTemplate recipeTemplate, int skillLvlDiff, int bonus) {
-		this(requestor, responder, recipeTemplate, skillLvlDiff, bonus, 1);
-	}
-
-	/**
 	 * 构造可批量制作的任务。
 	 * Creates a craft task with optional multi-craft count.
 	 * @param requestor 发起制作的玩家 / requesting player
@@ -257,15 +244,6 @@ public class CraftingTask extends AbstractCraftTask {
 		PacketSendUtility.broadcastPacket(requestor, new SM_CRAFT_ANIMATION(requestor.getObjectId(), responder.getObjectId(), 0, 2), true);
 		requestor.setCraftingTask(null);
 		stop(true);
-	}
-
-	/**
-	 * 交互结束：清理玩家制作任务引用。
-	 * Interaction finish: clears the player's craft task reference.
-	 */
-	@Override
-	protected void onInteractionFinish() {
-		requestor.setCraftingTask(null);
 	}
 
 	/**

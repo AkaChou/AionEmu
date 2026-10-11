@@ -35,6 +35,8 @@ import com.aionemu.gameserver.skillengine.model.Effect;
 import com.aionemu.gameserver.skillengine.model.HitType;
 import com.aionemu.gameserver.skillengine.model.HopType;
 import com.aionemu.gameserver.skillengine.model.SkillTemplate;
+import com.aionemu.gameserver.model.templates.item.ItemAttackType;
+import com.aionemu.gameserver.skillengine.model.SkillSubType;
 import com.aionemu.gameserver.skillengine.model.SkillType;
 import com.aionemu.gameserver.skillengine.model.SpellStatus;
 import com.aionemu.gameserver.skillengine.model.TransformType;
@@ -122,11 +124,11 @@ public abstract class EffectTemplate {
 	 */
 	@XmlAttribute(name = "basiclvl")
 	protected int basicLvl;
-	@XmlAttribute(name = "hittype", required = false)
+	@XmlAttribute(name = "hittype")
 	protected HitType hitType = HitType.EVERYHIT;
-	@XmlAttribute(name = "hittypeprob2", required = false)
+	@XmlAttribute(name = "hittypeprob2")
 	protected int hitTypeProb = 1000;
-	@XmlAttribute(name = "hittypeprob1", required = false)
+	@XmlAttribute(name = "hittypeprob1")
 	protected int hitTypeProbDelta;
 	/**
 	 * 获取技能元素属性。
@@ -335,30 +337,23 @@ public abstract class EffectTemplate {
 			cannotMiss = ((SkillAttackInstantEffect) this).isCannotmiss();
 		if (!noResist && !cannotMiss) {
 			int boostResist = 0;
-			switch (effect.getSkillTemplate().getSubType()) {
-			case DEBUFF:
+			if (effect.getSkillTemplate().getSubType() == SkillSubType.DEBUFF) {
 				boostResist = effect.getEffector().getGameStats().getStat(StatEnum.BOOST_RESIST_DEBUFF, 0).getCurrent();
-				break;
-			default:
-				break;
 			}
 
 			int accMod = accMod2 + accMod1 * effect.getSkillLevel() + effect.getAccModBoost() + boostResist
 					+ effect.getEffector().getObserveController().getSkillAccuracyModifier(skillType);
 			switch (skillType) {
 			case PHYSICAL:
-				switch (effect.getEffector().getAttackType()) {
-				case PHYSICAL:
+				if (effect.getEffector().getAttackType() == ItemAttackType.PHYSICAL) {
 					if (StatFunctions.calculatePhysicalDodgeRate(effect.getEffector(), effect.getEffected(), accMod)) {
 						return false;
 					}
-					break;
-				default:
+				} else {
 					if (Rnd.nextInt(1000) < StatFunctions.calculateMagicalResistRate(effect.getEffector(),
 							effect.getEffected(), accMod, getElement())) {
 						return false;
 					}
-					break;
 				}
 				break;
 			case MAGICAL:
@@ -579,7 +574,7 @@ public abstract class EffectTemplate {
 		if (resting) {
 			chance = (int) (chance * 0.3f);
 		}
-		return Math.max(0, Math.min(1000, chance + exclusiveResistance));
+		return Math.clamp(chance + exclusiveResistance, 0, 1000);
 	}
 
 	/**
@@ -721,8 +716,8 @@ public abstract class EffectTemplate {
 		EffectType temp = null;
 		try {
 			temp = EffectType
-					.valueOf(this.getClass().getName().replaceAll("com.aionemu.gameserver.skillengine.effect.", "")
-							.replaceAll("Effect", "").toUpperCase());
+					.valueOf(this.getClass().getName().replace("com.aionemu.gameserver.skillengine.effect.", "")
+							.replace("Effect", "").toUpperCase());
 		} catch (Exception e) {
 			log.info(I18n.get("log.67edc30354d5", this.getClass().getName()));
 		}

@@ -58,7 +58,7 @@ public abstract class AbstractHealEffect extends EffectTemplate {
 		int valueWithDelta = value + delta * effect.getSkillLevel();
 		int currentValue = getCurrentStatValue(effect);
 		int maxCurValue = getMaxStatValue(effect);
-		int possibleHealValue = 0;
+		int possibleHealValue;
 		if (percent) {
 			possibleHealValue = maxCurValue * valueWithDelta / 100;
 		}
@@ -69,11 +69,10 @@ public abstract class AbstractHealEffect extends EffectTemplate {
 		int finalHeal = possibleHealValue;
 
 		if (healType == HealType.HP) {
-			int baseHeal = possibleHealValue;
 			if (effect.getItemTemplate() == null && effect.getSkillTemplate().isHealBoostApplied()) {
 				int boostHealAdd = effector.getGameStats().getStat(StatEnum.HEAL_BOOST, 0).getCurrent();
 				// 应用百分比治疗增强加成（如特性技能） / Apply percent Heal Boost bonus (ex. Passive skills)
-				int boostHeal = (effector.getGameStats().getStat(StatEnum.HEAL_BOOST, baseHeal).getCurrent() - boostHealAdd);
+				int boostHeal = (effector.getGameStats().getStat(StatEnum.HEAL_BOOST, possibleHealValue).getCurrent() - boostHealAdd);
 				// 应用治疗增强加成（如仁慈类技能） / Apply Add Heal Boost bonus (ex. Skills like Benevolence)
 				boostHeal += boostHeal * boostHealAdd / 1000;
 				finalHeal = effector.getGameStats().getStat(StatEnum.HEAL_SKILL_BOOST, boostHeal).getCurrent();
@@ -90,7 +89,7 @@ public abstract class AbstractHealEffect extends EffectTemplate {
 			finalHeal = currentValue > -finalHeal ? finalHeal : -currentValue;
 		}
 		else {
-			finalHeal = maxCurValue - currentValue < finalHeal ? (maxCurValue - currentValue) : finalHeal;
+			finalHeal = Math.min(finalHeal, maxCurValue - currentValue);
 		}
 
 		if (healType == HealType.HP && effect.getEffected().getEffectController().isAbnormalSet(AbnormalState.DISEASE)) {

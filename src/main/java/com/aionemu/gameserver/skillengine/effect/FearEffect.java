@@ -136,7 +136,7 @@ public class FearEffect extends EffectTemplate {
 		}
 	}
 
-	class FearTask implements Runnable {
+	static class FearTask implements Runnable {
 
 		private final Creature effector;
 		private final Creature effected;

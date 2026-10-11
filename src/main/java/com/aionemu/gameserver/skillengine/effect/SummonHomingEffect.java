@@ -37,7 +37,7 @@ public class SummonHomingEffect extends SummonEffect {
 	protected int attackCountDelta;
 	@XmlAttribute(name = "homing_id")
 	protected int homingId;
-	@XmlAttribute(name = "skill_id", required = false)
+	@XmlAttribute(name = "skill_id")
 	protected int skillId;
 
 	/**
@@ -85,7 +85,7 @@ public class SummonHomingEffect extends SummonEffect {
 			}
 			// 以防万一调度取消生成 / Schedule a despawn just in case
 			Future<?> task = GameThreadPoolServices.threadPoolManager().schedule(() -> {
-				if ((homing != null) && (homing.isSpawned())) {
+				if (homing.isSpawned()) {
 					homing.getController().onDelete();
 				}
 			}, 15 * 1000L);

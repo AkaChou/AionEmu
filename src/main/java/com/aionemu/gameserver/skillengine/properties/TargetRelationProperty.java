@@ -30,8 +30,6 @@ public class TargetRelationProperty {
 		boolean isMaterialSkill = DataManager.MATERIAL_DATA.isMaterialSkill(skill.getSkillId());
 		Creature effector = skill.getEffector();
 		switch (value) {
-		case ALL:
-			break;
 		case ENEMY:
 			for (Iterator<Creature> iter = effectedList.iterator(); iter.hasNext();) {
 				Creature nextEffected = iter.next();
@@ -53,7 +51,7 @@ public class TargetRelationProperty {
 				skill.setFirstTarget(skill.getEffector());
 				effectedList.add(skill.getEffector());
 			} else {
-				skill.setFirstTarget(effectedList.get(0));
+				skill.setFirstTarget(effectedList.getFirst());
 			}
 			break;
 		case MYPARTY:
@@ -89,7 +87,7 @@ public class TargetRelationProperty {
 				skill.setFirstTarget(effector);
 				effectedList.add(effector);
 			} else {
-				skill.setFirstTarget(effectedList.get(0));
+				skill.setFirstTarget(effectedList.getFirst());
 			}
 			break;
 		default:

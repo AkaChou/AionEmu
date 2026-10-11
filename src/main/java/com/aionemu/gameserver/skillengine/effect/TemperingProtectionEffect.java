@@ -19,8 +19,4 @@ public class TemperingProtectionEffect extends BuffEffect {
 		effect.addSucessEffect(this);
 	}
 
-	@Override
-	public void applyEffect(Effect effect) {
-		effect.addToEffectedController();
-	}
 }

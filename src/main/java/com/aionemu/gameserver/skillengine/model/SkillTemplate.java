@@ -402,16 +402,6 @@ public class SkillTemplate {
 	public boolean isActive() {
 		return activationAttribute == ActivationAttribute.ACTIVE;
 	}
-	/**
-	 * 按位置获取效果模板（1-based）。
-	 * Gets effect template by 1-based position.
-	 * @param position 1-based 位置 / 1-based position
-	 * @return 效果模板，无则 null / effect template or null
-	 */
-	public EffectTemplate getEffectTemplate(int position) {
-		return effects != null && effects.getEffects().size() >= position ? effects.getEffects().get(position - 1)
-				: null;
-	}
 	public int scaleCooldownByAttackDelay(int cooldown, int attackDelay) {
 		return delayType == 1 ? (int) (cooldown * (attackDelay / 1000f)) : cooldown;
 	}
@@ -437,19 +427,11 @@ public class SkillTemplate {
 	}
 
 	/**
-	 * 是否含物品飞行值治疗。
-	 * Whether has item FP heal effect.
+	 * 是否不含闪避效果。
+	 * Whether no evade effect is present.
 	 */
-	public boolean hasItemHealFpEffect() {
-		return getEffects() != null && getEffects().isEffectTypePresent(EffectType.PROCFPHEALINSTANT);
-	}
-
-	/**
-	 * 是否含闪避效果。
-	 * Whether has evade effect.
-	 */
-	public boolean hasEvadeEffect() {
-		return getEffects() != null && getEffects().isEffectTypePresent(EffectType.EVADE);
+	public boolean lacksEvadeEffect() {
+		return getEffects() == null || !getEffects().isEffectTypePresent(EffectType.EVADE);
 	}
 
 	/**
@@ -490,24 +472,6 @@ public class SkillTemplate {
 	}
 
 	/**
-	 * 是否含治疗效果。
-	 * Whether has heal effect.
-	 */
-	public boolean hasHealEffect() {
-		return getEffects() != null && (getEffects().isEffectTypePresent(EffectType.HEAL)
-				|| getEffects().isEffectTypePresent(EffectType.HEALINSTANT));
-	}
-
-	/**
-	 * 是否含随机位移效果。
-	 * Whether has random move effect.
-	 * @return 是否随机位移 / has random move
-	 */
-	public boolean hasRandomMoveEffect() {
-		return getEffects() != null && (getEffects().isEffectTypePresent(EffectType.RANDOMMOVELOC));
-	}
-
-	/**
 	 * 获取冷却延迟 ID（无则用 skillId）。
 	 * Gets delay/cooldown id (falls back to skillId).
 	 */
@@ -536,7 +500,7 @@ public class SkillTemplate {
 			if (et.getRandomTime() > 0) {
 				effectDuration -= Rnd.get(et.getRandomTime());
 			}
-			duration = duration > effectDuration ? duration : effectDuration;
+			duration = Math.max(duration, effectDuration);
 		}
 		return duration;
 	}
