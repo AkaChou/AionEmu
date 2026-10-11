@@ -24,9 +24,6 @@ public class CM_FIND_GROUP extends AionClientPacket {
 	private String message;
 	private int groupType;
 	@SuppressWarnings("unused")
-	private int classId;
-	@SuppressWarnings("unused")
-	private int level;
 	private int unk;
 	private int instanceId;
 	private int minMembers;
@@ -74,8 +71,8 @@ public class CM_FIND_GROUP extends AionClientPacket {
 			playerObjId = readD();
 			message = readS();
 			groupType = readC();
-			classId = readC();
-			level = readC();
+			readC();
+			readC();
 			break;
 		case 0x08: // 登记副本队伍 / register InstanceGroup
 			instanceId = readD();
@@ -97,6 +94,7 @@ public class CM_FIND_GROUP extends AionClientPacket {
 		switch (action) {
 		case 0x00:
 		case 0x04:
+		case 0x0A:
 			GameRuntimeServices.findGroupService().sendFindGroups(player, action);
 			break;
 		case 0x01:
@@ -114,9 +112,6 @@ public class CM_FIND_GROUP extends AionClientPacket {
 		case 0x08:
 			GameRuntimeServices.findGroupService().registerInstanceGroup(player, 0x0E, instanceId, message, minMembers,
 					groupType);
-			break;
-		case 0x0A:
-			GameRuntimeServices.findGroupService().sendFindGroups(player, action);
 			break;
 		default:
 			PacketSendUtility.sendPacket(player, new SM_FIND_GROUP(action, playerObjId, unk));

@@ -47,7 +47,7 @@ public class CM_MACRO_CREATE extends AionClientPacket {
 	 */
 	@Override
 	protected void runImpl() {
-		log.debug(String.format("Created Macro #%d: %s", macroPosition, macroXML));
+		log.debug("Created Macro #{}: {}", macroPosition, macroXML);
 
 		PlayerService.addMacro(getConnection().getActivePlayer(), macroPosition, macroXML);
 

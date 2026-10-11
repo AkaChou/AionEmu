@@ -46,11 +46,7 @@ public class LsPacketHandler {
 	 */
 	public void addPacketPrototype(LsClientPacket packetPrototype, State... states) {
 		for (State state : states) {
-			Map<Integer, LsClientPacket> pm = packetPrototypes.get(state);
-			if (pm == null) {
-				pm = new HashMap<>();
-				packetPrototypes.put(state, pm);
-			}
+			Map<Integer, LsClientPacket> pm = packetPrototypes.computeIfAbsent(state, _ -> new HashMap<>());
 			pm.put(packetPrototype.getOpcode(), packetPrototype);
 		}
 	}

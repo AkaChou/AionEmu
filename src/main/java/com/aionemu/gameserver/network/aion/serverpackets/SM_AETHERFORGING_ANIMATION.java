@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.network.aion.serverpackets;
 
-import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 
@@ -17,12 +16,11 @@ public class SM_AETHERFORGING_ANIMATION extends AionServerPacket {
 	/**
 	 * 构造奥德锻造动画包。
 	 * Creates an Aetherforging animation packet.
-	 * @param player 执行锻造的玩家（当前未写入包体） / forging player (not written into the packet body currently)
-	 * recipe id
+	 * @param recipeId 配方 ID / recipe id
 	 * @param barTime 进度条时长 / progress bar duration
 	 * @param type 动画/状态类型 / animation/status type
 	 */
-	public SM_AETHERFORGING_ANIMATION(Player player, int recipeId, int barTime, int type) {
+	public SM_AETHERFORGING_ANIMATION(int recipeId, int barTime, int type) {
 		this.recipeId = recipeId;
 		this.barTime = barTime;
 		this.type = type;

@@ -55,8 +55,7 @@ public class SM_HOUSE_BIDS extends AionServerPacket {
 			writeQ(0);
 		}
 		writeH(houseBids.size());
-		for (int n = 0; n < houseBids.size(); n++) {
-			HouseBidEntry entry = houseBids.get(n);
+		for (HouseBidEntry entry : houseBids) {
 			writeD(entry.getEntryIndex());
 			writeD(entry.getLandId());
 			writeD(entry.getAddress());

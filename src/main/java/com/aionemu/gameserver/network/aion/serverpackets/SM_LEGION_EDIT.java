@@ -83,10 +83,8 @@ public class SM_LEGION_EDIT extends AionServerPacket {
 			writeD(unixTime);
 			break;
 			case 0x07:
-			break;
-            case 0x08:
-			break;
-            case 0x10:
+			case 0x08:
+			case 0x10:
 			break;
 		case 0x0C:
 			writeS(legion.getLegionDescription());

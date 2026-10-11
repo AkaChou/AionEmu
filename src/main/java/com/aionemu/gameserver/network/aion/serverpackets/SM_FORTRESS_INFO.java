@@ -13,12 +13,11 @@ public class SM_FORTRESS_INFO extends AionServerPacket {
 
 	private final int locationId;
 	private final boolean teleportStatus;
-	private int unk;
 
 	protected void writeImpl(AionConnection con) {
 		writeD(1);// 4.3 protocol changed
 		writeD(locationId);
-		writeD(unk);// 4.3 protocol changed
+		writeD(0);// 4.3 protocol changed（未知恒 0 / unknown, always 0）
 		writeC(teleportStatus ? 1 : 0);
 	}
 }

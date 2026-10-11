@@ -40,6 +40,7 @@ public class CM_CHARACTER_PASSKEY extends AionClientPacket {
 				newPasskey = new String(readB(32), StandardCharsets.UTF_16LE);
 			}
 		} catch (Exception e) {
+			// 口令解析失败时保持为空，交由后续校验处理 / keep passkey empty on parse failure; later validation handles it
 		}
 	}
 

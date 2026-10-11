@@ -16,8 +16,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
  */
 public class CM_SHOW_BRAND extends AionClientPacket {
 
-	@SuppressWarnings("unused")
-	private int action;
 	private int brandId;
 	private int targetObjectId;
 
@@ -35,7 +33,7 @@ public class CM_SHOW_BRAND extends AionClientPacket {
 	 */
 	@Override
 	protected void readImpl() {
-		action = readD();
+		readD();
 		brandId = readD();
 		targetObjectId = readD();
 	}

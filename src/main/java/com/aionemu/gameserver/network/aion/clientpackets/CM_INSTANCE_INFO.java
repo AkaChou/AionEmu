@@ -15,8 +15,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 
 public class CM_INSTANCE_INFO extends AionClientPacket {
 
-	@SuppressWarnings("unused")
-	private int unk1, unk2;
 	/**
 	 * 构造该客户端包。
 	 * Constructs this client packet.
@@ -27,6 +25,8 @@ public class CM_INSTANCE_INFO extends AionClientPacket {
 	public CM_INSTANCE_INFO(int opcode, State state, State... restStates) {
 		super(opcode, state, restStates);
 	}
+
+	private int unk1, unk2;
 
 	@Override
 	protected void readImpl() {

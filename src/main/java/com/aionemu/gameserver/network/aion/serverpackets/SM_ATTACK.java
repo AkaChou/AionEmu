@@ -56,7 +56,7 @@ public class SM_ATTACK extends AionServerPacket {
 		writeC((int) (100f * targetCurrHp / targetMaxHp)); // target %hp
 		writeC((int) (100f * attackerCurrHp / attackerMaxHp)); // attacker %hp
 
-		switch (attackList.get(0).getAttackStatus().getId()) { // Counter skills
+		switch (attackList.getFirst().getAttackStatus().getId()) { // Counter skills
 		case 196: // case CRITICAL_BLOCK 4.5
 		case 4: // case BLOCK
 		case 5:
@@ -88,8 +88,8 @@ public class SM_ATTACK extends AionServerPacket {
 		// 从数据包设置计数技能以获得最佳时间同步。 / setting counter skill from packet to have the best synchronization of time
 		// 与客户端 / with client
 		if (target instanceof Player) {
-			if (attackList.get(0).getAttackStatus().isCounterSkill()) {
-				((Player) target).setLastCounterSkill(attackList.get(0).getAttackStatus());
+			if (attackList.getFirst().getAttackStatus().isCounterSkill()) {
+				((Player) target).setLastCounterSkill(attackList.getFirst().getAttackStatus());
 			}
 		}
 		writeH(0);

@@ -58,7 +58,7 @@ public class CM_CREATIVITY_POINTS extends AionClientPacket {
 				if (pcp.getPanelCpType() == PanelCpType.STAT_UP) {
 					if (point <= 255) {
 						GameCreativityServices.creativityStatsService().onEssenceApply(activePlayer, type, plusSize, id, point);
-					} else if (point > 255) {
+					} else {
 						PacketSendUtility.sendBrightYellowMessageOnCenter(activePlayer, "Essence bug detected... Please reset points or relog for solv this issue!");
 					}
 				} else if (pcp.getPanelCpType() == PanelCpType.LEARN_SKILL) {

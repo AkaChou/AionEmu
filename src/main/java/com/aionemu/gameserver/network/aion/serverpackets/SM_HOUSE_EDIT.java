@@ -60,7 +60,7 @@ public class SM_HOUSE_EDIT extends AionServerPacket {
 		}
 		HouseObject<?> obj = player.getHouseRegistry().getObjectByObjId(itemObjectId);
 		if (action == 3) {
-			int templateId = 0;
+			int templateId;
 			int typeId = 0;
 			if (obj == null) {
 				HouseDecoration deco = player.getHouseRegistry().getCustomPartByObjId(itemObjectId);
@@ -95,9 +95,9 @@ public class SM_HOUSE_EDIT extends AionServerPacket {
 			}
 			writeD(0);
 			writeC(typeId);
-			if (obj != null && obj instanceof UseableItemObject) {
+			if (obj instanceof UseableItemObject useable) {
 				writeD(player.getObjectId());
-				((UseableItemObject) obj).writeUsageData(getBuf());
+				useable.writeUsageData(getBuf());
 			}
 		} else if (action == 4) {
 			writeC(action);
@@ -114,11 +114,7 @@ public class SM_HOUSE_EDIT extends AionServerPacket {
 			writeF(z);
 			writeH(rotation);
 			writeD(player.getHouseObjectCooldownList().getReuseDelay(itemObjectId));
-			if (obj.getUseSecondsLeft() > 0) {
-				writeD(obj.getUseSecondsLeft());
-			} else {
-				writeD(0);
-			}
+			writeD(Math.max(obj.getUseSecondsLeft(), 0));
 			Integer color = obj.getColor();
 			writeC(color == null ? 0 : 1);
 			if (color == null) {
@@ -132,8 +128,8 @@ public class SM_HOUSE_EDIT extends AionServerPacket {
 			}
 			writeD(0);
 			writeC(obj.getObjectTemplate().getTypeId());
-			if (obj instanceof UseableItemObject) {
-				((UseableItemObject) obj).writeUsageData(getBuf());
+			if (obj instanceof UseableItemObject useable) {
+				useable.writeUsageData(getBuf());
 			}
 		} else if (action == 7) {
 			writeC(action);

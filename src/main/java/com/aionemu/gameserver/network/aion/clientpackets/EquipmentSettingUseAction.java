@@ -58,23 +58,20 @@ class EquipmentSettingUseAction {
 	static boolean applyAll(List<EquipmentSettingUseAction> actions, EquipmentSettingUseTarget target) {
 		boolean changed = false;
 		boolean switchWeaponSets = shouldSwitchWeaponSets(actions, target);
-		if (switchWeaponSets && !target.canSwitchHands()) {
+		if (switchWeaponSets && target.isSwitchHandsBlocked()) {
 			return false;
 		}
 
 		changed |= unequipCurrentEquipment(actions, target, switchWeaponSets);
 		changed |= applyNonWeaponEquips(actions, target);
+		changed |= applyWeaponEquips(actions, target, ItemSlot.MAIN_OFF_OR_SUB_OFF.getSlotIdMask(), switchWeaponSets);
 		if (switchWeaponSets) {
-			changed |= applyWeaponEquips(actions, target, ItemSlot.MAIN_OFF_OR_SUB_OFF.getSlotIdMask(), true);
 			if (!target.switchHands()) {
 				return changed;
 			}
 			changed = true;
-			changed |= applyWeaponEquips(actions, target, ItemSlot.MAIN_OR_SUB.getSlotIdMask(), false);
-		} else {
-			changed |= applyWeaponEquips(actions, target, ItemSlot.MAIN_OFF_OR_SUB_OFF.getSlotIdMask(), false);
-			changed |= applyWeaponEquips(actions, target, ItemSlot.MAIN_OR_SUB.getSlotIdMask(), false);
 		}
+		changed |= applyWeaponEquips(actions, target, ItemSlot.MAIN_OR_SUB.getSlotIdMask(), false);
 		return changed;
 	}
 
@@ -113,13 +110,13 @@ class EquipmentSettingUseAction {
 		if (switchWeaponSets && isWeaponSlot(action.slot)) {
 			return true;
 		}
-		return !isEquipSatisfied(currentSlot, action.slot);
+		return needsEquip(currentSlot, action.slot);
 	}
 
 	private static boolean applyNonWeaponEquips(List<EquipmentSettingUseAction> actions, EquipmentSettingUseTarget target) {
 		boolean changed = false;
 		for (EquipmentSettingUseAction action : actions) {
-			if (action.action == ACTION_EQUIP && !isWeaponSlot(action.slot) && !isEquipSatisfied(target.getEquippedSlot(action.itemObjectId), action.slot)) {
+			if (action.action == ACTION_EQUIP && !isWeaponSlot(action.slot) && needsEquip(target.getEquippedSlot(action.itemObjectId), action.slot)) {
 				changed |= action.apply(target);
 			}
 		}
@@ -132,7 +129,7 @@ class EquipmentSettingUseAction {
 		Map<Integer, Long> requestedWeaponSlots = getRequestedWeaponSlots(actions, weaponSet);
 		for (Map.Entry<Integer, Long> requestedWeaponSlot : requestedWeaponSlots.entrySet()) {
 			long slot = stageForSwitch ? switchWeaponHands(requestedWeaponSlot.getValue()) : requestedWeaponSlot.getValue();
-			if (!isEquipSatisfied(target.getEquippedSlot(requestedWeaponSlot.getKey()), slot)) {
+			if (needsEquip(target.getEquippedSlot(requestedWeaponSlot.getKey()), slot)) {
 				changed |= target.equipItem(requestedWeaponSlot.getKey(), slot);
 			}
 		}
@@ -143,8 +140,7 @@ class EquipmentSettingUseAction {
 		Map<Integer, Long> requestedWeaponSlots = new LinkedHashMap<>();
 		for (EquipmentSettingUseAction action : actions) {
 			if (action.action == ACTION_EQUIP && isWeaponSlot(action.slot) && (action.slot & weaponSet) != 0) {
-				Long requestedSlot = requestedWeaponSlots.get(action.itemObjectId);
-				requestedWeaponSlots.put(action.itemObjectId, requestedSlot == null ? action.slot : requestedSlot | action.slot);
+				requestedWeaponSlots.merge(action.itemObjectId, action.slot, (a, b) -> a | b);
 			}
 		}
 		return requestedWeaponSlots;
@@ -170,8 +166,12 @@ class EquipmentSettingUseAction {
 				|| isOffHandWeaponSlot(firstSlot) && isMainWeaponSlot(secondSlot));
 	}
 
-	private static boolean isEquipSatisfied(long currentSlot, long requestedSlot) {
-		return currentSlot != 0 && (currentSlot & requestedSlot) == requestedSlot;
+	/**
+	 * 判断物品是否需要（重新）装备：当前未装备或槽位不满足请求掩码。
+	 * Whether the item needs (re-)equipping: not equipped yet or the slot mask is unsatisfied.
+	 */
+	private static boolean needsEquip(long currentSlot, long requestedSlot) {
+		return currentSlot == 0 || (currentSlot & requestedSlot) != requestedSlot;
 	}
 
 	private static boolean isMainWeaponSlot(long slot) {

@@ -5,7 +5,6 @@ import java.util.Collection;
 import lombok.extern.slf4j.Slf4j;
 
 import com.aionemu.gameserver.model.gameobjects.player.MinionCommonData;
-import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 import lombok.RequiredArgsConstructor;
@@ -26,8 +25,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class SM_MINIONS extends AionServerPacket {
 	private final int action;
-	@SuppressWarnings("unused")
-	private int expiredTimeMillis;
 	private int minionSkillPoints;
 	private boolean autoCharge;
 	private MinionCommonData commonData;
@@ -38,7 +35,6 @@ public class SM_MINIONS extends AionServerPacket {
 	private int ItemId;
 	private int slot;
 	private int slot2;
-	Player player;
 	private int addType;
 	private boolean isMaterial;
 	private boolean isloot;
@@ -266,10 +262,6 @@ public class SM_MINIONS extends AionServerPacket {
 				return;
 			}
 			writeD(commonData.getObjectId());
-			// if (player != null && player.getLifeStats().isAlreadyDead()) {
-			// writeC(0);
-			// break;
-			// }
 			writeC(21);
 			break;
 		}

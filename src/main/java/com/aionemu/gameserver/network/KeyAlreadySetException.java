@@ -5,7 +5,6 @@ package com.aionemu.gameserver.network;
  * Runtime exception thrown when {@link Crypt} key is set more than once.
  * @author -Nemesiss-
  */
-@SuppressWarnings("serial")
 public class KeyAlreadySetException extends RuntimeException {
 
 	/**
@@ -14,33 +13,5 @@ public class KeyAlreadySetException extends RuntimeException {
 	 */
 	public KeyAlreadySetException() {
 		super();
-	}
-
-	/**
-	 * 带详情消息的构造。
-	 * Constructs with the specified detail message.
-	 * @param s 详情消息 / detail message
-	 */
-	public KeyAlreadySetException(String s) {
-		super(s);
-	}
-
-	/**
-	 * 带消息与原因的构造。
-	 * Constructs with message and cause.
-	 * @param message exception description
-	 * @param cause cause
-	 */
-	public KeyAlreadySetException(String message, Throwable cause) {
-		super(message, cause);
-	}
-
-	/**
-	 * 带原因的构造。
-	 * Constructs with cause.
-	 * @param cause cause
-	 */
-	public KeyAlreadySetException(Throwable cause) {
-		super(cause);
 	}
 }

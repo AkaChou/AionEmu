@@ -19,8 +19,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 @Slf4j
 public class CM_SUMMON_EMOTION extends AionClientPacket {
 
-	@SuppressWarnings("unused")
-	private int objId;
 
 	private int emotionTypeId;
 
@@ -35,7 +33,7 @@ public class CM_SUMMON_EMOTION extends AionClientPacket {
 
 	@Override
 	protected void readImpl() {
-		objId = readD();
+		readD();
 		emotionTypeId = readC();
 	}
 

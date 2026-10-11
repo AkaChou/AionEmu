@@ -244,7 +244,6 @@ public class CM_DIALOG_SELECT extends AionClientPacket {
 			// 引擎内保持状态/owner/动作门，未认领零副作用（与原静默丢弃等价）。
 			// The carried object is unresolvable: a reward-window confirmation is still routed by quest id
 			// alone (the ownerless retail protocol); every gate stays inside the engine.
-			return;
 		}
 	}
 

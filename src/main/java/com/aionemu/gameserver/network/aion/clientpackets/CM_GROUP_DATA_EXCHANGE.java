@@ -17,8 +17,8 @@ public class CM_GROUP_DATA_EXCHANGE extends AionClientPacket {
 	private int groupType;
 	private int action;
 	private int unk2;
-	private int dataSize;
 	private byte[] data;
+	private int dataSize;
 
 	/**
 	 * 构造客户端包实例。

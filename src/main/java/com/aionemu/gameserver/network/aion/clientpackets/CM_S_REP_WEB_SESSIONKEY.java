@@ -12,7 +12,6 @@ import com.aionemu.gameserver.network.aion.AionConnection.State;
 public class CM_S_REP_WEB_SESSIONKEY extends AionClientPacket {
 
 
-	private int unk;
 	private String text;
 
 	/**
@@ -26,7 +25,7 @@ public class CM_S_REP_WEB_SESSIONKEY extends AionClientPacket {
 
 	@Override
 	protected void readImpl() {
-		unk = readC();
+		readC();
 		text = readS();
 	}
 

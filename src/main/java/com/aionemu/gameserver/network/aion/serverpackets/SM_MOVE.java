@@ -75,7 +75,7 @@ public class SM_MOVE extends AionServerPacket {
 			this.writeF(this.creature.getZ());
 			this.writeC(this.creature.getHeading());
 			this.writeC(moveData.getMovementMask());
-			if (moveData instanceof PlayableMoveController playermoveData) {
+			if (moveData instanceof PlayableMoveController<?> playermoveData) {
 				if ((moveData.getMovementMask() & 0xFFFFFFC0) == -64) {
 					if ((moveData.getMovementMask() & 0x20) == 0) {
 						this.writeF(playermoveData.vectorX);

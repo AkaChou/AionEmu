@@ -15,10 +15,6 @@ public class CM_MOVE_IN_AIR extends AionClientPacket {
 
 	float x, y, z;
 	int distance;
-	@SuppressWarnings("unused")
-	private byte locationId;
-	@SuppressWarnings("unused")
-	private int worldId;
 	/**
 	 * 构造该客户端包。
 	 * Constructs this client packet.
@@ -35,11 +31,11 @@ public class CM_MOVE_IN_AIR extends AionClientPacket {
 	 */
 	@Override
 	protected void readImpl() {
-		worldId = readD();
+		readD();
 		x = readF();
 		y = readF();
 		z = readF();
-		locationId = (byte) readC();
+		readC();
 		distance = readD();
 	}
 

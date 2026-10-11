@@ -13,15 +13,8 @@ import com.aionemu.gameserver.questEngine.model.QuestEnv;
  * Client packet notifying that a cutscene/movie finished; triggers quest and instance handlers.
  */
 public class CM_PLAY_MOVIE_END extends AionClientPacket {
-	@SuppressWarnings("unused")
-	private int type;
-	@SuppressWarnings("unused")
 	private int targetObjectId;
-	@SuppressWarnings("unused")
-	private int dialogId;
 	private int movieId;
-	@SuppressWarnings("unused")
-	private int unk;
 
 	/**
 	 * packet opcode
@@ -34,11 +27,11 @@ public class CM_PLAY_MOVIE_END extends AionClientPacket {
 
 	@Override
 	protected void readImpl() {
-		type = readC();
+		readC();
 		targetObjectId = readD();
-		dialogId = readD();
+		readD();
 		movieId = readH();
-		unk = readD();
+		readD();
 	}
 
 	@Override

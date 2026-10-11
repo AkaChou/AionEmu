@@ -28,7 +28,6 @@ public class SM_CREATE_CHARACTER extends PlayerInfo {
 	/** 名称已被保留 / The name is already reserved */
 	public static final int RESPONSE_NAME_RESERVED = 11;
 	/** 无法在同一服务器创建其他种族角色 / You cannot create characters of other races in the same server */
-	public static final int RESPONSE_OTHER_RACE = 12;
 	public static final int RESPONSE_CREATE_NEW = 22;
 
 	/**

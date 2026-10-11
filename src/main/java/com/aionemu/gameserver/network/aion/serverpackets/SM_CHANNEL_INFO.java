@@ -11,8 +11,8 @@ import com.aionemu.gameserver.world.WorldPosition;
  * Server packet synchronizing current map channel info (current channel and total instance/channel count).
  */
 public class SM_CHANNEL_INFO extends AionServerPacket {
-	int instanceCount = 0;
-	int currentChannel = 0;
+	int instanceCount;
+	int currentChannel;
 
 	/**
 	 * 根据玩家世界坐标构造频道信息包。

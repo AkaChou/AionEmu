@@ -65,7 +65,7 @@ public class SM_DIALOG_WINDOW extends AionServerPacket {
 		writeH(0);
 		if (this.dialogID == DialogPage.MAIL.id()) {
 			AionObject object = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findVisibleObject(targetObjectId);
-			if (object != null && object instanceof Npc znpc) {
+			if (object instanceof Npc znpc) {
 				if (znpc.getNpcId() == 798100 || znpc.getNpcId() == 798101) {
 					player.getMailbox().mailBoxState = MailboxState.EXPRESS;
 					writeH(2);
@@ -77,7 +77,7 @@ public class SM_DIALOG_WINDOW extends AionServerPacket {
 			}
 		} else if (this.dialogID == DialogPage.TOWN_CHALLENGE_TASK.id()) {
 			AionObject object = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findVisibleObject(targetObjectId);
-			if (object != null && object instanceof Npc npc) {
+			if (object instanceof Npc npc) {
 				if (npc.getNpcId() == 205770 || npc.getNpcId() == 730677 || npc.getNpcId() == 730679) {
 					int townId = 0;
 					MapRegion region = npc.getPosition().getMapRegion();

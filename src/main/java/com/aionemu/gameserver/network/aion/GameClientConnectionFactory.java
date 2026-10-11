@@ -3,7 +3,6 @@ package com.aionemu.gameserver.network.aion;
 
 import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
-import java.io.IOException;
 
 import com.aionemu.commons.network.AConnection;
 import com.aionemu.commons.network.ConnectionTransport;
@@ -45,10 +44,9 @@ public class GameClientConnectionFactory implements NettyConnectionFactory {
 	 * Creates an AionConnection for the inbound transport; closes and returns null on flood reject.
 	 * @param transport 连接传输 / connection transport
 	 * @return 新连接或 null / new connection or null
-	 * @throws IOException 创建失败 / if creation fails
-	 */
+     */
 	@Override
-	public AConnection create(ConnectionTransport transport) throws IOException {
+	public AConnection create(ConnectionTransport transport) {
 		if (NetworkConfig.ENABLE_FLOOD_CONNECTIONS) {
 			final Result isFlooding = floodAcceptor.isFlooding(transport.getIP(), true);
 			switch (isFlooding) {

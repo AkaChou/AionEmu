@@ -42,7 +42,7 @@ public class CM_MACRO_DELETE extends AionClientPacket {
 	 */
 	@Override
 	protected void runImpl() {
-		log.debug("Request to delete macro #" + macroPosition);
+		log.debug("Request to delete macro #{}", macroPosition);
 
 		PlayerService.removeMacro(getConnection().getActivePlayer(), macroPosition);
 

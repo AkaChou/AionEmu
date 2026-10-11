@@ -11,9 +11,9 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
  * @author Ranastic
  */
 public class SM_A_STATION extends AionServerPacket {
-	private boolean isFirst = false;
-	private int currentServer = 0;
-	private int newServerId = 0;
+	private boolean isFirst;
+	private int currentServer;
+	private int newServerId;
 
 	/**
 	 * @param currentServer 当前服务器 ID / current server id

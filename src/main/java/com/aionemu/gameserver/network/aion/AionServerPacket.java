@@ -31,7 +31,7 @@ public abstract class AionServerPacket extends BaseServerPacket {
 	 * Writes obfuscated opcode and two additional bytes.
 	 * @param value 原始操作码 / raw opcode
 	 */
-	private final void writeOP(int value) {
+	private void writeOP(int value) {
 		int op = Crypt.encodeOpcodec(value);
 		buf.putShort((short) (op));
         buf.put(Crypt.staticServerPacketCode);

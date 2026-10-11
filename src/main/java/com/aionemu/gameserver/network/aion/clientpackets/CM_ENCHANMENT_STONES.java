@@ -24,7 +24,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 @Slf4j
 public class CM_ENCHANMENT_STONES extends AionClientPacket {
 
-	private int npcObjId;
 	private int slotNum;
 	private int actionType;
 	private int targetFusedSlot;
@@ -63,7 +62,7 @@ public class CM_ENCHANMENT_STONES extends AionClientPacket {
 			slotNum = readC();
 			readC();
 			readH();
-			npcObjId = readD();
+			readD();
 			break;
 		case 4:
 			stoneUniqueId = readD();

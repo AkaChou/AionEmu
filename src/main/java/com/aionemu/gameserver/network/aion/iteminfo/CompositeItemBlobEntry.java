@@ -56,7 +56,7 @@ public class CompositeItemBlobEntry extends ItemBlobEntry {
 				}
 			}
 			if (item.getFusionedItemTemplate().getSpecialSlots() > 0) {
-				if (ancientStones.size() > 0) {
+				if (!ancientStones.isEmpty()) {
 					for (ManaStone ancientStone : ancientStones) {
 						if (count == 6) {
 							break;

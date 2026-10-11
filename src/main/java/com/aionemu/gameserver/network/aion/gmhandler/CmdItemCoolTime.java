@@ -1,7 +1,6 @@
 package com.aionemu.gameserver.network.aion.gmhandler;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
 
@@ -67,10 +66,8 @@ public class CmdItemCoolTime extends AbstractGMHandler {
 		PacketSendUtility.sendPacket(playerT, SM_ITEM_COOLDOWN.load(playerT.getItemCoolDowns()));
 
 		if (playerT.getHouseRegistry() != null
-				&& playerT.getHouseObjectCooldownList().getHouseObjectCooldowns().size() > 0) {
-			Iterator<HouseObject<?>> iter = playerT.getHouseRegistry().getObjects().iterator();
-			while (iter.hasNext()) {
-				HouseObject<?> obj = iter.next();
+				&& !playerT.getHouseObjectCooldownList().getHouseObjectCooldowns().isEmpty()) {
+			for (HouseObject<?> obj : playerT.getHouseRegistry().getObjects()) {
 				if (obj instanceof UseableItemObject) {
 					if (!playerT.getHouseObjectCooldownList().isCanUseObject(obj.getObjectId())) {
 						playerT.getHouseObjectCooldownList().addHouseObjectCooldown(obj.getObjectId(), 0);

@@ -34,15 +34,8 @@ public class SM_HOUSE_REGISTRY extends AionServerPacket {
 				int templateId = obj.getObjectTemplate().getTemplateId();
 				writeD(templateId);
 				writeD(player.getHouseObjectCooldownList().getReuseDelay(obj.getObjectId()));
-				if (obj.getUseSecondsLeft() > 0) {
-					writeD(obj.getUseSecondsLeft());
-				} else {
-					writeD(0);
-				}
-				Integer color = null;
-				if (obj != null) {
-					color = obj.getColor();
-				}
+				writeD(Math.max(obj.getUseSecondsLeft(), 0));
+				Integer color = obj.getColor();
 				if (color != null && color > 0) {
 					writeC(1);
 					writeC((color & 0xFF0000) >> 16);

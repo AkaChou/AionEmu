@@ -19,10 +19,10 @@ interface EquipmentSettingUseTarget {
 	boolean unEquipItem(int itemObjectId, long slot);
 
 	/**
-	 * 是否允许切换主副手。
-	 * Whether hand-switch is allowed.
+	 * 是否禁止切换主副手。
+	 * Whether hand-switch is blocked.
 	 */
-	boolean canSwitchHands();
+	boolean isSwitchHandsBlocked();
 
 	/**
 	 * 切换主副手。

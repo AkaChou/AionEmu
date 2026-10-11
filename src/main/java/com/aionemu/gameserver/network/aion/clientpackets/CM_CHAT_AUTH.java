@@ -18,10 +18,8 @@ public class CM_CHAT_AUTH extends AionClientPacket {
 
 	@Override
 	protected void readImpl() {
-		@SuppressWarnings("unused")
-		int objectId = readD();
-		@SuppressWarnings("unused")
-		byte[] macAddress = readB(6);
+		readD();
+		readB(6);
 	}
 
 	@Override

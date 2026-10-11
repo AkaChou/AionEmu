@@ -46,7 +46,7 @@ public class CM_TELEPORT_SELECT extends AionClientPacket {
 			return;
 		}
 		AionObject obj = player.getKnownList().getObject(targetObjectId);
-		if (obj != null && obj instanceof Npc npc) {
+		if (obj instanceof Npc npc) {
 			int npcId = npc.getNpcId();
 			if (!MathUtil.isInRange(npc, player, npc.getObjectTemplate().getTalkDistance() + 2)) {
 				return;
@@ -58,8 +58,8 @@ public class CM_TELEPORT_SELECT extends AionClientPacket {
 				log.warn(I18n.get("log.aa4841d68464", locId, npcId));
 			}
 		} else {
-			log.debug("player " + player.getName() + " requested npc "
-					+ targetObjectId + " for teleportation " + locId + ", but he doesnt have such npc in knownlist");
+			log.debug("player {} requested npc {} for teleportation {}, but he doesnt have such npc in knownlist",
+					player.getName(), targetObjectId, locId);
 		}
 	}
 }

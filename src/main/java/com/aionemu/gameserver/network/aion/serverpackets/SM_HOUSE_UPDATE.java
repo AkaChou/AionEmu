@@ -52,8 +52,8 @@ public class SM_HOUSE_UPDATE extends AionServerPacket {
 		// 显示/隐藏所有者名称。 / Show/Hide Owner Name
 		writeC(house.getNoticeState().getPacketValue());
 		byte[] signNotice = house.getSignNotice();
-		for (int i = 0; i < signNotice.length; i++) {
-			writeC(signNotice[i]);
+		for (byte signByte : signNotice) {
+			writeC(signByte);
 		}
 		for (int i = signNotice.length; i < House.NOTICE_LENGTH; i++) {
 			writeC(0);

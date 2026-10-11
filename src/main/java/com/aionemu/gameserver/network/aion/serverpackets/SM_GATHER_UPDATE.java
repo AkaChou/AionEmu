@@ -60,27 +60,10 @@ public class SM_GATHER_UPDATE extends AionServerPacket {
 			writeH(0); // 0x24
 			break;
 		}
-		case 1: {
-			writeQ(con.getActivePlayer().getRates().getGatheringCountRate());
-			writeD(success);
-			writeD(failure);
-			writeD(700); // unk timer??
-			writeD(1200); // unk timer??
-			writeD(0); // unk timer??writeD(700);
-			writeH(0);
-			break;
-		}
-		case 2: {
-			writeQ(con.getActivePlayer().getRates().getGatheringCountRate());
-			writeD(success);
-			writeD(failure);
-			writeD(700);// unk timer??
-			writeD(1200); // unk timer??
-			writeD(0); // unk timer??writeD(700);
-			writeH(0);
-			break;
-		}
-		case 3: {
+		case 1:
+		case 2:
+		case 3:
+		case 6: {
 			writeQ(con.getActivePlayer().getRates().getGatheringCountRate());
 			writeD(success);
 			writeD(failure);
@@ -98,16 +81,6 @@ public class SM_GATHER_UPDATE extends AionServerPacket {
 			writeD(700);// unk timer??
 			writeD(1200); // unk timer??
 			writeD(1330080); // unk timer??writeD(700);
-			writeH(0);
-			break;
-		}
-		case 6: {
-			writeQ(con.getActivePlayer().getRates().getGatheringCountRate());
-			writeD(success);
-			writeD(failure);
-			writeD(700); // unk timer??
-			writeD(1200); // unk timer??
-			writeD(0); // unk timer??writeD(700);
 			writeH(0);
 			break;
 		}

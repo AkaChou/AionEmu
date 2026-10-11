@@ -5,7 +5,6 @@ import com.aionemu.gameserver.services.instance.InstanceService;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldMap;
-import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.WorldMapType;
 
 /**
@@ -428,28 +427,9 @@ public class CmdTeleportTo extends AbstractGMHandler {
 	private static void goTo(final Player admin, int worldId, float x, float y, float z) {
 		WorldMap destinationMap = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(worldId);
 		if (destinationMap.isInstanceType()) {
-			TeleportService2.teleportTo(admin, worldId, getInstanceId(worldId, admin), x, y, z);
+			TeleportService2.teleportTo(admin, worldId, InstanceService.resolveInstanceId(worldId, admin), x, y, z);
 		} else {
 			TeleportService2.teleportTo(admin, worldId, x, y, z);
 		}
-	}
-
-	/**
-	 * 获取或注册目标地图的实例 ID。
-	 * Returns or registers an instance id for the destination map.
-	 * @param worldId 世界地图 ID / world map id
-	 * @param admin 管理员 / the admin
-	 * @return 实例 ID / instance id
-	 */
-	private static int getInstanceId(int worldId, Player admin) {
-		if (admin.getWorldId() == worldId) {
-			WorldMapInstance registeredInstance = InstanceService.getRegisteredInstance(worldId, admin.getObjectId());
-			if (registeredInstance != null) {
-				return registeredInstance.getInstanceId();
-			}
-		}
-		WorldMapInstance newInstance = InstanceService.getNextAvailableInstance(worldId);
-		InstanceService.registerPlayerWithInstance(newInstance, admin);
-		return newInstance.getInstanceId();
 	}
 }

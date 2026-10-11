@@ -11,8 +11,6 @@ import com.aionemu.gameserver.network.aion.AionConnection.State;
  * Client packet for registering an item on the broker.
  */
 public class CM_REGISTER_BROKER_ITEM extends AionClientPacket {
-	@SuppressWarnings("unused")
-	private int brokerId;
 	private int itemUniqueId;
 	private long PricePerItem;
 	private long itemCount;
@@ -29,7 +27,7 @@ public class CM_REGISTER_BROKER_ITEM extends AionClientPacket {
 
 	@Override
 	protected void readImpl() {
-		this.brokerId = readD();
+		readD();
 		this.itemUniqueId = readD();
 		this.PricePerItem = readQ();
 		this.itemCount = readQ();

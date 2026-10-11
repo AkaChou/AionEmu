@@ -19,14 +19,6 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public final class FloodManager {
 	/**
-	 * 错误模式分类（预留）。
-	 * Error mode categories (reserved).
-	 */
-	public enum ErrorMode {
-		INVALID_OPCODE, BUFFER_UNDER_FLOW, BUFFER_OVER_FLOW, FAILED_READING, FAILED_RUNNING
-	}
-
-	/**
 	 * 洪泛过滤阈值：警告上限、拒绝上限、统计 tick 数。
 	 * Flood filter thresholds: warn limit, reject limit, tick window.
 	 */
@@ -193,7 +185,7 @@ public final class FloodManager {
 		}
 		_tickAmount = max;
 
-		NetFlusher.add(() -> flush(), 60000);
+		NetFlusher.add(this::flush, 60000);
 	}
 
 	/**

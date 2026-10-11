@@ -48,7 +48,7 @@ public class SM_INVENTORY_ADD_ITEM extends AionServerPacket {
 	protected void writeImpl(AionConnection con) {
 		int mask = addType.getMask();
 		if (addType == ItemAddType.ITEM_COLLECT && items.size() == 1
-				&& items.get(0).getEquipmentSlot() != ItemStorage.FIRST_AVAILABLE_SLOT) {
+				&& items.getFirst().getEquipmentSlot() != ItemStorage.FIRST_AVAILABLE_SLOT) {
 			mask = ItemAddType.PARTIAL_WITH_SLOT.getMask();
 		}
 		writeC(mask);

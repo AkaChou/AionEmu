@@ -77,7 +77,6 @@ public class SM_GROUP_MEMBER_INFO extends AionServerPacket {
 		switch (event) {
 		case MOVEMENT:
 		case DISCONNECTED:
-			break;
 		case LEAVE:
 			break;
 		case ENTER_OFFLINE:

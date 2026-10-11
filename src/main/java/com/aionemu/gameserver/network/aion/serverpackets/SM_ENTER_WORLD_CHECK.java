@@ -14,7 +14,7 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class SM_ENTER_WORLD_CHECK extends AionServerPacket {
 
-	private byte msg = 0x00;
+	private byte msg;
 
 	@Override
 	protected void writeImpl(AionConnection con) {

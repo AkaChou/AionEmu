@@ -42,8 +42,8 @@ public class CM_BLOCK_DEL extends AionClientPacket {
 			sendPacket(SM_SYSTEM_MESSAGE.STR_BUDDYLIST_NOT_IN_LIST);
 		} else {
 			if (!SocialService.deleteBlockedUser(activePlayer, target.getObjId())) {
-				log.debug("Could not unblock " + targetName + " from " + activePlayer.getName()
-						+ " blocklist. Check database setup.");
+				log.debug("Could not unblock {} from {} blocklist. Check database setup.", targetName,
+						activePlayer.getName());
 			}
 		}
 	}

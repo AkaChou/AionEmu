@@ -62,13 +62,13 @@ public class CM_HOUSE_TELEPORT extends AionClientPacket {
 		if (player1 == null || !player1.isOnline()) {
 			return;
 		}
-		House house = null;
+		House house;
 		if (actionId == 1) {
 			playerId2 = playerId1;
 		} else if (actionId == 3) {
 			List<Integer> relationIds = new ArrayList<>();
 			Iterator<Friend> friends = player1.getFriendList().iterator();
-			int address = 0;
+			int address;
 			while (friends.hasNext()) {
 				int friendId = friends.next().getOid();
 				address = GameHousingServices.housingService().getPlayerAddress(friendId);
@@ -101,7 +101,7 @@ public class CM_HOUSE_TELEPORT extends AionClientPacket {
 					}
 				}
 			}
-			if (relationIds.size() == 0) {
+			if (relationIds.isEmpty()) {
 				PacketSendUtility.sendPacket(player1, SM_SYSTEM_MESSAGE.STR_MSG_NO_RELATIONSHIP_RECENTLY);
 				return;
 			}
@@ -111,8 +111,8 @@ public class CM_HOUSE_TELEPORT extends AionClientPacket {
 			return;
 		}
 		house = GameHousingServices.housingService().getPlayerStudio(playerId2);
-		HouseAddress address = null;
-		int instanceId = 0;
+		HouseAddress address;
+		int instanceId;
 		if (house != null) {
 			address = house.getAddress();
 			WorldMapInstance instance = InstanceService.getPersonalInstance(address.getMapId(), playerId2);

@@ -102,11 +102,12 @@ public class SM_PET extends AionServerPacket {
 	}
 
 	/**
-	 * 欢呼功能开关（actionId=13, subType=5）。
-	 * Cheer function toggle (actionId=13, subType=5).
+	 * 欢呼功能开关（actionId=13, subType=5）。后两个形参为协议占位，用于与拾取开关签名区分。
+	 * Cheer function toggle (actionId=13, subType=5). The two trailing params are protocol placeholders
+	 * keeping this signature distinct from the loot toggle.
 	 * @param isCheering 是否欢呼中 / whether cheering is active
-	 * @param what 保留参数 / reserved
-	 * reserved
+	 * @param what 保留占位 / reserved placeholder
+	 * @param wahtwaht 保留占位 / reserved placeholder
 	 */
 	public SM_PET(boolean isCheering, int what, int wahtwaht) {
 		this.actionId = 13;
@@ -164,7 +165,7 @@ public class SM_PET extends AionServerPacket {
 
 	@Override
 	protected void writeImpl(AionConnection con) {
-		PetTemplate petTemplate = null;
+		PetTemplate petTemplate;
 		writeH(actionId);
 		switch (actionId) {
 		case 0:

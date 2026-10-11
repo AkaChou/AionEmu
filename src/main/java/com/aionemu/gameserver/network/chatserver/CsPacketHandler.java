@@ -41,11 +41,7 @@ public class CsPacketHandler {
 	 */
 	public void addPacketPrototype(CsClientPacket packetPrototype, State... states) {
 		for (State state : states) {
-			Map<Integer, CsClientPacket> pm = packetPrototypes.get(state);
-			if (pm == null) {
-				pm = new HashMap<>();
-				packetPrototypes.put(state, pm);
-			}
+			Map<Integer, CsClientPacket> pm = packetPrototypes.computeIfAbsent(state, _ -> new HashMap<>());
 			pm.put(packetPrototype.getOpcode(), packetPrototype);
 		}
 	}

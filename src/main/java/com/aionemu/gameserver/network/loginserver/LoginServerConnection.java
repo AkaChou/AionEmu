@@ -109,7 +109,7 @@ public class LoginServerConnection extends AConnection {
 	@Override
 	public boolean processData(ByteBuffer data) {
 		LsClientPacket pck = lsPacketHandler.handle(data, this);
-		log.debug("received packet: " + pck);
+		log.debug("received packet: {}", pck);
 
 		if (pck != null && pck.read()) {
 			GameThreadPoolServices.threadPoolManager().executeLsPacket(pck);
@@ -173,7 +173,7 @@ public class LoginServerConnection extends AConnection {
 			if (isWriteDisabled()) {
 				return;
 			}
-			log.debug("sending packet: " + bp);
+			log.debug("sending packet: {}", bp);
 
 			sendMsgQueue.addLast(bp);
 			enableWriteInterest();
@@ -191,7 +191,7 @@ public class LoginServerConnection extends AConnection {
 			if (isWriteDisabled()) {
 				return;
 			}
-			log.debug("sending packet: " + closePacket + " and closing connection after that.");
+			log.debug("sending packet: {} and closing connection after that.", closePacket);
 
 			pendingClose = true;
 			isForcedClosing = forced;

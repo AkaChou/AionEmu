@@ -103,8 +103,8 @@ public class CM_OBJECT_SEARCH extends AionClientPacket {
 		if (searchResult == null) {
 			return;
 		}
-		sendPacket(new SM_SHOW_NPC_ON_MAP(searchNpcId, searchResult.getWorldId(), searchResult.getSpot().getX(),
-				searchResult.getSpot().getY(), searchResult.getSpot().getZ()));
+		sendPacket(new SM_SHOW_NPC_ON_MAP(searchNpcId, searchResult.worldId(), searchResult.spot().getX(),
+				searchResult.spot().getY(), searchResult.spot().getZ()));
 	}
 
 	/**
@@ -359,7 +359,7 @@ public class CM_OBJECT_SEARCH extends AionClientPacket {
 		}
 		List<SpawnSearchResult> filtered = new ArrayList<>();
 		for (SpawnSearchResult loc : locations) {
-			WorldType type = worldTypeProvider.apply(loc.getWorldId());
+			WorldType type = worldTypeProvider.apply(loc.worldId());
 			if (race == Race.ELYOS && type == WorldType.ASMODAE) {
 				continue;
 			}
@@ -394,8 +394,8 @@ public class CM_OBJECT_SEARCH extends AionClientPacket {
 			SpawnSearchResult location) {
 		for (Npc npc : npcs) {
 			if (!isLivingNpc(npc, npcId)
-				|| npc.getWorldId() != location.getWorldId() || npc.getSpawn() == null
-				|| !sameLocation(npc, location.getSpot())) {
+				|| npc.getWorldId() != location.worldId() || npc.getSpawn() == null
+				|| !sameLocation(npc, location.spot())) {
 				continue;
 			}
 			return npc;

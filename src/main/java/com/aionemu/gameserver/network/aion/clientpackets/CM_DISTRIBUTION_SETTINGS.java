@@ -48,9 +48,6 @@ public class CM_DISTRIBUTION_SETTINGS extends AionClientPacket {
 		unk1 = readD();
 		lootrul = readD();
 		switch (lootrul) {
-		case 0:
-			lootrules = LootRuleType.FREEFORALL;
-			break;
 		case 1:
 			lootrules = LootRuleType.ROUNDROBIN;
 			break;
@@ -71,9 +68,6 @@ public class CM_DISTRIBUTION_SETTINGS extends AionClientPacket {
 		unk2 = readD();
 
 		switch (autodistr) {
-		case 0:
-			autodistribution = LootDistribution.NORMAL;
-			break;
 		case 2:
 			autodistribution = LootDistribution.ROLL_DICE;
 			break;

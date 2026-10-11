@@ -27,8 +27,6 @@ public class CM_SELECT_ITEM extends AionClientPacket
 
 	private int uniqueItemId;
 	private int index;
-	@SuppressWarnings("unused")
-	private int unk;
 
 	/**
 	 * packet opcode
@@ -44,7 +42,7 @@ public class CM_SELECT_ITEM extends AionClientPacket
 	protected void readImpl()
 	{
 		this.uniqueItemId = readD();
-		this.unk = readD();
+		readD();
 		this.index = readC();
 
 	}

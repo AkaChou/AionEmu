@@ -144,17 +144,7 @@ public class SM_FIND_GROUP extends AionServerPacket {
 			writeH(groupSize);// size
 			writeH(groupSize);// size
 			writeD(lastUpdate);// systemcurrentimemillis
-			for (FindGroup findGroup : findGroups) {
-				writeD(0);// groupId?
-				writeD(findGroup.getInstanceId());// instanceId
-				writeD(findGroup.getObjectId());// playerObjId
-				writeD(findGroup.getMinLevel());// playerLevel
-				writeD(1);// 未知 / unk
-				writeH(1);// 未知 / unk
-				writeC(findGroup.getGroupType());// groupType?
-				writeC(findGroup.getClassId());// classId?
-				writeS(findGroup.getName());// writerName
-			}
+			writeFindGroupEntries();
 		case 0x16:
 			writeD(0);// GroupEntryId
 			writeD(0);// instanceId
@@ -163,22 +153,30 @@ public class SM_FIND_GROUP extends AionServerPacket {
 			writeD(0);// GroupObjId
 			writeD(0);// instanceId
 			writeC(0);// classId?
-			for (FindGroup findGroup : findGroups) {
-				writeD(0);// GroupRegisteredId
-				writeD(findGroup.getInstanceId());// instanceId
-				writeD(findGroup.getObjectId());// playerObjId
-				writeD(findGroup.getMinLevel());// playerLevel
-				writeD(1);// 未知 / unk
-				writeH(1);// 未知 / unk
-				writeC(findGroup.getGroupType());// groupType?
-				writeC(findGroup.getClassId());// classId?
-				writeS(findGroup.getName());// writerName
-			}
+			writeFindGroupEntries();
 			break;
 		case 0x1A:
 			writeH(1);// 未知 / unk
 			writeD(instanceId);
 			break;
+		}
+	}
+
+	/**
+	 * 写入单个招募条目的公共字段段（0x10/0x18 两个响应共用）。
+	 * Writes the common per-entry fields shared by responses 0x10/0x18.
+	 */
+	private void writeFindGroupEntries() {
+		for (FindGroup findGroup : findGroups) {
+			writeD(0);// GroupRegisteredId / groupId?
+			writeD(findGroup.getInstanceId());// instanceId
+			writeD(findGroup.getObjectId());// playerObjId
+			writeD(findGroup.getMinLevel());// playerLevel
+			writeD(1);// 未知 / unk
+			writeH(1);// 未知 / unk
+			writeC(findGroup.getGroupType());// groupType?
+			writeC(findGroup.getClassId());// classId?
+			writeS(findGroup.getName());// writerName
 		}
 	}
 }

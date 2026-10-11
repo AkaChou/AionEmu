@@ -49,7 +49,7 @@ public class PacketLoggerService {
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean /
 	 *         when no provider or bean is available
 	 */
-	public static final PacketLoggerService getInstance() {
+	public static PacketLoggerService getInstance() {
 		ObjectProvider<PacketLoggerService> provider = instanceProvider;
 		PacketLoggerService provided = provider == null ? null : provider.getIfAvailable();
 		if (provided == null) {

@@ -90,13 +90,13 @@ public class CM_EQUIPMENT_SETTING_USE extends AionClientPacket {
         }
 
         @Override
-        public boolean canSwitchHands() {
-            return !player.getController().hasTask(TaskId.ITEM_USE) || player.getController().getTask(TaskId.ITEM_USE).isDone();
+        public boolean isSwitchHandsBlocked() {
+            return player.getController().hasTask(TaskId.ITEM_USE) && !player.getController().getTask(TaskId.ITEM_USE).isDone();
         }
 
         @Override
         public boolean switchHands() {
-            if (!canSwitchHands()) {
+            if (isSwitchHandsBlocked()) {
                 PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_CANT_EQUIP_ITEM_IN_ACTION);
                 return false;
             }

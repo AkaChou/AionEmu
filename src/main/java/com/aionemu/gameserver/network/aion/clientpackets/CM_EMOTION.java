@@ -193,7 +193,7 @@ public class CM_EMOTION extends AionClientPacket {
 		case START_SPRINT:
 			int Fp = player.ride.getCostFp();
 			if (player.getSkillList().isSkillPresent(10968)) {
-				Fp *= 0.70f;
+				Fp = (int) (Fp * 0.70f);
 			}
 			if (!player.isInPlayerMode(PlayerMode.RIDE) || player.getLifeStats().getCurrentFp() < Fp
 					|| player.isInState(CreatureState.FLYING) || !player.ride.canSprint()) {
@@ -220,7 +220,7 @@ public class CM_EMOTION extends AionClientPacket {
 		return emotionType != EmotionType.SELECT_TARGET && (emotionType != EmotionType.JUMP || !noJumpCancel);
 	}
 
-	private final int getTargetObjectId(Player player) {
+	private int getTargetObjectId(Player player) {
 		int target = player.getTarget() == null ? 0 : player.getTarget().getObjectId();
 		return target != 0 ? target : this.targetObjectId;
 	}

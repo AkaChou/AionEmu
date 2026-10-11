@@ -23,7 +23,6 @@ public class CM_CASTSPELL extends AionClientPacket {
 	private int targetObjectId;
 	private int hitTime;
 	private int level;
-	private int unk;
 
 	public CM_CASTSPELL(int opcode, State state, State... restStates) {
 		super(opcode, state, restStates);
@@ -63,7 +62,7 @@ public class CM_CASTSPELL extends AionClientPacket {
 			break;
 		}
 		hitTime = readH();
-		unk = readD();
+		readD();
 	}
 
 	@Override

@@ -22,15 +22,12 @@ public class CM_LUNA_SHOP extends AionClientPacket {
 
 	private int actionId;
 	private int indun_id;
-	private int indun_unk;
 	private int recipe_id;
 	private int material_item_id;
 	private long material_item_count;
 	private int teleportId;
 	private int slot;
 	private int ItemObjId;
-	@SuppressWarnings("unused")
-	private int lunaCost;
 	/**
 	 * 构造该客户端包。
 	 * Constructs this client packet.
@@ -51,7 +48,7 @@ public class CM_LUNA_SHOP extends AionClientPacket {
 		switch (actionId) {
 		case 0: // Taki 的任务传送 / Taki's Missions Teleport.
 			indun_id = readD();
-			indun_unk = readC();
+			readC(); // indun_unk
 			break;
 		case 2: // Karunerk 的工坊 / Karunerk's Workshop.
 			recipe_id = readD();
@@ -75,7 +72,7 @@ public class CM_LUNA_SHOP extends AionClientPacket {
 		case 11: // 修改外观 / Modify appearance
 			slot = readC();
 			ItemObjId = readD();
-			lunaCost = readC();
+			readC(); // lunaCost
 			break;
 		case 12: // 打开宝箱 / Open Chest.
 			break;
@@ -110,7 +107,7 @@ public class CM_LUNA_SHOP extends AionClientPacket {
 						true);
 				return;
 			} else {
-				GameEventBootstrapServices.lunaShopService().takiAdventureTeleport(player, indun_unk, indun_id);
+				GameEventBootstrapServices.lunaShopService().takiAdventureTeleport(player, indun_id);
 			}
 			break;
 		case 2: // Karunerk 的工坊 / Karunerk's Workshop

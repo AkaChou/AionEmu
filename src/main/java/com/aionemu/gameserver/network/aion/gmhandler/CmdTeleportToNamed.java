@@ -32,7 +32,7 @@ public class CmdTeleportToNamed extends AbstractGMHandler {
 		int npcId = 0;
 		String message = "";
 		try {
-			npcId = Integer.valueOf(params);
+			npcId = Integer.parseInt(params);
 		} catch (ArrayIndexOutOfBoundsException e) {
 			onFail(admin, e.getMessage());
 		} catch (NumberFormatException e) {
@@ -48,7 +48,7 @@ public class CmdTeleportToNamed extends AbstractGMHandler {
 		}
 
 		if (npcId > 0) {
-			if (!message.equals(""))
+			if (!message.isEmpty())
 				message = "Teleporting to Npc: " + npcId + "\n" + message;
 			else
 				message = "Teleporting to Npc: " + npcId;

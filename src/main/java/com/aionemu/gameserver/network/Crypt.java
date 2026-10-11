@@ -19,7 +19,7 @@ public class Crypt {
 	 * 服务端包第二字节必须等于该静态码。
 	 * Second byte of server packet must equal this static code.
 	 */
-	public final static byte staticServerPacketCode = 0x56; // 5.8
+	public static final byte staticServerPacketCode = 0x56; // 5.8
 	/**
 	 * 在首个服务端包发出后启用加密。
 	 * Crypt is enabled after the first server packet was sent.
@@ -43,7 +43,7 @@ public class Crypt {
 
 		packetKey = new EncryptionKeyPair(key);
 
-		log.debug("new encrypt key: " + packetKey);
+		log.debug("new encrypt key: {}", packetKey);
 
         return (key ^ 0xCD92E4D5) + 0x3FF2CCD7; // 5.8 EU
 	}
@@ -82,7 +82,7 @@ public class Crypt {
 	 * @param op 原始操作码 / raw opcode
 	 * @return 混淆后的操作码 / obfuscated opcode
 	 */
-	public static final int encodeOpcodec(int op) {
+	public static int encodeOpcodec(int op) {
 		return (op + 0xD5) ^ 0xD5; // 5.8 EU
 	}
 }

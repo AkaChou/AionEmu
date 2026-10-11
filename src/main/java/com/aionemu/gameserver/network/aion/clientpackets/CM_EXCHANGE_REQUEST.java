@@ -58,42 +58,40 @@ public class CM_EXCHANGE_REQUEST extends AionClientPacket {
 				log.info(I18n.get("log.92dc0d1a576a", activePlayer.getName(), targetPlayer.getName()));
 				return;
 			}
-			if (targetPlayer != null) {
-				if (targetPlayer.getPlayerSettings().isInDeniedStatus(DeniedStatus.TRADE)) {
-					sendPacket(SM_SYSTEM_MESSAGE.STR_MSG_REJECTED_TRADE(targetPlayer.getName()));
-					return;
-				}
-				if (targetPlayer.getInventory().isFull()) {
-					// 对方携带物品过多，无法交易。 / You cannot trade with the target as the target is carrying too many items.
-					PacketSendUtility.sendPacket(activePlayer, SM_SYSTEM_MESSAGE.STR_PARTNER_TOO_HEAVY_TO_EXCHANGE);
-					return;
-				}
-				if (activePlayer.getInventory().isFull()) {
-					// 你携带物品过多，无法与对方交易。 / You cannot trade with the target as you are carrying too many items.
-					PacketSendUtility.sendPacket(activePlayer,
-							SM_SYSTEM_MESSAGE.STR_EXCHANGE_CANT_EXCHANGE_HEAVY_TO_ADD_EXCHANGE_ITEM);
-					return;
-				}
-				sendPacket(SM_SYSTEM_MESSAGE.STR_EXCHANGE_ASKED_EXCHANGE_TO_HIM(targetPlayer.getName()));
-				RequestResponseHandler responseHandler = new RequestResponseHandler(activePlayer) {
-					@Override
-					public void acceptRequest(Creature requester, Player responder) {
-						GameRuntimeServices.exchangeService().registerExchange(activePlayer, targetPlayer);
-					}
-
-					@Override
-					public void denyRequest(Creature requester, Player responder) {
-						PacketSendUtility.sendPacket(activePlayer, new SM_SYSTEM_MESSAGE(
-								SystemMessageId.EXCHANGE_HE_REJECTED_EXCHANGE, targetPlayer.getName()));
-					}
-				};
-				boolean requested = targetPlayer.getResponseRequester()
-						.putRequest(SM_QUESTION_WINDOW.STR_EXCHANGE_DO_YOU_ACCEPT_EXCHANGE, responseHandler);
-				if (requested) {
-					PacketSendUtility.sendPacket(targetPlayer, new SM_QUESTION_WINDOW(
-							SM_QUESTION_WINDOW.STR_EXCHANGE_DO_YOU_ACCEPT_EXCHANGE, 0, 0, activePlayer.getName()));
-				}
-			}
+	if (targetPlayer.getPlayerSettings().isInDeniedStatus(DeniedStatus.TRADE)) {
+		sendPacket(SM_SYSTEM_MESSAGE.STR_MSG_REJECTED_TRADE(targetPlayer.getName()));
+		return;
+	}
+	if (targetPlayer.getInventory().isFull()) {
+		// 对方携带物品过多，无法交易。 / You cannot trade with the target as the target is carrying too many items.
+		PacketSendUtility.sendPacket(activePlayer, SM_SYSTEM_MESSAGE.STR_PARTNER_TOO_HEAVY_TO_EXCHANGE);
+		return;
+	}
+	if (activePlayer.getInventory().isFull()) {
+		// 你携带物品过多，无法与对方交易。 / You cannot trade with the target as you are carrying too many items.
+		PacketSendUtility.sendPacket(activePlayer,
+				SM_SYSTEM_MESSAGE.STR_EXCHANGE_CANT_EXCHANGE_HEAVY_TO_ADD_EXCHANGE_ITEM);
+		return;
+	}
+	sendPacket(SM_SYSTEM_MESSAGE.STR_EXCHANGE_ASKED_EXCHANGE_TO_HIM(targetPlayer.getName()));
+	RequestResponseHandler responseHandler = new RequestResponseHandler(activePlayer) {
+		@Override
+		public void acceptRequest(Creature requester, Player responder) {
+			GameRuntimeServices.exchangeService().registerExchange(activePlayer, targetPlayer);
 		}
+
+		@Override
+		public void denyRequest(Creature requester, Player responder) {
+			PacketSendUtility.sendPacket(activePlayer, new SM_SYSTEM_MESSAGE(
+					SystemMessageId.EXCHANGE_HE_REJECTED_EXCHANGE, targetPlayer.getName()));
+		}
+	};
+	boolean requested = targetPlayer.getResponseRequester()
+			.putRequest(SM_QUESTION_WINDOW.STR_EXCHANGE_DO_YOU_ACCEPT_EXCHANGE, responseHandler);
+	if (requested) {
+		PacketSendUtility.sendPacket(targetPlayer, new SM_QUESTION_WINDOW(
+				SM_QUESTION_WINDOW.STR_EXCHANGE_DO_YOU_ACCEPT_EXCHANGE, 0, 0, activePlayer.getName()));
+	}
+}
 	}
 }

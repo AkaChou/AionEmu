@@ -13,7 +13,7 @@ public class SM_DIE extends AionServerPacket {
 	private final boolean hasRebirth;
 	private final boolean hasItem;
 	private final int remainingKiskTime;
-	private int type = 0;
+	private int type;
 	private final boolean invasion;
 
 	/**

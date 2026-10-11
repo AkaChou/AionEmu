@@ -38,9 +38,6 @@ public class CM_CHARACTER_EDIT extends AionClientPacket {
 			return;
 		}
 		Player player = PlayerService.getPlayer(objectId, account);
-		if (player == null) {
-			return;
-		}
 		PlayerCommonData playerCommonData = player.getCommonData();
 		PlayerAppearance playerAppearance = player.getPlayerAppearance();
 		int gender = readD();

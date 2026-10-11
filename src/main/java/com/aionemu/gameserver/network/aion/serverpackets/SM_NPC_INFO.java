@@ -4,7 +4,6 @@ import com.aionemu.gameserver.lifecycle.GameHousingServices;
 
 import java.util.Map.Entry;
 
-import org.apache.commons.lang3.StringUtils;
 
 import com.aionemu.gameserver.model.NpcType;
 import com.aionemu.gameserver.model.Race;
@@ -37,9 +36,7 @@ public class SM_NPC_INFO extends AionServerPacket {
 	private final NpcTemplate npcTemplate;
 	private final int npcId;
 	private int creatorId;
-	private String masterName = StringUtils.EMPTY;
-	@SuppressWarnings("unused")
-	private float speed = 0.3f;
+	private String masterName;
 	private int npcTypeId;
 
 	/**
@@ -88,7 +85,6 @@ public class SM_NPC_INFO extends AionServerPacket {
 		if (owner != null) {
 			creatorId = owner.getObjectId();
 			masterName = owner.getName();
-			speed = owner.getGameStats().getMovementSpeedFloat();
 		} else {
 			masterName = "LOST";
 		}

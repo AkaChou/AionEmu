@@ -19,8 +19,6 @@ public class CM_HOTSPOT_TELEPORT extends AionClientPacket {
 	private int action;
 	private int teleportId;
 	private int price;
-	@SuppressWarnings("unused")
-	private int unk;
 	/**
 	 * 构造该客户端包。
 	 * Constructs this client packet.
@@ -38,7 +36,7 @@ public class CM_HOTSPOT_TELEPORT extends AionClientPacket {
 		if (action == 1) {
 			teleportId = readD();
 			price = readD();
-			unk = readD();
+			readD();
 		}
 	}
 

@@ -18,10 +18,6 @@ import com.aionemu.gameserver.utils.collections.ListSplitter;
 public class SM_MAIL_SERVICE extends MailServicePacket {
 	private final int serviceId;
 	private Collection<Letter> letters;
-	private int totalCount;
-	private int unreadCount;
-	private int unreadExpressCount;
-	private int unreadBlackCloudCount;
 	private int mailMessage;
 	private Letter letter;
 	private long time;
@@ -33,9 +29,8 @@ public class SM_MAIL_SERVICE extends MailServicePacket {
 	/**
 	 * 同步邮箱总体状态（serviceId = 0）。
 	 * Syncs overall mailbox state (serviceId = 0).
-	 * @param mailbox 邮箱（触发状态刷新） / mailbox (triggers state refresh)
 	 */
-	public SM_MAIL_SERVICE(Mailbox mailbox) {
+	public SM_MAIL_SERVICE() {
 		super(null);
 		this.serviceId = 0;
 	}
@@ -118,10 +113,10 @@ public class SM_MAIL_SERVICE extends MailServicePacket {
 	@Override
 	protected void writeImpl(AionConnection con) {
 		Mailbox mailbox = con.getActivePlayer().getMailbox();
-		this.totalCount = mailbox.size();
-		this.unreadCount = mailbox.getUnreadCount();
-		this.unreadExpressCount = mailbox.getUnreadCountByType(LetterType.EXPRESS);
-		this.unreadBlackCloudCount = mailbox.getUnreadCountByType(LetterType.BLACKCLOUD);
+		int totalCount = mailbox.size();
+		int unreadCount = mailbox.getUnreadCount();
+		int unreadExpressCount = mailbox.getUnreadCountByType(LetterType.EXPRESS);
+		int unreadBlackCloudCount = mailbox.getUnreadCountByType(LetterType.BLACKCLOUD);
 		writeC(serviceId);
 		switch (serviceId) {
 		case 0:

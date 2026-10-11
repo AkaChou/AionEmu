@@ -14,8 +14,6 @@ public class CM_QUESTION_RESPONSE extends AionClientPacket {
 
 	private int questionid;
 	private int response;
-	@SuppressWarnings("unused")
-	private int senderid;
 
 	/**
 	 * packet opcode
@@ -35,7 +33,7 @@ public class CM_QUESTION_RESPONSE extends AionClientPacket {
 		response = readC(); // 是/否 / yes/no
 		readC(); // unk 0x00 - 0x01 ?
 		readH();
-		senderid = readD();
+		readD();
 		readD();
 		readH();
 	}

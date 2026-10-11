@@ -13,8 +13,6 @@ import com.aionemu.gameserver.network.aion.AionConnection.State;
  */
 public class CM_UPGRADE_ARCADE extends AionClientPacket {
 	private int action;
-	@SuppressWarnings("unused")
-	private int sessionId;
 
 	/**
 	 * packet opcode
@@ -28,7 +26,7 @@ public class CM_UPGRADE_ARCADE extends AionClientPacket {
 	@Override
 	protected void readImpl() {
 		action = readC();
-		sessionId = readD();
+		readD();
 	}
 
 	@Override

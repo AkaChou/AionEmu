@@ -17,11 +17,7 @@ public class CM_SUMMON_ATTACK extends AionClientPacket {
 
 	private int summonObjId;
 	private int targetObjId;
-	@SuppressWarnings("unused")
-	private int unk1;
 	private int time;
-	@SuppressWarnings("unused")
-	private int unk3;
 
 	/**
 	 * packet opcode
@@ -36,9 +32,9 @@ public class CM_SUMMON_ATTACK extends AionClientPacket {
 	protected void readImpl() {
 		summonObjId = readD();
 		targetObjId = readD();
-		unk1 = readC();
+		readC();
 		time = readH();
-		unk3 = readC();
+		readC();
 	}
 
 	@Override
@@ -52,8 +48,8 @@ public class CM_SUMMON_ATTACK extends AionClientPacket {
 			return;
 		}
 		VisibleObject obj = summon.getKnownList().getObject(targetObjId);
-		if (obj != null && obj instanceof Creature) {
-			summon.getController().attackTarget((Creature) obj, time);
+		if (obj instanceof Creature creature) {
+			summon.getController().attackTarget(creature, time);
 		}
 	}
 }

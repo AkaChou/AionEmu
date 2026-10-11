@@ -17,7 +17,6 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_SEASON_RANKING;
 
 public class CM_SEASON_RANKING extends AionClientPacket {
 	private int tableId;
-	private int serverSwitch;
 
 	/**
 	 * packet opcode
@@ -31,7 +30,7 @@ public class CM_SEASON_RANKING extends AionClientPacket {
 	@Override
 	protected void readImpl() {
 		tableId = readD();
-		serverSwitch = readC();
+		readC();
 	}
 
 	@Override

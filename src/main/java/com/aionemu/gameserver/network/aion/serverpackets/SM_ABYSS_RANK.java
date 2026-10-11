@@ -32,7 +32,7 @@ public class SM_ABYSS_RANK extends AionServerPacket {
 		if (currentRankId < 9) {
 			int nextRankId = currentRankId < AbyssRankEnum.values().length ? currentRankId + 1 : currentRankId;
 			writeD(100 * rank.getAp() / AbyssRankEnum.getRankById(nextRankId).getApRequired());
-		} else if ((currentRankId >= 9) && (currentRankId <= 18)) {
+		} else if (currentRankId <= 18) {
 			int nextRankId = currentRankId < AbyssRankEnum.values().length ? currentRankId + 1 : currentRankId;
 			writeD(100 * rank.getGp() / AbyssRankEnum.getRankById(nextRankId).getGpRequired());
 		}

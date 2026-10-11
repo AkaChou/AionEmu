@@ -17,7 +17,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 public class CM_PET_EMOTE extends AionClientPacket {
 
 	private PetEmote emote;
-	private int emoteId;
 
 	private float x1;
 	private float y1;
@@ -43,7 +42,7 @@ public class CM_PET_EMOTE extends AionClientPacket {
 
 	@Override
 	protected void readImpl() {
-		emoteId = readC();
+		int emoteId = readC();
 		emote = PetEmote.getEmoteById(emoteId);
 
 		switch (emote) {
@@ -80,8 +79,6 @@ public class CM_PET_EMOTE extends AionClientPacket {
 		if (x1 < 0 || y1 < 0 || z1 < 0) {
 			return;
 		}
-		// log.info(I18n.get("log.c5f538b73fa3", new Object[] { emoteId,
-		// unk1, unk2 }));
 		switch (emote) {
 		case UNKNOWN:
 			break;

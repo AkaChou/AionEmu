@@ -35,15 +35,8 @@ public class SM_HOUSE_OBJECT extends AionServerPacket {
 		writeF(houseObject.getZ());
 		writeH(houseObject.getRotation());
 		writeD(player.getHouseObjectCooldownList().getReuseDelay(houseObject.getObjectId()));
-		if (houseObject.getUseSecondsLeft() > 0) {
-			writeD(houseObject.getUseSecondsLeft());
-		} else {
-			writeD(0);
-		}
-		Integer color = null;
-		if (houseObject != null) {
-			color = houseObject.getColor();
-		}
+		writeD(Math.max(houseObject.getUseSecondsLeft(), 0));
+		Integer color = houseObject.getColor();
 		if (color != null && color > 0) {
 			writeC(1);
 			writeC((color & 0xFF0000) >> 16);
@@ -65,6 +58,7 @@ public class SM_HOUSE_OBJECT extends AionServerPacket {
 		case 7:
 			NpcObject npcObj = (NpcObject) houseObject;
 			writeD(npcObj.getNpcObjectId());
+			break;
 		default:
 			break;
 		}

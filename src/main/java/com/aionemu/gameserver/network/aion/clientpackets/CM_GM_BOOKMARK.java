@@ -16,7 +16,6 @@ import com.aionemu.gameserver.utils.Util;
 public class CM_GM_BOOKMARK extends AionClientPacket {
 	private GmCommands command;
 	private String playerName;
-	private String[] parts;
 
 	/**
 	 * 构造客户端包实例。
@@ -32,7 +31,7 @@ public class CM_GM_BOOKMARK extends AionClientPacket {
 	@Override
 	protected void readImpl() {
 		playerName = readS();
-		parts = playerName.split(" ");
+		String[] parts = playerName.split(" ");
 		command = GmCommands.getValue(parts[0]);
 		playerName = parts[1];
 	}

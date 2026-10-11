@@ -11,7 +11,6 @@ import com.aionemu.gameserver.services.TradeService;
  */
 public class CM_BUY_TRADE_IN_TRADE extends AionClientPacket {
 	private int sellerObjId;
-	private int BuyMask;
 	private int itemId;
 	private int count;
 	private int TradeinListCount;
@@ -26,7 +25,7 @@ public class CM_BUY_TRADE_IN_TRADE extends AionClientPacket {
 	@Override
 	protected void readImpl() {
 		sellerObjId = readD();
-		BuyMask = readC();
+		readC();
 		itemId = readD();
 		count = readD();
 		TradeinListCount = readH();

@@ -27,26 +27,26 @@ public class EncryptionKeyPair {
 	 * 静态 XOR 密钥表。
 	 * Static XOR key table.
 	 */
-	private final static byte[] staticKey = "nKO/WctQ0AVLbpzfBkS6NevDYT8ourG5CRlmdjyJ72aswx4EPq1UgZhFMXH?3iI9"
+	private static final byte[] staticKey = "nKO/WctQ0AVLbpzfBkS6NevDYT8ourG5CRlmdjyJ72aswx4EPq1UgZhFMXH?3iI9"
 			.getBytes();
 
 	/**
 	 * 客户端包第二字节必须等于该静态码。
 	 * Second byte of client packet must equal this static code.
 	 */
-	private final static byte staticClientPacketCode = 0x7D;
+	private static final byte staticClientPacketCode = 0x7D;
 
 	/**
 	 * 用于生成客户端/服务端密钥的基础密钥。
 	 * Base key used to generate client/server keys.
 	 */
-	private int baseKey = 0;
+	private int baseKey;
 
 	/**
 	 * 加密密钥数组：0=服务端，1=客户端。
 	 * Encryption keys: 0=server, 1=client.
 	 */
-	private byte[][] keys = null;
+	private byte[][] keys;
 
 	/**
 	 * 上次使用密钥的时间戳。
@@ -87,7 +87,7 @@ public class EncryptionKeyPair {
 		}
 		sb.append(",base:0x");
 		sb.append(Integer.toHexString(baseKey));
-		sb.append(",update:" + lastUpdate + "}");
+		sb.append(",update:").append(lastUpdate).append("}");
 		return sb.toString();
 	}
 
@@ -97,7 +97,7 @@ public class EncryptionKeyPair {
 	 * @param buf 包缓冲区 / packet buffer
 	 * @return 密钥对有效时为 {@code true} / {@code true} if valid
 	 */
-	private final boolean validateClientPacket(ByteBuffer buf) {
+	private boolean validateClientPacket(ByteBuffer buf) {
 		return buf.getShort(0) == ~buf.getShort(3) && buf.get(2) == staticClientPacketCode;
 	}
 

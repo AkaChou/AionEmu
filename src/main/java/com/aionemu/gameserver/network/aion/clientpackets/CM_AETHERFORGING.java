@@ -17,9 +17,7 @@ import java.util.Map;
  */
 public class CM_AETHERFORGING extends AionClientPacket {
 	private int actionId;
-	private int targetTemplateId;
 	private int recipeId;
-	private int targetObjId;
 	private int materialsCount;
 	private int craftType;
 	private final Map<Integer, Long> requestedComponents = new HashMap<>();
@@ -34,18 +32,18 @@ public class CM_AETHERFORGING extends AionClientPacket {
 		actionId = readC();
 		switch (actionId) {
 		case 0:
-			targetTemplateId = readD();
+			readD();
 			recipeId = readD();
-			targetObjId = readD();
+			readD();
 			materialsCount = readH();
 			craftType = readC();
 			break;
 		case 1:
 			requestedComponents.clear();
 			componentsOk = true;
-			targetTemplateId = readD();
+			readD();
 			recipeId = readD();
-			targetObjId = readD();
+			readD();
 			materialsCount = readH();
 			craftType = readC();
 			for (int i = 0; i < materialsCount; i++) {

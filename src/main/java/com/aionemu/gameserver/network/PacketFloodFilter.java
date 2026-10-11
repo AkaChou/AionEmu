@@ -76,7 +76,7 @@ public class PacketFloodFilter {
 				java.util.Properties props = PropertiesUtils.load(Config.configFile("administration/pff.properties").getPath());
 				for (Object key : props.keySet()) {
 					String str = (String) key;
-					reloadedPackets[Integer.decode(str)] = Integer.valueOf(props.getProperty(str).trim());
+					reloadedPackets[Integer.decode(str)] = Integer.parseInt(props.getProperty(str).trim());
 					cnt++;
 				}
 			} catch (IOException e) {

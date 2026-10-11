@@ -11,7 +11,6 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
 public class SM_BATTLEFIELD_UNION extends AionServerPacket {
 	int fortressId;
 	boolean isAvailable;
-	int timer;
 	int memberSize;
 	int maxSize;
 

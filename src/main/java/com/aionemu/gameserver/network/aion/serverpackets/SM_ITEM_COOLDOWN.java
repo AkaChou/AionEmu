@@ -43,8 +43,8 @@ public class SM_ITEM_COOLDOWN extends AionServerPacket {
 		for (Map.Entry<Integer, ItemCooldown> entry : cooldowns.entrySet()) {
 			writeH(entry.getKey());
 			int left = (int) ((entry.getValue().getReuseTime() - currentTime) / 1000);
-			writeD(left > 0 ? left : 0);
-			writeD(entry.getValue().getUseDelay());
+			writeD(Math.max(left, 0));
+			writeD(entry.getValue().useDelay());
 		}
 	}
 }

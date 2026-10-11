@@ -1069,8 +1069,8 @@ public class SM_INSTANCE_SCORE extends AionServerPacket {
 			}
 			break;
 		case 301500000: // Stonespear Reach 4.8
-			for (StonespearReachPlayerReward playerReward : (List<StonespearReachPlayerReward>) instanceReward
-					.getInstanceRewards()) {
+			int stoneSpearCount = ((List<StonespearReachPlayerReward>) instanceReward.getInstanceRewards()).size();
+			for (int i = 0; i < stoneSpearCount; i++) {
 				StonespearReachReward srr = (StonespearReachReward) instanceReward;
 				writeD(srr.getPoints());
 				writeD(srr.getNpcKills());
@@ -1262,8 +1262,7 @@ public class SM_INSTANCE_SCORE extends AionServerPacket {
 			int rank, points;
 			boolean isRewarded = arenaReward.isRewarded();
 			for (Player player : players) {
-				InstancePlayerReward reward = arenaReward.getPlayerReward(player.getObjectId());
-				PvPArenaPlayerReward playerReward = (PvPArenaPlayerReward) reward;
+				PvPArenaPlayerReward playerReward = arenaReward.getPlayerReward(player.getObjectId());
 				points = playerReward.getPoints();
 				rank = arenaReward.getRank(playerReward.getScorePoints());
 				writeD(playerReward.getOwner());
@@ -1383,7 +1382,6 @@ public class SM_INSTANCE_SCORE extends AionServerPacket {
 			break;
 		case 302320000: // 黄金神庙训练所 / Hall Of Tenacity
 			HallOfTenacityReward hot = (HallOfTenacityReward) instanceReward;
-			List<Player> members = hot.getPlayersInside();
 			writeD(type);
 			switch (type) {
 			case 0: // Enter Hall Of Tenacity
@@ -1453,7 +1451,6 @@ public class SM_INSTANCE_SCORE extends AionServerPacket {
 	private void kamarBattlefieldTable(Race race) {
 		int count = 0;
 		KamarBattlefieldReward kbr = (KamarBattlefieldReward) instanceReward;
-		boolean isFirst = false;
 		for (Player player : players) {
 			if (!race.equals(player.getRace())) {
 				continue;
@@ -1478,7 +1475,6 @@ public class SM_INSTANCE_SCORE extends AionServerPacket {
 	private void engulfedOphidanBridgeTable(Race race) {
 		int count = 0;
 		EngulfedOphidanBridgeReward eobr = (EngulfedOphidanBridgeReward) instanceReward;
-		boolean isFirst = false;
 		for (Player player : players) {
 			if (!race.equals(player.getRace())) {
 				continue;
@@ -1503,7 +1499,6 @@ public class SM_INSTANCE_SCORE extends AionServerPacket {
 	private void ironWallWarfrontTable(Race race) {
 		int count = 0;
 		IronWallWarfrontReward iwwr = (IronWallWarfrontReward) instanceReward;
-		boolean isFirst = false;
 		for (Player player : players) {
 			if (!race.equals(player.getRace())) {
 				continue;
@@ -1528,7 +1523,6 @@ public class SM_INSTANCE_SCORE extends AionServerPacket {
 	private void idgelDomeTable(Race race) {
 		int count = 0;
 		IdgelDomeReward idr = (IdgelDomeReward) instanceReward;
-		boolean isFirst = false;
 		for (Player player : players) {
 			if (!race.equals(player.getRace())) {
 				continue;
@@ -1553,7 +1547,6 @@ public class SM_INSTANCE_SCORE extends AionServerPacket {
 	private void landMarkTable(Race race) {
 		int count = 0;
 		LandMarkReward lmr = (LandMarkReward) instanceReward;
-		boolean isFirst = false;
 		for (Player player : players) {
 			if (!race.equals(player.getRace())) {
 				continue;
@@ -1578,7 +1571,6 @@ public class SM_INSTANCE_SCORE extends AionServerPacket {
 	private void evergaleCanyonTable(Race race) {
 		int count = 0;
 		EvergaleCanyonReward ecr = (EvergaleCanyonReward) instanceReward;
-		boolean isFirst = false;
 		for (Player player : players) {
 			if (!race.equals(player.getRace())) {
 				continue;

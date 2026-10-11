@@ -30,19 +30,7 @@ public class SM_CAPTCHA extends AionServerPacket {
 		this.data = data;
 	}
 
-	/**
-	 * 返回验证码校验结果与封禁时长。
-	 * Returns captcha verification result and ban duration.
-	 * @param isCorrect 是否通过校验 / whether verification succeeded
-	 * @param banTime 错误时的封禁秒数 / ban duration in seconds on failure
-	 */
-	public SM_CAPTCHA(boolean isCorrect, int banTime) {
-		this.type = 3;
-		this.isCorrect = isCorrect;
-		this.banTime = banTime;
-	}
-
-	@Override
+		@Override
 	protected void writeImpl(AionConnection con) {
 		writeC(type);
 

@@ -15,11 +15,6 @@ import com.aionemu.gameserver.services.player.PlayerService;
 public class CM_RESTORE_CHARACTER extends AionClientPacket {
 
 	/**
-	 * PlayOk2（忽略） / PlayOk2 - we dont care
-	 */
-	@SuppressWarnings("unused")
-	private int playOk2;
-	/**
 	 * 取消删除的角色对象 ID / ObjectId of character that deletion should be canceled
 	 */
 	private int chaOid;
@@ -38,7 +33,7 @@ public class CM_RESTORE_CHARACTER extends AionClientPacket {
 	 */
 	@Override
 	protected void readImpl() {
-		playOk2 = readD();
+		readD(); // playOk2（忽略） / playOk2 - ignored
 		chaOid = readD();
 	}
 

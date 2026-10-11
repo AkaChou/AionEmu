@@ -18,7 +18,7 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
  * Client packet to share a quest with party or alliance members.
  */
 public class CM_QUEST_SHARE extends AionClientPacket {
-	public int questId;
+	private int questId;
 
 	/**
 	 * packet opcode
@@ -54,61 +54,45 @@ public class CM_QUEST_SHARE extends AionClientPacket {
 			return;
 		}
 		if (player.isInGroup2()) {
-			for (Player member : player.getPlayerGroup2().getOnlineMembers()) {
-				if (player == member)
-					continue;
-				if (!MathUtil.isIn3dRange(member, player, GroupConfig.GROUP_MAX_DISTANCE)) {
-					PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1100000, member.getName()));
-					continue;
-				}
-				if ("FORCE".equals(metadata.targetType())) { // 同盟。 / Alliance.
-					PacketSendUtility.sendPacket(member, new SM_SYSTEM_MESSAGE(1100005, player.getName()));
-					continue;
-				}
-				if (!canReceiveByState(metadata, member.getQuestStateList().getQuestState(questId))) {
-					continue;
-				}
-				if (member.isInFlyingState()) {
-					PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1100003, member.getName()));
-					continue;
-				}
-				if (!canReceiveByLevel(metadata, member.getLevel())) {
-					PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1100003, member.getName()));
-					PacketSendUtility.sendPacket(member, new SM_SYSTEM_MESSAGE(1100003, player.getName()));
-					continue;
-				}
-					member.addPendingQuestShare(questId);
-					PacketSendUtility.sendPacket(member, new SM_QUEST_ACTION(this.questId, member.getObjectId(), true));
-			}
+			shareWithMembers(player, player.getPlayerGroup2().getOnlineMembers(), metadata, questId, "FORCE");
 		} else if (player.isInAlliance2()) {
-			for (Player member : player.getPlayerAllianceGroup2().getOnlineMembers()) {
-				if (player == member)
-					continue;
-				if (!MathUtil.isIn3dRange(member, player, GroupConfig.GROUP_MAX_DISTANCE)) {
-					PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1100000, member.getName()));
-					continue;
-				}
-				if ("UNION".equals(metadata.targetType())) { // 联盟。 / League.
-					PacketSendUtility.sendPacket(member, new SM_SYSTEM_MESSAGE(1100005, player.getName()));
-					continue;
-				}
-				if (!canReceiveByState(metadata, member.getQuestStateList().getQuestState(questId))) {
-					continue;
-				}
-				if (member.isInFlyingState()) {
-					PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1100003, member.getName()));
-					continue;
-				}
-				if (!canReceiveByLevel(metadata, member.getLevel())) {
-					PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1100003, member.getName()));
-					PacketSendUtility.sendPacket(member, new SM_SYSTEM_MESSAGE(1100003, player.getName()));
-					continue;
-				}
-					member.addPendingQuestShare(questId);
-					PacketSendUtility.sendPacket(member, new SM_QUEST_ACTION(this.questId, member.getObjectId(), true));
-			}
+			shareWithMembers(player, player.getPlayerAllianceGroup2().getOnlineMembers(), metadata, questId, "UNION");
 		} else {
 			PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1100000));
+		}
+	}
+
+	/**
+	 * 向成员逐个校验并推送任务分享（targetType 匹配 blockedTargetType 的成员被排除）。
+	 * Validates and pushes the quest share to each member (members matching blockedTargetType are excluded).
+	 */
+	private static void shareWithMembers(Player player, Iterable<Player> members, QuestMetadata metadata, int questId,
+			String blockedTargetType) {
+		for (Player member : members) {
+			if (player == member)
+				continue;
+			if (!MathUtil.isIn3dRange(member, player, GroupConfig.GROUP_MAX_DISTANCE)) {
+				PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1100000, member.getName()));
+				continue;
+			}
+			if (blockedTargetType.equals(metadata.targetType())) { // 同盟/联盟。 / Alliance or league.
+				PacketSendUtility.sendPacket(member, new SM_SYSTEM_MESSAGE(1100005, player.getName()));
+				continue;
+			}
+			if (!canReceiveByState(metadata, member.getQuestStateList().getQuestState(questId))) {
+				continue;
+			}
+			if (member.isInFlyingState()) {
+				PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1100003, member.getName()));
+				continue;
+			}
+			if (!canReceiveByLevel(metadata, member.getLevel())) {
+				PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1100003, member.getName()));
+				PacketSendUtility.sendPacket(member, new SM_SYSTEM_MESSAGE(1100003, player.getName()));
+				continue;
+			}
+			member.addPendingQuestShare(questId);
+			PacketSendUtility.sendPacket(member, new SM_QUEST_ACTION(questId, member.getObjectId(), true));
 		}
 	}
 

@@ -124,7 +124,7 @@ public class AionConnection extends AConnection {
 	private long lastPingTimeMS;
 
 	private int nbInvalidPackets = 0;
-	private final static int MAX_INVALID_PACKETS = 3;
+	private static final int MAX_INVALID_PACKETS = 3;
 
 	/**
 	 * -- GETTER --

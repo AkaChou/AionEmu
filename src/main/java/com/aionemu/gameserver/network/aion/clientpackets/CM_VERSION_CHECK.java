@@ -16,14 +16,6 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_VERSION_CHECK;
  */
 public class CM_VERSION_CHECK extends AionClientPacket {
 	private int version;
-	@SuppressWarnings("unused")
-	private int subversion;
-	@SuppressWarnings("unused")
-	private int windowsEncoding;
-	@SuppressWarnings("unused")
-	private int windowsVersion;
-	@SuppressWarnings("unused")
-	private int windowsSubVersion;
 	private int unk;
 
 	/**
@@ -38,10 +30,10 @@ public class CM_VERSION_CHECK extends AionClientPacket {
 	@Override
 	protected void readImpl() {
 		version = readH();
-		subversion = readH();
-		windowsEncoding = readD();
-		windowsVersion = readD();
-		windowsSubVersion = readD();
+		readH();
+		readD();
+		readD();
+		readD();
 		unk = readC();
 	}
 

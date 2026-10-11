@@ -26,12 +26,8 @@ public class SM_FRIEND_RESPONSE extends AionServerPacket {
 	public static final int TARGET_REMOVED = 0x06;
 	/** 目标在黑名单中 / target is blocked */
 	public static final int TARGET_BLOCKED = 0x08;
-	/** 目标已死亡，暂不可加好友 / target dead */
-	public static final int TARGET_DEAD = 0x09;
 	/** 好友备注更新 / friend note update */
 	public static final int TARGET_NOTE = 0x21;
-	/** 离线添加相关 / offline-add related */
-	public static final int FRIEND_LOGOUT_ADD = 0x11;
 
 	private final String player;
 	private final int code;

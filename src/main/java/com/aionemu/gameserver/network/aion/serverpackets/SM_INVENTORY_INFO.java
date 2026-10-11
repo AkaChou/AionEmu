@@ -19,14 +19,14 @@ public class SM_INVENTORY_INFO extends AionServerPacket {
 
 	public static final int EMPTY = 0;
 	public static final int FULL = 1;
-	public int npcExpandsSize = 0;
-	public int questExpandsSize = 0;
+	public int npcExpandsSize;
+	public int questExpandsSize;
 
-	private List<Item> items;
-	private Player player;
+	private final List<Item> items;
+	private final Player player;
 
 	public int packetType = FULL;
-	private boolean isFirstPacket;
+	private final boolean isFirstPacket;
 
 	/**
 	 * 构造完整背包信息包，包含物品列表与背包扩展容量。
@@ -46,14 +46,6 @@ public class SM_INVENTORY_INFO extends AionServerPacket {
 		this.npcExpandsSize = npcExpandsSize;
 		this.questExpandsSize = questExpandsSize;
 		this.player = player;
-	}
-
-	/**
-	 * 构造空背包信息包。
-	 * Creates an empty inventory info packet.
-	 */
-	public SM_INVENTORY_INFO() {
-		this.packetType = EMPTY;
 	}
 
 	/**

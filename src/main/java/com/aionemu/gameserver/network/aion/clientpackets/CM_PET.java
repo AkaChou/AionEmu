@@ -43,28 +43,12 @@ public class CM_PET extends AionClientPacket {
 	private int dopingSlot1;
 	private int dopingSlot2;
 	private int activateLoot;
-	@SuppressWarnings("unused")
-	private int unk2;
-	@SuppressWarnings("unused")
-	private int unk3;
-	@SuppressWarnings("unused")
-	private int unk5;
-	@SuppressWarnings("unused")
-	private int unk6;
 
 	// 增益 / Buff
 	private int activateCheering;
-	@SuppressWarnings("unused")
-	private int unkCheer2;
-	@SuppressWarnings("unused")
-	private int unkCheer3;
 
 	// 商人 / Merchand
 	private int activateAutoSell;
-	@SuppressWarnings("unused")
-	private int unkMerchand2;
-	@SuppressWarnings("unused")
-	private int unkMerchand3;
 	/**
 	 * 构造该客户端包。
 	 * Constructs this client packet.
@@ -87,11 +71,11 @@ public class CM_PET extends AionClientPacket {
 		case ADOPT:
 			eggObjId = readD();
 			petId = readD();
-			unk2 = readC();
-			unk3 = readD();
+			readC();
+			readD();
 			decorationId = readD();
-			unk5 = readD();
-			unk6 = readD();
+			readD();
+			readD();
 			petName = readS();
 			break;
 		case SURRENDER:
@@ -120,16 +104,16 @@ public class CM_PET extends AionClientPacket {
 				}
 			} else if (actionType == 4) {
 				activateAutoSell = readD();
-				unkMerchand2 = readD();
-				unkMerchand3 = readD();
+				readD();
+				readD();
 			} else if (actionType == 5) {
 				activateCheering = readD();
-				unkCheer2 = readD();
-				unkCheer3 = readD();
+				readD();
+				readD();
 			} else {
 				objectId = readD();
 				count = readD();
-				unk2 = readD();
+				readD();
 			}
 			break;
 		case RENAME:

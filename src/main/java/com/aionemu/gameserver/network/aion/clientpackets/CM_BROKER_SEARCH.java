@@ -26,14 +26,6 @@ public class CM_BROKER_SEARCH extends AionClientPacket {
 	private int itemCount;
 	private List<Integer> itemList;
 
-	private int unk1;
-	private int unk2;
-	private int unk3;
-	private int minLvl;
-	private int maxLvl;
-	private int minUnk;
-	private int maxUnk;
-	private int unk4;
 
 	public CM_BROKER_SEARCH(int opcode, State state, State... restStates) {
 		super(opcode, state, restStates);
@@ -44,15 +36,15 @@ public class CM_BROKER_SEARCH extends AionClientPacket {
 		this.brokerId = readD();
 		this.sortType = readC();
 		this.page = readH();
-		unk1 = readC();
-		unk2 = readH();
+		readC();
+		readH();
 		this.mask = readH();
-		unk3 = readD();
-		minLvl = readH();
-		maxLvl = readH();
-		minUnk = readC();
-		maxUnk = readC();
-		unk4 = readH();
+		readD();
+		readH();
+		readH();
+		readC();
+		readC();
+		readH();
 
 		this.itemCount = readH();
 		this.itemList = new ArrayList<>();

@@ -17,10 +17,6 @@ public class CM_SUMMON_CASTSPELL extends AionClientPacket {
 	private int summonObjId;
 	private int targetObjId;
 	private int skillId;
-	@SuppressWarnings("unused")
-	private int skillLvl;
-	@SuppressWarnings("unused")
-	private float unk;
 
 	/**
 	 * packet opcode
@@ -35,9 +31,9 @@ public class CM_SUMMON_CASTSPELL extends AionClientPacket {
 	protected void readImpl() {
 		summonObjId = readD();
 		skillId = readH();
-		skillLvl = readC();
+		readC();
 		targetObjId = readD();
-		unk = readF();
+		readF();
 	}
 
 	@Override
@@ -57,8 +53,8 @@ public class CM_SUMMON_CASTSPELL extends AionClientPacket {
 		Creature target = null;
 		if (targetObjId != summon.getObjectId()) {
 			VisibleObject obj = summon.getKnownList().getObject(targetObjId);
-			if (obj instanceof Creature) {
-				target = (Creature) obj;
+			if (obj instanceof Creature creature) {
+				target = creature;
 			}
 		} else {
 			target = summon;

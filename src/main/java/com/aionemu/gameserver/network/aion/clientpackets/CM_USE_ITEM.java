@@ -195,7 +195,7 @@ public class CM_USE_ITEM extends AionClientPacket {
 				actions.add(itemAction);
 			}
 		}
-		if (actions.size() == 0) {
+		if (actions.isEmpty()) {
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_ITEM_IS_NOT_USABLE);
 			return;
 		}

@@ -100,7 +100,7 @@ public class SM_ALLIANCE_MEMBER_INFO extends AionServerPacket {
 				List<Effect> abnormalEffects = player.getEffectController().getAbnormalEffects();
 				writeC(127);
 				writeH(abnormalEffects.size());
-				if (abnormalEffects.size() > 0) {
+				if (!abnormalEffects.isEmpty()) {
 					for (Effect effect : abnormalEffects) {
 						writeD(effect.getEffectorId());
 						writeH(effect.getSkillId());
@@ -115,7 +115,7 @@ public class SM_ALLIANCE_MEMBER_INFO extends AionServerPacket {
 				List<Effect> abnormalEffects = player.getEffectController().getAbnormalEffects();
 				writeC(0);
 				writeH(abnormalEffects.size());
-				if (abnormalEffects.size() > 0) {
+				if (!abnormalEffects.isEmpty()) {
 					for (Effect effect : abnormalEffects) {
 						writeD(effect.getEffectorId());
 						writeH(effect.getSkillId());

@@ -14,21 +14,14 @@ import com.aionemu.gameserver.network.aion.AionConnection.State;
 public class CM_GROUP_LOOT extends AionClientPacket {
 
 	@SuppressWarnings("unused")
-	private int groupId;
 	private int index;
 	@SuppressWarnings("unused")
-	private int unk1;
 	private int itemId;
 	@SuppressWarnings("unused")
-	private int unk2;
-	@SuppressWarnings("unused")
-	private int unk3;
 	private int npcId;
 	private int distributionId;
 	private int roll;
 	private long bid;
-	@SuppressWarnings("unused")
-	private int unk4;
 	/**
 	 * 构造该客户端包。
 	 * Constructs this client packet.
@@ -42,13 +35,13 @@ public class CM_GROUP_LOOT extends AionClientPacket {
 
 	@Override
 	protected void readImpl() {
-		groupId = readD();
+		readD();
 		index = readD();
-		unk1 = readD();
+		readD();
 		itemId = readD();
-		unk2 = readC();
-		unk3 = readC(); // 3.0
-		unk4 = readC(); // 3.5
+		readC();
+		readC(); // 3.0
+		readC(); // 3.5
 		npcId = readD();
 		distributionId = readC();// 2：掷骰 3：竞价 / 2: Roll 3: Bid
 		roll = readD();// 0：未掷骰 1：已掷骰 / 0: Never Rolled 1: Rolled

@@ -12,7 +12,6 @@ import com.aionemu.gameserver.network.aion.AionConnection.State;
  */
 @Slf4j
 public class CM_INTRUDER_SCAN extends AionClientPacket {
-	private int value;
 	/**
 	 * 构造该客户端包。
 	 * Constructs this client packet.
@@ -26,7 +25,7 @@ public class CM_INTRUDER_SCAN extends AionClientPacket {
 
 	@Override
 	protected void readImpl() {
-		this.value = readC();
+		readC();
 	}
 
 	@Override

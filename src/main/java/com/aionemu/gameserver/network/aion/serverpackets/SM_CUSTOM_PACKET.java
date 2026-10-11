@@ -29,7 +29,7 @@ public class SM_CUSTOM_PACKET extends AionServerPacket {
 
 			@Override
 			public void write(SM_CUSTOM_PACKET packet, String value) {
-				packet.writeB(new byte[Integer.valueOf(value)]);
+				packet.writeB(new byte[Integer.parseInt(value)]);
 			}
 		},
 		BB('B') {
@@ -57,14 +57,14 @@ public class SM_CUSTOM_PACKET extends AionServerPacket {
 
 			@Override
 			public void write(SM_CUSTOM_PACKET packet, String value) {
-				packet.writeF(Float.valueOf(value));
+				packet.writeF(Float.parseFloat(value));
 			}
 		},
 		DF('e') {
 
 			@Override
 			public void write(SM_CUSTOM_PACKET packet, String value) {
-				packet.writeDF(Double.valueOf(value));
+				packet.writeDF(Double.parseDouble(value));
 			}
 		},
 		Q('q') {
@@ -138,15 +138,6 @@ public class SM_CUSTOM_PACKET extends AionServerPacket {
 	public SM_CUSTOM_PACKET(int opcode) {
 		super();
 		setOpcode(opcode);
-	}
-
-	/**
-	 * 追加一个已构造的元素。
-	 * Appends a pre-built element.
-	 * @param packetElement element
-	 */
-	public void addElement(PacketElement packetElement) {
-		elements.add(packetElement);
 	}
 
 	/**

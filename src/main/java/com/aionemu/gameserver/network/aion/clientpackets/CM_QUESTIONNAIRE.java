@@ -16,10 +16,6 @@ import com.aionemu.gameserver.services.HTMLService;
 public class CM_QUESTIONNAIRE extends AionClientPacket {
 
 	private int objectId;
-	private int itemId;
-	@SuppressWarnings("unused")
-	private String stringItemsId;
-	private int itemSize;
 	private List<Integer> items;
 
 	/**
@@ -39,13 +35,13 @@ public class CM_QUESTIONNAIRE extends AionClientPacket {
 	@Override
 	protected void readImpl() {
 		objectId = readD();
-		itemSize = readH();
+		int itemSize = readH();
 		items = new ArrayList<>();
 		for (int i = 0; i < itemSize; i++) {
-			itemId = readD();
+			int itemId = readD();
 			items.add(itemId);
 		}
-		stringItemsId = readS();
+		readS();
 	}
 
 	/*

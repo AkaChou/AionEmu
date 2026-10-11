@@ -43,14 +43,14 @@ public class SM_SEASON_RANKING extends AionServerPacket {
 		for (SeasonRankingResult rs : data) {
 			writeD(tableId);
 			writeD(rs.getPoints());
-			writeD(rs.getRank());
-			writeD(rs.getOldRank());
+			writeD(rs.rank());
+			writeD(rs.oldRank());
 			writeD(0); // Sex ? 0=male / 1=female
-			writeD(rs.getPlayerId());
-			writeD(rs.getPlayerRace());
-			writeD(rs.getPlayerClass().getClassId());
+			writeD(rs.playerId());
+			writeD(rs.playerRace());
+			writeD(rs.playerClass().getClassId());
 			writeC(NetworkConfig.GAMESERVER_ID);
-			writeS(rs.getPlayerName(), 52);// Player Name
+			writeS(rs.playerName(), 52);// Player Name
 		}
 	}
 }

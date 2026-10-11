@@ -32,9 +32,9 @@ public class StigmaInfoBlobEntry extends ItemBlobEntry {
 		Item item = ownerItem;
 		Stigma stigma = item.getItemTemplate().getStigma();
 
-		writeD(buf, stigma.getSkills().get(0).getSkillId());// skill id 1
+		writeD(buf, stigma.getSkills().get(0).skillId());// skill id 1
 		if (stigma.getSkills().size() >= 2) {
-			writeD(buf, stigma.getSkills().get(1).getSkillId());// skill id 2
+			writeD(buf, stigma.getSkills().get(1).skillId());// skill id 2
 		} else {
 			writeD(buf, 0);
 		}

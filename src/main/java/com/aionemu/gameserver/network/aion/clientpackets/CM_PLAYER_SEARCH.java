@@ -38,10 +38,7 @@ public class CM_PLAYER_SEARCH extends AionClientPacket {
 
 	@Override
 	protected void readImpl() {
-		name = readS(52);
-		if (name != null) {
-			name = Util.convertName(name);
-		}
+		name = Util.convertName(readS(52));
 		region = readD();
 		classMask = readD();
 		minLevel = readC();
@@ -64,29 +61,38 @@ public class CM_PLAYER_SEARCH extends AionClientPacket {
 			Player player = it.next();
 			if (!player.isSpawned()) {
 				continue;
-			} else if (player.getFriendList().getStatus() == Status.OFFLINE) {
-				continue;
-			} else if (player.isGM() && !CustomConfig.SEARCH_GM_LIST) {
-				continue;
-			} else if (lfgOnly == 1 && !player.isLookingForGroup()) {
-				continue;
-			} else if (!name.isEmpty() && !player.getName().toLowerCase().contains(name.toLowerCase())) {
-				continue;
-			} else if (minLevel != 0xFF && player.getLevel() < minLevel) {
-				continue;
-			} else if (maxLevel != 0xFF && player.getLevel() > maxLevel) {
-				continue;
-			} else if (classMask > 0 && (player.getPlayerClass().getMask() & classMask) == 0) {
-				continue;
-			} else if (region > 0 && player.getActiveRegion().getMapId() != region) {
-				continue;
-			} else if ((player.getRace() != activePlayer.getRace()) && (!CustomConfig.FACTIONS_SEARCH_MODE)) {
-				continue;
-			} else if (player.getName() == activePlayer.getName()) {
-				continue;
-			} else {
-				matches.add(player);
 			}
+			if (player.getFriendList().getStatus() == Status.OFFLINE) {
+				continue;
+			}
+			if (player.isGM() && !CustomConfig.SEARCH_GM_LIST) {
+				continue;
+			}
+			if (lfgOnly == 1 && !player.isLookingForGroup()) {
+				continue;
+			}
+			if (!name.isEmpty() && !player.getName().toLowerCase().contains(name.toLowerCase())) {
+				continue;
+			}
+			if (minLevel != 0xFF && player.getLevel() < minLevel) {
+				continue;
+			}
+			if (maxLevel != 0xFF && player.getLevel() > maxLevel) {
+				continue;
+			}
+			if (classMask > 0 && (player.getPlayerClass().getMask() & classMask) == 0) {
+				continue;
+			}
+			if (region > 0 && player.getActiveRegion().getMapId() != region) {
+				continue;
+			}
+			if (player.getRace() != activePlayer.getRace() && !CustomConfig.FACTIONS_SEARCH_MODE) {
+				continue;
+			}
+			if (player.getName().equals(activePlayer.getName())) {
+				continue;
+			}
+			matches.add(player);
 		}
 		sendPacket(new SM_PLAYER_SEARCH(matches, region));
 	}

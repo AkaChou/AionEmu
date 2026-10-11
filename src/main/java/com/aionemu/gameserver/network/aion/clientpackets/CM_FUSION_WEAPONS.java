@@ -23,7 +23,6 @@ public class CM_FUSION_WEAPONS extends AionClientPacket {
 		super(opcode, state, restStates);
 	}
 
-	private int npcObjId;
 	private int firstItemId;
 	private int secondItemId;
 
@@ -32,7 +31,7 @@ public class CM_FUSION_WEAPONS extends AionClientPacket {
 	 */
 	@Override
 	protected void readImpl() {
-		npcObjId = readD();
+		readD();
 		firstItemId = readD();
 		secondItemId = readD();
 	}

@@ -145,8 +145,6 @@ public class SM_EMOTION extends AionServerPacket {
 			writeC(0x40);
 			break;
 		case START_SPRINT:
-			writeD(0);
-			break;
 		case RESURRECT:
 			writeD(0);
 			break;
