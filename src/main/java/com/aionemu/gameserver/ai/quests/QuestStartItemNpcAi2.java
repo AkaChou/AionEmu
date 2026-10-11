@@ -81,10 +81,7 @@ public class QuestStartItemNpcAi2 extends ActionItemNpcAI2 {
 		if (player.isCompleteQuest(questId)) {
 			return false;
 		}
-		if (player.getInventory() != null && player.getInventory().getItemCountByItemId(itemId) > 0) {
-			return false;
-		}
-		return true;
+		return player.getInventory() == null || player.getInventory().getItemCountByItemId(itemId) <= 0;
 	}
 
 	static List<Integer> dialogIdsFor(boolean hasQuestStart) {

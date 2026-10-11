@@ -89,9 +89,9 @@ public class DeadLockDetector extends Thread {
                 if (ids != null) {
                     deadlock = true;
                     ThreadInfo[] tis = tmx.getThreadInfo(ids, true, true);
-                    String info = "DeadLock Found!\n";
+                    StringBuilder info = new StringBuilder("DeadLock Found!\n");
                     for (ThreadInfo ti : tis) {
-                        info += ti.toString();
+                        info.append(ti);
                     }
 
                     for (ThreadInfo ti : tis) {
@@ -102,18 +102,18 @@ public class DeadLockDetector extends Thread {
                         }
 
                         ThreadInfo dl = ti;
-                        info += "Java-level deadlock:\n";
-                        info += createShortLockInfo(dl);
+                        info.append("Java-level deadlock:\n");
+                        info.append(createShortLockInfo(dl));
                         while ((dl = tmx.getThreadInfo(new long[] {dl.getLockOwnerId()}, true, true)[0]).getThreadId() != ti.getThreadId()) {
-                            info += createShortLockInfo(dl);
+                            info.append(createShortLockInfo(dl));
                         }
 
-                        info += "\nDumping all threads:\n";
+                        info.append("\nDumping all threads:\n");
                         for (ThreadInfo dumpedTI : tmx.dumpAllThreads(true, true)) {
-                            info += printDumpedThreadInfo(dumpedTI);
+                            info.append(printDumpedThreadInfo(dumpedTI));
                         }
                     }
-                    log.warn(info);
+                    log.warn(info.toString());
 
                     handleDeadlock();
                 }
@@ -141,7 +141,7 @@ public class DeadLockDetector extends Thread {
      * @return 格式化锁信息 / Formatted lock information
      */
     private String createShortLockInfo(ThreadInfo threadInfo) {
-		String sb = "\t" + threadInfo.getThreadName() +
+		return "\t" + threadInfo.getThreadName() +
 			" is waiting to lock " +
 			threadInfo.getLockInfo().toString() +
 			" which is held by " +
@@ -151,7 +151,6 @@ public class DeadLockDetector extends Thread {
 			" monitors:" +
 			threadInfo.getLockedMonitors().length +
 			"\n";
-        return sb;
     }
 
     /**

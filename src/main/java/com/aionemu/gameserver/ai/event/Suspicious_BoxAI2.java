@@ -52,7 +52,7 @@ public class Suspicious_BoxAI2 extends NpcAI2
 				PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_MSG_TREASUREBOX_DESPAWN_ONE, 0);
 			} else if (MathUtil.isIn3dRange(getOwner(), creature, 10)) {
 				if (startedEvent.compareAndSet(false, true)) {
-					suspiciousChestTask = GameThreadPoolServices.threadPoolManager().schedule(() -> eventChestStart(), 1000);
+					suspiciousChestTask = GameThreadPoolServices.threadPoolManager().schedule(this::eventChestStart, 1000);
 					suspiciousChestTask = GameThreadPoolServices.threadPoolManager().schedule(() -> {
 						getOwner().setNpcType(NpcType.ATTACKABLE);
 						PacketSendUtility.sendPacket(player, new SM_CUSTOM_SETTINGS(getOwner().getObjectId(), 0, NpcType.ATTACKABLE.getId(), 0));

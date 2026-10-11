@@ -119,7 +119,7 @@ public class PropertiesUtils {
      */
     public Properties[] loadAllFromDirectory(File dir, boolean recursive) throws IOException {
         Collection<File> files = FileUtils.listFiles(dir, new String[]{"properties"}, recursive);
-        return load(files.toArray(new File[files.size()]));
+        return load(files.toArray(new File[0]));
     }
 
     /**
@@ -131,11 +131,7 @@ public class PropertiesUtils {
      */
     public Properties[] overrideProperties(Properties[] initialProperties, Properties[] properties) {
         if (properties != null) {
-            Properties[] arr$ = properties;
-            int len$ = properties.length;
-
-            for (int i$ = 0; i$ < len$; ++i$) {
-                Properties props = arr$[i$];
+            for (Properties props : properties) {
                 overrideProperties(initialProperties, props);
             }
         }
@@ -152,11 +148,7 @@ public class PropertiesUtils {
      */
     public Properties[] overrideProperties(Properties[] initialProperties, Properties properties) {
         if (properties != null) {
-            Properties[] arr$ = initialProperties;
-            int len$ = initialProperties.length;
-
-            for (int i$ = 0; i$ < len$; ++i$) {
-                Properties initialProps = arr$[i$];
+            for (Properties initialProps : initialProperties) {
                 initialProps.putAll(properties);
             }
         }

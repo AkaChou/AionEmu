@@ -167,8 +167,7 @@ public class ServerCommandProcessor {
 	 * Grant-item-to-player listener.
 	 */
 	ActionListener al_add = e -> {
-		int i = Integer.parseInt(itemID.getText());
-		int itemId = i;
+		int itemId = Integer.parseInt(itemID.getText());
 		long itemCount = 1;
 
 		Player receiver;
@@ -177,7 +176,7 @@ public class ServerCommandProcessor {
 		receiver = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(playerName);
 
 		if (itemID.getText() != null) {
-			if (i != 0) {
+			if (itemId != 0) {
 				if (DataManager.ITEM_DATA.getItemTemplate(itemId) == null) {
 					log.info(I18n.get("log.60fb69b4774c", itemId));
 					return;

@@ -6,8 +6,6 @@ import com.aionemu.gameserver.questEngine.runtime.QuestMutationPlanner;
 import com.aionemu.gameserver.questEngine.runtime.QuestSnapshot;
 import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -15,7 +13,7 @@ import java.util.Map;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -60,7 +58,7 @@ class CollapsedSingleStepLadderContractTest {
 	private static final List<Integer> TRACES = List.of(703434, 703435, 703436, 703437);
 
 	@Test
-	void collapsedShardsProjectTheAlignedRewardRow() throws Exception {
+	void collapsedShardsProjectTheAlignedRewardRow() {
 		for (Contract contract : CONTRACTS) {
 			assertEquals(contract.rewardRow(),
 				node(definition(contract.questId()).definition(), "reward").projection().variables().get("var0"),
@@ -76,7 +74,7 @@ class CollapsedSingleStepLadderContractTest {
 	}
 
 	@Test
-	void everyJournalRowOwnsAState() throws Exception {
+	void everyJournalRowOwnsAState() {
 		for (Contract contract : CONTRACTS) {
 			QuestDefinition definition = definition(contract.questId()).definition();
 			Set<Integer> rows = new LinkedHashSet<>();
@@ -99,7 +97,7 @@ class CollapsedSingleStepLadderContractTest {
 	}
 
 	@Test
-	void milliardShardWalksTheClientActionLadder() throws Exception {
+	void milliardShardWalksTheClientActionLadder() {
 		QuestDefinition definition = definition(15000).definition();
 		assertEquals(1, routes(definition, "started", "s1").size(),
 			() -> "15000 hands the bag over into journal row 1");
@@ -156,7 +154,7 @@ class CollapsedSingleStepLadderContractTest {
 	}
 
 	@Test
-	void hemellosShardWalksTheClientActionLadder() throws Exception {
+	void hemellosShardWalksTheClientActionLadder() {
 		QuestDefinition definition = definition(15670).definition();
 		assertEquals(new QuestEvent.TalkToNpc(HEMELLOS, QuestDialogAction.SETPRO1.id(), 0),
 			routes(definition, "started", "s1").getFirst().event(),
@@ -197,12 +195,12 @@ class CollapsedSingleStepLadderContractTest {
 			});
 		assertEquals(Set.of(ILISIA), completionNpcs,
 			() -> "15670 completion owner stays on the reward-row NPC Ilisia");
-		assertTrue(routes(definition, "reward", "complete").size() >= 1,
+		assertFalse(routes(definition, "reward", "complete").isEmpty(),
 			() -> "15670 keeps a reward -> complete route");
 	}
 
 	@Test
-	void ilumaEvidenceCollectionMovesToTheHandoverRow() throws Exception {
+	void ilumaEvidenceCollectionMovesToTheHandoverRow() {
 		QuestDefinition definition = definition(15670).definition();
 		for (int templateId : TRACES) {
 			assertTrue(routes(definition, "s1", "s1").stream()
@@ -223,7 +221,7 @@ class CollapsedSingleStepLadderContractTest {
 	}
 
 	@Test
-	void staleCollapsedRewardSavesHealToTheRewardRow() throws Exception {
+	void staleCollapsedRewardSavesHealToTheRewardRow() {
 		for (Contract contract : CONTRACTS) {
 			CompiledQuestDefinition compiled = definition(contract.questId());
 			List<QuestTransition> matches = enterWorldRecoveries(compiled.definition()).stream()
@@ -251,7 +249,7 @@ class CollapsedSingleStepLadderContractTest {
 	}
 
 	@Test
-	void collapsedHandoverNoLongerJumpsStraightToReward() throws Exception {
+	void collapsedHandoverNoLongerJumpsStraightToReward() {
 		for (Contract contract : CONTRACTS) {
 			QuestDefinition definition = definition(contract.questId()).definition();
 			assertTrue(routes(definition, "started", "reward").isEmpty(),

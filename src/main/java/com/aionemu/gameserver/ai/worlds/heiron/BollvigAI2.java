@@ -98,7 +98,7 @@ public class BollvigAI2 extends AggressiveFirstSkillAI2
 		} else if(hpPercent <= 25) {
 			useSkill(18037);
 		}
-		secondTask = GameThreadPoolServices.threadPoolManager().schedule(() -> skillThree(), 31000);
+		secondTask = GameThreadPoolServices.threadPoolManager().schedule(this::skillThree, 31000);
 	}
 
 	private void skillThree() {
@@ -113,7 +113,7 @@ public class BollvigAI2 extends AggressiveFirstSkillAI2
 				firstSkill();
 			} else if (25 >= hpPercent) {
 				useSkill(18027);
-				lastTask = GameThreadPoolServices.threadPoolManager().schedule(() -> skillThree(), 11000);
+				lastTask = GameThreadPoolServices.threadPoolManager().schedule(this::skillThree, 11000);
 			}
 		}, 5000);
 	}

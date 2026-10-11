@@ -178,7 +178,7 @@ public class NettyConnectionHandler extends ChannelInboundHandlerAdapter impleme
     @Override
     public void enableWriteInterest() {
         if (context != null) {
-            context.executor().execute(() -> flushWrites());
+            context.executor().execute(this::flushWrites);
         }
     }
 

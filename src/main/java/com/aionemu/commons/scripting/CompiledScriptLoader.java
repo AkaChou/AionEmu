@@ -60,6 +60,6 @@ public final class CompiledScriptLoader {
 		for (String className : sortedClassNames) {
 			classes.add(Class.forName(className, false, classLoader));
 		}
-		return classes.toArray(new Class<?>[classes.size()]);
+		return classes.toArray(new Class<?>[0]);
 	}
 }

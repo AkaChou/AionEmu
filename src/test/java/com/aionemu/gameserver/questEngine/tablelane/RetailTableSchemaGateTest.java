@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.questEngine.tablelane;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
@@ -84,8 +86,11 @@ class RetailTableSchemaGateTest {
 	@Test
 	void retailTablesCarryNoDoctypeAndOnlyPredefinedEntities() throws IOException {
 		for (Table table : TABLES) {
-			String text = new String(resource(table.xml()).readAllBytes(), StandardCharsets.UTF_8);
-			assertTrue(!text.contains("<!DOCTYPE"),
+			String text;
+			try (InputStream stream = resource(table.xml())) {
+				text = new String(stream.readAllBytes(), StandardCharsets.UTF_8);
+			}
+			assertFalse(text.contains("<!DOCTYPE"),
 					table.xml() + " must not carry a DOCTYPE (strip batch regression?)");
 			Matcher matcher = ENTITY_REF.matcher(text);
 			while (matcher.find()) {
@@ -98,7 +103,7 @@ class RetailTableSchemaGateTest {
 
 	private InputStream resource(String name) {
 		InputStream input = getClass().getClassLoader().getResourceAsStream(DIR + name);
-		assertTrue(input != null, "missing " + DIR + name);
+		assertNotNull(input, "missing " + DIR + name);
 		return input;
 	}
 

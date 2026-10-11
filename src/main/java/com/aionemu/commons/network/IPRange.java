@@ -155,8 +155,8 @@ public class IPRange {
 
     @Override
     public int hashCode() {
-        int result = (int) (min ^ (min >>> 32));
-        result = 31 * result + (int) (max ^ (max >>> 32));
+        int result = Long.hashCode(min);
+        result = 31 * result + Long.hashCode(max);
         result = 31 * result + Arrays.hashCode(address);
         return result;
     }

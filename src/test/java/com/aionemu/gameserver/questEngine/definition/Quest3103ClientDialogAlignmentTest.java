@@ -2,10 +2,9 @@ package com.aionemu.gameserver.questEngine.definition;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-
-import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
@@ -32,7 +31,7 @@ class Quest3103ClientDialogAlignmentTest {
 		assertTrue(handler.routes(3102), "3102 必须由 native 车道路由");
 		assertEquals(798206, handler.acquireNpc(3102), "接取 NPC");
 		assertEquals(798225, handler.rewardNpc(3102), "交付 NPC");
-		assertFalse(handler.acquireNpc(3102).equals(handler.rewardNpc(3102)),
+		assertNotEquals(handler.acquireNpc(3102), handler.rewardNpc(3102),
 				"接取与交付 owner 分离");
 		assertEquals(2, handler.relayCount(3102), "中继步数");
 		assertTrue(handler.relaysForNpc(798167).stream().anyMatch(relay -> relay.questId() == 3102 && relay.step() == 1),
@@ -48,7 +47,7 @@ class Quest3103ClientDialogAlignmentTest {
 		assertTrue(handler.routes(3103), "3103 必须由 native 车道路由");
 		assertEquals(798225, handler.acquireNpc(3103), "接取 NPC");
 		assertEquals(798226, handler.rewardNpc(3103), "交付 NPC");
-		assertFalse(handler.acquireNpc(3103).equals(handler.rewardNpc(3103)),
+		assertNotEquals(handler.acquireNpc(3103), handler.rewardNpc(3103),
 				"接取与交付 owner 分离");
 		assertEquals(0, handler.relayCount(3103), "中继步数");
 		assertNull(handler.acceptGiveItem(3103), "接取侧无发放");

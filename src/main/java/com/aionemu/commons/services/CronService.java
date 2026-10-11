@@ -298,10 +298,7 @@ public final class CronService {
                return Collections.emptySet();
             } else {
                Set<JobDetail> result = Sets.newHashSetWithExpectedSize(keys.size());
-               Iterator i$ = keys.iterator();
-
-               while(i$.hasNext()) {
-                  JobKey jk = (JobKey)i$.next();
+               for (JobKey jk : keys) {
                   result.add(this.scheduler.getJobDetail(jk));
                }
 
@@ -324,10 +321,7 @@ public final class CronService {
          return Collections.emptyMap();
       } else {
          Map<Runnable, JobDetail> result = Maps.newHashMap();
-         Iterator i$ = jobDetails.iterator();
-
-         while(i$.hasNext()) {
-            JobDetail jd = (JobDetail)i$.next();
+         for (JobDetail jd : jobDetails) {
             if (!GenericValidator.isBlankOrNull(jd.getJobDataMap()) && jd.getJobDataMap().containsKey("cronservice.scheduled.runnable.instance")) {
                Runnable runnable = (Runnable) jd.getJobDataMap().get("cronservice.scheduled.runnable.original");
                result.put(runnable == null ? (Runnable) jd.getJobDataMap().get("cronservice.scheduled.runnable.instance") : runnable, jd);

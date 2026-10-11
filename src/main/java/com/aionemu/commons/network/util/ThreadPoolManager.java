@@ -40,7 +40,7 @@ public class ThreadPoolManager implements Executor {
      * Get singleton instance.
      * @return 线程池管理器 / Thread pool manager
      */
-    public static final ThreadPoolManager getInstance() {
+    public static ThreadPoolManager getInstance() {
         return SingletonHolder.instance;
     }
 

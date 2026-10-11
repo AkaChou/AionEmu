@@ -80,8 +80,6 @@ public class CM_CS_AUTH extends GsClientPacket {
                 log.info(I18n.get("log.29ce1a6300e7", gameServerId));
                 getConnection().sendPacket(new SM_GS_AUTH_RESPONSE(resp));
                 break;
-            //	default:
-            //	getConnection().close(new SM_GS_AUTH_RESPONSE(resp), false);
         }
     }
 }

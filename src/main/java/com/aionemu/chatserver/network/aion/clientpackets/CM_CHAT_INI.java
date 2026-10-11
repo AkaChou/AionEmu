@@ -43,7 +43,6 @@ public class CM_CHAT_INI extends AbstractClientPacket {
      */
     @Override
     protected void runImpl() {
-        clientChannelHandler.getChatClient();
         clientChannelHandler.sendPacket(new SM_CHAT_INI());
     }
 }

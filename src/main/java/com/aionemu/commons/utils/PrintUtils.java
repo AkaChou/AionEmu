@@ -27,9 +27,9 @@ public class PrintUtils {
         String title = normalizeTitle(sectionName);
         CONSOLE.info("");
         if (!title.isEmpty()) {
-            CONSOLE.info("  " + title);
+            CONSOLE.info("  {}", title);
         }
-        CONSOLE.info("  " + RULE);
+        CONSOLE.info("  {}", RULE);
     }
 
     /**
@@ -42,7 +42,7 @@ public class PrintUtils {
         if (normalized.isEmpty()) {
             return;
         }
-        CONSOLE.info("  · " + normalized);
+        CONSOLE.info("  · {}", normalized);
     }
 
     /**
@@ -105,11 +105,7 @@ public class PrintUtils {
      */
     public String bytes2hex(byte[] bytes) {
         StringBuilder result = new StringBuilder();
-        byte[] arr$ = bytes;
-        int len$ = bytes.length;
-
-        for (int i$ = 0; i$ < len$; ++i$) {
-            byte b = arr$[i$];
+        for (byte b : bytes) {
             int value = b & 255;
             result.append(String.format("%02X", value));
         }

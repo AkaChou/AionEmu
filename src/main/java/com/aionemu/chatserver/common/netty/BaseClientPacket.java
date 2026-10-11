@@ -45,7 +45,7 @@ public abstract class BaseClientPacket extends AbstractPacket {
         try {
             readImpl();
             if (getRemainingBytes() > 0) {
-                log.debug("Packet " + this + " not fully readed!");
+                log.debug("Packet {} not fully readed!", this);
             }
             return true;
         } catch (Exception ex) {
@@ -169,7 +169,7 @@ public abstract class BaseClientPacket extends AbstractPacket {
      * @return 字符串值 / String value
      */
     protected final String readS() {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         char ch;
         try {
             while ((ch = buf.readChar()) != 0) {

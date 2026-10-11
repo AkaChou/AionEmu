@@ -72,7 +72,7 @@ public abstract class BaseClientPacket<T extends AConnection> extends BasePacket
         try {
             this.readImpl();
             if (this.getRemainingBytes() > 0) {
-                log.debug("Packet " + this + " not fully readed!");
+                log.debug("Packet {} not fully readed!", this);
             }
 
             return true;
@@ -215,7 +215,7 @@ public abstract class BaseClientPacket<T extends AConnection> extends BasePacket
      * @return 字符串值 / String value
      */
     protected final String readS() {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
 
         char ch;
         try {

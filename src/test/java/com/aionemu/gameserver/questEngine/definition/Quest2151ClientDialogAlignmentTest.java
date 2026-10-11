@@ -2,10 +2,9 @@ package com.aionemu.gameserver.questEngine.definition;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-
-import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
@@ -32,7 +31,7 @@ class Quest2151ClientDialogAlignmentTest {
 		assertTrue(handler.routes(2151), "2151 必须由 native 车道路由");
 		assertEquals(801035, handler.acquireNpc(2151), "接取 NPC");
 		assertEquals(801034, handler.rewardNpc(2151), "交付 NPC");
-		assertFalse(handler.acquireNpc(2151).equals(handler.rewardNpc(2151)),
+		assertNotEquals(handler.acquireNpc(2151), handler.rewardNpc(2151),
 				"接取与交付 owner 分离");
 		assertEquals(0, handler.relayCount(2151), "中继步数");
 		assertNull(handler.acceptGiveItem(2151), "接取侧无发放");

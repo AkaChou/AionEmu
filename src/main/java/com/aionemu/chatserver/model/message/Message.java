@@ -78,8 +78,7 @@ public class Message {
      */
     public String getTextString() {
         try {
-            String s = new String(text, StandardCharsets.UTF_16LE);
-            return s;
+            return new String(text, StandardCharsets.UTF_16LE);
         } catch (Exception e) {
             return "";
         }

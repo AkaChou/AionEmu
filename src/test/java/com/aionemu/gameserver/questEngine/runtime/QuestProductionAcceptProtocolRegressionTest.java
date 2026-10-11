@@ -2,6 +2,7 @@ package com.aionemu.gameserver.questEngine.runtime;
 
 import com.aionemu.gameserver.questEngine.definition.QuestDefinitionDirectoryLoader;
 import com.aionemu.gameserver.questEngine.definition.AfterCommitAction;
+import com.aionemu.gameserver.questEngine.definition.QuestStartCondition;
 import com.aionemu.gameserver.questEngine.definition.CompiledQuestDefinition;
 import com.aionemu.gameserver.questEngine.definition.ImmutableQuestCatalog;
 import com.aionemu.gameserver.questEngine.definition.QuestAction;
@@ -237,7 +238,7 @@ class QuestProductionAcceptProtocolRegressionTest {
 		return definition.definition().metadata().startConditionGroups().stream()
 			.flatMap(group -> group.conditions().stream())
 			.filter(condition -> "finished".equals(condition.type()))
-			.map(condition -> condition.questId())
+			.map(QuestStartCondition::questId)
 			.collect(java.util.stream.Collectors.toUnmodifiableSet());
 	}
 
@@ -294,7 +295,7 @@ class QuestProductionAcceptProtocolRegressionTest {
 		};
 	}
 
-	private static CompiledQuestDefinition definition(int questId) throws Exception {
+	private static CompiledQuestDefinition definition(int questId) {
 		// 退役任务的生产 XML 只在 git 历史里：统一取生产视图（XML 目录 + 原版 overlay）。
 		// TEMP-VERIFY(view): 并行 SimpleTalk 批次落定前生产覆盖门不可用，用宽松 overlay 验证本断言。
 		return VIEW.updateAndGet(current -> current != null ? current
@@ -310,6 +311,9 @@ class QuestProductionAcceptProtocolRegressionTest {
 	private static Connection connection() {
 		return (Connection) Proxy.newProxyInstance(Connection.class.getClassLoader(),
 			new Class<?>[]{Connection.class}, (proxy, method, args) -> switch (method.getName()) {
+				case "hashCode" -> System.identityHashCode(proxy);
+				case "equals" -> proxy == args[0];
+				case "toString" -> "MockConnection@" + Integer.toHexString(System.identityHashCode(proxy));
 				case "getAutoCommit" -> true;
 				case "setAutoCommit", "commit", "rollback", "close" -> null;
 				default -> method.getReturnType() == boolean.class ? false : null;
